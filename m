@@ -2,119 +2,129 @@ Return-Path: <SRS0=M1fl=TR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1575BC04AB4
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 05:36:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03220C04AB4
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 05:37:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E4ACC20848
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 05:36:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C793B20868
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 05:37:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1558071423;
+	bh=saVFeWx4qKBQbevY5CRLfQRXJKjxHWRxrtd/hzjO1D4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=l4Cv8FnedAUv31RpP8JFUPKe2+l/dhLAC5pPo56VQ/0+vh0NdXITUbOSeHsx0+naz
+	 dr9Os7mxFXg0fjsY8vU4o+vaTkLYZMbsx6RPL7nu9FWF96v1D+mRfHpfE2KQrKJI/w
+	 ueKXFKTmV3BBp5uTe/xgcVxwwO3W0hWQeR8VnjYY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727952AbfEQFgb (ORCPT
+        id S1727978AbfEQFhC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 May 2019 01:36:31 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:41608 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727520AbfEQFga (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 May 2019 01:36:30 -0400
-Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4H5aSsI092637
-        for <linux-kernel@vger.kernel.org>; Fri, 17 May 2019 01:36:29 -0400
-Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2shpua8b4j-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Fri, 17 May 2019 01:36:29 -0400
-Received: from localhost
-        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <vaibhav@linux.ibm.com>;
-        Fri, 17 May 2019 06:36:24 +0100
-Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
-        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Fri, 17 May 2019 06:36:21 +0100
-Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
-        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x4H5aKFS60227814
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 17 May 2019 05:36:20 GMT
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 50139AE04D;
-        Fri, 17 May 2019 05:36:20 +0000 (GMT)
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 0245EAE055;
-        Fri, 17 May 2019 05:36:17 +0000 (GMT)
-Received: from vajain21.in.ibm.com (unknown [9.109.195.228])
-        by d06av26.portsmouth.uk.ibm.com (Postfix) with SMTP;
-        Fri, 17 May 2019 05:36:16 +0000 (GMT)
-Received: by vajain21.in.ibm.com (sSMTP sendmail emulation); Fri, 17 May 2019 11:06:16 +0530
-From:   Vaibhav Jain <vaibhav@linux.ibm.com>
-To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Keith Busch <keith.busch@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Chandan Rajendra <chandan@linux.ibm.com>,
-        Mike Snitzer <snitzer@redhat.com>
-Subject: Re: [PATCH] dax: Fix last_page check in __bdev_dax_supported()
-In-Reply-To: <CAPcyv4j6Jhpqg9SqAAmz2A6PDry7UUtnniNVoc_qG=WXwuVOWA@mail.gmail.com>
-References: <20190516055422.16939-1-vaibhav@linux.ibm.com> <CAPcyv4j6Jhpqg9SqAAmz2A6PDry7UUtnniNVoc_qG=WXwuVOWA@mail.gmail.com>
-Date:   Fri, 17 May 2019 11:06:16 +0530
+        Fri, 17 May 2019 01:37:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48564 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726772AbfEQFhC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 May 2019 01:37:02 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id ACC6120848;
+        Fri, 17 May 2019 05:37:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1558071421;
+        bh=saVFeWx4qKBQbevY5CRLfQRXJKjxHWRxrtd/hzjO1D4=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Q4c09mtGJTXYnEaFeIDfgP9dA0KKnSrinBudtGnmwB/svoRQsge75boD6bBrIm5ln
+         pgmKM80pkHOLEgbkdyKyUPl80E503sSa4X7yv8JgWN8Bhqpo7RjA96uhq7R1hFG4Cz
+         mPRsyVhA1brGcO2vZm/a8DFMSHfKPrbeRUceJ29g=
+Date:   Fri, 17 May 2019 07:36:58 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Sam Ravnborg <sam@ravnborg.org>, Arnd Bergmann <arnd@arndb.de>,
+        Jessica Yu <jeyu@kernel.org>,
+        Lucas De Marchi <lucas.de.marchi@gmail.com>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Michael Schmitz <schmitzmic@gmail.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Rusty Russell <rusty@rustcorp.com.au>,
+        Kees Cook <keescook@chromium.org>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2] kbuild: check uniqueness of module names
+Message-ID: <20190517053658.GA3464@kroah.com>
+References: <20190517042753.25857-1-yamada.masahiro@socionext.com>
+ <CAK7LNARvQUPPBzdq7ac67h-xhB6tHZ4WPzBHZy+c3iHE_bi_Fg@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-TM-AS-GCONF: 00
-x-cbid: 19051705-0012-0000-0000-0000031C9AD8
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19051705-0013-0000-0000-000021553EC5
-Message-Id: <87bm01mylr.fsf@vajain21.in.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-17_02:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1905170037
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAK7LNARvQUPPBzdq7ac67h-xhB6tHZ4WPzBHZy+c3iHE_bi_Fg@mail.gmail.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Dan Williams <dan.j.williams@intel.com> writes:
+On Fri, May 17, 2019 at 01:45:11PM +0900, Masahiro Yamada wrote:
+> On Fri, May 17, 2019 at 1:29 PM Masahiro Yamada
+> <yamada.masahiro@socionext.com> wrote:
+> >
+> > In the recent build test of linux-next, Stephen saw a build error
+> > caused by a broken .tmp_versions/*.mod file:
+> >
+> >   https://lkml.org/lkml/2019/5/13/991
+> >
+> > drivers/net/phy/asix.ko and drivers/net/usb/asix.ko have the same
+> > basename, and there is a race in generating .tmp_versions/asix.mod
+> >
+> > Kbuild has not checked this before, and it suddenly shows up with
+> > obscure error message when this kind of race occurs.
+> >
+> > Non-unique module names cause various sort of problems, but it is
+> > not trivial to catch them by eyes.
+> >
+> > Hence, this script.
+> >
+> > It checks not only real modules, but also built-in modules (i.e.
+> > controlled by tristate CONFIG option, but currently compiled with =y).
+> > Non-unique names for built-in modules also cause problems because
+> > /sys/modules/ would fall over.
+> >
+> > I tested allmodconfig on the latest kernel, and it detected the
+> > following:
+> >
+> > warning: same basename if the following are built as modules:
+> >   drivers/regulator/88pm800.ko
+> >   drivers/mfd/88pm800.ko
+> > warning: same basename if the following are built as modules:
+> >   drivers/gpu/drm/bridge/adv7511/adv7511.ko
+> >   drivers/media/i2c/adv7511.ko
+> > warning: same basename if the following are built as modules:
+> >   drivers/net/phy/asix.ko
+> >   drivers/net/usb/asix.ko
+> > warning: same basename if the following are built as modules:
+> >   fs/coda/coda.ko
+> >   drivers/media/platform/coda/coda.ko
+> > warning: same basename if the following are built as modules:
+> >   drivers/net/phy/realtek.ko
+> >   drivers/net/dsa/realtek.ko
+> >
+> > Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
+> > Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+> > Reviewed-by: Kees Cook <keescook@chromium.org>
+> > ---
+> 
+> 
+> One more question popped up.
+> 
+> External modules are out of scope of the community,
+> but it is possible that people create an external module
+> that happens to have the same name as an upstream driver.
 
-> On Wed, May 15, 2019 at 10:55 PM Vaibhav Jain <vaibhav@linux.ibm.com> wrote:
->>
->> Presently __bdev_dax_supported() checks if first sector of last
->> page ( last_page ) on the block device is aligned to page
->> boundary. However the code to compute 'last_page' assumes that there
->> are 8 sectors/page assuming a 4K page-size.
->>
->> This assumption breaks on architectures which use a different page
->> size specifically PPC64 where page-size == 64K. Hence a warning is
->> seen while trying to mount a xfs/ext4 file-system with dax enabled:
->>
->> $ sudo mount -o dax /dev/pmem0 /mnt/pmem
->> XFS (pmem0): DAX enabled. Warning: EXPERIMENTAL, use at your own risk
->> XFS (pmem0): DAX unsupported by block device. Turning off DAX.
->>
->> The patch fixes this issue by updating calculation of 'last_var' to
->> take into account number-of-sectors/page instead of assuming it to be
->> '8'.
->
-> Yes, I noticed this too and fixed it up in a wider change that also
-> allows device-mapper to validate each component device. Does this
-> patch work for you?
->
-> https://lore.kernel.org/lkml/155789172402.748145.11853718580748830476.stgit@dwillia2-desk3.amr.corp.intel.com/
+That is their bug, nothing we can do about that :)
 
-Thanks Dan, I tested your patch and not seeing the issue anymore.
+thanks,
 
-So, please ignore this patch.
-
--- 
-Vaibhav Jain <vaibhav@linux.ibm.com>
-Linux Technology Center, IBM India Pvt. Ltd.
-
+greg k-h
