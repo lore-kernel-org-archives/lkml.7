@@ -2,218 +2,427 @@ Return-Path: <SRS0=M1fl=TR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 172E4C04AB4
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 15:36:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78D4FC04AB4
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 15:36:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D48242087E
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 15:36:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 359E22087E
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 15:36:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ukQJJ6QW"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="Hk8UfTHs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729093AbfEQPgf (ORCPT
+        id S1729142AbfEQPgh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 May 2019 11:36:35 -0400
-Received: from mail-lf1-f43.google.com ([209.85.167.43]:41325 "EHLO
-        mail-lf1-f43.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728520AbfEQPge (ORCPT
+        Fri, 17 May 2019 11:36:37 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:32944 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728632AbfEQPgf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 May 2019 11:36:34 -0400
-Received: by mail-lf1-f43.google.com with SMTP id d8so5644295lfb.8
-        for <linux-kernel@vger.kernel.org>; Fri, 17 May 2019 08:36:32 -0700 (PDT)
+        Fri, 17 May 2019 11:36:35 -0400
+Received: by mail-wr1-f68.google.com with SMTP id d9so7666498wrx.0
+        for <linux-kernel@vger.kernel.org>; Fri, 17 May 2019 08:36:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=oZcAaE96cSVFWi9Z2GMlWClyPZwgW4ysxzcgvnYID2w=;
-        b=ukQJJ6QWk/wEWo45qlJo55ycIMOzrNaD/adNVJiPR6LgZz+jATCHfkKEwDA5e6hWHq
-         1oPQQZKdJU+V4YSjNARNb4tzmjZ53aLzUXNsz/agIMwWcs8psk5gVQdTXaRGG0u5HgGb
-         oUqtYERB1ptM6flPp0Unimi/ZV3qiNFfql7uAdSPqYGwbielDc/SeCk0JzYCKJeNqIAJ
-         Rpf/lEX3lAetp1HdXFi6a7Y9rFbNLj+gQvdnRzhhR4BEKMDQ5jXDavCqgEI0+K34WD34
-         qKRdivF0KpiCsHavuTnnTp68NHCkJY5WRlfmpzwwvqGp3uSLg3NQb4Eu1ndB98xRGI0s
-         3s/w==
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:openpgp:autocrypt:organization
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=6E5ON01H2nf881unjrijyCilTVQej1skhDclPJcb53Q=;
+        b=Hk8UfTHsI889Ko1dvTJ1I4YpudWz6TeCmqBswYotDbYKfGH8tMzo+QJZKjzjuYfd7O
+         3IiIIuR7t7fD1Ic+OrTMqg2smsaIKmNEJkjvA9wn+TpUTY4O9YJAk30p6BJDjBtDY7G4
+         Z8Dl+yjxr43b/MtMUb4Q/M3lpEgVxqINLunSFiT2MmjNIiqjwMmakiWMOEweI2GeuRKF
+         kCCGYI6xCEZJs+rkdvo3AEVmKDnD3TPT+jYe0Euyh+LNDf5JT8yJWZhDS9esYE2r1yeU
+         RMZdo8U3i/2BXOw8htAcc5OeneW8bVAkXAhiSHPuFDKRhq9HtS4GE++vTVdEFEY3r9vv
+         865g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=oZcAaE96cSVFWi9Z2GMlWClyPZwgW4ysxzcgvnYID2w=;
-        b=LK04AbjQgls7e/krU+M2MEy64dZLAQad+lLDz74PBF6zV4SQEFdo1QlL3tGJZj1YFA
-         cxr164mIve6fdBzRU+7UOmOn4b08ra75K7bnlz63+Sc6J6nkBBvrsoOrGKrmPCQpeKbT
-         u/SV9T0163gw86gru0T0cYJsT5+0zd1PgMbnE85+t/no2SZ9MA1zLk2bnFxi4Htw42OG
-         D2+KzR/+lbAGkJs2BsGrlj8qyGCPTMZGZiHqIaYtJ7qSlCpcP254tIhWKJbyAVWnEFCR
-         cmsgbiJg7zc5dVEeq9qgIV1zx1iSMPRvf95Bp0yy5IcDi2w0yBrSNjI2MV7v6tDXy17i
-         wzAA==
-X-Gm-Message-State: APjAAAUYoe1aUjvZswzuKVpXDkIJqAoCdX83t9/J9786WOyc/3eLrK7A
-        jX8M5oR2OOOeXrqszb3LIMZFTm4h3lsCkG/b4aQgsg==
-X-Google-Smtp-Source: APXvYqz64d2LvnJfbN5s9Gb1Iyfpq0GgEc7anMX6fK9nGSMysnHpVM4aVTsGauTros3Zi5dYfKdhTRyzoN/v9tBQ1aQ=
-X-Received: by 2002:a19:7d42:: with SMTP id y63mr20552876lfc.54.1558107391166;
- Fri, 17 May 2019 08:36:31 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
+         :organization:message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=6E5ON01H2nf881unjrijyCilTVQej1skhDclPJcb53Q=;
+        b=SHPs07jBu1T8sga4Gj2LM1MY6Mm5/KqvRwh9cAFVTStX9ky6B2Zw/F7u0IUxesK/23
+         yMMN6WnnIXkvr8jV8vqETEwY9mXvjR/rUc8dvBYqvUMTMj78OBxSaCgkSCt+qXO+syMX
+         PRy5/xdmEkACs0sy1wd1c0o7nEaf4S3RJX2AWoRQ5oF+fFKey/Iosq4+FgJUMrbgsp7P
+         G7z0J4SmTWNm+pVSaqeyUOc7cetAThcSNDHRSvYsnSyXNkEB8XQu9+LplGBa21xqVPxt
+         1h2C1sW7+oS2DgAD4QwLA8piVBKCPGTbgGp6kaF4LXsde+TZXDF4RDyhC/0PunJKvIM9
+         06/Q==
+X-Gm-Message-State: APjAAAV1J8Opbx/GycrOF2GdlyNiNWAQeLmJRYCUsFkEsxdLxMZwyyaI
+        x3O6kIR5Noq5A/1WqMjZh5cWig==
+X-Google-Smtp-Source: APXvYqxBbkv2X60sU/xz/QIyD6hX0VnCGJ2MW7KmVgIuFYjkdTvMq10s9ilH8/Y2d7vo2KEIs0E5LQ==
+X-Received: by 2002:a5d:554f:: with SMTP id g15mr7125793wrw.318.1558107392777;
+        Fri, 17 May 2019 08:36:32 -0700 (PDT)
+Received: from [10.1.2.12] (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
+        by smtp.gmail.com with ESMTPSA id y40sm14914929wrd.96.2019.05.17.08.36.31
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 17 May 2019 08:36:32 -0700 (PDT)
+Subject: Re: [PATCH v3 2/2] dt-bindings: arm: Convert Amlogic board/soc
+ bindings to json-schema
+To:     Rob Herring <robh@kernel.org>, Kevin Hilman <khilman@baylibre.com>
+Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-amlogic@lists.infradead.org, Carlo Caione <carlo@caione.org>,
+        Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
+References: <20190517152723.28518-1-robh@kernel.org>
+ <20190517152723.28518-2-robh@kernel.org>
+From:   Neil Armstrong <narmstrong@baylibre.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=narmstrong@baylibre.com; prefer-encrypt=mutual; keydata=
+ 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
+ ZaTUOEkgIor5losDrePdPgE=
+Organization: Baylibre
+Message-ID: <77fcc70c-74ef-2421-c925-eb4fb9b7554d@baylibre.com>
+Date:   Fri, 17 May 2019 17:36:30 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-References: <CACT4Y+Z9GcY-d19ROSXgAq4-d_hOBVArfgGV1VdYcYD_X1coPQ@mail.gmail.com>
-In-Reply-To: <CACT4Y+Z9GcY-d19ROSXgAq4-d_hOBVArfgGV1VdYcYD_X1coPQ@mail.gmail.com>
-From:   Todd Kjos <tkjos@google.com>
-Date:   Fri, 17 May 2019 08:36:19 -0700
-Message-ID: <CAHRSSEw7QAfuKsQhHNZcwizn5zEVA6CjAdO7qh69g3fkXrk7DA@mail.gmail.com>
-Subject: Re: binder stress testing
-To:     Dmitry Vyukov <dvyukov@google.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        =?UTF-8?B?QXJ2ZSBIasO4bm5ldsOlZw==?= <arve@android.com>,
-        Todd Kjos <tkjos@android.com>,
-        Martijn Coenen <maco@android.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Christian Brauner <christian@brauner.io>,
-        "open list:ANDROID DRIVERS" <devel@driverdev.osuosl.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        syzkaller <syzkaller@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20190517152723.28518-2-robh@kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dmitry Vyukov <dvyukov@google.com>
-Date: Fri, May 17, 2019 at 3:26 AM
-To: Greg Kroah-Hartman, Arve Hj=C3=B8nnev=C3=A5g, Todd Kjos, Martijn Coenen=
-,
-Joel Fernandes, Christian Brauner, open list:ANDROID DRIVERS, LKML
-Cc: syzkaller
+On 17/05/2019 17:27, Rob Herring wrote:
+> Convert Amlogic SoC bindings to DT schema format using json-schema.
+> 
+> Cc: Carlo Caione <carlo@caione.org>
+> Cc: Kevin Hilman <khilman@baylibre.com>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: devicetree@vger.kernel.org
+> Signed-off-by: Rob Herring <robh@kernel.org>
+> ---
+> v3:
+> - Add board descriptions
+> - Rebase onto Linus' master
+> 
+>  .../devicetree/bindings/arm/amlogic.txt       | 113 --------------
+>  .../devicetree/bindings/arm/amlogic.yaml      | 140 ++++++++++++++++++
+>  2 files changed, 140 insertions(+), 113 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/arm/amlogic.txt
+>  create mode 100644 Documentation/devicetree/bindings/arm/amlogic.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/arm/amlogic.txt b/Documentation/devicetree/bindings/arm/amlogic.txt
+> deleted file mode 100644
+> index 5f650248b18e..000000000000
+> --- a/Documentation/devicetree/bindings/arm/amlogic.txt
+> +++ /dev/null
+> @@ -1,113 +0,0 @@
+> -Amlogic MesonX device tree bindings
+> --------------------------------------------
+> -
+> -Work in progress statement:
+> -
+> -Device tree files and bindings applying to Amlogic SoCs and boards are
+> -considered "unstable". Any Amlogic device tree binding may change at
+> -any time. Be sure to use a device tree binary and a kernel image
+> -generated from the same source tree.
+> -
+> -Please refer to Documentation/devicetree/bindings/ABI.txt for a definition of a
+> -stable binding/ABI.
+> -
+> ----------------------------------------------------------------
+> -
+> -Boards with the Amlogic Meson6 SoC shall have the following properties:
+> -  Required root node property:
+> -    compatible: "amlogic,meson6"
+> -
+> -Boards with the Amlogic Meson8 SoC shall have the following properties:
+> -  Required root node property:
+> -    compatible: "amlogic,meson8";
+> -
+> -Boards with the Amlogic Meson8b SoC shall have the following properties:
+> -  Required root node property:
+> -    compatible: "amlogic,meson8b";
+> -
+> -Boards with the Amlogic Meson8m2 SoC shall have the following properties:
+> -  Required root node property:
+> -    compatible: "amlogic,meson8m2";
+> -
+> -Boards with the Amlogic Meson GXBaby SoC shall have the following properties:
+> -  Required root node property:
+> -    compatible: "amlogic,meson-gxbb";
+> -
+> -Boards with the Amlogic Meson GXL S905X SoC shall have the following properties:
+> -  Required root node property:
+> -    compatible: "amlogic,s905x", "amlogic,meson-gxl";
+> -
+> -Boards with the Amlogic Meson GXL S905D SoC shall have the following properties:
+> -  Required root node property:
+> -    compatible: "amlogic,s905d", "amlogic,meson-gxl";
+> -
+> -Boards with the Amlogic Meson GXL S805X SoC shall have the following properties:
+> -  Required root node property:
+> -    compatible: "amlogic,s805x", "amlogic,meson-gxl";
+> -
+> -Boards with the Amlogic Meson GXL S905W SoC shall have the following properties:
+> -  Required root node property:
+> -    compatible: "amlogic,s905w", "amlogic,meson-gxl";
+> -
+> -Boards with the Amlogic Meson GXM S912 SoC shall have the following properties:
+> -  Required root node property:
+> -    compatible: "amlogic,s912", "amlogic,meson-gxm";
+> -
+> -Boards with the Amlogic Meson AXG A113D SoC shall have the following properties:
+> -  Required root node property:
+> -    compatible: "amlogic,a113d", "amlogic,meson-axg";
+> -
+> -Boards with the Amlogic Meson G12A S905D2 SoC shall have the following properties:
+> -  Required root node property:
+> -    compatible: "amlogic,g12a";
+> -
+> -Board compatible values (alphabetically, grouped by SoC):
+> -
+> -  - "geniatech,atv1200" (Meson6)
+> -
+> -  - "minix,neo-x8" (Meson8)
+> -
+> -  - "endless,ec100" (Meson8b)
+> -  - "hardkernel,odroid-c1" (Meson8b)
+> -  - "tronfy,mxq" (Meson8b)
+> -
+> -  - "tronsmart,mxiii-plus" (Meson8m2)
+> -
+> -  - "amlogic,p200" (Meson gxbb)
+> -  - "amlogic,p201" (Meson gxbb)
+> -  - "friendlyarm,nanopi-k2" (Meson gxbb)
+> -  - "hardkernel,odroid-c2" (Meson gxbb)
+> -  - "nexbox,a95x" (Meson gxbb or Meson gxl s905x)
+> -  - "tronsmart,vega-s95-pro", "tronsmart,vega-s95" (Meson gxbb)
+> -  - "tronsmart,vega-s95-meta", "tronsmart,vega-s95" (Meson gxbb)
+> -  - "tronsmart,vega-s95-telos", "tronsmart,vega-s95" (Meson gxbb)
+> -  - "wetek,hub" (Meson gxbb)
+> -  - "wetek,play2" (Meson gxbb)
+> -
+> -  - "amlogic,p212" (Meson gxl s905x)
+> -  - "hwacom,amazetv" (Meson gxl s905x)
+> -  - "khadas,vim" (Meson gxl s905x)
+> -  - "libretech,cc" (Meson gxl s905x)
+> -
+> -  - "amlogic,p230" (Meson gxl s905d)
+> -  - "amlogic,p231" (Meson gxl s905d)
+> -  - "phicomm,n1" (Meson gxl s905d)
+> -
+> -  - "amlogic,p241" (Meson gxl s805x)
+> -  - "libretech,aml-s805x-ac" (Meson gxl s805x)
+> -
+> -  - "amlogic,p281" (Meson gxl s905w)
+> -  - "oranth,tx3-mini" (Meson gxl s905w)
+> -
+> -  - "amlogic,q200" (Meson gxm s912)
+> -  - "amlogic,q201" (Meson gxm s912)
+> -  - "khadas,vim2" (Meson gxm s912)
+> -  - "kingnovel,r-box-pro" (Meson gxm S912)
+> -  - "nexbox,a1" (Meson gxm s912)
+> -  - "tronsmart,vega-s96" (Meson gxm s912)
+> -
+> -  - "amlogic,s400" (Meson axg a113d)
+> -
+> -  - "amlogic,u200" (Meson g12a s905d2)
+> -  - "amediatech,x96-max" (Meson g12a s905x2)
+> -  - "seirobotics,sei510" (Meson g12a s905x2)
+> diff --git a/Documentation/devicetree/bindings/arm/amlogic.yaml b/Documentation/devicetree/bindings/arm/amlogic.yaml
+> new file mode 100644
+> index 000000000000..6d5bb493db03
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/arm/amlogic.yaml
+> @@ -0,0 +1,140 @@
+> +# SPDX-License-Identifier: GPL-2.0
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/arm/amlogic.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Amlogic MesonX device tree bindings
+> +
+> +maintainers:
+> +  - Neil Armstrong <narmstrong@baylibre.com>
+> +  - Carlo Caione <carlo@caione.org>
+> +  - Kevin Hilman <khilman@baylibre.com>
 
-> Hi,
->
-> I have 2 questions re drivers/android/binder.c stress testing.
->
-> 1. Are there any docs on the kernel interface? Or some examples on how
-> to use it and reference syscall sequences to make it do something
-> meaningful?
-> I hopefully figured out struct layouts and offsets of objects thing,
-> but I still can't figure out handles, pointers, nodes, pointer to
-> nodes... pointer to data (?), references, cookies and where does one
-> get valid values for these.
+Please drop Carlo and me.
 
-The kernel interface is not well documented since it isn't intended to
-be used apart from libbinder. The best example for your purposes is
-probably the binderDriverInterfaceTest which you can find at
-https://android.googlesource.com/platform/frameworks/native/+/refs/heads/ma=
-ster/libs/binder/tests/binderDriverInterfaceTest.cpp.
+> +
+> +description: |+
+> +  Work in progress statement:
+> +
+> +  Device tree files and bindings applying to Amlogic SoCs and boards are
+> +  considered "unstable". Any Amlogic device tree binding may change at
+> +  any time. Be sure to use a device tree binary and a kernel image
+> +  generated from the same source tree.
+> +
+> +  Please refer to Documentation/devicetree/bindings/ABI.txt for a definition of a
+> +  stable binding/ABI.
+> +
+> +properties:
+> +  $nodename:
+> +    const: '/'
+> +  compatible:
+> +    oneOf:
+> +      - description: Boards with the Amlogic Meson6 SoC
+> +        items:
+> +          - enum:
+> +              - geniatech,atv1200
+> +          - const: amlogic,meson6
+> +
+> +      - description: Boards with the Amlogic Meson8 SoC
+> +        items:
+> +          - enum:
+> +              - minix,neo-x8
+> +          - const: amlogic,meson8
+> +
+> +      - description: Boards with the Amlogic Meson8m2 SoC
+> +        items:
+> +          - enum:
+> +              - tronsmart,mxiii-plus
+> +          - const: amlogic,meson8m2
+> +
+> +      - description: Boards with the Amlogic Meson8b SoC
+> +        items:
+> +          - enum:
+> +              - endless,ec100
+> +              - hardkernel,odroid-c1
+> +              - tronfy,mxq
+> +          - const: amlogic,meson8b
+> +
+> +      - description: Boards with the Amlogic Meson GXBaby SoC
+> +        items:
+> +          - enum:
+> +              - amlogic,p200
+> +              - amlogic,p201
+> +              - friendlyarm,nanopi-k2
+> +              - hardkernel,odroid-c2
+> +              - nexbox,a95x
+> +              - wetek,hub
+> +              - wetek,play2
+> +          - const: amlogic,meson-gxbb
+> +
+> +      - description: Tronsmart Vega S95 devices
+> +        items:
+> +          - enum:
+> +              - tronsmart,vega-s95-pro
+> +              - tronsmart,vega-s95-meta
+> +              - tronsmart,vega-s95-telos
+> +          - const: tronsmart,vega-s95
+> +          - const: amlogic,meson-gxbb
+> +
+> +      - description: Boards with the Amlogic Meson GXL S805X SoC
+> +        items:
+> +          - enum:
+> +              - amlogic,p241
+> +              - libretech,aml-s805x-ac
+> +          - const: amlogic,s805x
+> +          - const: amlogic,meson-gxl
+> +
+> +      - description: Boards with the Amlogic Meson GXL S905W SoC
+> +        items:
+> +          - enum:
+> +              - amlogic,p281
+> +              - oranth,tx3-mini
+> +          - const: amlogic,s905w
+> +          - const: amlogic,meson-gxl
+> +
+> +      - description: Boards with the Amlogic Meson GXL S905X SoC
+> +        items:
+> +          - enum:
+> +              - amediatech,x96-max
+> +              - amlogic,p212
+> +              - hwacom,amazetv
+> +              - khadas,vim
+> +              - libretech,cc
+> +              - nexbox,a95x
+> +              - seirobotics,sei510
+> +          - const: amlogic,s905x
+> +          - const: amlogic,meson-gxl
+> +
+> +      - description: Boards with the Amlogic Meson GXL S905D SoC
+> +        items:
+> +          - enum:
+> +              - amlogic,p230
+> +              - amlogic,p231
+> +              - phicomm,n1
+> +          - const: amlogic,s905d
+> +          - const: amlogic,meson-gxl
+> +
+> +      - description: Boards with the Amlogic Meson GXM S912 SoC
+> +        items:
+> +          - enum:
+> +              - amlogic,q200
+> +              - amlogic,q201
+> +              - khadas,vim2
+> +              - kingnovel,r-box-pro
+> +              - nexbox,a1
+> +              - tronsmart,vega-s96
+> +          - const: amlogic,s912
+> +          - const: amlogic,meson-gxm
+> +
+> +      - description: Boards with the Amlogic Meson AXG A113D SoC
+> +        items:
+> +          - enum:
+> +              - amlogic,s400
+> +          - const: amlogic,a113d
+> +          - const: amlogic,meson-axg
+> +
+> +      - description: Boards with the Amlogic Meson G12A S905D2 SoC
+> +        items:
+> +          - enum:
+> +              - amlogic,u200
+> +          - const: amlogic,g12a
+> +
+> +...
+> 
 
-The libbinder source is at
-https://android.googlesource.com/platform/frameworks/native/+/refs/heads/ma=
-ster/libs/binder.
+Otherwise looks fine.
 
->
-> 2. In my tests any transaction breaks binder device until the next reboot=
-.
-> If I open binder device twice, mmap, set context and then the process
-> dies, then everything it released fine, in particular the context
-> (context_mgr_node gone). So the device is ready for a next test:
->
-> [   40.247970][ T6239] binder: binder_open: 6238:6239
-> [   40.250819][ T6239] binder: 6238:6239 node 1 u0000000000000000
-> c0000000000000000 created
-> [   40.253365][ T6239] binder: binder_mmap: 6238 200a0000-200a2000 (8
-> K) vma f9 pagep 8000000000000025
-> [   40.256454][ T6239] binder: binder_open: 6238:6239
-> [   40.259604][ T6239] binder: binder_mmap: 6238 200c0000-200c2000 (8
-> K) vma f9 pagep 8000000000000025
-> [   40.271526][ T6238] binder: 6238 close vm area 200a0000-200a2000 (8
-> K) vma 180200d9 pagep 8000000000000025
-> [   40.273113][ T6238] binder: 6238 close vm area 200c0000-200c2000 (8
-> K) vma 180200d9 pagep 8000000000000025
-> [   40.275058][   T17] binder: binder_flush: 6238 woke 0 threads
-> [   40.275997][   T17] binder: binder_flush: 6238 woke 0 threads
-> [   40.276968][   T17] binder: binder_deferred_release: 6238 threads
-> 0, nodes 0 (ref 0), refs 0, active transactions 0
-> [   40.278626][   T17] binder: binder_deferred_release: 6238
-> context_mgr_node gone
-> [   40.279756][   T17] binder: binder_deferred_release: 6238 threads
-> 1, nodes 1 (ref 0), refs 0, active transactions 0
->
->
-> However, if I also send a transaction between these fd's, then
-> context_mgr_node is not released:
->
-> [  783.851403][ T6167] binder: binder_open: 6166:6167
-> [  783.858801][ T6167] binder: 6166:6167 node 1 u0000000000000000
-> c0000000000000000 created
-> [  783.862458][ T6167] binder: binder_mmap: 6166 200a0000-200a2000 (8
-> K) vma f9 pagep 8000000000000025
-> [  783.865777][ T6167] binder: binder_open: 6166:6167
-> [  783.867892][ T6167] binder: binder_mmap: 6166 200c0000-200c2000 (8
-> K) vma f9 pagep 8000000000000025
-> [  783.870810][ T6167] binder: 6166:6167 write 76 at 0000000020000180,
-> read 0 at 0000000020000300
-> [  783.872211][ T6167] binder: 6166:6167 BC_TRANSACTION 2 -> 6166 -
-> node 1, data 0000000020000200-00000000200002c0 size 88-24-16
-> [  783.873819][ T6167] binder: 6166:6167 node 3 u0000000000000000
-> c0000000000000000 created
-> [  783.875032][ T6167] binder: 6166 new ref 4 desc 1 for node 3
-> [  783.875860][ T6167] binder:         node 3 u0000000000000000 -> ref 4 =
-desc 1
-> [  783.876868][ T6167] binder: 6166:6167 wrote 76 of 76, read return 0 of=
- 0
-> [  783.886714][ T6167] binder: 6166 close vm area 200a0000-200a2000 (8
-> K) vma 180200d9 pagep 8000000000000025
-> [  783.888161][ T6167] binder: 6166 close vm area 200c0000-200c2000 (8
-> K) vma 180200d9 pagep 8000000000000025
-> [  783.890134][   T27] binder: binder_flush: 6166 woke 0 threads
-> [  783.891036][   T27] binder: binder_flush: 6166 woke 0 threads
-> [  783.892027][ T2903] binder: release 6166:6167 transaction 2 out, still=
- active
-> [  783.893097][ T2903] binder: unexpected work type, 4, not freed
-> [  783.893947][ T2903] binder: undelivered TRANSACTION_COMPLETE
-> [  783.894849][ T2903] binder: node 3 now dead, refs 1, death 0
-> [  783.895717][ T2903] binder: binder_deferred_release: 6166 threads
-> 1, nodes 1 (ref 1), refs 0, active transactions 1
->
->
-> And all subsequent tests will fail because "BINDER_SET_CONTEXT_MGR
-> already set" presumably to the now unrecoverably dead process:
->
-> [  831.085174][ T6191] binder: binder_open: 6190:6191
-> [  831.087450][ T6191] binder: BINDER_SET_CONTEXT_MGR already set
-> [  831.088910][ T6191] binder: 6190:6191 ioctl 4018620d 200000c0 returned=
- -16
-> [  831.090626][ T6191] binder: binder_mmap: 6190 200a0000-200a2000 (8
-> K) vma f9 pagep 8000000000000025
-> [  831.092783][ T6191] binder: binder_open: 6190:6191
-> [  831.094076][ T6191] binder: binder_mmap: 6190 200c0000-200c2000 (8
-> K) vma f9 pagep 8000000000000025
-> [  831.096218][ T6191] binder: 6190:6191 write 76 at 0000000020000180,
-> read 0 at 0000000020000300
-> [  831.097606][ T6191] binder: 6190:6191 BC_TRANSACTION 5 -> 6166 -
-> node 1, data 0000000020000200-00000000200002c0 size 88-24-16
-> [  831.099251][ T6191] binder_alloc: 6166: binder_alloc_buf, no vma
-> [  831.100433][ T6191] binder: 6190:6191 transaction failed 29189/-3,
-> size 88-24 line 3157
-> [  831.101559][ T6191] binder: 6190:6191 wrote 76 of 76, read return 0 of=
- 0
-> [  831.110317][ T6191] binder: 6190 close vm area 200a0000-200a2000 (8
-> K) vma 180200d9 pagep 8000000000000025
-> [  831.111752][ T6191] binder: 6190 close vm area 200c0000-200c2000 (8
-> K) vma 180200d9 pagep 8000000000000025
-> [  831.113266][ T3344] binder: binder_flush: 6190 woke 0 threads
-> [  831.114147][ T3344] binder: binder_flush: 6190 woke 0 threads
-> [  831.115087][ T3344] binder: undelivered TRANSACTION_ERROR: 29189
-> [  831.115991][ T3344] binder: binder_deferred_release: 6190 threads
-> 1, nodes 0 (ref 0), refs 0, active transactions 0
-> [  831.117525][ T3344] binder: binder_deferred_release: 6190 threads
-> 1, nodes 0 (ref 0), refs 0, active transactions 0
->
->
-> The question is: if processes that opened the device and ever mapped
-> it are now completely gone, should it reset the original state when
-> context can be bound again? Is it a bug in binder that it does not? If
-> so, is there some kind of temp work-around for this?
+With carlo and me removed from the maintainers :
+Reviewed-by: Neil Armstrong <narmstrong@baylibre.com>
 
-If all the processes that opened the device are gone, everything
-should be cleaned up and leave binder in a useable state. When the
-device is in this state, can you dump out
-/sys/debug/kernel/binder/state and send it to me?
-
->
-> Thanks
+Neil
