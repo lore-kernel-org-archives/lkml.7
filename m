@@ -2,107 +2,211 @@ Return-Path: <SRS0=M1fl=TR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ADBACC04AAF
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 02:41:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A50F5C46460
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 02:44:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7745E205ED
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 02:41:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 66AB720815
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 02:44:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="kGRIbIfb"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="TiM3+9qm";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="LMHW0afm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727379AbfEQClN (ORCPT
+        id S1727516AbfEQCoA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 22:41:13 -0400
-Received: from mail-eopbgr60069.outbound.protection.outlook.com ([40.107.6.69]:9782
-        "EHLO EUR04-DB3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725933AbfEQClN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 May 2019 22:41:13 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=4PTwfMgy7lO3Fjrv6jCWVtWw3kNzvBbT0MIAdKWY6GQ=;
- b=kGRIbIfbuO9XjcGSAvjSjo1rF34dDLRQafnack72fm005ThyCt1MEtxEUP1v1FX9AiStaJ4g8b4yNt7U36QHiCvvVfPKUDFglecA/9UgJO/uwmxmvdyqbrekUt/MumUCYkoS3n6BD7o9T3T8Cy3llKIVhuMlcFLzL+tEYzOHMzk=
-Received: from VE1PR04MB6479.eurprd04.prod.outlook.com (20.179.233.80) by
- VE1PR04MB6349.eurprd04.prod.outlook.com (10.255.118.18) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1900.17; Fri, 17 May 2019 02:41:10 +0000
-Received: from VE1PR04MB6479.eurprd04.prod.outlook.com
- ([fe80::a5b5:13f5:f89c:9a30]) by VE1PR04MB6479.eurprd04.prod.outlook.com
- ([fe80::a5b5:13f5:f89c:9a30%7]) with mapi id 15.20.1900.010; Fri, 17 May 2019
- 02:41:10 +0000
-From:   "S.j. Wang" <shengjiu.wang@nxp.com>
-To:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Mark Brown <broonie@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>
-CC:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: RE: linux-next: Fixes tag needs some work in the sound-asoc tree
-Thread-Topic: linux-next: Fixes tag needs some work in the sound-asoc tree
-Thread-Index: AdUMWOUgW4w1G7LAQNer7u1oxDjcrA==
-Date:   Fri, 17 May 2019 02:41:10 +0000
-Message-ID: <VE1PR04MB64798F450C1128243C83FC4BE30B0@VE1PR04MB6479.eurprd04.prod.outlook.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=shengjiu.wang@nxp.com; 
-x-originating-ip: [119.31.174.66]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: a81c9728-c6ce-4829-aa71-08d6da711ecf
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:VE1PR04MB6349;
-x-ms-traffictypediagnostic: VE1PR04MB6349:
-x-microsoft-antispam-prvs: <VE1PR04MB6349B6CC5C21A80FA7C125A2E30B0@VE1PR04MB6349.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:1247;
-x-forefront-prvs: 0040126723
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(39860400002)(346002)(136003)(366004)(376002)(396003)(189003)(199004)(66066001)(316002)(74316002)(5660300002)(9686003)(53936002)(110136005)(54906003)(81156014)(8676002)(7736002)(305945005)(2906002)(6436002)(81166006)(8936002)(52536014)(4744005)(55016002)(229853002)(68736007)(71190400001)(71200400001)(256004)(86362001)(73956011)(66476007)(4326008)(76116006)(66946007)(66446008)(33656002)(476003)(3846002)(486006)(6116002)(64756008)(26005)(7696005)(6506007)(186003)(66556008)(99286004)(25786009)(6246003)(478600001)(102836004)(14454004);DIR:OUT;SFP:1101;SCL:1;SRVR:VE1PR04MB6349;H:VE1PR04MB6479.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: KVTVxQCLOCG+x9vAktdlDJMxNtZwOHdZFmwha5i8UsSDK8Xk3TAYFAClMjyXPf/d7R/jXmpq6cfqyawgLnhWRTkb5LOHiu8UX7gG7bSlxnC0zy0+o0MevClm/XlThXV2FRsWWQSlll+9ccVyo5d0AnX7fz3NkJft/4j+UHEqZZrh8fe2tLULCVW0wtTiSexOQ/ASeqnZ3TaOHF+6yHXerLRcnz10loot7yahwoJ2lT1DVMD+jv/vmtRhgjFFe0uC4WyU9H9H+nq3NaACCQvo0nk3/AFN/BHTtW0pQCPmJPsqF9iJ0OqKQc3u7xili1eLhmF6lqCgJLKtV+0ffCb7TSmjNtk26cqoQCdHDpEb92IlzXyL47mVsbk1SvXXKGKS7DngvLYMRGbZoDUzkgQYwAcHQRtd7IBNpKhvzMJAP1g=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Thu, 16 May 2019 22:44:00 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:45924 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725933AbfEQCoA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 May 2019 22:44:00 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id BE28960DAB; Fri, 17 May 2019 02:43:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1558061038;
+        bh=K09d6YzJWvbZaW19iYpFFDTHSzDhNF1cUlPnNgBKhOo=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=TiM3+9qmx+F+cCs7e55viOMwtufHDuCtCpYNFU/3gShPWNNDtHS1jDpixGpdBUWmk
+         kzxUOJCoi3wB5VoNTPHIzDH490cLCiMiPVf5bqsdfevTVKKgreNJ99stkZ0ZC8bHfM
+         vB657rOH0gKxAIBLMp/6G93CfuJQPp5GeXpjYFNQ=
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        by smtp.codeaurora.org (Postfix) with ESMTP id 62D12608BA;
+        Fri, 17 May 2019 02:43:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1558061037;
+        bh=K09d6YzJWvbZaW19iYpFFDTHSzDhNF1cUlPnNgBKhOo=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=LMHW0afmhkGjjbhlr62+MD/NgYRESdt0KDZV/lyHlNjlRccO8aI5mWkGD4dD0SmbN
+         ze1pbXA7MkWEkOYbdpfM4SFtqnRSslMkYrbZ68TYcg4ctiG9HCantHtYx/kvFTf9rE
+         usHSdeOI5+X7cvKTQC7jB2Mk1oGl0jM7j7W3XErA=
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: a81c9728-c6ce-4829-aa71-08d6da711ecf
-X-MS-Exchange-CrossTenant-originalarrivaltime: 17 May 2019 02:41:10.2019
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VE1PR04MB6349
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Fri, 17 May 2019 08:13:57 +0530
+From:   Balakrishna Godavarthi <bgodavar@codeaurora.org>
+To:     Rocky Liao <rjliao@codeaurora.org>
+Cc:     robh+dt@kernel.org, mark.rutland@arm.com, marcel@holtmann.org,
+        johan.hedberg@gmail.com, thierry.escande@linaro.org,
+        netdev@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-bluetooth@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, c-hbandi@codeaurora.org,
+        Hemantg <hemantg@codeaurora.org>
+Subject: Re: [PATCH v5 1/2] Bluetooth: hci_qca: Load customized NVM based on
+ the device property
+In-Reply-To: <1557919161-11010-1-git-send-email-rjliao@codeaurora.org>
+References: <1557631148-5120-1-git-send-email-rjliao@codeaurora.org>
+ <1557919161-11010-1-git-send-email-rjliao@codeaurora.org>
+Message-ID: <178d2a3454399cfad0e61e72a13ea19a@codeaurora.org>
+X-Sender: bgodavar@codeaurora.org
+User-Agent: Roundcube Webmail/1.2.5
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi=20
+Hi Rocky,
 
-   Do I need to resend the patch?
+On 2019-05-15 16:49, Rocky Liao wrote:
+> QCA BTSOC NVM is a customized firmware file and different vendors may
+> want to have different BTSOC configuration (e.g. Configure SCO over PCM
+> or I2S, Setting Tx power, etc.) via this file. This patch will allow
+> vendors to download different NVM firmware file by reading a device
+> property "firmware-name".
+> 
+> Signed-off-by: Rocky Liao <rjliao@codeaurora.org>
+> ---
+> Changes in v5:
+>   * Made the change applicable to the wcn399x series chip sets
+> ---
+>  drivers/bluetooth/btqca.c   |  8 ++++++--
+>  drivers/bluetooth/btqca.h   |  6 ++++--
+>  drivers/bluetooth/hci_qca.c | 19 ++++++++++++++++++-
+>  3 files changed, 28 insertions(+), 5 deletions(-)
+> 
+> diff --git a/drivers/bluetooth/btqca.c b/drivers/bluetooth/btqca.c
+> index cc12eec..a78b80e 100644
+> --- a/drivers/bluetooth/btqca.c
+> +++ b/drivers/bluetooth/btqca.c
+> @@ -332,7 +332,8 @@ int qca_set_bdaddr_rome(struct hci_dev *hdev,
+> const bdaddr_t *bdaddr)
+>  EXPORT_SYMBOL_GPL(qca_set_bdaddr_rome);
+> 
+>  int qca_uart_setup(struct hci_dev *hdev, uint8_t baudrate,
+> -		   enum qca_btsoc_type soc_type, u32 soc_ver)
+> +		   enum qca_btsoc_type soc_type, u32 soc_ver,
+> +		   const char *firmware_name)
+>  {
+>  	struct rome_config config;
+>  	int err;
+> @@ -365,7 +366,10 @@ int qca_uart_setup(struct hci_dev *hdev, uint8_t 
+> baudrate,
+> 
+>  	/* Download NVM configuration */
+>  	config.type = TLV_TYPE_NVM;
+> -	if (qca_is_wcn399x(soc_type))
+> +	if (firmware_name)
+> +		snprintf(config.fwname, sizeof(config.fwname),
+> +			 "qca/%s", firmware_name);
+> +	else if (qca_is_wcn399x(soc_type))
+>  		snprintf(config.fwname, sizeof(config.fwname),
+>  			 "qca/crnv%02x.bin", rom_ver);
+>  	else
+> diff --git a/drivers/bluetooth/btqca.h b/drivers/bluetooth/btqca.h
+> index 4c4fe2b..8c037bb 100644
+> --- a/drivers/bluetooth/btqca.h
+> +++ b/drivers/bluetooth/btqca.h
+> @@ -140,7 +140,8 @@ enum qca_btsoc_type {
+> 
+>  int qca_set_bdaddr_rome(struct hci_dev *hdev, const bdaddr_t *bdaddr);
+>  int qca_uart_setup(struct hci_dev *hdev, uint8_t baudrate,
+> -		   enum qca_btsoc_type soc_type, u32 soc_ver);
+> +		   enum qca_btsoc_type soc_type, u32 soc_ver,
+> +		   const char *firmware_name);
+>  int qca_read_soc_version(struct hci_dev *hdev, u32 *soc_version);
+>  int qca_set_bdaddr(struct hci_dev *hdev, const bdaddr_t *bdaddr);
+>  static inline bool qca_is_wcn399x(enum qca_btsoc_type soc_type)
+> @@ -155,7 +156,8 @@ static inline int qca_set_bdaddr_rome(struct
+> hci_dev *hdev, const bdaddr_t *bdad
+>  }
+> 
+>  static inline int qca_uart_setup(struct hci_dev *hdev, uint8_t 
+> baudrate,
+> -				 enum qca_btsoc_type soc_type, u32 soc_ver)
+> +				 enum qca_btsoc_type soc_type, u32 soc_ver,
+> +				 const char *firmware_name)
+>  {
+>  	return -EOPNOTSUPP;
+>  }
+> diff --git a/drivers/bluetooth/hci_qca.c b/drivers/bluetooth/hci_qca.c
+> index 57322c4..9590602 100644
+> --- a/drivers/bluetooth/hci_qca.c
+> +++ b/drivers/bluetooth/hci_qca.c
+> @@ -169,6 +169,7 @@ struct qca_serdev {
+>  	struct qca_power *bt_power;
+>  	u32 init_speed;
+>  	u32 oper_speed;
+> +	const char *firmware_name;
+>  };
+> 
+>  static int qca_power_setup(struct hci_uart *hu, bool on);
+> @@ -190,6 +191,17 @@ static enum qca_btsoc_type qca_soc_type(struct
+> hci_uart *hu)
+>  	return soc_type;
+>  }
+> 
+> +static const char *qca_get_firmware_name(struct hci_uart *hu)
+> +{
+> +	if (hu->serdev) {
+> +		struct qca_serdev *qsd = serdev_device_get_drvdata(hu->serdev);
+> +
+> +		return qsd->firmware_name;
+> +	} else {
+> +		return NULL;
+> +	}
+> +}
+> +
+>  static void __serial_clock_on(struct tty_struct *tty)
+>  {
+>  	/* TODO: Some chipset requires to enable UART clock on client
+> @@ -1195,6 +1207,7 @@ static int qca_setup(struct hci_uart *hu)
+>  	struct qca_data *qca = hu->priv;
+>  	unsigned int speed, qca_baudrate = QCA_BAUDRATE_115200;
+>  	enum qca_btsoc_type soc_type = qca_soc_type(hu);
+> +	const char *firmware_name = qca_get_firmware_name(hu);
+>  	int ret;
+>  	int soc_ver = 0;
+> 
+> @@ -1245,7 +1258,8 @@ static int qca_setup(struct hci_uart *hu)
+> 
+>  	bt_dev_info(hdev, "QCA controller version 0x%08x", soc_ver);
+>  	/* Setup patch / NVM configurations */
+> -	ret = qca_uart_setup(hdev, qca_baudrate, soc_type, soc_ver);
+> +	ret = qca_uart_setup(hdev, qca_baudrate, soc_type, soc_ver,
+> +			firmware_name);
+>  	if (!ret) {
+>  		set_bit(QCA_IBS_ENABLED, &qca->flags);
+>  		qca_debugfs_init(hdev);
+> @@ -1477,6 +1491,9 @@ static int qca_serdev_probe(struct serdev_device 
+> *serdev)
+>  			return PTR_ERR(qcadev->bt_en);
+>  		}
+> 
+> +		device_property_read_string(&serdev->dev, "firmware-name",
+> +					 &qcadev->firmware_name);
+> +
+>  		qcadev->susclk = devm_clk_get(&serdev->dev, NULL);
+>  		if (IS_ERR(qcadev->susclk)) {
+>  			dev_err(&serdev->dev, "failed to acquire clk\n");
 
-Best regards
-Wang shengjiu
->=20
-> In commit
->=20
->   b06c58c2a1ee ("ASoC: fsl_asrc: Fix the issue about unsupported rate")
->=20
-> Fixes tag
->=20
->   Fixes: fff6e03c7b65 ("ASoC: fsl_asrc: add support for 8-30kHz
->=20
-> has these problem(s):
->=20
->   - Subject has leading but no trailing parentheses
->   - Subject has leading but no trailing quotes
->=20
-> Please do not split fixes tags over more that one line.
->=20
-> --
-> Cheers,
-> Stephen Rothwell
+Thanks for doing it for wcn399x series too.
+
+Change look fine to me.
+
+Reviewed-by: Balakrishna Godavarthi <bgodavar@codeaurora.org>
+-- 
+Regards
+Balakrishna.
