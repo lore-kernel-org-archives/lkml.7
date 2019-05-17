@@ -2,555 +2,121 @@ Return-Path: <SRS0=M1fl=TR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0190C04AB4
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 19:21:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C646C04E87
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 19:25:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6636B206BF
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 19:21:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2E2142184C
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 19:25:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="S9wgwZAY"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="MRIUWXTd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728735AbfEQTVp (ORCPT
+        id S1728207AbfEQTZ6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 May 2019 15:21:45 -0400
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:44697 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726295AbfEQTVn (ORCPT
+        Fri, 17 May 2019 15:25:58 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:44898 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726295AbfEQTZ5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 May 2019 15:21:43 -0400
-Received: by mail-oi1-f194.google.com with SMTP id z65so5931386oia.11;
-        Fri, 17 May 2019 12:21:42 -0700 (PDT)
+        Fri, 17 May 2019 15:25:57 -0400
+Received: by mail-pl1-f194.google.com with SMTP id c5so3756474pll.11
+        for <linux-kernel@vger.kernel.org>; Fri, 17 May 2019 12:25:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=usvjkESDKCkdcL7KjxK5+weEZxQOT9+0N++Iq5zdUfY=;
-        b=S9wgwZAY+KfYsVSEgX6g5fIWJUzcYaV+VDSx3qecASV/3amWnu1K8ghLVj22td+vpS
-         cIkxdCL+mxzliwVMOtw609kDQPIpxyljZs/P/+QYPLtwVCn3TJKB00b/fO0XKwwo0pZp
-         3HYfjvxrr/uIORshlVrkRUsjVSDvxpbkIEO3IqglPHRUJ0Pl6snTbbDwHGjBiYFg7Y+D
-         gVn2ziDXvSIi8sx9lAMbwtHrTlfUBbPjGvER0x97PaNZgoLgMwGK08Mye9pyGtuwDyhG
-         FFfncqMqxhYhOLFsAwcpdkoqoa4WsZIshjCWNH1BWgMoanGh90ByX/qe6ta3GRFaz+L5
-         2foQ==
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=6m950k0wpGbiOzwRM0Zmf6vFeYvepUmTaDILG4jsOaE=;
+        b=MRIUWXTdcwy3u1sW6nKHueYTSpb0gJ7fF8cYZVlfUuPds94ETgvDpGDxvTp+t1DlXI
+         4AS+i7KmUjpAsXiZRYObHC7OVDJTf5O0aN4echqrlAa/dV2kkHUWDEIBh4xDmFPN2mZI
+         OV8PFvr7njJVJaL9n7a1Kz3M75K/90YxuX/n0=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=usvjkESDKCkdcL7KjxK5+weEZxQOT9+0N++Iq5zdUfY=;
-        b=ikLIot8VHHJETy0BGed9mwpWj20ozQDvBK2OHPr1xaJGp58hXwjsPZi8DtFL9vy7LD
-         wY9G4hvE41CUeAIaL3JMPvZcTHhN0WB829JLIRV2/F+N5aJ57SL9UDLfLWqaLSH07y1V
-         3mad/TLIFm5hriVudkrFuey5Jd4TGCM/3CZvtxB86CNQJCfWESiqewT75xYuHYWBvmMw
-         DdVXXBBpkPgr0tQ7/izLIp+kSe+95F74Mi6/nK4hJAw0CE9sGuCS+um26KDTIdflPD6w
-         uZU6vGFpDQjPL80mI1ylTDUy6bz+wLl/2uvbW410HsRekXXCxeL+FRIiWgJws6IaLivi
-         vL6A==
-X-Gm-Message-State: APjAAAVf4N+gud/dWJ0DfQYInzQuL8Ut28I+WhrfM4q14uAXdv6cRxld
-        p9TH5HnL/UAPbwuUsNhXoI3X/vEtf/kRGmWN0AM=
-X-Google-Smtp-Source: APXvYqyhI6mpfCIEu0hREAEy64CQG4lKET9ZCLVdqqDF8nsijUoo625MEC2XZQW2+mMbkAM/X8eVXLmm8Vl4bRN0Cvc=
-X-Received: by 2002:aca:240d:: with SMTP id n13mr14768947oic.145.1558120901888;
- Fri, 17 May 2019 12:21:41 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=6m950k0wpGbiOzwRM0Zmf6vFeYvepUmTaDILG4jsOaE=;
+        b=HWk38V4geqJV4rHfdqtlBclzlXJozNyGJhms0E9UvEOwuKvZt7pnZQWF4gHDE0Taon
+         IFT7cu0p+l1lX3+pKfqPCP7VPev3fWKIrpFEaWXeTqhw9vEFBstvROBqeAQFP/4KQ5me
+         lZGSxQZ6fYzN+hgKqDdpSRnKw1jhSVqr2EDcHeTjoy35yrGDqfgjq+ncwDkx6A1kXwcB
+         3/ymOX+TrGMQfSqByjtQKiCzCmizaBQkgl/9GVfKTaMUUzoNo6QvS3enbEqVbnucekRO
+         vcUjIcbdUBBpZwjDuw/+NdAReZ18qgOkLi8jAYoMIHUh9UF8o6nZqePws97OxXePn3XM
+         8Wvg==
+X-Gm-Message-State: APjAAAX6KK6OGAnqkmH9bjS5j8iIqEJVDMZJ4D+aZe3OfBksIFx6Kx5o
+        KuEIucUIH2W3GvHpFkGZOF+WWw==
+X-Google-Smtp-Source: APXvYqx1H180sw6ugMRwdB57GS4R9rz+Su7MJuu5k1RoAAIBbeI3A+RJSaekWJWtXdGn9n8Fk40Phg==
+X-Received: by 2002:a17:902:2d03:: with SMTP id o3mr23240811plb.309.1558121156947;
+        Fri, 17 May 2019 12:25:56 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id g22sm11186901pfo.28.2019.05.17.12.25.55
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 17 May 2019 12:25:55 -0700 (PDT)
+Date:   Fri, 17 May 2019 12:25:54 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Dan Williams <dan.j.williams@intel.com>
+Cc:     Jan Kara <jack@suse.cz>, linux-nvdimm <linux-nvdimm@lists.01.org>,
+        stable <stable@vger.kernel.org>, Jeff Moyer <jmoyer@redhat.com>,
+        Ingo Molnar <mingo@redhat.com>, Christoph Hellwig <hch@lst.de>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Matthew Wilcox <willy@infradead.org>,
+        Jeff Smits <jeff.smits@intel.com>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] libnvdimm/pmem: Bypass CONFIG_HARDENED_USERCOPY overhead
+Message-ID: <201905171225.29F9564BA2@keescook>
+References: <155805321833.867447.3864104616303535270.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <20190517084739.GB20550@quack2.suse.cz>
+ <CAPcyv4iZZCgcC657ZOysBP9=1ejp3jfFj=VETVBPrgmfg7xUEw@mail.gmail.com>
+ <201905170855.8E2E1AC616@keescook>
+ <CAPcyv4g9HpMaifC+Qe2RVbgL_qq9vQvjwr-Jw813xhxcviehYQ@mail.gmail.com>
 MIME-Version: 1.0
-References: <20190512082614.9045-1-tiny.windzz@gmail.com> <20190512082614.9045-3-tiny.windzz@gmail.com>
- <20190512133930.t5txssl7mou2gljt@flea>
-In-Reply-To: <20190512133930.t5txssl7mou2gljt@flea>
-From:   Vasily Khoruzhick <anarsoul@gmail.com>
-Date:   Fri, 17 May 2019 12:21:57 -0700
-Message-ID: <CA+E=qVe82xXPBXpgyLgt2ME6EjGMWWMVvD5eU-b3ntQk_okMdg@mail.gmail.com>
-Subject: Re: [PATCH 2/3] thermal: sun50i: add thermal driver for h6
-To:     Maxime Ripard <maxime.ripard@bootlin.com>
-Cc:     Yangtao Li <tiny.windzz@gmail.com>,
-        Mark Rutland <mark.rutland@arm.com>, daniel.lezcano@linaro.org,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>, bjorn.andersson@linaro.org,
-        mchehab+samsung@kernel.org, paulmck@linux.ibm.com,
-        Stefan Wahren <stefan.wahren@i2se.com>,
-        linux-pm@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>,
-        Jagan Teki <jagan@amarulasolutions.com>, andy.gross@linaro.org,
-        rui.zhang@intel.com, devicetree <devicetree@vger.kernel.org>,
-        marc.w.gonzalez@free.fr, edubezval@gmail.com,
-        enric.balletbo@collabora.com, Rob Herring <robh+dt@kernel.org>,
-        Jonathan.Cameron@huawei.com,
-        arm-linux <linux-arm-kernel@lists.infradead.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Olof Johansson <olof@lixom.net>,
-        "David S. Miller" <davem@davemloft.net>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAPcyv4g9HpMaifC+Qe2RVbgL_qq9vQvjwr-Jw813xhxcviehYQ@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, May 12, 2019 at 6:39 AM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
->
-> Hi,
->
-> Thanks a lot for working on this!
->
-> On Sun, May 12, 2019 at 04:26:13AM -0400, Yangtao Li wrote:
-> > This patch adds the support for allwinner thermal sensor, within
-> > allwinner SoC. It will register sensors for thermal framework
-> > and use device tree to bind cooling device.
+On Fri, May 17, 2019 at 10:28:48AM -0700, Dan Williams wrote:
+> On Fri, May 17, 2019 at 8:57 AM Kees Cook <keescook@chromium.org> wrote:
 > >
-> > Based on driver code found here:
-> > https://megous.com/git/linux and https://github.com/Allwinner-Homlet/H6-BSP4.9-linux
->
-> I wouldn't place the URL in the commit log. The commit log stays
-> forever in the linux history. Git repos and branches are going away
-> over time.
->
-> > Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
-> > ---
-> >  MAINTAINERS                      |   7 +
-> >  drivers/thermal/Kconfig          |  14 ++
-> >  drivers/thermal/Makefile         |   1 +
-> >  drivers/thermal/sun50i_thermal.c | 357 +++++++++++++++++++++++++++++++
->
-> The long term goal is to support all the thermal sensors, not just the
-> H6. Since that controller was introduced with the sun8i family, it
-> makes more sense to use that prefix for the driver and the functions.
->
-> >  4 files changed, 379 insertions(+)
-> >  create mode 100644 drivers/thermal/sun50i_thermal.c
+> > On Fri, May 17, 2019 at 08:08:27AM -0700, Dan Williams wrote:
+> > > As far as I can see it's mostly check_heap_object() that is the
+> > > problem, so I'm open to finding a way to just bypass that sub-routine.
+> > > However, as far as I can see none of the other block / filesystem user
+> > > copy implementations submit to the hardened checks, like
+> > > bio_copy_from_iter(), and iov_iter_copy_from_user_atomic() . So,
+> > > either those need to grow additional checks, or the hardened copy
+> > > implementation is targeting single object copy use cases, not
+> > > necessarily block-I/O. Yes, Kees, please advise.
 > >
-> > diff --git a/MAINTAINERS b/MAINTAINERS
-> > index 3c65228e93c5..8da56582e72a 100644
-> > --- a/MAINTAINERS
-> > +++ b/MAINTAINERS
-> > @@ -674,6 +674,13 @@ L:       linux-crypto@vger.kernel.org
-> >  S:   Maintained
-> >  F:   drivers/crypto/sunxi-ss/
-> >
-> > +ALLWINNER THERMAL DRIVER
-> > +M:   Yangtao Li <tiny.windzz@gmail.com>
-> > +L:   linux-pm@vger.kernel.org
-> > +S:   Maintained
-> > +F:   Documentation/devicetree/bindings/thermal/sun50i-thermal.txt
-> > +F:   drivers/thermal/sun50i_thermal.c
-> > +
-> >  ALLWINNER VPU DRIVER
-> >  M:   Maxime Ripard <maxime.ripard@bootlin.com>
-> >  M:   Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-> > diff --git a/drivers/thermal/Kconfig b/drivers/thermal/Kconfig
-> > index 653aa27a25a4..2a8d1c98c6ca 100644
-> > --- a/drivers/thermal/Kconfig
-> > +++ b/drivers/thermal/Kconfig
-> > @@ -252,6 +252,20 @@ config SPEAR_THERMAL
-> >         Enable this to plug the SPEAr thermal sensor driver into the Linux
-> >         thermal framework.
-> >
-> > +config SUN50I_THERMAL
-> > +     tristate "Allwinner sun50i thermal driver"
-> > +     depends on ARCH_SUNXI || COMPILE_TEST
-> > +     depends on HAS_IOMEM
-> > +     depends on NVMEM
-> > +     depends on OF
-> > +     depends on RESET_CONTROLLER
-> > +     help
-> > +       Support for the sun50i thermal sensor driver into the Linux thermal
-> > +       framework.
-> > +
-> > +       To compile this driver as a module, choose M here: the
-> > +       module will be called sun50i-thermal.
-> > +
-> >  config ROCKCHIP_THERMAL
-> >       tristate "Rockchip thermal driver"
-> >       depends on ARCH_ROCKCHIP || COMPILE_TEST
-> > diff --git a/drivers/thermal/Makefile b/drivers/thermal/Makefile
-> > index 486d682be047..a09b30b90003 100644
-> > --- a/drivers/thermal/Makefile
-> > +++ b/drivers/thermal/Makefile
-> > @@ -30,6 +30,7 @@ thermal_sys-$(CONFIG_DEVFREQ_THERMAL) += devfreq_cooling.o
-> >  # platform thermal drivers
-> >  obj-y                                += broadcom/
-> >  obj-$(CONFIG_SPEAR_THERMAL)  += spear_thermal.o
-> > +obj-$(CONFIG_SUN50I_THERMAL) += sun50i_thermal.o
-> >  obj-$(CONFIG_ROCKCHIP_THERMAL)       += rockchip_thermal.o
-> >  obj-$(CONFIG_RCAR_THERMAL)   += rcar_thermal.o
-> >  obj-$(CONFIG_RCAR_GEN3_THERMAL)      += rcar_gen3_thermal.o
-> > diff --git a/drivers/thermal/sun50i_thermal.c b/drivers/thermal/sun50i_thermal.c
-> > new file mode 100644
-> > index 000000000000..3bdb3677b3d4
-> > --- /dev/null
-> > +++ b/drivers/thermal/sun50i_thermal.c
-> > @@ -0,0 +1,357 @@
-> > +// SPDX-License-Identifier: GPL-2.0
-> > +/*
-> > + * Thermal sensor driver for Allwinner SOC
-> > + * Copyright (C) 2019 Yangtao Li
-> > + *
-> > + * Based on the work of Icenowy Zheng <icenowy@aosc.io>
-> > + * Based on the work of Ondrej Jirman <megous@megous.com>
-> > + * Based on the work of Josef Gajdusek <atx@atx.name>
-> > + */
-> > +
-> > +#include <linux/clk.h>
-> > +#include <linux/device.h>
-> > +#include <linux/module.h>
-> > +#include <linux/nvmem-consumer.h>
-> > +#include <linux/of_device.h>
-> > +#include <linux/platform_device.h>
-> > +#include <linux/regmap.h>
-> > +#include <linux/reset.h>
-> > +#include <linux/slab.h>
-> > +#include <linux/thermal.h>
-> > +
-> > +#define MAX_SENSOR_NUM       4
-> > +
-> > +#define FT_TEMP_MASK                         GENMASK(11, 0)
-> > +#define TEMP_CALIB_MASK                              GENMASK(11, 0)
-> > +#define TEMP_TO_REG                          672
-> > +#define CALIBRATE_DEFAULT                    0x800
-> > +
-> > +#define SUN50I_THS_CTRL0                     0x00
-> > +#define SUN50I_H6_THS_ENABLE                 0x04
-> > +#define SUN50I_H6_THS_PC                     0x08
-> > +#define SUN50I_H6_THS_MFC                    0x30
-> > +#define SUN50I_H6_TEMP_CALIB                 0xa0
-> > +#define SUN50I_H6_TEMP_DATA                  0xc0
-> > +
-> > +#define SUN50I_THS_CTRL0_T_ACQ(x)            ((GENMASK(15, 0) & (x)) << 16)
-> > +#define SUN50I_THS_FILTER_EN                 BIT(2)
-> > +#define SUN50I_THS_FILTER_TYPE(x)            (GENMASK(1, 0) & (x))
-> > +#define SUN50I_H6_THS_PC_TEMP_PERIOD(x)              ((GENMASK(19, 0) & (x)) << 12)
-> > +
-> > +/* millidegree celsius */
-> > +#define SUN50I_H6_FT_DEVIATION                       7000
-> > +
-> > +struct tsens_device;
-> > +
-> > +struct tsensor {
-> > +     struct tsens_device             *tmdev;
-> > +     struct thermal_zone_device      *tzd;
-> > +     int                             id;
-> > +};
-> > +
-> > +struct sun50i_thermal_chip {
-> > +     int     sensor_num;
-> > +     int     offset;
-> > +     int     scale;
-> > +     int     ft_deviation;
-> > +     int     temp_calib_base;
-> > +     int     temp_data_base;
-> > +     int     (*enable)(struct tsens_device *tmdev);
-> > +     int     (*disable)(struct tsens_device *tmdev);
-> > +};
->
-> I'm not super fond of having a lot of quirks that are not needed. If
-> we ever need those quirks when adding support for a new SoC, then
-> yeah, we should totally have some, but only when and if it's needed.
->
-> Otherwise, the driver is more complicated for no particular reason.
->
-> > +
-> > +struct tsens_device {
->
-> IIRC the acronym used by allwinner is THS, maybe we can just use that
-> as a prefix?
->
-> > +     const struct sun50i_thermal_chip        *chip;
-> > +     struct device                           *dev;
-> > +     struct regmap                           *regmap;
-> > +     struct reset_control                    *reset;
-> > +     struct clk                              *bus_clk;
-> > +     struct tsensor                          sensor[MAX_SENSOR_NUM];
-> > +};
-> > +
-> > +/* Temp Unit: millidegree Celsius */
-> > +static int tsens_reg2temp(struct tsens_device *tmdev,
-> > +                           int reg)
-> > +{
-> > +     return (reg + tmdev->chip->offset) * tmdev->chip->scale;
-> > +}
-> > +
-> > +static int tsens_get_temp(void *data, int *temp)
-> > +{
-> > +     struct tsensor *s = data;
-> > +     struct tsens_device *tmdev = s->tmdev;
-> > +     int val;
-> > +
-> > +     regmap_read(tmdev->regmap, tmdev->chip->temp_data_base +
-> > +                 0x4 * s->id, &val);
-> > +
-> > +     if (unlikely(val == 0))
-> > +             return -EBUSY;
->
-> I'm not sure why a val equals to 0 would be associated with EBUSY?
+> > The intention is mainly for copies that haven't had explicit bounds
+> > checking already performed on them, yes. Is there something getting
+> > checked out of the slab, or is it literally just the overhead of doing
+> > the "is this slab?" check that you're seeing?
+> 
+> It's literally the overhead of "is this slab?" since it needs to go
+> retrieve the struct page and read that potentially cold cacheline. In
+> the case where that page is on memory media that is higher latency
+> than DRAM we get the ~37% performance loss that Jeff measured.
 
-First few reads of temp data return 0, and in case of H6 (and A64) it
-means max temperature, so kernel does emergency shutdown. I used
--ETIMEDOUT as a workaround in my tree, but it's not appropriate here
-either. Any suggestions are welcome.
+Ah-ha! Okay, I understand now; thanks!
 
-> Also, it's not in a fast path, so you can drop the unlikely. Chances
-> are it's not that unlikely anyway.
+> The path is via the filesystem ->write_iter() file operation. In the
+> DAX case the filesystem traps that path early, before submitting block
+> I/O, and routes it to the dax_iomap_actor() routine. That routine
+> validates that the logical file offset is within bounds of the file,
+> then it does a sector-to-pfn translation which validates that the
+> physical mapping is within bounds of the block device.
+> 
+> It seems dax_iomap_actor() is not a path where we'd be worried about
+> needing hardened user copy checks.
 
-As I said earlier, it's just few samples after start up.
+I would agree: I think the proposed patch makes sense. :)
 
-> > +     *temp = tsens_reg2temp(tmdev, val);
-> > +     if (tmdev->chip->ft_deviation)
-> > +             *temp += tmdev->chip->ft_deviation;
-> > +
-> > +     return 0;
-> > +}
-> > +
-> > +static const struct thermal_zone_of_device_ops tsens_ops = {
-> > +     .get_temp = tsens_get_temp,
-> > +};
-> > +
-> > +static const struct regmap_config config = {
-> > +     .reg_bits = 32,
-> > +     .val_bits = 32,
-> > +     .reg_stride = 4,
-> > +     .fast_io = true,
-> > +};
-> > +
-> > +static int tsens_init(struct tsens_device *tmdev)
-> > +{
-> > +     struct device *dev = tmdev->dev;
-> > +     struct platform_device *pdev = to_platform_device(dev);
-> > +     struct resource *mem;
-> > +     void __iomem *base;
-> > +
-> > +     mem = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> > +     base = devm_ioremap_resource(dev, mem);
-> > +     if (IS_ERR(base))
-> > +             return PTR_ERR(base);
-> > +
-> > +     tmdev->regmap = devm_regmap_init_mmio_clk(dev, "bus",
-> > +                                               base,
-> > +                                               &config);
-> > +     if (IS_ERR(tmdev->regmap))
-> > +             return PTR_ERR(tmdev->regmap);
-> > +
-> > +     tmdev->reset = devm_reset_control_get(dev, "bus");
-> > +     if (IS_ERR(tmdev->reset))
-> > +             return PTR_ERR(tmdev->reset);
-> > +
-> > +     tmdev->bus_clk = devm_clk_get(&pdev->dev, "bus");
-> > +     if (IS_ERR(tmdev->bus_clk))
-> > +             return PTR_ERR(tmdev->bus_clk);
->
-> You don't need to get that clock if regmap has it already.
->
-> > +     return 0;
-> > +}
-> > +
-> > +/*
-> > + * Even if the external calibration data stored in sid is not accessible,
-> > + * the THS hardware can still work, although the data won't be so accurate.
-> > + * The default value of calibration register is 0x800 for every sensor,
-> > + * and the calibration value is usually 0x7xx or 0x8xx, so they won't be
-> > + * away from the default value for a lot.
-> > + *
-> > + * So here we do not return error if the calibartion data is
-> > + * not available, except the probe needs deferring.
-> > + */
-> > +static int tsens_calibrate(struct tsens_device *tmdev)
-> > +{
-> > +     struct nvmem_cell *calcell;
-> > +     struct device *dev = tmdev->dev;
-> > +     u16 *caldata;
-> > +     size_t callen;
-> > +     int ft_temp;
-> > +     int i = 0;
-> > +
-> > +     calcell = devm_nvmem_cell_get(dev, "calib");
-> > +     if (IS_ERR(calcell)) {
-> > +             if (PTR_ERR(calcell) == -EPROBE_DEFER)
-> > +                     return -EPROBE_DEFER;
-> > +
-> > +             goto out;
-> > +     }
-> > +
-> > +     caldata = nvmem_cell_read(calcell, &callen);
-> > +     if (IS_ERR(caldata))
-> > +             goto out;
-> > +
-> > +     if (!caldata[0] || callen < 2 + 2 * tmdev->chip->sensor_num)
-> > +             goto out_free;
->
-> The first part of your or isn't obvious and should have a comment.
->
-> The second part shouldn't return 0 but an error
->
-> > +
-> > +     /*
-> > +      * The calbration data on H6 is stored as temperature-value
-> > +      * pair when being filled at factory test stage.
-> > +      * The unit of stored FT temperature is 0.1 degreee celusis.
-> > +      */
-> > +     ft_temp = caldata[0] & FT_TEMP_MASK;
-> > +
-> > +     for (; i < tmdev->chip->sensor_num; i++) {
->
-> Usually you would initialize i here, and not when declared.
->
-> > +             int reg = (int)caldata[i + 1];
-> > +             int sensor_temp = tsens_reg2temp(tmdev, reg);
-> > +             int delta, cdata, calib_offest;
-> > +
-> > +             /*
-> > +              * To calculate the calibration value:
-> > +              *
-> > +              * X(in Celsius) = Ts - ft_temp
-> > +              * delta = X * 10000 / TEMP_TO_REG
-> > +              * cdata = CALIBRATE_DEFAULT - delta
-> > +              *
-> > +              * cdata: calibration value
-> > +              */
-> > +             delta = (sensor_temp - ft_temp * 100) * 10 / TEMP_TO_REG;
-> > +             cdata = CALIBRATE_DEFAULT - delta;
-> > +             if (cdata & ~TEMP_CALIB_MASK) {
-> > +                     dev_warn(dev, "sensor%d calibration value error", i);
-> > +
-> > +                     continue;
-> > +             }
-> > +
-> > +             calib_offest = tmdev->chip->temp_calib_base + (i / 2) * 0x4;
-> > +
-> > +             if (i % 2) {
-> > +                     int val;
-> > +
-> > +                     regmap_read(tmdev->regmap, calib_offest, &val);
-> > +                     val = (val & TEMP_CALIB_MASK) | (cdata << 16);
-> > +                     regmap_write(tmdev->regmap, calib_offest, val);
-> > +             } else
-> > +                     regmap_write(tmdev->regmap, calib_offest, cdata);
->
-> This should have brackets as well
->
-> > +     }
-> > +
-> > +out_free:
-> > +     kfree(caldata);
-> > +out:
-> > +     return 0;
-> > +}
-> > +
-> > +static int tsens_register(struct tsens_device *tmdev)
-> > +{
-> > +     struct thermal_zone_device *tzd;
-> > +     int i = 0;
-> > +
-> > +     for (; i < tmdev->chip->sensor_num; i++) {
->
-> Ditto
->
-> > +             tmdev->sensor[i].tmdev = tmdev;
-> > +             tmdev->sensor[i].id = i;
-> > +             tmdev->sensor[i].tzd = devm_thermal_zone_of_sensor_register(
-> > +                                     tmdev->dev, i, &tmdev->sensor[i],
-> > +                                     &tsens_ops);
-> > +             if (IS_ERR(tmdev->sensor[i].tzd))
-> > +                     return PTR_ERR(tzd);
-> > +     }
-> > +
-> > +     return 0;
-> > +}
-> > +
-> > +static int tsens_probe(struct platform_device *pdev)
-> > +{
-> > +     struct tsens_device *tmdev;
-> > +     struct device *dev = &pdev->dev;
-> > +     int ret;
-> > +
-> > +     tmdev = devm_kzalloc(dev, sizeof(*tmdev), GFP_KERNEL);
-> > +     if (!tmdev)
-> > +             return -ENOMEM;
-> > +
-> > +     tmdev->dev = dev;
-> > +     tmdev->chip = of_device_get_match_data(&pdev->dev);
-> > +     if (!tmdev->chip)
-> > +             return -EINVAL;
-> > +
-> > +     ret = tsens_init(tmdev);
-> > +     if (ret)
-> > +             return ret;
-> > +
-> > +     ret = tsens_register(tmdev);
-> > +     if (ret)
-> > +             return ret;
-> > +
-> > +     ret = tmdev->chip->enable(tmdev);
-> > +     if (ret)
-> > +             return ret;
-> >
-> > +     platform_set_drvdata(pdev, tmdev);
->
-> Your registration should be the very last thing you do. Otherwise, you
-> have a small window where the get_temp callback can be called, but the
-> driver will not be functional yet.
->
-> > +     return ret;
-> > +}
-> > +
-> > +static int tsens_remove(struct platform_device *pdev)
-> > +{
-> > +     struct tsens_device *tmdev = platform_get_drvdata(pdev);
-> > +
-> > +     tmdev->chip->disable(tmdev);
-> > +
-> > +     return 0;
-> > +}
-> > +
-> > +static int sun50i_thermal_enable(struct tsens_device *tmdev)
-> > +{
-> > +     int ret, val;
-> > +
-> > +     ret = reset_control_deassert(tmdev->reset);
-> > +     if (ret)
-> > +             return ret;
-> > +
-> > +     ret = clk_prepare_enable(tmdev->bus_clk);
-> > +     if (ret)
-> > +             goto assert_reset;
->
-> This is done by regmap as well
->
-> > +     ret = tsens_calibrate(tmdev);
-> > +     if (ret)
-> > +             return ret;
-> > +
-> > +     /*
-> > +      * clkin = 24MHz
-> > +      * T acquire = clkin / (SUN50I_THS_CTRL0_T_ACQ + 1)
-> > +      *           = 20us
-> > +      */
-> > +     regmap_write(tmdev->regmap, SUN50I_THS_CTRL0,
-> > +                  SUN50I_THS_CTRL0_T_ACQ(479));
-> > +     /* average over 4 samples */
-> > +     regmap_write(tmdev->regmap, SUN50I_H6_THS_MFC,
-> > +                  SUN50I_THS_FILTER_EN |
-> > +                  SUN50I_THS_FILTER_TYPE(1));
-> > +     /* period = (SUN50I_H6_THS_PC_TEMP_PERIOD + 1) * 4096 / clkin; ~10ms */
-> > +     regmap_write(tmdev->regmap, SUN50I_H6_THS_PC,
-> > +                  SUN50I_H6_THS_PC_TEMP_PERIOD(58));
-> > +     /* enable sensor */
-> > +     val = GENMASK(tmdev->chip->sensor_num - 1, 0);
-> > +     regmap_write(tmdev->regmap, SUN50I_H6_THS_ENABLE, val);
-> > +
-> > +     return 0;
-> > +
-> > +assert_reset:
-> > +     reset_control_assert(tmdev->reset);
-> > +
-> > +     return ret;
->
-> Can't we do that with runtime_pm?
->
-> Thanks!
-> Maxime
->
-> --
-> Maxime Ripard, Bootlin
-> Embedded Linux and Kernel engineering
-> https://bootlin.com
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+-- 
+Kees Cook
