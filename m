@@ -2,149 +2,179 @@ Return-Path: <SRS0=M1fl=TR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 540E7C04AB4
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 16:32:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38837C04AB4
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 16:33:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1DC8920848
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 16:32:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F0FBA2168B
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 16:33:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="d3D+QFu6";
-	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="YoSB3Czk"
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="kZIxusP5";
+	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="AIQLFJNk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726464AbfEQQcN (ORCPT
+        id S1726687AbfEQQdG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 May 2019 12:32:13 -0400
-Received: from esa1.hgst.iphmx.com ([68.232.141.245]:39364 "EHLO
-        esa1.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725932AbfEQQcM (ORCPT
+        Fri, 17 May 2019 12:33:06 -0400
+Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:43052 "EHLO
+        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725932AbfEQQdG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 May 2019 12:32:12 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1558110732; x=1589646732;
-  h=from:to:cc:subject:date:message-id:references:
-   content-transfer-encoding:mime-version;
-  bh=qvM06v5LK2earYmAgDdwZOgIJmtAceqfZkuhQxMz6Cw=;
-  b=d3D+QFu6DMSB8o4ry+fktLiSR9eresgq0BtXMnO5n1sPkEhbc0kp59VK
-   dZFtn2MlLRPhgAXucAl9LEZCreoAfJynBu5BTawu5cRLwcqtBIAq7Uat6
-   BFum6FePgMwqTzuQtLhpz75vfLuzL9Tqvc5qDEcAzTYBbVeLDYlHr0gTx
-   mypzosur4VPZjiDiIYfbR2t+L4Dkuw5W6xU2k6lFh6zKM1gACoext9CmJ
-   ae0yU8qg7Fh5U2d9LpECDZcGxZ60FLF5LuaenG+nvs79x5fad7vqcT8fn
-   n4fWRU7kk82keXhvaagSrdMwsIG1YW/+rem8m+Z4/+8Rf3Hy05f5XRqAQ
-   A==;
-X-IronPort-AV: E=Sophos;i="5.60,480,1549900800"; 
-   d="scan'208";a="214659982"
-Received: from mail-bn3nam01lp2056.outbound.protection.outlook.com (HELO NAM01-BN3-obe.outbound.protection.outlook.com) ([104.47.33.56])
-  by ob1.hgst.iphmx.com with ESMTP; 18 May 2019 00:32:06 +0800
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
+        Fri, 17 May 2019 12:33:06 -0400
+Received: from pps.filterd (m0001255.ppops.net [127.0.0.1])
+        by mx0b-00082601.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4HGROD8010662;
+        Fri, 17 May 2019 09:32:50 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
+ : date : message-id : references : in-reply-to : content-type : content-id
+ : content-transfer-encoding : mime-version; s=facebook;
+ bh=NJ3hso/WmOgSS+6n1y+qSQvU0a0Ih98TNQn/HvLliMM=;
+ b=kZIxusP5Z1aZReXpNgEOfnqjFmhl+nj+1MqOUMRN5XoY5rnpwrdah+zQxgSjFM7Ydxoj
+ Kj7+KREBmEKuOuJtuiPjxQOfhxdeIB96xvmNIeGw+VOUwiTpd3XD8mpVTts3dR7uXHFG
+ 2llkY+Z6USiFN8VPHxev2qaw7q4xjuCUls4= 
+Received: from maileast.thefacebook.com ([163.114.130.16])
+        by mx0b-00082601.pphosted.com with ESMTP id 2sht77987t-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
+        Fri, 17 May 2019 09:32:50 -0700
+Received: from ash-exopmbx101.TheFacebook.com (2620:10d:c0a8:82::b) by
+ ash-exhub103.TheFacebook.com (2620:10d:c0a8:82::c) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Fri, 17 May 2019 09:32:49 -0700
+Received: from ash-exhub101.TheFacebook.com (2620:10d:c0a8:82::e) by
+ ash-exopmbx101.TheFacebook.com (2620:10d:c0a8:82::b) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Fri, 17 May 2019 09:32:49 -0700
+Received: from NAM02-CY1-obe.outbound.protection.outlook.com (100.104.31.183)
+ by o365-in.thefacebook.com (100.104.35.173) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5
+ via Frontend Transport; Fri, 17 May 2019 09:32:49 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
+ s=selector1-fb-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=8LRwACc9N4amVXgP1c6tadnlQKYFBobfTc5Y5y4YkQE=;
- b=YoSB3Czkud8aJNPxHvAQaHf4f99iV1w4AxEj2kIMsIN29G4BFaIlkOm9UZ0ny0IH0smzFlY+uP4xUUuXQI88pl2gP0wG/PQR88RYexvgU/y7D+ZBeO2yfRZpgqNGyiVt147QI3ShUiwXQ+U2y8uBkzrb92nA/26U4CHauGHXbXI=
-Received: from SN6PR04MB4527.namprd04.prod.outlook.com (52.135.120.25) by
- SN6PR04MB5312.namprd04.prod.outlook.com (20.177.255.22) with Microsoft SMTP
+ bh=NJ3hso/WmOgSS+6n1y+qSQvU0a0Ih98TNQn/HvLliMM=;
+ b=AIQLFJNkLR+b+lZ2DyFd9TPcNODpEnYJvyVCvo/vV78NJ/TenyKFPwrc4hlHoHtwAqckM09S6QI8jV5Oi5aWIO2xwUehabmNiTdFnhSElcF963wBSPW3kYskJzOk0L2gBrMK0MRUi+oNsQ4aqmCqI4oCn0jVFcMhKAqAFtTx1Dk=
+Received: from MWHPR15MB1165.namprd15.prod.outlook.com (10.175.2.19) by
+ MWHPR15MB1615.namprd15.prod.outlook.com (10.175.135.137) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1900.17; Fri, 17 May 2019 16:32:02 +0000
-Received: from SN6PR04MB4527.namprd04.prod.outlook.com
- ([fe80::b163:e740:af6e:2602]) by SN6PR04MB4527.namprd04.prod.outlook.com
- ([fe80::b163:e740:af6e:2602%6]) with mapi id 15.20.1900.010; Fri, 17 May 2019
- 16:32:02 +0000
-From:   Chaitanya Kulkarni <Chaitanya.Kulkarni@wdc.com>
-To:     xiaolinkui <xiaolinkui@kylinos.cn>, "hch@lst.de" <hch@lst.de>,
-        "sagi@grimberg.me" <sagi@grimberg.me>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-nvme@lists.infradead.org" <linux-nvme@lists.infradead.org>
-Subject: Re: [PATCH] nvme: target: use struct_size() in kmalloc()
-Thread-Topic: [PATCH] nvme: target: use struct_size() in kmalloc()
-Thread-Index: AQHVDH8oTBY/BlMzjUaR4gerzBgDxQ==
-Date:   Fri, 17 May 2019 16:32:02 +0000
-Message-ID: <SN6PR04MB4527D340D48215FE19335A99860B0@SN6PR04MB4527.namprd04.prod.outlook.com>
-References: <1558076615-8576-1-git-send-email-xiaolinkui@kylinos.cn>
+ 15.20.1900.18; Fri, 17 May 2019 16:32:47 +0000
+Received: from MWHPR15MB1165.namprd15.prod.outlook.com
+ ([fe80::85b5:614:bc49:8a15]) by MWHPR15MB1165.namprd15.prod.outlook.com
+ ([fe80::85b5:614:bc49:8a15%11]) with mapi id 15.20.1900.010; Fri, 17 May 2019
+ 16:32:47 +0000
+From:   Song Liu <songliubraving@fb.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+CC:     "kasong@redhat.com" <kasong@redhat.com>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Kernel Team <Kernel-team@fb.com>,
+        "Josh Poimboeuf" <jpoimboe@redhat.com>
+Subject: Re: Getting empty callchain from perf_callchain_kernel()
+Thread-Topic: Getting empty callchain from perf_callchain_kernel()
+Thread-Index: AQHVDEJXbyjc1nknl06FlgTGlvLrzKZu8J8AgAAG+ICAAIw1AA==
+Date:   Fri, 17 May 2019 16:32:47 +0000
+Message-ID: <8EF9E8F7-0B89-43E2-B767-AECD86E627B5@fb.com>
+References: <3CD3EE63-0CD2-404A-A403-E11DCF2DF8D9@fb.com>
+ <20190517074600.GJ2623@hirez.programming.kicks-ass.net>
+ <20190517081057.GQ2650@hirez.programming.kicks-ass.net>
+In-Reply-To: <20190517081057.GQ2650@hirez.programming.kicks-ass.net>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Chaitanya.Kulkarni@wdc.com; 
-x-originating-ip: [2605:e000:3e45:f500:f9a6:10ea:e679:e2ee]
+x-mailer: Apple Mail (2.3445.104.8)
+x-originating-ip: [2620:10d:c090:200::2:7648]
 x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 4796274b-408c-4ef6-5450-08d6dae5312e
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:SN6PR04MB5312;
-x-ms-traffictypediagnostic: SN6PR04MB5312:
-wdcipoutbound: EOP-TRUE
-x-microsoft-antispam-prvs: <SN6PR04MB5312C1606B7338188D04BE4C860B0@SN6PR04MB5312.namprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:4714;
+x-ms-office365-filtering-correlation-id: 6cd2a4e7-9385-40a5-27d5-08d6dae54c05
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(2017052603328)(7193020);SRVR:MWHPR15MB1615;
+x-ms-traffictypediagnostic: MWHPR15MB1615:
+x-microsoft-antispam-prvs: <MWHPR15MB1615B7229ADAC8DACF0EE797B30B0@MWHPR15MB1615.namprd15.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:1468;
 x-forefront-prvs: 0040126723
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(136003)(346002)(396003)(376002)(39860400002)(366004)(189003)(199004)(68736007)(476003)(4326008)(46003)(55016002)(14454004)(53936002)(9686003)(486006)(54906003)(446003)(229853002)(25786009)(6436002)(102836004)(6246003)(66946007)(66476007)(2501003)(66556008)(64756008)(66446008)(2906002)(76116006)(91956017)(73956011)(81156014)(71190400001)(7736002)(71200400001)(478600001)(72206003)(256004)(110136005)(7696005)(186003)(86362001)(76176011)(316002)(5660300002)(81166006)(33656002)(2201001)(52536014)(6506007)(8936002)(6116002)(53546011)(74316002)(8676002)(305945005)(99286004);DIR:OUT;SFP:1102;SCL:1;SRVR:SN6PR04MB5312;H:SN6PR04MB4527.namprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(376002)(346002)(136003)(366004)(39860400002)(396003)(189003)(199004)(81166006)(229853002)(6246003)(81156014)(6506007)(8676002)(46003)(6436002)(6512007)(33656002)(5660300002)(6486002)(8936002)(86362001)(54906003)(14454004)(36756003)(14444005)(256004)(2906002)(82746002)(4326008)(186003)(57306001)(53546011)(68736007)(50226002)(316002)(66556008)(7736002)(64756008)(66946007)(53936002)(66446008)(486006)(73956011)(66476007)(305945005)(476003)(76116006)(2616005)(25786009)(478600001)(11346002)(446003)(99286004)(6916009)(83716004)(71190400001)(102836004)(71200400001)(6116002)(76176011);DIR:OUT;SFP:1102;SCL:1;SRVR:MWHPR15MB1615;H:MWHPR15MB1165.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: fb.com does not designate
+ permitted sender hosts)
 x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: i4zpuG7JX247DZ+MTcifqpzAXSGmhIGLB+CsJ4Qqr88okPesKhUaIElQlkuZTmSrFLHOJBlWCBzh+N5tSq3dhPKFkFQY6EuzMnsOVZtoIMNbJph8cn7TeQSwKHPLvxS1v9Jp5QEDuMF7T43oEenaL53BFIJl29tZ+I0qo3iLdNe1U69zLFES7AXmx5O2Iyf+dv90t38NXtv8RsWLfnjVn2W5z2EtQGJzcMhkH4k3C4fNMCoxdVVcMYvJp9QGzBye1DaIAQ8pt1AVsQF2XcPt0afHQlDJR83SOYTwjIh45sXBGRXzVyQkp86Zosa7fyiWkc77qunTDn6v/7pcgQzlS0Vnd+MCv1eYRWJbKPqS4mtDqGky2VWbYY5tetlkRoQtsh/0QeJeZjZqXxG74gzzyssNGUW6kcjH6oeZDu7BAa0=
+x-microsoft-antispam-message-info: +F9Gbpmv/5yrFSawFZqyjwJiZIliDbpBfZO9BSwmQXRV5K8KUyhuAfCzpYrvqcwZQDNsqyaa60b4S7PGginvzIcM9NaKpbmQhiwo6k/Sp1wk4xEeEkbkt8ys1fbKftP8M+zENEq6yJCCoIT5vDCiBseWaH8SQzyOwlRYzr7+eBdtDsYw8qfW/WUyPkPvo773Up7Jjrd0svHPgigWfG2DkrwZWlppnyWLtkOz/OfURm0eWFY7un/vn0AKtKvTT+NZUejdpCXP40ge+QD3RzsbRQC1MXllHfKG1JhbD1vwZ9/Zmkx016b+hMjIitqVJ6A9f+W0ZKWQ11QAC0lrNr8RCfv8bii7aKaY8zrLWdtYmpx1M0OF1mLmp/DWsWNQFa1WEyA4CYBRBe9rdfhpF7bM/rY1XThbs4lxu0qNqMNy/HQ=
 Content-Type: text/plain; charset="us-ascii"
+Content-ID: <D3DCF5FA2E41BC4390A1C0C59C671E04@namprd15.prod.outlook.com>
 Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-X-OriginatorOrg: wdc.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4796274b-408c-4ef6-5450-08d6dae5312e
-X-MS-Exchange-CrossTenant-originalarrivaltime: 17 May 2019 16:32:02.5530
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6cd2a4e7-9385-40a5-27d5-08d6dae54c05
+X-MS-Exchange-CrossTenant-originalarrivaltime: 17 May 2019 16:32:47.5644
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
+X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR04MB5312
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR15MB1615
+X-OriginatorOrg: fb.com
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-17_09:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1905170099
+X-FB-Internal: deliver
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If maintainers are okay with this then,=0A=
-=0A=
-Reviewed-by: Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>=0A=
-=0A=
-On 5/17/19 12:07 AM, xiaolinkui wrote:=0A=
-> Use struct_size() to keep code sample.=0A=
-> One of the more common cases of allocation size calculations is finding=
-=0A=
-> the size of a structure that has a zero-sized array at the end, along=0A=
-> with memory for some number of elements for that array. For example:=0A=
->=0A=
-> struct foo {=0A=
->     int stuff;=0A=
->     struct boo entry[];=0A=
-> };=0A=
->=0A=
-> instance =3D kmalloc(sizeof(struct foo) + count * sizeof(struct boo), GFP=
-_KERNEL);=0A=
->=0A=
-> Instead of leaving these open-coded and prone to type mistakes, we can=0A=
-> now use the new struct_size() helper:=0A=
->=0A=
-> instance =3D kmalloc(struct_size(instance, entry, count), GFP_KERNEL);=0A=
->=0A=
-> Signed-off-by: xiaolinkui <xiaolinkui@kylinos.cn>=0A=
-> ---=0A=
->  drivers/nvme/target/admin-cmd.c | 4 ++--=0A=
->  1 file changed, 2 insertions(+), 2 deletions(-)=0A=
->=0A=
-> diff --git a/drivers/nvme/target/admin-cmd.c b/drivers/nvme/target/admin-=
-cmd.c=0A=
-> index 9f72d51..6f9f830 100644=0A=
-> --- a/drivers/nvme/target/admin-cmd.c=0A=
-> +++ b/drivers/nvme/target/admin-cmd.c=0A=
-> @@ -248,8 +248,8 @@ static void nvmet_execute_get_log_page_ana(struct nvm=
-et_req *req)=0A=
->  	u16 status;=0A=
->  =0A=
->  	status =3D NVME_SC_INTERNAL;=0A=
-> -	desc =3D kmalloc(sizeof(struct nvme_ana_group_desc) +=0A=
-> -			NVMET_MAX_NAMESPACES * sizeof(__le32), GFP_KERNEL);=0A=
-> +	desc =3D kmalloc(struct_size(desc, nsids, NVMET_MAX_NAMESPACES),=0A=
-> +			GFP_KERNEL);=0A=
->  	if (!desc)=0A=
->  		goto out;=0A=
->  =0A=
-=0A=
-=0A=
+
+
+> On May 17, 2019, at 1:10 AM, Peter Zijlstra <peterz@infradead.org> wrote:
+>=20
+> On Fri, May 17, 2019 at 09:46:00AM +0200, Peter Zijlstra wrote:
+>> On Thu, May 16, 2019 at 11:51:55PM +0000, Song Liu wrote:
+>>> Hi,=20
+>>>=20
+>>> We found a failure with selftests/bpf/tests_prog in test_stacktrace_map=
+ (on bpf/master
+>>> branch).=20
+>>>=20
+>>> After digging into the code, we found that perf_callchain_kernel() is g=
+iving empty
+>>> callchain for tracepoint sched/sched_switch. And it seems related to co=
+mmit
+>>>=20
+>>> d15d356887e770c5f2dcf963b52c7cb510c9e42d
+>>> ("perf/x86: Make perf callchains work without CONFIG_FRAME_POINTER")
+>>>=20
+>>> Before this commit, perf_callchain_kernel() returns callchain with regs=
+->ip. With
+>>> this commit, regs->ip is not sent for !perf_hw_regs(regs) case.=20
+>>=20
+>> So while I think the below is indeed right; we should store regs->ip
+>> regardless of the unwind path chosen, I still think there's something
+>> fishy if this results in just the 1 entry.
+>>=20
+>> The sched/sched_switch event really should have a non-trivial stack.
+>>=20
+>> Let me see if I can reproduce with just perf.
+>=20
+> $ perf record -g -e "sched:sched_switch" -- make clean
+> $ perf report -D
+>=20
+> 12 904071759467 0x1790 [0xd0]: PERF_RECORD_SAMPLE(IP, 0x1): 7236/7236: 0x=
+ffffffff81c29562 period: 1 addr: 0
+> ... FP chain: nr:10
+> .....  0: ffffffffffffff80
+> .....  1: ffffffff81c29562
+> .....  2: ffffffff81c29933
+> .....  3: ffffffff8111f688
+> .....  4: ffffffff81120b9d
+> .....  5: ffffffff81120ce5
+> .....  6: ffffffff8100254a
+> .....  7: ffffffff81e0007d
+> .....  8: fffffffffffffe00
+> .....  9: 00007f9b6cd9682a
+> ... thread: sh:7236
+> ...... dso: /lib/modules/5.1.0-12177-g41bbb9129767/build/vmlinux
+>=20
+
+Hmm... I also get this FP chain even with CONFIG_UNWINDER_ORC=3Dy.=20
+I guess it is actually from ORC?=20
+
+Thanks,
+Song=20
+
