@@ -8,55 +8,55 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2069C04AB4
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 18:47:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CCE8FC04AB4
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 18:47:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 70D7721734
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 18:47:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9DEE22173C
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 18:47:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZZRwoRSb"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IzX0fpNh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729454AbfEQSrh (ORCPT
+        id S1727537AbfEQSrL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 May 2019 14:47:37 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:38781 "EHLO
+        Fri, 17 May 2019 14:47:11 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:44231 "EHLO
         mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726464AbfEQSrM (ORCPT
+        with ESMTP id S1726464AbfEQSrJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 May 2019 14:47:12 -0400
-Received: by mail-wr1-f65.google.com with SMTP id d18so8166317wrs.5;
-        Fri, 17 May 2019 11:47:11 -0700 (PDT)
+        Fri, 17 May 2019 14:47:09 -0400
+Received: by mail-wr1-f65.google.com with SMTP id c5so8123940wrs.11;
+        Fri, 17 May 2019 11:47:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=uWjp5N7/2gycMhkjj4F7Je3PI1NUTqU00O1ySy3vSNY=;
-        b=ZZRwoRSb1PL/97jGRmzSD44FfFvnZd2iIqEeVhOF3VrLEp9vzAWHatj2PBKWjdz7r1
-         yg52bRI0/h8oCYPFhaTaKKThP9PlSn9gRGQt2rUvGnvG9eLmfL73zySDWEsuKGAVa2nK
-         9pkwIYCCYzqBP6tfJ9kbGX0jZep2rcV5YEVqufDdd2NbwkkhEW7b8XDabGkEyuaudPT3
-         Bf6ynCNlrdw878zv8/FHYA9Mcbvq9E6roUjTWsYVlYLrbwFXXPuEFJYV8f+uG6Ljrlhf
-         YYRGkUj5ohV2j0C1nSbkpjJke7iX6ZDj6uEO0eZZuyMu/SZEIGvjAfkl5WObHWgLGYCv
-         LIzw==
+        bh=4QRWDFkVz3xUnUzR3+DHbkRCIRl8pbjmxCa/vhR9hvo=;
+        b=IzX0fpNh7WWzngetTRMHcGGlBKa4/Y10ND0MNxVowv35ASa6AyO+qLIiBx3oorQdoE
+         gIMiRRTn12Vsg2PSpAtRil1uUy8xkxChgYigzhBilxkZX68upC2GKDNyLfBUb7Z2bHUQ
+         l3UW0QKhlFhotuDCigGjT0urbWePYMe8D/Pqzy4lHHDPtWu2SCcAKN5A52dsJNj3f/9u
+         wkbw9NIvOfWOihlEVc51Vd3gqhyPPlvGT64PX4ziAJrrUtqwzN1IUvq1Nm5N1J3wTFtQ
+         EAhiuVgi6wE0rGJSFc9r5guK7YM9/7d0ISQhpYx5+RHA1MbYhrZU48H4aCLkI/T/pxBx
+         RsxA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=uWjp5N7/2gycMhkjj4F7Je3PI1NUTqU00O1ySy3vSNY=;
-        b=GFcieenmwvxnLrp5x8LSwg4nsSoaiZF1RHADzGRALSmpkEcFKIe8MknT0n97ar3UVf
-         Yx/cN0jp4QgujxQjm7t6JPz/WR5t3M91NnGigsSFrGzXTdgupVa80w3UHu0USWLOsG0f
-         Y9dmQH16ssUK48MlbeRWsv9majPjl5y5O6l1xQZGFfnrqI83YDn87N8gpBuIxeuPT9eu
-         u1YpfSJrOFhfvzrgQ1BriIj8H+Sy4QEXVRmLvi9PHjABIjakwXgh/lYrnls/kPwAZDO0
-         usGdDuE3Ffn9F79ImdtGBnRDXFK5QngyBD7sVNAoQnX9VgA5iHd54jPSvr0cbmDSszKm
-         qPoA==
-X-Gm-Message-State: APjAAAVd0aTFHmIxwPALuWQ8O/4p60zhb2/EQgfdUeCxZZbE7SMzVsJ3
-        MUtXBtqxL8QGB4BJpDsj7OE=
-X-Google-Smtp-Source: APXvYqwBJ1PZ+mVOlD7wgBOxP5lzlCYxaqUa2bsvWXXFw9/yU+63xVcCkN1xYNthpr6aPrD+TDolfg==
-X-Received: by 2002:adf:de82:: with SMTP id w2mr24718302wrl.53.1558118830993;
-        Fri, 17 May 2019 11:47:10 -0700 (PDT)
+        bh=4QRWDFkVz3xUnUzR3+DHbkRCIRl8pbjmxCa/vhR9hvo=;
+        b=Rvz6DzQVr2J8tsU5UkMkfv7oR+aJkpbxNzNafZxRZ18Gz5CkN0As3rnBGAqwoBl5Ld
+         sNpYbSOzmqmzBwMzLloncCzTB2U5ioC9hc5u9e710IA7syV9eSG2ra6Nys73t/UeEDyz
+         VyEvlyifZwkQER8PQvRZDuoJRPZ6eLNOKO5qHNRbyIl0gRANZn1XfwHnFKiUA2Rnut/y
+         3Fb5yQycWOJDbriFkcMVhpUTjGi7GsSmFMdIAx7nRaawczOpxJLthtf5/NkHJxH3KU/L
+         aFPEeI6LEF18HIhrzdaaeuGDep1LlSCaoY3ablX5fTAkcIe6sUE5t6m8y9K+FVu8bn7O
+         VWNA==
+X-Gm-Message-State: APjAAAWcJw+A/x9egjJsURByrvyj972fXKzFER0cX5qlkS3HYn8mzxsd
+        HppiPBXm5SPFn7ZMT2R1IpBDqQXtBMhepQ==
+X-Google-Smtp-Source: APXvYqzQ3Rol+3txTzhDDbnTRdYC6TTbSHhpgNCNWdrgxxOScCII+60hVNsOpiwPvn2YYuVJGvfLtA==
+X-Received: by 2002:a5d:658d:: with SMTP id q13mr19937938wru.61.1558118827335;
+        Fri, 17 May 2019 11:47:07 -0700 (PDT)
 Received: from localhost.localdomain ([2a01:e0a:1f1:d0f0::4e2b:d7ca])
-        by smtp.gmail.com with ESMTPSA id v20sm5801112wmj.10.2019.05.17.11.47.09
+        by smtp.gmail.com with ESMTPSA id v20sm5801112wmj.10.2019.05.17.11.47.06
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 17 May 2019 11:47:10 -0700 (PDT)
+        Fri, 17 May 2019 11:47:06 -0700 (PDT)
 From:   =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
 To:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
         Rob Herring <robh+dt@kernel.org>,
@@ -73,9 +73,9 @@ Cc:     dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         iommu@lists.linux-foundation.org,
         =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
-Subject: [PATCH v5 4/6] dt-bindings: gpu: mali-midgard: Add H6 mali gpu compatible
-Date:   Fri, 17 May 2019 20:46:57 +0200
-Message-Id: <20190517184659.18828-5-peron.clem@gmail.com>
+Subject: [PATCH v5 1/6] drm: panfrost: add optional bus_clock
+Date:   Fri, 17 May 2019 20:46:54 +0200
+Message-Id: <20190517184659.18828-2-peron.clem@gmail.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190517184659.18828-1-peron.clem@gmail.com>
 References: <20190517184659.18828-1-peron.clem@gmail.com>
@@ -87,44 +87,76 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This add the H6 mali compatible in the dt-bindings to later support
-specific implementation.
+Allwinner H6 has an ARM Mali-T720 MP2 which required a bus_clock.
+
+Add an optional bus_clock at the init of the panfrost driver.
 
 Signed-off-by: Clément Péron <peron.clem@gmail.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
 ---
- .../devicetree/bindings/gpu/arm,mali-midgard.txt         | 9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
+ drivers/gpu/drm/panfrost/panfrost_device.c | 25 +++++++++++++++++++++-
+ drivers/gpu/drm/panfrost/panfrost_device.h |  1 +
+ 2 files changed, 25 insertions(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/gpu/arm,mali-midgard.txt b/Documentation/devicetree/bindings/gpu/arm,mali-midgard.txt
-index 2e8bbce35695..4bf17e1cf555 100644
---- a/Documentation/devicetree/bindings/gpu/arm,mali-midgard.txt
-+++ b/Documentation/devicetree/bindings/gpu/arm,mali-midgard.txt
-@@ -15,6 +15,7 @@ Required properties:
-     + "arm,mali-t860"
-     + "arm,mali-t880"
-   * which must be preceded by one of the following vendor specifics:
-+    + "allwinner,sun50i-h6-mali"
-     + "amlogic,meson-gxm-mali"
-     + "rockchip,rk3288-mali"
-     + "rockchip,rk3399-mali"
-@@ -49,9 +50,15 @@ Vendor-specific bindings
- ------------------------
+diff --git a/drivers/gpu/drm/panfrost/panfrost_device.c b/drivers/gpu/drm/panfrost/panfrost_device.c
+index 3b2bced1b015..8da6e612d384 100644
+--- a/drivers/gpu/drm/panfrost/panfrost_device.c
++++ b/drivers/gpu/drm/panfrost/panfrost_device.c
+@@ -44,7 +44,8 @@ static int panfrost_clk_init(struct panfrost_device *pfdev)
  
- The Mali GPU is integrated very differently from one SoC to
--another. In order to accomodate those differences, you have the option
-+another. In order to accommodate those differences, you have the option
- to specify one more vendor-specific compatible, among:
+ 	pfdev->clock = devm_clk_get(pfdev->dev, NULL);
+ 	if (IS_ERR(pfdev->clock)) {
+-		dev_err(pfdev->dev, "get clock failed %ld\n", PTR_ERR(pfdev->clock));
++		dev_err(pfdev->dev, "get clock failed %ld\n",
++			PTR_ERR(pfdev->clock));
+ 		return PTR_ERR(pfdev->clock);
+ 	}
  
-+- "allwinner,sun50i-h6-mali"
-+  Required properties:
-+  - clocks : phandles to core and bus clocks
-+  - clock-names : must contain "core" and "bus"
-+  - resets: phandle to GPU reset line
+@@ -55,11 +56,33 @@ static int panfrost_clk_init(struct panfrost_device *pfdev)
+ 	if (err)
+ 		return err;
+ 
++	pfdev->bus_clock = devm_clk_get_optional(pfdev->dev, "bus");
++	if (IS_ERR(pfdev->bus_clock)) {
++		dev_err(pfdev->dev, "get bus_clock failed %ld\n",
++			PTR_ERR(pfdev->bus_clock));
++		return PTR_ERR(pfdev->bus_clock);
++	}
 +
- - "amlogic,meson-gxm-mali"
-   Required properties:
-   - resets : Should contain phandles of :
++	if (pfdev->bus_clock) {
++		rate = clk_get_rate(pfdev->bus_clock);
++		dev_info(pfdev->dev, "bus_clock rate = %lu\n", rate);
++
++		err = clk_prepare_enable(pfdev->bus_clock);
++		if (err)
++			goto disable_clock;
++	}
++
+ 	return 0;
++
++disable_clock:
++	clk_disable_unprepare(pfdev->clock);
++
++	return err;
+ }
+ 
+ static void panfrost_clk_fini(struct panfrost_device *pfdev)
+ {
++	clk_disable_unprepare(pfdev->bus_clock);
+ 	clk_disable_unprepare(pfdev->clock);
+ }
+ 
+diff --git a/drivers/gpu/drm/panfrost/panfrost_device.h b/drivers/gpu/drm/panfrost/panfrost_device.h
+index 56f452dfb490..8074f221034b 100644
+--- a/drivers/gpu/drm/panfrost/panfrost_device.h
++++ b/drivers/gpu/drm/panfrost/panfrost_device.h
+@@ -66,6 +66,7 @@ struct panfrost_device {
+ 
+ 	void __iomem *iomem;
+ 	struct clk *clock;
++	struct clk *bus_clock;
+ 	struct regulator *regulator;
+ 	struct reset_control *rstc;
+ 
 -- 
 2.17.1
 
