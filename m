@@ -2,158 +2,87 @@ Return-Path: <SRS0=M1fl=TR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA3F7C04E87
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 22:31:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D5E7C04AB4
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 22:36:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A9AEB2168B
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 22:31:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="kxpKLA07"
+	by mail.kernel.org (Postfix) with ESMTP id EA5982166E
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 22:36:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729590AbfEQWby (ORCPT
+        id S1728174AbfEQWgt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 May 2019 18:31:54 -0400
-Received: from perceval.ideasonboard.com ([213.167.242.64]:54412 "EHLO
-        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729158AbfEQWbx (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 May 2019 18:31:53 -0400
-Received: from localhost.localdomain (cpc89242-aztw30-2-0-cust488.18-1.cable.virginm.net [86.31.129.233])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id D061697E;
-        Sat, 18 May 2019 00:31:49 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1558132310;
-        bh=qWZtuujGnyu74xn/yiK06dv4y3ecqEWxDBkPb5hnYjU=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kxpKLA07jN8uB8QeM6j8J4uIkDGfqluDyNnn7Oxq3vaX+FKbpiviT6KmJCSPVUzbw
-         oT82en8/lKMmg+y81MTpjQ2Uc6ZdZ9oUqFa8Jkv9uFUotUpglRtoKrSz/8VOgptm1D
-         ufRjAwLfkJEDc/mGbpCWt1Gt5gib8cA917bQFJ9U=
-From:   Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
-To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        linux-renesas-soc@vger.kernel.org, linux-media@vger.kernel.org,
-        dri-devel@lists.freedesktop.org
-Cc:     Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH 3/3] media: vsp1: drm: Remove vsp1_du_setup_lif()
-Date:   Fri, 17 May 2019 23:31:43 +0100
-Message-Id: <20190517223143.26251-4-kieran.bingham+renesas@ideasonboard.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190517223143.26251-1-kieran.bingham+renesas@ideasonboard.com>
-References: <20190517223143.26251-1-kieran.bingham+renesas@ideasonboard.com>
+        Fri, 17 May 2019 18:36:49 -0400
+Received: from mga03.intel.com ([134.134.136.65]:30450 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726761AbfEQWgs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 May 2019 18:36:48 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 May 2019 15:36:48 -0700
+X-ExtLoop1: 1
+Received: from orsmsx107.amr.corp.intel.com ([10.22.240.5])
+  by orsmga001.jf.intel.com with ESMTP; 17 May 2019 15:36:47 -0700
+Received: from orsmsx104.amr.corp.intel.com ([169.254.4.200]) by
+ ORSMSX107.amr.corp.intel.com ([169.254.1.194]) with mapi id 14.03.0415.000;
+ Fri, 17 May 2019 15:36:47 -0700
+From:   "Bowers, AndrewX" <andrewx.bowers@intel.com>
+To:     "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "intel-wired-lan@lists.osuosl.org" <intel-wired-lan@lists.osuosl.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [Intel-wired-lan] [PATCH][next] i40e: mark expected switch
+ fall-through
+Thread-Topic: [Intel-wired-lan] [PATCH][next] i40e: mark expected switch
+ fall-through
+Thread-Index: AQHVAGBkv65pMyI0KkarzT0dRkZJ76ZwASjQ
+Date:   Fri, 17 May 2019 22:36:47 +0000
+Message-ID: <26D9FDECA4FBDD4AADA65D8E2FC68A4A1D3DB7B9@ORSMSX104.amr.corp.intel.com>
+References: <20190501205541.GA17995@embeddedor>
+In-Reply-To: <20190501205541.GA17995@embeddedor>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiMzdlNDk2ZGQtODAyMS00MTYwLTlhMTktODBjYTI2MGM0ZmNmIiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoid3RIMGdTUzB1M1FMd3NSNDBsc1hsc2JzOVlTb1BSYVZvZEs3WVlCOTY4bEVQVjFNcU9cL2R2QlV4WmlZd2NVU3EifQ==
+x-ctpclassification: CTP_NT
+dlp-product: dlpe-windows
+dlp-version: 11.0.400.15
+dlp-reaction: no-action
+x-originating-ip: [10.22.254.139]
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The vsp1_du_setup_lif() function is deprecated, and the users have been
-removed. Remove the implementation and the associated configuration
-structure.
-
-Signed-off-by: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
----
- drivers/media/platform/vsp1/vsp1_drm.c | 47 --------------------------
- include/media/vsp1.h                   | 22 ------------
- 2 files changed, 69 deletions(-)
-
-diff --git a/drivers/media/platform/vsp1/vsp1_drm.c b/drivers/media/platform/vsp1/vsp1_drm.c
-index ce5c0780680f..12f76344bdec 100644
---- a/drivers/media/platform/vsp1/vsp1_drm.c
-+++ b/drivers/media/platform/vsp1/vsp1_drm.c
-@@ -817,53 +817,6 @@ int vsp1_du_atomic_disable(struct device *dev, unsigned int pipe_index)
- }
- EXPORT_SYMBOL_GPL(vsp1_du_atomic_disable);
- 
--/**
-- * vsp1_du_setup_lif - Setup the output part of the VSP pipeline
-- * @dev: the VSP device
-- * @pipe_index: the DRM pipeline index
-- * @cfg: the LIF configuration
-- *
-- * Configure the output part of VSP DRM pipeline for the given frame @cfg.width
-- * and @cfg.height. This sets up formats on the BRx source pad, the WPF sink and
-- * source pads, and the LIF sink pad.
-- *
-- * The @pipe_index argument selects which DRM pipeline to setup. The number of
-- * available pipelines depend on the VSP instance.
-- *
-- * As the media bus code on the blend unit source pad is conditioned by the
-- * configuration of its sink 0 pad, we also set up the formats on all blend unit
-- * sinks, even if the configuration will be overwritten later by
-- * vsp1_du_setup_rpf(). This ensures that the blend unit configuration is set to
-- * a well defined state.
-- *
-- * Return 0 on success or a negative error code on failure.
-- */
--int vsp1_du_setup_lif(struct device *dev, unsigned int pipe_index,
--		      const struct vsp1_du_lif_config *cfg)
--{
--	int ret;
--
--	struct vsp1_du_modeset_config modes = {
--		.width = cfg->width,
--		.height = cfg->height,
--		.interlaced = cfg->interlaced,
--	};
--	struct vsp1_du_enable_config enable = {
--		.callback = cfg->callback,
--		.callback_data = cfg->callback_data,
--	};
--
--	if (!cfg)
--		return vsp1_du_atomic_disable(dev, pipe_index);
--
--	ret = vsp1_du_atomic_modeset(dev, pipe_index, &modes);
--	if (ret)
--		return ret;
--
--	return vsp1_du_atomic_enable(dev, pipe_index, &enable);
--}
--EXPORT_SYMBOL_GPL(vsp1_du_setup_lif);
--
- /**
-  * vsp1_du_atomic_begin - Prepare for an atomic update
-  * @dev: the VSP device
-diff --git a/include/media/vsp1.h b/include/media/vsp1.h
-index 13f5a1c4d45a..bc0a26d33d9a 100644
---- a/include/media/vsp1.h
-+++ b/include/media/vsp1.h
-@@ -20,28 +20,6 @@ int vsp1_du_init(struct device *dev);
- #define VSP1_DU_STATUS_COMPLETE		BIT(0)
- #define VSP1_DU_STATUS_WRITEBACK	BIT(1)
- 
--/**
-- * struct vsp1_du_lif_config - VSP LIF configuration - Deprecated
-- * @width: output frame width
-- * @height: output frame height
-- * @interlaced: true for interlaced pipelines
-- * @callback: frame completion callback function (optional). When a callback
-- *	      is provided, the VSP driver guarantees that it will be called once
-- *	      and only once for each vsp1_du_atomic_flush() call.
-- * @callback_data: data to be passed to the frame completion callback
-- */
--struct vsp1_du_lif_config {
--	unsigned int width;
--	unsigned int height;
--	bool interlaced;
--
--	void (*callback)(void *data, unsigned int status, u32 crc);
--	void *callback_data;
--};
--
--int vsp1_du_setup_lif(struct device *dev, unsigned int pipe_index,
--		      const struct vsp1_du_lif_config *cfg);
--
- /**
-  * struct vsp1_du_modeset_config - VSP LIF Mode configuration
-  * @width: output frame width
--- 
-2.20.1
-
+PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBJbnRlbC13aXJlZC1sYW4gW21h
+aWx0bzppbnRlbC13aXJlZC1sYW4tYm91bmNlc0Bvc3Vvc2wub3JnXSBPbg0KPiBCZWhhbGYgT2Yg
+R3VzdGF2byBBLiBSLiBTaWx2YQ0KPiBTZW50OiBXZWRuZXNkYXksIE1heSAxLCAyMDE5IDE6NTYg
+UE0NCj4gVG86IEtpcnNoZXIsIEplZmZyZXkgVCA8amVmZnJleS50LmtpcnNoZXJAaW50ZWwuY29t
+PjsgRGF2aWQgUy4gTWlsbGVyDQo+IDxkYXZlbUBkYXZlbWxvZnQubmV0Pg0KPiBDYzogbmV0ZGV2
+QHZnZXIua2VybmVsLm9yZzsgaW50ZWwtd2lyZWQtbGFuQGxpc3RzLm9zdW9zbC5vcmc7IGxpbnV4
+LQ0KPiBrZXJuZWxAdmdlci5rZXJuZWwub3JnOyBLZWVzIENvb2sgPGtlZXNjb29rQGNocm9taXVt
+Lm9yZz4NCj4gU3ViamVjdDogW0ludGVsLXdpcmVkLWxhbl0gW1BBVENIXVtuZXh0XSBpNDBlOiBt
+YXJrIGV4cGVjdGVkIHN3aXRjaCBmYWxsLQ0KPiB0aHJvdWdoDQo+IA0KPiBJbiBwcmVwYXJhdGlv
+biB0byBlbmFibGluZyAtV2ltcGxpY2l0LWZhbGx0aHJvdWdoLCBtYXJrIHN3aXRjaCBjYXNlcyB3
+aGVyZQ0KPiB3ZSBhcmUgZXhwZWN0aW5nIHRvIGZhbGwgdGhyb3VnaC4NCj4gDQo+IFRoaXMgcGF0
+Y2ggZml4ZXMgdGhlIGZvbGxvd2luZyB3YXJuaW5nOg0KPiANCj4gZHJpdmVycy9uZXQvZXRoZXJu
+ZXQvaW50ZWwvaTQwZS9pNDBlX3hzay5jOiBJbiBmdW5jdGlvbiDigJhpNDBlX3J1bl94ZHBfemPi
+gJk6DQo+IGRyaXZlcnMvbmV0L2V0aGVybmV0L2ludGVsL2k0MGUvaTQwZV94c2suYzoyMTc6Mzog
+d2FybmluZzogdGhpcyBzdGF0ZW1lbnQNCj4gbWF5IGZhbGwgdGhyb3VnaCBbLVdpbXBsaWNpdC1m
+YWxsdGhyb3VnaD1dDQo+ICAgIGJwZl93YXJuX2ludmFsaWRfeGRwX2FjdGlvbihhY3QpOw0KPiAg
+ICBefn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fg0KPiBkcml2ZXJzL25ldC9ldGhlcm5l
+dC9pbnRlbC9pNDBlL2k0MGVfeHNrLmM6MjE4OjI6IG5vdGU6IGhlcmUNCj4gICBjYXNlIFhEUF9B
+Qk9SVEVEOg0KPiAgIF5+fn4NCj4gDQo+IEluIHByZXBhcmF0aW9uIHRvIGVuYWJsaW5nIC1XaW1w
+bGljaXQtZmFsbHRocm91Z2gsIG1hcmsgc3dpdGNoIGNhc2VzIHdoZXJlDQo+IHdlIGFyZSBleHBl
+Y3RpbmcgdG8gZmFsbCB0aHJvdWdoLg0KPiANCj4gVGhpcyBwYXRjaCBmaXhlcyB0aGUgZm9sbG93
+aW5nIHdhcm5pbmc6DQo+IA0KPiBTaWduZWQtb2ZmLWJ5OiBHdXN0YXZvIEEuIFIuIFNpbHZhIDxn
+dXN0YXZvQGVtYmVkZGVkb3IuY29tPg0KPiAtLS0NCj4gIGRyaXZlcnMvbmV0L2V0aGVybmV0L2lu
+dGVsL2k0MGUvaTQwZV94c2suYyB8IDEgKw0KPiAgMSBmaWxlIGNoYW5nZWQsIDEgaW5zZXJ0aW9u
+KCspDQoNClRlc3RlZC1ieTogQW5kcmV3IEJvd2VycyA8YW5kcmV3eC5ib3dlcnNAaW50ZWwuY29t
+Pg0KDQoNCg==
