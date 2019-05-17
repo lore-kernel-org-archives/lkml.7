@@ -2,90 +2,75 @@ Return-Path: <SRS0=M1fl=TR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 760A2C04AB4
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 21:02:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9505FC04AB4
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 21:02:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 40FCA20675
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 21:02:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NvtUMrEE"
+	by mail.kernel.org (Postfix) with ESMTP id 665CC2082E
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 21:02:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729310AbfEQVCY (ORCPT
+        id S1729369AbfEQVCb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 May 2019 17:02:24 -0400
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:34686 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728382AbfEQVCY (ORCPT
+        Fri, 17 May 2019 17:02:31 -0400
+Received: from mx0b-002e3701.pphosted.com ([148.163.143.35]:36052 "EHLO
+        mx0b-002e3701.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728382AbfEQVCa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 May 2019 17:02:24 -0400
-Received: by mail-qt1-f195.google.com with SMTP id h1so9681064qtp.1;
-        Fri, 17 May 2019 14:02:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=zm172sKuEoJHoST/QG9QtXQuShTwFrHdaf7AbMxHV/c=;
-        b=NvtUMrEEEmOmOEaikDJJe53KWEzTe30PTlqu92ySPuycej06XQWJu+rFpdk/3OJM34
-         Z/nasyQM0942f/xMmRcaxJ0PTSKm40p4bsqdWHJc/dhtrVKkV/XBz4tkFW4/510XTCoV
-         K3pS0Kb28WteLZqychrKFcRjSeeZYCuQ2yc8lKGwBSF2ipldMpcAU3mPTWy/z8YfooI5
-         JZYYB0RprvKbpK1U/ozZ8Xsf1SgOpBVU4Dx5qfRURfzXdP5ipFf4IFpGjaAEMt8k0vfN
-         g1x3FVVHhUH9xIyb9Dk5mF0c6RkhD9/NYojUcLUPiO7Wdgi2UKlxtgN42mEDPoUv9nqM
-         9vWA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:date:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=zm172sKuEoJHoST/QG9QtXQuShTwFrHdaf7AbMxHV/c=;
-        b=MGc7TQbiHmTattsGIm5LHLfHGbIhStuXA0FTM9k6uuwAU+ewqO2sfSbB9Ebj/4HNj9
-         d6reKQ7ozXe/6ByT3RKfV/xXWeF+A3JRESp1TXUfnakCrIP8mzcQBj3JUna2fOoNNUYn
-         IS4PMFbmlhho6o3HJBLttiP3L0MiX4XuEinpcG32czLXazSIXAGsB+F6XF+DfA+8PzUm
-         Vi0nRIJLKW0mRYoWFzy2JhEU17bCa5aw4+k79J9dofM6azQ6y3aGi0IBmwPYJRnY9xi8
-         5cthN0dS/J+PaVXDowVX8VdaDrAa3CCCl/U+F/j3wPuQ3llptuYP5FA92AkHI73nLFks
-         fAeA==
-X-Gm-Message-State: APjAAAVjBVtZpEQHOdJSX7GtbsmpjJspgQG7Yx9fyonZYDoVJR+mfJ0k
-        +NyBBrzPqoRDmRdDFWXjJ/A=
-X-Google-Smtp-Source: APXvYqwvttvCTTpLBiz1t71xS2G4tD7pzgpktH+Nh7koNB/WjUqUYr7Alq0vzVBtVRRRrJuXlstVSA==
-X-Received: by 2002:ac8:353a:: with SMTP id y55mr48673865qtb.95.1558126942686;
-        Fri, 17 May 2019 14:02:22 -0700 (PDT)
-Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
-        by smtp.gmail.com with ESMTPSA id e4sm4540925qkl.17.2019.05.17.14.02.21
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 17 May 2019 14:02:22 -0700 (PDT)
-From:   Arvind Sankar <nivedita@alum.mit.edu>
-X-Google-Original-From: Arvind Sankar <arvind@rani.riverdale.lan>
-Date:   Fri, 17 May 2019 17:02:20 -0400
-To:     hpa@zytor.com
-Cc:     Roberto Sassu <roberto.sassu@huawei.com>, viro@zeniv.linux.org.uk,
-        linux-security-module@vger.kernel.org,
-        linux-integrity@vger.kernel.org, initramfs@vger.kernel.org,
-        linux-api@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, zohar@linux.vnet.ibm.com,
-        silviu.vlasceanu@huawei.com, dmitry.kasatkin@huawei.com,
-        takondra@cisco.com, kamensky@cisco.com, arnd@arndb.de,
-        rob@landley.net, james.w.mcmechan@gmail.com, niveditas98@gmail.com
-Subject: Re: [PATCH v3 2/2] initramfs: introduce do_readxattrs()
-Message-ID: <20190517210219.GA5998@rani.riverdale.lan>
-References: <20190517165519.11507-1-roberto.sassu@huawei.com>
- <20190517165519.11507-3-roberto.sassu@huawei.com>
- <CD9A4F89-7CA5-4329-A06A-F8DEB87905A5@zytor.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <CD9A4F89-7CA5-4329-A06A-F8DEB87905A5@zytor.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Fri, 17 May 2019 17:02:30 -0400
+Received: from pps.filterd (m0134424.ppops.net [127.0.0.1])
+        by mx0b-002e3701.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4HL18oL004720;
+        Fri, 17 May 2019 21:02:07 GMT
+Received: from g2t2352.austin.hpe.com (g2t2352.austin.hpe.com [15.233.44.25])
+        by mx0b-002e3701.pphosted.com with ESMTP id 2sj2yngk0p-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 17 May 2019 21:02:07 +0000
+Received: from g2t2360.austin.hpecorp.net (g2t2360.austin.hpecorp.net [16.196.225.135])
+        by g2t2352.austin.hpe.com (Postfix) with ESMTP id 63D9CA3;
+        Fri, 17 May 2019 21:02:06 +0000 (UTC)
+Received: from lxbuild.ftc.rdlabs.hpecorp.net (lxbuild.ftc.rdlabs.hpecorp.net [16.78.34.175])
+        by g2t2360.austin.hpecorp.net (Postfix) with ESMTP id 4189944;
+        Fri, 17 May 2019 21:02:05 +0000 (UTC)
+From:   Jerry Hoemann <jerry.hoemann@hpe.com>
+To:     linux@roeck-us.net, wim@linux-watchdog.org,
+        linux-watchdog@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, mironov.ivan@gmail.com,
+        rasmus.villemoes@prevas.dk, jerry.hoemann@hpe.com
+Subject: [PATCH 0/6] watchdog/hpwdt: cleanups and kdump accommodations
+Date:   Fri, 17 May 2019 14:59:37 -0600
+Message-Id: <1558126783-4877-1-git-send-email-jerry.hoemann@hpe.com>
+X-Mailer: git-send-email 1.8.3.1
+X-HPE-SCL: -1
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-17_13:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1011 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=619 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1905170125
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 17, 2019 at 01:18:11PM -0700, hpa@zytor.com wrote:
-> 
-> Ok... I just realized this does not work for a modular initramfs, composed at load time from multiple files, which is a very real problem. Should be easy enough to deal with: instead of one large file, use one companion file per source file, perhaps something like filename..xattrs (suggesting double dots to make it less likely to conflict with a "real" file.) No leading dot, as it makes it more likely that archivers will sort them before the file proper.
-This version of the patch was changed from the previous one exactly to deal with this case --
-it allows for the bootloader to load multiple initramfs archives, each
-with its own .xattr-list file, and to have that work properly.
-Could you elaborate on the issue that you see?
+First two changes makes hpwdt more generic.
+Next two changes make hpwdt work better with kdump.
+
+
+Jerry Hoemann (6):
+  watchdog/hpwdt: Stop hpwdt on unregister.
+  watchdog/hpwdt: Advertize max_hw_heartbeat_ms
+  watchdog/hpwdt: Have core ping watchdog.
+  watchdog/hpwdt: Add module parameter kdumptimeout.
+  watchdog/hpwdt: Update documentation
+  watchdog/hpwdt: Reflect changes
+
+ Documentation/watchdog/hpwdt.txt |  4 +++
+ drivers/watchdog/hpwdt.c         | 55 ++++++++++++++++++++++++++++++----------
+ 2 files changed, 45 insertions(+), 14 deletions(-)
+
+-- 
+1.8.3.1
+
