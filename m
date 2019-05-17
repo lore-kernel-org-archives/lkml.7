@@ -2,307 +2,125 @@ Return-Path: <SRS0=M1fl=TR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E49F8C04AB4
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 15:51:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E143DC04AB4
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 15:53:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9CDF2216C4
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 15:51:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD1452083E
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 15:53:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="EdLVt4H4"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="kP5ojcPf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729156AbfEQPvr (ORCPT
+        id S1729169AbfEQPx5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 May 2019 11:51:47 -0400
-Received: from mail-it1-f195.google.com ([209.85.166.195]:52919 "EHLO
-        mail-it1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728551AbfEQPvr (ORCPT
+        Fri, 17 May 2019 11:53:57 -0400
+Received: from mail-pg1-f170.google.com ([209.85.215.170]:40819 "EHLO
+        mail-pg1-f170.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728664AbfEQPx5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 May 2019 11:51:47 -0400
-Received: by mail-it1-f195.google.com with SMTP id q65so12737734itg.2
-        for <linux-kernel@vger.kernel.org>; Fri, 17 May 2019 08:51:46 -0700 (PDT)
+        Fri, 17 May 2019 11:53:57 -0400
+Received: by mail-pg1-f170.google.com with SMTP id d30so3488684pgm.7
+        for <linux-kernel@vger.kernel.org>; Fri, 17 May 2019 08:53:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=VbbNCjTb5IwhiXsCnsp9hJQiAQOUOk5xYx1NL8Z/LvE=;
-        b=EdLVt4H4/SRvzZtXhGgTbgxrouneKa+zaoTUIR19jBq+KVWunh/u92KM0qDbFFpa5s
-         ULQQbTiD+xl7S9Dyjoc7/pMfFgUwMTx05aYoUYTYenjoRfClX4KyscU3yyVHbB/bwptT
-         wXIpzv4xb4/ox0/zloSUaenuHcrfvDEDtHemcYsuOgR0ZfvBjjWA6+aygBLOQJMVh4R9
-         VCPJ7ai67fTNmmA1kwHmNg5UlDvAEFbhgJtyGhziCbddd6GSlcoR8Y8HbthhrCfhcRoy
-         vucfajfpxwrBPA4T3x/E8iLf1T3aXe1LXEO5jGtFUkLSTMDI4FD3tgz4CYoCg+R6r+w4
-         aOgQ==
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=DeWYh2wXHt0SGoJqX0T0F4RONBrBgIxGbZCJ2kdSH6I=;
+        b=kP5ojcPfRjRGKbxsO4pF79WW/kSRZaLu97/2LsHLFWXmA56eKS99Mt+3JVChAIHpWm
+         /edz0dqcheadE+lCi2SLduXDhlV/p2PinTyIt4lzceJGxetX1fUXdKy/JmwgB4UYvVNK
+         Brmr62mRz4mVtq7sVy58XKgfbiMqAH/4IEa8o=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=VbbNCjTb5IwhiXsCnsp9hJQiAQOUOk5xYx1NL8Z/LvE=;
-        b=ajedjwpoeVR16XP+3TRcrHySm4c+wmQ9Ou1OcqcmxMnN2yl3HVkyDshQb76S7chbpv
-         FFS1om+D3dkjdYRJjQD6cKSA0XKkCAQY6cYD5PnjZCpQPCW659ujBxq76jMSRV46ofnu
-         sdgNAGQaFvpCLDNCS+JBkZjcmDWfZ1DEUBbzL5qhDt4towh4vQHIfgxC4d7dXEeEOiVx
-         uni92HhHdHR4JwCAK+EKBKxdKzZD6TKxZ5eEeQi00fcndfbSprPqz1N7kzZ/CsVsgk3L
-         x9rpneu5czRrgs6cZo54tyD5XRaTsb6lkjZFGrqABLwoMyk8oizNwTHMoPl6nUYEWIGp
-         lpPQ==
-X-Gm-Message-State: APjAAAV0vg/9kesjEbFlOEDqsQtdtB++ERfRHWlMnfeDdY3G1Gm02u1k
-        L76loJy2Wm9tkMqb5z/BX+Dh4d/IbMA/d0XS7S1B9Q==
-X-Google-Smtp-Source: APXvYqwjw3TC6/bd3TKGu78mOm6uCA8D3o/oJv5DE3XeZeE5ZoTkBte7S48W0nHpmq1jgPK68m9KkIPBSECsIeSeE0E=
-X-Received: by 2002:a24:91d2:: with SMTP id i201mr3347712ite.88.1558108306007;
- Fri, 17 May 2019 08:51:46 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=DeWYh2wXHt0SGoJqX0T0F4RONBrBgIxGbZCJ2kdSH6I=;
+        b=WB+pc7SL0X0TTXqGQGkIw3k6t1JtUzg132sUV8fjVwKslVflauCShCehGyow6gULxW
+         83xbVb8yXa7pkC1BY6GmN0NFBh7lECeluB7lRo0/3GXd65hMIWxinnSpVg824iQO+02s
+         J2wmFzw64fz8zXBxjRA5LZhyKCtYV9Xjc2eZEFHaB+EHvoszY9bJgMro+vfWs7Fs3C3Z
+         GTmtCZz7IIGD9/fEJxgwnAM6EvVMsB0FIbRzD3d9033APwtnR9/QnLnWuM6TwIOjcHhH
+         5Vaowa4xPyJSbU3V7MBRyJ/gwL9/eGbED/PaH84Fal00ud4vApc5mGzoGx6umQ8pMwma
+         J2jA==
+X-Gm-Message-State: APjAAAWvlunypPjFCIgA6TJTQkITddKvpzoHqHGcibG7yJrF4evzzaR1
+        TPtE88NCzXdxuOhsIqvZBNCUlA==
+X-Google-Smtp-Source: APXvYqyvXdwCR61IEEY49hfPBp0/QulW7H4+PkBv7xWEeGfEdGz2OO8yjJsd70M5DeFCJZN6lhnfqQ==
+X-Received: by 2002:a62:8893:: with SMTP id l141mr4899472pfd.261.1558108436771;
+        Fri, 17 May 2019 08:53:56 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id m12sm5169259pgi.56.2019.05.17.08.53.55
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 17 May 2019 08:53:55 -0700 (PDT)
+Date:   Fri, 17 May 2019 08:53:54 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     David Laight <David.Laight@ACULAB.COM>
+Cc:     'Jan Kara' <jack@suse.cz>, Dan Williams <dan.j.williams@intel.com>,
+        "linux-nvdimm@lists.01.org" <linux-nvdimm@lists.01.org>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>,
+        Jeff Moyer <jmoyer@redhat.com>, Ingo Molnar <mingo@redhat.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Matthew Wilcox <willy@infradead.org>,
+        Jeff Smits <jeff.smits@intel.com>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] libnvdimm/pmem: Bypass CONFIG_HARDENED_USERCOPY overhead
+Message-ID: <201905170845.1B4E2A03@keescook>
+References: <155805321833.867447.3864104616303535270.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <20190517084739.GB20550@quack2.suse.cz>
+ <2d8b1ba7890940bf8a512d4eef0d99b3@AcuMS.aculab.com>
 MIME-Version: 1.0
-References: <CACT4Y+Z9GcY-d19ROSXgAq4-d_hOBVArfgGV1VdYcYD_X1coPQ@mail.gmail.com>
- <CAHRSSEw7QAfuKsQhHNZcwizn5zEVA6CjAdO7qh69g3fkXrk7DA@mail.gmail.com>
- <CACT4Y+ZLZHbsW3kFD5oXssuOP6LmY0YRRPnWc41CBQ6APJS4MA@mail.gmail.com> <CACT4Y+ZW=OaNBsWm0FMXfefHnNgpjb698r_+Xhn66dQZHfgVRw@mail.gmail.com>
-In-Reply-To: <CACT4Y+ZW=OaNBsWm0FMXfefHnNgpjb698r_+Xhn66dQZHfgVRw@mail.gmail.com>
-From:   Dmitry Vyukov <dvyukov@google.com>
-Date:   Fri, 17 May 2019 17:51:34 +0200
-Message-ID: <CACT4Y+Z5wTRMCWYrhYArb0kBS5kRKJYH82m6F+_6qUucJUy7jQ@mail.gmail.com>
-Subject: Re: binder stress testing
-To:     Todd Kjos <tkjos@google.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        =?UTF-8?B?QXJ2ZSBIasO4bm5ldsOlZw==?= <arve@android.com>,
-        Todd Kjos <tkjos@android.com>,
-        Martijn Coenen <maco@android.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Christian Brauner <christian@brauner.io>,
-        "open list:ANDROID DRIVERS" <devel@driverdev.osuosl.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        syzkaller <syzkaller@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <2d8b1ba7890940bf8a512d4eef0d99b3@AcuMS.aculab.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 17, 2019 at 5:45 PM Dmitry Vyukov <dvyukov@google.com> wrote:
->
-> On Fri, May 17, 2019 at 5:44 PM Dmitry Vyukov <dvyukov@google.com> wrote:
-> >
-> > On Fri, May 17, 2019 at 5:36 PM Todd Kjos <tkjos@google.com> wrote:
-> > >
-> > > From: Dmitry Vyukov <dvyukov@google.com>
-> > > Date: Fri, May 17, 2019 at 3:26 AM
-> > > To: Greg Kroah-Hartman, Arve Hj=C3=B8nnev=C3=A5g, Todd Kjos, Martijn =
-Coenen,
-> > > Joel Fernandes, Christian Brauner, open list:ANDROID DRIVERS, LKML
-> > > Cc: syzkaller
-> > >
-> > > > Hi,
-> > > >
-> > > > I have 2 questions re drivers/android/binder.c stress testing.
-> > > >
-> > > > 1. Are there any docs on the kernel interface? Or some examples on =
-how
-> > > > to use it and reference syscall sequences to make it do something
-> > > > meaningful?
-> > > > I hopefully figured out struct layouts and offsets of objects thing=
-,
-> > > > but I still can't figure out handles, pointers, nodes, pointer to
-> > > > nodes... pointer to data (?), references, cookies and where does on=
-e
-> > > > get valid values for these.
-> > >
-> > > The kernel interface is not well documented since it isn't intended t=
-o
-> > > be used apart from libbinder. The best example for your purposes is
-> > > probably the binderDriverInterfaceTest which you can find at
-> > > https://android.googlesource.com/platform/frameworks/native/+/refs/he=
-ads/master/libs/binder/tests/binderDriverInterfaceTest.cpp.
-> > >
-> > > The libbinder source is at
-> > > https://android.googlesource.com/platform/frameworks/native/+/refs/he=
-ads/master/libs/binder.
-> > >
-> > > >
-> > > > 2. In my tests any transaction breaks binder device until the next =
-reboot.
-> > > > If I open binder device twice, mmap, set context and then the proce=
-ss
-> > > > dies, then everything it released fine, in particular the context
-> > > > (context_mgr_node gone). So the device is ready for a next test:
-> > > >
-> > > > [   40.247970][ T6239] binder: binder_open: 6238:6239
-> > > > [   40.250819][ T6239] binder: 6238:6239 node 1 u0000000000000000
-> > > > c0000000000000000 created
-> > > > [   40.253365][ T6239] binder: binder_mmap: 6238 200a0000-200a2000 =
-(8
-> > > > K) vma f9 pagep 8000000000000025
-> > > > [   40.256454][ T6239] binder: binder_open: 6238:6239
-> > > > [   40.259604][ T6239] binder: binder_mmap: 6238 200c0000-200c2000 =
-(8
-> > > > K) vma f9 pagep 8000000000000025
-> > > > [   40.271526][ T6238] binder: 6238 close vm area 200a0000-200a2000=
- (8
-> > > > K) vma 180200d9 pagep 8000000000000025
-> > > > [   40.273113][ T6238] binder: 6238 close vm area 200c0000-200c2000=
- (8
-> > > > K) vma 180200d9 pagep 8000000000000025
-> > > > [   40.275058][   T17] binder: binder_flush: 6238 woke 0 threads
-> > > > [   40.275997][   T17] binder: binder_flush: 6238 woke 0 threads
-> > > > [   40.276968][   T17] binder: binder_deferred_release: 6238 thread=
-s
-> > > > 0, nodes 0 (ref 0), refs 0, active transactions 0
-> > > > [   40.278626][   T17] binder: binder_deferred_release: 6238
-> > > > context_mgr_node gone
-> > > > [   40.279756][   T17] binder: binder_deferred_release: 6238 thread=
-s
-> > > > 1, nodes 1 (ref 0), refs 0, active transactions 0
-> > > >
-> > > >
-> > > > However, if I also send a transaction between these fd's, then
-> > > > context_mgr_node is not released:
-> > > >
-> > > > [  783.851403][ T6167] binder: binder_open: 6166:6167
-> > > > [  783.858801][ T6167] binder: 6166:6167 node 1 u0000000000000000
-> > > > c0000000000000000 created
-> > > > [  783.862458][ T6167] binder: binder_mmap: 6166 200a0000-200a2000 =
-(8
-> > > > K) vma f9 pagep 8000000000000025
-> > > > [  783.865777][ T6167] binder: binder_open: 6166:6167
-> > > > [  783.867892][ T6167] binder: binder_mmap: 6166 200c0000-200c2000 =
-(8
-> > > > K) vma f9 pagep 8000000000000025
-> > > > [  783.870810][ T6167] binder: 6166:6167 write 76 at 00000000200001=
-80,
-> > > > read 0 at 0000000020000300
-> > > > [  783.872211][ T6167] binder: 6166:6167 BC_TRANSACTION 2 -> 6166 -
-> > > > node 1, data 0000000020000200-00000000200002c0 size 88-24-16
-> > > > [  783.873819][ T6167] binder: 6166:6167 node 3 u0000000000000000
-> > > > c0000000000000000 created
-> > > > [  783.875032][ T6167] binder: 6166 new ref 4 desc 1 for node 3
-> > > > [  783.875860][ T6167] binder:         node 3 u0000000000000000 -> =
-ref 4 desc 1
-> > > > [  783.876868][ T6167] binder: 6166:6167 wrote 76 of 76, read retur=
-n 0 of 0
-> > > > [  783.886714][ T6167] binder: 6166 close vm area 200a0000-200a2000=
- (8
-> > > > K) vma 180200d9 pagep 8000000000000025
-> > > > [  783.888161][ T6167] binder: 6166 close vm area 200c0000-200c2000=
- (8
-> > > > K) vma 180200d9 pagep 8000000000000025
-> > > > [  783.890134][   T27] binder: binder_flush: 6166 woke 0 threads
-> > > > [  783.891036][   T27] binder: binder_flush: 6166 woke 0 threads
-> > > > [  783.892027][ T2903] binder: release 6166:6167 transaction 2 out,=
- still active
-> > > > [  783.893097][ T2903] binder: unexpected work type, 4, not freed
-> > > > [  783.893947][ T2903] binder: undelivered TRANSACTION_COMPLETE
-> > > > [  783.894849][ T2903] binder: node 3 now dead, refs 1, death 0
-> > > > [  783.895717][ T2903] binder: binder_deferred_release: 6166 thread=
-s
-> > > > 1, nodes 1 (ref 1), refs 0, active transactions 1
-> > > >
-> > > >
-> > > > And all subsequent tests will fail because "BINDER_SET_CONTEXT_MGR
-> > > > already set" presumably to the now unrecoverably dead process:
-> > > >
-> > > > [  831.085174][ T6191] binder: binder_open: 6190:6191
-> > > > [  831.087450][ T6191] binder: BINDER_SET_CONTEXT_MGR already set
-> > > > [  831.088910][ T6191] binder: 6190:6191 ioctl 4018620d 200000c0 re=
-turned -16
-> > > > [  831.090626][ T6191] binder: binder_mmap: 6190 200a0000-200a2000 =
-(8
-> > > > K) vma f9 pagep 8000000000000025
-> > > > [  831.092783][ T6191] binder: binder_open: 6190:6191
-> > > > [  831.094076][ T6191] binder: binder_mmap: 6190 200c0000-200c2000 =
-(8
-> > > > K) vma f9 pagep 8000000000000025
-> > > > [  831.096218][ T6191] binder: 6190:6191 write 76 at 00000000200001=
-80,
-> > > > read 0 at 0000000020000300
-> > > > [  831.097606][ T6191] binder: 6190:6191 BC_TRANSACTION 5 -> 6166 -
-> > > > node 1, data 0000000020000200-00000000200002c0 size 88-24-16
-> > > > [  831.099251][ T6191] binder_alloc: 6166: binder_alloc_buf, no vma
-> > > > [  831.100433][ T6191] binder: 6190:6191 transaction failed 29189/-=
-3,
-> > > > size 88-24 line 3157
-> > > > [  831.101559][ T6191] binder: 6190:6191 wrote 76 of 76, read retur=
-n 0 of 0
-> > > > [  831.110317][ T6191] binder: 6190 close vm area 200a0000-200a2000=
- (8
-> > > > K) vma 180200d9 pagep 8000000000000025
-> > > > [  831.111752][ T6191] binder: 6190 close vm area 200c0000-200c2000=
- (8
-> > > > K) vma 180200d9 pagep 8000000000000025
-> > > > [  831.113266][ T3344] binder: binder_flush: 6190 woke 0 threads
-> > > > [  831.114147][ T3344] binder: binder_flush: 6190 woke 0 threads
-> > > > [  831.115087][ T3344] binder: undelivered TRANSACTION_ERROR: 29189
-> > > > [  831.115991][ T3344] binder: binder_deferred_release: 6190 thread=
-s
-> > > > 1, nodes 0 (ref 0), refs 0, active transactions 0
-> > > > [  831.117525][ T3344] binder: binder_deferred_release: 6190 thread=
-s
-> > > > 1, nodes 0 (ref 0), refs 0, active transactions 0
-> > > >
-> > > >
-> > > > The question is: if processes that opened the device and ever mappe=
-d
-> > > > it are now completely gone, should it reset the original state when
-> > > > context can be bound again? Is it a bug in binder that it does not?=
- If
-> > > > so, is there some kind of temp work-around for this?
-> > >
-> > > If all the processes that opened the device are gone, everything
-> > > should be cleaned up and leave binder in a useable state. When the
-> > > device is in this state, can you dump out
-> > > /sys/debug/kernel/binder/state and send it to me?
-> >
-> >
-> > Here it is:
-> >
-> >
-> > binder state:
-> > dead nodes:
-> >   node 3: u0000000000000000 c0000000000000000 hs 0 hw 0 ls 0 lw 0 is 1
-> > iw 1 tr 1 proc 6193
-> > proc 6193
->
-> /\/\/\
->
-> This process does not exist anymore for minutes. Like at all. Even no
-> procfs node.
->
-> > context binder0
-> >   thread 6194: l 00 need_return 1 tr 0
-> >   node 1: u0000000000000000 c0000000000000000 hs 1 hw 1 ls 2 lw 1 is 0 =
-iw 0 tr 1
-> >   ref 4: desc 1 dead node 3 s 1 w 0 d 00000000e77aea3b
-> >   buffer 2: 00000000b2301cfa size 88:24:16 active
-> >   pending transaction 2: 00000000b1591166 from 0:0 to 6193:0 code 0
-> > flags 0 pri 0 r1 node 1 size 88:24 data 00000000b2301cfa
-> >
-> >
-> >
-> > Kernel also said:
-> >
-> > [  197.049702][   T12] binder: release 6193:6194 transaction 2 out, sti=
-ll active
-> > [  197.050803][   T12] binder: unexpected work type, 4, not freed
-> > [  197.051658][   T12] binder: undelivered TRANSACTION_COMPLETE
-> >
-> > Not sure why there is something unexpected. I don't try to fuzz it or
-> > something at this point. Just run a basic test.
-> > Here is the test, it's in syzkaller notation, but hopefully you can
-> > get overall idea:
-> >
-> > r0 =3D syz_open_dev$binder(&AUTO=3D'/dev/binder#\x00', 0x0, 0x2)
-> > ioctl$BINDER_SET_CONTEXT_MGR_EXT(r0, AUTO, &AUTO=3D{AUTO, 0x100, 0x0, 0=
-x0})
-> > mmap$binder(&(0x7f00000a0000), 0x2000, 0x1, 0x11, r0, 0x0)
-> > r1 =3D syz_open_dev$binder(&AUTO=3D'/dev/binder#\x00', 0x0, 0x2)
-> > mmap$binder(&(0x7f00000c0000), 0x2000, 0x1, 0x11, r1, 0x0)
-> > ioctl$BINDER_WRITE_READ(r1, AUTO, &AUTO=3D{AUTO, AUTO,
-> > &AUTO=3D[@transaction_sg=3D{AUTO, {0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0,
-> > AUTO, AUTO, &AUTO=3D{@flat=3D@binder=3D{AUTO, 0x0, 0x0, 0x0}, @fd=3D{AU=
-TO,
-> > AUTO, r0, AUTO, 0x0}, @ptr=3D{AUTO, 0x0, &AUTO=3D""/10, AUTO, 0x0, 0x0}=
-},
-> > &AUTO=3D{AUTO, AUTO, AUTO}}, 0x10}], AUTO, AUTO, &AUTO})
+On Fri, May 17, 2019 at 09:06:26AM +0000, David Laight wrote:
+> From: Jan Kara
+> > Sent: 17 May 2019 09:48
+> ...
+> > So this last paragraph is not obvious to me as check_copy_size() does a lot
+> > of various checks in CONFIG_HARDENED_USERCOPY case. I agree that some of
+> > those checks don't make sense for PMEM pages but I'd rather handle that by
+> > refining check_copy_size() and check_object_size() functions to detect and
+> > appropriately handle pmem pages rather that generally skip all the checks
+> > in pmem_copy_from/to_iter(). And yes, every check in such hot path is going
+> > to cost performance but that's what user asked for with
+> > CONFIG_HARDENED_USERCOPY... Kees?
+> 
+> Except that all the distros enable it by default.
+> So you get the performance cost whether you (as a user) want it or not.
 
+Note that it can be disabled on the kernel command line, but that seems
+like a last resort. :)
 
-Here is corresponding C test that you can use:
-https://gist.githubusercontent.com/dvyukov/484368950289954516e352a0d086794b=
-/raw/fab6b0fb3ef7af57c3040a3adeed26bcf03e75a6/gistfile1.txt
+> 
+> I've changed some of our code to use __get_user() to avoid
+> these stupid overheads.
+
+__get_user() skips even access_ok() checking too, so that doesn't seem
+like a good idea. Did you run access_ok() checks separately? (This
+generally isn't recommended.)
+
+The usercopy hardening is intended to only kick in when the copy size
+isn't a builtin constant -- it's attempting to do a bounds check on
+the size, with the pointer used to figure out what bounds checking is
+possible (basically "is this stack? check stack location/frame size"
+or "is this kmem cache? check the allocation size") and then do bounds
+checks from there. It tries to bail out early to avoid needless checking,
+so if there is some additional logic to be added to check_object_size()
+that is globally applicable, sure, let's do it.
+
+I'm still not clear from this thread about the case that is getting
+tripped/slowed? If you're already doing bounds checks somewhere else
+and there isn't a chance for the pointer or size to change, then yeah,
+it seems safe to skip the usercopy size checks. But what's the actual
+code that is having a problem?
+
+-- 
+Kees Cook
