@@ -2,235 +2,193 @@ Return-Path: <SRS0=M1fl=TR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66029C04AB4
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 17:23:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CFA5BC04E84
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 17:23:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 32A7D20848
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 17:23:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 978112168B
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 17:23:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=cloudflare.com header.i=@cloudflare.com header.b="K4m9yztG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727714AbfEQRXV (ORCPT
+        id S1728344AbfEQRXY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 May 2019 13:23:21 -0400
-Received: from caffeine.csclub.uwaterloo.ca ([129.97.134.17]:34527 "EHLO
-        caffeine.csclub.uwaterloo.ca" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725932AbfEQRXU (ORCPT
+        Fri, 17 May 2019 13:23:24 -0400
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:41581 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725932AbfEQRXX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 May 2019 13:23:20 -0400
-Received: by caffeine.csclub.uwaterloo.ca (Postfix, from userid 20367)
-        id C53C646380B; Fri, 17 May 2019 13:23:17 -0400 (EDT)
-Date:   Fri, 17 May 2019 13:23:17 -0400
-To:     Alexander Duyck <alexander.duyck@gmail.com>
-Cc:     Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Netdev <netdev@vger.kernel.org>,
-        intel-wired-lan <intel-wired-lan@lists.osuosl.org>
-Subject: Re: [Intel-wired-lan] i40e X722 RSS problem with NAT-Traversal IPsec
- packets
-Message-ID: <20190517172317.amopafirjfizlgej@csclub.uwaterloo.ca>
-References: <CAKgT0UcV2wCr6iUYktZ+Bju_GNpXKzR=M+NLfKhUsw4bsJSiyA@mail.gmail.com>
- <20190503205935.bg45rsso5jjj3gnx@csclub.uwaterloo.ca>
- <20190513165547.alkkgcsdelaznw6v@csclub.uwaterloo.ca>
- <CAKgT0Uf_nqZtCnHmC=-oDFz-3PuSM6=30BvJSDiAgzK062OY6w@mail.gmail.com>
- <20190514163443.glfjva3ofqcy7lbg@csclub.uwaterloo.ca>
- <CAKgT0UdPDyCBsShQVwwE5C8fBKkMcfS6_S5m3T7JP-So9fzVgA@mail.gmail.com>
- <20190516183407.qswotwyjwtjqfdqm@csclub.uwaterloo.ca>
- <20190516183705.e4zflbli7oujlbek@csclub.uwaterloo.ca>
- <CAKgT0UfSa-dM2+7xntK9tB7Zw5N8nDd3U1n4OSK0gbWbkNSKJQ@mail.gmail.com>
- <CAKgT0Ucd0s_0F5_nwqXknRngwROyuecUt+4bYzWvp1-2cNSg7g@mail.gmail.com>
+        Fri, 17 May 2019 13:23:23 -0400
+Received: by mail-qt1-f195.google.com with SMTP id y22so8855181qtn.8
+        for <linux-kernel@vger.kernel.org>; Fri, 17 May 2019 10:23:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cloudflare.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=WEZ7AiajoAMSBYXOBuJNhhjKANkhKtoMOAplcmbEPfs=;
+        b=K4m9yztG8Wq/hQHBRz2dza3n6qfE9FDCnzo0GZZYZ1kHQWaOcPYvgP2WNyuDf3dN4N
+         9lr6CYXGHGCHFbPQfHTCJwM82G5zl917lxxTFq5mOjP0k0ICpxm3RYCEZF2kA4iK6ASe
+         ypKJoT5bOd14UPcY0euHX+lddCo7MYZkTxXDE=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=WEZ7AiajoAMSBYXOBuJNhhjKANkhKtoMOAplcmbEPfs=;
+        b=DeSkg5/nM+fQIHxBCik0Ul3aAGBSq/fAup35WspwmRtoRzoMRp/F9TM+13h9ky1VmO
+         T4QwYMwWB85GsH/iomWdM5m0IvmLVW9NtXkaz0vBDpEOlgZRvpq/gZGwhOw1VOaESBmD
+         H40RjzwwrR+Gh0T+jwW5JDWx/toYou43NyNq0KUjiSojG2Y8cYO3+fwSBgelTMxV4o8V
+         o2iA28Api8fqJ0VJiGCMDM1hrohZNYT+ePZTGv895/rr4Vd56rj5rHf5Rrli3D/YhiO/
+         C5oUZMtDqQmzGrZ9+u2sVuyvQ79Ua3DDYBMByRC62J2w+6KYAhm4i5dH5K9N3j93EnsD
+         LPGw==
+X-Gm-Message-State: APjAAAUd/MlvLkkDYPkmGjGocUASyVBkk9LQTauWHCH/hvcbrlb9rKC9
+        HrrRh39xxqe1co1vusLoHzM/Gp+LBREeipJjC6XoQw==
+X-Google-Smtp-Source: APXvYqyr9QnyTM8BEaMPnV2eB92VgCk/mI9dzB9/xVz8fcWRZK0RY9dzJsypig9ucdPf1oKbLlluFRgd0bIemntKoqM=
+X-Received: by 2002:ac8:27fb:: with SMTP id x56mr16696632qtx.14.1558113802118;
+ Fri, 17 May 2019 10:23:22 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAKgT0Ucd0s_0F5_nwqXknRngwROyuecUt+4bYzWvp1-2cNSg7g@mail.gmail.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
-From:   lsorense@csclub.uwaterloo.ca (Lennart Sorensen)
+References: <CANiq72kvpiC-i53AXM-YsCUvWroHQemmqxsXjnB330ZEeHahUg@mail.gmail.com>
+ <CABWYdi1zhTTaN-GSgH0DnPfz7p=SRw0wts5QVYYVtfvoiS0qnQ@mail.gmail.com>
+ <CANiq72=fsL5m2_e+bNovFCHy3=YVf53EKGtGE_sWvsAD=ONHuQ@mail.gmail.com>
+ <20190516225013.nvhwqi5tfwtby6qb@treble> <CABWYdi29E++jBw8boFZAiDZA7iT5NiJhnNmiHb-Rvd9+97hSVA@mail.gmail.com>
+ <20190517050931.GB32367@kroah.com> <20190517073813.GB2589@hirez.programming.kicks-ass.net>
+ <CANiq72nUPoNHWM-dJuFc3=4D2=8XMuvO0PgGPjviOv+EhrAWUw@mail.gmail.com>
+ <20190517085126.GA3249@kroah.com> <CANiq72muyjE3XPjmtQgJpGaqWR=YBi6KVNT3qe-EMXP7x+q_rQ@mail.gmail.com>
+ <20190517152200.GI8945@kernel.org>
+In-Reply-To: <20190517152200.GI8945@kernel.org>
+From:   Ivan Babrou <ivan@cloudflare.com>
+Date:   Fri, 17 May 2019 10:23:10 -0700
+Message-ID: <CABWYdi2Xsp4AUhV1GwphTd4-nN2zCZMmg5y7WheNc67KrdVBfw@mail.gmail.com>
+Subject: Re: Linux 4.19 and GCC 9
+To:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+Cc:     Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        kernel-team <kernel-team@cloudflare.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 17, 2019 at 09:42:19AM -0700, Alexander Duyck wrote:
-> So the patch below/attached should resolve the issues you are seeing
-> with your system in terms of UDPv4 RSS. What you should see with this
-> patch is the first function to come up will display some "update input
-> mask" messages, and then the remaining functions shouldn't make any
-> noise about it since the registers being updated are global to the
-> device.
-> 
-> If you can test this and see if it resolves the UDPv4 RSS issues I
-> would appreciate it.
-> 
-> Thanks.
-> 
-> - Alex
-> 
-> diff --git a/drivers/net/ethernet/intel/i40e/i40e_main.c
-> b/drivers/net/ethernet/intel/i40e/i40e_main.c
-> index 65c2b9d2652b..c0a7f66babd9 100644
-> --- a/drivers/net/ethernet/intel/i40e/i40e_main.c
-> +++ b/drivers/net/ethernet/intel/i40e/i40e_main.c
-> @@ -10998,6 +10998,58 @@ static int i40e_pf_config_rss(struct i40e_pf *pf)
->                 ((u64)i40e_read_rx_ctl(hw, I40E_PFQF_HENA(1)) << 32);
->         hena |= i40e_pf_get_default_rss_hena(pf);
-> 
-> +       for (ret = 64; ret--;) {
-> +               u64 hash_inset_orig, hash_inset_update;
-> +
-> +               if (!(hena & (1ull << ret)))
-> +                       continue;
-> +
-> +               /* Read initial input set value for flow type */
-> +               hash_inset_orig = i40e_read_rx_ctl(hw,
-> I40E_GLQF_HASH_INSET(1, ret));
-> +               hash_inset_orig <<= 32;
-> +               hash_inset_orig |= i40e_read_rx_ctl(hw,
-> I40E_GLQF_HASH_INSET(0, ret));
-> +
-> +               /* Copy value so we can compare later */
-> +               hash_inset_update = hash_inset_orig;
-> +
-> +               /* We should be looking at either the entire IPv6 or IPv4
-> +                * mask being set. If only part of the IPv6 mask is set, but
-> +                * the IPv4 mask is not then we have a garbage mask value
-> +                * and need to reset it.
-> +                */
-> +               switch (hash_inset_orig & I40E_L3_V6_SRC_MASK) {
-> +               case I40E_L3_V6_SRC_MASK:
-> +               case I40E_L3_SRC_MASK:
-> +               case 0:
-> +                       break;
-> +               default:
-> +                       hash_inset_update &= ~I40E_L3_V6_SRC_MASK;
-> +                       hash_inset_update |= I40E_L3_SRC_MASK;
-> +               }
-> +
-> +               switch (hash_inset_orig & I40E_L3_V6_DST_MASK) {
-> +               case I40E_L3_V6_DST_MASK:
-> +               case I40E_L3_DST_MASK:
-> +               case 0:
-> +                       break;
-> +               default:
-> +                       hash_inset_update &= ~I40E_L3_V6_DST_MASK;
-> +                       hash_inset_update |= I40E_L3_DST_MASK;
-> +               }
-> +
-> +               if (hash_inset_update != hash_inset_orig) {
-> +                       dev_warn(&pf->pdev->dev,
-> +                                "flow type: %d update input mask
-> from:0x%016llx, to:0x%016llx\n",
-> +                                ret,
-> +                                hash_inset_orig, hash_inset_update);
-> +                       i40e_write_rx_ctl(hw, I40E_GLQF_HASH_INSET(0, ret),
-> +                                         (u32)hash_inset_update);
-> +                       hash_inset_update >>= 32;
-> +                       i40e_write_rx_ctl(hw, I40E_GLQF_HASH_INSET(1, ret),
-> +                                         (u32)hash_inset_update);
-> +               }
-> +       }
-> +
->         i40e_write_rx_ctl(hw, I40E_PFQF_HENA(0), (u32)hena);
->         i40e_write_rx_ctl(hw, I40E_PFQF_HENA(1), (u32)(hena >> 32));
+On Fri, May 17, 2019 at 8:22 AM Arnaldo Carvalho de Melo
+<arnaldo.melo@gmail.com> wrote:
+>
+> Em Fri, May 17, 2019 at 11:01:45AM +0200, Miguel Ojeda escreveu:
+> > On Fri, May 17, 2019 at 10:51 AM Greg KH <gregkh@linuxfoundation.org> w=
+rote:
+> > >
+> > > On Fri, May 17, 2019 at 10:35:29AM +0200, Miguel Ojeda wrote:
+> > > > On Fri, May 17, 2019 at 9:38 AM Peter Zijlstra <peterz@infradead.or=
+g> wrote:
+> > > > >
+> > > > > Right; if there is anything you can reproduce on linus.git I'll h=
+appily
+> > > > > have a look. If it doesn't reproduce all you have to do is find t=
+he
+> > > > > patches that make it work and ask Greg.
+> > > >
+> > > > Just to clarify: Linus' master is clean of these issues with GCC 9.=
+1.1.
+> > >
+> > > Great!  Care to find the patches that did that work and send me the g=
+it
+> > > commit ids so that I can queue them up?  I don't have gcc9 here yet o=
+n
+> > > my systems, so I can not test for this.
+> >
+> > I am unsure about the perf and the objtools parts (Peter/Josh?), but
+>
+> I'm not noticing these while building upstream perf with gcc 9.1.1 on at
+> least fedora:30.
+>
+>     33  fedora:30                     : Ok   gcc (GCC) 9.1.1 20190503 (Re=
+d Hat 9.1.1-1)
 
-> i40e: Debug hash inputs
-> 
-> From: Alexander Duyck <alexander.h.duyck@linux.intel.com>
-> 
-> 
-> ---
->  drivers/net/ethernet/intel/i40e/i40e_main.c |   52 +++++++++++++++++++++++++++
->  1 file changed, 52 insertions(+)
-> 
-> diff --git a/drivers/net/ethernet/intel/i40e/i40e_main.c b/drivers/net/ethernet/intel/i40e/i40e_main.c
-> index 65c2b9d2652b..c0a7f66babd9 100644
-> --- a/drivers/net/ethernet/intel/i40e/i40e_main.c
-> +++ b/drivers/net/ethernet/intel/i40e/i40e_main.c
-> @@ -10998,6 +10998,58 @@ static int i40e_pf_config_rss(struct i40e_pf *pf)
->  		((u64)i40e_read_rx_ctl(hw, I40E_PFQF_HENA(1)) << 32);
->  	hena |= i40e_pf_get_default_rss_hena(pf);
->  
-> +	for (ret = 64; ret--;) {
-> +		u64 hash_inset_orig, hash_inset_update;
-> +
-> +		if (!(hena & (1ull << ret)))
-> +			continue;
-> +
-> +		/* Read initial input set value for flow type */
-> +		hash_inset_orig = i40e_read_rx_ctl(hw, I40E_GLQF_HASH_INSET(1, ret));
-> +		hash_inset_orig <<= 32;
-> +		hash_inset_orig |= i40e_read_rx_ctl(hw, I40E_GLQF_HASH_INSET(0, ret));
-> +
-> +		/* Copy value so we can compare later */
-> +		hash_inset_update = hash_inset_orig;
-> +
-> +		/* We should be looking at either the entire IPv6 or IPv4
-> +		 * mask being set. If only part of the IPv6 mask is set, but
-> +		 * the IPv4 mask is not then we have a garbage mask value
-> +		 * and need to reset it.
-> +		 */
-> +		switch (hash_inset_orig & I40E_L3_V6_SRC_MASK) {
-> +		case I40E_L3_V6_SRC_MASK:
-> +		case I40E_L3_SRC_MASK:
-> +		case 0:
-> +			break;
-> +		default:
-> +			hash_inset_update &= ~I40E_L3_V6_SRC_MASK;
-> +			hash_inset_update |= I40E_L3_SRC_MASK;
-> +		}
-> +
-> +		switch (hash_inset_orig & I40E_L3_V6_DST_MASK) {
-> +		case I40E_L3_V6_DST_MASK:
-> +		case I40E_L3_DST_MASK:
-> +		case 0:
-> +			break;
-> +		default:
-> +			hash_inset_update &= ~I40E_L3_V6_DST_MASK;
-> +			hash_inset_update |= I40E_L3_DST_MASK;
-> +		}
-> +
-> +		if (hash_inset_update != hash_inset_orig) {
-> +			dev_warn(&pf->pdev->dev,
-> +				 "flow type: %d update input mask from:0x%016llx, to:0x%016llx\n",
-> +				 ret,
-> +				 hash_inset_orig, hash_inset_update);
-> +			i40e_write_rx_ctl(hw, I40E_GLQF_HASH_INSET(0, ret),
-> +					  (u32)hash_inset_update);
-> +			hash_inset_update >>= 32;
-> +			i40e_write_rx_ctl(hw, I40E_GLQF_HASH_INSET(1, ret),
-> +					  (u32)hash_inset_update);
-> +		}
-> +	}
-> +
->  	i40e_write_rx_ctl(hw, I40E_PFQF_HENA(0), (u32)hena);
->  	i40e_write_rx_ctl(hw, I40E_PFQF_HENA(1), (u32)(hena >> 32));
->  
+I've tried to replicate this in fedora:30 docker container and it's there:
 
-OK I applied that and see this:
+[root@linuxkit-025000000001 perf]# gcc --version
+gcc (GCC) 9.1.1 20190503 (Red Hat 9.1.1-1)
 
-i40e: Intel(R) Ethernet Connection XL710 Network Driver - version 2.1.7-k
-i40e: Copyright (c) 2013 - 2014 Intel Corporation.
-i40e 0000:3d:00.0: fw 3.10.52896 api 1.6 nvm 4.00 0x80001577 1.1767.0
-i40e 0000:3d:00.0: The driver for the device detected a newer version of the NVM image than expected. Please install the most recent version of the network driver.
-i40e 0000:3d:00.0: MAC address: a4:bf:01:4e:0c:87
-i40e 0000:3d:00.0: flow type: 36 update input mask from:0x0006060000000000, to:0x0001801800000000
-i40e 0000:3d:00.0: flow type: 35 update input mask from:0x0006060000000000, to:0x0001801800000000
-i40e 0000:3d:00.0: flow type: 34 update input mask from:0x0006060780000000, to:0x0001801f80000000
-i40e 0000:3d:00.0: flow type: 33 update input mask from:0x0006060600000000, to:0x0001801e00000000
-i40e 0000:3d:00.0: flow type: 32 update input mask from:0x0006060600000000, to:0x0001801e00000000
-i40e 0000:3d:00.0: flow type: 31 update input mask from:0x0006060600000000, to:0x0001801e00000000
-i40e 0000:3d:00.0: flow type: 30 update input mask from:0x0006060600000000, to:0x0001801e00000000
-i40e 0000:3d:00.0: flow type: 29 update input mask from:0x0006060600000000, to:0x0001801e00000000
-i40e 0000:3d:00.0: Features: PF-id[0] VSIs: 34 QP: 12 TXQ: 13 RSS VxLAN Geneve VEPA
-i40e 0000:3d:00.1: fw 3.10.52896 api 1.6 nvm 4.00 0x80001577 1.1767.0
-i40e 0000:3d:00.1: The driver for the device detected a newer version of the NVM image than expected. Please install the most recent version of the network driver.
-i40e 0000:3d:00.1: MAC address: a4:bf:01:4e:0c:88
-i40e 0000:3d:00.1: Features: PF-id[1] VSIs: 34 QP: 12 TXQ: 13 RSS VxLAN Geneve VEPA
-i40e 0000:3d:00.1 eth2: NIC Link is Up, 1000 Mbps Full Duplex, Flow Control: None
+[root@linuxkit-025000000001 perf]# pwd
+/tmp/linux-4.19.44/tools/perf
 
-Unfortunately (much to my disappointment, I hoped it would work) I see
-no change in behaviour.
+[root@linuxkit-025000000001 perf]# make -j1
+...
+trace/beauty/ioctl.c: In function =E2=80=98ioctl__scnprintf_kvm_cmd=E2=80=
+=99:
+trace/beauty/ioctl.c:85:82: error: array subscript [-2147483648, -1]
+is outside array bounds of =E2=80=98const char *[0]=E2=80=99 [-Werror=3Darr=
+ay-bounds]
+   85 |  if (nr < strarray__kvm_ioctl_cmds.nr_entries &&
+strarray__kvm_ioctl_cmds.entries[nr] !=3D NULL)
+      |
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~
+In file included from trace/beauty/ioctl.c:82:
+/tmp/linux-4.19.44/tools/perf/trace/beauty/generated/ioctl/kvm_ioctl_array.=
+c:1:20:
+note: while referencing =E2=80=98kvm_ioctl_cmds=E2=80=99
+    1 | static const char *kvm_ioctl_cmds[] =3D {
+      |                    ^~~~~~~~~~~~~~
+In file included from /usr/include/string.h:494,
+                 from util/debug.h:7,
+                 from builtin-help.c:15:
+In function =E2=80=98strncpy=E2=80=99,
+    inlined from =E2=80=98add_man_viewer=E2=80=99 at builtin-help.c:192:2,
+    inlined from =E2=80=98perf_help_config=E2=80=99 at builtin-help.c:284:3=
+:
+/usr/include/bits/string_fortified.h:106:10: error:
+=E2=80=98__builtin_strncpy=E2=80=99 output truncated before terminating nul=
+ copying as
+many bytes from a string as its length [-Werror=3Dstringop-truncation]
+  106 |   return __builtin___strncpy_chk (__dest, __src, __len, __bos (__de=
+st));
+      |          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~=
+~~~~
+builtin-help.c: In function =E2=80=98perf_help_config=E2=80=99:
+builtin-help.c:187:15: note: length computed here
+  187 |  size_t len =3D strlen(name);
+      |               ^~~~~~~~~~~~
+trace/beauty/ioctl.c: In function =E2=80=98ioctl__scnprintf_perf_cmd=E2=80=
+=99:
+trace/beauty/ioctl.c:109:84: error: array subscript [-2147483648, -1]
+is outside array bounds of =E2=80=98const char *[0]=E2=80=99 [-Werror=3Darr=
+ay-bounds]
+  109 |  if (nr < strarray__perf_ioctl_cmds.nr_entries &&
+strarray__perf_ioctl_cmds.entries[nr] !=3D NULL)
+      |
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~
+In file included from trace/beauty/ioctl.c:106:
+/tmp/linux-4.19.44/tools/perf/trace/beauty/generated/ioctl/perf_ioctl_array=
+.c:1:20:
+note: while referencing =E2=80=98perf_ioctl_cmds=E2=80=99
+    1 | static const char *perf_ioctl_cmds[] =3D {
+      |                    ^~~~~~~~~~~~~~~
+cc1: all warnings being treated as errors
 
--- 
-Len Sorensen
+> > about the -Wmissing-attributes I cleaned, they were these:
+>
+> > a6e60d84989f ("include/linux/module.h: copy __init/__exit attrs to
+> > init/cleanup_module")
+> > c0d9782f5b6d ("Compiler Attributes: add support for __copy (gcc >=3D 9)=
+")
+> > ff98e20ef208 ("lib/crc32.c: mark crc32_le_base/__crc32c_le_base
+> > aliases as __pure")
+> >
+> > Cheers,
+> > Miguel
+>
+> --
+>
+> - Arnaldo
