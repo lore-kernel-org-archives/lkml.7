@@ -2,127 +2,135 @@ Return-Path: <SRS0=M1fl=TR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5001C04AB4
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 08:47:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6D3FC04E87
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 08:47:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B378C206A3
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 08:47:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ivsIs+Vh"
+	by mail.kernel.org (Postfix) with ESMTP id ADDDC20873
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 08:47:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728379AbfEQIrR (ORCPT
+        id S1728413AbfEQIrp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 May 2019 04:47:17 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:60470 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726685AbfEQIrR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 May 2019 04:47:17 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=qYyTW+u0uH6BS/vH/FDpbmo0AX8q63BcKgO+wcvhh6A=; b=ivsIs+VhHjfUO5TfOAnQ4la4z
-        AlGlBPznHk20Y7eScgnkjBDqe3XSqKdLSEm4p0pVYXIMeD/GtsK/A4a8fEcbcazkQOXLCcGYiDPgN
-        /arWk35Hk1qv3w5pDfx/pE/UxKNvfEeDEEqynaH6K+yJorG5T9O60F4FAuMUu5l0CiSbIqrqrNW6e
-        xggCfGSHI3GoXPXvGTCt1T5MUK2xszJES0cFFus2SOfUhH6be9lEnPZH0UZaOrJBpbNrApWTDyN/Y
-        Ktq4fobDnQQ2Z5pfJUPuA7nINplnZ09Pspso6djcvfHVH/OoaHrxbOxpSy97GYvaU99vFLks34EHE
-        pVHFeRcBg==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hRYWI-000206-6p; Fri, 17 May 2019 08:47:14 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id A5F112029B0A3; Fri, 17 May 2019 10:47:12 +0200 (CEST)
-Date:   Fri, 17 May 2019 10:47:12 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Yabin Cui <yabinc@google.com>
-Cc:     Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] perf/ring_buffer: Fix exposing a temporarily
- decreased data_head.
-Message-ID: <20190517084712.GL2623@hirez.programming.kicks-ass.net>
-References: <20190515003059.23920-1-yabinc@google.com>
- <20190516184010.167903-1-yabinc@google.com>
+        Fri, 17 May 2019 04:47:45 -0400
+Received: from mx2.suse.de ([195.135.220.15]:52786 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727843AbfEQIro (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 May 2019 04:47:44 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 4AA79AE33;
+        Fri, 17 May 2019 08:47:42 +0000 (UTC)
+Received: by quack2.suse.cz (Postfix, from userid 1000)
+        id 767281E3ED6; Fri, 17 May 2019 10:47:39 +0200 (CEST)
+Date:   Fri, 17 May 2019 10:47:39 +0200
+From:   Jan Kara <jack@suse.cz>
+To:     Dan Williams <dan.j.williams@intel.com>
+Cc:     linux-nvdimm@lists.01.org, Jan Kara <jack@suse.cz>,
+        stable@vger.kernel.org, Jeff Moyer <jmoyer@redhat.com>,
+        Ingo Molnar <mingo@redhat.com>, Christoph Hellwig <hch@lst.de>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Matthew Wilcox <willy@infradead.org>,
+        Jeff Smits <jeff.smits@intel.com>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Kees Cook <keescook@chromium.org>
+Subject: Re: [PATCH] libnvdimm/pmem: Bypass CONFIG_HARDENED_USERCOPY overhead
+Message-ID: <20190517084739.GB20550@quack2.suse.cz>
+References: <155805321833.867447.3864104616303535270.stgit@dwillia2-desk3.amr.corp.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190516184010.167903-1-yabinc@google.com>
+In-Reply-To: <155805321833.867447.3864104616303535270.stgit@dwillia2-desk3.amr.corp.intel.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 16, 2019 at 11:40:10AM -0700, Yabin Cui wrote:
-> In perf_output_put_handle(), an IRQ/NMI can happen in below location and
-> write records to the same ring buffer:
-> 	...
-> 	local_dec_and_test(&rb->nest)
-> 	...                          <-- an IRQ/NMI can happen here
-> 	rb->user_page->data_head = head;
-> 	...
-> 
-> In this case, a value A is written to data_head in the IRQ, then a value
-> B is written to data_head after the IRQ. And A > B. As a result,
-> data_head is temporarily decreased from A to B. And a reader may see
-> data_head < data_tail if it read the buffer frequently enough, which
-> creates unexpected behaviors.
-> 
-> This can be fixed by moving dec(&rb->nest) to after updating data_head,
-> which prevents the IRQ/NMI above from updating data_head.
-> 
-> Signed-off-by: Yabin Cui <yabinc@google.com>
-> ---
-> 
-> v1 -> v2: change rb->nest from local_t to unsigned int, and add barriers.
-> 
-> ---
->  kernel/events/internal.h    |  2 +-
->  kernel/events/ring_buffer.c | 24 ++++++++++++++++++------
->  2 files changed, 19 insertions(+), 7 deletions(-)
-> 
-> diff --git a/kernel/events/internal.h b/kernel/events/internal.h
-> index 79c47076700a..0a8c003b9bcf 100644
-> --- a/kernel/events/internal.h
-> +++ b/kernel/events/internal.h
-> @@ -24,7 +24,7 @@ struct ring_buffer {
->  	atomic_t			poll;		/* POLL_ for wakeups */
->  
->  	local_t				head;		/* write position    */
-> -	local_t				nest;		/* nested writers    */
-> +	unsigned int			nest;		/* nested writers    */
->  	local_t				events;		/* event limit       */
->  	local_t				wakeup;		/* wakeup stamp      */
->  	local_t				lost;		/* nr records lost   */
-> diff --git a/kernel/events/ring_buffer.c b/kernel/events/ring_buffer.c
-> index 674b35383491..c677beb01fb1 100644
-> --- a/kernel/events/ring_buffer.c
-> +++ b/kernel/events/ring_buffer.c
-> @@ -38,7 +38,8 @@ static void perf_output_get_handle(struct perf_output_handle *handle)
->  	struct ring_buffer *rb = handle->rb;
->  
->  	preempt_disable();
-> -	local_inc(&rb->nest);
-> +	rb->nest++;
-> +	barrier();
+Let's add Kees to CC for usercopy expertise...
 
-Urgh; almost but not quite. You just lost the 'volatile' qualifier and
-now the compiler can mess things up for you.
+On Thu 16-05-19 17:33:38, Dan Williams wrote:
+> Jeff discovered that performance improves from ~375K iops to ~519K iops
+> on a simple psync-write fio workload when moving the location of 'struct
+> page' from the default PMEM location to DRAM. This result is surprising
+> because the expectation is that 'struct page' for dax is only needed for
+> third party references to dax mappings. For example, a dax-mapped buffer
+> passed to another system call for direct-I/O requires 'struct page' for
+> sending the request down the driver stack and pinning the page. There is
+> no usage of 'struct page' for first party access to a file via
+> read(2)/write(2) and friends.
+> 
+> However, this "no page needed" expectation is violated by
+> CONFIG_HARDENED_USERCOPY and the check_copy_size() performed in
+> copy_from_iter_full_nocache() and copy_to_iter_mcsafe(). The
+> check_heap_object() helper routine assumes the buffer is backed by a
+> page-allocator DRAM page and applies some checks.  Those checks are
+> invalid, dax pages are not from the heap, and redundant,
+> dax_iomap_actor() has already validated that the I/O is within bounds.
 
->  	handle->wakeup = local_read(&rb->wakeup);
+So this last paragraph is not obvious to me as check_copy_size() does a lot
+of various checks in CONFIG_HARDENED_USERCOPY case. I agree that some of
+those checks don't make sense for PMEM pages but I'd rather handle that by
+refining check_copy_size() and check_object_size() functions to detect and
+appropriately handle pmem pages rather that generally skip all the checks
+in pmem_copy_from/to_iter(). And yes, every check in such hot path is going
+to cost performance but that's what user asked for with
+CONFIG_HARDENED_USERCOPY... Kees?
+
+								Honza
+
+> 
+> Bypass this overhead and call the 'no check' versions of the
+> copy_{to,from}_iter operations directly.
+> 
+> Fixes: 0aed55af8834 ("x86, uaccess: introduce copy_from_iter_flushcache...")
+> Cc: Jan Kara <jack@suse.cz>
+> Cc: <stable@vger.kernel.org>
+> Cc: Jeff Moyer <jmoyer@redhat.com>
+> Cc: Ingo Molnar <mingo@redhat.com>
+> Cc: Christoph Hellwig <hch@lst.de>
+> Cc: Al Viro <viro@zeniv.linux.org.uk>
+> Cc: Thomas Gleixner <tglx@linutronix.de>
+> Cc: Matthew Wilcox <willy@infradead.org>
+> Reported-and-tested-by: Jeff Smits <jeff.smits@intel.com>
+> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+> ---
+>  drivers/nvdimm/pmem.c |    9 +++++++--
+>  1 file changed, 7 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/nvdimm/pmem.c b/drivers/nvdimm/pmem.c
+> index 845c5b430cdd..c894f45e5077 100644
+> --- a/drivers/nvdimm/pmem.c
+> +++ b/drivers/nvdimm/pmem.c
+> @@ -281,16 +281,21 @@ static long pmem_dax_direct_access(struct dax_device *dax_dev,
+>  	return __pmem_direct_access(pmem, pgoff, nr_pages, kaddr, pfn);
 >  }
-
-What I'm going to do is split this into two patches, one fixes the
-problem and marked for backport, and one changing away from local_t.
-
+>  
+> +/*
+> + * Use the 'no check' versions of copy_from_iter_flushcache() and
+> + * copy_to_iter_mcsafe() to bypass HARDENED_USERCOPY overhead. Bounds
+> + * checking is handled by dax_iomap_actor()
+> + */
+>  static size_t pmem_copy_from_iter(struct dax_device *dax_dev, pgoff_t pgoff,
+>  		void *addr, size_t bytes, struct iov_iter *i)
+>  {
+> -	return copy_from_iter_flushcache(addr, bytes, i);
+> +	return _copy_from_iter_flushcache(addr, bytes, i);
+>  }
+>  
+>  static size_t pmem_copy_to_iter(struct dax_device *dax_dev, pgoff_t pgoff,
+>  		void *addr, size_t bytes, struct iov_iter *i)
+>  {
+> -	return copy_to_iter_mcsafe(addr, bytes, i);
+> +	return _copy_to_iter_mcsafe(addr, bytes, i);
+>  }
+>  
+>  static const struct dax_operations pmem_dax_ops = {
+> 
+-- 
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
