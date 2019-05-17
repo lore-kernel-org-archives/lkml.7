@@ -2,134 +2,132 @@ Return-Path: <SRS0=M1fl=TR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45B97C04AB4
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 05:34:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09A35C04AB4
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 05:36:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0F59620848
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 05:34:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="XCLpFXxX"
+	by mail.kernel.org (Postfix) with ESMTP id D072E20868
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 05:36:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727899AbfEQFeo (ORCPT
+        id S1727936AbfEQFgA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 May 2019 01:34:44 -0400
-Received: from ozlabs.org ([203.11.71.1]:51269 "EHLO ozlabs.org"
+        Fri, 17 May 2019 01:36:00 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:51660 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726772AbfEQFeo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 May 2019 01:34:44 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        id S1727317AbfEQFgA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 May 2019 01:36:00 -0400
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 454xnD321Lz9s55;
-        Fri, 17 May 2019 15:34:40 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1558071281;
-        bh=bw+Mmk5RPWITtoR+Iv5JYFrtaaLoLeyObgBQwi6dcLI=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=XCLpFXxXnkGQ6zm1XaFLysJ4ke+eg0uUNPbVm4eSpUxSymtzBrVgkFWdlV4uNl67y
-         +pg4cjZ7ZGzybJA46gTTF0Y+L/TXqFhjeQ5oTYMNhFw0Gajxy9C1KVvD0GVma5sG26
-         CzutJfEWCXNyUVktPAaQ/kbycG8nLQgy9f4xv3FeaXnNuUDym9exXMYygCXA4N3iwB
-         CeLJg3Nm0n7+wshwdDxubzDSL+Q2bbmbIirCG7P5v4odEVCBxY7hwNJ3AWRx4fJo/P
-         wOYoiYkd23ko0We7ysw/9iKBahJ7PAFgIaIfowNtOgvC55nTEIJyOzlQrR2wDJSGQD
-         h1wk5f7UOSGLg==
-Date:   Fri, 17 May 2019 15:34:39 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc:     linux-kbuild@vger.kernel.org, Sam Ravnborg <sam@ravnborg.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Jessica Yu <jeyu@kernel.org>,
-        Lucas De Marchi <lucas.de.marchi@gmail.com>,
-        Michael Schmitz <schmitzmic@gmail.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Rusty Russell <rusty@rustcorp.com.au>,
-        Kees Cook <keescook@chromium.org>,
-        Michal Marek <michal.lkml@markovi.net>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] kbuild: check uniqueness of module names
-Message-ID: <20190517153439.3b479334@canb.auug.org.au>
-In-Reply-To: <20190517042753.25857-1-yamada.masahiro@socionext.com>
-References: <20190517042753.25857-1-yamada.masahiro@socionext.com>
+        by mx1.redhat.com (Postfix) with ESMTPS id 7DB4D81DE6;
+        Fri, 17 May 2019 05:35:59 +0000 (UTC)
+Received: from colo-mx.corp.redhat.com (colo-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.20])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 58AE01001DD2;
+        Fri, 17 May 2019 05:35:59 +0000 (UTC)
+Received: from zmail21.collab.prod.int.phx2.redhat.com (zmail21.collab.prod.int.phx2.redhat.com [10.5.83.24])
+        by colo-mx.corp.redhat.com (Postfix) with ESMTP id 0AB9A1806B10;
+        Fri, 17 May 2019 05:35:59 +0000 (UTC)
+Date:   Fri, 17 May 2019 01:35:58 -0400 (EDT)
+From:   Pankaj Gupta <pagupta@redhat.com>
+To:     Jakub =?utf-8?Q?Staro=C5=84?= <jstaron@google.com>
+Cc:     linux-nvdimm@lists.01.org, linux-kernel@vger.kernel.org,
+        virtualization@lists.linux-foundation.org, kvm@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-acpi@vger.kernel.org,
+        qemu-devel@nongnu.org, linux-ext4@vger.kernel.org,
+        linux-xfs@vger.kernel.org, jack@suse.cz, mst@redhat.com,
+        jasowang@redhat.com, david@fromorbit.com, lcapitulino@redhat.com,
+        adilger kernel <adilger.kernel@dilger.ca>, smbarber@google.com,
+        zwisler@kernel.org, aarcange@redhat.com,
+        dave jiang <dave.jiang@intel.com>,
+        darrick wong <darrick.wong@oracle.com>,
+        vishal l verma <vishal.l.verma@intel.com>, david@redhat.com,
+        willy@infradead.org, hch@infradead.org, jmoyer@redhat.com,
+        nilal@redhat.com, lenb@kernel.org, kilobyte@angband.pl,
+        riel@surriel.com, yuval shaia <yuval.shaia@oracle.com>,
+        stefanha@redhat.com, pbonzini@redhat.com,
+        dan j williams <dan.j.williams@intel.com>, kwolf@redhat.com,
+        tytso@mit.edu, xiaoguangrong eric <xiaoguangrong.eric@gmail.com>,
+        cohuck@redhat.com, rjw@rjwysocki.net, imammedo@redhat.com
+Message-ID: <1954162775.29408078.1558071358974.JavaMail.zimbra@redhat.com>
+In-Reply-To: <c06514fd-8675-ba74-4b7b-ff0eb4a91605@google.com>
+References: <20190514145422.16923-1-pagupta@redhat.com> <20190514145422.16923-3-pagupta@redhat.com> <c06514fd-8675-ba74-4b7b-ff0eb4a91605@google.com>
+Subject: Re: [Qemu-devel] [PATCH v9 2/7] virtio-pmem: Add virtio pmem driver
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/IlsPisnNmYNysYS_bs/ddIU"; protocol="application/pgp-signature"
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.67.116.188, 10.4.195.1]
+Thread-Topic: virtio-pmem: Add virtio pmem driver
+Thread-Index: Jfq72a6Lppgn6G/na6kHvdhmTQkM6g==
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.25]); Fri, 17 May 2019 05:35:59 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/IlsPisnNmYNysYS_bs/ddIU
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
 
-Hi Masahiro,
 
-Thanks for this, looks good to me.  Just a nit below.
+Hi Jakub,
 
-On Fri, 17 May 2019 13:27:53 +0900 Masahiro Yamada <yamada.masahiro@socione=
-xt.com> wrote:
->
+> 
+> On 5/14/19 7:54 AM, Pankaj Gupta wrote:
+> > +		if (!list_empty(&vpmem->req_list)) {
+> > +			req_buf = list_first_entry(&vpmem->req_list,
+> > +					struct virtio_pmem_request, list);
+> > +			req_buf->wq_buf_avail = true;
+> > +			wake_up(&req_buf->wq_buf);
+> > +			list_del(&req_buf->list);
+> Yes, this change is the right one, thank you!
 
-> diff --git a/scripts/modules-check.sh b/scripts/modules-check.sh
-> new file mode 100755
-> index 000000000000..c875f6eab01e
-> --- /dev/null
-> +++ b/scripts/modules-check.sh
-> @@ -0,0 +1,20 @@
-> +#!/bin/sh
-> +# SPDX-License-Identifier: GPL-2.0
-> +
-> +set -e
-> +
-> +# Check uniqueness of module names
-> +check_same_name_modules()
-> +{
-> +	same_name_modules=3D$(cat modules.order modules.builtin | \
-                                                                ^
-This trailing '\' is unnecessary after a pipe symbol.
+Thank you for the confirmation.
 
-> +				xargs -r basename -a -- | sort | uniq -d)
-> +
-> +	for m in $same_name_modules
-> +	do
-> +		echo "warning: same basename if the following are built as modules:" >=
-&2
-> +		grep -h -e "/$m" modules.order modules.builtin | \
+> 
+> > +	 /*
+> > +	  * If virtqueue_add_sgs returns -ENOSPC then req_vq virtual
+> > +	  * queue does not have free descriptor. We add the request
+> > +	  * to req_list and wait for host_ack to wake us up when free
+> > +	  * slots are available.
+> > +	  */
+> > +	while ((err = virtqueue_add_sgs(vpmem->req_vq, sgs, 1, 1, req,
+> > +					GFP_ATOMIC)) == -ENOSPC) {
+> > +
+> > +		dev_err(&vdev->dev, "failed to send command to virtio pmem" \
+> > +			"device, no free slots in the virtqueue\n");
+> > +		req->wq_buf_avail = false;
+> > +		list_add_tail(&req->list, &vpmem->req_list);
+> > +		spin_unlock_irqrestore(&vpmem->pmem_lock, flags);
+> > +
+> > +		/* A host response results in "host_ack" getting called */
+> > +		wait_event(req->wq_buf, req->wq_buf_avail);
+> > +		spin_lock_irqsave(&vpmem->pmem_lock, flags);
+> > +	}
+> > +	err1 = virtqueue_kick(vpmem->req_vq);
+> > +	spin_unlock_irqrestore(&vpmem->pmem_lock, flags);
+> > +
+> > +	/*
+> > +	 * virtqueue_add_sgs failed with error different than -ENOSPC, we can't
+> > +	 * do anything about that.
+> > +	 */
+> > +	if (err || !err1) {
+> > +		dev_info(&vdev->dev, "failed to send command to virtio pmem device\n");
+> > +		err = -EIO;
+> > +	} else {
+> > +		/* A host repsonse results in "host_ack" getting called */
+> > +		wait_event(req->host_acked, req->done);
+> > +		err = req->ret;
+> > +I confirm that the failures I was facing with the `-ENOSPC` error path are
+> > not present in v9.
 
-Same here
+Can I take it your reviewed/acked-by? or tested-by tag? for the virtio patch :)
 
-> +						sed 's:^kernel/:  :' >&2
-> +	done
-> +}
-> +
-> +check_same_name_modules
+Thank you,
+Pankaj
 
-Reviewed-by: Stephen ROthwell <sfr@canb.auug.org.au>
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/IlsPisnNmYNysYS_bs/ddIU
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAlzeR+8ACgkQAVBC80lX
-0Gzmhwf7B10c15F0Cw1Alt+7cctlQvs4IV/Lpxcg/nFDLrKaGl9UEiAOS1NiUong
-cJuqTud0LO2PP41jUDbNoAwf6a90eLkJ28vhU4xz3l9x7lIHIwd8ziwkmbMHPCrY
-q6R63Qi6YKRo1ZbJAcKI671d+Dbkv3/VKArWxXHjha17/lYHOTLr15ASO+oaXyz3
-oK8IJ6+hX6wCPNV3RHgQ88GrazAaRlH+XefxCtxsV/lX2avmnk8y0rMwkN3v11nq
-CsOpLdpBCMgAFZ4Kpt3yr/XGDYBM9Gb3cFvkKbVbdKSKOuu6GZlAEd1JUwpdcSea
-YiAuCZu/OOoiNOhXrv3uDZzEJ48zFg==
-=Xu3a
------END PGP SIGNATURE-----
-
---Sig_/IlsPisnNmYNysYS_bs/ddIU--
+> 
+> Best,
+> Jakub Staron
+> 
+> 
