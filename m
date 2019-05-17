@@ -2,111 +2,90 @@ Return-Path: <SRS0=M1fl=TR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74757C04AB4
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 19:09:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7933C04AB4
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 19:10:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2630C21734
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 19:09:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HxlQrygY"
+	by mail.kernel.org (Postfix) with ESMTP id 8075621734
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 19:10:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727977AbfEQTJe (ORCPT
+        id S1728887AbfEQTKR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 May 2019 15:09:34 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:42649 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725954AbfEQTJe (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 May 2019 15:09:34 -0400
-Received: by mail-lj1-f194.google.com with SMTP id 188so7201888ljf.9
-        for <linux-kernel@vger.kernel.org>; Fri, 17 May 2019 12:09:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=db6mb74L+PPicDHpwKuPDnVCSGYCzF4jUKKVjxH/fvA=;
-        b=HxlQrygYJrKchUDVDSf2nIYdkzxe8tCRKX9+Capc53EO5ZZnImjAQCI6skqbbZ50Kn
-         NjM/GIGNZLGPiQ1Z+HIzZwAX9fl1NHE2hY4t5Tg2VDKFYRnpzU9bqnWr64tpSEpboZIM
-         Ve5Pgn/4I0W/nvzYntd6nJTsYkflykUC42P8yDRUX8ijxEv3Bgaowy2HnJWwzg6pVmXr
-         pAsB4OP43cUDzRPtcZL6FkLW2+YinmbLwh+Fio8RaMLNkvYAwWQOKeUfxKs4gI3OWdIR
-         G0swZy3zI1AHkulw0We5g9kZkgCYfWayKlQvMY7j1nTnINZyHpBulc2brn1lzNJ6YCBG
-         KTBA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=db6mb74L+PPicDHpwKuPDnVCSGYCzF4jUKKVjxH/fvA=;
-        b=HfzGsTyw+/3uiI6gYszHpDoSoxeipT0NBgFDNhuL86IGLxm/HhcJ2yKx5kuzU1LO+3
-         y473IKZvzbgKPJx9lqPL+Tvgf7y8KIab732C168O+1vb/PBsXfE9gi3a2+rVuIiBGo3n
-         9FJSnGKE5jZhPJAuUg2D0+ac/3p6WMP2NLFuR4L16Y7Pt5zPSpEReesZpwS4x/pqd4/r
-         3I8unGI4rc/NJlD+HJP9XuC9cWI/FaiIDjR2prnhgzkPQaiPcGG+ftZ3zcDh2WEyYZ6M
-         Ofwtu6romL6Jv3WeBpNMP4Oe4iraJ+WRA8quPR368K4L9jNTznUdGO94IJb0780VmT6E
-         Hrww==
-X-Gm-Message-State: APjAAAX16XD3GYDClGSV4j10O+xz1276dX88GZb7nzlxtQb4Z4u9/hO0
-        80Mf/tGxOsuI1usbWlTJ7nxKrQD0AHP8hwyYvUE=
-X-Google-Smtp-Source: APXvYqzywiUzI5+5xKOFVoME6HGMZ5ebHqKQoEafbsG9ztvNhIrdBxOhHI5TLR5QPW6Hx1IupdOzDbdrWdYRTB/bfu4=
-X-Received: by 2002:a2e:84a:: with SMTP id g10mr18381763ljd.98.1558120172354;
- Fri, 17 May 2019 12:09:32 -0700 (PDT)
+        Fri, 17 May 2019 15:10:17 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:33178 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725954AbfEQTKQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 May 2019 15:10:16 -0400
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 8E67D81F0D;
+        Fri, 17 May 2019 19:10:16 +0000 (UTC)
+Received: from treble (ovpn-125-173.rdu2.redhat.com [10.10.125.173])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 963406085B;
+        Fri, 17 May 2019 19:10:13 +0000 (UTC)
+Date:   Fri, 17 May 2019 14:10:11 -0500
+From:   Josh Poimboeuf <jpoimboe@redhat.com>
+To:     Joe Lawrence <joe.lawrence@redhat.com>
+Cc:     live-patching@vger.kernel.org, linux-kernel@vger.kernel.org,
+        jikos@kernel.org, pmladek@suse.com, tglx@linutronix.de
+Subject: Re: [PATCH] stacktrace: fix CONFIG_ARCH_STACKWALK
+ stack_trace_save_tsk_reliable return
+Message-ID: <20190517191011.oe3g57vxwkf4gupa@treble>
+References: <20190517185117.24642-1-joe.lawrence@redhat.com>
 MIME-Version: 1.0
-References: <20190517092502.GA22779@gmail.com> <CAHk-=wiNkOU-Ng+9_+tj4-AqJ4Q9JQpVbR4QVVAWLY68yQ62Gw@mail.gmail.com>
-In-Reply-To: <CAHk-=wiNkOU-Ng+9_+tj4-AqJ4Q9JQpVbR4QVVAWLY68yQ62Gw@mail.gmail.com>
-From:   Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date:   Fri, 17 May 2019 21:09:21 +0200
-Message-ID: <CANiq72=hUULnd_oDoGoD2gjE-QvL2Kw2n7hMxke+gkS2_gzCqw@mail.gmail.com>
-Subject: Re: [PATCH] tracing: silence GCC 9 array bounds warning
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Steven Rostedt <rostedt@goodmis.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20190517185117.24642-1-joe.lawrence@redhat.com>
+User-Agent: NeoMutt/20180716
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.27]); Fri, 17 May 2019 19:10:16 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 17, 2019 at 7:59 PM Linus Torvalds
-<torvalds@linux-foundation.org> wrote:
->
-> On Fri, May 17, 2019 at 2:25 AM Miguel Ojeda
-> <miguel.ojeda.sandonis@gmail.com> wrote:
-> >
-> > +       memset((char *)(iter) + offsetof(struct trace_iterator, seq), 0,
-> > +              sizeof(struct trace_iterator) -
-> > +              offsetof(struct trace_iterator, seq));
->
-> Honestly, the above is nasty.
->
-> Whenever you have to split an expression or statement over several
-> lines, you should ask yourself why it's so complicated.
+On Fri, May 17, 2019 at 02:51:17PM -0400, Joe Lawrence wrote:
+> Miroslav reported that the livepatch self-tests were failing,
+> specifically a case in which the consistency model ensures that we do
+> not patch a current executing function, "TEST: busy target module".
+> 
+> Recent renovations to stack_trace_save_tsk_reliable() left it returning
+> only an -ERRNO success indication in some configuration combinations:
+> 
+>   klp_check_stack()
+>     ret = stack_trace_save_tsk_reliable()
+>       #ifdef CONFIG_ARCH_STACKWALK && CONFIG_HAVE_RELIABLE_STACKTRACE
+>         stack_trace_save_tsk_reliable()
+>           ret = arch_stack_walk_reliable()
+>             return 0
+>             return -EINVAL
+>           ...
+>           return ret;
+>     ...
+>     if (ret < 0)
+>       /* stack_trace_save_tsk_reliable error */
+>     nr_entries = ret;                               << 0
+> 
+> Previously (and currently for !CONFIG_ARCH_STACKWALK &&
+> CONFIG_HAVE_RELIABLE_STACKTRACE) stack_trace_save_tsk_reliable()
+> returned the number of entries that it consumed in the passed storage
+> array.
+> 
+> In the case of the above config and trace, be sure to return the
+> stacktrace_cookie.len on stack_trace_save_tsk_reliable() success.
+> 
+> Fixes: 25e39e32b0a3f ("livepatch: Simplify stack trace retrieval")
+> Reported-by: Miroslav Benes <mbenes@suse.cz>
+> Signed-off-by: Joe Lawrence <joe.lawrence@redhat.com>
 
-Will do -- I was trying to keep the code as closely to the original as
-possible (I simply replaced the &iter.seq expression :-)
+It's great to see the livepatch selftests working and finding
+regressions.
 
-By the way, how do you all feel about moving this as a generic
-facility to zero out the suffix/prefix of an structure? In particular,
-since we won't have the LAT* stuff according to Steven.
+Acked-by: Josh Poimboeuf <jpoimboe@redhat.com>
 
-> Also, the while 'offset' is a variable, any compiler will immediately
-> see that it's a constant value, so it's not like this will affect the
-> generated code at all.
-
-I like C++'s constexpr (for variable defs), maybe one day we will get
-it on C; it is useful to cleanly annotate compile-time values like
-this.
-
-> Unless you compile with something crazy like
-> '-O0', which is not a supported configuration exactly because we
-> expect compilers to not be terminally stupid.
-
-Fun fact: it seems clang folds some of these even under -O0. In
-godbolt I see it folding the third argument completely. The first one
-isn't, but it is computed on the function prologue, leaving the
-'offset' variable unused.
-
-Cheers,
-Miguel
+-- 
+Josh
