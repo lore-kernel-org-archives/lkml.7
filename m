@@ -2,122 +2,148 @@ Return-Path: <SRS0=M1fl=TR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DD5DC04E87
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 22:37:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 365A0C04AB4
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 22:49:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1AB76216C4
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 22:37:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0759A2133D
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 22:49:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="j1fMEwmF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729142AbfEQWhI (ORCPT
+        id S1729153AbfEQWs7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 May 2019 18:37:08 -0400
-Received: from outgoing-stata.csail.mit.edu ([128.30.2.210]:38982 "EHLO
-        outgoing-stata.csail.mit.edu" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728179AbfEQWhI (ORCPT
+        Fri, 17 May 2019 18:48:59 -0400
+Received: from mail-it1-f193.google.com ([209.85.166.193]:35395 "EHLO
+        mail-it1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727181AbfEQWs7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 May 2019 18:37:08 -0400
-X-Greylist: delayed 1255 seconds by postgrey-1.27 at vger.kernel.org; Fri, 17 May 2019 18:37:06 EDT
-Received: from [4.30.142.84] (helo=srivatsab-a01.vmware.com)
-        by outgoing-stata.csail.mit.edu with esmtpsa (TLS1.2:RSA_AES_128_CBC_SHA1:128)
-        (Exim 4.82)
-        (envelope-from <srivatsa@csail.mit.edu>)
-        id 1hRl91-000BD0-LI; Fri, 17 May 2019 18:16:03 -0400
-To:     linux-fsdevel@vger.kernel.org, linux-block@vger.kernel.org,
-        linux-ext4@vger.kernel.org, cgroups@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     axboe@kernel.dk, paolo.valente@linaro.org, jack@suse.cz,
-        jmoyer@redhat.com, tytso@mit.edu, amakhalov@vmware.com,
-        anishs@vmware.com, srivatsab@vmware.com,
-        "Srivatsa S. Bhat" <srivatsa@csail.mit.edu>
-From:   "Srivatsa S. Bhat" <srivatsa@csail.mit.edu>
-Subject: CFQ idling kills I/O performance on ext4 with blkio cgroup controller
-Message-ID: <8d72fcf7-bbb4-2965-1a06-e9fc177a8938@csail.mit.edu>
-Date:   Fri, 17 May 2019 15:16:01 -0700
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.13; rv:60.0)
- Gecko/20100101 Thunderbird/60.6.1
+        Fri, 17 May 2019 18:48:59 -0400
+Received: by mail-it1-f193.google.com with SMTP id u186so14548574ith.0
+        for <linux-kernel@vger.kernel.org>; Fri, 17 May 2019 15:48:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=fWLIDy2co5Vn50CtpXbdQSItadAnwXRU6oL36I+LMbU=;
+        b=j1fMEwmFBzpq5dKJ/MaU3D+drIuI0ARLCKClUL2DUep1n6kX4Fj3FE+3y2BpqzVZcg
+         cEeqDwknBjsY/k8bhbZb9ooIqb2AicXfoG+WcGFLfDGOXOwGm39gXALlBPzi1fE7dZkl
+         Gy0hqJ4vSeb3tcYqh9HvuEQUYmtA/7AZnr2/4=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=fWLIDy2co5Vn50CtpXbdQSItadAnwXRU6oL36I+LMbU=;
+        b=q0B6mFUXnDRKQkGem9UMMUj5aUFfj4k5R9h/3uRunxTRncIW1ePnhjQKRfbUyygmQ/
+         RIvo9m8TvpeEVzW2t9aVbBpgWmHqnAiCZ4B90eyxjhVjJyGPtIkAo3qZbaHClsv+3WwR
+         xICyhzS0oDMitK2E6At1YUFtZ9PCa4tG79h5jVbLNlMTJVFJapThWSYT9JfUFuns62yr
+         hDsaB7P+WubZcRhjiM2P5Eo5rf81ZrucPszLGnb2rkGX2m1SF0caP4ytkL1lqCBp/1pF
+         UsVbdBDJUSo7nJ8ebOya0t4RteInTa5Ec9LAtA+tISgjZODz3Xk004jLcWv9XnojZLvo
+         Kbzw==
+X-Gm-Message-State: APjAAAWYAaC9Bs45Z8F9M0Vm6z8vI+AmKe1dv7+552KRgSrivR3RqCfx
+        XlVQVV4WDa8l6/IPZrH8Z7vzUHHqMm+CkGq1YFgTjA==
+X-Google-Smtp-Source: APXvYqyYg5NJJ7Eb1Cf1sch9W6PqiIZNmQkePH7xL+iwmKaY8JvrKHQXzNzcY6+FGrg1OB6xJE1HilF2iy1ns9vW/Ag=
+X-Received: by 2002:a02:1142:: with SMTP id 63mr37714962jaf.19.1558133338638;
+ Fri, 17 May 2019 15:48:58 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20190509211353.213194-1-gwendal@chromium.org>
+In-Reply-To: <20190509211353.213194-1-gwendal@chromium.org>
+From:   Gwendal Grignou <gwendal@chromium.org>
+Date:   Fri, 17 May 2019 15:48:47 -0700
+Message-ID: <CAPUE2ut4OUhrmbx6n8KCj7+ghXmC9iMnxGN8DMvyvZstznwwng@mail.gmail.com>
+Subject: Re: [PATCH v3 00/30] Update cros_ec_commands.h
+To:     Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Benson Leung <bleung@chromium.org>,
+        Guenter Roeck <groeck@chromium.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Mark Brown <broonie@kernel.org>,
+        Cheng-Yi Chiang <cychiang@chromium.org>,
+        Takashi Iwai <tiwai@suse.com>
+Cc:     linux-iio@vger.kernel.org, alsa-devel@alsa-project.org,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Lee,
 
-Hi,
+I verified and merged the changes on the kernels (3.18, 4.4 and 4.14)
+used on chromebook using a squashed version of these patches.
+(crrev.com/c/1583322, crrev.com/c/1583385, crrev.com/c/1583321
+respectively)
+Please let me know if you have any questions.
 
-One of my colleagues noticed upto 10x - 30x drop in I/O throughput
-running the following command, with the CFQ I/O scheduler:
+Thanks,
 
-dd if=/dev/zero of=/root/test.img bs=512 count=10000 oflags=dsync
+Gwendal.
 
-Throughput with CFQ: 60 KB/s
-Throughput with noop or deadline: 1.5 MB/s - 2 MB/s
-
-I spent some time looking into it and found that this is caused by the
-undesirable interaction between 4 different components:
-
-- blkio cgroup controller enabled
-- ext4 with the jbd2 kthread running in the root blkio cgroup
-- dd running on ext4, in any other blkio cgroup than that of jbd2
-- CFQ I/O scheduler with defaults for slice_idle and group_idle
-
-
-When docker is enabled, systemd creates a blkio cgroup called
-system.slice to run system services (and docker) under it, and a
-separate blkio cgroup called user.slice for user processes. So, when
-dd is invoked, it runs under user.slice.
-
-The dd command above includes the dsync flag, which performs an
-fdatasync after every write to the output file. Since dd is writing to
-a file on ext4, jbd2 will be active, committing transactions
-corresponding to those fdatasync requests from dd. (In other words, dd
-depends on jdb2, in order to make forward progress). But jdb2 being a
-kernel thread, runs in the root blkio cgroup, as opposed to dd, which
-runs under user.slice.
-
-Now, if the I/O scheduler in use for the underlying block device is
-CFQ, then its inter-queue/inter-group idling takes effect (via the
-slice_idle and group_idle parameters, both of which default to 8ms).
-Therefore, everytime CFQ switches between processing requests from dd
-vs jbd2, this 8ms idle time is injected, which slows down the overall
-throughput tremendously!
-
-To verify this theory, I tried various experiments, and in all cases,
-the 4 pre-conditions mentioned above were necessary to reproduce this
-performance drop. For example, if I used an XFS filesystem (which
-doesn't use a separate kthread like jbd2 for journaling), or if I dd'ed
-directly to a block device, I couldn't reproduce the performance
-issue. Similarly, running dd in the root blkio cgroup (where jbd2
-runs) also gets full performance; as does using the noop or deadline
-I/O schedulers; or even CFQ itself, with slice_idle and group_idle set
-to zero.
-
-These results were reproduced on a Linux VM (kernel v4.19) on ESXi,
-both with virtualized storage as well as with disk pass-through,
-backed by a rotational hard disk in both cases. The same problem was
-also seen with the BFQ I/O scheduler in kernel v5.1.
-
-Searching for any earlier discussions of this problem, I found an old
-thread on LKML that encountered this behavior [1], as well as a docker
-github issue [2] with similar symptoms (mentioned later in the
-thread).
-
-So, I'm curious to know if this is a well-understood problem and if
-anybody has any thoughts on how to fix it.
-
-Thank you very much!
-
-
-[1]. https://lkml.org/lkml/2015/11/19/359
-
-[2]. https://github.com/moby/moby/issues/21485
-     https://github.com/moby/moby/issues/21485#issuecomment-222941103
-
-Regards,
-Srivatsa
+On Thu, May 9, 2019 at 2:14 PM Gwendal Grignou <gwendal@chromium.org> wrote:
+>
+> The interface between CrosEC embedded controller and the host,
+> described by cros_ec_commands.h, as diverged from what the embedded
+> controller really support.
+>
+> The source of thruth is at
+> https://chromium.googlesource.com/chromiumos/platform/ec/+/master/include/ec_commands.h
+>
+> That include file is converted to remove ACPI and Embedded only code.
+>
+> From now on, cros_ec_commands.h will be automatically generated from
+> the file above, do not modify directly.
+>
+> Fell free to squash the commits below.
+>
+> Changes in v3:
+> - Rebase after commit 81888d8ab1532 ("mfd: cros_ec: Update the EC feature codes")
+> - Add Acked-by: Benson Leung <bleung@chromium.org>
+>
+> Changes in v2:
+> - Move I2S changes at the end of the patchset, squashed with change in
+>   sound/soc/codecs/cros_ec_codec.c to match new interface.
+> - Add Acked-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+>
+> Gwendal Grignou (30):
+>   mfd: cros_ec: Update license term
+>   mfd: cros_ec: Zero BUILD_ macro
+>   mfd: cros_ec: set comments properly
+>   mfd: cros_ec: add ec_align macros
+>   mfd: cros_ec: Define commands as 4-digit UPPER CASE hex values
+>   mfd: cros_ec: use BIT macro
+>   mfd: cros_ec: Update ACPI interface definition
+>   mfd: cros_ec: move HDMI CEC API definition
+>   mfd: cros_ec: Remove zero-size structs
+>   mfd: cros_ec: Add Flash V2 commands API
+>   mfd: cros_ec: Add PWM_SET_DUTY API
+>   mfd: cros_ec: Add lightbar v2 API
+>   mfd: cros_ec: Expand hash API
+>   mfd: cros_ec: Add EC transport protocol v4
+>   mfd: cros_ec: Complete MEMS sensor API
+>   mfd: cros_ec: Fix event processing API
+>   mfd: cros_ec: Add fingerprint API
+>   mfd: cros_ec: Fix temperature API
+>   mfd: cros_ec: Complete Power and USB PD API
+>   mfd: cros_ec: Add API for keyboard testing
+>   mfd: cros_ec: Add Hibernate API
+>   mfd: cros_ec: Add Smart Battery Firmware update API
+>   mfd: cros_ec: Add I2C passthru protection API
+>   mfd: cros_ec: Add API for EC-EC communication
+>   mfd: cros_ec: Add API for Touchpad support
+>   mfd: cros_ec: Add API for Fingerprint support
+>   mfd: cros_ec: Add API for rwsig
+>   mfd: cros_ec: Add SKU ID and Secure storage API
+>   mfd: cros_ec: Add Management API entry points
+>   mfd: cros_ec: Update I2S API
+>
+>  include/linux/mfd/cros_ec_commands.h | 3658 ++++++++++++++++++++------
+>  sound/soc/codecs/cros_ec_codec.c     |    8 +-
+>  2 files changed, 2915 insertions(+), 751 deletions(-)
+>
+> --
+> 2.21.0.1020.gf2820cf01a-goog
+>
