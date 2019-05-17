@@ -2,104 +2,123 @@ Return-Path: <SRS0=M1fl=TR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53F8DC04AB4
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 08:35:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A647C04AB4
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 08:41:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1D9F420818
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 08:35:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E6F70206A3
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 08:41:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pYv2sJLn"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Xlq1AsNG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728497AbfEQIfp (ORCPT
+        id S1728087AbfEQIll (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 May 2019 04:35:45 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:40727 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728078AbfEQIfn (ORCPT
+        Fri, 17 May 2019 04:41:41 -0400
+Received: from mail-it1-f195.google.com ([209.85.166.195]:56318 "EHLO
+        mail-it1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727626AbfEQIlk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 May 2019 04:35:43 -0400
-Received: by mail-lj1-f193.google.com with SMTP id d15so5522651ljc.7;
-        Fri, 17 May 2019 01:35:41 -0700 (PDT)
+        Fri, 17 May 2019 04:41:40 -0400
+Received: by mail-it1-f195.google.com with SMTP id q132so10658225itc.5
+        for <linux-kernel@vger.kernel.org>; Fri, 17 May 2019 01:41:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=ihhw5ox45JGgFt4PN7kc9f57bh4mc9j6kPyQqbFsIX4=;
-        b=pYv2sJLnz86KwGDIUYhtqlU5J8oQRXxMjGC13Ik/NPUVAg7KXl9SpPfDLhY4uH0h5y
-         hU3uGifo2P7JTv/erhzIwD3LqG5xCwd8kgtaRhqk466lZ5cFY9IeAjkm7Ws5FejL3Gh1
-         Qu/DjUu+ZSdLhufF0E+vzBBCzB1F2IM14uT2dx6LBjbHNlzg6M97Mzn3vVtthTn9VkHy
-         ntjqVX8lAy/Q8ex87nbGu86BwsmgUjhzRJ/R4+u4ppAoFB/XRA+OQUBeqs/wxe7TYAxt
-         rwPKadYzzOAbMJoe8nZW45KHvZZp8JV3A8ll+3VYoeHIO1jr41NFYBaFB0VMOFkrRv9N
-         fc1g==
+        bh=OzAD5c2YizDdXZbA4lFyJqsN3eVyddIrW3Cl6aBVZRg=;
+        b=Xlq1AsNGys96BcJAGk3jRBqqXiqDnK5XJM67Eue97/ry1AF7IBdBuiWHQqQt8ybR72
+         turN3fd11DHO0M++Ig3/ByLeWYX4w6mK480OfEHBndQywtZ/KxrBuBlRHPutEkc93JQh
+         wS8DPbkSd+GU+EjD5Y1YzoWf/hFXsM4Ud1ZixydW7cqiHx50m2u3ifeFFg008+JfPufC
+         DciS5AmnXx6+pmy3bzhFCOOrHD+rrMVtdLUrN9JxhVVJN8M8BbM5PgLBniecKgNHiydU
+         Zyl7gY5mGVtybOTP6jrLwWU/H1nIlDEh7Tf9wDJJXDETE4WxisDYJckOZLcLPNPA71H8
+         Qv3Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=ihhw5ox45JGgFt4PN7kc9f57bh4mc9j6kPyQqbFsIX4=;
-        b=q/0UCp5IB6gvEcDJWpPPf7zNT9b/aWkQZYdfDpaZvCMfac3upPoMIMCqFP6CocH0i9
-         jEK+oM1ZRMus9cx4Re7yY/ptbX7g57dd83OCTEI1YomRIFo5oMrWXWYxtO3vHlrGCD8R
-         TkeQr1Vae2V0zG4/4azYZzrt6x3NMEJI74He8kEHFW+Dl4tjSI9sTUNzeyuzP663Jhbq
-         FhG3xxALQMA4K5pqaIycIY2tQ3kEfsXaIWIcADvdpGEHFsG1CLm7xQIRwXxIM4MvDW9a
-         KgHdBHf00FTrDwGHsrwK1NNZMPxS4kg5Z4WayritLlam9GPVbLEPtNWEZttUZr/3a7wx
-         Lbgg==
-X-Gm-Message-State: APjAAAXuIQErZsCXfxpapFzj7a60vb2YaWxNs4MTp2Q2yOyGGSI5XaY2
-        4NIhxMDnr3YkMHEq2fe1WhrzSNQLZB7P0GZOcv0=
-X-Google-Smtp-Source: APXvYqz7g/tYbSyASwhoBvx3+kcnS8YgJe1z40ldbHzpGG7L7EVmsDvGQt6P35xz4gydwxz7zizTz7D06UhEAZcHShU=
-X-Received: by 2002:a2e:2b58:: with SMTP id q85mr27358851lje.179.1558082140831;
- Fri, 17 May 2019 01:35:40 -0700 (PDT)
+        bh=OzAD5c2YizDdXZbA4lFyJqsN3eVyddIrW3Cl6aBVZRg=;
+        b=q/cVEXaytTVZwPISjuYnn7BWNTzQ6G552Jx1Tnfuyt68TBiGsVnFvKPAv8lm9lkNkN
+         PDrYXXLN/cE7tBDKgwwAFHbOjGxNr5ZxMHWQPpH1o0mKBFpqT4agVy20ym66W2XP85cn
+         c6RI0HJbCAU2nF37KMBrqD1e8epJ5SDEQM6CKMQ1H9+WTr5wnroU5lY817rjNf7qADui
+         3XYaGOwv7pF/OjiGadsZ/3CZvIAVp9fLdOyh27p410JIwLffM/kSy4XOfVujV3iKrS4H
+         daiOzqwIme5AZg7e7eQ5ndIqiWYH9zEUeddEpa28onEQvGro0Rm1bo2Hs/QYe3L2TvF3
+         2zfg==
+X-Gm-Message-State: APjAAAWgYl7YloAoMHjzE3mhV2kMOtsMB7bEZKT4CvivsHIvX+oNwdPF
+        FXhbxIC4Q9iINkiOvwfIh1ucftzQgtlFk8+9yPFnZA==
+X-Google-Smtp-Source: APXvYqxxG19vrc4zh9B8cysrofVDaZKTfnys80lHH5g51hp2fuu5wvhQpGmof7CNTeCpZzuD/GyqsNliegUDGmUlJpw=
+X-Received: by 2002:a24:9fc5:: with SMTP id c188mr1592711ite.104.1558082499923;
+ Fri, 17 May 2019 01:41:39 -0700 (PDT)
 MIME-Version: 1.0
-References: <CABWYdi06NUOWRLingNuybgZZsTZPjhmsOx-9oCGK94qZGYbzcw@mail.gmail.com>
- <CANiq72kvpiC-i53AXM-YsCUvWroHQemmqxsXjnB330ZEeHahUg@mail.gmail.com>
- <CABWYdi1zhTTaN-GSgH0DnPfz7p=SRw0wts5QVYYVtfvoiS0qnQ@mail.gmail.com>
- <CANiq72=fsL5m2_e+bNovFCHy3=YVf53EKGtGE_sWvsAD=ONHuQ@mail.gmail.com>
- <20190516225013.nvhwqi5tfwtby6qb@treble> <CABWYdi29E++jBw8boFZAiDZA7iT5NiJhnNmiHb-Rvd9+97hSVA@mail.gmail.com>
- <20190517050931.GB32367@kroah.com> <20190517073813.GB2589@hirez.programming.kicks-ass.net>
-In-Reply-To: <20190517073813.GB2589@hirez.programming.kicks-ass.net>
-From:   Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date:   Fri, 17 May 2019 10:35:29 +0200
-Message-ID: <CANiq72nUPoNHWM-dJuFc3=4D2=8XMuvO0PgGPjviOv+EhrAWUw@mail.gmail.com>
-Subject: Re: Linux 4.19 and GCC 9
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Greg KH <gregkh@linuxfoundation.org>,
-        Ivan Babrou <ivan@cloudflare.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        kernel-team <kernel-team@cloudflare.com>
+References: <20190517082633.GA3890@zhanggen-UX430UQ>
+In-Reply-To: <20190517082633.GA3890@zhanggen-UX430UQ>
+From:   Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Date:   Fri, 17 May 2019 10:41:28 +0200
+Message-ID: <CAKv+Gu98JNK34Q6MNOe3aq0W5rbv6hUFiuc7cHxHJat5aTk_gg@mail.gmail.com>
+Subject: Re: [PATCH] efi_64: Fix a missing-check bug in arch/x86/platform/efi/efi_64.c
+ of Linux 5.1
+To:     Gen Zhang <blackgod016574@gmail.com>,
+        linux-efi <linux-efi@vger.kernel.org>
+Cc:     Darren Hart <dvhart@infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 17, 2019 at 9:38 AM Peter Zijlstra <peterz@infradead.org> wrote:
->
-> On Fri, May 17, 2019 at 07:09:31AM +0200, Greg KH wrote:
-> > On Thu, May 16, 2019 at 08:14:25PM -0700, Ivan Babrou wrote:
-> > > We are building the upstream kernel. There are a few patches, but
-> > > nothing related to objtool.
-> > >
-> > > Unless you mean mainline/stable by upstream, I haven't tried that. We
-> > > stick to LTS.
-> >
-> > Please work and all of these issues fixed up in Linus's tree and then I
-> > will be glad to take the fixed into the stable releases.
->
-> Right; if there is anything you can reproduce on linus.git I'll happily
-> have a look. If it doesn't reproduce all you have to do is find the
-> patches that make it work and ask Greg.
+Hello Gen,
 
-Just to clarify: Linus' master is clean of these issues with GCC 9.1.1.
+Thanks for the patch.
 
-Cheers,
-Miguel
+On Fri, 17 May 2019 at 10:26, Gen Zhang <blackgod016574@gmail.com> wrote:
+>
+> save_pgd is allocated by kmalloc_array. And it is dereferenced in the
+> following codes. However, memory allocation functions such as
+> kmalloc_array may fail. Dereferencing this save_pgd null pointer may
+> cause the kernel go wrong. Thus we should check this allocation and add
+> error handling code.
+>
+> Signed-off-by: Gen Zhang <blackgod016574@gmail.com>
+>
+> ---
+> diff --git a/arch/x86/platform/efi/efi_64.c b/arch/x86/platform/efi/efi_64.c
+> index cf0347f..fb9ae57 100644
+> --- a/arch/x86/platform/efi/efi_64.c
+> +++ b/arch/x86/platform/efi/efi_64.c
+> @@ -91,6 +91,8 @@ pgd_t * __init efi_call_phys_prolog(void)
+>
+>         n_pgds = DIV_ROUND_UP((max_pfn << PAGE_SHIFT), PGDIR_SIZE);
+>         save_pgd = kmalloc_array(n_pgds, sizeof(*save_pgd), GFP_KERNEL);
+> +       if (!save_pgd)
+> +               goto err;
+>
+>         /*
+>          * Build 1:1 identity mapping for efi=old_map usage. Note that
+> @@ -142,6 +144,9 @@ pgd_t * __init efi_call_phys_prolog(void)
+>         __flush_tlb_all();
+>
+>         return save_pgd;
+> +err:
+> +       __flush_tlb_all();
+
+What is the point of the goto and the TLB flush?
+
+> +       return ERR_PTR(-ENOMEM);
+
+Returning an error here is not going to make much difference, given
+that the caller of efi_call_phys_prolog() does not bother to check it,
+and passes the result straight into efi_call_phys_epilog(), which
+happily attempts to dereference it.
+
+So if you want to fix this properly, please fix it at the call site as
+well. I'd prefer to avoid ERR_PTR() and just return NULL for a failed
+allocation though.
+
+>  }
+>
+>  void __init efi_call_phys_epilog(pgd_t *save_pgd)
+> ---
