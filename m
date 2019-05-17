@@ -2,127 +2,116 @@ Return-Path: <SRS0=M1fl=TR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 849E7C04AB4
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 15:57:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 447FDC04AB4
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 15:58:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 55472204FD
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 15:57:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="daO9zMPt"
+	by mail.kernel.org (Postfix) with ESMTP id 1D0D4204FD
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 15:58:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729352AbfEQP51 (ORCPT
+        id S1729374AbfEQP6o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 May 2019 11:57:27 -0400
-Received: from conssluserg-04.nifty.com ([210.131.2.83]:32540 "EHLO
-        conssluserg-04.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728664AbfEQP50 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 May 2019 11:57:26 -0400
-Received: from mail-ua1-f51.google.com (mail-ua1-f51.google.com [209.85.222.51]) (authenticated)
-        by conssluserg-04.nifty.com with ESMTP id x4HFvL9n027883;
-        Sat, 18 May 2019 00:57:21 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-04.nifty.com x4HFvL9n027883
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1558108642;
-        bh=201g0kbs2uB+GwEUpx//GJ+uGiu2C1BbNfc9wcMx28M=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=daO9zMPtTO1SudT852qzfFXT3zN1kX0AnlrMUt9bNXWbBbYbkGr6Bp6NDxrbHuIHx
-         X/4J1e8+cQATiUnou+PuZ4jmwSMIP5OJFnGVnlrD6kOn3Ctt2fo22qEPJYYwKOe35o
-         DxubPrHMzEI//dZzILv91GxM8H/Jzat7AGctFvqFDUgUou/UAUiqgMl07KWX6bk+zr
-         dqVjgNTW05XspY4Q7YtIYAVKNb3Ubb8A6nwh8VeOSeSGXLwmgNI0598VHRNTGfLHIm
-         WOJEJxBrissBxUkwhDbDtPSnYqTZSrnif84FOELRbi006LEtydsZhJ4nNmmcWUyPmC
-         ebwprQ1qvJN3A==
-X-Nifty-SrcIP: [209.85.222.51]
-Received: by mail-ua1-f51.google.com with SMTP id n7so2856030uap.12;
-        Fri, 17 May 2019 08:57:21 -0700 (PDT)
-X-Gm-Message-State: APjAAAVujX9Un6Cmn8ItI0jnfhOKzZwjn8S4lQ7Abj+gN01VJUZqthnJ
-        1h2xieeq/U1B/94/2QTZ0Ssng575JtMd/P7+FCk=
-X-Google-Smtp-Source: APXvYqxKCJU7FYDbi2z/Ynz5+ClThgGVIlGk5c+MP7LYq+ng9LP99MBRt97KIy7ayu2FnqEy1VXipCTrUsF0p0Cuy3M=
-X-Received: by 2002:ab0:3058:: with SMTP id x24mr24619043ual.95.1558108640471;
- Fri, 17 May 2019 08:57:20 -0700 (PDT)
+        Fri, 17 May 2019 11:58:44 -0400
+Received: from mga11.intel.com ([192.55.52.93]:23501 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728664AbfEQP6n (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 May 2019 11:58:43 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 May 2019 08:58:43 -0700
+X-ExtLoop1: 1
+Received: from paasikivi.fi.intel.com ([10.237.72.42])
+  by orsmga006.jf.intel.com with ESMTP; 17 May 2019 08:58:41 -0700
+Received: by paasikivi.fi.intel.com (Postfix, from userid 1000)
+        id 3E7DB21145; Fri, 17 May 2019 18:58:40 +0300 (EEST)
+Date:   Fri, 17 May 2019 18:58:40 +0300
+From:   Sakari Ailus <sakari.ailus@linux.intel.com>
+To:     Janusz Krzysztofik <jmkrzyszt@gmail.com>
+Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v6 1/3] media: v4l2-subdev: Verify arguments in
+ v4l2_subdev_call()
+Message-ID: <20190517155839.khjyor4cy6vg5vwf@paasikivi.fi.intel.com>
+References: <20190514224823.11564-1-jmkrzyszt@gmail.com>
+ <20190514224823.11564-2-jmkrzyszt@gmail.com>
+ <20190515071601.knfdhwofz6ukjmxt@paasikivi.fi.intel.com>
+ <1943741.XiKEDqKQ7m@z50>
 MIME-Version: 1.0
-References: <20190517042753.25857-1-yamada.masahiro@socionext.com>
- <CAJ1xhMUxsFR6yLeV1rG1FRZzqwyMGF5PURk6F5_6kN3v2dGN1A@mail.gmail.com>
- <68270a84-966b-05e3-c82e-893c320febfd@petrovitsch.priv.at> <CAJ1xhMVaeQPoW1v91bcNOkw1FJOr7ddhDc-ir=3AiKRCSzCj=g@mail.gmail.com>
-In-Reply-To: <CAJ1xhMVaeQPoW1v91bcNOkw1FJOr7ddhDc-ir=3AiKRCSzCj=g@mail.gmail.com>
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Sat, 18 May 2019 00:56:44 +0900
-X-Gmail-Original-Message-ID: <CAK7LNATm5OS8wUh8boZJ9x65SUxajtDZV9bNdAvXcRgHC2NQdA@mail.gmail.com>
-Message-ID: <CAK7LNATm5OS8wUh8boZJ9x65SUxajtDZV9bNdAvXcRgHC2NQdA@mail.gmail.com>
-Subject: Re: [PATCH v2] kbuild: check uniqueness of module names
-To:     Alexander Kapshuk <alexander.kapshuk@gmail.com>
-Cc:     Bernd Petrovitsch <bernd@petrovitsch.priv.at>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Sam Ravnborg <sam@ravnborg.org>, Arnd Bergmann <arnd@arndb.de>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Jessica Yu <jeyu@kernel.org>,
-        Lucas De Marchi <lucas.de.marchi@gmail.com>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Michael Schmitz <schmitzmic@gmail.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Rusty Russell <rusty@rustcorp.com.au>,
-        Kees Cook <keescook@chromium.org>,
-        Michal Marek <michal.lkml@markovi.net>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1943741.XiKEDqKQ7m@z50>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 17, 2019 at 6:25 PM Alexander Kapshuk
-<alexander.kapshuk@gmail.com> wrote:
->
-> On Fri, May 17, 2019 at 11:58 AM Bernd Petrovitsch
-> <bernd@petrovitsch.priv.at> wrote:
-> >
-> > On 17/05/2019 10:16, Alexander Kapshuk wrote:
-> > [...]
-> > > The 'xargs' '-r' flag is a GNU extension.
-> > > If POSIX compliance is important here, the use of 'cat', 'xargs' and
-> > > 'basename' may be substituted with that of 'sed' to initialise
-> > > same_name_modules:
-> > > sed 's!.*/!!' modules.order modules.builtin | sort | uniq -d
-> >
-> > 's!' is TTBOMK also a GNU-extension:
-> > sed 's/.*\///' modules.order modules.builtin | sort | uniq -d
->
-> It isn't.
-> Here's an excerpt from the POSIX manpage for 'sed',
-> http://pubs.opengroup.org/onlinepubs/009695399/utilities/sed.html:
-> [2addr]s/BRE/replacement/flags
-> ...  Any character other than backslash or <newline> can be used
-> instead of a slash to delimit the BRE and the replacement....
->
-> >
-> > > 'Sed' may also be used on its own in the 'for' loop instead of as part
-> > > of a pipeline along with 'grep' to generate the desired output:
-> > > sed '/\/'$m'/!d;s:^kernel/:  :' modules.order modules.builtin
-> >
-> > sed "/\/${m}/!d;s/^kernel\//  /" modules.order modules.builtin
->
-> The parameter expansion syntax is redundant here.
-> See https://pubs.opengroup.org/onlinepubs/9699919799/utilities/V3_chap02.html#tag_18_06_02:
-> The parameter name or symbol can be enclosed in braces, which are
-> optional except for positional parameters with more than one digit or
-> when parameter is a name and is followed by a character that could be
-> interpreted as part of the name.
->
-> Here's an alternative version using double quotes.
-> sed "/\/$m/!d;s:^kernel/:  :" modules.order modules.builtin
+Hi Janusz,
 
+On Wed, May 15, 2019 at 10:56:36PM +0200, Janusz Krzysztofik wrote:
+> Hi Sakari,
+> 
+> On Wednesday, May 15, 2019 9:16:02 AM CEST Sakari Ailus wrote:
+> > Hi Janusz,
+> > 
+> > On Wed, May 15, 2019 at 12:48:21AM +0200, Janusz Krzysztofik wrote:
+> > > -static int check_crop(struct v4l2_subdev *sd, struct v4l2_subdev_crop 
+> *crop)
+> > > +static inline int check_pad(struct v4l2_subdev *sd, __u32 pad)
+> > >  {
+> > > -	if (crop->which != V4L2_SUBDEV_FORMAT_TRY &&
+> > > -	    crop->which != V4L2_SUBDEV_FORMAT_ACTIVE)
+> > > +#if defined(CONFIG_MEDIA_CONTROLLER)
+> > > +	if (sd->entity.num_pads && pad >= sd->entity.num_pads)
+> > 
+> > One more comment.
+> > 
+> > The num_pads doesn't really tell whether a given op is valid for a device.
+> > Well, in this case it would have to be a bug in the driver, but those do
+> > happen. How about checking for sd->entity.graph_obj.mdev instead? It's
+> > non-NULL if the entity is registered with a media device, i.e. when these
+> > callback functions are supposed to be called.
+> 
+> Before I do that, let me undestand your point better.
+> 
+> My intentions were:
+> 1) to provide a check for validity of a pad ID passed to an operation, not ann 
+> eligibility of a driver to support the operation,
+> 2) to not break drivers which don't set pad_num, especially when building them 
+> with CONFIG_MEDIA_CONTROLLER turned on for whatever reason.
 
-Awesome!
-This is much shorter.
-I will use it in v3.
+Indeed.
 
-Thanks.
+But these checks still allow calling the pad operations on sub-devices that
+have no pads. That should not be allowed. Pads are a Media controller
+concept, they do not exist outside it; therefore checking for pads only if
+the subdev is a part of the media device would be entirely correct.
 
+It should probably accompany a check that requires the pad number is zero
+if the subdev doesn't have a graph object, even if the pad field isn't
+supposedly used for any purpose. Would that address your concern?
+
+> 
+> Since pad IDs are verified against pad_num which may be not set, we should 
+> obviously check validity of pad_num before comparing against it.  Since media 
+> controller compatible subdevices need at least one pad, I think the check for 
+> non-zero pad_num is quite reasonable.
+> 
+> Moreover, old drivers are actually using those pad operations you describe as 
+> not supposed to be called.  They are using them because they were converted to 
+> use them in place of former video ops.  Already dealing with pad IDs, they may 
+> decide to turn on CONFIG_MEDIA_CONTROLLER and use selected functionality, for 
+> example register pads, without implementing fulll media controller support.  
+> Why should we refuse to perform pad ID verification for them?
 
 -- 
-Best Regards
-Masahiro Yamada
+Kind regards,
+
+Sakari Ailus
+sakari.ailus@linux.intel.com
