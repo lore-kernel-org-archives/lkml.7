@@ -2,65 +2,169 @@ Return-Path: <SRS0=M1fl=TR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B4B7C04AB4
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 10:44:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FE18C04E87
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 10:44:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 343F82089E
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 10:44:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 31F962087B
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 10:44:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="R6RUDRe4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728188AbfEQKoU convert rfc822-to-8bit (ORCPT
+        id S1728389AbfEQKog (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 May 2019 06:44:20 -0400
-Received: from gloria.sntech.de ([185.11.138.130]:60942 "EHLO gloria.sntech.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727689AbfEQKoT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 May 2019 06:44:19 -0400
-Received: from we0524.dip.tu-dresden.de ([141.76.178.12] helo=phil.localnet)
-        by gloria.sntech.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <heiko@sntech.de>)
-        id 1hRaLX-0001UL-UH; Fri, 17 May 2019 12:44:15 +0200
-From:   Heiko Stuebner <heiko@sntech.de>
-To:     Matthias Kaehlcke <mka@chromium.org>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Douglas Anderson <dianders@chromium.org>
-Subject: Re: [PATCH v2 1/3] ARM: dts: rockchip: raise CPU trip point temperature for veyron to 100 degC
-Date:   Fri, 17 May 2019 12:44:15 +0200
-Message-ID: <2157639.ILuVUxfVHr@phil>
-In-Reply-To: <20190516162942.154823-1-mka@chromium.org>
-References: <20190516162942.154823-1-mka@chromium.org>
+        Fri, 17 May 2019 06:44:36 -0400
+Received: from mail-it1-f196.google.com ([209.85.166.196]:36036 "EHLO
+        mail-it1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728193AbfEQKog (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 May 2019 06:44:36 -0400
+Received: by mail-it1-f196.google.com with SMTP id e184so11245524ite.1
+        for <linux-kernel@vger.kernel.org>; Fri, 17 May 2019 03:44:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=Ae6y0KuXzMG1pHLjgX5VAMMTwD/mpdbSQHyUYqpGa1Y=;
+        b=R6RUDRe47ZibIlkhxQWfsIgH9dt5pFYOUAFW/3Asfdh4QE7ekEXvUMeji89niTUt1k
+         ThSHvMS8k3bXzi1VUy39vktMv6CElxov+TYUYhnWCWo/JeHIl+5X5uTCE/JPXOr9SNxF
+         itX9zP/rxln7zlf7HwFmVYDMS5/xp2TFIkV0GGNN+/7PfpTnpEPE+hJBb0z/BNOLkuD8
+         fM8SBe/WyYf0Wg2moOirFS03wLy6/d548Y2nMjbiOokDeRXQUbUn7dr6gtDP/bnIa6mx
+         aaatnT+JDGwhVfUdZh/oAQz/iZ67xf1VLuE9Sq/dNCVBEWfSOEzycF2eMKOKgKqVT9/q
+         Fw2g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=Ae6y0KuXzMG1pHLjgX5VAMMTwD/mpdbSQHyUYqpGa1Y=;
+        b=a2//Ysxixb3FAr0TKNJnvuUHd+KgzfzSC0Tp+j7y73V1kxfY8YQDYI4pNt1j4PcjjY
+         EdTaAds2xKe063T5aGpIJaKqnZkF5EyraCaS608T7pKIn6mPHGrQUlXyZi2vXWB1XXri
+         Yh5sGrHgKY4JglI1TFYlHDgvyWPPc7BTx8vQAF13lEVcJG8SXBQLbWq8Y6XWRAOHZjtz
+         ngiL3l8BYuTqPnIKvaxY78/o2MG0e6pzwoWv8uJxLAk4/3BOMXdVEW/GPOk03prY2xG3
+         9OKRxe5tFp/gMCIunU29zngrxcZ6wyqiIuBY7n+fQjZuY2OSw+Ll9fNHx00KztbPeCep
+         bJ2w==
+X-Gm-Message-State: APjAAAUT04V4HGdZnrEMEXtK85dt+eKwMniYAd5LKL3fyC5OASifsRbm
+        RQcVNTO1EypSKZz63EI772AegWYcUvs1VOSf+MFPig==
+X-Google-Smtp-Source: APXvYqx3JP27Nk1tvOQBMDUThEQjHMC4TS5L3KtmWKuKzLoARJahORDrcr3fbLBY/dMbMzQj6L5PkULqhdgPoVo6Vr4=
+X-Received: by 2002:a02:1dc7:: with SMTP id 190mr34241024jaj.62.1558089874890;
+ Fri, 17 May 2019 03:44:34 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8BIT
-Content-Type: text/plain; charset="iso-8859-1"
+References: <20190515072747.39941-1-xiaowei.bao@nxp.com> <20190515072747.39941-2-xiaowei.bao@nxp.com>
+ <CAK8P3a3AXRp_v_7hkoJA28tUCiSh1eYzbk4Q4h29OqL6y-KL8A@mail.gmail.com>
+ <AM5PR04MB329934765FB8EB1828743D79F50B0@AM5PR04MB3299.eurprd04.prod.outlook.com>
+ <CAK8P3a0kKb7njiJvUkwJYwf-yc-hEyErSiWcvbdf0XnMoctzrg@mail.gmail.com>
+In-Reply-To: <CAK8P3a0kKb7njiJvUkwJYwf-yc-hEyErSiWcvbdf0XnMoctzrg@mail.gmail.com>
+From:   Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Date:   Fri, 17 May 2019 12:44:22 +0200
+Message-ID: <CAKv+Gu-WVcVvqPoH3gsz8G3Dwizne81MAQAUGNnGrpthvUiSnw@mail.gmail.com>
+Subject: Re: [EXT] Re: [PATCH 2/3] arm64: dts: ls1028a: Add PCIe controller DT nodes
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Xiaowei Bao <xiaowei.bao@nxp.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Roy Zang <roy.zang@nxp.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        DTML <devicetree@vger.kernel.org>,
+        gregkh <gregkh@linuxfoundation.org>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Kishon <kishon@ti.com>, "M.h. Lian" <minghuan.lian@nxp.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Philippe Ombredanne <pombredanne@nexb.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Leo Li <leoyang.li@nxp.com>, Shawn Guo <shawnguo@kernel.org>,
+        Shawn Lin <shawn.lin@rock-chips.com>,
+        Mingkai Hu <mingkai.hu@nxp.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Am Donnerstag, 16. Mai 2019, 18:29:40 CEST schrieb Matthias Kaehlcke:
-> This value matches what is used by the downstream Chrome OS 3.14
-> kernel, the 'official' kernel for veyron devices. Keep the temperature
-> for 'speedy' at 90°C, as in the downstream kernel.
-> 
-> Increase the temperature for a hardware shutdown to 125°C, which
-> matches the downstream configuration and gives the system a chance
-> to shut down orderly at the criticial trip point.
-> 
-> Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
+On Fri, 17 May 2019 at 10:59, Arnd Bergmann <arnd@arndb.de> wrote:
+>
+> On Fri, May 17, 2019 at 5:21 AM Xiaowei Bao <xiaowei.bao@nxp.com> wrote:
+> > -----Original Message-----
+> > From: Arnd Bergmann <arnd@arndb.de>
+> > On Wed, May 15, 2019 at 9:36 AM Xiaowei Bao <xiaowei.bao@nxp.com> wrote=
+:
+> > > Signed-off-by: Xiaowei Bao <xiaowei.bao@nxp.com>
+> > > ---
+> > >  arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi |   52 ++++++++++++++=
+++++++++++
+> > >  1 files changed, 52 insertions(+), 0 deletions(-)
+> > >
+> > > diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi b/arch/ar=
+m64/boot/dts/freescale/fsl-ls1028a.dtsi
+> > > index b045812..50b579b 100644
+> > > --- a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
+> > > +++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
+> > > @@ -398,6 +398,58 @@
+> > >                         status =3D "disabled";
+> > >                 };
+> > >
+> > > +               pcie@3400000 {
+> > > +                       compatible =3D "fsl,ls1028a-pcie";
+> > > +                       reg =3D <0x00 0x03400000 0x0 0x00100000   /* =
+controller registers */
+> > > +                              0x80 0x00000000 0x0 0x00002000>; /* co=
+nfiguration space */
+> > > +                       reg-names =3D "regs", "config";
+> > > +                       interrupts =3D <GIC_SPI 108 IRQ_TYPE_LEVEL_HI=
+GH>, /* PME interrupt */
+> > > +                                    <GIC_SPI 109 IRQ_TYPE_LEVEL_HIGH=
+>; /* aer interrupt */
+> > > +                       interrupt-names =3D "pme", "aer";
+> > > +                       #address-cells =3D <3>;
+> > > +                       #size-cells =3D <2>;
+> > > +                       device_type =3D "pci";
+> > > +                       dma-coherent;
+> > > +                       num-lanes =3D <4>;
+> > > +                       bus-range =3D <0x0 0xff>;
+> > > +                       ranges =3D <0x81000000 0x0 0x00000000 0x80 0x=
+00010000 0x0 0x00010000   /* downstream I/O */
+> > > +                                 0x82000000 0x0 0x40000000 0x80 0x40=
+000000 0x0 0x40000000>; /* non-prefetchable memory */
+> >
+> > Are you sure there is no support for 64-bit BARs or prefetchable memory=
+?
+> > [Xiaowei Bao] sorry for late reply, Thought that our Layerscape platfor=
+m has not added prefetchable memory support in DTS, so this platform has no=
+t been added, I will submit a separate patch to add prefetchable memory sup=
+port for all Layerscape platforms.
+>
+> Ok, thanks.
+>
+> > Of course, the prefetchable PCIE device can work in our boards, because=
+ the RC will
+> > assign non-prefetchable memory for this device. We reserve 1G no-prefet=
+chable
+> > memory for PCIE device, it is enough for general devices.
+>
+> Sure, many devices work just fine, this is mostly a question of supportin=
+g those
+> devices that do require multiple gigabytes, or that need prefetchable mem=
+ory
+> semantics to get the expected performance. GPUs are the obvious example,
+> but I think there are others (infiniband?).
+>
 
-applied all 3 for 5.3 with Doug's RB and did a small fix to the commit
-message of patch2 ("thorse").
+Some implementations of the Synopsys dw PCIe IP contain a 'root port'
+(within quotes because it is not actually a root port but an arbitrary
+set of MMIO registers that looks like a type 01 config region) that
+does not permit the prefetchable bridge window BAR to be written (a
+thing which is apparently permitted by the PCIe spec). So while the
+host bridge is capable of supporting more than one MMIO BAR window,
+the OS visible software interface does not expose this functionality
 
-Thanks
-Heiko
-
-
-
+In practice, it probably doesn't matter, since the driver uses the
+same iATU attributes for prefetchable and non-prefetchable windows,
+but I guess 1 GB of MMIO BAR space is a bit restrictive for modern
+systems.
