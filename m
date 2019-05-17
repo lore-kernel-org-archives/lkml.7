@@ -2,102 +2,235 @@ Return-Path: <SRS0=M1fl=TR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B480C04E87
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 17:22:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66029C04AB4
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 17:23:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CC3FE2168B
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 17:22:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=soleen.com header.i=@soleen.com header.b="le6/IjvK"
+	by mail.kernel.org (Postfix) with ESMTP id 32A7D20848
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 17:23:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727380AbfEQRWP (ORCPT
+        id S1727714AbfEQRXV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 May 2019 13:22:15 -0400
-Received: from mail-ed1-f45.google.com ([209.85.208.45]:33133 "EHLO
-        mail-ed1-f45.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725932AbfEQRWO (ORCPT
+        Fri, 17 May 2019 13:23:21 -0400
+Received: from caffeine.csclub.uwaterloo.ca ([129.97.134.17]:34527 "EHLO
+        caffeine.csclub.uwaterloo.ca" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725932AbfEQRXU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 May 2019 13:22:14 -0400
-Received: by mail-ed1-f45.google.com with SMTP id n17so11683137edb.0
-        for <linux-kernel@vger.kernel.org>; Fri, 17 May 2019 10:22:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=soleen.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=1NWuugkWpQRRWA/1rSmW1lzMgKVNslNjLRYEkdR1Nr8=;
-        b=le6/IjvKmu1b5/J+EeSLlKWUQDlzA2Aar3VHLn8ExShqMsFCKjqEBf+toX4TliPE0H
-         eb+VONE8jljaQgC23HLZmR5QS5UHQ14s4T0FxyYIFc1hvnC7sseb5WD9AvBCBynEFdA1
-         lrQnNndD0CS9PvrNd4djxjYrHkGXrpWHkuZzQhKz2o77NRvXkFxRo3BMupdD9bP4JwDh
-         yQuehqXV3ucui8vm8YCOufYwj2Wjwx3CcE2DourDzyTtKv53LPK/Fz1M5PAGRNdsAIKj
-         bO3vOu6X06VOTo0XH8SXdjrvrE9azf4qJEek9V7PjsFw50AHNk+SxUWS1jrukw+OJIJ/
-         FaZA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=1NWuugkWpQRRWA/1rSmW1lzMgKVNslNjLRYEkdR1Nr8=;
-        b=KcKarqTw11eOzYJ9CnzMcDR8KPoMlFaoAfwsJj04jwrqQM8o4dYnJp2KHA3yGafBPM
-         y2rF6Or4igRaOnmjyKYBR6u3akP3p7ZHQz1HDoAo3uXI8LcTotSi/niY40DqL57deQTS
-         aYUuFHnqF52RhIOUslx8duzdphknQdaNNGkybF0MDq//2j354qdOqKD8nYnyFFWORosD
-         DisJ65o8DgcPcUsiqk+w7mzyLDZAwyYHCFRTMLzjn2qsD7PaXRYItAZy904p5X8PnAGO
-         y3uerECkrVDbC/lrmqwDYTa9rFKd+L6YN6FLLo1bJju94vFZPKmMnT1ihrVhphDflg1x
-         ccFg==
-X-Gm-Message-State: APjAAAV3a9LvaotLc6gaejrMGRwMRUMlGZRGP36V7go5q6UiFcf9Av4l
-        1ZC6ECfba2LJyHMDeDY6GPjpoBwriwj++cnVxd7Wrg==
-X-Google-Smtp-Source: APXvYqx8zTScvrcOMIUQcp6YiIXAtTO5C4EC3YusWLTaHpQGKmpnKkByyxWWHYm2mGvPVmZ4pHgwJqvrnr9pIKweO4c=
-X-Received: by 2002:a50:f48d:: with SMTP id s13mr59668225edm.151.1558113732961;
- Fri, 17 May 2019 10:22:12 -0700 (PDT)
+        Fri, 17 May 2019 13:23:20 -0400
+Received: by caffeine.csclub.uwaterloo.ca (Postfix, from userid 20367)
+        id C53C646380B; Fri, 17 May 2019 13:23:17 -0400 (EDT)
+Date:   Fri, 17 May 2019 13:23:17 -0400
+To:     Alexander Duyck <alexander.duyck@gmail.com>
+Cc:     Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Netdev <netdev@vger.kernel.org>,
+        intel-wired-lan <intel-wired-lan@lists.osuosl.org>
+Subject: Re: [Intel-wired-lan] i40e X722 RSS problem with NAT-Traversal IPsec
+ packets
+Message-ID: <20190517172317.amopafirjfizlgej@csclub.uwaterloo.ca>
+References: <CAKgT0UcV2wCr6iUYktZ+Bju_GNpXKzR=M+NLfKhUsw4bsJSiyA@mail.gmail.com>
+ <20190503205935.bg45rsso5jjj3gnx@csclub.uwaterloo.ca>
+ <20190513165547.alkkgcsdelaznw6v@csclub.uwaterloo.ca>
+ <CAKgT0Uf_nqZtCnHmC=-oDFz-3PuSM6=30BvJSDiAgzK062OY6w@mail.gmail.com>
+ <20190514163443.glfjva3ofqcy7lbg@csclub.uwaterloo.ca>
+ <CAKgT0UdPDyCBsShQVwwE5C8fBKkMcfS6_S5m3T7JP-So9fzVgA@mail.gmail.com>
+ <20190516183407.qswotwyjwtjqfdqm@csclub.uwaterloo.ca>
+ <20190516183705.e4zflbli7oujlbek@csclub.uwaterloo.ca>
+ <CAKgT0UfSa-dM2+7xntK9tB7Zw5N8nDd3U1n4OSK0gbWbkNSKJQ@mail.gmail.com>
+ <CAKgT0Ucd0s_0F5_nwqXknRngwROyuecUt+4bYzWvp1-2cNSg7g@mail.gmail.com>
 MIME-Version: 1.0
-References: <CA+CK2bBeOJPnnyWBgj0CJ7E1z9GVWVg_EJAmDs07BSJDp3PYfQ@mail.gmail.com>
- <20190517143816.GO6836@dhcp22.suse.cz>
-In-Reply-To: <20190517143816.GO6836@dhcp22.suse.cz>
-From:   Pavel Tatashin <pasha.tatashin@soleen.com>
-Date:   Fri, 17 May 2019 13:22:02 -0400
-Message-ID: <CA+CK2bA+2+HaV4GWNUNP04fjjTPKbEGQHSPrSrmY7HLD57au1Q@mail.gmail.com>
-Subject: Re: NULL pointer dereference during memory hotremove
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     "Verma, Vishal L" <vishal.l.verma@intel.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "jmorris@namei.org" <jmorris@namei.org>,
-        "tiwai@suse.de" <tiwai@suse.de>,
-        "sashal@kernel.org" <sashal@kernel.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
-        "david@redhat.com" <david@redhat.com>, "bp@suse.de" <bp@suse.de>,
-        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-        "linux-nvdimm@lists.01.org" <linux-nvdimm@lists.01.org>,
-        "jglisse@redhat.com" <jglisse@redhat.com>,
-        "zwisler@kernel.org" <zwisler@kernel.org>,
-        "Jiang, Dave" <dave.jiang@intel.com>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "Busch, Keith" <keith.busch@intel.com>,
-        "thomas.lendacky@amd.com" <thomas.lendacky@amd.com>,
-        "Huang, Ying" <ying.huang@intel.com>,
-        "Wu, Fengguang" <fengguang.wu@intel.com>,
-        "baiyaowei@cmss.chinamobile.com" <baiyaowei@cmss.chinamobile.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAKgT0Ucd0s_0F5_nwqXknRngwROyuecUt+4bYzWvp1-2cNSg7g@mail.gmail.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
+From:   lsorense@csclub.uwaterloo.ca (Lennart Sorensen)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 17, 2019 at 10:38 AM Michal Hocko <mhocko@kernel.org> wrote:
->
-> On Fri 17-05-19 10:20:38, Pavel Tatashin wrote:
-> > This panic is unrelated to circular lock issue that I reported in a
-> > separate thread, that also happens during memory hotremove.
-> >
-> > xakep ~/x/linux$ git describe
-> > v5.1-12317-ga6a4b66bd8f4
->
-> Does this happen on 5.0 as well?
+On Fri, May 17, 2019 at 09:42:19AM -0700, Alexander Duyck wrote:
+> So the patch below/attached should resolve the issues you are seeing
+> with your system in terms of UDPv4 RSS. What you should see with this
+> patch is the first function to come up will display some "update input
+> mask" messages, and then the remaining functions shouldn't make any
+> noise about it since the registers being updated are global to the
+> device.
+> 
+> If you can test this and see if it resolves the UDPv4 RSS issues I
+> would appreciate it.
+> 
+> Thanks.
+> 
+> - Alex
+> 
+> diff --git a/drivers/net/ethernet/intel/i40e/i40e_main.c
+> b/drivers/net/ethernet/intel/i40e/i40e_main.c
+> index 65c2b9d2652b..c0a7f66babd9 100644
+> --- a/drivers/net/ethernet/intel/i40e/i40e_main.c
+> +++ b/drivers/net/ethernet/intel/i40e/i40e_main.c
+> @@ -10998,6 +10998,58 @@ static int i40e_pf_config_rss(struct i40e_pf *pf)
+>                 ((u64)i40e_read_rx_ctl(hw, I40E_PFQF_HENA(1)) << 32);
+>         hena |= i40e_pf_get_default_rss_hena(pf);
+> 
+> +       for (ret = 64; ret--;) {
+> +               u64 hash_inset_orig, hash_inset_update;
+> +
+> +               if (!(hena & (1ull << ret)))
+> +                       continue;
+> +
+> +               /* Read initial input set value for flow type */
+> +               hash_inset_orig = i40e_read_rx_ctl(hw,
+> I40E_GLQF_HASH_INSET(1, ret));
+> +               hash_inset_orig <<= 32;
+> +               hash_inset_orig |= i40e_read_rx_ctl(hw,
+> I40E_GLQF_HASH_INSET(0, ret));
+> +
+> +               /* Copy value so we can compare later */
+> +               hash_inset_update = hash_inset_orig;
+> +
+> +               /* We should be looking at either the entire IPv6 or IPv4
+> +                * mask being set. If only part of the IPv6 mask is set, but
+> +                * the IPv4 mask is not then we have a garbage mask value
+> +                * and need to reset it.
+> +                */
+> +               switch (hash_inset_orig & I40E_L3_V6_SRC_MASK) {
+> +               case I40E_L3_V6_SRC_MASK:
+> +               case I40E_L3_SRC_MASK:
+> +               case 0:
+> +                       break;
+> +               default:
+> +                       hash_inset_update &= ~I40E_L3_V6_SRC_MASK;
+> +                       hash_inset_update |= I40E_L3_SRC_MASK;
+> +               }
+> +
+> +               switch (hash_inset_orig & I40E_L3_V6_DST_MASK) {
+> +               case I40E_L3_V6_DST_MASK:
+> +               case I40E_L3_DST_MASK:
+> +               case 0:
+> +                       break;
+> +               default:
+> +                       hash_inset_update &= ~I40E_L3_V6_DST_MASK;
+> +                       hash_inset_update |= I40E_L3_DST_MASK;
+> +               }
+> +
+> +               if (hash_inset_update != hash_inset_orig) {
+> +                       dev_warn(&pf->pdev->dev,
+> +                                "flow type: %d update input mask
+> from:0x%016llx, to:0x%016llx\n",
+> +                                ret,
+> +                                hash_inset_orig, hash_inset_update);
+> +                       i40e_write_rx_ctl(hw, I40E_GLQF_HASH_INSET(0, ret),
+> +                                         (u32)hash_inset_update);
+> +                       hash_inset_update >>= 32;
+> +                       i40e_write_rx_ctl(hw, I40E_GLQF_HASH_INSET(1, ret),
+> +                                         (u32)hash_inset_update);
+> +               }
+> +       }
+> +
+>         i40e_write_rx_ctl(hw, I40E_PFQF_HENA(0), (u32)hena);
+>         i40e_write_rx_ctl(hw, I40E_PFQF_HENA(1), (u32)(hena >> 32));
 
-Yes, just reproduced it on 5.0 as well. Unfortunately, I do not have a
-script, and have to do it manually, also it does not happen every
-time, it happened on 3rd time for me.
+> i40e: Debug hash inputs
+> 
+> From: Alexander Duyck <alexander.h.duyck@linux.intel.com>
+> 
+> 
+> ---
+>  drivers/net/ethernet/intel/i40e/i40e_main.c |   52 +++++++++++++++++++++++++++
+>  1 file changed, 52 insertions(+)
+> 
+> diff --git a/drivers/net/ethernet/intel/i40e/i40e_main.c b/drivers/net/ethernet/intel/i40e/i40e_main.c
+> index 65c2b9d2652b..c0a7f66babd9 100644
+> --- a/drivers/net/ethernet/intel/i40e/i40e_main.c
+> +++ b/drivers/net/ethernet/intel/i40e/i40e_main.c
+> @@ -10998,6 +10998,58 @@ static int i40e_pf_config_rss(struct i40e_pf *pf)
+>  		((u64)i40e_read_rx_ctl(hw, I40E_PFQF_HENA(1)) << 32);
+>  	hena |= i40e_pf_get_default_rss_hena(pf);
+>  
+> +	for (ret = 64; ret--;) {
+> +		u64 hash_inset_orig, hash_inset_update;
+> +
+> +		if (!(hena & (1ull << ret)))
+> +			continue;
+> +
+> +		/* Read initial input set value for flow type */
+> +		hash_inset_orig = i40e_read_rx_ctl(hw, I40E_GLQF_HASH_INSET(1, ret));
+> +		hash_inset_orig <<= 32;
+> +		hash_inset_orig |= i40e_read_rx_ctl(hw, I40E_GLQF_HASH_INSET(0, ret));
+> +
+> +		/* Copy value so we can compare later */
+> +		hash_inset_update = hash_inset_orig;
+> +
+> +		/* We should be looking at either the entire IPv6 or IPv4
+> +		 * mask being set. If only part of the IPv6 mask is set, but
+> +		 * the IPv4 mask is not then we have a garbage mask value
+> +		 * and need to reset it.
+> +		 */
+> +		switch (hash_inset_orig & I40E_L3_V6_SRC_MASK) {
+> +		case I40E_L3_V6_SRC_MASK:
+> +		case I40E_L3_SRC_MASK:
+> +		case 0:
+> +			break;
+> +		default:
+> +			hash_inset_update &= ~I40E_L3_V6_SRC_MASK;
+> +			hash_inset_update |= I40E_L3_SRC_MASK;
+> +		}
+> +
+> +		switch (hash_inset_orig & I40E_L3_V6_DST_MASK) {
+> +		case I40E_L3_V6_DST_MASK:
+> +		case I40E_L3_DST_MASK:
+> +		case 0:
+> +			break;
+> +		default:
+> +			hash_inset_update &= ~I40E_L3_V6_DST_MASK;
+> +			hash_inset_update |= I40E_L3_DST_MASK;
+> +		}
+> +
+> +		if (hash_inset_update != hash_inset_orig) {
+> +			dev_warn(&pf->pdev->dev,
+> +				 "flow type: %d update input mask from:0x%016llx, to:0x%016llx\n",
+> +				 ret,
+> +				 hash_inset_orig, hash_inset_update);
+> +			i40e_write_rx_ctl(hw, I40E_GLQF_HASH_INSET(0, ret),
+> +					  (u32)hash_inset_update);
+> +			hash_inset_update >>= 32;
+> +			i40e_write_rx_ctl(hw, I40E_GLQF_HASH_INSET(1, ret),
+> +					  (u32)hash_inset_update);
+> +		}
+> +	}
+> +
+>  	i40e_write_rx_ctl(hw, I40E_PFQF_HENA(0), (u32)hena);
+>  	i40e_write_rx_ctl(hw, I40E_PFQF_HENA(1), (u32)(hena >> 32));
+>  
 
-Pasha
+OK I applied that and see this:
+
+i40e: Intel(R) Ethernet Connection XL710 Network Driver - version 2.1.7-k
+i40e: Copyright (c) 2013 - 2014 Intel Corporation.
+i40e 0000:3d:00.0: fw 3.10.52896 api 1.6 nvm 4.00 0x80001577 1.1767.0
+i40e 0000:3d:00.0: The driver for the device detected a newer version of the NVM image than expected. Please install the most recent version of the network driver.
+i40e 0000:3d:00.0: MAC address: a4:bf:01:4e:0c:87
+i40e 0000:3d:00.0: flow type: 36 update input mask from:0x0006060000000000, to:0x0001801800000000
+i40e 0000:3d:00.0: flow type: 35 update input mask from:0x0006060000000000, to:0x0001801800000000
+i40e 0000:3d:00.0: flow type: 34 update input mask from:0x0006060780000000, to:0x0001801f80000000
+i40e 0000:3d:00.0: flow type: 33 update input mask from:0x0006060600000000, to:0x0001801e00000000
+i40e 0000:3d:00.0: flow type: 32 update input mask from:0x0006060600000000, to:0x0001801e00000000
+i40e 0000:3d:00.0: flow type: 31 update input mask from:0x0006060600000000, to:0x0001801e00000000
+i40e 0000:3d:00.0: flow type: 30 update input mask from:0x0006060600000000, to:0x0001801e00000000
+i40e 0000:3d:00.0: flow type: 29 update input mask from:0x0006060600000000, to:0x0001801e00000000
+i40e 0000:3d:00.0: Features: PF-id[0] VSIs: 34 QP: 12 TXQ: 13 RSS VxLAN Geneve VEPA
+i40e 0000:3d:00.1: fw 3.10.52896 api 1.6 nvm 4.00 0x80001577 1.1767.0
+i40e 0000:3d:00.1: The driver for the device detected a newer version of the NVM image than expected. Please install the most recent version of the network driver.
+i40e 0000:3d:00.1: MAC address: a4:bf:01:4e:0c:88
+i40e 0000:3d:00.1: Features: PF-id[1] VSIs: 34 QP: 12 TXQ: 13 RSS VxLAN Geneve VEPA
+i40e 0000:3d:00.1 eth2: NIC Link is Up, 1000 Mbps Full Duplex, Flow Control: None
+
+Unfortunately (much to my disappointment, I hoped it would work) I see
+no change in behaviour.
+
+-- 
+Len Sorensen
