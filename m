@@ -2,114 +2,166 @@ Return-Path: <SRS0=M1fl=TR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66D3CC04E87
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 23:13:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64CD8C04AB4
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 23:16:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 374132166E
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 23:13:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="Lb04dCqI"
+	by mail.kernel.org (Postfix) with ESMTP id 343DB216FD
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 23:16:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1558134992;
+	bh=meZf1MBd6RWHyzLdEWtcf3NsChu5kGkuOwJPEccJxe0=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=c+aqJJpWu8M2F17PH2OUQDp2gEt3hZwgN0fpE+Hp3BH/tN3EgVrK8JzxOnNjps8wy
+	 twLuZ4WWI9uzPInF4Vu9d4ISo3eO3qNFYpSTKI3wg/OTRfkExr6YmVWPFJS7kK2h77
+	 6K6PA5ldXVmtR4NSBvOtizYOHh6fxAQEi6a9L5bA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728990AbfEQXNq (ORCPT
+        id S1729127AbfEQXQb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 May 2019 19:13:46 -0400
-Received: from smtp-fw-9101.amazon.com ([207.171.184.25]:36207 "EHLO
-        smtp-fw-9101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727120AbfEQXNp (ORCPT
+        Fri, 17 May 2019 19:16:31 -0400
+Received: from mail-qk1-f194.google.com ([209.85.222.194]:38696 "EHLO
+        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726913AbfEQXQb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 May 2019 19:13:45 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1558134825; x=1589670825;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=YzwMlzH7xToQwqdmfuxN3FjSxsAuK3aol4/PCCQcBXk=;
-  b=Lb04dCqIPQ2XCIFL103wRVliTHFoFhqm2MG8zcdrDdkxfdEt3zP5+pGG
-   lM7VMmVUC15ltWjeQxbpl5wxDzoujTa9LTGrqNqAkPZPJQA+wSokNED7f
-   qJTXf6Wo+HSsfPFv23k62SWOIJMDDaELCe9qV/L/riarlL7G01O3XPrfS
-   c=;
-X-IronPort-AV: E=Sophos;i="5.60,481,1549929600"; 
-   d="scan'208";a="805299185"
-Received: from sea3-co-svc-lb6-vlan3.sea.amazon.com (HELO email-inbound-relay-1d-f273de60.us-east-1.amazon.com) ([10.47.22.38])
-  by smtp-border-fw-out-9101.sea19.amazon.com with ESMTP/TLS/DHE-RSA-AES256-SHA; 17 May 2019 23:13:42 +0000
-Received: from EX13MTAUWB001.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan2.iad.amazon.com [10.40.159.162])
-        by email-inbound-relay-1d-f273de60.us-east-1.amazon.com (8.14.7/8.14.7) with ESMTP id x4HNDWrr055781
-        (version=TLSv1/SSLv3 cipher=AES256-SHA bits=256 verify=FAIL);
-        Fri, 17 May 2019 23:13:41 GMT
-Received: from EX13D05UWB001.ant.amazon.com (10.43.161.181) by
- EX13MTAUWB001.ant.amazon.com (10.43.161.249) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Fri, 17 May 2019 23:13:40 +0000
-Received: from EX13MTAUWA001.ant.amazon.com (10.43.160.58) by
- EX13D05UWB001.ant.amazon.com (10.43.161.181) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Fri, 17 May 2019 23:13:40 +0000
-Received: from localhost (10.94.216.44) by mail-relay.amazon.com
- (10.43.160.118) with Microsoft SMTP Server id 15.0.1367.3 via Frontend
- Transport; Fri, 17 May 2019 23:13:40 +0000
-From:   Eduardo Valentin <eduval@amazon.com>
-To:     Guenter Roeck <linux@roeck-us.net>
-CC:     Eduardo Valentin <eduval@amazon.com>,
-        Jean Delvare <jdelvare@suse.com>,
-        <linux-hwmon@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH 2/2] hwmon: core: fix potential memory leak in *hwmon_device_register*
-Date:   Fri, 17 May 2019 16:13:37 -0700
-Message-ID: <20190517231337.27859-3-eduval@amazon.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190517231337.27859-1-eduval@amazon.com>
-References: <20190517231337.27859-1-eduval@amazon.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
+        Fri, 17 May 2019 19:16:31 -0400
+Received: by mail-qk1-f194.google.com with SMTP id a64so5488530qkg.5;
+        Fri, 17 May 2019 16:16:30 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=k1tap1xvwvAf6PxZjyNNMBvxJSWSIQcr4opnzIKbxTo=;
+        b=Z7zO4BRgtDJP6DzJfFylR0TjdLEc3ze4+p4jhS7cJhRXFXBTH27rbE4wYnNTobSWUq
+         9vZXrkcuU3xBZALyJxmnNiGPrpdHY0hK7HRWdFpZtdZ+/Q4uuDDMjjQR6dx4iUbSSV0+
+         U700GJuw5DwKzTBgcBT9kG+QvlkWeq4A1BMnPH1muhjwoe/XRaFYHwudiSyFq+/UaFwk
+         QWedmAFB7oiTJTJtlem12owsRCibp8jFr5XX1rzW4KU98W6Jg2uEtVReMUFgeyNJXCTV
+         mPotYRnI3MGpFifgFeSt8msqpNRlfvP6aGn1YS1Yu6aCcjLGUzBjKVlSkv/HDzMaCKSp
+         IwNA==
+X-Gm-Message-State: APjAAAWPSrrPgD9hscUuO/QPTlWtsYQ1cNDdZwKtWDEqKKZYzOnkDDS5
+        4uRSaAL5aOrW4MFmvWrXyME=
+X-Google-Smtp-Source: APXvYqxPQO0F5bS8iL88kYTdTs+oxKhpzBjD0oVidZkh/eNSOqMCfGM2TXHxgYpdbZA65fBH8ShP8A==
+X-Received: by 2002:a37:7984:: with SMTP id u126mr47466102qkc.204.1558134990129;
+        Fri, 17 May 2019 16:16:30 -0700 (PDT)
+Received: from dennisz-mbp.thefacebook.com ([163.114.130.128])
+        by smtp.gmail.com with ESMTPSA id y12sm5469464qtk.51.2019.05.17.16.16.28
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Fri, 17 May 2019 16:16:29 -0700 (PDT)
+From:   Dennis Zhou <dennis@kernel.org>
+To:     David Sterba <dsterba@suse.com>,
+        Josef Bacik <josef@toxicpanda.com>, Chris Mason <clm@fb.com>
+Cc:     linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-team@fb.com, "Erhard F ." <erhard_f@mailbox.org>,
+        Dennis Zhou <dennis@kernel.org>
+Subject: [PATCH] btrfs: correct zstd workspace manager lock to use spin_lock_bh()
+Date:   Fri, 17 May 2019 19:16:26 -0400
+Message-Id: <20190517231626.85614-1-dennis@kernel.org>
+X-Mailer: git-send-email 2.13.5
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When registering a hwmon device with HWMON_C_REGISTER_TZ flag
-in place, the hwmon subsystem will attempt to register the device
-also with the thermal subsystem. When the of-thermal registration
-fails, __hwmon_device_register jumps to ida_remove, leaving
-the locally allocated hwdev pointer and also the hdev registered.
+The btrfs zstd workspace manager uses a background timer to reclaim
+not recently used workspaces. I dumbly call spin_lock() from this
+context which I should have caught with lockdep but.. This deadlock was
+reported in [1]. The fix is to switch the zstd wsm lock to use
+spin_lock_bh().
 
-This patch fixes both issues by jumping to a new label that
-will first unregister hdev and the fall into the kfree of hwdev
-to finally remove the idas and propagate the error code.
+[1] https://bugzilla.kernel.org/show_bug.cgi?id=203517
 
-Cc: Jean Delvare <jdelvare@suse.com>
-Cc: Guenter Roeck <linux@roeck-us.net>
-Cc: linux-hwmon@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-Signed-off-by: Eduardo Valentin <eduval@amazon.com>
+Signed-off-by: Dennis Zhou <dennis@kernel.org>
 ---
- drivers/hwmon/hwmon.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ fs/btrfs/zstd.c | 20 ++++++++++----------
+ 1 file changed, 10 insertions(+), 10 deletions(-)
 
-diff --git a/drivers/hwmon/hwmon.c b/drivers/hwmon/hwmon.c
-index 6b3559f58b67..6f1194952189 100644
---- a/drivers/hwmon/hwmon.c
-+++ b/drivers/hwmon/hwmon.c
-@@ -637,7 +637,7 @@ __hwmon_device_register(struct device *dev, const char *name, void *drvdata,
- 								hwdev, j);
- 					if (err) {
- 						device_unregister(hdev);
--						goto ida_remove;
-+						goto device_unregister;
- 					}
- 				}
- 			}
-@@ -646,6 +646,8 @@ __hwmon_device_register(struct device *dev, const char *name, void *drvdata,
+diff --git a/fs/btrfs/zstd.c b/fs/btrfs/zstd.c
+index a6ff07cf11d5..3837ca180d52 100644
+--- a/fs/btrfs/zstd.c
++++ b/fs/btrfs/zstd.c
+@@ -105,10 +105,10 @@ static void zstd_reclaim_timer_fn(struct timer_list *timer)
+ 	unsigned long reclaim_threshold = jiffies - ZSTD_BTRFS_RECLAIM_JIFFIES;
+ 	struct list_head *pos, *next;
  
- 	return hdev;
+-	spin_lock(&wsm.lock);
++	spin_lock_bh(&wsm.lock);
  
-+device_unregister:
-+	device_unregister(hdev);
- free_hwmon:
- 	kfree(hwdev);
- ida_remove:
+ 	if (list_empty(&wsm.lru_list)) {
+-		spin_unlock(&wsm.lock);
++		spin_unlock_bh(&wsm.lock);
+ 		return;
+ 	}
+ 
+@@ -137,7 +137,7 @@ static void zstd_reclaim_timer_fn(struct timer_list *timer)
+ 	if (!list_empty(&wsm.lru_list))
+ 		mod_timer(&wsm.timer, jiffies + ZSTD_BTRFS_RECLAIM_JIFFIES);
+ 
+-	spin_unlock(&wsm.lock);
++	spin_unlock_bh(&wsm.lock);
+ }
+ 
+ /*
+@@ -198,7 +198,7 @@ static void zstd_cleanup_workspace_manager(void)
+ 	struct workspace *workspace;
+ 	int i;
+ 
+-	spin_lock(&wsm.lock);
++	spin_lock_bh(&wsm.lock);
+ 	for (i = 0; i < ZSTD_BTRFS_MAX_LEVEL; i++) {
+ 		while (!list_empty(&wsm.idle_ws[i])) {
+ 			workspace = container_of(wsm.idle_ws[i].next,
+@@ -208,7 +208,7 @@ static void zstd_cleanup_workspace_manager(void)
+ 			zstd_free_workspace(&workspace->list);
+ 		}
+ 	}
+-	spin_unlock(&wsm.lock);
++	spin_unlock_bh(&wsm.lock);
+ 
+ 	del_timer_sync(&wsm.timer);
+ }
+@@ -230,7 +230,7 @@ static struct list_head *zstd_find_workspace(unsigned int level)
+ 	struct workspace *workspace;
+ 	int i = level - 1;
+ 
+-	spin_lock(&wsm.lock);
++	spin_lock_bh(&wsm.lock);
+ 	for_each_set_bit_from(i, &wsm.active_map, ZSTD_BTRFS_MAX_LEVEL) {
+ 		if (!list_empty(&wsm.idle_ws[i])) {
+ 			ws = wsm.idle_ws[i].next;
+@@ -242,11 +242,11 @@ static struct list_head *zstd_find_workspace(unsigned int level)
+ 				list_del(&workspace->lru_list);
+ 			if (list_empty(&wsm.idle_ws[i]))
+ 				clear_bit(i, &wsm.active_map);
+-			spin_unlock(&wsm.lock);
++			spin_unlock_bh(&wsm.lock);
+ 			return ws;
+ 		}
+ 	}
+-	spin_unlock(&wsm.lock);
++	spin_unlock_bh(&wsm.lock);
+ 
+ 	return NULL;
+ }
+@@ -305,7 +305,7 @@ static void zstd_put_workspace(struct list_head *ws)
+ {
+ 	struct workspace *workspace = list_to_workspace(ws);
+ 
+-	spin_lock(&wsm.lock);
++	spin_lock_bh(&wsm.lock);
+ 
+ 	/* A node is only taken off the lru if we are the corresponding level */
+ 	if (workspace->req_level == workspace->level) {
+@@ -325,7 +325,7 @@ static void zstd_put_workspace(struct list_head *ws)
+ 	list_add(&workspace->list, &wsm.idle_ws[workspace->level - 1]);
+ 	workspace->req_level = 0;
+ 
+-	spin_unlock(&wsm.lock);
++	spin_unlock_bh(&wsm.lock);
+ 
+ 	if (workspace->level == ZSTD_BTRFS_MAX_LEVEL)
+ 		cond_wake_up(&wsm.wait);
 -- 
-2.21.0
+2.17.1
 
