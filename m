@@ -2,123 +2,152 @@ Return-Path: <SRS0=M1fl=TR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09FB5C04AB4
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 13:05:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09DC0C04AB4
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 13:05:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CED422087E
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 13:05:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558098315;
-	bh=i5DJvks1gmI5T/gJcxuuBt7CWz7a23NEKapu5x5IMNg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=MUOcpmgjIjQ73bGp0EU8o2d2kKK2++Y6/TAKyKRvdEBjIpEfpYthDcvJ/YPXM08v6
-	 8BEk5QNd24MKgrq3bqqZf3mErb7e/CwWN3PVXc+BOzLBSiWTdlLg5/biAP6q4gBuyl
-	 N7Zgi1Gw1sbo+tc2/olnh/ABZnxsnlDVaHKsZP44=
+	by mail.kernel.org (Postfix) with ESMTP id D3DF12087E
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 13:05:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728939AbfEQNFO (ORCPT
+        id S1728997AbfEQNFW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 May 2019 09:05:14 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:56100 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728683AbfEQNFO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 May 2019 09:05:14 -0400
-Received: by mail-wm1-f67.google.com with SMTP id x64so6877485wmb.5
-        for <linux-kernel@vger.kernel.org>; Fri, 17 May 2019 06:05:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=vaB+OdjsG8viJ4FyS4fKjKvehzlQvH9QRLvZ75BY8fM=;
-        b=ngUzaKdOzcX3F5VP0BKsw7S6V+5BHIUZgyNTSY96DAv/1dWWAhuDZ8cTQ5roo3+el1
-         NWLRku1Z23kJIomw5VwsHCVcrFD3bSnMI8OeoWEGhwkeHs66GCsqe4cJMIN2jAwNDuJ2
-         FdnA7iF89eTaXsqfkPEC6eSwzEoCNbogtKmA8lBw6Htl85z5HMJ/bxl9/RAzH4Hq7GY3
-         MRBvFcHqLn4scXb5Z35MRQhWwFH816dC63EHKTS1iVxXfnBSqa6AMxZLxAKFRF79zzxz
-         MpygDVR3XOd33jk0zPQkqQhB6fhXqKRzRA2A/dP5S+bd3Vdt27njNSXF0MT7w7zYHUas
-         /VcQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=vaB+OdjsG8viJ4FyS4fKjKvehzlQvH9QRLvZ75BY8fM=;
-        b=bEc7j9aMe5BkwJ6BCfyuvxrWWWSts5u6IqlO0tddzzQ8Fptb3LxnQnuW4i3irBBiTw
-         0OMaBKBLT8HZA7fWw9u3kSFzPKCypGI7+01bvp5pGu9hgS4WPWD/sw8sblWh/m/vEcT6
-         HunEhr6xR1YvvWLjc+WKpYk+8aaaruGt6iaP1LyNCie5a3nrZjzZRAP+XlPqdSVE67Vx
-         EZ03A2n03j0vUISgHsfcaWjF1RwCCUGoM7wGk4Wedi9mwhj4qVdSVL1Lyp0b2OvOemoF
-         mn5+n2kTXXu5OlA5bxI5J0SE6tfZe0F5UTJ0a/Lu0Qma8VMIKjx5Bn54fVBd1LvVqz/g
-         gbmg==
-X-Gm-Message-State: APjAAAWklmlbUhFjfeZ/KCBXrmkGDmmllYCZfWV0sb6ypmOr1XFfFEHe
-        eBcauKrLR3eLHa1l+Rk9/gU=
-X-Google-Smtp-Source: APXvYqzq2fpINvtEJgqLPDhUzc8bGd34ybF1vEVlVOW37a9S6fbFE+jNnbwvTSj+E3cColdHRLIgMQ==
-X-Received: by 2002:a1c:f205:: with SMTP id s5mr2108595wmc.124.1558098312338;
-        Fri, 17 May 2019 06:05:12 -0700 (PDT)
-Received: from gmail.com (2E8B0CD5.catv.pool.telekom.hu. [46.139.12.213])
-        by smtp.gmail.com with ESMTPSA id g13sm3200039wrw.63.2019.05.17.06.05.10
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 17 May 2019 06:05:11 -0700 (PDT)
-Date:   Fri, 17 May 2019 15:05:09 +0200
-From:   Ingo Molnar <mingo@kernel.org>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     yabinc@google.com, acme@kernel.org,
-        alexander.shishkin@linux.intel.com, jolsa@redhat.com,
-        namhyung@kernel.org, mark.rutland@arm.com,
-        linux-kernel@vger.kernel.org, Ingo Molnar <mingo@redhat.com>
-Subject: Re: [PATCH 1/4] perf/ring_buffer: Fix exposing a temporarily
- decreased data_head.
-Message-ID: <20190517130509.GA90824@gmail.com>
-References: <20190517115230.437269790@infradead.org>
- <20190517115418.224478157@infradead.org>
+        Fri, 17 May 2019 09:05:22 -0400
+Received: from mga09.intel.com ([134.134.136.24]:60150 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728683AbfEQNFW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 May 2019 09:05:22 -0400
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 May 2019 06:05:21 -0700
+X-ExtLoop1: 1
+Received: from kuha.fi.intel.com ([10.237.72.189])
+  by fmsmga001.fm.intel.com with SMTP; 17 May 2019 06:05:12 -0700
+Received: by kuha.fi.intel.com (sSMTP sendmail emulation); Fri, 17 May 2019 16:05:11 +0300
+Date:   Fri, 17 May 2019 16:05:11 +0300
+From:   Heikki Krogerus <heikki.krogerus@linux.intel.com>
+To:     Chunfeng Yun <chunfeng.yun@mediatek.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Adam Thomson <Adam.Thomson.Opensource@diasemi.com>,
+        Li Jun <jun.li@nxp.com>,
+        Badhri Jagan Sridharan <badhri@google.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Min Guo <min.guo@mediatek.com>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org,
+        Biju Das <biju.das@bp.renesas.com>,
+        Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v5 4/6] usb: roles: add API to get usb_role_switch by node
+Message-ID: <20190517130511.GA1887@kuha.fi.intel.com>
+References: <1557823643-8616-1-git-send-email-chunfeng.yun@mediatek.com>
+ <1557823643-8616-5-git-send-email-chunfeng.yun@mediatek.com>
+ <20190517103736.GA1490@kuha.fi.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190517115418.224478157@infradead.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190517103736.GA1490@kuha.fi.intel.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi,
 
-* Peter Zijlstra <peterz@infradead.org> wrote:
-
-> In perf_output_put_handle(), an IRQ/NMI can happen in below location and
-> write records to the same ring buffer:
-> 	...
-> 	local_dec_and_test(&rb->nest)
-> 	...                          <-- an IRQ/NMI can happen here
-> 	rb->user_page->data_head = head;
-> 	...
+On Fri, May 17, 2019 at 01:37:36PM +0300, Heikki Krogerus wrote:
+> On Tue, May 14, 2019 at 04:47:21PM +0800, Chunfeng Yun wrote:
+> > Add fwnode_usb_role_switch_get() to make easier to get
+> > usb_role_switch by fwnode which register it.
+> > It's useful when there is not device_connection registered
+> > between two drivers and only knows the fwnode which register
+> > usb_role_switch.
+> > 
+> > Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
+> > Tested-by: Biju Das <biju.das@bp.renesas.com>
 > 
-> In this case, a value A is written to data_head in the IRQ, then a value
-> B is written to data_head after the IRQ. And A > B. As a result,
-> data_head is temporarily decreased from A to B. And a reader may see
-> data_head < data_tail if it read the buffer frequently enough, which
-> creates unexpected behaviors.
-> 
-> This can be fixed by moving dec(&rb->nest) to after updating data_head,
-> which prevents the IRQ/NMI above from updating data_head.
-> 
-> Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
-> Cc: Ingo Molnar <mingo@redhat.com>
-> Cc: Jiri Olsa <jolsa@redhat.com>
-> Cc: Namhyung Kim <namhyung@kernel.org>
-> Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-> Fixes: ef60777c9abd ("perf: Optimize the perf_output() path by removing IRQ-disables")
-> Signed-off-by: Yabin Cui <yabinc@google.com>
-> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-> Link: https://lkml.kernel.org/r/20190516184010.167903-1-yabinc@google.com
+> Acked-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
 
-So these are missing a bunch of:
+Hold on. I just noticed Rob's comment on patch 2/6, where he points out
+that you don't need to use device graph since the controller is the
+parent of the connector. Doesn't that mean you don't really need this
+API?
 
-  From: Yabin Cui <yabinc@google.com>
+> > ---
+> > v5 changes:
+> >  1. remove linux/of.h suggested by Biju
+> >  2. add tested by Biju
+> > 
+> > Note: still depends on [1]
+> >  [1]: [v6,08/13] usb: roles: Introduce stubs for the exiting functions in role.h
+> >       https://patchwork.kernel.org/patch/10909971/
+> > 
+> > v4 changes:
+> >   1. use switch_fwnode_match() to find fwnode suggested by Heikki
+> >   2. this patch now depends on [1]
+> > 
+> >  [1] [v6,08/13] usb: roles: Introduce stubs for the exiting functions in role.h
+> >     https://patchwork.kernel.org/patch/10909971/
+> > 
+> > v3 changes:
+> >   1. use fwnodes instead of node suggested by Andy
+> >   2. rebuild the API suggested by Heikki
+> > 
+> > v2 no changes
+> > ---
+> >  drivers/usb/roles/class.c | 24 ++++++++++++++++++++++++
+> >  include/linux/usb/role.h  |  8 ++++++++
+> >  2 files changed, 32 insertions(+)
+> > 
+> > diff --git a/drivers/usb/roles/class.c b/drivers/usb/roles/class.c
+> > index f45d8df5cfb8..4a1f09a41ec0 100644
+> > --- a/drivers/usb/roles/class.c
+> > +++ b/drivers/usb/roles/class.c
+> > @@ -135,6 +135,30 @@ struct usb_role_switch *usb_role_switch_get(struct device *dev)
+> >  }
+> >  EXPORT_SYMBOL_GPL(usb_role_switch_get);
+> >  
+> > +/**
+> > + * fwnode_usb_role_switch_get - Find USB role switch by it's parent fwnode
+> > + * @fwnode: The fwnode that register USB role switch
+> > + *
+> > + * Finds and returns role switch registered by @fwnode. The reference count
+> > + * for the found switch is incremented.
+> > + */
+> > +struct usb_role_switch *
+> > +fwnode_usb_role_switch_get(struct fwnode_handle *fwnode)
+> > +{
+> > +	struct usb_role_switch *sw;
+> > +	struct device *dev;
+> > +
+> > +	dev = class_find_device(role_class, NULL, fwnode, switch_fwnode_match);
+> > +	if (!dev)
+> > +		return ERR_PTR(-EPROBE_DEFER);
+> > +
+> > +	sw = to_role_switch(dev);
+> > +	WARN_ON(!try_module_get(sw->dev.parent->driver->owner));
+> > +
+> > +	return sw;
+> > +}
+> > +EXPORT_SYMBOL_GPL(fwnode_usb_role_switch_get);
 
-lines, right?
+This function only basically converts the fwnode to usb_role_switch,
+but I would actually prefer that we walked through the device graph
+here instead of expecting the caller to do that.
 
-Thanks,
+So this function should probable be called fwnode_to_usb_role_switch()
+and not fwnode_usb_role_switch_get(), but I guess you don't need it
+at all, right?
 
-	Ingo
+
+thanks,
+
+-- 
+heikki
