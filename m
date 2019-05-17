@@ -2,163 +2,186 @@ Return-Path: <SRS0=M1fl=TR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD864C04AAF
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 00:26:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D928C04AAF
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 00:27:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8D10B206BF
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 00:26:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558052792;
-	bh=NztWQ67b79un61zbgNfI2N8kygb1psFx3jPAnJ9AZ9M=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=Jn89OnaYTtLI5mERazEtkFrUTl6gJxhkRltS60VyBdZUiI4QS9hI9UCs5NxoYENEo
-	 1hS4IAgSErg1V3VQVPpV0vHDM4LbRlKUxYUJwlk7BxyCd2JVkUowxNWHlq8aPD4Nwj
-	 5A0Gud1iGqF0r72Un56vD1C6VRt8FahlVvGLDP2k=
+	by mail.kernel.org (Postfix) with ESMTP id EF66E20848
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 00:27:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727704AbfEQA0b (ORCPT
+        id S1726975AbfEQA1h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 20:26:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46148 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727052AbfEQA0a (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 May 2019 20:26:30 -0400
-Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CA62321473
-        for <linux-kernel@vger.kernel.org>; Fri, 17 May 2019 00:26:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558052789;
-        bh=NztWQ67b79un61zbgNfI2N8kygb1psFx3jPAnJ9AZ9M=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=L1SWhJRYZKvea+sEKB8iBRJPEdS25Y/AC4lulser4bJgEe5UBtyCRGQcG6lkCzJto
-         8ehHfFQz7niGf2b4ANE/gIPmON2kGVQtua26wrVxnijcgNqx4M39criRzFKVGPefEY
-         OBdVuJW8707vwc/N/wejcOT0J3UxPEmr5yw2jkWs=
-Received: by mail-wm1-f46.google.com with SMTP id t5so3730962wmh.3
-        for <linux-kernel@vger.kernel.org>; Thu, 16 May 2019 17:26:28 -0700 (PDT)
-X-Gm-Message-State: APjAAAXqz22KQAc6J7o/ibzywfA2q+hswQEe/0L750KEA7gjrSUQrJoU
-        P/qLZMiZCY/RKzBZEFumPOK3QpgekV/bwzPbbhlbQQ==
-X-Google-Smtp-Source: APXvYqyzZC1sRMZCOrU+cBmKZj+z0GjEtH3CEoPL3iTBPQcsKOZibfNULUZeIIKzDi8ccIGrbCmULrKbXY5Q1EtKJgA=
-X-Received: by 2002:a1c:4107:: with SMTP id o7mr25806455wma.122.1558052787319;
- Thu, 16 May 2019 17:26:27 -0700 (PDT)
-MIME-Version: 1.0
-References: <960B34DE67B9E140824F1DCDEC400C0F4E886094@ORSMSX116.amr.corp.intel.com>
- <6da269d8-7ebb-4177-b6a7-50cc5b435cf4@fortanix.com> <CALCETrWCZQwg-TUCm58DVG43=xCKRsMe1tVHrR8vdt06hf4fWA@mail.gmail.com>
- <20190513102926.GD8743@linux.intel.com> <20190514104323.GA7591@linux.intel.com>
- <CALCETrVbgTCnPo=PAq0-KoaRwt--urrPzn==quAJ8wodCpkBkw@mail.gmail.com>
- <20190514204527.GC1977@linux.intel.com> <CALCETrX6aL367mMJh5+Y1Seznfu-AvhPV6P7GkWF4Dhu0GV8cw@mail.gmail.com>
- <20190515013031.GF1977@linux.intel.com> <CALCETrXf8mSK45h7sTK5Wf+pXLVn=Bjsc_RLpgO-h-qdzBRo5Q@mail.gmail.com>
- <20190517000331.GD11204@linux.intel.com>
-In-Reply-To: <20190517000331.GD11204@linux.intel.com>
-From:   Andy Lutomirski <luto@kernel.org>
-Date:   Thu, 16 May 2019 17:26:15 -0700
-X-Gmail-Original-Message-ID: <CALCETrWxw7xALE0kmiYBzomaSMAeXEVq-7rX7xeqPtDPeDQiCA@mail.gmail.com>
-Message-ID: <CALCETrWxw7xALE0kmiYBzomaSMAeXEVq-7rX7xeqPtDPeDQiCA@mail.gmail.com>
-Subject: Re: SGX vs LSM (Re: [PATCH v20 00/28] Intel SGX1 support)
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     Andy Lutomirski <luto@kernel.org>,
-        James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        LSM List <linux-security-module@vger.kernel.org>,
-        Paul Moore <paul@paul-moore.com>,
-        Stephen Smalley <sds@tycho.nsa.gov>,
-        Eric Paris <eparis@parisplace.org>, selinux@vger.kernel.org,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Jethro Beekman <jethro@fortanix.com>,
-        "Xing, Cedric" <cedric.xing@intel.com>,
-        "Hansen, Dave" <dave.hansen@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "Dr. Greg" <greg@enjellic.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
-        "linux-sgx@vger.kernel.org" <linux-sgx@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "nhorman@redhat.com" <nhorman@redhat.com>,
-        "npmccallum@redhat.com" <npmccallum@redhat.com>,
-        "Ayoun, Serge" <serge.ayoun@intel.com>,
-        "Katz-zamir, Shay" <shay.katz-zamir@intel.com>,
-        "Huang, Haitao" <haitao.huang@intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        "Svahn, Kai" <kai.svahn@intel.com>, Borislav Petkov <bp@alien8.de>,
-        Josh Triplett <josh@joshtriplett.org>,
-        "Huang, Kai" <kai.huang@intel.com>,
-        David Rientjes <rientjes@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        Thu, 16 May 2019 20:27:37 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:38759 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726651AbfEQA1g (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 May 2019 20:27:36 -0400
+Received: by mail-pf1-f195.google.com with SMTP id b76so2717480pfb.5
+        for <linux-kernel@vger.kernel.org>; Thu, 16 May 2019 17:27:36 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:subject:cc:from:to:message-id;
+        bh=jUqvnYGakfbu3X+S19cL7CMuDFcJHkA4STcR5kbvbv4=;
+        b=XUVM3nuth2dSoRdQsvLH/QH2/XPE3o+1s7zYCcVUxPw42UwqUirKGmm93npNKEbWxp
+         oIgljOoiu0BDCQyBtsvBmaP+kaAKScz8x2rPpTbC+W9sIlAOqmxkZJorfr9J3nb4W6Yq
+         tXz0x5MrDTyw4Z0VUHO1IBamv8+Q4+lD2e8FaoKG+xufSphdmjzETPVbydV915aD8oxO
+         2EhCtdqw1U84tYK86xTOBCXeDD1skjBZIIgI4++fnvXJ7n/sH5pvlP9Kn2k1BNchtCfE
+         aNpmR/tufJhKI8MNLh+PLvZPagwyXTobsmw+5q4NHFYIGoWAuT2sIJhmpt9I4md4CkdP
+         MGRw==
+X-Gm-Message-State: APjAAAXN2pzPwuceOwPKy/QMHTvofinyJDypYGmdoj5SU5eq6HSWStks
+        AdFFv0wdXuH7X5JpI/gTDOj60Q==
+X-Google-Smtp-Source: APXvYqyG6ulz31XFgTWJh+fLqRzGIQkJoz/n+WzyKDfgPA5o7NIjw00EuiNnwhVxsNUKAUABrSi0Cw==
+X-Received: by 2002:a63:1354:: with SMTP id 20mr52472775pgt.356.1558052855801;
+        Thu, 16 May 2019 17:27:35 -0700 (PDT)
+Received: from localhost ([12.206.222.5])
+        by smtp.gmail.com with ESMTPSA id z125sm10673250pfb.75.2019.05.16.17.27.34
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 16 May 2019 17:27:35 -0700 (PDT)
+Date:   Thu, 16 May 2019 17:27:35 -0700 (PDT)
+X-Google-Original-Date: Thu, 16 May 2019 17:23:56 PDT (-0700)
+Subject: [GIT PULL] RISC-V Patches for the 5.2 Merge Window, Part 1 v2
+CC:      linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
+From:   Palmer Dabbelt <palmer@sifive.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Message-ID: <mhng-5ac66c65-9c46-409c-a5fb-a6551bb206c5@palmer-si-x1e>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 16, 2019 at 5:03 PM Sean Christopherson
-<sean.j.christopherson@intel.com> wrote:
->
-> On Wed, May 15, 2019 at 11:27:04AM -0700, Andy Lutomirski wrote:
-> > Here's a very vague proposal that's kind of like what I've been
-> > thinking over the past few days.  The SGX inode could track, for each
-> > page, a "safe-to-execute" bit.  When you first open /dev/sgx/enclave,
-> > you get a blank enclave and all pages are safe-to-execute.  When you
-> > do the ioctl to load context (which could be code, data, or anything
-> > else), the kernel will check whether the *source* VMA is executable
-> > and, if not, mark the page of the enclave being loaded as unsafe.
-> > Once the enclave is initialized, the driver will clear the
-> > safe-to-execute bit for any page that is successfully mapped writably.
-> >
-> > The intent is that a page of the enclave is safe-to-execute if that
-> > page was populated from executable memory and not modified since then.
-> > LSMs could then enforce a policy that you can map an enclave page RX
-> > if the page is safe-to-execute, you can map any page you want for
-> > write if there are no executable mappings, and you can only map a page
-> > for write and execute simultaneously if you can EXECMOD permission.
-> > This should allow an enclave to be loaded by userspace from a file
-> > with EXECUTE rights.
->
-> I'm still confused as to why you want to track execute permissions on the
-> enclave pages and add SGX-specific LSM hooks.  Is there anything that
-> prevents userspace from building the enclave like any other DSO and then
-> copying it into enclave memory?
+The following changes since commit 085b7755808aa11f78ab9377257e1dad2e6fa4bb:
 
-It's entirely possible that I'm the one missing something.  But here's
-why I think this:
+  Linux 5.1-rc6 (2019-04-21 10:45:57 -0700)
 
-> I feel like I'm missing something.
->
->   1. Userspace loads enclave into regular memory, e.g. like a normal DSO.
->      All mmap(), mprotect(), etc... calls are subject to all existing
->      LSM policies.
->
->   2. Userspace opens /dev/sgx/enclave to instantiate a new enclave.
->
->   3. Userspace uses mmap() to allocate virtual memory for its enclave,
->      again subject to all existing LSM policies (sane userspaces map it RO
->      since the permissions eventually get tossed anyways).
+are available in the Git repository at:
 
-Is userspace actually requred to mmap() the enclave prior to EADDing things?
+  git://git.kernel.org/pub/scm/linux/kernel/git/palmer/riscv-linux.git tags/riscv-for-linus-5.2-mw1
 
->
->   4. SGX subsystem refuses to service page faults for enclaves that have
->      not yet been initialized, e.g. signals SIGBUS or SIGSEGV.
->
->   5. Userspace invokes SGX ioctl() to copy enclave from regulary VMA to
->      enclave VMA.
->
->   6. SGX ioctl() propagates VMA protection-related flags from source VMA
->      to enclave VMA, e.g. invokes mprotect_fixup().  Enclave VMA(s) may
->      be split as part of this process.
+for you to fetch changes up to 81eba518d95f43d9f81ed5eb6dd9edb4179687aa:
 
-Does this also call the LSM?  If so, what is it expected to do?  What
-happens if there are different regions with different permissions on
-the same page?  SGX has 256-byte granularity right?
+  RISC-V: sifive_l2_cache: Add L2 cache controller driver for SiFive SoCs (2019-05-15 18:40:14 -0700)
 
->
->   7. At all times, mprotect() calls on the enclave VMA are subject to
->      existing LSM policies, i.e. it's not special cased for enclaves.
+----------------------------------------------------------------
+RISC-V Patches for the 5.2 Merge Window, Part 1 v2
 
-I don't think the normal behavior actually works here.  An enclave is
-always MAP_SHARED, so (with SELinux) mprotecting() to X or RX requires
-EXECUTE and mprotecting() to RWX requires extra permissions.  But user
-code can also mmap() the enclave again.  What is supposed to happen in
-that case?
+This patch set contains an assortment of RISC-V related patches that I'd
+like to target for the 5.2 merge window.  Most of the patches are
+cleanups, but there are a handful of user-visible changes:
+
+* The nosmp and nr_cpus command-line arguments are now supported, which
+  work like normal.
+* The SBI console no longer installs itself as a preferred console, we
+  rely on standard mechanisms (/chosen, command-line, hueristics)
+  instead.
+* sfence_remove_sfence_vma{,_asid} now pass their arguments along to the
+  SBI call.
+* Modules now support BUG().
+* A missing sfence.vma during boot has been added.  This bug only
+  manifests during boot.
+* The arch/riscv support for SiFive's L2 cache controller has been
+  merged, which should un-block the EDAC framework work.
+
+I've only tested this on QEMU again, as I didn't have time to get things
+running on the Unleashed.  The latest master from this morning merges in
+cleanly and passes the tests as well.
+
+This patch set rebased my "5.2 MW, Part 1" patch set which includes an
+erronous empty file.  That patch set has not been merged.
+
+----------------------------------------------------------------
+Anup Patel (4):
+      RISC-V: Use tabs to align macro values in asm/csr.h
+      RISC-V: Add interrupt related SCAUSE defines in asm/csr.h
+      RISC-V: Access CSRs using CSR numbers
+      tty: Don't force RISCV SBI console as preferred console
+
+Atish Patra (4):
+      RISC-V: Add RISC-V specific arch_match_cpu_phys_id
+      RISC-V: Implement nosmp commandline option.
+      RISC-V: Support nr_cpus command line option.
+      RISC-V: Fix minor checkpatch issues.
+
+Christoph Hellwig (11):
+      riscv: use asm-generic/extable.h
+      riscv: turn mm_segment_t into a struct
+      riscv: remove unreachable big endian code
+      riscv: remove CONFIG_RISCV_ISA_A
+      riscv: clear all pending interrupts when booting
+      riscv: simplify the stack pointer setup in head.S
+      riscv: cleanup the parse_dtb calling conventions
+      riscv: remove unreachable !HAVE_FUNCTION_GRAPH_RET_ADDR_PTR code
+      riscv: remove duplicate macros from ptrace.h
+      riscv: print the unexpected interrupt cause
+      riscv: call pm_power_off from machine_halt / machine_power_off
+
+Gary Guo (3):
+      riscv: move flush_icache_{all,mm} to cacheflush.c
+      riscv: move switch_mm to its own file
+      riscv: fix sbi_remote_sfence_vma{,_asid}.
+
+Guo Ren (1):
+      riscv/signal: Fixup additional syscall restarting
+
+Nick Desaulniers (1):
+      riscv: vdso: drop unnecessary cc-ldoption
+
+Palmer Dabbelt (1):
+      RISC-V: Avoid using invalid intermediate translations
+
+Vincent Chen (3):
+      riscv: support trap-based WARN()
+      riscv: Add the support for c.ebreak check in is_valid_bugaddr()
+      riscv: Support BUG() in kernel module
+
+Yash Shah (2):
+      RISC-V: Add DT documentation for SiFive L2 Cache Controller
+      RISC-V: sifive_l2_cache: Add L2 cache controller driver for SiFive SoCs
+
+ .../devicetree/bindings/riscv/sifive-l2-cache.txt  |  51 ++++++
+ arch/riscv/Kconfig                                 |   6 +-
+ arch/riscv/Makefile                                |   5 +-
+ arch/riscv/include/asm/Kbuild                      |   1 +
+ arch/riscv/include/asm/bug.h                       |  35 +++--
+ arch/riscv/include/asm/cacheflush.h                |   2 +-
+ arch/riscv/include/asm/csr.h                       | 123 +++++++++------
+ arch/riscv/include/asm/elf.h                       |   6 -
+ arch/riscv/include/asm/futex.h                     |  13 --
+ arch/riscv/include/asm/irqflags.h                  |  10 +-
+ arch/riscv/include/asm/mmu_context.h               |  59 +------
+ arch/riscv/include/asm/ptrace.h                    |  21 +--
+ arch/riscv/include/asm/sbi.h                       |  19 ++-
+ arch/riscv/include/asm/sifive_l2_cache.h           |  16 ++
+ arch/riscv/include/asm/thread_info.h               |   4 +-
+ arch/riscv/include/asm/uaccess.h                   |  28 ++--
+ arch/riscv/kernel/asm-offsets.c                    |   3 -
+ arch/riscv/kernel/cpu.c                            |   3 +-
+ arch/riscv/kernel/entry.S                          |  22 +--
+ arch/riscv/kernel/head.S                           |  33 ++--
+ arch/riscv/kernel/irq.c                            |  19 +--
+ arch/riscv/kernel/perf_event.c                     |   4 +-
+ arch/riscv/kernel/reset.c                          |  15 +-
+ arch/riscv/kernel/setup.c                          |   6 +-
+ arch/riscv/kernel/signal.c                         |   6 +
+ arch/riscv/kernel/smp.c                            |  61 ++-----
+ arch/riscv/kernel/smpboot.c                        |  22 ++-
+ arch/riscv/kernel/stacktrace.c                     |  14 +-
+ arch/riscv/kernel/traps.c                          |  30 +++-
+ arch/riscv/kernel/vdso/Makefile                    |   2 +-
+ arch/riscv/mm/Makefile                             |   2 +
+ arch/riscv/mm/cacheflush.c                         |  61 +++++++
+ arch/riscv/mm/context.c                            |  69 ++++++++
+ arch/riscv/mm/fault.c                              |   6 +-
+ arch/riscv/mm/sifive_l2_cache.c                    | 175 +++++++++++++++++++++
+ drivers/tty/hvc/hvc_riscv_sbi.c                    |   1 -
+ modules.builtin.modinfo                            | Bin 0 -> 46064 bytes
+ 37 files changed, 633 insertions(+), 320 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/riscv/sifive-l2-cache.txt
+ create mode 100644 arch/riscv/include/asm/sifive_l2_cache.h
+ create mode 100644 arch/riscv/mm/context.c
+ create mode 100644 arch/riscv/mm/sifive_l2_cache.c
+ create mode 100644 modules.builtin.modinfo
