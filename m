@@ -2,122 +2,221 @@ Return-Path: <SRS0=M1fl=TR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89207C04E87
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 04:24:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A840C04E87
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 04:26:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5B71720868
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 04:24:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C47D42083E
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 04:26:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="MjmYEj/7"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="dTGmC+qN";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="LUhHEH9F"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727417AbfEQEY4 (ORCPT
+        id S1727516AbfEQE0d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 May 2019 00:24:56 -0400
-Received: from conssluserg-04.nifty.com ([210.131.2.83]:49060 "EHLO
-        conssluserg-04.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726755AbfEQEY4 (ORCPT
+        Fri, 17 May 2019 00:26:33 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:48378 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726755AbfEQE0d (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 May 2019 00:24:56 -0400
-Received: from mail-vs1-f49.google.com (mail-vs1-f49.google.com [209.85.217.49]) (authenticated)
-        by conssluserg-04.nifty.com with ESMTP id x4H4OW2a016993;
-        Fri, 17 May 2019 13:24:33 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-04.nifty.com x4H4OW2a016993
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1558067073;
-        bh=XSdURHr+DFj73XgjlE8DVqoSorih7QO9jSg+HW1D8TM=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=MjmYEj/7xZIYGboJToCEBgv5PN/8CD6sDWZgip2cIfkO7e3Ii9sfP5C3OkJ+w+bmf
-         nV6cmWzKaBSSjsZhyrn4bys5Y4Q6I+OEw7Kw5shBSlS1idFvlydMF1XAeStprazHXe
-         YEbmOvO03hshhgHZXMzPoXOKrUM23BsqSOjE9eL/rkptHR8OUhQKwyp/IklD0+/Dl9
-         owyazsPp24tpqnpga80RjHHMgFR00FgPaqDWKyOVGScKcv6zoiLl/Anuo6IiuxTxjf
-         qbtJQzYFIsrlK27Oe+MJKRLUUuHhjaC4kJm7cNQh1CbYjHyDzVm4085SMLX6fx2uBd
-         H18+0yFykqaGg==
-X-Nifty-SrcIP: [209.85.217.49]
-Received: by mail-vs1-f49.google.com with SMTP id o10so3750740vsp.12;
-        Thu, 16 May 2019 21:24:32 -0700 (PDT)
-X-Gm-Message-State: APjAAAUM7tMr8SHSizjNRn02KJyzLHVXpwOUD1M81+T2t10lCH1GD3ZS
-        gOrlhGZjT2w8LXvKFSaC90rpzIRamTE26OnpgKU=
-X-Google-Smtp-Source: APXvYqwRom2nfToM4jL1gKybhnXBZPLM/8GRypEcR2drcSxkNBd5y+Id9rfE+eiIpAnAfm5gkg5AbPeOHdYPagE+d9M=
-X-Received: by 2002:a67:ad0f:: with SMTP id t15mr7896301vsl.179.1558067071748;
- Thu, 16 May 2019 21:24:31 -0700 (PDT)
+        Fri, 17 May 2019 00:26:33 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id C0C1760DA8; Fri, 17 May 2019 04:26:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1558067191;
+        bh=IbDX8lLKkmrbMMScNIrGA8uD1ioXtQEK203WKkXTUT0=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=dTGmC+qNl2FUVV+7qBdEdAjItTQsseVKSWf95tfccyNE1BxfqrTygEVFXd7NO/GWQ
+         jDBFBQOOkHHudfJP4ujWXnoudeljtfX3ReNKpBBbeKO6UnXYQLWvpGnHx7D+70zCIB
+         FHNKwG0JOenyB8WWtc6W8nZQ32WzHg0DTpO4/IRs=
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        by smtp.codeaurora.org (Postfix) with ESMTP id 4B63960A24;
+        Fri, 17 May 2019 04:26:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1558067190;
+        bh=IbDX8lLKkmrbMMScNIrGA8uD1ioXtQEK203WKkXTUT0=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=LUhHEH9FOfejyMct2qG5JfNqdbHSCyCc85invtgoc3ed/holhaFywPZZ/qDfcGzO2
+         nNvx3skH4PpWKqbih7Zmd271uvLaqfSk/46wF6swOypbzDlL2hTrEe8gT/c/Ps0z7k
+         Ms3t7Yb8OyVvZEeymVo2S3+duvPx6Evpwbws/AkU=
 MIME-Version: 1.0
-References: <20190423034959.13525-1-yamada.masahiro@socionext.com>
- <20190423034959.13525-5-yamada.masahiro@socionext.com> <aa73f81d-5d5a-a1d2-5239-3e8eb1278ec4@redhat.com>
-In-Reply-To: <aa73f81d-5d5a-a1d2-5239-3e8eb1278ec4@redhat.com>
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Fri, 17 May 2019 13:23:55 +0900
-X-Gmail-Original-Message-ID: <CAK7LNAST5y9Khg0BBz6W0mekPpuLPwWa9nPvvVENidWhHZ-avw@mail.gmail.com>
-Message-ID: <CAK7LNAST5y9Khg0BBz6W0mekPpuLPwWa9nPvvVENidWhHZ-avw@mail.gmail.com>
-Subject: Re: [RESEND PATCH v3 04/11] s390/cpacf: mark scpacf_query() as __always_inline
-To:     Laura Abbott <labbott@redhat.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        linux-s390 <linux-s390@vger.kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Mathieu Malaterre <malat@debian.org>, X86 ML <x86@kernel.org>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        linux-mips@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        linux-mtd <linux-mtd@lists.infradead.org>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Fri, 17 May 2019 09:56:30 +0530
+From:   Harish Bandi <c-hbandi@codeaurora.org>
+To:     Balakrishna Godavarthi <bgodavar@codeaurora.org>
+Cc:     Rocky Liao <rjliao@codeaurora.org>, robh+dt@kernel.org,
+        mark.rutland@arm.com, marcel@holtmann.org, johan.hedberg@gmail.com,
+        thierry.escande@linaro.org, netdev@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-bluetooth@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        Hemantg <hemantg@codeaurora.org>,
+        linux-bluetooth-owner@vger.kernel.org
+Subject: Re: [PATCH v5 1/2] Bluetooth: hci_qca: Load customized NVM based on
+ the device property
+In-Reply-To: <178d2a3454399cfad0e61e72a13ea19a@codeaurora.org>
+References: <1557631148-5120-1-git-send-email-rjliao@codeaurora.org>
+ <1557919161-11010-1-git-send-email-rjliao@codeaurora.org>
+ <178d2a3454399cfad0e61e72a13ea19a@codeaurora.org>
+Message-ID: <d3e2f431a8e2ef00d7bd8c1cebe5dfc1@codeaurora.org>
+X-Sender: c-hbandi@codeaurora.org
+User-Agent: Roundcube Webmail/1.2.5
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 17, 2019 at 8:01 AM Laura Abbott <labbott@redhat.com> wrote:
->
-> On 4/22/19 8:49 PM, Masahiro Yamada wrote:
-> > This prepares to move CONFIG_OPTIMIZE_INLINING from x86 to a common
-> > place. We need to eliminate potential issues beforehand.
-> >
-> > If it is enabled for s390, the following error is reported:
-> >
-> > In file included from arch/s390/crypto/des_s390.c:19:
-> > ./arch/s390/include/asm/cpacf.h: In function 'cpacf_query':
-> > ./arch/s390/include/asm/cpacf.h:170:2: warning: asm operand 3 probably doesn't match constraints
-> >    asm volatile(
-> >    ^~~
-> > ./arch/s390/include/asm/cpacf.h:170:2: error: impossible constraint in 'asm'
-> >
->
-> This also seems to still be broken, again with gcc 9.1.1
->
-> BUILDSTDERR: In file included from arch/s390/crypto/prng.c:29:
-> BUILDSTDERR: ./arch/s390/include/asm/cpacf.h: In function 'cpacf_query_func':
-> BUILDSTDERR: ./arch/s390/include/asm/cpacf.h:170:2: warning: asm operand 3 probably doesn't match constraints
-> BUILDSTDERR:   170 |  asm volatile(
-> BUILDSTDERR:       |  ^~~
-> BUILDSTDERR: ./arch/s390/include/asm/cpacf.h:170:2: error: impossible constraint in 'asm'
->
-> I realized we're still carrying a patch to add -fno-section-anchors
-> but it's a similar failure to powerpc.
+On 2019-05-17 08:13, Balakrishna Godavarthi wrote:
+> Hi Rocky,
+> 
+> On 2019-05-15 16:49, Rocky Liao wrote:
+>> QCA BTSOC NVM is a customized firmware file and different vendors may
+>> want to have different BTSOC configuration (e.g. Configure SCO over 
+>> PCM
+>> or I2S, Setting Tx power, etc.) via this file. This patch will allow
+>> vendors to download different NVM firmware file by reading a device
+>> property "firmware-name".
+>> 
+>> Signed-off-by: Rocky Liao <rjliao@codeaurora.org>
+>> ---
+>> Changes in v5:
+>>   * Made the change applicable to the wcn399x series chip sets
+>> ---
+>>  drivers/bluetooth/btqca.c   |  8 ++++++--
+>>  drivers/bluetooth/btqca.h   |  6 ++++--
+>>  drivers/bluetooth/hci_qca.c | 19 ++++++++++++++++++-
+>>  3 files changed, 28 insertions(+), 5 deletions(-)
+>> 
+>> diff --git a/drivers/bluetooth/btqca.c b/drivers/bluetooth/btqca.c
+>> index cc12eec..a78b80e 100644
+>> --- a/drivers/bluetooth/btqca.c
+>> +++ b/drivers/bluetooth/btqca.c
+>> @@ -332,7 +332,8 @@ int qca_set_bdaddr_rome(struct hci_dev *hdev,
+>> const bdaddr_t *bdaddr)
+>>  EXPORT_SYMBOL_GPL(qca_set_bdaddr_rome);
+>> 
+>>  int qca_uart_setup(struct hci_dev *hdev, uint8_t baudrate,
+>> -		   enum qca_btsoc_type soc_type, u32 soc_ver)
+>> +		   enum qca_btsoc_type soc_type, u32 soc_ver,
+>> +		   const char *firmware_name)
+>>  {
+>>  	struct rome_config config;
+>>  	int err;
+>> @@ -365,7 +366,10 @@ int qca_uart_setup(struct hci_dev *hdev, uint8_t 
+>> baudrate,
+>> 
+>>  	/* Download NVM configuration */
+>>  	config.type = TLV_TYPE_NVM;
+>> -	if (qca_is_wcn399x(soc_type))
+>> +	if (firmware_name)
+>> +		snprintf(config.fwname, sizeof(config.fwname),
+>> +			 "qca/%s", firmware_name);
+>> +	else if (qca_is_wcn399x(soc_type))
+>>  		snprintf(config.fwname, sizeof(config.fwname),
+>>  			 "qca/crnv%02x.bin", rom_ver);
+>>  	else
+>> diff --git a/drivers/bluetooth/btqca.h b/drivers/bluetooth/btqca.h
+>> index 4c4fe2b..8c037bb 100644
+>> --- a/drivers/bluetooth/btqca.h
+>> +++ b/drivers/bluetooth/btqca.h
+>> @@ -140,7 +140,8 @@ enum qca_btsoc_type {
+>> 
+>>  int qca_set_bdaddr_rome(struct hci_dev *hdev, const bdaddr_t 
+>> *bdaddr);
+>>  int qca_uart_setup(struct hci_dev *hdev, uint8_t baudrate,
+>> -		   enum qca_btsoc_type soc_type, u32 soc_ver);
+>> +		   enum qca_btsoc_type soc_type, u32 soc_ver,
+>> +		   const char *firmware_name);
+>>  int qca_read_soc_version(struct hci_dev *hdev, u32 *soc_version);
+>>  int qca_set_bdaddr(struct hci_dev *hdev, const bdaddr_t *bdaddr);
+>>  static inline bool qca_is_wcn399x(enum qca_btsoc_type soc_type)
+>> @@ -155,7 +156,8 @@ static inline int qca_set_bdaddr_rome(struct
+>> hci_dev *hdev, const bdaddr_t *bdad
+>>  }
+>> 
+>>  static inline int qca_uart_setup(struct hci_dev *hdev, uint8_t 
+>> baudrate,
+>> -				 enum qca_btsoc_type soc_type, u32 soc_ver)
+>> +				 enum qca_btsoc_type soc_type, u32 soc_ver,
+>> +				 const char *firmware_name)
+>>  {
+>>  	return -EOPNOTSUPP;
+>>  }
+>> diff --git a/drivers/bluetooth/hci_qca.c b/drivers/bluetooth/hci_qca.c
+>> index 57322c4..9590602 100644
+>> --- a/drivers/bluetooth/hci_qca.c
+>> +++ b/drivers/bluetooth/hci_qca.c
+>> @@ -169,6 +169,7 @@ struct qca_serdev {
+>>  	struct qca_power *bt_power;
+>>  	u32 init_speed;
+>>  	u32 oper_speed;
+>> +	const char *firmware_name;
+>>  };
+>> 
+>>  static int qca_power_setup(struct hci_uart *hu, bool on);
+>> @@ -190,6 +191,17 @@ static enum qca_btsoc_type qca_soc_type(struct
+>> hci_uart *hu)
+>>  	return soc_type;
+>>  }
+>> 
+>> +static const char *qca_get_firmware_name(struct hci_uart *hu)
+>> +{
+>> +	if (hu->serdev) {
+>> +		struct qca_serdev *qsd = serdev_device_get_drvdata(hu->serdev);
+>> +
+>> +		return qsd->firmware_name;
+>> +	} else {
+>> +		return NULL;
+>> +	}
+>> +}
+>> +
+>>  static void __serial_clock_on(struct tty_struct *tty)
+>>  {
+>>  	/* TODO: Some chipset requires to enable UART clock on client
+>> @@ -1195,6 +1207,7 @@ static int qca_setup(struct hci_uart *hu)
+>>  	struct qca_data *qca = hu->priv;
+>>  	unsigned int speed, qca_baudrate = QCA_BAUDRATE_115200;
+>>  	enum qca_btsoc_type soc_type = qca_soc_type(hu);
+>> +	const char *firmware_name = qca_get_firmware_name(hu);
+>>  	int ret;
+>>  	int soc_ver = 0;
+>> 
+>> @@ -1245,7 +1258,8 @@ static int qca_setup(struct hci_uart *hu)
+>> 
+>>  	bt_dev_info(hdev, "QCA controller version 0x%08x", soc_ver);
+>>  	/* Setup patch / NVM configurations */
+>> -	ret = qca_uart_setup(hdev, qca_baudrate, soc_type, soc_ver);
+>> +	ret = qca_uart_setup(hdev, qca_baudrate, soc_type, soc_ver,
+>> +			firmware_name);
+>>  	if (!ret) {
+>>  		set_bit(QCA_IBS_ENABLED, &qca->flags);
+>>  		qca_debugfs_init(hdev);
+>> @@ -1477,6 +1491,9 @@ static int qca_serdev_probe(struct serdev_device 
+>> *serdev)
+>>  			return PTR_ERR(qcadev->bt_en);
+>>  		}
+>> 
+>> +		device_property_read_string(&serdev->dev, "firmware-name",
+>> +					 &qcadev->firmware_name);
+>> +
+>>  		qcadev->susclk = devm_clk_get(&serdev->dev, NULL);
+>>  		if (IS_ERR(qcadev->susclk)) {
+>>  			dev_err(&serdev->dev, "failed to acquire clk\n");
+> 
+> Thanks for doing it for wcn399x series too.
+> 
+> Change look fine to me.
+> 
+> Reviewed-by: Balakrishna Godavarthi <bgodavar@codeaurora.org>
 
+Tested for WCN3998.
 
-Christophe had already pointed out potential issues for "i" constraint,
-and I have fixups in hand:
+Tested-by: Harish Bandi <c-hbandi@codeaurora.org>
 
-See
-https://lkml.org/lkml/2019/5/3/459
-
-
-My plan was to send it after all of my base patches
-were merged.
-
-This s390 cparf.h is included in the TODO list.
-
-Will fix soon.
-
-Thanks.
-
--- 
-Best Regards
-Masahiro Yamada
+Thanks,
+Harish
