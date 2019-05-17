@@ -2,247 +2,161 @@ Return-Path: <SRS0=M1fl=TR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C3FEC46470
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 16:35:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD860C04AB4
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 16:36:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 31768216FD
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 16:35:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A13D320848
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 16:36:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="a655/08p"
+	dkim=pass (1024-bit key) header.d=cisco.com header.i=@cisco.com header.b="i50W31Uv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726888AbfEQQfL (ORCPT
+        id S1726964AbfEQQgw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 May 2019 12:35:11 -0400
-Received: from mail-it1-f195.google.com ([209.85.166.195]:51911 "EHLO
-        mail-it1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725932AbfEQQfK (ORCPT
+        Fri, 17 May 2019 12:36:52 -0400
+Received: from alln-iport-6.cisco.com ([173.37.142.93]:22096 "EHLO
+        alln-iport-6.cisco.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725932AbfEQQgv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 May 2019 12:35:10 -0400
-Received: by mail-it1-f195.google.com with SMTP id m3so9168675itl.1;
-        Fri, 17 May 2019 09:35:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :content-transfer-encoding;
-        bh=k3eLPJeFfTPv6TDvaqkmkbLRpKbPkalLozF0uKgDS0w=;
-        b=a655/08pvA5tAEYJxcg8wgkRU0hsAMqB0mXWuqtMtdvgNCbMuUP9B3X6dotZ6kLaiS
-         R1H/lm3y+/WgbsK24NoYfJvZAeVDOJWcXFUkXz5YX8aoOultAe4JHcXGVoEjGx4qTMZC
-         QMRXdkkggogxS/Xfu132Ukr93FYGAXS6w4myVLum3ttDhkTZ3eUivku7XTO4YnKcqpdL
-         2YqucLNb7zrvr46crgHA6h9IG/dFEG82Cehlcp+JqfQalNiLmRqNxNQXKUkX1gmrP4co
-         ggb0iBorZVzcQ9GiqvuNATt/2nSpUpda5btDqL2RpDp+i6C20Fa6Is5119dMApE6oQ9c
-         UEAA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:content-transfer-encoding;
-        bh=k3eLPJeFfTPv6TDvaqkmkbLRpKbPkalLozF0uKgDS0w=;
-        b=an9MgPNrAMM/mdG4ACsfNAvm+UFAMTVTIadutAcU8ebyzdn/juOlCOOZbIr5HoaLMb
-         xpA9lSP0yy12YgIteBVQwIQCj/Oen8wqtcsmd9X0BoZuw2gJM/WxeXXPET3uwSNtrgkN
-         T1JwZ3ARiCIeu+xSGJRKKsGIBAJzwNS5jTjYHr0bIatogGzNFLOZSBmlVgPqgGyjv9bX
-         fFqZt+OSiG7Qt7nMBBtOgeOUNtyYcaK584/BTJyVAA5gJ79/HBIHLO6kOyrL5TQs7Cq1
-         OB2E3L5M5XHWzr7eQbXh7KyqKX/Z1c/KzUVQ3ANDTUE8kfzKUf3MfKXLSZvhSP6tNBTV
-         9zuQ==
-X-Gm-Message-State: APjAAAWMaVK51snNA73mgveMklbQJwx8bI4M9SAVTiS2oSkIigPeN5yy
-        zlaNvyi7+FKYUjGDGqjyl12sZKC6uqD/XHW4BYg=
-X-Google-Smtp-Source: APXvYqzDym+y/WmoJ7mUwnMdhz5ZNgY4qEk+9h4TgQdw2Wcyk7OG0owfEtQTfsiZZUF6M67quXcikzQQAqQXIcmZU8w=
-X-Received: by 2002:a24:ac49:: with SMTP id m9mr11819158iti.174.1558110909642;
- Fri, 17 May 2019 09:35:09 -0700 (PDT)
+        Fri, 17 May 2019 12:36:51 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=cisco.com; i=@cisco.com; l=4235; q=dns/txt; s=iport;
+  t=1558111011; x=1559320611;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=MRsfiVUXzKrb3WUopDCNh+ul+4ofhNdmm2stHa5/lDY=;
+  b=i50W31UvbkmiKJUAjsRVRV87pCW7QhfHOW9+ehjKKGXFQtOZyHH3u3Kr
+   etqH9d+pujggwDN5tK4sKKrq7+s0uaRWOnZck8Yq9edlMmq9nQH9sgOMO
+   eD8vhfkl6J/L+I2s57DyqZkXRiCRKGPO4M78EcOj3nYUliukMpyzRCFv+
+   g=;
+X-IronPort-AV: E=Sophos;i="5.60,480,1549929600"; 
+   d="scan'208";a="277494728"
+Received: from alln-core-7.cisco.com ([173.36.13.140])
+  by alln-iport-6.cisco.com with ESMTP/TLS/DHE-RSA-SEED-SHA; 17 May 2019 16:36:51 +0000
+Received: from zorba ([10.24.25.58])
+        by alln-core-7.cisco.com (8.15.2/8.15.2) with ESMTPS id x4HGamkm004388
+        (version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
+        Fri, 17 May 2019 16:36:50 GMT
+Date:   Fri, 17 May 2019 09:36:43 -0700
+From:   Daniel Walker <danielwa@cisco.com>
+To:     Alexander Duyck <alexander.duyck@gmail.com>
+Cc:     Florian Fainelli <f.fainelli@gmail.com>,
+        "Nikunj Kela (nkela)" <nkela@cisco.com>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "intel-wired-lan@lists.osuosl.org" <intel-wired-lan@lists.osuosl.org>,
+        "xe-linux-external(mailer list)" <xe-linux-external@cisco.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: Re: [Intel-wired-lan] [PATCH] igb: add parameter to ignore nvm
+ checksum validation
+Message-ID: <20190517163643.7tlch7xqplxohoq7@zorba>
+References: <1557357269-9498-1-git-send-email-nkela@cisco.com>
+ <9be117dc6e818ab83376cd8e0f79dbfaaf193aa9.camel@intel.com>
+ <76B41175-0CEE-466C-91BF-89A1CA857061@cisco.com>
+ <4469196a-0705-5459-8aca-3f08e9889d61@gmail.com>
+ <20190517010330.2wynopuhsqycqzuq@zorba>
+ <bd9e6a93-c8e8-a90e-25b0-26ccbf65b7c4@gmail.com>
+ <CAKgT0Uev7sfpOOhusAg9jFLkFeE9JtTntyTd0aAHz2db69L13g@mail.gmail.com>
 MIME-Version: 1.0
-References: <20190512082614.9045-1-tiny.windzz@gmail.com> <20190512082614.9045-3-tiny.windzz@gmail.com>
- <20190512221612.ubmknvim4utnqpl4@core.my.home> <CAEExFWv5A5mhpV7afQT=AaYx2ko5QnfbM6HvfuTgT1Na=ssOcw@mail.gmail.com>
- <20190516182936.h6xdzp3gtg4ikave@core.my.home>
-In-Reply-To: <20190516182936.h6xdzp3gtg4ikave@core.my.home>
-From:   Frank Lee <tiny.windzz@gmail.com>
-Date:   Sat, 18 May 2019 00:34:57 +0800
-Message-ID: <CAEExFWvDO3wJd6wp1hFudf3EGF0NixgKAwAd5-b1=VLF+7-jCw@mail.gmail.com>
-Subject: Re: [PATCH 2/3] thermal: sun50i: add thermal driver for h6
-To:     Frank Lee <tiny.windzz@gmail.com>, rui.zhang@intel.com,
-        Eduardo Valentin <edubezval@gmail.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>, robh+dt@kernel.org,
-        Mark Rutland <mark.rutland@arm.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Chen-Yu Tsai <wens@csie.org>, catalin.marinas@arm.com,
-        will.deacon@arm.com, David Miller <davem@davemloft.net>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jonathan.Cameron@huawei.com,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        paulmck@linux.ibm.com, Andy Gross <andy.gross@linaro.org>,
-        olof@lixom.net, bjorn.andersson@linaro.org,
-        Jagan Teki <jagan@amarulasolutions.com>,
-        marc.w.gonzalez@free.fr, stefan.wahren@i2se.com,
-        enric.balletbo@collabora.com, devicetree@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux PM <linux-pm@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAKgT0Uev7sfpOOhusAg9jFLkFeE9JtTntyTd0aAHz2db69L13g@mail.gmail.com>
+User-Agent: NeoMutt/20170609 (1.8.3)
+X-Auto-Response-Suppress: DR, OOF, AutoReply
+X-Outbound-SMTP-Client: 10.24.25.58, [10.24.25.58]
+X-Outbound-Node: alln-core-7.cisco.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-HI,
-
-On Fri, May 17, 2019 at 2:29 AM Ond=C5=99ej Jirman <megous@megous.com> wrot=
-e:
->
-> Hi Yangtao,
->
-> thank you for work on this driver.
->
-> On Fri, May 17, 2019 at 02:06:53AM +0800, Frank Lee wrote:
-> > HI Ond=C5=99ej,
+On Fri, May 17, 2019 at 08:16:34AM -0700, Alexander Duyck wrote:
+> On Thu, May 16, 2019 at 6:48 PM Florian Fainelli <f.fainelli@gmail.com> wrote:
 > >
-> > On Mon, May 13, 2019 at 6:16 AM Ond=C5=99ej Jirman <megous@megous.com> =
-wrote:
-> > > > +
-> > > > +/* Temp Unit: millidegree Celsius */
-> > > > +static int tsens_reg2temp(struct tsens_device *tmdev,
-> > > > +                           int reg)
-> > >
-> > > Please name all functions so that they are more clearly identifiable
-> > > in stack traces as belonging to this driver. For example:
-> > >
-> > >   sun8i_ths_reg2temp
-> > >
-> > > The same applies for all tsens_* functions below. tsens_* is too
-> > > generic.
 > >
-> > Done but no sun8i_ths_reg2temp.
 > >
-> > ths_reg2tem() should be a generic func.
-> > I think it should be suitable for all platforms=EF=BC=8C so no platform=
- prefix.
->
-> You've missed my point. The driver name is sun8i_thermal and if you get
-> and oops from the kernel you'll get a stack trace where there are just fu=
-nction
-> names. If you use too generic function names, it will not be clear which
-> driver is oopsing.
->
->   - sun8i_ths_reg2temp will tell you much more clearly where to search th=
-an
->   - ths_reg2temp
->
-> Of course you can always grep, but most thermal drivers are thermal senso=
-r (ths)
-> drivers, and if multiple of them used this too-generic naming scheme you'=
-d
-> have hard time debugging.
->
-> Look at other thermal drivers. They usually encode driver name in the fun=
-ction
-> names to help with identification (even if these are static driver-local
-> functions).
->
-
-Can we change to sunxi_ths_ prefix?
-
-> > > > +static int tsens_probe(struct platform_device *pdev)
-> > > > +{
-> > > > +     struct tsens_device *tmdev;
-> > > > +     struct device *dev =3D &pdev->dev;
-> > > > +     int ret;
-> > > > +
-> > > > +     tmdev =3D devm_kzalloc(dev, sizeof(*tmdev), GFP_KERNEL);
-> > > > +     if (!tmdev)
-> > > > +             return -ENOMEM;
-> > > > +
-> > > > +     tmdev->dev =3D dev;
-> > > > +     tmdev->chip =3D of_device_get_match_data(&pdev->dev);
-> > > > +     if (!tmdev->chip)
-> > > > +             return -EINVAL;
-> > > > +
-> > > > +     ret =3D tsens_init(tmdev);
-> > > > +     if (ret)
-> > > > +             return ret;
-> > > > +
-> > > > +     ret =3D tsens_register(tmdev);
-> > > > +     if (ret)
-> > > > +             return ret;
+> > On 5/16/2019 6:03 PM, Daniel Walker wrote:
+> > > On Thu, May 16, 2019 at 03:02:18PM -0700, Florian Fainelli wrote:
+> > >> On 5/16/19 12:55 PM, Nikunj Kela (nkela) wrote:
+> > >>>
+> > >>>
+> > >>> On 5/16/19, 12:35 PM, "Jeff Kirsher" <jeffrey.t.kirsher@intel.com> wrote:
+> > >>>
+> > >>>     On Wed, 2019-05-08 at 23:14 +0000, Nikunj Kela wrote:
+> > >>>    >> Some of the broken NICs don't have EEPROM programmed correctly. It
+> > >>>    >> results
+> > >>>    >> in probe to fail. This change adds a module parameter that can be
+> > >>>    >> used to
+> > >>>    >> ignore nvm checksum validation.
+> > >>>    >>
+> > >>>    >> Cc: xe-linux-external@cisco.com
+> > >>>    >> Signed-off-by: Nikunj Kela <nkela@cisco.com>
+> > >>>    >> ---
+> > >>>    >>  drivers/net/ethernet/intel/igb/igb_main.c | 28
+> > >>>    >> ++++++++++++++++++++++------
+> > >>>    >>  1 file changed, 22 insertions(+), 6 deletions(-)
+> > >>>
+> > >>>     >NAK for two reasons.  First, module parameters are not desirable
+> > >>>     >because their individual to one driver and a global solution should be
+> > >>>     >found so that all networking device drivers can use the solution.  This
+> > >>>     >will keep the interface to change/setup/modify networking drivers
+> > >>>     >consistent for all drivers.
+> > >>>
+> > >>>
+> > >>>     >Second and more importantly, if your NIC is broken, fix it.  Do not try
+> > >>>     >and create a software workaround so that you can continue to use a
+> > >>>     >broken NIC.  There are methods/tools available to properly reprogram
+> > >>>     >the EEPROM on a NIC, which is the right solution for your issue.
+> > >>>
+> > >>> I am proposing this as a debug parameter. Obviously, we need to fix EEPROM but this helps us continuing the development while manufacturing fixes NIC.
+> > >>
+> > >> Then why even bother with sending this upstream?
 > > >
-> > > Why split this out of probe into separate functions?
-> > >
-> > > > +     ret =3D tmdev->chip->enable(tmdev);
-> > > > +     if (ret)
-> > > > +             return ret;
-> > > > +
-> > > > +     platform_set_drvdata(pdev, tmdev);
-> > > > +
-> > > > +     return ret;
-> > > > +}
-> > > > +
-> > > > +static int tsens_remove(struct platform_device *pdev)
-> > > > +{
-> > > > +     struct tsens_device *tmdev =3D platform_get_drvdata(pdev);
-> > > > +
-> > > > +     tmdev->chip->disable(tmdev);
-> > > > +
-> > > > +     return 0;
-> > > > +}
-> > > > +
-> > > > +static int sun50i_thermal_enable(struct tsens_device *tmdev)
-> > > > +{
-> > > > +     int ret, val;
-> > > > +
-> > > > +     ret =3D reset_control_deassert(tmdev->reset);
-> > > > +     if (ret)
-> > > > +             return ret;
-> > > > +
-> > > > +     ret =3D clk_prepare_enable(tmdev->bus_clk);
-> > > > +     if (ret)
-> > > > +             goto assert_reset;
-> > > > +
-> > > > +     ret =3D tsens_calibrate(tmdev);
-> > > > +     if (ret)
-> > > > +             return ret;
-> > >
-> > > If this fails (it may likely fail with EPROBE_DEFER) you are leaving =
-reset
-> > > deasserted, and clock enabled.
-> > >
-> > > Overall, I think, reset/clock management and nvmem reading will be co=
-mmon
-> > > to all the HW variants, so it doesn't make much sense splitting it ou=
-t
-> > > of probe into separate functions, and makes it more error prone.
+> > > It seems rather drastic to disable the entire driver because the checksum
+> > > doesn't match. It really should be a warning, even a big warning, to let people
+> > > know something is wrong, but disabling the whole driver doesn't make sense.
 > >
-> > Our long-term goal is to support all platforms.
-> > Bacicallt there is a differencr between each generation.
-> > So I feel it necessary to isolate these differences.
-> >
-> > Maybe:
-> > At some point, we can draw a part of the public part and platform
-> > difference into different
-> > files. something like qcom thermal driver.
->
-> I understand, but I wrote ths drivers for H3/H5/A83T and it so far it loo=
-ks like
-> all of them would share these 3 calls.
->
-> You'll be enabling clock/reset and callibrating everywhere. So putting th=
-is to
-> per-SoC function seems premature.
+> > You could generate a random Ethernet MAC address if you don't have a
+> > valid one, a lot of drivers do that, and that's a fairly reasonable
+> > behavior. At some point in your product development someone will
+> > certainly verify that the provisioned MAC address matches the network
+> > interface's MAC address.
+> > --
+> > Florian
+> 
+> The thing is the EEPROM contains much more than just the MAC address.
+> There ends up being configuration for some of the PCIe interface in
+> the hardware as well as PHY configuration. If that is somehow mangled
+> we shouldn't be bringing up the part because there are one or more
+> pieces of the device configuration that are likely wrong.
+> 
+> The checksum is being used to make sure the EEPROM is valid, without
+> that we would need to go through and validate each individual section
+> of the EEPROM before enabling the the portions of the device related
+> to it. The concern is that this will become a slippery slope where we
+> eventually have to code all the configuration of the EEPROM into the
+> driver itself.
+ 
 
-In fact, enalbe and disable are the suspend and resume functions.(PM
-callback will be added in the future)
-When exiting from s2ram, the register will become the initial value.
-We need to do all the work, enabling reset/clk ,calibrating and
-initializing other reg.
+I don't think you can say because the checksum is valid that all data contained
+inside is also valid. You can have a valid checksum , and someone screwed up the
+data prior to the checksum getting computed.
 
-So I think it is no need to put enabling reset/clk and calibrating to
-probe func, and I'd like
-to keep enable and disable func.
 
->
-> thank you and regards,
->         o.
->
-> > Regards,
-> > Yangtao
+> We need to make the checksum a hard stop. If the part is broken then
+> it needs to be addressed. Workarounds just end up being used and
+> forgotten, which makes it that much harder to support the product.
+> Better to mark the part as being broken, and get it fixed now, than to
+> have parts start shipping that require workarounds in order to
+> function.o
+
+I don't think it's realistic to define the development process for large
+corporations like Cisco, or like what your doing , to define the development
+process for all corporations and products which may use intel parts. It's better
+to be flexible.
+
+Daniel
