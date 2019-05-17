@@ -5,54 +5,54 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39B35C04E84
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 16:47:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1CC0C04E87
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 16:48:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0D2242168B
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 16:47:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C90482166E
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 16:48:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ZhDwx/7u"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="PYP/b3+x"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727614AbfEQQr5 (ORCPT
+        id S1727698AbfEQQsA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 May 2019 12:47:57 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:34589 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725933AbfEQQrz (ORCPT
+        Fri, 17 May 2019 12:48:00 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:35962 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727617AbfEQQr4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 May 2019 12:47:55 -0400
-Received: by mail-pf1-f196.google.com with SMTP id n19so3962284pfa.1
+        Fri, 17 May 2019 12:47:56 -0400
+Received: by mail-pl1-f196.google.com with SMTP id d21so3610399plr.3
         for <linux-kernel@vger.kernel.org>; Fri, 17 May 2019 09:47:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=hE0fe9lMVv6/FQxLkF3fQ4UQY6bw1uWnd2q8EpUNjIc=;
-        b=ZhDwx/7uQqUnTIHD1PA1Upu1Y8Z3YXS3B9HztVGpVhQ1tAXH449NhmdQCurju4ZJB9
-         vNhIXcRedwThXY2BekwHNiWsmcH7xI5RXQTxVxFuMqKhuiq90bGAcOc8hj9Vd5FEss09
-         u6kj7HIYJx12jSex16z82pa6RCUW1/cmEbwHk=
+        bh=O42F5A4GX0eA84yy8Ef+AkKPQRwJmwFWVhtyExm+PVY=;
+        b=PYP/b3+x4BUW2tXl5EeWPVhQ2Ydr9f0XlD8JFJZdeKuWGUm9x2gBEwCIanOv3mBLby
+         T3lJRIqhz+aMnbrOABRtKWxma2+WZvjeN4x+PFt3loQXcwqG8h15GMZTzENSWae+cGEi
+         HfbFUHK/8IaOWGApHdEcikH6nKx9xsnyyafPQ=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=hE0fe9lMVv6/FQxLkF3fQ4UQY6bw1uWnd2q8EpUNjIc=;
-        b=Hqpv9ld8eenymc7KUM3nCKdQAoAR7wl2SoFf96XU6peTtFL5wd7/EW+Yfq1H6Ooa45
-         JlInKOghhC3SzZ48aWCpubF1tbeNG3wgG5fH7WDlx9ixtdyktZTs2WRq4E98Spi3tK8R
-         yrsz5K1RpH7rPPqauRD1dzHpCacUoFgZW1JkjCxmomT/4KAw5lDAHi2OXnidNA4oh0MC
-         eRvd7lU4maNV70B+kTf81g2ppvK5QDbu2pGM7B4PF7hYRKo6kXOL4b6mU9Nri8vCtyHP
-         4Lm/aJWt1edL+YRAy36zp340DYWcABWxrqw5Im3FGJrkJ3RVlmzn/KFAZuUVM0woaGtS
-         1EwA==
-X-Gm-Message-State: APjAAAVUYvrJguFJdOtW8gibTVFJ495ppV5x0AGOPYwproI4VFNZ8NV5
-        Vv+tOmDeW9XbaUHjIZqcEJmXmsJrUpYoVQ==
-X-Google-Smtp-Source: APXvYqzuCXeovIOaR4RbpVXx1csND1I5sP1Zmc0ZU68p58V4I5232ilFAA9A/gPdohyIIkl9VXHhPQ==
-X-Received: by 2002:a63:785:: with SMTP id 127mr54984321pgh.230.1558111674612;
-        Fri, 17 May 2019 09:47:54 -0700 (PDT)
+        bh=O42F5A4GX0eA84yy8Ef+AkKPQRwJmwFWVhtyExm+PVY=;
+        b=QSk/vzvOiJ8XCOTsTMnZeXNKAoNLMRIsN1ObXNRjInYLhYbWyVnnQh/PI3rCXEA2QS
+         w2Rz+ZoQbCr4nruy51CDbpqFcRDbBYyrF16wxM8VyLsJfOKY9iXm5PoNi7UGpNU7jm64
+         BiwwjW0JAMGPQZ6HMDv64EpXjeBs5ioPNyQw53z6NqgpwXaHQXXyAMy8gdobq3oOUjdK
+         qwDhnqnKR8msxEsDD3+zblN3Z302PbEmpPmNVcKULjqXHmbf+i6mFxGOvTUOPqAHAXWH
+         4q4qP9KL4cHW2l6OpJFSPlrHe4NE8OXcooxWnhTF+pMdfO5HRrGeKjcdXQ1mnkUv895+
+         jc5g==
+X-Gm-Message-State: APjAAAUxBOiEusbGEw1kelVhwZb/CSxe2arw8uSFWniUlLlko9AffkCW
+        cULJ2a8k/hgACrGP5bc1T/1if2YDU4aQQw==
+X-Google-Smtp-Source: APXvYqz5grEEF0O5CgARwN/Kl3T5APmZtPmXKSBTqLDuepRs1NbjLFpphhsqHJa3rK39CAOOKrQTJA==
+X-Received: by 2002:a17:902:968b:: with SMTP id n11mr57741397plp.118.1558111675502;
+        Fri, 17 May 2019 09:47:55 -0700 (PDT)
 Received: from smtp.gmail.com ([2620:15c:202:1:fa53:7765:582b:82b9])
-        by smtp.gmail.com with ESMTPSA id l141sm12229810pfd.24.2019.05.17.09.47.53
+        by smtp.gmail.com with ESMTPSA id l141sm12229810pfd.24.2019.05.17.09.47.54
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 17 May 2019 09:47:54 -0700 (PDT)
+        Fri, 17 May 2019 09:47:55 -0700 (PDT)
 From:   Stephen Boyd <swboyd@chromium.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     linux-arm-msm@vger.kernel.org,
@@ -64,9 +64,9 @@ Cc:     linux-arm-msm@vger.kernel.org,
         Will Deacon <will.deacon@arm.com>,
         Catalin Marinas <catalin.marinas@arm.com>,
         Dan Williams <dan.j.williams@intel.com>
-Subject: [RFC/PATCH 4/5] arm64: Add support for arch_memremap_ro()
-Date:   Fri, 17 May 2019 09:47:45 -0700
-Message-Id: <20190517164746.110786-5-swboyd@chromium.org>
+Subject: [RFC/PATCH 5/5] soc: qcom: cmd-db: Map with read-only mappings
+Date:   Fri, 17 May 2019 09:47:46 -0700
+Message-Id: <20190517164746.110786-6-swboyd@chromium.org>
 X-Mailer: git-send-email 2.21.0.1020.gf2820cf01a-goog
 In-Reply-To: <20190517164746.110786-1-swboyd@chromium.org>
 References: <20190517164746.110786-1-swboyd@chromium.org>
@@ -77,9 +77,10 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Pass in PAGE_KERNEL_RO to the underlying IO mapping mechanism to get a
-read-only mapping for the MEMREMAP_RO type of memory mappings that
-memremap() supports.
+The command DB is read-only already to the kernel because everything is
+const marked once we map it. Let's go one step further and try to map
+the memory as read-only in the page tables. This should make it harder
+for random code to corrupt the database and change the contents.
 
 Cc: Evan Green <evgreen@chromium.org>
 Cc: Rob Herring <robh+dt@kernel.org>
@@ -90,21 +91,23 @@ Cc: Catalin Marinas <catalin.marinas@arm.com>
 Cc: Dan Williams <dan.j.williams@intel.com>
 Signed-off-by: Stephen Boyd <swboyd@chromium.org>
 ---
- arch/arm64/include/asm/io.h | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/soc/qcom/cmd-db.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm64/include/asm/io.h b/arch/arm64/include/asm/io.h
-index 8bb7210ac286..245bd371e8dc 100644
---- a/arch/arm64/include/asm/io.h
-+++ b/arch/arm64/include/asm/io.h
-@@ -185,6 +185,7 @@ extern void __iomem *ioremap_cache(phys_addr_t phys_addr, size_t size);
- #define ioremap_nocache(addr, size)	__ioremap((addr), (size), __pgprot(PROT_DEVICE_nGnRE))
- #define ioremap_wc(addr, size)		__ioremap((addr), (size), __pgprot(PROT_NORMAL_NC))
- #define ioremap_wt(addr, size)		__ioremap((addr), (size), __pgprot(PROT_DEVICE_nGnRE))
-+#define arch_memremap_ro(addr, size)	__ioremap((addr), (size), PAGE_KERNEL_RO)
- #define iounmap				__iounmap
+diff --git a/drivers/soc/qcom/cmd-db.c b/drivers/soc/qcom/cmd-db.c
+index 10a34d26b753..6365e8260282 100644
+--- a/drivers/soc/qcom/cmd-db.c
++++ b/drivers/soc/qcom/cmd-db.c
+@@ -240,7 +240,8 @@ static int cmd_db_dev_probe(struct platform_device *pdev)
+ {
+ 	int ret = 0;
  
- /*
+-	cmd_db_header = devm_memremap_reserved_mem(&pdev->dev, MEMREMAP_WB);
++	cmd_db_header = devm_memremap_reserved_mem(&pdev->dev,
++						   MEMREMAP_RO | MEMREMAP_WB);
+ 	if (IS_ERR(cmd_db_header)) {
+ 		ret = PTR_ERR(cmd_db_header);
+ 		cmd_db_header = NULL;
 -- 
 Sent by a computer through tubes
 
