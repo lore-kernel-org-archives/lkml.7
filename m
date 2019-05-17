@@ -2,87 +2,103 @@ Return-Path: <SRS0=M1fl=TR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16A88C04AB4
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 04:53:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B17B0C04AB4
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 04:56:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DE74620833
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 04:53:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7ED572087E
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 04:56:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727694AbfEQExO (ORCPT
+        id S1727730AbfEQE4Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 May 2019 00:53:14 -0400
-Received: from mga06.intel.com ([134.134.136.31]:56156 "EHLO mga06.intel.com"
+        Fri, 17 May 2019 00:56:16 -0400
+Received: from inva021.nxp.com ([92.121.34.21]:45868 "EHLO inva021.nxp.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725929AbfEQExO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 May 2019 00:53:14 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 16 May 2019 21:53:13 -0700
-X-ExtLoop1: 1
-Received: from allen-box.sh.intel.com (HELO [10.239.159.136]) ([10.239.159.136])
-  by fmsmga008.fm.intel.com with ESMTP; 16 May 2019 21:53:11 -0700
-Cc:     baolu.lu@linux.intel.com, alex.williamson@redhat.com,
-        shameerali.kolothum.thodi@huawei.com
-Subject: Re: [PATCH v3 7/7] iommu/vt-d: Differentiate relaxable and non
- relaxable RMRRs
-To:     Eric Auger <eric.auger@redhat.com>, eric.auger.pro@gmail.com,
-        joro@8bytes.org, iommu@lists.linux-foundation.org,
-        linux-kernel@vger.kernel.org, dwmw2@infradead.org,
-        lorenzo.pieralisi@arm.com, robin.murphy@arm.com,
-        will.deacon@arm.com, hanjun.guo@linaro.org, sudeep.holla@arm.com
-References: <20190516100817.12076-1-eric.auger@redhat.com>
- <20190516100817.12076-8-eric.auger@redhat.com>
-From:   Lu Baolu <baolu.lu@linux.intel.com>
-Message-ID: <2ebc33ed-ded6-0eee-96ef-84e6f61f692e@linux.intel.com>
-Date:   Fri, 17 May 2019 12:46:34 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
-MIME-Version: 1.0
-In-Reply-To: <20190516100817.12076-8-eric.auger@redhat.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        id S1725929AbfEQE4Q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 May 2019 00:56:16 -0400
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 1FE9C200015;
+        Fri, 17 May 2019 06:56:14 +0200 (CEST)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 61AA9200005;
+        Fri, 17 May 2019 06:56:10 +0200 (CEST)
+Received: from localhost.localdomain (mega.ap.freescale.net [10.192.208.232])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 7596E40250;
+        Fri, 17 May 2019 12:56:05 +0800 (SGT)
+From:   Ran Wang <ran.wang_1@nxp.com>
+To:     Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
+Cc:     linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Ran Wang <ran.wang_1@nxp.com>
+Subject: [PATCH v2] arm64: dts: ls1028a: Fix CPU idle fail.
+Date:   Fri, 17 May 2019 12:57:53 +0800
+Message-Id: <20190517045753.3709-1-ran.wang_1@nxp.com>
+X-Mailer: git-send-email 2.17.1
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Eric,
+PSCI spec define 1st parameter's bit 16 of function CPU_SUSPEND to
+indicate CPU State Type: 0 for standby, 1 for power down. In this
+case, we want to select standby for CPU idle feature. But current
+setting wrongly select power down and cause CPU SUSPEND fail every
+time. Need this fix.
 
-On 5/16/19 6:08 PM, Eric Auger wrote:
-> Now we have a new IOMMU_RESV_DIRECT_RELAXABLE reserved memory
-> region type, let's report USB and GFX RMRRs as relaxable ones.
-> 
-> This allows to have a finer reporting at IOMMU API level of
-> reserved memory regions. This will be exploitable by VFIO to
-> define the usable IOVA range and detect potential conflicts
-> between the guest physical address space and host reserved
-> regions.
-> 
-> Signed-off-by: Eric Auger <eric.auger@redhat.com>
-> ---
->   drivers/iommu/intel-iommu.c | 10 ++++++++--
->   1 file changed, 8 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/iommu/intel-iommu.c b/drivers/iommu/intel-iommu.c
-> index a36604f4900f..af1d65fdedfc 100644
-> --- a/drivers/iommu/intel-iommu.c
-> +++ b/drivers/iommu/intel-iommu.c
-> @@ -5493,7 +5493,9 @@ static void intel_iommu_get_resv_regions(struct device *device,
->   	for_each_rmrr_units(rmrr) {
->   		for_each_active_dev_scope(rmrr->devices, rmrr->devices_cnt,
->   					  i, i_dev) {
-> +			struct pci_dev *pdev = to_pci_dev(device);
+Fixes: 8897f3255c9c ("arm64: dts: Add support for NXP LS1028A SoC")
+Signed-off-by: Ran Wang <ran.wang_1@nxp.com>
+---
+ arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi |   18 +++++++++---------
+ 1 files changed, 9 insertions(+), 9 deletions(-)
 
-Probably should be:
-
-struct pci_dev *pdev = dev_is_pci(device) ? to_pci_dev(device) : NULL;
-
-Best regards,
-Lu Baolu
+diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
+index b045812..bf7f845 100644
+--- a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
++++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
+@@ -28,7 +28,7 @@
+ 			enable-method = "psci";
+ 			clocks = <&clockgen 1 0>;
+ 			next-level-cache = <&l2>;
+-			cpu-idle-states = <&CPU_PH20>;
++			cpu-idle-states = <&CPU_PW20>;
+ 		};
+ 
+ 		cpu1: cpu@1 {
+@@ -38,7 +38,7 @@
+ 			enable-method = "psci";
+ 			clocks = <&clockgen 1 0>;
+ 			next-level-cache = <&l2>;
+-			cpu-idle-states = <&CPU_PH20>;
++			cpu-idle-states = <&CPU_PW20>;
+ 		};
+ 
+ 		l2: l2-cache {
+@@ -53,13 +53,13 @@
+ 		 */
+ 		entry-method = "arm,psci";
+ 
+-		CPU_PH20: cpu-ph20 {
+-			compatible = "arm,idle-state";
+-			idle-state-name = "PH20";
+-			arm,psci-suspend-param = <0x00010000>;
+-			entry-latency-us = <1000>;
+-			exit-latency-us = <1000>;
+-			min-residency-us = <3000>;
++		CPU_PW20: cpu-pw20 {
++			  compatible = "arm,idle-state";
++			  idle-state-name = "PW20";
++			  arm,psci-suspend-param = <0x0>;
++			  entry-latency-us = <2000>;
++			  exit-latency-us = <2000>;
++			  min-residency-us = <6000>;
+ 		};
+ 	};
+ 
+-- 
+1.7.1
 
