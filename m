@@ -2,162 +2,163 @@ Return-Path: <SRS0=M1fl=TR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12276C04AB4
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 13:53:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CEC79C04AB4
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 13:56:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D6F4520873
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 13:53:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="U4OqajLc"
+	by mail.kernel.org (Postfix) with ESMTP id A6B5520873
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 13:56:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728834AbfEQNxv (ORCPT
+        id S1728901AbfEQN45 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 May 2019 09:53:51 -0400
-Received: from hqemgate14.nvidia.com ([216.228.121.143]:9545 "EHLO
-        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728103AbfEQNxu (ORCPT
+        Fri, 17 May 2019 09:56:57 -0400
+Received: from iolanthe.rowland.org ([192.131.102.54]:41724 "HELO
+        iolanthe.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with SMTP id S1728464AbfEQN45 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 May 2019 09:53:50 -0400
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5cdebcf20000>; Fri, 17 May 2019 06:53:54 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Fri, 17 May 2019 06:53:48 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Fri, 17 May 2019 06:53:48 -0700
-Received: from HQMAIL106.nvidia.com (172.18.146.12) by HQMAIL106.nvidia.com
- (172.18.146.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 17 May
- 2019 13:53:48 +0000
-Received: from hqnvemgw02.nvidia.com (172.16.227.111) by HQMAIL106.nvidia.com
- (172.18.146.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Fri, 17 May 2019 13:53:48 +0000
-Received: from sumitg-l4t.nvidia.com (Not Verified[10.24.42.162]) by hqnvemgw02.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5cdebce90002>; Fri, 17 May 2019 06:53:48 -0700
-From:   Sumit Gupta <sumitg@nvidia.com>
-To:     <mchehab@kernel.org>, <hverkuil-cisco@xs4all.nl>,
-        <sakari.ailus@linux.intel.com>, <paul.kocialkowski@bootlin.com>,
-        <tfiga@chromium.org>, <keiichiw@chromium.org>, <bbasu@nvidia.com>,
-        <sumitg@nvidia.com>
-CC:     <linux-media@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: [Patch V4] v4l2-core: fix use-after-free error
-Date:   Fri, 17 May 2019 19:23:42 +0530
-Message-ID: <1558101222-31561-1-git-send-email-sumitg@nvidia.com>
-X-Mailer: git-send-email 2.7.4
-X-NVConfidentiality: public
+        Fri, 17 May 2019 09:56:57 -0400
+Received: (qmail 1594 invoked by uid 2102); 17 May 2019 09:56:56 -0400
+Received: from localhost (sendmail-bs@127.0.0.1)
+  by localhost with SMTP; 17 May 2019 09:56:56 -0400
+Date:   Fri, 17 May 2019 09:56:56 -0400 (EDT)
+From:   Alan Stern <stern@rowland.harvard.edu>
+X-X-Sender: stern@iolanthe.rowland.org
+To:     Marek Szyprowski <m.szyprowski@samsung.com>
+cc:     linux-usb@vger.kernel.org, <linux-samsung-soc@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Markus Reichl <m.reichl@fivetechno.de>,
+        =?UTF-8?q?M=C3=A5ns=20Rullg=C3=A5rd?= <mans@mansr.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Peter Chen <peter.chen@nxp.com>
+Subject: Re: [PATCH v4] usb: exynos: add workaround for the USB device bindings
+ conflict
+In-Reply-To: <20190517105702.4522-1-m.szyprowski@samsung.com>
+Message-ID: <Pine.LNX.4.44L0.1905170955040.1430-100000@iolanthe.rowland.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1558101234; bh=stfFbiMFaMOGKxRkfm3KN5/YWTVTdNcxBzqgLT72XC4=;
-        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
-         X-NVConfidentiality:MIME-Version:Content-Type;
-        b=U4OqajLcdejMgiOT6Aqn6upoK/NND13QD6QluTj8Nar5FnL4dcBW2vC66Ou04tXyx
-         7+NHOIZT+islWazgEWSx9bMKrCZU2ywZGqTzw8eb8lmN9rLZUlDvpGgvmNLLTcd53f
-         kO8XY+sQ0EZU3l7gE4v4HAhFPTPDAV5k6ETG6Fd22LRQpNnvgDPggM8pfW6Q37hTWk
-         Aai7bOgc7hEt3i5H/ZPDGLmSBazeXLXzFqO6TbAoeJutP3g3LJ25G8S3acwqVM2zmg
-         9yFgK9twsp6ZXVDQn68AHJGNvIRcJPhOUyASJvZJctv96nA2AJRyl4Mu4Vh8XON52k
-         7RMkapz7B9bPA==
+Content-Type: TEXT/PLAIN; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: sumitg <sumitg@nvidia.com>
+On Fri, 17 May 2019, Marek Szyprowski wrote:
 
-Fixing use-after-free within __v4l2_ctrl_handler_setup().
-Memory is being freed with kfree(new_ref) for duplicate
-control reference entry but ctrl->cluster pointer is still
-referring to freed duplicate entry resulting in error on
-access. Change done to update cluster pointer only when new
-control reference is added.
+> Commit 69bec7259853 ("USB: core: let USB device know device node") added
+> support for attaching devicetree node for USB devices. Those nodes are
+> children of their USB host controller. However Exynos EHCI and OHCI
+> driver bindings already define child-nodes for each physical root hub
+> port and assigns respective PHY controller and parameters to them. Those
+> bindings predates support for USB device tree nodes.
+> 
+> To mitigate the side-effects of the conflict between those bindings,
+> lets reset Exynos host controller of_node pointer before registering it
+> to USB subsystem. This fixes the issue raised by the commit 01fdf179f4b0
+> ("usb: core: skip interfaces disabled in devicetree"), which incorrectly
+> disabled some devices on Exynos based boards.
+> 
+> Reported-by: Markus Reichl <m.reichl@fivetechno.de>
+> Suggested-by: Måns Rullgård <mans@mansr.com>
+> Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+> ---
+> v4:
+> - moved workaround to Exynos OHCI/EHCI drivers as suggested by Måns
+> 
+> v3: https://lkml.org/lkml/2019/5/9/119
+> - replaced ad hoc checks by proper test for proper value of the
+>   compatible string in drivers/usb/core/of.c
+> 
+> v2: https://lkml.org/lkml/2019/5/8/321
+> 
+> v1: https://lkml.org/lkml/2019/5/7/715
+> ---
+>  drivers/usb/host/ehci-exynos.c | 10 ++++++++++
+>  drivers/usb/host/ohci-exynos.c | 10 ++++++++++
+>  2 files changed, 20 insertions(+)
+> 
+> diff --git a/drivers/usb/host/ehci-exynos.c b/drivers/usb/host/ehci-exynos.c
+> index 8e3bab1e0c1f..b127642332ee 100644
+> --- a/drivers/usb/host/ehci-exynos.c
+> +++ b/drivers/usb/host/ehci-exynos.c
+> @@ -39,6 +39,7 @@ static struct hc_driver __read_mostly exynos_ehci_hc_driver;
+>  
+>  struct exynos_ehci_hcd {
+>  	struct clk *clk;
+> +	struct device_node *of_node;
+>  	struct phy *phy[PHY_NUMBER];
+>  };
+>  
+> @@ -203,6 +204,13 @@ static int exynos_ehci_probe(struct platform_device *pdev)
+>  	ehci = hcd_to_ehci(hcd);
+>  	ehci->caps = hcd->regs;
+>  
+> +	/*
+> +	 * Workaround: reset of_node pointer to avoid conflict between Exynos
+> +	 * EHCI port subnodes and generic USB device bindings
+> +	 */
+> +	exynos_ehci->of_node = pdev->dev.of_node;
+> +	pdev->dev.of_node = NULL;
+> +
+>  	/* DMA burst Enable */
+>  	writel(EHCI_INSNREG00_ENABLE_DMA_BURST, EHCI_INSNREG00(hcd->regs));
+>  
 
- ==================================================================
- BUG: KASAN: use-after-free in __v4l2_ctrl_handler_setup+0x388/0x428
- Read of size 8 at addr ffffffc324e78618 by task systemd-udevd/312
+You forgot to adjust the fail_add_hcd: error pathway in 
+exynos_ehci_probe().
 
- Allocated by task 312:
+> @@ -231,6 +239,8 @@ static int exynos_ehci_remove(struct platform_device *pdev)
+>  	struct usb_hcd *hcd = platform_get_drvdata(pdev);
+>  	struct exynos_ehci_hcd *exynos_ehci = to_exynos_ehci(hcd);
+>  
+> +	pdev->dev.of_node = exynos_ehci->of_node;
+> +
+>  	usb_remove_hcd(hcd);
+>  
+>  	exynos_ehci_phy_disable(&pdev->dev);
+> diff --git a/drivers/usb/host/ohci-exynos.c b/drivers/usb/host/ohci-exynos.c
+> index c0c4dcca6f3c..29f65963af3b 100644
+> --- a/drivers/usb/host/ohci-exynos.c
+> +++ b/drivers/usb/host/ohci-exynos.c
+> @@ -30,6 +30,7 @@ static struct hc_driver __read_mostly exynos_ohci_hc_driver;
+>  
+>  struct exynos_ohci_hcd {
+>  	struct clk *clk;
+> +	struct device_node *of_node;
+>  	struct phy *phy[PHY_NUMBER];
+>  };
+>  
+> @@ -170,6 +171,13 @@ static int exynos_ohci_probe(struct platform_device *pdev)
+>  		goto fail_io;
+>  	}
+>  
+> +	/*
+> +	 * Workaround: reset of_node pointer to avoid conflict between Exynos
+> +	 * OHCI port subnodes and generic USB device bindings
+> +	 */
+> +	exynos_ohci->of_node = pdev->dev.of_node;
+> +	pdev->dev.of_node = NULL;
+> +
+>  	err = usb_add_hcd(hcd, irq, IRQF_SHARED);
+>  	if (err) {
+>  		dev_err(&pdev->dev, "Failed to add USB HCD\n");
 
- Freed by task 312:
+And same here.
 
- The buggy address belongs to the object at ffffffc324e78600
-  which belongs to the cache kmalloc-64 of size 64
- The buggy address is located 24 bytes inside of
-  64-byte region [ffffffc324e78600, ffffffc324e78640)
- The buggy address belongs to the page:
- page:ffffffbf0c939e00 count:1 mapcount:0 mapping:
-					(null) index:0xffffffc324e78f80
- flags: 0x4000000000000100(slab)
- raw: 4000000000000100 0000000000000000 ffffffc324e78f80 000000018020001a
- raw: 0000000000000000 0000000100000001 ffffffc37040fb80 0000000000000000
- page dumped because: kasan: bad access detected
+Alan Stern
 
- Memory state around the buggy address:
-  ffffffc324e78500: fb fb fb fb fb fb fb fb fc fc fc fc fc fc fc fc
-  ffffffc324e78580: fb fb fb fb fb fb fb fb fc fc fc fc fc fc fc fc
- >ffffffc324e78600: fb fb fb fb fb fb fb fb fc fc fc fc fc fc fc fc
-                             ^
-  ffffffc324e78680: 00 00 00 00 00 00 00 00 fc fc fc fc fc fc fc fc
-  ffffffc324e78700: 00 00 00 00 00 fc fc fc fc fc fc fc fc fc fc fc
- ==================================================================
-
-Suggested-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Signed-off-by: Sumit Gupta <sumitg@nvidia.com>
----
-
-v4:
-* update ctrl->cluster only when new control reference is added.
-
-v3:
-* update ctrl->cluster only when new control reference is added.
-* add new ctrl to handler only if the cluster points to an entry.
-
-v2:
-* update ctrl->cluster only when new control reference is added.
-* check ctrl->ncontrols to avoid illegal access when cluster has zero controls.
-
- drivers/media/v4l2-core/v4l2-ctrls.c | 18 +++++++++---------
- 1 file changed, 9 insertions(+), 9 deletions(-)
-
-diff --git a/drivers/media/v4l2-core/v4l2-ctrls.c b/drivers/media/v4l2-core/v4l2-ctrls.c
-index 5e3806f..956522c 100644
---- a/drivers/media/v4l2-core/v4l2-ctrls.c
-+++ b/drivers/media/v4l2-core/v4l2-ctrls.c
-@@ -2154,15 +2154,6 @@ static int handler_new_ref(struct v4l2_ctrl_handler *hdl,
- 	if (size_extra_req)
- 		new_ref->p_req.p = &new_ref[1];
- 
--	if (ctrl->handler == hdl) {
--		/* By default each control starts in a cluster of its own.
--		   new_ref->ctrl is basically a cluster array with one
--		   element, so that's perfect to use as the cluster pointer.
--		   But only do this for the handler that owns the control. */
--		ctrl->cluster = &new_ref->ctrl;
--		ctrl->ncontrols = 1;
--	}
--
- 	INIT_LIST_HEAD(&new_ref->node);
- 
- 	mutex_lock(hdl->lock);
-@@ -2195,6 +2186,15 @@ static int handler_new_ref(struct v4l2_ctrl_handler *hdl,
- 	hdl->buckets[bucket] = new_ref;
- 	if (ctrl_ref)
- 		*ctrl_ref = new_ref;
-+	if (ctrl->handler == hdl) {
-+		/* By default each control starts in a cluster of its own.
-+		 * new_ref->ctrl is basically a cluster array with one
-+		 * element, so that's perfect to use as the cluster pointer.
-+		 * But only do this for the handler that owns the control.
-+		 */
-+		ctrl->cluster = &new_ref->ctrl;
-+		ctrl->ncontrols = 1;
-+	}
- 
- unlock:
- 	mutex_unlock(hdl->lock);
--- 
-2.7.4
+> @@ -192,6 +200,8 @@ static int exynos_ohci_remove(struct platform_device *pdev)
+>  	struct usb_hcd *hcd = platform_get_drvdata(pdev);
+>  	struct exynos_ohci_hcd *exynos_ohci = to_exynos_ohci(hcd);
+>  
+> +	pdev->dev.of_node = exynos_ohci->of_node;
+> +
+>  	usb_remove_hcd(hcd);
+>  
+>  	exynos_ohci_phy_disable(&pdev->dev);
+> 
 
