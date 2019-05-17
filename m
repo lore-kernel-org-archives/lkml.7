@@ -2,110 +2,289 @@ Return-Path: <SRS0=M1fl=TR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1ED23C04E87
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 18:21:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68D5BC04AB4
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 18:22:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F0DE620848
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 18:21:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 31A2121734
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 18:22:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1558117377;
+	bh=KK9QKyeHXGNZS14JEvoS56XPdr9dX51Q2wnzy9zhzdw=;
+	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
+	b=lj+T45o/eCkI+X2dzZLomHXu04I1bhNEv1EJENMDeYF7X+4XCtgyaMKYIPVYIOnCn
+	 qEuUEEPpRC1bMsyMj7JvKU0D1hz98jZ8uipiEV2Lt0b1ByB/Gdjme1YH0SD+UJdUMF
+	 3qeduKx8sgmH1r/opQh35gX+6L7lxsn/qHnZSfqI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729245AbfEQSV0 (ORCPT
+        id S1729266AbfEQSW4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 May 2019 14:21:26 -0400
-Received: from mga14.intel.com ([192.55.52.115]:19131 "EHLO mga14.intel.com"
+        Fri, 17 May 2019 14:22:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36832 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726295AbfEQSV0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 May 2019 14:21:26 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 May 2019 11:21:25 -0700
-X-ExtLoop1: 1
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.36])
-  by orsmga005.jf.intel.com with ESMTP; 17 May 2019 11:21:24 -0700
-Date:   Fri, 17 May 2019 11:21:24 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Andy Lutomirski <luto@amacapital.net>,
-        Stephen Smalley <sds@tycho.nsa.gov>,
-        "Xing, Cedric" <cedric.xing@intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        LSM List <linux-security-module@vger.kernel.org>,
-        Paul Moore <paul@paul-moore.com>,
-        Eric Paris <eparis@parisplace.org>,
-        "selinux@vger.kernel.org" <selinux@vger.kernel.org>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Jethro Beekman <jethro@fortanix.com>,
-        "Hansen, Dave" <dave.hansen@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "Dr. Greg" <greg@enjellic.com>,
-        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
-        "linux-sgx@vger.kernel.org" <linux-sgx@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "nhorman@redhat.com" <nhorman@redhat.com>,
-        "npmccallum@redhat.com" <npmccallum@redhat.com>,
-        "Ayoun, Serge" <serge.ayoun@intel.com>,
-        "Katz-zamir, Shay" <shay.katz-zamir@intel.com>,
-        "Huang, Haitao" <haitao.huang@intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        "Svahn, Kai" <kai.svahn@intel.com>, Borislav Petkov <bp@alien8.de>,
-        Josh Triplett <josh@joshtriplett.org>,
-        "Huang, Kai" <kai.huang@intel.com>,
-        David Rientjes <rientjes@google.com>
-Subject: Re: SGX vs LSM (Re: [PATCH v20 00/28] Intel SGX1 support)
-Message-ID: <20190517182124.GF15006@linux.intel.com>
-References: <CALCETrUfmyQ7ivNzQic0FyPXe1fmAnoK093jnz0i8DRn2LvdSA@mail.gmail.com>
- <960B34DE67B9E140824F1DCDEC400C0F654E3FB9@ORSMSX116.amr.corp.intel.com>
- <6a97c099-2f42-672e-a258-95bc09152363@tycho.nsa.gov>
- <20190517150948.GA15632@linux.intel.com>
- <ca807220-47e2-5ec2-982c-4fb4a72439c6@tycho.nsa.gov>
- <80013cca-f1c2-f4d5-7558-8f4e752ada76@tycho.nsa.gov>
- <20190517172953.GC15006@linux.intel.com>
- <DFE03E0C-694A-4289-B416-29CDC2644F94@amacapital.net>
- <20190517175500.GE15006@linux.intel.com>
- <CAHk-=wgH2FBzBG3_RZSuatpYCj8DCQZipJYp9vh3Wy_S3Qt4-g@mail.gmail.com>
+        id S1726295AbfEQSW4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 May 2019 14:22:56 -0400
+Received: from kernel.org (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 548EA20815;
+        Fri, 17 May 2019 18:22:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1558117374;
+        bh=KK9QKyeHXGNZS14JEvoS56XPdr9dX51Q2wnzy9zhzdw=;
+        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
+        b=cFxMk9+pv8gbeXxX98UnM9NZlslsE37dec0L6/dd6ESCHIfh2/n5NwmR4frW+1Ldi
+         L533sROPmjbe4JZK53rnXRHbfG4VAZSkK4NvHlBa84pxKlXjoDa8zo/LSKIOOfi+AG
+         +c1M6CBnPpDCrODbxfe8K/TVPbtYLqh+vrEYEL18=
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHk-=wgH2FBzBG3_RZSuatpYCj8DCQZipJYp9vh3Wy_S3Qt4-g@mail.gmail.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20190514221711.248228-18-brendanhiggins@google.com>
+References: <20190514221711.248228-1-brendanhiggins@google.com> <20190514221711.248228-18-brendanhiggins@google.com>
+Subject: Re: [PATCH v4 17/18] kernel/sysctl-test: Add null pointer test for sysctl.c:proc_dointvec()
+From:   Stephen Boyd <sboyd@kernel.org>
+Cc:     devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        kunit-dev@googlegroups.com, linux-doc@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kbuild@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        linux-nvdimm@lists.01.org, linux-um@lists.infradead.org,
+        Alexander.Levin@microsoft.com, Tim.Bird@sony.com,
+        amir73il@gmail.com, dan.carpenter@oracle.com, daniel@ffwll.ch,
+        jdike@addtoit.com, joel@jms.id.au, julia.lawall@lip6.fr,
+        khilman@baylibre.com, knut.omang@oracle.com, logang@deltatee.com,
+        mpe@ellerman.id.au, pmladek@suse.com, rdunlap@infradead.org,
+        richard@nod.at, rientjes@google.com, rostedt@goodmis.org,
+        wfg@linux.intel.com, Iurii Zaikin <yzaikin@google.com>,
+        Brendan Higgins <brendanhiggins@google.com>
+To:     Brendan Higgins <brendanhiggins@google.com>,
+        frowand.list@gmail.com, gregkh@linuxfoundation.org,
+        jpoimboe@redhat.com, keescook@google.com,
+        kieran.bingham@ideasonboard.com, mcgrof@kernel.org,
+        peterz@infradead.org, robh@kernel.org, shuah@kernel.org,
+        tytso@mit.edu, yamada.masahiro@socionext.com
+User-Agent: alot/0.8.1
+Date:   Fri, 17 May 2019 11:22:53 -0700
+Message-Id: <20190517182254.548EA20815@mail.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 17, 2019 at 11:04:22AM -0700, Linus Torvalds wrote:
-> On Fri, May 17, 2019 at 10:55 AM Sean Christopherson
-> <sean.j.christopherson@intel.com> wrote:
-> >
-> > In this snippet, IS_PRIVATE() is true for anon inodes, false for
-> > /dev/sgx/enclave.  Because EPC memory is always shared, SELinux will never
-> > check PROCESS__EXECMEM for mprotect() on/dev/sgx/enclave.
-> 
-> Why _does_ the memory have to be shared? Shared mmap() is
-> fundamentally less secure than private mmap, since by definition it
-> means "oh, somebody else has access to it too and might modify it
-> under us".
-> 
-> Why does the SGX logic care about things like that? Normal executables
-> are just private mappings of an underlying file, I'm not sure why the
-> SGX interface has to have that shared thing, and why the interface has
-> to have a device node in the first place when  you have system calls
-> for setup anyway.
-> 
-> So why don't the system calls just work on perfectly normal anonymous
-> mmap's? Why a device node, and why must it be shared to begin with?
+Quoting Brendan Higgins (2019-05-14 15:17:10)
+> diff --git a/kernel/sysctl-test.c b/kernel/sysctl-test.c
+> new file mode 100644
+> index 0000000000000..fe0f2bae66085
+> --- /dev/null
+> +++ b/kernel/sysctl-test.c
+> @@ -0,0 +1,293 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * KUnit test of proc sysctl.
+> + */
+> +
+> +#include <kunit/test.h>
+> +#include <linux/printk.h>
 
-I agree that conceptually EPC is private memory, but because EPC is
-managed as a separate memory pool, SGX tags it VM_PFNMAP and manually
-inserts PFNs, i.e. EPC effectively it gets classified as IO memory. 
+Is this include used?
 
-And vmf_insert_pfn_prot() doesn't like writable private IO mappings:
+> +#include <linux/sysctl.h>
+> +#include <linux/uaccess.h>
 
-   BUG_ON((vma->vm_flags & VM_PFNMAP) && is_cow_mapping(vma->vm_flags));
+Is this include used?
+
+> +
+> +
+> +static void sysctl_test_dointvec_happy_single_negative(struct kunit *tes=
+t)
+> +{
+> +       struct ctl_table table =3D {
+> +               .procname =3D "foo",
+> +               .data           =3D &test_data.int_0001,
+> +               .maxlen         =3D sizeof(int),
+> +               .mode           =3D 0644,
+> +               .proc_handler   =3D proc_dointvec,
+> +               .extra1         =3D &i_zero,
+> +               .extra2         =3D &i_one_hundred,
+> +       };
+> +       char input[] =3D "-9";
+> +       size_t len =3D sizeof(input) - 1;
+> +       loff_t pos =3D 0;
+> +
+> +       table.data =3D kunit_kzalloc(test, sizeof(int), GFP_USER);
+> +       KUNIT_EXPECT_EQ(test, 0, proc_dointvec(&table, 1, input, &len, &p=
+os));
+> +       KUNIT_EXPECT_EQ(test, sizeof(input) - 1, len);
+> +       KUNIT_EXPECT_EQ(test, sizeof(input) - 1, pos);
+> +       KUNIT_EXPECT_EQ(test, -9, *(int *)table.data);
+
+Is the casting necessary? Or can the macro do a type coercion of the
+second parameter based on the first type?
+
+> +}
+> +
+> +static void sysctl_test_dointvec_single_less_int_min(struct kunit *test)
+> +{
+> +       struct ctl_table table =3D {
+> +               .procname =3D "foo",
+> +               .data           =3D &test_data.int_0001,
+> +               .maxlen         =3D sizeof(int),
+> +               .mode           =3D 0644,
+> +               .proc_handler   =3D proc_dointvec,
+> +               .extra1         =3D &i_zero,
+> +               .extra2         =3D &i_one_hundred,
+> +       };
+> +       char input[32];
+> +       size_t len =3D sizeof(input) - 1;
+> +       loff_t pos =3D 0;
+> +       unsigned long abs_of_less_than_min =3D (unsigned long)INT_MAX
+> +                                            - (INT_MAX + INT_MIN) + 1;
+> +
+> +       KUNIT_EXPECT_LT(test,
+> +                       snprintf(input, sizeof(input), "-%lu",
+> +                                abs_of_less_than_min),
+> +                       sizeof(input));
+> +
+> +       table.data =3D kunit_kzalloc(test, sizeof(int), GFP_USER);
+> +       KUNIT_EXPECT_EQ(test, -EINVAL,
+> +                       proc_dointvec(&table, 1, input, &len, &pos));
+> +       KUNIT_EXPECT_EQ(test, sizeof(input) - 1, len);
+> +       KUNIT_EXPECT_EQ(test, 0, *(int *)table.data);
+> +}
+> +
+> +static void sysctl_test_dointvec_single_greater_int_max(struct kunit *te=
+st)
+> +{
+> +       struct ctl_table table =3D {
+> +               .procname =3D "foo",
+> +               .data           =3D &test_data.int_0001,
+> +               .maxlen         =3D sizeof(int),
+> +               .mode           =3D 0644,
+> +               .proc_handler   =3D proc_dointvec,
+> +               .extra1         =3D &i_zero,
+> +               .extra2         =3D &i_one_hundred,
+> +       };
+> +       char input[32];
+> +       size_t len =3D sizeof(input) - 1;
+> +       loff_t pos =3D 0;
+> +       unsigned long greater_than_max =3D (unsigned long)INT_MAX + 1;
+> +
+> +       KUNIT_EXPECT_GT(test, greater_than_max, INT_MAX);
+> +       KUNIT_EXPECT_LT(test, snprintf(input, sizeof(input), "%lu",
+> +                                      greater_than_max),
+> +                       sizeof(input));
+> +       table.data =3D kunit_kzalloc(test, sizeof(int), GFP_USER);
+> +       KUNIT_EXPECT_EQ(test, -EINVAL,
+> +                       proc_dointvec(&table, 1, input, &len, &pos));
+> +       KUNIT_EXPECT_EQ(test, sizeof(input) - 1, len);
+> +       KUNIT_EXPECT_EQ(test, 0, *(int *)table.data);
+> +}
+> +
+> +static int sysctl_test_init(struct kunit *test)
+> +{
+> +       return 0;
+> +}
+> +
+> +/*
+> + * This is run once after each test case, see the comment on example_tes=
+t_module
+> + * for more information.
+> + */
+> +static void sysctl_test_exit(struct kunit *test)
+> +{
+> +}
+
+Can the above two be omitted? If they can be empty sometimes it would be
+nice to avoid the extra symbols and code by letting them be assigned to
+NULL in the kunit_module.
+
+> +
+> +/*
+> + * Here we make a list of all the test cases we want to add to the test =
+module
+> + * below.
+> + */
+> +static struct kunit_case sysctl_test_cases[] =3D {
+> +       /*
+> +        * This is a helper to create a test case object from a test case
+> +        * function; its exact function is not important to understand ho=
+w to
+> +        * use KUnit, just know that this is how you associate test cases=
+ with a
+> +        * test module.
+> +        */
+> +       KUNIT_CASE(sysctl_test_dointvec_null_tbl_data),
+> +       KUNIT_CASE(sysctl_test_dointvec_table_maxlen_unset),
+> +       KUNIT_CASE(sysctl_test_dointvec_table_len_is_zero),
+> +       KUNIT_CASE(sysctl_test_dointvec_table_read_but_position_set),
+> +       KUNIT_CASE(sysctl_test_dointvec_happy_single_positive),
+> +       KUNIT_CASE(sysctl_test_dointvec_happy_single_negative),
+> +       KUNIT_CASE(sysctl_test_dointvec_single_less_int_min),
+> +       KUNIT_CASE(sysctl_test_dointvec_single_greater_int_max),
+> +       {},
+> +};
+> +
+> +/*
+> + * This defines a suite or grouping of tests.
+> + *
+> + * Test cases are defined as belonging to the suite by adding them to
+> + * `test_cases`.
+> + *
+> + * Often it is desirable to run some function which will set up things w=
+hich
+> + * will be used by every test; this is accomplished with an `init` funct=
+ion
+> + * which runs before each test case is invoked. Similarly, an `exit` fun=
+ction
+> + * may be specified which runs after every test case and can be used to =
+for
+> + * cleanup. For clarity, running tests in a test module would behave as =
+follows:
+> + *
+> + * module.init(test);
+> + * module.test_case[0](test);
+> + * module.exit(test);
+> + * module.init(test);
+> + * module.test_case[1](test);
+> + * module.exit(test);
+> + * ...;
+
+This comment (and the one above for "this is a helper") looks generic
+and should probably only be in some documentation somewhere and not for
+a sysctl test?
+
+> + */
+> +static struct kunit_module sysctl_test_module =3D {
+> +       .name =3D "sysctl_test",
+> +       .init =3D sysctl_test_init,
+> +       .exit =3D sysctl_test_exit,
+> +       .test_cases =3D sysctl_test_cases,
+> +};
+> +
+> +/*
+> + * This registers the above test module telling KUnit that this is a sui=
+te of
+> + * tests that need to be run.
+> + */
+
+Same comment about generic comment.
+
+> +module_test(sysctl_test_module);
+> diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
+> index d5a4a4036d2f8..772af4ec70111 100644
+> --- a/lib/Kconfig.debug
+> +++ b/lib/Kconfig.debug
+> @@ -1908,6 +1908,12 @@ config TEST_SYSCTL
+> =20
+>           If unsure, say N.
+> =20
+> +config SYSCTL_KUNIT_TEST
+> +       bool "KUnit test for sysctl"
+
+Why not tristate?
+
+> +       depends on KUNIT
+> +       help
+> +         Enables KUnit sysctl test.
+> +
