@@ -2,128 +2,276 @@ Return-Path: <SRS0=M1fl=TR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D96CDC04E87
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 17:57:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08160C04AB4
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 17:58:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AD32A216FD
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 17:57:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=vmware.com header.i=@vmware.com header.b="q5wK0QaL"
+	by mail.kernel.org (Postfix) with ESMTP id C63312173C
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 17:58:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1558115924;
+	bh=6wuDO6C2j5ISFUHqCZvEZgXgmSk5Y1yp2LQuMtU2X3c=;
+	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
+	b=p8ME7BDE8i7jP70H1IN1jaBUqMzLMBYGZfcu228dSEfzEJu2CSBi4NbtTvix5PaMd
+	 E13gYsYEKT8MyHwK9KDGkN5JIr/ndnKPRGvk2m46TLf+juyhYFrG6B1vzXPt+68/83
+	 V6/ce8rzbzOUIJtCCRWxbqSvhEwuoLPJB1/2bQdA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728949AbfEQR5g (ORCPT
+        id S1729041AbfEQR6o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 May 2019 13:57:36 -0400
-Received: from mail-eopbgr680072.outbound.protection.outlook.com ([40.107.68.72]:3398
-        "EHLO NAM04-BN3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726872AbfEQR5f (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 May 2019 13:57:35 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vmware.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=zfJ1f1qCesyo9VZPoLq6eXOwun65crUZfvfXFlEfK+E=;
- b=q5wK0QaLh/+XKglRd4RCI0j59oYBmyIfUoXz+DE8MxojSsAAV7ghfNxrH1m0DX/EZ4kv3fJ4dp9HiX5K4AAewPNIBegON6nfvKBK6YDDcLU0OEkYz5TYWoQZ/FjwKjLU4oJk2YoMm4D6/x2/LAw2yOKPiwxeDjZHqkQ+ZjTbrAA=
-Received: from BYAPR05MB4776.namprd05.prod.outlook.com (52.135.233.146) by
- BYAPR05MB6007.namprd05.prod.outlook.com (20.178.53.92) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1922.7; Fri, 17 May 2019 17:57:22 +0000
-Received: from BYAPR05MB4776.namprd05.prod.outlook.com
- ([fe80::b057:917a:f098:6098]) by BYAPR05MB4776.namprd05.prod.outlook.com
- ([fe80::b057:917a:f098:6098%7]) with mapi id 15.20.1922.002; Fri, 17 May 2019
- 17:57:22 +0000
-From:   Nadav Amit <namit@vmware.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-CC:     Arnd Bergmann <arnd@arndb.de>, Julien Freche <jfreche@vmware.com>,
-        Pv-drivers <Pv-drivers@vmware.com>,
-        Jason Wang <jasowang@redhat.com>,
-        lkml <linux-kernel@vger.kernel.org>,
-        "virtualization@lists.linux-foundation.org" 
-        <virtualization@lists.linux-foundation.org>,
-        Linux-MM <linux-mm@kvack.org>,
-        "Michael S. Tsirkin" <mst@redhat.com>
-Subject: Re: [PATCH v4 0/4] vmw_balloon: Compaction and shrinker support
-Thread-Topic: [PATCH v4 0/4] vmw_balloon: Compaction and shrinker support
-Thread-Index: AQHU+5sfw4lXp6MJj0Ov0LaKSU1Rk6ZaOUgAgBV2VACAAAPxgIAACS+A
-Date:   Fri, 17 May 2019 17:57:22 +0000
-Message-ID: <26FEBE86-AF49-428F-9C9F-1FA435ADCB54@vmware.com>
-References: <20190425115445.20815-1-namit@vmware.com>
- <8A2D1D43-759A-4B09-B781-31E9002AE3DA@vmware.com>
- <9AD9FE33-1825-4D1A-914F-9C29DF93DC8D@vmware.com>
- <20190517172429.GA21509@kroah.com>
-In-Reply-To: <20190517172429.GA21509@kroah.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=namit@vmware.com; 
-x-originating-ip: [66.170.99.2]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 6e0dc56b-e90b-47e3-15c6-08d6daf11cd2
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(2017052603328)(7193020);SRVR:BYAPR05MB6007;
-x-ms-traffictypediagnostic: BYAPR05MB6007:
-x-ld-processed: b39138ca-3cee-4b4a-a4d6-cd83d9dd62f0,ExtAddr
-x-microsoft-antispam-prvs: <BYAPR05MB600747377EAE958A3202486DD00B0@BYAPR05MB6007.namprd05.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:3826;
-x-forefront-prvs: 0040126723
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(346002)(376002)(366004)(136003)(396003)(39860400002)(199004)(189003)(33656002)(8936002)(8676002)(81166006)(81156014)(6916009)(316002)(229853002)(71190400001)(71200400001)(6436002)(6512007)(7736002)(478600001)(305945005)(83716004)(476003)(6246003)(11346002)(4326008)(2616005)(86362001)(2906002)(66066001)(486006)(3846002)(6116002)(186003)(26005)(446003)(36756003)(53936002)(68736007)(25786009)(66476007)(54906003)(14444005)(66556008)(64756008)(66446008)(6486002)(256004)(76176011)(53546011)(102836004)(6506007)(5660300002)(76116006)(73956011)(66946007)(14454004)(82746002)(99286004);DIR:OUT;SFP:1101;SCL:1;SRVR:BYAPR05MB6007;H:BYAPR05MB4776.namprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: vmware.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: dNN6XgPo5hvx1UB+NfT0AYgtRI9+ZVm3HoykNJEQ7cRftnheN13qTPZxALoNjsPKdDa9ClcPTh96z9lch6BLh/cvPZWNNFWHy6kAEL7BQffUhqdtiBMARSJrxFcXB1aa8lwTxeX8ycBI8QqP/9JeWuGbo0J0cxLWDP9kJRdso5a6dVUQRxDEfi2BrFChmzqO3mHLUYAc1KT0j3RY3ZYvqovjuTAv5Rm5ivuOmqCQBA+ZmPX1I6qODYXrM0syTZat+oCco9qpFHx1/fOiUqkhZ7GvQH3ojWSyeTHr1KgPA9UfITObZDF9Mkrq/2mFZTJyArNbq4CZo3gZYmZPnGuF0Bg7LnJJie7aWlI4c8i7zPNZfFUTVZfQcJubwxw2euTlg5g72r3+rjBE/lSQdzxBoJDh9TalPGqp6POOHkT3bC0=
+        Fri, 17 May 2019 13:58:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53426 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728225AbfEQR6n (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 May 2019 13:58:43 -0400
+Received: from kernel.org (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id F3396216FD;
+        Fri, 17 May 2019 17:58:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1558115922;
+        bh=6wuDO6C2j5ISFUHqCZvEZgXgmSk5Y1yp2LQuMtU2X3c=;
+        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
+        b=sDtAwiFiKEC7wD2Ufzw/udB7/5BWIyScyUaJXH5U6VCsDwlqQoDM/P4m+X1+94VzN
+         UMN8BtoINRqIUVkug6vKVri3xHvdA3/CbFFhbNpR4pZcBbxJrTK6xZUmI6Dk+l/a4V
+         1dq1lsjIu2TctOk9kzXv+Q2ILY/h6f897iZjhR+M=
 Content-Type: text/plain; charset="utf-8"
-Content-ID: <BF90EFC62CAD0944AB47C0512DCC17F0@namprd05.prod.outlook.com>
-Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-X-OriginatorOrg: vmware.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 6e0dc56b-e90b-47e3-15c6-08d6daf11cd2
-X-MS-Exchange-CrossTenant-originalarrivaltime: 17 May 2019 17:57:22.3448
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: b39138ca-3cee-4b4a-a4d6-cd83d9dd62f0
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: namit@vmware.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR05MB6007
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20190514221711.248228-5-brendanhiggins@google.com>
+References: <20190514221711.248228-1-brendanhiggins@google.com> <20190514221711.248228-5-brendanhiggins@google.com>
+Subject: Re: [PATCH v4 04/18] kunit: test: add kunit_stream a std::stream like logger
+From:   Stephen Boyd <sboyd@kernel.org>
+Cc:     devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        kunit-dev@googlegroups.com, linux-doc@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kbuild@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        linux-nvdimm@lists.01.org, linux-um@lists.infradead.org,
+        Alexander.Levin@microsoft.com, Tim.Bird@sony.com,
+        amir73il@gmail.com, dan.carpenter@oracle.com, daniel@ffwll.ch,
+        jdike@addtoit.com, joel@jms.id.au, julia.lawall@lip6.fr,
+        khilman@baylibre.com, knut.omang@oracle.com, logang@deltatee.com,
+        mpe@ellerman.id.au, pmladek@suse.com, rdunlap@infradead.org,
+        richard@nod.at, rientjes@google.com, rostedt@goodmis.org,
+        wfg@linux.intel.com, Brendan Higgins <brendanhiggins@google.com>
+To:     Brendan Higgins <brendanhiggins@google.com>,
+        frowand.list@gmail.com, gregkh@linuxfoundation.org,
+        jpoimboe@redhat.com, keescook@google.com,
+        kieran.bingham@ideasonboard.com, mcgrof@kernel.org,
+        peterz@infradead.org, robh@kernel.org, shuah@kernel.org,
+        tytso@mit.edu, yamada.masahiro@socionext.com
+User-Agent: alot/0.8.1
+Date:   Fri, 17 May 2019 10:58:41 -0700
+Message-Id: <20190517175841.F3396216FD@mail.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PiBPbiBNYXkgMTcsIDIwMTksIGF0IDEwOjI0IEFNLCBHcmVnIEtyb2FoLUhhcnRtYW4gPGdyZWdr
-aEBsaW51eGZvdW5kYXRpb24ub3JnPiB3cm90ZToNCj4gDQo+IE9uIEZyaSwgTWF5IDE3LCAyMDE5
-IGF0IDA1OjEwOjIzUE0gKzAwMDAsIE5hZGF2IEFtaXQgd3JvdGU6DQo+Pj4gT24gTWF5IDMsIDIw
-MTksIGF0IDY6MjUgUE0sIE5hZGF2IEFtaXQgPG5hbWl0QHZtd2FyZS5jb20+IHdyb3RlOg0KPj4+
-IA0KPj4+PiBPbiBBcHIgMjUsIDIwMTksIGF0IDQ6NTQgQU0sIE5hZGF2IEFtaXQgPG5hbWl0QHZt
-d2FyZS5jb20+IHdyb3RlOg0KPj4+PiANCj4+Pj4gVk13YXJlIGJhbGxvb24gZW5oYW5jZW1lbnRz
-OiBhZGRpbmcgc3VwcG9ydCBmb3IgbWVtb3J5IGNvbXBhY3Rpb24sDQo+Pj4+IG1lbW9yeSBzaHJp
-bmtlciAodG8gcHJldmVudCBPT00pIGFuZCBzcGxpdHRpbmcgb2YgcmVmdXNlZCBwYWdlcyB0bw0K
-Pj4+PiBwcmV2ZW50IHJlY3VycmluZyBpbmZsYXRpb25zLg0KPj4+PiANCj4+Pj4gUGF0Y2hlcyAx
-LTI6IFN1cHBvcnQgZm9yIGNvbXBhY3Rpb24NCj4+Pj4gUGF0Y2ggMzogU3VwcG9ydCBmb3IgbWVt
-b3J5IHNocmlua2VyIC0gZGlzYWJsZWQgYnkgZGVmYXVsdA0KPj4+PiBQYXRjaCA0OiBTcGxpdCBy
-ZWZ1c2VkIHBhZ2VzIHRvIGltcHJvdmUgcGVyZm9ybWFuY2UNCj4+Pj4gDQo+Pj4+IHYzLT52NDoN
-Cj4+Pj4gKiAiZ2V0IGFyb3VuZCB0byIgY29tbWVudCBbTWljaGFlbF0NCj4+Pj4gKiBQdXQgbGlz
-dF9hZGQgdW5kZXIgcGFnZSBsb2NrIFtNaWNoYWVsXQ0KPj4+PiANCj4+Pj4gdjItPnYzOg0KPj4+
-PiAqIEZpeGluZyB3cm9uZyBhcmd1bWVudCB0eXBlIChpbnQtPnNpemVfdCkgW01pY2hhZWxdDQo+
-Pj4+ICogRml4aW5nIGEgY29tbWVudCAoaXQpIFtNaWNoYWVsXQ0KPj4+PiAqIFJlaW5zdGF0aW5n
-IHRoZSBCVUdfT04oKSB3aGVuIHBhZ2UgaXMgbG9ja2VkIFtNaWNoYWVsXSANCj4+Pj4gDQo+Pj4+
-IHYxLT52MjoNCj4+Pj4gKiBSZXR1cm4gbnVtYmVyIG9mIHBhZ2VzIGluIGxpc3QgZW5xdWV1ZS9k
-ZXF1ZXVlIGludGVyZmFjZXMgW01pY2hhZWxdDQo+Pj4+ICogUmVtb3ZlZCBmaXJzdCB0d28gcGF0
-Y2hlcyB3aGljaCB3ZXJlIGFscmVhZHkgbWVyZ2VkDQo+Pj4+IA0KPj4+PiBOYWRhdiBBbWl0ICg0
-KToNCj4+Pj4gbW0vYmFsbG9vbl9jb21wYWN0aW9uOiBMaXN0IGludGVyZmFjZXMNCj4+Pj4gdm13
-X2JhbGxvb246IENvbXBhY3Rpb24gc3VwcG9ydA0KPj4+PiB2bXdfYmFsbG9vbjogQWRkIG1lbW9y
-eSBzaHJpbmtlcg0KPj4+PiB2bXdfYmFsbG9vbjogU3BsaXQgcmVmdXNlZCBwYWdlcw0KPj4+PiAN
-Cj4+Pj4gZHJpdmVycy9taXNjL0tjb25maWcgICAgICAgICAgICAgICB8ICAgMSArDQo+Pj4+IGRy
-aXZlcnMvbWlzYy92bXdfYmFsbG9vbi5jICAgICAgICAgfCA0ODkgKysrKysrKysrKysrKysrKysr
-KysrKysrKystLS0NCj4+Pj4gaW5jbHVkZS9saW51eC9iYWxsb29uX2NvbXBhY3Rpb24uaCB8ICAg
-NCArDQo+Pj4+IG1tL2JhbGxvb25fY29tcGFjdGlvbi5jICAgICAgICAgICAgfCAxNDQgKysrKysr
-LS0tDQo+Pj4+IDQgZmlsZXMgY2hhbmdlZCwgNTUzIGluc2VydGlvbnMoKyksIDg1IGRlbGV0aW9u
-cygtKQ0KPj4+PiANCj4+Pj4gLS0gDQo+Pj4+IDIuMTkuMQ0KPj4+IA0KPj4+IFBpbmcuDQo+PiAN
-Cj4+IFBpbmcuDQo+PiANCj4+IEdyZWcsIGRpZCBpdCBnb3QgbG9zdCBhZ2Fpbj8NCj4gDQo+IA0K
-PiBJIHRob3VnaHQgeW91IG5lZWRlZCB0aGUgbW0gZGV2ZWxvcGVycyB0byBhY2sgdGhlIGZpcnN0
-IHBhdGNoLCBkaWQgdGhhdA0KPiBldmVyIGhhcHBlbj8NCg0KWWVzLiBZb3Ugd2lsbCBzZWUgTWlj
-aGFlbCBUc2lya2lu4oCZcyDigJxBY2tlZC1ieSIgb24gaXQuDQoNCg==
+Quoting Brendan Higgins (2019-05-14 15:16:57)
+> diff --git a/kunit/kunit-stream.c b/kunit/kunit-stream.c
+> new file mode 100644
+> index 0000000000000..1884f1b550888
+> --- /dev/null
+> +++ b/kunit/kunit-stream.c
+> @@ -0,0 +1,152 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * C++ stream style string formatter and printer used in KUnit for outpu=
+tting
+> + * KUnit messages.
+> + *
+> + * Copyright (C) 2019, Google LLC.
+> + * Author: Brendan Higgins <brendanhiggins@google.com>
+> + */
+> +
+> +#include <kunit/test.h>
+> +#include <kunit/kunit-stream.h>
+> +#include <kunit/string-stream.h>
+> +
+> +static const char *kunit_stream_get_level(struct kunit_stream *this)
+> +{
+> +       unsigned long flags;
+> +       const char *level;
+> +
+> +       spin_lock_irqsave(&this->lock, flags);
+> +       level =3D this->level;
+> +       spin_unlock_irqrestore(&this->lock, flags);
+> +
+> +       return level;
+
+Please remove this whole function and inline it to the one call-site.
+
+> +}
+> +
+> +void kunit_stream_set_level(struct kunit_stream *this, const char *level)
+> +{
+> +       unsigned long flags;
+> +
+> +       spin_lock_irqsave(&this->lock, flags);
+> +       this->level =3D level;
+> +       spin_unlock_irqrestore(&this->lock, flags);
+
+I don't get the locking here. What are we protecting against? Are tests
+running in parallel using the same kunit_stream? If so, why is the level
+changeable in one call and then adding strings is done in a different
+function call? It would make sense to combine the level setting and
+string adding so that it's one atomic operation if it's truly a parallel
+operation, or remove the locking entirely.
+
+> +}
+> +
+> +void kunit_stream_add(struct kunit_stream *this, const char *fmt, ...)
+> +{
+> +       va_list args;
+> +       struct string_stream *stream =3D this->internal_stream;
+> +
+> +       va_start(args, fmt);
+> +
+> +       if (string_stream_vadd(stream, fmt, args) < 0)
+> +               kunit_err(this->test, "Failed to allocate fragment: %s\n"=
+, fmt);
+> +
+> +       va_end(args);
+> +}
+> +
+> +void kunit_stream_append(struct kunit_stream *this,
+> +                               struct kunit_stream *other)
+> +{
+> +       struct string_stream *other_stream =3D other->internal_stream;
+> +       const char *other_content;
+> +
+> +       other_content =3D string_stream_get_string(other_stream);
+> +
+> +       if (!other_content) {
+> +               kunit_err(this->test,
+> +                         "Failed to get string from second argument for =
+appending.\n");
+> +               return;
+> +       }
+> +
+> +       kunit_stream_add(this, other_content);
+> +}
+> +
+> +void kunit_stream_clear(struct kunit_stream *this)
+> +{
+> +       string_stream_clear(this->internal_stream);
+> +}
+> +
+> +void kunit_stream_commit(struct kunit_stream *this)
+
+Should this be rather called kunit_stream_flush()?
+
+> +{
+> +       struct string_stream *stream =3D this->internal_stream;
+> +       struct string_stream_fragment *fragment;
+> +       const char *level;
+> +       char *buf;
+> +
+> +       level =3D kunit_stream_get_level(this);
+> +       if (!level) {
+> +               kunit_err(this->test,
+> +                         "Stream was committed without a specified log l=
+evel.\n");
+
+Drop the full-stop?
+
+> +               level =3D KERN_ERR;
+> +               kunit_stream_set_level(this, level);
+> +       }
+> +
+> +       buf =3D string_stream_get_string(stream);
+> +       if (!buf) {
+> +               kunit_err(this->test,
+
+Can you grow a local variable for 'this->test'? It's used many times.
+
+Also, 'this' is not very kernel idiomatic. We usually name variables by
+their type instead of 'this' which is a keyword in other languages.
+Perhaps it could be named 'kstream'?
+
+> +                        "Could not allocate buffer, dumping stream:\n");
+> +               list_for_each_entry(fragment, &stream->fragments, node) {
+> +                       kunit_err(this->test, fragment->fragment);
+> +               }
+> +               kunit_err(this->test, "\n");
+> +               goto cleanup;
+> +       }
+> +
+> +       kunit_printk(level, this->test, buf);
+> +       kfree(buf);
+> +
+> +cleanup:
+> +       kunit_stream_clear(this);
+> +}
+> +
+> +static int kunit_stream_init(struct kunit_resource *res, void *context)
+> +{
+> +       struct kunit *test =3D context;
+> +       struct kunit_stream *stream;
+> +
+> +       stream =3D kzalloc(sizeof(*stream), GFP_KERNEL);
+
+Of course, here it's called 'stream', so maybe it should be 'kstream'
+here too.
+
+> +       if (!stream)
+> +               return -ENOMEM;
+> +
+> +       res->allocation =3D stream;
+> +       stream->test =3D test;
+> +       spin_lock_init(&stream->lock);
+> +       stream->internal_stream =3D new_string_stream();
+
+Can new_string_stream() be renamed to alloc_string_stream()? Sorry, I
+just see so much C++ isms in here it's hard to read from the kernel
+developer perspective.
+
+> +
+> +       if (!stream->internal_stream) {
+
+Nitpick: Please join this to the "allocation" event above instead of
+keeping it separated.
+
+> +               kfree(stream);
+> +               return -ENOMEM;
+> +       }
+> +
+> +       return 0;
+> +}
+> +
+> +static void kunit_stream_free(struct kunit_resource *res)
+> +{
+> +       struct kunit_stream *stream =3D res->allocation;
+> +
+> +       if (!string_stream_is_empty(stream->internal_stream)) {
+> +               kunit_err(stream->test,
+> +                        "End of test case reached with uncommitted strea=
+m entries.\n");
+> +               kunit_stream_commit(stream);
+> +       }
+> +
+> +       destroy_string_stream(stream->internal_stream);
+> +       kfree(stream);
+> +}
+> +
+> +struct kunit_stream *kunit_new_stream(struct kunit *test)
+> +{
+> +       struct kunit_resource *res;
+> +
+> +       res =3D kunit_alloc_resource(test,
+> +                                  kunit_stream_init,
+> +                                  kunit_stream_free,
+> +                                  test);
+> +
+> +       if (res)
+> +               return res->allocation;
+> +       else
+> +               return NULL;
+
+Don't have if (...) return ...; else return ..., just return instead of
+else.
+
