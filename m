@@ -2,75 +2,105 @@ Return-Path: <SRS0=M1fl=TR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9790BC04AAF
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 01:11:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A1D4C04AAF
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 01:17:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5AC9520848
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 01:11:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558055505;
-	bh=v8ur96ilx7klTthe7jJO6SMElFMgiokDxbEycSV8fMo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Ga5vnH/YHE1huH0YurnjX079mMDawjlu/hSGMFue/MYE1ynSEc9QQsFOz0Zx1o4lQ
-	 vAs9OKliV32CsoeiLrjAhKK57+yWT2dmdycwxxWzaKODF2WQZt5xGrrEwN0mjJrhid
-	 I6TVYD2mV+YslZcHD94eyO4lEUsLLIjNg8YXfXpM=
+	by mail.kernel.org (Postfix) with ESMTP id 33D31206BF
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 01:17:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="qLbiJJSg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727471AbfEQBLo (ORCPT
+        id S1727180AbfEQBRD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 21:11:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55676 "EHLO mail.kernel.org"
+        Thu, 16 May 2019 21:17:03 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:38481 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725929AbfEQBLo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 May 2019 21:11:44 -0400
-Received: from dragon (98.142.130.235.16clouds.com [98.142.130.235])
-        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
+        id S1726241AbfEQBRC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 May 2019 21:17:02 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4C5B3206BF;
-        Fri, 17 May 2019 01:11:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558055503;
-        bh=v8ur96ilx7klTthe7jJO6SMElFMgiokDxbEycSV8fMo=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=isBtt1fbeiPbegVIF+v/krAjs6pL1N+Rh4af+stinmvpbnApl+GxnuCELbDJBau6z
-         DW1p7vvl+3q0Fnuyobn598bko7rY3kZbYmJYR1qzvy2NW/SguZ++F9ggcqu6dVIFVf
-         MFUblPPGtoD/4CNTWZcWzav4GaHOIdJfV/2s0Wqw=
-Date:   Fri, 17 May 2019 09:11:02 +0800
-From:   Shawn Guo <shawnguo@kernel.org>
-To:     Anson Huang <anson.huang@nxp.com>
-Cc:     "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>
-Subject: Re: [PATCH RESEND 1/2] ARM: dts: imx6sl: Assign corresponding clocks
- instead of dummy clock
-Message-ID: <20190517011101.GU15856@dragon>
-References: <1557655028-12654-1-git-send-email-Anson.Huang@nxp.com>
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 454r3w0jBlz9s9N;
+        Fri, 17 May 2019 11:17:00 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1558055820;
+        bh=GmKkgxMc9neyWGN6pTHLiLtZljrkrN2L1tSS7tgt2FA=;
+        h=Date:From:To:Cc:Subject:From;
+        b=qLbiJJSgGXBCwRDi77lG6pdVk9RcLPCLQX63Z0QLNJAvcz9lrjkJPEh9Pu3F1MNxn
+         gZij6JqzlY5JarJ4iqOmb4ANbC6oDU9QY657sLoq4YreeAzGmLVkOkp36XsnLT+2QE
+         D99hjAKfM9nlBYo8s+WnWnLA4W0QmrIEIz1+WMa67u6/Rwb9VWiIVqvST4T/N8jGE8
+         qNsASJbhDIZf5r88rdMJqM3okRGgH00t4PaSNFZV5xdCQ1VEhrmhRtbMK6M+oBBGzT
+         XKVGYC05BLf/0Jy1DLSRSwdAy3Ird4oNtNn35dZaGL3o0RDOBbOpYPNVaozud8gSwY
+         E0DEdIZpVuj+Q==
+Date:   Fri, 17 May 2019 11:16:59 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Paolo Bonzini <pbonzini@redhat.com>,
+        Radim =?UTF-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        KVM <kvm@vger.kernel.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: linux-next: manual merge of the kvm tree with Linus' tree
+Message-ID: <20190517111659.0abd4659@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1557655028-12654-1-git-send-email-Anson.Huang@nxp.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/Je8SHF0vaegqUhEkF/nQ7iM"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, May 12, 2019 at 10:02:10AM +0000, Anson Huang wrote:
-> i.MX6SL's KPP and WDOG use IMX6SL_CLK_IPG as clock root,
-> assign IMX6SL_CLK_IPG to them instead of IMX6SL_CLK_DUMMY.
-> 
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-> Reviewed-by: Dong Aisheng <aisheng.dong@nxp.com>
+--Sig_/Je8SHF0vaegqUhEkF/nQ7iM
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Applied both ,thanks.
+Hi all,
+
+Today's linux-next merge of the kvm tree got a conflict in:
+
+  tools/testing/selftests/kvm/dirty_log_test.c
+
+between commit:
+
+  76d58e0f07ec ("KVM: fix KVM_CLEAR_DIRTY_LOG for memory slots of unaligned=
+ size")
+
+from Linus' tree and commit:
+
+  65c4189de8c1 ("KVM: fix KVM_CLEAR_DIRTY_LOG for memory slots of unaligned=
+ size")
+
+from the kvm tree.
+
+I fixed it up (the only difference was a comment, so I just used the
+former evrsion) and can carry the fix as necessary. This is now fixed
+as far as linux-next is concerned, but any non trivial conflicts should
+be mentioned to your upstream maintainer when your tree is submitted for
+merging.  You may also want to consider cooperating with the maintainer
+of the conflicting tree to minimise any particularly complex conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/Je8SHF0vaegqUhEkF/nQ7iM
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAlzeC4sACgkQAVBC80lX
+0GwJBQf/VxQyU+e+oOJtg/JYzZqy+NvzQ3vIIBLL1lbF5xsHIBsV3punUZXliCrZ
+diJpeO2yiMlCl8q2q1QLJXYUnGcebwwfLHXS/tUhyYz8GmF3Bo1wSMkdQt8T63Vg
+fTRdGYMpAdy8cUBD1HDs5CRiygD3EDq7/FI2vexsuF/H0lF41lqJovzn/4AKYb2A
+SUdND7SnJ2rMJxcSSwQUcB1Ece7c8FCa2xT9BToA5fVZUfTE6LAXQ9k5yjwymr7O
+O7egXL0anA846Eunw0dvJcZ203Hl6sYksmC7Zm9vKADaVVnHE44GEqIeOe9SBBSz
+ALVmJM4Xe0UpYeERXt4kkF+ash19gA==
+=hWq6
+-----END PGP SIGNATURE-----
+
+--Sig_/Je8SHF0vaegqUhEkF/nQ7iM--
