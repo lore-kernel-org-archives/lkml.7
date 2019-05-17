@@ -2,107 +2,112 @@ Return-Path: <SRS0=M1fl=TR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C15AAC04AB4
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 09:48:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D903C04AB4
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 09:54:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 930EC20879
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 09:48:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558086497;
-	bh=UI5UD2PNyH/H3Zr/rvoQcZgX0FuVQLH05Y88u0Zl+js=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=06vjHhPAqwGi81+vQyiTIOm8oUjsjMrFkim65x2FQKKqZwC39kie8GAuqruNPWi82
-	 6ZIxQkF3qhAI53O18OyjEMQHIxQxtxYDU6zmlOWPLss3bGlG8pBZaqygEsmNQAd0w4
-	 oK+R/4oyefeT8l+BCAxPPE5WH9R5gNIHU27CdiYQ=
+	by mail.kernel.org (Postfix) with ESMTP id 61A6D20879
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 09:54:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="Vau7VG2e"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728216AbfEQJsQ (ORCPT
+        id S1728057AbfEQJyQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 May 2019 05:48:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33484 "EHLO mail.kernel.org"
+        Fri, 17 May 2019 05:54:16 -0400
+Received: from ozlabs.org ([203.11.71.1]:44709 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727309AbfEQJsQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 May 2019 05:48:16 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1727309AbfEQJyQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 May 2019 05:54:16 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D690E20833;
-        Fri, 17 May 2019 09:48:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558086495;
-        bh=UI5UD2PNyH/H3Zr/rvoQcZgX0FuVQLH05Y88u0Zl+js=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=xuVhqFcHGVRenIW8vohc3Iz1ogZGNJztTJv6jXFlipKzZODdHHX7NzvZQc/43bUx4
-         NY3Bjhc7bN3dmr7EJXduuC+E/4AGQacFqp6l6yMUltEq5r6keDO/UcqOn+4Fktq9G+
-         v46LeGBzicgzYH7AIsYRADcF+s01QGbkZ4DYcYYs=
-Date:   Fri, 17 May 2019 11:48:13 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ivan Babrou <ivan@cloudflare.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        kernel-team <kernel-team@cloudflare.com>
-Subject: Re: Linux 4.19 and GCC 9
-Message-ID: <20190517094813.GA15090@kroah.com>
-References: <CANiq72kvpiC-i53AXM-YsCUvWroHQemmqxsXjnB330ZEeHahUg@mail.gmail.com>
- <CABWYdi1zhTTaN-GSgH0DnPfz7p=SRw0wts5QVYYVtfvoiS0qnQ@mail.gmail.com>
- <CANiq72=fsL5m2_e+bNovFCHy3=YVf53EKGtGE_sWvsAD=ONHuQ@mail.gmail.com>
- <20190516225013.nvhwqi5tfwtby6qb@treble>
- <CABWYdi29E++jBw8boFZAiDZA7iT5NiJhnNmiHb-Rvd9+97hSVA@mail.gmail.com>
- <20190517050931.GB32367@kroah.com>
- <20190517073813.GB2589@hirez.programming.kicks-ass.net>
- <CANiq72nUPoNHWM-dJuFc3=4D2=8XMuvO0PgGPjviOv+EhrAWUw@mail.gmail.com>
- <20190517085126.GA3249@kroah.com>
- <CANiq72muyjE3XPjmtQgJpGaqWR=YBi6KVNT3qe-EMXP7x+q_rQ@mail.gmail.com>
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 4553Xh4nDNz9sB3;
+        Fri, 17 May 2019 19:54:12 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1558086853;
+        bh=73FzsMEDIqD1GOIyHuNtsAPdtGNJiw1agWt6UJFdv3M=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=Vau7VG2eZZGPWWoCE9WwXL3tX7w1vtUVIrx9gHArwILsjjU1hY/xDiLcpKlenWo0Y
+         Qgqzcv3pj+/WaO/qSEyPSoFhRku1rEiYMr4PWTDpThqU7bhLke+NcgXmJRlrtDGjiv
+         KMZ6kh8kBv1Ml28zy3yP9Z6T81CI/lX5S8NW7Iz7AcAwxpZDEycJ97K+ObW/PpZ8YN
+         31daBfrYiTeRa1kBrgVGRg9q09BYvLXKdrKEE9a0K2CX/YJkBvrxyo5+54Sx29PjKz
+         K9ZCsAFiYYjpD2ayFJSG/wHiGsgtdBA7oEJimon+H7kJO6KiaCgPqexb0w77L6ZzXY
+         CzMAIQj+2qmxA==
+Date:   Fri, 17 May 2019 19:53:40 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Kirill Tkhai <ktkhai@virtuozzo.com>
+Cc:     atish.patra@wdc.com, palmer@sifive.com,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: linux-next: Tree for May 17
+Message-ID: <20190517195340.269ba527@canb.auug.org.au>
+In-Reply-To: <07e1a10a-5348-2d2e-fb6a-c9ef837185fe@virtuozzo.com>
+References: <20190517142152.588edb6e@canb.auug.org.au>
+        <a119ca58-6771-cc36-fe5a-187ba500010a@virtuozzo.com>
+        <07e1a10a-5348-2d2e-fb6a-c9ef837185fe@virtuozzo.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CANiq72muyjE3XPjmtQgJpGaqWR=YBi6KVNT3qe-EMXP7x+q_rQ@mail.gmail.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/x30sYicc=Trq=q+7RRhjQSu"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 17, 2019 at 11:01:45AM +0200, Miguel Ojeda wrote:
-> On Fri, May 17, 2019 at 10:51 AM Greg KH <gregkh@linuxfoundation.org> wrote:
-> >
-> > On Fri, May 17, 2019 at 10:35:29AM +0200, Miguel Ojeda wrote:
-> > > On Fri, May 17, 2019 at 9:38 AM Peter Zijlstra <peterz@infradead.org> wrote:
-> > > >
-> > > > Right; if there is anything you can reproduce on linus.git I'll happily
-> > > > have a look. If it doesn't reproduce all you have to do is find the
-> > > > patches that make it work and ask Greg.
-> > >
-> > > Just to clarify: Linus' master is clean of these issues with GCC 9.1.1.
-> >
-> > Great!  Care to find the patches that did that work and send me the git
-> > commit ids so that I can queue them up?  I don't have gcc9 here yet on
-> > my systems, so I can not test for this.
-> 
-> I am unsure about the perf and the objtools parts (Peter/Josh?), but
-> about the -Wmissing-attributes I cleaned, they were these:
-> 
-> a6e60d84989f ("include/linux/module.h: copy __init/__exit attrs to
-> init/cleanup_module")
-> c0d9782f5b6d ("Compiler Attributes: add support for __copy (gcc >= 9)")
-> ff98e20ef208 ("lib/crc32.c: mark crc32_le_base/__crc32c_le_base
-> aliases as __pure")
+--Sig_/x30sYicc=Trq=q+7RRhjQSu
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-This last patch is not needed, as that only resolves something that
-showed in in 4.20.
+Hi all,
 
-thanks,
+On Fri, 17 May 2019 12:43:08 +0300 Kirill Tkhai <ktkhai@virtuozzo.com> wrot=
+e:
+>
+> On 17.05.2019 12:41, Kirill Tkhai wrote:
+> > On 17.05.2019 07:21, Stephen Rothwell wrote: =20
+> >> Hi all,
+> >>
+> >> Please do not add any v5.3 material to your linux-next included
+> >> trees/branches until after v5.2-rc1 has been released.
+> >>
+> >> Changes since 20190516:
+> >>
+> >> The kvm tree gained conflicts against Linus' tree.
+> >>
+> >> Non-merge commits (relative to Linus' tree): 1023
+> >>  1119 files changed, 27058 insertions(+), 7629 deletions(-) =20
+> >=20
+> > Binary file was added:
+> >=20
+> > ~/linux-next$ git log --oneline ./modules.builtin.modinfo
+> > 4cbb0d07b4d1 RISC-V: Support nr_cpus command line option. =20
+>=20
+> CC Palmer.
 
-greg k-h
+It's been fixed in the risc-v tree since it was included in linux-next
+today.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/x30sYicc=Trq=q+7RRhjQSu
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAlzehKQACgkQAVBC80lX
+0Gw1WggAjoBLD0Ea9Npr3UG0H/u07ONi1zuf4U7kYTpaNgETz9eizPAw2P7c8hXb
+fp8hLZkJ7169QSei02HiIHL80hwxfsxY8rz9ZRVwGV47oZHhuO+XRwkvFC28S3e7
+k7c3RkU/1rKQdEKoY6H1fMS5VF7J2Uls96sddQq5nQAdxs7fr+aBpIEHxapk9qjl
+F2Cl8mj5nfDMeeR8iNeapVEQlrUGv2t+zncBrT/WJN0AnubD9ufQO4Eyv21GayWA
+9u2urrEWRW5qsRLvMZDEzKLoaGzMCKSZxZibTnVXoo4wWNwTkXLcugq2Ybaam3Fj
+zyB5nnPoSOIf5UvgeUBr52v2Pi6Bkw==
+=lRvW
+-----END PGP SIGNATURE-----
+
+--Sig_/x30sYicc=Trq=q+7RRhjQSu--
