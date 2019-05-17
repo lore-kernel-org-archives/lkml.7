@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74AD6C04AB4
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 19:40:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 301BCC04AB4
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 19:40:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3B91121743
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 19:40:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DAE96217D4
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 19:40:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558122028;
-	bh=96Ykpsqb3FDQ7iMqiJcl477CcXgJCoBX+zB5foYhdVM=;
+	s=default; t=1558122032;
+	bh=93AnWlAt7LDifH/MAsQDaI9FUPeHoynCq3sQmydy/GU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VZh0bwFHKTm2Lwts/I/n5dv6iYoWWhEPzPnncRP00ot86WE8wA0qhvC3yJ/rvOaxk
-	 C5xItfRsapUrEUtBU2Drtnjz2vaWHI5M0CXlnZ/LES5vA/BjHkAU1B9KKZqEL4wi2x
-	 9koIOzS0WbRGFSOddXr+/e91NnIUvEBpSeIbmvOE=
+	b=FmOmhKQY2yGzFyMxe2aoui9PkmIOvdyltPhQ10x1eTdVofAa0WSIn6ZyEzIuHBNw6
+	 qJP9q5Mk3nwoe0gkJdbnrwAzvXniQoLvAn/URCk2ozBgd23KJq3tv19HmAgIMiKMjb
+	 oeiOVkOME9RPcQfm1vnKy5nwMkBiS9QeQOLSQYaI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729951AbfEQTk0 (ORCPT
+        id S1729731AbfEQTkb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 May 2019 15:40:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56900 "EHLO mail.kernel.org"
+        Fri, 17 May 2019 15:40:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56986 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729682AbfEQTkX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 May 2019 15:40:23 -0400
+        id S1729473AbfEQTk1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 May 2019 15:40:27 -0400
 Received: from quaco.ghostprotocols.net (unknown [190.15.121.82])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4DCBD217F4;
-        Fri, 17 May 2019 19:40:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6C2D821726;
+        Fri, 17 May 2019 19:40:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558122021;
-        bh=96Ykpsqb3FDQ7iMqiJcl477CcXgJCoBX+zB5foYhdVM=;
+        s=default; t=1558122026;
+        bh=93AnWlAt7LDifH/MAsQDaI9FUPeHoynCq3sQmydy/GU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JxpqI14C2qOSpxMs5FqPEQg2MjJrY3RjF3Hn17bc5rFAy2y9wLwXeNsqY0g+DpUuc
-         FF/9tE8YMZZuIciN8QRsOSadx4NPYSivv1lnY0DcYCLKntxrJoLZtG/GJ4uu4lLxbj
-         EWT1T+KB9agNbtb8dWA9aJQ9yNnDVsWH5B+E3/7M=
+        b=K4+bses2cXLIIx0MnzDAhugpmp+pM0XkxSTjAA4tX0356PUU5Zu/GWFLcnpS/fdqu
+         EaCiHLpPefocWbr37hFAqTLZzrMEKQS0RlsNie/Cn7j90RGSONVDC8ownkFa4tORRn
+         FI2obXcCc61jIzEPPeBzi+OVj1W7dTibKslW2pyo=
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
 To:     Ingo Molnar <mingo@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>
@@ -50,9 +50,9 @@ Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Andi Kleen <ak@linux.intel.com>,
         Peter Zijlstra <peterz@infradead.org>
-Subject: [PATCH 55/73] perf record: Implement -z,--compression_level[=<n>] option
-Date:   Fri, 17 May 2019 16:35:53 -0300
-Message-Id: <20190517193611.4974-56-acme@kernel.org>
+Subject: [PATCH 56/73] perf report: Implement perf.data record decompression
+Date:   Fri, 17 May 2019 16:35:54 -0300
+Message-Id: <20190517193611.4974-57-acme@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190517193611.4974-1-acme@kernel.org>
 References: <20190517193611.4974-1-acme@kernel.org>
@@ -65,83 +65,57 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Alexey Budankov <alexey.budankov@linux.intel.com>
 
-Implemented -z,--compression_level[=<n>] option that enables compression
-of mmaped kernel data buffers content in runtime during perf record mode
-collection. Default option value is 1 (fastest compression).
+zstd_init(, comp_level = 0) initializes decompression part of API only
+hat now consists of zstd_decompress_stream() function.
 
-Compression overhead has been measured for serial and AIO streaming when
-profiling matrix multiplication workload:
+The perf.data PERF_RECORD_COMPRESSED records are decompressed using
+zstd_decompress_stream() function into a linked list of mmaped memory
+regions of mmap_comp_len size (struct decomp).
 
-      -------------------------------------------------------------
-      | SERIAL			  | AIO-1                       |
-  ----------------------------------------------------------------|
-  |-z | OVH(x) | ratio(x) size(MiB) | OVH(x) | ratio(x) size(MiB) |
-  |---------------------------------------------------------------|
-  | 0 | 1,00   | 1,000    179,424   | 1,00   | 1,000    187,527   |
-  | 1 | 1,04   | 8,427    181,148   | 1,01   | 8,474    188,562   |
-  | 2 | 1,07   | 8,055    186,953   | 1,03   | 7,912    191,773   |
-  | 3 | 1,04   | 8,283    181,908   | 1,03   | 8,220    191,078   |
-  | 5 | 1,09   | 8,101    187,705   | 1,05   | 7,780    190,065   |
-  | 8 | 1,05   | 9,217    179,191   | 1,12   | 6,111    193,024   |
-  -----------------------------------------------------------------
+After decompression of one COMPRESSED record its content is iterated and
+fetched for usual processing. The mmaped memory regions with
+decompressed events are kept in the linked list till the tool process
+termination.
 
-OVH = (Execution time with -z N) / (Execution time with -z 0)
-
-ratio - compression ratio
-size  - number of bytes that was compressed
-
-	size ~= trace size x ratio
+When dumping raw records (e.g., perf report -D --header) file offsets of
+events from compressed records are printed as zero.
 
 Committer notes:
 
-Testing it I noticed that it failed to disable build id processing when
-compression is enabled, and as we'd have to uncompress everything to
-look for the PERF_RECORD_{MMAP,SAMPLE,etc} to figure out which build ids
-to read from DSOs, we better disable build id processing when
-compression is enabled, logging with pr_debug() when doing so:
+Since now we have support for processing PERF_RECORD_COMPRESSED, we see
+none, in raw form, like we saw in the previous patch commiter notes,
+they were decompressed into the usual PERF_RECORD_{FORK,MMAP,COMM,etc}
+records, we only see the stats for those PERF_RECORD_COMPRESSED events,
+and since I used the file generated in the commiter notes for the
+previous patch, there they are, 2 compressed records:
 
-Original patch:
-
-  # perf record -z2
-  ^C[ perf record: Woken up 1 times to write data ]
-  0x1746e0 [0x76]: failed to process type: 81 [Invalid argument]
-  [ perf record: Captured and wrote 1.568 MB perf.data, compressed (original 0.452 MB, ratio is 3.995) ]
-  #
-
-After auto-disabling build id processing when compression is enabled:
-
-  $ perf record -z2 sleep 1
-  [ perf record: Woken up 1 times to write data ]
-  [ perf record: Captured and wrote 0.001 MB perf.data, compressed (original 0.001 MB, ratio is 2.292) ]
-  $ perf record -v -z2 sleep 1
-  Compression enabled, disabling build id collection at the end of the session.
-  <SNIP extra -v pr_debug() messages>
-  [ perf record: Woken up 1 times to write data ]
-  [ perf record: Captured and wrote 0.001 MB perf.data, compressed (original 0.001 MB, ratio is 2.305) ]
-  $
-
-Also, with parts of the patch originally after this one moved to just
-before this one we get:
-
-  $ perf record -z2 sleep 1
-  [ perf record: Woken up 1 times to write data ]
-  [ perf record: Captured and wrote 0.001 MB perf.data, compressed (original 0.001 MB, ratio is 2.371) ]
+  $ perf report --header-only | grep cmdline
+  # cmdline : /home/acme/bin/perf record -z2 sleep 1
   $ perf report -D | grep COMPRESS
-  0 0x1b8 [0x155]: PERF_RECORD_COMPRESSED: unhandled!
-  0 0x30d [0x80]: PERF_RECORD_COMPRESSED: unhandled!
         COMPRESSED events:          2
         COMPRESSED events:          0
-  $
+  $ perf report --stdio
+  # To display the perf.data header info, please use --header/--header-only options.
+  #
+  #
+  # Total Lost Samples: 0
+  #
+  # Samples: 15  of event 'cycles:u'
+  # Event count (approx.): 962227
+  #
+  # Overhead  Command  Shared Object     Symbol
+  # ........  .......  ................  ...........................
+  #
+      46.99%  sleep    libc-2.28.so      [.] _dl_addr
+      29.24%  sleep    [unknown]         [k] 0xffffffffaea00a67
+      16.45%  sleep    libc-2.28.so      [.] __GI__IO_un_link.part.1
+       5.92%  sleep    ld-2.28.so        [.] _dl_setup_hash
+       1.40%  sleep    libc-2.28.so      [.] __nanosleep
+       0.00%  sleep    [unknown]         [k] 0xffffffffaea00163
 
-I.e. when faced with PERF_RECORD_COMPRESSED that we still have no code
-to process, we just show it as not being handled, skip them and
-continue, while before we had:
-
-  $ perf report -D | grep COMPRESS
-  0x1b8 [0x169]: failed to process type: 81 [Invalid argument]
-  Error:
-  failed to process sample
-  0 0x1b8 [0x169]: PERF_RECORD_COMPRESSED
+  #
+  # (Tip: To see callchains in a more compact form: perf report -g folded)
+  #
   $
 
 Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
@@ -151,84 +125,335 @@ Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
 Cc: Andi Kleen <ak@linux.intel.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
-Link: http://lkml.kernel.org/r/9ff06518-ae63-a908-e44d-5d9e56dd66d9@linux.intel.com
+Link: http://lkml.kernel.org/r/304b0a59-942c-3fe1-da02-aa749f87108b@linux.intel.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/Documentation/perf-record.txt |  5 ++++
- tools/perf/builtin-record.c              | 30 ++++++++++++++++++++++++
- 2 files changed, 35 insertions(+)
+ tools/perf/builtin-report.c |   5 +-
+ tools/perf/util/compress.h  |  11 ++++
+ tools/perf/util/session.c   | 116 +++++++++++++++++++++++++++++++++++-
+ tools/perf/util/session.h   |  10 ++++
+ tools/perf/util/zstd.c      |  41 +++++++++++++
+ 5 files changed, 181 insertions(+), 2 deletions(-)
 
-diff --git a/tools/perf/Documentation/perf-record.txt b/tools/perf/Documentation/perf-record.txt
-index 58986f4cc190..27b37624c376 100644
---- a/tools/perf/Documentation/perf-record.txt
-+++ b/tools/perf/Documentation/perf-record.txt
-@@ -478,6 +478,11 @@ Also at some cases executing less output write syscalls with bigger data size
- can take less time than executing more output write syscalls with smaller data
- size thus lowering runtime profiling overhead.
+diff --git a/tools/perf/builtin-report.c b/tools/perf/builtin-report.c
+index 91e27ac297c2..1ca533f06a4c 100644
+--- a/tools/perf/builtin-report.c
++++ b/tools/perf/builtin-report.c
+@@ -1258,6 +1258,9 @@ int cmd_report(int argc, const char **argv)
+ 	if (session == NULL)
+ 		return -1;
  
-+-z::
-+--compression-level[=n]::
-+Produce compressed trace using specified level n (default: 1 - fastest compression,
-+22 - smallest trace)
++	if (zstd_init(&(session->zstd_data), 0) < 0)
++		pr_warning("Decompression initialization failed. Reported data may be incomplete.\n");
 +
- --all-kernel::
- Configure all used events to run in kernel space.
+ 	if (report.queue_size) {
+ 		ordered_events__set_alloc_size(&session->ordered_events,
+ 					       report.queue_size);
+@@ -1448,7 +1451,7 @@ int cmd_report(int argc, const char **argv)
+ error:
+ 	if (report.ptime_range)
+ 		zfree(&report.ptime_range);
+-
++	zstd_fini(&(session->zstd_data));
+ 	perf_session__delete(session);
+ 	return ret;
+ }
+diff --git a/tools/perf/util/compress.h b/tools/perf/util/compress.h
+index 1041a4fd81e2..0cd3369af2a4 100644
+--- a/tools/perf/util/compress.h
++++ b/tools/perf/util/compress.h
+@@ -20,6 +20,7 @@ bool lzma_is_compressed(const char *input);
+ struct zstd_data {
+ #ifdef HAVE_ZSTD_SUPPORT
+ 	ZSTD_CStream	*cstream;
++	ZSTD_DStream	*dstream;
+ #endif
+ };
  
-diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
-index a0bd9104fae6..861395753c25 100644
---- a/tools/perf/builtin-record.c
-+++ b/tools/perf/builtin-record.c
-@@ -443,6 +443,25 @@ static int record__mmap_flush_parse(const struct option *opt,
+@@ -31,6 +32,9 @@ int zstd_fini(struct zstd_data *data);
+ size_t zstd_compress_stream_to_records(struct zstd_data *data, void *dst, size_t dst_size,
+ 				       void *src, size_t src_size, size_t max_record_size,
+ 				       size_t process_header(void *record, size_t increment));
++
++size_t zstd_decompress_stream(struct zstd_data *data, void *src, size_t src_size,
++			      void *dst, size_t dst_size);
+ #else /* !HAVE_ZSTD_SUPPORT */
+ 
+ static inline int zstd_init(struct zstd_data *data __maybe_unused, int level __maybe_unused)
+@@ -52,6 +56,13 @@ size_t zstd_compress_stream_to_records(struct zstd_data *data __maybe_unused,
+ {
  	return 0;
  }
++
++static inline size_t zstd_decompress_stream(struct zstd_data *data __maybe_unused, void *src __maybe_unused,
++					    size_t src_size __maybe_unused, void *dst __maybe_unused,
++					    size_t dst_size __maybe_unused)
++{
++	return 0;
++}
+ #endif
+ 
+ #endif /* PERF_COMPRESS_H */
+diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
+index ec1dec86d0e1..2310a1752983 100644
+--- a/tools/perf/util/session.c
++++ b/tools/perf/util/session.c
+@@ -29,6 +29,61 @@
+ #include "stat.h"
+ #include "arch/common.h"
  
 +#ifdef HAVE_ZSTD_SUPPORT
-+static unsigned int comp_level_default = 1;
-+
-+static int record__parse_comp_level(const struct option *opt, const char *str, int unset)
++static int perf_session__process_compressed_event(struct perf_session *session,
++						  union perf_event *event, u64 file_offset)
 +{
-+	struct record_opts *opts = opt->value;
++	void *src;
++	size_t decomp_size, src_size;
++	u64 decomp_last_rem = 0;
++	size_t decomp_len = session->header.env.comp_mmap_len;
++	struct decomp *decomp, *decomp_last = session->decomp_last;
 +
-+	if (unset) {
-+		opts->comp_level = 0;
++	decomp = mmap(NULL, sizeof(struct decomp) + decomp_len, PROT_READ|PROT_WRITE,
++		      MAP_ANONYMOUS|MAP_PRIVATE, -1, 0);
++	if (decomp == MAP_FAILED) {
++		pr_err("Couldn't allocate memory for decompression\n");
++		return -1;
++	}
++
++	decomp->file_pos = file_offset;
++	decomp->head = 0;
++
++	if (decomp_last) {
++		decomp_last_rem = decomp_last->size - decomp_last->head;
++		memcpy(decomp->data, &(decomp_last->data[decomp_last->head]), decomp_last_rem);
++		decomp->size = decomp_last_rem;
++	}
++
++	src = (void *)event + sizeof(struct compressed_event);
++	src_size = event->pack.header.size - sizeof(struct compressed_event);
++
++	decomp_size = zstd_decompress_stream(&(session->zstd_data), src, src_size,
++				&(decomp->data[decomp_last_rem]), decomp_len - decomp_last_rem);
++	if (!decomp_size) {
++		munmap(decomp, sizeof(struct decomp) + decomp_len);
++		pr_err("Couldn't decompress data\n");
++		return -1;
++	}
++
++	decomp->size += decomp_size;
++
++	if (session->decomp == NULL) {
++		session->decomp = decomp;
++		session->decomp_last = decomp;
 +	} else {
-+		if (str)
-+			opts->comp_level = strtol(str, NULL, 0);
-+		if (!opts->comp_level)
-+			opts->comp_level = comp_level_default;
++		session->decomp_last->next = decomp;
++		session->decomp_last = decomp;
++	}
++
++	pr_debug("decomp (B): %ld to %ld\n", src_size, decomp_size);
++
++	return 0;
++}
++#else /* !HAVE_ZSTD_SUPPORT */
++#define perf_session__process_compressed_event perf_session__process_compressed_event_stub
++#endif
++
+ static int perf_session__deliver_event(struct perf_session *session,
+ 				       union perf_event *event,
+ 				       struct perf_tool *tool,
+@@ -197,6 +252,21 @@ static void perf_session__delete_threads(struct perf_session *session)
+ 	machine__delete_threads(&session->machines.host);
+ }
+ 
++static void perf_session__release_decomp_events(struct perf_session *session)
++{
++	struct decomp *next, *decomp;
++	size_t decomp_len;
++	next = session->decomp;
++	decomp_len = session->header.env.comp_mmap_len;
++	do {
++		decomp = next;
++		if (decomp == NULL)
++			break;
++		next = decomp->next;
++		munmap(decomp, decomp_len + sizeof(struct decomp));
++	} while (1);
++}
++
+ void perf_session__delete(struct perf_session *session)
+ {
+ 	if (session == NULL)
+@@ -205,6 +275,7 @@ void perf_session__delete(struct perf_session *session)
+ 	auxtrace_index__free(&session->auxtrace_index);
+ 	perf_session__destroy_kernel_maps(session);
+ 	perf_session__delete_threads(session);
++	perf_session__release_decomp_events(session);
+ 	perf_env__exit(&session->header.env);
+ 	machines__exit(&session->machines);
+ 	if (session->data)
+@@ -439,7 +510,7 @@ void perf_tool__fill_defaults(struct perf_tool *tool)
+ 	if (tool->feature == NULL)
+ 		tool->feature = process_event_op2_stub;
+ 	if (tool->compressed == NULL)
+-		tool->compressed = perf_session__process_compressed_event_stub;
++		tool->compressed = perf_session__process_compressed_event;
+ }
+ 
+ static void swap_sample_id_all(union perf_event *event, void *data)
+@@ -1725,6 +1796,8 @@ static int perf_session__flush_thread_stacks(struct perf_session *session)
+ 
+ volatile int session_done;
+ 
++static int __perf_session__process_decomp_events(struct perf_session *session);
++
+ static int __perf_session__process_pipe_events(struct perf_session *session)
+ {
+ 	struct ordered_events *oe = &session->ordered_events;
+@@ -1805,6 +1878,10 @@ static int __perf_session__process_pipe_events(struct perf_session *session)
+ 	if (skip > 0)
+ 		head += skip;
+ 
++	err = __perf_session__process_decomp_events(session);
++	if (err)
++		goto out_err;
++
+ 	if (!session_done())
+ 		goto more;
+ done:
+@@ -1853,6 +1930,39 @@ fetch_mmaped_event(struct perf_session *session,
+ 	return event;
+ }
+ 
++static int __perf_session__process_decomp_events(struct perf_session *session)
++{
++	s64 skip;
++	u64 size, file_pos = 0;
++	struct decomp *decomp = session->decomp_last;
++
++	if (!decomp)
++		return 0;
++
++	while (decomp->head < decomp->size && !session_done()) {
++		union perf_event *event = fetch_mmaped_event(session, decomp->head, decomp->size, decomp->data);
++
++		if (!event)
++			break;
++
++		size = event->header.size;
++
++		if (size < sizeof(struct perf_event_header) ||
++		    (skip = perf_session__process_event(session, event, file_pos)) < 0) {
++			pr_err("%#" PRIx64 " [%#x]: failed to process type: %d\n",
++				decomp->file_pos + decomp->head, event->header.size, event->header.type);
++			return -EINVAL;
++		}
++
++		if (skip)
++			size += skip;
++
++		decomp->head += size;
 +	}
 +
 +	return 0;
 +}
-+#endif
- static unsigned int comp_level_max = 22;
++
+ /*
+  * On 64bit we can mmap the data file in one go. No need for tiny mmap
+  * slices. On 32bit we use 32MB.
+@@ -1962,6 +2072,10 @@ reader__process_events(struct reader *rd, struct perf_session *session,
+ 	head += size;
+ 	file_pos += size;
  
- static int record__comp_enabled(struct record *rec)
-@@ -2200,6 +2219,11 @@ static struct option __record_options[] = {
- 	OPT_CALLBACK(0, "affinity", &record.opts, "node|cpu",
- 		     "Set affinity mask of trace reading thread to NUMA node cpu mask or cpu of processed mmap buffer",
- 		     record__parse_affinity),
-+#ifdef HAVE_ZSTD_SUPPORT
-+	OPT_CALLBACK_OPTARG('z', "compression-level", &record.opts, &comp_level_default,
-+			    "n", "Compressed records using specified level (default: 1 - fastest compression, 22 - greatest compression)",
-+			    record__parse_comp_level),
-+#endif
- 	OPT_END()
++	err = __perf_session__process_decomp_events(session);
++	if (err)
++		goto out;
++
+ 	ui_progress__update(prog, size);
+ 
+ 	if (session_done())
+diff --git a/tools/perf/util/session.h b/tools/perf/util/session.h
+index 6c984c895924..dd8920b745bc 100644
+--- a/tools/perf/util/session.h
++++ b/tools/perf/util/session.h
+@@ -39,6 +39,16 @@ struct perf_session {
+ 	u64			bytes_transferred;
+ 	u64			bytes_compressed;
+ 	struct zstd_data	zstd_data;
++	struct decomp		*decomp;
++	struct decomp		*decomp_last;
++};
++
++struct decomp {
++	struct decomp *next;
++	u64 file_pos;
++	u64 head;
++	size_t size;
++	char data[];
  };
  
-@@ -2259,6 +2283,12 @@ int cmd_record(int argc, const char **argv)
- 			"cgroup monitoring only available in system-wide mode");
+ struct perf_tool;
+diff --git a/tools/perf/util/zstd.c b/tools/perf/util/zstd.c
+index 359ec9a9d306..23bdb9884576 100644
+--- a/tools/perf/util/zstd.c
++++ b/tools/perf/util/zstd.c
+@@ -9,6 +9,21 @@ int zstd_init(struct zstd_data *data, int level)
+ {
+ 	size_t ret;
  
- 	}
-+
-+	if (rec->opts.comp_level != 0) {
-+		pr_debug("Compression enabled, disabling build id collection at the end of the session.\n");
-+		rec->no_buildid = true;
++	data->dstream = ZSTD_createDStream();
++	if (data->dstream == NULL) {
++		pr_err("Couldn't create decompression stream.\n");
++		return -1;
 +	}
 +
- 	if (rec->opts.record_switch_events &&
- 	    !perf_can_record_switch_events()) {
- 		ui__error("kernel does not support recording context switch events\n");
++	ret = ZSTD_initDStream(data->dstream);
++	if (ZSTD_isError(ret)) {
++		pr_err("Failed to initialize decompression stream: %s\n", ZSTD_getErrorName(ret));
++		return -1;
++	}
++
++	if (!level)
++		return 0;
++
+ 	data->cstream = ZSTD_createCStream();
+ 	if (data->cstream == NULL) {
+ 		pr_err("Couldn't create compression stream.\n");
+@@ -26,6 +41,11 @@ int zstd_init(struct zstd_data *data, int level)
+ 
+ int zstd_fini(struct zstd_data *data)
+ {
++	if (data->dstream) {
++		ZSTD_freeDStream(data->dstream);
++		data->dstream = NULL;
++	}
++
+ 	if (data->cstream) {
+ 		ZSTD_freeCStream(data->cstream);
+ 		data->cstream = NULL;
+@@ -68,3 +88,24 @@ size_t zstd_compress_stream_to_records(struct zstd_data *data, void *dst, size_t
+ 
+ 	return compressed;
+ }
++
++size_t zstd_decompress_stream(struct zstd_data *data, void *src, size_t src_size,
++			      void *dst, size_t dst_size)
++{
++	size_t ret;
++	ZSTD_inBuffer input = { src, src_size, 0 };
++	ZSTD_outBuffer output = { dst, dst_size, 0 };
++
++	while (input.pos < input.size) {
++		ret = ZSTD_decompressStream(data->dstream, &output, &input);
++		if (ZSTD_isError(ret)) {
++			pr_err("failed to decompress (B): %ld -> %ld : %s\n",
++			       src_size, output.size, ZSTD_getErrorName(ret));
++			break;
++		}
++		output.dst  = dst + output.pos;
++		output.size = dst_size - output.pos;
++	}
++
++	return output.pos;
++}
 -- 
 2.20.1
 
