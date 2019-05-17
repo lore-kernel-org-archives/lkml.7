@@ -8,55 +8,55 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8239CC04AB4
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 18:47:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98E2FC04AB4
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 18:47:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 537782173C
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 18:47:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6AC6121848
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 18:47:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sYa1xSeq"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mMauM/oR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729125AbfEQSrN (ORCPT
+        id S1729184AbfEQSrQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 May 2019 14:47:13 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:38470 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725933AbfEQSrK (ORCPT
+        Fri, 17 May 2019 14:47:16 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:38780 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727380AbfEQSrL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 May 2019 14:47:10 -0400
-Received: by mail-wm1-f67.google.com with SMTP id t5so6312098wmh.3;
-        Fri, 17 May 2019 11:47:09 -0700 (PDT)
+        Fri, 17 May 2019 14:47:11 -0400
+Received: by mail-wr1-f66.google.com with SMTP id d18so8166269wrs.5;
+        Fri, 17 May 2019 11:47:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=r8viNroRA5goE0iPj/ap53EgAXBGfEQtlqx5YkjMMp0=;
-        b=sYa1xSeqBijyACT713JrcPfeJ6i1pId1XJ8eV7bYFwQOvCKVI9hU6X6rsi5VoYuOYt
-         0D2cTJcpZWhDRkgW3lFeqzAiU5xxh8pXYkjduO+E3yB4kURp14tlb4FYguNJ6mVXxr/o
-         7sNEuSmlziet3wBZ3p1LC4/4XDskX8RjgeFVzrsZZncbZNeV30kdefMoGz1GhCiM5MVN
-         77LwiSFwRps5gRv+r0TY4n6TYH1qIYzplYaT0WGD17Sd2DddZ0Ra8tJkdfzHukxZ9Emq
-         OxPUS2T4geuoPK9oiBP1tfS0VhtC7+6ZAjb7E2YjmdJZy2Hapy3h2XjQMFiCW1W0RPGZ
-         OXDw==
+        bh=2w/o0YvWj4GW2dKc8xosf8L/TwKxnX3w/M6Sh7NSyHk=;
+        b=mMauM/oRgsPGZUvkUT/+QSTeGRj6V4+Bsa6SDx89DACsieftOUcfnpP0PEa41Y7jjx
+         vXR0gKI35+II1451PFUMT8qwllnoMQCNopXWWgkKjmFkg97k9NkB0qyU/ITdLnqaNvhm
+         7824EGQbsW7XUYg+EzvF7fldSBjWgoGIYtjpilZkMG0t9WLhzSrvsol8kDo+K3T3NCbz
+         PtKzNCbAtvYzjHxH1L/LnQ5cuh6R/Ykju94XenD6GIqKrMqbcTl7PRp9x84vws0jG24X
+         O0reJu7XDq7JltXMnRyde6v/Fyx4Zr/oaaCH3CSZNg0MmhVKzYSpSwrgTvKQLNFPdlfF
+         wbeg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=r8viNroRA5goE0iPj/ap53EgAXBGfEQtlqx5YkjMMp0=;
-        b=b3VQMkVILVH478Y3jEMPd9uVARFRTodwseLJIWxE3pLPPlU3tiIBeuP66yGImnDhhw
-         yAXky4QotkG5Wnl02gNogqcpQUfMlgBBr2tstitzjb+slplIh7NDsONXhi5EaM2KfPBG
-         J/lx+rq1Hh7iQYScqi+AtmV55ucUsYCmPV7SvL2msB+Kt1It/4i3U0jVL6TGIcDQXFmZ
-         KgafqDVEJKdEGHSdT3FUYBNa7jmJHNla4p3Q6mZNEoewtNP7GEBFszG91ANuqjPY7/e4
-         B1FYzGWV/JCEcnwWf3fnEmvK41hr3PLGwcb9CDroYPRK8peJWIjJXWQxvJnCm4RW+qM2
-         yn4A==
-X-Gm-Message-State: APjAAAX0BMgXejHQzpKoi2zSd8lIW/DNEYoi2w5EUdvaIbaGcVHM5KJy
-        q9zizFJS9d1tonOJypG6mBw=
-X-Google-Smtp-Source: APXvYqx5WYQ+/UFX3j4mg5Ayc/w6LeLH6Wy8mGmkZ59Hw5REOLqHmfti245ovfZ/JrzJoGg3/ubYNA==
-X-Received: by 2002:a1c:7c0d:: with SMTP id x13mr3111380wmc.89.1558118828555;
-        Fri, 17 May 2019 11:47:08 -0700 (PDT)
+        bh=2w/o0YvWj4GW2dKc8xosf8L/TwKxnX3w/M6Sh7NSyHk=;
+        b=qy2D90BVTc2c7vCID5TbQ1DPbCYSzbGm9zPli5JHlg3Q/PjUjFgKTHZjX/WGNP2IeE
+         HIR5D8CPUUVmEOwLZUR8bBRyw6IXEWolBLJvsDtld/lBbe0jfMhnVfKfLTBJcEpTgMjq
+         7VaelTvNiHQUBUuTL2bNkLvbirsx/ly0L73kv9pAmJOtsrcY1GOaQUU42WjicW5MmWNk
+         udcZ6u4KtRI+19VO/NeZ/XcONrasLOgLYl+Vob1CNB1BS5I+THvi6Ywc4yCWkDlMXnQA
+         xLWhIgSYmNWNTGjwicGRlaOuY+YPEs4S8woVVa4exSU0cX6GnMgW3xEEco9IuC5uNicY
+         vWpA==
+X-Gm-Message-State: APjAAAUlDQzNSinLtzWPVGPQIMB3PwoLJagdIX4u5UNM7Q7NkzBrCH2k
+        OXkHgB0M8YXRhtez2lr7YZw=
+X-Google-Smtp-Source: APXvYqwJzLvCjxFr10WwtK8XqGQ5+MmNhKYR5eWWQw+nzXOrlwwqnjpWoqW7Z7qd4a37Tuhgl5Jysw==
+X-Received: by 2002:adf:eb03:: with SMTP id s3mr29605848wrn.170.1558118829632;
+        Fri, 17 May 2019 11:47:09 -0700 (PDT)
 Received: from localhost.localdomain ([2a01:e0a:1f1:d0f0::4e2b:d7ca])
-        by smtp.gmail.com with ESMTPSA id v20sm5801112wmj.10.2019.05.17.11.47.07
+        by smtp.gmail.com with ESMTPSA id v20sm5801112wmj.10.2019.05.17.11.47.08
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 17 May 2019 11:47:07 -0700 (PDT)
+        Fri, 17 May 2019 11:47:08 -0700 (PDT)
 From:   =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
 To:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
         Rob Herring <robh+dt@kernel.org>,
@@ -71,11 +71,11 @@ To:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
         Steven Price <steven.price@arm.com>
 Cc:     dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        iommu@lists.linux-foundation.org,
+        iommu@lists.linux-foundation.org, Icenowy Zheng <icenowy@aosc.io>,
         =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
-Subject: [PATCH v5 2/6] iommu: io-pgtable: fix sanity check for non 48-bit mali iommu
-Date:   Fri, 17 May 2019 20:46:55 +0200
-Message-Id: <20190517184659.18828-3-peron.clem@gmail.com>
+Subject: [PATCH v5 3/6] dt-bindings: gpu: add bus clock for Mali Midgard GPUs
+Date:   Fri, 17 May 2019 20:46:56 +0200
+Message-Id: <20190517184659.18828-4-peron.clem@gmail.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190517184659.18828-1-peron.clem@gmail.com>
 References: <20190517184659.18828-1-peron.clem@gmail.com>
@@ -87,30 +87,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Allwinner H6 SoC has a Mali T720MP2 with a 33-bit iommu which
-trig the sanity check during the alloc of the pgtable.
+From: Icenowy Zheng <icenowy@aosc.io>
 
-Change the sanity check to allow non 48-bit configuration.
+Some SoCs adds a bus clock gate to the Mali Midgard GPU.
 
-Suggested-by: Robin Murphy <robin.murphy@arm.com>
+Add the binding for the bus clock.
+
+Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
 Signed-off-by: Clément Péron <peron.clem@gmail.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
 ---
- drivers/iommu/io-pgtable-arm.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ Documentation/devicetree/bindings/gpu/arm,mali-midgard.txt | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/drivers/iommu/io-pgtable-arm.c b/drivers/iommu/io-pgtable-arm.c
-index 4e21efbc4459..74f2ce802e6f 100644
---- a/drivers/iommu/io-pgtable-arm.c
-+++ b/drivers/iommu/io-pgtable-arm.c
-@@ -1016,7 +1016,7 @@ arm_mali_lpae_alloc_pgtable(struct io_pgtable_cfg *cfg, void *cookie)
- {
- 	struct io_pgtable *iop;
+diff --git a/Documentation/devicetree/bindings/gpu/arm,mali-midgard.txt b/Documentation/devicetree/bindings/gpu/arm,mali-midgard.txt
+index 1b1a74129141..2e8bbce35695 100644
+--- a/Documentation/devicetree/bindings/gpu/arm,mali-midgard.txt
++++ b/Documentation/devicetree/bindings/gpu/arm,mali-midgard.txt
+@@ -31,6 +31,12 @@ Optional properties:
  
--	if (cfg->ias != 48 || cfg->oas > 40)
-+	if (cfg->ias > 48 || cfg->oas > 40)
- 		return NULL;
+ - clocks : Phandle to clock for the Mali Midgard device.
  
- 	cfg->pgsize_bitmap &= (SZ_4K | SZ_2M | SZ_1G);
++- clock-names : Specify the names of the clocks specified in clocks
++  when multiple clocks are present.
++    * core: clock driving the GPU itself (When only one clock is present,
++      assume it's this clock.)
++    * bus: bus clock for the GPU
++
+ - mali-supply : Phandle to regulator for the Mali device. Refer to
+   Documentation/devicetree/bindings/regulator/regulator.txt for details.
+ 
 -- 
 2.17.1
 
