@@ -2,179 +2,158 @@ Return-Path: <SRS0=M1fl=TR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.7 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA214C04AB4
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 18:40:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32B65C04AB4
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 18:40:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D7742087B
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 18:40:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 03115218EA
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 18:40:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1558118437;
+	bh=zBXRbeIQrwFN+otrC2SUsB1tTk/+5ebPtDQk7hrMMvE=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=mrEgp21OHoZkIMaV2axBQJddWCWsFhvok6/A2kMH6Dv4ns/uXhNq2332M/eCr3BFw
+	 1B/3y6Umm6gaeH7w9sgMfYyb6TkVzNrc3I/aDAamIn6JJ/KVIlSv5Y5oRZjEqtioMg
+	 Ia7Bye58fuRlVScMYW7ZtLtpcmGrPGAbrcOn1v40=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727730AbfEQSkH (ORCPT
+        id S1727958AbfEQSkg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 May 2019 14:40:07 -0400
-Received: from mail-io1-f69.google.com ([209.85.166.69]:52099 "EHLO
-        mail-io1-f69.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727366AbfEQSkG (ORCPT
+        Fri, 17 May 2019 14:40:36 -0400
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:37255 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726740AbfEQSkf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 May 2019 14:40:06 -0400
-Received: by mail-io1-f69.google.com with SMTP id i20so6044975ioo.18
-        for <linux-kernel@vger.kernel.org>; Fri, 17 May 2019 11:40:05 -0700 (PDT)
+        Fri, 17 May 2019 14:40:35 -0400
+Received: by mail-lf1-f68.google.com with SMTP id q17so6036729lfo.4
+        for <linux-kernel@vger.kernel.org>; Fri, 17 May 2019 11:40:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=oO/GMUgT+1j7VBkn8MyV9uRSDi94nW1hm071Hw5jVSo=;
+        b=Fg3ijOgmH36WIunWDge4wgVr1HpSUVX9oAp+UCHPw0NDKT8DXkwZR5Mut0XUVphKdk
+         7WE868HzNhOuKCXNTdn21kpMbzVCMJsRd2eClEQCb4geolrkgNdveLxZ1t0pqQciLaT5
+         bwxxuYpv6Ki2BW9/dHBX6rwlLrcuW+6kpcRCs=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=pc1ZOBiodFIfLl7ABdn3nfhRF80uG71nN0Nl/mP40/8=;
-        b=ZnNgMKyo4B+LKhRto5Ei+qqqmw9ZhpzASjcp0pU1tf7/QNcGGE0XNLxN46x6CHh/z+
-         nDLy61xNqiP6aeFB/eAYH8AHyxfhZRF9oe3XK9wVV5Lp4nIOVfwOLbzcRfbMiM+dPBkZ
-         QVurtrzI6CEg8A/YHVHKVQMu9++A01Q/ZYMxKcT9PK/zR4OM97u6IcZSh4DeTfB4Xjd7
-         Z4Tbp1Oqu3DrbZkrJL3nKHNFMhD/ZVEUyT3eVWOoQDVMfMzt2DdPiTFn3uhL599ahV2b
-         6L6XSBTI4+6VaaHqNWjQUVLTmE4bvWaenxtf0ScMNOykf7Hk/3yxvoiPWov911DN6EyH
-         5OCg==
-X-Gm-Message-State: APjAAAVIgAn/dm9BtZAKMu+S/b0cuPxGjijnu0tskcEwPiVw31qavD0E
-        uJt/kxTYd+/KQ3J+lfgZj/fBpVjVs4AfwgnzNJjezeHVpd6d
-X-Google-Smtp-Source: APXvYqzxE/lUYFkEPn8eDP8vQOgpONADWLlVB8PiA7iXhedwDuOUTG9Vwvb04G8sz0v8SNGbwD/Wbhgj0/bzO5YQG6J4+aOZCQty
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=oO/GMUgT+1j7VBkn8MyV9uRSDi94nW1hm071Hw5jVSo=;
+        b=VyruRE4rIfonJZcxxx074EkdVY0EwoMpEvMZIbOo5qRuXvv1neRakEoGjksV2MEonU
+         ZFfP/g3AaJjQaTPl3a/84TAUYV8d3z2s+Xfn+lANta2RGO20l8cqArvjVXsWDbIrNYrM
+         q4TBw68tizehSn1a4ohChuFxY0dez33b9k2d0pFHnq7f5g6w5wlxYWTQKQrlN1S31HtB
+         Qij3DKrsLShzd3yT9sF7vkAVQh/XslSBHkS8KVuI6H/lhOw7qyrWu90X5ZEDQwjtQsGn
+         li3tDQ1esuBQAtN61bSZf/KquxIX71UuZYzSMRtLwVoT5oIMA8RlPWB4Hn+IiSJ5Af0Z
+         renQ==
+X-Gm-Message-State: APjAAAVaZtGkznYYzqmm6uk6JQEjEUCuKhtePOtwa6+/1czLUU0Nnslh
+        Nu3GViUg01uVOXrMQAQCGfqemNcps5Y=
+X-Google-Smtp-Source: APXvYqy44kI+YM4IZ9ny3zoMymPsWu4+vVQJ4Vmb2CaZXkaaM6mrlA3B5QZT4FcaJJG/3CevXIOjAQ==
+X-Received: by 2002:a19:7d04:: with SMTP id y4mr28264034lfc.153.1558118432314;
+        Fri, 17 May 2019 11:40:32 -0700 (PDT)
+Received: from mail-lj1-f178.google.com (mail-lj1-f178.google.com. [209.85.208.178])
+        by smtp.gmail.com with ESMTPSA id i187sm1813646lfe.64.2019.05.17.11.40.31
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 17 May 2019 11:40:32 -0700 (PDT)
+Received: by mail-lj1-f178.google.com with SMTP id j24so7205590ljg.1
+        for <linux-kernel@vger.kernel.org>; Fri, 17 May 2019 11:40:31 -0700 (PDT)
+X-Received: by 2002:a2e:9546:: with SMTP id t6mr8446776ljh.51.1558118026162;
+ Fri, 17 May 2019 11:33:46 -0700 (PDT)
 MIME-Version: 1.0
-X-Received: by 2002:a5e:8409:: with SMTP id h9mr3005977ioj.187.1558118405045;
- Fri, 17 May 2019 11:40:05 -0700 (PDT)
-Date:   Fri, 17 May 2019 11:40:05 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000000d1491058919b662@google.com>
-Subject: KASAN: use-after-free Read in tls_push_sg
-From:   syzbot <syzbot+66fbe4719f6ef22754ee@syzkaller.appspotmail.com>
-To:     aviadye@mellanox.com, borisp@mellanox.com, daniel@iogearbox.net,
-        davejwatson@fb.com, davem@davemloft.net, john.fastabend@gmail.com,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+References: <CALCETrUfmyQ7ivNzQic0FyPXe1fmAnoK093jnz0i8DRn2LvdSA@mail.gmail.com>
+ <960B34DE67B9E140824F1DCDEC400C0F654E3FB9@ORSMSX116.amr.corp.intel.com>
+ <6a97c099-2f42-672e-a258-95bc09152363@tycho.nsa.gov> <20190517150948.GA15632@linux.intel.com>
+ <ca807220-47e2-5ec2-982c-4fb4a72439c6@tycho.nsa.gov> <80013cca-f1c2-f4d5-7558-8f4e752ada76@tycho.nsa.gov>
+ <20190517172953.GC15006@linux.intel.com> <DFE03E0C-694A-4289-B416-29CDC2644F94@amacapital.net>
+ <20190517175500.GE15006@linux.intel.com> <CAHk-=wgH2FBzBG3_RZSuatpYCj8DCQZipJYp9vh3Wy_S3Qt4-g@mail.gmail.com>
+ <20190517182124.GF15006@linux.intel.com>
+In-Reply-To: <20190517182124.GF15006@linux.intel.com>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Fri, 17 May 2019 11:33:30 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wi6N1ckASALGDSydzj+YXwAUq26uVPZD0r2q4Mjwss7hw@mail.gmail.com>
+Message-ID: <CAHk-=wi6N1ckASALGDSydzj+YXwAUq26uVPZD0r2q4Mjwss7hw@mail.gmail.com>
+Subject: Re: SGX vs LSM (Re: [PATCH v20 00/28] Intel SGX1 support)
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     Andy Lutomirski <luto@amacapital.net>,
+        Stephen Smalley <sds@tycho.nsa.gov>,
+        "Xing, Cedric" <cedric.xing@intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        James Morris <jmorris@namei.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        LSM List <linux-security-module@vger.kernel.org>,
+        Paul Moore <paul@paul-moore.com>,
+        Eric Paris <eparis@parisplace.org>,
+        "selinux@vger.kernel.org" <selinux@vger.kernel.org>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Jethro Beekman <jethro@fortanix.com>,
+        "Hansen, Dave" <dave.hansen@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "Dr. Greg" <greg@enjellic.com>,
+        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
+        "linux-sgx@vger.kernel.org" <linux-sgx@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "nhorman@redhat.com" <nhorman@redhat.com>,
+        "npmccallum@redhat.com" <npmccallum@redhat.com>,
+        "Ayoun, Serge" <serge.ayoun@intel.com>,
+        "Katz-zamir, Shay" <shay.katz-zamir@intel.com>,
+        "Huang, Haitao" <haitao.huang@intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        "Svahn, Kai" <kai.svahn@intel.com>, Borislav Petkov <bp@alien8.de>,
+        Josh Triplett <josh@joshtriplett.org>,
+        "Huang, Kai" <kai.huang@intel.com>,
+        David Rientjes <rientjes@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On Fri, May 17, 2019 at 11:21 AM Sean Christopherson
+<sean.j.christopherson@intel.com> wrote:
+>
+> I agree that conceptually EPC is private memory, but because EPC is
+> managed as a separate memory pool, SGX tags it VM_PFNMAP and manually
+> inserts PFNs, i.e. EPC effectively it gets classified as IO memory.
+>
+> And vmf_insert_pfn_prot() doesn't like writable private IO mappings:
+>
+>    BUG_ON((vma->vm_flags & VM_PFNMAP) && is_cow_mapping(vma->vm_flags));
 
-syzbot found the following crash on:
+Hmm. I haven't looked into why you want to do your own page insertion
+and not just "use existing pages", but I'm sure there's some reason.
 
-HEAD commit:    35c99ffa Merge tag 'for_linus' of git://git.kernel.org/pub..
-git tree:       net-next
-console output: https://syzkaller.appspot.com/x/log.txt?x=10ff3322a00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=82f0809e8f0a8c87
-dashboard link: https://syzkaller.appspot.com/bug?extid=66fbe4719f6ef22754ee
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+It looks like the "shared vs private" inode part is a red herring,
+though. You might as well give each opener of the sgx node its own
+inode - and you probably should. Then you can keep track of the pages
+that have been added in the inode->i_mapping, and you could avoid the
+whole PFN thing entirely. I still am not a huge fan of the device node
+in the first place, but I guess it's just one more place where a
+system admin can then give (or deny) access to a kernel feature from
+users. I guess the kvm people do the same thing, for not necessarily
+any better reasons.
 
-Unfortunately, I don't have any reproducer for this crash yet.
+With the PFNMAP model I guess the SGX memory ends up being unswappable
+- at least done the obvious way.
 
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+66fbe4719f6ef22754ee@syzkaller.appspotmail.com
+Again, the way I'd expect it to be done is as a shmem inode - that
+would I think be a better model. But I think that's a largely internal
+design decision, and the device node could just do that eventually
+(and the mmap could just map the populated shmem information into
+memory, no PFNMAP needed - the inode and the mapping could be
+"read-only" as far as the _user_ is concerned, but the i_mapping then
+gets populated by the ioctl's).
 
-==================================================================
-BUG: KASAN: use-after-free in tls_push_sg+0x5e2/0x680 net/tls/tls_main.c:139
-Read of size 4 at addr ffff888066f4d584 by task syz-executor.1/28368
+I have not actually looked at any of the SGX patches, so maybe you're
+already doing something like that (although the PFNMAP comment makes
+me think not), and quite possibly there's some fundamental reason why
+you can't just use the shmem approach.
 
-CPU: 0 PID: 28368 Comm: syz-executor.1 Not tainted 5.1.0+ #9
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-Call Trace:
-  __dump_stack lib/dump_stack.c:77 [inline]
-  dump_stack+0x172/0x1f0 lib/dump_stack.c:113
-  print_address_description.cold+0x7c/0x20d mm/kasan/report.c:188
-  __kasan_report.cold+0x1b/0x40 mm/kasan/report.c:317
-  kasan_report+0x12/0x20 mm/kasan/common.c:614
-  __asan_report_load4_noabort+0x14/0x20 mm/kasan/generic_report.c:131
-  tls_push_sg+0x5e2/0x680 net/tls/tls_main.c:139
-  tls_push_partial_record net/tls/tls_main.c:208 [inline]
-  tls_complete_pending_work include/net/tls.h:382 [inline]
-  tls_sk_proto_close+0x4a8/0x780 net/tls/tls_main.c:282
-  inet_release+0x105/0x1f0 net/ipv4/af_inet.c:432
-  inet6_release+0x53/0x80 net/ipv6/af_inet6.c:474
-  __sock_release+0xd3/0x2b0 net/socket.c:607
-  sock_close+0x1b/0x30 net/socket.c:1279
-  __fput+0x302/0x890 fs/file_table.c:279
-  ____fput+0x16/0x20 fs/file_table.c:312
-  task_work_run+0x14a/0x1c0 kernel/task_work.c:113
-  tracehook_notify_resume include/linux/tracehook.h:188 [inline]
-  exit_to_usermode_loop+0x273/0x2c0 arch/x86/entry/common.c:168
-  prepare_exit_to_usermode arch/x86/entry/common.c:199 [inline]
-  syscall_return_slowpath arch/x86/entry/common.c:279 [inline]
-  do_syscall_64+0x594/0x680 arch/x86/entry/common.c:304
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x412b61
-Code: 75 14 b8 03 00 00 00 0f 05 48 3d 01 f0 ff ff 0f 83 e4 1a 00 00 c3 48  
-83 ec 08 e8 0a fc ff ff 48 89 04 24 b8 03 00 00 00 0f 05 <48> 8b 3c 24 48  
-89 c2 e8 53 fc ff ff 48 89 d0 48 83 c4 08 48 3d 01
-RSP: 002b:00007fff8622b0f0 EFLAGS: 00000293 ORIG_RAX: 0000000000000003
-RAX: 0000000000000000 RBX: 0000000000000005 RCX: 0000000000412b61
-RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000000004
-RBP: 0000000000000001 R08: 00000000bb5eab81 R09: 00000000bb5eab85
-R10: 00007fff8622b1d0 R11: 0000000000000293 R12: 000000000073c900
-R13: 000000000073c900 R14: 00000000002190c3 R15: 000000000073bfac
+So my high-level reaction here may be just the rantings of somebody
+who just isn't familiar with what you do. My "why not shmem and
+regular mmap" questions come from a 30000ft view without knowing any
+of the details.
 
-Allocated by task 28369:
-  save_stack+0x23/0x90 mm/kasan/common.c:71
-  set_track mm/kasan/common.c:79 [inline]
-  __kasan_kmalloc mm/kasan/common.c:489 [inline]
-  __kasan_kmalloc.constprop.0+0xcf/0xe0 mm/kasan/common.c:462
-  kasan_kmalloc+0x9/0x10 mm/kasan/common.c:503
-  __do_kmalloc mm/slab.c:3690 [inline]
-  __kmalloc+0x15c/0x740 mm/slab.c:3699
-  kmalloc include/linux/slab.h:552 [inline]
-  kzalloc include/linux/slab.h:742 [inline]
-  tls_get_rec+0x104/0x590 net/tls/tls_sw.c:322
-  tls_sw_sendmsg+0xda5/0x17b0 net/tls/tls_sw.c:928
-  inet_sendmsg+0x147/0x5e0 net/ipv4/af_inet.c:802
-  sock_sendmsg_nosec net/socket.c:660 [inline]
-  sock_sendmsg+0xf2/0x170 net/socket.c:671
-  __sys_sendto+0x262/0x380 net/socket.c:1964
-  __do_sys_sendto net/socket.c:1976 [inline]
-  __se_sys_sendto net/socket.c:1972 [inline]
-  __x64_sys_sendto+0xe1/0x1a0 net/socket.c:1972
-  do_syscall_64+0x103/0x680 arch/x86/entry/common.c:301
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-
-Freed by task 4964:
-  save_stack+0x23/0x90 mm/kasan/common.c:71
-  set_track mm/kasan/common.c:79 [inline]
-  __kasan_slab_free+0x102/0x150 mm/kasan/common.c:451
-  kasan_slab_free+0xe/0x10 mm/kasan/common.c:459
-  __cache_free mm/slab.c:3462 [inline]
-  kfree+0xcf/0x230 mm/slab.c:3785
-  tls_tx_records+0x4c6/0x760 net/tls/tls_sw.c:408
-  tx_work_handler+0xba/0xf0 net/tls/tls_sw.c:2150
-  process_one_work+0x98e/0x1790 kernel/workqueue.c:2268
-  worker_thread+0x98/0xe40 kernel/workqueue.c:2414
-  kthread+0x357/0x430 kernel/kthread.c:253
-  ret_from_fork+0x3a/0x50 arch/x86/entry/entry_64.S:352
-
-The buggy address belongs to the object at ffff888066f4d280
-  which belongs to the cache kmalloc-2k of size 2048
-The buggy address is located 772 bytes inside of
-  2048-byte region [ffff888066f4d280, ffff888066f4da80)
-The buggy address belongs to the page:
-page:ffffea00019bd300 count:1 mapcount:0 mapping:ffff8880aa400c40 index:0x0  
-compound_mapcount: 0
-flags: 0x1fffc0000010200(slab|head)
-raw: 01fffc0000010200 ffffea0002413588 ffffea0001aa2a08 ffff8880aa400c40
-raw: 0000000000000000 ffff888066f4c180 0000000100000003 0000000000000000
-page dumped because: kasan: bad access detected
-
-Memory state around the buggy address:
-  ffff888066f4d480: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-  ffff888066f4d500: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-> ffff888066f4d580: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-                    ^
-  ffff888066f4d600: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-  ffff888066f4d680: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-==================================================================
-
-
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+                   Linus
