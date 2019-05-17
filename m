@@ -2,134 +2,108 @@ Return-Path: <SRS0=M1fl=TR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 690FEC04AB4
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 16:25:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 299FEC04E87
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 16:25:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3AFB520848
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 16:25:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EB5B0216C4
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 16:25:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="zqzD3+5M"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="QaZHohHY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726774AbfEQQZB (ORCPT
+        id S1726808AbfEQQZV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 May 2019 12:25:01 -0400
-Received: from conssluserg-02.nifty.com ([210.131.2.81]:37007 "EHLO
-        conssluserg-02.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725933AbfEQQZA (ORCPT
+        Fri, 17 May 2019 12:25:21 -0400
+Received: from mail-wm1-f42.google.com ([209.85.128.42]:55038 "EHLO
+        mail-wm1-f42.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726441AbfEQQZU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 May 2019 12:25:00 -0400
-Received: from mail-vs1-f50.google.com (mail-vs1-f50.google.com [209.85.217.50]) (authenticated)
-        by conssluserg-02.nifty.com with ESMTP id x4HGOVdR004971;
-        Sat, 18 May 2019 01:24:32 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-02.nifty.com x4HGOVdR004971
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1558110272;
-        bh=zIcbxBsGKT0njbeaFi6Mkg+6kcbGCAfu8DgoGnoVqWk=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=zqzD3+5Mwcnw4vsvf7bDEaHBqEkuESPJBfE5aZRk3sDjbM4rkYFAr1M9uBg5g0BO1
-         Lvw4CYDx1NIETfDDxwUY67FdEXbi1IunRv53SIiuwVtBW2azOCaX0ngkFH0/VDFIn2
-         sN5gO07hUMslQpg+FM9lNrA6Id753A6MJze96W9SW391FGjfMz7Wu1pRP4Y2KLniD7
-         GmCdEIGAqOiwo4OR+p+IzVSyxQVkGGS6E/Bufxm3Bamw/YnERX2+5nh3EB2Vm8OT5s
-         unkgghYgawo37tNbTbOrnCvRIt16cETTDl+GRoP6bOWtR8jrVRbLU/1n6gK2DfgZIZ
-         lZqscROJPooQg==
-X-Nifty-SrcIP: [209.85.217.50]
-Received: by mail-vs1-f50.google.com with SMTP id d128so4976565vsc.10;
-        Fri, 17 May 2019 09:24:32 -0700 (PDT)
-X-Gm-Message-State: APjAAAU9M+gBt+91NhImAzXKd8fmrb0MgA65vLwUhzjDuRq1QjKDmNHe
-        EOUIPYvQ0VwNcDy+Ug712k5E/wnRIUXHbXWWuSw=
-X-Google-Smtp-Source: APXvYqxOIzK1boEAfFi3DuhFikilPnfO6s12Yh1XSWACijiGDzmqTNBmEpssJoWLpVBXe/1JDftvlJA0O3bfGH974BI=
-X-Received: by 2002:a67:ad0f:: with SMTP id t15mr9498363vsl.179.1558110271151;
- Fri, 17 May 2019 09:24:31 -0700 (PDT)
+        Fri, 17 May 2019 12:25:20 -0400
+Received: by mail-wm1-f42.google.com with SMTP id i3so7503033wml.4
+        for <linux-kernel@vger.kernel.org>; Fri, 17 May 2019 09:25:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=8x2Jy6/gxZmiezgdFVn1BQR/C6WvCQ7LwkCWGJtj+hI=;
+        b=QaZHohHYfmwHjH4GvWttm3+9MJWC/0IJ5/Aro3Wu+pdYp7FyBA1SYgTXoWSUFJPpZF
+         yyHQmF+d2nOxFU8JzNBbveifLDji7skAw5dWHCnc+z2dSJGpNvs3685UrWXp7u0fXnd5
+         +mIt8qddf2y4wwI0ffXo+rr3bittdci8FYuzZbEonksAISNEquDZNrkAo5XghTlRP6AX
+         3fgq5Hoc7sWuMARPZuo19SMlYM30mYhupvF9gCXQHLGB0IZkJNwtZzNakL0qdAXdz749
+         nhDmsikrJAlgjjTZb5RDfxAY6A8BNFfIW+kWbROm6RTdRjoxVoQuBEPj3JjnQxchB9xj
+         Wl+w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=8x2Jy6/gxZmiezgdFVn1BQR/C6WvCQ7LwkCWGJtj+hI=;
+        b=lIhT+byerOjD7GHWQALCW5kA2Cnsq4nza/yDKFXl22petG8a9+AIEO3EwsSArIK3cu
+         31XVZAfsqRCoHw8se7LeRtE/fvbaFk0opPLwAI3l++gV+KigSp+6Zn0F+lYWP7/FF6Me
+         wjdlhz5tzIpEUNjjZ2zOiyooaQj1oc0fBSlT3T9Qv8w5YmJ71k5BA60oJYdqTpneIWEi
+         Bcc5mirNM8TXCn86at8Tb38VcwQv6BExufyc4Yyh+ax1T51svv4Ru/WS4HVr5S+f4uPT
+         vVOLuZ1okQjRvrlTebQdL/Sf3MQeVqkwivbVGthrCNg9jFvS5pGyl6t0BuAHawoBqgy5
+         4S7Q==
+X-Gm-Message-State: APjAAAVTBdyAfzY3HnvQgN9y3wPcfV3DIrqkNm/JJdU/zMHmScio/oky
+        RV2IxurtXsuapbWMj4gjFZoKKg==
+X-Google-Smtp-Source: APXvYqwPm5Uo6MeWvcRhGVDqKtnGQIbzB18KIfogvsXWSaBa2KfTjIHRF150v5mcpy4LLvwCUH28FQ==
+X-Received: by 2002:a7b:c344:: with SMTP id l4mr17740012wmj.25.1558110318183;
+        Fri, 17 May 2019 09:25:18 -0700 (PDT)
+Received: from [192.168.0.41] (sju31-1-78-210-255-2.fbx.proxad.net. [78.210.255.2])
+        by smtp.googlemail.com with ESMTPSA id k30sm13228108wrd.0.2019.05.17.09.25.16
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 17 May 2019 09:25:17 -0700 (PDT)
+Subject: Re: [PATCHv1 8/8] arm64: dts: qcom: sdm845: Add PSCI cpuidle low
+ power states
+To:     Amit Kucheria <amit.kucheria@linaro.org>,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        bjorn.andersson@linaro.org, andy.gross@linaro.org,
+        David Brown <david.brown@linaro.org>,
+        Li Yang <leoyang.li@nxp.com>, Shawn Guo <shawnguo@kernel.org>
+Cc:     "Raju P.L.S.S.S.N" <rplsssn@codeaurora.org>,
+        devicetree@vger.kernel.org, mkshah@codeaurora.org
+References: <cover.1557486950.git.amit.kucheria@linaro.org>
+ <044cd74e461a1dd7934f44531802f4b557264365.1557486950.git.amit.kucheria@linaro.org>
+From:   Daniel Lezcano <daniel.lezcano@linaro.org>
+Message-ID: <2132b7dd-8832-7db3-d05a-69eec3d5f139@linaro.org>
+Date:   Fri, 17 May 2019 18:25:16 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-References: <20190517042753.25857-1-yamada.masahiro@socionext.com> <20190517153439.3b479334@canb.auug.org.au>
-In-Reply-To: <20190517153439.3b479334@canb.auug.org.au>
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Sat, 18 May 2019 01:23:55 +0900
-X-Gmail-Original-Message-ID: <CAK7LNAQMCfEE2ncrGj3Cair8udQZea_ZsTGGSsFA_7T86-7vRA@mail.gmail.com>
-Message-ID: <CAK7LNAQMCfEE2ncrGj3Cair8udQZea_ZsTGGSsFA_7T86-7vRA@mail.gmail.com>
-Subject: Re: [PATCH v2] kbuild: check uniqueness of module names
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Sam Ravnborg <sam@ravnborg.org>, Arnd Bergmann <arnd@arndb.de>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Jessica Yu <jeyu@kernel.org>,
-        Lucas De Marchi <lucas.de.marchi@gmail.com>,
-        Michael Schmitz <schmitzmic@gmail.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Rusty Russell <rusty@rustcorp.com.au>,
-        Kees Cook <keescook@chromium.org>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <044cd74e461a1dd7934f44531802f4b557264365.1557486950.git.amit.kucheria@linaro.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 17, 2019 at 2:34 PM Stephen Rothwell <sfr@canb.auug.org.au> wrote:
->
-> Hi Masahiro,
->
-> Thanks for this, looks good to me.  Just a nit below.
->
-> On Fri, 17 May 2019 13:27:53 +0900 Masahiro Yamada <yamada.masahiro@socionext.com> wrote:
-> >
->
-> > diff --git a/scripts/modules-check.sh b/scripts/modules-check.sh
-> > new file mode 100755
-> > index 000000000000..c875f6eab01e
-> > --- /dev/null
-> > +++ b/scripts/modules-check.sh
-> > @@ -0,0 +1,20 @@
-> > +#!/bin/sh
-> > +# SPDX-License-Identifier: GPL-2.0
-> > +
-> > +set -e
-> > +
-> > +# Check uniqueness of module names
-> > +check_same_name_modules()
-> > +{
-> > +     same_name_modules=$(cat modules.order modules.builtin | \
->                                                                 ^
-> This trailing '\' is unnecessary after a pipe symbol.
+On 10/05/2019 13:29, Amit Kucheria wrote:
+> From: "Raju P.L.S.S.S.N" <rplsssn@codeaurora.org>
+> 
+> Add device bindings for cpuidle states for cpu devices.
+> 
+> [amit: rename the idle-states to more generic names and fixups]
+> 
+> Cc: <devicetree@vger.kernel.org>
+> Cc: <mkshah@codeaurora.org>
+> Signed-off-by: Raju P.L.S.S.S.N <rplsssn@codeaurora.org>
+> Reviewed-by: Evan Green <evgreen@chromium.org>
+> Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
 
-
-With the suggestion from Alexander Kapshuk,
-the code in v3 became short enough to fit in 80-columns.
-
-Anyway, thanks for pointing it out.
-
-
-
-
-
-> > +                             xargs -r basename -a -- | sort | uniq -d)
-> > +
-> > +     for m in $same_name_modules
-> > +     do
-> > +             echo "warning: same basename if the following are built as modules:" >&2
-> > +             grep -h -e "/$m" modules.order modules.builtin | \
->
-> Same here
->
-> > +                                             sed 's:^kernel/:  :' >&2
-> > +     done
-> > +}
-> > +
-> > +check_same_name_modules
->
-> Reviewed-by: Stephen ROthwell <sfr@canb.auug.org.au>
->
-> --
-> Cheers,
-> Stephen Rothwell
+Acked-by: Daniel Lezcano <daniel.lezcano@linaro.org>
 
 
 
 -- 
-Best Regards
-Masahiro Yamada
+ <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
+
