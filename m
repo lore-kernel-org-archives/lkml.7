@@ -2,69 +2,86 @@ Return-Path: <SRS0=M1fl=TR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 699A6C04E84
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 02:25:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68048C04AAF
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 02:31:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 38D8420848
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 02:25:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2D8DF204EC
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 02:31:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558059930;
-	bh=s2kmQqAn8MSL+gSt8BT0mIrhErZcoqmmSlzM06BVnU0=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=HbI6X5Sz/sr/u9pPYkJ+UM8SIvpKbFfgImt7W7XQ/AyewvejcWTJqpxkWZuZ2FtqC
-	 TlX52N9e2FaCcS199o+Jg+PzdqCe/cz3AVtCcg2gWOdpic0nF71KkWW/4aTbsY6S/D
-	 xdq6Emq10iJBzVQrl3IBFnn6c/vtBMZURl5f/YZw=
+	s=default; t=1558060287;
+	bh=2+A5A1BXytEqa5zIBoSTMI9tuxv/jN00Tdx46eTZmoQ=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=xTgfhmhjXOo+pQMLIYtL706lA1eO/aCFRdOArtoM76C4tnfLPHBhPrxFFMpGeZVGu
+	 /UO/hcRIRotzm0A14hjtfehRDi/8p1Io2SYrn7SdpKgW//dqZnjMXGJ9WCKvwCsT2f
+	 DRPYycN+gbv8G9GqCqO/pGToMhzsZajbaREfS7OU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727752AbfEQCZ2 (ORCPT
+        id S1727382AbfEQCb0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 22:25:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46018 "EHLO mail.kernel.org"
+        Thu, 16 May 2019 22:31:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47360 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726920AbfEQCZY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 May 2019 22:25:24 -0400
-Subject: Re: [GIT PULL] One more clk change for the merge window
+        id S1726339AbfEQCb0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 May 2019 22:31:26 -0400
+Received: from mail-qt1-f181.google.com (mail-qt1-f181.google.com [209.85.160.181])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 383AD2087B;
+        Fri, 17 May 2019 02:31:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558059924;
-        bh=s2kmQqAn8MSL+gSt8BT0mIrhErZcoqmmSlzM06BVnU0=;
-        h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=WQtsHj2smKg1Km30e376IvqFx77NwaYnMbp6ehrQKcxva/albJjvt/ArBDEYtseRM
-         Gzihz1FAnKG7zDLqjrg+hsySKBGN84w8aTp6KYlRDs7D81rZzglAMNJpYTPKOOrF0V
-         4YfwywyCNvm+hRGkVIUuD1/hKLS3NOvRqoKmNUKM=
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20190516230429.124276-1-sboyd@kernel.org>
-References: <20190516230429.124276-1-sboyd@kernel.org>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20190516230429.124276-1-sboyd@kernel.org>
-X-PR-Tracked-Remote: https://git.kernel.org/pub/scm/linux/kernel/git/clk/linux.git
- tags/clk-for-linus
-X-PR-Tracked-Commit-Id: 62e59c4e69b3cdbad67e3c2d49e4df4cfe1679e3
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 815d469d8c9a3360ee0a8b7857dd95352a6c7bde
-Message-Id: <155805992427.6110.11663227248164879485.pr-tracker-bot@kernel.org>
-Date:   Fri, 17 May 2019 02:25:24 +0000
-To:     Stephen Boyd <sboyd@kernel.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org
+        s=default; t=1558060285;
+        bh=2+A5A1BXytEqa5zIBoSTMI9tuxv/jN00Tdx46eTZmoQ=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=yotMRwZ4W+solrrj1jYJMw6aVU6pgmrP+hLdtSkoG2pvNu1ymuBA8jw/nH6faKu7W
+         lRFoyTnwZIwhW2JC8aqjOfiZOwLY1z+0uMpcUxYb+N/8ZFTAiOB1gGlyk7qN6KrgYk
+         aRqW/7B7ygh/P8TE3AWOe2aUlC33OuSyq6eB/Rig=
+Received: by mail-qt1-f181.google.com with SMTP id y42so6398086qtk.6;
+        Thu, 16 May 2019 19:31:25 -0700 (PDT)
+X-Gm-Message-State: APjAAAWSVb2shi1MBBiuYtQhGWGKWq9vST9z1ojk/PwZXMYQ1nkq6Pbr
+        Yy4aiUyYktaKk2EBpeZDXgw1FBDLVB0egsWKUA==
+X-Google-Smtp-Source: APXvYqx/rQhhXbs3Zm1ZaazZt73ewsKquxIsvA5TGLe4WlO6glcLO4+7Y8HWssTf0uDrB5YLL8uyMOMq6PTvVt3CsaI=
+X-Received: by 2002:aed:3f5b:: with SMTP id q27mr44580598qtf.143.1558060284526;
+ Thu, 16 May 2019 19:31:24 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190514132822.27023-1-angus@akkea.ca> <20190514132822.27023-4-angus@akkea.ca>
+In-Reply-To: <20190514132822.27023-4-angus@akkea.ca>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Thu, 16 May 2019 21:31:13 -0500
+X-Gmail-Original-Message-ID: <CAL_Jsq+p_Hu5hY3XGx168iq8jo+-rD1qu8tbGfQdBXASi7H+mg@mail.gmail.com>
+Message-ID: <CAL_Jsq+p_Hu5hY3XGx168iq8jo+-rD1qu8tbGfQdBXASi7H+mg@mail.gmail.com>
+Subject: Re: [PATCH v12 3/4] dt-bindings: Add an entry for Purism SPC
+To:     "Angus Ainslie (Purism)" <angus@akkea.ca>
+Cc:     angus.ainslie@puri.sm, Shawn Guo <shawnguo@kernel.org>,
+        Li Yang <leoyang.li@nxp.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>, devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Thu, 16 May 2019 16:04:29 -0700:
+On Tue, May 14, 2019 at 8:28 AM Angus Ainslie (Purism) <angus@akkea.ca> wrote:
+>
+> Add an entry for Purism, SPC
+>
+> Signed-off-by: Angus Ainslie (Purism) <angus@akkea.ca>
+> Reviewed-by: Rob Herring <robh@kernel.org>
+> ---
+>  Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
+>  1 file changed, 1 insertion(+)
 
-> https://git.kernel.org/pub/scm/linux/kernel/git/clk/linux.git tags/clk-for-linus
+I've converted this file to json-schema as of v5.2-rc1. See commit
+8122de54602e. Sorry, but you will have to rework this patch.
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/815d469d8c9a3360ee0a8b7857dd95352a6c7bde
 
-Thank you!
-
--- 
-Deet-doot-dot, I am a bot.
-https://korg.wiki.kernel.org/userdoc/prtracker
+Rob
