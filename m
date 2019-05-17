@@ -2,229 +2,204 @@ Return-Path: <SRS0=M1fl=TR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E29DC04E84
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 02:05:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5A9FC04AAF
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 02:07:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DDF4620645
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 02:05:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A58EA20862
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 02:07:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="F4gUCN21"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Q5TIdini"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727543AbfEQCF0 (ORCPT
+        id S1727553AbfEQCHX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 22:05:26 -0400
-Received: from mail-eopbgr700121.outbound.protection.outlook.com ([40.107.70.121]:49504
-        "EHLO NAM04-SN1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725933AbfEQCF0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 May 2019 22:05:26 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=testarcselector01; d=microsoft.com; cv=none;
- b=oaD0OKdQakdJbTnW2aCeFhDI0+WcIsExaqqhFjlOwzrH1o/FJF2fMTE5ycXAZhSdVnpBJzNcOTzqfEA/cYy/uTs8+k6EOj8g7Ws8M9uTO4ar5vrEBnMCcSMRdt8JwqFtHtHFvUETNcAnocsxGZK2NiW//Q4JYGGmg1yo1GL5Mz4=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=testarcselector01;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=6seYDAJhRAxsLWd/YATLjL2+Zn1TrxIrD9kjcSa7tJ0=;
- b=T4atCcJs+eo/HGca7E+cfu7W36ff4Xw1mmJpn43fjNBxvopyvEc9zYP3AjWKYPs3nQOVBsI90EqTiE/TL78Y2TR1HZuTAB/41HaA6yXU8BBrCqFWrOZHQSiI1wBBzGI5FDbaiaZmCRoiSHof13miHAf+IdjOuQEjpUgzACbwOSM=
-ARC-Authentication-Results: i=1; test.office365.com
- 1;spf=none;dmarc=none;dkim=none;arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=6seYDAJhRAxsLWd/YATLjL2+Zn1TrxIrD9kjcSa7tJ0=;
- b=F4gUCN21S0MYjowiQ0YFUExdc1f50ET6Ev1GlJTy+qeMUyp/wtlkCuN/i22v3ULKGX9oEFoxTElrkQsD6uey7wRgCNyTRmH3oTVvV+6NlHP5PaTL2WC/zZNtiEMMiccP5SoGW2VZK8Y7kpoyRmtXVMXq4+PuiBB2khRf6CL/x1E=
-Received: from BN6PR21MB0465.namprd21.prod.outlook.com (2603:10b6:404:b2::15)
- by BN6PR21MB0756.namprd21.prod.outlook.com (2603:10b6:404:9c::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384_P256) id 15.20.1922.1; Fri, 17
- May 2019 02:05:23 +0000
-Received: from BN6PR21MB0465.namprd21.prod.outlook.com
- ([fe80::6cf3:89fb:af21:b168]) by BN6PR21MB0465.namprd21.prod.outlook.com
- ([fe80::6cf3:89fb:af21:b168%12]) with mapi id 15.20.1922.002; Fri, 17 May
- 2019 02:05:23 +0000
-From:   Sunil Muthuswamy <sunilmut@microsoft.com>
-To:     KY Srinivasan <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Sasha Levin <sashal@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Dexuan Cui <decui@microsoft.com>,
-        Michael Kelley <mikelley@microsoft.com>
-CC:     "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: [PATCH] hv_sock: perf: loop in send() to maximize bandwidth
-Thread-Topic: [PATCH] hv_sock: perf: loop in send() to maximize bandwidth
-Thread-Index: AdUMVBbujvPfmRv4TlunnQ+yORJc9Q==
-Date:   Fri, 17 May 2019 02:05:22 +0000
-Message-ID: <BN6PR21MB046557834D46216464A6BA08C00B0@BN6PR21MB0465.namprd21.prod.outlook.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=sunilmut@microsoft.com; 
-x-originating-ip: [2001:4898:80e8:8:56d:b927:3a9:15b7]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: e8b63975-2324-4060-f372-08d6da6c1f13
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:BN6PR21MB0756;
-x-ms-traffictypediagnostic: BN6PR21MB0756:
-x-microsoft-antispam-prvs: <BN6PR21MB0756DAD9ABF7607C8BF589E0C00B0@BN6PR21MB0756.namprd21.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:6430;
-x-forefront-prvs: 0040126723
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(39860400002)(346002)(396003)(366004)(136003)(376002)(199004)(189003)(4326008)(9686003)(14454004)(8936002)(10290500003)(86612001)(86362001)(55016002)(25786009)(71190400001)(71200400001)(478600001)(66446008)(5660300002)(52536014)(64756008)(256004)(73956011)(66476007)(76116006)(66946007)(66556008)(68736007)(33656002)(81156014)(81166006)(53936002)(54906003)(486006)(476003)(46003)(186003)(6506007)(99286004)(7696005)(7736002)(316002)(6116002)(6436002)(22452003)(10090500001)(1511001)(74316002)(8676002)(110136005)(2906002)(8990500004)(52396003)(6636002)(305945005)(102836004)(14963001);DIR:OUT;SFP:1102;SCL:1;SRVR:BN6PR21MB0756;H:BN6PR21MB0465.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: microsoft.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: rIyhcgFVMPuFv0rZh7zWjIo+2pKVF2pxVtRrbFcmJ1UQVpwycJOWTTalb8EH5NL5rfiTt+TaBTFNjuCbLyxOCDx+nBGGn7rPRkjbbUpQRpAVb2n9cFQTOCmEIm1dqwfbhIepPrXgWQQ7FOyZ/nRrXBqnjYXKuXQHfHryirMcXVWkk8H4s7visfWJgYoxDWnfNAmh8B0WhiqfRN3ASQ5y55DLAQk1Ukwl/xWznUIuEWV8ervYGBILzUorhsW3bdeXT4Lys8y5JrFLhnPgYOw1eQLJB/Hj4DERB6R+Xzq5vaZB9VzlejsZTOC2CZw6diFJEUNwFAU9J400eZMGP8qqJO/ZrdY1ILd1arWtZl8DZFfdJZJfpcS/6EicyIvpZ5UnuSPGbdePLViRJvV47Qpj4dm28qFClSI5lHx2B2EhloM=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Thu, 16 May 2019 22:07:23 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:56656 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725933AbfEQCHX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 May 2019 22:07:23 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x4H24Q8R094195;
+        Fri, 17 May 2019 02:06:34 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2018-07-02;
+ bh=bjnO+NM5dUe7lDVkmEEo2/UA5Dd+CKQDyT5gWb2FUlg=;
+ b=Q5TIdiniRf8fc/yHXDkJogrqZIzx9dhnek7EvBstRbq2aQiOw5LLfdeYat2kamsLd6ss
+ 7slJaXwY14ANrAr+C6CsMVxq3lU+96gsQX2FNLAfL5UV8L3z5rei8lG3XV8o9hyWgR5o
+ ovb1sLdGouSpMprxZbvgXuOSO2L5zJqR78YSZwMl1atytwUVVRPhYEHPGDRdv7e0G7UO
+ +WiC7QqaBPAJAFDxGrCvBjLzM+SDgz6dHFPNIT/TxorhiMMlH7/fU9YD49Jo1g0IWbjQ
+ CRDg090i7eF6rHr+gBrOI7DhCrPrm0FgTne/Nmy3q/J9iUjo8+ss96ab+sRAGK4iMQhW jw== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2120.oracle.com with ESMTP id 2sdq1qxtf9-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 17 May 2019 02:06:34 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x4H25SXB035632;
+        Fri, 17 May 2019 02:06:33 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by aserp3030.oracle.com with ESMTP id 2sggeu154u-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 17 May 2019 02:06:33 +0000
+Received: from abhmp0020.oracle.com (abhmp0020.oracle.com [141.146.116.26])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x4H26WY6014020;
+        Fri, 17 May 2019 02:06:32 GMT
+Received: from [192.168.0.110] (/70.36.60.91)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 16 May 2019 19:06:32 -0700
+Subject: Re: [PATCH] sched: introduce configurable delay before entering idle
+To:     Wanpeng Li <kernellwp@gmail.com>
+Cc:     Marcelo Tosatti <mtosatti@redhat.com>,
+        kvm-devel <kvm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Bandan Das <bsd@redhat.com>,
+        Paolo Bonzini <pbonzini@redhat.com>
+References: <20190507185647.GA29409@amt.cnet>
+ <CANRm+Cx8zCDG6Oz1m9eukkmx_uVFYcQOdMwZrHwsQcbLm_kuPA@mail.gmail.com>
+ <20190514135022.GD4392@amt.cnet>
+ <7e390fef-e0df-963f-4e18-e44ac2766be3@oracle.com>
+ <CANRm+CyrLneGkOXzEmGyB-Sr+DOqqDAF4eNB1YBpbhm3Edo3Gw@mail.gmail.com>
+From:   Ankur Arora <ankur.a.arora@oracle.com>
+Message-ID: <265675b1-07e2-f5dd-6de8-5e47fa91be32@oracle.com>
+Date:   Thu, 16 May 2019 19:06:30 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.4.0
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: e8b63975-2324-4060-f372-08d6da6c1f13
-X-MS-Exchange-CrossTenant-originalarrivaltime: 17 May 2019 02:05:22.2930
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: sunilmut@ntdev.microsoft.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN6PR21MB0756
+In-Reply-To: <CANRm+CyrLneGkOXzEmGyB-Sr+DOqqDAF4eNB1YBpbhm3Edo3Gw@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9259 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1810050000 definitions=main-1905170011
+X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9259 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1905170011
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently, the hv_sock send() iterates once over the buffer, puts data into
-the VMBUS channel and returns. It doesn't maximize on the case when there
-is a simultaneous reader draining data from the channel. In such a case,
-the send() can maximize the bandwidth (and consequently minimize the cpu
-cycles) by iterating until the channel is found to be full.
+On 2019-05-15 6:07 p.m., Wanpeng Li wrote:
+> On Thu, 16 May 2019 at 02:42, Ankur Arora <ankur.a.arora@oracle.com> wrote:
+>>
+>> On 5/14/19 6:50 AM, Marcelo Tosatti wrote:
+>>> On Mon, May 13, 2019 at 05:20:37PM +0800, Wanpeng Li wrote:
+>>>> On Wed, 8 May 2019 at 02:57, Marcelo Tosatti <mtosatti@redhat.com> wrote:
+>>>>>
+>>>>>
+>>>>> Certain workloads perform poorly on KVM compared to baremetal
+>>>>> due to baremetal's ability to perform mwait on NEED_RESCHED
+>>>>> bit of task flags (therefore skipping the IPI).
+>>>>
+>>>> KVM supports expose mwait to the guest, if it can solve this?
+>>>>
+>>>> Regards,
+>>>> Wanpeng Li
+>>>
+>>> Unfortunately mwait in guest is not feasible (uncompatible with multiple
+>>> guests). Checking whether a paravirt solution is possible.
+>>
+>> Hi Marcelo,
+>>
+>> I was also looking at making MWAIT available to guests in a safe manner:
+>> whether through emulation or a PV-MWAIT. My (unsolicited) thoughts
+> 
+> MWAIT emulation is not simple, here is a research
+> https://www.contrib.andrew.cmu.edu/~somlo/OSXKVM/mwait.html
+Agreed. I had outlined my attempt to do that below and come
+to the conclusion that we would need a PV-MWAIT.
 
-Perf data:
-Total Data Transfer: 10GB/iteration
-Single threaded reader/writer, Linux hvsocket writer with Windows hvsocket
-reader
-Packet size: 64KB
-CPU sys time was captured using the 'time' command for the writer to send
-10GB of data.
-'Send Buffer Loop' is with the patch applied.
-The values below are over 10 iterations.
+Ankur
 
-|--------------------------------------------------------|
-|        |        Current        |   Send Buffer Loop    |
-|--------------------------------------------------------|
-|        | Throughput | CPU sys  | Throughput | CPU sys  |
-|        | (MB/s)     | time (s) | (MB/s)     | time (s) |
-|--------------------------------------------------------|
-| Min    |     407    |   7.048  |    401     |  5.958   |
-|--------------------------------------------------------|
-| Max    |     455    |   7.563  |    542     |  6.993   |
-|--------------------------------------------------------|
-| Avg    |     440    |   7.411  |    451     |  6.639   |
-|--------------------------------------------------------|
-| Median |     446    |   7.417  |    447     |  6.761   |
-|--------------------------------------------------------|
-
-Observation:
-1. The avg throughput doesn't really change much with this change for this
-scenario. This is most probably because the bottleneck on throughput is
-somewhere else.
-2. The average system (or kernel) cpu time goes down by 10%+ with this
-change, for the same amount of data transfer.
-
-Signed-off-by: Sunil Muthuswamy <sunilmut@microsoft.com>
----
- net/vmw_vsock/hyperv_transport.c | 45 +++++++++++++++++++++++++++---------=
-----
- 1 file changed, 31 insertions(+), 14 deletions(-)
-
-diff --git a/net/vmw_vsock/hyperv_transport.c b/net/vmw_vsock/hyperv_transp=
-ort.c
-index 982a8dc..7c13032 100644
---- a/net/vmw_vsock/hyperv_transport.c
-+++ b/net/vmw_vsock/hyperv_transport.c
-@@ -55,8 +55,9 @@ struct hvs_recv_buf {
- };
-=20
- /* We can send up to HVS_MTU_SIZE bytes of payload to the host, but let's =
-use
-- * a small size, i.e. HVS_SEND_BUF_SIZE, to minimize the dynamically-alloc=
-ated
-- * buffer, because tests show there is no significant performance differen=
-ce.
-+ * a smaller size, i.e. HVS_SEND_BUF_SIZE, to maximize concurrency between=
- the
-+ * guest and the host processing as one VMBUS packet is the smallest proce=
-ssing
-+ * unit.
-  *
-  * Note: the buffer can be eliminated in the future when we add new VMBus
-  * ringbuffer APIs that allow us to directly copy data from userspace buff=
-er
-@@ -644,7 +645,9 @@ static ssize_t hvs_stream_enqueue(struct vsock_sock *vs=
-k, struct msghdr *msg,
- 	struct hvsock *hvs =3D vsk->trans;
- 	struct vmbus_channel *chan =3D hvs->chan;
- 	struct hvs_send_buf *send_buf;
--	ssize_t to_write, max_writable, ret;
-+	ssize_t to_write, max_writable;
-+	ssize_t ret =3D 0;
-+	ssize_t bytes_written =3D 0;
-=20
- 	BUILD_BUG_ON(sizeof(*send_buf) !=3D PAGE_SIZE_4K);
-=20
-@@ -652,20 +655,34 @@ static ssize_t hvs_stream_enqueue(struct vsock_sock *=
-vsk, struct msghdr *msg,
- 	if (!send_buf)
- 		return -ENOMEM;
-=20
--	max_writable =3D hvs_channel_writable_bytes(chan);
--	to_write =3D min_t(ssize_t, len, max_writable);
--	to_write =3D min_t(ssize_t, to_write, HVS_SEND_BUF_SIZE);
--
--	ret =3D memcpy_from_msg(send_buf->data, msg, to_write);
--	if (ret < 0)
--		goto out;
-+	/* Reader(s) could be draining data from the channel as we write.
-+	 * Maximize bandwidth, by iterating until the channel is found to be
-+	 * full.
-+	 */
-+	while (len) {
-+		max_writable =3D hvs_channel_writable_bytes(chan);
-+		if (!max_writable)
-+			break;
-+		to_write =3D min_t(ssize_t, len, max_writable);
-+		to_write =3D min_t(ssize_t, to_write, HVS_SEND_BUF_SIZE);
-+		/* memcpy_from_msg is safe for loop as it advances the offsets
-+		 * within the message iterator.
-+		 */
-+		ret =3D memcpy_from_msg(send_buf->data, msg, to_write);
-+		if (ret < 0)
-+			goto out;
-=20
--	ret =3D hvs_send_data(hvs->chan, send_buf, to_write);
--	if (ret < 0)
--		goto out;
-+		ret =3D hvs_send_data(hvs->chan, send_buf, to_write);
-+		if (ret < 0)
-+			goto out;
-=20
--	ret =3D to_write;
-+		bytes_written +=3D to_write;
-+		len -=3D to_write;
-+	}
- out:
-+	/* If any data has been sent, return that */
-+	if (bytes_written)
-+		ret =3D bytes_written;
- 	kfree(send_buf);
- 	return ret;
- }
---=20
-2.7.4
+> 
+> Regards,
+> Wanpeng Li
+> 
+>> follow.
+>>
+>> We basically want to handle this sequence:
+>>
+>>       monitor(monitor_address);
+>>       if (*monitor_address == base_value)
+>>            mwaitx(max_delay);
+>>
+>> Emulation seems problematic because, AFAICS this would happen:
+>>
+>>       guest                                   hypervisor
+>>       =====                                   ====
+>>
+>>       monitor(monitor_address);
+>>           vmexit  ===>                        monitor(monitor_address)
+>>       if (*monitor_address == base_value)
+>>            mwait();
+>>                 vmexit    ====>               mwait()
+>>
+>> There's a context switch back to the guest in this sequence which seems
+>> problematic. Both the AMD and Intel specs list system calls and
+>> far calls as events which would lead to the MWAIT being woken up:
+>> "Voluntary transitions due to fast system call and far calls (occurring
+>> prior to issuing MWAIT but after setting the monitor)".
+>>
+>>
+>> We could do this instead:
+>>
+>>       guest                                   hypervisor
+>>       =====                                   ====
+>>
+>>       monitor(monitor_address);
+>>           vmexit  ===>                        cache monitor_address
+>>       if (*monitor_address == base_value)
+>>            mwait();
+>>                 vmexit    ====>              monitor(monitor_address)
+>>                                              mwait()
+>>
+>> But, this would miss the "if (*monitor_address == base_value)" check in
+>> the host which is problematic if *monitor_address changed simultaneously
+>> when monitor was executed.
+>> (Similar problem if we cache both the monitor_address and
+>> *monitor_address.)
+>>
+>>
+>> So, AFAICS, the only thing that would work is the guest offloading the
+>> whole PV-MWAIT operation.
+>>
+>> AFAICS, that could be a paravirt operation which needs three parameters:
+>> (monitor_address, base_value, max_delay.)
+>>
+>> This would allow the guest to offload this whole operation to
+>> the host:
+>>       monitor(monitor_address);
+>>       if (*monitor_address == base_value)
+>>            mwaitx(max_delay);
+>>
+>> I'm guessing you are thinking on similar lines?
+>>
+>>
+>> High level semantics: If the CPU doesn't have any runnable threads, then
+>> we actually do this version of PV-MWAIT -- arming a timer if necessary
+>> so we only sleep until the time-slice expires or the MWAIT max_delay does.
+>>
+>> If the CPU has any runnable threads then this could still finish its
+>> time-quanta or we could just do a schedule-out.
+>>
+>>
+>> So the semantics guaranteed to the host would be that PV-MWAIT returns
+>> after >= max_delay OR with the *monitor_address changed.
+>>
+>>
+>>
+>> Ankur
 
