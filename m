@@ -2,110 +2,169 @@ Return-Path: <SRS0=M1fl=TR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22906C04AB4
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 12:13:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0BB7C04AB4
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 12:13:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E729420873
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 12:13:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 93B9020879
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 12:13:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eVAkEEE1"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="DmsorBzX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728641AbfEQMNm (ORCPT
+        id S1728720AbfEQMNp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 May 2019 08:13:42 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:53087 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728260AbfEQMNl (ORCPT
+        Fri, 17 May 2019 08:13:45 -0400
+Received: from mail-yb1-f194.google.com ([209.85.219.194]:42107 "EHLO
+        mail-yb1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728636AbfEQMNm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 May 2019 08:13:41 -0400
-Received: by mail-wm1-f65.google.com with SMTP id y3so6743564wmm.2;
-        Fri, 17 May 2019 05:13:40 -0700 (PDT)
+        Fri, 17 May 2019 08:13:42 -0400
+Received: by mail-yb1-f194.google.com with SMTP id a21so2541568ybg.9
+        for <linux-kernel@vger.kernel.org>; Fri, 17 May 2019 05:13:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:to:subject:date:message-id;
-        bh=aDe4WefbxGIBtvtccZHYzwFMvx7Jk1IWn8lyxDHSymk=;
-        b=eVAkEEE1W6z3X/C/A6bR7CDafk66r+lGump+hYlNLoeaLcN87GuhIUd4c27E2pBAGL
-         6NgrhYEQnb7bigIho7JPTQ6AexmiNcSYSqQmo5gkAfHmHZwrVukYe/I4TLMf4YUFTg96
-         5N3gjmwnQMtJ+5OZ8hNi1P8eQ3bt8zb21gJD6/H85IiK2ZtWBWi4qfI9gXr7y3tf6x04
-         bAS6LnZFxhoqA45hbamRdBHYucIWsVJ42N9e8Sey+txlhU5pOlpDkCxud7qWN7UykiUh
-         3DWNnF/yVEnXOUq9vkkOx+oNlcb2Zb/h31FkNnXPRWDSYv3A7MIgGZqiBZfXoHvmSVLG
-         OFwA==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=M3s5onH4EKHtLRHaMdmA6OtBScYx3vU5FV884xFkNgc=;
+        b=DmsorBzXRDvon/8kG4JcRIox8FFPMnHLt2Pa3GMNzeTIrY3kOQXjVd2VBrPODbpCa3
+         n050y2TXrw9wMMLA9KR+e/iqa+pf3SLfhWqrKyNx7sVQ7aFg4wnAf8t7TldJrIe152o3
+         UNUCQC+vFQINNOPNJu1oYLW9PArZO3q0eoBIvwOWWnWrjBvnq3k2LJnsCjMZfI6trr1V
+         UztxEjymcEYDQ32K/E4lRBDnX5v4Q0uH61h3RMK7mjXq4FZ4NTgtTEEsn2fqODJkLm7U
+         SyyiGFcg9Tv0i1o4OTp7AbUrzF3DplnUdd5spgSdeF2Jeur5HMIkKz1gvcu1hJF/hmiL
+         1U9w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:subject:date:message-id;
-        bh=aDe4WefbxGIBtvtccZHYzwFMvx7Jk1IWn8lyxDHSymk=;
-        b=WHO2POYW14z2ZbC9V7up2nwpymKDaRuk6Pje+7JPX/ewahPgxYUSChtjS3Ti7vhztO
-         jHeNZAd4/yEsSjjgsvfkqlTW8LyK3Tu0zoU+dqLuiWych9TIYWZ/5geB0afnQxblzq4n
-         /GzyXUPISPRCrQO+sTInvXWayDy6WId7/aI6NvUkOpSKRkf+9DPRIx0ZszHi9LBrRDF/
-         qN3BRMs/gZnxQW0R2wsSV7sZ9I0aajhaC8I8FmZF2siDVllFNE9GDX6uyALGkLqjWPWF
-         7mDjGU51FyVGr6jv7/DO3zT96XM3dY6RaE3Uz9AdlnAv1melkM/6uICG0p7KHN6lA0S2
-         YGKA==
-X-Gm-Message-State: APjAAAUAaslH0Q5QN/YNsmmjFKq3DPui9SWLog4fYXtZeLY0Uj2hZhJn
-        ZdCDcks433fU/TwpWIk3YKojCxzRYYc=
-X-Google-Smtp-Source: APXvYqw+/wqZ6HgBsx9b8ttbYySUxHL/ilEeNwtBZHrXSmj+ikC8TON/0VI0LKNP4MliT6dQWEi4HA==
-X-Received: by 2002:a7b:c5d6:: with SMTP id n22mr1949875wmk.112.1558095219277;
-        Fri, 17 May 2019 05:13:39 -0700 (PDT)
-Received: from 640k.localdomain.com ([93.56.166.5])
-        by smtp.gmail.com with ESMTPSA id e12sm8327265wrs.8.2019.05.17.05.13.38
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 17 May 2019 05:13:38 -0700 (PDT)
-From:   Paolo Bonzini <pbonzini@redhat.com>
-To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-Subject: [PATCH] kvm: fix compilation on aarch64
-Date:   Fri, 17 May 2019 14:13:35 +0200
-Message-Id: <1558095215-43363-1-git-send-email-pbonzini@redhat.com>
-X-Mailer: git-send-email 1.8.3.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=M3s5onH4EKHtLRHaMdmA6OtBScYx3vU5FV884xFkNgc=;
+        b=ZMpua1OLlnyfOlh0EPzRXTEaCkXGeZSZYO2zxFPz1vf7dGqg98vphbv7iXAms9H3ji
+         PL+fNFz5blcYkuiXHX6kjj8ajRsVEprCo6fR2p5yuEClBnOIj75PCD2N16SODnh9C7EC
+         ZHj4jhDGX8y5WlwMSjDgl1oplKFkVMIjVBv+GrHoA9UQl4Cmh+U+0XRdN7ab7SkY5Ppp
+         U1vhy/DdP5HNtjnfdf3mpPO6hSDJBtuc1TnoopLWL/Y0qJiTs/+FdXZkBCEODSfxpfck
+         WH59mKB8YV4zGekP49hPmMAJS/OcT+Ihg60LbZ1croeLVL9z8xd+p9U89BrLXS13HOVr
+         6LUQ==
+X-Gm-Message-State: APjAAAXDC52l6fH7k7gvuJOWyxH262cDnBllnYugZST5Ei3cQHvaJ6Hl
+        n5MDb3VYjzNmYSZoeOHeW161TspuW4ezYZ7H7QtCBQ==
+X-Google-Smtp-Source: APXvYqxFgKrdchFhbncq+L/DflCvydSU3r588+pQQDqHWgrWJBOXXWXnbpaiVmZjZdH9qR6LbIbNq4yAxWHyN4nmiyo=
+X-Received: by 2002:a25:b30b:: with SMTP id l11mr26189771ybj.172.1558095220713;
+ Fri, 17 May 2019 05:13:40 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190517080044.tnwhbeyxcccsymgf@esperanza> <20190517114204.6330-1-jslaby@suse.cz>
+In-Reply-To: <20190517114204.6330-1-jslaby@suse.cz>
+From:   Shakeel Butt <shakeelb@google.com>
+Date:   Fri, 17 May 2019 05:13:29 -0700
+Message-ID: <CALvZod4w3Hfs1WBsNchp3J_Ymvuni=Ap-rBpaS=iXwd2P+5w5g@mail.gmail.com>
+Subject: Re: [PATCH v2] memcg: make it work on sparse non-0-node systems
+To:     Jiri Slaby <jslaby@suse.cz>
+Cc:     Linux MM <linux-mm@kvack.org>, LKML <linux-kernel@vger.kernel.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Vladimir Davydov <vdavydov.dev@gmail.com>,
+        Cgroups <cgroups@vger.kernel.org>,
+        Raghavendra K T <raghavendra.kt@linux.vnet.ibm.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit e45adf665a53 ("KVM: Introduce a new guest mapping API", 2019-01-31)
-introduced a build failure on aarch64 defconfig:
+On Fri, May 17, 2019 at 4:42 AM Jiri Slaby <jslaby@suse.cz> wrote:
+>
+> We have a single node system with node 0 disabled:
+>   Scanning NUMA topology in Northbridge 24
+>   Number of physical nodes 2
+>   Skipping disabled node 0
+>   Node 1 MemBase 0000000000000000 Limit 00000000fbff0000
+>   NODE_DATA(1) allocated [mem 0xfbfda000-0xfbfeffff]
+>
+> This causes crashes in memcg when system boots:
+>   BUG: unable to handle kernel NULL pointer dereference at 0000000000000008
+>   #PF error: [normal kernel read fault]
+> ...
+>   RIP: 0010:list_lru_add+0x94/0x170
+> ...
+>   Call Trace:
+>    d_lru_add+0x44/0x50
+>    dput.part.34+0xfc/0x110
+>    __fput+0x108/0x230
+>    task_work_run+0x9f/0xc0
+>    exit_to_usermode_loop+0xf5/0x100
+>
+> It is reproducible as far as 4.12. I did not try older kernels. You have
+> to have a new enough systemd, e.g. 241 (the reason is unknown -- was not
+> investigated). Cannot be reproduced with systemd 234.
+>
+> The system crashes because the size of lru array is never updated in
+> memcg_update_all_list_lrus and the reads are past the zero-sized array,
+> causing dereferences of random memory.
+>
+> The root cause are list_lru_memcg_aware checks in the list_lru code.
+> The test in list_lru_memcg_aware is broken: it assumes node 0 is always
+> present, but it is not true on some systems as can be seen above.
+>
+> So fix this by avoiding checks on node 0. Remember the memcg-awareness
+> by a bool flag in struct list_lru.
+>
+> [v2] use the idea proposed by Vladimir -- the bool flag.
+>
+> Signed-off-by: Jiri Slaby <jslaby@suse.cz>
 
-$ make -j$(nproc) ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- O=out defconfig \
-                Image.gz
-...
-../arch/arm64/kvm/../../../virt/kvm/kvm_main.c:
-    In function '__kvm_map_gfn':
-../arch/arm64/kvm/../../../virt/kvm/kvm_main.c:1763:9: error:
-    implicit declaration of function 'memremap'; did you mean 'memset_p'?
-../arch/arm64/kvm/../../../virt/kvm/kvm_main.c:1763:46: error:
-    'MEMREMAP_WB' undeclared (first use in this function)
-../arch/arm64/kvm/../../../virt/kvm/kvm_main.c:
-    In function 'kvm_vcpu_unmap':
-../arch/arm64/kvm/../../../virt/kvm/kvm_main.c:1795:3: error:
-    implicit declaration of function 'memunmap'; did you mean 'vm_munmap'?
+Reviewed-by: Shakeel Butt <shakeelb@google.com>
 
-because these functions are declared in <linux/io.h> rather than <asm/io.h>,
-and the former was being pulled in already on x86 but not on aarch64.
-
-Reported-by: Nathan Chancellor <natechancellor@gmail.com>
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
----
- virt/kvm/kvm_main.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
-index d22b1f4bfa56..34afa94f0183 100644
---- a/virt/kvm/kvm_main.c
-+++ b/virt/kvm/kvm_main.c
-@@ -51,9 +51,9 @@
- #include <linux/slab.h>
- #include <linux/sort.h>
- #include <linux/bsearch.h>
-+#include <linux/io.h>
- 
- #include <asm/processor.h>
--#include <asm/io.h>
- #include <asm/ioctl.h>
- #include <linux/uaccess.h>
- #include <asm/pgtable.h>
--- 
-1.8.3.1
-
+> Cc: Johannes Weiner <hannes@cmpxchg.org>
+> Cc: Michal Hocko <mhocko@kernel.org>
+> Suggested-by: Vladimir Davydov <vdavydov.dev@gmail.com>
+> Acked-by: Vladimir Davydov <vdavydov.dev@gmail.com>
+> Cc: <cgroups@vger.kernel.org>
+> Cc: <linux-mm@kvack.org>
+> Cc: Raghavendra K T <raghavendra.kt@linux.vnet.ibm.com>
+> ---
+>  include/linux/list_lru.h | 1 +
+>  mm/list_lru.c            | 8 +++-----
+>  2 files changed, 4 insertions(+), 5 deletions(-)
+>
+> diff --git a/include/linux/list_lru.h b/include/linux/list_lru.h
+> index aa5efd9351eb..d5ceb2839a2d 100644
+> --- a/include/linux/list_lru.h
+> +++ b/include/linux/list_lru.h
+> @@ -54,6 +54,7 @@ struct list_lru {
+>  #ifdef CONFIG_MEMCG_KMEM
+>         struct list_head        list;
+>         int                     shrinker_id;
+> +       bool                    memcg_aware;
+>  #endif
+>  };
+>
+> diff --git a/mm/list_lru.c b/mm/list_lru.c
+> index 0730bf8ff39f..d3b538146efd 100644
+> --- a/mm/list_lru.c
+> +++ b/mm/list_lru.c
+> @@ -37,11 +37,7 @@ static int lru_shrinker_id(struct list_lru *lru)
+>
+>  static inline bool list_lru_memcg_aware(struct list_lru *lru)
+>  {
+> -       /*
+> -        * This needs node 0 to be always present, even
+> -        * in the systems supporting sparse numa ids.
+> -        */
+> -       return !!lru->node[0].memcg_lrus;
+> +       return lru->memcg_aware;
+>  }
+>
+>  static inline struct list_lru_one *
+> @@ -451,6 +447,8 @@ static int memcg_init_list_lru(struct list_lru *lru, bool memcg_aware)
+>  {
+>         int i;
+>
+> +       lru->memcg_aware = memcg_aware;
+> +
+>         if (!memcg_aware)
+>                 return 0;
+>
+> --
+> 2.21.0
+>
