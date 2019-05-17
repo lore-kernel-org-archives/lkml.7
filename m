@@ -2,426 +2,1282 @@ Return-Path: <SRS0=M1fl=TR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9900C04AB4
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 03:59:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D12CC04AB4
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 04:05:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6C3EF2087B
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 03:59:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VhM1Vjhj"
+	by mail.kernel.org (Postfix) with ESMTP id BE35D20879
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 04:05:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727840AbfEQD7o (ORCPT
+        id S1727317AbfEQEFJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 23:59:44 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:44803 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727070AbfEQD7n (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 May 2019 23:59:43 -0400
-Received: by mail-wr1-f68.google.com with SMTP id c5so5467923wrs.11;
-        Thu, 16 May 2019 20:59:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=ZuTro7RXFDzJRRmOnOZhMJCMTeb+cRd1UZrSgaGR6bo=;
-        b=VhM1Vjhj0D/6WKwgTJmq564Z1Tn+tl0Nl3bcJuJhpsmRcScotGkIp6/QTup0g3x+GU
-         cQTQ3jJGc5XdUiNGQmSIdzC90d6FGIVWD8aVFYPh81HkTyF7lMmOtm5fZ6ZEPB1Tu/+Y
-         0alKN5wynYuePW+FzsShiW/bdnM9f2KvMR5rmJqHT9WWMVNVZHO2lINMT4gJS2WRi954
-         jIeRk3CvFMpyDS5WTca5dYtoYHBjXmv8qZtGh71yeopoLYY2kZdzhhnz54ItiBnpGIry
-         2J8LPw3g6dg8hT6y+6EaohNiavEPVwogHXyrEEYLJR9VRyZbC+orCahA5U4U9xd9K2B6
-         LEfQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
-         :mime-version:content-transfer-encoding;
-        bh=ZuTro7RXFDzJRRmOnOZhMJCMTeb+cRd1UZrSgaGR6bo=;
-        b=bLTtagncYaYUgZxWIndJh6Hi9RQ+c8Bro9v0LS1EhXI1RjKRSJtXT+2n2R2zYC7WfW
-         ondwW+9xJX5gUgdvy6MFhukWQ3gkolI5YW60Izb9mroIDWiZ3F1v4x63Qaguo7QpqS0C
-         z0gEW+9zZfj+TUBooKsuMuAAwXAyIlZA9qlGpHecIOlOktXSkVUP9TEFcjK5yiKkfV65
-         WXFHu/xTFEu7s23a8fqfpT7/6HMD7hz3Yyl149WRzsyu0L2dkZSjfvwKLV9cxtsMn27V
-         WgTbzIFZYEjftpZWxaDOWAwi+8eawJ3prBHWg9CTM4hE5wlyAMPuUE5lhE/pWJw5nogM
-         HteQ==
-X-Gm-Message-State: APjAAAUeiwGYSf3KUjxt1mZ1863BCL8L7aji3Th7lU5RF6GWLtTjULJF
-        4T3wWo6Vy2IjaWuUHGj6Z+Y=
-X-Google-Smtp-Source: APXvYqw5UhV5ZbhvG5hCvFc8DFSsjsOWCdPUH/8fGZH//zCOUD+YM1dI2wVmEsfCJdhlA7kyIhee9Q==
-X-Received: by 2002:adf:efcd:: with SMTP id i13mr4646421wrp.51.1558065581064;
-        Thu, 16 May 2019 20:59:41 -0700 (PDT)
-Received: from 640k.localdomain.com ([93.56.166.5])
-        by smtp.gmail.com with ESMTPSA id v12sm6750831wrw.23.2019.05.16.20.59.40
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 16 May 2019 20:59:40 -0700 (PDT)
-From:   Paolo Bonzini <pbonzini@redhat.com>
-To:     torvalds@linux-foundation.org
-Cc:     linux-kernel@vger.kernel.org, rkrcmar@redhat.com,
-        kvm@vger.kernel.org
-Subject: [GIT PULL] KVM changes for 5.2 merge window
-Date:   Fri, 17 May 2019 05:59:36 +0200
-Message-Id: <1558065576-21115-1-git-send-email-pbonzini@redhat.com>
-X-Mailer: git-send-email 1.8.3.1
+        Fri, 17 May 2019 00:05:09 -0400
+Received: from mga12.intel.com ([192.55.52.136]:29533 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725267AbfEQEFJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 May 2019 00:05:09 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 16 May 2019 21:05:07 -0700
+X-ExtLoop1: 1
+Received: from hao-dev.bj.intel.com (HELO localhost) ([10.238.157.65])
+  by fmsmga001.fm.intel.com with ESMTP; 16 May 2019 21:05:05 -0700
+Date:   Fri, 17 May 2019 11:48:57 +0800
+From:   Wu Hao <hao.wu@intel.com>
+To:     Alan Tull <atull@kernel.org>
+Cc:     Moritz Fischer <mdf@kernel.org>, linux-fpga@vger.kernel.org,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-api@vger.kernel.org, Luwei Kang <luwei.kang@intel.com>,
+        Xu Yilun <yilun.xu@intel.com>
+Subject: Re: [PATCH v2 18/18] fpga: dfl: fme: add performance reporting
+ support
+Message-ID: <20190517034857.GA20569@hao-dev>
+References: <1556528151-17221-1-git-send-email-hao.wu@intel.com>
+ <1556528151-17221-19-git-send-email-hao.wu@intel.com>
+ <CANk1AXR-i-h98XfbY4wMubs=z7BM2ZV0nPD513wnFrKwYh8vFg@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CANk1AXR-i-h98XfbY4wMubs=z7BM2ZV0nPD513wnFrKwYh8vFg@mail.gmail.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Linus,
+On Thu, May 16, 2019 at 12:28:08PM -0500, Alan Tull wrote:
+> On Mon, Apr 29, 2019 at 4:13 AM Wu Hao <hao.wu@intel.com> wrote:
+> 
+> Hi Hao,
+> 
+> >
+> > This patch adds support for performance reporting private feature
+> > for FPGA Management Engine (FME). Actually it supports 4 categories
+> > performance counters, 'clock', 'cache', 'iommu' and 'fabric', user
+> > could read the performance counter via exposed sysfs interfaces.
+> > Please refer to sysfs doc for more details.
+> >
+> > Signed-off-by: Luwei Kang <luwei.kang@intel.com>
+> > Signed-off-by: Xu Yilun <yilun.xu@intel.com>
+> > Signed-off-by: Wu Hao <hao.wu@intel.com>
+> > ---
+> > v2: improve sysfs doc
+> > ---
+> >  Documentation/ABI/testing/sysfs-platform-dfl-fme |  93 +++
+> >  drivers/fpga/Makefile                            |   1 +
+> >  drivers/fpga/dfl-fme-main.c                      |   4 +
+> >  drivers/fpga/dfl-fme-perf.c                      | 950 +++++++++++++++++++++++
+> >  drivers/fpga/dfl-fme.h                           |   2 +
+> >  drivers/fpga/dfl.c                               |   1 +
+> >  drivers/fpga/dfl.h                               |   2 +
+> >  7 files changed, 1053 insertions(+)
+> >  create mode 100644 drivers/fpga/dfl-fme-perf.c
+> >
+> > diff --git a/Documentation/ABI/testing/sysfs-platform-dfl-fme b/Documentation/ABI/testing/sysfs-platform-dfl-fme
+> > index 503984b..a7f7eb6 100644
+> > --- a/Documentation/ABI/testing/sysfs-platform-dfl-fme
+> > +++ b/Documentation/ABI/testing/sysfs-platform-dfl-fme
+> > @@ -250,3 +250,96 @@ Description:       Write-only. Write error code to this file to clear all errors
+> >                 logged in errors, first_error and next_error. Write fails with
+> >                 -EINVAL if input parsing fails or input error code doesn't
+> >                 match.
+> > +
+> > +What:          /sys/bus/platform/devices/dfl-fme.0/perf/clock
+> > +Date:          April 2019
+> > +KernelVersion:  5.2
+> > +Contact:       Wu Hao <hao.wu@intel.com>
+> > +Description:   Read-Only. Read for Accelerator Function Unit (AFU) clock
+> > +               counter.
+> > +
+> > +What:          /sys/bus/platform/devices/dfl-fme.0/perf/cache/freeze
+> > +Date:          April 2019
+> > +KernelVersion:  5.2
+> > +Contact:       Wu Hao <hao.wu@intel.com>
+> > +Description:   Read-Write. Read this file for the current status of 'cache'
+> > +               category performance counters, and Write '1' or '0' to freeze
+> > +               or unfreeze 'cache' performance counters.
+> > +
+> > +What:          /sys/bus/platform/devices/dfl-fme.0/perf/cache/<counter>
+> > +Date:          April 2019
+> > +KernelVersion:  5.2
+> > +Contact:       Wu Hao <hao.wu@intel.com>
+> > +Description:   Read-Only. Read 'cache' category performance counters:
+> > +               read_hit, read_miss, write_hit, write_miss, hold_request,
+> > +               data_write_port_contention, tag_write_port_contention,
+> > +               tx_req_stall, rx_req_stall and rx_eviction.
+> > +
+> > +What:          /sys/bus/platform/devices/dfl-fme.0/perf/iommu/freeze
+> > +Date:          April 2019
+> > +KernelVersion:  5.2
+> > +Contact:       Wu Hao <hao.wu@intel.com>
+> > +Description:   Read-Write. Read this file for the current status of 'iommu'
+> > +               category performance counters, and Write '1' or '0' to freeze
+> > +               or unfreeze 'iommu' performance counters.
+> > +
+> > +What:          /sys/bus/platform/devices/dfl-fme.0/perf/iommu/<sip_counter>
+> > +Date:          April 2019
+> > +KernelVersion:  5.2
+> > +Contact:       Wu Hao <hao.wu@intel.com>
+> > +Description:   Read-Only. Read 'iommu' category 'sip' sub category
+> > +               performance counters: iotlb_4k_hit, iotlb_2m_hit,
+> > +               iotlb_1g_hit, slpwc_l3_hit, slpwc_l4_hit, rcc_hit,
+> > +               rcc_miss, iotlb_4k_miss, iotlb_2m_miss, iotlb_1g_miss,
+> > +               slpwc_l3_miss and slpwc_l4_miss.
+> > +
+> > +What:          /sys/bus/platform/devices/dfl-fme.0/perf/iommu/afu0/<counter>
+> > +Date:          April 2019
+> > +KernelVersion:  5.2
+> > +Contact:       Wu Hao <hao.wu@intel.com>
+> > +Description:   Read-Only. Read 'iommu' category 'afuX' sub category
+> > +               performance counters: read_transaction, write_transaction,
+> > +               devtlb_read_hit, devtlb_write_hit, devtlb_4k_fill,
+> > +               devtlb_2m_fill and devtlb_1g_fill.
+> > +
+> > +What:          /sys/bus/platform/devices/dfl-fme.0/perf/fabric/freeze
+> > +Date:          April 2019
+> > +KernelVersion:  5.2
+> > +Contact:       Wu Hao <hao.wu@intel.com>
+> > +Description:   Read-Write. Read this file for the current status of 'fabric'
+> > +               category performance counters, and Write '1' or '0' to freeze
+> > +               or unfreeze 'fabric' performance counters.
+> > +
+> > +What:          /sys/bus/platform/devices/dfl-fme.0/perf/fabric/<counter>
+> > +Date:          April 2019
+> > +KernelVersion:  5.2
+> > +Contact:       Wu Hao <hao.wu@intel.com>
+> > +Description:   Read-Only. Read 'fabric' category performance counters:
+> > +               pcie0_read, pcie0_write, pcie1_read, pcie1_write,
+> > +               upi_read, upi_write and mmio_read.
+> 
+> Also mmio_write
 
-The following changes since commit 7a223e06b1a411cef6c4cd7a9b9a33c8d225b10e:
+Thanks for the comments, will fix it.
 
-  KVM: x86: avoid misreporting level-triggered irqs as edge-triggered in tracing (2019-04-16 15:38:08 +0200)
+> 
+> > +
+> > +What:          /sys/bus/platform/devices/dfl-fme.0/perf/fabric/enable
+> > +Date:          April 2019
+> > +KernelVersion:  5.2
+> > +Contact:       Wu Hao <hao.wu@intel.com>
+> > +Description:   Read-Write. Read this file for current status of device level
+> > +               fabric counters. Write "1" to enable device level fabric
+> > +               counters. Once device level fabric counters are enabled, port
+> > +               level fabric counters will be disabled automatically.
+> > +
+> > +What:          /sys/bus/platform/devices/dfl-fme.0/perf/fabric/port0/<counter>
+> > +Date:          April 2019
+> > +KernelVersion:  5.2
+> > +Contact:       Wu Hao <hao.wu@intel.com>
+> > +Description:   Read-Only. Read 'fabric' category "portX" sub category
+> > +               performance counters: pcie0_read, pcie0_write, pcie1_read,
+> > +               pcie1_write, upi_read, upi_write and mmio_read.
+> > +
+> > +What:          /sys/bus/platform/devices/dfl-fme.0/perf/fabric/port0/enable
+> > +Date:          April 2019
+> > +KernelVersion:  5.2
+> > +Contact:       Wu Hao <hao.wu@intel.com>
+> > +Description:   Read-Write. Read this file for current status of port level
+> > +               fabric counters. Write "1" to enable port level fabric counters.
+> > +               Once port level fabric counters are enabled, device level fabric
+> > +               counters will be disabled automatically.
+> > diff --git a/drivers/fpga/Makefile b/drivers/fpga/Makefile
+> > index 1a9fa3d..7df3971 100644
+> > --- a/drivers/fpga/Makefile
+> > +++ b/drivers/fpga/Makefile
+> > @@ -39,6 +39,7 @@ obj-$(CONFIG_FPGA_DFL_FME_REGION)     += dfl-fme-region.o
+> >  obj-$(CONFIG_FPGA_DFL_AFU)             += dfl-afu.o
+> >
+> >  dfl-fme-objs := dfl-fme-main.o dfl-fme-pr.o dfl-fme-error.o
+> > +dfl-fme-objs += dfl-fme-perf.o
+> >  dfl-afu-objs := dfl-afu-main.o dfl-afu-region.o dfl-afu-dma-region.o
+> >  dfl-afu-objs += dfl-afu-error.o
+> >
+> > diff --git a/drivers/fpga/dfl-fme-main.c b/drivers/fpga/dfl-fme-main.c
+> > index 1986b32..221f4ec 100644
+> > --- a/drivers/fpga/dfl-fme-main.c
+> > +++ b/drivers/fpga/dfl-fme-main.c
+> > @@ -690,6 +690,10 @@ static void fme_power_mgmt_uinit(struct platform_device *pdev,
+> >                 .ops = &fme_global_err_ops,
+> >         },
+> >         {
+> > +               .id_table = fme_perf_id_table,
+> > +               .ops = &fme_perf_ops,
+> > +       },
+> > +       {
+> >                 .ops = NULL,
+> >         },
+> >  };
+> > diff --git a/drivers/fpga/dfl-fme-perf.c b/drivers/fpga/dfl-fme-perf.c
+> > new file mode 100644
+> > index 0000000..035bb68
+> > --- /dev/null
+> > +++ b/drivers/fpga/dfl-fme-perf.c
+> > @@ -0,0 +1,950 @@
+> > +// SPDX-License-Identifier: GPL-2.0
+> > +/*
+> > + * Driver for FPGA Management Engine (FME) Global Performance Reporting
+> > + *
+> > + * Copyright 2019 Intel Corporation, Inc.
+> > + *
+> > + * Authors:
+> > + *   Kang Luwei <luwei.kang@intel.com>
+> > + *   Xiao Guangrong <guangrong.xiao@linux.intel.com>
+> > + *   Wu Hao <hao.wu@intel.com>
+> > + *   Joseph Grecco <joe.grecco@intel.com>
+> > + *   Enno Luebbers <enno.luebbers@intel.com>
+> > + *   Tim Whisonant <tim.whisonant@intel.com>
+> > + *   Ananda Ravuri <ananda.ravuri@intel.com>
+> > + *   Mitchel, Henry <henry.mitchel@intel.com>
+> > + */
+> > +
+> > +#include "dfl.h"
+> > +#include "dfl-fme.h"
+> > +
+> > +/*
+> > + * Performance Counter Registers for Cache.
+> > + *
+> > + * Cache Events are listed below as CACHE_EVNT_*.
+> > + */
+> > +#define CACHE_CTRL                     0x8
+> > +#define CACHE_RESET_CNTR               BIT_ULL(0)
+> > +#define CACHE_FREEZE_CNTR              BIT_ULL(8)
+> > +#define CACHE_CTRL_EVNT                        GENMASK_ULL(19, 16)
+> > +#define CACHE_EVNT_RD_HIT              0x0
+> > +#define CACHE_EVNT_WR_HIT              0x1
+> > +#define CACHE_EVNT_RD_MISS             0x2
+> > +#define CACHE_EVNT_WR_MISS             0x3
+> > +#define CACHE_EVNT_RSVD                        0x4
+> > +#define CACHE_EVNT_HOLD_REQ            0x5
+> > +#define CACHE_EVNT_DATA_WR_PORT_CONTEN 0x6
+> > +#define CACHE_EVNT_TAG_WR_PORT_CONTEN  0x7
+> > +#define CACHE_EVNT_TX_REQ_STALL                0x8
+> > +#define CACHE_EVNT_RX_REQ_STALL                0x9
+> > +#define CACHE_EVNT_EVICTIONS           0xa
+> > +#define CACHE_EVNT_MAX                 CACHE_EVNT_EVICTIONS
+> > +#define CACHE_CHANNEL_SEL              BIT_ULL(20)
+> > +#define CACHE_CHANNEL_RD               0
+> > +#define CACHE_CHANNEL_WR               1
+> > +#define CACHE_CHANNEL_MAX              2
+> > +#define CACHE_CNTR0                    0x10
+> > +#define CACHE_CNTR1                    0x18
+> > +#define CACHE_CNTR_EVNT_CNTR           GENMASK_ULL(47, 0)
+> > +#define CACHE_CNTR_EVNT                        GENMASK_ULL(63, 60)
+> > +
+> > +/*
+> > + * Performance Counter Registers for Fabric.
+> > + *
+> > + * Fabric Events are listed below as FAB_EVNT_*
+> > + */
+> > +#define FAB_CTRL                       0x20
+> > +#define FAB_RESET_CNTR                 BIT_ULL(0)
+> > +#define FAB_FREEZE_CNTR                        BIT_ULL(8)
+> > +#define FAB_CTRL_EVNT                  GENMASK_ULL(19, 16)
+> > +#define FAB_EVNT_PCIE0_RD              0x0
+> > +#define FAB_EVNT_PCIE0_WR              0x1
+> > +#define FAB_EVNT_PCIE1_RD              0x2
+> > +#define FAB_EVNT_PCIE1_WR              0x3
+> > +#define FAB_EVNT_UPI_RD                        0x4
+> > +#define FAB_EVNT_UPI_WR                        0x5
+> > +#define FAB_EVNT_MMIO_RD               0x6
+> > +#define FAB_EVNT_MMIO_WR               0x7
+> > +#define FAB_EVNT_MAX                   FAB_EVNT_MMIO_WR
+> > +#define FAB_PORT_ID                    GENMASK_ULL(21, 20)
+> > +#define FAB_PORT_FILTER                        BIT_ULL(23)
+> > +#define FAB_PORT_FILTER_DISABLE                0
+> > +#define FAB_PORT_FILTER_ENABLE         1
+> > +#define FAB_CNTR                       0x28
+> > +#define FAB_CNTR_EVNT_CNTR             GENMASK_ULL(59, 0)
+> > +#define FAB_CNTR_EVNT                  GENMASK_ULL(63, 60)
+> > +
+> > +/*
+> > + * Performance Counter Registers for Clock.
+> > + *
+> > + * Clock Counter can't be reset or frozen by SW.
+> > + */
+> > +#define CLK_CNTR                       0x30
+> > +
+> > +/*
+> > + * Performance Counter Registers for IOMMU / VT-D.
+> > + *
+> > + * VT-D Events are listed below as VTD_EVNT_* and VTD_SIP_EVNT_*
+> > + */
+> > +#define VTD_CTRL                       0x38
+> > +#define VTD_RESET_CNTR                 BIT_ULL(0)
+> > +#define VTD_FREEZE_CNTR                        BIT_ULL(8)
+> > +#define VTD_CTRL_EVNT                  GENMASK_ULL(19, 16)
+> > +#define VTD_EVNT_AFU_MEM_RD_TRANS      0x0
+> > +#define VTD_EVNT_AFU_MEM_WR_TRANS      0x1
+> > +#define VTD_EVNT_AFU_DEVTLB_RD_HIT     0x2
+> > +#define VTD_EVNT_AFU_DEVTLB_WR_HIT     0x3
+> > +#define VTD_EVNT_DEVTLB_4K_FILL                0x4
+> > +#define VTD_EVNT_DEVTLB_2M_FILL                0x5
+> > +#define VTD_EVNT_DEVTLB_1G_FILL                0x6
+> > +#define VTD_EVNT_MAX                   VTD_EVNT_DEVTLB_1G_FILL
+> > +#define VTD_CNTR                       0x40
+> > +#define VTD_CNTR_EVNT                  GENMASK_ULL(63, 60)
+> > +#define VTD_CNTR_EVNT_CNTR             GENMASK_ULL(47, 0)
+> > +#define VTD_SIP_CTRL                   0x48
+> > +#define VTD_SIP_RESET_CNTR             BIT_ULL(0)
+> > +#define VTD_SIP_FREEZE_CNTR            BIT_ULL(8)
+> > +#define VTD_SIP_CTRL_EVNT              GENMASK_ULL(19, 16)
+> > +#define VTD_SIP_EVNT_IOTLB_4K_HIT      0x0
+> > +#define VTD_SIP_EVNT_IOTLB_2M_HIT      0x1
+> > +#define VTD_SIP_EVNT_IOTLB_1G_HIT      0x2
+> > +#define VTD_SIP_EVNT_SLPWC_L3_HIT      0x3
+> > +#define VTD_SIP_EVNT_SLPWC_L4_HIT      0x4
+> > +#define VTD_SIP_EVNT_RCC_HIT           0x5
+> > +#define VTD_SIP_EVNT_IOTLB_4K_MISS     0x6
+> > +#define VTD_SIP_EVNT_IOTLB_2M_MISS     0x7
+> > +#define VTD_SIP_EVNT_IOTLB_1G_MISS     0x8
+> > +#define VTD_SIP_EVNT_SLPWC_L3_MISS     0x9
+> > +#define VTD_SIP_EVNT_SLPWC_L4_MISS     0xa
+> > +#define VTD_SIP_EVNT_RCC_MISS          0xb
+> > +#define VTD_SIP_EVNT_MAX               VTD_SIP_EVNT_RCC_MISS
+> > +#define VTD_SIP_CNTR                   0X50
+> > +#define VTD_SIP_CNTR_EVNT              GENMASK_ULL(63, 60)
+> > +#define VTD_SIP_CNTR_EVNT_CNTR         GENMASK_ULL(47, 0)
+> > +
+> > +#define PERF_OBJ_ROOT_ID               (~0)
+> > +
+> > +#define PERF_TIMEOUT                   30
+> > +
+> > +/**
+> > + * struct perf_object - object of performance counter
+> > + *
+> > + * @id: instance id. PERF_OBJ_ROOT_ID indicates it is a parent object which
+> > + *      counts performance counters for all instances.
+> > + * @attr_groups: the sysfs files are associated with this object.
+> > + * @feature: pointer to related private feature.
+> > + * @node: used to link itself to parent's children list.
+> > + * @children: used to link its children objects together.
+> > + * @kobj: generic kobject interface.
+> > + *
+> > + * 'node' and 'children' are used to construct parent-children hierarchy.
+> > + */
+> > +struct perf_object {
+> > +       int id;
+> > +       const struct attribute_group **attr_groups;
+> > +       struct dfl_feature *feature;
+> > +
+> > +       struct list_head node;
+> > +       struct list_head children;
+> > +       struct kobject kobj;
+> > +};
+> > +
+> > +/**
+> > + * struct perf_obj_attribute - attribute of perf object
+> > + *
+> > + * @attr: attribute of this perf object.
+> > + * @show: show callback for sysfs attribute.
+> > + * @store: store callback for sysfs attribute.
+> > + */
+> > +struct perf_obj_attribute {
+> > +       struct attribute attr;
+> > +       ssize_t (*show)(struct perf_object *pobj, char *buf);
+> > +       ssize_t (*store)(struct perf_object *pobj,
+> > +                        const char *buf, size_t n);
+> > +};
+> > +
+> > +#define to_perf_obj_attr(_attr)                                        \
+> > +               container_of(_attr, struct perf_obj_attribute, attr)
+> > +#define to_perf_obj(_kobj)                                     \
+> > +               container_of(_kobj, struct perf_object, kobj)
+> > +
+> > +#define PERF_OBJ_ATTR(_name, _filename, _mode, _show, _store)  \
+> > +struct perf_obj_attribute perf_obj_attr_##_name =              \
+> > +       __ATTR(_filename, _mode, _show, _store)
+> 
+> This #define and the ones below set up an interdependency with sysfs.h
+> that I'm scratching my head about.  You're defining your own type of
+> attribute struct which is fine, but counting on __ATTR to continue to
+> work with it in the future.  It wouldn't be much of a change here to
+> define your own macro here (which is the same as __ATTR) and then use
+> it for your PERF_OBJ_ATTR_RW, etc.  Maybe I'm being overcautious, but
+> it's a small change.
 
-are available in the git repository at:
+Sure, I can change it in the next version.
 
-  https://git.kernel.org/pub/scm/virt/kvm/kvm.git tags/for-linus
+> 
+> > +
+> > +#define PERF_OBJ_ATTR_RW(_name)                                        \
+> > +       struct perf_obj_attribute perf_obj_attr_##_name = __ATTR_RW(_name)
+> > +#define PERF_OBJ_ATTR_RO(_name)                                        \
+> > +       struct perf_obj_attribute perf_obj_attr_##_name = __ATTR_RO(_name)
+> > +#define PERF_OBJ_ATTR_WO(_name)                                        \
+> > +       struct perf_obj_attribute perf_obj_attr_##_name = __ATTR_WO(_name)
+> > +
+> > +static ssize_t perf_obj_attr_show(struct kobject *kobj,
+> > +                                 struct attribute *__attr, char *buf)
+> > +{
+> > +       struct perf_obj_attribute *attr = to_perf_obj_attr(__attr);
+> > +       struct perf_object *pobj = to_perf_obj(kobj);
+> > +       ssize_t ret = -EIO;
+> 
+> Would this be -EPERM?
 
-for you to fetch changes up to dd53f6102c30a774e0db8e55d49017a38060f6f6:
+Actually i use the same error code as other code in drivers/base/core.c.
 
-  Merge tag 'kvmarm-for-v5.2' of git://git.kernel.org/pub/scm/linux/kernel/git/kvmarm/kvmarm into HEAD (2019-05-15 23:41:43 +0200)
+> 
+> > +
+> > +       if (attr->show)
+> > +               ret = attr->show(pobj, buf);
+> 
+> Actually is it even possible for !attr->show if this were a WO attribute?
 
-----------------------------------------------------------------
+It's possible, but i think if this is a WO attribute, you may get -EPERM
+directly when trying to open it for Read, and this show function should
+not be invoked at all.
 
-* ARM: support for SVE and Pointer Authentication in guests, PMU improvements
+> 
+> > +       return ret;
+> > +}
+> > +
+> > +static ssize_t perf_obj_attr_store(struct kobject *kobj,
+> > +                                  struct attribute *__attr,
+> > +                                  const char *buf, size_t n)
+> > +{
+> > +       struct perf_obj_attribute *attr = to_perf_obj_attr(__attr);
+> > +       struct perf_object *pobj = to_perf_obj(kobj);
+> > +       ssize_t ret = -EIO;
+> 
+> Same here
+> 
+> > +
+> > +       if (attr->store)
+> > +               ret = attr->store(pobj, buf, n);
+> > +       return ret;
+> > +}
+> > +
+> > +static const struct sysfs_ops perf_obj_sysfs_ops = {
+> > +       .show = perf_obj_attr_show,
+> > +       .store = perf_obj_attr_store,
+> > +};
+> > +
+> > +static void perf_obj_release(struct kobject *kobj)
+> > +{
+> > +       kfree(to_perf_obj(kobj));
+> > +}
+> > +
+> > +static struct kobj_type perf_obj_ktype = {
+> > +       .sysfs_ops = &perf_obj_sysfs_ops,
+> > +       .release = perf_obj_release,
+> > +};
+> > +
+> > +static struct perf_object *
+> > +create_perf_obj(struct dfl_feature *feature, struct kobject *parent, int id,
+> > +               const struct attribute_group **groups, const char *name)
+> > +{
+> > +       struct perf_object *pobj;
+> > +       int ret;
+> > +
+> > +       pobj = kzalloc(sizeof(*pobj), GFP_KERNEL);
+> > +       if (!pobj)
+> > +               return ERR_PTR(-ENOMEM);
+> > +
+> > +       pobj->id = id;
+> > +       pobj->feature = feature;
+> > +       pobj->attr_groups = groups;
+> > +       INIT_LIST_HEAD(&pobj->node);
+> > +       INIT_LIST_HEAD(&pobj->children);
+> > +
+> > +       if (id != PERF_OBJ_ROOT_ID)
+> > +               ret = kobject_init_and_add(&pobj->kobj, &perf_obj_ktype,
+> > +                                          parent, "%s%d", name, id);
+> > +       else
+> > +               ret = kobject_init_and_add(&pobj->kobj, &perf_obj_ktype,
+> > +                                          parent, "%s", name);
+> > +       if (ret)
+> > +               goto put_exit;
+> > +
+> > +       if (pobj->attr_groups) {
+> > +               ret = sysfs_create_groups(&pobj->kobj, pobj->attr_groups);
+> > +               if (ret)
+> > +                       goto del_exit;
+> > +       }
+> > +
+> > +       return pobj;
+> > +
+> > +del_exit:
+> > +       kobject_del(&pobj->kobj);
+> 
+> kobject_put will delete and clean up, you won't need kobject_del.
 
-* POWER: support for direct access to the POWER9 XIVE interrupt controller,
-memory and performance optimizations.
+Will fix this, kobject_put should be enough.
 
-* x86: support for accessing memory not backed by struct page, fixes and refactoring
+> 
+> > +put_exit:
+> > +       kobject_put(&pobj->kobj);
+> > +       return ERR_PTR(ret);
+> > +}
+> > +
+> > +/*
+> > + * Counter Sysfs Interface for Clock.
+> > + */
+> > +static ssize_t clock_show(struct perf_object *pobj, char *buf)
+> > +{
+> > +       void __iomem *base = pobj->feature->ioaddr;
+> > +
+> > +       return scnprintf(buf, PAGE_SIZE, "0x%llx\n",
+> > +                        (unsigned long long)readq(base + CLK_CNTR));
+> 
+> It's fine to use sprintf, as mentioned recently on one of the other patches.
 
-* Generic: dirty page tracking improvements
+Sure, will fix this.
 
-----------------------------------------------------------------
-Aaron Lewis (5):
-      tests: kvm: Add tests to .gitignore
-      tests: kvm: Add tests for KVM_CAP_MAX_VCPUS and KVM_CAP_MAX_CPU_ID
-      KVM: nVMX: KVM_SET_NESTED_STATE - Tear down old EVMCS state before setting new state
-      tests: kvm: Add tests for KVM_SET_NESTED_STATE
-      kvm: nVMX: Set nested_run_pending in vmx_set_nested_state after checks complete
+> 
+> > +}
+> > +static PERF_OBJ_ATTR_RO(clock);
+> > +
+> > +static struct attribute *clock_attrs[] = {
+> > +       &perf_obj_attr_clock.attr,
+> > +       NULL,
+> > +};
+> > +
+> > +static struct attribute_group clock_attr_group = {
+> > +       .attrs = clock_attrs,
+> > +};
+> > +
+> > +static const struct attribute_group *perf_dev_attr_groups[] = {
+> > +       &clock_attr_group,
+> > +       NULL,
+> > +};
+> > +
+> > +static void destroy_perf_obj(struct perf_object *pobj)
+> > +{
+> > +       struct perf_object *obj, *obj_tmp;
+> > +
+> > +       list_for_each_entry_safe(obj, obj_tmp, &pobj->children, node)
+> > +               destroy_perf_obj(obj);
+> > +
+> > +       list_del(&pobj->node);
+> > +       if (pobj->attr_groups)
+> > +               sysfs_remove_groups(&pobj->kobj, pobj->attr_groups);
+> 
+> The attributes should be removed before anything else goes away.
 
-Alexey Kardashevskiy (3):
-      KVM: PPC: Book3S HV: Fix lockdep warning when entering the guest
-      KVM: PPC: Book3S HV: Avoid lockdep debugging in TCE realmode handlers
-      KVM: PPC: Book3S: Allocate guest TCEs on demand too
+Sure.
 
-Amit Daniel Kachhap (3):
-      KVM: arm64: Add a vcpu flag to control ptrauth for guest
-      KVM: arm64: Add userspace flag to enable pointer authentication
-      KVM: arm64: Add capability to advertise ptrauth for guest
+> 
+> > +       kobject_put(&pobj->kobj);
+> > +}
+> > +
+> > +static struct perf_object *create_perf_dev(struct dfl_feature *feature)
+> > +{
+> > +       struct platform_device *pdev = feature->pdev;
+> > +
+> > +       return create_perf_obj(feature, &pdev->dev.kobj, PERF_OBJ_ROOT_ID,
+> > +                              perf_dev_attr_groups, "perf");
+> > +}
+> > +
+> > +/*
+> > + * Counter Sysfs Interfaces for Cache.
+> > + */
+> > +static ssize_t cache_freeze_show(struct perf_object *pobj, char *buf)
+> > +{
+> > +       void __iomem *base = pobj->feature->ioaddr;
+> > +       u64 v;
+> > +
+> > +       v = readq(base + CACHE_CTRL);
+> > +
+> > +       return scnprintf(buf, PAGE_SIZE, "%u\n",
+> > +                        (unsigned int)FIELD_GET(CACHE_FREEZE_CNTR, v));
+> > +}
+> > +
+> > +static ssize_t cache_freeze_store(struct perf_object *pobj,
+> > +                                 const char *buf, size_t n)
+> > +{
+> > +       struct dfl_feature *feature = pobj->feature;
+> > +       struct dfl_feature_platform_data *pdata;
+> > +       void __iomem *base = feature->ioaddr;
+> > +       bool state;
+> > +       u64 v;
+> > +
+> > +       if (strtobool(buf, &state))
+> > +               return -EINVAL;
+> > +
+> > +       pdata = dev_get_platdata(&feature->pdev->dev);
+> > +
+> > +       mutex_lock(&pdata->lock);
+> > +       v = readq(base + CACHE_CTRL);
+> > +       v &= ~CACHE_FREEZE_CNTR;
+> > +       v |= FIELD_PREP(CACHE_FREEZE_CNTR, state ? 1 : 0);
+> > +       writeq(v, base + CACHE_CTRL);
+> > +       mutex_unlock(&pdata->lock);
+> > +
+> > +       return n;
+> > +}
+> > +static PERF_OBJ_ATTR(cache_freeze, freeze, 0644,
+> > +                    cache_freeze_show, cache_freeze_store);
+> > +
+> > +static ssize_t read_cache_counter(struct perf_object *pobj, char *buf,
+> > +                                 u8 channel, u8 event)
+> > +{
+> > +       struct dfl_feature *feature = pobj->feature;
+> > +       struct dfl_feature_platform_data *pdata;
+> > +       void __iomem *base = feature->ioaddr;
+> > +       u64 v, count;
+> > +
+> > +       if (event > CACHE_EVNT_MAX || channel > CACHE_CHANNEL_MAX)
+> > +               return -EINVAL;
+> 
+> This would only happen if there was a coding error using one of the
+> macros below, right?
 
-Andrew Murray (9):
-      arm64: arm_pmu: Remove unnecessary isb instruction
-      arm64: KVM: Encapsulate kvm_cpu_context in kvm_host_data
-      arm64: KVM: Add accessors to track guest/host only counters
-      arm64: arm_pmu: Add !VHE support for exclude_host/exclude_guest attributes
-      arm64: KVM: Enable !VHE support for :G/:H perf event modifiers
-      arm64: KVM: Enable VHE support for :G/:H perf event modifiers
-      arm64: KVM: Avoid isb's by using direct pmxevtyper sysreg
-      arm64: docs: Document perf event attributes
-      arm64: KVM: Fix perf cycle counter support for VHE
+Yes. So WARN should be better instead -EINVAL. Let me fix this.
 
-Borislav Petkov (1):
-      x86/kvm: Implement HWCR support
+> 
+> > +
+> > +       pdata = dev_get_platdata(&feature->pdev->dev);
+> > +
+> > +       mutex_lock(&pdata->lock);
+> > +       /* set channel access type and cache event code. */
+> > +       v = readq(base + CACHE_CTRL);
+> > +       v &= ~(CACHE_CHANNEL_SEL | CACHE_CTRL_EVNT);
+> > +       v |= FIELD_PREP(CACHE_CHANNEL_SEL, channel);
+> > +       v |= FIELD_PREP(CACHE_CTRL_EVNT, event);
+> > +       writeq(v, base + CACHE_CTRL);
+> > +
+> > +       if (readq_poll_timeout(base + CACHE_CNTR0, v,
+> > +                              FIELD_GET(CACHE_CNTR_EVNT, v) == event,
+> > +                              1, PERF_TIMEOUT)) {
+> > +               dev_err(&feature->pdev->dev, "timeout, unmatched cache event type in counter registers.\n");
+> > +               mutex_unlock(&pdata->lock);
+> > +               return -ETIMEDOUT;
+> > +       }
+> > +
+> > +       v = readq(base + CACHE_CNTR0);
+> > +       count = FIELD_GET(CACHE_CNTR_EVNT_CNTR, v);
+> > +       v = readq(base + CACHE_CNTR1);
+> > +       count += FIELD_GET(CACHE_CNTR_EVNT_CNTR, v);
+> > +       mutex_unlock(&pdata->lock);
+> > +
+> > +       return scnprintf(buf, PAGE_SIZE, "0x%llx\n", (unsigned long long)count);
+> > +}
+> > +
+> > +#define CACHE_SHOW(name, type, event)                                  \
+> > +static ssize_t name##_show(struct perf_object *pobj, char *buf)                \
+> > +{                                                                      \
+> > +       return read_cache_counter(pobj, buf, type, event);              \
+> > +}                                                                      \
+> > +static PERF_OBJ_ATTR_RO(name)
+> > +
+> > +CACHE_SHOW(read_hit, CACHE_CHANNEL_RD, CACHE_EVNT_RD_HIT);
+> > +CACHE_SHOW(read_miss, CACHE_CHANNEL_RD, CACHE_EVNT_RD_MISS);
+> > +CACHE_SHOW(write_hit, CACHE_CHANNEL_WR, CACHE_EVNT_WR_HIT);
+> > +CACHE_SHOW(write_miss, CACHE_CHANNEL_WR, CACHE_EVNT_WR_MISS);
+> > +CACHE_SHOW(hold_request, CACHE_CHANNEL_RD, CACHE_EVNT_HOLD_REQ);
+> > +CACHE_SHOW(tx_req_stall, CACHE_CHANNEL_RD, CACHE_EVNT_TX_REQ_STALL);
+> > +CACHE_SHOW(rx_req_stall, CACHE_CHANNEL_RD, CACHE_EVNT_RX_REQ_STALL);
+> > +CACHE_SHOW(rx_eviction, CACHE_CHANNEL_RD, CACHE_EVNT_EVICTIONS);
+> > +CACHE_SHOW(data_write_port_contention, CACHE_CHANNEL_WR,
+> > +          CACHE_EVNT_DATA_WR_PORT_CONTEN);
+> > +CACHE_SHOW(tag_write_port_contention, CACHE_CHANNEL_WR,
+> > +          CACHE_EVNT_TAG_WR_PORT_CONTEN);
+> > +
+> > +static struct attribute *cache_attrs[] = {
+> > +       &perf_obj_attr_read_hit.attr,
+> > +       &perf_obj_attr_read_miss.attr,
+> > +       &perf_obj_attr_write_hit.attr,
+> > +       &perf_obj_attr_write_miss.attr,
+> > +       &perf_obj_attr_hold_request.attr,
+> > +       &perf_obj_attr_data_write_port_contention.attr,
+> > +       &perf_obj_attr_tag_write_port_contention.attr,
+> > +       &perf_obj_attr_tx_req_stall.attr,
+> > +       &perf_obj_attr_rx_req_stall.attr,
+> > +       &perf_obj_attr_rx_eviction.attr,
+> > +       &perf_obj_attr_cache_freeze.attr,
+> > +       NULL,
+> > +};
+> > +
+> > +static struct attribute_group cache_attr_group = {
+> > +       .attrs = cache_attrs,
+> > +};
+> > +
+> > +static const struct attribute_group *cache_attr_groups[] = {
+> > +       &cache_attr_group,
+> > +       NULL,
+> > +};
+> > +
+> > +static int create_perf_cache_obj(struct perf_object *perf_dev)
+> > +{
+> > +       struct perf_object *pobj;
+> > +
+> > +       pobj = create_perf_obj(perf_dev->feature, &perf_dev->kobj,
+> > +                              PERF_OBJ_ROOT_ID, cache_attr_groups, "cache");
+> > +       if (IS_ERR(pobj))
+> > +               return PTR_ERR(pobj);
+> > +
+> > +       list_add(&pobj->node, &perf_dev->children);
+> > +
+> > +       return 0;
+> > +}
+> > +
+> > +/*
+> > + * Counter Sysfs Interfaces for VT-D / IOMMU.
+> > + */
+> > +static ssize_t vtd_freeze_show(struct perf_object *pobj, char *buf)
+> > +{
+> > +       void __iomem *base = pobj->feature->ioaddr;
+> > +       u64 v;
+> > +
+> > +       v = readq(base + VTD_CTRL);
+> > +
+> > +       return scnprintf(buf, PAGE_SIZE, "%u\n",
+> > +                        (unsigned int)FIELD_GET(VTD_FREEZE_CNTR, v));
+> > +}
+> > +
+> > +static ssize_t vtd_freeze_store(struct perf_object *pobj,
+> > +                               const char *buf, size_t n)
+> > +{
+> > +       struct dfl_feature *feature = pobj->feature;
+> > +       struct dfl_feature_platform_data *pdata;
+> > +       void __iomem *base = feature->ioaddr;
+> > +       bool state;
+> > +       u64 v;
+> > +
+> > +       if (strtobool(buf, &state))
+> > +               return -EINVAL;
+> > +
+> > +       pdata = dev_get_platdata(&feature->pdev->dev);
+> > +
+> > +       mutex_lock(&pdata->lock);
+> > +       v = readq(base + VTD_CTRL);
+> > +       v &= ~VTD_FREEZE_CNTR;
+> > +       v |= FIELD_PREP(VTD_FREEZE_CNTR, state ? 1 : 0);
+> > +       writeq(v, base + VTD_CTRL);
+> > +       mutex_unlock(&pdata->lock);
+> > +
+> > +       return n;
+> > +}
+> > +static PERF_OBJ_ATTR(vtd_freeze, freeze, 0644,
+> > +                    vtd_freeze_show, vtd_freeze_store);
+> > +
+> > +static struct attribute *iommu_top_attrs[] = {
+> > +       &perf_obj_attr_vtd_freeze.attr,
+> > +       NULL,
+> > +};
+> > +
+> > +static struct attribute_group iommu_top_attr_group = {
+> > +       .attrs = iommu_top_attrs,
+> > +};
+> > +
+> > +static ssize_t read_iommu_sip_counter(struct perf_object *pobj,
+> > +                                     u8 event, char *buf)
+> > +{
+> > +       struct dfl_feature *feature = pobj->feature;
+> > +       struct dfl_feature_platform_data *pdata;
+> > +       void __iomem *base = feature->ioaddr;
+> > +       u64 v, count;
+> > +
+> > +       if (event > VTD_SIP_EVNT_MAX)
+> > +               return -EINVAL;
+> > +
+> > +       pdata = dev_get_platdata(&feature->pdev->dev);
+> > +
+> > +       mutex_lock(&pdata->lock);
+> > +       v = readq(base + VTD_SIP_CTRL);
+> > +       v &= ~VTD_SIP_CTRL_EVNT;
+> > +       v |= FIELD_PREP(VTD_SIP_CTRL_EVNT, event);
+> > +       writeq(v, base + VTD_SIP_CTRL);
+> > +
+> > +       if (readq_poll_timeout(base + VTD_SIP_CNTR, v,
+> > +                              FIELD_GET(VTD_SIP_CNTR_EVNT, v) == event,
+> > +                              1, PERF_TIMEOUT)) {
+> > +               dev_err(&feature->pdev->dev, "timeout, unmatched VTd SIP event type in counter registers\n");
+> > +               mutex_unlock(&pdata->lock);
+> > +               return -ETIMEDOUT;
+> > +       }
+> > +
+> > +       v = readq(base + VTD_SIP_CNTR);
+> > +       count = FIELD_GET(VTD_SIP_CNTR_EVNT_CNTR, v);
+> > +       mutex_unlock(&pdata->lock);
+> > +
+> > +       return scnprintf(buf, PAGE_SIZE, "0x%llx\n", (unsigned long long)count);
+> > +}
+> > +
+> > +#define VTD_SIP_SHOW(name, event)                                      \
+> > +static ssize_t name##_show(struct perf_object *pobj, char *buf)                \
+> > +{                                                                      \
+> > +       return read_iommu_sip_counter(pobj, event, buf);                \
+> > +}                                                                      \
+> > +static PERF_OBJ_ATTR_RO(name)
+> > +
+> > +VTD_SIP_SHOW(iotlb_4k_hit, VTD_SIP_EVNT_IOTLB_4K_HIT);
+> > +VTD_SIP_SHOW(iotlb_2m_hit, VTD_SIP_EVNT_IOTLB_2M_HIT);
+> > +VTD_SIP_SHOW(iotlb_1g_hit, VTD_SIP_EVNT_IOTLB_1G_HIT);
+> > +VTD_SIP_SHOW(slpwc_l3_hit, VTD_SIP_EVNT_SLPWC_L3_HIT);
+> > +VTD_SIP_SHOW(slpwc_l4_hit, VTD_SIP_EVNT_SLPWC_L4_HIT);
+> > +VTD_SIP_SHOW(rcc_hit, VTD_SIP_EVNT_RCC_HIT);
+> > +VTD_SIP_SHOW(iotlb_4k_miss, VTD_SIP_EVNT_IOTLB_4K_MISS);
+> > +VTD_SIP_SHOW(iotlb_2m_miss, VTD_SIP_EVNT_IOTLB_2M_MISS);
+> > +VTD_SIP_SHOW(iotlb_1g_miss, VTD_SIP_EVNT_IOTLB_1G_MISS);
+> > +VTD_SIP_SHOW(slpwc_l3_miss, VTD_SIP_EVNT_SLPWC_L3_MISS);
+> > +VTD_SIP_SHOW(slpwc_l4_miss, VTD_SIP_EVNT_SLPWC_L4_MISS);
+> > +VTD_SIP_SHOW(rcc_miss, VTD_SIP_EVNT_RCC_MISS);
+> > +
+> > +static struct attribute *iommu_sip_attrs[] = {
+> > +       &perf_obj_attr_iotlb_4k_hit.attr,
+> > +       &perf_obj_attr_iotlb_2m_hit.attr,
+> > +       &perf_obj_attr_iotlb_1g_hit.attr,
+> > +       &perf_obj_attr_slpwc_l3_hit.attr,
+> > +       &perf_obj_attr_slpwc_l4_hit.attr,
+> > +       &perf_obj_attr_rcc_hit.attr,
+> > +       &perf_obj_attr_iotlb_4k_miss.attr,
+> > +       &perf_obj_attr_iotlb_2m_miss.attr,
+> > +       &perf_obj_attr_iotlb_1g_miss.attr,
+> > +       &perf_obj_attr_slpwc_l3_miss.attr,
+> > +       &perf_obj_attr_slpwc_l4_miss.attr,
+> > +       &perf_obj_attr_rcc_miss.attr,
+> > +       NULL,
+> > +};
+> > +
+> > +static struct attribute_group iommu_sip_attr_group = {
+> > +       .attrs = iommu_sip_attrs,
+> > +};
+> > +
+> > +static const struct attribute_group *iommu_top_attr_groups[] = {
+> > +       &iommu_top_attr_group,
+> > +       &iommu_sip_attr_group,
+> > +       NULL,
+> > +};
+> > +
+> > +static ssize_t read_iommu_counter(struct perf_object *pobj, u8 event, char *buf)
+> > +{
+> > +       struct dfl_feature *feature = pobj->feature;
+> > +       struct dfl_feature_platform_data *pdata;
+> > +       void __iomem *base = feature->ioaddr;
+> > +       u64 v, count;
+> > +
+> > +       if (event > VTD_EVNT_MAX)
+> > +               return -EINVAL;
+> > +
+> > +       event += pobj->id;
+> > +       pdata = dev_get_platdata(&feature->pdev->dev);
+> > +
+> > +       mutex_lock(&pdata->lock);
+> > +       v = readq(base + VTD_CTRL);
+> > +       v &= ~VTD_CTRL_EVNT;
+> > +       v |= FIELD_PREP(VTD_CTRL_EVNT, event);
+> > +       writeq(v, base + VTD_CTRL);
+> > +
+> > +       if (readq_poll_timeout(base + VTD_CNTR, v,
+> > +                              FIELD_GET(VTD_CNTR_EVNT, v) == event, 1,
+> > +                              PERF_TIMEOUT)) {
+> > +               dev_err(&feature->pdev->dev, "timeout, unmatched VTd event type in counter registers\n");
+> > +               mutex_unlock(&pdata->lock);
+> > +               return -ETIMEDOUT;
+> > +       }
+> > +
+> > +       v = readq(base + VTD_CNTR);
+> > +       count = FIELD_GET(VTD_CNTR_EVNT_CNTR, v);
+> > +       mutex_unlock(&pdata->lock);
+> > +
+> > +       return scnprintf(buf, PAGE_SIZE, "0x%llx\n", (unsigned long long)count);
+> > +}
+> > +
+> > +#define VTD_SHOW(name, base_event)                                     \
+> > +static ssize_t name##_show(struct perf_object *pobj, char *buf)                \
+> > +{                                                                      \
+> > +       return read_iommu_counter(pobj, base_event, buf);               \
+> > +}                                                                      \
+> > +static PERF_OBJ_ATTR_RO(name)
+> > +
+> > +VTD_SHOW(read_transaction, VTD_EVNT_AFU_MEM_RD_TRANS);
+> > +VTD_SHOW(write_transaction, VTD_EVNT_AFU_MEM_WR_TRANS);
+> > +VTD_SHOW(devtlb_read_hit, VTD_EVNT_AFU_DEVTLB_RD_HIT);
+> > +VTD_SHOW(devtlb_write_hit, VTD_EVNT_AFU_DEVTLB_WR_HIT);
+> > +VTD_SHOW(devtlb_4k_fill, VTD_EVNT_DEVTLB_4K_FILL);
+> > +VTD_SHOW(devtlb_2m_fill, VTD_EVNT_DEVTLB_2M_FILL);
+> > +VTD_SHOW(devtlb_1g_fill, VTD_EVNT_DEVTLB_1G_FILL);
+> > +
+> > +static struct attribute *iommu_attrs[] = {
+> > +       &perf_obj_attr_read_transaction.attr,
+> > +       &perf_obj_attr_write_transaction.attr,
+> > +       &perf_obj_attr_devtlb_read_hit.attr,
+> > +       &perf_obj_attr_devtlb_write_hit.attr,
+> > +       &perf_obj_attr_devtlb_4k_fill.attr,
+> > +       &perf_obj_attr_devtlb_2m_fill.attr,
+> > +       &perf_obj_attr_devtlb_1g_fill.attr,
+> > +       NULL,
+> > +};
+> > +
+> > +static struct attribute_group iommu_attr_group = {
+> > +       .attrs = iommu_attrs,
+> > +};
+> > +
+> > +static const struct attribute_group *iommu_attr_groups[] = {
+> > +       &iommu_attr_group,
+> > +       NULL,
+> > +};
+> > +
+> > +#define PERF_MAX_PORT_NUM      1
+> > +
+> > +static int create_perf_iommu_obj(struct perf_object *perf_dev)
+> > +{
+> > +       struct dfl_feature *feature = perf_dev->feature;
+> > +       struct device *dev = &feature->pdev->dev;
+> > +       struct perf_object *pobj, *obj;
+> > +       void __iomem *base;
+> > +       u64 v;
+> > +       int i;
+> > +
+> > +       /* check if iommu is not supported on this device. */
+> > +       base = dfl_get_feature_ioaddr_by_id(dev, FME_FEATURE_ID_HEADER);
+> > +       v = readq(base + FME_HDR_CAP);
+> > +       if (!FIELD_GET(FME_CAP_IOMMU_AVL, v))
+> > +               return 0;
+> > +
+> > +       pobj = create_perf_obj(feature, &perf_dev->kobj, PERF_OBJ_ROOT_ID,
+> > +                              iommu_top_attr_groups, "iommu");
+> > +       if (IS_ERR(pobj))
+> > +               return PTR_ERR(pobj);
+> > +
+> > +       list_add(&pobj->node, &perf_dev->children);
+> > +
+> > +       for (i = 0; i < PERF_MAX_PORT_NUM; i++) {
+> > +               obj = create_perf_obj(feature, &pobj->kobj, i,
+> > +                                     iommu_attr_groups, "afu");
+> > +               if (IS_ERR(obj))
+> > +                       return PTR_ERR(obj);
+> > +
+> > +               list_add(&obj->node, &pobj->children);
+> > +       }
+> > +
+> > +       return 0;
+> > +}
+> > +
+> > +/*
+> > + * Counter Sysfs Interfaces for Fabric
+> > + */
+> > +static bool fabric_pobj_is_enabled(struct perf_object *pobj)
+> > +{
+> > +       struct dfl_feature *feature = pobj->feature;
+> > +       void __iomem *base = feature->ioaddr;
+> > +       u64 v;
+> > +
+> > +       v = readq(base + FAB_CTRL);
+> > +
+> > +       if (FIELD_GET(FAB_PORT_FILTER, v) == FAB_PORT_FILTER_DISABLE)
+> > +               return pobj->id == PERF_OBJ_ROOT_ID;
+> > +
+> > +       return pobj->id == FIELD_GET(FAB_PORT_ID, v);
+> > +}
+> > +
+> > +static ssize_t read_fabric_counter(struct perf_object *pobj,
+> > +                                  u8 event, char *buf)
+> > +{
+> > +       struct dfl_feature *feature = pobj->feature;
+> > +       struct dfl_feature_platform_data *pdata;
+> > +       void __iomem *base = feature->ioaddr;
+> > +       u64 v, count = 0;
+> > +
+> > +       if (event > FAB_EVNT_MAX)
+> > +               return -EINVAL;
+> > +
+> > +       pdata = dev_get_platdata(&feature->pdev->dev);
+> > +
+> > +       mutex_lock(&pdata->lock);
+> > +       /* if it is disabled, force the counter to return zero. */
+> > +       if (!fabric_pobj_is_enabled(pobj))
+> > +               goto exit;
+> > +
+> > +       v = readq(base + FAB_CTRL);
+> > +       v &= ~FAB_CTRL_EVNT;
+> > +       v |= FIELD_PREP(FAB_CTRL_EVNT, event);
+> > +       writeq(v, base + FAB_CTRL);
+> > +
+> > +       if (readq_poll_timeout(base + FAB_CNTR, v,
+> > +                              FIELD_GET(FAB_CNTR_EVNT, v) == event,
+> > +                              1, PERF_TIMEOUT)) {
+> > +               dev_err(&feature->pdev->dev, "timeout, unmatched fab event type in counter registers.\n");
+> > +               mutex_unlock(&pdata->lock);
+> > +               return -ETIMEDOUT;
+> > +       }
+> > +
+> > +       v = readq(base + FAB_CNTR);
+> > +       count = FIELD_GET(FAB_CNTR_EVNT_CNTR, v);
+> > +exit:
+> > +       mutex_unlock(&pdata->lock);
+> > +       return scnprintf(buf, PAGE_SIZE, "0x%llx\n", (unsigned long long)count);
+> > +}
+> > +
+> > +#define FAB_SHOW(name, event)                                          \
+> > +static ssize_t name##_show(struct perf_object *pobj, char *buf)                \
+> > +{                                                                      \
+> > +       return read_fabric_counter(pobj, event, buf);                   \
+> > +}                                                                      \
+> > +static PERF_OBJ_ATTR_RO(name)
+> > +
+> > +FAB_SHOW(pcie0_read, FAB_EVNT_PCIE0_RD);
+> > +FAB_SHOW(pcie0_write, FAB_EVNT_PCIE0_WR);
+> > +FAB_SHOW(pcie1_read, FAB_EVNT_PCIE1_RD);
+> > +FAB_SHOW(pcie1_write, FAB_EVNT_PCIE1_WR);
+> > +FAB_SHOW(upi_read, FAB_EVNT_UPI_RD);
+> > +FAB_SHOW(upi_write, FAB_EVNT_UPI_WR);
+> > +FAB_SHOW(mmio_read, FAB_EVNT_MMIO_RD);
+> > +FAB_SHOW(mmio_write, FAB_EVNT_MMIO_WR);
+> > +
+> > +static ssize_t fab_enable_show(struct perf_object *pobj, char *buf)
+> > +{
+> > +       return scnprintf(buf, PAGE_SIZE, "%u\n",
+> > +                        (unsigned int)!!fabric_pobj_is_enabled(pobj));
+> > +}
+> > +
+> > +/*
+> > + * If enable one port or all port event counter in fabric, other
+> > + * fabric event counter originally enabled will be disable automatically.
+> > + */
+> > +static ssize_t fab_enable_store(struct perf_object *pobj,
+> > +                               const char *buf, size_t n)
+> > +{
+> > +       struct dfl_feature *feature = pobj->feature;
+> > +       struct dfl_feature_platform_data *pdata;
+> > +       void __iomem *base = feature->ioaddr;
+> > +       bool state;
+> > +       u64 v;
+> > +
+> > +       if (strtobool(buf, &state) || !state)
+> > +               return -EINVAL;
+> > +
+> > +       pdata = dev_get_platdata(&feature->pdev->dev);
+> > +
+> > +       /* if it is already enabled. */
+> > +       if (fabric_pobj_is_enabled(pobj))
+> > +               return n;
+> > +
+> > +       mutex_lock(&pdata->lock);
+> > +       v = readq(base + FAB_CTRL);
+> > +       v &= ~(FAB_PORT_FILTER | FAB_PORT_ID);
+> > +
+> > +       if (pobj->id == PERF_OBJ_ROOT_ID) {
+> > +               v |= FIELD_PREP(FAB_PORT_FILTER, FAB_PORT_FILTER_DISABLE);
+> > +       } else {
+> > +               v |= FIELD_PREP(FAB_PORT_FILTER, FAB_PORT_FILTER_ENABLE);
+> > +               v |= FIELD_PREP(FAB_PORT_ID, pobj->id);
+> > +       }
+> > +       writeq(v, base + FAB_CTRL);
+> > +       mutex_unlock(&pdata->lock);
+> > +
+> > +       return n;
+> > +}
+> > +static PERF_OBJ_ATTR(fab_enable, enable, 0644,
+> > +                    fab_enable_show, fab_enable_store);
+> > +
+> > +static struct attribute *fabric_attrs[] = {
+> > +       &perf_obj_attr_pcie0_read.attr,
+> > +       &perf_obj_attr_pcie0_write.attr,
+> > +       &perf_obj_attr_pcie1_read.attr,
+> > +       &perf_obj_attr_pcie1_write.attr,
+> > +       &perf_obj_attr_upi_read.attr,
+> > +       &perf_obj_attr_upi_write.attr,
+> > +       &perf_obj_attr_mmio_read.attr,
+> > +       &perf_obj_attr_mmio_write.attr,
+> > +       &perf_obj_attr_fab_enable.attr,
+> > +       NULL,
+> > +};
+> > +
+> > +static struct attribute_group fabric_attr_group = {
+> > +       .attrs = fabric_attrs,
+> > +};
+> > +
+> > +static const struct attribute_group *fabric_attr_groups[] = {
+> > +       &fabric_attr_group,
+> > +       NULL,
+> > +};
+> > +
+> > +static ssize_t fab_freeze_show(struct perf_object *pobj, char *buf)
+> > +{
+> > +       void __iomem *base = pobj->feature->ioaddr;
+> > +       u64 v;
+> > +
+> > +       v = readq(base + FAB_CTRL);
+> > +
+> > +       return scnprintf(buf, PAGE_SIZE, "%u\n",
+> > +                        (unsigned int)FIELD_GET(FAB_FREEZE_CNTR, v));
+> > +}
+> > +
+> > +static ssize_t fab_freeze_store(struct perf_object *pobj,
+> > +                               const char *buf, size_t n)
+> > +{
+> > +       struct dfl_feature *feature = pobj->feature;
+> > +       struct dfl_feature_platform_data *pdata;
+> > +       void __iomem *base = feature->ioaddr;
+> > +       bool state;
+> > +       u64 v;
+> > +
+> > +       if (strtobool(buf, &state))
+> > +               return -EINVAL;
+> > +
+> > +       pdata = dev_get_platdata(&feature->pdev->dev);
+> > +
+> > +       mutex_lock(&pdata->lock);
+> > +       v = readq(base + FAB_CTRL);
+> > +       v &= ~FAB_FREEZE_CNTR;
+> > +       v |= FIELD_PREP(FAB_FREEZE_CNTR, state ? 1 : 0);
+> > +       writeq(v, base + FAB_CTRL);
+> > +       mutex_unlock(&pdata->lock);
+> > +
+> > +       return n;
+> > +}
+> > +static PERF_OBJ_ATTR(fab_freeze, freeze, 0644,
+> > +                    fab_freeze_show, fab_freeze_store);
+> 
+> PERF_OBJ_ATTR_RW ?  Also in a few other places, wherever '0644' shows up.
 
-Christian Borntraeger (9):
-      KVM: s390: add vector enhancements facility 2 to cpumodel
-      KVM: s390: add vector BCD enhancements facility to cpumodel
-      KVM: s390: add MSA9 to cpumodel
-      KVM: s390: provide query function for instructions returning 32 byte
-      KVM: s390: add enhanced sort facilty to cpu model
-      KVM: s390: add deflate conversion facilty to cpu model
-      KVM: s390: enable MSA9 keywrapping functions depending on cpu model
-      KVM: polling: add architecture backend to disable polling
-      KVM: s390: provide kvm_arch_no_poll function
+PERF_OBJ_ATTR is used as it can define its own file name.
+Let me see if we can improve this in the next version.
 
-Colin Ian King (1):
-      KVM: PPC: Book3S HV: XIVE: Fix spelling mistake "acessing" -> "accessing"
+Thanks for the review!
 
-Cédric Le Goater (18):
-      powerpc/xive: add OPAL extensions for the XIVE native exploitation support
-      KVM: PPC: Book3S HV: Add a new KVM device for the XIVE native exploitation mode
-      KVM: PPC: Book3S HV: XIVE: Introduce a new capability KVM_CAP_PPC_IRQ_XIVE
-      KVM: PPC: Book3S HV: XIVE: add a control to initialize a source
-      KVM: PPC: Book3S HV: XIVE: Add a control to configure a source
-      KVM: PPC: Book3S HV: XIVE: Add controls for the EQ configuration
-      KVM: PPC: Book3S HV: XIVE: Add a global reset control
-      KVM: PPC: Book3S HV: XIVE: Add a control to sync the sources
-      KVM: PPC: Book3S HV: XIVE: Add a control to dirty the XIVE EQ pages
-      KVM: PPC: Book3S HV: XIVE: Add get/set accessors for the VP XIVE state
-      KVM: Introduce a 'mmap' method for KVM devices
-      KVM: PPC: Book3S HV: XIVE: Add a TIMA mapping
-      KVM: PPC: Book3S HV: XIVE: Add a mapping for the source ESB pages
-      KVM: PPC: Book3S HV: XIVE: Add passthrough support
-      KVM: PPC: Book3S HV: XIVE: Activate XIVE exploitation mode
-      KVM: Introduce a 'release' method for KVM devices
-      KVM: PPC: Book3S HV: XIVE: Replace the 'destroy' method by a 'release' method
-      KVM: PPC: Book3S: Remove useless checks in 'release' method of KVM device
+Hao
 
-Dan Carpenter (1):
-      KVM: vmx: clean up some debug output
-
-Dave Martin (41):
-      KVM: Documentation: Document arm64 core registers in detail
-      arm64: fpsimd: Always set TIF_FOREIGN_FPSTATE on task state flush
-      KVM: arm64: Delete orphaned declaration for __fpsimd_enabled()
-      KVM: arm64: Refactor kvm_arm_num_regs() for easier maintenance
-      KVM: arm64: Add missing #includes to kvm_host.h
-      arm64/sve: Clarify role of the VQ map maintenance functions
-      arm64/sve: Check SVE virtualisability
-      arm64/sve: Enable SVE state tracking for non-task contexts
-      KVM: arm64: Add a vcpu flag to control SVE visibility for the guest
-      KVM: arm64: Propagate vcpu into read_id_reg()
-      KVM: arm64: Support runtime sysreg visibility filtering
-      KVM: arm64/sve: System register context switch and access support
-      KVM: arm64/sve: Context switch the SVE registers
-      KVM: Allow 2048-bit register access via ioctl interface
-      KVM: arm64: Add missing #include of <linux/string.h> in guest.c
-      KVM: arm64: Factor out core register ID enumeration
-      KVM: arm64: Reject ioctl access to FPSIMD V-regs on SVE vcpus
-      KVM: arm64/sve: Add SVE support to register access ioctl interface
-      KVM: arm64: Enumerate SVE register indices for KVM_GET_REG_LIST
-      arm64/sve: In-kernel vector length availability query interface
-      KVM: arm/arm64: Add hook for arch-specific KVM initialisation
-      KVM: arm/arm64: Add KVM_ARM_VCPU_FINALIZE ioctl
-      KVM: arm64/sve: Add pseudo-register for the guest's vector lengths
-      KVM: arm64/sve: Allow userspace to enable SVE for vcpus
-      KVM: arm64: Add a capability to advertise SVE support
-      KVM: Document errors for KVM_GET_ONE_REG and KVM_SET_ONE_REG
-      KVM: arm64/sve: Document KVM API extensions for SVE
-      arm64/sve: Clarify vq map semantics
-      KVM: arm/arm64: Demote kvm_arm_init_arch_resources() to just set up SVE
-      KVM: arm: Make vcpu finalization stubs into inline functions
-      KVM: arm64/sve: sys_regs: Demote redundant vcpu_has_sve() checks to WARNs
-      KVM: arm64/sve: Clean up UAPI register ID definitions
-      KVM: arm64/sve: Miscellaneous tidyups in guest.c
-      KVM: arm64/sve: Make register ioctl access errors more consistent
-      KVM: arm64/sve: WARN when avoiding divide-by-zero in sve_reg_to_region()
-      KVM: arm64/sve: Simplify KVM_REG_ARM64_SVE_VLS array sizing
-      KVM: arm64/sve: Explain validity checks in set_sve_vls()
-      KVM: arm/arm64: Clean up vcpu finalization function parameter naming
-      KVM: Clarify capability requirements for KVM_ARM_VCPU_FINALIZE
-      KVM: Clarify KVM_{SET,GET}_ONE_REG error code documentation
-      KVM: arm64: Clarify access behaviour for out-of-range SVE register slice IDs
-
-Eric Farman (1):
-      KVM: s390: Fix potential spectre warnings
-
-Filippo Sironi (1):
-      X86/KVM: Handle PFNs outside of kernel reach when touching GPTEs
-
-Jiang Biao (1):
-      kvm_main: fix some comments
-
-Kai Huang (1):
-      kvm: x86: Fix L1TF mitigation for shadow MMU
-
-KarimAllah Ahmed (13):
-      X86/nVMX: handle_vmon: Read 4 bytes from guest memory
-      X86/nVMX: Update the PML table without mapping and unmapping the page
-      KVM: Introduce a new guest mapping API
-      X86/nVMX: handle_vmptrld: Use kvm_vcpu_map when copying VMCS12 from guest memory
-      KVM/nVMX: Use kvm_vcpu_map when mapping the L1 MSR bitmap
-      KVM/nVMX: Use kvm_vcpu_map when mapping the virtual APIC page
-      KVM/nVMX: Use kvm_vcpu_map when mapping the posted interrupt descriptor table
-      KVM/X86: Use kvm_vcpu_map in emulator_cmpxchg_emulated
-      KVM/nSVM: Use the new mapping API for mapping guest memory
-      KVM/nVMX: Use kvm_vcpu_map for accessing the shadow VMCS
-      KVM/nVMX: Use kvm_vcpu_map for accessing the enlightened VMCS
-      KVM/nVMX: Use page_address_valid in a few more locations
-      kvm, x86: Properly check whether a pfn is an MMIO or not
-
-Krish Sadhukhan (2):
-      kvm: nVMX: Check "load IA32_PAT" VM-exit control on vmentry
-      kvm: nVMX: Check "load IA32_PAT" VM-entry control on vmentry
-
-Kristina Martsenko (1):
-      KVM: arm64: Fix ptrauth ID register masking logic
-
-Liran Alon (1):
-      KVM: VMX: Nop emulation of MSR_IA32_POWER_CTL
-
-Luwei Kang (2):
-      KVM: x86: Inject PMI for KVM guest
-      KVM: x86: Add support of clear Trace_ToPA_PMI status
-
-Marc Zyngier (1):
-      arm64: KVM: Fix system register enumeration
-
-Mark Rutland (1):
-      KVM: arm/arm64: Context-switch ptrauth registers
-
-Michael Neuling (1):
-      powerpc: Add force enable of DAWR on P9 option
-
-Palmer Dabbelt (1):
-      KVM: PPC: Book3S HV: smb->smp comment fixup
-
-Paolo Bonzini (10):
-      KVM: vmx: print more APICv fields in dump_vmcs
-      KVM: x86: clear VM_EXIT_SAVE_IA32_PAT
-      KVM: x86: optimize check for valid PAT value
-      KVM: nVMX: Return -EINVAL when signaling failure in pre-VM-Entry helpers
-      kvm: move KVM_CAP_NR_MEMSLOTS to common code
-      Merge tag 'kvm-s390-next-5.2-1' of git://git.kernel.org/.../kvms390/linux into HEAD
-      KVM: fix KVM_CLEAR_DIRTY_LOG for memory slots of unaligned size
-      KVM: x86: use direct accessors for RIP and RSP
-      Merge tag 'kvm-ppc-next-5.2-2' of git://git.kernel.org/.../paulus/powerpc into HEAD
-      Merge tag 'kvmarm-for-v5.2' of git://git.kernel.org/.../kvmarm/kvmarm into HEAD
-
-Paul Mackerras (7):
-      KVM: PPC: Book3S HV: Fix XICS-on-XIVE H_IPI when priority = 0
-      KVM: PPC: Book3S HV: Move HPT guest TLB flushing to C code
-      KVM: PPC: Book3S HV: Flush TLB on secondary radix threads
-      Merge remote-tracking branch 'remotes/powerpc/topic/ppc-kvm' into kvm-ppc-next
-      KVM: PPC: Book3S HV: XIVE: Prevent races when releasing device
-      KVM: PPC: Book3S HV: XIVE: Clear escalation interrupt pointers on device close
-      KVM: PPC: Book3S HV: Make sure to load LPID for radix VCPUs
-
-Peter Xu (3):
-      KVM: Fix the bitmap range to copy during clear dirty
-      KVM: Fix kvm_clear_dirty_log_protect off-by-(minus-)one
-      KVM: Introduce KVM_CAP_MANUAL_DIRTY_LOG_PROTECT2
-
-Pierre Morel (2):
-      KVM: s390: vsie: Do not shadow CRYCB when no AP and no keys
-      KVM: s390: vsie: Return correct values for Invalid CRYCB format
-
-Radim Krčmář (1):
-      Revert "KVM: doc: Document the life cycle of a VM and its resources"
-
-Sean Christopherson (15):
-      KVM: nVMX: Move guest non-reg state checks to VM-Exit path
-      KVM: nVMX: Rename and split top-level consistency checks to match SDM
-      KVM: nVMX: Return -EINVAL when signaling failure in VM-Entry helpers
-      KVM: x86: Skip EFER vs. guest CPUID checks for host-initiated writes
-      KVM: x86: Inject #GP if guest attempts to set unsupported EFER bits
-      KVM: lapic: Busy wait for timer to expire when using hv_timer
-      KVM: lapic: Explicitly cancel the hv timer if it's pre-expired
-      KVM: lapic: Refactor ->set_hv_timer to use an explicit expired param
-      KVM: lapic: Check for a pending timer intr prior to start_hv_timer()
-      KVM: VMX: Skip delta_tsc shift-and-divide if the dividend is zero
-      KVM: VMX: Include architectural defs header in capabilities.h
-      KVM: x86: Omit caching logic for always-available GPRs
-      KVM: VMX: Use accessors for GPRs outside of dedicated caching logic
-      KVM: nVMX: Disable intercept for FS/GS base MSRs in vmcs02 when possible
-      Revert "KVM: nVMX: Expose RDPMC-exiting only when guest supports PMU"
-
-Suraj Jitindar Singh (4):
-      KVM: PPC: Book3S HV: Implement virtual mode H_PAGE_INIT handler
-      KVM: PPC: Book3S HV: Implement real mode H_PAGE_INIT handler
-      KVM: PPC: Book3S HV: Handle virtual mode in XIVE VCPU push code
-      KVM: PPC: Book3S HV: Save/restore vrsave register in kvmhv_p9_guest_entry()
-
- Documentation/arm64/perf.txt                       |   85 ++
- Documentation/arm64/pointer-authentication.txt     |   22 +-
- Documentation/powerpc/DAWR-POWER9.txt              |   32 +
- Documentation/virtual/kvm/api.txt                  |  230 +++-
- Documentation/virtual/kvm/devices/vm.txt           |    3 +-
- Documentation/virtual/kvm/devices/xive.txt         |  197 +++
- arch/arm/include/asm/kvm_emulate.h                 |    2 +
- arch/arm/include/asm/kvm_host.h                    |   26 +-
- arch/arm64/Kconfig                                 |    6 +-
- arch/arm64/include/asm/fpsimd.h                    |   29 +-
- arch/arm64/include/asm/kvm_asm.h                   |    3 +-
- arch/arm64/include/asm/kvm_emulate.h               |   16 +
- arch/arm64/include/asm/kvm_host.h                  |  101 +-
- arch/arm64/include/asm/kvm_hyp.h                   |    1 -
- arch/arm64/include/asm/kvm_ptrauth.h               |  111 ++
- arch/arm64/include/asm/sysreg.h                    |    3 +
- arch/arm64/include/uapi/asm/kvm.h                  |   43 +
- arch/arm64/kernel/asm-offsets.c                    |    7 +
- arch/arm64/kernel/cpufeature.c                     |    2 +-
- arch/arm64/kernel/fpsimd.c                         |  179 ++-
- arch/arm64/kernel/perf_event.c                     |   50 +-
- arch/arm64/kernel/signal.c                         |    5 -
- arch/arm64/kvm/Makefile                            |    2 +-
- arch/arm64/kvm/fpsimd.c                            |   17 +-
- arch/arm64/kvm/guest.c                             |  415 ++++++-
- arch/arm64/kvm/handle_exit.c                       |   36 +-
- arch/arm64/kvm/hyp/entry.S                         |   15 +
- arch/arm64/kvm/hyp/switch.c                        |   80 +-
- arch/arm64/kvm/pmu.c                               |  239 ++++
- arch/arm64/kvm/reset.c                             |  167 ++-
- arch/arm64/kvm/sys_regs.c                          |  183 ++-
- arch/arm64/kvm/sys_regs.h                          |   25 +
- arch/powerpc/include/asm/hw_breakpoint.h           |    8 +
- arch/powerpc/include/asm/kvm_host.h                |   11 +-
- arch/powerpc/include/asm/kvm_ppc.h                 |   41 +-
- arch/powerpc/include/asm/opal-api.h                |    7 +-
- arch/powerpc/include/asm/opal.h                    |    7 +
- arch/powerpc/include/asm/xive.h                    |   17 +
- arch/powerpc/include/uapi/asm/kvm.h                |   46 +
- arch/powerpc/kernel/hw_breakpoint.c                |   62 +-
- arch/powerpc/kernel/process.c                      |    9 +-
- arch/powerpc/kernel/ptrace.c                       |    3 +-
- arch/powerpc/kvm/Makefile                          |    2 +-
- arch/powerpc/kvm/book3s.c                          |   42 +-
- arch/powerpc/kvm/book3s_64_vio.c                   |  102 +-
- arch/powerpc/kvm/book3s_64_vio_hv.c                |  105 +-
- arch/powerpc/kvm/book3s_hv.c                       |  159 ++-
- arch/powerpc/kvm/book3s_hv_builtin.c               |   57 +
- arch/powerpc/kvm/book3s_hv_rm_mmu.c                |  144 +++
- arch/powerpc/kvm/book3s_hv_rmhandlers.S            |  109 +-
- arch/powerpc/kvm/book3s_xive.c                     |  250 +++-
- arch/powerpc/kvm/book3s_xive.h                     |   37 +
- arch/powerpc/kvm/book3s_xive_native.c              | 1249 ++++++++++++++++++++
- arch/powerpc/kvm/book3s_xive_template.c            |   78 +-
- arch/powerpc/kvm/powerpc.c                         |   40 +-
- arch/powerpc/platforms/powernv/opal-call.c         |    3 +
- arch/powerpc/sysdev/xive/native.c                  |  110 ++
- arch/s390/include/asm/cpacf.h                      |    1 +
- arch/s390/include/asm/kvm_host.h                   |    2 +
- arch/s390/include/uapi/asm/kvm.h                   |    5 +-
- arch/s390/kvm/Kconfig                              |    1 +
- arch/s390/kvm/interrupt.c                          |   11 +-
- arch/s390/kvm/kvm-s390.c                           |  120 +-
- arch/s390/kvm/vsie.c                               |   13 +-
- arch/s390/tools/gen_facilities.c                   |    3 +
- arch/x86/events/intel/core.c                       |    6 +-
- arch/x86/include/asm/e820/api.h                    |    1 +
- arch/x86/include/asm/kvm_host.h                    |    7 +-
- arch/x86/include/asm/msr-index.h                   |    8 +
- arch/x86/kernel/e820.c                             |   18 +-
- arch/x86/kvm/cpuid.c                               |   12 +-
- arch/x86/kvm/hyperv.c                              |   24 +-
- arch/x86/kvm/kvm_cache_regs.h                      |   42 +-
- arch/x86/kvm/lapic.c                               |   38 +-
- arch/x86/kvm/mmu.c                                 |   23 +-
- arch/x86/kvm/mtrr.c                                |   10 +-
- arch/x86/kvm/paging_tmpl.h                         |   38 +-
- arch/x86/kvm/svm.c                                 |  128 +-
- arch/x86/kvm/vmx/capabilities.h                    |    2 +
- arch/x86/kvm/vmx/nested.c                          |  348 +++---
- arch/x86/kvm/vmx/pmu_intel.c                       |    8 +-
- arch/x86/kvm/vmx/vmx.c                             |   90 +-
- arch/x86/kvm/vmx/vmx.h                             |   11 +-
- arch/x86/kvm/x86.c                                 |  199 ++--
- arch/x86/kvm/x86.h                                 |   10 +
- include/linux/kvm_host.h                           |   48 +
- include/linux/perf_event.h                         |    1 +
- include/uapi/linux/kvm.h                           |   15 +-
- tools/arch/s390/include/uapi/asm/kvm.h             |    3 +-
- tools/testing/selftests/kvm/.gitignore             |    7 +-
- tools/testing/selftests/kvm/Makefile               |    2 +
- tools/testing/selftests/kvm/dirty_log_test.c       |    8 +-
- tools/testing/selftests/kvm/include/kvm_util.h     |    4 +
- tools/testing/selftests/kvm/lib/kvm_util.c         |   32 +
- .../selftests/kvm/x86_64/kvm_create_max_vcpus.c    |   70 ++
- .../kvm/x86_64/vmx_set_nested_state_test.c         |  280 +++++
- virt/kvm/Kconfig                                   |    3 +
- virt/kvm/arm/arm.c                                 |   43 +-
- virt/kvm/kvm_main.c                                |  108 +-
- 99 files changed, 5838 insertions(+), 995 deletions(-)
- create mode 100644 Documentation/arm64/perf.txt
- create mode 100644 Documentation/virtual/kvm/devices/xive.txt
- create mode 100644 arch/arm64/include/asm/kvm_ptrauth.h
- create mode 100644 arch/arm64/kvm/pmu.c
- create mode 100644 arch/powerpc/kvm/book3s_xive_native.c
- create mode 100644 tools/testing/selftests/kvm/x86_64/kvm_create_max_vcpus.c
- create mode 100644 tools/testing/selftests/kvm/x86_64/vmx_set_nested_state_test.c
+> 
+> 
+> > +
+> > +static struct attribute *fabric_top_attrs[] = {
+> > +       &perf_obj_attr_fab_freeze.attr,
+> > +       NULL,
+> > +};
+> > +
+> > +static struct attribute_group fabric_top_attr_group = {
+> > +       .attrs = fabric_top_attrs,
+> > +};
+> > +
+> > +static const struct attribute_group *fabric_top_attr_groups[] = {
+> > +       &fabric_attr_group,
+> > +       &fabric_top_attr_group,
+> > +       NULL,
+> > +};
+> > +
+> > +static int create_perf_fabric_obj(struct perf_object *perf_dev)
+> > +{
+> > +       struct perf_object *pobj, *obj;
+> > +       int i;
+> > +
+> > +       pobj = create_perf_obj(perf_dev->feature, &perf_dev->kobj,
+> > +                              PERF_OBJ_ROOT_ID, fabric_top_attr_groups,
+> > +                              "fabric");
+> > +       if (IS_ERR(pobj))
+> > +               return PTR_ERR(pobj);
+> > +
+> > +       list_add(&pobj->node, &perf_dev->children);
+> > +
+> > +       for (i = 0; i < PERF_MAX_PORT_NUM; i++) {
+> > +               obj = create_perf_obj(perf_dev->feature, &pobj->kobj, i,
+> > +                                     fabric_attr_groups, "port");
+> > +               if (IS_ERR(obj))
+> > +                       return PTR_ERR(obj);
+> > +
+> > +               list_add(&obj->node, &pobj->children);
+> > +       }
+> > +
+> > +       return 0;
+> > +}
+> > +
+> > +static int fme_perf_init(struct platform_device *pdev,
+> > +                        struct dfl_feature *feature)
+> > +{
+> > +       struct perf_object *perf_dev;
+> > +       int ret;
+> > +
+> > +       perf_dev = create_perf_dev(feature);
+> > +       if (IS_ERR(perf_dev))
+> > +               return PTR_ERR(perf_dev);
+> > +
+> > +       ret = create_perf_fabric_obj(perf_dev);
+> > +       if (ret)
+> > +               goto done;
+> > +
+> > +       if (feature->id == FME_FEATURE_ID_GLOBAL_IPERF) {
+> > +               /*
+> > +                * Cache and IOMMU(VT-D) performance counters are not supported
+> > +                * on discreted solutions e.g. Intel Programmable Acceleration
+> > +                * Card based on PCIe.
+> > +                */
+> > +               ret = create_perf_cache_obj(perf_dev);
+> > +               if (ret)
+> > +                       goto done;
+> > +
+> > +               ret = create_perf_iommu_obj(perf_dev);
+> > +               if (ret)
+> > +                       goto done;
+> > +       }
+> > +
+> > +       feature->priv = perf_dev;
+> > +       return 0;
+> > +
+> > +done:
+> > +       destroy_perf_obj(perf_dev);
+> > +       return ret;
+> > +}
+> > +
+> > +static void fme_perf_uinit(struct platform_device *pdev,
+> > +                          struct dfl_feature *feature)
+> > +{
+> > +       struct perf_object *perf_dev = feature->priv;
+> > +
+> > +       destroy_perf_obj(perf_dev);
+> > +}
+> > +
+> > +const struct dfl_feature_id fme_perf_id_table[] = {
+> > +       {.id = FME_FEATURE_ID_GLOBAL_IPERF,},
+> > +       {.id = FME_FEATURE_ID_GLOBAL_DPERF,},
+> > +       {0,}
+> > +};
+> > +
+> > +const struct dfl_feature_ops fme_perf_ops = {
+> > +       .init = fme_perf_init,
+> > +       .uinit = fme_perf_uinit,
+> > +};
+> > diff --git a/drivers/fpga/dfl-fme.h b/drivers/fpga/dfl-fme.h
+> > index 5fbe3f5..dc71048 100644
+> > --- a/drivers/fpga/dfl-fme.h
+> > +++ b/drivers/fpga/dfl-fme.h
+> > @@ -39,5 +39,7 @@ struct dfl_fme {
+> >  extern const struct dfl_feature_id fme_pr_mgmt_id_table[];
+> >  extern const struct dfl_feature_ops fme_global_err_ops;
+> >  extern const struct dfl_feature_id fme_global_err_id_table[];
+> > +extern const struct dfl_feature_ops fme_perf_ops;
+> > +extern const struct dfl_feature_id fme_perf_id_table[];
+> >
+> >  #endif /* __DFL_FME_H */
+> > diff --git a/drivers/fpga/dfl.c b/drivers/fpga/dfl.c
+> > index 65f91ef..637692a 100644
+> > --- a/drivers/fpga/dfl.c
+> > +++ b/drivers/fpga/dfl.c
+> > @@ -507,6 +507,7 @@ static int build_info_commit_dev(struct build_feature_devs_info *binfo)
+> >                 struct dfl_feature *feature = &pdata->features[index];
+> >
+> >                 /* save resource information for each feature */
+> > +               feature->pdev = fdev;
+> >                 feature->id = finfo->fid;
+> >                 feature->resource_index = index;
+> >                 feature->ioaddr = finfo->ioaddr;
+> > diff --git a/drivers/fpga/dfl.h b/drivers/fpga/dfl.h
+> > index 6c32080..bf23436 100644
+> > --- a/drivers/fpga/dfl.h
+> > +++ b/drivers/fpga/dfl.h
+> > @@ -191,6 +191,7 @@ struct dfl_feature_driver {
+> >  /**
+> >   * struct dfl_feature - sub feature of the feature devices
+> >   *
+> > + * @pdev: parent platform device.
+> >   * @id: sub feature id.
+> >   * @resource_index: each sub feature has one mmio resource for its registers.
+> >   *                 this index is used to find its mmio resource from the
+> > @@ -200,6 +201,7 @@ struct dfl_feature_driver {
+> >   * @priv: priv data of this feature.
+> >   */
+> >  struct dfl_feature {
+> > +       struct platform_device *pdev;
+> >         u64 id;
+> >         int resource_index;
+> >         void __iomem *ioaddr;
+> > --
+> > 1.8.3.1
+> >
