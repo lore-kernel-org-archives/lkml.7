@@ -6,21 +6,21 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BC7CC04AB4
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 10:04:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43C40C04AB4
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 10:04:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 10BF320879
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 10:04:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1EF7820873
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 10:04:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728387AbfEQKEB (ORCPT
+        id S1728425AbfEQKEF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 May 2019 06:04:01 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:37580 "EHLO huawei.com"
+        Fri, 17 May 2019 06:04:05 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:37578 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727788AbfEQKEB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1728112AbfEQKEB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 17 May 2019 06:04:01 -0400
 Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id A4A91164ADCA12F9ABB6;
+        by Forcepoint Email with ESMTP id A0876D550BCA3411A7D9;
         Fri, 17 May 2019 18:03:59 +0800 (CST)
 Received: from localhost.localdomain.localdomain (10.175.113.25) by
  DGGEMS413-HUB.china.huawei.com (10.3.19.213) with Microsoft SMTP Server id
@@ -30,12 +30,13 @@ To:     Corey Minyard <minyard@acm.org>, Arnd Bergmann <arnd@arndb.de>,
         "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
         <openipmi-developer@lists.sourceforge.net>,
         <linux-kernel@vger.kernel.org>
-CC:     Kefeng Wang <wangkefeng.wang@huawei.com>,
-        Hulk Robot <hulkci@huawei.com>
-Subject: [PATCH] ipmi_si: fix unexpected driver unregister warning
-Date:   Fri, 17 May 2019 18:12:44 +0800
-Message-ID: <20190517101245.4341-1-wangkefeng.wang@huawei.com>
+CC:     Kefeng Wang <wangkefeng.wang@huawei.com>
+Subject: [PATCH] ipmi_si: use bool type for initialized variable
+Date:   Fri, 17 May 2019 18:12:45 +0800
+Message-ID: <20190517101245.4341-2-wangkefeng.wang@huawei.com>
 X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190517101245.4341-1-wangkefeng.wang@huawei.com>
+References: <20190517101245.4341-1-wangkefeng.wang@huawei.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7BIT
 Content-Type:   text/plain; charset=US-ASCII
@@ -46,50 +47,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If ipmi_si_platform_init()->platform_driver_register() fails,
-platform_driver_unregister() called unconditionally will trigger
-following warning,
+Cover 'int' to 'bool' type for initialized variable.
 
-ipmi_platform: Unable to register driver: -12
-------------[ cut here ]------------
-Unexpected driver unregister!
-WARNING: CPU: 1 PID: 7210 at drivers/base/driver.c:193 driver_unregister+0x60/0x70 drivers/base/driver.c:193
-
-Fix it by adding platform_registered variable, only unregister platform
-driver when it is already successfully registered.
-
-Reported-by: Hulk Robot <hulkci@huawei.com>
 Signed-off-by: Kefeng Wang <wangkefeng.wang@huawei.com>
 ---
- drivers/char/ipmi/ipmi_si_platform.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ drivers/char/ipmi/ipmi_si_intf.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/char/ipmi/ipmi_si_platform.c b/drivers/char/ipmi/ipmi_si_platform.c
-index f2a91c4d8cab..0cd849675d99 100644
---- a/drivers/char/ipmi/ipmi_si_platform.c
-+++ b/drivers/char/ipmi/ipmi_si_platform.c
-@@ -19,6 +19,7 @@
- #include "ipmi_si.h"
- #include "ipmi_dmi.h"
+diff --git a/drivers/char/ipmi/ipmi_si_intf.c b/drivers/char/ipmi/ipmi_si_intf.c
+index f124a2d2bb9f..da5b6723329a 100644
+--- a/drivers/char/ipmi/ipmi_si_intf.c
++++ b/drivers/char/ipmi/ipmi_si_intf.c
+@@ -71,7 +71,7 @@ enum si_intf_state {
  
-+static bool platform_registered;
- static bool si_tryplatform = true;
- #ifdef CONFIG_ACPI
- static bool          si_tryacpi = true;
-@@ -469,9 +470,12 @@ void ipmi_si_platform_init(void)
- 	int rv = platform_driver_register(&ipmi_platform_driver);
- 	if (rv)
- 		pr_err("Unable to register driver: %d\n", rv);
-+	else
-+		platform_registered = true;
- }
+ static const char * const si_to_str[] = { "invalid", "kcs", "smic", "bt" };
  
- void ipmi_si_platform_shutdown(void)
- {
--	platform_driver_unregister(&ipmi_platform_driver);
-+	if (platform_registered)
-+		platform_driver_unregister(&ipmi_platform_driver);
- }
+-static int initialized;
++static bool initialized;
+ 
+ /*
+  * Indexes into stats[] in smi_info below.
+@@ -2124,7 +2124,7 @@ static int __init init_ipmi_si(void)
+ 	}
+ 
+ skip_fallback_noirq:
+-	initialized = 1;
++	initialized = true;
+ 	mutex_unlock(&smi_infos_lock);
+ 
+ 	if (type)
 -- 
 2.20.1
 
