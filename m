@@ -2,85 +2,108 @@ Return-Path: <SRS0=M1fl=TR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10EB0C04AB4
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 17:26:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31F4DC04AB4
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 17:27:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D8FA220848
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 17:26:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 023882168B
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 17:27:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Mb62EaGB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727843AbfEQR0u (ORCPT
+        id S1728184AbfEQR1R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 May 2019 13:26:50 -0400
-Received: from mga06.intel.com ([134.134.136.31]:33548 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725932AbfEQR0u (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 May 2019 13:26:50 -0400
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 May 2019 10:26:49 -0700
-X-ExtLoop1: 1
-Received: from agluck-desk.sc.intel.com (HELO agluck-desk) ([10.3.52.160])
-  by orsmga003.jf.intel.com with ESMTP; 17 May 2019 10:26:49 -0700
-Date:   Fri, 17 May 2019 10:26:49 -0700
-From:   "Luck, Tony" <tony.luck@intel.com>
-To:     Borislav Petkov <bp@alien8.de>
-Cc:     "Ghannam, Yazen" <Yazen.Ghannam@amd.com>,
-        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "x86@kernel.org" <x86@kernel.org>
-Subject: Re: [PATCH v3 5/6] x86/MCE: Save MCA control bits that get set in
- hardware
-Message-ID: <20190517172648.GA18164@agluck-desk>
-References: <SN6PR12MB26397B30A120E3426184727FF80A0@SN6PR12MB2639.namprd12.prod.outlook.com>
- <20190516165648.GB21857@zn.tnic>
- <SN6PR12MB26392B440ED735C26AA2C678F80A0@SN6PR12MB2639.namprd12.prod.outlook.com>
- <20190516172117.GC21857@zn.tnic>
- <SN6PR12MB26394CD4E1BAC068B0B1AEF6F80A0@SN6PR12MB2639.namprd12.prod.outlook.com>
- <20190516203456.GD21857@zn.tnic>
- <20190516205943.GA3299@agluck-desk>
- <20190517101006.GA32065@zn.tnic>
- <SN6PR12MB26391A0C3979030082EE38F8F80B0@SN6PR12MB2639.namprd12.prod.outlook.com>
- <20190517163729.GE13482@zn.tnic>
+        Fri, 17 May 2019 13:27:17 -0400
+Received: from mail-it1-f196.google.com ([209.85.166.196]:50601 "EHLO
+        mail-it1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725932AbfEQR1Q (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 May 2019 13:27:16 -0400
+Received: by mail-it1-f196.google.com with SMTP id i10so13225133ite.0
+        for <linux-kernel@vger.kernel.org>; Fri, 17 May 2019 10:27:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=M48MIzsMtIW3RacnfhHRKOC/99zIJyrXj5URZcQXnyI=;
+        b=Mb62EaGBDi+zgq4OJCbYqI25W1D+k8N/zl8pupco6beQ9tQWnRV6zIlDgixtlToUsK
+         TZXhkUfnxXnXBvG8byqgWgfM6NhlkuKufSiSII4bUNikq0weX+Jo8tORoTEl2npkAbBm
+         UuIJFpp44i0wyTMihH744Hr9aofWl4gHu1MNTw8g0dD7/RhkgBRynmBVmBNHaxHpNqYV
+         PeM/yc0skXicDgZ3pL9F4FtoTW7HfydSdMLaGzbww1GS4DpGFdbNXWvCmk1Xe1KVIq5/
+         rjEpSkjIS0Aie3xqRrn2DWc3bjNTW9CbhJ9QKR+NHkTaYYNvqY5xp7ah6HYW+1+N9q73
+         3jHQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=M48MIzsMtIW3RacnfhHRKOC/99zIJyrXj5URZcQXnyI=;
+        b=md1FkLi+A+3MUr8KRFFUZMc1IZoyf3og90yj7zDLuo/vE88ZLCQOKNhdNP0rINmzzn
+         TEOqTTlxuwcOkIyYxMUCyUj2REJiTHU4s5Pi5GY/ff/yztE4Uq9XBn5pMeU+0wEMwTbc
+         +LDDIKNpf5O9ZGm6JuKiJ9lVDyNDqWXDWoPIWuxoS3YoCFQOVOn7gUrIF1GqlcZ316z8
+         2eEdTiyvpBztLMLROPa0i62NxtybPMWA42vwnMt75AqtnisgqLS5jLU4HHLShYkSOBpL
+         V7yT1lbYigkEf6YjUsjPoNblExCG15xY3fU7I0dTw2fS9B9DmG8cS8WZXqWvAEhvS93X
+         SC2Q==
+X-Gm-Message-State: APjAAAW7sYjlNxEY7vg9aM5E1x6RoznQScR0/D9etZ0xa5L6pQckTW8i
+        fcNsImf5GHcE2jwnLKPdO1jmNiF4FD8=
+X-Google-Smtp-Source: APXvYqwo8SJb/axA1pQtMm5VqXyN9K90ok/ZPdTR78ey1GZqc6MTdnRryPfuQHrwA06lDZ9cL5NFRg==
+X-Received: by 2002:a24:f946:: with SMTP id l67mr3525196ith.43.1558114035406;
+        Fri, 17 May 2019 10:27:15 -0700 (PDT)
+Received: from [172.22.22.26] (c-71-195-29-92.hsd1.mn.comcast.net. [71.195.29.92])
+        by smtp.googlemail.com with ESMTPSA id v134sm505362ita.16.2019.05.17.10.27.13
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 17 May 2019 10:27:14 -0700 (PDT)
+Subject: Re: [PATCH 02/18] soc: qcom: create "include/soc/qcom/rmnet.h"
+To:     Subash Abhinov Kasiviswanathan <subashab@codeaurora.org>
+Cc:     Arnd Bergmann <arnd@arndb.de>, David Miller <davem@davemloft.net>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Ilias Apalodimas <ilias.apalodimas@linaro.org>,
+        stranche@codeaurora.org, YueHaibing <yuehaibing@huawei.com>,
+        Joe Perches <joe@perches.com>, syadagir@codeaurora.org,
+        mjavid@codeaurora.org, evgreen@chromium.org, benchan@google.com,
+        ejcaruso@google.com, abhishek.esse@gmail.com,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <20190512012508.10608-1-elder@linaro.org>
+ <20190512012508.10608-3-elder@linaro.org>
+ <CAK8P3a16HpKEUB7_6G_W_RKkyVeVBW_rofLbdhC2QmWjVOAHMg@mail.gmail.com>
+ <9cae00c4-29ab-6c3e-7437-6ed878a3061f@linaro.org>
+ <005ae8fb4ea9ba86fd0924b1719f1753@codeaurora.org>
+From:   Alex Elder <elder@linaro.org>
+Message-ID: <eca367f2-e019-f785-509d-5662ed7b7398@linaro.org>
+Date:   Fri, 17 May 2019 12:27:13 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190517163729.GE13482@zn.tnic>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <005ae8fb4ea9ba86fd0924b1719f1753@codeaurora.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 17, 2019 at 06:37:29PM +0200, Borislav Petkov wrote:
-> Now, the
+On 5/15/19 8:09 PM, Subash Abhinov Kasiviswanathan wrote:
+. . .
+> Hi Alex
 > 
-> 	wrmsrl(msr_ops.ctl(i), -1)
-> 	rdmsrl(msr_ops.ctl(i), val);
-> 
-> method of throwing all 1s to see what sticks is what Intel wants, as
-> Tony said. Is that going to be a problem on AMD?
+> Could we instead have the rmnet header definition in
+> include/linux/if_rmnet.h
 
-It is what we want in general ...  but there is this:
+I have no objection to that, but I don't actually know what
+the criteria are for putting a file in that directory.
 
-        if (c->x86_vendor == X86_VENDOR_INTEL) {
-                /*
-                 * SDM documents that on family 6 bank 0 should not be written
-                 * because it aliases to another special BIOS controlled
-                 * register.
-                 * But it's not aliased anymore on model 0x1a+
-                 * Don't ignore bank 0 completely because there could be a
-                 * valid event later, merely don't write CTL0.
-                 */
+Glancing at other "if_*" files there it seems sensible, but
+because I don't know, I'd like to have a little better
+justification.
 
-                if (c->x86 == 6 && c->x86_model < 0x1A && cfg->banks > 0)
-                        mce_banks[0].init = 0;
+Can you provide a good explanation about why these
+definitions belong in "include/linux/if_rmnet.h" instead
+of "include/soc/qcom/rmnet.h"?
 
-Which is a quirk for some models where we don't want to do
-the "write all 1s and see what sticks"
+Thanks.
 
--Tony
+					-Alex
