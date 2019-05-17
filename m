@@ -2,142 +2,93 @@ Return-Path: <SRS0=M1fl=TR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE954C04AB4
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 21:09:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0CA0C04AB4
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 21:10:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9F11C2087B
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 21:09:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D0F42087B
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 21:10:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="g7LzPxyH"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JlnpXgjA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729568AbfEQVJh (ORCPT
+        id S1729584AbfEQVKT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 May 2019 17:09:37 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:36268 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729517AbfEQVJ0 (ORCPT
+        Fri, 17 May 2019 17:10:19 -0400
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:43127 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727949AbfEQVKT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 May 2019 17:09:26 -0400
-Received: by mail-pl1-f196.google.com with SMTP id d21so3890502plr.3
-        for <linux-kernel@vger.kernel.org>; Fri, 17 May 2019 14:09:26 -0700 (PDT)
+        Fri, 17 May 2019 17:10:19 -0400
+Received: by mail-qt1-f194.google.com with SMTP id i26so9602461qtr.10;
+        Fri, 17 May 2019 14:10:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=UnBJbIYE69zMGwO8poN8IDYOmff82X6EhsKpcU8MvMQ=;
-        b=g7LzPxyH+LvPI6gCbyuPthanjuBTT5sBDNxHjvccQvOx19AaSrjT67G+RlhKKys9oV
-         pG/2wHM5+/l/ltgaITw9JcI1ey8st1bO9vfHyhCxg0ptne3yPEKbdVKfGao+KZKykTkA
-         El0JtBYeLKcptdg7g8X7VPUc7vsSkbKgBQR94=
+        d=gmail.com; s=20161025;
+        h=sender:from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=fziPkUVPPd8pNB7Q6ntU7Mk+rKbDI7+Yj/Vwva8hPrU=;
+        b=JlnpXgjAvmojHhaoUZEOu7nWYTbT1WVJxhAQg/ltq3l00FQgUC0dvQZf2p22una2rm
+         9NInH+w++1EZSp6c9V4ArJNMj0EAJLDYIfxVCMfM8rM9MLmdVhjb+eHTRl+Ra78QFxXX
+         IG9d8DqbnCZutAMOvfYCXCVqJ5r6A4eEaaUJATicMAJMWc5TGj7ByHGEXGpxYZnxfpyb
+         ZYNmbMJhbE7AzeziqiEnETar43KaaApisrhb3zr50qmubOxdvXZfP7n45h3hE/eMx/ho
+         FxWTz+5OCOQzvUJxsZDqZhuohZlwCwT9v0M4p5yk49olx6EVw3thkj8ReeaQbn+Tq7sT
+         Gltg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=UnBJbIYE69zMGwO8poN8IDYOmff82X6EhsKpcU8MvMQ=;
-        b=FbJEItZ7E0rexNfCSMxyzxY26wtWNH1395WNwFayRyrAzCvQxRRdV0Y4ulRzVE/IZJ
-         aZBn0kfz0SXT42BjESjIv00ZfXl4Grg2C+Fp8ynCc6FNHK23LV7iw4bJyA388HEDTZJH
-         UEvv1e7rQsMvoXe78PqKm29aWPf6EExSE3FTk4Rn1Y+AlXUNPqkk0viaoWcjamv8XhSY
-         JcvszpWJga8J7Q1ru9fBXgn6nY7J0pHbWLFkSTpzaLGsVZ/tOxDeRmt2VdsVNZBMnAKq
-         dalDe7pLnEouSaev95qAzNBo0daS0rx+Z3fF0CKcoyxR4KIM8xfleC+pU1JL06aCPGo+
-         njWg==
-X-Gm-Message-State: APjAAAVBjl8X8PCREg/sSBGQJRkuHdjwaXQ9EEiN0dwbtzWwxPz9kP/P
-        CRwlXLj5aZBTTlXN5ukXmFOPtw==
-X-Google-Smtp-Source: APXvYqzt+2QTyd1NBsT69B9i+E7J5DJu/DXqehYKxdE+JFn0L1xTEJQGTfYwt14XNlqiLAT+fN3Ylw==
-X-Received: by 2002:a17:902:704c:: with SMTP id h12mr4735064plt.65.1558127365770;
-        Fri, 17 May 2019 14:09:25 -0700 (PDT)
-Received: from smtp.gmail.com ([2620:15c:202:1:fa53:7765:582b:82b9])
-        by smtp.gmail.com with ESMTPSA id q142sm7890448pfc.27.2019.05.17.14.09.24
+        h=x-gm-message-state:sender:from:date:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=fziPkUVPPd8pNB7Q6ntU7Mk+rKbDI7+Yj/Vwva8hPrU=;
+        b=YazsBqPYZaR59a51u4L7fWL8lmwm9+o78VAbaUTGCwx2TbxoJuT6u7eWoFTpd1hqJY
+         T03WEJKtO6jIoi40yTafjpCJIUCWtAnv8Qs90JXjrRXNwZELanZYPQ3FLjkG9j+oQVpS
+         /ghnY4kf0J8FmsyAF31EOz32mbmD6beMfzr4mWRNim7Y44inOGGozbdVYNGJqYIhZePe
+         ewF/hQVErlDS008yRJrMkfbGtGMfVki9+EvI7ZbqQQe2hpF8/LqCrvR4tRiS9GbecmQu
+         Tj1665SppGX5eEa3fSp27+q+2jEAE/QfF6tCGCAmhPHaPoB7lvzw8NltycI8prfATpaa
+         Opvw==
+X-Gm-Message-State: APjAAAWyhmFx/N9+gGM40YvtyyPAiXKphWekJ4JqGffMHvUrefk34F4n
+        UKgbyyl6heN4/yHmGhlWO3M=
+X-Google-Smtp-Source: APXvYqyFIiqdHrvDSG3vP/SapftcAOyMi+dlfXg/SB/Ow1xRVTrmglb9Fi0SzpTlVcrCviHw2loSQg==
+X-Received: by 2002:ac8:1aa4:: with SMTP id x33mr49219315qtj.69.1558127417674;
+        Fri, 17 May 2019 14:10:17 -0700 (PDT)
+Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
+        by smtp.gmail.com with ESMTPSA id c32sm699984qtd.61.2019.05.17.14.10.16
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 17 May 2019 14:09:25 -0700 (PDT)
-From:   Stephen Boyd <swboyd@chromium.org>
-To:     Andy Gross <agross@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        Ian Jackson <ian.jackson@citrix.com>,
-        Julien Grall <julien.grall@arm.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Avaneesh Kumar Dwivedi <akdwived@codeaurora.org>
-Subject: [PATCH 1/3] firmware: qcom_scm: Use proper types for dma mappings
-Date:   Fri, 17 May 2019 14:09:21 -0700
-Message-Id: <20190517210923.202131-2-swboyd@chromium.org>
-X-Mailer: git-send-email 2.21.0.1020.gf2820cf01a-goog
-In-Reply-To: <23774.56553.445601.436491@mariner.uk.xensource.com>
-References: <23774.56553.445601.436491@mariner.uk.xensource.com>
+        Fri, 17 May 2019 14:10:17 -0700 (PDT)
+From:   Arvind Sankar <nivedita@alum.mit.edu>
+X-Google-Original-From: Arvind Sankar <arvind@rani.riverdale.lan>
+Date:   Fri, 17 May 2019 17:10:15 -0400
+To:     Arvind Sankar <nivedita@alum.mit.edu>
+Cc:     hpa@zytor.com, Roberto Sassu <roberto.sassu@huawei.com>,
+        viro@zeniv.linux.org.uk, linux-security-module@vger.kernel.org,
+        linux-integrity@vger.kernel.org, initramfs@vger.kernel.org,
+        linux-api@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, zohar@linux.vnet.ibm.com,
+        silviu.vlasceanu@huawei.com, dmitry.kasatkin@huawei.com,
+        takondra@cisco.com, kamensky@cisco.com, arnd@arndb.de,
+        rob@landley.net, james.w.mcmechan@gmail.com, niveditas98@gmail.com
+Subject: Re: [PATCH v3 2/2] initramfs: introduce do_readxattrs()
+Message-ID: <20190517211014.GA9198@rani.riverdale.lan>
+References: <20190517165519.11507-1-roberto.sassu@huawei.com>
+ <20190517165519.11507-3-roberto.sassu@huawei.com>
+ <CD9A4F89-7CA5-4329-A06A-F8DEB87905A5@zytor.com>
+ <20190517210219.GA5998@rani.riverdale.lan>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20190517210219.GA5998@rani.riverdale.lan>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We need to use the proper types and convert between physical addresses
-and dma addresses here to avoid mismatch warnings. This is especially
-important on systems with a different size for dma addresses and
-physical addresses. Otherwise, we get the following warning:
-
-  drivers/firmware/qcom_scm.c: In function "qcom_scm_assign_mem":
-  drivers/firmware/qcom_scm.c:469:47: error: passing argument 3 of "dma_alloc_coherent" from incompatible pointer type [-Werror=incompatible-pointer-types]
-
-We also fix the size argument to dma_free_coherent() because that size
-doesn't need to be aligned after it's already aligned on the allocation
-size. In fact, dma debugging expects the same arguments to be passed to
-both the allocation and freeing sides of the functions so changing the
-size is incorrect regardless.
-
-Reported-by: Ian Jackson <ian.jackson@citrix.com>
-Cc: Ian Jackson <ian.jackson@citrix.com>
-Cc: Julien Grall <julien.grall@arm.com>
-Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc: Avaneesh Kumar Dwivedi <akdwived@codeaurora.org>
-Signed-off-by: Stephen Boyd <swboyd@chromium.org>
----
- drivers/firmware/qcom_scm.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/firmware/qcom_scm.c b/drivers/firmware/qcom_scm.c
-index af4eee86919d..0c63495cf269 100644
---- a/drivers/firmware/qcom_scm.c
-+++ b/drivers/firmware/qcom_scm.c
-@@ -18,6 +18,7 @@
- #include <linux/init.h>
- #include <linux/cpumask.h>
- #include <linux/export.h>
-+#include <linux/dma-direct.h>
- #include <linux/dma-mapping.h>
- #include <linux/module.h>
- #include <linux/types.h>
-@@ -449,6 +450,7 @@ int qcom_scm_assign_mem(phys_addr_t mem_addr, size_t mem_sz,
- 	phys_addr_t mem_to_map_phys;
- 	phys_addr_t dest_phys;
- 	phys_addr_t ptr_phys;
-+	dma_addr_t ptr_dma;
- 	size_t mem_to_map_sz;
- 	size_t dest_sz;
- 	size_t src_sz;
-@@ -466,9 +468,10 @@ int qcom_scm_assign_mem(phys_addr_t mem_addr, size_t mem_sz,
- 	ptr_sz = ALIGN(src_sz, SZ_64) + ALIGN(mem_to_map_sz, SZ_64) +
- 			ALIGN(dest_sz, SZ_64);
- 
--	ptr = dma_alloc_coherent(__scm->dev, ptr_sz, &ptr_phys, GFP_KERNEL);
-+	ptr = dma_alloc_coherent(__scm->dev, ptr_sz, &ptr_dma, GFP_KERNEL);
- 	if (!ptr)
- 		return -ENOMEM;
-+	ptr_phys = dma_to_phys(__scm->dev, ptr_dma);
- 
- 	/* Fill source vmid detail */
- 	src = ptr;
-@@ -498,7 +501,7 @@ int qcom_scm_assign_mem(phys_addr_t mem_addr, size_t mem_sz,
- 
- 	ret = __qcom_scm_assign_mem(__scm->dev, mem_to_map_phys, mem_to_map_sz,
- 				    ptr_phys, src_sz, dest_phys, dest_sz);
--	dma_free_coherent(__scm->dev, ALIGN(ptr_sz, SZ_64), ptr, ptr_phys);
-+	dma_free_coherent(__scm->dev, ptr_sz, ptr, ptr_dma);
- 	if (ret) {
- 		dev_err(__scm->dev,
- 			"Assign memory protection call failed %d.\n", ret);
--- 
-Sent by a computer through tubes
-
+On Fri, May 17, 2019 at 05:02:20PM -0400, Arvind Sankar wrote:
+> On Fri, May 17, 2019 at 01:18:11PM -0700, hpa@zytor.com wrote:
+> > 
+> > Ok... I just realized this does not work for a modular initramfs, composed at load time from multiple files, which is a very real problem. Should be easy enough to deal with: instead of one large file, use one companion file per source file, perhaps something like filename..xattrs (suggesting double dots to make it less likely to conflict with a "real" file.) No leading dot, as it makes it more likely that archivers will sort them before the file proper.
+> This version of the patch was changed from the previous one exactly to deal with this case --
+> it allows for the bootloader to load multiple initramfs archives, each
+> with its own .xattr-list file, and to have that work properly.
+> Could you elaborate on the issue that you see?
+Roberto, are you missing a changelog entry for v2->v3 change?
