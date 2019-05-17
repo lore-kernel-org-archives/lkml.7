@@ -2,93 +2,127 @@ Return-Path: <SRS0=M1fl=TR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0CA0C04AB4
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 21:10:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88222C04AB4
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 21:12:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8D0F42087B
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 21:10:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JlnpXgjA"
+	by mail.kernel.org (Postfix) with ESMTP id 55CB92087B
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 21:12:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1558127523;
+	bh=Cr5kb3G7RGw3ztcggbHW6k8d8aqqY2Qosw+W4yl+edE=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=HARpkKXdG6kOqEFvD9dav9Ot3X/4txXSPNSuTuOQ4dt3mLSC1NyULyQ9sh6NymGVn
+	 WX8asSY+X5cbzQzB8FsypNe4MceXIcIxCwOlAQU+D3hly7BXFpRCZp6iyfgy/C0mc5
+	 1PkKeq0vecamw4FRSBf1M1DTZE4Qz9Y88AWMmfo0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729584AbfEQVKT (ORCPT
+        id S1728717AbfEQVMC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 May 2019 17:10:19 -0400
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:43127 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727949AbfEQVKT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 May 2019 17:10:19 -0400
-Received: by mail-qt1-f194.google.com with SMTP id i26so9602461qtr.10;
-        Fri, 17 May 2019 14:10:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=fziPkUVPPd8pNB7Q6ntU7Mk+rKbDI7+Yj/Vwva8hPrU=;
-        b=JlnpXgjAvmojHhaoUZEOu7nWYTbT1WVJxhAQg/ltq3l00FQgUC0dvQZf2p22una2rm
-         9NInH+w++1EZSp6c9V4ArJNMj0EAJLDYIfxVCMfM8rM9MLmdVhjb+eHTRl+Ra78QFxXX
-         IG9d8DqbnCZutAMOvfYCXCVqJ5r6A4eEaaUJATicMAJMWc5TGj7ByHGEXGpxYZnxfpyb
-         ZYNmbMJhbE7AzeziqiEnETar43KaaApisrhb3zr50qmubOxdvXZfP7n45h3hE/eMx/ho
-         FxWTz+5OCOQzvUJxsZDqZhuohZlwCwT9v0M4p5yk49olx6EVw3thkj8ReeaQbn+Tq7sT
-         Gltg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:date:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=fziPkUVPPd8pNB7Q6ntU7Mk+rKbDI7+Yj/Vwva8hPrU=;
-        b=YazsBqPYZaR59a51u4L7fWL8lmwm9+o78VAbaUTGCwx2TbxoJuT6u7eWoFTpd1hqJY
-         T03WEJKtO6jIoi40yTafjpCJIUCWtAnv8Qs90JXjrRXNwZELanZYPQ3FLjkG9j+oQVpS
-         /ghnY4kf0J8FmsyAF31EOz32mbmD6beMfzr4mWRNim7Y44inOGGozbdVYNGJqYIhZePe
-         ewF/hQVErlDS008yRJrMkfbGtGMfVki9+EvI7ZbqQQe2hpF8/LqCrvR4tRiS9GbecmQu
-         Tj1665SppGX5eEa3fSp27+q+2jEAE/QfF6tCGCAmhPHaPoB7lvzw8NltycI8prfATpaa
-         Opvw==
-X-Gm-Message-State: APjAAAWyhmFx/N9+gGM40YvtyyPAiXKphWekJ4JqGffMHvUrefk34F4n
-        UKgbyyl6heN4/yHmGhlWO3M=
-X-Google-Smtp-Source: APXvYqyFIiqdHrvDSG3vP/SapftcAOyMi+dlfXg/SB/Ow1xRVTrmglb9Fi0SzpTlVcrCviHw2loSQg==
-X-Received: by 2002:ac8:1aa4:: with SMTP id x33mr49219315qtj.69.1558127417674;
-        Fri, 17 May 2019 14:10:17 -0700 (PDT)
-Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
-        by smtp.gmail.com with ESMTPSA id c32sm699984qtd.61.2019.05.17.14.10.16
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 17 May 2019 14:10:17 -0700 (PDT)
-From:   Arvind Sankar <nivedita@alum.mit.edu>
-X-Google-Original-From: Arvind Sankar <arvind@rani.riverdale.lan>
-Date:   Fri, 17 May 2019 17:10:15 -0400
-To:     Arvind Sankar <nivedita@alum.mit.edu>
-Cc:     hpa@zytor.com, Roberto Sassu <roberto.sassu@huawei.com>,
-        viro@zeniv.linux.org.uk, linux-security-module@vger.kernel.org,
-        linux-integrity@vger.kernel.org, initramfs@vger.kernel.org,
-        linux-api@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, zohar@linux.vnet.ibm.com,
-        silviu.vlasceanu@huawei.com, dmitry.kasatkin@huawei.com,
-        takondra@cisco.com, kamensky@cisco.com, arnd@arndb.de,
-        rob@landley.net, james.w.mcmechan@gmail.com, niveditas98@gmail.com
-Subject: Re: [PATCH v3 2/2] initramfs: introduce do_readxattrs()
-Message-ID: <20190517211014.GA9198@rani.riverdale.lan>
-References: <20190517165519.11507-1-roberto.sassu@huawei.com>
- <20190517165519.11507-3-roberto.sassu@huawei.com>
- <CD9A4F89-7CA5-4329-A06A-F8DEB87905A5@zytor.com>
- <20190517210219.GA5998@rani.riverdale.lan>
+        Fri, 17 May 2019 17:12:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59958 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726771AbfEQVMC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 May 2019 17:12:02 -0400
+Received: from mail-qt1-f171.google.com (mail-qt1-f171.google.com [209.85.160.171])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E6F762166E;
+        Fri, 17 May 2019 21:12:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1558127521;
+        bh=Cr5kb3G7RGw3ztcggbHW6k8d8aqqY2Qosw+W4yl+edE=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=RVRGkAgCXj67cHasiMUZLXRu3M2Kh4X4/vTVb89qs8DinBil4+Da07NiNdjKUdeLK
+         aGSnp46JC6AY0I6VZhc4Vbbsb3vb4bskHFwO5oSfH+mBG33XwYktUW9GiFJVR9TEnE
+         GcSTKqn2no2O+tAuRzygt+Jwd0AXGMVeSqe/zaNU=
+Received: by mail-qt1-f171.google.com with SMTP id a17so9695780qth.3;
+        Fri, 17 May 2019 14:12:00 -0700 (PDT)
+X-Gm-Message-State: APjAAAXnLwDXCnLTwfJgAtVZVwlJSiqi5ESclrQ0g3oF8htsAeJ3+yWk
+        qzTpceGVa/24YYPC4S4aqlsvoRhCbMLUOBG9lQ==
+X-Google-Smtp-Source: APXvYqzPeJBGMQo9MUCbEz0jHdsw9NOoM2DjetgzWmPgzzxGJ8qADKNKR9tBGIvkgVO70RL7qVN1xMcR/sOzQTUX2sg=
+X-Received: by 2002:a0c:8aad:: with SMTP id 42mr48279852qvv.200.1558127520194;
+ Fri, 17 May 2019 14:12:00 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20190517210219.GA5998@rani.riverdale.lan>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20190424092505.6578-1-masneyb@onstation.org> <20190424092505.6578-3-masneyb@onstation.org>
+In-Reply-To: <20190424092505.6578-3-masneyb@onstation.org>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Fri, 17 May 2019 16:11:48 -0500
+X-Gmail-Original-Message-ID: <CAL_JsqLdS2SDd-dczZmqDTN3XMY7fwDjdkX5OibXbrksd7qQYA@mail.gmail.com>
+Message-ID: <CAL_JsqLdS2SDd-dczZmqDTN3XMY7fwDjdkX5OibXbrksd7qQYA@mail.gmail.com>
+Subject: Re: [PATCH v6 2/3] dt-bindings: backlight: add lm3630a bindings
+To:     Brian Masney <masneyb@onstation.org>
+Cc:     Lee Jones <lee.jones@linaro.org>,
+        Daniel Thompson <daniel.thompson@linaro.org>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Linux LED Subsystem <linux-leds@vger.kernel.org>,
+        devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Linux Fbdev development list <linux-fbdev@vger.kernel.org>,
+        Dan Murphy <dmurphy@ti.com>, Jonathan Marek <jonathan@marek.ca>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 17, 2019 at 05:02:20PM -0400, Arvind Sankar wrote:
-> On Fri, May 17, 2019 at 01:18:11PM -0700, hpa@zytor.com wrote:
-> > 
-> > Ok... I just realized this does not work for a modular initramfs, composed at load time from multiple files, which is a very real problem. Should be easy enough to deal with: instead of one large file, use one companion file per source file, perhaps something like filename..xattrs (suggesting double dots to make it less likely to conflict with a "real" file.) No leading dot, as it makes it more likely that archivers will sort them before the file proper.
-> This version of the patch was changed from the previous one exactly to deal with this case --
-> it allows for the bootloader to load multiple initramfs archives, each
-> with its own .xattr-list file, and to have that work properly.
-> Could you elaborate on the issue that you see?
-Roberto, are you missing a changelog entry for v2->v3 change?
+On Wed, Apr 24, 2019 at 4:25 AM Brian Masney <masneyb@onstation.org> wrote:
+>
+> Add new backlight bindings for the TI LM3630A dual-string white LED.
+>
+> Signed-off-by: Brian Masney <masneyb@onstation.org>
+> Reviewed-by: Rob Herring <robh@kernel.org>
+> ---
+> Changes since v5:
+> - Change 'lm3630a_bl@38' in examples to 'led-controller@38'
+>
+> Changes since v4:
+> - Drop $ref from led-sources
+> - Drop description from reg of i2c address
+> - Expand description of reg for the control bank
+> - Drop status from examples
+>
+> Changes since v3:
+> - Add label. I didn't add a description for it since that'll come from
+>   the common properties once its converted.
+>
+> Changes since v2:
+> - Update description of max-brightness
+> - Add description for reg
+> - Correct typo: s/tranisiton/transition
+> - add reg to control banks
+> - add additionalProperties
+>
+>  .../leds/backlight/lm3630a-backlight.yaml     | 129 ++++++++++++++++++
+>  1 file changed, 129 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/leds/backlight/lm3630a-backlight.yaml
+
+I'm working on getting the examples to be validated by the schema (in
+addition to just building with dtc) and there's a couple of errors:
+
+Documentation/devicetree/bindings/leds/backlight/lm3630a-backlight.example.dt.yaml:
+'#address-cells', '#size-cells' do not match any of the regexes:
+'^led@[01]$', 'pinctrl-[0-9]+'
+Documentation/devicetree/bindings/leds/backlight/lm3630a-backlight.example.dt.yaml:
+'#address-cells', '#size-cells' do not match any of the regexes:
+'^led@[01]$', 'pinctrl-[0-9]+'
+
+You didn't list '#address-cells' and '#size-cells'.
+
+Documentation/devicetree/bindings/leds/backlight/lm3630a-backlight.example.dt.yaml:
+led@0: 'ti,linear-mapping-mode' does not match any of the regexes:
+'pinctrl-[0-9]+'
+Documentation/devicetree/bindings/leds/backlight/lm3630a-backlight.example.dt.yaml:
+led@1: 'ti,linear-mapping-mode' does not match any of the regexes:
+'pinctrl-[0-9]+'
+
+'ti,linear-mapping-mode' is not defined in the child nodes.
+
+Rob
