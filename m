@@ -2,100 +2,86 @@ Return-Path: <SRS0=M1fl=TR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72AAEC04AB4
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 07:08:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DE37C04AB4
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 07:10:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4866A20833
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 07:08:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E1D9C20873
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 07:10:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="j/4yVJSH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728103AbfEQHIG (ORCPT
+        id S1727986AbfEQHK2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 May 2019 03:08:06 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:45252 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727386AbfEQHIG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 May 2019 03:08:06 -0400
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id EE18081DE6;
-        Fri, 17 May 2019 07:07:42 +0000 (UTC)
-Received: from [10.36.116.17] (ovpn-116-17.ams2.redhat.com [10.36.116.17])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 274AC5D9C4;
-        Fri, 17 May 2019 07:07:31 +0000 (UTC)
-Subject: Re: [PATCH v3 7/7] iommu/vt-d: Differentiate relaxable and non
- relaxable RMRRs
-To:     Lu Baolu <baolu.lu@linux.intel.com>, eric.auger.pro@gmail.com,
-        joro@8bytes.org, iommu@lists.linux-foundation.org,
-        linux-kernel@vger.kernel.org, dwmw2@infradead.org,
-        lorenzo.pieralisi@arm.com, robin.murphy@arm.com,
-        will.deacon@arm.com, hanjun.guo@linaro.org, sudeep.holla@arm.com
-Cc:     alex.williamson@redhat.com, shameerali.kolothum.thodi@huawei.com
-References: <20190516100817.12076-1-eric.auger@redhat.com>
- <20190516100817.12076-8-eric.auger@redhat.com>
- <2ebc33ed-ded6-0eee-96ef-84e6f61f692e@linux.intel.com>
-From:   Auger Eric <eric.auger@redhat.com>
-Message-ID: <65852894-2525-e67e-5fd3-55ba4a323c2f@redhat.com>
-Date:   Fri, 17 May 2019 09:07:30 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.4.0
+        Fri, 17 May 2019 03:10:28 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:34414 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727386AbfEQHK2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 May 2019 03:10:28 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=HxUFN7ImIherhziAwE4B0zMLXT1M0ngsvbs97gyVEkE=; b=j/4yVJSH4JiFFugtuMOtwB4uo
+        78y9tzESi7HMzHX+wUzTEMVSYVKslEfJ6H8nXugzN1VipITSGlrQuXBMgNEEnYkaQhr/UhTfm2Ejl
+        dIL/1/zxXPGhWOfioAkX91ZIXv46+8o3PVtSoVJSf44rKSWOwO7vCIgpToAECIXCgS8LQvHnLw2NO
+        Pmhi9uJb0PK4BQJP3fjY123u+cdfxjV4nTpRCvL+oN12r4nKs6c8gOa4e1l2+afp1OYbf1WGsNndF
+        yjMkl9tFuUnLwzpUH/3ekvZc3g/5ojgqQ2le3qK5UjvcsGxc6lLh1tMFN0cS3gcCJNbZFfvPBqu5E
+        pXwh+QQjw==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hRX0X-00075i-Do; Fri, 17 May 2019 07:10:21 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 9ED092029906B; Fri, 17 May 2019 09:10:18 +0200 (CEST)
+Date:   Fri, 17 May 2019 09:10:18 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Raphael Gault <raphael.gault@arm.com>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        mingo@redhat.com, catalin.marinas@arm.com, will.deacon@arm.com,
+        acme@kernel.org, mark.rutland@arm.com
+Subject: Re: [PATCH 4/6] arm64: pmu: Add hook to handle pmu-related undefined
+ instructions
+Message-ID: <20190517071018.GH2623@hirez.programming.kicks-ass.net>
+References: <20190516132148.10085-1-raphael.gault@arm.com>
+ <20190516132148.10085-5-raphael.gault@arm.com>
 MIME-Version: 1.0
-In-Reply-To: <2ebc33ed-ded6-0eee-96ef-84e6f61f692e@linux.intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.25]); Fri, 17 May 2019 07:08:05 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190516132148.10085-5-raphael.gault@arm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Lu,
+On Thu, May 16, 2019 at 02:21:46PM +0100, Raphael Gault wrote:
+> In order to prevent the userspace processes which are trying to access
+> the registers from the pmu registers on a big.LITTLE environment we
+> introduce a hook to handle undefined instructions.
+> 
+> The goal here is to prevent the process to be interrupted by a signal
+> when the error is caused by the task being scheduled while accessing
+> a counter, causing the counter access to be invalid. As we are not able
+> to know efficiently the number of counters available physically on both
+> pmu in that context we consider that any faulting access to a counter
+> which is architecturally correct should not cause a SIGILL signal if
+> the permissions are set accordingly.
 
-On 5/17/19 6:46 AM, Lu Baolu wrote:
-> Hi Eric,
-> 
-> On 5/16/19 6:08 PM, Eric Auger wrote:
->> Now we have a new IOMMU_RESV_DIRECT_RELAXABLE reserved memory
->> region type, let's report USB and GFX RMRRs as relaxable ones.
->>
->> This allows to have a finer reporting at IOMMU API level of
->> reserved memory regions. This will be exploitable by VFIO to
->> define the usable IOVA range and detect potential conflicts
->> between the guest physical address space and host reserved
->> regions.
->>
->> Signed-off-by: Eric Auger <eric.auger@redhat.com>
->> ---
->>   drivers/iommu/intel-iommu.c | 10 ++++++++--
->>   1 file changed, 8 insertions(+), 2 deletions(-)
->>
->> diff --git a/drivers/iommu/intel-iommu.c b/drivers/iommu/intel-iommu.c
->> index a36604f4900f..af1d65fdedfc 100644
->> --- a/drivers/iommu/intel-iommu.c
->> +++ b/drivers/iommu/intel-iommu.c
->> @@ -5493,7 +5493,9 @@ static void intel_iommu_get_resv_regions(struct
->> device *device,
->>       for_each_rmrr_units(rmrr) {
->>           for_each_active_dev_scope(rmrr->devices, rmrr->devices_cnt,
->>                         i, i_dev) {
->> +            struct pci_dev *pdev = to_pci_dev(device);
-> 
-> Probably should be:
-> 
-> struct pci_dev *pdev = dev_is_pci(device) ? to_pci_dev(device) : NULL;
+The other approach is using rseq for this; with that you can guarantee
+it will never issue the instruction on a wrong CPU.
 
-That's correct. I will fix that asap.
+That said; emulating the thing isn't horrible either.
 
-Thanks!
+> +	/*
+> +	 * We put 0 in the target register if we
+> +	 * are reading from pmu register. If we are
+> +	 * writing, we do nothing.
+> +	 */
 
-Eric
-> 
-> Best regards,
-> Lu Baolu
-> 
+Wait _what_ ?!? userspace can _WRITE_ to these registers?
