@@ -2,117 +2,124 @@ Return-Path: <SRS0=M1fl=TR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77ADEC46470
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 15:08:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E18F6C04E87
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 15:09:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4AC752166E
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 15:08:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="NxNZPHkQ"
+	by mail.kernel.org (Postfix) with ESMTP id BA02A2166E
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 15:09:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729196AbfEQPIj (ORCPT
+        id S1729211AbfEQPJv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 May 2019 11:08:39 -0400
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:33769 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729162AbfEQPIj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 May 2019 11:08:39 -0400
-Received: by mail-oi1-f195.google.com with SMTP id m204so5435947oib.0
-        for <linux-kernel@vger.kernel.org>; Fri, 17 May 2019 08:08:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=OGIfXnKXpW5eMKxUMdzRkt44XId1MoiNVnAxGfKvpiQ=;
-        b=NxNZPHkQ9m7afnPn+MzAQqWjc4b6NDowhfobUzGnErro91DDQhcbPCtV4yyPmQs5K/
-         qHoNY3q3kg21Z1aKKfhVtA51efXEJSWMC+nqJfOqd/6Cxza+N0PESVDd5pxT7+8WWxJ8
-         dZbrryqg4W1sKStoCFp33Wpzb60H7wUxxexYHFYmftwZiHvQx7ag+Qv71q7GSKVtf3Yv
-         0YURKil61RhPfxk/xokqMuqcpKadv25cmmeCfUPGZVYy8ZS45CyPZ/lVBP6QJrWv4/nC
-         v1/j1QVq4xm8msZpqCNnpxMl6+GJA9oIEyJXlJST7m7WnJ1/eAUMStAIB5yhR6N2QBgq
-         J6JQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=OGIfXnKXpW5eMKxUMdzRkt44XId1MoiNVnAxGfKvpiQ=;
-        b=WgcK1nOC2RwHGxpVzCh/3lTMR62ZQeWMbBEvyicwGzpldMc19iIT0Tav5QyTI0CzBG
-         E4N/hFGvEoGFjuyCeUkrz924slqRZbmCFdlUpHWUKez1byvwkRRBfq9SeQyE6jao6PH4
-         +1gyANY05sKp2U80dCt4eqnYCNNUA2buryhzuZ0TN2RCAEgziwo1q7cqjhTmCucy0aaJ
-         aR8joEHXwp52uKTC529kKzk0zx2rgxq2k2Z5w1xSC9QN2GP6yNLyn38rd+51r70XyYMP
-         2VFF8Zh+0JdJ3qmqOmJJ/3ncmBPMWlco8Ym5+8Ag6MubRBftKwVF/i5JUL/nShWJ+fTb
-         phzA==
-X-Gm-Message-State: APjAAAVmw1PQo34d2TqjFruKaynBBlwACzGBI6E4/y/XmbWjiMV/OOaW
-        7j3R1UexEmyzhmdZDKzvU2tw4ZTppW6l3M6nL+83gQ==
-X-Google-Smtp-Source: APXvYqyTjO/s0rMdx1VgVCXo7bqh4zMktZXJwLahomPBvDpO+I4RjmmwQ75n8Xpfpye+mAWhmlTX6Dis4MloPOV9WcA=
-X-Received: by 2002:aca:b641:: with SMTP id g62mr12196057oif.149.1558105718742;
- Fri, 17 May 2019 08:08:38 -0700 (PDT)
-MIME-Version: 1.0
-References: <155805321833.867447.3864104616303535270.stgit@dwillia2-desk3.amr.corp.intel.com>
- <20190517084739.GB20550@quack2.suse.cz>
-In-Reply-To: <20190517084739.GB20550@quack2.suse.cz>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Fri, 17 May 2019 08:08:27 -0700
-Message-ID: <CAPcyv4iZZCgcC657ZOysBP9=1ejp3jfFj=VETVBPrgmfg7xUEw@mail.gmail.com>
-Subject: Re: [PATCH] libnvdimm/pmem: Bypass CONFIG_HARDENED_USERCOPY overhead
-To:     Jan Kara <jack@suse.cz>
-Cc:     linux-nvdimm <linux-nvdimm@lists.01.org>,
-        stable <stable@vger.kernel.org>, Jeff Moyer <jmoyer@redhat.com>,
-        Ingo Molnar <mingo@redhat.com>, Christoph Hellwig <hch@lst.de>,
-        Al Viro <viro@zeniv.linux.org.uk>,
+        Fri, 17 May 2019 11:09:51 -0400
+Received: from mga12.intel.com ([192.55.52.136]:20328 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729162AbfEQPJu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 May 2019 11:09:50 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 May 2019 08:09:49 -0700
+X-ExtLoop1: 1
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.36])
+  by fmsmga006.fm.intel.com with ESMTP; 17 May 2019 08:09:48 -0700
+Date:   Fri, 17 May 2019 08:09:48 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Stephen Smalley <sds@tycho.nsa.gov>
+Cc:     "Xing, Cedric" <cedric.xing@intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        James Morris <jmorris@namei.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        LSM List <linux-security-module@vger.kernel.org>,
+        Paul Moore <paul@paul-moore.com>,
+        Eric Paris <eparis@parisplace.org>,
+        "selinux@vger.kernel.org" <selinux@vger.kernel.org>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Jethro Beekman <jethro@fortanix.com>,
+        "Hansen, Dave" <dave.hansen@intel.com>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Matthew Wilcox <willy@infradead.org>,
-        Jeff Smits <jeff.smits@intel.com>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Kees Cook <keescook@chromium.org>
-Content-Type: text/plain; charset="UTF-8"
+        "Dr. Greg" <greg@enjellic.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
+        "linux-sgx@vger.kernel.org" <linux-sgx@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "nhorman@redhat.com" <nhorman@redhat.com>,
+        "npmccallum@redhat.com" <npmccallum@redhat.com>,
+        "Ayoun, Serge" <serge.ayoun@intel.com>,
+        "Katz-zamir, Shay" <shay.katz-zamir@intel.com>,
+        "Huang, Haitao" <haitao.huang@intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        "Svahn, Kai" <kai.svahn@intel.com>, Borislav Petkov <bp@alien8.de>,
+        Josh Triplett <josh@joshtriplett.org>,
+        "Huang, Kai" <kai.huang@intel.com>,
+        David Rientjes <rientjes@google.com>
+Subject: Re: SGX vs LSM (Re: [PATCH v20 00/28] Intel SGX1 support)
+Message-ID: <20190517150948.GA15632@linux.intel.com>
+References: <20190515013031.GF1977@linux.intel.com>
+ <CALCETrXf8mSK45h7sTK5Wf+pXLVn=Bjsc_RLpgO-h-qdzBRo5Q@mail.gmail.com>
+ <alpine.LRH.2.21.1905160543070.19802@namei.org>
+ <CALCETrX_Q6qwNRNF0TL2tgfm1j6DKLX7NVHHmWbMFtk3WnHDKw@mail.gmail.com>
+ <alpine.LRH.2.21.1905160844130.29250@namei.org>
+ <CALCETrX2ovRx3Rre+1_xC-q6CiybyLjQ-gmB4FZF_qCZ-Qd+4A@mail.gmail.com>
+ <960B34DE67B9E140824F1DCDEC400C0F654E38CD@ORSMSX116.amr.corp.intel.com>
+ <CALCETrUfmyQ7ivNzQic0FyPXe1fmAnoK093jnz0i8DRn2LvdSA@mail.gmail.com>
+ <960B34DE67B9E140824F1DCDEC400C0F654E3FB9@ORSMSX116.amr.corp.intel.com>
+ <6a97c099-2f42-672e-a258-95bc09152363@tycho.nsa.gov>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <6a97c099-2f42-672e-a258-95bc09152363@tycho.nsa.gov>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 17, 2019 at 1:47 AM Jan Kara <jack@suse.cz> wrote:
->
-> Let's add Kees to CC for usercopy expertise...
->
-> On Thu 16-05-19 17:33:38, Dan Williams wrote:
-> > Jeff discovered that performance improves from ~375K iops to ~519K iops
-> > on a simple psync-write fio workload when moving the location of 'struct
-> > page' from the default PMEM location to DRAM. This result is surprising
-> > because the expectation is that 'struct page' for dax is only needed for
-> > third party references to dax mappings. For example, a dax-mapped buffer
-> > passed to another system call for direct-I/O requires 'struct page' for
-> > sending the request down the driver stack and pinning the page. There is
-> > no usage of 'struct page' for first party access to a file via
-> > read(2)/write(2) and friends.
-> >
-> > However, this "no page needed" expectation is violated by
-> > CONFIG_HARDENED_USERCOPY and the check_copy_size() performed in
-> > copy_from_iter_full_nocache() and copy_to_iter_mcsafe(). The
-> > check_heap_object() helper routine assumes the buffer is backed by a
-> > page-allocator DRAM page and applies some checks.  Those checks are
-> > invalid, dax pages are not from the heap, and redundant,
-> > dax_iomap_actor() has already validated that the I/O is within bounds.
->
-> So this last paragraph is not obvious to me as check_copy_size() does a lot
-> of various checks in CONFIG_HARDENED_USERCOPY case. I agree that some of
-> those checks don't make sense for PMEM pages but I'd rather handle that by
-> refining check_copy_size() and check_object_size() functions to detect and
-> appropriately handle pmem pages rather that generally skip all the checks
-> in pmem_copy_from/to_iter(). And yes, every check in such hot path is going
-> to cost performance but that's what user asked for with
-> CONFIG_HARDENED_USERCOPY... Kees?
+On Fri, May 17, 2019 at 09:53:06AM -0400, Stephen Smalley wrote:
+> On 5/16/19 6:23 PM, Xing, Cedric wrote:
+> >I thought EXECMOD applied to files (and memory mappings backed by them) but
+> >I was probably wrong. It sounds like EXECMOD applies to the whole process so
+> >would allow all pages within a process's address space to be modified then
+> >executed, regardless the backing files. Am I correct this time?
+> 
+> No, you were correct the first time I think; EXECMOD is used to control
+> whether a process can make executable a private file mapping that has
+> previously been modified (e.g. text relocation); it is a special case to
+> support text relocations without having to allow full EXECMEM (i.e. execute
+> arbitrary memory).
+> 
+> SELinux checks relevant to W^X include:
+> 
+> - EXECMEM: mmap/mprotect PROT_EXEC an anonymous mapping (regardless of
+> PROT_WRITE, since we know the content has to have been written at some
+> point) or a private file mapping that is also PROT_WRITE.
+> - EXECMOD: mprotect PROT_EXEC a private file mapping that has been
+> previously modified, typically for text relocations,
+> - FILE__WRITE: mmap/mprotect PROT_WRITE a shared file mapping,
+> - FILE__EXECUTE: mmap/mprotect PROT_EXEC a file mapping.
+> 
+> (ignoring EXECSTACK and EXECHEAP here since they aren't really relevant to
+> this discussion)
+> 
+> So if you want to ensure W^X, then you wouldn't allow EXECMEM for the
+> process, EXECMOD by the process to any file, and the combination of both
+> FILE__WRITE and FILE__EXECUTE by the process to any file.
+> 
+> If the /dev/sgx/enclave mappings are MAP_SHARED and you aren't using an
+> anonymous inode, then I would expect that only the FILE__WRITE and
+> FILE__EXECUTE checks are relevant.
 
-As far as I can see it's mostly check_heap_object() that is the
-problem, so I'm open to finding a way to just bypass that sub-routine.
-However, as far as I can see none of the other block / filesystem user
-copy implementations submit to the hardened checks, like
-bio_copy_from_iter(), and iov_iter_copy_from_user_atomic() . So,
-either those need to grow additional checks, or the hardened copy
-implementation is targeting single object copy use cases, not
-necessarily block-I/O. Yes, Kees, please advise.
+Yep, I was just typing this up in a different thread:
+
+I think we may want to change the SGX API to alloc an anon inode for each
+enclave instead of hanging every enclave off of the /dev/sgx/enclave inode.
+Because /dev/sgx/enclave is NOT private, SELinux's file_map_prot_check()
+will only require FILE__WRITE and FILE__EXECUTE to mprotect() enclave VMAs
+to RWX.  Backing each enclave with an anon inode will make SELinux treat
+EPC memory like anonymous mappings, which is what we want (I think), e.g.
+making *any* EPC page executable will require PROCESS__EXECMEM (SGX is
+64-bit only at this point, so SELinux will always have default_noexec).
