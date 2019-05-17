@@ -2,132 +2,138 @@ Return-Path: <SRS0=M1fl=TR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19CC9C04E87
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 22:17:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CA12C04AB4
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 22:20:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DE3632168B
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 22:17:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5DCBC2133D
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 22:20:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NV6J2lEr"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OV3qTZHW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729415AbfEQWRh (ORCPT
+        id S1728283AbfEQWUQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 May 2019 18:17:37 -0400
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:34098 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727001AbfEQWRg (ORCPT
+        Fri, 17 May 2019 18:20:16 -0400
+Received: from mail-it1-f171.google.com ([209.85.166.171]:38449 "EHLO
+        mail-it1-f171.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727133AbfEQWUP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 May 2019 18:17:36 -0400
-Received: by mail-qt1-f193.google.com with SMTP id h1so9871005qtp.1;
-        Fri, 17 May 2019 15:17:35 -0700 (PDT)
+        Fri, 17 May 2019 18:20:15 -0400
+Received: by mail-it1-f171.google.com with SMTP id i63so14451457ita.3;
+        Fri, 17 May 2019 15:20:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=sender:from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=4Hl8T+4u/qgIIk8+r4CsaXe+ilR4CzdKuLNrb4mEdnE=;
-        b=NV6J2lErU6kauPc1kdxYtPdNeGXhZZheMQ4RIrEQR9uGKQuH4FGDCUqL7wyIsbrmL2
-         SedIMzzQajeBX/kOSToUXNSVRlHY+qB+iRxAX/xrtGX3IVXJ/tiLfTLLQc0ntNtLp4r4
-         ktTQGzGO/15ZcxMbT24qyow8ZDxjcsIlQz2VrMiMeoWdyMQRzOx7VmKPMnNCuCjVYzkN
-         J//i5uYN7StnsOKqjoJU7u7vIpdBvwsq7bLS6C+9uvNwR9aV1Q4ZjzIi51gFdUtlj6eu
-         cXO/vRglGr6Gl0rW1pE2aKVtQ8lXDvszVctfM2YwH1ZmsQ8/hsL0MfFatbfnP1SEFdrG
-         uHrQ==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=wj0pD51ojgB5zVKiIq4Es3I5B8O4yozAvKeClJ57Lic=;
+        b=OV3qTZHWTA7Svs9DXhVorI3K9ivGPAgm8NeczpZfM3McIt3WOC0zvYyIV5UF6Dl2wb
+         NF068qvC+MUkCFrY8C7i/5bEL6nbXSdBaZMF3HOzVx2VEx6Rd+KX9X9WxC3aXwVei1U2
+         QovDihWeJRsI6/ghHjVatOJXwrvn1GVuXtbyL3uCJUL91h0/r07CNGOsPlvP0aC2ppYg
+         G240Vw1KTD6wVlKHCIo0oWCsDHHoc8NyAT8xGCpqiZXPiPh8nlZyn0I4eEHeRgtMH+DQ
+         val/OZAlzwYoCgMLyMh/2mGJFzkmagSWFlIoWc3CITUbGRD2IShP7tKVXC3P1fvaN+Na
+         GvsQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:date:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=4Hl8T+4u/qgIIk8+r4CsaXe+ilR4CzdKuLNrb4mEdnE=;
-        b=OdklydhNB/+vzQslkY3Jf0TSZ8MJ/aawk5df0E+o4LY5JCy2C9D8Scaf/oS/B26y5q
-         CN4T3yrp5plwDepkNHVpaiXVM/SxcwK8u7vzowLkWNPWMzIFPI6P+uruUlIduNfmVAWL
-         ReSorAVk6fVHvMykzCNxtugmcl7CmfNeKV8VYkhRkfnWW2KUfn/XmmFyjN+z9MpnHzcA
-         8HXFoxSu+PGaAjCO9VOlCDo7kFCBGmDxOjY4GwmYujQs5iO7D+kFerhz9UssqAV/HWBk
-         wSquE+R6+mv8tMq5HXQOhyX58KFzd3nqd6mT7tpV7R1Mq71PpVdaxzSXaJ1ywC6GyWwF
-         uRHA==
-X-Gm-Message-State: APjAAAUDJsQSPcbqXfo0Gup6IyC9zEmI4CPQwa10+e5xq2+w/0T6os6W
-        Va5avxB9goEROwoMl0MKRVg=
-X-Google-Smtp-Source: APXvYqxxUYDge47vddAWXjHSnKIL8D9j1YJySwbTD27V4UaA7kVHiSbNMOKcE9PfZBtm16oIHqUGXQ==
-X-Received: by 2002:ac8:32d1:: with SMTP id a17mr43459703qtb.111.1558131454998;
-        Fri, 17 May 2019 15:17:34 -0700 (PDT)
-Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
-        by smtp.gmail.com with ESMTPSA id c16sm5405296qkb.15.2019.05.17.15.17.33
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 17 May 2019 15:17:34 -0700 (PDT)
-From:   Arvind Sankar <nivedita@alum.mit.edu>
-X-Google-Original-From: Arvind Sankar <arvind@rani.riverdale.lan>
-Date:   Fri, 17 May 2019 18:17:32 -0400
-To:     "H. Peter Anvin" <hpa@zytor.com>
-Cc:     Arvind Sankar <nivedita@alum.mit.edu>,
-        Roberto Sassu <roberto.sassu@huawei.com>,
-        viro@zeniv.linux.org.uk, linux-security-module@vger.kernel.org,
-        linux-integrity@vger.kernel.org, initramfs@vger.kernel.org,
-        linux-api@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, zohar@linux.vnet.ibm.com,
-        silviu.vlasceanu@huawei.com, dmitry.kasatkin@huawei.com,
-        takondra@cisco.com, kamensky@cisco.com, arnd@arndb.de,
-        rob@landley.net, james.w.mcmechan@gmail.com, niveditas98@gmail.com
-Subject: Re: [PATCH v3 2/2] initramfs: introduce do_readxattrs()
-Message-ID: <20190517221731.GA11358@rani.riverdale.lan>
-References: <20190517165519.11507-1-roberto.sassu@huawei.com>
- <20190517165519.11507-3-roberto.sassu@huawei.com>
- <CD9A4F89-7CA5-4329-A06A-F8DEB87905A5@zytor.com>
- <20190517210219.GA5998@rani.riverdale.lan>
- <d48f35a1-aab1-2f20-2e91-5e81a84b107f@zytor.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=wj0pD51ojgB5zVKiIq4Es3I5B8O4yozAvKeClJ57Lic=;
+        b=bW4fBxzEWA9t7LAyHojLhKdlnjHG61YRz5kC1hnRLWh4di0Xluv0k27kT7INPuECF4
+         SkYdB00XmVFf80r6W2Arqy39uLCMhzswZuSIWWnGNsm8fioA9u8GBngd3CpWhVFtiP89
+         sIQ2RYVlmU4PmDI5yP//yRNY20b61b28b6w8G7ZJqeB0qYsb9UqJKAhm7cq1IxTHNjSZ
+         Wd5IPVuwD0ggvnapFf/1JNDhBHk1WcqXx3ujUaaCBO4XS591NqWqja1c7lOqccfPcWB/
+         aXquOt0Y4BczBGoCpJ49O/+DOyNMf7I/0EUMB1Ph/TG5H1IhjNI0t3KePUdjakKBRloM
+         k08A==
+X-Gm-Message-State: APjAAAXjYowBXfO+SjFITfvZHrBaAdqA/G6ekZ06coajHMA9TRGX//x+
+        EuwTPF0u41bfatY4Hpk/qJVJtSZ5EJFHNyKtM/4=
+X-Google-Smtp-Source: APXvYqzdiUl1n0BS7rw5BYLSIIDeslgMl7J0ljwWyt9VIVdxHw+yq2Y+DCOWbQnsASDGm4sYISAToRlqjN7Fp/11Kz8=
+X-Received: by 2002:a02:1049:: with SMTP id 70mr36520228jay.114.1558131613863;
+ Fri, 17 May 2019 15:20:13 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <d48f35a1-aab1-2f20-2e91-5e81a84b107f@zytor.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <CAKgT0UcV2wCr6iUYktZ+Bju_GNpXKzR=M+NLfKhUsw4bsJSiyA@mail.gmail.com>
+ <20190503205935.bg45rsso5jjj3gnx@csclub.uwaterloo.ca> <20190513165547.alkkgcsdelaznw6v@csclub.uwaterloo.ca>
+ <CAKgT0Uf_nqZtCnHmC=-oDFz-3PuSM6=30BvJSDiAgzK062OY6w@mail.gmail.com>
+ <20190514163443.glfjva3ofqcy7lbg@csclub.uwaterloo.ca> <CAKgT0UdPDyCBsShQVwwE5C8fBKkMcfS6_S5m3T7JP-So9fzVgA@mail.gmail.com>
+ <20190516183407.qswotwyjwtjqfdqm@csclub.uwaterloo.ca> <20190516183705.e4zflbli7oujlbek@csclub.uwaterloo.ca>
+ <CAKgT0UfSa-dM2+7xntK9tB7Zw5N8nDd3U1n4OSK0gbWbkNSKJQ@mail.gmail.com>
+ <CAKgT0Ucd0s_0F5_nwqXknRngwROyuecUt+4bYzWvp1-2cNSg7g@mail.gmail.com> <20190517172317.amopafirjfizlgej@csclub.uwaterloo.ca>
+In-Reply-To: <20190517172317.amopafirjfizlgej@csclub.uwaterloo.ca>
+From:   Alexander Duyck <alexander.duyck@gmail.com>
+Date:   Fri, 17 May 2019 15:20:02 -0700
+Message-ID: <CAKgT0UdM28pSTCsaT=TWqmQwCO44NswS0PqFLAzgs9pmn41VeQ@mail.gmail.com>
+Subject: Re: [Intel-wired-lan] i40e X722 RSS problem with NAT-Traversal IPsec packets
+To:     Lennart Sorensen <lsorense@csclub.uwaterloo.ca>
+Cc:     Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Netdev <netdev@vger.kernel.org>,
+        intel-wired-lan <intel-wired-lan@lists.osuosl.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 17, 2019 at 02:47:31PM -0700, H. Peter Anvin wrote:
-> On 5/17/19 2:02 PM, Arvind Sankar wrote:
-> > On Fri, May 17, 2019 at 01:18:11PM -0700, hpa@zytor.com wrote:
-> >>
-> >> Ok... I just realized this does not work for a modular initramfs, composed at load time from multiple files, which is a very real problem. Should be easy enough to deal with: instead of one large file, use one companion file per source file, perhaps something like filename..xattrs (suggesting double dots to make it less likely to conflict with a "real" file.) No leading dot, as it makes it more likely that archivers will sort them before the file proper.
-> > This version of the patch was changed from the previous one exactly to deal with this case --
-> > it allows for the bootloader to load multiple initramfs archives, each
-> > with its own .xattr-list file, and to have that work properly.
-> > Could you elaborate on the issue that you see?
-> > 
-> 
-> Well, for one thing, how do you define "cpio archive", each with its own
-> .xattr-list file? Second, that would seem to depend on the ordering, no,
-> in which case you depend critically on .xattr-list file following the
-> files, which most archivers won't do.
-> 
-> Either way it seems cleaner to have this per file; especially if/as it
-> can be done without actually mucking up the format.
-> 
-> I need to run, but I'll post a more detailed explanation of what I did
-> in a little bit.
-> 
-> 	-hpa
-> 
-Not sure what you mean by how do I define it? Each cpio archive will
-contain its own .xattr-list file with signatures for the files within
-it, that was the idea.
+On Fri, May 17, 2019 at 10:23 AM Lennart Sorensen
+<lsorense@csclub.uwaterloo.ca> wrote:
+> OK I applied that and see this:
+>
+> i40e: Intel(R) Ethernet Connection XL710 Network Driver - version 2.1.7-k
+> i40e: Copyright (c) 2013 - 2014 Intel Corporation.
+> i40e 0000:3d:00.0: fw 3.10.52896 api 1.6 nvm 4.00 0x80001577 1.1767.0
+> i40e 0000:3d:00.0: The driver for the device detected a newer version of the NVM image than expected. Please install the most recent version of the network driver.
+> i40e 0000:3d:00.0: MAC address: a4:bf:01:4e:0c:87
+> i40e 0000:3d:00.0: flow type: 36 update input mask from:0x0006060000000000, to:0x0001801800000000
+> i40e 0000:3d:00.0: flow type: 35 update input mask from:0x0006060000000000, to:0x0001801800000000
+> i40e 0000:3d:00.0: flow type: 34 update input mask from:0x0006060780000000, to:0x0001801f80000000
+> i40e 0000:3d:00.0: flow type: 33 update input mask from:0x0006060600000000, to:0x0001801e00000000
+> i40e 0000:3d:00.0: flow type: 32 update input mask from:0x0006060600000000, to:0x0001801e00000000
+> i40e 0000:3d:00.0: flow type: 31 update input mask from:0x0006060600000000, to:0x0001801e00000000
+> i40e 0000:3d:00.0: flow type: 30 update input mask from:0x0006060600000000, to:0x0001801e00000000
+> i40e 0000:3d:00.0: flow type: 29 update input mask from:0x0006060600000000, to:0x0001801e00000000
+> i40e 0000:3d:00.0: Features: PF-id[0] VSIs: 34 QP: 12 TXQ: 13 RSS VxLAN Geneve VEPA
+> i40e 0000:3d:00.1: fw 3.10.52896 api 1.6 nvm 4.00 0x80001577 1.1767.0
+> i40e 0000:3d:00.1: The driver for the device detected a newer version of the NVM image than expected. Please install the most recent version of the network driver.
+> i40e 0000:3d:00.1: MAC address: a4:bf:01:4e:0c:88
+> i40e 0000:3d:00.1: Features: PF-id[1] VSIs: 34 QP: 12 TXQ: 13 RSS VxLAN Geneve VEPA
+> i40e 0000:3d:00.1 eth2: NIC Link is Up, 1000 Mbps Full Duplex, Flow Control: None
+>
+> Unfortunately (much to my disappointment, I hoped it would work) I see
+> no change in behaviour.
+>
+> --
+> Len Sorensen
 
-You need to review the code more closely I think -- it does not depend
-on the .xattr-list file following the files to which it applies.
+I was hoping it would work too. It seemed like it should have been the
+answer since it definitely didn't seem right. Now it has me wondering
+about some of the other code in the driver.
 
-The code first extracts .xattr-list as though it was a regular file. If
-a later dupe shows up (presumably from a second archive, although the
-patch will actually allow a second one in the same archive), it will
-then process the existing .xattr-list file and apply the attributes
-listed within it. It then will proceed to read the second one and
-overwrite the first one with it (this is the normal behaviour in the
-kernel cpio parser). At the end once all the archives have been
-extracted, if there is an .xattr-list file in the rootfs it will be
-parsed (it would've been the last one encountered, which hasn't been
-parsed yet, just extracted).
+By any chance have you run anything like DPDK on any of the X722
+interfaces on this system recently? I ask because it occurs to me that
+if you had and it loaded something like a custom parsing profile it
+could cause issues similar to this.
 
-Regarding the idea to use the high 16 bits of the mode field in
-the header that's another possibility. It would just require additional
-support in the program that actually creates the archive though, which
-the current patch doesn't.
+A debugging step you might try would be to revert back to my earlier
+patch that only displayed the input mask instead of changing it. Once
+you have done that you could look at doing a full power cycle on the
+system by either physically disconnecting the power, or using the
+power switch on the power supply itself if one is available. It is
+necessary to disconnect the motherboard/NIC from power in order to
+fully clear the global state stored in the device as it is retained
+when the system is in standby.
+
+What I want to verify is if the input mask that we have ran into is
+the natural power-on input mask of if that is something that was
+overridden by something else. The mask change I made should be reset
+if the system loses power, and then it will either default back to the
+value with the 6's if that is it's natural state, or it will match
+what I had if it was not.
+
+Other than that I really can't think up too much else. I suppose there
+is the possibility of the NVM either setting up a DCB setting or
+HREGION register causing an override that is limiting the queues to 1.
+However, the likelihood of that should be really low.
+
+- Alex
