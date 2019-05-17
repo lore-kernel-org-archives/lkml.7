@@ -2,92 +2,158 @@ Return-Path: <SRS0=M1fl=TR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E82EEC04AB4
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 04:27:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92698C04AB4
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 04:29:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B57252083E
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 04:27:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B5092083E
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 04:29:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="lmJWY92e"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727578AbfEQE10 (ORCPT
+        id S1727500AbfEQE34 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 May 2019 00:27:26 -0400
-Received: from mga02.intel.com ([134.134.136.20]:42690 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726755AbfEQE10 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 May 2019 00:27:26 -0400
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 16 May 2019 21:27:25 -0700
-X-ExtLoop1: 1
-Received: from hao-dev.bj.intel.com (HELO localhost) ([10.238.157.65])
-  by orsmga003.jf.intel.com with ESMTP; 16 May 2019 21:27:23 -0700
-Date:   Fri, 17 May 2019 12:11:16 +0800
-From:   Wu Hao <hao.wu@intel.com>
-To:     Alan Tull <atull@kernel.org>
-Cc:     Moritz Fischer <mdf@kernel.org>, linux-fpga@vger.kernel.org,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-api@vger.kernel.org, Xu Yilun <yilun.xu@intel.com>
-Subject: Re: [PATCH v2 05/18] Documentation: fpga: dfl: add descriptions for
- virtualization and new interfaces.
-Message-ID: <20190517041116.GC20569@hao-dev>
-References: <1556528151-17221-1-git-send-email-hao.wu@intel.com>
- <1556528151-17221-6-git-send-email-hao.wu@intel.com>
- <CANk1AXQSL8k=FOLv4_rLfRHBqOi=CW=yP3O8ch4VEa25cj9+Cw@mail.gmail.com>
- <CANk1AXQCp2ozUQDWz__MuiUeDLvGvrfqj3KUYmBa5Z34oxG8NQ@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CANk1AXQCp2ozUQDWz__MuiUeDLvGvrfqj3KUYmBa5Z34oxG8NQ@mail.gmail.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+        Fri, 17 May 2019 00:29:56 -0400
+Received: from conuserg-12.nifty.com ([210.131.2.79]:40507 "EHLO
+        conuserg-12.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726078AbfEQE3z (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 May 2019 00:29:55 -0400
+Received: from localhost.localdomain (p14092-ipngnfx01kyoto.kyoto.ocn.ne.jp [153.142.97.92]) (authenticated)
+        by conuserg-12.nifty.com with ESMTP id x4H4S6m7020760;
+        Fri, 17 May 2019 13:28:06 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-12.nifty.com x4H4S6m7020760
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1558067287;
+        bh=S6lUG5wzELNkLDTIQ5q0KxmZoKYRPjFzFvxypw0i15o=;
+        h=From:To:Cc:Subject:Date:From;
+        b=lmJWY92eISyiUDky3rMD3ZyuryoVjAMcuTit/WmqwC8NXp7LrdSs9SUFwZoRYBjqa
+         M4wRPzpxa5JJIArOLFzLBGxR7XDpwmowRFKd7Y6f4JEhGls/6PQPSRmEGKf4onuKCk
+         qiOdjy4a7x6wQyB3FZzdu2Um5sHJpjgmHYVhgLH0W38UROX5QUvbW5QqZZaO3PpsZD
+         vM+R6PSpD3geAyxQxInyiolXsrDb/XLRCAd2d2QC/4Caz3cSmnWbb6KsYg4xVx8rVH
+         pgfFkg1ZnlqXNNy7s7c5oVD6EaY6U+D5nuYJtD+cYMm7HP8GSF3UfXDP/pnUfYP3uH
+         ckE6paHnX6XpA==
+X-Nifty-SrcIP: [153.142.97.92]
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+To:     linux-kbuild@vger.kernel.org
+Cc:     Sam Ravnborg <sam@ravnborg.org>, Arnd Bergmann <arnd@arndb.de>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Jessica Yu <jeyu@kernel.org>,
+        Lucas De Marchi <lucas.de.marchi@gmail.com>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Michael Schmitz <schmitzmic@gmail.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Rusty Russell <rusty@rustcorp.com.au>,
+        Kees Cook <keescook@chromium.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Michal Marek <michal.lkml@markovi.net>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v2] kbuild: check uniqueness of module names
+Date:   Fri, 17 May 2019 13:27:53 +0900
+Message-Id: <20190517042753.25857-1-yamada.masahiro@socionext.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 16, 2019 at 12:53:00PM -0500, Alan Tull wrote:
-> On Thu, May 16, 2019 at 12:36 PM Alan Tull <atull@kernel.org> wrote:
-> >
-> > On Mon, Apr 29, 2019 at 4:12 AM Wu Hao <hao.wu@intel.com> wrote:
-> 
-> Hi Hao,
-> 
-> Most of this patchset looks ready to go upstream or nearly so with
-> pretty straightforward changes .  Patches 17 and 18 need minor changes
-> and please change the scnprintf in the other patches.  The patches
-> that had nontrivial changes are the power and thermal ones involving
-> hwmon.  I'm hoping to send up the patchset minus the hwmon patches in
-> the next version if there's no unforseen issues.  If the hwmon patches
-> are ready then also, that's great, but otherwise those patches don't
-> need to hold up all the rest of the patchset.  How's that sound?
+In the recent build test of linux-next, Stephen saw a build error
+caused by a broken .tmp_versions/*.mod file:
 
-Hi Alan
+  https://lkml.org/lkml/2019/5/13/991
 
-Thanks for your time for reviewing this patchset.
+drivers/net/phy/asix.ko and drivers/net/usb/asix.ko have the same
+basename, and there is a race in generating .tmp_versions/asix.mod
 
-This sounds good to me. Only thing here is, I need to split the patch which
-updates documentation into 2 patches (to remove hwmon description in doc),
-but for sure, it should be very easy. :)
+Kbuild has not checked this before, and it suddenly shows up with
+obscure error message when this kind of race occurs.
 
-Thanks
-Hao
+Non-unique module names cause various sort of problems, but it is
+not trivial to catch them by eyes.
 
-> 
-> Alan
-> 
-> > >
-> > > This patch adds virtualization support description for DFL based
-> > > FPGA devices (based on PCIe SRIOV), and introductions to new
-> > > interfaces added by new dfl private feature drivers.
-> > >
-> > > Signed-off-by: Xu Yilun <yilun.xu@intel.com>
-> > > Signed-off-by: Wu Hao <hao.wu@intel.com>
-> >
-> > Acked-by: Alan Tull <atull@kernel.org>
-> >
-> > Thanks,
-> > Alan
+Hence, this script.
+
+It checks not only real modules, but also built-in modules (i.e.
+controlled by tristate CONFIG option, but currently compiled with =y).
+Non-unique names for built-in modules also cause problems because
+/sys/modules/ would fall over.
+
+I tested allmodconfig on the latest kernel, and it detected the
+following:
+
+warning: same basename if the following are built as modules:
+  drivers/regulator/88pm800.ko
+  drivers/mfd/88pm800.ko
+warning: same basename if the following are built as modules:
+  drivers/gpu/drm/bridge/adv7511/adv7511.ko
+  drivers/media/i2c/adv7511.ko
+warning: same basename if the following are built as modules:
+  drivers/net/phy/asix.ko
+  drivers/net/usb/asix.ko
+warning: same basename if the following are built as modules:
+  fs/coda/coda.ko
+  drivers/media/platform/coda/coda.ko
+warning: same basename if the following are built as modules:
+  drivers/net/phy/realtek.ko
+  drivers/net/dsa/realtek.ko
+
+Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
+Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+Reviewed-by: Kees Cook <keescook@chromium.org>
+---
+
+Changes in v2:
+ - redirect messages to stderr
+ - use '--' after 'basename -a'
+ - use '-r' for xargs to cope with empty modules.order/modules.builtin
+
+ Makefile                 |  1 +
+ scripts/modules-check.sh | 20 ++++++++++++++++++++
+ 2 files changed, 21 insertions(+)
+ create mode 100755 scripts/modules-check.sh
+
+diff --git a/Makefile b/Makefile
+index a61a95b6b38f..30792fec7a12 100644
+--- a/Makefile
++++ b/Makefile
+@@ -1290,6 +1290,7 @@ modules: $(vmlinux-dirs) $(if $(KBUILD_BUILTIN),vmlinux) modules.builtin
+ 	$(Q)$(AWK) '!x[$$0]++' $(vmlinux-dirs:%=$(objtree)/%/modules.order) > $(objtree)/modules.order
+ 	@$(kecho) '  Building modules, stage 2.';
+ 	$(Q)$(MAKE) -f $(srctree)/scripts/Makefile.modpost
++	$(Q)$(CONFIG_SHELL) $(srctree)/scripts/modules-check.sh
+ 
+ modules.builtin: $(vmlinux-dirs:%=%/modules.builtin)
+ 	$(Q)$(AWK) '!x[$$0]++' $^ > $(objtree)/modules.builtin
+diff --git a/scripts/modules-check.sh b/scripts/modules-check.sh
+new file mode 100755
+index 000000000000..c875f6eab01e
+--- /dev/null
++++ b/scripts/modules-check.sh
+@@ -0,0 +1,20 @@
++#!/bin/sh
++# SPDX-License-Identifier: GPL-2.0
++
++set -e
++
++# Check uniqueness of module names
++check_same_name_modules()
++{
++	same_name_modules=$(cat modules.order modules.builtin | \
++				xargs -r basename -a -- | sort | uniq -d)
++
++	for m in $same_name_modules
++	do
++		echo "warning: same basename if the following are built as modules:" >&2
++		grep -h -e "/$m" modules.order modules.builtin | \
++						sed 's:^kernel/:  :' >&2
++	done
++}
++
++check_same_name_modules
+-- 
+2.17.1
+
