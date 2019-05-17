@@ -2,192 +2,214 @@ Return-Path: <SRS0=M1fl=TR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 358A3C04E87
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 18:55:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A303C04AB4
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 18:56:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 07C9E217D4
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 18:55:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558119350;
-	bh=deEKOf6AJ76PRSC4UpVH+4TLM70ODdzWsv0fqu2nNcI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=AM+wb1ELeaPAhSaYtpKvPm8XR/E6bfhfVX5yuvefeSov6037Aht5VoW4lHviZCP/H
-	 EmmuN18JQUpImBH8hf0Feye7jaRlCb576gO6LEc93xZ8ZLn1YWHsDprCs7c3BSdgvN
-	 kVT1Enddav60bbdRLsqH5xtTx0INLC2tAKS78srM=
+	by mail.kernel.org (Postfix) with ESMTP id E114720848
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 18:56:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727757AbfEQSzt (ORCPT
+        id S1728218AbfEQS4k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 May 2019 14:55:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53888 "EHLO mail.kernel.org"
+        Fri, 17 May 2019 14:56:40 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:49162 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726293AbfEQSzs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 May 2019 14:55:48 -0400
-Received: from localhost (unknown [69.71.4.100])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1726293AbfEQS4j (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 May 2019 14:56:39 -0400
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 21C8620848;
-        Fri, 17 May 2019 18:55:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558119347;
-        bh=deEKOf6AJ76PRSC4UpVH+4TLM70ODdzWsv0fqu2nNcI=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=WoCcjU9EPDSSxnXApzaer4eHVwztWZio/M63p3GJgB837AdrutJHNdQp1gwUTLUHI
-         actYI7GDpKukKVdeD0jm8tBSyFLSl7PZsqxuhzxUYhwGWrkwwdaYeGdQjVYkRQgWoo
-         2+Bs/vBWHfQ3zGZhdU0wPjztXyTuDyK6KRLbDT5s=
-Date:   Fri, 17 May 2019 13:55:45 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Vidya Sagar <vidyas@nvidia.com>
-Cc:     Christoph Hellwig <hch@infradead.org>, lorenzo.pieralisi@arm.com,
-        robh+dt@kernel.org, mark.rutland@arm.com, thierry.reding@gmail.com,
-        jonathanh@nvidia.com, kishon@ti.com, catalin.marinas@arm.com,
-        will.deacon@arm.com, jingoohan1@gmail.com,
-        gustavo.pimentel@synopsys.com, mperttunen@nvidia.com,
-        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, kthota@nvidia.com,
-        mmaddireddy@nvidia.com, sagar.tv@gmail.com
-Subject: Re: [PATCH V6 02/15] PCI/PME: Export pcie_pme_disable_msi() &
- pcie_pme_no_msi() APIs
-Message-ID: <20190517185545.GB49425@google.com>
-References: <20190513050626.14991-1-vidyas@nvidia.com>
- <20190513050626.14991-3-vidyas@nvidia.com>
- <20190513072539.GA27708@infradead.org>
- <3a8cea93-2aeb-e5e2-4d56-f0c6449073c3@nvidia.com>
- <20190516133426.GC101793@google.com>
- <bd08ccaa-c6ee-f966-91e4-bcd5d99d5cf2@nvidia.com>
- <20190517132453.GA30700@google.com>
- <ba611a45-9589-8dce-58e1-d99dd463265d@nvidia.com>
+        by mx1.redhat.com (Postfix) with ESMTPS id 0DBB381E05;
+        Fri, 17 May 2019 18:56:39 +0000 (UTC)
+Received: from redhat.com (dhcp-17-208.bos.redhat.com [10.18.17.208])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 5732B5DD73;
+        Fri, 17 May 2019 18:56:38 +0000 (UTC)
+Date:   Fri, 17 May 2019 14:56:36 -0400
+From:   Joe Lawrence <joe.lawrence@redhat.com>
+To:     live-patching@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     jikos@kernel.org, jpoimboe@redhat.com, pmladek@suse.com,
+        tglx@linutronix.de
+Subject: Re: [PATCH] stacktrace: fix CONFIG_ARCH_STACKWALK
+ stack_trace_save_tsk_reliable return
+Message-ID: <20190517185636.GA24696@redhat.com>
+References: <20190517185117.24642-1-joe.lawrence@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <ba611a45-9589-8dce-58e1-d99dd463265d@nvidia.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190517185117.24642-1-joe.lawrence@redhat.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.25]); Fri, 17 May 2019 18:56:39 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 17, 2019 at 11:23:36PM +0530, Vidya Sagar wrote:
-> On 5/17/2019 6:54 PM, Bjorn Helgaas wrote:
-> > Do you have "lspci -vvxxx" output for the root ports handy?
-> > 
-> > If there's some clue in the standard config space that would tell us
-> > that MSI works for some events but not others, we could make the PCI
-> > core pay attention it.  That would be the best solution because it
-> > wouldn't require Tegra-specific code.
+On Fri, May 17, 2019 at 02:51:17PM -0400, Joe Lawrence wrote:
+> Miroslav reported that the livepatch self-tests were failing,
+> specifically a case in which the consistency model ensures that we do
+> not patch a current executing function, "TEST: busy target module".
 > 
-> Here is the output of 'lspci vvxxx' for one of Tegra194's root ports.
+> Recent renovations to stack_trace_save_tsk_reliable() left it returning
+> only an -ERRNO success indication in some configuration combinations:
+> 
+>   klp_check_stack()
+>     ret = stack_trace_save_tsk_reliable()
+>       #ifdef CONFIG_ARCH_STACKWALK && CONFIG_HAVE_RELIABLE_STACKTRACE
+>         stack_trace_save_tsk_reliable()
+>           ret = arch_stack_walk_reliable()
+>             return 0
+>             return -EINVAL
+>           ...
+>           return ret;
+>     ...
+>     if (ret < 0)
+>       /* stack_trace_save_tsk_reliable error */
+>     nr_entries = ret;                               << 0
+> 
+> Previously (and currently for !CONFIG_ARCH_STACKWALK &&
+> CONFIG_HAVE_RELIABLE_STACKTRACE) stack_trace_save_tsk_reliable()
+> returned the number of entries that it consumed in the passed storage
+> array.
+> 
+> In the case of the above config and trace, be sure to return the
+> stacktrace_cookie.len on stack_trace_save_tsk_reliable() success.
+> 
+> Fixes: 25e39e32b0a3f ("livepatch: Simplify stack trace retrieval")
+> Reported-by: Miroslav Benes <mbenes@suse.cz>
+> Signed-off-by: Joe Lawrence <joe.lawrence@redhat.com>
+> ---
+>  kernel/stacktrace.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/kernel/stacktrace.c b/kernel/stacktrace.c
+> index 27bafc1e271e..90d3e0bf0302 100644
+> --- a/kernel/stacktrace.c
+> +++ b/kernel/stacktrace.c
+> @@ -206,7 +206,7 @@ int stack_trace_save_tsk_reliable(struct task_struct *tsk, unsigned long *store,
+>  
+>  	ret = arch_stack_walk_reliable(consume_entry, &c, tsk);
+>  	put_task_stack(tsk);
+> -	return ret;
+> +	return ret ? ret : c.len;
+>  }
+>  #endif
+>  
+> -- 
+> 2.20.1
+> 
 
-Thanks!
+Hi Thomas,
 
-This port advertises both MSI and MSI-X, and neither one is enabled.
-This particular port doesn't have a slot, so hotplug isn't applicable
-to it.
+This change is *very* lightly tested.  It passes the livepatch
+self-tests and a test driver that I wrote to debug this.  If a more
+substantial change is needed, feel free to grab this one.
 
-But if I understand correctly, if MSI or MSI-X were enabled and the
-port had a slot, the port would generate MSI/MSI-X hotplug interrupts.
-But PME and AER events would still cause INTx interrupts (even with
-MSI or MSI-X enabled).
+FWIW, here's the debugging module that I used to first verify that the
+return code was always 0 (ie, no nr_entries) and then that I was getting
+sane values back from the modified version.  It's simple, echo in a task
+pointer and it will dump the stack trace to dmesg:
 
-Do I have that right?  I just want to make sure that the reason for
-PME being INTx is a permanent hardware choice and that it's not
-related to MSI and MSI-X currently being disabled.
+  % dmesg -C
+  % echo 0xffff8a4107082f40 > /sys/module/checkstack/parameters/task_param 
+  % dmesg
+  [ 1909.546463] checkstack: task @ ffff8a4107082f40
+  [ 1909.549280] checkstack: nr_entries = 7
+  [ 1909.552268] checkstack:      [ffffffffa608fb29] schedule+0x29/0x90
+  [ 1909.555583] checkstack:      [ffffffffa60941ed] schedule_hrtimeout_range_clock+0x18d/0x1a0
+  [ 1909.556864] checkstack:      [ffffffffa5b27e38] ep_poll+0x428/0x450
+  [ 1909.557645] checkstack:      [ffffffffa5b27f10] do_epoll_wait+0xb0/0xd0
+  [ 1909.558454] checkstack:      [ffffffffa5b27f4a] __x64_sys_epoll_wait+0x1a/0x20
+  [ 1909.559354] checkstack:      [ffffffffa58041e5] do_syscall_64+0x55/0x1a0
+  [ 1909.560233] checkstack:      [ffffffffa620008c] entry_SYSCALL_64_after_hwframe+0x44/0xa9
 
-> 0005:00:00.0 PCI bridge: NVIDIA Corporation Device 1ad0 (rev a1) (prog-if 00 [Normal decode])
-> 	Control: I/O+ Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop- ParErr- Stepping- SERR+ FastB2B- DisINTx-
-> 	Status: Cap+ 66MHz- UDF- FastB2B- ParErr- DEVSEL=fast >TAbort- <TAbort- <MAbort- >SERR- <PERR- INTx-
-> 	Latency: 0
-> 	Interrupt: pin A routed to IRQ 50
-> 	Bus: primary=00, secondary=01, subordinate=ff, sec-latency=0
-> 	I/O behind bridge: None
-> 	Memory behind bridge: 40000000-400fffff [size=1M]
-> 	Prefetchable memory behind bridge: None
-> 	Secondary status: 66MHz- FastB2B- ParErr- DEVSEL=fast >TAbort- <TAbort- <MAbort- <SERR- <PERR-
-> 	BridgeCtl: Parity- SERR+ NoISA- VGA- VGA16- MAbort- >Reset- FastB2B-
-> 		PriDiscTmr- SecDiscTmr- DiscTmrStat- DiscTmrSERREn-
-> 	Capabilities: [40] Power Management version 3
-> 		Flags: PMEClk- DSI- D1- D2- AuxCurrent=375mA PME(D0+,D1-,D2-,D3hot+,D3cold+)
-> 		Status: D0 NoSoftRst+ PME-Enable- DSel=0 DScale=0 PME-
-> 	Capabilities: [50] MSI: Enable- Count=1/1 Maskable+ 64bit+
-> 		Address: 0000000000000000  Data: 0000
-> 		Masking: 00000000  Pending: 00000000
-> 	Capabilities: [70] Express (v2) Root Port (Slot-), MSI 00
-> 		DevCap:	MaxPayload 256 bytes, PhantFunc 0
-> 			ExtTag- RBE+
-> 		DevCtl:	CorrErr+ NonFatalErr+ FatalErr+ UnsupReq+
-> 			RlxdOrd+ ExtTag- PhantFunc- AuxPwr- NoSnoop+
-> 			MaxPayload 128 bytes, MaxReadReq 512 bytes
-> 		DevSta:	CorrErr- NonFatalErr- FatalErr- UnsupReq- AuxPwr+ TransPend-
-> 		LnkCap:	Port #0, Speed 16GT/s, Width x8, ASPM L0s L1, Exit Latency L0s <1us, L1 <64us
-> 			ClockPM- Surprise+ LLActRep+ BwNot+ ASPMOptComp+
-> 		LnkCtl:	ASPM Disabled; RCB 64 bytes Disabled- CommClk+
-> 			ExtSynch- ClockPM- AutWidDis- BWInt+ AutBWInt-
-> 		LnkSta:	Speed 5GT/s (downgraded), Width x1 (downgraded)
-> 			TrErr- Train- SlotClk+ DLActive+ BWMgmt+ ABWMgmt+
-> 		RootCtl: ErrCorrectable- ErrNon-Fatal- ErrFatal- PMEIntEna+ CRSVisible+
-> 		RootCap: CRSVisible+
-> 		RootSta: PME ReqID 0000, PMEStatus- PMEPending-
-> 		DevCap2: Completion Timeout: Range ABCD, TimeoutDis+, LTR+, OBFF Not Supported ARIFwd-
-> 			 AtomicOpsCap: Routing- 32bit- 64bit- 128bitCAS-
-> 		DevCtl2: Completion Timeout: 50us to 50ms, TimeoutDis-, LTR+, OBFF Disabled ARIFwd-
-> 			 AtomicOpsCtl: ReqEn- EgressBlck-
-> 		LnkCtl2: Target Link Speed: 16GT/s, EnterCompliance- SpeedDis-
-> 			 Transmit Margin: Normal Operating Range, EnterModifiedCompliance- ComplianceSOS-
-> 			 Compliance De-emphasis: -6dB
-> 		LnkSta2: Current De-emphasis Level: -6dB, EqualizationComplete-, EqualizationPhase1-
-> 			 EqualizationPhase2-, EqualizationPhase3-, LinkEqualizationRequest-
-> 	Capabilities: [b0] MSI-X: Enable- Count=8 Masked-
-> 		Vector table: BAR=2 offset=00000000
-> 		PBA: BAR=2 offset=00010000
-> 	Capabilities: [100 v2] Advanced Error Reporting
-> 		UESta:	DLP- SDES- TLP- FCP- CmpltTO- CmpltAbrt- UnxCmplt- RxOF- MalfTLP- ECRC- UnsupReq- ACSViol-
-> 		UEMsk:	DLP- SDES- TLP- FCP- CmpltTO- CmpltAbrt- UnxCmplt- RxOF- MalfTLP- ECRC- UnsupReq- ACSViol-
-> 		UESvrt:	DLP+ SDES+ TLP- FCP+ CmpltTO- CmpltAbrt- UnxCmplt- RxOF+ MalfTLP+ ECRC- UnsupReq- ACSViol-
-> 		CESta:	RxErr- BadTLP- BadDLLP- Rollover- Timeout- AdvNonFatalErr-
-> 		CEMsk:	RxErr- BadTLP- BadDLLP- Rollover- Timeout- AdvNonFatalErr+
-> 		AERCap:	First Error Pointer: 00, ECRCGenCap+ ECRCGenEn- ECRCChkCap+ ECRCChkEn-
-> 			MultHdrRecCap+ MultHdrRecEn- TLPPfxPres- HdrLogCap-
-> 		HeaderLog: 00000000 00000000 00000000 00000000
-> 		RootCmd: CERptEn+ NFERptEn+ FERptEn+
-> 		RootSta: CERcvd- MultCERcvd- UERcvd- MultUERcvd-
-> 			 FirstFatal- NonFatalMsg- FatalMsg- IntMsg 0
-> 		ErrorSrc: ERR_COR: 0000 ERR_FATAL/NONFATAL: 0000
-> 	Capabilities: [148 v1] Secondary PCI Express <?>
-> 	Capabilities: [168 v1] Physical Layer 16.0 GT/s <?>
-> 	Capabilities: [190 v1] Lane Margining at the Receiver <?>
-> 	Capabilities: [1c0 v1] L1 PM Substates
-> 		L1SubCap: PCI-PM_L1.2+ PCI-PM_L1.1+ ASPM_L1.2+ ASPM_L1.1+ L1_PM_Substates+
-> 			  PortCommonModeRestoreTime=60us PortTPowerOnTime=40us
-> 		L1SubCtl1: PCI-PM_L1.2- PCI-PM_L1.1- ASPM_L1.2- ASPM_L1.1-
-> 			   T_CommonMode=10us LTR1.2_Threshold=0ns
-> 		L1SubCtl2: T_PwrOn=10us
-> 	Capabilities: [1d0 v1] Vendor Specific Information: ID=0002 Rev=4 Len=100 <?>
-> 	Capabilities: [2d0 v1] Vendor Specific Information: ID=0001 Rev=1 Len=038 <?>
-> 	Capabilities: [308 v1] Data Link Feature <?>
-> 	Capabilities: [314 v1] Precision Time Measurement
-> 		PTMCap: Requester:+ Responder:+ Root:+
-> 		PTMClockGranularity: 16ns
-> 		PTMControl: Enabled:- RootSelected:-
-> 		PTMEffectiveGranularity: Unknown
-> 	Capabilities: [320 v1] Vendor Specific Information: ID=0004 Rev=1 Len=054 <?>
-> 	Kernel driver in use: pcieport
-> 00: de 10 d0 1a 07 01 10 00 a1 00 04 06 00 00 01 00
-> 10: 00 00 00 00 00 00 00 00 00 01 ff 00 f0 00 00 00
-> 20: 00 40 00 40 f1 ff 01 00 00 00 00 00 00 00 00 00
-> 30: 00 00 00 00 40 00 00 00 00 00 00 00 32 01 02 00
-> 40: 01 50 c3 c9 08 00 00 00 00 00 00 00 00 00 00 00
-> 50: 05 70 80 01 00 00 00 00 00 00 00 00 00 00 00 00
-> 60: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-> 70: 10 b0 42 00 01 80 00 00 1f 28 10 00 84 4c 7b 00
-> 80: 40 04 12 f0 00 00 00 00 c0 03 40 00 18 00 01 00
-> 90: 00 00 00 00 1f 0c 01 00 00 04 00 00 1e 00 80 01
-> a0: 04 00 00 02 00 00 00 00 00 00 00 00 00 00 00 00
-> b0: 11 00 07 00 02 00 00 00 02 00 01 00 00 00 00 00
-> c0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-> d0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-> e0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-> f0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+-- Joe
+
+-->8-- -->8-- -->8-- -->8-- -->8-- -->8-- -->8-- -->8-- -->8-- -->8--
+
+
+#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
+
+#include <linux/kernel.h>
+#include <linux/module.h>
+#include <linux/cpu.h>
+#include <linux/kallsyms.h>
+#include <linux/stacktrace.h>
+
+MODULE_LICENSE("GPL");
+MODULE_AUTHOR("Joe Lawrence <joe.lawrence@stratus.com>");
+
+#define MAX_STACK_ENTRIES  100
+
+/* No exports, no fun */
+static int (*p_stack_trace_save_tsk_reliable)(struct task_struct *tsk, unsigned long *store, unsigned int size);
+
+int checkstack(struct task_struct *task)
+{
+	static unsigned long entries[MAX_STACK_ENTRIES];
+	unsigned long address;
+	int ret, nr_entries, i;
+
+	if (!task)
+		return 0;
+
+	pr_info("task @ %lx\n", (unsigned long) task);
+
+        ret = p_stack_trace_save_tsk_reliable(task, entries, ARRAY_SIZE(entries));
+        WARN_ON_ONCE(ret == -ENOSYS);
+        if (ret < 0) {
+                pr_err("%s: %s:%d has an unreliable stack\n",
+                         __func__, task->comm, task->pid);
+                return ret;
+        }
+	nr_entries = ret;
+	pr_info("nr_entries = %d\n", nr_entries); 
+
+        for (i = 0; i < nr_entries; i++) {
+                address = entries[i];
+		pr_info("\t[%lx] %pS\n", address, (void *) address);
+        }
+
+	return 0;
+}
+
+
+static unsigned long task_param = 0;
+static int task_param_set(const char *val, const struct kernel_param *kp)
+{
+        int ret;
+
+        ret = param_set_ulong(val, kp);
+        if (ret < 0)
+                return ret;
+
+	return checkstack((struct task_struct *)task_param);
+}
+static const struct kernel_param_ops task_param_ops = {
+	.set = task_param_set,
+	.get = param_get_ulong,
+};
+module_param_cb(task_param, &task_param_ops, &task_param, 0644);
+MODULE_PARM_DESC(task_param, "task (default=0)");
+
+
+int __init init_module(void)
+{
+	p_stack_trace_save_tsk_reliable = 
+		(void *)kallsyms_lookup_name("stack_trace_save_tsk_reliable");
+	if (!p_stack_trace_save_tsk_reliable) {
+		pr_err("can't find stack_trace_save_tsk_reliable symbol\n");
+		return -ENXIO;
+	}
+	pr_info("p_stack_trace_save_tsk_reliable @ %lx\n",
+		(unsigned long) p_stack_trace_save_tsk_reliable);
+
+	return 0;
+}
+
+void cleanup_module(void)
+{
+}
