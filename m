@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-14.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33B7BC04AB4
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 19:38:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75310C04AB4
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 19:38:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 03D3521743
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 19:38:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 442D121726
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 19:38:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558121910;
-	bh=ZoEXBcVdmFsdz/V/Ql5U8fQ3EuR+/gKC/IbjsOaJxj8=;
+	s=default; t=1558121913;
+	bh=9n38qUIdozudC6yheFv2zMGuMxdA6cPiLPZg/nVW5Bs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RIqkXAPSG+1qjb8LWwFpXpTgSVb/et2mfE75AkEHPczkR6HSJccA/UnMNy2FkKH+5
-	 S33eET4iVxkK95huwEsiyJeyRjlKbX9F/Cwci7Tk1vfO4rLaCUjiy0iOvcoIt5Kjbb
-	 qidaHyXvJP8UwIPpUoiVpZ/lPLpHBKgTnMRPYy9g=
+	b=LtaTrBAKdlUZwfGmOwH3xRUXtd0ikaMGlZ0IitJFKT/5GGUt+lIIxM+7SgwOzist+
+	 CKHOVlmmL+KcXIhTrpTXvVzMpclQbphKMrqQ4rWvyf/dlxY/X3cmdMLtWB9vkRAc3E
+	 HFvYWsnHbMK9lPl3Ok8F8c3zu4h5K06T9n//fNNQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729698AbfEQTi3 (ORCPT
+        id S1729713AbfEQTic (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 May 2019 15:38:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54440 "EHLO mail.kernel.org"
+        Fri, 17 May 2019 15:38:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54528 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729686AbfEQTi0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 May 2019 15:38:26 -0400
+        id S1729686AbfEQTia (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 May 2019 15:38:30 -0400
 Received: from quaco.ghostprotocols.net (unknown [190.15.121.82])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D791A21744;
-        Fri, 17 May 2019 19:38:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2005D21783;
+        Fri, 17 May 2019 19:38:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558121905;
-        bh=ZoEXBcVdmFsdz/V/Ql5U8fQ3EuR+/gKC/IbjsOaJxj8=;
+        s=default; t=1558121909;
+        bh=9n38qUIdozudC6yheFv2zMGuMxdA6cPiLPZg/nVW5Bs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PktAaB1UhlxLhF7pbYXEURsJ0QfhCZED2/gUCusEXaJWhzTQBIrcEC6K/bfPZLTBQ
-         bopOYz4dicCYktkXv0gA1B1HDxWKvDZcrmgarb5zLxff6ABgbfbII3LzU6eGGX4Cv6
-         kZU2fmtHYXgNG7DOl26tWt9OMZnIJi0WTYzXzAlo=
+        b=Q1+aGJS8GJ40hFjdutzVTPfikxmXVDdiGpOXrSLeVU4mlU6puwoU8NDSA22gzthQS
+         Evq59L/Fgg2f5SFTMJOsFoSkwZEIHSPS8j3tDFPhfa7bnGx+hiXLZzXPspviBExqxB
+         pD7EGQ1qBJclOXC+xoy1XoHka/VQy6hPWDWSZ2f8=
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
 To:     Ingo Molnar <mingo@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>
@@ -51,9 +51,9 @@ Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
         linux-trace-devel@vger.kernel.org,
         Steven Rostedt <rostedt@goodmis.org>,
         Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH 28/73] tools lib traceevent: Man page for page size APIs
-Date:   Fri, 17 May 2019 16:35:26 -0300
-Message-Id: <20190517193611.4974-29-acme@kernel.org>
+Subject: [PATCH 29/73] tools lib traceevent: Man page for tep_strerror()
+Date:   Fri, 17 May 2019 16:35:27 -0300
+Message-Id: <20190517193611.4974-30-acme@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190517193611.4974-1-acme@kernel.org>
 References: <20190517193611.4974-1-acme@kernel.org>
@@ -66,38 +66,35 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Tzvetomir Stoyanov <tstoyanov@vmware.com>
 
-Create man pages for libtraceevent APIs:
-
-  tep_get_page_size()
-  tep_set_page_size()
+Create man page for tep_strerror() libtraceevent API.
 
 Signed-off-by: Tzvetomir Stoyanov <tstoyanov@vmware.com>
 Cc: Andrew Morton <akpm@linux-foundation.org>
 Cc: Jiri Olsa <jolsa@redhat.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: linux-trace-devel@vger.kernel.org
-Link: http://lore.kernel.org/linux-trace-devel/20190503091119.23399-9-tstoyanov@vmware.com
-Link: http://lkml.kernel.org/r/20190510200107.218173559@goodmis.org
+Link: http://lore.kernel.org/linux-trace-devel/20190503091119.23399-10-tstoyanov@vmware.com
+Link: http://lkml.kernel.org/r/20190510200107.371692630@goodmis.org
+[ Added "always" to state it doesn't matter if it is POSIX or GNU ]
 Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- .../Documentation/libtraceevent-page_size.txt | 82 +++++++++++++++++++
- 1 file changed, 82 insertions(+)
- create mode 100644 tools/lib/traceevent/Documentation/libtraceevent-page_size.txt
+ .../Documentation/libtraceevent-strerror.txt  | 85 +++++++++++++++++++
+ 1 file changed, 85 insertions(+)
+ create mode 100644 tools/lib/traceevent/Documentation/libtraceevent-strerror.txt
 
-diff --git a/tools/lib/traceevent/Documentation/libtraceevent-page_size.txt b/tools/lib/traceevent/Documentation/libtraceevent-page_size.txt
+diff --git a/tools/lib/traceevent/Documentation/libtraceevent-strerror.txt b/tools/lib/traceevent/Documentation/libtraceevent-strerror.txt
 new file mode 100644
-index 000000000000..452c0cfa1822
+index 000000000000..ee4062a00c9f
 --- /dev/null
-+++ b/tools/lib/traceevent/Documentation/libtraceevent-page_size.txt
-@@ -0,0 +1,82 @@
++++ b/tools/lib/traceevent/Documentation/libtraceevent-strerror.txt
+@@ -0,0 +1,85 @@
 +libtraceevent(3)
 +================
 +
 +NAME
 +----
-+tep_get_page_size, tep_set_page_size - Get / set the size of a memory page on
-+the machine, where the trace is generated
++tep_strerror - Returns a string describing regular errno and tep error number.
 +
 +SYNOPSIS
 +--------
@@ -105,40 +102,44 @@ index 000000000000..452c0cfa1822
 +--
 +*#include <event-parse.h>*
 +
-+int *tep_get_page_size*(struct tep_handle pass:[*]_tep_);
-+void *tep_set_page_size*(struct tep_handle pass:[*]_tep_, int _page_size_);
-+--
++int *tep_strerror*(struct tep_handle pass:[*]_tep_, enum tep_errno _errnum_, char pass:[*]_buf_, size_t _buflen_);
 +
++--
 +DESCRIPTION
 +-----------
-+The _tep_get_page_size()_ function returns the size of a memory page on
-+the machine, where the trace is generated. The _tep_ argument is trace
-+event parser context.
++The _tep_strerror()_ function converts tep error number into a human
++readable string.
++The _tep_ argument is trace event parser context. The _errnum_ is a regular
++errno, defined in errno.h, or a tep error number. The string, describing this
++error number is copied in the _buf_ argument. The _buflen_ argument is
++the size of the _buf_.
 +
-+The _tep_set_page_size()_ function stores in the _tep_ context the size of a
-+memory page on the machine, where the trace is generated.
-+The _tep_ argument is trace event parser context.
-+The _page_size_ argument is the size of a memory page, in bytes.
++It as a thread safe wrapper around strerror_r(). The library function has two
++different behaviors - POSIX and GNU specific. The _tep_strerror()_ API always
++behaves as the POSIX version - the error string is copied in the user supplied
++buffer.
 +
 +RETURN VALUE
 +------------
-+The _tep_get_page_size()_ function returns size of the memory page, in bytes.
++The _tep_strerror()_ function returns 0, if a valid _errnum_ is passed and the
++string is copied into _buf_. If _errnum_ is not a valid error number,
++-1 is returned and _buf_ is not modified.
 +
 +EXAMPLE
 +-------
 +[source,c]
 +--
-+#include <unistd.h>
 +#include <event-parse.h>
 +...
 +struct tep_handle *tep = tep_alloc();
 +...
-+	int page_size = getpagesize();
-+
-+	tep_set_page_size(tep, page_size);
-+
-+	printf("The page size for this machine is %d\n", tep_get_page_size(tep));
-+
++char buf[32];
++char *pool = calloc(1, 128);
++if (tep == NULL) {
++	tep_strerror(tep, TEP_ERRNO__MEM_ALLOC_FAILED, buf, 32);
++	printf ("The pool is not initialized, %s", buf);
++}
++...
 +--
 +
 +FILES
