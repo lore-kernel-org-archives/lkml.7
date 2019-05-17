@@ -2,233 +2,122 @@ Return-Path: <SRS0=M1fl=TR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13355C04AB4
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 17:00:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9806CC04E87
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 17:03:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E356D2168B
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 16:59:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6866521726
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 17:03:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="HSWvFxn0";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="k+R2tF9W"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728028AbfEQQ76 (ORCPT
+        id S1727187AbfEQRD4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 May 2019 12:59:58 -0400
-Received: from lhrrgout.huawei.com ([185.176.76.210]:32953 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726575AbfEQQ76 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 May 2019 12:59:58 -0400
-Received: from lhreml707-cah.china.huawei.com (unknown [172.18.7.106])
-        by Forcepoint Email with ESMTP id A5B5E1A365CDA136CABA;
-        Fri, 17 May 2019 17:59:56 +0100 (IST)
-Received: from roberto-HP-EliteDesk-800-G2-DM-65W.huawei.com (10.204.65.154)
- by smtpsuk.huawei.com (10.201.108.48) with Microsoft SMTP Server (TLS) id
- 14.3.408.0; Fri, 17 May 2019 17:59:46 +0100
-From:   Roberto Sassu <roberto.sassu@huawei.com>
-To:     <viro@zeniv.linux.org.uk>
-CC:     <linux-security-module@vger.kernel.org>,
-        <linux-integrity@vger.kernel.org>, <initramfs@vger.kernel.org>,
-        <linux-api@vger.kernel.org>, <linux-fsdevel@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <zohar@linux.vnet.ibm.com>,
-        <silviu.vlasceanu@huawei.com>, <dmitry.kasatkin@huawei.com>,
-        <takondra@cisco.com>, <kamensky@cisco.com>, <hpa@zytor.com>,
-        <arnd@arndb.de>, <rob@landley.net>, <james.w.mcmechan@gmail.com>,
-        <niveditas98@gmail.com>, Roberto Sassu <roberto.sassu@huawei.com>
-Subject: [PATCH v3 2/2] initramfs: introduce do_readxattrs()
-Date:   Fri, 17 May 2019 18:55:19 +0200
-Message-ID: <20190517165519.11507-3-roberto.sassu@huawei.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190517165519.11507-1-roberto.sassu@huawei.com>
-References: <20190517165519.11507-1-roberto.sassu@huawei.com>
+        Fri, 17 May 2019 13:03:56 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:42978 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726462AbfEQRD4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 May 2019 13:03:56 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 0ABD660DAB; Fri, 17 May 2019 17:03:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1558112635;
+        bh=4IgcuJFcVBunA66vabPQGLUoMAAyfYOXj6QvXzjcV9I=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=HSWvFxn0qtDzSm9PyIPznHPMS+TALkycUaHjcD5iJAgxDLVsfR0Kj6IN2B9DwhzZL
+         C6oMyNLOWq2l7ufhPAoF/zPhDYWvoultb+rJN3Pkbj2rohDU7lHvov6OKhzz4Yedb7
+         JHtJcTkxvt4HesHwsqEzz1XR2HC2PWxAv7eYiIgA=
+Received: from [10.226.58.28] (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: jhugo@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 5A423602F8;
+        Fri, 17 May 2019 17:03:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1558112634;
+        bh=4IgcuJFcVBunA66vabPQGLUoMAAyfYOXj6QvXzjcV9I=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=k+R2tF9WuUY7eh5PECiRZ0/Qf9PXm5wjZm6I0pUXoXqvxamT22r8qoNZamBUmTc5e
+         VFax+tV3sVJZ8RUoBq93EnftWC7b1GYXfiqoIOplx8CNMt83P4K8kiyl1FuriR2a6j
+         QbBQZOCQO5ALfNYi4RMRKJdCL2gAoyNcnByeWhYM=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 5A423602F8
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=jhugo@codeaurora.org
+Subject: Re: [PATCH v4 0/9] RPMPD for QCS404 and MSM8998
+To:     Sibi Sankar <sibis@codeaurora.org>, bjorn.andersson@linaro.org,
+        robh+dt@kernel.org, agross@kernel.org
+Cc:     david.brown@linaro.org, mark.rutland@arm.com,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org, rnayak@codeaurora.org,
+        marc.w.gonzalez@free.fr
+References: <20190513102015.26551-1-sibis@codeaurora.org>
+From:   Jeffrey Hugo <jhugo@codeaurora.org>
+Message-ID: <2d453c99-4ea2-e4f0-1d99-e13d099bfa07@codeaurora.org>
+Date:   Fri, 17 May 2019 11:03:52 -0600
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.204.65.154]
-X-CFilter-Loop: Reflected
+In-Reply-To: <20190513102015.26551-1-sibis@codeaurora.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch adds support for an alternative method to add xattrs to files in
-the rootfs filesystem. Instead of extracting them directly from the ram
-disk image, they are extracted from a regular file called .xattr-list, that
-can be added by any ram disk generator available today. The file format is:
+On 5/13/2019 4:20 AM, Sibi Sankar wrote:
+> Re-worked the macros of the rpmpd driver. Add power domains support
+> for QCS404 and MSM8998.
 
-<file #N data len (ASCII, 10 chars)><file #N path>\0
-<xattr #N data len (ASCII, 8 chars)><xattr #N name>\0<xattr #N value>
+For the series:
+Reviewed-by: Jeffrey Hugo <jhugo@codeaurora.org>
 
-.xattr-list can be generated by executing:
+> 
+> V4:
+> * fixup fixes tag and commit message in patch 1 [Marc]
+> * fixup typos in qcs404 and msm8998 dt nodes
+> * fixup comments regarding resource type in patch 8 [Marc]
+> 
+> V3:
+> * always send level updates to vfc and vfl in set_performance state
+> * fixup commit messages [Rajendra]
+> * fixup s-o-b ordering
+> 
+> V2:
+> * Add rpmpd support for msm8998
+> * fixup corner/vfc with vlfl/vfl
+> 
+> Bjorn Andersson (4):
+>    soc: qcom: rpmpd: Modify corner defining macros
+>    dt-bindings: power: Add rpm power domain bindings for qcs404
+>    soc: qcom: rpmpd: Add QCS404 power-domains
+>    arm64: dts: qcom: qcs404: Add rpmpd node
+> 
+> Sibi Sankar (5):
+>    soc: qcom: rpmpd: fixup rpmpd set performance state
+>    soc: qcom: rpmpd: Add support to set rpmpd state to max
+>    dt-bindings: power: Add rpm power domain bindings for msm8998
+>    soc: qcom: rpmpd: Add MSM8998 power-domains
+>    arm64: dts: qcom: msm8998: Add rpmpd node
+> 
+>   .../devicetree/bindings/power/qcom,rpmpd.txt  |   2 +
+>   arch/arm64/boot/dts/qcom/msm8998.dtsi         |  51 +++++++
+>   arch/arm64/boot/dts/qcom/qcs404.dtsi          |  55 +++++++
+>   drivers/soc/qcom/rpmpd.c                      | 134 ++++++++++++++----
+>   include/dt-bindings/power/qcom-rpmpd.h        |  34 +++++
+>   5 files changed, 252 insertions(+), 24 deletions(-)
+> 
 
-$ getfattr --absolute-names -d -h -R -e hex -m - \
-      <file list> | xattr.awk -b > ${initdir}/.xattr-list
 
-where the content of the xattr.awk script is:
-
-#! /usr/bin/awk -f
-{
-  if (!length($0)) {
-    printf("%.10x%s\0", len, file);
-    for (x in xattr) {
-      printf("%.8x%s\0", xattr_len[x], x);
-      for (i = 0; i < length(xattr[x]) / 2; i++) {
-        printf("%c", strtonum("0x"substr(xattr[x], i * 2 + 1, 2)));
-      }
-    }
-    i = 0;
-    delete xattr;
-    delete xattr_len;
-    next;
-  };
-  if (i == 0) {
-    file=$3;
-    len=length(file) + 8 + 1;
-  }
-  if (i > 0) {
-    split($0, a, "=");
-    xattr[a[1]]=substr(a[2], 3);
-    xattr_len[a[1]]=length(a[1]) + 1 + 8 + length(xattr[a[1]]) / 2;
-    len+=xattr_len[a[1]];
-  };
-  i++;
-}
-
-Signed-off-by: Roberto Sassu <roberto.sassu@huawei.com>
----
- init/initramfs.c | 99 ++++++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 99 insertions(+)
-
-diff --git a/init/initramfs.c b/init/initramfs.c
-index 0c6dd1d5d3f6..6ec018c6279a 100644
---- a/init/initramfs.c
-+++ b/init/initramfs.c
-@@ -13,6 +13,8 @@
- #include <linux/namei.h>
- #include <linux/xattr.h>
- 
-+#define XATTR_LIST_FILENAME ".xattr-list"
-+
- static ssize_t __init xwrite(int fd, const char *p, size_t count)
- {
- 	ssize_t out = 0;
-@@ -382,6 +384,97 @@ static int __init __maybe_unused do_setxattrs(char *pathname)
- 	return 0;
- }
- 
-+struct path_hdr {
-+	char p_size[10]; /* total size including p_size field */
-+	char p_data[];   /* <path>\0<xattrs> */
-+};
-+
-+static int __init do_readxattrs(void)
-+{
-+	struct path_hdr hdr;
-+	char *path = NULL;
-+	char str[sizeof(hdr.p_size) + 1];
-+	unsigned long file_entry_size;
-+	size_t size, path_size, total_size;
-+	struct kstat st;
-+	struct file *file;
-+	loff_t pos;
-+	int ret;
-+
-+	ret = vfs_lstat(XATTR_LIST_FILENAME, &st);
-+	if (ret < 0)
-+		return ret;
-+
-+	total_size = st.size;
-+
-+	file = filp_open(XATTR_LIST_FILENAME, O_RDONLY, 0);
-+	if (IS_ERR(file))
-+		return PTR_ERR(file);
-+
-+	pos = file->f_pos;
-+
-+	while (total_size) {
-+		size = kernel_read(file, (char *)&hdr, sizeof(hdr), &pos);
-+		if (size != sizeof(hdr)) {
-+			ret = -EIO;
-+			goto out;
-+		}
-+
-+		total_size -= size;
-+
-+		str[sizeof(hdr.p_size)] = 0;
-+		memcpy(str, hdr.p_size, sizeof(hdr.p_size));
-+		ret = kstrtoul(str, 16, &file_entry_size);
-+		if (ret < 0)
-+			goto out;
-+
-+		file_entry_size -= sizeof(sizeof(hdr.p_size));
-+		if (file_entry_size > total_size) {
-+			ret = -EINVAL;
-+			goto out;
-+		}
-+
-+		path = vmalloc(file_entry_size);
-+		if (!path) {
-+			ret = -ENOMEM;
-+			goto out;
-+		}
-+
-+		size = kernel_read(file, path, file_entry_size, &pos);
-+		if (size != file_entry_size) {
-+			ret = -EIO;
-+			goto out_free;
-+		}
-+
-+		total_size -= size;
-+
-+		path_size = strnlen(path, file_entry_size);
-+		if (path_size == file_entry_size) {
-+			ret = -EINVAL;
-+			goto out_free;
-+		}
-+
-+		xattr_buf = path + path_size + 1;
-+		xattr_len = file_entry_size - path_size - 1;
-+
-+		ret = do_setxattrs(path);
-+		vfree(path);
-+		path = NULL;
-+
-+		if (ret < 0)
-+			break;
-+	}
-+out_free:
-+	vfree(path);
-+out:
-+	fput(file);
-+
-+	if (ret < 0)
-+		error("Unable to parse xattrs");
-+
-+	return ret;
-+}
-+
- static __initdata int wfd;
- 
- static int __init do_name(void)
-@@ -391,6 +484,11 @@ static int __init do_name(void)
- 	if (strcmp(collected, "TRAILER!!!") == 0) {
- 		free_hash();
- 		return 0;
-+	} else if (strcmp(collected, XATTR_LIST_FILENAME) == 0) {
-+		struct kstat st;
-+
-+		if (!vfs_lstat(collected, &st))
-+			do_readxattrs();
- 	}
- 	clean_path(collected, mode);
- 	if (S_ISREG(mode)) {
-@@ -562,6 +660,7 @@ static char * __init unpack_to_rootfs(char *buf, unsigned long len)
- 		buf += my_inptr;
- 		len -= my_inptr;
- 	}
-+	do_readxattrs();
- 	dir_utime();
- 	kfree(name_buf);
- 	kfree(symlink_buf);
 -- 
-2.17.1
-
+Jeffrey Hugo
+Qualcomm Datacenter Technologies as an affiliate of Qualcomm 
+Technologies, Inc.
+Qualcomm Technologies, Inc. is a member of the
+Code Aurora Forum, a Linux Foundation Collaborative Project.
