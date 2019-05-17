@@ -2,213 +2,100 @@ Return-Path: <SRS0=M1fl=TR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EBC2C04AAF
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 01:21:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8293C04AB4
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 01:29:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3368220848
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 01:21:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558056096;
-	bh=gof0GYVbhaJmsy1U34euLEiyfxRjuIA4jzoUaq2teCU=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=ILdDR/mxaTLN3KNOYZHFweMUSKJrcSm/UJqfqqKREZIM6yqVDzY3EnvfW5m/UZYFF
-	 B0JN8ZlHPgrhXS3Fn1R7sRkQLh2ZUR0MdecLodjTYd52UxiVqt0qC/oiOp078SXi4+
-	 pFksEjtZbcU93orWE4Yct9TWeGulTwMjgC/Z5HKo=
+	by mail.kernel.org (Postfix) with ESMTP id 991AC2082E
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 01:29:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727269AbfEQBVe (ORCPT
+        id S1727481AbfEQB3c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 21:21:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60792 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727027AbfEQBVe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 May 2019 21:21:34 -0400
-Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7E2D32177B
-        for <linux-kernel@vger.kernel.org>; Fri, 17 May 2019 01:21:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558056092;
-        bh=gof0GYVbhaJmsy1U34euLEiyfxRjuIA4jzoUaq2teCU=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=aRKGmssGlGlJ230iE7AwZpUuXotMV/b2pMeGvX3uBLqJTK4Z+UKIc8i6YthHF5PvR
-         Xny8i1xX2ow1TkXQsUNgtMm54NX23RMfkzgC9VyWzZWEDyAg2eJV6JC01nL2DhE1LW
-         NaS0L00Oudt+HZO/LUe0h5OykFt66z8fK46NWcsc=
-Received: by mail-wm1-f49.google.com with SMTP id i3so5306638wml.4
-        for <linux-kernel@vger.kernel.org>; Thu, 16 May 2019 18:21:32 -0700 (PDT)
-X-Gm-Message-State: APjAAAXQ2ZPtKJuo4slv1gexqfuiOUpKuW1o1ISosMNvmCLu8/zMfBOE
-        czdNMh7CIbb5Pb0v1+SNBsVKmm7ErEeA+Y4BGyhaeA==
-X-Google-Smtp-Source: APXvYqzucfQJBhFEKinnpPMWLjerC1ZjQk/cxa3T5vZNq+uh2Gt1iyRSxgpCfW36vFEaCk8BkmC+R7hddLCYzjZh0cY=
-X-Received: by 2002:a1c:4107:: with SMTP id o7mr25914083wma.122.1558056090883;
- Thu, 16 May 2019 18:21:30 -0700 (PDT)
+        Thu, 16 May 2019 21:29:32 -0400
+Received: from linux.microsoft.com ([13.77.154.182]:60864 "EHLO
+        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726839AbfEQB3c (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 May 2019 21:29:32 -0400
+Received: from [10.200.157.26] (unknown [131.107.147.154])
+        by linux.microsoft.com (Postfix) with ESMTPSA id 51CAE20110AD;
+        Thu, 16 May 2019 18:29:31 -0700 (PDT)
+Subject: Re: [PATCH 0/2] public key: IMA signer logging: Log public key of IMA
+ Signature signer in IMA log
+To:     Ken Goldman <kgold@linux.ibm.com>,
+        Linux Integrity <linux-integrity@vger.kernel.org>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        David Howells <dhowells@redhat.com>,
+        James Morris <jamorris@linux.microsoft.com>,
+        Linux Kernel <linux-kernel@vger.kernel.org>
+Cc:     Balaji Balasubramanyan <balajib@linux.microsoft.com>,
+        Prakhar Srivastava <prsriva@linux.microsoft.com>
+References: <6b69f115-96cf-890a-c92b-0b2b05798357@linux.microsoft.com>
+ <750fdb9f-fc9b-24bf-42c3-32156ecdc16f@linux.ibm.com>
+From:   Lakshmi <nramas@linux.microsoft.com>
+Message-ID: <9c944ba6-f520-96e1-3631-1e21bbc4c327@linux.microsoft.com>
+Date:   Thu, 16 May 2019 18:29:31 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-References: <8fe520bb-30bd-f246-a3d8-c5443e47a014@intel.com>
- <358e9b36-230f-eb18-efdb-b472be8438b4@fortanix.com> <960B34DE67B9E140824F1DCDEC400C0F4E886094@ORSMSX116.amr.corp.intel.com>
- <6da269d8-7ebb-4177-b6a7-50cc5b435cf4@fortanix.com> <CALCETrWCZQwg-TUCm58DVG43=xCKRsMe1tVHrR8vdt06hf4fWA@mail.gmail.com>
- <20190513102926.GD8743@linux.intel.com> <20190514104323.GA7591@linux.intel.com>
- <CALCETrVbgTCnPo=PAq0-KoaRwt--urrPzn==quAJ8wodCpkBkw@mail.gmail.com>
- <20190514204527.GC1977@linux.intel.com> <CALCETrX6aL367mMJh5+Y1Seznfu-AvhPV6P7GkWF4Dhu0GV8cw@mail.gmail.com>
- <20190515013031.GF1977@linux.intel.com> <CALCETrXf8mSK45h7sTK5Wf+pXLVn=Bjsc_RLpgO-h-qdzBRo5Q@mail.gmail.com>
- <alpine.LRH.2.21.1905160543070.19802@namei.org> <CALCETrX_Q6qwNRNF0TL2tgfm1j6DKLX7NVHHmWbMFtk3WnHDKw@mail.gmail.com>
- <alpine.LRH.2.21.1905160844130.29250@namei.org> <CALCETrX2ovRx3Rre+1_xC-q6CiybyLjQ-gmB4FZF_qCZ-Qd+4A@mail.gmail.com>
- <960B34DE67B9E140824F1DCDEC400C0F654E38CD@ORSMSX116.amr.corp.intel.com>
- <CALCETrUfmyQ7ivNzQic0FyPXe1fmAnoK093jnz0i8DRn2LvdSA@mail.gmail.com>
- <960B34DE67B9E140824F1DCDEC400C0F654E3FB9@ORSMSX116.amr.corp.intel.com>
- <CALCETrXmyau8Gq-wKHZ5FdNGF+mqd7a+q+HAVR2sqvXA6av9BA@mail.gmail.com> <960B34DE67B9E140824F1DCDEC400C0F654E40E5@ORSMSX116.amr.corp.intel.com>
-In-Reply-To: <960B34DE67B9E140824F1DCDEC400C0F654E40E5@ORSMSX116.amr.corp.intel.com>
-From:   Andy Lutomirski <luto@kernel.org>
-Date:   Thu, 16 May 2019 18:21:19 -0700
-X-Gmail-Original-Message-ID: <CALCETrVufjQSJ1nq2sL4tmetFA_Kj+o9xW0YQ1Z2w6Oz+2Y0wA@mail.gmail.com>
-Message-ID: <CALCETrVufjQSJ1nq2sL4tmetFA_Kj+o9xW0YQ1Z2w6Oz+2Y0wA@mail.gmail.com>
-Subject: Re: SGX vs LSM (Re: [PATCH v20 00/28] Intel SGX1 support)
-To:     "Xing, Cedric" <cedric.xing@intel.com>
-Cc:     Andy Lutomirski <luto@kernel.org>,
-        James Morris <jmorris@namei.org>,
-        "Christopherson, Sean J" <sean.j.christopherson@intel.com>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        LSM List <linux-security-module@vger.kernel.org>,
-        Paul Moore <paul@paul-moore.com>,
-        Stephen Smalley <sds@tycho.nsa.gov>,
-        Eric Paris <eparis@parisplace.org>,
-        "selinux@vger.kernel.org" <selinux@vger.kernel.org>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Jethro Beekman <jethro@fortanix.com>,
-        "Hansen, Dave" <dave.hansen@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "Dr. Greg" <greg@enjellic.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
-        "linux-sgx@vger.kernel.org" <linux-sgx@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "nhorman@redhat.com" <nhorman@redhat.com>,
-        "npmccallum@redhat.com" <npmccallum@redhat.com>,
-        "Ayoun, Serge" <serge.ayoun@intel.com>,
-        "Katz-zamir, Shay" <shay.katz-zamir@intel.com>,
-        "Huang, Haitao" <haitao.huang@intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        "Svahn, Kai" <kai.svahn@intel.com>, Borislav Petkov <bp@alien8.de>,
-        Josh Triplett <josh@joshtriplett.org>,
-        "Huang, Kai" <kai.huang@intel.com>,
-        David Rientjes <rientjes@google.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <750fdb9f-fc9b-24bf-42c3-32156ecdc16f@linux.ibm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 16, 2019 at 6:06 PM Xing, Cedric <cedric.xing@intel.com> wrote:
->
-> > From: Andy Lutomirski [mailto:luto@kernel.org]
-> >
-> > On Thu, May 16, 2019 at 3:23 PM Xing, Cedric <cedric.xing@intel.com>
-> > wrote:
-> > >
-> > > Hi Andy,
-> > >
-> > > > > SIGSTRUCT isn't necessarily stored on disk so may not always have
-> > a fd.
-> > > > How about the following?
-> > > > > void *ss_pointer =3D mmap(sigstruct_fd, PROT_READ,...);
-> > > > > ioctl(enclave_fd, SGX_INIT_THE_ENCLAVE, ss_pointer);
-> > > > >
-> > > > > The idea here is SIGSTRUCT will still be passed in memory so it
-> > > > > works
-> > > > the same way when no LSM modules are loaded or basing its decision
-> > > > on the .sigstruct file. Otherwise, an LSM module can figure out the
-> > > > backing file (and offset within that file) by looking into the VMA
-> > > > covering ss_pointer.
-> > > >
-> > > > I don=E2=80=99t love this approach.  Application authors seem likel=
-y to use
-> > > > read() instead of mmap(), and it=E2=80=99ll still work in many care=
-s. It
-> > > > would also complicate the kernel implementation, and looking at the
-> > > > inode backing the vma that backs a pointer is at least rather
-> > unusual.
-> > > > Instead, if the sigstruct isn=E2=80=99t on disk because it=E2=80=99=
-s dynamic or came
-> > > > from a network, the application can put it in a memfd.
-> > >
-> > > I understand your concern here. But I guess we are making too much
-> > assumption on how enclaves are structured/packaged. My concern is, what
-> > if a SIGSTRUCT really has to be from memory? For example, an enclave
-> > (along with its SIGSTRUCT) could be embedded inside a shared object (or
-> > even the "main" executable) so it shows up in memory to begin with.
-> >
-> > Hmm.  That's a fair point, although opening /proc/self/exe could be
-> > somewhat of a workaround.  It does suffer from a bit of an in-band
-> > signaling problem, though, in that it's possible that some other random
-> > bytes in the library resemble a SIGSTRUCT.
-> >
-> > > I was not saying enclaves were exempt to good security practices. Wha=
-t
-> > I was trying to say was, EPC pages are *not* subject to the same attack=
-s
-> > as regular pages so I suspect there will be a desire to enforce
-> > different policies on them, especially after new SGX2
-> > features/applications become available. So I think it beneficial to
-> > distinguish between regular vs. enclave virtual ranges. And to do that,
-> > a new VM_SGX flag in VMA is probably a very simple/easy way. And with
-> > that VM_SGX flag, we could add a new security_sgx_mprot() hook so that
-> > LSM modules/policies could act differently.
-> >
-> > I'm not opposed to this, but I also don't think this needs to be in the
-> > initial upstream driver.  VM_SGX also isn't strictly necessary -- an LS=
-M
-> > could inspect the VMA to decide whether it's an SGX VMA if it really
-> > wanted to.
->
-> VM_SGX is just what I think is the easiest way for any module to tell enc=
-lave VMAs from all others. I agree totally with you that doesn't have to be=
- in the initial release!
->
-> >
-> > That being said, do you have any specific behavior differences in mind
-> > aside from the oddities involved in loading the enclave.
->
-> The major thing is dynamically linked enclaves. Say if you want something=
- like dlopen() inside an enclave, the driver would need to EAUG a page as R=
-W initially, and then change to RX after it has been EACCEPTCOPY'ed by the =
-enclave. So it's like a RW->RX transition and an LSM module/policy may want=
- to allow it only if it's within an enclave range (ELRANGE), or deny it oth=
-erwise.
+On 5/16/19 7:34 AM, Ken Goldman wrote:
 
-I'm not convinced.  Given that the kernel has no way to tell that the
-dynamically loaded code wasn't dynamically generated, I don't think it
-makes sense to allow this in an enclave but disallow it outside an
-enclave.
+>> But outside the client machine this key id is not sufficient to
+>> uniquely determine which key the signature corresponds to.
+> 
+> Why is this not sufficient?
+> 
+> In my implementation, I create a lookup table at the attestation service 
+> that maps the 4-byte IMA log key identifier to the signing public key.
+> 
+> Are you concerned about collisions?  Something else?
 
->
-> >
-> > >
-> > > And if you are with me on that bigger picture, the next question is:
-> > what should be the default behavior of security_sgx_mprot() for
-> > existing/non-SGX-aware LSM modules/policies? I'd say a reasonable
-> > default is to allow R, RW and RX, but not anything else. It'd suffice t=
-o
-> > get rid of EXECMEM/EXECMOD requirements on enclave applications. For
-> > SGX1, EPCM permissions are immutable so it really doesn't matter what
-> > security_sgx_mprot() does. For SGX2 and beyond, there's still time and
-> > new SGX-aware LSM modules/policies will probably have emerged by then.
-> >
-> > I hadn't thought about the SGX1 vs SGX2 difference.  If the driver
-> > initially only wants to support SGX1, then I guess we really could get
-> > away with constraining the EPC flags based on the source page permissio=
-n
-> > and not restricting mprotect() and mmap() permissions on
-> > /dev/sgx/enclave at all.
->
-> This is exactly what I'm going after!
->
-> But I have to apologize for this silly question because I don't know much=
- about SELinux: Wouldn't it require changes to existing SELinux policies to=
- *not* restrict mprotect() on /dev/sgx/enclave?
+Yes - the concern is collision.
 
-I'm assuming we'd make a small in-kernel change to SELinux to make it
-work without policy changes, assuming the SELinux maintainers would be
-okay with this.
+The "Subject Key Identifier" (SKI) for no two certificate can be the 
+same. But since we are using only the last 4 bytes of the SKI it can 
+collide. That's mainly the reason I want to log the entire public key.
+
+> 
+> Are you suggesting that the client supply the verification public key 
+> and that the verifier trust it?  Wouldn't that make the log self signed?
+> 
+> How would the verifier determine that the key from the IMA log is valid 
+> / trusted / not revoked from the log itself?
+
+IMA log is backed by the TPM. So if the public key is added to the IMA 
+log the attestation service can validate the key information.
+I am not sure if that answers your question.
+
+> 
+> A minor question here.
+> 
+> Are you proposing that the IMA log contain a single ima-sigkey entry per 
+> public key followed by ima-sig entries?
+> 
+> Or are you proposing that ima-sig be replaced by ima-sigkey, and that 
+> each event would contain both the signature and the public key?
+> 
+> If the latter, this could add 25M to a server's 100K log.  Would that 
+> increase in size concern anyone?  Could it be a concern on the other 
+> end, an IoT device with limited memory?
+
+Mimi had raised the same concern. I will update my implementation to 
+include the certification information in the IMA log only once per key - 
+when that key is added to the IMA or Platform keyring.
+
+Thanks,
+  -lakshmi
+
