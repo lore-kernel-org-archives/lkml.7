@@ -2,124 +2,162 @@ Return-Path: <SRS0=M1fl=TR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20501C04AB4
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 13:50:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12276C04AB4
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 13:53:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E60272168B
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 13:50:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D6F4520873
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 13:53:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="PI8tfbwE"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="U4OqajLc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728963AbfEQNuf (ORCPT
+        id S1728834AbfEQNxv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 May 2019 09:50:35 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:54432 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728692AbfEQNue (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 May 2019 09:50:34 -0400
-Received: from zn.tnic (p200300EC2F0C5000C4DD38E37EE1A463.dip0.t-ipconnect.de [IPv6:2003:ec:2f0c:5000:c4dd:38e3:7ee1:a463])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 137B81EC0874;
-        Fri, 17 May 2019 15:50:32 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1558101032;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=pSULXWxo865hvokHJVuAYuoi1vX3Tfl+hb+Yba1Anj8=;
-        b=PI8tfbwE7JYpL2hAAdxUoFbyMF0cAzl84EXyGS3t8w8ap7/1enpEDvutHIc4RmQlaPA1Nx
-        f5D6FiUSVe5+kh+h1QmXCAzpDZmN0zuekYqqdnRtNgstjWntGDbh/yGObU/fsPz46UAQKf
-        R2OINCPG+AdpUce6BR+r1BfTCquwLB4=
-Date:   Fri, 17 May 2019 15:50:30 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     Dave Young <dyoung@redhat.com>
-Cc:     Baoquan He <bhe@redhat.com>, j-nomura@ce.jp.nec.com,
-        kasong@redhat.com, fanc.fnst@cn.fujitsu.com, x86@kernel.org,
-        kexec@lists.infradead.org, linux-kernel@vger.kernel.org,
-        hpa@zytor.com, tglx@linutronix.de
-Subject: [PATCH] x86/boot: Call get_rsdp_addr() after console_init()
-Message-ID: <20190517135030.GB13482@zn.tnic>
-References: <20190424092944.30481-2-bhe@redhat.com>
- <20190429002318.GA25400@MiWiFi-R3L-srv>
- <20190429135536.GC2324@zn.tnic>
- <20190513014248.GA16774@MiWiFi-R3L-srv>
- <20190513070725.GA20105@zn.tnic>
- <20190513073254.GB16774@MiWiFi-R3L-srv>
- <20190513075006.GB20105@zn.tnic>
- <20190513080653.GD16774@MiWiFi-R3L-srv>
- <20190514032208.GA25875@dhcp-128-65.nay.redhat.com>
- <20190517134159.GA13482@zn.tnic>
+        Fri, 17 May 2019 09:53:51 -0400
+Received: from hqemgate14.nvidia.com ([216.228.121.143]:9545 "EHLO
+        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728103AbfEQNxu (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 May 2019 09:53:50 -0400
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5cdebcf20000>; Fri, 17 May 2019 06:53:54 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Fri, 17 May 2019 06:53:48 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Fri, 17 May 2019 06:53:48 -0700
+Received: from HQMAIL106.nvidia.com (172.18.146.12) by HQMAIL106.nvidia.com
+ (172.18.146.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 17 May
+ 2019 13:53:48 +0000
+Received: from hqnvemgw02.nvidia.com (172.16.227.111) by HQMAIL106.nvidia.com
+ (172.18.146.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Fri, 17 May 2019 13:53:48 +0000
+Received: from sumitg-l4t.nvidia.com (Not Verified[10.24.42.162]) by hqnvemgw02.nvidia.com with Trustwave SEG (v7,5,8,10121)
+        id <B5cdebce90002>; Fri, 17 May 2019 06:53:48 -0700
+From:   Sumit Gupta <sumitg@nvidia.com>
+To:     <mchehab@kernel.org>, <hverkuil-cisco@xs4all.nl>,
+        <sakari.ailus@linux.intel.com>, <paul.kocialkowski@bootlin.com>,
+        <tfiga@chromium.org>, <keiichiw@chromium.org>, <bbasu@nvidia.com>,
+        <sumitg@nvidia.com>
+CC:     <linux-media@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: [Patch V4] v4l2-core: fix use-after-free error
+Date:   Fri, 17 May 2019 19:23:42 +0530
+Message-ID: <1558101222-31561-1-git-send-email-sumitg@nvidia.com>
+X-Mailer: git-send-email 2.7.4
+X-NVConfidentiality: public
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20190517134159.GA13482@zn.tnic>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1558101234; bh=stfFbiMFaMOGKxRkfm3KN5/YWTVTdNcxBzqgLT72XC4=;
+        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
+         X-NVConfidentiality:MIME-Version:Content-Type;
+        b=U4OqajLcdejMgiOT6Aqn6upoK/NND13QD6QluTj8Nar5FnL4dcBW2vC66Ou04tXyx
+         7+NHOIZT+islWazgEWSx9bMKrCZU2ywZGqTzw8eb8lmN9rLZUlDvpGgvmNLLTcd53f
+         kO8XY+sQ0EZU3l7gE4v4HAhFPTPDAV5k6ETG6Fd22LRQpNnvgDPggM8pfW6Q37hTWk
+         Aai7bOgc7hEt3i5H/ZPDGLmSBazeXLXzFqO6TbAoeJutP3g3LJ25G8S3acwqVM2zmg
+         9yFgK9twsp6ZXVDQn68AHJGNvIRcJPhOUyASJvZJctv96nA2AJRyl4Mu4Vh8XON52k
+         7RMkapz7B9bPA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-And now as a proper patch:
+From: sumitg <sumitg@nvidia.com>
 
+Fixing use-after-free within __v4l2_ctrl_handler_setup().
+Memory is being freed with kfree(new_ref) for duplicate
+control reference entry but ctrl->cluster pointer is still
+referring to freed duplicate entry resulting in error on
+access. Change done to update cluster pointer only when new
+control reference is added.
+
+ ==================================================================
+ BUG: KASAN: use-after-free in __v4l2_ctrl_handler_setup+0x388/0x428
+ Read of size 8 at addr ffffffc324e78618 by task systemd-udevd/312
+
+ Allocated by task 312:
+
+ Freed by task 312:
+
+ The buggy address belongs to the object at ffffffc324e78600
+  which belongs to the cache kmalloc-64 of size 64
+ The buggy address is located 24 bytes inside of
+  64-byte region [ffffffc324e78600, ffffffc324e78640)
+ The buggy address belongs to the page:
+ page:ffffffbf0c939e00 count:1 mapcount:0 mapping:
+					(null) index:0xffffffc324e78f80
+ flags: 0x4000000000000100(slab)
+ raw: 4000000000000100 0000000000000000 ffffffc324e78f80 000000018020001a
+ raw: 0000000000000000 0000000100000001 ffffffc37040fb80 0000000000000000
+ page dumped because: kasan: bad access detected
+
+ Memory state around the buggy address:
+  ffffffc324e78500: fb fb fb fb fb fb fb fb fc fc fc fc fc fc fc fc
+  ffffffc324e78580: fb fb fb fb fb fb fb fb fc fc fc fc fc fc fc fc
+ >ffffffc324e78600: fb fb fb fb fb fb fb fb fc fc fc fc fc fc fc fc
+                             ^
+  ffffffc324e78680: 00 00 00 00 00 00 00 00 fc fc fc fc fc fc fc fc
+  ffffffc324e78700: 00 00 00 00 00 fc fc fc fc fc fc fc fc fc fc fc
+ ==================================================================
+
+Suggested-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Sumit Gupta <sumitg@nvidia.com>
 ---
-From: Borislav Petkov <bp@suse.de>
 
-... so that early debugging output from the RSDP parsing code can be
-visible and collected.
+v4:
+* update ctrl->cluster only when new control reference is added.
 
-Suggested-by: Dave Young <dyoung@redhat.com>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Cc: Baoquan He <bhe@redhat.com>
-Cc: Chao Fan <fanc.fnst@cn.fujitsu.com>
-Cc: Jun'ichi Nomura <j-nomura@ce.jp.nec.com>
-Cc: Kairui Song <kasong@redhat.com>
-Cc: kexec@lists.infradead.org
-Cc: x86@kernel.org
----
- arch/x86/boot/compressed/misc.c | 11 ++++++++---
- 1 file changed, 8 insertions(+), 3 deletions(-)
+v3:
+* update ctrl->cluster only when new control reference is added.
+* add new ctrl to handler only if the cluster points to an entry.
 
-diff --git a/arch/x86/boot/compressed/misc.c b/arch/x86/boot/compressed/misc.c
-index c0d6c560df69..24e65a0f756d 100644
---- a/arch/x86/boot/compressed/misc.c
-+++ b/arch/x86/boot/compressed/misc.c
-@@ -351,9 +351,6 @@ asmlinkage __visible void *extract_kernel(void *rmode, memptr heap,
- 	/* Clear flags intended for solely in-kernel use. */
- 	boot_params->hdr.loadflags &= ~KASLR_FLAG;
+v2:
+* update ctrl->cluster only when new control reference is added.
+* check ctrl->ncontrols to avoid illegal access when cluster has zero controls.
+
+ drivers/media/v4l2-core/v4l2-ctrls.c | 18 +++++++++---------
+ 1 file changed, 9 insertions(+), 9 deletions(-)
+
+diff --git a/drivers/media/v4l2-core/v4l2-ctrls.c b/drivers/media/v4l2-core/v4l2-ctrls.c
+index 5e3806f..956522c 100644
+--- a/drivers/media/v4l2-core/v4l2-ctrls.c
++++ b/drivers/media/v4l2-core/v4l2-ctrls.c
+@@ -2154,15 +2154,6 @@ static int handler_new_ref(struct v4l2_ctrl_handler *hdl,
+ 	if (size_extra_req)
+ 		new_ref->p_req.p = &new_ref[1];
  
--	/* Save RSDP address for later use. */
--	boot_params->acpi_rsdp_addr = get_rsdp_addr();
+-	if (ctrl->handler == hdl) {
+-		/* By default each control starts in a cluster of its own.
+-		   new_ref->ctrl is basically a cluster array with one
+-		   element, so that's perfect to use as the cluster pointer.
+-		   But only do this for the handler that owns the control. */
+-		ctrl->cluster = &new_ref->ctrl;
+-		ctrl->ncontrols = 1;
+-	}
 -
- 	sanitize_boot_params(boot_params);
+ 	INIT_LIST_HEAD(&new_ref->node);
  
- 	if (boot_params->screen_info.orig_video_mode == 7) {
-@@ -368,6 +365,14 @@ asmlinkage __visible void *extract_kernel(void *rmode, memptr heap,
- 	cols = boot_params->screen_info.orig_video_cols;
+ 	mutex_lock(hdl->lock);
+@@ -2195,6 +2186,15 @@ static int handler_new_ref(struct v4l2_ctrl_handler *hdl,
+ 	hdl->buckets[bucket] = new_ref;
+ 	if (ctrl_ref)
+ 		*ctrl_ref = new_ref;
++	if (ctrl->handler == hdl) {
++		/* By default each control starts in a cluster of its own.
++		 * new_ref->ctrl is basically a cluster array with one
++		 * element, so that's perfect to use as the cluster pointer.
++		 * But only do this for the handler that owns the control.
++		 */
++		ctrl->cluster = &new_ref->ctrl;
++		ctrl->ncontrols = 1;
++	}
  
- 	console_init();
-+
-+	/*
-+	 * Save RSDP address for later use. Have this after console_init()
-+	 * so that early debugging output from the RSDP parsing code can be
-+	 * collected.
-+	 */
-+	boot_params->acpi_rsdp_addr = get_rsdp_addr();
-+
- 	debug_putstr("early console in extract_kernel\n");
- 
- 	free_mem_ptr     = heap;	/* Heap */
+ unlock:
+ 	mutex_unlock(hdl->lock);
 -- 
-2.21.0
+2.7.4
 
-
--- 
-Regards/Gruss,
-    Boris.
-
-Good mailing practices for 400: avoid top-posting and trim the reply.
