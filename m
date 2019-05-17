@@ -2,149 +2,180 @@ Return-Path: <SRS0=M1fl=TR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92DF0C04E84
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 08:29:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D6C4C04AB4
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 08:32:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6FA4E20818
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 08:29:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EAE9B20818
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 08:32:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728225AbfEQI3X (ORCPT
+        id S1728351AbfEQIc1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 May 2019 04:29:23 -0400
-Received: from mx2.suse.de ([195.135.220.15]:49918 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727825AbfEQI3X (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 May 2019 04:29:23 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 55426AE3E;
-        Fri, 17 May 2019 08:29:21 +0000 (UTC)
-Received: by quack2.suse.cz (Postfix, from userid 1000)
-        id E7E501E3ED6; Fri, 17 May 2019 10:29:18 +0200 (CEST)
-Date:   Fri, 17 May 2019 10:29:18 +0200
-From:   Jan Kara <jack@suse.cz>
-To:     Gaowei Pu <pugaowei@gmail.com>
-Cc:     tytso@mit.edu, jack@suse.com, linux-ext4@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] jbd2: fix some print format mistakes
-Message-ID: <20190517082918.GA20550@quack2.suse.cz>
-References: <20190517061951.13730-1-pugaowei@gmail.com>
+        Fri, 17 May 2019 04:32:27 -0400
+Received: from mail-it1-f178.google.com ([209.85.166.178]:32824 "EHLO
+        mail-it1-f178.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727825AbfEQIc1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 May 2019 04:32:27 -0400
+Received: by mail-it1-f178.google.com with SMTP id u16so10377969itc.0
+        for <linux-kernel@vger.kernel.org>; Fri, 17 May 2019 01:32:26 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=buUaf8bdgqOfOsg+ByDinQ3LqlSKg6mIHp9aUb3Uw5w=;
+        b=L2jisizcgDEoJchm48REYRhwT+rNxuyzmhn8HTIuh4jr6i/gmHR45pSYnnNBHC+vPC
+         XORjn5ar7fVDGYQa79PrTPokMRQPB0xffNKEUFSqrpfs0qKXgVucdmUNEQRY/noYDXwt
+         QaDxyyspR1U5qKldpIgac17q376Fbv0dkO/B8ux0+hD9dzDGwNW74UP+gZqXzOw8NCRS
+         6pK/uMai/meQ+3+FlkmJ3lk9KE6tVtIXfU3IOJ9j15OsXDE20ZxtgE1ZDSOOg+t+pxge
+         KM1tXj5wgSGKXZtyqBXDfI7Z3WlndlpT4zOFT1Y0FE9ejbXp+bY6pdxI/S5YRREMYGNV
+         Lzvw==
+X-Gm-Message-State: APjAAAU/Qug7OK61DaY8+XQeZ4doN3GDedBeWXQjqEaV2SFO+HxSOsuP
+        NMxebLZ+PEI4AKIidZsgXugzS7r5WxgqpETrdP33+w==
+X-Google-Smtp-Source: APXvYqw3CAsiNcFZHvxBF1PncU+PTXyiepwpvUgbXrQ2mYwsG0oWcXnm1V5TmRQmFm/ET3wbwxoxYMEGkwDEGf6ylno=
+X-Received: by 2002:a24:6cd5:: with SMTP id w204mr1639431itb.12.1558081945908;
+ Fri, 17 May 2019 01:32:25 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190517061951.13730-1-pugaowei@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <3CD3EE63-0CD2-404A-A403-E11DCF2DF8D9@fb.com> <20190517074600.GJ2623@hirez.programming.kicks-ass.net>
+ <20190517081057.GQ2650@hirez.programming.kicks-ass.net> <CACPcB9cB5n1HOmZcVpusJq8rAV5+KfmZ-Lxv3tgsSoy7vNrk7w@mail.gmail.com>
+In-Reply-To: <CACPcB9cB5n1HOmZcVpusJq8rAV5+KfmZ-Lxv3tgsSoy7vNrk7w@mail.gmail.com>
+From:   Kairui Song <kasong@redhat.com>
+Date:   Fri, 17 May 2019 16:32:15 +0800
+Message-ID: <CACPcB9cf1NWnR_hUiuA2vYNUyAhzXHbfEVamUVrKFm46Fww3VA@mail.gmail.com>
+Subject: Re: Getting empty callchain from perf_callchain_kernel()
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Song Liu <songliubraving@fb.com>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Kernel Team <Kernel-team@fb.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri 17-05-19 14:19:51, Gaowei Pu wrote:
-> There are some print format mistakes in debug messages. Fix them.
-> 
-> Signed-off-by: Gaowei Pu <pugaowei@gmail.com>
+On Fri, May 17, 2019 at 4:15 PM Kairui Song <kasong@redhat.com> wrote:
+>
+> On Fri, May 17, 2019 at 4:11 PM Peter Zijlstra <peterz@infradead.org> wrote:
+> >
+> > On Fri, May 17, 2019 at 09:46:00AM +0200, Peter Zijlstra wrote:
+> > > On Thu, May 16, 2019 at 11:51:55PM +0000, Song Liu wrote:
+> > > > Hi,
+> > > >
+> > > > We found a failure with selftests/bpf/tests_prog in test_stacktrace_map (on bpf/master
+> > > > branch).
+> > > >
+> > > > After digging into the code, we found that perf_callchain_kernel() is giving empty
+> > > > callchain for tracepoint sched/sched_switch. And it seems related to commit
+> > > >
+> > > > d15d356887e770c5f2dcf963b52c7cb510c9e42d
+> > > > ("perf/x86: Make perf callchains work without CONFIG_FRAME_POINTER")
+> > > >
+> > > > Before this commit, perf_callchain_kernel() returns callchain with regs->ip. With
+> > > > this commit, regs->ip is not sent for !perf_hw_regs(regs) case.
+> > >
+> > > So while I think the below is indeed right; we should store regs->ip
+> > > regardless of the unwind path chosen, I still think there's something
+> > > fishy if this results in just the 1 entry.
+> > >
+> > > The sched/sched_switch event really should have a non-trivial stack.
+> > >
+> > > Let me see if I can reproduce with just perf.
+> >
+> > $ perf record -g -e "sched:sched_switch" -- make clean
+> > $ perf report -D
+> >
+> > 12 904071759467 0x1790 [0xd0]: PERF_RECORD_SAMPLE(IP, 0x1): 7236/7236: 0xffffffff81c29562 period: 1 addr: 0
+> > ... FP chain: nr:10
+> > .....  0: ffffffffffffff80
+> > .....  1: ffffffff81c29562
+> > .....  2: ffffffff81c29933
+> > .....  3: ffffffff8111f688
+> > .....  4: ffffffff81120b9d
+> > .....  5: ffffffff81120ce5
+> > .....  6: ffffffff8100254a
+> > .....  7: ffffffff81e0007d
+> > .....  8: fffffffffffffe00
+> > .....  9: 00007f9b6cd9682a
+> > ... thread: sh:7236
+> > ...... dso: /lib/modules/5.1.0-12177-g41bbb9129767/build/vmlinux
+> >
+> >
+> > IOW, it seems to 'work'.
+> >
+>
+> Hi, I think the actual problem is that bpf_get_stackid_tp (and maybe
+> some other bfp functions) is now broken, or, strating an unwind
+> directly inside a bpf program will end up strangely. It have following
+> kernel message:
+>
+> WARNING: kernel stack frame pointer at 0000000070cad07c in
+> test_progs:1242 has bad value 00000000ffd4497e
+>
+> And in the debug message:
+>
+> [  160.460287] 000000006e117175: ffffffffaa23a0e8
+> (get_perf_callchain+0x148/0x280)
+> [  160.460287] 0000000002e8715f: 0000000000c6bba0 (0xc6bba0)
+> [  160.460288] 00000000b3d07758: ffff9ce3f9790000 (0xffff9ce3f9790000)
+> [  160.460289] 0000000055c97836: ffff9ce3f9790000 (0xffff9ce3f9790000)
+> [  160.460289] 000000007cbb140a: 000000010000007f (0x10000007f)
+> [  160.460290] 000000007dc62ac9: 0000000000000000 ...
+> [  160.460290] 000000006b41e346: 1c7da01cd70c4000 (0x1c7da01cd70c4000)
+> [  160.460291] 00000000f23d1826: ffffd89cffc3ae80 (0xffffd89cffc3ae80)
+> [  160.460292] 00000000f9a16017: 000000000000007f (0x7f)
+> [  160.460292] 00000000a8e62d44: 0000000000000000 ...
+> [  160.460293] 00000000cbc83c97: ffffb89d00d8d000 (0xffffb89d00d8d000)
+> [  160.460293] 0000000092842522: 000000000000007f (0x7f)
+> [  160.460294] 00000000dafbec89: ffffb89d00c6bc50 (0xffffb89d00c6bc50)
+> [  160.460296] 000000000777e4cf: ffffffffaa225d97 (bpf_get_stackid+0x77/0x470)
+> [  160.460296] 000000009942ea16: 0000000000000000 ...
+> [  160.460297] 00000000a08006b1: 0000000000000001 (0x1)
+> [  160.460298] 000000009f03b438: ffffb89d00c6bc30 (0xffffb89d00c6bc30)
+> [  160.460299] 000000006caf8b32: ffffffffaa074fe8 (__do_page_fault+0x58/0x90)
+> [  160.460300] 000000003a13d702: 0000000000000000 ...
+> [  160.460300] 00000000e2e2496d: ffff9ce300000000 (0xffff9ce300000000)
+> [  160.460301] 000000008ee6b7c2: ffffd89cffc3ae80 (0xffffd89cffc3ae80)
+> [  160.460301] 00000000a8cf6d55: 0000000000000000 ...
+> [  160.460302] 0000000059078076: ffffd89cffc3ae80 (0xffffd89cffc3ae80)
+> [  160.460303] 00000000c6aac739: ffff9ce3f1e18eb0 (0xffff9ce3f1e18eb0)
+> [  160.460303] 00000000a39aff92: ffffb89d00c6bc60 (0xffffb89d00c6bc60)
+> [  160.460305] 0000000097498bf2: ffffffffaa1f4791 (bpf_get_stackid_tp+0x11/0x20)
+> [  160.460306] 000000006992de1e: ffffb89d00c6bc78 (0xffffb89d00c6bc78)
+> [  160.460307] 00000000dacd0ce5: ffffffffc0405676 (0xffffffffc0405676)
+> [  160.460307] 00000000a81f2714: 0000000000000000 ...
+>
+> # Note here is the invalid frame pointer
+> [  160.460308] 0000000070cad07c: ffffb89d00a1d000 (0xffffb89d00a1d000)
+> [  160.460308] 00000000f8f194e4: 0000000000000001 (0x1)
+> [  160.460309] 000000002134f42a: ffffd89cffc3ae80 (0xffffd89cffc3ae80)
+> [  160.460310] 00000000f9345889: ffff9ce3f1e18eb0 (0xffff9ce3f1e18eb0)
+> [  160.460310] 000000008ad22a42: 0000000000000000 ...
+> [  160.460311] 0000000073808173: ffffb89d00c6bce0 (0xffffb89d00c6bce0)
+> [  160.460312] 00000000c9effff4: ffffffffaa1f48d1 (trace_call_bpf+0x81/0x100)
+> [  160.460313] 00000000c5d8ebd1: ffffb89d00c6bcc0 (0xffffb89d00c6bcc0)
+> [  160.460315] 00000000bce0b072: ffffffffab651be0
+> (event_sched_migrate_task+0xa0/0xa0)
+> [  160.460316] 00000000355cf319: 0000000000000000 ...
+> [  160.460316] 000000003b67f2ad: ffffd89cffc3ae80 (0xffffd89cffc3ae80)
+> [  160.460316] 000000009a77e20b: ffff9ce3fba25000 (0xffff9ce3fba25000)
+> [  160.460317] 0000000032cf7376: 0000000000000001 (0x1)
+> [  160.460317] 000000000051db74: ffffb89d00c6bd20 (0xffffb89d00c6bd20)
+> [  160.460318] 0000000040eb3bf7: ffffffffaa22be81
+> (perf_trace_run_bpf_submit+0x41/0xb0)
+>
+> Simply store the IP still won't really fix the problem, it just passed
+> the test. Just had a try to have bpf functions set the
+> X86_EFLAGS_FIXED for the flags and always dump the bp, it bypassed
+> this specified problem.
+>
+> Using frame pointer unwinder for testing this, and seems ORC is fine with this.
 
-Looks good. You can add:
+Correction: ORC won't print an error, but it also give empty callstack.
 
-Reviewed-by: Jan Kara <jack@suse.cz>
-
-								Honza
-
-> ---
->  fs/jbd2/journal.c | 18 +++++++++---------
->  1 file changed, 9 insertions(+), 9 deletions(-)
-> 
-> diff --git a/fs/jbd2/journal.c b/fs/jbd2/journal.c
-> index 37e16d969925..565e99b67b30 100644
-> --- a/fs/jbd2/journal.c
-> +++ b/fs/jbd2/journal.c
-> @@ -203,7 +203,7 @@ static int kjournald2(void *arg)
->  	if (journal->j_flags & JBD2_UNMOUNT)
->  		goto end_loop;
->  
-> -	jbd_debug(1, "commit_sequence=%d, commit_request=%d\n",
-> +	jbd_debug(1, "commit_sequence=%u, commit_request=%u\n",
->  		journal->j_commit_sequence, journal->j_commit_request);
->  
->  	if (journal->j_commit_sequence != journal->j_commit_request) {
-> @@ -324,7 +324,7 @@ static void journal_kill_thread(journal_t *journal)
->   * IO is in progress. do_get_write_access() handles this.
->   *
->   * The function returns a pointer to the buffer_head to be used for IO.
-> - * 
-> + *
->   *
->   * Return value:
->   *  <0: Error
-> @@ -500,7 +500,7 @@ int __jbd2_log_start_commit(journal_t *journal, tid_t target)
->  		 */
->  
->  		journal->j_commit_request = target;
-> -		jbd_debug(1, "JBD2: requesting commit %d/%d\n",
-> +		jbd_debug(1, "JBD2: requesting commit %u/%u\n",
->  			  journal->j_commit_request,
->  			  journal->j_commit_sequence);
->  		journal->j_running_transaction->t_requested = jiffies;
-> @@ -513,7 +513,7 @@ int __jbd2_log_start_commit(journal_t *journal, tid_t target)
->  		WARN_ONCE(1, "JBD2: bad log_start_commit: %u %u %u %u\n",
->  			  journal->j_commit_request,
->  			  journal->j_commit_sequence,
-> -			  target, journal->j_running_transaction ? 
-> +			  target, journal->j_running_transaction ?
->  			  journal->j_running_transaction->t_tid : 0);
->  	return 0;
->  }
-> @@ -698,12 +698,12 @@ int jbd2_log_wait_commit(journal_t *journal, tid_t tid)
->  #ifdef CONFIG_JBD2_DEBUG
->  	if (!tid_geq(journal->j_commit_request, tid)) {
->  		printk(KERN_ERR
-> -		       "%s: error: j_commit_request=%d, tid=%d\n",
-> +		       "%s: error: j_commit_request=%u, tid=%u\n",
->  		       __func__, journal->j_commit_request, tid);
->  	}
->  #endif
->  	while (tid_gt(tid, journal->j_commit_sequence)) {
-> -		jbd_debug(1, "JBD2: want %d, j_commit_sequence=%d\n",
-> +		jbd_debug(1, "JBD2: want %u, j_commit_sequence=%u\n",
->  				  tid, journal->j_commit_sequence);
->  		read_unlock(&journal->j_state_lock);
->  		wake_up(&journal->j_wait_commit);
-> @@ -944,7 +944,7 @@ int __jbd2_update_log_tail(journal_t *journal, tid_t tid, unsigned long block)
->  
->  	trace_jbd2_update_log_tail(journal, tid, block, freed);
->  	jbd_debug(1,
-> -		  "Cleaning journal tail from %d to %d (offset %lu), "
-> +		  "Cleaning journal tail from %u to %u (offset %lu), "
->  		  "freeing %lu\n",
->  		  journal->j_tail_sequence, tid, block, freed);
->  
-> @@ -1318,7 +1318,7 @@ static int journal_reset(journal_t *journal)
->  	 */
->  	if (sb->s_start == 0) {
->  		jbd_debug(1, "JBD2: Skipping superblock update on recovered sb "
-> -			"(start %ld, seq %d, errno %d)\n",
-> +			"(start %ld, seq %u, errno %d)\n",
->  			journal->j_tail, journal->j_tail_sequence,
->  			journal->j_errno);
->  		journal->j_flags |= JBD2_FLUSHED;
-> @@ -1453,7 +1453,7 @@ static void jbd2_mark_journal_empty(journal_t *journal, int write_op)
->  		return;
->  	}
->  
-> -	jbd_debug(1, "JBD2: Marking journal as empty (seq %d)\n",
-> +	jbd_debug(1, "JBD2: Marking journal as empty (seq %u)\n",
->  		  journal->j_tail_sequence);
->  
->  	sb->s_sequence = cpu_to_be32(journal->j_tail_sequence);
-> -- 
-> 2.21.0
-> 
-> 
 -- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+Best Regards,
+Kairui Song
