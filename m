@@ -2,161 +2,133 @@ Return-Path: <SRS0=M1fl=TR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CCE8FC04AB4
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 18:47:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97C24C04E87
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 18:48:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9DEE22173C
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 18:47:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 694C22087B
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 18:48:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IzX0fpNh"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="aJziovqK";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="SOz/6r03"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727537AbfEQSrL (ORCPT
+        id S1729462AbfEQSsW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 May 2019 14:47:11 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:44231 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726464AbfEQSrJ (ORCPT
+        Fri, 17 May 2019 14:48:22 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:53562 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726286AbfEQSsW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 May 2019 14:47:09 -0400
-Received: by mail-wr1-f65.google.com with SMTP id c5so8123940wrs.11;
-        Fri, 17 May 2019 11:47:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=4QRWDFkVz3xUnUzR3+DHbkRCIRl8pbjmxCa/vhR9hvo=;
-        b=IzX0fpNh7WWzngetTRMHcGGlBKa4/Y10ND0MNxVowv35ASa6AyO+qLIiBx3oorQdoE
-         gIMiRRTn12Vsg2PSpAtRil1uUy8xkxChgYigzhBilxkZX68upC2GKDNyLfBUb7Z2bHUQ
-         l3UW0QKhlFhotuDCigGjT0urbWePYMe8D/Pqzy4lHHDPtWu2SCcAKN5A52dsJNj3f/9u
-         wkbw9NIvOfWOihlEVc51Vd3gqhyPPlvGT64PX4ziAJrrUtqwzN1IUvq1Nm5N1J3wTFtQ
-         EAhiuVgi6wE0rGJSFc9r5guK7YM9/7d0ISQhpYx5+RHA1MbYhrZU48H4aCLkI/T/pxBx
-         RsxA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=4QRWDFkVz3xUnUzR3+DHbkRCIRl8pbjmxCa/vhR9hvo=;
-        b=Rvz6DzQVr2J8tsU5UkMkfv7oR+aJkpbxNzNafZxRZ18Gz5CkN0As3rnBGAqwoBl5Ld
-         sNpYbSOzmqmzBwMzLloncCzTB2U5ioC9hc5u9e710IA7syV9eSG2ra6Nys73t/UeEDyz
-         VyEvlyifZwkQER8PQvRZDuoJRPZ6eLNOKO5qHNRbyIl0gRANZn1XfwHnFKiUA2Rnut/y
-         3Fb5yQycWOJDbriFkcMVhpUTjGi7GsSmFMdIAx7nRaawczOpxJLthtf5/NkHJxH3KU/L
-         aFPEeI6LEF18HIhrzdaaeuGDep1LlSCaoY3ablX5fTAkcIe6sUE5t6m8y9K+FVu8bn7O
-         VWNA==
-X-Gm-Message-State: APjAAAWcJw+A/x9egjJsURByrvyj972fXKzFER0cX5qlkS3HYn8mzxsd
-        HppiPBXm5SPFn7ZMT2R1IpBDqQXtBMhepQ==
-X-Google-Smtp-Source: APXvYqzQ3Rol+3txTzhDDbnTRdYC6TTbSHhpgNCNWdrgxxOScCII+60hVNsOpiwPvn2YYuVJGvfLtA==
-X-Received: by 2002:a5d:658d:: with SMTP id q13mr19937938wru.61.1558118827335;
-        Fri, 17 May 2019 11:47:07 -0700 (PDT)
-Received: from localhost.localdomain ([2a01:e0a:1f1:d0f0::4e2b:d7ca])
-        by smtp.gmail.com with ESMTPSA id v20sm5801112wmj.10.2019.05.17.11.47.06
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 17 May 2019 11:47:06 -0700 (PDT)
-From:   =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
-To:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Steven Price <steven.price@arm.com>
-Cc:     dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        iommu@lists.linux-foundation.org,
-        =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
-Subject: [PATCH v5 1/6] drm: panfrost: add optional bus_clock
-Date:   Fri, 17 May 2019 20:46:54 +0200
-Message-Id: <20190517184659.18828-2-peron.clem@gmail.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190517184659.18828-1-peron.clem@gmail.com>
-References: <20190517184659.18828-1-peron.clem@gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+        Fri, 17 May 2019 14:48:22 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id C2F5A61892; Fri, 17 May 2019 18:48:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1558118900;
+        bh=35zZ5q4uMp/3q4Z0JDCSvFDAAIE0REjNe04GsZlSd9s=;
+        h=From:To:Cc:Subject:Date:From;
+        b=aJziovqK9JqfOz+VdzLUlLoZzJq7MpPBgTKdfPh4KjQN1WlFQdJrcVmdyDgeBFuDn
+         rbo6VsoEGhC0sfP5CHF5kBvY8jSYbN4swXbH29meixv5Pzt7opn32mZcMG/H+WQkhR
+         PsF/k7nTKCeSTHpc3TD7cvKDW401LvWHOmYHnUXY=
+Received: from isaacm-linux.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: isaacm@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 736716179C;
+        Fri, 17 May 2019 18:48:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1558118891;
+        bh=35zZ5q4uMp/3q4Z0JDCSvFDAAIE0REjNe04GsZlSd9s=;
+        h=From:To:Cc:Subject:Date:From;
+        b=SOz/6r03g7SCcJGbSThbJKQnFy/ydy//GRaazg08v/2nnzbeA2kfwt+7DU/h5VOl4
+         xXmNB0yQSIchcnRZzMOY3UoRMEbtrWtzv2tggQZPxIPf3+VznmC4rVcRLPMToj7grj
+         pn7Xia0PvsazfTd/chmiqRi5k+mz1Ap3FJqYLL18=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 736716179C
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=isaacm@codeaurora.org
+From:   "Isaac J. Manjarres" <isaacm@codeaurora.org>
+To:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-pci@vger.kernel.org, iommu@lists.linux-foundation.org,
+        linux-arm-kernel@lists.infradead.org
+Cc:     "Isaac J. Manjarres" <isaacm@codeaurora.org>, robh+dt@kernel.org,
+        frowand.list@gmail.com, bhelgaas@google.com, joro@8bytes.org,
+        robin.murphy@arm.com, will.deacon@arm.com, kernel-team@android.com,
+        pratikp@codeaurora.org, lmark@codeaurora.org
+Subject: [RFC/PATCH 0/4] Initial support for modular IOMMU drivers
+Date:   Fri, 17 May 2019 11:47:33 -0700
+Message-Id: <1558118857-16912-1-git-send-email-isaacm@codeaurora.org>
+X-Mailer: git-send-email 1.9.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Allwinner H6 has an ARM Mali-T720 MP2 which required a bus_clock.
+This series adds initial support for being able to use the ARM
+SMMU driver as a loadable kernel module. The series also adds
+to the IOMMU framework, so that it can defer probing for devices
+that depend on an IOMMU driver that may be a loadable module.
 
-Add an optional bus_clock at the init of the panfrost driver.
+The primary reason behind these changes is that having the ARM
+SMMU driver as a module allows for the same kernel image to be
+used across different platforms. For example, if one platform
+contains an IOMMU that implements one version of the ARM SMMU
+specification, and another platform simply does not have an
+IOMMU, the only way that these platforms can share the same
+kernel image is if the ARM SMMU driver is compiled into the
+kernel image.
 
-Signed-off-by: Clément Péron <peron.clem@gmail.com>
----
- drivers/gpu/drm/panfrost/panfrost_device.c | 25 +++++++++++++++++++++-
- drivers/gpu/drm/panfrost/panfrost_device.h |  1 +
- 2 files changed, 25 insertions(+), 1 deletion(-)
+This solution is not scalable, as it will lead to bloating the
+kernel image with support for several future versions of the
+SMMU specification to maintain a common kernel image that works
+across all platforms. Having the ARM SMMU driver as a module allows
+for a common kernel image to be supported across all platforms,
+while yielding a smaller kernel image size, since the correct
+SMMU driver can be loaded at runtime, if necessary.
 
-diff --git a/drivers/gpu/drm/panfrost/panfrost_device.c b/drivers/gpu/drm/panfrost/panfrost_device.c
-index 3b2bced1b015..8da6e612d384 100644
---- a/drivers/gpu/drm/panfrost/panfrost_device.c
-+++ b/drivers/gpu/drm/panfrost/panfrost_device.c
-@@ -44,7 +44,8 @@ static int panfrost_clk_init(struct panfrost_device *pfdev)
- 
- 	pfdev->clock = devm_clk_get(pfdev->dev, NULL);
- 	if (IS_ERR(pfdev->clock)) {
--		dev_err(pfdev->dev, "get clock failed %ld\n", PTR_ERR(pfdev->clock));
-+		dev_err(pfdev->dev, "get clock failed %ld\n",
-+			PTR_ERR(pfdev->clock));
- 		return PTR_ERR(pfdev->clock);
- 	}
- 
-@@ -55,11 +56,33 @@ static int panfrost_clk_init(struct panfrost_device *pfdev)
- 	if (err)
- 		return err;
- 
-+	pfdev->bus_clock = devm_clk_get_optional(pfdev->dev, "bus");
-+	if (IS_ERR(pfdev->bus_clock)) {
-+		dev_err(pfdev->dev, "get bus_clock failed %ld\n",
-+			PTR_ERR(pfdev->bus_clock));
-+		return PTR_ERR(pfdev->bus_clock);
-+	}
-+
-+	if (pfdev->bus_clock) {
-+		rate = clk_get_rate(pfdev->bus_clock);
-+		dev_info(pfdev->dev, "bus_clock rate = %lu\n", rate);
-+
-+		err = clk_prepare_enable(pfdev->bus_clock);
-+		if (err)
-+			goto disable_clock;
-+	}
-+
- 	return 0;
-+
-+disable_clock:
-+	clk_disable_unprepare(pfdev->clock);
-+
-+	return err;
- }
- 
- static void panfrost_clk_fini(struct panfrost_device *pfdev)
- {
-+	clk_disable_unprepare(pfdev->bus_clock);
- 	clk_disable_unprepare(pfdev->clock);
- }
- 
-diff --git a/drivers/gpu/drm/panfrost/panfrost_device.h b/drivers/gpu/drm/panfrost/panfrost_device.h
-index 56f452dfb490..8074f221034b 100644
---- a/drivers/gpu/drm/panfrost/panfrost_device.h
-+++ b/drivers/gpu/drm/panfrost/panfrost_device.h
-@@ -66,6 +66,7 @@ struct panfrost_device {
- 
- 	void __iomem *iomem;
- 	struct clk *clock;
-+	struct clk *bus_clock;
- 	struct regulator *regulator;
- 	struct reset_control *rstc;
- 
+Patchset Summary:
+
+1. Since the ARM SMMU driver depends on symbols being exported from
+several subsystems, the first three patches are dedicated to exporting
+the necessary symbols.
+
+2. Similar to how the pinctrl framework handles deferring probes,
+the subsequent patch makes it so that the IOMMU framework will defer
+probes indefinitely if there is a chance that the IOMMU driver that a
+device is waiting for is a module. Otherwise, it upholds the current
+behavior of stopping probe deferrals once all of the builtin drivers
+have finished probing.
+
+The ARM SMMU driver currently has support for the deprecated
+"mmu-masters" binding, which relies on the notion of initcall
+ordering for setting the bus ops to ensure that all SMMU devices
+have been bound to the driver. This poses a problem with
+making the driver a module, as there is no such notion with
+loadable modules. Will support for this be completely deprecated?
+If not, might it be useful to leverage the device tree ordering,
+and assign a property to the last SMMU device, and set the bus ops
+at that point? Or perhaps have some deferred timer based approach
+to know when to set the bus ops? 
+
+Thanks,
+Isaac
+
+Isaac J. Manjarres (4):
+  of: Export of_phandle_iterator_args() to modules
+  PCI: Export PCI ACS and DMA searching functions to modules
+  iommu: Export core IOMMU functions to kernel modules
+  iommu: Add probe deferral support for IOMMU kernel modules
+
+ drivers/iommu/iommu-sysfs.c | 3 +++
+ drivers/iommu/iommu.c       | 6 ++++++
+ drivers/iommu/of_iommu.c    | 8 ++++++--
+ drivers/of/base.c           | 1 +
+ drivers/pci/pci.c           | 1 +
+ drivers/pci/search.c        | 1 +
+ 6 files changed, 18 insertions(+), 2 deletions(-)
+
 -- 
-2.17.1
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
 
