@@ -2,118 +2,108 @@ Return-Path: <SRS0=M1fl=TR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4469C04AB4
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 17:59:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9B44C04AB4
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 17:59:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8603921743
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 17:59:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D6FC217D4
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 17:59:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558115968;
-	bh=wligyCDB6cBWaRhqVXQqSqaWOLM1I+XoOGjFzIGqDps=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=lL0DPgn5hvtkLOirnXBMi09P2f1JtsolsJkUOy4s8hfdwBqJYq53DzUiXFobvAVC1
-	 NiBmftxgY4mu4ag8wHcfG9lf+LlGmFAZqLApiptd7KC0ddvKzBWQSKCmVHf9NkZ3IE
-	 f4F2OnVLpypOANJ/EQ3bNGCQQFcQATusk+XjuLjg=
+	s=default; t=1558115971;
+	bh=SWL63IOuJG5gM5oQVFmjLL4N6Eo6juwVs637U8pmW3c=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=PH3zazdjFsN8UuMDd6CBsUaA5kd9jnuMbr32EGGfuDVTJIEarZQVadRZUH3CjhIK4
+	 m0d+YIhTGd6ZsD6y48z9pMTJblyQHe5EvIxT+QnPrJDIp0A7FoZGvQ5kLcSHJGMbK5
+	 w3bbnePvbk+7H2Kwq9/uK5hXoQkK6bda15cNIXqI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729114AbfEQR71 (ORCPT
+        id S1729141AbfEQR7a (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 May 2019 13:59:27 -0400
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:35971 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728536AbfEQR71 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 May 2019 13:59:27 -0400
-Received: by mail-lf1-f66.google.com with SMTP id y10so5970314lfl.3
-        for <linux-kernel@vger.kernel.org>; Fri, 17 May 2019 10:59:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=rB3dNWIaqQDPGHNT19oahTEP+BWSc5q1Dug0Regx5ks=;
-        b=RKf5fN9yw2LRRY7jLcfWOW9ebsu2L8Ka0aIlL6+zWMprMbvUihDj+fmUcrw3ejhnSb
-         olvc33josiDhqxFEFHMMPPeFQa56MrKGqqRoWKaWs8DzBeaKCeUmMaZAEDoqWjUl4xtw
-         4KsqbLtTFw4qjNNi1uiYd5IS5SnBHdpWpXdbk=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=rB3dNWIaqQDPGHNT19oahTEP+BWSc5q1Dug0Regx5ks=;
-        b=aJA8QQGxQLpYBEkqB24AkRcF1qTm3KjVOjt67fc143vvTVKEZsEZOeceY8Q0H/nRTc
-         1B3DR/TuyqnAPgjRgF3gEpxvQC0O/TR+hl5fxJTcItxN30LZO6+qhtmFxyFYmSSY+xZt
-         ngFnPCCagjzrbmpObb6RKHQbU8AIghDMlzvxiAYjFagJQ0CGDVdiSc4YP4mWVV9SboPl
-         +f18jT8xQIUmvt6+kJ3CsUDg4nz+09zD0+zQEezEwap1zYb6WCfZBV9c++wKBgmGjwkw
-         3Bxh+VQhbCqwSrUEOmOmkWKRgTeWUyRBFVTZxT3pnIIY3Rla2eFqNOQ7CzD7dc0kZbmT
-         PBFw==
-X-Gm-Message-State: APjAAAWsQojaR1s8aACXKYL3BcvUarbXKOx8drL/zIdNmwALMc652Byj
-        1suiQVX/CnjMpOlXQqH63CGcL8P0oEQ=
-X-Google-Smtp-Source: APXvYqyygs4JEJTgklHpT9uTSeu+OU+9GbKJobfYK4RucaqHU9d046PLZqURoEt7UVs1z3rlvaTnmg==
-X-Received: by 2002:a19:96:: with SMTP id 144mr27705175lfa.29.1558115964444;
-        Fri, 17 May 2019 10:59:24 -0700 (PDT)
-Received: from mail-lf1-f45.google.com (mail-lf1-f45.google.com. [209.85.167.45])
-        by smtp.gmail.com with ESMTPSA id u2sm1600575ljd.97.2019.05.17.10.59.23
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 17 May 2019 10:59:23 -0700 (PDT)
-Received: by mail-lf1-f45.google.com with SMTP id x132so5974395lfd.0
-        for <linux-kernel@vger.kernel.org>; Fri, 17 May 2019 10:59:23 -0700 (PDT)
-X-Received: by 2002:a19:f501:: with SMTP id j1mr8089820lfb.156.1558115963163;
- Fri, 17 May 2019 10:59:23 -0700 (PDT)
+        Fri, 17 May 2019 13:59:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55714 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728536AbfEQR73 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 May 2019 13:59:29 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8E16921773;
+        Fri, 17 May 2019 17:59:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1558115969;
+        bh=SWL63IOuJG5gM5oQVFmjLL4N6Eo6juwVs637U8pmW3c=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Awo8jfRwqiLbT4uODENudpkr3n04WnSim8CidHfOxdmkowkaMyYyxbO/A+pXFKRYB
+         ud7LuUB2+LYBY4084ih5NRclyWBW/sQZLKYGeseqa7U0/d6EvTH923bBN3Sy5OIs4o
+         UdaX4xTRzNjihMcRiAGeutga/17xArb/5I5iTWTE=
+Date:   Fri, 17 May 2019 19:59:26 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Liming Sun <lsun@mellanox.com>
+Cc:     Andy Shevchenko <andy@infradead.org>,
+        Darren Hart <dvhart@infradead.org>,
+        Vadim Pasternak <vadimp@mellanox.com>,
+        David Woods <dwoods@mellanox.com>,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "David S. Miller" <davem@davemloft.net>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        "Paul E. McKenney" <paulmck@linux.ibm.com>
+Subject: Re: [PATCH v5 2/2] platform/mellanox/mlxbf-bootctl: Add the ABI
+ definitions
+Message-ID: <20190517175926.GA24535@kroah.com>
+References: <0b74e9ad12360b56bc0a3c2ca972798c424f2610.1548790896.git.lsun@mellanox.com>
+ <1558115345-32476-2-git-send-email-lsun@mellanox.com>
 MIME-Version: 1.0
-References: <20190517092502.GA22779@gmail.com>
-In-Reply-To: <20190517092502.GA22779@gmail.com>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Fri, 17 May 2019 10:59:07 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wiNkOU-Ng+9_+tj4-AqJ4Q9JQpVbR4QVVAWLY68yQ62Gw@mail.gmail.com>
-Message-ID: <CAHk-=wiNkOU-Ng+9_+tj4-AqJ4Q9JQpVbR4QVVAWLY68yQ62Gw@mail.gmail.com>
-Subject: Re: [PATCH] tracing: silence GCC 9 array bounds warning
-To:     Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Cc:     Steven Rostedt <rostedt@goodmis.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1558115345-32476-2-git-send-email-lsun@mellanox.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 17, 2019 at 2:25 AM Miguel Ojeda
-<miguel.ojeda.sandonis@gmail.com> wrote:
->
-> +       memset((char *)(iter) + offsetof(struct trace_iterator, seq), 0,
-> +              sizeof(struct trace_iterator) -
-> +              offsetof(struct trace_iterator, seq));
+On Fri, May 17, 2019 at 01:49:05PM -0400, Liming Sun wrote:
+> This commit adds the ABI definitions exposed to userspace for
+> the platform/mellanox/mlxbf-bootctl driver.
+> 
+> Reviewed-by: Vadim Pasternak <vadimp@mellanox.com>
+> Signed-off-by: Liming Sun <lsun@mellanox.com>
+> ---
+>  .../ABI/testing/sysfs-platform-mellanox-bootctl    | 58 ++++++++++++++++++++++
+>  MAINTAINERS                                        |  1 +
+>  2 files changed, 59 insertions(+)
+>  create mode 100644 Documentation/ABI/testing/sysfs-platform-mellanox-bootctl
+> 
+> diff --git a/Documentation/ABI/testing/sysfs-platform-mellanox-bootctl b/Documentation/ABI/testing/sysfs-platform-mellanox-bootctl
+> new file mode 100644
+> index 0000000..19a14db
+> --- /dev/null
+> +++ b/Documentation/ABI/testing/sysfs-platform-mellanox-bootctl
+> @@ -0,0 +1,58 @@
+> +What:		/sys/bus/platform/drivers/mlxbf-bootctl/lifecycle_state
+> +Date:		May 2019
+> +KernelVersion:	5.3
+> +Contact:	"Liming Sun <lsun@mellanox.com>"
+> +Description:
+> +		The Life-cycle state of the SoC, which could be one of the
+> +		following values.
+> +		  Production - Production state and can be updated to secure
+> +		  GA Secured - Secure chip and not able to change state
+> +		  GA Non-Secured - Non-Secure chip and not able to change state
+> +		  RMA - Return Merchandise Authorization
 
-Honestly, the above is nasty.
+A "driver" does not have a lifecycle state, a "device" does.
 
-Whenever you have to split an expression or statement over several
-lines, you should ask yourself why it's so complicated.
+You are putting all of these attributes in the wrong place.  Put them on
+your device please, not the driver.  driver-specific attributes are
+_VERY_ rare, and only for things that can modify/show for all devices
+attached to that driver.
 
-This can be trivially rewritten as
+thanks,
 
-        const unsigned int offset = offsetof(struct trace_iterator, seq);
-        memset(offset + (void *)iter, 0, sizeof(*iter) - offset);
-
-and now we have two much simpler expressions that are each much easier
-to read and don't need multiple lines.
-
-In particular using that "offset" variable means that you can
-trivially see that "oh, we're starting the memset at that offset, and
-we're using the 'sizeof() - offset' thing to limit the size". It's a
-lot clearer to use the same trivial 'offset' thing in both the offset
-and the size, than to have a more complex expression that it
-duplicated twice and is not at all as visually obvious that it's the
-exact same thing simply because it's bigger and more complex.
-
-Also, the while 'offset' is a variable, any compiler will immediately
-see that it's a constant value, so it's not like this will affect the
-generated code at all. Unless you compile with something crazy like
-'-O0', which is not a supported configuration exactly because we
-expect compilers to not be terminally stupid.
-
-So you get simpler and clearer source, with no downsides.
-
-               Linus
+greg k-h
