@@ -2,111 +2,149 @@ Return-Path: <SRS0=M1fl=TR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB17AC04E84
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 09:33:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 759D8C04AB4
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 09:38:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A8C342082E
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 09:33:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 51DE320833
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 09:38:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728771AbfEQJdo (ORCPT
+        id S1728828AbfEQJif (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 May 2019 05:33:44 -0400
-Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:33524 "EHLO
-        atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727758AbfEQJdo (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 May 2019 05:33:44 -0400
-Received: by atrey.karlin.mff.cuni.cz (Postfix, from userid 512)
-        id 2A2F380398; Fri, 17 May 2019 11:33:32 +0200 (CEST)
-Date:   Fri, 17 May 2019 11:33:41 +0200
-From:   Pavel Machek <pavel@denx.de>
-To:     Claudiu Manoil <claudiu.manoil@nxp.com>
-Cc:     Pavel Machek <pavel@denx.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>,
-        "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>
-Subject: Re: [PATCH 4.19 042/113] ocelot: Dont sleep in atomic context
- (irqs_disabled())
-Message-ID: <20190517093341.GA18565@amd>
-References: <20190515090652.640988966@linuxfoundation.org>
- <20190515090656.813206864@linuxfoundation.org>
- <20190517081642.GC17012@amd>
- <VI1PR04MB488053E08D56380DBB6EFB05960B0@VI1PR04MB4880.eurprd04.prod.outlook.com>
+        Fri, 17 May 2019 05:38:35 -0400
+Received: from eumx.net ([91.82.101.43]:54662 "EHLO legacy.eumx.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727758AbfEQJif (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 May 2019 05:38:35 -0400
+X-Greylist: delayed 1273 seconds by postgrey-1.27 at vger.kernel.org; Fri, 17 May 2019 05:38:34 EDT
+Subject: Re: next/master boot bisection: next-20190514 on rk3288-veyron-jaq
+To:     Doug Anderson <dianders@chromium.org>,
+        "kernelci.org bot" <bot@kernelci.org>
+Cc:     Elaine Zhang <zhangqing@rock-chips.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Guillaume Tucker <guillaume.tucker@collabora.com>,
+        mgalka@collabora.com, LKML <linux-kernel@vger.kernel.org>,
+        Eduardo Valentin <edubezval@gmail.com>,
+        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
+        Mark Brown <broonie@kernel.org>, matthew.hart@linaro.org,
+        Kevin Hilman <khilman@baylibre.com>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Heiko Stuebner <heiko@sntech.de>
+References: <5cdae78b.1c69fb81.a32a9.870f@mx.google.com>
+ <CAD=FV=WDjUBvwoAaWNOmXPaLpZCccpAgRWDzRSnvsQ62TFwVmQ@mail.gmail.com>
+From:   Jack Mitchell <ml@embed.me.uk>
+Message-ID: <a9767b82-9b3c-fc05-5f33-fb79c8fc8507@embed.me.uk>
+Date:   Fri, 17 May 2019 10:17:02 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="J/dobhs11T7y2rNN"
-Content-Disposition: inline
-In-Reply-To: <VI1PR04MB488053E08D56380DBB6EFB05960B0@VI1PR04MB4880.eurprd04.prod.outlook.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+In-Reply-To: <CAD=FV=WDjUBvwoAaWNOmXPaLpZCccpAgRWDzRSnvsQ62TFwVmQ@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-BW
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 16/05/2019 22:38, Doug Anderson wrote:
+> Hi,
+> 
+> From: kernelci.org bot <bot@kernelci.org>
+> Date: Tue, May 14, 2019 at 9:06 AM
+> To: <tomeu.vizoso@collabora.com>, <guillaume.tucker@collabora.com>,
+> <mgalka@collabora.com>, <broonie@kernel.org>,
+> <matthew.hart@linaro.org>, <khilman@baylibre.com>,
+> <enric.balletbo@collabora.com>, Elaine Zhang, Eduardo Valentin, Daniel
+> Lezcano
+> Cc: Heiko Stuebner, <linux-pm@vger.kernel.org>,
+> <linux-kernel@vger.kernel.org>, <linux-rockchip@lists.infradead.org>,
+> Zhang Rui, <linux-arm-kernel@lists.infradead.org>
+> 
+>> * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+>> * This automated bisection report was sent to you on the basis  *
+>> * that you may be involved with the breaking commit it has      *
+>> * found.  No manual investigation has been done to verify it,   *
+>> * and the root cause of the problem may be somewhere else.      *
+>> * Hope this helps!                                              *
+>> * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+>>
+>> next/master boot bisection: next-20190514 on rk3288-veyron-jaq
+>>
+>> Summary:
+>>   Start:      0a13f187b16a Add linux-next specific files for 20190514
+>>   Details:    https://kernelci.org/boot/id/5cda7f2259b514876d7a3628
+>>   Plain log:  https://storage.kernelci.org//next/master/next-20190514/arm/multi_v7_defconfig+CONFIG_EFI=y+CONFIG_ARM_LPAE=y/gcc-8/lab-collabora/boot-rk3288-veyron-jaq.txt
+>>   HTML log:   https://storage.kernelci.org//next/master/next-20190514/arm/multi_v7_defconfig+CONFIG_EFI=y+CONFIG_ARM_LPAE=y/gcc-8/lab-collabora/boot-rk3288-veyron-jaq.html
+>>   Result:     691d4947face thermal: rockchip: fix up the tsadc pinctrl setting error
+>>
+>> Checks:
+>>   revert:     PASS
+>>   verify:     PASS
+>>
+>> Parameters:
+>>   Tree:       next
+>>   URL:        git://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git
+>>   Branch:     master
+>>   Target:     rk3288-veyron-jaq
+>>   CPU arch:   arm
+>>   Lab:        lab-collabora
+>>   Compiler:   gcc-8
+>>   Config:     multi_v7_defconfig+CONFIG_EFI=y+CONFIG_ARM_LPAE=y
+>>   Test suite: boot
+>>
+>> Breaking commit found:
+>>
+>> -------------------------------------------------------------------------------
+>> commit 691d4947faceb8bd841900049e07c81c95ca4b0d
+>> Author: Elaine Zhang <zhangqing@rock-chips.com>
+>> Date:   Tue Apr 30 18:09:44 2019 +0800
+>>
+>>     thermal: rockchip: fix up the tsadc pinctrl setting error
+>>
+>>     Explicitly use the pinctrl to set/unset the right mode
+>>     instead of relying on the pinctrl init mode.
+>>     And it requires setting the tshut polarity before select pinctrl.
+>>
+>>     When the temperature sensor mode is set to 0, it will automatically
+>>     reset the board via the Clock-Reset-Unit (CRU) if the over temperature
+>>     threshold is reached. However, when the pinctrl initializes, it does a
+>>     transition to "otp_out" which may lead the SoC restart all the time.
+>>
+>>     "otp_out" IO may be connected to the RESET circuit on the hardware.
+>>     If the IO is in the wrong state, it will trigger RESET.
+>>     (similar to the effect of pressing the RESET button)
+>>     which will cause the soc to restart all the time.
+>>
+>>     Signed-off-by: Elaine Zhang <zhangqing@rock-chips.com>
+>>     Reviewed-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+>>     Signed-off-by: Eduardo Valentin <edubezval@gmail.com>
+> 
+> I can confirm that the above commit breaks my jerry, though I haven't
+> dug into the details.  :(  Is anyone fixing?  For now I'm just booting
+> with the revert.
+> 
+> 
+> -Doug
 
---J/dobhs11T7y2rNN
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+I can also confirm that this breaks boot on our custom board which is
+very similar to the rk3288-Firefly. In my scenario the processor just
+seems to "hang", no reset occurs if that helps debug matters.
 
-Hi!
+Regards,
+Jack.
 
-> >On Wed 2019-05-15 12:55:33, Greg Kroah-Hartman wrote:
-> >> [ Upstream commit a8fd48b50deaa20808bbf0f6685f6f1acba6a64c ]
-> >>
-> >> Preemption disabled at:
-> >>  [<ffff000008cabd54>] dev_set_rx_mode+0x1c/0x38
-> >>  Call trace:
-> >>  [<ffff00000808a5c0>] dump_backtrace+0x0/0x3d0
-> >>  [<ffff00000808a9a4>] show_stack+0x14/0x20
-> >>  [<ffff000008e6c0c0>] dump_stack+0xac/0xe4
-> >>  [<ffff0000080fe76c>] ___might_sleep+0x164/0x238
-> >>  [<ffff0000080fe890>] __might_sleep+0x50/0x88
-> >>  [<ffff0000082261e4>] kmem_cache_alloc+0x17c/0x1d0
-> >>  [<ffff000000ea0ae8>] ocelot_set_rx_mode+0x108/0x188
-> >[mscc_ocelot_common]
-> >>  [<ffff000008cabcf0>] __dev_set_rx_mode+0x58/0xa0
-> >>  [<ffff000008cabd5c>] dev_set_rx_mode+0x24/0x38
-> >>
-> >> Fixes: a556c76adc05 ("net: mscc: Add initial Ocelot switch support")
-> >
-> >Is it right fix? Warning is gone, but now allocation is more likely to
-> >fail, causing mc_add() to fail under memory pressure.
-> >
->=20
-> So far this contributes to fixing a kernel hang issue, seen occasionally
-> when the switch interfaces were brought up.
-> Other than that I would look into improving this code.
-> It looks suboptimal at least.  Do we really need to allocate whole
-> struct netdev_hw_addr elements? Can the allocation size be reduced?
-> What about pre-allocating enough room for ha elements outside the
-> atomic context (set_rx_mode() in this case)?
-
-Pre-allocating the elements sounds like a obvious solution, yes.
-
-Best regards,
-								Pavel
---=20
-DENX Software Engineering GmbH,      Managing Director: Wolfgang Denk
-HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
-
---J/dobhs11T7y2rNN
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAlzef/UACgkQMOfwapXb+vJjGgCgstxXfIUGi5SKgeRmDcJmlcjT
-VUUAn3UEZsjB0dizYH96Q9/AOiF/k8I2
-=PdRN
------END PGP SIGNATURE-----
-
---J/dobhs11T7y2rNN--
+> 
+> _______________________________________________
+> Linux-rockchip mailing list
+> Linux-rockchip@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-rockchip
+> 
