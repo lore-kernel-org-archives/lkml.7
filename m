@@ -2,94 +2,105 @@ Return-Path: <SRS0=M1fl=TR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3607CC04AB4
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 09:06:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B585C04AB4
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 09:07:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0022720833
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 09:06:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 68C6720818
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 09:07:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rGkZXfwz"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="iv7w/Tb+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728654AbfEQJGy (ORCPT
+        id S1728676AbfEQJHR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 May 2019 05:06:54 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:38947 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728448AbfEQJGy (ORCPT
+        Fri, 17 May 2019 05:07:17 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:37070 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728422AbfEQJHQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 May 2019 05:06:54 -0400
-Received: by mail-pg1-f194.google.com with SMTP id w22so3007343pgi.6
-        for <linux-kernel@vger.kernel.org>; Fri, 17 May 2019 02:06:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=GgShVfrJdzVX4OHpBlPpeZRiwTUzDnQ/1+vh7MIr97A=;
-        b=rGkZXfwzMhy0gz3wN4E2bBh+lCxHuu6IdIpe86W1vX8CZoM+/oI+WtufMyZXsy5z+D
-         ZVKMXCukQQlQD6e8qb7xN55Rq5MNaPI8rMC/hxcqCwPKLz0G9QS4hnGfmGfcKJdMAs9f
-         71rKxD7hM0STMDHwahaeYvC4LcU4duF5oCEZoAjquog1LNdkmKxpu1+wCBBJIAfCypq+
-         Fv0tbclO+Ffl99VijsyVB2z7YFmb8EuNnDDw2rEGxMZ2eA0Hbmnwj8XLKudQTen6nghW
-         q1NO0qEroof+FXs1Dw38Fd7DYCcocmH/Tm74FEEUiHhAY5JzQrsNqxQ5VYFckKlVoAAE
-         M8Zw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=GgShVfrJdzVX4OHpBlPpeZRiwTUzDnQ/1+vh7MIr97A=;
-        b=lFMqmprCn43K/YESmyOMZykmYRD2mlLAGA/38bHHY/NL/NLv1qkfrRTKow9CbpgNsn
-         UQM23uql1WAY/6PpGLKPAWRtByZYWDa7Bpr3OwoM6GSfzaGtE2mMac9bimz9kgf5e5d9
-         IHwz85E4Bg8iKK9OvPXPJg8CFuKyYwUYa0SumpWoyDflQIx8kJwi1u3U/r9GVdxW6DeE
-         me0705/DAcx33ITMFe3u9o1M+BC6hGXYcx9cNBfZEWBncj146M0kDkbv7le8eW1b7tH1
-         ZdUkvqmRlMF34GDZ1ca48Oe5hrqP1e+U+tNgQ+ibr+AGyzkDr2k6rNvea4s4Yt+kww+n
-         xEvg==
-X-Gm-Message-State: APjAAAWmower8QUqkVQtGYPZnPjNr3l4CqEWHEwVnkBDeGQgAax1BBzB
-        QRme78WXJ3h0H7gLU3YdOrL2LXJwXFs=
-X-Google-Smtp-Source: APXvYqx9ltdJabmG9EajLLgAw51/p+NhG8d/rygZJA1v7m1seb7Sea3eMHXlFcnxH4ZRXZ90Wsn1cg==
-X-Received: by 2002:a62:30c2:: with SMTP id w185mr59918683pfw.175.1558084013478;
-        Fri, 17 May 2019 02:06:53 -0700 (PDT)
-Received: from zhanggen-UX430UQ ([66.42.35.75])
-        by smtp.gmail.com with ESMTPSA id n2sm10663440pgp.27.2019.05.17.02.06.50
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 17 May 2019 02:06:52 -0700 (PDT)
-Date:   Fri, 17 May 2019 17:06:28 +0800
-From:   Gen Zhang <blackgod016574@gmail.com>
-To:     Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Cc:     linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] efi_64: Fix a missing-check bug in
- arch/x86/platform/efi/efi_64.c of Linux 5.1
-Message-ID: <20190517090628.GA4162@zhanggen-UX430UQ>
-References: <20190517082633.GA3890@zhanggen-UX430UQ>
- <CAKv+Gu98JNK34Q6MNOe3aq0W5rbv6hUFiuc7cHxHJat5aTk_gg@mail.gmail.com>
+        Fri, 17 May 2019 05:07:16 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=V2wSgE9jHWp8zeZBJCg0bOCUi1aKXMJLx0J1R6ddWCM=; b=iv7w/Tb+fLpedfpGrRNGzQZ5X
+        GL8vRUa5YDhdjrqY+VtJ7VTXmLdJxq6wK6zbV12BJZhLSHW53PdbohFQopaG34eGf4s+PEZCnboHT
+        KRyUaIi/tVgHXONylyWEXr7VY1ntwPVRm/8haMXOlNUenMMeFPxleR+fG8rK093vKaFwpxV6+hWuw
+        vTS4fJNt5X1ktGymV9Q+yXJYQ45CNd2rc701woYh/du9wCcJwpyKy4BZj3EVF2wwvePgFh9qDX1PW
+        W8C+0nnJWODLibPPFRKPHFJs763u20JGqCKWIwX9ouxMzXdJ71A3irPsmfnBYP8tHxbL4qHbxvuIJ
+        SoNw+JqyA==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hRYpe-0000u9-Fj; Fri, 17 May 2019 09:07:14 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id C0D422029B0A3; Fri, 17 May 2019 11:07:12 +0200 (CEST)
+Date:   Fri, 17 May 2019 11:07:12 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Mark Rutland <mark.rutland@arm.com>
+Cc:     Raphael Gault <raphael.gault@arm.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        mingo@redhat.com, catalin.marinas@arm.com, will.deacon@arm.com,
+        acme@kernel.org
+Subject: Re: [PATCH 4/6] arm64: pmu: Add hook to handle pmu-related undefined
+ instructions
+Message-ID: <20190517090712.GR2650@hirez.programming.kicks-ass.net>
+References: <20190516132148.10085-1-raphael.gault@arm.com>
+ <20190516132148.10085-5-raphael.gault@arm.com>
+ <20190517071018.GH2623@hirez.programming.kicks-ass.net>
+ <20190517080419.dziz4iqc7t4mpoej@blommer>
+ <20190517082655.GK2623@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAKv+Gu98JNK34Q6MNOe3aq0W5rbv6hUFiuc7cHxHJat5aTk_gg@mail.gmail.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <20190517082655.GK2623@hirez.programming.kicks-ass.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 17, 2019 at 10:41:28AM +0200, Ard Biesheuvel wrote:
-> Returning an error here is not going to make much difference, given
-> that the caller of efi_call_phys_prolog() does not bother to check it,
-> and passes the result straight into efi_call_phys_epilog(), which
-> happily attempts to dereference it.
+On Fri, May 17, 2019 at 10:26:55AM +0200, Peter Zijlstra wrote:
+> On Fri, May 17, 2019 at 09:04:20AM +0100, Mark Rutland wrote:
 > 
-> So if you want to fix this properly, please fix it at the call site as
-> well. I'd prefer to avoid ERR_PTR() and just return NULL for a failed
-> allocation though.
-Hi Ard,
-Thanks for your timely reply!
-I think returning NULL in efi_call_phys_prolog() and checking in 
-efi_call_phys_epilog() is much better. But I am confused what to return
-in efi_call_phys_epilog() if save_pgd is NULL. Definitely not return
--ENOMEM, because efi_call_phys_epilog() returns unsigned long. Could
-please light on me to fix this problem?
-Thanks
-Gen
+> > Remember that this is in an undefined (trap) handler.
+> > 
+> > If userspace _attempts_ to write to the registers, the CPU will trap to the
+> > kernel. The comment is perhaps misleading; when we "do nothing", the common
+> > trap handling code will send a SIGILL to userspace.
+> > 
+> > It would probably be better to say something like:
+> > 
+> > 	/*
+> > 	 * If userspace is tries to read a counter that doesn't exist on this
+> > 	 * CPU, we emulate it as reading as zero. This happens if userspace is
+> > 	 * preempted between reading the idx and actually reading the counter,
+> > 	 * and the seqlock and idx have already changed, so it's as-if the
+> > 	 * counter has been reprogrammed with a different event.
+> 
+> Might be good to mention that userspace will/should discard the value it
+> reads, and therefore any value is good (including 0).
+> 
+> > 	 * We don't permit userspace to write to these registers, and will
+> > 	 * inject a SIGILL.
+> > 	 */
+> > 
+> > There is one caveat: userspace can write to PMSELR without trapping, so we will
+> > have to context-switch with the task. That only affects indirect addressing of
+> > PMU registers, and doesn't have a functional effect on the behaviour of the
+> > PMU, so that's benign from the PoV of perf.
+> 
+> Sad though; ideally you'd state that indirect addressing is
+> out-of-bounds and they get to keep the pieces. But I suspect you're
+> right that people will do it anyway and complain once it comes apart.
+
+I'm still not entirely convinced you need that context switching. If we
+sched-out, the seqcount value will change, idem when we sched-in. So
+under no circumstance (even if we stay on the same CPU), will the
+seqcount match when we get back on.
+
+So why preserve that register?
