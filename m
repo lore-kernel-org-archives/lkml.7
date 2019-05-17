@@ -2,100 +2,77 @@ Return-Path: <SRS0=M1fl=TR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F003C04E87
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 13:38:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B14AC04AB4
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 13:42:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3332F2166E
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 13:38:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558100308;
-	bh=pbTJr359FJMy2WUUMG/Lf2r9Lyuh9YLPUqwHd+Wo8VM=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=tJPm3zRCB0UZbKt1gMqWyMiIAX3LA+716/nWhKhk3C7HzlEOud3rpjmgHF58GoqTB
-	 q20bIYKZ7XBaiZecrk+nLjp/BkRw8WjjwTfd+0potQMxY0oOTRQxSR6qEXsUpf3zXx
-	 qUkHEm59PqCtSU/g0N1SMtD2kwETu6AzQ0krjrYc=
+	by mail.kernel.org (Postfix) with ESMTP id 657962087E
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 13:42:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="aaeXQ0d+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729026AbfEQNi1 (ORCPT
+        id S1728749AbfEQNmG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 May 2019 09:38:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60534 "EHLO mail.kernel.org"
+        Fri, 17 May 2019 09:42:06 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:53278 "EHLO mail.skyhub.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726556AbfEQNi1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 May 2019 09:38:27 -0400
-Received: from mail-qk1-f174.google.com (mail-qk1-f174.google.com [209.85.222.174])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1728365AbfEQNmG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 May 2019 09:42:06 -0400
+Received: from zn.tnic (p200300EC2F0C5000C4DD38E37EE1A463.dip0.t-ipconnect.de [IPv6:2003:ec:2f0c:5000:c4dd:38e3:7ee1:a463])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 468BF217D8;
-        Fri, 17 May 2019 13:38:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558100306;
-        bh=pbTJr359FJMy2WUUMG/Lf2r9Lyuh9YLPUqwHd+Wo8VM=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=vctqqeOF41AfIjkmUkCBWXAfSnm+p9DUxehsXrNwgZAO+bPS1LO55NQyEIHxaHsZ3
-         q0XwJDhm1LJR1gHfXandcOp+J48YmQ1h8XDDzfB9Bdz0s6z+dtY+vRQWe+IMTcLE3+
-         gOV+gjRdPhi5Mt9rQmcaiKsQ4Wkqht4HyISHWfCs=
-Received: by mail-qk1-f174.google.com with SMTP id j20so4462731qke.1;
-        Fri, 17 May 2019 06:38:26 -0700 (PDT)
-X-Gm-Message-State: APjAAAX6gQ9xJI3N8LfZ34dD2sVtHWf5Wm/7pveoZ2C81XyBQ8S5GhKJ
-        ePazCP5gVnp02sJoDSnWX6PtdP+S/vmPIVnREQ==
-X-Google-Smtp-Source: APXvYqw49ctY7vjhM+4Z3JnlL9CMKiUL4zKvRdQ04InbXYUNxCMkL8zusPDA6stSF8Q6Xj2NjoygEZEuDR3YGpWMxGY=
-X-Received: by 2002:a05:620a:1107:: with SMTP id o7mr36956035qkk.184.1558100305381;
- Fri, 17 May 2019 06:38:25 -0700 (PDT)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 24EA81EC0874;
+        Fri, 17 May 2019 15:42:05 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1558100525;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=kxqMwd6/M8Bnqd/BVW9JvtYKwei+gVc81c65tCa7ppU=;
+        b=aaeXQ0d+gjQ6WkTkH3UBr33GYfNQ+ZFgNlQHWrnH1GRucfU1QdI7d9FhF0fSBe2lHpHDqw
+        3yVDdrh4dt/NRQm1UMBNyHDdJbFvRxxFZ1AKtFmLNjmjMOQcVeFIni38muZW10bczdsqLk
+        apgaOxDp11uLBdVwUwfrW2vjpKrNEU4=
+Date:   Fri, 17 May 2019 15:41:59 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     Dave Young <dyoung@redhat.com>
+Cc:     Baoquan He <bhe@redhat.com>, j-nomura@ce.jp.nec.com,
+        kasong@redhat.com, fanc.fnst@cn.fujitsu.com, x86@kernel.org,
+        kexec@lists.infradead.org, linux-kernel@vger.kernel.org,
+        hpa@zytor.com, tglx@linutronix.de
+Subject: Re: [PATCH v6 1/2] x86/kexec: Build identity mapping for EFI systab
+ and ACPI tables
+Message-ID: <20190517134159.GA13482@zn.tnic>
+References: <20190424092944.30481-1-bhe@redhat.com>
+ <20190424092944.30481-2-bhe@redhat.com>
+ <20190429002318.GA25400@MiWiFi-R3L-srv>
+ <20190429135536.GC2324@zn.tnic>
+ <20190513014248.GA16774@MiWiFi-R3L-srv>
+ <20190513070725.GA20105@zn.tnic>
+ <20190513073254.GB16774@MiWiFi-R3L-srv>
+ <20190513075006.GB20105@zn.tnic>
+ <20190513080653.GD16774@MiWiFi-R3L-srv>
+ <20190514032208.GA25875@dhcp-128-65.nay.redhat.com>
 MIME-Version: 1.0
-References: <1558085189-22061-1-git-send-email-fabrizio.castro@bp.renesas.com> <1558085189-22061-2-git-send-email-fabrizio.castro@bp.renesas.com>
-In-Reply-To: <1558085189-22061-2-git-send-email-fabrizio.castro@bp.renesas.com>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Fri, 17 May 2019 08:38:14 -0500
-X-Gmail-Original-Message-ID: <CAL_JsqJCJyRBX+08UriNeYZ01ow0yLv=VjK3sNbjVi1GB5=MQA@mail.gmail.com>
-Message-ID: <CAL_JsqJCJyRBX+08UriNeYZ01ow0yLv=VjK3sNbjVi1GB5=MQA@mail.gmail.com>
-Subject: Re: [PATCH v3 1/2] dt-bindings: Add vendor prefix for HopeRun
-To:     Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Cc:     Mark Rutland <mark.rutland@arm.com>,
-        Simon Horman <horms@verge.net.au>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Thierry Reding <treding@nvidia.com>,
-        =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Jagan Teki <jagan@amarulasolutions.com>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        "open list:MEDIA DRIVERS FOR RENESAS - FCP" 
-        <linux-renesas-soc@vger.kernel.org>, devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Chris Paterson <Chris.Paterson2@renesas.com>,
-        Biju Das <biju.das@bp.renesas.com>, xu_shunji@hoperun.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20190514032208.GA25875@dhcp-128-65.nay.redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 17, 2019 at 4:27 AM Fabrizio Castro
-<fabrizio.castro@bp.renesas.com> wrote:
->
-> Add "Jiangsu HopeRun Software Co., Ltd." to the list of devicetree
-> vendor prefixes as "hoperun".
->
-> Website: http://www.hoperun.com/en
->
-> Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-> Reviewed-by: Chris Paterson <Chris.Paterson2@renesas.com>
->
-> ---
-> v2->v3:
-> * Moved to vendor-prefixes.yaml
-> * Dropped Reviewed-by Simon as this is a completely new patch and as
->   such it needs a brand new review
-> v1->v2:
-> * No change
-> ---
->  Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 ++
->  1 file changed, 2 insertions(+)
+On Tue, May 14, 2019 at 11:22:08AM +0800, Dave Young wrote:
+> Another thing is we can move the get rsdp after console_init, but that
+> can be done later as separate patch.
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+https://lkml.kernel.org/r/20190417090247.GD20492@zn.tnic
+
+-- 
+Regards/Gruss,
+    Boris.
+
+Good mailing practices for 400: avoid top-posting and trim the reply.
