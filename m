@@ -7,52 +7,52 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E161BC04AB4
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 22:54:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F3EFC04AB4
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 22:54:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B27312082E
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 22:54:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E54EF2082E
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 22:54:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="j738cSt9"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="YBy/i07q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729676AbfEQWyr (ORCPT
+        id S1729694AbfEQWyu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 May 2019 18:54:47 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:35367 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729488AbfEQWyp (ORCPT
+        Fri, 17 May 2019 18:54:50 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:35368 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729673AbfEQWyr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 May 2019 18:54:45 -0400
-Received: by mail-pg1-f195.google.com with SMTP id t1so2536668pgc.2
-        for <linux-kernel@vger.kernel.org>; Fri, 17 May 2019 15:54:44 -0700 (PDT)
+        Fri, 17 May 2019 18:54:47 -0400
+Received: by mail-pg1-f193.google.com with SMTP id t1so2536695pgc.2
+        for <linux-kernel@vger.kernel.org>; Fri, 17 May 2019 15:54:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=kE32OCklpIZXO7svMqG/W8w7+/cFFktuMCsLmJ9iAxQ=;
-        b=j738cSt9G+eC+Ssi6Mhsw32N5TiBKHXPoJHB8D/AEDypV+5B0elAKCdF6PlzOM6OcS
-         rbZQn5r0unqEm9W5BfrmtQTF+g0qfmROnRX2xCe1NjJ64kzHNg820UnDDryZLzrD8T2m
-         etwXw4YU1QMMjXANx95rOa5DruCs5yslqOl6w=
+        bh=jmrinjUmvX+AQ+lipzMHtBZaQD2gwKEewfCw3RvxUZk=;
+        b=YBy/i07qpQlrvxx+6Ohii/hGKkEYRmpgmxzUqTc6t6e7jWY6J0RFRRoni7Yc9uR55E
+         dOjuS+sxiF3k24jBmU7V/xt3JzhbBVbS1Jb28lbbMPZ8uBUX67zRh9M3rxqKH17xRDfC
+         1JyFzVqKbemtnksZtgFzqdiY3uYO5HgqwLLb0=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=kE32OCklpIZXO7svMqG/W8w7+/cFFktuMCsLmJ9iAxQ=;
-        b=CsmqmAEOR0xaLCkAyOqmQnGV3J3k5en2lP/g9aFjGaNteOQV6dQC80R0fPTVznqru9
-         xSeSdn2ktc7cJF7Wr1lw7a+0gtjdVOlf9isGbTIHkKfCL5WbZV/yhKXCMsk63RlfTsYV
-         iU/iVnLsReLtMfv/D8RBotGoJKNVp25kAI3PCbTWa92ngOZcTbijrUGIG2G+DBL5/U1F
-         YPcF1JAiOGIPcg983BD1DfRDCi2bHmo3nmN0F4CkxqN0W+rvv8M5PLaRholt7wL9z9nT
-         YqHedxLdhvpXqWbvv09kCtlMEaMW+4sIewqTG7kU8l5DGnUqx7kct0h/EX2FJP4TjYjd
-         yTTw==
-X-Gm-Message-State: APjAAAWcbH7dp2BuGqRuTlu78DWsPmbTY2sxMLdj7Al0P4fML9ABV2gX
-        RvE5iSZ6F+G49Sf9jfj5nF8kA6GEeMg=
-X-Google-Smtp-Source: APXvYqw3Pllw0o/YaHOCk+UhRzInd8A3zNoabhFlV045lJlGWBCfwcMIFoinD8muUSpjk/9MTo4nVw==
-X-Received: by 2002:a63:ee0b:: with SMTP id e11mr6703708pgi.453.1558133684631;
-        Fri, 17 May 2019 15:54:44 -0700 (PDT)
+        bh=jmrinjUmvX+AQ+lipzMHtBZaQD2gwKEewfCw3RvxUZk=;
+        b=t+Q2oAhhLBAbnmdrj3po4mN2ot38jMMIUT7IC3bFflLce6VVr5vJsMY6xoRnepDYjT
+         a0vLfTdp7Y7P1xijquPww9XGn6Zko3ZecsAc75zVdfo5WECSIwssVd+v6eYX1uEnI8vM
+         c/DK0hc9FJp/LfbMie8rKSxHbJmIkyBciO3vEW7fWZMhzz/LE9Btw9+88ZvSYfECNYVH
+         6qTd/coxPu7JDpvhsEE0fQjKebYHrY9/64mHSz3zAPXa9u1yyoGJGHWVwio6ShKcXteB
+         NVysS+L6pEODUKap+n1pcZDwuNh8NOBUcUFgLNV5qGwgOZO/QDFVG+s8+DX3f6ozhqP5
+         xF1Q==
+X-Gm-Message-State: APjAAAVlvWkEsvCwhXu5LkF4lmzzC6QVQu7//kaLYPREVEWE8WWo8A3X
+        gj7cC0DGOq79iTgQ7S+Xw6Qa1g==
+X-Google-Smtp-Source: APXvYqzxf9q2pzvCOer/zrm6/W4Z5BkzeAcb6pguC267JTog7JQqRYkt2ViDmHMU+7mEiD3cc9ESaA==
+X-Received: by 2002:a65:628b:: with SMTP id f11mr57246101pgv.95.1558133686865;
+        Fri, 17 May 2019 15:54:46 -0700 (PDT)
 Received: from tictac2.mtv.corp.google.com ([2620:15c:202:1:24fa:e766:52c9:e3b2])
-        by smtp.gmail.com with ESMTPSA id u11sm11174450pfh.130.2019.05.17.15.54.43
+        by smtp.gmail.com with ESMTPSA id u11sm11174450pfh.130.2019.05.17.15.54.45
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 17 May 2019 15:54:44 -0700 (PDT)
+        Fri, 17 May 2019 15:54:46 -0700 (PDT)
 From:   Douglas Anderson <dianders@chromium.org>
 To:     Ulf Hansson <ulf.hansson@linaro.org>,
         Kalle Valo <kvalo@codeaurora.org>,
@@ -65,16 +65,16 @@ Cc:     linux-rockchip@lists.infradead.org,
         Chi-Hsien Lin <chi-hsien.lin@cypress.com>,
         Douglas Anderson <dianders@chromium.org>,
         brcm80211-dev-list.pdl@broadcom.com,
+        "David S. Miller" <davem@davemloft.net>,
         Franky Lin <franky.lin@broadcom.com>, netdev@vger.kernel.org,
         linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Madhan Mohan R <MadhanMohan.R@cypress.com>,
         Hante Meuleman <hante.meuleman@broadcom.com>,
         Naveen Gupta <naveen.gupta@cypress.com>,
         brcm80211-dev-list@cypress.com, YueHaibing <yuehaibing@huawei.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 1/3] brcmfmac: re-enable command decode in sdio_aos for BRCM 4354
-Date:   Fri, 17 May 2019 15:54:18 -0700
-Message-Id: <20190517225420.176893-2-dianders@chromium.org>
+        Michael Trimarchi <michael@amarulasolutions.com>
+Subject: [PATCH 3/3] brcmfmac: sdio: Disable auto-tuning around commands expected to fail
+Date:   Fri, 17 May 2019 15:54:20 -0700
+Message-Id: <20190517225420.176893-4-dianders@chromium.org>
 X-Mailer: git-send-email 2.21.0.1020.gf2820cf01a-goog
 In-Reply-To: <20190517225420.176893-1-dianders@chromium.org>
 References: <20190517225420.176893-1-dianders@chromium.org>
@@ -85,48 +85,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In commit 29f6589140a1 ("brcmfmac: disable command decode in
-sdio_aos") we disabled something called "command decode in sdio_aos"
-for a whole bunch of Broadcom SDIO WiFi parts.
+There are certain cases, notably when transitioning between sleep and
+active state, when Broadcom SDIO WiFi cards will produce errors on the
+SDIO bus.  This is evident from the source code where you can see that
+we try commands in a loop until we either get success or we've tried
+too many times.  The comment in the code reinforces this by saying
+"just one write attempt may fail"
 
-After that patch landed I find that my kernel log on
-rk3288-veyron-minnie and rk3288-veyron-speedy is filled with:
-  brcmfmac: brcmf_sdio_bus_sleep: error while changing bus sleep state -110
+Unfortunately these failures sometimes end up causing an "-EILSEQ"
+back to the core which triggers a retuning of the SDIO card and that
+blocks all traffic to the card until it's done.
 
-This seems to happen every time the Broadcom WiFi transitions out of
-sleep mode.  Reverting the part of the commit that affects the WiFi on
-my boards fixes the problem for me, so that's what this patch does.
+Let's disable retuning around the commands we expect might fail.
 
-Note that, in general, the justification in the original commit seemed
-a little weak.  It looked like someone was testing on a SD card
-controller that would sometimes die if there were CRC errors on the
-bus.  This used to happen back in early days of dw_mmc (the controller
-on my boards), but we fixed it.  Disabling a feature on all boards
-just because one SD card controller is broken seems bad.  ...so
-instead of just this patch possibly the right thing to do is to fully
-revert the original commit.
-
-Fixes: 29f6589140a1 ("brcmfmac: disable command decode in sdio_aos")
+Fixes: bd11e8bd03ca ("mmc: core: Flag re-tuning is needed on CRC errors")
 Signed-off-by: Douglas Anderson <dianders@chromium.org>
 ---
 
- drivers/net/wireless/broadcom/brcm80211/brcmfmac/sdio.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ drivers/net/wireless/broadcom/brcm80211/brcmfmac/sdio.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
 diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/sdio.c b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/sdio.c
-index 22b73da42822..3fd2d58a3c88 100644
+index 3fd2d58a3c88..c09bb8965487 100644
 --- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/sdio.c
 +++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/sdio.c
-@@ -3378,8 +3378,7 @@ static bool brcmf_sdio_aos_no_decode(struct brcmf_sdio *bus)
- 	if (bus->ci->chip == CY_CC_43012_CHIP_ID ||
- 	    bus->ci->chip == CY_CC_4373_CHIP_ID ||
- 	    bus->ci->chip == BRCM_CC_4339_CHIP_ID ||
--	    bus->ci->chip == BRCM_CC_4345_CHIP_ID ||
--	    bus->ci->chip == BRCM_CC_4354_CHIP_ID)
-+	    bus->ci->chip == BRCM_CC_4345_CHIP_ID)
- 		return true;
- 	else
- 		return false;
+@@ -27,6 +27,7 @@
+ #include <linux/mmc/sdio_ids.h>
+ #include <linux/mmc/sdio_func.h>
+ #include <linux/mmc/card.h>
++#include <linux/mmc/core.h>
+ #include <linux/semaphore.h>
+ #include <linux/firmware.h>
+ #include <linux/module.h>
+@@ -708,6 +709,7 @@ brcmf_sdio_kso_control(struct brcmf_sdio *bus, bool on)
+ 		bmask = SBSDIO_FUNC1_SLEEPCSR_KSO_MASK;
+ 	}
+ 
++	mmc_expect_errors_begin(bus->sdiodev->func1->card->host);
+ 	do {
+ 		/* reliable KSO bit set/clr:
+ 		 * the sdiod sleep write access is synced to PMU 32khz clk
+@@ -730,6 +732,7 @@ brcmf_sdio_kso_control(struct brcmf_sdio *bus, bool on)
+ 				   &err);
+ 
+ 	} while (try_cnt++ < MAX_KSO_ATTEMPTS);
++	mmc_expect_errors_end(bus->sdiodev->func1->card->host);
+ 
+ 	if (try_cnt > 2)
+ 		brcmf_dbg(SDIO, "try_cnt=%d rd_val=0x%x err=%d\n", try_cnt,
 -- 
 2.21.0.1020.gf2820cf01a-goog
 
