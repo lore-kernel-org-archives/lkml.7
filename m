@@ -2,117 +2,99 @@ Return-Path: <SRS0=M1fl=TR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BEA56C04AB4
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 16:23:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE3B1C04E87
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 16:24:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7C39D20848
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 16:23:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B51120848
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 16:24:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="LQGcX8HM";
-	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="ZRli9/uW"
+	dkim=pass (2048-bit key) header.d=amacapital-net.20150623.gappssmtp.com header.i=@amacapital-net.20150623.gappssmtp.com header.b="NXpueBp2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729280AbfEQQXR (ORCPT
+        id S1726757AbfEQQYn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 May 2019 12:23:17 -0400
-Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:49340 "EHLO
-        mx0b-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728551AbfEQQXQ (ORCPT
+        Fri, 17 May 2019 12:24:43 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:46019 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725933AbfEQQYn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 May 2019 12:23:16 -0400
-Received: from pps.filterd (m0148460.ppops.net [127.0.0.1])
-        by mx0a-00082601.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4HG4EFX032471;
-        Fri, 17 May 2019 09:22:34 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
- : date : message-id : references : in-reply-to : content-type : content-id
- : content-transfer-encoding : mime-version; s=facebook;
- bh=PRb/bFXZ9N3UognEP+TkJlJCup1nhCalqvBnurkQ46Q=;
- b=LQGcX8HM1G2D7/oNnk21SRzmdOrWHs7uhzZw/esi/eD5hJf4WZJTKKr1DinxVkz+mK4B
- 8ALSghK9FU8n3IbfOXjXtbLS+hnsaxALNl97T2KfyUexSKudkzfLP/l7KARADjBSjjdp
- xDvkuFh4ZjBkguqK2lWsFSSVdnpXyS6iQJI= 
-Received: from mail.thefacebook.com (mailout.thefacebook.com [199.201.64.23])
-        by mx0a-00082601.pphosted.com with ESMTP id 2shsqghaf1-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
-        Fri, 17 May 2019 09:22:34 -0700
-Received: from prn-mbx03.TheFacebook.com (2620:10d:c081:6::17) by
- prn-hub02.TheFacebook.com (2620:10d:c081:35::126) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- 15.1.1713.5; Fri, 17 May 2019 09:22:33 -0700
-Received: from prn-hub05.TheFacebook.com (2620:10d:c081:35::129) by
- prn-mbx03.TheFacebook.com (2620:10d:c081:6::17) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- 15.1.1713.5; Fri, 17 May 2019 09:22:32 -0700
-Received: from NAM05-CO1-obe.outbound.protection.outlook.com (192.168.54.28)
- by o365-in.thefacebook.com (192.168.16.29) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.1.1713.5
- via Frontend Transport; Fri, 17 May 2019 09:22:32 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
- s=selector1-fb-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=PRb/bFXZ9N3UognEP+TkJlJCup1nhCalqvBnurkQ46Q=;
- b=ZRli9/uWJHvk1yF4iIuOwWIcq/Jvr4s3wRJ7rF6VpSQ+skzKa7e+hXU+S8+I/Rcbrp9PMW1mfB+GfSYafmqRaZ3Sr1bW5u7Aof5ZiOq0av9Bmv2pyHWaUeyBegWmbjy4hm8v4aMDcPpV3pHM8qEgaTnoVMyBLx61LwmJoynsEbY=
-Received: from MWHPR15MB1165.namprd15.prod.outlook.com (10.175.2.19) by
- MWHPR15MB1886.namprd15.prod.outlook.com (10.174.100.135) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1900.17; Fri, 17 May 2019 16:22:31 +0000
-Received: from MWHPR15MB1165.namprd15.prod.outlook.com
- ([fe80::85b5:614:bc49:8a15]) by MWHPR15MB1165.namprd15.prod.outlook.com
- ([fe80::85b5:614:bc49:8a15%11]) with mapi id 15.20.1900.010; Fri, 17 May 2019
- 16:22:31 +0000
-From:   Song Liu <songliubraving@fb.com>
-To:     Kairui Song <kasong@redhat.com>
-CC:     Peter Zijlstra <peterz@infradead.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Kernel Team <Kernel-team@fb.com>,
-        "Josh Poimboeuf" <jpoimboe@redhat.com>
-Subject: Re: Getting empty callchain from perf_callchain_kernel() 
-Thread-Topic: Getting empty callchain from perf_callchain_kernel() 
-Thread-Index: AQHVDEJXbyjc1nknl06FlgTGlvLrzKZu8J8AgAAG+ICAAAFQgIAABKSAgACDYwA=
-Date:   Fri, 17 May 2019 16:22:31 +0000
-Message-ID: <C5AAB1C4-2DCD-4589-8233-AB50152505C8@fb.com>
-References: <3CD3EE63-0CD2-404A-A403-E11DCF2DF8D9@fb.com>
- <20190517074600.GJ2623@hirez.programming.kicks-ass.net>
- <20190517081057.GQ2650@hirez.programming.kicks-ass.net>
- <CACPcB9cB5n1HOmZcVpusJq8rAV5+KfmZ-Lxv3tgsSoy7vNrk7w@mail.gmail.com>
- <CACPcB9cf1NWnR_hUiuA2vYNUyAhzXHbfEVamUVrKFm46Fww3VA@mail.gmail.com>
-In-Reply-To: <CACPcB9cf1NWnR_hUiuA2vYNUyAhzXHbfEVamUVrKFm46Fww3VA@mail.gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-mailer: Apple Mail (2.3445.104.8)
-x-originating-ip: [2620:10d:c090:200::2:7648]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 6aece493-b5ba-4a89-8672-08d6dae3dc90
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(2017052603328)(7193020);SRVR:MWHPR15MB1886;
-x-ms-traffictypediagnostic: MWHPR15MB1886:
-x-microsoft-antispam-prvs: <MWHPR15MB1886BDB36ECA8FA00ACC7BC2B30B0@MWHPR15MB1886.namprd15.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:2399;
-x-forefront-prvs: 0040126723
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(979002)(39860400002)(136003)(376002)(346002)(366004)(396003)(189003)(199004)(446003)(486006)(11346002)(2906002)(14454004)(86362001)(57306001)(6246003)(6116002)(53936002)(316002)(2616005)(6436002)(186003)(54906003)(6512007)(36756003)(82746002)(33656002)(476003)(46003)(229853002)(81156014)(71190400001)(64756008)(83716004)(73956011)(66476007)(5660300002)(6486002)(305945005)(14444005)(66556008)(99286004)(76116006)(68736007)(7736002)(66446008)(256004)(102836004)(71200400001)(53546011)(66946007)(76176011)(4326008)(81166006)(478600001)(6506007)(25786009)(6916009)(8676002)(50226002)(4743002)(8936002)(969003)(989001)(999001)(1009001)(1019001);DIR:OUT;SFP:1102;SCL:1;SRVR:MWHPR15MB1886;H:MWHPR15MB1165.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: fb.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: c5bjSkrNiiWMAhBsE1/BgxoEXEXDMToqgn/ChGQ6OSOvP33K2nbr2wNZNRyGXJuKq/vMV/6dJ+QhLLpghWobj76exrjv0nG+GhvHoxQ3C9IOi3fzoEeJZvBLZYVusbCOrvRQUR7MAtis9IgUdU7aLOjRcQF+0bX7VjXHj+Ut2x/exrFOoCO8bNIohFyTVsCiineKXgqxQbwuKTsh4w+LunRWcdCrfPuf4hcEB+yMmq5CRlYKqHcuYugb+q3/MsJad4PGcmvNk9o/yNVyWlJTbIdihYA/chOwVWX0WadKnXw45hX8mOZe6uYSJ9PeErMUDJNkSA+Bpa95gw7EZX0KHt6wD6V4R5MVJE44iAe5uW1a6dh5dobCL7l86E8xdy+Kzrsid54qbvXP5SQey66fKc1RcHfNyQNanwoQD2xxwK8=
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <8643C00BB1394A4A9354428CEFF3E3C7@namprd15.prod.outlook.com>
+        Fri, 17 May 2019 12:24:43 -0400
+Received: by mail-pl1-f194.google.com with SMTP id a5so3552299pls.12
+        for <linux-kernel@vger.kernel.org>; Fri, 17 May 2019 09:24:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=amacapital-net.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=aV3rffMxuXG8e12nRoLl587y9MXM8TOV+Ti1qX5jxqI=;
+        b=NXpueBp2RQMTp7/ult69Cy5m/zTxwcPQ4jUpkeJZIDfT5NUWtRfdwnURyUvF+j6BFp
+         AtAoNq/qumpwpOFcKFiEZaF/sZdU1y/HLKnK9X7UPX0N/K43J1jkVrMf5Xs5CqVetGcL
+         ZBfYzEeuzoVND9qwgMHdjgycO60Wj5qtT1MAM5cT1Ytwi56EKX3k7ReMiyMZ8xdGHNre
+         mM4fVZcEHDooxUjnhbVinIyKSNOV8KWA1dtbI6Y7eb62sxO2ITHJnViW49OB1VjvhKtv
+         DGINjLmb++niWPUIc88gcCTcevakt4/DwbPMhlaoWreegbl0aeJ3i93b5EK1cmpI033W
+         Wulg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=aV3rffMxuXG8e12nRoLl587y9MXM8TOV+Ti1qX5jxqI=;
+        b=EJFKlFa7R/jf3zRWgfTmhZmwtHYEAY+q4Yzxp62Mr30jqFBJKSYDFAxlHQe7bGxKY6
+         R1/PpX9FiPcKZ2Wji8WuBdYkVhWLOo+EukYixAFk/AvNJ8tWnGfIIbejeOH25615/S+U
+         YXA1nQ1TyrElsbTFQuOwCdQFViJW3x2OHQrjCSDV4sriSiA6ib1ylf/VzCG47t7ZA14A
+         U461D1y6xGEcOWylcrYUuoeZB29OjGso0IWBVGoSXvTro/q374+AvuE1s6Xllnl3qMJV
+         9QDIhuLl2QJ2EPCYCPBCF+zwaGNgu4tEzpE+bIWPk6iA1cDa7fKejFKzWydHaCdW0lc0
+         rhrw==
+X-Gm-Message-State: APjAAAXis+jPu0ujI45rwJNzqHIp2Ap7bH5STbyUWZMHegxGgNf4tfFE
+        dImcikQ8GEc1LaI+NPKYAqfc8Q==
+X-Google-Smtp-Source: APXvYqzLLqL8f8ufEhA84JZ4KDsuDGxuqP9EQI1cVkvo3Az2BKCevLwr9qASi18i0IIJwQ0nWw2g6w==
+X-Received: by 2002:a17:902:be0e:: with SMTP id r14mr40513480pls.152.1558110282349;
+        Fri, 17 May 2019 09:24:42 -0700 (PDT)
+Received: from ?IPv6:2600:1010:b066:f2e9:80d1:f40f:2e81:3df1? ([2600:1010:b066:f2e9:80d1:f40f:2e81:3df1])
+        by smtp.gmail.com with ESMTPSA id k9sm10974460pfa.180.2019.05.17.09.24.41
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 17 May 2019 09:24:41 -0700 (PDT)
+Content-Type: text/plain;
+        charset=utf-8
+Mime-Version: 1.0 (1.0)
+Subject: Re: SGX vs LSM (Re: [PATCH v20 00/28] Intel SGX1 support)
+From:   Andy Lutomirski <luto@amacapital.net>
+X-Mailer: iPhone Mail (16E227)
+In-Reply-To: <ca807220-47e2-5ec2-982c-4fb4a72439c6@tycho.nsa.gov>
+Date:   Fri, 17 May 2019 09:24:39 -0700
+Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
+        "Xing, Cedric" <cedric.xing@intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        James Morris <jmorris@namei.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        LSM List <linux-security-module@vger.kernel.org>,
+        Paul Moore <paul@paul-moore.com>,
+        Eric Paris <eparis@parisplace.org>,
+        "selinux@vger.kernel.org" <selinux@vger.kernel.org>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Jethro Beekman <jethro@fortanix.com>,
+        "Hansen, Dave" <dave.hansen@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "Dr. Greg" <greg@enjellic.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
+        "linux-sgx@vger.kernel.org" <linux-sgx@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "nhorman@redhat.com" <nhorman@redhat.com>,
+        "npmccallum@redhat.com" <npmccallum@redhat.com>,
+        "Ayoun, Serge" <serge.ayoun@intel.com>,
+        "Katz-zamir, Shay" <shay.katz-zamir@intel.com>,
+        "Huang, Haitao" <haitao.huang@intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        "Svahn, Kai" <kai.svahn@intel.com>, Borislav Petkov <bp@alien8.de>,
+        Josh Triplett <josh@joshtriplett.org>,
+        "Huang, Kai" <kai.huang@intel.com>,
+        David Rientjes <rientjes@google.com>
 Content-Transfer-Encoding: quoted-printable
-MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: 6aece493-b5ba-4a89-8672-08d6dae3dc90
-X-MS-Exchange-CrossTenant-originalarrivaltime: 17 May 2019 16:22:31.0622
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR15MB1886
-X-OriginatorOrg: fb.com
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-17_09:,,
- signatures=0
-X-Proofpoint-Spam-Reason: safe
-X-FB-Internal: Safe
+Message-Id: <ECF62380-A58A-4829-AFF0-F7D439D6F886@amacapital.net>
+References: <20190515013031.GF1977@linux.intel.com> <CALCETrXf8mSK45h7sTK5Wf+pXLVn=Bjsc_RLpgO-h-qdzBRo5Q@mail.gmail.com> <alpine.LRH.2.21.1905160543070.19802@namei.org> <CALCETrX_Q6qwNRNF0TL2tgfm1j6DKLX7NVHHmWbMFtk3WnHDKw@mail.gmail.com> <alpine.LRH.2.21.1905160844130.29250@namei.org> <CALCETrX2ovRx3Rre+1_xC-q6CiybyLjQ-gmB4FZF_qCZ-Qd+4A@mail.gmail.com> <960B34DE67B9E140824F1DCDEC400C0F654E38CD@ORSMSX116.amr.corp.intel.com> <CALCETrUfmyQ7ivNzQic0FyPXe1fmAnoK093jnz0i8DRn2LvdSA@mail.gmail.com> <960B34DE67B9E140824F1DCDEC400C0F654E3FB9@ORSMSX116.amr.corp.intel.com> <6a97c099-2f42-672e-a258-95bc09152363@tycho.nsa.gov> <20190517150948.GA15632@linux.intel.com> <ca807220-47e2-5ec2-982c-4fb4a72439c6@tycho.nsa.gov>
+To:     Stephen Smalley <sds@tycho.nsa.gov>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -120,145 +102,72 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 
 
-> On May 17, 2019, at 1:32 AM, Kairui Song <kasong@redhat.com> wrote:
+> On May 17, 2019, at 9:20 AM, Stephen Smalley <sds@tycho.nsa.gov> wrote:
 >=20
-> On Fri, May 17, 2019 at 4:15 PM Kairui Song <kasong@redhat.com> wrote:
->>=20
->> On Fri, May 17, 2019 at 4:11 PM Peter Zijlstra <peterz@infradead.org> wr=
-ote:
+>> On 5/17/19 11:09 AM, Sean Christopherson wrote:
+>>> On Fri, May 17, 2019 at 09:53:06AM -0400, Stephen Smalley wrote:
+>>>> On 5/16/19 6:23 PM, Xing, Cedric wrote:
+>>>> I thought EXECMOD applied to files (and memory mappings backed by them)=
+ but
+>>>> I was probably wrong. It sounds like EXECMOD applies to the whole proce=
+ss so
+>>>> would allow all pages within a process's address space to be modified t=
+hen
+>>>> executed, regardless the backing files. Am I correct this time?
 >>>=20
->>> On Fri, May 17, 2019 at 09:46:00AM +0200, Peter Zijlstra wrote:
->>>> On Thu, May 16, 2019 at 11:51:55PM +0000, Song Liu wrote:
->>>>> Hi,
->>>>>=20
->>>>> We found a failure with selftests/bpf/tests_prog in test_stacktrace_m=
-ap (on bpf/master
->>>>> branch).
->>>>>=20
->>>>> After digging into the code, we found that perf_callchain_kernel() is=
- giving empty
->>>>> callchain for tracepoint sched/sched_switch. And it seems related to =
-commit
->>>>>=20
->>>>> d15d356887e770c5f2dcf963b52c7cb510c9e42d
->>>>> ("perf/x86: Make perf callchains work without CONFIG_FRAME_POINTER")
->>>>>=20
->>>>> Before this commit, perf_callchain_kernel() returns callchain with re=
-gs->ip. With
->>>>> this commit, regs->ip is not sent for !perf_hw_regs(regs) case.
->>>>=20
->>>> So while I think the below is indeed right; we should store regs->ip
->>>> regardless of the unwind path chosen, I still think there's something
->>>> fishy if this results in just the 1 entry.
->>>>=20
->>>> The sched/sched_switch event really should have a non-trivial stack.
->>>>=20
->>>> Let me see if I can reproduce with just perf.
+>>> No, you were correct the first time I think; EXECMOD is used to control
+>>> whether a process can make executable a private file mapping that has
+>>> previously been modified (e.g. text relocation); it is a special case to=
+
+>>> support text relocations without having to allow full EXECMEM (i.e. exec=
+ute
+>>> arbitrary memory).
 >>>=20
->>> $ perf record -g -e "sched:sched_switch" -- make clean
->>> $ perf report -D
+>>> SELinux checks relevant to W^X include:
 >>>=20
->>> 12 904071759467 0x1790 [0xd0]: PERF_RECORD_SAMPLE(IP, 0x1): 7236/7236: =
-0xffffffff81c29562 period: 1 addr: 0
->>> ... FP chain: nr:10
->>> .....  0: ffffffffffffff80
->>> .....  1: ffffffff81c29562
->>> .....  2: ffffffff81c29933
->>> .....  3: ffffffff8111f688
->>> .....  4: ffffffff81120b9d
->>> .....  5: ffffffff81120ce5
->>> .....  6: ffffffff8100254a
->>> .....  7: ffffffff81e0007d
->>> .....  8: fffffffffffffe00
->>> .....  9: 00007f9b6cd9682a
->>> ... thread: sh:7236
->>> ...... dso: /lib/modules/5.1.0-12177-g41bbb9129767/build/vmlinux
+>>> - EXECMEM: mmap/mprotect PROT_EXEC an anonymous mapping (regardless of
+>>> PROT_WRITE, since we know the content has to have been written at some
+>>> point) or a private file mapping that is also PROT_WRITE.
+>>> - EXECMOD: mprotect PROT_EXEC a private file mapping that has been
+>>> previously modified, typically for text relocations,
+>>> - FILE__WRITE: mmap/mprotect PROT_WRITE a shared file mapping,
+>>> - FILE__EXECUTE: mmap/mprotect PROT_EXEC a file mapping.
 >>>=20
+>>> (ignoring EXECSTACK and EXECHEAP here since they aren't really relevant t=
+o
+>>> this discussion)
 >>>=20
->>> IOW, it seems to 'work'.
+>>> So if you want to ensure W^X, then you wouldn't allow EXECMEM for the
+>>> process, EXECMOD by the process to any file, and the combination of both=
+
+>>> FILE__WRITE and FILE__EXECUTE by the process to any file.
 >>>=20
->>=20
->> Hi, I think the actual problem is that bpf_get_stackid_tp (and maybe
->> some other bfp functions) is now broken, or, strating an unwind
->> directly inside a bpf program will end up strangely. It have following
->> kernel message:
->>=20
->> WARNING: kernel stack frame pointer at 0000000070cad07c in
->> test_progs:1242 has bad value 00000000ffd4497e
->>=20
->> And in the debug message:
->>=20
->> [  160.460287] 000000006e117175: ffffffffaa23a0e8
->> (get_perf_callchain+0x148/0x280)
->> [  160.460287] 0000000002e8715f: 0000000000c6bba0 (0xc6bba0)
->> [  160.460288] 00000000b3d07758: ffff9ce3f9790000 (0xffff9ce3f9790000)
->> [  160.460289] 0000000055c97836: ffff9ce3f9790000 (0xffff9ce3f9790000)
->> [  160.460289] 000000007cbb140a: 000000010000007f (0x10000007f)
->> [  160.460290] 000000007dc62ac9: 0000000000000000 ...
->> [  160.460290] 000000006b41e346: 1c7da01cd70c4000 (0x1c7da01cd70c4000)
->> [  160.460291] 00000000f23d1826: ffffd89cffc3ae80 (0xffffd89cffc3ae80)
->> [  160.460292] 00000000f9a16017: 000000000000007f (0x7f)
->> [  160.460292] 00000000a8e62d44: 0000000000000000 ...
->> [  160.460293] 00000000cbc83c97: ffffb89d00d8d000 (0xffffb89d00d8d000)
->> [  160.460293] 0000000092842522: 000000000000007f (0x7f)
->> [  160.460294] 00000000dafbec89: ffffb89d00c6bc50 (0xffffb89d00c6bc50)
->> [  160.460296] 000000000777e4cf: ffffffffaa225d97 (bpf_get_stackid+0x77/=
-0x470)
->> [  160.460296] 000000009942ea16: 0000000000000000 ...
->> [  160.460297] 00000000a08006b1: 0000000000000001 (0x1)
->> [  160.460298] 000000009f03b438: ffffb89d00c6bc30 (0xffffb89d00c6bc30)
->> [  160.460299] 000000006caf8b32: ffffffffaa074fe8 (__do_page_fault+0x58/=
-0x90)
->> [  160.460300] 000000003a13d702: 0000000000000000 ...
->> [  160.460300] 00000000e2e2496d: ffff9ce300000000 (0xffff9ce300000000)
->> [  160.460301] 000000008ee6b7c2: ffffd89cffc3ae80 (0xffffd89cffc3ae80)
->> [  160.460301] 00000000a8cf6d55: 0000000000000000 ...
->> [  160.460302] 0000000059078076: ffffd89cffc3ae80 (0xffffd89cffc3ae80)
->> [  160.460303] 00000000c6aac739: ffff9ce3f1e18eb0 (0xffff9ce3f1e18eb0)
->> [  160.460303] 00000000a39aff92: ffffb89d00c6bc60 (0xffffb89d00c6bc60)
->> [  160.460305] 0000000097498bf2: ffffffffaa1f4791 (bpf_get_stackid_tp+0x=
-11/0x20)
->> [  160.460306] 000000006992de1e: ffffb89d00c6bc78 (0xffffb89d00c6bc78)
->> [  160.460307] 00000000dacd0ce5: ffffffffc0405676 (0xffffffffc0405676)
->> [  160.460307] 00000000a81f2714: 0000000000000000 ...
->>=20
->> # Note here is the invalid frame pointer
->> [  160.460308] 0000000070cad07c: ffffb89d00a1d000 (0xffffb89d00a1d000)
->> [  160.460308] 00000000f8f194e4: 0000000000000001 (0x1)
->> [  160.460309] 000000002134f42a: ffffd89cffc3ae80 (0xffffd89cffc3ae80)
->> [  160.460310] 00000000f9345889: ffff9ce3f1e18eb0 (0xffff9ce3f1e18eb0)
->> [  160.460310] 000000008ad22a42: 0000000000000000 ...
->> [  160.460311] 0000000073808173: ffffb89d00c6bce0 (0xffffb89d00c6bce0)
->> [  160.460312] 00000000c9effff4: ffffffffaa1f48d1 (trace_call_bpf+0x81/0=
-x100)
->> [  160.460313] 00000000c5d8ebd1: ffffb89d00c6bcc0 (0xffffb89d00c6bcc0)
->> [  160.460315] 00000000bce0b072: ffffffffab651be0
->> (event_sched_migrate_task+0xa0/0xa0)
->> [  160.460316] 00000000355cf319: 0000000000000000 ...
->> [  160.460316] 000000003b67f2ad: ffffd89cffc3ae80 (0xffffd89cffc3ae80)
->> [  160.460316] 000000009a77e20b: ffff9ce3fba25000 (0xffff9ce3fba25000)
->> [  160.460317] 0000000032cf7376: 0000000000000001 (0x1)
->> [  160.460317] 000000000051db74: ffffb89d00c6bd20 (0xffffb89d00c6bd20)
->> [  160.460318] 0000000040eb3bf7: ffffffffaa22be81
->> (perf_trace_run_bpf_submit+0x41/0xb0)
->>=20
->> Simply store the IP still won't really fix the problem, it just passed
->> the test. Just had a try to have bpf functions set the
->> X86_EFLAGS_FIXED for the flags and always dump the bp, it bypassed
->> this specified problem.
->>=20
->> Using frame pointer unwinder for testing this, and seems ORC is fine wit=
-h this.
+>>> If the /dev/sgx/enclave mappings are MAP_SHARED and you aren't using an
+>>> anonymous inode, then I would expect that only the FILE__WRITE and
+>>> FILE__EXECUTE checks are relevant.
+>> Yep, I was just typing this up in a different thread:
+>> I think we may want to change the SGX API to alloc an anon inode for each=
+
+>> enclave instead of hanging every enclave off of the /dev/sgx/enclave inod=
+e.
+>> Because /dev/sgx/enclave is NOT private, SELinux's file_map_prot_check()
+>> will only require FILE__WRITE and FILE__EXECUTE to mprotect() enclave VMA=
+s
+>> to RWX.  Backing each enclave with an anon inode will make SELinux treat
+>> EPC memory like anonymous mappings, which is what we want (I think), e.g.=
+
+>> making *any* EPC page executable will require PROCESS__EXECMEM (SGX is
+>> 64-bit only at this point, so SELinux will always have default_noexec).
 >=20
-> Correction: ORC won't print an error, but it also give empty callstack.
+> I don't think we want to require EXECMEM (or equivalently both FILE__WRITE=
+ and FILE__EXECUTE to /dev/sgx/enclave) for making any EPC page executable, o=
+nly if the page is also writable or previously modified.  The intent is to p=
+revent arbitrary code execution without EXECMEM (or FILE__WRITE|FILE__EXECUT=
+E), while still allowing enclaves to be created without EXECMEM as long as t=
+he EPC page mapping is only ever mapped RX and its initial contents came fro=
+m an unmodified file mapping that was PROT_EXEC (and hence already checked v=
+ia FILE__EXECUTE).
 
-Yes, we are using ORC here, and getting empty callstack. bpf_get_stackid()
-takes empty callstack as error, so we need up getting nothing.=20
-
-Does it make sense to add regs->ip back?
-
-Thanks,
-Song
-
-
-
+That agrees with my thoughts. Actually plumbing everything together so this w=
+orks could be a bit interesting.  I assume it=E2=80=99ll need a special case=
+ in SELinux or maybe a new vm_op.=
