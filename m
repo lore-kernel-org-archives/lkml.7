@@ -2,184 +2,183 @@ Return-Path: <SRS0=M1fl=TR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7C15C04AB4
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 16:56:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34218C04AB4
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 16:59:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 75F1821734
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 16:56:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DED3D2168B
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 16:58:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rmoA0u10"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727640AbfEQQ4c (ORCPT
+        id S1727811AbfEQQ67 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 May 2019 12:56:32 -0400
-Received: from mga06.intel.com ([134.134.136.31]:31655 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726519AbfEQQ4c (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 May 2019 12:56:32 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 May 2019 09:56:31 -0700
-X-ExtLoop1: 1
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga008.jf.intel.com with ESMTP; 17 May 2019 09:56:31 -0700
-Received: from [10.252.17.14] (abudanko-mobl.ccr.corp.intel.com [10.252.17.14])
-        by linux.intel.com (Postfix) with ESMTP id B22865803E4;
-        Fri, 17 May 2019 09:56:28 -0700 (PDT)
-Subject: Re: [PATCH v10 09/12] perf record: implement
- -z,--compression_level[=<n>] option
-To:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-Cc:     Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-References: <20190515123802.GA23162@kernel.org>
- <175a0cd8-226f-dee4-8919-89f844a6dc8b@linux.intel.com>
- <20190517150122.GF8945@kernel.org>
-From:   Alexey Budankov <alexey.budankov@linux.intel.com>
-Organization: Intel Corp.
-Message-ID: <f182d845-2b1e-66f4-b627-210bb6e09327@linux.intel.com>
-Date:   Fri, 17 May 2019 19:56:27 +0300
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Fri, 17 May 2019 12:58:59 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:42786 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727370AbfEQQ66 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 May 2019 12:58:58 -0400
+Received: by mail-io1-f68.google.com with SMTP id g16so6035316iom.9;
+        Fri, 17 May 2019 09:58:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=25VNczWuptEWYgXOl4vV+bCkNxc25zGJb812eV/WGMY=;
+        b=rmoA0u10E+DtjIHjlxyG3qiXINdnKGOLEnBlCJvKkxXV4Rl6jdqmhKtgy2RCnF9C+6
+         M5yOaCoS/OSGWcdPn17qMhTKp4rMnXGVbwLdGsw2Ex74WtZiQSsMOCrAvpSXeHWXhzOQ
+         GNgl4DoLd9nLDX/qqVkYiyXXTSAgJTTZXRlqwVjjsH9DOYnej+BFJOYyvkRo0d6t5cUD
+         nX6Fz3N27LqCkd6KXicxkxI8AB6/zvzKr7mcyICVUAq3jhtnHJIHsCzjvfQwCoek45hb
+         9dKo5oYwYwk/R/Fq3C0Ci2W7tQQugKh4WUDYVWYF+9r1/AP6s3i6yiXKvpLmQAnZq3sz
+         CtBQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=25VNczWuptEWYgXOl4vV+bCkNxc25zGJb812eV/WGMY=;
+        b=MqebMIw7lihnCG1B0ig8bG7bIEhLzVa72UVt++pCCKh2oPpHG3C8oe8yp1eUcmGDjn
+         ke5kgFRBqKrYIPbTgObGcNW3IldZs8JHrgCpW+0ZpyeM13i/DP5cl+wKc++o4FPoRggu
+         DJchWzkrA66+hD40RPspagJZfuZ9aCs73CwFKziFq9BrySa+MoKRUqmyC45ArYh+9KZS
+         N0w0L0Y7m/Aka67WiwZSd2yH58j8yBDi6Q7/cnRj22ut4++leoEl9qUqYNQyqHJZcSfo
+         g0qS5BxR2oyFAKLEUt/sFXMD/Z53y0PZ6KXGvG+U3IAa2WK/k2vybjsUJw/pHKEl1iN6
+         L+CQ==
+X-Gm-Message-State: APjAAAVNtd4v6zrtHutnt2h88vYKbcGzUcXMdfN7tBNfGSAh9hYW/3Nx
+        iLlv+VVf0WEv1yurNTNBgA3sDcDL73nFDkW6Mu0=
+X-Google-Smtp-Source: APXvYqxUIJzAr/gytocISvpMMLmJJBpKo+o0RChc616DzUobTYLUQZ1B3VMFoAJwOA88AnyNEVWl8H9ikp+QwzyettA=
+X-Received: by 2002:a5e:c60b:: with SMTP id f11mr1090167iok.42.1558112337376;
+ Fri, 17 May 2019 09:58:57 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190517150122.GF8945@kernel.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <1557357269-9498-1-git-send-email-nkela@cisco.com>
+ <9be117dc6e818ab83376cd8e0f79dbfaaf193aa9.camel@intel.com>
+ <76B41175-0CEE-466C-91BF-89A1CA857061@cisco.com> <4469196a-0705-5459-8aca-3f08e9889d61@gmail.com>
+ <20190517010330.2wynopuhsqycqzuq@zorba> <bd9e6a93-c8e8-a90e-25b0-26ccbf65b7c4@gmail.com>
+ <CAKgT0Uev7sfpOOhusAg9jFLkFeE9JtTntyTd0aAHz2db69L13g@mail.gmail.com> <20190517163643.7tlch7xqplxohoq7@zorba>
+In-Reply-To: <20190517163643.7tlch7xqplxohoq7@zorba>
+From:   Alexander Duyck <alexander.duyck@gmail.com>
+Date:   Fri, 17 May 2019 09:58:46 -0700
+Message-ID: <CAKgT0Ue0b1QxG2ijegbHFz-2Wpxga0ffvhsfDg4VLDRaDSFvdw@mail.gmail.com>
+Subject: Re: [Intel-wired-lan] [PATCH] igb: add parameter to ignore nvm
+ checksum validation
+To:     Daniel Walker <danielwa@cisco.com>
+Cc:     Florian Fainelli <f.fainelli@gmail.com>,
+        "Nikunj Kela (nkela)" <nkela@cisco.com>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "intel-wired-lan@lists.osuosl.org" <intel-wired-lan@lists.osuosl.org>,
+        "xe-linux-external(mailer list)" <xe-linux-external@cisco.com>,
+        "David S. Miller" <davem@davemloft.net>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 17.05.2019 18:01, Arnaldo Carvalho de Melo wrote:
-> Em Wed, May 15, 2019 at 06:44:29PM +0300, Alexey Budankov escreveu:
->> On 15.05.2019 15:59, Arnaldo Carvalho de Melo wrote:
-<SNIP>
->>> Em Wed, May 15, 2019 at 11:43:30AM +0300, Alexey Budankov escreveu:
->>>> On 15.05.2019 0:46, Arnaldo Carvalho de Melo wrote:
->>>>> Em Tue, May 14, 2019 at 05:20:41PM -0300, Arnaldo Carvalho de Melo escreveu:
->>>>>> Em Mon, Mar 18, 2019 at 08:44:42PM +0300, Alexey Budankov escreveu:
->>>
->>>>>>> Implemented -z,--compression_level[=<n>] option that enables compression
->>>>>>> of mmaped kernel data buffers content in runtime during perf record
->>>>>>> mode collection. Default option value is 1 (fastest compression).
->>>
->>>>> <SNIP>
->>>
->>>>>> [root@quaco ~]# perf record -z2
->>>>>> ^C[ perf record: Woken up 1 times to write data ]
->>>>>> 0x1746e0 [0x76]: failed to process type: 81 [Invalid argument]
->>>>>> [ perf record: Captured and wrote 1.568 MB perf.data, compressed (original 0.452 MB, ratio is 3.995) ]
->>>
->>>>>> [root@quaco ~]#
->>>
->>>>> So, its the buildid processing at the end, so we can't do build-id
->>>>> processing when using PERF_RECORD_COMPRESSED, otherwise we'd have to
->>>>> uncompress at the end to find the PERF_RECORD_FORK/PERF_RECORD_MMAP,
->>>>> etc.
->>>
->>>>> [root@quaco ~]# perf record -z2  --no-buildid sleep 1
->>>>> [ perf record: Woken up 1 times to write data ]
->>>>> [ perf record: Captured and wrote 0.020 MB perf.data, compressed (original 0.001 MB, ratio is 2.153) ]
->>>>> [root@quaco ~]# perf report -D | grep PERF_RECORD_COMP
->>>>> 0x4f40 [0x195]: failed to process type: 81 [Invalid argument]
->>>>> Error:
->>>>> failed to process sample
->>>>> 0 0x4f40 [0x195]: PERF_RECORD_COMPRESSED
->>>>> [root@quaco ~]#
->>>
->>>>> I'll play with it tomorrow.
->>>
->>>> Applied the whole patch set on top of the current perf/core 
->>>> and the whole thing functions as expected.
->>>
->>> It doesn't, see the reported error above, these three lines, that
->>> shouldn't be there:
->>>
->>> 0x4f40 [0x195]: failed to process type: 81 [Invalid argument]
->>> Error:
->>> failed to process sample
->>>
->>> That is because at this point in the patch series a record was
->>> introduced that is not being handled by the build id processing done, by
->>> default, at the end of the 'perf record' session, and, as explained
->>> above, needs fixing so that when we do 'git bisect' looking for a non
->>> expected "failed to process type: 81" kind of error, this doesn't
->>> appear.
->>>
->>> I added the changes below to this cset and will continue from there:
->>>
->>> diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
->>> index d84a4885e341..f8d21991f94c 100644
->>> --- a/tools/perf/builtin-record.c
->>> +++ b/tools/perf/builtin-record.c
->>> @@ -2284,6 +2284,12 @@ int cmd_record(int argc, const char **argv)
->>>  			"cgroup monitoring only available in system-wide mode");
->>>  
->>>  	}
->>> +
->>> +	if (rec->opts.comp_level != 0) {
->>> +		pr_debug("Compression enabled, disabling build id collection at the end of the session\n");
->>> +		rec->no_buildid = true;
->>> +	}
->>> +
->>>  	if (rec->opts.record_switch_events &&
->>>  	    !perf_can_record_switch_events()) {
->>>  		ui__error("kernel does not support recording context switch events\n");
->>>
->>> ---------------------------------------------------------------------------
->>>
->>> [acme@quaco perf]$ perf record -z2 sleep 1
->>> [ perf record: Woken up 1 times to write data ]
->>> [ perf record: Captured and wrote 0.001 MB perf.data, compressed (original 0.001 MB, ratio is 2.292) ]
->>> [acme@quaco perf]$ perf record -v -z2 sleep 1
->>> Compression enabled, disabling build id collection at the end of the session
->>> Using CPUID GenuineIntel-6-8E-A
->>> nr_cblocks: 0
->>> affinity: SYS
->>> mmap flush: 1
->>> comp level: 2
->>> mmap size 528384B
->>> Couldn't start the BPF side band thread:
->>> BPF programs starting from now on won't be annotatable
->>> perf_event__synthesize_bpf_events: can't get next program: Operation not permitted
->>> [ perf record: Woken up 1 times to write data ]
->>> [ perf record: Captured and wrote 0.001 MB perf.data, compressed (original 0.001 MB, ratio is 2.305) ]
->>> [acme@quaco perf]$
->>>
->>> Will check if its possible to get rid of the following in this patch, to
->>> keep bisection working for this case as well:
->>>
->>> [acme@quaco perf]$ perf report -D | grep COMPRESS
->>> 0x1b8 [0x169]: failed to process type: 81 [Invalid argument]
->>> Error:
->>> failed to process sample
->>> 0 0x1b8 [0x169]: PERF_RECORD_COMPRESSED
->>> [acme@quaco perf]$
->>
->> Makes sense. Thanks.
-> 
-> I did it yesterday, all is in my acme/perf/core branch, now testing it
-> together with the large pile of patches there accumulated while I was in
-> LSF/MM + vacations :-)
-> 
-> All have already passed through most of my test build containers, with
-> most of the distros that have libzstd being updated to include it, and
-> the make_minimal test build target was updated to build explicitely
-> disabling zstd, i.e. with NO_LIBZSTD=1, so that we test with/without it
-> in systems where it is installed and also in systems where zstd is not
-> even available.
+On Fri, May 17, 2019 at 9:36 AM Daniel Walker <danielwa@cisco.com> wrote:
+>
+> On Fri, May 17, 2019 at 08:16:34AM -0700, Alexander Duyck wrote:
+> > On Thu, May 16, 2019 at 6:48 PM Florian Fainelli <f.fainelli@gmail.com> wrote:
+> > >
+> > >
+> > >
+> > > On 5/16/2019 6:03 PM, Daniel Walker wrote:
+> > > > On Thu, May 16, 2019 at 03:02:18PM -0700, Florian Fainelli wrote:
+> > > >> On 5/16/19 12:55 PM, Nikunj Kela (nkela) wrote:
+> > > >>>
+> > > >>>
+> > > >>> On 5/16/19, 12:35 PM, "Jeff Kirsher" <jeffrey.t.kirsher@intel.com> wrote:
+> > > >>>
+> > > >>>     On Wed, 2019-05-08 at 23:14 +0000, Nikunj Kela wrote:
+> > > >>>    >> Some of the broken NICs don't have EEPROM programmed correctly. It
+> > > >>>    >> results
+> > > >>>    >> in probe to fail. This change adds a module parameter that can be
+> > > >>>    >> used to
+> > > >>>    >> ignore nvm checksum validation.
+> > > >>>    >>
+> > > >>>    >> Cc: xe-linux-external@cisco.com
+> > > >>>    >> Signed-off-by: Nikunj Kela <nkela@cisco.com>
+> > > >>>    >> ---
+> > > >>>    >>  drivers/net/ethernet/intel/igb/igb_main.c | 28
+> > > >>>    >> ++++++++++++++++++++++------
+> > > >>>    >>  1 file changed, 22 insertions(+), 6 deletions(-)
+> > > >>>
+> > > >>>     >NAK for two reasons.  First, module parameters are not desirable
+> > > >>>     >because their individual to one driver and a global solution should be
+> > > >>>     >found so that all networking device drivers can use the solution.  This
+> > > >>>     >will keep the interface to change/setup/modify networking drivers
+> > > >>>     >consistent for all drivers.
+> > > >>>
+> > > >>>
+> > > >>>     >Second and more importantly, if your NIC is broken, fix it.  Do not try
+> > > >>>     >and create a software workaround so that you can continue to use a
+> > > >>>     >broken NIC.  There are methods/tools available to properly reprogram
+> > > >>>     >the EEPROM on a NIC, which is the right solution for your issue.
+> > > >>>
+> > > >>> I am proposing this as a debug parameter. Obviously, we need to fix EEPROM but this helps us continuing the development while manufacturing fixes NIC.
+> > > >>
+> > > >> Then why even bother with sending this upstream?
+> > > >
+> > > > It seems rather drastic to disable the entire driver because the checksum
+> > > > doesn't match. It really should be a warning, even a big warning, to let people
+> > > > know something is wrong, but disabling the whole driver doesn't make sense.
+> > >
+> > > You could generate a random Ethernet MAC address if you don't have a
+> > > valid one, a lot of drivers do that, and that's a fairly reasonable
+> > > behavior. At some point in your product development someone will
+> > > certainly verify that the provisioned MAC address matches the network
+> > > interface's MAC address.
+> > > --
+> > > Florian
+> >
+> > The thing is the EEPROM contains much more than just the MAC address.
+> > There ends up being configuration for some of the PCIe interface in
+> > the hardware as well as PHY configuration. If that is somehow mangled
+> > we shouldn't be bringing up the part because there are one or more
+> > pieces of the device configuration that are likely wrong.
+> >
+> > The checksum is being used to make sure the EEPROM is valid, without
+> > that we would need to go through and validate each individual section
+> > of the EEPROM before enabling the the portions of the device related
+> > to it. The concern is that this will become a slippery slope where we
+> > eventually have to code all the configuration of the EEPROM into the
+> > driver itself.
+>
+>
+> I don't think you can say because the checksum is valid that all data contained
+> inside is also valid. You can have a valid checksum , and someone screwed up the
+> data prior to the checksum getting computed.
 
-Good news. Thanks!
+If someone screwed up the data prior to writing the checksum then that
+is on them. In theory we could also have a multi-bit error that could
+similarly be missed. However if the checksum is not valid then the
+data contained in the NVM does not match what was originally written,
+so we know we have bad data. Why should we act on the data if we know
+it is bad?
 
-~Alexey
+> > We need to make the checksum a hard stop. If the part is broken then
+> > it needs to be addressed. Workarounds just end up being used and
+> > forgotten, which makes it that much harder to support the product.
+> > Better to mark the part as being broken, and get it fixed now, than to
+> > have parts start shipping that require workarounds in order to
+> > function.o
+>
+> I don't think it's realistic to define the development process for large
+> corporations like Cisco, or like what your doing , to define the development
+> process for all corporations and products which may use intel parts. It's better
+> to be flexible.
+>
+> Daniel
 
-> 
-> - Arnaldo
-> 
+This isn't about development. If you are doing development you can do
+whatever you want with your own downstream driver. What you are
+attempting to do is update the upstream driver which is used in
+production environments.
+
+What concerns me is when this module parameter gets used in a
+development environment and then slips into being required for a
+production environment. At that point it defeats the whole point of
+the checksum in the first place.
