@@ -2,137 +2,81 @@ Return-Path: <SRS0=M1fl=TR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E01C9C04AB4
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 14:49:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 618BBC04E87
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 14:52:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B13CA2082E
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 14:49:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 339DD216FD
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 14:52:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1558104759;
+	bh=GWPQahVBLc9oCB8wTxBcTd3TyO8Alw8wwia+iCLmYwM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=EX8/mUOlfTZOk4RbpuDHMReiP08fNCEOrLSuOPIdO0Ljh/GReAkuFMuu1/2PDErP6
+	 Vj9nXvM5QugosiElbtlFQI/HfYNrPKELsVcHjCKx+Oxgbj3AEz481nHoDyXEy/rBFu
+	 JDKjUKfbvVW7/ehw3RgZd1QCw37ZmKE4VN0J559M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729131AbfEQOtk (ORCPT
+        id S1729120AbfEQOwi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 May 2019 10:49:40 -0400
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:44286 "EHLO
-        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729041AbfEQOtk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 May 2019 10:49:40 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C624E1715;
-        Fri, 17 May 2019 07:49:39 -0700 (PDT)
-Received: from arrakis.emea.arm.com (arrakis.cambridge.arm.com [10.1.196.78])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3BA583F71E;
-        Fri, 17 May 2019 07:49:34 -0700 (PDT)
-Date:   Fri, 17 May 2019 15:49:31 +0100
-From:   Catalin Marinas <catalin.marinas@arm.com>
-To:     Andrey Konovalov <andreyknvl@google.com>
-Cc:     linux-arm-kernel@lists.infradead.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, amd-gfx@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org, linux-rdma@vger.kernel.org,
-        linux-media@vger.kernel.org, kvm@vger.kernel.org,
-        linux-kselftest@vger.kernel.org,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Kees Cook <keescook@chromium.org>,
-        Yishai Hadas <yishaih@mellanox.com>,
-        Felix Kuehling <Felix.Kuehling@amd.com>,
-        Alexander Deucher <Alexander.Deucher@amd.com>,
-        Christian Koenig <Christian.Koenig@amd.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Jens Wiklander <jens.wiklander@linaro.org>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Leon Romanovsky <leon@kernel.org>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Kostya Serebryany <kcc@google.com>,
-        Evgeniy Stepanov <eugenis@google.com>,
-        Lee Smith <Lee.Smith@arm.com>,
-        Ramana Radhakrishnan <Ramana.Radhakrishnan@arm.com>,
-        Jacob Bramley <Jacob.Bramley@arm.com>,
-        Ruben Ayrapetyan <Ruben.Ayrapetyan@arm.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
-        Dave Martin <Dave.Martin@arm.com>,
-        Kevin Brodsky <kevin.brodsky@arm.com>,
-        Szabolcs Nagy <Szabolcs.Nagy@arm.com>
-Subject: Re: [PATCH v15 00/17] arm64: untag user pointers passed to the kernel
-Message-ID: <20190517144931.GA56186@arrakis.emea.arm.com>
-References: <cover.1557160186.git.andreyknvl@google.com>
+        Fri, 17 May 2019 10:52:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49830 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728968AbfEQOwi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 May 2019 10:52:38 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3B7762168B;
+        Fri, 17 May 2019 14:52:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1558104757;
+        bh=GWPQahVBLc9oCB8wTxBcTd3TyO8Alw8wwia+iCLmYwM=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=XzPSRxhuJeAU0NHHV0zUbVzWRB26FRuJ/3AltD4zUgMHCwRuVLwCoWXsvnh/f1M/o
+         zor7FnbIyNhmgAh76jLylIBoBb9qObAWRu4IZRSyEVun2kZ4aIagQw1TQQ6FAUkjC5
+         deQwi1Z9KDUB+G5K/cvajvAYivqjJKJjCFCC0Jv4=
+Date:   Fri, 17 May 2019 16:52:35 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Gilad Ben-Yossef <gilad@benyossef.com>
+Cc:     Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>, stable@vger.kernel.org,
+        Ofir Drang <ofir.drang@arm.com>,
+        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
+        Linux kernel mailing list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 00/35] crypto: ccree: features and bug fixes for 5.2
+Message-ID: <20190517145235.GB10613@kroah.com>
+References: <20190418133913.9122-1-gilad@benyossef.com>
+ <CAOtvUMd9WUZAFgTqVH0U2ZZp8bbHXNg9Ae_ZFvGKJTSKNct8JA@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <cover.1557160186.git.andreyknvl@google.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <CAOtvUMd9WUZAFgTqVH0U2ZZp8bbHXNg9Ae_ZFvGKJTSKNct8JA@mail.gmail.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Andrey,
+On Sun, Apr 21, 2019 at 11:52:55AM +0300, Gilad Ben-Yossef wrote:
+> On Thu, Apr 18, 2019 at 4:39 PM Gilad Ben-Yossef <gilad@benyossef.com> wrote:
+> >
+> > A set of new features, mostly support for CryptoCell 713
+> > features including protected keys, security disable mode and
+> > new HW revision indetification interface alongside many bug fixes.
+> 
+> FYI,
+> 
+> A port of those patches from this patch series which have been marked
+> for stable is available at
+> https://github.com/gby/linux/tree/4.19-ccree
 
-On Mon, May 06, 2019 at 06:30:46PM +0200, Andrey Konovalov wrote:
-> One of the alternative approaches to untagging that was considered is to
-> completely strip the pointer tag as the pointer enters the kernel with
-> some kind of a syscall wrapper, but that won't work with the countless
-> number of different ioctl calls. With this approach we would need a custom
-> wrapper for each ioctl variation, which doesn't seem practical.
+Hm, all I seem to need are 2 patches that failed to apply.  Can you just
+provide backports for them?
 
-The more I look at this problem, the less convinced I am that we can
-solve it in a way that results in a stable ABI covering ioctls(). While
-for the Android kernel codebase it could be simpler as you don't upgrade
-the kernel version every 2.5 months, for the mainline kernel this
-doesn't scale. Any run-time checks are relatively limited in terms of
-drivers covered. Better static checking would be nice as a long term
-solution but we didn't get anywhere with the discussion last year.
+thanks,
 
-IMO (RFC for now), I see two ways forward:
-
-1. Make this a user space problem and do not allow tagged pointers into
-   the syscall ABI. A libc wrapper would have to convert structures,
-   parameters before passing them into the kernel. Note that we can
-   still support the hardware MTE in the kernel by enabling tagged
-   memory ranges, saving/restoring tags etc. but not allowing tagged
-   addresses at the syscall boundary.
-
-2. Similar shim to the above libc wrapper but inside the kernel
-   (arch/arm64 only; most pointer arguments could be covered with an
-   __SC_CAST similar to the s390 one). There are two differences from
-   what we've discussed in the past:
-
-   a) this is an opt-in by the user which would have to explicitly call
-      prctl(). If it returns -ENOTSUPP etc., the user won't be allowed
-      to pass tagged pointers to the kernel. This would probably be the
-      responsibility of the C lib to make sure it doesn't tag heap
-      allocations. If the user did not opt-in, the syscalls are routed
-      through the normal path (no untagging address shim).
-
-   b) ioctl() and other blacklisted syscalls (prctl) will not accept
-      tagged pointers (to be documented in Vicenzo's ABI patches).
-
-It doesn't solve the problems we are trying to address but 2.a saves us
-from blindly relaxing the ABI without knowing how to easily assess new
-code being merged (over 500K lines between kernel versions). Existing
-applications (who don't opt-in) won't inadvertently start using the new
-ABI which could risk becoming de-facto ABI that we need to support on
-the long run.
-
-Option 1 wouldn't solve the ioctl() problem either and while it makes
-things simpler for the kernel, I am aware that it's slightly more
-complicated in user space (but I really don't mind if you prefer option
-1 ;)).
-
-The tagged pointers (whether hwasan or MTE) should ideally be a
-transparent feature for the application writer but I don't think we can
-solve it entirely and make it seamless for the multitude of ioctls().
-I'd say you only opt in to such feature if you know what you are doing
-and the user code takes care of specific cases like ioctl(), hence the
-prctl() proposal even for the hwasan.
-
-Comments welcomed.
-
--- 
-Catalin
+greg k-h
