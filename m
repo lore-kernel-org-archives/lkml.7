@@ -2,102 +2,155 @@ Return-Path: <SRS0=M1fl=TR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85AC7C04E87
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 06:33:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B7F7C04AB4
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 06:33:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5900B20833
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 06:33:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B3C020833
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 06:33:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GMduykPv"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kmcGs7Fu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727965AbfEQGdD (ORCPT
+        id S1727986AbfEQGdq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 May 2019 02:33:03 -0400
-Received: from mail-it1-f195.google.com ([209.85.166.195]:38578 "EHLO
-        mail-it1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727151AbfEQGdD (ORCPT
+        Fri, 17 May 2019 02:33:46 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:45130 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727151AbfEQGdp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 May 2019 02:33:03 -0400
-Received: by mail-it1-f195.google.com with SMTP id i63so10247677ita.3;
-        Thu, 16 May 2019 23:33:02 -0700 (PDT)
+        Fri, 17 May 2019 02:33:45 -0400
+Received: by mail-pg1-f196.google.com with SMTP id i21so2789979pgi.12
+        for <linux-kernel@vger.kernel.org>; Thu, 16 May 2019 23:33:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=I6XGRwp+Dc9M8zI2ETBG/Sre5AGhZJfAsVgmhaFG05M=;
-        b=GMduykPv6eI8shYSnXZOiT82hZQMC23TnercnCaYA/f8Mfm+fY2UEOlY20UhSLGFn3
-         4PB7S7vV9sazR4mh9AxjRYJhrPJiXD/fKyv39rUDtJkEJ3cUipsI3NF1tWjiRQwjN96o
-         gn24P0bBArld5YXTUtVUzQZ+hnmCjZsB88E+qqWwCvDnTd5aC+TKhJ1/QBSWFmWcDpvt
-         KIF+43H2aIsuENO1xbKQSWcZ11pC7/0sL65wRjiecg1+m6tRucMlYwsmJ58HLimaWB0w
-         9G3MZBa78ay2qOfZTESJQfMPiT0gIa/fLTYi21KzGLn3ACJGppPwKHoI2GXM20fYVu5W
-         Xa8w==
+        h=from:to:cc:subject:date:message-id;
+        bh=bb7Nb+AcbwIXHUOUSIxjLWvCQysIpMmSZQ55rBSyD7c=;
+        b=kmcGs7FucekfoRndFFOul65z4dL19N2BqPypshL0hr0Q+9BFBRZ7Gh4vR+y/GwpGi2
+         qQfNAQBWCIa0xTNp4BxRz23bTCPuumdjOM2J/xQjFnMlVrRr5G40/wPP/eXUG2J+HAvz
+         6fOYeETAcc6J2V0CpIJQ0NWgYbyUOjBuUWM7bhCW610za3Y6R3yoWSjJThMluYWoN2eb
+         RQgGYZ8B3sR2eXi/6mMCirwQvnNEXlB7MH99cXloqJdDzhop6ViEhd/Kberlcy9s8rDG
+         g8bVQA8PduVwOFinlWsGndF7PlEEaYT5KXiHw7FfZH1Fe9g+WOx+5FOz5QczzmjapUwe
+         2HWQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=I6XGRwp+Dc9M8zI2ETBG/Sre5AGhZJfAsVgmhaFG05M=;
-        b=aIpL0fH3M0oIwDKZpOM7IezXxP1NYrKPj6X6zeVuS/P308tTCJVMu+QNmxL/uVum6/
-         jhs7R6J9eOwkjj/EpF0V+KokdaZgUrMM0/sLGCUeTN2sje44oG+WeNIKQ7qXySObDlre
-         eiZkZKHlZwQxVCZZ69ieu5fcTIydtZkw0FtI6zrY2lpfiGMHSVXNyVVVhpTCS36cp7QL
-         SqpOAF0hAhsNLkNOUKHMmVPW/CtFwdDBd8+0YtNhR35c+th0Wkcr8XjlsMWqvWOv8bwm
-         749mTcUFUwlU5zxotwbCxpyIyEXeM9BybHr30ZGWoNc0r5KhpiQWYiLNxB4y4YSnXB56
-         ZUdw==
-X-Gm-Message-State: APjAAAU9ZGlhlpeYfsrIc9bes9qoN37v9KO23kO1RlREW11S6e5phFn/
-        Yjs9K10WEex7nQq6BjiSsW4ZCFPfejcjLQ==
-X-Google-Smtp-Source: APXvYqw36mwoMV9a8ZQuF6j0qIMSNIEBAWSKLaKLUV//4LwuGtwYCXpNgZznA4fdEdE4lnH0ujsoPQ==
-X-Received: by 2002:a02:c99a:: with SMTP id b26mr36647022jap.32.1558074782227;
-        Thu, 16 May 2019 23:33:02 -0700 (PDT)
-Received: from asus (c-73-243-191-173.hsd1.co.comcast.net. [73.243.191.173])
-        by smtp.gmail.com with ESMTPSA id l25sm2609438ioj.8.2019.05.16.23.33.00
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 16 May 2019 23:33:01 -0700 (PDT)
-Date:   Fri, 17 May 2019 00:33:00 -0600
-From:   Kelsey Skunberg <skunberg.kelsey@gmail.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-        akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
-        patches@kernelci.org, ben.hutchings@codethink.co.uk,
-        lkft-triage@lists.linaro.org, stable@vger.kernel.org
-Subject: Re: [PATCH 4.9 00/51] 4.9.177-stable review
-Message-ID: <20190517063259.GA2378@asus>
-References: <20190515090616.669619870@linuxfoundation.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190515090616.669619870@linuxfoundation.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=bb7Nb+AcbwIXHUOUSIxjLWvCQysIpMmSZQ55rBSyD7c=;
+        b=bMjCnEu/xYLoHV5coaM/2bcsh5bzFVs7TryrThDYxcv3mOyqBRgFuaMYdWU+2ILKVo
+         ZsnoG2fNJnZRASlXXksIxZEIM60fadgtiqpohIice51pVWKBQligu0wsBGMnu072HDOq
+         uPTmuwj4qM+c7RiWuNmLChs3i6qAlrBvGvGX7Jw6h6P9mOr8r/AOswGJBPQVEL0KeNOt
+         BifrsJI03dBXcwqfHy9mn7JUFxmkborWnaVQRnhhxwtxJZHBm5+INTsOfl66XtcjJsWv
+         yl0vlGz81OGuHaQMIDZ4yw0vzQnLw7lRadgcc1Ug6J2nGnt3VoeBSJ9oQNWVCxvGiXqk
+         CMww==
+X-Gm-Message-State: APjAAAXb3Q0+cYNAW0EMN8ZsIZD33pjEBvUnBzhRHjNupGVj9qhnzrqv
+        B3L8Q8DvefAhVZrhWPTAZRQf69Bq3h4=
+X-Google-Smtp-Source: APXvYqwbIwGH3Zd/XBNcH3jkrsyPtR2Jd9SP/u1Fma1//sQIHCTphFBe1bEEZJcz5VXI0mdZDoN0YA==
+X-Received: by 2002:a63:18e:: with SMTP id 136mr26308725pgb.277.1558074825154;
+        Thu, 16 May 2019 23:33:45 -0700 (PDT)
+Received: from hydra-Latitude-E5440.qualcomm.com (blr-bdr-fw-01_globalnat_allzones-outside.qualcomm.com. [103.229.18.19])
+        by smtp.gmail.com with ESMTPSA id d15sm22666897pfm.186.2019.05.16.23.33.42
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 16 May 2019 23:33:44 -0700 (PDT)
+From:   parna.naveenkumar@gmail.com
+To:     perex@perex.cz, tiwai@suse.com
+Cc:     alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
+        Naveen Kumar Parna <parna.naveenkumar@gmail.com>
+Subject: [PATCH] sound: open brace should be on the previous line
+Date:   Fri, 17 May 2019 12:03:28 +0530
+Message-Id: <20190517063328.21512-1-parna.naveenkumar@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 15, 2019 at 12:55:35PM +0200, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 4.9.177 release.
-> There are 51 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
-> 
-> Responses should be made by Fri 17 May 2019 09:04:42 AM UTC.
-> Anything received after that time might be too late.
-> 
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.9.177-rc1.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.9.y
-> and the diffstat can be found below.
-> 
-> thanks,
-> 
-> greg k-h
+From: Naveen Kumar Parna <parna.naveenkumar@gmail.com>
 
-Compiled and booted with no dmesg regressions on my system.
+Resolved open brace { should be on the previous line checkpatch.pl
+error. While addressing this error, also corrected the affected code
+for below mentioned checkpatch errors.
 
-Cheers,
-Kelsey
+ERROR: spaces required around that '<' (ctx:VxV)
+ERROR: spaces required around that '==' (ctx:VxV)
+ERROR: space required before the open parenthesis '('
+
+Signed-off-by: Naveen Kumar Parna <parna.naveenkumar@gmail.com>
+---
+ sound/sound_core.c | 21 +++++++--------------
+ 1 file changed, 7 insertions(+), 14 deletions(-)
+
+diff --git a/sound/sound_core.c b/sound/sound_core.c
+index 40ad000c2e3c..ce794a2afc6b 100644
+--- a/sound/sound_core.c
++++ b/sound/sound_core.c
+@@ -111,8 +111,7 @@ module_exit(cleanup_soundcore);
+ 
+ #define SOUND_STEP 16
+ 
+-struct sound_unit
+-{
++struct sound_unit {
+ 	int unit_minor;
+ 	const struct file_operations *unit_fops;
+ 	struct sound_unit *next;
+@@ -151,8 +150,7 @@ module_param(preclaim_oss, int, 0444);
+ 
+ static int soundcore_open(struct inode *, struct file *);
+ 
+-static const struct file_operations soundcore_fops =
+-{
++static const struct file_operations soundcore_fops = {
+ 	/* We must have an owner or the module locking fails */
+ 	.owner	= THIS_MODULE,
+ 	.open	= soundcore_open,
+@@ -173,8 +171,7 @@ static int __sound_insert_unit(struct sound_unit * s, struct sound_unit **list,
+ 		while (*list && (*list)->unit_minor<n)
+ 			list=&((*list)->next);
+ 
+-		while(n<top)
+-		{
++		while (n < top) {
+ 			/* Found a hole ? */
+ 			if(*list==NULL || (*list)->unit_minor>n)
+ 				break;
+@@ -219,11 +216,9 @@ static int __sound_insert_unit(struct sound_unit * s, struct sound_unit **list,
+  
+ static struct sound_unit *__sound_remove_unit(struct sound_unit **list, int unit)
+ {
+-	while(*list)
+-	{
++	while (*list) {
+ 		struct sound_unit *p=*list;
+-		if(p->unit_minor==unit)
+-		{
++		if (p->unit_minor == unit) {
+ 			*list=p->next;
+ 			return p;
+ 		}
+@@ -528,8 +523,7 @@ static struct sound_unit *__look_for_unit(int chain, int unit)
+ 	struct sound_unit *s;
+ 	
+ 	s=chains[chain];
+-	while(s && s->unit_minor <= unit)
+-	{
++	while (s && s->unit_minor <= unit) {
+ 		if(s->unit_minor==unit)
+ 			return s;
+ 		s=s->next;
+@@ -545,8 +539,7 @@ static int soundcore_open(struct inode *inode, struct file *file)
+ 	const struct file_operations *new_fops = NULL;
+ 
+ 	chain=unit&0x0F;
+-	if(chain==4 || chain==5)	/* dsp/audio/dsp16 */
+-	{
++	if (chain == 4 || chain == 5) {	/* dsp/audio/dsp16 */
+ 		unit&=0xF0;
+ 		unit|=3;
+ 		chain=3;
+-- 
+2.17.1
 
