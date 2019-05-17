@@ -3,175 +3,135 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01F77C04AB4
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 08:15:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4F69C04E84
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 08:16:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C570D20873
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 08:15:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 82C1F20873
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 08:16:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728756AbfEQIPv (ORCPT
+        id S1728773AbfEQIQa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 May 2019 04:15:51 -0400
-Received: from mail-io1-f54.google.com ([209.85.166.54]:46941 "EHLO
-        mail-io1-f54.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727386AbfEQIPv (ORCPT
+        Fri, 17 May 2019 04:16:30 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:37032 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727386AbfEQIQa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 May 2019 04:15:51 -0400
-Received: by mail-io1-f54.google.com with SMTP id q21so4760009iog.13
-        for <linux-kernel@vger.kernel.org>; Fri, 17 May 2019 01:15:50 -0700 (PDT)
+        Fri, 17 May 2019 04:16:30 -0400
+Received: by mail-wm1-f67.google.com with SMTP id 7so5844481wmo.2;
+        Fri, 17 May 2019 01:16:28 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=6rZvuSTA03tZt4ntB82dySVHhY4AUvjuHvOnoRahYnc=;
-        b=XA0uax63zfJjfu9/8GzGqUYhTf7yVsZ66WdHdpmPtv4F5cPmOEFbHKX/B0AeprpiV3
-         ZAwLAoifkJneQZvbOTAZcUZYO+O3VeaR2FPYZS2s5VZyPPdAfHOUVcH9jASB5EwOldw5
-         /GdSdTEeurLU1klD6PwX2J33XIBdLuJpZn5W68R1yK2lW2NWiaTV2B5aovkQEjAQf1Ep
-         K/t1CDnrd2LcFbwBTaVSZcoH2DqWIHgJQxySKCohtKB1xEUf4kceqSo5vW2ZRlYXYWLF
-         4ED0jyxWB6/3DJuw14OevnKiw1aO0t+P9HkoHVX0msAb9BmItGRJHEJ6GN7wcSIxv1o0
-         Eokg==
-X-Gm-Message-State: APjAAAU3IhmRRdGQizsjQVZS9zSR6OH46Ap44B9H2zRGizCkpAerXFDB
-        zl/iYhXN0pt6JDyzA2lT1xZFg7SPLG/LbebBd36d/g==
-X-Google-Smtp-Source: APXvYqzxauYik0HqX6cIGCJ0EBNWc/OAcDXXCy5romY7JEOgTTa3ygWaEms2oRenEH+xS8fAcMje5T6yMuiSocD8j9g=
-X-Received: by 2002:a05:6602:211a:: with SMTP id x26mr29650054iox.202.1558080950017;
- Fri, 17 May 2019 01:15:50 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=VVddGdwNwzt754dECiwX4P5eL0snKFoHnCCiVdymDOE=;
+        b=LBEL2Hz4L4fofTr7cp1Z5kttJGsMCmP1G8SmEW0b2DpoDGDlO+RgPSplM+ZV0tsKs1
+         UTAN8EJ6KrhlER0PVfXZRGLDJCeTN3EolquiJpSUrNVOXmaZeyPU6OMy3cXdv2/dAEhA
+         TrsBXVhZBgp3tFv5hEAsmXjO3x0FTqr77ca5Ui5qsk99Hlu827qE9XkJZIltUhLySRcJ
+         AN2JU1Jak/uTedhxThAGhzSpCfNJWjvI9WPCxronwrZvvOs4irY/qEDpDPzlDPA6alOx
+         XdL8bKbtaM3zt1WtxleQzjMwncisPkd+mmhyXJxbUbwabU7EANqsjFGRfcrATPWj4OZf
+         /D6A==
+X-Gm-Message-State: APjAAAUze35tOjXklezmyvptTbT2Vh4euCcBP3M0u4xWF7A002laOesT
+        fbvELo/Vj6REyTjM/C9JnprLsbjt
+X-Google-Smtp-Source: APXvYqx2TpPJUw9AqnVLULGUdNzWC44410i4wRTRx0SBLF55tOJDc12m8wI6vToM3Jtht4jov2W4pg==
+X-Received: by 2002:a7b:c0d5:: with SMTP id s21mr15354880wmh.152.1558080987723;
+        Fri, 17 May 2019 01:16:27 -0700 (PDT)
+Received: from ?IPv6:2a0b:e7c0:0:107::49? ([2a0b:e7c0:0:107::49])
+        by smtp.gmail.com with ESMTPSA id k63sm236268wmf.35.2019.05.17.01.16.24
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 17 May 2019 01:16:26 -0700 (PDT)
+Subject: Re: [PATCH] memcg: make it work on sparse non-0-node systems
+To:     Vladimir Davydov <vdavydov.dev@gmail.com>
+Cc:     Michal Hocko <mhocko@kernel.org>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, Johannes Weiner <hannes@cmpxchg.org>,
+        cgroups@vger.kernel.org,
+        Raghavendra K T <raghavendra.kt@linux.vnet.ibm.com>
+References: <359d98e6-044a-7686-8522-bdd2489e9456@suse.cz>
+ <20190429105939.11962-1-jslaby@suse.cz>
+ <20190509122526.ck25wscwanooxa3t@esperanza>
+ <20190516135923.GV16651@dhcp22.suse.cz>
+ <68075828-8fd7-adbb-c1d9-5eb39fbf18cb@suse.cz>
+ <20190517080044.tnwhbeyxcccsymgf@esperanza>
+From:   Jiri Slaby <jslaby@suse.cz>
+Openpgp: preference=signencrypt
+Autocrypt: addr=jslaby@suse.cz; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <2c3fab03-99fb-9313-140b-04a245065dd7@suse.cz>
+Date:   Fri, 17 May 2019 10:16:23 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-References: <3CD3EE63-0CD2-404A-A403-E11DCF2DF8D9@fb.com> <20190517074600.GJ2623@hirez.programming.kicks-ass.net>
- <20190517081057.GQ2650@hirez.programming.kicks-ass.net>
-In-Reply-To: <20190517081057.GQ2650@hirez.programming.kicks-ass.net>
-From:   Kairui Song <kasong@redhat.com>
-Date:   Fri, 17 May 2019 16:15:39 +0800
-Message-ID: <CACPcB9cB5n1HOmZcVpusJq8rAV5+KfmZ-Lxv3tgsSoy7vNrk7w@mail.gmail.com>
-Subject: Re: Getting empty callchain from perf_callchain_kernel()
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Song Liu <songliubraving@fb.com>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Kernel Team <Kernel-team@fb.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190517080044.tnwhbeyxcccsymgf@esperanza>
+Content-Type: text/plain; charset=iso-8859-2
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 17, 2019 at 4:11 PM Peter Zijlstra <peterz@infradead.org> wrote:
->
-> On Fri, May 17, 2019 at 09:46:00AM +0200, Peter Zijlstra wrote:
-> > On Thu, May 16, 2019 at 11:51:55PM +0000, Song Liu wrote:
-> > > Hi,
-> > >
-> > > We found a failure with selftests/bpf/tests_prog in test_stacktrace_map (on bpf/master
-> > > branch).
-> > >
-> > > After digging into the code, we found that perf_callchain_kernel() is giving empty
-> > > callchain for tracepoint sched/sched_switch. And it seems related to commit
-> > >
-> > > d15d356887e770c5f2dcf963b52c7cb510c9e42d
-> > > ("perf/x86: Make perf callchains work without CONFIG_FRAME_POINTER")
-> > >
-> > > Before this commit, perf_callchain_kernel() returns callchain with regs->ip. With
-> > > this commit, regs->ip is not sent for !perf_hw_regs(regs) case.
-> >
-> > So while I think the below is indeed right; we should store regs->ip
-> > regardless of the unwind path chosen, I still think there's something
-> > fishy if this results in just the 1 entry.
-> >
-> > The sched/sched_switch event really should have a non-trivial stack.
-> >
-> > Let me see if I can reproduce with just perf.
->
-> $ perf record -g -e "sched:sched_switch" -- make clean
-> $ perf report -D
->
-> 12 904071759467 0x1790 [0xd0]: PERF_RECORD_SAMPLE(IP, 0x1): 7236/7236: 0xffffffff81c29562 period: 1 addr: 0
-> ... FP chain: nr:10
-> .....  0: ffffffffffffff80
-> .....  1: ffffffff81c29562
-> .....  2: ffffffff81c29933
-> .....  3: ffffffff8111f688
-> .....  4: ffffffff81120b9d
-> .....  5: ffffffff81120ce5
-> .....  6: ffffffff8100254a
-> .....  7: ffffffff81e0007d
-> .....  8: fffffffffffffe00
-> .....  9: 00007f9b6cd9682a
-> ... thread: sh:7236
-> ...... dso: /lib/modules/5.1.0-12177-g41bbb9129767/build/vmlinux
->
->
-> IOW, it seems to 'work'.
->
+On 17. 05. 19, 10:00, Vladimir Davydov wrote:
+> On Fri, May 17, 2019 at 06:48:37AM +0200, Jiri Slaby wrote:
+>> On 16. 05. 19, 15:59, Michal Hocko wrote:
+>>>> However, I tend to agree with Michal that (ab)using node[0].memcg_lrus
+>>>> to check if a list_lru is memcg aware looks confusing. I guess we could
+>>>> simply add a bool flag to list_lru instead. Something like this, may be:
+>>>
+>>> Yes, this makes much more sense to me!
+>>
+>> I am not sure if I should send a patch with this solution or Vladimir
+>> will (given he is an author and has a diff already)?
+> 
+> I didn't even try to compile it, let alone test it. I'd appreciate if
+> you could wrap it up and send it out using your authorship. Feel free
+> to add my acked-by.
 
-Hi, I think the actual problem is that bpf_get_stackid_tp (and maybe
-some other bfp functions) is now broken, or, strating an unwind
-directly inside a bpf program will end up strangely. It have following
-kernel message:
+OK, NP.
 
-WARNING: kernel stack frame pointer at 0000000070cad07c in
-test_progs:1242 has bad value 00000000ffd4497e
-
-And in the debug message:
-
-[  160.460287] 000000006e117175: ffffffffaa23a0e8
-(get_perf_callchain+0x148/0x280)
-[  160.460287] 0000000002e8715f: 0000000000c6bba0 (0xc6bba0)
-[  160.460288] 00000000b3d07758: ffff9ce3f9790000 (0xffff9ce3f9790000)
-[  160.460289] 0000000055c97836: ffff9ce3f9790000 (0xffff9ce3f9790000)
-[  160.460289] 000000007cbb140a: 000000010000007f (0x10000007f)
-[  160.460290] 000000007dc62ac9: 0000000000000000 ...
-[  160.460290] 000000006b41e346: 1c7da01cd70c4000 (0x1c7da01cd70c4000)
-[  160.460291] 00000000f23d1826: ffffd89cffc3ae80 (0xffffd89cffc3ae80)
-[  160.460292] 00000000f9a16017: 000000000000007f (0x7f)
-[  160.460292] 00000000a8e62d44: 0000000000000000 ...
-[  160.460293] 00000000cbc83c97: ffffb89d00d8d000 (0xffffb89d00d8d000)
-[  160.460293] 0000000092842522: 000000000000007f (0x7f)
-[  160.460294] 00000000dafbec89: ffffb89d00c6bc50 (0xffffb89d00c6bc50)
-[  160.460296] 000000000777e4cf: ffffffffaa225d97 (bpf_get_stackid+0x77/0x470)
-[  160.460296] 000000009942ea16: 0000000000000000 ...
-[  160.460297] 00000000a08006b1: 0000000000000001 (0x1)
-[  160.460298] 000000009f03b438: ffffb89d00c6bc30 (0xffffb89d00c6bc30)
-[  160.460299] 000000006caf8b32: ffffffffaa074fe8 (__do_page_fault+0x58/0x90)
-[  160.460300] 000000003a13d702: 0000000000000000 ...
-[  160.460300] 00000000e2e2496d: ffff9ce300000000 (0xffff9ce300000000)
-[  160.460301] 000000008ee6b7c2: ffffd89cffc3ae80 (0xffffd89cffc3ae80)
-[  160.460301] 00000000a8cf6d55: 0000000000000000 ...
-[  160.460302] 0000000059078076: ffffd89cffc3ae80 (0xffffd89cffc3ae80)
-[  160.460303] 00000000c6aac739: ffff9ce3f1e18eb0 (0xffff9ce3f1e18eb0)
-[  160.460303] 00000000a39aff92: ffffb89d00c6bc60 (0xffffb89d00c6bc60)
-[  160.460305] 0000000097498bf2: ffffffffaa1f4791 (bpf_get_stackid_tp+0x11/0x20)
-[  160.460306] 000000006992de1e: ffffb89d00c6bc78 (0xffffb89d00c6bc78)
-[  160.460307] 00000000dacd0ce5: ffffffffc0405676 (0xffffffffc0405676)
-[  160.460307] 00000000a81f2714: 0000000000000000 ...
-
-# Note here is the invalid frame pointer
-[  160.460308] 0000000070cad07c: ffffb89d00a1d000 (0xffffb89d00a1d000)
-[  160.460308] 00000000f8f194e4: 0000000000000001 (0x1)
-[  160.460309] 000000002134f42a: ffffd89cffc3ae80 (0xffffd89cffc3ae80)
-[  160.460310] 00000000f9345889: ffff9ce3f1e18eb0 (0xffff9ce3f1e18eb0)
-[  160.460310] 000000008ad22a42: 0000000000000000 ...
-[  160.460311] 0000000073808173: ffffb89d00c6bce0 (0xffffb89d00c6bce0)
-[  160.460312] 00000000c9effff4: ffffffffaa1f48d1 (trace_call_bpf+0x81/0x100)
-[  160.460313] 00000000c5d8ebd1: ffffb89d00c6bcc0 (0xffffb89d00c6bcc0)
-[  160.460315] 00000000bce0b072: ffffffffab651be0
-(event_sched_migrate_task+0xa0/0xa0)
-[  160.460316] 00000000355cf319: 0000000000000000 ...
-[  160.460316] 000000003b67f2ad: ffffd89cffc3ae80 (0xffffd89cffc3ae80)
-[  160.460316] 000000009a77e20b: ffff9ce3fba25000 (0xffff9ce3fba25000)
-[  160.460317] 0000000032cf7376: 0000000000000001 (0x1)
-[  160.460317] 000000000051db74: ffffb89d00c6bd20 (0xffffb89d00c6bd20)
-[  160.460318] 0000000040eb3bf7: ffffffffaa22be81
-(perf_trace_run_bpf_submit+0x41/0xb0)
-
-Simply store the IP still won't really fix the problem, it just passed
-the test. Just had a try to have bpf functions set the
-X86_EFLAGS_FIXED for the flags and always dump the bp, it bypassed
-this specified problem.
-
-Using frame pointer unwinder for testing this, and seems ORC is fine with this.
-
+thanks,
 -- 
-Best Regards,
-Kairui Song
+js
+suse labs
