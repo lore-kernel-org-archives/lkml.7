@@ -5,40 +5,40 @@ X-Spam-Level:
 X-Spam-Status: No, score=-14.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A75A3C04AB4
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 19:38:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42E1EC04AB4
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 19:38:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 76B6421744
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 19:38:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 13CB32166E
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 19:38:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558121900;
-	bh=cVr3Pz9ro6AUNWN07ga7liLJ8gHYTb+xjZNb1YnqfhQ=;
+	s=default; t=1558121905;
+	bh=ZZHpVeldgq2te0IVdNlVpjadCkX6kTS1VW6eps8Klc0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OPz2vU5sRG109VJcvr+Y4fpEc5yRJVzu5yn3Ark5qn9Ro80ve/uUZElbqzmcutvYv
-	 tg++b7WH3jpmaxn74eAWVGnBEE4eBdRlRgH8PDOLUhf0VjfQTAnwZEzNSdqCiOiiaa
-	 gyl9sdy3Wpu3oLkLo6ctfzWv04LIqrWTZBLhJiDQ=
+	b=aUPECYtqEW7MHekkIe+WXTHDNtLl4HJELczkR18RBO6DGEpEHzG5d0/I9KjZRBtpk
+	 oxJvWD3TV3lYqR9eCt67omTM9flxoos2XHB5uwjdfnN+kmYpTE6idxbzOv5w3FFN8O
+	 PXkLFVTgWciB373AeO3i4Tb1Xo0O1YvkLywgtQsU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729675AbfEQTiT (ORCPT
+        id S1729685AbfEQTiX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 May 2019 15:38:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54240 "EHLO mail.kernel.org"
+        Fri, 17 May 2019 15:38:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54342 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727771AbfEQTiS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 May 2019 15:38:18 -0400
+        id S1727771AbfEQTiW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 May 2019 15:38:22 -0400
 Received: from quaco.ghostprotocols.net (unknown [190.15.121.82])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 865B8216FD;
-        Fri, 17 May 2019 19:38:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 372A72087B;
+        Fri, 17 May 2019 19:38:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558121896;
-        bh=cVr3Pz9ro6AUNWN07ga7liLJ8gHYTb+xjZNb1YnqfhQ=;
+        s=default; t=1558121901;
+        bh=ZZHpVeldgq2te0IVdNlVpjadCkX6kTS1VW6eps8Klc0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mh6a/0JghaiFfUIZhPy6TbElJTYvw8i2PWslh9mvt9a1kCMoKfjg5F2HXkJht+6bz
-         1a2OlmaLu6bsPqggSVCsbhT+KmwPLKjw6CZohDviXmq3HppsBH6eedLyHuCWiELmyX
-         hyvQi2GykXbhmY6N2wrkuuQ1+eNJccqFsnYu8cYA=
+        b=DXl/cscYi22cHe4wi4q5ZrvOrlcfDIWwB2CxZDsqSK2uNeSIkJTVoMbviBiUKkplG
+         9otLxNNc1xVx/b6qa/thZ/X5/DunkkOfEceE8HykuoSuBa9D3YojVuKTvNyZsEurcl
+         kgUkEURF0eRpQvk6N/fxz8w9NYHAUFvvWZj6AA5g=
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
 To:     Ingo Molnar <mingo@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>
@@ -51,9 +51,9 @@ Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
         linux-trace-devel@vger.kernel.org,
         Steven Rostedt <rostedt@goodmis.org>,
         Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH 26/73] tools lib traceevent: Man page for file endian APIs
-Date:   Fri, 17 May 2019 16:35:24 -0300
-Message-Id: <20190517193611.4974-27-acme@kernel.org>
+Subject: [PATCH 27/73] tools lib traceevent: Man page for host endian APIs
+Date:   Fri, 17 May 2019 16:35:25 -0300
+Message-Id: <20190517193611.4974-28-acme@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190517193611.4974-1-acme@kernel.org>
 References: <20190517193611.4974-1-acme@kernel.org>
@@ -68,36 +68,37 @@ From: Tzvetomir Stoyanov <tstoyanov@vmware.com>
 
 Create man pages for libtraceevent APIs:
 
-  tep_is_file_bigendian(),
-  tep_set_file_bigendian()
+  tep_is_bigendian(),
+  tep_is_local_bigendian(),
+  tep_set_local_bigendian()
 
 Signed-off-by: Tzvetomir Stoyanov <tstoyanov@vmware.com>
 Cc: Andrew Morton <akpm@linux-foundation.org>
 Cc: Jiri Olsa <jolsa@redhat.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: linux-trace-devel@vger.kernel.org
-Link: http://lore.kernel.org/linux-trace-devel/20190503091119.23399-7-tstoyanov@vmware.com
-Link: http://lkml.kernel.org/r/20190510200106.895177252@goodmis.org
+Link: http://lore.kernel.org/linux-trace-devel/20190503091119.23399-8-tstoyanov@vmware.com
+Link: http://lkml.kernel.org/r/20190510200107.063709363@goodmis.org
 Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- .../libtraceevent-file_endian.txt             | 91 +++++++++++++++++++
- 1 file changed, 91 insertions(+)
- create mode 100644 tools/lib/traceevent/Documentation/libtraceevent-file_endian.txt
+ .../libtraceevent-host_endian.txt             | 104 ++++++++++++++++++
+ 1 file changed, 104 insertions(+)
+ create mode 100644 tools/lib/traceevent/Documentation/libtraceevent-host_endian.txt
 
-diff --git a/tools/lib/traceevent/Documentation/libtraceevent-file_endian.txt b/tools/lib/traceevent/Documentation/libtraceevent-file_endian.txt
+diff --git a/tools/lib/traceevent/Documentation/libtraceevent-host_endian.txt b/tools/lib/traceevent/Documentation/libtraceevent-host_endian.txt
 new file mode 100644
-index 000000000000..f401ad311047
+index 000000000000..d5d375eb8d1e
 --- /dev/null
-+++ b/tools/lib/traceevent/Documentation/libtraceevent-file_endian.txt
-@@ -0,0 +1,91 @@
++++ b/tools/lib/traceevent/Documentation/libtraceevent-host_endian.txt
+@@ -0,0 +1,104 @@
 +libtraceevent(3)
 +================
 +
 +NAME
 +----
-+tep_is_file_bigendian, tep_set_file_bigendian - Get / set the endianness of the
-+raw data being accessed by the tep handler.
++tep_is_bigendian, tep_is_local_bigendian, tep_set_local_bigendian - Get / set
++the endianness of the local machine.
 +
 +SYNOPSIS
 +--------
@@ -110,28 +111,38 @@ index 000000000000..f401ad311047
 +	TEP_BIG_ENDIAN
 +};
 +
-+bool *tep_is_file_bigendian*(struct tep_handle pass:[*]_tep_);
-+void *tep_set_file_bigendian*(struct tep_handle pass:[*]_tep_, enum tep_endian _endian_);
-+
++int *tep_is_bigendian*(void);
++bool *tep_is_local_bigendian*(struct tep_handle pass:[*]_tep_);
++void *tep_set_local_bigendian*(struct tep_handle pass:[*]_tep_, enum tep_endian _endian_);
 +--
++
 +DESCRIPTION
 +-----------
-+The _tep_is_file_bigendian()_ function gets the endianness of the raw data,
-+being accessed by the tep handler. The _tep_ argument is trace event parser
-+context.
 +
-+The _tep_set_file_bigendian()_ function sets the endianness of raw data being
-+accessed by the tep handler. The _tep_ argument is trace event parser context.
++The _tep_is_bigendian()_ gets the endianness of the machine, executing
++the function.
++
++The _tep_is_local_bigendian()_ function gets the endianness of the local
++machine, saved in the _tep_ handler. The _tep_ argument is the trace event
++parser context. This API is a bit faster than _tep_is_bigendian()_, as it
++returns cached endianness of the local machine instead of checking it each time.
++
++The _tep_set_local_bigendian()_ function sets the endianness of the local
++machine in the _tep_ handler. The _tep_ argument is trace event parser context.
++The _endian_ argument is the endianness:
 +[verse]
 +--
-+The _endian_ argument is the endianness:
-+	_TEP_LITTLE_ENDIAN_ - the raw data is in little endian format,
-+	_TEP_BIG_ENDIAN_ - the raw data is in big endian format.
++	_TEP_LITTLE_ENDIAN_ - the machine is little endian,
++	_TEP_BIG_ENDIAN_ - the machine is big endian.
 +--
++
 +RETURN VALUE
 +------------
-+The _tep_is_file_bigendian()_ function returns true if the data is in bigendian
-+format, false otherwise.
++The _tep_is_bigendian()_ function returns non zero if the endianness of the
++machine, executing the code, is big endian and zero otherwise.
++
++The _tep_is_local_bigendian()_ function returns true, if the endianness of the
++local machine, saved in the _tep_ handler, is big endian, or false otherwise.
 +
 +EXAMPLE
 +-------
@@ -141,13 +152,16 @@ index 000000000000..f401ad311047
 +...
 +struct tep_handle *tep = tep_alloc();
 +...
-+	tep_set_file_bigendian(tep, TEP_LITTLE_ENDIAN);
++	if (tep_is_bigendian())
++		tep_set_local_bigendian(tep, TEP_BIG_ENDIAN);
++	else
++		tep_set_local_bigendian(tep, TEP_LITTLE_ENDIAN);
 +...
-+	if (tep_is_file_bigendian(tep)) {
-+		/* The raw data is in big endian */
-+	} else {
-+		/* The raw data is in little endian */
-+	}
++	if (tep_is_local_bigendian(tep))
++		printf("This machine you are running on is bigendian\n");
++	else
++		printf("This machine you are running on is little endian\n");
++
 +--
 +
 +FILES
