@@ -2,131 +2,172 @@ Return-Path: <SRS0=M1fl=TR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFEB4C04E87
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 09:14:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DD42C04AB4
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 09:17:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 839AD20848
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 09:14:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="TYqXowP9"
+	by mail.kernel.org (Postfix) with ESMTP id D3A0420848
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 09:17:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1558084648;
+	bh=x8xM42vRfxXpkjm9JoKWC83RWedLTJsZZqfbIa6ntcQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Sa0QDgf7Nmx6Gdqoqbvvi73/RLXrtRB2spdFNkaZNYrzOn1eI4ymJVyKuk2UDhzbW
+	 Kb+BvZHbLXRkvY6A+MbeYGXopBP3IeTIPYJ1ghJqmx1LIM2EyuJRQTVdWEKbcs0rC8
+	 Sz7sxe5yykuy8gglB53DfXt8XnuB9h6GgSazqXds=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728862AbfEQJOQ (ORCPT
+        id S1728877AbfEQJR2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 May 2019 05:14:16 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:54843 "EHLO
-        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727620AbfEQJOQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 May 2019 05:14:16 -0400
-Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x4H9DnhM1276940
-        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Fri, 17 May 2019 02:13:49 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x4H9DnhM1276940
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019041745; t=1558084430;
-        bh=OYv8bAt0TiIeSeWcCXLn4riQwhM0ceLLg4AFci1cecs=;
-        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
-        b=TYqXowP9UbEGD0Pr2hYozoY7iU9DRybFkIdTS0YnqjNdPbAGp7LzMBcfdZsooAY+a
-         262Cc/I0BPhqGZIpZshwfJTyvBhVKe1WZI0NYKoZFGHm6glAlU6NSSkgTl45mtEr3N
-         3vlkOYrEHrjr9TuT6y3qNwI8bMzYPCX0hRwJ8yg8AnU2/iDpAehSMV+8M8qdsdWSRQ
-         UFDR8mOVyF+Mn2UkpJDt6y3XXp0yonnS+/WCXB014ba3H4bUGPMztNgrp/a8J555r2
-         gSjAlV0ZWYZ8Zxe//Z+6y/MT40k7iJBiO5pUbyca/34k4sA/9b9Jy9mUxkmD31G7fq
-         nz+DnY0wskGfg==
-Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x4H9DnE81276937;
-        Fri, 17 May 2019 02:13:49 -0700
-Date:   Fri, 17 May 2019 02:13:49 -0700
-X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   tip-bot for Nathan Chancellor <tipbot@zytor.com>
-Message-ID: <tip-8ea58f1e8b11cca3087b294779bf5959bf89cc10@git.kernel.org>
-Cc:     tglx@linutronix.de, peterz@infradead.org, jpoimboe@redhat.com,
-        ndesaulniers@google.com, mingo@kernel.org,
-        linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-        hpa@zytor.com, mojha@codeaurora.org, natechancellor@gmail.com,
-        stable@vger.kernel.org
-Reply-To: natechancellor@gmail.com, stable@vger.kernel.org, hpa@zytor.com,
-          mojha@codeaurora.org, torvalds@linux-foundation.org,
-          mingo@kernel.org, linux-kernel@vger.kernel.org,
-          ndesaulniers@google.com, tglx@linutronix.de, jpoimboe@redhat.com,
-          peterz@infradead.org
-In-Reply-To: <80822a9353926c38fd7a152991c6292491a9d0e8.1558028966.git.jpoimboe@redhat.com>
-References: <80822a9353926c38fd7a152991c6292491a9d0e8.1558028966.git.jpoimboe@redhat.com>
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:core/urgent] objtool: Allow AR to be overridden with HOSTAR
-Git-Commit-ID: 8ea58f1e8b11cca3087b294779bf5959bf89cc10
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot.git.kernel.org>
-Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
- these emails
+        Fri, 17 May 2019 05:17:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51816 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727620AbfEQJR1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 May 2019 05:17:27 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B695F20818;
+        Fri, 17 May 2019 09:17:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1558084646;
+        bh=x8xM42vRfxXpkjm9JoKWC83RWedLTJsZZqfbIa6ntcQ=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=cqqM1da66TINk7r17jzm+neh5fRW/d6kj1JI9lA5JEr27bv83rASrldtEkTaFsgBF
+         0eXRbpsjJtUVNMq52+G9TFsnbAbevBdRFRLiJpbIN+3fkdqNAT+rDT65F9lk3gsjSL
+         MKdAOfiLiC51PtmwNYYA86jBnfEGkIApOz8p+AKk=
+Date:   Fri, 17 May 2019 11:17:23 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Quentin Deslandes <quentin.deslandes@itdev.co.uk>
+Cc:     "kernel-janitors@vger.kernel.org" <kernel-janitors@vger.kernel.org>,
+        "devel@driverdev.osuosl.org" <devel@driverdev.osuosl.org>,
+        Mukesh Ojha <mojha@codeaurora.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Forest Bond <forest@alittletooquiet.net>,
+        Ojaswin Mujoo <ojaswin25111998@gmail.com>
+Subject: Re: [PATCH v3] staging: vt6656: returns error code on
+ vnt_int_start_interrupt fail
+Message-ID: <20190517091723.GA4602@kroah.com>
+References: <20190516093046.1400-1-quentin.deslandes@itdev.co.uk>
+ <20190517075331.3658-1-quentin.deslandes@itdev.co.uk>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <20190517075331.3658-1-quentin.deslandes@itdev.co.uk>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  8ea58f1e8b11cca3087b294779bf5959bf89cc10
-Gitweb:     https://git.kernel.org/tip/8ea58f1e8b11cca3087b294779bf5959bf89cc10
-Author:     Nathan Chancellor <natechancellor@gmail.com>
-AuthorDate: Thu, 16 May 2019 12:49:42 -0500
-Committer:  Ingo Molnar <mingo@kernel.org>
-CommitDate: Fri, 17 May 2019 11:10:42 +0200
+On Fri, May 17, 2019 at 07:53:49AM +0000, Quentin Deslandes wrote:
+> Returns error code from 'vnt_int_start_interrupt()' so the device's private
+> buffers will be correctly freed and 'struct ieee80211_hw' start function
+> will return an error code.
+> 
+> Signed-off-by: Quentin Deslandes <quentin.deslandes@itdev.co.uk>
+> ---
+> v2: returns 'status' value to caller instead of removing it.
+> v3: add patch version details. Thanks to Greg K-H for his help.
 
-objtool: Allow AR to be overridden with HOSTAR
+Looking better!
 
-Currently, this Makefile hardcodes GNU ar, meaning that if it is not
-available, there is no way to supply a different one and the build will
-fail.
+But a few minor things below:
 
-  $ make AR=llvm-ar CC=clang LD=ld.lld HOSTAR=llvm-ar HOSTCC=clang \
-         HOSTLD=ld.lld HOSTLDFLAGS=-fuse-ld=lld defconfig modules_prepare
-  ...
-    AR       /out/tools/objtool/libsubcmd.a
-  /bin/sh: 1: ar: not found
-  ...
+> 
+>  drivers/staging/vt6656/int.c      |  4 +++-
+>  drivers/staging/vt6656/int.h      |  2 +-
+>  drivers/staging/vt6656/main_usb.c | 12 +++++++++---
+>  3 files changed, 13 insertions(+), 5 deletions(-)
+> 
+> diff --git a/drivers/staging/vt6656/int.c b/drivers/staging/vt6656/int.c
+> index 504424b19fcf..f3ee2198e1b3 100644
+> --- a/drivers/staging/vt6656/int.c
+> +++ b/drivers/staging/vt6656/int.c
+> @@ -39,7 +39,7 @@ static const u8 fallback_rate1[5][5] = {
+>  	{RATE_54M, RATE_54M, RATE_36M, RATE_18M, RATE_18M}
+>  };
+>  
+> -void vnt_int_start_interrupt(struct vnt_private *priv)
+> +int vnt_int_start_interrupt(struct vnt_private *priv)
+>  {
+>  	unsigned long flags;
+>  	int status;
+> @@ -51,6 +51,8 @@ void vnt_int_start_interrupt(struct vnt_private *priv)
+>  	status = vnt_start_interrupt_urb(priv);
+>  
+>  	spin_unlock_irqrestore(&priv->lock, flags);
+> +
+> +	return status;
+>  }
+>  
+>  static int vnt_int_report_rate(struct vnt_private *priv, u8 pkt_no, u8 tsr)
+> diff --git a/drivers/staging/vt6656/int.h b/drivers/staging/vt6656/int.h
+> index 987c454e99e9..8a6d60569ceb 100644
+> --- a/drivers/staging/vt6656/int.h
+> +++ b/drivers/staging/vt6656/int.h
+> @@ -41,7 +41,7 @@ struct vnt_interrupt_data {
+>  	u8 sw[2];
+>  } __packed;
+>  
+> -void vnt_int_start_interrupt(struct vnt_private *priv);
+> +int vnt_int_start_interrupt(struct vnt_private *priv);
+>  void vnt_int_process_data(struct vnt_private *priv);
+>  
+>  #endif /* __INT_H__ */
+> diff --git a/drivers/staging/vt6656/main_usb.c b/drivers/staging/vt6656/main_usb.c
+> index ccafcc2c87ac..71e10b9ae253 100644
+> --- a/drivers/staging/vt6656/main_usb.c
+> +++ b/drivers/staging/vt6656/main_usb.c
+> @@ -483,6 +483,7 @@ static void vnt_tx_80211(struct ieee80211_hw *hw,
+>  
+>  static int vnt_start(struct ieee80211_hw *hw)
+>  {
+> +	int err = 0;
+>  	struct vnt_private *priv = hw->priv;
+>  
+>  	priv->rx_buf_sz = MAX_TOTAL_SIZE_WITH_ALL_HEADERS;
+> @@ -496,15 +497,20 @@ static int vnt_start(struct ieee80211_hw *hw)
+>  
+>  	if (vnt_init_registers(priv) == false) {
+>  		dev_dbg(&priv->usb->dev, " init register fail\n");
+> +		err = -ENOMEM;
 
-Follow the logic of HOST{CC,LD} and allow the user to specify a
-different ar tool via HOSTAR (which is used elsewhere in other
-tools/ Makefiles).
+Why ENOMEM?  vnt_init_registers() should return a proper error code,
+based on what went wrong, not true/false.  So fix that up first, and
+then you can do this patch.
 
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
-Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
-Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
-Reviewed-by: Mukesh Ojha <mojha@codeaurora.org>
-Cc: <stable@vger.kernel.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Link: http://lkml.kernel.org/r/80822a9353926c38fd7a152991c6292491a9d0e8.1558028966.git.jpoimboe@redhat.com
-Link: https://github.com/ClangBuiltLinux/linux/issues/481
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
----
- tools/objtool/Makefile | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+See, your one tiny coding style fix is turning into real cleanups, nice!
 
-diff --git a/tools/objtool/Makefile b/tools/objtool/Makefile
-index 53f8be0f4a1f..88158239622b 100644
---- a/tools/objtool/Makefile
-+++ b/tools/objtool/Makefile
-@@ -7,11 +7,12 @@ ARCH := x86
- endif
- 
- # always use the host compiler
-+HOSTAR	?= ar
- HOSTCC	?= gcc
- HOSTLD	?= ld
-+AR	 = $(HOSTAR)
- CC	 = $(HOSTCC)
- LD	 = $(HOSTLD)
--AR	 = ar
- 
- ifeq ($(srctree),)
- srctree := $(patsubst %/,%,$(dir $(CURDIR)))
+>  		goto free_all;
+>  	}
+>  
+> -	if (vnt_key_init_table(priv))
+> +	if (vnt_key_init_table(priv)) {
+> +		err = -ENOMEM;
+
+Same here, vnt_key_init_table() should return a real error value, and
+then just return that here.
+
+>  		goto free_all;
+> +	}
+>  
+>  	priv->int_interval = 1;  /* bInterval is set to 1 */
+>  
+> -	vnt_int_start_interrupt(priv);
+> +	err = vnt_int_start_interrupt(priv);
+> +	if (err)
+> +		goto free_all;
+
+Like this, that is the correct thing.
+
+So, this is now going to be a patch series, fixing up those two
+functions (and any functions they call possibly), and then this can be
+the last patch of the series.
+
+thanks,
+
+greg k-h
