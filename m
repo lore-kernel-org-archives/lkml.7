@@ -2,165 +2,176 @@ Return-Path: <SRS0=M1fl=TR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CF02C04AB4
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 12:27:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22134C04AB4
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 12:39:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C944C2087B
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 12:27:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558096028;
-	bh=TSGHK1BGSvnCUOb+aF8hhCjkK9ks3zTJ+k73Beyui+I=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=FRB2ELBZUS23KgEK660Eu0oVsgJ7TtjiNjRctKwqghZAIV05CWj4hwINm5kvzLRVq
-	 i1mMYu/Ki3cckAvUY/U3aQc08JS8aIjfQaWZUbi4tSWKRPm/0/eq/RsUcms2Mt0mPw
-	 hyj5bErQLnJiMz6CHM9eguhbYB9mcS5yfL0b8m40=
+	by mail.kernel.org (Postfix) with ESMTP id DBADB20848
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 12:39:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="RlvE92Gt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728899AbfEQM1I (ORCPT
+        id S1728909AbfEQMjJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 May 2019 08:27:08 -0400
-Received: from mx2.suse.de ([195.135.220.15]:59000 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728365AbfEQM1H (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 May 2019 08:27:07 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 9D97DAEF5;
-        Fri, 17 May 2019 12:27:05 +0000 (UTC)
-Date:   Fri, 17 May 2019 14:27:05 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Jiri Slaby <jslaby@suse.cz>
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>,
-        cgroups@vger.kernel.org,
-        Raghavendra K T <raghavendra.kt@linux.vnet.ibm.com>
-Subject: Re: [PATCH v2] memcg: make it work on sparse non-0-node systems
-Message-ID: <20190517122705.GH6836@dhcp22.suse.cz>
-References: <20190517080044.tnwhbeyxcccsymgf@esperanza>
- <20190517114204.6330-1-jslaby@suse.cz>
+        Fri, 17 May 2019 08:39:09 -0400
+Received: from hqemgate16.nvidia.com ([216.228.121.65]:18913 "EHLO
+        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728169AbfEQMjJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 May 2019 08:39:09 -0400
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5cdeab660000>; Fri, 17 May 2019 05:39:02 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Fri, 17 May 2019 05:39:06 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Fri, 17 May 2019 05:39:06 -0700
+Received: from HQMAIL101.nvidia.com (172.20.187.10) by HQMAIL101.nvidia.com
+ (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 17 May
+ 2019 12:39:06 +0000
+Received: from hqnvemgw01.nvidia.com (172.20.150.20) by HQMAIL101.nvidia.com
+ (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Fri, 17 May 2019 12:39:06 +0000
+Received: from vidyas-desktop.nvidia.com (Not Verified[10.24.37.38]) by hqnvemgw01.nvidia.com with Trustwave SEG (v7,5,8,10121)
+        id <B5cdeab640002>; Fri, 17 May 2019 05:39:06 -0700
+From:   Vidya Sagar <vidyas@nvidia.com>
+To:     <lorenzo.pieralisi@arm.com>, <bhelgaas@google.com>,
+        <robh+dt@kernel.org>, <mark.rutland@arm.com>,
+        <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
+        <kishon@ti.com>, <catalin.marinas@arm.com>, <will.deacon@arm.com>,
+        <jingoohan1@gmail.com>, <gustavo.pimentel@synopsys.com>
+CC:     <mperttunen@nvidia.com>, <linux-pci@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <kthota@nvidia.com>,
+        <mmaddireddy@nvidia.com>, <vidyas@nvidia.com>, <sagar.tv@gmail.com>
+Subject: [PATCH V7 00/15] Add Tegra194 PCIe support
+Date:   Fri, 17 May 2019 18:08:31 +0530
+Message-ID: <20190517123846.3708-1-vidyas@nvidia.com>
+X-Mailer: git-send-email 2.17.1
+X-NVConfidentiality: public
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190517114204.6330-1-jslaby@suse.cz>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1558096742; bh=u/4AQVGziCNrQ2xZIY5ClKkgupD/qrSZhq0/kL2pPfY=;
+        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
+         X-NVConfidentiality:MIME-Version:Content-Type;
+        b=RlvE92GtZrhBCY5g6Zd8L8lpTh6FL8fuplUsYjbi5BSy9ScwKBrvN11R3mRdl9HdH
+         7iQRI8frfo7GYejfKff64JwMbMRDXL1k7B+jHH1coNx4EGm13piclFjAyZC+7+lsVX
+         wW815Q800kLvqm9T30tPDnAnsbcheqr0gR9NPHOcwkDb669Sy3fhhw2eoF8ceI7+3S
+         URa8bN6CYWnfs3RViOT8gzSB6BFtbApcy54NhmIAo/PZw1I1p+eguHOHQ4LJbKp4oI
+         1bPYzm4K21l/5jW7Qhj5jnPNkkdpTvdifqT7FQQmQWA+Qgmp9ahc+LFM/NdblLQLuj
+         FZOyNnlbTjqAA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri 17-05-19 13:42:04, Jiri Slaby wrote:
-> We have a single node system with node 0 disabled:
->   Scanning NUMA topology in Northbridge 24
->   Number of physical nodes 2
->   Skipping disabled node 0
->   Node 1 MemBase 0000000000000000 Limit 00000000fbff0000
->   NODE_DATA(1) allocated [mem 0xfbfda000-0xfbfeffff]
-> 
-> This causes crashes in memcg when system boots:
->   BUG: unable to handle kernel NULL pointer dereference at 0000000000000008
->   #PF error: [normal kernel read fault]
-> ...
->   RIP: 0010:list_lru_add+0x94/0x170
-> ...
->   Call Trace:
->    d_lru_add+0x44/0x50
->    dput.part.34+0xfc/0x110
->    __fput+0x108/0x230
->    task_work_run+0x9f/0xc0
->    exit_to_usermode_loop+0xf5/0x100
-> 
-> It is reproducible as far as 4.12. I did not try older kernels. You have
-> to have a new enough systemd, e.g. 241 (the reason is unknown -- was not
-> investigated). Cannot be reproduced with systemd 234.
-> 
-> The system crashes because the size of lru array is never updated in
-> memcg_update_all_list_lrus and the reads are past the zero-sized array,
-> causing dereferences of random memory.
-> 
-> The root cause are list_lru_memcg_aware checks in the list_lru code.
-> The test in list_lru_memcg_aware is broken: it assumes node 0 is always
-> present, but it is not true on some systems as can be seen above.
-> 
-> So fix this by avoiding checks on node 0. Remember the memcg-awareness
-> by a bool flag in struct list_lru.
-> 
-> [v2] use the idea proposed by Vladimir -- the bool flag.
-> 
-> Signed-off-by: Jiri Slaby <jslaby@suse.cz>
-> Cc: Johannes Weiner <hannes@cmpxchg.org>
-> Cc: Michal Hocko <mhocko@kernel.org>
-> Suggested-by: Vladimir Davydov <vdavydov.dev@gmail.com>
-> Acked-by: Vladimir Davydov <vdavydov.dev@gmail.com>
-> Cc: <cgroups@vger.kernel.org>
-> Cc: <linux-mm@kvack.org>
-> Cc: Raghavendra K T <raghavendra.kt@linux.vnet.ibm.com>
+Tegra194 has six PCIe controllers based on Synopsys DesignWare core.
+There are two Universal PHY (UPHY) blocks with each supporting 12(HSIO:
+Hisg Speed IO) and 8(NVHS: NVIDIA High Speed) lanes respectively.
+Controllers:0~4 use UPHY lanes from HSIO brick whereas Controller:5 uses
+UPHY lanes from NVHS brick. Lane mapping in HSIO UPHY brick to each PCIe
+controller (0~4) is controlled in XBAR module by BPMP-FW. Since PCIe
+core has PIPE interface, a glue module called PIPE-to-UPHY (P2U) is used
+to connect each UPHY lane (applicable to both HSIO and NVHS UPHY bricks)
+to PCIe controller
+This patch series
+- Adds support for P2U PHY driver
+- Adds support for PCIe host controller
+- Adds device tree nodes each PCIe controllers
+- Enables nodes applicable to p2972-0000 platform
+- Adds helper APIs in Designware core driver to get capability regs offset
+- Adds defines for new feature registers of PCIe spec revision 4
+- Makes changes in DesignWare core driver to get Tegra194 PCIe working
 
-Fixes: 60d3fd32a7a9 ("list_lru: introduce per-memcg lists")
-unless I have missed something
+Testing done on P2972-0000 platform
+- Able to get PCIe link up with on-board Marvel eSATA controller
+- Able to get PCIe link up with NVMe cards connected to M.2 Key-M slot
+- Able to do data transfers with both SATA drives and NVMe cards
 
-Cc: stable sounds like a good idea to me as well, although nobody has
-noticed this yet but Node0 machines are quite rare.
+Note
+- Enabling x8 slot on P2972-0000 platform requires pinmux driver for Tegra194.
+  It is being worked on currently and hence Controller:5 (i.e. x8 slot) is
+  disabled in this patch series. A future patch series would enable this.
+- This series is based on top of the following series
+  Jisheng's patches to add support to .remove() in Designware sub-system
+  https://patchwork.kernel.org/project/linux-pci/list/?series=98559
+  (Jisheng's patches are now accepted and applied for v5.2)
+  My patches made on top of Jisheng's patches to export various symbols
+  https://patchwork.kernel.org/project/linux-pci/list/?series=101259
 
-I haven't checked all users of list_lru but the structure size increase
-shouldn't be a big problem. There tend to be only limited number of
-those and the number shouldn't be huge.
+Changes since [v6]:
+* Took care of review comments from Rob
+* Added a quirk to disable MSI for root ports
+* Removed using pcie_pme_disable_msi() API in host controller driver
 
-So this looks good to me.
-Acked-by: Michal Hocko <mhocko@suse.com>
+Changes since [v5]:
+* Removed patch that exports pcie_bus_config symbol
+* Took care of review comments from Thierry and Rob
 
-Thanks a lot Jiri!
+Changes since [v4]:
+* Removed redundant APIs in pcie-designware-ep.c file after moving them
+  to pcie-designware.c file based on Bjorn's review comments
 
-> ---
->  include/linux/list_lru.h | 1 +
->  mm/list_lru.c            | 8 +++-----
->  2 files changed, 4 insertions(+), 5 deletions(-)
-> 
-> diff --git a/include/linux/list_lru.h b/include/linux/list_lru.h
-> index aa5efd9351eb..d5ceb2839a2d 100644
-> --- a/include/linux/list_lru.h
-> +++ b/include/linux/list_lru.h
-> @@ -54,6 +54,7 @@ struct list_lru {
->  #ifdef CONFIG_MEMCG_KMEM
->  	struct list_head	list;
->  	int			shrinker_id;
-> +	bool			memcg_aware;
->  #endif
->  };
->  
-> diff --git a/mm/list_lru.c b/mm/list_lru.c
-> index 0730bf8ff39f..d3b538146efd 100644
-> --- a/mm/list_lru.c
-> +++ b/mm/list_lru.c
-> @@ -37,11 +37,7 @@ static int lru_shrinker_id(struct list_lru *lru)
->  
->  static inline bool list_lru_memcg_aware(struct list_lru *lru)
->  {
-> -	/*
-> -	 * This needs node 0 to be always present, even
-> -	 * in the systems supporting sparse numa ids.
-> -	 */
-> -	return !!lru->node[0].memcg_lrus;
-> +	return lru->memcg_aware;
->  }
->  
->  static inline struct list_lru_one *
-> @@ -451,6 +447,8 @@ static int memcg_init_list_lru(struct list_lru *lru, bool memcg_aware)
->  {
->  	int i;
->  
-> +	lru->memcg_aware = memcg_aware;
-> +
->  	if (!memcg_aware)
->  		return 0;
->  
-> -- 
-> 2.21.0
+Changes since [v3]:
+* Rebased on top of linux-next top of the tree
+* Addressed Gustavo's comments and added his Ack for some of the changes.
+
+Changes since [v2]:
+* Addressed review comments from Thierry
+
+Changes since [v1]:
+* Addressed review comments from Bjorn, Thierry, Jonathan, Rob & Kishon
+* Added more patches in v2 series
+
+Vidya Sagar (15):
+  PCI: Add #defines for some of PCIe spec r4.0 features
+  PCI: Disable MSI for Tegra194 root port
+  PCI: dwc: Perform dbi regs write lock towards the end
+  PCI: dwc: Move config space capability search API
+  PCI: dwc: Add ext config space capability search API
+  dt-bindings: PCI: designware: Add binding for CDM register check
+  PCI: dwc: Add support to enable CDM register check
+  dt-bindings: Add PCIe supports-clkreq property
+  dt-bindings: PCI: tegra: Add device tree support for Tegra194
+  dt-bindings: PHY: P2U: Add Tegra194 P2U block
+  arm64: tegra: Add P2U and PCIe controller nodes to Tegra194 DT
+  arm64: tegra: Enable PCIe slots in P2972-0000 board
+  phy: tegra: Add PCIe PIPE2UPHY support
+  PCI: tegra: Add Tegra194 PCIe support
+  arm64: Add Tegra194 PCIe driver to defconfig
+
+ .../bindings/pci/designware-pcie.txt          |    5 +
+ .../bindings/pci/nvidia,tegra194-pcie.txt     |  158 ++
+ Documentation/devicetree/bindings/pci/pci.txt |    5 +
+ .../bindings/phy/phy-tegra194-p2u.txt         |   28 +
+ .../arm64/boot/dts/nvidia/tegra194-p2888.dtsi |    2 +-
+ .../boot/dts/nvidia/tegra194-p2972-0000.dts   |   41 +
+ arch/arm64/boot/dts/nvidia/tegra194.dtsi      |  437 +++++
+ arch/arm64/configs/defconfig                  |    1 +
+ drivers/pci/controller/dwc/Kconfig            |   10 +
+ drivers/pci/controller/dwc/Makefile           |    1 +
+ .../pci/controller/dwc/pcie-designware-ep.c   |   37 +-
+ .../pci/controller/dwc/pcie-designware-host.c |   14 +-
+ drivers/pci/controller/dwc/pcie-designware.c  |   88 +
+ drivers/pci/controller/dwc/pcie-designware.h  |   12 +
+ drivers/pci/controller/dwc/pcie-tegra194.c    | 1620 +++++++++++++++++
+ drivers/pci/quirks.c                          |   14 +
+ drivers/phy/tegra/Kconfig                     |    7 +
+ drivers/phy/tegra/Makefile                    |    1 +
+ drivers/phy/tegra/pcie-p2u-tegra194.c         |  109 ++
+ include/uapi/linux/pci_regs.h                 |   22 +-
+ 20 files changed, 2569 insertions(+), 43 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/pci/nvidia,tegra194-pcie.txt
+ create mode 100644 Documentation/devicetree/bindings/phy/phy-tegra194-p2u.txt
+ create mode 100644 drivers/pci/controller/dwc/pcie-tegra194.c
+ create mode 100644 drivers/phy/tegra/pcie-p2u-tegra194.c
 
 -- 
-Michal Hocko
-SUSE Labs
+2.17.1
+
