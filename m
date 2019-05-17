@@ -2,172 +2,134 @@ Return-Path: <SRS0=M1fl=TR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE3B1C04E87
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 16:24:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 690FEC04AB4
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 16:25:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7B51120848
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 16:24:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3AFB520848
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 16:25:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=amacapital-net.20150623.gappssmtp.com header.i=@amacapital-net.20150623.gappssmtp.com header.b="NXpueBp2"
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="zqzD3+5M"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726757AbfEQQYn (ORCPT
+        id S1726774AbfEQQZB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 May 2019 12:24:43 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:46019 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725933AbfEQQYn (ORCPT
+        Fri, 17 May 2019 12:25:01 -0400
+Received: from conssluserg-02.nifty.com ([210.131.2.81]:37007 "EHLO
+        conssluserg-02.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725933AbfEQQZA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 May 2019 12:24:43 -0400
-Received: by mail-pl1-f194.google.com with SMTP id a5so3552299pls.12
-        for <linux-kernel@vger.kernel.org>; Fri, 17 May 2019 09:24:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=amacapital-net.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=aV3rffMxuXG8e12nRoLl587y9MXM8TOV+Ti1qX5jxqI=;
-        b=NXpueBp2RQMTp7/ult69Cy5m/zTxwcPQ4jUpkeJZIDfT5NUWtRfdwnURyUvF+j6BFp
-         AtAoNq/qumpwpOFcKFiEZaF/sZdU1y/HLKnK9X7UPX0N/K43J1jkVrMf5Xs5CqVetGcL
-         ZBfYzEeuzoVND9qwgMHdjgycO60Wj5qtT1MAM5cT1Ytwi56EKX3k7ReMiyMZ8xdGHNre
-         mM4fVZcEHDooxUjnhbVinIyKSNOV8KWA1dtbI6Y7eb62sxO2ITHJnViW49OB1VjvhKtv
-         DGINjLmb++niWPUIc88gcCTcevakt4/DwbPMhlaoWreegbl0aeJ3i93b5EK1cmpI033W
-         Wulg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=aV3rffMxuXG8e12nRoLl587y9MXM8TOV+Ti1qX5jxqI=;
-        b=EJFKlFa7R/jf3zRWgfTmhZmwtHYEAY+q4Yzxp62Mr30jqFBJKSYDFAxlHQe7bGxKY6
-         R1/PpX9FiPcKZ2Wji8WuBdYkVhWLOo+EukYixAFk/AvNJ8tWnGfIIbejeOH25615/S+U
-         YXA1nQ1TyrElsbTFQuOwCdQFViJW3x2OHQrjCSDV4sriSiA6ib1ylf/VzCG47t7ZA14A
-         U461D1y6xGEcOWylcrYUuoeZB29OjGso0IWBVGoSXvTro/q374+AvuE1s6Xllnl3qMJV
-         9QDIhuLl2QJ2EPCYCPBCF+zwaGNgu4tEzpE+bIWPk6iA1cDa7fKejFKzWydHaCdW0lc0
-         rhrw==
-X-Gm-Message-State: APjAAAXis+jPu0ujI45rwJNzqHIp2Ap7bH5STbyUWZMHegxGgNf4tfFE
-        dImcikQ8GEc1LaI+NPKYAqfc8Q==
-X-Google-Smtp-Source: APXvYqzLLqL8f8ufEhA84JZ4KDsuDGxuqP9EQI1cVkvo3Az2BKCevLwr9qASi18i0IIJwQ0nWw2g6w==
-X-Received: by 2002:a17:902:be0e:: with SMTP id r14mr40513480pls.152.1558110282349;
-        Fri, 17 May 2019 09:24:42 -0700 (PDT)
-Received: from ?IPv6:2600:1010:b066:f2e9:80d1:f40f:2e81:3df1? ([2600:1010:b066:f2e9:80d1:f40f:2e81:3df1])
-        by smtp.gmail.com with ESMTPSA id k9sm10974460pfa.180.2019.05.17.09.24.41
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 17 May 2019 09:24:41 -0700 (PDT)
-Content-Type: text/plain;
-        charset=utf-8
-Mime-Version: 1.0 (1.0)
-Subject: Re: SGX vs LSM (Re: [PATCH v20 00/28] Intel SGX1 support)
-From:   Andy Lutomirski <luto@amacapital.net>
-X-Mailer: iPhone Mail (16E227)
-In-Reply-To: <ca807220-47e2-5ec2-982c-4fb4a72439c6@tycho.nsa.gov>
-Date:   Fri, 17 May 2019 09:24:39 -0700
-Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
-        "Xing, Cedric" <cedric.xing@intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        LSM List <linux-security-module@vger.kernel.org>,
-        Paul Moore <paul@paul-moore.com>,
-        Eric Paris <eparis@parisplace.org>,
-        "selinux@vger.kernel.org" <selinux@vger.kernel.org>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Jethro Beekman <jethro@fortanix.com>,
-        "Hansen, Dave" <dave.hansen@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "Dr. Greg" <greg@enjellic.com>,
+        Fri, 17 May 2019 12:25:00 -0400
+Received: from mail-vs1-f50.google.com (mail-vs1-f50.google.com [209.85.217.50]) (authenticated)
+        by conssluserg-02.nifty.com with ESMTP id x4HGOVdR004971;
+        Sat, 18 May 2019 01:24:32 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-02.nifty.com x4HGOVdR004971
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1558110272;
+        bh=zIcbxBsGKT0njbeaFi6Mkg+6kcbGCAfu8DgoGnoVqWk=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=zqzD3+5Mwcnw4vsvf7bDEaHBqEkuESPJBfE5aZRk3sDjbM4rkYFAr1M9uBg5g0BO1
+         Lvw4CYDx1NIETfDDxwUY67FdEXbi1IunRv53SIiuwVtBW2azOCaX0ngkFH0/VDFIn2
+         sN5gO07hUMslQpg+FM9lNrA6Id753A6MJze96W9SW391FGjfMz7Wu1pRP4Y2KLniD7
+         GmCdEIGAqOiwo4OR+p+IzVSyxQVkGGS6E/Bufxm3Bamw/YnERX2+5nh3EB2Vm8OT5s
+         unkgghYgawo37tNbTbOrnCvRIt16cETTDl+GRoP6bOWtR8jrVRbLU/1n6gK2DfgZIZ
+         lZqscROJPooQg==
+X-Nifty-SrcIP: [209.85.217.50]
+Received: by mail-vs1-f50.google.com with SMTP id d128so4976565vsc.10;
+        Fri, 17 May 2019 09:24:32 -0700 (PDT)
+X-Gm-Message-State: APjAAAU9M+gBt+91NhImAzXKd8fmrb0MgA65vLwUhzjDuRq1QjKDmNHe
+        EOUIPYvQ0VwNcDy+Ug712k5E/wnRIUXHbXWWuSw=
+X-Google-Smtp-Source: APXvYqxOIzK1boEAfFi3DuhFikilPnfO6s12Yh1XSWACijiGDzmqTNBmEpssJoWLpVBXe/1JDftvlJA0O3bfGH974BI=
+X-Received: by 2002:a67:ad0f:: with SMTP id t15mr9498363vsl.179.1558110271151;
+ Fri, 17 May 2019 09:24:31 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190517042753.25857-1-yamada.masahiro@socionext.com> <20190517153439.3b479334@canb.auug.org.au>
+In-Reply-To: <20190517153439.3b479334@canb.auug.org.au>
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+Date:   Sat, 18 May 2019 01:23:55 +0900
+X-Gmail-Original-Message-ID: <CAK7LNAQMCfEE2ncrGj3Cair8udQZea_ZsTGGSsFA_7T86-7vRA@mail.gmail.com>
+Message-ID: <CAK7LNAQMCfEE2ncrGj3Cair8udQZea_ZsTGGSsFA_7T86-7vRA@mail.gmail.com>
+Subject: Re: [PATCH v2] kbuild: check uniqueness of module names
+To:     Stephen Rothwell <sfr@canb.auug.org.au>
+Cc:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Sam Ravnborg <sam@ravnborg.org>, Arnd Bergmann <arnd@arndb.de>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Jessica Yu <jeyu@kernel.org>,
+        Lucas De Marchi <lucas.de.marchi@gmail.com>,
+        Michael Schmitz <schmitzmic@gmail.com>,
         Linus Torvalds <torvalds@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
-        "linux-sgx@vger.kernel.org" <linux-sgx@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "nhorman@redhat.com" <nhorman@redhat.com>,
-        "npmccallum@redhat.com" <npmccallum@redhat.com>,
-        "Ayoun, Serge" <serge.ayoun@intel.com>,
-        "Katz-zamir, Shay" <shay.katz-zamir@intel.com>,
-        "Huang, Haitao" <haitao.huang@intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        "Svahn, Kai" <kai.svahn@intel.com>, Borislav Petkov <bp@alien8.de>,
-        Josh Triplett <josh@joshtriplett.org>,
-        "Huang, Kai" <kai.huang@intel.com>,
-        David Rientjes <rientjes@google.com>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <ECF62380-A58A-4829-AFF0-F7D439D6F886@amacapital.net>
-References: <20190515013031.GF1977@linux.intel.com> <CALCETrXf8mSK45h7sTK5Wf+pXLVn=Bjsc_RLpgO-h-qdzBRo5Q@mail.gmail.com> <alpine.LRH.2.21.1905160543070.19802@namei.org> <CALCETrX_Q6qwNRNF0TL2tgfm1j6DKLX7NVHHmWbMFtk3WnHDKw@mail.gmail.com> <alpine.LRH.2.21.1905160844130.29250@namei.org> <CALCETrX2ovRx3Rre+1_xC-q6CiybyLjQ-gmB4FZF_qCZ-Qd+4A@mail.gmail.com> <960B34DE67B9E140824F1DCDEC400C0F654E38CD@ORSMSX116.amr.corp.intel.com> <CALCETrUfmyQ7ivNzQic0FyPXe1fmAnoK093jnz0i8DRn2LvdSA@mail.gmail.com> <960B34DE67B9E140824F1DCDEC400C0F654E3FB9@ORSMSX116.amr.corp.intel.com> <6a97c099-2f42-672e-a258-95bc09152363@tycho.nsa.gov> <20190517150948.GA15632@linux.intel.com> <ca807220-47e2-5ec2-982c-4fb4a72439c6@tycho.nsa.gov>
-To:     Stephen Smalley <sds@tycho.nsa.gov>
+        Rusty Russell <rusty@rustcorp.com.au>,
+        Kees Cook <keescook@chromium.org>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, May 17, 2019 at 2:34 PM Stephen Rothwell <sfr@canb.auug.org.au> wrote:
+>
+> Hi Masahiro,
+>
+> Thanks for this, looks good to me.  Just a nit below.
+>
+> On Fri, 17 May 2019 13:27:53 +0900 Masahiro Yamada <yamada.masahiro@socionext.com> wrote:
+> >
+>
+> > diff --git a/scripts/modules-check.sh b/scripts/modules-check.sh
+> > new file mode 100755
+> > index 000000000000..c875f6eab01e
+> > --- /dev/null
+> > +++ b/scripts/modules-check.sh
+> > @@ -0,0 +1,20 @@
+> > +#!/bin/sh
+> > +# SPDX-License-Identifier: GPL-2.0
+> > +
+> > +set -e
+> > +
+> > +# Check uniqueness of module names
+> > +check_same_name_modules()
+> > +{
+> > +     same_name_modules=$(cat modules.order modules.builtin | \
+>                                                                 ^
+> This trailing '\' is unnecessary after a pipe symbol.
 
 
-> On May 17, 2019, at 9:20 AM, Stephen Smalley <sds@tycho.nsa.gov> wrote:
->=20
->> On 5/17/19 11:09 AM, Sean Christopherson wrote:
->>> On Fri, May 17, 2019 at 09:53:06AM -0400, Stephen Smalley wrote:
->>>> On 5/16/19 6:23 PM, Xing, Cedric wrote:
->>>> I thought EXECMOD applied to files (and memory mappings backed by them)=
- but
->>>> I was probably wrong. It sounds like EXECMOD applies to the whole proce=
-ss so
->>>> would allow all pages within a process's address space to be modified t=
-hen
->>>> executed, regardless the backing files. Am I correct this time?
->>>=20
->>> No, you were correct the first time I think; EXECMOD is used to control
->>> whether a process can make executable a private file mapping that has
->>> previously been modified (e.g. text relocation); it is a special case to=
+With the suggestion from Alexander Kapshuk,
+the code in v3 became short enough to fit in 80-columns.
 
->>> support text relocations without having to allow full EXECMEM (i.e. exec=
-ute
->>> arbitrary memory).
->>>=20
->>> SELinux checks relevant to W^X include:
->>>=20
->>> - EXECMEM: mmap/mprotect PROT_EXEC an anonymous mapping (regardless of
->>> PROT_WRITE, since we know the content has to have been written at some
->>> point) or a private file mapping that is also PROT_WRITE.
->>> - EXECMOD: mprotect PROT_EXEC a private file mapping that has been
->>> previously modified, typically for text relocations,
->>> - FILE__WRITE: mmap/mprotect PROT_WRITE a shared file mapping,
->>> - FILE__EXECUTE: mmap/mprotect PROT_EXEC a file mapping.
->>>=20
->>> (ignoring EXECSTACK and EXECHEAP here since they aren't really relevant t=
-o
->>> this discussion)
->>>=20
->>> So if you want to ensure W^X, then you wouldn't allow EXECMEM for the
->>> process, EXECMOD by the process to any file, and the combination of both=
+Anyway, thanks for pointing it out.
 
->>> FILE__WRITE and FILE__EXECUTE by the process to any file.
->>>=20
->>> If the /dev/sgx/enclave mappings are MAP_SHARED and you aren't using an
->>> anonymous inode, then I would expect that only the FILE__WRITE and
->>> FILE__EXECUTE checks are relevant.
->> Yep, I was just typing this up in a different thread:
->> I think we may want to change the SGX API to alloc an anon inode for each=
 
->> enclave instead of hanging every enclave off of the /dev/sgx/enclave inod=
-e.
->> Because /dev/sgx/enclave is NOT private, SELinux's file_map_prot_check()
->> will only require FILE__WRITE and FILE__EXECUTE to mprotect() enclave VMA=
-s
->> to RWX.  Backing each enclave with an anon inode will make SELinux treat
->> EPC memory like anonymous mappings, which is what we want (I think), e.g.=
 
->> making *any* EPC page executable will require PROCESS__EXECMEM (SGX is
->> 64-bit only at this point, so SELinux will always have default_noexec).
->=20
-> I don't think we want to require EXECMEM (or equivalently both FILE__WRITE=
- and FILE__EXECUTE to /dev/sgx/enclave) for making any EPC page executable, o=
-nly if the page is also writable or previously modified.  The intent is to p=
-revent arbitrary code execution without EXECMEM (or FILE__WRITE|FILE__EXECUT=
-E), while still allowing enclaves to be created without EXECMEM as long as t=
-he EPC page mapping is only ever mapped RX and its initial contents came fro=
-m an unmodified file mapping that was PROT_EXEC (and hence already checked v=
-ia FILE__EXECUTE).
 
-That agrees with my thoughts. Actually plumbing everything together so this w=
-orks could be a bit interesting.  I assume it=E2=80=99ll need a special case=
- in SELinux or maybe a new vm_op.=
+
+> > +                             xargs -r basename -a -- | sort | uniq -d)
+> > +
+> > +     for m in $same_name_modules
+> > +     do
+> > +             echo "warning: same basename if the following are built as modules:" >&2
+> > +             grep -h -e "/$m" modules.order modules.builtin | \
+>
+> Same here
+>
+> > +                                             sed 's:^kernel/:  :' >&2
+> > +     done
+> > +}
+> > +
+> > +check_same_name_modules
+>
+> Reviewed-by: Stephen ROthwell <sfr@canb.auug.org.au>
+>
+> --
+> Cheers,
+> Stephen Rothwell
+
+
+
+-- 
+Best Regards
+Masahiro Yamada
