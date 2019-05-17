@@ -2,281 +2,189 @@ Return-Path: <SRS0=M1fl=TR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BD53C04AB4
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 15:46:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51C03C04E87
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 15:46:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 44815216FD
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 15:46:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C95721726
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 15:46:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="mAAE09Ep"
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="E0E/vFTQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729323AbfEQPqJ (ORCPT
+        id S1729362AbfEQPqX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 May 2019 11:46:09 -0400
-Received: from mail-it1-f175.google.com ([209.85.166.175]:52478 "EHLO
-        mail-it1-f175.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729000AbfEQPqJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 May 2019 11:46:09 -0400
-Received: by mail-it1-f175.google.com with SMTP id q65so12709112itg.2
-        for <linux-kernel@vger.kernel.org>; Fri, 17 May 2019 08:46:08 -0700 (PDT)
+        Fri, 17 May 2019 11:46:23 -0400
+Received: from mail-eopbgr750081.outbound.protection.outlook.com ([40.107.75.81]:42030
+        "EHLO NAM02-BL2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729000AbfEQPqW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 May 2019 11:46:22 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=Zebb4trPFc32h+eNwkH5pjskrIQYplq4IH2SkEBSCUw=;
-        b=mAAE09EpxhEYRj+Os7W/pvy1brWLkI4oNsDo0UOZfyvOc2qWVnz5rgB3NPMBGCX1RG
-         CC7WDbl/n3MtblKiNpzD9giKl79yf9wXJrpbQK+SUnKnNhlMRL9+XUnP7hyLROhNXj9C
-         PpgUgYxMovKAerOGxoL5bfHLJ7LGD7v1lVEKoYwTCDBqUTu/ZIXkzF1SILnPx069dYrc
-         sKIDnWl90NTwuMyKZ6gel2i9dtz6cnnVHj81J7ywZ06qD2NcINoMtQ9HAl1UnbyAlzHW
-         Am5wu6JqclrEcbNAw+AKObWcga84FLzQFLPlGwXs96xX1pynVIzANKRULVPakuM3WYUn
-         RJGA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=Zebb4trPFc32h+eNwkH5pjskrIQYplq4IH2SkEBSCUw=;
-        b=VGVCe+rhjOVcHf4FkmxhA1XZb/QoN4Da/V5M++usqA7ZTzLSKOo6KtJXAP4SVcSKAb
-         lwptKIxwgEighHieUTMiW5PCUOXsp/EQn2s53c7YeEfZj3YoFZtjRJMFMjZcnTHsHc5c
-         04LqzevCK8NTLgWG1TOrobIqT4/btFdk45mYhn/+1V7e8sj4dDF/zJsQaomdMGyTIMN3
-         6cPn0MiAtziA1rA4apLRqnIusXO3tI/cr7FmveJ/eVCq8kSqE+Xa4Xb96EUokJQkymLc
-         jJJYokB+dyrVOlYfUdGjQfy8TqTwoTk1EoholI9vuaDXgKYO1Z0khxCRvZbFF/IwWRXM
-         8zZA==
-X-Gm-Message-State: APjAAAVaIcGwSftcuN4D2LCtbxGCaZ6fxIcWbBkjA/GYKNZgWtUUXeNM
-        LcfCoGqXSDRUFoHQ4RnuA5wSzoDzwuebod3ueOLClg==
-X-Google-Smtp-Source: APXvYqwmpk8N15X8omllwb+0METfGSgJrbp4QykAbB8slWIz9HudOpFbxHuObAzS4BTIfkwm4L55Pwa/Slq8W+uX5RE=
-X-Received: by 2002:a24:91d2:: with SMTP id i201mr3324172ite.88.1558107967759;
- Fri, 17 May 2019 08:46:07 -0700 (PDT)
+ d=amdcloud.onmicrosoft.com; s=selector1-amdcloud-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=nhjFSqv3U9EFLOPwV1OXKdDvCt4B/B8JOvpicyAdcGE=;
+ b=E0E/vFTQxk5gwzq/UzsWDg2tUEKOfQT0fEGxoy1Bk7lhnkHqkZPmVKNDJzwB45I1dHpjrCWPHEPDvZjwg3LbLCYFyaiamqgTWlilF5gTMqktuZAznURzRnT0+p9EgLnDmI1YjsxoW2+/NujBOmt0Q90aCLDDvChjG2jZhbIvJTI=
+Received: from SN6PR12MB2639.namprd12.prod.outlook.com (52.135.103.16) by
+ SN6PR12MB2608.namprd12.prod.outlook.com (52.135.102.161) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1900.16; Fri, 17 May 2019 15:46:07 +0000
+Received: from SN6PR12MB2639.namprd12.prod.outlook.com
+ ([fe80::69b5:19ac:b63d:2b82]) by SN6PR12MB2639.namprd12.prod.outlook.com
+ ([fe80::69b5:19ac:b63d:2b82%3]) with mapi id 15.20.1900.010; Fri, 17 May 2019
+ 15:46:07 +0000
+From:   "Ghannam, Yazen" <Yazen.Ghannam@amd.com>
+To:     Borislav Petkov <bp@alien8.de>, "Luck, Tony" <tony.luck@intel.com>
+CC:     "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "x86@kernel.org" <x86@kernel.org>
+Subject: RE: [PATCH v3 5/6] x86/MCE: Save MCA control bits that get set in
+ hardware
+Thread-Topic: [PATCH v3 5/6] x86/MCE: Save MCA control bits that get set in
+ hardware
+Thread-Index: AQHU/5PPbonhoiIaT0+tpMBUt0fOpKZt/3MAgAAEtbCAAA1jAIAAAELggAAGlYCAADB8kIAABZ8AgAAG7YCAANzUAIAAUaUw
+Date:   Fri, 17 May 2019 15:46:07 +0000
+Message-ID: <SN6PR12MB26391A0C3979030082EE38F8F80B0@SN6PR12MB2639.namprd12.prod.outlook.com>
+References: <20190430203206.104163-1-Yazen.Ghannam@amd.com>
+ <20190430203206.104163-6-Yazen.Ghannam@amd.com>
+ <20190516155202.GA11517@agluck-desk>
+ <SN6PR12MB26397B30A120E3426184727FF80A0@SN6PR12MB2639.namprd12.prod.outlook.com>
+ <20190516165648.GB21857@zn.tnic>
+ <SN6PR12MB26392B440ED735C26AA2C678F80A0@SN6PR12MB2639.namprd12.prod.outlook.com>
+ <20190516172117.GC21857@zn.tnic>
+ <SN6PR12MB26394CD4E1BAC068B0B1AEF6F80A0@SN6PR12MB2639.namprd12.prod.outlook.com>
+ <20190516203456.GD21857@zn.tnic> <20190516205943.GA3299@agluck-desk>
+ <20190517101006.GA32065@zn.tnic>
+In-Reply-To: <20190517101006.GA32065@zn.tnic>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Yazen.Ghannam@amd.com; 
+x-originating-ip: [172.58.139.248]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 3215e1d8-6134-4984-49a7-08d6dadec6d0
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:SN6PR12MB2608;
+x-ms-traffictypediagnostic: SN6PR12MB2608:
+x-ms-exchange-purlcount: 1
+x-microsoft-antispam-prvs: <SN6PR12MB2608E6C7A45BB86F41C42191F80B0@SN6PR12MB2608.namprd12.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:4125;
+x-forefront-prvs: 0040126723
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(39860400002)(366004)(376002)(396003)(346002)(136003)(199004)(189003)(13464003)(6116002)(74316002)(446003)(476003)(486006)(3846002)(2906002)(8936002)(66446008)(256004)(66066001)(66476007)(66556008)(64756008)(71200400001)(71190400001)(316002)(6306002)(73956011)(76116006)(9686003)(110136005)(102836004)(8676002)(81156014)(81166006)(54906003)(55016002)(66946007)(6506007)(53546011)(25786009)(76176011)(99286004)(26005)(6246003)(966005)(14454004)(7696005)(86362001)(11346002)(53936002)(6436002)(305945005)(186003)(72206003)(4326008)(5660300002)(229853002)(7736002)(478600001)(33656002)(68736007)(52536014)(309714004);DIR:OUT;SFP:1101;SCL:1;SRVR:SN6PR12MB2608;H:SN6PR12MB2639.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: amd.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: xTWmK3qOm7VqJ2tjsPpzImHVNQs06hW+vw5gfhFuTgmpAja8aTexWsIQ/aipaWm1roxpfAehXit47aSfV0zre/qQZS/FTRgBmvjQsWzxzFj4FJfXOfx3O1vrAGGsP3BBdVcNSuJ12uBmWNVoP/qQG39mfpWZab+gDWaybV5a0UcE28zKsuVna+bUmuJHYcaBTgtJfQPPsfhGRtwAiC/FXloU+QIP8rqPDI7uasCm13zY0w09rN295aySXvApoRKHi2KD9oNq47ROSvcCeF523TUf5GkzQeopYfiVK3ZWwUzq4I9urPBkudyAPwtoCM3k7pXiFD/1n4ZA9w1xGaQXoLf95+7/NDNNlS/rHYtDWXhH23Sk0QZPm3vZ57kAnGqcycDsIgCnAiQ/urdV5lnYl4vksFl9y+9FUnxcSvjVpKc=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-References: <CACT4Y+Z9GcY-d19ROSXgAq4-d_hOBVArfgGV1VdYcYD_X1coPQ@mail.gmail.com>
- <CAHRSSEw7QAfuKsQhHNZcwizn5zEVA6CjAdO7qh69g3fkXrk7DA@mail.gmail.com> <CACT4Y+ZLZHbsW3kFD5oXssuOP6LmY0YRRPnWc41CBQ6APJS4MA@mail.gmail.com>
-In-Reply-To: <CACT4Y+ZLZHbsW3kFD5oXssuOP6LmY0YRRPnWc41CBQ6APJS4MA@mail.gmail.com>
-From:   Dmitry Vyukov <dvyukov@google.com>
-Date:   Fri, 17 May 2019 17:45:56 +0200
-Message-ID: <CACT4Y+ZW=OaNBsWm0FMXfefHnNgpjb698r_+Xhn66dQZHfgVRw@mail.gmail.com>
-Subject: Re: binder stress testing
-To:     Todd Kjos <tkjos@google.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        =?UTF-8?B?QXJ2ZSBIasO4bm5ldsOlZw==?= <arve@android.com>,
-        Todd Kjos <tkjos@android.com>,
-        Martijn Coenen <maco@android.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Christian Brauner <christian@brauner.io>,
-        "open list:ANDROID DRIVERS" <devel@driverdev.osuosl.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        syzkaller <syzkaller@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3215e1d8-6134-4984-49a7-08d6dadec6d0
+X-MS-Exchange-CrossTenant-originalarrivaltime: 17 May 2019 15:46:07.1788
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR12MB2608
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 17, 2019 at 5:44 PM Dmitry Vyukov <dvyukov@google.com> wrote:
->
-> On Fri, May 17, 2019 at 5:36 PM Todd Kjos <tkjos@google.com> wrote:
-> >
-> > From: Dmitry Vyukov <dvyukov@google.com>
-> > Date: Fri, May 17, 2019 at 3:26 AM
-> > To: Greg Kroah-Hartman, Arve Hj=C3=B8nnev=C3=A5g, Todd Kjos, Martijn Co=
-enen,
-> > Joel Fernandes, Christian Brauner, open list:ANDROID DRIVERS, LKML
-> > Cc: syzkaller
-> >
-> > > Hi,
-> > >
-> > > I have 2 questions re drivers/android/binder.c stress testing.
-> > >
-> > > 1. Are there any docs on the kernel interface? Or some examples on ho=
-w
-> > > to use it and reference syscall sequences to make it do something
-> > > meaningful?
-> > > I hopefully figured out struct layouts and offsets of objects thing,
-> > > but I still can't figure out handles, pointers, nodes, pointer to
-> > > nodes... pointer to data (?), references, cookies and where does one
-> > > get valid values for these.
-> >
-> > The kernel interface is not well documented since it isn't intended to
-> > be used apart from libbinder. The best example for your purposes is
-> > probably the binderDriverInterfaceTest which you can find at
-> > https://android.googlesource.com/platform/frameworks/native/+/refs/head=
-s/master/libs/binder/tests/binderDriverInterfaceTest.cpp.
-> >
-> > The libbinder source is at
-> > https://android.googlesource.com/platform/frameworks/native/+/refs/head=
-s/master/libs/binder.
-> >
-> > >
-> > > 2. In my tests any transaction breaks binder device until the next re=
-boot.
-> > > If I open binder device twice, mmap, set context and then the process
-> > > dies, then everything it released fine, in particular the context
-> > > (context_mgr_node gone). So the device is ready for a next test:
-> > >
-> > > [   40.247970][ T6239] binder: binder_open: 6238:6239
-> > > [   40.250819][ T6239] binder: 6238:6239 node 1 u0000000000000000
-> > > c0000000000000000 created
-> > > [   40.253365][ T6239] binder: binder_mmap: 6238 200a0000-200a2000 (8
-> > > K) vma f9 pagep 8000000000000025
-> > > [   40.256454][ T6239] binder: binder_open: 6238:6239
-> > > [   40.259604][ T6239] binder: binder_mmap: 6238 200c0000-200c2000 (8
-> > > K) vma f9 pagep 8000000000000025
-> > > [   40.271526][ T6238] binder: 6238 close vm area 200a0000-200a2000 (=
-8
-> > > K) vma 180200d9 pagep 8000000000000025
-> > > [   40.273113][ T6238] binder: 6238 close vm area 200c0000-200c2000 (=
-8
-> > > K) vma 180200d9 pagep 8000000000000025
-> > > [   40.275058][   T17] binder: binder_flush: 6238 woke 0 threads
-> > > [   40.275997][   T17] binder: binder_flush: 6238 woke 0 threads
-> > > [   40.276968][   T17] binder: binder_deferred_release: 6238 threads
-> > > 0, nodes 0 (ref 0), refs 0, active transactions 0
-> > > [   40.278626][   T17] binder: binder_deferred_release: 6238
-> > > context_mgr_node gone
-> > > [   40.279756][   T17] binder: binder_deferred_release: 6238 threads
-> > > 1, nodes 1 (ref 0), refs 0, active transactions 0
-> > >
-> > >
-> > > However, if I also send a transaction between these fd's, then
-> > > context_mgr_node is not released:
-> > >
-> > > [  783.851403][ T6167] binder: binder_open: 6166:6167
-> > > [  783.858801][ T6167] binder: 6166:6167 node 1 u0000000000000000
-> > > c0000000000000000 created
-> > > [  783.862458][ T6167] binder: binder_mmap: 6166 200a0000-200a2000 (8
-> > > K) vma f9 pagep 8000000000000025
-> > > [  783.865777][ T6167] binder: binder_open: 6166:6167
-> > > [  783.867892][ T6167] binder: binder_mmap: 6166 200c0000-200c2000 (8
-> > > K) vma f9 pagep 8000000000000025
-> > > [  783.870810][ T6167] binder: 6166:6167 write 76 at 0000000020000180=
-,
-> > > read 0 at 0000000020000300
-> > > [  783.872211][ T6167] binder: 6166:6167 BC_TRANSACTION 2 -> 6166 -
-> > > node 1, data 0000000020000200-00000000200002c0 size 88-24-16
-> > > [  783.873819][ T6167] binder: 6166:6167 node 3 u0000000000000000
-> > > c0000000000000000 created
-> > > [  783.875032][ T6167] binder: 6166 new ref 4 desc 1 for node 3
-> > > [  783.875860][ T6167] binder:         node 3 u0000000000000000 -> re=
-f 4 desc 1
-> > > [  783.876868][ T6167] binder: 6166:6167 wrote 76 of 76, read return =
-0 of 0
-> > > [  783.886714][ T6167] binder: 6166 close vm area 200a0000-200a2000 (=
-8
-> > > K) vma 180200d9 pagep 8000000000000025
-> > > [  783.888161][ T6167] binder: 6166 close vm area 200c0000-200c2000 (=
-8
-> > > K) vma 180200d9 pagep 8000000000000025
-> > > [  783.890134][   T27] binder: binder_flush: 6166 woke 0 threads
-> > > [  783.891036][   T27] binder: binder_flush: 6166 woke 0 threads
-> > > [  783.892027][ T2903] binder: release 6166:6167 transaction 2 out, s=
-till active
-> > > [  783.893097][ T2903] binder: unexpected work type, 4, not freed
-> > > [  783.893947][ T2903] binder: undelivered TRANSACTION_COMPLETE
-> > > [  783.894849][ T2903] binder: node 3 now dead, refs 1, death 0
-> > > [  783.895717][ T2903] binder: binder_deferred_release: 6166 threads
-> > > 1, nodes 1 (ref 1), refs 0, active transactions 1
-> > >
-> > >
-> > > And all subsequent tests will fail because "BINDER_SET_CONTEXT_MGR
-> > > already set" presumably to the now unrecoverably dead process:
-> > >
-> > > [  831.085174][ T6191] binder: binder_open: 6190:6191
-> > > [  831.087450][ T6191] binder: BINDER_SET_CONTEXT_MGR already set
-> > > [  831.088910][ T6191] binder: 6190:6191 ioctl 4018620d 200000c0 retu=
-rned -16
-> > > [  831.090626][ T6191] binder: binder_mmap: 6190 200a0000-200a2000 (8
-> > > K) vma f9 pagep 8000000000000025
-> > > [  831.092783][ T6191] binder: binder_open: 6190:6191
-> > > [  831.094076][ T6191] binder: binder_mmap: 6190 200c0000-200c2000 (8
-> > > K) vma f9 pagep 8000000000000025
-> > > [  831.096218][ T6191] binder: 6190:6191 write 76 at 0000000020000180=
-,
-> > > read 0 at 0000000020000300
-> > > [  831.097606][ T6191] binder: 6190:6191 BC_TRANSACTION 5 -> 6166 -
-> > > node 1, data 0000000020000200-00000000200002c0 size 88-24-16
-> > > [  831.099251][ T6191] binder_alloc: 6166: binder_alloc_buf, no vma
-> > > [  831.100433][ T6191] binder: 6190:6191 transaction failed 29189/-3,
-> > > size 88-24 line 3157
-> > > [  831.101559][ T6191] binder: 6190:6191 wrote 76 of 76, read return =
-0 of 0
-> > > [  831.110317][ T6191] binder: 6190 close vm area 200a0000-200a2000 (=
-8
-> > > K) vma 180200d9 pagep 8000000000000025
-> > > [  831.111752][ T6191] binder: 6190 close vm area 200c0000-200c2000 (=
-8
-> > > K) vma 180200d9 pagep 8000000000000025
-> > > [  831.113266][ T3344] binder: binder_flush: 6190 woke 0 threads
-> > > [  831.114147][ T3344] binder: binder_flush: 6190 woke 0 threads
-> > > [  831.115087][ T3344] binder: undelivered TRANSACTION_ERROR: 29189
-> > > [  831.115991][ T3344] binder: binder_deferred_release: 6190 threads
-> > > 1, nodes 0 (ref 0), refs 0, active transactions 0
-> > > [  831.117525][ T3344] binder: binder_deferred_release: 6190 threads
-> > > 1, nodes 0 (ref 0), refs 0, active transactions 0
-> > >
-> > >
-> > > The question is: if processes that opened the device and ever mapped
-> > > it are now completely gone, should it reset the original state when
-> > > context can be bound again? Is it a bug in binder that it does not? I=
-f
-> > > so, is there some kind of temp work-around for this?
-> >
-> > If all the processes that opened the device are gone, everything
-> > should be cleaned up and leave binder in a useable state. When the
-> > device is in this state, can you dump out
-> > /sys/debug/kernel/binder/state and send it to me?
->
->
-> Here it is:
->
->
-> binder state:
-> dead nodes:
->   node 3: u0000000000000000 c0000000000000000 hs 0 hw 0 ls 0 lw 0 is 1
-> iw 1 tr 1 proc 6193
-> proc 6193
-
-/\/\/\
-
-This process does not exist anymore for minutes. Like at all. Even no
-procfs node.
-
-> context binder0
->   thread 6194: l 00 need_return 1 tr 0
->   node 1: u0000000000000000 c0000000000000000 hs 1 hw 1 ls 2 lw 1 is 0 iw=
- 0 tr 1
->   ref 4: desc 1 dead node 3 s 1 w 0 d 00000000e77aea3b
->   buffer 2: 00000000b2301cfa size 88:24:16 active
->   pending transaction 2: 00000000b1591166 from 0:0 to 6193:0 code 0
-> flags 0 pri 0 r1 node 1 size 88:24 data 00000000b2301cfa
->
->
->
-> Kernel also said:
->
-> [  197.049702][   T12] binder: release 6193:6194 transaction 2 out, still=
- active
-> [  197.050803][   T12] binder: unexpected work type, 4, not freed
-> [  197.051658][   T12] binder: undelivered TRANSACTION_COMPLETE
->
-> Not sure why there is something unexpected. I don't try to fuzz it or
-> something at this point. Just run a basic test.
-> Here is the test, it's in syzkaller notation, but hopefully you can
-> get overall idea:
->
-> r0 =3D syz_open_dev$binder(&AUTO=3D'/dev/binder#\x00', 0x0, 0x2)
-> ioctl$BINDER_SET_CONTEXT_MGR_EXT(r0, AUTO, &AUTO=3D{AUTO, 0x100, 0x0, 0x0=
-})
-> mmap$binder(&(0x7f00000a0000), 0x2000, 0x1, 0x11, r0, 0x0)
-> r1 =3D syz_open_dev$binder(&AUTO=3D'/dev/binder#\x00', 0x0, 0x2)
-> mmap$binder(&(0x7f00000c0000), 0x2000, 0x1, 0x11, r1, 0x0)
-> ioctl$BINDER_WRITE_READ(r1, AUTO, &AUTO=3D{AUTO, AUTO,
-> &AUTO=3D[@transaction_sg=3D{AUTO, {0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0,
-> AUTO, AUTO, &AUTO=3D{@flat=3D@binder=3D{AUTO, 0x0, 0x0, 0x0}, @fd=3D{AUTO=
-,
-> AUTO, r0, AUTO, 0x0}, @ptr=3D{AUTO, 0x0, &AUTO=3D""/10, AUTO, 0x0, 0x0}},
-> &AUTO=3D{AUTO, AUTO, AUTO}}, 0x10}], AUTO, AUTO, &AUTO})
+PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBsaW51eC1lZGFjLW93bmVyQHZn
+ZXIua2VybmVsLm9yZyA8bGludXgtZWRhYy1vd25lckB2Z2VyLmtlcm5lbC5vcmc+IE9uIEJlaGFs
+ZiBPZiBCb3Jpc2xhdiBQZXRrb3YNCj4gU2VudDogRnJpZGF5LCBNYXkgMTcsIDIwMTkgNToxMCBB
+TQ0KPiBUbzogTHVjaywgVG9ueSA8dG9ueS5sdWNrQGludGVsLmNvbT4NCj4gQ2M6IEdoYW5uYW0s
+IFlhemVuIDxZYXplbi5HaGFubmFtQGFtZC5jb20+OyBsaW51eC1lZGFjQHZnZXIua2VybmVsLm9y
+ZzsgbGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZzsgeDg2QGtlcm5lbC5vcmcNCj4gU3ViamVj
+dDogUmU6IFtQQVRDSCB2MyA1LzZdIHg4Ni9NQ0U6IFNhdmUgTUNBIGNvbnRyb2wgYml0cyB0aGF0
+IGdldCBzZXQgaW4gaGFyZHdhcmUNCj4gDQo+IA0KPiBPbiBUaHUsIE1heSAxNiwgMjAxOSBhdCAw
+MTo1OTo0M1BNIC0wNzAwLCBMdWNrLCBUb255IHdyb3RlOg0KPiA+IEkgdGhpbmsgdGhlIGludGVu
+dCBvZiB0aGUgb3JpZ2luYWwgcGF0Y2ggd2FzIHRvIGZpbmQgb3V0DQo+ID4gd2hpY2ggYml0cyBh
+cmUgImltcGxlbWVudGVkIGluIGhhcmR3YXJlIi4gSS5lLiB0aHJvdyBhbGwNCj4gPiAxJ3MgYXQg
+dGhlIHJlZ2lzdGVyIGFuZCBzZWUgaWYgYW55IG9mIHRoZW0gc3RpY2suDQo+IA0KPiBBbmQsIGlu
+IGFkZGl0aW9uLCBjaGVjayAtPmluaXQgYmVmb3JlIHNob3dpbmcvc2V0dGluZyBhIGJhbms6DQo+
+IA0KPiAtLS0NCj4gQEAgLTIwOTUsNiArMjA5OCw5IEBAIHN0YXRpYyBzc2l6ZV90IHNob3dfYmFu
+ayhzdHJ1Y3QgZGV2aWNlICpzLCBzdHJ1Y3QgZGV2aWNlX2F0dHJpYnV0ZSAqYXR0ciwNCj4gDQo+
+ICAgICAgICAgYiA9ICZwZXJfY3B1KG1jZV9iYW5rc19hcnJheSwgcy0+aWQpW2JhbmtdOw0KPiAN
+Cj4gKyAgICAgICBpZiAoIWItPmluaXQpDQo+ICsgICAgICAgICAgICAgICByZXR1cm4gLUVOT0RF
+VjsNCj4gKw0KPiAgICAgICAgIHJldHVybiBzcHJpbnRmKGJ1ZiwgIiVsbHhcbiIsIGItPmN0bCk7
+DQo+ICB9DQo+IA0KPiBAQCAtMjExMyw2ICsyMTE5LDkgQEAgc3RhdGljIHNzaXplX3Qgc2V0X2Jh
+bmsoc3RydWN0IGRldmljZSAqcywgc3RydWN0IGRldmljZV9hdHRyaWJ1dGUgKmF0dHIsDQo+IA0K
+PiAgICAgICAgIGIgPSAmcGVyX2NwdShtY2VfYmFua3NfYXJyYXksIHMtPmlkKVtiYW5rXTsNCj4g
+DQo+ICsgICAgICAgaWYgKCFiLT5pbml0KQ0KPiArICAgICAgICAgICAgICAgcmV0dXJuIC1FTk9E
+RVY7DQo+ICsNCj4gICAgICAgICBiLT5jdGwgPSBuZXc7DQo+ICAgICAgICAgbWNlX3Jlc3RhcnQo
+KTsNCj4gLS0tDQo+IA0KPiBzbyB0aGF0IHlvdSBnZXQgYSBmZWVkYmFjayB3aGV0aGVyIHRoZSBz
+ZXR0aW5nIGhhcyBldmVuIHN1Y2NlZWRlZCBvcg0KPiBub3QuIFJpZ2h0IG5vdyB3ZSdyZSBkb2lu
+ZyAic29tZXRoaW5nIiBibGluZGx5IGFuZCBhY2NlcHRpbmcgYW55IGItPmN0bA0KPiBmcm9tIHVz
+ZXJzcGFjZS4gWWVhaCwgaXQgaXMgcm9vdC1vbmx5IGJ1dCBzdGlsbC4uLg0KPiANCj4gPiBJIGRv
+bid0IG9iamVjdCB0byB0aGUgaWRlYSBiZWhpbmQgdGhlIHBhdGNoLiBCdXQgaWYgeW91IHdhbnQN
+Cj4gPiB0byBkbyB0aGlzIHlvdSBqdXN0IHNob3VsZCBub3QgbW9kaWZ5IGItPmN0bC4NCj4gPg0K
+PiA+IFNvIHNvbWV0aGluZyBsaWtlOg0KPiA+DQo+ID4NCj4gPiBzdGF0aWMgdm9pZCBfX21jaGVj
+a19jcHVfaW5pdF9jbGVhcl9iYW5rcyh2b2lkKQ0KPiA+IHsNCj4gPiAgICAgICAgIHN0cnVjdCBt
+Y2VfYmFuayAqbWNlX2JhbmtzID0gdGhpc19jcHVfcmVhZChtY2VfYmFua3NfYXJyYXkpOw0KPiA+
+ICAgICAgIHU2NCB0bXA7DQo+ID4gICAgICAgICBpbnQgaTsNCj4gPg0KPiA+ICAgICAgICAgZm9y
+IChpID0gMDsgaSA8IHRoaXNfY3B1X3JlYWQobWNlX251bV9iYW5rcyk7IGkrKykgew0KPiA+ICAg
+ICAgICAgICAgICAgICBzdHJ1Y3QgbWNlX2JhbmsgKmIgPSAmbWNlX2JhbmtzW2ldOw0KPiA+DQo+
+ID4gICAgICAgICAgICAgICAgIGlmIChiLT5pbml0KSB7DQo+ID4gICAgICAgICAgICAgICAgICAg
+ICAgICAgd3Jtc3JsKG1zcl9vcHMuY3RsKGkpLCBiLT5jdGwpOw0KPiA+ICAgICAgICAgICAgICAg
+ICAgICAgICAgIHdybXNybChtc3Jfb3BzLnN0YXR1cyhpKSwgMCk7DQo+ID4gICAgICAgICAgICAg
+ICAgICAgICAgIHJkbXNybChtc3Jfb3BzLmN0bChpKSwgdG1wKTsNCj4gPg0KPiA+ICAgICAgICAg
+ICAgICAgICAgICAgICAvKiBDaGVjayBpZiBhbnkgYml0cyBpbXBsZW1lbnRlZCBpbiBoL3cgKi8N
+Cj4gPiAgICAgICAgICAgICAgICAgICAgICAgYi0+aW5pdCA9ICEhdG1wOw0KPiA+ICAgICAgICAg
+ICAgICAgICB9DQo+IA0KPiAuLi4gZXhjZXB0IHRoYXQgd2UgdW5jb25kaXRpb25hbGx5IHNldCAt
+PmluaXQgdG8gMSBpbg0KPiBfX21jaGVja19jcHVfbWNlX2JhbmtzX2luaXQoKSBhbmQgSSB0aGlu
+ayB3ZSBzaG91bGQgcXVlcnkgaXQuIEJ0dywgdGhhdA0KPiBuYW1lIF9fbWNoZWNrX2NwdV9tY2Vf
+YmFua3NfaW5pdCgpIGlzIGhpZGVvdXMgdG9vLiBJJ2xsIGZpeCB0aG9zZSB1cC4gSW4NCj4gdGhl
+IG1lYW50aW1lLCBob3cgZG9lcyB0aGUgYmVsb3cgbG9vayBsaWtlPyBUaGUgY2hhbmdlIGlzIHRv
+IHRpY2tsZSBvdXQNCj4gZnJvbSB0aGUgaHcgd2hldGhlciBzb21lIENUTCBiaXRzIHN0aWNrIGFu
+ZCB0aGVuIHVzZSB0aGF0IHRvIGRldGVybWluZQ0KPiBiLT5pbml0IHNldHRpbmc6DQo+IA0KPiAt
+LS0NCj4gRnJvbTogWWF6ZW4gR2hhbm5hbSA8eWF6ZW4uZ2hhbm5hbUBhbWQuY29tPg0KPiBEYXRl
+OiBUdWUsIDMwIEFwciAyMDE5IDIwOjMyOjIxICswMDAwDQo+IFN1YmplY3Q6IFtQQVRDSF0geDg2
+L01DRTogRGV0ZXJtaW5lIE1DQSBiYW5rcycgaW5pdCBzdGF0ZSBwcm9wZXJseQ0KPiANCj4gVGhl
+IE9TIGlzIGV4cGVjdGVkIHRvIHdyaXRlIGFsbCBiaXRzIHRvIE1DQV9DVEwgZm9yIGVhY2ggYmFu
+aywNCj4gdGh1cyBlbmFibGluZyBlcnJvciByZXBvcnRpbmcgaW4gYWxsIGJhbmtzLiBIb3dldmVy
+LCBzb21lIGJhbmtzDQo+IG1heSBiZSB1bnVzZWQgaW4gd2hpY2ggY2FzZSB0aGUgcmVnaXN0ZXJz
+IGZvciBzdWNoIGJhbmtzIGFyZQ0KPiBSZWFkLWFzLVplcm8vV3JpdGVzLUlnbm9yZWQuIEFsc28s
+IHRoZSBPUyBtYXkgYXZvaWQgc2V0dGluZyBzb21lIGNvbnRyb2wNCj4gYml0cyBiZWNhdXNlIG9m
+IHF1aXJrcywgZXRjLg0KPiANCj4gQSBiYW5rIGNhbiBiZSBjb25zaWRlcmVkIHVuaW5pdGlhbGl6
+ZWQgaWYgdGhlIE1DQV9DVEwgcmVnaXN0ZXIgcmV0dXJucw0KPiB6ZXJvLiBUaGlzIGlzIGJlY2F1
+c2UgZWl0aGVyIHRoZSBPUyBkaWQgbm90IHdyaXRlIGFueXRoaW5nIG9yIGJlY2F1c2UNCj4gdGhl
+IGhhcmR3YXJlIGlzIGVuZm9yY2luZyBSQVovV0kgZm9yIHRoZSBiYW5rLg0KPiANCj4gU2V0IGEg
+YmFuaydzIGluaXQgdmFsdWUgYmFzZWQgb24gaWYgdGhlIGNvbnRyb2wgYml0cyBhcmUgc2V0IG9y
+IG5vdCBpbg0KPiBoYXJkd2FyZS4gUmV0dXJuIGFuIGVycm9yIGNvZGUgaW4gdGhlIHN5c2ZzIGlu
+dGVyZmFjZSBmb3IgdW5pbml0aWFsaXplZA0KPiBiYW5rcy4NCj4gDQo+ICBbIGJwOiBNYXNzYWdl
+IGEgYml0LiBEaXNjb3ZlciBiYW5rIGluaXQgc3RhdGUgYXQgYm9vdC4gXQ0KPiANCj4gU2lnbmVk
+LW9mZi1ieTogWWF6ZW4gR2hhbm5hbSA8eWF6ZW4uZ2hhbm5hbUBhbWQuY29tPg0KPiBTaWduZWQt
+b2ZmLWJ5OiBCb3Jpc2xhdiBQZXRrb3YgPGJwQHN1c2UuZGU+DQo+IENjOiAiSC4gUGV0ZXIgQW52
+aW4iIDxocGFAenl0b3IuY29tPg0KPiBDYzogSW5nbyBNb2xuYXIgPG1pbmdvQHJlZGhhdC5jb20+
+DQo+IENjOiAibGludXgtZWRhY0B2Z2VyLmtlcm5lbC5vcmciIDxsaW51eC1lZGFjQHZnZXIua2Vy
+bmVsLm9yZz4NCj4gQ2M6IFRob21hcyBHbGVpeG5lciA8dGdseEBsaW51dHJvbml4LmRlPg0KPiBD
+YzogVG9ueSBMdWNrIDx0b255Lmx1Y2tAaW50ZWwuY29tPg0KPiBDYzogIng4NkBrZXJuZWwub3Jn
+IiA8eDg2QGtlcm5lbC5vcmc+DQo+IExpbms6IGh0dHBzOi8vbGttbC5rZXJuZWwub3JnL3IvMjAx
+OTA0MzAyMDMyMDYuMTA0MTYzLTctWWF6ZW4uR2hhbm5hbUBhbWQuY29tDQo+IC0tLQ0KPiAgYXJj
+aC94ODYva2VybmVsL2NwdS9tY2UvY29yZS5jIHwgMjMgKysrKysrKysrKysrKysrKysrLS0tLS0N
+Cj4gIDEgZmlsZSBjaGFuZ2VkLCAxOCBpbnNlcnRpb25zKCspLCA1IGRlbGV0aW9ucygtKQ0KPiAN
+Cj4gZGlmZiAtLWdpdCBhL2FyY2gveDg2L2tlcm5lbC9jcHUvbWNlL2NvcmUuYyBiL2FyY2gveDg2
+L2tlcm5lbC9jcHUvbWNlL2NvcmUuYw0KPiBpbmRleCA1YmNlY2FkY2Y0ZDkuLmQ4NGIwYzcwN2Qw
+ZSAxMDA2NDQNCj4gLS0tIGEvYXJjaC94ODYva2VybmVsL2NwdS9tY2UvY29yZS5jDQo+ICsrKyBi
+L2FyY2gveDg2L2tlcm5lbC9jcHUvbWNlL2NvcmUuYw0KPiBAQCAtMTQ5Miw5ICsxNDkyLDE2IEBA
+IHN0YXRpYyBpbnQgX19tY2hlY2tfY3B1X21jZV9iYW5rc19pbml0KHZvaWQpDQo+IA0KPiAgICAg
+ICAgIGZvciAoaSA9IDA7IGkgPCBuX2JhbmtzOyBpKyspIHsNCj4gICAgICAgICAgICAgICAgIHN0
+cnVjdCBtY2VfYmFuayAqYiA9ICZtY2VfYmFua3NbaV07DQo+ICsgICAgICAgICAgICAgICB1NjQg
+dmFsOw0KPiANCj4gICAgICAgICAgICAgICAgIGItPmN0bCA9IC0xVUxMOw0KPiAtICAgICAgICAg
+ICAgICAgYi0+aW5pdCA9IDE7DQo+ICsNCj4gKyAgICAgICAgICAgICAgIC8qIENoZWNrIGlmIGFu
+eSBiaXRzIGFyZSBpbXBsZW1lbnRlZCBpbiBoL3cgKi8NCj4gKyAgICAgICAgICAgICAgIHdybXNy
+bChtc3Jfb3BzLmN0bChpKSwgYi0+Y3RsKTsNCj4gKyAgICAgICAgICAgICAgIHJkbXNybChtc3Jf
+b3BzLmN0bChpKSwgdmFsKTsNCj4gKyAgICAgICAgICAgICAgIGItPmluaXQgPSAhIXZhbDsNCj4g
+Kw0KPiArICAgICAgICAgICAgICAgd3Jtc3JsKG1zcl9vcHMuc3RhdHVzKGkpLCAwKTsNCj4gICAg
+ICAgICB9DQoNCkkgdGhpbmsgdGhlcmUgYXJlIGEgY291cGxlIG9mIGlzc3VlcyBoZXJlLg0KMSkg
+VGhlIGJhbmsgaXMgYmVpbmcgaW5pdGlhbGl6ZWQgd2l0aG91dCBhY2NvdW50aW5nIGZvciBhbnkg
+cXVpcmtzLg0KMikgVGhlIGJhbmsgaXMgYmVpbmcgaW5pdGlhbGl6ZWQgd2l0aG91dCBoYXZpbmcg
+c2V0IHVwIGFueSBoYW5kbGVyIG9yIG90aGVyIGFwcHJvcHJpYXRlIHNldHVwLg0KDQpUaGFua3Ms
+DQpZYXplbg0KDQo=
