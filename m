@@ -2,93 +2,102 @@ Return-Path: <SRS0=M1fl=TR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28C0CC04AB4
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 17:20:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B480C04E87
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 17:22:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EF29320645
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 17:20:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CC3FE2168B
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 17:22:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=soleen.com header.i=@soleen.com header.b="le6/IjvK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728249AbfEQRUe (ORCPT
+        id S1727380AbfEQRWP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 May 2019 13:20:34 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:49326 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725932AbfEQRUd (ORCPT
+        Fri, 17 May 2019 13:22:15 -0400
+Received: from mail-ed1-f45.google.com ([209.85.208.45]:33133 "EHLO
+        mail-ed1-f45.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725932AbfEQRWO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 May 2019 13:20:33 -0400
-Received: from localhost.localdomain (unknown [IPv6:2804:431:9718:5766:d14e:219b:d0a:2eb5])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: koike)
-        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id C9449281CB5;
-        Fri, 17 May 2019 18:20:29 +0100 (BST)
-From:   Helen Koike <helen.koike@collabora.com>
-To:     linux-media@vger.kernel.org
-Cc:     hverkuil-cisco@xs4all.nl, kernel@collabora.com,
-        ezequiel.garcia@collabora.com, andrealmeid@collabora.com,
-        Helen Koike <helen.koike@collabora.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] media: vimc: fix component match compare
-Date:   Fri, 17 May 2019 14:20:11 -0300
-Message-Id: <20190517172011.13257-1-helen.koike@collabora.com>
-X-Mailer: git-send-email 2.20.1
+        Fri, 17 May 2019 13:22:14 -0400
+Received: by mail-ed1-f45.google.com with SMTP id n17so11683137edb.0
+        for <linux-kernel@vger.kernel.org>; Fri, 17 May 2019 10:22:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=soleen.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=1NWuugkWpQRRWA/1rSmW1lzMgKVNslNjLRYEkdR1Nr8=;
+        b=le6/IjvKmu1b5/J+EeSLlKWUQDlzA2Aar3VHLn8ExShqMsFCKjqEBf+toX4TliPE0H
+         eb+VONE8jljaQgC23HLZmR5QS5UHQ14s4T0FxyYIFc1hvnC7sseb5WD9AvBCBynEFdA1
+         lrQnNndD0CS9PvrNd4djxjYrHkGXrpWHkuZzQhKz2o77NRvXkFxRo3BMupdD9bP4JwDh
+         yQuehqXV3ucui8vm8YCOufYwj2Wjwx3CcE2DourDzyTtKv53LPK/Fz1M5PAGRNdsAIKj
+         bO3vOu6X06VOTo0XH8SXdjrvrE9azf4qJEek9V7PjsFw50AHNk+SxUWS1jrukw+OJIJ/
+         FaZA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=1NWuugkWpQRRWA/1rSmW1lzMgKVNslNjLRYEkdR1Nr8=;
+        b=KcKarqTw11eOzYJ9CnzMcDR8KPoMlFaoAfwsJj04jwrqQM8o4dYnJp2KHA3yGafBPM
+         y2rF6Or4igRaOnmjyKYBR6u3akP3p7ZHQz1HDoAo3uXI8LcTotSi/niY40DqL57deQTS
+         aYUuFHnqF52RhIOUslx8duzdphknQdaNNGkybF0MDq//2j354qdOqKD8nYnyFFWORosD
+         DisJ65o8DgcPcUsiqk+w7mzyLDZAwyYHCFRTMLzjn2qsD7PaXRYItAZy904p5X8PnAGO
+         y3uerECkrVDbC/lrmqwDYTa9rFKd+L6YN6FLLo1bJju94vFZPKmMnT1ihrVhphDflg1x
+         ccFg==
+X-Gm-Message-State: APjAAAV3a9LvaotLc6gaejrMGRwMRUMlGZRGP36V7go5q6UiFcf9Av4l
+        1ZC6ECfba2LJyHMDeDY6GPjpoBwriwj++cnVxd7Wrg==
+X-Google-Smtp-Source: APXvYqx8zTScvrcOMIUQcp6YiIXAtTO5C4EC3YusWLTaHpQGKmpnKkByyxWWHYm2mGvPVmZ4pHgwJqvrnr9pIKweO4c=
+X-Received: by 2002:a50:f48d:: with SMTP id s13mr59668225edm.151.1558113732961;
+ Fri, 17 May 2019 10:22:12 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <CA+CK2bBeOJPnnyWBgj0CJ7E1z9GVWVg_EJAmDs07BSJDp3PYfQ@mail.gmail.com>
+ <20190517143816.GO6836@dhcp22.suse.cz>
+In-Reply-To: <20190517143816.GO6836@dhcp22.suse.cz>
+From:   Pavel Tatashin <pasha.tatashin@soleen.com>
+Date:   Fri, 17 May 2019 13:22:02 -0400
+Message-ID: <CA+CK2bA+2+HaV4GWNUNP04fjjTPKbEGQHSPrSrmY7HLD57au1Q@mail.gmail.com>
+Subject: Re: NULL pointer dereference during memory hotremove
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     "Verma, Vishal L" <vishal.l.verma@intel.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "jmorris@namei.org" <jmorris@namei.org>,
+        "tiwai@suse.de" <tiwai@suse.de>,
+        "sashal@kernel.org" <sashal@kernel.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
+        "david@redhat.com" <david@redhat.com>, "bp@suse.de" <bp@suse.de>,
+        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
+        "linux-nvdimm@lists.01.org" <linux-nvdimm@lists.01.org>,
+        "jglisse@redhat.com" <jglisse@redhat.com>,
+        "zwisler@kernel.org" <zwisler@kernel.org>,
+        "Jiang, Dave" <dave.jiang@intel.com>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "Busch, Keith" <keith.busch@intel.com>,
+        "thomas.lendacky@amd.com" <thomas.lendacky@amd.com>,
+        "Huang, Ying" <ying.huang@intel.com>,
+        "Wu, Fengguang" <fengguang.wu@intel.com>,
+        "baiyaowei@cmss.chinamobile.com" <baiyaowei@cmss.chinamobile.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If the system has other devices being registered in the component
-framework, the compare function will be called with a device that
-doesn't belong to vimc.
-This device is not necessarily a platform_device, nor have a
-platform_data (which causes a NULL pointer dereference error) and if it
-does have a pdata, it is not necessarily type of struct vimc_platform_data.
-So casting to any of these types is wrong.
+On Fri, May 17, 2019 at 10:38 AM Michal Hocko <mhocko@kernel.org> wrote:
+>
+> On Fri 17-05-19 10:20:38, Pavel Tatashin wrote:
+> > This panic is unrelated to circular lock issue that I reported in a
+> > separate thread, that also happens during memory hotremove.
+> >
+> > xakep ~/x/linux$ git describe
+> > v5.1-12317-ga6a4b66bd8f4
+>
+> Does this happen on 5.0 as well?
 
-Instead of expecting a given pdev with a given pdata, just expect for
-the device it self. vimc-core is the one who creates them, we know in
-advance exactly which object to expect in the match.
+Yes, just reproduced it on 5.0 as well. Unfortunately, I do not have a
+script, and have to do it manually, also it does not happen every
+time, it happened on 3rd time for me.
 
-Fixes: 4a29b7090749 ("[media] vimc: Subdevices as modules")
-Signed-off-by: Helen Koike <helen.koike@collabora.com>
-
----
-
- drivers/media/platform/vimc/vimc-core.c | 7 ++-----
- 1 file changed, 2 insertions(+), 5 deletions(-)
-
-diff --git a/drivers/media/platform/vimc/vimc-core.c b/drivers/media/platform/vimc/vimc-core.c
-index 3aa62d7e3d0e..23992affd01f 100644
---- a/drivers/media/platform/vimc/vimc-core.c
-+++ b/drivers/media/platform/vimc/vimc-core.c
-@@ -244,10 +244,7 @@ static void vimc_comp_unbind(struct device *master)
- 
- static int vimc_comp_compare(struct device *comp, void *data)
- {
--	const struct platform_device *pdev = to_platform_device(comp);
--	const char *name = data;
--
--	return !strcmp(pdev->dev.platform_data, name);
-+	return comp == data;
- }
- 
- static struct component_match *vimc_add_subdevs(struct vimc_device *vimc)
-@@ -277,7 +274,7 @@ static struct component_match *vimc_add_subdevs(struct vimc_device *vimc)
- 		}
- 
- 		component_match_add(&vimc->pdev.dev, &match, vimc_comp_compare,
--				    (void *)vimc->pipe_cfg->ents[i].name);
-+				    &vimc->subdevs[i]->dev);
- 	}
- 
- 	return match;
--- 
-2.20.1
-
+Pasha
