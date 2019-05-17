@@ -2,63 +2,93 @@ Return-Path: <SRS0=M1fl=TR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C250EC04AB4
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 09:41:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C99AC04AB4
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 09:42:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9C2CD2166E
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 09:41:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 33D8D205ED
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 09:42:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1558086143;
+	bh=8mYw8j5LRbtX3WbYBdfrNM39btiVSXy2cHu1qqORAPA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=0Kd3QXght31OPO4bpZa4UYlxHRWOEln6WQKxKyVgaW3rGAwGwRLdL1YfjM6yWFlRz
+	 ASgoarV9jq3rwiW5EWeFa7FJBhLJSBaggTyMsWYybSoIMtNqzKvL8DT8rE8XvuX0nC
+	 xLYKGyLnoqzbSYnG02BycoapQGh6LyFt6c5GFC3M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728978AbfEQJlg (ORCPT
+        id S1729002AbfEQJmW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 May 2019 05:41:36 -0400
-Received: from relay.sw.ru ([185.231.240.75]:36768 "EHLO relay.sw.ru"
+        Fri, 17 May 2019 05:42:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60342 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727338AbfEQJlf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 May 2019 05:41:35 -0400
-Received: from [172.16.25.169]
-        by relay.sw.ru with esmtp (Exim 4.91)
-        (envelope-from <ktkhai@virtuozzo.com>)
-        id 1hRZMo-0003eQ-PP; Fri, 17 May 2019 12:41:30 +0300
-Subject: Re: linux-next: Tree for May 17
-To:     Stephen Rothwell <sfr@canb.auug.org.au>, atish.patra@wdc.com,
-        Linux Next Mailing List <linux-next@vger.kernel.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-References: <20190517142152.588edb6e@canb.auug.org.au>
-From:   Kirill Tkhai <ktkhai@virtuozzo.com>
-Message-ID: <a119ca58-6771-cc36-fe5a-187ba500010a@virtuozzo.com>
-Date:   Fri, 17 May 2019 12:41:30 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        id S1728466AbfEQJmU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 May 2019 05:42:20 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 86CE120833;
+        Fri, 17 May 2019 09:42:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1558086140;
+        bh=8mYw8j5LRbtX3WbYBdfrNM39btiVSXy2cHu1qqORAPA=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Y0u5wIDAfPhJhxK1mEcEN+DTOXZ0f7xvwwyedBMRtQgx5Mt+E7jndOFZ7C8QGV0eQ
+         9Q/yW5wlHZXQOsv6nYO7oiRY7tnuo7u8efQg43MJK4K25Vw5p3FUc68fS+lUwNYnjP
+         +JME1YzZ0QGEF5AviLEtMMGrCIGdjplB5DbMcmmM=
+Date:   Fri, 17 May 2019 11:42:17 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ivan Babrou <ivan@cloudflare.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        kernel-team <kernel-team@cloudflare.com>
+Subject: Re: Linux 4.19 and GCC 9
+Message-ID: <20190517094217.GA13913@kroah.com>
+References: <CANiq72=fsL5m2_e+bNovFCHy3=YVf53EKGtGE_sWvsAD=ONHuQ@mail.gmail.com>
+ <20190516225013.nvhwqi5tfwtby6qb@treble>
+ <CABWYdi29E++jBw8boFZAiDZA7iT5NiJhnNmiHb-Rvd9+97hSVA@mail.gmail.com>
+ <20190517050931.GB32367@kroah.com>
+ <20190517073813.GB2589@hirez.programming.kicks-ass.net>
+ <CANiq72nUPoNHWM-dJuFc3=4D2=8XMuvO0PgGPjviOv+EhrAWUw@mail.gmail.com>
+ <20190517085126.GA3249@kroah.com>
+ <CANiq72muyjE3XPjmtQgJpGaqWR=YBi6KVNT3qe-EMXP7x+q_rQ@mail.gmail.com>
+ <20190517092302.GA5235@kroah.com>
+ <CANiq72=HpvQx1t+W3YwY-6Rdw1F6UJbVkAzJFdE61H668B8s2g@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20190517142152.588edb6e@canb.auug.org.au>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CANiq72=HpvQx1t+W3YwY-6Rdw1F6UJbVkAzJFdE61H668B8s2g@mail.gmail.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 17.05.2019 07:21, Stephen Rothwell wrote:
-> Hi all,
+On Fri, May 17, 2019 at 11:27:41AM +0200, Miguel Ojeda wrote:
+> On Fri, May 17, 2019 at 11:23 AM Greg KH <gregkh@linuxfoundation.org> wrote:
+> >
+> > On Fri, May 17, 2019 at 11:01:45AM +0200, Miguel Ojeda wrote:
+> >
+> > > a6e60d84989f ("include/linux/module.h: copy __init/__exit attrs to
+> > > init/cleanup_module")
+> >
+> > That patch I applied now.
 > 
-> Please do not add any v5.3 material to your linux-next included
-> trees/branches until after v5.2-rc1 has been released.
-> 
-> Changes since 20190516:
-> 
-> The kvm tree gained conflicts against Linus' tree.
-> 
-> Non-merge commits (relative to Linus' tree): 1023
->  1119 files changed, 27058 insertions(+), 7629 deletions(-)
+> Note that this one requires the second one (c0d9782f5b6d).
 
-Binary file was added:
+Oops, yeah, my build boxes just blew up :)
 
-~/linux-next$ git log --oneline ./modules.builtin.modinfo
-4cbb0d07b4d1 RISC-V: Support nr_cpus command line option.
+Let me go take the time to do this correctly now...
 
-Kirill
+greg k-h
