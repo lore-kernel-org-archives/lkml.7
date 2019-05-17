@@ -2,162 +2,84 @@ Return-Path: <SRS0=M1fl=TR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6EE7C04E87
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 09:58:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6080C04AB4
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 10:02:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B9DE320873
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 09:58:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XHc9m3rW"
+	by mail.kernel.org (Postfix) with ESMTP id 9154F20873
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 10:02:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728249AbfEQJ6q (ORCPT
+        id S1728336AbfEQKCH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 May 2019 05:58:46 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:33544 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727309AbfEQJ6p (ORCPT
+        Fri, 17 May 2019 06:02:07 -0400
+Received: from esgaroth.petrovitsch.at ([78.47.184.11]:1591 "EHLO
+        esgaroth.tuxoid.at" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728282AbfEQKCH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 May 2019 05:58:45 -0400
-Received: by mail-lj1-f195.google.com with SMTP id w1so5796777ljw.0;
-        Fri, 17 May 2019 02:58:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=7IQqw/zCk49M4CTj1Osv3TDkm05cc0pffIOGepZLXmo=;
-        b=XHc9m3rWVl8kKVuFONLFh9duic0MoOGqenQYMKs9C0mjlOiBRlHZCcVlYwexy/2H1S
-         gkWi4fD3pi/e1GhZ/uAUh+C5XKm5PnWF1U8rZ4lWHBcoFVb4ik5GNdlYve+v9SdIcB6a
-         Q2eY4Xk/ep4+42mSSdxi8376gvn2lKpVXZocHg8wr8ybFuNQ9tYwCsZ4yDGUGiBt1re+
-         M7fldX6Cc3EkykHxzhJP0ITiUMXfkUP92FKa+KJJzga3n37vvZ3YvDzzJrLhqTA/DVdI
-         WJiAnk5FbTEzI7xZIZNcUrIMKJSAytV3WCeuaZHavMyy/b+iJCqQOSCah7Htihq/lBs+
-         q9tQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=7IQqw/zCk49M4CTj1Osv3TDkm05cc0pffIOGepZLXmo=;
-        b=IwJqZYOfbZHmFSeRMNSPe6W7onCoI/sBgDTEZBQXVR7EOWmOvi8jrD+YqXS9eoSqjL
-         CZ3uLKwoZM/2Uewgm8z4CTYhLy4J/MlXT6FtC7Qj9JzkmGWx5WyiN47/xKu6IYHvIHkA
-         lgfAatjBfOn6+D8Y9kzJd6kwBe5L1OiGwsttAVCaoRW7QE3Ee7dhkyZEAy4t8zhQL+nc
-         ilZ2I7xGORWmtcaFpo84DCijgxyLZraUFVUxO9t19hiCAbHoklQPGWYVVPV5ssBy+hme
-         KFM3uypHZLvHGYVpVjKJOtUIKagVW3iEtS6Q7qMMh4YqsZv9tFiPc7XdBvO/7iLJOuda
-         fj2w==
-X-Gm-Message-State: APjAAAV1BF8UqKxSnk1IGCbnIqrsdGLxdzRYEQXgk8TYSvBrO1llLzCP
-        7Mdo+GgPY/+vXWwSQtix1YwOJO/thPk=
-X-Google-Smtp-Source: APXvYqz7lvkwBZ1PTqgT0BBKUlqadz1F0K35Dq7yLjC4EsZO7HzMHBHXt/eN8h09dUEfAOWRZ8RJEQ==
-X-Received: by 2002:a2e:730c:: with SMTP id o12mr24903943ljc.61.1558087123094;
-        Fri, 17 May 2019 02:58:43 -0700 (PDT)
-Received: from otyshchenko.kyiv.epam.com (ll-74.141.223.85.sovam.net.ua. [85.223.141.74])
-        by smtp.gmail.com with ESMTPSA id y27sm1328720ljd.14.2019.05.17.02.58.41
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Fri, 17 May 2019 02:58:42 -0700 (PDT)
-From:   Oleksandr Tyshchenko <olekstysh@gmail.com>
-To:     linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     julien.grall@arm.com, horms@verge.net.au, magnus.damm@gmail.com,
-        linux@armlinux.org.uk, geert@linux-m68k.org,
-        Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>
-Subject: [PATCH V5] ARM: mach-shmobile: Don't init CNTVOFF/counter if PSCI is available
-Date:   Fri, 17 May 2019 12:58:13 +0300
-Message-Id: <1558087093-22113-1-git-send-email-olekstysh@gmail.com>
-X-Mailer: git-send-email 2.7.4
+        Fri, 17 May 2019 06:02:07 -0400
+X-Greylist: delayed 3771 seconds by postgrey-1.27 at vger.kernel.org; Fri, 17 May 2019 06:02:06 EDT
+Received: from thorin.petrovitsch.priv.at (80-110-98-206.cgn.dynamic.surfer.at [80.110.98.206])
+        (authenticated bits=0)
+        by esgaroth.tuxoid.at (8.15.2/8.15.2) with ESMTPSA id x4H8vTgY028431
+        (version=TLSv1 cipher=AES128-SHA bits=128 verify=NO);
+        Fri, 17 May 2019 10:57:30 +0200
+Subject: Re: [PATCH v2] kbuild: check uniqueness of module names
+To:     Alexander Kapshuk <alexander.kapshuk@gmail.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc:     linux-kbuild@vger.kernel.org, Sam Ravnborg <sam@ravnborg.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Jessica Yu <jeyu@kernel.org>,
+        Lucas De Marchi <lucas.de.marchi@gmail.com>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Michael Schmitz <schmitzmic@gmail.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Rusty Russell <rusty@rustcorp.com.au>,
+        Kees Cook <keescook@chromium.org>,
+        Michal Marek <michal.lkml@markovi.net>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+References: <20190517042753.25857-1-yamada.masahiro@socionext.com>
+ <CAJ1xhMUxsFR6yLeV1rG1FRZzqwyMGF5PURk6F5_6kN3v2dGN1A@mail.gmail.com>
+From:   Bernd Petrovitsch <bernd@petrovitsch.priv.at>
+Message-ID: <68270a84-966b-05e3-c82e-893c320febfd@petrovitsch.priv.at>
+Date:   Fri, 17 May 2019 10:57:14 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
+MIME-Version: 1.0
+In-Reply-To: <CAJ1xhMUxsFR6yLeV1rG1FRZzqwyMGF5PURk6F5_6kN3v2dGN1A@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-DCC-URT-Metrics: esgaroth.tuxoid.at 1060; Body=15 Fuz1=15 Fuz2=15
+X-Virus-Scanned: clamav-milter 0.97 at esgaroth.tuxoid.at
+X-Virus-Status: Clean
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>
+On 17/05/2019 10:16, Alexander Kapshuk wrote:
+[...]
+> The 'xargs' '-r' flag is a GNU extension.
+> If POSIX compliance is important here, the use of 'cat', 'xargs' and
+> 'basename' may be substituted with that of 'sed' to initialise
+> same_name_modules:
+> sed 's!.*/!!' modules.order modules.builtin | sort | uniq -d
 
-If PSCI is available then most likely we are running on PSCI-enabled
-U-Boot which, we assume, has already taken care of resetting CNTVOFF
-and updating counter module before switching to non-secure mode
-and we don't need to.
+'s!' is TTBOMK also a GNU-extension:
+sed 's/.*\///' modules.order modules.builtin | sort | uniq -d
 
-As the psci_smp_available() helper always returns false if CONFIG_SMP
-is disabled, it can't be used safely as an indicator of PSCI usage.
-For that reason, we check for the mandatory PSCI operation to be
-available.
+> 'Sed' may also be used on its own in the 'for' loop instead of as part
+> of a pipeline along with 'grep' to generate the desired output:
+> sed '/\/'$m'/!d;s:^kernel/:  :' modules.order modules.builtin
 
-Please note, an extra check to prevent secure_cntvoff_init() from
-being called for secondary CPUs in headsmp-apmu.S is not needed,
-as SMP code for APMU based system is not executed if PSCI is in use.
+sed "/\/${m}/!d;s/^kernel\//  /" modules.order modules.builtin
 
-Signed-off-by: Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>
-CC: Julien Grall <julien.grall@arm.com>
-
----
-   You can find previous discussions here:
-   [v1]  https://lkml.org/lkml/2019/4/17/810
-   [v2]  https://lkml.org/lkml/2019/5/3/338
-   [v3]  https://lkml.org/lkml/2019/5/10/415
-   [RFC] https://lkml.org/lkml/2019/5/10/473
-   [v4]  https://lkml.org/lkml/2019/5/14/550
-
-   Changes in v2:
-      - Clarify patch subject/description
-      - Don't use CONFIG_ARM_PSCI option, check whether the PSCI is available,
-        by using psci_smp_available()
-      - Check whether we are running on top of Xen, by using xen_domain()
-
-   Changes in v3:
-      - Don't check for the presence of Xen
-
-   Changes in v4:
-      - Don't use psci_smp_available() helper, check for psci_ops.cpu_on
-        directly
-      - Skip updating counter module if PSCI is available
-
-   Changes in v5:
-      - Check for psci_ops.cpu_on if CONFIG_ARM_PSCI_FW is defined
----
- arch/arm/mach-shmobile/setup-rcar-gen2.c | 17 +++++++++++++++++
- 1 file changed, 17 insertions(+)
-
-diff --git a/arch/arm/mach-shmobile/setup-rcar-gen2.c b/arch/arm/mach-shmobile/setup-rcar-gen2.c
-index eea60b2..0eeca49b 100644
---- a/arch/arm/mach-shmobile/setup-rcar-gen2.c
-+++ b/arch/arm/mach-shmobile/setup-rcar-gen2.c
-@@ -17,6 +17,7 @@
- #include <linux/of.h>
- #include <linux/of_fdt.h>
- #include <linux/of_platform.h>
-+#include <linux/psci.h>
- #include <asm/mach/arch.h>
- #include <asm/secure_cntvoff.h>
- #include "common.h"
-@@ -62,6 +63,21 @@ void __init rcar_gen2_timer_init(void)
- {
- 	void __iomem *base;
- 	u32 freq;
-+	bool need_update = true;
-+
-+	/*
-+	 * If PSCI is available then most likely we are running on PSCI-enabled
-+	 * U-Boot which, we assume, has already taken care of resetting CNTVOFF
-+	 * and updating counter module before switching to non-secure mode
-+	 * and we don't need to.
-+	 */
-+#if defined(CONFIG_ARM_PSCI_FW)
-+	if (psci_ops.cpu_on)
-+		need_update = false;
-+#endif
-+
-+	if (need_update == false)
-+		goto skip_update;
- 
- 	secure_cntvoff_init();
- 
-@@ -102,6 +118,7 @@ void __init rcar_gen2_timer_init(void)
- 
- 	iounmap(base);
- 
-+skip_update:
- 	of_clk_init(NULL);
- 	timer_probe();
- }
+MfG,
+	Bernd
 -- 
-2.7.4
-
+Bernd Petrovitsch                  Email : bernd@petrovitsch.priv.at
+                     LUGA : http://www.luga.at
