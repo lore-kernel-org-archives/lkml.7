@@ -3,100 +3,175 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63087C04AB4
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 08:15:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01F77C04AB4
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 08:15:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3ADC320848
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 08:15:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C570D20873
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 08:15:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728742AbfEQIPN (ORCPT
+        id S1728756AbfEQIPv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 May 2019 04:15:13 -0400
-Received: from verein.lst.de ([213.95.11.211]:36068 "EHLO newverein.lst.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727386AbfEQIPN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 May 2019 04:15:13 -0400
-Received: by newverein.lst.de (Postfix, from userid 107)
-        id 6C01068C4E; Fri, 17 May 2019 10:14:52 +0200 (CEST)
-Received: from blackhole.lan (p5B33F92B.dip0.t-ipconnect.de [91.51.249.43])
-        by newverein.lst.de (Postfix) with ESMTPSA id DBFF067329;
-        Fri, 17 May 2019 10:14:19 +0200 (CEST)
-Date:   Fri, 17 May 2019 10:14:18 +0200
-From:   Torsten Duwe <duwe@lst.de>
-To:     Maxime Ripard <maxime.ripard@bootlin.com>
-Cc:     Vasily Khoruzhick <anarsoul@gmail.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        Icenowy Zheng <icenowy@aosc.io>,
-        Sean Paul <seanpaul@chromium.org>,
-        Harald Geyer <harald@ccbib.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        arm-linux <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 4/4] arm64: DTS: allwinner: a64: enable ANX6345 bridge
- on Teres-I
-Message-ID: <20190517101353.3e86d696@blackhole.lan>
-In-Reply-To: <20190517072738.deohh5fly4jxms7k@flea>
-References: <20190514155911.6C0AC68B05@newverein.lst.de>
-        <20190514160241.9EAC768C7B@newverein.lst.de>
-        <CA+E=qVfuKBzWK7dpM_eabjU8mLdzOw3zCnYk6Tc1oXdavH7CNA@mail.gmail.com>
-        <20190515093141.41016b11@blackhole.lan>
-        <CA+E=qVf6K_0T0x2Hsfp6EDqM-ok6xiAzeZPvp6SRg0yt010pKA@mail.gmail.com>
-        <20190516154820.GA10431@lst.de>
-        <CA+E=qVe5NkAvHXPvVc7iTbZn5sKeoRm0166zPW_s83c2gk7B+g@mail.gmail.com>
-        <20190516164859.GB10431@lst.de>
-        <20190517072738.deohh5fly4jxms7k@flea>
-Organization: LST e.V.
-X-Mailer: Claws Mail 3.16.0 (GTK+ 2.24.32; x86_64-suse-linux-gnu)
+        Fri, 17 May 2019 04:15:51 -0400
+Received: from mail-io1-f54.google.com ([209.85.166.54]:46941 "EHLO
+        mail-io1-f54.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727386AbfEQIPv (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 May 2019 04:15:51 -0400
+Received: by mail-io1-f54.google.com with SMTP id q21so4760009iog.13
+        for <linux-kernel@vger.kernel.org>; Fri, 17 May 2019 01:15:50 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=6rZvuSTA03tZt4ntB82dySVHhY4AUvjuHvOnoRahYnc=;
+        b=XA0uax63zfJjfu9/8GzGqUYhTf7yVsZ66WdHdpmPtv4F5cPmOEFbHKX/B0AeprpiV3
+         ZAwLAoifkJneQZvbOTAZcUZYO+O3VeaR2FPYZS2s5VZyPPdAfHOUVcH9jASB5EwOldw5
+         /GdSdTEeurLU1klD6PwX2J33XIBdLuJpZn5W68R1yK2lW2NWiaTV2B5aovkQEjAQf1Ep
+         K/t1CDnrd2LcFbwBTaVSZcoH2DqWIHgJQxySKCohtKB1xEUf4kceqSo5vW2ZRlYXYWLF
+         4ED0jyxWB6/3DJuw14OevnKiw1aO0t+P9HkoHVX0msAb9BmItGRJHEJ6GN7wcSIxv1o0
+         Eokg==
+X-Gm-Message-State: APjAAAU3IhmRRdGQizsjQVZS9zSR6OH46Ap44B9H2zRGizCkpAerXFDB
+        zl/iYhXN0pt6JDyzA2lT1xZFg7SPLG/LbebBd36d/g==
+X-Google-Smtp-Source: APXvYqzxauYik0HqX6cIGCJ0EBNWc/OAcDXXCy5romY7JEOgTTa3ygWaEms2oRenEH+xS8fAcMje5T6yMuiSocD8j9g=
+X-Received: by 2002:a05:6602:211a:: with SMTP id x26mr29650054iox.202.1558080950017;
+ Fri, 17 May 2019 01:15:50 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <3CD3EE63-0CD2-404A-A403-E11DCF2DF8D9@fb.com> <20190517074600.GJ2623@hirez.programming.kicks-ass.net>
+ <20190517081057.GQ2650@hirez.programming.kicks-ass.net>
+In-Reply-To: <20190517081057.GQ2650@hirez.programming.kicks-ass.net>
+From:   Kairui Song <kasong@redhat.com>
+Date:   Fri, 17 May 2019 16:15:39 +0800
+Message-ID: <CACPcB9cB5n1HOmZcVpusJq8rAV5+KfmZ-Lxv3tgsSoy7vNrk7w@mail.gmail.com>
+Subject: Re: Getting empty callchain from perf_callchain_kernel()
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Song Liu <songliubraving@fb.com>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Kernel Team <Kernel-team@fb.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 17 May 2019 09:27:38 +0200
-Maxime Ripard <maxime.ripard@bootlin.com> wrote:
-
-> On Thu, May 16, 2019 at 06:48:59PM +0200, Torsten Duwe wrote:
-> > On Thu, May 16, 2019 at 09:06:41AM -0700, Vasily Khoruzhick wrote:
+On Fri, May 17, 2019 at 4:11 PM Peter Zijlstra <peterz@infradead.org> wrote:
+>
+> On Fri, May 17, 2019 at 09:46:00AM +0200, Peter Zijlstra wrote:
+> > On Thu, May 16, 2019 at 11:51:55PM +0000, Song Liu wrote:
+> > > Hi,
 > > >
-> > > Driver can talk to the panel over AUX channel only after t1+t3,
-> > > t1 is up to 10ms, t3 is up to 200ms.
+> > > We found a failure with selftests/bpf/tests_prog in test_stacktrace_map (on bpf/master
+> > > branch).
+> > >
+> > > After digging into the code, we found that perf_callchain_kernel() is giving empty
+> > > callchain for tracepoint sched/sched_switch. And it seems related to commit
+> > >
+> > > d15d356887e770c5f2dcf963b52c7cb510c9e42d
+> > > ("perf/x86: Make perf callchains work without CONFIG_FRAME_POINTER")
+> > >
+> > > Before this commit, perf_callchain_kernel() returns callchain with regs->ip. With
+> > > this commit, regs->ip is not sent for !perf_hw_regs(regs) case.
 > >
-> > This is after power-on. The boot loader needs to deal with this.
-> 
-> The bootloader can deal with it, but the kernel will also need to. The
-> bootloader might not be doing this because it's not been updated, the
-> regulator might have been disabled between the time the kernel was
-> started and the time the bridge driver probes, etc.
+> > So while I think the below is indeed right; we should store regs->ip
+> > regardless of the unwind path chosen, I still think there's something
+> > fishy if this results in just the 1 entry.
+> >
+> > The sched/sched_switch event really should have a non-trivial stack.
+> >
+> > Let me see if I can reproduce with just perf.
+>
+> $ perf record -g -e "sched:sched_switch" -- make clean
+> $ perf report -D
+>
+> 12 904071759467 0x1790 [0xd0]: PERF_RECORD_SAMPLE(IP, 0x1): 7236/7236: 0xffffffff81c29562 period: 1 addr: 0
+> ... FP chain: nr:10
+> .....  0: ffffffffffffff80
+> .....  1: ffffffff81c29562
+> .....  2: ffffffff81c29933
+> .....  3: ffffffff8111f688
+> .....  4: ffffffff81120b9d
+> .....  5: ffffffff81120ce5
+> .....  6: ffffffff8100254a
+> .....  7: ffffffff81e0007d
+> .....  8: fffffffffffffe00
+> .....  9: 00007f9b6cd9682a
+> ... thread: sh:7236
+> ...... dso: /lib/modules/5.1.0-12177-g41bbb9129767/build/vmlinux
+>
+>
+> IOW, it seems to 'work'.
+>
 
-No, you cannot practically switch off this voltage. It supports _all_
-the devices I mentioned. In fact, the PMIC needs to enable it initially,
-and then it takes some time before the SoC can access the MMC and read
-the SPL from it, just because of exactly these 3.3V. Then the boot
-loader starts, and later the eDP bridge gets initialised.
+Hi, I think the actual problem is that bpf_get_stackid_tp (and maybe
+some other bfp functions) is now broken, or, strating an unwind
+directly inside a bpf program will end up strangely. It have following
+kernel message:
 
-In *theory*, albeit a very daring one, I could imagine a very deep
-sleep mode that can only be ended by pressing the power button, which
-should still work without DCDC1. Only then, a description of the panel
-would be required. But I probably missed something and even this does
-not work.
+WARNING: kernel stack frame pointer at 0000000070cad07c in
+test_progs:1242 has bad value 00000000ffd4497e
 
-So for all current practical purposes, we can assume the Teres-I panel
-to be powered properly and providing valid EDID; nothing to worry about
-in software.
+And in the debug message:
 
-HTH,
-	Torsten
+[  160.460287] 000000006e117175: ffffffffaa23a0e8
+(get_perf_callchain+0x148/0x280)
+[  160.460287] 0000000002e8715f: 0000000000c6bba0 (0xc6bba0)
+[  160.460288] 00000000b3d07758: ffff9ce3f9790000 (0xffff9ce3f9790000)
+[  160.460289] 0000000055c97836: ffff9ce3f9790000 (0xffff9ce3f9790000)
+[  160.460289] 000000007cbb140a: 000000010000007f (0x10000007f)
+[  160.460290] 000000007dc62ac9: 0000000000000000 ...
+[  160.460290] 000000006b41e346: 1c7da01cd70c4000 (0x1c7da01cd70c4000)
+[  160.460291] 00000000f23d1826: ffffd89cffc3ae80 (0xffffd89cffc3ae80)
+[  160.460292] 00000000f9a16017: 000000000000007f (0x7f)
+[  160.460292] 00000000a8e62d44: 0000000000000000 ...
+[  160.460293] 00000000cbc83c97: ffffb89d00d8d000 (0xffffb89d00d8d000)
+[  160.460293] 0000000092842522: 000000000000007f (0x7f)
+[  160.460294] 00000000dafbec89: ffffb89d00c6bc50 (0xffffb89d00c6bc50)
+[  160.460296] 000000000777e4cf: ffffffffaa225d97 (bpf_get_stackid+0x77/0x470)
+[  160.460296] 000000009942ea16: 0000000000000000 ...
+[  160.460297] 00000000a08006b1: 0000000000000001 (0x1)
+[  160.460298] 000000009f03b438: ffffb89d00c6bc30 (0xffffb89d00c6bc30)
+[  160.460299] 000000006caf8b32: ffffffffaa074fe8 (__do_page_fault+0x58/0x90)
+[  160.460300] 000000003a13d702: 0000000000000000 ...
+[  160.460300] 00000000e2e2496d: ffff9ce300000000 (0xffff9ce300000000)
+[  160.460301] 000000008ee6b7c2: ffffd89cffc3ae80 (0xffffd89cffc3ae80)
+[  160.460301] 00000000a8cf6d55: 0000000000000000 ...
+[  160.460302] 0000000059078076: ffffd89cffc3ae80 (0xffffd89cffc3ae80)
+[  160.460303] 00000000c6aac739: ffff9ce3f1e18eb0 (0xffff9ce3f1e18eb0)
+[  160.460303] 00000000a39aff92: ffffb89d00c6bc60 (0xffffb89d00c6bc60)
+[  160.460305] 0000000097498bf2: ffffffffaa1f4791 (bpf_get_stackid_tp+0x11/0x20)
+[  160.460306] 000000006992de1e: ffffb89d00c6bc78 (0xffffb89d00c6bc78)
+[  160.460307] 00000000dacd0ce5: ffffffffc0405676 (0xffffffffc0405676)
+[  160.460307] 00000000a81f2714: 0000000000000000 ...
+
+# Note here is the invalid frame pointer
+[  160.460308] 0000000070cad07c: ffffb89d00a1d000 (0xffffb89d00a1d000)
+[  160.460308] 00000000f8f194e4: 0000000000000001 (0x1)
+[  160.460309] 000000002134f42a: ffffd89cffc3ae80 (0xffffd89cffc3ae80)
+[  160.460310] 00000000f9345889: ffff9ce3f1e18eb0 (0xffff9ce3f1e18eb0)
+[  160.460310] 000000008ad22a42: 0000000000000000 ...
+[  160.460311] 0000000073808173: ffffb89d00c6bce0 (0xffffb89d00c6bce0)
+[  160.460312] 00000000c9effff4: ffffffffaa1f48d1 (trace_call_bpf+0x81/0x100)
+[  160.460313] 00000000c5d8ebd1: ffffb89d00c6bcc0 (0xffffb89d00c6bcc0)
+[  160.460315] 00000000bce0b072: ffffffffab651be0
+(event_sched_migrate_task+0xa0/0xa0)
+[  160.460316] 00000000355cf319: 0000000000000000 ...
+[  160.460316] 000000003b67f2ad: ffffd89cffc3ae80 (0xffffd89cffc3ae80)
+[  160.460316] 000000009a77e20b: ffff9ce3fba25000 (0xffff9ce3fba25000)
+[  160.460317] 0000000032cf7376: 0000000000000001 (0x1)
+[  160.460317] 000000000051db74: ffffb89d00c6bd20 (0xffffb89d00c6bd20)
+[  160.460318] 0000000040eb3bf7: ffffffffaa22be81
+(perf_trace_run_bpf_submit+0x41/0xb0)
+
+Simply store the IP still won't really fix the problem, it just passed
+the test. Just had a try to have bpf functions set the
+X86_EFLAGS_FIXED for the flags and always dump the bp, it bypassed
+this specified problem.
+
+Using frame pointer unwinder for testing this, and seems ORC is fine with this.
+
+-- 
+Best Regards,
+Kairui Song
