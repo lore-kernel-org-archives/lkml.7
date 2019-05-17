@@ -2,256 +2,147 @@ Return-Path: <SRS0=M1fl=TR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73D87C04AB4
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 20:19:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D93FC04AB4
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 20:34:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 351E12087E
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 20:19:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 02E252087E
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 20:34:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernelci-org.20150623.gappssmtp.com header.i=@kernelci-org.20150623.gappssmtp.com header.b="rtMZPuBQ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="edhO8K4C"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728949AbfEQUTq (ORCPT
+        id S1728074AbfEQUei (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 May 2019 16:19:46 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:44658 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727594AbfEQUTp (ORCPT
+        Fri, 17 May 2019 16:34:38 -0400
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:42613 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727566AbfEQUeh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 May 2019 16:19:45 -0400
-Received: by mail-wr1-f66.google.com with SMTP id c5so8335868wrs.11
-        for <linux-kernel@vger.kernel.org>; Fri, 17 May 2019 13:19:43 -0700 (PDT)
+        Fri, 17 May 2019 16:34:37 -0400
+Received: by mail-qt1-f193.google.com with SMTP id j53so9521728qta.9
+        for <linux-kernel@vger.kernel.org>; Fri, 17 May 2019 13:34:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernelci-org.20150623.gappssmtp.com; s=20150623;
-        h=message-id:date:mime-version:content-transfer-encoding:subject:to
-         :from:cc;
-        bh=djr/WXBRd+de1RQsSnwTqjcAKvd/O5mg6l1k6CM1beM=;
-        b=rtMZPuBQvMBed2NCiJd0SHx9iaYiKFrVe/wUeUm5M4lQwUXyGNcUhnPpyRHOCz74Vv
-         F9FODgdaQXiqY2POtpk7X0/HUaRTDhL1FI+cxZVel9IWrW9F38ccLZbUMYpQgkEedGRA
-         hbj44T5trbEmUh2+hoFWj8RF+yDbogVNg+mS58vL6joWcho3MtRCdUKxVDI+lIyC2HjC
-         iPKWz6Gvju7MRlbbwqPA0weRAa2Wu90lLhxjaSjYFumPAgJX2H3M0I+whJJ7M//h/lD3
-         Hv8GvVjbOOcLN0eIHbAsdbA+ssvFqRcPNzgm9vnRGYQV9pv0Pf0F117O4buo2+PXocGs
-         BNrg==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=RbAOSk8QxR8pxMSSXPbl0/7Hv6ZMJZsH4C4gzrbPVXg=;
+        b=edhO8K4Cnt/bF/BJMP1DFGm/5VM2bDJXF7LvFdaUAWXJbc/tROILr+8hinTr91esi8
+         mg/hpeAUtdKQTg2dywpC1hUw7wsz+zn06CNqqgBIuOywq93RQPh1CRnCNxZT/ybvPGBM
+         WY365EuQJEd5jYwZA8h5KGD5PQfxMiAC7bY4f9BJnl7i7yoTuGRBRWpX6rLgpUwWWT42
+         00qFlfFvaCNGjHze7NXxI86Elsa4Xc3s5ng66w1zjLEDFB5XY3Ybuci2pUnAcT4L9z2L
+         zvI8f9GSaX7XtH1oJi+XJ/Xba9X63ymtEspl7YrpZPbwilibvTFm2eBQy1k/gXFiSkq7
+         nx6w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:date:mime-version
-         :content-transfer-encoding:subject:to:from:cc;
-        bh=djr/WXBRd+de1RQsSnwTqjcAKvd/O5mg6l1k6CM1beM=;
-        b=ayKZj9Ne6vEqaUiqqJaa+aC/HP2tcXqlzL7JUr3gnFZoPQWRhMvs8Ec4eNsKRQsye7
-         EAs8Yr5XIusGgO95ByohokflGPPPSppERPex44T7YOOz97wvERjmlTVPtlCBEpuZKRUs
-         vI6bFqfjCPbC7LMXIo9qJ1NpPdTjQ8XAO0ALCHgq2C86/hLY5jHftlykp5zv5uKnvmX7
-         mOOSVRvgWP0O2ivxMbXJGtXAOzR2u81WAlSYzIxgHsHj+Jlo3q4pbsZspfv28tUkEP1b
-         8m5UKZS8VVZkAszPiQ/NS4NOGM+Lmm+UuEwnBwV+kNVbEVR0Mteukntj12KMHwvMCIUw
-         mSgw==
-X-Gm-Message-State: APjAAAUuVbJLsr2fUR6QV2CObhNFpSEEHAIjF3DSggnika6eskAy369d
-        5fbeAnrRL24v7vzWWibHrpetJQ==
-X-Google-Smtp-Source: APXvYqwuptJZlrKbAVpQaVn0SYxkQTsT/owQkYH0t1z2X5Bs1vc49kuHcuTHERoyvP5DmbggcdIz3A==
-X-Received: by 2002:adf:f6c8:: with SMTP id y8mr24018465wrp.175.1558124382869;
-        Fri, 17 May 2019 13:19:42 -0700 (PDT)
-Received: from [148.251.42.114] ([2a01:4f8:201:9271::2])
-        by smtp.gmail.com with ESMTPSA id u15sm1402035wru.16.2019.05.17.13.19.41
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=RbAOSk8QxR8pxMSSXPbl0/7Hv6ZMJZsH4C4gzrbPVXg=;
+        b=mG1uDZ0seoP0MfLj7Y8aH5MKEOvl5LpWMzs6P4UrVeqgtL4WGgHVUwFbfYas6WUZAe
+         z2E/AJ/+eingMHxw1hbg7WdEAC1KIiST9LCkoaOZKQ/sGIQ6OVqsLrNK/+/Ly4Ltwh+U
+         0eAc7Caq/v8Y2JhiilOZSOODTvHmhypSse2Hk9tzw1dnWu3+eP4gorcEGhQ6aG7JF6Yx
+         xQzgTm6AqrBKoNGTYlogoEjlcOAPSFqWbB0rHfR3ZMWJwWHhZjgF6xxebHA8wohH2BmB
+         zDTA2hLNZZVCCu7aiDI9wkM+UitHujhvt3hXKAB3bWjUuCFF032fP75He8Bvqia6pxsF
+         utGA==
+X-Gm-Message-State: APjAAAUBcFTEwi9JDjQ7Acevqxsd1c31KEqhcIIEdx0CpQuBtTEtMr06
+        dXfq6TzYi1U0CdRUBl4A/w==
+X-Google-Smtp-Source: APXvYqy2M0jlxliLATGgVjWH4P9MYuaDZU4a3gCEqnRNwtY36ESB0RRWnMfMLaFQsRNuE2ZDqI/YVA==
+X-Received: by 2002:aed:3501:: with SMTP id a1mr50458608qte.265.1558125276742;
+        Fri, 17 May 2019 13:34:36 -0700 (PDT)
+Received: from localhost.localdomain ([92.117.189.151])
+        by smtp.gmail.com with ESMTPSA id u5sm5499145qtj.95.2019.05.17.13.34.35
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 17 May 2019 13:19:42 -0700 (PDT)
-Message-ID: <5cdf175e.1c69fb81.9d43b.8249@mx.google.com>
-Date:   Fri, 17 May 2019 13:19:42 -0700 (PDT)
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Kernelci-Report-Type: bisect
-X-Kernelci-Tree: mainline
-X-Kernelci-Lab-Name: lab-baylibre
-X-Kernelci-Branch: master
-X-Kernelci-Kernel: v5.1-12172-g2c45e7fbc962
-Subject: mainline/master boot bisection: v5.1-12172-g2c45e7fbc962 on
- meson-g12a-x96-max
-To:     tomeu.vizoso@collabora.com, guillaume.tucker@collabora.com,
-        mgalka@collabora.com, Kevin Hilman <khilman@baylibre.com>,
-        Neil Armstrong <narmstrong@baylibre.com>, broonie@kernel.org,
-        matthew.hart@linaro.org, khilman@baylibre.com,
-        enric.balletbo@collabora.com, Jerome Brunet <jbrunet@baylibre.com>
-From:   "kernelci.org bot" <bot@kernelci.org>
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Rob Herring <robh+dt@kernel.org>,
-        linux-amlogic@lists.infradead.org,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-arm-kernel@lists.infradead.org
+        Fri, 17 May 2019 13:34:36 -0700 (PDT)
+From:   Viktor Rosendahl <viktor.rosendahl@gmail.com>
+To:     Steven Rostedt <rostedt@goodmis.org>,
+        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org
+Cc:     Joel Fernandes <joel@joelfernandes.org>,
+        Viktor Rosendahl <viktor.rosendahl@gmail.com>
+Subject: [PATCH v4 0/4] Some new features for the latency tracers
+Date:   Fri, 17 May 2019 22:34:26 +0200
+Message-Id: <20190517203430.6729-1-viktor.rosendahl@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-* This automated bisection report was sent to you on the basis  *
-* that you may be involved with the breaking commit it has      *
-* found.  No manual investigation has been done to verify it,   *
-* and the root cause of the problem may be somewhere else.      *
-* Hope this helps!                                              *
-* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+Hello all,
 
-mainline/master boot bisection: v5.1-12172-g2c45e7fbc962 on meson-g12a-x96-=
-max
+Changes in v4:
 
-Summary:
-  Start:      2c45e7fbc962 Merge branch 'next' of git://git.kernel.org/pub/=
-scm/linux/kernel/git/rzhang/linux
-  Details:    https://kernelci.org/boot/id/5cde4f3459b5143cfb7a3628
-  Plain log:  https://storage.kernelci.org//mainline/master/v5.1-12172-g2c4=
-5e7fbc962/arm64/defconfig+CONFIG_RANDOMIZE_BASE=3Dy/gcc-8/lab-baylibre/boot=
--meson-g12a-x96-max.txt
-  HTML log:   https://storage.kernelci.org//mainline/master/v5.1-12172-g2c4=
-5e7fbc962/arm64/defconfig+CONFIG_RANDOMIZE_BASE=3Dy/gcc-8/lab-baylibre/boot=
--meson-g12a-x96-max.html
-  Result:     11a7bea17c9e arm64: dts: meson: g12a: add pinctrl support con=
-trollers
+- [PATCH 1/4]:
+  * Improved support for multiple active trace instances by storing entries
+    that cannot be notified immediately in a linked list instead of a
+    single pointer. With multiple instances this could happen.
 
-Checks:
-  revert:     PASS
-  verify:     PASS
+  * Register trace_maxlat_fsnotify_init() with late_initcall_sync().
+    Previously it was piggy backed on tracer_init_tracefs() and it got
+    called more than once.
 
-Parameters:
-  Tree:       mainline
-  URL:        git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.=
-git
-  Branch:     master
-  Target:     meson-g12a-x96-max
-  CPU arch:   arm64
-  Lab:        lab-baylibre
-  Compiler:   gcc-8
-  Config:     defconfig+CONFIG_RANDOMIZE_BASE=3Dy
-  Test suite: boot
+  * Added some comments.
 
-Breaking commit found:
+- [PATCH 3/4]:
+  * Some of the code was incorrectly added in the next patch. Improved
+    commit message.
 
----------------------------------------------------------------------------=
-----
-commit 11a7bea17c9e0a36daab934d83e15a760f402147
-Author: Jerome Brunet <jbrunet@baylibre.com>
-Date:   Mon Mar 18 10:58:45 2019 +0100
-
-    arm64: dts: meson: g12a: add pinctrl support controllers
-    =
-
-    Add the peripheral and always-on pinctrl controllers to the g12a soc.
-    =
-
-    Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
-    Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
-    Signed-off-by: Kevin Hilman <khilman@baylibre.com>
-
-diff --git a/arch/arm64/boot/dts/amlogic/meson-g12a.dtsi b/arch/arm64/boot/=
-dts/amlogic/meson-g12a.dtsi
-index abfa167751af..5e07e4ca3f4b 100644
---- a/arch/arm64/boot/dts/amlogic/meson-g12a.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-g12a.dtsi
-@@ -104,6 +104,29 @@
- 				#address-cells =3D <2>;
- 				#size-cells =3D <2>;
- 				ranges =3D <0x0 0x0 0x0 0x34400 0x0 0x400>;
-+
-+				periphs_pinctrl: pinctrl@40 {
-+					compatible =3D "amlogic,meson-g12a-periphs-pinctrl";
-+					#address-cells =3D <2>;
-+					#size-cells =3D <2>;
-+					ranges;
-+
-+					gpio: bank@40 {
-+						reg =3D <0x0 0x40  0x0 0x4c>,
-+						      <0x0 0xe8  0x0 0x18>,
-+						      <0x0 0x120 0x0 0x18>,
-+						      <0x0 0x2c0 0x0 0x40>,
-+						      <0x0 0x340 0x0 0x1c>;
-+						reg-names =3D "gpio",
-+							    "pull",
-+							    "pull-enable",
-+							    "mux",
-+							    "ds";
-+						gpio-controller;
-+						#gpio-cells =3D <2>;
-+						gpio-ranges =3D <&periphs_pinctrl 0 0 86>;
-+					};
-+				};
- 			};
- =
-
- 			hiu: bus@3c000 {
-@@ -150,6 +173,25 @@
- 					clocks =3D <&xtal>, <&clkc CLKID_CLK81>;
- 					clock-names =3D "xtal", "mpeg-clk";
- 				};
-+
-+				ao_pinctrl: pinctrl@14 {
-+					compatible =3D "amlogic,meson-g12a-aobus-pinctrl";
-+					#address-cells =3D <2>;
-+					#size-cells =3D <2>;
-+					ranges;
-+
-+					gpio_ao: bank@14 {
-+						reg =3D <0x0 0x14 0x0 0x8>,
-+						      <0x0 0x1c 0x0 0x8>,
-+						      <0x0 0x24 0x0 0x14>;
-+						reg-names =3D "mux",
-+							    "ds",
-+							    "gpio";
-+						gpio-controller;
-+						#gpio-cells =3D <2>;
-+						gpio-ranges =3D <&ao_pinctrl 0 0 15>;
-+					};
-+				};
- 			};
- =
-
- 			sec_AO: ao-secure@140 {
----------------------------------------------------------------------------=
-----
+- [PATCH 4/4]:
+  * Some code from the previous patch was incorrectly included here.
 
 
-Git bisection log:
+This series is meant to address two issues with the latency tracing.
 
----------------------------------------------------------------------------=
-----
-git bisect start
-# good: [a455eda33faafcaac1effb31d682765b14ef868c] Merge branch 'linus' of =
-git://git.kernel.org/pub/scm/linux/kernel/git/evalenti/linux-soc-thermal
-git bisect good a455eda33faafcaac1effb31d682765b14ef868c
-# bad: [2c45e7fbc962be1b03f2c2af817a76f5ba810af2] Merge branch 'next' of gi=
-t://git.kernel.org/pub/scm/linux/kernel/git/rzhang/linux
-git bisect bad 2c45e7fbc962be1b03f2c2af817a76f5ba810af2
-# bad: [be058ba65d9e43f40d31d9b16b99627f0a20de1b] Merge tag 'imx-dt-5.2' of=
- git://git.kernel.org/pub/scm/linux/kernel/git/shawnguo/linux into arm/dt
-git bisect bad be058ba65d9e43f40d31d9b16b99627f0a20de1b
-# bad: [7996313656b83ba516a1546d51f08f1a0fab4e06] Merge tag 'omap-for-v5.2/=
-dt-am3-signed' of git://git.kernel.org/pub/scm/linux/kernel/git/tmlind/linu=
-x-omap into arm/dt
-git bisect bad 7996313656b83ba516a1546d51f08f1a0fab4e06
-# bad: [2140eaf2f46faf2627ec030d7cabf2dda2cb546b] Merge tag 'stm32-dt-for-v=
-5.2-1' of git://git.kernel.org/pub/scm/linux/kernel/git/atorgue/stm32 into =
-arm/dt
-git bisect bad 2140eaf2f46faf2627ec030d7cabf2dda2cb546b
-# bad: [1a88083b9349b8310b25d9a9a96802ee4447e6b9] Merge tag 'v5.2-rockchip-=
-dts64-1' of git://git.kernel.org/pub/scm/linux/kernel/git/mmind/linux-rockc=
-hip into arm/dt
-git bisect bad 1a88083b9349b8310b25d9a9a96802ee4447e6b9
-# bad: [1c93235a6d92deaab38bbb1cfc764b0757331ebb] Merge tag 'amlogic-dt' of=
- https://git.kernel.org/pub/scm/linux/kernel/git/khilman/linux-amlogic into=
- arm/dt
-git bisect bad 1c93235a6d92deaab38bbb1cfc764b0757331ebb
-# bad: [ff4f8b6cab5885ebc2c6b21fd058db8544e2eebb] arm64: dts: meson: g12a: =
-Add UART A, B & C nodes and pins
-git bisect bad ff4f8b6cab5885ebc2c6b21fd058db8544e2eebb
-# good: [965c827ac37e71f76d3ac55c75ac08909f2a4eed] arm64: dts: meson: g12a:=
- add efuse
-git bisect good 965c827ac37e71f76d3ac55c75ac08909f2a4eed
-# bad: [11a7bea17c9e0a36daab934d83e15a760f402147] arm64: dts: meson: g12a: =
-add pinctrl support controllers
-git bisect bad 11a7bea17c9e0a36daab934d83e15a760f402147
-# good: [b019f4a4199f865b054262ff78f606ca70f7b981] arm64: dts: meson: g12a:=
- Add AO Clock + Reset Controller support
-git bisect good b019f4a4199f865b054262ff78f606ca70f7b981
-# first bad commit: [11a7bea17c9e0a36daab934d83e15a760f402147] arm64: dts: =
-meson: g12a: add pinctrl support controllers
----------------------------------------------------------------------------=
-----
+The first three patches provide a method to trace latencies that always
+occurs very close to each other and to differentiate between them, in spite
+of the fact that the latency tracers work in overwrite mode.
+
+[PATCH 1/4] This implement fs notification for tracing_max_latency. It
+makes it possible for userspace to detect when a new latency has been
+detected.
+
+[PATCH 2/4] This extends the preemptirq_delay_test module so that it can be
+used to generate a burst of closely occurring latencies.
+
+[PATCH 3/4] This adds a user space program to the tools directory that
+utilizes the fs notification feature and a randomized algorithm to print out
+any of the latencies in a burst with approximately equal probability.
+
+The last patch is not directly connected but doesn't apply cleanly on
+its own:
+
+[PATCH 4/4] This adds the option console-latency to the trace options. This
+makes it possible to enable tracing of console latencies.
+
+best regards,
+
+Viktor
+
+Viktor Rosendahl (4):
+  ftrace: Implement fs notification for tracing_max_latency
+  preemptirq_delay_test: Add the burst feature and a sysfs trigger
+  Add the latency-collector to tools
+  ftrace: Add an option for tracing console latencies
+
+ include/linux/irqflags.h             |   21 +
+ include/trace/events/power.h         |   40 +
+ include/trace/events/sched.h         |   40 +
+ kernel/printk/printk.c               |    6 +-
+ kernel/sched/core.c                  |    2 +
+ kernel/sched/idle.c                  |    2 +
+ kernel/trace/Kconfig                 |    6 +-
+ kernel/trace/preemptirq_delay_test.c |  145 ++-
+ kernel/trace/trace.c                 |  168 +++-
+ kernel/trace/trace.h                 |   13 +
+ kernel/trace/trace_hwlat.c           |    4 +-
+ kernel/trace/trace_irqsoff.c         |   12 +
+ tools/Makefile                       |   14 +-
+ tools/trace/Makefile                 |   20 +
+ tools/trace/latency-collector.c      | 1211 ++++++++++++++++++++++++++
+ 15 files changed, 1671 insertions(+), 33 deletions(-)
+ create mode 100644 tools/trace/Makefile
+ create mode 100644 tools/trace/latency-collector.c
+
+-- 
+2.17.1
+
