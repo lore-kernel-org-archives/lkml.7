@@ -2,151 +2,194 @@ Return-Path: <SRS0=M1fl=TR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DD00C04AB4
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 13:37:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CCF0C04AB4
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 13:37:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 57082204FD
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 13:37:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4CC55204FD
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 13:37:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="e3fMuHrY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728983AbfEQNhY (ORCPT
+        id S1729021AbfEQNhg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 May 2019 09:37:24 -0400
-Received: from esgaroth.petrovitsch.at ([78.47.184.11]:2261 "EHLO
-        esgaroth.tuxoid.at" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728333AbfEQNhX (ORCPT
+        Fri, 17 May 2019 09:37:36 -0400
+Received: from hqemgate14.nvidia.com ([216.228.121.143]:8920 "EHLO
+        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728464AbfEQNhg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 May 2019 09:37:23 -0400
-Received: from [10.68.100.236] (h10-gesig.woeg.acw.at [217.116.178.11] (may be forged))
-        (authenticated bits=0)
-        by esgaroth.tuxoid.at (8.15.2/8.15.2) with ESMTPSA id x4HDZoC0031977
-        (version=TLSv1 cipher=AES128-SHA bits=128 verify=NO);
-        Fri, 17 May 2019 15:35:50 +0200
-Subject: Re: [PATCH v2] kbuild: check uniqueness of module names
-To:     Alexander Kapshuk <alexander.kapshuk@gmail.com>
-Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
-        linux-kbuild@vger.kernel.org, Sam Ravnborg <sam@ravnborg.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Jessica Yu <jeyu@kernel.org>,
-        Lucas De Marchi <lucas.de.marchi@gmail.com>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Michael Schmitz <schmitzmic@gmail.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Rusty Russell <rusty@rustcorp.com.au>,
-        Kees Cook <keescook@chromium.org>,
-        Michal Marek <michal.lkml@markovi.net>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-References: <20190517042753.25857-1-yamada.masahiro@socionext.com>
- <CAJ1xhMUxsFR6yLeV1rG1FRZzqwyMGF5PURk6F5_6kN3v2dGN1A@mail.gmail.com>
- <68270a84-966b-05e3-c82e-893c320febfd@petrovitsch.priv.at>
- <CAJ1xhMVaeQPoW1v91bcNOkw1FJOr7ddhDc-ir=3AiKRCSzCj=g@mail.gmail.com>
-From:   Bernd Petrovitsch <bernd@petrovitsch.priv.at>
-Message-ID: <781705f7-61c8-3af9-1a0a-df2b6d078b77@petrovitsch.priv.at>
-Date:   Fri, 17 May 2019 15:35:34 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Fri, 17 May 2019 09:37:36 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5cdeb9240001>; Fri, 17 May 2019 06:37:40 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Fri, 17 May 2019 06:37:34 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Fri, 17 May 2019 06:37:34 -0700
+Received: from [10.19.120.147] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 17 May
+ 2019 13:37:31 +0000
+Subject: Re: [PATCH v10 1/2] usb: xhci : Add devaddr in struct usb_device
+To:     Alan Stern <stern@rowland.harvard.edu>
+References: <Pine.LNX.4.44L0.1905161054250.1280-100000@iolanthe.rowland.org>
+CC:     <gregkh@linuxfoundation.org>, <mathias.nyman@intel.com>,
+        <kai.heng.feng@canonical.com>, <drinkcat@chromium.org>,
+        <keescook@chromium.org>, <nsaenzjulienne@suse.de>,
+        <jflat@chromium.org>, <malat@debian.org>,
+        <linux-usb@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+From:   Jim Lin <jilin@nvidia.com>
+Message-ID: <63b291c6-b7bc-7796-412e-03f151d1b1a0@nvidia.com>
+Date:   Fri, 17 May 2019 21:37:22 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:45.0) Gecko/20100101
+ Thunderbird/45.2.0
 MIME-Version: 1.0
-In-Reply-To: <CAJ1xhMVaeQPoW1v91bcNOkw1FJOr7ddhDc-ir=3AiKRCSzCj=g@mail.gmail.com>
-Content-Type: multipart/mixed;
- boundary="------------684266AF469CFF47027062F7"
-Content-Language: en-US
-X-DCC-debian-Metrics: esgaroth.tuxoid.at 1169; Body=15 Fuz1=15 Fuz2=15
-X-Virus-Scanned: clamav-milter 0.97 at esgaroth.tuxoid.at
-X-Virus-Status: Clean
+In-Reply-To: <Pine.LNX.4.44L0.1905161054250.1280-100000@iolanthe.rowland.org>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL108.nvidia.com (172.18.146.13) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: quoted-printable
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1558100261; bh=N0Nend43fiGw+jZLFyUCiqfXhdL3evNRULYfXIR/Y9M=;
+        h=X-PGP-Universal:Subject:To:References:CC:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding;
+        b=e3fMuHrYyRfTrVd/+zJS9bL3Qk4s5pZTD28Cymw2Q7X/TA42ZJzAgvTd8ZYSQ2ODD
+         DtcIVd7X+CFEEMe+ZQDEELtKFfgOyJKPCDqcDuEFDLh5tLFcKAl83Hmbb+oXZs6nQe
+         P0qDQLmE+vsmXTyZuuUgO8II4U1Jj2b8pInTpBt8zFFTdvGNk5hzpJey/xAjX8CGnU
+         PDnkgR8M9jfl6HMiYJU97DH8qpJmYxHwuSmP4x+2cX8kZC/r2mCbZky5AGoaBE3kaq
+         B9GQGQ1LY7w6b5hLts2h5pA8T9XUKdM6Lkj33MbjRxsyqX7m7BBy20nfs2AD3ij20R
+         u6TD6BgiS38OQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is a multi-part message in MIME format.
---------------684266AF469CFF47027062F7
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Sorry, something went wrong.
 
-On 17/05/2019 11:25, Alexander Kapshuk wrote:
-> On Fri, May 17, 2019 at 11:58 AM Bernd Petrovitsch
-> <bernd@petrovitsch.priv.at> wrote:
+The result is not as expected in one of the tests.
+
+Abandon this series of patches.
+
+Will debug and resubmit later.
+
+
+Jim
+
+
+On 2019=E5=B9=B405=E6=9C=8816=E6=97=A5 22:56, Alan Stern wrote:
+> On Thu, 16 May 2019, Jim Lin wrote:
+>
+>> The Clear_TT_Buffer request sent to the hub includes the address of
+>> the LS/FS child device in wValue field. usb_hub_clear_tt_buffer()
+>> uses udev->devnum to set the address wValue. This won't work for
+>> devices connected to xHC.
 >>
->> On 17/05/2019 10:16, Alexander Kapshuk wrote:
->> [...]
->>> The 'xargs' '-r' flag is a GNU extension.
->>> If POSIX compliance is important here, the use of 'cat', 'xargs' and
->>> 'basename' may be substituted with that of 'sed' to initialise
->>> same_name_modules:
->>> sed 's!.*/!!' modules.order modules.builtin | sort | uniq -d
+>> For other host controllers udev->devnum is the same as the address of
+>> the usb device, chosen and set by usb core. With xHC the controller
+>> hardware assigns the address, and won't be the same as devnum.
 >>
->> 's!' is TTBOMK also a GNU-extension:
->> sed 's/.*\///' modules.order modules.builtin | sort | uniq -d
->=20
-> It isn't.
-> Here's an excerpt from the POSIX manpage for 'sed',
-> http://pubs.opengroup.org/onlinepubs/009695399/utilities/sed.html:
-> [2addr]s/BRE/replacement/flags
-> ...  Any character other than backslash or <newline> can be used
-> instead of a slash to delimit the BRE and the replacement....
+>> Here we add devaddr in "struct usb_device" for
+>> usb_hub_clear_tt_buffer() to use.
+>>
+>> Signed-off-by: Jim Lin <jilin@nvidia.com>
+>> ---
+> Aside from the "xhci:" part of the Subject line (it's not really
+> appropriate because this is a modification of the USB core more than of
+> the xhci-hcd driver),
+>
+> Acked-by: Alan Stern <stern@rowland.harvard.edu>
+>
+>
+>> v2: xhci_clear_tt_buffer_complete: add static, shorter indentation
+>>      , remove its claiming in xhci.h
+>> v3: Add description for clearing_tt (xhci.h)
+>> v4: Remove clearing_tt flag because hub_tt_work has hub->tt.lock
+>>      to protect for Clear_TT_Buffer to be run serially.
+>>      Remove xhci_clear_tt_buffer_complete as it's not necessary.
+>>      Same reason as the above.
+>>      Extend usb_hub_clear_tt_buffer parameter
+>> v5: Not extending usb_hub_clear_tt_buffer parameter
+>>      Add description.
+>> v6: Remove unused parameter slot_id from xhci_clear_hub_tt_buffer
+>> v7: Add devaddr field in "struct usb_device"
+>> v8: split as two patches, change type from int to u8 for devaddr.
+>> v9: Use pahole to find place to put devaddr in struct usb_device.
+>>      Remove space between type cast and variable.
+>>      hub.c changed from v8
+>>      clear->devinfo |=3D (u16) (udev->devaddr << 4);
+>>      to
+>>      clear->devinfo |=3D ((u16)udev->devaddr) << 4;
+>>      to solve a problem if devaddr is larger than 16.
+>> v10 Initialize devaddr in xhci_setup_device()
+>>      Move devaddr to be below "u8 level"
+>>
+>>   drivers/usb/core/hub.c  | 4 +++-
+>>   drivers/usb/host/xhci.c | 1 +
+>>   include/linux/usb.h     | 2 ++
+>>   3 files changed, 6 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/usb/core/hub.c b/drivers/usb/core/hub.c
+>> index 15a2934dc29d..0d4b289be103 100644
+>> --- a/drivers/usb/core/hub.c
+>> +++ b/drivers/usb/core/hub.c
+>> @@ -873,7 +873,7 @@ int usb_hub_clear_tt_buffer(struct urb *urb)
+>>   	/* info that CLEAR_TT_BUFFER needs */
+>>   	clear->tt =3D tt->multi ? udev->ttport : 1;
+>>   	clear->devinfo =3D usb_pipeendpoint (pipe);
+>> -	clear->devinfo |=3D udev->devnum << 4;
+>> +	clear->devinfo |=3D ((u16)udev->devaddr) << 4;
+>>   	clear->devinfo |=3D usb_pipecontrol(pipe)
+>>   			? (USB_ENDPOINT_XFER_CONTROL << 11)
+>>   			: (USB_ENDPOINT_XFER_BULK << 11);
+>> @@ -2125,6 +2125,8 @@ static void update_devnum(struct usb_device *udev,=
+ int devnum)
+>>   	/* The address for a WUSB device is managed by wusbcore. */
+>>   	if (!udev->wusb)
+>>   		udev->devnum =3D devnum;
+>> +	if (!udev->devaddr)
+>> +		udev->devaddr =3D (u8)devnum;
+>>   }
+>>  =20
+>>   static void hub_free_dev(struct usb_device *udev)
+>> diff --git a/drivers/usb/host/xhci.c b/drivers/usb/host/xhci.c
+>> index 7fa58c99f126..68b393e5a453 100644
+>> --- a/drivers/usb/host/xhci.c
+>> +++ b/drivers/usb/host/xhci.c
+>> @@ -4096,6 +4096,7 @@ static int xhci_setup_device(struct usb_hcd *hcd, =
+struct usb_device *udev,
+>>   	/* Zero the input context control for later use */
+>>   	ctrl_ctx->add_flags =3D 0;
+>>   	ctrl_ctx->drop_flags =3D 0;
+>> +	udev->devaddr =3D (u8)(le32_to_cpu(slot_ctx->dev_state) & DEV_ADDR_MAS=
+K);
+>>  =20
+>>   	xhci_dbg_trace(xhci, trace_xhci_dbg_address,
+>>   		       "Internal device address =3D %d",
+>> diff --git a/include/linux/usb.h b/include/linux/usb.h
+>> index 4229eb74bd2c..af68e31118f8 100644
+>> --- a/include/linux/usb.h
+>> +++ b/include/linux/usb.h
+>> @@ -580,6 +580,7 @@ struct usb3_lpm_parameters {
+>>    * @bus_mA: Current available from the bus
+>>    * @portnum: parent port number (origin 1)
+>>    * @level: number of USB hub ancestors
+>> + * @devaddr: device address, XHCI: assigned by HW, others: same as devn=
+um
+>>    * @can_submit: URBs may be submitted
+>>    * @persist_enabled:  USB_PERSIST enabled for this device
+>>    * @have_langid: whether string_langid is valid
+>> @@ -663,6 +664,7 @@ struct usb_device {
+>>   	unsigned short bus_mA;
+>>   	u8 portnum;
+>>   	u8 level;
+>> +	u8 devaddr;
+>>  =20
+>>   	unsigned can_submit:1;
+>>   	unsigned persist_enabled:1;
+>>
 
-Oops, yup, sorry for the noise.
-Don't know anymore where I encountered problems with that in the past ...=
-=2E
-
-MfG,
-         Bernd--
-"I dislike type abstraction if it has no real reason. And saving
-on typing is not a good reason - if your typing speed is the main
-issue when you're coding, you're doing something seriously wrong."
-    - Linus Torvalds
-
---------------684266AF469CFF47027062F7
-Content-Type: application/pgp-keys;
- name="pEpkey.asc"
-Content-Transfer-Encoding: quoted-printable
-Content-Disposition: attachment;
- filename="pEpkey.asc"
-
------BEGIN PGP PUBLIC KEY BLOCK-----
-
-mQGNBFss+8cBDACpXlq0ZC9Qp8R+iFPx5vDPu12FpnmbbV8CwexVDchdizF2qz+A
-PFh12RrkE6yudI0r7peAIRePiSVYqv8XT82TpJM+tbTYk/MSQaPhcmz8jl1HaKv0
-q8g5nKtr42qRsswU7Q2Sa6mWXaIdOisPYZ9eLZC9BDBhI/YrgdAwszyYJ1HUwNkp
-Dw5i4wW/SsIKrotCboYzbBjZfHbmDJr4dFYSoMg5jQVHD2Yz8fqNSoRyd7i/oicn
-1bH/DjEkrmIu9YuptuHYmblpCRo5dLww7kgszNw12j8Iljp64uJ/uz5+asBUmRZM
-mGey82BB1DnIvy1v+GnbGWFIYy79/HeqdN+KbOgO/sXoqYKS5KJ6aSqWOLTQk6sv
-AnDN2PNF5jOB9ROCNwoQSH/YNEfMd/mQ5pGB0UJ4ykD0UnjW7DdXbVOwvwWzfHF7
-HaZXB1NMpBzHxold3W19DThd4HECvXYZ6Au6p0WE8IfABS11CzbX7KJuD5Ua+xKG
-3W05fMg5i0td2aMAEQEAAbQtQmVybmQgUGV0cm92aXRzY2ggPGJlcm5kQHBldHJv
-dml0c2NoLnByaXYuYXQ+iQHUBBMBCgA+FiEEgDWyyHEwksebo557hUq7AhBHKGYF
-Alss+/wCGwMFCQHhM4AFCwkIBwMFFQoJCAsFFgMCAQACHgECF4AACgkQhUq7AhBH
-KGa5Hgv7BKXf7BKtA/2Awa/UW5mA+6FU/kcQCHptKDZqFEleDPiUOoU+nbz1FMNu
-zs84cJxTUWl+lqFEDlvId+K8948OgIi2ImQgg/FeGjywmB3GOzaMGKZjSzLGnnAf
-RqamHIsoQMGHwI0dh0obnx2sjqXghu4bs2DVEV0oUGFNhclSoWNUucg/tOSG3QCM
-ViUqfCGADaLG8zavRC093423m51ea9IVJkaTtdi59EKWjY6UqlRTOWXh3E/yF8NK
-T1SWztTs0jWPeISx063/TzkfbEAtGPOSHP136ZpI1WR3c+6Y3gXrgTYN1QilRM9m
-daep4/Fsoc8pwCtfKXND4v4kbuJnEaeTU+5XF9fCB0nHXX+ToqaOxZOO8KZ6XY+p
-9nJgt2zBudKnT2oWzlqOROOHlckxYwEHeDhX3U8nIuDwYsnD/nB40oDiXjauv/Op
-25Ej0BMSDSsTZ2/q7bjXwsV10ML7h6C0SRx8Hr6coGbvbP0BMrlV3Nphi24qvXZp
-iCc+G6wnuQGNBFss+8kBDADRASin2ms38GGbHv5HcWkVWDtPQo08ceO5ULrtA3G3
-lQrv08pbKfSw91n5cIOCDvcCY29GrVZ/lcSGov855zu6tFZ/T+d68zth3aWZzR5d
-Brz6Nb6DclyEMkfKX2xYT7tGoN9XgBboG4yWgTMKvlu6yKxxJM4AM5AjpHodsXwP
-txvzqnmfgIQ4k0idqB7c7khiFsraUM1+f0/Bn+p+RPhqg+C33Ui38IWdwtNgck+G
-U7+WYQi3LxD2mu8BC0NIYJMiFTUPC0a4FTQtKCXno5Stys5wYG6OXiGOw3sTbs3v
-qy95H5/cVa6mf81OiNZP1liXnm0cBrT+UbFgtZk/OnoekzS7RPCdCuMZyxMqPTLl
-+EjNyejmSN3cnGLNDa+Jh/eSIUZzvihuNFxdtQQfuD+nqoPanfSfrWaDABMU7Daf
-6vZI10D3d473WzCplWR4A+Rdm8ysi2haas7KZnL+ajcEo2jCghW83BQPBD57fEtl
-UWLXihAFcEiSx0i2AUAXYOcAEQEAAYkBvAQYAQoAJhYhBIA1sshxMJLHm6Oee4VK
-uwIQRyhmBQJbLPvJAhsMBQkB4TOAAAoJEIVKuwIQRyhmrGIL/3rsdQqaO3umXj9X
-Ts4nAme/2DVsEyGUFzeDllbzOKH7PsjJhbEsQRRE+kDk0tp2xbpVzNZ73wFhXFL+
-zqa8tdMhYEjLUZ4ry/bg83yZH2bNj/jTii32AkvmL2zcYf0/knuAAAypdfTM4K6S
-PVlwOo09Drkiz/SDXyvpSG9GdCZLVR/HbQpsob0JddcouWwliATRrnUETb/MN6MO
-WI4687r1wi4Kn28CHydWA5YONvFyb7BJZRHiLQnJwlh7dgBtOSCeZClrKfhIBFB2
-YgfBcgmHnpYkzyBGdUTnrrlmiMeuxZqG2SzwswRMACYqUFoe+3E7RZQX5ym17oUP
-Kat5L8uZbd2+TlbICXnxwTadBKDvk8qxjLSwzthoHlmM6zeFekQdq67aiBWfa9oV
-6tljJtvE9QREo+hDjQaiVmzHqeB8pMGVHWzAGJzvxFuXMaKzUI8vWDH5jaht0Sqn
-xHyhVz8+rEsLoB67PBuY3GLecTeQ3rr52BVMzfNRPdSyVHESzw=3D=3D
-=3Dv2Yn
------END PGP PUBLIC KEY BLOCK-----
-
---------------684266AF469CFF47027062F7--
