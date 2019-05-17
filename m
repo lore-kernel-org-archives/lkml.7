@@ -2,196 +2,287 @@ Return-Path: <SRS0=M1fl=TR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38E1BC04E84
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 20:14:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 674C2C04E84
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 20:18:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EAF222082E
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 20:14:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2CD592082E
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 20:18:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=amacapital-net.20150623.gappssmtp.com header.i=@amacapital-net.20150623.gappssmtp.com header.b="sgC8USHJ"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="w+h6VnLJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729152AbfEQUOE (ORCPT
+        id S1728225AbfEQUSk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 May 2019 16:14:04 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:37083 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726460AbfEQUOD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 May 2019 16:14:03 -0400
-Received: by mail-pg1-f194.google.com with SMTP id n27so1191157pgm.4
-        for <linux-kernel@vger.kernel.org>; Fri, 17 May 2019 13:14:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=amacapital-net.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=djiAluF6Os7TIFCRa6Lz/pNs4CAEzPaAGQb3bIhp0AI=;
-        b=sgC8USHJylMmTugxbrJIZExCFRu3pVa9hcPmCcK4p6hSAcQrxxlnFPE9W7VZX26LMv
-         +NNIg5GUmvKrN+cTLBJl/W6v9t6AXRsn5rDKXTNt4zdcYR9IKTGc84dXHM/Glg4EjJq6
-         conKdsD9PcOd7Zj6sVOgFGJrZYyH9Ivqh3nF3JuwyJpSfxmUwlPcmqEv9DIsPXydTmFJ
-         q9vlpsao5402l3yk/NcX0qpkHGDXUopZJW1RbyqIUWQ+f19tKMX0TpqtY5dgRy5l8nKg
-         Q+E3mqN4/jQT26rO4mayqwt80PqDym/fxXRA6C91Fu/2zZQ+NRo0SVqZ/9ayzrNNsHXl
-         nlYA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=djiAluF6Os7TIFCRa6Lz/pNs4CAEzPaAGQb3bIhp0AI=;
-        b=JO91rAl5LmRQBpmRdZuCbUPEPTQgBjea0RKC3LpNMcL1nHGTqJs4Z1Qbr5uRPXzZsk
-         Ep2wzcBz8hcCQslk6wRYze6ZczRFEK3f/11TBwgnkfKvwh/LTh5egtOzTm3npEySADB2
-         PY8WevmgcOjQRswxXnWGU7sXzJ+LLy/CzjkGago9IOCKFYfkRjE3/CdLHQDhX+ZiyRZz
-         n0NeRLDsrHIf024FWhofUObgY+tnv1NT5PAqlQs11TDizn53WbJfAsBf4G/UwnaLdQlr
-         5Xg79X32jl8hIPqyifw/0fFHOz8PdnnuaBX+9uTyR7J4gnekSPGBQu2Zxh8Ac6G4UNyS
-         hb/g==
-X-Gm-Message-State: APjAAAU8yOFhKKG6bK5+FM4tzbMEcWmQRWzEzw09l26GZqUcC4e7O9Zp
-        blQHUCmzFCRU7LQRAZW1zIEItA==
-X-Google-Smtp-Source: APXvYqxqEHlR2LaL8nj/xNhZ/tyfEOKQIe177n5+LgtmYcJFfb2KwNTDT0V0qu3unH8GKzQuLagvyA==
-X-Received: by 2002:a63:dd4a:: with SMTP id g10mr5357469pgj.419.1558124042986;
-        Fri, 17 May 2019 13:14:02 -0700 (PDT)
-Received: from ?IPv6:2601:646:c200:1ef2:3dbf:4623:7293:192d? ([2601:646:c200:1ef2:3dbf:4623:7293:192d])
-        by smtp.gmail.com with ESMTPSA id u6sm15468121pfa.1.2019.05.17.13.14.01
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 17 May 2019 13:14:01 -0700 (PDT)
+        Fri, 17 May 2019 16:18:40 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:55331 "EHLO
+        mail.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727035AbfEQUSj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 May 2019 16:18:39 -0400
+Received: from [192.168.4.253] (c-73-70-228-160.hsd1.ca.comcast.net [73.70.228.160])
+        (authenticated bits=0)
+        by mail.zytor.com (8.15.2/8.15.2) with ESMTPSA id x4HKIIrM1494008
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NO);
+        Fri, 17 May 2019 13:18:20 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com x4HKIIrM1494008
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+        s=2019041745; t=1558124301;
+        bh=vdDVB5ppVXE7h0lfdpmULNAc1TPNhv9ZuI1v8nlJhKE=;
+        h=Date:In-Reply-To:References:Subject:To:CC:From:From;
+        b=w+h6VnLJISTUnmerbPvDhhsWCy/r0YsosYHQEnxdVxG2uoPtEu72EotaKkMA+IOKi
+         /5ztDVZ9ZYTutKg1TMnU0B7RR9gadjw1szGEGs1uDLVMQ48nOzkQsPrDG0UUBaXVyv
+         A4mk4bixtJWgj+qcqrbrItfmsUJYhcc1tr+BA1zdFagk7CnsltIs5pIvrEQkyg/QhI
+         HaEfkfIRud2BCOMPltSa/tt0MKNzjyIr+E6w4VudCnVG6Dp2SR+7+JEFbgaaWVckE0
+         c0DSjqSD4F4NPIbygtlbHtgrWQQf6+q85/2gmn8didrBz93R9GG8GLD3QA4jQbozAM
+         vwTbflaM0/oqg==
+Date:   Fri, 17 May 2019 13:18:11 -0700
+User-Agent: K-9 Mail for Android
+In-Reply-To: <20190517165519.11507-3-roberto.sassu@huawei.com>
+References: <20190517165519.11507-1-roberto.sassu@huawei.com> <20190517165519.11507-3-roberto.sassu@huawei.com>
+MIME-Version: 1.0
 Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (1.0)
-Subject: Re: SGX vs LSM (Re: [PATCH v20 00/28] Intel SGX1 support)
-From:   Andy Lutomirski <luto@amacapital.net>
-X-Mailer: iPhone Mail (16E227)
-In-Reply-To: <c901ea99-5b43-a25d-03e8-55b4fce9c466@tycho.nsa.gov>
-Date:   Fri, 17 May 2019 13:14:00 -0700
-Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
-        "Xing, Cedric" <cedric.xing@intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        LSM List <linux-security-module@vger.kernel.org>,
-        Paul Moore <paul@paul-moore.com>,
-        Eric Paris <eparis@parisplace.org>,
-        "selinux@vger.kernel.org" <selinux@vger.kernel.org>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Jethro Beekman <jethro@fortanix.com>,
-        "Hansen, Dave" <dave.hansen@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "Dr. Greg" <greg@enjellic.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
-        "linux-sgx@vger.kernel.org" <linux-sgx@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "nhorman@redhat.com" <nhorman@redhat.com>,
-        "npmccallum@redhat.com" <npmccallum@redhat.com>,
-        "Ayoun, Serge" <serge.ayoun@intel.com>,
-        "Katz-zamir, Shay" <shay.katz-zamir@intel.com>,
-        "Huang, Haitao" <haitao.huang@intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        "Svahn, Kai" <kai.svahn@intel.com>, Borislav Petkov <bp@alien8.de>,
-        Josh Triplett <josh@joshtriplett.org>,
-        "Huang, Kai" <kai.huang@intel.com>,
-        David Rientjes <rientjes@google.com>
+ charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Message-Id: <ED98AEC9-FFA3-4DA4-9B86-11D8AADC9151@amacapital.net>
-References: <CALCETrX2ovRx3Rre+1_xC-q6CiybyLjQ-gmB4FZF_qCZ-Qd+4A@mail.gmail.com> <960B34DE67B9E140824F1DCDEC400C0F654E38CD@ORSMSX116.amr.corp.intel.com> <CALCETrUfmyQ7ivNzQic0FyPXe1fmAnoK093jnz0i8DRn2LvdSA@mail.gmail.com> <960B34DE67B9E140824F1DCDEC400C0F654E3FB9@ORSMSX116.amr.corp.intel.com> <6a97c099-2f42-672e-a258-95bc09152363@tycho.nsa.gov> <20190517150948.GA15632@linux.intel.com> <ca807220-47e2-5ec2-982c-4fb4a72439c6@tycho.nsa.gov> <80013cca-f1c2-f4d5-7558-8f4e752ada76@tycho.nsa.gov> <837CE33B-A636-4BF8-B46E-0A8A40C5A563@amacapital.net> <6d083885-1880-f33d-a54f-23518d56b714@tycho.nsa.gov> <20190517192823.GG15006@linux.intel.com> <c901ea99-5b43-a25d-03e8-55b4fce9c466@tycho.nsa.gov>
-To:     Stephen Smalley <sds@tycho.nsa.gov>
+Subject: Re: [PATCH v3 2/2] initramfs: introduce do_readxattrs()
+To:     Roberto Sassu <roberto.sassu@huawei.com>, viro@zeniv.linux.org.uk
+CC:     linux-security-module@vger.kernel.org,
+        linux-integrity@vger.kernel.org, initramfs@vger.kernel.org,
+        linux-api@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, zohar@linux.vnet.ibm.com,
+        silviu.vlasceanu@huawei.com, dmitry.kasatkin@huawei.com,
+        takondra@cisco.com, kamensky@cisco.com, arnd@arndb.de,
+        rob@landley.net, james.w.mcmechan@gmail.com, niveditas98@gmail.com
+From:   hpa@zytor.com
+Message-ID: <CD9A4F89-7CA5-4329-A06A-F8DEB87905A5@zytor.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-> On May 17, 2019, at 1:09 PM, Stephen Smalley <sds@tycho.nsa.gov> wrote:
+On May 17, 2019 9:55:19 AM PDT, Roberto Sassu <roberto=2Esassu@huawei=2Ecom=
+> wrote:
+>This patch adds support for an alternative method to add xattrs to
+>files in
+>the rootfs filesystem=2E Instead of extracting them directly from the ram
+>disk image, they are extracted from a regular file called =2Exattr-list,
+>that
+>can be added by any ram disk generator available today=2E The file format
+>is:
+>
+><file #N data len (ASCII, 10 chars)><file #N path>\0
+><xattr #N data len (ASCII, 8 chars)><xattr #N name>\0<xattr #N value>
+>
+>=2Exattr-list can be generated by executing:
+>
+>$ getfattr --absolute-names -d -h -R -e hex -m - \
+>      <file list> | xattr=2Eawk -b > ${initdir}/=2Exattr-list
+>
+>where the content of the xattr=2Eawk script is:
+>
+>#! /usr/bin/awk -f
+>{
+>  if (!length($0)) {
+>    printf("%=2E10x%s\0", len, file);
+>    for (x in xattr) {
+>      printf("%=2E8x%s\0", xattr_len[x], x);
+>      for (i =3D 0; i < length(xattr[x]) / 2; i++) {
+>        printf("%c", strtonum("0x"substr(xattr[x], i * 2 + 1, 2)));
+>      }
+>    }
+>    i =3D 0;
+>    delete xattr;
+>    delete xattr_len;
+>    next;
+>  };
+>  if (i =3D=3D 0) {
+>    file=3D$3;
+>    len=3Dlength(file) + 8 + 1;
+>  }
+>  if (i > 0) {
+>    split($0, a, "=3D");
+>    xattr[a[1]]=3Dsubstr(a[2], 3);
+>    xattr_len[a[1]]=3Dlength(a[1]) + 1 + 8 + length(xattr[a[1]]) / 2;
+>    len+=3Dxattr_len[a[1]];
+>  };
+>  i++;
+>}
+>
+>Signed-off-by: Roberto Sassu <roberto=2Esassu@huawei=2Ecom>
+>---
+> init/initramfs=2Ec | 99 ++++++++++++++++++++++++++++++++++++++++++++++++
+> 1 file changed, 99 insertions(+)
+>
+>diff --git a/init/initramfs=2Ec b/init/initramfs=2Ec
+>index 0c6dd1d5d3f6=2E=2E6ec018c6279a 100644
+>--- a/init/initramfs=2Ec
+>+++ b/init/initramfs=2Ec
+>@@ -13,6 +13,8 @@
+> #include <linux/namei=2Eh>
+> #include <linux/xattr=2Eh>
 >=20
->> On 5/17/19 3:28 PM, Sean Christopherson wrote:
->>> On Fri, May 17, 2019 at 02:05:39PM -0400, Stephen Smalley wrote:
->>>> On 5/17/19 1:12 PM, Andy Lutomirski wrote:
->>>>=20
->>>> How can that work?  Unless the API changes fairly radically, users
->>>> fundamentally need to both write and execute the enclave.  Some of it w=
-ill
->>>> be written only from already executable pages, and some privilege shoul=
-d be
->>>> needed to execute any enclave page that was not loaded like this.
->>>=20
->>> I'm not sure what the API is. Let's say they do something like this:
->>>=20
->>> fd =3D open("/dev/sgx/enclave", O_RDONLY);
->>> addr =3D mmap(NULL, size, PROT_READ | PROT_EXEC, MAP_SHARED, fd, 0);
->>> stuff addr into ioctl args
->>> ioctl(fd, ENCLAVE_CREATE, &ioctlargs);
->>> ioctl(fd, ENCLAVE_ADD_PAGE, &ioctlargs);
->>> ioctl(fd, ENCLAVE_INIT, &ioctlargs);
->> That's rougly the flow, except that that all enclaves need to have RW and=
-
->> X EPC pages.
->>> The important points are that they do not open /dev/sgx/enclave with wri=
-te
->>> access (otherwise they will trigger FILE__WRITE at open time, and later
->>> encounter FILE__EXECUTE as well during mmap, thereby requiring both to b=
-e
->>> allowed to /dev/sgx/enclave), and that they do not request PROT_WRITE to=
- the
->>> resulting mapping (otherwise they will trigger FILE__WRITE at mmap time)=
-.
->>> Then only FILE__READ and FILE__EXECUTE are required to /dev/sgx/enclave i=
-n
->>> policy.
->>>=20
->>> If they switch to an anon inode, then any mmap PROT_EXEC of the opened f=
-ile
->>> will trigger an EXECMEM check, at least as currently implemented, as we h=
-ave
->>> no useful backing inode information.
->> Yep, and that's by design in the overall proposal.  The trick is that
->> ENCLAVE_ADD takes a source VMA and copies the contents *and* the
->> permissions from the source VMA.  The source VMA points at regular memory=
-
->> that was mapped and populated using existing mechanisms for loading DSOs.=
-
->> E.g. at a high level:
->> source_fd =3D open("/home/sean/path/to/my/enclave", O_RDONLY);
->> for_each_chunk {
->>         <hand waving - mmap()/mprotect() the enclave file into regular me=
-mory>
->> }
->> enclave_fd =3D open("/dev/sgx/enclave", O_RDWR); /* allocs anon inode */
->> enclave_addr =3D mmap(NULL, size, PROT_READ, MAP_SHARED, enclave_fd, 0);
->> ioctl(enclave_fd, ENCLAVE_CREATE, {enclave_addr});
->> for_each_chunk {
->>         struct sgx_enclave_add ioctlargs =3D {
->>                 .offset =3D chunk.offset,
->>                 .source =3D chunk.addr,
->>                 .size   =3D chunk.size,
->>                 .type   =3D chunk.type, /* SGX specific metadata */
->>         }
->>         ioctl(fd, ENCLAVE_ADD, &ioctlargs); /* modifies enclave's VMAs */=
-
->> }
->> ioctl(fd, ENCLAVE_INIT, ...);
->> Userspace never explicitly requests PROT_EXEC on enclave_fd, but SGX also=
-
->> ensures userspace isn't bypassing LSM policies by virtue of copying the
->> permissions for EPC VMAs from regular VMAs that have already gone through=
-
->> LSM checks.
+>+#define XATTR_LIST_FILENAME "=2Exattr-list"
+>+
+> static ssize_t __init xwrite(int fd, const char *p, size_t count)
+> {
+> 	ssize_t out =3D 0;
+>@@ -382,6 +384,97 @@ static int __init __maybe_unused do_setxattrs(char
+>*pathname)
+> 	return 0;
+> }
 >=20
-> Is O_RDWR required for /dev/sgx/enclave or would O_RDONLY suffice?  Do you=
- do anything other than ioctl() calls on it?
+>+struct path_hdr {
+>+	char p_size[10]; /* total size including p_size field */
+>+	char p_data[];   /* <path>\0<xattrs> */
+>+};
+>+
+>+static int __init do_readxattrs(void)
+>+{
+>+	struct path_hdr hdr;
+>+	char *path =3D NULL;
+>+	char str[sizeof(hdr=2Ep_size) + 1];
+>+	unsigned long file_entry_size;
+>+	size_t size, path_size, total_size;
+>+	struct kstat st;
+>+	struct file *file;
+>+	loff_t pos;
+>+	int ret;
+>+
+>+	ret =3D vfs_lstat(XATTR_LIST_FILENAME, &st);
+>+	if (ret < 0)
+>+		return ret;
+>+
+>+	total_size =3D st=2Esize;
+>+
+>+	file =3D filp_open(XATTR_LIST_FILENAME, O_RDONLY, 0);
+>+	if (IS_ERR(file))
+>+		return PTR_ERR(file);
+>+
+>+	pos =3D file->f_pos;
+>+
+>+	while (total_size) {
+>+		size =3D kernel_read(file, (char *)&hdr, sizeof(hdr), &pos);
+>+		if (size !=3D sizeof(hdr)) {
+>+			ret =3D -EIO;
+>+			goto out;
+>+		}
+>+
+>+		total_size -=3D size;
+>+
+>+		str[sizeof(hdr=2Ep_size)] =3D 0;
+>+		memcpy(str, hdr=2Ep_size, sizeof(hdr=2Ep_size));
+>+		ret =3D kstrtoul(str, 16, &file_entry_size);
+>+		if (ret < 0)
+>+			goto out;
+>+
+>+		file_entry_size -=3D sizeof(sizeof(hdr=2Ep_size));
+>+		if (file_entry_size > total_size) {
+>+			ret =3D -EINVAL;
+>+			goto out;
+>+		}
+>+
+>+		path =3D vmalloc(file_entry_size);
+>+		if (!path) {
+>+			ret =3D -ENOMEM;
+>+			goto out;
+>+		}
+>+
+>+		size =3D kernel_read(file, path, file_entry_size, &pos);
+>+		if (size !=3D file_entry_size) {
+>+			ret =3D -EIO;
+>+			goto out_free;
+>+		}
+>+
+>+		total_size -=3D size;
+>+
+>+		path_size =3D strnlen(path, file_entry_size);
+>+		if (path_size =3D=3D file_entry_size) {
+>+			ret =3D -EINVAL;
+>+			goto out_free;
+>+		}
+>+
+>+		xattr_buf =3D path + path_size + 1;
+>+		xattr_len =3D file_entry_size - path_size - 1;
+>+
+>+		ret =3D do_setxattrs(path);
+>+		vfree(path);
+>+		path =3D NULL;
+>+
+>+		if (ret < 0)
+>+			break;
+>+	}
+>+out_free:
+>+	vfree(path);
+>+out:
+>+	fput(file);
+>+
+>+	if (ret < 0)
+>+		error("Unable to parse xattrs");
+>+
+>+	return ret;
+>+}
+>+
+> static __initdata int wfd;
 >=20
-> What's the advantage of allocating an anon inode in the above?  At present=
- anon inodes are exempted from inode-based checking, thereby losing the abil=
-ity to perform SELinux ioctl whitelisting, unlike the file-backed /dev/sgx/e=
-nclave inode.
->=20
-> How would SELinux (or other security modules) restrict the authorized encl=
-aves that can be loaded via this interface?  Would the sgx driver invoke a n=
-ew LSM hook with the regular/source VMAs as parameters and allow the securit=
-y module to reject the ENCLAVE_ADD operation?  That could be just based on t=
-he vm_file (e.g. whitelist what enclave files are permitted in general) or i=
-t could be based on both the process and the vm_file (e.g. only allow specif=
-ic enclaves to be loaded into specific processes).
+> static int __init do_name(void)
+>@@ -391,6 +484,11 @@ static int __init do_name(void)
+> 	if (strcmp(collected, "TRAILER!!!") =3D=3D 0) {
+> 		free_hash();
+> 		return 0;
+>+	} else if (strcmp(collected, XATTR_LIST_FILENAME) =3D=3D 0) {
+>+		struct kstat st;
+>+
+>+		if (!vfs_lstat(collected, &st))
+>+			do_readxattrs();
+> 	}
+> 	clean_path(collected, mode);
+> 	if (S_ISREG(mode)) {
+>@@ -562,6 +660,7 @@ static char * __init unpack_to_rootfs(char *buf,
+>unsigned long len)
+> 		buf +=3D my_inptr;
+> 		len -=3D my_inptr;
+> 	}
+>+	do_readxattrs();
+> 	dir_utime();
+> 	kfree(name_buf);
+> 	kfree(symlink_buf);
 
-This is the idea behind the .sigstruct file. The driver could call a new hoo=
-k to approve or reject the .sigstruct. The sigstruct contains a hash of the w=
-hole enclave and a signature by the author.=
+Ok=2E=2E=2E I just realized this does not work for a modular initramfs, co=
+mposed at load time from multiple files, which is a very real problem=2E Sh=
+ould be easy enough to deal with: instead of one large file, use one compan=
+ion file per source file, perhaps something like filename=2E=2Exattrs (sugg=
+esting double dots to make it less likely to conflict with a "real" file=2E=
+) No leading dot, as it makes it more likely that archivers will sort them =
+before the file proper=2E
+
+A side benefit is that the format can be simpler as there is no need to en=
+code the filename=2E
+
+A technically cleaner solution still, but which would need archiver modifi=
+cations, would be to encode the xattrs as an optionally nameless file (just=
+ an empty string) with a new file mode value, immediately following the ori=
+ginal file=2E The advantage there is that the archiver itself could support=
+ xattrs and other extended metadata (which has been requested elsewhere); t=
+he disadvantage obviously is that that it requires new support in the archi=
+ver=2E However, at least it ought to be simpler since it is still a higher =
+protocol level than the cpio archive itself=2E
+
+There's already one special case in cpio, which is the "!!!TRAILER!!!" fil=
+ename; although I don't think it is part of the formal spec, to the extent =
+there is one, I would expect that in practice it is always encoded with a m=
+ode of 0, which incidentally could be used to unbreak the case where such a=
+ filename actually exists=2E So one way to support such extended metadata w=
+ould be to set mode to 0 and use the filename to encode the type of metadat=
+a=2E I wonder how existing GNU or BSD cpio (the BSD one is better maintaine=
+d these days) would deal with reading such a file; it would at least not be=
+ a regression if it just read it still, possibly with warnings=2E It could =
+also be possible to use bits 17:16 in the mode, which are traditionally alw=
+ays zero (mode_t being 16 bits), but I believe are present in most or all o=
+f the cpio formats for historical reasons=2E It might be accepted better by=
+ existing implementations to use one of these high bits combined with S_IFR=
+EG, I dont know=2E
+
+--=20
+Sent from my Android device with K-9 Mail=2E Please excuse my brevity=2E
