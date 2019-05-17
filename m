@@ -4,47 +4,47 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E9C4C04AB4
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 16:17:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14244C04AB4
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 16:17:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DE9072087E
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 16:17:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D9B6C2087E
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 16:17:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729478AbfEQQRA (ORCPT
+        id S1729502AbfEQQRE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 May 2019 12:17:00 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:44752 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729198AbfEQQRA (ORCPT
+        Fri, 17 May 2019 12:17:04 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:37514 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729459AbfEQQRB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 May 2019 12:17:00 -0400
-Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4HG6cr8107614
-        for <linux-kernel@vger.kernel.org>; Fri, 17 May 2019 12:16:59 -0400
-Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2shyrt9hqa-1
+        Fri, 17 May 2019 12:17:01 -0400
+Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4HG7Gj2058865
+        for <linux-kernel@vger.kernel.org>; Fri, 17 May 2019 12:17:00 -0400
+Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2shyky9y1t-1
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Fri, 17 May 2019 12:16:58 -0400
+        for <linux-kernel@vger.kernel.org>; Fri, 17 May 2019 12:16:59 -0400
 Received: from localhost
-        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
         for <linux-kernel@vger.kernel.org> from <pmorel@linux.ibm.com>;
         Fri, 17 May 2019 17:16:57 +0100
 Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
-        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
         (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Fri, 17 May 2019 17:16:54 +0100
+        Fri, 17 May 2019 17:16:53 +0100
 Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
-        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x4HGGqDG47644828
+        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x4HGGqSq18743538
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
         Fri, 17 May 2019 16:16:52 GMT
 Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id AA34F52073;
+        by IMSVA (Postfix) with ESMTP id 1313552067;
         Fri, 17 May 2019 16:16:52 +0000 (GMT)
 Received: from morel-ThinkPad-W530.boeblingen.de.ibm.com (unknown [9.145.153.112])
-        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id 2531B52071;
-        Fri, 17 May 2019 16:16:52 +0000 (GMT)
+        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id 7F1D35206D;
+        Fri, 17 May 2019 16:16:51 +0000 (GMT)
 From:   Pierre Morel <pmorel@linux.ibm.com>
 To:     sebott@linux.vnet.ibm.com
 Cc:     gerald.schaefer@de.ibm.com, pasic@linux.vnet.ibm.com,
@@ -54,20 +54,20 @@ Cc:     gerald.schaefer@de.ibm.com, pasic@linux.vnet.ibm.com,
         alex.williamson@redhat.com, kvm@vger.kernel.org,
         schwidefsky@de.ibm.com, heiko.carstens@de.ibm.com,
         robin.murphy@arm.com
-Subject: [PATCH v2 2/4] vfio: vfio_iommu_type1: Define VFIO_IOMMU_INFO_CAPABILITIES
-Date:   Fri, 17 May 2019 18:16:48 +0200
+Subject: [PATCH v2 1/4] s390: pci: Exporting access to CLP PCI function and PCI group
+Date:   Fri, 17 May 2019 18:16:47 +0200
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1558109810-18683-1-git-send-email-pmorel@linux.ibm.com>
 References: <1558109810-18683-1-git-send-email-pmorel@linux.ibm.com>
 X-TM-AS-GCONF: 00
-x-cbid: 19051716-0008-0000-0000-000002E7C7C9
+x-cbid: 19051716-4275-0000-0000-00000335E464
 X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19051716-0009-0000-0000-0000225472E3
-Message-Id: <1558109810-18683-3-git-send-email-pmorel@linux.ibm.com>
+x-cbparentid: 19051716-4276-0000-0000-0000384570A3
+Message-Id: <1558109810-18683-2-git-send-email-pmorel@linux.ibm.com>
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-17_09:,,
  signatures=0
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=1 phishscore=0 bulkscore=0 spamscore=0
+ malwarescore=0 suspectscore=3 phishscore=0 bulkscore=0 spamscore=0
  clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
  mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
  scancount=1 engine=8.0.1-1810050000 definitions=main-1905170098
@@ -76,101 +76,148 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We add a capabilities functionality to VFIO_IOMMU_GET_INFO.
+For the generic implementation of VFIO PCI we need to retrieve
+the hardware configuration for the PCI functions and the
+PCI function groups.
 
-This will allow the VFIO_IOMMU_GET_INFO ioctl to retrieve IOMMU
-specific information.
-
-we define a new flag VFIO_IOMMU_INFO_CAPABILITIES in the
-vfio_iommu_type1_info structure and two Z-PCI specific
-capabilities:
-VFIO_IOMMU_INFO_CAP_QFN: to query Z-PCI function information
-VFIO_IOMMU_INFO_CAP_QGRP: to query for Z-PCI group information
-and we define the associated information structures.
+We modify the internal function using CLP Query PCI function and
+CLP query PCI function group so that they can be called from
+outside the S390 architecture PCI code and prefix the two
+functions with "zdev" to make clear that they can be called
+knowing only the associated zdevice.
 
 Signed-off-by: Pierre Morel <pmorel@linux.ibm.com>
+Reviewed-by: Sebastian Ott <sebott@linux.ibm.com>
 ---
- include/uapi/linux/vfio.h | 67 +++++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 67 insertions(+)
+ arch/s390/include/asm/pci.h |  3 ++
+ arch/s390/pci/pci_clp.c     | 70 +++++++++++++++++++++++----------------------
+ 2 files changed, 39 insertions(+), 34 deletions(-)
 
-diff --git a/include/uapi/linux/vfio.h b/include/uapi/linux/vfio.h
-index 8f10748..aed0e72 100644
---- a/include/uapi/linux/vfio.h
-+++ b/include/uapi/linux/vfio.h
-@@ -715,6 +715,73 @@ struct vfio_iommu_type1_info {
- 	__u32	flags;
- #define VFIO_IOMMU_INFO_PGSIZES (1 << 0)	/* supported page sizes info */
- 	__u64	iova_pgsizes;		/* Bitmap of supported page sizes */
-+#define VFIO_IOMMU_INFO_CAPABILITIES (1 << 1)  /* support capabilities info */
-+	__u64   cap_offset;     /* Offset within info struct of first cap */
-+};
-+
-+/*
-+ * The VFIO IOMMU INFO  PCI function capability allows to retrieve
-+ * Z-PCI function specific data needed by the VFIO user to provide
-+ * them to the guest function's driver.
-+ *
-+ * The structures below define version 1 of this capability.
-+ */
-+#define VFIO_IOMMU_INFO_CAP_QFN		1
-+
-+struct vfio_iommu_pci_function {
-+	__u32 ignored;
-+	__u32 format;		/* Structure format */
-+	__u64 reserved1;
-+	__u16 vfn;		/* Virtual function number */
-+	__u8 u;			/* utility string presence */
-+	__u8 gid;		/* Function group */
-+	__u32 fid;		/* Function identifier */
-+	__u8 bar_size[6];	/* Bar size */
-+	__u16 pchid;		/* Physical channel ID */
-+	__u32 bar[6];		/* PCI Bar address */
-+	__u64 reserved2;
-+	__u64 sdma;		/* Start available DMA */
-+	__u64 edma;		/* End available DMA */
-+	__u32 reserved3[11];
-+	__u32 uid;		/* User's identifier */
-+	__u8 util_str[64];	/* Adapter specific utility string */
-+};
-+
-+struct vfio_iommu_type1_info_pcifn {
-+	struct vfio_info_cap_header header;
-+	struct vfio_iommu_pci_function response;
-+};
-+
-+/*
-+ * The VFIO IOMMU INFO PCI function group capability allows to retrieve
-+ * information, specific to a group of Z-PCI functions, needed by
-+ * the VFIO user to provide them to the guest function's driver.
-+ *
-+ * The structures below define version 1 of this capability.
-+ */
-+#define VFIO_IOMMU_INFO_CAP_QGRP	2
-+
-+struct vfio_iommu_pci_function_group {
-+	__u32 ignored;
-+	__u32 format;		/* Structure format */
-+	__u64 reserved1;
-+	__u16 noi;		/* Maximum number of interruptions */
-+	__u8 version;		/* Version */
-+	__u8 flags;		/* Flags */
-+#define VFIO_IOMMU_ZPCI_REFRESH	0x01
-+#define VFIO_IOMMU_ZPCI_FRAME	0x02
-+	__u16 maxstbl;		/* Maximum store-block length */
-+	__u16 mui;		/* Measurement block update interval */
-+	__u64 reserved3;
-+	__u64 dasm;		/* DMA Address space mask */
-+	__u64 msia;		/* MSI Address */
-+	__u64 reserved4;
-+	__u64 reserved5;
-+};
-+
-+struct vfio_iommu_type1_info_pcifg {
-+	struct vfio_info_cap_header header;
-+	struct vfio_iommu_pci_function_group response;
- };
+diff --git a/arch/s390/include/asm/pci.h b/arch/s390/include/asm/pci.h
+index 305befd..e66b246 100644
+--- a/arch/s390/include/asm/pci.h
++++ b/arch/s390/include/asm/pci.h
+@@ -261,4 +261,7 @@ cpumask_of_pcibus(const struct pci_bus *bus)
  
- #define VFIO_IOMMU_GET_INFO _IO(VFIO_TYPE, VFIO_BASE + 12)
+ #endif /* CONFIG_NUMA */
+ 
++int zdev_query_pci_fngrp(struct zpci_dev *zdev,
++			 struct clp_req_rsp_query_pci_grp *rrb);
++int zdev_query_pci_fn(struct zpci_dev *zdev, struct clp_req_rsp_query_pci *rrb);
+ #endif
+diff --git a/arch/s390/pci/pci_clp.c b/arch/s390/pci/pci_clp.c
+index 3a36b07..c57f675 100644
+--- a/arch/s390/pci/pci_clp.c
++++ b/arch/s390/pci/pci_clp.c
+@@ -113,31 +113,16 @@ static void clp_store_query_pci_fngrp(struct zpci_dev *zdev,
+ 	}
+ }
+ 
+-static int clp_query_pci_fngrp(struct zpci_dev *zdev, u8 pfgid)
++int zdev_query_pci_fngrp(struct zpci_dev *zdev,
++			 struct clp_req_rsp_query_pci_grp *rrb)
+ {
+-	struct clp_req_rsp_query_pci_grp *rrb;
+-	int rc;
+-
+-	rrb = clp_alloc_block(GFP_KERNEL);
+-	if (!rrb)
+-		return -ENOMEM;
+-
+ 	memset(rrb, 0, sizeof(*rrb));
+ 	rrb->request.hdr.len = sizeof(rrb->request);
+ 	rrb->request.hdr.cmd = CLP_QUERY_PCI_FNGRP;
+ 	rrb->response.hdr.len = sizeof(rrb->response);
+-	rrb->request.pfgid = pfgid;
++	rrb->request.pfgid = zdev->pfgid;
+ 
+-	rc = clp_req(rrb, CLP_LPS_PCI);
+-	if (!rc && rrb->response.hdr.rsp == CLP_RC_OK)
+-		clp_store_query_pci_fngrp(zdev, &rrb->response);
+-	else {
+-		zpci_err("Q PCI FGRP:\n");
+-		zpci_err_clp(rrb->response.hdr.rsp, rc);
+-		rc = -EIO;
+-	}
+-	clp_free_block(rrb);
+-	return rc;
++	return clp_req(rrb, CLP_LPS_PCI);
+ }
+ 
+ static int clp_store_query_pci_fn(struct zpci_dev *zdev,
+@@ -174,32 +159,49 @@ static int clp_store_query_pci_fn(struct zpci_dev *zdev,
+ 	return 0;
+ }
+ 
+-static int clp_query_pci_fn(struct zpci_dev *zdev, u32 fh)
++int zdev_query_pci_fn(struct zpci_dev *zdev, struct clp_req_rsp_query_pci *rrb)
++{
++
++	memset(rrb, 0, sizeof(*rrb));
++	rrb->request.hdr.len = sizeof(rrb->request);
++	rrb->request.hdr.cmd = CLP_QUERY_PCI_FN;
++	rrb->response.hdr.len = sizeof(rrb->response);
++	rrb->request.fh = zdev->fh;
++
++	return clp_req(rrb, CLP_LPS_PCI);
++}
++
++static int clp_query_pci(struct zpci_dev *zdev)
+ {
+ 	struct clp_req_rsp_query_pci *rrb;
++	struct clp_req_rsp_query_pci_grp *grrb;
+ 	int rc;
+ 
+ 	rrb = clp_alloc_block(GFP_KERNEL);
+ 	if (!rrb)
+ 		return -ENOMEM;
+ 
+-	memset(rrb, 0, sizeof(*rrb));
+-	rrb->request.hdr.len = sizeof(rrb->request);
+-	rrb->request.hdr.cmd = CLP_QUERY_PCI_FN;
+-	rrb->response.hdr.len = sizeof(rrb->response);
+-	rrb->request.fh = fh;
+-
+-	rc = clp_req(rrb, CLP_LPS_PCI);
+-	if (!rc && rrb->response.hdr.rsp == CLP_RC_OK) {
+-		rc = clp_store_query_pci_fn(zdev, &rrb->response);
+-		if (rc)
+-			goto out;
+-		rc = clp_query_pci_fngrp(zdev, rrb->response.pfgid);
+-	} else {
++	rc = zdev_query_pci_fn(zdev, rrb);
++	if (rc || rrb->response.hdr.rsp != CLP_RC_OK) {
+ 		zpci_err("Q PCI FN:\n");
+ 		zpci_err_clp(rrb->response.hdr.rsp, rc);
+ 		rc = -EIO;
++		goto out;
+ 	}
++	rc = clp_store_query_pci_fn(zdev, &rrb->response);
++	if (rc)
++		goto out;
++
++	grrb = (struct clp_req_rsp_query_pci_grp *)rrb;
++	rc = zdev_query_pci_fngrp(zdev, grrb);
++	if (rc || grrb->response.hdr.rsp != CLP_RC_OK) {
++		zpci_err("Q PCI FGRP:\n");
++		zpci_err_clp(grrb->response.hdr.rsp, rc);
++		rc = -EIO;
++		goto out;
++	}
++	clp_store_query_pci_fngrp(zdev, &grrb->response);
++
+ out:
+ 	clp_free_block(rrb);
+ 	return rc;
+@@ -219,7 +221,7 @@ int clp_add_pci_device(u32 fid, u32 fh, int configured)
+ 	zdev->fid = fid;
+ 
+ 	/* Query function properties and update zdev */
+-	rc = clp_query_pci_fn(zdev, fh);
++	rc = clp_query_pci(zdev);
+ 	if (rc)
+ 		goto error;
+ 
 -- 
 2.7.4
 
