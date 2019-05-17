@@ -2,211 +2,108 @@ Return-Path: <SRS0=M1fl=TR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3359FC04AB4
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 17:27:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5650AC46460
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 17:29:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0795B20848
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 17:27:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 286B9216C4
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 17:29:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="f4wV8lPN"
+	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="dJsV4x6I"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728516AbfEQR1w (ORCPT
+        id S1728195AbfEQR3A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 May 2019 13:27:52 -0400
-Received: from mail-it1-f193.google.com ([209.85.166.193]:34241 "EHLO
-        mail-it1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728467AbfEQR1w (ORCPT
+        Fri, 17 May 2019 13:29:00 -0400
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:40634 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726078AbfEQR3A (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 May 2019 13:27:52 -0400
-Received: by mail-it1-f193.google.com with SMTP id p18so11470262itm.1;
-        Fri, 17 May 2019 10:27:51 -0700 (PDT)
+        Fri, 17 May 2019 13:29:00 -0400
+Received: by mail-oi1-f194.google.com with SMTP id r136so5725971oie.7
+        for <linux-kernel@vger.kernel.org>; Fri, 17 May 2019 10:28:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=8ICI9CdfR+Sv6JXgOHP/5oOIpKavCtZL50883X2efRw=;
-        b=f4wV8lPNseh7Fo79RC+jiQD8g9H/sL1IxsS3OB4PaJnsQsdm4AR617fEQuI9BFkj6c
-         f5aDiGoJg91SJxZIBKQ1Y0wsogLz9A8cNw/rYVB5DC6jFHe0bHj1v5oAMKjc1Sminwp6
-         Rr60ashoJRiDEFqwJU+zoFQzmhRClCnhuSlMLPzlfI3Jbb/TUGt8HTKHvjCSji4/upYd
-         rcbmS3KKywLEEOgP2FT5o0lhatDAKBHN4Sse2rBjSEw6e9WQq6x4vX2TiQoL2kh7adl+
-         efVJKln3csKNlFGlAd1lcLSo+zzsAZZIsiuREN+1p9L/NeDOfG1piVexmrO7PrBkzVXU
-         MNNw==
+         :cc;
+        bh=DZg+iPjy57Sau/2Fv2Pd7vOTOxQm9eqfYjNJZeyrWIs=;
+        b=dJsV4x6IxLCgdPBEdcoEAdj7Zz5cN+2SMQigBpwwLCEnytqZSwk8zS1uvReMjOe4cj
+         Q24WakyMkK56lXo3uuygO/fpLNaDFdlHZ4HKZ89RdkRYdy7710qGfvhjYW0h2qLXROj5
+         Udi0Ja8h/Gn5ceLVB/Dd8MsMGQWpESB4ureyJ+HPhXQP+qv0PLzcH82NXB6OZOpHv/ol
+         jiw0rT7qOiQrtpVx/2IyOEEJ4tL4ltdsslvJg/tILl3oaaWcaKU303I9MpGYmzHslK2g
+         CI3AyFD5/HFMxWLbDcHtj5KFQRpwpFleoORC+4GRdyjxHEFM2eK+lztKXJz8ctBDuLma
+         Vs0Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=8ICI9CdfR+Sv6JXgOHP/5oOIpKavCtZL50883X2efRw=;
-        b=ueih0TehAj4x1xLeIemlreq3Oc/beglmEiG8PUHEiNX+17rF9/oeQdxjgYjpZiYW8Q
-         ti01XAgwCJsBlo+o1Nu1p9u9kv40x5BRA/QF04S3AEjVRTZe/cpig245yov2s4QIUilg
-         vHSJluoIOHO5rDu3Lm5559Fj6KAdx5yco3alsC6DCs54UfE8HgxuGQB7ReVYpeYDCMDz
-         RJl93/7BHD2GkI66sBI/3o/WJQgQVHg0mAdOjPWe7bpeSRbMaXR9DYs1S6D8m2cKBOQ+
-         k5HImIE0zFRyDPUZYeFwafWeFUei/3o2jBwBjK+Wh3JqQIqCYdCBZ1efI7xs1f5w8r8P
-         ++Pw==
-X-Gm-Message-State: APjAAAXDjHbJ2q/fxdsXFjG7ZCu/Nq5YRmYws3pfRFl819W6cmiN9ORu
-        vWeW/pfvNQUAJpyMbVdhlqUfu7fEhilN2qZ7DTg=
-X-Google-Smtp-Source: APXvYqxGGY6AszlnM3hxh5GgSKjuChgf1o9wkHmEJUdEHLYWP1w6j+Lk8W0j7JyVaVmdjCGOzUC6vJPhgT9EpOorAec=
-X-Received: by 2002:a02:a794:: with SMTP id e20mr36184091jaj.12.1558114070786;
- Fri, 17 May 2019 10:27:50 -0700 (PDT)
+         :message-id:subject:to:cc;
+        bh=DZg+iPjy57Sau/2Fv2Pd7vOTOxQm9eqfYjNJZeyrWIs=;
+        b=gu+MVLX9U8rbjXVHx1hTl/G1gf0MODn2o0CNR/frfcCpD69aP9dZ1DPqlxkt1pjesN
+         05oMMJnyICGRSm4BiQghjVnsh8isZMU2855umb5uC2WTZgCNBONEetKFso1WiIjVdGgL
+         JaVYw8mdSBKGsVelwM4UlvwOltGfkmF0AfOu+h6iqWd53oJ7Un+sSL5lnHrbYt2vitJ3
+         uI8NlnfIU/hTw+DUndLSpYhzZbKgP4T3kFzUIH+cKRsXejFyYh9SoDY5dQhq8kjPydZ0
+         S12/q9Fudnn4wZbzPkC68Qh0coov2tDlGQHaCc+HbbjLEPgtZU97XhviIcAm4Fdll+KK
+         2G6A==
+X-Gm-Message-State: APjAAAUCOoVEEKn48WNv5C8VGJqEHTAWt8SQL1zLX4YDR4hr6mcTRBli
+        YvhZ1m/k1G+dqbW/QMygwWuEw65PPcelzC21AD/iTg==
+X-Google-Smtp-Source: APXvYqyypz+lE+RFowzVzsoRyDPIn100uvW4JTOwzRg1F63adltFZC2q4xwOBjZ3OZAsNEKxmDVZopC2u4kD8gMpRhg=
+X-Received: by 2002:aca:4208:: with SMTP id p8mr16013695oia.105.1558114139313;
+ Fri, 17 May 2019 10:28:59 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190512082614.9045-1-tiny.windzz@gmail.com> <20190512082614.9045-3-tiny.windzz@gmail.com>
- <20190512133930.t5txssl7mou2gljt@flea> <CAEExFWvcMbiCJ4HD0UAtv1P6AuBJ=oUdmhu886BNZhrRz483Ug@mail.gmail.com>
- <20190517073634.izdmba3yqvxviyg3@flea>
-In-Reply-To: <20190517073634.izdmba3yqvxviyg3@flea>
-From:   Frank Lee <tiny.windzz@gmail.com>
-Date:   Sat, 18 May 2019 01:27:39 +0800
-Message-ID: <CAEExFWtNhTqLR+v3o6vn0Y4L65i_XsrEeiex6DNLEPEkhseCjA@mail.gmail.com>
-Subject: Re: [PATCH 2/3] thermal: sun50i: add thermal driver for h6
-To:     Maxime Ripard <maxime.ripard@bootlin.com>
-Cc:     rui.zhang@intel.com, Eduardo Valentin <edubezval@gmail.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>, robh+dt@kernel.org,
-        Mark Rutland <mark.rutland@arm.com>,
-        Chen-Yu Tsai <wens@csie.org>, catalin.marinas@arm.com,
-        will.deacon@arm.com, David Miller <davem@davemloft.net>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jonathan.Cameron@huawei.com,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        paulmck@linux.ibm.com, Andy Gross <andy.gross@linaro.org>,
-        olof@lixom.net, bjorn.andersson@linaro.org,
-        Jagan Teki <jagan@amarulasolutions.com>,
-        marc.w.gonzalez@free.fr, stefan.wahren@i2se.com,
-        enric.balletbo@collabora.com, Linux PM <linux-pm@vger.kernel.org>,
-        devicetree@vger.kernel.org,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+References: <155805321833.867447.3864104616303535270.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <20190517084739.GB20550@quack2.suse.cz> <CAPcyv4iZZCgcC657ZOysBP9=1ejp3jfFj=VETVBPrgmfg7xUEw@mail.gmail.com>
+ <201905170855.8E2E1AC616@keescook>
+In-Reply-To: <201905170855.8E2E1AC616@keescook>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Fri, 17 May 2019 10:28:48 -0700
+Message-ID: <CAPcyv4g9HpMaifC+Qe2RVbgL_qq9vQvjwr-Jw813xhxcviehYQ@mail.gmail.com>
+Subject: Re: [PATCH] libnvdimm/pmem: Bypass CONFIG_HARDENED_USERCOPY overhead
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Jan Kara <jack@suse.cz>, linux-nvdimm <linux-nvdimm@lists.01.org>,
+        stable <stable@vger.kernel.org>, Jeff Moyer <jmoyer@redhat.com>,
+        Ingo Molnar <mingo@redhat.com>, Christoph Hellwig <hch@lst.de>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Matthew Wilcox <willy@infradead.org>,
+        Jeff Smits <jeff.smits@intel.com>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 17, 2019 at 3:36 PM Maxime Ripard <maxime.ripard@bootlin.com> w=
-rote:
+On Fri, May 17, 2019 at 8:57 AM Kees Cook <keescook@chromium.org> wrote:
 >
-> On Fri, May 17, 2019 at 01:51:56AM +0800, Frank Lee wrote:
-> > > > +struct sun50i_thermal_chip {
-> > > > +     int     sensor_num;
-> > > > +     int     offset;
-> > > > +     int     scale;
-> > > > +     int     ft_deviation;
-> > > > +     int     temp_calib_base;
-> > > > +     int     temp_data_base;
-> > > > +     int     (*enable)(struct tsens_device *tmdev);
-> > > > +     int     (*disable)(struct tsens_device *tmdev);
-> > > > +};
-> > >
-> > > I'm not super fond of having a lot of quirks that are not needed. If
-> > > we ever need those quirks when adding support for a new SoC, then
-> > > yeah, we should totally have some, but only when and if it's needed.
-> > >
-> > > Otherwise, the driver is more complicated for no particular reason.
-> >
-> > This is unavoidable because of the difference in soc.
+> On Fri, May 17, 2019 at 08:08:27AM -0700, Dan Williams wrote:
+> > As far as I can see it's mostly check_heap_object() that is the
+> > problem, so I'm open to finding a way to just bypass that sub-routine.
+> > However, as far as I can see none of the other block / filesystem user
+> > copy implementations submit to the hardened checks, like
+> > bio_copy_from_iter(), and iov_iter_copy_from_user_atomic() . So,
+> > either those need to grow additional checks, or the hardened copy
+> > implementation is targeting single object copy use cases, not
+> > necessarily block-I/O. Yes, Kees, please advise.
 >
-> I know, but this isn't my point.
->
-> My point is that at this time of the driver development, we don't know
-> what is going to be needed to support all of those SoCs.
->
-> Some of the parameters you added might not be needed, some parameters
-> might be missing, we don't know. So let's keep it simple for now.
->
-> > > > +static int tsens_probe(struct platform_device *pdev)
-> > > > +{
-> > > > +     struct tsens_device *tmdev;
-> > > > +     struct device *dev =3D &pdev->dev;
-> > > > +     int ret;
-> > > > +
-> > > > +     tmdev =3D devm_kzalloc(dev, sizeof(*tmdev), GFP_KERNEL);
-> > > > +     if (!tmdev)
-> > > > +             return -ENOMEM;
-> > > > +
-> > > > +     tmdev->dev =3D dev;
-> > > > +     tmdev->chip =3D of_device_get_match_data(&pdev->dev);
-> > > > +     if (!tmdev->chip)
-> > > > +             return -EINVAL;
-> > > > +
-> > > > +     ret =3D tsens_init(tmdev);
-> > > > +     if (ret)
-> > > > +             return ret;
-> > > > +
-> > > > +     ret =3D tsens_register(tmdev);
-> > > > +     if (ret)
-> > > > +             return ret;
-> > > > +
-> > > > +     ret =3D tmdev->chip->enable(tmdev);
-> > > > +     if (ret)
-> > > > +             return ret;
-> > > >
-> > > > +     platform_set_drvdata(pdev, tmdev);
-> > >
-> > > Your registration should be the very last thing you do. Otherwise, yo=
-u
-> > > have a small window where the get_temp callback can be called, but th=
-e
-> > > driver will not be functional yet.
-> >
-> > No. Anyway, ths data qcquisition is ms level.
->
-> That's kind of irrelevant. There's nothing preventing get_temp to be
-> called right away.
-As Ond=C5=99ej said,
+> The intention is mainly for copies that haven't had explicit bounds
+> checking already performed on them, yes. Is there something getting
+> checked out of the slab, or is it literally just the overhead of doing
+> the "is this slab?" check that you're seeing?
 
-Registration after enabling will lead to call tz update on non-registered t=
-z
-from an interrupt handler.
+It's literally the overhead of "is this slab?" since it needs to go
+retrieve the struct page and read that potentially cold cacheline. In
+the case where that page is on memory media that is higher latency
+than DRAM we get the ~37% performance loss that Jeff measured.
 
->
-> > > > +     ret =3D tsens_calibrate(tmdev);
-> > > > +     if (ret)
-> > > > +             return ret;
-> > > > +
-> > > > +     /*
-> > > > +      * clkin =3D 24MHz
-> > > > +      * T acquire =3D clkin / (SUN50I_THS_CTRL0_T_ACQ + 1)
-> > > > +      *           =3D 20us
-> > > > +      */
-> > > > +     regmap_write(tmdev->regmap, SUN50I_THS_CTRL0,
-> > > > +                  SUN50I_THS_CTRL0_T_ACQ(479));
-> > > > +     /* average over 4 samples */
-> > > > +     regmap_write(tmdev->regmap, SUN50I_H6_THS_MFC,
-> > > > +                  SUN50I_THS_FILTER_EN |
-> > > > +                  SUN50I_THS_FILTER_TYPE(1));
-> > > > +     /* period =3D (SUN50I_H6_THS_PC_TEMP_PERIOD + 1) * 4096 / clk=
-in; ~10ms */
-> > > > +     regmap_write(tmdev->regmap, SUN50I_H6_THS_PC,
-> > > > +                  SUN50I_H6_THS_PC_TEMP_PERIOD(58));
-> > > > +     /* enable sensor */
-> > > > +     val =3D GENMASK(tmdev->chip->sensor_num - 1, 0);
-> > > > +     regmap_write(tmdev->regmap, SUN50I_H6_THS_ENABLE, val);
-> > > > +
-> > > > +     return 0;
-> > > > +
-> > > > +assert_reset:
-> > > > +     reset_control_assert(tmdev->reset);
-> > > > +
-> > > > +     return ret;
-> > >
-> > > Can't we do that with runtime_pm?
-> >
-> > Saving energy doesn't make much sense compared to system security.
->
-> I'm not sure what you mean by security.
+The path is via the filesystem ->write_iter() file operation. In the
+DAX case the filesystem traps that path early, before submitting block
+I/O, and routes it to the dax_iomap_actor() routine. That routine
+validates that the logical file offset is within bounds of the file,
+then it does a sector-to-pfn translation which validates that the
+physical mapping is within bounds of the block device.
 
-Protect system hardware from damage.
-
-Thx,
-Yangtao
->
-> Maxime
->
-> --
-> Maxime Ripard, Bootlin
-> Embedded Linux and Kernel engineering
-> https://bootlin.com
+It seems dax_iomap_actor() is not a path where we'd be worried about
+needing hardened user copy checks.
