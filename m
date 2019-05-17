@@ -3,355 +3,249 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E024FC04AB4
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 09:05:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8208EC04AB4
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 09:05:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A025820833
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 09:05:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 52FED20833
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 09:05:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728417AbfEQJE7 (ORCPT
+        id S1728566AbfEQJFq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 May 2019 05:04:59 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:59816 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727338AbfEQJE7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 May 2019 05:04:59 -0400
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id BC4B330C0DC8;
-        Fri, 17 May 2019 09:04:58 +0000 (UTC)
-Received: from thuth.com (ovpn-117-142.ams2.redhat.com [10.36.117.142])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 9C8F5348F5;
-        Fri, 17 May 2019 09:04:54 +0000 (UTC)
-From:   Thomas Huth <thuth@redhat.com>
-To:     =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        linux-kselftest@vger.kernel.org, kvm@vger.kernel.org
-Cc:     Shuah Khan <shuah@kernel.org>, Andrew Jones <drjones@redhat.com>,
-        Peter Xu <peterx@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v2] KVM: selftests: Compile code with warnings enabled
-Date:   Fri, 17 May 2019 11:04:45 +0200
-Message-Id: <20190517090445.4502-1-thuth@redhat.com>
+        Fri, 17 May 2019 05:05:46 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:64726 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727338AbfEQJFq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 May 2019 05:05:46 -0400
+X-UUID: 7e0adf44dfaf4e61a3e5cfc579ddbcb2-20190517
+X-UUID: 7e0adf44dfaf4e61a3e5cfc579ddbcb2-20190517
+Received: from mtkexhb02.mediatek.inc [(172.21.101.103)] by mailgw02.mediatek.com
+        (envelope-from <ck.hu@mediatek.com>)
+        (mhqrelay.mediatek.com ESMTP with TLS)
+        with ESMTP id 492930839; Fri, 17 May 2019 17:05:35 +0800
+Received: from mtkcas08.mediatek.inc (172.21.101.126) by
+ mtkmbs03n1.mediatek.inc (172.21.101.181) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Fri, 17 May 2019 17:05:34 +0800
+Received: from [172.21.77.4] (172.21.77.4) by mtkcas08.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Fri, 17 May 2019 17:05:34 +0800
+Message-ID: <1558083934.29098.6.camel@mtksdaap41>
+Subject: Re: [PATCH v3 09/13] [media] mtk-mipicsi: add ISR for writing the
+ data to buffer
+From:   CK Hu <ck.hu@mediatek.com>
+To:     Stu Hsieh <stu.hsieh@mediatek.com>
+CC:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "Matthias Brugger" <matthias.bgg@gmail.com>,
+        <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>, <srv_heupstream@mediatek.com>
+Date:   Fri, 17 May 2019 17:05:34 +0800
+In-Reply-To: <1557814430-9675-10-git-send-email-stu.hsieh@mediatek.com>
+References: <1557814430-9675-1-git-send-email-stu.hsieh@mediatek.com>
+         <1557814430-9675-10-git-send-email-stu.hsieh@mediatek.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.10.4-0ubuntu2 
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.45]); Fri, 17 May 2019 09:04:58 +0000 (UTC)
+Content-Transfer-Encoding: 7bit
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-So far the KVM selftests are compiled without any compiler warnings
-enabled. That's quite bad, since we miss a lot of possible bugs this
-way. Let's enable at least "-Wall" and some other useful warning flags
-now, and fix at least the trivial problems in the code (like unused
-variables).
+Hi, Stu:
 
-Signed-off-by: Thomas Huth <thuth@redhat.com>
----
- v2:
- - Rebased to kvm/queue
- - Fix warnings in state_test.c and evmcs_test.c, too
+On Tue, 2019-05-14 at 14:13 +0800, Stu Hsieh wrote:
+> This patch add ISR for writing the data to buffer
+> 
+> When mipicsi HW complete to write the data in buffer,
+> the interrupt woulb be trigger.
+> So, the ISR need to clear interrupt status for next interrupt.
+> 
+> Signed-off-by: Stu Hsieh <stu.hsieh@mediatek.com>
+> ---
+>  .../media/platform/mtk-mipicsi/mtk_mipicsi.c  | 110 ++++++++++++++++++
+>  1 file changed, 110 insertions(+)
+> 
+> diff --git a/drivers/media/platform/mtk-mipicsi/mtk_mipicsi.c b/drivers/media/platform/mtk-mipicsi/mtk_mipicsi.c
+> index 44c01c8d566b..af5655345754 100644
+> --- a/drivers/media/platform/mtk-mipicsi/mtk_mipicsi.c
+> +++ b/drivers/media/platform/mtk-mipicsi/mtk_mipicsi.c
+> @@ -36,6 +36,7 @@
+>  #include <linux/pm_runtime.h>
+>  #include <linux/iommu.h>
+>  #include <linux/of.h>
+> +#include <linux/of_irq.h>
+>  #include <linux/of_platform.h>
+>  #include <media/v4l2-common.h>
+>  #include <media/v4l2-dev.h>
+> @@ -93,6 +94,8 @@
+>  #define CAMSV_MODULE_EN					0x10
+>  #define CAMSV_FMT_SEL					0x14
+>  #define CAMSV_INT_EN					0x18
+> +#define CAMSV_INT_STATUS				0x1C
+> +#define PASS1_DONE_STATUS				10
+>  #define CAMSV_SW_CTL					0x20
+>  #define CAMSV_CLK_EN					0x30
+>  
+> @@ -122,6 +125,8 @@ struct mtk_mipicsi_dev {
+>  	struct platform_device *pdev;
+>  	unsigned int camsv_num;
+>  	struct device *larb_pdev;
+> +	unsigned int		irq[MTK_CAMDMA_MAX_NUM];
+> +	bool irq_status[MTK_CAMDMA_MAX_NUM];
+>  	void __iomem		*ana;
+>  	void __iomem		*seninf_ctrl;
+>  	void __iomem		*seninf;
+> @@ -132,6 +137,7 @@ struct mtk_mipicsi_dev {
+>  	spinlock_t		lock;
+>  	spinlock_t		queue_lock;
+>  	struct mtk_mipicsi_buf	cam_buf[MAX_BUFFER_NUM];
+> +	bool			is_enable_irq[MTK_CAMDMA_MAX_NUM];
 
- tools/testing/selftests/kvm/Makefile                       | 4 +++-
- tools/testing/selftests/kvm/dirty_log_test.c               | 6 +++++-
- tools/testing/selftests/kvm/lib/kvm_util.c                 | 3 ---
- tools/testing/selftests/kvm/lib/x86_64/processor.c         | 4 +---
- tools/testing/selftests/kvm/x86_64/cr4_cpuid_sync_test.c   | 1 +
- tools/testing/selftests/kvm/x86_64/evmcs_test.c            | 7 +------
- tools/testing/selftests/kvm/x86_64/platform_info_test.c    | 1 -
- tools/testing/selftests/kvm/x86_64/smm_test.c              | 3 +--
- tools/testing/selftests/kvm/x86_64/state_test.c            | 7 +------
- .../selftests/kvm/x86_64/vmx_close_while_nested_test.c     | 5 +----
- tools/testing/selftests/kvm/x86_64/vmx_tsc_adjust_test.c   | 5 ++---
- 11 files changed, 16 insertions(+), 30 deletions(-)
+Useless, so remove it.
 
-diff --git a/tools/testing/selftests/kvm/Makefile b/tools/testing/selftests/kvm/Makefile
-index 79c524395ebe..d113eaf2d570 100644
---- a/tools/testing/selftests/kvm/Makefile
-+++ b/tools/testing/selftests/kvm/Makefile
-@@ -34,7 +34,9 @@ LIBKVM += $(LIBKVM_$(UNAME_M))
- INSTALL_HDR_PATH = $(top_srcdir)/usr
- LINUX_HDR_PATH = $(INSTALL_HDR_PATH)/include/
- LINUX_TOOL_INCLUDE = $(top_srcdir)/tools/include
--CFLAGS += -O2 -g -std=gnu99 -fno-stack-protector -fno-PIE -I$(LINUX_TOOL_INCLUDE) -I$(LINUX_HDR_PATH) -Iinclude -I$(<D) -Iinclude/$(UNAME_M) -I..
-+CFLAGS += -Wall -Wstrict-prototypes -Wuninitialized -O2 -g -std=gnu99 \
-+	-fno-stack-protector -fno-PIE -I$(LINUX_TOOL_INCLUDE) \
-+	-I$(LINUX_HDR_PATH) -Iinclude -I$(<D) -Iinclude/$(UNAME_M) -I..
- 
- no-pie-option := $(call try-run, echo 'int main() { return 0; }' | \
-         $(CC) -Werror $(KBUILD_CPPFLAGS) $(CC_OPTION_CFLAGS) -no-pie -x c - -o "$$TMP", -no-pie)
-diff --git a/tools/testing/selftests/kvm/dirty_log_test.c b/tools/testing/selftests/kvm/dirty_log_test.c
-index a29d1119ccb3..ff20950aee05 100644
---- a/tools/testing/selftests/kvm/dirty_log_test.c
-+++ b/tools/testing/selftests/kvm/dirty_log_test.c
-@@ -131,6 +131,7 @@ static void *vcpu_worker(void *data)
- 	while (!READ_ONCE(host_quit)) {
- 		/* Let the guest dirty the random pages */
- 		ret = _vcpu_run(vm, VCPU_ID);
-+		TEST_ASSERT(ret == 0, "vcpu_run failed: %d\n", ret);
- 		if (get_ucall(vm, VCPU_ID, &uc) == UCALL_SYNC) {
- 			pages_count += TEST_PAGES_PER_LOOP;
- 			generate_random_array(guest_array, TEST_PAGES_PER_LOOP);
-@@ -423,8 +424,11 @@ int main(int argc, char *argv[])
- 	unsigned long interval = TEST_HOST_LOOP_INTERVAL;
- 	bool mode_selected = false;
- 	uint64_t phys_offset = 0;
--	unsigned int mode, host_ipa_limit;
-+	unsigned int mode;
- 	int opt, i;
-+#ifdef __aarch64__
-+	unsigned int host_ipa_limit;
-+#endif
- 
- #ifdef USE_CLEAR_DIRTY_LOG
- 	if (!kvm_check_cap(KVM_CAP_MANUAL_DIRTY_LOG_PROTECT2)) {
-diff --git a/tools/testing/selftests/kvm/lib/kvm_util.c b/tools/testing/selftests/kvm/lib/kvm_util.c
-index e9113857f44e..cf62de377310 100644
---- a/tools/testing/selftests/kvm/lib/kvm_util.c
-+++ b/tools/testing/selftests/kvm/lib/kvm_util.c
-@@ -135,7 +135,6 @@ struct kvm_vm *_vm_create(enum vm_guest_mode mode, uint64_t phy_pages,
- 			  int perm, unsigned long type)
- {
- 	struct kvm_vm *vm;
--	int kvm_fd;
- 
- 	vm = calloc(1, sizeof(*vm));
- 	TEST_ASSERT(vm != NULL, "Insufficient Memory");
-@@ -556,7 +555,6 @@ void vm_userspace_mem_region_add(struct kvm_vm *vm,
- 	uint32_t flags)
- {
- 	int ret;
--	unsigned long pmem_size = 0;
- 	struct userspace_mem_region *region;
- 	size_t huge_page_size = KVM_UTIL_PGS_PER_HUGEPG * vm->page_size;
- 
-@@ -1334,7 +1332,6 @@ void vcpu_sregs_set(struct kvm_vm *vm, uint32_t vcpuid, struct kvm_sregs *sregs)
- int _vcpu_sregs_set(struct kvm_vm *vm, uint32_t vcpuid, struct kvm_sregs *sregs)
- {
- 	struct vcpu *vcpu = vcpu_find(vm, vcpuid);
--	int ret;
- 
- 	TEST_ASSERT(vcpu != NULL, "vcpu not found, vcpuid: %u", vcpuid);
- 
-diff --git a/tools/testing/selftests/kvm/lib/x86_64/processor.c b/tools/testing/selftests/kvm/lib/x86_64/processor.c
-index dc7fae9fa424..21f3040d90cb 100644
---- a/tools/testing/selftests/kvm/lib/x86_64/processor.c
-+++ b/tools/testing/selftests/kvm/lib/x86_64/processor.c
-@@ -229,8 +229,6 @@ void sregs_dump(FILE *stream, struct kvm_sregs *sregs,
- 
- void virt_pgd_alloc(struct kvm_vm *vm, uint32_t pgd_memslot)
- {
--	int rc;
--
- 	TEST_ASSERT(vm->mode == VM_MODE_P52V48_4K, "Attempt to use "
- 		"unknown or unsupported guest mode, mode: 0x%x", vm->mode);
- 
-@@ -549,7 +547,6 @@ vm_paddr_t addr_gva2gpa(struct kvm_vm *vm, vm_vaddr_t gva)
- 	struct pageDirectoryPointerEntry *pdpe;
- 	struct pageDirectoryEntry *pde;
- 	struct pageTableEntry *pte;
--	void *hva;
- 
- 	TEST_ASSERT(vm->mode == VM_MODE_P52V48_4K, "Attempt to use "
- 		"unknown or unsupported guest mode, mode: 0x%x", vm->mode);
-@@ -582,6 +579,7 @@ vm_paddr_t addr_gva2gpa(struct kvm_vm *vm, vm_vaddr_t gva)
- unmapped_gva:
- 	TEST_ASSERT(false, "No mapping for vm virtual address, "
- 		    "gva: 0x%lx", gva);
-+	exit(EXIT_FAILURE);
- }
- 
- static void kvm_setup_gdt(struct kvm_vm *vm, struct kvm_dtable *dt, int gdt_memslot,
-diff --git a/tools/testing/selftests/kvm/x86_64/cr4_cpuid_sync_test.c b/tools/testing/selftests/kvm/x86_64/cr4_cpuid_sync_test.c
-index 7c2c4d4055a8..63cc9c3f5ab6 100644
---- a/tools/testing/selftests/kvm/x86_64/cr4_cpuid_sync_test.c
-+++ b/tools/testing/selftests/kvm/x86_64/cr4_cpuid_sync_test.c
-@@ -87,6 +87,7 @@ int main(int argc, char *argv[])
- 	while (1) {
- 		rc = _vcpu_run(vm, VCPU_ID);
- 
-+		TEST_ASSERT(rc == 0, "vcpu_run failed: %d\n", rc);
- 		TEST_ASSERT(run->exit_reason == KVM_EXIT_IO,
- 			    "Unexpected exit reason: %u (%s),\n",
- 			    run->exit_reason,
-diff --git a/tools/testing/selftests/kvm/x86_64/evmcs_test.c b/tools/testing/selftests/kvm/x86_64/evmcs_test.c
-index 36669684eca5..b38260e29775 100644
---- a/tools/testing/selftests/kvm/x86_64/evmcs_test.c
-+++ b/tools/testing/selftests/kvm/x86_64/evmcs_test.c
-@@ -19,8 +19,6 @@
- 
- #define VCPU_ID		5
- 
--static bool have_nested_state;
--
- void l2_guest_code(void)
- {
- 	GUEST_SYNC(6);
-@@ -73,7 +71,6 @@ void guest_code(struct vmx_pages *vmx_pages)
- 
- int main(int argc, char *argv[])
- {
--	struct vmx_pages *vmx_pages = NULL;
- 	vm_vaddr_t vmx_pages_gva = 0;
- 
- 	struct kvm_regs regs1, regs2;
-@@ -88,8 +85,6 @@ int main(int argc, char *argv[])
- 		 .args[0] = (unsigned long)&evmcs_ver
- 	};
- 
--	struct kvm_cpuid_entry2 *entry = kvm_get_supported_cpuid_entry(1);
--
- 	/* Create VM */
- 	vm = vm_create_default(VCPU_ID, 0, guest_code);
- 
-@@ -113,7 +108,7 @@ int main(int argc, char *argv[])
- 
- 	vcpu_regs_get(vm, VCPU_ID, &regs1);
- 
--	vmx_pages = vcpu_alloc_vmx(vm, &vmx_pages_gva);
-+	vcpu_alloc_vmx(vm, &vmx_pages_gva);
- 	vcpu_args_set(vm, VCPU_ID, 1, vmx_pages_gva);
- 
- 	for (stage = 1;; stage++) {
-diff --git a/tools/testing/selftests/kvm/x86_64/platform_info_test.c b/tools/testing/selftests/kvm/x86_64/platform_info_test.c
-index eb3e7a838cb4..40050e44ec0a 100644
---- a/tools/testing/selftests/kvm/x86_64/platform_info_test.c
-+++ b/tools/testing/selftests/kvm/x86_64/platform_info_test.c
-@@ -81,7 +81,6 @@ static void test_msr_platform_info_disabled(struct kvm_vm *vm)
- int main(int argc, char *argv[])
- {
- 	struct kvm_vm *vm;
--	struct kvm_run *state;
- 	int rv;
- 	uint64_t msr_platform_info;
- 
-diff --git a/tools/testing/selftests/kvm/x86_64/smm_test.c b/tools/testing/selftests/kvm/x86_64/smm_test.c
-index fb8086964d83..4daf520bada1 100644
---- a/tools/testing/selftests/kvm/x86_64/smm_test.c
-+++ b/tools/testing/selftests/kvm/x86_64/smm_test.c
-@@ -87,7 +87,6 @@ void guest_code(struct vmx_pages *vmx_pages)
- 
- int main(int argc, char *argv[])
- {
--	struct vmx_pages *vmx_pages = NULL;
- 	vm_vaddr_t vmx_pages_gva = 0;
- 
- 	struct kvm_regs regs;
-@@ -115,7 +114,7 @@ int main(int argc, char *argv[])
- 	vcpu_set_msr(vm, VCPU_ID, MSR_IA32_SMBASE, SMRAM_GPA);
- 
- 	if (kvm_check_cap(KVM_CAP_NESTED_STATE)) {
--		vmx_pages = vcpu_alloc_vmx(vm, &vmx_pages_gva);
-+		vcpu_alloc_vmx(vm, &vmx_pages_gva);
- 		vcpu_args_set(vm, VCPU_ID, 1, vmx_pages_gva);
- 	} else {
- 		printf("will skip SMM test with VMX enabled\n");
-diff --git a/tools/testing/selftests/kvm/x86_64/state_test.c b/tools/testing/selftests/kvm/x86_64/state_test.c
-index e0a3c0204b7c..2a4121f4de01 100644
---- a/tools/testing/selftests/kvm/x86_64/state_test.c
-+++ b/tools/testing/selftests/kvm/x86_64/state_test.c
-@@ -22,8 +22,6 @@
- 
- #define VCPU_ID		5
- 
--static bool have_nested_state;
--
- void l2_guest_code(void)
- {
- 	GUEST_SYNC(6);
-@@ -122,7 +120,6 @@ void guest_code(struct vmx_pages *vmx_pages)
- 
- int main(int argc, char *argv[])
- {
--	struct vmx_pages *vmx_pages = NULL;
- 	vm_vaddr_t vmx_pages_gva = 0;
- 
- 	struct kvm_regs regs1, regs2;
-@@ -132,8 +129,6 @@ int main(int argc, char *argv[])
- 	struct ucall uc;
- 	int stage;
- 
--	struct kvm_cpuid_entry2 *entry = kvm_get_supported_cpuid_entry(1);
--
- 	/* Create VM */
- 	vm = vm_create_default(VCPU_ID, 0, guest_code);
- 	vcpu_set_cpuid(vm, VCPU_ID, kvm_get_supported_cpuid());
-@@ -142,7 +137,7 @@ int main(int argc, char *argv[])
- 	vcpu_regs_get(vm, VCPU_ID, &regs1);
- 
- 	if (kvm_check_cap(KVM_CAP_NESTED_STATE)) {
--		vmx_pages = vcpu_alloc_vmx(vm, &vmx_pages_gva);
-+		vcpu_alloc_vmx(vm, &vmx_pages_gva);
- 		vcpu_args_set(vm, VCPU_ID, 1, vmx_pages_gva);
- 	} else {
- 		printf("will skip nested state checks\n");
-diff --git a/tools/testing/selftests/kvm/x86_64/vmx_close_while_nested_test.c b/tools/testing/selftests/kvm/x86_64/vmx_close_while_nested_test.c
-index 6edec6fd790b..97182b47b10c 100644
---- a/tools/testing/selftests/kvm/x86_64/vmx_close_while_nested_test.c
-+++ b/tools/testing/selftests/kvm/x86_64/vmx_close_while_nested_test.c
-@@ -39,8 +39,6 @@ static void l1_guest_code(struct vmx_pages *vmx_pages)
- {
- #define L2_GUEST_STACK_SIZE 64
- 	unsigned long l2_guest_stack[L2_GUEST_STACK_SIZE];
--	uint32_t control;
--	uintptr_t save_cr3;
- 
- 	GUEST_ASSERT(prepare_for_vmx_operation(vmx_pages));
- 	GUEST_ASSERT(load_vmcs(vmx_pages));
-@@ -55,7 +53,6 @@ static void l1_guest_code(struct vmx_pages *vmx_pages)
- 
- int main(int argc, char *argv[])
- {
--	struct vmx_pages *vmx_pages;
- 	vm_vaddr_t vmx_pages_gva;
- 	struct kvm_cpuid_entry2 *entry = kvm_get_supported_cpuid_entry(1);
- 
-@@ -68,7 +65,7 @@ int main(int argc, char *argv[])
- 	vcpu_set_cpuid(vm, VCPU_ID, kvm_get_supported_cpuid());
- 
- 	/* Allocate VMX pages and shared descriptors (vmx_pages). */
--	vmx_pages = vcpu_alloc_vmx(vm, &vmx_pages_gva);
-+	vcpu_alloc_vmx(vm, &vmx_pages_gva);
- 	vcpu_args_set(vm, VCPU_ID, 1, vmx_pages_gva);
- 
- 	for (;;) {
-diff --git a/tools/testing/selftests/kvm/x86_64/vmx_tsc_adjust_test.c b/tools/testing/selftests/kvm/x86_64/vmx_tsc_adjust_test.c
-index 18fa64db0d7a..6d37a3173956 100644
---- a/tools/testing/selftests/kvm/x86_64/vmx_tsc_adjust_test.c
-+++ b/tools/testing/selftests/kvm/x86_64/vmx_tsc_adjust_test.c
-@@ -121,7 +121,7 @@ static void l1_guest_code(struct vmx_pages *vmx_pages)
- 	GUEST_DONE();
- }
- 
--void report(int64_t val)
-+static void report(int64_t val)
- {
- 	printf("IA32_TSC_ADJUST is %ld (%lld * TSC_ADJUST_VALUE + %lld).\n",
- 	       val, val / TSC_ADJUST_VALUE, val % TSC_ADJUST_VALUE);
-@@ -129,7 +129,6 @@ void report(int64_t val)
- 
- int main(int argc, char *argv[])
- {
--	struct vmx_pages *vmx_pages;
- 	vm_vaddr_t vmx_pages_gva;
- 	struct kvm_cpuid_entry2 *entry = kvm_get_supported_cpuid_entry(1);
- 
-@@ -142,7 +141,7 @@ int main(int argc, char *argv[])
- 	vcpu_set_cpuid(vm, VCPU_ID, kvm_get_supported_cpuid());
- 
- 	/* Allocate VMX pages and shared descriptors (vmx_pages). */
--	vmx_pages = vcpu_alloc_vmx(vm, &vmx_pages_gva);
-+	vcpu_alloc_vmx(vm, &vmx_pages_gva);
- 	vcpu_args_set(vm, VCPU_ID, 1, vmx_pages_gva);
- 
- 	for (;;) {
--- 
-2.21.0
+>  	bool streamon;
+>  	unsigned int link;
+>  	u8 link_reg_val;
+> @@ -911,9 +917,96 @@ static const struct dev_pm_ops mtk_mipicsi_pm = {
+>  		mtk_mipicsi_pm_resume, NULL)
+>  };
+>  
+> +static int get_irq_channel(struct mtk_mipicsi_dev *mipicsi)
+> +{
+> +	int ch;
+> +	u32 int_reg_val;
+> +
+> +	for (ch = 0; ch < mipicsi->camsv_num; ++ch) {
+> +		int_reg_val = readl(mipicsi->camsv[ch] + CAMSV_INT_STATUS);
+> +		if ((int_reg_val & (1UL << PASS1_DONE_STATUS)) != 0UL)
+> +			return ch;
+> +	}
+> +
+> +	return -1;
+> +}
+> +
+> +static void mtk_mipicsi_irq_buf_process(struct mtk_mipicsi_dev *mipicsi)
+> +{
+> +	unsigned int i = 0U;
+> +	struct mtk_mipicsi_buf *new_cam_buf = NULL;
+> +	struct mtk_mipicsi_buf *tmp = NULL;
+> +	unsigned int index = 0U;
+> +	unsigned int next = 0U;
+> +
+> +	for (i = 0U; i < MTK_CAMDMA_MAX_NUM; ++i)
+> +		mipicsi->irq_status[i] = false;
+> +
+> +	i = 0;
+> +
+> +	/* only one buffer left */
+> +	if ((&(mipicsi->fb_list))->next->next == &(mipicsi->fb_list))
+> +		return;
+> +
+> +	/*for each fb_lst 2 times to get the top 2 buffer.*/
+> +	list_for_each_entry_safe(new_cam_buf, tmp,
+> +		&(mipicsi->fb_list), queue) {
+> +		if (i == 0U) {
+> +			index = new_cam_buf->vb->index;
+> +		} else {
+> +			next = new_cam_buf->vb->index;
+> +			break;
+> +		}
+> +		++i;
+> +	}
+> +
+> +	/*
+> +	 * fb_list has one more buffer. Free the first buffer to user
+> +	 * and fill the second buffer to HW.
+> +	 */
+> +	vb2_buffer_done(mipicsi->cam_buf[index].vb,
+> +		VB2_BUF_STATE_DONE);
+> +
+> +	list_del_init(&(mipicsi->cam_buf[index].queue));
+> +}
+> +
+> +static irqreturn_t mtk_mipicsi_isr(int irq, void *data)
+> +{
+> +
+> +	struct mtk_mipicsi_dev *mipicsi = data;
+> +	unsigned long flags = 0;
+> +	int isr_ch;
+> +	u8 irq_cnt = 0, i = 0;
+> +
+> +	spin_lock_irqsave(&mipicsi->lock, flags);
+> +
+> +	isr_ch = get_irq_channel(mipicsi);
+
+I think you should pass data as camsv instance, so you need not to
+search the camsv instance, and each camsv instance could pointer to the
+same misicsi instance.
+
+> +	if (isr_ch < 0) {
+> +		spin_unlock_irqrestore(&mipicsi->lock, flags);
+> +		return IRQ_HANDLED;
+> +	}
+> +
+> +	/* clear interrupt */
+> +	writel(1UL << PASS1_DONE_STATUS,
+> +		mipicsi->camsv[isr_ch] + CAMSV_INT_STATUS);
+> +	mipicsi->irq_status[isr_ch] = true;
+> +	for (i = 0U; i < MTK_CAMDMA_MAX_NUM; ++i) {
+> +		if (mipicsi->irq_status[i])
+> +			++irq_cnt;
+> +	}
+> +
+> +	if (irq_cnt == mipicsi->link)
+> +		mtk_mipicsi_irq_buf_process(mipicsi);
+
+I think mtk_mipicsi_irq_buf_process() should not be processed in irq
+handler. In irq handler, do as few things as possible.
+
+Regards,
+CK
+
+> +	spin_unlock_irqrestore(&mipicsi->lock, flags);
+> +
+> +	return IRQ_HANDLED;
+> +}
+> +
+>  static int seninf_mux_camsv_node_parse(struct mtk_mipicsi_dev *mipicsi,
+>  		int index)
+>  {
+> +	int ret;
+> +	int irq;
+>  	struct clk *clk = NULL;
+>  	struct device *dev = NULL;
+>  	struct resource *res = NULL;
+> @@ -951,6 +1044,23 @@ static int seninf_mux_camsv_node_parse(struct mtk_mipicsi_dev *mipicsi,
+>  	}
+>  	mipicsi->clk[index] = clk;
+>  
+> +	irq = of_irq_get(np, 0);
+> +	if (irq <= 0) {
+> +		dev_err(dev, "get irq fail in %s node\n", np->full_name);
+> +		return -ENODEV;
+> +	}
+> +	mipicsi->irq[index] = irq;
+> +
+> +	ret = devm_request_irq(dev, irq,
+> +			mtk_mipicsi_isr, 0,
+> +			mipicsi->drv_name, mipicsi);
+> +	if (ret != 0) {
+> +		dev_err(dev, "%s irq register failed\n", np->full_name);
+> +		return -ENODEV;
+> +	}
+> +	disable_irq(mipicsi->irq[index]);
+> +	mipicsi->irq_status[index] = false;
+> +
+>  	res = platform_get_resource(camdma_pdev, IORESOURCE_MEM, 0);
+>  	if (res == NULL) {
+>  		dev_err(dev, "get seninf_mux memory failed in %s node\n",
+
 
