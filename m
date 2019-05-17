@@ -2,296 +2,142 @@ Return-Path: <SRS0=M1fl=TR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=0.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,HTTP_ESCAPED_HOST,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3546C04AB4
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 06:57:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC16DC04AB4
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 06:59:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 760DA20848
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 06:57:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BBDF520848
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 06:59:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="W+bv7VhQ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="r4fYzjKy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728132AbfEQG53 (ORCPT
+        id S1727940AbfEQG74 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 May 2019 02:57:29 -0400
-Received: from mail-vs1-f67.google.com ([209.85.217.67]:41506 "EHLO
-        mail-vs1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727218AbfEQG53 (ORCPT
+        Fri, 17 May 2019 02:59:56 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:42502 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727674AbfEQG74 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 May 2019 02:57:29 -0400
-Received: by mail-vs1-f67.google.com with SMTP id g187so3947733vsc.8
-        for <linux-kernel@vger.kernel.org>; Thu, 16 May 2019 23:57:28 -0700 (PDT)
+        Fri, 17 May 2019 02:59:56 -0400
+Received: by mail-pf1-f193.google.com with SMTP id 13so3200520pfw.9;
+        Thu, 16 May 2019 23:59:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=hc0HmzH6OT39dn85lsyoXsO/ryHfm7mgqA3KpAw+uOM=;
-        b=W+bv7VhQuiNbe6C4ETIQQxuBkl+ezqdwrhRzaMh5nNmSX8oL00TG4Z+bgQNTnCDynp
-         6tB66HhmBBeGUnNo904nRgfZZD9GR/YlUpcpAWjfTOy8/4pCooAaxt72jfuhn8Y/L+73
-         9Gn7b0ExQj7uXgkky5cbt+jV4OJ2MwLxnYxPQZgXIrljixmgbVqD7wNW6Q2IJC0HhPT/
-         RbS5RN0dWuj3zr3UIlgQBcIgGnlhoaHpSv/YYPItHryTkUz1nbFhTUIyO+zLgnqFDbYa
-         ShN3ebb38/7oHDtrV0jjPNxl2/k4ySAD4cQ2V9qgxB0J0MGddAIs6ibuIMDwoRDF+H8m
-         PVcQ==
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=acOBVSJe/b9a1J3px6iLY0/PUzqcYk644yoY0pO+fWc=;
+        b=r4fYzjKyyva15V5BJgQyBUWunPQ6iE3RrmKaRS0nJqt4r0z5+xRT221roa7vGpJJJK
+         4yu10nSaIOGCBD4V9jAhebSoCUQOn9hI4PsqoBN3WlN7wj2gizty6A1ZuAl22108dMFt
+         IXLnRBZ6TyXjNF4IiaYMdg4EwuzBKX9lCfV4+8+YzimfO2ZCtBfBfJGnQERypAuhU6yL
+         BsLpBjoX3+entTCYxXFFd30pWOt0sQqlrldKxvGstP8vpmyambOIqORidM1JfXx29cpu
+         YsmX0YDhCP5jmTLeCOIM1ixTstQJPkXKqo9SRwU7c7EwCcb8wwxpBSbgoufbVt9JBoic
+         tlcQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=hc0HmzH6OT39dn85lsyoXsO/ryHfm7mgqA3KpAw+uOM=;
-        b=k3XF2Sx4gp6tRIMBIEjGYxqJf+J8/NVcMmajQxX4ghZxw+K+SBQ4M/xZCeG3IdA2nb
-         raOjoKCzn7Og08b2fAI7393CEKWyFuNZUTLH1+Mo9N0YB45rL3Lrt7/IAanyKI2OozTv
-         ZY+za3tVI6Vs8zb1Q8h2DR/s3Jv9knsbOusF8YLWriYHl8YrEsH8uv7HKeXGV7kMDZBi
-         HKhj+Aq1lHdlCymzWfidmPt7+gw4sFyk7IXJZ7zFNKQ774qBBruDWgcz6v/rai7Dvcm6
-         4YNp8OSohRtYIDWFJvmGegY4mu/QCXUgRoFytO+CbyAunAOGZzBxOnPGiku8vo7pvGSs
-         rutA==
-X-Gm-Message-State: APjAAAVQ5dmJx6ysGP8AQSxABGkkYuRDc1kWmL057/WTFtjelaWj2CyW
-        ccWPHSm1mds+8Q75RTdzTi+DQPVIzBZvCpfCwaAwDg==
-X-Google-Smtp-Source: APXvYqz2DwB9AIFN/f/Don/xWEYRgZOj8oBbn3PBY345zvNQQSfRPWSLNWMqQomwB7XRLAhx836ifXxnCKD0Xogi3t4=
-X-Received: by 2002:a67:f693:: with SMTP id n19mr26380878vso.89.1558076247825;
- Thu, 16 May 2019 23:57:27 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=acOBVSJe/b9a1J3px6iLY0/PUzqcYk644yoY0pO+fWc=;
+        b=QBX/WspPLNEBpwHzKhq1zT4amfIERgcfr8kRS2hENH45cmJ1yWIVbfz+SFZw5NN2sT
+         OPipdpttGR8QguM+VtADIt6+7vQwZryMinbMk//Zpxa5zA+mySDE0nP22v8DdYPyVb/Y
+         56INEdfvtMU4iDiw7EyJ/zbcOz7A2T6cgFWw8J9AD2hVSPaTZPfvwY/j2Bepej3NsMTj
+         sDDYQ94znJjtLBiDprRwuNexy/q578DF/z5aSaJw1vMDDDuHcBS9zZ0yd72NOvutZQPY
+         YTGgXuZceLjDVtZubztSXQ3iNr4MsN/AExg2fchpcowaXWuW8SUAQNb1rocqj/PTz442
+         qhmg==
+X-Gm-Message-State: APjAAAWFC4KqDuQzXTkaF4K/QA4L9p6kRIHLpyw/a8oHGxoAU/AvHg05
+        yUP0YAwNBWdr1c7pw1wH2/E=
+X-Google-Smtp-Source: APXvYqwVsYMDzmbtlH7JvkVY3DQu3VRAiUxen2R5hvO3et1uXbQGqPujCoICePAFj3Sc5WcxJCveJA==
+X-Received: by 2002:aa7:8e0d:: with SMTP id c13mr60354955pfr.193.1558076395817;
+        Thu, 16 May 2019 23:59:55 -0700 (PDT)
+Received: from localhost ([175.223.38.122])
+        by smtp.gmail.com with ESMTPSA id u6sm9339104pfm.10.2019.05.16.23.59.54
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 16 May 2019 23:59:55 -0700 (PDT)
+Date:   Fri, 17 May 2019 15:59:51 +0900
+From:   Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
+To:     Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc:     Martin Schwidefsky <schwidefsky@de.ibm.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        linux-s390@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        Claudio Imbrenda <imbrenda@linux.vnet.ibm.com>,
+        linux-kernel@vger.kernel.org,
+        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
+        Souptick Joarder <jrdr.linux@gmail.com>,
+        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
+        Philipp Rudo <prudo@linux.ibm.com>
+Subject: Re: [PATCH] s390: add unreachable() to dump_fault_info() to fix
+ -Wmaybe-uninitialized
+Message-ID: <20190517065951.GA11550@jagdpanzerIV>
+References: <20190517064922.22743-1-yamada.masahiro@socionext.com>
 MIME-Version: 1.0
-References: <20190415155636.32748-1-sashal@kernel.org> <20190507174020.GH1747@sasha-vm>
- <20190508124436.GE7642@linux.intel.com> <20190514193056.GN11972@sasha-vm>
- <CAFA6WYM06E0y9o6+CLNPe48spiL=UDEqoGsidMbk1dBa5Rbmkg@mail.gmail.com>
- <CY4PR21MB0279339E8B0A15414C8F9E14BC0A0@CY4PR21MB0279.namprd21.prod.outlook.com>
- <CAFA6WYMvuF+tAA_GmkVg=FTvuuAhMuM=um7kakq=YARaP8un5Q@mail.gmail.com> <CY4PR21MB02790D399645EFCA02FBE124BC0A0@CY4PR21MB0279.namprd21.prod.outlook.com>
-In-Reply-To: <CY4PR21MB02790D399645EFCA02FBE124BC0A0@CY4PR21MB0279.namprd21.prod.outlook.com>
-From:   Sumit Garg <sumit.garg@linaro.org>
-Date:   Fri, 17 May 2019 12:27:15 +0530
-Message-ID: <CAFA6WYMsQ53L=Ge5_yX+mvQNgKQRxPq=GxAn6zCksaDU18aTtw@mail.gmail.com>
-Subject: Re: [PATCH v3 0/2] ftpm: a firmware based TPM driver
-To:     Thirupathaiah Annapureddy <thiruan@microsoft.com>
-Cc:     Sasha Levin <sashal@kernel.org>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        "peterhuewe@gmx.de" <peterhuewe@gmx.de>,
-        "jgg@ziepe.ca" <jgg@ziepe.ca>, "corbet@lwn.net" <corbet@lwn.net>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        "linux-integrity@vger.kernel.org" <linux-integrity@vger.kernel.org>,
-        Microsoft Linux Kernel List <linux-kernel@microsoft.com>,
-        "Bryan Kelly (CSI)" <bryankel@microsoft.com>,
-        Rob Herring <robh+dt@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190517064922.22743-1-yamada.masahiro@socionext.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-+ Rob
+On (05/17/19 15:49), Masahiro Yamada wrote:
+[..]
+> @@ -211,6 +211,8 @@ static void dump_fault_info(struct pt_regs *regs)
+>  		asce = S390_lowcore.kernel_asce;
+>  		pr_cont("kernel ");
+>  		break;
+> +	default:
+> +		unreachable();
+>  	}
+>  	pr_cont("ASCE.\n");
+>  	dump_pagetable(asce, regs->int_parm_long & __FAIL_ADDR_MASK);
 
-On Fri, 17 May 2019 at 00:54, Thirupathaiah Annapureddy
-<thiruan@microsoft.com> wrote:
->
->
->
-> > -----Original Message-----
-> > From: Sumit Garg <sumit.garg@linaro.org>
-> > Sent: Thursday, May 16, 2019 12:06 AM
-> > To: Thirupathaiah Annapureddy <thiruan@microsoft.com>
-> > Cc: Sasha Levin <sashal@kernel.org>; Jarkko Sakkinen
-> > <jarkko.sakkinen@linux.intel.com>; peterhuewe@gmx.de; jgg@ziepe.ca;
-> > corbet@lwn.net; Linux Kernel Mailing List <linux-kernel@vger.kernel.org>;
-> > linux-doc@vger.kernel.org; linux-integrity@vger.kernel.org; Microsoft Linux
-> > Kernel List <linux-kernel@microsoft.com>; Bryan Kelly (CSI)
-> > <bryankel@microsoft.com>
-> > Subject: Re: [PATCH v3 0/2] ftpm: a firmware based TPM driver
-> >
-> > On Thu, 16 May 2019 at 06:30, Thirupathaiah Annapureddy
-> > <thiruan@microsoft.com> wrote:
-> > >
-> > >
-> > >
-> > > > -----Original Message-----
-> > > > From: Sumit Garg <sumit.garg@linaro.org>
-> > > > Sent: Tuesday, May 14, 2019 7:02 PM
-> > > > To: Sasha Levin <sashal@kernel.org>
-> > > > Cc: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>;
-> > peterhuewe@gmx.de;
-> > > > jgg@ziepe.ca; corbet@lwn.net; Linux Kernel Mailing List <linux-
-> > > > kernel@vger.kernel.org>; linux-doc@vger.kernel.org; linux-
-> > > > integrity@vger.kernel.org; Microsoft Linux Kernel List <linux-
-> > > > kernel@microsoft.com>; Thirupathaiah Annapureddy
-> > <thiruan@microsoft.com>;
-> > > > Bryan Kelly (CSI) <bryankel@microsoft.com>
-> > > > Subject: Re: [PATCH v3 0/2] ftpm: a firmware based TPM driver
-> > > >
-> > > > On Wed, 15 May 2019 at 01:00, Sasha Levin <sashal@kernel.org> wrote:
-> > > > >
-> > > > > On Wed, May 08, 2019 at 03:44:36PM +0300, Jarkko Sakkinen wrote:
-> > > > > >On Tue, May 07, 2019 at 01:40:20PM -0400, Sasha Levin wrote:
-> > > > > >> On Mon, Apr 15, 2019 at 11:56:34AM -0400, Sasha Levin wrote:
-> > > > > >> > From: "Sasha Levin (Microsoft)" <sashal@kernel.org>
-> > > > > >> >
-> > > > > >> > Changes since v2:
-> > > > > >> >
-> > > > > >> > - Drop the devicetree bindings patch (we don't add any new
-> > ones).
-> > > > > >> > - More code cleanups based on Jason Gunthorpe's review.
-> > > > > >> >
-> > > > > >> > Sasha Levin (2):
-> > > > > >> >  ftpm: firmware TPM running in TEE
-> > > > > >> >  ftpm: add documentation for ftpm driver
-> > > > > >>
-> > > > > >> Ping? Does anyone have any objections to this?
-> > > > > >
-> > > > > >Sorry I've been on vacation week before last week and last week
-> > > > > >I was extremely busy because I had been on vacation. This in
-> > > > > >my TODO list. Will look into it tomorrow in detail.
-> > > > > >
-> > > > > >Apologies for the delay with this!
-> > > > >
-> > > > > Hi Jarkko,
-> > > > >
-> > > > > If there aren't any big objections to this, can we get it merged in?
-> > > > > We'll be happy to address any comments that come up.
-> > > >
-> > > > I guess you have missed or ignored this comment [1]. Please address it.
-> > > >
-> > > > [1]
-> > > >
-> > https://nam06.safelinks.protection.outlook.com/?url=https%3A%2F%2Flkml.org%
-> > > >
-> > 2Flkml%2F2019%2F5%2F8%2F11&amp;data=01%7C01%7Cthiruan%40microsoft.com%7Cf2a
-> > > >
-> > 80c7b94434329eaee08d6d8d962b1%7C72f988bf86f141af91ab2d7cd011db47%7C1&amp;sd
-> > > > ata=hyJRc23NwEFLDuaIMkbSCGetd%2BObQWiAg%2BJtMMR6z9U%3D&amp;reserved=0
-> > > >
-> > > > -Sumit
-> > >
-> > > Thanks for reviewing and adding comments.
-> > >
-> > > We tried to use TEE bus framework you suggested for fTPM enumeration.
-> > > We were not able to pass the TCG Logs collected by the boot loaders.
-> > >
-> > > Currently there are 3 ways to pass TCG Logs based on the code
-> > > in drivers/char/tpm/eventlog:
-> > >
-> > > 1. ACPI Table
-> > > 2. EFI Table
-> > > 3. OF Device node properties
-> > >
-> > > Our ARM system is booting using U-boot and Device Tree.
-> > > So ACPI/EFI table mechanism to pass TCG2 logs won't be applicable.
-> > > We needed to use OF device node properties to pass TCG2 Logs.
-> > > TEE bus enumeration framework does not work for our use case due to the
-> > above.
-> >
-> > Firstly let me clarify that this framework is intended to communicate
-> > with TEE based services/devices rather than boot loader. And in this
-> > case fTPM being a TEE based service, so this framework should be used.
-> >
-> It does not work for our use case. We gave enough justification so far.
-> TEE bus enumeration needs to be flexible to support our use case and
-> more future use cases.
->
+Or have default fault type and asce?
 
-TEE based services are virtual devices which could be very well be
-aware about the platform and device driver could easily query these
-devices for platform specific properties. In case of firmware TPM as a
-TEE based service, it could easily store the event logs generated
-during PCR extend operations which could be fetched at runtime. But a
-real TPM device doesn't possess that storage capability leading to
-software managing these event logs.
+Just an idea.
 
-> > >
-> > > Is it possible to add flexibility in TEE bus enumeration framework to
-> > support
-> > > platform specific properties through OF nodes or ACPI?
-> > >
-> >
-> > As you mentioned above, TCG logs are collected by boot loader. So it
-> > should find a way to pass them to Linux.
-> >
-> > How about if boot loader register these TCG logs with fTPM TA which
-> > could be fetched during fTPM driver probe or new api like
-> > tpm_read_log_tee()?
->
-> And then how does fTPM driver pass TCG Logs to the TPM framework?
-> It requires changes to the upstream TPM framework to ask the driver
-> explicitly for the TCG Logs.
+---
 
-My suggestion was to add 4th way to pass TCG logs as follows:
-
---- a/drivers/char/tpm/eventlog/common.c
-+++ b/drivers/char/tpm/eventlog/common.c
-@@ -95,6 +95,10 @@ static int tpm_read_log(struct tpm_chip *chip)
-        if (rc != -ENODEV)
-                return rc;
-
-+       rc = tpm_read_log_tee(chip);
-+       if (rc != -ENODEV)
-+               return rc;
-+
-        return tpm_read_log_of(chip);
+diff --git a/arch/s390/mm/fault.c b/arch/s390/mm/fault.c
+index c220399ae196..876d71c31894 100644
+--- a/arch/s390/mm/fault.c
++++ b/arch/s390/mm/fault.c
+@@ -174,7 +174,8 @@ static void dump_pagetable(unsigned long asce, unsigned long address)
+ 
+ static void dump_fault_info(struct pt_regs *regs)
+ {
+-	unsigned long asce;
++	unsigned long asce = S390_lowcore.kernel_asce;
++	char *type = "kernel ";
+ 
+ 	pr_alert("Failing address: %016lx TEID: %016lx\n",
+ 		 regs->int_parm_long & __FAIL_ADDR_MASK, regs->int_parm_long);
+@@ -197,22 +198,18 @@ static void dump_fault_info(struct pt_regs *regs)
+ 	switch (get_fault_type(regs)) {
+ 	case USER_FAULT:
+ 		asce = S390_lowcore.user_asce;
+-		pr_cont("user ");
++		type = "user ";
+ 		break;
+ 	case VDSO_FAULT:
+ 		asce = S390_lowcore.vdso_asce;
+-		pr_cont("vdso ");
++		type = "vdso ";
+ 		break;
+ 	case GMAP_FAULT:
+ 		asce = ((struct gmap *) S390_lowcore.gmap)->asce;
+-		pr_cont("gmap ");
+-		break;
+-	case KERNEL_FAULT:
+-		asce = S390_lowcore.kernel_asce;
+-		pr_cont("kernel ");
++		type = "gmap ";
+ 		break;
+ 	}
+-	pr_cont("ASCE.\n");
++	pr_cont("%s ASCE.\n", type);
+ 	dump_pagetable(asce, regs->int_parm_long & __FAIL_ADDR_MASK);
  }
---- /dev/null
-+++ b/drivers/char/tpm/eventlog/tee.c
-@@ -0,0 +1,43 @@
-<snip>
-+int tpm_read_log_tee(struct tpm_chip *chip)
-+{
-+       struct tpm_bios_log *log;
-+       struct ftpm_tee_private *pvt_data;
-+
-+       log = &chip->log;
-+       if (!strcmp(chip->dev.bus->name, tee_bus_type.name))
-+               pvt_data = dev_get_drvdata(chip->dev.parent);
-+       else
-+               return -ENODEV;
-+
-+       // Here you could simply do an invoke command to fetch the TCG logs.
-+
-+       if (chip->flags & TPM_CHIP_FLAG_TPM2)
-+               return EFI_TCG2_EVENT_LOG_FORMAT_TCG_2;
-+       return EFI_TCG2_EVENT_LOG_FORMAT_TCG_1_2;
-+}
-
->
-> Note that this also requires changes to the fTPM TA that has been existing for few years.
->
-
-That's not a sane reason to avoid implementing generic stuff. As there
-could be other fTPM implementations and specific DT nodes for each
-which might not be maintainable. BTW, in current implementation also I
-don't find DT bindings corresponding to DT node used in this
-patch-set.
-
-> Is it not possible to add flexibility in TEE bus enumeration framework to
-> support platform specific properties through OF nodes or ACPI?
->
-
-TEE bus framework was designed specifically to avoid OF nodes or ACPI
-properties. As devices could be intelligent enough to be queried for
-required properties.
-
-> Devices enumerated by buses such as i2c can read platform specific properties.
-
-i2c devices are real hardware which could be platform agnostic, so you
-need to have platform specific properties.
-
--Sumit
-
-> With this flexibility added, more future use cases through TEE bus.
->
->
-> > This is something similar to what I used in
-> > optee-rng [1] driver to fetch RNG properties.
-> >
-> > [1]
-> > https://nam06.safelinks.protection.outlook.com/?url=https%3A%2F%2Fgithub.co
-> > m%2Ftorvalds%2Flinux%2Fblob%2Fmaster%2Fdrivers%2Fchar%2Fhw_random%2Foptee-
-> > rng.c%23L176&amp;data=02%7C01%7Cthiruan%40microsoft.com%7Cd37438eaf4f9483e4
-> > 0c708d6d9ccfe0c%7C72f988bf86f141af91ab2d7cd011db47%7C1%7C0%7C63693587179549
-> > 3006&amp;sdata=As9sC45Bl7sZdJKOq0sHz6GmXttMxS80Nn5yvN4vqng%3D&amp;reserved=
-> > 0
-> >
-> > -Sumit
-> >
-> > > >
-> > > > >
-> > > > > --
-> > > > > Thanks,
-> > > > > Sasha
+ 
