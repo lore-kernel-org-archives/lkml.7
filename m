@@ -2,161 +2,204 @@ Return-Path: <SRS0=M1fl=TR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D50EC04AB4
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 16:10:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D336FC04AB4
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 16:11:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DD8902087E
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 16:10:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9BE512087E
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 16:11:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="EdtEN/AS"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="zC8ivZGj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729407AbfEQQKF (ORCPT
+        id S1729417AbfEQQLE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 May 2019 12:10:05 -0400
-Received: from conuserg-12.nifty.com ([210.131.2.79]:58837 "EHLO
-        conuserg-12.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728482AbfEQQKE (ORCPT
+        Fri, 17 May 2019 12:11:04 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:54370 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728482AbfEQQLE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 May 2019 12:10:04 -0400
-Received: from grover.flets-west.jp (softbank126125154139.bbtec.net [126.125.154.139]) (authenticated)
-        by conuserg-12.nifty.com with ESMTP id x4HG7US3006312;
-        Sat, 18 May 2019 01:07:30 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-12.nifty.com x4HG7US3006312
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1558109251;
-        bh=KvvGD13sSEkabVZlqCDEfHGHyy3N71YktjZRCjCmt8c=;
-        h=From:To:Cc:Subject:Date:From;
-        b=EdtEN/ASXyFVDslvp+QeBtvFo3NtuxHuv/qoNBnA1EJArY9I8QHWn4EQDLd+2rv8H
-         DdvLOX56xvQxEm+jseJ8UR+7GEkunJtGPMFYzODjXkem0o+UAJRgv78/2+5MPVYjjP
-         DHR/0WdWHnYq2v4uWvlibI1251Z6SQ5ddARPSuI3WnPXHEw4MfdljtpFJkObcu/5F/
-         VLUVJ6JSiEsNSqMN5KZf+FWKFlprwwVF9OUb8TaOWZQuQYJiSIv3RwD6eu9N1gDElm
-         M4zJBB3uEjUldAsVLGPD9dQOyJ2IlBBiFI9SIvKg+CRdf0LRYKBD0VdCp2+C0lQhek
-         sSI4eQaer0xxw==
-X-Nifty-SrcIP: [126.125.154.139]
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-To:     linux-kbuild@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Arnd Bergmann <arnd@arndb.de>, Jessica Yu <jeyu@kernel.org>,
-        Lucas De Marchi <lucas.demarchi@intel.com>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Michael Schmitz <schmitzmic@gmail.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Rusty Russell <rusty@rustcorp.com.au>,
-        Kees Cook <keescook@chromium.org>,
-        Bernd Petrovitsch <bernd@petrovitsch.priv.at>,
-        Alexander Kapshuk <alexander.kapshuk@gmail.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Michal Marek <michal.lkml@markovi.net>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v3] kbuild: check uniqueness of module names
-Date:   Sat, 18 May 2019 01:07:15 +0900
-Message-Id: <1558109235-23042-1-git-send-email-yamada.masahiro@socionext.com>
-X-Mailer: git-send-email 2.7.4
+        Fri, 17 May 2019 12:11:04 -0400
+Received: by mail-wm1-f65.google.com with SMTP id i3so7463715wml.4
+        for <linux-kernel@vger.kernel.org>; Fri, 17 May 2019 09:11:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=o3znglSYE3qWmbHWfVx7bUQXAqGJQvSQXgl1NOhCAVQ=;
+        b=zC8ivZGjYMdfpaM3iFqctfmjEYxiou7E1dRg+77y5lw2eJ0a5+xq0gvLDIQv5iuONp
+         wrei1mpheIyRIM0QyPMLCba4jnj2KksNNGzg1wNwO8eoHfbaqaNyxyH4jdtVf//2Acm9
+         nhQeqxco9Dhbsm891E/BDwsPm2yJUkYx9qM/BpNUZ1ihzeu9Bq0Lf+nJV1RJU55nPzYM
+         ejupTDvwK+3seXgL8TYP8B4UIic8Uvg17r0ZyjVtEi/2+09l5uOpFOqgoqjvlD2XKISW
+         gOM9EYcneCW0/a9AAAZ33cfRefmnkRN/dtBfb4mMLGWrHeUARCBpWqDajaJE5XjLztxy
+         BPHA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=o3znglSYE3qWmbHWfVx7bUQXAqGJQvSQXgl1NOhCAVQ=;
+        b=JxsTqu6sY2TXkPkvs/bBWzm+VrUVF3CkHG17aMNPKHwzW5/Agc0vqQe7w56cFQO+1P
+         AzhZB27xFz3ENGSW/ymXfn0gFASXC/oW/wSLInUbN56+8xhADcXa48q22dhvwsCw/rd6
+         5ix+7mQGhRkqAIkkNYNhl6VWrvARGvAQ6+1DZJtxtI7cwlGtwfmXUVwR41AUl1ZReve3
+         GbmouYbpiQ7WrD5yFgqJ0OTDFHpImsJAkx+zW9COjIUMPNPQnVx0jnYaTtPO8+P3kiBU
+         LeU/DKGyv0QzoOS7jelcnKh6pKictG0UsDRoG7u4z6G1heoHNxbqDuzGeBcKGmSRM2xV
+         4OBA==
+X-Gm-Message-State: APjAAAU2wH5y/0JhEkIPmhZIgTQ4iep0zj+ae2DErKem6DMB3rolrYV2
+        FPE/JJsL3gom6PyxGRlb+vfwzg==
+X-Google-Smtp-Source: APXvYqytFb6Lr6UvVt6vABF1Ha5/L0gUrj561kuxWy2jGkrPlViqSGlF3tlPtcq9umuF69+5oH3ZEQ==
+X-Received: by 2002:a1c:7518:: with SMTP id o24mr2624307wmc.42.1558109461904;
+        Fri, 17 May 2019 09:11:01 -0700 (PDT)
+Received: from [192.168.0.41] (sju31-1-78-210-255-2.fbx.proxad.net. [78.210.255.2])
+        by smtp.googlemail.com with ESMTPSA id z8sm10116243wrh.48.2019.05.17.09.11.00
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 17 May 2019 09:11:01 -0700 (PDT)
+Subject: Re: [PATCHv1 7/8] arm64: dts: qcom: msm8998: Add PSCI cpuidle low
+ power states
+To:     Amit Kucheria <amit.kucheria@linaro.org>,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        bjorn.andersson@linaro.org, andy.gross@linaro.org,
+        David Brown <david.brown@linaro.org>,
+        Li Yang <leoyang.li@nxp.com>, Shawn Guo <shawnguo@kernel.org>
+Cc:     Marc Gonzalez <marc.w.gonzalez@free.fr>, devicetree@vger.kernel.org
+References: <cover.1557486950.git.amit.kucheria@linaro.org>
+ <0afe77d25490b10250f9eac4b4e92ccac8c42718.1557486950.git.amit.kucheria@linaro.org>
+From:   Daniel Lezcano <daniel.lezcano@linaro.org>
+Message-ID: <6b60656e-7786-1560-05f9-e2cbd6d1d18d@linaro.org>
+Date:   Fri, 17 May 2019 18:11:00 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
+MIME-Version: 1.0
+In-Reply-To: <0afe77d25490b10250f9eac4b4e92ccac8c42718.1557486950.git.amit.kucheria@linaro.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In the recent build test of linux-next, Stephen saw a build error
-caused by a broken .tmp_versions/*.mod file:
+On 10/05/2019 13:29, Amit Kucheria wrote:
+> Add device bindings for cpuidle states for cpu devices.
+> 
+> Cc: Marc Gonzalez <marc.w.gonzalez@free.fr>
+> Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
 
-  https://lkml.org/lkml/2019/5/13/991
+Acked-by: Daniel Lezcano <daniel.lezcano@linaro.org>
 
-drivers/net/phy/asix.ko and drivers/net/usb/asix.ko have the same
-basename, and there is a race in generating .tmp_versions/asix.mod
+> ---
+>  arch/arm64/boot/dts/qcom/msm8998.dtsi | 32 +++++++++++++++++++++++++++
+>  1 file changed, 32 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/qcom/msm8998.dtsi b/arch/arm64/boot/dts/qcom/msm8998.dtsi
+> index 3fd0769fe648..208281f318e2 100644
+> --- a/arch/arm64/boot/dts/qcom/msm8998.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/msm8998.dtsi
+> @@ -78,6 +78,7 @@
+>  			compatible = "arm,armv8";
+>  			reg = <0x0 0x0>;
+>  			enable-method = "psci";
+> +			cpu-idle-states = <&LITTLE_CPU_PD>;
+>  			efficiency = <1024>;
+>  			next-level-cache = <&L2_0>;
+>  			L2_0: l2-cache {
+> @@ -97,6 +98,7 @@
+>  			compatible = "arm,armv8";
+>  			reg = <0x0 0x1>;
+>  			enable-method = "psci";
+> +			cpu-idle-states = <&LITTLE_CPU_PD>;
+>  			efficiency = <1024>;
+>  			next-level-cache = <&L2_0>;
+>  			L1_I_1: l1-icache {
+> @@ -112,6 +114,7 @@
+>  			compatible = "arm,armv8";
+>  			reg = <0x0 0x2>;
+>  			enable-method = "psci";
+> +			cpu-idle-states = <&LITTLE_CPU_PD>;
+>  			efficiency = <1024>;
+>  			next-level-cache = <&L2_0>;
+>  			L1_I_2: l1-icache {
+> @@ -127,6 +130,7 @@
+>  			compatible = "arm,armv8";
+>  			reg = <0x0 0x3>;
+>  			enable-method = "psci";
+> +			cpu-idle-states = <&LITTLE_CPU_PD>;
+>  			efficiency = <1024>;
+>  			next-level-cache = <&L2_0>;
+>  			L1_I_3: l1-icache {
+> @@ -142,6 +146,7 @@
+>  			compatible = "arm,armv8";
+>  			reg = <0x0 0x100>;
+>  			enable-method = "psci";
+> +			cpu-idle-states = <&BIG_CPU_PD>;
+>  			efficiency = <1536>;
+>  			next-level-cache = <&L2_1>;
+>  			L2_1: l2-cache {
+> @@ -161,6 +166,7 @@
+>  			compatible = "arm,armv8";
+>  			reg = <0x0 0x101>;
+>  			enable-method = "psci";
+> +			cpu-idle-states = <&BIG_CPU_PD>;
+>  			efficiency = <1536>;
+>  			next-level-cache = <&L2_1>;
+>  			L1_I_101: l1-icache {
+> @@ -176,6 +182,7 @@
+>  			compatible = "arm,armv8";
+>  			reg = <0x0 0x102>;
+>  			enable-method = "psci";
+> +			cpu-idle-states = <&BIG_CPU_PD>;
+>  			efficiency = <1536>;
+>  			next-level-cache = <&L2_1>;
+>  			L1_I_102: l1-icache {
+> @@ -191,6 +198,7 @@
+>  			compatible = "arm,armv8";
+>  			reg = <0x0 0x103>;
+>  			enable-method = "psci";
+> +			cpu-idle-states = <&BIG_CPU_PD>;
+>  			efficiency = <1536>;
+>  			next-level-cache = <&L2_1>;
+>  			L1_I_103: l1-icache {
+> @@ -238,6 +246,30 @@
+>  				};
+>  			};
+>  		};
+> +
+> +		idle-states {
+> +			entry-method="psci";
+> +
+> +			LITTLE_CPU_PD: little-power-down {
+> +				compatible = "arm,idle-state";
+> +				idle-state-name = "little-power-down";
+> +				arm,psci-suspend-param = <0x00000002>;
+> +				entry-latency-us = <43>;
+> +				exit-latency-us = <43>;
+> +				min-residency-us = <200>;
+> +				local-timer-stop;
+> +			};
+> +
+> +			BIG_CPU_PD: big-power-down {
+> +				compatible = "arm,idle-state";
+> +				idle-state-name = "big-power-down";
+> +				arm,psci-suspend-param = <0x00000002>;
+> +				entry-latency-us = <41>;
+> +				exit-latency-us = <41>;
+> +				min-residency-us = <200>;
+> +				local-timer-stop;
+> +			};
+> +		};
+>  	};
+>  
+>  	firmware {
+> 
 
-Kbuild has not checked this before, and it suddenly shows up with
-obscure error message when this kind of race occurs.
 
-Non-unique module names cause various sort of problems, but it is
-not trivial to catch them by eyes.
-
-Hence, this script.
-
-It checks not only real modules, but also built-in modules (i.e.
-controlled by tristate CONFIG option, but currently compiled with =y).
-Non-unique names for built-in modules also cause problems because
-/sys/modules/ would fall over.
-
-I tested allmodconfig on the latest kernel, and it detected the
-following:
-
-warning: same basename if the following are built as modules:
-  drivers/regulator/88pm800.ko
-  drivers/mfd/88pm800.ko
-warning: same basename if the following are built as modules:
-  drivers/gpu/drm/bridge/adv7511/adv7511.ko
-  drivers/media/i2c/adv7511.ko
-warning: same basename if the following are built as modules:
-  drivers/net/phy/asix.ko
-  drivers/net/usb/asix.ko
-warning: same basename if the following are built as modules:
-  fs/coda/coda.ko
-  drivers/media/platform/coda/coda.ko
-warning: same basename if the following are built as modules:
-  drivers/net/phy/realtek.ko
-  drivers/net/dsa/realtek.ko
-
-Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
-Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-Reviewed-by: Kees Cook <keescook@chromium.org>
-Reviewed-by: Stephen Rothwell <sfr@canb.auug.org.au>
-Reviewed-by: Lucas De Marchi <lucas.demarchi@intel.com>
----
-
-Changes in v3:
- - Simplied sed code (Alexander Kapshuk)
-
-Changes in v2:
- - redirect messages to stderr
- - use '--' after 'basename -a'
- - use '-r' for xargs to cope with empty modules.order/modules.builtin
-
- Makefile                 |  1 +
- scripts/modules-check.sh | 16 ++++++++++++++++
- 2 files changed, 17 insertions(+)
- create mode 100755 scripts/modules-check.sh
-
-diff --git a/Makefile b/Makefile
-index a61a95b..30792fe 100644
---- a/Makefile
-+++ b/Makefile
-@@ -1290,6 +1290,7 @@ modules: $(vmlinux-dirs) $(if $(KBUILD_BUILTIN),vmlinux) modules.builtin
- 	$(Q)$(AWK) '!x[$$0]++' $(vmlinux-dirs:%=$(objtree)/%/modules.order) > $(objtree)/modules.order
- 	@$(kecho) '  Building modules, stage 2.';
- 	$(Q)$(MAKE) -f $(srctree)/scripts/Makefile.modpost
-+	$(Q)$(CONFIG_SHELL) $(srctree)/scripts/modules-check.sh
- 
- modules.builtin: $(vmlinux-dirs:%=%/modules.builtin)
- 	$(Q)$(AWK) '!x[$$0]++' $^ > $(objtree)/modules.builtin
-diff --git a/scripts/modules-check.sh b/scripts/modules-check.sh
-new file mode 100755
-index 0000000..2f65953
---- /dev/null
-+++ b/scripts/modules-check.sh
-@@ -0,0 +1,16 @@
-+#!/bin/sh
-+# SPDX-License-Identifier: GPL-2.0
-+
-+set -e
-+
-+# Check uniqueness of module names
-+check_same_name_modules()
-+{
-+	for m in $(sed 's:.*/::' modules.order modules.builtin | sort | uniq -d)
-+	do
-+		echo "warning: same basename if the following are built as modules:" >&2
-+		sed "/\/$m/!d;s:^kernel/:  :" modules.order modules.builtin >&2
-+	done
-+}
-+
-+check_same_name_modules
 -- 
-2.7.4
+ <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
 
