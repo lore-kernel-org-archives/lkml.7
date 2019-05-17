@@ -2,358 +2,156 @@ Return-Path: <SRS0=M1fl=TR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B71C2C04AB4
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 11:22:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AAB6C04AB4
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 11:24:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7E2CC20879
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 11:22:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 13FC82087B
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 11:24:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="OPimjJDf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728835AbfEQLWM (ORCPT
+        id S1728693AbfEQLYy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 May 2019 07:22:12 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:41394 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728803AbfEQLWL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 May 2019 07:22:11 -0400
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id A4541C09AD18;
-        Fri, 17 May 2019 11:22:10 +0000 (UTC)
-Received: from gondolin (dhcp-192-222.str.redhat.com [10.33.192.222])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 68803173C5;
-        Fri, 17 May 2019 11:22:09 +0000 (UTC)
-Date:   Fri, 17 May 2019 13:22:06 +0200
-From:   Cornelia Huck <cohuck@redhat.com>
-To:     Parav Pandit <parav@mellanox.com>
-Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kwankhede@nvidia.com, alex.williamson@redhat.com, cjia@nvidia.com
-Subject: Re: [PATCHv3 3/3] vfio/mdev: Synchronize device create/remove with
- parent removal
-Message-ID: <20190517132207.12d823f2.cohuck@redhat.com>
-In-Reply-To: <20190516233034.16407-4-parav@mellanox.com>
-References: <20190516233034.16407-1-parav@mellanox.com>
-        <20190516233034.16407-4-parav@mellanox.com>
-Organization: Red Hat GmbH
+        Fri, 17 May 2019 07:24:54 -0400
+Received: from mailout1.w1.samsung.com ([210.118.77.11]:33161 "EHLO
+        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728366AbfEQLYy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 May 2019 07:24:54 -0400
+Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
+        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20190517112452euoutp010694a5e78823722996830f8fcbaca725~fdK9S-sSy0777707777euoutp01b
+        for <linux-kernel@vger.kernel.org>; Fri, 17 May 2019 11:24:52 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20190517112452euoutp010694a5e78823722996830f8fcbaca725~fdK9S-sSy0777707777euoutp01b
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1558092292;
+        bh=s5xn7k0/PVouqiLEPICwHZnbldv3z7LESLoslwe+Fug=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=OPimjJDfUpGJ864Co3ggSgU0rAlm/mVajf5gCTl78zCtWMk5m8RwAex8gdbHD8jia
+         2D95RJuuiuD2oD8OK4jwkhQtJA5FjMBR4XwWVaqb40RxFO96ueMprGoVO86ZsHUgk7
+         OeBUtWW/7s5NK4wNHNKVQ6+bavLP45RXP2q8cqZU=
+Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
+        20190517112451eucas1p2cb66814f7d5b3db55da07e65459ce182~fdK8jo9Bb1635116351eucas1p2v;
+        Fri, 17 May 2019 11:24:51 +0000 (GMT)
+Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
+        eusmges3new.samsung.com (EUCPMTA) with SMTP id 6A.AD.04325.30A9EDC5; Fri, 17
+        May 2019 12:24:51 +0100 (BST)
+Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
+        20190517112450eucas1p2d987b7b6bcb6058af76d435a9fe79158~fdK70Td812524425244eucas1p2d;
+        Fri, 17 May 2019 11:24:50 +0000 (GMT)
+Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
+        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20190517112450eusmtrp22af6d099881ef87ee4651f77e1a3f0fa~fdK7mP8As0539105391eusmtrp2v;
+        Fri, 17 May 2019 11:24:50 +0000 (GMT)
+X-AuditID: cbfec7f5-fbbf09c0000010e5-a0-5cde9a03ce46
+Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
+        eusmgms1.samsung.com (EUCPMTA) with SMTP id 2B.F6.04146.20A9EDC5; Fri, 17
+        May 2019 12:24:50 +0100 (BST)
+Received: from [106.120.51.71] (unknown [106.120.51.71]) by
+        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20190517112450eusmtip26bf5615b51f217ab73c7d60def838c43~fdK7SddQ02003220032eusmtip2L;
+        Fri, 17 May 2019 11:24:50 +0000 (GMT)
+Subject: Re: [PATCH] vt/fbcon: deinitialize resources in visual_init() after
+ failed memory allocation
+To:     Grzegorz Halat <ghalat@redhat.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>, linux-fbdev@vger.kernel.org,
+        Oleksandr Natalenko <oleksandr@redhat.com>
+From:   Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Message-ID: <782f3255-3a25-4620-e97c-2f742e733f32@samsung.com>
+Date:   Fri, 17 May 2019 13:24:49 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+        Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <20190426145946.26537-1-ghalat@redhat.com>
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.32]); Fri, 17 May 2019 11:22:10 +0000 (UTC)
+X-Brightmail-Tracker: H4sIAAAAAAAAA01Sa0iTYRjt9bvsczh5nSufzApGGQlpluDUkiKJESVFBZUjW+1jSt7avPtH
+        CS+sEFNBXVpSeS9dZs4bRhOckmlOTEu8gWWJOsELmJfy81Py33mec85z3gMvQ4iLKWcmNCKa
+        1UQow6S0kKxvX+4+RuhHFMfT8yWy8uZZJHv4soaW5RrmbGQdmXOUrK+pkJZNV/TYnKHlH4pe
+        C+TW1n5aXlPXT8rnaw9cJm8JT6nYsNBYVuPhf0cYMvIzlY5aEcY/XzEIktEUo0MMA9gLllIS
+        dUjIiHE5go6lBVqHbDeGBQRNPT48MY+gO/cV4gjOMJ79m+KJMgQpqc1bwwyCoQELyakcsRre
+        DxgJDkuwK3R9a0KciMAtCBbnxwQcQWNfeJJeuXlWhP0hy9i/aSDxYZjOL6I4vBvfgNF2A8Vr
+        HKCzYGIzwBZ7Q1pRpw2HCewE3yeeb+GDYJwpJLgwwJUCMPWuUnzRAKgtTuArOMKUuU7AYxf4
+        28h5OX01grWMX1tmI4KynHWaV/lBm7l38xCBj0JNkwe/Pgtt1jbE37eHwRkH/g32kF2fR/Br
+        EWSkiXm1KxhKDfR2rK6xgshCUv2OZvodbfQ72uj/5xYjshI5sTHacDWrPRnBxrlrleHamAi1
+        +73I8Fq08W8+rZsXG1Dr6l0TwgyS2onwxWGFmFLGahPCTQgYQioRGaxDCrFIpUxIZDWRwZqY
+        MFZrQvsYUuokSto1FiTGamU0e59lo1jNNmvD2DonI/cX8jVMfnx2YhJPHgncn+9jufL1fI6d
+        JM9887ZX3R5VaYvwdJcnq64araN9Jy1d565S8R6DRfmzj6IqgueTfiy3vIOA4T+XSlLzBA5e
+        9iXeb68pqtuDrF8sT93U6kxR495DF64Hfm4IlHpV+fU9iCtxeTNGRRfoylQpeHym7LGU1IYo
+        Pd0IjVb5D+mQp04zAwAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrMIsWRmVeSWpSXmKPExsVy+t/xe7pMs+7FGPy8o2yxYvc7RovmxevZ
+        LKZs+MBkcaLvA6vF5V1z2CzerDzP5MDmsX/uGnaP9/uusnms33KVxePzJrkAlig9m6L80pJU
+        hYz84hJbpWhDCyM9Q0sLPSMTSz1DY/NYKyNTJX07m5TUnMyy1CJ9uwS9jHvPWtkKfnNVzP+9
+        gb2B8RVHFyMnh4SAicTDSS9Zuxi5OIQEljJKXPq4k72LkQMoISNxfH0ZRI2wxJ9rXWwgtpDA
+        a0aJK7sMQGxhgXSJrde3M4PYIgJqEmdu7mIEmcMssI9RYse5H1BDuxglFr45DNbNJmAlMbF9
+        FSOIzStgJzFh+1WwbhYBVYk3M+aygtiiAhESZ96vYIGoEZQ4OfMJmM0pYC7RNvckE4jNLKAu
+        8WfeJWYIW1zi1pP5UHF5ie1v5zBPYBSahaR9FpKWWUhaZiFpWcDIsopRJLW0ODc9t9hQrzgx
+        t7g0L10vOT93EyMwwrYd+7l5B+OljcGHGAU4GJV4eAV87sYIsSaWFVfmHmKU4GBWEuHd8P52
+        jBBvSmJlVWpRfnxRaU5q8SFGU6DnJjJLiSbnA6M/ryTe0NTQ3MLS0NzY3NjMQkmct0PgYIyQ
+        QHpiSWp2ampBahFMHxMHp1QDo0rDZLaP29/ffdUQZ/xIZMqEzBcOWy6fPWIdZCDmFfl8dQ/D
+        zIQJT9s2slnJ7WWpP6z4o6z9xZ/yJWKaR4M/h3q0uEkm+Rd2qMQJrTctW/F6raBd8fP2+2Hz
+        /Z5wc+ec3yRcpnP4jVqeUscS3+dvpz3Mvnl77c669x0OMj48U5PPS549+DGVS4mlOCPRUIu5
+        qDgRANn0/lLGAgAA
+X-CMS-MailID: 20190517112450eucas1p2d987b7b6bcb6058af76d435a9fe79158
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20190426145959epcas3p452b4b80025c58916331820abbb0060ed
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20190426145959epcas3p452b4b80025c58916331820abbb0060ed
+References: <CGME20190426145959epcas3p452b4b80025c58916331820abbb0060ed@epcas3p4.samsung.com>
+        <20190426145946.26537-1-ghalat@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 16 May 2019 18:30:34 -0500
-Parav Pandit <parav@mellanox.com> wrote:
 
-> In following sequences, child devices created while removing mdev parent
-> device can be left out, or it may lead to race of removing half
-> initialized child mdev devices.
+On 4/26/19 4:59 PM, Grzegorz Halat wrote:
+> After memory allocation failure vc_allocate() doesn't clean up data
+> which has been initialized in visual_init(). In case of fbcon this
+> leads to divide-by-0 in fbcon_init() on next open of the same tty.
 > 
-> issue-1:
-> --------
->        cpu-0                         cpu-1
->        -----                         -----
->                                   mdev_unregister_device()
->                                     device_for_each_child()
->                                       mdev_device_remove_cb()
->                                         mdev_device_remove()
-> create_store()
->   mdev_device_create()                   [...]
->     device_add()
->                                   parent_remove_sysfs_files()
+> memory allocation in vc_allocate() may fail here:
+> 1097:     vc->vc_screenbuf = kzalloc(vc->vc_screenbuf_size, GFP_KERNEL);
 > 
-> /* BUG: device added by cpu-0
->  * whose parent is getting removed
->  * and it won't process this mdev.
->  */
+> on next open() fbcon_init() skips vc_font.data initialization:
+> 1088:     if (!p->fontdata) {
 > 
-> issue-2:
-> --------
-> Below crash is observed when user initiated remove is in progress
-> and mdev_unregister_driver() completes parent unregistration.
+> division by zero in fbcon_init() happens here:
+> 1149:     new_cols /= vc->vc_font.width;
 > 
->        cpu-0                         cpu-1
->        -----                         -----
-> remove_store()
->    mdev_device_remove()
->    active = false;
->                                   mdev_unregister_device()
->                                   parent device removed.
->    [...]
->    parents->ops->remove()
->  /*
->   * BUG: Accessing invalid parent.
->   */
+> Additional check is needed in fbcon_deinit() to prevent
+> usage of uninitialized vc_screenbuf:
 > 
-> This is similar race like create() racing with mdev_unregister_device().
+> 1251:        if (vc->vc_hi_font_mask && vc->vc_screenbuf)
+> 1252:                set_vc_hi_font(vc, false);
 > 
-> BUG: unable to handle kernel paging request at ffffffffc0585668
-> PGD e8f618067 P4D e8f618067 PUD e8f61a067 PMD 85adca067 PTE 0
-> Oops: 0000 [#1] SMP PTI
-> CPU: 41 PID: 37403 Comm: bash Kdump: loaded Not tainted 5.1.0-rc6-vdevbus+ #6
-> Hardware name: Supermicro SYS-6028U-TR4+/X10DRU-i+, BIOS 2.0b 08/09/2016
-> RIP: 0010:mdev_device_remove+0xfa/0x140 [mdev]
-> Call Trace:
->  remove_store+0x71/0x90 [mdev]
->  kernfs_fop_write+0x113/0x1a0
->  vfs_write+0xad/0x1b0
->  ksys_write+0x5a/0xe0
->  do_syscall_64+0x5a/0x210
->  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+> Crash:
 > 
-> Therefore, mdev core is improved as below to overcome above issues.
+>  #6 [ffffc90001eafa60] divide_error at ffffffff81a00be4
+>     [exception RIP: fbcon_init+463]
+>     RIP: ffffffff814b860f  RSP: ffffc90001eafb18  RFLAGS: 00010246
+> ...
+>  #7 [ffffc90001eafb60] visual_init at ffffffff8154c36e
+>  #8 [ffffc90001eafb80] vc_allocate at ffffffff8154f53c
+>  #9 [ffffc90001eafbc8] con_install at ffffffff8154f624
+> ...
 > 
-> Wait for any ongoing mdev create() and remove() to finish before
-> unregistering parent device using refcount and completion.
-> This continues to allow multiple create and remove to progress in
-> parallel for different mdev devices as most common case.
-> At the same time guard parent removal while parent is being access by
-> create() and remove callbacks.
-> 
-> Code is simplified from kref to use refcount as unregister_device() has
-> to wait anyway for all create/remove to finish.
-> 
-> While removing mdev devices during parent unregistration, there isn't
-> need to acquire refcount of parent device, hence code is restructured
-> using mdev_device_remove_common() to avoid it.
-> 
-> Fixes: 7b96953bc640 ("vfio: Mediated device Core driver")
-> Signed-off-by: Parav Pandit <parav@mellanox.com>
-> ---
->  drivers/vfio/mdev/mdev_core.c    | 86 ++++++++++++++++++++------------
->  drivers/vfio/mdev/mdev_private.h |  6 ++-
->  2 files changed, 60 insertions(+), 32 deletions(-)
+> Signed-off-by: Grzegorz Halat <ghalat@redhat.com>
 
-I'm still not quite happy with this patch. I think most of my dislike
-comes from how you are using a member called 'refcount' vs. what I
-believe a refcount actually is. See below.
+Acked-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
 
-> 
-> diff --git a/drivers/vfio/mdev/mdev_core.c b/drivers/vfio/mdev/mdev_core.c
-> index 0bef0cae1d4b..ca33246c1dc3 100644
-> --- a/drivers/vfio/mdev/mdev_core.c
-> +++ b/drivers/vfio/mdev/mdev_core.c
-> @@ -78,34 +78,41 @@ static struct mdev_parent *__find_parent_device(struct device *dev)
->  	return NULL;
->  }
->  
-> -static void mdev_release_parent(struct kref *kref)
-> +static bool mdev_try_get_parent(struct mdev_parent *parent)
->  {
-> -	struct mdev_parent *parent = container_of(kref, struct mdev_parent,
-> -						  ref);
-> -	struct device *dev = parent->dev;
-> -
-> -	kfree(parent);
-> -	put_device(dev);
-> +	if (parent)
-> +		return refcount_inc_not_zero(&parent->refcount);
-> +	return false;
->  }
->  
-> -static struct mdev_parent *mdev_get_parent(struct mdev_parent *parent)
-> +static void mdev_put_parent(struct mdev_parent *parent)
->  {
-> -	if (parent)
-> -		kref_get(&parent->ref);
-> -
-> -	return parent;
-> +	if (parent && refcount_dec_and_test(&parent->refcount))
-> +		complete(&parent->unreg_completion);
->  }
-
-So far, this is "obtain a reference if the reference is not 0 (implying
-the object is not ready to use) and notify waiters when the last
-reference is dropped". This still looks idiomatic enough.
-
->  
-> -static void mdev_put_parent(struct mdev_parent *parent)
-> +static void mdev_device_remove_common(struct mdev_device *mdev)
->  {
-> -	if (parent)
-> -		kref_put(&parent->ref, mdev_release_parent);
-> +	struct mdev_parent *parent;
-> +	struct mdev_type *type;
-> +	int ret;
-> +
-> +	type = to_mdev_type(mdev->type_kobj);
-> +	mdev_remove_sysfs_files(&mdev->dev, type);
-> +	device_del(&mdev->dev);
-> +	parent = mdev->parent;
-> +	ret = parent->ops->remove(mdev);
-> +	if (ret)
-> +		dev_err(&mdev->dev, "Remove failed: err=%d\n", ret);
-> +
-> +	/* Balances with device_initialize() */
-> +	put_device(&mdev->dev);
->  }
->  
->  static int mdev_device_remove_cb(struct device *dev, void *data)
->  {
->  	if (dev_is_mdev(dev))
-> -		mdev_device_remove(dev);
-> +		mdev_device_remove_common(to_mdev_device(dev));
->  
->  	return 0;
->  }
-> @@ -147,7 +154,8 @@ int mdev_register_device(struct device *dev, const struct mdev_parent_ops *ops)
->  		goto add_dev_err;
->  	}
->  
-> -	kref_init(&parent->ref);
-> +	refcount_set(&parent->refcount, 1);
-
-Initializing to 1 when creating is also fine.
-
-> +	init_completion(&parent->unreg_completion);
->  
->  	parent->dev = dev;
->  	parent->ops = ops;
-> @@ -206,14 +214,27 @@ void mdev_unregister_device(struct device *dev)
->  	dev_info(dev, "MDEV: Unregistering\n");
->  
->  	list_del(&parent->next);
-> +	mutex_unlock(&parent_list_lock);
-> +
-> +	/* Release the initial reference so that new create cannot start */
-> +	mdev_put_parent(parent);
-
-The comment is confusing: We do drop one reference, but this does not
-imply we're going to 0 (which would be the one thing that would block
-creating new devices).
-
-> +
-> +	/*
-> +	 * Wait for all the create and remove references to drop.
-> +	 */
-> +	wait_for_completion(&parent->unreg_completion);
-
-It only reaches 0 after this wait.
-
-> +
-> +	/*
-> +	 * New references cannot be taken and all users are done
-> +	 * using the parent. So it is safe to unregister parent.
-> +	 */
->  	class_compat_remove_link(mdev_bus_compat_class, dev, NULL);
->  
->  	device_for_each_child(dev, NULL, mdev_device_remove_cb);
->  
->  	parent_remove_sysfs_files(parent);
-> -
-> -	mutex_unlock(&parent_list_lock);
-> -	mdev_put_parent(parent);
-> +	kfree(parent);
-> +	put_device(dev);
->  }
->  EXPORT_SYMBOL(mdev_unregister_device);
->  
-> @@ -237,10 +258,11 @@ int mdev_device_create(struct kobject *kobj,
->  	struct mdev_parent *parent;
->  	struct mdev_type *type = to_mdev_type(kobj);
->  
-> -	parent = mdev_get_parent(type->parent);
-> -	if (!parent)
-> +	if (!mdev_try_get_parent(type->parent))
-
-If other calls are still running, the refcount won't be 0, and this
-will succeed, even if we really want to get rid of the device.
-
->  		return -EINVAL;
->  
-> +	parent = type->parent;
-> +
->  	mutex_lock(&mdev_list_lock);
->  
->  	/* Check for duplicate */
-> @@ -287,6 +309,7 @@ int mdev_device_create(struct kobject *kobj,
->  
->  	mdev->active = true;
->  	dev_dbg(&mdev->dev, "MDEV: created\n");
-> +	mdev_put_parent(parent);
->  
->  	return 0;
->  
-> @@ -306,7 +329,6 @@ int mdev_device_remove(struct device *dev)
->  	struct mdev_device *mdev, *tmp;
->  	struct mdev_parent *parent;
->  	struct mdev_type *type;
-> -	int ret;
->  
->  	mdev = to_mdev_device(dev);
->  
-> @@ -330,15 +352,17 @@ int mdev_device_remove(struct device *dev)
->  	mutex_unlock(&mdev_list_lock);
->  
->  	type = to_mdev_type(mdev->type_kobj);
-> -	mdev_remove_sysfs_files(dev, type);
-> -	device_del(&mdev->dev);
-> -	parent = mdev->parent;
-> -	ret = parent->ops->remove(mdev);
-> -	if (ret)
-> -		dev_err(&mdev->dev, "Remove failed: err=%d\n", ret);
-> +	if (!mdev_try_get_parent(type->parent)) {
-
-Same here: Is there really a guarantee that the refcount is 0 when the
-parent is going away?
-
-> +		/*
-> +		 * Parent unregistration have started.
-> +		 * No need to remove here.
-> +		 */
-> +		mutex_unlock(&mdev_list_lock);
-
-Btw., you already unlocked above.
-
-> +		return -ENODEV;
-> +	}
->  
-> -	/* Balances with device_initialize() */
-> -	put_device(&mdev->dev);
-> +	parent = mdev->parent;
-> +	mdev_device_remove_common(mdev);
->  	mdev_put_parent(parent);
->  
->  	return 0;
-> diff --git a/drivers/vfio/mdev/mdev_private.h b/drivers/vfio/mdev/mdev_private.h
-> index 924ed2274941..55ebab0af7b0 100644
-> --- a/drivers/vfio/mdev/mdev_private.h
-> +++ b/drivers/vfio/mdev/mdev_private.h
-> @@ -19,7 +19,11 @@ void mdev_bus_unregister(void);
->  struct mdev_parent {
->  	struct device *dev;
->  	const struct mdev_parent_ops *ops;
-> -	struct kref ref;
-> +	/* Protects unregistration to wait until create/remove
-> +	 * are completed.
-> +	 */
-> +	refcount_t refcount;
-> +	struct completion unreg_completion;
->  	struct list_head next;
->  	struct kset *mdev_types_kset;
->  	struct list_head type_list;
-
-I think what's really needed is to split up the different needs and not
-overload the 'refcount' concept.
-
-- If we need to make sure that a reference to the parent is held so
-  that the parent may not go away while still in use, we should
-  continue to use the kref (in the idiomatic way it is used before this
-  patch.)
-- We need to protect against creation of new devices if the parent is
-  going away. Maybe set a going_away marker in the parent structure for
-  that so that creation bails out immediately? What happens if the
-  creation has already started when parent removal kicks in, though?
-  Do we need some child list locking and an indication whether a child
-  is in progress of being registered/unregistered?
-- We also need to protect against removal of devices while unregister
-  is in progress (same mechanism as above?) The second issue you
-  describe above should be fixed then if the children keep a reference
-  of the parent.
+Best regards,
+--
+Bartlomiej Zolnierkiewicz
+Samsung R&D Institute Poland
+Samsung Electronics
