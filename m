@@ -2,160 +2,134 @@ Return-Path: <SRS0=M1fl=TR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 772B2C04AB4
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 05:32:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45B97C04AB4
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 05:34:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1146420848
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 05:32:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0F59620848
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 05:34:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="AdUEU8ky"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="XCLpFXxX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727871AbfEQFcJ (ORCPT
+        id S1727899AbfEQFeo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 May 2019 01:32:09 -0400
-Received: from mailout3.samsung.com ([203.254.224.33]:59823 "EHLO
-        mailout3.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727840AbfEQFcJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 May 2019 01:32:09 -0400
-Received: from epcas5p2.samsung.com (unknown [182.195.41.40])
-        by mailout3.samsung.com (KnoxPortal) with ESMTP id 20190517053207epoutp031df381cde516219665e5752b4b39609d~fYW9vo5oR0539605396epoutp03j
-        for <linux-kernel@vger.kernel.org>; Fri, 17 May 2019 05:32:07 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20190517053207epoutp031df381cde516219665e5752b4b39609d~fYW9vo5oR0539605396epoutp03j
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1558071127;
-        bh=QoTb4J0MrDDwjXI5H0Us5qd6vRZEw/A2DnYVdFwNDKs=;
-        h=From:To:Cc:In-Reply-To:Subject:Date:References:From;
-        b=AdUEU8kyiPppfK8EiOpBmjPqi8cBeSx0mXpu7jy6Bn3kD3wRG2LdivADeGg5yp3cp
-         0J09ysVXCuc9RQYhIauxTmu29imNiWpL7SNKRzP+Fq9JCqDAmZojkBjtlGIx0Tg15c
-         c9IS3WPk2Wp7VBU0OisVxeQ14iOu5qsaQcbMPsow=
-Received: from epsmges5p2new.samsung.com (unknown [182.195.42.74]) by
-        epcas5p4.samsung.com (KnoxPortal) with ESMTP id
-        20190517053206epcas5p4b2e9229062957ac7436e187f43b9036d~fYW9AI5Bn2456024560epcas5p4s;
-        Fri, 17 May 2019 05:32:06 +0000 (GMT)
-Received: from epcas5p4.samsung.com ( [182.195.41.42]) by
-        epsmges5p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        7B.D8.04066.6574EDC5; Fri, 17 May 2019 14:32:06 +0900 (KST)
-Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
-        epcas5p2.samsung.com (KnoxPortal) with ESMTPA id
-        20190517053206epcas5p275a94194a8e60c0ec38c9f8ad7424570~fYW8tLZYv2772627726epcas5p2-;
-        Fri, 17 May 2019 05:32:06 +0000 (GMT)
-Received: from epsmgms1p2new.samsung.com (unknown [182.195.42.42]) by
-        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20190517053206epsmtrp268ab76a813e98e2764488c436d7cc3f0~fYW8sdtQd1717817178epsmtrp2v;
-        Fri, 17 May 2019 05:32:06 +0000 (GMT)
-X-AuditID: b6c32a4a-973ff70000000fe2-77-5cde47560a17
-Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
-        epsmgms1p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        81.63.03662.6574EDC5; Fri, 17 May 2019 14:32:06 +0900 (KST)
-Received: from JOSHIK01 (unknown [107.111.93.135]) by epsmtip2.samsung.com
-        (KnoxPortal) with ESMTPA id
-        20190517053204epsmtip298269f87eb140783bb081bc4f965491c~fYW7U4EYQ2086620866epsmtip2j;
-        Fri, 17 May 2019 05:32:04 +0000 (GMT)
-From:   "kanchan" <joshi.k@samsung.com>
-To:     "'Christoph Hellwig'" <hch@infradead.org>
-Cc:     <linux-kernel@vger.kernel.org>, <linux-block@vger.kernel.org>,
-        <linux-nvme@lists.infradead.org>, <linux-fsdevel@vger.kernel.org>,
-        <linux-ext4@vger.kernel.org>, <prakash.v@samsung.com>,
-        <anshul@samsung.com>
-In-Reply-To: <20190510170249.GA26907@infradead.org>
-Subject: RE: [PATCH v5 0/7] Extend write-hint framework, and add write-hint
- for Ext4 journal
-Date:   Fri, 17 May 2019 11:01:55 +0530
-Message-ID: <00fb01d50c71$dd358e50$97a0aaf0$@samsung.com>
+        Fri, 17 May 2019 01:34:44 -0400
+Received: from ozlabs.org ([203.11.71.1]:51269 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726772AbfEQFeo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 May 2019 01:34:44 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 454xnD321Lz9s55;
+        Fri, 17 May 2019 15:34:40 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1558071281;
+        bh=bw+Mmk5RPWITtoR+Iv5JYFrtaaLoLeyObgBQwi6dcLI=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=XCLpFXxXnkGQ6zm1XaFLysJ4ke+eg0uUNPbVm4eSpUxSymtzBrVgkFWdlV4uNl67y
+         +pg4cjZ7ZGzybJA46gTTF0Y+L/TXqFhjeQ5oTYMNhFw0Gajxy9C1KVvD0GVma5sG26
+         CzutJfEWCXNyUVktPAaQ/kbycG8nLQgy9f4xv3FeaXnNuUDym9exXMYygCXA4N3iwB
+         CeLJg3Nm0n7+wshwdDxubzDSL+Q2bbmbIirCG7P5v4odEVCBxY7hwNJ3AWRx4fJo/P
+         wOYoiYkd23ko0We7ysw/9iKBahJ7PAFgIaIfowNtOgvC55nTEIJyOzlQrR2wDJSGQD
+         h1wk5f7UOSGLg==
+Date:   Fri, 17 May 2019 15:34:39 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc:     linux-kbuild@vger.kernel.org, Sam Ravnborg <sam@ravnborg.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Jessica Yu <jeyu@kernel.org>,
+        Lucas De Marchi <lucas.de.marchi@gmail.com>,
+        Michael Schmitz <schmitzmic@gmail.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Rusty Russell <rusty@rustcorp.com.au>,
+        Kees Cook <keescook@chromium.org>,
+        Michal Marek <michal.lkml@markovi.net>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] kbuild: check uniqueness of module names
+Message-ID: <20190517153439.3b479334@canb.auug.org.au>
+In-Reply-To: <20190517042753.25857-1-yamada.masahiro@socionext.com>
+References: <20190517042753.25857-1-yamada.masahiro@socionext.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-Mailer: Microsoft Outlook 15.0
-Thread-Index: AQJoSeMIlXjPMuci1lQDnd0IsY+e8wLu+qiYAUGsmF+lJrwgsA==
-Content-Language: en-us
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrOKsWRmVeSWpSXmKPExsWy7bCmlm6Y+70Yg8nHZS1+T5/CanF6wiIm
-        i723tC1mzrvDZrFn70kWi8u75rBZzF/2lN3iypRFzA4cHptXaHlsXlLv0bdlFaPH501yASxR
-        XDYpqTmZZalF+nYJXBmXD25kLZgtWHH8xQbmBsa5fF2MnBwSAiYSV349ZAaxhQR2M0pcW6sM
-        YX9ilNj/172LkQvI/sYo8X/tJrYuRg6whj1rYyDiexklFt37yALhPGeUODnlGTtIN5uAqsS9
-        H71sILaIgK7E2YUvGEFsZoGrjBIXNoeC2JwCxhJvlj4D2ywsECfRcHcCWC8LUO/TjnZWEJtX
-        wFLiz81JTBC2oMTJmU9YIObIS2x/O4cZ4gMFid2fjrKCHCci4CSxckUuRIm4xMujR9hBbpMQ
-        eM0m8WfTGhaIeheJyUuusEPYwhKvjm+BsqUkPr/bywZhF0v8unOUGaK5g1HiesNMqGZ7iYt7
-        /jKBLGMW0JRYv0sfYhmfRO/vJ0yQAOKV6GgTgqhWlLg36SkrhC0u8XDGEijbQ+Lh282MExgV
-        ZyH5bBaSz2YheWEWwrIFjCyrGCVTC4pz01OLTQuM8lLL9YoTc4tL89L1kvNzNzGCk4+W1w7G
-        Zed8DjEKcDAq8fAK+NyNEWJNLCuuzD3EKMHBrCTCu+H97Rgh3pTEyqrUovz4otKc1OJDjNIc
-        LErivJNYr8YICaQnlqRmp6YWpBbBZJk4OKUaGHsUg/cuzhA3cT5ize57oPVrbt+qZ8ukNXPF
-        4htk4/hyipyzlRJ0l4rHdC6sdptRwXbn4YdN336vO/Z30V+W2sTyzRLLNC/+sf4Xpm8aE/1l
-        +ZVwNa1Uo0kXW1XsPp77FTtJYcGpJ1y+vGzXpJ/dvq8yp3P2l986uz/unCp8+sPLnMexjdsW
-        /ldiKc5INNRiLipOBABRZoWPOgMAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFupmkeLIzCtJLcpLzFFi42LZdlhJXjfM/V6MwZZPHBa/p09htTg9YRGT
-        xd5b2hYz591hs9iz9ySLxeVdc9gs5i97ym5xZcoiZgcOj80rtDw2L6n36NuyitHj8ya5AJYo
-        LpuU1JzMstQifbsErozLBzeyFswWrDj+YgNzA+Ncvi5GDg4JAROJPWtjuhi5OIQEdjNK7Fy+
-        kq2LkRMoLi7RfO0HO4QtLLHy33N2iKKnjBJHN0wCK2ITUJW496MXzBYR0JU4u/AFI0gRs8Bd
-        Rom3M5Yxwo3tX/UerIpTwFjizdJnzCC2sECMxPrJC8HiLECTnna0s4LYvAKWEn9uTmKCsAUl
-        Ts58wgJyKrOAnkTbRkaQMLOAvMT2t3OYIa5TkNj96SgrSImIgJPEyhW5ECXiEi+PHmGfwCg8
-        C8mgWQiDZiEZNAtJxwJGllWMkqkFxbnpucWGBUZ5qeV6xYm5xaV56XrJ+bmbGMFRpKW1g/HE
-        ifhDjAIcjEo8vDs878YIsSaWFVfmHmKU4GBWEuHd8P52jBBvSmJlVWpRfnxRaU5q8SFGaQ4W
-        JXFe+fxjkUIC6YklqdmpqQWpRTBZJg5OqQbGtSvPLP/z/omR9ddeRvfu0w+PfZjBnCjFePmI
-        jOy9FvdSs4uffx69fXBt9MyJPXr1heeyt/4ttfuzrti6OexOkqbs9CUf/hZwVpkov/qx513o
-        6ZK8pzqTtP26G69duvT8WMvyL6sefy7I+NjMZ7/i8Yk614sftLn5ckW57t0RDNm/Jmbi87jv
-        05VYijMSDbWYi4oTAciFmlieAgAA
-X-CMS-MailID: 20190517053206epcas5p275a94194a8e60c0ec38c9f8ad7424570
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-CMS-TYPE: 105P
-X-CMS-RootMailID: 20190425112347epcas2p1f7be48b8f0d2203252b8c9dd510c1b61
-References: <CGME20190425112347epcas2p1f7be48b8f0d2203252b8c9dd510c1b61@epcas2p1.samsung.com>
-        <1556191202-3245-1-git-send-email-joshi.k@samsung.com>
-        <20190510170249.GA26907@infradead.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/IlsPisnNmYNysYS_bs/ddIU"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Christoph, 
+--Sig_/IlsPisnNmYNysYS_bs/ddIU
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-> Including the one this model causes on at least some SSDs where you now
-statically allocate resources to a stream that is now not globally
-available.  
+Hi Masahiro,
 
-Sorry but can you please elaborate the issue? I do not get what is being
-statically allocated which was globally available earlier.
-If you are referring to nvme driver,  available streams at subsystem level
-are being reflected for all namespaces. This is same as earlier. 
-There is no attempt to explicitly allocate (using dir-receive) or reserve
-streams for any namespace.  
-Streams will continue to get allocated/released implicitly as and when
-writes (with stream id) arrive.
+Thanks for this, looks good to me.  Just a nit below.
 
-> All for the little log with very short date lifetime that any half decent
-hot/cold partitioning algorithm in the SSD should be able to detect.
+On Fri, 17 May 2019 13:27:53 +0900 Masahiro Yamada <yamada.masahiro@socione=
+xt.com> wrote:
+>
 
-With streams, hot/cold segregation is happening at the time of placement
-itself, without algorithm; that is a clear win over algorithms which take
-time/computation to be able to do the same.
-And infrastructure update (write-hint-to-stream-id conversion in
-block-layer,  in-kernel hints etc.) seems to be required anyway for streams
-to extend its reach beyond nvme and user-space hints.
-  
-Thanks,
+> diff --git a/scripts/modules-check.sh b/scripts/modules-check.sh
+> new file mode 100755
+> index 000000000000..c875f6eab01e
+> --- /dev/null
+> +++ b/scripts/modules-check.sh
+> @@ -0,0 +1,20 @@
+> +#!/bin/sh
+> +# SPDX-License-Identifier: GPL-2.0
+> +
+> +set -e
+> +
+> +# Check uniqueness of module names
+> +check_same_name_modules()
+> +{
+> +	same_name_modules=3D$(cat modules.order modules.builtin | \
+                                                                ^
+This trailing '\' is unnecessary after a pipe symbol.
 
------Original Message-----
-From: Christoph Hellwig [mailto:hch@infradead.org] 
-Sent: Friday, May 10, 2019 10:33 PM
-To: Kanchan Joshi <joshi.k@samsung.com>
-Cc: linux-kernel@vger.kernel.org; linux-block@vger.kernel.org;
-linux-nvme@lists.infradead.org; linux-fsdevel@vger.kernel.org;
-linux-ext4@vger.kernel.org; prakash.v@samsung.com; anshul@samsung.com
-Subject: Re: [PATCH v5 0/7] Extend write-hint framework, and add write-hint
-for Ext4 journal
+> +				xargs -r basename -a -- | sort | uniq -d)
+> +
+> +	for m in $same_name_modules
+> +	do
+> +		echo "warning: same basename if the following are built as modules:" >=
+&2
+> +		grep -h -e "/$m" modules.order modules.builtin | \
 
-I think this fundamentally goes in the wrong direction.  We explicitly
-designed the block layer infrastructure around life time hints and not the
-not fish not flesh streams interface, which causes all kinds of problems.
+Same here
 
-Including the one this model causes on at least some SSDs where you now
-statically allocate resources to a stream that is now not globally
-available.  All for the little log with very short date lifetime that any
-half decent hot/cold partitioning algorithm in the SSD should be able to
-detect.
+> +						sed 's:^kernel/:  :' >&2
+> +	done
+> +}
+> +
+> +check_same_name_modules
 
+Reviewed-by: Stephen ROthwell <sfr@canb.auug.org.au>
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/IlsPisnNmYNysYS_bs/ddIU
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAlzeR+8ACgkQAVBC80lX
+0Gzmhwf7B10c15F0Cw1Alt+7cctlQvs4IV/Lpxcg/nFDLrKaGl9UEiAOS1NiUong
+cJuqTud0LO2PP41jUDbNoAwf6a90eLkJ28vhU4xz3l9x7lIHIwd8ziwkmbMHPCrY
+q6R63Qi6YKRo1ZbJAcKI671d+Dbkv3/VKArWxXHjha17/lYHOTLr15ASO+oaXyz3
+oK8IJ6+hX6wCPNV3RHgQ88GrazAaRlH+XefxCtxsV/lX2avmnk8y0rMwkN3v11nq
+CsOpLdpBCMgAFZ4Kpt3yr/XGDYBM9Gb3cFvkKbVbdKSKOuu6GZlAEd1JUwpdcSea
+YiAuCZu/OOoiNOhXrv3uDZzEJ48zFg==
+=Xu3a
+-----END PGP SIGNATURE-----
+
+--Sig_/IlsPisnNmYNysYS_bs/ddIU--
