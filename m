@@ -2,191 +2,95 @@ Return-Path: <SRS0=M1fl=TR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE6BEC04AB4
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 18:05:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A23BAC04E84
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 18:06:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9B2852168B
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 18:05:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 76EE52168B
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 18:06:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729088AbfEQSFt (ORCPT
+        id S1729123AbfEQSGK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 May 2019 14:05:49 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:59756 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726422AbfEQSFr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 May 2019 14:05:47 -0400
-Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4HHw2gU050171
-        for <linux-kernel@vger.kernel.org>; Fri, 17 May 2019 14:05:46 -0400
-Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2shysbw3yp-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Fri, 17 May 2019 14:05:45 -0400
-Received: from localhost
-        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <pmorel@linux.ibm.com>;
-        Fri, 17 May 2019 19:04:39 +0100
-Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
-        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Fri, 17 May 2019 19:04:36 +0100
-Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
-        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x4HI4Y8p47644864
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 17 May 2019 18:04:34 GMT
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id AF81FAE051;
-        Fri, 17 May 2019 18:04:34 +0000 (GMT)
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 0DBA4AE045;
-        Fri, 17 May 2019 18:04:34 +0000 (GMT)
-Received: from [9.145.153.112] (unknown [9.145.153.112])
-        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Fri, 17 May 2019 18:04:33 +0000 (GMT)
-Reply-To: pmorel@linux.ibm.com
-Subject: Re: [PATCH v2 4/4] vfio: vfio_iommu_type1: implement
- VFIO_IOMMU_INFO_CAPABILITIES
-To:     Alex Williamson <alex.williamson@redhat.com>
-Cc:     sebott@linux.vnet.ibm.com, gerald.schaefer@de.ibm.com,
-        pasic@linux.vnet.ibm.com, borntraeger@de.ibm.com,
-        walling@linux.ibm.com, linux-s390@vger.kernel.org,
-        iommu@lists.linux-foundation.org, joro@8bytes.org,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        schwidefsky@de.ibm.com, heiko.carstens@de.ibm.com,
-        robin.murphy@arm.com
-References: <1558109810-18683-1-git-send-email-pmorel@linux.ibm.com>
- <1558109810-18683-5-git-send-email-pmorel@linux.ibm.com>
- <20190517104143.240082b5@x1.home>
-From:   Pierre Morel <pmorel@linux.ibm.com>
-Date:   Fri, 17 May 2019 20:04:33 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Fri, 17 May 2019 14:06:10 -0400
+Received: from mga05.intel.com ([192.55.52.43]:46547 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727063AbfEQSGK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 May 2019 14:06:10 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 May 2019 11:06:09 -0700
+X-ExtLoop1: 1
+Received: from agluck-desk.sc.intel.com (HELO agluck-desk) ([10.3.52.160])
+  by orsmga001.jf.intel.com with ESMTP; 17 May 2019 11:06:08 -0700
+Date:   Fri, 17 May 2019 11:06:07 -0700
+From:   "Luck, Tony" <tony.luck@intel.com>
+To:     Borislav Petkov <bp@alien8.de>
+Cc:     "Ghannam, Yazen" <Yazen.Ghannam@amd.com>,
+        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "x86@kernel.org" <x86@kernel.org>
+Subject: Re: [PATCH v3 5/6] x86/MCE: Save MCA control bits that get set in
+ hardware
+Message-ID: <20190517180607.GA21710@agluck-desk>
+References: <SN6PR12MB26392B440ED735C26AA2C678F80A0@SN6PR12MB2639.namprd12.prod.outlook.com>
+ <20190516172117.GC21857@zn.tnic>
+ <SN6PR12MB26394CD4E1BAC068B0B1AEF6F80A0@SN6PR12MB2639.namprd12.prod.outlook.com>
+ <20190516203456.GD21857@zn.tnic>
+ <20190516205943.GA3299@agluck-desk>
+ <20190517101006.GA32065@zn.tnic>
+ <SN6PR12MB26391A0C3979030082EE38F8F80B0@SN6PR12MB2639.namprd12.prod.outlook.com>
+ <20190517163729.GE13482@zn.tnic>
+ <20190517172648.GA18164@agluck-desk>
+ <20190517174817.GG13482@zn.tnic>
 MIME-Version: 1.0
-In-Reply-To: <20190517104143.240082b5@x1.home>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 19051718-0028-0000-0000-0000036ED32E
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19051718-0029-0000-0000-0000242E734F
-Message-Id: <92b6ad4e-9a49-636b-9225-acca0bec4bb7@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-17_11:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=894 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1905170106
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190517174817.GG13482@zn.tnic>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 17/05/2019 18:41, Alex Williamson wrote:
-> On Fri, 17 May 2019 18:16:50 +0200
-> Pierre Morel <pmorel@linux.ibm.com> wrote:
-> 
->> We implement the capability interface for VFIO_IOMMU_GET_INFO.
->>
->> When calling the ioctl, the user must specify
->> VFIO_IOMMU_INFO_CAPABILITIES to retrieve the capabilities and
->> must check in the answer if capabilities are supported.
->>
->> The iommu get_attr callback will be used to retrieve the specific
->> attributes and fill the capabilities.
->>
->> Currently two Z-PCI specific capabilities will be queried and
->> filled by the underlying Z specific s390_iommu:
->> VFIO_IOMMU_INFO_CAP_QFN for the PCI query function attributes
->> and
->> VFIO_IOMMU_INFO_CAP_QGRP for the PCI query function group.
->>
->> Other architectures may add new capabilities in the same way
->> after enhancing the architecture specific IOMMU driver.
->>
->> Signed-off-by: Pierre Morel <pmorel@linux.ibm.com>
->> ---
->>   drivers/vfio/vfio_iommu_type1.c | 122 +++++++++++++++++++++++++++++++++++++++-
->>   1 file changed, 121 insertions(+), 1 deletion(-)
->>
->> diff --git a/drivers/vfio/vfio_iommu_type1.c b/drivers/vfio/vfio_iommu_type1.c
->> index d0f731c..9435647 100644
->> --- a/drivers/vfio/vfio_iommu_type1.c
->> +++ b/drivers/vfio/vfio_iommu_type1.c
->> @@ -1658,6 +1658,97 @@ static int vfio_domains_have_iommu_cache(struct vfio_iommu *iommu)
->>   	return ret;
->>   }
->>   
->> +static int vfio_iommu_type1_zpci_fn(struct iommu_domain *domain,
->> +				    struct vfio_info_cap *caps, size_t size)
->> +{
->> +	struct vfio_iommu_type1_info_pcifn *info_fn;
->> +	int ret;
->> +
->> +	info_fn = kzalloc(size, GFP_KERNEL);
->> +	if (!info_fn)
->> +		return -ENOMEM;
->> +
->> +	ret = iommu_domain_get_attr(domain, DOMAIN_ATTR_ZPCI_FN,
->> +				    &info_fn->response);
-> 
-> What ensures that the 'struct clp_rsp_query_pci' returned from this
-> get_attr remains consistent with a 'struct vfio_iommu_pci_function'?
-> Why does the latter contains so many reserved fields (beyond simply
-> alignment) for a user API?  What fields of these structures are
-> actually useful to userspace?  Should any fields not be exposed to the
-> user?  Aren't BAR sizes redundant to what's available through the vfio
-> PCI API?  I'm afraid that simply redefining an internal structure as
-> the API leaves a lot to be desired too.  Thanks,
-> 
-> Alex
-> 
-Hi Alex,
+On Fri, May 17, 2019 at 07:48:17PM +0200, Borislav Petkov wrote:
+> @@ -1562,15 +1567,21 @@ static void __mcheck_cpu_init_generic(void)
+>  static void __mcheck_cpu_init_clear_banks(void)
+>  {
+>  	struct mce_bank *mce_banks = this_cpu_read(mce_banks_array);
+> +	u64 msrval;
+>  	int i;
+>  
+>  	for (i = 0; i < this_cpu_read(mce_num_banks); i++) {
+>  		struct mce_bank *b = &mce_banks[i];
+>  
+> -		if (!b->init)
+> -			continue;
+> -		wrmsrl(msr_ops.ctl(i), b->ctl);
+> -		wrmsrl(msr_ops.status(i), 0);
+> +		if (b->init) {
+> +			/* Check if any bits are implemented in h/w */
+> +			wrmsrl(msr_ops.ctl(i), b->ctl);
+> +			rdmsrl(msr_ops.ctl(i), msrval);
+> +
+> +			b->init = !!msrval;
+> +
+> +			wrmsrl(msr_ops.status(i), 0);
+> +		}
+>  	}
+>  }
 
-I simply used the structure returned by the firmware to be sure to be 
-consistent with future evolutions and facilitate the copy from CLP and 
-to userland.
+Am I misreading the diff here? It doesn't look like you
+needed to drop the
 
-If you prefer, and I understand that this is the case, I can define a 
-specific VFIO_IOMMU structure with only the fields relevant to the user, 
-leaving future enhancement of the user's interface being implemented in 
-another kernel patch when the time has come.
+	if (!b->init)
+		continue;
 
-In fact, the struct will have all defined fields I used but not the BAR 
-size and address (at least for now because there are special cases we do 
-not support yet with bars).
-All the reserved fields can go away.
+and thus end up with that extra level on indent for the rest
+of the function.
 
-Is it more conform to your idea?
-
-Also I have 2 interfaces:
-
-s390_iommu.get_attr <-I1-> VFIO_IOMMU <-I2-> userland
-
-Do you prefer:
-- 2 different structures, no CLP raw structure
-- the CLP raw structure for I1 and a VFIO specific structure for I2
-- the same VFIO structure for both I1 and I2
-
-Thank you if you could give me a direction for this.
-
-Thanks for the comments, and thanks a lot to have answered so quickly.
-
-Pierre
-
-
-
-
-
-
-
--- 
-Pierre Morel
-Linux/KVM/QEMU in Böblingen - Germany
-
+-Tony
