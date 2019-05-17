@@ -2,107 +2,122 @@ Return-Path: <SRS0=M1fl=TR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.5 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35B46C04AB4
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 11:56:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD2B3C04E84
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 11:57:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 05CD820881
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 11:56:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="m+abuiCU"
+	by mail.kernel.org (Postfix) with ESMTP id BE47720848
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 11:57:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728860AbfEQL4P (ORCPT
+        id S1728410AbfEQL5m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 May 2019 07:56:15 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:37241 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727727AbfEQL4O (ORCPT
+        Fri, 17 May 2019 07:57:42 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:59186 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727927AbfEQL5m (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 May 2019 07:56:14 -0400
-Received: by mail-io1-f68.google.com with SMTP id u2so5250311ioc.4
-        for <linux-kernel@vger.kernel.org>; Fri, 17 May 2019 04:56:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=CA1QgtL8vOu+blk28g43ESoyKQjrdUgm0/mMdKslbwI=;
-        b=m+abuiCUQOIh/qk/pVf/2UgQvs4lGmH9qCd1ZGSbqAU43C5rMnpZZysuLCIvNqjLQA
-         87UWsCglPydE4JDOUkakqnPU5kEvIdYTqG3iL0GsDlcuRtiOuy7Ar8NMVoQHztL3W+Bt
-         0n1WIlfK0eKU7TwxOBwd3gLz/LCwrn/7yiRj8gr1+dqsZnmhMrOqmPkeNBJpo94ijifG
-         emoszrtzIKzFdAmFP488Z0uClSgQf6Eu1EoyUUVVLG0Mst5A8+FNLjx8GwHW0+KT8viB
-         T77kKAR08xTPlRd8I9Q7fUdmexzP29xTCorVjCuFTDy2mDU/EvQmsV2WbW0IuDPWklYC
-         C43g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=CA1QgtL8vOu+blk28g43ESoyKQjrdUgm0/mMdKslbwI=;
-        b=C24DIIJbvRjhZ3Mwq4jwj+IHUgPv/fpqwYmrsIxBafr6MoIHTsowetUrH3sJoDipry
-         IjZIJdQozCDjl3wyUa5Eedf7XZubyg3VKgAI0V1S4cFOlIGsotG8rS21k9Rf/Cz+w+FE
-         zX6zIvnvdZ2lXVrQCc9MRqm4ANH+UPDozt8NA17K4bDUSz3sqgkbfdrd/jZ0wDacGINs
-         tPHSj3J3kTfikJT4z73Gnv5tL3M4KjxD5MGz9puATwurQflcRO8Vlp8wdDVmrEaE7clY
-         aeF5fHpTm9d0yqjPIdkEbnnDQZIwDX2TdeLD8/V84tC6wNxOp9VYd0coGhdtrSSQFC4c
-         +ukg==
-X-Gm-Message-State: APjAAAVnitDpb7L0U64FIR3uirAEApwUZV6pvSmw8tFYmFT9NFLqEn2l
-        OISIDUo9M1STTabt2VEPqN3+2AYemX1bIbMn2xdpAQ==
-X-Google-Smtp-Source: APXvYqzbxd/LhE2W1VznV5HXbB0SgsNd3x8iv/pmdPHmijU0/muzRSAM0zIjA7vRy7qKVFuYiijaQdNgZJpAJyC1r6s=
-X-Received: by 2002:a6b:3b88:: with SMTP id i130mr16477327ioa.21.1558094174033;
- Fri, 17 May 2019 04:56:14 -0700 (PDT)
+        Fri, 17 May 2019 07:57:42 -0400
+Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4HBsvJ0005582
+        for <linux-kernel@vger.kernel.org>; Fri, 17 May 2019 07:57:41 -0400
+Received: from e14.ny.us.ibm.com (e14.ny.us.ibm.com [129.33.205.204])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2shssn7fer-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Fri, 17 May 2019 07:57:41 -0400
+Received: from localhost
+        by e14.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <paulmck@linux.vnet.ibm.com>;
+        Fri, 17 May 2019 12:57:39 +0100
+Received: from b01cxnp23034.gho.pok.ibm.com (9.57.198.29)
+        by e14.ny.us.ibm.com (146.89.104.201) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Fri, 17 May 2019 12:57:35 +0100
+Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
+        by b01cxnp23034.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x4HBvYZo37159404
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 17 May 2019 11:57:35 GMT
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id D6D2FB2066;
+        Fri, 17 May 2019 11:57:34 +0000 (GMT)
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id B5A3EB2064;
+        Fri, 17 May 2019 11:57:34 +0000 (GMT)
+Received: from paulmck-ThinkPad-W541 (unknown [9.80.212.26])
+        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
+        Fri, 17 May 2019 11:57:34 +0000 (GMT)
+Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
+        id E637216C168F; Fri, 17 May 2019 04:57:34 -0700 (PDT)
+Date:   Fri, 17 May 2019 04:57:34 -0700
+From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
+To:     Lee Jones <lee.jones@linaro.org>
+Cc:     Philippe Mazenauer <philippe.mazenauer@outlook.de>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        "rcu@vger.kernel.org" <rcu@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] rcu: Remove unused variable
+Reply-To: paulmck@linux.ibm.com
+References: <AM0PR07MB4417DD6F49126041FFC18864FD0B0@AM0PR07MB4417.eurprd07.prod.outlook.com>
+ <20190517105111.GW4319@dell>
 MIME-Version: 1.0
-References: <1558024913-26502-1-git-send-email-kdasu.kdev@gmail.com>
- <1558024913-26502-2-git-send-email-kdasu.kdev@gmail.com> <CAFLxGvyZCpKthJevFHjjBQXo=j5f-FUip0MAsLy0HaoJzLZ2rA@mail.gmail.com>
-In-Reply-To: <CAFLxGvyZCpKthJevFHjjBQXo=j5f-FUip0MAsLy0HaoJzLZ2rA@mail.gmail.com>
-From:   Kamal Dasu <kdasu.kdev@gmail.com>
-Date:   Fri, 17 May 2019 07:56:01 -0400
-Message-ID: <CAC=U0a2UxMG2SuVCjv=TLzMs7Dg3yqJdxW6ft2tSQgEKj0C6ZQ@mail.gmail.com>
-Subject: Re: [PATCH v3 2/2] mtd: nand: raw: brcmnand: When oops in progress
- use pio and interrupt polling
-To:     Richard Weinberger <richard.weinberger@gmail.com>
-Cc:     MTD Maling List <linux-mtd@lists.infradead.org>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Richard Weinberger <richard@nod.at>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Marek Vasut <marek.vasut@gmail.com>,
-        bcm-kernel-feedback-list@broadcom.com,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Brian Norris <computersforpeace@gmail.com>,
-        David Woodhouse <dwmw2@infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190517105111.GW4319@dell>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-TM-AS-GCONF: 00
+x-cbid: 19051711-0052-0000-0000-000003C09A5F
+X-IBM-SpamModules-Scores: 
+X-IBM-SpamModules-Versions: BY=3.00011111; HX=3.00000242; KW=3.00000007;
+ PH=3.00000004; SC=3.00000286; SDB=6.01204598; UDB=6.00632385; IPR=6.00985533;
+ MB=3.00026931; MTD=3.00000008; XFM=3.00000015; UTC=2019-05-17 11:57:38
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19051711-0053-0000-0000-000060EE1E39
+Message-Id: <20190517115734.GJ28207@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-17_07:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=897 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1905170078
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 17, 2019 at 4:12 AM Richard Weinberger
-<richard.weinberger@gmail.com> wrote:
->
-> On Thu, May 16, 2019 at 6:42 PM Kamal Dasu <kdasu.kdev@gmail.com> wrote:
-> >
-> > If mtd_oops is in progress, switch to polling during NAND command
-> > completion instead of relying on DMA/interrupts so that the mtd_oops
-> > buffer can be completely written in the assigned NAND partition.
->
-> With the new flag the semantics change, as soon a panic write happened,
-> the flag will stay and *all* future operates will take the polling/pio path.
->
+On Fri, May 17, 2019 at 11:51:11AM +0100, Lee Jones wrote:
+> On Fri, 17 May 2019, Philippe Mazenauer wrote:
+> 
+> > Variable 'rdp' is set but not used in synchronize_rcu_expidited(). The
+> > macro per_cpu_ptr() used to set the value of 'rdp' has no side effect.
+> > 
+> > ../kernel/rcu/tree_exp.h:768:19: warning: variable ‘rdp’ set but not used [-Wunused-but-set-variable]
+> >    struct rcu_data *rdp;
+> >                     ^~~
+> > 
+> > Signed-off-by: Philippe Mazenauer <philippe.mazenauer@outlook.de>
+> > ---
+> >  kernel/rcu/tree_exp.h | 2 --
+> >  1 file changed, 2 deletions(-)
+> 
+> Looks reasonable:
+> 
+> Acked-by: Lee Jones <lee.jones@linaro.org>
 
-Yes that is true.
+Good eyes!
 
-> IMHO this is fine since the kernel cannot recover from an oops.
-> But just to make sure we all get this. :-)
-> An alternative would be to block all further non-panic writes.
+However, Jiang Biao beat you to it.  Please see commmit a18e1552af94
+("rcu: Remove unused rdp local from synchronize_rcu_expedited()") in -rcu:
+git://git.kernel.org/pub/scm/linux/kernel/git/paulmck/linux-rcu.git branch
+"dev".
 
-Capturing the panic writes into an mtd device reliably is what the low
-level driver is trying to do.If there are non panic writes they will
-use pio and interrupt  polling  as well in this case.
+							Thanx, Paul
 
-> --
-> Thanks,
-> //richard
-
-Thanks
-Kamal
