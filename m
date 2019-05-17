@@ -2,114 +2,96 @@ Return-Path: <SRS0=M1fl=TR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CFA9AC04AB4
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 18:48:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07871C04AB4
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 18:51:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A118F21726
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 18:48:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="QLbsqWe5";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="Q5qKpN3d"
+	by mail.kernel.org (Postfix) with ESMTP id CD6A121734
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 18:51:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729517AbfEQSse (ORCPT
+        id S1728473AbfEQSvl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 May 2019 14:48:34 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:54308 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725933AbfEQSsc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 May 2019 14:48:32 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 0658661952; Fri, 17 May 2019 18:48:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1558118911;
-        bh=OV/Plnh2chiiFpl1tPau4te8Ie4x49eB+//wLShrquY=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QLbsqWe5pg04GvaQ+/fmWgFjQ9vQgU0r6W6w4D75Q49UVpLOasUzByiGdcnCDgPai
-         t4/T+TZQshgdfeSzVLz94992RuInbqAEoBCLsIceSSPr6Zt4eiR/k6bJ0CVdILKQd3
-         e5nUdVe9NDgiApnat9fnZASHgfaWAOwRvX62jpcY=
-Received: from isaacm-linux.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        Fri, 17 May 2019 14:51:41 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:43834 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726732AbfEQSvk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 May 2019 14:51:40 -0400
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        (Authenticated sender: isaacm@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id F01AD619CC;
-        Fri, 17 May 2019 18:48:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1558118905;
-        bh=OV/Plnh2chiiFpl1tPau4te8Ie4x49eB+//wLShrquY=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Q5qKpN3dzD5EBfg8X33uOuhjvsyIAfJF6baPusIbikdtrA7fSJA4JsOWL4C85cVDC
-         6FtobZvYMtIuxiz15DDKOE+LomXOAc/mc8XvGNFwKs80DvTeeluNDTIpqXyNMmQIN8
-         HYC2NEdjPmNHGdOTajB64JomRehH+pSN1aUwCpA8=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org F01AD619CC
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=isaacm@codeaurora.org
-From:   "Isaac J. Manjarres" <isaacm@codeaurora.org>
-To:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-pci@vger.kernel.org, iommu@lists.linux-foundation.org,
-        linux-arm-kernel@lists.infradead.org
-Cc:     "Isaac J. Manjarres" <isaacm@codeaurora.org>, robh+dt@kernel.org,
-        frowand.list@gmail.com, bhelgaas@google.com, joro@8bytes.org,
-        robin.murphy@arm.com, will.deacon@arm.com, kernel-team@android.com,
-        pratikp@codeaurora.org, lmark@codeaurora.org
-Subject: [RFC/PATCH 4/4] iommu: Add probe deferral support for IOMMU kernel modules
-Date:   Fri, 17 May 2019 11:47:37 -0700
-Message-Id: <1558118857-16912-5-git-send-email-isaacm@codeaurora.org>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <1558118857-16912-1-git-send-email-isaacm@codeaurora.org>
-References: <1558118857-16912-1-git-send-email-isaacm@codeaurora.org>
+        by mx1.redhat.com (Postfix) with ESMTPS id 26FB8C09AD16;
+        Fri, 17 May 2019 18:51:40 +0000 (UTC)
+Received: from jlaw-desktop.bos.redhat.com (dhcp-17-208.bos.redhat.com [10.18.17.208])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 28DBC413C;
+        Fri, 17 May 2019 18:51:35 +0000 (UTC)
+From:   Joe Lawrence <joe.lawrence@redhat.com>
+To:     live-patching@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     jikos@kernel.org, joe.lawrence@redhat.com, jpoimboe@redhat.com,
+        pmladek@suse.com, tglx@linutronix.de
+Subject: [PATCH] stacktrace: fix CONFIG_ARCH_STACKWALK stack_trace_save_tsk_reliable return
+Date:   Fri, 17 May 2019 14:51:17 -0400
+Message-Id: <20190517185117.24642-1-joe.lawrence@redhat.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.32]); Fri, 17 May 2019 18:51:40 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently, the IOMMU core assumes that all IOMMU drivers
-will be built into the kernel. This makes it so that all
-the IOMMU core will stop deferring probes when all of the
-builtin kernel drivers have finished probing (i.e. when
-initcalls are finished).
+Miroslav reported that the livepatch self-tests were failing,
+specifically a case in which the consistency model ensures that we do
+not patch a current executing function, "TEST: busy target module".
 
-This is problematic if an IOMMU driver is generated as a module,
-because the registration of the IOMMU driver may happen at an
-unknown point in time after all builtin drivers have finished
-probing.
+Recent renovations to stack_trace_save_tsk_reliable() left it returning
+only an -ERRNO success indication in some configuration combinations:
 
-Thus, if there exists a chance for the IOMMU driver
-to be a module, then allow for clients to wait indefinitely
-for the IOMMU driver to be loaded. Otherwise, rely on the
-driver core to dictate when clients should stop deferring
-their probes.
+  klp_check_stack()
+    ret = stack_trace_save_tsk_reliable()
+      #ifdef CONFIG_ARCH_STACKWALK && CONFIG_HAVE_RELIABLE_STACKTRACE
+        stack_trace_save_tsk_reliable()
+          ret = arch_stack_walk_reliable()
+            return 0
+            return -EINVAL
+          ...
+          return ret;
+    ...
+    if (ret < 0)
+      /* stack_trace_save_tsk_reliable error */
+    nr_entries = ret;                               << 0
 
-Signed-off-by: Isaac J. Manjarres <isaacm@codeaurora.org>
+Previously (and currently for !CONFIG_ARCH_STACKWALK &&
+CONFIG_HAVE_RELIABLE_STACKTRACE) stack_trace_save_tsk_reliable()
+returned the number of entries that it consumed in the passed storage
+array.
+
+In the case of the above config and trace, be sure to return the
+stacktrace_cookie.len on stack_trace_save_tsk_reliable() success.
+
+Fixes: 25e39e32b0a3f ("livepatch: Simplify stack trace retrieval")
+Reported-by: Miroslav Benes <mbenes@suse.cz>
+Signed-off-by: Joe Lawrence <joe.lawrence@redhat.com>
 ---
- drivers/iommu/of_iommu.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ kernel/stacktrace.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/iommu/of_iommu.c b/drivers/iommu/of_iommu.c
-index f04a6df..1e7e323 100644
---- a/drivers/iommu/of_iommu.c
-+++ b/drivers/iommu/of_iommu.c
-@@ -116,8 +116,12 @@ static int of_iommu_xlate(struct device *dev,
- 	 * IOMMU device we're waiting for, which will be useful if we ever get
- 	 * a proper probe-ordering dependency mechanism in future.
- 	 */
--	if (!ops)
--		return driver_deferred_probe_check_state(dev);
-+	if (!ops) {
-+		if (IS_ENABLED(CONFIG_MODULES))
-+			return -EPROBE_DEFER;
-+		else
-+			return driver_deferred_probe_check_state(dev);
-+	}
+diff --git a/kernel/stacktrace.c b/kernel/stacktrace.c
+index 27bafc1e271e..90d3e0bf0302 100644
+--- a/kernel/stacktrace.c
++++ b/kernel/stacktrace.c
+@@ -206,7 +206,7 @@ int stack_trace_save_tsk_reliable(struct task_struct *tsk, unsigned long *store,
  
- 	return ops->of_xlate(dev, iommu_spec);
+ 	ret = arch_stack_walk_reliable(consume_entry, &c, tsk);
+ 	put_task_stack(tsk);
+-	return ret;
++	return ret ? ret : c.len;
  }
+ #endif
+ 
 -- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+2.20.1
 
