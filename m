@@ -2,211 +2,120 @@ Return-Path: <SRS0=M1fl=TR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A50F5C46460
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 02:44:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A5F2C04AAF
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 02:44:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 66AB720815
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 02:44:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="TiM3+9qm";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="LMHW0afm"
+	by mail.kernel.org (Postfix) with ESMTP id 1D07620862
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 02:44:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1558061070;
+	bh=wa9myGyRMaYahr2088guoMQ/oF7+8i++qNk0d4F0tOo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=T0k0CHEsSpa5O59+4sbu5MyUlozKSQPs9I4nCrVXjOsFCLRbYncXUd9sLSoqdhnmK
+	 BHZ+PZ5Cek9p14DcwExd3Lq2c4Y/ZKiL+pMhyvgFa3AlBKZhFWpq9uoJVwe59qLBjf
+	 KxZFsZIl2WXm8s6jnUZDhrJLWn61smbwgI3k4VAo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727516AbfEQCoA (ORCPT
+        id S1727537AbfEQCo3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 22:44:00 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:45924 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725933AbfEQCoA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 May 2019 22:44:00 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id BE28960DAB; Fri, 17 May 2019 02:43:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1558061038;
-        bh=K09d6YzJWvbZaW19iYpFFDTHSzDhNF1cUlPnNgBKhOo=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=TiM3+9qmx+F+cCs7e55viOMwtufHDuCtCpYNFU/3gShPWNNDtHS1jDpixGpdBUWmk
-         kzxUOJCoi3wB5VoNTPHIzDH490cLCiMiPVf5bqsdfevTVKKgreNJ99stkZ0ZC8bHfM
-         vB657rOH0gKxAIBLMp/6G93CfuJQPp5GeXpjYFNQ=
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        by smtp.codeaurora.org (Postfix) with ESMTP id 62D12608BA;
-        Fri, 17 May 2019 02:43:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1558061037;
-        bh=K09d6YzJWvbZaW19iYpFFDTHSzDhNF1cUlPnNgBKhOo=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=LMHW0afmhkGjjbhlr62+MD/NgYRESdt0KDZV/lyHlNjlRccO8aI5mWkGD4dD0SmbN
-         ze1pbXA7MkWEkOYbdpfM4SFtqnRSslMkYrbZ68TYcg4ctiG9HCantHtYx/kvFTf9rE
-         usHSdeOI5+X7cvKTQC7jB2Mk1oGl0jM7j7W3XErA=
+        Thu, 16 May 2019 22:44:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51264 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725933AbfEQCo3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 May 2019 22:44:29 -0400
+Received: from dragon (98.142.130.235.16clouds.com [98.142.130.235])
+        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3B1C920848;
+        Fri, 17 May 2019 02:44:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1558061068;
+        bh=wa9myGyRMaYahr2088guoMQ/oF7+8i++qNk0d4F0tOo=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=wG4lQWEDTA9JTF64I55cyQIiVuwwwcPmjKEcd9mAw+uX/IMhb2sOaF72YFr/xBAZ1
+         804NBQW3XXJw8NoMkFhQKGugNy3b2L1c2rnF5aGPP7DIRbYJVb+uPcqrhiaomlPxDr
+         oyi3W6QfxHX+0ThT+2cj+5yyoq7CkIJaivdo53Lw=
+Date:   Fri, 17 May 2019 10:43:49 +0800
+From:   Shawn Guo <shawnguo@kernel.org>
+To:     Anson Huang <anson.huang@nxp.com>
+Cc:     "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        Aisheng Dong <aisheng.dong@nxp.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        dl-linux-imx <linux-imx@nxp.com>
+Subject: Re: [PATCH RESEND] firmware: imx: SCU irq should ONLY be enabled
+ after SCU IPC is ready
+Message-ID: <20190517024347.GC15856@dragon>
+References: <1557650002-10565-1-git-send-email-Anson.Huang@nxp.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Fri, 17 May 2019 08:13:57 +0530
-From:   Balakrishna Godavarthi <bgodavar@codeaurora.org>
-To:     Rocky Liao <rjliao@codeaurora.org>
-Cc:     robh+dt@kernel.org, mark.rutland@arm.com, marcel@holtmann.org,
-        johan.hedberg@gmail.com, thierry.escande@linaro.org,
-        netdev@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-bluetooth@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, c-hbandi@codeaurora.org,
-        Hemantg <hemantg@codeaurora.org>
-Subject: Re: [PATCH v5 1/2] Bluetooth: hci_qca: Load customized NVM based on
- the device property
-In-Reply-To: <1557919161-11010-1-git-send-email-rjliao@codeaurora.org>
-References: <1557631148-5120-1-git-send-email-rjliao@codeaurora.org>
- <1557919161-11010-1-git-send-email-rjliao@codeaurora.org>
-Message-ID: <178d2a3454399cfad0e61e72a13ea19a@codeaurora.org>
-X-Sender: bgodavar@codeaurora.org
-User-Agent: Roundcube Webmail/1.2.5
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1557650002-10565-1-git-send-email-Anson.Huang@nxp.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Rocky,
+On Sun, May 12, 2019 at 08:38:22AM +0000, Anson Huang wrote:
+> The imx_scu_irq_group_enable() is normally called during module driver
+> probe phase to enable SCU group irq, if SCU IPC is NOT ready, below
+> dump will show out:
+> 
+> [    0.933001] Hardware name: Freescale i.MX8QXP MEK (DT)
+> [    0.938129] pstate: 60000005 (nZCv daif -PAN -UAO)
+> [    0.942907] pc : imx_scu_call_rpc+0x114/0x158
+> [    0.947251] lr : imx_scu_irq_group_enable+0x74/0xc4
+> [    0.952113] sp : ffff00001005bae0
+> [    0.955415] x29: ffff00001005bae0 x28: ffff0000111bb0a0
+> [    0.960712] x27: ffff00001140b000 x26: ffff00001111068c
+> [    0.966011] x25: ffff0000111bb100 x24: 0000000000000000
+> [    0.971311] x23: ffff0000113d9cd8 x22: 0000000000000001
+> [    0.976610] x21: 0000000000000001 x20: ffff80083b51a410
+> [    0.981909] x19: ffff000011259000 x18: 0000000000000480
+> [    0.987209] x17: 000000000023ffb8 x16: 0000000000000010
+> [    0.992508] x15: 000000000000023f x14: ffffffffffffffff
+> [    0.997807] x13: 0000000000000018 x12: 0000000000000030
+> [    1.003107] x11: 0000000000000003 x10: 0101010101010101
+> [    1.008406] x9 : ffffffffffffffff x8 : 7f7f7f7f7f7f7f7f
+> [    1.013706] x7 : fefefeff646c606d x6 : 0000000000000000
+> [    1.019005] x5 : ffff0000112596c8 x4 : 0000000000000008
+> [    1.024304] x3 : 0000000000000003 x2 : 0000000000000001
+> [    1.029604] x1 : ffff00001005bb58 x0 : 0000000000000000
+> [    1.034905] Call trace:
+> [    1.037341]  imx_scu_call_rpc+0x114/0x158
+> [    1.041334]  imx_scu_irq_group_enable+0x74/0xc4
+> [    1.045856]  imx_sc_wdt_probe+0x24/0x150
+> [    1.049766]  platform_drv_probe+0x4c/0xb0
+> [    1.053762]  really_probe+0x1f8/0x2c8
+> [    1.057407]  driver_probe_device+0x58/0xfc
+> [    1.061490]  device_driver_attach+0x68/0x70
+> [    1.065660]  __driver_attach+0x94/0xdc
+> [    1.069397]  bus_for_each_dev+0x64/0xc0
+> [    1.073220]  driver_attach+0x20/0x28
+> [    1.076782]  bus_add_driver+0x148/0x1fc
+> [    1.080601]  driver_register+0x68/0x120
+> [    1.084424]  __platform_driver_register+0x4c/0x54
+> [    1.089120]  imx_sc_wdt_driver_init+0x18/0x20
+> [    1.093463]  do_one_initcall+0x58/0x1b8
+> [    1.097287]  kernel_init_freeable+0x1cc/0x288
+> [    1.101630]  kernel_init+0x10/0x100
+> [    1.105101]  ret_from_fork+0x10/0x18
+> [    1.108669] ---[ end trace 9e03302114457de9 ]---
+> [    1.113296] enable irq failed, group 1, mask 1, ret -22
+> 
+> To avoid such scenario, return -EPROBE_DEFER in imx_scu_irq_group_enable()
+> API if SCU IPC is NOT ready, then module driver which calls this API
+> in probe phase will defer probe after SCU IPC ready.
+> 
+> Fixes: 851826c7566e ("firmware: imx: enable imx scu general irq function")
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 
-On 2019-05-15 16:49, Rocky Liao wrote:
-> QCA BTSOC NVM is a customized firmware file and different vendors may
-> want to have different BTSOC configuration (e.g. Configure SCO over PCM
-> or I2S, Setting Tx power, etc.) via this file. This patch will allow
-> vendors to download different NVM firmware file by reading a device
-> property "firmware-name".
-> 
-> Signed-off-by: Rocky Liao <rjliao@codeaurora.org>
-> ---
-> Changes in v5:
->   * Made the change applicable to the wcn399x series chip sets
-> ---
->  drivers/bluetooth/btqca.c   |  8 ++++++--
->  drivers/bluetooth/btqca.h   |  6 ++++--
->  drivers/bluetooth/hci_qca.c | 19 ++++++++++++++++++-
->  3 files changed, 28 insertions(+), 5 deletions(-)
-> 
-> diff --git a/drivers/bluetooth/btqca.c b/drivers/bluetooth/btqca.c
-> index cc12eec..a78b80e 100644
-> --- a/drivers/bluetooth/btqca.c
-> +++ b/drivers/bluetooth/btqca.c
-> @@ -332,7 +332,8 @@ int qca_set_bdaddr_rome(struct hci_dev *hdev,
-> const bdaddr_t *bdaddr)
->  EXPORT_SYMBOL_GPL(qca_set_bdaddr_rome);
-> 
->  int qca_uart_setup(struct hci_dev *hdev, uint8_t baudrate,
-> -		   enum qca_btsoc_type soc_type, u32 soc_ver)
-> +		   enum qca_btsoc_type soc_type, u32 soc_ver,
-> +		   const char *firmware_name)
->  {
->  	struct rome_config config;
->  	int err;
-> @@ -365,7 +366,10 @@ int qca_uart_setup(struct hci_dev *hdev, uint8_t 
-> baudrate,
-> 
->  	/* Download NVM configuration */
->  	config.type = TLV_TYPE_NVM;
-> -	if (qca_is_wcn399x(soc_type))
-> +	if (firmware_name)
-> +		snprintf(config.fwname, sizeof(config.fwname),
-> +			 "qca/%s", firmware_name);
-> +	else if (qca_is_wcn399x(soc_type))
->  		snprintf(config.fwname, sizeof(config.fwname),
->  			 "qca/crnv%02x.bin", rom_ver);
->  	else
-> diff --git a/drivers/bluetooth/btqca.h b/drivers/bluetooth/btqca.h
-> index 4c4fe2b..8c037bb 100644
-> --- a/drivers/bluetooth/btqca.h
-> +++ b/drivers/bluetooth/btqca.h
-> @@ -140,7 +140,8 @@ enum qca_btsoc_type {
-> 
->  int qca_set_bdaddr_rome(struct hci_dev *hdev, const bdaddr_t *bdaddr);
->  int qca_uart_setup(struct hci_dev *hdev, uint8_t baudrate,
-> -		   enum qca_btsoc_type soc_type, u32 soc_ver);
-> +		   enum qca_btsoc_type soc_type, u32 soc_ver,
-> +		   const char *firmware_name);
->  int qca_read_soc_version(struct hci_dev *hdev, u32 *soc_version);
->  int qca_set_bdaddr(struct hci_dev *hdev, const bdaddr_t *bdaddr);
->  static inline bool qca_is_wcn399x(enum qca_btsoc_type soc_type)
-> @@ -155,7 +156,8 @@ static inline int qca_set_bdaddr_rome(struct
-> hci_dev *hdev, const bdaddr_t *bdad
->  }
-> 
->  static inline int qca_uart_setup(struct hci_dev *hdev, uint8_t 
-> baudrate,
-> -				 enum qca_btsoc_type soc_type, u32 soc_ver)
-> +				 enum qca_btsoc_type soc_type, u32 soc_ver,
-> +				 const char *firmware_name)
->  {
->  	return -EOPNOTSUPP;
->  }
-> diff --git a/drivers/bluetooth/hci_qca.c b/drivers/bluetooth/hci_qca.c
-> index 57322c4..9590602 100644
-> --- a/drivers/bluetooth/hci_qca.c
-> +++ b/drivers/bluetooth/hci_qca.c
-> @@ -169,6 +169,7 @@ struct qca_serdev {
->  	struct qca_power *bt_power;
->  	u32 init_speed;
->  	u32 oper_speed;
-> +	const char *firmware_name;
->  };
-> 
->  static int qca_power_setup(struct hci_uart *hu, bool on);
-> @@ -190,6 +191,17 @@ static enum qca_btsoc_type qca_soc_type(struct
-> hci_uart *hu)
->  	return soc_type;
->  }
-> 
-> +static const char *qca_get_firmware_name(struct hci_uart *hu)
-> +{
-> +	if (hu->serdev) {
-> +		struct qca_serdev *qsd = serdev_device_get_drvdata(hu->serdev);
-> +
-> +		return qsd->firmware_name;
-> +	} else {
-> +		return NULL;
-> +	}
-> +}
-> +
->  static void __serial_clock_on(struct tty_struct *tty)
->  {
->  	/* TODO: Some chipset requires to enable UART clock on client
-> @@ -1195,6 +1207,7 @@ static int qca_setup(struct hci_uart *hu)
->  	struct qca_data *qca = hu->priv;
->  	unsigned int speed, qca_baudrate = QCA_BAUDRATE_115200;
->  	enum qca_btsoc_type soc_type = qca_soc_type(hu);
-> +	const char *firmware_name = qca_get_firmware_name(hu);
->  	int ret;
->  	int soc_ver = 0;
-> 
-> @@ -1245,7 +1258,8 @@ static int qca_setup(struct hci_uart *hu)
-> 
->  	bt_dev_info(hdev, "QCA controller version 0x%08x", soc_ver);
->  	/* Setup patch / NVM configurations */
-> -	ret = qca_uart_setup(hdev, qca_baudrate, soc_type, soc_ver);
-> +	ret = qca_uart_setup(hdev, qca_baudrate, soc_type, soc_ver,
-> +			firmware_name);
->  	if (!ret) {
->  		set_bit(QCA_IBS_ENABLED, &qca->flags);
->  		qca_debugfs_init(hdev);
-> @@ -1477,6 +1491,9 @@ static int qca_serdev_probe(struct serdev_device 
-> *serdev)
->  			return PTR_ERR(qcadev->bt_en);
->  		}
-> 
-> +		device_property_read_string(&serdev->dev, "firmware-name",
-> +					 &qcadev->firmware_name);
-> +
->  		qcadev->susclk = devm_clk_get(&serdev->dev, NULL);
->  		if (IS_ERR(qcadev->susclk)) {
->  			dev_err(&serdev->dev, "failed to acquire clk\n");
-
-Thanks for doing it for wcn399x series too.
-
-Change look fine to me.
-
-Reviewed-by: Balakrishna Godavarthi <bgodavar@codeaurora.org>
--- 
-Regards
-Balakrishna.
+Applied, thanks.
