@@ -2,119 +2,214 @@ Return-Path: <SRS0=M1fl=TR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D469FC04E84
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 17:55:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71A14C04AB4
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 17:57:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B446620645
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 17:55:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4FFE821726
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 17:57:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728816AbfEQRzC (ORCPT
+        id S1728866AbfEQR5c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 May 2019 13:55:02 -0400
-Received: from mga04.intel.com ([192.55.52.120]:5677 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725932AbfEQRzB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 May 2019 13:55:01 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 May 2019 10:55:00 -0700
-X-ExtLoop1: 1
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.36])
-  by orsmga004.jf.intel.com with ESMTP; 17 May 2019 10:55:00 -0700
-Date:   Fri, 17 May 2019 10:55:00 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Andy Lutomirski <luto@amacapital.net>
-Cc:     Stephen Smalley <sds@tycho.nsa.gov>,
-        "Xing, Cedric" <cedric.xing@intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        LSM List <linux-security-module@vger.kernel.org>,
-        Paul Moore <paul@paul-moore.com>,
-        Eric Paris <eparis@parisplace.org>,
-        "selinux@vger.kernel.org" <selinux@vger.kernel.org>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Jethro Beekman <jethro@fortanix.com>,
-        "Hansen, Dave" <dave.hansen@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "Dr. Greg" <greg@enjellic.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
-        "linux-sgx@vger.kernel.org" <linux-sgx@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "nhorman@redhat.com" <nhorman@redhat.com>,
-        "npmccallum@redhat.com" <npmccallum@redhat.com>,
-        "Ayoun, Serge" <serge.ayoun@intel.com>,
-        "Katz-zamir, Shay" <shay.katz-zamir@intel.com>,
-        "Huang, Haitao" <haitao.huang@intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        "Svahn, Kai" <kai.svahn@intel.com>, Borislav Petkov <bp@alien8.de>,
-        Josh Triplett <josh@joshtriplett.org>,
-        "Huang, Kai" <kai.huang@intel.com>,
-        David Rientjes <rientjes@google.com>
-Subject: Re: SGX vs LSM (Re: [PATCH v20 00/28] Intel SGX1 support)
-Message-ID: <20190517175500.GE15006@linux.intel.com>
-References: <CALCETrX2ovRx3Rre+1_xC-q6CiybyLjQ-gmB4FZF_qCZ-Qd+4A@mail.gmail.com>
- <960B34DE67B9E140824F1DCDEC400C0F654E38CD@ORSMSX116.amr.corp.intel.com>
- <CALCETrUfmyQ7ivNzQic0FyPXe1fmAnoK093jnz0i8DRn2LvdSA@mail.gmail.com>
- <960B34DE67B9E140824F1DCDEC400C0F654E3FB9@ORSMSX116.amr.corp.intel.com>
- <6a97c099-2f42-672e-a258-95bc09152363@tycho.nsa.gov>
- <20190517150948.GA15632@linux.intel.com>
- <ca807220-47e2-5ec2-982c-4fb4a72439c6@tycho.nsa.gov>
- <80013cca-f1c2-f4d5-7558-8f4e752ada76@tycho.nsa.gov>
- <20190517172953.GC15006@linux.intel.com>
- <DFE03E0C-694A-4289-B416-29CDC2644F94@amacapital.net>
+        Fri, 17 May 2019 13:57:32 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:7659 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727585AbfEQR5c (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 May 2019 13:57:32 -0400
+Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 855CDEEBB4425080DA30;
+        Sat, 18 May 2019 01:57:28 +0800 (CST)
+Received: from [127.0.0.1] (10.184.191.73) by DGGEMS412-HUB.china.huawei.com
+ (10.3.19.212) with Microsoft SMTP Server id 14.3.439.0; Sat, 18 May 2019
+ 01:57:22 +0800
+To:     <jon.maloy@ericsson.com>, <ying.xue@windriver.com>,
+        <davem@davemloft.net>
+CC:     "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        <tipc-discussion@lists.sourceforge.net>,
+        <linux-kernel@vger.kernel.org>, <zhoukang7@huawei.com>,
+        <mingfangsen@huawei.com>, <wangxiaogang3@huawei.com>,
+        <mousuanming@huawei.com>
+From:   hujunwei <hujunwei4@huawei.com>
+Subject: [PATCH v2] tipc: fix modprobe tipc failed after switch order of
+ device registration
+Message-ID: <4da8084e-372b-8301-e04f-b780ff4826b3@huawei.com>
+Date:   Sat, 18 May 2019 01:57:05 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <DFE03E0C-694A-4289-B416-29CDC2644F94@amacapital.net>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.184.191.73]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 17, 2019 at 10:43:01AM -0700, Andy Lutomirski wrote:
-> 
-> > On May 17, 2019, at 10:29 AM, Sean Christopherson <sean.j.christopherson@intel.com> wrote:
-> > 
-> > AIUI, having FILE__WRITE and FILE__EXECUTE on /dev/sgx/enclave would allow
-> > *any* enclave/process to map EPC as RWX.  Moving to anon inodes and thus
-> > PROCESS__EXECMEM achieves per-process granularity.
-> 
-> How does anon_inode make any difference?  Anon_inode is not the same thing as
-> anon_vma.
+From: Junwei Hu <hujunwei4@huawei.com>
 
-In this snippet, IS_PRIVATE() is true for anon inodes, false for
-/dev/sgx/enclave.  Because EPC memory is always shared, SELinux will never
-check PROCESS__EXECMEM for mprotect() on/dev/sgx/enclave.
+Error message printed:
+modprobe: ERROR: could not insert 'tipc': Address family not
+supported by protocol.
+when modprobe tipc after the following patch: switch order of
+device registration, commit 7e27e8d6130c
+("tipc: switch order of device registration to fix a crash")
 
-static int file_map_prot_check(struct file *file, unsigned long prot, int shared)
-{
-        const struct cred *cred = current_cred();
-        u32 sid = cred_sid(cred);
-        int rc = 0;
+Because sock_create_kern(net, AF_TIPC, ...) called by
+tipc_topsrv_create_listener() in the initialization process
+of tipc_init_net(), so tipc_socket_init() must be execute before that.
+Meanwhile, tipc_net_id need to be initialized when sock_create()
+called, and tipc_socket_init() is no need to be called for each namespace.
 
-        if (default_noexec &&
-            (prot & PROT_EXEC) && (!file || IS_PRIVATE(file_inode(file)) ||
-                                   (!shared && (prot & PROT_WRITE)))) {
-                /*
-                 * We are making executable an anonymous mapping or a
-                 * private file mapping that will also be writable.
-                 * This has an additional check.
-                 */
-                rc = avc_has_perm(&selinux_state,
-                                  sid, sid, SECCLASS_PROCESS,
-                                  PROCESS__EXECMEM, NULL);
-                if (rc)
-                        goto error;
-        }
+I add a variable tipc_topsrv_net_ops, and split the
+register_pernet_subsys() of tipc into two parts, and split
+tipc_socket_init() with initialization of pernet params.
 
-	...
-}
+By the way, I fixed resources rollback error when tipc_bcast_init()
+failed in tipc_init_net().
+
+Fixes: 7e27e8d6130c
+("tipc: switch order of device registration to fix a crash")
+Signed-off-by: Junwei Hu <hujunwei4@huawei.com>
+Reported-by: Wang Wang <wangwang2@huawei.com>
+Reviewed-by: Kang Zhou <zhoukang7@huawei.com>
+Reviewed-by: Suanming Mou <mousuanming@huawei.com>
+---
+V1->V2:
+- split the register_pernet_subsys() of tipc into two parts
+---
+ net/tipc/core.c   | 18 ++++++++++++------
+ net/tipc/subscr.h |  5 +++--
+ net/tipc/topsrv.c | 14 ++++++++++++--
+ 3 files changed, 27 insertions(+), 10 deletions(-)
+
+diff --git a/net/tipc/core.c b/net/tipc/core.c
+index ddd2e0f67c07..ed536c05252a 100644
+--- a/net/tipc/core.c
++++ b/net/tipc/core.c
+@@ -77,9 +77,6 @@ static int __net_init tipc_init_net(struct net *net)
+ 		goto out_nametbl;
+
+ 	INIT_LIST_HEAD(&tn->dist_queue);
+-	err = tipc_topsrv_start(net);
+-	if (err)
+-		goto out_subscr;
+
+ 	err = tipc_bcast_init(net);
+ 	if (err)
+@@ -88,8 +85,6 @@ static int __net_init tipc_init_net(struct net *net)
+ 	return 0;
+
+ out_bclink:
+-	tipc_bcast_stop(net);
+-out_subscr:
+ 	tipc_nametbl_stop(net);
+ out_nametbl:
+ 	tipc_sk_rht_destroy(net);
+@@ -99,7 +94,6 @@ static int __net_init tipc_init_net(struct net *net)
+
+ static void __net_exit tipc_exit_net(struct net *net)
+ {
+-	tipc_topsrv_stop(net);
+ 	tipc_net_stop(net);
+ 	tipc_bcast_stop(net);
+ 	tipc_nametbl_stop(net);
+@@ -113,6 +107,11 @@ static struct pernet_operations tipc_net_ops = {
+ 	.size = sizeof(struct tipc_net),
+ };
+
++static struct pernet_operations tipc_topsrv_net_ops = {
++	.init = tipc_topsrv_init_net,
++	.exit = tipc_topsrv_exit_net,
++};
++
+ static int __init tipc_init(void)
+ {
+ 	int err;
+@@ -143,6 +142,10 @@ static int __init tipc_init(void)
+ 	if (err)
+ 		goto out_socket;
+
++	err = register_pernet_subsys(&tipc_topsrv_net_ops);
++	if (err)
++		goto out_pernet_topsrv;
++
+ 	err = tipc_bearer_setup();
+ 	if (err)
+ 		goto out_bearer;
+@@ -150,6 +153,8 @@ static int __init tipc_init(void)
+ 	pr_info("Started in single node mode\n");
+ 	return 0;
+ out_bearer:
++	unregister_pernet_subsys(&tipc_topsrv_net_ops);
++out_pernet_topsrv:
+ 	tipc_socket_stop();
+ out_socket:
+ 	unregister_pernet_subsys(&tipc_net_ops);
+@@ -167,6 +172,7 @@ static int __init tipc_init(void)
+ static void __exit tipc_exit(void)
+ {
+ 	tipc_bearer_cleanup();
++	unregister_pernet_subsys(&tipc_topsrv_net_ops);
+ 	tipc_socket_stop();
+ 	unregister_pernet_subsys(&tipc_net_ops);
+ 	tipc_netlink_stop();
+diff --git a/net/tipc/subscr.h b/net/tipc/subscr.h
+index d793b4343885..aa015c233898 100644
+--- a/net/tipc/subscr.h
++++ b/net/tipc/subscr.h
+@@ -77,8 +77,9 @@ void tipc_sub_report_overlap(struct tipc_subscription *sub,
+ 			     u32 found_lower, u32 found_upper,
+ 			     u32 event, u32 port, u32 node,
+ 			     u32 scope, int must);
+-int tipc_topsrv_start(struct net *net);
+-void tipc_topsrv_stop(struct net *net);
++
++int __net_init tipc_topsrv_init_net(struct net *net);
++void __net_exit tipc_topsrv_exit_net(struct net *net);
+
+ void tipc_sub_put(struct tipc_subscription *subscription);
+ void tipc_sub_get(struct tipc_subscription *subscription);
+diff --git a/net/tipc/topsrv.c b/net/tipc/topsrv.c
+index b45932d78004..f345662890a6 100644
+--- a/net/tipc/topsrv.c
++++ b/net/tipc/topsrv.c
+@@ -635,7 +635,7 @@ static void tipc_topsrv_work_stop(struct tipc_topsrv *s)
+ 	destroy_workqueue(s->send_wq);
+ }
+
+-int tipc_topsrv_start(struct net *net)
++static int tipc_topsrv_start(struct net *net)
+ {
+ 	struct tipc_net *tn = tipc_net(net);
+ 	const char name[] = "topology_server";
+@@ -668,7 +668,7 @@ int tipc_topsrv_start(struct net *net)
+ 	return ret;
+ }
+
+-void tipc_topsrv_stop(struct net *net)
++static void tipc_topsrv_stop(struct net *net)
+ {
+ 	struct tipc_topsrv *srv = tipc_topsrv(net);
+ 	struct socket *lsock = srv->listener;
+@@ -693,3 +693,13 @@ void tipc_topsrv_stop(struct net *net)
+ 	idr_destroy(&srv->conn_idr);
+ 	kfree(srv);
+ }
++
++int __net_init tipc_topsrv_init_net(struct net *net)
++{
++	return tipc_topsrv_start(net);
++}
++
++void __net_exit tipc_topsrv_exit_net(struct net *net)
++{
++	tipc_topsrv_stop(net);
++}
+-- 
+2.21.GIT
+
