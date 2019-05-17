@@ -7,59 +7,58 @@ X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78C9CC04AB4
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 10:14:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9F6BC04AB4
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 10:14:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 48B15204EC
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 10:14:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8244920879
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 10:14:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="iomWStGl"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="lQncQYni"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728591AbfEQKOM (ORCPT
+        id S1728619AbfEQKOa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 May 2019 06:14:12 -0400
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:43723 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727573AbfEQKOM (ORCPT
+        Fri, 17 May 2019 06:14:30 -0400
+Received: from mail-qk1-f194.google.com ([209.85.222.194]:40702 "EHLO
+        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727573AbfEQKOa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 May 2019 06:14:12 -0400
-Received: by mail-qt1-f193.google.com with SMTP id i26so7271403qtr.10
-        for <linux-kernel@vger.kernel.org>; Fri, 17 May 2019 03:14:11 -0700 (PDT)
+        Fri, 17 May 2019 06:14:30 -0400
+Received: by mail-qk1-f194.google.com with SMTP id q197so4092887qke.7
+        for <linux-kernel@vger.kernel.org>; Fri, 17 May 2019 03:14:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc:content-transfer-encoding;
-        bh=zJAY/Pv8Q8rCNwC0Vbgeg982L/4wPTYgnNPmTbKhmDg=;
-        b=iomWStGl4iQbx8eysPjAozeB43WumfOwhPB77ZRRDGP/507Zl7PX1Gq7HJ1rJ9Eqlb
-         HVJX7hCf6FtmuB82mMUTRb8z4gsMdsm94Bbwk5jKY74u28in3UC3C09azGNKeHNLNEdx
-         Se7hyfP11juO1tqPdhboIE+k9wGUduPUC10mzjhJNBokCoUG/NZQhuCkGfOpdUziIQQQ
-         XKiTGp25+uJ4xLUhWMDsE+fLqb+x/gbwNLg5CIT7WmhGSPIyHAFycNQ7EzPClNwB7Qwl
-         BDtPhmPCodYbrRNYKxnLv7c06tdvUwlx5lKIbVBmg89br/GeOX+lAuwsbf8kxt8W01sd
-         gZww==
+        bh=c2AcJv21LbYCYD5C9Jjpp5BCKygW6luQM6iJ5dPZwlA=;
+        b=lQncQYniggfzZ8LMfFNfPm8ZuE9Yt7gKDDYK2B1lpPhyV0V6lMzqpbaJnQQp9ken6D
+         UviiUJLEW8Gn9oGUMRErMd2XDMk4cD2cIXOlUyk1MWyWe6ANmXrTTy4ouKnfbOXcG5uS
+         +Hy1nXkwnLFxZFjtaTK4ro37s4NKGxt9bLqVgAfiW3Aa3k1qc/PsbbbOasjpV4v0oR2a
+         pApLyVKvEFTZfCT8grgONhlyTFBToshHNZ4SxDANwweiL75sUBT/jtj909UDHI2KChbW
+         xs9DFoJ+I3YDX1Gke7gHMGY5rKN7j/jTJHi+kY7D4GikXNTi+wQuwadOU9+JivSXorW5
+         BUkA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc:content-transfer-encoding;
-        bh=zJAY/Pv8Q8rCNwC0Vbgeg982L/4wPTYgnNPmTbKhmDg=;
-        b=OOT8SlB1bRzbDK919Pz1rR64f60PBQjaCfF1Ih9lsAp0+8yIwyfsd9Q51m2UqssB6g
-         G9DvCYw1mFDdHTGmSOX7RvkW8jzEzKyfCYgqhqfMu0u3UeDPT2eVBr8sVXtre4Cp6nz3
-         rTmtVXGRCWGsRoiFeWLNFyYmuVtKqncVFqfZmWbmqlX0z8iAXe4LqukYwGoOOnXYRKzl
-         dNhwmq9mryEXPFbLTlaJ9yaq8dOjgEANeZI8qX7ZRWgy8ao+eDiYXy+oOSpKK0HCbuKm
-         udQmWT3I1zK7ceatHqJw4xoa505RYgAtspcxJ+MfaNOjt6/o1/2Fac6NvDG5yFuyPMCB
-         +zZg==
-X-Gm-Message-State: APjAAAUo7Utc9+6X9XRe6Xe0CANrkcQ+ZazjSwCrMZi3FhYPCqEzuTPH
-        cgh0Aju782HlIR9FMWFIn3PJ5J+Xou/C/+F/idpNuMd7
-X-Google-Smtp-Source: APXvYqz6mT2feKlh8y8KJBFeHaGvmta1tNVLx2J144g2NFmA84lEkdM2Ca/94epR0ewDk42GFLZtxmPXuKFrJ6HDE+g=
-X-Received: by 2002:ac8:104:: with SMTP id e4mr47527750qtg.234.1558088051122;
- Fri, 17 May 2019 03:14:11 -0700 (PDT)
+        bh=c2AcJv21LbYCYD5C9Jjpp5BCKygW6luQM6iJ5dPZwlA=;
+        b=dtcbXIfUWtoMfYzkxN5g9K5BIhrmFsan6rjkLkfBUYjPjM8slczrapto77wfOPwLos
+         y6Cvp3+US23loyP1H8yyHVJ6s5N0SwkjvsJUsrjvgo/BN3Q7bt8nOsIBUHfDSFP9/Axc
+         JJbRkKxzwFZ6PA5qiQzIFedEhFOUFVGSgo87g6emiH7Xct8C5vI2uFzrLKBUKqu58FpX
+         96m+9pxyTpTs+2+KMPONeyGrpODJI3lI4QDpQEZPo0bZR/H6fukV3VsFOGiu2V8Meyii
+         HVuP5Oha0mnpKtrh8ujgWEEU2/EMPnQO0EdFcKQL2I4MDptWgLHQ3p6ReZO01t813hgy
+         Ytow==
+X-Gm-Message-State: APjAAAUHIwPZACbuA4vV2bVaRmBMAzs98aJOdDaxtZ+dSv6DXNd+CeCD
+        zZCja8bnukm+4/Hz1RxwAU+RPB43W5gZhyKaD0OPsQ==
+X-Google-Smtp-Source: APXvYqxVWn2bvh4TLQU8hA7wU5xUDlGjdTmy4QhvkCVnfiI9qFaHAIv4QUUclL6iglzysUdQhZdbFUDPdGhnmrBs0bA=
+X-Received: by 2002:a37:a555:: with SMTP id o82mr22147311qke.93.1558088068450;
+ Fri, 17 May 2019 03:14:28 -0700 (PDT)
 MIME-Version: 1.0
-References: <1557826556-10079-1-git-send-email-yannick.fertre@st.com> <1557826556-10079-2-git-send-email-yannick.fertre@st.com>
-In-Reply-To: <1557826556-10079-2-git-send-email-yannick.fertre@st.com>
+References: <1557826556-10079-1-git-send-email-yannick.fertre@st.com> <1557826556-10079-3-git-send-email-yannick.fertre@st.com>
+In-Reply-To: <1557826556-10079-3-git-send-email-yannick.fertre@st.com>
 From:   Benjamin Gaignard <benjamin.gaignard@linaro.org>
-Date:   Fri, 17 May 2019 12:14:00 +0200
-Message-ID: <CA+M3ks66kdeCEEzRj9B41YTQQkod5f5p9EgpjUZvnj=q36ak4Q@mail.gmail.com>
-Subject: Re: [PATCH v4 1/2] dt-bindings: display: stm32: add supply property
- to DSI controller
+Date:   Fri, 17 May 2019 12:14:17 +0200
+Message-ID: <CA+M3ks5hQnqdLxefcCskmNJTw4FeXEgWp=8mUhm7y0JSR4vsKQ@mail.gmail.com>
+Subject: Re: [PATCH v4 2/2] drm/stm: dsi: add regulator support
 To:     =?UTF-8?Q?Yannick_Fertr=C3=A9?= <yannick.fertre@st.com>
 Cc:     Philippe Cornu <philippe.cornu@st.com>,
         Benjamin Gaignard <benjamin.gaignard@st.com>,
@@ -82,47 +81,161 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 Le mar. 14 mai 2019 =C3=A0 11:36, Yannick Fertr=C3=A9 <yannick.fertre@st.co=
 m> a =C3=A9crit :
 >
-> This patch adds documentation of a new property phy-dsi-supply to the
-> STM32 DSI controller.
+> Add support of regulator for the phy part of the DSI
+> controller.
 >
 > Signed-off-by: Yannick Fertr=C3=A9 <yannick.fertre@st.com>
-> Reviewed-by: Rob Herring <robh@kernel.org>
-> Reviewed-by: Philippe Cornu <philippe.cornu@st.com>
-
+> Acked-by: Philippe Cornu <philippe.cornu@st.com>
 Applied on drm-misc-next,
 
 Thanks,
 Benjamin
 
 > ---
->  Documentation/devicetree/bindings/display/st,stm32-ltdc.txt | 3 +++
->  1 file changed, 3 insertions(+)
+>  drivers/gpu/drm/stm/dw_mipi_dsi-stm.c | 60 ++++++++++++++++++++++++++++-=
+------
+>  1 file changed, 49 insertions(+), 11 deletions(-)
 >
-> diff --git a/Documentation/devicetree/bindings/display/st,stm32-ltdc.txt =
-b/Documentation/devicetree/bindings/display/st,stm32-ltdc.txt
-> index 3eb1b48..60c54da 100644
-> --- a/Documentation/devicetree/bindings/display/st,stm32-ltdc.txt
-> +++ b/Documentation/devicetree/bindings/display/st,stm32-ltdc.txt
-> @@ -40,6 +40,8 @@ Mandatory nodes specific to STM32 DSI:
->  - panel or bridge node: A node containing the panel or bridge descriptio=
-n as
->    documented in [6].
->    - port: panel or bridge port node, connected to the DSI output port (p=
-ort@1).
-> +Optional properties:
-> +- phy-dsi-supply: phandle of the regulator that provides the supply volt=
-age.
+> diff --git a/drivers/gpu/drm/stm/dw_mipi_dsi-stm.c b/drivers/gpu/drm/stm/=
+dw_mipi_dsi-stm.c
+> index 1bef73e..d8e4a14 100644
+> --- a/drivers/gpu/drm/stm/dw_mipi_dsi-stm.c
+> +++ b/drivers/gpu/drm/stm/dw_mipi_dsi-stm.c
+> @@ -9,6 +9,7 @@
+>  #include <linux/clk.h>
+>  #include <linux/iopoll.h>
+>  #include <linux/module.h>
+> +#include <linux/regulator/consumer.h>
+>  #include <drm/drmP.h>
+>  #include <drm/drm_mipi_dsi.h>
+>  #include <drm/bridge/dw_mipi_dsi.h>
+> @@ -76,6 +77,7 @@ struct dw_mipi_dsi_stm {
+>         u32 hw_version;
+>         int lane_min_kbps;
+>         int lane_max_kbps;
+> +       struct regulator *vdd_supply;
+>  };
 >
->  Note: You can find more documentation in the following references
->  [1] Documentation/devicetree/bindings/clock/clock-bindings.txt
-> @@ -101,6 +103,7 @@ Example 2: DSI panel
->                         clock-names =3D "pclk", "ref";
->                         resets =3D <&rcc STM32F4_APB2_RESET(DSI)>;
->                         reset-names =3D "apb";
-> +                       phy-dsi-supply =3D <&reg18>;
+>  static inline void dsi_write(struct dw_mipi_dsi_stm *dsi, u32 reg, u32 v=
+al)
+> @@ -314,21 +316,36 @@ static int dw_mipi_dsi_stm_probe(struct platform_de=
+vice *pdev)
+>         res =3D platform_get_resource(pdev, IORESOURCE_MEM, 0);
+>         dsi->base =3D devm_ioremap_resource(dev, res);
+>         if (IS_ERR(dsi->base)) {
+> -               DRM_ERROR("Unable to get dsi registers\n");
+> -               return PTR_ERR(dsi->base);
+> +               ret =3D PTR_ERR(dsi->base);
+> +               DRM_ERROR("Unable to get dsi registers %d\n", ret);
+> +               return ret;
+> +       }
+> +
+> +       dsi->vdd_supply =3D devm_regulator_get(dev, "phy-dsi");
+> +       if (IS_ERR(dsi->vdd_supply)) {
+> +               ret =3D PTR_ERR(dsi->vdd_supply);
+> +               if (ret !=3D -EPROBE_DEFER)
+> +                       DRM_ERROR("Failed to request regulator: %d\n", re=
+t);
+> +               return ret;
+> +       }
+> +
+> +       ret =3D regulator_enable(dsi->vdd_supply);
+> +       if (ret) {
+> +               DRM_ERROR("Failed to enable regulator: %d\n", ret);
+> +               return ret;
+>         }
 >
->                         ports {
->                                 #address-cells =3D <1>;
+>         dsi->pllref_clk =3D devm_clk_get(dev, "ref");
+>         if (IS_ERR(dsi->pllref_clk)) {
+>                 ret =3D PTR_ERR(dsi->pllref_clk);
+> -               dev_err(dev, "Unable to get pll reference clock: %d\n", r=
+et);
+> -               return ret;
+> +               DRM_ERROR("Unable to get pll reference clock: %d\n", ret)=
+;
+> +               goto err_clk_get;
+>         }
+>
+>         ret =3D clk_prepare_enable(dsi->pllref_clk);
+>         if (ret) {
+> -               dev_err(dev, "%s: Failed to enable pllref_clk\n", __func_=
+_);
+> -               return ret;
+> +               DRM_ERROR("Failed to enable pllref_clk: %d\n", ret);
+> +               goto err_clk_get;
+>         }
+>
+>         dw_mipi_dsi_stm_plat_data.base =3D dsi->base;
+> @@ -338,20 +355,28 @@ static int dw_mipi_dsi_stm_probe(struct platform_de=
+vice *pdev)
+>
+>         dsi->dsi =3D dw_mipi_dsi_probe(pdev, &dw_mipi_dsi_stm_plat_data);
+>         if (IS_ERR(dsi->dsi)) {
+> -               DRM_ERROR("Failed to initialize mipi dsi host\n");
+> -               clk_disable_unprepare(dsi->pllref_clk);
+> -               return PTR_ERR(dsi->dsi);
+> +               ret =3D PTR_ERR(dsi->dsi);
+> +               DRM_ERROR("Failed to initialize mipi dsi host: %d\n", ret=
+);
+> +               goto err_dsi_probe;
+>         }
+>
+>         return 0;
+> +
+> +err_dsi_probe:
+> +       clk_disable_unprepare(dsi->pllref_clk);
+> +err_clk_get:
+> +       regulator_disable(dsi->vdd_supply);
+> +
+> +       return ret;
+>  }
+>
+>  static int dw_mipi_dsi_stm_remove(struct platform_device *pdev)
+>  {
+>         struct dw_mipi_dsi_stm *dsi =3D platform_get_drvdata(pdev);
+>
+> -       clk_disable_unprepare(dsi->pllref_clk);
+>         dw_mipi_dsi_remove(dsi->dsi);
+> +       clk_disable_unprepare(dsi->pllref_clk);
+> +       regulator_disable(dsi->vdd_supply);
+>
+>         return 0;
+>  }
+> @@ -363,6 +388,7 @@ static int __maybe_unused dw_mipi_dsi_stm_suspend(str=
+uct device *dev)
+>         DRM_DEBUG_DRIVER("\n");
+>
+>         clk_disable_unprepare(dsi->pllref_clk);
+> +       regulator_disable(dsi->vdd_supply);
+>
+>         return 0;
+>  }
+> @@ -370,10 +396,22 @@ static int __maybe_unused dw_mipi_dsi_stm_suspend(s=
+truct device *dev)
+>  static int __maybe_unused dw_mipi_dsi_stm_resume(struct device *dev)
+>  {
+>         struct dw_mipi_dsi_stm *dsi =3D dw_mipi_dsi_stm_plat_data.priv_da=
+ta;
+> +       int ret;
+>
+>         DRM_DEBUG_DRIVER("\n");
+>
+> -       clk_prepare_enable(dsi->pllref_clk);
+> +       ret =3D regulator_enable(dsi->vdd_supply);
+> +       if (ret) {
+> +               DRM_ERROR("Failed to enable regulator: %d\n", ret);
+> +               return ret;
+> +       }
+> +
+> +       ret =3D clk_prepare_enable(dsi->pllref_clk);
+> +       if (ret) {
+> +               regulator_disable(dsi->vdd_supply);
+> +               DRM_ERROR("Failed to enable pllref_clk: %d\n", ret);
+> +               return ret;
+> +       }
+>
+>         return 0;
+>  }
 > --
 > 2.7.4
 >
