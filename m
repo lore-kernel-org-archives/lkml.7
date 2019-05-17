@@ -2,361 +2,88 @@ Return-Path: <SRS0=M1fl=TR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.5 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EB6EC04AB4
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 03:09:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC21BC04AB4
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 03:11:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3FFAE206A3
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 03:09:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="D+8wIcsJ"
+	by mail.kernel.org (Postfix) with ESMTP id A8FC8206A3
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 03:11:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727469AbfEQDJ1 (ORCPT
+        id S1727542AbfEQDL2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 23:09:27 -0400
-Received: from mail-eopbgr50068.outbound.protection.outlook.com ([40.107.5.68]:65361
-        "EHLO EUR03-VE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726447AbfEQDJ1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 May 2019 23:09:27 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=u0FuCMMzpP/ODHlbwv4mvoBdANto4iRezsdTzITLA1M=;
- b=D+8wIcsJgbRuzBifCHU2ddmWnteXWLpoG0ybWKwGdV26T62Qgsmj5Vcp2lET6MIAW+h5XGmay/lzmjNtZgW/Wq3JELu6jMQx8DpO+cD9ix5BatpwnuvAhrQc421Fl8ZmECnjepBWiH0cmpueY7HzkbdYF2l92TBmxLNbXc0KEP8=
-Received: from VE1PR04MB6479.eurprd04.prod.outlook.com (20.179.233.80) by
- VE1PR04MB6462.eurprd04.prod.outlook.com (20.179.233.19) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1900.17; Fri, 17 May 2019 03:09:22 +0000
-Received: from VE1PR04MB6479.eurprd04.prod.outlook.com
- ([fe80::a5b5:13f5:f89c:9a30]) by VE1PR04MB6479.eurprd04.prod.outlook.com
- ([fe80::a5b5:13f5:f89c:9a30%7]) with mapi id 15.20.1900.010; Fri, 17 May 2019
- 03:09:22 +0000
-From:   "S.j. Wang" <shengjiu.wang@nxp.com>
-To:     "timur@kernel.org" <timur@kernel.org>,
-        "nicoleotsuka@gmail.com" <nicoleotsuka@gmail.com>,
-        "Xiubo.Lee@gmail.com" <Xiubo.Lee@gmail.com>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "broonie@kernel.org" <broonie@kernel.org>,
-        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>
-CC:     "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: [PATCH] ASoC: fsl_esai: fix the channel swap issue after xrun
-Thread-Topic: [PATCH] ASoC: fsl_esai: fix the channel swap issue after xrun
-Thread-Index: AQHVDF3seZkwEu4He0GObjqY7EqttQ==
-Date:   Fri, 17 May 2019 03:09:22 +0000
-Message-ID: <20190517030903.25731-1-shengjiu.wang@nxp.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-mailer: git-send-email 2.21.0
-x-clientproxiedby: HK2PR03CA0052.apcprd03.prod.outlook.com
- (2603:1096:202:17::22) To VE1PR04MB6479.eurprd04.prod.outlook.com
- (2603:10a6:803:11e::16)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=shengjiu.wang@nxp.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [119.31.174.66]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: d02c888d-3473-45fe-839a-08d6da750f23
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:VE1PR04MB6462;
-x-ms-traffictypediagnostic: VE1PR04MB6462:
-x-ms-exchange-purlcount: 1
-x-microsoft-antispam-prvs: <VE1PR04MB6462A0508F4A258D203150ACE30B0@VE1PR04MB6462.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:132;
-x-forefront-prvs: 0040126723
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(376002)(396003)(366004)(346002)(136003)(39860400002)(199004)(189003)(71200400001)(110136005)(71190400001)(2501003)(52116002)(50226002)(81166006)(8936002)(102836004)(8676002)(54906003)(316002)(6506007)(386003)(81156014)(6512007)(6306002)(305945005)(7736002)(6116002)(99286004)(3846002)(6436002)(4326008)(25786009)(186003)(5660300002)(66476007)(2201001)(36756003)(53936002)(86362001)(68736007)(66446008)(66556008)(64756008)(66946007)(73956011)(14454004)(486006)(2616005)(476003)(14444005)(256004)(478600001)(26005)(66066001)(6486002)(2906002)(1076003);DIR:OUT;SFP:1101;SCL:1;SRVR:VE1PR04MB6462;H:VE1PR04MB6479.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: yXPrYiIHXB7h/ihjvVjo49a3Sur5qGkFD4mFCZpPhJamuEUCj3eYLvH+35mZqi7Ke121MpEGOxnrRBIKCB6i1cOIW0xAkUjcdRKtBPGcMuin87icz40H358rBm1TMCLqwWXUpq3zcaftOAsTEvQZIVHl3dtXxcXxuNgZJzKy4zFMOxefRV4eDqtd7nT4JIKXOecDkaZKUfG2zO2OpAGsFq8c9NME2OEulNoTgk946fSY5QnGAbIx6b2cLcwqva+6siK2rAgSI8TLu1ZIlnMH0wRGgzQlhlZK6rYNxjkQONTBr9hls5pvagKdTU4QKWchIQz+c/eRE5fTckux96m22Hz6aPWrPtSsyaRcvEydflNac2DxbaK5XO+rZxF9xUjpxPh0j4Id6waTDtJ6XffuNtwHbHaZfbetSn9g68kqkt0=
-Content-Type: text/plain; charset="iso-8859-1"
-Content-ID: <CD952D0B5BE728489F6FFD2DDF2D3DA2@eurprd04.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        Thu, 16 May 2019 23:11:28 -0400
+Received: from zeniv.linux.org.uk ([195.92.253.2]:38286 "EHLO
+        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726447AbfEQDL2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 May 2019 23:11:28 -0400
+Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92 #3 (Red Hat Linux))
+        id 1hRTHK-0001RR-EC; Fri, 17 May 2019 03:11:26 +0000
+Date:   Fri, 17 May 2019 04:11:26 +0100
+From:   Al Viro <viro@zeniv.linux.org.uk>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [git pull] vfs.git mount followups
+Message-ID: <20190517031125.GF17978@ZenIV.linux.org.uk>
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: d02c888d-3473-45fe-839a-08d6da750f23
-X-MS-Exchange-CrossTenant-originalarrivaltime: 17 May 2019 03:09:22.2356
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VE1PR04MB6462
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There is chip errata ERR008000, the reference doc is
-(https://www.nxp.com/docs/en/errata/IMX6DQCE.pdf),
+	Propagation of new syscalls to other architectures + cosmetical
+change from Christian (fscontext didn't follow the convention for anon
+inode names).
 
-The issue is "While using ESAI transmit or receive and
-an underrun/overrun happens, channel swap may occur.
-The only recovery mechanism is to reset the ESAI."
+	What is _not_ included is cloexec changes - I really don't see
+the benefits for the cloexec-by-default for new syscalls, when there's
+no chance in hell of switching to that policy for old ones.
 
-In this commit add a tasklet to handle reset of ESAI
-after xrun happens
+The following changes since commit 05883eee857eab4693e7d13ebab06716475c5754:
 
-Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
----
- sound/soc/fsl/fsl_esai.c | 166 +++++++++++++++++++++++++++++++++++++++
- 1 file changed, 166 insertions(+)
+  do_move_mount(): fix an unsafe use of is_anon_ns() (2019-05-09 02:32:50 -0400)
 
-diff --git a/sound/soc/fsl/fsl_esai.c b/sound/soc/fsl/fsl_esai.c
-index 10d2210c91ef..149972894c95 100644
---- a/sound/soc/fsl/fsl_esai.c
-+++ b/sound/soc/fsl/fsl_esai.c
-@@ -52,17 +52,20 @@ struct fsl_esai {
- 	struct clk *extalclk;
- 	struct clk *fsysclk;
- 	struct clk *spbaclk;
-+	struct tasklet_struct task;
- 	u32 fifo_depth;
- 	u32 slot_width;
- 	u32 slots;
- 	u32 tx_mask;
- 	u32 rx_mask;
-+	u32 tx_channels;
- 	u32 hck_rate[2];
- 	u32 sck_rate[2];
- 	bool hck_dir[2];
- 	bool sck_div[2];
- 	bool slave_mode;
- 	bool synchronous;
-+	bool reset_at_xrun;
- 	char name[32];
- };
-=20
-@@ -71,8 +74,14 @@ static irqreturn_t esai_isr(int irq, void *devid)
- 	struct fsl_esai *esai_priv =3D (struct fsl_esai *)devid;
- 	struct platform_device *pdev =3D esai_priv->pdev;
- 	u32 esr;
-+	u32 saisr;
-=20
- 	regmap_read(esai_priv->regmap, REG_ESAI_ESR, &esr);
-+	regmap_read(esai_priv->regmap, REG_ESAI_SAISR, &saisr);
-+
-+	if ((saisr & (ESAI_SAISR_TUE | ESAI_SAISR_ROE))
-+		&& esai_priv->reset_at_xrun)
-+		tasklet_schedule(&esai_priv->task);
-=20
- 	if (esr & ESAI_ESR_TINIT_MASK)
- 		dev_dbg(&pdev->dev, "isr: Transmission Initialized\n");
-@@ -552,6 +561,9 @@ static int fsl_esai_trigger(struct snd_pcm_substream *s=
-ubstream, int cmd,
- 	u32 pins =3D DIV_ROUND_UP(channels, esai_priv->slots);
- 	u32 mask;
-=20
-+	if (tx)
-+		esai_priv->tx_channels =3D channels;
-+
- 	switch (cmd) {
- 	case SNDRV_PCM_TRIGGER_START:
- 	case SNDRV_PCM_TRIGGER_RESUME:
-@@ -585,10 +597,16 @@ static int fsl_esai_trigger(struct snd_pcm_substream =
-*substream, int cmd,
- 		regmap_update_bits(esai_priv->regmap, REG_ESAI_xSMA(tx),
- 				   ESAI_xSMA_xS_MASK, ESAI_xSMA_xS(mask));
-=20
-+		regmap_update_bits(esai_priv->regmap, REG_ESAI_xCR(tx),
-+				   ESAI_xCR_xEIE_MASK, ESAI_xCR_xEIE);
-+
- 		break;
- 	case SNDRV_PCM_TRIGGER_SUSPEND:
- 	case SNDRV_PCM_TRIGGER_STOP:
- 	case SNDRV_PCM_TRIGGER_PAUSE_PUSH:
-+		regmap_update_bits(esai_priv->regmap, REG_ESAI_xCR(tx),
-+				   ESAI_xCR_xEIE_MASK, 0);
-+
- 		regmap_update_bits(esai_priv->regmap, REG_ESAI_xCR(tx),
- 				   tx ? ESAI_xCR_TE_MASK : ESAI_xCR_RE_MASK, 0);
- 		regmap_update_bits(esai_priv->regmap, REG_ESAI_xSMA(tx),
-@@ -618,6 +636,145 @@ static const struct snd_soc_dai_ops fsl_esai_dai_ops =
-=3D {
- 	.set_tdm_slot =3D fsl_esai_set_dai_tdm_slot,
- };
-=20
-+static void fsl_esai_reset(unsigned long arg)
-+{
-+	struct fsl_esai *esai_priv =3D (struct fsl_esai *)arg;
-+	u32 saisr;
-+	u32 tsma, tsmb, rsma, rsmb, tcr, rcr, tfcr, rfcr;
-+	int i;
-+
-+	/*
-+	 * stop the tx & rx
-+	 */
-+	regmap_read(esai_priv->regmap, REG_ESAI_TSMA, &tsma);
-+	regmap_read(esai_priv->regmap, REG_ESAI_TSMB, &tsmb);
-+	regmap_read(esai_priv->regmap, REG_ESAI_RSMA, &rsma);
-+	regmap_read(esai_priv->regmap, REG_ESAI_RSMB, &rsmb);
-+
-+	regmap_read(esai_priv->regmap, REG_ESAI_TCR, &tcr);
-+	regmap_read(esai_priv->regmap, REG_ESAI_RCR, &rcr);
-+
-+	regmap_read(esai_priv->regmap, REG_ESAI_TFCR, &tfcr);
-+	regmap_read(esai_priv->regmap, REG_ESAI_RFCR, &rfcr);
-+
-+	regmap_update_bits(esai_priv->regmap, REG_ESAI_TCR,
-+				ESAI_xCR_xEIE_MASK | ESAI_xCR_TE_MASK, 0);
-+	regmap_update_bits(esai_priv->regmap, REG_ESAI_RCR,
-+				ESAI_xCR_xEIE_MASK | ESAI_xCR_RE_MASK, 0);
-+
-+	regmap_update_bits(esai_priv->regmap, REG_ESAI_TSMA,
-+				ESAI_xSMA_xS_MASK, 0);
-+	regmap_update_bits(esai_priv->regmap, REG_ESAI_TSMB,
-+				ESAI_xSMB_xS_MASK, 0);
-+	regmap_update_bits(esai_priv->regmap, REG_ESAI_RSMA,
-+				ESAI_xSMA_xS_MASK, 0);
-+	regmap_update_bits(esai_priv->regmap, REG_ESAI_RSMB,
-+				ESAI_xSMB_xS_MASK, 0);
-+
-+	regmap_update_bits(esai_priv->regmap, REG_ESAI_TFCR,
-+				ESAI_xFCR_xFR | ESAI_xFCR_xFEN, ESAI_xFCR_xFR);
-+	regmap_update_bits(esai_priv->regmap, REG_ESAI_TFCR,
-+				ESAI_xFCR_xFR, 0);
-+
-+	regmap_update_bits(esai_priv->regmap, REG_ESAI_RFCR,
-+				ESAI_xFCR_xFR | ESAI_xFCR_xFEN, ESAI_xFCR_xFR);
-+	regmap_update_bits(esai_priv->regmap, REG_ESAI_RFCR,
-+				ESAI_xFCR_xFR, 0);
-+
-+	/*
-+	 * reset the esai, and restore the registers
-+	 */
-+	regmap_update_bits(esai_priv->regmap, REG_ESAI_ECR,
-+				ESAI_ECR_ESAIEN_MASK | ESAI_ECR_ERST_MASK,
-+				ESAI_ECR_ESAIEN | ESAI_ECR_ERST);
-+	regmap_update_bits(esai_priv->regmap, REG_ESAI_ECR,
-+				ESAI_ECR_ESAIEN_MASK | ESAI_ECR_ERST_MASK,
-+				ESAI_ECR_ESAIEN);
-+
-+	regmap_update_bits(esai_priv->regmap, REG_ESAI_TCR,
-+				ESAI_xCR_xPR_MASK,
-+				ESAI_xCR_xPR);
-+	regmap_update_bits(esai_priv->regmap, REG_ESAI_RCR,
-+				ESAI_xCR_xPR_MASK,
-+				ESAI_xCR_xPR);
-+
-+	regmap_update_bits(esai_priv->regmap, REG_ESAI_PRRC,
-+				ESAI_PRRC_PDC_MASK, 0);
-+	regmap_update_bits(esai_priv->regmap, REG_ESAI_PCRC,
-+				ESAI_PCRC_PC_MASK, 0);
-+
-+	/*
-+	 * Add fifo reset here, because the regcache_sync will
-+	 * write one more data to ETDR.
-+	 * Which will cause channel shift.
-+	 */
-+	regmap_update_bits(esai_priv->regmap, REG_ESAI_TFCR,
-+				ESAI_xFCR_xFR_MASK, ESAI_xFCR_xFR);
-+	regmap_update_bits(esai_priv->regmap, REG_ESAI_RFCR,
-+				ESAI_xFCR_xFR_MASK, ESAI_xFCR_xFR);
-+
-+	regcache_mark_dirty(esai_priv->regmap);
-+	regcache_sync(esai_priv->regmap);
-+
-+	regmap_update_bits(esai_priv->regmap, REG_ESAI_TFCR,
-+				ESAI_xFCR_xFR_MASK, 0);
-+	regmap_update_bits(esai_priv->regmap, REG_ESAI_RFCR,
-+				ESAI_xFCR_xFR_MASK, 0);
-+
-+	regmap_update_bits(esai_priv->regmap, REG_ESAI_TCR,
-+				ESAI_xCR_xPR_MASK, 0);
-+	regmap_update_bits(esai_priv->regmap, REG_ESAI_RCR,
-+				ESAI_xCR_xPR_MASK, 0);
-+
-+	regmap_update_bits(esai_priv->regmap, REG_ESAI_PRRC,
-+				ESAI_PRRC_PDC_MASK,
-+				ESAI_PRRC_PDC(ESAI_GPIO));
-+	regmap_update_bits(esai_priv->regmap, REG_ESAI_PCRC,
-+				ESAI_PCRC_PC_MASK,
-+				ESAI_PCRC_PC(ESAI_GPIO));
-+
-+	regmap_read(esai_priv->regmap, REG_ESAI_SAISR, &saisr);
-+
-+	/*
-+	 * restart tx / rx, if they already enabled
-+	 */
-+
-+	regmap_update_bits(esai_priv->regmap, REG_ESAI_TFCR,
-+				ESAI_xFCR_xFEN_MASK, tfcr & ESAI_xFCR_xFEN);
-+
-+	regmap_update_bits(esai_priv->regmap, REG_ESAI_RFCR,
-+				ESAI_xFCR_xFEN_MASK, rfcr & ESAI_xFCR_xFEN);
-+
-+	/* Write initial words reqiured by ESAI as normal procedure */
-+	for (i =3D 0; i < esai_priv->tx_channels; i++)
-+		regmap_write(esai_priv->regmap, REG_ESAI_ETDR, 0x0);
-+
-+	regmap_update_bits(esai_priv->regmap, REG_ESAI_TCR,
-+				ESAI_xCR_TE_MASK,
-+				ESAI_xCR_TE_MASK & tcr);
-+	regmap_update_bits(esai_priv->regmap, REG_ESAI_RCR,
-+				ESAI_xCR_RE_MASK,
-+				ESAI_xCR_RE_MASK & rcr);
-+
-+	regmap_update_bits(esai_priv->regmap, REG_ESAI_TSMB,
-+				ESAI_xSMB_xS_MASK,
-+				ESAI_xSMB_xS_MASK & tsmb);
-+	regmap_update_bits(esai_priv->regmap, REG_ESAI_TSMA,
-+				ESAI_xSMA_xS_MASK,
-+				ESAI_xSMA_xS_MASK & tsma);
-+	regmap_update_bits(esai_priv->regmap, REG_ESAI_RSMB,
-+				ESAI_xSMB_xS_MASK,
-+				ESAI_xSMB_xS_MASK & rsmb);
-+	regmap_update_bits(esai_priv->regmap, REG_ESAI_RSMA,
-+				ESAI_xSMA_xS_MASK,
-+				ESAI_xSMA_xS_MASK & rsma);
-+
-+	regmap_update_bits(esai_priv->regmap, REG_ESAI_TCR,
-+			   ESAI_xCR_xEIE_MASK, ESAI_xCR_xEIE & tcr);
-+	regmap_update_bits(esai_priv->regmap, REG_ESAI_RCR,
-+			   ESAI_xCR_xEIE_MASK, ESAI_xCR_xEIE & rcr);
-+}
-+
- static int fsl_esai_dai_probe(struct snd_soc_dai *dai)
- {
- 	struct fsl_esai *esai_priv =3D snd_soc_dai_get_drvdata(dai);
-@@ -787,6 +944,10 @@ static int fsl_esai_probe(struct platform_device *pdev=
-)
- 	esai_priv->pdev =3D pdev;
- 	snprintf(esai_priv->name, sizeof(esai_priv->name), "%pOFn", np);
-=20
-+	if (of_device_is_compatible(np, "fsl,vf610-esai") ||
-+	    of_device_is_compatible(np, "fsl,imx35-esai"))
-+		esai_priv->reset_at_xrun =3D true;
-+
- 	/* Get the addresses and IRQ */
- 	res =3D platform_get_resource(pdev, IORESOURCE_MEM, 0);
- 	regs =3D devm_ioremap_resource(&pdev->dev, res);
-@@ -899,6 +1060,8 @@ static int fsl_esai_probe(struct platform_device *pdev=
-)
- 		return ret;
- 	}
-=20
-+	tasklet_init(&esai_priv->task, fsl_esai_reset, (unsigned long)esai_priv);
-+
- 	pm_runtime_enable(&pdev->dev);
-=20
- 	regcache_cache_only(esai_priv->regmap, true);
-@@ -912,7 +1075,10 @@ static int fsl_esai_probe(struct platform_device *pde=
-v)
-=20
- static int fsl_esai_remove(struct platform_device *pdev)
- {
-+	struct fsl_esai *esai_priv =3D platform_get_drvdata(pdev);
-+
- 	pm_runtime_disable(&pdev->dev);
-+	tasklet_kill(&esai_priv->task);
-=20
- 	return 0;
- }
---=20
-2.21.0
+are available in the git repository at:
 
+  git://git.kernel.org/pub/scm/linux/kernel/git/viro/vfs.git fixes
+
+for you to fetch changes up to d8076bdb56af5e5918376cd1573a6b0007fc1a89:
+
+  uapi: Wire up the mount API syscalls on non-x86 arches [ver #2] (2019-05-16 12:23:45 -0400)
+
+----------------------------------------------------------------
+Christian Brauner (1):
+      uapi, fsopen: use square brackets around "fscontext" [ver #2]
+
+David Howells (2):
+      uapi, x86: Fix the syscall numbering of the mount API syscalls [ver #2]
+      uapi: Wire up the mount API syscalls on non-x86 arches [ver #2]
+
+ arch/alpha/kernel/syscalls/syscall.tbl      |  6 ++++++
+ arch/arm/tools/syscall.tbl                  |  6 ++++++
+ arch/arm64/include/asm/unistd.h             |  2 +-
+ arch/arm64/include/asm/unistd32.h           | 12 ++++++++++++
+ arch/ia64/kernel/syscalls/syscall.tbl       |  6 ++++++
+ arch/m68k/kernel/syscalls/syscall.tbl       |  6 ++++++
+ arch/microblaze/kernel/syscalls/syscall.tbl |  6 ++++++
+ arch/mips/kernel/syscalls/syscall_n32.tbl   |  6 ++++++
+ arch/mips/kernel/syscalls/syscall_n64.tbl   |  6 ++++++
+ arch/mips/kernel/syscalls/syscall_o32.tbl   |  6 ++++++
+ arch/parisc/kernel/syscalls/syscall.tbl     |  6 ++++++
+ arch/powerpc/kernel/syscalls/syscall.tbl    |  6 ++++++
+ arch/s390/kernel/syscalls/syscall.tbl       |  6 ++++++
+ arch/sh/kernel/syscalls/syscall.tbl         |  6 ++++++
+ arch/sparc/kernel/syscalls/syscall.tbl      |  6 ++++++
+ arch/x86/entry/syscalls/syscall_32.tbl      | 12 ++++++------
+ arch/x86/entry/syscalls/syscall_64.tbl      | 12 ++++++------
+ arch/xtensa/kernel/syscalls/syscall.tbl     |  6 ++++++
+ fs/fsopen.c                                 |  2 +-
+ include/uapi/asm-generic/unistd.h           | 14 +++++++++++++-
+ 20 files changed, 123 insertions(+), 15 deletions(-)
