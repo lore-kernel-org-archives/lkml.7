@@ -2,183 +2,121 @@ Return-Path: <SRS0=M1fl=TR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34218C04AB4
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 16:59:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31948C04AB4
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 16:59:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DED3D2168B
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 16:58:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rmoA0u10"
+	by mail.kernel.org (Postfix) with ESMTP id 0C5E72168B
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 16:59:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727811AbfEQQ67 (ORCPT
+        id S1727873AbfEQQ7E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 May 2019 12:58:59 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:42786 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727370AbfEQQ66 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 May 2019 12:58:58 -0400
-Received: by mail-io1-f68.google.com with SMTP id g16so6035316iom.9;
-        Fri, 17 May 2019 09:58:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=25VNczWuptEWYgXOl4vV+bCkNxc25zGJb812eV/WGMY=;
-        b=rmoA0u10E+DtjIHjlxyG3qiXINdnKGOLEnBlCJvKkxXV4Rl6jdqmhKtgy2RCnF9C+6
-         M5yOaCoS/OSGWcdPn17qMhTKp4rMnXGVbwLdGsw2Ex74WtZiQSsMOCrAvpSXeHWXhzOQ
-         GNgl4DoLd9nLDX/qqVkYiyXXTSAgJTTZXRlqwVjjsH9DOYnej+BFJOYyvkRo0d6t5cUD
-         nX6Fz3N27LqCkd6KXicxkxI8AB6/zvzKr7mcyICVUAq3jhtnHJIHsCzjvfQwCoek45hb
-         9dKo5oYwYwk/R/Fq3C0Ci2W7tQQugKh4WUDYVWYF+9r1/AP6s3i6yiXKvpLmQAnZq3sz
-         CtBQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=25VNczWuptEWYgXOl4vV+bCkNxc25zGJb812eV/WGMY=;
-        b=MqebMIw7lihnCG1B0ig8bG7bIEhLzVa72UVt++pCCKh2oPpHG3C8oe8yp1eUcmGDjn
-         ke5kgFRBqKrYIPbTgObGcNW3IldZs8JHrgCpW+0ZpyeM13i/DP5cl+wKc++o4FPoRggu
-         DJchWzkrA66+hD40RPspagJZfuZ9aCs73CwFKziFq9BrySa+MoKRUqmyC45ArYh+9KZS
-         N0w0L0Y7m/Aka67WiwZSd2yH58j8yBDi6Q7/cnRj22ut4++leoEl9qUqYNQyqHJZcSfo
-         g0qS5BxR2oyFAKLEUt/sFXMD/Z53y0PZ6KXGvG+U3IAa2WK/k2vybjsUJw/pHKEl1iN6
-         L+CQ==
-X-Gm-Message-State: APjAAAVNtd4v6zrtHutnt2h88vYKbcGzUcXMdfN7tBNfGSAh9hYW/3Nx
-        iLlv+VVf0WEv1yurNTNBgA3sDcDL73nFDkW6Mu0=
-X-Google-Smtp-Source: APXvYqxUIJzAr/gytocISvpMMLmJJBpKo+o0RChc616DzUobTYLUQZ1B3VMFoAJwOA88AnyNEVWl8H9ikp+QwzyettA=
-X-Received: by 2002:a5e:c60b:: with SMTP id f11mr1090167iok.42.1558112337376;
- Fri, 17 May 2019 09:58:57 -0700 (PDT)
+        Fri, 17 May 2019 12:59:04 -0400
+Received: from lhrrgout.huawei.com ([185.176.76.210]:32951 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727370AbfEQQ7C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 May 2019 12:59:02 -0400
+Received: from lhreml707-cah.china.huawei.com (unknown [172.18.7.106])
+        by Forcepoint Email with ESMTP id DD288D5C50E3A877CF75;
+        Fri, 17 May 2019 17:59:00 +0100 (IST)
+Received: from roberto-HP-EliteDesk-800-G2-DM-65W.huawei.com (10.204.65.154)
+ by smtpsuk.huawei.com (10.201.108.48) with Microsoft SMTP Server (TLS) id
+ 14.3.408.0; Fri, 17 May 2019 17:58:52 +0100
+From:   Roberto Sassu <roberto.sassu@huawei.com>
+To:     <viro@zeniv.linux.org.uk>
+CC:     <linux-security-module@vger.kernel.org>,
+        <linux-integrity@vger.kernel.org>, <initramfs@vger.kernel.org>,
+        <linux-api@vger.kernel.org>, <linux-fsdevel@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <zohar@linux.vnet.ibm.com>,
+        <silviu.vlasceanu@huawei.com>, <dmitry.kasatkin@huawei.com>,
+        <takondra@cisco.com>, <kamensky@cisco.com>, <hpa@zytor.com>,
+        <arnd@arndb.de>, <rob@landley.net>, <james.w.mcmechan@gmail.com>,
+        <niveditas98@gmail.com>, Roberto Sassu <roberto.sassu@huawei.com>
+Subject: [PATCH v3 0/2] initramfs: add support for xattrs in the initial ram disk
+Date:   Fri, 17 May 2019 18:55:17 +0200
+Message-ID: <20190517165519.11507-1-roberto.sassu@huawei.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-References: <1557357269-9498-1-git-send-email-nkela@cisco.com>
- <9be117dc6e818ab83376cd8e0f79dbfaaf193aa9.camel@intel.com>
- <76B41175-0CEE-466C-91BF-89A1CA857061@cisco.com> <4469196a-0705-5459-8aca-3f08e9889d61@gmail.com>
- <20190517010330.2wynopuhsqycqzuq@zorba> <bd9e6a93-c8e8-a90e-25b0-26ccbf65b7c4@gmail.com>
- <CAKgT0Uev7sfpOOhusAg9jFLkFeE9JtTntyTd0aAHz2db69L13g@mail.gmail.com> <20190517163643.7tlch7xqplxohoq7@zorba>
-In-Reply-To: <20190517163643.7tlch7xqplxohoq7@zorba>
-From:   Alexander Duyck <alexander.duyck@gmail.com>
-Date:   Fri, 17 May 2019 09:58:46 -0700
-Message-ID: <CAKgT0Ue0b1QxG2ijegbHFz-2Wpxga0ffvhsfDg4VLDRaDSFvdw@mail.gmail.com>
-Subject: Re: [Intel-wired-lan] [PATCH] igb: add parameter to ignore nvm
- checksum validation
-To:     Daniel Walker <danielwa@cisco.com>
-Cc:     Florian Fainelli <f.fainelli@gmail.com>,
-        "Nikunj Kela (nkela)" <nkela@cisco.com>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "intel-wired-lan@lists.osuosl.org" <intel-wired-lan@lists.osuosl.org>,
-        "xe-linux-external(mailer list)" <xe-linux-external@cisco.com>,
-        "David S. Miller" <davem@davemloft.net>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-Originating-IP: [10.204.65.154]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 17, 2019 at 9:36 AM Daniel Walker <danielwa@cisco.com> wrote:
->
-> On Fri, May 17, 2019 at 08:16:34AM -0700, Alexander Duyck wrote:
-> > On Thu, May 16, 2019 at 6:48 PM Florian Fainelli <f.fainelli@gmail.com> wrote:
-> > >
-> > >
-> > >
-> > > On 5/16/2019 6:03 PM, Daniel Walker wrote:
-> > > > On Thu, May 16, 2019 at 03:02:18PM -0700, Florian Fainelli wrote:
-> > > >> On 5/16/19 12:55 PM, Nikunj Kela (nkela) wrote:
-> > > >>>
-> > > >>>
-> > > >>> On 5/16/19, 12:35 PM, "Jeff Kirsher" <jeffrey.t.kirsher@intel.com> wrote:
-> > > >>>
-> > > >>>     On Wed, 2019-05-08 at 23:14 +0000, Nikunj Kela wrote:
-> > > >>>    >> Some of the broken NICs don't have EEPROM programmed correctly. It
-> > > >>>    >> results
-> > > >>>    >> in probe to fail. This change adds a module parameter that can be
-> > > >>>    >> used to
-> > > >>>    >> ignore nvm checksum validation.
-> > > >>>    >>
-> > > >>>    >> Cc: xe-linux-external@cisco.com
-> > > >>>    >> Signed-off-by: Nikunj Kela <nkela@cisco.com>
-> > > >>>    >> ---
-> > > >>>    >>  drivers/net/ethernet/intel/igb/igb_main.c | 28
-> > > >>>    >> ++++++++++++++++++++++------
-> > > >>>    >>  1 file changed, 22 insertions(+), 6 deletions(-)
-> > > >>>
-> > > >>>     >NAK for two reasons.  First, module parameters are not desirable
-> > > >>>     >because their individual to one driver and a global solution should be
-> > > >>>     >found so that all networking device drivers can use the solution.  This
-> > > >>>     >will keep the interface to change/setup/modify networking drivers
-> > > >>>     >consistent for all drivers.
-> > > >>>
-> > > >>>
-> > > >>>     >Second and more importantly, if your NIC is broken, fix it.  Do not try
-> > > >>>     >and create a software workaround so that you can continue to use a
-> > > >>>     >broken NIC.  There are methods/tools available to properly reprogram
-> > > >>>     >the EEPROM on a NIC, which is the right solution for your issue.
-> > > >>>
-> > > >>> I am proposing this as a debug parameter. Obviously, we need to fix EEPROM but this helps us continuing the development while manufacturing fixes NIC.
-> > > >>
-> > > >> Then why even bother with sending this upstream?
-> > > >
-> > > > It seems rather drastic to disable the entire driver because the checksum
-> > > > doesn't match. It really should be a warning, even a big warning, to let people
-> > > > know something is wrong, but disabling the whole driver doesn't make sense.
-> > >
-> > > You could generate a random Ethernet MAC address if you don't have a
-> > > valid one, a lot of drivers do that, and that's a fairly reasonable
-> > > behavior. At some point in your product development someone will
-> > > certainly verify that the provisioned MAC address matches the network
-> > > interface's MAC address.
-> > > --
-> > > Florian
-> >
-> > The thing is the EEPROM contains much more than just the MAC address.
-> > There ends up being configuration for some of the PCIe interface in
-> > the hardware as well as PHY configuration. If that is somehow mangled
-> > we shouldn't be bringing up the part because there are one or more
-> > pieces of the device configuration that are likely wrong.
-> >
-> > The checksum is being used to make sure the EEPROM is valid, without
-> > that we would need to go through and validate each individual section
-> > of the EEPROM before enabling the the portions of the device related
-> > to it. The concern is that this will become a slippery slope where we
-> > eventually have to code all the configuration of the EEPROM into the
-> > driver itself.
->
->
-> I don't think you can say because the checksum is valid that all data contained
-> inside is also valid. You can have a valid checksum , and someone screwed up the
-> data prior to the checksum getting computed.
+This patch set aims at solving the following use case: appraise files from
+the initial ram disk. To do that, IMA checks the signature/hash from the
+security.ima xattr. Unfortunately, this use case cannot be implemented
+currently, as the CPIO format does not support xattrs.
 
-If someone screwed up the data prior to writing the checksum then that
-is on them. In theory we could also have a multi-bit error that could
-similarly be missed. However if the checksum is not valid then the
-data contained in the NVM does not match what was originally written,
-so we know we have bad data. Why should we act on the data if we know
-it is bad?
+This proposal consists in marshaling pathnames and xattrs in a file called
+.xattr-list. They are unmarshaled by the CPIO parser after all files have
+been extracted, or before the next ram disk is processed.
 
-> > We need to make the checksum a hard stop. If the part is broken then
-> > it needs to be addressed. Workarounds just end up being used and
-> > forgotten, which makes it that much harder to support the product.
-> > Better to mark the part as being broken, and get it fixed now, than to
-> > have parts start shipping that require workarounds in order to
-> > function.o
->
-> I don't think it's realistic to define the development process for large
-> corporations like Cisco, or like what your doing , to define the development
-> process for all corporations and products which may use intel parts. It's better
-> to be flexible.
->
-> Daniel
+The difference from v1 (https://lkml.org/lkml/2018/11/22/1182) is that all
+xattrs are stored in a single file and not per file (solves the file name
+limitation issue, as it is not necessary to add a suffix to files
+containing xattrs).
 
-This isn't about development. If you are doing development you can do
-whatever you want with your own downstream driver. What you are
-attempting to do is update the upstream driver which is used in
-production environments.
+The difference with another proposal
+(https://lore.kernel.org/patchwork/cover/888071/) is that xattrs can be
+included in an image without changing the image format, as opposed to
+defining a new one. As seen from the discussion, if a new format has to be
+defined, it should fix the issues of the existing format, which requires
+more time.
 
-What concerns me is when this module parameter gets used in a
-development environment and then slips into being required for a
-production environment. At that point it defeats the whole point of
-the checksum in the first place.
+To fulfill both requirements, adding support for xattrs in a short time and
+defining a new image format properly, this patch set takes an incremental
+approach: it introduces a parser of xattrs that can be used either if
+xattrs are in a regular file or directly added to the image (this patch set
+reuses patch 9/15 of the existing proposal); in addition, it introduces a
+wrapper of the xattr parser, to read xattrs from a file.
+
+The changes introduced by this patch set don't cause any compatibility
+issue: kernels without the xattr parser simply extracts .xattr-list and
+don't unmarshal xattrs; kernels with the xattr parser don't unmarshal
+xattrs if .xattr-list is not found in the image.
+
+From the kernel space perspective, backporting this functionality to older
+kernels should be very easy. It is sufficient to add two calls to the new
+function do_readxattrs(). From the user space perspective, no change is
+required for the use case. A new dracut module (module-setup.sh) will
+execute:
+
+getfattr --absolute-names -d -h -R -e hex -m security.ima \
+    <file list> | xattr.awk -b > ${initdir}/.xattr-list
+
+where xattr.awk is the script that marshals xattrs (see patch 3/3). The
+same can be done with the initramfs-tools ram disk generator.
+
+Changelog
+
+v2:
+- replace ksys_lsetxattr() with kern_path() and vfs_setxattr()
+  (suggested by Jann Horn)
+- replace ksys_open()/ksys_read()/ksys_close() with
+  filp_open()/kernel_read()/fput()
+  (suggested by Jann Horn)
+- use path variable instead of name_buf in do_readxattrs()
+- set last byte of str to 0 in do_readxattrs()
+- call do_readxattrs() in do_name() before replacing an existing
+  .xattr-list
+- pass pathname to do_setxattrs()
+
+
+Mimi Zohar (1):
+  initramfs: set extended attributes
+
+Roberto Sassu (1):
+  initramfs: introduce do_readxattrs()
+
+ init/initramfs.c | 170 ++++++++++++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 168 insertions(+), 2 deletions(-)
+
+-- 
+2.17.1
+
