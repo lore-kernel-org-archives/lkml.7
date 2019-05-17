@@ -2,96 +2,73 @@ Return-Path: <SRS0=M1fl=TR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0DD4C04AB4
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 07:27:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10023C04AB4
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 07:28:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 87C23206A3
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 07:27:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rL1R5dEG"
+	by mail.kernel.org (Postfix) with ESMTP id DDBFB206A3
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 07:28:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728269AbfEQH1m (ORCPT
+        id S1728283AbfEQH2G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 May 2019 03:27:42 -0400
-Received: from mail-pg1-f169.google.com ([209.85.215.169]:38398 "EHLO
-        mail-pg1-f169.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727357AbfEQH1m (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 May 2019 03:27:42 -0400
-Received: by mail-pg1-f169.google.com with SMTP id j26so2887969pgl.5
-        for <linux-kernel@vger.kernel.org>; Fri, 17 May 2019 00:27:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=5yR7w+lbXREb1V+QECtjDDonB2NG2+mD0zE8iEbLsOA=;
-        b=rL1R5dEGxFf0mAiouBM4WyIyJZ8lQ/FFAJS1ZztuHLBBhU/AuQSJk59uh2/Naurhzu
-         JsZaG5ziu7sOP04pfroQYmEnw+an5tgyQ3pQjx680Ve6Q0NUGh94x33CUPaabRViKSL8
-         Hys5i+cUGtBGyBGtnWDDzfhGLFa4Kyp41YBM7y3s8z6Qlnp5DIWH19wR2dPsyCcWK5lQ
-         o0klD35f6BhlECxzjiBlm3d17a6dMOHRZi0LT2f8Y1ymTYC3KwPaSiiQqnUpV/HZ/V0J
-         +Lo46zzei2RJNXEhbjv8u8WmdckJw8wSHi1xjVxzErXCdn7OacgK8Edo1JvwuCif/SrY
-         AxZQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=5yR7w+lbXREb1V+QECtjDDonB2NG2+mD0zE8iEbLsOA=;
-        b=g4gDBN7eyjEySrkyrAHW6+dVOAfDwV4ex763t8m0kRZMvDTVHs1GuyP1D/pRq9ayXV
-         ZLJVAcBhUXsiNNFyhy22pm02W2yOhbeVGzkbzILD40ZxpLCawEAwoxqAaOE/NtP7mBHO
-         B2nLr0pidA4WR5E2lGg7a9FAkclpbFGgHIlM3D5DhVpBjZcItc54fI8A/2VuZdmfCfhK
-         2b05ZXYsz1DjSZw9cMwsfmO+G6A996q7WhLWkwaxAY8HcuYCYE094a2uMWEh3K86SEfj
-         xZzrk+2wTl+RTCyq/VV+QMXMY+DNAYSm497AfZaVJoeVeW6fWg8JERVlkyZElbUBkVHI
-         pNzA==
-X-Gm-Message-State: APjAAAVsqqJIupdKRALYGtYjfwbHM8R0beSRiXAl2plbH6TjSDmHoQtK
-        pLeBcGhsv4UNGa+c+x4batY=
-X-Google-Smtp-Source: APXvYqwkpkqsGtVIR2m+JggYHRaeSu01PUNRAiPSAH7+euE+tdrLQfGM8RMw5R18pbOHoltUL9EtUQ==
-X-Received: by 2002:a65:64da:: with SMTP id t26mr55379408pgv.322.1558078061730;
-        Fri, 17 May 2019 00:27:41 -0700 (PDT)
-Received: from localhost ([175.223.38.122])
-        by smtp.gmail.com with ESMTPSA id m12sm3674967pgi.56.2019.05.17.00.27.39
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 17 May 2019 00:27:40 -0700 (PDT)
-Date:   Fri, 17 May 2019 16:27:37 +0900
-From:   Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
-To:     Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
-Cc:     Ben Skeggs <bskeggs@redhat.com>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
-Subject: Re: drm/nouveau/core/memory: kmemleak 684 new suspected memory leaks
-Message-ID: <20190517072737.GA651@jagdpanzerIV>
-References: <20190517061340.GA709@jagdpanzerIV>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190517061340.GA709@jagdpanzerIV>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+        Fri, 17 May 2019 03:28:06 -0400
+Received: from smtpbgau1.qq.com ([54.206.16.166]:35062 "EHLO smtpbgau1.qq.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727274AbfEQH2G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 May 2019 03:28:06 -0400
+X-QQ-mid: bizesmtp6t1558078014tvru3ndpu
+Received: from localhost.localdomain (unknown [218.76.23.26])
+        by esmtp6.qq.com (ESMTP) with 
+        id ; Fri, 17 May 2019 15:26:49 +0800 (CST)
+X-QQ-SSF: 01400000000000H0HH32B00A0000000
+X-QQ-FEAT: uPLuWhYJ8bgQ0KBKFD26TP9nD+iZGxfLS5lfh9f7aD4HRiMqZBPYNqzg8iaWJ
+        1nB6QC8odokeMzekQ6BY5HBuhXVzpGTTfXzMT14VhPUEE6i/C88YPCGNQ6dTyO/GGa499mI
+        OV8irotPyiSh6NNnLrst0WZAeYOWbQ1W0zjwVeuXNM0pU3sS07KIpKo1pu1GDSeDTT+Y0X1
+        wnWOlrLgKl75pbUL0GWR7iiP3ZVUbHzAIgIFuASwetrelpCJmRoctTYoYe4ho/Ces90ReM6
+        txkM9csxi87PorZqRUfyPNQiHDaVv8Zo4h0L0Lr8n1UEY84s1cn9Wh5uH99IKGp6N4CQ==
+X-QQ-GoodBg: 2
+From:   xiaolinkui <xiaolinkui@kylinos.cn>
+To:     james.morris@microsoft.com, gustavo@embeddedor.com,
+        dhowells@redhat.com, akpm@linux-foundation.org
+Cc:     linux-kernel@vger.kernel.org, xiaolinkui@kylinos.cn
+Subject: [PATCH 1/3] lib: assoc_array: use struct_size() in kmalloc()
+Date:   Fri, 17 May 2019 15:26:48 +0800
+Message-Id: <1558078008-15737-1-git-send-email-xiaolinkui@kylinos.cn>
+X-Mailer: git-send-email 2.7.4
+X-QQ-SENDSIZE: 520
+Feedback-ID: bizesmtp:kylinos.cn:qybgforeign:qybgforeign4
+X-QQ-Bgrelay: 1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On (05/17/19 15:13), Sergey Senozhatsky wrote:
+Use the new struct_size() helper to keep code simple.
 
-> ... but most likely it's utterly wrong.
-> 
+Signed-off-by: xiaolinkui <xiaolinkui@kylinos.cn>
+---
+ lib/assoc_array.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-JFI, I removed kmemleak annotation and added the following
-thing:
+diff --git a/lib/assoc_array.c b/lib/assoc_array.c
+index edc3c14..0e69b5b 100644
+--- a/lib/assoc_array.c
++++ b/lib/assoc_array.c
+@@ -1494,8 +1494,7 @@ int assoc_array_gc(struct assoc_array *array,
+ 		shortcut = assoc_array_ptr_to_shortcut(cursor);
+ 		keylen = round_up(shortcut->skip_to_level, ASSOC_ARRAY_KEY_CHUNK_SIZE);
+ 		keylen >>= ASSOC_ARRAY_KEY_CHUNK_SHIFT;
+-		new_s = kmalloc(sizeof(struct assoc_array_shortcut) +
+-				keylen * sizeof(unsigned long), GFP_KERNEL);
++		new_s = kmalloc(struct_size(new_s, index_key, keylen), GFP_KERNEL);
+ 		if (!new_s)
+ 			goto enomem;
+ 		pr_devel("dup shortcut %p -> %p\n", shortcut, new_s);
+-- 
+2.7.4
 
-@@ -360,6 +360,7 @@ gp100_vmm_valid(struct nvkm_vmm *vmm, void *argv, u32 argc,
-                        return -EINVAL;
-                }
 
-+               kfree(map->tags);
-                ret = nvkm_memory_tags_get(memory, device, tags,
-                                           nvkm_ltc_tags_clear,
-                                           &map->tags);
 
-	-ss
