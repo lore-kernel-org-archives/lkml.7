@@ -2,125 +2,177 @@ Return-Path: <SRS0=M1fl=TR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E143DC04AB4
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 15:53:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32105C04AB4
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 15:55:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AD1452083E
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 15:53:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F2FBD2083E
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 15:55:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="kP5ojcPf"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="eqtMLehk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729169AbfEQPx5 (ORCPT
+        id S1729125AbfEQPzZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 May 2019 11:53:57 -0400
-Received: from mail-pg1-f170.google.com ([209.85.215.170]:40819 "EHLO
-        mail-pg1-f170.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728664AbfEQPx5 (ORCPT
+        Fri, 17 May 2019 11:55:25 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:38904 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728820AbfEQPzZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 May 2019 11:53:57 -0400
-Received: by mail-pg1-f170.google.com with SMTP id d30so3488684pgm.7
-        for <linux-kernel@vger.kernel.org>; Fri, 17 May 2019 08:53:57 -0700 (PDT)
+        Fri, 17 May 2019 11:55:25 -0400
+Received: by mail-wm1-f67.google.com with SMTP id t5so5885588wmh.3
+        for <linux-kernel@vger.kernel.org>; Fri, 17 May 2019 08:55:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=DeWYh2wXHt0SGoJqX0T0F4RONBrBgIxGbZCJ2kdSH6I=;
-        b=kP5ojcPfRjRGKbxsO4pF79WW/kSRZaLu97/2LsHLFWXmA56eKS99Mt+3JVChAIHpWm
-         /edz0dqcheadE+lCi2SLduXDhlV/p2PinTyIt4lzceJGxetX1fUXdKy/JmwgB4UYvVNK
-         Brmr62mRz4mVtq7sVy58XKgfbiMqAH/4IEa8o=
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=9n65JKv2XtPRLEdFty+JHya3Hjv0VqsllvETqv34x3s=;
+        b=eqtMLehkSuVpZWU8YmbIdTgq3l1bQgg7oenIJACGfzp0n0gA5cHySNoLpfqW61V6FE
+         yg2edrtMPTNl6grlRjM5KMn21ohd4hQe/V20GWefTBh4O/PMQ27z9LcQhn2TRsUtw5Uc
+         vC9v22wkaQ+lQKYMwV6o6PaHmDcT4bu0pRDAtjqirQPLYYZ6/hCKGwLzRD6edyJKLbd3
+         npy+XyhvE/qrQ8Mq1+XDZeGRUAV8kYZnqNRJwBOXCAWAuykziVlRlesQ8myaci4ZtXU/
+         VuChTSL1DYUSbpb+YjgdVEf3CdmFiesBd4yQh0pXUMIxlyYyMALfLwGCpkS8yHEq7plt
+         YO3Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=DeWYh2wXHt0SGoJqX0T0F4RONBrBgIxGbZCJ2kdSH6I=;
-        b=WB+pc7SL0X0TTXqGQGkIw3k6t1JtUzg132sUV8fjVwKslVflauCShCehGyow6gULxW
-         83xbVb8yXa7pkC1BY6GmN0NFBh7lECeluB7lRo0/3GXd65hMIWxinnSpVg824iQO+02s
-         J2wmFzw64fz8zXBxjRA5LZhyKCtYV9Xjc2eZEFHaB+EHvoszY9bJgMro+vfWs7Fs3C3Z
-         GTmtCZz7IIGD9/fEJxgwnAM6EvVMsB0FIbRzD3d9033APwtnR9/QnLnWuM6TwIOjcHhH
-         5Vaowa4xPyJSbU3V7MBRyJ/gwL9/eGbED/PaH84Fal00ud4vApc5mGzoGx6umQ8pMwma
-         J2jA==
-X-Gm-Message-State: APjAAAWvlunypPjFCIgA6TJTQkITddKvpzoHqHGcibG7yJrF4evzzaR1
-        TPtE88NCzXdxuOhsIqvZBNCUlA==
-X-Google-Smtp-Source: APXvYqyvXdwCR61IEEY49hfPBp0/QulW7H4+PkBv7xWEeGfEdGz2OO8yjJsd70M5DeFCJZN6lhnfqQ==
-X-Received: by 2002:a62:8893:: with SMTP id l141mr4899472pfd.261.1558108436771;
-        Fri, 17 May 2019 08:53:56 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id m12sm5169259pgi.56.2019.05.17.08.53.55
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 17 May 2019 08:53:55 -0700 (PDT)
-Date:   Fri, 17 May 2019 08:53:54 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     David Laight <David.Laight@ACULAB.COM>
-Cc:     'Jan Kara' <jack@suse.cz>, Dan Williams <dan.j.williams@intel.com>,
-        "linux-nvdimm@lists.01.org" <linux-nvdimm@lists.01.org>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>,
-        Jeff Moyer <jmoyer@redhat.com>, Ingo Molnar <mingo@redhat.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Matthew Wilcox <willy@infradead.org>,
-        Jeff Smits <jeff.smits@intel.com>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] libnvdimm/pmem: Bypass CONFIG_HARDENED_USERCOPY overhead
-Message-ID: <201905170845.1B4E2A03@keescook>
-References: <155805321833.867447.3864104616303535270.stgit@dwillia2-desk3.amr.corp.intel.com>
- <20190517084739.GB20550@quack2.suse.cz>
- <2d8b1ba7890940bf8a512d4eef0d99b3@AcuMS.aculab.com>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=9n65JKv2XtPRLEdFty+JHya3Hjv0VqsllvETqv34x3s=;
+        b=kKsMyWaKF5lWXjP7qdtqKS0qBgGfRx+eOrxjIRwKFKFnQp/MGiXIvDeA7CaMXwsNWA
+         4lLP9K6kDwOnJhsrqO7z4mWVFNZywZiU7AlREhjiXrDk7pd+196092d8bebN1Z0WFiBA
+         /S8HGF2mg5/WSmphBy7rV6PoXZ1YIgw3OddHZxM5zGeGiHUCxFZGiRUmnSW51SbxqpzT
+         5tptNLyvvv5Beemxc+dIIfNk6V6QSK2UyZVRQj07YvcAEcLE2vnUsmmjU+NfxxVVgkGO
+         cdroz07CuYEWp3lXFGIl3hfuG+uaSlZ5T4Ca4Duof/K7p/dRxs+YF+YURA8GNys+3/1D
+         ucIQ==
+X-Gm-Message-State: APjAAAWXSZEHjKwguYQZelGBOhlgqLXnRMKuoO9FoZOrsyKVjT+Pu7AV
+        Ev0ibHTYM3pun4Iq06BI/7czmg==
+X-Google-Smtp-Source: APXvYqxyD1MoKJab3x0ukgsHx31lbCyhH+uK861VI4R8nx43jO0xg/nPl2AK0Cj1rIQtnP3UUpZLng==
+X-Received: by 2002:a1c:9eca:: with SMTP id h193mr23434703wme.125.1558108522628;
+        Fri, 17 May 2019 08:55:22 -0700 (PDT)
+Received: from [192.168.0.41] (sju31-1-78-210-255-2.fbx.proxad.net. [78.210.255.2])
+        by smtp.googlemail.com with ESMTPSA id z7sm7544362wme.26.2019.05.17.08.55.21
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 17 May 2019 08:55:21 -0700 (PDT)
+Subject: Re: [PATCHv1 6/8] arm64: dts: qcom: msm8996: Add PSCI cpuidle low
+ power states
+To:     Amit Kucheria <amit.kucheria@linaro.org>,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        bjorn.andersson@linaro.org, andy.gross@linaro.org,
+        David Brown <david.brown@linaro.org>,
+        Li Yang <leoyang.li@nxp.com>, Shawn Guo <shawnguo@kernel.org>
+Cc:     devicetree@vger.kernel.org
+References: <cover.1557486950.git.amit.kucheria@linaro.org>
+ <8648ba97d49a9f731001e4b36611be9650e37f37.1557486950.git.amit.kucheria@linaro.org>
+From:   Daniel Lezcano <daniel.lezcano@linaro.org>
+Message-ID: <b488bd2a-5544-4f7e-3f5f-8ce1b686ce87@linaro.org>
+Date:   Fri, 17 May 2019 17:55:20 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <2d8b1ba7890940bf8a512d4eef0d99b3@AcuMS.aculab.com>
+In-Reply-To: <8648ba97d49a9f731001e4b36611be9650e37f37.1557486950.git.amit.kucheria@linaro.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 17, 2019 at 09:06:26AM +0000, David Laight wrote:
-> From: Jan Kara
-> > Sent: 17 May 2019 09:48
-> ...
-> > So this last paragraph is not obvious to me as check_copy_size() does a lot
-> > of various checks in CONFIG_HARDENED_USERCOPY case. I agree that some of
-> > those checks don't make sense for PMEM pages but I'd rather handle that by
-> > refining check_copy_size() and check_object_size() functions to detect and
-> > appropriately handle pmem pages rather that generally skip all the checks
-> > in pmem_copy_from/to_iter(). And yes, every check in such hot path is going
-> > to cost performance but that's what user asked for with
-> > CONFIG_HARDENED_USERCOPY... Kees?
+On 10/05/2019 13:29, Amit Kucheria wrote:
+> Add device bindings for cpuidle states for cpu devices.
 > 
-> Except that all the distros enable it by default.
-> So you get the performance cost whether you (as a user) want it or not.
-
-Note that it can be disabled on the kernel command line, but that seems
-like a last resort. :)
-
+> Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
+> ---
+>  arch/arm64/boot/dts/qcom/msm8996.dtsi | 28 +++++++++++++++++++++++++++
+>  1 file changed, 28 insertions(+)
 > 
-> I've changed some of our code to use __get_user() to avoid
-> these stupid overheads.
+> diff --git a/arch/arm64/boot/dts/qcom/msm8996.dtsi b/arch/arm64/boot/dts/qcom/msm8996.dtsi
+> index c761269caf80..b615bcb9e351 100644
+> --- a/arch/arm64/boot/dts/qcom/msm8996.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/msm8996.dtsi
+> @@ -95,6 +95,7 @@
+>  			compatible = "qcom,kryo";
+>  			reg = <0x0 0x0>;
+>  			enable-method = "psci";
+> +			cpu-idle-states = <&LITTLE_CPU_PD>;
 
-__get_user() skips even access_ok() checking too, so that doesn't seem
-like a good idea. Did you run access_ok() checks separately? (This
-generally isn't recommended.)
+It is the same micro architecture, the CPUS differ by their max OPP.
+Shall we call it really little?
 
-The usercopy hardening is intended to only kick in when the copy size
-isn't a builtin constant -- it's attempting to do a bounds check on
-the size, with the pointer used to figure out what bounds checking is
-possible (basically "is this stack? check stack location/frame size"
-or "is this kmem cache? check the allocation size") and then do bounds
-checks from there. It tries to bail out early to avoid needless checking,
-so if there is some additional logic to be added to check_object_size()
-that is globally applicable, sure, let's do it.
+I take the opportunity to report the capacity-dmips-mhz attribute is
+missing. The max capacity computation is not triggered, thus the
+scheduler see the same capacity for both cluster even if one has less
+OPP. Adding capacity-dmips-mhz = <1024>; to all CPUs will fix it.
 
-I'm still not clear from this thread about the case that is getting
-tripped/slowed? If you're already doing bounds checks somewhere else
-and there isn't a chance for the pointer or size to change, then yeah,
-it seems safe to skip the usercopy size checks. But what's the actual
-code that is having a problem?
+>  			next-level-cache = <&L2_0>;
+>  			L2_0: l2-cache {
+>  			      compatible = "cache";
+> @@ -107,6 +108,7 @@
+>  			compatible = "qcom,kryo";
+>  			reg = <0x0 0x1>;
+>  			enable-method = "psci";
+> +			cpu-idle-states = <&LITTLE_CPU_PD>;
+>  			next-level-cache = <&L2_0>;
+>  		};
+>  
+> @@ -115,6 +117,7 @@
+>  			compatible = "qcom,kryo";
+>  			reg = <0x0 0x100>;
+>  			enable-method = "psci";
+> +			cpu-idle-states = <&BIG_CPU_PD>;
+>  			next-level-cache = <&L2_1>;
+>  			L2_1: l2-cache {
+>  			      compatible = "cache";
+> @@ -127,6 +130,7 @@
+>  			compatible = "qcom,kryo";
+>  			reg = <0x0 0x101>;
+>  			enable-method = "psci";
+> +			cpu-idle-states = <&BIG_CPU_PD>;
+>  			next-level-cache = <&L2_1>;
+>  		};
+>  
+> @@ -151,6 +155,30 @@
+>  				};
+>  			};
+>  		};
+> +
+> +		idle-states {
+> +			entry-method="psci";
+> +
+> +			LITTLE_CPU_PD: little-power-down {
+> +				compatible = "arm,idle-state";
+> +				idle-state-name = "standalone-power-collapse";
+> +				arm,psci-suspend-param = <0x00000004>;
+> +				entry-latency-us = <40>;
+> +				exit-latency-us = <40>;
+> +				min-residency-us = <300>;
+> +				local-timer-stop;
+> +			};
+> +
+> +			BIG_CPU_PD: big-power-down {
+> +				compatible = "arm,idle-state";
+> +				idle-state-name = "standalone-power-collapse";
+> +				arm,psci-suspend-param = <0x00000004>;
+> +				entry-latency-us = <40>;
+> +				exit-latency-us = <40>;
+> +				min-residency-us = <300>;
+> +				local-timer-stop;
+> +			};
+> +		};
+>  	};
+>  
+>  	thermal-zones {
+> 
+
 
 -- 
-Kees Cook
+ <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
+
