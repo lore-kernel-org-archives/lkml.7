@@ -2,89 +2,116 @@ Return-Path: <SRS0=M1fl=TR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CD32C04E87
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 20:02:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CBCDC04AB4
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 20:05:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 602CA21726
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 20:02:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="olPH8CQg"
+	by mail.kernel.org (Postfix) with ESMTP id 0EC7620818
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 20:05:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729232AbfEQUCe (ORCPT
+        id S1729140AbfEQUFL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 May 2019 16:02:34 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:52150 "EHLO mail.skyhub.de"
+        Fri, 17 May 2019 16:05:11 -0400
+Received: from mga11.intel.com ([192.55.52.93]:39234 "EHLO mga11.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727088AbfEQUCd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 May 2019 16:02:33 -0400
-Received: from zn.tnic (p200300EC2F0C500031BA4AEE98C6BAA9.dip0.t-ipconnect.de [IPv6:2003:ec:2f0c:5000:31ba:4aee:98c6:baa9])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 8E2711EC01D4;
-        Fri, 17 May 2019 22:02:31 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1558123351;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=9VydyjHzDmof8wnmo6GNe/zh/nlLASDl1sKA6ia7xU0=;
-        b=olPH8CQgu3OFNC55UYroNnBzifiMkR8xA3FA0NO9KU9pV4Ti599N91Rm36lL9XnkU8s//l
-        nTD1nhHb7gqAos6TQ49q/6ttRX0Ot45ZmYx/0ReKe2LTXgQE2QRolIDdn0PuNE6YEMs8pW
-        akjql6reFAWRRIf3aaBbY/TM7/eIC/4=
-Date:   Fri, 17 May 2019 22:02:25 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     "Ghannam, Yazen" <Yazen.Ghannam@amd.com>
-Cc:     "Luck, Tony" <tony.luck@intel.com>,
-        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "x86@kernel.org" <x86@kernel.org>
-Subject: Re: [PATCH v3 5/6] x86/MCE: Save MCA control bits that get set in
- hardware
-Message-ID: <20190517200225.GK13482@zn.tnic>
-References: <20190516203456.GD21857@zn.tnic>
- <20190516205943.GA3299@agluck-desk>
- <20190517101006.GA32065@zn.tnic>
- <SN6PR12MB26391A0C3979030082EE38F8F80B0@SN6PR12MB2639.namprd12.prod.outlook.com>
- <20190517163729.GE13482@zn.tnic>
- <20190517172648.GA18164@agluck-desk>
- <20190517174817.GG13482@zn.tnic>
- <20190517180607.GA21710@agluck-desk>
- <20190517193431.GI13482@zn.tnic>
- <SN6PR12MB2639C5427366AC3004C35CC0F80B0@SN6PR12MB2639.namprd12.prod.outlook.com>
+        id S1726738AbfEQUFK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 May 2019 16:05:10 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 May 2019 13:05:10 -0700
+X-ExtLoop1: 1
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.36])
+  by orsmga005.jf.intel.com with ESMTP; 17 May 2019 13:05:09 -0700
+Date:   Fri, 17 May 2019 13:05:09 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Wanpeng Li <kernellwp@gmail.com>
+Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Liran Alon <liran.alon@oracle.com>
+Subject: Re: [PATCH v3 3/5] KVM: LAPIC: Expose per-vCPU timer_advance_ns to
+ userspace
+Message-ID: <20190517200509.GJ15006@linux.intel.com>
+References: <1557975980-9875-1-git-send-email-wanpengli@tencent.com>
+ <1557975980-9875-4-git-send-email-wanpengli@tencent.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <SN6PR12MB2639C5427366AC3004C35CC0F80B0@SN6PR12MB2639.namprd12.prod.outlook.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <1557975980-9875-4-git-send-email-wanpengli@tencent.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 17, 2019 at 07:49:10PM +0000, Ghannam, Yazen wrote:
-> > @@ -1569,7 +1575,13 @@ static void __mcheck_cpu_init_clear_banks(void)
-> > 
-> >                 if (!b->init)
-> >                         continue;
-> > +
-> > +               /* Check if any bits are implemented in h/w */
-> >                 wrmsrl(msr_ops.ctl(i), b->ctl);
-> > +               rdmsrl(msr_ops.ctl(i), msrval);
-> > +
-> > +               b->init = !!msrval;
-> > +
-> Just a minor nit, but can we group the comment, RDMSR, and check
-> together? The WRMSR is part of normal operation and isn't tied to the
-> check.
+On Thu, May 16, 2019 at 11:06:18AM +0800, Wanpeng Li wrote:
+> From: Wanpeng Li <wanpengli@tencent.com>
+> 
+> Expose per-vCPU timer_advance_ns to userspace, so it is able to 
+> query the auto-adjusted value.
+> 
+> Cc: Paolo Bonzini <pbonzini@redhat.com>
+> Cc: Radim Krčmář <rkrcmar@redhat.com>
+> Cc: Sean Christopherson <sean.j.christopherson@intel.com>
+> Cc: Liran Alon <liran.alon@oracle.com>
+> Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
+> ---
+>  arch/x86/kvm/debugfs.c | 16 ++++++++++++++++
+>  1 file changed, 16 insertions(+)
+> 
+> diff --git a/arch/x86/kvm/debugfs.c b/arch/x86/kvm/debugfs.c
+> index c19c7ed..a6f1f93 100644
+> --- a/arch/x86/kvm/debugfs.c
+> +++ b/arch/x86/kvm/debugfs.c
+> @@ -9,12 +9,22 @@
+>   */
+>  #include <linux/kvm_host.h>
+>  #include <linux/debugfs.h>
+> +#include "lapic.h"
+>  
+>  bool kvm_arch_has_vcpu_debugfs(void)
+>  {
+>  	return true;
+>  }
+>  
+> +static int vcpu_get_timer_advance_ns(void *data, u64 *val)
+> +{
+> +	struct kvm_vcpu *vcpu = (struct kvm_vcpu *) data;
+> +	*val = vcpu->arch.apic->lapic_timer.timer_advance_ns;
 
-Of course it is - that's the "throw all 1s at it" part :)
+This needs to ensure to check lapic_in_kernel() to ensure apic isn't NULL.
+Actually, I think we can skip creation of the parameter entirely if
+lapic_in_kernel() is false.  VMX and SVM both instantiate the lapic
+during kvm_arch_vcpu_create(), which is (obviously) called before
+kvm_arch_create_vcpu_debugfs().
 
--- 
-Regards/Gruss,
-    Boris.
-
-Good mailing practices for 400: avoid top-posting and trim the reply.
+> +	return 0;
+> +}
+> +
+> +DEFINE_SIMPLE_ATTRIBUTE(vcpu_timer_advance_ns_fops, vcpu_get_timer_advance_ns, NULL, "%llu\n");
+> +
+>  static int vcpu_get_tsc_offset(void *data, u64 *val)
+>  {
+>  	struct kvm_vcpu *vcpu = (struct kvm_vcpu *) data;
+> @@ -51,6 +61,12 @@ int kvm_arch_create_vcpu_debugfs(struct kvm_vcpu *vcpu)
+>  	if (!ret)
+>  		return -ENOMEM;
+>  
+> +	ret = debugfs_create_file("lapic_timer_advance_ns", 0444,
+> +							vcpu->debugfs_dentry,
+> +							vcpu, &vcpu_timer_advance_ns_fops);
+> +	if (!ret)
+> +		return -ENOMEM;
+> +
+>  	if (kvm_has_tsc_control) {
+>  		ret = debugfs_create_file("tsc-scaling-ratio", 0444,
+>  							vcpu->debugfs_dentry,
+> -- 
+> 2.7.4
+> 
