@@ -2,78 +2,92 @@ Return-Path: <SRS0=M1fl=TR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 039B6C04AAF
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 02:45:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB7A3C04AAF
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 02:46:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CE41420815
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 02:45:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A71C620815
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 02:46:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727568AbfEQCpQ (ORCPT
+        id S1727604AbfEQCqd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 22:45:16 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:60736 "EHLO mx1.redhat.com"
+        Thu, 16 May 2019 22:46:33 -0400
+Received: from inva020.nxp.com ([92.121.34.13]:58074 "EHLO inva020.nxp.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725933AbfEQCpP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 May 2019 22:45:15 -0400
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 962F936883;
-        Fri, 17 May 2019 02:45:15 +0000 (UTC)
-Received: from xz-x1 (dhcp-15-205.nay.redhat.com [10.66.15.205])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id ACD8960A9D;
-        Fri, 17 May 2019 02:45:12 +0000 (UTC)
-Date:   Fri, 17 May 2019 10:45:10 +0800
-From:   Peter Xu <peterx@redhat.com>
-To:     Thomas Huth <thuth@redhat.com>
-Cc:     Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        linux-kselftest@vger.kernel.org, kvm@vger.kernel.org,
-        Shuah Khan <shuah@kernel.org>,
-        Andrew Jones <drjones@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] KVM: selftests: Compile code with warnings enabled
-Message-ID: <20190517024510.GN16681@xz-x1>
-References: <20190516130257.29445-1-thuth@redhat.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20190516130257.29445-1-thuth@redhat.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.30]); Fri, 17 May 2019 02:45:15 +0000 (UTC)
+        id S1727184AbfEQCqc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 May 2019 22:46:32 -0400
+Received: from inva020.nxp.com (localhost [127.0.0.1])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id CF84D1A010B;
+        Fri, 17 May 2019 04:46:29 +0200 (CEST)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 29CAE1A000F;
+        Fri, 17 May 2019 04:46:24 +0200 (CEST)
+Received: from localhost.localdomain (mega.ap.freescale.net [10.192.208.232])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 4ED96402BF;
+        Fri, 17 May 2019 10:46:17 +0800 (SGT)
+From:   Ran Wang <ran.wang_1@nxp.com>
+To:     Li Yang <leoyang.li@nxp.com>, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
+Cc:     "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Pavel Machek <pavel@ucw.cz>, Len Brown <len.brown@intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linuxppc-dev@lists.ozlabs.org,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        Ran Wang <ran.wang_1@nxp.com>
+Subject: [PATCH 2/3] Documentation: dt: binding: fsl: Add 'little-endian' and update Chassis define
+Date:   Fri, 17 May 2019 10:47:47 +0800
+Message-Id: <20190517024748.15534-2-ran.wang_1@nxp.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190517024748.15534-1-ran.wang_1@nxp.com>
+References: <20190517024748.15534-1-ran.wang_1@nxp.com>
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi, Thomas,
+By default, QorIQ SoC's RCPM register block is Big Endian. But
+there are some exceptions, such as LS1088A and LS2088A, are Little
+Endian. So add this optional property to help identify them.
 
-On Thu, May 16, 2019 at 03:02:57PM +0200, Thomas Huth wrote:
-> So far the KVM selftests are compiled without any compiler warnings
-> enabled. That's quite bad, since we miss a lot of possible bugs this
-> way. Let's enable at least "-Wall" and some other useful warning flags
-> now.
-> 
-> Signed-off-by: Thomas Huth <thuth@redhat.com>
-> ---
->  This patch fixes most of the warnings in the x86 code already - but
->  for some warnings, I was not quite sure (e.g. about the need for the
->  kvm_get_supported_cpuid_entry(1) in some tests), so I did not touch
+Actually LS2021A and other Layerscapes won't totally follow Chassis
+2.1, so separate them from powerpc SoC.
 
-If you mean the two calls in state_test and evmcs_test I would agree
-they should be dropped directly.
+Signed-off-by: Ran Wang <ran.wang_1@nxp.com>
+---
+ Documentation/devicetree/bindings/soc/fsl/rcpm.txt |    8 +++++++-
+ 1 files changed, 7 insertions(+), 1 deletions(-)
 
-Just to mention that the patch may not apply cleanly to kvm/queue now
-probably because the dirty-log-test.c touchup recently, so may need a
-rebase.  Otherwise it looks nice at least to me to have these checks.
-
-Thanks,
-
+diff --git a/Documentation/devicetree/bindings/soc/fsl/rcpm.txt b/Documentation/devicetree/bindings/soc/fsl/rcpm.txt
+index e284e4e..058154c 100644
+--- a/Documentation/devicetree/bindings/soc/fsl/rcpm.txt
++++ b/Documentation/devicetree/bindings/soc/fsl/rcpm.txt
+@@ -20,6 +20,7 @@ Required properites:
+ 	* "fsl,qoriq-rcpm-1.0": for chassis 1.0 rcpm
+ 	* "fsl,qoriq-rcpm-2.0": for chassis 2.0 rcpm
+ 	* "fsl,qoriq-rcpm-2.1": for chassis 2.1 rcpm
++	* "fsl,qoriq-rcpm-2.1+": for chassis 2.1+ rcpm
+ 
+ All references to "1.0" and "2.0" refer to the QorIQ chassis version to
+ which the chip complies.
+@@ -27,7 +28,12 @@ Chassis Version		Example Chips
+ ---------------		-------------------------------
+ 1.0				p4080, p5020, p5040, p2041, p3041
+ 2.0				t4240, b4860, b4420
+-2.1				t1040, ls1021
++2.1				t1040,
++2.1+			ls1021a, ls1012a, ls1043a, ls1046a
++
++Optional properties:
++ - little-endian : RCPM register block is Little Endian. Without it RCPM
++   will be Big Endian (default case).
+ 
+ Example:
+ The RCPM node for T4240:
 -- 
-Peter Xu
+1.7.1
+
