@@ -2,101 +2,165 @@ Return-Path: <SRS0=M1fl=TR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34DFDC04E84
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 12:25:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CF02C04AB4
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 12:27:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 115F6204FD
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 12:25:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C944C2087B
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 12:27:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1558096028;
+	bh=TSGHK1BGSvnCUOb+aF8hhCjkK9ks3zTJ+k73Beyui+I=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=FRB2ELBZUS23KgEK660Eu0oVsgJ7TtjiNjRctKwqghZAIV05CWj4hwINm5kvzLRVq
+	 i1mMYu/Ki3cckAvUY/U3aQc08JS8aIjfQaWZUbi4tSWKRPm/0/eq/RsUcms2Mt0mPw
+	 hyj5bErQLnJiMz6CHM9eguhbYB9mcS5yfL0b8m40=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728881AbfEQMZw (ORCPT
+        id S1728899AbfEQM1I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 May 2019 08:25:52 -0400
-Received: from mout.kundenserver.de ([212.227.17.13]:35425 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728073AbfEQMZw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 May 2019 08:25:52 -0400
-Received: from [192.168.178.167] ([109.104.37.130]) by
- mrelayeu.kundenserver.de (mreue109 [212.227.15.183]) with ESMTPSA (Nemesis)
- id 1N4i3d-1gi8y90Jhn-011mLu; Fri, 17 May 2019 14:25:26 +0200
-Subject: Re: [GIT PULL] Thermal-SoC management changes for v5.2-rc1
-From:   Stefan Wahren <stefan.wahren@i2se.com>
-To:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Eduardo Valentin <edubezval@gmail.com>,
-        Guenter Roeck <linux@roeck-us.net>
-Cc:     Rui Zhang <rui.zhang@intel.com>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-References: <20190516044313.GA17751@localhost.localdomain>
- <CAHk-=wiaO_8SiEB9QM3vOTniiT67K6CBH0uHJ82-Dp_+6kxH3g@mail.gmail.com>
- <4803994d-f519-a6b6-f5bb-a2f50d91ecd7@i2se.com>
-Message-ID: <d6da5203-c113-5cec-c12e-9af91a9ff716@i2se.com>
-Date:   Fri, 17 May 2019 14:25:24 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Fri, 17 May 2019 08:27:08 -0400
+Received: from mx2.suse.de ([195.135.220.15]:59000 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728365AbfEQM1H (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 May 2019 08:27:07 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 9D97DAEF5;
+        Fri, 17 May 2019 12:27:05 +0000 (UTC)
+Date:   Fri, 17 May 2019 14:27:05 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Jiri Slaby <jslaby@suse.cz>
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Vladimir Davydov <vdavydov.dev@gmail.com>,
+        cgroups@vger.kernel.org,
+        Raghavendra K T <raghavendra.kt@linux.vnet.ibm.com>
+Subject: Re: [PATCH v2] memcg: make it work on sparse non-0-node systems
+Message-ID: <20190517122705.GH6836@dhcp22.suse.cz>
+References: <20190517080044.tnwhbeyxcccsymgf@esperanza>
+ <20190517114204.6330-1-jslaby@suse.cz>
 MIME-Version: 1.0
-In-Reply-To: <4803994d-f519-a6b6-f5bb-a2f50d91ecd7@i2se.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Provags-ID: V03:K1:f5a1GGMzwh+OJVKp3JEevbnxv4E4pHWmhaLPs4AP+6XsV4DhPVI
- 1ZC4jRQoyl9v8RmeHk35a2Z+mETuGNKmnSalWnfyWN3xuqgq6wyyj4zMJ93nflBbzD2KQ7J
- oMteAHY2B07z65HLNdvYftDwhmb/ZxofvDOW3t2+5JEY2bdPOp8msDZztRhVgGLCcMIeVfy
- oJWxd9caAfRPHR+p9dlxA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:cqbDtugd1ew=:CgicXDFd3qtxngcDKrjVr7
- ZgnuByVbxmgO8qKH+zqNdqbbY3dELmRo8Nwy3YDhZziw+/XvQ/0WVGdjFg5GFBA8bVXlvZ1pA
- dNDb0F4M1keUPQebLWqwHOkHVr/MuC+OsddbxUVmFCzJyHQ/6P3AWHU0wb1hY6tLGgLXkUotw
- k8af0d8TYRgtOcPgS0diKDE588GiOdHIiOysfAxoTN+SzB+H2U1DZWYT7AOYhPbVCIvYD8h6W
- GsZUe5gvOwlMmpJe1mdprG2GCUSciJd5xxN1eeYoaWrNaNtdELWKFscw0Q2kWJ0Z4OrnqptSr
- 2k3r1ocNiS1qliMQpWNj7QxilEhVpbRnbC9YrxwD/U0sDaER9DPbKf4L7iw1z0R16oRXk5g2F
- llntN61/SMKG55Cj+a2zEhdnYqRJ/3VTsuoJK5zP4A5ABIkcmzPcq/o/1PZn+5yBdK7lEmuS3
- UyI4VXxkuRyyLjSx1NR/Ay0mMgFRHzekggtHklBX5kCyKcYjukstTulL1xFbLud1sitW73BQk
- qhhcYEOyRaX6spwBvvOEDxAH/vHXqyKsTfLtI93oWKeNuvJG/U14vxq4yPQtF+uz4jnA9x5y1
- XrNysL4X8nbh4uedlbyuq4Adm/OuMhJgIKlMF7DB8FUVPd/B4IjxS9tlQhEx8DvDEVQfrzU9D
- MsnIJo/zVc9b8BICMBNOQmx8sAFTbOxsq2koIJnRNb/8gNYU8FeJaeRAU/B4t1ic+40an2YT2
- 30KSelRlJ/5YC9mDdaL4w8Qqbb9nhNI/ZbD3bB4lhmqJ9EQvOSObiLt5npE=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190517114204.6330-1-jslaby@suse.cz>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 16.05.19 18:11, Stefan Wahren wrote:
-> Hi Linus,
->
-> On 16.05.19 17:07, Linus Torvalds wrote:
->> On Wed, May 15, 2019 at 9:43 PM Eduardo Valentin <edubezval@gmail.com> wrote:
->>> - thermal core has a new devm_* API for registering cooling devices, thanks to Guenter R.
->>>   I took the entire series, that is why you see changes on drivers/hwmon in this pull.
->> This clashed badly with commit 6b1ec4789fb1 ("hwmon: (pwm-fan) Add RPM
->> support via external interrupt"), which added a timer to the pwm-fan
->> handling.
->>
->> In particular, that timer now needed the same kind of cleanup changes,
->> and I'd like you guys (particularly Guenther, who was involved on both
->> sides) to double-check my merge.
->>
->> The way I solved it was to just make the pwm_fan_pwm_disable()
->> callback do both the pwm_diable() _and_ the del_timer_sync() on the
->> new timer. That seemed to be the simplest solution that meshed with
->> the new devm cleanup model, but while I build-tested the result, I
->> obviously did no actual use testing. And maybe there's some reason why
->> that approach is flawed.
-> i will try to test on our custom i.MX6 board. Unfortunately this take
-> some time since it isn't mainline yet (at least until tomorrow).
+On Fri 17-05-19 13:42:04, Jiri Slaby wrote:
+> We have a single node system with node 0 disabled:
+>   Scanning NUMA topology in Northbridge 24
+>   Number of physical nodes 2
+>   Skipping disabled node 0
+>   Node 1 MemBase 0000000000000000 Limit 00000000fbff0000
+>   NODE_DATA(1) allocated [mem 0xfbfda000-0xfbfeffff]
+> 
+> This causes crashes in memcg when system boots:
+>   BUG: unable to handle kernel NULL pointer dereference at 0000000000000008
+>   #PF error: [normal kernel read fault]
+> ...
+>   RIP: 0010:list_lru_add+0x94/0x170
+> ...
+>   Call Trace:
+>    d_lru_add+0x44/0x50
+>    dput.part.34+0xfc/0x110
+>    __fput+0x108/0x230
+>    task_work_run+0x9f/0xc0
+>    exit_to_usermode_loop+0xf5/0x100
+> 
+> It is reproducible as far as 4.12. I did not try older kernels. You have
+> to have a new enough systemd, e.g. 241 (the reason is unknown -- was not
+> investigated). Cannot be reproduced with systemd 234.
+> 
+> The system crashes because the size of lru array is never updated in
+> memcg_update_all_list_lrus and the reads are past the zero-sized array,
+> causing dereferences of random memory.
+> 
+> The root cause are list_lru_memcg_aware checks in the list_lru code.
+> The test in list_lru_memcg_aware is broken: it assumes node 0 is always
+> present, but it is not true on some systems as can be seen above.
+> 
+> So fix this by avoiding checks on node 0. Remember the memcg-awareness
+> by a bool flag in struct list_lru.
+> 
+> [v2] use the idea proposed by Vladimir -- the bool flag.
+> 
+> Signed-off-by: Jiri Slaby <jslaby@suse.cz>
+> Cc: Johannes Weiner <hannes@cmpxchg.org>
+> Cc: Michal Hocko <mhocko@kernel.org>
+> Suggested-by: Vladimir Davydov <vdavydov.dev@gmail.com>
+> Acked-by: Vladimir Davydov <vdavydov.dev@gmail.com>
+> Cc: <cgroups@vger.kernel.org>
+> Cc: <linux-mm@kvack.org>
+> Cc: Raghavendra K T <raghavendra.kt@linux.vnet.ibm.com>
 
-Okay, today's test based on your tree ( a6a4b66bd8f ) were successful.
+Fixes: 60d3fd32a7a9 ("list_lru: introduce per-memcg lists")
+unless I have missed something
 
-Thanks
-Stefan
+Cc: stable sounds like a good idea to me as well, although nobody has
+noticed this yet but Node0 machines are quite rare.
 
->
-> Stefan
->
->> Guenther?
->>
->>                     Linus
+I haven't checked all users of list_lru but the structure size increase
+shouldn't be a big problem. There tend to be only limited number of
+those and the number shouldn't be huge.
+
+So this looks good to me.
+Acked-by: Michal Hocko <mhocko@suse.com>
+
+Thanks a lot Jiri!
+
+> ---
+>  include/linux/list_lru.h | 1 +
+>  mm/list_lru.c            | 8 +++-----
+>  2 files changed, 4 insertions(+), 5 deletions(-)
+> 
+> diff --git a/include/linux/list_lru.h b/include/linux/list_lru.h
+> index aa5efd9351eb..d5ceb2839a2d 100644
+> --- a/include/linux/list_lru.h
+> +++ b/include/linux/list_lru.h
+> @@ -54,6 +54,7 @@ struct list_lru {
+>  #ifdef CONFIG_MEMCG_KMEM
+>  	struct list_head	list;
+>  	int			shrinker_id;
+> +	bool			memcg_aware;
+>  #endif
+>  };
+>  
+> diff --git a/mm/list_lru.c b/mm/list_lru.c
+> index 0730bf8ff39f..d3b538146efd 100644
+> --- a/mm/list_lru.c
+> +++ b/mm/list_lru.c
+> @@ -37,11 +37,7 @@ static int lru_shrinker_id(struct list_lru *lru)
+>  
+>  static inline bool list_lru_memcg_aware(struct list_lru *lru)
+>  {
+> -	/*
+> -	 * This needs node 0 to be always present, even
+> -	 * in the systems supporting sparse numa ids.
+> -	 */
+> -	return !!lru->node[0].memcg_lrus;
+> +	return lru->memcg_aware;
+>  }
+>  
+>  static inline struct list_lru_one *
+> @@ -451,6 +447,8 @@ static int memcg_init_list_lru(struct list_lru *lru, bool memcg_aware)
+>  {
+>  	int i;
+>  
+> +	lru->memcg_aware = memcg_aware;
+> +
+>  	if (!memcg_aware)
+>  		return 0;
+>  
+> -- 
+> 2.21.0
+
+-- 
+Michal Hocko
+SUSE Labs
