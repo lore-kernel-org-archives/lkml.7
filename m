@@ -2,194 +2,127 @@ Return-Path: <SRS0=M1fl=TR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 930ACC04AB4
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 21:54:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 901FEC04E87
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 21:55:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 650B12133D
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 21:54:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 44E31216C4
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 21:55:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=soleen.com header.i=@soleen.com header.b="dxODNsdP"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="J6sBCDZE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729592AbfEQVyu (ORCPT
+        id S1729622AbfEQVzV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 May 2019 17:54:50 -0400
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:38599 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729522AbfEQVyr (ORCPT
+        Fri, 17 May 2019 17:55:21 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:41841 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729594AbfEQVzV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 May 2019 17:54:47 -0400
-Received: by mail-qt1-f195.google.com with SMTP id d13so9770194qth.5
-        for <linux-kernel@vger.kernel.org>; Fri, 17 May 2019 14:54:46 -0700 (PDT)
+        Fri, 17 May 2019 17:55:21 -0400
+Received: by mail-pl1-f196.google.com with SMTP id f12so3922184plt.8
+        for <linux-kernel@vger.kernel.org>; Fri, 17 May 2019 14:55:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=soleen.com; s=google;
-        h=from:to:subject:date:message-id:in-reply-to:references:mime-version
-         :content-transfer-encoding;
-        bh=8p3wsS4SMTLuQgzuXCRhTKHP61mCg8wFpFeHB9x4QIQ=;
-        b=dxODNsdP4xdmGLZgD3wGpBVlOvBLAVbSmuov53M2mG0sFDyfGFIGchYc5sW1e4tdjh
-         E4c/jto60Apec/FyJ74ps0C/lZTwCHSVCGEu/P9hjQyCnKCnrzUieZ4VeCLSkNoimqU6
-         vTLoXPIvlC8WqNcEBLsvkQh9YYqP+L4H5r2GbwuKQ+kEujoYI57NpN8mOTCWgmfsr7Aw
-         Spg565JQb5vi1JEv/tGDOgJGc//CmfQNLmu7NjApk78ZskurVXGDnNCuawRCwtqnE6X6
-         JljgK2qNEAxVFEPGagOdIZlQ2j6+4SDQF/UVFwdv64lQUFlavVTkaDTXSW2ZYOAZXFsD
-         rTLg==
+        d=chromium.org; s=google;
+        h=message-id:mime-version:content-transfer-encoding:in-reply-to
+         :references:subject:from:cc:to:user-agent:date;
+        bh=3cmDmKVrpmOZMNgPRAiH0olqmC9Yh+Gmdf/HadyohC4=;
+        b=J6sBCDZEcDFHQljhONfwZsgtsfwSoAQY/BmYrJ9Df8UUnT54h3T2+eZsxV5rHjLhSt
+         gsEPT4lke+v+APQlrZCxIn4+A4jvnTSS7HiMae4+5DVhMVIiML1iXWIYyz6mP7E9bSa/
+         hJYSNflLuHdJBE65HxtMr6Q6fCKRPt8A47avk=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=8p3wsS4SMTLuQgzuXCRhTKHP61mCg8wFpFeHB9x4QIQ=;
-        b=L+4BDMDucaV3CrF0gYsTqyI7HvL7QENbzm2AXCNWkhoULKzftpuDYYE888daeXEyj8
-         shxKEIxM33Njt0Y9au9xUDvI0R4TMVlgF4f6BaU4TdWfmqa/AbHlOm1g/4+Er/MYqpoF
-         SWA9D2M7enMcGrhic9zvZKOrKWDOAtAyMdrtxMTYfDFmpNRPJT8Y8fTLMzxJZagDKROJ
-         0aaKr9g0BH2+SMRkFvoIsHK77nON4PPfBQLOFjwEYKA8pjOPOd+AP9EjSJ8HQCbcV4DP
-         Wx1p6NB8jOhpnRlMVzdeKSRdaYIyxInEYMFMPM2SSZi2SVf6acf4lC5GDq+9B8cwo0GU
-         Et8w==
-X-Gm-Message-State: APjAAAWqGDtuUtfiNlnpEGmIoS99p0XzXJS2PxMYaFUANcpgTHLXfxc+
-        SvJJytaCLVjPuMCrfnygZQlaGw==
-X-Google-Smtp-Source: APXvYqwFk9kJSaOoaMhXOv97FFwjvOjt9oKxB+WBIkvvLLcYVDlAeyLAX4m1Cd2gwueE6vntUoBbxw==
-X-Received: by 2002:ac8:3696:: with SMTP id a22mr50806933qtc.296.1558130086264;
-        Fri, 17 May 2019 14:54:46 -0700 (PDT)
-Received: from localhost.localdomain (c-73-69-118-222.hsd1.nh.comcast.net. [73.69.118.222])
-        by smtp.gmail.com with ESMTPSA id n36sm6599813qtk.9.2019.05.17.14.54.44
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 17 May 2019 14:54:45 -0700 (PDT)
-From:   Pavel Tatashin <pasha.tatashin@soleen.com>
-To:     pasha.tatashin@soleen.com, jmorris@namei.org, sashal@kernel.org,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        linux-nvdimm@lists.01.org, akpm@linux-foundation.org,
-        mhocko@suse.com, dave.hansen@linux.intel.com,
-        dan.j.williams@intel.com, keith.busch@intel.com,
-        vishal.l.verma@intel.com, dave.jiang@intel.com, zwisler@kernel.org,
-        thomas.lendacky@amd.com, ying.huang@intel.com,
-        fengguang.wu@intel.com, bp@suse.de, bhelgaas@google.com,
-        baiyaowei@cmss.chinamobile.com, tiwai@suse.de, jglisse@redhat.com,
-        david@redhat.com
-Subject: [v6 3/3] device-dax: "Hotremove" persistent memory that is used like normal RAM
-Date:   Fri, 17 May 2019 17:54:38 -0400
-Message-Id: <20190517215438.6487-4-pasha.tatashin@soleen.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190517215438.6487-1-pasha.tatashin@soleen.com>
-References: <20190517215438.6487-1-pasha.tatashin@soleen.com>
+        h=x-gm-message-state:message-id:mime-version
+         :content-transfer-encoding:in-reply-to:references:subject:from:cc:to
+         :user-agent:date;
+        bh=3cmDmKVrpmOZMNgPRAiH0olqmC9Yh+Gmdf/HadyohC4=;
+        b=RA122x/os/10Gjl9tUazeqBUJ6LkT+XwohajxOVIvyzNIPQmPC+1tnvM6096YJYoDX
+         xxu8hAo3fWmjtrN79Ohs6agiRP4wHW2E0NDNUWvaKk7t7QyR+cSW3jbTW542bVJBSyME
+         PZjSis6bRaKcqIG6Fx2Xo0UWCyIsYsOOJ8K1mmUF+mYNKv/VoA6e6d2AoqITT+ytR4Ma
+         KTEBiWdD1ZOP7S11z/2Sd39ct1G9wFUyEzkM41Fu+u2alrOrTQeAhPyLbiOnDXpGQ0jZ
+         J9rOIBcFH0DkilwOYOtT7pKB98ifLc1O15X3N92W82vDTmvPbmiuUvt2jO7MIg3DdbIb
+         UGpg==
+X-Gm-Message-State: APjAAAWpTlgAe+DhuiPfXUdyJlLV7sbRyMqCQZq2GRZgZ9Ij/5vomvD9
+        /fT8COwuJcf+BRsjS7Ib1GemAg==
+X-Google-Smtp-Source: APXvYqw9MkFyQZykC6TAt/08Rk/EnsGsIC2de8Bs+rNwfZLiGzHmFC8ZPpTfd4rxAE6RGMd2uFlcaw==
+X-Received: by 2002:a17:902:868c:: with SMTP id g12mr42106151plo.323.1558130120619;
+        Fri, 17 May 2019 14:55:20 -0700 (PDT)
+Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
+        by smtp.gmail.com with ESMTPSA id e73sm9564668pfh.59.2019.05.17.14.55.19
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 17 May 2019 14:55:20 -0700 (PDT)
+Message-ID: <5cdf2dc8.1c69fb81.521c8.9339@mx.google.com>
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <CAHLCerP69Jw27VyO+ek4Fe3-2fDiOejtz6XZPykPSRA2G1831w@mail.gmail.com>
+References: <20190114184255.258318-1-mka@chromium.org> <CAHLCerP+F9AP97+qVCMqwu-OMJXRhwZrXd33Wk-vj5eyyw-KyA@mail.gmail.com> <CAHLCerPZ0Y-rkeMa_7BJWtR4g5af2vwfPY9FgOuvpUTJG3rf7g@mail.gmail.com> <155786856719.14659.2902538189660269078@swboyd.mtv.corp.google.com> <CAHLCerP69Jw27VyO+ek4Fe3-2fDiOejtz6XZPykPSRA2G1831w@mail.gmail.com>
+Subject: Re: [PATCH] arm64: dts: sdm845: Add CPU topology
+From:   Stephen Boyd <swboyd@chromium.org>
+Cc:     Matthias Kaehlcke <mka@chromium.org>,
+        David Brown <david.brown@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        "open list:ARM/QUALCOMM SUPPORT" <linux-soc@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+        Douglas Anderson <dianders@chromium.org>,
+        Rajendra Nayak <rnayak@codeaurora.org>
+To:     Amit Kucheria <amit.kucheria@linaro.org>,
+        Andy Gross <agross@kernel.org>
+User-Agent: alot/0.8.1
+Date:   Fri, 17 May 2019 14:55:19 -0700
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-It is now allowed to use persistent memory like a regular RAM, but
-currently there is no way to remove this memory until machine is
-rebooted.
+Quoting Amit Kucheria (2019-05-16 04:54:45)
+> (cc'ing Andy's correct email address)
+>=20
+> On Wed, May 15, 2019 at 2:46 AM Stephen Boyd <swboyd@chromium.org> wrote:
+> >
+> > Quoting Amit Kucheria (2019-05-13 04:54:12)
+> > > On Mon, May 13, 2019 at 4:31 PM Amit Kucheria <amit.kucheria@linaro.o=
+rg> wrote:
+> > > >
+> > > > On Tue, Jan 15, 2019 at 12:13 AM Matthias Kaehlcke <mka@chromium.or=
+g> wrote:
+> > > > >
+> > > > > The 8 CPU cores of the SDM845 are organized in two clusters of 4 =
+big
+> > > > > ("gold") and 4 little ("silver") cores. Add a cpu-map node to the=
+ DT
+> > > > > that describes this topology.
+> > > >
+> > > > This is partly true. There are two groups of gold and silver cores,
+> > > > but AFAICT they are in a single cluster, not two separate ones. SDM=
+845
+> > > > is one of the early examples of ARM's Dynamiq architecture.
+> > > >
+> > > > > Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
+> > > >
+> > > > I noticed that this patch sneaked through for this merge window but
+> > > > perhaps we can whip up a quick fix for -rc2?
+> > > >
+> > >
+> > > And please find attached a patch to fix this up. Andy, since this
+> > > hasn't landed yet (can we still squash this into the original patch?),
+> > > I couldn't add a Fixes tag.
+> > >
+> >
+> > I had the same concern. Thanks for catching this. I suspect this must
+> > cause some problem for IPA given that it can't discern between the big
+> > and little "power clusters"?
+>=20
+> Both EAS and IPA, I believe. It influences the scheduler's view of the
+> the topology.
 
-This work expands the functionality to also allows hotremoving
-previously hotplugged persistent memory, and recover the device for use
-for other purposes.
-
-To hotremove persistent memory, the management software must first
-offline all memory blocks of dax region, and than unbind it from
-device-dax/kmem driver. So, operations should look like this:
-
-echo offline > /sys/devices/system/memory/memoryN/state
-...
-echo dax0.0 > /sys/bus/dax/drivers/kmem/unbind
-
-Note: if unbind is done without offlining memory beforehand, it won't be
-possible to do dax0.0 hotremove, and dax's memory is going to be part of
-System RAM until reboot.
-
-Signed-off-by: Pavel Tatashin <pasha.tatashin@soleen.com>
-Reviewed-by: David Hildenbrand <david@redhat.com>
----
- drivers/dax/dax-private.h |  2 ++
- drivers/dax/kmem.c        | 41 +++++++++++++++++++++++++++++++++++----
- 2 files changed, 39 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/dax/dax-private.h b/drivers/dax/dax-private.h
-index a45612148ca0..999aaf3a29b3 100644
---- a/drivers/dax/dax-private.h
-+++ b/drivers/dax/dax-private.h
-@@ -53,6 +53,7 @@ struct dax_region {
-  * @pgmap - pgmap for memmap setup / lifetime (driver owned)
-  * @ref: pgmap reference count (driver owned)
-  * @cmp: @ref final put completion (driver owned)
-+ * @dax_mem_res: physical address range of hotadded DAX memory
-  */
- struct dev_dax {
- 	struct dax_region *region;
-@@ -62,6 +63,7 @@ struct dev_dax {
- 	struct dev_pagemap pgmap;
- 	struct percpu_ref ref;
- 	struct completion cmp;
-+	struct resource *dax_kmem_res;
- };
- 
- static inline struct dev_dax *to_dev_dax(struct device *dev)
-diff --git a/drivers/dax/kmem.c b/drivers/dax/kmem.c
-index 4c0131857133..3d0a7e702c94 100644
---- a/drivers/dax/kmem.c
-+++ b/drivers/dax/kmem.c
-@@ -71,21 +71,54 @@ int dev_dax_kmem_probe(struct device *dev)
- 		kfree(new_res);
- 		return rc;
- 	}
-+	dev_dax->dax_kmem_res = new_res;
- 
- 	return 0;
- }
- 
-+#ifdef CONFIG_MEMORY_HOTREMOVE
-+static int dev_dax_kmem_remove(struct device *dev)
-+{
-+	struct dev_dax *dev_dax = to_dev_dax(dev);
-+	struct resource *res = dev_dax->dax_kmem_res;
-+	resource_size_t kmem_start = res->start;
-+	resource_size_t kmem_size = resource_size(res);
-+	int rc;
-+
-+	/*
-+	 * We have one shot for removing memory, if some memory blocks were not
-+	 * offline prior to calling this function remove_memory() will fail, and
-+	 * there is no way to hotremove this memory until reboot because device
-+	 * unbind will succeed even if we return failure.
-+	 */
-+	rc = remove_memory(dev_dax->target_node, kmem_start, kmem_size);
-+	if (rc) {
-+		dev_err(dev,
-+			"DAX region %pR cannot be hotremoved until the next reboot\n",
-+			res);
-+		return rc;
-+	}
-+
-+	/* Release and free dax resources */
-+	release_resource(res);
-+	kfree(res);
-+	dev_dax->dax_kmem_res = NULL;
-+
-+	return 0;
-+}
-+#else
- static int dev_dax_kmem_remove(struct device *dev)
- {
- 	/*
--	 * Purposely leak the request_mem_region() for the device-dax
--	 * range and return '0' to ->remove() attempts. The removal of
--	 * the device from the driver always succeeds, but the region
--	 * is permanently pinned as reserved by the unreleased
-+	 * Without hotremove purposely leak the request_mem_region() for the
-+	 * device-dax range and return '0' to ->remove() attempts. The removal
-+	 * of the device from the driver always succeeds, but the region is
-+	 * permanently pinned as reserved by the unreleased
- 	 * request_mem_region().
- 	 */
- 	return 0;
- }
-+#endif /* CONFIG_MEMORY_HOTREMOVE */
- 
- static struct dax_device_driver device_dax_kmem_driver = {
- 	.drv = {
--- 
-2.21.0
+And EAS and IPA are OK with the real topology? I'm just curious if
+changing the topology to reflect reality will be a problem for those
+two.
 
