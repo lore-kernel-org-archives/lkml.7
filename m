@@ -2,131 +2,101 @@ Return-Path: <SRS0=M1fl=TR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C688C04AB4
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 06:27:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D04CC04E87
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 06:28:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3551420644
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 06:27:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5737220868
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 06:28:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ma+CFUX8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727800AbfEQG1n (ORCPT
+        id S1727855AbfEQG25 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 May 2019 02:27:43 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:35273 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727184AbfEQG1m (ORCPT
+        Fri, 17 May 2019 02:28:57 -0400
+Received: from mail-it1-f193.google.com ([209.85.166.193]:52363 "EHLO
+        mail-it1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727218AbfEQG25 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 May 2019 02:27:42 -0400
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1hRWLB-0002VC-4N; Fri, 17 May 2019 08:27:37 +0200
-Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1hRWLA-0002Gi-RW; Fri, 17 May 2019 08:27:36 +0200
-Date:   Fri, 17 May 2019 08:27:36 +0200
-From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-To:     Kun Yi <kunyi@google.com>
-Cc:     linux-leds@vger.kernel.org, jacek.anaszewski@gmail.com,
-        pavel@ucw.cz, dmurphy@ti.com, linux-kernel@vger.kernel.org,
-        linux-gpio@vger.kernel.org
-Subject: Re: [PATCH 2/2] ledtrig-gpio: 0 is a valid GPIO number
-Message-ID: <20190517062736.bh46ozfiux7xvnox@pengutronix.de>
-References: <20190516214209.139726-1-kunyi@google.com>
- <20190516214209.139726-3-kunyi@google.com>
+        Fri, 17 May 2019 02:28:57 -0400
+Received: by mail-it1-f193.google.com with SMTP id q65so10219249itg.2;
+        Thu, 16 May 2019 23:28:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=aE+x5+dl9MX2p1ad/5FbE3e7gAOZarlIFaZtG6NZuCg=;
+        b=Ma+CFUX83bsuUP3ZNQlhk6w3YI7Yn1WdN6pUiv8rgKcT8+hRadEStf1y3O9iobpev3
+         zU8Cm9984+4t6ARgbeBeJqx4rAJpTJ80EbRVYBi3QvElELfBHHIBX51zTc5j/pJoDFnQ
+         u7l7pZSKgcJzspc3OD7pWfjw/tTkwIDoHBckQgwtVYAEqJO8ZytkY9TmHgyDaB4PzYJd
+         5NoBScJ2vyXuJe7w2PCwOHAA2LVrVh+I4NgY9oWKxuQy0YyQzC6ZLlLNcdJf98PXfAUH
+         h1vIKjwZZPepXSUe1ibpEAcb6Nj1QvH6lxnnIMTsoX62YMoojfmgUoJaIc5i2PpZtB1T
+         3HRQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=aE+x5+dl9MX2p1ad/5FbE3e7gAOZarlIFaZtG6NZuCg=;
+        b=cOLXRRLL2eWThERvWD7GyJPkS4/7l/DOAYTgeja2RU5pSMXvOCOKfbRjTLy+uGIh2c
+         sCH4PEOTaUw9RjeBxkoIx1d7TE9xnaFai2j31DoO0OpjEGBmVmw1GKWjiDvhba7ePT2+
+         948r+x9WLzFFR+udCI5+BrFmvXM6huH9A+C8irV68U8Te6bKuI/e2+WG4lHmik2kSX9i
+         eR/6mYvVf/atUinZdhmFIeOWihKFierWq22La8uJXP8MkZIuCPNrQPeFowKkd8q0IN7T
+         JF9a9WmFHhxQXMfl+8968dVhJG4hwp149zuq0KG/FeYrQ/uo2NUR+CVa3v2kGA4m/Jf3
+         ExwQ==
+X-Gm-Message-State: APjAAAUvccGGBAcXmQ4KM5zHdr7m1gPHrOdVB1LQegMC+//XRb4wrHvZ
+        h0fa6EEjMB78swKIvWKwDWotL8P6LA7bLQ==
+X-Google-Smtp-Source: APXvYqy7xQyujiJGFabdtV39mMRi/hVsb0QAvzo+QfogaLuvhZsQUBUN/osrCBI0geqJfiIynZq3JA==
+X-Received: by 2002:a24:97d2:: with SMTP id k201mr16059903ite.151.1558074536343;
+        Thu, 16 May 2019 23:28:56 -0700 (PDT)
+Received: from asus (c-73-243-191-173.hsd1.co.comcast.net. [73.243.191.173])
+        by smtp.gmail.com with ESMTPSA id p136sm2444380itc.29.2019.05.16.23.28.54
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 16 May 2019 23:28:55 -0700 (PDT)
+Date:   Fri, 17 May 2019 00:28:53 -0600
+From:   Kelsey Skunberg <skunberg.kelsey@gmail.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+        akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
+        patches@kernelci.org, ben.hutchings@codethink.co.uk,
+        lkft-triage@lists.linaro.org, stable@vger.kernel.org
+Subject: Re: [PATCH 5.0 000/137] 5.0.17-stable review
+Message-ID: <20190517062851.GA2303@asus>
+References: <20190515090651.633556783@linuxfoundation.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190516214209.139726-3-kunyi@google.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+In-Reply-To: <20190515090651.633556783@linuxfoundation.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 16, 2019 at 02:42:09PM -0700, Kun Yi wrote:
-> GPIO number 0 is a valid case to handle. Use -1 as initial value
-> and use gpio_is_valid() to determine validity of the GPIO
-> number.
-
-I think it's more sensible to convert to gpiod instead.
-
-Best regards
-Uwe
-
-> Signed-off-by: Kun Yi <kunyi@google.com>
-> Change-Id: I4a29f98b237fd0d8ba4dd2a28219d4429f2ccfff
-> ---
->  drivers/leds/trigger/ledtrig-gpio.c | 16 +++++-----------
->  1 file changed, 5 insertions(+), 11 deletions(-)
+On Wed, May 15, 2019 at 12:54:41PM +0200, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 5.0.17 release.
+> There are 137 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
 > 
-> diff --git a/drivers/leds/trigger/ledtrig-gpio.c b/drivers/leds/trigger/ledtrig-gpio.c
-> index f6d50e031492..48d8ef8538bd 100644
-> --- a/drivers/leds/trigger/ledtrig-gpio.c
-> +++ b/drivers/leds/trigger/ledtrig-gpio.c
-> @@ -22,7 +22,7 @@ struct gpio_trig_data {
->  
->  	unsigned desired_brightness;	/* desired brightness when led is on */
->  	unsigned inverted;		/* true when gpio is inverted */
-> -	unsigned gpio;			/* gpio that triggers the leds */
-> +	int gpio;			/* gpio that triggers the leds */
->  };
->  
->  static irqreturn_t gpio_trig_irq(int irq, void *_led)
-> @@ -114,13 +114,12 @@ static ssize_t gpio_trig_gpio_show(struct device *dev,
->  {
->  	struct gpio_trig_data *gpio_data = led_trigger_get_drvdata(dev);
->  
-> -	return sprintf(buf, "%u\n", gpio_data->gpio);
-> +	return sprintf(buf, "%d\n", gpio_data->gpio);
->  }
->  
-> -static inline void free_used_gpio_if_valid(unsigned int gpio,
-> -					   struct led_classdev *led)
-> +static inline void free_used_gpio_if_valid(int gpio, struct led_classdev *led)
->  {
-> -	if (gpio == 0)
-> +	if (!gpio_is_valid(gpio))
->  		return;
->  
->  	free_irq(gpio_to_irq(gpio), led);
-> @@ -144,12 +143,6 @@ static ssize_t gpio_trig_gpio_store(struct device *dev,
->  	if (gpio_data->gpio == gpio)
->  		return n;
->  
-> -	if (!gpio) {
-> -		free_used_gpio_if_valid(gpio_data->gpio, led);
-> -		gpio_data->gpio = 0;
-> -		return n;
-> -	}
-> -
->  	ret = gpio_request(gpio, "ledtrig-gpio");
->  	if (ret) {
->  		dev_err(dev, "gpio_request failed with error %d\n", ret);
-> @@ -195,6 +188,7 @@ static int gpio_trig_activate(struct led_classdev *led)
->  		return -ENOMEM;
->  
->  	gpio_data->led = led;
-> +	gpio_data->gpio = -1;
->  	led_set_trigger_data(led, gpio_data);
->  
->  	return 0;
-> -- 
-> 2.21.0.1020.gf2820cf01a-goog
+> Responses should be made by Fri 17 May 2019 09:04:31 AM UTC.
+> Anything received after that time might be too late.
 > 
+> The whole patch series can be found in one patch at:
+> 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.0.17-rc1.gz
+> or in the git tree and branch at:
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.0.y
+> and the diffstat can be found below.
 > 
+> thanks,
+> 
+> greg k-h
 
--- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Compiled and booted with no dmesg regressions on my system.
+
+Cheers,
+Kelsey
