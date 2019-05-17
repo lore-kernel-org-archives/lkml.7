@@ -2,84 +2,94 @@ Return-Path: <SRS0=M1fl=TR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6080C04AB4
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 10:02:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BC7CC04AB4
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 10:04:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9154F20873
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 10:02:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 10BF320879
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 10:04:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728336AbfEQKCH (ORCPT
+        id S1728387AbfEQKEB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 May 2019 06:02:07 -0400
-Received: from esgaroth.petrovitsch.at ([78.47.184.11]:1591 "EHLO
-        esgaroth.tuxoid.at" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728282AbfEQKCH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 May 2019 06:02:07 -0400
-X-Greylist: delayed 3771 seconds by postgrey-1.27 at vger.kernel.org; Fri, 17 May 2019 06:02:06 EDT
-Received: from thorin.petrovitsch.priv.at (80-110-98-206.cgn.dynamic.surfer.at [80.110.98.206])
-        (authenticated bits=0)
-        by esgaroth.tuxoid.at (8.15.2/8.15.2) with ESMTPSA id x4H8vTgY028431
-        (version=TLSv1 cipher=AES128-SHA bits=128 verify=NO);
-        Fri, 17 May 2019 10:57:30 +0200
-Subject: Re: [PATCH v2] kbuild: check uniqueness of module names
-To:     Alexander Kapshuk <alexander.kapshuk@gmail.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc:     linux-kbuild@vger.kernel.org, Sam Ravnborg <sam@ravnborg.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Jessica Yu <jeyu@kernel.org>,
-        Lucas De Marchi <lucas.de.marchi@gmail.com>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Michael Schmitz <schmitzmic@gmail.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Rusty Russell <rusty@rustcorp.com.au>,
-        Kees Cook <keescook@chromium.org>,
-        Michal Marek <michal.lkml@markovi.net>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-References: <20190517042753.25857-1-yamada.masahiro@socionext.com>
- <CAJ1xhMUxsFR6yLeV1rG1FRZzqwyMGF5PURk6F5_6kN3v2dGN1A@mail.gmail.com>
-From:   Bernd Petrovitsch <bernd@petrovitsch.priv.at>
-Message-ID: <68270a84-966b-05e3-c82e-893c320febfd@petrovitsch.priv.at>
-Date:   Fri, 17 May 2019 10:57:14 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Fri, 17 May 2019 06:04:01 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:37580 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727788AbfEQKEB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 May 2019 06:04:01 -0400
+Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id A4A91164ADCA12F9ABB6;
+        Fri, 17 May 2019 18:03:59 +0800 (CST)
+Received: from localhost.localdomain.localdomain (10.175.113.25) by
+ DGGEMS413-HUB.china.huawei.com (10.3.19.213) with Microsoft SMTP Server id
+ 14.3.439.0; Fri, 17 May 2019 18:03:49 +0800
+From:   Kefeng Wang <wangkefeng.wang@huawei.com>
+To:     Corey Minyard <minyard@acm.org>, Arnd Bergmann <arnd@arndb.de>,
+        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
+        <openipmi-developer@lists.sourceforge.net>,
+        <linux-kernel@vger.kernel.org>
+CC:     Kefeng Wang <wangkefeng.wang@huawei.com>,
+        Hulk Robot <hulkci@huawei.com>
+Subject: [PATCH] ipmi_si: fix unexpected driver unregister warning
+Date:   Fri, 17 May 2019 18:12:44 +0800
+Message-ID: <20190517101245.4341-1-wangkefeng.wang@huawei.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-In-Reply-To: <CAJ1xhMUxsFR6yLeV1rG1FRZzqwyMGF5PURk6F5_6kN3v2dGN1A@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-DCC-URT-Metrics: esgaroth.tuxoid.at 1060; Body=15 Fuz1=15 Fuz2=15
-X-Virus-Scanned: clamav-milter 0.97 at esgaroth.tuxoid.at
-X-Virus-Status: Clean
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.175.113.25]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 17/05/2019 10:16, Alexander Kapshuk wrote:
-[...]
-> The 'xargs' '-r' flag is a GNU extension.
-> If POSIX compliance is important here, the use of 'cat', 'xargs' and
-> 'basename' may be substituted with that of 'sed' to initialise
-> same_name_modules:
-> sed 's!.*/!!' modules.order modules.builtin | sort | uniq -d
+If ipmi_si_platform_init()->platform_driver_register() fails,
+platform_driver_unregister() called unconditionally will trigger
+following warning,
 
-'s!' is TTBOMK also a GNU-extension:
-sed 's/.*\///' modules.order modules.builtin | sort | uniq -d
+ipmi_platform: Unable to register driver: -12
+------------[ cut here ]------------
+Unexpected driver unregister!
+WARNING: CPU: 1 PID: 7210 at drivers/base/driver.c:193 driver_unregister+0x60/0x70 drivers/base/driver.c:193
 
-> 'Sed' may also be used on its own in the 'for' loop instead of as part
-> of a pipeline along with 'grep' to generate the desired output:
-> sed '/\/'$m'/!d;s:^kernel/:  :' modules.order modules.builtin
+Fix it by adding platform_registered variable, only unregister platform
+driver when it is already successfully registered.
 
-sed "/\/${m}/!d;s/^kernel\//  /" modules.order modules.builtin
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: Kefeng Wang <wangkefeng.wang@huawei.com>
+---
+ drivers/char/ipmi/ipmi_si_platform.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-MfG,
-	Bernd
+diff --git a/drivers/char/ipmi/ipmi_si_platform.c b/drivers/char/ipmi/ipmi_si_platform.c
+index f2a91c4d8cab..0cd849675d99 100644
+--- a/drivers/char/ipmi/ipmi_si_platform.c
++++ b/drivers/char/ipmi/ipmi_si_platform.c
+@@ -19,6 +19,7 @@
+ #include "ipmi_si.h"
+ #include "ipmi_dmi.h"
+ 
++static bool platform_registered;
+ static bool si_tryplatform = true;
+ #ifdef CONFIG_ACPI
+ static bool          si_tryacpi = true;
+@@ -469,9 +470,12 @@ void ipmi_si_platform_init(void)
+ 	int rv = platform_driver_register(&ipmi_platform_driver);
+ 	if (rv)
+ 		pr_err("Unable to register driver: %d\n", rv);
++	else
++		platform_registered = true;
+ }
+ 
+ void ipmi_si_platform_shutdown(void)
+ {
+-	platform_driver_unregister(&ipmi_platform_driver);
++	if (platform_registered)
++		platform_driver_unregister(&ipmi_platform_driver);
+ }
 -- 
-Bernd Petrovitsch                  Email : bernd@petrovitsch.priv.at
-                     LUGA : http://www.luga.at
+2.20.1
+
