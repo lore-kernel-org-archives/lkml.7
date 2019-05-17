@@ -2,85 +2,196 @@ Return-Path: <SRS0=M1fl=TR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D82B7C04AB4
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 20:12:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38E1BC04E84
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 20:14:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9DEB120657
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 20:12:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EAF222082E
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 20:14:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=amacapital-net.20150623.gappssmtp.com header.i=@amacapital-net.20150623.gappssmtp.com header.b="sgC8USHJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728179AbfEQUMm (ORCPT
+        id S1729152AbfEQUOE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 May 2019 16:12:42 -0400
-Received: from mga07.intel.com ([134.134.136.100]:51061 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727018AbfEQUMm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 May 2019 16:12:42 -0400
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 May 2019 13:12:41 -0700
-X-ExtLoop1: 1
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.36])
-  by orsmga007.jf.intel.com with ESMTP; 17 May 2019 13:12:41 -0700
-Date:   Fri, 17 May 2019 13:12:41 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Wanpeng Li <kernellwp@gmail.com>
-Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>
-Subject: Re: [PATCH 4/4] KVM: nVMX: Fix using __this_cpu_read() in
- preemptible context
-Message-ID: <20190517201241.GK15006@linux.intel.com>
-References: <1558082990-7822-1-git-send-email-wanpengli@tencent.com>
- <1558082990-7822-4-git-send-email-wanpengli@tencent.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <1558082990-7822-4-git-send-email-wanpengli@tencent.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+        Fri, 17 May 2019 16:14:04 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:37083 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726460AbfEQUOD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 May 2019 16:14:03 -0400
+Received: by mail-pg1-f194.google.com with SMTP id n27so1191157pgm.4
+        for <linux-kernel@vger.kernel.org>; Fri, 17 May 2019 13:14:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=amacapital-net.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=djiAluF6Os7TIFCRa6Lz/pNs4CAEzPaAGQb3bIhp0AI=;
+        b=sgC8USHJylMmTugxbrJIZExCFRu3pVa9hcPmCcK4p6hSAcQrxxlnFPE9W7VZX26LMv
+         +NNIg5GUmvKrN+cTLBJl/W6v9t6AXRsn5rDKXTNt4zdcYR9IKTGc84dXHM/Glg4EjJq6
+         conKdsD9PcOd7Zj6sVOgFGJrZYyH9Ivqh3nF3JuwyJpSfxmUwlPcmqEv9DIsPXydTmFJ
+         q9vlpsao5402l3yk/NcX0qpkHGDXUopZJW1RbyqIUWQ+f19tKMX0TpqtY5dgRy5l8nKg
+         Q+E3mqN4/jQT26rO4mayqwt80PqDym/fxXRA6C91Fu/2zZQ+NRo0SVqZ/9ayzrNNsHXl
+         nlYA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=djiAluF6Os7TIFCRa6Lz/pNs4CAEzPaAGQb3bIhp0AI=;
+        b=JO91rAl5LmRQBpmRdZuCbUPEPTQgBjea0RKC3LpNMcL1nHGTqJs4Z1Qbr5uRPXzZsk
+         Ep2wzcBz8hcCQslk6wRYze6ZczRFEK3f/11TBwgnkfKvwh/LTh5egtOzTm3npEySADB2
+         PY8WevmgcOjQRswxXnWGU7sXzJ+LLy/CzjkGago9IOCKFYfkRjE3/CdLHQDhX+ZiyRZz
+         n0NeRLDsrHIf024FWhofUObgY+tnv1NT5PAqlQs11TDizn53WbJfAsBf4G/UwnaLdQlr
+         5Xg79X32jl8hIPqyifw/0fFHOz8PdnnuaBX+9uTyR7J4gnekSPGBQu2Zxh8Ac6G4UNyS
+         hb/g==
+X-Gm-Message-State: APjAAAU8yOFhKKG6bK5+FM4tzbMEcWmQRWzEzw09l26GZqUcC4e7O9Zp
+        blQHUCmzFCRU7LQRAZW1zIEItA==
+X-Google-Smtp-Source: APXvYqxqEHlR2LaL8nj/xNhZ/tyfEOKQIe177n5+LgtmYcJFfb2KwNTDT0V0qu3unH8GKzQuLagvyA==
+X-Received: by 2002:a63:dd4a:: with SMTP id g10mr5357469pgj.419.1558124042986;
+        Fri, 17 May 2019 13:14:02 -0700 (PDT)
+Received: from ?IPv6:2601:646:c200:1ef2:3dbf:4623:7293:192d? ([2601:646:c200:1ef2:3dbf:4623:7293:192d])
+        by smtp.gmail.com with ESMTPSA id u6sm15468121pfa.1.2019.05.17.13.14.01
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 17 May 2019 13:14:01 -0700 (PDT)
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (1.0)
+Subject: Re: SGX vs LSM (Re: [PATCH v20 00/28] Intel SGX1 support)
+From:   Andy Lutomirski <luto@amacapital.net>
+X-Mailer: iPhone Mail (16E227)
+In-Reply-To: <c901ea99-5b43-a25d-03e8-55b4fce9c466@tycho.nsa.gov>
+Date:   Fri, 17 May 2019 13:14:00 -0700
+Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
+        "Xing, Cedric" <cedric.xing@intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        James Morris <jmorris@namei.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        LSM List <linux-security-module@vger.kernel.org>,
+        Paul Moore <paul@paul-moore.com>,
+        Eric Paris <eparis@parisplace.org>,
+        "selinux@vger.kernel.org" <selinux@vger.kernel.org>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Jethro Beekman <jethro@fortanix.com>,
+        "Hansen, Dave" <dave.hansen@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "Dr. Greg" <greg@enjellic.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
+        "linux-sgx@vger.kernel.org" <linux-sgx@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "nhorman@redhat.com" <nhorman@redhat.com>,
+        "npmccallum@redhat.com" <npmccallum@redhat.com>,
+        "Ayoun, Serge" <serge.ayoun@intel.com>,
+        "Katz-zamir, Shay" <shay.katz-zamir@intel.com>,
+        "Huang, Haitao" <haitao.huang@intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        "Svahn, Kai" <kai.svahn@intel.com>, Borislav Petkov <bp@alien8.de>,
+        Josh Triplett <josh@joshtriplett.org>,
+        "Huang, Kai" <kai.huang@intel.com>,
+        David Rientjes <rientjes@google.com>
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <ED98AEC9-FFA3-4DA4-9B86-11D8AADC9151@amacapital.net>
+References: <CALCETrX2ovRx3Rre+1_xC-q6CiybyLjQ-gmB4FZF_qCZ-Qd+4A@mail.gmail.com> <960B34DE67B9E140824F1DCDEC400C0F654E38CD@ORSMSX116.amr.corp.intel.com> <CALCETrUfmyQ7ivNzQic0FyPXe1fmAnoK093jnz0i8DRn2LvdSA@mail.gmail.com> <960B34DE67B9E140824F1DCDEC400C0F654E3FB9@ORSMSX116.amr.corp.intel.com> <6a97c099-2f42-672e-a258-95bc09152363@tycho.nsa.gov> <20190517150948.GA15632@linux.intel.com> <ca807220-47e2-5ec2-982c-4fb4a72439c6@tycho.nsa.gov> <80013cca-f1c2-f4d5-7558-8f4e752ada76@tycho.nsa.gov> <837CE33B-A636-4BF8-B46E-0A8A40C5A563@amacapital.net> <6d083885-1880-f33d-a54f-23518d56b714@tycho.nsa.gov> <20190517192823.GG15006@linux.intel.com> <c901ea99-5b43-a25d-03e8-55b4fce9c466@tycho.nsa.gov>
+To:     Stephen Smalley <sds@tycho.nsa.gov>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 17, 2019 at 04:49:50PM +0800, Wanpeng Li wrote:
-> From: Wanpeng Li <wanpengli@tencent.com>
-> 
->  BUG: using __this_cpu_read() in preemptible [00000000] code: qemu-system-x86/4590
->   caller is nested_vmx_enter_non_root_mode+0xebd/0x1790 [kvm_intel]
->   CPU: 4 PID: 4590 Comm: qemu-system-x86 Tainted: G           OE     5.1.0-rc4+ #1
->   Call Trace:
->    dump_stack+0x67/0x95
->    __this_cpu_preempt_check+0xd2/0xe0
->    nested_vmx_enter_non_root_mode+0xebd/0x1790 [kvm_intel]
->    nested_vmx_run+0xda/0x2b0 [kvm_intel]
->    handle_vmlaunch+0x13/0x20 [kvm_intel]
->    vmx_handle_exit+0xbd/0x660 [kvm_intel]
->    kvm_arch_vcpu_ioctl_run+0xa2c/0x1e50 [kvm]
->    kvm_vcpu_ioctl+0x3ad/0x6d0 [kvm]
->    do_vfs_ioctl+0xa5/0x6e0
->    ksys_ioctl+0x6d/0x80
->    __x64_sys_ioctl+0x1a/0x20
->    do_syscall_64+0x6f/0x6c0
->    entry_SYSCALL_64_after_hwframe+0x49/0xbe
-> 
-> Accessing per-cpu variable should disable preemption, this patch extends the 
-> preemption disable region for __this_cpu_read().
-> 
-> Cc: Paolo Bonzini <pbonzini@redhat.com>
-> Cc: Radim Krčmář <rkrcmar@redhat.com>
-> Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
-> ---
 
-Fixes: 52017608da33 ("KVM: nVMX: add option to perform early consistency checks via H/W")
+> On May 17, 2019, at 1:09 PM, Stephen Smalley <sds@tycho.nsa.gov> wrote:
+>=20
+>> On 5/17/19 3:28 PM, Sean Christopherson wrote:
+>>> On Fri, May 17, 2019 at 02:05:39PM -0400, Stephen Smalley wrote:
+>>>> On 5/17/19 1:12 PM, Andy Lutomirski wrote:
+>>>>=20
+>>>> How can that work?  Unless the API changes fairly radically, users
+>>>> fundamentally need to both write and execute the enclave.  Some of it w=
+ill
+>>>> be written only from already executable pages, and some privilege shoul=
+d be
+>>>> needed to execute any enclave page that was not loaded like this.
+>>>=20
+>>> I'm not sure what the API is. Let's say they do something like this:
+>>>=20
+>>> fd =3D open("/dev/sgx/enclave", O_RDONLY);
+>>> addr =3D mmap(NULL, size, PROT_READ | PROT_EXEC, MAP_SHARED, fd, 0);
+>>> stuff addr into ioctl args
+>>> ioctl(fd, ENCLAVE_CREATE, &ioctlargs);
+>>> ioctl(fd, ENCLAVE_ADD_PAGE, &ioctlargs);
+>>> ioctl(fd, ENCLAVE_INIT, &ioctlargs);
+>> That's rougly the flow, except that that all enclaves need to have RW and=
 
-and probably
+>> X EPC pages.
+>>> The important points are that they do not open /dev/sgx/enclave with wri=
+te
+>>> access (otherwise they will trigger FILE__WRITE at open time, and later
+>>> encounter FILE__EXECUTE as well during mmap, thereby requiring both to b=
+e
+>>> allowed to /dev/sgx/enclave), and that they do not request PROT_WRITE to=
+ the
+>>> resulting mapping (otherwise they will trigger FILE__WRITE at mmap time)=
+.
+>>> Then only FILE__READ and FILE__EXECUTE are required to /dev/sgx/enclave i=
+n
+>>> policy.
+>>>=20
+>>> If they switch to an anon inode, then any mmap PROT_EXEC of the opened f=
+ile
+>>> will trigger an EXECMEM check, at least as currently implemented, as we h=
+ave
+>>> no useful backing inode information.
+>> Yep, and that's by design in the overall proposal.  The trick is that
+>> ENCLAVE_ADD takes a source VMA and copies the contents *and* the
+>> permissions from the source VMA.  The source VMA points at regular memory=
 
-Cc: stable@vger.kernel.org
+>> that was mapped and populated using existing mechanisms for loading DSOs.=
 
-Reviewed-by: Sean Christopherson <sean.j.christopherson@intel.com>
+>> E.g. at a high level:
+>> source_fd =3D open("/home/sean/path/to/my/enclave", O_RDONLY);
+>> for_each_chunk {
+>>         <hand waving - mmap()/mprotect() the enclave file into regular me=
+mory>
+>> }
+>> enclave_fd =3D open("/dev/sgx/enclave", O_RDWR); /* allocs anon inode */
+>> enclave_addr =3D mmap(NULL, size, PROT_READ, MAP_SHARED, enclave_fd, 0);
+>> ioctl(enclave_fd, ENCLAVE_CREATE, {enclave_addr});
+>> for_each_chunk {
+>>         struct sgx_enclave_add ioctlargs =3D {
+>>                 .offset =3D chunk.offset,
+>>                 .source =3D chunk.addr,
+>>                 .size   =3D chunk.size,
+>>                 .type   =3D chunk.type, /* SGX specific metadata */
+>>         }
+>>         ioctl(fd, ENCLAVE_ADD, &ioctlargs); /* modifies enclave's VMAs */=
+
+>> }
+>> ioctl(fd, ENCLAVE_INIT, ...);
+>> Userspace never explicitly requests PROT_EXEC on enclave_fd, but SGX also=
+
+>> ensures userspace isn't bypassing LSM policies by virtue of copying the
+>> permissions for EPC VMAs from regular VMAs that have already gone through=
+
+>> LSM checks.
+>=20
+> Is O_RDWR required for /dev/sgx/enclave or would O_RDONLY suffice?  Do you=
+ do anything other than ioctl() calls on it?
+>=20
+> What's the advantage of allocating an anon inode in the above?  At present=
+ anon inodes are exempted from inode-based checking, thereby losing the abil=
+ity to perform SELinux ioctl whitelisting, unlike the file-backed /dev/sgx/e=
+nclave inode.
+>=20
+> How would SELinux (or other security modules) restrict the authorized encl=
+aves that can be loaded via this interface?  Would the sgx driver invoke a n=
+ew LSM hook with the regular/source VMAs as parameters and allow the securit=
+y module to reject the ENCLAVE_ADD operation?  That could be just based on t=
+he vm_file (e.g. whitelist what enclave files are permitted in general) or i=
+t could be based on both the process and the vm_file (e.g. only allow specif=
+ic enclaves to be loaded into specific processes).
+
+This is the idea behind the .sigstruct file. The driver could call a new hoo=
+k to approve or reject the .sigstruct. The sigstruct contains a hash of the w=
+hole enclave and a signature by the author.=
