@@ -2,185 +2,110 @@ Return-Path: <SRS0=M1fl=TR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 314B3C04AB4
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 14:08:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21D79C04AB4
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 14:08:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 05D282082E
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 14:08:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E44092082E
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 14:08:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="bCbydxhI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729012AbfEQOIG (ORCPT
+        id S1729041AbfEQOIu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 May 2019 10:08:06 -0400
-Received: from mga18.intel.com ([134.134.136.126]:6678 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728103AbfEQOIF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 May 2019 10:08:05 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 May 2019 07:08:04 -0700
-X-ExtLoop1: 1
-Received: from mattu-haswell.fi.intel.com (HELO [10.237.72.164]) ([10.237.72.164])
-  by FMSMGA003.fm.intel.com with ESMTP; 17 May 2019 07:08:02 -0700
-Subject: Re: [PATCH v10 2/2] usb: xhci: Add Clear_TT_Buffer
-To:     Jim Lin <jilin@nvidia.com>, gregkh@linuxfoundation.org,
-        mathias.nyman@intel.com, stern@rowland.harvard.edu,
-        kai.heng.feng@canonical.com, drinkcat@chromium.org,
-        keescook@chromium.org, nsaenzjulienne@suse.de, jflat@chromium.org,
-        malat@debian.org
-Cc:     linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <1558017657-13835-1-git-send-email-jilin@nvidia.com>
- <1558017657-13835-3-git-send-email-jilin@nvidia.com>
-From:   Mathias Nyman <mathias.nyman@linux.intel.com>
-Message-ID: <ece2b354-8b3b-6c3d-6e64-5d7e6236148e@linux.intel.com>
-Date:   Fri, 17 May 2019 17:10:41 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.4.0
+        Fri, 17 May 2019 10:08:50 -0400
+Received: from mail-it1-f195.google.com ([209.85.166.195]:39151 "EHLO
+        mail-it1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728260AbfEQOIt (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 May 2019 10:08:49 -0400
+Received: by mail-it1-f195.google.com with SMTP id 9so12175170itf.4
+        for <linux-kernel@vger.kernel.org>; Fri, 17 May 2019 07:08:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=wnE5ugQSV+EX8NJq3bXAxc5+808EKDRQWDkjcFDm76g=;
+        b=bCbydxhIRSNOt3TwDd4BdgsvwmO+IYfUOtPAEAjE2b/cMzWleRTqkn3UbY13DGYF1K
+         x4yKjJrT6J8shR6+H2q3zQgZGYdC9a0WvJmPeCQ4S0ffoyFISZ2B0V76p9gorMUSQ6ER
+         bRKXGBesi4Znrw/l7X+0AcOZOXjCjR7CaV4xUbio+/j3wXC0fnhOlLLnTQyxz5/dsx5U
+         oSqt/pSv99S0Oftm7Z+LRef9zrwxu9hleDGUMXzjoDfyHveXTeVIn3F3wfTR3OL6TJGu
+         082bIphpUtJ9LlQ5xRROlabqAeWGtZVRZrntcO9m/4dBEXkJ5cyyPS6SNomLQs8wNpZ8
+         Xw9Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=wnE5ugQSV+EX8NJq3bXAxc5+808EKDRQWDkjcFDm76g=;
+        b=EDas/L8YMVgiXAA+Fni5SzK1rhns0bTSY3fp33bUBi/lskJUDsCe0XOX8jakwKvA7k
+         zMrECTz54eQDbjYh8n+A+4ztzZollNCa92q4J+/Fv70klbeyVbxFsJh/j7OY6JPiuX42
+         0/9unRklfhCx9f+3XjyE6lDLRp/qrxUCxLuNJyTUbZsqxzWiCRFDWa0vHS2wHOQkw/sh
+         IbkDh/jxOyp2CC/d5tOCAw0N/t8bvi0lidPeAyUpBCP2ID4unKNxb98HXwpuOOB0FUiY
+         DXREfqIDnzERNupdxtWNO/bG4XNtIBJBaW4XjeZN4ZDfy4A+aJOLYgg+d5uXJ0xwmVwQ
+         4ssQ==
+X-Gm-Message-State: APjAAAUwXDa9mWBs+j3Nhg4lj+MScMXsluRS3msuWFF+YqkGXDFCfOg+
+        y6wk5dbR7rdvvVi3levI7k3T9+vBMPswUend2SXe0w==
+X-Google-Smtp-Source: APXvYqzuUfMi8lV0T0lwvRZljXNCxDfrTqM5N220cNATHJKTOwPJxnkJlmO1e5pjoYWFu4RheZnomcXVJ0T1qE6Tsfg=
+X-Received: by 2002:a02:412:: with SMTP id 18mr1390107jab.82.1558102128480;
+ Fri, 17 May 2019 07:08:48 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <1558017657-13835-3-git-send-email-jilin@nvidia.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <00000000000014285d05765bf72a@google.com> <0000000000000eaf23058912af14@google.com>
+ <20190517134850.GG17978@ZenIV.linux.org.uk>
+In-Reply-To: <20190517134850.GG17978@ZenIV.linux.org.uk>
+From:   Dmitry Vyukov <dvyukov@google.com>
+Date:   Fri, 17 May 2019 16:08:35 +0200
+Message-ID: <CACT4Y+Z8760uYQP0jKgJmVC5sstqTv9pE6K6YjK_feeK6-Obfg@mail.gmail.com>
+Subject: Re: BUG: unable to handle kernel paging request in do_mount
+To:     Al Viro <viro@zeniv.linux.org.uk>
+Cc:     syzbot <syzbot+73c7fe4f77776505299b@syzkaller.appspotmail.com>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>, sabin.rapan@gmail.com,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 16.5.2019 17.40, Jim Lin wrote:
-> USB 2.0 specification chapter 11.17.5 says "as part of endpoint halt
-> processing for full-/low-speed endpoints connected via a TT, the host
-> software must use the Clear_TT_Buffer request to the TT to ensure
-> that the buffer is not in the busy state".
-> 
-> In our case, a full-speed speaker (ConferenceCam) is behind a high-
-> speed hub (ConferenceCam Connect), sometimes once we get STALL on a
-> request we may continue to get STALL with the folllowing requests,
-> like Set_Interface.
-> 
-> Here we invoke usb_hub_clear_tt_buffer() to send Clear_TT_Buffer
-> request to the hub of the device for the following Set_Interface
-> requests to the device to get ACK successfully.
-> 
-> Signed-off-by: Jim Lin <jilin@nvidia.com>
-> ---
-> v2: xhci_clear_tt_buffer_complete: add static, shorter indentation
->      , remove its claiming in xhci.h
-> v3: Add description for clearing_tt (xhci.h)
-> v4: Remove clearing_tt flag because hub_tt_work has hub->tt.lock
->      to protect for Clear_TT_Buffer to be run serially.
->      Remove xhci_clear_tt_buffer_complete as it's not necessary.
->      Same reason as the above.
->      Extend usb_hub_clear_tt_buffer parameter
-> v5: Not extending usb_hub_clear_tt_buffer parameter
->      Add description.
-> v6: Remove unused parameter slot_id from xhci_clear_hub_tt_buffer
-> v7: Add devaddr field in "struct usb_device"
-> v8: split as two patches
-> v9: no change flag
-> v10: Add EP_CLEARING_TT flag
-> 
->   drivers/usb/host/xhci-ring.c | 27 ++++++++++++++++++++++++++-
->   drivers/usb/host/xhci.c      | 17 +++++++++++++++++
->   drivers/usb/host/xhci.h      |  5 +++++
->   3 files changed, 48 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/usb/host/xhci-ring.c b/drivers/usb/host/xhci-ring.c
-> index 9215a28dad40..11d498b6c09b 100644
-> --- a/drivers/usb/host/xhci-ring.c
-> +++ b/drivers/usb/host/xhci-ring.c
-> @@ -399,7 +399,7 @@ void xhci_ring_ep_doorbell(struct xhci_hcd *xhci,
->   	 * stream once the endpoint is on the HW schedule.
->   	 */
->   	if ((ep_state & EP_STOP_CMD_PENDING) || (ep_state & SET_DEQ_PENDING) ||
-> -	    (ep_state & EP_HALTED))
-> +	    (ep_state & EP_HALTED) || (ep_state & EP_CLEARING_TT))
->   		return;
->   	writel(DB_VALUE(ep_index, stream_id), db_addr);
->   	/* The CPU has better things to do at this point than wait for a
-> @@ -433,6 +433,13 @@ static void ring_doorbell_for_active_rings(struct xhci_hcd *xhci,
->   	}
->   }
->   
-> +void xhci_ring_doorbell_for_active_rings(struct xhci_hcd *xhci,
-> +		unsigned int slot_id,
-> +		unsigned int ep_index)
-> +{
-> +	ring_doorbell_for_active_rings(xhci, slot_id, ep_index);
-> +}
-> +
->   /* Get the right ring for the given slot_id, ep_index and stream_id.
->    * If the endpoint supports streams, boundary check the URB's stream ID.
->    * If the endpoint doesn't support streams, return the singular endpoint ring.
-> @@ -1786,6 +1793,23 @@ struct xhci_segment *trb_in_td(struct xhci_hcd *xhci,
->   	return NULL;
->   }
->   
-> +static void xhci_clear_hub_tt_buffer(struct xhci_hcd *xhci, struct xhci_td *td,
-> +		struct xhci_virt_ep *ep)
-> +{
-> +	/*
-> +	 * As part of low/full-speed endpoint-halt processing
-> +	 * we must clear the TT buffer (USB 2.0 specification 11.17.5).
-> +	 */
-> +	if (td->urb->dev->tt && !usb_pipeint(td->urb->pipe) &&
-> +	    (td->urb->dev->tt->hub != xhci_to_hcd(xhci)->self.root_hub) &&
-> +	    !(ep->ep_state & EP_CLEARING_TT)) {
-> +		ep->ep_state |= EP_CLEARING_TT;
-> +		td->urb->ep->hcpriv = td->urb->dev;
-> +		if (usb_hub_clear_tt_buffer(td->urb))
-> +			ep->ep_state &= ~EP_CLEARING_TT;
-> +	}
-> +}
-> +
->   static void xhci_cleanup_halted_endpoint(struct xhci_hcd *xhci,
->   		unsigned int slot_id, unsigned int ep_index,
->   		unsigned int stream_id, struct xhci_td *td,
-> @@ -1804,6 +1828,7 @@ static void xhci_cleanup_halted_endpoint(struct xhci_hcd *xhci,
->   	if (reset_type == EP_HARD_RESET) {
->   		ep->ep_state |= EP_HARD_CLEAR_TOGGLE;
->   		xhci_cleanup_stalled_ring(xhci, ep_index, stream_id, td);
-> +		xhci_clear_hub_tt_buffer(xhci, td, ep);
->   	}
->   	xhci_ring_cmd_db(xhci);
->   }
-> diff --git a/drivers/usb/host/xhci.c b/drivers/usb/host/xhci.c
-> index 68b393e5a453..0dc108e61a89 100644
-> --- a/drivers/usb/host/xhci.c
-> +++ b/drivers/usb/host/xhci.c
-> @@ -5133,6 +5133,22 @@ int xhci_gen_setup(struct usb_hcd *hcd, xhci_get_quirks_t get_quirks)
->   }
->   EXPORT_SYMBOL_GPL(xhci_gen_setup);
->   
-> +static void xhci_clear_tt_buffer_complete(struct usb_hcd *hcd,
-> +		struct usb_host_endpoint *ep)
-> +{
-> +	struct xhci_hcd *xhci;
-> +	struct usb_device *udev;
-> +	unsigned int slot_id;
-> +	unsigned int ep_index;
-> +
-> +	xhci = hcd_to_xhci(hcd);
-> +	udev = (struct usb_device *)ep->hcpriv;
-> +	slot_id = udev->slot_id;
-> +	ep_index = xhci_get_endpoint_index(&ep->desc);
+On Fri, May 17, 2019 at 3:48 PM Al Viro <viro@zeniv.linux.org.uk> wrote:
+>
+> On Fri, May 17, 2019 at 03:17:02AM -0700, syzbot wrote:
+> > This bug is marked as fixed by commit:
+> > vfs: namespace: error pointer dereference in do_remount()
+> > But I can't find it in any tested tree for more than 90 days.
+> > Is it a correct commit? Please update it by replying:
+> > #syz fix: exact-commit-title
+> > Until then the bug is still considered open and
+> > new crashes with the same signature are ignored.
+>
+> Could somebody explain how the following situation is supposed to
+> be handled:
+>
+> 1) branch B1 with commits  C1, C2, C3, C4 is pushed out
+> 2) C2 turns out to have a bug, which gets caught and fixed
+> 3) fix is folded in and branch B2 with C1, C2', C3', C4' is
+> pushed out.  The bug is not in it anymore.
+> 4) B1 is left mouldering (or is entirely removed); B2 is
+> eventually merged into other trees.
+>
+> This is normal and it appears to be problematic for syzbot.
+> How to deal with that?  One thing I will *NOT* do in such
+> situations is giving up on folding the fixes in.  Bisection
+> hazards alone make that a bad idea.
 
+linux-next creates a bit of a havoc.
 
-spin_lock_irqsave(&xhci->lock, flags);  (protecting ep_state)
+The ideal way of handling this is including Tested-by: tag into C2'.
+Reported-by: would work too, but people suggested that Reported-by: is
+confusing in this situation because it suggests that the commit fixes
+a bug in some previous commit. Technically, syzbot now accepts any
+tag, so With-inputs-from:
+syzbot+73c7fe4f77776505299b@syzkaller.appspotmail.com would work too.
 
-> +	xhci->devs[slot_id]->eps[ep_index].ep_state &= ~EP_CLEARING_TT;
-> +	xhci_ring_doorbell_for_active_rings(xhci, slot_id, ep_index);
-
-unlock
-
-note:
-lock is already taken in xhci_cleanup_halted_endpoint()
-so no need to take lock for xhci_clear_hub_tt_buffer()
-  
-
-Other than that this looks good to me.
-
--Mathias
+At this point we obvious can't fix up C2'. For such cases syzbot
+accepts #syz fix command to associate bugs with fixes. So replying
+with "#syz fix: C2'-commit-title" should do.
