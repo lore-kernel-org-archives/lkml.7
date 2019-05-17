@@ -2,276 +2,186 @@ Return-Path: <SRS0=M1fl=TR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-16.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00ED1C04E84
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 23:39:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30DA7C46470
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 23:49:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C7C232166E
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 23:39:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EB4DA21726
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 23:49:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="RXGKfYyM"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Bvr6EX1B"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728387AbfEQXjH (ORCPT
+        id S1727439AbfEQXtU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 May 2019 19:39:07 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:36472 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727958AbfEQXjG (ORCPT
+        Fri, 17 May 2019 19:49:20 -0400
+Received: from mail-yw1-f73.google.com ([209.85.161.73]:34821 "EHLO
+        mail-yw1-f73.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726200AbfEQXtU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 May 2019 19:39:06 -0400
-Received: by mail-pg1-f193.google.com with SMTP id a3so4001695pgb.3
-        for <linux-kernel@vger.kernel.org>; Fri, 17 May 2019 16:39:05 -0700 (PDT)
+        Fri, 17 May 2019 19:49:20 -0400
+Received: by mail-yw1-f73.google.com with SMTP id r23so7899737ywg.2
+        for <linux-kernel@vger.kernel.org>; Fri, 17 May 2019 16:49:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=ReIwvSW1gibG6rcIrbJ7tf7TexCbxQLkXs9Ll/bUMDk=;
-        b=RXGKfYyMqznbpXVjZFO1s3f5Ix9s1Ik5s/F8um5Jfk5PjnbtjpLO4nHpc/TiRA3Tum
-         VIrKOTi7MI8lw+S7L/3SXsqnfZAaUhsQBwQ+OutOdgtr85JOYtFFfQQXN53vRGugtKwj
-         /UKNsJYBKuUmCjUJMchw+i2oByhblwEFwB5B0=
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=A7gs1+mF+FP/rGmpwnYONHmDSeyLtKWRbITND9nfmUM=;
+        b=Bvr6EX1BZXsucquzdYD7Uqmbj6wwCOxg3rcQn60MXW4DU7nJ6/r0BcLbdwz5tSoo77
+         t8gK6+Z8fzNWaCdetWoEM7f+2o8RnbLx8CS1YTx0OWWOXgHf9GbSSna8rk7ZkJtW9366
+         qbOsVKy8h934mTsg17ZQzmg23y3wZf6pC6xq1BVMNnUuFeutN/8AR5EEbmK2sMuprJRg
+         a6emrfrio99QVrVPAotorRVenxbKFArMXtlR5cm7+deloUaXTiqoqlTSpS4oeX0kgREi
+         0grH9KoxLi4uE2v2hT9u5ceJ8cARpo0zsvhoqwkeDP3WrpIcGPvl6wRM7wSZypUbnFbe
+         t2WA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=ReIwvSW1gibG6rcIrbJ7tf7TexCbxQLkXs9Ll/bUMDk=;
-        b=ICYVzMJ4DzAu8Bq7kJL23YmosO3d1KjUCwhyxlfdjJjLFTiChalZcKpjBB5s90HqPr
-         VFmADEVQP/B+kZ4+Q9Z7uXbz2rXrSaNLZEkRIhFxH6Cm9RwExMJrGVlfgTEhi1bHgPML
-         BEa6TUGtjEJh0alX2J8ee7XsZzUiz/su5oQ8xFegsp5ZV5b8Y8nQcJkL0CVkdmcd/qdZ
-         JDx71Y2uYOYq5k/Svoi1FT2ovY1kV/6ABxUviG9UTMQU5nSLZrDdAmoaxCcT3KuinFWu
-         faHbvicFJj9MQpfuetlfQ/TqaDvMMGPPZRANsf9/DDRbGvfKERtOHgWoSJu07RGWOhvb
-         1Qhg==
-X-Gm-Message-State: APjAAAX4i/+g1q/t3Kk9ojWqIUdRKySkULwn2A14/c7NivyisJJnIJwF
-        4Zjy5lMJvM84t2mtZdbqZ4Mxig==
-X-Google-Smtp-Source: APXvYqwQidO1KC+MffDhwmDts1dUo4VpS7aBYBQQLeZn50P0J+UCsmklXBy9BckqXbjRrNBSwoCW9A==
-X-Received: by 2002:a65:624f:: with SMTP id q15mr59923633pgv.436.1558136345462;
-        Fri, 17 May 2019 16:39:05 -0700 (PDT)
-Received: from localhost ([2620:15c:202:1:3c8f:512b:3522:dfaf])
-        by smtp.gmail.com with ESMTPSA id r74sm11960716pfa.71.2019.05.17.16.39.04
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 17 May 2019 16:39:04 -0700 (PDT)
-From:   Gwendal Grignou <gwendal@chromium.org>
-To:     enric.balletbo@collabora.com, bleung@chromium.org,
-        groeck@chromium.org, lee.jones@linaro.org, jic23@kernel.org
-Cc:     linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Gwendal Grignou <gwendal@chromium.org>
-Subject: [PATCH v7 2/2] iio: cros_ec: Add lid angle driver
-Date:   Fri, 17 May 2019 16:38:56 -0700
-Message-Id: <20190517233856.155793-3-gwendal@chromium.org>
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=A7gs1+mF+FP/rGmpwnYONHmDSeyLtKWRbITND9nfmUM=;
+        b=F2XppEuHgDGHGRHx/VCKnMEvTIk1fCbQs5UT3TDUj1Dh5q8InwZtPmhJMy1t3gpXKH
+         v3elyN5CLf9FmP2J8tV3265V5oaQZv79eqm8TJUvcabMTof5+iuk1RKTfGgJcP/KjQjX
+         19/LaTZ2W3s6dhzC7LWSXJVPM5nMbTsWy7Dzcwj8PIkaetB6D0AtqZ+74DDd5rCQxQ1x
+         j8PVOA+wQmsGZNqIGqUTZTjd5zhguJl1UJmpq4pcfmeuS4EJwMeXq9vE5rFM1//Qpdoo
+         fCKRh9ROkr8TXv65HZrqG9MqTy/70w9b0K9F+HQEtCWAFFYn9taVBOthOuDB3/kC9kpt
+         Pq9Q==
+X-Gm-Message-State: APjAAAX20kVpTTGtZVkugxqB/nNG5M9KdVMXyIP20nq0UIVI9dTfmIBU
+        sHLcBm0sJeCqG4wkAqSb9Kn02+dHcA4OBQ==
+X-Google-Smtp-Source: APXvYqwKEww9mPrrXsrI0/TpLKrEc7pSe78bah2w5Z+0kdvcu66zLeplA2OTybD6hUGaqQkHasrvoaOkRdan0w==
+X-Received: by 2002:a81:3589:: with SMTP id c131mr28332892ywa.456.1558136959229;
+ Fri, 17 May 2019 16:49:19 -0700 (PDT)
+Date:   Fri, 17 May 2019 16:49:09 -0700
+Message-Id: <20190517234909.175734-1-shakeelb@google.com>
+Mime-Version: 1.0
 X-Mailer: git-send-email 2.21.0.1020.gf2820cf01a-goog
-In-Reply-To: <20190517233856.155793-1-gwendal@chromium.org>
-References: <20190517233856.155793-1-gwendal@chromium.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Subject: [PATCH] mm, memcg: introduce memory.events.local
+From:   Shakeel Butt <shakeelb@google.com>
+To:     Johannes Weiner <hannes@cmpxchg.org>,
+        Vladimir Davydov <vdavydov.dev@gmail.com>,
+        Michal Hocko <mhocko@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Roman Gushchin <guro@fb.com>, Chris Down <chris@chrisdown.name>
+Cc:     linux-mm@kvack.org, cgroups@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Shakeel Butt <shakeelb@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add a IIO driver that reports the angle between the lid and the base for
-ChromeOS convertible device.
+The memory controller in cgroup v2 exposes memory.events file for each
+memcg which shows the number of times events like low, high, max, oom
+and oom_kill have happened for the whole tree rooted at that memcg.
+Users can also poll or register notification to monitor the changes in
+that file. Any event at any level of the tree rooted at memcg will
+notify all the listeners along the path till root_mem_cgroup. There are
+existing users which depend on this behavior.
 
-Tested on eve with ToT EC firmware.
-Check driver is loaded and lid angle is correct.
+However there are users which are only interested in the events
+happening at a specific level of the memcg tree and not in the events in
+the underlying tree rooted at that memcg. One such use-case is a
+centralized resource monitor which can dynamically adjust the limits of
+the jobs running on a system. The jobs can create their sub-hierarchy
+for their own sub-tasks. The centralized monitor is only interested in
+the events at the top level memcgs of the jobs as it can then act and
+adjust the limits of the jobs. Using the current memory.events for such
+centralized monitor is very inconvenient. The monitor will keep
+receiving events which it is not interested and to find if the received
+event is interesting, it has to read memory.event files of the next
+level and compare it with the top level one. So, let's introduce
+memory.events.local to the memcg which shows and notify for the events
+at the memcg level.
 
-Signed-off-by: Gwendal Grignou <gwendal@chromium.org>
+Now, does memory.stat and memory.pressure need their local versions.
+IMHO no due to the no internal process contraint of the cgroup v2. The
+memory.stat file of the top level memcg of a job shows the stats and
+vmevents of the whole tree. The local stats or vmevents of the top level
+memcg will only change if there is a process running in that memcg but
+v2 does not allow that. Similarly for memory.pressure there will not be
+any process in the internal nodes and thus no chance of local pressure.
+
+Signed-off-by: Shakeel Butt <shakeelb@google.com>
 ---
-Changes in v7:
-- Split patch in two: This is the IIO section.
+ include/linux/memcontrol.h |  7 ++++++-
+ mm/memcontrol.c            | 25 +++++++++++++++++++++++++
+ 2 files changed, 31 insertions(+), 1 deletion(-)
 
-Changes in v6:
-- Fix lock held in an error path error.
-
-Changes in v5:
-- Remove unnecessary define.
-- v4 was the wrong patch file
-
-Changes in v3:
-- Use static channel array, simplify code because index is always 0.
-
-Changes in v2:
-- Fix license, remove driver_module field.
-
- drivers/iio/common/cros_ec_sensors/Kconfig    |   9 ++
- drivers/iio/common/cros_ec_sensors/Makefile   |   1 +
- .../cros_ec_sensors/cros_ec_lid_angle.c       | 139 ++++++++++++++++++
- 3 files changed, 149 insertions(+)
- create mode 100644 drivers/iio/common/cros_ec_sensors/cros_ec_lid_angle.c
-
-diff --git a/drivers/iio/common/cros_ec_sensors/Kconfig b/drivers/iio/common/cros_ec_sensors/Kconfig
-index 135f6825903f..aacc2ab9c34f 100644
---- a/drivers/iio/common/cros_ec_sensors/Kconfig
-+++ b/drivers/iio/common/cros_ec_sensors/Kconfig
-@@ -20,3 +20,12 @@ config IIO_CROS_EC_SENSORS
- 	  Accelerometers, Gyroscope and Magnetometer that are
- 	  presented by the ChromeOS EC Sensor hub.
- 	  Creates an IIO device for each functions.
-+
-+config IIO_CROS_EC_SENSORS_LID_ANGLE
-+	tristate "ChromeOS EC Sensor for lid angle"
-+	depends on IIO_CROS_EC_SENSORS_CORE
-+	help
-+	  Module to report the angle between lid and base for some
-+	  convertible devices.
-+	  This module is loaded when the EC can calculate the angle between the base
-+	  and the lid.
-diff --git a/drivers/iio/common/cros_ec_sensors/Makefile b/drivers/iio/common/cros_ec_sensors/Makefile
-index ec716ff2a775..a35ee232ac07 100644
---- a/drivers/iio/common/cros_ec_sensors/Makefile
-+++ b/drivers/iio/common/cros_ec_sensors/Makefile
-@@ -4,3 +4,4 @@
+diff --git a/include/linux/memcontrol.h b/include/linux/memcontrol.h
+index 36bdfe8e5965..de77405eec46 100644
+--- a/include/linux/memcontrol.h
++++ b/include/linux/memcontrol.h
+@@ -239,8 +239,9 @@ struct mem_cgroup {
+ 	/* OOM-Killer disable */
+ 	int		oom_kill_disable;
  
- obj-$(CONFIG_IIO_CROS_EC_SENSORS_CORE) += cros_ec_sensors_core.o
- obj-$(CONFIG_IIO_CROS_EC_SENSORS) += cros_ec_sensors.o
-+obj-$(CONFIG_IIO_CROS_EC_SENSORS_LID_ANGLE) += cros_ec_lid_angle.o
-diff --git a/drivers/iio/common/cros_ec_sensors/cros_ec_lid_angle.c b/drivers/iio/common/cros_ec_sensors/cros_ec_lid_angle.c
-new file mode 100644
-index 000000000000..876dfd176b0e
---- /dev/null
-+++ b/drivers/iio/common/cros_ec_sensors/cros_ec_lid_angle.c
-@@ -0,0 +1,139 @@
-+// SPDX-License-Identifier: GPL-2.0
+-	/* memory.events */
++	/* memory.events and memory.events.local */
+ 	struct cgroup_file events_file;
++	struct cgroup_file events_local_file;
+ 
+ 	/* handle for "memory.swap.events" */
+ 	struct cgroup_file swap_events_file;
+@@ -286,6 +287,7 @@ struct mem_cgroup {
+ 	atomic_long_t		vmevents_local[NR_VM_EVENT_ITEMS];
+ 
+ 	atomic_long_t		memory_events[MEMCG_NR_MEMORY_EVENTS];
++	atomic_long_t		memory_events_local[MEMCG_NR_MEMORY_EVENTS];
+ 
+ 	unsigned long		socket_pressure;
+ 
+@@ -761,6 +763,9 @@ static inline void count_memcg_event_mm(struct mm_struct *mm,
+ static inline void memcg_memory_event(struct mem_cgroup *memcg,
+ 				      enum memcg_memory_event event)
+ {
++	atomic_long_inc(&memcg->memory_events_local[event]);
++	cgroup_file_notify(&memcg->events_local_file);
 +
-+/*
-+ * cros_ec_lid_angle - Driver for CrOS EC lid angle sensor.
-+ *
-+ * Copyright 2018 Google, Inc
-+ *
-+ * This driver uses the cros-ec interface to communicate with the Chrome OS
-+ * EC about counter sensors. Counters are presented through
-+ * iio sysfs.
-+ */
-+
-+#include <linux/delay.h>
-+#include <linux/device.h>
-+#include <linux/iio/buffer.h>
-+#include <linux/iio/common/cros_ec_sensors_core.h>
-+#include <linux/iio/iio.h>
-+#include <linux/iio/kfifo_buf.h>
-+#include <linux/iio/trigger.h>
-+#include <linux/iio/triggered_buffer.h>
-+#include <linux/iio/trigger_consumer.h>
-+#include <linux/kernel.h>
-+#include <linux/mfd/cros_ec.h>
-+#include <linux/mfd/cros_ec_commands.h>
-+#include <linux/module.h>
-+#include <linux/platform_device.h>
-+#include <linux/slab.h>
-+
-+#define DRV_NAME "cros-ec-lid-angle"
-+
-+/*
-+ * One channel for the lid angle, the other for timestamp.
-+ */
-+static const struct iio_chan_spec cros_ec_lid_angle_channels[] = {
-+	{
-+		.info_mask_separate = BIT(IIO_CHAN_INFO_RAW),
-+		.scan_type.realbits = CROS_EC_SENSOR_BITS,
-+		.scan_type.storagebits = CROS_EC_SENSOR_BITS,
-+		.scan_type.sign = 'u',
-+		.type = IIO_ANGL
-+	},
-+	IIO_CHAN_SOFT_TIMESTAMP(1)
-+};
-+
-+/* State data for ec_sensors iio driver. */
-+struct cros_ec_lid_angle_state {
-+	/* Shared by all sensors */
-+	struct cros_ec_sensors_core_state core;
-+};
-+
-+static int cros_ec_sensors_read_lid_angle(struct iio_dev *indio_dev,
-+					  unsigned long scan_mask, s16 *data)
+ 	do {
+ 		atomic_long_inc(&memcg->memory_events[event]);
+ 		cgroup_file_notify(&memcg->events_file);
+diff --git a/mm/memcontrol.c b/mm/memcontrol.c
+index 2713b45ec3f0..a746127012fa 100644
+--- a/mm/memcontrol.c
++++ b/mm/memcontrol.c
+@@ -5648,6 +5648,25 @@ static int memory_events_show(struct seq_file *m, void *v)
+ 	return 0;
+ }
+ 
++static int memory_events_local_show(struct seq_file *m, void *v)
 +{
-+	struct cros_ec_sensors_core_state *st = iio_priv(indio_dev);
-+	int ret;
++	struct mem_cgroup *memcg = mem_cgroup_from_seq(m);
 +
-+	st->param.cmd = MOTIONSENSE_CMD_LID_ANGLE;
-+	ret = cros_ec_motion_send_host_cmd(st, sizeof(st->resp->lid_angle));
-+	if (ret) {
-+		dev_warn(&indio_dev->dev, "Unable to read lid angle\n");
-+		return ret;
-+	}
++	seq_printf(m, "low %lu\n",
++		   atomic_long_read(&memcg->memory_events_local[MEMCG_LOW]));
++	seq_printf(m, "high %lu\n",
++		   atomic_long_read(&memcg->memory_events_local[MEMCG_HIGH]));
++	seq_printf(m, "max %lu\n",
++		   atomic_long_read(&memcg->memory_events_local[MEMCG_MAX]));
++	seq_printf(m, "oom %lu\n",
++		   atomic_long_read(&memcg->memory_events_local[MEMCG_OOM]));
++	seq_printf(m, "oom_kill %lu\n",
++		   atomic_long_read(&memcg->memory_events_local[MEMCG_OOM_KILL])
++		   );
 +
-+	*data = st->resp->lid_angle.value;
 +	return 0;
 +}
 +
-+static int cros_ec_lid_angle_read(struct iio_dev *indio_dev,
-+				    struct iio_chan_spec const *chan,
-+				    int *val, int *val2, long mask)
-+{
-+	struct cros_ec_lid_angle_state *st = iio_priv(indio_dev);
-+	s16 data;
-+	int ret;
-+
-+	mutex_lock(&st->core.cmd_lock);
-+	ret = cros_ec_sensors_read_lid_angle(indio_dev, 1, &data);
-+	if (ret == 0) {
-+		*val = data;
-+		ret = IIO_VAL_INT;
-+	}
-+	mutex_unlock(&st->core.cmd_lock);
-+	return ret;
-+}
-+
-+static const struct iio_info cros_ec_lid_angle_info = {
-+	.read_raw = &cros_ec_lid_angle_read,
-+};
-+
-+static int cros_ec_lid_angle_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct iio_dev *indio_dev;
-+	struct cros_ec_lid_angle_state *state;
-+	int ret;
-+
-+	indio_dev = devm_iio_device_alloc(dev, sizeof(*state));
-+	if (!indio_dev)
-+		return -ENOMEM;
-+
-+	ret = cros_ec_sensors_core_init(pdev, indio_dev, false);
-+	if (ret)
-+		return ret;
-+
-+	indio_dev->info = &cros_ec_lid_angle_info;
-+	state = iio_priv(indio_dev);
-+	indio_dev->channels = cros_ec_lid_angle_channels;
-+	indio_dev->num_channels = ARRAY_SIZE(cros_ec_lid_angle_channels);
-+
-+	state->core.read_ec_sensors_data = cros_ec_sensors_read_lid_angle;
-+
-+	ret = devm_iio_triggered_buffer_setup(dev, indio_dev, NULL,
-+			cros_ec_sensors_capture, NULL);
-+	if (ret)
-+		return ret;
-+
-+	return devm_iio_device_register(dev, indio_dev);
-+}
-+
-+static const struct platform_device_id cros_ec_lid_angle_ids[] = {
+ static int memory_stat_show(struct seq_file *m, void *v)
+ {
+ 	struct mem_cgroup *memcg = mem_cgroup_from_seq(m);
+@@ -5806,6 +5825,12 @@ static struct cftype memory_files[] = {
+ 		.file_offset = offsetof(struct mem_cgroup, events_file),
+ 		.seq_show = memory_events_show,
+ 	},
 +	{
-+		.name = DRV_NAME,
++		.name = "events.local",
++		.flags = CFTYPE_NOT_ON_ROOT,
++		.file_offset = offsetof(struct mem_cgroup, events_local_file),
++		.seq_show = memory_events_local_show,
 +	},
-+	{ /* sentinel */ }
-+};
-+MODULE_DEVICE_TABLE(platform, cros_ec_lid_angle_ids);
-+
-+static struct platform_driver cros_ec_lid_angle_platform_driver = {
-+	.driver = {
-+		.name	= DRV_NAME,
-+		.pm	= &cros_ec_sensors_pm_ops,
-+	},
-+	.probe		= cros_ec_lid_angle_probe,
-+	.id_table	= cros_ec_lid_angle_ids,
-+};
-+module_platform_driver(cros_ec_lid_angle_platform_driver);
-+
-+MODULE_DESCRIPTION("ChromeOS EC driver for reporting convertible lid angle.");
-+MODULE_LICENSE("GPL v2");
+ 	{
+ 		.name = "stat",
+ 		.flags = CFTYPE_NOT_ON_ROOT,
 -- 
 2.21.0.1020.gf2820cf01a-goog
 
