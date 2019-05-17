@@ -2,206 +2,280 @@ Return-Path: <SRS0=M1fl=TR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97C3EC04AB4
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 15:41:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 683B0C04AB4
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 15:42:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5D43B20815
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 15:41:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.de header.i=@amazon.de header.b="pkPNEBpT"
+	by mail.kernel.org (Postfix) with ESMTP id 2BB93216C4
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 15:42:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1558107726;
+	bh=BKrfk+As2w0WYhhZ8aohK54c8m600fvX9J78C6gg8nQ=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=zcUKyOOg3cpzx7Y0M5cflIozmV685k7+cgvuypd65jHahJo6lmElV6N8i22FFUd+g
+	 zBu06ssav9ZZjcvXP+XXSohKym23Nc6wnv+QY8qCO/OyTfXDXHA6xlmD1L0PXdDuxs
+	 V73xTEp4dZK9qVsjod7p8RK/DoELOq//DeJKFR7s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729235AbfEQPlq (ORCPT
+        id S1729282AbfEQPmF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 May 2019 11:41:46 -0400
-Received: from smtp-fw-6002.amazon.com ([52.95.49.90]:13948 "EHLO
-        smtp-fw-6002.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728861AbfEQPlp (ORCPT
+        Fri, 17 May 2019 11:42:05 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:35103 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729041AbfEQPmF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 May 2019 11:41:45 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.de; i=@amazon.de; q=dns/txt; s=amazon201209;
-  t=1558107704; x=1589643704;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-id:mime-version:
-   content-transfer-encoding;
-  bh=5PwOvUa2QeUYezBMIw7pLuLH7aeDi9x8dxh6Bcuj1T0=;
-  b=pkPNEBpTfId2pSiHw35G46whRha12mw7LuOjkWbLFW2QpZWK7Pd+iACu
-   O9gxMfRMILX+TNuS8NM+T6gt8jmnEgS3RVQZ97Z/RbsbLBTnGrfhWnprs
-   fGsVAVV/HQWJ2e/faBWiCUigmoPh2x/kKqHIgD7t1w41Cx5QIu+r9lcCa
-   c=;
-X-IronPort-AV: E=Sophos;i="5.60,480,1549929600"; 
-   d="scan'208";a="402579638"
-Received: from iad6-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-1e-57e1d233.us-east-1.amazon.com) ([10.124.125.6])
-  by smtp-border-fw-out-6002.iad6.amazon.com with ESMTP/TLS/DHE-RSA-AES256-SHA; 17 May 2019 15:41:43 +0000
-Received: from EX13MTAUEA001.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan3.iad.amazon.com [10.40.159.166])
-        by email-inbound-relay-1e-57e1d233.us-east-1.amazon.com (8.14.7/8.14.7) with ESMTP id x4HFffwv037521
-        (version=TLSv1/SSLv3 cipher=AES256-SHA bits=256 verify=FAIL);
-        Fri, 17 May 2019 15:41:42 GMT
-Received: from EX13D02EUC004.ant.amazon.com (10.43.164.117) by
- EX13MTAUEA001.ant.amazon.com (10.43.61.82) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Fri, 17 May 2019 15:41:41 +0000
-Received: from EX13D02EUC001.ant.amazon.com (10.43.164.92) by
- EX13D02EUC004.ant.amazon.com (10.43.164.117) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Fri, 17 May 2019 15:41:40 +0000
-Received: from EX13D02EUC001.ant.amazon.com ([10.43.164.92]) by
- EX13D02EUC001.ant.amazon.com ([10.43.164.92]) with mapi id 15.00.1367.000;
- Fri, 17 May 2019 15:41:40 +0000
-From:   "Sironi, Filippo" <sironi@amazon.de>
-To:     "Graf, Alexander" <graf@amazon.com>
-CC:     LKML <linux-kernel@vger.kernel.org>,
-        KVM list <kvm@vger.kernel.org>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        "cohuck@redhat.com" <cohuck@redhat.com>,
-        "konrad.wilk@oracle.com" <konrad.wilk@oracle.com>,
-        "xen-devel@lists.xenproject.org" <xen-devel@lists.xenproject.org>
-Subject: Re: [PATCH v2 1/2] KVM: Start populating /sys/hypervisor with KVM
- entries
-Thread-Topic: [PATCH v2 1/2] KVM: Start populating /sys/hypervisor with KVM
- entries
-Thread-Index: AQHVCmguTMwTmVyYP0+tMrT8Z/dQMaZtx8qAgAGxboA=
-Date:   Fri, 17 May 2019 15:41:39 +0000
-Message-ID: <3D2C4EE3-1C2E-4032-9964-31A066E542AA@amazon.de>
-References: <1539078879-4372-1-git-send-email-sironi@amazon.de>
- <1557847002-23519-1-git-send-email-sironi@amazon.de>
- <1557847002-23519-2-git-send-email-sironi@amazon.de>
- <e976f31b-2ccd-29ba-6a32-2edde49f867f@amazon.com>
-In-Reply-To: <e976f31b-2ccd-29ba-6a32-2edde49f867f@amazon.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.43.165.155]
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <10D2265497ECB941BB8FCEB5614DF2F7@amazon.com>
+        Fri, 17 May 2019 11:42:05 -0400
+Received: by mail-ot1-f66.google.com with SMTP id n14so7155064otk.2;
+        Fri, 17 May 2019 08:42:04 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=M14rlFzwcUBHjfiLjquFIIr+CTAHX9KTzEGha2QcIb4=;
+        b=JSEU8DRAj5pbv6moQA8tzwPSirg7FFpgKy2ZhXAR89mxmGo0/l9DQ5+byGLlC3052B
+         jYfj1Ncl8BAmLL4rY3flYsG//alf/rIO+Gt6PFdlJLnaFaKS0L40KUmcr4/LislrFCTH
+         BkEpbPvS6OKWwHBjDGk9ZIGFRl7zi1b/QegvxuYXSvIxC9tgL7GTvyuJu0M0J0MsuvBS
+         3VE52ACaDtQurq8A3ENauO8xUo+giMzJ2vz/sSRT7AaG1VvlMqPjQQzmgxsb73BJjBMP
+         vcCVyQikIqRAgPna2LDBJUuYbdg9MDW1aX3VMSd07WwJ6ETwHKORt/WyhJ/1UEbJz9u4
+         06vg==
+X-Gm-Message-State: APjAAAV9T7970WvhelLQ0bmNOi1yQc9pk7wErSpYzHKG7DzLwRj0SxXl
+        m6X4cjOZY1nxd72sCyrD0KUVvRI=
+X-Google-Smtp-Source: APXvYqw0Xw5KM/Ug+L3eQ59evU0HzCljrxLHoWvrm2B6Bua1+oOoEbMfCxmoUgUa8UTB+GUNxkAMjw==
+X-Received: by 2002:a05:6830:208a:: with SMTP id y10mr8971186otq.293.1558107724092;
+        Fri, 17 May 2019 08:42:04 -0700 (PDT)
+Received: from xps15.herring.priv (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.googlemail.com with ESMTPSA id x21sm2912108otk.4.2019.05.17.08.42.03
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Fri, 17 May 2019 08:42:03 -0700 (PDT)
+From:   Rob Herring <robh@kernel.org>
+To:     Matthias Brugger <matthias.bgg@gmail.com>
+Cc:     linux-kernel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org
+Subject: [PATCH v3] dt-bindings: arm: Convert MediaTek board/soc bindings to json-schema
+Date:   Fri, 17 May 2019 10:42:02 -0500
+Message-Id: <20190517154202.24594-1-robh@kernel.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Convert MediaTek SoC bindings to DT schema format using json-schema.
 
-> On 16. May 2019, at 15:50, Graf, Alexander <graf@amazon.com> wrote:
-> =
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Matthias Brugger <matthias.bgg@gmail.com>
+Cc: devicetree@vger.kernel.org
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: linux-mediatek@lists.infradead.org
+Signed-off-by: Rob Herring <robh@kernel.org>
+---
+v3:
+ - Rebase to Linus' master
 
-> On 14.05.19 08:16, Filippo Sironi wrote:
->> Start populating /sys/hypervisor with KVM entries when we're running on
->> KVM. This is to replicate functionality that's available when we're
->> running on Xen.
->> =
+ .../devicetree/bindings/arm/mediatek.txt      | 89 ------------------
+ .../devicetree/bindings/arm/mediatek.yaml     | 91 +++++++++++++++++++
+ 2 files changed, 91 insertions(+), 89 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/arm/mediatek.txt
+ create mode 100644 Documentation/devicetree/bindings/arm/mediatek.yaml
 
->> Start with /sys/hypervisor/uuid, which users prefer over
->> /sys/devices/virtual/dmi/id/product_uuid as a way to recognize a virtual
->> machine, since it's also available when running on Xen HVM and on Xen PV
->> and, on top of that doesn't require root privileges by default.
->> Let's create arch-specific hooks so that different architectures can
->> provide different implementations.
->> =
-
->> Signed-off-by: Filippo Sironi <sironi@amazon.de>
-> =
-
-> I think this needs something akin to
-> =
-
->  https://www.kernel.org/doc/Documentation/ABI/stable/sysfs-hypervisor-xen
-> =
-
-> to document which files are available.
-> =
-
->> ---
->> v2:
->> * move the retrieval of the VM UUID out of uuid_show and into
->>  kvm_para_get_uuid, which is a weak function that can be overwritten
->> =
-
->> drivers/Kconfig              |  2 ++
->> drivers/Makefile             |  2 ++
->> drivers/kvm/Kconfig          | 14 ++++++++++++++
->> drivers/kvm/Makefile         |  1 +
->> drivers/kvm/sys-hypervisor.c | 30 ++++++++++++++++++++++++++++++
->> 5 files changed, 49 insertions(+)
->> create mode 100644 drivers/kvm/Kconfig
->> create mode 100644 drivers/kvm/Makefile
->> create mode 100644 drivers/kvm/sys-hypervisor.c
->> =
-
-> =
-
-> [...]
-> =
-
->> +
->> +__weak const char *kvm_para_get_uuid(void)
->> +{
->> +	return NULL;
->> +}
->> +
->> +static ssize_t uuid_show(struct kobject *obj,
->> +			 struct kobj_attribute *attr,
->> +			 char *buf)
->> +{
->> +	const char *uuid =3D kvm_para_get_uuid();
->> +	return sprintf(buf, "%s\n", uuid);
-> =
-
-> The usual return value for the Xen /sys/hypervisor interface is
-> "<denied>". Wouldn't it make sense to follow that pattern for the KVM
-> one too? Currently, if we can not determine the UUID this will just
-> return (null).
-> =
-
-> Otherwise, looks good to me. Are you aware of any other files we should
-> provide? Also, is there any reason not to implement ARM as well while at =
-it?
-> =
-
-> Alex
-
-This originated from a customer request that was using /sys/hypervisor/uuid.
-My guess is that we would want to expose "type" and "version" moving
-forward and that's when we hypervisor hooks will be useful on top
-of arch hooks.
-
-On a different note, any idea how to check whether the OS is running
-virtualized on KVM on ARM and ARM64?  kvm_para_available() isn't an
-option and the same is true for S390 where kvm_para_available()
-always returns true and it would even if a KVM enabled kernel would
-be running on bare metal.
-
-I think we will need another arch hook to call a function that says
-whether the OS is running virtualized on KVM.
-
->> +}
->> +
->> +static struct kobj_attribute uuid =3D __ATTR_RO(uuid);
->> +
->> +static int __init uuid_init(void)
->> +{
->> +	if (!kvm_para_available())
->> +		return 0;
->> +	return sysfs_create_file(hypervisor_kobj, &uuid.attr);
->> +}
->> +
->> +device_initcall(uuid_init);
-
-
-
-
-Amazon Development Center Germany GmbH
-Krausenstr. 38
-10117 Berlin
-Geschaeftsfuehrer: Christian Schlaeger, Ralf Herbrich
-Ust-ID: DE 289 237 879
-Eingetragen am Amtsgericht Charlottenburg HRB 149173 B
-
+diff --git a/Documentation/devicetree/bindings/arm/mediatek.txt b/Documentation/devicetree/bindings/arm/mediatek.txt
+deleted file mode 100644
+index 56ac7896d6d8..000000000000
+--- a/Documentation/devicetree/bindings/arm/mediatek.txt
++++ /dev/null
+@@ -1,89 +0,0 @@
+-MediaTek SoC based Platforms Device Tree Bindings
+-
+-Boards with a MediaTek SoC shall have the following property:
+-
+-Required root node property:
+-
+-compatible: Must contain one of
+-   "mediatek,mt2701"
+-   "mediatek,mt2712"
+-   "mediatek,mt6580"
+-   "mediatek,mt6589"
+-   "mediatek,mt6592"
+-   "mediatek,mt6755"
+-   "mediatek,mt6765"
+-   "mediatek,mt6795"
+-   "mediatek,mt6797"
+-   "mediatek,mt7622"
+-   "mediatek,mt7623"
+-   "mediatek,mt7629"
+-   "mediatek,mt8127"
+-   "mediatek,mt8135"
+-   "mediatek,mt8173"
+-   "mediatek,mt8183"
+-
+-
+-Supported boards:
+-
+-- Evaluation board for MT2701:
+-    Required root node properties:
+-      - compatible = "mediatek,mt2701-evb", "mediatek,mt2701";
+-- Evaluation board for MT2712:
+-    Required root node properties:
+-      - compatible = "mediatek,mt2712-evb", "mediatek,mt2712";
+-- Evaluation board for MT6580:
+-    Required root node properties:
+-      - compatible = "mediatek,mt6580-evbp1", "mediatek,mt6580";
+-- bq Aquaris5 smart phone:
+-    Required root node properties:
+-      - compatible = "mundoreader,bq-aquaris5", "mediatek,mt6589";
+-- Evaluation board for MT6592:
+-    Required root node properties:
+-      - compatible = "mediatek,mt6592-evb", "mediatek,mt6592";
+-- Evaluation phone for MT6755(Helio P10):
+-    Required root node properties:
+-      - compatible = "mediatek,mt6755-evb", "mediatek,mt6755";
+-- Evaluation board for MT6765(Helio P22):
+-    Required root node properties:
+-      - compatible = "mediatek,mt6765-evb", "mediatek,mt6765";
+-- Evaluation board for MT6795(Helio X10):
+-    Required root node properties:
+-      - compatible = "mediatek,mt6795-evb", "mediatek,mt6795";
+-- Evaluation board for MT6797(Helio X20):
+-    Required root node properties:
+-      - compatible = "mediatek,mt6797-evb", "mediatek,mt6797";
+-- Mediatek X20 Development Board:
+-    Required root node properties:
+-      - compatible = "archermind,mt6797-x20-dev", "mediatek,mt6797";
+-- Reference board variant 1 for MT7622:
+-    Required root node properties:
+-      - compatible = "mediatek,mt7622-rfb1", "mediatek,mt7622";
+-- Bananapi BPI-R64 for MT7622:
+-    Required root node properties:
+-      - compatible = "bananapi,bpi-r64", "mediatek,mt7622";
+-- Reference board for MT7623a with eMMC:
+-    Required root node properties:
+-      - compatible = "mediatek,mt7623a-rfb-emmc", "mediatek,mt7623";
+-- Reference board for MT7623a with NAND:
+-    Required root node properties:
+-      - compatible = "mediatek,mt7623a-rfb-nand", "mediatek,mt7623";
+-- Reference board for MT7623n with eMMC:
+-    Required root node properties:
+-      - compatible = "mediatek,mt7623n-rfb-emmc", "mediatek,mt7623";
+-- Bananapi BPI-R2 board:
+-      - compatible = "bananapi,bpi-r2", "mediatek,mt7623";
+-- Reference board for MT7629:
+-    Required root node properties:
+-      - compatible = "mediatek,mt7629-rfb", "mediatek,mt7629";
+-- MTK mt8127 tablet moose EVB:
+-    Required root node properties:
+-      - compatible = "mediatek,mt8127-moose", "mediatek,mt8127";
+-- MTK mt8135 tablet EVB:
+-    Required root node properties:
+-      - compatible = "mediatek,mt8135-evbp1", "mediatek,mt8135";
+-- MTK mt8173 tablet EVB:
+-    Required root node properties:
+-      - compatible = "mediatek,mt8173-evb", "mediatek,mt8173";
+-- Evaluation board for MT8183:
+-    Required root node properties:
+-      - compatible = "mediatek,mt8183-evb", "mediatek,mt8183";
+diff --git a/Documentation/devicetree/bindings/arm/mediatek.yaml b/Documentation/devicetree/bindings/arm/mediatek.yaml
+new file mode 100644
+index 000000000000..a4ad2eb926f9
+--- /dev/null
++++ b/Documentation/devicetree/bindings/arm/mediatek.yaml
+@@ -0,0 +1,91 @@
++# SPDX-License-Identifier: GPL-2.0
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/arm/mediatek.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: MediaTek SoC based Platforms Device Tree Bindings
++
++maintainers:
++  - Sean Wang <sean.wang@mediatek.com>
++  - Matthias Brugger <matthias.bgg@gmail.com>
++description: |
++  Boards with a MediaTek SoC shall have the following properties.
++
++properties:
++  $nodename:
++    const: '/'
++  compatible:
++    oneOf:
++      - items:
++          - enum:
++              - mediatek,mt2701-evb
++          - const: mediatek,mt2701
++
++      - items:
++          - enum:
++              - mediatek,mt2712-evb
++          - const: mediatek,mt2712
++      - items:
++          - enum:
++              - mediatek,mt6580-evbp1
++          - const: mediatek,mt6580
++      - items:
++          - enum:
++              - mundoreader,bq-aquaris5
++          - const: mediatek,mt6589
++      - items:
++          - enum:
++              - mediatek,mt6592-evb
++          - const: mediatek,mt6592
++      - items:
++          - enum:
++              - mediatek,mt6755-evb
++          - const: mediatek,mt6755
++      - items:
++          - enum:
++              - mediatek,mt6765-evb
++          - const: mediatek,mt6765
++      - items:
++          - enum:
++              - mediatek,mt6795-evb
++          - const: mediatek,mt6795
++      - items:
++          - enum:
++              - archermind,mt6797-x20-dev
++              - mediatek,mt6797-evb
++          - const: mediatek,mt6797
++      - items:
++          - enum:
++              - bananapi,bpi-r64
++              - mediatek,mt7622-rfb1
++          - const: mediatek,mt7622
++      - items:
++          - enum:
++              - mediatek,mt7623a-rfb-emmc
++              - mediatek,mt7623a-rfb-nand
++              - mediatek,mt7623n-rfb-emmc
++              - bananapi,bpi-r2
++          - const: mediatek,mt7623
++
++      - items:
++          - enum:
++              - mediatek,mt7629-rfb
++          - const: mediatek,mt7629
++      - items:
++          - enum:
++              - mediatek,mt8127-moose
++          - const: mediatek,mt8127
++      - items:
++          - enum:
++              - mediatek,mt8135-evbp1
++          - const: mediatek,mt8135
++      - items:
++          - enum:
++              - mediatek,mt8173-evb
++          - const: mediatek,mt8173
++      - items:
++          - enum:
++              - mediatek,mt8183-evb
++          - const: mediatek,mt8183
++...
+-- 
+2.20.1
 
