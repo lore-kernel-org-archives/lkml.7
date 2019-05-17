@@ -2,139 +2,165 @@ Return-Path: <SRS0=M1fl=TR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6FF3C04AB4
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 06:13:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB9AEC04AB4
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 06:20:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AC8C620848
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 06:13:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B7FF720848
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 06:20:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="t/Ag4ohx"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Fox3LYtQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727561AbfEQGNp (ORCPT
+        id S1727666AbfEQGT7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 May 2019 02:13:45 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:36768 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726893AbfEQGNp (ORCPT
+        Fri, 17 May 2019 02:19:59 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:39453 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726871AbfEQGT7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 May 2019 02:13:45 -0400
-Received: by mail-pg1-f194.google.com with SMTP id a3so2787690pgb.3
-        for <linux-kernel@vger.kernel.org>; Thu, 16 May 2019 23:13:45 -0700 (PDT)
+        Fri, 17 May 2019 02:19:59 -0400
+Received: by mail-pg1-f193.google.com with SMTP id w22so2786139pgi.6;
+        Thu, 16 May 2019 23:19:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=kUjckoiL4hcazmpiRVYWRXZ1+byR8V6/hc2uWj9Ysig=;
-        b=t/Ag4ohx5G5C8vnn5fyJXM4y0k89Op7ZWxUgsxV1Xd145aByUYxDEcZte/PTwB+pun
-         ggfpKQTMWuvkQT+SdpuaDMqVOrX7JHIqa2JN+4SF21hFgFsa0yEsNpbj6g3lb9AevSVv
-         jxOfHa1kwBVZv+IHcrbdJ3QtKzAKVUVgHqtoZdIWXlvfFuMoS4rEICsLqzX57xvmDTcG
-         L5V+7EEKbEfXpxT+yzZMFHOcS4dbYlwuoxgH185T92qnWXRBdPDs/XWxXXBXXYpTfWSV
-         iaBPKXUlVcSqPdsAl8E/dgUMRpZRV1oEqdlhY/IWloYEBRJ7z3aScnzW5ALwCiWpHRyK
-         b3ag==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=xuFZm74Z9l79xdJ/4Cl+h92bWI5KTm3zMpzIFt8UcTc=;
+        b=Fox3LYtQlUW/RHf9SwWPrSo2GXNwyu9Zt552dBGMs0u8IBCNHNEjr36P5WBXBvEOKR
+         kPdgF4gEFz+qFGTGbp4v3lLawdbOB1fRL6XwN/HC8zQ7S2gcLiCum3/gOWz0wJtZn9O9
+         0i+3fl6v+4hJKaNC280xfAbCRB/SNAIdYqY0t6npcXjwRbb1NY/GcgXhg6ClniKITqYQ
+         /Ridv2I8OcNoMfeeaAKWjraeIjgmdSFhQIWJPzjHWjdShIMHKzLtSQZ0PRG79ZCVXZZZ
+         3UO+W/LQL9LJpX+awK373z5wSX3DPG/Lm1A4VnBm+assU0qPFozAwNkwiXPcYsGt/zyl
+         ThmQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=kUjckoiL4hcazmpiRVYWRXZ1+byR8V6/hc2uWj9Ysig=;
-        b=VJAVXlW63BE6Qhwbs35QqmoU/521frrxug7E6S9a2gK1RKmo6Ogm7WdBOm94Sm88i7
-         /tVOTScOIWejbjgPyoAgPV89Ah5RJyXFAify4NIKiAbbnpg0JTsIpml95/JTtnx2aPhZ
-         m3u9U1L9VE2eQedOs/zY4gZ+LzDbCAe0CI8h7fcjoFB7AQ8jA4DT0Q4bVGJU8xzWr2S3
-         p2R1c+h/v/oi53BOL0+zSPehlmLJIFdXDqApMisXEl6XszjGoHWo9d+l2+MBu+AIBQdB
-         uEkz3OpYiwhv3MCVWFuRPnwPKME5KYAW2FctdAfyKG5cN2YGRZwPITlFt6sjsEBoZwp+
-         sMew==
-X-Gm-Message-State: APjAAAXEfxr0d4gm8kTdx0rQHIyELHOffxu196Fd2bu5lc5CvO4NqcHY
-        CEzllS6tS7U1utCHJhzd8aw=
-X-Google-Smtp-Source: APXvYqxnnFmrplpftkM7cxoI/lh030At8OG7CfCN9dr3kjxbHY3VuCVSsn2e2V4tGmNN0DpfBDcmSA==
-X-Received: by 2002:a62:640e:: with SMTP id y14mr39509744pfb.109.1558073624914;
-        Thu, 16 May 2019 23:13:44 -0700 (PDT)
-Received: from localhost ([175.223.38.122])
-        by smtp.gmail.com with ESMTPSA id s24sm9246940pfe.57.2019.05.16.23.13.42
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 16 May 2019 23:13:44 -0700 (PDT)
-Date:   Fri, 17 May 2019 15:13:40 +0900
-From:   Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
-To:     Ben Skeggs <bskeggs@redhat.com>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>
-Cc:     dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org,
-        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
-Subject: drm/nouveau/core/memory: kmemleak 684 new suspected memory leaks
-Message-ID: <20190517061340.GA709@jagdpanzerIV>
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=xuFZm74Z9l79xdJ/4Cl+h92bWI5KTm3zMpzIFt8UcTc=;
+        b=PXWcpGGX23SXqj0+DVWsZUu3XQMUVE8HZLCU3PBDzA3TRXj6/xLDnD53sZTbjDxW9F
+         LStKOLDGaCh/zNqJzjX0sKsDqb9kxPiB9apWq4LORlCedfS7DSnHBoj8bjzOVGf63vTm
+         Fz2rtSwto5DQi4pPmVavlaP1WTMobnebKXKAvbH3tG9NAn6w9amBI53hEukIcjl6IMwM
+         TSsCeq6hPmqusY1sqWMHhHvU/Lhm2VQxd7uMXzAqXb44g+QtEqg2BfzTFLqHvjkA/eIg
+         /aoQAf+cl4yTzgBbyxxh2yX5dRA+rdLpHHxpPTwaVqRgICwzfFIN6rua6g2f9GVSh4Hf
+         7kGg==
+X-Gm-Message-State: APjAAAV91KF3wkWv92AHDu7jXLHzvI19MnVEtLznCitFSXsbIj+xMw2M
+        Y2hteielsEf2UYR6g6B/9wU5SHTYf7DEhA==
+X-Google-Smtp-Source: APXvYqw+WA3bfurFok2ai8+oJuWkBrHiGtx4UAn3M/gDpJbWNusoI2ceJp9Piqiguu8FH3vSKiv1lg==
+X-Received: by 2002:a63:7:: with SMTP id 7mr55679570pga.108.1558073998643;
+        Thu, 16 May 2019 23:19:58 -0700 (PDT)
+Received: from localhost.localdomain ([123.139.57.210])
+        by smtp.gmail.com with ESMTPSA id 63sm9412858pfu.95.2019.05.16.23.19.56
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 16 May 2019 23:19:58 -0700 (PDT)
+From:   Gaowei Pu <pugaowei@gmail.com>
+To:     tytso@mit.edu
+Cc:     jack@suse.com, linux-ext4@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] jbd2: fix some print format mistakes
+Date:   Fri, 17 May 2019 14:19:51 +0800
+Message-Id: <20190517061951.13730-1-pugaowei@gmail.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.11.4 (2019-03-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+There are some print format mistakes in debug messages. Fix them.
 
-5.1.0-next-20190517
-
-I'm looking at quite a lot of kmemleak reports coming from
-drm/nouveau/core/memory, all of which are:
-
-    unreferenced object 0xffff8deec27c4ac0 (size 16):
-      comm "Web Content", pid 5309, jiffies 4309675011 (age 68.076s)
-      hex dump (first 16 bytes):
-        00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-      backtrace:
-        [<0000000081f2894f>] nvkm_memory_tags_get+0x8e/0x130
-        [<000000007cd7c0bc>] gf100_vmm_valid+0x196/0x2f0
-        [<0000000070cc6d67>] nvkm_vmm_map+0xa8/0x360
-        [<00000000ab678644>] nvkm_vram_map+0x48/0x50
-        [<00000000d8176378>] nvkm_uvmm_mthd+0x658/0x770
-        [<00000000463fca5a>] nvkm_ioctl+0xdf/0x177
-        [<000000000afc4996>] nvif_object_mthd+0xd4/0x100
-        [<000000002f7a7385>] nvif_vmm_map+0xeb/0x100
-        [<00000000ef2537ed>] nouveau_mem_map+0x79/0xd0
-        [<0000000014ddc0cf>] nouveau_vma_new+0x19d/0x1c0
-        [<00000000f99888a1>] nouveau_gem_object_open+0xd4/0x140
-        [<000000009cd25861>] drm_gem_handle_create_tail+0xe3/0x160
-        [<00000000191784d9>] nouveau_gem_ioctl_new+0x6e/0xd0
-        [<00000000159678df>] drm_ioctl_kernel+0x8c/0xd0
-        [<00000000fbaa6154>] drm_ioctl+0x1c4/0x360
-        [<000000006833fe15>] nouveau_drm_ioctl+0x63/0xb0
-
-Wondering if those are real leaks or just false positives.
-
-For now I marked `tags' as kmemleak_not_leak(); but most
-likely it's utterly wrong.
-
-Any thoughts?
-
+Signed-off-by: Gaowei Pu <pugaowei@gmail.com>
 ---
- drivers/gpu/drm/nouveau/nvkm/core/memory.c | 2 ++
- 1 file changed, 2 insertions(+)
+ fs/jbd2/journal.c | 18 +++++++++---------
+ 1 file changed, 9 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/gpu/drm/nouveau/nvkm/core/memory.c b/drivers/gpu/drm/nouveau/nvkm/core/memory.c
-index e85a08ecd9da..cd46f54c5c32 100644
---- a/drivers/gpu/drm/nouveau/nvkm/core/memory.c
-+++ b/drivers/gpu/drm/nouveau/nvkm/core/memory.c
-@@ -25,6 +25,7 @@
- #include <core/mm.h>
- #include <subdev/fb.h>
- #include <subdev/instmem.h>
-+#include <linux/kmemleak.h>
+diff --git a/fs/jbd2/journal.c b/fs/jbd2/journal.c
+index 37e16d969925..565e99b67b30 100644
+--- a/fs/jbd2/journal.c
++++ b/fs/jbd2/journal.c
+@@ -203,7 +203,7 @@ static int kjournald2(void *arg)
+ 	if (journal->j_flags & JBD2_UNMOUNT)
+ 		goto end_loop;
  
- void
- nvkm_memory_tags_put(struct nvkm_memory *memory, struct nvkm_device *device,
-@@ -92,6 +93,7 @@ nvkm_memory_tags_get(struct nvkm_memory *memory, struct nvkm_device *device,
+-	jbd_debug(1, "commit_sequence=%d, commit_request=%d\n",
++	jbd_debug(1, "commit_sequence=%u, commit_request=%u\n",
+ 		journal->j_commit_sequence, journal->j_commit_request);
  
- 	refcount_set(&tags->refcount, 1);
- 	mutex_unlock(&fb->subdev.mutex);
-+	kmemleak_not_leak(tags);
- 	*ptags = tags;
+ 	if (journal->j_commit_sequence != journal->j_commit_request) {
+@@ -324,7 +324,7 @@ static void journal_kill_thread(journal_t *journal)
+  * IO is in progress. do_get_write_access() handles this.
+  *
+  * The function returns a pointer to the buffer_head to be used for IO.
+- * 
++ *
+  *
+  * Return value:
+  *  <0: Error
+@@ -500,7 +500,7 @@ int __jbd2_log_start_commit(journal_t *journal, tid_t target)
+ 		 */
+ 
+ 		journal->j_commit_request = target;
+-		jbd_debug(1, "JBD2: requesting commit %d/%d\n",
++		jbd_debug(1, "JBD2: requesting commit %u/%u\n",
+ 			  journal->j_commit_request,
+ 			  journal->j_commit_sequence);
+ 		journal->j_running_transaction->t_requested = jiffies;
+@@ -513,7 +513,7 @@ int __jbd2_log_start_commit(journal_t *journal, tid_t target)
+ 		WARN_ONCE(1, "JBD2: bad log_start_commit: %u %u %u %u\n",
+ 			  journal->j_commit_request,
+ 			  journal->j_commit_sequence,
+-			  target, journal->j_running_transaction ? 
++			  target, journal->j_running_transaction ?
+ 			  journal->j_running_transaction->t_tid : 0);
  	return 0;
  }
+@@ -698,12 +698,12 @@ int jbd2_log_wait_commit(journal_t *journal, tid_t tid)
+ #ifdef CONFIG_JBD2_DEBUG
+ 	if (!tid_geq(journal->j_commit_request, tid)) {
+ 		printk(KERN_ERR
+-		       "%s: error: j_commit_request=%d, tid=%d\n",
++		       "%s: error: j_commit_request=%u, tid=%u\n",
+ 		       __func__, journal->j_commit_request, tid);
+ 	}
+ #endif
+ 	while (tid_gt(tid, journal->j_commit_sequence)) {
+-		jbd_debug(1, "JBD2: want %d, j_commit_sequence=%d\n",
++		jbd_debug(1, "JBD2: want %u, j_commit_sequence=%u\n",
+ 				  tid, journal->j_commit_sequence);
+ 		read_unlock(&journal->j_state_lock);
+ 		wake_up(&journal->j_wait_commit);
+@@ -944,7 +944,7 @@ int __jbd2_update_log_tail(journal_t *journal, tid_t tid, unsigned long block)
+ 
+ 	trace_jbd2_update_log_tail(journal, tid, block, freed);
+ 	jbd_debug(1,
+-		  "Cleaning journal tail from %d to %d (offset %lu), "
++		  "Cleaning journal tail from %u to %u (offset %lu), "
+ 		  "freeing %lu\n",
+ 		  journal->j_tail_sequence, tid, block, freed);
+ 
+@@ -1318,7 +1318,7 @@ static int journal_reset(journal_t *journal)
+ 	 */
+ 	if (sb->s_start == 0) {
+ 		jbd_debug(1, "JBD2: Skipping superblock update on recovered sb "
+-			"(start %ld, seq %d, errno %d)\n",
++			"(start %ld, seq %u, errno %d)\n",
+ 			journal->j_tail, journal->j_tail_sequence,
+ 			journal->j_errno);
+ 		journal->j_flags |= JBD2_FLUSHED;
+@@ -1453,7 +1453,7 @@ static void jbd2_mark_journal_empty(journal_t *journal, int write_op)
+ 		return;
+ 	}
+ 
+-	jbd_debug(1, "JBD2: Marking journal as empty (seq %d)\n",
++	jbd_debug(1, "JBD2: Marking journal as empty (seq %u)\n",
+ 		  journal->j_tail_sequence);
+ 
+ 	sb->s_sequence = cpu_to_be32(journal->j_tail_sequence);
 -- 
 2.21.0
 
