@@ -2,168 +2,250 @@ Return-Path: <SRS0=M1fl=TR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+X-Spam-Status: No, score=-11.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32545C04E84
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 11:42:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A192BC04AB4
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 11:49:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0692020815
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 11:42:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=yandex-team.ru header.i=@yandex-team.ru header.b="ZeBCvFex"
+	by mail.kernel.org (Postfix) with ESMTP id 6CE4F204FD
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 11:49:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728771AbfEQLm3 (ORCPT
+        id S1728389AbfEQLth (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 May 2019 07:42:29 -0400
-Received: from forwardcorp1o.mail.yandex.net ([95.108.205.193]:54098 "EHLO
-        forwardcorp1o.mail.yandex.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727727AbfEQLm2 (ORCPT
+        Fri, 17 May 2019 07:49:37 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:40671 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727221AbfEQLtg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 May 2019 07:42:28 -0400
-Received: from mxbackcorp2j.mail.yandex.net (mxbackcorp2j.mail.yandex.net [IPv6:2a02:6b8:0:1619::119])
-        by forwardcorp1o.mail.yandex.net (Yandex) with ESMTP id 191932E14DD;
-        Fri, 17 May 2019 14:42:25 +0300 (MSK)
-Received: from smtpcorp1p.mail.yandex.net (smtpcorp1p.mail.yandex.net [2a02:6b8:0:1472:2741:0:8b6:10])
-        by mxbackcorp2j.mail.yandex.net (nwsmtp/Yandex) with ESMTP id lBau1MQ6yC-gO0uNjAp;
-        Fri, 17 May 2019 14:42:25 +0300
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex-team.ru; s=default;
-        t=1558093345; bh=DuAu62W6AZc9BLNWjfPvq/8pURNd6AGdCvHd+9yn0vQ=;
-        h=In-Reply-To:Message-ID:From:Date:References:To:Subject:Cc;
-        b=ZeBCvFexSzy4eK7HnXw2m4E5GbH4MqlmnqC7eg/bDjugORxk6Zg2cuAreDZwKKW84
-         IglY+I/SVtpVb4zGjn7fFOaVikA0ixgEa/Wpe87mU8GxVjh0oByXvhV2GNYkoND1GK
-         U5BObTMXhRqdbNw1ddlNlHde7uX4NKFs+sTewuzc=
-Authentication-Results: mxbackcorp2j.mail.yandex.net; dkim=pass header.i=@yandex-team.ru
-Received: from dynamic-red.dhcp.yndx.net (dynamic-red.dhcp.yndx.net [2a02:6b8:0:40c:4cb8:ba55:7b16:beea])
-        by smtpcorp1p.mail.yandex.net (nwsmtp/Yandex) with ESMTPSA id rncTEwRDdX-gOdCPYWB;
-        Fri, 17 May 2019 14:42:24 +0300
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (Client certificate not present)
-Subject: Re: [PATCH RFC] proc/meminfo: add KernelMisc counter
-To:     Roman Gushchin <guro@fb.com>
-Cc:     "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <155792098821.1536.17069603544573830315.stgit@buzz>
- <20190516175912.GA32262@tower.DHCP.thefacebook.com>
-From:   Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
-Message-ID: <6bb58fe4-d860-555e-3fb9-17b4ab552da6@yandex-team.ru>
-Date:   Fri, 17 May 2019 14:42:24 +0300
+        Fri, 17 May 2019 07:49:36 -0400
+Received: by mail-pf1-f195.google.com with SMTP id u17so3581755pfn.7
+        for <linux-kernel@vger.kernel.org>; Fri, 17 May 2019 04:49:36 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=qjpZSW9P86hUhxCXQpbZYJLTAJv9t1jQ7A46fddIkiA=;
+        b=druIA4QnQFsreBGf8r5EJdhbkmHR7PAgRgmD6bW4VuNkkFLwaAvmNDun7nj3A1Wp65
+         SOaLc8KEYZcm7keTt7A7Vjf8m+S1ZuAF3Oe9IF6arkPBmzj1V4P1YoVnnpooffjwBtLn
+         vBBufLaWEBJex6McKirvnRVhZr8nr/dybUoQnz6H/ngYhl0b2gkabUiWJ+CC8y9v6u+r
+         M7GPCPIdWpWLdlGQPLnynvJI830zKDZ8H8kB5BFbyo//Mkb7Q1yIqyzbcTv8udOi9NAU
+         J8k03XyA4hCg9y7rgPXEj7IHQY35Ei62zE4lAz55kju9g5B2yLMA+8iOYagF6EiQqXfz
+         EuwQ==
+X-Gm-Message-State: APjAAAUDTzWyUWP4BNqps2nSYDYWsqg+cQAUQ0+bFp7fDYYoM/b0qxT2
+        1CmP6x0dx+/t61Ak2+OPZaSlow==
+X-Google-Smtp-Source: APXvYqy3OmP/a8Gvw7GrWFbJxOIprB9wNBP4LNhgib6Y9emzTZAqgh4TdJZx/l+wp5UNgszQx6m5PQ==
+X-Received: by 2002:a63:4f16:: with SMTP id d22mr13102896pgb.148.1558093775894;
+        Fri, 17 May 2019 04:49:35 -0700 (PDT)
+Received: from [172.27.174.155] (23-24-245-129-static.hfc.comcastbusiness.net. [23.24.245.129])
+        by smtp.gmail.com with ESMTPSA id l7sm4565036pfl.9.2019.05.17.04.49.34
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 17 May 2019 04:49:35 -0700 (PDT)
+Subject: Re: [GIT PULL] KVM changes for 5.2 merge window
+To:     Nathan Chancellor <natechancellor@gmail.com>
+Cc:     torvalds@linux-foundation.org, linux-kernel@vger.kernel.org,
+        rkrcmar@redhat.com, kvm@vger.kernel.org
+References: <1558065576-21115-1-git-send-email-pbonzini@redhat.com>
+ <20190517062214.GA127599@archlinux-epyc>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Message-ID: <a8170dab-7c7d-de3d-9461-9eecb73026ff@redhat.com>
+Date:   Fri, 17 May 2019 13:49:34 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <20190516175912.GA32262@tower.DHCP.thefacebook.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-CA
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <20190517062214.GA127599@archlinux-epyc>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 16.05.2019 20:59, Roman Gushchin wrote:
-> On Wed, May 15, 2019 at 02:49:48PM +0300, Konstantin Khlebnikov wrote:
->> Some kernel memory allocations are not accounted anywhere.
->> This adds easy-read counter for them by subtracting all tracked kinds.
+On 17/05/19 08:22, Nathan Chancellor wrote:
+> On Fri, May 17, 2019 at 05:59:36AM +0200, Paolo Bonzini wrote:
+>> Linus,
 >>
->> Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
-> 
-> We have something similar in userspace, and it was very useful several times.
-> In our case, it was mostly vmallocs and percpu stuff (which are now shown
-> in meminfo), but for sure there are other memory users who are not.
-> 
-> I don't particularly like the proposed name, but have no better ideas.
-> It's really a gray area, everything we know, it's that the memory is occupied
-> by something.
-> 
-
-Probably it's better to add overall 'MemKernel'.
-Detailed analysis anyway requires special tools.
-
->> ---
->>   Documentation/filesystems/proc.txt |    2 ++
->>   fs/proc/meminfo.c                  |   41 +++++++++++++++++++++++++-----------
->>   2 files changed, 30 insertions(+), 13 deletions(-)
+>> The following changes since commit 7a223e06b1a411cef6c4cd7a9b9a33c8d225b10e:
 >>
->> diff --git a/Documentation/filesystems/proc.txt b/Documentation/filesystems/proc.txt
->> index 66cad5c86171..f11ce167124c 100644
->> --- a/Documentation/filesystems/proc.txt
->> +++ b/Documentation/filesystems/proc.txt
->> @@ -891,6 +891,7 @@ VmallocTotal:   112216 kB
->>   VmallocUsed:       428 kB
->>   VmallocChunk:   111088 kB
->>   Percpu:          62080 kB
->> +KernelMisc:     212856 kB
->>   HardwareCorrupted:   0 kB
->>   AnonHugePages:   49152 kB
->>   ShmemHugePages:      0 kB
->> @@ -988,6 +989,7 @@ VmallocTotal: total size of vmalloc memory area
->>   VmallocChunk: largest contiguous block of vmalloc area which is free
->>         Percpu: Memory allocated to the percpu allocator used to back percpu
->>                 allocations. This stat excludes the cost of metadata.
->> +  KernelMisc: All other kinds of kernel memory allocaitons
->                                                         ^^^
-> 						       typo
->>   
->>   ..............................................................................
->>   
->> diff --git a/fs/proc/meminfo.c b/fs/proc/meminfo.c
->> index 568d90e17c17..7bc14716fc5d 100644
->> --- a/fs/proc/meminfo.c
->> +++ b/fs/proc/meminfo.c
->> @@ -38,15 +38,21 @@ static int meminfo_proc_show(struct seq_file *m, void *v)
->>   	long cached;
->>   	long available;
->>   	unsigned long pages[NR_LRU_LISTS];
->> -	unsigned long sreclaimable, sunreclaim;
->> +	unsigned long sreclaimable, sunreclaim, misc_reclaimable;
->> +	unsigned long kernel_stack_kb, page_tables, percpu_pages;
->> +	unsigned long anon_pages, file_pages, swap_cached;
->> +	long kernel_misc;
->>   	int lru;
->>   
->>   	si_meminfo(&i);
->>   	si_swapinfo(&i);
->>   	committed = percpu_counter_read_positive(&vm_committed_as);
->>   
->> -	cached = global_node_page_state(NR_FILE_PAGES) -
->> -			total_swapcache_pages() - i.bufferram;
->> +	anon_pages = global_node_page_state(NR_ANON_MAPPED);
->> +	file_pages = global_node_page_state(NR_FILE_PAGES);
->> +	swap_cached = total_swapcache_pages();
->> +
->> +	cached = file_pages - swap_cached - i.bufferram;
->>   	if (cached < 0)
->>   		cached = 0;
->>   
->> @@ -56,13 +62,25 @@ static int meminfo_proc_show(struct seq_file *m, void *v)
->>   	available = si_mem_available();
->>   	sreclaimable = global_node_page_state(NR_SLAB_RECLAIMABLE);
->>   	sunreclaim = global_node_page_state(NR_SLAB_UNRECLAIMABLE);
->> +	misc_reclaimable = global_node_page_state(NR_KERNEL_MISC_RECLAIMABLE);
->> +	kernel_stack_kb = global_zone_page_state(NR_KERNEL_STACK_KB);
->> +	page_tables = global_zone_page_state(NR_PAGETABLE);
->> +	percpu_pages = pcpu_nr_pages();
->> +
->> +	/* all other kinds of kernel memory allocations */
->> +	kernel_misc = i.totalram - i.freeram - anon_pages - file_pages
->> +		      - sreclaimable - sunreclaim - misc_reclaimable
->> +		      - (kernel_stack_kb >> (PAGE_SHIFT - 10))
->> +		      - page_tables - percpu_pages;
->> +	if (kernel_misc < 0)
->> +		kernel_misc = 0;
+>>   KVM: x86: avoid misreporting level-triggered irqs as edge-triggered in tracing (2019-04-16 15:38:08 +0200)
+>>
+>> are available in the git repository at:
+>>
+>>   https://git.kernel.org/pub/scm/virt/kvm/kvm.git tags/for-linus
+>>
+>> for you to fetch changes up to dd53f6102c30a774e0db8e55d49017a38060f6f6:
+>>
+>>   Merge tag 'kvmarm-for-v5.2' of git://git.kernel.org/pub/scm/linux/kernel/git/kvmarm/kvmarm into HEAD (2019-05-15 23:41:43 +0200)
+>>
+>> ----------------------------------------------------------------
+>>
+>> * ARM: support for SVE and Pointer Authentication in guests, PMU improvements
+>>
+>> * POWER: support for direct access to the POWER9 XIVE interrupt controller,
+>> memory and performance optimizations.
+>>
+>> * x86: support for accessing memory not backed by struct page, fixes and refactoring
+>>
+>> * Generic: dirty page tracking improvements
+>>
+>> ----------------------------------------------------------------
+>> Aaron Lewis (5):
+>>       tests: kvm: Add tests to .gitignore
+>>       tests: kvm: Add tests for KVM_CAP_MAX_VCPUS and KVM_CAP_MAX_CPU_ID
+>>       KVM: nVMX: KVM_SET_NESTED_STATE - Tear down old EVMCS state before setting new state
+>>       tests: kvm: Add tests for KVM_SET_NESTED_STATE
+>>       kvm: nVMX: Set nested_run_pending in vmx_set_nested_state after checks complete
+>>
+>> Alexey Kardashevskiy (3):
+>>       KVM: PPC: Book3S HV: Fix lockdep warning when entering the guest
+>>       KVM: PPC: Book3S HV: Avoid lockdep debugging in TCE realmode handlers
+>>       KVM: PPC: Book3S: Allocate guest TCEs on demand too
+>>
+>> Amit Daniel Kachhap (3):
+>>       KVM: arm64: Add a vcpu flag to control ptrauth for guest
+>>       KVM: arm64: Add userspace flag to enable pointer authentication
+>>       KVM: arm64: Add capability to advertise ptrauth for guest
+>>
+>> Andrew Murray (9):
+>>       arm64: arm_pmu: Remove unnecessary isb instruction
+>>       arm64: KVM: Encapsulate kvm_cpu_context in kvm_host_data
+>>       arm64: KVM: Add accessors to track guest/host only counters
+>>       arm64: arm_pmu: Add !VHE support for exclude_host/exclude_guest attributes
+>>       arm64: KVM: Enable !VHE support for :G/:H perf event modifiers
+>>       arm64: KVM: Enable VHE support for :G/:H perf event modifiers
+>>       arm64: KVM: Avoid isb's by using direct pmxevtyper sysreg
+>>       arm64: docs: Document perf event attributes
+>>       arm64: KVM: Fix perf cycle counter support for VHE
+>>
+>> Borislav Petkov (1):
+>>       x86/kvm: Implement HWCR support
+>>
+>> Christian Borntraeger (9):
+>>       KVM: s390: add vector enhancements facility 2 to cpumodel
+>>       KVM: s390: add vector BCD enhancements facility to cpumodel
+>>       KVM: s390: add MSA9 to cpumodel
+>>       KVM: s390: provide query function for instructions returning 32 byte
+>>       KVM: s390: add enhanced sort facilty to cpu model
+>>       KVM: s390: add deflate conversion facilty to cpu model
+>>       KVM: s390: enable MSA9 keywrapping functions depending on cpu model
+>>       KVM: polling: add architecture backend to disable polling
+>>       KVM: s390: provide kvm_arch_no_poll function
+>>
+>> Colin Ian King (1):
+>>       KVM: PPC: Book3S HV: XIVE: Fix spelling mistake "acessing" -> "accessing"
+>>
+>> Cédric Le Goater (18):
+>>       powerpc/xive: add OPAL extensions for the XIVE native exploitation support
+>>       KVM: PPC: Book3S HV: Add a new KVM device for the XIVE native exploitation mode
+>>       KVM: PPC: Book3S HV: XIVE: Introduce a new capability KVM_CAP_PPC_IRQ_XIVE
+>>       KVM: PPC: Book3S HV: XIVE: add a control to initialize a source
+>>       KVM: PPC: Book3S HV: XIVE: Add a control to configure a source
+>>       KVM: PPC: Book3S HV: XIVE: Add controls for the EQ configuration
+>>       KVM: PPC: Book3S HV: XIVE: Add a global reset control
+>>       KVM: PPC: Book3S HV: XIVE: Add a control to sync the sources
+>>       KVM: PPC: Book3S HV: XIVE: Add a control to dirty the XIVE EQ pages
+>>       KVM: PPC: Book3S HV: XIVE: Add get/set accessors for the VP XIVE state
+>>       KVM: Introduce a 'mmap' method for KVM devices
+>>       KVM: PPC: Book3S HV: XIVE: Add a TIMA mapping
+>>       KVM: PPC: Book3S HV: XIVE: Add a mapping for the source ESB pages
+>>       KVM: PPC: Book3S HV: XIVE: Add passthrough support
+>>       KVM: PPC: Book3S HV: XIVE: Activate XIVE exploitation mode
+>>       KVM: Introduce a 'release' method for KVM devices
+>>       KVM: PPC: Book3S HV: XIVE: Replace the 'destroy' method by a 'release' method
+>>       KVM: PPC: Book3S: Remove useless checks in 'release' method of KVM device
+>>
+>> Dan Carpenter (1):
+>>       KVM: vmx: clean up some debug output
+>>
+>> Dave Martin (41):
+>>       KVM: Documentation: Document arm64 core registers in detail
+>>       arm64: fpsimd: Always set TIF_FOREIGN_FPSTATE on task state flush
+>>       KVM: arm64: Delete orphaned declaration for __fpsimd_enabled()
+>>       KVM: arm64: Refactor kvm_arm_num_regs() for easier maintenance
+>>       KVM: arm64: Add missing #includes to kvm_host.h
+>>       arm64/sve: Clarify role of the VQ map maintenance functions
+>>       arm64/sve: Check SVE virtualisability
+>>       arm64/sve: Enable SVE state tracking for non-task contexts
+>>       KVM: arm64: Add a vcpu flag to control SVE visibility for the guest
+>>       KVM: arm64: Propagate vcpu into read_id_reg()
+>>       KVM: arm64: Support runtime sysreg visibility filtering
+>>       KVM: arm64/sve: System register context switch and access support
+>>       KVM: arm64/sve: Context switch the SVE registers
+>>       KVM: Allow 2048-bit register access via ioctl interface
+>>       KVM: arm64: Add missing #include of <linux/string.h> in guest.c
+>>       KVM: arm64: Factor out core register ID enumeration
+>>       KVM: arm64: Reject ioctl access to FPSIMD V-regs on SVE vcpus
+>>       KVM: arm64/sve: Add SVE support to register access ioctl interface
+>>       KVM: arm64: Enumerate SVE register indices for KVM_GET_REG_LIST
+>>       arm64/sve: In-kernel vector length availability query interface
+>>       KVM: arm/arm64: Add hook for arch-specific KVM initialisation
+>>       KVM: arm/arm64: Add KVM_ARM_VCPU_FINALIZE ioctl
+>>       KVM: arm64/sve: Add pseudo-register for the guest's vector lengths
+>>       KVM: arm64/sve: Allow userspace to enable SVE for vcpus
+>>       KVM: arm64: Add a capability to advertise SVE support
+>>       KVM: Document errors for KVM_GET_ONE_REG and KVM_SET_ONE_REG
+>>       KVM: arm64/sve: Document KVM API extensions for SVE
+>>       arm64/sve: Clarify vq map semantics
+>>       KVM: arm/arm64: Demote kvm_arm_init_arch_resources() to just set up SVE
+>>       KVM: arm: Make vcpu finalization stubs into inline functions
+>>       KVM: arm64/sve: sys_regs: Demote redundant vcpu_has_sve() checks to WARNs
+>>       KVM: arm64/sve: Clean up UAPI register ID definitions
+>>       KVM: arm64/sve: Miscellaneous tidyups in guest.c
+>>       KVM: arm64/sve: Make register ioctl access errors more consistent
+>>       KVM: arm64/sve: WARN when avoiding divide-by-zero in sve_reg_to_region()
+>>       KVM: arm64/sve: Simplify KVM_REG_ARM64_SVE_VLS array sizing
+>>       KVM: arm64/sve: Explain validity checks in set_sve_vls()
+>>       KVM: arm/arm64: Clean up vcpu finalization function parameter naming
+>>       KVM: Clarify capability requirements for KVM_ARM_VCPU_FINALIZE
+>>       KVM: Clarify KVM_{SET,GET}_ONE_REG error code documentation
+>>       KVM: arm64: Clarify access behaviour for out-of-range SVE register slice IDs
+>>
+>> Eric Farman (1):
+>>       KVM: s390: Fix potential spectre warnings
+>>
+>> Filippo Sironi (1):
+>>       X86/KVM: Handle PFNs outside of kernel reach when touching GPTEs
+>>
+>> Jiang Biao (1):
+>>       kvm_main: fix some comments
+>>
+>> Kai Huang (1):
+>>       kvm: x86: Fix L1TF mitigation for shadow MMU
+>>
+>> KarimAllah Ahmed (13):
+>>       X86/nVMX: handle_vmon: Read 4 bytes from guest memory
+>>       X86/nVMX: Update the PML table without mapping and unmapping the page
+>>       KVM: Introduce a new guest mapping API
 > 
-> Hm, why? Is there any realistic scenario (not caused by the kernel doing
-> the memory accounting wrong) when it's negative?
+> This commit causes a build failure on arm64 defconfig:
 > 
-> Maybe it's better to show it as it is, if it's negative? Because
-> it might be a good indication that something's wrong with some of
-> the counters.
+> $ make -j$(nproc) ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- O=out defconfig Image.gz
+> ...
+>     ../arch/arm64/kvm/../../../virt/kvm/kvm_main.c: In function '__kvm_map_gfn':
+> ../arch/arm64/kvm/../../../virt/kvm/kvm_main.c:1763:9: error: implicit declaration of function 'memremap'; did you mean 'memset_p'? [-Werror=implicit-function-declaration]
+>    hva = memremap(pfn_to_hpa(pfn), PAGE_SIZE, MEMREMAP_WB);
+>          ^~~~~~~~
+>          memset_p
+>   CC      kernel/cgroup/rstat.o
+> ../arch/arm64/kvm/../../../virt/kvm/kvm_main.c:1763:46: error: 'MEMREMAP_WB' undeclared (first use in this function)
+>    hva = memremap(pfn_to_hpa(pfn), PAGE_SIZE, MEMREMAP_WB);
+>                                               ^~~~~~~~~~~
+> ../arch/arm64/kvm/../../../virt/kvm/kvm_main.c:1763:46: note: each undeclared identifier is reported only once for each function it appears in
+> ../arch/arm64/kvm/../../../virt/kvm/kvm_main.c: In function 'kvm_vcpu_unmap':
+> ../arch/arm64/kvm/../../../virt/kvm/kvm_main.c:1795:3: error: implicit declaration of function 'memunmap'; did you mean 'vm_munmap'? [-Werror=implicit-function-declaration]
+>    memunmap(map->hva);
+>    ^~~~~~~~
+>    vm_munmap
+> 
+> It seems that the <asm/io.h> include should probably be converted into
+> <linux/io.h>.
 
-Such kind of sanitisation is a common practice for racy counters.
-See 'cached' above.
+Ouch, thanks. :/  I'll send a new pull request as soon as I finish
+testing the change you suggested.
 
-> 
-> Thanks!
-> 
+Paolo
+
