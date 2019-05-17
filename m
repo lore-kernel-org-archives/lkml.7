@@ -2,81 +2,150 @@ Return-Path: <SRS0=M1fl=TR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 618BBC04E87
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 14:52:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A957C04AB4
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 14:53:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 339DD216FD
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 14:52:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558104759;
-	bh=GWPQahVBLc9oCB8wTxBcTd3TyO8Alw8wwia+iCLmYwM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=EX8/mUOlfTZOk4RbpuDHMReiP08fNCEOrLSuOPIdO0Ljh/GReAkuFMuu1/2PDErP6
-	 Vj9nXvM5QugosiElbtlFQI/HfYNrPKELsVcHjCKx+Oxgbj3AEz481nHoDyXEy/rBFu
-	 JDKjUKfbvVW7/ehw3RgZd1QCw37ZmKE4VN0J559M=
+	by mail.kernel.org (Postfix) with ESMTP id 47BBA21726
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 14:53:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=felipegasper.com header.i=@felipegasper.com header.b="PbLc3yPg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729120AbfEQOwi (ORCPT
+        id S1729149AbfEQOxJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 May 2019 10:52:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49830 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728968AbfEQOwi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 May 2019 10:52:38 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3B7762168B;
-        Fri, 17 May 2019 14:52:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558104757;
-        bh=GWPQahVBLc9oCB8wTxBcTd3TyO8Alw8wwia+iCLmYwM=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=XzPSRxhuJeAU0NHHV0zUbVzWRB26FRuJ/3AltD4zUgMHCwRuVLwCoWXsvnh/f1M/o
-         zor7FnbIyNhmgAh76jLylIBoBb9qObAWRu4IZRSyEVun2kZ4aIagQw1TQQ6FAUkjC5
-         deQwi1Z9KDUB+G5K/cvajvAYivqjJKJjCFCC0Jv4=
-Date:   Fri, 17 May 2019 16:52:35 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Gilad Ben-Yossef <gilad@benyossef.com>
-Cc:     Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>, stable@vger.kernel.org,
-        Ofir Drang <ofir.drang@arm.com>,
-        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
-        Linux kernel mailing list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 00/35] crypto: ccree: features and bug fixes for 5.2
-Message-ID: <20190517145235.GB10613@kroah.com>
-References: <20190418133913.9122-1-gilad@benyossef.com>
- <CAOtvUMd9WUZAFgTqVH0U2ZZp8bbHXNg9Ae_ZFvGKJTSKNct8JA@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAOtvUMd9WUZAFgTqVH0U2ZZp8bbHXNg9Ae_ZFvGKJTSKNct8JA@mail.gmail.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+        Fri, 17 May 2019 10:53:09 -0400
+Received: from web1.siteocity.com ([67.227.147.204]:37842 "EHLO
+        web1.siteocity.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728968AbfEQOxJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 May 2019 10:53:09 -0400
+X-Greylist: delayed 2485 seconds by postgrey-1.27 at vger.kernel.org; Fri, 17 May 2019 10:53:07 EDT
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=felipegasper.com; s=default; h=To:References:Message-Id:
+        Content-Transfer-Encoding:Cc:Date:In-Reply-To:From:Subject:Mime-Version:
+        Content-Type:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=N6m8ItcPeAXtI74gTibpdhO9VtglXynz6qvN46c+wdE=; b=PbLc3yPgpUwo/2Tew4KztUm6S
+        rZJmFRHIoU+mXUVUC8Ov5FFBXfUWtDM54nHWwDtTIUJJn+HMajz888QdKsY4VrA1A5L39+Jrqxu0z
+        +FpipWyEUSj93ct8veIK7NeHbcP4Ww63H5533KcvSfbWJrR6r8KOO30yFmEiWm5M39Xo2zAgVt+39
+        8nZvmhDNgnrjPSQZ0aAR7nR8gx//oaRW2VxsnxYpZfWugiWZUXArBmBruHKZPToS1mq2ImRG567RX
+        kYLoeZIBOeGnKZDrFlxd/qeuugysXejb5juPhbBGavctKePoxlRzLrGpFikzohTtPpvU2tsEnsGM9
+        0pL2zc1pA==;
+Received: from [149.248.87.38] (port=51684 helo=[192.168.86.41])
+        by web1.siteocity.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.92)
+        (envelope-from <felipe@felipegasper.com>)
+        id 1hRdaG-0000dd-AM; Fri, 17 May 2019 09:11:41 -0500
+Content-Type: text/plain;
+        charset=utf-8
+Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
+Subject: Re: [PATCH] Add UNIX_DIAG_UID to Netlink UNIX socket diagnostics.
+From:   Felipe Gasper <felipe@felipegasper.com>
+In-Reply-To: <CALCETrUaTamZ1ZGbWpu+4kDAEFRqyESoa_4tgwpAmMh3NVQ4pQ@mail.gmail.com>
+Date:   Fri, 17 May 2019 10:11:38 -0400
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Network Development <netdev@vger.kernel.org>,
+        Linux API <linux-api@vger.kernel.org>
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <AF68C2F5-1E59-44D4-BC63-9C988C278174@felipegasper.com>
+References: <20190517032505.19921-1-felipe@felipegasper.com>
+ <CALCETrUaTamZ1ZGbWpu+4kDAEFRqyESoa_4tgwpAmMh3NVQ4pQ@mail.gmail.com>
+To:     Andy Lutomirski <luto@kernel.org>
+X-Mailer: Apple Mail (2.3445.104.11)
+X-OutGoing-Spam-Status: No, score=-1.0
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - web1.siteocity.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - felipegasper.com
+X-Get-Message-Sender-Via: web1.siteocity.com: authenticated_id: fgasper/from_h
+X-Authenticated-Sender: web1.siteocity.com: felipe@felipegasper.com
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-From-Rewrite: unmodified, already matched
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Apr 21, 2019 at 11:52:55AM +0300, Gilad Ben-Yossef wrote:
-> On Thu, Apr 18, 2019 at 4:39 PM Gilad Ben-Yossef <gilad@benyossef.com> wrote:
-> >
-> > A set of new features, mostly support for CryptoCell 713
-> > features including protected keys, security disable mode and
-> > new HW revision indetification interface alongside many bug fixes.
-> 
-> FYI,
-> 
-> A port of those patches from this patch series which have been marked
-> for stable is available at
-> https://github.com/gby/linux/tree/4.19-ccree
 
-Hm, all I seem to need are 2 patches that failed to apply.  Can you just
-provide backports for them?
+> On May 17, 2019, at 12:59 AM, Andy Lutomirski <luto@kernel.org> wrote:
+>=20
+>> On May 16, 2019, at 8:25 PM, Felipe <felipe@felipegasper.com> wrote:
+>>=20
+>> Author: Felipe Gasper <felipe@felipegasper.com>
+>> Date:   Thu May 16 12:16:53 2019 -0500
+>>=20
+>>   Add UNIX_DIAG_UID to Netlink UNIX socket diagnostics.
+>>=20
+>>   This adds the ability for Netlink to report a socket=E2=80=99s UID =
+along with the
+>>   other UNIX socket diagnostic information that is already available. =
+This will
+>>   allow diagnostic tools greater insight into which users control =
+which socket.
+>>=20
+>>   Signed-off-by: Felipe Gasper <felipe@felipegasper.com>
+>>=20
+>> diff --git a/include/uapi/linux/unix_diag.h =
+b/include/uapi/linux/unix_diag.h
+>> index 5c502fd..a198857 100644
+>> --- a/include/uapi/linux/unix_diag.h
+>> +++ b/include/uapi/linux/unix_diag.h
+>> @@ -20,6 +20,7 @@ struct unix_diag_req {
+>> #define UDIAG_SHOW_ICONS    0x00000008    /* show pending connections =
+*/
+>> #define UDIAG_SHOW_RQLEN    0x00000010    /* show skb receive queue =
+len */
+>> #define UDIAG_SHOW_MEMINFO    0x00000020    /* show memory info of a =
+socket */
+>> +#define UDIAG_SHOW_UID        0x00000040    /* show socket's UID */
+>>=20
+>> struct unix_diag_msg {
+>>   __u8    udiag_family;
+>> @@ -40,6 +41,7 @@ enum {
+>>   UNIX_DIAG_RQLEN,
+>>   UNIX_DIAG_MEMINFO,
+>>   UNIX_DIAG_SHUTDOWN,
+>> +    UNIX_DIAG_UID,
+>>=20
+>>   __UNIX_DIAG_MAX,
+>> };
+>> diff --git a/net/unix/diag.c b/net/unix/diag.c
+>> index 3183d9b..011f56c 100644
+>> --- a/net/unix/diag.c
+>> +++ b/net/unix/diag.c
+>> @@ -110,6 +110,11 @@ static int sk_diag_show_rqlen(struct sock *sk, =
+struct sk_buff *nlskb)
+>>   return nla_put(nlskb, UNIX_DIAG_RQLEN, sizeof(rql), &rql);
+>> }
+>>=20
+>> +static int sk_diag_dump_uid(struct sock *sk, struct sk_buff *nlskb)
+>> +{
+>> +    return nla_put(nlskb, UNIX_DIAG_UID, sizeof(kuid_t), =
+&(sk->sk_uid));
+>=20
+> That type is called *k* uid_t because it=E2=80=99s internal to the =
+kernel. You
+> probably want from_kuid_munged(), which will fix it up for an
+> appropriate userns.  Presumably you want sk=E2=80=99s netns=E2=80=99s =
+userns.
 
-thanks,
+Thank you for pointing this out.
 
-greg k-h
+Would it suffice to get the userns as: =E2=80=9Csk_user_ns(sk)=E2=80=9D?
+
+Or would it be better to pass struct netlink_callback *cb from =
+unix_diag_dump() to sk_diag_dump() to sk_diag_fill(), then to the new =
+function to add the UID?
+
+cheers,
+-Felipe Gasper=
