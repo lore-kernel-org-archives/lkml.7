@@ -2,113 +2,139 @@ Return-Path: <SRS0=M1fl=TR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58926C04AB4
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 04:40:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00BCFC04AB4
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 04:46:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 309B4216F4
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 04:40:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C08BD20868
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 04:46:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="Ki17k6GL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727512AbfEQEkz (ORCPT
+        id S1727537AbfEQEqA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 May 2019 00:40:55 -0400
-Received: from mga02.intel.com ([134.134.136.20]:43334 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725929AbfEQEky (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 May 2019 00:40:54 -0400
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 16 May 2019 21:40:54 -0700
-X-ExtLoop1: 1
-Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
-  by FMSMGA003.fm.intel.com with ESMTP; 16 May 2019 21:40:53 -0700
-Received: from kbuild by lkp-server01 with local (Exim 4.89)
-        (envelope-from <lkp@intel.com>)
-        id 1hRUfs-00020o-J6; Fri, 17 May 2019 12:40:52 +0800
-Date:   Fri, 17 May 2019 12:40:30 +0800
-From:   kbuild test robot <lkp@intel.com>
-To:     Patrick Venture <venture@google.com>
-Cc:     kbuild-all@01.org, linux-kernel@vger.kernel.org,
-        Olof Johansson <olof@lixom.net>
-Subject: drivers/soc/Kconfig:23: 'menu' in different file than 'menu'
-Message-ID: <201905171226.xchw0NQ2%lkp@intel.com>
+        Fri, 17 May 2019 00:46:00 -0400
+Received: from conssluserg-02.nifty.com ([210.131.2.81]:50867 "EHLO
+        conssluserg-02.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725929AbfEQEqA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 May 2019 00:46:00 -0400
+Received: from mail-vk1-f175.google.com (mail-vk1-f175.google.com [209.85.221.175]) (authenticated)
+        by conssluserg-02.nifty.com with ESMTP id x4H4jm0a023816;
+        Fri, 17 May 2019 13:45:49 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-02.nifty.com x4H4jm0a023816
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1558068349;
+        bh=Qn7DNZWaczGYT+EoYw97KLq0hjtJgpMogyakqDUKKJs=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=Ki17k6GL10zubUsSj926QbZ9JOfvYTdpt+etQ7NBS/vNEPfo06UO+eo5gAewC26TH
+         g1r70SYtalPE0L+pxBElnnONwmxELC0XrRtDuoYj3HCWPfAITs6D5ANINHbYqt7Xim
+         fdQ6HE4BGQANutbOlouVskeYSAZkWAOAf0Dlt54zZrak057UXDmZ8cH2SIPHE59bKG
+         9oHl57qfCgXkas5MoUZblJCMcDydzkDabls6oVQaXbYEdRluD3g0Mt7fthL/4W5O2j
+         3a1DDcq67DH20HwwPY3qdsoheh2nUHspOYU6QV+ll9m2C+j6jg+LJsFj0sCFRIH3qy
+         vD+gW261xGHhg==
+X-Nifty-SrcIP: [209.85.221.175]
+Received: by mail-vk1-f175.google.com with SMTP id o187so1672040vkg.4;
+        Thu, 16 May 2019 21:45:48 -0700 (PDT)
+X-Gm-Message-State: APjAAAWmqRw79/0iQ4JY1Gji+ATYN4R1/9nhJwRtEsPnHsNokkUyttI1
+        dt3H6/c9Y9783I5A1gGO4o93CEKc7XBTH1tHfHo=
+X-Google-Smtp-Source: APXvYqzGuYVwx+PmAR3w6mksl8n4Iqn1f0pKRu/8urTOc6d+8VibAY+jntCkqEuxXukHLeAP+ngWhVfhAaWwupRqU0Q=
+X-Received: by 2002:a1f:30d4:: with SMTP id w203mr1444390vkw.0.1558068347755;
+ Thu, 16 May 2019 21:45:47 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-X-Patchwork-Hint: ignore
-User-Agent: Mutt/1.5.23 (2014-03-12)
+References: <20190517042753.25857-1-yamada.masahiro@socionext.com>
+In-Reply-To: <20190517042753.25857-1-yamada.masahiro@socionext.com>
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+Date:   Fri, 17 May 2019 13:45:11 +0900
+X-Gmail-Original-Message-ID: <CAK7LNARvQUPPBzdq7ac67h-xhB6tHZ4WPzBHZy+c3iHE_bi_Fg@mail.gmail.com>
+Message-ID: <CAK7LNARvQUPPBzdq7ac67h-xhB6tHZ4WPzBHZy+c3iHE_bi_Fg@mail.gmail.com>
+Subject: Re: [PATCH v2] kbuild: check uniqueness of module names
+To:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>
+Cc:     Sam Ravnborg <sam@ravnborg.org>, Arnd Bergmann <arnd@arndb.de>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Jessica Yu <jeyu@kernel.org>,
+        Lucas De Marchi <lucas.de.marchi@gmail.com>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Michael Schmitz <schmitzmic@gmail.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Rusty Russell <rusty@rustcorp.com.au>,
+        Kees Cook <keescook@chromium.org>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Patrick,
+On Fri, May 17, 2019 at 1:29 PM Masahiro Yamada
+<yamada.masahiro@socionext.com> wrote:
+>
+> In the recent build test of linux-next, Stephen saw a build error
+> caused by a broken .tmp_versions/*.mod file:
+>
+>   https://lkml.org/lkml/2019/5/13/991
+>
+> drivers/net/phy/asix.ko and drivers/net/usb/asix.ko have the same
+> basename, and there is a race in generating .tmp_versions/asix.mod
+>
+> Kbuild has not checked this before, and it suddenly shows up with
+> obscure error message when this kind of race occurs.
+>
+> Non-unique module names cause various sort of problems, but it is
+> not trivial to catch them by eyes.
+>
+> Hence, this script.
+>
+> It checks not only real modules, but also built-in modules (i.e.
+> controlled by tristate CONFIG option, but currently compiled with =y).
+> Non-unique names for built-in modules also cause problems because
+> /sys/modules/ would fall over.
+>
+> I tested allmodconfig on the latest kernel, and it detected the
+> following:
+>
+> warning: same basename if the following are built as modules:
+>   drivers/regulator/88pm800.ko
+>   drivers/mfd/88pm800.ko
+> warning: same basename if the following are built as modules:
+>   drivers/gpu/drm/bridge/adv7511/adv7511.ko
+>   drivers/media/i2c/adv7511.ko
+> warning: same basename if the following are built as modules:
+>   drivers/net/phy/asix.ko
+>   drivers/net/usb/asix.ko
+> warning: same basename if the following are built as modules:
+>   fs/coda/coda.ko
+>   drivers/media/platform/coda/coda.ko
+> warning: same basename if the following are built as modules:
+>   drivers/net/phy/realtek.ko
+>   drivers/net/dsa/realtek.ko
+>
+> Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
+> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+> Reviewed-by: Kees Cook <keescook@chromium.org>
+> ---
 
-FYI, the error/warning still remains.
 
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-head:   0d74471924f2a01dcd32d154510c0500780b531a
-commit: 524feb799408e5d45c6aa82763a9f52489d1e19f soc: add aspeed folder and misc drivers
-date:   3 weeks ago
-config: xtensa-allyesconfig
-compiler: xtensa-linux-gcc (GCC) 8.1.0
-reproduce:
-        wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
-        chmod +x ~/bin/make.cross
-        git checkout 524feb799408e5d45c6aa82763a9f52489d1e19f
-        GCC_VERSION=8.1.0 make.cross ARCH=xtensa  allyesconfig
-        GCC_VERSION=8.1.0 make.cross ARCH=xtensa 
+One more question popped up.
 
-If you fix the issue, kindly add following tag
-Reported-by: kbuild test robot <lkp@intel.com>
+External modules are out of scope of the community,
+but it is possible that people create an external module
+that happens to have the same name as an upstream driver.
 
-All errors (new ones prefixed by >>):
+drivers/this/is/upstream/subsystem/foo.ko
+/home/fred/my/own/external/module/foo.ko
 
->> drivers/soc/Kconfig:23: 'menu' in different file than 'menu'
->> drivers/soc/aspeed/Kconfig:1: location of the 'menu'
->> drivers/Kconfig:233: 'menu' in different file than 'menu'
->> drivers/soc/aspeed/Kconfig:1: location of the 'menu'
-   <none>:34: syntax error
->> drivers/Kconfig:2: missing end statement for this entry
-   make[2]: *** [allyesconfig] Error 1
-   make[1]: *** [allyesconfig] Error 2
-   make: *** [sub-make] Error 2
---
->> drivers/soc/Kconfig:23: 'menu' in different file than 'menu'
->> drivers/soc/aspeed/Kconfig:1: location of the 'menu'
->> drivers/Kconfig:233: 'menu' in different file than 'menu'
->> drivers/soc/aspeed/Kconfig:1: location of the 'menu'
-   <none>:34: syntax error
->> drivers/Kconfig:2: missing end statement for this entry
-   make[2]: *** [oldconfig] Error 1
-   make[1]: *** [oldconfig] Error 2
-   make: *** [sub-make] Error 2
---
->> drivers/soc/Kconfig:23: 'menu' in different file than 'menu'
->> drivers/soc/aspeed/Kconfig:1: location of the 'menu'
->> drivers/Kconfig:233: 'menu' in different file than 'menu'
->> drivers/soc/aspeed/Kconfig:1: location of the 'menu'
-   <none>:34: syntax error
->> drivers/Kconfig:2: missing end statement for this entry
-   make[2]: *** [olddefconfig] Error 1
-   make[1]: *** [olddefconfig] Error 2
-   make: *** [sub-make] Error 2
+Is modprobe confused in this case too?
 
-vim +23 drivers/soc/Kconfig
+Perhaps, checking for the M= build
+might be good too...
 
-5d144e36 Andy Gross        2014-04-24  22  
-3a6e0821 Santosh Shilimkar 2014-04-23 @23  endmenu
 
-:::::: The code at line 23 was first introduced by commit
-:::::: 3a6e08218f36baa9c49282ad2fe0dfbf001d8f23 soc: Introduce drivers/soc place-holder for SOC specific drivers
 
-:::::: TO: Santosh Shilimkar <santosh.shilimkar@ti.com>
-:::::: CC: Kumar Gala <galak@codeaurora.org>
-
----
-0-DAY kernel test infrastructure                Open Source Technology Center
-https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
+-- 
+Best Regards
+Masahiro Yamada
