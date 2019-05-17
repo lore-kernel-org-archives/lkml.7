@@ -2,124 +2,152 @@ Return-Path: <SRS0=M1fl=TR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E18F6C04E87
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 15:09:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E78B7C04AB4
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 15:16:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BA02A2166E
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 15:09:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B2E4A21734
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 15:16:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VoNWRhyT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729211AbfEQPJv (ORCPT
+        id S1729246AbfEQPQr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 May 2019 11:09:51 -0400
-Received: from mga12.intel.com ([192.55.52.136]:20328 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729162AbfEQPJu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 May 2019 11:09:50 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 May 2019 08:09:49 -0700
-X-ExtLoop1: 1
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.36])
-  by fmsmga006.fm.intel.com with ESMTP; 17 May 2019 08:09:48 -0700
-Date:   Fri, 17 May 2019 08:09:48 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Stephen Smalley <sds@tycho.nsa.gov>
-Cc:     "Xing, Cedric" <cedric.xing@intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        LSM List <linux-security-module@vger.kernel.org>,
-        Paul Moore <paul@paul-moore.com>,
-        Eric Paris <eparis@parisplace.org>,
-        "selinux@vger.kernel.org" <selinux@vger.kernel.org>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Jethro Beekman <jethro@fortanix.com>,
-        "Hansen, Dave" <dave.hansen@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "Dr. Greg" <greg@enjellic.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
-        "linux-sgx@vger.kernel.org" <linux-sgx@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "nhorman@redhat.com" <nhorman@redhat.com>,
-        "npmccallum@redhat.com" <npmccallum@redhat.com>,
-        "Ayoun, Serge" <serge.ayoun@intel.com>,
-        "Katz-zamir, Shay" <shay.katz-zamir@intel.com>,
-        "Huang, Haitao" <haitao.huang@intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        "Svahn, Kai" <kai.svahn@intel.com>, Borislav Petkov <bp@alien8.de>,
-        Josh Triplett <josh@joshtriplett.org>,
-        "Huang, Kai" <kai.huang@intel.com>,
-        David Rientjes <rientjes@google.com>
-Subject: Re: SGX vs LSM (Re: [PATCH v20 00/28] Intel SGX1 support)
-Message-ID: <20190517150948.GA15632@linux.intel.com>
-References: <20190515013031.GF1977@linux.intel.com>
- <CALCETrXf8mSK45h7sTK5Wf+pXLVn=Bjsc_RLpgO-h-qdzBRo5Q@mail.gmail.com>
- <alpine.LRH.2.21.1905160543070.19802@namei.org>
- <CALCETrX_Q6qwNRNF0TL2tgfm1j6DKLX7NVHHmWbMFtk3WnHDKw@mail.gmail.com>
- <alpine.LRH.2.21.1905160844130.29250@namei.org>
- <CALCETrX2ovRx3Rre+1_xC-q6CiybyLjQ-gmB4FZF_qCZ-Qd+4A@mail.gmail.com>
- <960B34DE67B9E140824F1DCDEC400C0F654E38CD@ORSMSX116.amr.corp.intel.com>
- <CALCETrUfmyQ7ivNzQic0FyPXe1fmAnoK093jnz0i8DRn2LvdSA@mail.gmail.com>
- <960B34DE67B9E140824F1DCDEC400C0F654E3FB9@ORSMSX116.amr.corp.intel.com>
- <6a97c099-2f42-672e-a258-95bc09152363@tycho.nsa.gov>
+        Fri, 17 May 2019 11:16:47 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:37137 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729164AbfEQPQq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 May 2019 11:16:46 -0400
+Received: by mail-io1-f68.google.com with SMTP id u2so5777908ioc.4;
+        Fri, 17 May 2019 08:16:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=O7EJOOciNikkf5PiuE4H3WoYPiyHO7ThOU93whUfBug=;
+        b=VoNWRhyTiUpJGTcZo1DtkVlKLGI/9YYMnnX6vEykzx5I/hvbqm+Bp0N1y+la0Te5rh
+         zhK3l3qLAtzsppcK3AA/GwIBDccL92xQcfedpg+Mn9qcHHXqQn3Y1S4qJjFQbpcxkJ2r
+         K96LMQGlceMLUSCmocBIpM2nK7HB2AVWcUOzEspl0+rlX9BSe04wDRwe23qzcMLxawgI
+         TLmubmLQc9a5jJaL6Z3ZvpffNVlqGTSCcZ0Xecl4fMWI2+lkosmnrt+EO1wLApiTc2ZD
+         ZRKnwjIAVJeLxKFCEpmIosN+LwRGSCcc5grteFogXctLtY7rzz++Moukthhumj1Tx/Kw
+         Gx6Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=O7EJOOciNikkf5PiuE4H3WoYPiyHO7ThOU93whUfBug=;
+        b=ZCdliEPGTKWMR85DP1+cXCBnagItryuev4VOc6PUYC2xLk4mIgPtelFnFS3cUY1iO3
+         GCSqO8k7kXpxFPMkiTAng3PHy6g98Ogj4h5XDZ4W6U0isYDeo7QJK41m9BiuFxMFJBdD
+         wKsu/VIXLHuCEatyvMFT7akKcmWA0RhHuN97CNByOBWIzW4BCBJ0T54++FaXumo5ozCE
+         Jz6zIctOObR1riEJUTrsrkQ0C4RjdmfVy/7EtJD0wCy4e2DMKGCEjjtNi7DYGPuWqDu5
+         zjZ3l+zq7A0hhiJAV8ttNywhbKVw/7OoZUtIThFOWki+JTLOicUoyuT1R9vdKUaVVxVP
+         jRXQ==
+X-Gm-Message-State: APjAAAWnIyvQo7h2+PYjbIFAJPxVOCMn6+JzzR12vzZNFr/xryopQo+C
+        l2DOhDcewZVE8RSCgrsh8SM27cPqix0EHlBfG8g=
+X-Google-Smtp-Source: APXvYqw8t8xC+aNND57aUm26LmEwNT3jvC+cE1+OL9mdPzhwEpes5kmIIvl0zaN+QSJyxEXGF8GGzNzL/Ol3ZRLqu4o=
+X-Received: by 2002:a5e:c60b:: with SMTP id f11mr718296iok.42.1558106205472;
+ Fri, 17 May 2019 08:16:45 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <6a97c099-2f42-672e-a258-95bc09152363@tycho.nsa.gov>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+References: <1557357269-9498-1-git-send-email-nkela@cisco.com>
+ <9be117dc6e818ab83376cd8e0f79dbfaaf193aa9.camel@intel.com>
+ <76B41175-0CEE-466C-91BF-89A1CA857061@cisco.com> <4469196a-0705-5459-8aca-3f08e9889d61@gmail.com>
+ <20190517010330.2wynopuhsqycqzuq@zorba> <bd9e6a93-c8e8-a90e-25b0-26ccbf65b7c4@gmail.com>
+In-Reply-To: <bd9e6a93-c8e8-a90e-25b0-26ccbf65b7c4@gmail.com>
+From:   Alexander Duyck <alexander.duyck@gmail.com>
+Date:   Fri, 17 May 2019 08:16:34 -0700
+Message-ID: <CAKgT0Uev7sfpOOhusAg9jFLkFeE9JtTntyTd0aAHz2db69L13g@mail.gmail.com>
+Subject: Re: [Intel-wired-lan] [PATCH] igb: add parameter to ignore nvm
+ checksum validation
+To:     Florian Fainelli <f.fainelli@gmail.com>
+Cc:     Daniel Walker <danielwa@cisco.com>,
+        "Nikunj Kela (nkela)" <nkela@cisco.com>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "intel-wired-lan@lists.osuosl.org" <intel-wired-lan@lists.osuosl.org>,
+        "xe-linux-external(mailer list)" <xe-linux-external@cisco.com>,
+        "David S. Miller" <davem@davemloft.net>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 17, 2019 at 09:53:06AM -0400, Stephen Smalley wrote:
-> On 5/16/19 6:23 PM, Xing, Cedric wrote:
-> >I thought EXECMOD applied to files (and memory mappings backed by them) but
-> >I was probably wrong. It sounds like EXECMOD applies to the whole process so
-> >would allow all pages within a process's address space to be modified then
-> >executed, regardless the backing files. Am I correct this time?
-> 
-> No, you were correct the first time I think; EXECMOD is used to control
-> whether a process can make executable a private file mapping that has
-> previously been modified (e.g. text relocation); it is a special case to
-> support text relocations without having to allow full EXECMEM (i.e. execute
-> arbitrary memory).
-> 
-> SELinux checks relevant to W^X include:
-> 
-> - EXECMEM: mmap/mprotect PROT_EXEC an anonymous mapping (regardless of
-> PROT_WRITE, since we know the content has to have been written at some
-> point) or a private file mapping that is also PROT_WRITE.
-> - EXECMOD: mprotect PROT_EXEC a private file mapping that has been
-> previously modified, typically for text relocations,
-> - FILE__WRITE: mmap/mprotect PROT_WRITE a shared file mapping,
-> - FILE__EXECUTE: mmap/mprotect PROT_EXEC a file mapping.
-> 
-> (ignoring EXECSTACK and EXECHEAP here since they aren't really relevant to
-> this discussion)
-> 
-> So if you want to ensure W^X, then you wouldn't allow EXECMEM for the
-> process, EXECMOD by the process to any file, and the combination of both
-> FILE__WRITE and FILE__EXECUTE by the process to any file.
-> 
-> If the /dev/sgx/enclave mappings are MAP_SHARED and you aren't using an
-> anonymous inode, then I would expect that only the FILE__WRITE and
-> FILE__EXECUTE checks are relevant.
+On Thu, May 16, 2019 at 6:48 PM Florian Fainelli <f.fainelli@gmail.com> wrote:
+>
+>
+>
+> On 5/16/2019 6:03 PM, Daniel Walker wrote:
+> > On Thu, May 16, 2019 at 03:02:18PM -0700, Florian Fainelli wrote:
+> >> On 5/16/19 12:55 PM, Nikunj Kela (nkela) wrote:
+> >>>
+> >>>
+> >>> On 5/16/19, 12:35 PM, "Jeff Kirsher" <jeffrey.t.kirsher@intel.com> wrote:
+> >>>
+> >>>     On Wed, 2019-05-08 at 23:14 +0000, Nikunj Kela wrote:
+> >>>    >> Some of the broken NICs don't have EEPROM programmed correctly. It
+> >>>    >> results
+> >>>    >> in probe to fail. This change adds a module parameter that can be
+> >>>    >> used to
+> >>>    >> ignore nvm checksum validation.
+> >>>    >>
+> >>>    >> Cc: xe-linux-external@cisco.com
+> >>>    >> Signed-off-by: Nikunj Kela <nkela@cisco.com>
+> >>>    >> ---
+> >>>    >>  drivers/net/ethernet/intel/igb/igb_main.c | 28
+> >>>    >> ++++++++++++++++++++++------
+> >>>    >>  1 file changed, 22 insertions(+), 6 deletions(-)
+> >>>
+> >>>     >NAK for two reasons.  First, module parameters are not desirable
+> >>>     >because their individual to one driver and a global solution should be
+> >>>     >found so that all networking device drivers can use the solution.  This
+> >>>     >will keep the interface to change/setup/modify networking drivers
+> >>>     >consistent for all drivers.
+> >>>
+> >>>
+> >>>     >Second and more importantly, if your NIC is broken, fix it.  Do not try
+> >>>     >and create a software workaround so that you can continue to use a
+> >>>     >broken NIC.  There are methods/tools available to properly reprogram
+> >>>     >the EEPROM on a NIC, which is the right solution for your issue.
+> >>>
+> >>> I am proposing this as a debug parameter. Obviously, we need to fix EEPROM but this helps us continuing the development while manufacturing fixes NIC.
+> >>
+> >> Then why even bother with sending this upstream?
+> >
+> > It seems rather drastic to disable the entire driver because the checksum
+> > doesn't match. It really should be a warning, even a big warning, to let people
+> > know something is wrong, but disabling the whole driver doesn't make sense.
+>
+> You could generate a random Ethernet MAC address if you don't have a
+> valid one, a lot of drivers do that, and that's a fairly reasonable
+> behavior. At some point in your product development someone will
+> certainly verify that the provisioned MAC address matches the network
+> interface's MAC address.
+> --
+> Florian
 
-Yep, I was just typing this up in a different thread:
+The thing is the EEPROM contains much more than just the MAC address.
+There ends up being configuration for some of the PCIe interface in
+the hardware as well as PHY configuration. If that is somehow mangled
+we shouldn't be bringing up the part because there are one or more
+pieces of the device configuration that are likely wrong.
 
-I think we may want to change the SGX API to alloc an anon inode for each
-enclave instead of hanging every enclave off of the /dev/sgx/enclave inode.
-Because /dev/sgx/enclave is NOT private, SELinux's file_map_prot_check()
-will only require FILE__WRITE and FILE__EXECUTE to mprotect() enclave VMAs
-to RWX.  Backing each enclave with an anon inode will make SELinux treat
-EPC memory like anonymous mappings, which is what we want (I think), e.g.
-making *any* EPC page executable will require PROCESS__EXECMEM (SGX is
-64-bit only at this point, so SELinux will always have default_noexec).
+The checksum is being used to make sure the EEPROM is valid, without
+that we would need to go through and validate each individual section
+of the EEPROM before enabling the the portions of the device related
+to it. The concern is that this will become a slippery slope where we
+eventually have to code all the configuration of the EEPROM into the
+driver itself.
+
+We need to make the checksum a hard stop. If the part is broken then
+it needs to be addressed. Workarounds just end up being used and
+forgotten, which makes it that much harder to support the product.
+Better to mark the part as being broken, and get it fixed now, than to
+have parts start shipping that require workarounds in order to
+function.
+
+- Alex
