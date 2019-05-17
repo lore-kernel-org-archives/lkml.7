@@ -2,115 +2,160 @@ Return-Path: <SRS0=M1fl=TR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8982AC04AB4
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 06:50:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52CB0C04AB4
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 06:55:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 00450206A3
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 06:50:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1ECAE20879
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 06:55:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="LZNk7Xov"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=brauner.io header.i=@brauner.io header.b="Dh+1CbT6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728096AbfEQGuJ (ORCPT
+        id S1728100AbfEQGzA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 May 2019 02:50:09 -0400
-Received: from conuserg-11.nifty.com ([210.131.2.78]:52613 "EHLO
-        conuserg-11.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726871AbfEQGuI (ORCPT
+        Fri, 17 May 2019 02:55:00 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:38755 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727694AbfEQGzA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 May 2019 02:50:08 -0400
-Received: from localhost.localdomain (p14092-ipngnfx01kyoto.kyoto.ocn.ne.jp [153.142.97.92]) (authenticated)
-        by conuserg-11.nifty.com with ESMTP id x4H6nWQD001015;
-        Fri, 17 May 2019 15:49:32 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-11.nifty.com x4H6nWQD001015
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1558075773;
-        bh=N1B2j8YTLhqQwcpZvsbGQ/rqXqS3XcNo6ROsyEynx48=;
-        h=From:To:Cc:Subject:Date:From;
-        b=LZNk7XovCLIA/bkEo6VNizTpoEvpmo5lFBNWowQJHJefloaGu5KxW5l878vpMWSz2
-         HVFz2xYL7AsO6cFu9z1DJLdERlIdT84bU2dJ7aqG6QLvU615/LfYDpShUXM63nfDrj
-         9N50haB7RV10KMy9mvoDjx04sViO5TrdheoozQkNY1Ry2SIGG+AYmNC8w955sTM9FN
-         ezqFIUz8La7izHgU6YUSToj/MzZQXN0sLpI8OFVPoKfjeg0j1KB8gIB1XNVkc5rEXk
-         SGfJywUELWcNdagBjcZnujUo8zQ3z54PFXQ5ejnw9+hFtMkeZBFncKCYl32ePxlqDw
-         Z9cbJjWHMQ0FA==
-X-Nifty-SrcIP: [153.142.97.92]
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-To:     Martin Schwidefsky <schwidefsky@de.ibm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        linux-s390@vger.kernel.org
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Claudio Imbrenda <imbrenda@linux.vnet.ibm.com>,
-        linux-kernel@vger.kernel.org,
-        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
-        Souptick Joarder <jrdr.linux@gmail.com>,
-        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
-        Philipp Rudo <prudo@linux.ibm.com>
-Subject: [PATCH] s390: add unreachable() to dump_fault_info() to fix -Wmaybe-uninitialized
-Date:   Fri, 17 May 2019 15:49:22 +0900
-Message-Id: <20190517064922.22743-1-yamada.masahiro@socionext.com>
-X-Mailer: git-send-email 2.17.1
+        Fri, 17 May 2019 02:55:00 -0400
+Received: by mail-wr1-f65.google.com with SMTP id d18so5852034wrs.5
+        for <linux-kernel@vger.kernel.org>; Thu, 16 May 2019 23:54:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=brauner.io; s=google;
+        h=date:user-agent:in-reply-to:references:mime-version
+         :content-transfer-encoding:subject:to:cc:from:message-id;
+        bh=4Ft7vXd1zuW+VBauzDv2GqD/tRxDd6qBcaHK1f4P0u0=;
+        b=Dh+1CbT6CcF0vPmgJk2+E2MWtzwYSqSzTXYy6MkqNyqwJ4O7EEhwvIK0mt900W4AUC
+         i+ym48gKb2zVLc2yruZU/QElE/hfhRKAk8goAtPKPbAAtzn/9GhV3HfGPRKW/x6OB9O4
+         YAOK7dJavS8lvJLnYNNTYJrm3nM26WdErWCLMWIUO5Ibo1CC0zKEgfRQS+UbWp4QCXtG
+         klfR3yQ1604qtCSQT2irXTeGzZv13hyeNDsJfb4CDMwVzw5b9AJsW1d3NpCrbxp5bDQy
+         rWv8t6ZiaMu+DEYYs/jVG+nsY3m6tNWEMzq06os9YP4X0LDP3Xv80VHQMJnK6Wm9A4Kh
+         1SUg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:user-agent:in-reply-to:references
+         :mime-version:content-transfer-encoding:subject:to:cc:from
+         :message-id;
+        bh=4Ft7vXd1zuW+VBauzDv2GqD/tRxDd6qBcaHK1f4P0u0=;
+        b=PVPAIsrV0H+4MhtTh/O+OShTojOagKxHVq35NeWwuD06eVS19UWJqDBBJX4TSePM/K
+         fkoMQWxz5pP+OnI/OEMn8I+Cb7xcpyWWKvgXkBy1T8MfwRBuwoPPyqT/CgoYWm01L/Li
+         0ujrFmJDWsOcy+wKYcp2JRbdNM/wFyzW7ifRU4ijLa+2Spx4Ox9/bs1FHNwlJ2A4ACfZ
+         EI9XmW+HQoIdf2lK4efO/VPb46y6AgrXOH6Yfmmw3IDuw6SXiCapgE/f2vI4dYqB1h2u
+         HK+QJjN35p5WBH4Y42CWk/ABBC4scJsoMXF/QTQCY9UUT+mqFm7ovOksF8V5n3xswVqg
+         DC/g==
+X-Gm-Message-State: APjAAAXgN99H/7T5cZXcxQbqTWmBiQr3Yepkl219g7uo0H6mYQBQxzoy
+        D+URvq4bG2GHF/mxj8od/cqHsg==
+X-Google-Smtp-Source: APXvYqxlzt7I3AKYu26X01bVUVKlpPBiyYa8Q4VkKvznW1qD7TyuMByccR8dAdsIOGEIHnNIr90JsA==
+X-Received: by 2002:adf:ec8e:: with SMTP id z14mr5189366wrn.198.1558076098185;
+        Thu, 16 May 2019 23:54:58 -0700 (PDT)
+Received: from [172.18.135.95] ([46.183.103.8])
+        by smtp.gmail.com with ESMTPSA id v5sm14219659wra.83.2019.05.16.23.54.57
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 16 May 2019 23:54:57 -0700 (PDT)
+Date:   Fri, 17 May 2019 08:54:52 +0200
+User-Agent: K-9 Mail for Android
+In-Reply-To: <20190516202331.GA29908@altlinux.org>
+References: <155800752418.4037.9567789434648701032.stgit@warthog.procyon.org.uk> <20190516162259.GB17978@ZenIV.linux.org.uk> <20190516163151.urrmrueugockxtdy@brauner.io> <20190516165021.GD17978@ZenIV.linux.org.uk> <20190516202331.GA29908@altlinux.org>
+MIME-Version: 1.0
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH 0/4] uapi, vfs: Change the mount API UAPI [ver #2]
+To:     "Dmitry V. Levin" <ldv@altlinux.org>,
+        Al Viro <viro@zeniv.linux.org.uk>
+CC:     David Howells <dhowells@redhat.com>, torvalds@linux-foundation.org,
+        Arnd Bergmann <arnd@arndb.de>, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-api@vger.kernel.org
+From:   Christian Brauner <christian@brauner.io>
+Message-ID: <D41D33CA-ADFC-4E79-9C9C-79FE19E068CA@brauner.io>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When CONFIG_OPTIMIZE_INLINING is enabled for s390, I see this warning:
+On May 16, 2019 10:23:31 PM GMT+02:00, "Dmitry V=2E Levin" <ldv@altlinux=2E=
+org> wrote:
+>[looks like linux-abi is a typo, Cc'ed linux-api instead]
+>
+>On Thu, May 16, 2019 at 05:50:22PM +0100, Al Viro wrote:
+>> [linux-abi cc'd]
+>>=20
+>> On Thu, May 16, 2019 at 06:31:52PM +0200, Christian Brauner wrote:
+>> > On Thu, May 16, 2019 at 05:22:59PM +0100, Al Viro wrote:
+>> > > On Thu, May 16, 2019 at 12:52:04PM +0100, David Howells wrote:
+>> > > >=20
+>> > > > Hi Linus, Al,
+>> > > >=20
+>> > > > Here are some patches that make changes to the mount API UAPI
+>and two of
+>> > > > them really need applying, before -rc1 - if they're going to be
+>applied at
+>> > > > all=2E
+>> > >=20
+>> > > I'm fine with 2--4, but I'm not convinced that cloexec-by-default
+>crusade
+>> > > makes any sense=2E  Could somebody give coherent arguments in
+>favour of
+>> > > abandoning the existing conventions?
+>> >=20
+>> > So as I said in the commit message=2E From a userspace perspective
+>it's
+>> > more of an issue if one accidently leaks an fd to a task during
+>exec=2E
+>> >=20
+>> > Also, most of the time one does not want to inherit an fd during an
+>> > exec=2E It is a hazzle to always have to specify an extra flag=2E
+>> >=20
+>> > As Al pointed out to me open() semantics are not going anywhere=2E
+>Sure,
+>> > no argument there at all=2E
+>> > But the idea of making fds cloexec by default is only targeted at
+>fds
+>> > that come from separate syscalls=2E fsopen(), open_tree_clone(), etc=
+=2E
+>they
+>> > all return fds independent of open() so it's really easy to have
+>them
+>> > cloexec by default without regressing anyone and we also remove the
+>need
+>> > for a bunch of separate flags for each syscall to turn them into
+>> > cloexec-fds=2E I mean, those for syscalls came with 4 separate flags
+>to be
+>> > able to specify that the returned fd should be made cloexec=2E The
+>other
+>> > way around, cloexec by default, fcntl() to remove the cloexec bit
+>is way
+>> > saner imho=2E
+>>=20
+>> Re separate flags - it is, in principle, a valid argument=2E  OTOH, I'm
+>not
+>> sure if they need to be separate - they all have the same value and
+>> I don't see any reason for that to change=2E=2E=2E
+>>=20
+>> Only tangentially related, but I wonder if something like
+>close_range(from, to)
+>> would be a more useful approach=2E=2E=2E  That kind of open-coded loops=
+ is
+>not
+>> rare in userland and kernel-side code can do them much cheaper=2E=20
+>Something
+>> like
+>> 	/* that exec is sensitive */
+>> 	unshare(CLONE_FILES);
+>> 	/* we don't want anything past stderr here */
+>> 	close_range(3, ~0U);
+>> 	execve(=2E=2E=2E=2E);
+>> on the userland side of thing=2E  Comments?
+>
+>glibc people need a syscall to implement closefrom properly, see
+>https://sourceware=2Eorg/bugzilla/show_bug=2Ecgi?id=3D10353#c14
 
-arch/s390/mm/fault.c:127:15: warning: 'asce' may be used uninitialized in this function [-Wmaybe-uninitialized]
-  switch (asce & _ASCE_TYPE_MASK) {
-arch/s390/mm/fault.c:177:16: note: 'asce' was declared here
-  unsigned long asce;
-                ^~~~
+I have a prototype for close_range()=2E
+I'll send it out after rc1=2E
 
-If get_fault_type() is not inlined, the compiler cannot deduce that
-all the possible paths in the 'switch' statement are covered.
-
-Of course, we could mark get_fault_type() as __always_inline to get
-back the original behavior, but I do not think it sensible to force
-inlining just for the purpose of suppressing the warning. Since this
-is just a matter of warning, I want to keep as much room for compiler
-optimization as possible.
-
-I added unreachable() to teach the compiler that the 'default' label
-is unreachable.
-
-I got rid of the 'inline' marker. Even without the 'inline' hint,
-the compiler inlines functions based on its inlining heuristic.
-
-Fixes: 9012d011660e ("compiler: allow all arches to enable CONFIG_OPTIMIZE_INLINING")
-Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
----
-
- arch/s390/mm/fault.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
-
-diff --git a/arch/s390/mm/fault.c b/arch/s390/mm/fault.c
-index c220399ae196..91ce03fd0c84 100644
---- a/arch/s390/mm/fault.c
-+++ b/arch/s390/mm/fault.c
-@@ -85,7 +85,7 @@ static inline int notify_page_fault(struct pt_regs *regs)
-  * Find out which address space caused the exception.
-  * Access register mode is impossible, ignore space == 3.
-  */
--static inline enum fault_type get_fault_type(struct pt_regs *regs)
-+static enum fault_type get_fault_type(struct pt_regs *regs)
- {
- 	unsigned long trans_exc_code;
- 
-@@ -211,6 +211,8 @@ static void dump_fault_info(struct pt_regs *regs)
- 		asce = S390_lowcore.kernel_asce;
- 		pr_cont("kernel ");
- 		break;
-+	default:
-+		unreachable();
- 	}
- 	pr_cont("ASCE.\n");
- 	dump_pagetable(asce, regs->int_parm_long & __FAIL_ADDR_MASK);
--- 
-2.17.1
+Christian
 
