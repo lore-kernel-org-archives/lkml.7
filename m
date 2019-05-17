@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-14.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1489C04AB4
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 19:38:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EFA7EC04AB4
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 19:39:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 71D40216FD
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 19:38:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BD3E221744
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 19:39:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558121934;
-	bh=S66R7P0cvTF/7gOwPvHAiRLKWeSwRQiD/cJ+RFsXyKQ=;
+	s=default; t=1558121940;
+	bh=q7WKE/PxVdUiZswmkA8zyS4iEKkoSFu3iphWqBiJvZw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UGK8E0J4djEpyQYDVwVUXdzVBFRSfES2tqz9lu1UC7kQS4PCd9DqWIOgab09iJBcX
-	 TlJjgadzNwVD2YbTfoDAJpchUaopwhFpBRWNUAPrIOUM1NPkoXp3X0ya5NLdTB1ydj
-	 popRGUBfAfZ6igyJE51yNBvzvNZ2OMIkG1i4NpPA=
+	b=glTml/Bj9Web+wAWI6RlGHqe2of6RL+KRRkC62xXfiG5GtfwzhvoQHmxMdN+vstHT
+	 dCQqytN94JrX33ykH7ZLkt0F2tO6cIKaBlbNB+TGnYt7eBvC1GOSuoZz6+Jv5nxizO
+	 zsKv6C1ycKggMiT61DbiUOKZ5XoED8UyXgDQGAxY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729773AbfEQTix (ORCPT
+        id S1729782AbfEQTi7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 May 2019 15:38:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54984 "EHLO mail.kernel.org"
+        Fri, 17 May 2019 15:38:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55084 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729437AbfEQTiw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 May 2019 15:38:52 -0400
+        id S1728410AbfEQTi4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 May 2019 15:38:56 -0400
 Received: from quaco.ghostprotocols.net (unknown [190.15.121.82])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F190D2087B;
-        Fri, 17 May 2019 19:38:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EC52D2166E;
+        Fri, 17 May 2019 19:38:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558121931;
-        bh=S66R7P0cvTF/7gOwPvHAiRLKWeSwRQiD/cJ+RFsXyKQ=;
+        s=default; t=1558121935;
+        bh=q7WKE/PxVdUiZswmkA8zyS4iEKkoSFu3iphWqBiJvZw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BAT8asWNzOL/xyi5kbZrD3xByHXbjFy5t0nL2FtSs8W8hD277unlZ0iRkNPTZ1p6z
-         NA9LbuXHA0rU5yaXtcfVPAP8iS+kXkbB++fnBQ919F0MUbgSPRDD3P9NrP+pSlEcVD
-         uKuooEE/15yyVI2CZisNSgVfmZ7c9EZ76C7E5h2Y=
+        b=TxCB621t0HfmhB+KCbW1Leg1tP4ElPlcePBA/iaqzzmSq3gcQZ39MrtCeutnVCtda
+         1zSoNii4BYj7YFoWbGMk8RE5rnHGAU2hpK9pIyQcYjAngBfPA2bX13gZcVFIh3OaDz
+         c5DqBlQd2IMsxlo/1H8pofsAUkBE8OpPmkuC886Y=
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
 To:     Ingo Molnar <mingo@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>
@@ -51,9 +51,9 @@ Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
         linux-trace-devel@vger.kernel.org,
         Steven Rostedt <rostedt@goodmis.org>,
         Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH 34/73] tools lib traceevent: Man pages for event find APIs
-Date:   Fri, 17 May 2019 16:35:32 -0300
-Message-Id: <20190517193611.4974-35-acme@kernel.org>
+Subject: [PATCH 35/73] tools lib traceevent: Man page for list events APIs
+Date:   Fri, 17 May 2019 16:35:33 -0300
+Message-Id: <20190517193611.4974-36-acme@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190517193611.4974-1-acme@kernel.org>
 References: <20190517193611.4974-1-acme@kernel.org>
@@ -66,39 +66,38 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Tzvetomir Stoyanov <tstoyanov@vmware.com>
 
-Create man pages for libtraceevent APIs:
+Create man page for libtraceevent APIs:
 
-  tep_find_event()
-  tep_find_event_by_name()
-  tep_find_event_by_record()
+  tep_list_events()
+  tep_list_events_copy()
 
 Signed-off-by: Tzvetomir Stoyanov <tstoyanov@vmware.com>
 Cc: Andrew Morton <akpm@linux-foundation.org>
 Cc: Jiri Olsa <jolsa@redhat.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: linux-trace-devel@vger.kernel.org
-Link: http://lore.kernel.org/linux-trace-devel/20190503091119.23399-15-tstoyanov@vmware.com
-Link: http://lkml.kernel.org/r/20190510200108.197407057@goodmis.org
+Link: http://lore.kernel.org/linux-trace-devel/20190503091119.23399-16-tstoyanov@vmware.com
+Link: http://lkml.kernel.org/r/20190510200108.367633707@goodmis.org
 Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- .../libtraceevent-event_find.txt              | 103 ++++++++++++++++++
- 1 file changed, 103 insertions(+)
- create mode 100644 tools/lib/traceevent/Documentation/libtraceevent-event_find.txt
+ .../libtraceevent-event_list.txt              | 122 ++++++++++++++++++
+ 1 file changed, 122 insertions(+)
+ create mode 100644 tools/lib/traceevent/Documentation/libtraceevent-event_list.txt
 
-diff --git a/tools/lib/traceevent/Documentation/libtraceevent-event_find.txt b/tools/lib/traceevent/Documentation/libtraceevent-event_find.txt
+diff --git a/tools/lib/traceevent/Documentation/libtraceevent-event_list.txt b/tools/lib/traceevent/Documentation/libtraceevent-event_list.txt
 new file mode 100644
-index 000000000000..7bc062c9f76f
+index 000000000000..fba350e5a4cb
 --- /dev/null
-+++ b/tools/lib/traceevent/Documentation/libtraceevent-event_find.txt
-@@ -0,0 +1,103 @@
++++ b/tools/lib/traceevent/Documentation/libtraceevent-event_list.txt
+@@ -0,0 +1,122 @@
 +libtraceevent(3)
 +================
 +
 +NAME
 +----
-+tep_find_event,tep_find_event_by_name,tep_find_event_by_record -
-+Find events by given key.
++tep_list_events, tep_list_events_copy -
++Get list of events, sorted by given criteria.
 +
 +SYNOPSIS
 +--------
@@ -106,32 +105,44 @@ index 000000000000..7bc062c9f76f
 +--
 +*#include <event-parse.h>*
 +
-+struct tep_event pass:[*]*tep_find_event*(struct tep_handle pass:[*]_tep_, int _id_);
-+struct tep_event pass:[*]*tep_find_event_by_name*(struct tep_handle pass:[*]_tep_, const char pass:[*]_sys_, const char pass:[*]_name_);
-+struct tep_event pass:[*]*tep_find_event_by_record*(struct tep_handle pass:[*]_tep_, struct tep_record pass:[*]_record_);
++enum *tep_event_sort_type* {
++	_TEP_EVENT_SORT_ID_,
++	_TEP_EVENT_SORT_NAME_,
++	_TEP_EVENT_SORT_SYSTEM_,
++};
++
++struct tep_event pass:[*]pass:[*]*tep_list_events*(struct tep_handle pass:[*]_tep_, enum tep_event_sort_type _sort_type_);
++struct tep_event pass:[*]pass:[*]*tep_list_events_copy*(struct tep_handle pass:[*]_tep_, enum tep_event_sort_type _sort_type_);
 +--
 +
 +DESCRIPTION
 +-----------
-+This set of functions can be used to search for an event, based on a given
-+criteria. All functions require a pointer to a _tep_, trace event parser
-+context.
++The _tep_list_events()_ function returns an array of pointers to the events,
++sorted by the _sort_type_ criteria. The last element of the array is NULL.
++The returned memory must not be freed, it is managed by the library.
++The function is not thread safe. The _tep_ argument is trace event parser
++context. The _sort_type_ argument is the required sort criteria:
++[verse]
++--
++	_TEP_EVENT_SORT_ID_	- sort by the event ID.
++	_TEP_EVENT_SORT_NAME_	- sort by the event (name, system, id) triplet.
++	_TEP_EVENT_SORT_SYSTEM_	- sort by the event (system, name, id) triplet.
++--
 +
-+The _tep_find_event()_ function searches for an event by given event _id_. The
-+event ID is assigned dynamically and can be viewed in event's format file,
-+"ID" field.
-+
-+The tep_find_event_by_name()_ function searches for an event by given
-+event _name_, under the system _sys_. If the _sys_ is NULL (not specified),
-+the first event with _name_ is returned.
-+
-+The tep_find_event_by_record()_ function searches for an event from a given
-+_record_.
++The _tep_list_events_copy()_ is a thread safe version of _tep_list_events()_.
++It has the same behavior, but the returned array is allocated internally and
++must be freed by the caller. Note that the content of the array must not be
++freed (see the EXAMPLE below).
 +
 +RETURN VALUE
 +------------
-+All these functions return a pointer to the found event, or NULL if there is no
-+such event.
++The _tep_list_events()_ function returns an array of pointers to events.
++In case of an error, NULL is returned. The returned array must not be freed,
++it is managed by the library.
++
++The _tep_list_events_copy()_ function returns an array of pointers to events.
++In case of an error, NULL is returned. The returned array must be freed by
++the caller.
 +
 +EXAMPLE
 +-------
@@ -141,25 +152,32 @@ index 000000000000..7bc062c9f76f
 +...
 +struct tep_handle *tep = tep_alloc();
 +...
-+struct tep_event *event;
++int i;
++struct tep_event_format **events;
 +
-+event = tep_find_event(tep, 1857);
-+if (event == NULL) {
-+	/* There is no event with ID 1857 */
-+}
-+
-+event = tep_find_event_by_name(tep, "kvm", "kvm_exit");
-+if (event == NULL) {
-+	/* There is no kvm_exit event, from kvm system */
-+}
-+
-+void event_from_record(struct tep_record *record)
-+{
-+ struct tep_event *event = tep_find_event_by_record(tep, record);
-+	if (event == NULL) {
-+		/* There is no event from given record */
++i=0;
++events = tep_list_events(tep, TEP_EVENT_SORT_ID);
++if (events == NULL) {
++	/* Failed to get the events, sorted by ID */
++} else {
++	while(events[i]) {
++		/* walk through the list of the events, sorted by ID */
++		i++;
 +	}
 +}
++
++i=0;
++events = tep_list_events_copy(tep, TEP_EVENT_SORT_NAME);
++if (events == NULL) {
++	/* Failed to get the events, sorted by name */
++} else {
++	while(events[i]) {
++		/* walk through the list of the events, sorted by name */
++		i++;
++	}
++	free(events);
++}
++
 +...
 +--
 +
