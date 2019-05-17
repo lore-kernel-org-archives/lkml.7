@@ -2,154 +2,129 @@ Return-Path: <SRS0=M1fl=TR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2175C04AB4
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 10:37:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01CB9C04AB4
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 10:37:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BA1692166E
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 10:37:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="Lpkm6TlW"
+	by mail.kernel.org (Postfix) with ESMTP id CC74820881
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 10:37:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728718AbfEQKhI (ORCPT
+        id S1728735AbfEQKhL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 May 2019 06:37:08 -0400
-Received: from mail-eopbgr20062.outbound.protection.outlook.com ([40.107.2.62]:28603
-        "EHLO EUR02-VE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727309AbfEQKhI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 May 2019 06:37:08 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=11HkWuiUGch+CUaQ5R1xQdAei8VG1fBcLo+sQQbkakk=;
- b=Lpkm6TlWWLDd8S/fLMTAu4MNxG4xP+GxHWn7cTTdEaZJXUNdMWIDrLT1T7gNy9uqfvL/htYVjpqIzEf8hGIx66r0Ar3T1sueiO3O/29HAmm+eLyLB1gPIUekt6lpp1qBapdniSy1nxIZsU/6MRT6dUvkGb5xFutYYDpdp5VGMao=
-Received: from AM0PR04MB4865.eurprd04.prod.outlook.com (20.176.215.158) by
- AM0PR04MB6355.eurprd04.prod.outlook.com (10.255.182.80) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1900.16; Fri, 17 May 2019 10:37:02 +0000
-Received: from AM0PR04MB4865.eurprd04.prod.outlook.com
- ([fe80::f496:84c1:30b5:43be]) by AM0PR04MB4865.eurprd04.prod.outlook.com
- ([fe80::f496:84c1:30b5:43be%7]) with mapi id 15.20.1878.028; Fri, 17 May 2019
- 10:37:02 +0000
-From:   Wen He <wen.he_1@nxp.com>
-To:     Robin Murphy <robin.murphy@arm.com>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "liviu.dudau@arm.com" <liviu.dudau@arm.com>
-CC:     Leo Li <leoyang.li@nxp.com>
-Subject: RE: [EXT] Re: [v1] drm/arm/mali-dp: Disable checking for required
- pixel clock rate
-Thread-Topic: [EXT] Re: [v1] drm/arm/mali-dp: Disable checking for required
- pixel clock rate
-Thread-Index: AQHVCsfKc9H8v6XkZkyzoxWRKfwkRaZsbagAgAEP0WCAABXcAIABdLnQ
-Date:   Fri, 17 May 2019 10:37:01 +0000
-Message-ID: <AM0PR04MB4865EC817EB0B441D4042D38E20B0@AM0PR04MB4865.eurprd04.prod.outlook.com>
-References: <20190515024348.43642-1-wen.he_1@nxp.com>
- <3f87b2a7-c7e8-0597-2f62-d421aa6ccaa5@arm.com>
- <AM0PR04MB4865435E9FA2D61E2D9A238EE20A0@AM0PR04MB4865.eurprd04.prod.outlook.com>
- <edd9dc6c-aba2-3881-3121-efee388b47cf@arm.com>
-In-Reply-To: <edd9dc6c-aba2-3881-3121-efee388b47cf@arm.com>
-Accept-Language: en-US, zh-CN
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=wen.he_1@nxp.com; 
-x-originating-ip: [119.31.174.73]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 9d86601f-9a91-45b8-2fb4-08d6dab3991e
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:AM0PR04MB6355;
-x-ms-traffictypediagnostic: AM0PR04MB6355:
-x-microsoft-antispam-prvs: <AM0PR04MB635516AD670BC098D330A546E20B0@AM0PR04MB6355.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
-x-forefront-prvs: 0040126723
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(979002)(376002)(346002)(366004)(136003)(396003)(39860400002)(189003)(199004)(13464003)(5660300002)(52536014)(25786009)(86362001)(7736002)(2201001)(316002)(186003)(4326008)(74316002)(9686003)(55016002)(305945005)(68736007)(3846002)(2501003)(71200400001)(26005)(71190400001)(229853002)(7696005)(6116002)(476003)(6246003)(6506007)(11346002)(53546011)(76176011)(33656002)(102836004)(446003)(66446008)(66946007)(73956011)(64756008)(8936002)(66556008)(66066001)(2906002)(53936002)(66476007)(76116006)(14454004)(110136005)(478600001)(81166006)(81156014)(8676002)(486006)(6436002)(256004)(99286004)(969003)(989001)(999001)(1009001)(1019001);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR04MB6355;H:AM0PR04MB4865.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: /ghvkeKd3ZzE2dkPYsH+MFMd387Vhb3i9H7RG9NASkjMXpWRDrkMhE8gFnXwEB9Nc8AUGXFfxuxnDVNx+vCo8J1NJE4tEOaH8L6losutuND0nr5ASIo/ChrFxGIsYsgq6L0YrA4kOB/23FmsyrTV9cYt6ICGHjmePey5PeDZKz0kv8o8k/sjmVrcXYIdylKiqmvd4RNCc3g46v5TJQk4IS3EN9zPHFoRwmXxxD80Lc1pVBezygHAmetIhiqoIKfz/NoRp8Jx7/yB151GkNC2U8lg5NBNv+QBseYSedea3forOXCKNxyjkPbUp2NIxn7rDXSBAZM49uug24OUHbYl5cuJOkPWxvjfX5qodzEU7J0R5xAIRe4pSQTFMGFlY9/XFBq7fcealb5lK9EPgRkUViQSR67oZKFp//NJswhk1/s=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Fri, 17 May 2019 06:37:11 -0400
+Received: from a.mx.secunet.com ([62.96.220.36]:35478 "EHLO a.mx.secunet.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727309AbfEQKhK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 May 2019 06:37:10 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by a.mx.secunet.com (Postfix) with ESMTP id 3298220250;
+        Fri, 17 May 2019 12:37:08 +0200 (CEST)
+X-Virus-Scanned: by secunet
+Received: from a.mx.secunet.com ([127.0.0.1])
+        by localhost (a.mx.secunet.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id yx2B3fPUquiJ; Fri, 17 May 2019 12:37:07 +0200 (CEST)
+Received: from mail-essen-01.secunet.de (mail-essen-01.secunet.de [10.53.40.204])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by a.mx.secunet.com (Postfix) with ESMTPS id B5D2F20096;
+        Fri, 17 May 2019 12:37:07 +0200 (CEST)
+Received: from [10.182.6.138] (10.182.6.138) by mail-essen-01.secunet.de
+ (10.53.40.204) with Microsoft SMTP Server (TLS) id 14.3.439.0; Fri, 17 May
+ 2019 12:37:07 +0200
+From:   Dennis Wassenberg <dennis.wassenberg@secunet.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=dennis.wassenberg@secunet.com; keydata=
+ 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
+ YPsSSSBN/R6Xmw==
+Organization: secunet Security Networks AG
+To:     Kernel development list <linux-kernel@vger.kernel.org>,
+        <linux-pm@vger.kernel.org>
+Subject: Question regarding intel_pstate in case of disabled smt
+Message-ID: <8d859cb0-0646-4f52-b060-3816d689aade@secunet.com>
+Date:   Fri, 17 May 2019 12:24:11 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9d86601f-9a91-45b8-2fb4-08d6dab3991e
-X-MS-Exchange-CrossTenant-originalarrivaltime: 17 May 2019 10:37:01.7800
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB6355
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-G-Data-MailSecurity-for-Exchange-State: 0
+X-G-Data-MailSecurity-for-Exchange-Error: 0
+X-G-Data-MailSecurity-for-Exchange-Sender: 23
+X-G-Data-MailSecurity-for-Exchange-Server: d65e63f7-5c15-413f-8f63-c0d707471c93
+X-EXCLAIMER-MD-CONFIG: 2c86f778-e09b-4440-8b15-867914633a10
+X-G-Data-MailSecurity-for-Exchange-Guid: BB456798-2C16-4525-8065-8F28594D0268
+X-G-Data-MailSecurity-for-Exchange-ProcessedOnRouted: True
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogUm9iaW4gTXVycGh5IFtt
-YWlsdG86cm9iaW4ubXVycGh5QGFybS5jb21dDQo+IFNlbnQ6IDIwMTnlubQ15pyIMTbml6UgMTg6
-NDUNCj4gVG86IFdlbiBIZSA8d2VuLmhlXzFAbnhwLmNvbT47IGRyaS1kZXZlbEBsaXN0cy5mcmVl
-ZGVza3RvcC5vcmc7DQo+IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7IGxpdml1LmR1ZGF1
-QGFybS5jb20NCj4gQ2M6IExlbyBMaSA8bGVveWFuZy5saUBueHAuY29tPg0KPiBTdWJqZWN0OiBS
-ZTogW0VYVF0gUmU6IFt2MV0gZHJtL2FybS9tYWxpLWRwOiBEaXNhYmxlIGNoZWNraW5nIGZvciBy
-ZXF1aXJlZA0KPiBwaXhlbCBjbG9jayByYXRlDQo+IA0KPiANCj4gT24gMTYvMDUvMjAxOSAxMDo0
-MiwgV2VuIEhlIHdyb3RlOg0KPiA+DQo+ID4NCj4gPj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0t
-LS0NCj4gPj4gRnJvbTogUm9iaW4gTXVycGh5IFttYWlsdG86cm9iaW4ubXVycGh5QGFybS5jb21d
-DQo+ID4+IFNlbnQ6IDIwMTnlubQ15pyIMTbml6UgMToxNA0KPiA+PiBUbzogV2VuIEhlIDx3ZW4u
-aGVfMUBueHAuY29tPjsgZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZzsNCj4gPj4gbGlu
-dXgta2VybmVsQHZnZXIua2VybmVsLm9yZzsgbGl2aXUuZHVkYXVAYXJtLmNvbQ0KPiA+PiBDYzog
-TGVvIExpIDxsZW95YW5nLmxpQG54cC5jb20+DQo+ID4+IFN1YmplY3Q6IFtFWFRdIFJlOiBbdjFd
-IGRybS9hcm0vbWFsaS1kcDogRGlzYWJsZSBjaGVja2luZyBmb3INCj4gPj4gcmVxdWlyZWQgcGl4
-ZWwgY2xvY2sgcmF0ZQ0KPiA+Pg0KPiA+PiBDYXV0aW9uOiBFWFQgRW1haWwNCj4gPj4NCj4gPj4g
-T24gMTUvMDUvMjAxOSAwMzo0MiwgV2VuIEhlIHdyb3RlOg0KPiA+Pj4gRGlzYWJsZSBjaGVja2lu
-ZyBmb3IgcmVxdWlyZWQgcGl4ZWwgY2xvY2sgcmF0ZSBpZiBBUkNIX0xBWUVSU0NQQUUgaXMNCj4g
-Pj4+IGVuYWJsZS4NCj4gPj4+DQo+ID4+PiBTaWduZWQtb2ZmLWJ5OiBBbGlzb24gV2FuZyA8YWxp
-c29uLndhbmdAbnhwLmNvbT4NCj4gPj4+IFNpZ25lZC1vZmYtYnk6IFdlbiBIZSA8d2VuLmhlXzFA
-bnhwLmNvbT4NCj4gPj4+IC0tLQ0KPiA+Pj4gY2hhbmdlIGluIGRlc2NyaXB0aW9uOg0KPiA+Pj4g
-ICAgICAgIC0gVGhpcyBjaGVjayB0aGF0IG9ubHkgc3VwcG9ydGVkIG9uZSBwaXhlbCBjbG9jayBy
-ZXF1aXJlZCBjbG9jaw0KPiByYXRlDQo+ID4+PiAgICAgICAgY29tcGFyZSB3aXRoIGR0cyBub2Rl
-IHZhbHVlLiBidXQgd2UgaGF2ZSBzdXBwb3J0cyA0IHBpeGVsIGNsb2NrDQo+ID4+PiAgICAgICAg
-Zm9yIGxzMTAyOGEgYm9hcmQuDQo+ID4+PiAgICBkcml2ZXJzL2dwdS9kcm0vYXJtL21hbGlkcF9j
-cnRjLmMgfCAyICsrDQo+ID4+PiAgICAxIGZpbGUgY2hhbmdlZCwgMiBpbnNlcnRpb25zKCspDQo+
-ID4+Pg0KPiA+Pj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9hcm0vbWFsaWRwX2NydGMu
-Yw0KPiA+Pj4gYi9kcml2ZXJzL2dwdS9kcm0vYXJtL21hbGlkcF9jcnRjLmMNCj4gPj4+IGluZGV4
-IDU2YWFkMjg4NjY2ZS4uYmI3OTIyM2Q5OTgxIDEwMDY0NA0KPiA+Pj4gLS0tIGEvZHJpdmVycy9n
-cHUvZHJtL2FybS9tYWxpZHBfY3J0Yy5jDQo+ID4+PiArKysgYi9kcml2ZXJzL2dwdS9kcm0vYXJt
-L21hbGlkcF9jcnRjLmMNCj4gPj4+IEBAIC0zNiwxMSArMzYsMTMgQEAgc3RhdGljIGVudW0gZHJt
-X21vZGVfc3RhdHVzDQo+ID4+PiBtYWxpZHBfY3J0Y19tb2RlX3ZhbGlkKHN0cnVjdCBkcm1fY3J0
-YyAqY3J0YywNCj4gPj4+DQo+ID4+PiAgICAgICAgaWYgKHJlcV9yYXRlKSB7DQo+ID4+PiAgICAg
-ICAgICAgICAgICByYXRlID0gY2xrX3JvdW5kX3JhdGUoaHdkZXYtPnB4bGNsaywgcmVxX3JhdGUp
-Ow0KPiA+Pj4gKyNpZm5kZWYgQ09ORklHX0FSQ0hfTEFZRVJTQ0FQRQ0KPiA+Pg0KPiA+PiBXaGF0
-IGFib3V0IG11bHRpcGxhdGZvcm0gYnVpbGRzPyBUaGUga2VybmVsIGNvbmZpZyBkb2Vzbid0IHRl
-bGwgeW91DQo+ID4+IHdoYXQgaGFyZHdhcmUgeW91J3JlIGFjdHVhbGx5IHJ1bm5pbmcgb24uDQo+
-ID4+DQo+ID4NCj4gPiBIaSBSb2JpbiwNCj4gPg0KPiA+IFRoYW5rcyBmb3IgeW91ciByZXBseS4N
-Cj4gPg0KPiA+IEluIGZhY3QsIE9ubHkgb25lIHBsYXRmb3JtIGludGVncmF0ZXMgdGhpcyBJUCB3
-aGVuDQo+IENPTkZJR19BUkNIX0xBWUVSU0NBUEUgaXMgc2V0Lg0KPiA+IEFsdGhvdWdoIHRoaXMg
-YXJlIG5vdCBnb29kIHdheXMsIGJ1dCBJIHRoaW5rIGl0IHdvbid0IGJlIGEgcHJvYmxlbSB1bmRl
-cg0KPiBtdWx0aXBsYXRmb3JtIGJ1aWxkcy4NCj4gDQo+IE15IHBvaW50IGlzIHRoYXQgQVJDSF9M
-QVlFUlNDQVBFIGlzIGdvaW5nIHRvIGJlIGVuYWJsZWQgaW4gZGlzdHJpYnV0aW9uDQo+IGtlcm5l
-bHMgYWxvbmcgd2l0aCBldmVyeXRoaW5nIGVsc2UsIHNvIHlvdSdyZSBlZmZlY3RpdmVseSByZW1v
-dmluZyB0aGlzIGNoZWNrIGZvcg0KPiBhbGwgb3RoZXIgdmVuZG9ycycgTWFsaS1EUCBpbXBsZW1l
-bnRhdGlvbnMgYXMgd2VsbCwgd2hpY2ggaXMgcHJvYmFibHkgbm90IE9LLg0KPiANCj4gRnVydGhl
-cm1vcmUsIGlmIExTMTAyOEEgcmVhbGx5IG9ubHkgc3VwcG9ydHMgNCBzcGVjaWZpYyBtb2RlcyBh
-cyB0aGUgQlNQDQo+IGRvY3VtZW50YXRpb24gSSBmb3VuZCBjbGFpbXMsIHRoZW4gc3VyZWx5IHlv
-dSdkIHdhbnQgYSAqbW9yZSogc3BlY2lmaWMgY2hlY2sNCj4gaGVyZSwgcmF0aGVyIHRoYW4gbm8g
-Y2hlY2sgYXQgYWxsPw0KDQpIaSBSb2JpbiwNCg0KVGhhbmtzIGZvciB5b3VyIGNvbW1lbnRzLg0K
-DQpZZXMsIEFzIHlvdSBzYWlkLCBub3cgTFMxMDI4QSBvbmx5IHN1cHBvcnRzIDQgbW9kZXMsIGFu
-ZCB3ZSB1c2UgdGhyZWUgY2xvY2tzIHRvIHN1cHBvcnQNCmFsbCBmb3VyIG1vZGVzLiBJbiBmYWN0
-LCB0aGlzIHdhcyByZWFsbHkgdGhlIHBvaW50Lg0KDQpIb3dldmVyLCB3ZSBjYW4gb25seSBlbmFi
-bGUgb25lIG1vZGUgdG8gbWVldCB0aGUgY2hlY2sgc3RhdGVtZW50IGluIHRoaXMgcGxhY2UuDQoN
-CkZvciBleGFtcGxlLCBJZiB1c2VyIGhhcyBhIDEwODBwIG1vbml0b3IsIHdlIG11c3QgYmUgc2V0
-IHRoZSBwaXhlbCBmaXhlZC1jbG9jayB0byAxNDguNU1Iei4gDQppZiB1c2VyIHdhbnQgdG8gY2hv
-aWNlIDRrIG1vbml0b3IsIHdlIGFsc28gdG8gYmUgY2hhbmdlIHRoZSBwaXhlbCBmaXhlZC1jbG9j
-ayB0byA1OTRNSHogaW4NCkRUIG5vZGUuIEluIHJlYWxpdHksIFdlIGhhdmUgbm8gd2F5IG9mIGtu
-b3dpbmcgd2hhdCBraW5kIG9mIG1vbml0b3IgdGhlIHVzZXIgd2FudHMuIFJpZ2h0Pw0KDQpNb3Jl
-b3ZlciwgdXNlciBjYW5ub3QgdG8gY2hhbmdlIHNjcmVlbiByZXNvbHV0aW9uIGluIHRoaXMgY2Fz
-ZSwgSSBkb24ndCB0aGluayB0aGlzIHBsYWNlIGlzDQpyZWFzb25hYmxlLiB3ZSBuZWVkIHRvIHN1
-cHBvcnRpbmcgVWJ1bnR1ICwgV2F5bGFuZCBhbmQgb3RoZXIgZW1iZWRkZWQgR1UsIHNvIHdlIG5l
-ZWQNCnRvIHN3aXRjaCB0aGUgcmVzb2x1dGlvbnMuDQoNCk1heWJlIGl0J3MgdGhhdCBtb3N0IGFu
-ZHJvaWQgZGV2aWNlIHVzZWQsIGFuZCBhbmRyb2lkIHN5c3RlbSBhbHdheXMgb25seSBuZWVkIG9u
-ZQ0KcmVzb2x1dGlvbi4NCg0KQmVzdCBSZWdhcmRzLA0KV2VuDQoNCj4gDQo+IFJvYmluLg0K
+Hi all,
+
+I would like to ask a question regarding cpu frequency scaling / cpu performance using intel_pstate with activated HWP.
+I think the special CPU doesn't matter. I checked it with i7-8550U and i7-8565U. Currently I am not sure if this is a
+bug. Thats why I am asking...
+
+Using intel_pstate default settings (min_perf_pct=10, max_perf_pct=100, no_turbo=0) everything behaves as expected. If I
+change max_perf_pct and/or no_turbo i can observe that the cpu frequency doesn't increase that much compared to the
+default settings under load.
+
+But if I disable smt, the settings of the pstate driver does not seem to change anything. If I set no_turbo and/or
+max_perf_pct to a lower value than 100 I can not notice that there is a change at the cpu frequency scaling. For
+example: If I set min_perf_pct=max_perf_pct=5 the cpu frequency of the 4 online cpus will be above 4 GHz in case of smt
+is disabled. If smt is enabled the cpu frequency of the 8 cpus is 400 MHz. The same occurred if I disable turbo by
+setting no_turbo to 1. If smt is disbaled the frequency will be above 4 GHz in load situations. If smt is enabled the
+cpu frequency is 1,80 GHz.
+
+If I use intel_pstate with disabled HWP it behaves the same if smt is enabled or disabled. So, it makes no difference if
+smt is enabled or disabled . The cpu frequency will adapt exactly to the configured settings.
+
+So, is this intended that HWP does not consider the pstate settings if smt is disabled?
+
+Thank you & best regards,
+
+Dennis
