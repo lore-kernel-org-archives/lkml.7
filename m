@@ -2,145 +2,616 @@ Return-Path: <SRS0=M1fl=TR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B09EC04E84
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 18:53:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4642BC04AB4
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 18:53:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5B172217D4
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 18:53:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=amacapital-net.20150623.gappssmtp.com header.i=@amacapital-net.20150623.gappssmtp.com header.b="ip6rP4a7"
+	by mail.kernel.org (Postfix) with ESMTP id F03BA21783
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 18:53:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1558119188;
+	bh=ELb3H7Nos3RRCsfBagjPT0/HEf9aP8K/iidFcHGUGi0=;
+	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
+	b=lCYe7WYTvXL4ik9T3MvPfPGWLnQRJb0m3WcPWwaGfKyWr+D/k217Xz6O6YATDHIop
+	 uywQGBO+aBMjp1FjpJwKcvf1Z4c4MWtwN4I8OMhAc+E0rQfDZ7AyfkWPCUTzqQaGy2
+	 wD4UGJhrocfmcomkxCFCwZmSFgqb6UTQZ4SnN+Do=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728700AbfEQSxD (ORCPT
+        id S1729289AbfEQSxH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 May 2019 14:53:03 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:38962 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726293AbfEQSxD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 May 2019 14:53:03 -0400
-Received: by mail-pg1-f194.google.com with SMTP id w22so3696884pgi.6
-        for <linux-kernel@vger.kernel.org>; Fri, 17 May 2019 11:53:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=amacapital-net.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=Zedk+akRmRCkjlP2v+DLCTRSwVyK89TYIDPpzH+WlCo=;
-        b=ip6rP4a7K7+zXEf5W8Wi59dm82XG6OS0S9ZuQM/R3m4HZBPDpbEsryeSQAiNCUMo9n
-         Npyu0Ex/7I6LSTU0Hn0T9B9ff3Qt7UHKpZ4kb10dgIjtzru1QNEgtg06cvgOrtmkvSb1
-         ISueCn1+o+BjU7M/al9zR680IGNP81M2Qw5lkhqS3odOPIG4Szuv1+huK6X2LpmcVRNu
-         D1YAcdMthvyCXOXfPq1Xk3wBo9rPn/9ozeUV9V07aIpTgpZegpqlAGe46klScMYLO4lD
-         h7qUu9d/skpnGxNs/BXnYhbOSYwMNq17RQoSytbin/2RaC9iv4MkDYZ+yHk4Ncsq5ugT
-         fCGw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=Zedk+akRmRCkjlP2v+DLCTRSwVyK89TYIDPpzH+WlCo=;
-        b=EidCBv7XOsHeOHNbSWs7UnqKRY0ULeZ6AGsHqDcr+1jZIY98gevgIRi9J88iHrpXBi
-         5vMtXLXVn5nVR9jMaufdSsa1qpe3WhHgRBOp2zjRSfOyTGOB557UAv6c5hZ0gMMmTtGl
-         MkMrOFpdF3BDP7l+1w6HPuLB/dmL9UD++k+7jXDOZpwZxUKOlQM4hrqAEIJeDw5Wp1HY
-         uWAtuKYrwrfjdd0LtBAXopwAjoewQLuTZs/OVyHy3YRIzodiaNkClXXysnx+89u3d4sD
-         EvfZn9ntV/N+zLkBwShS1MuQZey8PfnUKLCiB+XwTCAqM+wKHTaSIM3S+qjHqSSj81KT
-         FIXg==
-X-Gm-Message-State: APjAAAXpCO+XZiqXwNYe06gXn9gXMwDo+zAV/d10fFoRxGyg8upG/Yxt
-        tgJnzDitGvsCyqNww4v3AdcCZA==
-X-Google-Smtp-Source: APXvYqyTd69tqkuVEARG8Y+9ZovVDRZ6Vc29b6lGDGKyVcTXVijdT6jmM3t9cOKJjq1rFQRiuTEvwA==
-X-Received: by 2002:aa7:8a11:: with SMTP id m17mr40233878pfa.122.1558119182522;
-        Fri, 17 May 2019 11:53:02 -0700 (PDT)
-Received: from ?IPv6:2600:1010:b04b:10dc:8986:2c48:2978:531d? ([2600:1010:b04b:10dc:8986:2c48:2978:531d])
-        by smtp.gmail.com with ESMTPSA id t142sm529350pgb.32.2019.05.17.11.53.01
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 17 May 2019 11:53:01 -0700 (PDT)
-Content-Type: text/plain;
-        charset=utf-8
-Mime-Version: 1.0 (1.0)
-Subject: Re: SGX vs LSM (Re: [PATCH v20 00/28] Intel SGX1 support)
-From:   Andy Lutomirski <luto@amacapital.net>
-X-Mailer: iPhone Mail (16E227)
-In-Reply-To: <20190517182124.GF15006@linux.intel.com>
-Date:   Fri, 17 May 2019 11:53:00 -0700
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Stephen Smalley <sds@tycho.nsa.gov>,
-        "Xing, Cedric" <cedric.xing@intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        LSM List <linux-security-module@vger.kernel.org>,
-        Paul Moore <paul@paul-moore.com>,
-        Eric Paris <eparis@parisplace.org>,
-        "selinux@vger.kernel.org" <selinux@vger.kernel.org>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Jethro Beekman <jethro@fortanix.com>,
-        "Hansen, Dave" <dave.hansen@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "Dr. Greg" <greg@enjellic.com>,
-        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
-        "linux-sgx@vger.kernel.org" <linux-sgx@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "nhorman@redhat.com" <nhorman@redhat.com>,
-        "npmccallum@redhat.com" <npmccallum@redhat.com>,
-        "Ayoun, Serge" <serge.ayoun@intel.com>,
-        "Katz-zamir, Shay" <shay.katz-zamir@intel.com>,
-        "Huang, Haitao" <haitao.huang@intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        "Svahn, Kai" <kai.svahn@intel.com>, Borislav Petkov <bp@alien8.de>,
-        Josh Triplett <josh@joshtriplett.org>,
-        "Huang, Kai" <kai.huang@intel.com>,
-        David Rientjes <rientjes@google.com>
+        Fri, 17 May 2019 14:53:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52486 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726293AbfEQSxF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 May 2019 14:53:05 -0400
+Received: from kernel.org (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 24EBE20848;
+        Fri, 17 May 2019 18:53:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1558119184;
+        bh=ELb3H7Nos3RRCsfBagjPT0/HEf9aP8K/iidFcHGUGi0=;
+        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
+        b=hPXuHS3Yw2jkx/z7WQLHy5z+aUTNwq7IjL1NEH+Hh7zueqD+rMjsmUgjLj86VY/bE
+         CzAMtP82elmXLyv+VraCAMD5oYw2gArSEnPNMUm8OIaWzUg8I87XaMFnPuCNF9Nx8z
+         ZGRdmtLmWk6JbdNAba4LSdxoYMSU5LAxRfvF3Usw=
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
-Message-Id: <3FECC02D-C65C-4D35-B538-D32EC7D722D5@amacapital.net>
-References: <CALCETrUfmyQ7ivNzQic0FyPXe1fmAnoK093jnz0i8DRn2LvdSA@mail.gmail.com> <960B34DE67B9E140824F1DCDEC400C0F654E3FB9@ORSMSX116.amr.corp.intel.com> <6a97c099-2f42-672e-a258-95bc09152363@tycho.nsa.gov> <20190517150948.GA15632@linux.intel.com> <ca807220-47e2-5ec2-982c-4fb4a72439c6@tycho.nsa.gov> <80013cca-f1c2-f4d5-7558-8f4e752ada76@tycho.nsa.gov> <20190517172953.GC15006@linux.intel.com> <DFE03E0C-694A-4289-B416-29CDC2644F94@amacapital.net> <20190517175500.GE15006@linux.intel.com> <CAHk-=wgH2FBzBG3_RZSuatpYCj8DCQZipJYp9vh3Wy_S3Qt4-g@mail.gmail.com> <20190517182124.GF15006@linux.intel.com>
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
+In-Reply-To: <20190514221711.248228-2-brendanhiggins@google.com>
+References: <20190514221711.248228-1-brendanhiggins@google.com> <20190514221711.248228-2-brendanhiggins@google.com>
+Subject: Re: [PATCH v4 01/18] kunit: test: add KUnit test runner core
+From:   Stephen Boyd <sboyd@kernel.org>
+Cc:     devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        kunit-dev@googlegroups.com, linux-doc@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kbuild@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        linux-nvdimm@lists.01.org, linux-um@lists.infradead.org,
+        Alexander.Levin@microsoft.com, Tim.Bird@sony.com,
+        amir73il@gmail.com, dan.carpenter@oracle.com, daniel@ffwll.ch,
+        jdike@addtoit.com, joel@jms.id.au, julia.lawall@lip6.fr,
+        khilman@baylibre.com, knut.omang@oracle.com, logang@deltatee.com,
+        mpe@ellerman.id.au, pmladek@suse.com, rdunlap@infradead.org,
+        richard@nod.at, rientjes@google.com, rostedt@goodmis.org,
+        wfg@linux.intel.com, Brendan Higgins <brendanhiggins@google.com>
+To:     Brendan Higgins <brendanhiggins@google.com>,
+        frowand.list@gmail.com, gregkh@linuxfoundation.org,
+        jpoimboe@redhat.com, keescook@google.com,
+        kieran.bingham@ideasonboard.com, mcgrof@kernel.org,
+        peterz@infradead.org, robh@kernel.org, shuah@kernel.org,
+        tytso@mit.edu, yamada.masahiro@socionext.com
+User-Agent: alot/0.8.1
+Date:   Fri, 17 May 2019 11:53:03 -0700
+Message-Id: <20190517185304.24EBE20848@mail.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Quoting Brendan Higgins (2019-05-14 15:16:54)
+> diff --git a/include/kunit/test.h b/include/kunit/test.h
+> new file mode 100644
+> index 0000000000000..e682ea0e1f9a5
+> --- /dev/null
+> +++ b/include/kunit/test.h
+> @@ -0,0 +1,162 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +/*
+> + * Base unit test (KUnit) API.
+> + *
+> + * Copyright (C) 2019, Google LLC.
+> + * Author: Brendan Higgins <brendanhiggins@google.com>
+> + */
+> +
+> +#ifndef _KUNIT_TEST_H
+> +#define _KUNIT_TEST_H
+> +
+> +#include <linux/types.h>
+> +#include <linux/slab.h>
 
+Is this include used here?
 
-> On May 17, 2019, at 11:21 AM, Sean Christopherson <sean.j.christopherson@i=
-ntel.com> wrote:
->=20
->> On Fri, May 17, 2019 at 11:04:22AM -0700, Linus Torvalds wrote:
->> On Fri, May 17, 2019 at 10:55 AM Sean Christopherson
->> <sean.j.christopherson@intel.com> wrote:
->>>=20
->>> In this snippet, IS_PRIVATE() is true for anon inodes, false for
->>> /dev/sgx/enclave.  Because EPC memory is always shared, SELinux will nev=
-er
->>> check PROCESS__EXECMEM for mprotect() on/dev/sgx/enclave.
->>=20
->> Why _does_ the memory have to be shared? Shared mmap() is
->> fundamentally less secure than private mmap, since by definition it
->> means "oh, somebody else has access to it too and might modify it
->> under us".
->>=20
->> Why does the SGX logic care about things like that? Normal executables
->> are just private mappings of an underlying file, I'm not sure why the
->> SGX interface has to have that shared thing, and why the interface has
->> to have a device node in the first place when  you have system calls
->> for setup anyway.
->>=20
->> So why don't the system calls just work on perfectly normal anonymous
->> mmap's? Why a device node, and why must it be shared to begin with?
->=20
-> I agree that conceptually EPC is private memory, but because EPC is
-> managed as a separate memory pool, SGX tags it VM_PFNMAP and manually
-> inserts PFNs, i.e. EPC effectively it gets classified as IO memory.=20
->=20
-> And vmf_insert_pfn_prot() doesn't like writable private IO mappings:
->=20
->   BUG_ON((vma->vm_flags & VM_PFNMAP) && is_cow_mapping(vma->vm_flags));
+> +
+> +struct kunit;
+> +
+> +/**
+> + * struct kunit_case - represents an individual test case.
+> + * @run_case: the function representing the actual test case.
+> + * @name: the name of the test case.
+> + *
+> + * A test case is a function with the signature, ``void (*)(struct kunit=
+ *)``
+> + * that makes expectations (see KUNIT_EXPECT_TRUE()) about code under te=
+st. Each
+> + * test case is associated with a &struct kunit_module and will be run a=
+fter the
+> + * module's init function and followed by the module's exit function.
+> + *
+> + * A test case should be static and should only be created with the KUNI=
+T_CASE()
+> + * macro; additionally, every array of test cases should be terminated w=
+ith an
+> + * empty test case.
+> + *
+> + * Example:
+> + *
+> + * .. code-block:: c
+> + *
+> + *     void add_test_basic(struct kunit *test)
+> + *     {
+> + *             KUNIT_EXPECT_EQ(test, 1, add(1, 0));
+> + *             KUNIT_EXPECT_EQ(test, 2, add(1, 1));
+> + *             KUNIT_EXPECT_EQ(test, 0, add(-1, 1));
+> + *             KUNIT_EXPECT_EQ(test, INT_MAX, add(0, INT_MAX));
+> + *             KUNIT_EXPECT_EQ(test, -1, add(INT_MAX, INT_MIN));
+> + *     }
+> + *
+> + *     static struct kunit_case example_test_cases[] =3D {
+> + *             KUNIT_CASE(add_test_basic),
+> + *             {},
 
-I don=E2=80=99t see how it could be anonymous even in principle.  The kernel=
- can=E2=80=99t *read* the memory =E2=80=94 how could we possibly CoW it?  An=
-d we can=E2=80=99t share an RO backing pages between two different enclaves b=
-ecause the CPU won=E2=80=99t let us =E2=80=94 each EPC page belongs to a par=
-ticular enclave.  And fork()ing an enclave is right out.
+Nitpick: Please drop the comma on the sentinel so nobody gets ideas to
+add another entry after it.
 
-So I agree that MAP_ANONYMOUS would be nice conceptually, but I don=E2=80=99=
-t see how it would work.=
+> + *     };
+> + *
+> + */
+> +struct kunit_case {
+> +       void (*run_case)(struct kunit *test);
+> +       const char name[256];
+
+Maybe 256 can be a #define KUNIT_NAME_MAX_LEN? Or it could just be a
+const char pointer to a literal pool? Are unit tests making up names at
+runtime?
+
+> +
+> +       /* private: internal use only. */
+> +       bool success;
+> +};
+> +
+> +/**
+> + * KUNIT_CASE - A helper for creating a &struct kunit_case
+> + * @test_name: a reference to a test case function.
+> + *
+> + * Takes a symbol for a function representing a test case and creates a
+> + * &struct kunit_case object from it. See the documentation for
+> + * &struct kunit_case for an example on how to use it.
+> + */
+> +#define KUNIT_CASE(test_name) { .run_case =3D test_name, .name =3D #test=
+_name }
+> +
+> +/**
+> + * struct kunit_module - describes a related collection of &struct kunit=
+_case s.
+> + * @name: the name of the test. Purely informational.
+> + * @init: called before every test case.
+> + * @exit: called after every test case.
+> + * @test_cases: a null terminated array of test cases.
+> + *
+> + * A kunit_module is a collection of related &struct kunit_case s, such =
+that
+> + * @init is called before every test case and @exit is called after ever=
+y test
+> + * case, similar to the notion of a *test fixture* or a *test class* in =
+other
+> + * unit testing frameworks like JUnit or Googletest.
+> + *
+> + * Every &struct kunit_case must be associated with a kunit_module for K=
+Unit to
+> + * run it.
+> + */
+> +struct kunit_module {
+> +       const char name[256];
+> +       int (*init)(struct kunit *test);
+> +       void (*exit)(struct kunit *test);
+> +       struct kunit_case *test_cases;
+
+Can this variable be const? Or we expect test modules to adjust test_cases =
+after
+the fact?
+
+> +};
+> +
+> +/**
+> + * struct kunit - represents a running instance of a test.
+> + * @priv: for user to store arbitrary data. Commonly used to pass data c=
+reated
+> + * in the init function (see &struct kunit_module).
+> + *
+> + * Used to store information about the current context under which the t=
+est is
+> + * running. Most of this data is private and should only be accessed ind=
+irectly
+> + * via public functions; the one exception is @priv which can be used by=
+ the
+> + * test writer to store arbitrary data.
+> + */
+> +struct kunit {
+> +       void *priv;
+> +
+> +       /* private: internal use only. */
+> +       const char *name; /* Read only after initialization! */
+> +       spinlock_t lock; /* Gaurds all mutable test state. */
+> +       bool success; /* Protected by lock. */
+> +};
+> +
+> +void kunit_init_test(struct kunit *test, const char *name);
+> +
+> +int kunit_run_tests(struct kunit_module *module);
+> +
+> +/**
+> + * module_test() - used to register a &struct kunit_module with KUnit.
+> + * @module: a statically allocated &struct kunit_module.
+> + *
+> + * Registers @module with the test framework. See &struct kunit_module f=
+or more
+> + * information.
+> + */
+> +#define module_test(module) \
+> +               static int module_kunit_init##module(void) \
+> +               { \
+> +                       return kunit_run_tests(&module); \
+> +               } \
+> +               late_initcall(module_kunit_init##module)
+
+Maybe we need to introduce another initcall level after
+late_initcall_sync() for tests? I wonder if there will be tests that
+need to run after all other initcalls have run, including late sync
+initcalls.
+
+> +
+> +void __printf(3, 4) kunit_printk(const char *level,
+> +                                const struct kunit *test,
+> +                                const char *fmt, ...);
+> +
+> +/**
+> + * kunit_info() - Prints an INFO level message associated with the curre=
+nt test.
+> + * @test: The test context object.
+> + * @fmt: A printk() style format string.
+> + *
+> + * Prints an info level message associated with the test module being ru=
+n. Takes
+> + * a variable number of format parameters just like printk().
+> + */
+> +#define kunit_info(test, fmt, ...) \
+> +               kunit_printk(KERN_INFO, test, fmt, ##__VA_ARGS__)
+> +
+> +/**
+> + * kunit_warn() - Prints a WARN level message associated with the curren=
+t test.
+> + * @test: The test context object.
+> + * @fmt: A printk() style format string.
+> + *
+> + * See kunit_info().
+
+Why? Just write out that it "Prints a warning level message".
+
+> + */
+> +#define kunit_warn(test, fmt, ...) \
+> +               kunit_printk(KERN_WARNING, test, fmt, ##__VA_ARGS__)
+> +
+> +/**
+> + * kunit_err() - Prints an ERROR level message associated with the curre=
+nt test.
+> + * @test: The test context object.
+> + * @fmt: A printk() style format string.
+> + *
+> + * See kunit_info().
+
+Same comment.
+
+> + */
+> +#define kunit_err(test, fmt, ...) \
+> +               kunit_printk(KERN_ERR, test, fmt, ##__VA_ARGS__)
+> +
+> +#endif /* _KUNIT_TEST_H */
+> diff --git a/kunit/Kconfig b/kunit/Kconfig
+> new file mode 100644
+> index 0000000000000..64480092b2c24
+> --- /dev/null
+> +++ b/kunit/Kconfig
+> @@ -0,0 +1,16 @@
+> +#
+> +# KUnit base configuration
+> +#
+> +
+> +menu "KUnit support"
+> +
+> +config KUNIT
+> +       bool "Enable support for unit tests (KUnit)"
+> +       help
+> +         Enables support for kernel unit tests (KUnit), a lightweight un=
+it
+> +         testing and mocking framework for the Linux kernel. These tests=
+ are
+> +         able to be run locally on a developer's workstation without a V=
+M or
+> +         special hardware. For more information, please see
+> +         Documentation/kunit/
+
+This moved and needs an update.
+
+> +
+> +endmenu
+> diff --git a/kunit/Makefile b/kunit/Makefile
+> new file mode 100644
+> index 0000000000000..5efdc4dea2c08
+> --- /dev/null
+> +++ b/kunit/Makefile
+> @@ -0,0 +1 @@
+> +obj-$(CONFIG_KUNIT) +=3D                 test.o
+> diff --git a/kunit/test.c b/kunit/test.c
+> new file mode 100644
+> index 0000000000000..86f65ba2bcf92
+> --- /dev/null
+> +++ b/kunit/test.c
+> @@ -0,0 +1,229 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Base unit test (KUnit) API.
+> + *
+> + * Copyright (C) 2019, Google LLC.
+> + * Author: Brendan Higgins <brendanhiggins@google.com>
+> + */
+> +
+> +#include <linux/sched.h>
+
+This include gets removed later in the series, was it ever needed?
+
+> +#include <linux/sched/debug.h>
+> +#include <kunit/test.h>
+> +
+> +static bool kunit_get_success(struct kunit *test)
+> +{
+> +       unsigned long flags;
+> +       bool success;
+> +
+> +       spin_lock_irqsave(&test->lock, flags);
+> +       success =3D test->success;
+> +       spin_unlock_irqrestore(&test->lock, flags);
+> +
+> +       return success;
+> +}
+> +
+> +static void kunit_set_success(struct kunit *test, bool success)
+> +{
+> +       unsigned long flags;
+> +
+> +       spin_lock_irqsave(&test->lock, flags);
+> +       test->success =3D success;
+> +       spin_unlock_irqrestore(&test->lock, flags);
+> +}
+> +
+> +static int kunit_vprintk_emit(int level, const char *fmt, va_list args)
+> +{
+> +       return vprintk_emit(0, level, NULL, 0, fmt, args);
+> +}
+> +
+> +static int kunit_printk_emit(int level, const char *fmt, ...)
+> +{
+> +       va_list args;
+> +       int ret;
+> +
+> +       va_start(args, fmt);
+> +       ret =3D kunit_vprintk_emit(level, fmt, args);
+> +       va_end(args);
+> +
+> +       return ret;
+> +}
+> +
+> +static void kunit_vprintk(const struct kunit *test,
+> +                         const char *level,
+> +                         struct va_format *vaf)
+> +{
+> +       kunit_printk_emit(level[1] - '0', "\t# %s: %pV", test->name, vaf);
+> +}
+> +
+> +static bool kunit_has_printed_tap_version;
+> +
+> +static void kunit_print_tap_version(void)
+> +{
+> +       if (!kunit_has_printed_tap_version) {
+> +               kunit_printk_emit(LOGLEVEL_INFO, "TAP version 14\n");
+> +               kunit_has_printed_tap_version =3D true;
+> +       }
+> +}
+> +
+> +static size_t kunit_test_cases_len(struct kunit_case *test_cases)
+> +{
+> +       struct kunit_case *test_case;
+> +       size_t len =3D 0;
+> +
+> +       for (test_case =3D test_cases; test_case->run_case; test_case++)
+> +               len++;
+> +
+> +       return len;
+> +}
+> +
+> +static void kunit_print_subtest_start(struct kunit_module *module)
+> +{
+> +       kunit_print_tap_version();
+> +       kunit_printk_emit(LOGLEVEL_INFO, "\t# Subtest: %s\n", module->nam=
+e);
+> +       kunit_printk_emit(LOGLEVEL_INFO,
+> +                         "\t1..%zd\n",
+> +                         kunit_test_cases_len(module->test_cases));
+> +}
+> +
+> +static void kunit_print_ok_not_ok(bool should_indent,
+> +                                 bool is_ok,
+> +                                 size_t test_number,
+> +                                 const char *description)
+> +{
+> +       const char *indent, *ok_not_ok;
+> +
+> +       if (should_indent)
+> +               indent =3D "\t";
+> +       else
+> +               indent =3D "";
+> +
+> +       if (is_ok)
+> +               ok_not_ok =3D "ok";
+> +       else
+> +               ok_not_ok =3D "not ok";
+> +
+> +       kunit_printk_emit(LOGLEVEL_INFO,
+> +                         "%s%s %zd - %s\n",
+> +                         indent, ok_not_ok, test_number, description);
+> +}
+> +
+> +static bool kunit_module_has_succeeded(struct kunit_module *module)
+> +{
+> +       struct kunit_case *test_case;
+
+This can be const?
+
+> +       bool success =3D true;
+> +
+> +       for (test_case =3D module->test_cases; test_case->run_case; test_=
+case++)
+> +               if (!test_case->success)
+> +                       success =3D false;
+
+Bail out early here on first "fail" with return false?
+
+> +
+> +       return success;
+> +}
+> +
+> +size_t kunit_module_counter =3D 1;
+> +
+> +static void kunit_print_subtest_end(struct kunit_module *module)
+> +{
+> +       kunit_print_ok_not_ok(false,
+> +                             kunit_module_has_succeeded(module),
+> +                             kunit_module_counter++,
+> +                             module->name);
+> +}
+> +
+> +static void kunit_print_test_case_ok_not_ok(struct kunit_case *test_case,
+> +                                           size_t test_number)
+> +{
+> +       kunit_print_ok_not_ok(true,
+> +                             test_case->success,
+> +                             test_number,
+> +                             test_case->name);
+> +}
+> +
+> +void kunit_init_test(struct kunit *test, const char *name)
+> +{
+> +       spin_lock_init(&test->lock);
+> +       test->name =3D name;
+> +}
+> +
+> +/*
+> + * Initializes and runs test case. Does not clean up or do post validati=
+ons.
+> + */
+> +static void kunit_run_case_internal(struct kunit *test,
+> +                                   struct kunit_module *module,
+> +                                   struct kunit_case *test_case)
+> +{
+> +       int ret;
+> +
+> +       if (module->init) {
+> +               ret =3D module->init(test);
+> +               if (ret) {
+> +                       kunit_err(test, "failed to initialize: %d\n", ret=
+);
+> +                       kunit_set_success(test, false);
+> +                       return;
+> +               }
+> +       }
+> +
+> +       test_case->run_case(test);
+> +}
+> +
+> +/*
+> + * Performs post validations and cleanup after a test case was run.
+> + * XXX: Should ONLY BE CALLED AFTER kunit_run_case_internal!
+> + */
+> +static void kunit_run_case_cleanup(struct kunit *test,
+> +                                  struct kunit_module *module,
+> +                                  struct kunit_case *test_case)
+
+But test_case isn't used?
+
+> +{
+> +       if (module->exit)
+
+Aha, so we don't need empty functions in the sysctl test.
+
+> +               module->exit(test);
+> +}
+> +
+> +/*
+> + * Performs all logic to run a test case.
+> + */
+> +static void kunit_run_case(struct kunit_module *module,
+> +                          struct kunit_case *test_case)
+> +{
+> +       struct kunit test;
+> +
+> +       kunit_init_test(&test, test_case->name);
+> +       kunit_set_success(&test, true);
+
+Can kunit_init_test() also kunit_set_success() to true or false,
+depending on what is desired as the initial state?
+
+> +
+> +       kunit_run_case_internal(&test, module, test_case);
+> +       kunit_run_case_cleanup(&test, module, test_case);
+
+I find this odd, we have run_case_internal() that does two things, init
+and run_case, while case_cleanup() does one thing, call module->exit().
+
+Can we just inline all those functions in here so that it looks like
+this:
+
+       int ret =3D 0;
+
+       if (module->init) {
+              ret =3D module->init(test);
+               if (ret) {
+                       kunit_err(test, "failed to initialize: %d\n", ret);
+                       kunit_set_success(&test, false);
+               }
+       }
+
+       if (!ret)
+               test_case->run_case(&test);
+
+       if (module->exit)
+               module->exit(&test);
+
+       return kunit_get_success(&test);
+
+Then I don't have to read two more functions to figure out the flow of
+running a test case.
+
+> +
+> +       test_case->success =3D kunit_get_success(&test);
+> +}
+> +
+> +int kunit_run_tests(struct kunit_module *module)
+> +{
+> +       struct kunit_case *test_case;
+> +       size_t test_case_count =3D 1;
+
+Might make sense to assign this to 0 first and then pre-increment so
+that test_case_count can't be 1 when there aren't any tests?
+
+> +
+> +       kunit_print_subtest_start(module);
+> +
+> +       for (test_case =3D module->test_cases; test_case->run_case; test_=
+case++) {
+> +               kunit_run_case(module, test_case);
+> +               kunit_print_test_case_ok_not_ok(test_case, test_case_coun=
+t++);
+
+Can this be pushed into kunit_run_case() and have that function take a
+test_case_count number? Maybe that would allow us to avoid storing
+test_case->success entirely? Assuming that kunit_run_case() returned a
+value like success or failure, then yes it would work.
+
+       unsigned int failed =3D 0;
+
+       for (test_case =3D module->test_cases; test_case->run_case; test_cas=
+e++) {
+               failed |=3D kunit_run_case(module, test_case, ++test_case_co=
+unt);
+
+       kunit_print_ok_not_ok(false,
+                             !failed,
+                             kunit_module_counter++,
+                             module->name);
+
+> +       kunit_print_subtest_end(module);
+> +
+> +       return 0;
+> +}
