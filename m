@@ -2,77 +2,65 @@ Return-Path: <SRS0=M1fl=TR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B14AC04AB4
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 13:42:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F9B2C04AB4
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 13:48:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 657962087E
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 13:42:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="aaeXQ0d+"
+	by mail.kernel.org (Postfix) with ESMTP id 640BB2168B
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 13:48:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728749AbfEQNmG (ORCPT
+        id S1728862AbfEQNsx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 May 2019 09:42:06 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:53278 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728365AbfEQNmG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 May 2019 09:42:06 -0400
-Received: from zn.tnic (p200300EC2F0C5000C4DD38E37EE1A463.dip0.t-ipconnect.de [IPv6:2003:ec:2f0c:5000:c4dd:38e3:7ee1:a463])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 24EA81EC0874;
-        Fri, 17 May 2019 15:42:05 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1558100525;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=kxqMwd6/M8Bnqd/BVW9JvtYKwei+gVc81c65tCa7ppU=;
-        b=aaeXQ0d+gjQ6WkTkH3UBr33GYfNQ+ZFgNlQHWrnH1GRucfU1QdI7d9FhF0fSBe2lHpHDqw
-        3yVDdrh4dt/NRQm1UMBNyHDdJbFvRxxFZ1AKtFmLNjmjMOQcVeFIni38muZW10bczdsqLk
-        apgaOxDp11uLBdVwUwfrW2vjpKrNEU4=
-Date:   Fri, 17 May 2019 15:41:59 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     Dave Young <dyoung@redhat.com>
-Cc:     Baoquan He <bhe@redhat.com>, j-nomura@ce.jp.nec.com,
-        kasong@redhat.com, fanc.fnst@cn.fujitsu.com, x86@kernel.org,
-        kexec@lists.infradead.org, linux-kernel@vger.kernel.org,
-        hpa@zytor.com, tglx@linutronix.de
-Subject: Re: [PATCH v6 1/2] x86/kexec: Build identity mapping for EFI systab
- and ACPI tables
-Message-ID: <20190517134159.GA13482@zn.tnic>
-References: <20190424092944.30481-1-bhe@redhat.com>
- <20190424092944.30481-2-bhe@redhat.com>
- <20190429002318.GA25400@MiWiFi-R3L-srv>
- <20190429135536.GC2324@zn.tnic>
- <20190513014248.GA16774@MiWiFi-R3L-srv>
- <20190513070725.GA20105@zn.tnic>
- <20190513073254.GB16774@MiWiFi-R3L-srv>
- <20190513075006.GB20105@zn.tnic>
- <20190513080653.GD16774@MiWiFi-R3L-srv>
- <20190514032208.GA25875@dhcp-128-65.nay.redhat.com>
+        Fri, 17 May 2019 09:48:53 -0400
+Received: from zeniv.linux.org.uk ([195.92.253.2]:46198 "EHLO
+        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728365AbfEQNsx (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 May 2019 09:48:53 -0400
+Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92 #3 (Red Hat Linux))
+        id 1hRdEA-0001Yb-Ey; Fri, 17 May 2019 13:48:50 +0000
+Date:   Fri, 17 May 2019 14:48:50 +0100
+From:   Al Viro <viro@zeniv.linux.org.uk>
+To:     syzbot <syzbot+73c7fe4f77776505299b@syzkaller.appspotmail.com>
+Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        sabin.rapan@gmail.com, syzkaller-bugs@googlegroups.com
+Subject: Re: BUG: unable to handle kernel paging request in do_mount
+Message-ID: <20190517134850.GG17978@ZenIV.linux.org.uk>
+References: <00000000000014285d05765bf72a@google.com>
+ <0000000000000eaf23058912af14@google.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190514032208.GA25875@dhcp-128-65.nay.redhat.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <0000000000000eaf23058912af14@google.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 14, 2019 at 11:22:08AM +0800, Dave Young wrote:
-> Another thing is we can move the get rsdp after console_init, but that
-> can be done later as separate patch.
+On Fri, May 17, 2019 at 03:17:02AM -0700, syzbot wrote:
+> This bug is marked as fixed by commit:
+> vfs: namespace: error pointer dereference in do_remount()
+> But I can't find it in any tested tree for more than 90 days.
+> Is it a correct commit? Please update it by replying:
+> #syz fix: exact-commit-title
+> Until then the bug is still considered open and
+> new crashes with the same signature are ignored.
 
-https://lkml.kernel.org/r/20190417090247.GD20492@zn.tnic
+Could somebody explain how the following situation is supposed to
+be handled:
 
--- 
-Regards/Gruss,
-    Boris.
+1) branch B1 with commits  C1, C2, C3, C4 is pushed out
+2) C2 turns out to have a bug, which gets caught and fixed
+3) fix is folded in and branch B2 with C1, C2', C3', C4' is
+pushed out.  The bug is not in it anymore.
+4) B1 is left mouldering (or is entirely removed); B2 is
+eventually merged into other trees.
 
-Good mailing practices for 400: avoid top-posting and trim the reply.
+This is normal and it appears to be problematic for syzbot.
+How to deal with that?  One thing I will *NOT* do in such
+situations is giving up on folding the fixes in.  Bisection
+hazards alone make that a bad idea.
