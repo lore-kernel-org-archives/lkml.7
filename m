@@ -2,137 +2,139 @@ Return-Path: <SRS0=M1fl=TR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
 	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9904C04AB4
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 08:20:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AED44C04AB4
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 08:23:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 95AD920848
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 08:20:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C61420818
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 08:23:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="PIZR+Fdg"
+	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="NBYiZYb8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728822AbfEQIT7 (ORCPT
+        id S1728296AbfEQIXF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 May 2019 04:19:59 -0400
-Received: from hqemgate14.nvidia.com ([216.228.121.143]:11795 "EHLO
-        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726893AbfEQIT7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 May 2019 04:19:59 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5cde6eb40000>; Fri, 17 May 2019 01:20:04 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Fri, 17 May 2019 01:19:58 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Fri, 17 May 2019 01:19:58 -0700
-Received: from [10.24.47.197] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 17 May
- 2019 08:19:52 +0000
-Subject: Re: [PATCH V6 02/15] PCI/PME: Export pcie_pme_disable_msi() &
- pcie_pme_no_msi() APIs
-To:     Bjorn Helgaas <helgaas@kernel.org>
-CC:     Christoph Hellwig <hch@infradead.org>, <lorenzo.pieralisi@arm.com>,
-        <robh+dt@kernel.org>, <mark.rutland@arm.com>,
-        <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
-        <kishon@ti.com>, <catalin.marinas@arm.com>, <will.deacon@arm.com>,
-        <jingoohan1@gmail.com>, <gustavo.pimentel@synopsys.com>,
-        <mperttunen@nvidia.com>, <linux-pci@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <kthota@nvidia.com>,
-        <mmaddireddy@nvidia.com>, <sagar.tv@gmail.com>
-References: <20190513050626.14991-1-vidyas@nvidia.com>
- <20190513050626.14991-3-vidyas@nvidia.com>
- <20190513072539.GA27708@infradead.org>
- <3a8cea93-2aeb-e5e2-4d56-f0c6449073c3@nvidia.com>
- <20190516133426.GC101793@google.com>
-X-Nvconfidentiality: public
-From:   Vidya Sagar <vidyas@nvidia.com>
-Message-ID: <bd08ccaa-c6ee-f966-91e4-bcd5d99d5cf2@nvidia.com>
-Date:   Fri, 17 May 2019 13:49:49 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+        Fri, 17 May 2019 04:23:05 -0400
+Received: from mout.web.de ([212.227.15.4]:52729 "EHLO mout.web.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726893AbfEQIXF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 May 2019 04:23:05 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
+        s=dbaedf251592; t=1558081357;
+        bh=StEDDRzjWMT45eFGLqTPNOBTlF9uL0xfMqLTjrk7b2g=;
+        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
+        b=NBYiZYb8alUCo6triDbOv85cuGW7eDP2xza1zs6AOoCI97iUxKxnVC+5RDX51Ssgk
+         NQF2IVPMN5sihDMxLccrYkMHUE0LHlJ2Qrjs6Cx+meH5sdiI9KSdVLr/Z6k01eSuro
+         owqNWs+NFEFW0/Yji3uE883zYONxD/KzdwJsfBys=
+X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
+Received: from [192.168.1.3] ([93.131.147.35]) by smtp.web.de (mrweb003
+ [213.165.67.108]) with ESMTPSA (Nemesis) id 0LoYWI-1glLZ11hKU-00gW45; Fri, 17
+ May 2019 10:22:37 +0200
+Subject: Re: Coccinelle: semantic patch for missing of_node_put
+To:     Julia Lawall <julia.lawall@lip6.fr>
+Cc:     cocci@systeme.lip6.fr, linux-kernel@vger.kernel.org,
+        Gilles Muller <Gilles.Muller@lip6.fr>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Nicolas Palix <nicolas.palix@imag.fr>,
+        Wen Yang <wen.yang99@zte.com.cn>
+References: <201905171432571474636@zte.com.cn>
+ <alpine.DEB.2.20.1905170912590.4014@hadrien>
+From:   Markus Elfring <Markus.Elfring@web.de>
+Openpgp: preference=signencrypt
+Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
+ 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 FEE=
+Message-ID: <bb05f122-753a-7117-a00f-455b25621bac@web.de>
+Date:   Fri, 17 May 2019 10:22:34 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <20190516133426.GC101793@google.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL104.nvidia.com (172.18.146.11) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1558081204; bh=7E+nwQQsltOhNZTMZRtiT6upSwPTXBC0GyTnK7lGcQc=;
-        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=PIZR+FdgqtUqHfH3RaSJwY5WHI0FbtL4N5qOhHWlKa2YHOp7bBX7cWzl4ZxjDJHrG
-         b8kDPynQK0jrZZMrDPYUiDGSdFZsxeoBcfH8vVGuNP8JOXbBNEB47xTBrc2CP2LHlH
-         f9bM30qiw4vC1GyoKCGovtTkgpIFS/7+toa5YKkljDcZ3fCpr4qkw5CT2nl07Nkuxh
-         CYX8t/cEBvFWblrcfcpefgF177Ux3urnY9Wj/cMrbHKErCw3noqYqtuVs9AR4O5UVB
-         ki6lW2NtnGaZI/R78Yi+XM+rpqojgnSAkh6j+a+YZfL4jGO6bHnfC97c81qtzqvufC
-         u+mg3bAalPI4w==
+In-Reply-To: <alpine.DEB.2.20.1905170912590.4014@hadrien>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+X-Provags-ID: V03:K1:oUTMqgIq40HKD+DHhaWtQHGaHjAK22g1NFiuagK4UuMePnZ+PGp
+ AZGYWywTed2MP+2izP57yrjh2oUJxz9oQ24N1ECfBJ+lr8PPBnmeshubLANawdD3GPV+O9N
+ NtCsDyaVHA14NNSBQspjYOu49bivjDG1AqoXZs0Y4HYGLxzlT4BPClXiYDK/dfD+oA8yivb
+ ZELUdgNT6vGi5smeEYUCA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:P4e6gqo4AL4=:jyr1gK527HFJ+eyeA5xvWN
+ cyxMioGZfTDp7FbGQybOsnXAxOgq/H/kXgMIVGY1efXX2qtJ9vO1srIaoLLPrVARyHOortjLf
+ VFLHEOMNeejjp9K7DnRzPiGF/Z27uDgY9L9DG2G2HoG4shAtNpg3T3seYYYK7/sge5aJjhtLG
+ Zyl6xCZutodo3d+xUzxF0cI8MlkL5+W821tezbBtvrhuH1FJlsgUKHJCfHn4KH4zxVhEVAJAe
+ YgF+9F2FgGQfKSAiMwUId/SSaMQLDjotbTPnE4Z52iaXuhPS7NN0B+exB413xJ4RFr3jGcsf/
+ 0PTkybMmvJHOIgT2ChJlStuNcW1NCmzs034mBR+eu52JC7oKOBFIUiI79MA5a5/J88OOE3aOB
+ 0L3rB7dtBuT4PA6g85RpzZ8xaHGRMKCtoScYUEcIVCJopON7wO5h14KPwvHd1ETyYo9AiPhgq
+ /2IDgPprCUY6qoJYqAlLoNHsK24hLng7uo0YW5lQmycrIuDe3F49xzbM8o/YwhAcTe/asKJC+
+ ZgRQncHGE8ThVzQ8I3flgEAI+thKwWUBpkqpP5z906bZM6urSxiOrHVGtiwGwn/A8AJC9vFd9
+ idA30yRqP1LG+ZBf8o9lRi23E833rVbB7qwDEJT0T2GkPxDfm4EvDN/PUnUvdYyzqvupTkAPN
+ g82bKcXzbuUAbXjTykAwv4H52hC5HMeZ7tnh9EJ+6UPHhpcClxPTmUU1ITUeUKFHcKXQvlLWo
+ 0qMXfvq46PLwiUZlLQqk7L45aiUgV1cqXSNs43s6m4jWmMOZzzbwB+yTd6NWYBGUbJpPFYoqv
+ 9pj5kDQxh8cKraA5857nAPds2FA8nOho65DUfu0d5d60pGAvf8GK2I9ffhmPhNhxcCKkFNfwT
+ zMppBrkQQuyaKwQL5omcZdCPCocEdEXuOrj4ctnGNGiCpzwm7ez+otZvRULLnaihpwNlkA6zJ
+ d+uPhsz73CctoP38fo24HWvyLHUNHLJnEfvoEPp/RPD+tcqL+xqtN
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/16/2019 7:04 PM, Bjorn Helgaas wrote:
-> On Tue, May 14, 2019 at 09:00:19AM +0530, Vidya Sagar wrote:
->> On 5/13/2019 12:55 PM, Christoph Hellwig wrote:
->>> On Mon, May 13, 2019 at 10:36:13AM +0530, Vidya Sagar wrote:
->>>> Export pcie_pme_disable_msi() & pcie_pme_no_msi() APIs to enable drivers
->>>> using these APIs be able to build as loadable modules.
->>>
->>> But this is a global setting.  If you root port is broken you need
->>> a per-rootport quirk instead.
->>>
->> There is nothing broken in Tegra194 root port as such, rather, this
->> is more of software configuration choice and we are going with
->> legacy interrupts than MSI interrupts (as Tegra194 doesn't support
->> raising PME interrupts through MSI and please note that this doesn't
->> mean root port is broken).
-> 
-> I think the port *is* broken.  PCIe r4.0, sec 6.1.6, says
-> 
->    If the Root Port is enabled for edge-triggered interrupt signaling
->    using MSI or MSI-X, an interrupt message must be sent every time the
->    logical AND of the following conditions transitions from FALSE to
->    TRUE:
-> 
->      * The associated vector is unmasked (not applicable if MSI does
->        not support PVM).
-> 
->      * The PME Interrupt Enable bit in the Root Control register is set
->        to 1b.
-> 
->      * The PME Status bit in the Root Status register is set.
-> 
-> The Tegra194 root port advertises MSI support, so the above should
-> apply.
-I had a discussion with our hardware engineers and we are of the opinion
-that the root port is not really broken w.r.t MSI as spec doesn't clearly
-say that if root port advertises MSI support, it must generate MSI interrupts
-for PME. All that it says is, if MSI is enabled, then MSI should be raised
-for PME events. Here, by 'enable', we understand that as enabling at
-hardware level to generate MSI interrupt which is not the case with Tegra194.
-In Tegra194, root port is enabled to generate MSI only for hot-plug events and
-legacy interrupts are used for PME, AER. Having said that I'm fine to add a
-quick based on Vendor-ID and Device-IDs of root port in Tegra194 to set
-pdev->no_msi to '1'.
+> A semantic patch has no access to comments.
 
-> 
->> Since Tegra194 has only Synopsys DesignWare core based host
->> controllers and not any other hosts, I think it is fine to call this
->> API in driver.
-> 
-> It's fine to add a per-device quirk to set pdev->no_msi or something
-> similar.
-> 
-> Bjorn
-> 
+Thanks for your acknowledgement of the current situation.
 
+
+> The only thing I can see to do is to use python to interact with some external tools.
+
+I see more software development possibilities.
+
+* Advanced data processing for source code comments
+  https://github.com/coccinelle/coccinelle/issues/57
+
+* Add a metavariable for the handling of source code
+  https://github.com/coccinelle/coccinelle/issues/140
+
+
+Regards,
+Markus
