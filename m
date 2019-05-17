@@ -2,102 +2,98 @@ Return-Path: <SRS0=M1fl=TR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E72FCC04AB4
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 08:51:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 146CBC04AB4
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 08:54:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B54FE20868
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 08:51:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558083090;
-	bh=QdEb+VIPp2jJ9ZiyXfNNv/NuB+mmxGT0F6kB25tdnu8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=gZFIPytiOZcfGcCTA4cwUgqhbtPBYUW27MZJbCcubR2ga+C2E2Xl+ykc8NCbrfHWY
-	 sZA8zZUIXYCXH+lrCzoYk/i9oCa17ekaNjXvraRzGQCqSSsqzxftrFnEeRoURLpEiY
-	 zWUtIgU2PFaPXLkZVmjzy2PWzjvkc/MkxgqsS2+E=
+	by mail.kernel.org (Postfix) with ESMTP id E61A520848
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 08:54:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728272AbfEQIv3 (ORCPT
+        id S1728047AbfEQIyz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 May 2019 04:51:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42090 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726685AbfEQIv3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 May 2019 04:51:29 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 277C72082E;
-        Fri, 17 May 2019 08:51:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558083088;
-        bh=QdEb+VIPp2jJ9ZiyXfNNv/NuB+mmxGT0F6kB25tdnu8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=PSkCleR7s4t9185eLljAWjKUkOOS5i5ZC+4hwMjhWOZ+IuVmd6S2/86yPLRj50OxZ
-         fsnysZinfab2t7bIlFUicowCuMqfsU8HkdZFW3/LdFOReKtUwv+6KaugHQuXlCAfx+
-         WVpz/P4g1bgZUe1X4dCVq3H20GeA9EbO/C9xU0Wo=
-Date:   Fri, 17 May 2019 10:51:26 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ivan Babrou <ivan@cloudflare.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        kernel-team <kernel-team@cloudflare.com>
-Subject: Re: Linux 4.19 and GCC 9
-Message-ID: <20190517085126.GA3249@kroah.com>
-References: <CABWYdi06NUOWRLingNuybgZZsTZPjhmsOx-9oCGK94qZGYbzcw@mail.gmail.com>
- <CANiq72kvpiC-i53AXM-YsCUvWroHQemmqxsXjnB330ZEeHahUg@mail.gmail.com>
- <CABWYdi1zhTTaN-GSgH0DnPfz7p=SRw0wts5QVYYVtfvoiS0qnQ@mail.gmail.com>
- <CANiq72=fsL5m2_e+bNovFCHy3=YVf53EKGtGE_sWvsAD=ONHuQ@mail.gmail.com>
- <20190516225013.nvhwqi5tfwtby6qb@treble>
- <CABWYdi29E++jBw8boFZAiDZA7iT5NiJhnNmiHb-Rvd9+97hSVA@mail.gmail.com>
- <20190517050931.GB32367@kroah.com>
- <20190517073813.GB2589@hirez.programming.kicks-ass.net>
- <CANiq72nUPoNHWM-dJuFc3=4D2=8XMuvO0PgGPjviOv+EhrAWUw@mail.gmail.com>
+        Fri, 17 May 2019 04:54:55 -0400
+Received: from mail-vs1-f68.google.com ([209.85.217.68]:42770 "EHLO
+        mail-vs1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726685AbfEQIyz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 May 2019 04:54:55 -0400
+Received: by mail-vs1-f68.google.com with SMTP id z11so4122218vsq.9;
+        Fri, 17 May 2019 01:54:54 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=t0Mq7ikTM4WrfU9v859gJudNUhJRp7mXi1TLYRLRTSM=;
+        b=NzgzIKawRlnj+Qwoqg/FLuLkprPwIoRcOVtqbPsQbVSawbVsDH6nZIsPwaf893dSqY
+         EhOpywCzAFQa1N+fRWsq7QDzj2mzK6QJIjI92Ax9erGQe/RARpoRtz5k4KJ/tGS73jPN
+         2dkoW+kqPTQjeCHOOHrV0zlyW/dGYk2v1C3rLMGEku5LNVeIlghKSPoO2sZ6xeL/Xyb7
+         sjCzyNiswZzvnZXLvpuJJH5SfdFa88ghTYITzDq/v+fW36INf3l4Q9p5cHv5i9+TIxYn
+         4Mg1AdHAKS9Csf4cDOvcViBXndNAf/yvSIpsJGJ4ejdu4Lsw195qhCm9cWg0k+H674AP
+         H75g==
+X-Gm-Message-State: APjAAAXHR3O2Y8Z5/3UMiP2UrcopSRku5aieeyD0k22dpdcwT+dlrvTQ
+        WgGkkTWtIp0/vHpvpSuyRrmezSXcBmvyR/GwwTP9hwUg
+X-Google-Smtp-Source: APXvYqw6KfCwx/5810+PxQUetcDqtlhTRMlqUB9mE4KfpcbJxUoKeel5OToySMAYnXbb6y7lrTVfWrHYJ1fixFM9DjU=
+X-Received: by 2002:a67:7c93:: with SMTP id x141mr18300022vsc.96.1558083293857;
+ Fri, 17 May 2019 01:54:53 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CANiq72nUPoNHWM-dJuFc3=4D2=8XMuvO0PgGPjviOv+EhrAWUw@mail.gmail.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+References: <CAK8P3a2+RHAReOZdo8nEvqDeC1EPj83L2Ug4JuVRiUh943AuNw@mail.gmail.com>
+ <CAHk-=wgiv5ftb+dq7N8cN4n2YX3VkyzeQccywn07Xu9xhOLTSw@mail.gmail.com>
+ <CAK8P3a2EEuxh3uhsqauEC_vROZ7tQHhFwxgiLUnrgtpMdb3kuA@mail.gmail.com> <CAHk-=wiH=vGjsW9MdWFGsgto2W+71sA4XJ7CSubpXkbpC_bGKA@mail.gmail.com>
+In-Reply-To: <CAHk-=wiH=vGjsW9MdWFGsgto2W+71sA4XJ7CSubpXkbpC_bGKA@mail.gmail.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Fri, 17 May 2019 10:54:42 +0200
+Message-ID: <CAMuHMdU0N9j2TRtJwJx5uxE2ScFnB-MRrd9hzaXJmwTuY4Ldzw@mail.gmail.com>
+Subject: Re: [GIT PULL] asm-generic: kill <asm/segment.h> and improve nommu
+ generic uaccess helpers
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Arnd Bergmann <arnd@arndb.de>, Christoph Hellwig <hch@lst.de>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        linux-riscv@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 17, 2019 at 10:35:29AM +0200, Miguel Ojeda wrote:
-> On Fri, May 17, 2019 at 9:38 AM Peter Zijlstra <peterz@infradead.org> wrote:
-> >
-> > On Fri, May 17, 2019 at 07:09:31AM +0200, Greg KH wrote:
-> > > On Thu, May 16, 2019 at 08:14:25PM -0700, Ivan Babrou wrote:
-> > > > We are building the upstream kernel. There are a few patches, but
-> > > > nothing related to objtool.
-> > > >
-> > > > Unless you mean mainline/stable by upstream, I haven't tried that. We
-> > > > stick to LTS.
-> > >
-> > > Please work and all of these issues fixed up in Linus's tree and then I
-> > > will be glad to take the fixed into the stable releases.
-> >
-> > Right; if there is anything you can reproduce on linus.git I'll happily
-> > have a look. If it doesn't reproduce all you have to do is find the
-> > patches that make it work and ask Greg.
-> 
-> Just to clarify: Linus' master is clean of these issues with GCC 9.1.1.
+Hi Linus,
 
-Great!  Care to find the patches that did that work and send me the git
-commit ids so that I can queue them up?  I don't have gcc9 here yet on
-my systems, so I can not test for this.
+On Fri, May 17, 2019 at 12:06 AM Linus Torvalds
+<torvalds@linux-foundation.org> wrote:
+> On Thu, May 16, 2019 at 1:34 PM Arnd Bergmann <arnd@arndb.de> wrote:
+> > I have reconfigured it locally now and pushed an identical tag with a
+> > new signature. Can you see if that gives you the same warning if you
+> > try to pull that?
+>
+> No, same issue:
+>
+>    [torvalds@i7 linux]$ git fetch
+> git://git.kernel.org/pub/scm/linux/kernel/git/arnd/asm-generic
+> tags/asm-generic-nommu
+>    From ssh://gitolite.kernel.org/pub/scm/linux/kernel/git/arnd/asm-generic
+>     * tag                         asm-generic-nommu -> FETCH_HEAD
+>    [torvalds@i7 linux]$ git verify-tag FETCH_HEAD
+>    gpg: Signature made Thu 16 May 2019 01:28:54 PM PDT
+>    gpg:                using RSA key 60AB47FFC9095227
+>    gpg: bad data signature from key 60AB47FFC9095227: Wrong key usage
+> (0x00, 0x4)
+>    gpg: Can't check signature: Wrong key usage
 
-thanks,
+Works fine here.
 
-greg k-h
+Oh, I do have the recommended cronjob:
+https://www.kernel.org/doc/html/latest/process/maintainer-pgp-guide.html#set-up-a-refresh-cronjob
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
