@@ -2,177 +2,110 @@ Return-Path: <SRS0=//ty=TS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21C2FC04AAF
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 May 2019 10:07:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4478C04AAF
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 May 2019 10:17:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E2B8320B7C
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 May 2019 10:07:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558174078;
-	bh=sUB5hovs/rIf/1+OYH5HuM1pm0D1fXyH9bo/DU9kax4=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=eKDBy9XLYZic8VU2/oNpIp6tm2KVJYeBsBsRrdB7O2Rc0in5xvgDFn93ddU3AZupz
-	 J28n7lL+aC74CHay5RT04pxyKZb3yNrAV2uABv2MJ32gXzQKfbyrFjFltycAUep+1W
-	 UiKejgUtKIM6dpnebqNQD5bFslotG6ZiLpEqEUfE=
+	by mail.kernel.org (Postfix) with ESMTP id A20D220882
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 May 2019 10:17:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jqMAAxVv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729000AbfERKH4 (ORCPT
+        id S1729195AbfERKRZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 May 2019 06:07:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34876 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726050AbfERKH4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 May 2019 06:07:56 -0400
-Received: from archlinux (cpc91196-cmbg18-2-0-cust659.5-4.cable.virginm.net [81.96.234.148])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A642420882;
-        Sat, 18 May 2019 10:07:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558174074;
-        bh=sUB5hovs/rIf/1+OYH5HuM1pm0D1fXyH9bo/DU9kax4=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=SuqC8lJYndA+qDxIEQ3UiU5TI/vXjU4XgPEfDmaA2NcL+3dWoPt/KkRVJfJCfFhPn
-         LHvvS7X59ccHhiLMSJeWH1kQVNQ3kcG+IY65WuytW+H5XOIyd7PBwrCqc8oIMI8mC6
-         1QIGK1lhcfel4EcuqCkJui64jtNlGt7JwzJVn+5M=
-Date:   Sat, 18 May 2019 11:07:49 +0100
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Beniamin Bia <beniamin.bia@analog.com>
-Cc:     <lars@metafoo.de>, <Michael.Hennerich@analog.com>,
-        <knaack.h@gmx.de>, <pmeerw@pmeerw.net>,
-        <gregkh@linuxfoundation.org>, <linux-iio@vger.kernel.org>,
-        <devel@driverdev.osuosl.org>, <linux-kernel@vger.kernel.org>,
-        <mark.rutland@arm.com>, <robh+dt@kernel.org>,
-        <devicetree@vger.kernel.org>, <biabeniamin@outlook.com>
-Subject: Re: [PATCH 2/5] iio: adc: ad7606: Add software configuration
-Message-ID: <20190518110749.080c7a04@archlinux>
-In-Reply-To: <20190516143208.19294-2-beniamin.bia@analog.com>
-References: <20190516143208.19294-1-beniamin.bia@analog.com>
-        <20190516143208.19294-2-beniamin.bia@analog.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+        Sat, 18 May 2019 06:17:25 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:44120 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728520AbfERKRZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 18 May 2019 06:17:25 -0400
+Received: by mail-pg1-f196.google.com with SMTP id z16so4467449pgv.11;
+        Sat, 18 May 2019 03:17:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=uDC/BsmQRtlfHZE6W82svAARTtrMl8uipvRjlKfZYe0=;
+        b=jqMAAxVvQLoa/iVodlF6BKQjTM50dqttnz1gCJ80+4xf6TatP3V4+9+YPkAzYrRmxb
+         xPhNDKjHSc48GkcY5nfmH0xjFCNvuini0wJ/vetIVSGXbgMJWcy51lX1KnOkvV4Ti5E7
+         lSXx39FVpYuSA3V4FGbFiflMgGTsrR2mEjnefPuXe6IGL3sPNcx7nYGBEHOHZVFGRY40
+         JHE0q36J5pPuUp6m2wHFxcdaDrDRrZEp98ajT7njN0Es66Rz1n9gJftEsfCJ0tjVaNq4
+         34cZis/DuOzOJ2T8t186ksT1HL0a037yCE3Z8TqBAxETKR3ET+VWidZ7R8B/sMvFepSY
+         WyRw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=uDC/BsmQRtlfHZE6W82svAARTtrMl8uipvRjlKfZYe0=;
+        b=YpsMoHG9ndzOnNOtXR3gIF0Xw83sbgZhEOP8iVI9BisEnHywXnqTdsvI0a/0p8U5Rf
+         NOrDY+yha52p4uxAXswrh20/RWv5uHlXCoKIwnZtodA8n2t98QMrUuCPQLevPbQqm9rh
+         /dt+XLfbEaI3kGGq8vytGRY74WlUJXY78oFmv5ErNv7tDDSEC65VL3BG7XlFsOjkb9JB
+         LX3bnVX7qlqJLmGqxWsc9OVzTA2py4iHvlz9xDIkeUH4gbcQ8UwxOV+9pD30OmM6m++3
+         c9PS4e+nebDbTsx27ELFa/yG1usXpbT5c+fTO7WwVfkvHrG0BHIFoI2RKr6V8ZYuuXgo
+         /iIQ==
+X-Gm-Message-State: APjAAAUPyyepC0J/b8zrMBMA1tA8sxnuFen3o1bBRFnXoZ8ORFlcinRF
+        gafiHqmdIftSWJmucsfDCv4=
+X-Google-Smtp-Source: APXvYqyaKiMIlnNNyEKoqJPkqF8SgkjJDjXeymXjTiwGLNXPpPC1W/Rl4Gg1vy7rWTYjoYwLcYwSrg==
+X-Received: by 2002:a63:d345:: with SMTP id u5mr58810026pgi.83.1558174644590;
+        Sat, 18 May 2019 03:17:24 -0700 (PDT)
+Received: from localhost ([43.224.245.181])
+        by smtp.gmail.com with ESMTPSA id d15sm36399381pfm.186.2019.05.18.03.17.23
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sat, 18 May 2019 03:17:23 -0700 (PDT)
+From:   Weitao Hou <houweitaoo@gmail.com>
+To:     mcgrof@kernel.org, keescook@chromium.org
+Cc:     linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        Weitao Hou <houweitaoo@gmail.com>
+Subject: [PATCH] kernel: fix typos and some coding style in comments
+Date:   Sat, 18 May 2019 18:16:28 +0800
+Message-Id: <20190518101628.14633-1-houweitaoo@gmail.com>
+X-Mailer: git-send-email 2.18.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 16 May 2019 17:32:05 +0300
-Beniamin Bia <beniamin.bia@analog.com> wrote:
+fix lenght to length
 
-> Because this driver will support multiple configurations for software,
-> the software configuration was made generic.
->=20
-> Signed-off-by: Beniamin Bia <beniamin.bia@analog.com>
-Applied to the togreg branch of iio.git and pushed out as testing for
-the autobuilders to play with it.
+Signed-off-by: Weitao Hou <houweitaoo@gmail.com>
+---
+ kernel/sysctl.c | 18 +++++++++---------
+ 1 file changed, 9 insertions(+), 9 deletions(-)
 
-Thanks
-
-Jonathan
-
-> ---
->  drivers/iio/adc/ad7606.c | 40 +++++++++++++++++++++++++++++++++++++---
->  drivers/iio/adc/ad7606.h |  2 ++
->  2 files changed, 39 insertions(+), 3 deletions(-)
->=20
-> diff --git a/drivers/iio/adc/ad7606.c b/drivers/iio/adc/ad7606.c
-> index c66ff22f32d2..aba0fd123a51 100644
-> --- a/drivers/iio/adc/ad7606.c
-> +++ b/drivers/iio/adc/ad7606.c
-> @@ -140,7 +140,7 @@ static int ad7606_read_raw(struct iio_dev *indio_dev,
->  			   int *val2,
->  			   long m)
->  {
-> -	int ret;
-> +	int ret, ch =3D 0;
->  	struct ad7606_state *st =3D iio_priv(indio_dev);
-> =20
->  	switch (m) {
-> @@ -157,8 +157,10 @@ static int ad7606_read_raw(struct iio_dev *indio_dev,
->  		*val =3D (short)ret;
->  		return IIO_VAL_INT;
->  	case IIO_CHAN_INFO_SCALE:
-> +		if (st->sw_mode_en)
-> +			ch =3D chan->address;
->  		*val =3D 0;
-> -		*val2 =3D st->scale_avail[st->range[0]];
-> +		*val2 =3D st->scale_avail[st->range[ch]];
->  		return IIO_VAL_INT_PLUS_MICRO;
->  	case IIO_CHAN_INFO_OVERSAMPLING_RATIO:
->  		*val =3D st->oversampling;
-> @@ -233,7 +235,9 @@ static int ad7606_write_raw(struct iio_dev *indio_dev,
->  	case IIO_CHAN_INFO_SCALE:
->  		mutex_lock(&st->lock);
->  		i =3D find_closest(val2, st->scale_avail, st->num_scales);
-> -		ret =3D st->write_scale(indio_dev, chan->address, i);
-> +		if (st->sw_mode_en)
-> +			ch =3D chan->address;
-> +		ret =3D st->write_scale(indio_dev, ch, i);
->  		if (ret < 0) {
->  			mutex_unlock(&st->lock);
->  			return ret;
-> @@ -616,6 +620,36 @@ int ad7606_probe(struct device *dev, int irq, void _=
-_iomem *base_address,
->  	st->write_scale =3D ad7606_write_scale_hw;
->  	st->write_os =3D ad7606_write_os_hw;
-> =20
-> +	if (st->chip_info->sw_mode_config)
-> +		st->sw_mode_en =3D device_property_present(st->dev,
-> +							 "adi,sw-mode");
-> +
-> +	if (st->sw_mode_en) {
-> +		/* After reset, in software mode, =C2=B110 V is set by default */
-> +		memset32(st->range, 2, ARRAY_SIZE(st->range));
-> +		indio_dev->info =3D &ad7606_info_os_and_range;
-> +
-> +		/*
-> +		 * In software mode, the range gpio has no longer its function.
-> +		 * Instead, the scale can be configured individually for each
-> +		 * channel from the range registers.
-> +		 */
-> +		if (st->chip_info->write_scale_sw)
-> +			st->write_scale =3D st->chip_info->write_scale_sw;
-> +
-> +		/*
-> +		 * In software mode, the oversampling is no longer configured
-> +		 * with GPIO pins. Instead, the oversampling can be configured
-> +		 * in configuratiion register.
-> +		 */
-> +		if (st->chip_info->write_os_sw)
-> +			st->write_os =3D st->chip_info->write_os_sw;
-> +
-> +		ret =3D st->chip_info->sw_mode_config(indio_dev);
-> +		if (ret < 0)
-> +			return ret;
-> +	}
-> +
->  	st->trig =3D devm_iio_trigger_alloc(dev, "%s-dev%d",
->  					  indio_dev->name, indio_dev->id);
->  	if (!st->trig)
-> diff --git a/drivers/iio/adc/ad7606.h b/drivers/iio/adc/ad7606.h
-> index 143c30163df9..d8a509c2c428 100644
-> --- a/drivers/iio/adc/ad7606.h
-> +++ b/drivers/iio/adc/ad7606.h
-> @@ -43,6 +43,7 @@ struct ad7606_chip_info {
->   * @range		voltage range selection, selects which scale to apply
->   * @oversampling	oversampling selection
->   * @base_address	address from where to read data in parallel operation
-> + * @sw_mode_en		software mode enabled
->   * @scale_avail		pointer to the array which stores the available scales
->   * @num_scales		number of elements stored in the scale_avail array
->   * @oversampling_avail	pointer to the array which stores the available
-> @@ -71,6 +72,7 @@ struct ad7606_state {
->  	unsigned int			range[16];
->  	unsigned int			oversampling;
->  	void __iomem			*base_address;
-> +	bool				sw_mode_en;
->  	const unsigned int		*scale_avail;
->  	unsigned int			num_scales;
->  	const unsigned int		*oversampling_avail;
+diff --git a/kernel/sysctl.c b/kernel/sysctl.c
+index 943c89178e3d..0736a1d580df 100644
+--- a/kernel/sysctl.c
++++ b/kernel/sysctl.c
+@@ -187,17 +187,17 @@ extern int no_unaligned_warning;
+  * enum sysctl_writes_mode - supported sysctl write modes
+  *
+  * @SYSCTL_WRITES_LEGACY: each write syscall must fully contain the sysctl value
+- * 	to be written, and multiple writes on the same sysctl file descriptor
+- * 	will rewrite the sysctl value, regardless of file position. No warning
+- * 	is issued when the initial position is not 0.
++ * to be written, and multiple writes on the same sysctl file descriptor
++ * will rewrite the sysctl value, regardless of file position. No warning
++ * is issued when the initial position is not 0.
+  * @SYSCTL_WRITES_WARN: same as above but warn when the initial file position is
+- * 	not 0.
++ * not 0.
+  * @SYSCTL_WRITES_STRICT: writes to numeric sysctl entries must always be at
+- * 	file position 0 and the value must be fully contained in the buffer
+- * 	sent to the write syscall. If dealing with strings respect the file
+- * 	position, but restrict this to the max length of the buffer, anything
+- * 	passed the max lenght will be ignored. Multiple writes will append
+- * 	to the buffer.
++ * file position 0 and the value must be fully contained in the buffer
++ * sent to the write syscall. If dealing with strings respect the file
++ * position, but restrict this to the max length of the buffer, anything
++ * passed the max length will be ignored. Multiple writes will append
++ * to the buffer.
+  *
+  * These write modes control how current file position affects the behavior of
+  * updating sysctl values through the proc interface on each write.
+-- 
+2.18.0
 
