@@ -2,139 +2,260 @@ Return-Path: <SRS0=//ty=TS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D295C04AAF
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 May 2019 10:00:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF6ECC072A4
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 May 2019 10:04:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E8DC92087B
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 May 2019 10:00:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ZIdkarl5"
+	by mail.kernel.org (Postfix) with ESMTP id 9663420C01
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 May 2019 10:04:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1558173897;
+	bh=odXYwDDyB3lCgvI4EWIi8jTnqkXx3ZVF3y80Ahw8hLc=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=WjFeYa3RqY3S3rsbaibyHp7IiufVx0L5Mvt0vCUwhPhTWV5ft1P8pSwvKHObUb57f
+	 Rk0navOB3u/SdHaOQmltJs5nGgWcrAvkOkl19uw3ssqINAhwWN4pTBnjtegyN/Gj0C
+	 5JG/1s5I2AHon+fqnYl4wQhK3W6+bU5eXlj7KG5Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729367AbfERKAu (ORCPT
+        id S1729583AbfERKE4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 May 2019 06:00:50 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:36603 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725468AbfERKAt (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 May 2019 06:00:49 -0400
-Received: by mail-io1-f66.google.com with SMTP id e19so7442816iob.3
-        for <linux-kernel@vger.kernel.org>; Sat, 18 May 2019 03:00:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=JRtjnzNcf3yhB2MxCBJqAnArNNc7Fr+SZA5dBOrEV90=;
-        b=ZIdkarl5Xn8hlQtMF0N5Ak3sHU9OmA6a3MbeviitO/YD7kxl6R0PDXc2zuCNPeSBm2
-         KzoxF+mJkTlpMJqXnaXkrkEanhwuClbA6nLEgFSfZ/HgmFuiWSlzu77QaxVBPVENosSo
-         5jjIqGxv7SlDz5gJ9n60bexQKxCZA9vABP0f5NY8QixxJdMeJ2abD1kbD/aaRFlIUpIV
-         h1DPQMeR4Oywgi1tRclsA/eLxYlIAgRg2X+mv/shkCPzBRDObVSyfEdOojCkdxNCjzHE
-         wCH6WZINfdmiyv0ZW3Ko8UV+PXK0BBomoi61/58Joj46jsB8Nj8EnreSAV40IVfsciWW
-         7KSg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=JRtjnzNcf3yhB2MxCBJqAnArNNc7Fr+SZA5dBOrEV90=;
-        b=OQYxPPuNZXy5rnT9Ux3hGq5SogLx8Wm8eN96iJJoopQlzzC5USVxuTK2Oode/RcDXL
-         +5IF8XkV66wsamTTI/jfQm6iM7PKChiwgP8rkZVw9YbPkyA7qaSIU5IYq4yft7iM0mli
-         zwUDsIJkigHHH4lf723Oayy7IffBz63XgUQdiaFn3fAM4A4eRgfmzBwS+lr7GcFOa4YZ
-         k5Pc4a666zHSko0Vq9lf5nikUAtpTbkS0O9Sw6J+m7dxDyvgYIij3xqIUTO0A9weTyjU
-         WIC6V9xj3zTUf8owrPucKX/qEggSzcxiHqY1VtQp89b1otZwXwr0lx2/ygJetjzEugCU
-         x0KA==
-X-Gm-Message-State: APjAAAXuX+CylkRWfnZASsoXxNu6ME0h99gf8QLWIDV7MvMoju2UJ1Cq
-        FQ6mSf1eoFh/xpH7yFgsmId/HhO5EtlUg/1M6sC9AA==
-X-Google-Smtp-Source: APXvYqx4bvatpfL3NIuIe/lAYXvJa6LopMNSIHJiCMAb1SC4s1Ha0Ad/9vYk/fc50prgdpkalcj4sHsk3kWAy1dnzH0=
-X-Received: by 2002:a5d:968e:: with SMTP id m14mr2874037ion.49.1558173648766;
- Sat, 18 May 2019 03:00:48 -0700 (PDT)
+        Sat, 18 May 2019 06:04:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33824 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725468AbfERKE4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 18 May 2019 06:04:56 -0400
+Received: from archlinux (cpc91196-cmbg18-2-0-cust659.5-4.cable.virginm.net [81.96.234.148])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D4C9E2087B;
+        Sat, 18 May 2019 10:04:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1558173895;
+        bh=odXYwDDyB3lCgvI4EWIi8jTnqkXx3ZVF3y80Ahw8hLc=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=ToZEda4NMHHs3vRJAWFjpI3SkW4mnMTDbPJcJvIw4vl2nWaBnPMYyjJ8ICjpQ7YND
+         Y1j4Of32sHIB2skINjI+oWO6M9Hx3q35YR6GLdkwSHy4ltD1q6ZJ5XKnnTjwbWMOwX
+         39w9PCR10ihxIrL/Kj6kvHvnIWH76I8HThjhEhZo=
+Date:   Sat, 18 May 2019 11:04:49 +0100
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Beniamin Bia <beniamin.bia@analog.com>
+Cc:     <lars@metafoo.de>, <Michael.Hennerich@analog.com>,
+        <knaack.h@gmx.de>, <pmeerw@pmeerw.net>,
+        <gregkh@linuxfoundation.org>, <linux-iio@vger.kernel.org>,
+        <devel@driverdev.osuosl.org>, <linux-kernel@vger.kernel.org>,
+        <mark.rutland@arm.com>, <robh+dt@kernel.org>,
+        <devicetree@vger.kernel.org>, <biabeniamin@outlook.com>
+Subject: Re: [PATCH 1/5] iio: adc: ad7606: Move oversampling and scale
+ options to chip info
+Message-ID: <20190518110449.27b18ea7@archlinux>
+In-Reply-To: <20190516143208.19294-1-beniamin.bia@analog.com>
+References: <20190516143208.19294-1-beniamin.bia@analog.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-References: <20190429145159.GA29076@hc> <CAHk-=wjPqcPYkiWKFc=R3+18DXqEhV+Nfbo=JWa32Xp8Nze67g@mail.gmail.com>
- <20190502082741.GE13955@hc> <CAHk-=wjmtMrxC1nSEHarBn8bW+hNXGv=2YeAWmTw1o54V8GKWA@mail.gmail.com>
- <20190502231858.GB13168@dc5-eodlnx05.marvell.com> <CAHk-=wiEahkwDXpoy=-SzJHNMRXKVSjPa870+eKKenufhO_Hgw@mail.gmail.com>
- <20190506061100.GA8465@dc5-eodlnx05.marvell.com> <20190506181039.GA2875@brain-police>
- <20190518042424.GA28517@dc5-eodlnx05.marvell.com>
-In-Reply-To: <20190518042424.GA28517@dc5-eodlnx05.marvell.com>
-From:   Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Date:   Sat, 18 May 2019 12:00:34 +0200
-Message-ID: <CAKv+Gu9U9z3iAuz4V1c5zTHuz1As8FSNGY-TJon4OLErB8ts8Q@mail.gmail.com>
-Subject: Re: [RFC] Disable lockref on arm64
-To:     Jayachandran Chandrasekharan Nair <jnair@marvell.com>
-Cc:     Will Deacon <will.deacon@arm.com>,
-        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
-        Jan Glauber <jglauber@marvell.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 18 May 2019 at 06:25, Jayachandran Chandrasekharan Nair
-<jnair@marvell.com> wrote:
->
-> On Mon, May 06, 2019 at 07:10:40PM +0100, Will Deacon wrote:
-> > On Mon, May 06, 2019 at 06:13:12AM +0000, Jayachandran Chandrasekharan Nair wrote:
-> > > Perhaps someone from ARM can chime in here how the cas/yield combo
-> > > is expected to work when there is contention. ThunderX2 does not
-> > > do much with the yield, but I don't expect any ARM implementation
-> > > to treat YIELD as a hint not to yield, but to get/keep exclusive
-> > > access to the last failed CAS location.
-> >
-> > Just picking up on this as "someone from ARM".
-> >
-> > The yield instruction in our implementation of cpu_relax() is *only* there
-> > as a scheduling hint to QEMU so that it can treat it as an internal
-> > scheduling hint and run some other thread; see 1baa82f48030 ("arm64:
-> > Implement cpu_relax as yield"). We can't use WFE or WFI blindly here, as it
-> > could be a long time before we see a wake-up event such as an interrupt. Our
-> > implementation of smp_cond_load_acquire() is much better for that kind of
-> > thing, but doesn't help at all for a contended CAS loop where the variable
-> > is actually changing constantly.
->
-> Looking thru the perf output of this case (open/close of a file from
-> multiple CPUs), I see that refcount is a significant factor in most
-> kernel configurations - and that too uses cmpxchg (without yield).
-> x86 has an optimized inline version of refcount that helps
-> significantly. Do you think this is worth looking at for arm64?
->
+On Thu, 16 May 2019 17:32:04 +0300
+Beniamin Bia <beniamin.bia@analog.com> wrote:
 
-I looked into this a while ago [0], but at the time, we decided to
-stick with the generic implementation until we encountered a use case
-that benefits from it. Worth a try, I suppose ...
+> The device dependent options which are going to be different for devices
+> which will be supported  in the future by this driver,
+> were moved in chip info for a more generic driver. This patch allows
+> supporting more devices by the driver. Also, it is an intermediate
+> step of adding support for ad7616 in software mode.
+> 
+> Signed-off-by: Beniamin Bia <beniamin.bia@analog.com>
+Looks good to me.
 
-[0] https://lore.kernel.org/linux-arm-kernel/20170903101622.12093-1-ard.biesheuvel@linaro.org/
+Applied to the togreg branch of iio.git and pushed out as testing for
+the autobuilders to play with it.
 
-> > Implementing yield in the CPU may generally be beneficial for SMT designs so
-> > that the hardware resources aren't wasted when spinning round a busy loop.
->
-> Yield is probably used in sub-optimal implementations of delay or wait.
-> It is going to be different across multiple implementations and
-> revisions (given the description in ARM spec). Having a more yielding(?)
-> implementation would be equally problematic especially in the lockref
-> case.
->
-> > For this particular discussion (i.e. lockref), however, it seems as though
-> > the cpu_relax() call is questionable to start with.
->
-> In case of lockref, taking out the yield/pause and dropping to queued
-> spinlock after some cycles appears to me to be a better approach.
-> Relying on the quality of cpu_relax() on the specific processor to
-> mitigate against contention is going to be tricky anyway.
->
-> We will do some more work here, but would appreciate any pointers
-> based on your experience here.
->
-> Thanks,
-> JC
->
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+Thanks,
+
+Jonathan
+
+> ---
+>  drivers/iio/adc/ad7606.c | 61 +++++++++++++++++++++++++++++-----------
+>  drivers/iio/adc/ad7606.h | 15 +++++++++-
+>  2 files changed, 58 insertions(+), 18 deletions(-)
+> 
+> diff --git a/drivers/iio/adc/ad7606.c b/drivers/iio/adc/ad7606.c
+> index 24c70c3cefb4..c66ff22f32d2 100644
+> --- a/drivers/iio/adc/ad7606.c
+> +++ b/drivers/iio/adc/ad7606.c
+> @@ -158,7 +158,7 @@ static int ad7606_read_raw(struct iio_dev *indio_dev,
+>  		return IIO_VAL_INT;
+>  	case IIO_CHAN_INFO_SCALE:
+>  		*val = 0;
+> -		*val2 = st->scale_avail[st->range];
+> +		*val2 = st->scale_avail[st->range[0]];
+>  		return IIO_VAL_INT_PLUS_MICRO;
+>  	case IIO_CHAN_INFO_OVERSAMPLING_RATIO:
+>  		*val = st->oversampling;
+> @@ -194,6 +194,32 @@ static ssize_t in_voltage_scale_available_show(struct device *dev,
+>  
+>  static IIO_DEVICE_ATTR_RO(in_voltage_scale_available, 0);
+>  
+> +static int ad7606_write_scale_hw(struct iio_dev *indio_dev, int ch, int val)
+> +{
+> +	struct ad7606_state *st = iio_priv(indio_dev);
+> +
+> +	gpiod_set_value(st->gpio_range, val);
+> +
+> +	return 0;
+> +}
+> +
+> +static int ad7606_write_os_hw(struct iio_dev *indio_dev, int val)
+> +{
+> +	struct ad7606_state *st = iio_priv(indio_dev);
+> +	DECLARE_BITMAP(values, 3);
+> +
+> +	values[0] = val;
+> +
+> +	gpiod_set_array_value(ARRAY_SIZE(values), st->gpio_os->desc,
+> +			      st->gpio_os->info, values);
+> +
+> +	/* AD7616 requires a reset to update value */
+> +	if (st->chip_info->os_req_reset)
+> +		ad7606_reset(st);
+> +
+> +	return 0;
+> +}
+> +
+>  static int ad7606_write_raw(struct iio_dev *indio_dev,
+>  			    struct iio_chan_spec const *chan,
+>  			    int val,
+> @@ -201,15 +227,18 @@ static int ad7606_write_raw(struct iio_dev *indio_dev,
+>  			    long mask)
+>  {
+>  	struct ad7606_state *st = iio_priv(indio_dev);
+> -	DECLARE_BITMAP(values, 3);
+> -	int i;
+> +	int i, ret, ch = 0;
+>  
+>  	switch (mask) {
+>  	case IIO_CHAN_INFO_SCALE:
+>  		mutex_lock(&st->lock);
+>  		i = find_closest(val2, st->scale_avail, st->num_scales);
+> -		gpiod_set_value(st->gpio_range, i);
+> -		st->range = i;
+> +		ret = st->write_scale(indio_dev, chan->address, i);
+> +		if (ret < 0) {
+> +			mutex_unlock(&st->lock);
+> +			return ret;
+> +		}
+> +		st->range[ch] = i;
+>  		mutex_unlock(&st->lock);
+>  
+>  		return 0;
+> @@ -218,17 +247,12 @@ static int ad7606_write_raw(struct iio_dev *indio_dev,
+>  			return -EINVAL;
+>  		i = find_closest(val, st->oversampling_avail,
+>  				 st->num_os_ratios);
+> -
+> -		values[0] = i;
+> -
+>  		mutex_lock(&st->lock);
+> -		gpiod_set_array_value(ARRAY_SIZE(values), st->gpio_os->desc,
+> -				      st->gpio_os->info, values);
+> -
+> -		/* AD7616 requires a reset to update value */
+> -		if (st->chip_info->os_req_reset)
+> -			ad7606_reset(st);
+> -
+> +		ret = st->write_os(indio_dev, i);
+> +		if (ret < 0) {
+> +			mutex_unlock(&st->lock);
+> +			return ret;
+> +		}
+>  		st->oversampling = st->oversampling_avail[i];
+>  		mutex_unlock(&st->lock);
+>  
+> @@ -536,7 +560,7 @@ int ad7606_probe(struct device *dev, int irq, void __iomem *base_address,
+>  	st->bops = bops;
+>  	st->base_address = base_address;
+>  	/* tied to logic low, analog input range is +/- 5V */
+> -	st->range = 0;
+> +	st->range[0] = 0;
+>  	st->oversampling = 1;
+>  	st->scale_avail = ad7606_scale_avail;
+>  	st->num_scales = ARRAY_SIZE(ad7606_scale_avail);
+> @@ -589,6 +613,9 @@ int ad7606_probe(struct device *dev, int irq, void __iomem *base_address,
+>  	if (ret)
+>  		dev_warn(st->dev, "failed to RESET: no RESET GPIO specified\n");
+>  
+> +	st->write_scale = ad7606_write_scale_hw;
+> +	st->write_os = ad7606_write_os_hw;
+> +
+>  	st->trig = devm_iio_trigger_alloc(dev, "%s-dev%d",
+>  					  indio_dev->name, indio_dev->id);
+>  	if (!st->trig)
+> @@ -643,7 +670,7 @@ static int ad7606_resume(struct device *dev)
+>  	struct ad7606_state *st = iio_priv(indio_dev);
+>  
+>  	if (st->gpio_standby) {
+> -		gpiod_set_value(st->gpio_range, st->range);
+> +		gpiod_set_value(st->gpio_range, st->range[0]);
+>  		gpiod_set_value(st->gpio_standby, 1);
+>  		ad7606_reset(st);
+>  	}
+> diff --git a/drivers/iio/adc/ad7606.h b/drivers/iio/adc/ad7606.h
+> index f9ef52131e74..143c30163df9 100644
+> --- a/drivers/iio/adc/ad7606.h
+> +++ b/drivers/iio/adc/ad7606.h
+> @@ -16,6 +16,12 @@
+>   *			oversampling ratios.
+>   * @oversampling_num	number of elements stored in oversampling_avail array
+>   * @os_req_reset	some devices require a reset to update oversampling
+> + * @write_scale_sw	pointer to the function which writes the scale via spi
+> +			in software mode
+> + * @write_os_sw		pointer to the function which writes the os via spi
+> +			in software mode
+> + * @sw_mode_config:	pointer to a function which configured the device
+> + *			for software mode
+>   */
+>  struct ad7606_chip_info {
+>  	const struct iio_chan_spec	*channels;
+> @@ -23,6 +29,9 @@ struct ad7606_chip_info {
+>  	const unsigned int		*oversampling_avail;
+>  	unsigned int			oversampling_num;
+>  	bool				os_req_reset;
+> +	int (*write_scale_sw)(struct iio_dev *indio_dev, int ch, int val);
+> +	int (*write_os_sw)(struct iio_dev *indio_dev, int val);
+> +	int (*sw_mode_config)(struct iio_dev *indio_dev);
+>  };
+>  
+>  /**
+> @@ -39,6 +48,8 @@ struct ad7606_chip_info {
+>   * @oversampling_avail	pointer to the array which stores the available
+>   *			oversampling ratios.
+>   * @num_os_ratios	number of elements stored in oversampling_avail array
+> + * @write_scale		pointer to the function which writes the scale
+> + * @write_os		pointer to the function which writes the os
+>   * @lock		protect sensor state from concurrent accesses to GPIOs
+>   * @gpio_convst	GPIO descriptor for conversion start signal (CONVST)
+>   * @gpio_reset		GPIO descriptor for device hard-reset
+> @@ -57,13 +68,15 @@ struct ad7606_state {
+>  	const struct ad7606_chip_info	*chip_info;
+>  	struct regulator		*reg;
+>  	const struct ad7606_bus_ops	*bops;
+> -	unsigned int			range;
+> +	unsigned int			range[16];
+>  	unsigned int			oversampling;
+>  	void __iomem			*base_address;
+>  	const unsigned int		*scale_avail;
+>  	unsigned int			num_scales;
+>  	const unsigned int		*oversampling_avail;
+>  	unsigned int			num_os_ratios;
+> +	int (*write_scale)(struct iio_dev *indio_dev, int ch, int val);
+> +	int (*write_os)(struct iio_dev *indio_dev, int val);
+>  
+>  	struct mutex			lock; /* protect sensor state */
+>  	struct gpio_desc		*gpio_convst;
+
