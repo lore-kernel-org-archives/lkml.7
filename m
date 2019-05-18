@@ -7,115 +7,97 @@ X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 118C2C04AAF
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 May 2019 06:38:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2386DC072A4
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 May 2019 06:39:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D73A62166E
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 May 2019 06:38:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EE895216C4
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 May 2019 06:39:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ySHFdMXr"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="dZe0LlJt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727450AbfERGil (ORCPT
+        id S1727962AbfERGjx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 May 2019 02:38:41 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:56120 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725906AbfERGij (ORCPT
+        Sat, 18 May 2019 02:39:53 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:54127 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725268AbfERGjx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 May 2019 02:38:39 -0400
-Received: by mail-wm1-f66.google.com with SMTP id x64so8720090wmb.5
-        for <linux-kernel@vger.kernel.org>; Fri, 17 May 2019 23:38:38 -0700 (PDT)
+        Sat, 18 May 2019 02:39:53 -0400
+Received: by mail-wm1-f68.google.com with SMTP id 198so8724441wme.3
+        for <linux-kernel@vger.kernel.org>; Fri, 17 May 2019 23:39:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=date:from:to:subject:message-id:references:mime-version
+        h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:content-transfer-encoding:in-reply-to
          :user-agent;
-        bh=UjvV69Pw38TY+UWCm958W3BhSAELE7Lrbyek85Eb+1Q=;
-        b=ySHFdMXrg33fBSHehaQMTmzJVaqwtm+OJZocGViEljI8nlSfI28hu0S4MMER2QcMZK
-         vk5yH/MYOXm5qtMxKvtGUORTVQx90c/v9BAksqNfMJe8tqNDsQ5wKV2BO1vJ4fY97Ntr
-         Kwut1D0y0jHyK1mdhN7xpam0WMKzVFLvwSMAlXydRFkD0MMzCihW72p4fEMRE/p9Psc3
-         nm0D6NPG1oU0S9fVYGvRdA6/TfmcJ8zp6DgkF5kJOZGv/WWJYtIRQPIAlL9b/ObdeZLE
-         jrtZewLcINorntjfth3JxuckQcPW8F/qjJt6cc95bcdmokb+V3PIOwNdq5uFiF3R2x8E
-         0cig==
+        bh=Jt5wdJSrUlMimCqzmtUfOwS3RUy8dmQzUxp/EazQ63E=;
+        b=dZe0LlJtaGjmsxFrB3WS6yfJAUdNu7yGh2KfFAhFjOYxyhAu7hRONM2EoZfpL0aWFy
+         BBmbRuFArOn2ofe65BDJg19HRDus/FpRJeh1XQfc9P584bczswF4q7C3NjGvZX7PtAe0
+         1AF63pWP3P7/pQjatnOvogqaAsIJSL+HnvxVPhzCWE6Bp3DyQwUv/nPPtejN6uRkVdlT
+         1iglk5nzNJaG0BovJfM1R3QjorFnB2LqdpYIQc5ROPQxmmyoyO6HStd8E+Av/17J2HzV
+         bVc4WGuIUihZx3DmekjIjr/Cr9j1yhy4xTAwGFeI1ZXHtQKpYF7vDDHi6PoI93tstccv
+         tugw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:subject:message-id:references
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:content-transfer-encoding
          :in-reply-to:user-agent;
-        bh=UjvV69Pw38TY+UWCm958W3BhSAELE7Lrbyek85Eb+1Q=;
-        b=n9/OY/36BZBIUeUZpYJAcy52Yn7Qd4MjdJO9n31pVSi0Dp0tmTqatK1i9fEMrv4cCd
-         AFtjJQhWHw31h1uCyqNC4TlBR9IX921RrH612qoqyji/R4Wa0ckLLTv0T4mJm6ZY6Y4x
-         S23mizXaLn+4jvuxyHSkvr2vlY5JQJJ192NAVwQfFeduilAOmQbGwJ3EYj50DwKP4Bwu
-         vY49ux7TVxEsDVafMax6DzUT29Et2Qan2nU7ZPkuqUOhSekH/SsXoYj38aUoVaDqlGzW
-         NEVMUCIcw/Gd2SQyt+j+STb43LTv4TDAgRf5VYi2mNBbTB+TqWKIvUfTHM8gP8d6ocn6
-         1YBw==
-X-Gm-Message-State: APjAAAUly4TpwcHDPGMn/1FLnhRXeKIFnKbKDjaMU7fpU3Ey+zC6b2h3
-        At9Oiu0PUxttCGl2E4YDDKzccw==
-X-Google-Smtp-Source: APXvYqwNDJIp4PvB+a8yC5VIFYDeUcjM+xuvOJLOkzug9UL4qIro5CmakUjLQd5a+rNQaZRi8yCwEQ==
-X-Received: by 2002:a1c:48d7:: with SMTP id v206mr35374564wma.38.1558161517515;
-        Fri, 17 May 2019 23:38:37 -0700 (PDT)
+        bh=Jt5wdJSrUlMimCqzmtUfOwS3RUy8dmQzUxp/EazQ63E=;
+        b=Q3DotXoPn7fTHZso5BTm6tvJScDQ+H0yCd026BSYvBDYkbl1ajnN9QCTpIOCy9i8iz
+         aGVqq1ovdH6HBEpNUhobyP9LZOjtwNJDy9fMV/vuPznp/FD+DEPRwDQswPOYtSb5xavH
+         YwFEweSXMVEy5FPtH+IDXSsVD4xUC9ZqWTRZlcyx7vMHq0gYc7E94QSxqKARTrUK0giD
+         1JlvPxGEeyG8VygdGbG9zlEOLz/cg52bLSSgvR3SHYcI2MQKKwkfE7z0ttEFUKgl4A3X
+         GVi0VNNU1i7gzkGXr90I3rMElR8NkUR9WT+4lhrSCsSJrr5W5IqcgtsCIQmVqGcSpvUh
+         YuKg==
+X-Gm-Message-State: APjAAAVxcHORw8l2kn25lHaFQQ/OZbra1Cs4jbB+IjtcWek6/278s77Q
+        M4V6+W0zuP4luyA4g3NgDoVkTw==
+X-Google-Smtp-Source: APXvYqyMF2eXS8TN2xbzmW4LOMI5WZiw2Jc5lr+yU/TJnKmJrKCVrjm4QEnP4KX7m2d6GrlabBihHw==
+X-Received: by 2002:a7b:ce84:: with SMTP id q4mr4655773wmj.41.1558161590908;
+        Fri, 17 May 2019 23:39:50 -0700 (PDT)
 Received: from dell ([2.27.167.43])
-        by smtp.gmail.com with ESMTPSA id m206sm12881593wmf.21.2019.05.17.23.38.35
+        by smtp.gmail.com with ESMTPSA id c63sm11476790wma.29.2019.05.17.23.39.50
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 17 May 2019 23:38:36 -0700 (PDT)
-Date:   Sat, 18 May 2019 07:38:34 +0100
+        Fri, 17 May 2019 23:39:50 -0700 (PDT)
+Date:   Sat, 18 May 2019 07:39:49 +0100
 From:   Lee Jones <lee.jones@linaro.org>
-To:     Theodore Ts'o <tytso@mit.edu>,
-        Philippe Mazenauer <philippe.mazenauer@outlook.de>,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        "linux-ext4@vger.kernel.org" <linux-ext4@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] ext4: Variable to signed to check return code
-Message-ID: <20190518063834.GX4319@dell>
-References: <AM0PR07MB4417C1C3A4E55EFE47027CA2FD0B0@AM0PR07MB4417.eurprd07.prod.outlook.com>
- <20190517102506.GU4319@dell>
- <20190517202810.GA21961@mit.edu>
+To:     Gwendal Grignou <gwendal@chromium.org>
+Cc:     Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Benson Leung <bleung@chromium.org>,
+        Guenter Roeck <groeck@chromium.org>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Mark Brown <broonie@kernel.org>,
+        Cheng-Yi Chiang <cychiang@chromium.org>,
+        Takashi Iwai <tiwai@suse.com>, linux-iio@vger.kernel.org,
+        alsa-devel@alsa-project.org,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v3 00/30] Update cros_ec_commands.h
+Message-ID: <20190518063949.GY4319@dell>
+References: <20190509211353.213194-1-gwendal@chromium.org>
+ <CAPUE2ut4OUhrmbx6n8KCj7+ghXmC9iMnxGN8DMvyvZstznwwng@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190517202810.GA21961@mit.edu>
+In-Reply-To: <CAPUE2ut4OUhrmbx6n8KCj7+ghXmC9iMnxGN8DMvyvZstznwwng@mail.gmail.com>
 User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 17 May 2019, Theodore Ts'o wrote:
+On Fri, 17 May 2019, Gwendal Grignou wrote:
 
-> On Fri, May 17, 2019 at 11:25:06AM +0100, Lee Jones wrote:
-> > On Fri, 17 May 2019, Philippe Mazenauer wrote:
-> > 
-> > > Variables 'n' and 'err' are both used for less-than-zero error checking,
-> > > however both are declared as unsigned. Ensure ext4_map_blocks() and
-> > > add_system_zone() are able to have their return values propagated
-> > > correctly by redefining them both as signed integers.
+> Lee,
 > 
-> This is already fixed in the ext4.git tree; it will be pushed to Linus
-> shortly.  (Thanks to Colin Ian King from Canonical for sending the
-> patch.)
-> 
-> > Acked-by: Lee Jones <lee.jones@linaro.org>
-> 
-> Lee, techncially this should have been Reviewed-by.  Acked-by is used
-> by the maintainer when a patch is going in via some other tree other
-> than the Maintainer's (it means the Maintainer has acked the patch).
-> If you are reviewing a patch, the tag you should be adding is
-> Reviewed-by.
+> I verified and merged the changes on the kernels (3.18, 4.4 and 4.14)
+> used on chromebook using a squashed version of these patches.
+> (crrev.com/c/1583322, crrev.com/c/1583385, crrev.com/c/1583321
+> respectively)
+> Please let me know if you have any questions.
 
-Actually, that's not technically correct.
+Is no one else from Chromium going to review?
 
-  "- Acked-by: indicates an agreement by another developer (often a
-     maintainer of the relevant code) that the patch is appropriate for
-     inclusion into the kernel."
-
-And I, as a developer (and not a Maintainer in this case) do indicate
-that this patch is appropriate for inclusion into the kernel.
-
-Reviewed-by has stronger connotations and implies I have in-depth
-knowledge of the subsystem/driver AND agree to the Reviewer's
-Statement.  I use Acked-by in this case as a weaker agreement after a
-shallow review of the patch based on its merits alone.
+These seem like quite important changes.
 
 -- 
 Lee Jones [李琼斯]
