@@ -2,103 +2,77 @@ Return-Path: <SRS0=//ty=TS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-5.7 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 286D7C04AAF
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 May 2019 18:26:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29D2CC04AAF
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 May 2019 18:31:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0551520873
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 May 2019 18:26:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 04FD320873
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 May 2019 18:31:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729720AbfERS01 (ORCPT
+        id S1729859AbfERSbC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 May 2019 14:26:27 -0400
-Received: from Galois.linutronix.de ([146.0.238.70]:54268 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726050AbfERS00 (ORCPT
+        Sat, 18 May 2019 14:31:02 -0400
+Received: from mail-it1-f199.google.com ([209.85.166.199]:42493 "EHLO
+        mail-it1-f199.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729358AbfERSbB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 May 2019 14:26:26 -0400
-Received: from p5de0b374.dip0.t-ipconnect.de ([93.224.179.116] helo=nanos)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1hS42I-0001ix-6A; Sat, 18 May 2019 20:26:22 +0200
-Date:   Sat, 18 May 2019 20:26:21 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
-cc:     Stephen Boyd <sboyd@kernel.org>,
-        John Stultz <john.stultz@linaro.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH RFC] time: validate watchdog clocksource using second
- best candidate
-In-Reply-To: <602b155f-4108-2865-3f1c-4e63d73405ed@yandex-team.ru>
-Message-ID: <alpine.DEB.2.21.1905182023520.3019@nanos.tec.linutronix.de>
-References: <155790645605.1933.906798561802423361.stgit@buzz> <alpine.DEB.2.21.1905181712000.3019@nanos.tec.linutronix.de> <602b155f-4108-2865-3f1c-4e63d73405ed@yandex-team.ru>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Sat, 18 May 2019 14:31:01 -0400
+Received: by mail-it1-f199.google.com with SMTP id s18so7323360itl.7
+        for <linux-kernel@vger.kernel.org>; Sat, 18 May 2019 11:31:01 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
+         :from:to;
+        bh=5UxPqyqpEqIg/qruEb6a7Im9QP9xMl5nRiEBDpgwPDQ=;
+        b=EsYWF6MgQIUTk4qch4wSl0A5rvNGPZ8NhbrQbDlbhV2b+jRdwbqMcnQkVadhTdHa6T
+         CJLzm4cgonOHXWFoLYDpIT5P7CNOL2hwv2Y2Yx/moezzrSaPhu976Y4wK8U2L97b8eaN
+         Sn3tdMSzZDcysag1bEzFvAuDO+E+05uy5kyhAAeXBol6rIC25woOO7LaICqswfbk/ThT
+         CcJf78tv+v93NUQ2BTX6UMbqahsmYMCXp2gM1j1BxvXVNXA4hfSfjqNcG9Lx4knLj/yJ
+         hntrfN4KLqtipVp4aJHVwUcMVvHzd/BK8ePgnb/0UVT5AyjbcAm4Iw8eGlkCV42AmOm0
+         HPTw==
+X-Gm-Message-State: APjAAAXWK9piNhX5LG8iYBu2EkEAkmv+MWOJ8JYmwFMAm8Jmf+iPYz7O
+        ONzSstPq3KK4D144uaLDS1zGhwM6p23i93sqzPRTV+Ysk59v
+X-Google-Smtp-Source: APXvYqxyoPxBCWAJcC7wBdzP5ONzNf8bm0M0WJRQqXxOkD/QkxdxnSlvE17v680NI9Hn+ZjaeUejDcigqV9rbTj2Ln+qA8flWavS
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+X-Received: by 2002:a6b:4e17:: with SMTP id c23mr9854089iob.178.1558204260940;
+ Sat, 18 May 2019 11:31:00 -0700 (PDT)
+Date:   Sat, 18 May 2019 11:31:00 -0700
+In-Reply-To: <Pine.LNX.4.44L0.1905181346380.10594-100000@netrider.rowland.org>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <00000000000076047305892db3f2@google.com>
+Subject: Re: KASAN: use-after-free Read in p54u_load_firmware_cb
+From:   syzbot <syzbot+200d4bb11b23d929335f@syzkaller.appspotmail.com>
+To:     andreyknvl@google.com, chunkeey@gmail.com, chunkeey@googlemail.com,
+        davem@davemloft.net, kvalo@codeaurora.org,
+        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        oneukum@suse.com, stern@rowland.harvard.edu,
+        syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 18 May 2019, Konstantin Khlebnikov wrote:
+Hello,
 
-> On 18.05.2019 18:17, Thomas Gleixner wrote:
-> > On Wed, 15 May 2019, Konstantin Khlebnikov wrote:
-> > 
-> > > Timekeeping watchdog verifies doubtful clocksources using more reliable
-> > > candidates. For x86 it likely verifies 'tsc' using 'hpet'. But 'hpet'
-> > > is far from perfect too. It's better to have second opinion if possible.
-> > > 
-> > > We're seeing sudden jumps of hpet counter to 0xffffffff:
-> > 
-> > On which kind of hardware? A particular type of CPU or random ones?
-> 
-> In general this is very rare event.
-> 
-> This exact pattern have been seen ten times or so on several servers with
-> Intel(R) Xeon(R) CPU E5-2660 v4 @ 2.00GHz
-> (this custom built platform with chipset Intel C610)
-> 
-> and haven't seen for previous generation
-> Intel(R) Xeon(R) CPU E5-2650 v2 @ 2.60GHz
-> (this is another custom built platform)
+syzbot has tested the proposed patch and the reproducer did not trigger  
+crash:
 
-Same chipset? Note the HPET is part of the chipset not of the CPU.
+Reported-and-tested-by:  
+syzbot+200d4bb11b23d929335f@syzkaller.appspotmail.com
 
-> Link was in patch: https://lore.kernel.org/patchwork/patch/667413/
+Tested on:
 
-Hmm. Not really helpful either.
+commit:         43151d6c usb-fuzzer: main usb gadget fuzzer driver
+git tree:       https://github.com/google/kasan.git usb-fuzzer
+kernel config:  https://syzkaller.appspot.com/x/.config?x=4183eeef650d1234
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+patch:          https://syzkaller.appspot.com/x/patch.diff?x=17e42018a00000
 
-> > > This patch uses second reliable clocksource as backup for validation.
-> > > For x86 this is usually 'acpi_pm'. If watchdog and backup are not consent
-> > > then other clocksources will not be marked as unstable at this iteration.
-> > 
-> > The mess you add to the watchdog code is unholy and that's broken as there
-> > is no guarantee for acpi_pm (or any other secondary watchdog) being
-> > available.
-> 
-> ACPI power management timer is a pretty standard x86 hardware.
-
-Used to be.
-
-> But my patch should work for any platform with any second reliable
-> clocksource.
-
-Which is close to zero if PM timer is not exposed.
-
-> If there is no second clocksource my patch does noting:
-> watchdog_backup stays NULL and backup_consent always true.
-
-That still does not justify the extra complexity for a few custom built
-systems.
-
-Thanks,
-
-	tglx
+Note: testing is done by a robot and is best-effort only.
