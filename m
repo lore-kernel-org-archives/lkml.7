@@ -4,59 +4,61 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14806C04AAF
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 May 2019 08:52:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5793EC04AAF
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 May 2019 08:52:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DD2F020872
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 May 2019 08:52:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 29F43206BF
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 May 2019 08:52:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="jaFq6San"
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="fJ7jF0qn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729422AbfERIwI (ORCPT
+        id S1729442AbfERIwt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 May 2019 04:52:08 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:41193 "EHLO
+        Sat, 18 May 2019 04:52:49 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:43975 "EHLO
         terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726056AbfERIwH (ORCPT
+        with ESMTP id S1726056AbfERIws (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 May 2019 04:52:07 -0400
+        Sat, 18 May 2019 04:52:48 -0400
 Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x4I8pp5Q1732403
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x4I8qXoH1732471
         (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Sat, 18 May 2019 01:51:51 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x4I8pp5Q1732403
+        Sat, 18 May 2019 01:52:33 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x4I8qXoH1732471
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019041745; t=1558169512;
-        bh=xwA+5eOFpsEd9JJyqQA7UkKcbj+nBkadPUdDXDLiHPY=;
+        s=2019041745; t=1558169554;
+        bh=DWxHAETxtM8iPG1bUMXxRRL2P1sbeG4KK+Hp4+xPQVA=;
         h=Date:From:Cc:Reply-To:To:Subject:From;
-        b=jaFq6SanGo+wxdjwAeGP+5YUKMwZqaUN/wnmnLNFX0IL8YaCMo7v070F5DbRZqPZQ
-         tCAH48zmeWC0vrExr+PWWU5zB0mI1R2Ej3yacS6bbhRZuKHr6FyPmt2wtcvTlkyXRu
-         TRpAgDMnK9Iis1gQmzXDUc8xcjcU9W+rmqv5nLA5RaPFZzPeL33HgqRrfm2/2Fh6W/
-         42r4FUwY0jatJ0IUtTO0DBQ6GSKioq3zjEIZM76x/gfhuqGcRZEWycUq+FWxso1pn5
-         q+0/JUE8yH1uJbfUSxfDF/3QvvNOk0ssjGF+6gL3+aq9nWcgBqDHJ82Em4rhWCHJ6U
-         3WH84Shu2Sm1g==
+        b=fJ7jF0qnriVvAAe0ezq3A3HqG92kJfJzYCbaCoZxJpSeUm4evnS0ZBs5X19uhOr2F
+         fOG6pyUQTFRJEIj9o23I8pkgIs9pOfwQRL8mInUCezc4FgiEVtAilMkZYaZAeNuCed
+         cQPBxrrTEkT/hRtlhwuSxok3jlzBlzl/YnRcoRocCNWs15KXxz+Vp7WDtU5dG5pCAC
+         LHmJi97rs/4725xxxeWsUNIZy1nXkwrcWhCHYVLGNkj/XjGKRUCu+Kav8Xl88wOiz9
+         lmo+95iKmR4JlZgksdNZdT8Rju6Smm7HKZMbeAdxXn6zGeu0+YLY+H968C06Usof2z
+         sRI28d9wAzflQ==
 Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x4I8pokX1732400;
-        Sat, 18 May 2019 01:51:50 -0700
-Date:   Sat, 18 May 2019 01:51:50 -0700
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x4I8qWhY1732465;
+        Sat, 18 May 2019 01:52:32 -0700
+Date:   Sat, 18 May 2019 01:52:32 -0700
 X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
 From:   tip-bot for Arnaldo Carvalho de Melo <tipbot@zytor.com>
-Message-ID: <tip-9re6bd7eh9epi3koslkv3ocn@git.kernel.org>
-Cc:     gustavo.pimentel@synopsys.com, acme@redhat.com, tglx@linutronix.de,
-        lorenzo.pieralisi@arm.com, namhyung@kernel.org,
-        adrian.hunter@intel.com, mingo@kernel.org, hpa@zytor.com,
-        jolsa@kernel.org, kishon@ti.com, linux-kernel@vger.kernel.org
-Reply-To: mingo@kernel.org, adrian.hunter@intel.com, jolsa@kernel.org,
-          hpa@zytor.com, kishon@ti.com, linux-kernel@vger.kernel.org,
-          acme@redhat.com, gustavo.pimentel@synopsys.com,
-          tglx@linutronix.de, lorenzo.pieralisi@arm.com,
-          namhyung@kernel.org
+Message-ID: <tip-r0xhfhy5radmkhhcbcfs5izf@git.kernel.org>
+Cc:     tglx@linutronix.de, acme@redhat.com, adrian.hunter@intel.com,
+        hpa@zytor.com, jolsa@kernel.org, eranian@google.com,
+        mingo@kernel.org, ak@linux.intel.com, peterz@infradead.org,
+        kan.liang@linux.intel.com, alexander.shishkin@linux.intel.com,
+        linux-kernel@vger.kernel.org, namhyung@kernel.org
+Reply-To: acme@redhat.com, tglx@linutronix.de, jolsa@kernel.org,
+          adrian.hunter@intel.com, hpa@zytor.com, eranian@google.com,
+          mingo@kernel.org, ak@linux.intel.com, peterz@infradead.org,
+          kan.liang@linux.intel.com, alexander.shishkin@linux.intel.com,
+          namhyung@kernel.org, linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:perf/core] tools pci: Do not delete pcitest.sh in 'make clean'
-Git-Commit-ID: c9a7078750531c189c04ddd184c4367a5cb77780
+Subject: [tip:perf/core] perf record: Fix suggestion to get list of
+ registers usable with --user-regs and --intr-regs
+Git-Commit-ID: 8e5bc76f2ce39ffd48350d6dd9318d78d07b0bfa
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot.git.kernel.org>
 Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
@@ -70,85 +72,78 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  c9a7078750531c189c04ddd184c4367a5cb77780
-Gitweb:     https://git.kernel.org/tip/c9a7078750531c189c04ddd184c4367a5cb77780
+Commit-ID:  8e5bc76f2ce39ffd48350d6dd9318d78d07b0bfa
+Gitweb:     https://git.kernel.org/tip/8e5bc76f2ce39ffd48350d6dd9318d78d07b0bfa
 Author:     Arnaldo Carvalho de Melo <acme@redhat.com>
-AuthorDate: Mon, 13 May 2019 13:53:20 -0400
+AuthorDate: Mon, 13 May 2019 15:55:01 -0300
 Committer:  Arnaldo Carvalho de Melo <acme@redhat.com>
 CommitDate: Wed, 15 May 2019 16:36:46 -0300
 
-tools pci: Do not delete pcitest.sh in 'make clean'
+perf record: Fix suggestion to get list of registers usable with --user-regs and --intr-regs
 
-When running 'make -C tools clean' I noticed that a revision controlled
-file was being deleted:
+  $ perf record -h -I
 
-  $ git diff
-  diff --git a/tools/pci/pcitest.sh b/tools/pci/pcitest.sh
-  deleted file mode 100644
-  index 75ed48ff2990..000000000000
-  --- a/tools/pci/pcitest.sh
-  +++ /dev/null
-  @@ -1,72 +0,0 @@
-  -#!/bin/sh
-  -# SPDX-License-Identifier: GPL-2.0
-  -
-  -echo "BAR tests"
-  -echo
-  <SNIP>
+   Usage: perf record [<options>] [<command>]
+      or: perf record [<options>] -- <command> [<options>]
 
-So I changed the make variables to fix that, testing it should produce
-the same intended result while not deleting revision controlled files.
+      -I, --intr-regs[=<any register>]
+                            sample selected machine registers on interrupt, use -I ? to list register names
 
-  $ make O=/tmp/build/pci -C tools/pci install
-  make: Entering directory '/home/acme/git/perf/tools/pci'
-  make -f /home/acme/git/perf/tools/build/Makefile.build dir=. obj=pcitest
-  install -d -m 755 /usr/bin;		\
-  for program in /tmp/build/pci/pcitest pcitest.sh; do	\
-  	install $program /usr/bin;	\
-  done
-  install: cannot change permissions of ‘/usr/bin’: Operation not permitted
-  install: cannot create regular file '/usr/bin/pcitest': Permission denied
-  install: cannot create regular file '/usr/bin/pcitest.sh': Permission denied
-  make: *** [Makefile:46: install] Error 1
-  make: Leaving directory '/home/acme/git/perf/tools/pci'
-  $ ls -la /tmp/build/pci/pcitest
-  -rwxrwxr-x. 1 acme acme 27152 May 13 13:52 /tmp/build/pci/pcitest
-  $ /tmp/build/pci/pcitest
-  can't open PCI Endpoint Test device: No such file or directory
+  $ m
+  $ perf record -I ?
+  Workload failed: No such file or directory
+  $
+
+  After:
+
+  $ perf record -h -I
+
+   Usage: perf record [<options>] [<command>]
+      or: perf record [<options>] -- <command> [<options>]
+
+      -I, --intr-regs[=<any register>]
+                            sample selected machine registers on interrupt, use '-I?' to list register names
+
+  $
+  $ perf record -I?
+  available registers: AX BX CX DX SI DI BP SP IP FLAGS CS SS R8 R9 R10 R11 R12 R13 R14 R15
+
+   Usage: perf record [<options>] [<command>]
+      or: perf record [<options>] -- <command> [<options>]
+
+      -I, --intr-regs[=<any register>]
+                            sample selected machine registers on interrupt, use '-I?' to list register names
   $
 
 Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Andi Kleen <ak@linux.intel.com>
 Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Kishon Vijay Abraham I <kishon@ti.com>
-Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc: Kan Liang <kan.liang@linux.intel.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Fixes: 1ce78ce09430 ("tools: PCI: Change pcitest compiling process")
-Link: https://lkml.kernel.org/n/tip-9re6bd7eh9epi3koslkv3ocn@git.kernel.org
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Stephane Eranian <eranian@google.com>
+Fixes: bcc84ec65ad1 ("perf record: Add ability to name registers to record")
+Link: https://lkml.kernel.org/n/tip-r0xhfhy5radmkhhcbcfs5izf@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/pci/Makefile | 4 ++--
+ tools/perf/builtin-record.c | 4 ++--
  1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/tools/pci/Makefile b/tools/pci/Makefile
-index 46e4c2f318c9..f64da817bc03 100644
---- a/tools/pci/Makefile
-+++ b/tools/pci/Makefile
-@@ -14,7 +14,7 @@ MAKEFLAGS += -r
- 
- CFLAGS += -O2 -Wall -g -D_GNU_SOURCE -I$(OUTPUT)include
- 
--ALL_TARGETS := pcitest pcitest.sh
-+ALL_TARGETS := pcitest
- ALL_PROGRAMS := $(patsubst %,$(OUTPUT)%,$(ALL_TARGETS))
- 
- all: $(ALL_PROGRAMS)
-@@ -44,7 +44,7 @@ clean:
- 
- install: $(ALL_PROGRAMS)
- 	install -d -m 755 $(DESTDIR)$(bindir);		\
--	for program in $(ALL_PROGRAMS); do		\
-+	for program in $(ALL_PROGRAMS) pcitest.sh; do	\
- 		install $$program $(DESTDIR)$(bindir);	\
- 	done
- 
+diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
+index c5e10552776a..d2b5a22b7249 100644
+--- a/tools/perf/builtin-record.c
++++ b/tools/perf/builtin-record.c
+@@ -2017,10 +2017,10 @@ static struct option __record_options[] = {
+ 		    "use per-thread mmaps"),
+ 	OPT_CALLBACK_OPTARG('I', "intr-regs", &record.opts.sample_intr_regs, NULL, "any register",
+ 		    "sample selected machine registers on interrupt,"
+-		    " use -I ? to list register names", parse_regs),
++		    " use '-I?' to list register names", parse_regs),
+ 	OPT_CALLBACK_OPTARG(0, "user-regs", &record.opts.sample_user_regs, NULL, "any register",
+ 		    "sample selected machine registers on interrupt,"
+-		    " use -I ? to list register names", parse_regs),
++		    " use '-I?' to list register names", parse_regs),
+ 	OPT_BOOLEAN(0, "running-time", &record.opts.running_time,
+ 		    "Record running/enabled time of read (:S) events"),
+ 	OPT_CALLBACK('k', "clockid", &record.opts,
