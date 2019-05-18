@@ -2,94 +2,69 @@ Return-Path: <SRS0=//ty=TS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 894E8C04AAF
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 May 2019 20:19:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0290C04AAF
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 May 2019 20:27:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5CF8F20848
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 May 2019 20:19:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA8992082C
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 May 2019 20:27:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729362AbfERUTF (ORCPT
+        id S1729377AbfERU1O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 May 2019 16:19:05 -0400
-Received: from outgoing-auth-1.mit.edu ([18.9.28.11]:59481 "EHLO
-        outgoing.mit.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727620AbfERUTF (ORCPT
+        Sat, 18 May 2019 16:27:14 -0400
+Received: from shards.monkeyblade.net ([23.128.96.9]:59906 "EHLO
+        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725446AbfERU1O (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 May 2019 16:19:05 -0400
-Received: from callcc.thunk.org ([66.31.38.53])
-        (authenticated bits=0)
-        (User authenticated as tytso@ATHENA.MIT.EDU)
-        by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id x4IKIvcp010106
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Sat, 18 May 2019 16:18:58 -0400
-Received: by callcc.thunk.org (Postfix, from userid 15806)
-        id AF74E420027; Sat, 18 May 2019 16:18:43 -0400 (EDT)
-Date:   Sat, 18 May 2019 16:18:43 -0400
-From:   "Theodore Ts'o" <tytso@mit.edu>
-To:     Al Viro <viro@zeniv.linux.org.uk>
-Cc:     Dmitry Vyukov <dvyukov@google.com>,
-        syzbot <syzbot+73c7fe4f77776505299b@syzkaller.appspotmail.com>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>, sabin.rapan@gmail.com,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
-Subject: Re: BUG: unable to handle kernel paging request in do_mount
-Message-ID: <20190518201843.GD14277@mit.edu>
-Mail-Followup-To: Theodore Ts'o <tytso@mit.edu>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        syzbot <syzbot+73c7fe4f77776505299b@syzkaller.appspotmail.com>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>, sabin.rapan@gmail.com,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
-References: <00000000000014285d05765bf72a@google.com>
- <0000000000000eaf23058912af14@google.com>
- <20190517134850.GG17978@ZenIV.linux.org.uk>
- <CACT4Y+Z8760uYQP0jKgJmVC5sstqTv9pE6K6YjK_feeK6-Obfg@mail.gmail.com>
- <CACT4Y+bQ+zW_9a3F4jY0xcAn_Hdk5yAwX2K3E38z9fttbF0SJA@mail.gmail.com>
- <20190518162142.GH17978@ZenIV.linux.org.uk>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190518162142.GH17978@ZenIV.linux.org.uk>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Sat, 18 May 2019 16:27:14 -0400
+Received: from localhost (unknown [IPv6:2601:601:9f80:35cd::3d8])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 912F614DF4C35;
+        Sat, 18 May 2019 13:27:13 -0700 (PDT)
+Date:   Sat, 18 May 2019 13:27:12 -0700 (PDT)
+Message-Id: <20190518.132712.1971625204431294331.davem@davemloft.net>
+To:     jasowang@redhat.com
+Cc:     mst@redhat.com, virtualization@lists.linux-foundation.org,
+        kvm@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, pbonzini@redhat.com,
+        stefanha@redhat.com
+Subject: Re: [PATCH V2 0/4] Prevent vhost kthread from hogging CPU
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <1558067392-11740-1-git-send-email-jasowang@redhat.com>
+References: <1558067392-11740-1-git-send-email-jasowang@redhat.com>
+X-Mailer: Mew version 6.8 on Emacs 26.1
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Sat, 18 May 2019 13:27:13 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, May 18, 2019 at 05:21:42PM +0100, Al Viro wrote:
-> IOW, Dan's fix folded into the offending commit.  And that kind of
-> pattern is not rare; I would argue that appending Dan's patch at
-> the end of queue and leaving the crap in between would be a fucking
-> bad idea - it would've left a massive bisection hazard *and* made
-> life much more unpleasant when the things got to merging into the
-> mainline (or reviewing, for that matter).
+From: Jason Wang <jasowang@redhat.com>
+Date: Fri, 17 May 2019 00:29:48 -0400
 
-When this happens in the ext4 git tree, I usually don't worry about
-giving credit to whatever system finds the problem, whether coming
-from it's Coverity, or someone running sparse, or syzbot, etc.
-
-There will always be issues where there are no way to clear out the
-syzbot report via a commit description --- for example, when a patch
-gets dropped entirely from linux-next.  With Coverity, the report gets
-dropped automatically.  With syzbot, it will have closed out by hand.
-
-> What would you prefer to happen in such situations?  Commit summaries
-> modified enough to confuse CI tools into *NOT* noticing that those
-> are versions of the same patch?  Some kind of metadata telling the
-> same tools that such-and-such commits got folded in (and they might
-> have been split in process, with parts folded into different spots
-> in the series, at that)?
+> Hi:
 > 
-> Because "never fold in, never reorder, just accumulate patches in
-> the end of the series" is not going to fly.  For a lot of reasons.
+> This series try to prevent a guest triggerable CPU hogging through
+> vhost kthread. This is done by introducing and checking the weight
+> after each requrest. The patch has been tested with reproducer of
+> vsock and virtio-net. Only compile test is done for vhost-scsi.
+> 
+> Please review.
+> 
+> This addresses CVE-2019-3900.
+> 
+> Changs from V1:
+> - fix user-ater-free in vosck patch
 
-As far as I'm concerned, this is the tools problem; I don't think it's
-worth it for developers to feel they need to twist themselves into
-knots just to try to make the CI tools' life easier.
+I am assuming that not only will mst review this, it will also go via
+his tree rather than mine.
 
-			     	     	- Ted
+Thanks.
