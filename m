@@ -2,124 +2,246 @@ Return-Path: <SRS0=//ty=TS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF019C04AAF
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 May 2019 09:17:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DE74C04AAF
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 May 2019 09:18:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7D5AA20848
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 May 2019 09:17:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558171052;
-	bh=IlJp5YWs0ddocyfiiFNvvgvI0GtecDFbZBcvkD1dQxM=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=Ke8IKtDzZ1znn42BMYiPRqcHC0LEVlqBXnvDI7xxGMN87htsvb3aSRuZnBsSkzngt
-	 hdLa+9o4C6uT9TUFdWSlL5Jz5UfAfCvm9li5bv3v+BtCJfUBnqMpG//7wowcJqrNJK
-	 rtanS4sFYuJDRnk5gPoDyZA+Lkrr71U+X2CHxntc=
+	by mail.kernel.org (Postfix) with ESMTP id DA7862087E
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 May 2019 09:18:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="oeM7ymT/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729765AbfERJRb (ORCPT
+        id S1729778AbfERJSC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 May 2019 05:17:31 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:39811 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725268AbfERJRb (ORCPT
+        Sat, 18 May 2019 05:18:02 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:56657 "EHLO
+        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725468AbfERJSB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 May 2019 05:17:31 -0400
-Received: by mail-wr1-f65.google.com with SMTP id w8so9443817wrl.6
-        for <linux-kernel@vger.kernel.org>; Sat, 18 May 2019 02:17:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=VXjGbB8IK4t+6naxMPHljUGMibb1mHdTkM1gGyq/XwE=;
-        b=K1I+hEYtnrOtnl3ZUfK890+wqma0VqQjNPO2HLnL7NuhjRP+nT2QC4QJHeCDVLoPmc
-         8oTnBX7Ex4+oxyVAFtj8r/fwTkUsfyV82osklMPHhipwFzhhUIzurBGs2BqF6p3+6lCl
-         KRx/30ws0VMxvWOeN5rVV+VJ8zJhXtOAZzDcDJMAjouGeRM42Ld9NQYWEl3mkBeMLPXp
-         WDGEsVSrLMI7fuM7KzOfdkpIScp/CjhZn4x7h+leRcShHJwuXKIuvTAShxCIttxP53Fx
-         cMuJX+5HkJRC+rpUVUlCseVCK0aDmDsqMV+FI16a+RbIdLfge94MrYW2rGRiGrtd5Bxr
-         Tt1Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :mime-version:content-disposition:user-agent;
-        bh=VXjGbB8IK4t+6naxMPHljUGMibb1mHdTkM1gGyq/XwE=;
-        b=Psn3pi9hgWCab4IN0Zmyqn4DaipTXld03T8wenrcoaDQhSmZSWVlbQSjO4TSmkpdBH
-         zvVuRWy+gwsrtB+uqv8QN6Qcr1EeIzSn5ZF+PXRGRf7x5AaqYNqhMcNK2fEtuQyPjvP7
-         ELXPp4uOt8D9GXYGNO/7qJxjeZD0IrQ4S6pfO/S5lI8+wno5moiHVQSv6WZfhcJ5jiN5
-         etoh6Un7n/IkBTTXAs70Ffz+AhJr3BSNxdfyhk1OhMQUzv7sdntSTPTnE8fGgi+9dGyq
-         G/z16Y/kIw4dgT2LCavvOlRcOOEmwuvdBOWkCvnVkBHHfgeYi4YJS+guSAuwECFvyn8C
-         GseA==
-X-Gm-Message-State: APjAAAURegGpt6jSuXm61DJ7M8dby+cYumew34TqjxN6FHvyj3tFbH1i
-        P7TK5j70a54ZPQ5xwm8+tFE=
-X-Google-Smtp-Source: APXvYqzvRg2OpgDX9V48aEgbCGhwCxN3tRVu2LxZzGDzmzoYjUl1Fbt/w4ixzvKag0b8+Vj/JbVM0g==
-X-Received: by 2002:a5d:4b81:: with SMTP id b1mr13843344wrt.217.1558171049279;
-        Sat, 18 May 2019 02:17:29 -0700 (PDT)
-Received: from gmail.com (2E8B0CD5.catv.pool.telekom.hu. [46.139.12.213])
-        by smtp.gmail.com with ESMTPSA id u2sm19551251wra.82.2019.05.18.02.17.28
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Sat, 18 May 2019 02:17:28 -0700 (PDT)
-Date:   Sat, 18 May 2019 11:17:26 +0200
-From:   Ingo Molnar <mingo@kernel.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        James Morse <james.morse@arm.com>,
-        Matt Fleming <matt@codeblueprint.co.uk>
-Subject: [GIT PULL] EFI fix
-Message-ID: <20190518091726.GA47721@gmail.com>
+        Sat, 18 May 2019 05:18:01 -0400
+Received: from terminus.zytor.com (localhost [127.0.0.1])
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x4I9Ha401738228
+        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
+        Sat, 18 May 2019 02:17:36 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x4I9Ha401738228
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+        s=2019041745; t=1558171057;
+        bh=hZ9yrTrslIAmhf6KLA2J/SP5qx6zwfYnjXrV/z5HEjg=;
+        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
+        b=oeM7ymT/0eh7kvaci1a+NUbK+OKpqEhVxTEBhF4eKyRk5eO+pPqwl6JX2XqxDGQZ4
+         6A1bPREUFrb2K/Ih75VbU3PK831fVfqUBWYu+0d5EwMf8i+qa+R4a45pbXSzrK9+ic
+         DcqFLzlo8Yn4cjbxNo0xaxJsfcByEGDVK0w3LZj2pcVc9BnLBfyhe4XZzz9+2BU6VL
+         iJ/D6y2unbaH7fMNv9gWYK1UzK/y7SxT151jOK/jk4XROOcL9WEAVSfcFiKw3DWpXB
+         LLdIV5Xylo246Yhv+UiDNV16LH1rqzyYA7cDS+uSCDEfVs/9QR08Chx5Cbczl3k2L0
+         5z6cSVjQtk3MA==
+Received: (from tipbot@localhost)
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x4I9HZOf1738225;
+        Sat, 18 May 2019 02:17:35 -0700
+Date:   Sat, 18 May 2019 02:17:35 -0700
+X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
+From:   tip-bot for Tzvetomir Stoyanov <tipbot@zytor.com>
+Message-ID: <tip-0133fc6068fb51aa7ce8876e8fee465d92acfc14@git.kernel.org>
+Cc:     mingo@kernel.org, akpm@linux-foundation.org, acme@redhat.com,
+        namhyung@kernel.org, hpa@zytor.com, rostedt@goodmis.org,
+        tglx@linutronix.de, jolsa@redhat.com, linux-kernel@vger.kernel.org,
+        tstoyanov@vmware.com
+Reply-To: linux-kernel@vger.kernel.org, jolsa@redhat.com,
+          tglx@linutronix.de, rostedt@goodmis.org, tstoyanov@vmware.com,
+          acme@redhat.com, akpm@linux-foundation.org, mingo@kernel.org,
+          hpa@zytor.com, namhyung@kernel.org
+In-Reply-To: <20190510200110.284281830@goodmis.org>
+References: <20190510200110.284281830@goodmis.org>
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip:perf/core] tools lib traceevent: Man pages for APIs used to
+ extract common fields from a record
+Git-Commit-ID: 0133fc6068fb51aa7ce8876e8fee465d92acfc14
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot.git.kernel.org>
+Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
+ these emails
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
 Content-Disposition: inline
-User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Linus,
+Commit-ID:  0133fc6068fb51aa7ce8876e8fee465d92acfc14
+Gitweb:     https://git.kernel.org/tip/0133fc6068fb51aa7ce8876e8fee465d92acfc14
+Author:     Tzvetomir Stoyanov <tstoyanov@vmware.com>
+AuthorDate: Fri, 10 May 2019 15:56:32 -0400
+Committer:  Arnaldo Carvalho de Melo <acme@redhat.com>
+CommitDate: Wed, 15 May 2019 16:36:48 -0300
 
-Please pull the latest efi-urgent-for-linus git tree from:
+tools lib traceevent: Man pages for APIs used to extract common fields from a record
 
-   git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git efi-urgent-for-linus
+Create man pages for libtraceevent APIs:
 
-   # HEAD: f8585539df0a1527c78b5d760665c89fe1c105a9 fbdev/efifb: Ignore framebuffer memmap entries that lack any memory types
+ tep_data_type(),
+ tep_data_pid(),
+ tep_data_preempt_count(),
+ tep_data_flags()
 
-Fix an EFI-fb regression that affects certain x86 systems.
+Signed-off-by: Tzvetomir Stoyanov <tstoyanov@vmware.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: linux-trace-devel@vger.kernel.org
+Link: http://lore.kernel.org/linux-trace-devel/20190503091119.23399-26-tstoyanov@vmware.com
+Link: http://lkml.kernel.org/r/20190510200110.284281830@goodmis.org
+[ Fixed missing T in description of NOSUPPORT flag ]
+Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+---
+ .../Documentation/libtraceevent-record_parse.txt   | 137 +++++++++++++++++++++
+ 1 file changed, 137 insertions(+)
 
- Thanks,
-
-	Ingo
-
------------------->
-Ard Biesheuvel (1):
-      fbdev/efifb: Ignore framebuffer memmap entries that lack any memory types
-
-
- drivers/video/fbdev/efifb.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/video/fbdev/efifb.c b/drivers/video/fbdev/efifb.c
-index 9e529cc2b4ff..9f39f0c360e0 100644
---- a/drivers/video/fbdev/efifb.c
-+++ b/drivers/video/fbdev/efifb.c
-@@ -477,8 +477,12 @@ static int efifb_probe(struct platform_device *dev)
- 		 * If the UEFI memory map covers the efifb region, we may only
- 		 * remap it using the attributes the memory map prescribes.
- 		 */
--		mem_flags |= EFI_MEMORY_WT | EFI_MEMORY_WB;
--		mem_flags &= md.attribute;
-+		md.attribute &= EFI_MEMORY_UC | EFI_MEMORY_WC |
-+				EFI_MEMORY_WT | EFI_MEMORY_WB;
-+		if (md.attribute) {
-+			mem_flags |= EFI_MEMORY_WT | EFI_MEMORY_WB;
-+			mem_flags &= md.attribute;
-+		}
- 	}
- 	if (mem_flags & EFI_MEMORY_WC)
- 		info->screen_base = ioremap_wc(efifb_fix.smem_start,
+diff --git a/tools/lib/traceevent/Documentation/libtraceevent-record_parse.txt b/tools/lib/traceevent/Documentation/libtraceevent-record_parse.txt
+new file mode 100644
+index 000000000000..e9a69116c78b
+--- /dev/null
++++ b/tools/lib/traceevent/Documentation/libtraceevent-record_parse.txt
+@@ -0,0 +1,137 @@
++libtraceevent(3)
++================
++
++NAME
++----
++tep_data_type, tep_data_pid,tep_data_preempt_count, tep_data_flags -
++Extract common fields from a record.
++
++SYNOPSIS
++--------
++[verse]
++--
++*#include <event-parse.h>*
++
++enum *trace_flag_type* {
++	_TRACE_FLAG_IRQS_OFF_,
++	_TRACE_FLAG_IRQS_NOSUPPORT_,
++	_TRACE_FLAG_NEED_RESCHED_,
++	_TRACE_FLAG_HARDIRQ_,
++	_TRACE_FLAG_SOFTIRQ_,
++};
++
++int *tep_data_type*(struct tep_handle pass:[*]_tep_, struct tep_record pass:[*]_rec_);
++int *tep_data_pid*(struct tep_handle pass:[*]_tep_, struct tep_record pass:[*]_rec_);
++int *tep_data_preempt_count*(struct tep_handle pass:[*]_tep_, struct tep_record pass:[*]_rec_);
++int *tep_data_flags*(struct tep_handle pass:[*]_tep_, struct tep_record pass:[*]_rec_);
++--
++
++DESCRIPTION
++-----------
++This set of functions can be used to extract common fields from a record.
++
++The _tep_data_type()_ function gets the event id from the record _rec_.
++It reads the "common_type" field. The _tep_ argument is the trace event parser
++context.
++
++The _tep_data_pid()_ function gets the process id from the record _rec_.
++It reads the "common_pid" field. The _tep_ argument is the trace event parser
++context.
++
++The _tep_data_preempt_count()_ function gets the preemption count from the
++record _rec_. It reads the "common_preempt_count" field. The _tep_ argument is
++the trace event parser context.
++
++The _tep_data_flags()_ function gets the latency flags from the record _rec_.
++It reads the "common_flags" field. The _tep_ argument is the trace event parser
++context. Supported latency flags are:
++[verse]
++--
++	_TRACE_FLAG_IRQS_OFF_,		Interrupts are disabled.
++	_TRACE_FLAG_IRQS_NOSUPPORT_,	Reading IRQ flag is not supported by the architecture.
++	_TRACE_FLAG_NEED_RESCHED_,	Task needs rescheduling.
++	_TRACE_FLAG_HARDIRQ_,		Hard IRQ is running.
++	_TRACE_FLAG_SOFTIRQ_,		Soft IRQ is running.
++--
++
++RETURN VALUE
++------------
++The _tep_data_type()_ function returns an integer, representing the event id.
++
++The _tep_data_pid()_ function returns an integer, representing the process id
++
++The _tep_data_preempt_count()_ function returns an integer, representing the
++preemption count.
++
++The _tep_data_flags()_ function returns an integer, representing the latency
++flags. Look at the _trace_flag_type_ enum for supported flags.
++
++All these functions in case of an error return a negative integer.
++
++EXAMPLE
++-------
++[source,c]
++--
++#include <event-parse.h>
++...
++struct tep_handle *tep = tep_alloc();
++...
++void process_record(struct tep_record *record)
++{
++	int data;
++
++	data = tep_data_type(tep, record);
++	if (data >= 0) {
++		/* Got the ID of the event */
++	}
++
++	data = tep_data_pid(tep, record);
++	if (data >= 0) {
++		/* Got the process ID */
++	}
++
++	data = tep_data_preempt_count(tep, record);
++	if (data >= 0) {
++		/* Got the preemption count */
++	}
++
++	data = tep_data_flags(tep, record);
++	if (data >= 0) {
++		/* Got the latency flags */
++	}
++}
++...
++--
++
++FILES
++-----
++[verse]
++--
++*event-parse.h*
++	Header file to include in order to have access to the library APIs.
++*-ltraceevent*
++	Linker switch to add when building a program that uses the library.
++--
++
++SEE ALSO
++--------
++_libtraceevent(3)_, _trace-cmd(1)_
++
++AUTHOR
++------
++[verse]
++--
++*Steven Rostedt* <rostedt@goodmis.org>, author of *libtraceevent*.
++*Tzvetomir Stoyanov* <tz.stoyanov@gmail.com>, author of this man page.
++--
++REPORTING BUGS
++--------------
++Report bugs to  <linux-trace-devel@vger.kernel.org>
++
++LICENSE
++-------
++libtraceevent is Free Software licensed under the GNU LGPL 2.1
++
++RESOURCES
++---------
++https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
