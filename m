@@ -2,294 +2,154 @@ Return-Path: <SRS0=//ty=TS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B70FEC04AAF
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 May 2019 09:08:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 303A3C04AAF
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 May 2019 09:09:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6C15D2082C
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 May 2019 09:08:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 05ACB2082C
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 May 2019 09:09:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ctp4zeKD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729698AbfERJIq (ORCPT
+        id S1729708AbfERJJC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 May 2019 05:08:46 -0400
-Received: from mga03.intel.com ([134.134.136.65]:57729 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727432AbfERJIq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 May 2019 05:08:46 -0400
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 May 2019 02:08:44 -0700
-X-ExtLoop1: 1
-Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
-  by FMSMGA003.fm.intel.com with ESMTP; 18 May 2019 02:08:43 -0700
-Received: from kbuild by lkp-server01 with local (Exim 4.89)
-        (envelope-from <lkp@intel.com>)
-        id 1hRvKd-000DC4-8p; Sat, 18 May 2019 17:08:43 +0800
-Date:   Sat, 18 May 2019 17:08:14 +0800
-From:   kbuild test robot <lkp@intel.com>
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     kbuild-all@01.org, linux-kernel@vger.kernel.org
-Subject: undefined reference to `memremap'
-Message-ID: <201905181712.RQuLwcQQ%lkp@intel.com>
+        Sat, 18 May 2019 05:09:02 -0400
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:33404 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725468AbfERJJB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 18 May 2019 05:09:01 -0400
+Received: by mail-lf1-f66.google.com with SMTP id x132so7006257lfd.0;
+        Sat, 18 May 2019 02:09:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=JMJMxJ4pxlUz8asklfXu2+f43mE5Z5/GW0LwxKJU/nI=;
+        b=Ctp4zeKDTdrgBiXbI4X8Zcrd9YuEgiitY8MhoX5s6yaOPgi3ig821+yXq3T3EYw2Hv
+         8rAnvJrac4pPcY1mZmlqCQ12K77lOlFTfuQJ5f6hfssXLukOlcGLhyY+WmzvcdGs3lOd
+         qs1QudsMYyz3+0VdkKCCn8FUkJu5t5dlBgtd4CzgC5D+C0V/aoFjFz6hWkWKhapSkEwY
+         S3gtNWLfL6A/SHFn20zzJWhakp7mjc4vEJjBX1lpofL/aKXti4XyhsPstG9qaZ2hUHQ1
+         BFguhbaSwauVckqL3Fv6eiM/V9e0PNXd2xIThaq8QEGkmB3R/Qfl+BAZMYIAM0l1Gr+L
+         gnZQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=JMJMxJ4pxlUz8asklfXu2+f43mE5Z5/GW0LwxKJU/nI=;
+        b=I8pHsiHi8Zs+1R9n6x8Ba5OwiI4R9G040zwC+JNvNejLw2Lm5zrQEV8200mPtGmLI7
+         GsVU9PyynyVIIg1DsbZwg0d/PP+8kBltQqaXxDJc0E9XY8BYYMyZ8bXhxTB9pN2Bmh3S
+         tbrG8GbR2kl5gn/y5flDpfWGrorA6ipqY4F32Ap3ItFTaSmuZiM2yQwqLNtGamZmFP4w
+         APceDaicNHyPiFXrqNybqnHkkKB5lCv7pCm+h1jo2h+73IsWzGCW7r0UZKhicAsEAbtP
+         ahV4qIzTY0uAjMBjsxOvS9sBhDDq9aGAdGhb4AWuuEVY+JXYMLtI2SG+7qw56+56jGe0
+         KIMw==
+X-Gm-Message-State: APjAAAXeR+4Z1Ow3UQuql2/v8elH3RUReJAw/BnAgdp2orQaKr0zv2P5
+        S/z+v4nNYI4vc84c4ppMbeBLig+a2aw=
+X-Google-Smtp-Source: APXvYqy0r9DsbizCqrexPf9rUX12ja5WC7syNRm9Q4CKHVB7psLJiiPZPg+vaEdPhLPIeeqlAA81mw==
+X-Received: by 2002:a05:6512:309:: with SMTP id t9mr29680176lfp.103.1558170539702;
+        Sat, 18 May 2019 02:08:59 -0700 (PDT)
+Received: from [192.168.1.111] ([77.123.15.14])
+        by smtp.googlemail.com with ESMTPSA id f21sm2211511ljk.94.2019.05.18.02.08.58
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Sat, 18 May 2019 02:08:58 -0700 (PDT)
+Subject: Re: [PATCH v3] HID: fix A4Tech horizontal scrolling
+To:     =?UTF-8?B?QsWCYcW8ZWogU3pjenlnaWXFgg==?= <spaz16@wp.pl>
+Cc:     peter.hutterer@who-t.net, Jiri Kosina <jikos@kernel.org>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20190507050029.GA5197@jelly>
+ <20190512203313.18756-1-spaz16@wp.pl>
+From:   Igor Kushnir <igorkuo@gmail.com>
+Message-ID: <858498ef-b43a-f382-bfbc-e3a2ac9935e4@gmail.com>
+Date:   Sat, 18 May 2019 12:08:57 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="BXVAT5kNtrzKuDFl"
-Content-Disposition: inline
-X-Patchwork-Hint: ignore
-User-Agent: Mutt/1.5.23 (2014-03-12)
+In-Reply-To: <20190512203313.18756-1-spaz16@wp.pl>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: uk-UA
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi!
 
---BXVAT5kNtrzKuDFl
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+I have verified that the PATCH v3 applied to kernel 5.0.15 fixes 
+horizontal scrolling for my A4Tech WOP-49Z mouse just as well as the 
+previous patch did.
 
-Hi Paolo,
+Thank you,
+Igor
 
-It's probably a bug fix that unveils the link errors.
-
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-head:   72cf0b07418a9c8349aa9137194b1ccba6e54a9d
-commit: c011d23ba046826ccf8c4a4a6c1d01c9ccaa1403 kvm: fix compilation on aarch64
-date:   21 hours ago
-config: s390-defconfig (attached as .config)
-compiler: s390x-linux-gnu-gcc (Debian 7.2.0-11) 7.2.0
-reproduce:
-        wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
-        chmod +x ~/bin/make.cross
-        git checkout c011d23ba046826ccf8c4a4a6c1d01c9ccaa1403
-        # save the attached .config to linux build tree
-        GCC_VERSION=7.2.0 make.cross ARCH=s390 
-
-If you fix the issue, kindly add following tag
-Reported-by: kbuild test robot <lkp@intel.com>
-
-All errors (new ones prefixed by >>):
-
-   s390x-linux-gnu-ld: arch/s390/../../virt/kvm/kvm_main.o: in function `kvm_vcpu_map':
->> (.text+0x803c): undefined reference to `memremap'
-   s390x-linux-gnu-ld: arch/s390/../../virt/kvm/kvm_main.o: in function `kvm_vcpu_unmap':
->> (.text+0x82e4): undefined reference to `memunmap'
-
----
-0-DAY kernel test infrastructure                Open Source Technology Center
-https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
-
---BXVAT5kNtrzKuDFl
-Content-Type: application/gzip
-Content-Disposition: attachment; filename=".config.gz"
-Content-Transfer-Encoding: base64
-
-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
-
---BXVAT5kNtrzKuDFl--
+On 5/12/19 11:33 PM, Błażej Szczygieł wrote:
+> Since recent high resolution scrolling changes the A4Tech driver must
+> check for the "REL_WHEEL_HI_RES" usage code.
+> 
+> Link: https://bugzilla.kernel.org/show_bug.cgi?id=203369
+> Fixes: 2dc702c991e3774af9d7ce410eef410ca9e2357e ("HID: input: use the
+> Resolution Multiplier for high-resolution scrolling")
+> 
+> Signed-off-by: Błażej Szczygieł <spaz16@wp.pl>
+> ---
+> Changes in v2:
+> - changed commit message
+> 
+> Changes in v3:
+> - send also high resolution events
+> 
+>   drivers/hid/hid-a4tech.c | 11 ++++++++---
+>   1 file changed, 8 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/hid/hid-a4tech.c b/drivers/hid/hid-a4tech.c
+> index 9428ea7cdf8a..c3a6ce3613fe 100644
+> --- a/drivers/hid/hid-a4tech.c
+> +++ b/drivers/hid/hid-a4tech.c
+> @@ -38,8 +38,10 @@ static int a4_input_mapped(struct hid_device *hdev, struct hid_input *hi,
+>   {
+>   	struct a4tech_sc *a4 = hid_get_drvdata(hdev);
+>   
+> -	if (usage->type == EV_REL && usage->code == REL_WHEEL)
+> +	if (usage->type == EV_REL && usage->code == REL_WHEEL_HI_RES) {
+>   		set_bit(REL_HWHEEL, *bit);
+> +		set_bit(REL_HWHEEL_HI_RES, *bit);
+> +	}
+>   
+>   	if ((a4->quirks & A4_2WHEEL_MOUSE_HACK_7) && usage->hid == 0x00090007)
+>   		return -1;
+> @@ -60,7 +62,7 @@ static int a4_event(struct hid_device *hdev, struct hid_field *field,
+>   	input = field->hidinput->input;
+>   
+>   	if (a4->quirks & A4_2WHEEL_MOUSE_HACK_B8) {
+> -		if (usage->type == EV_REL && usage->code == REL_WHEEL) {
+> +		if (usage->type == EV_REL && usage->code == REL_WHEEL_HI_RES) {
+>   			a4->delayed_value = value;
+>   			return 1;
+>   		}
+> @@ -68,6 +70,8 @@ static int a4_event(struct hid_device *hdev, struct hid_field *field,
+>   		if (usage->hid == 0x000100b8) {
+>   			input_event(input, EV_REL, value ? REL_HWHEEL :
+>   					REL_WHEEL, a4->delayed_value);
+> +			input_event(input, EV_REL, value ? REL_HWHEEL_HI_RES :
+> +					REL_WHEEL_HI_RES, a4->delayed_value * 120);
+>   			return 1;
+>   		}
+>   	}
+> @@ -77,8 +81,9 @@ static int a4_event(struct hid_device *hdev, struct hid_field *field,
+>   		return 1;
+>   	}
+>   
+> -	if (usage->code == REL_WHEEL && a4->hw_wheel) {
+> +	if (usage->code == REL_WHEEL_HI_RES && a4->hw_wheel) {
+>   		input_event(input, usage->type, REL_HWHEEL, value);
+> +		input_event(input, usage->type, REL_HWHEEL_HI_RES, value * 120);
+>   		return 1;
+>   	}
+>   
+> 
