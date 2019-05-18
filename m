@@ -2,74 +2,124 @@ Return-Path: <SRS0=//ty=TS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78C3BC072A4
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 May 2019 15:20:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E380C072A4
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 May 2019 15:24:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5805F2087E
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 May 2019 15:20:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 25C7120B7C
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 May 2019 15:24:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="P1f/xHK9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729814AbfERPUs (ORCPT
+        id S1729815AbfERPYE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 May 2019 11:20:48 -0400
-Received: from netrider.rowland.org ([192.131.102.5]:38683 "HELO
-        netrider.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with SMTP id S1728516AbfERPUs (ORCPT
+        Sat, 18 May 2019 11:24:04 -0400
+Received: from mail-wr1-f48.google.com ([209.85.221.48]:33798 "EHLO
+        mail-wr1-f48.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728028AbfERPYE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 May 2019 11:20:48 -0400
-Received: (qmail 8577 invoked by uid 500); 18 May 2019 11:20:47 -0400
-Received: from localhost (sendmail-bs@127.0.0.1)
-  by localhost with SMTP; 18 May 2019 11:20:47 -0400
-Date:   Sat, 18 May 2019 11:20:47 -0400 (EDT)
-From:   Alan Stern <stern@rowland.harvard.edu>
-X-X-Sender: stern@netrider.rowland.org
-To:     "Eric W. Biederman" <ebiederm@xmission.com>
-cc:     linux-usb@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Oliver Neukum <oneukum@suse.com>,
-        <linux-kernel@vger.kernel.org>
-Subject: Re: [CFT][PATCH] signal/usb: Replace kill_pid_info_as_cred with
- kill_pid_usb_asyncio
-In-Reply-To: <87y334v8x1.fsf@xmission.com>
-Message-ID: <Pine.LNX.4.44L0.1905181116330.7855-100000@netrider.rowland.org>
+        Sat, 18 May 2019 11:24:04 -0400
+Received: by mail-wr1-f48.google.com with SMTP id f8so3617252wrt.1;
+        Sat, 18 May 2019 08:24:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=f2Vajn+WWPZ6MItypnKB1zIVfCo1eg6EMXVoRfUSJVM=;
+        b=P1f/xHK9z2ASDeMG8Rzksn0vI1MGfuEQXGKk3710zKCYHxOYESPUf73r6VwYnjzbTk
+         1o/TSTXo0NtMUmJWcyuX2eeOErUp6aomh0v/X2+X3RA+ZdgU9QpQV7oahfjAvufOu29V
+         DuPSygnxL0KH+04sJpqmsWEAQZV2oXT/xd4hkQYDHR8RYg4NsUBhsu6sHf2goI6srsdC
+         2IlabTPuksycgJ6cMvFRhtkkS5ioRs4ayZKquE+zUmgKuCcTGnVv3I6x/jTMrjMUkJYo
+         jz/6/5TRH9AUE9AiTw8w0OsvIaoxzUasblbdmTCz6e6Ugn74YoZC7+dDK3lxwbdPjhVn
+         +NyA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=f2Vajn+WWPZ6MItypnKB1zIVfCo1eg6EMXVoRfUSJVM=;
+        b=NbTLBlQWBe0YekQ3CByIVgNiT9ouvz/nh0pqwqgwf5x5h7ITSSazncZcWPHLO+Wn8Q
+         pbhqKUBky3nFT1GbjOuWse3PGrqQS4viIYMvhJjglVEj+xzyedbSv0Dh24STtZNwr7b8
+         T15HYlif1JIz52SZV/oI3WQ2WhhX4FdsXvsFTh+ihMv/DvRLOhd+YpDAPZFKlU4LxPEs
+         zVISEE4EoxR4GCu63cGYnZ6uwWdC9LKwgih04iva4yAqJsaudrpZj52pXX4m3Df+O0l2
+         IDIFFyAKKBpXqMF0ocyCZ+f9va1RgQHR11G5mV6SLppGhS/uW9C59V0avTqT1b1lEbXO
+         HA4g==
+X-Gm-Message-State: APjAAAUd+5KRdTgcHSn74ND2Q0WTYf41uhWwgSf8dWWC+l2jwt2SsFdu
+        vOwKW7P+JNGRW/9uVt2OgTQ=
+X-Google-Smtp-Source: APXvYqzsDebP4qfKcCv/S2MxLOaouK3ST+Az6tGNP9Vg56BOffbfysrpOufFkiafcP3Gw5Nk90jQBA==
+X-Received: by 2002:a5d:468b:: with SMTP id u11mr1787944wrq.276.1558193041864;
+        Sat, 18 May 2019 08:24:01 -0700 (PDT)
+Received: from localhost.localdomain ([2a01:e0a:1f1:d0f0::4e2b:d7ca])
+        by smtp.gmail.com with ESMTPSA id j190sm12934836wmb.19.2019.05.18.08.24.00
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sat, 18 May 2019 08:24:01 -0700 (PDT)
+From:   =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
+To:     Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Chen-Yu Tsai <wens@csie.org>
+Cc:     linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
+Subject: [PATCH v3 0/4] Allwinner H6 watchdog support
+Date:   Sat, 18 May 2019 17:23:51 +0200
+Message-Id: <20190518152355.11134-1-peron.clem@gmail.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 17 May 2019, Eric W. Biederman wrote:
+Hi,
 
-> Wow I got a little distracted but now I am back to this.
-> 
-> Using your test program I was able to test the basics of this.
-> 
-> I found one bug in my patch where I was missing a memset.  So I have
-> corrected that, and reorganized the patch a little bit.
-> 
-> I have not figured out how to trigger a usb disconnect so I have not
-> tested that.
+Allwinner H6 SoC has two watchdogs.
 
-Heh.  Assuming the device file you tell the test program to use 
-corresponds to an actual USB device, you can trigger a disconnect by 
-literally unplugging the USB cable.  (Add a 10-second delay to the 
-program to give yourself enough time.)
+As we are not sure that both A64 and H6 are stricly identical, I have
+introduced the H6 bindings.
 
-> The big thing I have not been able to test is running a 64bit big-endian
-> kernel with a 32bit user space.  My modified version of your test
-> program should report "Bad" without my patch, and should report "Good"
-> with it.
-> 
-> Is there any chance you can test that configuration?  I could not figure
-> out how to get a 64bit big-endian system running in qemu, and I don't
-> have the necessary hardware so I was not able to test that at all.  As
-> that is the actual bug I am still hoping someone can test it.
+After investigation it seems that on some boards the first watchdog doesn't
+make it properly reboot. Please see details in the commit log.
 
-Unfortunately, I don't have any big-endian systems either.
+I think it's proper to add it with a comment anyway.
 
-Alan Stern
+The r_watchdog is still available and usable on all the H6 boards.
+
+Maybe it would be proper to introduce a "allwinner,sun50i-h6-r-wdt" bindings?
+
+Thanks,
+Clément
+
+Changes since v2:
+ - Reintroduce H6 bindings
+ - Add watchdog Maintainters / ML
+ - Add Martin Ayotte test results
+
+Changes since v1:
+ - Use A64 compatible instead of H6
+ - Remove dt-bindings patch
+ - Change watchdog status to disabled
+ - Add r_watchdog node patch
+ - Add enable sunxi watchdog patch
+
+Clément Péron (4):
+  dt-bindings: watchdog: add Allwinner H6 watchdog
+  arm64: dts: allwinner: h6: add watchdog node
+  arm64: dts: allwinner: h6: add r_watchog node
+  arm64: defconfig: enable sunxi watchdog
+
+ .../devicetree/bindings/watchdog/sunxi-wdt.txt | 10 ++++++----
+ arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi   | 18 ++++++++++++++++++
+ arch/arm64/configs/defconfig                   |  1 +
+ 3 files changed, 25 insertions(+), 4 deletions(-)
+
+-- 
+2.17.1
 
