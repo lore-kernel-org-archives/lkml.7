@@ -2,165 +2,219 @@ Return-Path: <SRS0=//ty=TS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.7 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9867DC04AAF
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 May 2019 15:50:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29B5DC46460
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 May 2019 16:12:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 69D2220645
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 May 2019 15:50:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F3F8E20882
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 May 2019 16:12:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="mIEuqgFs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729458AbfERPuC (ORCPT
+        id S1729600AbfERQMn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 May 2019 11:50:02 -0400
-Received: from mail-it1-f198.google.com ([209.85.166.198]:52123 "EHLO
-        mail-it1-f198.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729342AbfERPuC (ORCPT
+        Sat, 18 May 2019 12:12:43 -0400
+Received: from mail-it1-f196.google.com ([209.85.166.196]:37616 "EHLO
+        mail-it1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729515AbfERQMm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 May 2019 11:50:02 -0400
-Received: by mail-it1-f198.google.com with SMTP id f196so9605432itf.1
-        for <linux-kernel@vger.kernel.org>; Sat, 18 May 2019 08:50:01 -0700 (PDT)
+        Sat, 18 May 2019 12:12:42 -0400
+Received: by mail-it1-f196.google.com with SMTP id m140so16801662itg.2
+        for <linux-kernel@vger.kernel.org>; Sat, 18 May 2019 09:12:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=NUYaBpI7HtM+jFnabamgjA4IxjSWFzxdWp6kmm3cyvc=;
+        b=mIEuqgFsXiDW3fTmdpRG+x6vjSNL10IgQt/XYQCA3tvAVqhB7QGkBxHPCI8wxwDhNd
+         LKhT/cUnMNci9N1bDfqzL1yn8/f8bRZj27gZzeRWqddEubo6SN4yvRpclKXOZMz5xKUq
+         5Jy0L71fygPiUrbWvc/eNo4ajwTAUj4ROThEKRkR+Wv3qIFs2Yax6JCqkAcALdbSrrhk
+         WixeukZ6A7rXQIIZ9adTcNBIRr66Pun66C+sC6rAy6XWix2BA/oWWbHiorYXcrJmzbUr
+         5C07cBiMW18gR75dHA5Mn8Jww09N2/+p29DRtnNsM/qqTrha/L3WWKTRqa3+fK63gTJd
+         qIcw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
-         :from:to;
-        bh=XQeWzljs1DH6t0S4944Drg1GlykramoA+3gl7La3QNE=;
-        b=rlkS+1FlqwwjMgV5YhDuab9Om+Hrcw0D8X9HCABn/1l1NtTHbArD70EJgrdkjd9GVR
-         G1rtGdRQZ2npxsPaBbnJmRdvyeBVydF3a/pJch/3mrv2khtWAttZYxzdnQ16jkMDCQ3r
-         6U4VkchLFsmVyF8mumybT9043HRh0YFsGZPKFictwCr4ljM/pzkaxa3LtCJFR4JF43GZ
-         IGAH1nqgIylTttMO3WX2Jkl4wqon1TcIMXyjsB5RBh5tqxkUudwW72VG7nCGKxoJnvpv
-         6MYH1IEMll0jQdE4P48zXHoosLb7qPXlmkGDHo4HNjAsyl5u5Cm3H/jvsEhT+zjKWMqK
-         QCjw==
-X-Gm-Message-State: APjAAAUub6CWHuFwnc3IbZ9K2McazGR8+upiGPenIqB+OMqRrKdVs+ZB
-        zeSoCJgsrLVAYajb2cswzE5xSQBT8CmwoZV2yDYyEmrxSXFF
-X-Google-Smtp-Source: APXvYqw51fcH2Q6KSLNH5ltgMkDrRqU7TnuRZxCa6WlIJ2EhuAlm1c5bT30xYyjUbYZ5qPm8WvvdjptFx/es420dPOWE+4cY4Yux
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=NUYaBpI7HtM+jFnabamgjA4IxjSWFzxdWp6kmm3cyvc=;
+        b=It4g6CJWtYR/89xQIRduHO3S2Rs8q6s7XBJuiA5YNqgcpBZyYdNhOUawo7JXZmfscF
+         zgUAqSmwFmfekICBm/QlUxoYxwBaO927AmZFZoFTgCD+pnSaF5SJG7pr8HIvAND16cZF
+         U23qKtpBn2Hu6+kC4iwXvBBDJ3l9WxxN43RlaoArN1BWgYLumTdfbjPQm8ORPnUbSISw
+         LHC4iFtgtrPhNJ082OrIVvl83pG/ZLnX+/7hyXOjxjSrsLqYobUEZxJfci0GCV0owAJk
+         E1nZeK4QTKZqWVl5XGI9R+jkMcjTiwB8VIUxW0cBPrQ/f+QbCbXAO9mz1/WyL05bVLRa
+         ql8g==
+X-Gm-Message-State: APjAAAVUyFHFMzTz2YZ3YftgC1P8peHpTu0DU99F77n5WDCP3fP2Dkc/
+        u0RVj9NVFJj/uVkbCv7GvgFmC6gm7eFjoDs9fDdP7g==
+X-Google-Smtp-Source: APXvYqwUL20YHqglcJVp2NUVYSoE87eqr/iSK2JugWCY2czDEEDb0iLbCV5bCK7vWFO/qjW7HnckzFSJVyUOyW4coOE=
+X-Received: by 2002:a24:ca84:: with SMTP id k126mr4027300itg.104.1558195961792;
+ Sat, 18 May 2019 09:12:41 -0700 (PDT)
 MIME-Version: 1.0
-X-Received: by 2002:a02:412:: with SMTP id 18mr5592188jab.82.1558194600923;
- Sat, 18 May 2019 08:50:00 -0700 (PDT)
-Date:   Sat, 18 May 2019 08:50:00 -0700
-In-Reply-To: <Pine.LNX.4.44L0.1905181045400.7855-100000@netrider.rowland.org>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000add98105892b73ec@google.com>
-Subject: Re: KASAN: use-after-free Read in p54u_load_firmware_cb
-From:   syzbot <syzbot+200d4bb11b23d929335f@syzkaller.appspotmail.com>
-To:     andreyknvl@google.com, chunkeey@gmail.com, chunkeey@googlemail.com,
-        davem@davemloft.net, kvalo@codeaurora.org,
-        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        oneukum@suse.com, stern@rowland.harvard.edu,
-        syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+References: <20190517213918.26045-1-matthewgarrett@google.com> <20190517213918.26045-5-matthewgarrett@google.com>
+In-Reply-To: <20190517213918.26045-5-matthewgarrett@google.com>
+From:   Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Date:   Sat, 18 May 2019 18:12:29 +0200
+Message-ID: <CAKv+Gu935UN8D5pkD8S9G-7=06JmsN66RdXVOCMaJfcLz=37ew@mail.gmail.com>
+Subject: Re: [PATCH V6 4/4] efi: Attempt to get the TCG2 event log in the boot stub
+To:     Matthew Garrett <matthewgarrett@google.com>
+Cc:     linux-integrity <linux-integrity@vger.kernel.org>,
+        =?UTF-8?Q?Peter_H=C3=BCwe?= <peterhuewe@gmx.de>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Roberto Sassu <roberto.sassu@huawei.com>,
+        linux-efi <linux-efi@vger.kernel.org>,
+        linux-security-module <linux-security-module@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Thiebaud Weksteen <tweek@google.com>,
+        Bartosz Szczepanek <bsz@semihalf.com>,
+        Matthew Garrett <mjg59@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On Fri, 17 May 2019 at 23:39, Matthew Garrett <matthewgarrett@google.com> wrote:
+>
+> From: Matthew Garrett <mjg59@google.com>
+>
+> Right now we only attempt to obtain the SHA1-only event log. The
+> protocol also supports a crypto agile log format, which contains digests
+> for all algorithms in use. Attempt to obtain this first, and fall back
+> to obtaining the older format if the system doesn't support it. This is
+> lightly complicated by the event sizes being variable (as we don't know
+> in advance which algorithms are in use), and the interface giving us
+> back a pointer to the start of the final entry rather than a pointer to
+> the end of the log - as a result, we need to parse the final entry to
+> figure out its length in order to know how much data to copy up to the
+> OS.
+>
+> Signed-off-by: Matthew Garrett <mjg59@google.com>
+> Tested-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+> Reviewed-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+> Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
 
-syzbot has tested the proposed patch but the reproducer still triggered  
-crash:
-KASAN: slab-out-of-bounds Read in p54u_load_firmware_cb
+This signoff doesn't belong here I think?
 
-usb 6-1: Direct firmware load for isl3887usb failed with error -2
-p54u_load_firmware_cb: priv->udev = ffff88809ad5bb80
-usb 6-1: Firmware not found.
-==================================================================
-BUG: KASAN: slab-out-of-bounds in p54u_load_firmware_cb+0x3c9/0x45f  
-drivers/net/wireless/intersil/p54/p54usb.c:937
-Read of size 8 at addr ffff88809abab588 by task kworker/1:8/5526
+> ---
+>  drivers/firmware/efi/libstub/tpm.c | 57 ++++++++++++++++++++----------
+>  1 file changed, 39 insertions(+), 18 deletions(-)
+>
+> diff --git a/drivers/firmware/efi/libstub/tpm.c b/drivers/firmware/efi/libstub/tpm.c
+> index 5bd04f75d8d6..b3f30448e454 100644
+> --- a/drivers/firmware/efi/libstub/tpm.c
+> +++ b/drivers/firmware/efi/libstub/tpm.c
+> @@ -8,8 +8,13 @@
+>   *     Thiebaud Weksteen <tweek@google.com>
+>   */
+>  #include <linux/efi.h>
+> -#include <linux/tpm_eventlog.h>
+>  #include <asm/efi.h>
+> +/*
+> + * KASAN redefines memcpy() in a way that isn't available in the EFI stub.
+> + * We need to include asm/efi.h before linux/tpm_eventlog.h in order to avoid
+> + * the wrong memcpy() being referenced.
+> + */
+> +#include <linux/tpm_eventlog.h>
+>
 
-CPU: 1 PID: 5526 Comm: kworker/1:8 Not tainted 5.1.0-rc3-g43151d6-dirty #1
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-Workqueue: events request_firmware_work_func
-Call Trace:
-  __dump_stack lib/dump_stack.c:77 [inline]
-  dump_stack+0xe8/0x16e lib/dump_stack.c:113
-  print_address_description+0x6c/0x236 mm/kasan/report.c:187
-  kasan_report.cold+0x1a/0x3c mm/kasan/report.c:317
-  p54u_load_firmware_cb+0x3c9/0x45f  
-drivers/net/wireless/intersil/p54/p54usb.c:937
-  request_firmware_work_func+0x12d/0x249  
-drivers/base/firmware_loader/main.c:785
-  process_one_work+0x90f/0x1580 kernel/workqueue.c:2269
-  worker_thread+0x9b/0xe20 kernel/workqueue.c:2415
-  kthread+0x313/0x420 kernel/kthread.c:253
-  ret_from_fork+0x3a/0x50 arch/x86/entry/entry_64.S:352
+Please drop this hunk. I just sent out a patch to fix this properly.
 
-Allocated by task 5503:
-  set_track mm/kasan/common.c:87 [inline]
-  __kasan_kmalloc mm/kasan/common.c:497 [inline]
-  __kasan_kmalloc.constprop.0+0xbf/0xd0 mm/kasan/common.c:470
-  slab_post_alloc_hook mm/slab.h:437 [inline]
-  slab_alloc_node mm/slub.c:2756 [inline]
-  __kmalloc_node_track_caller+0xf3/0x320 mm/slub.c:4372
-  __kmalloc_reserve.isra.0+0x3e/0xf0 net/core/skbuff.c:140
-  __alloc_skb+0xf4/0x5a0 net/core/skbuff.c:208
-  alloc_skb include/linux/skbuff.h:1058 [inline]
-  netlink_alloc_large_skb net/netlink/af_netlink.c:1182 [inline]
-  netlink_sendmsg+0x8db/0xcd0 net/netlink/af_netlink.c:1900
-  sock_sendmsg_nosec net/socket.c:651 [inline]
-  sock_sendmsg+0xda/0x130 net/socket.c:661
-  ___sys_sendmsg+0x80b/0x930 net/socket.c:2260
-  __sys_sendmsg+0xf1/0x1b0 net/socket.c:2298
-  do_syscall_64+0xcf/0x4f0 arch/x86/entry/common.c:290
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-
-Freed by task 5503:
-  set_track mm/kasan/common.c:87 [inline]
-  __kasan_slab_free+0x130/0x180 mm/kasan/common.c:459
-  slab_free_hook mm/slub.c:1429 [inline]
-  slab_free_freelist_hook+0x5e/0x140 mm/slub.c:1456
-  slab_free mm/slub.c:3003 [inline]
-  kfree+0xce/0x290 mm/slub.c:3958
-  skb_free_head+0x90/0xb0 net/core/skbuff.c:557
-  skb_release_data+0x543/0x8b0 net/core/skbuff.c:577
-  skb_release_all+0x4b/0x60 net/core/skbuff.c:631
-  __kfree_skb net/core/skbuff.c:645 [inline]
-  consume_skb net/core/skbuff.c:705 [inline]
-  consume_skb+0xc5/0x2f0 net/core/skbuff.c:699
-  netlink_unicast_kernel net/netlink/af_netlink.c:1311 [inline]
-  netlink_unicast+0x4e2/0x690 net/netlink/af_netlink.c:1336
-  netlink_sendmsg+0x810/0xcd0 net/netlink/af_netlink.c:1925
-  sock_sendmsg_nosec net/socket.c:651 [inline]
-  sock_sendmsg+0xda/0x130 net/socket.c:661
-  ___sys_sendmsg+0x80b/0x930 net/socket.c:2260
-  __sys_sendmsg+0xf1/0x1b0 net/socket.c:2298
-  do_syscall_64+0xcf/0x4f0 arch/x86/entry/common.c:290
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-
-The buggy address belongs to the object at ffff88809abab180
-  which belongs to the cache kmalloc-1k of size 1024
-The buggy address is located 8 bytes to the right of
-  1024-byte region [ffff88809abab180, ffff88809abab580)
-The buggy address belongs to the page:
-page:ffffea00026aea00 count:1 mapcount:0 mapping:ffff88812c3f4a00 index:0x0  
-compound_mapcount: 0
-flags: 0xfff00000010200(slab|head)
-raw: 00fff00000010200 dead000000000100 dead000000000200 ffff88812c3f4a00
-raw: 0000000000000000 00000000000e000e 00000001ffffffff 0000000000000000
-page dumped because: kasan: bad access detected
-
-Memory state around the buggy address:
-  ffff88809abab480: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-  ffff88809abab500: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-> ffff88809abab580: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
-                       ^
-  ffff88809abab600: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-  ffff88809abab680: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-==================================================================
-
-
-Tested on:
-
-commit:         43151d6c usb-fuzzer: main usb gadget fuzzer driver
-git tree:       https://github.com/google/kasan.git usb-fuzzer
-console output: https://syzkaller.appspot.com/x/log.txt?x=108a0108a00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=4183eeef650d1234
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-patch:          https://syzkaller.appspot.com/x/patch.diff?x=1292f852a00000
-
+>  #include "efistub.h"
+>
+> @@ -57,7 +62,7 @@ void efi_enable_reset_attack_mitigation(efi_system_table_t *sys_table_arg)
+>
+>  #endif
+>
+> -static void efi_retrieve_tpm2_eventlog_1_2(efi_system_table_t *sys_table_arg)
+> +void efi_retrieve_tpm2_eventlog(efi_system_table_t *sys_table_arg)
+>  {
+>         efi_guid_t tcg2_guid = EFI_TCG2_PROTOCOL_GUID;
+>         efi_guid_t linux_eventlog_guid = LINUX_EFI_TPM_EVENT_LOG_GUID;
+> @@ -67,6 +72,7 @@ static void efi_retrieve_tpm2_eventlog_1_2(efi_system_table_t *sys_table_arg)
+>         unsigned long first_entry_addr, last_entry_addr;
+>         size_t log_size, last_entry_size;
+>         efi_bool_t truncated;
+> +       int version = EFI_TCG2_EVENT_LOG_FORMAT_TCG_2;
+>         void *tcg2_protocol = NULL;
+>
+>         status = efi_call_early(locate_protocol, &tcg2_guid, NULL,
+> @@ -74,14 +80,20 @@ static void efi_retrieve_tpm2_eventlog_1_2(efi_system_table_t *sys_table_arg)
+>         if (status != EFI_SUCCESS)
+>                 return;
+>
+> -       status = efi_call_proto(efi_tcg2_protocol, get_event_log, tcg2_protocol,
+> -                               EFI_TCG2_EVENT_LOG_FORMAT_TCG_1_2,
+> -                               &log_location, &log_last_entry, &truncated);
+> -       if (status != EFI_SUCCESS)
+> -               return;
+> +       status = efi_call_proto(efi_tcg2_protocol, get_event_log,
+> +                               tcg2_protocol, version, &log_location,
+> +                               &log_last_entry, &truncated);
+> +
+> +       if (status != EFI_SUCCESS || !log_location) {
+> +               version = EFI_TCG2_EVENT_LOG_FORMAT_TCG_1_2;
+> +               status = efi_call_proto(efi_tcg2_protocol, get_event_log,
+> +                                       tcg2_protocol, version, &log_location,
+> +                                       &log_last_entry, &truncated);
+> +               if (status != EFI_SUCCESS || !log_location)
+> +                       return;
+> +
+> +       }
+>
+> -       if (!log_location)
+> -               return;
+>         first_entry_addr = (unsigned long) log_location;
+>
+>         /*
+> @@ -96,8 +108,23 @@ static void efi_retrieve_tpm2_eventlog_1_2(efi_system_table_t *sys_table_arg)
+>                  * We need to calculate its size to deduce the full size of
+>                  * the logs.
+>                  */
+> -               last_entry_size = sizeof(struct tcpa_event) +
+> -                       ((struct tcpa_event *) last_entry_addr)->event_size;
+> +               if (version == EFI_TCG2_EVENT_LOG_FORMAT_TCG_2) {
+> +                       /*
+> +                        * The TCG2 log format has variable length entries,
+> +                        * and the information to decode the hash algorithms
+> +                        * back into a size is contained in the first entry -
+> +                        * pass a pointer to the final entry (to calculate its
+> +                        * size) and the first entry (so we know how long each
+> +                        * digest is)
+> +                        */
+> +                       last_entry_size =
+> +                               __calc_tpm2_event_size((void *)last_entry_addr,
+> +                                                   (void *)(long)log_location,
+> +                                                   false);
+> +               } else {
+> +                       last_entry_size = sizeof(struct tcpa_event) +
+> +                          ((struct tcpa_event *) last_entry_addr)->event_size;
+> +               }
+>                 log_size = log_last_entry - log_location + last_entry_size;
+>         }
+>
+> @@ -114,7 +141,7 @@ static void efi_retrieve_tpm2_eventlog_1_2(efi_system_table_t *sys_table_arg)
+>
+>         memset(log_tbl, 0, sizeof(*log_tbl) + log_size);
+>         log_tbl->size = log_size;
+> -       log_tbl->version = EFI_TCG2_EVENT_LOG_FORMAT_TCG_1_2;
+> +       log_tbl->version = version;
+>         memcpy(log_tbl->log, (void *) first_entry_addr, log_size);
+>
+>         status = efi_call_early(install_configuration_table,
+> @@ -126,9 +153,3 @@ static void efi_retrieve_tpm2_eventlog_1_2(efi_system_table_t *sys_table_arg)
+>  err_free:
+>         efi_call_early(free_pool, log_tbl);
+>  }
+> -
+> -void efi_retrieve_tpm2_eventlog(efi_system_table_t *sys_table_arg)
+> -{
+> -       /* Only try to retrieve the logs in 1.2 format. */
+> -       efi_retrieve_tpm2_eventlog_1_2(sys_table_arg);
+> -}
+> --
+> 2.21.0.1020.gf2820cf01a-goog
+>
