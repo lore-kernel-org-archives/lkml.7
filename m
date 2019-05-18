@@ -2,219 +2,136 @@ Return-Path: <SRS0=//ty=TS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29B5DC46460
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 May 2019 16:12:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ADA09C04AAF
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 May 2019 16:21:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F3F8E20882
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 May 2019 16:12:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="mIEuqgFs"
+	by mail.kernel.org (Postfix) with ESMTP id 80D0D20873
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 May 2019 16:21:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729600AbfERQMn (ORCPT
+        id S1729628AbfERQVs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 May 2019 12:12:43 -0400
-Received: from mail-it1-f196.google.com ([209.85.166.196]:37616 "EHLO
-        mail-it1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729515AbfERQMm (ORCPT
+        Sat, 18 May 2019 12:21:48 -0400
+Received: from zeniv.linux.org.uk ([195.92.253.2]:42068 "EHLO
+        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729515AbfERQVs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 May 2019 12:12:42 -0400
-Received: by mail-it1-f196.google.com with SMTP id m140so16801662itg.2
-        for <linux-kernel@vger.kernel.org>; Sat, 18 May 2019 09:12:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=NUYaBpI7HtM+jFnabamgjA4IxjSWFzxdWp6kmm3cyvc=;
-        b=mIEuqgFsXiDW3fTmdpRG+x6vjSNL10IgQt/XYQCA3tvAVqhB7QGkBxHPCI8wxwDhNd
-         LKhT/cUnMNci9N1bDfqzL1yn8/f8bRZj27gZzeRWqddEubo6SN4yvRpclKXOZMz5xKUq
-         5Jy0L71fygPiUrbWvc/eNo4ajwTAUj4ROThEKRkR+Wv3qIFs2Yax6JCqkAcALdbSrrhk
-         WixeukZ6A7rXQIIZ9adTcNBIRr66Pun66C+sC6rAy6XWix2BA/oWWbHiorYXcrJmzbUr
-         5C07cBiMW18gR75dHA5Mn8Jww09N2/+p29DRtnNsM/qqTrha/L3WWKTRqa3+fK63gTJd
-         qIcw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=NUYaBpI7HtM+jFnabamgjA4IxjSWFzxdWp6kmm3cyvc=;
-        b=It4g6CJWtYR/89xQIRduHO3S2Rs8q6s7XBJuiA5YNqgcpBZyYdNhOUawo7JXZmfscF
-         zgUAqSmwFmfekICBm/QlUxoYxwBaO927AmZFZoFTgCD+pnSaF5SJG7pr8HIvAND16cZF
-         U23qKtpBn2Hu6+kC4iwXvBBDJ3l9WxxN43RlaoArN1BWgYLumTdfbjPQm8ORPnUbSISw
-         LHC4iFtgtrPhNJ082OrIVvl83pG/ZLnX+/7hyXOjxjSrsLqYobUEZxJfci0GCV0owAJk
-         E1nZeK4QTKZqWVl5XGI9R+jkMcjTiwB8VIUxW0cBPrQ/f+QbCbXAO9mz1/WyL05bVLRa
-         ql8g==
-X-Gm-Message-State: APjAAAVUyFHFMzTz2YZ3YftgC1P8peHpTu0DU99F77n5WDCP3fP2Dkc/
-        u0RVj9NVFJj/uVkbCv7GvgFmC6gm7eFjoDs9fDdP7g==
-X-Google-Smtp-Source: APXvYqwUL20YHqglcJVp2NUVYSoE87eqr/iSK2JugWCY2czDEEDb0iLbCV5bCK7vWFO/qjW7HnckzFSJVyUOyW4coOE=
-X-Received: by 2002:a24:ca84:: with SMTP id k126mr4027300itg.104.1558195961792;
- Sat, 18 May 2019 09:12:41 -0700 (PDT)
+        Sat, 18 May 2019 12:21:48 -0400
+Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92 #3 (Red Hat Linux))
+        id 1hS25e-0006JP-QQ; Sat, 18 May 2019 16:21:42 +0000
+Date:   Sat, 18 May 2019 17:21:42 +0100
+From:   Al Viro <viro@zeniv.linux.org.uk>
+To:     Dmitry Vyukov <dvyukov@google.com>
+Cc:     syzbot <syzbot+73c7fe4f77776505299b@syzkaller.appspotmail.com>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>, sabin.rapan@gmail.com,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
+Subject: Re: BUG: unable to handle kernel paging request in do_mount
+Message-ID: <20190518162142.GH17978@ZenIV.linux.org.uk>
+References: <00000000000014285d05765bf72a@google.com>
+ <0000000000000eaf23058912af14@google.com>
+ <20190517134850.GG17978@ZenIV.linux.org.uk>
+ <CACT4Y+Z8760uYQP0jKgJmVC5sstqTv9pE6K6YjK_feeK6-Obfg@mail.gmail.com>
+ <CACT4Y+bQ+zW_9a3F4jY0xcAn_Hdk5yAwX2K3E38z9fttbF0SJA@mail.gmail.com>
 MIME-Version: 1.0
-References: <20190517213918.26045-1-matthewgarrett@google.com> <20190517213918.26045-5-matthewgarrett@google.com>
-In-Reply-To: <20190517213918.26045-5-matthewgarrett@google.com>
-From:   Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Date:   Sat, 18 May 2019 18:12:29 +0200
-Message-ID: <CAKv+Gu935UN8D5pkD8S9G-7=06JmsN66RdXVOCMaJfcLz=37ew@mail.gmail.com>
-Subject: Re: [PATCH V6 4/4] efi: Attempt to get the TCG2 event log in the boot stub
-To:     Matthew Garrett <matthewgarrett@google.com>
-Cc:     linux-integrity <linux-integrity@vger.kernel.org>,
-        =?UTF-8?Q?Peter_H=C3=BCwe?= <peterhuewe@gmx.de>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Roberto Sassu <roberto.sassu@huawei.com>,
-        linux-efi <linux-efi@vger.kernel.org>,
-        linux-security-module <linux-security-module@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Thiebaud Weksteen <tweek@google.com>,
-        Bartosz Szczepanek <bsz@semihalf.com>,
-        Matthew Garrett <mjg59@google.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CACT4Y+bQ+zW_9a3F4jY0xcAn_Hdk5yAwX2K3E38z9fttbF0SJA@mail.gmail.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 17 May 2019 at 23:39, Matthew Garrett <matthewgarrett@google.com> wrote:
->
-> From: Matthew Garrett <mjg59@google.com>
->
-> Right now we only attempt to obtain the SHA1-only event log. The
-> protocol also supports a crypto agile log format, which contains digests
-> for all algorithms in use. Attempt to obtain this first, and fall back
-> to obtaining the older format if the system doesn't support it. This is
-> lightly complicated by the event sizes being variable (as we don't know
-> in advance which algorithms are in use), and the interface giving us
-> back a pointer to the start of the final entry rather than a pointer to
-> the end of the log - as a result, we need to parse the final entry to
-> figure out its length in order to know how much data to copy up to the
-> OS.
->
-> Signed-off-by: Matthew Garrett <mjg59@google.com>
-> Tested-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-> Reviewed-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-> Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+On Sat, May 18, 2019 at 05:00:39PM +0200, Dmitry Vyukov wrote:
+> On Fri, May 17, 2019 at 4:08 PM Dmitry Vyukov <dvyukov@google.com> wrote:
+> >
+> > On Fri, May 17, 2019 at 3:48 PM Al Viro <viro@zeniv.linux.org.uk> wrote:
+> > >
+> > > On Fri, May 17, 2019 at 03:17:02AM -0700, syzbot wrote:
+> > > > This bug is marked as fixed by commit:
+> > > > vfs: namespace: error pointer dereference in do_remount()
+> > > > But I can't find it in any tested tree for more than 90 days.
+> > > > Is it a correct commit? Please update it by replying:
+> > > > #syz fix: exact-commit-title
+> > > > Until then the bug is still considered open and
+> > > > new crashes with the same signature are ignored.
+> > >
+> > > Could somebody explain how the following situation is supposed to
+> > > be handled:
+> > >
+> > > 1) branch B1 with commits  C1, C2, C3, C4 is pushed out
+> > > 2) C2 turns out to have a bug, which gets caught and fixed
+> > > 3) fix is folded in and branch B2 with C1, C2', C3', C4' is
+> > > pushed out.  The bug is not in it anymore.
+> > > 4) B1 is left mouldering (or is entirely removed); B2 is
+> > > eventually merged into other trees.
+> > >
+> > > This is normal and it appears to be problematic for syzbot.
+> > > How to deal with that?  One thing I will *NOT* do in such
+> > > situations is giving up on folding the fixes in.  Bisection
+> > > hazards alone make that a bad idea.
+> >
+> > linux-next creates a bit of a havoc.
+> >
+> > The ideal way of handling this is including Tested-by: tag into C2'.
+> > Reported-by: would work too, but people suggested that Reported-by: is
+> > confusing in this situation because it suggests that the commit fixes
+> > a bug in some previous commit. Technically, syzbot now accepts any
+> > tag, so With-inputs-from:
+> > syzbot+73c7fe4f77776505299b@syzkaller.appspotmail.com would work too.
+> >
+> > At this point we obvious can't fix up C2'. For such cases syzbot
+> > accepts #syz fix command to associate bugs with fixes. So replying
+> > with "#syz fix: C2'-commit-title" should do.
+> 
+> What is that C2'?
 
-This signoff doesn't belong here I think?
+In this case?  Take a look at
 
-> ---
->  drivers/firmware/efi/libstub/tpm.c | 57 ++++++++++++++++++++----------
->  1 file changed, 39 insertions(+), 18 deletions(-)
->
-> diff --git a/drivers/firmware/efi/libstub/tpm.c b/drivers/firmware/efi/libstub/tpm.c
-> index 5bd04f75d8d6..b3f30448e454 100644
-> --- a/drivers/firmware/efi/libstub/tpm.c
-> +++ b/drivers/firmware/efi/libstub/tpm.c
-> @@ -8,8 +8,13 @@
->   *     Thiebaud Weksteen <tweek@google.com>
->   */
->  #include <linux/efi.h>
-> -#include <linux/tpm_eventlog.h>
->  #include <asm/efi.h>
-> +/*
-> + * KASAN redefines memcpy() in a way that isn't available in the EFI stub.
-> + * We need to include asm/efi.h before linux/tpm_eventlog.h in order to avoid
-> + * the wrong memcpy() being referenced.
-> + */
-> +#include <linux/tpm_eventlog.h>
->
+commit fd0002870b453c58d0d8c195954f5049bc6675fb
+Author: David Howells <dhowells@redhat.com>
+Date:   Tue Aug 28 14:45:06 2018 +0100
 
-Please drop this hunk. I just sent out a patch to fix this properly.
+    vfs: Implement a filesystem superblock creation/configuration context
 
->  #include "efistub.h"
->
-> @@ -57,7 +62,7 @@ void efi_enable_reset_attack_mitigation(efi_system_table_t *sys_table_arg)
->
->  #endif
->
-> -static void efi_retrieve_tpm2_eventlog_1_2(efi_system_table_t *sys_table_arg)
-> +void efi_retrieve_tpm2_eventlog(efi_system_table_t *sys_table_arg)
->  {
->         efi_guid_t tcg2_guid = EFI_TCG2_PROTOCOL_GUID;
->         efi_guid_t linux_eventlog_guid = LINUX_EFI_TPM_EVENT_LOG_GUID;
-> @@ -67,6 +72,7 @@ static void efi_retrieve_tpm2_eventlog_1_2(efi_system_table_t *sys_table_arg)
->         unsigned long first_entry_addr, last_entry_addr;
->         size_t log_size, last_entry_size;
->         efi_bool_t truncated;
-> +       int version = EFI_TCG2_EVENT_LOG_FORMAT_TCG_2;
->         void *tcg2_protocol = NULL;
->
->         status = efi_call_early(locate_protocol, &tcg2_guid, NULL,
-> @@ -74,14 +80,20 @@ static void efi_retrieve_tpm2_eventlog_1_2(efi_system_table_t *sys_table_arg)
->         if (status != EFI_SUCCESS)
->                 return;
->
-> -       status = efi_call_proto(efi_tcg2_protocol, get_event_log, tcg2_protocol,
-> -                               EFI_TCG2_EVENT_LOG_FORMAT_TCG_1_2,
-> -                               &log_location, &log_last_entry, &truncated);
-> -       if (status != EFI_SUCCESS)
-> -               return;
-> +       status = efi_call_proto(efi_tcg2_protocol, get_event_log,
-> +                               tcg2_protocol, version, &log_location,
-> +                               &log_last_entry, &truncated);
-> +
-> +       if (status != EFI_SUCCESS || !log_location) {
-> +               version = EFI_TCG2_EVENT_LOG_FORMAT_TCG_1_2;
-> +               status = efi_call_proto(efi_tcg2_protocol, get_event_log,
-> +                                       tcg2_protocol, version, &log_location,
-> +                                       &log_last_entry, &truncated);
-> +               if (status != EFI_SUCCESS || !log_location)
-> +                       return;
-> +
-> +       }
->
-> -       if (!log_location)
-> -               return;
->         first_entry_addr = (unsigned long) log_location;
->
->         /*
-> @@ -96,8 +108,23 @@ static void efi_retrieve_tpm2_eventlog_1_2(efi_system_table_t *sys_table_arg)
->                  * We need to calculate its size to deduce the full size of
->                  * the logs.
->                  */
-> -               last_entry_size = sizeof(struct tcpa_event) +
-> -                       ((struct tcpa_event *) last_entry_addr)->event_size;
-> +               if (version == EFI_TCG2_EVENT_LOG_FORMAT_TCG_2) {
-> +                       /*
-> +                        * The TCG2 log format has variable length entries,
-> +                        * and the information to decode the hash algorithms
-> +                        * back into a size is contained in the first entry -
-> +                        * pass a pointer to the final entry (to calculate its
-> +                        * size) and the first entry (so we know how long each
-> +                        * digest is)
-> +                        */
-> +                       last_entry_size =
-> +                               __calc_tpm2_event_size((void *)last_entry_addr,
-> +                                                   (void *)(long)log_location,
-> +                                                   false);
-> +               } else {
-> +                       last_entry_size = sizeof(struct tcpa_event) +
-> +                          ((struct tcpa_event *) last_entry_addr)->event_size;
-> +               }
->                 log_size = log_last_entry - log_location + last_entry_size;
->         }
->
-> @@ -114,7 +141,7 @@ static void efi_retrieve_tpm2_eventlog_1_2(efi_system_table_t *sys_table_arg)
->
->         memset(log_tbl, 0, sizeof(*log_tbl) + log_size);
->         log_tbl->size = log_size;
-> -       log_tbl->version = EFI_TCG2_EVENT_LOG_FORMAT_TCG_1_2;
-> +       log_tbl->version = version;
->         memcpy(log_tbl->log, (void *) first_entry_addr, log_size);
->
->         status = efi_call_early(install_configuration_table,
-> @@ -126,9 +153,3 @@ static void efi_retrieve_tpm2_eventlog_1_2(efi_system_table_t *sys_table_arg)
->  err_free:
->         efi_call_early(free_pool, log_tbl);
->  }
-> -
-> -void efi_retrieve_tpm2_eventlog(efi_system_table_t *sys_table_arg)
-> -{
-> -       /* Only try to retrieve the logs in 1.2 format. */
-> -       efi_retrieve_tpm2_eventlog_1_2(sys_table_arg);
-> -}
-> --
-> 2.21.0.1020.gf2820cf01a-goog
->
+and compare with
+
+commit f18edd10d3c7d6127b1fa97c8f3299629cf58ed5
+Author: David Howells <dhowells@redhat.com>
+Date:   Thu Nov 1 23:07:25 2018 +0000
+
+    vfs: Implement a filesystem superblock creation/configuration context
+
+There might have been intermediate forms, but that should illustrate what
+happened.  Diff of those two contains (among other things) this:
+@@ -985,6 +989,9 @@
+ +      fc = vfs_new_fs_context(path->dentry->d_sb->s_type,
+ +                              path->dentry, sb_flags, MS_RMT_MASK,
+ +                              FS_CONTEXT_FOR_RECONFIGURE);
+++      err = PTR_ERR(fc);
+++      if (IS_ERR(fc))
+++              goto err;
+ +
+ +      err = parse_monolithic_mount_data(fc, data, data_size);
+ +      if (err < 0)
+
+IOW, Dan's fix folded into the offending commit.  And that kind of
+pattern is not rare; I would argue that appending Dan's patch at
+the end of queue and leaving the crap in between would be a fucking
+bad idea - it would've left a massive bisection hazard *and* made
+life much more unpleasant when the things got to merging into the
+mainline (or reviewing, for that matter).
+
+What would you prefer to happen in such situations?  Commit summaries
+modified enough to confuse CI tools into *NOT* noticing that those
+are versions of the same patch?  Some kind of metadata telling the
+same tools that such-and-such commits got folded in (and they might
+have been split in process, with parts folded into different spots
+in the series, at that)?
+
+Because "never fold in, never reorder, just accumulate patches in
+the end of the series" is not going to fly.  For a lot of reasons.
