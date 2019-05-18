@@ -2,65 +2,66 @@ Return-Path: <SRS0=//ty=TS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A898FC04AAF
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 May 2019 09:21:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 578E5C04AAF
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 May 2019 09:22:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6A2452087B
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 May 2019 09:21:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 210832087B
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 May 2019 09:22:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="v0oUO2pl"
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="JEbaAlFP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729822AbfERJVR (ORCPT
+        id S1729833AbfERJWA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 May 2019 05:21:17 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:50571 "EHLO
+        Sat, 18 May 2019 05:22:00 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:38749 "EHLO
         terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725468AbfERJVR (ORCPT
+        with ESMTP id S1725468AbfERJV7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 May 2019 05:21:17 -0400
+        Sat, 18 May 2019 05:21:59 -0400
 Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x4I9L2Ht1738836
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x4I9LlCW1739064
         (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Sat, 18 May 2019 02:21:02 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x4I9L2Ht1738836
+        Sat, 18 May 2019 02:21:47 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x4I9LlCW1739064
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019041745; t=1558171263;
-        bh=DhX8Cons+GYwuL0E/v8TFiKoaAjHnYSJeCxOW+hCG+s=;
+        s=2019041745; t=1558171307;
+        bh=JN5L4QzSYCIpcc1mz6cgi4dRfmSNKY+8/f2TPOR+w/w=;
         h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
-        b=v0oUO2pl4aBh8/MjyKJszr9+6SpjJbX8agMMmrkPpkQiNxjKesacRzNvHyrJSvN9q
-         WPg0f8M6evOoB/r7Iz/FANWgSGgy8AOjA4FPGx5IXHzbjQuc7LP1NHwjxo6vmZBr2o
-         VLfl0ieyl1Z9PdZ0e8RooLphaREYvX0xd4c7ygx/Dy42xgnxcYjEQN6Mu7Bq9ZWy57
-         beA7HQIyfni56b9jtCpP6o3w4EofaMx2fhKql7bchOjH99DtTCb1ZgPX2UQpETkSAt
-         XjCrCtrCMgjeOxnSZ45y1kgJM6pfO4xkbWOhdpZU4wvTv8QPi3Kal9WdMRkDZMM47O
-         JZFkB4AULhRfw==
+        b=JEbaAlFPAqRP2RPfc6krklgljjxXN7RE/lzm6aXM4TUObjKepHrzRA5YmXWqQAuMp
+         PbaTt2fhgtwC4J/h7R5LC9rhDx3R8OBlPPN6MXEetxnndEk8yv0MW2m/p7q7AtmKaE
+         lTaaVYmoY/glvHexYIilThWG/ol+9tz55eeORUnDLCMOn3i7wEia0FBHK/ZtGMcgWD
+         Y55n2hz1YwhzbL9B7asHZWU1EQ20tngwLGz9B8Gqxg34oqORbyMqyLX+yJp66QpZcJ
+         6kmYlLS7mG+vJCK8diGo1Y8y2aL/l4kU0lgUBwGx6NUjZS4nrOPkBDMeRfvsWVpbQ7
+         X2Tm2vP+2EYWQ==
 Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x4I9L1kW1738787;
-        Sat, 18 May 2019 02:21:01 -0700
-Date:   Sat, 18 May 2019 02:21:01 -0700
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x4I9LkC01739061;
+        Sat, 18 May 2019 02:21:46 -0700
+Date:   Sat, 18 May 2019 02:21:46 -0700
 X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
 From:   tip-bot for Alexey Budankov <tipbot@zytor.com>
-Message-ID: <tip-51255a8af7c41c876c2d715a35ab03c13302a607@git.kernel.org>
-Cc:     peterz@infradead.org, namhyung@kernel.org, ak@linux.intel.com,
-        jolsa@kernel.org, alexey.budankov@linux.intel.com,
-        linux-kernel@vger.kernel.org, tglx@linutronix.de, hpa@zytor.com,
-        alexander.shishkin@linux.intel.com, acme@redhat.com,
-        mingo@kernel.org
-Reply-To: alexander.shishkin@linux.intel.com, mingo@kernel.org,
-          acme@redhat.com, hpa@zytor.com, tglx@linutronix.de,
-          alexey.budankov@linux.intel.com, linux-kernel@vger.kernel.org,
-          namhyung@kernel.org, jolsa@kernel.org, ak@linux.intel.com,
-          peterz@infradead.org
-In-Reply-To: <49b31321-0f70-392b-9a4f-649d3affe090@linux.intel.com>
-References: <49b31321-0f70-392b-9a4f-649d3affe090@linux.intel.com>
+Message-ID: <tip-f24c1d7523e6db26ec2115a308750c875927741b@git.kernel.org>
+Cc:     alexander.shishkin@linux.intel.com, linux-kernel@vger.kernel.org,
+        jolsa@kernel.org, acme@redhat.com, hpa@zytor.com,
+        tglx@linutronix.de, alexey.budankov@linux.intel.com,
+        namhyung@kernel.org, peterz@infradead.org, mingo@kernel.org,
+        ak@linux.intel.com
+Reply-To: ak@linux.intel.com, mingo@kernel.org,
+          alexey.budankov@linux.intel.com, tglx@linutronix.de,
+          peterz@infradead.org, hpa@zytor.com, namhyung@kernel.org,
+          acme@redhat.com, jolsa@kernel.org, linux-kernel@vger.kernel.org,
+          alexander.shishkin@linux.intel.com
+In-Reply-To: <18bf36f3-b85a-1fe2-dd83-10e0c6069568@linux.intel.com>
+References: <18bf36f3-b85a-1fe2-dd83-10e0c6069568@linux.intel.com>
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:perf/core] perf mmap: Implement dedicated memory buffer for
- data compression
-Git-Commit-ID: 51255a8af7c41c876c2d715a35ab03c13302a607
+Subject: [tip:perf/core] perf tools: Introduce Zstd streaming based
+ compression API
+Git-Commit-ID: f24c1d7523e6db26ec2115a308750c875927741b
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot.git.kernel.org>
 Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
@@ -74,17 +75,22 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  51255a8af7c41c876c2d715a35ab03c13302a607
-Gitweb:     https://git.kernel.org/tip/51255a8af7c41c876c2d715a35ab03c13302a607
+Commit-ID:  f24c1d7523e6db26ec2115a308750c875927741b
+Gitweb:     https://git.kernel.org/tip/f24c1d7523e6db26ec2115a308750c875927741b
 Author:     Alexey Budankov <alexey.budankov@linux.intel.com>
-AuthorDate: Mon, 18 Mar 2019 20:42:19 +0300
+AuthorDate: Mon, 18 Mar 2019 20:42:55 +0300
 Committer:  Arnaldo Carvalho de Melo <acme@redhat.com>
 CommitDate: Wed, 15 May 2019 16:36:49 -0300
 
-perf mmap: Implement dedicated memory buffer for data compression
+perf tools: Introduce Zstd streaming based compression API
 
-Implemented mmap data buffer that is used as the memory to operate
-on when compressing data in case of serial trace streaming.
+Implemented functions are based on Zstd streaming compression API.
+
+The functions are used in runtime to compress data that come from mmaped
+kernel buffer. zstd_init(), zstd_fini() are used for initialization and
+finalization to allocate and deallocate internal zstd objects.
+zstd_compress_stream_to_records() is used to convert parts of mmaped
+kernel buffer into an array of PERF_RECORD_COMPRESSED records.
 
 Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
 Reviewed-by: Jiri Olsa <jolsa@kernel.org>
@@ -92,183 +98,158 @@ Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
 Cc: Andi Kleen <ak@linux.intel.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
-Link: http://lkml.kernel.org/r/49b31321-0f70-392b-9a4f-649d3affe090@linux.intel.com
+Link: http://lkml.kernel.org/r/18bf36f3-b85a-1fe2-dd83-10e0c6069568@linux.intel.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/builtin-record.c |  8 +++++++-
- tools/perf/util/evlist.c    |  8 +++++---
- tools/perf/util/evlist.h    |  2 +-
- tools/perf/util/mmap.c      | 30 ++++++++++++++++++++++++++++--
- tools/perf/util/mmap.h      |  4 +++-
- 5 files changed, 44 insertions(+), 8 deletions(-)
+ tools/perf/util/Build      |  2 ++
+ tools/perf/util/compress.h | 42 ++++++++++++++++++++++++++++
+ tools/perf/util/zstd.c     | 70 ++++++++++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 114 insertions(+)
 
-diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
-index 45a80b3584ad..ca6d7488e34b 100644
---- a/tools/perf/builtin-record.c
-+++ b/tools/perf/builtin-record.c
-@@ -372,6 +372,8 @@ static int record__mmap_flush_parse(const struct option *opt,
- 	return 0;
- }
+diff --git a/tools/perf/util/Build b/tools/perf/util/Build
+index 8dd3102301ea..6d5bbc8b589b 100644
+--- a/tools/perf/util/Build
++++ b/tools/perf/util/Build
+@@ -145,6 +145,8 @@ perf-y += scripting-engines/
  
-+static unsigned int comp_level_max = 22;
+ perf-$(CONFIG_ZLIB) += zlib.o
+ perf-$(CONFIG_LZMA) += lzma.o
++perf-$(CONFIG_ZSTD) += zstd.o
 +
- static int record__comp_enabled(struct record *rec)
- {
- 	return rec->opts.comp_level > 0;
-@@ -587,7 +589,7 @@ static int record__mmap_evlist(struct record *rec,
- 				 opts->auxtrace_mmap_pages,
- 				 opts->auxtrace_snapshot_mode,
- 				 opts->nr_cblocks, opts->affinity,
--				 opts->mmap_flush) < 0) {
-+				 opts->mmap_flush, opts->comp_level) < 0) {
- 		if (errno == EPERM) {
- 			pr_err("Permission error mapping pages.\n"
- 			       "Consider increasing "
-@@ -2298,6 +2300,10 @@ int cmd_record(int argc, const char **argv)
- 	pr_debug("affinity: %s\n", affinity_tags[rec->opts.affinity]);
- 	pr_debug("mmap flush: %d\n", rec->opts.mmap_flush);
+ perf-y += demangle-java.o
+ perf-y += demangle-rust.o
  
-+	if (rec->opts.comp_level > comp_level_max)
-+		rec->opts.comp_level = comp_level_max;
-+	pr_debug("comp level: %d\n", rec->opts.comp_level);
+diff --git a/tools/perf/util/compress.h b/tools/perf/util/compress.h
+index 892e92e7e7fc..1041a4fd81e2 100644
+--- a/tools/perf/util/compress.h
++++ b/tools/perf/util/compress.h
+@@ -2,6 +2,11 @@
+ #ifndef PERF_COMPRESS_H
+ #define PERF_COMPRESS_H
+ 
++#include <stdbool.h>
++#ifdef HAVE_ZSTD_SUPPORT
++#include <zstd.h>
++#endif
 +
- 	err = __cmd_record(&record, argc, argv);
- out:
- 	perf_evlist__delete(rec->evlist);
-diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
-index 4b6783ff5813..69d0fa8ab16f 100644
---- a/tools/perf/util/evlist.c
-+++ b/tools/perf/util/evlist.c
-@@ -1009,7 +1009,8 @@ int perf_evlist__parse_mmap_pages(const struct option *opt, const char *str,
-  */
- int perf_evlist__mmap_ex(struct perf_evlist *evlist, unsigned int pages,
- 			 unsigned int auxtrace_pages,
--			 bool auxtrace_overwrite, int nr_cblocks, int affinity, int flush)
-+			 bool auxtrace_overwrite, int nr_cblocks, int affinity, int flush,
-+			 int comp_level)
- {
- 	struct perf_evsel *evsel;
- 	const struct cpu_map *cpus = evlist->cpus;
-@@ -1019,7 +1020,8 @@ int perf_evlist__mmap_ex(struct perf_evlist *evlist, unsigned int pages,
- 	 * Its value is decided by evsel's write_backward.
- 	 * So &mp should not be passed through const pointer.
- 	 */
--	struct mmap_params mp = { .nr_cblocks = nr_cblocks, .affinity = affinity, .flush = flush };
-+	struct mmap_params mp = { .nr_cblocks = nr_cblocks, .affinity = affinity, .flush = flush,
-+				  .comp_level = comp_level };
+ #ifdef HAVE_ZLIB_SUPPORT
+ int gzip_decompress_to_file(const char *input, int output_fd);
+ bool gzip_is_compressed(const char *input);
+@@ -12,4 +17,41 @@ int lzma_decompress_to_file(const char *input, int output_fd);
+ bool lzma_is_compressed(const char *input);
+ #endif
  
- 	if (!evlist->mmap)
- 		evlist->mmap = perf_evlist__alloc_mmap(evlist, false);
-@@ -1051,7 +1053,7 @@ int perf_evlist__mmap_ex(struct perf_evlist *evlist, unsigned int pages,
- 
- int perf_evlist__mmap(struct perf_evlist *evlist, unsigned int pages)
- {
--	return perf_evlist__mmap_ex(evlist, pages, 0, false, 0, PERF_AFFINITY_SYS, 1);
-+	return perf_evlist__mmap_ex(evlist, pages, 0, false, 0, PERF_AFFINITY_SYS, 1, 0);
- }
- 
- int perf_evlist__create_maps(struct perf_evlist *evlist, struct target *target)
-diff --git a/tools/perf/util/evlist.h b/tools/perf/util/evlist.h
-index c9a0f72677fd..49354fe24d5f 100644
---- a/tools/perf/util/evlist.h
-+++ b/tools/perf/util/evlist.h
-@@ -178,7 +178,7 @@ unsigned long perf_event_mlock_kb_in_pages(void);
- int perf_evlist__mmap_ex(struct perf_evlist *evlist, unsigned int pages,
- 			 unsigned int auxtrace_pages,
- 			 bool auxtrace_overwrite, int nr_cblocks,
--			 int affinity, int flush);
-+			 int affinity, int flush, int comp_level);
- int perf_evlist__mmap(struct perf_evlist *evlist, unsigned int pages);
- void perf_evlist__munmap(struct perf_evlist *evlist);
- 
-diff --git a/tools/perf/util/mmap.c b/tools/perf/util/mmap.c
-index ef3d79b2c90b..d85e73fc82e2 100644
---- a/tools/perf/util/mmap.c
-+++ b/tools/perf/util/mmap.c
-@@ -157,6 +157,10 @@ void __weak auxtrace_mmap_params__set_idx(struct auxtrace_mmap_params *mp __mayb
- }
- 
- #ifdef HAVE_AIO_SUPPORT
-+static int perf_mmap__aio_enabled(struct perf_mmap *map)
-+{
-+	return map->aio.nr_cblocks > 0;
-+}
- 
- #ifdef HAVE_LIBNUMA_SUPPORT
- static int perf_mmap__aio_alloc(struct perf_mmap *map, int idx)
-@@ -198,7 +202,7 @@ static int perf_mmap__aio_bind(struct perf_mmap *map, int idx, int cpu, int affi
- 
- 	return 0;
- }
--#else
-+#else /* !HAVE_LIBNUMA_SUPPORT */
- static int perf_mmap__aio_alloc(struct perf_mmap *map, int idx)
- {
- 	map->aio.data[idx] = malloc(perf_mmap__mmap_len(map));
-@@ -359,7 +363,12 @@ int perf_mmap__aio_push(struct perf_mmap *md, void *to, int idx,
- 
- 	return rc;
- }
--#else
-+#else /* !HAVE_AIO_SUPPORT */
-+static int perf_mmap__aio_enabled(struct perf_mmap *map __maybe_unused)
++struct zstd_data {
++#ifdef HAVE_ZSTD_SUPPORT
++	ZSTD_CStream	*cstream;
++#endif
++};
++
++#ifdef HAVE_ZSTD_SUPPORT
++
++int zstd_init(struct zstd_data *data, int level);
++int zstd_fini(struct zstd_data *data);
++
++size_t zstd_compress_stream_to_records(struct zstd_data *data, void *dst, size_t dst_size,
++				       void *src, size_t src_size, size_t max_record_size,
++				       size_t process_header(void *record, size_t increment));
++#else /* !HAVE_ZSTD_SUPPORT */
++
++static inline int zstd_init(struct zstd_data *data __maybe_unused, int level __maybe_unused)
 +{
 +	return 0;
 +}
 +
- static int perf_mmap__aio_mmap(struct perf_mmap *map __maybe_unused,
- 			       struct mmap_params *mp __maybe_unused)
- {
-@@ -374,6 +383,10 @@ static void perf_mmap__aio_munmap(struct perf_mmap *map __maybe_unused)
- void perf_mmap__munmap(struct perf_mmap *map)
- {
- 	perf_mmap__aio_munmap(map);
-+	if (map->data != NULL) {
-+		munmap(map->data, perf_mmap__mmap_len(map));
-+		map->data = NULL;
-+	}
- 	if (map->base != NULL) {
- 		munmap(map->base, perf_mmap__mmap_len(map));
- 		map->base = NULL;
-@@ -442,6 +455,19 @@ int perf_mmap__mmap(struct perf_mmap *map, struct mmap_params *mp, int fd, int c
- 
- 	map->flush = mp->flush;
- 
-+	map->comp_level = mp->comp_level;
++static inline int zstd_fini(struct zstd_data *data __maybe_unused)
++{
++	return 0;
++}
 +
-+	if (map->comp_level && !perf_mmap__aio_enabled(map)) {
-+		map->data = mmap(NULL, perf_mmap__mmap_len(map), PROT_READ|PROT_WRITE,
-+				 MAP_PRIVATE|MAP_ANONYMOUS, 0, 0);
-+		if (map->data == MAP_FAILED) {
-+			pr_debug2("failed to mmap data buffer, error %d\n",
-+					errno);
-+			map->data = NULL;
-+			return -1;
++static inline
++size_t zstd_compress_stream_to_records(struct zstd_data *data __maybe_unused,
++				       void *dst __maybe_unused, size_t dst_size __maybe_unused,
++				       void *src __maybe_unused, size_t src_size __maybe_unused,
++				       size_t max_record_size __maybe_unused,
++				       size_t process_header(void *record, size_t increment) __maybe_unused)
++{
++	return 0;
++}
++#endif
++
+ #endif /* PERF_COMPRESS_H */
+diff --git a/tools/perf/util/zstd.c b/tools/perf/util/zstd.c
+new file mode 100644
+index 000000000000..359ec9a9d306
+--- /dev/null
++++ b/tools/perf/util/zstd.c
+@@ -0,0 +1,70 @@
++// SPDX-License-Identifier: GPL-2.0
++
++#include <string.h>
++
++#include "util/compress.h"
++#include "util/debug.h"
++
++int zstd_init(struct zstd_data *data, int level)
++{
++	size_t ret;
++
++	data->cstream = ZSTD_createCStream();
++	if (data->cstream == NULL) {
++		pr_err("Couldn't create compression stream.\n");
++		return -1;
++	}
++
++	ret = ZSTD_initCStream(data->cstream, level);
++	if (ZSTD_isError(ret)) {
++		pr_err("Failed to initialize compression stream: %s\n", ZSTD_getErrorName(ret));
++		return -1;
++	}
++
++	return 0;
++}
++
++int zstd_fini(struct zstd_data *data)
++{
++	if (data->cstream) {
++		ZSTD_freeCStream(data->cstream);
++		data->cstream = NULL;
++	}
++
++	return 0;
++}
++
++size_t zstd_compress_stream_to_records(struct zstd_data *data, void *dst, size_t dst_size,
++				       void *src, size_t src_size, size_t max_record_size,
++				       size_t process_header(void *record, size_t increment))
++{
++	size_t ret, size, compressed = 0;
++	ZSTD_inBuffer input = { src, src_size, 0 };
++	ZSTD_outBuffer output;
++	void *record;
++
++	while (input.pos < input.size) {
++		record = dst;
++		size = process_header(record, 0);
++		compressed += size;
++		dst += size;
++		dst_size -= size;
++		output = (ZSTD_outBuffer){ dst, (dst_size > max_record_size) ?
++						max_record_size : dst_size, 0 };
++		ret = ZSTD_compressStream(data->cstream, &output, &input);
++		ZSTD_flushStream(data->cstream, &output);
++		if (ZSTD_isError(ret)) {
++			pr_err("failed to compress %ld bytes: %s\n",
++				(long)src_size, ZSTD_getErrorName(ret));
++			memcpy(dst, src, src_size);
++			return src_size;
 +		}
++		size = output.pos;
++		size = process_header(record, size);
++		compressed += size;
++		dst += size;
++		dst_size -= size;
 +	}
 +
- 	if (auxtrace_mmap__mmap(&map->auxtrace_mmap,
- 				&mp->auxtrace_mp, map->base, fd))
- 		return -1;
-diff --git a/tools/perf/util/mmap.h b/tools/perf/util/mmap.h
-index b82f8c2d55c4..4e2f58d95c1f 100644
---- a/tools/perf/util/mmap.h
-+++ b/tools/perf/util/mmap.h
-@@ -40,6 +40,8 @@ struct perf_mmap {
- #endif
- 	cpu_set_t	affinity_mask;
- 	u64		flush;
-+	void		*data;
-+	int		comp_level;
- };
- 
- /*
-@@ -71,7 +73,7 @@ enum bkw_mmap_state {
- };
- 
- struct mmap_params {
--	int			    prot, mask, nr_cblocks, affinity, flush;
-+	int prot, mask, nr_cblocks, affinity, flush, comp_level;
- 	struct auxtrace_mmap_params auxtrace_mp;
- };
- 
++	return compressed;
++}
