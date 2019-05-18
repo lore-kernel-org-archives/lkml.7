@@ -7,57 +7,58 @@ X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55115C04AAF
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 May 2019 09:02:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09B7AC04AAF
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 May 2019 09:03:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 208B420657
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 May 2019 09:02:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C756A2082C
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 May 2019 09:03:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="ngcLJ6Xu"
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="Pac6CBcX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729591AbfERJCj (ORCPT
+        id S1729599AbfERJDW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 May 2019 05:02:39 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:46613 "EHLO
+        Sat, 18 May 2019 05:03:22 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:33339 "EHLO
         terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726056AbfERJCi (ORCPT
+        with ESMTP id S1726056AbfERJDW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 May 2019 05:02:38 -0400
+        Sat, 18 May 2019 05:03:22 -0400
 Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x4I92Eh91734093
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x4I92us91734138
         (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Sat, 18 May 2019 02:02:14 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x4I92Eh91734093
+        Sat, 18 May 2019 02:02:56 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x4I92us91734138
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019041745; t=1558170135;
-        bh=K5naHoKzJH4DWvYM+s8pWbfZwvCJr9zMaT9JvQqfSBY=;
+        s=2019041745; t=1558170177;
+        bh=FWw0Z5HkdGb0/VTIxJRXGzPhkZxj2EdLu1Zxo2MlFvE=;
         h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
-        b=ngcLJ6Xub90vlK+SWLKDXXrXRTb96Trng86xpCQtwQkezRusZGL3eCAQdB0ULULm+
-         tFjecgwRq/2wAT/h+mkWRPv8hxXGhkeecg2DXsv1ouCj4R72v0b/yPtH6M+AWSXAKU
-         qhGsWvjgrwV3L8+HVH4S9BEQ+7KwAmvovIVSTRz/r2r1fjG1bf23QLq7KYtgPlDXx5
-         oUR9XCpBxwNKFvdHSaf6PXVBW5snV12mZSbNsDAzHLkFoK81CuPZCuqiJCHcipWpUI
-         QWUFfdpn9meIojbH9/qNZjdamDIJLRl0Wq8/NkjDdr8Guvm8sqA1YRql6FBTgMkTMi
-         U2+uKoasJUJsw==
+        b=Pac6CBcXSewlnWegh4I4i33H7sLNlaglxxHAeOMLX54e+01dm+gwp4Ki6t5/Wqo/k
+         2MVgPaCEyNZMc5xBLsp4Z7mc9RJdS7ZXtIkIK+d7aPeuxe9gd89G2pNJJLHmICwLsw
+         480QRJmaeW3lWQ6mkZTVqG9z72VnpVtzBj1IpTf8Zc+3ZZCrld89pDJ4CQfYU3mfmC
+         zsGMhwQhsvRzr/eeC6nEXWKdPH+XP17BiXHHJ8QsSPOq3AW8tw1Hd+Q/qNzKzj8kM2
+         Jg2GfpJ1Li9uKecdy3i3swAaTVWux/d4KKZDjKgRJA0Szs/ThXEta+raTkbhg0EnjK
+         dp3CHQMcgc/fw==
 Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x4I92DJp1734090;
-        Sat, 18 May 2019 02:02:13 -0700
-Date:   Sat, 18 May 2019 02:02:13 -0700
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x4I92tv71734135;
+        Sat, 18 May 2019 02:02:55 -0700
+Date:   Sat, 18 May 2019 02:02:55 -0700
 X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
 From:   tip-bot for Tzvetomir Stoyanov <tipbot@zytor.com>
-Message-ID: <tip-3d2626bd1f15711711b575463befbe137ac1adc6@git.kernel.org>
-Cc:     acme@redhat.com, rostedt@goodmis.org, tstoyanov@vmware.com,
-        tglx@linutronix.de, hpa@zytor.com, mingo@kernel.org,
-        linux-kernel@vger.kernel.org, jolsa@redhat.com,
-        namhyung@kernel.org, akpm@linux-foundation.org
-Reply-To: acme@redhat.com, tstoyanov@vmware.com, tglx@linutronix.de,
-          rostedt@goodmis.org, hpa@zytor.com, jolsa@redhat.com,
-          namhyung@kernel.org, akpm@linux-foundation.org, mingo@kernel.org,
-          linux-kernel@vger.kernel.org
-In-Reply-To: <20190510200106.583928896@goodmis.org>
-References: <20190510200106.583928896@goodmis.org>
+Message-ID: <tip-ba28fabe43c3a13bbc6e48f78fdf609dcc5e114b@git.kernel.org>
+Cc:     namhyung@kernel.org, akpm@linux-foundation.org,
+        rostedt@goodmis.org, hpa@zytor.com, tstoyanov@vmware.com,
+        acme@redhat.com, linux-kernel@vger.kernel.org, jolsa@redhat.com,
+        tglx@linutronix.de, mingo@kernel.org
+Reply-To: akpm@linux-foundation.org, namhyung@kernel.org,
+          rostedt@goodmis.org, tstoyanov@vmware.com, hpa@zytor.com,
+          acme@redhat.com, jolsa@redhat.com, linux-kernel@vger.kernel.org,
+          tglx@linutronix.de, mingo@kernel.org
+In-Reply-To: <20190510200106.742948683@goodmis.org>
+References: <20190510200106.742948683@goodmis.org>
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:perf/core] tools lib traceevent: Man page for header_page APIs
-Git-Commit-ID: 3d2626bd1f15711711b575463befbe137ac1adc6
+Subject: [tip:perf/core] tools lib traceevent: Man page for get/set cpus
+ APIs
+Git-Commit-ID: ba28fabe43c3a13bbc6e48f78fdf609dcc5e114b
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot.git.kernel.org>
 Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
@@ -71,139 +72,94 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  3d2626bd1f15711711b575463befbe137ac1adc6
-Gitweb:     https://git.kernel.org/tip/3d2626bd1f15711711b575463befbe137ac1adc6
+Commit-ID:  ba28fabe43c3a13bbc6e48f78fdf609dcc5e114b
+Gitweb:     https://git.kernel.org/tip/ba28fabe43c3a13bbc6e48f78fdf609dcc5e114b
 Author:     Tzvetomir Stoyanov <tstoyanov@vmware.com>
-AuthorDate: Fri, 10 May 2019 15:56:11 -0400
+AuthorDate: Fri, 10 May 2019 15:56:12 -0400
 Committer:  Arnaldo Carvalho de Melo <acme@redhat.com>
 CommitDate: Wed, 15 May 2019 16:36:47 -0300
 
-tools lib traceevent: Man page for header_page APIs
+tools lib traceevent: Man page for get/set cpus APIs
 
-Create a man page for libtraceevent APIs:
+Create man pages for libtraceevent APIs:
 
-  tep_get_header_page_size(),
-  tep_get_header_timestamp_size(),
-  tep_is_old_format()
+ tep_get_cpus(),
+ tep_set_cpus()
 
 Signed-off-by: Tzvetomir Stoyanov <tstoyanov@vmware.com>
 Cc: Andrew Morton <akpm@linux-foundation.org>
 Cc: Jiri Olsa <jolsa@redhat.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: linux-trace-devel@vger.kernel.org
-Link: http://lore.kernel.org/linux-trace-devel/20190503091119.23399-5-tstoyanov@vmware.com
-Link: http://lkml.kernel.org/r/20190510200106.583928896@goodmis.org
+Link: http://lore.kernel.org/linux-trace-devel/20190503091119.23399-6-tstoyanov@vmware.com
+Link: http://lkml.kernel.org/r/20190510200106.742948683@goodmis.org
 Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- .../Documentation/libtraceevent-header_page.txt    | 102 +++++++++++++++++++++
- 1 file changed, 102 insertions(+)
+ ...eevent-long_size.txt => libtraceevent-cpus.txt} | 27 +++++++++++-----------
+ 1 file changed, 13 insertions(+), 14 deletions(-)
 
-diff --git a/tools/lib/traceevent/Documentation/libtraceevent-header_page.txt b/tools/lib/traceevent/Documentation/libtraceevent-header_page.txt
-new file mode 100644
-index 000000000000..615d117dc39f
---- /dev/null
-+++ b/tools/lib/traceevent/Documentation/libtraceevent-header_page.txt
-@@ -0,0 +1,102 @@
-+libtraceevent(3)
-+================
-+
-+NAME
-+----
-+tep_get_header_page_size, tep_get_header_timestamp_size, tep_is_old_format -
-+Get the data stored in the header page, in kernel context.
-+
-+SYNOPSIS
-+--------
-+[verse]
-+--
-+*#include <event-parse.h>*
-+
-+int *tep_get_header_page_size*(struct tep_handle pass:[*]_tep_);
-+int *tep_get_header_timestamp_size*(struct tep_handle pass:[*]_tep_);
-+bool *tep_is_old_format*(struct tep_handle pass:[*]_tep_);
-+--
-+DESCRIPTION
-+-----------
-+These functions retrieve information from kernel context, stored in tracefs
-+events/header_page. Old kernels do not have header page info, so default values
-+from user space context are used.
-+
-+The _tep_get_header_page_size()_ function returns the size of a long integer,
-+in kernel context. The _tep_ argument is trace event parser context.
-+This information is retrieved from tracefs events/header_page, "commit" field.
-+
-+The _tep_get_header_timestamp_size()_ function returns the size of timestamps,
-+in kernel context. The _tep_ argument is trace event parser context. This
-+information is retrieved from tracefs events/header_page, "timestamp" field.
-+
-+The _tep_is_old_format()_ function returns true if the kernel predates
-+the addition of events/header_page, otherwise it returns false.
-+
-+RETURN VALUE
-+------------
-+The _tep_get_header_page_size()_ function returns the size of a long integer,
-+in bytes.
-+
-+The _tep_get_header_timestamp_size()_ function returns the size of timestamps,
-+in bytes.
-+
-+The _tep_is_old_format()_ function returns true, if an old kernel is used to
-+generate the tracing data, which has no event/header_page. If the kernel is new,
-+or _tep_ is NULL, false is returned.
-+
-+EXAMPLE
-+-------
-+[source,c]
-+--
-+#include <event-parse.h>
-+...
-+struct tep_handle *tep = tep_alloc();
-+...
-+	int longsize;
-+	int timesize;
-+	bool old;
-+
-+	longsize = tep_get_header_page_size(tep);
-+	timesize = tep_get_header_timestamp_size(tep);
-+	old = tep_is_old_format(tep);
-+
-+	printf ("%s kernel is used to generate the tracing data.\n",
-+		old?"Old":"New");
-+	printf("The size of a long integer is %d bytes.\n", longsize);
-+	printf("The timestamps size is %d bytes.\n", timesize);
-+...
-+--
-+
-+FILES
-+-----
-+[verse]
-+--
-+*event-parse.h*
-+	Header file to include in order to have access to the library APIs.
-+*-ltraceevent*
-+	Linker switch to add when building a program that uses the library.
-+--
-+
-+SEE ALSO
-+--------
-+_libtraceevent(3)_, _trace-cmd(1)_
-+
-+AUTHOR
-+------
-+[verse]
-+--
-+*Steven Rostedt* <rostedt@goodmis.org>, author of *libtraceevent*.
-+*Tzvetomir Stoyanov* <tz.stoyanov@gmail.com>, author of this man page.
-+--
-+REPORTING BUGS
-+--------------
-+Report bugs to  <linux-trace-devel@vger.kernel.org>
-+
-+LICENSE
-+-------
-+libtraceevent is Free Software licensed under the GNU LGPL 2.1
-+
-+RESOURCES
-+---------
-+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
+diff --git a/tools/lib/traceevent/Documentation/libtraceevent-long_size.txt b/tools/lib/traceevent/Documentation/libtraceevent-cpus.txt
+similarity index 52%
+copy from tools/lib/traceevent/Documentation/libtraceevent-long_size.txt
+copy to tools/lib/traceevent/Documentation/libtraceevent-cpus.txt
+index 01d78ea2519a..5ad70e43b752 100644
+--- a/tools/lib/traceevent/Documentation/libtraceevent-long_size.txt
++++ b/tools/lib/traceevent/Documentation/libtraceevent-cpus.txt
+@@ -3,8 +3,8 @@ libtraceevent(3)
+ 
+ NAME
+ ----
+-tep_get_long_size, tep_set_long_size - Get / set the size of a long integer on
+-the machine, where the trace is generated, in bytes
++tep_get_cpus, tep_set_cpus - Get / set the number of CPUs, which have a tracing
++buffer representing it. Note, the buffer may be empty.
+ 
+ SYNOPSIS
+ --------
+@@ -12,23 +12,23 @@ SYNOPSIS
+ --
+ *#include <event-parse.h>*
+ 
+-int *tep_get_long_size*(strucqt tep_handle pass:[*]_tep_);
+-void *tep_set_long_size*(struct tep_handle pass:[*]_tep_, int _long_size_);
++int *tep_get_cpus*(struct tep_handle pass:[*]_tep_);
++void *tep_set_cpus*(struct tep_handle pass:[*]_tep_, int _cpus_);
+ --
+ 
+ DESCRIPTION
+ -----------
+-The _tep_get_long_size()_ function returns the size of a long integer on the machine,
+-where the trace is generated. The _tep_ argument is trace event parser context.
++The _tep_get_cpus()_ function gets the number of CPUs, which have a tracing
++buffer representing it. The _tep_ argument is trace event parser context.
+ 
+-The _tep_set_long_size()_ function sets the size of a long integer on the machine,
+-where the trace is generated. The _tep_ argument is trace event parser context.
+-The _long_size_ is the size of a long integer, in bytes.
++The _tep_set_cpus()_ function sets the number of CPUs, which have a tracing
++buffer representing it. The _tep_ argument is trace event parser context.
++The _cpu_ argument is the number of CPUs with tracing data.
+ 
+ RETURN VALUE
+ ------------
+-The _tep_get_long_size()_ function returns the size of a long integer on the machine,
+-where the trace is generated, in bytes.
++The _tep_get_cpus()_ functions returns the number of CPUs, which have tracing
++data recorded.
+ 
+ EXAMPLE
+ -------
+@@ -38,10 +38,9 @@ EXAMPLE
+ ...
+ struct tep_handle *tep = tep_alloc();
+ ...
+-tep_set_long_size(tep, 4);
+-...
+-int long_size = tep_get_long_size(tep);
++	tep_set_cpus(tep, 5);
+ ...
++	printf("We have tracing data for %d CPUs", tep_get_cpus(tep));
+ --
+ 
+ FILES
