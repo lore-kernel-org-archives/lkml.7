@@ -6,39 +6,36 @@ X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FA52C04AAF
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 May 2019 18:21:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 286D7C04AAF
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 May 2019 18:26:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3462620872
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 May 2019 18:21:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0551520873
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 May 2019 18:26:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729776AbfERSVb (ORCPT
+        id S1729720AbfERS01 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 May 2019 14:21:31 -0400
-Received: from Galois.linutronix.de ([146.0.238.70]:54252 "EHLO
+        Sat, 18 May 2019 14:26:27 -0400
+Received: from Galois.linutronix.de ([146.0.238.70]:54268 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727380AbfERSVb (ORCPT
+        with ESMTP id S1726050AbfERS00 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 May 2019 14:21:31 -0400
+        Sat, 18 May 2019 14:26:26 -0400
 Received: from p5de0b374.dip0.t-ipconnect.de ([93.224.179.116] helo=nanos)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tglx@linutronix.de>)
-        id 1hS3xV-0001gu-Nh; Sat, 18 May 2019 20:21:25 +0200
-Date:   Sat, 18 May 2019 20:21:24 +0200 (CEST)
+        id 1hS42I-0001ix-6A; Sat, 18 May 2019 20:26:22 +0200
+Date:   Sat, 18 May 2019 20:26:21 +0200 (CEST)
 From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Harry Pan <gs0622@gmail.com>
-cc:     Harry Pan <harry.pan@intel.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Stephen Boyd <sboyd@kernel.org>,
-        John Stultz <john.stultz@linaro.org>, x86@kernel.org,
-        Dave Hansen <dave.hansen@intel.com>,
-        "H. Peter Anvin" <hpa@zytor.com>
-Subject: Re: [PATCH v2] clocksource: Untrust the clocksource watchdog when
- its interval is too small
-In-Reply-To: <CAHECPZMhOmQnvH=usFJoJTmF=Tc74uD+JgE6euWzqwz46LfMMQ@mail.gmail.com>
-Message-ID: <alpine.DEB.2.21.1905182015320.3019@nanos.tec.linutronix.de>
-References: <20190516090651.1396-1-harry.pan@intel.com> <20190518141005.1132-1-harry.pan@intel.com> <alpine.DEB.2.21.1905181718310.3019@nanos.tec.linutronix.de> <CAHECPZMhOmQnvH=usFJoJTmF=Tc74uD+JgE6euWzqwz46LfMMQ@mail.gmail.com>
+To:     Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+cc:     Stephen Boyd <sboyd@kernel.org>,
+        John Stultz <john.stultz@linaro.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH RFC] time: validate watchdog clocksource using second
+ best candidate
+In-Reply-To: <602b155f-4108-2865-3f1c-4e63d73405ed@yandex-team.ru>
+Message-ID: <alpine.DEB.2.21.1905182023520.3019@nanos.tec.linutronix.de>
+References: <155790645605.1933.906798561802423361.stgit@buzz> <alpine.DEB.2.21.1905181712000.3019@nanos.tec.linutronix.de> <602b155f-4108-2865-3f1c-4e63d73405ed@yandex-team.ru>
 User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
@@ -50,33 +47,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Harry,
+On Sat, 18 May 2019, Konstantin Khlebnikov wrote:
 
-On Sun, 19 May 2019, Harry Pan wrote:
+> On 18.05.2019 18:17, Thomas Gleixner wrote:
+> > On Wed, 15 May 2019, Konstantin Khlebnikov wrote:
+> > 
+> > > Timekeeping watchdog verifies doubtful clocksources using more reliable
+> > > candidates. For x86 it likely verifies 'tsc' using 'hpet'. But 'hpet'
+> > > is far from perfect too. It's better to have second opinion if possible.
+> > > 
+> > > We're seeing sudden jumps of hpet counter to 0xffffffff:
+> > 
+> > On which kind of hardware? A particular type of CPU or random ones?
+> 
+> In general this is very rare event.
+> 
+> This exact pattern have been seen ten times or so on several servers with
+> Intel(R) Xeon(R) CPU E5-2660 v4 @ 2.00GHz
+> (this custom built platform with chipset Intel C610)
+> 
+> and haven't seen for previous generation
+> Intel(R) Xeon(R) CPU E5-2650 v2 @ 2.60GHz
+> (this is another custom built platform)
 
-A: Because it messes up the order in which people normally read text.
-Q: Why is top-posting such a bad thing?
-A: Top-posting.
-Q: What is the most annoying thing in e-mail?
+Same chipset? Note the HPET is part of the chipset not of the CPU.
 
-> I just want to point out: it is wrong if a problematic watchdog clocksource
-> kicks off the main clocksource while this watchdog mechanism is unable to
-> validate itself through a simple interval check;
-> there is no any hardwired knowledge in this patch.
+> Link was in patch: https://lore.kernel.org/patchwork/patch/667413/
 
-The point is, that any clocksource which is not reliable needs to be marked
-as such and cannot be used as watchdog clocksource or as clocksource at all.
+Hmm. Not really helpful either.
 
-You're papering over the underlying problem. If HPET is not longer
-reliable, then HPET needs to be blacklisted, not only as clocksource, also
-as clockevent device and no exposure via the HPET device interface.
+> > > This patch uses second reliable clocksource as backup for validation.
+> > > For x86 this is usually 'acpi_pm'. If watchdog and backup are not consent
+> > > then other clocksources will not be marked as unstable at this iteration.
+> > 
+> > The mess you add to the watchdog code is unholy and that's broken as there
+> > is no guarantee for acpi_pm (or any other secondary watchdog) being
+> > available.
+> 
+> ACPI power management timer is a pretty standard x86 hardware.
 
-Everything else is just cosmetical surgery. And no, we are not going to
-verify whether the watchdog clocksource might be wrong simply because you
-create a circular dependency of what is watching what.
+Used to be.
 
-Please provide a list of SKUs which are affected and we disable HPET on
-those.
+> But my patch should work for any platform with any second reliable
+> clocksource.
+
+Which is close to zero if PM timer is not exposed.
+
+> If there is no second clocksource my patch does noting:
+> watchdog_backup stays NULL and backup_consent always true.
+
+That still does not justify the extra complexity for a few custom built
+systems.
 
 Thanks,
 
