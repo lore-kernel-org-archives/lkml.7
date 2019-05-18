@@ -7,58 +7,57 @@ X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37574C04AAF
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 May 2019 09:11:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42ED7C04AAF
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 May 2019 09:12:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0C21A2082C
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 May 2019 09:11:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0D6BF2082C
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 May 2019 09:12:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="qp3zJLX5"
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="Jt9aEX/Y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729724AbfERJLX (ORCPT
+        id S1729725AbfERJMH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 May 2019 05:11:23 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:58879 "EHLO
+        Sat, 18 May 2019 05:12:07 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:39749 "EHLO
         terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725268AbfERJLW (ORCPT
+        with ESMTP id S1725268AbfERJMH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 May 2019 05:11:22 -0400
+        Sat, 18 May 2019 05:12:07 -0400
 Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x4I9AvJg1737152
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x4I9Bgjx1737192
         (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Sat, 18 May 2019 02:10:58 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x4I9AvJg1737152
+        Sat, 18 May 2019 02:11:42 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x4I9Bgjx1737192
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019041745; t=1558170658;
-        bh=XmXTANWWOmA3HuCzlkq8Y3hjwjEzGcWz5UH2dD+7SMk=;
+        s=2019041745; t=1558170703;
+        bh=X1hzjFXAQM+lwwyhqR/HZTwxT3CkS1LXT7LCaTbRqrs=;
         h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
-        b=qp3zJLX5MY+aEfhOwZGTXcdgf+9Yk6kTalXE94IgHD6TfG/b5vhidp/XV68mu0K8j
-         e2rbX4Q8ZXdMEDV3mGdCp/OD0b762EX4JnbZmts7yAUj6R9uHWhwB5v8X0DZwTvCAY
-         MtKv9vSty8gtob9MhbRMccxr9It++91gO0NBrpjxz9mTgEk19nQ6aF9PGESJnaSjcv
-         4n0GrL6qDkZGO5ZrkjcZLVTRXNsFr+KwJ6JpGFo3k7oo+gFcRonkKqEObph/KVvgJ3
-         v7tpTwAbOEMUcDV57d3uRIeNyKYF5Vi/7jqjBSC7r9hbSr9RjCWV6I3OEHyJJyaErr
-         duYLkABd5iTJA==
+        b=Jt9aEX/Y4sJFFRI8NgIaFo9x3tm8G1emey43Fgfpx6MXElXBwMnoDe25J1VreELPr
+         ykgia25MXdezFQOsAhdGWPrGLDUKgy7p5j6XUQ739s1aS3Fu+mky4vZZZa90/VooGH
+         OvTREi0Vebv1YwcylMsry23hE1kmP+cKy5psA/NayBkMYX3AQJFBFMm6Qt+3hiuXQ3
+         qpVWbV+tiqr6aBvUpcJPb10Tm+4UE7sKsO8HZAENZnS3ZGnis7LJi/NC71cIbY7JuC
+         f/nXGf5fn5jreaNvzX1CUMF5yQOycokpAtb1jGCvxceeQrGIG/GE8S1rsNryM7zHLl
+         QLce7qWQ4HA+A==
 Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x4I9Au7p1737149;
-        Sat, 18 May 2019 02:10:56 -0700
-Date:   Sat, 18 May 2019 02:10:56 -0700
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x4I9BfFb1737189;
+        Sat, 18 May 2019 02:11:41 -0700
+Date:   Sat, 18 May 2019 02:11:41 -0700
 X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
 From:   tip-bot for Tzvetomir Stoyanov <tipbot@zytor.com>
-Message-ID: <tip-747e942c3925bb85e2865371664499a98fca83b0@git.kernel.org>
-Cc:     mingo@kernel.org, rostedt@goodmis.org, acme@redhat.com,
-        linux-kernel@vger.kernel.org, akpm@linux-foundation.org,
-        namhyung@kernel.org, tstoyanov@vmware.com, hpa@zytor.com,
-        jolsa@redhat.com, tglx@linutronix.de
-Reply-To: namhyung@kernel.org, akpm@linux-foundation.org,
-          linux-kernel@vger.kernel.org, acme@redhat.com,
-          rostedt@goodmis.org, mingo@kernel.org, tglx@linutronix.de,
-          jolsa@redhat.com, hpa@zytor.com, tstoyanov@vmware.com
-In-Reply-To: <20190510200108.561088129@goodmis.org>
-References: <20190510200108.561088129@goodmis.org>
+Message-ID: <tip-0b51220ee0c3f6634b9fcf9208cc0764d5861163@git.kernel.org>
+Cc:     mingo@kernel.org, linux-kernel@vger.kernel.org,
+        akpm@linux-foundation.org, tstoyanov@vmware.com, jolsa@redhat.com,
+        tglx@linutronix.de, rostedt@goodmis.org, namhyung@kernel.org,
+        hpa@zytor.com, acme@redhat.com
+Reply-To: acme@redhat.com, hpa@zytor.com, namhyung@kernel.org,
+          rostedt@goodmis.org, jolsa@redhat.com, tglx@linutronix.de,
+          tstoyanov@vmware.com, akpm@linux-foundation.org,
+          linux-kernel@vger.kernel.org, mingo@kernel.org
+In-Reply-To: <20190510200108.721589427@goodmis.org>
+References: <20190510200108.721589427@goodmis.org>
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:perf/core] tools lib traceevent: Man pages for libtraceevent
- event get APIs
-Git-Commit-ID: 747e942c3925bb85e2865371664499a98fca83b0
+Subject: [tip:perf/core] tools lib traceevent: Man pages for find field APIs
+Git-Commit-ID: 0b51220ee0c3f6634b9fcf9208cc0764d5861163
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot.git.kernel.org>
 Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
@@ -72,46 +71,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  747e942c3925bb85e2865371664499a98fca83b0
-Gitweb:     https://git.kernel.org/tip/747e942c3925bb85e2865371664499a98fca83b0
+Commit-ID:  0b51220ee0c3f6634b9fcf9208cc0764d5861163
+Gitweb:     https://git.kernel.org/tip/0b51220ee0c3f6634b9fcf9208cc0764d5861163
 Author:     Tzvetomir Stoyanov <tstoyanov@vmware.com>
-AuthorDate: Fri, 10 May 2019 15:56:23 -0400
+AuthorDate: Fri, 10 May 2019 15:56:24 -0400
 Committer:  Arnaldo Carvalho de Melo <acme@redhat.com>
 CommitDate: Wed, 15 May 2019 16:36:48 -0300
 
-tools lib traceevent: Man pages for libtraceevent event get APIs
+tools lib traceevent: Man pages for find field APIs
 
 Create man pages for libtraceevent APIs:
 
-  tep_get_event(),
-  tep_get_first_event(),
-  tep_get_events_count()
+  tep_find_common_field(),
+  tep_find_field()
+  tep_find_any_field()
 
 Signed-off-by: Tzvetomir Stoyanov <tstoyanov@vmware.com>
 Cc: Andrew Morton <akpm@linux-foundation.org>
 Cc: Jiri Olsa <jolsa@redhat.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: linux-trace-devel@vger.kernel.org
-Link: http://lore.kernel.org/linux-trace-devel/20190503091119.23399-17-tstoyanov@vmware.com
-Link: http://lkml.kernel.org/r/20190510200108.561088129@goodmis.org
+Link: http://lore.kernel.org/linux-trace-devel/20190503091119.23399-18-tstoyanov@vmware.com
+Link: http://lkml.kernel.org/r/20190510200108.721589427@goodmis.org
 Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- .../Documentation/libtraceevent-event_get.txt      | 99 ++++++++++++++++++++++
- 1 file changed, 99 insertions(+)
+ .../Documentation/libtraceevent-field_find.txt     | 118 +++++++++++++++++++++
+ 1 file changed, 118 insertions(+)
 
-diff --git a/tools/lib/traceevent/Documentation/libtraceevent-event_get.txt b/tools/lib/traceevent/Documentation/libtraceevent-event_get.txt
+diff --git a/tools/lib/traceevent/Documentation/libtraceevent-field_find.txt b/tools/lib/traceevent/Documentation/libtraceevent-field_find.txt
 new file mode 100644
-index 000000000000..6525092fc417
+index 000000000000..0896af5b9eff
 --- /dev/null
-+++ b/tools/lib/traceevent/Documentation/libtraceevent-event_get.txt
-@@ -0,0 +1,99 @@
++++ b/tools/lib/traceevent/Documentation/libtraceevent-field_find.txt
+@@ -0,0 +1,118 @@
 +libtraceevent(3)
 +================
 +
 +NAME
 +----
-+tep_get_event, tep_get_first_event, tep_get_events_count - Access events.
++tep_find_common_field, tep_find_field, tep_find_any_field -
++Search for a field in an event.
 +
 +SYNOPSIS
 +--------
@@ -119,35 +119,30 @@ index 000000000000..6525092fc417
 +--
 +*#include <event-parse.h>*
 +
-+struct tep_event pass:[*]*tep_get_event*(struct tep_handle pass:[*]_tep_, int _index_);
-+struct tep_event pass:[*]*tep_get_first_event*(struct tep_handle pass:[*]_tep_);
-+int *tep_get_events_count*(struct tep_handle pass:[*]_tep_);
++struct tep_format_field pass:[*]*tep_find_common_field*(struct tep_event pass:[*]_event_, const char pass:[*]_name_);
++struct tep_format_field pass:[*]*tep_find_field*(struct tep_event_ormat pass:[*]_event_, const char pass:[*]_name_);
++struct tep_format_field pass:[*]*tep_find_any_field*(struct tep_event pass:[*]_event_, const char pass:[*]_name_);
 +--
 +
 +DESCRIPTION
 +-----------
-+The _tep_get_event()_ function returns a pointer to event at the given _index_.
-+The _tep_ argument is trace event parser context, the _index_ is the index of
-+the requested event.
++These functions search for a field with given name in an event. The field
++returned can be used to find the field content from within a data record.
 +
-+The _tep_get_first_event()_ function returns a pointer to the first event.
-+As events are stored in an array, this function returns the pointer to the
-+beginning of the array. The _tep_ argument is trace event parser context.
++The _tep_find_common_field()_ function searches for a common field with _name_
++in the _event_.
 +
-+The _tep_get_events_count()_ function returns the number of the events
-+in the array. The _tep_ argument is trace event parser context.
++The _tep_find_field()_ function searches for an event specific field with
++_name_ in the _event_.
++
++The _tep_find_any_field()_ function searches for any field with _name_ in the
++_event_.
 +
 +RETURN VALUE
 +------------
-+The _tep_get_event()_ returns a pointer to the event located at _index_.
-+NULL is returned in case of error, in case there are no events or _index_ is
-+out of range.
-+
-+The _tep_get_first_event()_ returns a pointer to the first event. NULL is
-+returned in case of error, or in case there are no events.
-+
-+The _tep_get_events_count()_ returns the number of the events. 0 is
-+returned in case of error, or in case there are no events.
++The _tep_find_common_field(), _tep_find_field()_ and _tep_find_any_field()_
++functions return a pointer to the found field, or NULL in case there is no field
++with the requested name.
 +
 +EXAMPLE
 +-------
@@ -155,22 +150,45 @@ index 000000000000..6525092fc417
 +--
 +#include <event-parse.h>
 +...
-+struct tep_handle *tep = tep_alloc();
-+...
-+int i,count = tep_get_events_count(tep);
-+struct tep_event *event, *events = tep_get_first_event(tep);
++void get_htimer_info(struct tep_handle *tep, struct tep_record *record)
++{
++	struct tep_format_field *field;
++	struct tep_event *event;
++	long long softexpires;
++	int mode;
++	int pid;
 +
-+if (events == NULL) {
-+	/* There are no events */
-+} else {
-+	for (i = 0; i < count; i++) {
-+		event = (events+i);
-+		/* process events[i] */
++	event = tep_find_event_by_name(tep, "timer", "hrtimer_start");
++
++	field = tep_find_common_field(event, "common_pid");
++	if (field == NULL) {
++		/* Cannot find "common_pid" field in the event */
++	} else {
++		/* Get pid from the data record */
++		pid = tep_read_number(tep, record->data + field->offset,
++				      field->size);
 +	}
 +
-+	/* Get the last event */
-+	event = tep_get_event(tep, count-1);
++	field = tep_find_field(event, "softexpires");
++	if (field == NULL) {
++		/* Cannot find "softexpires" event specific field in the event */
++	} else {
++		/* Get softexpires parameter from the data record */
++		softexpires = tep_read_number(tep, record->data + field->offset,
++					      field->size);
++	}
++
++	field = tep_find_any_field(event, "mode");
++	if (field == NULL) {
++		/* Cannot find "mode" field in the event */
++	} else
++	{
++		/* Get mode parameter from the data record */
++		mode = tep_read_number(tep, record->data + field->offset,
++				       field->size);
++	}
 +}
++...
 +--
 +
 +FILES
