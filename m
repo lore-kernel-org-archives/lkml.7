@@ -2,102 +2,159 @@ Return-Path: <SRS0=//ty=TS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E132C04AAF
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 May 2019 06:10:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77F04C04AAF
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 May 2019 06:31:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5066120872
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 May 2019 06:10:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3013120848
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 May 2019 06:31:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="bujZ9xU5"
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="zWD6szCu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727108AbfERF7w (ORCPT
+        id S1727366AbfERGbQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 May 2019 01:59:52 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:33816 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725446AbfERF7v (ORCPT
+        Sat, 18 May 2019 02:31:16 -0400
+Received: from conssluserg-03.nifty.com ([210.131.2.82]:60034 "EHLO
+        conssluserg-03.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725268AbfERGbP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 May 2019 01:59:51 -0400
-Received: by mail-pl1-f193.google.com with SMTP id w7so4323369plz.1
-        for <linux-kernel@vger.kernel.org>; Fri, 17 May 2019 22:59:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=aS57w+JjSNQkH2rknXCc7Q22hExiMUTERsu/lABkOdw=;
-        b=bujZ9xU5Tx6d78rQ1gOjR1lDe0mK19wzpmNpSVgHo3HwkMdDaChHxoavIJFLDByJg+
-         MVLIrbIhCTBiQTzL6Pj4utmWdppNmXnyOmX/MOcc4gip/NJ9hTILgM8rdcDbfxCy4jhZ
-         ppYqHwBe+SGYLjFC8s8LZ5gy7zO/X3E6KMENM=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=aS57w+JjSNQkH2rknXCc7Q22hExiMUTERsu/lABkOdw=;
-        b=fwLnkUIGqPfvZ8rUTkGgK0unjkzLYjVbgSIm3uvqZ2NurU3CAauJZCq1ZjFw93NRZM
-         ozQEbYlzEGtvc2lQvpMq5c+Yw7gzSMIiPyxMkugTjnAihdyDN6dF3j4x4mXi04ZCICtm
-         Azjc6AY040lUxwDNSRw7TjE+V0uFXiTuVHRnZfl504/1Mo43LHK+DROPtMmz4KwBP7S1
-         S98LPaa14zzs3BosNZQEwu40bH6D8jJdE9oqxoiQY6c8DeNQE/4oM2UuPKdOgjyWYBJe
-         ovNkMqPW3ylU7YNOsy0pShTFEkoiY/BtDY+xNXtZPCEVq2JTlNKy/RMGCvNcShv6Rcvb
-         xJrA==
-X-Gm-Message-State: APjAAAUY1wUxPgRaHHLeqDG/MlC18yt6C6fZafpY5ALXhwdxN7k9GiZr
-        2Xf1eEgGaeVcm8FQF0aYiPI5Gw==
-X-Google-Smtp-Source: APXvYqzsVqvky95IbCzBSeQtEr5Xjf/A4aknBtRLNER/MPoGiXfE7gaygm3JAAaxM/qKF+MvL3ioKw==
-X-Received: by 2002:a17:902:2e83:: with SMTP id r3mr46277325plb.139.1558159191105;
-        Fri, 17 May 2019 22:59:51 -0700 (PDT)
-Received: from drinkcat2.tpe.corp.google.com ([2401:fa00:1:b:d8b7:33af:adcb:b648])
-        by smtp.gmail.com with ESMTPSA id j12sm11599940pff.148.2019.05.17.22.59.49
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 17 May 2019 22:59:50 -0700 (PDT)
-From:   Nicolas Boichat <drinkcat@chromium.org>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
-        Nicolas Boichat <drinkcat@chromium.org>,
-        Marc Zyngier <marc.zyngier@arm.com>,
-        Stephen Boyd <swboyd@chromium.org>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] scripts/decode_stacktrace: Match basepath using shell prefix operator, not regex
-Date:   Sat, 18 May 2019 13:59:46 +0800
-Message-Id: <20190518055946.181563-1-drinkcat@chromium.org>
-X-Mailer: git-send-email 2.21.0.1020.gf2820cf01a-goog
+        Sat, 18 May 2019 02:31:15 -0400
+Received: from mail-vs1-f53.google.com (mail-vs1-f53.google.com [209.85.217.53]) (authenticated)
+        by conssluserg-03.nifty.com with ESMTP id x4I6Uvd7026025;
+        Sat, 18 May 2019 15:30:58 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-03.nifty.com x4I6Uvd7026025
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1558161058;
+        bh=ei52fYKWjTlRAbyCt0fr60Z6fZOw8HyESNllhyAewIw=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=zWD6szCuLtmRonWEDr/i2GNYVDvgxpAEAVRtSHIJWGTD9cRuRfRv+Vn41+aXOli7M
+         WcwOquKf3EEVUm3mlfeWRdTMu28Ubl3wgY/pcYqoZ+eJ6NUDeukoATYvgXCVlZk+++
+         8wNPJPlUEI6WL7nDCzYT8Uiqyfxcc4lk+aDl7PE4hpIc/lxU0ne8g8BqSSOn3hXJHl
+         GoEroYnTeUH91xNuEN0nahJgHLetOeQlQvgvhY1YuTTmh9pIczJbBXNoXgeqApeHHW
+         EvVnAqIx5sSPbxXNjgMxdQ9xcxAt7DiUCHr/8pn5kd1ke5hmT72umZrVczbOrtK0OR
+         y92HvrN0jR6FA==
+X-Nifty-SrcIP: [209.85.217.53]
+Received: by mail-vs1-f53.google.com with SMTP id z11so6009755vsq.9;
+        Fri, 17 May 2019 23:30:58 -0700 (PDT)
+X-Gm-Message-State: APjAAAVXsSCvuV4xz2GE0rGMxYSSktsqRHx12t94QSjYjKcQf7uGCK0i
+        DvhfgpILedSBTtxnJ2tOQ7aIKm2xMQSB3TEvBCY=
+X-Google-Smtp-Source: APXvYqxBf/S37pkQ7h/wex9e82yqGOLnYPs4oB2EJ2zQAxn2I4s1kGKz2afDBehbr71vK7LhcvuTdI01SAAfXYUMr3Y=
+X-Received: by 2002:a67:fc4:: with SMTP id 187mr8390761vsp.215.1558161056885;
+ Fri, 17 May 2019 23:30:56 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <1558122142-10683-1-git-send-email-alex.popov@linux.com>
+In-Reply-To: <1558122142-10683-1-git-send-email-alex.popov@linux.com>
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+Date:   Sat, 18 May 2019 15:30:20 +0900
+X-Gmail-Original-Message-ID: <CAK7LNASGD3F-MOpQdwfoC3zqJowgdEP9bpABbg2g+a+d7jJPDg@mail.gmail.com>
+Message-ID: <CAK7LNASGD3F-MOpQdwfoC3zqJowgdEP9bpABbg2g+a+d7jJPDg@mail.gmail.com>
+Subject: Re: [v3 1/1] kconfig: Terminate menu blocks with a comment in the
+ generated config
+To:     Alexander Popov <alex.popov@linux.com>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The basepath may contain special characters, which would confuse
-the regex matcher. ${var#prefix} does the right thing.
+On Sat, May 18, 2019 at 4:42 AM Alexander Popov <alex.popov@linux.com> wrote:
+>
+> Currently menu blocks start with a pretty header but end with nothing in
+> the generated config. So next config options stick together with the
+> options from the menu block.
+>
+> Let's terminate menu blocks in the generated config with a comment and
+> a newline if needed. Example:
+>
+> ...
+> CONFIG_BPF_STREAM_PARSER=y
+> CONFIG_NET_FLOW_LIMIT=y
+>
+> #
+> # Network testing
+> #
+> CONFIG_NET_PKTGEN=y
+> CONFIG_NET_DROP_MONITOR=y
+> # end of Network testing
+> # end of Networking options
+>
+> CONFIG_HAMRADIO=y
+> ...
+>
+> Signed-off-by: Alexander Popov <alex.popov@linux.com>
 
-Fixes: 67a28de47faa8358 ("scripts/decode_stacktrace: only strip base path when a prefix of the path")
-Signed-off-by: Nicolas Boichat <drinkcat@chromium.org>
-Reviewed-by: Stephen Boyd <swboyd@chromium.org>
----
 
-I'm not sure how people normally use this script, but this seems to break
-even with a simple full path as parameter (e.g. /home/.../kernel/).
+Applied to linux-kbuild. Thanks.
 
- scripts/decode_stacktrace.sh | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/scripts/decode_stacktrace.sh b/scripts/decode_stacktrace.sh
-index bcdd45df3f5127a..e042acedcc0332c 100755
---- a/scripts/decode_stacktrace.sh
-+++ b/scripts/decode_stacktrace.sh
-@@ -85,7 +85,7 @@ parse_symbol() {
- 	fi
- 
- 	# Strip out the base of the path
--	code=${code//^$basepath/""}
-+	code=${code#$basepath/}
- 
- 	# In the case of inlines, move everything to same line
- 	code=${code//$'\n'/' '}
+
+> ---
+>
+> v3 changes:
+>  - rebase onto the recent rc;
+>  - don't print the end comment for the rootmenu to avoid breaking
+>    'make testconfig' (thanks to Masahiro Yamada).
+>
+> ---
+>  scripts/kconfig/confdata.c | 13 ++++++++++++-
+>  1 file changed, 12 insertions(+), 1 deletion(-)
+>
+> diff --git a/scripts/kconfig/confdata.c b/scripts/kconfig/confdata.c
+> index 492ac34..6006154 100644
+> --- a/scripts/kconfig/confdata.c
+> +++ b/scripts/kconfig/confdata.c
+> @@ -867,6 +867,7 @@ int conf_write(const char *name)
+>         const char *str;
+>         char tmpname[PATH_MAX + 1], oldname[PATH_MAX + 1];
+>         char *env;
+> +       bool need_newline = false;
+>
+>         if (!name)
+>                 name = conf_get_configname();
+> @@ -912,12 +913,16 @@ int conf_write(const char *name)
+>                                      "#\n"
+>                                      "# %s\n"
+>                                      "#\n", str);
+> +                       need_newline = false;
+>                 } else if (!(sym->flags & SYMBOL_CHOICE)) {
+>                         sym_calc_value(sym);
+>                         if (!(sym->flags & SYMBOL_WRITE))
+>                                 goto next;
+> +                       if (need_newline) {
+> +                               fprintf(out, "\n");
+> +                               need_newline = false;
+> +                       }
+>                         sym->flags &= ~SYMBOL_WRITE;
+> -
+>                         conf_write_symbol(out, sym, &kconfig_printer_cb, NULL);
+>                 }
+>
+> @@ -929,6 +934,12 @@ int conf_write(const char *name)
+>                 if (menu->next)
+>                         menu = menu->next;
+>                 else while ((menu = menu->parent)) {
+> +                       if (!menu->sym && menu_is_visible(menu) &&
+> +                           menu != &rootmenu) {
+> +                               str = menu_get_prompt(menu);
+> +                               fprintf(out, "# end of %s\n", str);
+> +                               need_newline = true;
+> +                       }
+>                         if (menu->next) {
+>                                 menu = menu->next;
+>                                 break;
+> --
+> 2.7.4
+>
+
+
 -- 
-2.21.0.1020.gf2820cf01a-goog
-
+Best Regards
+Masahiro Yamada
