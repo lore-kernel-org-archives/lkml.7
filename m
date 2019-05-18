@@ -4,60 +4,61 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8D3EC04AAF
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 May 2019 09:10:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37574C04AAF
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 May 2019 09:11:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 847FE2082C
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 May 2019 09:10:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0C21A2082C
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 May 2019 09:11:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="MIDVx9eZ"
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="qp3zJLX5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729717AbfERJKj (ORCPT
+        id S1729724AbfERJLX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 May 2019 05:10:39 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:54239 "EHLO
+        Sat, 18 May 2019 05:11:23 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:58879 "EHLO
         terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725268AbfERJKj (ORCPT
+        with ESMTP id S1725268AbfERJLW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 May 2019 05:10:39 -0400
+        Sat, 18 May 2019 05:11:22 -0400
 Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x4I9AEQD1737092
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x4I9AvJg1737152
         (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Sat, 18 May 2019 02:10:14 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x4I9AEQD1737092
+        Sat, 18 May 2019 02:10:58 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x4I9AvJg1737152
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019041745; t=1558170615;
-        bh=y/SZrLDa16BVSv06DSM7fze2hXZjaJhPKvs2RkAQrn0=;
+        s=2019041745; t=1558170658;
+        bh=XmXTANWWOmA3HuCzlkq8Y3hjwjEzGcWz5UH2dD+7SMk=;
         h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
-        b=MIDVx9eZQsdIl4p9rFl5vytRhU1qx5xbuvOtO4Yuml9rbN2n+aFoXXDVq3Kxtk41D
-         ffjriyVrftAj9+5EYdqzeTAIuwQRauADovG8RwIldnrM78v1yHzQX4pmDGJo2KtAKW
-         foJ0FwwUKQc5ywJ3yZTDWZT/SHSWBIdZT3xG71LwRnoNWj2F6DfF2/zLV0Pa22yRnU
-         WxrkrtBoJFhdgXo1OBfB/kDtxDh6UnBMDbA9v4si9Gnv0a9UCvi361YYjlv+50zHxr
-         zFIxDAylIWmlZYuC/slnxANwcvGvZkH+7JelxNyGpeylPph5qAEdDrE9MJ/nRwtG9y
-         oasUda/iUd4QA==
+        b=qp3zJLX5MY+aEfhOwZGTXcdgf+9Yk6kTalXE94IgHD6TfG/b5vhidp/XV68mu0K8j
+         e2rbX4Q8ZXdMEDV3mGdCp/OD0b762EX4JnbZmts7yAUj6R9uHWhwB5v8X0DZwTvCAY
+         MtKv9vSty8gtob9MhbRMccxr9It++91gO0NBrpjxz9mTgEk19nQ6aF9PGESJnaSjcv
+         4n0GrL6qDkZGO5ZrkjcZLVTRXNsFr+KwJ6JpGFo3k7oo+gFcRonkKqEObph/KVvgJ3
+         v7tpTwAbOEMUcDV57d3uRIeNyKYF5Vi/7jqjBSC7r9hbSr9RjCWV6I3OEHyJJyaErr
+         duYLkABd5iTJA==
 Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x4I9ADwA1737089;
-        Sat, 18 May 2019 02:10:13 -0700
-Date:   Sat, 18 May 2019 02:10:13 -0700
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x4I9Au7p1737149;
+        Sat, 18 May 2019 02:10:56 -0700
+Date:   Sat, 18 May 2019 02:10:56 -0700
 X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
 From:   tip-bot for Tzvetomir Stoyanov <tipbot@zytor.com>
-Message-ID: <tip-7935c316ef067881ee4043c4c7d611e982e5fe21@git.kernel.org>
-Cc:     tstoyanov@vmware.com, namhyung@kernel.org,
+Message-ID: <tip-747e942c3925bb85e2865371664499a98fca83b0@git.kernel.org>
+Cc:     mingo@kernel.org, rostedt@goodmis.org, acme@redhat.com,
         linux-kernel@vger.kernel.org, akpm@linux-foundation.org,
-        jolsa@redhat.com, hpa@zytor.com, tglx@linutronix.de,
-        acme@redhat.com, mingo@kernel.org, rostedt@goodmis.org
-Reply-To: jolsa@redhat.com, linux-kernel@vger.kernel.org,
-          tstoyanov@vmware.com, namhyung@kernel.org,
-          akpm@linux-foundation.org, mingo@kernel.org, rostedt@goodmis.org,
-          hpa@zytor.com, acme@redhat.com, tglx@linutronix.de
-In-Reply-To: <20190510200108.367633707@goodmis.org>
-References: <20190510200108.367633707@goodmis.org>
+        namhyung@kernel.org, tstoyanov@vmware.com, hpa@zytor.com,
+        jolsa@redhat.com, tglx@linutronix.de
+Reply-To: namhyung@kernel.org, akpm@linux-foundation.org,
+          linux-kernel@vger.kernel.org, acme@redhat.com,
+          rostedt@goodmis.org, mingo@kernel.org, tglx@linutronix.de,
+          jolsa@redhat.com, hpa@zytor.com, tstoyanov@vmware.com
+In-Reply-To: <20190510200108.561088129@goodmis.org>
+References: <20190510200108.561088129@goodmis.org>
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:perf/core] tools lib traceevent: Man page for list events APIs
-Git-Commit-ID: 7935c316ef067881ee4043c4c7d611e982e5fe21
+Subject: [tip:perf/core] tools lib traceevent: Man pages for libtraceevent
+ event get APIs
+Git-Commit-ID: 747e942c3925bb85e2865371664499a98fca83b0
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot.git.kernel.org>
 Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
@@ -71,46 +72,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  7935c316ef067881ee4043c4c7d611e982e5fe21
-Gitweb:     https://git.kernel.org/tip/7935c316ef067881ee4043c4c7d611e982e5fe21
+Commit-ID:  747e942c3925bb85e2865371664499a98fca83b0
+Gitweb:     https://git.kernel.org/tip/747e942c3925bb85e2865371664499a98fca83b0
 Author:     Tzvetomir Stoyanov <tstoyanov@vmware.com>
-AuthorDate: Fri, 10 May 2019 15:56:22 -0400
+AuthorDate: Fri, 10 May 2019 15:56:23 -0400
 Committer:  Arnaldo Carvalho de Melo <acme@redhat.com>
 CommitDate: Wed, 15 May 2019 16:36:48 -0300
 
-tools lib traceevent: Man page for list events APIs
+tools lib traceevent: Man pages for libtraceevent event get APIs
 
-Create man page for libtraceevent APIs:
+Create man pages for libtraceevent APIs:
 
-  tep_list_events()
-  tep_list_events_copy()
+  tep_get_event(),
+  tep_get_first_event(),
+  tep_get_events_count()
 
 Signed-off-by: Tzvetomir Stoyanov <tstoyanov@vmware.com>
 Cc: Andrew Morton <akpm@linux-foundation.org>
 Cc: Jiri Olsa <jolsa@redhat.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: linux-trace-devel@vger.kernel.org
-Link: http://lore.kernel.org/linux-trace-devel/20190503091119.23399-16-tstoyanov@vmware.com
-Link: http://lkml.kernel.org/r/20190510200108.367633707@goodmis.org
+Link: http://lore.kernel.org/linux-trace-devel/20190503091119.23399-17-tstoyanov@vmware.com
+Link: http://lkml.kernel.org/r/20190510200108.561088129@goodmis.org
 Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- .../Documentation/libtraceevent-event_list.txt     | 122 +++++++++++++++++++++
- 1 file changed, 122 insertions(+)
+ .../Documentation/libtraceevent-event_get.txt      | 99 ++++++++++++++++++++++
+ 1 file changed, 99 insertions(+)
 
-diff --git a/tools/lib/traceevent/Documentation/libtraceevent-event_list.txt b/tools/lib/traceevent/Documentation/libtraceevent-event_list.txt
+diff --git a/tools/lib/traceevent/Documentation/libtraceevent-event_get.txt b/tools/lib/traceevent/Documentation/libtraceevent-event_get.txt
 new file mode 100644
-index 000000000000..fba350e5a4cb
+index 000000000000..6525092fc417
 --- /dev/null
-+++ b/tools/lib/traceevent/Documentation/libtraceevent-event_list.txt
-@@ -0,0 +1,122 @@
++++ b/tools/lib/traceevent/Documentation/libtraceevent-event_get.txt
+@@ -0,0 +1,99 @@
 +libtraceevent(3)
 +================
 +
 +NAME
 +----
-+tep_list_events, tep_list_events_copy -
-+Get list of events, sorted by given criteria.
++tep_get_event, tep_get_first_event, tep_get_events_count - Access events.
 +
 +SYNOPSIS
 +--------
@@ -118,44 +119,35 @@ index 000000000000..fba350e5a4cb
 +--
 +*#include <event-parse.h>*
 +
-+enum *tep_event_sort_type* {
-+	_TEP_EVENT_SORT_ID_,
-+	_TEP_EVENT_SORT_NAME_,
-+	_TEP_EVENT_SORT_SYSTEM_,
-+};
-+
-+struct tep_event pass:[*]pass:[*]*tep_list_events*(struct tep_handle pass:[*]_tep_, enum tep_event_sort_type _sort_type_);
-+struct tep_event pass:[*]pass:[*]*tep_list_events_copy*(struct tep_handle pass:[*]_tep_, enum tep_event_sort_type _sort_type_);
++struct tep_event pass:[*]*tep_get_event*(struct tep_handle pass:[*]_tep_, int _index_);
++struct tep_event pass:[*]*tep_get_first_event*(struct tep_handle pass:[*]_tep_);
++int *tep_get_events_count*(struct tep_handle pass:[*]_tep_);
 +--
 +
 +DESCRIPTION
 +-----------
-+The _tep_list_events()_ function returns an array of pointers to the events,
-+sorted by the _sort_type_ criteria. The last element of the array is NULL.
-+The returned memory must not be freed, it is managed by the library.
-+The function is not thread safe. The _tep_ argument is trace event parser
-+context. The _sort_type_ argument is the required sort criteria:
-+[verse]
-+--
-+	_TEP_EVENT_SORT_ID_	- sort by the event ID.
-+	_TEP_EVENT_SORT_NAME_	- sort by the event (name, system, id) triplet.
-+	_TEP_EVENT_SORT_SYSTEM_	- sort by the event (system, name, id) triplet.
-+--
++The _tep_get_event()_ function returns a pointer to event at the given _index_.
++The _tep_ argument is trace event parser context, the _index_ is the index of
++the requested event.
 +
-+The _tep_list_events_copy()_ is a thread safe version of _tep_list_events()_.
-+It has the same behavior, but the returned array is allocated internally and
-+must be freed by the caller. Note that the content of the array must not be
-+freed (see the EXAMPLE below).
++The _tep_get_first_event()_ function returns a pointer to the first event.
++As events are stored in an array, this function returns the pointer to the
++beginning of the array. The _tep_ argument is trace event parser context.
++
++The _tep_get_events_count()_ function returns the number of the events
++in the array. The _tep_ argument is trace event parser context.
 +
 +RETURN VALUE
 +------------
-+The _tep_list_events()_ function returns an array of pointers to events.
-+In case of an error, NULL is returned. The returned array must not be freed,
-+it is managed by the library.
++The _tep_get_event()_ returns a pointer to the event located at _index_.
++NULL is returned in case of error, in case there are no events or _index_ is
++out of range.
 +
-+The _tep_list_events_copy()_ function returns an array of pointers to events.
-+In case of an error, NULL is returned. The returned array must be freed by
-+the caller.
++The _tep_get_first_event()_ returns a pointer to the first event. NULL is
++returned in case of error, or in case there are no events.
++
++The _tep_get_events_count()_ returns the number of the events. 0 is
++returned in case of error, or in case there are no events.
 +
 +EXAMPLE
 +-------
@@ -165,33 +157,20 @@ index 000000000000..fba350e5a4cb
 +...
 +struct tep_handle *tep = tep_alloc();
 +...
-+int i;
-+struct tep_event_format **events;
++int i,count = tep_get_events_count(tep);
++struct tep_event *event, *events = tep_get_first_event(tep);
 +
-+i=0;
-+events = tep_list_events(tep, TEP_EVENT_SORT_ID);
 +if (events == NULL) {
-+	/* Failed to get the events, sorted by ID */
++	/* There are no events */
 +} else {
-+	while(events[i]) {
-+		/* walk through the list of the events, sorted by ID */
-+		i++;
++	for (i = 0; i < count; i++) {
++		event = (events+i);
++		/* process events[i] */
 +	}
-+}
 +
-+i=0;
-+events = tep_list_events_copy(tep, TEP_EVENT_SORT_NAME);
-+if (events == NULL) {
-+	/* Failed to get the events, sorted by name */
-+} else {
-+	while(events[i]) {
-+		/* walk through the list of the events, sorted by name */
-+		i++;
-+	}
-+	free(events);
++	/* Get the last event */
++	event = tep_get_event(tep, count-1);
 +}
-+
-+...
 +--
 +
 +FILES
