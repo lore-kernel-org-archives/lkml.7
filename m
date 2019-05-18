@@ -3,107 +3,192 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EEE2BC04AAF
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 May 2019 07:51:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E0A2C04AAF
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 May 2019 07:51:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BF43A20C01
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 May 2019 07:51:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7046320C01
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 May 2019 07:51:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728337AbfERHvM (ORCPT
+        id S1728897AbfERHvr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 May 2019 03:51:12 -0400
-Received: from gloria.sntech.de ([185.11.138.130]:38818 "EHLO gloria.sntech.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725268AbfERHvM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 May 2019 03:51:12 -0400
-Received: from p508fcf3a.dip0.t-ipconnect.de ([80.143.207.58] helo=phil.localnet)
-        by gloria.sntech.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <heiko@sntech.de>)
-        id 1hRu7X-0005Nr-HM; Sat, 18 May 2019 09:51:07 +0200
-From:   Heiko Stuebner <heiko@sntech.de>
-To:     Doug Anderson <dianders@chromium.org>,
-        Guenter Roeck <groeck@chromium.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Kishon Vijay Abraham I <kishon@ti.com>
-Cc:     Elaine Zhang <zhangqing@rock-chips.com>,
-        Caesar <wxt@rock-chips.com>, Lin Huang <hl@rock-chips.com>,
-        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
-        Derek Basehore <dbasehore@chromium.org>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Ryan Case <ryandcase@chromium.org>
-Subject: Re: [PATCH] phy: rockchip-dp: Avoid power leak by leaving the PHY power on
-Date:   Sat, 18 May 2019 09:51:06 +0200
-Message-ID: <1862323.vETM5zrFmV@phil>
-In-Reply-To: <CAD=FV=VcF688tSArf5gu0sV5oKVgFEvPBxXm7j-5GXXMP_CYRw@mail.gmail.com>
-References: <20190507234857.81414-1-dianders@chromium.org> <CAD=FV=VcF688tSArf5gu0sV5oKVgFEvPBxXm7j-5GXXMP_CYRw@mail.gmail.com>
+        Sat, 18 May 2019 03:51:47 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:16528 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725268AbfERHvq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 18 May 2019 03:51:46 -0400
+X-UUID: 00c64ad0c4ba40d7b189bc49fad75e26-20190518
+X-UUID: 00c64ad0c4ba40d7b189bc49fad75e26-20190518
+Received: from mtkexhb01.mediatek.inc [(172.21.101.102)] by mailgw02.mediatek.com
+        (envelope-from <jitao.shi@mediatek.com>)
+        (mhqrelay.mediatek.com ESMTP with TLS)
+        with ESMTP id 1821289005; Sat, 18 May 2019 15:51:38 +0800
+Received: from MTKCAS32.mediatek.inc (172.27.4.184) by mtkmbs01n1.mediatek.inc
+ (172.21.101.68) with Microsoft SMTP Server (TLS) id 15.0.1395.4; Sat, 18 May
+ 2019 15:51:36 +0800
+Received: from [10.16.6.141] (172.27.4.253) by MTKCAS32.mediatek.inc
+ (172.27.4.170) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Sat, 18 May 2019 15:51:33 +0800
+Message-ID: <1558165892.7681.8.camel@mszsdaap41>
+Subject: Re: [v2 3/3] drm/mediatek: add mipi_tx driver for mt8183
+From:   Jitao Shi <jitao.shi@mediatek.com>
+To:     CK Hu <ck.hu@mediatek.com>
+CC:     Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>,
+        "Mark Rutland" <mark.rutland@arm.com>,
+        Ian Campbell <ijc+devicetree@hellion.org.uk>,
+        Kumar Gala <galak@codeaurora.org>, <linux-pwm@vger.kernel.org>,
+        David Airlie <airlied@linux.ie>,
+        "Matthias Brugger" <matthias.bgg@gmail.com>,
+        Thierry Reding <treding@nvidia.com>,
+        "Ajay Kumar" <ajaykumar.rs@samsung.com>,
+        Inki Dae <inki.dae@samsung.com>,
+        "Rahul Sharma" <rahul.sharma@samsung.com>,
+        Sean Paul <seanpaul@chromium.org>,
+        Vincent Palatin <vpalatin@chromium.org>,
+        Andy Yan <andy.yan@rock-chips.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        "Russell King" <rmk+kernel@arm.linux.org.uk>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <dri-devel@lists.freedesktop.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <srv_heupstream@mediatek.com>,
+        Sascha Hauer <kernel@pengutronix.de>,
+        <yingjoe.chen@mediatek.com>, <eddie.huang@mediatek.com>,
+        <cawa.cheng@mediatek.com>, <bibby.hsieh@mediatek.com>,
+        <stonea168@163.com>
+Date:   Sat, 18 May 2019 15:51:32 +0800
+In-Reply-To: <1557134258.5345.5.camel@mtksdaap41>
+References: <20190416054217.75387-1-jitao.shi@mediatek.com>
+         <20190416054217.75387-4-jitao.shi@mediatek.com>
+         <1557134258.5345.5.camel@mtksdaap41>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.10.4-0ubuntu2 
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-
-Am Samstag, 18. Mai 2019, 01:57:47 CEST schrieb Doug Anderson:
-> Elaine and Caesar,
+On Mon, 2019-05-06 at 17:17 +0800, CK Hu wrote:
+> Hi, Jitao:
 > 
-> On Tue, May 7, 2019 at 4:50 PM Douglas Anderson <dianders@chromium.org> wrote:
-> >
-> > While testing a newer kernel on rk3288-based Chromebooks I found that
-> > the power draw in suspend was higher on newer kernels compared to the
-> > downstream Chrome OS 3.14 kernel.  Specifically the power of an
-> > rk3288-veyron-jerry board that I tested (as measured by the smart
-> > battery) was ~16 mA on Chrome OS 3.14 and ~21 mA on a newer kernel.
-> >
-> > I tracked the regression down to the fact that the "DP PHY" driver
-> > didn't exist in our downstream 3.14.  We relied on the eDP driver to
-> > turn on the clock and relied on the fact that the power for the PHY
-> > was default turned on.
-> >
-> > Specifically the thing that caused the power regression was turning
-> > the eDP PHY _off_.  Presumably there is some sort of power leak in the
-> > system and when we turn the PHY off something is leaching power from
-> > something else and causing excessive power draw.
-> >
-> > Doing a search through device trees shows that this PHY is only ever
-> > used on rk3288.  Presumably this power leak is present on all
-> > rk3288-SoCs running upstream Linux so let's just whack the driver to
-> > make sure we never turn off power.  We'll still leave the parts that
-> > turn _on_ the power and grab the clock, though.
-> >
-> > NOTES:
-> > A) If someone can identify what this power leak is and fix it in some
-> >    other way we can revert this patch.
-> > B) If someone can show that their particular board doesn't have this
-> >    power leak (maybe they have rails hooked up differently?) we can
-> >    perhaps add a device tree property indicating that for some boards
-> >    it's OK to turn this rail off.  I don't want to add this property
-> >    until I know of a board that needs it.
-> >
-> > Fixes: fd968973de95 ("phy: Add driver for rockchip Display Port PHY")
-> > Signed-off-by: Douglas Anderson <dianders@chromium.org>
+> On Tue, 2019-04-16 at 13:42 +0800, Jitao Shi wrote:
+> > This patch add mt8183 mipi_tx driver.
+> > And also support other chips that use the same binding and driver.
+> > 
+> > Signed-off-by: Jitao Shi <jitao.shi@mediatek.com>
 > > ---
-> > As far as I know Yakir (the original author) is no longer at Rockchip.
-> > I've added a few other Rockchip people and hopefully one of them can
-> > help direct even if they're not directly responsible.
-> >
-> >  drivers/phy/rockchip/phy-rockchip-dp.c | 11 +++++++----
-> >  1 file changed, 7 insertions(+), 4 deletions(-)
+> >  drivers/gpu/drm/mediatek/Makefile             |   1 +
+> >  drivers/gpu/drm/mediatek/mtk_mipi_tx.c        |   2 +
+> >  drivers/gpu/drm/mediatek/mtk_mipi_tx.h        |   1 +
+> >  drivers/gpu/drm/mediatek/mtk_mt8183_mipi_tx.c | 154 ++++++++++++++++++
+> >  4 files changed, 158 insertions(+)
+> >  create mode 100644 drivers/gpu/drm/mediatek/mtk_mt8183_mipi_tx.c
+> > 
 > 
-> Can you help direct this to the right person?  ...or should we just
-> land it and assume it's fine?
+> [snip]
+> 
+> > +
+> > +static int mtk_mipi_tx_pll_prepare(struct clk_hw *hw)
+> > +{
+> > +	struct mtk_mipi_tx *mipi_tx = mtk_mipi_tx_from_clk_hw(hw);
+> > +	unsigned int txdiv, txdiv0;
+> > +	u64 pcw;
+> > +	int ret;
+> > +
+> > +	dev_dbg(mipi_tx->dev, "prepare: %u bps\n", mipi_tx->data_rate);
+> > +
+> > +	if (mipi_tx->data_rate >= 2000000000) {
+> > +		txdiv = 1;
+> > +		txdiv0 = 0;
+> > +	} else if (mipi_tx->data_rate >= 1000000000) {
+> > +		txdiv = 2;
+> > +		txdiv0 = 1;
+> > +	} else if (mipi_tx->data_rate >= 500000000) {
+> > +		txdiv = 4;
+> > +		txdiv0 = 2;
+> > +	} else if (mipi_tx->data_rate > 250000000) {
+> > +		txdiv = 8;
+> > +		txdiv0 = 3;
+> > +	} else if (mipi_tx->data_rate >= 125000000) {
+> > +		txdiv = 16;
+> > +		txdiv0 = 4;
+> > +	} else {
+> > +		return -EINVAL;
+> > +	}
+> > +
+> > +	ret = clk_prepare_enable(mipi_tx->ref_clk);
+> > +	if (ret < 0) {
+> > +		dev_err(mipi_tx->dev,
+> > +			"can't prepare and enable mipi_tx ref_clk %d\n", ret);
+> > +		return ret;
+> > +	}
+> 
+> You enable the parent clock when prepare this clock here, this behavior
+> looks strange. I think the flow should be:
+> 
+> 1. Parent clock prepare
+> 2. This clock prepare
+> 3. Parent clock enable
+> 4. This clock enable
+> 
+> Maybe you should implement 'enable callback' so that parent clock would
+> be already enabled.
+> 
+> One question is, mipi_tx_pll is used by dsi driver, but I does not see
+> dsi prepare_enable() mipi_tx_pll, how does this work?
+> 
+> Regards,
+> CK
+> 
 
-I tink Kishon as phy-maintainer is the correct person to take on this
-patch, but maybe he's waiting for the merge-window to be over.
+The mipi_tx can be accessed after clk_prepare_enable(mipi_tx->ref_clk);
 
+So place the clk_prepare_enable(mipi_tx->ref_clk) before accessing
+mipitx.
 
-Heiko
+mipi_tx_pll is enable by mtk_mipi_tx_power_on() in mtk_mip_tx.c.
+clk_prepare_enable(mipi_tx->pll) will enable mipi_tx_pll.
+
+Beset Regards
+Jitao
+
+> > +
+> > +	mtk_mipi_tx_clear_bits(mipi_tx, MIPITX_PLL_CON4, RG_DSI_PLL_IBIAS);
+> > +
+> > +	mtk_mipi_tx_set_bits(mipi_tx, MIPITX_PLL_PWR, AD_DSI_PLL_SDM_PWR_ON);
+> > +	usleep_range(30, 100);
+> > +	mtk_mipi_tx_clear_bits(mipi_tx, MIPITX_PLL_PWR, AD_DSI_PLL_SDM_ISO_EN);
+> > +	pcw = div_u64(((u64)mipi_tx->data_rate * txdiv) << 24, 26000000);
+> > +	writel(pcw, mipi_tx->regs + MIPITX_PLL_CON0);
+> > +	mtk_mipi_tx_update_bits(mipi_tx, MIPITX_PLL_CON1, RG_DSI_PLL_POSDIV,
+> > +				txdiv0 << 8);
+> > +	usleep_range(1000, 2000);
+> > +	mtk_mipi_tx_set_bits(mipi_tx, MIPITX_PLL_CON1, RG_DSI_PLL_EN);
+> > +
+> > +	return 0;
+> > +}
+> > +
+> > +static void mtk_mipi_tx_pll_unprepare(struct clk_hw *hw)
+> > +{
+> > +	struct mtk_mipi_tx *mipi_tx = mtk_mipi_tx_from_clk_hw(hw);
+> > +
+> > +	dev_dbg(mipi_tx->dev, "unprepare\n");
+> > +
+> > +	mtk_mipi_tx_clear_bits(mipi_tx, MIPITX_PLL_CON1, RG_DSI_PLL_EN);
+> > +
+> > +	mtk_mipi_tx_set_bits(mipi_tx, MIPITX_PLL_PWR, AD_DSI_PLL_SDM_ISO_EN);
+> > +	mtk_mipi_tx_clear_bits(mipi_tx, MIPITX_PLL_PWR, AD_DSI_PLL_SDM_PWR_ON);
+> > +	clk_disable_unprepare(mipi_tx->ref_clk);
+> > +}
+> > +
+> 
+> 
 
 
