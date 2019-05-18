@@ -2,138 +2,155 @@ Return-Path: <SRS0=//ty=TS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B055C04AB4
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 May 2019 00:05:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97C4CC04E84
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 May 2019 00:06:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5C5E721883
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 May 2019 00:05:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6ACB2218B6
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 May 2019 00:06:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CVyVw5po"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="XpHCXZ0v"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728861AbfERAFm (ORCPT
+        id S1729058AbfERAGK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 May 2019 20:05:42 -0400
-Received: from mail-it1-f193.google.com ([209.85.166.193]:53680 "EHLO
-        mail-it1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726774AbfERAFm (ORCPT
+        Fri, 17 May 2019 20:06:10 -0400
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:42736 "EHLO
+        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726774AbfERAGK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 May 2019 20:05:42 -0400
-Received: by mail-it1-f193.google.com with SMTP id m141so14610981ita.3;
-        Fri, 17 May 2019 17:05:41 -0700 (PDT)
+        Fri, 17 May 2019 20:06:10 -0400
+Received: by mail-qk1-f196.google.com with SMTP id d4so5510744qkc.9
+        for <linux-kernel@vger.kernel.org>; Fri, 17 May 2019 17:06:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:mime-version:subject:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=a7C3dDuMzG9dHiTnNVWPV79gGpjU//Ll/DxT8px+pnA=;
-        b=CVyVw5podqSpC5UGS+ZuDip7eZbEJsXzX5VFUZwanx1U0toRMkJnW3butmBLZQY9PS
-         C2ucdTjm40bKAPWLQKIm1QHIW2OZwTATdIX2W7RyZ6qwXmEU12TPRwcIA8rIGrEA8ozV
-         WpYrpWX18EtaXAVcolUj8CHOfnPvtAd+YJaS0/zd+VhWWS/sUqQinu5Fr3LcMIpBhOts
-         hQ6ZQnvpmZmZML5TlzCYpKJU8QzrmEQKlQ7apx9yh6ncuua//ixyuEAmWJtNZPb1QXhJ
-         zAP+dr+X1iAeedRZ5dI2Uat1j1lXAxvnRlfeW1qvhvowaM/wUznImexj8fdBqFkNnAtS
-         Je2w==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=qUU/PCHJ10Cnm4pEYGt2NYLBE8MczWcaqgp3zO0rTb0=;
+        b=XpHCXZ0vlW6ZB0LjNM3gSWk+gqE+tUaKl7t5x0Uy0r30UxhLbJy+WPkVwwq+x9/KQw
+         +CRNhMn/4++Gq8rK/DF2O3PN4lwDVocPTCjf90D6TQL/JFiByl1VKPohza0LgoggQUBz
+         PBQbfib83VzeF6lJ7d6/ERQaZw7rah61nnorKe+b9YXK0B+pXNDa5VZsNEEl7foC4tjD
+         1/Bh+WHotDx8JFM0DJ3sa09ujJ/a8zWFMl0O2QphX/caCiFP54RYDbSlvUZFlGbJK594
+         7fySsbMJ780nVzcYMRutROAriGZ/5rGlAuaXRPOzLRCsbglNSZkVH0rCdmrEB4TiipDl
+         cTYg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:mime-version:subject:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=a7C3dDuMzG9dHiTnNVWPV79gGpjU//Ll/DxT8px+pnA=;
-        b=UMYnfzh+D4zOVmjrqJC0sZ2BSE7m4GR4W5mk3RGgJTgkB8zV205ypMrgaR6Dy/Sjq6
-         MY9jZ5t9JevipvU4aa+XcvS09IgRrs/WBMxKwcoPu2r688B1ys8H2VExyvOeY85EHWk/
-         UtUwg4VJYmn0m5vidG2PvVSH2CakZxeYbW3YcvyVsBKBmGdC949YuGtmoYo8JyYkioXa
-         SbTTCQTthdj+cXO6ijvllq/QG3wO9wY1H3NQ8BE10Xt0uplOo754IecSRNuoiwQvV6Or
-         NkK6pZjGA1bo9ABFW3A2OXto8tWW6ndK2C0c3vd/+ZDvhL68ZH3ulmfvkeBt4o21jPMC
-         FJCg==
-X-Gm-Message-State: APjAAAWTDcpEhf6tqAQOoPeEFo48VI45w0yi1Vn38dfE04FGa6k+ua3f
-        DQhmBzguzjMHCV98rlHWor4=
-X-Google-Smtp-Source: APXvYqynYhiMRG2RP3SVmO493+tsMr68p2mZGv/8isY4LI0ixkxiunudS0yasg6Q4VxiyV87VJawxg==
-X-Received: by 2002:a24:9c47:: with SMTP id b68mr19781273ite.169.1558137940994;
-        Fri, 17 May 2019 17:05:40 -0700 (PDT)
-Received: from ?IPv6:2607:fea8:7a60:20d:68be:67af:76aa:290f? ([2607:fea8:7a60:20d:68be:67af:76aa:290f])
-        by smtp.gmail.com with ESMTPSA id 74sm1095659itk.3.2019.05.17.17.05.39
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 17 May 2019 17:05:40 -0700 (PDT)
-From:   Donald Yandt <donald.yandt@gmail.com>
-X-Google-Original-From: Donald Yandt <Donald.Yandt@gmail.com>
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (1.0)
-Subject: Re: [PATCH 20/73] perf machine: Null-terminate version char array upon fgets(/proc/version) error
-X-Mailer: iPhone Mail (16E227)
-In-Reply-To: <20190517193611.4974-21-acme@kernel.org>
-Date:   Fri, 17 May 2019 20:05:39 -0400
-Cc:     Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Clark Williams <williams@redhat.com>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Avi Kivity <avi@scylladb.com>, Jiri Olsa <jolsa@redhat.com>,
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=qUU/PCHJ10Cnm4pEYGt2NYLBE8MczWcaqgp3zO0rTb0=;
+        b=d726qp1ocScQEqe1YGpXEo6K4wq4OCTa/nwYiWanRNFENyBESL3ABOeqfCZvxzwyEq
+         EgHE9V/UveoHVRstQ4ktZVUIQYXZ6f9tUCk36glL6LJxiHw1aXMsrZvxyqsWAuXVZtCh
+         6w/7NejZ/iTSJVwJvwFeKPe9Ostn/y9CijrknBDiYJ7iS/2LrHLikd/KjPfQ7/OTOP0+
+         wARHS0Z3/hfHjw+msIlSYo3kacIo63K1DDmGiVVjzGLx24g6KCGRimtQOVCpTMskMUIz
+         vNp/iDYz+nN4NkxKJVwtWB/tJbhuZ5ORsgtGagjW94AvOI1BPRdc5IG9SiJtX2pbL5p/
+         GYXg==
+X-Gm-Message-State: APjAAAVWINa0Z5zFEuiKmKU8zn3ToQ//DjOnx+OyNrG6Ap3Cg1Gd/tjB
+        GmhOO9mkBxHPQFFyIOaYNwYXiQXGykMS8kWpg43y
+X-Google-Smtp-Source: APXvYqx9dlDkMrn2MOaCbua3SEWTUfkJSCGmXC5rRUtuNpy08kKWyNNzYC2LUnAUQvuDM1Xcl2tLkYeLd/8PvwCfoRM=
+X-Received: by 2002:a37:4948:: with SMTP id w69mr49213504qka.122.1558137968878;
+ Fri, 17 May 2019 17:06:08 -0700 (PDT)
+MIME-Version: 1.0
+References: <b8487de1-83a8-2761-f4a6-26c583eba083@oracle.com>
+ <B447B6E8-8CEF-46FF-9967-DFB2E00E55DB@amacapital.net> <4e7d52d7-d4d2-3008-b967-c40676ed15d2@oracle.com>
+ <CALCETrXtwksWniEjiWKgZWZAyYLDipuq+sQ449OvDKehJ3D-fg@mail.gmail.com>
+ <e5fedad9-4607-0aa4-297e-398c0e34ae2b@oracle.com> <20190514170522.GW2623@hirez.programming.kicks-ass.net>
+ <20190514180936.GA1977@linux.intel.com> <CALCETrVzbBLokip5n0KEyG6irH6aoEWqyNODTy8embpXhB1GQg@mail.gmail.com>
+ <20190514210603.GD1977@linux.intel.com> <A1EB80C0-2D88-4DC0-A898-3BED50A4F5A8@amacapital.net>
+ <20190514223823.GE1977@linux.intel.com>
+In-Reply-To: <20190514223823.GE1977@linux.intel.com>
+From:   Jonathan Adams <jwadams@google.com>
+Date:   Fri, 17 May 2019 17:05:32 -0700
+Message-ID: <CA+VK+GOL_sY5aWYijg1_X6VgvDtFbRX2ymuSXhsZeZH2_tO2qg@mail.gmail.com>
+Subject: Re: [RFC KVM 18/27] kvm/isolation: function to copy page table
+ entries for percpu buffer
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     Andy Lutomirski <luto@amacapital.net>,
+        Andy Lutomirski <luto@kernel.org>,
         Peter Zijlstra <peterz@infradead.org>,
-        Yanmin Zhang <yanmin_zhang@linux.intel.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>
+        Alexandre Chartre <alexandre.chartre@oracle.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Radim Krcmar <rkrcmar@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        kvm list <kvm@vger.kernel.org>, X86 ML <x86@kernel.org>,
+        Linux-MM <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        Jan Setje-Eilers <jan.setjeeilers@oracle.com>,
+        Liran Alon <liran.alon@oracle.com>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-Message-Id: <2D532F76-A57F-4CC4-BAA5-B466AFC0305D@gmail.com>
-References: <20190517193611.4974-1-acme@kernel.org> <20190517193611.4974-21-acme@kernel.org>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Thank you Arnaldo for signing my patch.
+On Tue, May 14, 2019 at 3:38 PM Sean Christopherson
+<sean.j.christopherson@intel.com> wrote:
+> On Tue, May 14, 2019 at 02:55:18PM -0700, Andy Lutomirski wrote:
+> > > On May 14, 2019, at 2:06 PM, Sean Christopherson <sean.j.christophers=
+on@intel.com> wrote:
+> > >> On Tue, May 14, 2019 at 01:33:21PM -0700, Andy Lutomirski wrote:
+> > >> I suspect that the context switch is a bit of a red herring.  A
+> > >> PCID-don't-flush CR3 write is IIRC under 300 cycles.  Sure, it's slo=
+w,
+> > >> but it's probably minor compared to the full cost of the vm exit.  T=
+he
+> > >> pain point is kicking the sibling thread.
+> > >
+> > > Speaking of PCIDs, a separate mm for KVM would mean consuming another
+> > > ASID, which isn't good.
+> >
+> > I=E2=80=99m not sure we care. We have many logical address spaces (two =
+per mm plus a
+> > few more).  We have 4096 PCIDs, but we only use ten or so.  And we have=
+ some
+> > undocumented number of *physical* ASIDs with some undocumented mechanis=
+m by
+> > which PCID maps to a physical ASID.
+>
+> Yeah, I was referring to physical ASIDs.
+>
+> > I don=E2=80=99t suppose you know how many physical ASIDs we have?
+>
+> Limited number of physical ASIDs.  I'll leave it at that so as not to
+> disclose something I shouldn't.
+>
+> > And how it interacts with the VPID stuff?
+>
+> VPID and PCID get factored into the final ASID, i.e. changing either one
+> results in a new ASID.  The SDM's oblique way of saying that:
+>
+>   VPIDs and PCIDs (see Section 4.10.1) can be used concurrently. When thi=
+s
+>   is done, the processor associates cached information with both a VPID a=
+nd
+>   a PCID. Such information is used only if the current VPID and PCID both
+>   match those associated with the cached information.
+>
+> E.g. enabling PTI in both the host and guest consumes four ASIDs just to
+> run a single task in the guest:
+>
+>   - VPID=3D0, PCID=3Dkernel
+>   - VPID=3D0, PCID=3Duser
+>   - VPID=3D1, PCID=3Dkernel
+>   - VPID=3D1, PCID=3Duser
+>
+> The impact of consuming another ASID for KVM would likely depend on both
+> the guest and host configurations/worloads, e.g. if the guest is using a
+> lot of PCIDs then it's probably a moot point.  It's something to keep in
+> mind though if we go down this path.
 
-     I think we should use version 4 of my patch and return NULL instead of n=
-ull-terminating for efficiency.
+One answer to that would be to have the KVM page tables use the same
+PCID as the normal user-mode PTI page tables.  It's not ideal (since
+the qemu/whatever process can see some kernel data via meltdown it
+wouldn't be able to normally see), but might be an option to
+investigate.
 
-Thanks,
-
-Donald
-
-> On May 17, 2019, at 3:35 PM, Arnaldo Carvalho de Melo <acme@kernel.org> wr=
-ote:
->=20
-> From: Donald Yandt <donald.yandt@gmail.com>
->=20
-> If fgets() fails due to any other error besides end-of-file, the version
-> char array may not even be null-terminated.
->=20
-> Signed-off-by: Donald Yandt <donald.yandt@gmail.com>
-> Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-> Cc: Avi Kivity <avi@scylladb.com>
-> Cc: Jiri Olsa <jolsa@redhat.com>
-> Cc: Peter Zijlstra <peterz@infradead.org>
-> Cc: Yanmin Zhang <yanmin_zhang@linux.intel.com>
-> Fixes: a1645ce12adb ("perf: 'perf kvm' tool for monitoring guest performan=
-ce from host")
-> Link: http://lkml.kernel.org/r/20190514110100.22019-1-donald.yandt@gmail.c=
-om
-> Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-> ---
-> tools/perf/util/machine.c | 3 ++-
-> 1 file changed, 2 insertions(+), 1 deletion(-)
->=20
-> diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
-> index 3c520baa198c..28a9541c4835 100644
-> --- a/tools/perf/util/machine.c
-> +++ b/tools/perf/util/machine.c
-> @@ -1234,8 +1234,9 @@ static char *get_kernel_version(const char *root_dir=
-)
->    if (!file)
->        return NULL;
->=20
-> -    version[0] =3D '\0';
->    tmp =3D fgets(version, sizeof(version), file);
-> +    if (!tmp)
-> +        *version =3D '\0';
->    fclose(file);
->=20
->    name =3D strstr(version, prefix);
-> --=20
-> 2.20.1
->=20
+Cheers,
+- jonathan
