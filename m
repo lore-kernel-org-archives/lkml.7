@@ -2,1189 +2,613 @@ Return-Path: <SRS0=//ty=TS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04004C04E84
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 May 2019 02:31:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AB1FC04AB4
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 May 2019 02:56:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B2C2421773
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 May 2019 02:31:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lnlYvX9V"
+	by mail.kernel.org (Postfix) with ESMTP id DA68221773
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 May 2019 02:56:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729036AbfERCbY (ORCPT
+        id S1727432AbfERC4o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 May 2019 22:31:24 -0400
-Received: from mail-qk1-f195.google.com ([209.85.222.195]:37803 "EHLO
-        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726200AbfERCbK (ORCPT
+        Fri, 17 May 2019 22:56:44 -0400
+Received: from out01.mta.xmission.com ([166.70.13.231]:51263 "EHLO
+        out01.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726519AbfERC4n (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 May 2019 22:31:10 -0400
-Received: by mail-qk1-f195.google.com with SMTP id d10so5667926qko.4
-        for <linux-kernel@vger.kernel.org>; Fri, 17 May 2019 19:31:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:subject:date:message-id:in-reply-to:references:mime-version
-         :content-transfer-encoding;
-        bh=PTBG03dcRrEeV4qM9X3q8Tc4RNOPyvEHkjChA/R1skY=;
-        b=lnlYvX9VTwd0QsdlOtw7yO2lkKpRIXbqbS4lq5yQ2kymr9yjkZEuke+8tuNVt1LVd9
-         WBJrxW6egv8DlLhteqrXG/ey/7hPLU3RUofIqoGus2ulFxgzPrnNQBY7Aj9KreL9MS78
-         Eejw45sVdp8e0pr8T+GcWNKV+bKHXDcQy/Xmpb7y8j8sANo3Lx66cJZ0aAnmUmI38drQ
-         CHItQnN3i1bovIhqVcmp5lUe4k6hkszjG0D84fwhZb8KpouI1i0hQ45oC6CsrNcAESEF
-         +HKVCPXyJAj11cnX9OSVgti1mIin2M0fp4JDRnxywXRy1aNEgVwl/Cr+wka1JVMdGUbA
-         UjDQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=PTBG03dcRrEeV4qM9X3q8Tc4RNOPyvEHkjChA/R1skY=;
-        b=qkl0SCJNUBBfE73culfk1fUrlRIwMIWOLKX2xKNuzeB6z/qZ6f7VGmrwusiedRmGj8
-         IYfOQS3bLax3Eb8lX2WPUAtSmAI7nVrLwrkUHJUrtB6i/FUBGw/KBUSBY4V89M2ZuZDy
-         XXV+fpyafZABWFSmPWhZGTg1aa+IL8rcGrGG3piW1DHVZeE8oqurxclWOxAyR6/EqSa/
-         e/+gGaOcajKWKbL3+onGDc8Kcc8+jjUOeknDUOCjkXVjH8oTurqkmWi4kSbP7w5VpWPP
-         zPqY2dcQ2BvN40My//2UuIgtHXAqUG2hxrYBybIdyeEl3eiMr4CqFPPmaNis2bjyr2tK
-         XPWw==
-X-Gm-Message-State: APjAAAUIPea0veFktghxS53GoPOQyIXkYFRCQ89DgUGgOjcZMEAxHtQo
-        1FYplqS0OComR3UbrW8uhMQ=
-X-Google-Smtp-Source: APXvYqxpS7s/2lqAaK7E/KiSyZGArIZVTmjYRdUK3KbUxRS+O3Al9eQFhIUYsWrAD0x7XybX/2RioA==
-X-Received: by 2002:a05:620a:15c1:: with SMTP id o1mr6508576qkm.299.1558146667970;
-        Fri, 17 May 2019 19:31:07 -0700 (PDT)
-Received: from arch-01.home (c-73-132-202-198.hsd1.dc.comcast.net. [73.132.202.198])
-        by smtp.gmail.com with ESMTPSA id n66sm5210322qke.6.2019.05.17.19.31.07
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 17 May 2019 19:31:07 -0700 (PDT)
-From:   Geordan Neukum <gneukum1@gmail.com>
-To:     gneukum1@gmail.com,
+        Fri, 17 May 2019 22:56:43 -0400
+X-Greylist: delayed 4660 seconds by postgrey-1.27 at vger.kernel.org; Fri, 17 May 2019 22:56:40 EDT
+Received: from in01.mta.xmission.com ([166.70.13.51])
+        by out01.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.87)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1hRoJP-0001Ys-Mg; Fri, 17 May 2019 19:38:59 -0600
+Received: from ip72-206-97-68.om.om.cox.net ([72.206.97.68] helo=x220.xmission.com)
+        by in01.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.87)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1hRoJO-0008JK-0G; Fri, 17 May 2019 19:38:59 -0600
+From:   ebiederm@xmission.com (Eric W. Biederman)
+To:     Alan Stern <stern@rowland.harvard.edu>
+Cc:     linux-usb@vger.kernel.org,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 1/5] staging: kpc2000: kpc_i2c: reindent i2c_driver.c
-Date:   Sat, 18 May 2019 02:29:56 +0000
-Message-Id: <0d1cf03b7c4a82f710bd28b968261e5bd92c0229.1558146549.git.gneukum1@gmail.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <cover.1558146549.git.gneukum1@gmail.com>
-References: <cover.1558146549.git.gneukum1@gmail.com>
+        Oliver Neukum <oneukum@suse.com>,
+        <linux-kernel@vger.kernel.org>
+References: <Pine.LNX.4.44L0.1902081652080.1482-200000@iolanthe.rowland.org>
+Date:   Fri, 17 May 2019 20:38:34 -0500
+In-Reply-To: <Pine.LNX.4.44L0.1902081652080.1482-200000@iolanthe.rowland.org>
+        (Alan Stern's message of "Fri, 8 Feb 2019 16:57:27 -0500 (EST)")
+Message-ID: <87y334v8x1.fsf@xmission.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/25.1 (gnu/linux)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/mixed; boundary="=-=-="
+X-XM-SPF: eid=1hRoJO-0008JK-0G;;;mid=<87y334v8x1.fsf@xmission.com>;;;hst=in01.mta.xmission.com;;;ip=72.206.97.68;;;frm=ebiederm@xmission.com;;;spf=neutral
+X-XM-AID: U2FsdGVkX18l9787xi5ILdaNwwKktcW5P+wq93aEoYE=
+X-SA-Exim-Connect-IP: 72.206.97.68
+X-SA-Exim-Mail-From: ebiederm@xmission.com
+Subject: Re: [CFT][PATCH] signal/usb: Replace kill_pid_info_as_cred with kill_pid_usb_asyncio
+X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
+X-SA-Exim-Scanned: Yes (on in01.mta.xmission.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-i2c_driver.c uses a mixture of space and tab indentations which
-conflicts with the kernel coding style guide. Reindent i2c_driver.c.
+--=-=-=
+Content-Type: text/plain
 
-Signed-off-by: Geordan Neukum <gneukum1@gmail.com>
+Alan Stern <stern@rowland.harvard.edu> writes:
+
+> On Thu, 7 Feb 2019, Eric W. Biederman wrote:
+>
+>> The usb support for asyncio encoded one of it's values in the wrong
+>> field.  It should have used si_value but instead used si_addr which is
+>> not present in the _rt union member of struct siginfo.
+>> 
+>> The result is a POSIX and glibc incompatible encoding of fields in
+>> struct siginfo with si_code of SI_ASYNCIO.  This makes it impossible
+>> to look at a struct siginfo with si_code set to SI_ASYNCIO and without
+>> context properly decode it.  Which unfortunately means that
+>> copy_siginfo_to_user32 can't handle the compat issues this unfortunate
+>> choice in encodings brings up.
+>> 
+>> Therefore replace kill_pid_info_as_cred with kill_pid_usb_asyncio a
+>> dedicated function for this one specific case.  There are no other
+>> users of kill_pid_info_as_cred so this specialization should have no
+>> impact on the amont of code in the kernel.  Have kill_pid_usb_asyncio
+>> take instead of a siginfo_t which is difficult error prone 3
+>> arguments, a signal number, an errno value, and an address enconded as
+>> a sigval_t.  The encoding as a sigval_t allows the caller to deal with
+>> the compat issues before calling kill_pid_info_as_cred.
+>> 
+>> Add BUILD_BUG_ONs in kernel/signal.c to ensure that we can now place
+>> the pointer value at the in si_pid (instead of si_addr) and get
+>> the same binary result when the structure is copied to user space
+>> and when the structure is copied field by field.
+>> 
+>> The usb code is updated to track if the values it passes into
+>> kill_pid_usb_asyncio were passed to it from a native userspace
+>> or from at compat user space.  To allow a proper conversion
+>> of the addresses.
+>> 
+>> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+>> Cc: linux-usb@vger.kernel.org
+>> Cc: Alan Stern <stern@rowland.harvard.edu>
+>> Cc: Oliver Neukum <oneukum@suse.com>
+>> Fixes: v2.3.39
+>> Cc: stable@vger.kernel.org
+>> Signed-off-by: "Eric W. Biederman" <ebiederm@xmission.com>
+>> ---
+>> 
+>> Can I get someone to test this code?  I just discovered that the
+>> usb code is filling in struct siginfo wrong and copy_siginfo_to_user32
+>> can't possibly get this correct without some help.
+>> 
+>> I think I have coded up a working fix.  But I don't have a setup
+>> where I can test this.
+>
+> Eric:
+>
+> You should be able to test this patch by running the attached 
+> program.  It takes one argument, the pathname to a USB device file.  
+> For example, on my system:
+>
+> # ./usbsig /dev/bus/usb/001/001
+> Got signal 10, signo 10 errno 0 code -4
+>
+> I don't know exactly what you're looking for, but it should be pretty 
+> easy to modify the test program however you want.
+>
+> If you need to test the compatibility mode specifically, I can do that
+> here -- I'm running a 32-bit userspace on a 64-bit kernel.  But you'll
+> have to tell me exactly what test code to run.
+
+Wow I got a little distracted but now I am back to this.
+
+Using your test program I was able to test the basics of this.
+
+I found one bug in my patch where I was missing a memset.  So I have
+corrected that, and reorganized the patch a little bit.
+
+I have not figured out how to trigger a usb disconnect so I have not
+tested that.
+
+The big thing I have not been able to test is running a 64bit big-endian
+kernel with a 32bit user space.  My modified version of your test
+program should report "Bad" without my patch, and should report "Good"
+with it.
+
+Is there any chance you can test that configuration?  I could not figure
+out how to get a 64bit big-endian system running in qemu, and I don't
+have the necessary hardware so I was not able to test that at all.  As
+that is the actual bug I am still hoping someone can test it.
+
+Thank you,
+Eric Biederman
 ---
- drivers/staging/kpc2000/kpc_i2c/i2c_driver.c | 1014 +++++++++---------
- 1 file changed, 507 insertions(+), 507 deletions(-)
 
-diff --git a/drivers/staging/kpc2000/kpc_i2c/i2c_driver.c b/drivers/staging/kpc2000/kpc_i2c/i2c_driver.c
-index 0fb068b2408d..6dda4eb6de75 100644
---- a/drivers/staging/kpc2000/kpc_i2c/i2c_driver.c
-+++ b/drivers/staging/kpc2000/kpc_i2c/i2c_driver.c
-@@ -1,14 +1,14 @@
- // SPDX-License-Identifier: GPL-2.0+
- /*  Copyright (c) 2014-2018  Daktronics,
--                             Matt Sickler <matt.sickler@daktronics.com>,
--                             Jordon Hofer <jordon.hofer@daktronics.com>
-+			      Matt Sickler <matt.sickler@daktronics.com>,
-+			      Jordon Hofer <jordon.hofer@daktronics.com>
-     Adapted i2c-i801.c for use with Kadoka hardware.
-     Copyright (c) 1998 - 2002  Frodo Looijaard <frodol@dds.nl>,
-     Philip Edelbrock <phil@netroedge.com>, and Mark D. Studebaker
-     <mdsxyz123@yahoo.com>
-     Copyright (C) 2007 - 2012  Jean Delvare <khali@linux-fr.org>
-     Copyright (C) 2010         Intel Corporation,
--                               David Woodhouse <dwmw2@infradead.org>
-+				David Woodhouse <dwmw2@infradead.org>
- */
- #include <linux/init.h>
- #include <linux/module.h>
-@@ -29,11 +29,11 @@ MODULE_AUTHOR("Matt.Sickler@Daktronics.com");
- MODULE_SOFTDEP("pre: i2c-dev");
- 
- struct i2c_device {
--    unsigned long           smba;
--    struct i2c_adapter      adapter;
--    struct platform_device *pldev;
--    struct rw_semaphore     rw_sem;
--    unsigned int            features;
-+	unsigned long           smba;
-+	struct i2c_adapter      adapter;
-+	struct platform_device *pldev;
-+	struct rw_semaphore     rw_sem;
-+	unsigned int            features;
- };
- 
- /*****************************
-@@ -134,479 +134,479 @@ MODULE_PARM_DESC(disable_features, "Disable selected driver features");
-    Return 0 if it is, -EBUSY if it is not. */
- static int i801_check_pre(struct i2c_device *priv)
+--=-=-=
+Content-Type: text/plain
+Content-Disposition: inline; filename=usbsig.c
+
+/* usbsig.c -- test USB async signal delivery */
+
+#include <stdio.h>
+#include <fcntl.h>
+#include <signal.h>
+#include <string.h>
+#include <sys/ioctl.h>
+#include <unistd.h>
+#include <linux/usb/ch9.h>
+#include <linux/usbdevice_fs.h>
+
+static struct usbdevfs_urb urb;
+static struct usbdevfs_disconnectsignal ds;
+
+void urb_handler(int sig, siginfo_t *info , void *ucontext)
+{
+	printf("Got signal %d, signo %d errno %d code %d addr: %p urb: %p\n",
+	       sig, info->si_signo, info->si_errno, info->si_code,
+	       info->si_addr, &urb);
+
+	printf("%s\n", (info->si_addr == &urb) ? "Good" : "Bad");
+}
+
+void ds_handler(int sig, siginfo_t *info , void *ucontext)
+{
+	printf("Got signal %d, signo %d errno %d code %d addr: %p ds: %p\n",
+	       sig, info->si_signo, info->si_errno, info->si_code,
+	       info->si_addr, &ds);
+
+	printf("%s\n", (info->si_addr == &ds) ? "Good" : "Bad");
+}
+
+int main(int argc, char **argv)
+{
+	char *devfilename;
+	int fd;
+	int rc;
+	struct sigaction act;
+	struct usb_ctrlrequest *req;
+	void *ptr;
+	char buf[80];
+
+	if (argc != 2) {
+		fprintf(stderr, "Usage: usbsig device-file-name\n");
+		return 1;
+	}
+
+	devfilename = argv[1];
+	fd = open(devfilename, O_RDWR);
+	if (fd == -1) {
+		perror("Error opening device file");
+		return 1;
+	}
+
+	act.sa_sigaction = urb_handler;
+	sigemptyset(&act.sa_mask);
+	act.sa_flags = SA_SIGINFO;
+
+	rc = sigaction(SIGUSR1, &act, NULL);
+	if (rc == -1) {
+		perror("Error in sigaction");
+		return 1;
+	}
+
+	act.sa_sigaction = ds_handler;
+	sigemptyset(&act.sa_mask);
+	act.sa_flags = SA_SIGINFO;
+
+	rc = sigaction(SIGUSR2, &act, NULL);
+	if (rc == -1) {
+		perror("Error in sigaction");
+		return 1;
+	}
+
+	memset(&urb, 0, sizeof(urb));
+	urb.type = USBDEVFS_URB_TYPE_CONTROL;
+	urb.endpoint = USB_DIR_IN | 0;
+	urb.buffer = buf;
+	urb.buffer_length = sizeof(buf);
+	urb.signr = SIGUSR1;
+
+	req = (struct usb_ctrlrequest *) buf;
+	req->bRequestType = USB_DIR_IN | USB_TYPE_STANDARD | USB_RECIP_DEVICE;
+	req->bRequest = USB_REQ_GET_DESCRIPTOR;
+	req->wValue = USB_DT_DEVICE << 8;
+	req->wIndex = 0;
+	req->wLength = sizeof(buf) - sizeof(*req);
+
+	rc = ioctl(fd, USBDEVFS_SUBMITURB, &urb);
+	if (rc == -1) {
+		perror("Error in SUBMITURB ioctl");
+		return 1;
+	}
+
+	rc = ioctl(fd, USBDEVFS_REAPURB, &ptr);
+	if (rc == -1) {
+		perror("Error in REAPURB ioctl");
+		return 1;
+	}
+
+	memset(&ds, 0, sizeof(ds));
+	ds.signr = SIGUSR2;
+	ds.context = &ds;
+	rc = ioctl(fd, USBDEVFS_DISCSIGNAL, &ds);
+	if (rc == -1) {
+		perror("Error in DISCSIGNAL ioctl");
+		return 1;
+	}
+
+	close(fd);
+	return 0;
+}
+
+
+--=-=-=
+Content-Type: text/plain
+Content-Disposition: inline;
+ filename=0001-signal-usb-Replace-kill_pid_info_as_cred-with-kill_p.patch
+
+From 0045109b65f32f4228072359282d2f8613fc8964 Mon Sep 17 00:00:00 2001
+From: "Eric W. Biederman" <ebiederm@xmission.com>
+Date: Thu, 7 Feb 2019 19:44:12 -0600
+Subject: [PATCH] signal/usb: Replace kill_pid_info_as_cred with
+ kill_pid_usb_asyncio
+
+The usb support for asyncio encoded one of it's values in the wrong
+field.  It should have used si_value but instead used si_addr which is
+not present in the _rt union member of struct siginfo.
+
+The result is a POSIX and glibc incompatible encoding of fields in
+struct siginfo with si_code of SI_ASYNCIO.  This makes it impossible
+to look at a struct siginfo with si_code set to SI_ASYNCIO and without
+context properly decode it.  Which unfortunately means that
+copy_siginfo_to_user32 can't handle the compat issues this unfortunate
+choice in encodings brings up.
+
+Therefore replace kill_pid_info_as_cred with kill_pid_usb_asyncio a
+dedicated function for this one specific case.  There are no other
+users of kill_pid_info_as_cred so this specialization should have no
+impact on the amount of code in the kernel.  Have kill_pid_usb_asyncio
+take instead of a siginfo_t which is difficult and error prone, 3
+arguments, a signal number, an errno value, and an address enconded as
+a sigval_t.  The encoding of the address as a sigval_t allows the
+caller to deal with the compat issues before calling
+kill_pid_info_as_cred.
+
+Add BUILD_BUG_ONs in kernel/signal.c to ensure that we can now place
+the pointer value at the in si_pid (instead of si_addr).  That is the
+code now verifies that si_pid and si_addr always occur at the same
+location.  Further the code veries that for native structures a value
+placed in si_pid and spilling into si_uid will appear in userspace in
+si_addr (on a byte by byte copy of siginfo or a field by field copy of
+siginfo).  The code also verifies that for a 64bit kernel and a 32bit
+userspace the 32bit pointer will fit in si_pid.
+
+The usb code is updated to compute the sigval_t to pass to
+kill_pid_usb_asyncio when the signals are registered with
+the usb layer.
+
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: linux-usb@vger.kernel.org
+Cc: Alan Stern <stern@rowland.harvard.edu>
+Cc: Oliver Neukum <oneukum@suse.com>
+Fixes: v2.3.39
+Cc: stable@vger.kernel.org
+Signed-off-by: "Eric W. Biederman" <ebiederm@xmission.com>
+---
+ drivers/usb/core/devio.c     | 48 ++++++++++++-------------
+ include/linux/sched/signal.h |  2 +-
+ kernel/signal.c              | 69 +++++++++++++++++++++++++++++++-----
+ 3 files changed, 86 insertions(+), 33 deletions(-)
+
+diff --git a/drivers/usb/core/devio.c b/drivers/usb/core/devio.c
+index fa783531ee88..a02448105527 100644
+--- a/drivers/usb/core/devio.c
++++ b/drivers/usb/core/devio.c
+@@ -63,7 +63,7 @@ struct usb_dev_state {
+ 	unsigned int discsignr;
+ 	struct pid *disc_pid;
+ 	const struct cred *cred;
+-	void __user *disccontext;
++	sigval_t disccontext;
+ 	unsigned long ifclaimed;
+ 	u32 disabled_bulk_eps;
+ 	bool privileges_dropped;
+@@ -90,6 +90,7 @@ struct async {
+ 	unsigned int ifnum;
+ 	void __user *userbuffer;
+ 	void __user *userurb;
++	sigval_t userurb_sigval;
+ 	struct urb *urb;
+ 	struct usb_memory *usbm;
+ 	unsigned int mem_usage;
+@@ -582,22 +583,19 @@ static void async_completed(struct urb *urb)
  {
--    int status;
--    
--    dev_dbg(&priv->adapter.dev, "i801_check_pre\n");
--    
--    status = inb_p(SMBHSTSTS(priv));
--    if (status & SMBHSTSTS_HOST_BUSY) {
--        dev_err(&priv->adapter.dev, "SMBus is busy, can't use it! (status=%x)\n", status);
--        return -EBUSY;
--    }
--    
--    status &= STATUS_FLAGS;
--    if (status) {
--        //dev_dbg(&priv->adapter.dev, "Clearing status flags (%02x)\n", status);
--        outb_p(status, SMBHSTSTS(priv));
--        status = inb_p(SMBHSTSTS(priv)) & STATUS_FLAGS;
--        if (status) {
--          dev_err(&priv->adapter.dev, "Failed clearing status flags (%02x)\n", status);
--          return -EBUSY;
--        }
--    }
--    return 0;
-+	int status;
+ 	struct async *as = urb->context;
+ 	struct usb_dev_state *ps = as->ps;
+-	struct kernel_siginfo sinfo;
+ 	struct pid *pid = NULL;
+ 	const struct cred *cred = NULL;
+ 	unsigned long flags;
+-	int signr;
++	sigval_t addr;
++	int signr, errno;
+ 
+ 	spin_lock_irqsave(&ps->lock, flags);
+ 	list_move_tail(&as->asynclist, &ps->async_completed);
+ 	as->status = urb->status;
+ 	signr = as->signr;
+ 	if (signr) {
+-		clear_siginfo(&sinfo);
+-		sinfo.si_signo = as->signr;
+-		sinfo.si_errno = as->status;
+-		sinfo.si_code = SI_ASYNCIO;
+-		sinfo.si_addr = as->userurb;
++		errno = as->status;
++		addr = as->userurb_sigval;
+ 		pid = get_pid(as->pid);
+ 		cred = get_cred(as->cred);
+ 	}
+@@ -615,7 +613,7 @@ static void async_completed(struct urb *urb)
+ 	spin_unlock_irqrestore(&ps->lock, flags);
+ 
+ 	if (signr) {
+-		kill_pid_info_as_cred(sinfo.si_signo, &sinfo, pid, cred);
++		kill_pid_usb_asyncio(signr, errno, addr, pid, cred);
+ 		put_pid(pid);
+ 		put_cred(cred);
+ 	}
+@@ -1427,7 +1425,7 @@ find_memory_area(struct usb_dev_state *ps, const struct usbdevfs_urb *uurb)
+ 
+ static int proc_do_submiturb(struct usb_dev_state *ps, struct usbdevfs_urb *uurb,
+ 			struct usbdevfs_iso_packet_desc __user *iso_frame_desc,
+-			void __user *arg)
++			void __user *arg, sigval_t userurb_sigval)
+ {
+ 	struct usbdevfs_iso_packet_desc *isopkt = NULL;
+ 	struct usb_host_endpoint *ep;
+@@ -1727,6 +1725,7 @@ static int proc_do_submiturb(struct usb_dev_state *ps, struct usbdevfs_urb *uurb
+ 	isopkt = NULL;
+ 	as->ps = ps;
+ 	as->userurb = arg;
++	as->userurb_sigval = userurb_sigval;
+ 	if (as->usbm) {
+ 		unsigned long uurb_start = (unsigned long)uurb->buffer;
+ 
+@@ -1801,13 +1800,17 @@ static int proc_do_submiturb(struct usb_dev_state *ps, struct usbdevfs_urb *uurb
+ static int proc_submiturb(struct usb_dev_state *ps, void __user *arg)
+ {
+ 	struct usbdevfs_urb uurb;
++	sigval_t userurb_sigval;
+ 
+ 	if (copy_from_user(&uurb, arg, sizeof(uurb)))
+ 		return -EFAULT;
+ 
++	memset(&userurb_sigval, 0, sizeof(userurb_sigval));
++	userurb_sigval.sival_ptr = arg;
 +
-+	dev_dbg(&priv->adapter.dev, "i801_check_pre\n");
-+
-+	status = inb_p(SMBHSTSTS(priv));
-+	if (status & SMBHSTSTS_HOST_BUSY) {
-+		dev_err(&priv->adapter.dev, "SMBus is busy, can't use it! (status=%x)\n", status);
-+		return -EBUSY;
-+	}
-+
-+	status &= STATUS_FLAGS;
-+	if (status) {
-+		//dev_dbg(&priv->adapter.dev, "Clearing status flags (%02x)\n", status);
-+		outb_p(status, SMBHSTSTS(priv));
-+		status = inb_p(SMBHSTSTS(priv)) & STATUS_FLAGS;
-+		if (status) {
-+			dev_err(&priv->adapter.dev, "Failed clearing status flags (%02x)\n", status);
-+			return -EBUSY;
-+		}
-+	}
-+	return 0;
+ 	return proc_do_submiturb(ps, &uurb,
+ 			(((struct usbdevfs_urb __user *)arg)->iso_frame_desc),
+-			arg);
++			arg, userurb_sigval);
  }
  
- /* Convert the status register to an error code, and clear it. */
- static int i801_check_post(struct i2c_device *priv, int status, int timeout)
- {
--    int result = 0;
--    
--    dev_dbg(&priv->adapter.dev, "i801_check_post\n");
--    
--    /* If the SMBus is still busy, we give up */
--    if (timeout) {
--        dev_err(&priv->adapter.dev, "Transaction timeout\n");
--        /* try to stop the current command */
--        dev_dbg(&priv->adapter.dev, "Terminating the current operation\n");
--        outb_p(inb_p(SMBHSTCNT(priv)) | SMBHSTCNT_KILL, SMBHSTCNT(priv));
--        usleep_range(1000, 2000);
--        outb_p(inb_p(SMBHSTCNT(priv)) & (~SMBHSTCNT_KILL), SMBHSTCNT(priv));
--        
--        /* Check if it worked */
--        status = inb_p(SMBHSTSTS(priv));
--        if ((status & SMBHSTSTS_HOST_BUSY) || !(status & SMBHSTSTS_FAILED)) {
--            dev_err(&priv->adapter.dev, "Failed terminating the transaction\n");
--        }
--        outb_p(STATUS_FLAGS, SMBHSTSTS(priv));
--        return -ETIMEDOUT;
--    }
--    
--    if (status & SMBHSTSTS_FAILED) {
--        result = -EIO;
--        dev_err(&priv->adapter.dev, "Transaction failed\n");
--    }
--    if (status & SMBHSTSTS_DEV_ERR) {
--        result = -ENXIO;
--        dev_dbg(&priv->adapter.dev, "No response\n");
--    }
--    if (status & SMBHSTSTS_BUS_ERR) {
--        result = -EAGAIN;
--        dev_dbg(&priv->adapter.dev, "Lost arbitration\n");
--    }
--    
--    if (result) {
--        /* Clear error flags */
--        outb_p(status & STATUS_FLAGS, SMBHSTSTS(priv));
--        status = inb_p(SMBHSTSTS(priv)) & STATUS_FLAGS;
--        if (status) {
--            dev_warn(&priv->adapter.dev, "Failed clearing status flags at end of transaction (%02x)\n", status);
--        }
--    }
--    
--    return result;
-+	int result = 0;
-+
-+	dev_dbg(&priv->adapter.dev, "i801_check_post\n");
-+
-+	/* If the SMBus is still busy, we give up */
-+	if (timeout) {
-+		dev_err(&priv->adapter.dev, "Transaction timeout\n");
-+		/* try to stop the current command */
-+		dev_dbg(&priv->adapter.dev, "Terminating the current operation\n");
-+		outb_p(inb_p(SMBHSTCNT(priv)) | SMBHSTCNT_KILL, SMBHSTCNT(priv));
-+		usleep_range(1000, 2000);
-+		outb_p(inb_p(SMBHSTCNT(priv)) & (~SMBHSTCNT_KILL), SMBHSTCNT(priv));
-+
-+		/* Check if it worked */
-+		status = inb_p(SMBHSTSTS(priv));
-+		if ((status & SMBHSTSTS_HOST_BUSY) || !(status & SMBHSTSTS_FAILED)) {
-+			dev_err(&priv->adapter.dev, "Failed terminating the transaction\n");
-+		}
-+		outb_p(STATUS_FLAGS, SMBHSTSTS(priv));
-+		return -ETIMEDOUT;
-+	}
-+
-+	if (status & SMBHSTSTS_FAILED) {
-+		result = -EIO;
-+		dev_err(&priv->adapter.dev, "Transaction failed\n");
-+	}
-+	if (status & SMBHSTSTS_DEV_ERR) {
-+		result = -ENXIO;
-+		dev_dbg(&priv->adapter.dev, "No response\n");
-+	}
-+	if (status & SMBHSTSTS_BUS_ERR) {
-+		result = -EAGAIN;
-+		dev_dbg(&priv->adapter.dev, "Lost arbitration\n");
-+	}
-+
-+	if (result) {
-+		/* Clear error flags */
-+		outb_p(status & STATUS_FLAGS, SMBHSTSTS(priv));
-+		status = inb_p(SMBHSTSTS(priv)) & STATUS_FLAGS;
-+		if (status) {
-+			dev_warn(&priv->adapter.dev, "Failed clearing status flags at end of transaction (%02x)\n", status);
-+		}
-+	}
-+
-+	return result;
+ static int proc_unlinkurb(struct usb_dev_state *ps, void __user *arg)
+@@ -1977,7 +1980,7 @@ static int proc_disconnectsignal_compat(struct usb_dev_state *ps, void __user *a
+ 	if (copy_from_user(&ds, arg, sizeof(ds)))
+ 		return -EFAULT;
+ 	ps->discsignr = ds.signr;
+-	ps->disccontext = compat_ptr(ds.context);
++	ps->disccontext.sival_int = ds.context;
+ 	return 0;
  }
  
- static int i801_transaction(struct i2c_device *priv, int xact)
+@@ -2005,13 +2008,17 @@ static int get_urb32(struct usbdevfs_urb *kurb,
+ static int proc_submiturb_compat(struct usb_dev_state *ps, void __user *arg)
  {
--    int status;
--    int result;
--    int timeout = 0;
--    
--    dev_dbg(&priv->adapter.dev, "i801_transaction\n");
--    
--    result = i801_check_pre(priv);
--    if (result < 0) {
--        return result;
--    }
--    /* the current contents of SMBHSTCNT can be overwritten, since PEC,
--    * INTREN, SMBSCMD are passed in xact */
--    outb_p(xact | I801_START, SMBHSTCNT(priv));
--    
--    /* We will always wait for a fraction of a second! */
--    do {
--        usleep_range(250, 500);
--        status = inb_p(SMBHSTSTS(priv));
--    } while ((status & SMBHSTSTS_HOST_BUSY) && (timeout++ < MAX_RETRIES));
--    
--    result = i801_check_post(priv, status, timeout > MAX_RETRIES);
--    if (result < 0) {
--        return result;
--    }
--    
--    outb_p(SMBHSTSTS_INTR, SMBHSTSTS(priv));
--    return 0;
-+	int status;
-+	int result;
-+	int timeout = 0;
+ 	struct usbdevfs_urb uurb;
++	sigval_t userurb_sigval;
+ 
+ 	if (get_urb32(&uurb, (struct usbdevfs_urb32 __user *)arg))
+ 		return -EFAULT;
+ 
++	memset(&userurb_sigval, 0, sizeof(userurb_sigval));
++	userurb_sigval.sival_int = ptr_to_compat(arg);
 +
-+	dev_dbg(&priv->adapter.dev, "i801_transaction\n");
-+
-+	result = i801_check_pre(priv);
-+	if (result < 0) {
-+		return result;
-+	}
-+	/* the current contents of SMBHSTCNT can be overwritten, since PEC,
-+	 * INTREN, SMBSCMD are passed in xact */
-+	outb_p(xact | I801_START, SMBHSTCNT(priv));
-+
-+	/* We will always wait for a fraction of a second! */
-+	do {
-+		usleep_range(250, 500);
-+		status = inb_p(SMBHSTSTS(priv));
-+	} while ((status & SMBHSTSTS_HOST_BUSY) && (timeout++ < MAX_RETRIES));
-+
-+	result = i801_check_post(priv, status, timeout > MAX_RETRIES);
-+	if (result < 0) {
-+		return result;
-+	}
-+
-+	outb_p(SMBHSTSTS_INTR, SMBHSTSTS(priv));
-+	return 0;
+ 	return proc_do_submiturb(ps, &uurb,
+ 			((struct usbdevfs_urb32 __user *)arg)->iso_frame_desc,
+-			arg);
++			arg, userurb_sigval);
  }
  
- /* wait for INTR bit as advised by Intel */
- static void i801_wait_hwpec(struct i2c_device *priv)
- {
--    int timeout = 0;
--    int status;
--    
--    dev_dbg(&priv->adapter.dev, "i801_wait_hwpec\n");
--    
--    do {
--        usleep_range(250, 500);
--        status = inb_p(SMBHSTSTS(priv));
--    } while ((!(status & SMBHSTSTS_INTR)) && (timeout++ < MAX_RETRIES));
--    
--    if (timeout > MAX_RETRIES) {
--        dev_dbg(&priv->adapter.dev, "PEC Timeout!\n");
--    }
--    
--    outb_p(status, SMBHSTSTS(priv));
-+	int timeout = 0;
-+	int status;
-+
-+	dev_dbg(&priv->adapter.dev, "i801_wait_hwpec\n");
-+
-+	do {
-+		usleep_range(250, 500);
-+		status = inb_p(SMBHSTSTS(priv));
-+	} while ((!(status & SMBHSTSTS_INTR)) && (timeout++ < MAX_RETRIES));
-+
-+	if (timeout > MAX_RETRIES) {
-+		dev_dbg(&priv->adapter.dev, "PEC Timeout!\n");
-+	}
-+
-+	outb_p(status, SMBHSTSTS(priv));
+ static int processcompl_compat(struct async *as, void __user * __user *arg)
+@@ -2092,7 +2099,7 @@ static int proc_disconnectsignal(struct usb_dev_state *ps, void __user *arg)
+ 	if (copy_from_user(&ds, arg, sizeof(ds)))
+ 		return -EFAULT;
+ 	ps->discsignr = ds.signr;
+-	ps->disccontext = ds.context;
++	ps->disccontext.sival_ptr = ds.context;
+ 	return 0;
  }
  
- static int i801_block_transaction_by_block(struct i2c_device *priv, union i2c_smbus_data *data, char read_write, int hwpec)
+@@ -2614,22 +2621,15 @@ const struct file_operations usbdev_file_operations = {
+ static void usbdev_remove(struct usb_device *udev)
  {
--    int i, len;
--    int status;
--    
--    dev_dbg(&priv->adapter.dev, "i801_block_transaction_by_block\n");
--    
--    inb_p(SMBHSTCNT(priv)); /* reset the data buffer index */
--    
--    /* Use 32-byte buffer to process this transaction */
--    if (read_write == I2C_SMBUS_WRITE) {
--        len = data->block[0];
--        outb_p(len, SMBHSTDAT0(priv));
--        for (i = 0; i < len; i++) {
--            outb_p(data->block[i+1], SMBBLKDAT(priv));
--        }
--    }
--    
--    status = i801_transaction(priv, I801_BLOCK_DATA | ENABLE_INT9 | I801_PEC_EN * hwpec);
--    if (status) {
--        return status;
--    }
--
--    if (read_write == I2C_SMBUS_READ) {
--        len = inb_p(SMBHSTDAT0(priv));
--        if (len < 1 || len > I2C_SMBUS_BLOCK_MAX) {
--            return -EPROTO;
--        }
--        
--        data->block[0] = len;
--        for (i = 0; i < len; i++) {
--            data->block[i + 1] = inb_p(SMBBLKDAT(priv));
--        }
--    }
--    return 0;
-+	int i, len;
-+	int status;
-+
-+	dev_dbg(&priv->adapter.dev, "i801_block_transaction_by_block\n");
-+
-+	inb_p(SMBHSTCNT(priv)); /* reset the data buffer index */
-+
-+	/* Use 32-byte buffer to process this transaction */
-+	if (read_write == I2C_SMBUS_WRITE) {
-+		len = data->block[0];
-+		outb_p(len, SMBHSTDAT0(priv));
-+		for (i = 0; i < len; i++) {
-+			outb_p(data->block[i+1], SMBBLKDAT(priv));
-+		}
-+	}
-+
-+	status = i801_transaction(priv, I801_BLOCK_DATA | ENABLE_INT9 | I801_PEC_EN * hwpec);
-+	if (status) {
-+		return status;
-+	}
-+
-+	if (read_write == I2C_SMBUS_READ) {
-+		len = inb_p(SMBHSTDAT0(priv));
-+		if (len < 1 || len > I2C_SMBUS_BLOCK_MAX) {
-+			return -EPROTO;
-+		}
-+
-+		data->block[0] = len;
-+		for (i = 0; i < len; i++) {
-+			data->block[i + 1] = inb_p(SMBBLKDAT(priv));
-+		}
-+	}
-+	return 0;
+ 	struct usb_dev_state *ps;
+-	struct kernel_siginfo sinfo;
+ 
+ 	while (!list_empty(&udev->filelist)) {
+ 		ps = list_entry(udev->filelist.next, struct usb_dev_state, list);
+ 		destroy_all_async(ps);
+ 		wake_up_all(&ps->wait);
+ 		list_del_init(&ps->list);
+-		if (ps->discsignr) {
+-			clear_siginfo(&sinfo);
+-			sinfo.si_signo = ps->discsignr;
+-			sinfo.si_errno = EPIPE;
+-			sinfo.si_code = SI_ASYNCIO;
+-			sinfo.si_addr = ps->disccontext;
+-			kill_pid_info_as_cred(ps->discsignr, &sinfo,
+-					ps->disc_pid, ps->cred);
+-		}
++		if (ps->discsignr)
++			kill_pid_usb_asyncio(ps->discsignr, EPIPE, ps->disccontext,
++					     ps->disc_pid, ps->cred);
+ 	}
  }
  
- static int i801_block_transaction_byte_by_byte(struct i2c_device *priv, union i2c_smbus_data *data, char read_write, int command, int hwpec)
- {
--    int i, len;
--    int smbcmd;
--    int status;
--    int result;
--    int timeout;
--    
--    dev_dbg(&priv->adapter.dev, "i801_block_transaction_byte_by_byte\n");
--    
--    result = i801_check_pre(priv);
--    if (result < 0) {
--        return result;
--    }
--    
--    len = data->block[0];
--    
--    if (read_write == I2C_SMBUS_WRITE) {
--        outb_p(len, SMBHSTDAT0(priv));
--        outb_p(data->block[1], SMBBLKDAT(priv));
--    }
--    
--    for (i = 1; i <= len; i++) {
--        if (i == len && read_write == I2C_SMBUS_READ) {
--            if (command == I2C_SMBUS_I2C_BLOCK_DATA) {
--                smbcmd = I801_I2C_BLOCK_LAST;
--            } else {
--                smbcmd = I801_BLOCK_LAST;
--            }
--        } else {
--            if (command == I2C_SMBUS_I2C_BLOCK_DATA && read_write == I2C_SMBUS_READ) {
--                smbcmd = I801_I2C_BLOCK_DATA;
--            } else {
--                smbcmd = I801_BLOCK_DATA;
--            }
--        }
--        outb_p(smbcmd | ENABLE_INT9, SMBHSTCNT(priv));
--        
--        if (i == 1) {
--            outb_p(inb(SMBHSTCNT(priv)) | I801_START, SMBHSTCNT(priv));
--        }
--        /* We will always wait for a fraction of a second! */
--        timeout = 0;
--        do {
--            usleep_range(250, 500);
--            status = inb_p(SMBHSTSTS(priv));
--        } while ((!(status & SMBHSTSTS_BYTE_DONE)) && (timeout++ < MAX_RETRIES));
--        
--        result = i801_check_post(priv, status, timeout > MAX_RETRIES);
--        if (result < 0) {
--            return result;
--        }
--        if (i == 1 && read_write == I2C_SMBUS_READ && command != I2C_SMBUS_I2C_BLOCK_DATA) {
--            len = inb_p(SMBHSTDAT0(priv));
--            if (len < 1 || len > I2C_SMBUS_BLOCK_MAX) {
--                dev_err(&priv->adapter.dev, "Illegal SMBus block read size %d\n", len);
--                /* Recover */
--                while (inb_p(SMBHSTSTS(priv)) & SMBHSTSTS_HOST_BUSY) {
--                    outb_p(SMBHSTSTS_BYTE_DONE, SMBHSTSTS(priv));
--                }
--                outb_p(SMBHSTSTS_INTR, SMBHSTSTS(priv));
--                return -EPROTO;
--            }
--            data->block[0] = len;
--        }
--        
--        /* Retrieve/store value in SMBBLKDAT */
--        if (read_write == I2C_SMBUS_READ) {
--            data->block[i] = inb_p(SMBBLKDAT(priv));
--        }
--        if (read_write == I2C_SMBUS_WRITE && i+1 <= len) {
--            outb_p(data->block[i+1], SMBBLKDAT(priv));
--        }
--        /* signals SMBBLKDAT ready */
--        outb_p(SMBHSTSTS_BYTE_DONE | SMBHSTSTS_INTR, SMBHSTSTS(priv));
--    }
--    
--    return 0;
-+	int i, len;
-+	int smbcmd;
-+	int status;
-+	int result;
-+	int timeout;
-+
-+	dev_dbg(&priv->adapter.dev, "i801_block_transaction_byte_by_byte\n");
-+
-+	result = i801_check_pre(priv);
-+	if (result < 0) {
-+		return result;
-+	}
-+
-+	len = data->block[0];
-+
-+	if (read_write == I2C_SMBUS_WRITE) {
-+		outb_p(len, SMBHSTDAT0(priv));
-+		outb_p(data->block[1], SMBBLKDAT(priv));
-+	}
-+
-+	for (i = 1; i <= len; i++) {
-+		if (i == len && read_write == I2C_SMBUS_READ) {
-+			if (command == I2C_SMBUS_I2C_BLOCK_DATA) {
-+				smbcmd = I801_I2C_BLOCK_LAST;
-+			} else {
-+				smbcmd = I801_BLOCK_LAST;
-+			}
-+		} else {
-+			if (command == I2C_SMBUS_I2C_BLOCK_DATA && read_write == I2C_SMBUS_READ) {
-+				smbcmd = I801_I2C_BLOCK_DATA;
-+			} else {
-+				smbcmd = I801_BLOCK_DATA;
-+			}
-+		}
-+		outb_p(smbcmd | ENABLE_INT9, SMBHSTCNT(priv));
-+
-+		if (i == 1) {
-+			outb_p(inb(SMBHSTCNT(priv)) | I801_START, SMBHSTCNT(priv));
-+		}
-+		/* We will always wait for a fraction of a second! */
-+		timeout = 0;
-+		do {
-+			usleep_range(250, 500);
-+			status = inb_p(SMBHSTSTS(priv));
-+		} while ((!(status & SMBHSTSTS_BYTE_DONE)) && (timeout++ < MAX_RETRIES));
-+
-+		result = i801_check_post(priv, status, timeout > MAX_RETRIES);
-+		if (result < 0) {
-+			return result;
-+		}
-+		if (i == 1 && read_write == I2C_SMBUS_READ && command != I2C_SMBUS_I2C_BLOCK_DATA) {
-+			len = inb_p(SMBHSTDAT0(priv));
-+			if (len < 1 || len > I2C_SMBUS_BLOCK_MAX) {
-+				dev_err(&priv->adapter.dev, "Illegal SMBus block read size %d\n", len);
-+				/* Recover */
-+				while (inb_p(SMBHSTSTS(priv)) & SMBHSTSTS_HOST_BUSY) {
-+					outb_p(SMBHSTSTS_BYTE_DONE, SMBHSTSTS(priv));
-+				}
-+				outb_p(SMBHSTSTS_INTR, SMBHSTSTS(priv));
-+				return -EPROTO;
-+			}
-+			data->block[0] = len;
-+		}
-+
-+		/* Retrieve/store value in SMBBLKDAT */
-+		if (read_write == I2C_SMBUS_READ) {
-+			data->block[i] = inb_p(SMBBLKDAT(priv));
-+		}
-+		if (read_write == I2C_SMBUS_WRITE && i+1 <= len) {
-+			outb_p(data->block[i+1], SMBBLKDAT(priv));
-+		}
-+		/* signals SMBBLKDAT ready */
-+		outb_p(SMBHSTSTS_BYTE_DONE | SMBHSTSTS_INTR, SMBHSTSTS(priv));
-+	}
-+
-+	return 0;
+diff --git a/include/linux/sched/signal.h b/include/linux/sched/signal.h
+index e412c092c1e8..c735113f7d93 100644
+--- a/include/linux/sched/signal.h
++++ b/include/linux/sched/signal.h
+@@ -328,7 +328,7 @@ extern void force_sigsegv(int sig, struct task_struct *p);
+ extern int force_sig_info(int, struct kernel_siginfo *, struct task_struct *);
+ extern int __kill_pgrp_info(int sig, struct kernel_siginfo *info, struct pid *pgrp);
+ extern int kill_pid_info(int sig, struct kernel_siginfo *info, struct pid *pid);
+-extern int kill_pid_info_as_cred(int, struct kernel_siginfo *, struct pid *,
++extern int kill_pid_usb_asyncio(int sig, int errno, sigval_t addr, struct pid *,
+ 				const struct cred *);
+ extern int kill_pgrp(struct pid *pid, int sig, int priv);
+ extern int kill_pid(struct pid *pid, int sig, int priv);
+diff --git a/kernel/signal.c b/kernel/signal.c
+index 227ba170298e..101820939baf 100644
+--- a/kernel/signal.c
++++ b/kernel/signal.c
+@@ -1436,13 +1436,44 @@ static inline bool kill_as_cred_perm(const struct cred *cred,
+ 	       uid_eq(cred->uid, pcred->uid);
  }
  
- static int i801_set_block_buffer_mode(struct i2c_device *priv)
+-/* like kill_pid_info(), but doesn't use uid/euid of "current" */
+-int kill_pid_info_as_cred(int sig, struct kernel_siginfo *info, struct pid *pid,
+-			 const struct cred *cred)
++/*
++ * The usb asyncio usage of siginfo is wrong.  The glibc support
++ * for asyncio which uses SI_ASYNCIO assumes the layout is SIL_RT.
++ * AKA after the generic fields:
++ *	kernel_pid_t	si_pid;
++ *	kernel_uid32_t	si_uid;
++ *	sigval_t	si_value;
++ *
++ * Unfortunately when usb generates SI_ASYNCIO it assumes the layout
++ * after the generic fields is:
++ *	void __user 	*si_addr;
++ *
++ * This is a practical problem when there is a 64bit big endian kernel
++ * and a 32bit userspace.  As the 32bit address will encoded in the low
++ * 32bits of the pointer.  Those low 32bits will be stored at higher
++ * address than appear in a 32 bit pointer.  So userspace will not
++ * see the address it was expecting for it's completions.
++ *
++ * There is nothing in the encoding that can allow
++ * copy_siginfo_to_user32 to detect this confusion of formats, so
++ * handle this by requiring the caller of kill_pid_usb_asyncio to
++ * notice when this situration takes place and to store the 32bit
++ * pointer in sival_int, instead of sival_addr of the sigval_t addr
++ * parameter.
++ */
++int kill_pid_usb_asyncio(int sig, int errno, sigval_t addr,
++			 struct pid *pid, const struct cred *cred)
  {
--    dev_dbg(&priv->adapter.dev, "i801_set_block_buffer_mode\n");
--    
--    outb_p(inb_p(SMBAUXCTL(priv)) | SMBAUXCTL_E32B, SMBAUXCTL(priv));
--    if ((inb_p(SMBAUXCTL(priv)) & SMBAUXCTL_E32B) == 0) {
--        return -EIO;
--    }
--    return 0;
-+	dev_dbg(&priv->adapter.dev, "i801_set_block_buffer_mode\n");
+-	int ret = -EINVAL;
++	struct kernel_siginfo info;
+ 	struct task_struct *p;
+ 	unsigned long flags;
++	int ret = -EINVAL;
 +
-+	outb_p(inb_p(SMBAUXCTL(priv)) | SMBAUXCTL_E32B, SMBAUXCTL(priv));
-+	if ((inb_p(SMBAUXCTL(priv)) & SMBAUXCTL_E32B) == 0) {
-+		return -EIO;
-+	}
-+	return 0;
- }
++	clear_siginfo(&info);
++	info.si_signo = sig;
++	info.si_errno = errno;
++	info.si_code = SI_ASYNCIO;
++	*((sigval_t *)&info.si_pid) = addr;
  
- /* Block transaction function */
- static int i801_block_transaction(struct i2c_device *priv, union i2c_smbus_data *data, char read_write, int command, int hwpec)
- {
--    int result = 0;
--    //unsigned char hostc;
--    
--    dev_dbg(&priv->adapter.dev, "i801_block_transaction\n");
--    
--    if (command == I2C_SMBUS_I2C_BLOCK_DATA) {
--        if (read_write == I2C_SMBUS_WRITE) {
--            /* set I2C_EN bit in configuration register */
--            //TODO: Figure out the right thing to do here...
--            //pci_read_config_byte(priv->pci_dev, SMBHSTCFG, &hostc);
--            //pci_write_config_byte(priv->pci_dev, SMBHSTCFG, hostc | SMBHSTCFG_I2C_EN);
--        } else if (!(priv->features & FEATURE_I2C_BLOCK_READ)) {
--            dev_err(&priv->adapter.dev, "I2C block read is unsupported!\n");
--            return -EOPNOTSUPP;
--        }
--    }
--    
--    if (read_write == I2C_SMBUS_WRITE || command == I2C_SMBUS_I2C_BLOCK_DATA) {
--        if (data->block[0] < 1) {
--            data->block[0] = 1;
--        }
--        if (data->block[0] > I2C_SMBUS_BLOCK_MAX) {
--            data->block[0] = I2C_SMBUS_BLOCK_MAX;
--        }
--    } else {
--        data->block[0] = 32;	/* max for SMBus block reads */
--    }
--    
--    /* Experience has shown that the block buffer can only be used for
--        SMBus (not I2C) block transactions, even though the datasheet
--        doesn't mention this limitation. */
--    if ((priv->features & FEATURE_BLOCK_BUFFER) && command != I2C_SMBUS_I2C_BLOCK_DATA && i801_set_block_buffer_mode(priv) == 0) {
--        result = i801_block_transaction_by_block(priv, data, read_write, hwpec);
--    } else {
--        result = i801_block_transaction_byte_by_byte(priv, data, read_write, command, hwpec);
--    }  
--    if (result == 0 && hwpec) {
--        i801_wait_hwpec(priv);
--    }
--    if (command == I2C_SMBUS_I2C_BLOCK_DATA && read_write == I2C_SMBUS_WRITE) {
--        /* restore saved configuration register value */
--        //TODO: Figure out the right thing to do here...
--        //pci_write_config_byte(priv->pci_dev, SMBHSTCFG, hostc);
--    }
--    return result;
-+	int result = 0;
-+	//unsigned char hostc;
+ 	if (!valid_signal(sig))
+ 		return ret;
+@@ -1453,17 +1484,17 @@ int kill_pid_info_as_cred(int sig, struct kernel_siginfo *info, struct pid *pid,
+ 		ret = -ESRCH;
+ 		goto out_unlock;
+ 	}
+-	if (si_fromuser(info) && !kill_as_cred_perm(cred, p)) {
++	if (!kill_as_cred_perm(cred, p)) {
+ 		ret = -EPERM;
+ 		goto out_unlock;
+ 	}
+-	ret = security_task_kill(p, info, sig, cred);
++	ret = security_task_kill(p, &info, sig, cred);
+ 	if (ret)
+ 		goto out_unlock;
+ 
+ 	if (sig) {
+ 		if (lock_task_sighand(p, &flags)) {
+-			ret = __send_signal(sig, info, p, PIDTYPE_TGID, 0);
++			ret = __send_signal(sig, &info, p, PIDTYPE_TGID, 0);
+ 			unlock_task_sighand(p, &flags);
+ 		} else
+ 			ret = -ESRCH;
+@@ -1472,7 +1503,7 @@ int kill_pid_info_as_cred(int sig, struct kernel_siginfo *info, struct pid *pid,
+ 	rcu_read_unlock();
+ 	return ret;
+ }
+-EXPORT_SYMBOL_GPL(kill_pid_info_as_cred);
++EXPORT_SYMBOL_GPL(kill_pid_usb_asyncio);
+ 
+ /*
+  * kill_something_info() interprets pid in interesting ways just like kill(2).
+@@ -4408,6 +4439,28 @@ static inline void siginfo_buildtime_checks(void)
+ 	CHECK_OFFSET(si_syscall);
+ 	CHECK_OFFSET(si_arch);
+ #undef CHECK_OFFSET
 +
-+	dev_dbg(&priv->adapter.dev, "i801_block_transaction\n");
-+
-+	if (command == I2C_SMBUS_I2C_BLOCK_DATA) {
-+		if (read_write == I2C_SMBUS_WRITE) {
-+			/* set I2C_EN bit in configuration register */
-+			//TODO: Figure out the right thing to do here...
-+			//pci_read_config_byte(priv->pci_dev, SMBHSTCFG, &hostc);
-+			//pci_write_config_byte(priv->pci_dev, SMBHSTCFG, hostc | SMBHSTCFG_I2C_EN);
-+		} else if (!(priv->features & FEATURE_I2C_BLOCK_READ)) {
-+			dev_err(&priv->adapter.dev, "I2C block read is unsupported!\n");
-+			return -EOPNOTSUPP;
-+		}
-+	}
-+
-+	if (read_write == I2C_SMBUS_WRITE || command == I2C_SMBUS_I2C_BLOCK_DATA) {
-+		if (data->block[0] < 1) {
-+			data->block[0] = 1;
-+		}
-+		if (data->block[0] > I2C_SMBUS_BLOCK_MAX) {
-+			data->block[0] = I2C_SMBUS_BLOCK_MAX;
-+		}
++	/* usb asyncio */
++	BUILD_BUG_ON(offsetof(struct siginfo, si_pid) !=
++		     offsetof(struct siginfo, si_addr));
++	if (sizeof(int) == sizeof(void __user *)) {
++		BUILD_BUG_ON(sizeof_field(struct siginfo, si_pid) !=
++			     sizeof(void __user *));
 +	} else {
-+		data->block[0] = 32;	/* max for SMBus block reads */
++		BUILD_BUG_ON((sizeof_field(struct siginfo, si_pid) +
++			      sizeof_field(struct siginfo, si_uid)) !=
++			     sizeof(void __user *));
++		BUILD_BUG_ON(offsetofend(struct siginfo, si_pid) !=
++			     offsetof(struct siginfo, si_uid));
 +	}
-+
-+	/* Experience has shown that the block buffer can only be used for
-+	   SMBus (not I2C) block transactions, even though the datasheet
-+	   doesn't mention this limitation. */
-+	if ((priv->features & FEATURE_BLOCK_BUFFER) && command != I2C_SMBUS_I2C_BLOCK_DATA && i801_set_block_buffer_mode(priv) == 0) {
-+		result = i801_block_transaction_by_block(priv, data, read_write, hwpec);
-+	} else {
-+		result = i801_block_transaction_byte_by_byte(priv, data, read_write, command, hwpec);
-+	}
-+	if (result == 0 && hwpec) {
-+		i801_wait_hwpec(priv);
-+	}
-+	if (command == I2C_SMBUS_I2C_BLOCK_DATA && read_write == I2C_SMBUS_WRITE) {
-+		/* restore saved configuration register value */
-+		//TODO: Figure out the right thing to do here...
-+		//pci_write_config_byte(priv->pci_dev, SMBHSTCFG, hostc);
-+	}
-+	return result;
++#ifdef CONFIG_COMPAT
++	BUILD_BUG_ON(offsetof(struct compat_siginfo, si_pid) !=
++		     offsetof(struct compat_siginfo, si_addr));
++	BUILD_BUG_ON(sizeof_field(struct compat_siginfo, si_pid) !=
++		     sizeof(compat_uptr_t));
++	BUILD_BUG_ON(sizeof_field(struct compat_siginfo, si_pid) !=
++		     sizeof_field(struct siginfo, si_pid));
++#endif
  }
  
- /* Return negative errno on error. */
- static s32 i801_access(struct i2c_adapter *adap, u16 addr, unsigned short flags, char read_write, u8 command, int size, union i2c_smbus_data *data)
- {
--    int hwpec;
--    int block = 0;
--    int ret, xact = 0;
--    struct i2c_device *priv = i2c_get_adapdata(adap);
--    
--    dev_dbg(&priv->adapter.dev, "i801_access (addr=%0d)  flags=%x  read_write=%x  command=%x  size=%x",
--      addr, flags, read_write, command, size );
--    
--    hwpec = (priv->features & FEATURE_SMBUS_PEC) && (flags & I2C_CLIENT_PEC) && size != I2C_SMBUS_QUICK && size != I2C_SMBUS_I2C_BLOCK_DATA;
--    
--    switch (size) {
--        case I2C_SMBUS_QUICK:
--            dev_dbg(&priv->adapter.dev, "  [acc] SMBUS_QUICK\n");
--            outb_p(((addr & 0x7f) << 1) | (read_write & 0x01), SMBHSTADD(priv));
--            xact = I801_QUICK;
--            break;
--        case I2C_SMBUS_BYTE:
--            dev_dbg(&priv->adapter.dev, "  [acc] SMBUS_BYTE\n");
--            
--            outb_p(((addr & 0x7f) << 1) | (read_write & 0x01), SMBHSTADD(priv));
--            if (read_write == I2C_SMBUS_WRITE) {
--                outb_p(command, SMBHSTCMD(priv));
--            }
--            xact = I801_BYTE;
--            break;
--        case I2C_SMBUS_BYTE_DATA:
--            dev_dbg(&priv->adapter.dev, "  [acc] SMBUS_BYTE_DATA\n");
--            outb_p(((addr & 0x7f) << 1) | (read_write & 0x01), SMBHSTADD(priv));
--            outb_p(command, SMBHSTCMD(priv));
--            if (read_write == I2C_SMBUS_WRITE) {
--                outb_p(data->byte, SMBHSTDAT0(priv));
--            }
--            xact = I801_BYTE_DATA;
--            break;
--        case I2C_SMBUS_WORD_DATA:
--            dev_dbg(&priv->adapter.dev, "  [acc] SMBUS_WORD_DATA\n");
--            outb_p(((addr & 0x7f) << 1) | (read_write & 0x01), SMBHSTADD(priv));
--            outb_p(command, SMBHSTCMD(priv));
--            if (read_write == I2C_SMBUS_WRITE) {
--                outb_p(data->word & 0xff, SMBHSTDAT0(priv));
--                outb_p((data->word & 0xff00) >> 8, SMBHSTDAT1(priv));
--            }
--            xact = I801_WORD_DATA;
--            break;
--        case I2C_SMBUS_BLOCK_DATA:
--            dev_dbg(&priv->adapter.dev, "  [acc] SMBUS_BLOCK_DATA\n");
--            outb_p(((addr & 0x7f) << 1) | (read_write & 0x01), SMBHSTADD(priv));
--            outb_p(command, SMBHSTCMD(priv));
--            block = 1;
--            break;
--        case I2C_SMBUS_I2C_BLOCK_DATA:
--            dev_dbg(&priv->adapter.dev, "  [acc] SMBUS_I2C_BLOCK_DATA\n");
--            /* NB: page 240 of ICH5 datasheet shows that the R/#W
--             * bit should be cleared here, even when reading */
--            outb_p((addr & 0x7f) << 1, SMBHSTADD(priv));
--            if (read_write == I2C_SMBUS_READ) {
--                /* NB: page 240 of ICH5 datasheet also shows
--                 * that DATA1 is the cmd field when reading */
--                outb_p(command, SMBHSTDAT1(priv));
--            } else {
--                outb_p(command, SMBHSTCMD(priv));
--            }
--            block = 1;
--            break;
--        default:
--            dev_dbg(&priv->adapter.dev, "  [acc] Unsupported transaction %d\n", size);
--            return -EOPNOTSUPP;
--    }
--    
--    if (hwpec) { /* enable/disable hardware PEC */
--        dev_dbg(&priv->adapter.dev, "  [acc] hwpec: yes\n");
--        outb_p(inb_p(SMBAUXCTL(priv)) | SMBAUXCTL_CRC, SMBAUXCTL(priv));
--    } else {
--        dev_dbg(&priv->adapter.dev, "  [acc] hwpec: no\n");
--        outb_p(inb_p(SMBAUXCTL(priv)) & (~SMBAUXCTL_CRC), SMBAUXCTL(priv));
--    }
--    
--    if (block) {
--        //ret = 0;
--        dev_dbg(&priv->adapter.dev, "  [acc] block: yes\n");
--        ret = i801_block_transaction(priv, data, read_write, size, hwpec);
--    } else {
--        dev_dbg(&priv->adapter.dev, "  [acc] block: no\n");
--        ret = i801_transaction(priv, xact | ENABLE_INT9);
--    }
--    
--    /* Some BIOSes don't like it when PEC is enabled at reboot or resume
--       time, so we forcibly disable it after every transaction. Turn off
--       E32B for the same reason. */
--    if (hwpec || block) {
--        dev_dbg(&priv->adapter.dev, "  [acc] hwpec || block\n");
--        outb_p(inb_p(SMBAUXCTL(priv)) & ~(SMBAUXCTL_CRC | SMBAUXCTL_E32B), SMBAUXCTL(priv));
--    }
--    if (block) {
--        dev_dbg(&priv->adapter.dev, "  [acc] block\n");
--        return ret;
--    }
--    if (ret) {
--        dev_dbg(&priv->adapter.dev, "  [acc] ret %d\n", ret);
--        return ret;
--    }
--    if ((read_write == I2C_SMBUS_WRITE) || (xact == I801_QUICK)) {
--        dev_dbg(&priv->adapter.dev, "  [acc] I2C_SMBUS_WRITE || I801_QUICK  -> ret 0\n");
--        return 0;
--    }
--    
--    switch (xact & 0x7f) {
--        case I801_BYTE:  /* Result put in SMBHSTDAT0 */
--        case I801_BYTE_DATA:
--            dev_dbg(&priv->adapter.dev, "  [acc] I801_BYTE or I801_BYTE_DATA\n");
--            data->byte = inb_p(SMBHSTDAT0(priv));
--            break;
--        case I801_WORD_DATA:
--            dev_dbg(&priv->adapter.dev, "  [acc] I801_WORD_DATA\n");
--            data->word = inb_p(SMBHSTDAT0(priv)) + (inb_p(SMBHSTDAT1(priv)) << 8);
--            break;
--    }
--    return 0;
-+	int hwpec;
-+	int block = 0;
-+	int ret, xact = 0;
-+	struct i2c_device *priv = i2c_get_adapdata(adap);
-+
-+	dev_dbg(&priv->adapter.dev, "i801_access (addr=%0d)  flags=%x  read_write=%x  command=%x  size=%x",
-+		addr, flags, read_write, command, size );
-+
-+	hwpec = (priv->features & FEATURE_SMBUS_PEC) && (flags & I2C_CLIENT_PEC) && size != I2C_SMBUS_QUICK && size != I2C_SMBUS_I2C_BLOCK_DATA;
-+
-+	switch (size) {
-+	case I2C_SMBUS_QUICK:
-+		dev_dbg(&priv->adapter.dev, "  [acc] SMBUS_QUICK\n");
-+		outb_p(((addr & 0x7f) << 1) | (read_write & 0x01), SMBHSTADD(priv));
-+		xact = I801_QUICK;
-+		break;
-+	case I2C_SMBUS_BYTE:
-+		dev_dbg(&priv->adapter.dev, "  [acc] SMBUS_BYTE\n");
-+
-+		outb_p(((addr & 0x7f) << 1) | (read_write & 0x01), SMBHSTADD(priv));
-+		if (read_write == I2C_SMBUS_WRITE) {
-+			outb_p(command, SMBHSTCMD(priv));
-+		}
-+		xact = I801_BYTE;
-+		break;
-+	case I2C_SMBUS_BYTE_DATA:
-+		dev_dbg(&priv->adapter.dev, "  [acc] SMBUS_BYTE_DATA\n");
-+		outb_p(((addr & 0x7f) << 1) | (read_write & 0x01), SMBHSTADD(priv));
-+		outb_p(command, SMBHSTCMD(priv));
-+		if (read_write == I2C_SMBUS_WRITE) {
-+			outb_p(data->byte, SMBHSTDAT0(priv));
-+		}
-+		xact = I801_BYTE_DATA;
-+		break;
-+	case I2C_SMBUS_WORD_DATA:
-+		dev_dbg(&priv->adapter.dev, "  [acc] SMBUS_WORD_DATA\n");
-+		outb_p(((addr & 0x7f) << 1) | (read_write & 0x01), SMBHSTADD(priv));
-+		outb_p(command, SMBHSTCMD(priv));
-+		if (read_write == I2C_SMBUS_WRITE) {
-+			outb_p(data->word & 0xff, SMBHSTDAT0(priv));
-+			outb_p((data->word & 0xff00) >> 8, SMBHSTDAT1(priv));
-+		}
-+		xact = I801_WORD_DATA;
-+		break;
-+	case I2C_SMBUS_BLOCK_DATA:
-+		dev_dbg(&priv->adapter.dev, "  [acc] SMBUS_BLOCK_DATA\n");
-+		outb_p(((addr & 0x7f) << 1) | (read_write & 0x01), SMBHSTADD(priv));
-+		outb_p(command, SMBHSTCMD(priv));
-+		block = 1;
-+		break;
-+	case I2C_SMBUS_I2C_BLOCK_DATA:
-+		dev_dbg(&priv->adapter.dev, "  [acc] SMBUS_I2C_BLOCK_DATA\n");
-+		/* NB: page 240 of ICH5 datasheet shows that the R/#W
-+		 * bit should be cleared here, even when reading */
-+		outb_p((addr & 0x7f) << 1, SMBHSTADD(priv));
-+		if (read_write == I2C_SMBUS_READ) {
-+			/* NB: page 240 of ICH5 datasheet also shows
-+			 * that DATA1 is the cmd field when reading */
-+			outb_p(command, SMBHSTDAT1(priv));
-+		} else {
-+			outb_p(command, SMBHSTCMD(priv));
-+		}
-+		block = 1;
-+		break;
-+	default:
-+		dev_dbg(&priv->adapter.dev, "  [acc] Unsupported transaction %d\n", size);
-+		return -EOPNOTSUPP;
-+	}
-+
-+	if (hwpec) { /* enable/disable hardware PEC */
-+		dev_dbg(&priv->adapter.dev, "  [acc] hwpec: yes\n");
-+		outb_p(inb_p(SMBAUXCTL(priv)) | SMBAUXCTL_CRC, SMBAUXCTL(priv));
-+	} else {
-+		dev_dbg(&priv->adapter.dev, "  [acc] hwpec: no\n");
-+		outb_p(inb_p(SMBAUXCTL(priv)) & (~SMBAUXCTL_CRC), SMBAUXCTL(priv));
-+	}
-+
-+	if (block) {
-+		//ret = 0;
-+		dev_dbg(&priv->adapter.dev, "  [acc] block: yes\n");
-+		ret = i801_block_transaction(priv, data, read_write, size, hwpec);
-+	} else {
-+		dev_dbg(&priv->adapter.dev, "  [acc] block: no\n");
-+		ret = i801_transaction(priv, xact | ENABLE_INT9);
-+	}
-+
-+	/* Some BIOSes don't like it when PEC is enabled at reboot or resume
-+	   time, so we forcibly disable it after every transaction. Turn off
-+	   E32B for the same reason. */
-+	if (hwpec || block) {
-+		dev_dbg(&priv->adapter.dev, "  [acc] hwpec || block\n");
-+		outb_p(inb_p(SMBAUXCTL(priv)) & ~(SMBAUXCTL_CRC | SMBAUXCTL_E32B), SMBAUXCTL(priv));
-+	}
-+	if (block) {
-+		dev_dbg(&priv->adapter.dev, "  [acc] block\n");
-+		return ret;
-+	}
-+	if (ret) {
-+		dev_dbg(&priv->adapter.dev, "  [acc] ret %d\n", ret);
-+		return ret;
-+	}
-+	if ((read_write == I2C_SMBUS_WRITE) || (xact == I801_QUICK)) {
-+		dev_dbg(&priv->adapter.dev, "  [acc] I2C_SMBUS_WRITE || I801_QUICK  -> ret 0\n");
-+		return 0;
-+	}
-+
-+	switch (xact & 0x7f) {
-+	case I801_BYTE:  /* Result put in SMBHSTDAT0 */
-+	case I801_BYTE_DATA:
-+		dev_dbg(&priv->adapter.dev, "  [acc] I801_BYTE or I801_BYTE_DATA\n");
-+		data->byte = inb_p(SMBHSTDAT0(priv));
-+		break;
-+	case I801_WORD_DATA:
-+		dev_dbg(&priv->adapter.dev, "  [acc] I801_WORD_DATA\n");
-+		data->word = inb_p(SMBHSTDAT0(priv)) + (inb_p(SMBHSTDAT1(priv)) << 8);
-+		break;
-+	}
-+	return 0;
- }
- 
- 
- 
- static u32 i801_func(struct i2c_adapter *adapter)
- {
--    struct i2c_device *priv = i2c_get_adapdata(adapter);
--    
--    /* original settings
--    u32 f = I2C_FUNC_SMBUS_QUICK | I2C_FUNC_SMBUS_BYTE |
--      I2C_FUNC_SMBUS_BYTE_DATA | I2C_FUNC_SMBUS_WORD_DATA |
--      I2C_FUNC_SMBUS_BLOCK_DATA | I2C_FUNC_SMBUS_WRITE_I2C_BLOCK |
--      ((priv->features & FEATURE_SMBUS_PEC) ? I2C_FUNC_SMBUS_PEC : 0) |
--      ((priv->features & FEATURE_I2C_BLOCK_READ) ?
--       I2C_FUNC_SMBUS_READ_I2C_BLOCK : 0);
--     */
--    
--    // http://lxr.free-electrons.com/source/include/uapi/linux/i2c.h#L85
--    
--    u32 f = 
--        I2C_FUNC_I2C                     | /* 0x00000001 (I enabled this one) */
--        !I2C_FUNC_10BIT_ADDR             | /* 0x00000002 */
--        !I2C_FUNC_PROTOCOL_MANGLING      | /* 0x00000004 */
--        ((priv->features & FEATURE_SMBUS_PEC) ? I2C_FUNC_SMBUS_PEC : 0) | /* 0x00000008 */
--        !I2C_FUNC_SMBUS_BLOCK_PROC_CALL  | /* 0x00008000 */
--        I2C_FUNC_SMBUS_QUICK             | /* 0x00010000 */
--        !I2C_FUNC_SMBUS_READ_BYTE        | /* 0x00020000 */
--        !I2C_FUNC_SMBUS_WRITE_BYTE       | /* 0x00040000 */
--        !I2C_FUNC_SMBUS_READ_BYTE_DATA   | /* 0x00080000 */
--        !I2C_FUNC_SMBUS_WRITE_BYTE_DATA  | /* 0x00100000 */
--        !I2C_FUNC_SMBUS_READ_WORD_DATA   | /* 0x00200000 */
--        !I2C_FUNC_SMBUS_WRITE_WORD_DATA  | /* 0x00400000 */
--        !I2C_FUNC_SMBUS_PROC_CALL        | /* 0x00800000 */
--        !I2C_FUNC_SMBUS_READ_BLOCK_DATA  | /* 0x01000000 */
--        !I2C_FUNC_SMBUS_WRITE_BLOCK_DATA | /* 0x02000000 */
--        ((priv->features & FEATURE_I2C_BLOCK_READ) ? I2C_FUNC_SMBUS_READ_I2C_BLOCK : 0) | /* 0x04000000 */
--        I2C_FUNC_SMBUS_WRITE_I2C_BLOCK   | /* 0x08000000 */
--        
--        I2C_FUNC_SMBUS_BYTE              | /* _READ_BYTE  _WRITE_BYTE */
--        I2C_FUNC_SMBUS_BYTE_DATA         | /* _READ_BYTE_DATA  _WRITE_BYTE_DATA */
--        I2C_FUNC_SMBUS_WORD_DATA         | /* _READ_WORD_DATA  _WRITE_WORD_DATA */
--        I2C_FUNC_SMBUS_BLOCK_DATA        | /* _READ_BLOCK_DATA  _WRITE_BLOCK_DATA */
--        !I2C_FUNC_SMBUS_I2C_BLOCK        | /* _READ_I2C_BLOCK  _WRITE_I2C_BLOCK */
--        !I2C_FUNC_SMBUS_EMUL;              /* _QUICK  _BYTE  _BYTE_DATA  _WORD_DATA  _PROC_CALL  _WRITE_BLOCK_DATA  _I2C_BLOCK _PEC */
--    return f;
-+	struct i2c_device *priv = i2c_get_adapdata(adapter);
-+
-+	/* original settings
-+	   u32 f = I2C_FUNC_SMBUS_QUICK | I2C_FUNC_SMBUS_BYTE |
-+	   I2C_FUNC_SMBUS_BYTE_DATA | I2C_FUNC_SMBUS_WORD_DATA |
-+	   I2C_FUNC_SMBUS_BLOCK_DATA | I2C_FUNC_SMBUS_WRITE_I2C_BLOCK |
-+	   ((priv->features & FEATURE_SMBUS_PEC) ? I2C_FUNC_SMBUS_PEC : 0) |
-+	   ((priv->features & FEATURE_I2C_BLOCK_READ) ?
-+	   I2C_FUNC_SMBUS_READ_I2C_BLOCK : 0);
-+	*/
-+
-+	// http://lxr.free-electrons.com/source/include/uapi/linux/i2c.h#L85
-+
-+	u32 f =
-+		I2C_FUNC_I2C                     | /* 0x00000001 (I enabled this one) */
-+		!I2C_FUNC_10BIT_ADDR             | /* 0x00000002 */
-+		!I2C_FUNC_PROTOCOL_MANGLING      | /* 0x00000004 */
-+		((priv->features & FEATURE_SMBUS_PEC) ? I2C_FUNC_SMBUS_PEC : 0) | /* 0x00000008 */
-+		!I2C_FUNC_SMBUS_BLOCK_PROC_CALL  | /* 0x00008000 */
-+		I2C_FUNC_SMBUS_QUICK             | /* 0x00010000 */
-+		!I2C_FUNC_SMBUS_READ_BYTE        | /* 0x00020000 */
-+		!I2C_FUNC_SMBUS_WRITE_BYTE       | /* 0x00040000 */
-+		!I2C_FUNC_SMBUS_READ_BYTE_DATA   | /* 0x00080000 */
-+		!I2C_FUNC_SMBUS_WRITE_BYTE_DATA  | /* 0x00100000 */
-+		!I2C_FUNC_SMBUS_READ_WORD_DATA   | /* 0x00200000 */
-+		!I2C_FUNC_SMBUS_WRITE_WORD_DATA  | /* 0x00400000 */
-+		!I2C_FUNC_SMBUS_PROC_CALL        | /* 0x00800000 */
-+		!I2C_FUNC_SMBUS_READ_BLOCK_DATA  | /* 0x01000000 */
-+		!I2C_FUNC_SMBUS_WRITE_BLOCK_DATA | /* 0x02000000 */
-+		((priv->features & FEATURE_I2C_BLOCK_READ) ? I2C_FUNC_SMBUS_READ_I2C_BLOCK : 0) | /* 0x04000000 */
-+		I2C_FUNC_SMBUS_WRITE_I2C_BLOCK   | /* 0x08000000 */
-+
-+		I2C_FUNC_SMBUS_BYTE              | /* _READ_BYTE  _WRITE_BYTE */
-+		I2C_FUNC_SMBUS_BYTE_DATA         | /* _READ_BYTE_DATA  _WRITE_BYTE_DATA */
-+		I2C_FUNC_SMBUS_WORD_DATA         | /* _READ_WORD_DATA  _WRITE_WORD_DATA */
-+		I2C_FUNC_SMBUS_BLOCK_DATA        | /* _READ_BLOCK_DATA  _WRITE_BLOCK_DATA */
-+		!I2C_FUNC_SMBUS_I2C_BLOCK        | /* _READ_I2C_BLOCK  _WRITE_I2C_BLOCK */
-+		!I2C_FUNC_SMBUS_EMUL;              /* _QUICK  _BYTE  _BYTE_DATA  _WORD_DATA  _PROC_CALL  _WRITE_BLOCK_DATA  _I2C_BLOCK _PEC */
-+	return f;
- }
- 
- static const struct i2c_algorithm smbus_algorithm = {
--    .smbus_xfer     = i801_access,
--    .functionality  = i801_func,
-+	.smbus_xfer     = i801_access,
-+	.functionality  = i801_func,
- };
- 
- 
-@@ -616,84 +616,84 @@ static const struct i2c_algorithm smbus_algorithm = {
-  ********************************/
- int pi2c_probe(struct platform_device *pldev)
- {
--    int err;
--    struct i2c_device *priv;
--    struct resource *res;
--    
--    dev_dbg(&pldev->dev, "pi2c_probe(pldev = %p '%s')\n", pldev, pldev->name);
--    
--    priv = kzalloc(sizeof(struct i2c_device), GFP_KERNEL);
--    if (!priv) {
--        return -ENOMEM;
--    }
--    
--    i2c_set_adapdata(&priv->adapter, priv);
--    priv->adapter.owner = THIS_MODULE;
--    priv->adapter.class = I2C_CLASS_HWMON | I2C_CLASS_SPD;
--    priv->adapter.algo = &smbus_algorithm;
--    
--    res = platform_get_resource(pldev, IORESOURCE_MEM, 0);
--    priv->smba = (unsigned long)ioremap_nocache(res->start, resource_size(res));
--    
--    priv->pldev = pldev;
--    pldev->dev.platform_data = priv;
--    
--    priv->features |= FEATURE_IDF;
--    priv->features |= FEATURE_I2C_BLOCK_READ;
--    priv->features |= FEATURE_SMBUS_PEC;
--    priv->features |= FEATURE_BLOCK_BUFFER;
--    
--    //init_MUTEX(&lddata->sem);
--    init_rwsem(&priv->rw_sem);
--    
--    /* set up the sysfs linkage to our parent device */
--    priv->adapter.dev.parent = &pldev->dev;
--    
--    /* Retry up to 3 times on lost arbitration */
--    priv->adapter.retries = 3;
--    
--    //snprintf(priv->adapter.name, sizeof(priv->adapter.name), "Fake SMBus I801 adapter at %04lx", priv->smba);
--    snprintf(priv->adapter.name, sizeof(priv->adapter.name), "Fake SMBus I801 adapter");
--    
--    err = i2c_add_adapter(&priv->adapter);
--    if (err) {
--        dev_err(&priv->adapter.dev, "Failed to add SMBus adapter\n");
--        return err;
--    }
--    
--    return 0;
-+	int err;
-+	struct i2c_device *priv;
-+	struct resource *res;
-+
-+	dev_dbg(&pldev->dev, "pi2c_probe(pldev = %p '%s')\n", pldev, pldev->name);
-+
-+	priv = kzalloc(sizeof(struct i2c_device), GFP_KERNEL);
-+	if (!priv) {
-+		return -ENOMEM;
-+	}
-+
-+	i2c_set_adapdata(&priv->adapter, priv);
-+	priv->adapter.owner = THIS_MODULE;
-+	priv->adapter.class = I2C_CLASS_HWMON | I2C_CLASS_SPD;
-+	priv->adapter.algo = &smbus_algorithm;
-+
-+	res = platform_get_resource(pldev, IORESOURCE_MEM, 0);
-+	priv->smba = (unsigned long)ioremap_nocache(res->start, resource_size(res));
-+
-+	priv->pldev = pldev;
-+	pldev->dev.platform_data = priv;
-+
-+	priv->features |= FEATURE_IDF;
-+	priv->features |= FEATURE_I2C_BLOCK_READ;
-+	priv->features |= FEATURE_SMBUS_PEC;
-+	priv->features |= FEATURE_BLOCK_BUFFER;
-+
-+	//init_MUTEX(&lddata->sem);
-+	init_rwsem(&priv->rw_sem);
-+
-+	/* set up the sysfs linkage to our parent device */
-+	priv->adapter.dev.parent = &pldev->dev;
-+
-+	/* Retry up to 3 times on lost arbitration */
-+	priv->adapter.retries = 3;
-+
-+	//snprintf(priv->adapter.name, sizeof(priv->adapter.name), "Fake SMBus I801 adapter at %04lx", priv->smba);
-+	snprintf(priv->adapter.name, sizeof(priv->adapter.name), "Fake SMBus I801 adapter");
-+
-+	err = i2c_add_adapter(&priv->adapter);
-+	if (err) {
-+		dev_err(&priv->adapter.dev, "Failed to add SMBus adapter\n");
-+		return err;
-+	}
-+
-+	return 0;
- }
- 
- int pi2c_remove(struct platform_device *pldev)
- {
--    struct i2c_device *lddev;
--    dev_dbg(&pldev->dev, "pi2c_remove(pldev = %p '%s')\n", pldev, pldev->name);
--    
--    lddev = (struct i2c_device *)pldev->dev.platform_data;
--    
--    i2c_del_adapter(&lddev->adapter);
--    
--    //TODO: Figure out the right thing to do here...
--    //pci_write_config_byte(dev, SMBHSTCFG, priv->original_hstcfg);
--    //pci_release_region(dev, SMBBAR);
--    //pci_set_drvdata(dev, NULL);
--    
--    //cdev_del(&lddev->cdev);
--    if(lddev != 0) {
--        kfree(lddev);
--        pldev->dev.platform_data = 0;
--    }
--    
--    return 0;
-+	struct i2c_device *lddev;
-+	dev_dbg(&pldev->dev, "pi2c_remove(pldev = %p '%s')\n", pldev, pldev->name);
-+
-+	lddev = (struct i2c_device *)pldev->dev.platform_data;
-+
-+	i2c_del_adapter(&lddev->adapter);
-+
-+	//TODO: Figure out the right thing to do here...
-+	//pci_write_config_byte(dev, SMBHSTCFG, priv->original_hstcfg);
-+	//pci_release_region(dev, SMBBAR);
-+	//pci_set_drvdata(dev, NULL);
-+
-+	//cdev_del(&lddev->cdev);
-+	if(lddev != 0) {
-+		kfree(lddev);
-+		pldev->dev.platform_data = 0;
-+	}
-+
-+	return 0;
- }
- 
- struct platform_driver i2c_plat_driver_i = {
--    .probe      = pi2c_probe,
--    .remove     = pi2c_remove,
--    .driver     = {
--        .name   = KP_DRIVER_NAME_I2C,
--        .owner  = THIS_MODULE,
--    },
-+	.probe      = pi2c_probe,
-+	.remove     = pi2c_remove,
-+	.driver     = {
-+		.name   = KP_DRIVER_NAME_I2C,
-+		.owner  = THIS_MODULE,
-+	},
- };
- 
- module_platform_driver(i2c_plat_driver_i);
+ void __init signals_init(void)
 -- 
-2.21.0
+2.17.1
 
+
+--=-=-=--
