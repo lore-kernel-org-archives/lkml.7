@@ -2,379 +2,197 @@ Return-Path: <SRS0=//ty=TS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA220C04AAF
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 May 2019 07:25:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4135C04AAF
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 May 2019 07:28:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 597ED216FD
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 May 2019 07:25:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="mGaC3EtP"
+	by mail.kernel.org (Postfix) with ESMTP id AE2FE216C4
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 May 2019 07:28:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728037AbfERHZw (ORCPT
+        id S1728745AbfERH2H (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 May 2019 03:25:52 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:46245 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725294AbfERHZv (ORCPT
+        Sat, 18 May 2019 03:28:07 -0400
+Received: from mail-it1-f198.google.com ([209.85.166.198]:39660 "EHLO
+        mail-it1-f198.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725996AbfERH2G (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 May 2019 03:25:51 -0400
-Received: by mail-io1-f65.google.com with SMTP id q21so7215042iog.13
-        for <linux-kernel@vger.kernel.org>; Sat, 18 May 2019 00:25:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=HDvOoyukwyL9itgFwUXP/y3PKFMZ9kslbftDYwGoNAg=;
-        b=mGaC3EtPQMTzHmyPZwXiemLvmHcSRcveHrtvYc4I21AMWtkZ/Qz0B6+pJK4O++izua
-         6eroFX8ocrG6WLY2xLZ8SHooUFcs3gSi7YTyF4ywJ7YcxtHn9XQ1LwL/SeUGGT4RHRz+
-         sVozMvKInBTTDdV0kpaJi9oi/FuQ1E5dxuyGGF2Bh10aQvaisIQFkNCqmWqfZpQJLVUh
-         Q9Mx+KxJkMbvx1Pl9gPJaOu1dPN5Fcol5Pom+t9mzNya3SlG/zFgGSaq0K+6nbtnJU8w
-         XaWONGVzsHmR14IWmJII0vVgEWr2BUOC6jFV+0HnhKN1319gvm4IKlkWW/VHxFTn3npX
-         BIiA==
+        Sat, 18 May 2019 03:28:06 -0400
+Received: by mail-it1-f198.google.com with SMTP id z125so8604589itf.4
+        for <linux-kernel@vger.kernel.org>; Sat, 18 May 2019 00:28:05 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=HDvOoyukwyL9itgFwUXP/y3PKFMZ9kslbftDYwGoNAg=;
-        b=Mx1nESu5pJAMt06H2haTD/PejPBWhxZC7uhSh13+Kbv/SAFDAc7YXFxGEWyq9SJ+Bi
-         znNrGkElHCFzvkCux0Nhg/BQwEiG95rL9rYsVFO/oVPH9f50cC+c7twEk3ttYkU+hUUD
-         sTHIH0FssazOcZdR0wz3wgpOD3XlQ1SMybDeiZBPskee/OAGzFqGQrEvQjHR10eIUvPx
-         KawB0+o4NopxYfHV2H/Sn8WsIe/HYCnWqN/y/4zYlZQ5jyDjA/CFnOghqZleteVOfvac
-         LsDCm0YdC5M8E6v6vA42oZ9TvvPk9BUVj/5C+nhUHi+d3qbt7u24tV/f7P1zBt4Qzl6d
-         BQ7g==
-X-Gm-Message-State: APjAAAXvh/Aef81wpRa7xJJF0te0eKXK7/kbqKLWuKSB/vALb/zh/Ats
-        to+LrUiYNAybzJ+oFX3z3psXUHgeWzeMQ8ewo/xpz/zRpxvMb4Mq
-X-Google-Smtp-Source: APXvYqxlP4x5riFbUeMnNVVwbS26v6i+lVkO8efAxgB2dLU8K4+l+csqqtLYPqnu4EPhoLAtEjYc0amcnOBCzZpAdEQ=
-X-Received: by 2002:a5d:9dc2:: with SMTP id 2mr7959253ioo.3.1558164350271;
- Sat, 18 May 2019 00:25:50 -0700 (PDT)
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=CS67Nh+w09K7rx+tarvOrs1p/4ZthQOjtiay8Tg2Ypw=;
+        b=hjMVDgsTApV+vjvOkm+qR09ZxwkgLp3CMqqEUU2oB1GkKpvdIO5Eu1QY+h4/1pGZCk
+         RdO7QRmVfC9NMLZevAiaZALW6WzuelIjxKWLigbpIBE9+6vMW1CIHjJmyGo1ombeGoVg
+         QJN0AyoOKvXLzXZQe/NytT8eoX9yrkZhr7KfJxV8cW6UhsKfySYcaRbrFHBXsYZyPc61
+         7fUtuxiKeMaG5qxQeK1oc/1/yQEiIveGiK/8sBG+VM5P8ILTpNXdhIE+48eACRMSCPjh
+         +Tg/eO+4fOLedw83O7gC9W9hqB4QrtFHPttr4vFmAsKv58pIOsghHWSgSNh2fsGUjOCl
+         jhLQ==
+X-Gm-Message-State: APjAAAVI/8GKLZrfBlIU2mnzZhaxJdqvCNl5soaQqX+yCHTujvZHpEfa
+        jmZN2C5zVBW1D08bLf/a/6Pua5fpeueHVQR/yERQZVbXa8BA
+X-Google-Smtp-Source: APXvYqxSkX95ASGwQoi5Yp/ForJIRPbBkuQz6t0sp987/fbCEqvwiHSzxPM1Z1xjFYtKKOnppWa20U2W2qLtVAPiXsyn/t9errji
 MIME-Version: 1.0
-References: <CACT4Y+Z9GcY-d19ROSXgAq4-d_hOBVArfgGV1VdYcYD_X1coPQ@mail.gmail.com>
- <CAHRSSEw7QAfuKsQhHNZcwizn5zEVA6CjAdO7qh69g3fkXrk7DA@mail.gmail.com>
- <CACT4Y+ZLZHbsW3kFD5oXssuOP6LmY0YRRPnWc41CBQ6APJS4MA@mail.gmail.com>
- <CACT4Y+ZW=OaNBsWm0FMXfefHnNgpjb698r_+Xhn66dQZHfgVRw@mail.gmail.com>
- <CACT4Y+Z5wTRMCWYrhYArb0kBS5kRKJYH82m6F+_6qUucJUy7jQ@mail.gmail.com>
- <CACT4Y+b4+rnStjwQ2X5TzYHR1Jhu36MMA30fRCWZ0iGAuH6CCQ@mail.gmail.com> <CAHRSSEx0gkKMHoJu-qLxbb1YKqAwWF8xs6myGWsioeOAz+JvBg@mail.gmail.com>
-In-Reply-To: <CAHRSSEx0gkKMHoJu-qLxbb1YKqAwWF8xs6myGWsioeOAz+JvBg@mail.gmail.com>
-From:   Dmitry Vyukov <dvyukov@google.com>
-Date:   Sat, 18 May 2019 09:25:39 +0200
-Message-ID: <CACT4Y+bMKPYnP2Pgo0Vn3EoQERmhq0+k6X8x0xvnOkCLUMa4pg@mail.gmail.com>
-Subject: Re: binder stress testing
-To:     Todd Kjos <tkjos@google.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        =?UTF-8?B?QXJ2ZSBIasO4bm5ldsOlZw==?= <arve@android.com>,
-        Todd Kjos <tkjos@android.com>,
-        Martijn Coenen <maco@android.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Christian Brauner <christian@brauner.io>,
-        "open list:ANDROID DRIVERS" <devel@driverdev.osuosl.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        syzkaller <syzkaller@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-Received: by 2002:a02:1384:: with SMTP id 126mr37351023jaz.72.1558164485542;
+ Sat, 18 May 2019 00:28:05 -0700 (PDT)
+Date:   Sat, 18 May 2019 00:28:05 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000a99a470589247007@google.com>
+Subject: KASAN: slab-out-of-bounds Read in rhashtable_walk_enter
+From:   syzbot <syzbot+21ad49ad4c11cbfba8d7@syzkaller.appspotmail.com>
+To:     davem@davemloft.net, jon.maloy@ericsson.com,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com,
+        tipc-discussion@lists.sourceforge.net, ying.xue@windriver.com
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 17, 2019 at 8:34 PM Todd Kjos <tkjos@google.com> wrote:
-> > On Fri, May 17, 2019 at 5:51 PM Dmitry Vyukov <dvyukov@google.com> wrot=
-e:
-> > > > > >
-> > > > > > From: Dmitry Vyukov <dvyukov@google.com>
-> > > > > > Date: Fri, May 17, 2019 at 3:26 AM
-> > > > > > To: Greg Kroah-Hartman, Arve Hj=C3=B8nnev=C3=A5g, Todd Kjos, Ma=
-rtijn Coenen,
-> > > > > > Joel Fernandes, Christian Brauner, open list:ANDROID DRIVERS, L=
-KML
-> > > > > > Cc: syzkaller
-> > > > > >
-> > > > > > > Hi,
-> > > > > > >
-> > > > > > > I have 2 questions re drivers/android/binder.c stress testing=
-.
-> > > > > > >
-> > > > > > > 1. Are there any docs on the kernel interface? Or some exampl=
-es on how
-> > > > > > > to use it and reference syscall sequences to make it do somet=
-hing
-> > > > > > > meaningful?
-> > > > > > > I hopefully figured out struct layouts and offsets of objects=
- thing,
-> > > > > > > but I still can't figure out handles, pointers, nodes, pointe=
-r to
-> > > > > > > nodes... pointer to data (?), references, cookies and where d=
-oes one
-> > > > > > > get valid values for these.
-> > > > > >
-> > > > > > The kernel interface is not well documented since it isn't inte=
-nded to
-> > > > > > be used apart from libbinder. The best example for your purpose=
-s is
-> > > > > > probably the binderDriverInterfaceTest which you can find at
-> > > > > > https://android.googlesource.com/platform/frameworks/native/+/r=
-efs/heads/master/libs/binder/tests/binderDriverInterfaceTest.cpp.
-> > > > > >
-> > > > > > The libbinder source is at
-> > > > > > https://android.googlesource.com/platform/frameworks/native/+/r=
-efs/heads/master/libs/binder.
-> > > > > >
-> > > > > > >
-> > > > > > > 2. In my tests any transaction breaks binder device until the=
- next reboot.
-> > > > > > > If I open binder device twice, mmap, set context and then the=
- process
-> > > > > > > dies, then everything it released fine, in particular the con=
-text
-> > > > > > > (context_mgr_node gone). So the device is ready for a next te=
-st:
-> > > > > > >
-> > > > > > > [   40.247970][ T6239] binder: binder_open: 6238:6239
-> > > > > > > [   40.250819][ T6239] binder: 6238:6239 node 1 u000000000000=
-0000
-> > > > > > > c0000000000000000 created
-> > > > > > > [   40.253365][ T6239] binder: binder_mmap: 6238 200a0000-200=
-a2000 (8
-> > > > > > > K) vma f9 pagep 8000000000000025
-> > > > > > > [   40.256454][ T6239] binder: binder_open: 6238:6239
-> > > > > > > [   40.259604][ T6239] binder: binder_mmap: 6238 200c0000-200=
-c2000 (8
-> > > > > > > K) vma f9 pagep 8000000000000025
-> > > > > > > [   40.271526][ T6238] binder: 6238 close vm area 200a0000-20=
-0a2000 (8
-> > > > > > > K) vma 180200d9 pagep 8000000000000025
-> > > > > > > [   40.273113][ T6238] binder: 6238 close vm area 200c0000-20=
-0c2000 (8
-> > > > > > > K) vma 180200d9 pagep 8000000000000025
-> > > > > > > [   40.275058][   T17] binder: binder_flush: 6238 woke 0 thre=
-ads
-> > > > > > > [   40.275997][   T17] binder: binder_flush: 6238 woke 0 thre=
-ads
-> > > > > > > [   40.276968][   T17] binder: binder_deferred_release: 6238 =
-threads
-> > > > > > > 0, nodes 0 (ref 0), refs 0, active transactions 0
-> > > > > > > [   40.278626][   T17] binder: binder_deferred_release: 6238
-> > > > > > > context_mgr_node gone
-> > > > > > > [   40.279756][   T17] binder: binder_deferred_release: 6238 =
-threads
-> > > > > > > 1, nodes 1 (ref 0), refs 0, active transactions 0
-> > > > > > >
-> > > > > > >
-> > > > > > > However, if I also send a transaction between these fd's, the=
-n
-> > > > > > > context_mgr_node is not released:
-> > > > > > >
-> > > > > > > [  783.851403][ T6167] binder: binder_open: 6166:6167
-> > > > > > > [  783.858801][ T6167] binder: 6166:6167 node 1 u000000000000=
-0000
-> > > > > > > c0000000000000000 created
-> > > > > > > [  783.862458][ T6167] binder: binder_mmap: 6166 200a0000-200=
-a2000 (8
-> > > > > > > K) vma f9 pagep 8000000000000025
-> > > > > > > [  783.865777][ T6167] binder: binder_open: 6166:6167
-> > > > > > > [  783.867892][ T6167] binder: binder_mmap: 6166 200c0000-200=
-c2000 (8
-> > > > > > > K) vma f9 pagep 8000000000000025
-> > > > > > > [  783.870810][ T6167] binder: 6166:6167 write 76 at 00000000=
-20000180,
-> > > > > > > read 0 at 0000000020000300
-> > > > > > > [  783.872211][ T6167] binder: 6166:6167 BC_TRANSACTION 2 -> =
-6166 -
-> > > > > > > node 1, data 0000000020000200-00000000200002c0 size 88-24-16
-> > > > > > > [  783.873819][ T6167] binder: 6166:6167 node 3 u000000000000=
-0000
-> > > > > > > c0000000000000000 created
-> > > > > > > [  783.875032][ T6167] binder: 6166 new ref 4 desc 1 for node=
- 3
-> > > > > > > [  783.875860][ T6167] binder:         node 3 u00000000000000=
-00 -> ref 4 desc 1
-> > > > > > > [  783.876868][ T6167] binder: 6166:6167 wrote 76 of 76, read=
- return 0 of 0
-> > > > > > > [  783.886714][ T6167] binder: 6166 close vm area 200a0000-20=
-0a2000 (8
-> > > > > > > K) vma 180200d9 pagep 8000000000000025
-> > > > > > > [  783.888161][ T6167] binder: 6166 close vm area 200c0000-20=
-0c2000 (8
-> > > > > > > K) vma 180200d9 pagep 8000000000000025
-> > > > > > > [  783.890134][   T27] binder: binder_flush: 6166 woke 0 thre=
-ads
-> > > > > > > [  783.891036][   T27] binder: binder_flush: 6166 woke 0 thre=
-ads
-> > > > > > > [  783.892027][ T2903] binder: release 6166:6167 transaction =
-2 out, still active
-> > > > > > > [  783.893097][ T2903] binder: unexpected work type, 4, not f=
-reed
-> > > > > > > [  783.893947][ T2903] binder: undelivered TRANSACTION_COMPLE=
-TE
-> > > > > > > [  783.894849][ T2903] binder: node 3 now dead, refs 1, death=
- 0
-> > > > > > > [  783.895717][ T2903] binder: binder_deferred_release: 6166 =
-threads
-> > > > > > > 1, nodes 1 (ref 1), refs 0, active transactions 1
-> > > > > > >
-> > > > > > >
-> > > > > > > And all subsequent tests will fail because "BINDER_SET_CONTEX=
-T_MGR
-> > > > > > > already set" presumably to the now unrecoverably dead process=
-:
-> > > > > > >
-> > > > > > > [  831.085174][ T6191] binder: binder_open: 6190:6191
-> > > > > > > [  831.087450][ T6191] binder: BINDER_SET_CONTEXT_MGR already=
- set
-> > > > > > > [  831.088910][ T6191] binder: 6190:6191 ioctl 4018620d 20000=
-0c0 returned -16
-> > > > > > > [  831.090626][ T6191] binder: binder_mmap: 6190 200a0000-200=
-a2000 (8
-> > > > > > > K) vma f9 pagep 8000000000000025
-> > > > > > > [  831.092783][ T6191] binder: binder_open: 6190:6191
-> > > > > > > [  831.094076][ T6191] binder: binder_mmap: 6190 200c0000-200=
-c2000 (8
-> > > > > > > K) vma f9 pagep 8000000000000025
-> > > > > > > [  831.096218][ T6191] binder: 6190:6191 write 76 at 00000000=
-20000180,
-> > > > > > > read 0 at 0000000020000300
-> > > > > > > [  831.097606][ T6191] binder: 6190:6191 BC_TRANSACTION 5 -> =
-6166 -
-> > > > > > > node 1, data 0000000020000200-00000000200002c0 size 88-24-16
-> > > > > > > [  831.099251][ T6191] binder_alloc: 6166: binder_alloc_buf, =
-no vma
-> > > > > > > [  831.100433][ T6191] binder: 6190:6191 transaction failed 2=
-9189/-3,
-> > > > > > > size 88-24 line 3157
-> > > > > > > [  831.101559][ T6191] binder: 6190:6191 wrote 76 of 76, read=
- return 0 of 0
-> > > > > > > [  831.110317][ T6191] binder: 6190 close vm area 200a0000-20=
-0a2000 (8
-> > > > > > > K) vma 180200d9 pagep 8000000000000025
-> > > > > > > [  831.111752][ T6191] binder: 6190 close vm area 200c0000-20=
-0c2000 (8
-> > > > > > > K) vma 180200d9 pagep 8000000000000025
-> > > > > > > [  831.113266][ T3344] binder: binder_flush: 6190 woke 0 thre=
-ads
-> > > > > > > [  831.114147][ T3344] binder: binder_flush: 6190 woke 0 thre=
-ads
-> > > > > > > [  831.115087][ T3344] binder: undelivered TRANSACTION_ERROR:=
- 29189
-> > > > > > > [  831.115991][ T3344] binder: binder_deferred_release: 6190 =
-threads
-> > > > > > > 1, nodes 0 (ref 0), refs 0, active transactions 0
-> > > > > > > [  831.117525][ T3344] binder: binder_deferred_release: 6190 =
-threads
-> > > > > > > 1, nodes 0 (ref 0), refs 0, active transactions 0
-> > > > > > >
-> > > > > > >
-> > > > > > > The question is: if processes that opened the device and ever=
- mapped
-> > > > > > > it are now completely gone, should it reset the original stat=
-e when
-> > > > > > > context can be bound again? Is it a bug in binder that it doe=
-s not? If
-> > > > > > > so, is there some kind of temp work-around for this?
-> > > > > >
-> > > > > > If all the processes that opened the device are gone, everythin=
-g
-> > > > > > should be cleaned up and leave binder in a useable state. When =
-the
-> > > > > > device is in this state, can you dump out
-> > > > > > /sys/debug/kernel/binder/state and send it to me?
-> > > > >
-> > > > >
-> > > > > Here it is:
-> > > > >
-> > > > >
-> > > > > binder state:
-> > > > > dead nodes:
-> > > > >   node 3: u0000000000000000 c0000000000000000 hs 0 hw 0 ls 0 lw 0=
- is 1
-> > > > > iw 1 tr 1 proc 6193
-> > > > > proc 6193
-> > > >
-> > > > /\/\/\
-> > > >
-> > > > This process does not exist anymore for minutes. Like at all. Even =
-no
-> > > > procfs node.
-> > > >
-> > > > > context binder0
-> > > > >   thread 6194: l 00 need_return 1 tr 0
-> > > > >   node 1: u0000000000000000 c0000000000000000 hs 1 hw 1 ls 2 lw 1=
- is 0 iw 0 tr 1
-> > > > >   ref 4: desc 1 dead node 3 s 1 w 0 d 00000000e77aea3b
-> > > > >   buffer 2: 00000000b2301cfa size 88:24:16 active
-> > > > >   pending transaction 2: 00000000b1591166 from 0:0 to 6193:0 code=
- 0
-> > > > > flags 0 pri 0 r1 node 1 size 88:24 data 00000000b2301cfa
-> > > > >
-> > > > >
-> > > > >
-> > > > > Kernel also said:
-> > > > >
-> > > > > [  197.049702][   T12] binder: release 6193:6194 transaction 2 ou=
-t, still active
-> > > > > [  197.050803][   T12] binder: unexpected work type, 4, not freed
-> > > > > [  197.051658][   T12] binder: undelivered TRANSACTION_COMPLETE
-> > > > >
-> > > > > Not sure why there is something unexpected. I don't try to fuzz i=
-t or
-> > > > > something at this point. Just run a basic test.
-> > > > > Here is the test, it's in syzkaller notation, but hopefully you c=
-an
-> > > > > get overall idea:
-> > > > >
-> > > > > r0 =3D syz_open_dev$binder(&AUTO=3D'/dev/binder#\x00', 0x0, 0x2)
-> > > > > ioctl$BINDER_SET_CONTEXT_MGR_EXT(r0, AUTO, &AUTO=3D{AUTO, 0x100, =
-0x0, 0x0})
-> > > > > mmap$binder(&(0x7f00000a0000), 0x2000, 0x1, 0x11, r0, 0x0)
-> > > > > r1 =3D syz_open_dev$binder(&AUTO=3D'/dev/binder#\x00', 0x0, 0x2)
-> > > > > mmap$binder(&(0x7f00000c0000), 0x2000, 0x1, 0x11, r1, 0x0)
-> > > > > ioctl$BINDER_WRITE_READ(r1, AUTO, &AUTO=3D{AUTO, AUTO,
-> > > > > &AUTO=3D[@transaction_sg=3D{AUTO, {0x0, 0x0, 0x0, 0x0, 0x0, 0x0, =
-0x0,
-> > > > > AUTO, AUTO, &AUTO=3D{@flat=3D@binder=3D{AUTO, 0x0, 0x0, 0x0}, @fd=
-=3D{AUTO,
-> > > > > AUTO, r0, AUTO, 0x0}, @ptr=3D{AUTO, 0x0, &AUTO=3D""/10, AUTO, 0x0=
-, 0x0}},
-> > > > > &AUTO=3D{AUTO, AUTO, AUTO}}, 0x10}], AUTO, AUTO, &AUTO})
-> > >
-> > >
-> > > Here is corresponding C test that you can use:
-> > > https://gist.githubusercontent.com/dvyukov/484368950289954516e352a0d0=
-86794b/raw/fab6b0fb3ef7af57c3040a3adeed26bcf03e75a6/gistfile1.txt
-> >
-> > Wait, is it because I send binder fd in BINDER_TYPE_FD object?
-> > I was just testing different object types and for BINDER_TYPE_FD I
-> > needed an fd, and the binder fd was the only fd that the test already
-> > had opened, so I was like OK, here is an fd if you need one here....
-> > Can it be a problem in real life? But either way this deadlock is
-> > quite unpleasant for fuzzing...
->
-> Which kernel branch is this? I think you are seeing an issue that
-> should have been fixed in mainline by 7aa135fcf263 ("ANDROID: binder:
-> prevent transactions into own process."). The process is sending a
-> transaction to itself which should have failed.
->
-> The hang is because the handling of BINDER_TYPE_FD does an fget() on
-> the fd (which is on /dev/binder0 in this case). Since the transaction
-> is stuck on the queue (no server thread to handle it), no one is
-> calling fput(). The result is that exit() doesn't result in
-> binder_release() being called to cleanup the process binder state.
->
-> So, if you use a different fd, the issue would be avoided -- but as I
-> said, this shouldn't have happened in the first place on mainline, so
-> if this is mainline or any branch that has the above patch, there is a
-> new driver bug that is somehow allowing transactions to self.
+Hello,
 
-I am on the latest Linus tree:
+syzbot found the following crash on:
 
-commit 63863ee8e2f6f6ae47be3dff4af2f2806f5ca2dd (HEAD -> master,
-origin/master, origin/HEAD)
-Merge: fbcde197e1be 259799ea5a9a
-Author: Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Mon May 13 16:01:52 2019 -0700
+HEAD commit:    510e2ced ipv6: fix src addr routing with the exception table
+git tree:       net
+console output: https://syzkaller.appspot.com/x/log.txt?x=15345db2a00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=82f0809e8f0a8c87
+dashboard link: https://syzkaller.appspot.com/bug?extid=21ad49ad4c11cbfba8d7
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1648fdb2a00000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=16437cf8a00000
 
-The commit you mentioned is already there. You can check the C repro
-how it sends such a transaction.
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+21ad49ad4c11cbfba8d7@syzkaller.appspotmail.com
+
+==================================================================
+BUG: KASAN: slab-out-of-bounds in __lock_acquire+0x3ba2/0x5490  
+kernel/locking/lockdep.c:3664
+Read of size 8 at addr ffff88821640d0c0 by task syz-executor701/9065
+
+CPU: 0 PID: 9065 Comm: syz-executor701 Not tainted 5.1.0+ #17
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+Call Trace:
+  __dump_stack lib/dump_stack.c:77 [inline]
+  dump_stack+0x172/0x1f0 lib/dump_stack.c:113
+  print_address_description.cold+0x7c/0x20d mm/kasan/report.c:188
+  __kasan_report.cold+0x1b/0x40 mm/kasan/report.c:317
+  kasan_report+0x12/0x20 mm/kasan/common.c:614
+  __asan_report_load8_noabort+0x14/0x20 mm/kasan/generic_report.c:132
+  __lock_acquire+0x3ba2/0x5490 kernel/locking/lockdep.c:3664
+  lock_acquire+0x16f/0x3f0 kernel/locking/lockdep.c:4302
+  __raw_spin_lock include/linux/spinlock_api_smp.h:142 [inline]
+  _raw_spin_lock+0x2f/0x40 kernel/locking/spinlock.c:151
+  spin_lock include/linux/spinlock.h:338 [inline]
+  rhashtable_walk_enter+0xf9/0x390 lib/rhashtable.c:669
+  __tipc_dump_start+0x1fa/0x3c0 net/tipc/socket.c:3414
+  tipc_dump_start+0x70/0x90 net/tipc/socket.c:3396
+  __netlink_dump_start+0x4fb/0x7e0 net/netlink/af_netlink.c:2351
+  netlink_dump_start include/linux/netlink.h:226 [inline]
+  tipc_sock_diag_handler_dump+0x1d9/0x270 net/tipc/diag.c:91
+  __sock_diag_cmd net/core/sock_diag.c:232 [inline]
+  sock_diag_rcv_msg+0x322/0x410 net/core/sock_diag.c:263
+  netlink_rcv_skb+0x17a/0x460 net/netlink/af_netlink.c:2486
+  sock_diag_rcv+0x2b/0x40 net/core/sock_diag.c:274
+  netlink_unicast_kernel net/netlink/af_netlink.c:1311 [inline]
+  netlink_unicast+0x536/0x720 net/netlink/af_netlink.c:1337
+  netlink_sendmsg+0x8ae/0xd70 net/netlink/af_netlink.c:1926
+  sock_sendmsg_nosec net/socket.c:660 [inline]
+  sock_sendmsg+0x12e/0x170 net/socket.c:671
+  ___sys_sendmsg+0x81d/0x960 net/socket.c:2292
+  __sys_sendmsg+0x105/0x1d0 net/socket.c:2330
+  __do_sys_sendmsg net/socket.c:2339 [inline]
+  __se_sys_sendmsg net/socket.c:2337 [inline]
+  __x64_sys_sendmsg+0x78/0xb0 net/socket.c:2337
+  do_syscall_64+0x103/0x680 arch/x86/entry/common.c:301
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x4401f9
+Code: 18 89 d0 c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 00 48 89 f8 48 89 f7  
+48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff  
+ff 0f 83 fb 13 fc ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007ffce5915488 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
+RAX: ffffffffffffffda RBX: 00000000004002c8 RCX: 00000000004401f9
+RDX: 0000000000000000 RSI: 0000000020000040 RDI: 0000000000000003
+RBP: 00000000006ca018 R08: 0000000000000000 R09: 00000000004002c8
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000401a80
+R13: 0000000000401b10 R14: 0000000000000000 R15: 0000000000000000
+
+Allocated by task 1:
+  save_stack+0x23/0x90 mm/kasan/common.c:71
+  set_track mm/kasan/common.c:79 [inline]
+  __kasan_kmalloc mm/kasan/common.c:489 [inline]
+  __kasan_kmalloc.constprop.0+0xcf/0xe0 mm/kasan/common.c:462
+  kasan_slab_alloc+0xf/0x20 mm/kasan/common.c:497
+  slab_post_alloc_hook mm/slab.h:437 [inline]
+  slab_alloc mm/slab.c:3356 [inline]
+  kmem_cache_alloc+0x11a/0x6f0 mm/slab.c:3518
+  kmem_cache_zalloc include/linux/slab.h:732 [inline]
+  __kernfs_new_node+0xf0/0x6c0 fs/kernfs/dir.c:632
+  kernfs_new_node+0x96/0x120 fs/kernfs/dir.c:698
+  __kernfs_create_file+0x51/0x340 fs/kernfs/file.c:1002
+  sysfs_add_file_mode_ns+0x222/0x560 fs/sysfs/file.c:305
+  create_files fs/sysfs/group.c:63 [inline]
+  internal_create_group+0x35b/0xc40 fs/sysfs/group.c:148
+  sysfs_create_group fs/sysfs/group.c:174 [inline]
+  sysfs_create_groups fs/sysfs/group.c:201 [inline]
+  sysfs_create_groups+0x9b/0x141 fs/sysfs/group.c:191
+  device_add_groups drivers/base/core.c:1288 [inline]
+  device_add_attrs drivers/base/core.c:1436 [inline]
+  device_add+0x80f/0x17a0 drivers/base/core.c:2080
+  netdev_register_kobject+0x183/0x3b0 net/core/net-sysfs.c:1750
+  register_netdevice+0x878/0xff0 net/core/dev.c:8743
+  register_netdev+0x30/0x50 net/core/dev.c:8861
+  vti6_init_net+0x518/0x820 net/ipv6/ip6_vti.c:1126
+  ops_init+0xb6/0x410 net/core/net_namespace.c:129
+  __register_pernet_operations net/core/net_namespace.c:1092 [inline]
+  register_pernet_operations+0x382/0x7f0 net/core/net_namespace.c:1163
+  register_pernet_device+0x2a/0x80 net/core/net_namespace.c:1250
+  vti6_tunnel_init+0x19/0x176 net/ipv6/ip6_vti.c:1195
+  do_one_initcall+0x109/0x7ca init/main.c:914
+  do_initcall_level init/main.c:982 [inline]
+  do_initcalls init/main.c:990 [inline]
+  do_basic_setup init/main.c:1008 [inline]
+  kernel_init_freeable+0x4da/0x5c9 init/main.c:1168
+  kernel_init+0x12/0x1c5 init/main.c:1086
+  ret_from_fork+0x3a/0x50 arch/x86/entry/entry_64.S:352
+
+Freed by task 0:
+(stack is not available)
+
+The buggy address belongs to the object at ffff88821640d000
+  which belongs to the cache kernfs_node_cache of size 160
+The buggy address is located 32 bytes to the right of
+  160-byte region [ffff88821640d000, ffff88821640d0a0)
+The buggy address belongs to the page:
+page:ffffea0008590340 count:1 mapcount:0 mapping:ffff88821bc45500  
+index:0xffff88821640dfee
+flags: 0x6fffc0000000200(slab)
+raw: 06fffc0000000200 ffffea00085a7c48 ffffea0008590388 ffff88821bc45500
+raw: ffff88821640dfee ffff88821640d000 0000000100000012 0000000000000000
+page dumped because: kasan: bad access detected
+
+Memory state around the buggy address:
+  ffff88821640cf80: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+  ffff88821640d000: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+> ffff88821640d080: 00 00 00 00 fc fc fc fc fc fc fc fc 00 00 00 00
+                                            ^
+  ffff88821640d100: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  ffff88821640d180: fc fc fc fc fc fc fc fc 00 00 00 00 00 00 00 00
+==================================================================
+
+
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+syzbot can test patches for this bug, for details see:
+https://goo.gl/tpsmEJ#testing-patches
