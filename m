@@ -2,173 +2,168 @@ Return-Path: <SRS0=//ty=TS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FE88C04AAF
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 May 2019 16:32:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ADBA9C04AAF
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 May 2019 16:38:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F06B92087B
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 May 2019 16:32:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8087A20872
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 May 2019 16:38:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729763AbfERQcL (ORCPT
+        id S1729214AbfERQiG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 May 2019 12:32:11 -0400
-Received: from netrider.rowland.org ([192.131.102.5]:54603 "HELO
-        netrider.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with SMTP id S1729623AbfERQcK (ORCPT
+        Sat, 18 May 2019 12:38:06 -0400
+Received: from gateway20.websitewelcome.com ([192.185.53.25]:17603 "EHLO
+        gateway20.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727073AbfERQiG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 May 2019 12:32:10 -0400
-Received: (qmail 10095 invoked by uid 500); 18 May 2019 12:32:09 -0400
-Received: from localhost (sendmail-bs@127.0.0.1)
-  by localhost with SMTP; 18 May 2019 12:32:09 -0400
-Date:   Sat, 18 May 2019 12:32:09 -0400 (EDT)
-From:   Alan Stern <stern@rowland.harvard.edu>
-X-X-Sender: stern@netrider.rowland.org
-To:     syzbot <syzbot+200d4bb11b23d929335f@syzkaller.appspotmail.com>
-cc:     andreyknvl@google.com, <chunkeey@gmail.com>,
-        <chunkeey@googlemail.com>, <davem@davemloft.net>,
-        <kvalo@codeaurora.org>, <linux-kernel@vger.kernel.org>,
-        <linux-usb@vger.kernel.org>, <linux-wireless@vger.kernel.org>,
-        <netdev@vger.kernel.org>, <oneukum@suse.com>,
-        <syzkaller-bugs@googlegroups.com>
-Subject: Re: KASAN: use-after-free Read in p54u_load_firmware_cb
-In-Reply-To: <000000000000add98105892b73ec@google.com>
-Message-ID: <Pine.LNX.4.44L0.1905181202500.7855-100000@netrider.rowland.org>
+        Sat, 18 May 2019 12:38:06 -0400
+X-Greylist: delayed 1500 seconds by postgrey-1.27 at vger.kernel.org; Sat, 18 May 2019 12:38:05 EDT
+Received: from cm16.websitewelcome.com (cm16.websitewelcome.com [100.42.49.19])
+        by gateway20.websitewelcome.com (Postfix) with ESMTP id 2DDFC400C6E2F
+        for <linux-kernel@vger.kernel.org>; Sat, 18 May 2019 10:52:54 -0500 (CDT)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id S1dmhTQ2F4FKpS1dmhqkbK; Sat, 18 May 2019 10:52:54 -0500
+X-Authority-Reason: nr=8
+Received: from [189.250.88.202] (port=34780 helo=[192.168.1.76])
+        by gator4166.hostgator.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
+        (Exim 4.91)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1hS1dl-000hEL-QU; Sat, 18 May 2019 10:52:53 -0500
+Subject: Re: [PATCH] nvme: target: use struct_size() in kmalloc()
+To:     xiaolinkui <xiaolinkui@kylinos.cn>, hch@lst.de, sagi@grimberg.me
+Cc:     linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <1558076615-8576-1-git-send-email-xiaolinkui@kylinos.cn>
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=gustavo@embeddedor.com; keydata=
+ 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
+ VtSixD1uOgytAP7RWS474w==
+Message-ID: <b6df7288-9b44-145a-f8be-b2ada6dcd360@embeddedor.com>
+Date:   Sat, 18 May 2019 10:52:52 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
+In-Reply-To: <1558076615-8576-1-git-send-email-xiaolinkui@kylinos.cn>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 189.250.88.202
+X-Source-L: No
+X-Exim-ID: 1hS1dl-000hEL-QU
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: ([192.168.1.76]) [189.250.88.202]:34780
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 10
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 18 May 2019, syzbot wrote:
 
-> Hello,
+
+On 5/17/19 2:03 AM, xiaolinkui wrote:
+> Use struct_size() to keep code sample.
+
+What do you mean by that?
+
+> One of the more common cases of allocation size calculations is finding
+> the size of a structure that has a zero-sized array at the end, along
+> with memory for some number of elements for that array. For example:
 > 
-> syzbot has tested the proposed patch but the reproducer still triggered  
-> crash:
-> KASAN: slab-out-of-bounds Read in p54u_load_firmware_cb
+> struct foo {
+>     int stuff;
+>     struct boo entry[];
+> };
 > 
-> usb 6-1: Direct firmware load for isl3887usb failed with error -2
-> p54u_load_firmware_cb: priv->udev = ffff88809ad5bb80
-> usb 6-1: Firmware not found.
-> ==================================================================
-> BUG: KASAN: slab-out-of-bounds in p54u_load_firmware_cb+0x3c9/0x45f  
-> drivers/net/wireless/intersil/p54/p54usb.c:937
-> Read of size 8 at addr ffff88809abab588 by task kworker/1:8/5526
+> instance = kmalloc(sizeof(struct foo) + count * sizeof(struct boo), GFP_KERNEL);
+> 
+> Instead of leaving these open-coded and prone to type mistakes, we can
+> now use the new struct_size() helper:
+> 
+> instance = kmalloc(struct_size(instance, entry, count), GFP_KERNEL);
+> 
 
-If you look at the full console log, you'll see that this address is 
-different from all the addresses printed out earlier.  Not what you 
-would expect.
+How did you find this code?
 
-Which makes me wonder: Suppose a disconnect occurs before the firmware 
-loader callback runs?  p54_disconnect() will get stuck waiting for the 
-priv->fw_load_wait completion to fire.  But when the callback runs, the 
-first thing it does is activate the completion.
+If you used a tool like Coccinelle, mention it in the changelog text.
 
-So now p54_disconnect() can finish doing its thing, including 
-deallocating all the private data structures.  Then when 
-p54u_load_firmware_cb() tries to read the contents of priv, it ends up 
-accessing deallocated memory!
+Did you compile it?
 
-The patch below tries to do things the right way.
+--
+Gustavo
 
-Alan Stern
-
-
-#syz test: https://github.com/google/kasan.git usb-fuzzer
-
- drivers/net/wireless/intersil/p54/p54usb.c |   37 +++++++++++------------------
- 1 file changed, 15 insertions(+), 22 deletions(-)
-
-Index: usb-devel/drivers/net/wireless/intersil/p54/p54usb.c
-===================================================================
---- usb-devel.orig/drivers/net/wireless/intersil/p54/p54usb.c
-+++ usb-devel/drivers/net/wireless/intersil/p54/p54usb.c
-@@ -33,6 +33,8 @@ MODULE_ALIAS("prism54usb");
- MODULE_FIRMWARE("isl3886usb");
- MODULE_FIRMWARE("isl3887usb");
- 
-+static struct usb_driver p54u_driver;
-+
- /*
-  * Note:
-  *
-@@ -921,9 +923,9 @@ static void p54u_load_firmware_cb(const
- {
- 	struct p54u_priv *priv = context;
- 	struct usb_device *udev = priv->udev;
-+	struct usb_interface *intf = priv->intf;
- 	int err;
- 
--	complete(&priv->fw_wait_load);
- 	if (firmware) {
- 		priv->fw = firmware;
- 		err = p54u_start_ops(priv);
-@@ -932,23 +934,19 @@ static void p54u_load_firmware_cb(const
- 		dev_err(&udev->dev, "Firmware not found.\n");
- 	}
- 
--	if (err) {
--		struct device *parent = priv->udev->dev.parent;
--
--		dev_err(&udev->dev, "failed to initialize device (%d)\n", err);
--
--		if (parent)
--			device_lock(parent);
-+	complete(&priv->fw_wait_load);
-+	/*
-+	 * At this point p54u_disconnect may have already freed
-+	 * the "priv" context. Do not use it anymore!
-+	 */
-+	priv = NULL;
- 
--		device_release_driver(&udev->dev);
--		/*
--		 * At this point p54u_disconnect has already freed
--		 * the "priv" context. Do not use it anymore!
--		 */
--		priv = NULL;
-+	if (err) {
-+		dev_err(&intf->dev, "failed to initialize device (%d)\n", err);
- 
--		if (parent)
--			device_unlock(parent);
-+		usb_lock_device(udev);
-+		usb_driver_release_interface(intf, &p54u_driver);
-+		usb_unlock_device(udev);
- 	}
- 
- 	usb_put_dev(udev);
-@@ -1011,8 +1009,6 @@ static int p54u_probe(struct usb_interfa
- 	skb_queue_head_init(&priv->rx_queue);
- 	init_usb_anchor(&priv->submitted);
- 
--	usb_get_dev(udev);
--
- 	/* really lazy and simple way of figuring out if we're a 3887 */
- 	/* TODO: should just stick the identification in the device table */
- 	i = intf->altsetting->desc.bNumEndpoints;
-@@ -1053,10 +1049,8 @@ static int p54u_probe(struct usb_interfa
- 		priv->upload_fw = p54u_upload_firmware_net2280;
- 	}
- 	err = p54u_load_firmware(dev, intf);
--	if (err) {
--		usb_put_dev(udev);
-+	if (err)
- 		p54_free_common(dev);
--	}
- 	return err;
- }
- 
-@@ -1072,7 +1066,6 @@ static void p54u_disconnect(struct usb_i
- 	wait_for_completion(&priv->fw_wait_load);
- 	p54_unregister_common(dev);
- 
--	usb_put_dev(interface_to_usbdev(intf));
- 	release_firmware(priv->fw);
- 	p54_free_common(dev);
- }
-
+> Signed-off-by: xiaolinkui <xiaolinkui@kylinos.cn>
+> ---
+>  drivers/nvme/target/admin-cmd.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/nvme/target/admin-cmd.c b/drivers/nvme/target/admin-cmd.c
+> index 9f72d51..6f9f830 100644
+> --- a/drivers/nvme/target/admin-cmd.c
+> +++ b/drivers/nvme/target/admin-cmd.c
+> @@ -248,8 +248,8 @@ static void nvmet_execute_get_log_page_ana(struct nvmet_req *req)
+>  	u16 status;
+>  
+>  	status = NVME_SC_INTERNAL;
+> -	desc = kmalloc(sizeof(struct nvme_ana_group_desc) +
+> -			NVMET_MAX_NAMESPACES * sizeof(__le32), GFP_KERNEL);
+> +	desc = kmalloc(struct_size(desc, nsids, NVMET_MAX_NAMESPACES),
+> +			GFP_KERNEL);
+>  	if (!desc)
+>  		goto out;
+>  
+> 
