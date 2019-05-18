@@ -6,51 +6,53 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B45AC04AB4
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 May 2019 00:46:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3A60C04AB4
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 May 2019 00:46:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5DCBA218A4
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 May 2019 00:46:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D6A9218A4
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 May 2019 00:46:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729191AbfERAqp (ORCPT
+        id S1729230AbfERAq5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 May 2019 20:46:45 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:54899 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727133AbfERAqp (ORCPT
+        Fri, 17 May 2019 20:46:57 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:51303 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726881AbfERAq4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 May 2019 20:46:45 -0400
-Received: by mail-wm1-f65.google.com with SMTP id i3so8386299wml.4
-        for <linux-kernel@vger.kernel.org>; Fri, 17 May 2019 17:46:43 -0700 (PDT)
+        Fri, 17 May 2019 20:46:56 -0400
+Received: by mail-wm1-f68.google.com with SMTP id c77so6908130wmd.1
+        for <linux-kernel@vger.kernel.org>; Fri, 17 May 2019 17:46:55 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=4J/wt/1bRO1VqR+N0Z8RIgw8kt+l268hnuB5sJUEyrg=;
-        b=E7CtGROX0dFb56G+StV6rIlvm0O93EJw0QujEWeDBfH0X5B7bsPGJVsVTcx4GDkLKy
-         PHI2qQ6G8H5AKJwdRIgKoxAUUB92zU1esxAeoRUslVEjVA9TLpZC/M6bHCcWMON6WeHs
-         AFi5zw+paQnGFtVKE8Takmqvekaq5xknplE+1XNni7Z1ydbmvsJ5y4/30EVusKtaa41R
-         UPTRA2gMxXzRZc1Q9d/ARyJ1pf3FarVLJlF/7gjJZJJI6weYMXA6KbL41kXjy6FxiDrB
-         TVjtjBTmpdz/Je9WjTxxWzucAnp4AlIJhLKFIVyNw6xFkAKidZrJdlBWcvjjY8udGrLb
-         Et6g==
-X-Gm-Message-State: APjAAAXceWV834Hg1NnnzOeyfSAoTaXPJ3YUPxS2qYv31rfMh1ZOXBkf
-        X7LzvROZJBvYSTz20hd9qbomc6x5op4=
-X-Google-Smtp-Source: APXvYqzF+1psvAoQ+dDw6U4q+Nc7IUoQS/9RUXg8csMpLyunTejTk8ztforCi8fMevmiVwXj3qTkpA==
-X-Received: by 2002:a7b:cf1a:: with SMTP id l26mr4094317wmg.18.1558140403006;
-        Fri, 17 May 2019 17:46:43 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=dVHOEkVV9mlfbXiBNiOTGc9iVLu9GHw8uX4Flvc6nzM=;
+        b=LKlEixSAyElDInJLoMe3o1DgF5qdTGR4OlgrItWpu/qB/AW5hdoCwL2t74LuSWovwp
+         yD04fEbbd/EkVhcDu9dMa+vQVrxuMCZJYnlOc+C5z0iveOcLKIWef5flYVA04JlqymLy
+         5o7TZ5fZRId2b7FpxIWjmkNY3irryD2Kd6biQqHbLb2vE73e/7oDMG5sG+jsj3eBN2er
+         nKUcvqQlWlrojSPr9Add28osguEM43AYRO1WvZZdD8BsE7J1j+31qfyP17mbDy5bnMbR
+         rKcje551qV0c/od8mV4GrqljaifJVkfPkFbF6HquUG0cxktnv60Dm2GYKGJu73OZAeil
+         q6Jg==
+X-Gm-Message-State: APjAAAVO3z5uyhUw9R96eLjsLiRH5qneTstl1amp2Ik2MsF1LlTMKf/u
+        x0ZjTXlXmkXMtnpC1so0XlkkDg==
+X-Google-Smtp-Source: APXvYqz9dVgMCVBct1AsG2RXTM2TI8XXuNWqSFcJ7VB0m1uiNeGfnNjK+La84/2whwbjh7SsBSR/0Q==
+X-Received: by 2002:a1c:f606:: with SMTP id w6mr4206756wmc.130.1558140415076;
+        Fri, 17 May 2019 17:46:55 -0700 (PDT)
 Received: from raver.teknoraver.net (net-47-53-225-211.cust.vodafonedsl.it. [47.53.225.211])
-        by smtp.gmail.com with ESMTPSA id f2sm11037959wme.12.2019.05.17.17.46.40
+        by smtp.gmail.com with ESMTPSA id b12sm12189924wmg.27.2019.05.17.17.46.54
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 17 May 2019 17:46:42 -0700 (PDT)
+        Fri, 17 May 2019 17:46:54 -0700 (PDT)
 From:   Matteo Croce <mcroce@redhat.com>
 To:     xdp-newbies@vger.kernel.org, bpf@vger.kernel.org
 Cc:     linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
         Alexei Starovoitov <ast@kernel.org>,
         Daniel Borkmann <daniel@iogearbox.net>
-Subject: [PATCH 1/5] samples/bpf: fix test_lru_dist build
-Date:   Sat, 18 May 2019 02:46:35 +0200
-Message-Id: <20190518004639.20648-1-mcroce@redhat.com>
+Subject: [PATCH 2/5] libbpf: add missing typedef
+Date:   Sat, 18 May 2019 02:46:36 +0200
+Message-Id: <20190518004639.20648-2-mcroce@redhat.com>
 X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190518004639.20648-1-mcroce@redhat.com>
+References: <20190518004639.20648-1-mcroce@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -59,38 +61,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix the following error by removing a duplicate struct definition:
+Sync tools/include/linux/types.h with the UAPI one to fix this build error:
 
-samples/bpf/test_lru_dist.c:39:8: error: redefinition of ‘struct list_head’
-   39 | struct list_head {
-      |        ^~~~~~~~~
-In file included from samples/bpf/test_lru_dist.c:9:
-./tools/include/linux/types.h:69:8: note: originally defined here
-   69 | struct list_head {
-      |        ^~~~~~~~~
-make[2]: *** [scripts/Makefile.host:92: samples/bpf/test_lru_dist] Error 1
+make -C samples/bpf/../../tools/lib/bpf/ RM='rm -rf' LDFLAGS= srctree=samples/bpf/../../ O=
+  HOSTCC  samples/bpf/sock_example
+In file included from samples/bpf/sock_example.c:27:
+/usr/include/linux/ip.h:102:2: error: unknown type name ‘__sum16’
+  102 |  __sum16 check;
+      |  ^~~~~~~
+make[2]: *** [scripts/Makefile.host:92: samples/bpf/sock_example] Error 1
 make[1]: *** [Makefile:1763: samples/bpf/] Error 2
 
 Signed-off-by: Matteo Croce <mcroce@redhat.com>
 ---
- samples/bpf/test_lru_dist.c | 4 ----
- 1 file changed, 4 deletions(-)
+ tools/include/linux/types.h | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/samples/bpf/test_lru_dist.c b/samples/bpf/test_lru_dist.c
-index eec3e2509ce8..f532b894654b 100644
---- a/samples/bpf/test_lru_dist.c
-+++ b/samples/bpf/test_lru_dist.c
-@@ -36,10 +36,6 @@ static int nr_cpus;
- static unsigned long long *dist_keys;
- static unsigned int dist_key_counts;
+diff --git a/tools/include/linux/types.h b/tools/include/linux/types.h
+index 154eb4e3ca7c..5266dbfee945 100644
+--- a/tools/include/linux/types.h
++++ b/tools/include/linux/types.h
+@@ -58,6 +58,9 @@ typedef __u32 __bitwise __be32;
+ typedef __u64 __bitwise __le64;
+ typedef __u64 __bitwise __be64;
  
--struct list_head {
--	struct list_head *next, *prev;
--};
--
- static inline void INIT_LIST_HEAD(struct list_head *list)
- {
- 	list->next = list;
++typedef __u16 __bitwise __sum16;
++typedef __u32 __bitwise __wsum;
++
+ typedef struct {
+ 	int counter;
+ } atomic_t;
 -- 
 2.21.0
 
