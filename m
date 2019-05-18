@@ -2,175 +2,159 @@ Return-Path: <SRS0=//ty=TS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70AF0C04AB4
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 May 2019 00:58:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18E35C04E87
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 May 2019 01:00:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4F1B520848
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 May 2019 00:58:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AECFD20848
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 May 2019 01:00:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="bL0Fp2IG";
+	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="EQBUwSht"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727544AbfERA6i (ORCPT
+        id S1727730AbfERA77 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 May 2019 20:58:38 -0400
-Received: from mga04.intel.com ([192.55.52.120]:33935 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726200AbfERA6h (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 May 2019 20:58:37 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 May 2019 17:58:37 -0700
-X-ExtLoop1: 1
-Received: from cli6-desk1.ccr.corp.intel.com (HELO [10.239.161.118]) ([10.239.161.118])
-  by fmsmga001.fm.intel.com with ESMTP; 17 May 2019 17:58:33 -0700
-Subject: Re: [RFC PATCH v2 00/17] Core scheduling v2
-To:     Ingo Molnar <mingo@kernel.org>, Aubrey Li <aubrey.intel@gmail.com>
-Cc:     Julien Desfossez <jdesfossez@digitalocean.com>,
-        Vineeth Remanan Pillai <vpillai@digitalocean.com>,
-        Nishanth Aravamudan <naravamudan@digitalocean.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Tim Chen <tim.c.chen@linux.intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Paul Turner <pjt@google.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        Subhra Mazumdar <subhra.mazumdar@oracle.com>,
-        =?UTF-8?B?RnLDqWTDqXJpYyBXZWlzYmVja2Vy?= <fweisbec@gmail.com>,
-        Kees Cook <keescook@chromium.org>,
-        Greg Kerr <kerrnel@google.com>, Phil Auld <pauld@redhat.com>,
-        Aaron Lu <aaron.lwe@gmail.com>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-References: <20190427142137.GA72051@gmail.com>
- <CAERHkrtaU=Y-Lxypu_7uBbe-mJtG-3friz=ZLhV53X4FXHcEyA@mail.gmail.com>
- <20190428093304.GA7393@gmail.com>
- <CAERHkrvaSSR1wRECF1AcLOhpmCAH0ecvFEL5MOFjK05F0xSuzA@mail.gmail.com>
- <20190428121721.GA121434@gmail.com>
- <db7c3e51-d013-b3d9-7bce-c247aa2e7144@linux.intel.com>
- <20190429061422.GA20939@gmail.com>
- <24bca399-5370-c4b5-725f-979db06bfc29@linux.intel.com>
- <20190429160058.GA82935@gmail.com>
- <CAERHkrvhggb8nkGOx1GHUftGhh5b0qLvq4HvuHJreNrRC1RXow@mail.gmail.com>
- <20190430044250.GC73609@gmail.com>
-From:   "Li, Aubrey" <aubrey.li@linux.intel.com>
-Message-ID: <9489d9e4-1dae-fc84-53eb-beb0c1418c0f@linux.intel.com>
-Date:   Sat, 18 May 2019 08:58:33 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.1.1
-MIME-Version: 1.0
-In-Reply-To: <20190430044250.GC73609@gmail.com>
-Content-Type: text/plain; charset=utf-8
+        Fri, 17 May 2019 20:59:59 -0400
+Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:37566 "EHLO
+        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726200AbfERA77 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 May 2019 20:59:59 -0400
+Received: from pps.filterd (m0089730.ppops.net [127.0.0.1])
+        by m0089730.ppops.net (8.16.0.27/8.16.0.27) with SMTP id x4I0xOOg008031;
+        Fri, 17 May 2019 17:59:47 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
+ : date : message-id : references : in-reply-to : content-type : content-id
+ : content-transfer-encoding : mime-version; s=facebook;
+ bh=7qKsPldQKiOqJbT53B5lYvQu0Xny2wWC1bg1lwvSMV8=;
+ b=bL0Fp2IGZVpRpN+z+SEaYK1ZNTKQ+3piBoXDKKa7LmBwXpuSFVwHr80Tu/3vHZ0TrG+l
+ +5jy4zy/BuKY+EhamjEcTW6KTbin/K4JHkyPiQZrI6VCPsFggbUXjN96lINoM9+hiniC
+ 1Fcak6ezMO7lfzWRHtmarfH83dwaKSloEqc= 
+Received: from mail.thefacebook.com (mailout.thefacebook.com [199.201.64.23])
+        by m0089730.ppops.net with ESMTP id 2sj7ggg22d-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
+        Fri, 17 May 2019 17:59:47 -0700
+Received: from prn-hub01.TheFacebook.com (2620:10d:c081:35::125) by
+ prn-hub06.TheFacebook.com (2620:10d:c081:35::130) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ 15.1.1713.5; Fri, 17 May 2019 17:59:46 -0700
+Received: from NAM02-CY1-obe.outbound.protection.outlook.com (192.168.54.28)
+ by o365-in.thefacebook.com (192.168.16.25) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.1.1713.5
+ via Frontend Transport; Fri, 17 May 2019 17:59:46 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
+ s=selector1-fb-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=7qKsPldQKiOqJbT53B5lYvQu0Xny2wWC1bg1lwvSMV8=;
+ b=EQBUwShtpY7RYKBOdCLPE58QQ/OmVEj7witCilVlDuuT7K4Ehy+j1Zy5zbEMfnQgNcGkNWmGpBbWylmYW+YtSHapMPxlt12Wpj9Kq/Zwj+TOSqeCyzVetBUz0jn0zVGAHkX007eYR9poZtG+isrHYIMlzWUbs6M+4HDGS/udKo0=
+Received: from BYAPR15MB2631.namprd15.prod.outlook.com (20.179.156.24) by
+ BYAPR15MB2805.namprd15.prod.outlook.com (20.179.158.146) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1900.18; Sat, 18 May 2019 00:59:30 +0000
+Received: from BYAPR15MB2631.namprd15.prod.outlook.com
+ ([fe80::d4f6:b485:69ee:fd9a]) by BYAPR15MB2631.namprd15.prod.outlook.com
+ ([fe80::d4f6:b485:69ee:fd9a%7]) with mapi id 15.20.1900.010; Sat, 18 May 2019
+ 00:59:30 +0000
+From:   Roman Gushchin <guro@fb.com>
+To:     Shakeel Butt <shakeelb@google.com>
+CC:     Johannes Weiner <hannes@cmpxchg.org>,
+        Vladimir Davydov <vdavydov.dev@gmail.com>,
+        Michal Hocko <mhocko@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Chris Down <chris@chrisdown.name>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "cgroups@vger.kernel.org" <cgroups@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2] mm, memcg: introduce memory.events.local
+Thread-Topic: [PATCH v2] mm, memcg: introduce memory.events.local
+Thread-Index: AQHVDQ9AIsql3vtrqUugyovKoP5pDaZwD8OA
+Date:   Sat, 18 May 2019 00:59:30 +0000
+Message-ID: <20190518005927.GB3431@tower.DHCP.thefacebook.com>
+References: <20190518001818.193336-1-shakeelb@google.com>
+In-Reply-To: <20190518001818.193336-1-shakeelb@google.com>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: BYAPR01CA0069.prod.exchangelabs.com (2603:10b6:a03:94::46)
+ To BYAPR15MB2631.namprd15.prod.outlook.com (2603:10b6:a03:152::24)
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [2620:10d:c090:200::2:d7d0]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: a97bfa3b-793f-4a1c-6b53-08d6db2c1558
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(2017052603328)(7193020);SRVR:BYAPR15MB2805;
+x-ms-traffictypediagnostic: BYAPR15MB2805:
+x-microsoft-antispam-prvs: <BYAPR15MB280518E3FFFE3988BAEAD750BE040@BYAPR15MB2805.namprd15.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-forefront-prvs: 0041D46242
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(366004)(136003)(376002)(396003)(39850400004)(346002)(54534003)(199004)(189003)(81156014)(81166006)(8676002)(99286004)(73956011)(186003)(6506007)(6116002)(386003)(68736007)(25786009)(5660300002)(478600001)(229853002)(316002)(54906003)(66446008)(2906002)(64756008)(9686003)(6512007)(4326008)(66556008)(14454004)(6246003)(66946007)(86362001)(8936002)(66476007)(102836004)(486006)(6436002)(71190400001)(71200400001)(53936002)(52116002)(76176011)(7736002)(305945005)(33656002)(476003)(14444005)(256004)(1076003)(6486002)(6916009)(46003)(446003)(11346002);DIR:OUT;SFP:1102;SCL:1;SRVR:BYAPR15MB2805;H:BYAPR15MB2631.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: fb.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: LDwaK9woaUlRqTZsOGjUGOI0aw8usd5G8QK5aYNipcJqTCtEJB1FDTzyEhf4dx+LnWpeUKuXc0tSeTH1vv5LYaS54pss1F9DOKREBDEPXCd1os0ir/0sW6udIRIUJBk+qMwsgtNlyYh1QGofUNy9ZQRj0HRm6vW5/rIMQhQKP9bAEIZo3IZcey3xgMO+eNyg1Oe94hxUTT6CNESxnpwHfb6EoOeY+E1/iRyG4OXkOGek1l65FmZaBM+7I3tZagEwA1ZK5Ih8eCDeCb9tX/TQ1Adc+pUu+cXCCnF+6UfY5H2a53G6m151gkONCqHWfWXntr6+X1EstI0xtRwyprk9eQlmcdVX4kdsZg98EU7HEfm1dgj3a/i/Ek1KvbXtdXm8EBYoTzzvet5cUVPs5QuyPppovFRHnuYTueO14hxSyf0=
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <F4C49EE3FF59984090F0BB32EF187949@namprd15.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-MS-Exchange-CrossTenant-Network-Message-Id: a97bfa3b-793f-4a1c-6b53-08d6db2c1558
+X-MS-Exchange-CrossTenant-originalarrivaltime: 18 May 2019 00:59:30.5192
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR15MB2805
+X-OriginatorOrg: fb.com
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-17_15:,,
+ signatures=0
+X-Proofpoint-Spam-Reason: safe
+X-FB-Internal: Safe
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019/4/30 12:42, Ingo Molnar wrote:
-> 
->>> What's interesting is how in the over-saturated case (the last three
->>> rows: 128, 256 and 512 total threads) coresched-SMT leaves 20-30% CPU
->>> performance on the floor according to the load figures.
->>
+On Fri, May 17, 2019 at 05:18:18PM -0700, Shakeel Butt wrote:
+> The memory controller in cgroup v2 exposes memory.events file for each
+> memcg which shows the number of times events like low, high, max, oom
+> and oom_kill have happened for the whole tree rooted at that memcg.
+> Users can also poll or register notification to monitor the changes in
+> that file. Any event at any level of the tree rooted at memcg will
+> notify all the listeners along the path till root_mem_cgroup. There are
+> existing users which depend on this behavior.
+>=20
+> However there are users which are only interested in the events
+> happening at a specific level of the memcg tree and not in the events in
+> the underlying tree rooted at that memcg. One such use-case is a
+> centralized resource monitor which can dynamically adjust the limits of
+> the jobs running on a system. The jobs can create their sub-hierarchy
+> for their own sub-tasks. The centralized monitor is only interested in
+> the events at the top level memcgs of the jobs as it can then act and
+> adjust the limits of the jobs. Using the current memory.events for such
+> centralized monitor is very inconvenient. The monitor will keep
+> receiving events which it is not interested and to find if the received
+> event is interesting, it has to read memory.event files of the next
+> level and compare it with the top level one. So, let's introduce
+> memory.events.local to the memcg which shows and notify for the events
+> at the memcg level.
+>=20
+> Now, does memory.stat and memory.pressure need their local versions.
+> IMHO no due to the no internal process contraint of the cgroup v2. The
+> memory.stat file of the top level memcg of a job shows the stats and
+> vmevents of the whole tree. The local stats or vmevents of the top level
+> memcg will only change if there is a process running in that memcg but
+> v2 does not allow that. Similarly for memory.pressure there will not be
+> any process in the internal nodes and thus no chance of local pressure.
+>=20
+> Signed-off-by: Shakeel Butt <shakeelb@google.com>
+> ---
+> Changelog since v1:
+> - refactor memory_events_show to share between events and events.local
 
-Sorry for a delay, I got a chance to obtain some profiling results. Here
-is the story on my side. I still used the previous testing 128/128 case
-(256 threads totally), and focus on CPU53(randomly pickup) only.
+Reviewed-by: Roman Gushchin <guro@fb.com>
 
-Firstly, mpstat reports cpu utilization,
-- baseline is 100%,
-- coresched-SMT is 87.51%
+You also need to add some stuff into cgroup v2 documentation.
 
-Then I traced sched_switch trace point, in 100s sampling period,
-- baseline context switch 14083 times, next task idle 0 times
-- coresched-SMT context switch 15101 times, next task idle 880 times
-
-So I guess pick_next_task() is mostly the interesting place, then I
-dig into the trace log on coresched-SMT case:
-- CPU53 selected idle task 767 times (matched with the data of sched_switch)
-
-There are 3 branches of CPU53 selecting idle task in pick_next_task():
-- pick pre selected 765 times
-- unconstrained pick 1 times
-- picked: swapper/53/0 1 times
-
-Where CPU53's "pick pre selected idle task" from? I guess its from its
-brother CPU1, so I checked CPU1's trace log and found:
-- CPU1 helped its sibling CPU53 select idle task 800 times
-
-So for CPU53, the most interesting part occurs in pick_task(), that is:
--The sibling CPU1 helped to select idle task in pick_task()
-
-Forgive me to paste this routine() here:
-=====================================================
-+// XXX fairness/fwd progress conditions
-+static struct task_struct *
-+pick_task(struct rq *rq, const struct sched_class *class, struct task_struct *max)
-+{
-+	struct task_struct *class_pick, *cookie_pick;
-+	unsigned long cookie = 0UL;
-+
-+	/*
-+	 * We must not rely on rq->core->core_cookie here, because we fail to reset
-+	 * rq->core->core_cookie on new picks, such that we can detect if we need
-+	 * to do single vs multi rq task selection.
-+	 */
-+
-+	if (max && max->core_cookie) {
-+		WARN_ON_ONCE(rq->core->core_cookie != max->core_cookie);
-+		cookie = max->core_cookie;
-+	}
-+
-+	class_pick = class->pick_task(rq);
-+	if (!cookie)
-+		return class_pick;
-+
-+	cookie_pick = sched_core_find(rq, cookie);
-+	if (!class_pick)
-+		return cookie_pick;
-+
-+	/*
-+	 * If class > max && class > cookie, it is the highest priority task on
-+	 * the core (so far) and it must be selected, otherwise we must go with
-+	 * the cookie pick in order to satisfy the constraint.
-+	 */
-+	if (cpu_prio_less(cookie_pick, class_pick) && core_prio_less(max, class_pick))
-+		return class_pick;
-+
-+	return cookie_pick;
-+}
-=================================================================
-
-And the most related log of the case:
-=================================================================
-<...>-21553 [001] dN.. 87341.514992: __schedule: cpu(1): selected: gemmbench/21294 ffff888823df8900
-<...>-21553 [001] dN.. 87341.514992: __schedule: max: gemmbench/21294 ffff888823df8900
-<...>-21553 [001] dN.. 87341.514995: __schedule: (swapper/53/0;140,0,0) ?< (sysbench/21503;140,457178607302,0)
-<...>-21553 [001] dN.. 87341.514996: __schedule: (gemmbench/21294;119,219715519947,0) ?< (sysbench/21503;119,457178607302,0)
-<...>-21553 [001] dN.. 87341.514996: __schedule: cpu(53): selected: swapper/53/0 0
-
-It said,
-- CPU1 selected gemmbench for itself
-- and gemmbench was assigned to max of this core
-- then CPU1 helped CPU53 to pick_task()
--- CPU1 used class->pick_task(), selected sysbench for CPU53
--- CPU1 used cookie_pick, selected swapper(idle task) for CPU53
--- the class_pick(sysbench) unfortunately didn't pass the priority check
-- idle task picked up at the end(sadly).
-
-So, I think if we want to improve CPU utilization under this scenario,
-the straightforward tweak is picking up class_pick if cookie_pick is idle.
-But I know, this is a violation of the design philosophy(avoid L1TF) of
-this proposal.
-
-Does it make sense to add a knob to switch security/performance?
-Welcome any comments!
-
-Thanks,
--Aubrey
+Thanks!
