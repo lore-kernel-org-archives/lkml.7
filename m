@@ -2,99 +2,160 @@ Return-Path: <SRS0=//ty=TS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4F29C072AF
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 May 2019 08:42:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E749C072A4
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 May 2019 08:46:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ABBA8216C4
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 May 2019 08:42:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cogentembedded-com.20150623.gappssmtp.com header.i=@cogentembedded-com.20150623.gappssmtp.com header.b="waXbbgrf"
+	by mail.kernel.org (Postfix) with ESMTP id 043312166E
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 May 2019 08:46:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1558169174;
+	bh=BAmzia/juQlU1FpjFzPY18M0wybiA82UzSc67eiEOxo=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=tCzMzlohqSihtlRM0MPfvVrY2DVu8XkEUTP7FddxBo1bjR54otDM7Pma6+YcS/lQK
+	 0Sx+gJpVugQrI2779ZDHtjLueqAQNvVByAPvJB05c/iNZILy79MmBWXeJjG0LqLN92
+	 6pFPz/IeeFVWiMzrO22YnCctOE3zu1eCtxctdnGo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728634AbfERImc (ORCPT
+        id S1728813AbfERIqN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 May 2019 04:42:32 -0400
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:37478 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726263AbfERImb (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 May 2019 04:42:31 -0400
-Received: by mail-lf1-f66.google.com with SMTP id q17so6961479lfo.4
-        for <linux-kernel@vger.kernel.org>; Sat, 18 May 2019 01:42:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cogentembedded-com.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=MB+am46zdrQ7/8By7GZdXoN/QVRGNRe/Mkw8jGEPF3g=;
-        b=waXbbgrfqxraHh9Df3iHVcwsQFar+ZalY+dY2SXbBvPF8SudNcrTRizlwedQCPBadz
-         oRQTvD1gFAIfKaeSaRzIXu74cJk31iFPIQ+tJUFUIBO25QLEEENYoCAW9aBdjPshnTsM
-         qS/56tdXwf0UqZaGZ4M7ylSBHkwUQ58wByLMEnrICDKUA1ss+4xkhIvtFeHXUBWllYsr
-         +lUDsDXexV+CyYTgejJAjxGsXD+2Bt6j4excRQxMjawHc/mGIczXkDLHeAl8ktGKGo0t
-         /JU2yVfagMBoK1uZLdDKq+3e2s0QLyu/QvVud0kg5YXXdrue6aq8EKf7WphQvYVVzcpe
-         RFYQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=MB+am46zdrQ7/8By7GZdXoN/QVRGNRe/Mkw8jGEPF3g=;
-        b=TbyCMn02Y8jAfe8GVQiThILGftr/+wK2T0HYpWIun3qY7dKdCr6Rz2ZpmAhCiPpAbk
-         P8Tgy9QDJRJC+EzV61OageHSdjWg8DaCTj8OFwSD8B6iERLXc0+q2vcFn322kAhaFOA0
-         fvcu5W1FSxhsmWxmMgiJSnK/ud9xdE8m717mtSvN5NSVDexZriy563HUC4PbMRmNEdSS
-         7UnPfhf5vi7PbymjWHA5ldmZmfHndDH2mfk3e+UIe8/g2HGmtX4o8ddRcg3ZHWDM9v5y
-         X8kqLln6uCkDyEAXAfqZgbqn1Qulg9VljR/YC8XG3cy4dRY+ffAj1HcvmGTVh6M6f/PR
-         B+bg==
-X-Gm-Message-State: APjAAAXKvtQdWpzZea9+8Ln0YGvhTAU29VD3PjWWgXL3TCqeSA9i0cMY
-        xdU72Jr5M4nsc4PrtPqXheczswR6t4U=
-X-Google-Smtp-Source: APXvYqyAUNwCfxMxjD9aODqmbrWMY8YATK25Yvddy6GpZFjK4p+l+3r/sZKd8A9gpxU3B/IQIqhQDA==
-X-Received: by 2002:a19:e34c:: with SMTP id c12mr8691523lfk.145.1558168949709;
-        Sat, 18 May 2019 01:42:29 -0700 (PDT)
-Received: from [192.168.0.199] ([31.173.86.130])
-        by smtp.gmail.com with ESMTPSA id z6sm2205931ljh.61.2019.05.18.01.42.28
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sat, 18 May 2019 01:42:29 -0700 (PDT)
-Subject: Re: [PATCH] drm: rcar-du: writeback: include interface header
-To:     Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        linux-renesas-soc@vger.kernel.org
-Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
-        "open list:DRM DRIVERS FOR RENESAS" <dri-devel@lists.freedesktop.org>,
-        open list <linux-kernel@vger.kernel.org>
-References: <20190517212050.3561-1-kieran.bingham+renesas@ideasonboard.com>
-From:   Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Message-ID: <a61ab53c-4e05-991c-f74f-802bd6222d8a@cogentembedded.com>
-Date:   Sat, 18 May 2019 11:42:28 +0300
-User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Sat, 18 May 2019 04:46:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38448 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725446AbfERIqN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 18 May 2019 04:46:13 -0400
+Received: from archlinux (cpc91196-cmbg18-2-0-cust659.5-4.cable.virginm.net [81.96.234.148])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8D41520872;
+        Sat, 18 May 2019 08:46:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1558169171;
+        bh=BAmzia/juQlU1FpjFzPY18M0wybiA82UzSc67eiEOxo=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=zAhkYO/WuYgMNfFwyeHFO3T2ohMfJb+E5kAZoyyPjvHyI91xAfZCnRy7Qzeh1ci7D
+         Iz0xKTZbzrTefspuCi0ZoiMSOYrQAV0UjWHylG6/VPU7Wcl9+4cHBdtpuAYVngiQdz
+         TV5fwwrlJfwykxju+jtbZ0LhzjR+t86aBlNKeONs=
+Date:   Sat, 18 May 2019 09:46:07 +0100
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Eddie James <eajames@linux.ibm.com>
+Cc:     linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        joel@jms.id.au, pmeerw@pmeerw.net, lars@metafoo.de, knaack.h@gmx.de
+Subject: Re: [PATCH v2 1/3] iio: Add driver for Infineon DPS310
+Message-ID: <20190518094607.50909f16@archlinux>
+In-Reply-To: <cf108058-dd50-4651-6c97-a5c7e82ef085@linux.ibm.com>
+References: <1557344128-690-1-git-send-email-eajames@linux.ibm.com>
+        <1557344128-690-2-git-send-email-eajames@linux.ibm.com>
+        <20190511102236.4c5f9585@archlinux>
+        <cf108058-dd50-4651-6c97-a5c7e82ef085@linux.ibm.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <20190517212050.3561-1-kieran.bingham+renesas@ideasonboard.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello!
+On Wed, 15 May 2019 13:46:46 -0500
+Eddie James <eajames@linux.ibm.com> wrote:
 
-On 18.05.2019 0:20, Kieran Bingham wrote:
-
-> The new writeback feature is exports functions so that they can
-                             ^^ not needed?
-
-> integrate into the rcar_du_kms module.
+> On 5/11/19 4:22 AM, Jonathan Cameron wrote:
+> > On Wed,  8 May 2019 14:35:26 -0500
+> > Eddie James <eajames@linux.ibm.com> wrote:
+> >  
+> >> From: Joel Stanley <joel@jms.id.au>
+> >>
+> >> The DPS310 is a temperature and pressure sensor. It can be accessed over
+> >> i2c and SPI.
+> >>
+> >> Signed-off-by: Eddie James <eajames@linux.ibm.com>  
+> > Hi Eddie,
+> >
+> > Ideally we'll get a sign off form Joel as well on this.
+> >
+> > A few comments inline.
+> >
+> > I 'think' this is probably fine without any locking to prevent simultaneous reads
+> > and /or writes to the registers because the few functions that do multiple reads
+> > and writes look fine.  Please do take another look at that though to confirm there
+> > are no corner cases.
+> >
+> > Otherwise there is a race in the remove path that needs fixing.
+> > Various minor bits and bobs inline.
+> >
+> > thanks,
+> >
+> > Jonathan
+> >
+> >
+> >  
+> >> ---
+> >>   MAINTAINERS                   |   6 +
+> >>   drivers/iio/pressure/Kconfig  |  10 +
+> >>   drivers/iio/pressure/Makefile |   1 +
+> >>   drivers/iio/pressure/dps310.c | 429 ++++++++++++++++++++++++++++++++++++++++++
+> >>   4 files changed, 446 insertions(+)
+> >>   create mode 100644 drivers/iio/pressure/dps310.c
+> >>  
 > 
-> The interface functions are defined in the rcar_du_writeback header, but
-> it is not included in the object file itself leading to compiler
-> warnings for missing prototypes.
+> >> +};
+> >> +MODULE_DEVICE_TABLE(i2c, dps310_id);
+> >> +
+> >> +static const unsigned short normal_i2c[] = {
+> >> +	0x77, 0x76, I2C_CLIENT_END
+> >> +};
+> >> +
+> >> +static struct i2c_driver dps310_driver = {
+> >> +	.driver = {
+> >> +		.name = "dps310",
+> >> +	},
+> >> +	.probe = dps310_probe,
+> >> +	.remove = dps310_remove,
+> >> +	.address_list = normal_i2c,  
+> > I'm fairly sure the address list is only used along with the detection
+> > infrastructure.  As such it doesn't actually provide any value unless
+> > you have a detect callback.  Please remove.
+> >
+> > I would like to see a DT and/or ACPI binding though as that is the
+> > means most people will use to find the device.  
 > 
-> Include the header as appropriate.
 > 
-> Signed-off-by: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
-[...]
+> Somehow the device is already present in the witherspoon device tree 
+> where it's currently being used, so I don't have anything to add. 
+> arch/arm/boot/dts/aspeed-bmc-opp-witherspoon.dts
+Yes, there is a fallback path (which in theory will be removed one day)
+in which the vendor is stripped off the dts entry and the rest matched
+against the registered i2c device table.
 
-MBR, Sergei
+However, it's less than ideal as it'll lead to a potential false match
+if some other company uses dps310 as a part number.
+
+Hence it is preferred to always provide and explicit dt binding which is
+checked before this fallback path.
+
+As a side note, this is a classic thing for people to pick up on and send
+follow up patches for.  Makes everyone's life easier to do it early!
+
+Thanks,
+
+Jonathan
+
+> 
+> Thanks,
+> 
+> Eddie
+> 
+> 
+> >  
+> >> +	.id_table = dps310_id,
+> >> +};
+> >> +module_i2c_driver(dps310_driver);
+> >> +
+> >> +MODULE_AUTHOR("Joel Stanley <joel@jms.id.au>");
+> >> +MODULE_DESCRIPTION("Infineon DPS310 pressure and temperature sensor");
+> >> +MODULE_LICENSE("GPL v2");  
+> 
+
