@@ -7,59 +7,61 @@ X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CE83C04AAF
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 May 2019 09:26:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36837C04AAF
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 May 2019 09:26:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 09E0920872
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 May 2019 09:26:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0C2DB20872
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 May 2019 09:26:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="IFM4m5wN"
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="mhBO7Ovi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729926AbfERJ0G (ORCPT
+        id S1729934AbfERJ0t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 May 2019 05:26:06 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:42335 "EHLO
+        Sat, 18 May 2019 05:26:49 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:37605 "EHLO
         terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725268AbfERJ0F (ORCPT
+        with ESMTP id S1725268AbfERJ0t (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 May 2019 05:26:05 -0400
+        Sat, 18 May 2019 05:26:49 -0400
 Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x4I9PsAQ1741268
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x4I9QbU61741326
         (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Sat, 18 May 2019 02:25:54 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x4I9PsAQ1741268
+        Sat, 18 May 2019 02:26:37 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x4I9QbU61741326
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019041745; t=1558171555;
-        bh=p8hGlLyY5wcMoY8I+WtQuDpq4NxU2FyKw+//UsXP2uk=;
+        s=2019041745; t=1558171598;
+        bh=/OB55E/goRKEh9q0ojzDFZWvrrdbXX8e/sHWfWqykTI=;
         h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
-        b=IFM4m5wNRTNLZEB49wLcBOBO125af0unSP8WpCrTCRLNL8geFLBoIcUAQtBAB975D
-         tYdwEhYb4cm94VhsmReUSahQjJ13ZZvGbdwNWPFSPpk3W+zSz+ejwQdHz/tEfqF0jN
-         f+dSjqzc7ZhAubP1h8FK/I0LWbs33iksDaIIyhSV7wr2N04ldIBiTnT/dsOH395/W1
-         08TeFLh0NHaQFYtEk83ZnNf2GP8vddYACHetlT9ByjC6xVcqt/IkqoP1GDGlZccx96
-         KLq1U50nkG81rdlgacPAf81kO5+bRspSJoET3QzMlnkUNChBcLB2dCSjfjS4fVx26o
-         zidQSS6b+CArQ==
+        b=mhBO7OviMJdIu9jiVsxgeA7dIfG4dfoi6xWnatSb5Gvj2CAhN7mCePWRkw0yc1XPv
+         HCYSTtVhZgZ3RQ3opjhvFvXOAHaTxS2noaJLmdqHUZ1TUXuVjJ7F6wKVoVULtGmfDv
+         D1iJRJGIzyC23uBVOzp5GRODM1s7iQ7NnoSke7aIr63em1TYBg7NilyGsndXGODYC0
+         RpYBpMR9IyUyuuRQpDx/opO2JILEyn+Zc8PI7tUpx1Qjag0Xn4xuSR49dHtaf85DBq
+         7knceuJhADSg6Y+4QW2snB54i4qVzy+Zc9OgCjFJe3OPs8XaAQqTbGe2aTvOHKst4Q
+         Z4OHl1aXWYcgQ==
 Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x4I9Pr2T1741265;
-        Sat, 18 May 2019 02:25:53 -0700
-Date:   Sat, 18 May 2019 02:25:53 -0700
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x4I9QbOV1741323;
+        Sat, 18 May 2019 02:26:37 -0700
+Date:   Sat, 18 May 2019 02:26:37 -0700
 X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
 From:   tip-bot for Alexey Budankov <tipbot@zytor.com>
-Message-ID: <tip-371a3378d83a755add84b2dca730a3a641002f3a@git.kernel.org>
-Cc:     jolsa@kernel.org, peterz@infradead.org, acme@redhat.com,
-        hpa@zytor.com, ak@linux.intel.com, mingo@kernel.org,
-        alexander.shishkin@linux.intel.com, linux-kernel@vger.kernel.org,
-        alexey.budankov@linux.intel.com, tglx@linutronix.de,
-        namhyung@kernel.org
-Reply-To: namhyung@kernel.org, linux-kernel@vger.kernel.org,
-          alexander.shishkin@linux.intel.com, mingo@kernel.org,
-          alexey.budankov@linux.intel.com, tglx@linutronix.de,
-          ak@linux.intel.com, peterz@infradead.org, jolsa@kernel.org,
-          hpa@zytor.com, acme@redhat.com
-In-Reply-To: <c27d7500-ecdd-3569-cab5-8f70bbed5ea4@linux.intel.com>
-References: <c27d7500-ecdd-3569-cab5-8f70bbed5ea4@linux.intel.com>
+Message-ID: <tip-bdc35cbc35c0b33428922503c7c85259510911a6@git.kernel.org>
+Cc:     ak@linux.intel.com, tglx@linutronix.de, hpa@zytor.com,
+        peterz@infradead.org, jolsa@kernel.org,
+        linux-kernel@vger.kernel.org, namhyung@kernel.org,
+        alexey.budankov@linux.intel.com,
+        alexander.shishkin@linux.intel.com, mingo@kernel.org,
+        acme@redhat.com
+Reply-To: mingo@kernel.org, acme@redhat.com,
+          alexey.budankov@linux.intel.com,
+          alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+          linux-kernel@vger.kernel.org, namhyung@kernel.org, hpa@zytor.com,
+          tglx@linutronix.de, ak@linux.intel.com, peterz@infradead.org
+In-Reply-To: <dc007ae4-104a-2b7c-316e-275929025f0d@linux.intel.com>
+References: <dc007ae4-104a-2b7c-316e-275929025f0d@linux.intel.com>
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:perf/core] perf inject: Enable COMPRESSED record decompression
-Git-Commit-ID: 371a3378d83a755add84b2dca730a3a641002f3a
+Subject: [tip:perf/core] perf tests: Implement Zstd comp/decomp integration
+ test
+Git-Commit-ID: bdc35cbc35c0b33428922503c7c85259510911a6
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot.git.kernel.org>
 Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
@@ -73,49 +75,87 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  371a3378d83a755add84b2dca730a3a641002f3a
-Gitweb:     https://git.kernel.org/tip/371a3378d83a755add84b2dca730a3a641002f3a
+Commit-ID:  bdc35cbc35c0b33428922503c7c85259510911a6
+Gitweb:     https://git.kernel.org/tip/bdc35cbc35c0b33428922503c7c85259510911a6
 Author:     Alexey Budankov <alexey.budankov@linux.intel.com>
-AuthorDate: Mon, 18 Mar 2019 20:45:44 +0300
+AuthorDate: Mon, 18 Mar 2019 20:46:17 +0300
 Committer:  Arnaldo Carvalho de Melo <acme@redhat.com>
 CommitDate: Wed, 15 May 2019 16:36:49 -0300
 
-perf inject: Enable COMPRESSED record decompression
+perf tests: Implement Zstd comp/decomp integration test
 
-Initialized decompression part of Zstd based API so COMPRESSED records
-would be decompressed into the resulting output data file.
+Introduce a basic integration test for Zstd based record
+compression/decompression using 'perf record' and 'perf report'.
+
+Committer notes:
+
+Reduce a bit the freq (from 25 kHz to 5 kHz) and the number of /dev/null
+records read (from 1000 to 500), reducing the time it takes to something
+more in line with the time existing 'perf test' entries take to run.
+
+With that in place:
+
+  $ time perf test zstd
+  68: Zstd perf.data compression/decompression              : Ok
+
+  real	0m10.376s
+  user	0m0.105s
+  sys	0m0.440s
+  $ grep "model name" /proc/cpuinfo  | head -1
+  model name	: Intel(R) Core(TM) i7-8650U CPU @ 1.90GHz
+  $
 
 Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
 Reviewed-by: Jiri Olsa <jolsa@kernel.org>
+Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
 Cc: Andi Kleen <ak@linux.intel.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
-Link: http://lkml.kernel.org/r/c27d7500-ecdd-3569-cab5-8f70bbed5ea4@linux.intel.com
+Link: http://lkml.kernel.org/r/dc007ae4-104a-2b7c-316e-275929025f0d@linux.intel.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/builtin-inject.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ tools/perf/tests/shell/record+zstd_comp_decomp.sh | 35 +++++++++++++++++++++++
+ 1 file changed, 35 insertions(+)
 
-diff --git a/tools/perf/builtin-inject.c b/tools/perf/builtin-inject.c
-index 24086b7f1b14..8e0e06d3edfc 100644
---- a/tools/perf/builtin-inject.c
-+++ b/tools/perf/builtin-inject.c
-@@ -837,6 +837,9 @@ int cmd_inject(int argc, const char **argv)
- 	if (inject.session == NULL)
- 		return -1;
- 
-+	if (zstd_init(&(inject.session->zstd_data), 0) < 0)
-+		pr_warning("Decompression initialization failed.\n");
+diff --git a/tools/perf/tests/shell/record+zstd_comp_decomp.sh b/tools/perf/tests/shell/record+zstd_comp_decomp.sh
+new file mode 100755
+index 000000000000..93a26a87b1f2
+--- /dev/null
++++ b/tools/perf/tests/shell/record+zstd_comp_decomp.sh
+@@ -0,0 +1,35 @@
++#!/bin/sh
++# Zstd perf.data compression/decompression
 +
- 	if (inject.build_ids) {
- 		/*
- 		 * to make sure the mmap records are ordered correctly
-@@ -867,6 +870,7 @@ int cmd_inject(int argc, const char **argv)
- 	ret = __cmd_inject(&inject);
- 
- out_delete:
-+	zstd_fini(&(inject.session->zstd_data));
- 	perf_session__delete(inject.session);
- 	return ret;
- }
++trace_file=$(mktemp /tmp/perf.data.XXX)
++perf_tool=perf
++output=/dev/null
++
++skip_if_no_z_record() {
++	$perf_tool record -h 2>&1 | grep '\-z, \-\-compression\-level'
++}
++
++collect_z_record() {
++	echo "Collecting compressed record file:"
++	$perf_tool record -o $trace_file -g -z -F 5000 -- \
++		dd count=500 if=/dev/random of=/dev/null > $output 2>&1
++}
++
++check_compressed_stats() {
++	echo "Checking compressed events stats:"
++	$perf_tool report -i $trace_file --header --stats | \
++		grep -E "(# compressed : Zstd,)|(COMPRESSED events:)" > $output 2>&1
++}
++
++check_compressed_output() {
++	$perf_tool inject -i $trace_file -o $trace_file.decomp &&
++	$perf_tool report -i $trace_file --stdio | head -n -3 > $trace_file.comp.output &&
++	$perf_tool report -i $trace_file.decomp --stdio | head -n -3 > $trace_file.decomp.output &&
++	diff $trace_file.comp.output $trace_file.decomp.output > $output 2>&1
++}
++
++skip_if_no_z_record || exit 2
++collect_z_record && check_compressed_stats && check_compressed_output
++err=$?
++rm -f $trace_file*
++exit $err
