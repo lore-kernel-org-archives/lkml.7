@@ -2,122 +2,149 @@ Return-Path: <SRS0=//ty=TS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2027C46460
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 May 2019 01:19:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8722BC04AB4
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 May 2019 01:53:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 92A7121897
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 May 2019 01:19:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 42C6021881
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 May 2019 01:53:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Aa2aThr8"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="l4ipXGRA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728559AbfERBTc (ORCPT
+        id S1728337AbfERBxh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 May 2019 21:19:32 -0400
-Received: from mail-yb1-f194.google.com ([209.85.219.194]:43885 "EHLO
-        mail-yb1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727260AbfERBTc (ORCPT
+        Fri, 17 May 2019 21:53:37 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:40272 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726761AbfERBxg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 May 2019 21:19:32 -0400
-Received: by mail-yb1-f194.google.com with SMTP id t7so3333406ybq.10
-        for <linux-kernel@vger.kernel.org>; Fri, 17 May 2019 18:19:32 -0700 (PDT)
+        Fri, 17 May 2019 21:53:36 -0400
+Received: by mail-ot1-f65.google.com with SMTP id u11so8389691otq.7;
+        Fri, 17 May 2019 18:53:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
+        d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=7Ho8cHrK4qMqiN3LtaRzVtq4HS5hpwx3f8cFy/TZJ4Y=;
-        b=Aa2aThr8oZpP0WVahD8NCNtshzOd5qsE6LqKaPa6VLI3iYk06oUL4BlBH5BA18zwU4
-         Gq3Rt3R6ehByjfoq9VBjVL/B24UpZw5SethE0DegFvSksoigMBv9jPJcnkpsG7vVKnei
-         7eB9NigP6sVXiyh6W3xmHGF2LtlTntNh8IWQG1gltDpbv/Vnqwt/dDkSv32UQ+Zyvmuj
-         7W64PTuAiZN+TtH90+krk10ZQRyYxIinqRqWZJElqdKAXDdwkbAtXLjE7EHAVHb0pNoh
-         RHgbOyZnzTbbTsUszgg8DRq5iAKYSjwFf09KEFH7+p2jQNeUpkR8kOulHqKzRSL9pd69
-         RqIw==
+         :cc:content-transfer-encoding;
+        bh=nQoQJoHpzJQYSi8VTTlyTdi+eKb5pb19O1ImUVZ7ifQ=;
+        b=l4ipXGRAjIUzrlrkNvaTG2k7I+bCkITMEedVuFdJU25ONJvkJw5RSmJ17hfa8hOlTj
+         mNz+//ZqwGZCy+TvYGRK0bDw0eTbWJ5r+kSSmDLPhgun28oX3ZxMC7XPRpjVdYpkMDni
+         omHVPXuYpg8wrhglnXxlow1lzLh96xxBmyWiMeoD+1gwQZWGntUKXA5decjWwKiBG/lx
+         axYgdvPwoEQZka/tB8jXG2WFzWSkSZWogp1PycM1fBN5M8h783W4P4NzgFB5oWuHQYP5
+         lBWYYo1w+qK5lL3mmcj3Y+cilEa1QO9YPKCKkewslqpnFc3OzC0DSNTcs5DiBqIFGYFw
+         0goQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=7Ho8cHrK4qMqiN3LtaRzVtq4HS5hpwx3f8cFy/TZJ4Y=;
-        b=OOlgE7hvod5XHusKe4kf7gebrOZ7JmdkzpTZNw0/b3bV7HkEwpkB6TZ71FpvHfzhex
-         iuJI3fmEhz3UME/19kqvl6gey6fLTiEKih/iFplIoR/sQanoLCreMLvXYJlja5CVBfrW
-         TCDSk3Z/SSjfY51t+P+GIYhD1BWkdz+zuLZgkydi5Z0qWkKj9qc9qGafcZs+2mWRppGO
-         bG7j53V9Wfu4onAsJqs0yN6p2+Z58pevaBmRTHsS92rGQ/jhtVk6jZN3xxXvnNNRaxdR
-         HGuKJVw4ECnIF6yV75DgcykDKVWfGiXdIZKi3ROXHQ7bWXOv92rvcwv03GT5YJBAIvUy
-         ZI+w==
-X-Gm-Message-State: APjAAAWT7Wg2u5wyYRFFSHyYn/kDWMniLLruChdFfXg+p3JG92GgWv5R
-        tx3pm1FV/fITqUBDCqp79NK0qIZTVnAsa5R+bjqIcg==
-X-Google-Smtp-Source: APXvYqzvKyMFNOSqSc71NU74orRIuvu6avgzOT91rXMBDzXJ82LO1zMIoynfnQdIB73p8+SDOiYAK9X4zzYXERAIrcA=
-X-Received: by 2002:a25:8608:: with SMTP id y8mr28856096ybk.100.1558142371276;
- Fri, 17 May 2019 18:19:31 -0700 (PDT)
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=nQoQJoHpzJQYSi8VTTlyTdi+eKb5pb19O1ImUVZ7ifQ=;
+        b=PID6GIxodNvBJofQ+/f8ZwwvS5fpSt4SAl8XZQdXSpWLXmlwAHm5lvS8L8EyTnXSzg
+         Tq+btrFrAeq4oTFq++mTDEPGWowiNBK/tII8nFEEPSf4KKsbR3mu9X8l0Ked3B2O2+eJ
+         z+iJwyE+e/XK49l4thn/J5P/e1dMQNd1vPREBRn482N6poVx48p2WrGIDlyw8UIXJcub
+         Xzyh2zoWhgLwzeJlYUh/BVGiBi+9jp+cn/34OT4Q5RofxYQQi28eUw04XNao4lcV8Zib
+         jf7AMPhy+a+I9Xs4Y2TE6+HaOdaEej9MpEKZN6EWNGBj5Qgjhdj0QmYFiT35UovnqAuq
+         vYxw==
+X-Gm-Message-State: APjAAAV+4r1/FA6Kskfsuaruw15W4oy6GGG5dIELWia+ItSE4gma8LTO
+        nRWtHcyA4FFe9rf1ifHT4YNMneHMrHUxguArwFM=
+X-Google-Smtp-Source: APXvYqzakSouikJDjGU/ZZDMXGyP5yHiZqGJqzz077iJsfIXTiPOTHYX631z9th9Ri2xS+j3CwbDVfry70noOTIRAQs=
+X-Received: by 2002:a9d:4808:: with SMTP id c8mr3385903otf.316.1558144416123;
+ Fri, 17 May 2019 18:53:36 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190518001818.193336-1-shakeelb@google.com> <20190518005927.GB3431@tower.DHCP.thefacebook.com>
-In-Reply-To: <20190518005927.GB3431@tower.DHCP.thefacebook.com>
-From:   Shakeel Butt <shakeelb@google.com>
-Date:   Fri, 17 May 2019 18:19:19 -0700
-Message-ID: <CALvZod4cOWrzGzJncCzaPqBbnmavbkrbTZnwY6r1V5eFVwOJAQ@mail.gmail.com>
-Subject: Re: [PATCH v2] mm, memcg: introduce memory.events.local
-To:     Roman Gushchin <guro@fb.com>
-Cc:     Johannes Weiner <hannes@cmpxchg.org>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>,
-        Michal Hocko <mhocko@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Chris Down <chris@chrisdown.name>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "cgroups@vger.kernel.org" <cgroups@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <CAJrd-UuMRdWHky4gkmiR0QYozfXW0O35Ohv6mJPFx2TLa8hRKg@mail.gmail.com>
+ <20190517163420.GG31704@bombadil.infradead.org>
+In-Reply-To: <20190517163420.GG31704@bombadil.infradead.org>
+From:   Jaewon Kim <jaewon31.kim@gmail.com>
+Date:   Sat, 18 May 2019 10:53:03 +0900
+Message-ID: <CAJrd-UuCMpuSDh6Sx24=aesK38XSB5ys2pHCT4K-O0VSj4ewkA@mail.gmail.com>
+Subject: Re: [RFC PATCH] usb: host: xhci: allow __GFP_FS in dma allocation
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     gregkh@linuxfoundation.org, m.szyprowski@samsung.com,
+        linux-mm@kvack.org, linux-usb@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Jaewon Kim <jaewon31.kim@samsung.com>, ytk.lee@samsung.com
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 17, 2019 at 5:59 PM Roman Gushchin <guro@fb.com> wrote:
->
-> On Fri, May 17, 2019 at 05:18:18PM -0700, Shakeel Butt wrote:
-> > The memory controller in cgroup v2 exposes memory.events file for each
-> > memcg which shows the number of times events like low, high, max, oom
-> > and oom_kill have happened for the whole tree rooted at that memcg.
-> > Users can also poll or register notification to monitor the changes in
-> > that file. Any event at any level of the tree rooted at memcg will
-> > notify all the listeners along the path till root_mem_cgroup. There are
-> > existing users which depend on this behavior.
-> >
-> > However there are users which are only interested in the events
-> > happening at a specific level of the memcg tree and not in the events in
-> > the underlying tree rooted at that memcg. One such use-case is a
-> > centralized resource monitor which can dynamically adjust the limits of
-> > the jobs running on a system. The jobs can create their sub-hierarchy
-> > for their own sub-tasks. The centralized monitor is only interested in
-> > the events at the top level memcgs of the jobs as it can then act and
-> > adjust the limits of the jobs. Using the current memory.events for such
-> > centralized monitor is very inconvenient. The monitor will keep
-> > receiving events which it is not interested and to find if the received
-> > event is interesting, it has to read memory.event files of the next
-> > level and compare it with the top level one. So, let's introduce
-> > memory.events.local to the memcg which shows and notify for the events
-> > at the memcg level.
-> >
-> > Now, does memory.stat and memory.pressure need their local versions.
-> > IMHO no due to the no internal process contraint of the cgroup v2. The
-> > memory.stat file of the top level memcg of a job shows the stats and
-> > vmevents of the whole tree. The local stats or vmevents of the top level
-> > memcg will only change if there is a process running in that memcg but
-> > v2 does not allow that. Similarly for memory.pressure there will not be
-> > any process in the internal nodes and thus no chance of local pressure.
-> >
-> > Signed-off-by: Shakeel Butt <shakeelb@google.com>
-> > ---
-> > Changelog since v1:
-> > - refactor memory_events_show to share between events and events.local
->
-> Reviewed-by: Roman Gushchin <guro@fb.com>
->
-> You also need to add some stuff into cgroup v2 documentation.
->
+Thank you for your comment.
 
-Thanks, will update the doc in the next version.
+In ARM64 architecture, default CMA region is commonly activated and it
+could be used
+if no specific memory region is defined. The USB driver in my platform
+also uses the
+default CMA region as DMA allocation. If using the CMA to do DMA
+allocation is improper,
+then do you think that the USB driver for my platform should be
+changed not to use CMA?
 
-Shakeel
+According to my understanding, in CONFIG_DMA_CMA on both v4.14 and v5.0,
+__GFP_DIRECT_RECLAIM will try CMA allocation first instead of normal
+buddy allocation.
+Then it will get default CMA region through dev_get_cma_area API.
+Please refer to
+dev_get_cma_area code below though I am using v4.14 for my platform.
+
+git show v5.0:include/linux/dma-contiguous.h
+ 61 #ifdef CONFIG_DMA_CMA
+ 62
+ 63 extern struct cma *dma_contiguous_default_area;
+ 64
+ 65 static inline struct cma *dev_get_cma_area(struct device *dev)
+ 66 {
+ 67         if (dev && dev->cma_area)
+ 68                 return dev->cma_area;
+ 69         return dma_contiguous_default_area;
+ 70 }
+
+Thank you
+
+2019=EB=85=84 5=EC=9B=94 18=EC=9D=BC (=ED=86=A0) =EC=98=A4=EC=A0=84 1:34, M=
+atthew Wilcox <willy@infradead.org>=EB=8B=98=EC=9D=B4 =EC=9E=91=EC=84=B1:
+>
+> On Sat, May 18, 2019 at 01:02:28AM +0900, Jaewon Kim wrote:
+> > Hello I don't have enough knowledge on USB core but I've wondered
+> > why GFP_NOIO has been used in xhci_alloc_dev for
+> > xhci_alloc_virt_device. I found commit ("a6d940dd759b xhci: Use
+> > GFP_NOIO during device reset"). But can we just change GFP_NOIO
+> > to __GFP_RECLAIM | __GFP_FS ?
+>
+> No.  __GFP_FS implies __GFP_IO; you can't set __GFP_FS and clear __GFP_IO=
+.
+>
+> It seems like the problem you have is using the CMA to do DMA allocation.
+> Why would you do such a thing?
+>
+> > Please refer to below case.
+> >
+> > I got a report from Lee YongTaek <ytk.lee@samsung.com> that the
+> > xhci_alloc_virt_device was too slow over 2 seconds only for one page
+> > allocation.
+> >
+> > 1) It was because kernel version was v4.14 and DMA allocation was
+> > done from CMA(Contiguous Memory Allocator) where CMA region was
+> > almost filled with file page and  CMA passes GFP down to page
+> > isolation. And the page isolation only allows file page isolation only =
+to
+> > requests having __GFP_FS.
+> >
+> > 2) Historically CMA was changed at v4.19 to use GFP_KERNEL
+> > regardless of GFP passed to  DMA allocation through the
+> > commit 6518202970c1 "(mm/cma: remove unsupported gfp_mask
+> > parameter from cma_alloc()".
+> >
+> > I think pre v4.19 the xhci_alloc_virt_device could be very slow
+> > depending on CMA situation but free to USB deadlock issue. But as of
+> > v4.19, I think, it will be fast but can face the deadlock issue.
+> > Consequently I think to meet the both cases, I think USB can pass
+> > __GFP_FS without __GFP_IO.
+> >
+> > If __GFP_FS is passed from USB core, of course, the CMA patch also
+> > need to be changed to pass GFP.
+>
+>
