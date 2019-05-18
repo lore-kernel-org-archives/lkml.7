@@ -2,37 +2,37 @@ Return-Path: <SRS0=//ty=TS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-6.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	UNPARSEABLE_RELAY,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9847C04AAF
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 May 2019 09:56:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2F0DC04AAF
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 May 2019 09:56:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8CD8B2087B
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 May 2019 09:56:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 902662087B
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 May 2019 09:56:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729990AbfERJ4o (ORCPT
+        id S1730009AbfERJ4w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 May 2019 05:56:44 -0400
-Received: from mailgw02.mediatek.com ([1.203.163.81]:43199 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1729929AbfERJ4g (ORCPT
+        Sat, 18 May 2019 05:56:52 -0400
+Received: from Mailgw01.mediatek.com ([1.203.163.78]:28690 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1729661AbfERJ4c (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 May 2019 05:56:36 -0400
-X-UUID: 2e26d94caa8440f5b2f67a263e06bef3-20190518
-X-UUID: 2e26d94caa8440f5b2f67a263e06bef3-20190518
-Received: from mtkcas32.mediatek.inc [(172.27.4.253)] by mailgw02.mediatek.com
+        Sat, 18 May 2019 05:56:32 -0400
+X-UUID: b5bc3861df2b4e7b979e490bdd0d5d0e-20190518
+X-UUID: b5bc3861df2b4e7b979e490bdd0d5d0e-20190518
+Received: from mtkcas35.mediatek.inc [(172.27.4.253)] by mailgw01.mediatek.com
         (envelope-from <jitao.shi@mediatek.com>)
         (mailgw01.mediatek.com ESMTP with TLS)
-        with ESMTP id 1306581263; Sat, 18 May 2019 17:56:30 +0800
+        with ESMTP id 1214317223; Sat, 18 May 2019 17:56:26 +0800
 Received: from MTKCAS36.mediatek.inc (172.27.4.186) by MTKMBS33DR.mediatek.inc
  (172.27.6.106) with Microsoft SMTP Server (TLS) id 15.0.1395.4; Sat, 18 May
- 2019 17:56:29 +0800
+ 2019 17:56:24 +0800
 Received: from mszsdclx1018.gcn.mediatek.inc (172.27.4.253) by
  MTKCAS36.mediatek.inc (172.27.4.170) with Microsoft SMTP Server id
- 15.0.1395.4 via Frontend Transport; Sat, 18 May 2019 17:56:28 +0800
+ 15.0.1395.4 via Frontend Transport; Sat, 18 May 2019 17:56:23 +0800
 From:   Jitao Shi <jitao.shi@mediatek.com>
 To:     Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>,
         Mark Rutland <mark.rutland@arm.com>,
@@ -59,9 +59,9 @@ CC:     Jitao Shi <jitao.shi@mediatek.com>,
         <yingjoe.chen@mediatek.com>, <eddie.huang@mediatek.com>,
         <cawa.cheng@mediatek.com>, <bibby.hsieh@mediatek.com>,
         <ck.hu@mediatek.com>, <stonea168@163.com>
-Subject: [v4 5/5] drm/mediatek: add mt8183 support dpi pins control
-Date:   Sat, 18 May 2019 17:56:18 +0800
-Message-ID: <20190518095618.18454-6-jitao.shi@mediatek.com>
+Subject: [v4 2/5] drm/mediatek: dpi dual edge support
+Date:   Sat, 18 May 2019 17:56:15 +0800
+Message-ID: <20190518095618.18454-3-jitao.shi@mediatek.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190518095618.18454-1-jitao.shi@mediatek.com>
 References: <20190518095618.18454-1-jitao.shi@mediatek.com>
@@ -74,26 +74,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Some DPI pins(Hsync Vsync DE ... ) keep high voltage and will cause
-leakage current. So set dpi pin as gpio and pull low when dpi off.
+DPI sample the data both rising and falling edge.
+It can reduce half data io pins.
 
 Signed-off-by: Jitao Shi <jitao.shi@mediatek.com>
 ---
- drivers/gpu/drm/mediatek/mtk_dpi.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/gpu/drm/mediatek/mtk_dpi.c | 13 ++++++++++++-
+ 1 file changed, 12 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/gpu/drm/mediatek/mtk_dpi.c b/drivers/gpu/drm/mediatek/mtk_dpi.c
-index 0c4ba0a2be27..565892a3e1ba 100644
+index 22e68a100e7b..ccef3ac1c560 100644
 --- a/drivers/gpu/drm/mediatek/mtk_dpi.c
 +++ b/drivers/gpu/drm/mediatek/mtk_dpi.c
-@@ -719,6 +719,7 @@ static const struct mtk_dpi_conf mt8183_conf = {
- 	.cal_factor = mt8183_calculate_factor,
- 	.reg_h_fre_con = 0xe0,
- 	.dual_edge = true,
-+	.dpi_pin_ctrl = true,
+@@ -117,6 +117,7 @@ struct mtk_dpi_conf {
+ 	unsigned int (*cal_factor)(int clock);
+ 	u32 reg_h_fre_con;
+ 	bool edge_sel_en;
++	bool dual_edge;
  };
  
- static int mtk_dpi_probe(struct platform_device *pdev)
+ static void mtk_dpi_mask(struct mtk_dpi *dpi, u32 offset, u32 val, u32 mask)
+@@ -353,6 +354,13 @@ static void mtk_dpi_config_disable_edge(struct mtk_dpi *dpi)
+ 		mtk_dpi_mask(dpi, dpi->conf->reg_h_fre_con, 0, EDGE_SEL_EN);
+ }
+ 
++static void mtk_dpi_enable_dual_edge(struct mtk_dpi *dpi)
++{
++	mtk_dpi_mask(dpi, DPI_DDR_SETTING, DDR_EN | DDR_4PHASE,
++		     DDR_EN | DDR_4PHASE);
++	mtk_dpi_mask(dpi, DPI_OUTPUT_SETTING, EDGE_SEL, EDGE_SEL);
++}
++
+ static void mtk_dpi_config_color_format(struct mtk_dpi *dpi,
+ 					enum mtk_dpi_out_color_format format)
+ {
+@@ -444,7 +452,8 @@ static int mtk_dpi_set_display_mode(struct mtk_dpi *dpi,
+ 	pll_rate = clk_get_rate(dpi->tvd_clk);
+ 
+ 	vm.pixelclock = pll_rate / factor;
+-	clk_set_rate(dpi->pixel_clk, vm.pixelclock);
++	clk_set_rate(dpi->pixel_clk,
++		     vm.pixelclock * (dpi->conf->dual_edge ? 2 : 1));
+ 	vm.pixelclock = clk_get_rate(dpi->pixel_clk);
+ 
+ 	dev_dbg(dpi->dev, "Got  PLL %lu Hz, pixel clock %lu Hz\n",
+@@ -509,6 +518,8 @@ static int mtk_dpi_set_display_mode(struct mtk_dpi *dpi,
+ 	mtk_dpi_config_color_format(dpi, dpi->color_format);
+ 	mtk_dpi_config_2n_h_fre(dpi);
+ 	mtk_dpi_config_disable_edge(dpi);
++	if (dpi->conf->dual_edge)
++		mtk_dpi_enable_dual_edge(dpi);
+ 	mtk_dpi_sw_reset(dpi, false);
+ 
+ 	return 0;
 -- 
 2.21.0
 
