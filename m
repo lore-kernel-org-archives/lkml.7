@@ -2,138 +2,116 @@ Return-Path: <SRS0=//ty=TS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66ADFC04AAF
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 May 2019 03:48:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB078C04AAF
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 May 2019 04:16:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 182C02082C
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 May 2019 03:48:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C83E204FD
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 May 2019 04:16:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=felipegasper.com header.i=@felipegasper.com header.b="Y1BmTae6"
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="UErM4dK6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728520AbfERDsX (ORCPT
+        id S1726024AbfEREQK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 May 2019 23:48:23 -0400
-Received: from web1.siteocity.com ([67.227.147.204]:44760 "EHLO
-        web1.siteocity.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726761AbfERDsW (ORCPT
+        Sat, 18 May 2019 00:16:10 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:33176 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725294AbfEREQK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 May 2019 23:48:22 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=felipegasper.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-        MIME-Version:Message-Id:Date:Subject:To:From:Sender:Reply-To:Cc:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=jC2pzib8Rq8RDjX2koQw8+8PZ+U/nFGIGBi9LwADKV0=; b=Y1BmTae6ZDK4oj5rbucA28kWmF
-        4ntpgJeqsTbTcdu4KLgb1HeFk/8tN7C8LhYK+9KCjlEQqiO9NqRHzKgZGPFrKD0G0AbunVkmUiXWz
-        FDkX82sTi8Mx6YVQOvLhxIk3O13WB8O6ZREewvD3Xil2JwF1Z4oovA9aXE2530gbMDn3WzAwwNCmO
-        JyUcO/VRnCPQ1E3cQHM8OgQBrtgbSHwGkaa2CcqoJkwnHCg+sH7oCX5zbLSXEUJWnwYsE2w7/4AHN
-        5yfNPmDnyTtipB+rvwTCC4yGIB3ZJNfkAbmb/STKetFO1pNuTSfjCy8ik+vx9uiU3N1FQHIQx6v5k
-        Zco85oYw==;
-Received: from fgasper by web1.siteocity.com with local (Exim 4.92)
-        (envelope-from <fgasper@web1.siteocity.com>)
-        id 1hRqKa-0004Vm-BF; Fri, 17 May 2019 22:48:21 -0500
-From:   Felipe Gasper <felipe@felipegasper.com>
-To:     davem@davemloft.net, viro@zeniv.linux.org.uk,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        linux-api@vger.kernel.org
-Subject: [PATCH v2] net: Add UNIX_DIAG_UID to Netlink UNIX socket diagnostics.
-Date:   Fri, 17 May 2019 22:48:20 -0500
-Message-Id: <20190518034820.16500-1-felipe@felipegasper.com>
-X-Mailer: git-send-email 2.21.0
+        Sat, 18 May 2019 00:16:10 -0400
+Received: by mail-pf1-f196.google.com with SMTP id z28so4642076pfk.0
+        for <linux-kernel@vger.kernel.org>; Fri, 17 May 2019 21:16:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=IHN+2zb98EUzBrL1AKIr2dSLN5sypIhYJWUd5zaRtbE=;
+        b=UErM4dK6pGkYInu7hET63Mf+T3s3qXd1V5TgiYj7o6Nr0zVC60FJirJ/mVOjZeoSru
+         8YDIMgiEK2loOXuOhUCtYPGCWaVmuDj3JtNEbo8EV8XwxYfV+V352ZHB8qjN+/4gTOWe
+         PNeNxol7huPsh2gO4ZbOT44o9qE+s5trLRobmwAZZ/mXsPZvwRd362+VPcqpwoN6zJFh
+         /hHGRs0iL3nCw6+pT4n7qLrUfOubQXJQVbok8ci0O7DjQ9tJFMuWxInF+GjfkiiWF31l
+         KVGgHk8yVt2iwWkNYke7zEQDzlGkYqpriePKSZOOoUzZFPPM70d0tUtkORlCZJxvdtek
+         QhpA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=IHN+2zb98EUzBrL1AKIr2dSLN5sypIhYJWUd5zaRtbE=;
+        b=DzSk9/UWBNtH4fZm7s2sfxe6UzLHXakGf1jT/QUjDQ77Cq+G4U2PYPjVU3uKsGU0+3
+         iJXQNGrjYi1aQU9z06xTpuRzSQ5wD2g26MPNCdgM8h+z5Ds6lfoTXlq926250AKVtuaq
+         +ZyDfKl5CbZagfkvBm4GG7YY0pykG3WnEqNkhVS/omaBrQJAhOxl7IrjGklCNkhCRfFZ
+         6Ifo2ITYf4BXVZZWy3PwKlyAYvKF9VMFZHqvzAcmY7ffjcW4031xAlSKjox3cFvOgbj8
+         qq03GPCQQmiQnXpdgS7vVO33qiMx1mCKaz4+rh9aHB2MLi8bPXFCOLzfLdOufTJXShzm
+         DqtA==
+X-Gm-Message-State: APjAAAW/6yt45ElBcuan35uHpWO5DwGW9TazeQfOAlMd+jDnusLyLA/6
+        1izdR1Xyq8WYnN9Km2FLHzt+XA==
+X-Google-Smtp-Source: APXvYqw0+uz2DLSFXWLN/soxGTf2r7GpZS8rqe9CpsogxdXqQEMdHbEPUDMvULtXrtXl71MIswmu5w==
+X-Received: by 2002:a65:51cb:: with SMTP id i11mr58187479pgq.390.1558152969501;
+        Fri, 17 May 2019 21:16:09 -0700 (PDT)
+Received: from [192.168.1.121] (66.29.164.166.static.utbb.net. [66.29.164.166])
+        by smtp.gmail.com with ESMTPSA id c15sm12574491pfi.172.2019.05.17.21.16.06
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 17 May 2019 21:16:07 -0700 (PDT)
+Subject: Re: [PATCH] block: bio: use struct_size() in kmalloc()
+To:     Chaitanya Kulkarni <Chaitanya.Kulkarni@wdc.com>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        xiaolinkui <xiaolinkui@kylinos.cn>
+References: <1558084350-25632-1-git-send-email-xiaolinkui@kylinos.cn>
+ <e46a73e2-b04d-371b-f199-e789dbdbd9fc@kernel.dk>
+ <d83390a9-33be-3d76-3e23-b97f0a05b72f@kernel.dk>
+ <SN6PR04MB45270B6B0A4EDE903568A29E86040@SN6PR04MB4527.namprd04.prod.outlook.com>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <b4d33107-75d5-fa18-536e-6d21c96e4972@kernel.dk>
+Date:   Fri, 17 May 2019 22:16:05 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-OutGoing-Spam-Status: No, score=0.0
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - web1.siteocity.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [1438 994] / [47 12]
-X-AntiAbuse: Sender Address Domain - web1.siteocity.com
-X-Get-Message-Sender-Via: web1.siteocity.com: authenticated_id: fgasper/from_h
-X-Authenticated-Sender: web1.siteocity.com: felipe@felipegasper.com
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: /home/fgasper
-X-From-Rewrite: unmodified, already matched
+In-Reply-To: <SN6PR04MB45270B6B0A4EDE903568A29E86040@SN6PR04MB4527.namprd04.prod.outlook.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Author: Felipe Gasper <felipe@felipegasper.com>
-Date:   Fri May 17 16:54:40 2019 -0500
+On 5/17/19 6:43 PM, Chaitanya Kulkarni wrote:
+> - linux-block@vger.kernel.org <linux-block@vger.kernel.org> to reduce
+> the noise.
+> 
+> I apologies Jens, I didn't apply and tested these patches before
+> submitting the review and assumed that patches are compiled and
+> tested, I'll do so for each patch before submitting the review.
 
-   net: Add UNIX_DIAG_UID to Netlink UNIX socket diagnostics.
+Just to be clear, I'm not placing any blame on you. It's easy to miss
+that kind of thing in a review. The onus is on the submitter to ensure
+that anything he/she sends in has been both compile and runtime tested.
 
-   This adds the ability for Netlink to report a socket’s UID along with the
-   other UNIX diagnostic information that is already available. This will
-   allow diagnostic tools greater insight into which users control which socket.
+> Xiaolinkui,
+> 
+> Please send compiled and tested patch only on the latest kernel on the
+> appropriate subsystem, otherwise mark the patch appropriately
+> [RFC/Compile only] so reviewer would know without such a tag
+> it is easy to assume that patch is compiled and tested.
+> 
+> You have also sent out the couple of more patches with this fix.
+> 
+> If they are not compiled and tested with right kernel branch for each
+> subsystem, please update the appropriate mail thread either to ignore those
+> patches (if they have compilation problem on appropriate branch) or mark
+> them compile test only (this needs to be avoided for these patches), in
+> either
+> case please send updated patches for this fix if needed.
 
-   Signed-off-by: Felipe Gasper <felipe@felipegasper.com>
+This is solid advice. Sending out untested patches without EXPLICITLY
+saying so is reckless and irresponsible, and causes harm to your
+reputation as well. Trust is an important part of being successful in an
+open source project.
 
-diff --git a/include/uapi/linux/unix_diag.h b/include/uapi/linux/unix_diag.h
-index 5c502fd..a198857 100644
---- a/include/uapi/linux/unix_diag.h
-+++ b/include/uapi/linux/unix_diag.h
-@@ -20,6 +20,7 @@ struct unix_diag_req {
- #define UDIAG_SHOW_ICONS	0x00000008	/* show pending connections */
- #define UDIAG_SHOW_RQLEN	0x00000010	/* show skb receive queue len */
- #define UDIAG_SHOW_MEMINFO	0x00000020	/* show memory info of a socket */
-+#define UDIAG_SHOW_UID		0x00000040	/* show socket's UID */
- 
- struct unix_diag_msg {
- 	__u8	udiag_family;
-@@ -40,6 +41,7 @@ enum {
- 	UNIX_DIAG_RQLEN,
- 	UNIX_DIAG_MEMINFO,
- 	UNIX_DIAG_SHUTDOWN,
-+	UNIX_DIAG_UID,
- 
- 	__UNIX_DIAG_MAX,
- };
-diff --git a/net/unix/diag.c b/net/unix/diag.c
-index 3183d9b..e40f348 100644
---- a/net/unix/diag.c
-+++ b/net/unix/diag.c
-@@ -4,9 +4,11 @@
- #include <linux/unix_diag.h>
- #include <linux/skbuff.h>
- #include <linux/module.h>
-+#include <linux/uidgid.h>
- #include <net/netlink.h>
- #include <net/af_unix.h>
- #include <net/tcp_states.h>
-+#include <net/sock.h>
- 
- static int sk_diag_dump_name(struct sock *sk, struct sk_buff *nlskb)
- {
-@@ -110,6 +112,12 @@ static int sk_diag_show_rqlen(struct sock *sk, struct sk_buff *nlskb)
- 	return nla_put(nlskb, UNIX_DIAG_RQLEN, sizeof(rql), &rql);
- }
- 
-+static int sk_diag_dump_uid(struct sock *sk, struct sk_buff *nlskb)
-+{
-+	uid_t uid = from_kuid_munged(sk_user_ns(sk), sock_i_uid(sk));
-+	return nla_put(nlskb, UNIX_DIAG_UID, sizeof(uid_t), &uid);
-+}
-+
- static int sk_diag_fill(struct sock *sk, struct sk_buff *skb, struct unix_diag_req *req,
- 		u32 portid, u32 seq, u32 flags, int sk_ino)
- {
-@@ -156,6 +164,10 @@ static int sk_diag_fill(struct sock *sk, struct sk_buff *skb, struct unix_diag_r
- 	if (nla_put_u8(skb, UNIX_DIAG_SHUTDOWN, sk->sk_shutdown))
- 		goto out_nlmsg_trim;
- 
-+	if ((req->udiag_show & UDIAG_SHOW_UID) &&
-+	    sk_diag_dump_uid(sk, skb))
-+		goto out_nlmsg_trim;
-+
- 	nlmsg_end(skb, nlh);
- 	return 0;
- 
+-- 
+Jens Axboe
+
