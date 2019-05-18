@@ -7,32 +7,32 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57D9EC04AAF
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 May 2019 09:56:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AB1EC04AAF
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 May 2019 09:56:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 374912087B
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 May 2019 09:56:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6AF502087B
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 May 2019 09:56:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729935AbfERJ4e (ORCPT
+        id S1729977AbfERJ4i (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 May 2019 05:56:34 -0400
-Received: from mailgw02.mediatek.com ([1.203.163.81]:43148 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1729423AbfERJ4b (ORCPT
+        Sat, 18 May 2019 05:56:38 -0400
+Received: from Mailgw01.mediatek.com ([1.203.163.78]:49148 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727001AbfERJ4g (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 May 2019 05:56:31 -0400
-X-UUID: 58b8cdd7a3424984987fa54ae5d052c6-20190518
-X-UUID: 58b8cdd7a3424984987fa54ae5d052c6-20190518
-Received: from mtkcas32.mediatek.inc [(172.27.4.253)] by mailgw02.mediatek.com
+        Sat, 18 May 2019 05:56:36 -0400
+X-UUID: 701dff21825947f598315e9ef2de7a5d-20190518
+X-UUID: 701dff21825947f598315e9ef2de7a5d-20190518
+Received: from mtkcas32.mediatek.inc [(172.27.4.253)] by mailgw01.mediatek.com
         (envelope-from <jitao.shi@mediatek.com>)
         (mailgw01.mediatek.com ESMTP with TLS)
-        with ESMTP id 297211270; Sat, 18 May 2019 17:56:24 +0800
-Received: from MTKCAS36.mediatek.inc (172.27.4.186) by MTKMBS33N1.mediatek.inc
- (172.27.4.75) with Microsoft SMTP Server (TLS) id 15.0.1395.4; Sat, 18 May
- 2019 17:56:23 +0800
+        with ESMTP id 2056482893; Sat, 18 May 2019 17:56:27 +0800
+Received: from MTKCAS36.mediatek.inc (172.27.4.186) by MTKMBS33N2.mediatek.inc
+ (172.27.4.76) with Microsoft SMTP Server (TLS) id 15.0.1395.4; Sat, 18 May
+ 2019 17:56:26 +0800
 Received: from mszsdclx1018.gcn.mediatek.inc (172.27.4.253) by
  MTKCAS36.mediatek.inc (172.27.4.170) with Microsoft SMTP Server id
- 15.0.1395.4 via Frontend Transport; Sat, 18 May 2019 17:56:21 +0800
+ 15.0.1395.4 via Frontend Transport; Sat, 18 May 2019 17:56:24 +0800
 From:   Jitao Shi <jitao.shi@mediatek.com>
 To:     Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>,
         Mark Rutland <mark.rutland@arm.com>,
@@ -58,11 +58,10 @@ CC:     Jitao Shi <jitao.shi@mediatek.com>,
         Sascha Hauer <kernel@pengutronix.de>,
         <yingjoe.chen@mediatek.com>, <eddie.huang@mediatek.com>,
         <cawa.cheng@mediatek.com>, <bibby.hsieh@mediatek.com>,
-        <ck.hu@mediatek.com>, <stonea168@163.com>,
-        Rob Herring <robh@kernel.org>
-Subject: [v4 1/5] dt-bindings: display: mediatek: update dpi  supported chips
-Date:   Sat, 18 May 2019 17:56:14 +0800
-Message-ID: <20190518095618.18454-2-jitao.shi@mediatek.com>
+        <ck.hu@mediatek.com>, <stonea168@163.com>
+Subject: [v4 3/5] drm/mediatek: add mt8183 dpi dual edge support
+Date:   Sat, 18 May 2019 17:56:16 +0800
+Message-ID: <20190518095618.18454-4-jitao.shi@mediatek.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190518095618.18454-1-jitao.shi@mediatek.com>
 References: <20190518095618.18454-1-jitao.shi@mediatek.com>
@@ -75,27 +74,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add decriptions about supported chips, including MT2701 & MT8173 &
-mt8183
+Add mt8183 dual edge support.
+DPI sample the data both rising and falling edge.
+It can reduce half data io pins.
 
 Signed-off-by: Jitao Shi <jitao.shi@mediatek.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
 ---
- .../devicetree/bindings/display/mediatek/mediatek,dpi.txt        | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/gpu/drm/mediatek/mtk_dpi.c | 19 +++++++++++++++++++
+ 1 file changed, 19 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/display/mediatek/mediatek,dpi.txt b/Documentation/devicetree/bindings/display/mediatek/mediatek,dpi.txt
-index b6a7e7397b8b..58914cf681b8 100644
---- a/Documentation/devicetree/bindings/display/mediatek/mediatek,dpi.txt
-+++ b/Documentation/devicetree/bindings/display/mediatek/mediatek,dpi.txt
-@@ -7,6 +7,7 @@ output bus.
+diff --git a/drivers/gpu/drm/mediatek/mtk_dpi.c b/drivers/gpu/drm/mediatek/mtk_dpi.c
+index ccef3ac1c560..77e6e0f99188 100644
+--- a/drivers/gpu/drm/mediatek/mtk_dpi.c
++++ b/drivers/gpu/drm/mediatek/mtk_dpi.c
+@@ -682,6 +682,16 @@ static unsigned int mt2701_calculate_factor(int clock)
+ 		return 2;
+ }
  
- Required properties:
- - compatible: "mediatek,<chip>-dpi"
-+  the supported chips are mt2701 , mt8173 and mt8183.
- - reg: Physical base address and length of the controller's registers
- - interrupts: The interrupt signal from the function block.
- - clocks: device clocks
++static unsigned int mt8183_calculate_factor(int clock)
++{
++	if (clock <= 27000)
++		return 8;
++	else if (clock <= 167000)
++		return 4;
++	else
++		return 2;
++}
++
+ static const struct mtk_dpi_conf mt8173_conf = {
+ 	.cal_factor = mt8173_calculate_factor,
+ 	.reg_h_fre_con = 0xe0,
+@@ -693,6 +703,12 @@ static const struct mtk_dpi_conf mt2701_conf = {
+ 	.edge_sel_en = true,
+ };
+ 
++static const struct mtk_dpi_conf mt8183_conf = {
++	.cal_factor = mt8183_calculate_factor,
++	.reg_h_fre_con = 0xe0,
++	.dual_edge = true,
++};
++
+ static int mtk_dpi_probe(struct platform_device *pdev)
+ {
+ 	struct device *dev = &pdev->dev;
+@@ -788,6 +804,9 @@ static const struct of_device_id mtk_dpi_of_ids[] = {
+ 	{ .compatible = "mediatek,mt8173-dpi",
+ 	  .data = &mt8173_conf,
+ 	},
++	{ .compatible = "mediatek,mt8183-dpi",
++	  .data = &mt8183_conf,
++	},
+ 	{ },
+ };
+ 
 -- 
 2.21.0
 
