@@ -2,107 +2,97 @@ Return-Path: <SRS0=//ty=TS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D582C04AAF
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 May 2019 15:24:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19558C072A4
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 May 2019 15:25:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 12AA820872
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 May 2019 15:24:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BtXqZsPg"
+	by mail.kernel.org (Postfix) with ESMTP id ED02E20872
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 May 2019 15:25:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729881AbfERPYK (ORCPT
+        id S1729931AbfERPZc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 May 2019 11:24:10 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:45164 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729849AbfERPYH (ORCPT
+        Sat, 18 May 2019 11:25:32 -0400
+Received: from out01.mta.xmission.com ([166.70.13.231]:58690 "EHLO
+        out01.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728037AbfERPZb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 May 2019 11:24:07 -0400
-Received: by mail-wr1-f68.google.com with SMTP id b18so9961813wrq.12;
-        Sat, 18 May 2019 08:24:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=hGVC97kr/8/BngU9FjmbWaxR7LHVSKdzb8qIb3rfhLw=;
-        b=BtXqZsPgI4WM70yIJTRcoOW/v1fHPTQ93blqEPfY62Z0eCoo1omvj12jxcouniHVav
-         RWUwM8ayTu/1lelHgxgyVv/r3oNEOc80PvKVxuCHjdnBpDeDYklt51R5ttVrCYjW9wfy
-         VBta0i3i+wa4GqaxtZGskmdJHQPoTLX4k4oAaghWp8yCaddmmJm5Ea5MqcX0iZIbYqxe
-         cJ1lGMTQltgYA4KHE+Djl8LQl/X8Tz+IJs5WfJ6LrgPQRTJ7ztQHBaaEhYmOr5JH3q1P
-         VWEjaCVhqAW5Fi1bRATi2/ScbR5HrO86rLKXlvxN68pNKXvBM/rnR/7GnmOFYghOr8Hd
-         vUaw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=hGVC97kr/8/BngU9FjmbWaxR7LHVSKdzb8qIb3rfhLw=;
-        b=Asz0xwt3naytOmQnfvWOW/imngOiEAHTykI9m5e2sSZY656bhS+KlZSJ15WvyQ2f5e
-         X7aK7uFsjRn8b0tO11KbT8ViQZa+QFBrJU1E60K4uYxNFxTWKREp3sJ4cLj0N+x4ders
-         BoHecfdjwUtIwXx4jIqN+ouVUc4/pjLjV4FyFQKxjReLHfBRwRbE89bxLafGt0TprqSJ
-         dMe3McHwRV6hAQv5a5AXbCHnOazqHaROd2BDMz1jnI6uIB1TRdOadFsTxgNgZWZduELg
-         32oyBGZqujHW2gNs8g5SjcyWv1KiiYCXsx2vOlEmfyS4SkW3sTWJm3t57YxjGfhk75+f
-         Sm6g==
-X-Gm-Message-State: APjAAAVMoQ8oRJ1nSZhWqerDeWBIKpj+5DMHeo3idWxD9ppw2i8JslhV
-        oUtyWzMoxPIw+0BXwuieSFE=
-X-Google-Smtp-Source: APXvYqxWCD6w353QbYqhVWkd+Dn2oVl6fxAxPkAkutmksHJUDijWPOUywy0u0pjrcZn1TcL3nbhdyg==
-X-Received: by 2002:adf:cf0e:: with SMTP id o14mr3328031wrj.230.1558193046204;
-        Sat, 18 May 2019 08:24:06 -0700 (PDT)
-Received: from localhost.localdomain ([2a01:e0a:1f1:d0f0::4e2b:d7ca])
-        by smtp.gmail.com with ESMTPSA id j190sm12934836wmb.19.2019.05.18.08.24.05
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sat, 18 May 2019 08:24:05 -0700 (PDT)
-From:   =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
-To:     Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Chen-Yu Tsai <wens@csie.org>
-Cc:     linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
-Subject: [PATCH v3 4/4] arm64: defconfig: enable sunxi watchdog
-Date:   Sat, 18 May 2019 17:23:55 +0200
-Message-Id: <20190518152355.11134-5-peron.clem@gmail.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190518152355.11134-1-peron.clem@gmail.com>
-References: <20190518152355.11134-1-peron.clem@gmail.com>
+        Sat, 18 May 2019 11:25:31 -0400
+Received: from in02.mta.xmission.com ([166.70.13.52])
+        by out01.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.87)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1hS1DG-0002hL-Hj; Sat, 18 May 2019 09:25:30 -0600
+Received: from ip72-206-97-68.om.om.cox.net ([72.206.97.68] helo=x220.xmission.com)
+        by in02.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.87)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1hS1DF-0003iq-O1; Sat, 18 May 2019 09:25:30 -0600
+From:   ebiederm@xmission.com (Eric W. Biederman)
+To:     Alan Stern <stern@rowland.harvard.edu>
+Cc:     linux-usb@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Oliver Neukum <oneukum@suse.com>,
+        <linux-kernel@vger.kernel.org>
+References: <Pine.LNX.4.44L0.1905181116330.7855-100000@netrider.rowland.org>
+Date:   Sat, 18 May 2019 10:25:05 -0500
+In-Reply-To: <Pine.LNX.4.44L0.1905181116330.7855-100000@netrider.rowland.org>
+        (Alan Stern's message of "Sat, 18 May 2019 11:20:47 -0400 (EDT)")
+Message-ID: <878sv3ss32.fsf@xmission.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/25.1 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-XM-SPF: eid=1hS1DF-0003iq-O1;;;mid=<878sv3ss32.fsf@xmission.com>;;;hst=in02.mta.xmission.com;;;ip=72.206.97.68;;;frm=ebiederm@xmission.com;;;spf=neutral
+X-XM-AID: U2FsdGVkX1/Vd8OIugNR8FtTsnNrJrJM9aHdGWcp/AY=
+X-SA-Exim-Connect-IP: 72.206.97.68
+X-SA-Exim-Mail-From: ebiederm@xmission.com
+Subject: Re: [CFT][PATCH] signal/usb: Replace kill_pid_info_as_cred with kill_pid_usb_asyncio
+X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
+X-SA-Exim-Scanned: Yes (on in02.mta.xmission.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The SUNXI_WATCHDOG option is required to make the
-watchdog available on Allwinner H6.
+Alan Stern <stern@rowland.harvard.edu> writes:
 
-Enable this option as a module.
+> On Fri, 17 May 2019, Eric W. Biederman wrote:
+>
+>> Wow I got a little distracted but now I am back to this.
+>> 
+>> Using your test program I was able to test the basics of this.
+>> 
+>> I found one bug in my patch where I was missing a memset.  So I have
+>> corrected that, and reorganized the patch a little bit.
+>> 
+>> I have not figured out how to trigger a usb disconnect so I have not
+>> tested that.
+>
+> Heh.  Assuming the device file you tell the test program to use 
+> corresponds to an actual USB device, you can trigger a disconnect by 
+> literally unplugging the USB cable.  (Add a 10-second delay to the 
+> program to give yourself enough time.)
 
-Signed-off-by: Clément Péron <peron.clem@gmail.com>
----
- arch/arm64/configs/defconfig | 1 +
- 1 file changed, 1 insertion(+)
+I have just been running this in qemu.  But yes.  I suppose the easy
+way would be to print a message asking the usb device to be unplugged
+and then just wait for the signal.  I might try that.
 
-diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
-index 4d583514258c..fc51dd4decb1 100644
---- a/arch/arm64/configs/defconfig
-+++ b/arch/arm64/configs/defconfig
-@@ -420,6 +420,7 @@ CONFIG_UNIPHIER_THERMAL=y
- CONFIG_WATCHDOG=y
- CONFIG_ARM_SP805_WATCHDOG=y
- CONFIG_S3C2410_WATCHDOG=y
-+CONFIG_SUNXI_WATCHDOG=m
- CONFIG_IMX2_WDT=y
- CONFIG_MESON_GXBB_WATCHDOG=m
- CONFIG_MESON_WATCHDOG=m
--- 
-2.17.1
+>> The big thing I have not been able to test is running a 64bit big-endian
+>> kernel with a 32bit user space.  My modified version of your test
+>> program should report "Bad" without my patch, and should report "Good"
+>> with it.
+>> 
+>> Is there any chance you can test that configuration?  I could not figure
+>> out how to get a 64bit big-endian system running in qemu, and I don't
+>> have the necessary hardware so I was not able to test that at all.  As
+>> that is the actual bug I am still hoping someone can test it.
+>
+> Unfortunately, I don't have any big-endian systems either.
 
+That probably explains why the breakage in big-endian was never noticed.
+I am starting to wonder if anyone is actually doing big-endian for new
+systems anymore.
+
+Eric
