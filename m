@@ -2,109 +2,93 @@ Return-Path: <SRS0=//ty=TS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA615C072A4
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 May 2019 21:01:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 036FCC072A4
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 May 2019 21:01:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ADE7D20882
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 May 2019 21:01:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C459F20882
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 May 2019 21:01:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FNpAL29q"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kRi08ubs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729599AbfERVBD (ORCPT
+        id S1729645AbfERVBJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 May 2019 17:01:03 -0400
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:39026 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728387AbfERVBC (ORCPT
+        Sat, 18 May 2019 17:01:09 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:42943 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728387AbfERVBI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 May 2019 17:01:02 -0400
-Received: by mail-qk1-f196.google.com with SMTP id z128so6601453qkb.6;
-        Sat, 18 May 2019 14:01:02 -0700 (PDT)
+        Sat, 18 May 2019 17:01:08 -0400
+Received: by mail-lj1-f195.google.com with SMTP id 188so9134147ljf.9;
+        Sat, 18 May 2019 14:01:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=vsAT5qbsaotm0oBGUetquV7WtLzGgBbpbWMnm1fUtaw=;
-        b=FNpAL29qZqJo1UbDaDy/m2Lx+72Jdb/OcpovJocPvNdp8WBksBQuzTgTykux8OFEry
-         u7I0119akjhgDUCZaMemtZzzAY+Nce0SIu4gcu8otcvtmQP5OUc3K9AJzRIRCCQ/5QT2
-         Usk+/Q1Y3Jqf8QpXqcMawAnSv3sFqsaFNepu7mzfwoqWmbkfFerAsRz67rnleRgN68pP
-         /OMaOgbmt4Un+ZoapzcSr1CxD9vQqKdgiMG3mcXs0svJKhG+AqIhtnQsSfhWmQOMg9rd
-         vFBaje0SFFonG9/h748wKquhNT6wFCc/Z9B8BGZtvU0LDKTCubGCI/mQ3kjvtwOtLkwS
-         uL1w==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=GjVQ36VwzFJ7223GVX+W1QUwbbB9XFPvg3hASkJmDUE=;
+        b=kRi08ubsnM+ykN86OGVCMysxcVyFgiHLV0b9Fr5ew9x6FdqJsy8RjcIcHaTPXgYKmm
+         d9J29YZ8wKZ/wqisIZCggD2OTJlDFI4EqxAo5uyb91meiXhXpkATPV+mqDRW3cmyPHkX
+         3XbgcF7MFCIgtbuwm+ReN7wbA62uj7EOJoMwVYslAIsKcLC7kxKGjMpkrLm8pFn0WumH
+         oUnqD/c5nHDKWSPTpB74hAfowS5FbTi6RLxKw1bqw7mIUlNbTJJQQf/H3gdEnOrDa1uE
+         qZc0C0sQ7lBMw6/Ew01qw9Jk2fXF8lBI1M64m//I24dV9uzG2Ydm6ayj7oXjhOe62ZLV
+         9NDg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=vsAT5qbsaotm0oBGUetquV7WtLzGgBbpbWMnm1fUtaw=;
-        b=HHyK1Bgxfplge6t7PwZfx87cyUcoKY5lMABCc8YyxarwLwoLV+FKFTpdE1d0OUfulT
-         UEUREUBQ8SHxn1nuwrlY8ls7kkea1/YoS/uWSw3eZ8eapaKBZgwx3nY4JmyV17m8YCGh
-         o99asHA96zw8nfEmrunYFjqao1AXxyvF5U6bpLs+DoLSRlgcKn6plZRyzfrebejakyn8
-         Ga1vr0VhKaGmHXXwcTHwVpzf+KKo22zyy/xH+ibm2V/oA1HMgnrJVTXEJY3A6k7bndlX
-         CsnC1AOxZlwIDkYUwTJVjzpCut5AoLWmoU86Kyvmu2Hl/1JCSFVt5i/LK76ZJgWN4sjL
-         dWLg==
-X-Gm-Message-State: APjAAAWFLGhuh3osCnvJC8VviqFjhhnma4CctjefBxopb8rLJtCMmkrv
-        +lLUA1BHrtYnjTZJ10HSisA=
-X-Google-Smtp-Source: APXvYqzxWN1QgdaQ3liwyrherSRNq5sJ61pYI5Zg395d80UXIdRoppdxLpHirXw2L9D4LwA2p75eRA==
-X-Received: by 2002:a37:6043:: with SMTP id u64mr39779236qkb.9.1558213261871;
-        Sat, 18 May 2019 14:01:01 -0700 (PDT)
-Received: from wall-e.ime.usp.br ([143.107.45.1])
-        by smtp.gmail.com with ESMTPSA id q5sm7730906qtj.3.2019.05.18.14.00.58
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Sat, 18 May 2019 14:01:01 -0700 (PDT)
-From:   Lucas Oshiro <lucasseikioshiro@gmail.com>
-To:     Lars-Peter Clausen <lars@metafoo.de>,
-        Michael Hennerich <Michael.Hennerich@analog.com>,
-        Stefan Popa <stefan.popa@analog.com>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-iio@vger.kernel.org, devel@driverdev.osuosl.org,
-        linux-kernel@vger.kernel.org, kernel-usp@googlegroups.com,
-        Rodrigo Ribeiro <rodrigorsdc@gmail.com>
-Subject: [PATCH] staging: iio: adis16240: add device to module device table
-Date:   Sat, 18 May 2019 18:00:08 -0300
-Message-Id: <20190518210008.20147-1-lucasseikioshiro@gmail.com>
-X-Mailer: git-send-email 2.21.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=GjVQ36VwzFJ7223GVX+W1QUwbbB9XFPvg3hASkJmDUE=;
+        b=DP0bXifh4c7m/hS+0eXu6r80hH0iq1iNfl/uA2kYpLSghynVC5tHuRr+kB4LYd4P21
+         np8rM54eSD/ic0wU26P4VyL+nhDJ0kSyMHoh7fW01UP1cevmnh2uiv0i+fcH+A1yIkKc
+         GD/E19vjMfwbuYOiM7UlOuE0/V6bXcCN9Bo/q3kRw3pCHAYdZuKh4F8J9KdaIu85NWNv
+         oKYVxc7minzIIKNUzu89ZqVWq9DmKsGIb7UTgCZ8XVXp2kqYUqBwu33D+bb0S8MGwTnI
+         5GKTIJyXHVGn3LvIH2u2+4XwHko2RvUAhboUJECD80RoWfiG03/7lfoOv8cQwVhSGP9G
+         6z+A==
+X-Gm-Message-State: APjAAAUN4P/ejIRFv7GfYpbYqc9uaF2NVV2/tYcNSUoUgyiOaatGJ22J
+        hxMw7HoDJO+1ESl4ABetAUWkgGvvO6u7Q0zAMdE=
+X-Google-Smtp-Source: APXvYqz5V1Li5FC7AKD0AQty1G5o21b08C9dVNe188+/PFCqLvAreMM45t6P1vCeSAEyPNJZMmZrxAYvskKc+t8Jt58=
+X-Received: by 2002:a2e:1f02:: with SMTP id f2mr31672771ljf.86.1558213266061;
+ Sat, 18 May 2019 14:01:06 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20190518173852.GA1191@hari-Inspiron-1545>
+In-Reply-To: <20190518173852.GA1191@hari-Inspiron-1545>
+From:   Fabio Estevam <festevam@gmail.com>
+Date:   Sat, 18 May 2019 18:00:56 -0300
+Message-ID: <CAOMZO5AjtnPhPsQqTqb+FgyEU7kVp+i+6M1AOmwm9XwzTE9rPg@mail.gmail.com>
+Subject: Re: [PATCH] staging: media: imx: fix Unneeded variable: "ret". Return "0"
+To:     Hariprasad Kelam <hariprasad.kelam@gmail.com>
+Cc:     Steve Longerbeam <slongerbeam@gmail.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        linux-media <linux-media@vger.kernel.org>,
+        "open list:STAGING SUBSYSTEM" <devel@driverdev.osuosl.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add a of_device_id struct and MODULE_DEVICE_TABLE call.
+On Sat, May 18, 2019 at 2:38 PM Hariprasad Kelam
+<hariprasad.kelam@gmail.com> wrote:
+>
+> fix below warning reported by  coccichec
+>
+> drivers/staging/media/imx/imx-media-capture.c:617:5-8: Unneeded
+> variable: "ret". Return "0" on line 630
+>
+> Signed-off-by: Hariprasad Kelam <hariprasad.kelam@gmail.com>
 
-Signed-off-by: Lucas Oshiro <lucasseikioshiro@gmail.com>
-Signed-off-by: Rodrigo Ribeiro <rodrigorsdc@gmail.com>
-Co-developed-by: Rodrigo Ribeiro <rodrigorsdc@gmail.com>
----
- drivers/staging/iio/accel/adis16240.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+Reviewed-by: Fabio Estevam <festevam@gmail.com>
 
-diff --git a/drivers/staging/iio/accel/adis16240.c b/drivers/staging/iio/accel/adis16240.c
-index b80e0d248b0f..8c6d23604eca 100644
---- a/drivers/staging/iio/accel/adis16240.c
-+++ b/drivers/staging/iio/accel/adis16240.c
-@@ -435,6 +435,12 @@ static int adis16240_remove(struct spi_device *spi)
- 	return 0;
- }
- 
-+static const struct of_device_id adis16240_of_match[] = {
-+	{ .compatible = "adi,adis16240" },
-+	{ },
-+};
-+MODULE_DEVICE_TABLE(of, adis16240_of_match);
-+
- static struct spi_driver adis16240_driver = {
- 	.driver = {
- 		.name = "adis16240",
--- 
-2.21.0
-
+Thanks
