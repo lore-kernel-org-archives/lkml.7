@@ -2,116 +2,176 @@ Return-Path: <SRS0=//ty=TS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB078C04AAF
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 May 2019 04:16:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16399C04AAF
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 May 2019 04:25:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9C83E204FD
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 May 2019 04:16:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C481920833
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 May 2019 04:25:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="UErM4dK6"
+	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="qF14xO1W";
+	dkim=pass (1024-bit key) header.d=marvell.onmicrosoft.com header.i=@marvell.onmicrosoft.com header.b="SiMcBe4u"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726024AbfEREQK (ORCPT
+        id S1726222AbfEREY7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 May 2019 00:16:10 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:33176 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725294AbfEREQK (ORCPT
+        Sat, 18 May 2019 00:24:59 -0400
+Received: from mx0b-0016f401.pphosted.com ([67.231.156.173]:49446 "EHLO
+        mx0b-0016f401.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725294AbfEREY7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 May 2019 00:16:10 -0400
-Received: by mail-pf1-f196.google.com with SMTP id z28so4642076pfk.0
-        for <linux-kernel@vger.kernel.org>; Fri, 17 May 2019 21:16:10 -0700 (PDT)
+        Sat, 18 May 2019 00:24:59 -0400
+Received: from pps.filterd (m0045851.ppops.net [127.0.0.1])
+        by mx0b-0016f401.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4I4K4oc021126;
+        Fri, 17 May 2019 21:24:47 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=from : to : cc :
+ subject : date : message-id : references : in-reply-to : content-type :
+ content-id : content-transfer-encoding : mime-version; s=pfpt0818;
+ bh=y1QCWpZuTmXMBKO6gpiTRMOFitJY070kzSvDaMh9c5M=;
+ b=qF14xO1Wu1z8BH7E8x5/xPikyU8k3M3Q2TjW8Fmf1iAWXKsmfT2n47DnMH1Qj6KdxaIv
+ 1FOJwGN36NV+y04VOhql48bOUo0B1fWX5vsK6EREkv5hX6k2YB/9KH7SBQ9DZn2pBcMc
+ sq9zyhLLvB8NpwcR5MJFF/5VoAcmZmw6VTeW8fcAbgIFxK3nqhocql5TAB/6CNLZgy49
+ K3mmjpjJGoJu3jZDrWxvbv6+ZAfNC5pooFuHQZ6jDbaDL7pfWcKILi6srxJ/rhYK0Z0i
+ l7dyc5vc26gSgkbG0Gng4XAMROwaex3rK4Bj4xT6XeEr5TrJaYTOgm6bpywwM+4kMRO1 mw== 
+Received: from sc-exch01.marvell.com ([199.233.58.181])
+        by mx0b-0016f401.pphosted.com with ESMTP id 2shv92kr5t-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
+        Fri, 17 May 2019 21:24:47 -0700
+Received: from SC-EXCH03.marvell.com (10.93.176.83) by SC-EXCH01.marvell.com
+ (10.93.176.81) with Microsoft SMTP Server (TLS) id 15.0.1367.3; Fri, 17 May
+ 2019 21:24:45 -0700
+Received: from NAM03-BY2-obe.outbound.protection.outlook.com (104.47.42.50) by
+ SC-EXCH03.marvell.com (10.93.176.83) with Microsoft SMTP Server (TLS) id
+ 15.0.1367.3 via Frontend Transport; Fri, 17 May 2019 21:24:45 -0700
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=IHN+2zb98EUzBrL1AKIr2dSLN5sypIhYJWUd5zaRtbE=;
-        b=UErM4dK6pGkYInu7hET63Mf+T3s3qXd1V5TgiYj7o6Nr0zVC60FJirJ/mVOjZeoSru
-         8YDIMgiEK2loOXuOhUCtYPGCWaVmuDj3JtNEbo8EV8XwxYfV+V352ZHB8qjN+/4gTOWe
-         PNeNxol7huPsh2gO4ZbOT44o9qE+s5trLRobmwAZZ/mXsPZvwRd362+VPcqpwoN6zJFh
-         /hHGRs0iL3nCw6+pT4n7qLrUfOubQXJQVbok8ci0O7DjQ9tJFMuWxInF+GjfkiiWF31l
-         KVGgHk8yVt2iwWkNYke7zEQDzlGkYqpriePKSZOOoUzZFPPM70d0tUtkORlCZJxvdtek
-         QhpA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=IHN+2zb98EUzBrL1AKIr2dSLN5sypIhYJWUd5zaRtbE=;
-        b=DzSk9/UWBNtH4fZm7s2sfxe6UzLHXakGf1jT/QUjDQ77Cq+G4U2PYPjVU3uKsGU0+3
-         iJXQNGrjYi1aQU9z06xTpuRzSQ5wD2g26MPNCdgM8h+z5Ds6lfoTXlq926250AKVtuaq
-         +ZyDfKl5CbZagfkvBm4GG7YY0pykG3WnEqNkhVS/omaBrQJAhOxl7IrjGklCNkhCRfFZ
-         6Ifo2ITYf4BXVZZWy3PwKlyAYvKF9VMFZHqvzAcmY7ffjcW4031xAlSKjox3cFvOgbj8
-         qq03GPCQQmiQnXpdgS7vVO33qiMx1mCKaz4+rh9aHB2MLi8bPXFCOLzfLdOufTJXShzm
-         DqtA==
-X-Gm-Message-State: APjAAAW/6yt45ElBcuan35uHpWO5DwGW9TazeQfOAlMd+jDnusLyLA/6
-        1izdR1Xyq8WYnN9Km2FLHzt+XA==
-X-Google-Smtp-Source: APXvYqw0+uz2DLSFXWLN/soxGTf2r7GpZS8rqe9CpsogxdXqQEMdHbEPUDMvULtXrtXl71MIswmu5w==
-X-Received: by 2002:a65:51cb:: with SMTP id i11mr58187479pgq.390.1558152969501;
-        Fri, 17 May 2019 21:16:09 -0700 (PDT)
-Received: from [192.168.1.121] (66.29.164.166.static.utbb.net. [66.29.164.166])
-        by smtp.gmail.com with ESMTPSA id c15sm12574491pfi.172.2019.05.17.21.16.06
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 17 May 2019 21:16:07 -0700 (PDT)
-Subject: Re: [PATCH] block: bio: use struct_size() in kmalloc()
-To:     Chaitanya Kulkarni <Chaitanya.Kulkarni@wdc.com>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        xiaolinkui <xiaolinkui@kylinos.cn>
-References: <1558084350-25632-1-git-send-email-xiaolinkui@kylinos.cn>
- <e46a73e2-b04d-371b-f199-e789dbdbd9fc@kernel.dk>
- <d83390a9-33be-3d76-3e23-b97f0a05b72f@kernel.dk>
- <SN6PR04MB45270B6B0A4EDE903568A29E86040@SN6PR04MB4527.namprd04.prod.outlook.com>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <b4d33107-75d5-fa18-536e-6d21c96e4972@kernel.dk>
-Date:   Fri, 17 May 2019 22:16:05 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
-MIME-Version: 1.0
-In-Reply-To: <SN6PR04MB45270B6B0A4EDE903568A29E86040@SN6PR04MB4527.namprd04.prod.outlook.com>
-Content-Type: text/plain; charset=utf-8
+ d=marvell.onmicrosoft.com; s=selector2-marvell-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=y1QCWpZuTmXMBKO6gpiTRMOFitJY070kzSvDaMh9c5M=;
+ b=SiMcBe4uzhsiLSDvWDcNBN8g7e3rWJsVByJB+tYqssIjAIIoh52S3bkSZyZLZ1L1Rcndt6ZppAzPLavOkrVcr5n7Keoc7UWZqsx2pCGPNOu7QvVSrYJKmFj/O+BIJRjJTgHbFwY8YQKJbiX7PmCcaG5TcBxIEB+KhiXwi7IDeTk=
+Received: from CY4PR1801MB1942.namprd18.prod.outlook.com (10.171.255.33) by
+ CY4PR1801MB1989.namprd18.prod.outlook.com (10.171.255.142) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1900.17; Sat, 18 May 2019 04:24:43 +0000
+Received: from CY4PR1801MB1942.namprd18.prod.outlook.com
+ ([fe80::f4b5:9677:2811:41f4]) by CY4PR1801MB1942.namprd18.prod.outlook.com
+ ([fe80::f4b5:9677:2811:41f4%7]) with mapi id 15.20.1900.010; Sat, 18 May 2019
+ 04:24:43 +0000
+From:   Jayachandran Chandrasekharan Nair <jnair@marvell.com>
+To:     Will Deacon <will.deacon@arm.com>
+CC:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Jan Glauber <jglauber@marvell.com>,
+        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [RFC] Disable lockref on arm64
+Thread-Topic: [RFC] Disable lockref on arm64
+Thread-Index: AQHVDTGeOFsW4ymLfEiMCmPnsI63vA==
+Date:   Sat, 18 May 2019 04:24:43 +0000
+Message-ID: <20190518042424.GA28517@dc5-eodlnx05.marvell.com>
+References: <20190429145159.GA29076@hc>
+ <CAHk-=wjPqcPYkiWKFc=R3+18DXqEhV+Nfbo=JWa32Xp8Nze67g@mail.gmail.com>
+ <20190502082741.GE13955@hc>
+ <CAHk-=wjmtMrxC1nSEHarBn8bW+hNXGv=2YeAWmTw1o54V8GKWA@mail.gmail.com>
+ <20190502231858.GB13168@dc5-eodlnx05.marvell.com>
+ <CAHk-=wiEahkwDXpoy=-SzJHNMRXKVSjPa870+eKKenufhO_Hgw@mail.gmail.com>
+ <20190506061100.GA8465@dc5-eodlnx05.marvell.com>
+ <20190506181039.GA2875@brain-police>
+In-Reply-To: <20190506181039.GA2875@brain-police>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: BYAPR05CA0027.namprd05.prod.outlook.com
+ (2603:10b6:a03:c0::40) To CY4PR1801MB1942.namprd18.prod.outlook.com
+ (2603:10b6:910:7a::33)
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [199.233.59.128]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: c2cdd682-2e64-4204-e083-08d6db48c079
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(2017052603328)(7193020);SRVR:CY4PR1801MB1989;
+x-ms-traffictypediagnostic: CY4PR1801MB1989:
+x-microsoft-antispam-prvs: <CY4PR1801MB1989423AE70737FB3F878676A6040@CY4PR1801MB1989.namprd18.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:10000;
+x-forefront-prvs: 0041D46242
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(376002)(346002)(396003)(366004)(39860400002)(136003)(199004)(189003)(66556008)(66476007)(66946007)(73956011)(64756008)(66446008)(6116002)(3846002)(229853002)(2906002)(86362001)(5660300002)(6916009)(68736007)(1076003)(66066001)(53936002)(305945005)(8676002)(26005)(6436002)(8936002)(11346002)(478600001)(486006)(446003)(186003)(6486002)(6512007)(71190400001)(71200400001)(81166006)(81156014)(6246003)(52116002)(14444005)(25786009)(14454004)(102836004)(316002)(256004)(7736002)(476003)(76176011)(33656002)(99286004)(54906003)(4326008)(6506007)(386003);DIR:OUT;SFP:1101;SCL:1;SRVR:CY4PR1801MB1989;H:CY4PR1801MB1942.namprd18.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: marvell.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: BpEglSbQ0nif9+5dbdgz1y2XVeFBaBrCotTK/ediHEA3rsQUVOwNWG6jF1vn4ohNCrqDsiiyvrge+VA0kHSxEOgyMA5yl1/mbOnvYfC1BQ/0Mg2opaHBmGH0rDeNxr9dKjrYq7yE/lnV8xprx539DQgsvjP1hjff9sKn/HJjPEI5wk8ukYSY0lL5tGV2CJ5RaEbEf6XyUuza1KjUHZoyZ0+vwexgwpKvy4DVnqU/J14zDC8yNIlLfzq6UwYWsws6Qy/+80pdykjvvj6ibZHRZCQ78PVLoBg1yeDmrsVYGkKbaAVknDQxKYuDUMu6rSZ8F74VbGKLwSc60Tm/kg6JvHoTVMIjLwIYKvpsUr2RTRK45fbhQ0eOhIjrPKpQEpxCruwEKYqy+IaY49GWEop9xXqB9kcMurZYXnz9Kv3AFsU=
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <06B7D208A28DEC478C224F6259B6479C@namprd18.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-MS-Exchange-CrossTenant-Network-Message-Id: c2cdd682-2e64-4204-e083-08d6db48c079
+X-MS-Exchange-CrossTenant-originalarrivaltime: 18 May 2019 04:24:43.6812
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 70e1fb47-1155-421d-87fc-2e58f638b6e0
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR1801MB1989
+X-OriginatorOrg: marvell.com
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-18_03:,,
+ signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/17/19 6:43 PM, Chaitanya Kulkarni wrote:
-> - linux-block@vger.kernel.org <linux-block@vger.kernel.org> to reduce
-> the noise.
-> 
-> I apologies Jens, I didn't apply and tested these patches before
-> submitting the review and assumed that patches are compiled and
-> tested, I'll do so for each patch before submitting the review.
+On Mon, May 06, 2019 at 07:10:40PM +0100, Will Deacon wrote:
+> On Mon, May 06, 2019 at 06:13:12AM +0000, Jayachandran Chandrasekharan Na=
+ir wrote:
+> > Perhaps someone from ARM can chime in here how the cas/yield combo
+> > is expected to work when there is contention. ThunderX2 does not
+> > do much with the yield, but I don't expect any ARM implementation
+> > to treat YIELD as a hint not to yield, but to get/keep exclusive
+> > access to the last failed CAS location.
+>=20
+> Just picking up on this as "someone from ARM".
+>=20
+> The yield instruction in our implementation of cpu_relax() is *only* ther=
+e
+> as a scheduling hint to QEMU so that it can treat it as an internal
+> scheduling hint and run some other thread; see 1baa82f48030 ("arm64:
+> Implement cpu_relax as yield"). We can't use WFE or WFI blindly here, as =
+it
+> could be a long time before we see a wake-up event such as an interrupt. =
+Our
+> implementation of smp_cond_load_acquire() is much better for that kind of
+> thing, but doesn't help at all for a contended CAS loop where the variabl=
+e
+> is actually changing constantly.
 
-Just to be clear, I'm not placing any blame on you. It's easy to miss
-that kind of thing in a review. The onus is on the submitter to ensure
-that anything he/she sends in has been both compile and runtime tested.
+Looking thru the perf output of this case (open/close of a file from
+multiple CPUs), I see that refcount is a significant factor in most
+kernel configurations - and that too uses cmpxchg (without yield).
+x86 has an optimized inline version of refcount that helps
+significantly. Do you think this is worth looking at for arm64?
+=20
+> Implementing yield in the CPU may generally be beneficial for SMT designs=
+ so
+> that the hardware resources aren't wasted when spinning round a busy loop=
+.
 
-> Xiaolinkui,
-> 
-> Please send compiled and tested patch only on the latest kernel on the
-> appropriate subsystem, otherwise mark the patch appropriately
-> [RFC/Compile only] so reviewer would know without such a tag
-> it is easy to assume that patch is compiled and tested.
-> 
-> You have also sent out the couple of more patches with this fix.
-> 
-> If they are not compiled and tested with right kernel branch for each
-> subsystem, please update the appropriate mail thread either to ignore those
-> patches (if they have compilation problem on appropriate branch) or mark
-> them compile test only (this needs to be avoided for these patches), in
-> either
-> case please send updated patches for this fix if needed.
+Yield is probably used in sub-optimal implementations of delay or wait.
+It is going to be different across multiple implementations and
+revisions (given the description in ARM spec). Having a more yielding(?)
+implementation would be equally problematic especially in the lockref
+case.
 
-This is solid advice. Sending out untested patches without EXPLICITLY
-saying so is reckless and irresponsible, and causes harm to your
-reputation as well. Trust is an important part of being successful in an
-open source project.
+> For this particular discussion (i.e. lockref), however, it seems as thoug=
+h
+> the cpu_relax() call is questionable to start with.
 
--- 
-Jens Axboe
+In case of lockref, taking out the yield/pause and dropping to queued
+spinlock after some cycles appears to me to be a better approach.
+Relying on the quality of cpu_relax() on the specific processor to
+mitigate against contention is going to be tricky anyway.
 
+We will do some more work here, but would appreciate any pointers
+based on your experience here.
+
+Thanks,
+JC
