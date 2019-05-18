@@ -7,58 +7,57 @@ X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5D7DC04AAF
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 May 2019 09:09:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA3A3C04AAF
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 May 2019 09:09:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B14EB2082C
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 May 2019 09:09:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8BFAE2082C
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 May 2019 09:09:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="FkZ/q322"
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="VTRu2YmL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729598AbfERJJL (ORCPT
+        id S1729715AbfERJJy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 May 2019 05:09:11 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:58671 "EHLO
+        Sat, 18 May 2019 05:09:54 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:53491 "EHLO
         terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725268AbfERJJK (ORCPT
+        with ESMTP id S1725268AbfERJJy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 May 2019 05:09:10 -0400
+        Sat, 18 May 2019 05:09:54 -0400
 Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x4I98kcP1736656
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x4I99UiK1736972
         (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Sat, 18 May 2019 02:08:47 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x4I98kcP1736656
+        Sat, 18 May 2019 02:09:30 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x4I99UiK1736972
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019041745; t=1558170527;
-        bh=IsCkhLdqM10G7V4eii1jf53eX6/L+wH1G3egkijtrGU=;
+        s=2019041745; t=1558170570;
+        bh=22iwg4vE2A/cF38F7Fv9unq86DIk7aEhj95Y7TSiS+Y=;
         h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
-        b=FkZ/q322mZp7kTVDrrgHrBt8xMAKt4YVK2zhfltN7hsw4/bbs/irEK5ezeD+FgSzY
-         nZlz4Lq9xI0LhDYAJOgo3OIUj3i22POn+r94sa5ZU5ZJ9EvsfOq2xjA+SM7vqij4in
-         EaYUz+6b6/2lZ+XN1TxdWQBpc2qtO/85/1Ql7MXixJkOurZD+kqDI3bcSG7sSHzbWu
-         sQLFA565PLt8rN0P69FnWDwahHGcFt1YDxN9FW5aPVZUtqmawZoi6AyTsk02tEt0V7
-         2q52QQ0KV+3Hy6DichacnAZo9/WG4nE23gNsTjAodlbb57fJqRYewp3JWaCuEziYmi
-         vqpozEcJxZlhw==
+        b=VTRu2YmLuvCB78+IpntuaG/ODp6sBZ3mSN9/6/VOz8sbJ7n+3NmfdKPHX/zErT7Ao
+         PLOPXUlCMvLvvSpONBY+88F2J1NQUrECXGrOQaNeAbsxQ72EWbZDlxbgnaC/oBV3cL
+         9XKcodc4ZNPiUFmiTtueQJZqPLuvK0BebjHpIJjNE9HK3sRF6zEbIfQFqKOlN1Hryq
+         JXYzb/DnNPWQRWehrmYE5xqbsP3ZWyK7yCZEdULgOVH+l2g9ow1RIGM9ZSU6aMsWg9
+         VMzFtaOmwsgaHFJb6uNnAIoClSh+490yQH53zWDlxep9rcqEm1Z9XMz8fBOdXXUg3P
+         eN6ESLUT7eYkg==
 Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x4I98kXQ1736653;
-        Sat, 18 May 2019 02:08:46 -0700
-Date:   Sat, 18 May 2019 02:08:46 -0700
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x4I99T2K1736969;
+        Sat, 18 May 2019 02:09:29 -0700
+Date:   Sat, 18 May 2019 02:09:29 -0700
 X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
 From:   tip-bot for Tzvetomir Stoyanov <tipbot@zytor.com>
-Message-ID: <tip-c76c22421875bbcbadd3c9fd4033981677aacfb0@git.kernel.org>
-Cc:     mingo@kernel.org, acme@redhat.com, jolsa@redhat.com,
-        tglx@linutronix.de, linux-kernel@vger.kernel.org,
-        rostedt@goodmis.org, akpm@linux-foundation.org,
-        tstoyanov@vmware.com, namhyung@kernel.org, hpa@zytor.com
-Reply-To: tstoyanov@vmware.com, hpa@zytor.com, namhyung@kernel.org,
-          rostedt@goodmis.org, akpm@linux-foundation.org,
-          linux-kernel@vger.kernel.org, mingo@kernel.org, acme@redhat.com,
-          jolsa@redhat.com, tglx@linutronix.de
-In-Reply-To: <20190510200108.042164597@goodmis.org>
-References: <20190510200108.042164597@goodmis.org>
+Message-ID: <tip-86e8076e93ff69213931f867878709f2c6139032@git.kernel.org>
+Cc:     tstoyanov@vmware.com, mingo@kernel.org,
+        linux-kernel@vger.kernel.org, akpm@linux-foundation.org,
+        namhyung@kernel.org, rostedt@goodmis.org, hpa@zytor.com,
+        tglx@linutronix.de, jolsa@redhat.com, acme@redhat.com
+Reply-To: tstoyanov@vmware.com, mingo@kernel.org,
+          akpm@linux-foundation.org, linux-kernel@vger.kernel.org,
+          namhyung@kernel.org, rostedt@goodmis.org, hpa@zytor.com,
+          jolsa@redhat.com, tglx@linutronix.de, acme@redhat.com
+In-Reply-To: <20190510200108.197407057@goodmis.org>
+References: <20190510200108.197407057@goodmis.org>
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:perf/core] tools lib traceevent: Man page for
- tep_read_number()
-Git-Commit-ID: c76c22421875bbcbadd3c9fd4033981677aacfb0
+Subject: [tip:perf/core] tools lib traceevent: Man pages for event find APIs
+Git-Commit-ID: 86e8076e93ff69213931f867878709f2c6139032
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot.git.kernel.org>
 Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
@@ -72,92 +71,140 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  c76c22421875bbcbadd3c9fd4033981677aacfb0
-Gitweb:     https://git.kernel.org/tip/c76c22421875bbcbadd3c9fd4033981677aacfb0
+Commit-ID:  86e8076e93ff69213931f867878709f2c6139032
+Gitweb:     https://git.kernel.org/tip/86e8076e93ff69213931f867878709f2c6139032
 Author:     Tzvetomir Stoyanov <tstoyanov@vmware.com>
-AuthorDate: Fri, 10 May 2019 15:56:20 -0400
+AuthorDate: Fri, 10 May 2019 15:56:21 -0400
 Committer:  Arnaldo Carvalho de Melo <acme@redhat.com>
 CommitDate: Wed, 15 May 2019 16:36:48 -0300
 
-tools lib traceevent: Man page for tep_read_number()
+tools lib traceevent: Man pages for event find APIs
 
-Create man page for tep_read_number() libtraceevent API.
+Create man pages for libtraceevent APIs:
+
+  tep_find_event()
+  tep_find_event_by_name()
+  tep_find_event_by_record()
 
 Signed-off-by: Tzvetomir Stoyanov <tstoyanov@vmware.com>
 Cc: Andrew Morton <akpm@linux-foundation.org>
 Cc: Jiri Olsa <jolsa@redhat.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: linux-trace-devel@vger.kernel.org
-Link: http://lore.kernel.org/linux-trace-devel/20190503091119.23399-14-tstoyanov@vmware.com
-Link: http://lkml.kernel.org/r/20190510200108.042164597@goodmis.org
+Link: http://lore.kernel.org/linux-trace-devel/20190503091119.23399-15-tstoyanov@vmware.com
+Link: http://lkml.kernel.org/r/20190510200108.197407057@goodmis.org
 Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- ...vent-cpus.txt => libtraceevent-endian_read.txt} | 29 +++++++++++-----------
- 1 file changed, 15 insertions(+), 14 deletions(-)
+ .../Documentation/libtraceevent-event_find.txt     | 103 +++++++++++++++++++++
+ 1 file changed, 103 insertions(+)
 
-diff --git a/tools/lib/traceevent/Documentation/libtraceevent-cpus.txt b/tools/lib/traceevent/Documentation/libtraceevent-endian_read.txt
-similarity index 54%
-copy from tools/lib/traceevent/Documentation/libtraceevent-cpus.txt
-copy to tools/lib/traceevent/Documentation/libtraceevent-endian_read.txt
-index 5ad70e43b752..e64851b6e189 100644
---- a/tools/lib/traceevent/Documentation/libtraceevent-cpus.txt
-+++ b/tools/lib/traceevent/Documentation/libtraceevent-endian_read.txt
-@@ -3,8 +3,7 @@ libtraceevent(3)
- 
- NAME
- ----
--tep_get_cpus, tep_set_cpus - Get / set the number of CPUs, which have a tracing
--buffer representing it. Note, the buffer may be empty.
-+tep_read_number - Reads a number from raw data.
- 
- SYNOPSIS
- --------
-@@ -12,23 +11,20 @@ SYNOPSIS
- --
- *#include <event-parse.h>*
- 
--int *tep_get_cpus*(struct tep_handle pass:[*]_tep_);
--void *tep_set_cpus*(struct tep_handle pass:[*]_tep_, int _cpus_);
-+unsigned long long *tep_read_number*(struct tep_handle pass:[*]_tep_, const void pass:[*]_ptr_, int _size_);
- --
- 
- DESCRIPTION
- -----------
--The _tep_get_cpus()_ function gets the number of CPUs, which have a tracing
--buffer representing it. The _tep_ argument is trace event parser context.
--
--The _tep_set_cpus()_ function sets the number of CPUs, which have a tracing
--buffer representing it. The _tep_ argument is trace event parser context.
--The _cpu_ argument is the number of CPUs with tracing data.
-+The _tep_read_number()_ function reads an integer from raw data, taking into
-+account the endianness of the raw data and the current host. The _tep_ argument
-+is the trace event parser context. The _ptr_ is a pointer to the raw data, where
-+the integer is, and the _size_ is the size of the integer.
- 
- RETURN VALUE
- ------------
--The _tep_get_cpus()_ functions returns the number of CPUs, which have tracing
--data recorded.
-+The _tep_read_number()_ function returns the integer in the byte order of
-+the current host. In case of an error, 0 is returned.
- 
- EXAMPLE
- -------
-@@ -38,9 +34,14 @@ EXAMPLE
- ...
- struct tep_handle *tep = tep_alloc();
- ...
--	tep_set_cpus(tep, 5);
-+void process_record(struct tep_record *record)
-+{
-+	int offset = 24;
-+	int data = tep_read_number(tep, record->data + offset, 4);
+diff --git a/tools/lib/traceevent/Documentation/libtraceevent-event_find.txt b/tools/lib/traceevent/Documentation/libtraceevent-event_find.txt
+new file mode 100644
+index 000000000000..7bc062c9f76f
+--- /dev/null
++++ b/tools/lib/traceevent/Documentation/libtraceevent-event_find.txt
+@@ -0,0 +1,103 @@
++libtraceevent(3)
++================
 +
-+	/* Read the 4 bytes at the offset 24 of data as an integer */
++NAME
++----
++tep_find_event,tep_find_event_by_name,tep_find_event_by_record -
++Find events by given key.
++
++SYNOPSIS
++--------
++[verse]
++--
++*#include <event-parse.h>*
++
++struct tep_event pass:[*]*tep_find_event*(struct tep_handle pass:[*]_tep_, int _id_);
++struct tep_event pass:[*]*tep_find_event_by_name*(struct tep_handle pass:[*]_tep_, const char pass:[*]_sys_, const char pass:[*]_name_);
++struct tep_event pass:[*]*tep_find_event_by_record*(struct tep_handle pass:[*]_tep_, struct tep_record pass:[*]_record_);
++--
++
++DESCRIPTION
++-----------
++This set of functions can be used to search for an event, based on a given
++criteria. All functions require a pointer to a _tep_, trace event parser
++context.
++
++The _tep_find_event()_ function searches for an event by given event _id_. The
++event ID is assigned dynamically and can be viewed in event's format file,
++"ID" field.
++
++The tep_find_event_by_name()_ function searches for an event by given
++event _name_, under the system _sys_. If the _sys_ is NULL (not specified),
++the first event with _name_ is returned.
++
++The tep_find_event_by_record()_ function searches for an event from a given
++_record_.
++
++RETURN VALUE
++------------
++All these functions return a pointer to the found event, or NULL if there is no
++such event.
++
++EXAMPLE
++-------
++[source,c]
++--
++#include <event-parse.h>
++...
++struct tep_handle *tep = tep_alloc();
++...
++struct tep_event *event;
++
++event = tep_find_event(tep, 1857);
++if (event == NULL) {
++	/* There is no event with ID 1857 */
 +}
- ...
--	printf("We have tracing data for %d CPUs", tep_get_cpus(tep));
- --
- 
- FILES
++
++event = tep_find_event_by_name(tep, "kvm", "kvm_exit");
++if (event == NULL) {
++	/* There is no kvm_exit event, from kvm system */
++}
++
++void event_from_record(struct tep_record *record)
++{
++ struct tep_event *event = tep_find_event_by_record(tep, record);
++	if (event == NULL) {
++		/* There is no event from given record */
++	}
++}
++...
++--
++
++FILES
++-----
++[verse]
++--
++*event-parse.h*
++	Header file to include in order to have access to the library APIs.
++*-ltraceevent*
++	Linker switch to add when building a program that uses the library.
++--
++
++SEE ALSO
++--------
++_libtraceevent(3)_, _trace-cmd(1)_
++
++AUTHOR
++------
++[verse]
++--
++*Steven Rostedt* <rostedt@goodmis.org>, author of *libtraceevent*.
++*Tzvetomir Stoyanov* <tz.stoyanov@gmail.com>, author of this man page.
++--
++REPORTING BUGS
++--------------
++Report bugs to  <linux-trace-devel@vger.kernel.org>
++
++LICENSE
++-------
++libtraceevent is Free Software licensed under the GNU LGPL 2.1
++
++RESOURCES
++---------
++https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
