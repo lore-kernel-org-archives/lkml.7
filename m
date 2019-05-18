@@ -2,97 +2,145 @@ Return-Path: <SRS0=//ty=TS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B267C04AAF
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 May 2019 06:44:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A459C04AAF
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 May 2019 06:52:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DEAB02087E
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 May 2019 06:44:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DtnfHMV4"
+	by mail.kernel.org (Postfix) with ESMTP id 64C472087E
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 May 2019 06:52:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727730AbfERGok (ORCPT
+        id S1727543AbfERGwG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 May 2019 02:44:40 -0400
-Received: from mail-it1-f170.google.com ([209.85.166.170]:40251 "EHLO
-        mail-it1-f170.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725268AbfERGok (ORCPT
+        Sat, 18 May 2019 02:52:06 -0400
+Received: from mail-io1-f71.google.com ([209.85.166.71]:47226 "EHLO
+        mail-io1-f71.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725268AbfERGwG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 May 2019 02:44:40 -0400
-Received: by mail-it1-f170.google.com with SMTP id g71so15482907ita.5;
-        Fri, 17 May 2019 23:44:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:from:date:message-id:subject:to;
-        bh=sm66+ylpmcUA5BNLiB9/0HEx+0otM0IFKrhWzKWuuyo=;
-        b=DtnfHMV4rPfs4QiVZFgW/bOpTUOaTdOuZgSQupG534bwUjgQQeDDX+/qkIhHGwjtBQ
-         +6RD4DXECMZKDV0ZSw1y8jM/mp5T9/dRANLNc+UU/pJPAYDaYtOOGyIJ9K42QYOiptdM
-         yQfDnJjHKEsF7DqkpXh17y9wMth1tjB8JQZYNEGpZ+xE4qfcFj2Fo3InLVU/SuTOUPB8
-         VBbgSRqxp36rKV812RScyfARSQzc+5WHZhxDafFp6x7T6sewHKHfkFhVKGap/2ezbNVn
-         pAG+sSF25uyaqzZZulQuVef0ao0BlrVoILRdi+WvJg0XFOdmvEc1EjB4YfH56l/SMbZT
-         IvPQ==
+        Sat, 18 May 2019 02:52:06 -0400
+Received: by mail-io1-f71.google.com with SMTP id d22so7167888ioh.14
+        for <linux-kernel@vger.kernel.org>; Fri, 17 May 2019 23:52:05 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
-        bh=sm66+ylpmcUA5BNLiB9/0HEx+0otM0IFKrhWzKWuuyo=;
-        b=LcbVQLsYOUT5WLhNOcyYY+8jUNeVXyaf8+3s7/7SGq4t8YukgPznmxk6ITjz1/S0du
-         oBn2Mg+Nj8+gBNy7J24lkcLCU06q19kA48j3+1xIjkp5ojQpp0DPp8Y4YdKYkAxQskVQ
-         /L38jZ+YlQ0aVVM5p5IuDoepT4mdnNX2UUNkChe4nMuXDg3Vc54qpPKQGPZsJHT82hai
-         cCvCNc8sEEMfAKcobQTTECILlId72VmnRq6N6NxeUfoui54PtRYeJXPVEaOZUSOYEMOS
-         1A/zRknTuOrFLdkTT/mnIvo9GxnQLliR4mLtMwd8SwsmBISBCYC2lNU2Mx8KFft7Lxfe
-         fOfg==
-X-Gm-Message-State: APjAAAXV/wznEFs6XYLXdqTQxb5IcENBGFclb1I9fU/BwpMaXKUnZj8b
-        xA+sS4oJrJxVwwfkTW2vjIFUp2Ol50LfSj73kZmX0ncOllCovA==
-X-Google-Smtp-Source: APXvYqzS+G/zaLwEZaQJCFGlI3m9T1Aj9pWGRglyyWqqy1aO1BJ9ufKmBCjJnBa/JEi2VnOOTx/L2V80eQ5OdXC/VZY=
-X-Received: by 2002:a24:f9c3:: with SMTP id l186mr5875379ith.44.1558161878939;
- Fri, 17 May 2019 23:44:38 -0700 (PDT)
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=TwUoesgSEecXhR/vJBArd4elSaGTejiqfQvMTKi9FuM=;
+        b=ldaIdDCpMbNzijxMo6GEqwK9v3Bxrboz2qztaYK+gzyCfGNonICH1UHMX7t81KMHce
+         CsoVTl+UqAUZKQqt8YB2JWOLCUi1xoKZP2YPGEr7VvEYDM0nMBVY6Lc5veY17AAOoMx9
+         t8snOYetcSsvcZW2NxT6y3bJzcZiWnu7iQ14iTX6mWKCqvDPmKiZQ5EM3qB2wktBLKiw
+         14I8TyHh9X4K3Veuw3r+GKh2fdOxtW83iVQaNSrJo+w3RIX5JnTyEHHGWneI19oqP1mW
+         hwe1Zi03HJrCOVjFItXA0YurYzFh39N/EWd0VMnRrEacJvCCJeXq2iE4KKNR2eH5VT4d
+         DzRA==
+X-Gm-Message-State: APjAAAWVCtp2N7L9OFfQ6/pByQYB8depEJmuIe9Eksv4qHJCN8NCvERm
+        S7p0YpMdrm/5Qzvn6Qe7MrYmIspkaPwRGaAPDkLG4hKtuF4Z
+X-Google-Smtp-Source: APXvYqyeKvi4NJniW+mpxjebxABk/bhxB6U3pnpaWGRmSa7da5sBiDbxf5fAnGq2tWPHJq2BcSgmmlHbIKG8W7rHe+/fY3KAqf3h
 MIME-Version: 1.0
-From:   Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>
-Date:   Sat, 18 May 2019 11:44:28 +0500
-Message-ID: <CABXGCsNPMSQgBjnFarYaxuQEGpA1G=U4U9OHqT0E53pNL2BK8g@mail.gmail.com>
-Subject: [bugreport] kernel 5.2 pblk bad header/extent: invalid extent entries
-To:     Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        linux-ext4@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+X-Received: by 2002:a6b:ef07:: with SMTP id k7mr33835519ioh.276.1558162325333;
+ Fri, 17 May 2019 23:52:05 -0700 (PDT)
+Date:   Fri, 17 May 2019 23:52:05 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000e76a90058923eff3@google.com>
+Subject: BUG: corrupted list in proto_register
+From:   syzbot <syzbot+7bc2817ec0ed18de9079@syzkaller.appspotmail.com>
+To:     davem@davemloft.net, jon.maloy@ericsson.com,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com,
+        tipc-discussion@lists.sourceforge.net, ying.xue@windriver.com
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi folks.
-Yesterday I updated kernel to 5.2 (git commit 7e9890a3500d)
-I always leave computer working at night.
-Today at morning I am found that computer are hanged.
-I was connect via ssh and look at kernel log.
-There I had seen strange records which I never seen before:
+Hello,
 
-[28616.429757] EXT4-fs error (device nvme0n1p2): ext4_find_extent:908:
-inode #8: comm jbd2/nvme0n1p2-: pblk 23101439 bad header/extent:
-invalid extent entries - magic f30a, entries 8, max 340(340), depth
-0(0)
-[28616.430602] jbd2_journal_bmap: journal block not found at offset
-4383 on nvme0n1p2-8
-[28616.430610] Aborting journal on device nvme0n1p2-8.
-[28616.432474] EXT4-fs error (device nvme0n1p2):
-ext4_journal_check_start:61: Detected aborted journal
-[28616.432489] EXT4-fs error (device nvme0n1p2):
-ext4_journal_check_start:61: Detected aborted journal
-[28616.432551] EXT4-fs (nvme0n1p2): Remounting filesystem read-only
-[28616.432690] EXT4-fs (nvme0n1p2): ext4_writepages: jbd2_start:
-9223372036854775791 pages, ino 3285789; err -30
-[28616.432692] EXT4-fs error (device nvme0n1p2):
-ext4_journal_check_start:61: Detected aborted journal
+syzbot found the following crash on:
 
-After reboot computer and running fsck system looks like working.
-But I am afraid that it could happens again and I may lost all my data.
+HEAD commit:    532b0f7e tipc: fix modprobe tipc failed after switch order..
+git tree:       net
+console output: https://syzkaller.appspot.com/x/log.txt?x=12665fe8a00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=82f0809e8f0a8c87
+dashboard link: https://syzkaller.appspot.com/bug?extid=7bc2817ec0ed18de9079
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
 
-How safe this error and what does it mean?
-It a bug of kernel 5.2 or not?
+Unfortunately, I don't have any reproducer for this crash yet.
 
---
-Best Regards,
-Mike Gavrilov.
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+7bc2817ec0ed18de9079@syzkaller.appspotmail.com
+
+------------[ cut here ]------------
+kernel BUG at lib/list_debug.c:29!
+invalid opcode: 0000 [#1] PREEMPT SMP KASAN
+CPU: 1 PID: 9479 Comm: syz-executor.2 Not tainted 5.1.0+ #18
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+RIP: 0010:__list_add_valid.cold+0x26/0x3c lib/list_debug.c:29
+Code: 56 ff ff ff 4c 89 e1 48 c7 c7 20 4c a3 87 e8 00 60 25 fe 0f 0b 48 89  
+f2 4c 89 e1 4c 89 ee 48 c7 c7 60 4d a3 87 e8 e9 5f 25 fe <0f> 0b 48 89 f1  
+48 c7 c7 e0 4c a3 87 4c 89 e6 e8 d5 5f 25 fe 0f 0b
+RSP: 0018:ffff8880747afb88 EFLAGS: 00010282
+RAX: 0000000000000058 RBX: ffffffff89544920 RCX: 0000000000000000
+RDX: 0000000000000000 RSI: ffffffff815afbe6 RDI: ffffed100e8f5f63
+RBP: ffff8880747afba0 R08: 0000000000000058 R09: ffffed1015d26011
+R10: ffffed1015d26010 R11: ffff8880ae930087 R12: ffffffff89544ab0
+R13: ffffffff89544ab0 R14: ffffffff89544ab0 R15: ffffffff89544a50
+FS:  00000000018b2940(0000) GS:ffff8880ae900000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007f88f7dac000 CR3: 0000000072fc7000 CR4: 00000000001406e0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+  __list_add include/linux/list.h:60 [inline]
+  list_add include/linux/list.h:79 [inline]
+  proto_register+0x459/0x8e0 net/core/sock.c:3385
+  tipc_socket_init+0x1c/0x70 net/tipc/socket.c:3241
+  tipc_init_net+0x32a/0x5b0 net/tipc/core.c:71
+  ops_init+0xb6/0x410 net/core/net_namespace.c:129
+  setup_net+0x2d3/0x740 net/core/net_namespace.c:315
+  copy_net_ns+0x1df/0x340 net/core/net_namespace.c:438
+  create_new_namespaces+0x400/0x7b0 kernel/nsproxy.c:107
+  unshare_nsproxy_namespaces+0xc2/0x200 kernel/nsproxy.c:206
+  ksys_unshare+0x440/0x980 kernel/fork.c:2664
+  __do_sys_unshare kernel/fork.c:2732 [inline]
+  __se_sys_unshare kernel/fork.c:2730 [inline]
+  __x64_sys_unshare+0x31/0x40 kernel/fork.c:2730
+  do_syscall_64+0x103/0x680 arch/x86/entry/common.c:301
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x45b897
+Code: 00 00 00 b8 63 00 00 00 0f 05 48 3d 01 f0 ff ff 0f 83 ad 8d fb ff c3  
+66 2e 0f 1f 84 00 00 00 00 00 66 90 b8 10 01 00 00 0f 05 <48> 3d 01 f0 ff  
+ff 0f 83 8d 8d fb ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007ffc2b108368 EFLAGS: 00000206 ORIG_RAX: 0000000000000110
+RAX: ffffffffffffffda RBX: 000000000073c988 RCX: 000000000045b897
+RDX: 0000000000000000 RSI: 00007ffc2b108310 RDI: 0000000040000000
+RBP: 00000000000000f8 R08: 0000000000000000 R09: 0000000000000005
+R10: 0000000000000000 R11: 0000000000000206 R12: 0000000000414ab0
+R13: 0000000000414b40 R14: 0000000000000000 R15: 0000000000000000
+Modules linked in:
+---[ end trace e4cbbfc7878b1973 ]---
+RIP: 0010:__list_add_valid.cold+0x26/0x3c lib/list_debug.c:29
+Code: 56 ff ff ff 4c 89 e1 48 c7 c7 20 4c a3 87 e8 00 60 25 fe 0f 0b 48 89  
+f2 4c 89 e1 4c 89 ee 48 c7 c7 60 4d a3 87 e8 e9 5f 25 fe <0f> 0b 48 89 f1  
+48 c7 c7 e0 4c a3 87 4c 89 e6 e8 d5 5f 25 fe 0f 0b
+RSP: 0018:ffff8880747afb88 EFLAGS: 00010282
+RAX: 0000000000000058 RBX: ffffffff89544920 RCX: 0000000000000000
+RDX: 0000000000000000 RSI: ffffffff815afbe6 RDI: ffffed100e8f5f63
+RBP: ffff8880747afba0 R08: 0000000000000058 R09: ffffed1015d26011
+R10: ffffed1015d26010 R11: ffff8880ae930087 R12: ffffffff89544ab0
+R13: ffffffff89544ab0 R14: ffffffff89544ab0 R15: ffffffff89544a50
+FS:  00000000018b2940(0000) GS:ffff8880ae900000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007fe45a0c89b8 CR3: 0000000072fc7000 CR4: 00000000001406e0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+
+
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
