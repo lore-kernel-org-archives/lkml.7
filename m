@@ -4,61 +4,61 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF406C04AAF
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 May 2019 09:16:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BBDEFC04AAF
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 May 2019 09:17:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8824320848
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 May 2019 09:16:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 903A320848
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 May 2019 09:17:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="dv/9c7mX"
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="tnR30kg3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729748AbfERJQj (ORCPT
+        id S1729756AbfERJRS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 May 2019 05:16:39 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:33717 "EHLO
+        Sat, 18 May 2019 05:17:18 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:41579 "EHLO
         terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728897AbfERJQi (ORCPT
+        with ESMTP id S1725268AbfERJRS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 May 2019 05:16:38 -0400
+        Sat, 18 May 2019 05:17:18 -0400
 Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x4I9G7TU1738148
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x4I9GqRk1738189
         (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Sat, 18 May 2019 02:16:08 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x4I9G7TU1738148
+        Sat, 18 May 2019 02:16:52 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x4I9GqRk1738189
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019041745; t=1558170968;
-        bh=3srXvm9OuzMP3IBMgCHvMM4UwUeiUJGge672h7hSYKU=;
+        s=2019041745; t=1558171013;
+        bh=X3T+S5appoGgHpeNsyH3nRX7Sl+SK02lAbpgeubM8BI=;
         h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
-        b=dv/9c7mXKwLBNEKo9l0z7WVh+ebrEZwbFeA9nn0UplvulkFoPCJ8rs5sGT+x5/Mfq
-         DXWuplo1xeyRrRemFS66+G6lkxxce5bhcZgZTCQCyeXw+9UrjUGlbgzj3WLNZGPKdx
-         LdL3+KtCh31jKgcBlAtJI20rItW3bhZVwrSdk9X3jZQ8UapndVU84H3CjrMhvQhXB3
-         mUB/yo9sZ6143dQj2g7O7tkg+NAd4HmldBBWIInQzuZI1nesAykGHocdePpI1k1ZaD
-         dvbZMdHFynnBvrDAFRry18UQv7m1IL1QwEwPTRBnwobmAd4Ynh/i+MpOyBRDaEE8X9
-         QiAoVQ2tQnNrA==
+        b=tnR30kg3quv9Cu87B4fV6EjXVLMdheh4z62q3mFWzYWGoEaEiJfwWAa3G6zWZgnAL
+         mjalZDkLppV4JGD4wZudyRGa2q9FVmyX2jbx1Th3QDS43h46l+edS4hs97T9Euk1ql
+         BR6DmO0o60ew7pkhhequ0va+rutzyVoaYD44/3SUu8M/C4C4zj1Ul4IkD9hUASK4DP
+         twmzV2HSpPH9r3ZqZgLvdxYWC76VqH/1EY2uV9Dnacnn5nNvzfcslA+/hzK7pnHAqb
+         qmAD64FMUfnGmmrku+DqSkhOzOn/r1gXhz8pH7dygKRztgPrwuqi0mPJWE1WcGIkqB
+         Sjxyd4iKC2BlQ==
 Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x4I9G7sg1738145;
-        Sat, 18 May 2019 02:16:07 -0700
-Date:   Sat, 18 May 2019 02:16:07 -0700
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x4I9GqWr1738186;
+        Sat, 18 May 2019 02:16:52 -0700
+Date:   Sat, 18 May 2019 02:16:52 -0700
 X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
 From:   tip-bot for Tzvetomir Stoyanov <tipbot@zytor.com>
-Message-ID: <tip-e57ea935ad744a36168a181a3c01e019fc237c3c@git.kernel.org>
-Cc:     akpm@linux-foundation.org, jolsa@redhat.com, tglx@linutronix.de,
-        linux-kernel@vger.kernel.org, hpa@zytor.com, mingo@kernel.org,
-        namhyung@kernel.org, tstoyanov@vmware.com, rostedt@goodmis.org,
-        acme@redhat.com
-Reply-To: akpm@linux-foundation.org, jolsa@redhat.com, tglx@linutronix.de,
-          linux-kernel@vger.kernel.org, hpa@zytor.com, mingo@kernel.org,
-          namhyung@kernel.org, tstoyanov@vmware.com, acme@redhat.com,
-          rostedt@goodmis.org
-In-Reply-To: <20190510200109.847820380@goodmis.org>
-References: <20190510200109.847820380@goodmis.org>
+Message-ID: <tip-73b6b470f60641cf763eab60640b6dd9360297c7@git.kernel.org>
+Cc:     mingo@kernel.org, tglx@linutronix.de, linux-kernel@vger.kernel.org,
+        acme@redhat.com, namhyung@kernel.org, jolsa@redhat.com,
+        akpm@linux-foundation.org, tstoyanov@vmware.com, hpa@zytor.com,
+        rostedt@goodmis.org
+Reply-To: hpa@zytor.com, tstoyanov@vmware.com, jolsa@redhat.com,
+          akpm@linux-foundation.org, rostedt@goodmis.org,
+          tglx@linutronix.de, mingo@kernel.org, namhyung@kernel.org,
+          acme@redhat.com, linux-kernel@vger.kernel.org
+In-Reply-To: <20190510200110.093108279@goodmis.org>
+References: <20190510200110.093108279@goodmis.org>
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:perf/core] tools lib traceevent: Man pages for parse event
- APIs
-Git-Commit-ID: e57ea935ad744a36168a181a3c01e019fc237c3c
+Subject: [tip:perf/core] tools lib traceevent: Man page for
+ tep_parse_header_page()
+Git-Commit-ID: 73b6b470f60641cf763eab60640b6dd9360297c7
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot.git.kernel.org>
 Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
@@ -72,45 +72,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  e57ea935ad744a36168a181a3c01e019fc237c3c
-Gitweb:     https://git.kernel.org/tip/e57ea935ad744a36168a181a3c01e019fc237c3c
+Commit-ID:  73b6b470f60641cf763eab60640b6dd9360297c7
+Gitweb:     https://git.kernel.org/tip/73b6b470f60641cf763eab60640b6dd9360297c7
 Author:     Tzvetomir Stoyanov <tstoyanov@vmware.com>
-AuthorDate: Fri, 10 May 2019 15:56:30 -0400
+AuthorDate: Fri, 10 May 2019 15:56:31 -0400
 Committer:  Arnaldo Carvalho de Melo <acme@redhat.com>
 CommitDate: Wed, 15 May 2019 16:36:48 -0300
 
-tools lib traceevent: Man pages for parse event APIs
+tools lib traceevent: Man page for tep_parse_header_page()
 
-Create man pages for libtraceevent APIs:
-
-  tep_parse_event(),
-  tep_parse_format()
+Create man page for tep_parse_header_page() libtraceevent API.
 
 Signed-off-by: Tzvetomir Stoyanov <tstoyanov@vmware.com>
 Cc: Andrew Morton <akpm@linux-foundation.org>
 Cc: Jiri Olsa <jolsa@redhat.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: linux-trace-devel@vger.kernel.org
-Link: http://lore.kernel.org/linux-trace-devel/20190503091119.23399-24-tstoyanov@vmware.com
-Link: http://lkml.kernel.org/r/20190510200109.847820380@goodmis.org
+Link: http://lore.kernel.org/linux-trace-devel/20190503091119.23399-25-tstoyanov@vmware.com
+Link: http://lkml.kernel.org/r/20190510200110.093108279@goodmis.org
 Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- .../Documentation/libtraceevent-parse_event.txt    | 90 ++++++++++++++++++++++
- 1 file changed, 90 insertions(+)
+ .../Documentation/libtraceevent-parse_head.txt     | 82 ++++++++++++++++++++++
+ 1 file changed, 82 insertions(+)
 
-diff --git a/tools/lib/traceevent/Documentation/libtraceevent-parse_event.txt b/tools/lib/traceevent/Documentation/libtraceevent-parse_event.txt
+diff --git a/tools/lib/traceevent/Documentation/libtraceevent-parse_head.txt b/tools/lib/traceevent/Documentation/libtraceevent-parse_head.txt
 new file mode 100644
-index 000000000000..f248114ca1ff
+index 000000000000..c90f16c7d8e6
 --- /dev/null
-+++ b/tools/lib/traceevent/Documentation/libtraceevent-parse_event.txt
-@@ -0,0 +1,90 @@
++++ b/tools/lib/traceevent/Documentation/libtraceevent-parse_head.txt
+@@ -0,0 +1,82 @@
 +libtraceevent(3)
 +================
 +
 +NAME
 +----
-+tep_parse_event, tep_parse_format - Parse the event format information
++tep_parse_header_page - Parses the data stored in the header page.
 +
 +SYNOPSIS
 +--------
@@ -118,28 +115,25 @@ index 000000000000..f248114ca1ff
 +--
 +*#include <event-parse.h>*
 +
-+enum tep_errno *tep_parse_event*(struct tep_handle pass:[*]_tep_, const char pass:[*]_buf_, unsigned long _size_, const char pass:[*]_sys_);
-+enum tep_errno *tep_parse_format*(struct tep_handle pass:[*]_tep_, struct tep_event pass:[*]pass:[*]_eventp_, const char pass:[*]_buf_, unsigned long _size_, const char pass:[*]_sys_);
++int *tep_parse_header_page*(struct tep_handle pass:[*]_tep_, char pass:[*]_buf_, unsigned long _size_, int _long_size_);
 +--
 +
 +DESCRIPTION
 +-----------
-+The _tep_parse_event()_ function parses the event format and creates an event
-+structure to quickly parse raw data for a given event. The _tep_ argument is
-+the trace event parser context. The created event structure is stored in the
-+_tep_ context. The _buf_ argument is a buffer with _size_, where the event
-+format data is. The event format data can be taken from
-+tracefs/events/.../.../format files. The _sys_ argument is the system of
-+the event.
++The _tep_parse_header_page()_ function parses the header page data from _buf_,
++and initializes the _tep_, trace event parser context, with it. The buffer
++_buf_ is with _size_, and is supposed to be copied from
++tracefs/events/header_page.
 +
-+The _tep_parse_format()_ function does the same as _tep_parse_event()_. The only
-+difference is in the extra _eventp_ argument, where the newly created event
-+structure is returned.
++Some old kernels do not have header page info, in this case the
++_tep_parse_header_page()_ function  can be called with _size_ equal to 0. The
++_tep_ context is initialized with default values. The _long_size_ can be used in
++this use case, to set the size of a long integer to be used.
 +
 +RETURN VALUE
 +------------
-+Both _tep_parse_event()_ and _tep_parse_format()_ functions return 0 on success,
-+or TEP_ERRNO__... in case of an error.
++The _tep_parse_header_page()_ function returns 0 in case of success, or -1
++in case of an error.
 +
 +EXAMPLE
 +-------
@@ -151,14 +145,9 @@ index 000000000000..f248114ca1ff
 +...
 +char *buf;
 +int size;
-+struct tep_event *event = NULL;
-+buf = read_file("/sys/kernel/tracing/events/ftrace/print/format", &size);
-+if (tep_parse_event(tep, buf, size, "ftrace") != 0) {
-+	/* Failed to parse the ftrace print format */
-+}
-+
-+if (tep_parse_format(tep, &event, buf, size, "ftrace") != 0) {
-+	/* Failed to parse the ftrace print format */
++buf = read_file("/sys/kernel/tracing/events/header_page", &size);
++if (tep_parse_header_page(tep, buf, size, sizeof(unsigned long)) != 0) {
++	/* Failed to parse the header page */
 +}
 +...
 +--
