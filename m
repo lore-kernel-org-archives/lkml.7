@@ -2,154 +2,162 @@ Return-Path: <SRS0=//ty=TS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 303A3C04AAF
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 May 2019 09:09:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5D7DC04AAF
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 May 2019 09:09:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 05ACB2082C
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 May 2019 09:09:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B14EB2082C
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 May 2019 09:09:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ctp4zeKD"
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="FkZ/q322"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729708AbfERJJC (ORCPT
+        id S1729598AbfERJJL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 May 2019 05:09:02 -0400
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:33404 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725468AbfERJJB (ORCPT
+        Sat, 18 May 2019 05:09:11 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:58671 "EHLO
+        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725268AbfERJJK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 May 2019 05:09:01 -0400
-Received: by mail-lf1-f66.google.com with SMTP id x132so7006257lfd.0;
-        Sat, 18 May 2019 02:09:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=JMJMxJ4pxlUz8asklfXu2+f43mE5Z5/GW0LwxKJU/nI=;
-        b=Ctp4zeKDTdrgBiXbI4X8Zcrd9YuEgiitY8MhoX5s6yaOPgi3ig821+yXq3T3EYw2Hv
-         8rAnvJrac4pPcY1mZmlqCQ12K77lOlFTfuQJ5f6hfssXLukOlcGLhyY+WmzvcdGs3lOd
-         qs1QudsMYyz3+0VdkKCCn8FUkJu5t5dlBgtd4CzgC5D+C0V/aoFjFz6hWkWKhapSkEwY
-         S3gtNWLfL6A/SHFn20zzJWhakp7mjc4vEJjBX1lpofL/aKXti4XyhsPstG9qaZ2hUHQ1
-         BFguhbaSwauVckqL3Fv6eiM/V9e0PNXd2xIThaq8QEGkmB3R/Qfl+BAZMYIAM0l1Gr+L
-         gnZQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=JMJMxJ4pxlUz8asklfXu2+f43mE5Z5/GW0LwxKJU/nI=;
-        b=I8pHsiHi8Zs+1R9n6x8Ba5OwiI4R9G040zwC+JNvNejLw2Lm5zrQEV8200mPtGmLI7
-         GsVU9PyynyVIIg1DsbZwg0d/PP+8kBltQqaXxDJc0E9XY8BYYMyZ8bXhxTB9pN2Bmh3S
-         tbrG8GbR2kl5gn/y5flDpfWGrorA6ipqY4F32Ap3ItFTaSmuZiM2yQwqLNtGamZmFP4w
-         APceDaicNHyPiFXrqNybqnHkkKB5lCv7pCm+h1jo2h+73IsWzGCW7r0UZKhicAsEAbtP
-         ahV4qIzTY0uAjMBjsxOvS9sBhDDq9aGAdGhb4AWuuEVY+JXYMLtI2SG+7qw56+56jGe0
-         KIMw==
-X-Gm-Message-State: APjAAAXeR+4Z1Ow3UQuql2/v8elH3RUReJAw/BnAgdp2orQaKr0zv2P5
-        S/z+v4nNYI4vc84c4ppMbeBLig+a2aw=
-X-Google-Smtp-Source: APXvYqy0r9DsbizCqrexPf9rUX12ja5WC7syNRm9Q4CKHVB7psLJiiPZPg+vaEdPhLPIeeqlAA81mw==
-X-Received: by 2002:a05:6512:309:: with SMTP id t9mr29680176lfp.103.1558170539702;
-        Sat, 18 May 2019 02:08:59 -0700 (PDT)
-Received: from [192.168.1.111] ([77.123.15.14])
-        by smtp.googlemail.com with ESMTPSA id f21sm2211511ljk.94.2019.05.18.02.08.58
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Sat, 18 May 2019 02:08:58 -0700 (PDT)
-Subject: Re: [PATCH v3] HID: fix A4Tech horizontal scrolling
-To:     =?UTF-8?B?QsWCYcW8ZWogU3pjenlnaWXFgg==?= <spaz16@wp.pl>
-Cc:     peter.hutterer@who-t.net, Jiri Kosina <jikos@kernel.org>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20190507050029.GA5197@jelly>
- <20190512203313.18756-1-spaz16@wp.pl>
-From:   Igor Kushnir <igorkuo@gmail.com>
-Message-ID: <858498ef-b43a-f382-bfbc-e3a2ac9935e4@gmail.com>
-Date:   Sat, 18 May 2019 12:08:57 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Sat, 18 May 2019 05:09:10 -0400
+Received: from terminus.zytor.com (localhost [127.0.0.1])
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x4I98kcP1736656
+        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
+        Sat, 18 May 2019 02:08:47 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x4I98kcP1736656
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+        s=2019041745; t=1558170527;
+        bh=IsCkhLdqM10G7V4eii1jf53eX6/L+wH1G3egkijtrGU=;
+        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
+        b=FkZ/q322mZp7kTVDrrgHrBt8xMAKt4YVK2zhfltN7hsw4/bbs/irEK5ezeD+FgSzY
+         nZlz4Lq9xI0LhDYAJOgo3OIUj3i22POn+r94sa5ZU5ZJ9EvsfOq2xjA+SM7vqij4in
+         EaYUz+6b6/2lZ+XN1TxdWQBpc2qtO/85/1Ql7MXixJkOurZD+kqDI3bcSG7sSHzbWu
+         sQLFA565PLt8rN0P69FnWDwahHGcFt1YDxN9FW5aPVZUtqmawZoi6AyTsk02tEt0V7
+         2q52QQ0KV+3Hy6DichacnAZo9/WG4nE23gNsTjAodlbb57fJqRYewp3JWaCuEziYmi
+         vqpozEcJxZlhw==
+Received: (from tipbot@localhost)
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x4I98kXQ1736653;
+        Sat, 18 May 2019 02:08:46 -0700
+Date:   Sat, 18 May 2019 02:08:46 -0700
+X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
+From:   tip-bot for Tzvetomir Stoyanov <tipbot@zytor.com>
+Message-ID: <tip-c76c22421875bbcbadd3c9fd4033981677aacfb0@git.kernel.org>
+Cc:     mingo@kernel.org, acme@redhat.com, jolsa@redhat.com,
+        tglx@linutronix.de, linux-kernel@vger.kernel.org,
+        rostedt@goodmis.org, akpm@linux-foundation.org,
+        tstoyanov@vmware.com, namhyung@kernel.org, hpa@zytor.com
+Reply-To: tstoyanov@vmware.com, hpa@zytor.com, namhyung@kernel.org,
+          rostedt@goodmis.org, akpm@linux-foundation.org,
+          linux-kernel@vger.kernel.org, mingo@kernel.org, acme@redhat.com,
+          jolsa@redhat.com, tglx@linutronix.de
+In-Reply-To: <20190510200108.042164597@goodmis.org>
+References: <20190510200108.042164597@goodmis.org>
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip:perf/core] tools lib traceevent: Man page for
+ tep_read_number()
+Git-Commit-ID: c76c22421875bbcbadd3c9fd4033981677aacfb0
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot.git.kernel.org>
+Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
+ these emails
 MIME-Version: 1.0
-In-Reply-To: <20190512203313.18756-1-spaz16@wp.pl>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: uk-UA
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi!
+Commit-ID:  c76c22421875bbcbadd3c9fd4033981677aacfb0
+Gitweb:     https://git.kernel.org/tip/c76c22421875bbcbadd3c9fd4033981677aacfb0
+Author:     Tzvetomir Stoyanov <tstoyanov@vmware.com>
+AuthorDate: Fri, 10 May 2019 15:56:20 -0400
+Committer:  Arnaldo Carvalho de Melo <acme@redhat.com>
+CommitDate: Wed, 15 May 2019 16:36:48 -0300
 
-I have verified that the PATCH v3 applied to kernel 5.0.15 fixes 
-horizontal scrolling for my A4Tech WOP-49Z mouse just as well as the 
-previous patch did.
+tools lib traceevent: Man page for tep_read_number()
 
-Thank you,
-Igor
+Create man page for tep_read_number() libtraceevent API.
 
-On 5/12/19 11:33 PM, Błażej Szczygieł wrote:
-> Since recent high resolution scrolling changes the A4Tech driver must
-> check for the "REL_WHEEL_HI_RES" usage code.
-> 
-> Link: https://bugzilla.kernel.org/show_bug.cgi?id=203369
-> Fixes: 2dc702c991e3774af9d7ce410eef410ca9e2357e ("HID: input: use the
-> Resolution Multiplier for high-resolution scrolling")
-> 
-> Signed-off-by: Błażej Szczygieł <spaz16@wp.pl>
-> ---
-> Changes in v2:
-> - changed commit message
-> 
-> Changes in v3:
-> - send also high resolution events
-> 
->   drivers/hid/hid-a4tech.c | 11 ++++++++---
->   1 file changed, 8 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/hid/hid-a4tech.c b/drivers/hid/hid-a4tech.c
-> index 9428ea7cdf8a..c3a6ce3613fe 100644
-> --- a/drivers/hid/hid-a4tech.c
-> +++ b/drivers/hid/hid-a4tech.c
-> @@ -38,8 +38,10 @@ static int a4_input_mapped(struct hid_device *hdev, struct hid_input *hi,
->   {
->   	struct a4tech_sc *a4 = hid_get_drvdata(hdev);
->   
-> -	if (usage->type == EV_REL && usage->code == REL_WHEEL)
-> +	if (usage->type == EV_REL && usage->code == REL_WHEEL_HI_RES) {
->   		set_bit(REL_HWHEEL, *bit);
-> +		set_bit(REL_HWHEEL_HI_RES, *bit);
-> +	}
->   
->   	if ((a4->quirks & A4_2WHEEL_MOUSE_HACK_7) && usage->hid == 0x00090007)
->   		return -1;
-> @@ -60,7 +62,7 @@ static int a4_event(struct hid_device *hdev, struct hid_field *field,
->   	input = field->hidinput->input;
->   
->   	if (a4->quirks & A4_2WHEEL_MOUSE_HACK_B8) {
-> -		if (usage->type == EV_REL && usage->code == REL_WHEEL) {
-> +		if (usage->type == EV_REL && usage->code == REL_WHEEL_HI_RES) {
->   			a4->delayed_value = value;
->   			return 1;
->   		}
-> @@ -68,6 +70,8 @@ static int a4_event(struct hid_device *hdev, struct hid_field *field,
->   		if (usage->hid == 0x000100b8) {
->   			input_event(input, EV_REL, value ? REL_HWHEEL :
->   					REL_WHEEL, a4->delayed_value);
-> +			input_event(input, EV_REL, value ? REL_HWHEEL_HI_RES :
-> +					REL_WHEEL_HI_RES, a4->delayed_value * 120);
->   			return 1;
->   		}
->   	}
-> @@ -77,8 +81,9 @@ static int a4_event(struct hid_device *hdev, struct hid_field *field,
->   		return 1;
->   	}
->   
-> -	if (usage->code == REL_WHEEL && a4->hw_wheel) {
-> +	if (usage->code == REL_WHEEL_HI_RES && a4->hw_wheel) {
->   		input_event(input, usage->type, REL_HWHEEL, value);
-> +		input_event(input, usage->type, REL_HWHEEL_HI_RES, value * 120);
->   		return 1;
->   	}
->   
-> 
+Signed-off-by: Tzvetomir Stoyanov <tstoyanov@vmware.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: linux-trace-devel@vger.kernel.org
+Link: http://lore.kernel.org/linux-trace-devel/20190503091119.23399-14-tstoyanov@vmware.com
+Link: http://lkml.kernel.org/r/20190510200108.042164597@goodmis.org
+Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+---
+ ...vent-cpus.txt => libtraceevent-endian_read.txt} | 29 +++++++++++-----------
+ 1 file changed, 15 insertions(+), 14 deletions(-)
+
+diff --git a/tools/lib/traceevent/Documentation/libtraceevent-cpus.txt b/tools/lib/traceevent/Documentation/libtraceevent-endian_read.txt
+similarity index 54%
+copy from tools/lib/traceevent/Documentation/libtraceevent-cpus.txt
+copy to tools/lib/traceevent/Documentation/libtraceevent-endian_read.txt
+index 5ad70e43b752..e64851b6e189 100644
+--- a/tools/lib/traceevent/Documentation/libtraceevent-cpus.txt
++++ b/tools/lib/traceevent/Documentation/libtraceevent-endian_read.txt
+@@ -3,8 +3,7 @@ libtraceevent(3)
+ 
+ NAME
+ ----
+-tep_get_cpus, tep_set_cpus - Get / set the number of CPUs, which have a tracing
+-buffer representing it. Note, the buffer may be empty.
++tep_read_number - Reads a number from raw data.
+ 
+ SYNOPSIS
+ --------
+@@ -12,23 +11,20 @@ SYNOPSIS
+ --
+ *#include <event-parse.h>*
+ 
+-int *tep_get_cpus*(struct tep_handle pass:[*]_tep_);
+-void *tep_set_cpus*(struct tep_handle pass:[*]_tep_, int _cpus_);
++unsigned long long *tep_read_number*(struct tep_handle pass:[*]_tep_, const void pass:[*]_ptr_, int _size_);
+ --
+ 
+ DESCRIPTION
+ -----------
+-The _tep_get_cpus()_ function gets the number of CPUs, which have a tracing
+-buffer representing it. The _tep_ argument is trace event parser context.
+-
+-The _tep_set_cpus()_ function sets the number of CPUs, which have a tracing
+-buffer representing it. The _tep_ argument is trace event parser context.
+-The _cpu_ argument is the number of CPUs with tracing data.
++The _tep_read_number()_ function reads an integer from raw data, taking into
++account the endianness of the raw data and the current host. The _tep_ argument
++is the trace event parser context. The _ptr_ is a pointer to the raw data, where
++the integer is, and the _size_ is the size of the integer.
+ 
+ RETURN VALUE
+ ------------
+-The _tep_get_cpus()_ functions returns the number of CPUs, which have tracing
+-data recorded.
++The _tep_read_number()_ function returns the integer in the byte order of
++the current host. In case of an error, 0 is returned.
+ 
+ EXAMPLE
+ -------
+@@ -38,9 +34,14 @@ EXAMPLE
+ ...
+ struct tep_handle *tep = tep_alloc();
+ ...
+-	tep_set_cpus(tep, 5);
++void process_record(struct tep_record *record)
++{
++	int offset = 24;
++	int data = tep_read_number(tep, record->data + offset, 4);
++
++	/* Read the 4 bytes at the offset 24 of data as an integer */
++}
+ ...
+-	printf("We have tracing data for %d CPUs", tep_get_cpus(tep));
+ --
+ 
+ FILES
