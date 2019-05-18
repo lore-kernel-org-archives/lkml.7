@@ -2,187 +2,96 @@ Return-Path: <SRS0=//ty=TS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_NEOMUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FED3C072A4
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 May 2019 06:31:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF6DFC04AAF
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 May 2019 06:34:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3EC0A20848
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 May 2019 06:31:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B76B620848
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 May 2019 06:34:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=wavesemi.onmicrosoft.com header.i=@wavesemi.onmicrosoft.com header.b="czzaqIKP"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="D8bcf6mO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727620AbfERGb4 (ORCPT
+        id S1727912AbfERGe1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 May 2019 02:31:56 -0400
-Received: from mail-eopbgr780137.outbound.protection.outlook.com ([40.107.78.137]:6848
-        "EHLO NAM03-BY2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725268AbfERGb4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 May 2019 02:31:56 -0400
+        Sat, 18 May 2019 02:34:27 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:35443 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725268AbfERGe1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 18 May 2019 02:34:27 -0400
+Received: by mail-pl1-f194.google.com with SMTP id g5so4347833plt.2
+        for <linux-kernel@vger.kernel.org>; Fri, 17 May 2019 23:34:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=wavesemi.onmicrosoft.com; s=selector1-wavesemi-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=31LfEHucMieoC0OH0HUuvXG51l8jSbOQYpPN7arvVgI=;
- b=czzaqIKPqmz7C8itPuNjE0ZdG5uy6h4BfvsIjGKjJfRRr1qu889/G7ZX9FJeXki56TKd2PrPfbVfDGnKFlGF/11CXxMHAh9Kx7ojGnMmuveTova7GPhhMejDuc+rtZPNozRS89SZiprp+D7YIG1A676GMdx8JFg6OKCC4Pjmgms=
-Received: from MWHPR2201MB1277.namprd22.prod.outlook.com (10.174.162.17) by
- MWHPR2201MB1488.namprd22.prod.outlook.com (10.174.170.149) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1900.17; Sat, 18 May 2019 06:31:52 +0000
-Received: from MWHPR2201MB1277.namprd22.prod.outlook.com
- ([fe80::90ff:8d19:8459:834b]) by MWHPR2201MB1277.namprd22.prod.outlook.com
- ([fe80::90ff:8d19:8459:834b%7]) with mapi id 15.20.1900.010; Sat, 18 May 2019
- 06:31:51 +0000
-From:   Paul Burton <paul.burton@mips.com>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>
-Subject: [GIT PULL] More MIPS changes for 5.2
-Thread-Topic: [GIT PULL] More MIPS changes for 5.2
-Thread-Index: AQHVDUNg37AV/Y+AA0CHXsgmhVUIIQ==
-Date:   Sat, 18 May 2019 06:31:51 +0000
-Message-ID: <20190518063149.pvcmpgulqnwwuwuf@pburton-laptop>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: yes
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: BYAPR02CA0044.namprd02.prod.outlook.com
- (2603:10b6:a03:54::21) To MWHPR2201MB1277.namprd22.prod.outlook.com
- (2603:10b6:301:24::17)
-user-agent: NeoMutt/20180716
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=pburton@wavecomp.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [2601:646:8a00:9810:9d6:9cca:ff8c:efe0]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 8673adf1-9ee6-4793-14e8-08d6db5a8300
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(2017052603328)(49563074)(7193020);SRVR:MWHPR2201MB1488;
-x-ms-traffictypediagnostic: MWHPR2201MB1488:
-x-microsoft-antispam-prvs: <MWHPR2201MB148838F7F904C33A7D8AD867C1040@MWHPR2201MB1488.namprd22.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:3383;
-x-forefront-prvs: 0041D46242
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(7916004)(396003)(366004)(376002)(39850400004)(346002)(136003)(189003)(199004)(9686003)(7736002)(305945005)(316002)(2906002)(25786009)(99936001)(33716001)(6116002)(1076003)(102836004)(52116002)(6916009)(99286004)(386003)(6506007)(6512007)(256004)(14444005)(3716004)(58126008)(8676002)(54906003)(81166006)(81156014)(71190400001)(71200400001)(66616009)(68736007)(8936002)(14454004)(478600001)(6436002)(42882007)(4326008)(5660300002)(46003)(64756008)(476003)(66946007)(44832011)(66476007)(66556008)(73956011)(6486002)(66446008)(186003)(53936002)(486006);DIR:OUT;SFP:1102;SCL:1;SRVR:MWHPR2201MB1488;H:MWHPR2201MB1277.namprd22.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: wavecomp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: 9idvyflQvSZ9h0HAG5ctU0AXOctqHpQhv+J9vBkt/J7MAPSaGoFMj3Ui2FNak1bB/Rczyx60p2ysVerFoZu1U6OSr9OmwbMFJwr0xB1e6I3nmI6R4sqcCVrUKgNu0r7rYLVYW8qKTQ5G2SmdFEJqwPUfcbQ0wZXde+iYBaBrgnHLC+HnSre9WhwFRl8AV+DOwOoXD12FIMpHSO2ZqNfiiWi2SsWmE2X9Y2k2TjOuHqAkvuhlGX1vO8x1Y5DqTJYWFpP3Gd7cHE0meXWSU9SnApsBZPXm2xGQeDjF/FI0sHaf7XpuBgi0hePm1UHC0ESjJde1JDuNOcO9UXvST9GmaPpbwjiPz6okL1gfSBvvuwpoHOB+GSsoQ6ZfbJluF+1ntRbS9nlDogBsiKCBxNNnEUzEYPExmWjTtAVpzUjn0Os=
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="ipltsq3rrhonmppt"
-MIME-Version: 1.0
-X-OriginatorOrg: mips.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8673adf1-9ee6-4793-14e8-08d6db5a8300
-X-MS-Exchange-CrossTenant-originalarrivaltime: 18 May 2019 06:31:51.7629
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 463607d3-1db3-40a0-8a29-970c56230104
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR2201MB1488
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=eKe6mQqRIzmIAL3NH48NT4h4QYXymD38jNnChIfW1BM=;
+        b=D8bcf6mOVVWuhxtlOYV82wNaZNpBanxO+avwGxv+FsAgKqgEJMjEwQVEGTsJoK4yJ5
+         34Un4QzPJGiWMl0xy4zRDWaXR6vNnlEZE4bOmVIjZ2qcNxu+yQi7IM13GiaJ+xIa82jF
+         AgHe2ozPdAcbctyUznTyXPJwN6OqvNSTjpjpCLp/3wqIU6ZvfRjEVziT4TFqs7YrCuFo
+         s8znKfEr2M4WguFHEzyVWGMAssTFHue4MfJ95kfoJ0MaMCoGK6Ft3zRFq4WMBRZgu/ra
+         KVM4GEJAb/bU1W7TK5sgB4RZ67s9v8aJPiYN2bvEcXnG1xhpY2xPJc+FQUIl1xELOBUk
+         nszg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=eKe6mQqRIzmIAL3NH48NT4h4QYXymD38jNnChIfW1BM=;
+        b=G5I0UbpJwmtNSRQVuhs3mNRVSxnY6nBIeH+ydw5dlbhcDFNUuciT+yPKnURK71o6wr
+         O86b0TPgwnodZoYSOSzgcrf8oYJNI1YTnlTCQ4/gyy97gCVu9hOE/g5hoVRPnbYXbtmW
+         m+jFRZuXTWeY58nfqELE9YEJB2Ng7QHoBQD1f0qFse8Fzj/NcOXfrhIH8euSdl5m37bz
+         He3DVSwzSdvbyk6JdUZE0EkrtwmM8Efb/nB27UAuxLYm8O7WILDWOEeaWQEKsJB+bO4G
+         E06i/53awlW3CHTQ4siyuYnaiH+55U/ps0TydXLgdPE9pREnw2SzkUpjBrB1zsQ0LQG/
+         ubew==
+X-Gm-Message-State: APjAAAWhxBtntOa/MFvBCv0W9u0BFRoN2yOGHaZtCA7XJkXRMqGvGNDA
+        Rb+PYUioMevQvMnaZef0HRg=
+X-Google-Smtp-Source: APXvYqzUwba2P7OrmWV5/zy/5X85L0OlHg2I/fXqKhGzPkH54H8SSW2HP6qfE9nZyUZMIfJLhMAg8g==
+X-Received: by 2002:a17:902:9a81:: with SMTP id w1mr59449007plp.71.1558161266954;
+        Fri, 17 May 2019 23:34:26 -0700 (PDT)
+Received: from localhost.localdomain ([103.227.98.84])
+        by smtp.googlemail.com with ESMTPSA id h26sm14347874pgh.26.2019.05.17.23.34.22
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 17 May 2019 23:34:26 -0700 (PDT)
+From:   Moses Christopher <moseschristopherb@gmail.com>
+To:     gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org
+Cc:     Larry.Finger@lwfinger.net, david.kershner@unisys.com,
+        forest@alittletooquiet.net, davem@davemloft.net,
+        ruxandra.radulescu@nxp.com, yangbo.lu@nxp.com, arnd@arndb.de,
+        christian.gromm@microchip.com, insafonov@gmail.com,
+        hdegoede@redhat.com, devel@driverdev.osuosl.org,
+        sparmaintainer@unisys.com,
+        Moses Christopher <moseschristopherb@gmail.com>
+Subject: [PATCH v1 0/6] use help instead of ---help--- in Kconfig 
+Date:   Sat, 18 May 2019 12:03:35 +0530
+Message-Id: <20190518063341.11178-1-moseschristopherb@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---ipltsq3rrhonmppt
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Resolve the Warning that comes from the Kconfig file, which states,
+"WARNING: prefer 'help' over '---help---' for new help texts"
 
-Hi Linus,
+Moses Christopher (6):
+  staging: fsl-dpaa2: use help instead of ---help--- in Kconfig
+  staging: most: use help instead of ---help--- in Kconfig
+  staging: unisys: use help instead of ---help--- in Kconfig
+  staging: rtl8188eu: use help instead of ---help--- in Kconfig
+  staging: rtl8723bs: use help instead of ---help--- in Kconfig
+  staging: vt665*: use help instead of ---help--- in Kconfig
 
-Here's a few more MIPS changes for 5.2, consisting of some SGI IP27
-specific PCI rework and a batch of fixes. Please pull.
+ drivers/staging/fsl-dpaa2/Kconfig | 8 ++++----
+ drivers/staging/most/Kconfig      | 2 +-
+ drivers/staging/rtl8188eu/Kconfig | 4 ++--
+ drivers/staging/rtl8723bs/Kconfig | 2 +-
+ drivers/staging/unisys/Kconfig    | 4 ++--
+ drivers/staging/vt6655/Kconfig    | 5 ++---
+ drivers/staging/vt6656/Kconfig    | 5 ++---
+ 7 files changed, 14 insertions(+), 16 deletions(-)
 
-You'll see a conflict in arch/mips/sgi-ip27/ip27-irq.c due to commit
-e4952b0c2c03 ("MIPS: SGI-IP27: Fix use of unchecked pointer in
-shutdown_bridge_irq") which was merged in v5.1-rc5. The correct
-resolution is to take the file content from the mips_5.2_2 tag, ie.
-remove the startup_bridge_irq() & shutdown_bridge_irq() functions.
+-- 
+2.17.1
 
-Thanks,
-    Paul
-
-
-The following changes since commit 3751cbda8f223549d7ea28803cbec8ac87e43ed2:
-
-  mips: Manually call fdt_init_reserved_mem() method (2019-05-05 20:12:20 -0700)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/mips/linux.git tags/mips_5.2_2
-
-for you to fetch changes up to b1e479e3dcbc970bfc0b20a56f213e4df08daf75:
-
-  MIPS: Alchemy: add DMA masks for on-chip ethernet (2019-05-15 14:29:29 -0700)
-
-----------------------------------------------------------------
-A few more MIPS changes for 5.2:
-
-- A build fix for BMIPS5000 configurations with CONFIG_HW_PERF_EVENTS=y,
-  which also neatly removes some #ifdefery.
-
-- A fix to report supported ISAs correctly on older Ingenic SoCs which
-  incorrectly indicate MIPSr2 support in their cop0 Config register.
-
-- Some PCI modernization for SGI IP27 systems as part of ongoing work to
-  support some other SGI systems.
-
-- A fix allowing use of appended DTB files with generic kernels.
-
-- DMA mask fixes for SGI IP22 & Alchemy systems.
-
-----------------------------------------------------------------
-Florian Fainelli (1):
-      MIPS: perf: Fix build with CONFIG_CPU_BMIPS5000 enabled
-
-Manuel Lauss (1):
-      MIPS: Alchemy: add DMA masks for on-chip ethernet
-
-Marcin Nowakowski (1):
-      generic: fix appended dtb support
-
-Paul Cercueil (1):
-      MIPS: Fix Ingenic SoCs sometimes reporting wrong ISA
-
-Thomas Bogendoerfer (3):
-      MIPS: SGI-IP27: use generic PCI driver
-      MIPS: SGI-IP27: abstract chipset irq from bridge
-      MIPS: SGI-IP22: provide missing dma_mask/coherent_dma_mask
-
- arch/mips/Kconfig                          |   6 +
- arch/mips/alchemy/common/platform.c        |  22 +-
- arch/mips/generic/init.c                   |   4 +-
- arch/mips/include/asm/mach-ip27/topology.h |  11 +-
- arch/mips/include/asm/pci/bridge.h         |  14 +-
- arch/mips/include/asm/sn/irq_alloc.h       |  11 +
- arch/mips/include/asm/xtalk/xtalk.h        |   9 -
- arch/mips/kernel/cpu-probe.c               |   8 +
- arch/mips/kernel/perf_event_mipsxx.c       |  21 +-
- arch/mips/pci/Makefile                     |   3 +-
- arch/mips/pci/ops-bridge.c                 | 302 --------------
- arch/mips/pci/pci-ip27.c                   | 181 ---------
- arch/mips/pci/pci-xtalk-bridge.c           | 610 +++++++++++++++++++++++++++++
- arch/mips/sgi-ip22/ip22-platform.c         |  13 +
- arch/mips/sgi-ip27/ip27-init.c             |   2 +
- arch/mips/sgi-ip27/ip27-irq.c              | 191 ++++-----
- arch/mips/sgi-ip27/ip27-xtalk.c            |  61 ++-
- include/linux/platform_data/xtalk-bridge.h |  22 ++
- 18 files changed, 831 insertions(+), 660 deletions(-)
- create mode 100644 arch/mips/include/asm/sn/irq_alloc.h
- delete mode 100644 arch/mips/pci/ops-bridge.c
- create mode 100644 arch/mips/pci/pci-xtalk-bridge.c
- create mode 100644 include/linux/platform_data/xtalk-bridge.h
-
---ipltsq3rrhonmppt
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEARYIAB0WIQRgLjeFAZEXQzy86/s+p5+stXUA3QUCXN+m1QAKCRA+p5+stXUA
-3RKHAP42Xxe+rzIHg9zrsOalB7XVi2H1wZu9sNakQYB/6PPb8wEAn1iuoaQJsvEH
-e01qEM2t6lEp1tw+YOb1lnS/T7Wz7Ac=
-=Y7hu
------END PGP SIGNATURE-----
-
---ipltsq3rrhonmppt--
