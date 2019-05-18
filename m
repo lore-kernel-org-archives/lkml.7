@@ -2,211 +2,118 @@ Return-Path: <SRS0=//ty=TS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,FROM_EXCESS_BASE64,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_NEOMUTT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2517C04AAF
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 May 2019 21:55:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A140C072A4
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 May 2019 22:27:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9F47C20833
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 May 2019 21:55:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0C0162087E
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 May 2019 22:27:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oMMpz9hU"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="S8YmYgYE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729628AbfERVzz (ORCPT
+        id S1727663AbfERW1o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 May 2019 17:55:55 -0400
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:39053 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727958AbfERVzy (ORCPT
+        Sat, 18 May 2019 18:27:44 -0400
+Received: from mail-qk1-f195.google.com ([209.85.222.195]:46271 "EHLO
+        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727042AbfERW1n (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 May 2019 17:55:54 -0400
-Received: by mail-qt1-f194.google.com with SMTP id y42so12121111qtk.6;
-        Sat, 18 May 2019 14:55:53 -0700 (PDT)
+        Sat, 18 May 2019 18:27:43 -0400
+Received: by mail-qk1-f195.google.com with SMTP id a132so6603077qkb.13;
+        Sat, 18 May 2019 15:27:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=F7kGZLgsWFNccN5jm5MJgbPyqpoPp4bIUgv86OI6qys=;
-        b=oMMpz9hUX7vJmNX9AE2o21KSXo7niJiVpqmbhL9LG4Mb5BeaP063SbLMRT3gqm2kB7
-         vnLdx8kymi9/1KuZxsnObcusD+lDqYXxFRvdW/AFELqa7Mvcx9CMsPzHOZT+0sgEPuHy
-         PI4a4pVE+o+WZ8VqTHktsq9lfrb3LBGEklBkA/h+I+Z7WkoCP/whENTGO53FIiKAYiYn
-         EoPf4k1ZcVEzGrQX6ohldCkTBpMpnij84eqNNPipken+aZN49pyD08igbt/zPbkSoa/L
-         1e8ykPmeca0cq6M3IdZQZCJ2yrDgRL82506jB/us59kiQdaDuLi8fQH8Lz9TMVNE6Nmx
-         hH6A==
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :content-transfer-encoding:user-agent;
+        bh=hy5p245u/hqfnBo05YVJIyRfP8Rg4GNqhBJE2ChmnFU=;
+        b=S8YmYgYEIqWloUrBR/fwQpYB01cQKqEWJ52gGf0snm/GKFZGEet2pUE6m6NVS6vTl+
+         iJcby4aq70fMsKx/JUjQvZPz6beLW92ERuI90JAtMKFzONo5Hrl88oXLkySDxgS43QqE
+         i6MvqcU6eJnhb3WQi2cgqha03yfeFRqqcc8NYax4E3Q876WDD9HIv9KOuCHLVfPdA5Dg
+         vRdAMcRhptxZJkP92pRjNQWJJhLbhmQ0Qa1TsLjueSAjCag7KVf6y52nZ4qcrPUatFXU
+         M8LCidr1j3mtksIS66hvDdgpQkgqqWWxMuqnJ5Mf1AD1dCN3FhJ06xG4wfkf6P9opDGh
+         mH6A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=F7kGZLgsWFNccN5jm5MJgbPyqpoPp4bIUgv86OI6qys=;
-        b=IcVVCmPnECyTfMXvltYVkzXfS6TO1kjIyJf5PR5KBO0wNYugc+6OmDcIdqEcccg3/4
-         NpxZauZaA3d2eBvYric2krq2GM0gV1Rzx278YMwIw5N0pZ/6+wZQAq050YUWu343iB/F
-         PHetzjJvWQKwpgPlQjnVvp0FXhmdJIJM0B1XQUBsW/HBlVO2lpomX581Z61ESPJ3DqfA
-         I3o5+fPxE6A+S6Y1bYhRtFXE6lrsqRJZMXkTNm5FZTc3zrYzy85841TbIoa4SaJvXAer
-         6Zud5OiyHqrXoR7ZS8Lagz5zdF2iVadphE1XhKq9lq1ttLea1VTKrdItFVe2/M4ihFEv
-         IGMA==
-X-Gm-Message-State: APjAAAXSa0Jr38xi0dxzYJBypqA0Q5KSLmXcp3QRBUausUbRC+hIO6aD
-        qILe5bT7to5iGkzRRZktna0oQF5ncqc=
-X-Google-Smtp-Source: APXvYqw3IA1BdawiLxSPcOk5SXMAHPsatl/On2nn+iBayvDG3T48bV+8tmD1hCNUNfiYytYnermx5A==
-X-Received: by 2002:ac8:2da8:: with SMTP id p37mr56526209qta.180.1558216553105;
-        Sat, 18 May 2019 14:55:53 -0700 (PDT)
-Received: from wall-e.ime.usp.br ([143.107.45.1])
-        by smtp.gmail.com with ESMTPSA id i7sm6239964qkk.35.2019.05.18.14.55.49
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Sat, 18 May 2019 14:55:52 -0700 (PDT)
-From:   Lucas Oshiro <lucasseikioshiro@gmail.com>
-To:     Jonathan Cameron <jic23@kernel.org>,
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:content-transfer-encoding:user-agent;
+        bh=hy5p245u/hqfnBo05YVJIyRfP8Rg4GNqhBJE2ChmnFU=;
+        b=VRFOjX0YNJVACOjCmD/9WuEY1MVuQfsm6fZaJQ5ZTjPCfevNTM1GnFRolmRhNtiL01
+         AVx/iK1nCpQ7hSmdwOeWveSNQ4lte9rm5UUpoV870Sg02tOqiR7xEVi1cYwmkfv8HG+H
+         L7YWSVjcT5beL7fqVIx/o+wTcv/t95dPWwpPslLGcC8LUrtlfP8PL1i4hETAOvPRyYyC
+         qmh8+jTN5DbSC7qrEq08PG4RX+Ag+Z/yOnponqhKL9050tDUhOCJ0rvEt+7rkfPe38hu
+         0pUFNKgboAvEze292mfWpU5plc7vumFR50PBqrARs6TGY6gFZ05H1PgJUKJ1q8opIisQ
+         E97A==
+X-Gm-Message-State: APjAAAWXFr3OZ/gYo5Z97q94POGl7EM0Db5WsPkjenpHXMpsKILEQQzr
+        /z684opamFCxCo8JXyS1tnw=
+X-Google-Smtp-Source: APXvYqwbh0b5G7fQ/Je9ThH/GFzks8ivtZyyrVjHAZyJWdBrSA2GNyTILBkZKch71UD4lhHvnemmWQ==
+X-Received: by 2002:ae9:ed45:: with SMTP id c66mr49545224qkg.86.1558218462666;
+        Sat, 18 May 2019 15:27:42 -0700 (PDT)
+Received: from smtp.gmail.com ([143.107.45.1])
+        by smtp.gmail.com with ESMTPSA id x3sm7201145qtk.75.2019.05.18.15.27.39
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Sat, 18 May 2019 15:27:42 -0700 (PDT)
+Date:   Sat, 18 May 2019 19:27:33 -0300
+From:   =?utf-8?B?Sm/Do28=?= Seckler <joaoseckler@gmail.com>
+To:     Lars-Peter Clausen <lars@metafoo.de>,
+        Michael Hennerich <Michael.Hennerich@analog.com>,
+        Stefan Popa <stefan.popa@analog.com>,
+        Jonathan Cameron <jic23@kernel.org>,
         Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
         Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Stefan Popa <stefan.popa@analog.com>
-Cc:     linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kernel-usp@googlegroups.com,
-        Rodrigo Ribeiro <rodrigorsdc@gmail.com>
-Subject: [PATCH] dt-bindings: iio: accel: adxl372: switch to YAML bindings
-Date:   Sat, 18 May 2019 18:55:42 -0300
-Message-Id: <20190518215542.25140-1-lucasseikioshiro@gmail.com>
-X-Mailer: git-send-email 2.21.0
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-iio@vger.kernel.org, devel@driverdev.osuosl.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] staging: iio: ad7746: add device tree support
+Message-ID: <20190518222733.2ttcgvy7fct4awra@smtp.gmail.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Convert the old device tree documentation to yaml format.
+Add a of_device_id struct variable and subsequent call to
+MODULE_DEVICE_TABLE macro to support device tree.
 
+Signed-off-by: João Seckler <joaoseckler@gmail.com>
 Signed-off-by: Lucas Oshiro <lucasseikioshiro@gmail.com>
-Signed-off-by: Rodrigo Ribeiro <rodrigorsdc@gmail.com>
-Co-developed-by: Rodrigo Ribeiro <rodrigorsdc@gmail.com>
+Co-developed-by: Lucas Oshiro <lucasseikioshiro@gmail.com>
 ---
+ drivers/staging/iio/cdc/ad7746.c | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-Hello,
-We've added Stefan Popa as maintainer of the yaml documentation of this driver
-because we found through git that he was the author of the older documentation.
-
- .../bindings/iio/accel/adi,adxl372.yaml       | 66 +++++++++++++++++++
- .../devicetree/bindings/iio/accel/adxl372.txt | 33 ----------
- 2 files changed, 66 insertions(+), 33 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/iio/accel/adi,adxl372.yaml
- delete mode 100644 Documentation/devicetree/bindings/iio/accel/adxl372.txt
-
-diff --git a/Documentation/devicetree/bindings/iio/accel/adi,adxl372.yaml b/Documentation/devicetree/bindings/iio/accel/adi,adxl372.yaml
-new file mode 100644
-index 000000000000..a6e2893d2ab1
---- /dev/null
-+++ b/Documentation/devicetree/bindings/iio/accel/adi,adxl372.yaml
-@@ -0,0 +1,66 @@
-+# SPDX-License-Identifier: GPL-2.0
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/iio/accelerometers/adi,adxl372.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
+diff --git a/drivers/staging/iio/cdc/ad7746.c b/drivers/staging/iio/cdc/ad7746.c
+index 47610d863908..21527d84f940 100644
+--- a/drivers/staging/iio/cdc/ad7746.c
++++ b/drivers/staging/iio/cdc/ad7746.c
+@@ -748,9 +748,19 @@ static const struct i2c_device_id ad7746_id[] = {
+ 
+ MODULE_DEVICE_TABLE(i2c, ad7746_id);
+ 
++static const struct of_device_id ad7746_of_match[] = {
++	{ .compatible = "adi,ad7745" },
++	{ .compatible = "adi,ad7746" },
++	{ .compatible = "adi,ad7747" },
++	{ },
++};
 +
-+title: Analog Devices ADXL372 3-Axis, +/-(200g) Digital Accelerometer
++MODULE_DEVICE_TABLE(of, ad7746_of_match);
 +
-+maintainers:
-+  - Stefan Popa <stefan.popa@analog.com>
-+
-+description: |
-+  Analog Devices ADXL372 3-Axis, +/-(200g) Digital Accelerometer that supports
-+  both I2C & SPI interfaces
-+    https://www.analog.com/en/products/adxl372.html
-+
-+properties:
-+  compatible:
-+    enum:
-+      - adi,adxl372
-+
-+  reg:
-+    description: the I2C address or SPI chip select number for the device
-+    maxItems: 1
-+
-+  interrupts:
-+    description:
-+      interrupt mapping for IRQ as documented in
-+      Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
-+    maxItems: 1
-+
-+required:
-+  - compatible
-+  - reg
-+
-+examples:
-+  - |
-+        #include <dt-bindings/gpio/gpio.h>
-+        #include <dt-bindings/interrupt-controller/irq.h>
-+        i2c0 {
-+                #address-cells = <1>;
-+                #size-cells = <0>;
-+
-+                /* Example for a I2C device node */
-+                accelerometer@53 {
-+                        compatible = "adi,adxl372";
-+                        reg = <0x53>;
-+                        interrupt-parent = <&gpio>;
-+                        interrupts = <25 IRQ_TYPE_EDGE_FALLING>;
-+                };
-+        };
-+  - |
-+        #include <dt-bindings/gpio/gpio.h>
-+        #include <dt-bindings/interrupt-controller/irq.h>
-+        spi0 {
-+                #address-cells = <1>;
-+                #size-cells = <0>;
-+
-+                accelerometer@0 {
-+                        compatible = "adi,adxl372";
-+                        reg = <0>;
-+                        spi-max-frequency = <1000000>;
-+                        interrupt-parent = <&gpio>;
-+                        interrupts = <25 IRQ_TYPE_EDGE_FALLING>;
-+                };
-+        };
-diff --git a/Documentation/devicetree/bindings/iio/accel/adxl372.txt b/Documentation/devicetree/bindings/iio/accel/adxl372.txt
-deleted file mode 100644
-index a289964756a7..000000000000
---- a/Documentation/devicetree/bindings/iio/accel/adxl372.txt
-+++ /dev/null
-@@ -1,33 +0,0 @@
--Analog Devices ADXL372 3-Axis, +/-(200g) Digital Accelerometer
--
--http://www.analog.com/media/en/technical-documentation/data-sheets/adxl372.pdf
--
--Required properties:
-- - compatible : should be "adi,adxl372"
-- - reg: the I2C address or SPI chip select number for the device
--
--Required properties for SPI bus usage:
-- - spi-max-frequency: Max SPI frequency to use
--
--Optional properties:
-- - interrupts: interrupt mapping for IRQ as documented in
--   Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
--
--Example for a I2C device node:
--
--	accelerometer@53 {
--		compatible = "adi,adxl372";
--		reg = <0x53>;
--		interrupt-parent = <&gpio>;
--		interrupts = <25 IRQ_TYPE_EDGE_FALLING>;
--	};
--
--Example for a SPI device node:
--
--	accelerometer@0 {
--		compatible = "adi,adxl372";
--		reg = <0>;
--		spi-max-frequency = <1000000>;
--		interrupt-parent = <&gpio>;
--		interrupts = <25 IRQ_TYPE_EDGE_FALLING>;
--	};
+ static struct i2c_driver ad7746_driver = {
+ 	.driver = {
+ 		.name = KBUILD_MODNAME,
++		.of_match_table = ad7746_of_match,
+ 	},
+ 	.probe = ad7746_probe,
+ 	.id_table = ad7746_id,
 -- 
-2.21.0
+2.11.0
 
