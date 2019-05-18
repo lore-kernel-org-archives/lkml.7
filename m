@@ -2,184 +2,259 @@ Return-Path: <SRS0=//ty=TS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E49B8C04AAF
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 May 2019 05:17:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10611C04AAF
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 May 2019 05:18:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ADA5720833
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 May 2019 05:17:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE2AB20833
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 May 2019 05:18:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="qh6Oq87H"
+	dkim=pass (2048-bit key) header.d=kernelci-org.20150623.gappssmtp.com header.i=@kernelci-org.20150623.gappssmtp.com header.b="F1zfWMdR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726263AbfERFRp (ORCPT
+        id S1727073AbfERFSt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 May 2019 01:17:45 -0400
-Received: from conssluserg-03.nifty.com ([210.131.2.82]:20260 "EHLO
-        conssluserg-03.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725268AbfERFRp (ORCPT
+        Sat, 18 May 2019 01:18:49 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:47054 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725810AbfERFSs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 May 2019 01:17:45 -0400
-Received: from mail-vs1-f50.google.com (mail-vs1-f50.google.com [209.85.217.50]) (authenticated)
-        by conssluserg-03.nifty.com with ESMTP id x4I5HQht029939;
-        Sat, 18 May 2019 14:17:27 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-03.nifty.com x4I5HQht029939
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1558156647;
-        bh=kywHDOSLnwkjDkKM0dbYJjVaCTIaJe5E56AK1QSBnpg=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=qh6Oq87HBAqCLw/HU2vAG8rWwMnRejolP3OWk+hRptk+euLf3tye5OYIAfTrJ/+t0
-         25gsgGhYSnZPXmT1AvVAm1ITnKh6NRe03ja5NcAb4gJEkGKBGDGUGnYO2o2LG1tuzb
-         f44mk+QX3SOK6OVqMsi6nuhsb2qJjoIt3RNR3DktJ+pQe62GtNgenKrV3nOTTaABDh
-         Rnu31a93Qmk97/Shq4mPAlVfvhkb9NmNWPteIFzkzxi1KoCR2J11x1wjKlzP1pmCeF
-         U5/Fr/7bliC00+m2mUVgTqTPMYoDFb4FeR6v9Mwaw5Cq7jjH6y5Iv3dbHaPXmcJcEI
-         cMNkXzssH8SCg==
-X-Nifty-SrcIP: [209.85.217.50]
-Received: by mail-vs1-f50.google.com with SMTP id q13so5982923vso.2;
-        Fri, 17 May 2019 22:17:27 -0700 (PDT)
-X-Gm-Message-State: APjAAAUn1ZNKEszCFGl3ZDSOotytAzoVo+nIgtjGNPCxfIvQ0VWWwIb3
-        n1zeLNKTGFRGrycL0z+/WmFWRa3HmAfwluuL5hg=
-X-Google-Smtp-Source: APXvYqyaV41T3lgarcHYIfcGzALfRz/7RFyfIO7aNgfATseO8tC80WC2aOEsHvxw1aU3Z6qXI8oicpisvjEOoiGks+M=
-X-Received: by 2002:a67:d382:: with SMTP id b2mr13359094vsj.155.1558156646034;
- Fri, 17 May 2019 22:17:26 -0700 (PDT)
+        Sat, 18 May 2019 01:18:48 -0400
+Received: by mail-wr1-f66.google.com with SMTP id r7so9028160wrr.13
+        for <linux-kernel@vger.kernel.org>; Fri, 17 May 2019 22:18:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernelci-org.20150623.gappssmtp.com; s=20150623;
+        h=message-id:date:mime-version:content-transfer-encoding:subject:to
+         :from:cc;
+        bh=FdTczlBBVa9u+WV7Y3o/VG0d13GnIMDeCYtn2Nanml4=;
+        b=F1zfWMdRgS6aonOqLALhrSo+SyB4+e0YJqXqynv/i3/qPBQf/XXDnhPbqBKxYRQZiz
+         S8ujokRw+sZ8gpEG0r/sqzCtbRLMEWbnAOWCRP/YvIVR8rdMH22YtSsZB8HGQFmDrbGd
+         MjKCAMONJPBnABOtf9XTXbB8QyJCzD30yc9wGBT2syOFI9Mx/wVMlR/kl72NNslvQkc0
+         z7onZq/tS9DFecIgbdFccvdkDKg7l1PIdSXBqMCmCG2+rsAvFL+aRCsJhrjAZYjG9zth
+         JrCM8prGC6/8wXVYk1+UHv2GKpnyZpJtx8vJdZ1t8xKyJKWKz0goQ2ksTil2qJsXAKAM
+         AU1A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:date:mime-version
+         :content-transfer-encoding:subject:to:from:cc;
+        bh=FdTczlBBVa9u+WV7Y3o/VG0d13GnIMDeCYtn2Nanml4=;
+        b=rz3Ur7Bl7l3jSJLYwaBqbyB8S95gAReku6Aw+KP9uVL4xcFpLLo0XAKtBzCbfjP4Df
+         NGAjpfLUrwCjESpB0BDoMFOjPYpeVIS8le/kblCJX/i2ysqs72Aq8LhNulsQF7Sf4kp1
+         JubLA8PFotl9y28nLt9kwn/X/58vV6IJKUHfy882B6GUls+cdPSOAIWjuQD5sPxQM/i7
+         cga/4hNUq6u8Q67/QibS6HIF4kbKKeIDR7xzJO+4F9WeNphnLzj2VZ11KPkPbUOjwP5o
+         Pjf5972N2jRpyGOvLA2WA8DOXOP1YyPeWWOuTXU2I2tAG2oDZZStsosYs+UDMzkmnZom
+         5cTw==
+X-Gm-Message-State: APjAAAWx0mqbTlfO+uoZjYHV6PtctrzNxBeeXoavy7BuarWbjrsiRfBR
+        CIAUUGBYYrYxn7I1Y2fJWhIeOw==
+X-Google-Smtp-Source: APXvYqyKs/VAHBOML+lvp5PP0kJwVtEuyjECXDM+qa9/C+RbEsVzF763x/DTJy2CzXp5JXcWVGKPwQ==
+X-Received: by 2002:a5d:4e50:: with SMTP id r16mr11753300wrt.197.1558156725277;
+        Fri, 17 May 2019 22:18:45 -0700 (PDT)
+Received: from [148.251.42.114] ([2a01:4f8:201:9271::2])
+        by smtp.gmail.com with ESMTPSA id r3sm9672144wrn.5.2019.05.17.22.18.44
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 17 May 2019 22:18:44 -0700 (PDT)
+Message-ID: <5cdf95b4.1c69fb81.808ef.7543@mx.google.com>
+Date:   Fri, 17 May 2019 22:18:44 -0700 (PDT)
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-References: <20190516194818.29230-1-jani.nikula@intel.com>
-In-Reply-To: <20190516194818.29230-1-jani.nikula@intel.com>
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Sat, 18 May 2019 14:16:50 +0900
-X-Gmail-Original-Message-ID: <CAK7LNAQv-fm2iV6HW_FM0Fe6hNDeJ25c9CS2SbroSOneoepFMQ@mail.gmail.com>
-Message-ID: <CAK7LNAQv-fm2iV6HW_FM0Fe6hNDeJ25c9CS2SbroSOneoepFMQ@mail.gmail.com>
-Subject: Re: [RFC 1/3] kbuild: add support for ensuring headers are self-contained
-To:     Jani Nikula <jani.nikula@intel.com>
-Cc:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        intel-gfx@lists.freedesktop.org,
-        Chris Wilson <chris@chris-wilson.co.uk>,
-        Michal Marek <michal.lkml@markovi.net>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Kernelci-Report-Type: bisect
+X-Kernelci-Tree: mainline
+X-Kernelci-Lab-Name: lab-baylibre
+X-Kernelci-Branch: master
+X-Kernelci-Kernel: v5.1-12505-g0ef0fd351550
+Subject: mainline/master boot bisection: v5.1-12505-g0ef0fd351550 on
+ meson-g12a-x96-max
+To:     tomeu.vizoso@collabora.com, guillaume.tucker@collabora.com,
+        mgalka@collabora.com, Kevin Hilman <khilman@baylibre.com>,
+        Neil Armstrong <narmstrong@baylibre.com>, broonie@kernel.org,
+        matthew.hart@linaro.org, khilman@baylibre.com,
+        enric.balletbo@collabora.com, Jerome Brunet <jbrunet@baylibre.com>
+From:   "kernelci.org bot" <bot@kernelci.org>
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Rob Herring <robh+dt@kernel.org>,
+        linux-amlogic@lists.infradead.org,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-arm-kernel@lists.infradead.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 17, 2019 at 4:48 AM Jani Nikula <jani.nikula@intel.com> wrote:
->
-> Sometimes it's useful to be able to explicitly ensure certain headers
-> remain self-contained, i.e. that they are compilable as standalone
-> units, by including and/or forward declaring everything they depend on.
->
-> Add special target header-test-y where individual Makefiles can add
-> headers to be tested if CONFIG_HEADER_TEST is enabled. This will
-> generate a dummy C file per header that gets built as part of extra-y.
->
-> Cc: Chris Wilson <chris@chris-wilson.co.uk>
-> Cc: Masahiro Yamada <yamada.masahiro@socionext.com>
-> Cc: Michal Marek <michal.lkml@markovi.net>
-> Signed-off-by: Jani Nikula <jani.nikula@intel.com>
-> ---
->  Documentation/kbuild/makefiles.txt |  7 +++++++
->  init/Kconfig                       |  9 +++++++++
->  scripts/Makefile.build             | 10 ++++++++++
->  scripts/Makefile.lib               |  3 +++
->  4 files changed, 29 insertions(+)
->
-> diff --git a/Documentation/kbuild/makefiles.txt b/Documentation/kbuild/makefiles.txt
-> index 03c065855eaf..73df58e5ea0c 100644
-> --- a/Documentation/kbuild/makefiles.txt
-> +++ b/Documentation/kbuild/makefiles.txt
-> @@ -1036,6 +1036,13 @@ When kbuild executes, the following steps are followed (roughly):
->         In this example, extra-y is used to list object files that
->         shall be built, but shall not be linked as part of built-in.a.
->
-> +    header-test-y
-> +
-> +       header-test-y specifies headers (*.h) in the current directory that
-> +       should be compile tested to ensure they are self-contained,
-> +       i.e. compilable as standalone units. If CONFIG_HEADER_TEST is enabled,
-> +       this autogenerates dummy sources to include the headers, and builds them
-> +       as part of extra-y.
->
->  --- 6.7 Commands useful for building a boot image
->
-> diff --git a/init/Kconfig b/init/Kconfig
-> index 4592bf7997c0..d91b157201b1 100644
-> --- a/init/Kconfig
-> +++ b/init/Kconfig
-> @@ -95,6 +95,15 @@ config COMPILE_TEST
->           here. If you are a user/distributor, say N here to exclude useless
->           drivers to be distributed.
->
-> +config HEADER_TEST
-> +       bool "Compile test headers that should be standalone compilable"
-> +       help
-> +         Compile test headers listed in header-test-y target to ensure they are
-> +         self-contained, i.e. compilable as standalone units.
-> +
-> +         If you are a developer or tester and want to ensure the requested
-> +         headers are self-contained, say Y here. Otherwise, choose N.
-> +
->  config LOCALVERSION
->         string "Local version - append to kernel release"
->         help
-> diff --git a/scripts/Makefile.build b/scripts/Makefile.build
-> index 76ca30cc4791..4d4bf698467a 100644
-> --- a/scripts/Makefile.build
-> +++ b/scripts/Makefile.build
-> @@ -291,6 +291,16 @@ quiet_cmd_cc_lst_c = MKLST   $@
->  $(obj)/%.lst: $(src)/%.c FORCE
->         $(call if_changed_dep,cc_lst_c)
->
-> +# Dummy C sources for header test (header-test-y target)
-> +# ---------------------------------------------------------------------------
-> +
-> +quiet_cmd_header_test = HDRTEST $@
-> +      cmd_header_test = echo "\#include \"$(<F)\"" > $@
-> +
-> +# FIXME: would be nice to be able to limit this implicit rule to header-test-y
-> +$(obj)/%.header_test.c: $(src)/%.h FORCE
-> +       $(call if_changed,header_test)
-> +
->  # Compile assembler sources (.S)
->  # ---------------------------------------------------------------------------
->
-> diff --git a/scripts/Makefile.lib b/scripts/Makefile.lib
-> index 8a1f64f17740..c2839de06485 100644
-> --- a/scripts/Makefile.lib
-> +++ b/scripts/Makefile.lib
-> @@ -66,6 +66,9 @@ extra-y += $(patsubst %.dtb,%.dt.yaml, $(dtb-y))
->  extra-$(CONFIG_OF_ALL_DTBS) += $(patsubst %.dtb,%.dt.yaml, $(dtb-))
->  endif
->
-> +# Test self-contained headers
-> +extra-$(CONFIG_HEADER_TEST) += $(patsubst %.h,%.header_test.o,$(header-test-y))
-> +
->  # Add subdir path
->
->  extra-y                := $(addprefix $(obj)/,$(extra-y))
-> --
-> 2.20.1
->
+* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+* This automated bisection report was sent to you on the basis  *
+* that you may be involved with the breaking commit it has      *
+* found.  No manual investigation has been done to verify it,   *
+* and the root cause of the problem may be somewhere else.      *
+* Hope this helps!                                              *
+* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+
+mainline/master boot bisection: v5.1-12505-g0ef0fd351550 on meson-g12a-x96-=
+max
+
+Summary:
+  Start:      0ef0fd351550 Merge tag 'for-linus' of git://git.kernel.org/pu=
+b/scm/virt/kvm/kvm
+  Details:    https://kernelci.org/boot/id/5cdf275859b514bb847a3628
+  Plain log:  https://storage.kernelci.org//mainline/master/v5.1-12505-g0ef=
+0fd351550/arm64/defconfig+CONFIG_RANDOMIZE_BASE=3Dy/gcc-8/lab-baylibre/boot=
+-meson-g12a-x96-max.txt
+  HTML log:   https://storage.kernelci.org//mainline/master/v5.1-12505-g0ef=
+0fd351550/arm64/defconfig+CONFIG_RANDOMIZE_BASE=3Dy/gcc-8/lab-baylibre/boot=
+-meson-g12a-x96-max.html
+  Result:     11a7bea17c9e arm64: dts: meson: g12a: add pinctrl support con=
+trollers
+
+Checks:
+  revert:     PASS
+  verify:     PASS
+
+Parameters:
+  Tree:       mainline
+  URL:        git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.=
+git
+  Branch:     master
+  Target:     meson-g12a-x96-max
+  CPU arch:   arm64
+  Lab:        lab-baylibre
+  Compiler:   gcc-8
+  Config:     defconfig+CONFIG_RANDOMIZE_BASE=3Dy
+  Test suite: boot
+
+Breaking commit found:
+
+---------------------------------------------------------------------------=
+----
+commit 11a7bea17c9e0a36daab934d83e15a760f402147
+Author: Jerome Brunet <jbrunet@baylibre.com>
+Date:   Mon Mar 18 10:58:45 2019 +0100
+
+    arm64: dts: meson: g12a: add pinctrl support controllers
+    =
+
+    Add the peripheral and always-on pinctrl controllers to the g12a soc.
+    =
+
+    Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
+    Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+    Signed-off-by: Kevin Hilman <khilman@baylibre.com>
+
+diff --git a/arch/arm64/boot/dts/amlogic/meson-g12a.dtsi b/arch/arm64/boot/=
+dts/amlogic/meson-g12a.dtsi
+index abfa167751af..5e07e4ca3f4b 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-g12a.dtsi
++++ b/arch/arm64/boot/dts/amlogic/meson-g12a.dtsi
+@@ -104,6 +104,29 @@
+ 				#address-cells =3D <2>;
+ 				#size-cells =3D <2>;
+ 				ranges =3D <0x0 0x0 0x0 0x34400 0x0 0x400>;
++
++				periphs_pinctrl: pinctrl@40 {
++					compatible =3D "amlogic,meson-g12a-periphs-pinctrl";
++					#address-cells =3D <2>;
++					#size-cells =3D <2>;
++					ranges;
++
++					gpio: bank@40 {
++						reg =3D <0x0 0x40  0x0 0x4c>,
++						      <0x0 0xe8  0x0 0x18>,
++						      <0x0 0x120 0x0 0x18>,
++						      <0x0 0x2c0 0x0 0x40>,
++						      <0x0 0x340 0x0 0x1c>;
++						reg-names =3D "gpio",
++							    "pull",
++							    "pull-enable",
++							    "mux",
++							    "ds";
++						gpio-controller;
++						#gpio-cells =3D <2>;
++						gpio-ranges =3D <&periphs_pinctrl 0 0 86>;
++					};
++				};
+ 			};
+ =
+
+ 			hiu: bus@3c000 {
+@@ -150,6 +173,25 @@
+ 					clocks =3D <&xtal>, <&clkc CLKID_CLK81>;
+ 					clock-names =3D "xtal", "mpeg-clk";
+ 				};
++
++				ao_pinctrl: pinctrl@14 {
++					compatible =3D "amlogic,meson-g12a-aobus-pinctrl";
++					#address-cells =3D <2>;
++					#size-cells =3D <2>;
++					ranges;
++
++					gpio_ao: bank@14 {
++						reg =3D <0x0 0x14 0x0 0x8>,
++						      <0x0 0x1c 0x0 0x8>,
++						      <0x0 0x24 0x0 0x14>;
++						reg-names =3D "mux",
++							    "ds",
++							    "gpio";
++						gpio-controller;
++						#gpio-cells =3D <2>;
++						gpio-ranges =3D <&ao_pinctrl 0 0 15>;
++					};
++				};
+ 			};
+ =
+
+ 			sec_AO: ao-secure@140 {
+---------------------------------------------------------------------------=
+----
 
 
-Thanks, probably we should do this.
+Git bisection log:
 
-At least, this check will be useful
-for uapi headers since the kernel does not
-test the self-containedness of
-exported headers, (then turned out be problematic
-later in user-space).
-
-I will take a little time to considier
-how far we can extend the idea about
-"headers should be self-contained".
-
-Thank you.
-
-
-
--- 
-Best Regards
-Masahiro Yamada
+---------------------------------------------------------------------------=
+----
+git bisect start
+# good: [a455eda33faafcaac1effb31d682765b14ef868c] Merge branch 'linus' of =
+git://git.kernel.org/pub/scm/linux/kernel/git/evalenti/linux-soc-thermal
+git bisect good a455eda33faafcaac1effb31d682765b14ef868c
+# bad: [0ef0fd351550130129bbdb77362488befd7b69d2] Merge tag 'for-linus' of =
+git://git.kernel.org/pub/scm/virt/kvm/kvm
+git bisect bad 0ef0fd351550130129bbdb77362488befd7b69d2
+# bad: [89f4f128ea535acaabf7d5bddc30ddda0fb7a70a] Merge tag 'imx-dt64-5.2' =
+of git://git.kernel.org/pub/scm/linux/kernel/git/shawnguo/linux into arm/dt
+git bisect bad 89f4f128ea535acaabf7d5bddc30ddda0fb7a70a
+# bad: [f5d6e8c077915c84d8b544bc02e3df2f0910c193] Merge tag 'sunxi-dt-for-5=
+.2' of https://git.kernel.org/pub/scm/linux/kernel/git/sunxi/linux into arm=
+/dt
+git bisect bad f5d6e8c077915c84d8b544bc02e3df2f0910c193
+# bad: [6d918e09331e63593b7827ea1a718f0da03b7fb0] Merge tag 'omap-for-v5.2/=
+dt-signed' of git://git.kernel.org/pub/scm/linux/kernel/git/tmlind/linux-om=
+ap into arm/dt
+git bisect bad 6d918e09331e63593b7827ea1a718f0da03b7fb0
+# bad: [2fe743c27f064d637df7f989333c153f8d4b0e65] Merge tag 'renesas-arm64-=
+dt-for-v5.2' of https://git.kernel.org/pub/scm/linux/kernel/git/horms/renes=
+as into arm/dt
+git bisect bad 2fe743c27f064d637df7f989333c153f8d4b0e65
+# bad: [f6f9683c5aedff214433fa130e67a79f08a47fdb] Merge tag 'v5.2-rockchip-=
+dts32-1' of git://git.kernel.org/pub/scm/linux/kernel/git/mmind/linux-rockc=
+hip into arm/dt
+git bisect bad f6f9683c5aedff214433fa130e67a79f08a47fdb
+# bad: [e2cffeb398f4830b004774444809ee256b9bc653] arm64: dts: meson-g12a: A=
+dd CMA reserved memory
+git bisect bad e2cffeb398f4830b004774444809ee256b9bc653
+# bad: [11a7bea17c9e0a36daab934d83e15a760f402147] arm64: dts: meson: g12a: =
+add pinctrl support controllers
+git bisect bad 11a7bea17c9e0a36daab934d83e15a760f402147
+# good: [7e09092aee006b21d830b99f8498b5640b8711f6] arm64: dts: meson-gxl-s9=
+05d-phicomm-n1: add status LED
+git bisect good 7e09092aee006b21d830b99f8498b5640b8711f6
+# good: [965c827ac37e71f76d3ac55c75ac08909f2a4eed] arm64: dts: meson: g12a:=
+ add efuse
+git bisect good 965c827ac37e71f76d3ac55c75ac08909f2a4eed
+# good: [b019f4a4199f865b054262ff78f606ca70f7b981] arm64: dts: meson: g12a:=
+ Add AO Clock + Reset Controller support
+git bisect good b019f4a4199f865b054262ff78f606ca70f7b981
+# first bad commit: [11a7bea17c9e0a36daab934d83e15a760f402147] arm64: dts: =
+meson: g12a: add pinctrl support controllers
+---------------------------------------------------------------------------=
+----
