@@ -7,57 +7,56 @@ X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7C78C04AAF
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 May 2019 09:31:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DAF9C04AAF
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 May 2019 09:31:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BD44920882
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 May 2019 09:31:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 06D2220872
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 May 2019 09:31:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="SR3Kdy6B"
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="iTtOOn3I"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730008AbfERJb3 (ORCPT
+        id S1730022AbfERJbu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 May 2019 05:31:29 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:34727 "EHLO
+        Sat, 18 May 2019 05:31:50 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:45533 "EHLO
         terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725268AbfERJb3 (ORCPT
+        with ESMTP id S1725268AbfERJbt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 May 2019 05:31:29 -0400
+        Sat, 18 May 2019 05:31:49 -0400
 Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x4I9VJ6C1742078
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x4I9UeB61742052
         (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Sat, 18 May 2019 02:31:19 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x4I9VJ6C1742078
+        Sat, 18 May 2019 02:30:40 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x4I9UeB61742052
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019041745; t=1558171880;
-        bh=4Qd8xv/bKZ75un3Hrz2gqPJOSLiD9F8jnyGYDogsqFo=;
+        s=2019041745; t=1558171841;
+        bh=6veWEyauEbwAT9CnyjcJx+j3ulVb/X1n35V/4eyveE0=;
         h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
-        b=SR3Kdy6BMViy8T+symMgVCjE4bmAlnEcRnaJRJiI0N/TGQ3wbQtCJNdcQXyLGwM/q
-         B6AtUt0BMURzXv4TP9kkCLbQcnK5n7p9b3jHuq2208c/30DIfM01nXzSev6MiUYMZ1
-         9HHYxAkO6LkXjYBozxUw2b7GwfD710EYqCrWQvM7DJyQFxW8Sh7hM+aNCihBwhRJIV
-         Gjc9Vk1tg18b+5ZUGvuOC744cDURl5xaPA8q1mzc+uLS2alsjDtb1C4TI78NOJOg45
-         ZgRSCc7kT1sEIhK58Tvp6LQDPJlvIr5lfXIhF6W6oVJBv9fbMhhHTuRTp7VHi7LM1d
-         h6IpG4mcnS4XQ==
+        b=iTtOOn3I02crY7JNLgfvx1cVIISn7PbuenwfHHWJL9oGv4UkQ5d9AsFFZ6Uw9MVrY
+         s+/YLu3s+1se4Fh6TS+vdAdMT/a0xehxuc3bzzOogPgotS7BYENAZm4raAfTBBhpht
+         lWEsZgql2UQu+oWk5+f9n0NLCVpd/CbPcu4SQDq9ChPQbldCyC3MFBCW2Hg1gauZ9k
+         fhEthG1LsUJujyRD3ft0DHeR4mM3smWg7kLK6kAh8cY/eadRVqi7oEbcKss+XW9MG5
+         wnDkDsCvqa/pjnWpK+iNJ6ktSG4rsskNPVMdmTOwgKWf8I2ooEx4lHUeoRLjfDFxlb
+         c/Z4poGhgYhtQ==
 Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x4I9VJYW1742075;
-        Sat, 18 May 2019 02:31:19 -0700
-Date:   Sat, 18 May 2019 02:31:19 -0700
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x4I9UdwT1742049;
+        Sat, 18 May 2019 02:30:39 -0700
+Date:   Sat, 18 May 2019 02:30:39 -0700
 X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
 From:   tip-bot for Kan Liang <tipbot@zytor.com>
-Message-ID: <tip-af785e75bf616704cab031e66403b6adcf5b700a@git.kernel.org>
-Cc:     ravi.bangoria@linux.ibm.com, mingo@kernel.org, tglx@linutronix.de,
-        acme@redhat.com, linux-kernel@vger.kernel.org, jolsa@kernel.org,
-        ak@linux.intel.com, kan.liang@linux.intel.com, hpa@zytor.com
-Reply-To: ravi.bangoria@linux.ibm.com, mingo@kernel.org,
-          tglx@linutronix.de, acme@redhat.com,
-          linux-kernel@vger.kernel.org, jolsa@kernel.org,
-          ak@linux.intel.com, kan.liang@linux.intel.com, hpa@zytor.com
-In-Reply-To: <1557865174-56264-2-git-send-email-kan.liang@linux.intel.com>
-References: <1557865174-56264-2-git-send-email-kan.liang@linux.intel.com>
+Message-ID: <tip-aeea9062d949584ac1f2f9a20f0e5ed306539a3e@git.kernel.org>
+Cc:     mingo@kernel.org, tglx@linutronix.de, linux-kernel@vger.kernel.org,
+        hpa@zytor.com, ak@linux.intel.com, kan.liang@linux.intel.com,
+        ravi.bangoria@linux.ibm.com, jolsa@kernel.org, acme@redhat.com
+Reply-To: acme@redhat.com, jolsa@kernel.org, ravi.bangoria@linux.ibm.com,
+          kan.liang@linux.intel.com, linux-kernel@vger.kernel.org,
+          tglx@linutronix.de, hpa@zytor.com, ak@linux.intel.com,
+          mingo@kernel.org
+In-Reply-To: <1557865174-56264-1-git-send-email-kan.liang@linux.intel.com>
+References: <1557865174-56264-1-git-send-email-kan.liang@linux.intel.com>
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:perf/core] perf parse-regs: Add generic support for
- arch__intr/user_reg_mask()
-Git-Commit-ID: af785e75bf616704cab031e66403b6adcf5b700a
+Subject: [tip:perf/core] perf parse-regs: Split parse_regs
+Git-Commit-ID: aeea9062d949584ac1f2f9a20f0e5ed306539a3e
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot.git.kernel.org>
 Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
@@ -71,120 +70,119 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  af785e75bf616704cab031e66403b6adcf5b700a
-Gitweb:     https://git.kernel.org/tip/af785e75bf616704cab031e66403b6adcf5b700a
+Commit-ID:  aeea9062d949584ac1f2f9a20f0e5ed306539a3e
+Gitweb:     https://git.kernel.org/tip/aeea9062d949584ac1f2f9a20f0e5ed306539a3e
 Author:     Kan Liang <kan.liang@linux.intel.com>
-AuthorDate: Tue, 14 May 2019 13:19:33 -0700
+AuthorDate: Tue, 14 May 2019 13:19:32 -0700
 Committer:  Arnaldo Carvalho de Melo <acme@redhat.com>
-CommitDate: Thu, 16 May 2019 14:17:12 -0300
+CommitDate: Wed, 15 May 2019 16:36:49 -0300
 
-perf parse-regs: Add generic support for arch__intr/user_reg_mask()
+perf parse-regs: Split parse_regs
 
-There may be different register mask for use with intr or user on some
-platforms, e.g. Icelake.
+The available registers for --int-regs and --user-regs may be different,
+e.g. XMM registers.
 
-Add weak functions arch__intr_reg_mask() and arch__user_reg_mask() to
-return intr and user register mask respectively.
+Split parse_regs into two dedicated functions for --int-regs and
+--user-regs respectively.
 
-Check mask before printing or comparing the register name.
+Modify the warning message. "--user-regs=?" should be applied to show
+the available registers for --user-regs.
 
-Generic code always return PERF_REGS_MASK. No functional change.
-
-Suggested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
 Tested-by: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
 Cc: Andi Kleen <ak@linux.intel.com>
 Cc: Jiri Olsa <jolsa@kernel.org>
-Link: http://lkml.kernel.org/r/1557865174-56264-2-git-send-email-kan.liang@linux.intel.com
+Link: http://lkml.kernel.org/r/1557865174-56264-1-git-send-email-kan.liang@linux.intel.com
+[ Changed docs as suggested by Ravi and agreed by Kan ]
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/parse-regs-options.c | 13 ++++++++++---
- tools/perf/util/perf_regs.c          | 10 ++++++++++
- tools/perf/util/perf_regs.h          |  2 ++
- 3 files changed, 22 insertions(+), 3 deletions(-)
+ tools/perf/Documentation/perf-record.txt |  3 ++-
+ tools/perf/builtin-record.c              |  4 ++--
+ tools/perf/util/parse-regs-options.c     | 19 ++++++++++++++++---
+ tools/perf/util/parse-regs-options.h     |  3 ++-
+ 4 files changed, 22 insertions(+), 7 deletions(-)
 
+diff --git a/tools/perf/Documentation/perf-record.txt b/tools/perf/Documentation/perf-record.txt
+index 27b37624c376..de269430720a 100644
+--- a/tools/perf/Documentation/perf-record.txt
++++ b/tools/perf/Documentation/perf-record.txt
+@@ -406,7 +406,8 @@ symbolic names, e.g. on x86, ax, si. To list the available registers use
+ --intr-regs=ax,bx. The list of register is architecture dependent.
+ 
+ --user-regs::
+-Capture user registers at sample time. Same arguments as -I.
++Similar to -I, but capture user registers at sample time. To list the available
++user registers use --user-regs=\?.
+ 
+ --running-time::
+ Record running and enabled time for read events (:S)
+diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
+index 861395753c25..e2c3a585a61e 100644
+--- a/tools/perf/builtin-record.c
++++ b/tools/perf/builtin-record.c
+@@ -2168,10 +2168,10 @@ static struct option __record_options[] = {
+ 		    "use per-thread mmaps"),
+ 	OPT_CALLBACK_OPTARG('I', "intr-regs", &record.opts.sample_intr_regs, NULL, "any register",
+ 		    "sample selected machine registers on interrupt,"
+-		    " use '-I?' to list register names", parse_regs),
++		    " use '-I?' to list register names", parse_intr_regs),
+ 	OPT_CALLBACK_OPTARG(0, "user-regs", &record.opts.sample_user_regs, NULL, "any register",
+ 		    "sample selected machine registers on interrupt,"
+-		    " use '-I?' to list register names", parse_regs),
++		    " use '--user-regs=?' to list register names", parse_user_regs),
+ 	OPT_BOOLEAN(0, "running-time", &record.opts.running_time,
+ 		    "Record running/enabled time of read (:S) events"),
+ 	OPT_CALLBACK('k', "clockid", &record.opts,
 diff --git a/tools/perf/util/parse-regs-options.c b/tools/perf/util/parse-regs-options.c
-index b21617f2bec1..08581e276225 100644
+index 9cb187a20fe2..b21617f2bec1 100644
 --- a/tools/perf/util/parse-regs-options.c
 +++ b/tools/perf/util/parse-regs-options.c
-@@ -12,6 +12,7 @@ __parse_regs(const struct option *opt, const char *str, int unset, bool intr)
+@@ -5,8 +5,8 @@
+ #include <subcmd/parse-options.h>
+ #include "util/parse-regs-options.h"
+ 
+-int
+-parse_regs(const struct option *opt, const char *str, int unset)
++static int
++__parse_regs(const struct option *opt, const char *str, int unset, bool intr)
+ {
+ 	uint64_t *mode = (uint64_t *)opt->value;
  	const struct sample_reg *r;
- 	char *s, *os = NULL, *p;
- 	int ret = -1;
-+	uint64_t mask;
- 
- 	if (unset)
- 		return 0;
-@@ -22,6 +23,11 @@ __parse_regs(const struct option *opt, const char *str, int unset, bool intr)
- 	if (*mode)
- 		return -1;
- 
-+	if (intr)
-+		mask = arch__intr_reg_mask();
-+	else
-+		mask = arch__user_reg_mask();
-+
- 	/* str may be NULL in case no arg is passed to -I */
- 	if (str) {
- 		/* because str is read-only */
-@@ -37,14 +43,15 @@ __parse_regs(const struct option *opt, const char *str, int unset, bool intr)
- 			if (!strcmp(s, "?")) {
- 				fprintf(stderr, "available registers: ");
- 				for (r = sample_reg_masks; r->name; r++) {
--					fprintf(stderr, "%s ", r->name);
-+					if (r->mask & mask)
-+						fprintf(stderr, "%s ", r->name);
- 				}
- 				fputc('\n', stderr);
- 				/* just printing available regs */
- 				return -1;
- 			}
- 			for (r = sample_reg_masks; r->name; r++) {
--				if (!strcasecmp(s, r->name))
-+				if ((r->mask & mask) && !strcasecmp(s, r->name))
+@@ -48,7 +48,8 @@ parse_regs(const struct option *opt, const char *str, int unset)
  					break;
  			}
  			if (!r->name) {
-@@ -65,7 +72,7 @@ __parse_regs(const struct option *opt, const char *str, int unset, bool intr)
+-				ui__warning("Unknown register \"%s\", check man page or run \"perf record -I?\"\n", s);
++				ui__warning("Unknown register \"%s\", check man page or run \"perf record %s?\"\n",
++					    s, intr ? "-I" : "--user-regs=");
+ 				goto error;
+ 			}
  
- 	/* default to all possible regs */
- 	if (*mode == 0)
--		*mode = PERF_REGS_MASK;
-+		*mode = mask;
- error:
+@@ -69,3 +70,15 @@ error:
  	free(os);
  	return ret;
-diff --git a/tools/perf/util/perf_regs.c b/tools/perf/util/perf_regs.c
-index 2acfcc527cac..2774cec1f15f 100644
---- a/tools/perf/util/perf_regs.c
-+++ b/tools/perf/util/perf_regs.c
-@@ -13,6 +13,16 @@ int __weak arch_sdt_arg_parse_op(char *old_op __maybe_unused,
- 	return SDT_ARG_SKIP;
  }
- 
-+uint64_t __weak arch__intr_reg_mask(void)
++
++int
++parse_user_regs(const struct option *opt, const char *str, int unset)
 +{
-+	return PERF_REGS_MASK;
++	return __parse_regs(opt, str, unset, false);
 +}
 +
-+uint64_t __weak arch__user_reg_mask(void)
++int
++parse_intr_regs(const struct option *opt, const char *str, int unset)
 +{
-+	return PERF_REGS_MASK;
++	return __parse_regs(opt, str, unset, true);
 +}
-+
- #ifdef HAVE_PERF_REGS_SUPPORT
- int perf_reg_value(u64 *valp, struct regs_dump *regs, int id)
- {
-diff --git a/tools/perf/util/perf_regs.h b/tools/perf/util/perf_regs.h
-index 1a15a4bfc28d..cb9c246c8962 100644
---- a/tools/perf/util/perf_regs.h
-+++ b/tools/perf/util/perf_regs.h
-@@ -23,6 +23,8 @@ enum {
- };
- 
- int arch_sdt_arg_parse_op(char *old_op, char **new_op);
-+uint64_t arch__intr_reg_mask(void);
-+uint64_t arch__user_reg_mask(void);
- 
- #ifdef HAVE_PERF_REGS_SUPPORT
- #include <perf_regs.h>
+diff --git a/tools/perf/util/parse-regs-options.h b/tools/perf/util/parse-regs-options.h
+index cdefb1acf6be..2b23d25c6394 100644
+--- a/tools/perf/util/parse-regs-options.h
++++ b/tools/perf/util/parse-regs-options.h
+@@ -2,5 +2,6 @@
+ #ifndef _PERF_PARSE_REGS_OPTIONS_H
+ #define _PERF_PARSE_REGS_OPTIONS_H 1
+ struct option;
+-int parse_regs(const struct option *opt, const char *str, int unset);
++int parse_user_regs(const struct option *opt, const char *str, int unset);
++int parse_intr_regs(const struct option *opt, const char *str, int unset);
+ #endif /* _PERF_PARSE_REGS_OPTIONS_H */
