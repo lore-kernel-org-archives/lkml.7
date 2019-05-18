@@ -7,58 +7,58 @@ X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3327C04AAF
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 May 2019 09:15:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1189C04AAF
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 May 2019 09:15:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A65DE2082C
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 May 2019 09:15:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 62E8E2082C
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 May 2019 09:15:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="tOOkrZ28"
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="g3ip0sKE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729741AbfERJPD (ORCPT
+        id S1728962AbfERJPq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 May 2019 05:15:03 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:52051 "EHLO
+        Sat, 18 May 2019 05:15:46 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:59699 "EHLO
         terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727183AbfERJPD (ORCPT
+        with ESMTP id S1725268AbfERJPq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 May 2019 05:15:03 -0400
+        Sat, 18 May 2019 05:15:46 -0400
 Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x4I9EcT91737753
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x4I9FKMB1738056
         (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Sat, 18 May 2019 02:14:38 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x4I9EcT91737753
+        Sat, 18 May 2019 02:15:21 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x4I9FKMB1738056
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019041745; t=1558170879;
-        bh=7lvYqWPi4kigoxBzYA8V+z7ghwkIeFHBd+d6ZmzjyMM=;
+        s=2019041745; t=1558170921;
+        bh=0+L8TxTol7as+YL0SAGL8LGFGG5mwanR0QXJ7p5EhA4=;
         h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
-        b=tOOkrZ28RIgNq/hB7jEx/iDbBqqClx/JyvcMqu7hXPgqMz+EiB8i488CAsFTL7+U5
-         FLJU7g3lDiuvGA4hhdWUlulN7u+BSTj4eYr60rvNFc0UmBpanD7WQzqZRR1rWMR1Kl
-         6mMrQFSIlL38eei4opSyKj8w3djCN1CyVd7AdUGwE2NbUnIK8tDXsK/rCrChaEK8RO
-         h3qkHFlHrHcM+YYNgFgxB+cpo8KgdeZYaaD82B8HYB1uSQOqJlHLLIDFpyFd2Hr0Rw
-         WBkwGI6os8C3qei/5c3u9Gjbg7R9BsRIZSyShb/XTYlPiC+82s5OF6m2KCxZ6zSB/O
-         NgXqu1gNZMtIg==
+        b=g3ip0sKE2vGeM08iktzg9rXxe8g03vDemA41ZiW8CjVPMxJIUPDKri6G1qqi0HbD5
+         7irtwXQw0z+Kjn2Yo4mcskKOfuHgFqDvki5jixn7MWxg1e6C3A5iWKqujkY9LzscQ2
+         u2hI2hSyPT+ZFK2Bviuk50iL0UEY6maoBvGNhZ85j40xrR1HVwF99hkTc0ILJeJNgf
+         RSf1skpegMl1ozPYN62e9w6rQc1082OCNkEfnh7vIhqQJmZl308xUngGEBoNo9H6iA
+         lMjiY3gxBtrdkBqtgXteP6j005fN/oL9O4fD6o4pUgXiVTA0UFoH8W9PHhfEXlWAEl
+         H08zwSBmowgZg==
 Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x4I9EbOr1737750;
-        Sat, 18 May 2019 02:14:37 -0700
-Date:   Sat, 18 May 2019 02:14:37 -0700
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x4I9FKEV1738053;
+        Sat, 18 May 2019 02:15:20 -0700
+Date:   Sat, 18 May 2019 02:15:20 -0700
 X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
 From:   tip-bot for Tzvetomir Stoyanov <tipbot@zytor.com>
-Message-ID: <tip-e64392019c0537829ef1d555451c513f1046ae2a@git.kernel.org>
-Cc:     hpa@zytor.com, mingo@kernel.org, akpm@linux-foundation.org,
-        tglx@linutronix.de, linux-kernel@vger.kernel.org,
-        rostedt@goodmis.org, acme@redhat.com, namhyung@kernel.org,
-        tstoyanov@vmware.com, jolsa@redhat.com
-Reply-To: jolsa@redhat.com, tstoyanov@vmware.com, namhyung@kernel.org,
-          acme@redhat.com, rostedt@goodmis.org, tglx@linutronix.de,
-          linux-kernel@vger.kernel.org, akpm@linux-foundation.org,
-          mingo@kernel.org, hpa@zytor.com
-In-Reply-To: <20190510200109.421670142@goodmis.org>
-References: <20190510200109.421670142@goodmis.org>
+Message-ID: <tip-854d73c6665984765f8d93dea3d6c1dcafa17154@git.kernel.org>
+Cc:     jolsa@redhat.com, akpm@linux-foundation.org, tglx@linutronix.de,
+        namhyung@kernel.org, tstoyanov@vmware.com, mingo@kernel.org,
+        rostedt@goodmis.org, acme@redhat.com, hpa@zytor.com,
+        linux-kernel@vger.kernel.org
+Reply-To: akpm@linux-foundation.org, tglx@linutronix.de,
+          tstoyanov@vmware.com, namhyung@kernel.org, jolsa@redhat.com,
+          acme@redhat.com, rostedt@goodmis.org, mingo@kernel.org,
+          linux-kernel@vger.kernel.org, hpa@zytor.com
+In-Reply-To: <20190510200109.638838141@goodmis.org>
+References: <20190510200109.638838141@goodmis.org>
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:perf/core] tools lib traceevent: Man pages for event fields
+Subject: [tip:perf/core] tools lib traceevent: Man pages for event filter
  APIs
-Git-Commit-ID: e64392019c0537829ef1d555451c513f1046ae2a
+Git-Commit-ID: 854d73c6665984765f8d93dea3d6c1dcafa17154
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot.git.kernel.org>
 Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
@@ -72,45 +72,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  e64392019c0537829ef1d555451c513f1046ae2a
-Gitweb:     https://git.kernel.org/tip/e64392019c0537829ef1d555451c513f1046ae2a
+Commit-ID:  854d73c6665984765f8d93dea3d6c1dcafa17154
+Gitweb:     https://git.kernel.org/tip/854d73c6665984765f8d93dea3d6c1dcafa17154
 Author:     Tzvetomir Stoyanov <tstoyanov@vmware.com>
-AuthorDate: Fri, 10 May 2019 15:56:28 -0400
+AuthorDate: Fri, 10 May 2019 15:56:29 -0400
 Committer:  Arnaldo Carvalho de Melo <acme@redhat.com>
 CommitDate: Wed, 15 May 2019 16:36:48 -0300
 
-tools lib traceevent: Man pages for event fields APIs
+tools lib traceevent: Man pages for event filter APIs
 
-Create man pages for libtraceevent APIs:
+Added new man pages, describing libtraceevent event filter APIs:
 
-  tep_event_common_fields(),
-  tep_event_fields()
+  tep_filter_alloc()
+  tep_filter_free()
+  tep_filter_reset()
+  tep_filter_add_filter_str()
+  tep_filter_strerror()
+  tep_event_filtered()
+  tep_filter_remove_event()
+  tep_filter_match()
+  tep_filter_copy()
+  tep_filter_compare()
+  tep_filter_make_string()
 
 Signed-off-by: Tzvetomir Stoyanov <tstoyanov@vmware.com>
 Cc: Andrew Morton <akpm@linux-foundation.org>
 Cc: Jiri Olsa <jolsa@redhat.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: linux-trace-devel@vger.kernel.org
-Link: http://lore.kernel.org/linux-trace-devel/20190503091119.23399-22-tstoyanov@vmware.com
-Link: http://lkml.kernel.org/r/20190510200109.421670142@goodmis.org
+Link: http://lore.kernel.org/linux-trace-devel/20190503091119.23399-23-tstoyanov@vmware.com
+Link: http://lkml.kernel.org/r/20190510200109.638838141@goodmis.org
 Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- .../Documentation/libtraceevent-fields.txt         | 105 +++++++++++++++++++++
- 1 file changed, 105 insertions(+)
+ .../Documentation/libtraceevent-filter.txt         | 209 +++++++++++++++++++++
+ 1 file changed, 209 insertions(+)
 
-diff --git a/tools/lib/traceevent/Documentation/libtraceevent-fields.txt b/tools/lib/traceevent/Documentation/libtraceevent-fields.txt
+diff --git a/tools/lib/traceevent/Documentation/libtraceevent-filter.txt b/tools/lib/traceevent/Documentation/libtraceevent-filter.txt
 new file mode 100644
-index 000000000000..1ccb531d5114
+index 000000000000..4a9962d8cb59
 --- /dev/null
-+++ b/tools/lib/traceevent/Documentation/libtraceevent-fields.txt
-@@ -0,0 +1,105 @@
++++ b/tools/lib/traceevent/Documentation/libtraceevent-filter.txt
+@@ -0,0 +1,209 @@
 +libtraceevent(3)
 +================
 +
 +NAME
 +----
-+tep_event_common_fields, tep_event_fields - Get a list of fields for an event.
++tep_filter_alloc, tep_filter_free, tep_filter_reset, tep_filter_make_string,
++tep_filter_copy, tep_filter_compare, tep_filter_match, tep_event_filtered,
++tep_filter_remove_event, tep_filter_strerror, tep_filter_add_filter_str -
++Event filter related APIs.
 +
 +SYNOPSIS
 +--------
@@ -118,25 +130,93 @@ index 000000000000..1ccb531d5114
 +--
 +*#include <event-parse.h>*
 +
-+struct tep_format_field pass:[*]pass:[*]*tep_event_common_fields*(struct tep_event pass:[*]_event_);
-+struct tep_format_field pass:[*]pass:[*]*tep_event_fields*(struct tep_event pass:[*]_event_);
++struct tep_event_filter pass:[*]*tep_filter_alloc*(struct tep_handle pass:[*]_tep_);
++void *tep_filter_free*(struct tep_event_filter pass:[*]_filter_);
++void *tep_filter_reset*(struct tep_event_filter pass:[*]_filter_);
++enum tep_errno *tep_filter_add_filter_str*(struct tep_event_filter pass:[*]_filter_, const char pass:[*]_filter_str_);
++int *tep_event_filtered*(struct tep_event_filter pass:[*]_filter_, int _event_id_);
++int *tep_filter_remove_event*(struct tep_event_filter pass:[*]_filter_, int _event_id_);
++enum tep_errno *tep_filter_match*(struct tep_event_filter pass:[*]_filter_, struct tep_record pass:[*]_record_);
++int *tep_filter_copy*(struct tep_event_filter pass:[*]_dest_, struct tep_event_filter pass:[*]_source_);
++int *tep_filter_compare*(struct tep_event_filter pass:[*]_filter1_, struct tep_event_filter pass:[*]_filter2_);
++char pass:[*]*tep_filter_make_string*(struct tep_event_filter pass:[*]_filter_, int _event_id_);
++int *tep_filter_strerror*(struct tep_event_filter pass:[*]_filter_, enum tep_errno _err_, char pass:[*]buf, size_t _buflen_);
 +--
 +
 +DESCRIPTION
 +-----------
-+The _tep_event_common_fields()_ function returns an array of pointers to common
-+fields for the _event_. The array is allocated in the function and must be freed
-+by free(). The last element of the array is NULL.
++Filters can be attached to traced events. They can be used to filter out various
++events when outputting them. Each event can be filtered based on its parameters,
++described in the event's format file. This set of functions can be used to
++create, delete, modify and attach event filters.
 +
-+The _tep_event_fields()_ function returns an array of pointers to event specific
-+fields for the _event_. The array is allocated in the function and must be freed
-+by free(). The last element of the array is NULL.
++The _tep_filter_alloc()_ function creates a new event filter. The _tep_ argument
++is the trace event parser context.
++
++The _tep_filter_free()_ function frees an event filter and all resources that it
++had used.
++
++The _tep_filter_reset()_ function removes all rules from an event filter and
++resets it.
++
++The _tep_filter_add_filter_str()_ function adds a new rule to the _filter_. The
++_filter_str_ argument is the filter string, that contains the rule.
++
++The _tep_event_filtered()_ function checks if the event with _event_id_ has
++_filter_.
++
++The _tep_filter_remove_event()_ function removes a _filter_ for an event with
++_event_id_.
++
++The _tep_filter_match()_ function tests if a _record_ matches given _filter_.
++
++The _tep_filter_copy()_ function copies a _source_ filter into a _dest_ filter.
++
++The _tep_filter_compare()_ function compares two filers - _filter1_ and _filter2_.
++
++The _tep_filter_make_string()_ function constructs a string, displaying
++the _filter_ contents for given _event_id_.
++
++The _tep_filter_strerror()_ function copies the _filter_ error buffer into the
++given _buf_ with the size _buflen_. If the error buffer is empty, in the _buf_
++is copied a string, describing the error _err_.
 +
 +RETURN VALUE
 +------------
-+Both _tep_event_common_fields()_ and _tep_event_fields()_ functions return
-+an array of pointers to tep_format_field structures in case of success, or
-+NULL in case of an error.
++The _tep_filter_alloc()_ function returns a pointer to the newly created event
++filter, or NULL in case of an error.
++
++The _tep_filter_add_filter_str()_ function returns 0 if the rule was
++successfully added or a negative error code.  Use _tep_filter_strerror()_ to see
++actual error message in case of an error.
++
++The _tep_event_filtered()_ function returns 1 if the filter is found for given
++event, or 0 otherwise.
++
++The _tep_filter_remove_event()_ function returns 1 if the vent was removed, or
++0 if the event was not found.
++
++The _tep_filter_match()_ function returns _tep_errno_, according to the result:
++[verse]
++--
++_pass:[TEP_ERRNO__FILTER_MATCH]_	- filter found for event, the record matches.
++_pass:[TEP_ERRNO__FILTER_MISS]_		- filter found for event, the record does not match.
++_pass:[TEP_ERRNO__FILTER_NOT_FOUND]_	- no filter found for record's event.
++_pass:[TEP_ERRNO__NO_FILTER]_		- no rules in the filter.
++--
++or any other _tep_errno_, if an error occurred during the test.
++
++The _tep_filter_copy()_ function returns 0 on success or -1 if not all rules
++ were copied.
++
++The _tep_filter_compare()_ function returns 1 if the two filters hold the same
++content, or 0 if they do not.
++
++The _tep_filter_make_string()_ function returns a string, which must be freed
++with free(), or NULL in case of an error.
++
++The _tep_filter_strerror()_ function returns 0 if message was filled
++successfully, or -1 in case of an error.
 +
 +EXAMPLE
 +-------
@@ -146,35 +226,68 @@ index 000000000000..1ccb531d5114
 +...
 +struct tep_handle *tep = tep_alloc();
 +...
-+int i;
-+struct tep_format_field **fields;
-+struct tep_event *event = tep_find_event_by_name(tep, "kvm", "kvm_exit");
-+if (event != NULL) {
-+	fields = tep_event_common_fields(event);
-+	if (fields != NULL) {
-+		i = 0;
-+		while (fields[i]) {
-+			/*
-+			  walk through the list of the common fields
-+			  of the kvm_exit event
-+			*/
-+			i++;
++char errstr[200];
++int ret;
++
++struct tep_event_filter *filter = tep_filter_alloc(tep);
++struct tep_event_filter *filter1 = tep_filter_alloc(tep);
++ret = tep_filter_add_filter_str(filter, "sched/sched_wakeup:target_cpu==1");
++if(ret < 0) {
++	tep_filter_strerror(filter, ret, errstr, sizeof(errstr));
++	/* Failed to add a new rule to the filter, the error string is in errstr */
++}
++if (tep_filter_copy(filter1, filter) != 0) {
++	/* Failed to copy filter in filter1 */
++}
++...
++if (tep_filter_compare(filter, filter1) != 1) {
++	/* Both filters are different */
++}
++...
++void process_record(struct tep_handle *tep, struct tep_record *record)
++{
++	struct tep_event *event;
++	char *fstring;
++
++	event = tep_find_event_by_record(tep, record);
++
++	if (tep_event_filtered(filter, event->id) == 1) {
++		/* The event has filter */
++		fstring = tep_filter_make_string(filter, event->id);
++		if (fstring != NULL) {
++			/* The filter for the event is in fstring */
++			free(fstring);
 +		}
-+		free(fields);
 +	}
-+	fields = tep_event_fields(event);
-+	if (fields != NULL) {
-+		i = 0;
-+		while (fields[i]) {
-+			/*
-+			  walk through the list of the event specific
-+			  fields of the kvm_exit event
-+			*/
-+			i++;
-+		}
-+		free(fields);
++
++	switch (tep_filter_match(filter, record)) {
++	case TEP_ERRNO__FILTER_MATCH:
++		/* The filter matches the record */
++		break;
++	case TEP_ERRNO__FILTER_MISS:
++		/* The filter does not match the record */
++		break;
++	case TEP_ERRNO__FILTER_NOT_FOUND:
++		/* No filter found for record's event */
++		break;
++	case TEP_ERRNO__NO_FILTER:
++		/* There are no rules in the filter */
++		break
++	default:
++		/* An error occurred during the test */
++		break;
++	}
++
++	if (tep_filter_remove_event(filter, event->id) == 1) {
++		/* The event was removed from the filter */
 +	}
 +}
++
++...
++tep_filter_reset(filter);
++...
++tep_filter_free(filter);
++tep_filter_free(filter1);
 +...
 +--
 +
