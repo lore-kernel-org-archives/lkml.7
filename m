@@ -4,85 +4,70 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97C4CC04E84
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 May 2019 00:06:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6833C04E84
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 May 2019 00:12:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6ACB2218B6
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 May 2019 00:06:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 77F28218C3
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 May 2019 00:12:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="XpHCXZ0v"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Fq1j7oUt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729058AbfERAGK (ORCPT
+        id S1729163AbfERAM6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 May 2019 20:06:10 -0400
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:42736 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726774AbfERAGK (ORCPT
+        Fri, 17 May 2019 20:12:58 -0400
+Received: from mail-ua1-f66.google.com ([209.85.222.66]:41418 "EHLO
+        mail-ua1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727309AbfERAM6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 May 2019 20:06:10 -0400
-Received: by mail-qk1-f196.google.com with SMTP id d4so5510744qkc.9
-        for <linux-kernel@vger.kernel.org>; Fri, 17 May 2019 17:06:09 -0700 (PDT)
+        Fri, 17 May 2019 20:12:58 -0400
+Received: by mail-ua1-f66.google.com with SMTP id s30so3360194uas.8
+        for <linux-kernel@vger.kernel.org>; Fri, 17 May 2019 17:12:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc:content-transfer-encoding;
-        bh=qUU/PCHJ10Cnm4pEYGt2NYLBE8MczWcaqgp3zO0rTb0=;
-        b=XpHCXZ0vlW6ZB0LjNM3gSWk+gqE+tUaKl7t5x0Uy0r30UxhLbJy+WPkVwwq+x9/KQw
-         +CRNhMn/4++Gq8rK/DF2O3PN4lwDVocPTCjf90D6TQL/JFiByl1VKPohza0LgoggQUBz
-         PBQbfib83VzeF6lJ7d6/ERQaZw7rah61nnorKe+b9YXK0B+pXNDa5VZsNEEl7foC4tjD
-         1/Bh+WHotDx8JFM0DJ3sa09ujJ/a8zWFMl0O2QphX/caCiFP54RYDbSlvUZFlGbJK594
-         7fySsbMJ780nVzcYMRutROAriGZ/5rGlAuaXRPOzLRCsbglNSZkVH0rCdmrEB4TiipDl
-         cTYg==
+        bh=jqgp/AAKfQLeMa+FXIn1qxTEO8Ap0fwZ5EF6f7NI8mA=;
+        b=Fq1j7oUtiICi06u8iNXtEC7qmvh4syEHGr5Mq4/Lew78h6OigQR5ARlU7EvYQ1kZ1b
+         pL3kxt3eZ7UdOQuTUE+p4ve4ydMeS6hXBKWqEwdqNnIkd1Rr3wyYoLcTvpmplMokWB28
+         OPELO3mssUQpXGpzu3kunZn8XVNJpzRozv82BWhR0vf3erhTd6VTSbSlMLLXtI+S13qZ
+         yUDWpfCmfM24aM8VIfyL7fxRJdB5lyVGAvFv3sgMQfQ0JN9lbYL2F2RelgkazWm2zF+/
+         0saqM2rW5m5k25nZBX3FvdwFAc9BV1qF9ZtkOFM0ukKomQbAlTPw5T4WDVv6qGn/ABTI
+         64cA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc:content-transfer-encoding;
-        bh=qUU/PCHJ10Cnm4pEYGt2NYLBE8MczWcaqgp3zO0rTb0=;
-        b=d726qp1ocScQEqe1YGpXEo6K4wq4OCTa/nwYiWanRNFENyBESL3ABOeqfCZvxzwyEq
-         EgHE9V/UveoHVRstQ4ktZVUIQYXZ6f9tUCk36glL6LJxiHw1aXMsrZvxyqsWAuXVZtCh
-         6w/7NejZ/iTSJVwJvwFeKPe9Ostn/y9CijrknBDiYJ7iS/2LrHLikd/KjPfQ7/OTOP0+
-         wARHS0Z3/hfHjw+msIlSYo3kacIo63K1DDmGiVVjzGLx24g6KCGRimtQOVCpTMskMUIz
-         vNp/iDYz+nN4NkxKJVwtWB/tJbhuZ5ORsgtGagjW94AvOI1BPRdc5IG9SiJtX2pbL5p/
-         GYXg==
-X-Gm-Message-State: APjAAAVWINa0Z5zFEuiKmKU8zn3ToQ//DjOnx+OyNrG6Ap3Cg1Gd/tjB
-        GmhOO9mkBxHPQFFyIOaYNwYXiQXGykMS8kWpg43y
-X-Google-Smtp-Source: APXvYqx9dlDkMrn2MOaCbua3SEWTUfkJSCGmXC5rRUtuNpy08kKWyNNzYC2LUnAUQvuDM1Xcl2tLkYeLd/8PvwCfoRM=
-X-Received: by 2002:a37:4948:: with SMTP id w69mr49213504qka.122.1558137968878;
- Fri, 17 May 2019 17:06:08 -0700 (PDT)
+        bh=jqgp/AAKfQLeMa+FXIn1qxTEO8Ap0fwZ5EF6f7NI8mA=;
+        b=Z9bU/FjdyfBHYYlYBEZ5BCrCBGV1buXm3HPZDgU+NFeqohl5UsBghDY7IOijuY4lM6
+         w+tvY8+mcXjbQGzovf86Jsh7MpNbe3CRoTgtBUiutbgCL71OrljbrbMdm8w3oEGAV4F/
+         zzwGzzpCVxiy76VY+74fivs8w0L+OGyDsoo+4fsJncB76U/1O5fXa5hlzpHwyyCBsyOM
+         Cw76el+o1R9CF1mjUU8mViDE8OXlXq4BLjG3jWViocF4Gh8WC5pv74JQLAD4uO7ulgZL
+         0frzQf0wUaU8QmkAJ+thRN6ctI//mLIpD3K9VdjX9tlXL9mYi/LXoDyH0AWBOGZViBD2
+         pDrA==
+X-Gm-Message-State: APjAAAUQnCiF9+Xm6FMm7XWaijlSV0YM5v307rtxhYsCoNiYUVN4xLKE
+        FluvAXoJVf5KU7okmmLj72sSGWLtkenMTOMVmD6L7Q==
+X-Google-Smtp-Source: APXvYqw6wAGTgIFK7xCUwoa4xEUAb53JdQRVmL0FhMGxX1gn9XVKTZuOFfV0bylHnx+sB3bG0oj/Kvochg+FbdGoYNk=
+X-Received: by 2002:a9f:2246:: with SMTP id 64mr30748332uad.47.1558138376557;
+ Fri, 17 May 2019 17:12:56 -0700 (PDT)
 MIME-Version: 1.0
-References: <b8487de1-83a8-2761-f4a6-26c583eba083@oracle.com>
- <B447B6E8-8CEF-46FF-9967-DFB2E00E55DB@amacapital.net> <4e7d52d7-d4d2-3008-b967-c40676ed15d2@oracle.com>
- <CALCETrXtwksWniEjiWKgZWZAyYLDipuq+sQ449OvDKehJ3D-fg@mail.gmail.com>
- <e5fedad9-4607-0aa4-297e-398c0e34ae2b@oracle.com> <20190514170522.GW2623@hirez.programming.kicks-ass.net>
- <20190514180936.GA1977@linux.intel.com> <CALCETrVzbBLokip5n0KEyG6irH6aoEWqyNODTy8embpXhB1GQg@mail.gmail.com>
- <20190514210603.GD1977@linux.intel.com> <A1EB80C0-2D88-4DC0-A898-3BED50A4F5A8@amacapital.net>
- <20190514223823.GE1977@linux.intel.com>
-In-Reply-To: <20190514223823.GE1977@linux.intel.com>
-From:   Jonathan Adams <jwadams@google.com>
-Date:   Fri, 17 May 2019 17:05:32 -0700
-Message-ID: <CA+VK+GOL_sY5aWYijg1_X6VgvDtFbRX2ymuSXhsZeZH2_tO2qg@mail.gmail.com>
-Subject: Re: [RFC KVM 18/27] kvm/isolation: function to copy page table
- entries for percpu buffer
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     Andy Lutomirski <luto@amacapital.net>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Alexandre Chartre <alexandre.chartre@oracle.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Radim Krcmar <rkrcmar@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        kvm list <kvm@vger.kernel.org>, X86 ML <x86@kernel.org>,
-        Linux-MM <linux-mm@kvack.org>,
+References: <1558073209-79549-1-git-send-email-chenjianhong2@huawei.com>
+In-Reply-To: <1558073209-79549-1-git-send-email-chenjianhong2@huawei.com>
+From:   Michel Lespinasse <walken@google.com>
+Date:   Fri, 17 May 2019 17:12:43 -0700
+Message-ID: <CANN689G6mGLSOkyj31ympGgnqxnJosPVc4EakW5gYGtA_45L7g@mail.gmail.com>
+Subject: Re: [PATCH] mm/mmap: fix the adjusted length error
+To:     jianhong chen <chenjianhong2@huawei.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>, mhocko@suse.com,
+        Vlastimil Babka <vbabka@suse.cz>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        Yang Shi <yang.shi@linux.alibaba.com>, jannh@google.com,
+        steve.capper@arm.com, tiny.windzz@gmail.com,
         LKML <linux-kernel@vger.kernel.org>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        Jan Setje-Eilers <jan.setjeeilers@oracle.com>,
-        Liran Alon <liran.alon@oracle.com>
+        linux-mm <linux-mm@kvack.org>, stable@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
@@ -90,67 +75,94 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 14, 2019 at 3:38 PM Sean Christopherson
-<sean.j.christopherson@intel.com> wrote:
-> On Tue, May 14, 2019 at 02:55:18PM -0700, Andy Lutomirski wrote:
-> > > On May 14, 2019, at 2:06 PM, Sean Christopherson <sean.j.christophers=
-on@intel.com> wrote:
-> > >> On Tue, May 14, 2019 at 01:33:21PM -0700, Andy Lutomirski wrote:
-> > >> I suspect that the context switch is a bit of a red herring.  A
-> > >> PCID-don't-flush CR3 write is IIRC under 300 cycles.  Sure, it's slo=
-w,
-> > >> but it's probably minor compared to the full cost of the vm exit.  T=
-he
-> > >> pain point is kicking the sibling thread.
-> > >
-> > > Speaking of PCIDs, a separate mm for KVM would mean consuming another
-> > > ASID, which isn't good.
-> >
-> > I=E2=80=99m not sure we care. We have many logical address spaces (two =
-per mm plus a
-> > few more).  We have 4096 PCIDs, but we only use ten or so.  And we have=
- some
-> > undocumented number of *physical* ASIDs with some undocumented mechanis=
-m by
-> > which PCID maps to a physical ASID.
->
-> Yeah, I was referring to physical ASIDs.
->
-> > I don=E2=80=99t suppose you know how many physical ASIDs we have?
->
-> Limited number of physical ASIDs.  I'll leave it at that so as not to
-> disclose something I shouldn't.
->
-> > And how it interacts with the VPID stuff?
->
-> VPID and PCID get factored into the final ASID, i.e. changing either one
-> results in a new ASID.  The SDM's oblique way of saying that:
->
->   VPIDs and PCIDs (see Section 4.10.1) can be used concurrently. When thi=
-s
->   is done, the processor associates cached information with both a VPID a=
-nd
->   a PCID. Such information is used only if the current VPID and PCID both
->   match those associated with the cached information.
->
-> E.g. enabling PTI in both the host and guest consumes four ASIDs just to
-> run a single task in the guest:
->
->   - VPID=3D0, PCID=3Dkernel
->   - VPID=3D0, PCID=3Duser
->   - VPID=3D1, PCID=3Dkernel
->   - VPID=3D1, PCID=3Duser
->
-> The impact of consuming another ASID for KVM would likely depend on both
-> the guest and host configurations/worloads, e.g. if the guest is using a
-> lot of PCIDs then it's probably a moot point.  It's something to keep in
-> mind though if we go down this path.
+I worry that the proposed change turns the search from an O(log N)
+worst case into a O(N) one.
 
-One answer to that would be to have the KVM page tables use the same
-PCID as the normal user-mode PTI page tables.  It's not ideal (since
-the qemu/whatever process can see some kernel data via meltdown it
-wouldn't be able to normally see), but might be an option to
-investigate.
+To see why the current search is O(log N), it is easiest to start by
+imagining a simplified search algorithm that wouldn't include the low
+and high address limits. In that algorithm, backtracking through the
+vma tree is never necessary - the tree walk can always know, prior to
+going left or right, if a suitable gap will be found in the
+corresponding subtree.
 
-Cheers,
-- jonathan
+The code we have today does have to respect the low and high address
+limits, so it does need to implement backtracking - but this
+backtracking only occurs to back out of subtrees that include the low
+address limit (the search went 'left' into a subtree that has a large
+enough gap, but the gap turns out to be below the limit so it can't be
+used and the search needs to go 'right' instead). Because of this, the
+amount of backtracking that can occur is very limited, and the search
+is still O(log N) in the worst case.
+
+With your proposed change, backtracking could occur not only around
+the low address limit, but also at any node within the search tree,
+when it turns out that a gap that seemed large enough actually isn't
+due to alignment constraints. So, the code should still work, but it
+could backtrack more in the worst case, turning the worst case search
+into an O(N) thing.
+
+I am not sure what to do about this. First I would want to understand
+more about your test case; is this something that you stumbled upon
+without expecting it or was it an artificially constructed case to
+show the limitations of the current search algorithm ? Also, if your
+process does something unusual and expects to be able to map (close
+to) the entirety of its address space, would it be reasonable for it
+to manually manage the address space and pass explicit addresses to
+mmap / shmat ?
+
+On Thu, May 16, 2019 at 11:02 PM jianhong chen <chenjianhong2@huawei.com> w=
+rote:
+> In linux version 4.4, a 32-bit process may fail to allocate 64M hugepage
+> memory by function shmat even though there is a 64M memory gap in
+> the process.
+>
+> It is the adjusted length that causes the problem, introduced from
+> commit db4fbfb9523c935 ("mm: vm_unmapped_area() lookup function").
+> Accounting for the worst case alignment overhead, function unmapped_area
+> and unmapped_area_topdown adjust the search length before searching
+> for available vma gap. This is an estimated length, sum of the desired
+> length and the longest alignment offset, which can cause misjudgement
+> if the system has very few virtual memory left. For example, if the
+> longest memory gap available is 64M, we can=E2=80=99t get it from the sys=
+tem
+> by allocating 64M hugepage memory via shmat function. The reason is
+> that it requires a longger length, the sum of the desired length(64M)
+> and the longest alignment offset.
+>
+> To fix this error ,we can calculate the alignment offset of
+> gap_start or gap_end to get a desired gap_start or gap_end value,
+> before searching for the available gap. In this way, we don't
+> need to adjust the search length.
+>
+> Problem reproduces procedure:
+> 1. allocate a lot of virtual memory segments via shmat and malloc
+> 2. release one of the biggest memory segment via shmdt
+> 3. attach the biggest memory segment via shmat
+>
+> e.g.
+> process maps:
+> 00008000-00009000 r-xp 00000000 00:12 3385    /tmp/memory_mmap
+> 00011000-00012000 rw-p 00001000 00:12 3385    /tmp/memory_mmap
+> 27536000-f756a000 rw-p 00000000 00:00 0
+> f756a000-f7691000 r-xp 00000000 01:00 560     /lib/libc-2.11.1.so
+> f7691000-f7699000 ---p 00127000 01:00 560     /lib/libc-2.11.1.so
+> f7699000-f769b000 r--p 00127000 01:00 560     /lib/libc-2.11.1.so
+> f769b000-f769c000 rw-p 00129000 01:00 560     /lib/libc-2.11.1.so
+> f769c000-f769f000 rw-p 00000000 00:00 0
+> f769f000-f76c0000 r-xp 00000000 01:00 583     /lib/libgcc_s.so.1
+> f76c0000-f76c7000 ---p 00021000 01:00 583     /lib/libgcc_s.so.1
+> f76c7000-f76c8000 rw-p 00020000 01:00 583     /lib/libgcc_s.so.1
+> f76c8000-f76e5000 r-xp 00000000 01:00 543     /lib/ld-2.11.1.so
+> f76e9000-f76ea000 rw-p 00000000 00:00 0
+> f76ea000-f76ec000 rw-p 00000000 00:00 0
+> f76ec000-f76ed000 r--p 0001c000 01:00 543     /lib/ld-2.11.1.so
+> f76ed000-f76ee000 rw-p 0001d000 01:00 543     /lib/ld-2.11.1.so
+> f7800000-f7a00000 rw-s 00000000 00:0e 0       /SYSV000000ea (deleted)
+> fba00000-fca00000 rw-s 00000000 00:0e 65538   /SYSV000000ec (deleted)
+> fca00000-fce00000 rw-s 00000000 00:0e 98307   /SYSV000000ed (deleted)
+> fce00000-fd800000 rw-s 00000000 00:0e 131076  /SYSV000000ee (deleted)
+> ff913000-ff934000 rw-p 00000000 00:00 0       [stack]
+> ffff0000-ffff1000 r-xp 00000000 00:00 0       [vectors]
+>
+> from 0xf7a00000 to fba00000, it has 64M memory gap, but we can't get
+> it from kernel.
