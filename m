@@ -2,162 +2,184 @@ Return-Path: <SRS0=//ty=TS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57977C04AAF
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 May 2019 17:44:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DEF87C04AAF
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 May 2019 17:49:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 26E2220873
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 May 2019 17:44:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C0CC520873
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 May 2019 17:49:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729693AbfERRo0 (ORCPT
+        id S1729799AbfERRtu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 May 2019 13:44:26 -0400
-Received: from mailoutvs59.siol.net ([185.57.226.250]:42530 "EHLO
-        mail.siol.net" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726050AbfERRo0 (ORCPT
+        Sat, 18 May 2019 13:49:50 -0400
+Received: from netrider.rowland.org ([192.131.102.5]:57213 "HELO
+        netrider.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with SMTP id S1728990AbfERRtu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 May 2019 13:44:26 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by mail.siol.net (Zimbra) with ESMTP id 3DCC6520A8D;
-        Sat, 18 May 2019 19:44:22 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at psrvmta12.zcs-production.pri
-Received: from mail.siol.net ([127.0.0.1])
-        by localhost (psrvmta12.zcs-production.pri [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id GueISRJvbvib; Sat, 18 May 2019 19:44:21 +0200 (CEST)
-Received: from mail.siol.net (localhost [127.0.0.1])
-        by mail.siol.net (Zimbra) with ESMTPS id C2B30520939;
-        Sat, 18 May 2019 19:44:21 +0200 (CEST)
-Received: from localhost.localdomain (cpe-86-58-52-202.static.triera.net [86.58.52.202])
-        (Authenticated sender: 031275009)
-        by mail.siol.net (Zimbra) with ESMTPSA id F058D520A8D;
-        Sat, 18 May 2019 19:44:20 +0200 (CEST)
-From:   Jernej Skrabec <jernej.skrabec@siol.net>
-To:     paul.kocialkowski@bootlin.com, maxime.ripard@bootlin.com
-Cc:     mchehab@kernel.org, hverkuil-cisco@xs4all.nl,
-        gregkh@linuxfoundation.org, wens@csie.org,
-        linux-media@vger.kernel.org, devel@driverdev.osuosl.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] media: cedrus: Allow different mod clock rates
-Date:   Sat, 18 May 2019 19:44:15 +0200
-Message-Id: <20190518174415.17795-1-jernej.skrabec@siol.net>
-X-Mailer: git-send-email 2.21.0
+        Sat, 18 May 2019 13:49:50 -0400
+Received: (qmail 11573 invoked by uid 500); 18 May 2019 13:49:49 -0400
+Received: from localhost (sendmail-bs@127.0.0.1)
+  by localhost with SMTP; 18 May 2019 13:49:49 -0400
+Date:   Sat, 18 May 2019 13:49:49 -0400 (EDT)
+From:   Alan Stern <stern@rowland.harvard.edu>
+X-X-Sender: stern@netrider.rowland.org
+To:     syzbot <syzbot+200d4bb11b23d929335f@syzkaller.appspotmail.com>
+cc:     andreyknvl@google.com, <chunkeey@gmail.com>,
+        <chunkeey@googlemail.com>, <davem@davemloft.net>,
+        <kvalo@codeaurora.org>, <linux-kernel@vger.kernel.org>,
+        <linux-usb@vger.kernel.org>, <linux-wireless@vger.kernel.org>,
+        <netdev@vger.kernel.org>, <oneukum@suse.com>,
+        <syzkaller-bugs@googlegroups.com>
+Subject: Re: KASAN: use-after-free Read in p54u_load_firmware_cb
+In-Reply-To: <000000000000b8203405892cee43@google.com>
+Message-ID: <Pine.LNX.4.44L0.1905181346380.10594-100000@netrider.rowland.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+Content-Type: TEXT/PLAIN; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Some VPU variants may run at higher clock speeds. They actually need
-extra speed to be capable of decoding more complex codecs like HEVC or
-bigger image sizes (4K).
+On Sat, 18 May 2019, syzbot wrote:
 
-Expand variant structure with mod_rate information.
+> Hello,
+> 
+> syzbot has tested the proposed patch but the reproducer still triggered  
+> crash:
+> KASAN: use-after-free Read in usb_driver_release_interface
+> 
+> usb 1-1: Loading firmware file isl3887usb
+> usb 1-1: Direct firmware load for isl3887usb failed with error -2
+> usb 1-1: Firmware not found.
+> p54usb 1-1:0.143: failed to initialize device (-2)
+> ==================================================================
+> BUG: KASAN: use-after-free in usb_driver_release_interface+0x16b/0x190  
+> drivers/usb/core/driver.c:584
+> Read of size 8 at addr ffff88808fc31218 by task kworker/0:1/12
 
-Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
----
- drivers/staging/media/sunxi/cedrus/cedrus.c    | 11 ++++++++---
- drivers/staging/media/sunxi/cedrus/cedrus.h    |  1 +
- drivers/staging/media/sunxi/cedrus/cedrus_hw.c |  2 +-
- drivers/staging/media/sunxi/cedrus/cedrus_hw.h |  2 --
- 4 files changed, 10 insertions(+), 6 deletions(-)
+Now the bad access is in a different place.  That's a good sign.
+In this case it indicates that although udev is still hanging around, 
+intf has already been freed.  We really should acquire a reference to 
+it instead.
 
-diff --git a/drivers/staging/media/sunxi/cedrus/cedrus.c b/drivers/stagin=
-g/media/sunxi/cedrus/cedrus.c
-index d0429c0e6b6b..9349a082a29c 100644
---- a/drivers/staging/media/sunxi/cedrus/cedrus.c
-+++ b/drivers/staging/media/sunxi/cedrus/cedrus.c
-@@ -369,36 +369,41 @@ static int cedrus_remove(struct platform_device *pd=
-ev)
- }
-=20
- static const struct cedrus_variant sun4i_a10_cedrus_variant =3D {
--	/* No particular capability. */
-+	.mod_rate	=3D 320000000,
- };
-=20
- static const struct cedrus_variant sun5i_a13_cedrus_variant =3D {
--	/* No particular capability. */
-+	.mod_rate	=3D 320000000,
- };
-=20
- static const struct cedrus_variant sun7i_a20_cedrus_variant =3D {
--	/* No particular capability. */
-+	.mod_rate	=3D 320000000,
- };
-=20
- static const struct cedrus_variant sun8i_a33_cedrus_variant =3D {
- 	.capabilities	=3D CEDRUS_CAPABILITY_UNTILED,
-+	.mod_rate	=3D 320000000,
- };
-=20
- static const struct cedrus_variant sun8i_h3_cedrus_variant =3D {
- 	.capabilities	=3D CEDRUS_CAPABILITY_UNTILED,
-+	.mod_rate	=3D 402000000,
- };
-=20
- static const struct cedrus_variant sun50i_a64_cedrus_variant =3D {
- 	.capabilities	=3D CEDRUS_CAPABILITY_UNTILED,
-+	.mod_rate	=3D 402000000,
- };
-=20
- static const struct cedrus_variant sun50i_h5_cedrus_variant =3D {
- 	.capabilities	=3D CEDRUS_CAPABILITY_UNTILED,
-+	.mod_rate	=3D 402000000,
- };
-=20
- static const struct cedrus_variant sun50i_h6_cedrus_variant =3D {
- 	.capabilities	=3D CEDRUS_CAPABILITY_UNTILED,
- 	.quirks		=3D CEDRUS_QUIRK_NO_DMA_OFFSET,
-+	.mod_rate	=3D 600000000,
- };
-=20
- static const struct of_device_id cedrus_dt_match[] =3D {
-diff --git a/drivers/staging/media/sunxi/cedrus/cedrus.h b/drivers/stagin=
-g/media/sunxi/cedrus/cedrus.h
-index c57c04b41d2e..25ee1f80f2c7 100644
---- a/drivers/staging/media/sunxi/cedrus/cedrus.h
-+++ b/drivers/staging/media/sunxi/cedrus/cedrus.h
-@@ -94,6 +94,7 @@ struct cedrus_dec_ops {
- struct cedrus_variant {
- 	unsigned int	capabilities;
- 	unsigned int	quirks;
-+	unsigned int	mod_rate;
- };
-=20
- struct cedrus_dev {
-diff --git a/drivers/staging/media/sunxi/cedrus/cedrus_hw.c b/drivers/sta=
-ging/media/sunxi/cedrus/cedrus_hw.c
-index fbfff7c1c771..60406b2d4595 100644
---- a/drivers/staging/media/sunxi/cedrus/cedrus_hw.c
-+++ b/drivers/staging/media/sunxi/cedrus/cedrus_hw.c
-@@ -236,7 +236,7 @@ int cedrus_hw_probe(struct cedrus_dev *dev)
- 		goto err_sram;
+Alan Stern
+
+
+#syz test: https://github.com/google/kasan.git usb-fuzzer
+
+ drivers/net/wireless/intersil/p54/p54usb.c |   43 ++++++++++++-----------------
+ 1 file changed, 18 insertions(+), 25 deletions(-)
+
+Index: usb-devel/drivers/net/wireless/intersil/p54/p54usb.c
+===================================================================
+--- usb-devel.orig/drivers/net/wireless/intersil/p54/p54usb.c
++++ usb-devel/drivers/net/wireless/intersil/p54/p54usb.c
+@@ -33,6 +33,8 @@ MODULE_ALIAS("prism54usb");
+ MODULE_FIRMWARE("isl3886usb");
+ MODULE_FIRMWARE("isl3887usb");
+ 
++static struct usb_driver p54u_driver;
++
+ /*
+  * Note:
+  *
+@@ -921,9 +923,9 @@ static void p54u_load_firmware_cb(const
+ {
+ 	struct p54u_priv *priv = context;
+ 	struct usb_device *udev = priv->udev;
++	struct usb_interface *intf = priv->intf;
+ 	int err;
+ 
+-	complete(&priv->fw_wait_load);
+ 	if (firmware) {
+ 		priv->fw = firmware;
+ 		err = p54u_start_ops(priv);
+@@ -932,26 +934,22 @@ static void p54u_load_firmware_cb(const
+ 		dev_err(&udev->dev, "Firmware not found.\n");
  	}
-=20
--	ret =3D clk_set_rate(dev->mod_clk, CEDRUS_CLOCK_RATE_DEFAULT);
-+	ret =3D clk_set_rate(dev->mod_clk, variant->mod_rate);
- 	if (ret) {
- 		dev_err(dev->dev, "Failed to set clock rate\n");
-=20
-diff --git a/drivers/staging/media/sunxi/cedrus/cedrus_hw.h b/drivers/sta=
-ging/media/sunxi/cedrus/cedrus_hw.h
-index b43c77d54b95..27d0882397aa 100644
---- a/drivers/staging/media/sunxi/cedrus/cedrus_hw.h
-+++ b/drivers/staging/media/sunxi/cedrus/cedrus_hw.h
-@@ -16,8 +16,6 @@
- #ifndef _CEDRUS_HW_H_
- #define _CEDRUS_HW_H_
-=20
--#define CEDRUS_CLOCK_RATE_DEFAULT	320000000
+ 
+-	if (err) {
+-		struct device *parent = priv->udev->dev.parent;
 -
- int cedrus_engine_enable(struct cedrus_dev *dev, enum cedrus_codec codec=
-);
- void cedrus_engine_disable(struct cedrus_dev *dev);
-=20
---=20
-2.21.0
+-		dev_err(&udev->dev, "failed to initialize device (%d)\n", err);
+-
+-		if (parent)
+-			device_lock(parent);
++	complete(&priv->fw_wait_load);
++	/*
++	 * At this point p54u_disconnect may have already freed
++	 * the "priv" context. Do not use it anymore!
++	 */
++	priv = NULL;
+ 
+-		device_release_driver(&udev->dev);
+-		/*
+-		 * At this point p54u_disconnect has already freed
+-		 * the "priv" context. Do not use it anymore!
+-		 */
+-		priv = NULL;
++	if (err) {
++		dev_err(&intf->dev, "failed to initialize device (%d)\n", err);
+ 
+-		if (parent)
+-			device_unlock(parent);
++		usb_lock_device(udev);
++		usb_driver_release_interface(&p54u_driver, intf);
++		usb_unlock_device(udev);
+ 	}
+ 
+-	usb_put_dev(udev);
++	usb_put_intf(intf);
+ }
+ 
+ static int p54u_load_firmware(struct ieee80211_hw *dev,
+@@ -972,14 +970,14 @@ static int p54u_load_firmware(struct iee
+ 	dev_info(&priv->udev->dev, "Loading firmware file %s\n",
+ 	       p54u_fwlist[i].fw);
+ 
+-	usb_get_dev(udev);
++	usb_get_intf(intf);
+ 	err = request_firmware_nowait(THIS_MODULE, 1, p54u_fwlist[i].fw,
+ 				      device, GFP_KERNEL, priv,
+ 				      p54u_load_firmware_cb);
+ 	if (err) {
+ 		dev_err(&priv->udev->dev, "(p54usb) cannot load firmware %s "
+ 					  "(%d)!\n", p54u_fwlist[i].fw, err);
+-		usb_put_dev(udev);
++		usb_put_intf(intf);
+ 	}
+ 
+ 	return err;
+@@ -1011,8 +1009,6 @@ static int p54u_probe(struct usb_interfa
+ 	skb_queue_head_init(&priv->rx_queue);
+ 	init_usb_anchor(&priv->submitted);
+ 
+-	usb_get_dev(udev);
+-
+ 	/* really lazy and simple way of figuring out if we're a 3887 */
+ 	/* TODO: should just stick the identification in the device table */
+ 	i = intf->altsetting->desc.bNumEndpoints;
+@@ -1053,10 +1049,8 @@ static int p54u_probe(struct usb_interfa
+ 		priv->upload_fw = p54u_upload_firmware_net2280;
+ 	}
+ 	err = p54u_load_firmware(dev, intf);
+-	if (err) {
+-		usb_put_dev(udev);
++	if (err)
+ 		p54_free_common(dev);
+-	}
+ 	return err;
+ }
+ 
+@@ -1072,7 +1066,6 @@ static void p54u_disconnect(struct usb_i
+ 	wait_for_completion(&priv->fw_wait_load);
+ 	p54_unregister_common(dev);
+ 
+-	usb_put_dev(interface_to_usbdev(intf));
+ 	release_firmware(priv->fw);
+ 	p54_free_common(dev);
+ }
 
