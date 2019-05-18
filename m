@@ -2,203 +2,223 @@ Return-Path: <SRS0=//ty=TS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-16.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9BE2C04E87
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 May 2019 00:18:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7C4AC04AB4
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 May 2019 00:34:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 99F4C218BA
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 May 2019 00:18:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8224A2189E
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 May 2019 00:34:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="QI3CMrbU"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="V7A8qobf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729158AbfERAS0 (ORCPT
+        id S1729165AbfERAcG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 May 2019 20:18:26 -0400
-Received: from mail-qk1-f202.google.com ([209.85.222.202]:50149 "EHLO
-        mail-qk1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727200AbfERAS0 (ORCPT
+        Fri, 17 May 2019 20:32:06 -0400
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:43972 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727543AbfERAcG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 May 2019 20:18:26 -0400
-Received: by mail-qk1-f202.google.com with SMTP id o64so7208332qka.16
-        for <linux-kernel@vger.kernel.org>; Fri, 17 May 2019 17:18:25 -0700 (PDT)
+        Fri, 17 May 2019 20:32:06 -0400
+Received: by mail-ed1-f65.google.com with SMTP id w33so13040241edb.10
+        for <linux-kernel@vger.kernel.org>; Fri, 17 May 2019 17:32:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=qkDr2UAFkscvX8ezXGKmGGmc+dl6f/FAMKwyKcz0Ozc=;
-        b=QI3CMrbUSisbO3F4zPF1hI/gUiK8dDCRjfX1TsAw9fftIwjnK8TdYw9nsLJY+RumM7
-         Shb9J86yo+n5aXxg08eiEqZj+2z9qtyWZZf7Tpv3HzS5PRcNpiIGroILaSRAMUzE9Dzh
-         kVb8DvXdY9osu7DCtFy07wfSZzUCDwO0B7L2gRNjrgKvc+pUzdBc9TTYDb3H+uw5c31O
-         4WDfAt3UWxQtKDB3C5AoRY4WnPyNHBQgtUUhRMKQdjs8CEz6bIrXQF+O0EBBG6tjURat
-         PomO6vvTPD6Sch2zcwASVvtsnQ3dhWAfNTYq9HRAlrpqLUGzo0UNA6yQgo8+kwneUm74
-         fPMA==
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=21+2kRHbXDaLjV7tdvFUSeidu2A7rBd5BsNq3PIKanY=;
+        b=V7A8qobfQY/1yjKbVieC56kv3x8sgBJ6aDKcPEOW6aMeEg62NmMxmK8+oXeVHB8eHI
+         JgfKhjU1AZcI0+jIjiTFJs9B5C3JvBD9XmYG6mpkZA1uI7UZti8taQC92qV2w7tPzJgj
+         W61k2MYxOaJ9Gcu2mdZ6z2lERBpJCC+RPLTGn0mr1YfQTv8PJHun+Nv7jZnf52l+Lz23
+         M3I/OiIKX46X2rziLXQkQm3AHG3Cp6mfTWLkKIXEYqrPu2KQASrg0/IHaUX16XQvkOVC
+         n83ENHn/Qs7Y1jIbpvv1y9tpJUVdwriaCC/X/6VovAA5HyjxudsZr1zLpj1yCCgaub4E
+         UrPw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=qkDr2UAFkscvX8ezXGKmGGmc+dl6f/FAMKwyKcz0Ozc=;
-        b=JvaiyFeNveqJiVNwDm6NORSMslyG+bV1a+riJNeuS5Np2fO0CUEuzhTso89ZTSucz3
-         e8upen+oLirx2heAPCuyEOWvXmhe9OdZXjGn1259cGbrFqtUmRanUcw7bwlgiY8V7IQ6
-         DAumI3hrhvWFR23SYLdDEEbyMhqmUDeBPzaq/W8jA/OCYxyoGmICck37pUpFkEl5tNUj
-         /z9cIz5b+waLN40FtRhRu9jAe825zlfRNNyxHIT2mroEJclhTEjKFSOtUH0XUSgoTZIk
-         83851bMvLh4bhxETb6U8YJaNd7xYqtH+BwepvdAw0qruRR7BRqg4srISRQOdvY75zcvl
-         AzZA==
-X-Gm-Message-State: APjAAAWziX51IqfJVS1nnsctmXtaIxIs5TCdXp7DP6CmiMR9GgH+bmTz
-        lGyLyFRCXUK95hH7P6VrcXRFv3ormuuyJw==
-X-Google-Smtp-Source: APXvYqzjvHIrSFCW8O8i+BzHoGWkysNM/KdQQ3zDtRn0LUwcgEMg0FCe79ufJdlJrN78yJCcMfe/ggmKl62N5A==
-X-Received: by 2002:ac8:2817:: with SMTP id 23mr16045714qtq.174.1558138704651;
- Fri, 17 May 2019 17:18:24 -0700 (PDT)
-Date:   Fri, 17 May 2019 17:18:18 -0700
-Message-Id: <20190518001818.193336-1-shakeelb@google.com>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.21.0.1020.gf2820cf01a-goog
-Subject: [PATCH v2] mm, memcg: introduce memory.events.local
-From:   Shakeel Butt <shakeelb@google.com>
-To:     Johannes Weiner <hannes@cmpxchg.org>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>,
-        Michal Hocko <mhocko@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Roman Gushchin <guro@fb.com>, Chris Down <chris@chrisdown.name>
-Cc:     linux-mm@kvack.org, cgroups@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Shakeel Butt <shakeelb@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :mime-version:content-disposition:user-agent;
+        bh=21+2kRHbXDaLjV7tdvFUSeidu2A7rBd5BsNq3PIKanY=;
+        b=HGW1cOFPR/gbPONRVvl6dGv//FYb5FGEADagEEdGrBiwQ8vfgTqOWNg//DBU4nfasD
+         k/Y+oZYYWzgCCo06ZYpYEFeixU59fzbPAMNh2FbktR2p7CbvH5cYIW6Dr4s2ckUrNkd0
+         3jODavuNvWbRVnRa+hnrtPtIKDlHO2y2IudnJDz3vSnFg/r3dRQVJbRPaYmASNB2+cqh
+         52senILrF1j0dZBbNhHWqzAuwOGhszHTr1yDFwA3ZsAK+QH3gFFhwDE25YZOQZSNyTvy
+         goxVrtFXl2JIepCGqmSvBO+KmiNQStD0+EJq+ArqxrtDmakgX0fyaZjrepEu56t6eCSh
+         HNnQ==
+X-Gm-Message-State: APjAAAWfr8f0SHc1jJ4j5Vgl5AV5UcF3lP5aKRgMxc4DAYNKfAPawGbr
+        1La3OSf43SAX38muDjqn/uU=
+X-Google-Smtp-Source: APXvYqy06z1aaTx7iMHbN6n68ilt5yOF3/dxmiORdWw1LKU+bqJ14ZXLd3U5ZrS4D7s5mRPVYx8dDQ==
+X-Received: by 2002:a50:a935:: with SMTP id l50mr59909553edc.198.1558139523673;
+        Fri, 17 May 2019 17:32:03 -0700 (PDT)
+Received: from dumbo (ip4da2e549.direct-adsl.nl. [77.162.229.73])
+        by smtp.gmail.com with ESMTPSA id j55sm3407297ede.27.2019.05.17.17.32.01
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 17 May 2019 17:32:02 -0700 (PDT)
+Date:   Sat, 18 May 2019 02:32:00 +0200
+From:   Domenico Andreoli <domenico.andreoli@linux.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Cc:     linux-kernel@vger.kernel.org
+Subject: [PATCH] Improve diagnostic on "Inconsistent kallsyms data"
+Message-ID: <20190518003200.rbzvcolxi7g4dc6q@dumbo>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The memory controller in cgroup v2 exposes memory.events file for each
-memcg which shows the number of times events like low, high, max, oom
-and oom_kill have happened for the whole tree rooted at that memcg.
-Users can also poll or register notification to monitor the changes in
-that file. Any event at any level of the tree rooted at memcg will
-notify all the listeners along the path till root_mem_cgroup. There are
-existing users which depend on this behavior.
+Hi,
 
-However there are users which are only interested in the events
-happening at a specific level of the memcg tree and not in the events in
-the underlying tree rooted at that memcg. One such use-case is a
-centralized resource monitor which can dynamically adjust the limits of
-the jobs running on a system. The jobs can create their sub-hierarchy
-for their own sub-tasks. The centralized monitor is only interested in
-the events at the top level memcgs of the jobs as it can then act and
-adjust the limits of the jobs. Using the current memory.events for such
-centralized monitor is very inconvenient. The monitor will keep
-receiving events which it is not interested and to find if the received
-event is interesting, it has to read memory.event files of the next
-level and compare it with the top level one. So, let's introduce
-memory.events.local to the memcg which shows and notify for the events
-at the memcg level.
+  linking kallsyms into the kernel occasionally triggers edge conditions
+of the linker heuristic and results in inconsistent System.map generation.
 
-Now, does memory.stat and memory.pressure need their local versions.
-IMHO no due to the no internal process contraint of the cgroup v2. The
-memory.stat file of the top level memcg of a job shows the stats and
-vmevents of the whole tree. The local stats or vmevents of the top level
-memcg will only change if there is a process running in that memcg but
-v2 does not allow that. Similarly for memory.pressure there will not be
-any process in the internal nodes and thus no chance of local pressure.
+This patch adds a first-aid analysis of such inconsistency in form of
+unified diff between the two generated symbol maps, where every symbol's
+address is replaced by the offset from the previous symbol.
 
-Signed-off-by: Shakeel Butt <shakeelb@google.com>
+Becomes then trivial to spot symbols reordering without incurring in
+the noise of other symbols shifting, as shown below.
+
+$ make
+...
+  LD      vmlinux.o
+  MODPOST vmlinux.o
+  KSYM    .tmp_kallsyms1.o
+  KSYM    .tmp_kallsyms2.o
+  KSYM    .tmp_kallsyms3.o
+  LD      vmlinux
+  SORTEX  vmlinux
+  SYSMAP  System.map
+Inconsistent kallsyms data
+Try "make KALLSYMS_EXTRA_PASS=1" as a workaround
+---- .tmp_System.map.relative   2019-05-18 02:13:19.197282498 +0200
+++++ System.map.relative        2019-05-18 02:13:16.817219696 +0200
+@@ -7,10 +7,10 @@
+ 0000000000013cf78 A __rela_size
+ 0000000000012da88 A __pecoff_data_rawsize
+ 0000000000004e600 A __pecoff_data_size
+-000000000004b7000 A __efistub_stext_offset
++000000000004a7000 A __efistub_stext_offset
+ 000000000001719d8 A __rela_offset
+ 0000000000026b628 A _kernel_size_le_lo32
+-0ffff00000f4b3000 t __efistub__text
++0ffff00000f4c3000 t __efistub__text
+ 00000000000000000 t _head
+ 00000000000000000 T _text
+ 00000000000000040 t pe_header
+@@ -28619,10 +28619,10 @@
+ 00000000000000008 r bus_spec.64271
+ 00000000000000008 r str_spec.64272
+ 00000000000000008 R kallsyms_offsets
+-00000000000019bd0 R kallsyms_relative_base
++00000000000019bc8 R kallsyms_relative_base
+ 00000000000000008 R kallsyms_num_syms
+ 00000000000000008 R kallsyms_names
+-0000000000004c468 R kallsyms_markers
++0000000000004c460 R kallsyms_markers
+ 000000000000001a0 R kallsyms_token_table
+ 00000000000000368 R kallsyms_token_index
+ 000000000000838c8 R __start_ro_after_init
+@@ -43349,9 +43349,9 @@
+ 00000000000000000 R __start___modver
+ 00000000000000000 R __stop___param
+ 00000000000000008 r __modver_attr
+-00000000000000008 R __stop___modver
+-00000000000000ff0 R __end_rodata
++00000000000000008 R __end_rodata
+ 00000000000000000 R __start___ex_table
++00000000000000000 R __stop___modver
+ 00000000000001c78 R __start_notes
+ 00000000000000000 R __stop___ex_table
+ 00000000000000024 r _note_54
+@@ -43359,11 +43359,11 @@
+ 0000000000000034c T idmap_pg_dir
+ 00000000000003000 T tramp_pg_dir
+ 00000000000001000 T swapper_pg_dir
+-00000000000001000 T swapper_pg_end
+-0000000000000f000 T __init_begin
++00000000000001000 T __init_begin
+ 00000000000000000 T __inittext_begin
+ 00000000000000000 T _sinittext
+ 00000000000000000 T stext
++00000000000000000 T swapper_pg_end
+ 00000000000000020 t preserve_boot_args
+ 00000000000000020 t __create_page_tables
+ 000000000000002e4 t __primary_switched
+...
+
+Signed-off-by: Domenico Andreoli <domenico.andreoli@linux.com>
+
 ---
-Changelog since v1:
-- refactor memory_events_show to share between events and events.local
+ scripts/link-vmlinux.sh |   27 +++++++++++++++++++++++----
+ 1 file changed, 23 insertions(+), 4 deletions(-)
 
- include/linux/memcontrol.h |  7 ++++++-
- mm/memcontrol.c            | 34 ++++++++++++++++++++++++----------
- 2 files changed, 30 insertions(+), 11 deletions(-)
-
-diff --git a/include/linux/memcontrol.h b/include/linux/memcontrol.h
-index 36bdfe8e5965..de77405eec46 100644
---- a/include/linux/memcontrol.h
-+++ b/include/linux/memcontrol.h
-@@ -239,8 +239,9 @@ struct mem_cgroup {
- 	/* OOM-Killer disable */
- 	int		oom_kill_disable;
- 
--	/* memory.events */
-+	/* memory.events and memory.events.local */
- 	struct cgroup_file events_file;
-+	struct cgroup_file events_local_file;
- 
- 	/* handle for "memory.swap.events" */
- 	struct cgroup_file swap_events_file;
-@@ -286,6 +287,7 @@ struct mem_cgroup {
- 	atomic_long_t		vmevents_local[NR_VM_EVENT_ITEMS];
- 
- 	atomic_long_t		memory_events[MEMCG_NR_MEMORY_EVENTS];
-+	atomic_long_t		memory_events_local[MEMCG_NR_MEMORY_EVENTS];
- 
- 	unsigned long		socket_pressure;
- 
-@@ -761,6 +763,9 @@ static inline void count_memcg_event_mm(struct mm_struct *mm,
- static inline void memcg_memory_event(struct mem_cgroup *memcg,
- 				      enum memcg_memory_event event)
+Index: b/scripts/link-vmlinux.sh
+===================================================================
+--- a/scripts/link-vmlinux.sh
++++ b/scripts/link-vmlinux.sh
+@@ -124,6 +124,25 @@ kallsyms()
+ mksysmap()
  {
-+	atomic_long_inc(&memcg->memory_events_local[event]);
-+	cgroup_file_notify(&memcg->events_local_file);
+ 	${CONFIG_SHELL} "${srctree}/scripts/mksysmap" ${1} ${2}
 +
- 	do {
- 		atomic_long_inc(&memcg->memory_events[event]);
- 		cgroup_file_notify(&memcg->events_file);
-diff --git a/mm/memcontrol.c b/mm/memcontrol.c
-index 2713b45ec3f0..a57dfcc4c4a4 100644
---- a/mm/memcontrol.c
-+++ b/mm/memcontrol.c
-@@ -5630,21 +5630,29 @@ static ssize_t memory_max_write(struct kernfs_open_file *of,
- 	return nbytes;
++	local KSYM_ADDR
++	local KSYM_ADDR_SIZE
++	local KSYM_ADDR_PREV
++	local KSYM_REMAINDER
++
++	# Replace the symbol's address with the offset from the previous
++	# so that in case of "Inconsistent kallsyms data" it's easier
++	# to spot symbols moving around
++	while read KSYM_ADDR KSYM_REMAINDER; do
++		if [ -z "${KSYM_ADDR_PREV}" ]; then
++			KSYM_ADDR_SIZE=`echo ${KSYM_ADDR} | wc -c`
++			KSYM_ADDR_PREV=${KSYM_ADDR}
++		fi
++		printf "%0${KSYM_ADDR_SIZE}x "                     \
++		       $(( 0x${KSYM_ADDR} - 0x${KSYM_ADDR_PREV} ))
++		echo ${KSYM_REMAINDER}
++		KSYM_ADDR_PREV=${KSYM_ADDR}
++	done <${2} >${2}.relative
  }
  
-+static void __memory_events_show(struct seq_file *m, atomic_long_t *events)
-+{
-+	seq_printf(m, "low %lu\n", atomic_long_read(&events[MEMCG_LOW]));
-+	seq_printf(m, "high %lu\n", atomic_long_read(&events[MEMCG_HIGH]));
-+	seq_printf(m, "max %lu\n", atomic_long_read(&events[MEMCG_MAX]));
-+	seq_printf(m, "oom %lu\n", atomic_long_read(&events[MEMCG_OOM]));
-+	seq_printf(m, "oom_kill %lu\n",
-+		   atomic_long_read(&events[MEMCG_OOM_KILL]));
-+}
-+
- static int memory_events_show(struct seq_file *m, void *v)
+ sortextable()
+@@ -134,10 +153,10 @@ sortextable()
+ # Delete output files in case of error
+ cleanup()
  {
- 	struct mem_cgroup *memcg = mem_cgroup_from_seq(m);
- 
--	seq_printf(m, "low %lu\n",
--		   atomic_long_read(&memcg->memory_events[MEMCG_LOW]));
--	seq_printf(m, "high %lu\n",
--		   atomic_long_read(&memcg->memory_events[MEMCG_HIGH]));
--	seq_printf(m, "max %lu\n",
--		   atomic_long_read(&memcg->memory_events[MEMCG_MAX]));
--	seq_printf(m, "oom %lu\n",
--		   atomic_long_read(&memcg->memory_events[MEMCG_OOM]));
--	seq_printf(m, "oom_kill %lu\n",
--		   atomic_long_read(&memcg->memory_events[MEMCG_OOM_KILL]));
-+	__memory_events_show(m, memcg->memory_events);
-+	return 0;
-+}
-+
-+static int memory_events_local_show(struct seq_file *m, void *v)
-+{
-+	struct mem_cgroup *memcg = mem_cgroup_from_seq(m);
- 
-+	__memory_events_show(m, memcg->memory_events_local);
- 	return 0;
+-	rm -f .tmp_System.map
++	rm -f .tmp_System.map*
+ 	rm -f .tmp_kallsyms*
+ 	rm -f .tmp_vmlinux*
+-	rm -f System.map
++	rm -f System.map*
+ 	rm -f vmlinux
+ 	rm -f vmlinux.o
  }
+@@ -240,7 +259,6 @@ if [ -n "${CONFIG_KALLSYMS}" ]; then
+ 		kallsyms_vmlinux=.tmp_vmlinux3
  
-@@ -5806,6 +5814,12 @@ static struct cftype memory_files[] = {
- 		.file_offset = offsetof(struct mem_cgroup, events_file),
- 		.seq_show = memory_events_show,
- 	},
-+	{
-+		.name = "events.local",
-+		.flags = CFTYPE_NOT_ON_ROOT,
-+		.file_offset = offsetof(struct mem_cgroup, events_local_file),
-+		.seq_show = memory_events_local_show,
-+	},
- 	{
- 		.name = "stat",
- 		.flags = CFTYPE_NOT_ON_ROOT,
--- 
-2.21.0.1020.gf2820cf01a-goog
-
+ 		vmlinux_link .tmp_kallsyms2.o .tmp_vmlinux3
+-
+ 		kallsyms .tmp_vmlinux3 .tmp_kallsyms3.o
+ 	fi
+ fi
+@@ -262,7 +280,8 @@ if [ -n "${CONFIG_KALLSYMS}" ]; then
+ 
+ 	if ! cmp -s System.map .tmp_System.map; then
+ 		echo >&2 Inconsistent kallsyms data
+-		echo >&2 Try "make KALLSYMS_EXTRA_PASS=1" as a workaround
++		echo >&2 Try \"make KALLSYMS_EXTRA_PASS=1\" as a workaround
++		diff -u .tmp_System.map.relative System.map.relative
+ 		exit 1
+ 	fi
+ fi
