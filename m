@@ -2,103 +2,175 @@ Return-Path: <SRS0=//ty=TS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-5.7 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70551C04AAF
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 May 2019 17:36:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD77DC04AAF
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 May 2019 17:36:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3A59420872
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 May 2019 17:36:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="auLY2NMG"
+	by mail.kernel.org (Postfix) with ESMTP id 819542087E
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 May 2019 17:36:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729330AbfERRdi (ORCPT
+        id S1729569AbfERRgB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 May 2019 13:33:38 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:46565 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727380AbfERRdh (ORCPT
+        Sat, 18 May 2019 13:36:01 -0400
+Received: from mail-it1-f199.google.com ([209.85.166.199]:54619 "EHLO
+        mail-it1-f199.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729347AbfERRgB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 May 2019 13:33:37 -0400
-Received: by mail-pf1-f194.google.com with SMTP id y11so5180841pfm.13
-        for <linux-kernel@vger.kernel.org>; Sat, 18 May 2019 10:33:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=pBUOpcZZhVnAEMzK2Qi13gp5BqUlujzgGPYXraDy+LU=;
-        b=auLY2NMGRP93XGfuqVGmCFv10ilgSNvE32chNovFfE3hNYk+VsNegdj6oqOIFK73I8
-         nyRJu8ucZYf9s/GnyxmcyL1TYCVAB8kgcSbw2EBPUo1O27isB1yk6MS1MoqMAXBD4tyt
-         0o/2CbJmzo8YtOYlwlReJ2LTMk3330zP9twY45DZrszNfoE33pyL5rUYIYgZeKd9XUmD
-         wdRxsywK2ENZRtEyaBQpGCWr5teezmZIRu83oMej7Cer77vKEQdQ5jv8UIiba4yaFrVK
-         ZbheqtkH6gSt8mF/FDGh0HjKmeHUgjwWuD/oHMX52RIBM0oCj3XQz2PH6CtLkwnzARoT
-         blZw==
+        Sat, 18 May 2019 13:36:01 -0400
+Received: by mail-it1-f199.google.com with SMTP id k8so9797193itd.4
+        for <linux-kernel@vger.kernel.org>; Sat, 18 May 2019 10:36:00 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=pBUOpcZZhVnAEMzK2Qi13gp5BqUlujzgGPYXraDy+LU=;
-        b=KhzAeSy0oh+PJ7PB4TMu1LMTwdEkl9htaCz3weg67wGYqwKOGEbK5E0j6t/oVQIHTW
-         X3A3IU0Pacib4bMJOVZFxFtwv3RP0IP8JkzaWs8DCcwV+mr2pOnuk/5bQK5EEPaYn1Wv
-         LYmmBVIjCB3OUFc81YxHnXTnUpOECuHdOeFPRZRoblPmLOpfuf/NmBIXVhWZNvkle5az
-         fopdoz7ahLWlpvky/oakOmegVYi/Ck1ClsLxK2HxTYWcoujBV/NJhVTDMpjak2OLfki2
-         y/qlXdLk6ml92RAkWYOaArVb3xQI5IdM1nAEvThpINaxngL0/aqm/Lar4IwQII1JMvNb
-         DViA==
-X-Gm-Message-State: APjAAAVkd3aAqs0L1xMVRMeNYz3IceSeD2HzZZmVRr+ubLWrtne2DQHw
-        m/KG3sG7akP+7EO8L2rT7SIhog1S
-X-Google-Smtp-Source: APXvYqxWJTJIdCpHS0U/FnQzuWH0oWUVKu8hlU6RfRmLRWX081s6/gamZSeSuCmsOfOw34bD/oX0jQ==
-X-Received: by 2002:a63:c54d:: with SMTP id g13mr65078775pgd.376.1558200817033;
-        Sat, 18 May 2019 10:33:37 -0700 (PDT)
-Received: from hari-Inspiron-1545 ([183.83.92.73])
-        by smtp.gmail.com with ESMTPSA id n21sm15160229pgf.28.2019.05.18.10.33.34
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sat, 18 May 2019 10:33:36 -0700 (PDT)
-Date:   Sat, 18 May 2019 23:03:31 +0530
-From:   Hariprasad Kelam <hariprasad.kelam@gmail.com>
-To:     Gao Xiang <gaoxiang25@huawei.com>, Chao Yu <yuchao0@huawei.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-erofs@lists.ozlabs.org, devel@driverdev.osuosl.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] staging: erofs: fix Warning Use BUG_ON instead of if
- condition followed by BUG
-Message-ID: <20190518173331.GA1069@hari-Inspiron-1545>
+        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
+         :from:to;
+        bh=1CvcmZSlB35QHwFTvpa0OM2vzXbECFOPgO/fzHPp5Ac=;
+        b=oRYC5e19Ae4gC+egUssOJ0rsa2hFaYg6AomioRF/XM14/joIPlztqJz4iSSc6WLVWj
+         IHK6tf9iRgt1GJZz8CVHwttNuq/NceD0kPDFVg3//yerrqcnjri6EvUhUPHtowclDjYE
+         R6zVHeyT/7SznuzGtSY8GTBx6IV0OrCEOle8ZZ2fw1B8ZgoSQxyqWBhhol+KlRuPVYXz
+         /G9wHO8+29UJQuTacBRn1fc+zzjsQO3ZMwP+2a/BMfD06UV60ZBVgQAZy/KygpKA7M8a
+         x5mp/IIozpwk7MciN3kkSIBJvPSgLWmIb7DCOIwfYC58D6Q9fG0//Il9G+OXroIy5hBn
+         kgJQ==
+X-Gm-Message-State: APjAAAW0tSTgIa4tfoj/f2SF3z+VpdnoTxkJWFHOQ0YBNazV757EAzJn
+        JOWdh2jsIIXT3t294v3UNxM+vaR8jke8UfaZzXhjtQfIFtUt
+X-Google-Smtp-Source: APXvYqzV8JeqBUYGAkEVFE/5tCLRs4BmMrMFHmykStvb7KmZgsRjuQCv2kRQa4EwNhkn41ukasbGIvtLxrHG8k6Baekq06RWo1k4
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Received: by 2002:a5e:d703:: with SMTP id v3mr30942144iom.197.1558200960160;
+ Sat, 18 May 2019 10:36:00 -0700 (PDT)
+Date:   Sat, 18 May 2019 10:36:00 -0700
+In-Reply-To: <Pine.LNX.4.44L0.1905181300440.10594-100000@netrider.rowland.org>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000b8203405892cee43@google.com>
+Subject: Re: KASAN: use-after-free Read in p54u_load_firmware_cb
+From:   syzbot <syzbot+200d4bb11b23d929335f@syzkaller.appspotmail.com>
+To:     andreyknvl@google.com, chunkeey@gmail.com, chunkeey@googlemail.com,
+        davem@davemloft.net, kvalo@codeaurora.org,
+        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        oneukum@suse.com, stern@rowland.harvard.edu,
+        syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-fix below warning reported by  coccicheck
+Hello,
 
-drivers/staging/erofs/unzip_pagevec.h:74:2-5: WARNING: Use BUG_ON
-instead of if condition followed by BUG.
+syzbot has tested the proposed patch but the reproducer still triggered  
+crash:
+KASAN: use-after-free Read in usb_driver_release_interface
 
-Signed-off-by: Hariprasad Kelam <hariprasad.kelam@gmail.com>
----
- drivers/staging/erofs/unzip_pagevec.h | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+usb 1-1: Loading firmware file isl3887usb
+usb 1-1: Direct firmware load for isl3887usb failed with error -2
+usb 1-1: Firmware not found.
+p54usb 1-1:0.143: failed to initialize device (-2)
+==================================================================
+BUG: KASAN: use-after-free in usb_driver_release_interface+0x16b/0x190  
+drivers/usb/core/driver.c:584
+Read of size 8 at addr ffff88808fc31218 by task kworker/0:1/12
 
-diff --git a/drivers/staging/erofs/unzip_pagevec.h b/drivers/staging/erofs/unzip_pagevec.h
-index f37d8fd..0f61c54 100644
---- a/drivers/staging/erofs/unzip_pagevec.h
-+++ b/drivers/staging/erofs/unzip_pagevec.h
-@@ -70,8 +70,7 @@ z_erofs_pagevec_ctor_next_page(struct z_erofs_pagevec_ctor *ctor,
- 			return tagptr_unfold_ptr(t);
- 	}
- 
--	if (unlikely(nr >= ctor->nr))
--		BUG();
-+	BUG_ON(nr >= ctor->nr);
- 
- 	return NULL;
- }
--- 
-2.7.4
+CPU: 0 PID: 12 Comm: kworker/0:1 Not tainted 5.1.0-rc3-g43151d6-dirty #1
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+Workqueue: events request_firmware_work_func
+Call Trace:
+  __dump_stack lib/dump_stack.c:77 [inline]
+  dump_stack+0xe8/0x16e lib/dump_stack.c:113
+  print_address_description+0x6c/0x236 mm/kasan/report.c:187
+  kasan_report.cold+0x1a/0x3c mm/kasan/report.c:317
+  usb_driver_release_interface+0x16b/0x190 drivers/usb/core/driver.c:584
+  p54u_load_firmware_cb+0x390/0x420  
+drivers/net/wireless/intersil/p54/p54usb.c:948
+  request_firmware_work_func+0x12d/0x249  
+drivers/base/firmware_loader/main.c:785
+  process_one_work+0x90f/0x1580 kernel/workqueue.c:2269
+  worker_thread+0x9b/0xe20 kernel/workqueue.c:2415
+  kthread+0x313/0x420 kernel/kthread.c:253
+  ret_from_fork+0x3a/0x50 arch/x86/entry/entry_64.S:352
+
+Allocated by task 12:
+  set_track mm/kasan/common.c:87 [inline]
+  __kasan_kmalloc mm/kasan/common.c:497 [inline]
+  __kasan_kmalloc.constprop.0+0xbf/0xd0 mm/kasan/common.c:470
+  kmalloc include/linux/slab.h:547 [inline]
+  kzalloc include/linux/slab.h:742 [inline]
+  usb_set_configuration+0x2e0/0x1740 drivers/usb/core/message.c:1846
+  generic_probe+0xa2/0xda drivers/usb/core/generic.c:210
+  usb_probe_device+0xc0/0x150 drivers/usb/core/driver.c:266
+  really_probe+0x2da/0xb10 drivers/base/dd.c:509
+  driver_probe_device+0x21d/0x350 drivers/base/dd.c:671
+  __device_attach_driver+0x1d8/0x290 drivers/base/dd.c:778
+  bus_for_each_drv+0x163/0x1e0 drivers/base/bus.c:454
+  __device_attach+0x223/0x3a0 drivers/base/dd.c:844
+  bus_probe_device+0x1f1/0x2a0 drivers/base/bus.c:514
+  device_add+0xad2/0x16e0 drivers/base/core.c:2106
+  usb_new_device.cold+0x537/0xccf drivers/usb/core/hub.c:2534
+  hub_port_connect drivers/usb/core/hub.c:5089 [inline]
+  hub_port_connect_change drivers/usb/core/hub.c:5204 [inline]
+  port_event drivers/usb/core/hub.c:5350 [inline]
+  hub_event+0x138e/0x3b00 drivers/usb/core/hub.c:5432
+  process_one_work+0x90f/0x1580 kernel/workqueue.c:2269
+  worker_thread+0x9b/0xe20 kernel/workqueue.c:2415
+  kthread+0x313/0x420 kernel/kthread.c:253
+  ret_from_fork+0x3a/0x50 arch/x86/entry/entry_64.S:352
+
+Freed by task 5394:
+  set_track mm/kasan/common.c:87 [inline]
+  __kasan_slab_free+0x130/0x180 mm/kasan/common.c:459
+  slab_free_hook mm/slub.c:1429 [inline]
+  slab_free_freelist_hook+0x5e/0x140 mm/slub.c:1456
+  slab_free mm/slub.c:3003 [inline]
+  kfree+0xce/0x290 mm/slub.c:3958
+  device_release+0x7d/0x210 drivers/base/core.c:1064
+  kobject_cleanup lib/kobject.c:662 [inline]
+  kobject_release lib/kobject.c:691 [inline]
+  kref_put include/linux/kref.h:67 [inline]
+  kobject_put+0x1df/0x4f0 lib/kobject.c:708
+  put_device+0x21/0x30 drivers/base/core.c:2205
+  usb_disable_device+0x309/0x790 drivers/usb/core/message.c:1244
+  usb_disconnect+0x298/0x870 drivers/usb/core/hub.c:2197
+  hub_port_connect drivers/usb/core/hub.c:4940 [inline]
+  hub_port_connect_change drivers/usb/core/hub.c:5204 [inline]
+  port_event drivers/usb/core/hub.c:5350 [inline]
+  hub_event+0xcd2/0x3b00 drivers/usb/core/hub.c:5432
+  process_one_work+0x90f/0x1580 kernel/workqueue.c:2269
+  worker_thread+0x9b/0xe20 kernel/workqueue.c:2415
+  kthread+0x313/0x420 kernel/kthread.c:253
+  ret_from_fork+0x3a/0x50 arch/x86/entry/entry_64.S:352
+
+The buggy address belongs to the object at ffff88808fc31100
+  which belongs to the cache kmalloc-2k of size 2048
+The buggy address is located 280 bytes inside of
+  2048-byte region [ffff88808fc31100, ffff88808fc31900)
+The buggy address belongs to the page:
+page:ffffea00023f0c00 count:1 mapcount:0 mapping:ffff88812c3f4800 index:0x0  
+compound_mapcount: 0
+flags: 0xfff00000010200(slab|head)
+raw: 00fff00000010200 dead000000000100 dead000000000200 ffff88812c3f4800
+raw: 0000000000000000 00000000000f000f 00000001ffffffff 0000000000000000
+page dumped because: kasan: bad access detected
+
+Memory state around the buggy address:
+  ffff88808fc31100: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+  ffff88808fc31180: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+> ffff88808fc31200: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+                             ^
+  ffff88808fc31280: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+  ffff88808fc31300: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+==================================================================
+
+
+Tested on:
+
+commit:         43151d6c usb-fuzzer: main usb gadget fuzzer driver
+git tree:       https://github.com/google/kasan.git usb-fuzzer
+console output: https://syzkaller.appspot.com/x/log.txt?x=148b9428a00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=4183eeef650d1234
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+patch:          https://syzkaller.appspot.com/x/patch.diff?x=17642018a00000
 
