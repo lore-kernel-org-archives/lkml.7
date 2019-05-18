@@ -2,168 +2,371 @@ Return-Path: <SRS0=//ty=TS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.7 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ADBA9C04AAF
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 May 2019 16:38:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 091EEC04AAF
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 May 2019 16:50:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8087A20872
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 May 2019 16:38:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE18520872
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 May 2019 16:50:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729214AbfERQiG (ORCPT
+        id S1729440AbfERQuC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 May 2019 12:38:06 -0400
-Received: from gateway20.websitewelcome.com ([192.185.53.25]:17603 "EHLO
-        gateway20.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727073AbfERQiG (ORCPT
+        Sat, 18 May 2019 12:50:02 -0400
+Received: from mail-io1-f70.google.com ([209.85.166.70]:36383 "EHLO
+        mail-io1-f70.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729166AbfERQuC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 May 2019 12:38:06 -0400
-X-Greylist: delayed 1500 seconds by postgrey-1.27 at vger.kernel.org; Sat, 18 May 2019 12:38:05 EDT
-Received: from cm16.websitewelcome.com (cm16.websitewelcome.com [100.42.49.19])
-        by gateway20.websitewelcome.com (Postfix) with ESMTP id 2DDFC400C6E2F
-        for <linux-kernel@vger.kernel.org>; Sat, 18 May 2019 10:52:54 -0500 (CDT)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id S1dmhTQ2F4FKpS1dmhqkbK; Sat, 18 May 2019 10:52:54 -0500
-X-Authority-Reason: nr=8
-Received: from [189.250.88.202] (port=34780 helo=[192.168.1.76])
-        by gator4166.hostgator.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
-        (Exim 4.91)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1hS1dl-000hEL-QU; Sat, 18 May 2019 10:52:53 -0500
-Subject: Re: [PATCH] nvme: target: use struct_size() in kmalloc()
-To:     xiaolinkui <xiaolinkui@kylinos.cn>, hch@lst.de, sagi@grimberg.me
-Cc:     linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <1558076615-8576-1-git-send-email-xiaolinkui@kylinos.cn>
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=gustavo@embeddedor.com; keydata=
- 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
- VtSixD1uOgytAP7RWS474w==
-Message-ID: <b6df7288-9b44-145a-f8be-b2ada6dcd360@embeddedor.com>
-Date:   Sat, 18 May 2019 10:52:52 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Sat, 18 May 2019 12:50:02 -0400
+Received: by mail-io1-f70.google.com with SMTP id i195so8053212ioa.3
+        for <linux-kernel@vger.kernel.org>; Sat, 18 May 2019 09:50:01 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
+         :from:to;
+        bh=/+qIz3tApBlHUL41YqHiyHFDjU+/tNH+rU6/UEVFdzY=;
+        b=d/nDnZQcZ/XnTrN2hvi464heR/uYLvvFLYJOdpu4KL+kbB58NgfP/dgUGYMxjb77FL
+         Av60AEnNI9VF8pnX4OIbmuM6QT9pGhN6p+FBJ38/xf5PhMpnB7HLgmPhoyXheGnnsVna
+         ofl6mh2A0sWrbke4O4wNIwS8mFHeTOuU5hOoZ9+0r9ZCQayzkDHxRp8lcLbyZ213WaBc
+         uFRRXgBjcdVgGnFMdH5kA4ThBQkrv8dEuJWw9mAzuPiFkP3vbe2TmPqn4wS/k9jw5LPm
+         gy9Jn6Ne+p4TgSs1DCpMJeEBfnMcqbCO5ZuNbPwZWQQ0NcGdHaazbReeOAWjWpCm6txP
+         CVbQ==
+X-Gm-Message-State: APjAAAW5SFF8Leyx6A8G3lb0tuU8T9vTI8EFH8SpV4iTHsL7q07HF6LD
+        sxMoI/6vkG3y7wShEdJ4SwmqqTJ7ISPgr2QuWff/GDqBb8mV
+X-Google-Smtp-Source: APXvYqxUBs5j99DSEzisXC8LwzZ/FgRp3siun721j4spsgsHFKXBLU0iDc0Eaa8XOQT9eRKB980P5pChQ1niwiboZ5SJp2HRBiRB
 MIME-Version: 1.0
-In-Reply-To: <1558076615-8576-1-git-send-email-xiaolinkui@kylinos.cn>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 189.250.88.202
-X-Source-L: No
-X-Exim-ID: 1hS1dl-000hEL-QU
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: ([192.168.1.76]) [189.250.88.202]:34780
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 10
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+X-Received: by 2002:a5d:9e0f:: with SMTP id h15mr4074235ioh.48.1558198201062;
+ Sat, 18 May 2019 09:50:01 -0700 (PDT)
+Date:   Sat, 18 May 2019 09:50:01 -0700
+In-Reply-To: <Pine.LNX.4.44L0.1905181202500.7855-100000@netrider.rowland.org>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <00000000000043a1f905892c4a1f@google.com>
+Subject: Re: KASAN: use-after-free Read in p54u_load_firmware_cb
+From:   syzbot <syzbot+200d4bb11b23d929335f@syzkaller.appspotmail.com>
+To:     andreyknvl@google.com, chunkeey@gmail.com, chunkeey@googlemail.com,
+        davem@davemloft.net, kvalo@codeaurora.org,
+        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        oneukum@suse.com, stern@rowland.harvard.edu,
+        syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hello,
+
+syzbot tried to test the proposed patch but build/boot failed:
+
+si/sg.o
+   CC      drivers/gpu/drm/nouveau/nvkm/engine/disp/rootgp102.o
+   CC      drivers/gpu/drm/nouveau/nvkm/engine/disp/rootgv100.o
+   CC      drivers/scsi/ch.o
+   CC      drivers/gpu/drm/nouveau/nvkm/engine/disp/roottu102.o
+   CC      drivers/scsi/ses.o
+   CC      drivers/gpu/drm/nouveau/nvkm/engine/disp/channv50.o
+   CC      drivers/gpu/drm/nouveau/nvkm/engine/disp/changf119.o
+   CC      drivers/scsi/scsi_sysfs.o
+   CC      drivers/gpu/drm/nouveau/nvkm/engine/disp/changv100.o
+   CC      drivers/gpu/drm/nouveau/nvkm/engine/disp/dmacnv50.o
+   CC      drivers/gpu/drm/nouveau/nvkm/engine/disp/dmacgf119.o
+   CC      drivers/gpu/drm/nouveau/nvkm/engine/disp/dmacgp102.o
+   CC      drivers/gpu/drm/nouveau/nvkm/engine/disp/dmacgv100.o
+   CC      drivers/gpu/drm/nouveau/nvkm/engine/disp/basenv50.o
+   CC      drivers/gpu/drm/nouveau/nvkm/engine/disp/baseg84.o
+   CC      drivers/gpu/drm/nouveau/nvkm/engine/disp/basegf119.o
+   CC      drivers/gpu/drm/nouveau/nvkm/engine/disp/basegp102.o
+   CC      drivers/gpu/drm/nouveau/nvkm/engine/disp/corenv50.o
+   CC      drivers/gpu/drm/nouveau/nvkm/engine/disp/coreg84.o
+   CC      drivers/gpu/drm/nouveau/nvkm/engine/disp/coreg94.o
+   CC      drivers/gpu/drm/nouveau/nvkm/engine/disp/coregf119.o
+   CC      drivers/gpu/drm/nouveau/nvkm/engine/disp/coregk104.o
+   CC      drivers/gpu/drm/nouveau/nvkm/engine/disp/coregp102.o
+   CC      drivers/gpu/drm/nouveau/nvkm/engine/disp/coregv100.o
+   CC      drivers/gpu/drm/nouveau/nvkm/engine/disp/ovlynv50.o
+   CC      drivers/gpu/drm/nouveau/nvkm/engine/disp/ovlyg84.o
+   CC      drivers/gpu/drm/nouveau/nvkm/engine/disp/ovlygt200.o
+   CC      drivers/gpu/drm/nouveau/nvkm/engine/disp/ovlygf119.o
+   CC      drivers/gpu/drm/nouveau/nvkm/engine/disp/ovlygk104.o
+   CC      drivers/gpu/drm/nouveau/nvkm/engine/disp/ovlygp102.o
+   CC      drivers/gpu/drm/nouveau/nvkm/engine/disp/wimmgv100.o
+   CC      drivers/gpu/drm/nouveau/nvkm/engine/disp/wndwgv100.o
+   CC      drivers/gpu/drm/nouveau/nvkm/engine/disp/piocnv50.o
+   CC      drivers/gpu/drm/nouveau/nvkm/engine/disp/piocgf119.o
+   CC      drivers/gpu/drm/nouveau/nvkm/engine/disp/cursgf119.o
+   CC      drivers/gpu/drm/nouveau/nvkm/engine/disp/cursgp102.o
+   CC      drivers/gpu/drm/nouveau/nvkm/engine/disp/cursnv50.o
+   CC      drivers/gpu/drm/nouveau/nvkm/engine/disp/cursgv100.o
+   CC      drivers/gpu/drm/nouveau/nvkm/engine/disp/oimmnv50.o
+   CC      drivers/gpu/drm/nouveau/nvkm/engine/disp/oimmgf119.o
+   CC      drivers/gpu/drm/nouveau/nvkm/engine/disp/oimmgp102.o
+   CC      drivers/gpu/drm/nouveau/nvkm/engine/dma/base.o
+   CC      drivers/gpu/drm/nouveau/nvkm/engine/dma/nv04.o
+   CC      drivers/gpu/drm/nouveau/nvkm/engine/dma/nv50.o
+   CC      drivers/gpu/drm/nouveau/nvkm/engine/dma/gf100.o
+   CC      drivers/gpu/drm/nouveau/nvkm/engine/dma/gf119.o
+   CC      drivers/gpu/drm/nouveau/nvkm/engine/dma/gv100.o
+   CC      drivers/gpu/drm/nouveau/nvkm/engine/dma/user.o
+   CC      drivers/gpu/drm/nouveau/nvkm/engine/dma/usernv04.o
+   CC      drivers/gpu/drm/nouveau/nvkm/engine/dma/usernv50.o
+   CC      drivers/gpu/drm/nouveau/nvkm/engine/dma/usergf100.o
+   CC      drivers/gpu/drm/nouveau/nvkm/engine/dma/usergf119.o
+   CC      drivers/gpu/drm/nouveau/nvkm/engine/dma/usergv100.o
+   CC      drivers/gpu/drm/nouveau/nvkm/engine/fifo/base.o
+   CC      drivers/gpu/drm/nouveau/nvkm/engine/fifo/nv04.o
+   CC      drivers/gpu/drm/nouveau/nvkm/engine/fifo/nv10.o
+   CC      drivers/gpu/drm/nouveau/nvkm/engine/fifo/nv17.o
+   CC      drivers/gpu/drm/nouveau/nvkm/engine/fifo/nv40.o
+   CC      drivers/gpu/drm/nouveau/nvkm/engine/fifo/nv50.o
+   CC      drivers/gpu/drm/nouveau/nvkm/engine/fifo/g84.o
+   CC      drivers/gpu/drm/nouveau/nvkm/engine/fifo/gf100.o
+   CC      drivers/gpu/drm/nouveau/nvkm/engine/fifo/gk110.o
+   CC      drivers/gpu/drm/nouveau/nvkm/engine/fifo/gk208.o
+   CC      drivers/gpu/drm/nouveau/nvkm/engine/fifo/gm107.o
+   CC      drivers/gpu/drm/nouveau/nvkm/engine/fifo/gk20a.o
+   CC      drivers/gpu/drm/nouveau/nvkm/engine/fifo/gk104.o
+   CC      drivers/gpu/drm/nouveau/nvkm/engine/fifo/gm200.o
+   CC      drivers/gpu/drm/nouveau/nvkm/engine/fifo/gm20b.o
+   CC      drivers/gpu/drm/nouveau/nvkm/engine/fifo/gp100.o
+   CC      drivers/gpu/drm/nouveau/nvkm/engine/fifo/gp10b.o
+   CC      drivers/gpu/drm/nouveau/nvkm/engine/fifo/gv100.o
+   CC      drivers/gpu/drm/nouveau/nvkm/engine/fifo/tu102.o
+   CC      drivers/gpu/drm/nouveau/nvkm/engine/fifo/chan.o
+   CC      drivers/gpu/drm/nouveau/nvkm/engine/fifo/channv50.o
+   CC      drivers/gpu/drm/nouveau/nvkm/engine/fifo/chang84.o
+   CC      drivers/gpu/drm/nouveau/nvkm/engine/fifo/dmanv04.o
+   CC      drivers/gpu/drm/nouveau/nvkm/engine/fifo/dmanv17.o
+   CC      drivers/gpu/drm/nouveau/nvkm/engine/fifo/dmanv10.o
+   CC      drivers/gpu/drm/nouveau/nvkm/engine/fifo/dmanv40.o
+   CC      drivers/gpu/drm/nouveau/nvkm/engine/fifo/dmanv50.o
+   CC      drivers/gpu/drm/nouveau/nvkm/engine/fifo/dmag84.o
+   CC      drivers/gpu/drm/nouveau/nvkm/engine/fifo/gpfifonv50.o
+   AR      drivers/net/ethernet/sun/built-in.a
+   CC      drivers/gpu/drm/nouveau/nvkm/engine/fifo/gpfifog84.o
+   AR      drivers/net/ethernet/built-in.a
+   CC      drivers/gpu/drm/nouveau/nvkm/engine/fifo/gpfifogk104.o
+   CC      drivers/gpu/drm/nouveau/nvkm/engine/fifo/gpfifogf100.o
+   CC      drivers/gpu/drm/nouveau/nvkm/engine/fifo/gpfifogv100.o
+   CC      drivers/gpu/drm/nouveau/nvkm/engine/fifo/usergv100.o
+   CC      drivers/gpu/drm/nouveau/nvkm/engine/gr/base.o
+   CC      drivers/gpu/drm/nouveau/nvkm/engine/fifo/usertu102.o
+   CC      drivers/gpu/drm/nouveau/nvkm/engine/gr/nv04.o
+   CC      drivers/gpu/drm/nouveau/nvkm/engine/gr/nv15.o
+   CC      drivers/gpu/drm/nouveau/nvkm/engine/fifo/gpfifotu102.o
+   CC      drivers/gpu/drm/nouveau/nvkm/engine/gr/nv10.o
+   CC      drivers/gpu/drm/nouveau/nvkm/engine/gr/nv17.o
+scripts/Makefile.build:486: recipe for target 'drivers/net' failed
+make[1]: *** [drivers/net] Error 2
+make[1]: *** Waiting for unfinished jobs....
+   CC      drivers/gpu/drm/nouveau/nvkm/engine/gr/nv25.o
+   CC      drivers/gpu/drm/nouveau/nvkm/engine/gr/nv20.o
+   CC      drivers/gpu/drm/nouveau/nvkm/engine/gr/nv2a.o
+   CC      drivers/gpu/drm/nouveau/nvkm/engine/gr/nv30.o
+   CC      drivers/gpu/drm/nouveau/nvkm/engine/gr/nv34.o
+   CC      drivers/gpu/drm/nouveau/nvkm/engine/gr/nv35.o
+   CC      drivers/gpu/drm/nouveau/nvkm/engine/gr/nv40.o
+   CC      drivers/gpu/drm/nouveau/nvkm/engine/gr/nv44.o
+   CC      drivers/gpu/drm/nouveau/nvkm/engine/gr/nv50.o
+   CC      drivers/gpu/drm/nouveau/nvkm/engine/gr/g84.o
+   CC      drivers/gpu/drm/nouveau/nvkm/engine/gr/gt200.o
+   CC      drivers/gpu/drm/nouveau/nvkm/engine/gr/mcp79.o
+   CC      drivers/gpu/drm/nouveau/nvkm/engine/gr/gt215.o
+   CC      drivers/gpu/drm/nouveau/nvkm/engine/gr/gf100.o
+   CC      drivers/gpu/drm/nouveau/nvkm/engine/gr/mcp89.o
+   CC      drivers/gpu/drm/nouveau/nvkm/engine/gr/gf104.o
+   CC      drivers/gpu/drm/nouveau/nvkm/engine/gr/gf110.o
+   CC      drivers/gpu/drm/nouveau/nvkm/engine/gr/gf108.o
+   CC      drivers/gpu/drm/nouveau/nvkm/engine/gr/gf117.o
+   CC      drivers/gpu/drm/nouveau/nvkm/engine/gr/gf119.o
+   CC      drivers/gpu/drm/nouveau/nvkm/engine/gr/gk110.o
+   CC      drivers/gpu/drm/nouveau/nvkm/engine/gr/gk104.o
+   CC      drivers/gpu/drm/nouveau/nvkm/engine/gr/gk110b.o
+   CC      drivers/gpu/drm/nouveau/nvkm/engine/gr/gk208.o
+   CC      drivers/gpu/drm/nouveau/nvkm/engine/gr/gk20a.o
+   CC      drivers/gpu/drm/nouveau/nvkm/engine/gr/gm107.o
+   CC      drivers/gpu/drm/nouveau/nvkm/engine/gr/gm200.o
+   CC      drivers/gpu/drm/nouveau/nvkm/engine/gr/gm20b.o
+   CC      drivers/gpu/drm/nouveau/nvkm/engine/gr/gp102.o
+   CC      drivers/gpu/drm/nouveau/nvkm/engine/gr/gp100.o
+   CC      drivers/gpu/drm/nouveau/nvkm/engine/gr/gp104.o
+   CC      drivers/gpu/drm/nouveau/nvkm/engine/gr/gp107.o
+   CC      drivers/gpu/drm/nouveau/nvkm/engine/gr/gv100.o
+   CC      drivers/gpu/drm/nouveau/nvkm/engine/gr/gp10b.o
+   CC      drivers/gpu/drm/nouveau/nvkm/engine/gr/ctxnv40.o
+   CC      drivers/gpu/drm/nouveau/nvkm/engine/gr/ctxnv50.o
+   CC      drivers/gpu/drm/nouveau/nvkm/engine/gr/ctxgf100.o
+   CC      drivers/gpu/drm/nouveau/nvkm/engine/gr/ctxgf104.o
+   CC      drivers/gpu/drm/nouveau/nvkm/engine/gr/ctxgf108.o
+   CC      drivers/gpu/drm/nouveau/nvkm/engine/gr/ctxgf110.o
+   CC      drivers/gpu/drm/nouveau/nvkm/engine/gr/ctxgf119.o
+   CC      drivers/gpu/drm/nouveau/nvkm/engine/gr/ctxgf117.o
+   CC      drivers/gpu/drm/nouveau/nvkm/engine/gr/ctxgk104.o
+   CC      drivers/gpu/drm/nouveau/nvkm/engine/gr/ctxgk110.o
+   CC      drivers/gpu/drm/nouveau/nvkm/engine/gr/ctxgk110b.o
+   CC      drivers/gpu/drm/nouveau/nvkm/engine/gr/ctxgk208.o
+   CC      drivers/gpu/drm/nouveau/nvkm/engine/gr/ctxgk20a.o
+   CC      drivers/gpu/drm/nouveau/nvkm/engine/gr/ctxgm107.o
+   CC      drivers/gpu/drm/nouveau/nvkm/engine/gr/ctxgm200.o
+   CC      drivers/gpu/drm/nouveau/nvkm/engine/gr/ctxgm20b.o
+   CC      drivers/gpu/drm/nouveau/nvkm/engine/gr/ctxgp100.o
+   CC      drivers/gpu/drm/nouveau/nvkm/engine/gr/ctxgp102.o
+   CC      drivers/gpu/drm/nouveau/nvkm/engine/gr/ctxgp104.o
+   CC      drivers/gpu/drm/nouveau/nvkm/engine/gr/ctxgp107.o
+   CC      drivers/gpu/drm/nouveau/nvkm/engine/gr/ctxgv100.o
+   CC      drivers/gpu/drm/nouveau/nvkm/engine/mpeg/nv31.o
+   CC      drivers/gpu/drm/nouveau/nvkm/engine/mpeg/nv40.o
+   CC      drivers/gpu/drm/nouveau/nvkm/engine/mpeg/nv44.o
+   CC      drivers/gpu/drm/nouveau/nvkm/engine/mspdec/base.o
+   CC      drivers/gpu/drm/nouveau/nvkm/engine/mpeg/g84.o
+   CC      drivers/gpu/drm/nouveau/nvkm/engine/mpeg/nv50.o
+   CC      drivers/gpu/drm/nouveau/nvkm/engine/mspdec/g98.o
+   CC      drivers/gpu/drm/nouveau/nvkm/engine/mspdec/gt215.o
+   CC      drivers/gpu/drm/nouveau/nvkm/engine/mspdec/gf100.o
+   CC      drivers/gpu/drm/nouveau/nvkm/engine/mspdec/gk104.o
+   CC      drivers/gpu/drm/nouveau/nvkm/engine/msppp/base.o
+   CC      drivers/gpu/drm/nouveau/nvkm/engine/msppp/g98.o
+   CC      drivers/gpu/drm/nouveau/nvkm/engine/msppp/gt215.o
+   CC      drivers/gpu/drm/nouveau/nvkm/engine/msvld/base.o
+   CC      drivers/gpu/drm/nouveau/nvkm/engine/msppp/gf100.o
+   CC      drivers/gpu/drm/nouveau/nvkm/engine/msvld/g98.o
+   CC      drivers/gpu/drm/nouveau/nvkm/engine/msvld/mcp89.o
+   CC      drivers/gpu/drm/nouveau/nvkm/engine/msvld/gt215.o
+   CC      drivers/gpu/drm/nouveau/nvkm/engine/msvld/gf100.o
+   CC      drivers/gpu/drm/nouveau/nvkm/engine/msvld/gk104.o
+   CC      drivers/gpu/drm/nouveau/nvkm/engine/nvdec/base.o
+   CC      drivers/gpu/drm/nouveau/nvkm/engine/nvdec/gp102.o
+   CC      drivers/gpu/drm/nouveau/nvkm/engine/pm/g84.o
+   CC      drivers/gpu/drm/nouveau/nvkm/engine/pm/gt200.o
+   CC      drivers/gpu/drm/nouveau/nvkm/engine/pm/gt215.o
+   CC      drivers/gpu/drm/nouveau/nvkm/engine/pm/gf100.o
+   CC      drivers/gpu/drm/nouveau/nvkm/engine/pm/gf108.o
+   CC      drivers/gpu/drm/nouveau/nvkm/engine/pm/nv40.o
+   CC      drivers/gpu/drm/nouveau/nvkm/engine/pm/base.o
+   CC      drivers/gpu/drm/nouveau/nvkm/engine/pm/gf117.o
+   CC      drivers/gpu/drm/nouveau/nvkm/engine/pm/gk104.o
+   CC      drivers/gpu/drm/nouveau/nvkm/engine/sec2/base.o
+   CC      drivers/gpu/drm/nouveau/nvkm/engine/sec/g98.o
+   CC      drivers/gpu/drm/nouveau/nvkm/engine/pm/nv50.o
+   CC      drivers/gpu/drm/nouveau/nvkm/engine/sec2/gp102.o
+   CC      drivers/gpu/drm/nouveau/nvkm/engine/sec2/tu102.o
+   CC      drivers/gpu/drm/nouveau/nvkm/engine/sw/base.o
+   CC      drivers/gpu/drm/nouveau/nvkm/engine/sw/nv04.o
+   CC      drivers/gpu/drm/nouveau/nvkm/engine/sw/nv10.o
+   CC      drivers/gpu/drm/nouveau/nvkm/engine/sw/nv50.o
+   CC      drivers/gpu/drm/nouveau/nvkm/engine/sw/gf100.o
+   CC      drivers/gpu/drm/nouveau/nvkm/engine/sw/chan.o
+   CC      drivers/gpu/drm/nouveau/nouveau_acpi.o
+   CC      drivers/gpu/drm/nouveau/nvkm/engine/vp/g84.o
+   CC      drivers/gpu/drm/nouveau/nvkm/engine/sw/nvsw.o
+   CC      drivers/gpu/drm/nouveau/nouveau_debugfs.o
+   CC      drivers/gpu/drm/nouveau/nouveau_drm.o
+   CC      drivers/gpu/drm/nouveau/nouveau_hwmon.o
+   CC      drivers/gpu/drm/nouveau/nouveau_ioc32.o
+   CC      drivers/gpu/drm/nouveau/nouveau_led.o
+   CC      drivers/gpu/drm/nouveau/nouveau_nvif.o
+   CC      drivers/gpu/drm/nouveau/nouveau_usif.o
+   CC      drivers/gpu/drm/nouveau/nouveau_bo.o
+   CC      drivers/gpu/drm/nouveau/nouveau_gem.o
+   CC      drivers/gpu/drm/nouveau/nouveau_mem.o
+   CC      drivers/gpu/drm/nouveau/nouveau_backlight.o
+   CC      drivers/gpu/drm/nouveau/nouveau_vga.o
+   CC      drivers/gpu/drm/nouveau/nouveau_vmm.o
+   CC      drivers/gpu/drm/nouveau/nouveau_ttm.o
+   CC      drivers/gpu/drm/nouveau/nouveau_bios.o
+   CC      drivers/gpu/drm/nouveau/nouveau_prime.o
+   CC      drivers/gpu/drm/nouveau/nouveau_connector.o
+   CC      drivers/gpu/drm/nouveau/nouveau_sgdma.o
+   CC      drivers/gpu/drm/nouveau/nouveau_dp.o
+   CC      drivers/gpu/drm/nouveau/nouveau_display.o
+   CC      drivers/gpu/drm/nouveau/nv04_fbcon.o
+   CC      drivers/gpu/drm/nouveau/nv50_fbcon.o
+   CC      drivers/gpu/drm/nouveau/nouveau_fbcon.o
+   CC      drivers/gpu/drm/nouveau/nvc0_fbcon.o
+   CC      drivers/gpu/drm/nouveau/dispnv04/arb.o
+   CC      drivers/gpu/drm/nouveau/dispnv04/crtc.o
+   CC      drivers/gpu/drm/nouveau/dispnv04/cursor.o
+   CC      drivers/gpu/drm/nouveau/dispnv04/dac.o
+   CC      drivers/gpu/drm/nouveau/dispnv04/dfp.o
+   CC      drivers/gpu/drm/nouveau/dispnv04/disp.o
+   CC      drivers/gpu/drm/nouveau/dispnv04/hw.o
+   CC      drivers/gpu/drm/nouveau/dispnv04/overlay.o
+   CC      drivers/gpu/drm/nouveau/dispnv04/tvmodesnv17.o
+   CC      drivers/gpu/drm/nouveau/dispnv04/tvnv04.o
+   AR      drivers/scsi/built-in.a
+   CC      drivers/gpu/drm/nouveau/dispnv04/tvnv17.o
+   CC      drivers/gpu/drm/nouveau/dispnv50/disp.o
+   CC      drivers/gpu/drm/nouveau/dispnv50/lut.o
+   CC      drivers/gpu/drm/nouveau/dispnv50/core507d.o
+   CC      drivers/gpu/drm/nouveau/dispnv50/core.o
+   CC      drivers/gpu/drm/nouveau/dispnv50/core907d.o
+   CC      drivers/gpu/drm/nouveau/dispnv50/core827d.o
+   CC      drivers/gpu/drm/nouveau/dispnv50/core917d.o
+   CC      drivers/gpu/drm/nouveau/dispnv50/corec37d.o
+   CC      drivers/gpu/drm/nouveau/dispnv50/corec57d.o
+   CC      drivers/gpu/drm/nouveau/dispnv50/dac907d.o
+   CC      drivers/gpu/drm/nouveau/dispnv50/dac507d.o
+   CC      drivers/gpu/drm/nouveau/dispnv50/pior507d.o
+   CC      drivers/gpu/drm/nouveau/dispnv50/sor507d.o
+   CC      drivers/gpu/drm/nouveau/dispnv50/sor907d.o
+   CC      drivers/gpu/drm/nouveau/dispnv50/sorc37d.o
+   CC      drivers/gpu/drm/nouveau/dispnv50/head.o
+   CC      drivers/gpu/drm/nouveau/dispnv50/head507d.o
+   CC      drivers/gpu/drm/nouveau/dispnv50/head827d.o
+   CC      drivers/gpu/drm/nouveau/dispnv50/head907d.o
+   CC      drivers/gpu/drm/nouveau/dispnv50/headc37d.o
+   CC      drivers/gpu/drm/nouveau/dispnv50/head917d.o
+   CC      drivers/gpu/drm/nouveau/dispnv50/headc57d.o
+   CC      drivers/gpu/drm/nouveau/dispnv50/wimm.o
+   CC      drivers/gpu/drm/nouveau/dispnv50/wimmc37b.o
+   CC      drivers/gpu/drm/nouveau/dispnv50/wndwc37e.o
+   CC      drivers/gpu/drm/nouveau/dispnv50/base.o
+   CC      drivers/gpu/drm/nouveau/dispnv50/wndwc57e.o
+   CC      drivers/gpu/drm/nouveau/dispnv50/wndw.o
+   CC      drivers/gpu/drm/nouveau/dispnv50/base907c.o
+   CC      drivers/gpu/drm/nouveau/dispnv50/base827c.o
+   CC      drivers/gpu/drm/nouveau/dispnv50/base507c.o
+   CC      drivers/gpu/drm/nouveau/dispnv50/base917c.o
+   CC      drivers/gpu/drm/nouveau/dispnv50/curs.o
+   CC      drivers/gpu/drm/nouveau/dispnv50/curs507a.o
+   CC      drivers/gpu/drm/nouveau/dispnv50/curs907a.o
+   CC      drivers/gpu/drm/nouveau/dispnv50/cursc37a.o
+   CC      drivers/gpu/drm/nouveau/dispnv50/oimm.o
+   CC      drivers/gpu/drm/nouveau/dispnv50/oimm507b.o
+   CC      drivers/gpu/drm/nouveau/dispnv50/ovly.o
+   CC      drivers/gpu/drm/nouveau/dispnv50/ovly507e.o
+   CC      drivers/gpu/drm/nouveau/dispnv50/ovly827e.o
+   CC      drivers/gpu/drm/nouveau/dispnv50/ovly907e.o
+   CC      drivers/gpu/drm/nouveau/dispnv50/ovly917e.o
+   CC      drivers/gpu/drm/nouveau/nouveau_abi16.o
+   CC      drivers/gpu/drm/nouveau/nouveau_chan.o
+   CC      drivers/gpu/drm/nouveau/nv04_fence.o
+   CC      drivers/gpu/drm/nouveau/nouveau_fence.o
+   CC      drivers/gpu/drm/nouveau/nouveau_dma.o
+   CC      drivers/gpu/drm/nouveau/nv10_fence.o
+   CC      drivers/gpu/drm/nouveau/nv50_fence.o
+   CC      drivers/gpu/drm/nouveau/nv17_fence.o
+   CC      drivers/gpu/drm/nouveau/nv84_fence.o
+   CC      drivers/gpu/drm/nouveau/nvc0_fence.o
+   AR      drivers/gpu/drm/nouveau/built-in.a
+   AR      drivers/gpu/drm/built-in.a
+   AR      drivers/gpu/built-in.a
+Makefile:1051: recipe for target 'drivers' failed
+make: *** [drivers] Error 2
 
 
-On 5/17/19 2:03 AM, xiaolinkui wrote:
-> Use struct_size() to keep code sample.
+Error text is too large and was truncated, full error text is at:
+https://syzkaller.appspot.com/x/error.txt?x=164a0108a00000
 
-What do you mean by that?
 
-> One of the more common cases of allocation size calculations is finding
-> the size of a structure that has a zero-sized array at the end, along
-> with memory for some number of elements for that array. For example:
-> 
-> struct foo {
->     int stuff;
->     struct boo entry[];
-> };
-> 
-> instance = kmalloc(sizeof(struct foo) + count * sizeof(struct boo), GFP_KERNEL);
-> 
-> Instead of leaving these open-coded and prone to type mistakes, we can
-> now use the new struct_size() helper:
-> 
-> instance = kmalloc(struct_size(instance, entry, count), GFP_KERNEL);
-> 
+Tested on:
 
-How did you find this code?
+commit:         43151d6c usb-fuzzer: main usb gadget fuzzer driver
+git tree:       https://github.com/google/kasan.git usb-fuzzer
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+patch:          https://syzkaller.appspot.com/x/patch.diff?x=15d1ef02a00000
 
-If you used a tool like Coccinelle, mention it in the changelog text.
-
-Did you compile it?
-
---
-Gustavo
-
-> Signed-off-by: xiaolinkui <xiaolinkui@kylinos.cn>
-> ---
->  drivers/nvme/target/admin-cmd.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/nvme/target/admin-cmd.c b/drivers/nvme/target/admin-cmd.c
-> index 9f72d51..6f9f830 100644
-> --- a/drivers/nvme/target/admin-cmd.c
-> +++ b/drivers/nvme/target/admin-cmd.c
-> @@ -248,8 +248,8 @@ static void nvmet_execute_get_log_page_ana(struct nvmet_req *req)
->  	u16 status;
->  
->  	status = NVME_SC_INTERNAL;
-> -	desc = kmalloc(sizeof(struct nvme_ana_group_desc) +
-> -			NVMET_MAX_NAMESPACES * sizeof(__le32), GFP_KERNEL);
-> +	desc = kmalloc(struct_size(desc, nsids, NVMET_MAX_NAMESPACES),
-> +			GFP_KERNEL);
->  	if (!desc)
->  		goto out;
->  
-> 
