@@ -6,50 +6,50 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69102C04E87
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 May 2019 00:47:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7635EC04E84
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 May 2019 00:47:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3F95420833
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 May 2019 00:47:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 51D0A21883
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 May 2019 00:47:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729347AbfERArU (ORCPT
+        id S1729376AbfERArb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 May 2019 20:47:20 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:41091 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729313AbfERArU (ORCPT
+        Fri, 17 May 2019 20:47:31 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:35042 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726870AbfERArb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 May 2019 20:47:20 -0400
-Received: by mail-wr1-f65.google.com with SMTP id g12so8498136wro.8
-        for <linux-kernel@vger.kernel.org>; Fri, 17 May 2019 17:47:19 -0700 (PDT)
+        Fri, 17 May 2019 20:47:31 -0400
+Received: by mail-wr1-f67.google.com with SMTP id m3so8624493wrv.2
+        for <linux-kernel@vger.kernel.org>; Fri, 17 May 2019 17:47:30 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=3DgH/GDCuXwmaYTsULk4dUFQoi/liSrcO0NR43ZPuKo=;
-        b=nB8JmBbI6LLUK9sQXOez5O5d43/NA608Kz28Xg49BQ3kX0/bilEMyHnFsslaautMfw
-         DRZ5CWtPmnkTZ4Ls1TldXn0IdHRtdc40VcLBkOKwaZHuD1aOhhS8WcWE/s27XwaHdqkc
-         hJT/lOZREkaCq81DSOL+q9dPsRkY1USiOYop4MzYP+vj/YXafWbYj4ZzLplIG4T1dYdk
-         mbVi5gGa4YoL23FWaZebqhhmqOFvU2Y3eP/4Q77MjQ7i+th3Ch4Lh8ZgjxhVvyBLHaC5
-         oefFzL+ghyDbzISCtdyLXWyMmM97SvWH7JAoL6mAbJUxrDsYcQLUTO9oRQ3ohoVfqFWg
-         82Cw==
-X-Gm-Message-State: APjAAAVgNRtsEN8bWrppio7OVaF4PK74nK/0U5VnA/TwXkxYZnonANtt
-        AxS4ECydA1pFcpcmnpktmJunflQEyu4=
-X-Google-Smtp-Source: APXvYqyPuu6yDKmkE/iulwPr5oaCAy2nYejJOHvbx+dwfpn42/EFXnjF/9CJyGfWaI6bOs3fVtV7Iw==
-X-Received: by 2002:a5d:54cc:: with SMTP id x12mr15259481wrv.303.1558140438471;
-        Fri, 17 May 2019 17:47:18 -0700 (PDT)
+        bh=vSly531sOw2rwvVk7zttVUIbMVurcuy0BpNrHVMScoY=;
+        b=RHEj0uUrjPe5aK4Txu0jwIIvKMskfbWN/8S1iQDcHmoDHwpK5USnM0OpzAD8mF05bt
+         DfFJWvp5hQSZjgZINhFKH1m7ZE97ZRW5G9dUy/gEncwnvFZNT7Y/Sb3XuIdFXEHlpRKE
+         +bTVH8JWAepM7J2PEj0mGj+2Gf6XQeSp5k5KbNQH5XUKUoK0DyZASC9fUTOcEdUzGQwf
+         pQHzooWUxA7kbP+lHfjMbPW2VjQvFNOeblKixM764oymUCgg1IO9UT16OkYsjCRGgoN6
+         E3WxBlKVGvO9dzxVgPf9vs583GzhIvI8z0N3A/t7yrsK++kQx3qP6GawYeR6KNknVFHE
+         k4YQ==
+X-Gm-Message-State: APjAAAWRuzlJ86GqkbWNOspDQv0vnkJOumi2pFLsBPy3qhkIxDvFxAeQ
+        eP8NfKbJRfi/UHZWFVzac82Tgg==
+X-Google-Smtp-Source: APXvYqxlCzuyTJ2++aLbnoALR+KdYHMVcvZEv227fTudzSLzBYhEqdsJUOOkmP6PGoIRErJdBel76Q==
+X-Received: by 2002:adf:e908:: with SMTP id f8mr5263821wrm.124.1558140449852;
+        Fri, 17 May 2019 17:47:29 -0700 (PDT)
 Received: from raver.teknoraver.net (net-47-53-225-211.cust.vodafonedsl.it. [47.53.225.211])
-        by smtp.gmail.com with ESMTPSA id n2sm14832005wra.89.2019.05.17.17.47.17
+        by smtp.gmail.com with ESMTPSA id j82sm14386099wmj.40.2019.05.17.17.47.28
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 17 May 2019 17:47:17 -0700 (PDT)
+        Fri, 17 May 2019 17:47:29 -0700 (PDT)
 From:   Matteo Croce <mcroce@redhat.com>
 To:     xdp-newbies@vger.kernel.org, bpf@vger.kernel.org
 Cc:     linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
         Alexei Starovoitov <ast@kernel.org>,
         Daniel Borkmann <daniel@iogearbox.net>
-Subject: [PATCH 4/5] samples/bpf: fix tracex5_user build error
-Date:   Sat, 18 May 2019 02:46:38 +0200
-Message-Id: <20190518004639.20648-4-mcroce@redhat.com>
+Subject: [PATCH 5/5] samples/bpf: fix hbm build error
+Date:   Sat, 18 May 2019 02:46:39 +0200
+Message-Id: <20190518004639.20648-5-mcroce@redhat.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190518004639.20648-1-mcroce@redhat.com>
 References: <20190518004639.20648-1-mcroce@redhat.com>
@@ -61,88 +61,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add missing symbols to tools/include/linux/filter.h to fix a build failure:
+Fix the following build error by declaring bpf_spin_lock in hbm.c.
+Including the UAPI header generates tons of redefined symbol errors,
+and including it in hbm.h breaks hbm_out_kern.c.
 
 make -C samples/bpf/../../tools/lib/bpf/ RM='rm -rf' LDFLAGS= srctree=samples/bpf/../../ O=
-  HOSTCC  samples/bpf/tracex5_user.o
-samples/bpf/tracex5_user.c: In function ‘install_accept_all_seccomp’:
-samples/bpf/tracex5_user.c:17:21: error: array type has incomplete element type ‘struct sock_filter’
-   17 |  struct sock_filter filter[] = {
-      |                     ^~~~~~
-samples/bpf/tracex5_user.c:18:3: warning: implicit declaration of function ‘BPF_STMT’; did you mean ‘BPF_STX’? [-Wimplicit-function-declaration]
-   18 |   BPF_STMT(BPF_RET+BPF_K, SECCOMP_RET_ALLOW),
-      |   ^~~~~~~~
-      |   BPF_STX
-samples/bpf/tracex5_user.c:20:9: error: variable ‘prog’ has initializer but incomplete type
-   20 |  struct sock_fprog prog = {
-      |         ^~~~~~~~~~
-samples/bpf/tracex5_user.c:21:4: error: ‘struct sock_fprog’ has no member named ‘len’
-   21 |   .len = (unsigned short)(sizeof(filter)/sizeof(filter[0])),
-      |    ^~~
-samples/bpf/tracex5_user.c:21:10: warning: excess elements in struct initializer
-   21 |   .len = (unsigned short)(sizeof(filter)/sizeof(filter[0])),
-      |          ^
-samples/bpf/tracex5_user.c:21:10: note: (near initialization for ‘prog’)
-samples/bpf/tracex5_user.c:22:4: error: ‘struct sock_fprog’ has no member named ‘filter’
-   22 |   .filter = filter,
-      |    ^~~~~~
-samples/bpf/tracex5_user.c:22:13: warning: excess elements in struct initializer
-   22 |   .filter = filter,
-      |             ^~~~~~
-samples/bpf/tracex5_user.c:22:13: note: (near initialization for ‘prog’)
-samples/bpf/tracex5_user.c:20:20: error: storage size of ‘prog’ isn’t known
-   20 |  struct sock_fprog prog = {
-      |                    ^~~~
-samples/bpf/tracex5_user.c:20:20: warning: unused variable ‘prog’ [-Wunused-variable]
-samples/bpf/tracex5_user.c:17:21: warning: unused variable ‘filter’ [-Wunused-variable]
-   17 |  struct sock_filter filter[] = {
-      |                     ^~~~~~
-make[2]: *** [scripts/Makefile.host:109: samples/bpf/tracex5_user.o] Error 1
+  HOSTCC  samples/bpf/hbm.o
+In file included from samples/bpf/hbm.c:49:
+samples/bpf/hbm.h:12:23: error: field ‘lock’ has incomplete type
+   12 |  struct bpf_spin_lock lock;
+      |                       ^~~~
+make[2]: *** [scripts/Makefile.host:109: samples/bpf/hbm.o] Error 1
 make[1]: *** [Makefile:1763: samples/bpf/] Error 2
 
 Signed-off-by: Matteo Croce <mcroce@redhat.com>
 ---
- tools/include/linux/filter.h | 27 +++++++++++++++++++++++++++
- 1 file changed, 27 insertions(+)
+ samples/bpf/hbm.c | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
 
-diff --git a/tools/include/linux/filter.h b/tools/include/linux/filter.h
-index ca28b6ab8db7..6b2ed7eccfa5 100644
---- a/tools/include/linux/filter.h
-+++ b/tools/include/linux/filter.h
-@@ -7,6 +7,33 @@
+diff --git a/samples/bpf/hbm.c b/samples/bpf/hbm.c
+index a79828ab273f..ca8e567b63c3 100644
+--- a/samples/bpf/hbm.c
++++ b/samples/bpf/hbm.c
+@@ -40,17 +40,22 @@
+ #include <fcntl.h>
+ #include <linux/unistd.h>
  
- #include <linux/bpf.h>
+-#include <linux/bpf.h>
+ #include <bpf/bpf.h>
++#include <linux/bpf.h>
  
-+/*
-+ *	Try and keep these values and structures similar to BSD, especially
-+ *	the BPF code definitions which need to match so you can share filters
-+ */
-+
-+struct sock_filter {	/* Filter block */
-+	__u16	code;   /* Actual filter code */
-+	__u8	jt;	/* Jump true */
-+	__u8	jf;	/* Jump false */
-+	__u32	k;      /* Generic multiuse field */
+ #include "bpf_load.h"
+ #include "bpf_rlimit.h"
+ #include "cgroup_helpers.h"
+-#include "hbm.h"
+ #include "bpf_util.h"
+ #include "bpf/bpf.h"
+ #include "bpf/libbpf.h"
+ 
++struct bpf_spin_lock {
++	__u32	val;
 +};
 +
-+struct sock_fprog {	/* Required for SO_ATTACH_FILTER. */
-+	unsigned short		len;	/* Number of filter blocks */
-+	struct sock_filter __user *filter;
-+};
++#include "hbm.h"
 +
-+/*
-+ * Macros for filter block array initializers.
-+ */
-+#ifndef BPF_STMT
-+#define BPF_STMT(code, k) { (unsigned short)(code), 0, 0, k }
-+#endif
-+#ifndef BPF_JUMP
-+#define BPF_JUMP(code, k, jt, jf) { (unsigned short)(code), jt, jf, k }
-+#endif
-+
- /* ArgX, context and stack frame pointer register positions. Note,
-  * Arg1, Arg2, Arg3, etc are used as argument mappings of function
-  * calls in BPF_CALL instruction.
+ bool outFlag = true;
+ int minRate = 1000;		/* cgroup rate limit in Mbps */
+ int rate = 1000;		/* can grow if rate conserving is enabled */
 -- 
 2.21.0
 
