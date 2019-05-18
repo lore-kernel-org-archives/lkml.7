@@ -2,175 +2,116 @@ Return-Path: <SRS0=//ty=TS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.7 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD77DC04AAF
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 May 2019 17:36:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E728EC04AAF
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 May 2019 17:39:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 819542087E
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 May 2019 17:36:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B949B20873
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 May 2019 17:39:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VKIycHZ8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729569AbfERRgB (ORCPT
+        id S1729620AbfERRi7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 May 2019 13:36:01 -0400
-Received: from mail-it1-f199.google.com ([209.85.166.199]:54619 "EHLO
-        mail-it1-f199.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729347AbfERRgB (ORCPT
+        Sat, 18 May 2019 13:38:59 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:44152 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727073AbfERRi7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 May 2019 13:36:01 -0400
-Received: by mail-it1-f199.google.com with SMTP id k8so9797193itd.4
-        for <linux-kernel@vger.kernel.org>; Sat, 18 May 2019 10:36:00 -0700 (PDT)
+        Sat, 18 May 2019 13:38:59 -0400
+Received: by mail-pf1-f195.google.com with SMTP id g9so5181805pfo.11;
+        Sat, 18 May 2019 10:38:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=K1nkYGLmXxVZQrJhOHX5C3Yjum/GvkV8x/L+QphEw5Y=;
+        b=VKIycHZ8mOTyhdoH7w67rLsEBUiN8FjSJtD8i98oTd0bVeMq1TDnxyqD+Tygrf5cox
+         9RQ01OJDPB9SDuyvZoJiYiW9YK5caCd1M4OnP2jgDDehk5/UIlpfbguJZbhuf1H0wtpi
+         7oneN1VrKDPSvo+EkvYw7LvLpp/41+8KiYYbaHPLa/DwrTg4Dw7ZHRafxwmsoXLrd3XM
+         +zo7nFPrpU75JFHCRy/2iuZh0Vj9wcv+0NX+GBsjQE7UJXd+160+tZiOVYc7sBP2lOMk
+         JcyKKbDq8LNU3STX2N0RYwfijfnAF3UAmCvNun6JT3NES8wxeZ56uXtr+IGco0xvP/qn
+         8LWA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
-         :from:to;
-        bh=1CvcmZSlB35QHwFTvpa0OM2vzXbECFOPgO/fzHPp5Ac=;
-        b=oRYC5e19Ae4gC+egUssOJ0rsa2hFaYg6AomioRF/XM14/joIPlztqJz4iSSc6WLVWj
-         IHK6tf9iRgt1GJZz8CVHwttNuq/NceD0kPDFVg3//yerrqcnjri6EvUhUPHtowclDjYE
-         R6zVHeyT/7SznuzGtSY8GTBx6IV0OrCEOle8ZZ2fw1B8ZgoSQxyqWBhhol+KlRuPVYXz
-         /G9wHO8+29UJQuTacBRn1fc+zzjsQO3ZMwP+2a/BMfD06UV60ZBVgQAZy/KygpKA7M8a
-         x5mp/IIozpwk7MciN3kkSIBJvPSgLWmIb7DCOIwfYC58D6Q9fG0//Il9G+OXroIy5hBn
-         kgJQ==
-X-Gm-Message-State: APjAAAW0tSTgIa4tfoj/f2SF3z+VpdnoTxkJWFHOQ0YBNazV757EAzJn
-        JOWdh2jsIIXT3t294v3UNxM+vaR8jke8UfaZzXhjtQfIFtUt
-X-Google-Smtp-Source: APXvYqzV8JeqBUYGAkEVFE/5tCLRs4BmMrMFHmykStvb7KmZgsRjuQCv2kRQa4EwNhkn41ukasbGIvtLxrHG8k6Baekq06RWo1k4
+        h=x-gm-message-state:date:from:to:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=K1nkYGLmXxVZQrJhOHX5C3Yjum/GvkV8x/L+QphEw5Y=;
+        b=DDVL7JkVONqEGU6l/wVLqILT/NpmOvi/Jr6TgB+RbrrPLlMCFqoISv66alpHyor5Cv
+         +3+MXXEfjqoiOcD6LHS47YmdsNiXJ/9UBwfhwaLL5tKXRTBNV7u6QBx2VSDl7f8oguO9
+         zFufVNtotZIAckvEvV3qj383zeaARYxVsNvotU6XbjfdkYRkN9S+ShMiVAeafIZWd336
+         M8BI4vn8aX4QUrvVLFkWzcycmwcsndd8flCJ5pKkGeINvHHAuM2wusMZnvybJQ4H/WUZ
+         rU/yvcEOL5EcgDfHYjQCPoVm3gEHFo2HquLyHPD4x4UbSKML8LWJ4JtSP92BVgucs5dD
+         ZFgw==
+X-Gm-Message-State: APjAAAWWjgCiuIbfBUxpERVQCoQoD5wzNxgTr0M2K4KKC+pylR01Qg9b
+        00i/rMUPbAWbYyo0/FjYBWw=
+X-Google-Smtp-Source: APXvYqzl9xVBK5tVB4brfCl3wCx/KY1AhgMnASNhuGFaPw+Hu5UPrOmG3gj5xYZHLy+UhgU9oGwz/Q==
+X-Received: by 2002:a63:c5b:: with SMTP id 27mr13696567pgm.70.1558201138477;
+        Sat, 18 May 2019 10:38:58 -0700 (PDT)
+Received: from hari-Inspiron-1545 ([183.83.92.73])
+        by smtp.gmail.com with ESMTPSA id y16sm23283514pfo.133.2019.05.18.10.38.54
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sat, 18 May 2019 10:38:58 -0700 (PDT)
+Date:   Sat, 18 May 2019 23:08:52 +0530
+From:   Hariprasad Kelam <hariprasad.kelam@gmail.com>
+To:     Steve Longerbeam <slongerbeam@gmail.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        linux-media@vger.kernel.org, devel@driverdev.osuosl.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] staging: media: imx: fix Unneeded variable: "ret". Return "0"
+Message-ID: <20190518173852.GA1191@hari-Inspiron-1545>
 MIME-Version: 1.0
-X-Received: by 2002:a5e:d703:: with SMTP id v3mr30942144iom.197.1558200960160;
- Sat, 18 May 2019 10:36:00 -0700 (PDT)
-Date:   Sat, 18 May 2019 10:36:00 -0700
-In-Reply-To: <Pine.LNX.4.44L0.1905181300440.10594-100000@netrider.rowland.org>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000b8203405892cee43@google.com>
-Subject: Re: KASAN: use-after-free Read in p54u_load_firmware_cb
-From:   syzbot <syzbot+200d4bb11b23d929335f@syzkaller.appspotmail.com>
-To:     andreyknvl@google.com, chunkeey@gmail.com, chunkeey@googlemail.com,
-        davem@davemloft.net, kvalo@codeaurora.org,
-        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        oneukum@suse.com, stern@rowland.harvard.edu,
-        syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+fix below warning reported by  coccichec
 
-syzbot has tested the proposed patch but the reproducer still triggered  
-crash:
-KASAN: use-after-free Read in usb_driver_release_interface
+drivers/staging/media/imx/imx-media-capture.c:617:5-8: Unneeded
+variable: "ret". Return "0" on line 630
 
-usb 1-1: Loading firmware file isl3887usb
-usb 1-1: Direct firmware load for isl3887usb failed with error -2
-usb 1-1: Firmware not found.
-p54usb 1-1:0.143: failed to initialize device (-2)
-==================================================================
-BUG: KASAN: use-after-free in usb_driver_release_interface+0x16b/0x190  
-drivers/usb/core/driver.c:584
-Read of size 8 at addr ffff88808fc31218 by task kworker/0:1/12
+Signed-off-by: Hariprasad Kelam <hariprasad.kelam@gmail.com>
+---
+ drivers/staging/media/imx/imx-media-capture.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-CPU: 0 PID: 12 Comm: kworker/0:1 Not tainted 5.1.0-rc3-g43151d6-dirty #1
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-Workqueue: events request_firmware_work_func
-Call Trace:
-  __dump_stack lib/dump_stack.c:77 [inline]
-  dump_stack+0xe8/0x16e lib/dump_stack.c:113
-  print_address_description+0x6c/0x236 mm/kasan/report.c:187
-  kasan_report.cold+0x1a/0x3c mm/kasan/report.c:317
-  usb_driver_release_interface+0x16b/0x190 drivers/usb/core/driver.c:584
-  p54u_load_firmware_cb+0x390/0x420  
-drivers/net/wireless/intersil/p54/p54usb.c:948
-  request_firmware_work_func+0x12d/0x249  
-drivers/base/firmware_loader/main.c:785
-  process_one_work+0x90f/0x1580 kernel/workqueue.c:2269
-  worker_thread+0x9b/0xe20 kernel/workqueue.c:2415
-  kthread+0x313/0x420 kernel/kthread.c:253
-  ret_from_fork+0x3a/0x50 arch/x86/entry/entry_64.S:352
-
-Allocated by task 12:
-  set_track mm/kasan/common.c:87 [inline]
-  __kasan_kmalloc mm/kasan/common.c:497 [inline]
-  __kasan_kmalloc.constprop.0+0xbf/0xd0 mm/kasan/common.c:470
-  kmalloc include/linux/slab.h:547 [inline]
-  kzalloc include/linux/slab.h:742 [inline]
-  usb_set_configuration+0x2e0/0x1740 drivers/usb/core/message.c:1846
-  generic_probe+0xa2/0xda drivers/usb/core/generic.c:210
-  usb_probe_device+0xc0/0x150 drivers/usb/core/driver.c:266
-  really_probe+0x2da/0xb10 drivers/base/dd.c:509
-  driver_probe_device+0x21d/0x350 drivers/base/dd.c:671
-  __device_attach_driver+0x1d8/0x290 drivers/base/dd.c:778
-  bus_for_each_drv+0x163/0x1e0 drivers/base/bus.c:454
-  __device_attach+0x223/0x3a0 drivers/base/dd.c:844
-  bus_probe_device+0x1f1/0x2a0 drivers/base/bus.c:514
-  device_add+0xad2/0x16e0 drivers/base/core.c:2106
-  usb_new_device.cold+0x537/0xccf drivers/usb/core/hub.c:2534
-  hub_port_connect drivers/usb/core/hub.c:5089 [inline]
-  hub_port_connect_change drivers/usb/core/hub.c:5204 [inline]
-  port_event drivers/usb/core/hub.c:5350 [inline]
-  hub_event+0x138e/0x3b00 drivers/usb/core/hub.c:5432
-  process_one_work+0x90f/0x1580 kernel/workqueue.c:2269
-  worker_thread+0x9b/0xe20 kernel/workqueue.c:2415
-  kthread+0x313/0x420 kernel/kthread.c:253
-  ret_from_fork+0x3a/0x50 arch/x86/entry/entry_64.S:352
-
-Freed by task 5394:
-  set_track mm/kasan/common.c:87 [inline]
-  __kasan_slab_free+0x130/0x180 mm/kasan/common.c:459
-  slab_free_hook mm/slub.c:1429 [inline]
-  slab_free_freelist_hook+0x5e/0x140 mm/slub.c:1456
-  slab_free mm/slub.c:3003 [inline]
-  kfree+0xce/0x290 mm/slub.c:3958
-  device_release+0x7d/0x210 drivers/base/core.c:1064
-  kobject_cleanup lib/kobject.c:662 [inline]
-  kobject_release lib/kobject.c:691 [inline]
-  kref_put include/linux/kref.h:67 [inline]
-  kobject_put+0x1df/0x4f0 lib/kobject.c:708
-  put_device+0x21/0x30 drivers/base/core.c:2205
-  usb_disable_device+0x309/0x790 drivers/usb/core/message.c:1244
-  usb_disconnect+0x298/0x870 drivers/usb/core/hub.c:2197
-  hub_port_connect drivers/usb/core/hub.c:4940 [inline]
-  hub_port_connect_change drivers/usb/core/hub.c:5204 [inline]
-  port_event drivers/usb/core/hub.c:5350 [inline]
-  hub_event+0xcd2/0x3b00 drivers/usb/core/hub.c:5432
-  process_one_work+0x90f/0x1580 kernel/workqueue.c:2269
-  worker_thread+0x9b/0xe20 kernel/workqueue.c:2415
-  kthread+0x313/0x420 kernel/kthread.c:253
-  ret_from_fork+0x3a/0x50 arch/x86/entry/entry_64.S:352
-
-The buggy address belongs to the object at ffff88808fc31100
-  which belongs to the cache kmalloc-2k of size 2048
-The buggy address is located 280 bytes inside of
-  2048-byte region [ffff88808fc31100, ffff88808fc31900)
-The buggy address belongs to the page:
-page:ffffea00023f0c00 count:1 mapcount:0 mapping:ffff88812c3f4800 index:0x0  
-compound_mapcount: 0
-flags: 0xfff00000010200(slab|head)
-raw: 00fff00000010200 dead000000000100 dead000000000200 ffff88812c3f4800
-raw: 0000000000000000 00000000000f000f 00000001ffffffff 0000000000000000
-page dumped because: kasan: bad access detected
-
-Memory state around the buggy address:
-  ffff88808fc31100: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-  ffff88808fc31180: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-> ffff88808fc31200: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-                             ^
-  ffff88808fc31280: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-  ffff88808fc31300: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-==================================================================
-
-
-Tested on:
-
-commit:         43151d6c usb-fuzzer: main usb gadget fuzzer driver
-git tree:       https://github.com/google/kasan.git usb-fuzzer
-console output: https://syzkaller.appspot.com/x/log.txt?x=148b9428a00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=4183eeef650d1234
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-patch:          https://syzkaller.appspot.com/x/patch.diff?x=17642018a00000
+diff --git a/drivers/staging/media/imx/imx-media-capture.c b/drivers/staging/media/imx/imx-media-capture.c
+index 9430c83..b678857 100644
+--- a/drivers/staging/media/imx/imx-media-capture.c
++++ b/drivers/staging/media/imx/imx-media-capture.c
+@@ -614,7 +614,6 @@ static int capture_release(struct file *file)
+ 	struct capture_priv *priv = video_drvdata(file);
+ 	struct video_device *vfd = priv->vdev.vfd;
+ 	struct vb2_queue *vq = &priv->q;
+-	int ret = 0;
+ 
+ 	mutex_lock(&priv->mutex);
+ 
+@@ -627,7 +626,7 @@ static int capture_release(struct file *file)
+ 
+ 	v4l2_fh_release(file);
+ 	mutex_unlock(&priv->mutex);
+-	return ret;
++	return 0;
+ }
+ 
+ static const struct v4l2_file_operations capture_fops = {
+-- 
+2.7.4
 
