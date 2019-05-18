@@ -2,110 +2,106 @@ Return-Path: <SRS0=//ty=TS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4E43C04E84
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 May 2019 02:15:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA9EBC04AB4
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 May 2019 02:31:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8EC1C21880
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 May 2019 02:15:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9ED4121744
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 May 2019 02:31:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=landley-net.20150623.gappssmtp.com header.i=@landley-net.20150623.gappssmtp.com header.b="TaT9fKi7"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CRO1qdgY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728897AbfERCPb (ORCPT
+        id S1727366AbfERCbI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 May 2019 22:15:31 -0400
-Received: from mail-yw1-f65.google.com ([209.85.161.65]:44613 "EHLO
-        mail-yw1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727585AbfERCPb (ORCPT
+        Fri, 17 May 2019 22:31:08 -0400
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:38091 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726200AbfERCbH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 May 2019 22:15:31 -0400
-Received: by mail-yw1-f65.google.com with SMTP id e74so3473342ywe.11
-        for <linux-kernel@vger.kernel.org>; Fri, 17 May 2019 19:15:30 -0700 (PDT)
+        Fri, 17 May 2019 22:31:07 -0400
+Received: by mail-qt1-f195.google.com with SMTP id d13so10250902qth.5
+        for <linux-kernel@vger.kernel.org>; Fri, 17 May 2019 19:31:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=landley-net.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=e/Re8JNkMMZS5vb+q48mFRH1gM+SXPJbTk6PEc7g9q4=;
-        b=TaT9fKi7fztMIo4wYsgTLZDMnxKQdpEqwKs28V2zcIpqmFTLAKns45HPPfCE5WngUb
-         /cjUP/dtAXmL/O2bc96thZrQHaWxU6ZtLzswD7p9cBMORrNKTnWGpz0PM1j9bBl69Lbz
-         mujkZe1Ja74zvbfU2kEu2rit4TTS1EcCBAV+T5XByRj11EEwm7k4hj7NpeDumKkpXjYk
-         Pof24nksP+mkg9BlqfvxkCflkBHCuKtRxV77HbRrclQZEzBnnAR5Zs8Uk/kK2wivODdS
-         MPW/elYrHw4itfDNH92HuXJVCV+YcqPJ7f77k5+LhM8UqkUZt+NPYDfSScblabao+j28
-         xvKA==
+        d=gmail.com; s=20161025;
+        h=from:to:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=q67f1b2VxwMpxdmTspg9aRXu3YBX/BaqwxIwMcxxa5A=;
+        b=CRO1qdgYKtpsKf1QqpQyrnSqu8vePhC+DaL23Vwv3zpWWx5DdVd2o/kH7L5qLlalr2
+         VHom+PuE4UGqtHX78zcC9GIgXHqF1z8nzroNbvEyGc5/2U8k/wQOG7JdyPZ+yNpcm4AC
+         P/fleD2A/UqxDOhuknM46vITzzRgAwj0+txNa6JeKB2VqjUCyocGTAkZwRTG+Febyyoq
+         nQGgBbu4q22tpIUhWjmZ3niNV9qBkj6p9HFG8PcA2rPf3335tn5KcSi5k5xfxjZNKe9c
+         6PCcMY2PTmM2bXBQ73yI/ExKIF/g7KnNCNuvpvZY4Gp9Esg+zs8Pu+Tw9frCUcYXSj2w
+         fckw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
+        h=x-gm-message-state:from:to:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=e/Re8JNkMMZS5vb+q48mFRH1gM+SXPJbTk6PEc7g9q4=;
-        b=qoftq4L0JKnYn8V54zsA3MtURWgIhlWhG6jCRuE2a2U1UJdqZK7Ycua+OnMxUVU6il
-         hTYZngfaDpp5bHSjaZsFAisakTHo3/QLS51V54HvyHN4I1OQCjMs2YmlNUGieABha8L2
-         DEPy9tLC8ZWmZUCgRZO+EI37aOzg+amQbsDbMbK++fa795eJJHbTRSQeiLAoNnw/W4jx
-         Dv3xtdy175YlzQLvohCyKDdqVOZ5SIB9/mmiVfZE5wtOitmf28guzDAKaIiRKyd+/fQX
-         rWFV2m5jy1n+CE8rEhFmIALS7o2tGl+Yrliv2vsnHwazhnD6m7KbsI6Ory6cVC9Y7jmC
-         yZNQ==
-X-Gm-Message-State: APjAAAXUVXqTRLQdAlyCdkuzcuMLWlHx5YYvs03btcTxDOTP6t5N3uxr
-        etxopB3vt06Htn+4k1zQ96us3w==
-X-Google-Smtp-Source: APXvYqwRQOdT2dPGlb54WwSW65T5Xzg/Y07ZThJYNzxMvkjGyvfuFPRNe52MRH3TF3M7IMuEtXBv+g==
-X-Received: by 2002:a81:3bd5:: with SMTP id i204mr22821560ywa.254.1558145730321;
-        Fri, 17 May 2019 19:15:30 -0700 (PDT)
-Received: from [192.168.43.9] ([172.56.6.82])
-        by smtp.googlemail.com with ESMTPSA id f129sm2902432ywe.35.2019.05.17.19.15.27
+        bh=q67f1b2VxwMpxdmTspg9aRXu3YBX/BaqwxIwMcxxa5A=;
+        b=mvxMHfMWvku4AfDzfhJkQgTkMsMYJQUGVoegW4ecfDKi0g3H7AvzQTLVcegZQanM9n
+         K5cqx/iXQDJ1qxLKsovmGKH+uXPbjmdam0HOjqbOZYFP8FXDg+LU6NpRUthmKQNV/i69
+         GXSajujIE1F6T5fmbGmWm8EADTknnxclfqpGKwrZFFuZE9r2RycbiVkoDjXmJGOCrBIv
+         KcEaurUV1hDaVv4FAOkD4pX2z8Zo4bJVVh9Zsq/xKee7B80IRqe1NFuxjijiQPhBLCOb
+         jkQPHl0VNIEza6ml/Y088PRrO7mZ7YE+F+OxSWxv1TV0KejKQhPIDYUu9X4tuebfOaMX
+         PGiQ==
+X-Gm-Message-State: APjAAAU9zOpPovejwWbLbKByIXWw843AZEjaahP960BbqnsW0oECp3I8
+        Sx/ENWaDUC4SeRsYDKQQ7rU=
+X-Google-Smtp-Source: APXvYqwc2ui0Mt2oTeKC744R/igCYt4EiQIOknTQYNHjLP0uMC9mU0xWi9CCaJFSbTibukNF7VFTFA==
+X-Received: by 2002:a0c:b621:: with SMTP id f33mr19245270qve.199.1558146666930;
+        Fri, 17 May 2019 19:31:06 -0700 (PDT)
+Received: from arch-01.home (c-73-132-202-198.hsd1.dc.comcast.net. [73.132.202.198])
+        by smtp.gmail.com with ESMTPSA id n66sm5210322qke.6.2019.05.17.19.31.06
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 17 May 2019 19:15:29 -0700 (PDT)
-Subject: Re: [PATCH v3 2/2] initramfs: introduce do_readxattrs()
-To:     "H. Peter Anvin" <hpa@zytor.com>,
-        Roberto Sassu <roberto.sassu@huawei.com>,
-        viro@zeniv.linux.org.uk
-Cc:     linux-security-module@vger.kernel.org,
-        linux-integrity@vger.kernel.org, initramfs@vger.kernel.org,
-        linux-api@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, zohar@linux.vnet.ibm.com,
-        silviu.vlasceanu@huawei.com, dmitry.kasatkin@huawei.com,
-        takondra@cisco.com, kamensky@cisco.com, arnd@arndb.de,
-        james.w.mcmechan@gmail.com, niveditas98@gmail.com
-References: <20190517165519.11507-1-roberto.sassu@huawei.com>
- <20190517165519.11507-3-roberto.sassu@huawei.com>
- <CD9A4F89-7CA5-4329-A06A-F8DEB87905A5@zytor.com>
- <69ef1f55-9fc1-7ee0-371f-3dbc77551dc0@zytor.com>
-From:   Rob Landley <rob@landley.net>
-Message-ID: <a0afd58f-c682-66b5-7478-c405a179d72a@landley.net>
-Date:   Fri, 17 May 2019 21:16:04 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Fri, 17 May 2019 19:31:06 -0700 (PDT)
+From:   Geordan Neukum <gneukum1@gmail.com>
+To:     gneukum1@gmail.com,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 0/5] Updates to staging driver: kpc_i2c
+Date:   Sat, 18 May 2019 02:29:55 +0000
+Message-Id: <cover.1558146549.git.gneukum1@gmail.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-In-Reply-To: <69ef1f55-9fc1-7ee0-371f-3dbc77551dc0@zytor.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/17/19 4:41 PM, H. Peter Anvin wrote:
-> On 5/17/19 1:18 PM, hpa@zytor.com wrote:
->>
->> Ok... I just realized this does not work for a modular initramfs, composed at load time from multiple files, which is a very real problem. Should be easy enough to deal with: instead of one large file, use one companion file per source file, perhaps something like filename..xattrs (suggesting double dots to make it less likely to conflict with a "real" file.) No leading dot, as it makes it more likely that archivers will sort them before the file proper.
->>
->> A side benefit is that the format can be simpler as there is no need to encode the filename.
->>
->> A technically cleaner solution still, but which would need archiver modifications, would be to encode the xattrs as an optionally nameless file (just an empty string) with a new file mode value, immediately following the original file. The advantage there is that the archiver itself could support xattrs and other extended metadata (which has been requested elsewhere); the disadvantage obviously is that that it requires new support in the archiver. However, at least it ought to be simpler since it is still a higher protocol level than the cpio archive itself.
->>
->> There's already one special case in cpio, which is the "!!!TRAILER!!!" filename; although I don't think it is part of the formal spec, to the extent there is one, I would expect that in practice it is always encoded with a mode of 0, which incidentally could be used to unbreak the case where such a filename actually exists. So one way to support such extended metadata would be to set mode to 0 and use the filename to encode the type of metadata. I wonder how existing GNU or BSD cpio (the BSD one is better maintained these days) would deal with reading such a file; it would at least not be a regression if it just read it still, possibly with warnings. It could also be possible to use bits 17:16 in the mode, which are traditionally always zero (mode_t being 16 bits), but I believe are present in most or all of the cpio formats for historical reasons. It might be accepted better by existing implementations to use one of these high bits combined with S_IFREG, I dont know.
->
-> 
-> Correction: it's just !!!TRAILER!!!.
+Attached are an assortment of updates to the kpc_i2c driver in the
+staging subtree.
 
-We documented it as "TRAILER!!!" without leading !!!, and that its purpose is to
-flush hardlinks:
+As a quick summary:
 
-  https://www.kernel.org/doc/Documentation/early-userspace/buffer-format.txt
+Patches 1, 4, and 5 address style concerns raised by the checkpatch
+script. Patch 1 (a reindentation fix) likely added additional 'line
+length' warnings, but given the fact that they were only hidden due to a
+nonstandard indentation style, I elected to defer that work to a future
+patchset. If the reviewers should disagree with that choice, I'd be happy
+to fix up those issues in a v2 upload.
 
-That's what toybox cpio has been producing. Kernel consumes it just fine. Just
-checked busybox cpio and that's what they're producing as well...
+Patch 2 is a reformatting / reorganization of the copyright header at the
+top of the file. I attempted to look at some other drivers in the i2c
+subsystem for inspiration, but I'd be happy to drop this isn't as simple
+an update as it seems.
 
-Rob
+Patch 3 addresses a potential bug in the cleanup of memory allocated in
+the probe method.
+
+Geordan Neukum (5):
+  staging: kpc2000: kpc_i2c: reindent i2c_driver.c
+  staging: kpc2000: kpc_i2c: reformat copyright for better readability
+  staging: kpc2000: kpc_i2c: prevent memory leak in probe() error case
+  staging: kpc2000: kpc_i2c: use %s with __func__ identifier in log
+    messages
+  staging: kpc2000: kpc_i2c: fixup block comment style in i2c_driver.c
+
+ drivers/staging/kpc2000/kpc_i2c/i2c_driver.c | 1043 +++++++++---------
+ 1 file changed, 527 insertions(+), 516 deletions(-)
+
+--
+2.21.0
+
