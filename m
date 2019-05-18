@@ -7,57 +7,58 @@ X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CFFEDC04AAF
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 May 2019 09:27:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82486C04AAF
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 May 2019 09:28:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A1E0120872
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 May 2019 09:27:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5740420872
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 May 2019 09:28:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="GDuwFyPK"
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="nuky1RiD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729950AbfERJ1a (ORCPT
+        id S1729961AbfERJ2U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 May 2019 05:27:30 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:41881 "EHLO
+        Sat, 18 May 2019 05:28:20 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:36733 "EHLO
         terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725268AbfERJ1a (ORCPT
+        with ESMTP id S1725268AbfERJ2T (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 May 2019 05:27:30 -0400
+        Sat, 18 May 2019 05:28:19 -0400
 Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x4I9RHip1741605
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x4I9Rv2Y1741657
         (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Sat, 18 May 2019 02:27:17 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x4I9RHip1741605
+        Sat, 18 May 2019 02:27:57 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x4I9Rv2Y1741657
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019041745; t=1558171637;
-        bh=fivn3MS59Xw2J78N3OUj+2kU5God/6k+4KC0UlUW8/s=;
-        h=Date:From:Cc:Reply-To:To:Subject:From;
-        b=GDuwFyPKS6O5/9LOKeA3jATojakwxR9zCq2rPlC9mZofpmrIdFtJtM0uond7dIMLm
-         sqs2S2kfyW0pxIYkVHuOQ1iNbM4WGB+wZT4jkyHQZLJrtwr8ObL7/eXMq+D+5i3AJQ
-         9VMNhXM/NHXtRq6DgB29WTjrcieeLDNxN0PoEYOwJsmXJ4hDzzGpDclpZ27foa39NR
-         0BtK75eScBBpSNoXWFCKjy9dLzTUAE7JaV5YnUfHYQBo3AkqYZ0ZUuVSfDlIkJFyEJ
-         j/rdKeg2C/zcvCJpF7AbO6e0ZtL3uYkGBila1qXCsFXNHoyH1y1gAc0CzOXR0fTjh5
-         XqN6zZkTZGjWQ==
+        s=2019041745; t=1558171678;
+        bh=rpOhxogJtYuCl8ipWCceQu79nPD2WljgrHaREOEDxSo=;
+        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
+        b=nuky1RiDI/bR+GqluWE2306wgV7vOoopfiEcro2uUn+iXg6FP5cJhNFkNwh1j0k99
+         10zdGtaFD323+sKac86E7y1wh0/J2uWxpAzQMB9atsVVR3rKq5FmX7E0Z/uI4VkWu3
+         WiWEdqZdoiBXoAzDeMMVviT609uXfAggOqIQaevvwijq8dMKFWhfR9yWEKXak7aDiX
+         Kx9ocnSZiMOVwp6DyiLektgeoXTTYe+O/uQWLVqlFN7Eas1jFc6EmHXlZrsrc5lVm5
+         nSM1oz8oX5j3/YDZQRUWB6YZBFMwrq8eoRE0KKlaiP4KRftNkJ+99ZjW0bMJU/uOAL
+         ER3v52HLI9AFg==
 Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x4I9RGeb1741602;
-        Sat, 18 May 2019 02:27:16 -0700
-Date:   Sat, 18 May 2019 02:27:16 -0700
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x4I9RumT1741654;
+        Sat, 18 May 2019 02:27:56 -0700
+Date:   Sat, 18 May 2019 02:27:56 -0700
 X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   tip-bot for Arnaldo Carvalho de Melo <tipbot@zytor.com>
-Message-ID: <tip-tp96618ds42zic94nlh0msz3@git.kernel.org>
-Cc:     jolsa@kernel.org, ak@linux.intel.com,
-        alexey.budankov@linux.intel.com, peterz@infradead.org,
-        alexander.shishkin@linux.intel.com, tglx@linutronix.de,
-        linux-kernel@vger.kernel.org, mingo@kernel.org, acme@redhat.com,
-        hpa@zytor.com, namhyung@kernel.org
-Reply-To: namhyung@kernel.org, acme@redhat.com, hpa@zytor.com,
-          mingo@kernel.org, linux-kernel@vger.kernel.org,
-          peterz@infradead.org, ak@linux.intel.com,
-          alexey.budankov@linux.intel.com, jolsa@kernel.org,
-          tglx@linutronix.de, alexander.shishkin@linux.intel.com
+From:   tip-bot for Zenghui Yu <tipbot@zytor.com>
+Message-ID: <tip-8e8f515d567f9ec1d960e9fdb117d39753b7504d@git.kernel.org>
+Cc:     alexander.shishkin@linux.intel.com, peterz@infradead.org,
+        mingo@kernel.org, yuzenghui@huawei.com, namhyung@kernel.org,
+        linux-kernel@vger.kernel.org, john.garry@huawei.com, hpa@zytor.com,
+        tglx@linutronix.de, jolsa@redhat.com, acme@redhat.com
+Reply-To: linux-kernel@vger.kernel.org, john.garry@huawei.com,
+          hpa@zytor.com, jolsa@redhat.com, tglx@linutronix.de,
+          acme@redhat.com, namhyung@kernel.org, yuzenghui@huawei.com,
+          mingo@kernel.org, peterz@infradead.org,
+          alexander.shishkin@linux.intel.com
+In-Reply-To: <1557919169-23972-1-git-send-email-yuzenghui@huawei.com>
+References: <1557919169-23972-1-git-send-email-yuzenghui@huawei.com>
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:perf/core] perf test zstd: Fixup verbose mode output
-Git-Commit-ID: d94cfbab6da92a3fc5fb69c8dae75c5720e6ed26
+Subject: [tip:perf/core] perf jevents: Remove unused variable
+Git-Commit-ID: 8e8f515d567f9ec1d960e9fdb117d39753b7504d
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot.git.kernel.org>
 Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
@@ -71,104 +72,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  d94cfbab6da92a3fc5fb69c8dae75c5720e6ed26
-Gitweb:     https://git.kernel.org/tip/d94cfbab6da92a3fc5fb69c8dae75c5720e6ed26
-Author:     Arnaldo Carvalho de Melo <acme@redhat.com>
-AuthorDate: Wed, 15 May 2019 15:58:40 -0300
+Commit-ID:  8e8f515d567f9ec1d960e9fdb117d39753b7504d
+Gitweb:     https://git.kernel.org/tip/8e8f515d567f9ec1d960e9fdb117d39753b7504d
+Author:     Zenghui Yu <yuzenghui@huawei.com>
+AuthorDate: Wed, 15 May 2019 11:19:29 +0000
 Committer:  Arnaldo Carvalho de Melo <acme@redhat.com>
 CommitDate: Wed, 15 May 2019 16:36:49 -0300
 
-perf test zstd: Fixup verbose mode output
+perf jevents: Remove unused variable
 
-The shell tests should not redirect useful output to /dev/null, as that
-is done automatically by 'perf test' in non verbose mode, so remove that
-from the zstd comp/decomp test, fixing up verbose mode.
+Address gcc warning:
 
-Before:
+  pmu-events/jevents.c: In function ‘save_arch_std_events’:
+  pmu-events/jevents.c:417:15: warning: unused variable ‘sb’ [-Wunused-variable]
+    struct stat *sb = data;
+                 ^~
 
-  $ perf test zstd
-  68: Zstd perf.data compression/decompression              : Ok
-  $ perf test -v zstd
-  68: Zstd perf.data compression/decompression              :
-  --- start ---
-  test child forked, pid 11956
-      -z, --compression-level[=<n>]
-  Collecting compressed record file:
-  Checking compressed events stats:
-  test child finished with 0
-  ---- end ----
-  Zstd perf.data compression/decompression: Ok
-  $
-
-Now:
-
-  $ perf test zstd
-  68: Zstd perf.data compression/decompression              : Ok
-  $ perf test -v zstd
-  68: Zstd perf.data compression/decompression              :
-  --- start ---
-  test child forked, pid 12695
-  Collecting compressed record file:
-  0+500 records in
-  72+1 records out
-  37361 bytes (37 kB, 36 KiB) copied, 9.83796 s, 3.8 kB/s
-  [ perf record: Woken up 1 times to write data ]
-  [ perf record: Captured and wrote 0.001 MB /tmp/perf.data.rzq, compressed (original 0.004 MB, ratio is 3.679) ]
-  Checking compressed events stats:
-  # compressed : Zstd, level = 1, ratio = 4
-        COMPRESSED events:          3
-  test child finished with 0
-  ---- end ----
-  Zstd perf.data compression/decompression: Ok
-  $
-
+Signed-off-by: Zenghui Yu <yuzenghui@huawei.com>
 Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Alexey Budankov <alexey.budankov@linux.intel.com>
-Cc: Andi Kleen <ak@linux.intel.com>
-Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: John Garry <john.garry@huawei.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
-Link: https://lkml.kernel.org/n/tip-tp96618ds42zic94nlh0msz3@git.kernel.org
+Cc: wanghaibin.wang@huawei.com
+Link: http://lkml.kernel.org/r/1557919169-23972-1-git-send-email-yuzenghui@huawei.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/tests/shell/record+zstd_comp_decomp.sh | 9 ++++-----
- 1 file changed, 4 insertions(+), 5 deletions(-)
+ tools/perf/pmu-events/jevents.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/tools/perf/tests/shell/record+zstd_comp_decomp.sh b/tools/perf/tests/shell/record+zstd_comp_decomp.sh
-index 93a26a87b1f2..5dcba800109f 100755
---- a/tools/perf/tests/shell/record+zstd_comp_decomp.sh
-+++ b/tools/perf/tests/shell/record+zstd_comp_decomp.sh
-@@ -3,29 +3,28 @@
+diff --git a/tools/perf/pmu-events/jevents.c b/tools/perf/pmu-events/jevents.c
+index daaea5003d4a..58f77fd0f59f 100644
+--- a/tools/perf/pmu-events/jevents.c
++++ b/tools/perf/pmu-events/jevents.c
+@@ -415,7 +415,6 @@ static int save_arch_std_events(void *data, char *name, char *event,
+ 				char *metric_name, char *metric_group)
+ {
+ 	struct event_struct *es;
+-	struct stat *sb = data;
  
- trace_file=$(mktemp /tmp/perf.data.XXX)
- perf_tool=perf
--output=/dev/null
- 
- skip_if_no_z_record() {
--	$perf_tool record -h 2>&1 | grep '\-z, \-\-compression\-level'
-+	$perf_tool record -h 2>&1 | grep -q '\-z, \-\-compression\-level'
- }
- 
- collect_z_record() {
- 	echo "Collecting compressed record file:"
- 	$perf_tool record -o $trace_file -g -z -F 5000 -- \
--		dd count=500 if=/dev/random of=/dev/null > $output 2>&1
-+		dd count=500 if=/dev/random of=/dev/null
- }
- 
- check_compressed_stats() {
- 	echo "Checking compressed events stats:"
- 	$perf_tool report -i $trace_file --header --stats | \
--		grep -E "(# compressed : Zstd,)|(COMPRESSED events:)" > $output 2>&1
-+		grep -E "(# compressed : Zstd,)|(COMPRESSED events:)"
- }
- 
- check_compressed_output() {
- 	$perf_tool inject -i $trace_file -o $trace_file.decomp &&
- 	$perf_tool report -i $trace_file --stdio | head -n -3 > $trace_file.comp.output &&
- 	$perf_tool report -i $trace_file.decomp --stdio | head -n -3 > $trace_file.decomp.output &&
--	diff $trace_file.comp.output $trace_file.decomp.output > $output 2>&1
-+	diff $trace_file.comp.output $trace_file.decomp.output
- }
- 
- skip_if_no_z_record || exit 2
+ 	es = malloc(sizeof(*es));
+ 	if (!es)
