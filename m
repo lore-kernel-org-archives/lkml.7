@@ -2,122 +2,138 @@ Return-Path: <SRS0=//ty=TS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AAC8EC04E87
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 May 2019 03:37:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66ADFC04AAF
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 May 2019 03:48:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7AB9020578
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 May 2019 03:37:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 182C02082C
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 May 2019 03:48:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="O28aqnJC"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=felipegasper.com header.i=@felipegasper.com header.b="Y1BmTae6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728217AbfERDhp (ORCPT
+        id S1728520AbfERDsX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 May 2019 23:37:45 -0400
-Received: from mail-pg1-f170.google.com ([209.85.215.170]:44669 "EHLO
-        mail-pg1-f170.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727309AbfERDhp (ORCPT
+        Fri, 17 May 2019 23:48:23 -0400
+Received: from web1.siteocity.com ([67.227.147.204]:44760 "EHLO
+        web1.siteocity.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726761AbfERDsW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 May 2019 23:37:45 -0400
-Received: by mail-pg1-f170.google.com with SMTP id z16so4160879pgv.11;
-        Fri, 17 May 2019 20:37:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:from:date:message-id:subject:to:cc;
-        bh=OM8pwcWcC1FGoW4dfmsYMsxUg+FgS1R/aDdR26qmmWY=;
-        b=O28aqnJC3u+6XwLnAZZREUdByMbtkEhXPjqFit3ma36c76z1tnAIqmLPGje2CtuYQq
-         jU2qI++x2kB+ulwqGHUeOuxXqwGkTaCLs2hv00qjDf4uMAuQRWCeT6a83ZSc98B3UzE5
-         4IjRScEqG9xkXj+2ILNZW0sAfIF4VDM2WsSa11J0XogWpjl/QLNbA20sZcgaRGWxwbTo
-         77HmlL42mlnDIoMc9x/kZ5iuStOc4TWjKeNODBOYGhOj64XNXTSkVkwfb7IvB0vRYeIJ
-         iN2xgVPNUThuxzvs1Ds9F0GfRTMVqq2QhRXEIA4u0mJ9cpPkFTah86s8Uq2m3r2i+3yi
-         0khQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
-        bh=OM8pwcWcC1FGoW4dfmsYMsxUg+FgS1R/aDdR26qmmWY=;
-        b=pmPVsr5+MRW0yKN+X7R4uCUkQ01Bv0zDQgv50lzexAyYVxBe1ogX82AwDBDjUovjsU
-         lk+0jDcgTUauVOAmwsa2Rz9EMyfKMrAmg6j9SNQHDkIfCuHT2hYmm6pSfEIv0TmAVMb3
-         IcLBnBgHjZVRkhwUJ8ABZCGP1rd84POpigfhRcwIFDDMDf+UG9KIcwJVayksYpraCcWB
-         Ne9B8xmLu8dnubE01xt2CZtZDedoovNptD1D73eflf6yYHW2xBYSNnNMM0q3tPYwuHUK
-         CLUOxiRUAZnsftY11hErucuTpGF/qOLNzpozg9ovUqSdGufMXcvNh34CRflwgcOcyN54
-         1Bmw==
-X-Gm-Message-State: APjAAAVWoUnz21Tm9q61iDbRgLwuJ38AQAwuf/NIvO9UwuXzGDzB+rPy
-        Sdc7Wb/bADARC2wZZ5PyyDeeVjG9Z1uxm7Gdbvk4kA==
-X-Google-Smtp-Source: APXvYqyUL2at8g6loPqY4hWfss78cxwdU0/jxRHyW1AUncUSQM/2bOOswHJOfKVJE+kMgx+PymPR8N6iJ+B+kzBB9lo=
-X-Received: by 2002:a62:2b82:: with SMTP id r124mr56423074pfr.235.1558150664230;
- Fri, 17 May 2019 20:37:44 -0700 (PDT)
+        Fri, 17 May 2019 23:48:22 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=felipegasper.com; s=default; h=Content-Transfer-Encoding:Content-Type:
+        MIME-Version:Message-Id:Date:Subject:To:From:Sender:Reply-To:Cc:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=jC2pzib8Rq8RDjX2koQw8+8PZ+U/nFGIGBi9LwADKV0=; b=Y1BmTae6ZDK4oj5rbucA28kWmF
+        4ntpgJeqsTbTcdu4KLgb1HeFk/8tN7C8LhYK+9KCjlEQqiO9NqRHzKgZGPFrKD0G0AbunVkmUiXWz
+        FDkX82sTi8Mx6YVQOvLhxIk3O13WB8O6ZREewvD3Xil2JwF1Z4oovA9aXE2530gbMDn3WzAwwNCmO
+        JyUcO/VRnCPQ1E3cQHM8OgQBrtgbSHwGkaa2CcqoJkwnHCg+sH7oCX5zbLSXEUJWnwYsE2w7/4AHN
+        5yfNPmDnyTtipB+rvwTCC4yGIB3ZJNfkAbmb/STKetFO1pNuTSfjCy8ik+vx9uiU3N1FQHIQx6v5k
+        Zco85oYw==;
+Received: from fgasper by web1.siteocity.com with local (Exim 4.92)
+        (envelope-from <fgasper@web1.siteocity.com>)
+        id 1hRqKa-0004Vm-BF; Fri, 17 May 2019 22:48:21 -0500
+From:   Felipe Gasper <felipe@felipegasper.com>
+To:     davem@davemloft.net, viro@zeniv.linux.org.uk,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        linux-api@vger.kernel.org
+Subject: [PATCH v2] net: Add UNIX_DIAG_UID to Netlink UNIX socket diagnostics.
+Date:   Fri, 17 May 2019 22:48:20 -0500
+Message-Id: <20190518034820.16500-1-felipe@felipegasper.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-From:   Steve French <smfrench@gmail.com>
-Date:   Fri, 17 May 2019 22:37:33 -0500
-Message-ID: <CAH2r5msEB_bvDTOPLwtoH0Ty6ttXhb3RP+18d47xNjN7q0apYA@mail.gmail.com>
-Subject: [GIT PULL] SMB3 Fixes
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     CIFS <linux-cifs@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-OutGoing-Spam-Status: No, score=0.0
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - web1.siteocity.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [1438 994] / [47 12]
+X-AntiAbuse: Sender Address Domain - web1.siteocity.com
+X-Get-Message-Sender-Via: web1.siteocity.com: authenticated_id: fgasper/from_h
+X-Authenticated-Sender: web1.siteocity.com: felipe@felipegasper.com
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: /home/fgasper
+X-From-Rewrite: unmodified, already matched
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Please pull the following changes since commit
-78d9affbb0e79d48fd82b34ef9cd673a7c86d6f2:
+Author: Felipe Gasper <felipe@felipegasper.com>
+Date:   Fri May 17 16:54:40 2019 -0500
 
-  Merge tag '5.2-smb3' of git://git.samba.org/sfrench/cifs-2.6
-(2019-05-08 13:06:18 -0700)
+   net: Add UNIX_DIAG_UID to Netlink UNIX socket diagnostics.
 
-are available in the Git repository at:
+   This adds the ability for Netlink to report a socket’s UID along with the
+   other UNIX diagnostic information that is already available. This will
+   allow diagnostic tools greater insight into which users control which socket.
 
-  git://git.samba.org/sfrench/cifs-2.6.git tags/5.2-rc-smb3-fixes
+   Signed-off-by: Felipe Gasper <felipe@felipegasper.com>
 
-for you to fetch changes up to dece44e381ab4a9fd1021db45ba4472e8c85becb:
-
-  cifs: add support for SEEK_DATA and SEEK_HOLE (2019-05-15 22:27:53 -0500)
-
-----------------------------------------------------------------
-Minor cleanup and SMB3 fixes, one for stable, 4 RDMA (smbdirect)
-related. Also adds SEEK_HOLE support
-----------------------------------------------------------------
-Christoph Probst (1):
-      cifs: cleanup smb2ops.c and normalize strings
-
-Kovtunenko Oleksandr (1):
-      Fixed https://bugzilla.kernel.org/show_bug.cgi?id=202935 allow
-write on the same file
-
-Long Li (4):
-      cifs:smbd When reconnecting to server, call smbd_destroy() after
-all MIDs have been called
-      cifs:smbd Use the correct DMA direction when sending data
-      cifs: Don't match port on SMBDirect transport
-      cifs: Allocate memory for all iovs in smb2_ioctl
-
-Ronnie Sahlberg (2):
-      cifs: use the right include for signal_pending()
-      cifs: add support for SEEK_DATA and SEEK_HOLE
-
-Steve French (2):
-      smb3: display session id in debug data
-      smb3: trivial cleanup to smb2ops.c
-
- fs/cifs/cifs_debug.c |   2 ++
- fs/cifs/cifsfs.c     |  14 +++++++----
- fs/cifs/cifsglob.h   |   2 ++
- fs/cifs/connect.c    |  41 ++++++++++++++++++-------------
- fs/cifs/smb2ops.c    | 134
-+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-----------------
- fs/cifs/smb2pdu.c    |  21 ++++++++++++++--
- fs/cifs/smbdirect.c  |   8 +++---
- fs/cifs/transport.c  |   2 +-
- 8 files changed, 173 insertions(+), 51 deletions(-)
-
-
---
-Thanks,
-
-Steve
+diff --git a/include/uapi/linux/unix_diag.h b/include/uapi/linux/unix_diag.h
+index 5c502fd..a198857 100644
+--- a/include/uapi/linux/unix_diag.h
++++ b/include/uapi/linux/unix_diag.h
+@@ -20,6 +20,7 @@ struct unix_diag_req {
+ #define UDIAG_SHOW_ICONS	0x00000008	/* show pending connections */
+ #define UDIAG_SHOW_RQLEN	0x00000010	/* show skb receive queue len */
+ #define UDIAG_SHOW_MEMINFO	0x00000020	/* show memory info of a socket */
++#define UDIAG_SHOW_UID		0x00000040	/* show socket's UID */
+ 
+ struct unix_diag_msg {
+ 	__u8	udiag_family;
+@@ -40,6 +41,7 @@ enum {
+ 	UNIX_DIAG_RQLEN,
+ 	UNIX_DIAG_MEMINFO,
+ 	UNIX_DIAG_SHUTDOWN,
++	UNIX_DIAG_UID,
+ 
+ 	__UNIX_DIAG_MAX,
+ };
+diff --git a/net/unix/diag.c b/net/unix/diag.c
+index 3183d9b..e40f348 100644
+--- a/net/unix/diag.c
++++ b/net/unix/diag.c
+@@ -4,9 +4,11 @@
+ #include <linux/unix_diag.h>
+ #include <linux/skbuff.h>
+ #include <linux/module.h>
++#include <linux/uidgid.h>
+ #include <net/netlink.h>
+ #include <net/af_unix.h>
+ #include <net/tcp_states.h>
++#include <net/sock.h>
+ 
+ static int sk_diag_dump_name(struct sock *sk, struct sk_buff *nlskb)
+ {
+@@ -110,6 +112,12 @@ static int sk_diag_show_rqlen(struct sock *sk, struct sk_buff *nlskb)
+ 	return nla_put(nlskb, UNIX_DIAG_RQLEN, sizeof(rql), &rql);
+ }
+ 
++static int sk_diag_dump_uid(struct sock *sk, struct sk_buff *nlskb)
++{
++	uid_t uid = from_kuid_munged(sk_user_ns(sk), sock_i_uid(sk));
++	return nla_put(nlskb, UNIX_DIAG_UID, sizeof(uid_t), &uid);
++}
++
+ static int sk_diag_fill(struct sock *sk, struct sk_buff *skb, struct unix_diag_req *req,
+ 		u32 portid, u32 seq, u32 flags, int sk_ino)
+ {
+@@ -156,6 +164,10 @@ static int sk_diag_fill(struct sock *sk, struct sk_buff *skb, struct unix_diag_r
+ 	if (nla_put_u8(skb, UNIX_DIAG_SHUTDOWN, sk->sk_shutdown))
+ 		goto out_nlmsg_trim;
+ 
++	if ((req->udiag_show & UDIAG_SHOW_UID) &&
++	    sk_diag_dump_uid(sk, skb))
++		goto out_nlmsg_trim;
++
+ 	nlmsg_end(skb, nlh);
+ 	return 0;
+ 
