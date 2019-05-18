@@ -6,44 +6,44 @@ X-Spam-Status: No, score=-0.7 required=3.0 tests=FROM_LOCAL_HEX,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD546C04AAF
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 May 2019 07:28:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97D24C04AAF
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 May 2019 07:28:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 832A02087E
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 May 2019 07:28:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C5A1216C4
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 May 2019 07:28:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728390AbfERH2H (ORCPT
+        id S1728850AbfERH2T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 May 2019 03:28:07 -0400
-Received: from mail-io1-f72.google.com ([209.85.166.72]:47396 "EHLO
-        mail-io1-f72.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726076AbfERH2G (ORCPT
+        Sat, 18 May 2019 03:28:19 -0400
+Received: from mail-io1-f69.google.com ([209.85.166.69]:50061 "EHLO
+        mail-io1-f69.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727439AbfERH2G (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Sat, 18 May 2019 03:28:06 -0400
-Received: by mail-io1-f72.google.com with SMTP id d22so7212988ioh.14
+Received: by mail-io1-f69.google.com with SMTP id e129so7184260iof.16
         for <linux-kernel@vger.kernel.org>; Sat, 18 May 2019 00:28:06 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=vlBVhwcjWr1stHkXYLRIcPCx5xGI39meNwnHI95eTFU=;
-        b=QAtiYjmRMAxb9PqLWIGgAIQnNYL0LbTuj40nYemrtQOaESwbEnrml4MgAmELVEnGeg
-         2JNhOKfAdBjKmYdkSaI/wOEPjr/Dj7naFMfL4vccQdNQQfyvG1PRE65CVIOfdBuRu/hE
-         iAi19BiH5qwmD58PhGTNxxb5abbdat7N4lDBXruEzJZbaVxZwgetXzKiICLWtIGa/3XF
-         IhEVn+KtBHXcbcQ6fnhGYFSqhwgorES6/zCX7hRVfPbrbD+8lqfbJfkIP6i2Uc+/CSYD
-         6N4O7ulko3nEk8tmAvvF5ezYzOu3yYjGpNlyxEx6n7yDbu6Je7N5UjotHD5qiozlr8EC
-         WNQQ==
-X-Gm-Message-State: APjAAAWmUi2GJKdJN8Z4trce3rEVQVoZoJEkCs7gb9jHY6tWneTBzIhE
-        Yh8lfu3A/LL9YzJm316s9WFzpjPdxTJigABeQCn5QZo91h7F
-X-Google-Smtp-Source: APXvYqynnfJD9oOmYso4d8nL1nFkMbUo4OiiqhOr+blRXBxywsNy0JEdAMTTWQK4NJ1IyMBzJM3MUwj7dovYAkKM0RXhuCfazC8u
+        bh=z2hYiAaTK0CEsKJSi/CwKbqUeagJfEqEMmgyIue0Y9I=;
+        b=tOfBhDZMa3nAer/BgTnc0kNUIziBIONdbUHMexBQKX23oSPdt5NIyEkAxQstNAKF5K
+         nwjUSLhNmaLc3FCvoqa726D+dUx9tiRWNi2STL9kY/wQvoWmPqd80SdeJiULc5s8uUsp
+         ALgF7sLN2VaqZFdVo8uueOKUmtiC+jZX/ngSI/b0y5O2IQzloYfHOQqs0/B+JKWOd6RH
+         qln5FeFK9AmkUhb7YMTWQIx9Y7W2ZVJD0ftqvCP+CZrBJJOvuksrf0rbIkJz5VEi7Sws
+         9f0RzQ4NRP4uriCZikPhMLS4VGy2U6HF4vtlhK41i5WosH3Vo6LKKLT9vWIgBJLQLDye
+         ioXA==
+X-Gm-Message-State: APjAAAUTFicFy4EnFTi+89p60oDm6w0WHviLqqvL4gQC0bw4JPLZndGu
+        b9E2ZfbPMJKk5FJ4dETzMihvuIMOYzwXkVbSQ9C2Na6vfMJa
+X-Google-Smtp-Source: APXvYqwOxYQL6gxdpSBErDed/nQ5jjjEVgmRKjJXWsX6IaYiKW0QfgV1RR8Qk1nLwgLAqfJ24Qbgo8qZtwD3nZiMJmxhGUkqKE1s
 MIME-Version: 1.0
-X-Received: by 2002:a24:8245:: with SMTP id t66mr18695527itd.121.1558164485736;
+X-Received: by 2002:a24:e046:: with SMTP id c67mr5538546ith.16.1558164485924;
  Sat, 18 May 2019 00:28:05 -0700 (PDT)
 Date:   Sat, 18 May 2019 00:28:05 -0700
 X-Google-Appengine-App-Id: s~syzkaller
 X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000ac9447058924709c@google.com>
-Subject: WARNING: locking bug in rhashtable_walk_enter
-From:   syzbot <syzbot+6440134c13554d3abfb0@syzkaller.appspotmail.com>
+Message-ID: <000000000000af6c020589247060@google.com>
+Subject: BUG: spinlock bad magic in rhashtable_walk_enter
+From:   syzbot <syzbot+01dd5c4b3c34a5cf9308@syzkaller.appspotmail.com>
 To:     davem@davemloft.net, jon.maloy@ericsson.com,
         linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
         syzkaller-bugs@googlegroups.com,
@@ -60,48 +60,45 @@ syzbot found the following crash on:
 
 HEAD commit:    510e2ced ipv6: fix src addr routing with the exception table
 git tree:       net
-console output: https://syzkaller.appspot.com/x/log.txt?x=11079cf8a00000
+console output: https://syzkaller.appspot.com/x/log.txt?x=11e25b02a00000
 kernel config:  https://syzkaller.appspot.com/x/.config?x=82f0809e8f0a8c87
-dashboard link: https://syzkaller.appspot.com/bug?extid=6440134c13554d3abfb0
+dashboard link: https://syzkaller.appspot.com/bug?extid=01dd5c4b3c34a5cf9308
 compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1055ac6ca00000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=13d5658ca00000
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=16b6373ca00000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1251e73ca00000
 
 IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+6440134c13554d3abfb0@syzkaller.appspotmail.com
+Reported-by: syzbot+01dd5c4b3c34a5cf9308@syzkaller.appspotmail.com
 
-------------[ cut here ]------------
-DEBUG_LOCKS_WARN_ON(class_idx > MAX_LOCKDEP_KEYS)
-WARNING: CPU: 0 PID: 9008 at kernel/locking/lockdep.c:3764  
-__lock_acquire+0x17b5/0x5490 kernel/locking/lockdep.c:3764
-Kernel panic - not syncing: panic_on_warn set ...
-CPU: 0 PID: 9008 Comm: syz-executor616 Not tainted 5.1.0+ #17
+BUG: spinlock bad magic on CPU#0, syz-executor715/8517
+kasan: CONFIG_KASAN_INLINE enabled
+kasan: GPF could be caused by NULL-ptr deref or user memory access
+general protection fault: 0000 [#1] PREEMPT SMP KASAN
+CPU: 0 PID: 8517 Comm: syz-executor715 Not tainted 5.1.0+ #17
 Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
 Google 01/01/2011
+RIP: 0010:task_pid_nr include/linux/sched.h:1241 [inline]
+RIP: 0010:spin_dump.cold+0xa2/0xe6 kernel/locking/spinlock_debug.c:65
+Code: ae 4c 02 00 e8 75 5d bf 05 58 5b 41 5c 41 5d 41 5e 5d c3 48 8d bb d0  
+04 00 00 b8 ff ff 37 00 48 89 fa 48 c1 e0 2a 48 c1 ea 03 <0f> b6 04 02 84  
+c0 74 04 3c 03 7e 24 44 8b ab d0 04 00 00 48 81 c3
+RSP: 0018:ffff888086267538 EFLAGS: 00010202
+RAX: dffffc0000000000 RBX: 0000000078e05280 RCX: 0000000000000000
+RDX: 000000000f1c0aea RSI: ffffffff815afbe6 RDI: 0000000078e05750
+RBP: ffff888086267560 R08: 0000000000000036 R09: ffffed1015d06011
+R10: ffffed1015d06010 R11: ffff8880ae830087 R12: ffff888216427ba8
+R13: ffff88808e534300 R14: ffff888216426980 R15: ffff8880862675d8
+FS:  0000000000b40880(0000) GS:ffff8880ae800000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000000020000204 CR3: 0000000098123000 CR4: 00000000001406f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
 Call Trace:
-  __dump_stack lib/dump_stack.c:77 [inline]
-  dump_stack+0x172/0x1f0 lib/dump_stack.c:113
-  panic+0x2cb/0x65c kernel/panic.c:214
-  __warn.cold+0x20/0x45 kernel/panic.c:566
-  report_bug+0x263/0x2b0 lib/bug.c:186
-  fixup_bug arch/x86/kernel/traps.c:180 [inline]
-  fixup_bug arch/x86/kernel/traps.c:175 [inline]
-  do_error_trap+0x11b/0x200 arch/x86/kernel/traps.c:273
-  do_invalid_op+0x37/0x50 arch/x86/kernel/traps.c:292
-  invalid_op+0x14/0x20 arch/x86/entry/entry_64.S:972
-RIP: 0010:__lock_acquire+0x17b5/0x5490 kernel/locking/lockdep.c:3764
-Code: d2 0f 85 c7 2c 00 00 44 8b 3d 07 46 09 08 45 85 ff 0f 85 57 f3 ff ff  
-48 c7 c6 c0 53 6b 87 48 c7 c7 a0 2a 6b 87 e8 f9 f0 eb ff <0f> 0b e9 40 f3  
-ff ff 0f 0b e9 83 f1 ff ff 8b 0d e7 52 ee 08 85 c9
-RSP: 0018:ffff888085edf3e0 EFLAGS: 00010086
-RAX: 0000000000000000 RBX: 0000000000000000 RCX: 0000000000000000
-RDX: 0000000000000000 RSI: ffffffff815afbe6 RDI: ffffed1010bdbe6e
-RBP: ffff888085edf588 R08: ffff8880a41cc5c0 R09: fffffbfff1133055
-R10: fffffbfff1133054 R11: ffffffff889982a3 R12: 00000000a508a4ad
-R13: 0000000000000000 R14: 00000000000404ad R15: 0000000000000000
-  lock_acquire+0x16f/0x3f0 kernel/locking/lockdep.c:4302
-  __raw_spin_lock include/linux/spinlock_api_smp.h:142 [inline]
-  _raw_spin_lock+0x2f/0x40 kernel/locking/spinlock.c:151
+  spin_bug kernel/locking/spinlock_debug.c:75 [inline]
+  debug_spin_lock_before kernel/locking/spinlock_debug.c:83 [inline]
+  do_raw_spin_lock+0x231/0x2e0 kernel/locking/spinlock_debug.c:112
+  __raw_spin_lock include/linux/spinlock_api_smp.h:143 [inline]
+  _raw_spin_lock+0x37/0x40 kernel/locking/spinlock.c:151
   spin_lock include/linux/spinlock.h:338 [inline]
   rhashtable_walk_enter+0xf9/0x390 lib/rhashtable.c:669
   __tipc_dump_start+0x1fa/0x3c0 net/tipc/socket.c:3414
@@ -129,14 +126,30 @@ RIP: 0033:0x4401f9
 Code: 18 89 d0 c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 00 48 89 f8 48 89 f7  
 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff  
 ff 0f 83 fb 13 fc ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007ffce1688958 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
+RSP: 002b:00007ffce875faa8 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
 RAX: ffffffffffffffda RBX: 00000000004002c8 RCX: 00000000004401f9
 RDX: 0000000000000000 RSI: 0000000020000080 RDI: 0000000000000003
 RBP: 00000000006ca018 R08: 0000000000000000 R09: 00000000004002c8
 R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000401a80
 R13: 0000000000401b10 R14: 0000000000000000 R15: 0000000000000000
-Kernel Offset: disabled
-Rebooting in 86400 seconds..
+Modules linked in:
+---[ end trace 3bee47f081c674b7 ]---
+RIP: 0010:task_pid_nr include/linux/sched.h:1241 [inline]
+RIP: 0010:spin_dump.cold+0xa2/0xe6 kernel/locking/spinlock_debug.c:65
+Code: ae 4c 02 00 e8 75 5d bf 05 58 5b 41 5c 41 5d 41 5e 5d c3 48 8d bb d0  
+04 00 00 b8 ff ff 37 00 48 89 fa 48 c1 e0 2a 48 c1 ea 03 <0f> b6 04 02 84  
+c0 74 04 3c 03 7e 24 44 8b ab d0 04 00 00 48 81 c3
+RSP: 0018:ffff888086267538 EFLAGS: 00010202
+RAX: dffffc0000000000 RBX: 0000000078e05280 RCX: 0000000000000000
+RDX: 000000000f1c0aea RSI: ffffffff815afbe6 RDI: 0000000078e05750
+RBP: ffff888086267560 R08: 0000000000000036 R09: ffffed1015d06011
+R10: ffffed1015d06010 R11: ffff8880ae830087 R12: ffff888216427ba8
+R13: ffff88808e534300 R14: ffff888216426980 R15: ffff8880862675d8
+FS:  0000000000b40880(0000) GS:ffff8880ae800000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000000020000204 CR3: 0000000098123000 CR4: 00000000001406f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
 
 
 ---
