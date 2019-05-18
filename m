@@ -2,98 +2,82 @@ Return-Path: <SRS0=//ty=TS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1397BC04AAF
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 May 2019 15:13:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53D55C04AAF
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 May 2019 15:17:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DB9A72087B
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 May 2019 15:13:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 00E7F2087B
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 May 2019 15:17:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729755AbfERPNl (ORCPT
+        id S1729784AbfERPRd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 May 2019 11:13:41 -0400
-Received: from netrider.rowland.org ([192.131.102.5]:59571 "HELO
-        netrider.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with SMTP id S1729147AbfERPNk (ORCPT
+        Sat, 18 May 2019 11:17:33 -0400
+Received: from Galois.linutronix.de ([146.0.238.70]:53950 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728516AbfERPRc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 May 2019 11:13:40 -0400
-Received: (qmail 8434 invoked by uid 500); 18 May 2019 11:13:39 -0400
-Received: from localhost (sendmail-bs@127.0.0.1)
-  by localhost with SMTP; 18 May 2019 11:13:39 -0400
-Date:   Sat, 18 May 2019 11:13:39 -0400 (EDT)
-From:   Alan Stern <stern@rowland.harvard.edu>
-X-X-Sender: stern@netrider.rowland.org
-To:     syzbot <syzbot+200d4bb11b23d929335f@syzkaller.appspotmail.com>
-cc:     andreyknvl@google.com, <chunkeey@gmail.com>,
-        <chunkeey@googlemail.com>, <davem@davemloft.net>,
-        <kvalo@codeaurora.org>,
-        Kernel development list <linux-kernel@vger.kernel.org>,
-        USB list <linux-usb@vger.kernel.org>,
-        <linux-wireless@vger.kernel.org>, <netdev@vger.kernel.org>,
-        Oliver Neukum <oneukum@suse.com>,
-        <syzkaller-bugs@googlegroups.com>
-Subject: Re: KASAN: use-after-free Read in p54u_load_firmware_cb
-In-Reply-To: <00000000000009fcff05891bae0a@google.com>
-Message-ID: <Pine.LNX.4.44L0.1905181045400.7855-100000@netrider.rowland.org>
+        Sat, 18 May 2019 11:17:32 -0400
+Received: from p5de0b374.dip0.t-ipconnect.de ([93.224.179.116] helo=nanos)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1hS15U-00084H-AF; Sat, 18 May 2019 17:17:28 +0200
+Date:   Sat, 18 May 2019 17:17:27 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+cc:     Stephen Boyd <sboyd@kernel.org>,
+        John Stultz <john.stultz@linaro.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH RFC] time: validate watchdog clocksource using second
+ best candidate
+In-Reply-To: <155790645605.1933.906798561802423361.stgit@buzz>
+Message-ID: <alpine.DEB.2.21.1905181712000.3019@nanos.tec.linutronix.de>
+References: <155790645605.1933.906798561802423361.stgit@buzz>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
+Content-Type: text/plain; charset=US-ASCII
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 17 May 2019, syzbot wrote:
+On Wed, 15 May 2019, Konstantin Khlebnikov wrote:
 
-> Hello,
+> Timekeeping watchdog verifies doubtful clocksources using more reliable
+> candidates. For x86 it likely verifies 'tsc' using 'hpet'. But 'hpet'
+> is far from perfect too. It's better to have second opinion if possible.
 > 
-> syzbot tried to test the proposed patch but build/boot failed:
+> We're seeing sudden jumps of hpet counter to 0xffffffff:
 
-Drat.  Mistake in the patch.  Let's try again.
+On which kind of hardware? A particular type of CPU or random ones?
 
-Incidentally, as far as I can tell there's no point in having the
-usb_get_dev() in p54u_probe() and usb_put_dev() in p54u_disconnect().  
-The device structure is guaranteed not to be deallocated while a driver
-is bound to any of its interfaces, so taking an extra reference won't
-make any difference.
+> timekeeping watchdog on CPU56: Marking clocksource 'tsc' as unstable because the skew is too large:
+> 'hpet' wd_now: ffffffff wd_last: 19ec5720 mask: ffffffff
+> 'tsc' cs_now: 69b8a15f0aed cs_last: 69b862c9947d mask: ffffffffffffffff
+> 
+> Shaohua Li reported the same case three years ago.
+> His patch backlisted this exact value and re-read hpet counter.
 
-On the other hand, I do see some problems in the firmware-load
-callback.  First, it calls device_release_driver() without first
-checking that the interface is still bound to the p54u driver.  
-Second, it shouldn't call device_release_driver() at all -- it should
-call usb_driver_release_interface().  It doesn't want to unbind the USB
-device's driver; it wants to unbind the interface's driver.  And third,
-to do this it needs to acquire udev's device lock, not the lock for
-udev's parent.
+Can you provide a reference please? Preferrably a lore.kernel.org/... URL
 
-Alan Stern
+> This patch uses second reliable clocksource as backup for validation.
+> For x86 this is usually 'acpi_pm'. If watchdog and backup are not consent
+> then other clocksources will not be marked as unstable at this iteration.
 
+The mess you add to the watchdog code is unholy and that's broken as there
+is no guarantee for acpi_pm (or any other secondary watchdog) being
+available.
 
-#syz test: https://github.com/google/kasan.git usb-fuzzer
+If the only wreckaged value is always ffffffff then I rather reread the
+hpet in that case. But not in the watchdog code, we need to do that in the
+HPET code as this affects any other HPET user as well.
 
- drivers/net/wireless/intersil/p54/p54usb.c |    3 +++
- 1 file changed, 3 insertions(+)
+Thanks,
 
-Index: usb-devel/drivers/net/wireless/intersil/p54/p54usb.c
-===================================================================
---- usb-devel.orig/drivers/net/wireless/intersil/p54/p54usb.c
-+++ usb-devel/drivers/net/wireless/intersil/p54/p54usb.c
-@@ -923,6 +923,7 @@ static void p54u_load_firmware_cb(const
- 	struct usb_device *udev = priv->udev;
- 	int err;
- 
-+	pr_info("%s: priv->udev = %px\n", __func__, udev);
- 	complete(&priv->fw_wait_load);
- 	if (firmware) {
- 		priv->fw = firmware;
-@@ -969,6 +970,8 @@ static int p54u_load_firmware(struct iee
- 	if (i < 0)
- 		return i;
- 
-+	dev_info(&udev->dev, "%s: udev @ %px, dev.parent @ %px\n",
-+			__func__, udev, &udev->dev.parent);
- 	dev_info(&priv->udev->dev, "Loading firmware file %s\n",
- 	       p54u_fwlist[i].fw);
-
+	tglx
