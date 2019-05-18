@@ -2,208 +2,231 @@ Return-Path: <SRS0=//ty=TS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E882C04AAF
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 May 2019 09:22:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89FECC04AAF
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 May 2019 09:22:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 658F520872
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 May 2019 09:22:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558171345;
-	bh=PIiohG80Nlyid3LugSBYke5qTGH+DAvIAbfyvhIwDQY=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=zKI54tehISPMK45Q/jShSVFItaHgewVBWXEz5Ht64Yzro6oQyiIViYAhYDCewJk3G
-	 e7naBUl5Sr+JKjUarnyf18+XkLFIhwG8ByR/CUuC4ptfIojmMLQcQnQReAVV9x6ase
-	 iPyySi97YBmO2qEKnlx1I/jGw/2tEzpMx1snr4DQ=
+	by mail.kernel.org (Postfix) with ESMTP id 4E0AD20872
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 May 2019 09:22:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="VQp0R1Ly"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729844AbfERJWY (ORCPT
+        id S1729856AbfERJWo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 May 2019 05:22:24 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:54754 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725468AbfERJWY (ORCPT
+        Sat, 18 May 2019 05:22:44 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:48655 "EHLO
+        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725468AbfERJWn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 May 2019 05:22:24 -0400
-Received: by mail-wm1-f68.google.com with SMTP id i3so8949770wml.4
-        for <linux-kernel@vger.kernel.org>; Sat, 18 May 2019 02:22:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=iflnrzBLI30tqXSW7QffxIXOJwULemI4kbrIOB3pipI=;
-        b=lSuJ1ldSDvc1U0k60AG89YSXvVVM5pF2anSVowaLxfS4X5TqhIvY3g15WWy5X5RtOX
-         ZaQP3u/RpCSFadkFt+6ibx34qOeTjqR8XVITRviuL6vTXkixB00iVzerOFt8Ru42FPPW
-         GFHNSzPFZGU20poup46q8rLPiZvwXVP9EuRigoTQi90udTyC+rhp82cEd23dtFGVF6DU
-         mMSp21XmkhBkg0eUtubE6Shgr45yIuGEj3jr7fdyIvifyzFpzFaOkuOSo3Fqop4OsiJg
-         1mtPWsDpDXBo7xmLq1eHtI52bS+oJwHuZg65VT1eX0SnBEtQ16qVVGSf9Z0h0sw1nI6p
-         nHRQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :mime-version:content-disposition:user-agent;
-        bh=iflnrzBLI30tqXSW7QffxIXOJwULemI4kbrIOB3pipI=;
-        b=Pbcto/MCqr3M6W0j2L1u3EDFwP4VsOtbnzW5vyxrvCNJ4V/keJARrpmj0bK87x9ICc
-         mNQr8+c74VGWjERBg9xBj24dDgOpzZxkM25oBlkhtoRs+eEcsZUuEWvAju8ARzNHq9sl
-         h9XAQ4SmcztFPF4a7YEzGAtEpjiGEn7R73UrjI1Xs52eek1TrcNbwbuB9mPLUk8dQb9i
-         t7g+wB9df6Y7XjsnPWOmqOPSQHQ2nVdvqVf1aOpIcTs+cUjiHsJOmjAKfzOzMSwE1oK2
-         Rcpp5dxEQI1KexZxJArLhyNE0gao/WepZIMdGolgnQwg9Zo29yOLBq3hPHT99wg6jXUJ
-         u9pA==
-X-Gm-Message-State: APjAAAU8HBzVXeQvzUWdVab+p9ZQFnIDgO20vQsUmbuL9VQSxRL76og4
-        ZXAZflXw/+EvlLoLKLjvXG2kHLZ0
-X-Google-Smtp-Source: APXvYqxA9PNycloUzVuUEvdjCKpYC72FWno1VYWpIC5jhEwmlC9kvKifGb4eexLtmbNolz7r+Fx88g==
-X-Received: by 2002:a1c:4456:: with SMTP id r83mr5362399wma.37.1558171341208;
-        Sat, 18 May 2019 02:22:21 -0700 (PDT)
-Received: from gmail.com (2E8B0CD5.catv.pool.telekom.hu. [46.139.12.213])
-        by smtp.gmail.com with ESMTPSA id u17sm7153676wmj.1.2019.05.18.02.22.20
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Sat, 18 May 2019 02:22:20 -0700 (PDT)
-Date:   Sat, 18 May 2019 11:22:18 +0200
-From:   Ingo Molnar <mingo@kernel.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Andrew Morton <akpm@linux-foundation.org>
-Subject: [RFC GIT PULL] IRQ chip updates
-Message-ID: <20190518092218.GA108644@gmail.com>
+        Sat, 18 May 2019 05:22:43 -0400
+Received: from terminus.zytor.com (localhost [127.0.0.1])
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x4I9MVVP1739127
+        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
+        Sat, 18 May 2019 02:22:31 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x4I9MVVP1739127
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+        s=2019041745; t=1558171351;
+        bh=sdZAATLzm52Z0/jInaQGYxsiymrbEglKbG6HDEpCeHw=;
+        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
+        b=VQp0R1LyeBUyViKKsRuYv1AWBbCG77POv69y1A8Livc5n5svv++bib9/nfEC1sTV/
+         ck/ik+Km27N4DNKZNw5J+f8mhMglj2r8Jb0jUlT2yCAj7kH1JQptMjm/+jbqR3tZw3
+         /RKZZboPYdAjsVfonU+8RFwn7v5j8NTqMYCN3/2b271igDRLPGPpAGZxOj37SPyjF/
+         P7+1ygKZnwlY/Khc5wQdH/VY9BLKfuj2VFnK+7sJuqAfsbqhnOB0m1X9eYZEA+zdLh
+         YxO8hMn+MXLsudmYZYRc20aWFY1vrcg2vzLE7LZY2BPdn0zG/N9K+it4zeuZyMSeap
+         cI8ELkpD9srKA==
+Received: (from tipbot@localhost)
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x4I9MUNa1739124;
+        Sat, 18 May 2019 02:22:30 -0700
+Date:   Sat, 18 May 2019 02:22:30 -0700
+X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
+From:   tip-bot for Alexey Budankov <tipbot@zytor.com>
+Message-ID: <tip-5d7f41164930ecc1797702b7f9728ac702609ef3@git.kernel.org>
+Cc:     acme@redhat.com, alexander.shishkin@linux.intel.com,
+        ak@linux.intel.com, peterz@infradead.org, tglx@linutronix.de,
+        linux-kernel@vger.kernel.org, jolsa@kernel.org,
+        alexey.budankov@linux.intel.com, hpa@zytor.com, mingo@kernel.org,
+        namhyung@kernel.org
+Reply-To: alexander.shishkin@linux.intel.com, acme@redhat.com,
+          tglx@linutronix.de, peterz@infradead.org, ak@linux.intel.com,
+          alexey.budankov@linux.intel.com, jolsa@kernel.org,
+          linux-kernel@vger.kernel.org, namhyung@kernel.org,
+          mingo@kernel.org, hpa@zytor.com
+In-Reply-To: <744df43f-3932-2594-ddef-1e99a3cad03a@linux.intel.com>
+References: <744df43f-3932-2594-ddef-1e99a3cad03a@linux.intel.com>
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip:perf/core] perf record: Implement compression for serial trace
+ streaming
+Git-Commit-ID: 5d7f41164930ecc1797702b7f9728ac702609ef3
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot.git.kernel.org>
+Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
+ these emails
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
 Content-Disposition: inline
-User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Linus,
+Commit-ID:  5d7f41164930ecc1797702b7f9728ac702609ef3
+Gitweb:     https://git.kernel.org/tip/5d7f41164930ecc1797702b7f9728ac702609ef3
+Author:     Alexey Budankov <alexey.budankov@linux.intel.com>
+AuthorDate: Mon, 18 Mar 2019 20:43:35 +0300
+Committer:  Arnaldo Carvalho de Melo <acme@redhat.com>
+CommitDate: Wed, 15 May 2019 16:36:49 -0300
 
-Please pull the latest irq-urgent-for-linus git tree from:
+perf record: Implement compression for serial trace streaming
 
-   git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git irq-urgent-for-linus
+Compression is implemented using the functions from zstd.c. As the
+memory to operate on the compression uses mmap->data buffer.
 
-   # HEAD: fb4e0592654adb31bc6f3a738d6499b816a655d6 Merge tag 'irqchip-5.2' of git://git.kernel.org/pub/scm/linux/kernel/git/maz/arm-platforms into irq/core
+If Zstd streaming compression API fails for some reason the data to be
+compressed are just copied into the memory buffers using plain memcpy().
 
-A late irqchips update: 
+Compressed trace frame consists of an array of PERF_RECORD_COMPRESSED
+records. Each element of the array is not longer that
+PERF_SAMPLE_MAX_SIZE and consists of perf_event_header followed by the
+compressed chunk that is decompressed on the loading stage.
 
-  - New TI INTR/INTA set of drivers
-  - Rewrite of the stm32mp1-exti driver as a platform driver
-  - Update the IOMMU MSI mapping API to be RT friendly
-  - A number of cleanups and other low impact fixes
+Comitter notes:
 
-I marked this RFC because it's a late pull request which fell through the 
-cracks.
+Undo some unnecessary line breaks, remove some unnecessary () around
+zstd_data to then just get its address, and fix conflicts with
+BPF_PROG_INFO/BPF_BTF patchkits.
 
- Thanks,
+Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
+Reviewed-by: Jiri Olsa <jolsa@kernel.org>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Andi Kleen <ak@linux.intel.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Link: http://lkml.kernel.org/r/744df43f-3932-2594-ddef-1e99a3cad03a@linux.intel.com
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+---
+ tools/perf/builtin-record.c | 51 +++++++++++++++++++++++++++++++++++++++++++--
+ tools/perf/util/session.h   |  2 ++
+ 2 files changed, 51 insertions(+), 2 deletions(-)
 
-	Ingo
-
------------------->
-
-Anson Huang (1):
-      irqchip/imx-irqsteer: Use devm_platform_ioremap_resource() to simplify code
-
-Fabien Dessenne (1):
-      irqchip/stm32: Use a platform driver for stm32mp1-exti device
-
-Florian Fainelli (1):
-      irqchip/bcm: Restore registration print with %pOF
-
-Geert Uytterhoeven (2):
-      irqchip: Remove unneeded select IRQ_DOMAIN
-      irqchip/renesas-intc-irqpin: Remove devm_kzalloc() error printing
-
-Grygorii Strashko (1):
-      firmware: ti_sci: Add support to get TISCI handle using of_phandle
-
-Hongbo Yao (1):
-      irqchip/gic-v3-its: fix some definitions of inner cacheability attributes
-
-Julien Grall (9):
-      irqchip/gic-v3-its: Fix typo in a comment in its_msi_prepare()
-      irq/irqdomain: Fix typo in the comment on top of __irq_domain_alloc_irqs()
-      genirq/msi: Add a new field in msi_desc to store an IOMMU cookie
-      iommu/dma-iommu: Split iommu_dma_map_msi_msg() in two parts
-      irqchip/gicv2m: Don't map the MSI page in gicv2m_compose_msi_msg()
-      irqchip/gic-v3-its: Don't map the MSI page in its_irq_compose_msi_msg()
-      irqchip/ls-scfg-msi: Don't map the MSI page in ls_scfg_msi_compose_msg()
-      irqchip/gic-v3-mbi: Don't map the MSI page in mbi_compose_m{b, s}i_msg()
-      iommu/dma-iommu: Remove iommu_dma_map_msi_msg()
-
-Lokesh Vutla (12):
-      firmware: ti_sci: Add support for RM core ops
-      firmware: ti_sci: Add support for IRQ management
-      firmware: ti_sci: Add helper apis to manage resources
-      genirq: Introduce irq_chip_{request,release}_resource_parent() apis
-      gpio: thunderx: Use the default parent apis for {request,release}_resources
-      dt-bindings: irqchip: Introduce TISCI Interrupt router bindings
-      irqchip/ti-sci-intr: Add support for Interrupt Router driver
-      dt-bindings: irqchip: Introduce TISCI Interrupt Aggregator bindings
-      irqchip/ti-sci-inta: Add support for Interrupt Aggregator driver
-      soc: ti: Add MSI domain bus support for Interrupt Aggregator
-      irqchip/ti-sci-inta: Add msi domain support
-      arm64: arch_k3: Enable interrupt controller drivers
-
-Peter Ujfalusi (1):
-      firmware: ti_sci: Add RM mapping table for am654
-
-Rasmus Villemoes (3):
-      irqchip/gic-v3-its: Move allocation outside mutex
-      irqchip/gic-v3-its: Drop redundant initialization in mk_lpi_range
-      irqchip/gic-v3-its: Make free_lpi_range a little cheaper
-
-Sameer Pujar (2):
-      irqchip/gic-pm: Update driver to use clk_bulk APIs
-      irqchip/gic-pm: Fix suspend handling
-
-Thomas Gleixner (1):
-      Merge tag 'irqchip-5.2' of git://git.kernel.org/.../maz/arm-platforms into irq/core
-
-
- Documentation/devicetree/bindings/arm/keystone/ti,sci.txt              |   3 +-
- Documentation/devicetree/bindings/interrupt-controller/ti,sci-inta.txt |  66 ++++++++++++
- Documentation/devicetree/bindings/interrupt-controller/ti,sci-intr.txt |  82 +++++++++++++++
- MAINTAINERS                                                            |   6 ++
- arch/arm64/Kconfig.platforms                                           |   5 +
- drivers/firmware/ti_sci.c                                              | 651 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
- drivers/firmware/ti_sci.h                                              | 102 +++++++++++++++++++
- drivers/gpio/gpio-thunderx.c                                           |  16 +--
- drivers/iommu/Kconfig                                                  |   1 +
- drivers/iommu/dma-iommu.c                                              |  48 +++++----
- drivers/irqchip/Kconfig                                                |  27 +++--
- drivers/irqchip/Makefile                                               |   2 +
- drivers/irqchip/irq-bcm7038-l1.c                                       |   3 +
- drivers/irqchip/irq-bcm7120-l2.c                                       |   3 +
- drivers/irqchip/irq-brcmstb-l2.c                                       |   2 +
- drivers/irqchip/irq-gic-pm.c                                           |  76 +++++++-------
- drivers/irqchip/irq-gic-v2m.c                                          |   8 +-
- drivers/irqchip/irq-gic-v3-its.c                                       |  84 +++++++--------
- drivers/irqchip/irq-gic-v3-mbi.c                                       |  10 +-
- drivers/irqchip/irq-imx-irqsteer.c                                     |   4 +-
- drivers/irqchip/irq-ls-scfg-msi.c                                      |   7 +-
- drivers/irqchip/irq-renesas-intc-irqpin.c                              |   4 +-
- drivers/irqchip/irq-stm32-exti.c                                       | 233 +++++++++++++++++++++++++-----------------
- drivers/irqchip/irq-ti-sci-inta.c                                      | 615 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
- drivers/irqchip/irq-ti-sci-intr.c                                      | 275 ++++++++++++++++++++++++++++++++++++++++++++++++++
- drivers/soc/ti/Kconfig                                                 |   6 ++
- drivers/soc/ti/Makefile                                                |   1 +
- drivers/soc/ti/ti_sci_inta_msi.c                                       | 146 +++++++++++++++++++++++++++
- include/linux/dma-iommu.h                                              |  24 ++++-
- include/linux/irq.h                                                    |   2 +
- include/linux/irqchip/arm-gic-v3.h                                     |  12 +--
- include/linux/irqdomain.h                                              |   1 +
- include/linux/msi.h                                                    |  36 +++++++
- include/linux/soc/ti/ti_sci_inta_msi.h                                 |  23 +++++
- include/linux/soc/ti/ti_sci_protocol.h                                 | 124 +++++++++++++++++++++++
- kernel/irq/Kconfig                                                     |   3 +
- kernel/irq/chip.c                                                      |  27 +++++
- kernel/irq/irqdomain.c                                                 |   2 +-
- 38 files changed, 2511 insertions(+), 229 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/interrupt-controller/ti,sci-inta.txt
- create mode 100644 Documentation/devicetree/bindings/interrupt-controller/ti,sci-intr.txt
- create mode 100644 drivers/irqchip/irq-ti-sci-inta.c
- create mode 100644 drivers/irqchip/irq-ti-sci-intr.c
- create mode 100644 drivers/soc/ti/ti_sci_inta_msi.c
- create mode 100644 include/linux/soc/ti/ti_sci_inta_msi.h
+diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
+index ca6d7488e34b..de9632c69852 100644
+--- a/tools/perf/builtin-record.c
++++ b/tools/perf/builtin-record.c
+@@ -133,6 +133,9 @@ static int record__write(struct record *rec, struct perf_mmap *map __maybe_unuse
+ 	return 0;
+ }
+ 
++static size_t zstd_compress(struct perf_session *session, void *dst, size_t dst_size,
++			    void *src, size_t src_size);
++
+ #ifdef HAVE_AIO_SUPPORT
+ static int record__aio_write(struct aiocb *cblock, int trace_fd,
+ 		void *buf, size_t size, off_t off)
+@@ -392,6 +395,11 @@ static int record__pushfn(struct perf_mmap *map, void *to, void *bf, size_t size
+ {
+ 	struct record *rec = to;
+ 
++	if (record__comp_enabled(rec)) {
++		size = zstd_compress(rec->session, map->data, perf_mmap__mmap_len(map), bf, size);
++		bf   = map->data;
++	}
++
+ 	rec->samples++;
+ 	return record__write(rec, map, bf, size);
+ }
+@@ -778,6 +786,37 @@ static void record__adjust_affinity(struct record *rec, struct perf_mmap *map)
+ 	}
+ }
+ 
++static size_t process_comp_header(void *record, size_t increment)
++{
++	struct compressed_event *event = record;
++	size_t size = sizeof(*event);
++
++	if (increment) {
++		event->header.size += increment;
++		return increment;
++	}
++
++	event->header.type = PERF_RECORD_COMPRESSED;
++	event->header.size = size;
++
++	return size;
++}
++
++static size_t zstd_compress(struct perf_session *session, void *dst, size_t dst_size,
++			    void *src, size_t src_size)
++{
++	size_t compressed;
++	size_t max_record_size = PERF_SAMPLE_MAX_SIZE - sizeof(struct compressed_event) - 1;
++
++	compressed = zstd_compress_stream_to_records(&session->zstd_data, dst, dst_size, src, src_size,
++						     max_record_size, process_comp_header);
++
++	session->bytes_transferred += src_size;
++	session->bytes_compressed  += compressed;
++
++	return compressed;
++}
++
+ static int record__mmap_read_evlist(struct record *rec, struct perf_evlist *evlist,
+ 				    bool overwrite, bool synch)
+ {
+@@ -1225,6 +1264,14 @@ static int __cmd_record(struct record *rec, int argc, const char **argv)
+ 	fd = perf_data__fd(data);
+ 	rec->session = session;
+ 
++	if (zstd_init(&session->zstd_data, rec->opts.comp_level) < 0) {
++		pr_err("Compression initialization failed.\n");
++		return -1;
++	}
++
++	session->header.env.comp_type  = PERF_COMP_ZSTD;
++	session->header.env.comp_level = rec->opts.comp_level;
++
+ 	record__init_features(rec);
+ 
+ 	if (rec->opts.use_clockid && rec->opts.clockid_res_ns)
+@@ -1565,6 +1612,7 @@ out_child:
+ 	}
+ 
+ out_delete_session:
++	zstd_fini(&session->zstd_data);
+ 	perf_session__delete(session);
+ 
+ 	if (!opts->no_bpf_event)
+@@ -2294,8 +2342,7 @@ int cmd_record(int argc, const char **argv)
+ 
+ 	if (rec->opts.nr_cblocks > nr_cblocks_max)
+ 		rec->opts.nr_cblocks = nr_cblocks_max;
+-	if (verbose > 0)
+-		pr_info("nr_cblocks: %d\n", rec->opts.nr_cblocks);
++	pr_debug("nr_cblocks: %d\n", rec->opts.nr_cblocks);
+ 
+ 	pr_debug("affinity: %s\n", affinity_tags[rec->opts.affinity]);
+ 	pr_debug("mmap flush: %d\n", rec->opts.mmap_flush);
+diff --git a/tools/perf/util/session.h b/tools/perf/util/session.h
+index 0e14884f28b2..6c984c895924 100644
+--- a/tools/perf/util/session.h
++++ b/tools/perf/util/session.h
+@@ -8,6 +8,7 @@
+ #include "machine.h"
+ #include "data.h"
+ #include "ordered-events.h"
++#include "util/compress.h"
+ #include <linux/kernel.h>
+ #include <linux/rbtree.h>
+ #include <linux/perf_event.h>
+@@ -37,6 +38,7 @@ struct perf_session {
+ 	struct perf_tool	*tool;
+ 	u64			bytes_transferred;
+ 	u64			bytes_compressed;
++	struct zstd_data	zstd_data;
+ };
+ 
+ struct perf_tool;
