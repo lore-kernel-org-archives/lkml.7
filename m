@@ -7,56 +7,56 @@ X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EE72C04AAF
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 May 2019 08:54:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC462C04AAF
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 May 2019 08:55:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D9B0C206BF
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 May 2019 08:54:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F0CB206BF
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 May 2019 08:55:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="IO+1X5uK"
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="sCk1kLw0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729477AbfERIym (ORCPT
+        id S1729479AbfERIzX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 May 2019 04:54:42 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:60705 "EHLO
+        Sat, 18 May 2019 04:55:23 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:39483 "EHLO
         terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726451AbfERIym (ORCPT
+        with ESMTP id S1726451AbfERIzX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 May 2019 04:54:42 -0400
+        Sat, 18 May 2019 04:55:23 -0400
 Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x4I8sZjJ1732865
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x4I8tFhp1732976
         (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Sat, 18 May 2019 01:54:35 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x4I8sZjJ1732865
+        Sat, 18 May 2019 01:55:15 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x4I8tFhp1732976
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019041745; t=1558169675;
-        bh=7VRGtmWIpRGR1h7TAHFhKjIZYVFsZqpQ7zlH7GRdYtw=;
+        s=2019041745; t=1558169716;
+        bh=V6PiSYW7Efkn54P4pTH/SJXM4LPn1mxU6g5lpNAHWZ0=;
         h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
-        b=IO+1X5uKk6VQhYhA/0VhHPGiFOBBZN2ydN4LdeY98ei2YTYu0tMQKy5zf5ZJCSRQC
-         GgtbunHzg3lbEtQP8M7PVHcwiSJbPt9yABi4oF3krYVzMyvrU7fJM99etKDJaTf7PF
-         Tc1lqkjovaynzfq+sUe501UamshIHnnmPLFarEGUBduFyuVEvRw5YAxbzFP3+wfaQN
-         HAPZq6yUQa+OBZSNN/1/D1C1gckb9/K252jKQkFsEIj1uCMoGfkgt2t0O6WoEcIxlT
-         YaSkUe9O0pyiTkCfG4ARUoysRqWPotffEww+fSpPlD/qkGdq8H9fD8HI/p7tAVnlZQ
-         fc2gVuAYzfYZA==
+        b=sCk1kLw08i/R/9XQ8CKVWxfAUHKs4oCCV1/3UmrGbW9WoR/iyqWe47lqVEg/N3lt6
+         a+9pKloUwiEWlGgIfrQQdPg/WapGIrQQc/8rj/PvaqHe1UELQR4VNRYy1WKYBhrM0L
+         nI0VoTU/AiQjeNqZQfAWn8TM8RXkzNLr+H5DpvRiSzhRu2nO1Jqxdy1gDYYT/ESVHV
+         td5nPoCIpMRcycup/HF86CaGdIjL+uLtx61/XR1PCud72+9psahUA1zkjyOpvPSbo0
+         kXgxRYQo+ejVXRFtq8UTqh6g/dT9B6U8LehVlzcTiBARB1XsFA39nmYol+11SWhn1r
+         KQJN5oGmtW8qg==
 Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x4I8sYli1732862;
-        Sat, 18 May 2019 01:54:34 -0700
-Date:   Sat, 18 May 2019 01:54:34 -0700
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x4I8tE6p1732973;
+        Sat, 18 May 2019 01:55:14 -0700
+Date:   Sat, 18 May 2019 01:55:14 -0700
 X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
 From:   tip-bot for Adrian Hunter <tipbot@zytor.com>
-Message-ID: <tip-be6e747136a4dc8aad99259e47fd6f7362a43996@git.kernel.org>
-Cc:     jolsa@redhat.com, hpa@zytor.com, acme@redhat.com, mingo@kernel.org,
-        adrian.hunter@intel.com, tglx@linutronix.de,
-        linux-kernel@vger.kernel.org
-Reply-To: jolsa@redhat.com, adrian.hunter@intel.com, tglx@linutronix.de,
-          linux-kernel@vger.kernel.org, acme@redhat.com, hpa@zytor.com,
-          mingo@kernel.org
-In-Reply-To: <20190503120828.25326-3-adrian.hunter@intel.com>
-References: <20190503120828.25326-3-adrian.hunter@intel.com>
+Message-ID: <tip-4b2084537e5f3b58337bce894391fb63bf3b0e28@git.kernel.org>
+Cc:     mingo@kernel.org, tglx@linutronix.de, adrian.hunter@intel.com,
+        linux-kernel@vger.kernel.org, acme@redhat.com, hpa@zytor.com,
+        jolsa@redhat.com
+Reply-To: acme@redhat.com, linux-kernel@vger.kernel.org, jolsa@redhat.com,
+          hpa@zytor.com, mingo@kernel.org, adrian.hunter@intel.com,
+          tglx@linutronix.de
+In-Reply-To: <20190503120828.25326-2-adrian.hunter@intel.com>
+References: <20190503120828.25326-2-adrian.hunter@intel.com>
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:perf/core] perf scripts python: exported-sql-viewer.py: Move
- view creation
-Git-Commit-ID: be6e747136a4dc8aad99259e47fd6f7362a43996
+Subject: [tip:perf/core] perf scripts python: exported-sql-viewer.py: Fix
+ error when shrinking / enlarging font
+Git-Commit-ID: 4b2084537e5f3b58337bce894391fb63bf3b0e28
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot.git.kernel.org>
 Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
@@ -70,64 +70,79 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  be6e747136a4dc8aad99259e47fd6f7362a43996
-Gitweb:     https://git.kernel.org/tip/be6e747136a4dc8aad99259e47fd6f7362a43996
+Commit-ID:  4b2084537e5f3b58337bce894391fb63bf3b0e28
+Gitweb:     https://git.kernel.org/tip/4b2084537e5f3b58337bce894391fb63bf3b0e28
 Author:     Adrian Hunter <adrian.hunter@intel.com>
-AuthorDate: Fri, 3 May 2019 15:08:24 +0300
+AuthorDate: Fri, 3 May 2019 15:08:23 +0300
 Committer:  Arnaldo Carvalho de Melo <acme@redhat.com>
 CommitDate: Wed, 15 May 2019 16:36:47 -0300
 
-perf scripts python: exported-sql-viewer.py: Move view creation
+perf scripts python: exported-sql-viewer.py: Fix error when shrinking / enlarging font
 
-As preparation for adding support for copying to clipboard, create view
-in TreeWindowBase instead of derived classes.
+Fix the following error if shrink / enlarge font is used with the help
+window.
+
+  Traceback (most recent call last):
+    File "tools/perf/scripts/python/exported-sql-viewer.py", line 2791, in ShrinkFont
+      ShrinkFont(win.view)
+  AttributeError: 'HelpWindow' object has no attribute 'view'
 
 Committer testing:
 
-Tested using an old .db used to test some older patches:
+Before, matches above output:
 
   $ python ~acme/libexec/perf-core/scripts/python/exported-sql-viewer.py ~/c/adrian.hunter/simple-retpoline.db
+  Traceback (most recent call last):
+    File "/home/acme/libexec/perf-core/scripts/python/exported-sql-viewer.py", line 2780, in EnlargeFont
+      EnlargeFont(win.view)
+  AttributeError: 'HelpWindow' object has no attribute 'view'
+  $
 
-Nothing breaks.
+After:
+
+No more tracebacks, but the fonts don't get enlarged, which is kinda
+frustrating...
 
 Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
 Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Cc: Jiri Olsa <jolsa@redhat.com>
-Link: http://lkml.kernel.org/r/20190503120828.25326-3-adrian.hunter@intel.com
+Link: http://lkml.kernel.org/r/20190503120828.25326-2-adrian.hunter@intel.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/scripts/python/exported-sql-viewer.py | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+ tools/perf/scripts/python/exported-sql-viewer.py | 14 ++++++++++----
+ 1 file changed, 10 insertions(+), 4 deletions(-)
 
 diff --git a/tools/perf/scripts/python/exported-sql-viewer.py b/tools/perf/scripts/python/exported-sql-viewer.py
-index 74ef92f1d19a..db4655168ab1 100755
+index db4655168ab1..fd073e4af8da 100755
 --- a/tools/perf/scripts/python/exported-sql-viewer.py
 +++ b/tools/perf/scripts/python/exported-sql-viewer.py
-@@ -877,9 +877,10 @@ class TreeWindowBase(QMdiSubWindow):
- 		super(TreeWindowBase, self).__init__(parent)
+@@ -2755,6 +2755,14 @@ class MainWindow(QMainWindow):
+ 		help_menu = menu.addMenu("&Help")
+ 		help_menu.addAction(CreateAction("&Exported SQL Viewer Help", "Helpful information", self.Help, self, QKeySequence.HelpContents))
  
- 		self.model = None
--		self.view = None
- 		self.find_bar = None
- 
-+		self.view = QTreeView()
++	def Try(self, fn):
++		win = self.mdi_area.activeSubWindow()
++		if win:
++			try:
++				fn(win.view)
++			except:
++				pass
 +
- 	def DisplayFound(self, ids):
- 		if not len(ids):
- 			return False
-@@ -921,7 +922,6 @@ class CallGraphWindow(TreeWindowBase):
+ 	def Find(self):
+ 		win = self.mdi_area.activeSubWindow()
+ 		if win:
+@@ -2772,12 +2780,10 @@ class MainWindow(QMainWindow):
+ 				pass
  
- 		self.model = LookupCreateModel("Context-Sensitive Call Graph", lambda x=glb: CallGraphModel(x))
+ 	def ShrinkFont(self):
+-		win = self.mdi_area.activeSubWindow()
+-		ShrinkFont(win.view)
++		self.Try(ShrinkFont)
  
--		self.view = QTreeView()
- 		self.view.setModel(self.model)
+ 	def EnlargeFont(self):
+-		win = self.mdi_area.activeSubWindow()
+-		EnlargeFont(win.view)
++		self.Try(EnlargeFont)
  
- 		for c, w in ((0, 250), (1, 100), (2, 60), (3, 70), (4, 70), (5, 100)):
-@@ -944,7 +944,6 @@ class CallTreeWindow(TreeWindowBase):
- 
- 		self.model = LookupCreateModel("Call Tree", lambda x=glb: CallTreeModel(x))
- 
--		self.view = QTreeView()
- 		self.view.setModel(self.model)
- 
- 		for c, w in ((0, 230), (1, 100), (2, 100), (3, 70), (4, 70), (5, 100)):
+ 	def EventMenu(self, events, reports_menu):
+ 		branches_events = 0
