@@ -7,58 +7,56 @@ X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1916AC04AAF
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 May 2019 08:49:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EA0FC04AAF
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 May 2019 08:50:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D964520872
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 May 2019 08:49:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D8F9020872
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 May 2019 08:50:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="aHPZoXQB"
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="m+Wf3D5d"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729316AbfERItT (ORCPT
+        id S1729325AbfERIt7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 May 2019 04:49:19 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:41937 "EHLO
+        Sat, 18 May 2019 04:49:59 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:60935 "EHLO
         terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726056AbfERItT (ORCPT
+        with ESMTP id S1726056AbfERIt7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 May 2019 04:49:19 -0400
+        Sat, 18 May 2019 04:49:59 -0400
 Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x4I8n6DW1731906
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x4I8nlAe1731953
         (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Sat, 18 May 2019 01:49:06 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x4I8n6DW1731906
+        Sat, 18 May 2019 01:49:47 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x4I8nlAe1731953
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019041745; t=1558169347;
-        bh=bU2FxHe30nLVpx1WLyjV37uuwWtqn3kee6b/esey+XI=;
-        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
-        b=aHPZoXQB7KSG8736qUJU2tymiGzl+JUM4R75OswOp+JfJIVVKR30+ls1D3rAOtP4U
-         jzJuJQdLHkx7rXW1KpImBXGc+PkVnIO92i9YuZ7ijCZkzJTe8O5OHoFsEiEoV9e2uY
-         EEszYfgChnmnNQRA8WTo7wfd9iW8tbpnqdTKc9SxAXPGReaYFxAuay0s+d82+KvkUy
-         iiU4pQw7lNfYlRhvSNzR0AQq5Nhdd8zR+IUvHDEz1ndSKJehqpSRnt+0Cgdf6/A813
-         l8ek6AlmBcKptgvS/aDg2THOjIykas15ML3fjso9joAZu5WvYlMRHoM4fFHwnt4PQX
-         dmrpvScKiiq6A==
+        s=2019041745; t=1558169388;
+        bh=/x0sSXksm0HqYWIx0vxNbTR0DQ5MH5Bkh0PbkZNzugw=;
+        h=Date:From:Cc:Reply-To:To:Subject:From;
+        b=m+Wf3D5dn1GFKob0NzwewH2K8fTiw7lS/dS7ahAfC3lZbHg5ykjvujw117aB/4hs0
+         zJh2ScxeYznzkZSCqde8DQHg0D21fe0AKDaJTSRDp0ZPJzBQlLRXWv1nmSb4Ep3wNU
+         69GYA3687bSRsn6X5UIYWFu05L3PTC9WUNi/pjFenKiSeJfWrj0Su7KLB5XQCcprVz
+         dp+bC69v9R/OUdFhoF/U8K84HIe2ye3bN9etywjeI8vx0R5ikGSS2FU13OQqMwkdeu
+         fmJZFDma9HfnVOdtcgQWmHZBtm0c73mx/6WolfR4Jla/EpJxOwiFuhhwcgXb0gOgBw
+         oTBXqA3VdqAog==
 Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x4I8n6qQ1731903;
-        Sat, 18 May 2019 01:49:06 -0700
-Date:   Sat, 18 May 2019 01:49:06 -0700
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x4I8nlqJ1731950;
+        Sat, 18 May 2019 01:49:47 -0700
+Date:   Sat, 18 May 2019 01:49:47 -0700
 X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   tip-bot for Jiri Olsa <tipbot@zytor.com>
-Message-ID: <tip-382619c07ff6491b33d54fccff7407336ddcb6d4@git.kernel.org>
-Cc:     tglx@linutronix.de, linux-kernel@vger.kernel.org,
-        namhyung@kernel.org, alexander.shishkin@linux.intel.com,
-        acme@redhat.com, jolsa@kernel.org, mingo@kernel.org, hpa@zytor.com,
-        peterz@infradead.org
-Reply-To: acme@redhat.com, jolsa@kernel.org, hpa@zytor.com,
-          mingo@kernel.org, peterz@infradead.org, tglx@linutronix.de,
-          namhyung@kernel.org, linux-kernel@vger.kernel.org,
-          alexander.shishkin@linux.intel.com
-In-Reply-To: <20190426073804.17238-1-jolsa@kernel.org>
-References: <20190426073804.17238-1-jolsa@kernel.org>
+From:   tip-bot for Arnaldo Carvalho de Melo <tipbot@zytor.com>
+Message-ID: <tip-j0mxgqkuibhw5qid9saaspdu@git.kernel.org>
+Cc:     jolsa@kernel.org, namhyung@kernel.org, tglx@linutronix.de,
+        acme@redhat.com, peterz@infradead.org, hpa@zytor.com,
+        adrian.hunter@intel.com, linux-kernel@vger.kernel.org,
+        mingo@kernel.org
+Reply-To: acme@redhat.com, namhyung@kernel.org, tglx@linutronix.de,
+          jolsa@kernel.org, peterz@infradead.org, hpa@zytor.com,
+          mingo@kernel.org, linux-kernel@vger.kernel.org,
+          adrian.hunter@intel.com
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:perf/core] perf tools: Speed up report for perf compiled with
- linwunwind
-Git-Commit-ID: 382619c07ff6491b33d54fccff7407336ddcb6d4
+Subject: [tip:perf/core] tools arch: Update arch/x86/lib/memcpy_64.S copy
+ used in 'perf bench mem memcpy'
+Git-Commit-ID: a021b54001114473333b41100f64ec1b649f5c24
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot.git.kernel.org>
 Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
@@ -72,162 +70,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  382619c07ff6491b33d54fccff7407336ddcb6d4
-Gitweb:     https://git.kernel.org/tip/382619c07ff6491b33d54fccff7407336ddcb6d4
-Author:     Jiri Olsa <jolsa@kernel.org>
-AuthorDate: Fri, 26 Apr 2019 09:38:04 +0200
+Commit-ID:  a021b54001114473333b41100f64ec1b649f5c24
+Gitweb:     https://git.kernel.org/tip/a021b54001114473333b41100f64ec1b649f5c24
+Author:     Arnaldo Carvalho de Melo <acme@redhat.com>
+AuthorDate: Mon, 13 May 2019 13:23:42 -0400
 Committer:  Arnaldo Carvalho de Melo <acme@redhat.com>
 CommitDate: Wed, 15 May 2019 16:36:46 -0300
 
-perf tools: Speed up report for perf compiled with linwunwind
+tools arch: Update arch/x86/lib/memcpy_64.S copy used in 'perf bench mem memcpy'
 
-When compiled with libunwind, perf does some preparatory work when
-processing side-band events. This is not needed when report actually
-don't unwind dwarf callchains, so it's disabled with
-dwarf_callchain_users bool.
+To bring in the change made in this cset:
 
-However we could move that check to higher level and shield more
-unwanted code for normal report processing, giving us following speed up
-on kernel build profile:
+  b69656fa7ea2 ("x86/uaccess: Fix up the fixup")
 
-Before:
+Silencing this perf build warning:
 
-  $ perf record make -j40
-  ...
-  $ ll ../../perf.data
-  -rw-------. 1 jolsa jolsa 461783932 Apr 26 09:11 perf.data
-  $ perf stat -e cycles:u,instructions:u perf report -i perf.data > out
+  Warning: Kernel ABI header at 'tools/arch/x86/lib/memcpy_64.S' differs from latest version at 'arch/x86/lib/memcpy_64.S'
+  diff -u tools/arch/x86/lib/memcpy_64.S arch/x86/lib/memcpy_64.S
 
-   Performance counter stats for 'perf report -i perf.data':
+No changes in the tooling using this, that was just to ease some objtool
+return checking.
 
-    78,669,920,155      cycles:u
-    99,076,431,951      instructions:u            #    1.26  insn per cycle
-
-      55.382823668 seconds time elapsed
-
-      27.512341000 seconds user
-      27.712871000 seconds sys
-
-After:
-
-  $ perf stat -e cycles:u,instructions:u perf report -i perf.data > out
-
-   Performance counter stats for 'perf report -i perf.data':
-
-    59,626,798,904      cycles:u
-    88,583,575,849      instructions:u            #    1.49  insn per cycle
-
-      21.296935559 seconds time elapsed
-
-      20.010191000 seconds user
-       1.202935000 seconds sys
-
-The speed is higher with profile having many side-band events,
-because these trigger libunwind preparatory code.
-
-This does not apply for perf compiled with libdw for dwarf unwind,
-only for build with libunwind.
-
-Signed-off-by: Jiri Olsa <jolsa@kernel.org>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
-Link: http://lkml.kernel.org/r/20190426073804.17238-1-jolsa@kernel.org
+Link: https://lkml.kernel.org/n/tip-j0mxgqkuibhw5qid9saaspdu@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/thread.c                 |  3 ++-
- tools/perf/util/unwind-libunwind-local.c |  6 ------
- tools/perf/util/unwind-libunwind.c       | 10 ++++++++++
- 3 files changed, 12 insertions(+), 7 deletions(-)
+ tools/arch/x86/lib/memcpy_64.S | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/tools/perf/util/thread.c b/tools/perf/util/thread.c
-index 50678d318185..403045a2bbea 100644
---- a/tools/perf/util/thread.c
-+++ b/tools/perf/util/thread.c
-@@ -15,6 +15,7 @@
- #include "map.h"
- #include "symbol.h"
- #include "unwind.h"
-+#include "callchain.h"
+diff --git a/tools/arch/x86/lib/memcpy_64.S b/tools/arch/x86/lib/memcpy_64.S
+index 3b24dc05251c..9d05572370ed 100644
+--- a/tools/arch/x86/lib/memcpy_64.S
++++ b/tools/arch/x86/lib/memcpy_64.S
+@@ -257,6 +257,7 @@ ENTRY(__memcpy_mcsafe)
+ 	/* Copy successful. Return zero */
+ .L_done_memcpy_trap:
+ 	xorl %eax, %eax
++.L_done:
+ 	ret
+ ENDPROC(__memcpy_mcsafe)
+ EXPORT_SYMBOL_GPL(__memcpy_mcsafe)
+@@ -273,7 +274,7 @@ EXPORT_SYMBOL_GPL(__memcpy_mcsafe)
+ 	addl	%edx, %ecx
+ .E_trailing_bytes:
+ 	mov	%ecx, %eax
+-	ret
++	jmp	.L_done
  
- #include <api/fs/fs.h>
- 
-@@ -327,7 +328,7 @@ static int thread__prepare_access(struct thread *thread)
- {
- 	int err = 0;
- 
--	if (symbol_conf.use_callchain)
-+	if (dwarf_callchain_users)
- 		err = __thread__prepare_access(thread);
- 
- 	return err;
-diff --git a/tools/perf/util/unwind-libunwind-local.c b/tools/perf/util/unwind-libunwind-local.c
-index f3c666a84e4d..25e1406b1f8b 100644
---- a/tools/perf/util/unwind-libunwind-local.c
-+++ b/tools/perf/util/unwind-libunwind-local.c
-@@ -617,8 +617,6 @@ static unw_accessors_t accessors = {
- 
- static int _unwind__prepare_access(struct thread *thread)
- {
--	if (!dwarf_callchain_users)
--		return 0;
- 	thread->addr_space = unw_create_addr_space(&accessors, 0);
- 	if (!thread->addr_space) {
- 		pr_err("unwind: Can't create unwind address space.\n");
-@@ -631,15 +629,11 @@ static int _unwind__prepare_access(struct thread *thread)
- 
- static void _unwind__flush_access(struct thread *thread)
- {
--	if (!dwarf_callchain_users)
--		return;
- 	unw_flush_cache(thread->addr_space, 0, 0);
- }
- 
- static void _unwind__finish_access(struct thread *thread)
- {
--	if (!dwarf_callchain_users)
--		return;
- 	unw_destroy_addr_space(thread->addr_space);
- }
- 
-diff --git a/tools/perf/util/unwind-libunwind.c b/tools/perf/util/unwind-libunwind.c
-index 9778b3133b77..c0811977d7d5 100644
---- a/tools/perf/util/unwind-libunwind.c
-+++ b/tools/perf/util/unwind-libunwind.c
-@@ -5,6 +5,7 @@
- #include "session.h"
- #include "debug.h"
- #include "env.h"
-+#include "callchain.h"
- 
- struct unwind_libunwind_ops __weak *local_unwind_libunwind_ops;
- struct unwind_libunwind_ops __weak *x86_32_unwind_libunwind_ops;
-@@ -24,6 +25,9 @@ int unwind__prepare_access(struct thread *thread, struct map *map,
- 	struct unwind_libunwind_ops *ops = local_unwind_libunwind_ops;
- 	int err;
- 
-+	if (!dwarf_callchain_users)
-+		return 0;
-+
- 	if (thread->addr_space) {
- 		pr_debug("unwind: thread map already set, dso=%s\n",
- 			 map->dso->name);
-@@ -65,12 +69,18 @@ out_register:
- 
- void unwind__flush_access(struct thread *thread)
- {
-+	if (!dwarf_callchain_users)
-+		return;
-+
- 	if (thread->unwind_libunwind_ops)
- 		thread->unwind_libunwind_ops->flush_access(thread);
- }
- 
- void unwind__finish_access(struct thread *thread)
- {
-+	if (!dwarf_callchain_users)
-+		return;
-+
- 	if (thread->unwind_libunwind_ops)
- 		thread->unwind_libunwind_ops->finish_access(thread);
- }
+ 	/*
+ 	 * For write fault handling, given the destination is unaligned,
