@@ -2,92 +2,110 @@ Return-Path: <SRS0=//ty=TS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87183C04AAF
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 May 2019 21:41:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EBB8CC072A4
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 May 2019 21:44:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 62ED420873
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 May 2019 21:41:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C044D20873
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 May 2019 21:44:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="maN8W3t5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729583AbfERVl4 (ORCPT
+        id S1729618AbfERVop (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 May 2019 17:41:56 -0400
-Received: from zeniv.linux.org.uk ([195.92.253.2]:45252 "EHLO
-        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727600AbfERVlz (ORCPT
+        Sat, 18 May 2019 17:44:45 -0400
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:33437 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726671AbfERVoo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 May 2019 17:41:55 -0400
-Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92 #3 (Red Hat Linux))
-        id 1hS75R-0006cQ-1J; Sat, 18 May 2019 21:41:49 +0000
-Date:   Sat, 18 May 2019 22:41:49 +0100
-From:   Al Viro <viro@zeniv.linux.org.uk>
-To:     Theodore Ts'o <tytso@mit.edu>, Dmitry Vyukov <dvyukov@google.com>,
-        syzbot <syzbot+73c7fe4f77776505299b@syzkaller.appspotmail.com>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>, sabin.rapan@gmail.com,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
-Subject: Re: BUG: unable to handle kernel paging request in do_mount
-Message-ID: <20190518214148.GI17978@ZenIV.linux.org.uk>
-References: <00000000000014285d05765bf72a@google.com>
- <0000000000000eaf23058912af14@google.com>
- <20190517134850.GG17978@ZenIV.linux.org.uk>
- <CACT4Y+Z8760uYQP0jKgJmVC5sstqTv9pE6K6YjK_feeK6-Obfg@mail.gmail.com>
- <CACT4Y+bQ+zW_9a3F4jY0xcAn_Hdk5yAwX2K3E38z9fttbF0SJA@mail.gmail.com>
- <20190518162142.GH17978@ZenIV.linux.org.uk>
- <20190518201843.GD14277@mit.edu>
+        Sat, 18 May 2019 17:44:44 -0400
+Received: by mail-qt1-f195.google.com with SMTP id m32so12156438qtf.0;
+        Sat, 18 May 2019 14:44:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=jJ5BRXNmtBYhU5KLCuS1xg2MlRH8bwhzIAasFCh/DOo=;
+        b=maN8W3t5H1DNQIgzJCDprNKkVjep+KwFN0fMsVa9RUsrMSqp6yaLfSW9nrfmkhvfyo
+         yTGr8uuUNZEUG2NvDyFbtVF+3sVlO4DQz2nu0BXUdQJ/x/wcwRAYFtucN2z12F08KIww
+         encs/kF/M8cdOXgCm5yfxIeFYR4NSizg7EIno8WPXs/oE9J9/mvv/vMBQdSasqAZPwm7
+         RNF1MLVv8Wb4Nis6vXPKQadOIhZvu907703LSWYOfkY4/WBVYoLzo3DFkD0AmDkcTtqN
+         5eIij1WP2+/uwpckPTU1wUdR7TCobUyu9UgIs/YzADyUiaccn3Oek6Mlx0K+urXGJW2a
+         TXkg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=jJ5BRXNmtBYhU5KLCuS1xg2MlRH8bwhzIAasFCh/DOo=;
+        b=por1BR5ZC2PjaFEPAiHb2jI6IotFXn5h9JrUJywNBa7uaWDCYqDnX5Kye7bez+BR7u
+         B/b2NxBIRkuglojzZYbhiN53BL9MDwAi99M8ODOok3kXiu74MhzYwl6HxUwXuQVUmKdO
+         NV+Phhr0i87xhD6OEJToQMfXhnXI5697zfulEgv4ycVF8rK4i3ES+r5F+S3kWuAPHaKy
+         fPGMmH1P+wyN4dDj00btUpcIm+T8KbzR9KVIREwuOU29oLpsxDrKGvJ6MdSHVQO6Xe1D
+         gYWndsyTU7Wq1J9ZCG7Xexv+YEEV69Gz316k1fHL0TT7iJksyXuWX9QFy5NMS/KrNjlB
+         k/xQ==
+X-Gm-Message-State: APjAAAUq6ywzX2mBC+tBmoXMMULlzrQZPqJEnB1c+MbgBDC73CEHJ23b
+        zXBLfCHqMIk5ygtJkSkkATg=
+X-Google-Smtp-Source: APXvYqyFsB4cbFR6WK/GdTpC/L6EjHHB/VoLoxxr++FzPhf3RZRMVm1V2r8hdHE6BufpS47pq1fgmg==
+X-Received: by 2002:ac8:2e84:: with SMTP id h4mr7898725qta.267.1558215883813;
+        Sat, 18 May 2019 14:44:43 -0700 (PDT)
+Received: from wall-e.ime.usp.br ([143.107.45.1])
+        by smtp.gmail.com with ESMTPSA id b22sm7313294qtc.37.2019.05.18.14.44.39
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Sat, 18 May 2019 14:44:43 -0700 (PDT)
+From:   Lucas Oshiro <lucasseikioshiro@gmail.com>
+To:     Lars-Peter Clausen <lars@metafoo.de>,
+        Michael Hennerich <Michael.Hennerich@analog.com>,
+        Stefan Popa <stefan.popa@analog.com>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-iio@vger.kernel.org, devel@driverdev.osuosl.org,
+        linux-kernel@vger.kernel.org, kernel-usp@googlegroups.com,
+        Rodrigo Ribeiro <rodrigorsdc@gmail.com>
+Subject: [PATCH v2] staging: iio: adis16240: add device to module device table
+Date:   Sat, 18 May 2019 18:44:34 -0300
+Message-Id: <20190518214434.23660-1-lucasseikioshiro@gmail.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190518201843.GD14277@mit.edu>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, May 18, 2019 at 04:18:43PM -0400, Theodore Ts'o wrote:
+Add a of_device_id struct and MODULE_DEVICE_TABLE call, in order to add
+device-tree support for this driver.
 
-> > What would you prefer to happen in such situations?  Commit summaries
-> > modified enough to confuse CI tools into *NOT* noticing that those
-> > are versions of the same patch?  Some kind of metadata telling the
-> > same tools that such-and-such commits got folded in (and they might
-> > have been split in process, with parts folded into different spots
-> > in the series, at that)?
-> > 
-> > Because "never fold in, never reorder, just accumulate patches in
-> > the end of the series" is not going to fly.  For a lot of reasons.
-> 
-> As far as I'm concerned, this is the tools problem; I don't think it's
-> worth it for developers to feel they need to twist themselves into
-> knots just to try to make the CI tools' life easier.
+Signed-off-by: Lucas Oshiro <lucasseikioshiro@gmail.com>
+Signed-off-by: Rodrigo Ribeiro <rodrigorsdc@gmail.com>
+Co-developed-by: Rodrigo Ribeiro <rodrigorsdc@gmail.com>
+---
+ drivers/staging/iio/accel/adis16240.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-FWIW, what _is_ the underlying problem?  It looks like the basic issue
-is with rebase/cherry-pick of a commit; it seems to be trying to
-handle two things:
-	1) report X' in commit C' is similar to report X in commit C,
-with C' apparently being a rebase/cherry-pick/whatnot of C; don't
-want to lose that information
-	2) reports X, Y and Z in commit C don't seem to be reoccuring
-on the current tree, without any claimed fix in it.  Want to keep
-an eye on those.
+diff --git a/drivers/staging/iio/accel/adis16240.c b/drivers/staging/iio/accel/adis16240.c
+index b80e0d248b0f..8c6d23604eca 100644
+--- a/drivers/staging/iio/accel/adis16240.c
++++ b/drivers/staging/iio/accel/adis16240.c
+@@ -435,6 +435,12 @@ static int adis16240_remove(struct spi_device *spi)
+ 	return 0;
+ }
+ 
++static const struct of_device_id adis16240_of_match[] = {
++	{ .compatible = "adi,adis16240" },
++	{ },
++};
++MODULE_DEVICE_TABLE(of, adis16240_of_match);
++
+ static struct spi_driver adis16240_driver = {
+ 	.driver = {
+ 		.name = "adis16240",
+-- 
+2.21.0
 
-... and getting screwed by a mix of those two: reports X, Y and Z in
-commit C don't seem to be reoccuring on the current tree, even though
-it does contain a commit C' that seems to be a rebase of C.  A fix for
-C is *not* present as an identifiable commit in the current tree.
-Was it lost or was it renamed/merged with other commits/replaced by
-another fix?
-
-What I don't quite understand is why does the tool care.  Suppose
-we have a buggy commit + clearly marked fix.  And see a report
-very similar to the original ones, on the tree with alleged fix
-clearly present.  IME the earlier reports are often quite relevant -
-the fix might have been incomplete/racy/etc., and in that case
-the old reports (*AND* pointer to the commit that was supposed to
-have fixed those) are very useful.
-
-What's the problem these reminders are trying to solve?  Computational
-resources eaten by comparisons?
