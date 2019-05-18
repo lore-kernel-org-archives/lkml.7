@@ -5,65 +5,65 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBBE8C04E87
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 May 2019 02:31:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04004C04E84
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 May 2019 02:31:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 86D5021783
+	by mail.kernel.org (Postfix) with ESMTP id B2C2421773
 	for <linux-kernel@archiver.kernel.org>; Sat, 18 May 2019 02:31:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HyAG7rMv"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lnlYvX9V"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728946AbfERCbO (ORCPT
+        id S1729036AbfERCbY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 May 2019 22:31:14 -0400
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:41261 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727537AbfERCbN (ORCPT
+        Fri, 17 May 2019 22:31:24 -0400
+Received: from mail-qk1-f195.google.com ([209.85.222.195]:37803 "EHLO
+        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726200AbfERCbK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 May 2019 22:31:13 -0400
-Received: by mail-qt1-f193.google.com with SMTP id y22so10229792qtn.8
-        for <linux-kernel@vger.kernel.org>; Fri, 17 May 2019 19:31:12 -0700 (PDT)
+        Fri, 17 May 2019 22:31:10 -0400
+Received: by mail-qk1-f195.google.com with SMTP id d10so5667926qko.4
+        for <linux-kernel@vger.kernel.org>; Fri, 17 May 2019 19:31:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:subject:date:message-id:in-reply-to:references:mime-version
          :content-transfer-encoding;
-        bh=Jx7wOgjO71cyvryJW/ALg7Y34849UqscRe/zdQWObUQ=;
-        b=HyAG7rMv3BEUuyj9kZ97Pyx3nP2G+He64Vc/T+z5iEq6S7vbPpTTEJ5CsyefdAkMXP
-         OFEmK7e4xWR6nL4IHQNz6aOXhCFeTuWgC0GieX63aTM5rQjg+egveUFW5em71vAJRbt7
-         B+MZtKenHp7mGKN1YzIG4mmDz7uwzQQHOmRVAtuNgDw8wTPsdDA0BzXRvl238WdzF2ib
-         jZHM1y4Cm3WqdHFOJUyoBBzcrZVSJCGdHZuuvwulX7VdSBeZVAEVPkcnvx4fzLoFbxH7
-         Qzhx+r+qud5zk7vQwuei270GYm+yc5/rCB1Nt2/xPT+zpJgLg8/zRlUnxQZZ+0hcysrb
-         xU8g==
+        bh=PTBG03dcRrEeV4qM9X3q8Tc4RNOPyvEHkjChA/R1skY=;
+        b=lnlYvX9VTwd0QsdlOtw7yO2lkKpRIXbqbS4lq5yQ2kymr9yjkZEuke+8tuNVt1LVd9
+         WBJrxW6egv8DlLhteqrXG/ey/7hPLU3RUofIqoGus2ulFxgzPrnNQBY7Aj9KreL9MS78
+         Eejw45sVdp8e0pr8T+GcWNKV+bKHXDcQy/Xmpb7y8j8sANo3Lx66cJZ0aAnmUmI38drQ
+         CHItQnN3i1bovIhqVcmp5lUe4k6hkszjG0D84fwhZb8KpouI1i0hQ45oC6CsrNcAESEF
+         +HKVCPXyJAj11cnX9OSVgti1mIin2M0fp4JDRnxywXRy1aNEgVwl/Cr+wka1JVMdGUbA
+         UjDQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=Jx7wOgjO71cyvryJW/ALg7Y34849UqscRe/zdQWObUQ=;
-        b=joifbC2oT1zLJCP/Xs7+gv48PL1l3Qhmz+bimwZubogrpRZqSvz6WvIsG+SshzWtyw
-         b4l9PB2K28YOhwRubm2nBX8jxv2gwYBs01By1EqAFfKzJb1LI8E7vRIICCb9Ha4tdAHs
-         76Si6TNu3VY9xIUolmlujeIenHNHbN/qYn/oZX1cqLxrbM7h4tfDA/vK3k+GkLRjT6Ru
-         l+tD3oNd6MNtb93syTB7TPWkmSjiGB0pGbRKmjdmummNCRQshFvzhiRAQmtvS0XoqlAS
-         jId43xK2BtHIY2OGlE3TKQx9BuRvV/SQeNbCPOqT8BIlsiV06cFWBURhCi70w4Opu8yg
-         lxGw==
-X-Gm-Message-State: APjAAAXmLwFe5N9G3Hn5Lsb5ZqrO1Lr+SXd7qHIb6Q2noIl9ZP8M2FKt
-        IkVepm/tZj2dohSJri06z9o=
-X-Google-Smtp-Source: APXvYqzV3iF+9yyRJp56As3DgJ4K6qFxCx3cRrp3JFL7fXnyUl0tb1yWsiDUqRCBe0D02GZmC5TdzA==
-X-Received: by 2002:aed:354c:: with SMTP id b12mr53038932qte.251.1558146671624;
-        Fri, 17 May 2019 19:31:11 -0700 (PDT)
+        bh=PTBG03dcRrEeV4qM9X3q8Tc4RNOPyvEHkjChA/R1skY=;
+        b=qkl0SCJNUBBfE73culfk1fUrlRIwMIWOLKX2xKNuzeB6z/qZ6f7VGmrwusiedRmGj8
+         IYfOQS3bLax3Eb8lX2WPUAtSmAI7nVrLwrkUHJUrtB6i/FUBGw/KBUSBY4V89M2ZuZDy
+         XXV+fpyafZABWFSmPWhZGTg1aa+IL8rcGrGG3piW1DHVZeE8oqurxclWOxAyR6/EqSa/
+         e/+gGaOcajKWKbL3+onGDc8Kcc8+jjUOeknDUOCjkXVjH8oTurqkmWi4kSbP7w5VpWPP
+         zPqY2dcQ2BvN40My//2UuIgtHXAqUG2hxrYBybIdyeEl3eiMr4CqFPPmaNis2bjyr2tK
+         XPWw==
+X-Gm-Message-State: APjAAAUIPea0veFktghxS53GoPOQyIXkYFRCQ89DgUGgOjcZMEAxHtQo
+        1FYplqS0OComR3UbrW8uhMQ=
+X-Google-Smtp-Source: APXvYqxpS7s/2lqAaK7E/KiSyZGArIZVTmjYRdUK3KbUxRS+O3Al9eQFhIUYsWrAD0x7XybX/2RioA==
+X-Received: by 2002:a05:620a:15c1:: with SMTP id o1mr6508576qkm.299.1558146667970;
+        Fri, 17 May 2019 19:31:07 -0700 (PDT)
 Received: from arch-01.home (c-73-132-202-198.hsd1.dc.comcast.net. [73.132.202.198])
-        by smtp.gmail.com with ESMTPSA id n66sm5210322qke.6.2019.05.17.19.31.10
+        by smtp.gmail.com with ESMTPSA id n66sm5210322qke.6.2019.05.17.19.31.07
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 17 May 2019 19:31:11 -0700 (PDT)
+        Fri, 17 May 2019 19:31:07 -0700 (PDT)
 From:   Geordan Neukum <gneukum1@gmail.com>
 To:     gneukum1@gmail.com,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 5/5] staging: kpc2000: kpc_i2c: fixup block comment style in i2c_driver.c
-Date:   Sat, 18 May 2019 02:30:00 +0000
-Message-Id: <1103bc883e10f356a4eb6f78ec3c52ebe1f9b043.1558146549.git.gneukum1@gmail.com>
+Subject: [PATCH 1/5] staging: kpc2000: kpc_i2c: reindent i2c_driver.c
+Date:   Sat, 18 May 2019 02:29:56 +0000
+Message-Id: <0d1cf03b7c4a82f710bd28b968261e5bd92c0229.1558146549.git.gneukum1@gmail.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <cover.1558146549.git.gneukum1@gmail.com>
 References: <cover.1558146549.git.gneukum1@gmail.com>
@@ -74,105 +74,1117 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Throughout i2c_driver.c, there are numerous deviations from the two
-standards of:
-	- placing a '*' at the beginning of every line containing a
-	  block comment.
-	- placing the closing comment marker '*/' on a new line.
-
-Instead, use a block comment style that is more consistent with the
-prescribed guidelines.
+i2c_driver.c uses a mixture of space and tab indentations which
+conflicts with the kernel coding style guide. Reindent i2c_driver.c.
 
 Signed-off-by: Geordan Neukum <gneukum1@gmail.com>
 ---
- drivers/staging/kpc2000/kpc_i2c/i2c_driver.c | 36 ++++++++++++--------
- 1 file changed, 21 insertions(+), 15 deletions(-)
+ drivers/staging/kpc2000/kpc_i2c/i2c_driver.c | 1014 +++++++++---------
+ 1 file changed, 507 insertions(+), 507 deletions(-)
 
 diff --git a/drivers/staging/kpc2000/kpc_i2c/i2c_driver.c b/drivers/staging/kpc2000/kpc_i2c/i2c_driver.c
-index 03e401322a18..986148c72185 100644
+index 0fb068b2408d..6dda4eb6de75 100644
 --- a/drivers/staging/kpc2000/kpc_i2c/i2c_driver.c
 +++ b/drivers/staging/kpc2000/kpc_i2c/i2c_driver.c
-@@ -137,7 +137,8 @@ MODULE_PARM_DESC(disable_features, "Disable selected driver features");
- #define outb_p(d,a) writeq(d,(void*)a)
+@@ -1,14 +1,14 @@
+ // SPDX-License-Identifier: GPL-2.0+
+ /*  Copyright (c) 2014-2018  Daktronics,
+-                             Matt Sickler <matt.sickler@daktronics.com>,
+-                             Jordon Hofer <jordon.hofer@daktronics.com>
++			      Matt Sickler <matt.sickler@daktronics.com>,
++			      Jordon Hofer <jordon.hofer@daktronics.com>
+     Adapted i2c-i801.c for use with Kadoka hardware.
+     Copyright (c) 1998 - 2002  Frodo Looijaard <frodol@dds.nl>,
+     Philip Edelbrock <phil@netroedge.com>, and Mark D. Studebaker
+     <mdsxyz123@yahoo.com>
+     Copyright (C) 2007 - 2012  Jean Delvare <khali@linux-fr.org>
+     Copyright (C) 2010         Intel Corporation,
+-                               David Woodhouse <dwmw2@infradead.org>
++				David Woodhouse <dwmw2@infradead.org>
+ */
+ #include <linux/init.h>
+ #include <linux/module.h>
+@@ -29,11 +29,11 @@ MODULE_AUTHOR("Matt.Sickler@Daktronics.com");
+ MODULE_SOFTDEP("pre: i2c-dev");
  
- /* Make sure the SMBus host is ready to start transmitting.
--   Return 0 if it is, -EBUSY if it is not. */
-+ * Return 0 if it is, -EBUSY if it is not.
-+ */
+ struct i2c_device {
+-    unsigned long           smba;
+-    struct i2c_adapter      adapter;
+-    struct platform_device *pldev;
+-    struct rw_semaphore     rw_sem;
+-    unsigned int            features;
++	unsigned long           smba;
++	struct i2c_adapter      adapter;
++	struct platform_device *pldev;
++	struct rw_semaphore     rw_sem;
++	unsigned int            features;
+ };
+ 
+ /*****************************
+@@ -134,479 +134,479 @@ MODULE_PARM_DESC(disable_features, "Disable selected driver features");
+    Return 0 if it is, -EBUSY if it is not. */
  static int i801_check_pre(struct i2c_device *priv)
  {
- 	int status;
-@@ -226,7 +227,8 @@ static int i801_transaction(struct i2c_device *priv, int xact)
- 		return result;
- 	}
- 	/* the current contents of SMBHSTCNT can be overwritten, since PEC,
--	 * INTREN, SMBSCMD are passed in xact */
-+	 * INTREN, SMBSCMD are passed in xact
-+	 */
- 	outb_p(xact | I801_START, SMBHSTCNT(priv));
+-    int status;
+-    
+-    dev_dbg(&priv->adapter.dev, "i801_check_pre\n");
+-    
+-    status = inb_p(SMBHSTSTS(priv));
+-    if (status & SMBHSTSTS_HOST_BUSY) {
+-        dev_err(&priv->adapter.dev, "SMBus is busy, can't use it! (status=%x)\n", status);
+-        return -EBUSY;
+-    }
+-    
+-    status &= STATUS_FLAGS;
+-    if (status) {
+-        //dev_dbg(&priv->adapter.dev, "Clearing status flags (%02x)\n", status);
+-        outb_p(status, SMBHSTSTS(priv));
+-        status = inb_p(SMBHSTSTS(priv)) & STATUS_FLAGS;
+-        if (status) {
+-          dev_err(&priv->adapter.dev, "Failed clearing status flags (%02x)\n", status);
+-          return -EBUSY;
+-        }
+-    }
+-    return 0;
++	int status;
++
++	dev_dbg(&priv->adapter.dev, "i801_check_pre\n");
++
++	status = inb_p(SMBHSTSTS(priv));
++	if (status & SMBHSTSTS_HOST_BUSY) {
++		dev_err(&priv->adapter.dev, "SMBus is busy, can't use it! (status=%x)\n", status);
++		return -EBUSY;
++	}
++
++	status &= STATUS_FLAGS;
++	if (status) {
++		//dev_dbg(&priv->adapter.dev, "Clearing status flags (%02x)\n", status);
++		outb_p(status, SMBHSTSTS(priv));
++		status = inb_p(SMBHSTSTS(priv)) & STATUS_FLAGS;
++		if (status) {
++			dev_err(&priv->adapter.dev, "Failed clearing status flags (%02x)\n", status);
++			return -EBUSY;
++		}
++	}
++	return 0;
+ }
  
- 	/* We will always wait for a fraction of a second! */
-@@ -424,8 +426,9 @@ static int i801_block_transaction(struct i2c_device *priv, union i2c_smbus_data
- 	}
+ /* Convert the status register to an error code, and clear it. */
+ static int i801_check_post(struct i2c_device *priv, int status, int timeout)
+ {
+-    int result = 0;
+-    
+-    dev_dbg(&priv->adapter.dev, "i801_check_post\n");
+-    
+-    /* If the SMBus is still busy, we give up */
+-    if (timeout) {
+-        dev_err(&priv->adapter.dev, "Transaction timeout\n");
+-        /* try to stop the current command */
+-        dev_dbg(&priv->adapter.dev, "Terminating the current operation\n");
+-        outb_p(inb_p(SMBHSTCNT(priv)) | SMBHSTCNT_KILL, SMBHSTCNT(priv));
+-        usleep_range(1000, 2000);
+-        outb_p(inb_p(SMBHSTCNT(priv)) & (~SMBHSTCNT_KILL), SMBHSTCNT(priv));
+-        
+-        /* Check if it worked */
+-        status = inb_p(SMBHSTSTS(priv));
+-        if ((status & SMBHSTSTS_HOST_BUSY) || !(status & SMBHSTSTS_FAILED)) {
+-            dev_err(&priv->adapter.dev, "Failed terminating the transaction\n");
+-        }
+-        outb_p(STATUS_FLAGS, SMBHSTSTS(priv));
+-        return -ETIMEDOUT;
+-    }
+-    
+-    if (status & SMBHSTSTS_FAILED) {
+-        result = -EIO;
+-        dev_err(&priv->adapter.dev, "Transaction failed\n");
+-    }
+-    if (status & SMBHSTSTS_DEV_ERR) {
+-        result = -ENXIO;
+-        dev_dbg(&priv->adapter.dev, "No response\n");
+-    }
+-    if (status & SMBHSTSTS_BUS_ERR) {
+-        result = -EAGAIN;
+-        dev_dbg(&priv->adapter.dev, "Lost arbitration\n");
+-    }
+-    
+-    if (result) {
+-        /* Clear error flags */
+-        outb_p(status & STATUS_FLAGS, SMBHSTSTS(priv));
+-        status = inb_p(SMBHSTSTS(priv)) & STATUS_FLAGS;
+-        if (status) {
+-            dev_warn(&priv->adapter.dev, "Failed clearing status flags at end of transaction (%02x)\n", status);
+-        }
+-    }
+-    
+-    return result;
++	int result = 0;
++
++	dev_dbg(&priv->adapter.dev, "i801_check_post\n");
++
++	/* If the SMBus is still busy, we give up */
++	if (timeout) {
++		dev_err(&priv->adapter.dev, "Transaction timeout\n");
++		/* try to stop the current command */
++		dev_dbg(&priv->adapter.dev, "Terminating the current operation\n");
++		outb_p(inb_p(SMBHSTCNT(priv)) | SMBHSTCNT_KILL, SMBHSTCNT(priv));
++		usleep_range(1000, 2000);
++		outb_p(inb_p(SMBHSTCNT(priv)) & (~SMBHSTCNT_KILL), SMBHSTCNT(priv));
++
++		/* Check if it worked */
++		status = inb_p(SMBHSTSTS(priv));
++		if ((status & SMBHSTSTS_HOST_BUSY) || !(status & SMBHSTSTS_FAILED)) {
++			dev_err(&priv->adapter.dev, "Failed terminating the transaction\n");
++		}
++		outb_p(STATUS_FLAGS, SMBHSTSTS(priv));
++		return -ETIMEDOUT;
++	}
++
++	if (status & SMBHSTSTS_FAILED) {
++		result = -EIO;
++		dev_err(&priv->adapter.dev, "Transaction failed\n");
++	}
++	if (status & SMBHSTSTS_DEV_ERR) {
++		result = -ENXIO;
++		dev_dbg(&priv->adapter.dev, "No response\n");
++	}
++	if (status & SMBHSTSTS_BUS_ERR) {
++		result = -EAGAIN;
++		dev_dbg(&priv->adapter.dev, "Lost arbitration\n");
++	}
++
++	if (result) {
++		/* Clear error flags */
++		outb_p(status & STATUS_FLAGS, SMBHSTSTS(priv));
++		status = inb_p(SMBHSTSTS(priv)) & STATUS_FLAGS;
++		if (status) {
++			dev_warn(&priv->adapter.dev, "Failed clearing status flags at end of transaction (%02x)\n", status);
++		}
++	}
++
++	return result;
+ }
  
- 	/* Experience has shown that the block buffer can only be used for
--	   SMBus (not I2C) block transactions, even though the datasheet
--	   doesn't mention this limitation. */
-+	 * SMBus (not I2C) block transactions, even though the datasheet
-+	 * doesn't mention this limitation.
-+	 */
- 	if ((priv->features & FEATURE_BLOCK_BUFFER) && command != I2C_SMBUS_I2C_BLOCK_DATA && i801_set_block_buffer_mode(priv) == 0) {
- 		result = i801_block_transaction_by_block(priv, data, read_write, hwpec);
- 	} else {
-@@ -499,11 +502,13 @@ static s32 i801_access(struct i2c_adapter *adap, u16 addr, unsigned short flags,
- 	case I2C_SMBUS_I2C_BLOCK_DATA:
- 		dev_dbg(&priv->adapter.dev, "  [acc] SMBUS_I2C_BLOCK_DATA\n");
- 		/* NB: page 240 of ICH5 datasheet shows that the R/#W
--		 * bit should be cleared here, even when reading */
-+		 * bit should be cleared here, even when reading
-+		 */
- 		outb_p((addr & 0x7f) << 1, SMBHSTADD(priv));
- 		if (read_write == I2C_SMBUS_READ) {
- 			/* NB: page 240 of ICH5 datasheet also shows
--			 * that DATA1 is the cmd field when reading */
-+			 * that DATA1 is the cmd field when reading
-+			 */
- 			outb_p(command, SMBHSTDAT1(priv));
- 		} else {
- 			outb_p(command, SMBHSTCMD(priv));
-@@ -533,8 +538,9 @@ static s32 i801_access(struct i2c_adapter *adap, u16 addr, unsigned short flags,
- 	}
+ static int i801_transaction(struct i2c_device *priv, int xact)
+ {
+-    int status;
+-    int result;
+-    int timeout = 0;
+-    
+-    dev_dbg(&priv->adapter.dev, "i801_transaction\n");
+-    
+-    result = i801_check_pre(priv);
+-    if (result < 0) {
+-        return result;
+-    }
+-    /* the current contents of SMBHSTCNT can be overwritten, since PEC,
+-    * INTREN, SMBSCMD are passed in xact */
+-    outb_p(xact | I801_START, SMBHSTCNT(priv));
+-    
+-    /* We will always wait for a fraction of a second! */
+-    do {
+-        usleep_range(250, 500);
+-        status = inb_p(SMBHSTSTS(priv));
+-    } while ((status & SMBHSTSTS_HOST_BUSY) && (timeout++ < MAX_RETRIES));
+-    
+-    result = i801_check_post(priv, status, timeout > MAX_RETRIES);
+-    if (result < 0) {
+-        return result;
+-    }
+-    
+-    outb_p(SMBHSTSTS_INTR, SMBHSTSTS(priv));
+-    return 0;
++	int status;
++	int result;
++	int timeout = 0;
++
++	dev_dbg(&priv->adapter.dev, "i801_transaction\n");
++
++	result = i801_check_pre(priv);
++	if (result < 0) {
++		return result;
++	}
++	/* the current contents of SMBHSTCNT can be overwritten, since PEC,
++	 * INTREN, SMBSCMD are passed in xact */
++	outb_p(xact | I801_START, SMBHSTCNT(priv));
++
++	/* We will always wait for a fraction of a second! */
++	do {
++		usleep_range(250, 500);
++		status = inb_p(SMBHSTSTS(priv));
++	} while ((status & SMBHSTSTS_HOST_BUSY) && (timeout++ < MAX_RETRIES));
++
++	result = i801_check_post(priv, status, timeout > MAX_RETRIES);
++	if (result < 0) {
++		return result;
++	}
++
++	outb_p(SMBHSTSTS_INTR, SMBHSTSTS(priv));
++	return 0;
+ }
  
- 	/* Some BIOSes don't like it when PEC is enabled at reboot or resume
--	   time, so we forcibly disable it after every transaction. Turn off
--	   E32B for the same reason. */
-+	 * time, so we forcibly disable it after every transaction. Turn off
-+	 * E32B for the same reason.
-+	 */
- 	if (hwpec || block) {
- 		dev_dbg(&priv->adapter.dev, "  [acc] hwpec || block\n");
- 		outb_p(inb_p(SMBAUXCTL(priv)) & ~(SMBAUXCTL_CRC | SMBAUXCTL_E32B), SMBAUXCTL(priv));
-@@ -573,13 +579,13 @@ static u32 i801_func(struct i2c_adapter *adapter)
- 	struct i2c_device *priv = i2c_get_adapdata(adapter);
+ /* wait for INTR bit as advised by Intel */
+ static void i801_wait_hwpec(struct i2c_device *priv)
+ {
+-    int timeout = 0;
+-    int status;
+-    
+-    dev_dbg(&priv->adapter.dev, "i801_wait_hwpec\n");
+-    
+-    do {
+-        usleep_range(250, 500);
+-        status = inb_p(SMBHSTSTS(priv));
+-    } while ((!(status & SMBHSTSTS_INTR)) && (timeout++ < MAX_RETRIES));
+-    
+-    if (timeout > MAX_RETRIES) {
+-        dev_dbg(&priv->adapter.dev, "PEC Timeout!\n");
+-    }
+-    
+-    outb_p(status, SMBHSTSTS(priv));
++	int timeout = 0;
++	int status;
++
++	dev_dbg(&priv->adapter.dev, "i801_wait_hwpec\n");
++
++	do {
++		usleep_range(250, 500);
++		status = inb_p(SMBHSTSTS(priv));
++	} while ((!(status & SMBHSTSTS_INTR)) && (timeout++ < MAX_RETRIES));
++
++	if (timeout > MAX_RETRIES) {
++		dev_dbg(&priv->adapter.dev, "PEC Timeout!\n");
++	}
++
++	outb_p(status, SMBHSTSTS(priv));
+ }
  
- 	/* original settings
--	   u32 f = I2C_FUNC_SMBUS_QUICK | I2C_FUNC_SMBUS_BYTE |
--	   I2C_FUNC_SMBUS_BYTE_DATA | I2C_FUNC_SMBUS_WORD_DATA |
--	   I2C_FUNC_SMBUS_BLOCK_DATA | I2C_FUNC_SMBUS_WRITE_I2C_BLOCK |
--	   ((priv->features & FEATURE_SMBUS_PEC) ? I2C_FUNC_SMBUS_PEC : 0) |
--	   ((priv->features & FEATURE_I2C_BLOCK_READ) ?
--	   I2C_FUNC_SMBUS_READ_I2C_BLOCK : 0);
--	*/
-+	 * u32 f = I2C_FUNC_SMBUS_QUICK | I2C_FUNC_SMBUS_BYTE |
-+	 * I2C_FUNC_SMBUS_BYTE_DATA | I2C_FUNC_SMBUS_WORD_DATA |
-+	 * I2C_FUNC_SMBUS_BLOCK_DATA | I2C_FUNC_SMBUS_WRITE_I2C_BLOCK |
-+	 * ((priv->features & FEATURE_SMBUS_PEC) ? I2C_FUNC_SMBUS_PEC : 0) |
-+	 * ((priv->features & FEATURE_I2C_BLOCK_READ) ?
-+	 * I2C_FUNC_SMBUS_READ_I2C_BLOCK : 0);
-+	 */
+ static int i801_block_transaction_by_block(struct i2c_device *priv, union i2c_smbus_data *data, char read_write, int hwpec)
+ {
+-    int i, len;
+-    int status;
+-    
+-    dev_dbg(&priv->adapter.dev, "i801_block_transaction_by_block\n");
+-    
+-    inb_p(SMBHSTCNT(priv)); /* reset the data buffer index */
+-    
+-    /* Use 32-byte buffer to process this transaction */
+-    if (read_write == I2C_SMBUS_WRITE) {
+-        len = data->block[0];
+-        outb_p(len, SMBHSTDAT0(priv));
+-        for (i = 0; i < len; i++) {
+-            outb_p(data->block[i+1], SMBBLKDAT(priv));
+-        }
+-    }
+-    
+-    status = i801_transaction(priv, I801_BLOCK_DATA | ENABLE_INT9 | I801_PEC_EN * hwpec);
+-    if (status) {
+-        return status;
+-    }
+-
+-    if (read_write == I2C_SMBUS_READ) {
+-        len = inb_p(SMBHSTDAT0(priv));
+-        if (len < 1 || len > I2C_SMBUS_BLOCK_MAX) {
+-            return -EPROTO;
+-        }
+-        
+-        data->block[0] = len;
+-        for (i = 0; i < len; i++) {
+-            data->block[i + 1] = inb_p(SMBBLKDAT(priv));
+-        }
+-    }
+-    return 0;
++	int i, len;
++	int status;
++
++	dev_dbg(&priv->adapter.dev, "i801_block_transaction_by_block\n");
++
++	inb_p(SMBHSTCNT(priv)); /* reset the data buffer index */
++
++	/* Use 32-byte buffer to process this transaction */
++	if (read_write == I2C_SMBUS_WRITE) {
++		len = data->block[0];
++		outb_p(len, SMBHSTDAT0(priv));
++		for (i = 0; i < len; i++) {
++			outb_p(data->block[i+1], SMBBLKDAT(priv));
++		}
++	}
++
++	status = i801_transaction(priv, I801_BLOCK_DATA | ENABLE_INT9 | I801_PEC_EN * hwpec);
++	if (status) {
++		return status;
++	}
++
++	if (read_write == I2C_SMBUS_READ) {
++		len = inb_p(SMBHSTDAT0(priv));
++		if (len < 1 || len > I2C_SMBUS_BLOCK_MAX) {
++			return -EPROTO;
++		}
++
++		data->block[0] = len;
++		for (i = 0; i < len; i++) {
++			data->block[i + 1] = inb_p(SMBBLKDAT(priv));
++		}
++	}
++	return 0;
+ }
  
- 	// http://lxr.free-electrons.com/source/include/uapi/linux/i2c.h#L85
+ static int i801_block_transaction_byte_by_byte(struct i2c_device *priv, union i2c_smbus_data *data, char read_write, int command, int hwpec)
+ {
+-    int i, len;
+-    int smbcmd;
+-    int status;
+-    int result;
+-    int timeout;
+-    
+-    dev_dbg(&priv->adapter.dev, "i801_block_transaction_byte_by_byte\n");
+-    
+-    result = i801_check_pre(priv);
+-    if (result < 0) {
+-        return result;
+-    }
+-    
+-    len = data->block[0];
+-    
+-    if (read_write == I2C_SMBUS_WRITE) {
+-        outb_p(len, SMBHSTDAT0(priv));
+-        outb_p(data->block[1], SMBBLKDAT(priv));
+-    }
+-    
+-    for (i = 1; i <= len; i++) {
+-        if (i == len && read_write == I2C_SMBUS_READ) {
+-            if (command == I2C_SMBUS_I2C_BLOCK_DATA) {
+-                smbcmd = I801_I2C_BLOCK_LAST;
+-            } else {
+-                smbcmd = I801_BLOCK_LAST;
+-            }
+-        } else {
+-            if (command == I2C_SMBUS_I2C_BLOCK_DATA && read_write == I2C_SMBUS_READ) {
+-                smbcmd = I801_I2C_BLOCK_DATA;
+-            } else {
+-                smbcmd = I801_BLOCK_DATA;
+-            }
+-        }
+-        outb_p(smbcmd | ENABLE_INT9, SMBHSTCNT(priv));
+-        
+-        if (i == 1) {
+-            outb_p(inb(SMBHSTCNT(priv)) | I801_START, SMBHSTCNT(priv));
+-        }
+-        /* We will always wait for a fraction of a second! */
+-        timeout = 0;
+-        do {
+-            usleep_range(250, 500);
+-            status = inb_p(SMBHSTSTS(priv));
+-        } while ((!(status & SMBHSTSTS_BYTE_DONE)) && (timeout++ < MAX_RETRIES));
+-        
+-        result = i801_check_post(priv, status, timeout > MAX_RETRIES);
+-        if (result < 0) {
+-            return result;
+-        }
+-        if (i == 1 && read_write == I2C_SMBUS_READ && command != I2C_SMBUS_I2C_BLOCK_DATA) {
+-            len = inb_p(SMBHSTDAT0(priv));
+-            if (len < 1 || len > I2C_SMBUS_BLOCK_MAX) {
+-                dev_err(&priv->adapter.dev, "Illegal SMBus block read size %d\n", len);
+-                /* Recover */
+-                while (inb_p(SMBHSTSTS(priv)) & SMBHSTSTS_HOST_BUSY) {
+-                    outb_p(SMBHSTSTS_BYTE_DONE, SMBHSTSTS(priv));
+-                }
+-                outb_p(SMBHSTSTS_INTR, SMBHSTSTS(priv));
+-                return -EPROTO;
+-            }
+-            data->block[0] = len;
+-        }
+-        
+-        /* Retrieve/store value in SMBBLKDAT */
+-        if (read_write == I2C_SMBUS_READ) {
+-            data->block[i] = inb_p(SMBBLKDAT(priv));
+-        }
+-        if (read_write == I2C_SMBUS_WRITE && i+1 <= len) {
+-            outb_p(data->block[i+1], SMBBLKDAT(priv));
+-        }
+-        /* signals SMBBLKDAT ready */
+-        outb_p(SMBHSTSTS_BYTE_DONE | SMBHSTSTS_INTR, SMBHSTSTS(priv));
+-    }
+-    
+-    return 0;
++	int i, len;
++	int smbcmd;
++	int status;
++	int result;
++	int timeout;
++
++	dev_dbg(&priv->adapter.dev, "i801_block_transaction_byte_by_byte\n");
++
++	result = i801_check_pre(priv);
++	if (result < 0) {
++		return result;
++	}
++
++	len = data->block[0];
++
++	if (read_write == I2C_SMBUS_WRITE) {
++		outb_p(len, SMBHSTDAT0(priv));
++		outb_p(data->block[1], SMBBLKDAT(priv));
++	}
++
++	for (i = 1; i <= len; i++) {
++		if (i == len && read_write == I2C_SMBUS_READ) {
++			if (command == I2C_SMBUS_I2C_BLOCK_DATA) {
++				smbcmd = I801_I2C_BLOCK_LAST;
++			} else {
++				smbcmd = I801_BLOCK_LAST;
++			}
++		} else {
++			if (command == I2C_SMBUS_I2C_BLOCK_DATA && read_write == I2C_SMBUS_READ) {
++				smbcmd = I801_I2C_BLOCK_DATA;
++			} else {
++				smbcmd = I801_BLOCK_DATA;
++			}
++		}
++		outb_p(smbcmd | ENABLE_INT9, SMBHSTCNT(priv));
++
++		if (i == 1) {
++			outb_p(inb(SMBHSTCNT(priv)) | I801_START, SMBHSTCNT(priv));
++		}
++		/* We will always wait for a fraction of a second! */
++		timeout = 0;
++		do {
++			usleep_range(250, 500);
++			status = inb_p(SMBHSTSTS(priv));
++		} while ((!(status & SMBHSTSTS_BYTE_DONE)) && (timeout++ < MAX_RETRIES));
++
++		result = i801_check_post(priv, status, timeout > MAX_RETRIES);
++		if (result < 0) {
++			return result;
++		}
++		if (i == 1 && read_write == I2C_SMBUS_READ && command != I2C_SMBUS_I2C_BLOCK_DATA) {
++			len = inb_p(SMBHSTDAT0(priv));
++			if (len < 1 || len > I2C_SMBUS_BLOCK_MAX) {
++				dev_err(&priv->adapter.dev, "Illegal SMBus block read size %d\n", len);
++				/* Recover */
++				while (inb_p(SMBHSTSTS(priv)) & SMBHSTSTS_HOST_BUSY) {
++					outb_p(SMBHSTSTS_BYTE_DONE, SMBHSTSTS(priv));
++				}
++				outb_p(SMBHSTSTS_INTR, SMBHSTSTS(priv));
++				return -EPROTO;
++			}
++			data->block[0] = len;
++		}
++
++		/* Retrieve/store value in SMBBLKDAT */
++		if (read_write == I2C_SMBUS_READ) {
++			data->block[i] = inb_p(SMBBLKDAT(priv));
++		}
++		if (read_write == I2C_SMBUS_WRITE && i+1 <= len) {
++			outb_p(data->block[i+1], SMBBLKDAT(priv));
++		}
++		/* signals SMBBLKDAT ready */
++		outb_p(SMBHSTSTS_BYTE_DONE | SMBHSTSTS_INTR, SMBHSTSTS(priv));
++	}
++
++	return 0;
+ }
  
+ static int i801_set_block_buffer_mode(struct i2c_device *priv)
+ {
+-    dev_dbg(&priv->adapter.dev, "i801_set_block_buffer_mode\n");
+-    
+-    outb_p(inb_p(SMBAUXCTL(priv)) | SMBAUXCTL_E32B, SMBAUXCTL(priv));
+-    if ((inb_p(SMBAUXCTL(priv)) & SMBAUXCTL_E32B) == 0) {
+-        return -EIO;
+-    }
+-    return 0;
++	dev_dbg(&priv->adapter.dev, "i801_set_block_buffer_mode\n");
++
++	outb_p(inb_p(SMBAUXCTL(priv)) | SMBAUXCTL_E32B, SMBAUXCTL(priv));
++	if ((inb_p(SMBAUXCTL(priv)) & SMBAUXCTL_E32B) == 0) {
++		return -EIO;
++	}
++	return 0;
+ }
+ 
+ /* Block transaction function */
+ static int i801_block_transaction(struct i2c_device *priv, union i2c_smbus_data *data, char read_write, int command, int hwpec)
+ {
+-    int result = 0;
+-    //unsigned char hostc;
+-    
+-    dev_dbg(&priv->adapter.dev, "i801_block_transaction\n");
+-    
+-    if (command == I2C_SMBUS_I2C_BLOCK_DATA) {
+-        if (read_write == I2C_SMBUS_WRITE) {
+-            /* set I2C_EN bit in configuration register */
+-            //TODO: Figure out the right thing to do here...
+-            //pci_read_config_byte(priv->pci_dev, SMBHSTCFG, &hostc);
+-            //pci_write_config_byte(priv->pci_dev, SMBHSTCFG, hostc | SMBHSTCFG_I2C_EN);
+-        } else if (!(priv->features & FEATURE_I2C_BLOCK_READ)) {
+-            dev_err(&priv->adapter.dev, "I2C block read is unsupported!\n");
+-            return -EOPNOTSUPP;
+-        }
+-    }
+-    
+-    if (read_write == I2C_SMBUS_WRITE || command == I2C_SMBUS_I2C_BLOCK_DATA) {
+-        if (data->block[0] < 1) {
+-            data->block[0] = 1;
+-        }
+-        if (data->block[0] > I2C_SMBUS_BLOCK_MAX) {
+-            data->block[0] = I2C_SMBUS_BLOCK_MAX;
+-        }
+-    } else {
+-        data->block[0] = 32;	/* max for SMBus block reads */
+-    }
+-    
+-    /* Experience has shown that the block buffer can only be used for
+-        SMBus (not I2C) block transactions, even though the datasheet
+-        doesn't mention this limitation. */
+-    if ((priv->features & FEATURE_BLOCK_BUFFER) && command != I2C_SMBUS_I2C_BLOCK_DATA && i801_set_block_buffer_mode(priv) == 0) {
+-        result = i801_block_transaction_by_block(priv, data, read_write, hwpec);
+-    } else {
+-        result = i801_block_transaction_byte_by_byte(priv, data, read_write, command, hwpec);
+-    }  
+-    if (result == 0 && hwpec) {
+-        i801_wait_hwpec(priv);
+-    }
+-    if (command == I2C_SMBUS_I2C_BLOCK_DATA && read_write == I2C_SMBUS_WRITE) {
+-        /* restore saved configuration register value */
+-        //TODO: Figure out the right thing to do here...
+-        //pci_write_config_byte(priv->pci_dev, SMBHSTCFG, hostc);
+-    }
+-    return result;
++	int result = 0;
++	//unsigned char hostc;
++
++	dev_dbg(&priv->adapter.dev, "i801_block_transaction\n");
++
++	if (command == I2C_SMBUS_I2C_BLOCK_DATA) {
++		if (read_write == I2C_SMBUS_WRITE) {
++			/* set I2C_EN bit in configuration register */
++			//TODO: Figure out the right thing to do here...
++			//pci_read_config_byte(priv->pci_dev, SMBHSTCFG, &hostc);
++			//pci_write_config_byte(priv->pci_dev, SMBHSTCFG, hostc | SMBHSTCFG_I2C_EN);
++		} else if (!(priv->features & FEATURE_I2C_BLOCK_READ)) {
++			dev_err(&priv->adapter.dev, "I2C block read is unsupported!\n");
++			return -EOPNOTSUPP;
++		}
++	}
++
++	if (read_write == I2C_SMBUS_WRITE || command == I2C_SMBUS_I2C_BLOCK_DATA) {
++		if (data->block[0] < 1) {
++			data->block[0] = 1;
++		}
++		if (data->block[0] > I2C_SMBUS_BLOCK_MAX) {
++			data->block[0] = I2C_SMBUS_BLOCK_MAX;
++		}
++	} else {
++		data->block[0] = 32;	/* max for SMBus block reads */
++	}
++
++	/* Experience has shown that the block buffer can only be used for
++	   SMBus (not I2C) block transactions, even though the datasheet
++	   doesn't mention this limitation. */
++	if ((priv->features & FEATURE_BLOCK_BUFFER) && command != I2C_SMBUS_I2C_BLOCK_DATA && i801_set_block_buffer_mode(priv) == 0) {
++		result = i801_block_transaction_by_block(priv, data, read_write, hwpec);
++	} else {
++		result = i801_block_transaction_byte_by_byte(priv, data, read_write, command, hwpec);
++	}
++	if (result == 0 && hwpec) {
++		i801_wait_hwpec(priv);
++	}
++	if (command == I2C_SMBUS_I2C_BLOCK_DATA && read_write == I2C_SMBUS_WRITE) {
++		/* restore saved configuration register value */
++		//TODO: Figure out the right thing to do here...
++		//pci_write_config_byte(priv->pci_dev, SMBHSTCFG, hostc);
++	}
++	return result;
+ }
+ 
+ /* Return negative errno on error. */
+ static s32 i801_access(struct i2c_adapter *adap, u16 addr, unsigned short flags, char read_write, u8 command, int size, union i2c_smbus_data *data)
+ {
+-    int hwpec;
+-    int block = 0;
+-    int ret, xact = 0;
+-    struct i2c_device *priv = i2c_get_adapdata(adap);
+-    
+-    dev_dbg(&priv->adapter.dev, "i801_access (addr=%0d)  flags=%x  read_write=%x  command=%x  size=%x",
+-      addr, flags, read_write, command, size );
+-    
+-    hwpec = (priv->features & FEATURE_SMBUS_PEC) && (flags & I2C_CLIENT_PEC) && size != I2C_SMBUS_QUICK && size != I2C_SMBUS_I2C_BLOCK_DATA;
+-    
+-    switch (size) {
+-        case I2C_SMBUS_QUICK:
+-            dev_dbg(&priv->adapter.dev, "  [acc] SMBUS_QUICK\n");
+-            outb_p(((addr & 0x7f) << 1) | (read_write & 0x01), SMBHSTADD(priv));
+-            xact = I801_QUICK;
+-            break;
+-        case I2C_SMBUS_BYTE:
+-            dev_dbg(&priv->adapter.dev, "  [acc] SMBUS_BYTE\n");
+-            
+-            outb_p(((addr & 0x7f) << 1) | (read_write & 0x01), SMBHSTADD(priv));
+-            if (read_write == I2C_SMBUS_WRITE) {
+-                outb_p(command, SMBHSTCMD(priv));
+-            }
+-            xact = I801_BYTE;
+-            break;
+-        case I2C_SMBUS_BYTE_DATA:
+-            dev_dbg(&priv->adapter.dev, "  [acc] SMBUS_BYTE_DATA\n");
+-            outb_p(((addr & 0x7f) << 1) | (read_write & 0x01), SMBHSTADD(priv));
+-            outb_p(command, SMBHSTCMD(priv));
+-            if (read_write == I2C_SMBUS_WRITE) {
+-                outb_p(data->byte, SMBHSTDAT0(priv));
+-            }
+-            xact = I801_BYTE_DATA;
+-            break;
+-        case I2C_SMBUS_WORD_DATA:
+-            dev_dbg(&priv->adapter.dev, "  [acc] SMBUS_WORD_DATA\n");
+-            outb_p(((addr & 0x7f) << 1) | (read_write & 0x01), SMBHSTADD(priv));
+-            outb_p(command, SMBHSTCMD(priv));
+-            if (read_write == I2C_SMBUS_WRITE) {
+-                outb_p(data->word & 0xff, SMBHSTDAT0(priv));
+-                outb_p((data->word & 0xff00) >> 8, SMBHSTDAT1(priv));
+-            }
+-            xact = I801_WORD_DATA;
+-            break;
+-        case I2C_SMBUS_BLOCK_DATA:
+-            dev_dbg(&priv->adapter.dev, "  [acc] SMBUS_BLOCK_DATA\n");
+-            outb_p(((addr & 0x7f) << 1) | (read_write & 0x01), SMBHSTADD(priv));
+-            outb_p(command, SMBHSTCMD(priv));
+-            block = 1;
+-            break;
+-        case I2C_SMBUS_I2C_BLOCK_DATA:
+-            dev_dbg(&priv->adapter.dev, "  [acc] SMBUS_I2C_BLOCK_DATA\n");
+-            /* NB: page 240 of ICH5 datasheet shows that the R/#W
+-             * bit should be cleared here, even when reading */
+-            outb_p((addr & 0x7f) << 1, SMBHSTADD(priv));
+-            if (read_write == I2C_SMBUS_READ) {
+-                /* NB: page 240 of ICH5 datasheet also shows
+-                 * that DATA1 is the cmd field when reading */
+-                outb_p(command, SMBHSTDAT1(priv));
+-            } else {
+-                outb_p(command, SMBHSTCMD(priv));
+-            }
+-            block = 1;
+-            break;
+-        default:
+-            dev_dbg(&priv->adapter.dev, "  [acc] Unsupported transaction %d\n", size);
+-            return -EOPNOTSUPP;
+-    }
+-    
+-    if (hwpec) { /* enable/disable hardware PEC */
+-        dev_dbg(&priv->adapter.dev, "  [acc] hwpec: yes\n");
+-        outb_p(inb_p(SMBAUXCTL(priv)) | SMBAUXCTL_CRC, SMBAUXCTL(priv));
+-    } else {
+-        dev_dbg(&priv->adapter.dev, "  [acc] hwpec: no\n");
+-        outb_p(inb_p(SMBAUXCTL(priv)) & (~SMBAUXCTL_CRC), SMBAUXCTL(priv));
+-    }
+-    
+-    if (block) {
+-        //ret = 0;
+-        dev_dbg(&priv->adapter.dev, "  [acc] block: yes\n");
+-        ret = i801_block_transaction(priv, data, read_write, size, hwpec);
+-    } else {
+-        dev_dbg(&priv->adapter.dev, "  [acc] block: no\n");
+-        ret = i801_transaction(priv, xact | ENABLE_INT9);
+-    }
+-    
+-    /* Some BIOSes don't like it when PEC is enabled at reboot or resume
+-       time, so we forcibly disable it after every transaction. Turn off
+-       E32B for the same reason. */
+-    if (hwpec || block) {
+-        dev_dbg(&priv->adapter.dev, "  [acc] hwpec || block\n");
+-        outb_p(inb_p(SMBAUXCTL(priv)) & ~(SMBAUXCTL_CRC | SMBAUXCTL_E32B), SMBAUXCTL(priv));
+-    }
+-    if (block) {
+-        dev_dbg(&priv->adapter.dev, "  [acc] block\n");
+-        return ret;
+-    }
+-    if (ret) {
+-        dev_dbg(&priv->adapter.dev, "  [acc] ret %d\n", ret);
+-        return ret;
+-    }
+-    if ((read_write == I2C_SMBUS_WRITE) || (xact == I801_QUICK)) {
+-        dev_dbg(&priv->adapter.dev, "  [acc] I2C_SMBUS_WRITE || I801_QUICK  -> ret 0\n");
+-        return 0;
+-    }
+-    
+-    switch (xact & 0x7f) {
+-        case I801_BYTE:  /* Result put in SMBHSTDAT0 */
+-        case I801_BYTE_DATA:
+-            dev_dbg(&priv->adapter.dev, "  [acc] I801_BYTE or I801_BYTE_DATA\n");
+-            data->byte = inb_p(SMBHSTDAT0(priv));
+-            break;
+-        case I801_WORD_DATA:
+-            dev_dbg(&priv->adapter.dev, "  [acc] I801_WORD_DATA\n");
+-            data->word = inb_p(SMBHSTDAT0(priv)) + (inb_p(SMBHSTDAT1(priv)) << 8);
+-            break;
+-    }
+-    return 0;
++	int hwpec;
++	int block = 0;
++	int ret, xact = 0;
++	struct i2c_device *priv = i2c_get_adapdata(adap);
++
++	dev_dbg(&priv->adapter.dev, "i801_access (addr=%0d)  flags=%x  read_write=%x  command=%x  size=%x",
++		addr, flags, read_write, command, size );
++
++	hwpec = (priv->features & FEATURE_SMBUS_PEC) && (flags & I2C_CLIENT_PEC) && size != I2C_SMBUS_QUICK && size != I2C_SMBUS_I2C_BLOCK_DATA;
++
++	switch (size) {
++	case I2C_SMBUS_QUICK:
++		dev_dbg(&priv->adapter.dev, "  [acc] SMBUS_QUICK\n");
++		outb_p(((addr & 0x7f) << 1) | (read_write & 0x01), SMBHSTADD(priv));
++		xact = I801_QUICK;
++		break;
++	case I2C_SMBUS_BYTE:
++		dev_dbg(&priv->adapter.dev, "  [acc] SMBUS_BYTE\n");
++
++		outb_p(((addr & 0x7f) << 1) | (read_write & 0x01), SMBHSTADD(priv));
++		if (read_write == I2C_SMBUS_WRITE) {
++			outb_p(command, SMBHSTCMD(priv));
++		}
++		xact = I801_BYTE;
++		break;
++	case I2C_SMBUS_BYTE_DATA:
++		dev_dbg(&priv->adapter.dev, "  [acc] SMBUS_BYTE_DATA\n");
++		outb_p(((addr & 0x7f) << 1) | (read_write & 0x01), SMBHSTADD(priv));
++		outb_p(command, SMBHSTCMD(priv));
++		if (read_write == I2C_SMBUS_WRITE) {
++			outb_p(data->byte, SMBHSTDAT0(priv));
++		}
++		xact = I801_BYTE_DATA;
++		break;
++	case I2C_SMBUS_WORD_DATA:
++		dev_dbg(&priv->adapter.dev, "  [acc] SMBUS_WORD_DATA\n");
++		outb_p(((addr & 0x7f) << 1) | (read_write & 0x01), SMBHSTADD(priv));
++		outb_p(command, SMBHSTCMD(priv));
++		if (read_write == I2C_SMBUS_WRITE) {
++			outb_p(data->word & 0xff, SMBHSTDAT0(priv));
++			outb_p((data->word & 0xff00) >> 8, SMBHSTDAT1(priv));
++		}
++		xact = I801_WORD_DATA;
++		break;
++	case I2C_SMBUS_BLOCK_DATA:
++		dev_dbg(&priv->adapter.dev, "  [acc] SMBUS_BLOCK_DATA\n");
++		outb_p(((addr & 0x7f) << 1) | (read_write & 0x01), SMBHSTADD(priv));
++		outb_p(command, SMBHSTCMD(priv));
++		block = 1;
++		break;
++	case I2C_SMBUS_I2C_BLOCK_DATA:
++		dev_dbg(&priv->adapter.dev, "  [acc] SMBUS_I2C_BLOCK_DATA\n");
++		/* NB: page 240 of ICH5 datasheet shows that the R/#W
++		 * bit should be cleared here, even when reading */
++		outb_p((addr & 0x7f) << 1, SMBHSTADD(priv));
++		if (read_write == I2C_SMBUS_READ) {
++			/* NB: page 240 of ICH5 datasheet also shows
++			 * that DATA1 is the cmd field when reading */
++			outb_p(command, SMBHSTDAT1(priv));
++		} else {
++			outb_p(command, SMBHSTCMD(priv));
++		}
++		block = 1;
++		break;
++	default:
++		dev_dbg(&priv->adapter.dev, "  [acc] Unsupported transaction %d\n", size);
++		return -EOPNOTSUPP;
++	}
++
++	if (hwpec) { /* enable/disable hardware PEC */
++		dev_dbg(&priv->adapter.dev, "  [acc] hwpec: yes\n");
++		outb_p(inb_p(SMBAUXCTL(priv)) | SMBAUXCTL_CRC, SMBAUXCTL(priv));
++	} else {
++		dev_dbg(&priv->adapter.dev, "  [acc] hwpec: no\n");
++		outb_p(inb_p(SMBAUXCTL(priv)) & (~SMBAUXCTL_CRC), SMBAUXCTL(priv));
++	}
++
++	if (block) {
++		//ret = 0;
++		dev_dbg(&priv->adapter.dev, "  [acc] block: yes\n");
++		ret = i801_block_transaction(priv, data, read_write, size, hwpec);
++	} else {
++		dev_dbg(&priv->adapter.dev, "  [acc] block: no\n");
++		ret = i801_transaction(priv, xact | ENABLE_INT9);
++	}
++
++	/* Some BIOSes don't like it when PEC is enabled at reboot or resume
++	   time, so we forcibly disable it after every transaction. Turn off
++	   E32B for the same reason. */
++	if (hwpec || block) {
++		dev_dbg(&priv->adapter.dev, "  [acc] hwpec || block\n");
++		outb_p(inb_p(SMBAUXCTL(priv)) & ~(SMBAUXCTL_CRC | SMBAUXCTL_E32B), SMBAUXCTL(priv));
++	}
++	if (block) {
++		dev_dbg(&priv->adapter.dev, "  [acc] block\n");
++		return ret;
++	}
++	if (ret) {
++		dev_dbg(&priv->adapter.dev, "  [acc] ret %d\n", ret);
++		return ret;
++	}
++	if ((read_write == I2C_SMBUS_WRITE) || (xact == I801_QUICK)) {
++		dev_dbg(&priv->adapter.dev, "  [acc] I2C_SMBUS_WRITE || I801_QUICK  -> ret 0\n");
++		return 0;
++	}
++
++	switch (xact & 0x7f) {
++	case I801_BYTE:  /* Result put in SMBHSTDAT0 */
++	case I801_BYTE_DATA:
++		dev_dbg(&priv->adapter.dev, "  [acc] I801_BYTE or I801_BYTE_DATA\n");
++		data->byte = inb_p(SMBHSTDAT0(priv));
++		break;
++	case I801_WORD_DATA:
++		dev_dbg(&priv->adapter.dev, "  [acc] I801_WORD_DATA\n");
++		data->word = inb_p(SMBHSTDAT0(priv)) + (inb_p(SMBHSTDAT1(priv)) << 8);
++		break;
++	}
++	return 0;
+ }
+ 
+ 
+ 
+ static u32 i801_func(struct i2c_adapter *adapter)
+ {
+-    struct i2c_device *priv = i2c_get_adapdata(adapter);
+-    
+-    /* original settings
+-    u32 f = I2C_FUNC_SMBUS_QUICK | I2C_FUNC_SMBUS_BYTE |
+-      I2C_FUNC_SMBUS_BYTE_DATA | I2C_FUNC_SMBUS_WORD_DATA |
+-      I2C_FUNC_SMBUS_BLOCK_DATA | I2C_FUNC_SMBUS_WRITE_I2C_BLOCK |
+-      ((priv->features & FEATURE_SMBUS_PEC) ? I2C_FUNC_SMBUS_PEC : 0) |
+-      ((priv->features & FEATURE_I2C_BLOCK_READ) ?
+-       I2C_FUNC_SMBUS_READ_I2C_BLOCK : 0);
+-     */
+-    
+-    // http://lxr.free-electrons.com/source/include/uapi/linux/i2c.h#L85
+-    
+-    u32 f = 
+-        I2C_FUNC_I2C                     | /* 0x00000001 (I enabled this one) */
+-        !I2C_FUNC_10BIT_ADDR             | /* 0x00000002 */
+-        !I2C_FUNC_PROTOCOL_MANGLING      | /* 0x00000004 */
+-        ((priv->features & FEATURE_SMBUS_PEC) ? I2C_FUNC_SMBUS_PEC : 0) | /* 0x00000008 */
+-        !I2C_FUNC_SMBUS_BLOCK_PROC_CALL  | /* 0x00008000 */
+-        I2C_FUNC_SMBUS_QUICK             | /* 0x00010000 */
+-        !I2C_FUNC_SMBUS_READ_BYTE        | /* 0x00020000 */
+-        !I2C_FUNC_SMBUS_WRITE_BYTE       | /* 0x00040000 */
+-        !I2C_FUNC_SMBUS_READ_BYTE_DATA   | /* 0x00080000 */
+-        !I2C_FUNC_SMBUS_WRITE_BYTE_DATA  | /* 0x00100000 */
+-        !I2C_FUNC_SMBUS_READ_WORD_DATA   | /* 0x00200000 */
+-        !I2C_FUNC_SMBUS_WRITE_WORD_DATA  | /* 0x00400000 */
+-        !I2C_FUNC_SMBUS_PROC_CALL        | /* 0x00800000 */
+-        !I2C_FUNC_SMBUS_READ_BLOCK_DATA  | /* 0x01000000 */
+-        !I2C_FUNC_SMBUS_WRITE_BLOCK_DATA | /* 0x02000000 */
+-        ((priv->features & FEATURE_I2C_BLOCK_READ) ? I2C_FUNC_SMBUS_READ_I2C_BLOCK : 0) | /* 0x04000000 */
+-        I2C_FUNC_SMBUS_WRITE_I2C_BLOCK   | /* 0x08000000 */
+-        
+-        I2C_FUNC_SMBUS_BYTE              | /* _READ_BYTE  _WRITE_BYTE */
+-        I2C_FUNC_SMBUS_BYTE_DATA         | /* _READ_BYTE_DATA  _WRITE_BYTE_DATA */
+-        I2C_FUNC_SMBUS_WORD_DATA         | /* _READ_WORD_DATA  _WRITE_WORD_DATA */
+-        I2C_FUNC_SMBUS_BLOCK_DATA        | /* _READ_BLOCK_DATA  _WRITE_BLOCK_DATA */
+-        !I2C_FUNC_SMBUS_I2C_BLOCK        | /* _READ_I2C_BLOCK  _WRITE_I2C_BLOCK */
+-        !I2C_FUNC_SMBUS_EMUL;              /* _QUICK  _BYTE  _BYTE_DATA  _WORD_DATA  _PROC_CALL  _WRITE_BLOCK_DATA  _I2C_BLOCK _PEC */
+-    return f;
++	struct i2c_device *priv = i2c_get_adapdata(adapter);
++
++	/* original settings
++	   u32 f = I2C_FUNC_SMBUS_QUICK | I2C_FUNC_SMBUS_BYTE |
++	   I2C_FUNC_SMBUS_BYTE_DATA | I2C_FUNC_SMBUS_WORD_DATA |
++	   I2C_FUNC_SMBUS_BLOCK_DATA | I2C_FUNC_SMBUS_WRITE_I2C_BLOCK |
++	   ((priv->features & FEATURE_SMBUS_PEC) ? I2C_FUNC_SMBUS_PEC : 0) |
++	   ((priv->features & FEATURE_I2C_BLOCK_READ) ?
++	   I2C_FUNC_SMBUS_READ_I2C_BLOCK : 0);
++	*/
++
++	// http://lxr.free-electrons.com/source/include/uapi/linux/i2c.h#L85
++
++	u32 f =
++		I2C_FUNC_I2C                     | /* 0x00000001 (I enabled this one) */
++		!I2C_FUNC_10BIT_ADDR             | /* 0x00000002 */
++		!I2C_FUNC_PROTOCOL_MANGLING      | /* 0x00000004 */
++		((priv->features & FEATURE_SMBUS_PEC) ? I2C_FUNC_SMBUS_PEC : 0) | /* 0x00000008 */
++		!I2C_FUNC_SMBUS_BLOCK_PROC_CALL  | /* 0x00008000 */
++		I2C_FUNC_SMBUS_QUICK             | /* 0x00010000 */
++		!I2C_FUNC_SMBUS_READ_BYTE        | /* 0x00020000 */
++		!I2C_FUNC_SMBUS_WRITE_BYTE       | /* 0x00040000 */
++		!I2C_FUNC_SMBUS_READ_BYTE_DATA   | /* 0x00080000 */
++		!I2C_FUNC_SMBUS_WRITE_BYTE_DATA  | /* 0x00100000 */
++		!I2C_FUNC_SMBUS_READ_WORD_DATA   | /* 0x00200000 */
++		!I2C_FUNC_SMBUS_WRITE_WORD_DATA  | /* 0x00400000 */
++		!I2C_FUNC_SMBUS_PROC_CALL        | /* 0x00800000 */
++		!I2C_FUNC_SMBUS_READ_BLOCK_DATA  | /* 0x01000000 */
++		!I2C_FUNC_SMBUS_WRITE_BLOCK_DATA | /* 0x02000000 */
++		((priv->features & FEATURE_I2C_BLOCK_READ) ? I2C_FUNC_SMBUS_READ_I2C_BLOCK : 0) | /* 0x04000000 */
++		I2C_FUNC_SMBUS_WRITE_I2C_BLOCK   | /* 0x08000000 */
++
++		I2C_FUNC_SMBUS_BYTE              | /* _READ_BYTE  _WRITE_BYTE */
++		I2C_FUNC_SMBUS_BYTE_DATA         | /* _READ_BYTE_DATA  _WRITE_BYTE_DATA */
++		I2C_FUNC_SMBUS_WORD_DATA         | /* _READ_WORD_DATA  _WRITE_WORD_DATA */
++		I2C_FUNC_SMBUS_BLOCK_DATA        | /* _READ_BLOCK_DATA  _WRITE_BLOCK_DATA */
++		!I2C_FUNC_SMBUS_I2C_BLOCK        | /* _READ_I2C_BLOCK  _WRITE_I2C_BLOCK */
++		!I2C_FUNC_SMBUS_EMUL;              /* _QUICK  _BYTE  _BYTE_DATA  _WORD_DATA  _PROC_CALL  _WRITE_BLOCK_DATA  _I2C_BLOCK _PEC */
++	return f;
+ }
+ 
+ static const struct i2c_algorithm smbus_algorithm = {
+-    .smbus_xfer     = i801_access,
+-    .functionality  = i801_func,
++	.smbus_xfer     = i801_access,
++	.functionality  = i801_func,
+ };
+ 
+ 
+@@ -616,84 +616,84 @@ static const struct i2c_algorithm smbus_algorithm = {
+  ********************************/
+ int pi2c_probe(struct platform_device *pldev)
+ {
+-    int err;
+-    struct i2c_device *priv;
+-    struct resource *res;
+-    
+-    dev_dbg(&pldev->dev, "pi2c_probe(pldev = %p '%s')\n", pldev, pldev->name);
+-    
+-    priv = kzalloc(sizeof(struct i2c_device), GFP_KERNEL);
+-    if (!priv) {
+-        return -ENOMEM;
+-    }
+-    
+-    i2c_set_adapdata(&priv->adapter, priv);
+-    priv->adapter.owner = THIS_MODULE;
+-    priv->adapter.class = I2C_CLASS_HWMON | I2C_CLASS_SPD;
+-    priv->adapter.algo = &smbus_algorithm;
+-    
+-    res = platform_get_resource(pldev, IORESOURCE_MEM, 0);
+-    priv->smba = (unsigned long)ioremap_nocache(res->start, resource_size(res));
+-    
+-    priv->pldev = pldev;
+-    pldev->dev.platform_data = priv;
+-    
+-    priv->features |= FEATURE_IDF;
+-    priv->features |= FEATURE_I2C_BLOCK_READ;
+-    priv->features |= FEATURE_SMBUS_PEC;
+-    priv->features |= FEATURE_BLOCK_BUFFER;
+-    
+-    //init_MUTEX(&lddata->sem);
+-    init_rwsem(&priv->rw_sem);
+-    
+-    /* set up the sysfs linkage to our parent device */
+-    priv->adapter.dev.parent = &pldev->dev;
+-    
+-    /* Retry up to 3 times on lost arbitration */
+-    priv->adapter.retries = 3;
+-    
+-    //snprintf(priv->adapter.name, sizeof(priv->adapter.name), "Fake SMBus I801 adapter at %04lx", priv->smba);
+-    snprintf(priv->adapter.name, sizeof(priv->adapter.name), "Fake SMBus I801 adapter");
+-    
+-    err = i2c_add_adapter(&priv->adapter);
+-    if (err) {
+-        dev_err(&priv->adapter.dev, "Failed to add SMBus adapter\n");
+-        return err;
+-    }
+-    
+-    return 0;
++	int err;
++	struct i2c_device *priv;
++	struct resource *res;
++
++	dev_dbg(&pldev->dev, "pi2c_probe(pldev = %p '%s')\n", pldev, pldev->name);
++
++	priv = kzalloc(sizeof(struct i2c_device), GFP_KERNEL);
++	if (!priv) {
++		return -ENOMEM;
++	}
++
++	i2c_set_adapdata(&priv->adapter, priv);
++	priv->adapter.owner = THIS_MODULE;
++	priv->adapter.class = I2C_CLASS_HWMON | I2C_CLASS_SPD;
++	priv->adapter.algo = &smbus_algorithm;
++
++	res = platform_get_resource(pldev, IORESOURCE_MEM, 0);
++	priv->smba = (unsigned long)ioremap_nocache(res->start, resource_size(res));
++
++	priv->pldev = pldev;
++	pldev->dev.platform_data = priv;
++
++	priv->features |= FEATURE_IDF;
++	priv->features |= FEATURE_I2C_BLOCK_READ;
++	priv->features |= FEATURE_SMBUS_PEC;
++	priv->features |= FEATURE_BLOCK_BUFFER;
++
++	//init_MUTEX(&lddata->sem);
++	init_rwsem(&priv->rw_sem);
++
++	/* set up the sysfs linkage to our parent device */
++	priv->adapter.dev.parent = &pldev->dev;
++
++	/* Retry up to 3 times on lost arbitration */
++	priv->adapter.retries = 3;
++
++	//snprintf(priv->adapter.name, sizeof(priv->adapter.name), "Fake SMBus I801 adapter at %04lx", priv->smba);
++	snprintf(priv->adapter.name, sizeof(priv->adapter.name), "Fake SMBus I801 adapter");
++
++	err = i2c_add_adapter(&priv->adapter);
++	if (err) {
++		dev_err(&priv->adapter.dev, "Failed to add SMBus adapter\n");
++		return err;
++	}
++
++	return 0;
+ }
+ 
+ int pi2c_remove(struct platform_device *pldev)
+ {
+-    struct i2c_device *lddev;
+-    dev_dbg(&pldev->dev, "pi2c_remove(pldev = %p '%s')\n", pldev, pldev->name);
+-    
+-    lddev = (struct i2c_device *)pldev->dev.platform_data;
+-    
+-    i2c_del_adapter(&lddev->adapter);
+-    
+-    //TODO: Figure out the right thing to do here...
+-    //pci_write_config_byte(dev, SMBHSTCFG, priv->original_hstcfg);
+-    //pci_release_region(dev, SMBBAR);
+-    //pci_set_drvdata(dev, NULL);
+-    
+-    //cdev_del(&lddev->cdev);
+-    if(lddev != 0) {
+-        kfree(lddev);
+-        pldev->dev.platform_data = 0;
+-    }
+-    
+-    return 0;
++	struct i2c_device *lddev;
++	dev_dbg(&pldev->dev, "pi2c_remove(pldev = %p '%s')\n", pldev, pldev->name);
++
++	lddev = (struct i2c_device *)pldev->dev.platform_data;
++
++	i2c_del_adapter(&lddev->adapter);
++
++	//TODO: Figure out the right thing to do here...
++	//pci_write_config_byte(dev, SMBHSTCFG, priv->original_hstcfg);
++	//pci_release_region(dev, SMBBAR);
++	//pci_set_drvdata(dev, NULL);
++
++	//cdev_del(&lddev->cdev);
++	if(lddev != 0) {
++		kfree(lddev);
++		pldev->dev.platform_data = 0;
++	}
++
++	return 0;
+ }
+ 
+ struct platform_driver i2c_plat_driver_i = {
+-    .probe      = pi2c_probe,
+-    .remove     = pi2c_remove,
+-    .driver     = {
+-        .name   = KP_DRIVER_NAME_I2C,
+-        .owner  = THIS_MODULE,
+-    },
++	.probe      = pi2c_probe,
++	.remove     = pi2c_remove,
++	.driver     = {
++		.name   = KP_DRIVER_NAME_I2C,
++		.owner  = THIS_MODULE,
++	},
+ };
+ 
+ module_platform_driver(i2c_plat_driver_i);
 -- 
 2.21.0
 
