@@ -7,58 +7,58 @@ X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99C9EC04AAF
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 May 2019 09:13:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C320BC04AAF
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 May 2019 09:14:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 614E720848
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 May 2019 09:13:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8ED4D20848
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 May 2019 09:14:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="RXxvKxRE"
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="aA6BliyQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729736AbfERJNg (ORCPT
+        id S1729737AbfERJOU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 May 2019 05:13:36 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:39869 "EHLO
+        Sat, 18 May 2019 05:14:20 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:49917 "EHLO
         terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725268AbfERJNg (ORCPT
+        with ESMTP id S1725268AbfERJOT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 May 2019 05:13:36 -0400
+        Sat, 18 May 2019 05:14:19 -0400
 Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x4I9DCm11737536
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x4I9DtUh1737686
         (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Sat, 18 May 2019 02:13:12 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x4I9DCm11737536
+        Sat, 18 May 2019 02:13:55 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x4I9DtUh1737686
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019041745; t=1558170793;
-        bh=EZREwiiEtVIvqGcJAVBAq0v3MlB0lCjT9hNcbGN29i0=;
+        s=2019041745; t=1558170836;
+        bh=NxjzSnZa4bcekzrTo/Som2q3f07EuHTDfpDqIp7qbE8=;
         h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
-        b=RXxvKxREe34Qxjqf50IazK99kyYTP4PwTkjYcPmYE7PVftrUrVQc7hyRUcG8g/Cpy
-         +I0o8TMLW/3jaO9vfqCJbIaryMWjTleJ5L598IDUcbPBMaLobAetfQYjDlddN/aUxI
-         7hTXyVrngPb2Zcm7Towq6gYctOQ9xjOCEvKOOMSIbM5kWHYs/nCaDwasbaM5LvlhvM
-         H5APGaX4z9oSMzT7q7yiGii9xFJFI3lkE/HU42UV3Jx6Ud2ea4v3GvvuUWh35WbAo+
-         5epKIgPo2ime7n/HWhATClI0LcSkE3miOUyXW6PA8urL9rOXzwY0QeEzpEW1JiUDf4
-         xHXtTwYafk2qQ==
+        b=aA6BliyQ+FheuQAIcoZzkurDsJu5sxqLDk4e+ICODIfjLZYzLFmNxwfqQF1pFeF1g
+         waEzkDSOKc7EWqyob1HbWuZ4PVzET9USXlsEA3z65kOVuB0s+KBvFupGNIyt4SpVtz
+         /UnxZjRcLvg11u2eGzSNP3my8Q2pAsI3tewBe5AhE4UKBPtg1BTJMObJU/EjIIyAqn
+         YiLNxPwe1qY7ERpF/SLbznXiCxwj+Iec+uNHkMe6OhN3197g5LBaZxsbtgpSgE/nM4
+         pgIuiz+SngIoeeJ9pFdoiXmHRt+JLQuDSiY2tyeZd0vTKdleedbYXPrraqF7r5dxpz
+         fL1sWqvfS/obw==
 Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x4I9DBeU1737533;
-        Sat, 18 May 2019 02:13:11 -0700
-Date:   Sat, 18 May 2019 02:13:11 -0700
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x4I9DsB01737682;
+        Sat, 18 May 2019 02:13:54 -0700
+Date:   Sat, 18 May 2019 02:13:54 -0700
 X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
 From:   tip-bot for Tzvetomir Stoyanov <tipbot@zytor.com>
-Message-ID: <tip-6dfe6849b6ee69975eb82181e0afb03fbd8b578f@git.kernel.org>
-Cc:     akpm@linux-foundation.org, tglx@linutronix.de, namhyung@kernel.org,
-        rostedt@goodmis.org, jolsa@redhat.com, tstoyanov@vmware.com,
-        linux-kernel@vger.kernel.org, acme@redhat.com, hpa@zytor.com,
-        mingo@kernel.org
-Reply-To: tglx@linutronix.de, akpm@linux-foundation.org,
-          namhyung@kernel.org, hpa@zytor.com, acme@redhat.com,
-          mingo@kernel.org, tstoyanov@vmware.com, jolsa@redhat.com,
-          rostedt@goodmis.org, linux-kernel@vger.kernel.org
-In-Reply-To: <20190510200109.054708419@goodmis.org>
-References: <20190510200109.054708419@goodmis.org>
+Message-ID: <tip-95ec2822a976af27c9cb77cdc01c650a3640adfa@git.kernel.org>
+Cc:     akpm@linux-foundation.org, acme@redhat.com, jolsa@redhat.com,
+        tglx@linutronix.de, mingo@kernel.org, tstoyanov@vmware.com,
+        rostedt@goodmis.org, linux-kernel@vger.kernel.org,
+        namhyung@kernel.org, hpa@zytor.com
+Reply-To: mingo@kernel.org, tglx@linutronix.de, rostedt@goodmis.org,
+          tstoyanov@vmware.com, linux-kernel@vger.kernel.org,
+          hpa@zytor.com, namhyung@kernel.org, akpm@linux-foundation.org,
+          acme@redhat.com, jolsa@redhat.com
+In-Reply-To: <20190510200109.219394901@goodmis.org>
+References: <20190510200109.219394901@goodmis.org>
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:perf/core] tools lib traceevent: Man pages for print field
- APIs
-Git-Commit-ID: 6dfe6849b6ee69975eb82181e0afb03fbd8b578f
+Subject: [tip:perf/core] tools lib traceevent: Man page for
+ tep_read_number_field()
+Git-Commit-ID: 95ec2822a976af27c9cb77cdc01c650a3640adfa
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot.git.kernel.org>
 Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
@@ -72,164 +72,95 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  6dfe6849b6ee69975eb82181e0afb03fbd8b578f
-Gitweb:     https://git.kernel.org/tip/6dfe6849b6ee69975eb82181e0afb03fbd8b578f
+Commit-ID:  95ec2822a976af27c9cb77cdc01c650a3640adfa
+Gitweb:     https://git.kernel.org/tip/95ec2822a976af27c9cb77cdc01c650a3640adfa
 Author:     Tzvetomir Stoyanov <tstoyanov@vmware.com>
-AuthorDate: Fri, 10 May 2019 15:56:26 -0400
+AuthorDate: Fri, 10 May 2019 15:56:27 -0400
 Committer:  Arnaldo Carvalho de Melo <acme@redhat.com>
 CommitDate: Wed, 15 May 2019 16:36:48 -0300
 
-tools lib traceevent: Man pages for print field APIs
+tools lib traceevent: Man page for tep_read_number_field()
 
-Create man pages for libtraceevent APIs:
-
-  tep_print_field(),
-  tep_print_fields(),
-  tep_print_num_field(),
-  tep_print_func_field()
+Create man page for libtraceevent API tep_read_number_field().
 
 Signed-off-by: Tzvetomir Stoyanov <tstoyanov@vmware.com>
 Cc: Andrew Morton <akpm@linux-foundation.org>
 Cc: Jiri Olsa <jolsa@redhat.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: linux-trace-devel@vger.kernel.org
-Link: http://lore.kernel.org/linux-trace-devel/20190503091119.23399-20-tstoyanov@vmware.com
-Link: http://lkml.kernel.org/r/20190510200109.054708419@goodmis.org
+Link: http://lore.kernel.org/linux-trace-devel/20190503091119.23399-21-tstoyanov@vmware.com
+Link: http://lkml.kernel.org/r/20190510200109.219394901@goodmis.org
 Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- .../Documentation/libtraceevent-field_print.txt    | 126 +++++++++++++++++++++
- 1 file changed, 126 insertions(+)
+ ...ndian_read.txt => libtraceevent-field_read.txt} | 27 ++++++++++++----------
+ 1 file changed, 15 insertions(+), 12 deletions(-)
 
-diff --git a/tools/lib/traceevent/Documentation/libtraceevent-field_print.txt b/tools/lib/traceevent/Documentation/libtraceevent-field_print.txt
-new file mode 100644
-index 000000000000..9a9df98ac44d
---- /dev/null
-+++ b/tools/lib/traceevent/Documentation/libtraceevent-field_print.txt
-@@ -0,0 +1,126 @@
-+libtraceevent(3)
-+================
-+
-+NAME
-+----
-+tep_print_field, tep_print_fields, tep_print_num_field, tep_print_func_field -
-+Print the field content.
-+
-+SYNOPSIS
-+--------
-+[verse]
-+--
-+*#include <event-parse.h>*
-+*#include <trace-seq.h>*
-+
-+void *tep_print_field*(struct trace_seq pass:[*]_s_, void pass:[*]_data_, struct tep_format_field pass:[*]_field_);
-+void *tep_print_fields*(struct trace_seq pass:[*]_s_, void pass:[*]_data_, int _size_, struct tep_event pass:[*]_event_);
-+int *tep_print_num_field*(struct trace_seq pass:[*]_s_, const char pass:[*]_fmt_, struct tep_event pass:[*]_event_, const char pass:[*]_name_, struct tep_record pass:[*]_record_, int _err_);
-+int *tep_print_func_field*(struct trace_seq pass:[*]_s_, const char pass:[*]_fmt_, struct tep_event pass:[*]_event_, const char pass:[*]_name_, struct tep_record pass:[*]_record_, int _err_);
-+--
-+
-+DESCRIPTION
-+-----------
-+These functions print recorded field's data, according to the field's type.
-+
-+The _tep_print_field()_ function extracts from the recorded raw _data_ value of
-+the _field_ and prints it into _s_, according to the field type.
-+
-+The _tep_print_fields()_ prints each field name followed by the record's field
-+value according to the field's type:
-+[verse]
-+--
-+"field1_name=field1_value field2_name=field2_value ..."
-+--
-+It iterates all fields of the _event_, and calls _tep_print_field()_ for each of
-+them.
-+
-+The _tep_print_num_field()_ function prints a numeric field with given format
-+string. A search is performed in the _event_ for a field with _name_. If such
-+field is found, its value is extracted from the _record_ and is printed in the
-+_s_, according to the given format string _fmt_. If the argument _err_ is
-+non-zero, and an error occures - it is printed in the _s_.
-+
-+The _tep_print_func_field()_ function prints a function field with given format
-+string.  A search is performed in the _event_ for a field with _name_. If such
-+field is found, its value is extracted from the _record_. The value is assumed
-+to be a function address, and a search is perform to find the name of this
-+function. The function name (if found) and its address are printed in the _s_,
-+according to the given format string _fmt_. If the argument _err_ is non-zero,
-+and an error occures - it is printed in _s_.
-+
-+RETURN VALUE
-+------------
-+The _tep_print_num_field()_ and _tep_print_func_field()_ functions return 1
-+on success, -1 in case of an error or 0 if the print buffer _s_ is full.
-+
-+EXAMPLE
-+-------
-+[source,c]
-+--
-+#include <event-parse.h>
-+#include <trace-seq.h>
-+...
-+struct tep_handle *tep = tep_alloc();
-+...
-+struct trace_seq seq;
-+trace_seq_init(&seq);
+diff --git a/tools/lib/traceevent/Documentation/libtraceevent-endian_read.txt b/tools/lib/traceevent/Documentation/libtraceevent-field_read.txt
+similarity index 54%
+copy from tools/lib/traceevent/Documentation/libtraceevent-endian_read.txt
+copy to tools/lib/traceevent/Documentation/libtraceevent-field_read.txt
+index e64851b6e189..64e9e25d3fd9 100644
+--- a/tools/lib/traceevent/Documentation/libtraceevent-endian_read.txt
++++ b/tools/lib/traceevent/Documentation/libtraceevent-field_read.txt
+@@ -3,7 +3,7 @@ libtraceevent(3)
+ 
+ NAME
+ ----
+-tep_read_number - Reads a number from raw data.
++tep_read_number_field - Reads a number from raw data.
+ 
+ SYNOPSIS
+ --------
+@@ -11,20 +11,20 @@ SYNOPSIS
+ --
+ *#include <event-parse.h>*
+ 
+-unsigned long long *tep_read_number*(struct tep_handle pass:[*]_tep_, const void pass:[*]_ptr_, int _size_);
++int *tep_read_number_field*(struct tep_format_field pass:[*]_field_, const void pass:[*]_data_, unsigned long long pass:[*]_value_);
+ --
+ 
+ DESCRIPTION
+ -----------
+-The _tep_read_number()_ function reads an integer from raw data, taking into
+-account the endianness of the raw data and the current host. The _tep_ argument
+-is the trace event parser context. The _ptr_ is a pointer to the raw data, where
+-the integer is, and the _size_ is the size of the integer.
++The _tep_read_number_field()_ function reads the value of the _field_ from the
++raw _data_ and stores it in the _value_. The function sets the _value_ according
++to the endianness of the raw data and the current machine and stores it in
++_value_.
+ 
+ RETURN VALUE
+ ------------
+-The _tep_read_number()_ function returns the integer in the byte order of
+-the current host. In case of an error, 0 is returned.
++The _tep_read_number_field()_ function retunrs 0 in case of success, or -1 in
++case of an error.
+ 
+ EXAMPLE
+ -------
+@@ -34,16 +34,19 @@ EXAMPLE
+ ...
+ struct tep_handle *tep = tep_alloc();
+ ...
 +struct tep_event *event = tep_find_event_by_name(tep, "timer", "hrtimer_start");
 +...
-+void process_record(struct tep_record *record)
-+{
+ void process_record(struct tep_record *record)
+ {
+-	int offset = 24;
+-	int data = tep_read_number(tep, record->data + offset, 4);
++	unsigned long long pid;
 +	struct tep_format_field *field_pid = tep_find_common_field(event, "common_pid");
-+
-+	trace_seq_reset(&seq);
-+
-+	/* Print the value of "common_pid" */
-+	tep_print_field(&seq, record->data, field_pid);
-+
-+	/* Print all fields of the "hrtimer_start" event */
-+	tep_print_fields(&seq, record->data, record->size, event);
-+
-+	/* Print the value of "expires" field with custom format string */
-+	tep_print_num_field(&seq, " timer expires in %llu ", event, "expires", record, 0);
-+
-+	/* Print the address and the name of "function" field with custom format string */
-+	tep_print_func_field(&seq, " timer function is %s ", event, "function", record, 0);
-+ }
-+ ...
-+--
-+
-+FILES
-+-----
-+[verse]
-+--
-+*event-parse.h*
-+	Header file to include in order to have access to the library APIs.
-+*trace-seq.h*
-+	Header file to include in order to have access to trace sequences related APIs.
-+	Trace sequences are used to allow a function to call several other functions
-+	to create a string of data to use.
-+*-ltraceevent*
-+	Linker switch to add when building a program that uses the library.
-+--
-+
-+SEE ALSO
-+--------
-+_libtraceevent(3)_, _trace-cmd(1)_
-+
-+AUTHOR
-+------
-+[verse]
-+--
-+*Steven Rostedt* <rostedt@goodmis.org>, author of *libtraceevent*.
-+*Tzvetomir Stoyanov* <tz.stoyanov@gmail.com>, author of this man page.
-+--
-+REPORTING BUGS
-+--------------
-+Report bugs to  <linux-trace-devel@vger.kernel.org>
-+
-+LICENSE
-+-------
-+libtraceevent is Free Software licensed under the GNU LGPL 2.1
-+
-+RESOURCES
-+---------
-+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
+ 
+-	/* Read the 4 bytes at the offset 24 of data as an integer */
++	if (tep_read_number_field(field_pid, record->data, &pid) != 0) {
++		/* Failed to get "common_pid" value */
++	}
+ }
+ ...
+ --
+-
+ FILES
+ -----
+ [verse]
