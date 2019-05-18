@@ -2,260 +2,186 @@ Return-Path: <SRS0=//ty=TS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF6ECC072A4
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 May 2019 10:04:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D12F1C04AAF
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 May 2019 10:05:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9663420C01
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 May 2019 10:04:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558173897;
-	bh=odXYwDDyB3lCgvI4EWIi8jTnqkXx3ZVF3y80Ahw8hLc=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=WjFeYa3RqY3S3rsbaibyHp7IiufVx0L5Mvt0vCUwhPhTWV5ft1P8pSwvKHObUb57f
-	 Rk0navOB3u/SdHaOQmltJs5nGgWcrAvkOkl19uw3ssqINAhwWN4pTBnjtegyN/Gj0C
-	 5JG/1s5I2AHon+fqnYl4wQhK3W6+bU5eXlj7KG5Y=
+	by mail.kernel.org (Postfix) with ESMTP id 9D4B920B7C
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 May 2019 10:05:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=brauner.io header.i=@brauner.io header.b="MzXf8JwF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729583AbfERKE4 (ORCPT
+        id S1729816AbfERKFK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 May 2019 06:04:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33824 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725468AbfERKE4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 May 2019 06:04:56 -0400
-Received: from archlinux (cpc91196-cmbg18-2-0-cust659.5-4.cable.virginm.net [81.96.234.148])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D4C9E2087B;
-        Sat, 18 May 2019 10:04:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558173895;
-        bh=odXYwDDyB3lCgvI4EWIi8jTnqkXx3ZVF3y80Ahw8hLc=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=ToZEda4NMHHs3vRJAWFjpI3SkW4mnMTDbPJcJvIw4vl2nWaBnPMYyjJ8ICjpQ7YND
-         Y1j4Of32sHIB2skINjI+oWO6M9Hx3q35YR6GLdkwSHy4ltD1q6ZJ5XKnnTjwbWMOwX
-         39w9PCR10ihxIrL/Kj6kvHvnIWH76I8HThjhEhZo=
-Date:   Sat, 18 May 2019 11:04:49 +0100
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Beniamin Bia <beniamin.bia@analog.com>
-Cc:     <lars@metafoo.de>, <Michael.Hennerich@analog.com>,
-        <knaack.h@gmx.de>, <pmeerw@pmeerw.net>,
-        <gregkh@linuxfoundation.org>, <linux-iio@vger.kernel.org>,
-        <devel@driverdev.osuosl.org>, <linux-kernel@vger.kernel.org>,
-        <mark.rutland@arm.com>, <robh+dt@kernel.org>,
-        <devicetree@vger.kernel.org>, <biabeniamin@outlook.com>
-Subject: Re: [PATCH 1/5] iio: adc: ad7606: Move oversampling and scale
- options to chip info
-Message-ID: <20190518110449.27b18ea7@archlinux>
-In-Reply-To: <20190516143208.19294-1-beniamin.bia@analog.com>
-References: <20190516143208.19294-1-beniamin.bia@analog.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Sat, 18 May 2019 06:05:10 -0400
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:47090 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729301AbfERKFI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 18 May 2019 06:05:08 -0400
+Received: by mail-ed1-f68.google.com with SMTP id f37so14639367edb.13
+        for <linux-kernel@vger.kernel.org>; Sat, 18 May 2019 03:05:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=brauner.io; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=kuxvODYNXQX1UADGYTekrXKJHl9GqTdixhHyMJoLFkg=;
+        b=MzXf8JwF72gJj2Pq8n12P+UywZxc2BVXTvpiVUKrEniJVb1LIFP3IbcOliQYISdvq7
+         CigvtYVzwi+8s8BzhGA7JzeYEAEgELRKSJUGXkBeKo3jIoY+k+AIz1NIGNQ3IbqWFvd/
+         pZcoiBfjP1G87UNeXXgpYPrDlzF+SvvAxTS1B9J01RvJsEbVREubCnWtrpwlE+W8uhC8
+         abJb2p1WNSljrqCFAQH7at9A4yXrlhg+5ZrhECybT+pFDJTv4XLPhvmKoEIQriQEdsEE
+         2qeWRYeIhjWVjN8Omnws0ZotrB2BKKuxhO4+QGekj7Ec6VajrUKLl5oRB10tcR/KFGxb
+         SomA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=kuxvODYNXQX1UADGYTekrXKJHl9GqTdixhHyMJoLFkg=;
+        b=N/RSNISHPl/2Y54+QeSOKnW8w4nbXFFqybLcvb/acWoy25ixUHAAlTFlgjTbhHOSv2
+         8OqIwsivVO3oss/wnhcNJ+CINmlNKkgSG1Y2fEPznBzqI4YV4fy4Deg62NGwme2GHM7k
+         LFHePnLPi5cAWyRtKpFzoaKPMrOSI6JqRee7Ht/0zWSj3IXmHeJvVHGDDutPt+FsIjuP
+         G5gUTVdWRKqiRhpYrkfrBf1TbtpnclD8mTYre+BUAJjT8pVHUSZvFaDqjstNICe5GDxL
+         pfh1t3Epumi9uChpsn7xxH58DellauVdHYXtgDfNSdP2U6yuByHQdszawi+sUIkcob8m
+         MXdA==
+X-Gm-Message-State: APjAAAUV2fLFhNc7Lp18QZZGBX20On2cr30XUNW+yZmyrcT9PdTRwdl9
+        2cKOtrf2I8Ao4ndpJVJQBuRfoA==
+X-Google-Smtp-Source: APXvYqyJ8cSwup5T+wLOXgE4G1RIJN3Q14FiCUfotn6HCvE35vO+QFm+mQrHo4U4TisKcq8ZEYMBDQ==
+X-Received: by 2002:a50:b82d:: with SMTP id j42mr63022736ede.186.1558173905455;
+        Sat, 18 May 2019 03:05:05 -0700 (PDT)
+Received: from brauner.io ([46.183.103.8])
+        by smtp.gmail.com with ESMTPSA id y30sm3741910edc.83.2019.05.18.03.04.59
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Sat, 18 May 2019 03:05:04 -0700 (PDT)
+Date:   Sat, 18 May 2019 12:04:46 +0200
+From:   Christian Brauner <christian@brauner.io>
+To:     Joel Fernandes <joel@joelfernandes.org>
+Cc:     jannh@google.com, oleg@redhat.com, viro@zeniv.linux.org.uk,
+        torvalds@linux-foundation.org, linux-kernel@vger.kernel.org,
+        arnd@arndb.de, akpm@linux-foundation.org, cyphar@cyphar.com,
+        dhowells@redhat.com, ebiederm@xmission.com,
+        elena.reshetova@intel.com, keescook@chromium.org,
+        luto@amacapital.net, luto@kernel.org, tglx@linutronix.de,
+        linux-alpha@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-ia64@vger.kernel.org, linux-m68k@lists.linux-m68k.org,
+        linux-mips@vger.kernel.orgg, linux-parisc@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
+        linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
+        linux-xtensa@linux-xtensa.org, linux-api@vger.kernel.org,
+        linux-arch@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        dancol@google.com, serge@hallyn.com, surenb@google.com,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        kernel-team@android.com
+Subject: Re: [PATCH v1 1/2] pid: add pidfd_open()
+Message-ID: <20190518100435.c5bqpcnra53dsr6p@brauner.io>
+References: <20190516135944.7205-1-christian@brauner.io>
+ <20190516224949.GA15401@localhost>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20190516224949.GA15401@localhost>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 16 May 2019 17:32:04 +0300
-Beniamin Bia <beniamin.bia@analog.com> wrote:
-
-> The device dependent options which are going to be different for devices
-> which will be supported  in the future by this driver,
-> were moved in chip info for a more generic driver. This patch allows
-> supporting more devices by the driver. Also, it is an intermediate
-> step of adding support for ad7616 in software mode.
+On Sat, May 18, 2019 at 05:48:03AM -0400, Joel Fernandes wrote:
+> Hi Christian,
 > 
-> Signed-off-by: Beniamin Bia <beniamin.bia@analog.com>
-Looks good to me.
+> For next revision, could you also CC surenb@google.com as well? He is also
+> working on the low memory killer. And also suggest CC to
+> kernel-team@android.com. And mentioned some comments below, thanks.
 
-Applied to the togreg branch of iio.git and pushed out as testing for
-the autobuilders to play with it.
+Yip, totally. Just added them both to my Cc list. :)
+(I saw you added Suren manually. I added the Android kernel team now too.)
 
-Thanks,
-
-Jonathan
-
-> ---
->  drivers/iio/adc/ad7606.c | 61 +++++++++++++++++++++++++++++-----------
->  drivers/iio/adc/ad7606.h | 15 +++++++++-
->  2 files changed, 58 insertions(+), 18 deletions(-)
 > 
-> diff --git a/drivers/iio/adc/ad7606.c b/drivers/iio/adc/ad7606.c
-> index 24c70c3cefb4..c66ff22f32d2 100644
-> --- a/drivers/iio/adc/ad7606.c
-> +++ b/drivers/iio/adc/ad7606.c
-> @@ -158,7 +158,7 @@ static int ad7606_read_raw(struct iio_dev *indio_dev,
->  		return IIO_VAL_INT;
->  	case IIO_CHAN_INFO_SCALE:
->  		*val = 0;
-> -		*val2 = st->scale_avail[st->range];
-> +		*val2 = st->scale_avail[st->range[0]];
->  		return IIO_VAL_INT_PLUS_MICRO;
->  	case IIO_CHAN_INFO_OVERSAMPLING_RATIO:
->  		*val = st->oversampling;
-> @@ -194,6 +194,32 @@ static ssize_t in_voltage_scale_available_show(struct device *dev,
->  
->  static IIO_DEVICE_ATTR_RO(in_voltage_scale_available, 0);
->  
-> +static int ad7606_write_scale_hw(struct iio_dev *indio_dev, int ch, int val)
-> +{
-> +	struct ad7606_state *st = iio_priv(indio_dev);
-> +
-> +	gpiod_set_value(st->gpio_range, val);
-> +
-> +	return 0;
-> +}
-> +
-> +static int ad7606_write_os_hw(struct iio_dev *indio_dev, int val)
-> +{
-> +	struct ad7606_state *st = iio_priv(indio_dev);
-> +	DECLARE_BITMAP(values, 3);
-> +
-> +	values[0] = val;
-> +
-> +	gpiod_set_array_value(ARRAY_SIZE(values), st->gpio_os->desc,
-> +			      st->gpio_os->info, values);
-> +
-> +	/* AD7616 requires a reset to update value */
-> +	if (st->chip_info->os_req_reset)
-> +		ad7606_reset(st);
-> +
-> +	return 0;
-> +}
-> +
->  static int ad7606_write_raw(struct iio_dev *indio_dev,
->  			    struct iio_chan_spec const *chan,
->  			    int val,
-> @@ -201,15 +227,18 @@ static int ad7606_write_raw(struct iio_dev *indio_dev,
->  			    long mask)
->  {
->  	struct ad7606_state *st = iio_priv(indio_dev);
-> -	DECLARE_BITMAP(values, 3);
-> -	int i;
-> +	int i, ret, ch = 0;
->  
->  	switch (mask) {
->  	case IIO_CHAN_INFO_SCALE:
->  		mutex_lock(&st->lock);
->  		i = find_closest(val2, st->scale_avail, st->num_scales);
-> -		gpiod_set_value(st->gpio_range, i);
-> -		st->range = i;
-> +		ret = st->write_scale(indio_dev, chan->address, i);
-> +		if (ret < 0) {
-> +			mutex_unlock(&st->lock);
-> +			return ret;
-> +		}
-> +		st->range[ch] = i;
->  		mutex_unlock(&st->lock);
->  
->  		return 0;
-> @@ -218,17 +247,12 @@ static int ad7606_write_raw(struct iio_dev *indio_dev,
->  			return -EINVAL;
->  		i = find_closest(val, st->oversampling_avail,
->  				 st->num_os_ratios);
-> -
-> -		values[0] = i;
-> -
->  		mutex_lock(&st->lock);
-> -		gpiod_set_array_value(ARRAY_SIZE(values), st->gpio_os->desc,
-> -				      st->gpio_os->info, values);
-> -
-> -		/* AD7616 requires a reset to update value */
-> -		if (st->chip_info->os_req_reset)
-> -			ad7606_reset(st);
-> -
-> +		ret = st->write_os(indio_dev, i);
-> +		if (ret < 0) {
-> +			mutex_unlock(&st->lock);
-> +			return ret;
-> +		}
->  		st->oversampling = st->oversampling_avail[i];
->  		mutex_unlock(&st->lock);
->  
-> @@ -536,7 +560,7 @@ int ad7606_probe(struct device *dev, int irq, void __iomem *base_address,
->  	st->bops = bops;
->  	st->base_address = base_address;
->  	/* tied to logic low, analog input range is +/- 5V */
-> -	st->range = 0;
-> +	st->range[0] = 0;
->  	st->oversampling = 1;
->  	st->scale_avail = ad7606_scale_avail;
->  	st->num_scales = ARRAY_SIZE(ad7606_scale_avail);
-> @@ -589,6 +613,9 @@ int ad7606_probe(struct device *dev, int irq, void __iomem *base_address,
->  	if (ret)
->  		dev_warn(st->dev, "failed to RESET: no RESET GPIO specified\n");
->  
-> +	st->write_scale = ad7606_write_scale_hw;
-> +	st->write_os = ad7606_write_os_hw;
-> +
->  	st->trig = devm_iio_trigger_alloc(dev, "%s-dev%d",
->  					  indio_dev->name, indio_dev->id);
->  	if (!st->trig)
-> @@ -643,7 +670,7 @@ static int ad7606_resume(struct device *dev)
->  	struct ad7606_state *st = iio_priv(indio_dev);
->  
->  	if (st->gpio_standby) {
-> -		gpiod_set_value(st->gpio_range, st->range);
-> +		gpiod_set_value(st->gpio_range, st->range[0]);
->  		gpiod_set_value(st->gpio_standby, 1);
->  		ad7606_reset(st);
->  	}
-> diff --git a/drivers/iio/adc/ad7606.h b/drivers/iio/adc/ad7606.h
-> index f9ef52131e74..143c30163df9 100644
-> --- a/drivers/iio/adc/ad7606.h
-> +++ b/drivers/iio/adc/ad7606.h
-> @@ -16,6 +16,12 @@
->   *			oversampling ratios.
->   * @oversampling_num	number of elements stored in oversampling_avail array
->   * @os_req_reset	some devices require a reset to update oversampling
-> + * @write_scale_sw	pointer to the function which writes the scale via spi
-> +			in software mode
-> + * @write_os_sw		pointer to the function which writes the os via spi
-> +			in software mode
-> + * @sw_mode_config:	pointer to a function which configured the device
-> + *			for software mode
->   */
->  struct ad7606_chip_info {
->  	const struct iio_chan_spec	*channels;
-> @@ -23,6 +29,9 @@ struct ad7606_chip_info {
->  	const unsigned int		*oversampling_avail;
->  	unsigned int			oversampling_num;
->  	bool				os_req_reset;
-> +	int (*write_scale_sw)(struct iio_dev *indio_dev, int ch, int val);
-> +	int (*write_os_sw)(struct iio_dev *indio_dev, int val);
-> +	int (*sw_mode_config)(struct iio_dev *indio_dev);
->  };
->  
->  /**
-> @@ -39,6 +48,8 @@ struct ad7606_chip_info {
->   * @oversampling_avail	pointer to the array which stores the available
->   *			oversampling ratios.
->   * @num_os_ratios	number of elements stored in oversampling_avail array
-> + * @write_scale		pointer to the function which writes the scale
-> + * @write_os		pointer to the function which writes the os
->   * @lock		protect sensor state from concurrent accesses to GPIOs
->   * @gpio_convst	GPIO descriptor for conversion start signal (CONVST)
->   * @gpio_reset		GPIO descriptor for device hard-reset
-> @@ -57,13 +68,15 @@ struct ad7606_state {
->  	const struct ad7606_chip_info	*chip_info;
->  	struct regulator		*reg;
->  	const struct ad7606_bus_ops	*bops;
-> -	unsigned int			range;
-> +	unsigned int			range[16];
->  	unsigned int			oversampling;
->  	void __iomem			*base_address;
->  	const unsigned int		*scale_avail;
->  	unsigned int			num_scales;
->  	const unsigned int		*oversampling_avail;
->  	unsigned int			num_os_ratios;
-> +	int (*write_scale)(struct iio_dev *indio_dev, int ch, int val);
-> +	int (*write_os)(struct iio_dev *indio_dev, int val);
->  
->  	struct mutex			lock; /* protect sensor state */
->  	struct gpio_desc		*gpio_convst;
+> On Thu, May 16, 2019 at 03:59:42PM +0200, Christian Brauner wrote:
+> [snip]  
+> > diff --git a/kernel/pid.c b/kernel/pid.c
+> > index 20881598bdfa..4afca3d6dcb8 100644
+> > --- a/kernel/pid.c
+> > +++ b/kernel/pid.c
+> > @@ -38,6 +38,7 @@
+> >  #include <linux/syscalls.h>
+> >  #include <linux/proc_ns.h>
+> >  #include <linux/proc_fs.h>
+> > +#include <linux/sched/signal.h>
+> >  #include <linux/sched/task.h>
+> >  #include <linux/idr.h>
+> >  
+> > @@ -451,6 +452,55 @@ struct pid *find_ge_pid(int nr, struct pid_namespace *ns)
+> >  	return idr_get_next(&ns->idr, &nr);
+> >  }
+> >  
+> > +/**
+> > + * pidfd_open() - Open new pid file descriptor.
+> > + *
+> > + * @pid:   pid for which to retrieve a pidfd
+> > + * @flags: flags to pass
+> > + *
+> > + * This creates a new pid file descriptor with the O_CLOEXEC flag set for
+> > + * the process identified by @pid. Currently, the process identified by
+> > + * @pid must be a thread-group leader. This restriction currently exists
+> > + * for all aspects of pidfds including pidfd creation (CLONE_PIDFD cannot
+> > + * be used with CLONE_THREAD) and pidfd polling (only supports thread group
+> > + * leaders).
+> > + *
+> > + * Return: On success, a cloexec pidfd is returned.
+> > + *         On error, a negative errno number will be returned.
+> > + */
+> > +SYSCALL_DEFINE2(pidfd_open, pid_t, pid, unsigned int, flags)
+> > +{
+> > +	int fd, ret;
+> > +	struct pid *p;
+> > +	struct task_struct *tsk;
+> > +
+> > +	if (flags)
+> > +		return -EINVAL;
+> > +
+> > +	if (pid <= 0)
+> > +		return -EINVAL;
+> > +
+> > +	p = find_get_pid(pid);
+> > +	if (!p)
+> > +		return -ESRCH;
+> > +
+> > +	ret = 0;
+> > +	rcu_read_lock();
+> > +	/*
+> > +	 * If this returns non-NULL the pid was used as a thread-group
+> > +	 * leader. Note, we race with exec here: If it changes the
+> > +	 * thread-group leader we might return the old leader.
+> > +	 */
+> > +	tsk = pid_task(p, PIDTYPE_TGID);
+> 
+> Just trying to understand the comment here. The issue is that we might either
+> return the new leader, or the old leader depending on the overlap with
+> concurrent de_thread right? In either case, we don't care though.
+> 
+> I suggest to remove the "Note..." part of the comment since it doesn't seem the
+> race is relevant here unless we are doing something else with tsk in the
+> function, but if you want to keep it that's also fine. Comment text should
+> probably should be 'return the new leader' though.
 
+Nah, I actually removed the comment already independently (cf. see [1]).
+
+[1]: https://git.kernel.org/pub/scm/linux/kernel/git/brauner/linux.git/commit/?h=pidfd_open&id=dcfc98c2d957bf3ac14b06414cb2cf4c673fc297
+> 
+> > +	if (!tsk)
+> > +		ret = -ESRCH;
+> 
+> Perhaps -EINVAL?  AFAICS, this can only happen if a CLONE_THREAD pid was
+> passed as argument to pidfd_open which is invalid. But let me know what you
+> had in mind..
+
+Hm, from the kernel's perspective ESRCH is correct but I guess EINVAL is
+nicer for userspace. So I don't have objections to using EINVAL. My
+first version did too I think.
+
+Thanks!
+Christian
