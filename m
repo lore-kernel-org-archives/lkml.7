@@ -2,66 +2,66 @@ Return-Path: <SRS0=//ty=TS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,INCLUDES_PULL_REQUEST,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EDF2C04AAF
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 May 2019 08:27:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DE8FC04AAF
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 May 2019 08:42:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ED88C20848
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 May 2019 08:27:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 41CFF21734
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 May 2019 08:42:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558168062;
-	bh=AuCkxsociycxh6PKyElcv5lPY5nCgenDemJit5qqrgw=;
+	s=default; t=1558168952;
+	bh=svLBz7ucSAlhsnhOnGAtKwhfxGDEZOVvZCuiVK+Rnmo=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=lxJOVJHkSJSgaeW1ktNX6ahYmJOb+y7AwT3fC+6vAVjAEWQIVZdiB3qcqtB0gV7kZ
-	 a96ibzFsUdqYrO19CCXLWJRFiFlAZWMr54iRXXeGzPacu31UmdXCii2WNeaYN6kHZd
-	 DXT99HLCPkEGA3UYyoy2fa7D3M7UrMXlM4kvEofc=
+	b=N2H7ie7qyhbTI4wKQG09eNvCFLqTeDuLZUJc7wmK4H1rocnm37TqKLqwQDePAFhmw
+	 CSB5Cr5sbfcSZAUIIb+jhDacdL5W+rdi8z2hYoJvjW2r2Q3PgvamCwmDWpdh2mTMQB
+	 3DQ59mDLr0PpKpfzZ4fF7RkpZxTlXz3VP1PPqOz4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727958AbfERI1l (ORCPT
+        id S1727537AbfERImb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 May 2019 04:27:41 -0400
-Received: from mail-wm1-f53.google.com ([209.85.128.53]:53820 "EHLO
-        mail-wm1-f53.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725446AbfERI1k (ORCPT
+        Sat, 18 May 2019 04:42:31 -0400
+Received: from mail-wr1-f46.google.com ([209.85.221.46]:39241 "EHLO
+        mail-wr1-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726056AbfERIma (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 May 2019 04:27:40 -0400
-Received: by mail-wm1-f53.google.com with SMTP id 198so8866996wme.3;
-        Sat, 18 May 2019 01:27:36 -0700 (PDT)
+        Sat, 18 May 2019 04:42:30 -0400
+Received: by mail-wr1-f46.google.com with SMTP id w8so9386439wrl.6;
+        Sat, 18 May 2019 01:42:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=sender:date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=WxiI1y7+UOFtd6Wj3WRNsZ+U8SmBzR26mUHKO7Fa95o=;
-        b=cWWrDd22zwOH6DRsYDlnaWJ9DdPVK3qubKTBgp3BZMqh0f5mIc8r4YNZxTj8rX/V+U
-         voTJfvaS5yaRPwGHXdf06L4Nmq9UAPxG0IdhpYdNROu+BzIC4RYUkd+i0AGlFNYEynZ9
-         n55XJdVuTxQCbkn/RwtGcdUfrJcdYKk/mOBsqleg+nP7oNk/p5o4TktcIFdw9+bIsQum
-         dXGwG+Qu40VH/YQlsMtnag1G/uVexGBKx4jN1ajxxf+mY2iFnIQHAmitXpzk2Se0hfHe
-         qDtkXis7v+pWiNwd5M3JhZb2KvFiS+PzKIcWcbvQi7MSInu1aGibLbY6SdIeTETwsY2E
-         XvcA==
+        bh=E/Bvl9HzseMY/4455gMKOil5pf+w9qKhu4DQOM/9FrY=;
+        b=nzUayguLJLL/9BlmINqhX/O3SpiJxSYPR/ds50P1cu2+y/qqMTOTi0bw67UI1Mgxpv
+         8uedtMhOuQzlFpuomgPsTyM2X1SZq4tXItQ+9Ex2OAs9lv5IPi3pa0rZYLfAxdslRVdQ
+         EVKzlaIDrAXvOeJfmKf5GD9WcQfDvQaKzwJoi3dPojIwIkM3hBZSVa0+jkVWz3OkfH+b
+         xD7El3FprYQE9eGu+0zRK45NFQNt9/XBhzYrMOBT0ZRf3rQUfT4y/HUlR42dd1PURAsB
+         aVFH0trnDVdN7g3q/lnITApktjtGCVOvC918e7MqcS2Vn2N2sfTkWeaYUUG7wYWxXqNC
+         m8QQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
          :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=WxiI1y7+UOFtd6Wj3WRNsZ+U8SmBzR26mUHKO7Fa95o=;
-        b=opU3NkIv89fp7CM0l6WpgdaK8RVEjZq/fW0zhXbAH4Nxolqqv2ZVQWEGE1ixOdXVkp
-         rIUnIP4mUULHNOyGU4BPwq+uFvbz8So5HQUC/CXJ2xWVxDI9B1qnytm99o36XU1M+ZZa
-         RvFqb1l6S5HJxgw/KhyCk68FE3+4CWfK607MP65j5tB36kWgY7Su8ar6q504/1xBzjDi
-         5AQ+5/0Esm1+xvE6KAkykiHdRq8JXjKk+DZJa9bxZoUvhR87UGHhaXIu/vQpDdKQ+46X
-         fdZ3qwzSUkHqQ+cfggJQq9W1mhRtUxSHf8Yo4rhBaR6QSvlU3KxbupNtdV+c+Gs34H2/
-         XMnw==
-X-Gm-Message-State: APjAAAVoQ7MoO3YeLJSuNoB4wadYI+4yswf4SXprZlgKagWS+q7r/ZLe
-        j2dNuf2OLOhhUUqWv6DfwQ0=
-X-Google-Smtp-Source: APXvYqyrHnTuMUvANXvRXsz/uvE6bT/fGTaM/g+1VJPTgB2UtM/+SmIg+dS+KI/aQI+x09KKu5oxCQ==
-X-Received: by 2002:a1c:701a:: with SMTP id l26mr34129161wmc.50.1558168055403;
-        Sat, 18 May 2019 01:27:35 -0700 (PDT)
+        bh=E/Bvl9HzseMY/4455gMKOil5pf+w9qKhu4DQOM/9FrY=;
+        b=t+GrbFhVSUynevz2CxXqxpkWkXTgo2/k+u1a1MNqWIxZIZMUu6Gbl6bu607HzeT7M8
+         wbgEMsGQfJAfu49v467JAVgQdipD29apTPyMwqSKht6e2OwsRIdTJ0kjZBk7RYTTBgXv
+         TovhYc/5FNmF7RAfELIOBeL/ODhfvcxwD4RCaBSXzFSugvLP0SGNJlOdtlHBIiK0KHSH
+         mWfTI1FL+56TW9oX3lW/r6yRd9DkHwd8jQdnaubCoNmvO9Hzcc4EWNT+rnhNIZsUeLyb
+         Ot7AgqygUgr5wb6PyqKaw2MhJcZ0qVz9w5nRe65i8WLZ1jzwDBvrW8zczErj85AptEdm
+         bZfQ==
+X-Gm-Message-State: APjAAAUwE/hEkioNEg3oOb1i9owrH0RDQ5ewmly9tm/rZOx1MKQi6sST
+        u8sSQMPq1be862CCjgf2Uc0=
+X-Google-Smtp-Source: APXvYqz/dRh0xD/OGxFmM0BDkhF76h2js/QEWFiIGWvu1H6qGjmcXVCMTy6xzxkTLPn+MfAuJHftPw==
+X-Received: by 2002:adf:afdf:: with SMTP id y31mr35309880wrd.315.1558168947048;
+        Sat, 18 May 2019 01:42:27 -0700 (PDT)
 Received: from gmail.com (2E8B0CD5.catv.pool.telekom.hu. [46.139.12.213])
-        by smtp.gmail.com with ESMTPSA id 88sm24080970wrc.33.2019.05.18.01.27.33
+        by smtp.gmail.com with ESMTPSA id z13sm7310000wrw.42.2019.05.18.01.42.25
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Sat, 18 May 2019 01:27:34 -0700 (PDT)
-Date:   Sat, 18 May 2019 10:27:32 +0200
+        Sat, 18 May 2019 01:42:26 -0700 (PDT)
+Date:   Sat, 18 May 2019 10:42:23 +0200
 From:   Ingo Molnar <mingo@kernel.org>
 To:     Arnaldo Carvalho de Melo <acme@kernel.org>
 Cc:     Thomas Gleixner <tglx@linutronix.de>, Jiri Olsa <jolsa@kernel.org>,
@@ -84,8 +84,8 @@ Cc:     Thomas Gleixner <tglx@linutronix.de>, Jiri Olsa <jolsa@kernel.org>,
         Tzvetomir Stoyanov <tstoyanov@vmware.com>,
         Zenghui Yu <yuzenghui@huawei.com>,
         Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: Re: [GIT PULL] perf/core improvements and fixes
-Message-ID: <20190518082732.GA85914@gmail.com>
+Subject: [PATCH] tools/headers: Synchronize kernel ABI headers
+Message-ID: <20190518084223.GB85914@gmail.com>
 References: <20190517193611.4974-1-acme@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
@@ -97,402 +97,626 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Pick up the latest v5.2-to-be kernel ABI headers and synchronize them with tooling:
 
-* Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
+ - arch/x86/entry/syscalls/syscall_64.tbl   => tools/perf/arch/x86/entry/syscalls/syscall_64.tbl  # new syscalls
+ - arch/x86/include/asm/cpufeatures.h       => tools/arch/x86/include/asm/cpufeatures.h           # new CPUID flags
+ - include/uapi/drm/drm.h                   => tools/include/uapi/drm/drm.h                       # new 'syncobj' DRM ABI
+ - include/uapi/drm/i915_drm.h              => tools/include/uapi/drm/i915_drm.h                  # new extensible DRM ABI
+ - include/uapi/linux/fcntl.h               => tools/include/uapi/linux/fcntl.h                   # new AT_RECURSIVE
+ - include/uapi/linux/fs.h                  => tools/include/uapi/linux/fs.h                      # new SYNC_FILE_RANGE_WRITE_AND_WAIT
+ - include/uapi/linux/mount.h               => tools/include/uapi/linux/mount.h                   # new VFS system calls: fspick, fsmount, fsconfig, fsopen, move_mount, open_tree
+ - include/uapi/linux/sched.h               => tools/include/uapi/linux/sched.h                   # new CLONE_PIDFD
 
-> Hi Ingo,
-> 
-> 	Please consider pulling, I pulled tip/perf/urgent into
-> tip/pref/core, IIRC was just a fast forward at that point, yeap, just
-> did it again and it still is:
-> 
->   $ git checkout -b t tip/perf/core
->   Branch 't' set up to track remote branch 'perf/core' from 'tip'.
->   Switched to a new branch 't'
->   $ git merge tip/perf/urgent
->   Updating d15d356887e7..c7a286577d75
->   Fast-forward
->   <SNIP>
-> 
->          IIRC Jiri needs this for a pile of patches he submitted and
-> that I'll process next,
-> 
-> Best regards,
-> 
-> - Arnaldo
-> 
-> Test results at the end of this message, as usual.
-> 
-> The following changes since commit 6b89d4c1ae8596a8c9240f169ef108704de373f2:
-> 
->   perf/x86/intel: Fix INTEL_FLAGS_EVENT_CONSTRAINT* masking (2019-05-10 08:04:17 +0200)
-> 
-> are available in the Git repository at:
-> 
->   git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git tags/perf-core-for-mingo-5.2-20190517
-> 
-> for you to fetch changes up to 4fc4d8dfa056dfd48afe73b9ea3b7570ceb80b9c:
-> 
->   perf stat: Support 'percore' event qualifier (2019-05-16 14:17:24 -0300)
-> 
-> ----------------------------------------------------------------
-> perf/core improvements and fixes:
-> 
-> perf.data:
-> 
->   Alexey Budankov:
-> 
->   - Streaming compression of perf ring buffer into PERF_RECORD_COMPRESSED
->     user space records, resulting in ~3-5x perf.data file size reduction
->     on variety of tested workloads what saves storage space on larger
->     server systems where perf.data size can easily reach several tens or
->     even hundreds of GiBs, especially when profiling with DWARF-based
->     stacks and tracing of context switches.
-> 
-> perf record:
-> 
->   Arnaldo Carvalho de Melo
-> 
->   - Improve -user-regs/intr-regs suggestions to overcome errors.
-> 
-> perf annotate:
-> 
->   Jin Yao:
-> 
->   - Remove hist__account_cycles() from callback, speeding up branch processing
->     (perf record -b).
-> 
-> perf stat:
-> 
->   - Add a 'percore' event qualifier, e.g.: -e cpu/event=0,umask=0x3,percore=1/,
->     that sums up the event counts for both hardware threads in a core.
-> 
->     We can already do this with --per-core, but it's often useful to do
->     this together with other metrics that are collected per hardware thread.
-> 
->     I.e. now its possible to do this per-event, and have it mixed with other
->     events not aggregated by core.
-> 
-> core libraries:
-> 
->   Donald Yandt:
-> 
->   - Check for errors when doing fgets(/proc/version).
-> 
->   Jiri Olsa:
-> 
->   - Speed up report for perf compiled with linbunwind.
-> 
-> tools headers:
-> 
->   Arnaldo Carvalho de Melo
-> 
->   - Update memcpy_64.S, x86's kvm.h and pt_regs.h.
-> 
-> arm64:
-> 
->   Florian Fainelli:
-> 
->   - Map Brahma-B53 CPUID to cortex-a53 events.
-> 
->   - Add Cortex-A57 and Cortex-A72 events.
-> 
-> csky:
-> 
->   Mao Han:
-> 
->   - Add DWARF register mappings for libdw, allowing --call-graph=dwarf to work
->     on the C-SKY arch.
-> 
-> x86:
-> 
->   Andi Kleen/Kan Liang:
-> 
->   - Add support for recording and printing XMM registers, available, for
->     instance, on Icelake.
-> 
->   Kan Liang:
-> 
->   - Add uncore_upi (Intel's "Ultra Path Interconnect" events) JSON support.
->     UPI replaced the Intel QuickPath Interconnect (QPI) in Xeon Skylake-SP.
-> 
-> Intel PT:
-> 
->   Adrian Hunter
-> 
->   . Fix instructions sampling rate.
-> 
->   . Timestamp fixes.
-> 
->   . Improve exported-sql-viewer GUI, allowing, for instance, to copy'n'paste
->     the trees, useful for e-mailing.
-> 
-> Documentation:
-> 
->   Thomas Richter:
-> 
->   - Add description for 'perf --debug stderr=1', which redirects stderr to stdout.
-> 
-> libtraceevent:
-> 
->   Tzvetomir Stoyanov:
-> 
->   - Add man pages for the various APIs.
-> 
-> Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-> 
-> ----------------------------------------------------------------
-> Adrian Hunter (9):
->       perf scripts python: exported-sql-viewer.py: Move view creation
->       perf scripts python: exported-sql-viewer.py: Fix error when shrinking / enlarging font
->       perf scripts python: exported-sql-viewer.py: Add tree level
->       perf scripts python: exported-sql-viewer.py: Add copy to clipboard
->       perf scripts python: exported-sql-viewer.py: Add context menu
->       perf scripts python: exported-sql-viewer.py: Add 'About' dialog box
->       perf intel-pt: Fix instructions sampling rate
->       perf intel-pt: Fix improved sample timestamp
->       perf intel-pt: Fix sample timestamp wrt non-taken branches
-> 
-> Alexey Budankov (11):
->       perf session: Define 'bytes_transferred' and 'bytes_compressed' metrics
->       perf record: Implement COMPRESSED event record and its attributes
->       perf mmap: Implement dedicated memory buffer for data compression
->       perf tools: Introduce Zstd streaming based compression API
->       perf record: Implement compression for serial trace streaming
->       perf record: Implement compression for AIO trace streaming
->       perf report: Add stub processing of compressed events for -D
->       perf record: Implement -z,--compression_level[=<n>] option
->       perf report: Implement perf.data record decompression
->       perf inject: Enable COMPRESSED record decompression
->       perf tests: Implement Zstd comp/decomp integration test
-> 
-> Andi Kleen (1):
->       perf tools x86: Add support for recording and printing XMM registers
-> 
-> Arnaldo Carvalho de Melo (8):
->       tools arch: Update arch/x86/lib/memcpy_64.S copy used in 'perf bench mem memcpy'
->       tools arch uapi: Sync the x86 kvm.h copy
->       tools x86 uapi asm: Sync the pt_regs.h copy with the kernel sources
->       tools pci: Do not delete pcitest.sh in 'make clean'
->       perf record: Fix suggestion to get list of registers usable with --user-regs and --intr-regs
->       perf parse-regs: Improve error output when faced with unknown register name
->       perf build tests: Add NO_LIBZSTD=1 to make_minimal
->       perf test zstd: Fixup verbose mode output
-> 
-> Colin Ian King (1):
->       perf test: Fix spelling mistake "leadking" -> "leaking"
-> 
-> Donald Yandt (1):
->       perf machine: Null-terminate version char array upon fgets(/proc/version) error
-> 
-> Florian Fainelli (3):
->       perf vendor events arm64: Remove [[:xdigit:]] wildcard
->       perf vendor events arm64: Map Brahma-B53 CPUID to cortex-a53 events
->       perf vendor events arm64: Add Cortex-A57 and Cortex-A72 events
-> 
-> Jin Yao (4):
->       perf annotate: Remove hist__account_cycles() from callback
->       perf tools: Add a 'percore' event qualifier
->       perf stat: Factor out aggregate counts printing
->       perf stat: Support 'percore' event qualifier
-> 
-> Jiri Olsa (1):
->       perf tools: Speed up report for perf compiled with linwunwind
-> 
-> Kan Liang (4):
->       perf vendor events intel: Add uncore_upi JSON support
->       perf parse-regs: Split parse_regs
->       perf parse-regs: Add generic support for arch__intr/user_reg_mask()
->       perf regs x86: Add X86 specific arch__intr_reg_mask()
-> 
-> Mao Han (1):
->       csky: Add support for libdw
-> 
-> Thomas Richter (1):
->       perf docs: Add description for stderr
-> 
-> Tzvetomir Stoyanov (27):
->       tools lib traceevent: Remove hard coded install paths from pkg-config file
->       tools lib traceevent: Introduce man pages
->       tools lib traceevent: Add support for man pages with multiple names
->       tools lib traceevent: Man pages for tep_handler related APIs
->       tools lib traceevent: Man page for header_page APIs
->       tools lib traceevent: Man page for get/set cpus APIs
->       tools lib traceevent: Man page for file endian APIs
->       tools lib traceevent: Man page for host endian APIs
->       tools lib traceevent: Man page for page size APIs
->       tools lib traceevent: Man page for tep_strerror()
->       tools lib traceevent: Man pages for event handler APIs
->       tools lib traceevent: Man pages for function related libtraceevent APIs
->       tools lib traceevent: Man pages for registering print function
->       tools lib traceevent: Man page for tep_read_number()
->       tools lib traceevent: Man pages for event find APIs
->       tools lib traceevent: Man page for list events APIs
->       tools lib traceevent: Man pages for libtraceevent event get APIs
->       tools lib traceevent: Man pages for find field APIs
->       tools lib traceevent: Man pages for get field value APIs
->       tools lib traceevent: Man pages for print field APIs
->       tools lib traceevent: Man page for tep_read_number_field()
->       tools lib traceevent: Man pages for event fields APIs
->       tools lib traceevent: Man pages for event filter APIs
->       tools lib traceevent: Man pages for parse event APIs
->       tools lib traceevent: Man page for tep_parse_header_page()
->       tools lib traceevent: Man pages for APIs used to extract common fields from a record
->       tools lib traceevent: Man pages for trace sequences APIs
-> 
-> Zenghui Yu (1):
->       perf jevents: Remove unused variable
-> 
->  tools/arch/csky/include/uapi/asm/perf_regs.h       |  51 ++++
->  tools/arch/x86/include/uapi/asm/kvm.h              |   1 +
->  tools/arch/x86/include/uapi/asm/perf_regs.h        |  23 +-
->  tools/arch/x86/lib/memcpy_64.S                     |   3 +-
->  tools/lib/traceevent/Documentation/Makefile        | 207 +++++++++++++
->  tools/lib/traceevent/Documentation/asciidoc.conf   | 120 ++++++++
->  .../Documentation/libtraceevent-commands.txt       | 153 ++++++++++
->  .../Documentation/libtraceevent-cpus.txt           |  77 +++++
->  .../Documentation/libtraceevent-endian_read.txt    |  78 +++++
->  .../Documentation/libtraceevent-event_find.txt     | 103 +++++++
->  .../Documentation/libtraceevent-event_get.txt      |  99 ++++++
->  .../Documentation/libtraceevent-event_list.txt     | 122 ++++++++
->  .../Documentation/libtraceevent-field_find.txt     | 118 +++++++
->  .../Documentation/libtraceevent-field_get_val.txt  | 122 ++++++++
->  .../Documentation/libtraceevent-field_print.txt    | 126 ++++++++
->  .../Documentation/libtraceevent-field_read.txt     |  81 +++++
->  .../Documentation/libtraceevent-fields.txt         | 105 +++++++
->  .../Documentation/libtraceevent-file_endian.txt    |  91 ++++++
->  .../Documentation/libtraceevent-filter.txt         | 209 +++++++++++++
->  .../Documentation/libtraceevent-func_apis.txt      | 183 +++++++++++
->  .../Documentation/libtraceevent-func_find.txt      |  88 ++++++
->  .../Documentation/libtraceevent-handle.txt         | 101 ++++++
->  .../Documentation/libtraceevent-header_page.txt    | 102 +++++++
->  .../Documentation/libtraceevent-host_endian.txt    | 104 +++++++
->  .../Documentation/libtraceevent-long_size.txt      |  78 +++++
->  .../Documentation/libtraceevent-page_size.txt      |  82 +++++
->  .../Documentation/libtraceevent-parse_event.txt    |  90 ++++++
->  .../Documentation/libtraceevent-parse_head.txt     |  82 +++++
->  .../Documentation/libtraceevent-record_parse.txt   | 137 +++++++++
->  .../libtraceevent-reg_event_handler.txt            | 156 ++++++++++
->  .../Documentation/libtraceevent-reg_print_func.txt | 155 ++++++++++
->  .../Documentation/libtraceevent-set_flag.txt       | 104 +++++++
->  .../Documentation/libtraceevent-strerror.txt       |  85 ++++++
->  .../Documentation/libtraceevent-tseq.txt           | 158 ++++++++++
->  .../lib/traceevent/Documentation/libtraceevent.txt | 203 ++++++++++++
->  .../lib/traceevent/Documentation/manpage-1.72.xsl  |  14 +
->  .../lib/traceevent/Documentation/manpage-base.xsl  |  35 +++
->  .../Documentation/manpage-bold-literal.xsl         |  17 ++
->  .../traceevent/Documentation/manpage-normal.xsl    |  13 +
->  .../Documentation/manpage-suppress-sp.xsl          |  21 ++
->  tools/lib/traceevent/Makefile                      |  46 ++-
->  tools/lib/traceevent/libtraceevent.pc.template     |   4 +-
->  tools/pci/Makefile                                 |   4 +-
->  tools/perf/Documentation/perf-list.txt             |  12 +
->  tools/perf/Documentation/perf-record.txt           |   8 +-
->  tools/perf/Documentation/perf-stat.txt             |   4 +
->  tools/perf/Documentation/perf.data-file-format.txt |  24 ++
->  tools/perf/Documentation/perf.txt                  |   2 +
->  tools/perf/Makefile.config                         |   6 +-
->  tools/perf/arch/csky/Build                         |   1 +
->  tools/perf/arch/csky/Makefile                      |   3 +
->  tools/perf/arch/csky/include/perf_regs.h           | 100 ++++++
->  tools/perf/arch/csky/util/Build                    |   2 +
->  tools/perf/arch/csky/util/dwarf-regs.c             |  49 +++
->  tools/perf/arch/csky/util/unwind-libdw.c           |  77 +++++
->  tools/perf/arch/x86/include/perf_regs.h            |  26 +-
->  tools/perf/arch/x86/util/perf_regs.c               |  44 +++
->  tools/perf/builtin-annotate.c                      |   4 +-
->  tools/perf/builtin-inject.c                        |   4 +
->  tools/perf/builtin-record.c                        | 229 ++++++++++++--
->  tools/perf/builtin-report.c                        |  16 +-
->  tools/perf/builtin-stat.c                          |  21 ++
->  tools/perf/perf.h                                  |   1 +
->  .../arm64/arm/cortex-a57-a72/core-imp-def.json     | 179 +++++++++++
->  tools/perf/pmu-events/arch/arm64/mapfile.csv       |   5 +-
->  tools/perf/pmu-events/jevents.c                    |   2 +-
->  tools/perf/scripts/python/exported-sql-viewer.py   | 340 ++++++++++++++++++++-
->  tools/perf/tests/dso-data.c                        |   4 +-
->  tools/perf/tests/make                              |   2 +-
->  tools/perf/tests/shell/record+zstd_comp_decomp.sh  |  34 +++
->  tools/perf/util/Build                              |   2 +
->  tools/perf/util/annotate.c                         |   2 +-
->  tools/perf/util/compress.h                         |  53 ++++
->  tools/perf/util/env.h                              |  11 +
->  tools/perf/util/event.c                            |   1 +
->  tools/perf/util/event.h                            |   7 +
->  tools/perf/util/evlist.c                           |   8 +-
->  tools/perf/util/evlist.h                           |   2 +-
->  tools/perf/util/evsel.c                            |   2 +
->  tools/perf/util/evsel.h                            |   3 +
->  tools/perf/util/header.c                           |  53 ++++
->  tools/perf/util/header.h                           |   1 +
->  .../perf/util/intel-pt-decoder/intel-pt-decoder.c  |  31 +-
->  tools/perf/util/machine.c                          |   3 +-
->  tools/perf/util/mmap.c                             | 102 ++-----
->  tools/perf/util/mmap.h                             |  16 +-
->  tools/perf/util/parse-events.c                     |  27 ++
->  tools/perf/util/parse-events.h                     |   1 +
->  tools/perf/util/parse-events.l                     |   1 +
->  tools/perf/util/parse-regs-options.c               |  33 +-
->  tools/perf/util/parse-regs-options.h               |   3 +-
->  tools/perf/util/perf_regs.c                        |  10 +
->  tools/perf/util/perf_regs.h                        |   3 +
->  tools/perf/util/session.c                          | 133 +++++++-
->  tools/perf/util/session.h                          |  14 +
->  tools/perf/util/stat-display.c                     | 107 +++++--
->  tools/perf/util/stat.c                             |   8 +-
->  tools/perf/util/thread.c                           |   3 +-
->  tools/perf/util/tool.h                             |   2 +
->  tools/perf/util/unwind-libunwind-local.c           |   6 -
->  tools/perf/util/unwind-libunwind.c                 |  10 +
->  tools/perf/util/zstd.c                             | 111 +++++++
->  102 files changed, 5703 insertions(+), 216 deletions(-)
->  create mode 100644 tools/arch/csky/include/uapi/asm/perf_regs.h
->  create mode 100644 tools/lib/traceevent/Documentation/Makefile
->  create mode 100644 tools/lib/traceevent/Documentation/asciidoc.conf
->  create mode 100644 tools/lib/traceevent/Documentation/libtraceevent-commands.txt
->  create mode 100644 tools/lib/traceevent/Documentation/libtraceevent-cpus.txt
->  create mode 100644 tools/lib/traceevent/Documentation/libtraceevent-endian_read.txt
->  create mode 100644 tools/lib/traceevent/Documentation/libtraceevent-event_find.txt
->  create mode 100644 tools/lib/traceevent/Documentation/libtraceevent-event_get.txt
->  create mode 100644 tools/lib/traceevent/Documentation/libtraceevent-event_list.txt
->  create mode 100644 tools/lib/traceevent/Documentation/libtraceevent-field_find.txt
->  create mode 100644 tools/lib/traceevent/Documentation/libtraceevent-field_get_val.txt
->  create mode 100644 tools/lib/traceevent/Documentation/libtraceevent-field_print.txt
->  create mode 100644 tools/lib/traceevent/Documentation/libtraceevent-field_read.txt
->  create mode 100644 tools/lib/traceevent/Documentation/libtraceevent-fields.txt
->  create mode 100644 tools/lib/traceevent/Documentation/libtraceevent-file_endian.txt
->  create mode 100644 tools/lib/traceevent/Documentation/libtraceevent-filter.txt
->  create mode 100644 tools/lib/traceevent/Documentation/libtraceevent-func_apis.txt
->  create mode 100644 tools/lib/traceevent/Documentation/libtraceevent-func_find.txt
->  create mode 100644 tools/lib/traceevent/Documentation/libtraceevent-handle.txt
->  create mode 100644 tools/lib/traceevent/Documentation/libtraceevent-header_page.txt
->  create mode 100644 tools/lib/traceevent/Documentation/libtraceevent-host_endian.txt
->  create mode 100644 tools/lib/traceevent/Documentation/libtraceevent-long_size.txt
->  create mode 100644 tools/lib/traceevent/Documentation/libtraceevent-page_size.txt
->  create mode 100644 tools/lib/traceevent/Documentation/libtraceevent-parse_event.txt
->  create mode 100644 tools/lib/traceevent/Documentation/libtraceevent-parse_head.txt
->  create mode 100644 tools/lib/traceevent/Documentation/libtraceevent-record_parse.txt
->  create mode 100644 tools/lib/traceevent/Documentation/libtraceevent-reg_event_handler.txt
->  create mode 100644 tools/lib/traceevent/Documentation/libtraceevent-reg_print_func.txt
->  create mode 100644 tools/lib/traceevent/Documentation/libtraceevent-set_flag.txt
->  create mode 100644 tools/lib/traceevent/Documentation/libtraceevent-strerror.txt
->  create mode 100644 tools/lib/traceevent/Documentation/libtraceevent-tseq.txt
->  create mode 100644 tools/lib/traceevent/Documentation/libtraceevent.txt
->  create mode 100644 tools/lib/traceevent/Documentation/manpage-1.72.xsl
->  create mode 100644 tools/lib/traceevent/Documentation/manpage-base.xsl
->  create mode 100644 tools/lib/traceevent/Documentation/manpage-bold-literal.xsl
->  create mode 100644 tools/lib/traceevent/Documentation/manpage-normal.xsl
->  create mode 100644 tools/lib/traceevent/Documentation/manpage-suppress-sp.xsl
->  create mode 100644 tools/perf/arch/csky/Build
->  create mode 100644 tools/perf/arch/csky/Makefile
->  create mode 100644 tools/perf/arch/csky/include/perf_regs.h
->  create mode 100644 tools/perf/arch/csky/util/Build
->  create mode 100644 tools/perf/arch/csky/util/dwarf-regs.c
->  create mode 100644 tools/perf/arch/csky/util/unwind-libdw.c
->  create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a57-a72/core-imp-def.json
->  create mode 100755 tools/perf/tests/shell/record+zstd_comp_decomp.sh
->  create mode 100644 tools/perf/util/zstd.c
+All of these are new ABI additions with no impact on existing tooling,
+so we copy the kernel headers with no other changes necessary.
 
-Pulled, thanks a lot Arnaldo!
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+---
+ tools/arch/x86/include/asm/cpufeatures.h          |   3 +
+ tools/include/uapi/drm/drm.h                      |  37 ++++
+ tools/include/uapi/drm/i915_drm.h                 | 254 +++++++++++++++-------
+ tools/include/uapi/linux/fcntl.h                  |   2 +
+ tools/include/uapi/linux/fs.h                     |   3 +
+ tools/include/uapi/linux/mount.h                  |  62 ++++++
+ tools/include/uapi/linux/sched.h                  |   1 +
+ tools/perf/arch/x86/entry/syscalls/syscall_64.tbl |   6 +
+ 8 files changed, 295 insertions(+), 73 deletions(-)
 
-	Ingo
+diff --git a/tools/arch/x86/include/asm/cpufeatures.h b/tools/arch/x86/include/asm/cpufeatures.h
+index 981ff9479648..75f27ee2c263 100644
+--- a/tools/arch/x86/include/asm/cpufeatures.h
++++ b/tools/arch/x86/include/asm/cpufeatures.h
+@@ -344,6 +344,7 @@
+ /* Intel-defined CPU features, CPUID level 0x00000007:0 (EDX), word 18 */
+ #define X86_FEATURE_AVX512_4VNNIW	(18*32+ 2) /* AVX-512 Neural Network Instructions */
+ #define X86_FEATURE_AVX512_4FMAPS	(18*32+ 3) /* AVX-512 Multiply Accumulation Single precision */
++#define X86_FEATURE_MD_CLEAR		(18*32+10) /* VERW clears CPU buffers */
+ #define X86_FEATURE_TSX_FORCE_ABORT	(18*32+13) /* "" TSX_FORCE_ABORT */
+ #define X86_FEATURE_PCONFIG		(18*32+18) /* Intel PCONFIG */
+ #define X86_FEATURE_SPEC_CTRL		(18*32+26) /* "" Speculation Control (IBRS + IBPB) */
+@@ -382,5 +383,7 @@
+ #define X86_BUG_SPECTRE_V2		X86_BUG(16) /* CPU is affected by Spectre variant 2 attack with indirect branches */
+ #define X86_BUG_SPEC_STORE_BYPASS	X86_BUG(17) /* CPU is affected by speculative store bypass attack */
+ #define X86_BUG_L1TF			X86_BUG(18) /* CPU is affected by L1 Terminal Fault */
++#define X86_BUG_MDS			X86_BUG(19) /* CPU is affected by Microarchitectural data sampling */
++#define X86_BUG_MSBDS_ONLY		X86_BUG(20) /* CPU is only affected by the  MSDBS variant of BUG_MDS */
+ 
+ #endif /* _ASM_X86_CPUFEATURES_H */
+diff --git a/tools/include/uapi/drm/drm.h b/tools/include/uapi/drm/drm.h
+index 300f336633f2..661d73f9a919 100644
+--- a/tools/include/uapi/drm/drm.h
++++ b/tools/include/uapi/drm/drm.h
+@@ -649,6 +649,7 @@ struct drm_gem_open {
+ #define DRM_CAP_PAGE_FLIP_TARGET	0x11
+ #define DRM_CAP_CRTC_IN_VBLANK_EVENT	0x12
+ #define DRM_CAP_SYNCOBJ		0x13
++#define DRM_CAP_SYNCOBJ_TIMELINE	0x14
+ 
+ /** DRM_IOCTL_GET_CAP ioctl argument type */
+ struct drm_get_cap {
+@@ -735,8 +736,18 @@ struct drm_syncobj_handle {
+ 	__u32 pad;
+ };
+ 
++struct drm_syncobj_transfer {
++	__u32 src_handle;
++	__u32 dst_handle;
++	__u64 src_point;
++	__u64 dst_point;
++	__u32 flags;
++	__u32 pad;
++};
++
+ #define DRM_SYNCOBJ_WAIT_FLAGS_WAIT_ALL (1 << 0)
+ #define DRM_SYNCOBJ_WAIT_FLAGS_WAIT_FOR_SUBMIT (1 << 1)
++#define DRM_SYNCOBJ_WAIT_FLAGS_WAIT_AVAILABLE (1 << 2) /* wait for time point to become available */
+ struct drm_syncobj_wait {
+ 	__u64 handles;
+ 	/* absolute timeout */
+@@ -747,12 +758,33 @@ struct drm_syncobj_wait {
+ 	__u32 pad;
+ };
+ 
++struct drm_syncobj_timeline_wait {
++	__u64 handles;
++	/* wait on specific timeline point for every handles*/
++	__u64 points;
++	/* absolute timeout */
++	__s64 timeout_nsec;
++	__u32 count_handles;
++	__u32 flags;
++	__u32 first_signaled; /* only valid when not waiting all */
++	__u32 pad;
++};
++
++
+ struct drm_syncobj_array {
+ 	__u64 handles;
+ 	__u32 count_handles;
+ 	__u32 pad;
+ };
+ 
++struct drm_syncobj_timeline_array {
++	__u64 handles;
++	__u64 points;
++	__u32 count_handles;
++	__u32 pad;
++};
++
++
+ /* Query current scanout sequence number */
+ struct drm_crtc_get_sequence {
+ 	__u32 crtc_id;		/* requested crtc_id */
+@@ -909,6 +941,11 @@ extern "C" {
+ #define DRM_IOCTL_MODE_GET_LEASE	DRM_IOWR(0xC8, struct drm_mode_get_lease)
+ #define DRM_IOCTL_MODE_REVOKE_LEASE	DRM_IOWR(0xC9, struct drm_mode_revoke_lease)
+ 
++#define DRM_IOCTL_SYNCOBJ_TIMELINE_WAIT	DRM_IOWR(0xCA, struct drm_syncobj_timeline_wait)
++#define DRM_IOCTL_SYNCOBJ_QUERY		DRM_IOWR(0xCB, struct drm_syncobj_timeline_array)
++#define DRM_IOCTL_SYNCOBJ_TRANSFER	DRM_IOWR(0xCC, struct drm_syncobj_transfer)
++#define DRM_IOCTL_SYNCOBJ_TIMELINE_SIGNAL	DRM_IOWR(0xCD, struct drm_syncobj_timeline_array)
++
+ /**
+  * Device specific ioctls should only be in their respective headers
+  * The device specific ioctl range is from 0x40 to 0x9f.
+diff --git a/tools/include/uapi/drm/i915_drm.h b/tools/include/uapi/drm/i915_drm.h
+index 397810fa2d33..3a73f5316766 100644
+--- a/tools/include/uapi/drm/i915_drm.h
++++ b/tools/include/uapi/drm/i915_drm.h
+@@ -62,6 +62,28 @@ extern "C" {
+ #define I915_ERROR_UEVENT		"ERROR"
+ #define I915_RESET_UEVENT		"RESET"
+ 
++/*
++ * i915_user_extension: Base class for defining a chain of extensions
++ *
++ * Many interfaces need to grow over time. In most cases we can simply
++ * extend the struct and have userspace pass in more data. Another option,
++ * as demonstrated by Vulkan's approach to providing extensions for forward
++ * and backward compatibility, is to use a list of optional structs to
++ * provide those extra details.
++ *
++ * The key advantage to using an extension chain is that it allows us to
++ * redefine the interface more easily than an ever growing struct of
++ * increasing complexity, and for large parts of that interface to be
++ * entirely optional. The downside is more pointer chasing; chasing across
++ * the __user boundary with pointers encapsulated inside u64.
++ */
++struct i915_user_extension {
++	__u64 next_extension;
++	__u32 name;
++	__u32 flags; /* All undefined bits must be zero. */
++	__u32 rsvd[4]; /* Reserved for future use; must be zero. */
++};
++
+ /*
+  * MOCS indexes used for GPU surfaces, defining the cacheability of the
+  * surface data and the coherency for this data wrt. CPU vs. GPU accesses.
+@@ -99,9 +121,23 @@ enum drm_i915_gem_engine_class {
+ 	I915_ENGINE_CLASS_VIDEO		= 2,
+ 	I915_ENGINE_CLASS_VIDEO_ENHANCE	= 3,
+ 
++	/* should be kept compact */
++
+ 	I915_ENGINE_CLASS_INVALID	= -1
+ };
+ 
++/*
++ * There may be more than one engine fulfilling any role within the system.
++ * Each engine of a class is given a unique instance number and therefore
++ * any engine can be specified by its class:instance tuplet. APIs that allow
++ * access to any engine in the system will use struct i915_engine_class_instance
++ * for this identification.
++ */
++struct i915_engine_class_instance {
++	__u16 engine_class; /* see enum drm_i915_gem_engine_class */
++	__u16 engine_instance;
++};
++
+ /**
+  * DOC: perf_events exposed by i915 through /sys/bus/event_sources/drivers/i915
+  *
+@@ -319,6 +355,7 @@ typedef struct _drm_i915_sarea {
+ #define DRM_I915_PERF_ADD_CONFIG	0x37
+ #define DRM_I915_PERF_REMOVE_CONFIG	0x38
+ #define DRM_I915_QUERY			0x39
++/* Must be kept compact -- no holes */
+ 
+ #define DRM_IOCTL_I915_INIT		DRM_IOW( DRM_COMMAND_BASE + DRM_I915_INIT, drm_i915_init_t)
+ #define DRM_IOCTL_I915_FLUSH		DRM_IO ( DRM_COMMAND_BASE + DRM_I915_FLUSH)
+@@ -367,6 +404,7 @@ typedef struct _drm_i915_sarea {
+ #define DRM_IOCTL_I915_GET_SPRITE_COLORKEY DRM_IOWR(DRM_COMMAND_BASE + DRM_I915_GET_SPRITE_COLORKEY, struct drm_intel_sprite_colorkey)
+ #define DRM_IOCTL_I915_GEM_WAIT		DRM_IOWR(DRM_COMMAND_BASE + DRM_I915_GEM_WAIT, struct drm_i915_gem_wait)
+ #define DRM_IOCTL_I915_GEM_CONTEXT_CREATE	DRM_IOWR (DRM_COMMAND_BASE + DRM_I915_GEM_CONTEXT_CREATE, struct drm_i915_gem_context_create)
++#define DRM_IOCTL_I915_GEM_CONTEXT_CREATE_EXT	DRM_IOWR (DRM_COMMAND_BASE + DRM_I915_GEM_CONTEXT_CREATE, struct drm_i915_gem_context_create_ext)
+ #define DRM_IOCTL_I915_GEM_CONTEXT_DESTROY	DRM_IOW (DRM_COMMAND_BASE + DRM_I915_GEM_CONTEXT_DESTROY, struct drm_i915_gem_context_destroy)
+ #define DRM_IOCTL_I915_REG_READ			DRM_IOWR (DRM_COMMAND_BASE + DRM_I915_REG_READ, struct drm_i915_reg_read)
+ #define DRM_IOCTL_I915_GET_RESET_STATS		DRM_IOWR (DRM_COMMAND_BASE + DRM_I915_GET_RESET_STATS, struct drm_i915_reset_stats)
+@@ -476,6 +514,7 @@ typedef struct drm_i915_irq_wait {
+ #define   I915_SCHEDULER_CAP_ENABLED	(1ul << 0)
+ #define   I915_SCHEDULER_CAP_PRIORITY	(1ul << 1)
+ #define   I915_SCHEDULER_CAP_PREEMPTION	(1ul << 2)
++#define   I915_SCHEDULER_CAP_SEMAPHORES	(1ul << 3)
+ 
+ #define I915_PARAM_HUC_STATUS		 42
+ 
+@@ -559,6 +598,8 @@ typedef struct drm_i915_irq_wait {
+  */
+ #define I915_PARAM_MMAP_GTT_COHERENT	52
+ 
++/* Must be kept compact -- no holes and well documented */
++
+ typedef struct drm_i915_getparam {
+ 	__s32 param;
+ 	/*
+@@ -574,6 +615,7 @@ typedef struct drm_i915_getparam {
+ #define I915_SETPARAM_TEX_LRU_LOG_GRANULARITY             2
+ #define I915_SETPARAM_ALLOW_BATCHBUFFER                   3
+ #define I915_SETPARAM_NUM_USED_FENCES                     4
++/* Must be kept compact -- no holes */
+ 
+ typedef struct drm_i915_setparam {
+ 	int param;
+@@ -972,7 +1014,7 @@ struct drm_i915_gem_execbuffer2 {
+ 	 * struct drm_i915_gem_exec_fence *fences.
+ 	 */
+ 	__u64 cliprects_ptr;
+-#define I915_EXEC_RING_MASK              (7<<0)
++#define I915_EXEC_RING_MASK              (0x3f)
+ #define I915_EXEC_DEFAULT                (0<<0)
+ #define I915_EXEC_RENDER                 (1<<0)
+ #define I915_EXEC_BSD                    (2<<0)
+@@ -1120,32 +1162,34 @@ struct drm_i915_gem_busy {
+ 	 * as busy may become idle before the ioctl is completed.
+ 	 *
+ 	 * Furthermore, if the object is busy, which engine is busy is only
+-	 * provided as a guide. There are race conditions which prevent the
+-	 * report of which engines are busy from being always accurate.
+-	 * However, the converse is not true. If the object is idle, the
+-	 * result of the ioctl, that all engines are idle, is accurate.
++	 * provided as a guide and only indirectly by reporting its class
++	 * (there may be more than one engine in each class). There are race
++	 * conditions which prevent the report of which engines are busy from
++	 * being always accurate.  However, the converse is not true. If the
++	 * object is idle, the result of the ioctl, that all engines are idle,
++	 * is accurate.
+ 	 *
+ 	 * The returned dword is split into two fields to indicate both
+-	 * the engines on which the object is being read, and the
+-	 * engine on which it is currently being written (if any).
++	 * the engine classess on which the object is being read, and the
++	 * engine class on which it is currently being written (if any).
+ 	 *
+ 	 * The low word (bits 0:15) indicate if the object is being written
+ 	 * to by any engine (there can only be one, as the GEM implicit
+ 	 * synchronisation rules force writes to be serialised). Only the
+-	 * engine for the last write is reported.
++	 * engine class (offset by 1, I915_ENGINE_CLASS_RENDER is reported as
++	 * 1 not 0 etc) for the last write is reported.
+ 	 *
+-	 * The high word (bits 16:31) are a bitmask of which engines are
+-	 * currently reading from the object. Multiple engines may be
++	 * The high word (bits 16:31) are a bitmask of which engines classes
++	 * are currently reading from the object. Multiple engines may be
+ 	 * reading from the object simultaneously.
+ 	 *
+-	 * The value of each engine is the same as specified in the
+-	 * EXECBUFFER2 ioctl, i.e. I915_EXEC_RENDER, I915_EXEC_BSD etc.
+-	 * Note I915_EXEC_DEFAULT is a symbolic value and is mapped to
+-	 * the I915_EXEC_RENDER engine for execution, and so it is never
++	 * The value of each engine class is the same as specified in the
++	 * I915_CONTEXT_SET_ENGINES parameter and via perf, i.e.
++	 * I915_ENGINE_CLASS_RENDER, I915_ENGINE_CLASS_COPY, etc.
+ 	 * reported as active itself. Some hardware may have parallel
+ 	 * execution engines, e.g. multiple media engines, which are
+-	 * mapped to the same identifier in the EXECBUFFER2 ioctl and
+-	 * so are not separately reported for busyness.
++	 * mapped to the same class identifier and so are not separately
++	 * reported for busyness.
+ 	 *
+ 	 * Caveat emptor:
+ 	 * Only the boolean result of this query is reliable; that is whether
+@@ -1412,65 +1456,17 @@ struct drm_i915_gem_wait {
+ };
+ 
+ struct drm_i915_gem_context_create {
+-	/*  output: id of new context*/
+-	__u32 ctx_id;
+-	__u32 pad;
+-};
+-
+-struct drm_i915_gem_context_destroy {
+-	__u32 ctx_id;
++	__u32 ctx_id; /* output: id of new context*/
+ 	__u32 pad;
+ };
+ 
+-struct drm_i915_reg_read {
+-	/*
+-	 * Register offset.
+-	 * For 64bit wide registers where the upper 32bits don't immediately
+-	 * follow the lower 32bits, the offset of the lower 32bits must
+-	 * be specified
+-	 */
+-	__u64 offset;
+-#define I915_REG_READ_8B_WA (1ul << 0)
+-
+-	__u64 val; /* Return value */
+-};
+-/* Known registers:
+- *
+- * Render engine timestamp - 0x2358 + 64bit - gen7+
+- * - Note this register returns an invalid value if using the default
+- *   single instruction 8byte read, in order to workaround that pass
+- *   flag I915_REG_READ_8B_WA in offset field.
+- *
+- */
+-
+-struct drm_i915_reset_stats {
+-	__u32 ctx_id;
+-	__u32 flags;
+-
+-	/* All resets since boot/module reload, for all contexts */
+-	__u32 reset_count;
+-
+-	/* Number of batches lost when active in GPU, for this context */
+-	__u32 batch_active;
+-
+-	/* Number of batches lost pending for execution, for this context */
+-	__u32 batch_pending;
+-
+-	__u32 pad;
+-};
+-
+-struct drm_i915_gem_userptr {
+-	__u64 user_ptr;
+-	__u64 user_size;
++struct drm_i915_gem_context_create_ext {
++	__u32 ctx_id; /* output: id of new context*/
+ 	__u32 flags;
+-#define I915_USERPTR_READ_ONLY 0x1
+-#define I915_USERPTR_UNSYNCHRONIZED 0x80000000
+-	/**
+-	 * Returned handle for the object.
+-	 *
+-	 * Object handles are nonzero.
+-	 */
+-	__u32 handle;
++#define I915_CONTEXT_CREATE_FLAGS_USE_EXTENSIONS	(1u << 0)
++#define I915_CONTEXT_CREATE_FLAGS_UNKNOWN \
++	(-(I915_CONTEXT_CREATE_FLAGS_USE_EXTENSIONS << 1))
++	__u64 extensions;
+ };
+ 
+ struct drm_i915_gem_context_param {
+@@ -1491,6 +1487,28 @@ struct drm_i915_gem_context_param {
+ 	 * drm_i915_gem_context_param_sseu.
+ 	 */
+ #define I915_CONTEXT_PARAM_SSEU		0x7
++
++/*
++ * Not all clients may want to attempt automatic recover of a context after
++ * a hang (for example, some clients may only submit very small incremental
++ * batches relying on known logical state of previous batches which will never
++ * recover correctly and each attempt will hang), and so would prefer that
++ * the context is forever banned instead.
++ *
++ * If set to false (0), after a reset, subsequent (and in flight) rendering
++ * from this context is discarded, and the client will need to create a new
++ * context to use instead.
++ *
++ * If set to true (1), the kernel will automatically attempt to recover the
++ * context by skipping the hanging batch and executing the next batch starting
++ * from the default context state (discarding the incomplete logical context
++ * state lost due to the reset).
++ *
++ * On creation, all new contexts are marked as recoverable.
++ */
++#define I915_CONTEXT_PARAM_RECOVERABLE	0x8
++/* Must be kept compact -- no holes and well documented */
++
+ 	__u64 value;
+ };
+ 
+@@ -1519,8 +1537,7 @@ struct drm_i915_gem_context_param_sseu {
+ 	/*
+ 	 * Engine class & instance to be configured or queried.
+ 	 */
+-	__u16 engine_class;
+-	__u16 engine_instance;
++	struct i915_engine_class_instance engine;
+ 
+ 	/*
+ 	 * Unused for now. Must be cleared to zero.
+@@ -1553,6 +1570,96 @@ struct drm_i915_gem_context_param_sseu {
+ 	__u32 rsvd;
+ };
+ 
++struct drm_i915_gem_context_create_ext_setparam {
++#define I915_CONTEXT_CREATE_EXT_SETPARAM 0
++	struct i915_user_extension base;
++	struct drm_i915_gem_context_param param;
++};
++
++struct drm_i915_gem_context_destroy {
++	__u32 ctx_id;
++	__u32 pad;
++};
++
++/*
++ * DRM_I915_GEM_VM_CREATE -
++ *
++ * Create a new virtual memory address space (ppGTT) for use within a context
++ * on the same file. Extensions can be provided to configure exactly how the
++ * address space is setup upon creation.
++ *
++ * The id of new VM (bound to the fd) for use with I915_CONTEXT_PARAM_VM is
++ * returned in the outparam @id.
++ *
++ * No flags are defined, with all bits reserved and must be zero.
++ *
++ * An extension chain maybe provided, starting with @extensions, and terminated
++ * by the @next_extension being 0. Currently, no extensions are defined.
++ *
++ * DRM_I915_GEM_VM_DESTROY -
++ *
++ * Destroys a previously created VM id, specified in @id.
++ *
++ * No extensions or flags are allowed currently, and so must be zero.
++ */
++struct drm_i915_gem_vm_control {
++	__u64 extensions;
++	__u32 flags;
++	__u32 vm_id;
++};
++
++struct drm_i915_reg_read {
++	/*
++	 * Register offset.
++	 * For 64bit wide registers where the upper 32bits don't immediately
++	 * follow the lower 32bits, the offset of the lower 32bits must
++	 * be specified
++	 */
++	__u64 offset;
++#define I915_REG_READ_8B_WA (1ul << 0)
++
++	__u64 val; /* Return value */
++};
++
++/* Known registers:
++ *
++ * Render engine timestamp - 0x2358 + 64bit - gen7+
++ * - Note this register returns an invalid value if using the default
++ *   single instruction 8byte read, in order to workaround that pass
++ *   flag I915_REG_READ_8B_WA in offset field.
++ *
++ */
++
++struct drm_i915_reset_stats {
++	__u32 ctx_id;
++	__u32 flags;
++
++	/* All resets since boot/module reload, for all contexts */
++	__u32 reset_count;
++
++	/* Number of batches lost when active in GPU, for this context */
++	__u32 batch_active;
++
++	/* Number of batches lost pending for execution, for this context */
++	__u32 batch_pending;
++
++	__u32 pad;
++};
++
++struct drm_i915_gem_userptr {
++	__u64 user_ptr;
++	__u64 user_size;
++	__u32 flags;
++#define I915_USERPTR_READ_ONLY 0x1
++#define I915_USERPTR_UNSYNCHRONIZED 0x80000000
++	/**
++	 * Returned handle for the object.
++	 *
++	 * Object handles are nonzero.
++	 */
++	__u32 handle;
++};
++
+ enum drm_i915_oa_format {
+ 	I915_OA_FORMAT_A13 = 1,	    /* HSW only */
+ 	I915_OA_FORMAT_A29,	    /* HSW only */
+@@ -1714,6 +1821,7 @@ struct drm_i915_perf_oa_config {
+ struct drm_i915_query_item {
+ 	__u64 query_id;
+ #define DRM_I915_QUERY_TOPOLOGY_INFO    1
++/* Must be kept compact -- no holes and well documented */
+ 
+ 	/*
+ 	 * When set to zero by userspace, this is filled with the size of the
+diff --git a/tools/include/uapi/linux/fcntl.h b/tools/include/uapi/linux/fcntl.h
+index a2f8658f1c55..1d338357df8a 100644
+--- a/tools/include/uapi/linux/fcntl.h
++++ b/tools/include/uapi/linux/fcntl.h
+@@ -91,5 +91,7 @@
+ #define AT_STATX_FORCE_SYNC	0x2000	/* - Force the attributes to be sync'd with the server */
+ #define AT_STATX_DONT_SYNC	0x4000	/* - Don't sync attributes with the server */
+ 
++#define AT_RECURSIVE		0x8000	/* Apply to the entire subtree */
++
+ 
+ #endif /* _UAPI_LINUX_FCNTL_H */
+diff --git a/tools/include/uapi/linux/fs.h b/tools/include/uapi/linux/fs.h
+index 121e82ce296b..59c71fa8c553 100644
+--- a/tools/include/uapi/linux/fs.h
++++ b/tools/include/uapi/linux/fs.h
+@@ -320,6 +320,9 @@ struct fscrypt_key {
+ #define SYNC_FILE_RANGE_WAIT_BEFORE	1
+ #define SYNC_FILE_RANGE_WRITE		2
+ #define SYNC_FILE_RANGE_WAIT_AFTER	4
++#define SYNC_FILE_RANGE_WRITE_AND_WAIT	(SYNC_FILE_RANGE_WRITE | \
++					 SYNC_FILE_RANGE_WAIT_BEFORE | \
++					 SYNC_FILE_RANGE_WAIT_AFTER)
+ 
+ /*
+  * Flags for preadv2/pwritev2:
+diff --git a/tools/include/uapi/linux/mount.h b/tools/include/uapi/linux/mount.h
+index 3f9ec42510b0..96a0240f23fe 100644
+--- a/tools/include/uapi/linux/mount.h
++++ b/tools/include/uapi/linux/mount.h
+@@ -55,4 +55,66 @@
+ #define MS_MGC_VAL 0xC0ED0000
+ #define MS_MGC_MSK 0xffff0000
+ 
++/*
++ * open_tree() flags.
++ */
++#define OPEN_TREE_CLONE		1		/* Clone the target tree and attach the clone */
++#define OPEN_TREE_CLOEXEC	O_CLOEXEC	/* Close the file on execve() */
++
++/*
++ * move_mount() flags.
++ */
++#define MOVE_MOUNT_F_SYMLINKS		0x00000001 /* Follow symlinks on from path */
++#define MOVE_MOUNT_F_AUTOMOUNTS		0x00000002 /* Follow automounts on from path */
++#define MOVE_MOUNT_F_EMPTY_PATH		0x00000004 /* Empty from path permitted */
++#define MOVE_MOUNT_T_SYMLINKS		0x00000010 /* Follow symlinks on to path */
++#define MOVE_MOUNT_T_AUTOMOUNTS		0x00000020 /* Follow automounts on to path */
++#define MOVE_MOUNT_T_EMPTY_PATH		0x00000040 /* Empty to path permitted */
++#define MOVE_MOUNT__MASK		0x00000077
++
++/*
++ * fsopen() flags.
++ */
++#define FSOPEN_CLOEXEC		0x00000001
++
++/*
++ * fspick() flags.
++ */
++#define FSPICK_CLOEXEC		0x00000001
++#define FSPICK_SYMLINK_NOFOLLOW	0x00000002
++#define FSPICK_NO_AUTOMOUNT	0x00000004
++#define FSPICK_EMPTY_PATH	0x00000008
++
++/*
++ * The type of fsconfig() call made.
++ */
++enum fsconfig_command {
++	FSCONFIG_SET_FLAG	= 0,	/* Set parameter, supplying no value */
++	FSCONFIG_SET_STRING	= 1,	/* Set parameter, supplying a string value */
++	FSCONFIG_SET_BINARY	= 2,	/* Set parameter, supplying a binary blob value */
++	FSCONFIG_SET_PATH	= 3,	/* Set parameter, supplying an object by path */
++	FSCONFIG_SET_PATH_EMPTY	= 4,	/* Set parameter, supplying an object by (empty) path */
++	FSCONFIG_SET_FD		= 5,	/* Set parameter, supplying an object by fd */
++	FSCONFIG_CMD_CREATE	= 6,	/* Invoke superblock creation */
++	FSCONFIG_CMD_RECONFIGURE = 7,	/* Invoke superblock reconfiguration */
++};
++
++/*
++ * fsmount() flags.
++ */
++#define FSMOUNT_CLOEXEC		0x00000001
++
++/*
++ * Mount attributes.
++ */
++#define MOUNT_ATTR_RDONLY	0x00000001 /* Mount read-only */
++#define MOUNT_ATTR_NOSUID	0x00000002 /* Ignore suid and sgid bits */
++#define MOUNT_ATTR_NODEV	0x00000004 /* Disallow access to device special files */
++#define MOUNT_ATTR_NOEXEC	0x00000008 /* Disallow program execution */
++#define MOUNT_ATTR__ATIME	0x00000070 /* Setting on how atime should be updated */
++#define MOUNT_ATTR_RELATIME	0x00000000 /* - Update atime relative to mtime/ctime. */
++#define MOUNT_ATTR_NOATIME	0x00000010 /* - Do not update access times. */
++#define MOUNT_ATTR_STRICTATIME	0x00000020 /* - Always perform atime updates */
++#define MOUNT_ATTR_NODIRATIME	0x00000080 /* Do not update directory access times */
++
+ #endif /* _UAPI_LINUX_MOUNT_H */
+diff --git a/tools/include/uapi/linux/sched.h b/tools/include/uapi/linux/sched.h
+index 22627f80063e..ed4ee170bee2 100644
+--- a/tools/include/uapi/linux/sched.h
++++ b/tools/include/uapi/linux/sched.h
+@@ -10,6 +10,7 @@
+ #define CLONE_FS	0x00000200	/* set if fs info shared between processes */
+ #define CLONE_FILES	0x00000400	/* set if open files shared between processes */
+ #define CLONE_SIGHAND	0x00000800	/* set if signal handlers and blocked signals shared */
++#define CLONE_PIDFD	0x00001000	/* set if a pidfd should be placed in parent */
+ #define CLONE_PTRACE	0x00002000	/* set if we want to let tracing continue on the child too */
+ #define CLONE_VFORK	0x00004000	/* set if the parent wants the child to wake it up on mm_release */
+ #define CLONE_PARENT	0x00008000	/* set if we want to have the same parent as the cloner */
+diff --git a/tools/perf/arch/x86/entry/syscalls/syscall_64.tbl b/tools/perf/arch/x86/entry/syscalls/syscall_64.tbl
+index 92ee0b4378d4..64ca0d06259a 100644
+--- a/tools/perf/arch/x86/entry/syscalls/syscall_64.tbl
++++ b/tools/perf/arch/x86/entry/syscalls/syscall_64.tbl
+@@ -343,6 +343,12 @@
+ 332	common	statx			__x64_sys_statx
+ 333	common	io_pgetevents		__x64_sys_io_pgetevents
+ 334	common	rseq			__x64_sys_rseq
++335	common	open_tree		__x64_sys_open_tree
++336	common	move_mount		__x64_sys_move_mount
++337	common	fsopen			__x64_sys_fsopen
++338	common	fsconfig		__x64_sys_fsconfig
++339	common	fsmount			__x64_sys_fsmount
++340	common	fspick			__x64_sys_fspick
+ # don't use numbers 387 through 423, add new calls after the last
+ # 'common' entry
+ 424	common	pidfd_send_signal	__x64_sys_pidfd_send_signal
