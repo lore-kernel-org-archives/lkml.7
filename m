@@ -2,103 +2,131 @@ Return-Path: <SRS0=AA30=TT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.5 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55059C04AB4
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 May 2019 16:57:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90118C072AD
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 May 2019 16:57:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 240D7206BF
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 May 2019 16:57:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 64106206BF
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 May 2019 16:57:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1558285043;
+	bh=N2AfJUm5S/n9kNq0ukcJ2NfhgtOc6Fh2mApK13sY1b0=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=GDX/oIIznqEHnyir+wsOr0Ywg6vCXkSFAx3cKySrsemiUcydJ6dFsnS6k1gEFabfx
+	 OoFyDzHNv0bJFU1stid1XA779VU85v2PseEMQWVkmJEmrP757lpPi7cxst32QuuFvM
+	 261eIOlXfLyPJnVUOW8O7yGOSjrBPDwnYlnG6XU8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725973AbfESQ5U (ORCPT
+        id S1726071AbfESQ5W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 19 May 2019 12:57:20 -0400
-Received: from outgoing-auth-1.mit.edu ([18.9.28.11]:48618 "EHLO
-        outgoing.mit.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725769AbfESQ5T (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 19 May 2019 12:57:19 -0400
-Received: from callcc.thunk.org ([66.31.38.53])
-        (authenticated bits=0)
-        (User authenticated as tytso@ATHENA.MIT.EDU)
-        by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id x4J5x94A021513
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Sun, 19 May 2019 01:59:10 -0400
-Received: by callcc.thunk.org (Postfix, from userid 15806)
-        id 77C90420027; Sun, 19 May 2019 01:58:48 -0400 (EDT)
-Date:   Sun, 19 May 2019 01:58:48 -0400
-From:   "Theodore Ts'o" <tytso@mit.edu>
-To:     torvalds@linux-foundation.org
-Cc:     linux-ext4@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [GIT PULL] ext4 fixes for 5.1-rc1
-Message-ID: <20190519055848.GA16693@mit.edu>
-Mail-Followup-To: Theodore Ts'o <tytso@mit.edu>,
-        torvalds@linux-foundation.org, linux-ext4@vger.kernel.org,
-        linux-kernel@vger.kernel.org
+        Sun, 19 May 2019 12:57:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55164 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725993AbfESQ5W (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 19 May 2019 12:57:22 -0400
+Received: from archlinux (cpc91196-cmbg18-2-0-cust659.5-4.cable.virginm.net [81.96.234.148])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C32E521743;
+        Sun, 19 May 2019 11:00:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1558263634;
+        bh=N2AfJUm5S/n9kNq0ukcJ2NfhgtOc6Fh2mApK13sY1b0=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=SfbqQ7URvAiUBaaGq9YorAgNZZLsiTxuY5c9iLHuYslS1D7htpDvUt3W57XB0XUoH
+         0zjJ5/Zn7wODiPbFk+6Y6AZPCjsSKyhLMq0tDxtQQqeAEL7ooS1e4Q1o+OeXJ63eH3
+         dODoRh9i8LZw9gAe42T6vDok5ihEq3zYXmkwhELo=
+Date:   Sun, 19 May 2019 12:00:29 +0100
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Lucas Oshiro <lucasseikioshiro@gmail.com>
+Cc:     Lars-Peter Clausen <lars@metafoo.de>,
+        Michael Hennerich <Michael.Hennerich@analog.com>,
+        Stefan Popa <stefan.popa@analog.com>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-iio@vger.kernel.org, devel@driverdev.osuosl.org,
+        linux-kernel@vger.kernel.org, kernel-usp@googlegroups.com,
+        Rodrigo Ribeiro <rodrigorsdc@gmail.com>
+Subject: Re: [PATCH v2] staging: iio: adis16240: add device to module device
+ table
+Message-ID: <20190519120029.1da8f41c@archlinux>
+In-Reply-To: <20190518214434.23660-1-lucasseikioshiro@gmail.com>
+References: <20190518214434.23660-1-lucasseikioshiro@gmail.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following changes since commit db90f41916cf04c020062f8d8b0385942248283e:
+On Sat, 18 May 2019 18:44:34 -0300
+Lucas Oshiro <lucasseikioshiro@gmail.com> wrote:
 
-  ext4: export /sys/fs/ext4/feature/casefold if Unicode support is present (2019-05-06 14:03:52 -0400)
+> Add a of_device_id struct and MODULE_DEVICE_TABLE call, in order to add
+> device-tree support for this driver.
+> 
+> Signed-off-by: Lucas Oshiro <lucasseikioshiro@gmail.com>
+> Signed-off-by: Rodrigo Ribeiro <rodrigorsdc@gmail.com>
+> Co-developed-by: Rodrigo Ribeiro <rodrigorsdc@gmail.com>
 
-are available in the Git repository at:
+Hi Lucas, Rodrigo,
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/tytso/ext4.git tags/ext4_for_linus_stable
+The description isn't 100% accurate but it's close enough.
+Ever since devicetree was introduced, there has been a fallback mode for
+i2c and spi devices in which, in the absence of either a devicetree match table
+or an ACPI one, an attempt is made to match against the older i2c_device_id
+table entries.
 
-for you to fetch changes up to 2c1d0e3631e5732dba98ef49ac0bec1388776793:
+So it'll 'work' for devicetree bindings without this patch, but by a less
+controlled route and one that doesn't allow for the possibility of
+multiple manufacturers using the same part number.
 
-  ext4: avoid panic during forced reboot due to aborted journal (2019-05-17 17:37:18 -0400)
+Hence these are good changes to make.  Simplifying the description to enabling
+devicetree probing is fine though.
 
-----------------------------------------------------------------
-Some bug fixes, and an update to the URL's for the final version of
-Unicode 12.1.0.
+Under drivers/spi.c, devices probed via a device tree binding use:
+of_register_spi_device (applied to all children of an spi bus, so the slave
+devices).  This calls of_modalias_node which performs a copy of the
+compatible without the manufacturer ID into the modalias field.
+Later, spi_match_device is called, which first attempts
+of_driver_match_device which I think does the precise match.
 
-----------------------------------------------------------------
-Chengguang Xu (1):
-      jbd2: fix potential double free
+If that fails, it tries ACPI, and failing that it falls back to matching
+the modalias against the id_table entries.   Thus it can still
+work without these entries but they do make it simpler and more consistent.
 
-Colin Ian King (1):
-      ext4: unsigned int compared against zero
+Applied to the togreg branch of iio.git and pushed out as testing
+for the autobuilders to play with it.
 
-Jan Kara (1):
-      ext4: avoid panic during forced reboot due to aborted journal
+Thanks,
 
-Lukas Czerner (1):
-      ext4: fix data corruption caused by overlapping unaligned and aligned IO
+Jonathan
 
-Sahitya Tummala (1):
-      ext4: fix use-after-free in dx_release()
 
-Sriram Rajagopalan (1):
-      ext4: zero out the unused memory region in the extent tree block
+> ---
+>  drivers/staging/iio/accel/adis16240.c | 6 ++++++
+>  1 file changed, 6 insertions(+)
+> 
+> diff --git a/drivers/staging/iio/accel/adis16240.c b/drivers/staging/iio/accel/adis16240.c
+> index b80e0d248b0f..8c6d23604eca 100644
+> --- a/drivers/staging/iio/accel/adis16240.c
+> +++ b/drivers/staging/iio/accel/adis16240.c
+> @@ -435,6 +435,12 @@ static int adis16240_remove(struct spi_device *spi)
+>  	return 0;
+>  }
+>  
+> +static const struct of_device_id adis16240_of_match[] = {
+> +	{ .compatible = "adi,adis16240" },
+> +	{ },
+> +};
+> +MODULE_DEVICE_TABLE(of, adis16240_of_match);
+> +
+>  static struct spi_driver adis16240_driver = {
+>  	.driver = {
+>  		.name = "adis16240",
 
-Theodore Ts'o (4):
-      ext4: fix miscellaneous sparse warnings
-      unicode: add missing check for an error return from utf8lookup()
-      unicode: update to Unicode 12.1.0 final
-      ext4: fix block validity checks for journal inodes using indirect blocks
-
- fs/ext4/block_validity.c   |  8 +++++++-
- fs/ext4/extents.c          | 17 +++++++++++++++--
- fs/ext4/file.c             |  7 +++++++
- fs/ext4/fsmap.c            |  2 +-
- fs/ext4/ioctl.c            |  2 +-
- fs/ext4/namei.c            |  5 ++++-
- fs/ext4/super.c            |  4 ++--
- fs/jbd2/journal.c          | 49 +++++++++++++++++++++++++++++++------------------
- fs/jbd2/revoke.c           | 32 ++++++++++++++++++++------------
- fs/jbd2/transaction.c      |  8 +++++---
- fs/unicode/README.utf8data | 28 +++++++---------------------
- fs/unicode/utf8-norm.c     |  2 ++
- include/linux/jbd2.h       |  8 +++++---
- 13 files changed, 107 insertions(+), 65 deletions(-)
