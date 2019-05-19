@@ -2,134 +2,113 @@ Return-Path: <SRS0=AA30=TT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A4AEC04AB4
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 May 2019 17:50:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1EC0C04AB4
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 May 2019 17:52:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 01FF620449
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 May 2019 17:50:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 721BF20645
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 May 2019 17:52:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="L5AIrXSZ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Xe9T/z4k"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729131AbfESRuP (ORCPT
+        id S1729153AbfESRv7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 19 May 2019 13:50:15 -0400
-Received: from hqemgate14.nvidia.com ([216.228.121.143]:13421 "EHLO
-        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726741AbfESRuO (ORCPT
+        Sun, 19 May 2019 13:51:59 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:35597 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725784AbfESRv7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 19 May 2019 13:50:14 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5ce0f7df0001>; Sat, 18 May 2019 23:29:51 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Sat, 18 May 2019 23:29:49 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Sat, 18 May 2019 23:29:49 -0700
-Received: from HQMAIL112.nvidia.com (172.18.146.18) by HQMAIL104.nvidia.com
- (172.18.146.11) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Sun, 19 May
- 2019 06:29:49 +0000
-Received: from HQMAIL103.nvidia.com (172.20.187.11) by HQMAIL112.nvidia.com
- (172.18.146.18) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Sun, 19 May
- 2019 06:29:48 +0000
-Received: from hqnvemgw02.nvidia.com (172.16.227.111) by HQMAIL103.nvidia.com
- (172.20.187.11) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Sun, 19 May 2019 06:29:48 +0000
-Received: from blueforge.nvidia.com (Not Verified[10.110.48.28]) by hqnvemgw02.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5ce0f7dc0002>; Sat, 18 May 2019 23:29:48 -0700
-From:   John Hubbard <jhubbard@nvidia.com>
-To:     LKML <linux-kernel@vger.kernel.org>,
-        Frederic Weisbecker <frederic@kernel.org>
-CC:     John Hubbard <jhubbard@nvidia.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        "Paul E . McKenney" <paulmck@linux.vnet.ibm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Will Deacon <will.deacon@arm.com>
-Subject: [PATCH] lockdep: fix warning: print_lock_trace defined but not used
-Date:   Sat, 18 May 2019 23:29:46 -0700
-Message-ID: <20190519062946.27040-2-jhubbard@nvidia.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190519062946.27040-1-jhubbard@nvidia.com>
-References: <20190519062946.27040-1-jhubbard@nvidia.com>
-MIME-Version: 1.0
-X-NVConfidentiality: public
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1558247391; bh=+mMeJXHl5ecrfmgXb1fLjcKTsuYCwxL+S6q5TJ9ck6o=;
-        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
-         In-Reply-To:References:MIME-Version:X-NVConfidentiality:
-         Content-Type:Content-Transfer-Encoding;
-        b=L5AIrXSZa1VcLK4AtyW/PdNDcLQCBig/gNswh+Nh+u5kvkf6mBf+g9RKmTJiLlJEx
-         QqBR/tIPYNvLnjhgf7amcSVAQ5aiJYI+IoWdE2NVnjl+6p6ep+y6iPKcBSCsBc5ihB
-         xPP6bBA7PEYDtIevnJBiHO/WrLQXThLrddKqb7q2sHY4gRx9R7h7MEJSLRhYpZA+Jd
-         9nkDDjwwqbEq9T8evV1DXJp3Rkj5AafCEb51Z9RbYNZDRFZBhRZTpI33or+fybxxMF
-         fTjxzDCBWBNt7Ym7lIFt+q6l04MeEtJxbsPRE8e6ba0EN2vz1R8hKG832F5v4qWrZe
-         aE6vZwGWdFacw==
+        Sun, 19 May 2019 13:51:59 -0400
+Received: by mail-pf1-f193.google.com with SMTP id t87so6079732pfa.2
+        for <linux-kernel@vger.kernel.org>; Sun, 19 May 2019 10:51:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=VTpDnGpSlH3sitRA1I0tP2N8TOBZbLCzCKErVuqixPw=;
+        b=Xe9T/z4kHbUN5PPMLszy4q/YrdRAwME43PLuBHkM+Hzma52O2VPXyaQME/McxWTsj0
+         9ie7U33Py6iF2OV8NvZA/HyHWMJzJILk9HxDchjBQLz84jdolRHHo8wN3dAOf+4SYlZ1
+         xUZxObPRj4Y9PGVXXvpdPlC7Hb76rVz1/enOCJXIwg6nAsfMlmjZ0LRLfKXG7OXX8J0o
+         yReU8cv2fKINMFk71zwy77aHeGIvmUZlXleKviH26hn8i0zHkK/WXTiUgpEBt/DIPdi2
+         7zOrbXcov6cMx8ixJdni1kjKoNxqAU/GaR5yjYUPpVdgZIcNfJeA7KJTYyHigJrS8Tjt
+         ELBQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=VTpDnGpSlH3sitRA1I0tP2N8TOBZbLCzCKErVuqixPw=;
+        b=QCt6/Y5qpqfyQgM0DmhzPYcET4zUhGSDZQVm2Vi85UoIdJJoX1lHh4jDPfwsEB1BA2
+         zlF4+NvNSSEzwzqaUJjUUWMSvfF+Jhbx80GR6FYoKAMVvZy0KOlZ9LgOTVlzqgU8+Ltq
+         YLONiCkR3a4q6Rbq8yD3oZTgismG9RJm116VZAlHZE+VS0Fg+e41kgb5IlotJ6Lj/IA8
+         8+BRD1ptnyiq9AQTe3QnMie+TnhezXkGl3J45qlCYF6JhyMCro2uTMbUscL+z+VQhyec
+         TTar/NLtfxPMBK2uZhBpc1ElM4Jdx2iS+Ux3r3kKsqMcA1CkELacU20NELS7NAhJGYLN
+         8Y3Q==
+X-Gm-Message-State: APjAAAXBuasA9BJqBjzN2GEXcyFfE65ZCC+bF7n/JkRBr6MytDDmZQY9
+        9W0KzBBTZqn+OiedwdY28rYq+FSV
+X-Google-Smtp-Source: APXvYqxn+YXcNTZuduG70hpfaq1BM9K3JvhmJLAfft2z8UBpYUir/hMdb3/9Ug/qeDVHh1+cXhNNpw==
+X-Received: by 2002:a63:d354:: with SMTP id u20mr21757566pgi.129.1558278440716;
+        Sun, 19 May 2019 08:07:20 -0700 (PDT)
+Received: from mita-MS-7A45.lan ([240f:34:212d:1:5085:bb4a:e3a8:fc9d])
+        by smtp.gmail.com with ESMTPSA id g17sm2441105pfb.56.2019.05.19.08.07.18
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Sun, 19 May 2019 08:07:20 -0700 (PDT)
+From:   Akinobu Mita <akinobu.mita@gmail.com>
+To:     linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc:     Akinobu Mita <akinobu.mita@gmail.com>,
+        Johannes Berg <johannes@sipsolutions.net>,
+        Keith Busch <keith.busch@intel.com>, Jens Axboe <axboe@fb.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        Minwoo Im <minwoo.im.dev@gmail.com>,
+        Kenneth Heitke <kenneth.heitke@intel.com>,
+        Chaitanya Kulkarni <Chaitanya.Kulkarni@wdc.com>
+Subject: [PATCH v4 2/7] devcoredump: fix typo in comment
+Date:   Mon, 20 May 2019 00:06:53 +0900
+Message-Id: <1558278418-5702-3-git-send-email-akinobu.mita@gmail.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1558278418-5702-1-git-send-email-akinobu.mita@gmail.com>
+References: <1558278418-5702-1-git-send-email-akinobu.mita@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit 0d2cc3b34532 ("locking/lockdep: Move valid_state() inside
-CONFIG_TRACE_IRQFLAGS && CONFIG_PROVE_LOCKING") moved the only usage of
-print_lock_trace() that was originally outside of the CONFIG_PROVE_LOCKING
-case. It moved that usage into a different case: CONFIG_PROVE_LOCKING &&
-CONFIG_TRACE_IRQFLAGS. That leaves things not symmetrical, and as a result,
-the following warning fires on my build, when I have
+s/dev_coredumpmsg/dev_coredumpsg/
 
-!CONFIG_TRACE_IRQFLAGS && !CONFIG_PROVE_LOCKING
-
-set:
-
-kernel/locking/lockdep.c:2821:13: warning: =E2=80=98print_lock_trace=E2=80=
-=99 defined
-    but not used [-Wunused-function]
-
-Fix this by only defining print_lock_trace() in cases in which is it
-called.
-
-Fixes: 0d2cc3b34532 ("locking/lockdep: Move valid_state() inside CONFIG_TRA=
-CE_IRQFLAGS && CONFIG_PROVE_LOCKING")
-Cc: Frederic Weisbecker <frederic@kernel.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Paul E. McKenney <paulmck@linux.vnet.ibm.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Will Deacon <will.deacon@arm.com>
-Signed-off-by: John Hubbard <jhubbard@nvidia.com>
+Cc: Johannes Berg <johannes@sipsolutions.net>
+Cc: Keith Busch <keith.busch@intel.com>
+Cc: Jens Axboe <axboe@fb.com>
+Cc: Christoph Hellwig <hch@lst.de>
+Cc: Sagi Grimberg <sagi@grimberg.me>
+Cc: Minwoo Im <minwoo.im.dev@gmail.com>
+Cc: Kenneth Heitke <kenneth.heitke@intel.com>
+Cc: Chaitanya Kulkarni <Chaitanya.Kulkarni@wdc.com>
+Reviewed-by: Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
+Signed-off-by: Akinobu Mita <akinobu.mita@gmail.com>
 ---
- kernel/locking/lockdep.c | 3 +++
- 1 file changed, 3 insertions(+)
+* v4
+- Add Reviewed-by tag
 
-diff --git a/kernel/locking/lockdep.c b/kernel/locking/lockdep.c
-index d06190fa5082..3065dc36c27a 100644
---- a/kernel/locking/lockdep.c
-+++ b/kernel/locking/lockdep.c
-@@ -2817,11 +2817,14 @@ static inline int validate_chain(struct task_struct=
- *curr,
- 	return 1;
- }
-=20
-+#if defined(CONFIG_TRACE_IRQFLAGS)
- static void print_lock_trace(struct lock_trace *trace, unsigned int spaces=
-)
- {
- }
- #endif
-=20
-+#endif
-+
- /*
-  * We are building curr_chain_key incrementally, so double-check
-  * it from scratch, to make sure that it's done correctly:
---=20
-2.21.0
+ drivers/base/devcoredump.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/base/devcoredump.c b/drivers/base/devcoredump.c
+index 3c960a6..e42d0b5 100644
+--- a/drivers/base/devcoredump.c
++++ b/drivers/base/devcoredump.c
+@@ -314,7 +314,7 @@ void dev_coredumpm(struct device *dev, struct module *owner,
+ EXPORT_SYMBOL_GPL(dev_coredumpm);
+ 
+ /**
+- * dev_coredumpmsg - create device coredump that uses scatterlist as data
++ * dev_coredumpsg - create device coredump that uses scatterlist as data
+  * parameter
+  * @dev: the struct device for the crashed device
+  * @table: the dump data
+-- 
+2.7.4
 
