@@ -2,117 +2,150 @@ Return-Path: <SRS0=AA30=TT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.9 required=3.0 tests=DATE_IN_PAST_06_12,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87F19C04AB4
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 May 2019 18:07:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23CAEC04AB4
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 May 2019 18:07:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4E0E320449
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 May 2019 18:07:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=benyossef-com.20150623.gappssmtp.com header.i=@benyossef-com.20150623.gappssmtp.com header.b="1DhIF28L"
+	by mail.kernel.org (Postfix) with ESMTP id EA29D20578
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 May 2019 18:07:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729541AbfESSH0 (ORCPT
+        id S1729597AbfESSHa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 19 May 2019 14:07:26 -0400
-Received: from mail-ua1-f68.google.com ([209.85.222.68]:41521 "EHLO
-        mail-ua1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725784AbfESSH0 (ORCPT
+        Sun, 19 May 2019 14:07:30 -0400
+Received: from mail-it1-f196.google.com ([209.85.166.196]:40252 "EHLO
+        mail-it1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729552AbfESSH3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 19 May 2019 14:07:26 -0400
-Received: by mail-ua1-f68.google.com with SMTP id s30so4503261uas.8
-        for <linux-kernel@vger.kernel.org>; Sun, 19 May 2019 11:07:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=benyossef-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=AfDkIx67EU0wHyEHueagVJG3HjlBgao6rt8wR4bAwCY=;
-        b=1DhIF28LSxz9G4Jti5KhSzI2A498eFkjxXbUEErOX1gKxjcvF3EMRfFWX96+lmzwcD
-         fGvVxDpQtkgu3dWJ5nq8aU1Kr6JSCO6dLbYcyy4c/PROtsxHewnBXjXV4syDCpl5FmSu
-         TFIxNikyIl0/Ap2KvZYY8YRKaJ08ZIVqssKvUChqhdFdV2dStlsVgXIe3ym265I93TV3
-         m2I4a8dW0tBEuZUJFkzWvLKpMp2S52pgWaGBSYD9+CcFIivJ1CbaDA8ki7Bypi9Kj3Rh
-         +oAFCbDfdYHFRGoZlQcH9jjLaeP6JTQszMmBujWo4o+uAkicK3R2yZAbew2VQsxBqGNS
-         IGfg==
+        Sun, 19 May 2019 14:07:29 -0400
+Received: by mail-it1-f196.google.com with SMTP id g71so19615342ita.5
+        for <linux-kernel@vger.kernel.org>; Sun, 19 May 2019 11:07:28 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=AfDkIx67EU0wHyEHueagVJG3HjlBgao6rt8wR4bAwCY=;
-        b=hNEKsYI2s4ghQ/8Si1v39ewWuWU/atUpu6ACdUTotQd/5L8SuKlouNDKsTl5Uft02Q
-         5vPREwA6SnD2HBrFeiUNaahw/V4hkEN8rs8Vy97CJnrEiggybudhUFhv1sX4qcXdomKt
-         ELDCh7r3qZC8mHJ/vJKeqRmSaDzF2Rm3zxcOfGYqmPJRSwB8uOUOn35lqZ4UFVbqvltb
-         exoRp2266zn211gpFc3pu880ytUB/IHZI49TOsfyr+nPbeyk9T6+y9gC8BFB3K47dnoN
-         F396A1t1Iur+cH/+DXH3oN9ROizZC0zQFXW/sC4/D5rRQcr2rpns0oLcD6yWg0/qSj2P
-         yxQw==
-X-Gm-Message-State: APjAAAU9NowIXaf1U6gXxdXxbYn9y06JRjTHNerUc5ngYb96jxE7JRsj
-        s1Wu/Y6sGOTf+aucpqmRIJPrla2YMnlLzTON+R4v09Kq7uU=
-X-Google-Smtp-Source: APXvYqy1ewDvtB4MUYqX6DuUZZ1vmwzclPcymjYyA39Wh+ycaaWGioENThJloKTmGBQNyKMpenvKzhxknWL/lJFLasE=
-X-Received: by 2002:ab0:5930:: with SMTP id n45mr19721206uad.87.1558254498292;
- Sun, 19 May 2019 01:28:18 -0700 (PDT)
+         :message-id:subject:to:cc;
+        bh=w7S1JiY5XMndUySOPpCBhO3vugzf338c54HkvkOEdUI=;
+        b=Lj5W4lPyxHETuoM6XjTL2ZdKowHojfbzwCsVBvZMh9MqsV+oal3A8yDMlxLUqw5msL
+         +6JEFnLOyRK3zH3ytEn3c11iMaJn/RlOI7lUvRrIWRpnWBh14Pxklmw2Q5m3Y2DmPDhW
+         SK2ZDQum94izdLXpaF76VDeqQDMS12L7h5fmv2nLEPGi5PlTSqabX55kDrHT54vB+T3u
+         xCfAYzISmdv7QZAwvkE4kwScOVQBjzNAnRECbqrjut9q5cTW5v/oI63I3Vr1J/WrgLtW
+         77Cpp5DsmpDeHlBEf9tvLF888jw/myWZq9CTpfGhf5JhrOEYzucOQnRvOmy+lrRZhbRe
+         DOgA==
+X-Gm-Message-State: APjAAAWgzOAXtkadVwtWTEu19BAy1Uer7DpoFpmD/ltxJEJvJKNZkixJ
+        7Gm8FCTTXThVvHeNPdH/bPqytfQwXcTMQIXpmsvk6w==
+X-Google-Smtp-Source: APXvYqzP5hoR7AStmML42U8uNCorWch+uTjHRCykkRZbdO5pXKwP6oCjkjO5vOQkA/sKjCaQPRa48D4ntAa22XdygUI=
+X-Received: by 2002:a24:7a90:: with SMTP id a138mr25523149itc.95.1558289248398;
+ Sun, 19 May 2019 11:07:28 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190418133913.9122-1-gilad@benyossef.com> <CAOtvUMd9WUZAFgTqVH0U2ZZp8bbHXNg9Ae_ZFvGKJTSKNct8JA@mail.gmail.com>
- <20190517145235.GB10613@kroah.com> <CAOtvUMc++UtTP3fvXofuJA4JpdT86s5gbSx6WRtDK=sWnuUZrg@mail.gmail.com>
-In-Reply-To: <CAOtvUMc++UtTP3fvXofuJA4JpdT86s5gbSx6WRtDK=sWnuUZrg@mail.gmail.com>
-From:   Gilad Ben-Yossef <gilad@benyossef.com>
-Date:   Sun, 19 May 2019 11:28:05 +0300
-Message-ID: <CAOtvUMcfXHv0UxytEEdGJG5LM-SfyyVHbnbE0RNALMfBD1zuEQ@mail.gmail.com>
-Subject: Re: [PATCH 00/35] crypto: ccree: features and bug fixes for 5.2
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>, stable@vger.kernel.org,
-        Ofir Drang <ofir.drang@arm.com>,
-        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
-        Linux kernel mailing list <linux-kernel@vger.kernel.org>
+References: <3CD3EE63-0CD2-404A-A403-E11DCF2DF8D9@fb.com> <20190517074600.GJ2623@hirez.programming.kicks-ass.net>
+ <20190517081057.GQ2650@hirez.programming.kicks-ass.net> <CACPcB9cB5n1HOmZcVpusJq8rAV5+KfmZ-Lxv3tgsSoy7vNrk7w@mail.gmail.com>
+ <20190517091044.GM2606@hirez.programming.kicks-ass.net> <8C814E68-B0B6-47E4-BDD6-917B01EC62D0@fb.com>
+ <c881767d-b6f3-c53e-5c70-556d09ea8d89@fb.com> <8449BBF3-E754-4ABC-BFEF-A8F264297F2D@fb.com>
+In-Reply-To: <8449BBF3-E754-4ABC-BFEF-A8F264297F2D@fb.com>
+From:   Kairui Song <kasong@redhat.com>
+Date:   Mon, 20 May 2019 02:07:19 +0800
+Message-ID: <CACPcB9emh9T23sixx-91mg2wL6kgrYF4MVfmuTCE0SsD=8efcQ@mail.gmail.com>
+Subject: Re: Getting empty callchain from perf_callchain_kernel()
+To:     Song Liu <songliubraving@fb.com>
+Cc:     Alexei Starovoitov <ast@fb.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Kernel Team <Kernel-team@fb.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        "bpf@vger.kernel.org" <bpf@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, May 18, 2019 at 10:36 AM Gilad Ben-Yossef <gilad@benyossef.com> wro=
-te:
+On Sat, May 18, 2019 at 5:48 AM Song Liu <songliubraving@fb.com> wrote:
 >
-> Hi
 >
-> On Fri, May 17, 2019 at 5:52 PM Greg KH <gregkh@linuxfoundation.org> wrot=
-e:
+>
+> > On May 17, 2019, at 2:06 PM, Alexei Starovoitov <ast@fb.com> wrote:
 > >
-> > On Sun, Apr 21, 2019 at 11:52:55AM +0300, Gilad Ben-Yossef wrote:
-> > > On Thu, Apr 18, 2019 at 4:39 PM Gilad Ben-Yossef <gilad@benyossef.com=
-> wrote:
-> > > >
-> > > > A set of new features, mostly support for CryptoCell 713
-> > > > features including protected keys, security disable mode and
-> > > > new HW revision indetification interface alongside many bug fixes.
-> > >
-> > > FYI,
-> > >
-> > > A port of those patches from this patch series which have been marked
-> > > for stable is available at
-> > > https://github.com/gby/linux/tree/4.19-ccree
+> > On 5/17/19 11:40 AM, Song Liu wrote:
+> >> +Alexei, Daniel, and bpf
+> >>
+> >>> On May 17, 2019, at 2:10 AM, Peter Zijlstra <peterz@infradead.org> wrote:
+> >>>
+> >>> On Fri, May 17, 2019 at 04:15:39PM +0800, Kairui Song wrote:
+> >>>> Hi, I think the actual problem is that bpf_get_stackid_tp (and maybe
+> >>>> some other bfp functions) is now broken, or, strating an unwind
+> >>>> directly inside a bpf program will end up strangely. It have following
+> >>>> kernel message:
+> >>>
+> >>> Urgh, what is that bpf_get_stackid_tp() doing to get the regs? I can't
+> >>> follow.
+> >>
+> >> I guess we need something like the following? (we should be able to
+> >> optimize the PER_CPU stuff).
+> >>
+> >> Thanks,
+> >> Song
+> >>
+> >>
+> >> diff --git i/kernel/trace/bpf_trace.c w/kernel/trace/bpf_trace.c
+> >> index f92d6ad5e080..c525149028a7 100644
+> >> --- i/kernel/trace/bpf_trace.c
+> >> +++ w/kernel/trace/bpf_trace.c
+> >> @@ -696,11 +696,13 @@ static const struct bpf_func_proto bpf_perf_event_output_proto_tp = {
+> >>         .arg5_type      = ARG_CONST_SIZE_OR_ZERO,
+> >>  };
+> >>
+> >> +static DEFINE_PER_CPU(struct pt_regs, bpf_stackid_tp_regs);
+> >>  BPF_CALL_3(bpf_get_stackid_tp, void *, tp_buff, struct bpf_map *, map,
+> >>            u64, flags)
+> >>  {
+> >> -       struct pt_regs *regs = *(struct pt_regs **)tp_buff;
+> >> +       struct pt_regs *regs = this_cpu_ptr(&bpf_stackid_tp_regs);
+> >>
+> >> +       perf_fetch_caller_regs(regs);
 > >
-> > Hm, all I seem to need are 2 patches that failed to apply.  Can you jus=
-t
-> > provide backports for them?
+> > No. pt_regs is already passed in. It's the first argument.
+> > If we call perf_fetch_caller_regs() again the stack trace will be wrong.
+> > bpf prog should not see itself, interpreter or all the frames in between.
 >
-> Sure, I'll send them early next week.
+> Thanks Alexei! I get it now.
+>
+> In bpf_get_stackid_tp(), the pt_regs is get by dereferencing the first field
+> of tp_buff:
+>
+>         struct pt_regs *regs = *(struct pt_regs **)tp_buff;
+>
+> tp_buff points to something like
+>
+>         struct sched_switch_args {
+>                 unsigned long long pad;
+>                 char prev_comm[16];
+>                 int prev_pid;
+>                 int prev_prio;
+>                 long long prev_state;
+>                 char next_comm[16];
+>                 int next_pid;
+>                 int next_prio;
+>         };
+>
+> where the first field "pad" is a pointer to pt_regs.
+>
+> @Kairui, I think you confirmed that current code will give empty call trace
+> with ORC unwinder? If that's the case, can we add regs->ip back? (as in the
+> first email of this thread.
+>
+> Thanks,
+> Song
+>
 
-hm...  I've just fetched the latest from
-git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable.git,
-rebased that branch against the linux-4.19.y branch and it all went
-smooth.
+Hi thanks for the suggestion, yes we can add it should be good an idea
+to always have IP when stack trace is not available.
+But stack trace is actually still broken, it will always give only one
+level of stacktrace (the IP).
 
-What am I'm missing? is there some other tree I should be doing this on?
-
-Thanks,
-Gilad
-
---=20
-Gilad Ben-Yossef
-Chief Coffee Drinker
-
-values of =CE=B2 will give rise to dom!
+-- 
+Best Regards,
+Kairui Song
