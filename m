@@ -2,159 +2,163 @@ Return-Path: <SRS0=AA30=TT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=0.4 required=3.0 tests=DATE_IN_PAST_06_12,
-	FROM_LOCAL_HEX,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 386C0C04AB4
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 May 2019 18:18:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F41BC04AB4
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 May 2019 18:19:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0123420449
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 May 2019 18:18:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7291F20449
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 May 2019 18:19:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NVlQhWxM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729602AbfESSSB (ORCPT
+        id S1729647AbfESSTA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 19 May 2019 14:18:01 -0400
-Received: from mail-it1-f200.google.com ([209.85.166.200]:42405 "EHLO
-        mail-it1-f200.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726014AbfESSSB (ORCPT
+        Sun, 19 May 2019 14:19:00 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:40464 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726090AbfESSTA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 19 May 2019 14:18:01 -0400
-Received: by mail-it1-f200.google.com with SMTP id s18so9443067itl.7
-        for <linux-kernel@vger.kernel.org>; Sun, 19 May 2019 11:18:00 -0700 (PDT)
+        Sun, 19 May 2019 14:19:00 -0400
+Received: by mail-wm1-f65.google.com with SMTP id 15so6778653wmg.5
+        for <linux-kernel@vger.kernel.org>; Sun, 19 May 2019 11:18:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=UWIwA4BOBfLVy7P2Ysfvi1FMBIPshq56DPWmogprASA=;
+        b=NVlQhWxMgOtRkJzQkbPQN6JGt6YqktghV1uSgSiYGNgxGZt3YI/ZtqBn1HZ0rp5QTz
+         dR2qJvH8fVzoGzcKtLc0xXdnTXF4nOJjQ85/s75TaCWq+tSbhuR/t2X4BLrIvm4rTNBi
+         x8ov48EoZ5tsxugbXkwBzfOhF/rF03KH7ptBKPwHcheHo1yWV3KYDGsUuuSHgpd4sdVp
+         Om8xS95lCk+N1YwvZDuY+fNZuyh080Evyx0QaMQkUVC/dIOlrjO7E2Je4WV5OfVEzWPm
+         66xqkuiP/lyY+yQ4/nubcJ9WLvSeWUOiV9Vq/naRVCERkD+VvNGDgKu97+io+TaSNby0
+         7iZQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=M1TghxkZ2cqK/XU0n2a61ItohSKPfNjC9hEQzfL0wnc=;
-        b=hyXdn2x8+h9el5XBZ7GIIex2+nqbHWS9DmoAJXyUA+qUF1+fcwjKLtwmhaFYpCSwst
-         GPdflWTSi4SFKNFMnZz0Vx8nm5l/8sENcNC201k1fK26Y2E62p2XQMjAlR1/YYYaQrPs
-         1XK7VgZkfEFDRFN1ZO1GWL4ww5ElFdqXftFZA9DL3LFtWszvvBjYgHVxDKe29BtslXc4
-         o6mYRVMf+Kb9sv0HA6ZiM6RADAULYhWQU6Pku2nLMx/rAcrtvbhFUPDLN6lrf6BVUmIZ
-         czBZ+X2+lhOJhkT3fKEl7EXNYjL2fQVg+A2OsChbk/zd2Scb820ZF0bAqCSug6ICnyy2
-         vafg==
-X-Gm-Message-State: APjAAAWcKH/1j9y2NIMxFpFMKkK4Ax5V0NYhJirR0slfVZeer3kpogR6
-        CBtImqxRVDL/kxaEDhUTZl8hZ5ZFAvU3BB10nEOjIevjwuLk
-X-Google-Smtp-Source: APXvYqwJMvHP1nHjqR08pleCqoffj1JzDsim7beyXZUNubPpMK3yQh38HPUVLvyiIJD+FgMh1dtC7AoKpHKqET2ojtRwpjpVGXez
-MIME-Version: 1.0
-X-Received: by 2002:a05:6638:221:: with SMTP id f1mr41655686jaq.1.1558258025060;
- Sun, 19 May 2019 02:27:05 -0700 (PDT)
-Date:   Sun, 19 May 2019 02:27:05 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000000d60e405893a38f0@google.com>
-Subject: general protection fault in rhashtable_walk_enter
-From:   syzbot <syzbot+153641db1759e576ec8e@syzkaller.appspotmail.com>
-To:     davem@davemloft.net, jon.maloy@ericsson.com,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com,
-        tipc-discussion@lists.sourceforge.net, ying.xue@windriver.com
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=UWIwA4BOBfLVy7P2Ysfvi1FMBIPshq56DPWmogprASA=;
+        b=b2zGoagE4FtJVzOZz89KwT9HJD0nSVcsoEdln2qbRuw2REAqqyid983e6ZnKWLnqtw
+         d/DMaC4jnrCecEfru54SnGkHph3T9UxZAwu3L0hmptZ1EElIlovizCc9qPUCAH56GPfe
+         iB+sf2yfYPOCwfJm+k/6bdRzEQv2aZxIcEyCWe0ESm6kk9IVDu2NeidIcoGYCljDGKnL
+         HAsqOTel0JwO+8Od6ncCXhk0N02YBvDQZ/vSjlFZaa77qeGUXvFOzEktnPgnZZjdn/qW
+         4BCEn+Yq2p+076wUsbUmwNiUSBc9mNjH487kk6qKv2PRZEyleUI/TIakR1tdjzy/saBa
+         LrUg==
+X-Gm-Message-State: APjAAAXoXjYWbnESASWBaaYGOJSFbZ9+EO3r9q3sRWGsNS57RPvXb1if
+        HR5Ts6/61NhiKfLFntqxKj3oYgZ2
+X-Google-Smtp-Source: APXvYqxl9OGaDM9U37kFUIV7OCFQu3VVky5clmktcBUEMjsRB6Qg05oWE1a8NkAs5q3C93QYaHNWvw==
+X-Received: by 2002:a1c:6783:: with SMTP id b125mr8112101wmc.79.1558264365331;
+        Sun, 19 May 2019 04:12:45 -0700 (PDT)
+Received: from ogabbay-VM.habana-labs.com ([31.154.190.6])
+        by smtp.gmail.com with ESMTPSA id s3sm26612570wre.97.2019.05.19.04.12.44
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sun, 19 May 2019 04:12:44 -0700 (PDT)
+From:   Oded Gabbay <oded.gabbay@gmail.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     gregkh@linuxfoundation.org
+Subject: [PATCH 2/2] habanalabs: don't limit packet size for device CPU
+Date:   Sun, 19 May 2019 14:12:41 +0300
+Message-Id: <20190519111241.23359-2-oded.gabbay@gmail.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190519111241.23359-1-oded.gabbay@gmail.com>
+References: <20190519111241.23359-1-oded.gabbay@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+This patch removes a limitation on the maximum packet size that is read by
+the device CPU as that limitation is not needed.
 
-syzbot found the following crash on:
+Therefore, the patch also removes an elaborate calculation that is based
+on this limitation which is also not needed now. Instead, use a fixed
+value for the memory pool size of the packets.
 
-HEAD commit:    b1d6682e Add linux-next specific files for 20190517
-git tree:       linux-next
-console output: https://syzkaller.appspot.com/x/log.txt?x=1022b8bca00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=d3758876561d8cec
-dashboard link: https://syzkaller.appspot.com/bug?extid=153641db1759e576ec8e
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-
-Unfortunately, I don't have any reproducer for this crash yet.
-
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+153641db1759e576ec8e@syzkaller.appspotmail.com
-
-kasan: CONFIG_KASAN_INLINE enabled
-kasan: GPF could be caused by NULL-ptr deref or user memory access
-general protection fault: 0000 [#1] PREEMPT SMP KASAN
-CPU: 0 PID: 2377 Comm: syz-executor.0 Not tainted 5.1.0-next-20190517 #17
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-RIP: 0010:strlen+0x1f/0xa0 lib/string.c:516
-Code: 00 66 2e 0f 1f 84 00 00 00 00 00 48 b8 00 00 00 00 00 fc ff df 55 48  
-89 fa 48 89 e5 48 c1 ea 03 41 54 49 89 fc 53 48 83 ec 08 <0f> b6 04 02 48  
-89 fa 83 e2 07 38 d0 7f 04 84 c0 75 4d 41 80 3c 24
-RSP: 0018:ffff88803eacf488 EFLAGS: 00010096
-RAX: dffffc0000000000 RBX: ffff8880a4dba828 RCX: 0000000000000000
-RDX: 00000000200002ce RSI: ffff888093223440 RDI: 0000000100001674
-RBP: ffff88803eacf4a0 R08: 0000000000000000 R09: 0000000000000001
-R10: ffffed1015d06bdf R11: 0000000000000001 R12: 0000000100001674
-R13: 0000000000000000 R14: ffff888093223440 R15: ffff88803eacf570
-FS:  00007fa96d643700(0000) GS:ffff8880ae800000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 0000000000738000 CR3: 00000000a8324000 CR4: 00000000001426f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
-  trace_event_get_offsets_lock_acquire include/trace/events/lock.h:13  
-[inline]
-  perf_trace_lock_acquire+0xb9/0x530 include/trace/events/lock.h:13
-  trace_lock_acquire include/trace/events/lock.h:13 [inline]
-  lock_acquire+0x299/0x3f0 kernel/locking/lockdep.c:4301
-  __raw_spin_lock include/linux/spinlock_api_smp.h:142 [inline]
-  _raw_spin_lock+0x2f/0x40 kernel/locking/spinlock.c:151
-  spin_lock include/linux/spinlock.h:338 [inline]
-  rhashtable_walk_enter+0xf9/0x390 lib/rhashtable.c:669
-  __tipc_dump_start+0x1fa/0x3c0 net/tipc/socket.c:3414
-  tipc_dump_start+0x70/0x90 net/tipc/socket.c:3396
-  __netlink_dump_start+0x4f8/0x7d0 net/netlink/af_netlink.c:2351
-  netlink_dump_start include/linux/netlink.h:226 [inline]
-  tipc_sock_diag_handler_dump+0x1d9/0x270 net/tipc/diag.c:91
-  __sock_diag_cmd net/core/sock_diag.c:232 [inline]
-  sock_diag_rcv_msg+0x319/0x410 net/core/sock_diag.c:263
-  netlink_rcv_skb+0x177/0x450 net/netlink/af_netlink.c:2486
-  sock_diag_rcv+0x2b/0x40 net/core/sock_diag.c:274
-  netlink_unicast_kernel net/netlink/af_netlink.c:1311 [inline]
-  netlink_unicast+0x531/0x710 net/netlink/af_netlink.c:1337
-  netlink_sendmsg+0x8a5/0xd60 net/netlink/af_netlink.c:1926
-  sock_sendmsg_nosec net/socket.c:660 [inline]
-  sock_sendmsg+0xd7/0x130 net/socket.c:671
-  ___sys_sendmsg+0x803/0x920 net/socket.c:2292
-  __sys_sendmsg+0x105/0x1d0 net/socket.c:2330
-  __do_sys_sendmsg net/socket.c:2339 [inline]
-  __se_sys_sendmsg net/socket.c:2337 [inline]
-  __x64_sys_sendmsg+0x78/0xb0 net/socket.c:2337
-  do_syscall_64+0xfd/0x680 arch/x86/entry/common.c:301
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x458da9
-Code: ad b8 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7  
-48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff  
-ff 0f 83 7b b8 fb ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007fa96d642c78 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
-RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 0000000000458da9
-RDX: 0000000000000000 RSI: 0000000020000040 RDI: 0000000000000004
-RBP: 000000000073bf00 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 00007fa96d6436d4
-R13: 00000000004c6790 R14: 00000000004db3e8 R15: 00000000ffffffff
-Modules linked in:
----[ end trace 88f78024ddc40fcd ]---
-RIP: 0010:strlen+0x1f/0xa0 lib/string.c:516
-Code: 00 66 2e 0f 1f 84 00 00 00 00 00 48 b8 00 00 00 00 00 fc ff df 55 48  
-89 fa 48 89 e5 48 c1 ea 03 41 54 49 89 fc 53 48 83 ec 08 <0f> b6 04 02 48  
-89 fa 83 e2 07 38 d0 7f 04 84 c0 75 4d 41 80 3c 24
-RSP: 0018:ffff88803eacf488 EFLAGS: 00010096
-RAX: dffffc0000000000 RBX: ffff8880a4dba828 RCX: 0000000000000000
-RDX: 00000000200002ce RSI: ffff888093223440 RDI: 0000000100001674
-RBP: ffff88803eacf4a0 R08: 0000000000000000 R09: 0000000000000001
-R10: ffffed1015d06bdf R11: 0000000000000001 R12: 0000000100001674
-R13: 0000000000000000 R14: ffff888093223440 R15: ffff88803eacf570
-FS:  00007fa96d643700(0000) GS:ffff8880ae800000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 0000000000738000 CR3: 00000000a8324000 CR4: 00000000001426f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-
-
+Signed-off-by: Oded Gabbay <oded.gabbay@gmail.com>
 ---
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+ drivers/misc/habanalabs/firmware_if.c | 12 ------------
+ drivers/misc/habanalabs/goya/goya.c   |  2 +-
+ drivers/misc/habanalabs/habanalabs.h  | 12 ++----------
+ 3 files changed, 3 insertions(+), 23 deletions(-)
 
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+diff --git a/drivers/misc/habanalabs/firmware_if.c b/drivers/misc/habanalabs/firmware_if.c
+index 0cbdfa0d7fba..cc8168bacb24 100644
+--- a/drivers/misc/habanalabs/firmware_if.c
++++ b/drivers/misc/habanalabs/firmware_if.c
+@@ -85,12 +85,6 @@ int hl_fw_send_cpu_message(struct hl_device *hdev, u32 hw_queue_id, u32 *msg,
+ 	u32 tmp;
+ 	int rc = 0;
+ 
+-	if (len > HL_CPU_CB_SIZE) {
+-		dev_err(hdev->dev, "Invalid CPU message size of %d bytes\n",
+-			len);
+-		return -ENOMEM;
+-	}
+-
+ 	pkt = hdev->asic_funcs->cpu_accessible_dma_pool_alloc(hdev, len,
+ 								&pkt_dma_addr);
+ 	if (!pkt) {
+@@ -181,9 +175,6 @@ void *hl_fw_cpu_accessible_dma_pool_alloc(struct hl_device *hdev, size_t size,
+ {
+ 	u64 kernel_addr;
+ 
+-	/* roundup to HL_CPU_PKT_SIZE */
+-	size = (size + (HL_CPU_PKT_SIZE - 1)) & HL_CPU_PKT_MASK;
+-
+ 	kernel_addr = gen_pool_alloc(hdev->cpu_accessible_dma_pool, size);
+ 
+ 	*dma_handle = hdev->cpu_accessible_dma_address +
+@@ -195,9 +186,6 @@ void *hl_fw_cpu_accessible_dma_pool_alloc(struct hl_device *hdev, size_t size,
+ void hl_fw_cpu_accessible_dma_pool_free(struct hl_device *hdev, size_t size,
+ 					void *vaddr)
+ {
+-	/* roundup to HL_CPU_PKT_SIZE */
+-	size = (size + (HL_CPU_PKT_SIZE - 1)) & HL_CPU_PKT_MASK;
+-
+ 	gen_pool_free(hdev->cpu_accessible_dma_pool, (u64) (uintptr_t) vaddr,
+ 			size);
+ }
+diff --git a/drivers/misc/habanalabs/goya/goya.c b/drivers/misc/habanalabs/goya/goya.c
+index 6ee5db697ca5..e0fc511acaec 100644
+--- a/drivers/misc/habanalabs/goya/goya.c
++++ b/drivers/misc/habanalabs/goya/goya.c
+@@ -655,7 +655,7 @@ static int goya_sw_init(struct hl_device *hdev)
+ 		goto free_dma_pool;
+ 	}
+ 
+-	hdev->cpu_accessible_dma_pool = gen_pool_create(HL_CPU_PKT_SHIFT, -1);
++	hdev->cpu_accessible_dma_pool = gen_pool_create(ilog2(32), -1);
+ 	if (!hdev->cpu_accessible_dma_pool) {
+ 		dev_err(hdev->dev,
+ 			"Failed to create CPU accessible DMA pool\n");
+diff --git a/drivers/misc/habanalabs/habanalabs.h b/drivers/misc/habanalabs/habanalabs.h
+index 9b1c03f1ab32..0462b7727da7 100644
+--- a/drivers/misc/habanalabs/habanalabs.h
++++ b/drivers/misc/habanalabs/habanalabs.h
+@@ -320,18 +320,10 @@ struct hl_cs_job;
+ #define HL_EQ_LENGTH			64
+ #define HL_EQ_SIZE_IN_BYTES		(HL_EQ_LENGTH * HL_EQ_ENTRY_SIZE)
+ 
+-#define HL_CPU_PKT_SHIFT		5
+-#define HL_CPU_PKT_SIZE			(1 << HL_CPU_PKT_SHIFT)
+-#define HL_CPU_PKT_MASK			(~((1 << HL_CPU_PKT_SHIFT) - 1))
+-#define HL_CPU_MAX_PKTS_IN_CB		32
+-#define HL_CPU_CB_SIZE			(HL_CPU_PKT_SIZE * \
+-					 HL_CPU_MAX_PKTS_IN_CB)
+-#define HL_CPU_CB_QUEUE_SIZE		(HL_QUEUE_LENGTH * HL_CPU_CB_SIZE)
+-
+-/* KMD <-> ArmCP shared memory size (EQ + PQ + CPU CB queue) */
++/* KMD <-> ArmCP shared memory size (EQ + PQ + 2MB for packets) */
+ #define HL_CPU_ACCESSIBLE_MEM_SIZE	(HL_EQ_SIZE_IN_BYTES + \
+ 					 HL_QUEUE_SIZE_IN_BYTES + \
+-					 HL_CPU_CB_QUEUE_SIZE)
++					 SZ_2M)
+ 
+ /**
+  * struct hl_hw_queue - describes a H/W transport queue.
+-- 
+2.17.1
+
