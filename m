@@ -2,154 +2,139 @@ Return-Path: <SRS0=AA30=TT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D06DC04AB4
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 May 2019 17:53:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6145EC04AB4
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 May 2019 17:57:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 07D8A205ED
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 May 2019 17:53:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 37E5520675
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 May 2019 17:57:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hZ2jJ1lV"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="l+8759gG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729226AbfESRxy (ORCPT
+        id S1728577AbfESR5Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 19 May 2019 13:53:54 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:35197 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726472AbfESRxx (ORCPT
+        Sun, 19 May 2019 13:57:25 -0400
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:38948 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727620AbfESR5Z (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 19 May 2019 13:53:53 -0400
-Received: by mail-pl1-f195.google.com with SMTP id p1so246844plo.2
-        for <linux-kernel@vger.kernel.org>; Sun, 19 May 2019 10:53:53 -0700 (PDT)
+        Sun, 19 May 2019 13:57:25 -0400
+Received: by mail-ed1-f65.google.com with SMTP id e24so19942539edq.6
+        for <linux-kernel@vger.kernel.org>; Sun, 19 May 2019 10:57:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=7U4GWlu3NhNM+H5m0c8v1GRLQbRyHo7s1euACcIsXE0=;
-        b=hZ2jJ1lV41sUooh+QYN+pA+yjuoXiY4VHfZYxskGzaKOZWy5Hw1p68M40Y6IB0E7PN
-         c1JJmnhOQ/bS2iqdMwdNSbNd3dF7sv9qdvZ60VgXvxQzqKET3bT9IEsI9AlGelCvIdwc
-         FwTyMi+7VtJNS4CBAY9fuIAESaBJOfW3mXLXM+exlywXR3DbxUdlRCjGrGP1cse3W8OJ
-         zgjuS0BfZkTC58mdJJDxxa6Y2WzWXZQQANIcTA0hlshoz02yScOS6CKxbedXg8BeIwB3
-         d5rEtDwouKwJXxsyYa8b/JSTsVdk1c25ACqkMd6JGS4LSGni7rzBChpOh93kAyAP4kOK
-         4NqQ==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=2KDJMNJfIv5qLkX9gjcuIru5PdS9zm2I9aje75Yv/6w=;
+        b=l+8759gGZy5S/jxlabgPPs2V+a/SRM9cdSQ0+67gyx5DqfYk/5qoGhbTTHeO+8/kt1
+         vAga7RE/6uB7F6XPw1TefZgf+ucaQEcCOgkaBina5W5iFyhc26yYaa7UZL1LO8r1sApo
+         7Fhqa3UuuFLVKn2j4VMOtnn1zO6z7KVCsfhg+6vH9/fyEbe6ntyEqCuWcXz9WoLkRdiI
+         YPXcl30wRvNkI556ukv4n3zPklKb6nyhgyY6tW87V7iaR4qeCPxHh2Ztdxv5pKp7KTuD
+         6X7BpL+Pzw3I1efXxXSYLs9ZtXrOMIYiaO9UMiRN6PiTaIxeM3djj7cQwnbPjeuaSRtT
+         rDyw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=7U4GWlu3NhNM+H5m0c8v1GRLQbRyHo7s1euACcIsXE0=;
-        b=nbklrEiV/bCjMRZXm2HiWA4lvq23c4OSlAG0JPoW2um+ULBmEWQmrQ10eg6NHiLdLt
-         sFWFKMtXac9V+us918shWxV47id/2Xi8uLHVDlWYZnQ0XEOUnNbQLFwd0Jyv4c29si29
-         X6tcaG252w5r0aw6OdYzwF5P+Hh6HJBdoFVZ/9MpN+YKhKHvqU+J86Pzzcj5Y4VbUy9r
-         S+1C7P4TR7xLW2X+c9F69fi6DhykiQmnKd/KjKMt5thdxHXxxJEeBsts+PsjgVJBy8IX
-         mwyeCMerNmug4LKYcLCzQgi7/UhanxafF7zTxzumZcEsE2rOQTmrflvNLYIc1TZMF8PI
-         THmA==
-X-Gm-Message-State: APjAAAUnCWcf+j6QgAegH6c5Df5/xyfjg5IIx5OJ/lmXQClH54HyHmL2
-        2ww2Mqh3e1oXlwOJhC40JOWU98VN
-X-Google-Smtp-Source: APXvYqyayPBWTYNdQszcQhIMFK+aS0ZvpndSym28CO3lemv+V5G3d3inoDU6heKFHo+0JAyJ5HeyNQ==
-X-Received: by 2002:a17:902:108a:: with SMTP id c10mr70960833pla.48.1558278435099;
-        Sun, 19 May 2019 08:07:15 -0700 (PDT)
-Received: from mita-MS-7A45.lan ([240f:34:212d:1:5085:bb4a:e3a8:fc9d])
-        by smtp.gmail.com with ESMTPSA id g17sm2441105pfb.56.2019.05.19.08.07.12
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Sun, 19 May 2019 08:07:14 -0700 (PDT)
-From:   Akinobu Mita <akinobu.mita@gmail.com>
-To:     linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc:     Akinobu Mita <akinobu.mita@gmail.com>,
-        Johannes Berg <johannes@sipsolutions.net>,
-        Keith Busch <keith.busch@intel.com>, Jens Axboe <axboe@fb.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        Minwoo Im <minwoo.im.dev@gmail.com>,
-        Kenneth Heitke <kenneth.heitke@intel.com>,
-        Chaitanya Kulkarni <Chaitanya.Kulkarni@wdc.com>
-Subject: [PATCH v4 0/7] nvme-pci: support device coredump
-Date:   Mon, 20 May 2019 00:06:51 +0900
-Message-Id: <1558278418-5702-1-git-send-email-akinobu.mita@gmail.com>
-X-Mailer: git-send-email 2.7.4
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=2KDJMNJfIv5qLkX9gjcuIru5PdS9zm2I9aje75Yv/6w=;
+        b=Qs2mZUwoSP5RD2vfX35GZe//RM8BRiF9twAsXUn1/hDy+tFjIA29wJYy2b/m0H+u+J
+         /F0HEHU0g9Eozu/m0AvfdG9vsz2JB9b/ZpZbnSIDNXMX/OlCppUHJE5Hx+licm1xt+ag
+         GM1cej5lKL1g5khNU60MsIare54t6rR0/a5ChoHoqmZSk7DFLYGAlzzgSn2NwdvyYhG8
+         ZQZl4pZTL0qShlPu3GEdp4TzC6j/stbvxLAa8JNeguLYvWfM9e5GhXcUelPrXatgjkzK
+         N36fqinECU59B0h2x+IztuKKP1yHPi0jGRgE/llExYzaGfVRQbmLxq+HwNGBsakp6+uP
+         cEyg==
+X-Gm-Message-State: APjAAAXzmrU/3Cw52mNiGjVjteMDiL5ToqKcdH97nvMCdOz+cjl+5RBU
+        7gLRLg8AdSplXoN2qn/l7KE=
+X-Google-Smtp-Source: APXvYqzEvNUVnANyNFltuSglkuQsB1moXN98HHJaC97f/0xeIx8YKGzQqYpDqwYWt1s50urnsGQjHw==
+X-Received: by 2002:a17:906:3955:: with SMTP id g21mr54442419eje.61.1558288643498;
+        Sun, 19 May 2019 10:57:23 -0700 (PDT)
+Received: from elitebook-localhost (84-106-70-146.cable.dynamic.v4.ziggo.nl. [84.106.70.146])
+        by smtp.gmail.com with ESMTPSA id z10sm4921920edl.35.2019.05.19.10.57.22
+        (version=TLS1 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Sun, 19 May 2019 10:57:22 -0700 (PDT)
+From:   nariman <narimantos@gmail.com>
+To:     broonie@kernel.org, hdegoede@redhat.com,
+        linux-kernel@vger.kernel.org, alsa-devel@alsa-project.org
+Cc:     Damian van Soelen <dj.vsoelen@gmail.com>,
+        Nariman Etemadi <narimantos@gmail.com>
+Subject: [PATCH] ASoC: Intel: cht_bsw_rt5645.c: Remove buffer and snprintf calls
+Date:   Sun, 19 May 2019 19:57:04 +0200
+Message-Id: <20190519175706.3998-2-narimantos@gmail.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190519175706.3998-1-narimantos@gmail.com>
+References: <20190519175706.3998-1-narimantos@gmail.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This enables to collect snapshot of controller information via device
-coredump mechanism.  The nvme device coredump is triggered when command
-timeout occurs, and can also be triggered by writing sysfs attribute.
+From: Damian van Soelen <dj.vsoelen@gmail.com>
 
-After finishing the nvme device coredump, the following files are created.
+The snprintf calls filling cht_rt5645_cpu_dai_name / cht_rt5645_codec_aif_name
+always fill them with the same string ("ssp0-port" resp "rt5645-aif2") so
+instead of keeping these buffers around and making the cpu_dai_name /
+codec_aif_name point to this, simply update the foo_dai_name and foo_aif_name pointers to
+directly point to a string constant containing the desired string.
 
- - regs: NVMe controller registers (00h to 4Fh)
- - sq<qid>: Submission queue
- - cq<qid>: Completion queue
- - telemetry-ctrl-log: Telemetry controller-initiated log (if available)
- - data: Empty
+Signed-off-by: Damian van Soelen <dj.vsoelen@gmail.com>
+Signed-off-by: Nariman Etemadi <narimantos@gmail.com>
+---
+ sound/soc/intel/boards/cht_bsw_rt5645.c | 26 ++++---------------------
+ 1 file changed, 4 insertions(+), 22 deletions(-)
 
-The device coredump mechanism currently allows drivers to create only a
-single coredump file, so this also provides a new function that allows
-drivers to create several device coredump files in one crashed device.
-
-* v4
-- Add Reviewed-by tags
-- Add nvme_get_telemetry_log() to nvme core module.
-- Copy struct nvme_telemetry_log_page_hdr from the latest nvme-cli
-- Use bio_vec instead of sg_table to store telemetry log page
-- Make nvme_coredump_logs() return error if the device didn't produce
-  a response.
-- Abandon the reset if nvme_coredump_logs() returns error code
-
-* v3
-- Merge 'add telemetry log page definisions' patch and 'add facility to
-  check log page attributes' patch
-- Copy struct nvme_telemetry_log_page_hdr from the latest nvme-cli
-- Add BUILD_BUG_ON for the size of struct nvme_telemetry_log_page_hdr
-- Fix typo s/machanism/mechanism/ in commit log
-- Fix max transfer size calculation for get log page
-- Add function comments
-- Extract 'enable to trigger device coredump by hand' patch
-- Don't try to get telemetry log when admin queue is not available
-- Avoid deadlock in .coredump callback
-
-* v2
-- Add Reviewed-by tag.
-- Add patch to fix typo in comment
-- Remove unneeded braces.
-- Allocate device_entry followed by an array of devcd_file elements.
-- Add telemetry log page definisions
-- Add facility to check log page attributes
-- Exclude the doorbell registers from register dump.
-- Save controller registers in a binary format instead of a text format.
-- Create an empty 'data' file in the device coredump.
-- Save telemetry controller-initiated log if available
-- Make coredump procedure into two phases (before resetting controller and
-  after resetting as soon as admin queue is available).
-
-Akinobu Mita (7):
-  devcoredump: use memory_read_from_buffer
-  devcoredump: fix typo in comment
-  devcoredump: allow to create several coredump files in one device
-  nvme: add basic facilities to get telemetry log page
-  nvme-pci: add device coredump infrastructure
-  nvme-pci: trigger device coredump on command timeout
-  nvme-pci: enable to trigger device coredump by hand
-
- drivers/base/devcoredump.c  | 168 ++++++++++------
- drivers/nvme/host/Kconfig   |   1 +
- drivers/nvme/host/core.c    |  59 ++++++
- drivers/nvme/host/nvme.h    |   3 +
- drivers/nvme/host/pci.c     | 473 ++++++++++++++++++++++++++++++++++++++++++--
- include/linux/devcoredump.h |  33 ++++
- include/linux/nvme.h        |  32 +++
- 7 files changed, 696 insertions(+), 73 deletions(-)
-
-Cc: Johannes Berg <johannes@sipsolutions.net>
-Cc: Keith Busch <keith.busch@intel.com>
-Cc: Jens Axboe <axboe@fb.com>
-Cc: Christoph Hellwig <hch@lst.de>
-Cc: Sagi Grimberg <sagi@grimberg.me>
-Cc: Minwoo Im <minwoo.im.dev@gmail.com>
-Cc: Kenneth Heitke <kenneth.heitke@intel.com>
-Cc: Chaitanya Kulkarni <Chaitanya.Kulkarni@wdc.com>
+diff --git a/sound/soc/intel/boards/cht_bsw_rt5645.c b/sound/soc/intel/boards/cht_bsw_rt5645.c
+index cbc2d458483f..b15459e56665 100644
+--- a/sound/soc/intel/boards/cht_bsw_rt5645.c
++++ b/sound/soc/intel/boards/cht_bsw_rt5645.c
+@@ -506,8 +506,6 @@ static struct cht_acpi_card snd_soc_cards[] = {
+ };
+ 
+ static char cht_rt5645_codec_name[SND_ACPI_I2C_ID_LEN];
+-static char cht_rt5645_codec_aif_name[12]; /*  = "rt5645-aif[1|2]" */
+-static char cht_rt5645_cpu_dai_name[10]; /*  = "ssp[0|2]-port" */
+ 
+ static bool is_valleyview(void)
+ {
+@@ -641,28 +639,12 @@ static int snd_cht_mc_probe(struct platform_device *pdev)
+ 	log_quirks(&pdev->dev);
+ 
+ 	if ((cht_rt5645_quirk & CHT_RT5645_SSP2_AIF2) ||
+-		(cht_rt5645_quirk & CHT_RT5645_SSP0_AIF2)) {
+-
+-		/* fixup codec aif name */
+-		snprintf(cht_rt5645_codec_aif_name,
+-			sizeof(cht_rt5645_codec_aif_name),
+-			"%s", "rt5645-aif2");
+-
+-		cht_dailink[dai_index].codec_dai_name =
+-			cht_rt5645_codec_aif_name;
+-	}
++		(cht_rt5645_quirk & CHT_RT5645_SSP0_AIF2))
++			cht_dailink[dai_index].codec_dai_name = "rt5645-aif2";
+ 
+ 	if ((cht_rt5645_quirk & CHT_RT5645_SSP0_AIF1) ||
+-		(cht_rt5645_quirk & CHT_RT5645_SSP0_AIF2)) {
+-
+-		/* fixup cpu dai name name */
+-		snprintf(cht_rt5645_cpu_dai_name,
+-			sizeof(cht_rt5645_cpu_dai_name),
+-			"%s", "ssp0-port");
+-
+-		cht_dailink[dai_index].cpu_dai_name =
+-			cht_rt5645_cpu_dai_name;
+-	}
++		(cht_rt5645_quirk & CHT_RT5645_SSP0_AIF2))
++			cht_dailink[dai_index].cpu_dai_name = "ssp0-port";
+ 
+ 	/* override plaform name, if required */
+ 	platform_name = mach->mach_params.platform;
 -- 
-2.7.4
+2.20.1
 
