@@ -2,113 +2,109 @@ Return-Path: <SRS0=AA30=TT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66BEAC46460
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 May 2019 17:02:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 088FBC04AB4
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 May 2019 17:03:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 33D21206BF
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 May 2019 17:02:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558285343;
-	bh=mBpAhk//8WvsbTtXPi/GRsgbj/yowPAq5t4mJK5gccY=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=RbDDhh02FNNWIzqc92+T1dxTksDyHy45pMWRR9a2w7/JNNOu3oywVEEKT5nJ+VfHi
-	 bdL41Jj3oVbxK/KU1AsrhsdF8X9MEG1V6P8DFVHnKpS069sOS7a1KVstwM4b6Ob0eS
-	 pmnBccTiDnFa9cl9X/l86erubsoGnz/WrNe4m21o=
+	by mail.kernel.org (Postfix) with ESMTP id C9E93206BF
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 May 2019 17:03:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gWa0lihc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726133AbfESRCW (ORCPT
+        id S1726243AbfESRDa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 19 May 2019 13:02:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56768 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725971AbfESRCW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 19 May 2019 13:02:22 -0400
-Received: from archlinux (cpc91196-cmbg18-2-0-cust659.5-4.cable.virginm.net [81.96.234.148])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 28C9E2177B;
-        Sun, 19 May 2019 11:02:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558263775;
-        bh=mBpAhk//8WvsbTtXPi/GRsgbj/yowPAq5t4mJK5gccY=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=pYZptuxyzCXeqdm4KC3jNE70+82Jk/nhhiTgXH5L3lozFHn2Bt2SRB5qrN7GITWoX
-         53y8XAbO4rR2LQGiNSswervuiIzCkuzDTVpR6En2/W6ZddHlODiPc3/sGaLzFj04i5
-         JvRvo6cyOt1Us/mBYWwqQN4zNOJNQHySnd00HXvw=
-Date:   Sun, 19 May 2019 12:02:50 +0100
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     =?UTF-8?B?Sm/Do28=?= Seckler <joaoseckler@gmail.com>
-Cc:     Lars-Peter Clausen <lars@metafoo.de>,
-        Michael Hennerich <Michael.Hennerich@analog.com>,
-        Stefan Popa <stefan.popa@analog.com>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-iio@vger.kernel.org, devel@driverdev.osuosl.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] staging: iio: ad7746: add device tree support
-Message-ID: <20190519120250.4644c255@archlinux>
-In-Reply-To: <20190518222733.2ttcgvy7fct4awra@smtp.gmail.com>
-References: <20190518222733.2ttcgvy7fct4awra@smtp.gmail.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Sun, 19 May 2019 13:03:30 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:43566 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725777AbfESRDa (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 19 May 2019 13:03:30 -0400
+Received: by mail-pf1-f196.google.com with SMTP id c6so6022578pfa.10
+        for <linux-kernel@vger.kernel.org>; Sun, 19 May 2019 10:03:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=mwcMY0VK0yx/OQxigRKnWF/1+9CrvrV9U/DB+F7KGAw=;
+        b=gWa0lihcO1Y5ONlmmU0LQ1eEAIlhK6f/aJU1utdVeo0XCYYtEatwMTpEY5kr45Pi5J
+         lfkS21DWq0pWC0tceRES+F56ZHsIKGTk5G5r2i5vuJhieEwMB3nXPsTKkUbnsyS4DhlY
+         dc2RjJ3qf0rVLnhufld77d/RuyYe823BdKP0ljeDqd1xcKqUNX6EEctCYls9PeBumyXE
+         MVz9YpBdJnsszIncMEyW7IFJjccQgZdiiW/9OQR/QJT4sa7s0KyNhCIri9/7dOs9jDsK
+         pK+z0ICK82Sn/Mf9CXm24v1Ywe/SZkgk81kGWRDmv9aRHI+28b3IGw32LTkDeuT9b7NB
+         ArsA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=mwcMY0VK0yx/OQxigRKnWF/1+9CrvrV9U/DB+F7KGAw=;
+        b=JuvJorUfsbLnj2fDW+/QJmjZUo+3937bhX9QG0PKS1Bu6X42hTAQn97lyn633wMnU4
+         AuxxfHd0ZeehceeTMIhG6zDrvL79sopf1c7MiAXgoDlAWIa8ofMMxY1Co3QEonCiZeCX
+         89uGF8CfslQCqfMQHXu8azawA8Lbi1CtMLi3yYhMGPqfa1XrC9kI3KQIYas7ZFzDiIsS
+         EmJNBZONBJSyLDMJvQ8e1Yk4wB7tPU7LqVNy786P8L8A5wMAAqbqqTtQFIty9CQeLQ8F
+         kNjzbQvvhhevJkCyvAx6JmcSUlRM4rrM1a+WDrjDInO2TaTZBQS/P8DrHvZHVvW8hpEW
+         kURg==
+X-Gm-Message-State: APjAAAW1xxWzJtiZltPNb8KnnlMly7U1jW5O0UBYtpcrYAqcKdMbBkyh
+        7ZWb/VFGj4bXztV2HTNVLnU=
+X-Google-Smtp-Source: APXvYqwN11CwT/b0nxrOEpz3Q6XeVBQSUgejFOtkNHoJMx6vFIoAVi+3hhmQ2zsppRxBem7n3E4H3w==
+X-Received: by 2002:a63:e94e:: with SMTP id q14mr69861840pgj.110.1558285409956;
+        Sun, 19 May 2019 10:03:29 -0700 (PDT)
+Received: from hari-Inspiron-1545 ([183.83.92.73])
+        by smtp.gmail.com with ESMTPSA id l7sm13308033pfl.9.2019.05.19.10.03.27
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sun, 19 May 2019 10:03:29 -0700 (PDT)
+Date:   Sun, 19 May 2019 22:33:25 +0530
+From:   Hariprasad Kelam <hariprasad.kelam@gmail.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Hariprasad Kelam <hariprasad.kelam@gmail.com>,
+        Payal Kshirsagar <payal.s.kshirsagar.98@gmail.com>,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] taging: rtl8723bs: hal: odm_HWConfig: odm_HWConfig: Unneeded
+ variable: "result". Return "HAL_STATUS_SUCCESS"
+Message-ID: <20190519170325.GA6982@hari-Inspiron-1545>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 18 May 2019 19:27:33 -0300
-Jo=C3=A3o Seckler <joaoseckler@gmail.com> wrote:
+This patch fixes below warnings reported by coccicheck
 
-> Add a of_device_id struct variable and subsequent call to
-> MODULE_DEVICE_TABLE macro to support device tree.
->=20
-> Signed-off-by: Jo=C3=A3o Seckler <joaoseckler@gmail.com>
-> Signed-off-by: Lucas Oshiro <lucasseikioshiro@gmail.com>
-> Co-developed-by: Lucas Oshiro <lucasseikioshiro@gmail.com>
-Applied to the togreg branch of iio.git and pushed out as testing
-for the autobuilders to play with it.
+drivers/staging/rtl8723bs/hal/odm_HWConfig.c:501:4-10: Unneeded
+variable: "result". Return "HAL_STATUS_SUCCESS" on line 526
 
-For a future improvement, try to explain the 'why' rather than
-'what' of a patch in the description.   This particular change
-is so common I don't mind that much, but it is a good habit to
-get into!
+Signed-off-by: Hariprasad Kelam <hariprasad.kelam@gmail.com>
+---
+ drivers/staging/rtl8723bs/hal/odm_HWConfig.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-Thanks,
-
-Jonathan
-> ---
->  drivers/staging/iio/cdc/ad7746.c | 10 ++++++++++
->  1 file changed, 10 insertions(+)
->=20
-> diff --git a/drivers/staging/iio/cdc/ad7746.c b/drivers/staging/iio/cdc/a=
-d7746.c
-> index 47610d863908..21527d84f940 100644
-> --- a/drivers/staging/iio/cdc/ad7746.c
-> +++ b/drivers/staging/iio/cdc/ad7746.c
-> @@ -748,9 +748,19 @@ static const struct i2c_device_id ad7746_id[] =3D {
-> =20
->  MODULE_DEVICE_TABLE(i2c, ad7746_id);
-> =20
-> +static const struct of_device_id ad7746_of_match[] =3D {
-> +	{ .compatible =3D "adi,ad7745" },
-> +	{ .compatible =3D "adi,ad7746" },
-> +	{ .compatible =3D "adi,ad7747" },
-> +	{ },
-> +};
-> +
-> +MODULE_DEVICE_TABLE(of, ad7746_of_match);
-> +
->  static struct i2c_driver ad7746_driver =3D {
->  	.driver =3D {
->  		.name =3D KBUILD_MODNAME,
-> +		.of_match_table =3D ad7746_of_match,
->  	},
->  	.probe =3D ad7746_probe,
->  	.id_table =3D ad7746_id,
+diff --git a/drivers/staging/rtl8723bs/hal/odm_HWConfig.c b/drivers/staging/rtl8723bs/hal/odm_HWConfig.c
+index d802a1f..4711c65 100644
+--- a/drivers/staging/rtl8723bs/hal/odm_HWConfig.c
++++ b/drivers/staging/rtl8723bs/hal/odm_HWConfig.c
+@@ -498,8 +498,6 @@ HAL_STATUS ODM_ConfigBBWithHeaderFile(
+ 
+ HAL_STATUS ODM_ConfigMACWithHeaderFile(PDM_ODM_T pDM_Odm)
+ {
+-	u8 result = HAL_STATUS_SUCCESS;
+-
+ 	ODM_RT_TRACE(
+ 		pDM_Odm,
+ 		ODM_COMP_INIT,
+@@ -523,5 +521,5 @@ HAL_STATUS ODM_ConfigMACWithHeaderFile(PDM_ODM_T pDM_Odm)
+ 
+ 	READ_AND_CONFIG(8723B, _MAC_REG);
+ 
+-	return result;
++	return HAL_STATUS_SUCCESS;
+ }
+-- 
+2.7.4
 
