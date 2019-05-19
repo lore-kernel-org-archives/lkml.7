@@ -2,231 +2,117 @@ Return-Path: <SRS0=AA30=TT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-4.9 required=3.0 tests=DATE_IN_PAST_06_12,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE679C04AB4
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 May 2019 18:07:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87F19C04AB4
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 May 2019 18:07:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C3DC620675
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 May 2019 18:07:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E0E320449
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 May 2019 18:07:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=benyossef-com.20150623.gappssmtp.com header.i=@benyossef-com.20150623.gappssmtp.com header.b="1DhIF28L"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729514AbfESSHG (ORCPT
+        id S1729541AbfESSH0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 19 May 2019 14:07:06 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:46937 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728418AbfESSHF (ORCPT
+        Sun, 19 May 2019 14:07:26 -0400
+Received: from mail-ua1-f68.google.com ([209.85.222.68]:41521 "EHLO
+        mail-ua1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725784AbfESSH0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 19 May 2019 14:07:05 -0400
-Received: by mail-io1-f67.google.com with SMTP id q21so9237563iog.13
-        for <linux-kernel@vger.kernel.org>; Sun, 19 May 2019 11:07:04 -0700 (PDT)
+        Sun, 19 May 2019 14:07:26 -0400
+Received: by mail-ua1-f68.google.com with SMTP id s30so4503261uas.8
+        for <linux-kernel@vger.kernel.org>; Sun, 19 May 2019 11:07:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=benyossef-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=AfDkIx67EU0wHyEHueagVJG3HjlBgao6rt8wR4bAwCY=;
+        b=1DhIF28LSxz9G4Jti5KhSzI2A498eFkjxXbUEErOX1gKxjcvF3EMRfFWX96+lmzwcD
+         fGvVxDpQtkgu3dWJ5nq8aU1Kr6JSCO6dLbYcyy4c/PROtsxHewnBXjXV4syDCpl5FmSu
+         TFIxNikyIl0/Ap2KvZYY8YRKaJ08ZIVqssKvUChqhdFdV2dStlsVgXIe3ym265I93TV3
+         m2I4a8dW0tBEuZUJFkzWvLKpMp2S52pgWaGBSYD9+CcFIivJ1CbaDA8ki7Bypi9Kj3Rh
+         +oAFCbDfdYHFRGoZlQcH9jjLaeP6JTQszMmBujWo4o+uAkicK3R2yZAbew2VQsxBqGNS
+         IGfg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=MrJ+8w3q4C2ZYv1/8t+7v0iFZoScN0cheuy7tMbszSA=;
-        b=PolxRgpUjd2MXKTsIsonCrJLyNQRTDJ9AdwhTV/7fz3kr9zrdVg82SxZOXzjCq/X6p
-         fZ/MEo2DBVKZuqLAEutoSvO9AZjEE1+VyS+v90H8LIHOK304m5xCjjky4/JlAKr4SReB
-         1HUUsDAiPE8hQrfBNvbS7SYQu41/2YrvNhxkyy5gPiYWGIe2WGdVLAXi3ewUTxVngzlP
-         85KSR9aJttpxArLHXmk+3YJlo9cLluWBBaswij/fKIke93j27E981SVPqTVMlSQKtqxn
-         VPkaFILr138mA0yMsfPST7GCaiSl337t39x4Iy8dENI6EGf+mUUBd5bpyh+k1wlqD00K
-         dfpg==
-X-Gm-Message-State: APjAAAUF4Ahb8sOhPvMK5OX92N/MpCcUBpGafZojSKrsCbsLwzZC3BKO
-        e2fuWlxzJPBwGMbgJCfXhYQ3JVOlIF5VxBVzWyu2lw==
-X-Google-Smtp-Source: APXvYqy1XROmNEZrT2qxm6jsC0ny+x7qxxPnQf9qM8ZsWe9g/PqSWqm7OW/MwwlBoVYHrD2cnsDtsbxmX6BSu5mYL+0=
-X-Received: by 2002:a6b:7d0d:: with SMTP id c13mr8028833ioq.249.1558289224445;
- Sun, 19 May 2019 11:07:04 -0700 (PDT)
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=AfDkIx67EU0wHyEHueagVJG3HjlBgao6rt8wR4bAwCY=;
+        b=hNEKsYI2s4ghQ/8Si1v39ewWuWU/atUpu6ACdUTotQd/5L8SuKlouNDKsTl5Uft02Q
+         5vPREwA6SnD2HBrFeiUNaahw/V4hkEN8rs8Vy97CJnrEiggybudhUFhv1sX4qcXdomKt
+         ELDCh7r3qZC8mHJ/vJKeqRmSaDzF2Rm3zxcOfGYqmPJRSwB8uOUOn35lqZ4UFVbqvltb
+         exoRp2266zn211gpFc3pu880ytUB/IHZI49TOsfyr+nPbeyk9T6+y9gC8BFB3K47dnoN
+         F396A1t1Iur+cH/+DXH3oN9ROizZC0zQFXW/sC4/D5rRQcr2rpns0oLcD6yWg0/qSj2P
+         yxQw==
+X-Gm-Message-State: APjAAAU9NowIXaf1U6gXxdXxbYn9y06JRjTHNerUc5ngYb96jxE7JRsj
+        s1Wu/Y6sGOTf+aucpqmRIJPrla2YMnlLzTON+R4v09Kq7uU=
+X-Google-Smtp-Source: APXvYqy1ewDvtB4MUYqX6DuUZZ1vmwzclPcymjYyA39Wh+ycaaWGioENThJloKTmGBQNyKMpenvKzhxknWL/lJFLasE=
+X-Received: by 2002:ab0:5930:: with SMTP id n45mr19721206uad.87.1558254498292;
+ Sun, 19 May 2019 01:28:18 -0700 (PDT)
 MIME-Version: 1.0
-References: <3CD3EE63-0CD2-404A-A403-E11DCF2DF8D9@fb.com> <20190517074600.GJ2623@hirez.programming.kicks-ass.net>
- <20190517081057.GQ2650@hirez.programming.kicks-ass.net> <CACPcB9cB5n1HOmZcVpusJq8rAV5+KfmZ-Lxv3tgsSoy7vNrk7w@mail.gmail.com>
- <20190517091044.GM2606@hirez.programming.kicks-ass.net>
-In-Reply-To: <20190517091044.GM2606@hirez.programming.kicks-ass.net>
-From:   Kairui Song <kasong@redhat.com>
-Date:   Mon, 20 May 2019 02:06:54 +0800
-Message-ID: <CACPcB9cpNp5CBqoRs+XMCwufzAFa8Pj-gbmj9fb+g5wVdue=ig@mail.gmail.com>
-Subject: Re: Getting empty callchain from perf_callchain_kernel()
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Song Liu <songliubraving@fb.com>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Kernel Team <Kernel-team@fb.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        "bpf@vger.kernel.org" <bpf@vger.kernel.org>
+References: <20190418133913.9122-1-gilad@benyossef.com> <CAOtvUMd9WUZAFgTqVH0U2ZZp8bbHXNg9Ae_ZFvGKJTSKNct8JA@mail.gmail.com>
+ <20190517145235.GB10613@kroah.com> <CAOtvUMc++UtTP3fvXofuJA4JpdT86s5gbSx6WRtDK=sWnuUZrg@mail.gmail.com>
+In-Reply-To: <CAOtvUMc++UtTP3fvXofuJA4JpdT86s5gbSx6WRtDK=sWnuUZrg@mail.gmail.com>
+From:   Gilad Ben-Yossef <gilad@benyossef.com>
+Date:   Sun, 19 May 2019 11:28:05 +0300
+Message-ID: <CAOtvUMcfXHv0UxytEEdGJG5LM-SfyyVHbnbE0RNALMfBD1zuEQ@mail.gmail.com>
+Subject: Re: [PATCH 00/35] crypto: ccree: features and bug fixes for 5.2
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>, stable@vger.kernel.org,
+        Ofir Drang <ofir.drang@arm.com>,
+        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
+        Linux kernel mailing list <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 17, 2019 at 5:10 PM Peter Zijlstra <peterz@infradead.org> wrote:
+On Sat, May 18, 2019 at 10:36 AM Gilad Ben-Yossef <gilad@benyossef.com> wro=
+te:
 >
-> On Fri, May 17, 2019 at 04:15:39PM +0800, Kairui Song wrote:
-> > Hi, I think the actual problem is that bpf_get_stackid_tp (and maybe
-> > some other bfp functions) is now broken, or, strating an unwind
-> > directly inside a bpf program will end up strangely. It have following
-> > kernel message:
+> Hi
 >
-> Urgh, what is that bpf_get_stackid_tp() doing to get the regs? I can't
-> follow.
+> On Fri, May 17, 2019 at 5:52 PM Greg KH <gregkh@linuxfoundation.org> wrot=
+e:
+> >
+> > On Sun, Apr 21, 2019 at 11:52:55AM +0300, Gilad Ben-Yossef wrote:
+> > > On Thu, Apr 18, 2019 at 4:39 PM Gilad Ben-Yossef <gilad@benyossef.com=
+> wrote:
+> > > >
+> > > > A set of new features, mostly support for CryptoCell 713
+> > > > features including protected keys, security disable mode and
+> > > > new HW revision indetification interface alongside many bug fixes.
+> > >
+> > > FYI,
+> > >
+> > > A port of those patches from this patch series which have been marked
+> > > for stable is available at
+> > > https://github.com/gby/linux/tree/4.19-ccree
+> >
+> > Hm, all I seem to need are 2 patches that failed to apply.  Can you jus=
+t
+> > provide backports for them?
+>
+> Sure, I'll send them early next week.
 
-bpf_get_stackid_tp will just use the regs passed to it from the trace
-point. And then it will eventually call perf_get_callchain to get the
-call chain.
-With a tracepoint we have the fake regs, so unwinder will start from
-where it is called, and use the fake regs as the indicator of the
-target frame it want, and keep unwinding until reached the actually
-callsite.
+hm...  I've just fetched the latest from
+git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable.git,
+rebased that branch against the linux-4.19.y branch and it all went
+smooth.
 
-But if the stack trace is started withing a bpf func call then it's broken...
+What am I'm missing? is there some other tree I should be doing this on?
 
-If the unwinder could trace back through the bpf func call then there
-will be no such problem.
+Thanks,
+Gilad
 
-For frame pointer unwinder, set the indicator flag (X86_EFLAGS_FIXED)
-before bpf call, and ensure bp is also dumped could fix it (so it will
-start using the regs for bpf calls, like before the commit
-d15d356887e7). But for ORC I don't see a clear way to fix the problem.
-First though is maybe dump some callee's regs for ORC (IP, BP, SP, DI,
-DX, R10, R13, else?) in the trace point handler, then use the flag to
-indicate ORC to do one more unwind (because can't get caller's regs,
-so get callee's regs instaed) before actually giving output?
+--=20
+Gilad Ben-Yossef
+Chief Coffee Drinker
 
-I had a try, for framepointer unwinder, mark the indicator flag before
-calling bpf functions, and dump bp as well in the trace point. Then
-with frame pointer, it works, test passed:
-
-diff --git a/arch/x86/include/asm/perf_event.h
-b/arch/x86/include/asm/perf_event.h
-index 1392d5e6e8d6..6f1192e9776b 100644
---- a/arch/x86/include/asm/perf_event.h
-+++ b/arch/x86/include/asm/perf_event.h
-@@ -302,12 +302,25 @@ extern unsigned long perf_misc_flags(struct
-pt_regs *regs);
-
- #include <asm/stacktrace.h>
-
-+#ifdef CONFIG_FRAME_POINTER
-+static inline unsigned long caller_frame_pointer(void)
-+{
-+       return (unsigned long)__builtin_frame_address(1);
-+}
-+#else
-+static inline unsigned long caller_frame_pointer(void)
-+{
-+       return 0;
-+}
-+#endif
-+
- /*
-  * We abuse bit 3 from flags to pass exact information, see perf_misc_flags
-  * and the comment with PERF_EFLAGS_EXACT.
-  */
- #define perf_arch_fetch_caller_regs(regs, __ip)                {       \
-        (regs)->ip = (__ip);                                    \
-+       (regs)->bp = caller_frame_pointer();                    \
-        (regs)->sp = (unsigned long)__builtin_frame_address(0); \
-        (regs)->cs = __KERNEL_CS;                               \
-        regs->flags = 0;                                        \
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index abbd4b3b96c2..ca7b95ee74f0 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -8549,6 +8549,7 @@ void perf_trace_run_bpf_submit(void *raw_data,
-int size, int rctx,
-                               struct task_struct *task)
- {
-        if (bpf_prog_array_valid(call)) {
-+               regs->flags |= X86_EFLAGS_FIXED;
-                *(struct pt_regs **)raw_data = regs;
-                if (!trace_call_bpf(call, raw_data) || hlist_empty(head)) {
-                        perf_swevent_put_recursion_context(rctx);
-@@ -8822,6 +8823,8 @@ static void bpf_overflow_handler(struct perf_event *event,
-        int ret = 0;
-
-        ctx.regs = perf_arch_bpf_user_pt_regs(regs);
-+       ctx.regs->flags |= X86_EFLAGS_FIXED;
-+
-        preempt_disable();
-        if (unlikely(__this_cpu_inc_return(bpf_prog_active) != 1))
-                goto out;
-diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
-index f92d6ad5e080..e1fa656677dc 100644
---- a/kernel/trace/bpf_trace.c
-+++ b/kernel/trace/bpf_trace.c
-@@ -497,6 +497,8 @@ u64 bpf_event_output(struct bpf_map *map, u64
-flags, void *meta, u64 meta_size,
-        };
-
-        perf_fetch_caller_regs(regs);
-+       regs->flags |= X86_EFLAGS_FIXED;
-+
-        perf_sample_data_init(sd, 0, 0);
-        sd->raw = &raw;
-
-@@ -831,6 +833,8 @@ BPF_CALL_5(bpf_perf_event_output_raw_tp, struct
-bpf_raw_tracepoint_args *, args,
-        struct pt_regs *regs = this_cpu_ptr(&bpf_raw_tp_regs);
-
-        perf_fetch_caller_regs(regs);
-+       regs->flags |= X86_EFLAGS_FIXED;
-+
-        return ____bpf_perf_event_output(regs, map, flags, data, size);
- }
-
-@@ -851,6 +855,8 @@ BPF_CALL_3(bpf_get_stackid_raw_tp, struct
-bpf_raw_tracepoint_args *, args,
-        struct pt_regs *regs = this_cpu_ptr(&bpf_raw_tp_regs);
-
-        perf_fetch_caller_regs(regs);
-+       regs->flags |= X86_EFLAGS_FIXED;
-+
-        /* similar to bpf_perf_event_output_tp, but pt_regs fetched
-differently */
-        return bpf_get_stackid((unsigned long) regs, (unsigned long) map,
-                               flags, 0, 0);
-@@ -871,6 +877,8 @@ BPF_CALL_4(bpf_get_stack_raw_tp, struct
-bpf_raw_tracepoint_args *, args,
-        struct pt_regs *regs = this_cpu_ptr(&bpf_raw_tp_regs);
-
-        perf_fetch_caller_regs(regs);
-+       regs->flags |= X86_EFLAGS_FIXED;
-+
-        return bpf_get_stack((unsigned long) regs, (unsigned long) buf,
-                             (unsigned long) size, flags, 0);
- }
-
-And *_raw_tp functions will fetch the regs by themselves so a bit
-trouble some...
-
-----------
-
-And another approach is to make unwinder direct unwinding works when
-called by bpf (if possible and reasonable). I also had a nasty hacky
-experiment (posted below) to just force frame pointer unwinder's
-get_stack_info pass for bpf, then problem is fixed without any other
-workaround:
-
-diff --git a/arch/x86/kernel/dumpstack_64.c b/arch/x86/kernel/dumpstack_64.c
-index 753b8cfe8b8a..c0cfdf25f5ed 100644
---- a/arch/x86/kernel/dumpstack_64.c
-+++ b/arch/x86/kernel/dumpstack_64.c
-@@ -166,7 +166,8 @@ int get_stack_info(unsigned long *stack, struct
-task_struct *task,
-        if (in_entry_stack(stack, info))
-                goto recursion_check;
-
--       goto unknown;
-+       goto recursion_check;
-
- recursion_check:
-        /*
-
-Don't know how to do it the right way, or is it even possible for all
-unwinders yet...
-
--- 
-Best Regards,
-Kairui Song
+values of =CE=B2 will give rise to dom!
