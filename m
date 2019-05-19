@@ -2,88 +2,61 @@ Return-Path: <SRS0=AA30=TT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C390C04E87
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 May 2019 21:35:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9386EC04AB4
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 May 2019 21:35:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D225C20578
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 May 2019 21:35:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6EC84206BF
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 May 2019 21:35:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730193AbfESVfA (ORCPT
+        id S1730203AbfESVfV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 19 May 2019 17:35:00 -0400
-Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:59876 "EHLO
-        atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725784AbfESVe7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 19 May 2019 17:34:59 -0400
-Received: by atrey.karlin.mff.cuni.cz (Postfix, from userid 512)
-        id A5A4180378; Sun, 19 May 2019 23:34:47 +0200 (CEST)
-Date:   Sun, 19 May 2019 23:34:57 +0200
-From:   Pavel Machek <pavel@denx.de>
-To:     Ran Wang <ran.wang_1@nxp.com>
-Cc:     Li Yang <leoyang.li@nxp.com>, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <len.brown@intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linuxppc-dev@lists.ozlabs.org,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org
-Subject: Re: [PATCH V2 1/3] PM: wakeup: Add routine to help fetch wakeup
- source object.
-Message-ID: <20190519213457.GG31403@amd>
-References: <20190517033946.30763-1-ran.wang_1@nxp.com>
+        Sun, 19 May 2019 17:35:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35408 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729314AbfESVfU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 19 May 2019 17:35:20 -0400
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id EF11820578;
+        Sun, 19 May 2019 21:35:19 +0000 (UTC)
+Date:   Sun, 19 May 2019 17:35:18 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] tracing: silence GCC 9 array bounds warning
+Message-ID: <20190519173518.5f40adfb@gandalf.local.home>
+In-Reply-To: <CANiq72=hUULnd_oDoGoD2gjE-QvL2Kw2n7hMxke+gkS2_gzCqw@mail.gmail.com>
+References: <20190517092502.GA22779@gmail.com>
+        <CAHk-=wiNkOU-Ng+9_+tj4-AqJ4Q9JQpVbR4QVVAWLY68yQ62Gw@mail.gmail.com>
+        <CANiq72=hUULnd_oDoGoD2gjE-QvL2Kw2n7hMxke+gkS2_gzCqw@mail.gmail.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="sLx0z+5FKKtIVDwd"
-Content-Disposition: inline
-In-Reply-To: <20190517033946.30763-1-ran.wang_1@nxp.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, 17 May 2019 21:09:21 +0200
+Miguel Ojeda <miguel.ojeda.sandonis@gmail.com> wrote:
 
---sLx0z+5FKKtIVDwd
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> By the way, how do you all feel about moving this as a generic
+> facility to zero out the suffix/prefix of an structure? In particular,
+> since we won't have the LAT* stuff according to Steven.
 
+Is this done in other places? If so, how many.
 
-> --- a/include/linux/pm_wakeup.h
+Note, the LAT* update doesn't belong in the iterator reset function,
+but the pos = -1 still does.
 
-> @@ -70,6 +71,7 @@ struct wakeup_source {
->  	unsigned long		wakeup_count;
->  	bool			active:1;
->  	bool			autosleep_enabled:1;
-> +	struct device	*attached_dev;
->  };
-> =20
->  #ifdef CONFIG_PM_SLEEP
+Thanks!
 
-You might want to format this similary to the rest...
-									Pavel
-
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---sLx0z+5FKKtIVDwd
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAlzhzAEACgkQMOfwapXb+vJFYwCfWepB4p66NbXEV3e8W5ZictQ/
-Es8AmgKZXmLs30UjIBYDFKic2DbgBegF
-=KZ5b
------END PGP SIGNATURE-----
-
---sLx0z+5FKKtIVDwd--
+-- Steve
