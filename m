@@ -2,150 +2,234 @@ Return-Path: <SRS0=AA30=TT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_NEOMUTT autolearn=unavailable
+X-Spam-Status: No, score=-11.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36139C072A4
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 May 2019 01:05:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC469C04AAF
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 May 2019 01:07:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 020D22087E
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 May 2019 01:05:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4D7682087B
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 May 2019 01:07:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pRUr/6Z6"
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="T+fhJaoK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727429AbfESBFK (ORCPT
+        id S1728813AbfESBHe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 May 2019 21:05:10 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:55193 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726790AbfESBFJ (ORCPT
+        Sat, 18 May 2019 21:07:34 -0400
+Received: from conssluserg-04.nifty.com ([210.131.2.83]:37101 "EHLO
+        conssluserg-04.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727532AbfESBHe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 May 2019 21:05:09 -0400
-Received: by mail-wm1-f65.google.com with SMTP id i3so9996783wml.4;
-        Sat, 18 May 2019 18:05:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=EQEfknT+Pvq496JYf3bTAv5KronZjseZKCaJZPgbjH0=;
-        b=pRUr/6Z6CuZgZtbgnrrOWcWxfnPOW69i939s1wdUmEar6q/feiA9XbLQlxHt3J9n7m
-         q39AhEelGr0lZVXGG6LlBBwjnQS2XHi419ZKgy/ySYKn2E4GihGe2UIlrJZngV36x8di
-         FfzUBvQuhGYCmk3XYDWedMeBbWXK1KuL3m6t+LTXTyBP+mUUMo5ddcYgHJMN0SOosfiF
-         RfaTIqHfVRP2x7ilKi62wfFIY26/cRZzIG55XENf4zL9WY59DI2sVR7hTXtYg3X0TJrt
-         Gj8yZmWSBSNE7PYbQhnNNbFvpeE7Zts5w1+O5xCeTbg6n8ojtMptXdz3lRB+yhCIy/CW
-         EFsA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=EQEfknT+Pvq496JYf3bTAv5KronZjseZKCaJZPgbjH0=;
-        b=XIfKeE7DyY1TLJjq4x4vMWNG8xH6l8HU0b8mJFrYX3h3/UH6/YrwXfmM7azAUfFou+
-         Kgvhbo3TfeOwW0Ajzb+o2AtUpXyL+95Y4rqOzN5uXp3qaHDN0JRC/tZYMLfhLcKpWKBP
-         Fd532KbLEH/PLt+FjovLWxKZeYf3QkPot18PSiZnlQ/8058Ny3iWkNf8z7sugFSI1385
-         I/l7l65wtmJeT1KbuvU9gbBHpOZvZwJNkn6uO9bxYc7ABovVHXdsjOsCBNECgU0OgpY8
-         TlzDIv8K6ecwlfhTzljesXjBAxe2S2xFhkRZNg40sEsXSJcfQu0O44eQNVfAftYc43oF
-         X7Hw==
-X-Gm-Message-State: APjAAAUSlw7XTE55v7bnOPWTTzm+c7g7ko2KV/jnEMrAzlIjdPNkh0fm
-        n5ojL0jeCNDE10KbZddMMh4=
-X-Google-Smtp-Source: APXvYqyDyZ2OPbtG1vVkFrxQurfhlNIGM/0qiHcfFqPQZr9B1M1FERztOCTjLSZbuOaP8vskS+nTYQ==
-X-Received: by 2002:a1c:2104:: with SMTP id h4mr6868266wmh.146.1558227907595;
-        Sat, 18 May 2019 18:05:07 -0700 (PDT)
-Received: from smtp.gmail.com ([2001:818:dc0d:4d00:bee4:6ffd:a011:52a7])
-        by smtp.gmail.com with ESMTPSA id f2sm13553440wme.12.2019.05.18.18.05.05
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Sat, 18 May 2019 18:05:06 -0700 (PDT)
-Date:   Sat, 18 May 2019 22:04:56 -0300
-From:   Melissa Wen <melissa.srw@gmail.com>
-To:     Lars-Peter Clausen <lars@metafoo.de>,
-        Michael Hennerich <Michael.Hennerich@analog.com>,
-        Stefan Popa <stefan.popa@analog.com>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Barry Song <21cnbao@gmail.com>
-Cc:     linux-iio@vger.kernel.org, devel@driverdev.osuosl.org,
-        linux-kernel@vger.kernel.org, kernel-usp@googlegroups.com
-Subject: [PATCH] staging:iio:ad7150: fix threshold mode config bit
-Message-ID: <20190519010456.lwq7n2e6nkqa6niz@smtp.gmail.com>
+        Sat, 18 May 2019 21:07:34 -0400
+Received: from mail-ua1-f47.google.com (mail-ua1-f47.google.com [209.85.222.47]) (authenticated)
+        by conssluserg-04.nifty.com with ESMTP id x4J17Sqn012202;
+        Sun, 19 May 2019 10:07:29 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-04.nifty.com x4J17Sqn012202
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1558228050;
+        bh=IhI0yBjnGjQLG7F+/hheP5GcqYbG7sk4U/apfwQ5pSc=;
+        h=From:Date:Subject:To:Cc:From;
+        b=T+fhJaoKnYk9lQ7+biKBYPKrHimNpum9iVq4avz9numT0vVLTkuGNVcxWQl87m1M9
+         KL0KNnN3JDOhuJB0cqDPqkf2yYRyfnu410kYWLEdmd9zUJpyse3q4PLhhgPUqKqbEv
+         NICvV//icZmUb9HgavwR6W8cOMB/a1lXsVb4xMBL/Q1kpZ6mz4W9WISUN3tfZ7XGSh
+         5W+pGZlJiKkBy2vRdD0r+EFokVSpSJ9oH1oR7gs0iOXCurBWkXB5DnKvcqCT463loP
+         AbxxjtVFn7Rw0wNA2Mpd8YRjQZHahBvRPr/w9f3MX11uiRdzAktoBb4DDaoI/8fkdm
+         5DxBtk7y9uwTA==
+X-Nifty-SrcIP: [209.85.222.47]
+Received: by mail-ua1-f47.google.com with SMTP id t18so4136130uar.4;
+        Sat, 18 May 2019 18:07:29 -0700 (PDT)
+X-Gm-Message-State: APjAAAUNCzrud+V553rXQD1CRDK+nWBXPhZUw8sJwHd4bIB5Ugrc65BB
+        KSKfoPR+cUGA4JusIroDj5OtEp+heeGMVnvsNeE=
+X-Google-Smtp-Source: APXvYqx1TI6iwGKK/SFLpjp+jaBAvGAf0YAP57YvaWIWQWnEz1vGgsx1pNwKgFC5ZiPuJh1RXpiFFsAH5Dmo57Z13/I=
+X-Received: by 2002:a9f:24a3:: with SMTP id 32mr8526737uar.109.1558228048186;
+ Sat, 18 May 2019 18:07:28 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: NeoMutt/20180716
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+Date:   Sun, 19 May 2019 10:06:52 +0900
+X-Gmail-Original-Message-ID: <CAK7LNATmYHZoF5WYVY6mWet76Teb5YMyVDUuEGJRJdRiqETROQ@mail.gmail.com>
+Message-ID: <CAK7LNATmYHZoF5WYVY6mWet76Teb5YMyVDUuEGJRJdRiqETROQ@mail.gmail.com>
+Subject: [GIT PULL] more Kbuild updates for v5.2-rc1
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        masahiroy@kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-According to the AD7150 configuration register description, bit 7 assumes
-value 1 when the threshold mode is fixed and 0 when it is adaptive,
-however, the operation that identifies this mode was considering the
-opposite values.
+Hi Linus,
 
-This patch renames the boolean variable to describe it correctly and
-properly replaces it in the places where it is used.
+Please pull some late Kbuild updates.
+(The reasons for lateness are;
+[1] rebasing to avoid merge conflicts
+[2] pick up patches that were not taken care of
+    by arch maintainers
+[3] some (e.g. checker of module name uniqueness)
+    are good to merge even in the last minutes of MW
+)
 
-Fixes: 531efd6aa0991 ("staging:iio:adc:ad7150: chan_spec conv + i2c_smbus commands + drop unused poweroff timeout control.")
-Signed-off-by: Melissa Wen <melissa.srw@gmail.com>
----
- drivers/staging/iio/cdc/ad7150.c | 19 +++++++++++--------
- 1 file changed, 11 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/staging/iio/cdc/ad7150.c b/drivers/staging/iio/cdc/ad7150.c
-index dd7fcab8e19e..e075244c602b 100644
---- a/drivers/staging/iio/cdc/ad7150.c
-+++ b/drivers/staging/iio/cdc/ad7150.c
-@@ -5,6 +5,7 @@
-  * Copyright 2010-2011 Analog Devices Inc.
-  */
- 
-+#include <linux/bitfield.h>
- #include <linux/interrupt.h>
- #include <linux/device.h>
- #include <linux/kernel.h>
-@@ -130,7 +131,7 @@ static int ad7150_read_event_config(struct iio_dev *indio_dev,
- {
- 	int ret;
- 	u8 threshtype;
--	bool adaptive;
-+	bool thrfixed;
- 	struct ad7150_chip_info *chip = iio_priv(indio_dev);
- 
- 	ret = i2c_smbus_read_byte_data(chip->client, AD7150_CFG);
-@@ -138,21 +139,23 @@ static int ad7150_read_event_config(struct iio_dev *indio_dev,
- 		return ret;
- 
- 	threshtype = (ret >> 5) & 0x03;
--	adaptive = !!(ret & 0x80);
-+
-+	/*check if threshold mode is fixed or adaptive*/
-+	thrfixed = FIELD_GET(AD7150_CFG_FIX, ret);
- 
- 	switch (type) {
- 	case IIO_EV_TYPE_MAG_ADAPTIVE:
- 		if (dir == IIO_EV_DIR_RISING)
--			return adaptive && (threshtype == 0x1);
--		return adaptive && (threshtype == 0x0);
-+			return !thrfixed && (threshtype == 0x1);
-+		return !thrfixed && (threshtype == 0x0);
- 	case IIO_EV_TYPE_THRESH_ADAPTIVE:
- 		if (dir == IIO_EV_DIR_RISING)
--			return adaptive && (threshtype == 0x3);
--		return adaptive && (threshtype == 0x2);
-+			return !thrfixed && (threshtype == 0x3);
-+		return !thrfixed && (threshtype == 0x2);
- 	case IIO_EV_TYPE_THRESH:
- 		if (dir == IIO_EV_DIR_RISING)
--			return !adaptive && (threshtype == 0x1);
--		return !adaptive && (threshtype == 0x0);
-+			return thrfixed && (threshtype == 0x1);
-+		return thrfixed && (threshtype == 0x0);
- 	default:
- 		break;
- 	}
+Thanks.
+
+
+The following changes since commit 72cf0b07418a9c8349aa9137194b1ccba6e54a9d:
+
+  Merge tag 'sound-fix-5.2-rc1' of
+git://git.kernel.org/pub/scm/linux/kernel/git/tiwai/sound (2019-05-17
+13:57:54 -0700)
+
+are available in the git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/masahiroy/linux-kbuild.git
+tags/kbuild-v5.2-2
+
+for you to fetch changes up to fc2694ec1ab7c805505bef2752aca56977a22abd:
+
+  kconfig: use 'else ifneq' for Makefile to improve readability
+(2019-05-19 09:34:35 +0900)
+
+----------------------------------------------------------------
+Kbuild updates for v5.2 (2nd)
+
+ - remove unneeded use of cc-option, cc-disable-warning, cc-ldoption
+
+ - exclude tracked files from .gitignore
+
+ - re-enable -Wint-in-bool-context warning
+
+ - refactor samples/Makefile
+
+ - stop building immediately if syncconfig fails
+
+ - do not sprinkle error messages when $(CC) does not exist
+
+ - move arch/alpha/defconfig to the configs subdirectory
+
+ - remove crappy header search path manipulation
+
+ - add comment lines to .config to clarify the end of menu blocks
+
+ - check uniqueness of module names (adding new warnings intentionally)
+
+----------------------------------------------------------------
+Alexander Popov (1):
+      kconfig: Terminate menu blocks with a comment in the generated config
+
+Krzysztof Kozlowski (1):
+      MAINTAINERS: kbuild: Add pattern for scripts/*vmlinux*
+
+Masahiro Yamada (19):
+      csky: remove deprecated arch/csky/boot/dts/include/dt-bindings
+      sh: exclude vmlinux.scr from .gitignore pattern
+      kbuild: re-enable int-in-bool-context warning
+      samples: guard sub-directories with CONFIG options
+      arch: remove dangling asm-generic wrappers
+      kbuild: add -Wvla flag unconditionally
+      kbuild: add some extra warning flags unconditionally
+      kbuild: add all Clang-specific flags unconditionally
+      .gitignore: exclude .get_maintainer.ignore and .gitattributes
+      kbuild: turn auto.conf.cmd into a mandatory include file
+      kbuild: terminate Kconfig when $(CC) or $(LD) is missing
+      alpha: move arch/alpha/defconfig to arch/alpha/configs/defconfig
+      media: remove unneeded header search paths
+      media: prefix header search paths with $(srctree)/
+      treewide: prefix header search paths with $(srctree)/
+      kbuild: remove 'addtree' and 'flags' magic for header search paths
+      kbuild: add LICENSES to KBUILD_ALLDIRS
+      kbuild: check uniqueness of module names
+      kconfig: use 'else ifneq' for Makefile to improve readability
+
+Nathan Chancellor (1):
+      kbuild: Don't try to add '-fcatch-undefined-behavior' flag
+
+Nick Desaulniers (2):
+      ia64: require -Wl,--hash-style=sysv
+      sh: vsyscall: drop unnecessary cc-ldoption
+
+ .gitignore                                    |  8 +++++---
+ MAINTAINERS                                   |  1 +
+ Makefile                                      | 21 ++++++++++-----------
+ arch/alpha/Makefile                           |  2 ++
+ arch/alpha/{ => configs}/defconfig            |  0
+ arch/csky/boot/dts/include/dt-bindings        |  1 -
+ arch/csky/include/asm/Kbuild                  |  4 ----
+ arch/h8300/include/asm/Kbuild                 |  1 -
+ arch/ia64/kernel/Makefile.gate                |  2 +-
+ arch/mips/pnx833x/Platform                    |  2 +-
+ arch/nds32/include/asm/Kbuild                 |  3 ---
+ arch/powerpc/Makefile                         |  2 +-
+ arch/riscv/include/asm/Kbuild                 |  4 ----
+ arch/sh/Makefile                              |  4 ++--
+ arch/sh/boot/.gitignore                       |  1 +
+ arch/sh/kernel/vsyscall/Makefile              |  3 +--
+ arch/x86/kernel/Makefile                      |  2 +-
+ arch/x86/mm/Makefile                          |  2 +-
+ arch/xtensa/boot/lib/Makefile                 |  2 +-
+ arch/xtensa/include/asm/Kbuild                |  1 -
+ drivers/hid/intel-ish-hid/Makefile            |  2 +-
+ drivers/media/common/b2c2/Makefile            |  4 ++--
+ drivers/media/dvb-frontends/cxd2880/Makefile  |  2 --
+ drivers/media/i2c/smiapp/Makefile             |  2 +-
+ drivers/media/mmc/siano/Makefile              |  3 +--
+ drivers/media/pci/b2c2/Makefile               |  2 +-
+ drivers/media/pci/bt8xx/Makefile              |  5 ++---
+ drivers/media/pci/cx18/Makefile               |  4 ++--
+ drivers/media/pci/cx23885/Makefile            |  4 ++--
+ drivers/media/pci/cx88/Makefile               |  4 ++--
+ drivers/media/pci/ddbridge/Makefile           |  4 ++--
+ drivers/media/pci/dm1105/Makefile             |  2 +-
+ drivers/media/pci/mantis/Makefile             |  2 +-
+ drivers/media/pci/netup_unidvb/Makefile       |  2 +-
+ drivers/media/pci/ngene/Makefile              |  4 ++--
+ drivers/media/pci/pluto2/Makefile             |  2 +-
+ drivers/media/pci/pt1/Makefile                |  4 ++--
+ drivers/media/pci/pt3/Makefile                |  4 ++--
+ drivers/media/pci/smipcie/Makefile            |  5 ++---
+ drivers/media/pci/ttpci/Makefile              |  4 ++--
+ drivers/media/platform/sti/c8sectpfe/Makefile |  5 ++---
+ drivers/media/radio/Makefile                  |  2 --
+ drivers/media/spi/Makefile                    |  4 +---
+ drivers/media/usb/as102/Makefile              |  2 +-
+ drivers/media/usb/au0828/Makefile             |  4 ++--
+ drivers/media/usb/b2c2/Makefile               |  2 +-
+ drivers/media/usb/cx231xx/Makefile            |  5 ++---
+ drivers/media/usb/em28xx/Makefile             |  4 ++--
+ drivers/media/usb/go7007/Makefile             |  2 +-
+ drivers/media/usb/pvrusb2/Makefile            |  4 ++--
+ drivers/media/usb/siano/Makefile              |  2 +-
+ drivers/media/usb/tm6000/Makefile             |  4 ++--
+ drivers/media/usb/ttusb-budget/Makefile       |  2 +-
+ drivers/media/usb/usbvision/Makefile          |  2 --
+ drivers/net/ethernet/chelsio/libcxgb/Makefile |  2 +-
+ drivers/target/iscsi/cxgbit/Makefile          |  6 +++---
+ drivers/usb/storage/Makefile                  |  2 +-
+ fs/ocfs2/dlm/Makefile                         |  3 +--
+ fs/ocfs2/dlmfs/Makefile                       |  2 +-
+ fs/xfs/Makefile                               |  4 ++--
+ net/bpfilter/Makefile                         |  2 +-
+ samples/Makefile                              | 24 ++++++++++++++++++++----
+ samples/seccomp/Makefile                      |  2 +-
+ samples/vfs/Makefile                          |  2 +-
+ scripts/Kbuild.include                        |  8 --------
+ scripts/Kconfig.include                       |  8 ++++++++
+ scripts/Makefile.extrawarn                    | 25 +++++++++++++------------
+ scripts/Makefile.host                         | 12 +++++-------
+ scripts/Makefile.lib                          | 26 ++++++++------------------
+ scripts/dtc/Makefile                          |  6 +++---
+ scripts/genksyms/Makefile                     |  4 ++--
+ scripts/kconfig/Makefile                      |  8 +++-----
+ scripts/kconfig/confdata.c                    | 13 ++++++++++++-
+ scripts/modules-check.sh                      | 16 ++++++++++++++++
+ 74 files changed, 178 insertions(+), 172 deletions(-)
+ rename arch/alpha/{ => configs}/defconfig (100%)
+ delete mode 120000 arch/csky/boot/dts/include/dt-bindings
+ create mode 100755 scripts/modules-check.sh
+
+
 -- 
-2.20.1
-
+Best Regards
+Masahiro Yamada
