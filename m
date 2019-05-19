@@ -4,63 +4,64 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DD16C04AB4
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 May 2019 19:10:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C7FEC072AD
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 May 2019 19:15:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5418E20645
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 May 2019 19:10:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B10D206B6
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 May 2019 19:15:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558293037;
-	bh=8jixYHmTH5m9UlhciK6dW32Y/+nWZ8e+T4iaHo0j1LU=;
+	s=default; t=1558293323;
+	bh=2NPU35+R0BIDd+eDKQ995xuCgF6F2m6s+/JE6TRSog8=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=zxxpy2Db25iHeOrQo74Vw0P0nWFGStiYs05wrsyN4Y3jKEW9xsGRV8+ek4Yd46Fcc
-	 RWFAP/qjF8EKC85h9j1eV/8MzKC114dETIJ3iBu995VquEQsF8tyZSj1sMGTKKBXPR
-	 IjR6lxIbZlfBPwiO4ZBJRDOBNRzqqTp9X0q1osRQ=
+	b=VHtQmk9PgilfTyhOPHF2iLGa7LQqJzfjPTLh6tnBcaG+aGsDvunVf4XEBadbCE8vF
+	 zcVMrZQW2Fnm0hMJKeR+Ujl3c0oaQ/osiY0BzXNwvBWESSinG+mhnEfgZwTNfGoyLX
+	 CGyhGK9+4EW9Xuq5CV8PYgxPVFxPXtTasVaJahTI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730009AbfESTKg (ORCPT
+        id S1727794AbfESTPW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 19 May 2019 15:10:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36874 "EHLO mail.kernel.org"
+        Sun, 19 May 2019 15:15:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39790 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726436AbfESTKf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 19 May 2019 15:10:35 -0400
-Subject: Re: [GIT PULL] ext4 fixes for 5.1-rc1
+        id S1726542AbfESTPV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 19 May 2019 15:15:21 -0400
+Subject: Re: [GIT PULL] SMB3 Fixes
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558293035;
-        bh=8jixYHmTH5m9UlhciK6dW32Y/+nWZ8e+T4iaHo0j1LU=;
+        s=default; t=1558293321;
+        bh=2NPU35+R0BIDd+eDKQ995xuCgF6F2m6s+/JE6TRSog8=;
         h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=llLcRmglkFFddMLJCcwbNqhDcVZqgWWHvUQZrh7QEXUKdFEXcIt8bXdO/JfjHVZxM
-         7AbfTN1ElDzZ6EhOii+qLLkDS1jcBnz6lVsjEJTDS4ncYVmS6a1AM/CBcUtwIc6fAd
-         Weidfk/uHsuaMXFApQJEBgZBYg/BMgQIPUBDCvQw=
+        b=Y7YMa6h5cBZhhpKEFbrEXYWLWiMd3PDgERKytfi13v6Y4tUGRw66lPJ4penVk1L3h
+         W9Nu1OjMGhua5+73pyPLDtg5Hytz/6ZC6mLlisQvYsk1DLS/j/obVVAVNZu6eD2xKM
+         jftngKG+uOmjnO/Z1Ss9H+hWCFjd/0fO8rl/5el8=
 From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20190519055848.GA16693@mit.edu>
-References: <20190519055848.GA16693@mit.edu>
-X-PR-Tracked-List-Id: <linux-ext4.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20190519055848.GA16693@mit.edu>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/tytso/ext4.git
- tags/ext4_for_linus_stable
-X-PR-Tracked-Commit-Id: 2c1d0e3631e5732dba98ef49ac0bec1388776793
+In-Reply-To: <CAH2r5msEB_bvDTOPLwtoH0Ty6ttXhb3RP+18d47xNjN7q0apYA@mail.gmail.com>
+References: <CAH2r5msEB_bvDTOPLwtoH0Ty6ttXhb3RP+18d47xNjN7q0apYA@mail.gmail.com>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <CAH2r5msEB_bvDTOPLwtoH0Ty6ttXhb3RP+18d47xNjN7q0apYA@mail.gmail.com>
+X-PR-Tracked-Remote: git://git.samba.org/sfrench/cifs-2.6.git
+ tags/5.2-rc-smb3-fixes
+X-PR-Tracked-Commit-Id: dece44e381ab4a9fd1021db45ba4472e8c85becb
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: c4d36b63b28b76cd584bec48af7b562b4513b87b
-Message-Id: <155829303514.20625.8555456470191160244.pr-tracker-bot@kernel.org>
-Date:   Sun, 19 May 2019 19:10:35 +0000
-To:     "Theodore Ts'o" <tytso@mit.edu>
-Cc:     torvalds@linux-foundation.org, linux-ext4@vger.kernel.org,
-        linux-kernel@vger.kernel.org
+X-PR-Merge-Commit-Id: d8848eefc1d541dd0e3ae175e09fb5c66f1d4de6
+Message-Id: <155829332124.24875.10913503700761281896.pr-tracker-bot@kernel.org>
+Date:   Sun, 19 May 2019 19:15:21 +0000
+To:     Steve French <smfrench@gmail.com>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        CIFS <linux-cifs@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Sun, 19 May 2019 01:58:48 -0400:
+The pull request you sent on Fri, 17 May 2019 22:37:33 -0500:
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/tytso/ext4.git tags/ext4_for_linus_stable
+> git://git.samba.org/sfrench/cifs-2.6.git tags/5.2-rc-smb3-fixes
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/c4d36b63b28b76cd584bec48af7b562b4513b87b
+https://git.kernel.org/torvalds/c/d8848eefc1d541dd0e3ae175e09fb5c66f1d4de6
 
 Thank you!
 
