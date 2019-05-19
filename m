@@ -2,107 +2,65 @@ Return-Path: <SRS0=AA30=TT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0176C072AD
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 May 2019 17:17:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60445C04AB4
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 May 2019 17:20:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BC9A7204EC
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 May 2019 17:17:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558286242;
-	bh=IU3z1lGeIXgWy+wPKVyg2cUICOUubab/isnFfeXG9XU=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=EfJdTNpNe9R2uiiU6h/ls5m1RmW3L+agxIk5Y5yRJZrGSk1j6SmdYmfSn4QPcXuAr
-	 nQz2kjgPpaZc2bCXk6KuixXe8qtBi4OVJekoFDLZB+pMgzxGZJPFunZdIKxq08nXbS
-	 wFa5+HltvuVRq9keR24G2T5VnML56LAPtlczjrzo=
+	by mail.kernel.org (Postfix) with ESMTP id 3D75F204EC
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 May 2019 17:20:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727157AbfESRRW (ORCPT
+        id S1727323AbfESRUm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 19 May 2019 13:17:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33020 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726607AbfESRRV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 19 May 2019 13:17:21 -0400
-Received: from archlinux (cpc91196-cmbg18-2-0-cust659.5-4.cable.virginm.net [81.96.234.148])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CE7D8217D9;
-        Sun, 19 May 2019 11:19:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558264780;
-        bh=IU3z1lGeIXgWy+wPKVyg2cUICOUubab/isnFfeXG9XU=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=xkV07FOOaPmLt2IaWxZVVagvoCZ0zikunT4WzmMbDo9xzy15VXmHCEXzvGGdumDlz
-         vOMofUuC1QLHUW6W7N16CmDsGOH1H3tDlcbEGmJwD36d5D8gJevDWm/yvZ6/hfGkvB
-         9XoYoIAChIwFyKeIn97QB35zD1xgBY0jZ3zZnI7M=
-Date:   Sun, 19 May 2019 12:19:35 +0100
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     =?UTF-8?B?Sm/Do28=?= Seckler <joaoseckler@gmail.com>
-Cc:     Lars-Peter Clausen <lars@metafoo.de>,
-        Michael Hennerich <Michael.Hennerich@analog.com>,
-        Stefan Popa <stefan.popa@analog.com>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-iio@vger.kernel.org, devel@driverdev.osuosl.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] staging: iio: ad9832: Add device tree support
-Message-ID: <20190519121935.341fd173@archlinux>
-In-Reply-To: <20190518204825.4kh5qkqo2e5q2se6@smtp.gmail.com>
-References: <20190518204825.4kh5qkqo2e5q2se6@smtp.gmail.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Sun, 19 May 2019 13:20:42 -0400
+Received: from Galois.linutronix.de ([146.0.238.70]:55672 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727159AbfESRUm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 19 May 2019 13:20:42 -0400
+Received: from p5de0b374.dip0.t-ipconnect.de ([93.224.179.116] helo=nanos)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1hSO9r-000660-SR; Sun, 19 May 2019 17:55:32 +0200
+Date:   Sun, 19 May 2019 17:55:31 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+cc:     Stephen Boyd <sboyd@kernel.org>,
+        John Stultz <john.stultz@linaro.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH RFC] time: validate watchdog clocksource using second
+ best candidate
+In-Reply-To: <alpine.DEB.2.21.1905182023520.3019@nanos.tec.linutronix.de>
+Message-ID: <alpine.DEB.2.21.1905191753300.3019@nanos.tec.linutronix.de>
+References: <155790645605.1933.906798561802423361.stgit@buzz> <alpine.DEB.2.21.1905181712000.3019@nanos.tec.linutronix.de> <602b155f-4108-2865-3f1c-4e63d73405ed@yandex-team.ru> <alpine.DEB.2.21.1905182023520.3019@nanos.tec.linutronix.de>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 18 May 2019 17:48:25 -0300
-Jo=C3=A3o Seckler <joaoseckler@gmail.com> wrote:
+On Sat, 18 May 2019, Thomas Gleixner wrote:
+> On Sat, 18 May 2019, Konstantin Khlebnikov wrote:
+> > If there is no second clocksource my patch does noting:
+> > watchdog_backup stays NULL and backup_consent always true.
+> 
+> That still does not justify the extra complexity for a few custom built
+> systems.
 
-> Add a of_device_id struct variable and subsequent call to
-> MODULE_DEVICE_TABLE macro to support device tree.
->=20
-> Signed-off-by: Jo=C3=A3o Seckler <joaoseckler@gmail.com>
-> Signed-off-by: Anderson Reis <andersonreisrosa@gmail.com>
-> Co-developed-by: Anderson Reis  <andersonreisrosa@gmail.com>
-> Signed-off-by: Andre Tadeu de Carvalho <andre.tadeu.de.carvalho@gmail.com>
-> Co-developed-by: Andre Tadeu de Carvalho <andre.tadeu.de.carvalho@gmail.c=
-om>
-Hi All,
-
-Missing the setting of the relevant entry in the spi_driver structure.
-Otherwise looks fine,
+Aside of that this leaves the HPET in a half broken state. HPET is not only
+used as a clock event device it's also exposed by HPET device. So no, if we
+figure out that HPET is broken on some platforms we have to blacklist and
+disable it completely and not just duct tape the place which exposes the
+wreckage.
 
 Thanks,
 
-Jonathan
-> ---
->  drivers/staging/iio/frequency/ad9832.c | 7 +++++++
->  1 file changed, 7 insertions(+)
->=20
-> diff --git a/drivers/staging/iio/frequency/ad9832.c b/drivers/staging/iio=
-/frequency/ad9832.c
-> index 74308a2e72db..51e97c74c6b2 100644
-> --- a/drivers/staging/iio/frequency/ad9832.c
-> +++ b/drivers/staging/iio/frequency/ad9832.c
-> @@ -451,6 +451,13 @@ static int ad9832_remove(struct spi_device *spi)
->  	return 0;
->  }
-> =20
-> +static const struct of_device_id ad9832_of_match[] =3D {
-> +	{ .compatible =3D "adi,ad9832", },
-> +	{ .compatible =3D "adi,ad9835", },
-> +	{ /* sentinel */ },
-> +};
-> +MODULE_DEVICE_TABLE(of, ad9832_of_match);
-> +
->  static const struct spi_device_id ad9832_id[] =3D {
->  	{"ad9832", 0},
->  	{"ad9835", 0},
-
+	tglx
