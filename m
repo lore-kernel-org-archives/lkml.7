@@ -2,186 +2,113 @@ Return-Path: <SRS0=AA30=TT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11D07C04AB4
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 May 2019 17:01:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66BEAC46460
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 May 2019 17:02:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DA6092082E
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 May 2019 17:01:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 33D21206BF
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 May 2019 17:02:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1558285343;
+	bh=mBpAhk//8WvsbTtXPi/GRsgbj/yowPAq5t4mJK5gccY=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=RbDDhh02FNNWIzqc92+T1dxTksDyHy45pMWRR9a2w7/JNNOu3oywVEEKT5nJ+VfHi
+	 bdL41Jj3oVbxK/KU1AsrhsdF8X9MEG1V6P8DFVHnKpS069sOS7a1KVstwM4b6Ob0eS
+	 pmnBccTiDnFa9cl9X/l86erubsoGnz/WrNe4m21o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726909AbfESRBH (ORCPT
+        id S1726133AbfESRCW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 19 May 2019 13:01:07 -0400
-Received: from ja.ssi.bg ([178.16.129.10]:36148 "EHLO ja.ssi.bg"
-        rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726482AbfESRBG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 19 May 2019 13:01:06 -0400
-Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-        by ja.ssi.bg (8.15.2/8.15.2) with ESMTP id x4JA9OiJ007435;
-        Sun, 19 May 2019 13:09:25 +0300
-Date:   Sun, 19 May 2019 13:09:24 +0300 (EEST)
-From:   Julian Anastasov <ja@ssi.bg>
-To:     YueHaibing <yuehaibing@huawei.com>
-cc:     davem@davemloft.net, wensong@linux-vs.org, horms@verge.net.au,
-        pablo@netfilter.org, kadlec@blackhole.kfki.hu, fw@strlen.de,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        lvs-devel@vger.kernel.org, netfilter-devel@vger.kernel.org,
-        coreteam@netfilter.org
-Subject: Re: [PATCH v2] ipvs: Fix use-after-free in ip_vs_in
-In-Reply-To: <20190517143149.17016-1-yuehaibing@huawei.com>
-Message-ID: <alpine.LFD.2.21.1905191258160.2448@ja.home.ssi.bg>
-References: <alpine.LFD.2.21.1905171015040.2233@ja.home.ssi.bg> <20190517143149.17016-1-yuehaibing@huawei.com>
-User-Agent: Alpine 2.21 (LFD 202 2017-01-01)
+        Sun, 19 May 2019 13:02:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56768 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725971AbfESRCW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 19 May 2019 13:02:22 -0400
+Received: from archlinux (cpc91196-cmbg18-2-0-cust659.5-4.cable.virginm.net [81.96.234.148])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 28C9E2177B;
+        Sun, 19 May 2019 11:02:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1558263775;
+        bh=mBpAhk//8WvsbTtXPi/GRsgbj/yowPAq5t4mJK5gccY=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=pYZptuxyzCXeqdm4KC3jNE70+82Jk/nhhiTgXH5L3lozFHn2Bt2SRB5qrN7GITWoX
+         53y8XAbO4rR2LQGiNSswervuiIzCkuzDTVpR6En2/W6ZddHlODiPc3/sGaLzFj04i5
+         JvRvo6cyOt1Us/mBYWwqQN4zNOJNQHySnd00HXvw=
+Date:   Sun, 19 May 2019 12:02:50 +0100
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     =?UTF-8?B?Sm/Do28=?= Seckler <joaoseckler@gmail.com>
+Cc:     Lars-Peter Clausen <lars@metafoo.de>,
+        Michael Hennerich <Michael.Hennerich@analog.com>,
+        Stefan Popa <stefan.popa@analog.com>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-iio@vger.kernel.org, devel@driverdev.osuosl.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] staging: iio: ad7746: add device tree support
+Message-ID: <20190519120250.4644c255@archlinux>
+In-Reply-To: <20190518222733.2ttcgvy7fct4awra@smtp.gmail.com>
+References: <20190518222733.2ttcgvy7fct4awra@smtp.gmail.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Sat, 18 May 2019 19:27:33 -0300
+Jo=C3=A3o Seckler <joaoseckler@gmail.com> wrote:
 
-	Hello,
+> Add a of_device_id struct variable and subsequent call to
+> MODULE_DEVICE_TABLE macro to support device tree.
+>=20
+> Signed-off-by: Jo=C3=A3o Seckler <joaoseckler@gmail.com>
+> Signed-off-by: Lucas Oshiro <lucasseikioshiro@gmail.com>
+> Co-developed-by: Lucas Oshiro <lucasseikioshiro@gmail.com>
+Applied to the togreg branch of iio.git and pushed out as testing
+for the autobuilders to play with it.
 
-On Fri, 17 May 2019, YueHaibing wrote:
+For a future improvement, try to explain the 'why' rather than
+'what' of a patch in the description.   This particular change
+is so common I don't mind that much, but it is a good habit to
+get into!
 
-> BUG: KASAN: use-after-free in ip_vs_in.part.29+0xe8/0xd20 [ip_vs]
-> Read of size 4 at addr ffff8881e9b26e2c by task sshd/5603
-> 
-> CPU: 0 PID: 5603 Comm: sshd Not tainted 4.19.39+ #30
-> Hardware name: Red Hat KVM, BIOS 0.5.1 01/01/2011
-> Call Trace:
->  dump_stack+0x71/0xab
->  print_address_description+0x6a/0x270
->  kasan_report+0x179/0x2c0
->  ip_vs_in.part.29+0xe8/0xd20 [ip_vs]
->  ip_vs_in+0xd8/0x170 [ip_vs]
->  nf_hook_slow+0x5f/0xe0
->  __ip_local_out+0x1d5/0x250
->  ip_local_out+0x19/0x60
->  __tcp_transmit_skb+0xba1/0x14f0
->  tcp_write_xmit+0x41f/0x1ed0
->  ? _copy_from_iter_full+0xca/0x340
->  __tcp_push_pending_frames+0x52/0x140
->  tcp_sendmsg_locked+0x787/0x1600
->  ? tcp_sendpage+0x60/0x60
->  ? inet_sk_set_state+0xb0/0xb0
->  tcp_sendmsg+0x27/0x40
->  sock_sendmsg+0x6d/0x80
->  sock_write_iter+0x121/0x1c0
->  ? sock_sendmsg+0x80/0x80
->  __vfs_write+0x23e/0x370
->  vfs_write+0xe7/0x230
->  ksys_write+0xa1/0x120
->  ? __ia32_sys_read+0x50/0x50
->  ? __audit_syscall_exit+0x3ce/0x450
->  do_syscall_64+0x73/0x200
->  entry_SYSCALL_64_after_hwframe+0x44/0xa9
-> RIP: 0033:0x7ff6f6147c60
-> Code: 73 01 c3 48 8b 0d 28 12 2d 00 f7 d8 64 89 01 48 83 c8 ff c3 66 0f 1f 44 00 00 83 3d 5d 73 2d 00 00 75 10 b8 01 00 00 00 0f 05 <48> 3d 01 f0 ff ff 73 31 c3 48 83
-> RSP: 002b:00007ffd772ead18 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
-> RAX: ffffffffffffffda RBX: 0000000000000034 RCX: 00007ff6f6147c60
-> RDX: 0000000000000034 RSI: 000055df30a31270 RDI: 0000000000000003
-> RBP: 000055df30a31270 R08: 0000000000000000 R09: 0000000000000000
-> R10: 00007ffd772ead70 R11: 0000000000000246 R12: 00007ffd772ead74
-> R13: 00007ffd772eae20 R14: 00007ffd772eae24 R15: 000055df2f12ddc0
-> 
-> Allocated by task 6052:
->  kasan_kmalloc+0xa0/0xd0
->  __kmalloc+0x10a/0x220
->  ops_init+0x97/0x190
->  register_pernet_operations+0x1ac/0x360
->  register_pernet_subsys+0x24/0x40
->  0xffffffffc0ea016d
->  do_one_initcall+0x8b/0x253
->  do_init_module+0xe3/0x335
->  load_module+0x2fc0/0x3890
->  __do_sys_finit_module+0x192/0x1c0
->  do_syscall_64+0x73/0x200
->  entry_SYSCALL_64_after_hwframe+0x44/0xa9
-> 
-> Freed by task 6067:
->  __kasan_slab_free+0x130/0x180
->  kfree+0x90/0x1a0
->  ops_free_list.part.7+0xa6/0xc0
->  unregister_pernet_operations+0x18b/0x1f0
->  unregister_pernet_subsys+0x1d/0x30
->  ip_vs_cleanup+0x1d/0xd2f [ip_vs]
->  __x64_sys_delete_module+0x20c/0x300
->  do_syscall_64+0x73/0x200
->  entry_SYSCALL_64_after_hwframe+0x44/0xa9
-> 
-> The buggy address belongs to the object at ffff8881e9b26600 which belongs to the cache kmalloc-4096 of size 4096
-> The buggy address is located 2092 bytes inside of 4096-byte region [ffff8881e9b26600, ffff8881e9b27600)
-> The buggy address belongs to the page:
-> page:ffffea0007a6c800 count:1 mapcount:0 mapping:ffff888107c0e600 index:0x0 compound_mapcount: 0
-> flags: 0x17ffffc0008100(slab|head)
-> raw: 0017ffffc0008100 dead000000000100 dead000000000200 ffff888107c0e600
-> raw: 0000000000000000 0000000080070007 00000001ffffffff 0000000000000000
-> page dumped because: kasan: bad access detected
-> 
-> while unregistering ipvs module, ops_free_list calls
-> __ip_vs_cleanup, then nf_unregister_net_hooks be called to
-> do remove nf hook entries. It need a RCU period to finish,
-> however net->ipvs is set to NULL immediately, which will
-> trigger NULL pointer dereference when a packet is hooked
-> and handled by ip_vs_in where net->ipvs is dereferenced.
-> 
-> Another scene is ops_free_list call ops_free to free the
-> net_generic directly while __ip_vs_cleanup finished, then
-> calling ip_vs_in will triggers use-after-free.
-> 
-> This patch moves nf_unregister_net_hooks from __ip_vs_cleanup()
-> to __ip_vs_dev_cleanup(),  where rcu_barrier() is called by
-> unregister_pernet_device -> unregister_pernet_operations,
-> that will do the needed grace period.
-> 
-> Reported-by: Hulk Robot <hulkci@huawei.com>
-> Fixes: efe41606184e ("ipvs: convert to use pernet nf_hook api")
-> Suggested-by: Julian Anastasov <ja@ssi.bg>
-> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Thanks,
 
-	Looks good to me, thanks!
-
-Acked-by: Julian Anastasov <ja@ssi.bg>
-
-	It should restore the order of unregistrations before
-the mentioned commit and to ensure grace period before stopping
-the traffic and unregistering ipvs_core_ops where traffic is not
-expected.
-
+Jonathan
 > ---
-> v2: fix by moving nf_unregister_net_hooks from __ip_vs_cleanup() to __ip_vs_dev_cleanup()
-> ---
->  net/netfilter/ipvs/ip_vs_core.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/net/netfilter/ipvs/ip_vs_core.c b/net/netfilter/ipvs/ip_vs_core.c
-> index 14457551bcb4..8ebf21149ec3 100644
-> --- a/net/netfilter/ipvs/ip_vs_core.c
-> +++ b/net/netfilter/ipvs/ip_vs_core.c
-> @@ -2312,7 +2312,6 @@ static void __net_exit __ip_vs_cleanup(struct net *net)
->  {
->  	struct netns_ipvs *ipvs = net_ipvs(net);
->  
-> -	nf_unregister_net_hooks(net, ip_vs_ops, ARRAY_SIZE(ip_vs_ops));
->  	ip_vs_service_net_cleanup(ipvs);	/* ip_vs_flush() with locks */
->  	ip_vs_conn_net_cleanup(ipvs);
->  	ip_vs_app_net_cleanup(ipvs);
-> @@ -2327,6 +2326,7 @@ static void __net_exit __ip_vs_dev_cleanup(struct net *net)
->  {
->  	struct netns_ipvs *ipvs = net_ipvs(net);
->  	EnterFunction(2);
-> +	nf_unregister_net_hooks(net, ip_vs_ops, ARRAY_SIZE(ip_vs_ops));
->  	ipvs->enable = 0;	/* Disable packet reception */
->  	smp_wmb();
->  	ip_vs_sync_net_cleanup(ipvs);
-> -- 
-> 2.20.1
+>  drivers/staging/iio/cdc/ad7746.c | 10 ++++++++++
+>  1 file changed, 10 insertions(+)
+>=20
+> diff --git a/drivers/staging/iio/cdc/ad7746.c b/drivers/staging/iio/cdc/a=
+d7746.c
+> index 47610d863908..21527d84f940 100644
+> --- a/drivers/staging/iio/cdc/ad7746.c
+> +++ b/drivers/staging/iio/cdc/ad7746.c
+> @@ -748,9 +748,19 @@ static const struct i2c_device_id ad7746_id[] =3D {
+> =20
+>  MODULE_DEVICE_TABLE(i2c, ad7746_id);
+> =20
+> +static const struct of_device_id ad7746_of_match[] =3D {
+> +	{ .compatible =3D "adi,ad7745" },
+> +	{ .compatible =3D "adi,ad7746" },
+> +	{ .compatible =3D "adi,ad7747" },
+> +	{ },
+> +};
+> +
+> +MODULE_DEVICE_TABLE(of, ad7746_of_match);
+> +
+>  static struct i2c_driver ad7746_driver =3D {
+>  	.driver =3D {
+>  		.name =3D KBUILD_MODNAME,
+> +		.of_match_table =3D ad7746_of_match,
+>  	},
+>  	.probe =3D ad7746_probe,
+>  	.id_table =3D ad7746_id,
 
-Regards
-
---
-Julian Anastasov <ja@ssi.bg>
