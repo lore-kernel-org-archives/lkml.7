@@ -2,118 +2,78 @@ Return-Path: <SRS0=AA30=TT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.2 required=3.0 tests=DATE_IN_PAST_03_06,
+	DKIM_INVALID,DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37177C072AD
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 May 2019 17:47:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77A4BC04AB4
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 May 2019 17:47:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0D5C220449
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 May 2019 17:47:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558288043;
-	bh=RyNE3JZI+YlVkh2xmqXpb/nqf7T44OMg4tbBzoAptd0=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=d4rC4E38mTY/hqfVkCrgb4BOLws1pm4DIRiGz3FDDPVkdLBgjpcVZ2C/NRaJ2dLaq
-	 G9dBk1pLtDv4KmsMJnhwXqWeWsGbQT3myuK4nEDnkowRKbgCTiL+m0S0Pvvi4f3wvD
-	 ny8Lxjtt9/4W1gKiKN0qSELfFqdYxi6nojuT5W3c=
+	by mail.kernel.org (Postfix) with ESMTP id 3FB4620645
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 May 2019 17:47:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="slfu0BFz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728222AbfESRrW (ORCPT
+        id S1728687AbfESRr6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 19 May 2019 13:47:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42878 "EHLO mail.kernel.org"
+        Sun, 19 May 2019 13:47:58 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:39363 "EHLO vps0.lunn.ch"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726739AbfESRrV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 19 May 2019 13:47:21 -0400
-Received: from archlinux (cpc91196-cmbg18-2-0-cust659.5-4.cable.virginm.net [81.96.234.148])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A25BB2166E;
-        Sun, 19 May 2019 10:39:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558262395;
-        bh=RyNE3JZI+YlVkh2xmqXpb/nqf7T44OMg4tbBzoAptd0=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=DcFOs9rBccmqfj2/A5J39xMlqtyK3GPley+aNW2gw3VN2hcxpHPHwlFPx815OXaxw
-         5urhXnD993Z4elcFm17Or6W5hVau+UBKwXKfwcpllVHj1cmgjIAZGjhWVZou2Imf59
-         tGJkz0mUX3Zk/JFelARILN3RJNBgaMlMXpzJ7IGM=
-Date:   Sun, 19 May 2019 11:39:49 +0100
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     =?UTF-8?B?Sm/Do28=?= Victor Marques de Oliveira 
-        <joao.marques.oliveira@usp.br>
-Cc:     Lars-Peter Clausen <lars@metafoo.de>,
-        Michael Hennerich <Michael.Hennerich@analog.com>,
-        Stefan Popa <stefan.popa@analog.com>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-iio@vger.kernel.org, devel@driverdev.osuosl.org,
-        linux-kernel@vger.kernel.org, kernel-usp@googlegroups.com,
-        "Thiago L . A . Miller" <tmiller@mochsl.org.br>,
-        "Osvaldo M . Yasuda" <omyasuda@yahoo.com.br>
-Subject: Re: [PATCH] staging: iio: ad9834: add of_device_id table
-Message-ID: <20190519113949.2eb0cd3a@archlinux>
-In-Reply-To: <20190518224720.30404-1-joao.marques.oliveira@usp.br>
-References: <20190518224720.30404-1-joao.marques.oliveira@usp.br>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        id S1726739AbfESRr6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 19 May 2019 13:47:58 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Transfer-Encoding:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=nGfJ2GuiWeyt9rdjobbqK26MJz6zWpxPp9VLVvLGkgg=; b=slfu0BFzLQZn1MmTp8hvrsCDeP
+        n2F9RinHqlueAn0CJbdWP+F9UROtNCunHcWodts0o01XtaINKnv04y3eAUwf39bsJpe5iPFvWzywb
+        ik0VOfEmH09QalAOH1lWpLPzll0uyscXaV+v12FeXr0ykAQtOae7BXuaeuEBdzHAOrU8=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.89)
+        (envelope-from <andrew@lunn.ch>)
+        id 1hSMOl-0005Vi-PL; Sun, 19 May 2019 16:02:47 +0200
+Date:   Sun, 19 May 2019 16:02:47 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Petr =?utf-8?Q?=C5=A0tetiar?= <ynezz@true.cz>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Mirko Lindner <mlindner@marvell.com>,
+        Stephen Hemminger <stephen@networkplumber.org>,
+        netdev@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] of_net: fix of_get_mac_address retval if compiled
+ without CONFIG_OF
+Message-ID: <20190519140247.GB30854@lunn.ch>
+References: <1558268324-5596-1-git-send-email-ynezz@true.cz>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <1558268324-5596-1-git-send-email-ynezz@true.cz>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 18 May 2019 19:47:20 -0300
-Jo=C3=A3o Victor Marques de Oliveira         <joao.marques.oliveira@usp.br>=
- wrote:
+On Sun, May 19, 2019 at 02:18:44PM +0200, Petr Štetiar wrote:
+> of_get_mac_address prior to commit d01f449c008a ("of_net: add NVMEM
+> support to of_get_mac_address") could return only valid pointer or NULL,
+> after this change it could return only valid pointer or ERR_PTR encoded
+> error value, but I've forget to change the return value of
+> of_get_mac_address in case where the kernel is compiled without
+> CONFIG_OF, so I'm doing so now.
+> 
+> Cc: Mirko Lindner <mlindner@marvell.com>
+> Cc: Stephen Hemminger <stephen@networkplumber.org>
+> Fixes: d01f449c008a ("of_net: add NVMEM support to of_get_mac_address")
+> Reported-by: Octavio Alvarez <octallk1@alvarezp.org>
+> Signed-off-by: Petr Štetiar <ynezz@true.cz>
 
-> Add a of_device_id struct array of_match_table variable and subsequent
-> call to MODULE_DEVICE_TABLE macro to device tree support.
->=20
-> Co-developed-by: Thiago L. A. Miller <tmiller@mochsl.org.br>
-> Signed-off-by: Thiago L. A. Miller <tmiller@mochsl.org.br>
-> Co-developed-by: Osvaldo M. Yasuda <omyasuda@yahoo.com.br>
-> Signed-off-by: Osvaldo M. Yasuda <omyasuda@yahoo.com.br>
-> Signed-off-by: Jo=C3=A3o Victor Marques de Oliveira <joao.marques.oliveir=
-a@usp.br>
-Nice patch.
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
 
-Applied to the togreg branch of iio.git and pushed out as testing for the
-autobuilders to play with it.
-
-Thanks,
-
-j
-> ---
->  drivers/staging/iio/frequency/ad9834.c | 11 +++++++++++
->  1 file changed, 11 insertions(+)
->=20
-> diff --git a/drivers/staging/iio/frequency/ad9834.c b/drivers/staging/iio=
-/frequency/ad9834.c
-> index 6de3cd7363d7..038d6732c3fd 100644
-> --- a/drivers/staging/iio/frequency/ad9834.c
-> +++ b/drivers/staging/iio/frequency/ad9834.c
-> @@ -521,9 +521,20 @@ static const struct spi_device_id ad9834_id[] =3D {
->  };
->  MODULE_DEVICE_TABLE(spi, ad9834_id);
-> =20
-> +static const struct of_device_id ad9834_of_match[] =3D {
-> +	{.compatible =3D "adi,ad9833"},
-> +	{.compatible =3D "adi,ad9834"},
-> +	{.compatible =3D "adi,ad9837"},
-> +	{.compatible =3D "adi,ad9838"},
-> +	{}
-> +};
-> +
-> +MODULE_DEVICE_TABLE(of, ad9834_of_match);
-> +
->  static struct spi_driver ad9834_driver =3D {
->  	.driver =3D {
->  		.name	=3D "ad9834",
-> +		.of_match_table =3D ad9834_of_match
->  	},
->  	.probe		=3D ad9834_probe,
->  	.remove		=3D ad9834_remove,
-
+    Andrew
