@@ -8,63 +8,66 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA9CEC04AB4
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 May 2019 17:57:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60641C04AB4
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 May 2019 17:57:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 811B920675
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 May 2019 17:57:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3515720675
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 May 2019 17:57:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="K6wB/8d7"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GAtLPg50"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729285AbfESR5b (ORCPT
+        id S1729413AbfESR5k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 19 May 2019 13:57:31 -0400
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:46016 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727866AbfESR53 (ORCPT
+        Sun, 19 May 2019 13:57:40 -0400
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:43162 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727456AbfESR50 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 19 May 2019 13:57:29 -0400
-Received: by mail-ed1-f68.google.com with SMTP id g57so19904495edc.12
-        for <linux-kernel@vger.kernel.org>; Sun, 19 May 2019 10:57:28 -0700 (PDT)
+        Sun, 19 May 2019 13:57:26 -0400
+Received: by mail-ed1-f67.google.com with SMTP id w33so19916938edb.10
+        for <linux-kernel@vger.kernel.org>; Sun, 19 May 2019 10:57:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=eVaNiZEHc2WcLQetcZoCKC6E7inFmZ0Pm/1lAy3U6IQ=;
-        b=K6wB/8d7dqCDlc21CCTdhmAzeRVyTKQRgt2+flXlaWoLItJMy8VTsJt++RLKl77n40
-         ftEt8NJZPoqzl75TaNzxFJ1MI1I3rTMb2TYt6C7/5lejLoTDOcg4ieqKJsSu19kT1weS
-         MMUAymGTkJKScCfuiSacIteezNzOzxWneXQXU8aU95rzYdCah4CyLbDcepmt9lypqY5B
-         v21JKS1WZ08knDGuN9L9vr2CgfmleW7Dx9JRAcPnD6uAMwwKD4nafvuvFOWlZ06eT9B/
-         vkWokLfdZRCrxp6OjqbDN2HyUOUMB//Yue0uHTCc5CJQV3I0WcFiQE3cqOsJ5ONGLnVZ
-         Hw3A==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=YXXH5t9TTRLBW2BHaBe8u0lhH1b3Av66zK7Fxpl6yxw=;
+        b=GAtLPg50hmCYoeXb6A/edx2LgTxQ/v0NLySw+fcbnq+PngK+PEo/XaGqJYs4qySqwO
+         DkqVvZ4VXWp6RIt4YxpfT1rlxQkpfHr73Nl9cmLBOqYwNNkSupAoWeHqdhBJLboFwtRh
+         bbaGetGNiFIgYyNZf03+hXl+rS7tAhj4a/XgwWwuUvBEeXDqNMVgRta7TCKqTeTrQhxI
+         3X7PwVuHResA4PsbKM5I9K5e7DLEoWE/KwQ3k18ujyCVmbuBYUcgKH92RiiadDLDH8Wj
+         +DRM8JFA3rkKxcdoBIQCbNNYSptSOnXyoAZNKTCdAAKtYZOU7BIeJsmUmygdICbbosp8
+         YfLA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=eVaNiZEHc2WcLQetcZoCKC6E7inFmZ0Pm/1lAy3U6IQ=;
-        b=Jnj3GKX6OIwwit0CHbRFwM0Yi7JuPOrBsft0xnIfFFiLsp+PgBAyAq6qa7RGq8i7IS
-         AsYPuUb3cLlehT4vlFpA+bDuZaKKLVCwE7sDZyp+955P5r4sHR45ADqYKX4npF1v2MFB
-         Kxd4e3ADSZo6DoHe+F/hwF/ipFy8HjlR+JC+yIBfFFnJWSAkhmo03usOeM440AipP6l7
-         BSaA6v67QHbIfouc3tkuVAQAGrbq7QIZ4HlbNLWspr+nHpnYnII9BbT9bDHsZufsjcCX
-         KIQ51KqeMzdZochZMEzgN2f0KAECVDWOcLHy5ibTkp15HOrbU/w+H45qZfNPQlSWjC36
-         itfg==
-X-Gm-Message-State: APjAAAX1pankM/fu6ogxid9vGTVLWlm/AhenAzg1HJ3fZDolyQtRLY70
-        3vBPjp+i1SS4UK2UfW3XCcM=
-X-Google-Smtp-Source: APXvYqzwILb9iU6xVGV23PJPw0nr3EUtl8te6kELaj8HZ7i6oFAwJbtvJrjvKY8xCkIvNFiumh4uSQ==
-X-Received: by 2002:a17:906:3e8a:: with SMTP id a10mr52197862ejj.179.1558288647205;
-        Sun, 19 May 2019 10:57:27 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=YXXH5t9TTRLBW2BHaBe8u0lhH1b3Av66zK7Fxpl6yxw=;
+        b=j9BLKDnIsXZojvFiWDubCBT1RXkaAwhxNXx54bTfiipW+3ggnb4OlXwD/IOILLN5UB
+         Yrcc18FNO2Cb/eYGhb/e7rDmGoTXDQ2fsrg8RQas4YB11rN/VaSziqcd4BU8SIzR2GpV
+         CKJyuJPmmkmhTLlNFy3PkT54MiF78y0ypy4wiWnFOM/u6ACh+D5A0SaBXY5cjehBv7Xw
+         Kb56n6Tawc8p7EgTVvWgys1F1eCaK8JeVF2mbZCCB1UjSc7nOslw/WkbPIGLYBaKfSjh
+         g5Pk/xVzb1rxSu9VEuZhmr1NRaRMen2V6WYfzR1/ccvnX5yQ0C69E76uCVHw/ycxUAJE
+         1o3w==
+X-Gm-Message-State: APjAAAWXGrL7f3Oe5mlnwc6tVjCb8ugr+yWFuZ2Pb1NwOfjveBEXhvTv
+        Oy/Y/Wdx1B5YMYUigxksVwc=
+X-Google-Smtp-Source: APXvYqxWrIwrCTIPqJP+H56HIVs5ZNIE4+Jcq5Aw1EY+qIZZroKHkaH3M4jxWm5IplbffUqLP9WElg==
+X-Received: by 2002:a17:906:5d12:: with SMTP id g18mr42455993ejt.286.1558288644893;
+        Sun, 19 May 2019 10:57:24 -0700 (PDT)
 Received: from elitebook-localhost (84-106-70-146.cable.dynamic.v4.ziggo.nl. [84.106.70.146])
-        by smtp.gmail.com with ESMTPSA id f25sm4936965ede.44.2019.05.19.10.57.26
+        by smtp.gmail.com with ESMTPSA id o47sm4959975edc.37.2019.05.19.10.57.24
         (version=TLS1 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Sun, 19 May 2019 10:57:26 -0700 (PDT)
+        Sun, 19 May 2019 10:57:24 -0700 (PDT)
 From:   nariman <narimantos@gmail.com>
 To:     broonie@kernel.org, hdegoede@redhat.com,
         linux-kernel@vger.kernel.org, alsa-devel@alsa-project.org
-Cc:     Nariman Etemadi <narimantos@gmail.com>
-Subject: [PATCH] ASoC: Intel: bytcr_5640.c:Refactored if statement and removed buffer
-Date:   Sun, 19 May 2019 19:57:03 +0200
-Message-Id: <20190519175706.3998-1-narimantos@gmail.com>
+Cc:     Jordy Ubink <jordyubink@hotmail.nl>,
+        Nariman Etemadi <narimantos@gmail.com>
+Subject: [PATCH] ASoC: Intel: bytcr_rt5651.c: remove string buffers 'byt_rt5651_cpu_dai_name' and 'byt_rt5651_cpu_dai_name'
+Date:   Sun, 19 May 2019 19:57:06 +0200
+Message-Id: <20190519175706.3998-4-narimantos@gmail.com>
 X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190519175706.3998-1-narimantos@gmail.com>
+References: <20190519175706.3998-1-narimantos@gmail.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -72,60 +75,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nariman Etemadi <narimantos@gmail.com>
+From: Jordy Ubink <jordyubink@hotmail.nl>
 
-in function snd_byt_rt5640_mc_probe and removed buffer yt_rt5640_codec_aif_name & byt_rt5640_cpu_dai_name
+The snprintf calls filling byt_rt5651_cpu_dai_name / byt_rt5651_cpu_dai_name always fill them with the same string (ssp0-port" resp "rt5651-aif2"). So instead of keeping these buffers around and making the cpu_dai_name / codec_dai_name point to this, simply update the foo_dai_name pointers to directly point to a string constant containing the desired string.
 
+Signed-off-by: Jordy Ubink <jordyubink@hotmail.nl>
 Signed-off-by: Nariman Etemadi <narimantos@gmail.com>
 ---
- sound/soc/intel/boards/bytcr_rt5640.c | 26 ++++----------------------
- 1 file changed, 4 insertions(+), 22 deletions(-)
+ sound/soc/intel/boards/bytcr_rt5651.c | 24 ++++--------------------
+ 1 file changed, 4 insertions(+), 20 deletions(-)
 
-diff --git a/sound/soc/intel/boards/bytcr_rt5640.c b/sound/soc/intel/boards/bytcr_rt5640.c
-index 940eb27158da..0d91642ca287 100644
---- a/sound/soc/intel/boards/bytcr_rt5640.c
-+++ b/sound/soc/intel/boards/bytcr_rt5640.c
-@@ -1075,8 +1075,6 @@ static struct snd_soc_dai_link byt_rt5640_dais[] = {
+diff --git a/sound/soc/intel/boards/bytcr_rt5651.c b/sound/soc/intel/boards/bytcr_rt5651.c
+index e528995668b7..2e1bf43820d8 100644
+--- a/sound/soc/intel/boards/bytcr_rt5651.c
++++ b/sound/soc/intel/boards/bytcr_rt5651.c
+@@ -730,8 +730,6 @@ static struct snd_soc_dai_link byt_rt5651_dais[] = {
  
  /* SoC card */
- static char byt_rt5640_codec_name[SND_ACPI_I2C_ID_LEN];
--static char byt_rt5640_codec_aif_name[12]; /*  = "rt5640-aif[1|2]" */
--static char byt_rt5640_cpu_dai_name[10]; /*  = "ssp[0|2]-port" */
- static char byt_rt5640_long_name[40]; /* = "bytcr-rt5640-*-spk-*-mic" */
+ static char byt_rt5651_codec_name[SND_ACPI_I2C_ID_LEN];
+-static char byt_rt5651_codec_aif_name[12]; /*  = "rt5651-aif[1|2]" */
+-static char byt_rt5651_cpu_dai_name[10]; /*  = "ssp[0|2]-port" */
+ static char byt_rt5651_long_name[50]; /* = "bytcr-rt5651-*-spk-*-mic[-swapped-hp]" */
  
- static int byt_rt5640_suspend(struct snd_soc_card *card)
-@@ -1268,28 +1266,12 @@ static int snd_byt_rt5640_mc_probe(struct platform_device *pdev)
+ static int byt_rt5651_suspend(struct snd_soc_card *card)
+@@ -1009,26 +1007,12 @@ static int snd_byt_rt5651_mc_probe(struct platform_device *pdev)
  	log_quirks(&pdev->dev);
  
- 	if ((byt_rt5640_quirk & BYT_RT5640_SSP2_AIF2) ||
--	    (byt_rt5640_quirk & BYT_RT5640_SSP0_AIF2)) {
--
+ 	if ((byt_rt5651_quirk & BYT_RT5651_SSP2_AIF2) ||
+-	    (byt_rt5651_quirk & BYT_RT5651_SSP0_AIF2)) {
 -		/* fixup codec aif name */
--		snprintf(byt_rt5640_codec_aif_name,
--			sizeof(byt_rt5640_codec_aif_name),
--			"%s", "rt5640-aif2");
+-		snprintf(byt_rt5651_codec_aif_name,
+-			sizeof(byt_rt5651_codec_aif_name),
+-			"%s", "rt5651-aif2");
 -
--		byt_rt5640_dais[dai_index].codec_dai_name =
--			byt_rt5640_codec_aif_name;
+-		byt_rt5651_dais[dai_index].codec_dai_name =
+-			byt_rt5651_codec_aif_name;
 -	}
-+	    (byt_rt5640_quirk & BYT_RT5640_SSP0_AIF2))
-+		byt_rt5640_dais[dai_index].codec_dai_name = "rt5640-aif2";
++	    (byt_rt5651_quirk & BYT_RT5651_SSP0_AIF2))
++		byt_rt5651_dais[dai_index].codec_dai_name = "rt5651-aif2";
  
- 	if ((byt_rt5640_quirk & BYT_RT5640_SSP0_AIF1) ||
--	    (byt_rt5640_quirk & BYT_RT5640_SSP0_AIF2)) {
--
+ 	if ((byt_rt5651_quirk & BYT_RT5651_SSP0_AIF1) ||
+-	    (byt_rt5651_quirk & BYT_RT5651_SSP0_AIF2)) {
 -		/* fixup cpu dai name name */
--		snprintf(byt_rt5640_cpu_dai_name,
--			sizeof(byt_rt5640_cpu_dai_name),
+-		snprintf(byt_rt5651_cpu_dai_name,
+-			sizeof(byt_rt5651_cpu_dai_name),
 -			"%s", "ssp0-port");
 -
--		byt_rt5640_dais[dai_index].cpu_dai_name =
--			byt_rt5640_cpu_dai_name;
+-		byt_rt5651_dais[dai_index].cpu_dai_name =
+-			byt_rt5651_cpu_dai_name;
 -	}
-+	    (byt_rt5640_quirk & BYT_RT5640_SSP0_AIF2))
-+		byt_rt5640_dais[dai_index].cpu_dai_name = "ssp0-port";
++	    (byt_rt5651_quirk & BYT_RT5651_SSP0_AIF2))
++		byt_rt5651_dais[dai_index].cpu_dai_name = "ssp0-port";
  
- 	if (byt_rt5640_quirk & BYT_RT5640_MCLK_EN) {
+ 	if (byt_rt5651_quirk & BYT_RT5651_MCLK_EN) {
  		priv->mclk = devm_clk_get(&pdev->dev, "pmc_plt_clk_3");
 -- 
 2.20.1
