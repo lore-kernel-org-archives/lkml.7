@@ -1,382 +1,191 @@
 Return-Path: <SRS0=AA30=TT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
-X-Spam-Level: *
-X-Spam-Status: No, score=1.6 required=3.0 tests=DATE_IN_PAST_06_12,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,HTTP_ESCAPED_HOST,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Level: 
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DATE_IN_PAST_03_06,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53E7BC04AB4
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 May 2019 16:58:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD67EC04AB4
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 May 2019 16:59:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 19D802082E
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 May 2019 16:58:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6FFD52082E
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 May 2019 16:59:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="jRgX/5Se"
+	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="neK8Jtgs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726520AbfESQ63 (ORCPT
+        id S1726627AbfESQ72 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 19 May 2019 12:58:29 -0400
-Received: from mail-vs1-f68.google.com ([209.85.217.68]:45320 "EHLO
-        mail-vs1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725766AbfESQ62 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 19 May 2019 12:58:28 -0400
-Received: by mail-vs1-f68.google.com with SMTP id k187so600662vsk.12
-        for <linux-kernel@vger.kernel.org>; Sun, 19 May 2019 09:58:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Tc0fiEW/TMEpCT/sZt+FfJG/eOf9P+8yjFxRdGtiS8A=;
-        b=jRgX/5SeseLZS0LfpMzCJfLY5zBnXI0oIxZ12thMryPtMQ0y3rgUnwL4+0faPSoQKu
-         to+W/6AeHrkZmBIsL/hNc8mm1I9OsubJsDu4hYR9oAQb6cxOHVw9upnzoX/uZpsi1vO1
-         NqpnYVOE7Z/hzwk2F6AA7djcRgrbh6weyDuQPudUEc0nGn8MA08TZ+XlEHKIIovwGSuq
-         Wnl2r7O1/E22wMWWXcKr5LBzxHAAmm7dfAM4YOeZTKIdSdvJb93Q2on8VcP/bXMzwStS
-         wzy5gj6qDN2ZVYvk+TI5MHQ6cgSKD12XxzCJUCp2Lh5wCGqUt+q/RnOry8nC/o+2Qiuo
-         sWUw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Tc0fiEW/TMEpCT/sZt+FfJG/eOf9P+8yjFxRdGtiS8A=;
-        b=VpYXSydQpfnVU5xkBB7EDFuXqT9gPiW4NtAu6GChdkjJDw2OuWP8k0pe5rgZkLkXbH
-         m77S0N6rvbZyNYoC0zWbEOL6mDux4fHzi2FP5kqXycDk662t6XtARdHwRxh/CsG865EX
-         MMxKd1b2/AloVRn28rI1FCnEVtcXvdmsR8517DQdrjf1LlUCPYw7s6fIRnBa3TqD0Hgc
-         E1LxSUoYySaRd4n/+MLWOEQUAqy6KLfeqH6vPwQ3KUaQB88LGlFWYJZtf4Fvlp/RakwY
-         elZQJ6hgo4QSc+YPv+XvDKlV+c8AuCmdF62w32Ye7Tbxjd7mVP5jIY3TxB1QQExRlCX+
-         LzGA==
-X-Gm-Message-State: APjAAAXXDHAQWM36Py7lQC4V/sy6Yki2L2K93gzh/zjeEfTlC4vlDgMn
-        uKxARfESpJW3YJuZq+3w2PY/xi4Vxl+TpsWYmTIuQuIoCPw=
-X-Google-Smtp-Source: APXvYqy0RZvFe4IrHh0Ksmp9NnZ/bVl0VWPfQl6jiMukeONdA3/UsxRusRR3gUk0BLv9Itc+E2Jb+G6CbRKdAgthQ5U=
-X-Received: by 2002:a67:2781:: with SMTP id n123mr14357741vsn.141.1558259173973;
- Sun, 19 May 2019 02:46:13 -0700 (PDT)
+        Sun, 19 May 2019 12:59:28 -0400
+Received: from vps.xff.cz ([195.181.215.36]:43092 "EHLO vps.xff.cz"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726545AbfESQ72 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 19 May 2019 12:59:28 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=megous.com; s=mail;
+        t=1558274063; bh=lXTBePQTd66A2iS+g6VRPcxOuAD2+KiPtXMZZvonC7Q=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=neK8JtgsXP3XLtC81Zyx6VE8nBcKHll5MldQfBfDf7T2/nzOZo+FNT3sptDKnPgmE
+         Tt9Ugu3Y18OSBH3bCGeTdfE5HCGy/zLHCqWsBwzWotZHkiMyMJLnxvgwh7af1zsLbg
+         P0RKVp9/xpl+lcEUJIMHU/qO5UIlr2qwLZsQPHUU=
+Date:   Sun, 19 May 2019 15:54:22 +0200
+From:   =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>
+To:     Maxime Ripard <maxime.ripard@bootlin.com>
+Cc:     Chen-Yu Tsai <wens@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree <devicetree@vger.kernel.org>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
+        Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>,
+        Yong Deng <yong.deng@magewell.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        linux-clk <linux-clk@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Linux Media Mailing List <linux-media@vger.kernel.org>
+Subject: Re: [PATCH 4/6] ARM: dts: sun8i: a83t: Add device node for CSI
+ (Camera Sensor Interface)
+Message-ID: <20190519135422.l2bnumyjr3dxehhx@core.my.home>
+Mail-Followup-To: Maxime Ripard <maxime.ripard@bootlin.com>,
+        Chen-Yu Tsai <wens@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+        devicetree <devicetree@vger.kernel.org>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
+        Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>,
+        Yong Deng <yong.deng@magewell.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        linux-clk <linux-clk@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Linux Media Mailing List <linux-media@vger.kernel.org>
+References: <20190408165744.11672-1-wens@kernel.org>
+ <20190408165744.11672-5-wens@kernel.org>
+ <20190409075804.4zrwjil7ie2gjigu@flea>
+ <CAGb2v64CYV68Q0a7x5p-XabS74vaQWP3paPopodmqQPTOrq2gQ@mail.gmail.com>
+ <20190409082818.z33mq2qrxethldzf@flea>
+ <CAGb2v67pX+7ccihmGEWPKrXg8mMhht-vh37p2auWYgt=qGDA6A@mail.gmail.com>
+ <20190409145225.2ltluiyqa5xha4zd@flea>
 MIME-Version: 1.0
-References: <20190415155636.32748-1-sashal@kernel.org> <20190507174020.GH1747@sasha-vm>
- <20190508124436.GE7642@linux.intel.com> <20190514193056.GN11972@sasha-vm>
- <CAFA6WYM06E0y9o6+CLNPe48spiL=UDEqoGsidMbk1dBa5Rbmkg@mail.gmail.com>
- <CY4PR21MB0279339E8B0A15414C8F9E14BC0A0@CY4PR21MB0279.namprd21.prod.outlook.com>
- <CAFA6WYMvuF+tAA_GmkVg=FTvuuAhMuM=um7kakq=YARaP8un5Q@mail.gmail.com>
- <CY4PR21MB02790D399645EFCA02FBE124BC0A0@CY4PR21MB0279.namprd21.prod.outlook.com>
- <CAFA6WYMsQ53L=Ge5_yX+mvQNgKQRxPq=GxAn6zCksaDU18aTtw@mail.gmail.com> <CY4PR21MB02798F18412AD6BDB74DC8A1BC0B0@CY4PR21MB0279.namprd21.prod.outlook.com>
-In-Reply-To: <CY4PR21MB02798F18412AD6BDB74DC8A1BC0B0@CY4PR21MB0279.namprd21.prod.outlook.com>
-From:   Sumit Garg <sumit.garg@linaro.org>
-Date:   Sun, 19 May 2019 15:16:01 +0530
-Message-ID: <CAFA6WYOU_JRxZg_b0685BG2veiBj-ZwC9QLPfieGkQojqo0+7A@mail.gmail.com>
-Subject: Re: [PATCH v3 0/2] ftpm: a firmware based TPM driver
-To:     Thirupathaiah Annapureddy <thiruan@microsoft.com>
-Cc:     Sasha Levin <sashal@kernel.org>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        "peterhuewe@gmx.de" <peterhuewe@gmx.de>,
-        "jgg@ziepe.ca" <jgg@ziepe.ca>, "corbet@lwn.net" <corbet@lwn.net>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        "linux-integrity@vger.kernel.org" <linux-integrity@vger.kernel.org>,
-        Microsoft Linux Kernel List <linux-kernel@microsoft.com>,
-        "Bryan Kelly (CSI)" <bryankel@microsoft.com>,
-        Rob Herring <robh+dt@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190409145225.2ltluiyqa5xha4zd@flea>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 17 May 2019 at 22:53, Thirupathaiah Annapureddy
-<thiruan@microsoft.com> wrote:
->
->
->
-> > -----Original Message-----
-> > From: Sumit Garg <sumit.garg@linaro.org>
-> > Sent: Thursday, May 16, 2019 11:57 PM
-> > To: Thirupathaiah Annapureddy <thiruan@microsoft.com>
-> > Cc: Sasha Levin <sashal@kernel.org>; Jarkko Sakkinen
-> > <jarkko.sakkinen@linux.intel.com>; peterhuewe@gmx.de; jgg@ziepe.ca;
-> > corbet@lwn.net; Linux Kernel Mailing List <linux-kernel@vger.kernel.org>;
-> > linux-doc@vger.kernel.org; linux-integrity@vger.kernel.org; Microsoft Linux
-> > Kernel List <linux-kernel@microsoft.com>; Bryan Kelly (CSI)
-> > <bryankel@microsoft.com>; Rob Herring <robh+dt@kernel.org>
-> > Subject: Re: [PATCH v3 0/2] ftpm: a firmware based TPM driver
-> >
-> > + Rob
-> >
-> > On Fri, 17 May 2019 at 00:54, Thirupathaiah Annapureddy
-> > <thiruan@microsoft.com> wrote:
+Hi Maxime,
+
+On Tue, Apr 09, 2019 at 04:52:25PM +0200, Maxime Ripard wrote:
+> On Tue, Apr 09, 2019 at 04:40:40PM +0800, Chen-Yu Tsai wrote:
+> > On Tue, Apr 9, 2019 at 4:28 PM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
 > > >
-> > >
-> > >
-> > > > -----Original Message-----
-> > > > From: Sumit Garg <sumit.garg@linaro.org>
-> > > > Sent: Thursday, May 16, 2019 12:06 AM
-> > > > To: Thirupathaiah Annapureddy <thiruan@microsoft.com>
-> > > > Cc: Sasha Levin <sashal@kernel.org>; Jarkko Sakkinen
-> > > > <jarkko.sakkinen@linux.intel.com>; peterhuewe@gmx.de; jgg@ziepe.ca;
-> > > > corbet@lwn.net; Linux Kernel Mailing List <linux-
-> > kernel@vger.kernel.org>;
-> > > > linux-doc@vger.kernel.org; linux-integrity@vger.kernel.org; Microsoft
-> > Linux
-> > > > Kernel List <linux-kernel@microsoft.com>; Bryan Kelly (CSI)
-> > > > <bryankel@microsoft.com>
-> > > > Subject: Re: [PATCH v3 0/2] ftpm: a firmware based TPM driver
-> > > >
-> > > > On Thu, 16 May 2019 at 06:30, Thirupathaiah Annapureddy
-> > > > <thiruan@microsoft.com> wrote:
-> > > > >
-> > > > >
-> > > > >
-> > > > > > -----Original Message-----
-> > > > > > From: Sumit Garg <sumit.garg@linaro.org>
-> > > > > > Sent: Tuesday, May 14, 2019 7:02 PM
-> > > > > > To: Sasha Levin <sashal@kernel.org>
-> > > > > > Cc: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>;
-> > > > peterhuewe@gmx.de;
-> > > > > > jgg@ziepe.ca; corbet@lwn.net; Linux Kernel Mailing List <linux-
-> > > > > > kernel@vger.kernel.org>; linux-doc@vger.kernel.org; linux-
-> > > > > > integrity@vger.kernel.org; Microsoft Linux Kernel List <linux-
-> > > > > > kernel@microsoft.com>; Thirupathaiah Annapureddy
-> > > > <thiruan@microsoft.com>;
-> > > > > > Bryan Kelly (CSI) <bryankel@microsoft.com>
-> > > > > > Subject: Re: [PATCH v3 0/2] ftpm: a firmware based TPM driver
+> > > On Tue, Apr 09, 2019 at 04:07:34PM +0800, Chen-Yu Tsai wrote:
+> > > > On Tue, Apr 9, 2019 at 3:58 PM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
+> > > > > On Tue, Apr 09, 2019 at 12:57:42AM +0800, Chen-Yu Tsai wrote:
+> > > > > > From: Chen-Yu Tsai <wens@csie.org>
 > > > > > >
-> > > > > > On Wed, 15 May 2019 at 01:00, Sasha Levin <sashal@kernel.org>
-> > wrote:
-> > > > > > >
-> > > > > > > On Wed, May 08, 2019 at 03:44:36PM +0300, Jarkko Sakkinen wrote:
-> > > > > > > >On Tue, May 07, 2019 at 01:40:20PM -0400, Sasha Levin wrote:
-> > > > > > > >> On Mon, Apr 15, 2019 at 11:56:34AM -0400, Sasha Levin wrote:
-> > > > > > > >> > From: "Sasha Levin (Microsoft)" <sashal@kernel.org>
-> > > > > > > >> >
-> > > > > > > >> > Changes since v2:
-> > > > > > > >> >
-> > > > > > > >> > - Drop the devicetree bindings patch (we don't add any new
-> > > > ones).
-> > > > > > > >> > - More code cleanups based on Jason Gunthorpe's review.
-> > > > > > > >> >
-> > > > > > > >> > Sasha Levin (2):
-> > > > > > > >> >  ftpm: firmware TPM running in TEE
-> > > > > > > >> >  ftpm: add documentation for ftpm driver
-> > > > > > > >>
-> > > > > > > >> Ping? Does anyone have any objections to this?
-> > > > > > > >
-> > > > > > > >Sorry I've been on vacation week before last week and last week
-> > > > > > > >I was extremely busy because I had been on vacation. This in
-> > > > > > > >my TODO list. Will look into it tomorrow in detail.
-> > > > > > > >
-> > > > > > > >Apologies for the delay with this!
-> > > > > > >
-> > > > > > > Hi Jarkko,
-> > > > > > >
-> > > > > > > If there aren't any big objections to this, can we get it merged
-> > in?
-> > > > > > > We'll be happy to address any comments that come up.
+> > > > > > The A83T SoC has a camera sensor interface (known as CSI in Allwinner
+> > > > > > lingo), which is similar to the one found on the A64 and H3. The only
+> > > > > > difference seems to be that support of MIPI CSI through a connected
+> > > > > > MIPI CSI-2 bridge.
 > > > > > >
-> > > > > > I guess you have missed or ignored this comment [1]. Please address
-> > it.
+> > > > > > Add a device node for it, and pinctrl nodes for the commonly used MCLK
+> > > > > > and 8-bit parallel interface. The property /omit-if-no-ref/ is added to
+> > > > > > the pinctrl nodes to keep the device tree blob size down if they are
+> > > > > > unused.
 > > > > > >
-> > > > > > [1]
+> > > > > > Signed-off-by: Chen-Yu Tsai <wens@csie.org>
+> > > > > > ---
+> > > > > >  arch/arm/boot/dts/sun8i-a83t.dtsi | 31 +++++++++++++++++++++++++++++++
+> > > > > >  1 file changed, 31 insertions(+)
 > > > > > >
-> > > >
-> > https://nam06.safelinks.protection.outlook.com/?url=https%3A%2F%2Flkml.org%
+> > > > > > diff --git a/arch/arm/boot/dts/sun8i-a83t.dtsi b/arch/arm/boot/dts/sun8i-a83t.dtsi
+> > > > > > index f739b88efb53..0c52f945fd5f 100644
+> > > > > > --- a/arch/arm/boot/dts/sun8i-a83t.dtsi
+> > > > > > +++ b/arch/arm/boot/dts/sun8i-a83t.dtsi
+> > > > > > @@ -682,6 +682,20 @@
+> > > > > >                       #interrupt-cells = <3>;
+> > > > > >                       #gpio-cells = <3>;
 > > > > > >
-> > > >
-> > 2Flkml%2F2019%2F5%2F8%2F11&amp;data=01%7C01%7Cthiruan%40microsoft.com%7Cf2a
+> > > > > > +                     /omit-if-no-ref/
+> > > > > > +                     csi_8bit_parallel_pins: csi-8bit-parallel-pins {
+> > > > > > +                             pins = "PE0", "PE2", "PE3", "PE6", "PE7",
+> > > > > > +                                    "PE8", "PE9", "PE10", "PE11",
+> > > > > > +                                    "PE12", "PE13";
+> > > > > > +                             function = "csi";
+> > > > > > +                     };
+> > > > > > +
+> > > > > > +                     /omit-if-no-ref/
+> > > > > > +                     csi_mclk_pin: csi-mclk-pin {
+> > > > > > +                             pins = "PE1";
+> > > > > > +                             function = "csi";
+> > > > > > +                     };
+> > > > > > +
+> > > > > >                       emac_rgmii_pins: emac-rgmii-pins {
+> > > > > >                               pins = "PD2", "PD3", "PD4", "PD5", "PD6", "PD7",
+> > > > > >                                      "PD11", "PD12", "PD13", "PD14", "PD18",
+> > > > > > @@ -994,6 +1008,23 @@
+> > > > > >                       interrupts = <GIC_PPI 9 (GIC_CPU_MASK_SIMPLE(8) | IRQ_TYPE_LEVEL_HIGH)>;
+> > > > > >               };
 > > > > > >
-> > > >
-> > 80c7b94434329eaee08d6d8d962b1%7C72f988bf86f141af91ab2d7cd011db47%7C1&amp;sd
-> > > > > >
-> > ata=hyJRc23NwEFLDuaIMkbSCGetd%2BObQWiAg%2BJtMMR6z9U%3D&amp;reserved=0
-> > > > > >
-> > > > > > -Sumit
+> > > > > > +             csi: camera@1cb0000 {
+> > > > > > +                     compatible = "allwinner,sun8i-a83t-csi";
+> > > > > > +                     reg = <0x01cb0000 0x1000>;
+> > > > > > +                     interrupts = <GIC_SPI 84 IRQ_TYPE_LEVEL_HIGH>;
+> > > > > > +                     clocks = <&ccu CLK_BUS_CSI>,
+> > > > > > +                              <&ccu CLK_CSI_SCLK>,
+> > > > > > +                              <&ccu CLK_DRAM_CSI>;
+> > > > > > +                     clock-names = "bus", "mod", "ram";
+> > > > > > +                     resets = <&ccu RST_BUS_CSI>;
+> > > > > > +                     status = "disabled";
+> > > > > > +
+> > > > > > +                     csi_in: port {
+> > > > > > +                             #address-cells = <1>;
+> > > > > > +                             #size-cells = <0>;
 > > > > >
-> > > > > Thanks for reviewing and adding comments.
-> > > > >
-> > > > > We tried to use TEE bus framework you suggested for fTPM enumeration.
-> > > > > We were not able to pass the TCG Logs collected by the boot loaders.
-> > > > >
-> > > > > Currently there are 3 ways to pass TCG Logs based on the code
-> > > > > in drivers/char/tpm/eventlog:
-> > > > >
-> > > > > 1. ACPI Table
-> > > > > 2. EFI Table
-> > > > > 3. OF Device node properties
-> > > > >
-> > > > > Our ARM system is booting using U-boot and Device Tree.
-> > > > > So ACPI/EFI table mechanism to pass TCG2 logs won't be applicable.
-> > > > > We needed to use OF device node properties to pass TCG2 Logs.
-> > > > > TEE bus enumeration framework does not work for our use case due to
-> > the
-> > > > above.
+> > > > > If we expect a single enpoint, then we don't need the address-cells
+> > > > > and size-cells properties.
 > > > >
-> > > > Firstly let me clarify that this framework is intended to communicate
-> > > > with TEE based services/devices rather than boot loader. And in this
-> > > > case fTPM being a TEE based service, so this framework should be used.
+> > > > I wouldn't bet on anything. The way the Q8 tablets did front/back cameras
+> > > > is kind of genius if not very hacky. They have two "identical" sensors
+> > > > on the same I2C bus and CSI bus, with shared reset line but separate
+> > > > shutdown lines. Since they are identical, they also have the same I2C
+> > > > address. I haven't figured out how to model this in the device tree.
 > > > >
-> > > It does not work for our use case. We gave enough justification so far.
-> > > TEE bus enumeration needs to be flexible to support our use case and
-> > > more future use cases.
+> > > > The point is, it's perfectly possible to have two or more sensors use
+> > > > the same controller, provided only one be active at a time.
 > > >
-> >
-> > TEE based services are virtual devices which could be very well be
-> > aware about the platform and device driver could easily query these
-> > devices for platform specific properties. In case of firmware TPM as a
-> > TEE based service, it could easily store the event logs generated
-> > during PCR extend operations which could be fetched at runtime. But a
-> > real TPM device doesn't possess that storage capability leading to
-> > software managing these event logs.
-> >
-> > > > >
-> > > > > Is it possible to add flexibility in TEE bus enumeration framework to
-> > > > support
-> > > > > platform specific properties through OF nodes or ACPI?
-> > > > >
-> > > >
-> > > > As you mentioned above, TCG logs are collected by boot loader. So it
-> > > > should find a way to pass them to Linux.
-> > > >
-> > > > How about if boot loader register these TCG logs with fTPM TA which
-> > > > could be fetched during fTPM driver probe or new api like
-> > > > tpm_read_log_tee()?
+> > > Right, but I guess the common case would be to have a single sensor,
+> > > where that wouldn't be needed.
 > > >
-> > > And then how does fTPM driver pass TCG Logs to the TPM framework?
-> > > It requires changes to the upstream TPM framework to ask the driver
-> > > explicitly for the TCG Logs.
+> > > In odd cases, we can always specify it in the DTS, and if it becomes
+> > > common enough, we can move it to the DTSI.
 > >
-> > My suggestion was to add 4th way to pass TCG logs as follows:
-> >
-> > --- a/drivers/char/tpm/eventlog/common.c
-> > +++ b/drivers/char/tpm/eventlog/common.c
-> > @@ -95,6 +95,10 @@ static int tpm_read_log(struct tpm_chip *chip)
-> >         if (rc != -ENODEV)
-> >                 return rc;
-> >
-> > +       rc = tpm_read_log_tee(chip);
-> > +       if (rc != -ENODEV)
-> > +               return rc;
-> > +
-> >         return tpm_read_log_of(chip);
-> >  }
-> > --- /dev/null
-> > +++ b/drivers/char/tpm/eventlog/tee.c
-> > @@ -0,0 +1,43 @@
-> > <snip>
-> > +int tpm_read_log_tee(struct tpm_chip *chip)
-> > +{
-> > +       struct tpm_bios_log *log;
-> > +       struct ftpm_tee_private *pvt_data;
-> > +
-> > +       log = &chip->log;
-> > +       if (!strcmp(chip->dev.bus->name, tee_bus_type.name))
-> > +               pvt_data = dev_get_drvdata(chip->dev.parent);
-> > +       else
-> > +               return -ENODEV;
-> > +
-> > +       // Here you could simply do an invoke command to fetch the TCG
-> > logs.
-> > +
-> > +       if (chip->flags & TPM_CHIP_FLAG_TPM2)
-> > +               return EFI_TCG2_EVENT_LOG_FORMAT_TCG_2;
-> > +       return EFI_TCG2_EVENT_LOG_FORMAT_TCG_1_2;
-> > +}
->
-> But I do not see a need for this 4th method if TEE bus enumeration framework supports flexibility.
+> > Makes sense. Do you want me to re-spin?
+> 
+> If there's no other comment, we'll fix it when applying.
 
-If there is a way to fetch event logs buffer at runtime from TPM
-device then why should we rely on DT or ACPI stuff?
+This patch series seems to have been forgotten. It doesn't seem there are any
+blockers. Can you please apply it now? I have some further series (camera module
+support for TBS-A711) that depend on this.
 
-> The problem is with the TEE bus enumeration.
->
+thank you and regards,
+	Ondrej
 
-See my response below.
+> Maxime
+> 
+> --
+> Maxime Ripard, Bootlin
+> Embedded Linux and Kernel engineering
+> https://bootlin.com
 
-> >
-> > >
-> > > Note that this also requires changes to the fTPM TA that has been
-> > existing for few years.
-> > >
-> >
-> > That's not a sane reason to avoid implementing generic stuff.
->
-> Exactly, TEE bus enumeration framework need to support generic stuff that is expected
-> of a bus driver. You are expecting everything else to be generic enough, but not TEE bus enumeration.
->
 
-I guess you are missing the basic TEE bus view. It is an
-auto-discoverable bus where TAs as devices are detected automatically.
-It is similar to USB, PCI etc. busses. But in case of Platform, I2C,
-SPI etc. which are NOT auto-discoverable busses, devices are described
-in the hardware description language (ACPI or DT).
 
-Like in case of TPM, when acting as an I2C based device is represented
-via a DT node (see section: "2.4 Device population" in
-Documentation/devicetree/usage-model.txt). And device specific
-properties are retrieved from corresponding device DT node. But in
-case of TPM being a TEE based device, detected automatically, you
-won't have a device DT node to describe its properties but rather
-those properties need to derived from the device automatically.
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
 
-So in summary, it doesn't seems possible to support TEE devices
-detected automatically and have properties described in DT unless you
-hard code DT node path in the driver to provide those properties which
-doesn't looks like a generic solution.
-
-> > As there
-> > could be other fTPM implementations and specific DT nodes for each
-> > which might not be maintainable. BTW, in current implementation also I
-> > don't find DT bindings corresponding to DT node used in this
-> > patch-set.
-> >
-> > > Is it not possible to add flexibility in TEE bus enumeration framework to
-> > > support platform specific properties through OF nodes or ACPI?
-> > >
-> >
-> > TEE bus framework was designed specifically to avoid OF nodes or ACPI
-> > properties. As devices could be intelligent enough to be queried for
-> > required properties.
->
-> Is there an expectation that TEE bus enumerated devices to be intelligent?
-> If so, this is another limitation of TEE bus enumeration.
-> Please fix these limitations to make TEE bus enumeration
-> scalable and flexible for future use cases.
->
-
-It's not a limitation but rather a feature of TEE devices being
-auto-discoverable rather being described via DT or ACPI.
-
--Sumit
-
-> >
-> > > Devices enumerated by buses such as i2c can read platform specific
-> > properties.
-> >
-> > i2c devices are real hardware which could be platform agnostic, so you
-> > need to have platform specific properties.
-> >
-> > -Sumit
-> >
-> > > With this flexibility added, more future use cases through TEE bus.
-> > >
-> > >
-> > > > This is something similar to what I used in
-> > > > optee-rng [1] driver to fetch RNG properties.
-> > > >
-> > > > [1]
-> > > >
-> > https://nam06.safelinks.protection.outlook.com/?url=https%3A%2F%2Fgithub.co
-> > > >
-> > m%2Ftorvalds%2Flinux%2Fblob%2Fmaster%2Fdrivers%2Fchar%2Fhw_random%2Foptee-
-> > > >
-> > rng.c%23L176&amp;data=02%7C01%7Cthiruan%40microsoft.com%7Cd37438eaf4f9483e4
-> > > >
-> > 0c708d6d9ccfe0c%7C72f988bf86f141af91ab2d7cd011db47%7C1%7C0%7C63693587179549
-> > > >
-> > 3006&amp;sdata=As9sC45Bl7sZdJKOq0sHz6GmXttMxS80Nn5yvN4vqng%3D&amp;reserved=
-> > > > 0
-> > > >
-> > > > -Sumit
-> > > >
-> > > > > >
-> > > > > > >
-> > > > > > > --
-> > > > > > > Thanks,
-> > > > > > > Sasha
