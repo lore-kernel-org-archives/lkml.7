@@ -4,44 +4,43 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 324FBC04AB4
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 May 2019 17:52:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E0FCC04E87
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 May 2019 17:52:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 08CCB2054F
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 May 2019 17:52:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 59C362053B
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 May 2019 17:52:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558288344;
-	bh=CHcqzmd7f/zzrLlSymUwD4OBdmYfCokpiaI12KylP3A=;
+	s=default; t=1558288348;
+	bh=6Lga5+qclP2sw4nWQGZpibGDqbeXADq87If2cmO73Ec=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=relSxymY7RSN5uEXzs9PLQ77N7f/kjbvvQf18VuwQ9W2jYRpJIEgl6QHlieGzAS4a
-	 CpAUgg1INFcBQUpF+RlonO4WXUCljsc9hL66q4Z5pBe7SwZrrTi34zc8DgfZ39fAYp
-	 WMzdGb+4BJy178i+cEZrmKMaPqIADYxX9Q42A0I4=
+	b=foYeDKlq++GaKX5ioT7peOKvQYDtqsGHaN643exj2wYD532siKU7Px3kNvgx6hil+
+	 ION+TOLOL4h5IJpnNZPPOefOaoBl4oOnwiiOud3qXMiWw/5QSWQWqPaO23UUObQL4Z
+	 /hsIgN5wC/hDVikeqSnBVuBamyGQ4RvOHriW551I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729253AbfESRwX (ORCPT
+        id S1729310AbfESRw1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 19 May 2019 13:52:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44540 "EHLO mail.kernel.org"
+        Sun, 19 May 2019 13:52:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44544 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727795AbfESRwV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1727994AbfESRwV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Sun, 19 May 2019 13:52:21 -0400
 Received: from archlinux (cpc91196-cmbg18-2-0-cust659.5-4.cable.virginm.net [81.96.234.148])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2DFE52053B;
-        Sun, 19 May 2019 10:42:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A480B2173C;
+        Sun, 19 May 2019 10:46:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558262552;
-        bh=CHcqzmd7f/zzrLlSymUwD4OBdmYfCokpiaI12KylP3A=;
+        s=default; t=1558262799;
+        bh=6Lga5+qclP2sw4nWQGZpibGDqbeXADq87If2cmO73Ec=;
         h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=YoczuPBn+eukyQ1MAURP/eFXVYH/RWtodIFqDMtNq25p9n6hwz62XWBo/F9LWWa/0
-         YOoxWq5RRNsjdOVxGSFQmZkNV9ceO08KaPoQ53yEPhR8omKbP2ZRtH8ZtIUgueVO4v
-         N5ClsS8OP2AvujGUYIR/wdMcx1OBeHgqv5Xb9WaI=
-Date:   Sun, 19 May 2019 11:42:26 +0100
+        b=aXLqKfSVLtysUxZFN6QFWMsZXVZui8ZCTidRNkvAfyD+6SEhmAp+3q5PbJ22nr9/8
+         P8ukThxwV0lMxaJITTdf3RHXAIU15zYTUSurczupwVkg+YfPukbb1jU70tqHg9zGJa
+         BakT02RTGjfHpxerUDxNK8K2m3ZNzx3LDoUDbGdg=
+Date:   Sun, 19 May 2019 11:46:34 +0100
 From:   Jonathan Cameron <jic23@kernel.org>
-To:     Thiago Estrela <thiagestrela@gmail.com>
+To:     =?UTF-8?B?QsOhcmJhcmE=?= Fernandes <barbara.fernandes@usp.br>
 Cc:     Lars-Peter Clausen <lars@metafoo.de>,
         Michael Hennerich <Michael.Hennerich@analog.com>,
         Stefan Popa <stefan.popa@analog.com>,
@@ -49,70 +48,73 @@ Cc:     Lars-Peter Clausen <lars@metafoo.de>,
         Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         linux-iio@vger.kernel.org, devel@driverdev.osuosl.org,
-        linux-kernel@vger.kernel.org,
-        Tiago Napoli <napoli.tiago96@gmail.com>,
-        Pedro Sousa <pedroteosousa@gmail.com>
-Subject: Re: [PATCH] staging: iio: adis16203: Add of_device_id table
-Message-ID: <20190519114226.68b86590@archlinux>
-In-Reply-To: <20190518224213.25927-1-thiagestrela@gmail.com>
-References: <20190518224213.25927-1-thiagestrela@gmail.com>
+        linux-kernel@vger.kernel.org, Wilson Sales <spoonm@spoonm.org>
+Subject: Re: [RESEND PATCH] staging: iio: ad7192: create of_device_id array
+Message-ID: <20190519114634.0e2a9389@archlinux>
+In-Reply-To: <20190518224435.18266-1-barbara.fernandes@usp.br>
+References: <20190518224435.18266-1-barbara.fernandes@usp.br>
 X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 18 May 2019 19:42:13 -0300
-Thiago Estrela <thiagestrela@gmail.com> wrote:
+On Sat, 18 May 2019 19:44:35 -0300
+B=C3=A1rbara Fernandes <barbara.fernandes@usp.br> wrote:
 
-> Accomplish device tree compatibility to driver ADIS16203
-> by adding of_device_id table and making a subsequent call to
-> MODULE_DEVICE_TABLE.
-> 
-> Signed-off-by: Thiago Estrela <thiagestrela@gmail.com>
-> Signed-off-by: Tiago Napoli <napoli.tiago96@gmail.com>
-> Co-developed-by: Tiago Napoli <napoli.tiago96@gmail.com>
-> Signed-off-by: Pedro Sousa <pedroteosousa@gmail.com>
-> Co-developed-by: Pedro Sousa <pedroteosousa@gmail.com>
-> Reviewed-by: Matheus Tavares <matheus.bernardino@usp.br>
-> Reviewed-by: Marcelo Schmitt <marcelo.schmitt1@gmail.com>
-Another nice patch.  Certainly seems like the dev day was
-successful and welcome to so many new people.
+> Create list of compatible device ids to be matched with those stated in
+> the device tree.
+>=20
+> Signed-off-by: B=C3=A1rbara Fernandes <barbara.fernandes@usp.br>
+> Signed-off-by: Wilson Sales <spoonm@spoonm.org>
+> Co-developed by: Wilson Sales <spoonm@spoonm.org>
+Hi B=C3=A1rbara, Wilson,
 
-Applied to the togreg branch of iio.git and pushed out as
-testing for the autobuilders to see if we missed anything.
+One minor issue inline about code ordering.
+Actual content is fine.
 
 Thanks,
 
 Jonathan
 
 > ---
->  drivers/staging/iio/accel/adis16203.c | 8 ++++++++
->  1 file changed, 8 insertions(+)
-> 
-> diff --git a/drivers/staging/iio/accel/adis16203.c b/drivers/staging/iio/accel/adis16203.c
-> index 70381756a64a..a5d974ac2e3b 100644
-> --- a/drivers/staging/iio/accel/adis16203.c
-> +++ b/drivers/staging/iio/accel/adis16203.c
-> @@ -311,9 +311,17 @@ static int adis16203_remove(struct spi_device *spi)
->  	return 0;
->  }
->  
-> +static const struct of_device_id adis16203_of_match[] = {
-> +	{ .compatible = "adi,adis16203" },
-> +	{ },
+>  drivers/staging/iio/adc/ad7192.c | 12 ++++++++++++
+>  1 file changed, 12 insertions(+)
+>=20
+> diff --git a/drivers/staging/iio/adc/ad7192.c b/drivers/staging/iio/adc/a=
+d7192.c
+> index 3d74da9d37e7..cc886f944dbf 100644
+> --- a/drivers/staging/iio/adc/ad7192.c
+> +++ b/drivers/staging/iio/adc/ad7192.c
+> @@ -810,11 +810,23 @@ static const struct spi_device_id ad7192_id[] =3D {
+>  	{"ad7195", ID_AD7195},
+>  	{}
+>  };
+> +
+> +static const struct of_device_id ad7192_of_spi_match[] =3D {
+> +	{ .compatible =3D "adi,ad7190" },
+> +	{ .compatible =3D "adi,ad7192" },
+> +	{ .compatible =3D "adi,ad7193" },
+> +	{ .compatible =3D "adi,ad7195" },
+> +	{}
 > +};
 > +
-> +MODULE_DEVICE_TABLE(of, adis16203_of_match);
+> +MODULE_DEVICE_TABLE(of, ad7192_of_spi_match);
 > +
->  static struct spi_driver adis16203_driver = {
->  	.driver = {
->  		.name = "adis16203",
-> +		.of_match_table = adis16203_of_match,
+Please keep the declaration of the table alongside the relevant
+MODULE_DEVICE_TABLE.
+
+In short, better to have your additions after this next line.
+>  MODULE_DEVICE_TABLE(spi, ad7192_id);
+> =20
+>  static struct spi_driver ad7192_driver =3D {
+>  	.driver =3D {
+>  		.name	=3D "ad7192",
+> +		.of_match_table =3D ad7192_of_spi_match,
 >  	},
->  	.probe = adis16203_probe,
->  	.remove = adis16203_remove,
+>  	.probe		=3D ad7192_probe,
+>  	.remove		=3D ad7192_remove,
 
