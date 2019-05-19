@@ -4,55 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3DD0C04AB4
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 May 2019 17:09:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40281C04AB4
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 May 2019 17:09:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 90E32205ED
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 May 2019 17:09:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 130A4205ED
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 May 2019 17:09:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="T/7IReFv"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="F1SPpDoL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726713AbfESRJO (ORCPT
+        id S1726999AbfESRJz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 19 May 2019 13:09:14 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:39379 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725838AbfESRJO (ORCPT
+        Sun, 19 May 2019 13:09:55 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:33025 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725766AbfESRJy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 19 May 2019 13:09:14 -0400
-Received: by mail-pf1-f194.google.com with SMTP id z26so6043629pfg.6
-        for <linux-kernel@vger.kernel.org>; Sun, 19 May 2019 10:09:14 -0700 (PDT)
+        Sun, 19 May 2019 13:09:54 -0400
+Received: by mail-pf1-f196.google.com with SMTP id z28so6065477pfk.0
+        for <linux-kernel@vger.kernel.org>; Sun, 19 May 2019 10:09:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=gCFKWEfomzC/p8Cp2zu9+tMCVjDMCf+wEVZ+N8bS+5w=;
-        b=T/7IReFvKjKaF14U1oGtHscyU/22SyS4d7KmRC5r07CtvxiAbogbfeuIroE/8H2wz0
-         nLTWIIZriLKgXnWDXlyBKjqUAsl9SsAMjTTs4IMZaZBFvDrupg39ZL7WTW3wXN2yB8aj
-         f8BzAcUBvMPTNeGH08JCB9Xs2xfvt2oFwNK1Q=
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=HjgKgNWvkrWu2AB4Hfm3UsbNqpkTfiMRDxIt6YpDrD8=;
+        b=F1SPpDoL5/a/tOtnEuMPcZHUmxrlYpCW55VLRABVi8Ktcj+pFOspwPpb/QdIdtJBsz
+         41Nz2EnmkcnqlqMJ4FH9DYTW9qOWF3B9mwhUR4kc12EXddRoh1xcNY+hvWUgG0kVZaSO
+         nmtAnQFNNwpNY2cb4wM/TTE7HA6icohq7g9rs=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=gCFKWEfomzC/p8Cp2zu9+tMCVjDMCf+wEVZ+N8bS+5w=;
-        b=YGe5ErxeOQtI/yZVr9AM0b4SKOcu+TtE2z6NTmQGTQfuLcG0FJeqaSn9r5W/YVFMSs
-         lcKWmBqlwBqnSPUr2fX20sKvczHEw2hFw4WsNKy752IyL+hLnPBGAGVAq6f1SaTD6ohL
-         KqJbX1kDyReMuu/Q5ZpdujKPniRX/4JyG97KlVlXcqQqVRcp9e4Iv29+ZI3I1+ZAZ5d8
-         79h5DoSUrHYXWhfAtJ94iDgznVCiwX6khGxEKNOFtC6piHbMlKFYphLh0E9WL56iOden
-         BGB03scES80a3YD1kZbplw/XmM6AK2p32QqSm7zeP0UFIaWol5i1Jzw4MBYaYdcQsLtV
-         Khnw==
-X-Gm-Message-State: APjAAAV5V1Nld3jRf0G1xsU6GcZPGyrEh25v1B3haoP/cnN6HWb7QR1g
-        sT2rvQOWLLoxIP4+oQNcEJoaqw==
-X-Google-Smtp-Source: APXvYqy+Gmvo5+tw39P1k0XyadavsTQNx3uwPq73xdTjt//OfTcVKyZMNiRhgh9F9ySQ8HBIePPR/g==
-X-Received: by 2002:a63:a08:: with SMTP id 8mr69721219pgk.46.1558281910923;
-        Sun, 19 May 2019 09:05:10 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=HjgKgNWvkrWu2AB4Hfm3UsbNqpkTfiMRDxIt6YpDrD8=;
+        b=b0E10A+yaAAja9t6iDX5/7rI4ZgJTW9zb7YvojtEjXH5nZVl+P3jF21UOAP6z3VXE7
+         WK7DYLEIfOUrjIWUZLoW5ljAX0eF3JYWKEYAcr7vOpuxM8gpARoXGYS8olxfsBW5vYiH
+         IImr3w/z7qHT7uR9d2sKd62yb/O98pVYlN5x3clIsKAllYZj77EZm/B8kBZXfi3EznAq
+         n46bPH2xPF1YiS03M54I2h+1v/D6XUEvUx/YWFG9wcDOBrrIbfWLR7lnbOjktarLQrow
+         rt2oUzo3ZvGArRI6DRnh52tNlCKPfYIgereu+DU58lmARZKcLSKJFuhkbMVQYpU9OQyt
+         BYbA==
+X-Gm-Message-State: APjAAAVP01C6Rr8nM37DRusHrF1HssUNzE5c2kDd7jBuwDAyPw+T5CSG
+        M2MWVvQfU6VGRVjOcMjHECQ8ew==
+X-Google-Smtp-Source: APXvYqzq2wiw9TB3Jsn9Sm+quwS8aysurwuin7NtHbnbO84Ogl+zCj5bZND02CjmQyW98Mvom1I2XQ==
+X-Received: by 2002:a62:e10f:: with SMTP id q15mr74698143pfh.56.1558281904958;
+        Sun, 19 May 2019 09:05:04 -0700 (PDT)
 Received: from hsinyi-z840.tpe.corp.google.com ([2401:fa00:1:10:b852:bd51:9305:4261])
-        by smtp.gmail.com with ESMTPSA id b23sm17547007pfi.6.2019.05.19.09.05.07
+        by smtp.gmail.com with ESMTPSA id b23sm17547007pfi.6.2019.05.19.09.05.00
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Sun, 19 May 2019 09:05:10 -0700 (PDT)
+        Sun, 19 May 2019 09:05:04 -0700 (PDT)
 From:   Hsin-Yi Wang <hsinyi@chromium.org>
 To:     linux-arm-kernel@lists.infradead.org
 Cc:     Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
@@ -73,12 +73,10 @@ Cc:     Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
         Laura Abbott <labbott@redhat.com>,
         Stephen Boyd <swboyd@chromium.org>,
         Kees Cook <keescook@chromium.org>
-Subject: [PATCH v4 2/3] fdt: add support for rng-seed
-Date:   Mon, 20 May 2019 00:04:45 +0800
-Message-Id: <20190519160446.320-2-hsinyi@chromium.org>
+Subject: [PATCH v4 1/3] amr64: map FDT as RW for early_init_dt_scan()
+Date:   Mon, 20 May 2019 00:04:44 +0800
+Message-Id: <20190519160446.320-1-hsinyi@chromium.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190519160446.320-1-hsinyi@chromium.org>
-References: <20190519160446.320-1-hsinyi@chromium.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -86,81 +84,76 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Introducing a chosen node, rng-seed, which is an entropy that can be
-passed to kernel called very early to increase initial device
-randomness. Bootloader should provide this entropy and the value is
-read from /chosen/rng-seed in DT.
+Currently in arm64, FDT is mapped to RO before it's passed to
+early_init_dt_scan(). However, there might be some code that needs
+to modify FDT during init. Map FDT to RW until unflatten DT.
 
 Signed-off-by: Hsin-Yi Wang <hsinyi@chromium.org>
 ---
 change log v2->v4:
 * v3 abandoned
-* fix doc error
+* add an arg pgprot_t to fixmap_remap_fdt()
 ---
- Documentation/devicetree/bindings/chosen.txt | 14 ++++++++++++++
- drivers/of/fdt.c                             | 10 ++++++++++
- 2 files changed, 24 insertions(+)
+ arch/arm64/include/asm/mmu.h | 2 +-
+ arch/arm64/kernel/setup.c    | 5 ++++-
+ arch/arm64/mm/mmu.c          | 4 ++--
+ 3 files changed, 7 insertions(+), 4 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/chosen.txt b/Documentation/devicetree/bindings/chosen.txt
-index 45e79172a646..678e81bc4383 100644
---- a/Documentation/devicetree/bindings/chosen.txt
-+++ b/Documentation/devicetree/bindings/chosen.txt
-@@ -28,6 +28,20 @@ mode) when EFI_RNG_PROTOCOL is supported, it will be overwritten by
- the Linux EFI stub (which will populate the property itself, using
- EFI_RNG_PROTOCOL).
+diff --git a/arch/arm64/include/asm/mmu.h b/arch/arm64/include/asm/mmu.h
+index 67ef25d037ea..4499cb00ece7 100644
+--- a/arch/arm64/include/asm/mmu.h
++++ b/arch/arm64/include/asm/mmu.h
+@@ -137,7 +137,7 @@ extern void init_mem_pgprot(void);
+ extern void create_pgd_mapping(struct mm_struct *mm, phys_addr_t phys,
+ 			       unsigned long virt, phys_addr_t size,
+ 			       pgprot_t prot, bool page_mappings_only);
+-extern void *fixmap_remap_fdt(phys_addr_t dt_phys);
++extern void *fixmap_remap_fdt(phys_addr_t dt_phys, pgprot_t prot);
+ extern void mark_linear_text_alias_ro(void);
  
-+rng-seed
-+-----------
-+
-+This property serves as an entropy to add device randomness. It is parsed
-+as a byte array, e.g.
-+
-+/ {
-+	chosen {
-+		rng-seed = <0x31 0x95 0x1b 0x3c 0xc9 0xfa 0xb3 ...>;
-+	};
-+};
-+
-+This random value should be provided by bootloader.
-+
- stdout-path
- -----------
+ #define INIT_MM_CONTEXT(name)	\
+diff --git a/arch/arm64/kernel/setup.c b/arch/arm64/kernel/setup.c
+index 413d566405d1..064df3de1d14 100644
+--- a/arch/arm64/kernel/setup.c
++++ b/arch/arm64/kernel/setup.c
+@@ -181,7 +181,7 @@ static void __init smp_build_mpidr_hash(void)
  
-diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
-index de893c9616a1..7f3d72921b23 100644
---- a/drivers/of/fdt.c
-+++ b/drivers/of/fdt.c
-@@ -24,6 +24,7 @@
- #include <linux/debugfs.h>
- #include <linux/serial_core.h>
- #include <linux/sysfs.h>
-+#include <linux/random.h>
- 
- #include <asm/setup.h>  /* for COMMAND_LINE_SIZE */
- #include <asm/page.h>
-@@ -1079,6 +1080,7 @@ int __init early_init_dt_scan_chosen(unsigned long node, const char *uname,
+ static void __init setup_machine_fdt(phys_addr_t dt_phys)
  {
- 	int l;
- 	const char *p;
-+	const void *rng_seed;
+-	void *dt_virt = fixmap_remap_fdt(dt_phys);
++	void *dt_virt = fixmap_remap_fdt(dt_phys, PAGE_KERNEL);
+ 	const char *name;
  
- 	pr_debug("search \"chosen\", depth: %d, uname: %s\n", depth, uname);
+ 	if (!dt_virt || !early_init_dt_scan(dt_virt)) {
+@@ -320,6 +320,9 @@ void __init setup_arch(char **cmdline_p)
+ 	/* Parse the ACPI tables for possible boot-time configuration */
+ 	acpi_boot_table_init();
  
-@@ -1113,6 +1115,14 @@ int __init early_init_dt_scan_chosen(unsigned long node, const char *uname,
- 
- 	pr_debug("Command line is: %s\n", (char*)data);
- 
-+	rng_seed = of_get_flat_dt_prop(node, "rng-seed", &l);
-+	if (rng_seed && l > 0) {
-+		add_device_randomness(rng_seed, l);
++	/* remap fdt to RO */
++	fixmap_remap_fdt(__fdt_pointer, PAGE_KERNEL_RO);
 +
-+		/* try to clear seed so it won't be found. */
-+		fdt_delprop(initial_boot_params, node, "rng-seed");
-+	}
-+
- 	/* break now */
- 	return 1;
+ 	if (acpi_disabled)
+ 		unflatten_device_tree();
+ 
+diff --git a/arch/arm64/mm/mmu.c b/arch/arm64/mm/mmu.c
+index a170c6369a68..29648e86f7e5 100644
+--- a/arch/arm64/mm/mmu.c
++++ b/arch/arm64/mm/mmu.c
+@@ -940,12 +940,12 @@ void *__init __fixmap_remap_fdt(phys_addr_t dt_phys, int *size, pgprot_t prot)
+ 	return dt_virt;
  }
+ 
+-void *__init fixmap_remap_fdt(phys_addr_t dt_phys)
++void *__init fixmap_remap_fdt(phys_addr_t dt_phys, pgprot_t prot)
+ {
+ 	void *dt_virt;
+ 	int size;
+ 
+-	dt_virt = __fixmap_remap_fdt(dt_phys, &size, PAGE_KERNEL_RO);
++	dt_virt = __fixmap_remap_fdt(dt_phys, &size, prot);
+ 	if (!dt_virt)
+ 		return NULL;
+ 
 -- 
 2.20.1
 
