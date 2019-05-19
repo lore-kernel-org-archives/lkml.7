@@ -2,88 +2,138 @@ Return-Path: <SRS0=AA30=TT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9764C04AB4
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 May 2019 17:30:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 523B5C04AB4
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 May 2019 17:31:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 75827204EC
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 May 2019 17:30:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 29DF1204EC
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 May 2019 17:31:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="LX6LYvYY"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NTnrrmFj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727472AbfESRas (ORCPT
+        id S1727522AbfESRbM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 19 May 2019 13:30:48 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:34790 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725769AbfESRas (ORCPT
+        Sun, 19 May 2019 13:31:12 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:39445 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725769AbfESRbM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 19 May 2019 13:30:48 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:MIME-Version:Date:Message-ID:Subject:From:Cc:To:Sender:Reply-To:
-        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-        Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=f5cN1mjIK4arJv5nxA+9gsIwVDLFcCDiUgKYVbUOMOo=; b=LX6LYvYYN+sOMe2wiacM1uzR3
-        zyvtL3DggelCbv5RiTtNft2qx7wFDxH5pTpIbCDTaoJqYX5E91v4TP2kfm5xN50a6/egfLVwuPd9e
-        c4S+CzzslEPNlKXjStrmXj/SvMJnh15TCDdcJAdw1TBKVbf2LJj7MMA6PUMmW8rKa7OTxYDc05RTl
-        n3Vy4MmzUg38kQlJrky+fVTsL2NzPF097e/IML8fmGeuI09yKl057LEsCLXbWGn+6xoFLHawUwhiY
-        1bM8EmSsPVOJkv2Lt4JXFNs1fmtgxVbbKfqIc43YlZXAukSjSkDqdsshbBlYtlKR3cYL8freek6Ne
-        qPyvJa5eA==;
-Received: from static-50-53-52-16.bvtn.or.frontiernet.net ([50.53.52.16] helo=dragon.dunlab)
-        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hSDSR-0006bj-41; Sun, 19 May 2019 04:29:59 +0000
-To:     LKML <linux-kernel@vger.kernel.org>
-Cc:     William Breathitt Gray <vilhelm.gray@gmail.com>,
-        linux-iio@vger.kernel.org,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Subject: [PATCH -next] counter: fix Documentation build error due to incorrect
- source file name
-Message-ID: <b6475070-f336-1093-ff0f-6bc8d5fda35e@infradead.org>
-Date:   Sat, 18 May 2019 21:29:58 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Sun, 19 May 2019 13:31:12 -0400
+Received: by mail-pf1-f193.google.com with SMTP id z26so6056231pfg.6
+        for <linux-kernel@vger.kernel.org>; Sun, 19 May 2019 10:31:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=3QptrOrhoRrb+8UfSBrbIZc3gQ6845r98RHnMaT6MkU=;
+        b=NTnrrmFjSAkT60/o3iMiUogVQSY9vFrlR941e/UEVCPbk7my1cYpToGhOVsbHjEFjP
+         3zDpnUc4FdRMlgm1Nrblkd3XZHcr0l89OZGXVpBddWBkyN8DlU8yqG52Cm7Gv/LhXBrb
+         HGo/AYFcgTGn9k0UqOK3iUF7FhvHyCNCjdpAt9DMwjzzCSLCLwJ9nJPF55vtRsK/i60/
+         dJ3ViHfAyIgIxKd/5pLms/Hoidm6ba4JrcSSAvll88MZhanV1UHaXqgZJi/OXDs7W8HU
+         qyKQGsRzok+Bt9Y5clcxEf1jtAIaXo+MNbWWfAF32omH6E857+EyzebipgXjQ4VebecE
+         WuJQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=3QptrOrhoRrb+8UfSBrbIZc3gQ6845r98RHnMaT6MkU=;
+        b=a+sZ8O8bOOlNLlT47epxv9788TGbnheGO8KMUTvqtoS3CCv60ZZNAkxnHfpBUvauYw
+         Dqk3nGPxm1xBV36SRU+pSM05GOl5yBd24k20zQJwgnOgBWzujnSWPBkXtH6bJkY5N+UG
+         2IzihTjVbUMYYs8aBr2h3Odl7z75vq9uh8caHo+Y7qz5zYC6L9wkumPo4ldq2VAhlnxu
+         mIf8TobqVVvqDupd2NHFRNGPADLSWu0jGdiE55bV1+GtNV2E05zgUFynZaveflQjdCRz
+         5sTlNOCM62rbpzEgo/+u7IgmjBTKvTB5cdmrQqkXvIZdZgP8dkRt+4P5HuM5fdM01Gon
+         lCdg==
+X-Gm-Message-State: APjAAAV9BBYeOwT/b+Pp3wIIbJPOPEoZyC2wRw2wC20+XVxw8Lb9wEud
+        hLrAayvfpfMUXYQZg0ultJiXRS3F
+X-Google-Smtp-Source: APXvYqzHNKOqcWO25MtIB2d+/lQBkISHLKuHtnvwtHM/ktImBVFZhohz6aCLT34vgGaW+GF85+FAwg==
+X-Received: by 2002:a62:1483:: with SMTP id 125mr45143058pfu.137.1558278455161;
+        Sun, 19 May 2019 08:07:35 -0700 (PDT)
+Received: from mita-MS-7A45.lan ([240f:34:212d:1:5085:bb4a:e3a8:fc9d])
+        by smtp.gmail.com with ESMTPSA id g17sm2441105pfb.56.2019.05.19.08.07.32
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Sun, 19 May 2019 08:07:34 -0700 (PDT)
+From:   Akinobu Mita <akinobu.mita@gmail.com>
+To:     linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc:     Akinobu Mita <akinobu.mita@gmail.com>,
+        Johannes Berg <johannes@sipsolutions.net>,
+        Keith Busch <keith.busch@intel.com>, Jens Axboe <axboe@fb.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        Minwoo Im <minwoo.im.dev@gmail.com>,
+        Kenneth Heitke <kenneth.heitke@intel.com>,
+        Chaitanya Kulkarni <Chaitanya.Kulkarni@wdc.com>
+Subject: [PATCH v4 7/7] nvme-pci: enable to trigger device coredump by hand
+Date:   Mon, 20 May 2019 00:06:58 +0900
+Message-Id: <1558278418-5702-8-git-send-email-akinobu.mita@gmail.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1558278418-5702-1-git-send-email-akinobu.mita@gmail.com>
+References: <1558278418-5702-1-git-send-email-akinobu.mita@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Randy Dunlap <rdunlap@infradead.org>
+This provides a way to trigger the nvme device coredump by writing
+anything to /sys/devices/.../coredump attribute.
 
-Fix kernel-doc build error in Documentation/driver-api/generic-counter.rst
-of incorrect source file name.
-Fixes this warning and error:
-
-Error: Cannot open file ../drivers/counter/generic-counter.c
-WARNING: kernel-doc '../scripts/kernel-doc -rst -enable-lineno -export ../drivers/counter/generic-counter.c' failed with return code 2
-
-Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
-Cc: William Breathitt Gray <vilhelm.gray@gmail.com>
-Cc: linux-iio@vger.kernel.org
+Cc: Johannes Berg <johannes@sipsolutions.net>
+Cc: Keith Busch <keith.busch@intel.com>
+Cc: Jens Axboe <axboe@fb.com>
+Cc: Christoph Hellwig <hch@lst.de>
+Cc: Sagi Grimberg <sagi@grimberg.me>
+Cc: Minwoo Im <minwoo.im.dev@gmail.com>
+Cc: Kenneth Heitke <kenneth.heitke@intel.com>
+Cc: Chaitanya Kulkarni <Chaitanya.Kulkarni@wdc.com>
+Signed-off-by: Akinobu Mita <akinobu.mita@gmail.com>
 ---
- Documentation/driver-api/generic-counter.rst |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+* v4
+- No change since v3
 
---- linux-next-20190517.orig/Documentation/driver-api/generic-counter.rst
-+++ linux-next-20190517/Documentation/driver-api/generic-counter.rst
-@@ -251,7 +251,7 @@ for defining a counter device.
- .. kernel-doc:: include/linux/counter.h
-    :internal:
- 
--.. kernel-doc:: drivers/counter/generic-counter.c
-+.. kernel-doc:: drivers/counter/counter.c
-    :export:
- 
- Implementation
+ drivers/nvme/host/pci.c | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
 
+diff --git a/drivers/nvme/host/pci.c b/drivers/nvme/host/pci.c
+index 6436e72..04084b9 100644
+--- a/drivers/nvme/host/pci.c
++++ b/drivers/nvme/host/pci.c
+@@ -3266,6 +3266,14 @@ static void nvme_coredump_complete(struct nvme_dev *dev)
+ 	nvme_coredump_clear(dev);
+ }
+ 
++static void nvme_coredump(struct device *dev)
++{
++	struct nvme_dev *ndev = dev_get_drvdata(dev);
++
++	nvme_dev_disable(ndev, false, true);
++	nvme_reset_ctrl_sync(&ndev->ctrl);
++}
++
+ #else
+ 
+ static void nvme_coredump_init(struct nvme_dev *dev)
+@@ -3281,6 +3289,10 @@ static void nvme_coredump_complete(struct nvme_dev *dev)
+ {
+ }
+ 
++static void nvme_coredump(struct device *dev)
++{
++}
++
+ #endif /* CONFIG_DEV_COREDUMP */
+ 
+ static pci_ers_result_t nvme_error_detected(struct pci_dev *pdev,
+@@ -3388,6 +3400,7 @@ static struct pci_driver nvme_driver = {
+ 	.shutdown	= nvme_shutdown,
+ 	.driver		= {
+ 		.pm	= &nvme_dev_pm_ops,
++		.coredump = nvme_coredump,
+ 	},
+ 	.sriov_configure = pci_sriov_configure_simple,
+ 	.err_handler	= &nvme_err_handler,
+-- 
+2.7.4
 
