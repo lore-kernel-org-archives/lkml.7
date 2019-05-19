@@ -2,74 +2,129 @@ Return-Path: <SRS0=lq4r=TU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8931C072AD
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 00:34:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F20DCC04AB4
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 00:46:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 85EEE206B6
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 00:34:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="w07pfqMW"
+	by mail.kernel.org (Postfix) with ESMTP id CA61C20815
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 00:46:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729822AbfETAeH (ORCPT
+        id S1729237AbfETAqk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 19 May 2019 20:34:07 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:39485 "EHLO vps0.lunn.ch"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727682AbfETAeH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 19 May 2019 20:34:07 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=QJ1zlmiUwkwG5fWJeQtvywIkCnEFUS1im+V7yvPnneo=; b=w07pfqMWRp5S6YyWg40sQaWds5
-        MpevLIUi3S0QIbW3VGyK0XeAGb9+EOFTwh+yaX+wP7NNdsuYR1KUhHodyKxyljCiNdk4Ob1Fi13Cx
-        04ti23myNThFJ1fYuKtr1YT9xXjAQEnhxbZ1efA1lhwzeyGDImLf+wvZ05j2B9V2aXGs=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.89)
-        (envelope-from <andrew@lunn.ch>)
-        id 1hSWFa-00019D-85; Mon, 20 May 2019 02:33:58 +0200
-Date:   Mon, 20 May 2019 02:33:58 +0200
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Oleksij Rempel <o.rempel@pengutronix.de>
-Cc:     Paul Burton <paul.burton@mips.com>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        James Hogan <jhogan@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Jay Cliburn <jcliburn@gmail.com>,
-        Chris Snook <chris.snook@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, John Crispin <john@phrozen.org>,
-        Felix Fietkau <nbd@nbd.name>, netdev@vger.kernel.org,
-        Chuanhong Guo <gch981213@gmail.com>,
-        info@freifunk-bad-gandersheim.net
-Subject: Re: [PATCH v4 3/3] net: ethernet: add ag71xx driver
-Message-ID: <20190520003358.GB1695@lunn.ch>
-References: <20190519080304.5811-1-o.rempel@pengutronix.de>
- <20190519080304.5811-4-o.rempel@pengutronix.de>
+        Sun, 19 May 2019 20:46:40 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:8213 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726923AbfETAqj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 19 May 2019 20:46:39 -0400
+Received: from DGGEMS401-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id D97A9D9289DAA879527E;
+        Sun, 19 May 2019 16:55:46 +0800 (CST)
+Received: from [127.0.0.1] (10.184.191.73) by DGGEMS401-HUB.china.huawei.com
+ (10.3.19.201) with Microsoft SMTP Server id 14.3.439.0; Sun, 19 May 2019
+ 16:55:43 +0800
+Subject: Re: INFO: trying to register non-static key in rhashtable_walk_enter
+To:     David Miller <davem@davemloft.net>,
+        <willemdebruijn.kernel@gmail.com>
+CC:     <syzbot+1e8114b61079bfe9cbc5@syzkaller.appspotmail.com>,
+        <jon.maloy@ericsson.com>, <linux-kernel@vger.kernel.org>,
+        <netdev@vger.kernel.org>, <syzkaller-bugs@googlegroups.com>,
+        <tipc-discussion@lists.sourceforge.net>, <ying.xue@windriver.com>,
+        <dvyukov@google.com>, <edumazet@google.com>
+References: <00000000000014e65905892486ab@google.com>
+ <CA+FuTSeM5qzyf_D+70Xe5k=3d+dYp2WyVZC-YM=K4=9kCCst6A@mail.gmail.com>
+ <CA+FuTSct1p1tYAWdsWOgQT7AHoFbdgoT=gA1tQ3nii_85k9bFA@mail.gmail.com>
+ <20190518.131257.1124207773533732758.davem@davemloft.net>
+From:   hujunwei <hujunwei4@huawei.com>
+Message-ID: <ad7739b9-0b90-d704-ebc0-08e77a1c7d5e@huawei.com>
+Date:   Sun, 19 May 2019 16:55:39 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190519080304.5811-4-o.rempel@pengutronix.de>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+In-Reply-To: <20190518.131257.1124207773533732758.davem@davemloft.net>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.184.191.73]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> +config AG71XX
-> +	tristate "Atheros AR7XXX/AR9XXX built-in ethernet mac support"
-> +	depends on ATH79
-> +	select PHYLIB
-> +	select MDIO_BITBANG
 
-I don't see any need for MDIO_BITBANG.
 
-  Andrew
+On 2019/5/19 4:12, David Miller wrote:
+> From: Willem de Bruijn <willemdebruijn.kernel@gmail.com>
+> Date: Sat, 18 May 2019 14:19:07 -0400
+> 
+>> On Sat, May 18, 2019 at 2:09 PM Willem de Bruijn
+>> <willemdebruijn.kernel@gmail.com> wrote:
+>>>
+>>> On Sat, May 18, 2019 at 3:34 AM syzbot
+>>> <syzbot+1e8114b61079bfe9cbc5@syzkaller.appspotmail.com> wrote:
+>>>>
+>>>> Hello,
+>>>>
+>>>> syzbot found the following crash on:
+>>>>
+>>>> HEAD commit:    510e2ced ipv6: fix src addr routing with the exception table
+>>>> git tree:       net
+>>>> console output: https://syzkaller.appspot.com/x/log.txt?x=15b7e608a00000
+>>>> kernel config:  https://syzkaller.appspot.com/x/.config?x=82f0809e8f0a8c87
+>>>> dashboard link: https://syzkaller.appspot.com/bug?extid=1e8114b61079bfe9cbc5
+>>>> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+>>>>
+>>>> Unfortunately, I don't have any reproducer for this crash yet.
+>>>>
+>>>> IMPORTANT: if you fix the bug, please add the following tag to the commit:
+>>>> Reported-by: syzbot+1e8114b61079bfe9cbc5@syzkaller.appspotmail.com
+>>>>
+>>>> INFO: trying to register non-static key.
+>>>> the code is fine but needs lockdep annotation.
+>>>
+>>> All these five rhashtable_walk_enter probably have the same root cause.
+>>>
+>>> Bisected to commit 7e27e8d6130c (" tipc: switch order of device
+>>> registration to fix a crash"). Reverting that fixes it.
+>>>
+>>> Before the commit, tipc_init succeeds. After the commit it fails at
+>>> register_pernet_subsys(&tipc_net_ops) due to error in
+>>>
+>>>   tipc_init_net
+>>>     tipc_topsrv_start
+>>>       tipc_topsrv_create_listener
+>>>         sock_create_kern
+>>>
+>>> On a related note, in tipc_topsrv_start srv is also not freed on later
+>>> error paths.
+>>
+>> and tipc_topsrv_stop is not called in tipc_init_net on later error paths.
+> 
+> This was gonna get fixed by:
+> 
+> 532b0f7ece4cb2ffd24dc723ddf55242d1188e5e
+> tipc: fix modprobe tipc failed after switch order of device registration
+> 
+> I think...
+> 
+> But I reverted because they were still fiddling around with the fix.
+> 
+> This looks really bad at this point and I'm likely to revert 7e27e8d6130c
+> because it creates so many more bugs than it fixes :-////
+> 
+> .
+> 
+Hi, David
+I am really sorry for this, just as you said, this bug fixed by:
+532b0f7ece4cb2ffd24dc723ddf55242d1188e5e
+tipc: fix modprobe tipc failed after switch order of device registration.
+
+I verified the patch v2 works fine, inclue use namespaces together.
+I will update syzbot report in patch v3.
+
+Regards,
+Junwei
+
