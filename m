@@ -2,129 +2,103 @@ Return-Path: <SRS0=AA30=TT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+X-Spam-Status: No, score=-12.5 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95CD4C072A4
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 May 2019 01:56:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55059C04AB4
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 May 2019 16:57:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 632D92087B
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 May 2019 01:56:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="aDGV5YuW"
+	by mail.kernel.org (Postfix) with ESMTP id 240D7206BF
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 May 2019 16:57:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729765AbfESB4X (ORCPT
+        id S1725973AbfESQ5U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 May 2019 21:56:23 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:43400 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729724AbfESB4X (ORCPT
+        Sun, 19 May 2019 12:57:20 -0400
+Received: from outgoing-auth-1.mit.edu ([18.9.28.11]:48618 "EHLO
+        outgoing.mit.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725769AbfESQ5T (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 May 2019 21:56:23 -0400
-Received: by mail-pg1-f193.google.com with SMTP id t22so5060929pgi.10
-        for <linux-kernel@vger.kernel.org>; Sat, 18 May 2019 18:56:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=+kj4OJTopW4rotB8qihKVkdclA94Kw2w9hND/ZASmD4=;
-        b=aDGV5YuWdqbIJilBO0WAM7gcfKLGH5t9gO/0KJVJ47LOMrp1HdMMS6jlrxipv7HfJD
-         3lCFORRxYNin9JkiebhDNWTH4fM2d0xnjPrAZ29NlQyaz52fXr7/d4uy5D0jVIVt0q7M
-         z3F+hS80VGUNPrsZWXwO1nfcpijgFKG2ERmZM=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=+kj4OJTopW4rotB8qihKVkdclA94Kw2w9hND/ZASmD4=;
-        b=TNJXmUMKe5KcOHMSm8uS3bwtadJU0o11Ecb5hbuiZ3V4VMvUAaXmNjWaUciNvF7s7f
-         Hhr3UkwfExyXhJ6uXfyjzoxU63+hIPZgpgSyvKOidQjG0GaNjC/U7FtyxYm0eFVkUPZW
-         Qp322Ktae4fz1uO9tnp1ZSnCFcFMo9pZmPj37nBk8uiWuf3jOCQB3dUW00zLTwUKdbJt
-         Yi1N+qXKEfVmxV5/yeWriDgRxHJzX/UNlTHocDF6ZkohkSSrVs+vZZQoiHkHizKpCKOH
-         I9GT1xj7atbiobzxLCp2xRkwSi8AbHhKmxyEgFn8ptazOcUcLdw3pfVcQ22PNPmm3slR
-         Z8Pg==
-X-Gm-Message-State: APjAAAXc7r1K+hPgkIOljGp7Q98KIscoyreqyI489dQvBNek2YCM91TD
-        jtDZhfXbtGXT0SFxxFfdXUwyKQ==
-X-Google-Smtp-Source: APXvYqxPCwPSZydCQNb24+pWdRNYEyp8uXWZRnLGTAIxluddIHLpHn7S4Gzf1USIDt211iw0hLpNTQ==
-X-Received: by 2002:a63:7146:: with SMTP id b6mr62397520pgn.426.1558230982600;
-        Sat, 18 May 2019 18:56:22 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id u66sm15405640pfb.76.2019.05.18.18.56.21
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Sat, 18 May 2019 18:56:21 -0700 (PDT)
-Date:   Sat, 18 May 2019 18:56:20 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Weitao Hou <houweitaoo@gmail.com>
-Cc:     mcgrof@kernel.org, linux-kernel@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH] kernel: fix typos and some coding style in comments
-Message-ID: <201905181855.91DE502D@keescook>
-References: <20190518101628.14633-1-houweitaoo@gmail.com>
+        Sun, 19 May 2019 12:57:19 -0400
+Received: from callcc.thunk.org ([66.31.38.53])
+        (authenticated bits=0)
+        (User authenticated as tytso@ATHENA.MIT.EDU)
+        by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id x4J5x94A021513
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Sun, 19 May 2019 01:59:10 -0400
+Received: by callcc.thunk.org (Postfix, from userid 15806)
+        id 77C90420027; Sun, 19 May 2019 01:58:48 -0400 (EDT)
+Date:   Sun, 19 May 2019 01:58:48 -0400
+From:   "Theodore Ts'o" <tytso@mit.edu>
+To:     torvalds@linux-foundation.org
+Cc:     linux-ext4@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [GIT PULL] ext4 fixes for 5.1-rc1
+Message-ID: <20190519055848.GA16693@mit.edu>
+Mail-Followup-To: Theodore Ts'o <tytso@mit.edu>,
+        torvalds@linux-foundation.org, linux-ext4@vger.kernel.org,
+        linux-kernel@vger.kernel.org
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190518101628.14633-1-houweitaoo@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, May 18, 2019 at 06:16:28PM +0800, Weitao Hou wrote:
-> fix lenght to length
+The following changes since commit db90f41916cf04c020062f8d8b0385942248283e:
 
-Can you please fix all the instances of this in the tree?
+  ext4: export /sys/fs/ext4/feature/casefold if Unicode support is present (2019-05-06 14:03:52 -0400)
 
-$ git grep lenght | grep -v spelling.txt
-Documentation/devicetree/bindings/usb/s3c2410-usb.txt: - reg: address and lenght of the controller memory mapped region
-drivers/net/wireless/mediatek/mt76/mt76x02_usb_core.c:   * length, need to update lenght of it and the last packet.
-kernel/sysctl.c: *      passed the max lenght will be ignored. Multiple writes will append
-sound/soc/qcom/qdsp6/q6asm.c: * @len: lenght in bytes
+are available in the Git repository at:
 
-> Signed-off-by: Weitao Hou <houweitaoo@gmail.com>
-> ---
->  kernel/sysctl.c | 18 +++++++++---------
->  1 file changed, 9 insertions(+), 9 deletions(-)
-> 
-> diff --git a/kernel/sysctl.c b/kernel/sysctl.c
-> index 943c89178e3d..0736a1d580df 100644
-> --- a/kernel/sysctl.c
-> +++ b/kernel/sysctl.c
-> @@ -187,17 +187,17 @@ extern int no_unaligned_warning;
->   * enum sysctl_writes_mode - supported sysctl write modes
->   *
->   * @SYSCTL_WRITES_LEGACY: each write syscall must fully contain the sysctl value
-> - * 	to be written, and multiple writes on the same sysctl file descriptor
-> - * 	will rewrite the sysctl value, regardless of file position. No warning
-> - * 	is issued when the initial position is not 0.
-> + * to be written, and multiple writes on the same sysctl file descriptor
-> + * will rewrite the sysctl value, regardless of file position. No warning
-> + * is issued when the initial position is not 0.
->   * @SYSCTL_WRITES_WARN: same as above but warn when the initial file position is
-> - * 	not 0.
-> + * not 0.
->   * @SYSCTL_WRITES_STRICT: writes to numeric sysctl entries must always be at
-> - * 	file position 0 and the value must be fully contained in the buffer
-> - * 	sent to the write syscall. If dealing with strings respect the file
-> - * 	position, but restrict this to the max length of the buffer, anything
-> - * 	passed the max lenght will be ignored. Multiple writes will append
-> - * 	to the buffer.
-> + * file position 0 and the value must be fully contained in the buffer
-> + * sent to the write syscall. If dealing with strings respect the file
-> + * position, but restrict this to the max length of the buffer, anything
-> + * passed the max length will be ignored. Multiple writes will append
-> + * to the buffer.
+  git://git.kernel.org/pub/scm/linux/kernel/git/tytso/ext4.git tags/ext4_for_linus_stable
 
-Also, why the reflow? It looks like these should stay indented...
+for you to fetch changes up to 2c1d0e3631e5732dba98ef49ac0bec1388776793:
 
->   *
->   * These write modes control how current file position affects the behavior of
->   * updating sysctl values through the proc interface on each write.
-> -- 
-> 2.18.0
-> 
+  ext4: avoid panic during forced reboot due to aborted journal (2019-05-17 17:37:18 -0400)
 
-Besides that, thanks for noticing and sending a patch!
+----------------------------------------------------------------
+Some bug fixes, and an update to the URL's for the final version of
+Unicode 12.1.0.
 
--- 
-Kees Cook
+----------------------------------------------------------------
+Chengguang Xu (1):
+      jbd2: fix potential double free
+
+Colin Ian King (1):
+      ext4: unsigned int compared against zero
+
+Jan Kara (1):
+      ext4: avoid panic during forced reboot due to aborted journal
+
+Lukas Czerner (1):
+      ext4: fix data corruption caused by overlapping unaligned and aligned IO
+
+Sahitya Tummala (1):
+      ext4: fix use-after-free in dx_release()
+
+Sriram Rajagopalan (1):
+      ext4: zero out the unused memory region in the extent tree block
+
+Theodore Ts'o (4):
+      ext4: fix miscellaneous sparse warnings
+      unicode: add missing check for an error return from utf8lookup()
+      unicode: update to Unicode 12.1.0 final
+      ext4: fix block validity checks for journal inodes using indirect blocks
+
+ fs/ext4/block_validity.c   |  8 +++++++-
+ fs/ext4/extents.c          | 17 +++++++++++++++--
+ fs/ext4/file.c             |  7 +++++++
+ fs/ext4/fsmap.c            |  2 +-
+ fs/ext4/ioctl.c            |  2 +-
+ fs/ext4/namei.c            |  5 ++++-
+ fs/ext4/super.c            |  4 ++--
+ fs/jbd2/journal.c          | 49 +++++++++++++++++++++++++++++++------------------
+ fs/jbd2/revoke.c           | 32 ++++++++++++++++++++------------
+ fs/jbd2/transaction.c      |  8 +++++---
+ fs/unicode/README.utf8data | 28 +++++++---------------------
+ fs/unicode/utf8-norm.c     |  2 ++
+ include/linux/jbd2.h       |  8 +++++---
+ 13 files changed, 107 insertions(+), 65 deletions(-)
