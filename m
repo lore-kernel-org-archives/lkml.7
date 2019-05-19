@@ -2,72 +2,92 @@ Return-Path: <SRS0=AA30=TT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36DA7C04AB4
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 May 2019 18:06:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A3D0C04AB4
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 May 2019 18:06:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 044F120675
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 May 2019 18:06:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6EA5520675
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 May 2019 18:06:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qpTB0CGH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729277AbfESSGJ (ORCPT
+        id S1729501AbfESSGk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 19 May 2019 14:06:09 -0400
-Received: from smtprelay0160.hostedemail.com ([216.40.44.160]:41984 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727623AbfESSGI (ORCPT
+        Sun, 19 May 2019 14:06:40 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:46632 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725784AbfESSGk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 19 May 2019 14:06:08 -0400
-Received: from smtprelay.hostedemail.com (10.5.19.251.rfc1918.com [10.5.19.251])
-        by smtpgrave08.hostedemail.com (Postfix) with ESMTP id DC7AE182D7B29
-        for <linux-kernel@vger.kernel.org>; Sun, 19 May 2019 05:07:55 +0000 (UTC)
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay03.hostedemail.com (Postfix) with ESMTP id C7428837F24A;
-        Sun, 19 May 2019 05:07:54 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: money15_44f87b89aa330
-X-Filterd-Recvd-Size: 1863
-Received: from XPS-9350 (cpe-23-242-196-136.socal.res.rr.com [23.242.196.136])
-        (Authenticated sender: joe@perches.com)
-        by omf15.hostedemail.com (Postfix) with ESMTPA;
-        Sun, 19 May 2019 05:07:53 +0000 (UTC)
-Message-ID: <201b9ab622b8359225f3a3b673a05047ffce5744.camel@perches.com>
-Subject: Re: [PATCH] scripts/spelling.txt: drop "sepc" from the misspelling
- list
-From:   Joe Perches <joe@perches.com>
-To:     Paul Walmsley <paul.walmsley@sifive.com>,
-        linux-kernel@vger.kernel.org
-Cc:     Andrew Morton <akpm@linux-foundation.org>
-Date:   Sat, 18 May 2019 22:07:52 -0700
-In-Reply-To: <20190518210037.13674-1-paul.walmsley@sifive.com>
-References: <20190518210037.13674-1-paul.walmsley@sifive.com>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.30.1-1build1 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        Sun, 19 May 2019 14:06:40 -0400
+Received: by mail-pl1-f196.google.com with SMTP id r18so5617031pls.13;
+        Sun, 19 May 2019 11:06:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=/yfHy3bk4VUcjD3ax5K1r2nhCYKz0EKfsLspUQgIkNM=;
+        b=qpTB0CGHhgm6kB7Asz+LTQATMNUrHvFESjOFyFQkpIbY8ZTMXTF15hKISipKb3Tmq1
+         fUzQ0BktEJdNVAuxVvRSSvOirFbpZoDjLloYoytKaQFVXL/NHYf1NDok0WdFtDtuB/+z
+         k2XMZbe45GE1FlJj9D1on78NNVHpf7AUNrfZI9W4kkBxIpRnze3TxIry3EVec+krfeCf
+         XO91hI39rrlmYnk0zgOLMXSBVDkZcYvKR7hu6I6aKK2JhFgtBb4BBoOLSxE6WIED/s4G
+         aP8/QPSG8XkX1vJGvSCOt7zfW0GhrWPPg7NrHbr8M0jEILuR70WBBiU9z8n5Aq43DT9F
+         TLUQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=/yfHy3bk4VUcjD3ax5K1r2nhCYKz0EKfsLspUQgIkNM=;
+        b=pr3NoH9R3txdVi80ZJHORYaZ63hwDTHZ/vHkhogVaBmyKOG5EH2EM6ktHdFSAbEOmv
+         y6nIVNvz4uZKJn9E8i0QRChSQY8BzP0FLu+YUD/8wq9QUUlZ5kqyYsAHYCnmL2bAIpdk
+         KYI7vLRV+aAfT59ZJJOFpaoG2O9tFGqjhWf2uHUzDMIyl1CNxGnprd4cHW42HAqxtYeu
+         qGFs54eUOKqZiHesUHCU9RSdPjZdb+IudVG2146ZzCXXIzKP7s/O5G5VrfEus2EdehYV
+         uTF3njOTDPMOOAheJygywsjWdfenWe8FSAd5fQdK7X6+z1ZRSqQaJfI2oPXkioqzwGUE
+         rOHQ==
+X-Gm-Message-State: APjAAAUKFLyx6t+NrDVrqLWO3kS8SopuAy2ku0kMy8nSZQhA1UcYQJcK
+        LhQtcJwOyZidlf24AAPyOrzyRuktc9w=
+X-Google-Smtp-Source: APXvYqzJWyPH4c0OA+p7Jv8rB/YaV8UG3Uuyxc2txQmVThUeRU8CVh+u5hb7nQnBHmCVfJgeeDVrsA==
+X-Received: by 2002:a17:902:6b:: with SMTP id 98mr68143824pla.271.1558236699451;
+        Sat, 18 May 2019 20:31:39 -0700 (PDT)
+Received: from localhost ([43.224.245.181])
+        by smtp.gmail.com with ESMTPSA id e123sm15745920pgc.29.2019.05.18.20.31.38
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sat, 18 May 2019 20:31:38 -0700 (PDT)
+From:   Weitao Hou <houweitaoo@gmail.com>
+To:     stas.yakovlev@gmail.com, kvalo@codeaurora.org, davem@davemloft.net
+Cc:     linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Weitao Hou <houweitaoo@gmail.com>
+Subject: [PATCH] wireless: fix intel typos in code comments
+Date:   Sun, 19 May 2019 11:31:14 +0800
+Message-Id: <20190519033114.20271-1-houweitaoo@gmail.com>
+X-Mailer: git-send-email 2.18.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 2019-05-18 at 14:00 -0700, Paul Walmsley wrote:
-> The RISC-V architecture has a register named the "Supervisor Exception
-> Program Counter", or "sepc".  This abbreviation triggers
-> checkpatch.pl's misspelling detector, resulting in noise in the
-> checkpatch output.  The risk that this noise could cause more useful
-> warnings to be missed seems to outweigh the harm of an occasional
-> misspelling of "spec".  Thus drop the "sepc" entry from the
-> misspelling list.
+fix lengh to length
 
-I would agree if you first fixed the existing sepc/spec
-and sepcific/specific typos.
+Signed-off-by: Weitao Hou <houweitaoo@gmail.com>
+---
+ drivers/net/wireless/intel/ipw2x00/ipw2200.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-arch/powerpc/kvm/book3s_xics.c:	 * a pending interrupt, this is a SW error and PAPR sepcifies
-arch/unicore32/include/mach/regs-gpio.h: * Sepcial Voltage Detect Reg GPIO_GPIR.
-drivers/net/wireless/realtek/rtlwifi/wifi.h:/* Ref: 802.11i sepc D10.0 7.3.2.25.1
-drivers/scsi/lpfc/lpfc_init.c:		/* Stop any OneConnect device sepcific driver timers */
-drivers/staging/rtl8723bs/hal/rtl8723b_phycfg.c:* OverView:	Read "sepcific bits" from BB register
-
+diff --git a/drivers/net/wireless/intel/ipw2x00/ipw2200.c b/drivers/net/wireless/intel/ipw2x00/ipw2200.c
+index fa400f92d7e2..807b2c11215a 100644
+--- a/drivers/net/wireless/intel/ipw2x00/ipw2200.c
++++ b/drivers/net/wireless/intel/ipw2x00/ipw2200.c
+@@ -774,7 +774,7 @@ static int ipw_get_ordinal(struct ipw_priv *priv, u32 ord, void *val, u32 * len)
+ 		 *
+ 		 * This table consist of six values, each containing
+ 		 *     - dword containing the starting offset of the data
+-		 *     - dword containing the lengh in the first 16bits
++		 *     - dword containing the length in the first 16bits
+ 		 *       and the count in the second 16bits
+ 		 */
+ 
+-- 
+2.18.0
 
