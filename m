@@ -2,234 +2,149 @@ Return-Path: <SRS0=AA30=TT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC469C04AAF
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 May 2019 01:07:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF7DFC04AAF
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 May 2019 01:38:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4D7682087B
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 May 2019 01:07:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7CFF820872
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 May 2019 01:38:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="T+fhJaoK"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=felipegasper.com header.i=@felipegasper.com header.b="qxcnOWjW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728813AbfESBHe (ORCPT
+        id S1729645AbfESBir (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 May 2019 21:07:34 -0400
-Received: from conssluserg-04.nifty.com ([210.131.2.83]:37101 "EHLO
-        conssluserg-04.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727532AbfESBHe (ORCPT
+        Sat, 18 May 2019 21:38:47 -0400
+Received: from web1.siteocity.com ([67.227.147.204]:40642 "EHLO
+        web1.siteocity.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727287AbfESBiq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 May 2019 21:07:34 -0400
-Received: from mail-ua1-f47.google.com (mail-ua1-f47.google.com [209.85.222.47]) (authenticated)
-        by conssluserg-04.nifty.com with ESMTP id x4J17Sqn012202;
-        Sun, 19 May 2019 10:07:29 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-04.nifty.com x4J17Sqn012202
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1558228050;
-        bh=IhI0yBjnGjQLG7F+/hheP5GcqYbG7sk4U/apfwQ5pSc=;
-        h=From:Date:Subject:To:Cc:From;
-        b=T+fhJaoKnYk9lQ7+biKBYPKrHimNpum9iVq4avz9numT0vVLTkuGNVcxWQl87m1M9
-         KL0KNnN3JDOhuJB0cqDPqkf2yYRyfnu410kYWLEdmd9zUJpyse3q4PLhhgPUqKqbEv
-         NICvV//icZmUb9HgavwR6W8cOMB/a1lXsVb4xMBL/Q1kpZ6mz4W9WISUN3tfZ7XGSh
-         5W+pGZlJiKkBy2vRdD0r+EFokVSpSJ9oH1oR7gs0iOXCurBWkXB5DnKvcqCT463loP
-         AbxxjtVFn7Rw0wNA2Mpd8YRjQZHahBvRPr/w9f3MX11uiRdzAktoBb4DDaoI/8fkdm
-         5DxBtk7y9uwTA==
-X-Nifty-SrcIP: [209.85.222.47]
-Received: by mail-ua1-f47.google.com with SMTP id t18so4136130uar.4;
-        Sat, 18 May 2019 18:07:29 -0700 (PDT)
-X-Gm-Message-State: APjAAAUNCzrud+V553rXQD1CRDK+nWBXPhZUw8sJwHd4bIB5Ugrc65BB
-        KSKfoPR+cUGA4JusIroDj5OtEp+heeGMVnvsNeE=
-X-Google-Smtp-Source: APXvYqx1TI6iwGKK/SFLpjp+jaBAvGAf0YAP57YvaWIWQWnEz1vGgsx1pNwKgFC5ZiPuJh1RXpiFFsAH5Dmo57Z13/I=
-X-Received: by 2002:a9f:24a3:: with SMTP id 32mr8526737uar.109.1558228048186;
- Sat, 18 May 2019 18:07:28 -0700 (PDT)
+        Sat, 18 May 2019 21:38:46 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=felipegasper.com; s=default; h=Content-Transfer-Encoding:MIME-Version:
+        Message-Id:Date:Subject:To:From:Sender:Reply-To:Cc:Content-Type:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=LHUYI5r/brNCMF1zXddbN6oSe+nBsFtr2AD/KlWPiRo=; b=qxcnOWjW58Pvk7n0wlmZqlhrgt
+        lR0IcMmHspnA/iZ9a3vzYlz+wWkI0fc4u1UAT44DG/9XuiQG1U3dzjHyQNNSVOnMSJSTkgtm+flOl
+        MIvEYtUVRrGMSXirBXLPfiiDW+IrnMaXFw7abQHkaE9fYmhIDX8o/ILbCDS3JV3AdZYdit3iqfRqE
+        4zJgi/LxVfNo+rUUeQmxkUtuXtWQUkGn01k9TDAkX9xy/BjijX2K32BdPHmbj03Nlv/gCd4gYtL+7
+        UBfXl3cBgCAffw2JcRhOAT0h+4CWhx6eviUYgbX/kl2uy6+H3Dcg9bqwG4PYdLGLRouayz5y0PfTb
+        tmfSRrFA==;
+Received: from fgasper by web1.siteocity.com with local (Exim 4.92)
+        (envelope-from <fgasper@web1.siteocity.com>)
+        id 1hSAmd-0005Rm-Sh; Sat, 18 May 2019 20:38:44 -0500
+From:   Felipe Gasper <felipe@felipegasper.com>
+To:     davem@davemloft.net, viro@zeniv.linux.org.uk,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        linux-api@vger.kernel.org
+Subject: [PATCH v3] net: Add UNIX_DIAG_UID to Netlink UNIX socket diagnostics.
+Date:   Sat, 18 May 2019 20:38:39 -0500
+Message-Id: <20190519013839.20355-1-felipe@felipegasper.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Sun, 19 May 2019 10:06:52 +0900
-X-Gmail-Original-Message-ID: <CAK7LNATmYHZoF5WYVY6mWet76Teb5YMyVDUuEGJRJdRiqETROQ@mail.gmail.com>
-Message-ID: <CAK7LNATmYHZoF5WYVY6mWet76Teb5YMyVDUuEGJRJdRiqETROQ@mail.gmail.com>
-Subject: [GIT PULL] more Kbuild updates for v5.2-rc1
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        masahiroy@kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-OutGoing-Spam-Status: No, score=0.0
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - web1.siteocity.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [1438 994] / [47 12]
+X-AntiAbuse: Sender Address Domain - web1.siteocity.com
+X-Get-Message-Sender-Via: web1.siteocity.com: authenticated_id: fgasper/from_h
+X-Authenticated-Sender: web1.siteocity.com: felipe@felipegasper.com
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: /home/fgasper
+X-From-Rewrite: unmodified, already matched
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+Author: Felipe Gasper <felipe@felipegasper.com>
+Date:   Sat May 18 20:04:40 2019 -0500
 
-Please pull some late Kbuild updates.
-(The reasons for lateness are;
-[1] rebasing to avoid merge conflicts
-[2] pick up patches that were not taken care of
-    by arch maintainers
-[3] some (e.g. checker of module name uniqueness)
-    are good to merge even in the last minutes of MW
-)
+   net: Add UNIX_DIAG_UID to Netlink UNIX socket diagnostics.
 
+   This adds the ability for Netlink to report a socket's UID along with the
+   other UNIX diagnostic information that is already available. This will
+   allow diagnostic tools greater insight into which users control which
+   socket.
 
-Thanks.
+   To test this, do the following as a non-root user:
 
+        unshare -U -r bash
+        nc -l -U user.socket.$$ &
 
-The following changes since commit 72cf0b07418a9c8349aa9137194b1ccba6e54a9d:
+   .. and verify from within that same session that Netlink UNIX socket
+   diagnostics report the socket's UID as 0. Also verify that Netlink UNIX
+   socket diagnostics report the socket's UID as the user's UID from an
+   unprivileged process in a different session. Verify the same from
+   a root process.
 
-  Merge tag 'sound-fix-5.2-rc1' of
-git://git.kernel.org/pub/scm/linux/kernel/git/tiwai/sound (2019-05-17
-13:57:54 -0700)
+   Signed-off-by: Felipe Gasper <felipe@felipegasper.com>
 
-are available in the git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/masahiroy/linux-kbuild.git
-tags/kbuild-v5.2-2
-
-for you to fetch changes up to fc2694ec1ab7c805505bef2752aca56977a22abd:
-
-  kconfig: use 'else ifneq' for Makefile to improve readability
-(2019-05-19 09:34:35 +0900)
-
-----------------------------------------------------------------
-Kbuild updates for v5.2 (2nd)
-
- - remove unneeded use of cc-option, cc-disable-warning, cc-ldoption
-
- - exclude tracked files from .gitignore
-
- - re-enable -Wint-in-bool-context warning
-
- - refactor samples/Makefile
-
- - stop building immediately if syncconfig fails
-
- - do not sprinkle error messages when $(CC) does not exist
-
- - move arch/alpha/defconfig to the configs subdirectory
-
- - remove crappy header search path manipulation
-
- - add comment lines to .config to clarify the end of menu blocks
-
- - check uniqueness of module names (adding new warnings intentionally)
-
-----------------------------------------------------------------
-Alexander Popov (1):
-      kconfig: Terminate menu blocks with a comment in the generated config
-
-Krzysztof Kozlowski (1):
-      MAINTAINERS: kbuild: Add pattern for scripts/*vmlinux*
-
-Masahiro Yamada (19):
-      csky: remove deprecated arch/csky/boot/dts/include/dt-bindings
-      sh: exclude vmlinux.scr from .gitignore pattern
-      kbuild: re-enable int-in-bool-context warning
-      samples: guard sub-directories with CONFIG options
-      arch: remove dangling asm-generic wrappers
-      kbuild: add -Wvla flag unconditionally
-      kbuild: add some extra warning flags unconditionally
-      kbuild: add all Clang-specific flags unconditionally
-      .gitignore: exclude .get_maintainer.ignore and .gitattributes
-      kbuild: turn auto.conf.cmd into a mandatory include file
-      kbuild: terminate Kconfig when $(CC) or $(LD) is missing
-      alpha: move arch/alpha/defconfig to arch/alpha/configs/defconfig
-      media: remove unneeded header search paths
-      media: prefix header search paths with $(srctree)/
-      treewide: prefix header search paths with $(srctree)/
-      kbuild: remove 'addtree' and 'flags' magic for header search paths
-      kbuild: add LICENSES to KBUILD_ALLDIRS
-      kbuild: check uniqueness of module names
-      kconfig: use 'else ifneq' for Makefile to improve readability
-
-Nathan Chancellor (1):
-      kbuild: Don't try to add '-fcatch-undefined-behavior' flag
-
-Nick Desaulniers (2):
-      ia64: require -Wl,--hash-style=sysv
-      sh: vsyscall: drop unnecessary cc-ldoption
-
- .gitignore                                    |  8 +++++---
- MAINTAINERS                                   |  1 +
- Makefile                                      | 21 ++++++++++-----------
- arch/alpha/Makefile                           |  2 ++
- arch/alpha/{ => configs}/defconfig            |  0
- arch/csky/boot/dts/include/dt-bindings        |  1 -
- arch/csky/include/asm/Kbuild                  |  4 ----
- arch/h8300/include/asm/Kbuild                 |  1 -
- arch/ia64/kernel/Makefile.gate                |  2 +-
- arch/mips/pnx833x/Platform                    |  2 +-
- arch/nds32/include/asm/Kbuild                 |  3 ---
- arch/powerpc/Makefile                         |  2 +-
- arch/riscv/include/asm/Kbuild                 |  4 ----
- arch/sh/Makefile                              |  4 ++--
- arch/sh/boot/.gitignore                       |  1 +
- arch/sh/kernel/vsyscall/Makefile              |  3 +--
- arch/x86/kernel/Makefile                      |  2 +-
- arch/x86/mm/Makefile                          |  2 +-
- arch/xtensa/boot/lib/Makefile                 |  2 +-
- arch/xtensa/include/asm/Kbuild                |  1 -
- drivers/hid/intel-ish-hid/Makefile            |  2 +-
- drivers/media/common/b2c2/Makefile            |  4 ++--
- drivers/media/dvb-frontends/cxd2880/Makefile  |  2 --
- drivers/media/i2c/smiapp/Makefile             |  2 +-
- drivers/media/mmc/siano/Makefile              |  3 +--
- drivers/media/pci/b2c2/Makefile               |  2 +-
- drivers/media/pci/bt8xx/Makefile              |  5 ++---
- drivers/media/pci/cx18/Makefile               |  4 ++--
- drivers/media/pci/cx23885/Makefile            |  4 ++--
- drivers/media/pci/cx88/Makefile               |  4 ++--
- drivers/media/pci/ddbridge/Makefile           |  4 ++--
- drivers/media/pci/dm1105/Makefile             |  2 +-
- drivers/media/pci/mantis/Makefile             |  2 +-
- drivers/media/pci/netup_unidvb/Makefile       |  2 +-
- drivers/media/pci/ngene/Makefile              |  4 ++--
- drivers/media/pci/pluto2/Makefile             |  2 +-
- drivers/media/pci/pt1/Makefile                |  4 ++--
- drivers/media/pci/pt3/Makefile                |  4 ++--
- drivers/media/pci/smipcie/Makefile            |  5 ++---
- drivers/media/pci/ttpci/Makefile              |  4 ++--
- drivers/media/platform/sti/c8sectpfe/Makefile |  5 ++---
- drivers/media/radio/Makefile                  |  2 --
- drivers/media/spi/Makefile                    |  4 +---
- drivers/media/usb/as102/Makefile              |  2 +-
- drivers/media/usb/au0828/Makefile             |  4 ++--
- drivers/media/usb/b2c2/Makefile               |  2 +-
- drivers/media/usb/cx231xx/Makefile            |  5 ++---
- drivers/media/usb/em28xx/Makefile             |  4 ++--
- drivers/media/usb/go7007/Makefile             |  2 +-
- drivers/media/usb/pvrusb2/Makefile            |  4 ++--
- drivers/media/usb/siano/Makefile              |  2 +-
- drivers/media/usb/tm6000/Makefile             |  4 ++--
- drivers/media/usb/ttusb-budget/Makefile       |  2 +-
- drivers/media/usb/usbvision/Makefile          |  2 --
- drivers/net/ethernet/chelsio/libcxgb/Makefile |  2 +-
- drivers/target/iscsi/cxgbit/Makefile          |  6 +++---
- drivers/usb/storage/Makefile                  |  2 +-
- fs/ocfs2/dlm/Makefile                         |  3 +--
- fs/ocfs2/dlmfs/Makefile                       |  2 +-
- fs/xfs/Makefile                               |  4 ++--
- net/bpfilter/Makefile                         |  2 +-
- samples/Makefile                              | 24 ++++++++++++++++++++----
- samples/seccomp/Makefile                      |  2 +-
- samples/vfs/Makefile                          |  2 +-
- scripts/Kbuild.include                        |  8 --------
- scripts/Kconfig.include                       |  8 ++++++++
- scripts/Makefile.extrawarn                    | 25 +++++++++++++------------
- scripts/Makefile.host                         | 12 +++++-------
- scripts/Makefile.lib                          | 26 ++++++++------------------
- scripts/dtc/Makefile                          |  6 +++---
- scripts/genksyms/Makefile                     |  4 ++--
- scripts/kconfig/Makefile                      |  8 +++-----
- scripts/kconfig/confdata.c                    | 13 ++++++++++++-
- scripts/modules-check.sh                      | 16 ++++++++++++++++
- 74 files changed, 178 insertions(+), 172 deletions(-)
- rename arch/alpha/{ => configs}/defconfig (100%)
- delete mode 120000 arch/csky/boot/dts/include/dt-bindings
- create mode 100755 scripts/modules-check.sh
-
-
--- 
-Best Regards
-Masahiro Yamada
+diff --git a/include/uapi/linux/unix_diag.h b/include/uapi/linux/unix_diag.h
+index 5c502fd..a198857 100644
+--- a/include/uapi/linux/unix_diag.h
++++ b/include/uapi/linux/unix_diag.h
+@@ -20,6 +20,7 @@ struct unix_diag_req {
+ #define UDIAG_SHOW_ICONS	0x00000008	/* show pending connections */
+ #define UDIAG_SHOW_RQLEN	0x00000010	/* show skb receive queue len */
+ #define UDIAG_SHOW_MEMINFO	0x00000020	/* show memory info of a socket */
++#define UDIAG_SHOW_UID		0x00000040	/* show socket's UID */
+ 
+ struct unix_diag_msg {
+ 	__u8	udiag_family;
+@@ -40,6 +41,7 @@ enum {
+ 	UNIX_DIAG_RQLEN,
+ 	UNIX_DIAG_MEMINFO,
+ 	UNIX_DIAG_SHUTDOWN,
++	UNIX_DIAG_UID,
+ 
+ 	__UNIX_DIAG_MAX,
+ };
+diff --git a/net/unix/diag.c b/net/unix/diag.c
+index 3183d9b..e40f348 100644
+--- a/net/unix/diag.c
++++ b/net/unix/diag.c
+@@ -4,9 +4,11 @@
+ #include <linux/unix_diag.h>
+ #include <linux/skbuff.h>
+ #include <linux/module.h>
++#include <linux/uidgid.h>
+ #include <net/netlink.h>
+ #include <net/af_unix.h>
+ #include <net/tcp_states.h>
++#include <net/sock.h>
+ 
+ static int sk_diag_dump_name(struct sock *sk, struct sk_buff *nlskb)
+ {
+@@ -110,6 +112,12 @@ static int sk_diag_show_rqlen(struct sock *sk, struct sk_buff *nlskb)
+ 	return nla_put(nlskb, UNIX_DIAG_RQLEN, sizeof(rql), &rql);
+ }
+ 
++static int sk_diag_dump_uid(struct sock *sk, struct sk_buff *nlskb)
++{
++	uid_t uid = from_kuid_munged(sk_user_ns(nlskb->sk), sock_i_uid(sk));
++	return nla_put(nlskb, UNIX_DIAG_UID, sizeof(uid_t), &uid);
++}
++
+ static int sk_diag_fill(struct sock *sk, struct sk_buff *skb, struct unix_diag_req *req,
+ 		u32 portid, u32 seq, u32 flags, int sk_ino)
+ {
+@@ -156,6 +164,10 @@ static int sk_diag_fill(struct sock *sk, struct sk_buff *skb, struct unix_diag_r
+ 	if (nla_put_u8(skb, UNIX_DIAG_SHUTDOWN, sk->sk_shutdown))
+ 		goto out_nlmsg_trim;
+ 
++	if ((req->udiag_show & UDIAG_SHOW_UID) &&
++	    sk_diag_dump_uid(sk, skb))
++		goto out_nlmsg_trim;
++
+ 	nlmsg_end(skb, nlh);
+ 	return 0;
+ 
