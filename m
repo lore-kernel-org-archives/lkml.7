@@ -2,136 +2,136 @@ Return-Path: <SRS0=AA30=TT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EBB6FC04AB4
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 May 2019 17:12:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA2FCC04AB4
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 May 2019 17:12:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C29B8204EC
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 May 2019 17:12:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 92AA7205ED
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 May 2019 17:12:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aa1xhBGV"
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="b6gDC8EN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727138AbfESRMe (ORCPT
+        id S1727168AbfESRMp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 19 May 2019 13:12:34 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:39631 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725766AbfESRMe (ORCPT
+        Sun, 19 May 2019 13:12:45 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:41999 "EHLO
+        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725766AbfESRMp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 19 May 2019 13:12:34 -0400
-Received: by mail-pg1-f193.google.com with SMTP id w22so5612557pgi.6
-        for <linux-kernel@vger.kernel.org>; Sun, 19 May 2019 10:12:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=2aJVDwIx9CNCJgquAEUdJfowE2zu/TP85bAx23aqgcE=;
-        b=aa1xhBGV+J6MUtB32Shj+5dPHvNdaqFAnSUVX2fFGJSKdL62Clq1dNrTbNuhBZxCOg
-         19a+Bbu50onEJQS/Vqmzcjl47CKbkJ8sj5jM/NPFw5mrhv942OOjwHDJE0QhP1w+6zZf
-         mPIWoXmcpbXCTQGFBnrnE6wMgKkap7wymXycMEkT9WWwv+aAd4xBQ5BqDP5M9X3PTxfZ
-         n79Uj7yFVO/tdfrDtb121GelXnybzzqQZ6A8l8rsbGa4JkeEa05RH+Ora5oMf8PYj/v8
-         axxgVQHGFBrCp1dC/dtFDbgvYfOaoRkkFrVJafB3kxZJmllbPEAU5bWDyIazb8YJKv5j
-         TlVQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=2aJVDwIx9CNCJgquAEUdJfowE2zu/TP85bAx23aqgcE=;
-        b=D67yzSuKsDdkSsbdKJhT/XVMDRaSAIUN+VIdA7bloEKLw4JixvyAlWiERimGFXqO1t
-         Tnl7pye4VUHyjcAn6g9rB3oA8LJPoFmwreq1F0yvppGU8TSG9EVmaEu7RiZ0M2zsqRsG
-         ROfnKiHNweyN6xwYF1ZGogpgyFPWPiciu62IipRdc3zMLy354fwXW1CXTGNTOLYenh4i
-         GdYK0EDLijbqL24tioiaA+3HRr3QmrlIAyckzMQaVmIcYsqvxE/l6dec4qdefXLRpvpg
-         sIm4k9BNGwuRuV05b0zVfc0jIBjpWWGIpYE3KpXXvR7GvJD6hAqhJ/stv9RZP/orgdi3
-         E9tg==
-X-Gm-Message-State: APjAAAVEA6JguJkxwGvkT9bb68C69/71qe/tX3RhO3ITmxOVQUXkjpSz
-        JgIjELO599TIAfacEmGuNERn5IF0oz8=
-X-Google-Smtp-Source: APXvYqxsn5ZvQTyKQYV5eB5cw3Gz6/f1BFVE0KCPTTWYwjlRlpndUVeNuqyi3oOVshg2U+TQzzQflQ==
-X-Received: by 2002:aa7:9289:: with SMTP id j9mr30426595pfa.251.1558285953896;
-        Sun, 19 May 2019 10:12:33 -0700 (PDT)
-Received: from hari-Inspiron-1545 ([183.83.92.73])
-        by smtp.gmail.com with ESMTPSA id c76sm28951727pfc.43.2019.05.19.10.12.30
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 19 May 2019 10:12:33 -0700 (PDT)
-Date:   Sun, 19 May 2019 22:42:27 +0530
-From:   Hariprasad Kelam <hariprasad.kelam@gmail.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Emanuel Bennici <benniciemanuel78@gmail.com>,
-        Vatsala Narang <vatsalanarang@gmail.com>,
-        Nishka Dasgupta <nishka.dasgupta@yahoo.com>,
-        Young Xiao <YangX92@hotmail.com>,
-        Aymen Qader <qader.aymen@gmail.com>,
-        Henriette Hofmeier <passt@h-hofmeier.de>,
-        Hardik Singh Rathore <hardiksingh.k@gmail.com>,
-        Madhumitha Prabakaran <madhumithabiw@gmail.com>,
-        Michael Straube <straube.linux@gmail.com>,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] staging: rtl8723bs: core: rtw_mlme_ext: fix warning Unneeded
- variable: "ret"
-Message-ID: <20190519171227.GA8089@hari-Inspiron-1545>
+        Sun, 19 May 2019 13:12:45 -0400
+Received: from terminus.zytor.com (localhost [127.0.0.1])
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x4J9kSic2199405
+        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
+        Sun, 19 May 2019 02:46:28 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x4J9kSic2199405
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+        s=2019041745; t=1558259189;
+        bh=EZEwnXKHEaFP80xAKay6xT1gVs9KTDVZTlMPotFvqNg=;
+        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
+        b=b6gDC8ENRMFKCLTan2gD7NIRuKZ5vAvs/Y1IHNgPWCwCwDLIZy3zp7fcq/a5w9bXN
+         xxTDn7d/7egh+yxIZsoHjlcw2TRMHFGntiy60P/8qiUxGoYTwoHqyYy5zcvYnLqVSX
+         XVi4jy/Rbhdw+QwGx43emLCANhXDtNf5ebOfAs7n3soienpJ7mFr7F219EeEiEAVS2
+         SU4hvqZx6zxoeOtLZG0vKdjKIp/Cp6GCc1K3oTaxcSTUuqGm1ECZU165KOtDc2NI/C
+         frvMSazF8tLTsAcMxcoMRTMfXi7g6Q9io19p53x8sjokwiKaFWet4x+Kh6dw8lakwm
+         evTfPKW0OtA8w==
+Received: (from tipbot@localhost)
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x4J9kPQC2199396;
+        Sun, 19 May 2019 02:46:25 -0700
+Date:   Sun, 19 May 2019 02:46:25 -0700
+X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
+From:   tip-bot for Joe Lawrence <tipbot@zytor.com>
+Message-ID: <tip-7eaf51a2e094229b75cc0c315f1cbbe2f3960058@git.kernel.org>
+Cc:     mingo@kernel.org, tglx@linutronix.de, kamalesh@linux.vnet.ibm.com,
+        linux-kernel@vger.kernel.org, joe.lawrence@redhat.com,
+        hpa@zytor.com, jpoimboe@redhat.com, mbenes@suse.cz
+Reply-To: tglx@linutronix.de, mingo@kernel.org, mbenes@suse.cz,
+          jpoimboe@redhat.com, hpa@zytor.com, joe.lawrence@redhat.com,
+          linux-kernel@vger.kernel.org, kamalesh@linux.vnet.ibm.com
+In-Reply-To: <20190517185117.24642-1-joe.lawrence@redhat.com>
+References: <20190517185117.24642-1-joe.lawrence@redhat.com>
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip:core/urgent] stacktrace: Unbreak
+ stack_trace_save_tsk_reliable()
+Git-Commit-ID: 7eaf51a2e094229b75cc0c315f1cbbe2f3960058
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot.git.kernel.org>
+Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
+ these emails
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
 Content-Disposition: inline
-User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch fixes below warnings reported by coccicheck
+Commit-ID:  7eaf51a2e094229b75cc0c315f1cbbe2f3960058
+Gitweb:     https://git.kernel.org/tip/7eaf51a2e094229b75cc0c315f1cbbe2f3960058
+Author:     Joe Lawrence <joe.lawrence@redhat.com>
+AuthorDate: Fri, 17 May 2019 14:51:17 -0400
+Committer:  Thomas Gleixner <tglx@linutronix.de>
+CommitDate: Sun, 19 May 2019 11:43:22 +0200
 
-drivers/staging/rtl8723bs/core/rtw_mlme_ext.c:1888:14-17: Unneeded
-variable: "ret". Return "_FAIL" on line 1920
-drivers/staging/rtl8723bs/core/rtw_mlme_ext.c:466:5-8: Unneeded
-variable: "res". Return "_SUCCESS" on line 494
+stacktrace: Unbreak stack_trace_save_tsk_reliable()
 
-Signed-off-by: Hariprasad Kelam <hariprasad.kelam@gmail.com>
+Miroslav reported that the livepatch self-tests were failing, specifically
+a case in which the consistency model ensures that a current executing
+function is not allowed to be patched, "TEST: busy target module".
+
+Recent renovations of stack_trace_save_tsk_reliable() left it returning
+only an -ERRNO success indication in some configuration combinations:
+
+  klp_check_stack()
+    ret = stack_trace_save_tsk_reliable()
+      #ifdef CONFIG_ARCH_STACKWALK && CONFIG_HAVE_RELIABLE_STACKTRACE
+        stack_trace_save_tsk_reliable()
+          ret = arch_stack_walk_reliable()
+            return 0
+            return -EINVAL
+          ...
+          return ret;
+    ...
+    if (ret < 0)
+      /* stack_trace_save_tsk_reliable error */
+    nr_entries = ret;                               << 0
+
+Previously (and currently for !CONFIG_ARCH_STACKWALK &&
+CONFIG_HAVE_RELIABLE_STACKTRACE) stack_trace_save_tsk_reliable() returned
+the number of entries that it consumed in the passed storage array.
+
+In the case of the above config and trace, be sure to return the
+stacktrace_cookie.len on stack_trace_save_tsk_reliable() success.
+
+Fixes: 25e39e32b0a3f ("livepatch: Simplify stack trace retrieval")
+Reported-by: Miroslav Benes <mbenes@suse.cz>
+Signed-off-by: Joe Lawrence <joe.lawrence@redhat.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Reviewed-by: Kamalesh Babulal <kamalesh@linux.vnet.ibm.com>
+Acked-by: Josh Poimboeuf <jpoimboe@redhat.com>
+Cc: live-patching@vger.kernel.org
+Cc: jikos@kernel.org
+Cc: pmladek@suse.com
+Link: https://lkml.kernel.org/r/20190517185117.24642-1-joe.lawrence@redhat.com
+
 ---
- drivers/staging/rtl8723bs/core/rtw_mlme_ext.c | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+ kernel/stacktrace.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/staging/rtl8723bs/core/rtw_mlme_ext.c b/drivers/staging/rtl8723bs/core/rtw_mlme_ext.c
-index d110d45..6a2eb66 100644
---- a/drivers/staging/rtl8723bs/core/rtw_mlme_ext.c
-+++ b/drivers/staging/rtl8723bs/core/rtw_mlme_ext.c
-@@ -463,7 +463,6 @@ static u8 init_channel_set(struct adapter *padapter, u8 ChannelPlan, RT_CHANNEL_
+diff --git a/kernel/stacktrace.c b/kernel/stacktrace.c
+index 27bafc1e271e..90d3e0bf0302 100644
+--- a/kernel/stacktrace.c
++++ b/kernel/stacktrace.c
+@@ -206,7 +206,7 @@ int stack_trace_save_tsk_reliable(struct task_struct *tsk, unsigned long *store,
  
- int	init_mlme_ext_priv(struct adapter *padapter)
- {
--	int	res = _SUCCESS;
- 	struct registry_priv *pregistrypriv = &padapter->registrypriv;
- 	struct mlme_ext_priv *pmlmeext = &padapter->mlmeextpriv;
- 	struct mlme_priv *pmlmepriv = &(padapter->mlmepriv);
-@@ -491,7 +490,7 @@ int	init_mlme_ext_priv(struct adapter *padapter)
- 	pmlmeext->fixed_chan = 0xFF;
+ 	ret = arch_stack_walk_reliable(consume_entry, &c, tsk);
+ 	put_task_stack(tsk);
+-	return ret;
++	return ret ? ret : c.len;
+ }
  #endif
  
--	return res;
-+	return _SUCCESS;
- 
- }
- 
-@@ -1885,7 +1884,6 @@ unsigned int OnAtim(struct adapter *padapter, union recv_frame *precv_frame)
- 
- unsigned int on_action_spct(struct adapter *padapter, union recv_frame *precv_frame)
- {
--	unsigned int ret = _FAIL;
- 	struct sta_info *psta = NULL;
- 	struct sta_priv *pstapriv = &padapter->stapriv;
- 	u8 *pframe = precv_frame->u.hdr.rx_data;
-@@ -1917,7 +1915,7 @@ unsigned int on_action_spct(struct adapter *padapter, union recv_frame *precv_fr
- 	}
- 
- exit:
--	return ret;
-+	return _FAIL;
- }
- 
- unsigned int OnAction_back(struct adapter *padapter, union recv_frame *precv_frame)
--- 
-2.7.4
-
