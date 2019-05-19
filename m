@@ -2,94 +2,278 @@ Return-Path: <SRS0=AA30=TT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.0 required=3.0 tests=DATE_IN_PAST_03_06,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE2E9C04AB4
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 May 2019 17:57:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE887C04AB4
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 May 2019 17:59:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B7E5E20675
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 May 2019 17:57:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F0962081C
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 May 2019 17:59:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="TnCPjyTJ"
+	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="cV97mwD3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729477AbfESR5p (ORCPT
+        id S1729377AbfESR72 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 19 May 2019 13:57:45 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:35307 "EHLO ozlabs.org"
+        Sun, 19 May 2019 13:59:28 -0400
+Received: from vps.xff.cz ([195.181.215.36]:43302 "EHLO vps.xff.cz"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727456AbfESR5o (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 19 May 2019 13:57:44 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 456KzD0wGPz9s9N;
-        Sun, 19 May 2019 21:48:07 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1558266489;
-        bh=dcC4Pl+dHTN4EvIbHGnWnpvX6DS3gAolTE3f1YRjrzY=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=TnCPjyTJKKehfukzj3YXNqKAv0YWzLCmXdxeqUvfUMPt7/kwhq+W8imQEkKDZRi1J
-         145c4USmrWAWlzDtyB+ZHrw51yvM30n18+r89fYnrEu94CdvUWQp1XiwVxDbwSGcsS
-         hJktgFqQcCAFZaaLR5UchBV8+FJ69xg83BRBDTdcEqpSZUKn0NBPQYOidhyOr+xeC2
-         zToVavSokFd1ZKj4165ksjGo5fksPa+xesicy+97csBV32SZlbsBMIG6CFWEfObMqS
-         g9sPYD4Y/wn+0E6JHp99j9Yr5dclOispVc7RK7pydBsf+4U/unn/DrrhrMs88iO13/
-         cuOZoPyItvHnA==
-Date:   Sun, 19 May 2019 21:48:05 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Junwei Hu <hujunwei4@huawei.com>
-Cc:     <davem@davemloft.net>, <willemdebruijn.kernel@gmail.com>,
-        <jon.maloy@ericsson.com>, <ying.xue@windriver.com>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        <tipc-discussion@lists.sourceforge.net>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        <mingfangsen@huawei.com>
-Subject: Re: [PATCH v3] tipc: fix modprobe tipc failed after switch order of
- device registration
-Message-ID: <20190519214805.520960ec@canb.auug.org.au>
-In-Reply-To: <529aff15-5f3a-1bf1-76fa-691911ff6170@huawei.com>
-References: <529aff15-5f3a-1bf1-76fa-691911ff6170@huawei.com>
+        id S1727456AbfESR72 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 19 May 2019 13:59:28 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=megous.com; s=mail;
+        t=1558275760; bh=lFF/AdVO9omdk1uyvjkzJYRIbqcQEkaQzcuTPAnqh4U=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=cV97mwD3nF9Z06u79LQgsT1o028s5wCQnA0408IymvQPuQI5rKEdY8m5dFchP8EPO
+         xZsfbl6rUP8Ka9h7enBDJ/l2QqbyHFRHTIJRnNf8lZhUwPyzsJfnZYWAkZYZMdRYeb
+         4iDwT2iUSUDJ2DLD1nqHSbbTdFGkjuaRtdQYEQKo=
+Date:   Sun, 19 May 2019 16:22:39 +0200
+From:   =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>
+To:     Frank Lee <tiny.windzz@gmail.com>
+Cc:     rui.zhang@intel.com, Eduardo Valentin <edubezval@gmail.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>, robh+dt@kernel.org,
+        Mark Rutland <mark.rutland@arm.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Chen-Yu Tsai <wens@csie.org>, catalin.marinas@arm.com,
+        will.deacon@arm.com, David Miller <davem@davemloft.net>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jonathan.Cameron@huawei.com,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        paulmck@linux.ibm.com, Andy Gross <andy.gross@linaro.org>,
+        olof@lixom.net, bjorn.andersson@linaro.org,
+        Jagan Teki <jagan@amarulasolutions.com>,
+        marc.w.gonzalez@free.fr, stefan.wahren@i2se.com,
+        enric.balletbo@collabora.com, devicetree@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux PM <linux-pm@vger.kernel.org>
+Subject: Re: [PATCH 2/3] thermal: sun50i: add thermal driver for h6
+Message-ID: <20190519142239.eolisexp5mrdyafz@core.my.home>
+Mail-Followup-To: Frank Lee <tiny.windzz@gmail.com>, rui.zhang@intel.com,
+        Eduardo Valentin <edubezval@gmail.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>, robh+dt@kernel.org,
+        Mark Rutland <mark.rutland@arm.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Chen-Yu Tsai <wens@csie.org>, catalin.marinas@arm.com,
+        will.deacon@arm.com, David Miller <davem@davemloft.net>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jonathan.Cameron@huawei.com,
+        Nicolas Ferre <nicolas.ferre@microchip.com>, paulmck@linux.ibm.com,
+        Andy Gross <andy.gross@linaro.org>, olof@lixom.net,
+        bjorn.andersson@linaro.org, Jagan Teki <jagan@amarulasolutions.com>,
+        marc.w.gonzalez@free.fr, stefan.wahren@i2se.com,
+        enric.balletbo@collabora.com, devicetree@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux PM <linux-pm@vger.kernel.org>
+References: <20190512082614.9045-1-tiny.windzz@gmail.com>
+ <20190512082614.9045-3-tiny.windzz@gmail.com>
+ <20190512221612.ubmknvim4utnqpl4@core.my.home>
+ <CAEExFWv5A5mhpV7afQT=AaYx2ko5QnfbM6HvfuTgT1Na=ssOcw@mail.gmail.com>
+ <20190516182936.h6xdzp3gtg4ikave@core.my.home>
+ <CAEExFWvDO3wJd6wp1hFudf3EGF0NixgKAwAd5-b1=VLF+7-jCw@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/.5WpHUFo45lAAiLWKH8ATXt"; protocol="application/pgp-signature"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAEExFWvDO3wJd6wp1hFudf3EGF0NixgKAwAd5-b1=VLF+7-jCw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/.5WpHUFo45lAAiLWKH8ATXt
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Hello Yangtao,
 
-Hi,
+On Sat, May 18, 2019 at 12:34:57AM +0800, Frank Lee wrote:
+> HI,
+> 
+> On Fri, May 17, 2019 at 2:29 AM Ondřej Jirman <megous@megous.com> wrote:
+> >
+> > Hi Yangtao,
+> >
+> > thank you for work on this driver.
+> >
+> > On Fri, May 17, 2019 at 02:06:53AM +0800, Frank Lee wrote:
+> > > HI Ondřej,
+> > >
+> > > On Mon, May 13, 2019 at 6:16 AM Ondřej Jirman <megous@megous.com> wrote:
+> > > > > +
+> > > > > +/* Temp Unit: millidegree Celsius */
+> > > > > +static int tsens_reg2temp(struct tsens_device *tmdev,
+> > > > > +                           int reg)
+> > > >
+> > > > Please name all functions so that they are more clearly identifiable
+> > > > in stack traces as belonging to this driver. For example:
+> > > >
+> > > >   sun8i_ths_reg2temp
+> > > >
+> > > > The same applies for all tsens_* functions below. tsens_* is too
+> > > > generic.
+> > >
+> > > Done but no sun8i_ths_reg2temp.
+> > >
+> > > ths_reg2tem() should be a generic func.
+> > > I think it should be suitable for all platforms， so no platform prefix.
+> >
+> > You've missed my point. The driver name is sun8i_thermal and if you get
+> > and oops from the kernel you'll get a stack trace where there are just function
+> > names. If you use too generic function names, it will not be clear which
+> > driver is oopsing.
+> >
+> >   - sun8i_ths_reg2temp will tell you much more clearly where to search than
+> >   - ths_reg2temp
+> >
+> > Of course you can always grep, but most thermal drivers are thermal sensor (ths)
+> > drivers, and if multiple of them used this too-generic naming scheme you'd
+> > have hard time debugging.
+> >
+> > Look at other thermal drivers. They usually encode driver name in the function
+> > names to help with identification (even if these are static driver-local
+> > functions).
+> >
+> 
+> Can we change to sunxi_ths_ prefix?
 
-On Sun, 19 May 2019 17:13:45 +0800 hujunwei <hujunwei4@huawei.com> wrote:
->
-> Fixes: 7e27e8d6130c
-> ("tipc: switch order of device registration to fix a crash")
+It should probably match the driver name, but yes, that's better.
 
-Please don't split Fixes tags over more than one line.  It is OK if
-they are too long.
---=20
-Cheers,
-Stephen Rothwell
+> > > > > +static int tsens_probe(struct platform_device *pdev)
+> > > > > +{
+> > > > > +     struct tsens_device *tmdev;
+> > > > > +     struct device *dev = &pdev->dev;
+> > > > > +     int ret;
+> > > > > +
+> > > > > +     tmdev = devm_kzalloc(dev, sizeof(*tmdev), GFP_KERNEL);
+> > > > > +     if (!tmdev)
+> > > > > +             return -ENOMEM;
+> > > > > +
+> > > > > +     tmdev->dev = dev;
+> > > > > +     tmdev->chip = of_device_get_match_data(&pdev->dev);
+> > > > > +     if (!tmdev->chip)
+> > > > > +             return -EINVAL;
+> > > > > +
+> > > > > +     ret = tsens_init(tmdev);
+> > > > > +     if (ret)
+> > > > > +             return ret;
+> > > > > +
+> > > > > +     ret = tsens_register(tmdev);
+> > > > > +     if (ret)
+> > > > > +             return ret;
+> > > >
+> > > > Why split this out of probe into separate functions?
+> > > >
+> > > > > +     ret = tmdev->chip->enable(tmdev);
+> > > > > +     if (ret)
+> > > > > +             return ret;
+> > > > > +
+> > > > > +     platform_set_drvdata(pdev, tmdev);
+> > > > > +
+> > > > > +     return ret;
+> > > > > +}
+> > > > > +
+> > > > > +static int tsens_remove(struct platform_device *pdev)
+> > > > > +{
+> > > > > +     struct tsens_device *tmdev = platform_get_drvdata(pdev);
+> > > > > +
+> > > > > +     tmdev->chip->disable(tmdev);
+> > > > > +
+> > > > > +     return 0;
+> > > > > +}
+> > > > > +
+> > > > > +static int sun50i_thermal_enable(struct tsens_device *tmdev)
+> > > > > +{
+> > > > > +     int ret, val;
+> > > > > +
+> > > > > +     ret = reset_control_deassert(tmdev->reset);
+> > > > > +     if (ret)
+> > > > > +             return ret;
+> > > > > +
+> > > > > +     ret = clk_prepare_enable(tmdev->bus_clk);
+> > > > > +     if (ret)
+> > > > > +             goto assert_reset;
+> > > > > +
+> > > > > +     ret = tsens_calibrate(tmdev);
+> > > > > +     if (ret)
+> > > > > +             return ret;
+> > > >
+> > > > If this fails (it may likely fail with EPROBE_DEFER) you are leaving reset
+> > > > deasserted, and clock enabled.
+> > > >
+> > > > Overall, I think, reset/clock management and nvmem reading will be common
+> > > > to all the HW variants, so it doesn't make much sense splitting it out
+> > > > of probe into separate functions, and makes it more error prone.
+> > >
+> > > Our long-term goal is to support all platforms.
+> > > Bacicallt there is a differencr between each generation.
+> > > So I feel it necessary to isolate these differences.
+> > >
+> > > Maybe:
+> > > At some point, we can draw a part of the public part and platform
+> > > difference into different
+> > > files. something like qcom thermal driver.
+> >
+> > I understand, but I wrote ths drivers for H3/H5/A83T and it so far it looks like
+> > all of them would share these 3 calls.
+> >
+> > You'll be enabling clock/reset and callibrating everywhere. So putting this to
+> > per-SoC function seems premature.
+> 
+> In fact, enalbe and disable are the suspend and resume functions.(PM
+> callback will be added in the future)
+> When exiting from s2ram, the register will become the initial value.
+> We need to do all the work, enabling reset/clk ,calibrating and
+> initializing other reg.
+> 
+> So I think it is no need to put enabling reset/clk and calibrating to
+> probe func, and I'd like
+> to keep enable and disable func.
 
---Sig_/.5WpHUFo45lAAiLWKH8ATXt
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+I know, I don't think it needs to be per-soc. These actions are all shared by
+all SoCs. Maybe with an exception that some SoCs may need one more clock, but
+that can be made optionally-required by some flag in struct sunxi_thermal_chip.
 
------BEGIN PGP SIGNATURE-----
+Only highly SoC specific thing is configuring the THS registers for sampling
+frequency/averaging/enabling interrupts. The reset/clock enable is generic, and
+already abstracted by the clock/reset framework.
 
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAlzhQnUACgkQAVBC80lX
-0Gz93gf/Vl/AGezDCSew9ABACA7mqAhzq73iHXkBVJFBpNUTn8crMYerkjeykLnY
-5Phbbqa41q6jAt9zw0mPS808Xx5pkkI8sg+JmCXe6bSxvLd5WMZAF6j10ijNk5x8
-HzwHEoXHg+wfh4hh8MDPXAIIYjkdgPgu+euSivoxjWBiZWL6qk8BMPMK/JR83M/f
-GVxOFsjAtXYJTA0Dubw4jY6so0VSwyuYqMQ5DJ7tG4uWetoSyIf+86FqGIjXBwW/
-IBYQA2V3HI6xoidvK4+4J/9l/Y1nMi4dbQBD1qz6mnCb39T95bMJeLbHuYdv6JZd
-Yp+0FPJiJjzJu3NOD2RIDYMmeTeVeQ==
-=KmgI
------END PGP SIGNATURE-----
+So what I suggest is having:
 
---Sig_/.5WpHUFo45lAAiLWKH8ATXt--
+sunxi_ths_enable()
+	reset deassert
+	bus clock prepare enable
+	optionally module clock prepare enable (in the future)
+	call per-soc calibration
+	call per-soc setup callback
+
+sunxi_ths_disable()
+	reset assert
+	bus clock unprepare disable
+	optionally module clock unprepare disable
+
+And if you could move devm_nvmem_cell_get to probe that should make per-SoC
+calibration callback also less repetitive and could avoid undoing the enable
+in case it returns EPROBE_DEFER (which is possible).
+
+All this should make it easier to support PM in the future and add less
+cumbersome to add support for A83T and H3/H5.
+
+BTW, what are your plans for more SoC support? I'd like to add support for
+A83T and H3/H5, maybe even during the 5.3 cycle if this driver happens to land
+early enough. If you don't have any plans I'll take it on.
+
+thank you and regards,
+ 	o.
+
+> >
+> > thank you and regards,
+> >         o.
+> >
+> > > Regards,
+> > > Yangtao
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
