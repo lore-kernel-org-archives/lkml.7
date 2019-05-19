@@ -2,149 +2,183 @@ Return-Path: <SRS0=AA30=TT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-19.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF7DFC04AAF
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 May 2019 01:38:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F22BC04AAF
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 May 2019 01:41:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7CFF820872
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 May 2019 01:38:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D1A1220872
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 May 2019 01:41:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=felipegasper.com header.i=@felipegasper.com header.b="qxcnOWjW"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="FWlFD/3e"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729645AbfESBir (ORCPT
+        id S1729687AbfESBli (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 May 2019 21:38:47 -0400
-Received: from web1.siteocity.com ([67.227.147.204]:40642 "EHLO
-        web1.siteocity.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727287AbfESBiq (ORCPT
+        Sat, 18 May 2019 21:41:38 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:39034 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726962AbfESBli (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 May 2019 21:38:46 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=felipegasper.com; s=default; h=Content-Transfer-Encoding:MIME-Version:
-        Message-Id:Date:Subject:To:From:Sender:Reply-To:Cc:Content-Type:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=LHUYI5r/brNCMF1zXddbN6oSe+nBsFtr2AD/KlWPiRo=; b=qxcnOWjW58Pvk7n0wlmZqlhrgt
-        lR0IcMmHspnA/iZ9a3vzYlz+wWkI0fc4u1UAT44DG/9XuiQG1U3dzjHyQNNSVOnMSJSTkgtm+flOl
-        MIvEYtUVRrGMSXirBXLPfiiDW+IrnMaXFw7abQHkaE9fYmhIDX8o/ILbCDS3JV3AdZYdit3iqfRqE
-        4zJgi/LxVfNo+rUUeQmxkUtuXtWQUkGn01k9TDAkX9xy/BjijX2K32BdPHmbj03Nlv/gCd4gYtL+7
-        UBfXl3cBgCAffw2JcRhOAT0h+4CWhx6eviUYgbX/kl2uy6+H3Dcg9bqwG4PYdLGLRouayz5y0PfTb
-        tmfSRrFA==;
-Received: from fgasper by web1.siteocity.com with local (Exim 4.92)
-        (envelope-from <fgasper@web1.siteocity.com>)
-        id 1hSAmd-0005Rm-Sh; Sat, 18 May 2019 20:38:44 -0500
-From:   Felipe Gasper <felipe@felipegasper.com>
-To:     davem@davemloft.net, viro@zeniv.linux.org.uk,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        linux-api@vger.kernel.org
-Subject: [PATCH v3] net: Add UNIX_DIAG_UID to Netlink UNIX socket diagnostics.
-Date:   Sat, 18 May 2019 20:38:39 -0500
-Message-Id: <20190519013839.20355-1-felipe@felipegasper.com>
-X-Mailer: git-send-email 2.21.0
+        Sat, 18 May 2019 21:41:38 -0400
+Received: by mail-io1-f67.google.com with SMTP id m7so8401692ioa.6
+        for <linux-kernel@vger.kernel.org>; Sat, 18 May 2019 18:41:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=B+HeqwAEcCZlxTlN2fPsPmRvYlA8UMTWELs3MdTDPTY=;
+        b=FWlFD/3ebRRLCywonkK1V5QyHaUWgp5+enX7C4DTPmQq/+0ZOddkFJv8wtfJozlPD7
+         PdWr96cjJh0exNAtBjPS0bTYeRJdxVsLiP6m0kUEtobZSygqFw+ItjXcgXEWo9QyI+6t
+         fXrGhg7LQlDs64VGOfh96k1ZXK70QND8msR6K/rY3ni8qJ4ZAqzMHoc1m4+f1w2rVzJo
+         V/WFiCxX0Eq5ngh0DQy9e9ooY2MWmHuNUHodaJLn6u1xddzAwwNexabtGE5739t+YVLo
+         uRqQ5B3xsFm2lPEVnBZauIF6ma/iXrYcLusEvSKiT+O8Ubeaew1MBk3z5zL3XKmv96mr
+         79QA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=B+HeqwAEcCZlxTlN2fPsPmRvYlA8UMTWELs3MdTDPTY=;
+        b=K6tcRV9Z+MlNNnVgixqTUB+hXNr2sS6kcN490VtGICVHtHI+jxmq+cSfd4nprlaGBq
+         VdqMMtdru/ieIMBZmJc94HDxNSLS51nSf1s0lFxQ7FEVTfeL4TN75n866hjpA9hdlj3I
+         a8PzoXNjDSQD7YFuGCzKioA169N955N4oToK7oNcACOHEzk+MfaV4y+66QGOpjdVZJVV
+         wJivveyhCCVN5k2/F2CbMGKkg+Ft1KlpYaPwEWO3zjh8tCJh6FrkCeEGOx61lh27wxYp
+         KDENgEev8usScrsiMyesOcdSxkQRJc8fGLZn+gxfP9Qjw3/BQuZ84UP0gDiLB02sxnRI
+         MpeQ==
+X-Gm-Message-State: APjAAAW0aR/0JKl/ByxfvOq8k5MCn7mu2A2s659G84LUVwQOwqj2Qi+o
+        Fwbr88XQApH31oFFo9tkE+JwLkT6x3bLqSCbf8wGpg==
+X-Google-Smtp-Source: APXvYqxw7z6yLYUkJ+gWXvTxERjZmblTFTr1I6hJ8+3UBc0x/URaQgoudoPl7MXtnLGMFZI9j+EBMcoWuzrKeCzjVyI=
+X-Received: by 2002:a5d:96c4:: with SMTP id r4mr10137168iol.193.1558230096974;
+ Sat, 18 May 2019 18:41:36 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-OutGoing-Spam-Status: No, score=0.0
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - web1.siteocity.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [1438 994] / [47 12]
-X-AntiAbuse: Sender Address Domain - web1.siteocity.com
-X-Get-Message-Sender-Via: web1.siteocity.com: authenticated_id: fgasper/from_h
-X-Authenticated-Sender: web1.siteocity.com: felipe@felipegasper.com
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: /home/fgasper
-X-From-Rewrite: unmodified, already matched
+References: <20190509214556.123493-1-eranian@google.com> <tip-6b89d4c1ae8596a8c9240f169ef108704de373f2@git.kernel.org>
+ <20190518211630.GC51669@gmail.com>
+In-Reply-To: <20190518211630.GC51669@gmail.com>
+From:   Stephane Eranian <eranian@google.com>
+Date:   Sat, 18 May 2019 18:41:25 -0700
+Message-ID: <CABPqkBSS5b583+sxGjLj=N-OSOMFRiTtbZLNF0=+cCqvvEigqw@mail.gmail.com>
+Subject: Re: [tip:perf/urgent] perf/x86/intel: Fix INTEL_FLAGS_EVENT_CONSTRAINT*
+ masking
+To:     Ingo Molnar <mingo@kernel.org>
+Cc:     "H. Peter Anvin" <hpa@zytor.com>,
+        Vince Weaver <vincent.weaver@maine.edu>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        linux-tip-commits@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Author: Felipe Gasper <felipe@felipegasper.com>
-Date:   Sat May 18 20:04:40 2019 -0500
+On Sat, May 18, 2019 at 2:16 PM Ingo Molnar <mingo@kernel.org> wrote:
+>
+>
+> * tip-bot for Stephane Eranian <tipbot@zytor.com> wrote:
+>
+> > Commit-ID:  6b89d4c1ae8596a8c9240f169ef108704de373f2
+> > Gitweb:     https://git.kernel.org/tip/6b89d4c1ae8596a8c9240f169ef108704de373f2
+> > Author:     Stephane Eranian <eranian@google.com>
+> > AuthorDate: Thu, 9 May 2019 14:45:56 -0700
+> > Committer:  Ingo Molnar <mingo@kernel.org>
+> > CommitDate: Fri, 10 May 2019 08:04:17 +0200
+> >
+> > perf/x86/intel: Fix INTEL_FLAGS_EVENT_CONSTRAINT* masking
+> >
+> > On Intel Westmere, a cmdline as follows:
+> >
+> >   $ perf record -e cpu/event=0xc4,umask=0x2,name=br_inst_retired.near_call/p ....
+> >
+> > was failing. Yet the event+ umask support PEBS.
+> >
+> > It turns out this is due to a bug in the the PEBS event constraint table for
+> > westmere. All forms of BR_INST_RETIRED.* support PEBS. Therefore the constraint
+> > mask should ignore the umask. The name of the macro INTEL_FLAGS_EVENT_CONSTRAINT()
+> > hint that this is the case but it was not. That macros was checking both the
+> > event code and event umask. Therefore, it was only matching on 0x00c4.
+> > There are code+umask macros, they all have *UEVENT*.
+> >
+> > This bug fixes the issue by checking only the event code in the mask.
+> > Both single and range version are modified.
+> >
+> > Signed-off-by: Stephane Eranian <eranian@google.com>
+> > Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+> > Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
+> > Cc: Jiri Olsa <jolsa@redhat.com>
+> > Cc: Linus Torvalds <torvalds@linux-foundation.org>
+> > Cc: Peter Zijlstra <peterz@infradead.org>
+> > Cc: Thomas Gleixner <tglx@linutronix.de>
+> > Cc: Vince Weaver <vincent.weaver@maine.edu>
+> > Cc: kan.liang@intel.com
+> > Link: http://lkml.kernel.org/r/20190509214556.123493-1-eranian@google.com
+> > Signed-off-by: Ingo Molnar <mingo@kernel.org>
+> > ---
+> >  arch/x86/events/perf_event.h | 4 ++--
+> >  1 file changed, 2 insertions(+), 2 deletions(-)
+> >
+> > diff --git a/arch/x86/events/perf_event.h b/arch/x86/events/perf_event.h
+> > index 07fc84bb85c1..a6ac2f4f76fc 100644
+> > --- a/arch/x86/events/perf_event.h
+> > +++ b/arch/x86/events/perf_event.h
+> > @@ -394,10 +394,10 @@ struct cpu_hw_events {
+> >
+> >  /* Event constraint, but match on all event flags too. */
+> >  #define INTEL_FLAGS_EVENT_CONSTRAINT(c, n) \
+> > -     EVENT_CONSTRAINT(c, n, INTEL_ARCH_EVENT_MASK|X86_ALL_EVENT_FLAGS)
+> > +     EVENT_CONSTRAINT(c, n, ARCH_PERFMON_EVENTSEL_EVENT|X86_ALL_EVENT_FLAGS)
+> >
+> >  #define INTEL_FLAGS_EVENT_CONSTRAINT_RANGE(c, e, n)                  \
+> > -     EVENT_CONSTRAINT_RANGE(c, e, n, INTEL_ARCH_EVENT_MASK|X86_ALL_EVENT_FLAGS)
+> > +     EVENT_CONSTRAINT_RANGE(c, e, n, ARCH_PERFMON_EVENTSEL_EVENT|X86_ALL_EVENT_FLAGS)
+>
+> This commit broke one of my testboxes - and unfortunately I noticed this
+> too late and the commit is now upstream.
+>
+> The breakage is that 'perf top' stops working altogether, it errors out
+> in the event creation:
+>
+>  $ perf top --stdio
+>  Error:
+>  The sys_perf_event_open() syscall returned with 22 (Invalid argument) for event (cycles).
+>
+> I bisected it back to this commit:
+>
+>  6b89d4c1ae8596a8c9240f169ef108704de373f2 is the first bad commit
+>  commit 6b89d4c1ae8596a8c9240f169ef108704de373f2
+>  Author: Stephane Eranian <eranian@google.com>
+>  Date:   Thu May 9 14:45:56 2019 -0700
+>
+>     perf/x86/intel: Fix INTEL_FLAGS_EVENT_CONSTRAINT* masking
+>
+> The system is IvyBridge model 62, running a defconfig-ish kernel, and
+> with perf_event_paranoid set to -1:
+>
+>  [    3.756600] Performance Events: PEBS fmt1+, IvyBridge events, 16-deep LBR, full-width counters, Intel PMU driver.
+>
+>  processor      : 39
+>  vendor_id      : GenuineIntel
+>  cpu family     : 6
+>  model          : 62
+>  model name     : Intel(R) Xeon(R) CPU E5-2680 v2 @ 2.80GHz
+>  stepping       : 4
+>  microcode      : 0x428
+>
+> If I revert the commit 'perf top' starts working again.
+>
+I have some ivybridge systems, let me debug this. This is likely
+related to cycles:ppp stuff given what perf top does.
+I think my patch is right, but there may be assumptions or bugs
+elsewhere exposed by the fix.
 
-   net: Add UNIX_DIAG_UID to Netlink UNIX socket diagnostics.
-
-   This adds the ability for Netlink to report a socket's UID along with the
-   other UNIX diagnostic information that is already available. This will
-   allow diagnostic tools greater insight into which users control which
-   socket.
-
-   To test this, do the following as a non-root user:
-
-        unshare -U -r bash
-        nc -l -U user.socket.$$ &
-
-   .. and verify from within that same session that Netlink UNIX socket
-   diagnostics report the socket's UID as 0. Also verify that Netlink UNIX
-   socket diagnostics report the socket's UID as the user's UID from an
-   unprivileged process in a different session. Verify the same from
-   a root process.
-
-   Signed-off-by: Felipe Gasper <felipe@felipegasper.com>
-
-diff --git a/include/uapi/linux/unix_diag.h b/include/uapi/linux/unix_diag.h
-index 5c502fd..a198857 100644
---- a/include/uapi/linux/unix_diag.h
-+++ b/include/uapi/linux/unix_diag.h
-@@ -20,6 +20,7 @@ struct unix_diag_req {
- #define UDIAG_SHOW_ICONS	0x00000008	/* show pending connections */
- #define UDIAG_SHOW_RQLEN	0x00000010	/* show skb receive queue len */
- #define UDIAG_SHOW_MEMINFO	0x00000020	/* show memory info of a socket */
-+#define UDIAG_SHOW_UID		0x00000040	/* show socket's UID */
- 
- struct unix_diag_msg {
- 	__u8	udiag_family;
-@@ -40,6 +41,7 @@ enum {
- 	UNIX_DIAG_RQLEN,
- 	UNIX_DIAG_MEMINFO,
- 	UNIX_DIAG_SHUTDOWN,
-+	UNIX_DIAG_UID,
- 
- 	__UNIX_DIAG_MAX,
- };
-diff --git a/net/unix/diag.c b/net/unix/diag.c
-index 3183d9b..e40f348 100644
---- a/net/unix/diag.c
-+++ b/net/unix/diag.c
-@@ -4,9 +4,11 @@
- #include <linux/unix_diag.h>
- #include <linux/skbuff.h>
- #include <linux/module.h>
-+#include <linux/uidgid.h>
- #include <net/netlink.h>
- #include <net/af_unix.h>
- #include <net/tcp_states.h>
-+#include <net/sock.h>
- 
- static int sk_diag_dump_name(struct sock *sk, struct sk_buff *nlskb)
- {
-@@ -110,6 +112,12 @@ static int sk_diag_show_rqlen(struct sock *sk, struct sk_buff *nlskb)
- 	return nla_put(nlskb, UNIX_DIAG_RQLEN, sizeof(rql), &rql);
- }
- 
-+static int sk_diag_dump_uid(struct sock *sk, struct sk_buff *nlskb)
-+{
-+	uid_t uid = from_kuid_munged(sk_user_ns(nlskb->sk), sock_i_uid(sk));
-+	return nla_put(nlskb, UNIX_DIAG_UID, sizeof(uid_t), &uid);
-+}
-+
- static int sk_diag_fill(struct sock *sk, struct sk_buff *skb, struct unix_diag_req *req,
- 		u32 portid, u32 seq, u32 flags, int sk_ino)
- {
-@@ -156,6 +164,10 @@ static int sk_diag_fill(struct sock *sk, struct sk_buff *skb, struct unix_diag_r
- 	if (nla_put_u8(skb, UNIX_DIAG_SHUTDOWN, sk->sk_shutdown))
- 		goto out_nlmsg_trim;
- 
-+	if ((req->udiag_show & UDIAG_SHOW_UID) &&
-+	    sk_diag_dump_uid(sk, skb))
-+		goto out_nlmsg_trim;
-+
- 	nlmsg_end(skb, nlh);
- 	return 0;
- 
+>
+> Thanks,
+>
+>         Ingo
