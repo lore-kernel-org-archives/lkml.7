@@ -2,107 +2,110 @@ Return-Path: <SRS0=AA30=TT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BED80C04AB4
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 May 2019 18:34:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE7BBC072AD
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 May 2019 18:43:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 90E2F206BF
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 May 2019 18:34:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A158020578
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 May 2019 18:43:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IrPi4dzj"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QtBju1AY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729918AbfESSes (ORCPT
+        id S1729944AbfESSnl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 19 May 2019 14:34:48 -0400
-Received: from mail-pg1-f177.google.com ([209.85.215.177]:43346 "EHLO
-        mail-pg1-f177.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727344AbfESSes (ORCPT
+        Sun, 19 May 2019 14:43:41 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:45919 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726090AbfESSnl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 19 May 2019 14:34:48 -0400
-Received: by mail-pg1-f177.google.com with SMTP id t22so5655058pgi.10
-        for <linux-kernel@vger.kernel.org>; Sun, 19 May 2019 11:34:47 -0700 (PDT)
+        Sun, 19 May 2019 14:43:41 -0400
+Received: by mail-pl1-f196.google.com with SMTP id a5so5626664pls.12;
+        Sun, 19 May 2019 11:43:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=11epPDMxJKikdDuH5v438Dqzhu+8xiuwN8/dlEEPf7w=;
-        b=IrPi4dzjuT6IuaUnXQW4C/RlKY8SAQGAI5efWh0a40wMRM8t2LHgHcz1avoKtU3abK
-         bFUrCDyneTCImqczkLbYkM6PeugMcl6RjCaBzPHsUMb2p2Qfu+d2cdlSbWEhnOqUdzd4
-         2H6Hc9rb8zKSVSzvYcSMEXscOSsySGNNd1unU/69ZUdiwH8CToKoW11BzMulBk5jOYJa
-         +H0GbeS85k3CzVc3RfSojyBPlo6/khO7Y7mF0IU6XLofQ4eJlBUFLEtkP0hBnuCAZJyx
-         VZwLlivrukrcR2MuFInFQFIZ+SZZZvgRjujyAsXkfkLjoB7fGeVs54Ztp/RiBvut1iUN
-         UlMw==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=6m7D+bu1zYRC0v/E1KNNwrtOsTcyu17DCNJXsbLJmfY=;
+        b=QtBju1AYMkQXi6pcqrAXtCcB3Sp/497azLfG5iatmvikg/hpypk2TcDmAtx+Z+4YPd
+         31H5wfz0LeIcfCoMVFRbwUIkU0WGIJeI8sNGvwcc4kvRYgSwSWie+IVyTdoHY/F164p0
+         sqEBBaNq7nb/LLo604WIIUp3qXVos2Eczj/1G7iaYgKX+7NAgxsP0PlZs34Q7XYlS0P4
+         8AX4izF6LRoahsmLnUKEyd+OCt3Fsi5Vpl4hKdMyOpO7D1sRNhh0ZLsViv4ArLO0Dzj5
+         GuUSkaOBeqg21lpGs+vH8rOeYE2+nTzdthBBFgg9gGFUu0ibmaK/zP9SWCN82qQWmvt/
+         wn2w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=11epPDMxJKikdDuH5v438Dqzhu+8xiuwN8/dlEEPf7w=;
-        b=s23+4aKluYAu7VTXPMBX59DFPT55xyrnLP3eyVtQ1NQdkrXgCy9134dKA8fl1ySl3q
-         bjW3wGW9ZTnUjsJqZSR/Jsl+X6v/Wg7bxYiY8eOszMG8DrCrcjjCYO/4d4qyk7Tg2m0H
-         aKkMFqA4f1gKY3GLtpWnrQYZOLwVFBhVQOXZV91ntL3bKpxB/+Xk1Krhk9Er4KDThXxA
-         f89KUuyw6i+OHQsoSmdB8c2h3dGUUJtawnT5u/HEhtgpMG/U/hY656urD0ZnEWgJ5Cp6
-         ojnmHmmVU3nOS5SMvq9WnEzYY6YyQpzy97626tjEyPIwhuDYa2RNVnX+VLR59xconYaf
-         /KXQ==
-X-Gm-Message-State: APjAAAVNfbI+rSXcbdWfCFsxkjdssDI30ccl+l1AjpPpipPgiI/OUeGT
-        ifhRbQnDV1dvvZ3K7rj5cpwPIOAw
-X-Google-Smtp-Source: APXvYqxvavbTr5Llg15jkn4mHoaZyPh1phIxnZxhyXOoqbUxbMz6gbjUaChu1TIA3y6jx3n1pcJ2/A==
-X-Received: by 2002:a63:7141:: with SMTP id b1mr68253806pgn.331.1558258486280;
-        Sun, 19 May 2019 02:34:46 -0700 (PDT)
-Received: from hari-Inspiron-1545 ([183.83.92.73])
-        by smtp.gmail.com with ESMTPSA id w189sm16622660pfw.147.2019.05.19.02.34.43
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 19 May 2019 02:34:45 -0700 (PDT)
-Date:   Sun, 19 May 2019 15:04:40 +0530
-From:   Hariprasad Kelam <hariprasad.kelam@gmail.com>
-To:     Gao Xiang <gaoxiang25@huawei.com>, Chao Yu <yuchao0@huawei.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-erofs@lists.ozlabs.org, devel@driverdev.osuosl.org,
-        linux-kernel@vger.kernel.org
-Subject: [Patch v2] staging: erofs: fix Warning Use BUG_ON instead of if
- condition followed by BUG
-Message-ID: <20190519093440.GA16838@hari-Inspiron-1545>
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=6m7D+bu1zYRC0v/E1KNNwrtOsTcyu17DCNJXsbLJmfY=;
+        b=Mv+UiuoPkvYxTPDnl9BbCnqTtn0XqMsWCiTtYfjFr31IKxPj2M/dqaPHjoGG9/tNXG
+         bdU6y1ak4tNg2YzXiT/pshFHl9c0KdUt3rJQESgcGVgZalhSABP8t1MMVowpRJ+TjT4v
+         XBL42l6u9iXbqVmvKC86Bz2v8YeCh8q8q94H5npkCaFQvFR+1S9U8XY8FH4ZotQ2lXI2
+         fOCZ1nIEpTAn5EFbaVlbqG1a+I0hT9L7iRxAoKzc7diq7lypXcpu7IWYZIsRac6nCicD
+         hFBQ0WVqwG2jY7aVUv+4xqWyLRAkHnzZBgOuxd6l8ueQEAth70Ow1qzqXcvdqPV6YIp8
+         U6cQ==
+X-Gm-Message-State: APjAAAUeff62E/otr5mETwBX23s5rHOJ7eVP8H+MNHEIRicsRDfdy0L4
+        NyzO2UGxZpjEjCWiMvbAgk2TC1EPY+o=
+X-Google-Smtp-Source: APXvYqyyTPdDvkdqCQv7W9NIjj7S0OuOv4xAQVr7r+33dAZbQb0c67SZZjkt5X9wDpV3Cm2ip+y+hw==
+X-Received: by 2002:a17:902:b713:: with SMTP id d19mr7121413pls.123.1558240428936;
+        Sat, 18 May 2019 21:33:48 -0700 (PDT)
+Received: from icarus ([2001:268:c1c3:c593:c70:4af9:86e2:2])
+        by smtp.gmail.com with ESMTPSA id j12sm14569207pff.148.2019.05.18.21.33.45
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Sat, 18 May 2019 21:33:47 -0700 (PDT)
+Date:   Sun, 19 May 2019 13:33:30 +0900
+From:   William Breathitt Gray <vilhelm.gray@gmail.com>
+To:     Randy Dunlap <rdunlap@infradead.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>, linux-iio@vger.kernel.org,
+        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>
+Subject: Re: [PATCH -next] counter: fix Documentation build error due to
+ incorrect source file name
+Message-ID: <20190519043313.GA20933@icarus>
+References: <b6475070-f336-1093-ff0f-6bc8d5fda35e@infradead.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <b6475070-f336-1093-ff0f-6bc8d5fda35e@infradead.org>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-fix below warning reported by  coccicheck
+On Sat, May 18, 2019 at 09:29:58PM -0700, Randy Dunlap wrote:
+> From: Randy Dunlap <rdunlap@infradead.org>
+> 
+> Fix kernel-doc build error in Documentation/driver-api/generic-counter.rst
+> of incorrect source file name.
+> Fixes this warning and error:
+> 
+> Error: Cannot open file ../drivers/counter/generic-counter.c
+> WARNING: kernel-doc '../scripts/kernel-doc -rst -enable-lineno -export ../drivers/counter/generic-counter.c' failed with return code 2
+> 
+> Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+> Cc: William Breathitt Gray <vilhelm.gray@gmail.com>
+> Cc: linux-iio@vger.kernel.org
+> ---
+>  Documentation/driver-api/generic-counter.rst |    2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> --- linux-next-20190517.orig/Documentation/driver-api/generic-counter.rst
+> +++ linux-next-20190517/Documentation/driver-api/generic-counter.rst
+> @@ -251,7 +251,7 @@ for defining a counter device.
+>  .. kernel-doc:: include/linux/counter.h
+>     :internal:
+>  
+> -.. kernel-doc:: drivers/counter/generic-counter.c
+> +.. kernel-doc:: drivers/counter/counter.c
+>     :export:
+>  
+>  Implementation
+> 
+> 
 
-drivers/staging/erofs/unzip_pagevec.h:74:2-5: WARNING: Use BUG_ON
-instead of if condition followed by BUG.
-
-Signed-off-by: Hariprasad Kelam <hariprasad.kelam@gmail.com>
------
-Changes in v2:
-  - replace BUG_ON with  DBG_BUGON
------
----
- drivers/staging/erofs/unzip_pagevec.h | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
-
-diff --git a/drivers/staging/erofs/unzip_pagevec.h b/drivers/staging/erofs/unzip_pagevec.h
-index f37d8fd..7938ee3 100644
---- a/drivers/staging/erofs/unzip_pagevec.h
-+++ b/drivers/staging/erofs/unzip_pagevec.h
-@@ -70,8 +70,7 @@ z_erofs_pagevec_ctor_next_page(struct z_erofs_pagevec_ctor *ctor,
- 			return tagptr_unfold_ptr(t);
- 	}
- 
--	if (unlikely(nr >= ctor->nr))
--		BUG();
-+	DBG_BUGON(nr >= ctor->nr);
- 
- 	return NULL;
- }
--- 
-2.7.4
-
+Acked-by: William Breathitt Gray <vilhelm.gray@gmail.com>
