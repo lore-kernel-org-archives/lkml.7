@@ -2,217 +2,81 @@ Return-Path: <SRS0=AA30=TT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 093B7C04AB4
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 May 2019 17:04:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7633C04AB4
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 May 2019 17:06:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D7052206BF
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 May 2019 17:04:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7BF6C206BF
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 May 2019 17:06:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726652AbfESREY (ORCPT
+        id S1726869AbfESRG3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 19 May 2019 13:04:24 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:53536 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725777AbfESREX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 19 May 2019 13:04:23 -0400
-Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 6CEBF1A028E709A6FC32;
-        Sun, 19 May 2019 17:13:54 +0800 (CST)
-Received: from [127.0.0.1] (10.184.191.73) by DGGEMS402-HUB.china.huawei.com
- (10.3.19.202) with Microsoft SMTP Server id 14.3.439.0; Sun, 19 May 2019
- 17:13:47 +0800
-To:     <davem@davemloft.net>, <willemdebruijn.kernel@gmail.com>,
-        <jon.maloy@ericsson.com>, <ying.xue@windriver.com>,
-        <sfr@canb.auug.org.au>
-CC:     "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        <tipc-discussion@lists.sourceforge.net>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        <mingfangsen@huawei.com>
-From:   hujunwei <hujunwei4@huawei.com>
-Subject: [PATCH v3] tipc: fix modprobe tipc failed after switch order of
- device registration
-Message-ID: <529aff15-5f3a-1bf1-76fa-691911ff6170@huawei.com>
-Date:   Sun, 19 May 2019 17:13:45 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Sun, 19 May 2019 13:06:29 -0400
+Received: from smtp-out.xnet.cz ([178.217.244.18]:22240 "EHLO smtp-out.xnet.cz"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725777AbfESRG2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 19 May 2019 13:06:28 -0400
+Received: from meh.true.cz (meh.true.cz [108.61.167.218])
+        (Authenticated sender: petr@true.cz)
+        by smtp-out.xnet.cz (Postfix) with ESMTPSA id 0E4444ACA;
+        Sun, 19 May 2019 14:19:01 +0200 (CEST)
+Received: by meh.true.cz (OpenSMTPD) with ESMTP id d9c28ecb;
+        Sun, 19 May 2019 14:18:59 +0200 (CEST)
+From:   =?UTF-8?q?Petr=20=C5=A0tetiar?= <ynezz@true.cz>
+To:     Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>
+Cc:     =?UTF-8?q?Petr=20=C5=A0tetiar?= <ynezz@true.cz>,
+        Mirko Lindner <mlindner@marvell.com>,
+        Stephen Hemminger <stephen@networkplumber.org>,
+        netdev@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] of_net: fix of_get_mac_address retval if compiled without CONFIG_OF
+Date:   Sun, 19 May 2019 14:18:44 +0200
+Message-Id: <1558268324-5596-1-git-send-email-ynezz@true.cz>
+X-Mailer: git-send-email 1.9.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.184.191.73]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Junwei Hu <hujunwei4@huawei.com>
+of_get_mac_address prior to commit d01f449c008a ("of_net: add NVMEM
+support to of_get_mac_address") could return only valid pointer or NULL,
+after this change it could return only valid pointer or ERR_PTR encoded
+error value, but I've forget to change the return value of
+of_get_mac_address in case where the kernel is compiled without
+CONFIG_OF, so I'm doing so now.
 
-Error message printed:
-modprobe: ERROR: could not insert 'tipc': Address family not
-supported by protocol.
-when modprobe tipc after the following patch: switch order of
-device registration, commit 7e27e8d6130c
-("tipc: switch order of device registration to fix a crash")
-
-Because sock_create_kern(net, AF_TIPC, ...) called by
-tipc_topsrv_create_listener() in the initialization process
-of tipc_init_net(), so tipc_socket_init() must be execute before that.
-Meanwhile, tipc_net_id need to be initialized when sock_create()
-called, and tipc_socket_init() is no need to be called for each namespace.
-
-I add a variable tipc_topsrv_net_ops, and split the
-register_pernet_subsys() of tipc into two parts, and split
-tipc_socket_init() with initialization of pernet params.
-
-By the way, I fixed resources rollback error when tipc_bcast_init()
-failed in tipc_init_net().
-
-Fixes: 7e27e8d6130c
-("tipc: switch order of device registration to fix a crash")
-Signed-off-by: Junwei Hu <hujunwei4@huawei.com>
-Reported-by: Wang Wang <wangwang2@huawei.com>
-Reported-by: syzbot+1e8114b61079bfe9cbc5@syzkaller.appspotmail.com
-Reviewed-by: Kang Zhou <zhoukang7@huawei.com>
-Reviewed-by: Suanming Mou <mousuanming@huawei.com>
+Cc: Mirko Lindner <mlindner@marvell.com>
+Cc: Stephen Hemminger <stephen@networkplumber.org>
+Fixes: d01f449c008a ("of_net: add NVMEM support to of_get_mac_address")
+Reported-by: Octavio Alvarez <octallk1@alvarezp.org>
+Signed-off-by: Petr Štetiar <ynezz@true.cz>
 ---
-V1->V2:
-- split the register_pernet_subsys() of tipc into two parts
-V2->V3:
-- update Reported-by
----
- net/tipc/core.c   | 18 ++++++++++++------
- net/tipc/subscr.h |  5 +++--
- net/tipc/topsrv.c | 14 ++++++++++++--
- 3 files changed, 27 insertions(+), 10 deletions(-)
+ include/linux/of_net.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/net/tipc/core.c b/net/tipc/core.c
-index ddd2e0f67c07..ed536c05252a 100644
---- a/net/tipc/core.c
-+++ b/net/tipc/core.c
-@@ -77,9 +77,6 @@ static int __net_init tipc_init_net(struct net *net)
- 		goto out_nametbl;
-
- 	INIT_LIST_HEAD(&tn->dist_queue);
--	err = tipc_topsrv_start(net);
--	if (err)
--		goto out_subscr;
-
- 	err = tipc_bcast_init(net);
- 	if (err)
-@@ -88,8 +85,6 @@ static int __net_init tipc_init_net(struct net *net)
- 	return 0;
-
- out_bclink:
--	tipc_bcast_stop(net);
--out_subscr:
- 	tipc_nametbl_stop(net);
- out_nametbl:
- 	tipc_sk_rht_destroy(net);
-@@ -99,7 +94,6 @@ static int __net_init tipc_init_net(struct net *net)
-
- static void __net_exit tipc_exit_net(struct net *net)
+diff --git a/include/linux/of_net.h b/include/linux/of_net.h
+index 9cd72aab76fe..0f0346e6829c 100644
+--- a/include/linux/of_net.h
++++ b/include/linux/of_net.h
+@@ -22,7 +22,7 @@ static inline int of_get_phy_mode(struct device_node *np)
+ 
+ static inline const void *of_get_mac_address(struct device_node *np)
  {
--	tipc_topsrv_stop(net);
- 	tipc_net_stop(net);
- 	tipc_bcast_stop(net);
- 	tipc_nametbl_stop(net);
-@@ -113,6 +107,11 @@ static struct pernet_operations tipc_net_ops = {
- 	.size = sizeof(struct tipc_net),
- };
-
-+static struct pernet_operations tipc_topsrv_net_ops = {
-+	.init = tipc_topsrv_init_net,
-+	.exit = tipc_topsrv_exit_net,
-+};
-+
- static int __init tipc_init(void)
- {
- 	int err;
-@@ -143,6 +142,10 @@ static int __init tipc_init(void)
- 	if (err)
- 		goto out_socket;
-
-+	err = register_pernet_subsys(&tipc_topsrv_net_ops);
-+	if (err)
-+		goto out_pernet_topsrv;
-+
- 	err = tipc_bearer_setup();
- 	if (err)
- 		goto out_bearer;
-@@ -150,6 +153,8 @@ static int __init tipc_init(void)
- 	pr_info("Started in single node mode\n");
- 	return 0;
- out_bearer:
-+	unregister_pernet_subsys(&tipc_topsrv_net_ops);
-+out_pernet_topsrv:
- 	tipc_socket_stop();
- out_socket:
- 	unregister_pernet_subsys(&tipc_net_ops);
-@@ -167,6 +172,7 @@ static int __init tipc_init(void)
- static void __exit tipc_exit(void)
- {
- 	tipc_bearer_cleanup();
-+	unregister_pernet_subsys(&tipc_topsrv_net_ops);
- 	tipc_socket_stop();
- 	unregister_pernet_subsys(&tipc_net_ops);
- 	tipc_netlink_stop();
-diff --git a/net/tipc/subscr.h b/net/tipc/subscr.h
-index d793b4343885..aa015c233898 100644
---- a/net/tipc/subscr.h
-+++ b/net/tipc/subscr.h
-@@ -77,8 +77,9 @@ void tipc_sub_report_overlap(struct tipc_subscription *sub,
- 			     u32 found_lower, u32 found_upper,
- 			     u32 event, u32 port, u32 node,
- 			     u32 scope, int must);
--int tipc_topsrv_start(struct net *net);
--void tipc_topsrv_stop(struct net *net);
-+
-+int __net_init tipc_topsrv_init_net(struct net *net);
-+void __net_exit tipc_topsrv_exit_net(struct net *net);
-
- void tipc_sub_put(struct tipc_subscription *subscription);
- void tipc_sub_get(struct tipc_subscription *subscription);
-diff --git a/net/tipc/topsrv.c b/net/tipc/topsrv.c
-index b45932d78004..f345662890a6 100644
---- a/net/tipc/topsrv.c
-+++ b/net/tipc/topsrv.c
-@@ -635,7 +635,7 @@ static void tipc_topsrv_work_stop(struct tipc_topsrv *s)
- 	destroy_workqueue(s->send_wq);
+-	return NULL;
++	return ERR_PTR(-ENODEV);
  }
-
--int tipc_topsrv_start(struct net *net)
-+static int tipc_topsrv_start(struct net *net)
- {
- 	struct tipc_net *tn = tipc_net(net);
- 	const char name[] = "topology_server";
-@@ -668,7 +668,7 @@ int tipc_topsrv_start(struct net *net)
- 	return ret;
- }
-
--void tipc_topsrv_stop(struct net *net)
-+static void tipc_topsrv_stop(struct net *net)
- {
- 	struct tipc_topsrv *srv = tipc_topsrv(net);
- 	struct socket *lsock = srv->listener;
-@@ -693,3 +693,13 @@ void tipc_topsrv_stop(struct net *net)
- 	idr_destroy(&srv->conn_idr);
- 	kfree(srv);
- }
-+
-+int __net_init tipc_topsrv_init_net(struct net *net)
-+{
-+	return tipc_topsrv_start(net);
-+}
-+
-+void __net_exit tipc_topsrv_exit_net(struct net *net)
-+{
-+	tipc_topsrv_stop(net);
-+}
+ 
+ static inline struct net_device *of_find_net_device_by_node(struct device_node *np)
 -- 
-2.21.GIT
+1.9.1
 
