@@ -2,66 +2,143 @@ Return-Path: <SRS0=AA30=TT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA94DC072AD
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 May 2019 17:35:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68D58C04E87
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 May 2019 17:37:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B070620644
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 May 2019 17:35:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 40F2C20644
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 May 2019 17:37:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1558287443;
+	bh=XzlTETSMrzArR830GrEOHizV3Tpk3ohasxsl/cG3kLo=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=CHX6mJwSihA4haV6YogyU6TAIV9omxGb5uFPp+p/GPRjUE0FkwLF/d/lGvzMnkqzD
+	 Opb8BKFME2st0Z45KukkyjmLWCnoyRr7Woomk+xt2tdtER2zJoMCs0bCjA8wDEKmIj
+	 ix6cbHUMqPcL8lMCoHA+ycKIpYUOlTpq9ttEJO/8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728410AbfESRff convert rfc822-to-8bit (ORCPT
+        id S1727846AbfESRhW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 19 May 2019 13:35:35 -0400
-Received: from shards.monkeyblade.net ([23.128.96.9]:41188 "EHLO
-        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727130AbfESRfe (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 19 May 2019 13:35:34 -0400
-Received: from localhost (unknown [IPv6:2601:601:9f80:35cd::3d8])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id B546C13F0734F;
-        Sun, 19 May 2019 10:35:33 -0700 (PDT)
-Date:   Sun, 19 May 2019 10:35:33 -0700 (PDT)
-Message-Id: <20190519.103533.1752298588551711978.davem@davemloft.net>
-To:     ynezz@true.cz
-Cc:     robh+dt@kernel.org, frowand.list@gmail.com, andrew@lunn.ch,
-        f.fainelli@gmail.com, hkallweit1@gmail.com, mlindner@marvell.com,
-        stephen@networkplumber.org, netdev@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] of_net: fix of_get_mac_address retval if compiled
- without CONFIG_OF
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <1558268324-5596-1-git-send-email-ynezz@true.cz>
-References: <1558268324-5596-1-git-send-email-ynezz@true.cz>
-X-Mailer: Mew version 6.8 on Emacs 26.1
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=iso-8859-15
-Content-Transfer-Encoding: 8BIT
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Sun, 19 May 2019 10:35:34 -0700 (PDT)
+        Sun, 19 May 2019 13:37:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39214 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726472AbfESRhV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 19 May 2019 13:37:21 -0400
+Received: from archlinux (cpc91196-cmbg18-2-0-cust659.5-4.cable.virginm.net [81.96.234.148])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1A0AE214D8;
+        Sun, 19 May 2019 10:29:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1558261797;
+        bh=XzlTETSMrzArR830GrEOHizV3Tpk3ohasxsl/cG3kLo=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=HvjBcJ20xJPkYcnBZXtTexX3Q9oLp+na2+udcGibyOclGZLbFG+S8H1FXz3GXfioz
+         fnTjdd1L6Y2F18ct5mvA08pAi47sJ5rnZ9c+NYlnM+fRMj1Tsuh9hIQtxgKtnlT10y
+         YtkC1zvVFsgv2RmjxJmbjIbN4A4oKjRUrtPbzUss=
+Date:   Sun, 19 May 2019 11:29:52 +0100
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Melissa Wen <melissa.srw@gmail.com>
+Cc:     Lars-Peter Clausen <lars@metafoo.de>,
+        Michael Hennerich <Michael.Hennerich@analog.com>,
+        Stefan Popa <stefan.popa@analog.com>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Barry Song <21cnbao@gmail.com>, linux-iio@vger.kernel.org,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
+        kernel-usp@googlegroups.com
+Subject: Re: [PATCH] staging:iio:ad7150: fix threshold mode config bit
+Message-ID: <20190519112952.58142fb0@archlinux>
+In-Reply-To: <20190519010456.lwq7n2e6nkqa6niz@smtp.gmail.com>
+References: <20190519010456.lwq7n2e6nkqa6niz@smtp.gmail.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Petr ¦tetiar <ynezz@true.cz>
-Date: Sun, 19 May 2019 14:18:44 +0200
+On Sat, 18 May 2019 22:04:56 -0300
+Melissa Wen <melissa.srw@gmail.com> wrote:
 
-> of_get_mac_address prior to commit d01f449c008a ("of_net: add NVMEM
-> support to of_get_mac_address") could return only valid pointer or NULL,
-> after this change it could return only valid pointer or ERR_PTR encoded
-> error value, but I've forget to change the return value of
-> of_get_mac_address in case where the kernel is compiled without
-> CONFIG_OF, so I'm doing so now.
+> According to the AD7150 configuration register description, bit 7 assumes
+> value 1 when the threshold mode is fixed and 0 when it is adaptive,
+> however, the operation that identifies this mode was considering the
+> opposite values.
 > 
-> Cc: Mirko Lindner <mlindner@marvell.com>
-> Cc: Stephen Hemminger <stephen@networkplumber.org>
-> Fixes: d01f449c008a ("of_net: add NVMEM support to of_get_mac_address")
-> Reported-by: Octavio Alvarez <octallk1@alvarezp.org>
-> Signed-off-by: Petr ¦tetiar <ynezz@true.cz>
+> This patch renames the boolean variable to describe it correctly and
+> properly replaces it in the places where it is used.
+> 
+> Fixes: 531efd6aa0991 ("staging:iio:adc:ad7150: chan_spec conv + i2c_smbus commands + drop unused poweroff timeout control.")
+> Signed-off-by: Melissa Wen <melissa.srw@gmail.com>
 
-Applied, thanks.
+Looks good to me.  Applied to the fixes-togreg branch of iio.git pushed out as
+as testing-fixes for the autobuilders to see if they can find anything
+we have missed.
+
+Thanks,
+
+Jonathan
+
+> ---
+>  drivers/staging/iio/cdc/ad7150.c | 19 +++++++++++--------
+>  1 file changed, 11 insertions(+), 8 deletions(-)
+> 
+> diff --git a/drivers/staging/iio/cdc/ad7150.c b/drivers/staging/iio/cdc/ad7150.c
+> index dd7fcab8e19e..e075244c602b 100644
+> --- a/drivers/staging/iio/cdc/ad7150.c
+> +++ b/drivers/staging/iio/cdc/ad7150.c
+> @@ -5,6 +5,7 @@
+>   * Copyright 2010-2011 Analog Devices Inc.
+>   */
+>  
+> +#include <linux/bitfield.h>
+>  #include <linux/interrupt.h>
+>  #include <linux/device.h>
+>  #include <linux/kernel.h>
+> @@ -130,7 +131,7 @@ static int ad7150_read_event_config(struct iio_dev *indio_dev,
+>  {
+>  	int ret;
+>  	u8 threshtype;
+> -	bool adaptive;
+> +	bool thrfixed;
+>  	struct ad7150_chip_info *chip = iio_priv(indio_dev);
+>  
+>  	ret = i2c_smbus_read_byte_data(chip->client, AD7150_CFG);
+> @@ -138,21 +139,23 @@ static int ad7150_read_event_config(struct iio_dev *indio_dev,
+>  		return ret;
+>  
+>  	threshtype = (ret >> 5) & 0x03;
+> -	adaptive = !!(ret & 0x80);
+> +
+> +	/*check if threshold mode is fixed or adaptive*/
+> +	thrfixed = FIELD_GET(AD7150_CFG_FIX, ret);
+>  
+>  	switch (type) {
+>  	case IIO_EV_TYPE_MAG_ADAPTIVE:
+>  		if (dir == IIO_EV_DIR_RISING)
+> -			return adaptive && (threshtype == 0x1);
+> -		return adaptive && (threshtype == 0x0);
+> +			return !thrfixed && (threshtype == 0x1);
+> +		return !thrfixed && (threshtype == 0x0);
+>  	case IIO_EV_TYPE_THRESH_ADAPTIVE:
+>  		if (dir == IIO_EV_DIR_RISING)
+> -			return adaptive && (threshtype == 0x3);
+> -		return adaptive && (threshtype == 0x2);
+> +			return !thrfixed && (threshtype == 0x3);
+> +		return !thrfixed && (threshtype == 0x2);
+>  	case IIO_EV_TYPE_THRESH:
+>  		if (dir == IIO_EV_DIR_RISING)
+> -			return !adaptive && (threshtype == 0x1);
+> -		return !adaptive && (threshtype == 0x0);
+> +			return thrfixed && (threshtype == 0x1);
+> +		return thrfixed && (threshtype == 0x0);
+>  	default:
+>  		break;
+>  	}
+
