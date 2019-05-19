@@ -2,136 +2,88 @@ Return-Path: <SRS0=AA30=TT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8779CC04AB4
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 May 2019 17:30:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9764C04AB4
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 May 2019 17:30:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5E09F204EC
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 May 2019 17:30:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 75827204EC
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 May 2019 17:30:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="prPrOvv+"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="LX6LYvYY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727316AbfESRaZ (ORCPT
+        id S1727472AbfESRas (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 19 May 2019 13:30:25 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:43031 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725769AbfESRaZ (ORCPT
+        Sun, 19 May 2019 13:30:48 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:34790 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725769AbfESRas (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 19 May 2019 13:30:25 -0400
-Received: by mail-pl1-f193.google.com with SMTP id gn7so1441079plb.10
-        for <linux-kernel@vger.kernel.org>; Sun, 19 May 2019 10:30:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=3nXBmIh7/vFkJ4Tm2l4dtTScuooDKNvEF1jpFXfvwsc=;
-        b=prPrOvv+nXzlq37dw9S0qdmegNQMY9mMQmGxVdosiPQlKvmQHZwzyNNaISmaHYISPL
-         X+MnJT//NcQ21npBKca3WpAApauj41TAIoPfE8Yn1PKHUg9dRm+3twylCz1VcUhpj9AY
-         TcBLFLBaEYI9qMBT/BXar0olvQLimM1sWud1T1/GfOO13CqMdqbUwAOF6akeVMHvShBG
-         389EvyUF/W8ChWuTLWfKobvsEmxcppXOOvx5AbluLHXBrSxVUDsPtbnSGtuNc47AipJP
-         LrRYAfePFA7lz8yV6lvkrbyhb38/XY3u7Pi4ItdkOP+VRZUORZzNtLVvNvBwQHUVJgbK
-         jkPQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=3nXBmIh7/vFkJ4Tm2l4dtTScuooDKNvEF1jpFXfvwsc=;
-        b=R+jVfNpSHDcdY7aT9vJ1878WuMHrDX4OWUdb6plfP+2TDQ7+u7u+E/axbDuKEnV9SX
-         9KbStvbn3Z+c1MAWyVhjV+eS92vAnQCsTRaAuuQhUFy8BeeP9z90ge4Tko8XIRtHs9WU
-         l7eZ+9nWNmTRV56Y51extDtVhN8KpygiKCxozOGqgOBqLhi3t4XQNYDNhZTY4YhLXEzu
-         oLTMwEcjTKJ+cVeFAogm6AESDHav3kwM2VJEaKGtEj6kpPKInGwhZZ+ymBW2aWP5l8Le
-         ncLftjB4fskQ0JCpoDx1MVC9n16vNGOBXJajaq9ERARtxGA52umn5QfkZJgrHPEIb3xQ
-         QWjg==
-X-Gm-Message-State: APjAAAUgHDBYV5C8zbqiAjyW/7qrtHHpAsdHvL6co3ZlxUsUNVtj9hJg
-        x9CfKydRXHR1WZX6OR25eW6jb57s
-X-Google-Smtp-Source: APXvYqxWU8wpTJXHBJp+Rkhz1pg1a0Wph4MXE9asWBt0UGUSJ69BeobNf1W2Emh5hysyAcKSb/AXeQ==
-X-Received: by 2002:a17:902:204:: with SMTP id 4mr17066355plc.21.1558260698892;
-        Sun, 19 May 2019 03:11:38 -0700 (PDT)
-Received: from hari-Inspiron-1545 ([183.83.92.73])
-        by smtp.gmail.com with ESMTPSA id c17sm9740268pfo.114.2019.05.19.03.11.35
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 19 May 2019 03:11:38 -0700 (PDT)
-Date:   Sun, 19 May 2019 15:41:32 +0530
-From:   Hariprasad Kelam <hariprasad.kelam@gmail.com>
-To:     Gao Xiang <hsiangkao@aol.com>, Gao Xiang <gaoxiang25@huawei.com>,
-        Chao Yu <yuchao0@huawei.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-erofs@lists.ozlabs.org, devel@driverdev.osuosl.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [Patch v2] staging: erofs: fix Warning Use BUG_ON instead of if
- condition followed by BUG
-Message-ID: <20190519101132.GA22620@hari-Inspiron-1545>
-References: <20190519093440.GA16838@hari-Inspiron-1545>
- <b32e6bca-60ec-2004-f1d6-16d2b8a478ae@aol.com>
+        Sun, 19 May 2019 13:30:48 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:MIME-Version:Date:Message-ID:Subject:From:Cc:To:Sender:Reply-To:
+        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+        Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=f5cN1mjIK4arJv5nxA+9gsIwVDLFcCDiUgKYVbUOMOo=; b=LX6LYvYYN+sOMe2wiacM1uzR3
+        zyvtL3DggelCbv5RiTtNft2qx7wFDxH5pTpIbCDTaoJqYX5E91v4TP2kfm5xN50a6/egfLVwuPd9e
+        c4S+CzzslEPNlKXjStrmXj/SvMJnh15TCDdcJAdw1TBKVbf2LJj7MMA6PUMmW8rKa7OTxYDc05RTl
+        n3Vy4MmzUg38kQlJrky+fVTsL2NzPF097e/IML8fmGeuI09yKl057LEsCLXbWGn+6xoFLHawUwhiY
+        1bM8EmSsPVOJkv2Lt4JXFNs1fmtgxVbbKfqIc43YlZXAukSjSkDqdsshbBlYtlKR3cYL8freek6Ne
+        qPyvJa5eA==;
+Received: from static-50-53-52-16.bvtn.or.frontiernet.net ([50.53.52.16] helo=dragon.dunlab)
+        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hSDSR-0006bj-41; Sun, 19 May 2019 04:29:59 +0000
+To:     LKML <linux-kernel@vger.kernel.org>
+Cc:     William Breathitt Gray <vilhelm.gray@gmail.com>,
+        linux-iio@vger.kernel.org,
+        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Subject: [PATCH -next] counter: fix Documentation build error due to incorrect
+ source file name
+Message-ID: <b6475070-f336-1093-ff0f-6bc8d5fda35e@infradead.org>
+Date:   Sat, 18 May 2019 21:29:58 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <b32e6bca-60ec-2004-f1d6-16d2b8a478ae@aol.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, May 19, 2019 at 05:50:40PM +0800, Gao Xiang wrote:
-> 
-> 
-> On 2019/5/19 下午5:34, Hariprasad Kelam wrote:
-> > fix below warning reported by  coccicheck
-> > 
-> > drivers/staging/erofs/unzip_pagevec.h:74:2-5: WARNING: Use BUG_ON
-> > instead of if condition followed by BUG.
-> > 
-> > Signed-off-by: Hariprasad Kelam <hariprasad.kelam@gmail.com>
-> > -----
-> > Changes in v2:
-> >   - replace BUG_ON with  DBG_BUGON
-> > -----
-> > ---
-> >  drivers/staging/erofs/unzip_pagevec.h | 3 +--
-> >  1 file changed, 1 insertion(+), 2 deletions(-)
-> > 
-> > diff --git a/drivers/staging/erofs/unzip_pagevec.h b/drivers/staging/erofs/unzip_pagevec.h
-> > index f37d8fd..7938ee3 100644
-> > --- a/drivers/staging/erofs/unzip_pagevec.h
-> > +++ b/drivers/staging/erofs/unzip_pagevec.h
-> > @@ -70,8 +70,7 @@ z_erofs_pagevec_ctor_next_page(struct z_erofs_pagevec_ctor *ctor,
-> >  			return tagptr_unfold_ptr(t);
-> >  	}
-> >  
-> 
-> I'd like to delete this line
-> 
-> > -	if (unlikely(nr >= ctor->nr))
-> > -		BUG();
-> > +	DBG_BUGON(nr >= ctor->nr);
-> >  
-> 
-> and this line.. I have already sent a new patch based on your v1 patch,
-> could you please check it out if it is acceptable for you? :)
-> 
-> Thanks,
-> Gao Xiang
+From: Randy Dunlap <rdunlap@infradead.org>
 
-Hi Gai Xiang,
+Fix kernel-doc build error in Documentation/driver-api/generic-counter.rst
+of incorrect source file name.
+Fixes this warning and error:
 
-The patch which you sent has all required. 
-Thanks for the  patch. We can ignore this v2 patch.
+Error: Cannot open file ../drivers/counter/generic-counter.c
+WARNING: kernel-doc '../scripts/kernel-doc -rst -enable-lineno -export ../drivers/counter/generic-counter.c' failed with return code 2
 
-Thanks,
-Hariprasad k
+Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+Cc: William Breathitt Gray <vilhelm.gray@gmail.com>
+Cc: linux-iio@vger.kernel.org
+---
+ Documentation/driver-api/generic-counter.rst |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+--- linux-next-20190517.orig/Documentation/driver-api/generic-counter.rst
++++ linux-next-20190517/Documentation/driver-api/generic-counter.rst
+@@ -251,7 +251,7 @@ for defining a counter device.
+ .. kernel-doc:: include/linux/counter.h
+    :internal:
+ 
+-.. kernel-doc:: drivers/counter/generic-counter.c
++.. kernel-doc:: drivers/counter/counter.c
+    :export:
+ 
+ Implementation
 
 
-
-> >  	return NULL;
-> >  }
-> > 
