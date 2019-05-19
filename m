@@ -2,159 +2,136 @@ Return-Path: <SRS0=AA30=TT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D4BBC04AB4
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 May 2019 17:12:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EBB6FC04AB4
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 May 2019 17:12:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0D6C5204EC
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 May 2019 17:12:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C29B8204EC
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 May 2019 17:12:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XH2H0sZv"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aa1xhBGV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727097AbfESRM1 (ORCPT
+        id S1727138AbfESRMe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 19 May 2019 13:12:27 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:55274 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725766AbfESRM0 (ORCPT
+        Sun, 19 May 2019 13:12:34 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:39631 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725766AbfESRMe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 19 May 2019 13:12:26 -0400
-Received: by mail-wm1-f67.google.com with SMTP id i3so10975065wml.4
-        for <linux-kernel@vger.kernel.org>; Sun, 19 May 2019 10:12:25 -0700 (PDT)
+        Sun, 19 May 2019 13:12:34 -0400
+Received: by mail-pg1-f193.google.com with SMTP id w22so5612557pgi.6
+        for <linux-kernel@vger.kernel.org>; Sun, 19 May 2019 10:12:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=EFKYpxqjUgA8HzBjiRCRwuGMXowQ2+hz3v8LScRXBnk=;
-        b=XH2H0sZvvAQy/qBRtlQscFZeOSj54hKcB57GEOQbYorOgNMmEyyUy1+3lpu5Hh5mPY
-         k5k3/VDSYnUv2FZrHGLAxtY57c3GFYJXx6/2YcFBd74XcVVp7yJi3sbmigns5JS3sv1X
-         nziYkoPMEDPP0caS76UCI+RZ+SdZBV2d/hNpYsd07+sBBbc0aRA/+hXBsLXlI1et+DeG
-         n9DpdcoEsvocotRXhKnmRslqezZ2G3X8OxmAQQBDXMKNQaL4v+MqwRPTv6KP2J+9iKuH
-         IPTo1oIYap7QrsBNeA+HVDHF+C4JZIZ0qEcrJZzAWAV5uMNDLsmrj9tHK0k8YkEJf2eO
-         +qgg==
+        h=date:from:to:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=2aJVDwIx9CNCJgquAEUdJfowE2zu/TP85bAx23aqgcE=;
+        b=aa1xhBGV+J6MUtB32Shj+5dPHvNdaqFAnSUVX2fFGJSKdL62Clq1dNrTbNuhBZxCOg
+         19a+Bbu50onEJQS/Vqmzcjl47CKbkJ8sj5jM/NPFw5mrhv942OOjwHDJE0QhP1w+6zZf
+         mPIWoXmcpbXCTQGFBnrnE6wMgKkap7wymXycMEkT9WWwv+aAd4xBQ5BqDP5M9X3PTxfZ
+         n79Uj7yFVO/tdfrDtb121GelXnybzzqQZ6A8l8rsbGa4JkeEa05RH+Ora5oMf8PYj/v8
+         axxgVQHGFBrCp1dC/dtFDbgvYfOaoRkkFrVJafB3kxZJmllbPEAU5bWDyIazb8YJKv5j
+         TlVQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=EFKYpxqjUgA8HzBjiRCRwuGMXowQ2+hz3v8LScRXBnk=;
-        b=bsLv24rlL9Q7JzBC7qXvEzsPR3maiGkr6GtNZ002D6hOAE2YJdfLqjY1eaXpZJjkTG
-         A3gAi4pq8CrLL0FOrOwaKxa9f9QS+suLHews/UlpsQDHqELL3UBCzpSowN1GFbAHhB4c
-         Bqw9LG449/Xj5vJyk4VTeU2deH0H3hgIOmnTc/OXLzB8LOKymLTuYPEBVasnIV5jEhKv
-         Sk/anbS34RcxfAl8RtzlYLOyqz/U50cF/su+VIkXqRVMCuN1iDC0ZIWma1sS/2mLeJ46
-         SNGTynAex34qDjqH/p+tuxxZKphO5L5mzW7GSxjRlzpubmIhbHvxU1QBMPzR7VyjnBws
-         BY5w==
-X-Gm-Message-State: APjAAAXokvEgDjKHyJBt2LcHL4Ll1Ryhe3jNXM1dWfCRbGt1+j0mxapw
-        cp8K+MsuMjChdO6mmWuF92AxGVq3
-X-Google-Smtp-Source: APXvYqwH90bJYZgc5/3UxmkH9HSBXjCEauN9/++rWvVnzze+b1QnrrHaZSJh34VdL3I6q0Mg5rxl1Q==
-X-Received: by 2002:a05:600c:10ca:: with SMTP id l10mr14088433wmd.23.1558264364289;
-        Sun, 19 May 2019 04:12:44 -0700 (PDT)
-Received: from ogabbay-VM.habana-labs.com ([31.154.190.6])
-        by smtp.gmail.com with ESMTPSA id s3sm26612570wre.97.2019.05.19.04.12.43
+        h=x-gm-message-state:date:from:to:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=2aJVDwIx9CNCJgquAEUdJfowE2zu/TP85bAx23aqgcE=;
+        b=D67yzSuKsDdkSsbdKJhT/XVMDRaSAIUN+VIdA7bloEKLw4JixvyAlWiERimGFXqO1t
+         Tnl7pye4VUHyjcAn6g9rB3oA8LJPoFmwreq1F0yvppGU8TSG9EVmaEu7RiZ0M2zsqRsG
+         ROfnKiHNweyN6xwYF1ZGogpgyFPWPiciu62IipRdc3zMLy354fwXW1CXTGNTOLYenh4i
+         GdYK0EDLijbqL24tioiaA+3HRr3QmrlIAyckzMQaVmIcYsqvxE/l6dec4qdefXLRpvpg
+         sIm4k9BNGwuRuV05b0zVfc0jIBjpWWGIpYE3KpXXvR7GvJD6hAqhJ/stv9RZP/orgdi3
+         E9tg==
+X-Gm-Message-State: APjAAAVEA6JguJkxwGvkT9bb68C69/71qe/tX3RhO3ITmxOVQUXkjpSz
+        JgIjELO599TIAfacEmGuNERn5IF0oz8=
+X-Google-Smtp-Source: APXvYqxsn5ZvQTyKQYV5eB5cw3Gz6/f1BFVE0KCPTTWYwjlRlpndUVeNuqyi3oOVshg2U+TQzzQflQ==
+X-Received: by 2002:aa7:9289:: with SMTP id j9mr30426595pfa.251.1558285953896;
+        Sun, 19 May 2019 10:12:33 -0700 (PDT)
+Received: from hari-Inspiron-1545 ([183.83.92.73])
+        by smtp.gmail.com with ESMTPSA id c76sm28951727pfc.43.2019.05.19.10.12.30
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 19 May 2019 04:12:43 -0700 (PDT)
-From:   Oded Gabbay <oded.gabbay@gmail.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     gregkh@linuxfoundation.org
-Subject: [PATCH 1/2] habanalabs: support device memory memset > 4GB
-Date:   Sun, 19 May 2019 14:12:40 +0300
-Message-Id: <20190519111241.23359-1-oded.gabbay@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Sun, 19 May 2019 10:12:33 -0700 (PDT)
+Date:   Sun, 19 May 2019 22:42:27 +0530
+From:   Hariprasad Kelam <hariprasad.kelam@gmail.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Emanuel Bennici <benniciemanuel78@gmail.com>,
+        Vatsala Narang <vatsalanarang@gmail.com>,
+        Nishka Dasgupta <nishka.dasgupta@yahoo.com>,
+        Young Xiao <YangX92@hotmail.com>,
+        Aymen Qader <qader.aymen@gmail.com>,
+        Henriette Hofmeier <passt@h-hofmeier.de>,
+        Hardik Singh Rathore <hardiksingh.k@gmail.com>,
+        Madhumitha Prabakaran <madhumithabiw@gmail.com>,
+        Michael Straube <straube.linux@gmail.com>,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] staging: rtl8723bs: core: rtw_mlme_ext: fix warning Unneeded
+ variable: "ret"
+Message-ID: <20190519171227.GA8089@hari-Inspiron-1545>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch adds support to the goya memset function to perform memset to
-device memory with size larger then 4GB. In this case, we need to use
-multiple LIN_DMA packets because a single packet supports up to 4GB.
+This patch fixes below warnings reported by coccicheck
 
-Signed-off-by: Oded Gabbay <oded.gabbay@gmail.com>
+drivers/staging/rtl8723bs/core/rtw_mlme_ext.c:1888:14-17: Unneeded
+variable: "ret". Return "_FAIL" on line 1920
+drivers/staging/rtl8723bs/core/rtw_mlme_ext.c:466:5-8: Unneeded
+variable: "res". Return "_SUCCESS" on line 494
+
+Signed-off-by: Hariprasad Kelam <hariprasad.kelam@gmail.com>
 ---
- drivers/misc/habanalabs/goya/goya.c | 49 ++++++++++++++++++-----------
- 1 file changed, 30 insertions(+), 19 deletions(-)
+ drivers/staging/rtl8723bs/core/rtw_mlme_ext.c | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/misc/habanalabs/goya/goya.c b/drivers/misc/habanalabs/goya/goya.c
-index be27ec6cf5fd..6ee5db697ca5 100644
---- a/drivers/misc/habanalabs/goya/goya.c
-+++ b/drivers/misc/habanalabs/goya/goya.c
-@@ -4478,36 +4478,47 @@ void *goya_get_events_stat(struct hl_device *hdev, u32 *size)
- 	return goya->events_stat;
+diff --git a/drivers/staging/rtl8723bs/core/rtw_mlme_ext.c b/drivers/staging/rtl8723bs/core/rtw_mlme_ext.c
+index d110d45..6a2eb66 100644
+--- a/drivers/staging/rtl8723bs/core/rtw_mlme_ext.c
++++ b/drivers/staging/rtl8723bs/core/rtw_mlme_ext.c
+@@ -463,7 +463,6 @@ static u8 init_channel_set(struct adapter *padapter, u8 ChannelPlan, RT_CHANNEL_
+ 
+ int	init_mlme_ext_priv(struct adapter *padapter)
+ {
+-	int	res = _SUCCESS;
+ 	struct registry_priv *pregistrypriv = &padapter->registrypriv;
+ 	struct mlme_ext_priv *pmlmeext = &padapter->mlmeextpriv;
+ 	struct mlme_priv *pmlmepriv = &(padapter->mlmepriv);
+@@ -491,7 +490,7 @@ int	init_mlme_ext_priv(struct adapter *padapter)
+ 	pmlmeext->fixed_chan = 0xFF;
+ #endif
+ 
+-	return res;
++	return _SUCCESS;
+ 
  }
  
--static int goya_memset_device_memory(struct hl_device *hdev, u64 addr, u32 size,
-+static int goya_memset_device_memory(struct hl_device *hdev, u64 addr, u64 size,
- 				u64 val, bool is_dram)
+@@ -1885,7 +1884,6 @@ unsigned int OnAtim(struct adapter *padapter, union recv_frame *precv_frame)
+ 
+ unsigned int on_action_spct(struct adapter *padapter, union recv_frame *precv_frame)
  {
- 	struct packet_lin_dma *lin_dma_pkt;
- 	struct hl_cs_job *job;
- 	u32 cb_size, ctl;
- 	struct hl_cb *cb;
--	int rc;
-+	int rc, lin_dma_pkts_cnt;
+-	unsigned int ret = _FAIL;
+ 	struct sta_info *psta = NULL;
+ 	struct sta_priv *pstapriv = &padapter->stapriv;
+ 	u8 *pframe = precv_frame->u.hdr.rx_data;
+@@ -1917,7 +1915,7 @@ unsigned int on_action_spct(struct adapter *padapter, union recv_frame *precv_fr
+ 	}
  
--	cb = hl_cb_kernel_create(hdev, PAGE_SIZE);
-+	lin_dma_pkts_cnt = DIV_ROUND_UP_ULL(size, SZ_2G);
-+	cb_size = lin_dma_pkts_cnt * sizeof(struct packet_lin_dma) +
-+						sizeof(struct packet_msg_prot);
-+	cb = hl_cb_kernel_create(hdev, cb_size);
- 	if (!cb)
--		return -EFAULT;
-+		return -ENOMEM;
+ exit:
+-	return ret;
++	return _FAIL;
+ }
  
- 	lin_dma_pkt = (struct packet_lin_dma *) (uintptr_t) cb->kernel_address;
- 
--	memset(lin_dma_pkt, 0, sizeof(*lin_dma_pkt));
--	cb_size = sizeof(*lin_dma_pkt);
--
--	ctl = ((PACKET_LIN_DMA << GOYA_PKT_CTL_OPCODE_SHIFT) |
--			(1 << GOYA_PKT_LIN_DMA_CTL_MEMSET_SHIFT) |
--			(1 << GOYA_PKT_LIN_DMA_CTL_WO_SHIFT) |
--			(1 << GOYA_PKT_CTL_RB_SHIFT) |
--			(1 << GOYA_PKT_CTL_MB_SHIFT));
--	ctl |= (is_dram ? DMA_HOST_TO_DRAM : DMA_HOST_TO_SRAM) <<
--			GOYA_PKT_LIN_DMA_CTL_DMA_DIR_SHIFT;
--	lin_dma_pkt->ctl = cpu_to_le32(ctl);
-+	do {
-+		memset(lin_dma_pkt, 0, sizeof(*lin_dma_pkt));
-+
-+		ctl = ((PACKET_LIN_DMA << GOYA_PKT_CTL_OPCODE_SHIFT) |
-+				(1 << GOYA_PKT_LIN_DMA_CTL_MEMSET_SHIFT) |
-+				(1 << GOYA_PKT_LIN_DMA_CTL_WO_SHIFT) |
-+				(1 << GOYA_PKT_CTL_RB_SHIFT) |
-+				(1 << GOYA_PKT_CTL_MB_SHIFT));
-+		ctl |= (is_dram ? DMA_HOST_TO_DRAM : DMA_HOST_TO_SRAM) <<
-+				GOYA_PKT_LIN_DMA_CTL_DMA_DIR_SHIFT;
-+		lin_dma_pkt->ctl = cpu_to_le32(ctl);
-+
-+		lin_dma_pkt->src_addr = cpu_to_le64(val);
-+		lin_dma_pkt->dst_addr = cpu_to_le64(addr);
-+		if (lin_dma_pkts_cnt > 1)
-+			lin_dma_pkt->tsize = cpu_to_le32(SZ_2G);
-+		else
-+			lin_dma_pkt->tsize = cpu_to_le32(size);
- 
--	lin_dma_pkt->src_addr = cpu_to_le64(val);
--	lin_dma_pkt->dst_addr = cpu_to_le64(addr);
--	lin_dma_pkt->tsize = cpu_to_le32(size);
-+		size -= SZ_2G;
-+		addr += SZ_2G;
-+		lin_dma_pkt++;
-+	} while (--lin_dma_pkts_cnt);
- 
- 	job = hl_cs_allocate_job(hdev, true);
- 	if (!job) {
-@@ -4522,7 +4533,7 @@ static int goya_memset_device_memory(struct hl_device *hdev, u64 addr, u32 size,
- 	job->user_cb_size = cb_size;
- 	job->hw_queue_id = GOYA_QUEUE_ID_DMA_0;
- 	job->patched_cb = job->user_cb;
--	job->job_cb_size = job->user_cb_size + sizeof(struct packet_msg_prot);
-+	job->job_cb_size = job->user_cb_size;
- 
- 	hl_debugfs_add_job(hdev, job);
- 
+ unsigned int OnAction_back(struct adapter *padapter, union recv_frame *precv_frame)
 -- 
-2.17.1
+2.7.4
 
