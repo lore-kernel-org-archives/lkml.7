@@ -6,61 +6,61 @@ X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
 	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FB8FC04AB4
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 May 2019 17:45:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E77A3C04AB4
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 May 2019 17:45:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4E2CF2082E
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 May 2019 17:45:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE3CF2085A
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 May 2019 17:45:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558287921;
-	bh=p39cSE+YEWhDHipYq4l9ZwR+n0AoruN4qVTWJAWJBQs=;
+	s=default; t=1558287923;
+	bh=YcDxhygZWb4DFgTe8LBDlB4/6CHD3jReOuScnoVIBuQ=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=sF8sOEnm454hMOLGZa9zE0kuOsH4z3BgFb8sfHe3XbVxsl7I4P3TpihOmD/M42Ze/
-	 FCB7tybciihaNVBdHZL2G8+QEWsUxma5T2CAXCOqOB0SRJzJ4TN8ih5dFZOj0az4z2
-	 o8R0IbAhTsoYn+sRG282l4l+E7mHeO/9ECyBScwE=
+	b=kmmZO66ng9PFrRYvLR979qV+kX4vKGWOwNKfAFylo29KTpwPBFDun3yFvFX4T0vXG
+	 rogWIKBQClTf02d1VIuaXX/Lw+XwKxllWZSUQ0ZT3NuKgmKDjrBY7d74At+MJgLBPb
+	 4rT71uQruFJu97JOXgkJA5wLlS82p+B/yPRqc8IU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727764AbfESRpU (ORCPT
+        id S1727917AbfESRpX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 19 May 2019 13:45:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42052 "EHLO mail.kernel.org"
+        Sun, 19 May 2019 13:45:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42066 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725784AbfESRpU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 19 May 2019 13:45:20 -0400
-Subject: Re: [GIT PULL] RISC-V Patches for the 5.2 Merge Window, Part 1 v3
+        id S1725784AbfESRpV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 19 May 2019 13:45:21 -0400
+Subject: Re: [GIT PULL] More MIPS changes for 5.2
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558287919;
-        bh=p39cSE+YEWhDHipYq4l9ZwR+n0AoruN4qVTWJAWJBQs=;
+        s=default; t=1558287921;
+        bh=YcDxhygZWb4DFgTe8LBDlB4/6CHD3jReOuScnoVIBuQ=;
         h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=g/N50TXJro8HgipULDBQ0NRm6iWMMBeUcu0xAdPvcDyuyf5IvpXumGiVkSVOtTgN3
-         jfVLkpkoZt/HujSErPZRON8IcSnrqFQ9tHIhxbfG/gLESnr3vF3rSDxa6+7MZkLFie
-         uECoogAOSAfEOIHnIN52UoKAI1H/UIvKCKnn8lSs=
+        b=AWkfAfBY0Q3buXVilbN7TVjTig44xEjKdQ6SWqeB7JikNiOYr6gRmoms3heiMakqS
+         CKBZ3wNxIqyb5nUC429Zv6A5dQqrzeOJIswo9xU1xhf1NLWgD2X+zwMYeuzD6oEpel
+         UQKE2Pc6ZDAbwWy+m8Nd3F6Q+tJ4WgGP9lssXoiI=
 From:   pr-tracker-bot@kernel.org
-In-Reply-To: <mhng-2cfcab49-74d1-4656-9913-36853a5be29d@palmer-si-x1e>
-References: <mhng-2cfcab49-74d1-4656-9913-36853a5be29d@palmer-si-x1e>
+In-Reply-To: <20190518063149.pvcmpgulqnwwuwuf@pburton-laptop>
+References: <20190518063149.pvcmpgulqnwwuwuf@pburton-laptop>
 X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <mhng-2cfcab49-74d1-4656-9913-36853a5be29d@palmer-si-x1e>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/palmer/riscv-linux.git
- tags/riscv-for-linus-5.2-mw2
-X-PR-Tracked-Commit-Id: 8fef9900d43feb9d5017c72840966733085e3e82
+X-PR-Tracked-Message-Id: <20190518063149.pvcmpgulqnwwuwuf@pburton-laptop>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/mips/linux.git tags/mips_5.2_2
+X-PR-Tracked-Commit-Id: b1e479e3dcbc970bfc0b20a56f213e4df08daf75
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: b0bb1269b9788a35af68587505d8df90498df75f
-Message-Id: <155828791965.9186.7458955761237233525.pr-tracker-bot@kernel.org>
-Date:   Sun, 19 May 2019 17:45:19 +0000
-To:     Palmer Dabbelt <palmer@sifive.com>
+X-PR-Merge-Commit-Id: bcd1739788e2ea111d0d2efe1ed6633d9f6a20da
+Message-Id: <155828792100.9186.5175291338145887273.pr-tracker-bot@kernel.org>
+Date:   Sun, 19 May 2019 17:45:21 +0000
+To:     Paul Burton <paul.burton@mips.com>
 Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Fri, 17 May 2019 15:54:33 -0700 (PDT):
+The pull request you sent on Sat, 18 May 2019 06:31:51 +0000:
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/palmer/riscv-linux.git tags/riscv-for-linus-5.2-mw2
+> git://git.kernel.org/pub/scm/linux/kernel/git/mips/linux.git tags/mips_5.2_2
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/b0bb1269b9788a35af68587505d8df90498df75f
+https://git.kernel.org/torvalds/c/bcd1739788e2ea111d0d2efe1ed6633d9f6a20da
 
 Thank you!
 
