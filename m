@@ -2,97 +2,72 @@ Return-Path: <SRS0=AA30=TT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38E04C04AB4
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 May 2019 18:01:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36DA7C04AB4
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 May 2019 18:06:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 02A3520675
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 May 2019 18:01:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uDVVrwGw"
+	by mail.kernel.org (Postfix) with ESMTP id 044F120675
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 May 2019 18:06:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729485AbfESSBQ (ORCPT
+        id S1729277AbfESSGJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 19 May 2019 14:01:16 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:42199 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727456AbfESSBP (ORCPT
+        Sun, 19 May 2019 14:06:09 -0400
+Received: from smtprelay0160.hostedemail.com ([216.40.44.160]:41984 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727623AbfESSGI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 19 May 2019 14:01:15 -0400
-Received: by mail-pf1-f196.google.com with SMTP id 13so6068632pfw.9;
-        Sun, 19 May 2019 11:01:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=czSHCdZXVQZecROM9WqMSFK1y+6AEn76N/qkIDTESik=;
-        b=uDVVrwGwtnx8Npp3qrf5HiE/iWJDV19oWasAJ9FbABxVkN3lqGNb5GpH9ssUaMMR6Z
-         aRsKNA7spPF3pxJh9i7sUaBTTrprTXLHiYJmWrVhPoIK8EC3e8toHmmbS0npjlo09rnr
-         yxy9fb2lFgQnA7l7VAh2Rf40ZjqsYMHoiLAvwi4nXIlZh25QA30pgO7ftv3Qz3F83UjV
-         Vkf4XGbLQv4FhPra+819T+EI1lx6jUkcf+CvAHAaOhfwg8bvoEsjUGFfNYNwKAYsYC23
-         QYy0FjnzbOItyuIi8jgQApsOYLN4mAzkbJngw9ud4oYYBPDHw5ptJo+jfTLKwkVFPQ8C
-         oG/w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=czSHCdZXVQZecROM9WqMSFK1y+6AEn76N/qkIDTESik=;
-        b=oICnz7n/0GGug6Tg1YIfqQsIZUMg44WLK6hD8WlTSjMuwlaCYHuUliQcEa5FyZoLsJ
-         V9YVh9VLiFkgCsTIBjBYb03HoLJqPY+crsOKp/fFgBxwa3WVhJLPwEhMjKI0oocuojt1
-         DA+SZZ1HT6wN2tzzdD7XVHTtWJkvzDNTl8j2NsWn5uK2P65OgekJRTyyyoeNC5C3l40d
-         LXC9XbtgW25b4bFIxSruI8wTtg4kEhmib6hWhb5Mii2ib+7teQV5dLVvctQdnMQEtgW3
-         gIVtDXYnIhWv7zpVk+sYmOvg0N5X2jKh4v3H0NSRrxaFkYVOt3vwE7cbYhLyNYhj3D+t
-         uMqw==
-X-Gm-Message-State: APjAAAU05gzXHI28qCLEsEMRox800Y7IOUd9c3Wy3BpfS/lVPChMR4ag
-        I0ZYqhIcIYEZMxCn4sY6iyLGItX0jEs=
-X-Google-Smtp-Source: APXvYqy5mFZ/0dgZN58kh6weAW5W4WSKhUs1B9aSm5bjyAYVuJUDvBS7JONYmX+/CCvJadcc44ejsg==
-X-Received: by 2002:a63:f710:: with SMTP id x16mr53164518pgh.216.1558236181646;
-        Sat, 18 May 2019 20:23:01 -0700 (PDT)
-Received: from localhost ([43.224.245.181])
-        by smtp.gmail.com with ESMTPSA id x23sm13783871pfn.160.2019.05.18.20.23.00
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sat, 18 May 2019 20:23:00 -0700 (PDT)
-From:   Weitao Hou <houweitaoo@gmail.com>
-To:     arend.vanspriel@broadcom.com, franky.lin@broadcom.com,
-        hante.meuleman@broadcom.com, chi-hsien.lin@cypress.com,
-        wright.feng@cypress.com, kvalo@codeaurora.org, davem@davemloft.net,
-        houweitaoo@gmail.com, rafal@milecki.pl
-Cc:     linux-wireless@vger.kernel.org,
-        brcm80211-dev-list.pdl@broadcom.com,
-        brcm80211-dev-list@cypress.com, netdev@vger.kernel.org,
+        Sun, 19 May 2019 14:06:08 -0400
+Received: from smtprelay.hostedemail.com (10.5.19.251.rfc1918.com [10.5.19.251])
+        by smtpgrave08.hostedemail.com (Postfix) with ESMTP id DC7AE182D7B29
+        for <linux-kernel@vger.kernel.org>; Sun, 19 May 2019 05:07:55 +0000 (UTC)
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay03.hostedemail.com (Postfix) with ESMTP id C7428837F24A;
+        Sun, 19 May 2019 05:07:54 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: money15_44f87b89aa330
+X-Filterd-Recvd-Size: 1863
+Received: from XPS-9350 (cpe-23-242-196-136.socal.res.rr.com [23.242.196.136])
+        (Authenticated sender: joe@perches.com)
+        by omf15.hostedemail.com (Postfix) with ESMTPA;
+        Sun, 19 May 2019 05:07:53 +0000 (UTC)
+Message-ID: <201b9ab622b8359225f3a3b673a05047ffce5744.camel@perches.com>
+Subject: Re: [PATCH] scripts/spelling.txt: drop "sepc" from the misspelling
+ list
+From:   Joe Perches <joe@perches.com>
+To:     Paul Walmsley <paul.walmsley@sifive.com>,
         linux-kernel@vger.kernel.org
-Subject: [PATCH] wireless: fix typos in code comments
-Date:   Sun, 19 May 2019 11:22:56 +0800
-Message-Id: <20190519032256.19346-1-houweitaoo@gmail.com>
-X-Mailer: git-send-email 2.18.0
+Cc:     Andrew Morton <akpm@linux-foundation.org>
+Date:   Sat, 18 May 2019 22:07:52 -0700
+In-Reply-To: <20190518210037.13674-1-paul.walmsley@sifive.com>
+References: <20190518210037.13674-1-paul.walmsley@sifive.com>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.30.1-1build1 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-fix lengh to length
+On Sat, 2019-05-18 at 14:00 -0700, Paul Walmsley wrote:
+> The RISC-V architecture has a register named the "Supervisor Exception
+> Program Counter", or "sepc".  This abbreviation triggers
+> checkpatch.pl's misspelling detector, resulting in noise in the
+> checkpatch output.  The risk that this noise could cause more useful
+> warnings to be missed seems to outweigh the harm of an occasional
+> misspelling of "spec".  Thus drop the "sepc" entry from the
+> misspelling list.
 
-Signed-off-by: Weitao Hou <houweitaoo@gmail.com>
----
- drivers/net/wireless/broadcom/brcm80211/brcmfmac/fwil.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+I would agree if you first fixed the existing sepc/spec
+and sepcific/specific typos.
 
-diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/fwil.c b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/fwil.c
-index 8ea27489734e..edd2f09613d8 100644
---- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/fwil.c
-+++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/fwil.c
-@@ -314,7 +314,7 @@ brcmf_create_bsscfg(s32 bsscfgidx, char *name, char *data, u32 datalen,
- 		return brcmf_create_iovar(name, data, datalen, buf, buflen);
- 
- 	prefixlen = strlen(prefix);
--	namelen = strlen(name) + 1; /* lengh of iovar  name + null */
-+	namelen = strlen(name) + 1; /* length of iovar  name + null */
- 	iolen = prefixlen + namelen + sizeof(bsscfgidx_le) + datalen;
- 
- 	if (buflen < iolen) {
--- 
-2.18.0
+arch/powerpc/kvm/book3s_xics.c:	 * a pending interrupt, this is a SW error and PAPR sepcifies
+arch/unicore32/include/mach/regs-gpio.h: * Sepcial Voltage Detect Reg GPIO_GPIR.
+drivers/net/wireless/realtek/rtlwifi/wifi.h:/* Ref: 802.11i sepc D10.0 7.3.2.25.1
+drivers/scsi/lpfc/lpfc_init.c:		/* Stop any OneConnect device sepcific driver timers */
+drivers/staging/rtl8723bs/hal/rtl8723b_phycfg.c:* OverView:	Read "sepcific bits" from BB register
+
 
