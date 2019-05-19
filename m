@@ -2,93 +2,159 @@ Return-Path: <SRS0=AA30=TT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=0.4 required=3.0 tests=DATE_IN_PAST_06_12,
+	FROM_LOCAL_HEX,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98332C04AB4
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 May 2019 18:15:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 386C0C04AB4
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 May 2019 18:18:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6E25820449
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 May 2019 18:15:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bbRR2bxz"
+	by mail.kernel.org (Postfix) with ESMTP id 0123420449
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 May 2019 18:18:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729552AbfESSPi (ORCPT
+        id S1729602AbfESSSB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 19 May 2019 14:15:38 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:45311 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729251AbfESSPi (ORCPT
+        Sun, 19 May 2019 14:18:01 -0400
+Received: from mail-it1-f200.google.com ([209.85.166.200]:42405 "EHLO
+        mail-it1-f200.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726014AbfESSSB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 19 May 2019 14:15:38 -0400
-Received: by mail-pf1-f195.google.com with SMTP id s11so6067563pfm.12;
-        Sun, 19 May 2019 11:15:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=LvoOGjtS9Q4v/OhQz+Xvt2yLQuispJiUfyTAeVDnMZ4=;
-        b=bbRR2bxzUuOllnh0/6nD2eAg5pGTqwoSpcBcQaFo8iNh0RHv2G1k2pQ4c1QaPL9SXa
-         NV0HHNI4IOKBJjVtUSkNJKOmUmqRIzz1ziVWFtDM1Z2kxBM1M8+8MxMZss9oXSfI2vfq
-         zVA8+Y0cSykPo5ytUKv4j/vwduPDRq2U2bQhZ0EyuUtRqO7Kf/ozSApKW9EdGHIyHdFM
-         Fpp5Of40958AdVd7rzupfDZSClSGIIoobTEdTmBSyf+g+PN051tgvztE7JAS26MnNZ1U
-         Hor1qStqQVSlC/bblDycPbwp2WL29cnbm4NI8KN4F90N2ygDm+JQ+nrBtYyoSTgjdXnu
-         1mmw==
+        Sun, 19 May 2019 14:18:01 -0400
+Received: by mail-it1-f200.google.com with SMTP id s18so9443067itl.7
+        for <linux-kernel@vger.kernel.org>; Sun, 19 May 2019 11:18:00 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=LvoOGjtS9Q4v/OhQz+Xvt2yLQuispJiUfyTAeVDnMZ4=;
-        b=AAars4n4wQXOcidKuaNj1ISdxBVwo1WEsF8CKzyA3NbZM0FvGewtowCN719I6s3I7U
-         pWrekPU0bd7gWhd9YM6jn7oVUrZ1McZiest24LaYmSmBXzKlvfsnOXT+7bJ1klGfD2+e
-         whXqrn+9zUwR81b+X3o15AYa3V6QS38kXNxpPq3652fXt3QFHP+JTRvmw4faFfuV+UIx
-         540Es4dQMCnD4+mNDi3RnBsH2hTyxvs7lNMbPXeazNK3dUFRyt/+JpXYfasjcB+CiHz1
-         1xo3j2cu528L1a2ofhaJMmNctwpYy902W6MYVvepgVUe0Jgpx95OYc3xiMatLJRtG5bB
-         h44Q==
-X-Gm-Message-State: APjAAAXRTH9WRdJs6FWGvg/mbhXzqNdu7JQ7RS5SBfDAvbJgFRUlZQ6W
-        qPCDFOR5bS20kVcwGXiWHoDo3/JDFL0=
-X-Google-Smtp-Source: APXvYqy3lkVNGdk2GsXbhC3BVFIuGkQcOtV/abTkec19BkOZMMKFGsQMT/jBr9HzKg45Z2p2n3q2XQ==
-X-Received: by 2002:a63:2cc9:: with SMTP id s192mr25216471pgs.24.1558238148827;
-        Sat, 18 May 2019 20:55:48 -0700 (PDT)
-Received: from localhost ([43.224.245.181])
-        by smtp.gmail.com with ESMTPSA id a11sm5188982pff.128.2019.05.18.20.55.47
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sat, 18 May 2019 20:55:48 -0700 (PDT)
-From:   Weitao Hou <houweitaoo@gmail.com>
-To:     gregkh@linuxfoundation.org, robh+dt@kernel.org,
-        mark.rutland@arm.com
-Cc:     linux-usb@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Weitao Hou <houweitaoo@gmail.com>
-Subject: [PATCH] usb: fix typos in code comments
-Date:   Sun, 19 May 2019 11:55:42 +0800
-Message-Id: <20190519035542.22094-1-houweitaoo@gmail.com>
-X-Mailer: git-send-email 2.18.0
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=M1TghxkZ2cqK/XU0n2a61ItohSKPfNjC9hEQzfL0wnc=;
+        b=hyXdn2x8+h9el5XBZ7GIIex2+nqbHWS9DmoAJXyUA+qUF1+fcwjKLtwmhaFYpCSwst
+         GPdflWTSi4SFKNFMnZz0Vx8nm5l/8sENcNC201k1fK26Y2E62p2XQMjAlR1/YYYaQrPs
+         1XK7VgZkfEFDRFN1ZO1GWL4ww5ElFdqXftFZA9DL3LFtWszvvBjYgHVxDKe29BtslXc4
+         o6mYRVMf+Kb9sv0HA6ZiM6RADAULYhWQU6Pku2nLMx/rAcrtvbhFUPDLN6lrf6BVUmIZ
+         czBZ+X2+lhOJhkT3fKEl7EXNYjL2fQVg+A2OsChbk/zd2Scb820ZF0bAqCSug6ICnyy2
+         vafg==
+X-Gm-Message-State: APjAAAWcKH/1j9y2NIMxFpFMKkK4Ax5V0NYhJirR0slfVZeer3kpogR6
+        CBtImqxRVDL/kxaEDhUTZl8hZ5ZFAvU3BB10nEOjIevjwuLk
+X-Google-Smtp-Source: APXvYqwJMvHP1nHjqR08pleCqoffj1JzDsim7beyXZUNubPpMK3yQh38HPUVLvyiIJD+FgMh1dtC7AoKpHKqET2ojtRwpjpVGXez
+MIME-Version: 1.0
+X-Received: by 2002:a05:6638:221:: with SMTP id f1mr41655686jaq.1.1558258025060;
+ Sun, 19 May 2019 02:27:05 -0700 (PDT)
+Date:   Sun, 19 May 2019 02:27:05 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000000d60e405893a38f0@google.com>
+Subject: general protection fault in rhashtable_walk_enter
+From:   syzbot <syzbot+153641db1759e576ec8e@syzkaller.appspotmail.com>
+To:     davem@davemloft.net, jon.maloy@ericsson.com,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com,
+        tipc-discussion@lists.sourceforge.net, ying.xue@windriver.com
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-fix lenght to length
+Hello,
 
-Signed-off-by: Weitao Hou <houweitaoo@gmail.com>
+syzbot found the following crash on:
+
+HEAD commit:    b1d6682e Add linux-next specific files for 20190517
+git tree:       linux-next
+console output: https://syzkaller.appspot.com/x/log.txt?x=1022b8bca00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=d3758876561d8cec
+dashboard link: https://syzkaller.appspot.com/bug?extid=153641db1759e576ec8e
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+
+Unfortunately, I don't have any reproducer for this crash yet.
+
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+153641db1759e576ec8e@syzkaller.appspotmail.com
+
+kasan: CONFIG_KASAN_INLINE enabled
+kasan: GPF could be caused by NULL-ptr deref or user memory access
+general protection fault: 0000 [#1] PREEMPT SMP KASAN
+CPU: 0 PID: 2377 Comm: syz-executor.0 Not tainted 5.1.0-next-20190517 #17
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+RIP: 0010:strlen+0x1f/0xa0 lib/string.c:516
+Code: 00 66 2e 0f 1f 84 00 00 00 00 00 48 b8 00 00 00 00 00 fc ff df 55 48  
+89 fa 48 89 e5 48 c1 ea 03 41 54 49 89 fc 53 48 83 ec 08 <0f> b6 04 02 48  
+89 fa 83 e2 07 38 d0 7f 04 84 c0 75 4d 41 80 3c 24
+RSP: 0018:ffff88803eacf488 EFLAGS: 00010096
+RAX: dffffc0000000000 RBX: ffff8880a4dba828 RCX: 0000000000000000
+RDX: 00000000200002ce RSI: ffff888093223440 RDI: 0000000100001674
+RBP: ffff88803eacf4a0 R08: 0000000000000000 R09: 0000000000000001
+R10: ffffed1015d06bdf R11: 0000000000000001 R12: 0000000100001674
+R13: 0000000000000000 R14: ffff888093223440 R15: ffff88803eacf570
+FS:  00007fa96d643700(0000) GS:ffff8880ae800000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000000000738000 CR3: 00000000a8324000 CR4: 00000000001426f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+  trace_event_get_offsets_lock_acquire include/trace/events/lock.h:13  
+[inline]
+  perf_trace_lock_acquire+0xb9/0x530 include/trace/events/lock.h:13
+  trace_lock_acquire include/trace/events/lock.h:13 [inline]
+  lock_acquire+0x299/0x3f0 kernel/locking/lockdep.c:4301
+  __raw_spin_lock include/linux/spinlock_api_smp.h:142 [inline]
+  _raw_spin_lock+0x2f/0x40 kernel/locking/spinlock.c:151
+  spin_lock include/linux/spinlock.h:338 [inline]
+  rhashtable_walk_enter+0xf9/0x390 lib/rhashtable.c:669
+  __tipc_dump_start+0x1fa/0x3c0 net/tipc/socket.c:3414
+  tipc_dump_start+0x70/0x90 net/tipc/socket.c:3396
+  __netlink_dump_start+0x4f8/0x7d0 net/netlink/af_netlink.c:2351
+  netlink_dump_start include/linux/netlink.h:226 [inline]
+  tipc_sock_diag_handler_dump+0x1d9/0x270 net/tipc/diag.c:91
+  __sock_diag_cmd net/core/sock_diag.c:232 [inline]
+  sock_diag_rcv_msg+0x319/0x410 net/core/sock_diag.c:263
+  netlink_rcv_skb+0x177/0x450 net/netlink/af_netlink.c:2486
+  sock_diag_rcv+0x2b/0x40 net/core/sock_diag.c:274
+  netlink_unicast_kernel net/netlink/af_netlink.c:1311 [inline]
+  netlink_unicast+0x531/0x710 net/netlink/af_netlink.c:1337
+  netlink_sendmsg+0x8a5/0xd60 net/netlink/af_netlink.c:1926
+  sock_sendmsg_nosec net/socket.c:660 [inline]
+  sock_sendmsg+0xd7/0x130 net/socket.c:671
+  ___sys_sendmsg+0x803/0x920 net/socket.c:2292
+  __sys_sendmsg+0x105/0x1d0 net/socket.c:2330
+  __do_sys_sendmsg net/socket.c:2339 [inline]
+  __se_sys_sendmsg net/socket.c:2337 [inline]
+  __x64_sys_sendmsg+0x78/0xb0 net/socket.c:2337
+  do_syscall_64+0xfd/0x680 arch/x86/entry/common.c:301
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x458da9
+Code: ad b8 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7  
+48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff  
+ff 0f 83 7b b8 fb ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007fa96d642c78 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
+RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 0000000000458da9
+RDX: 0000000000000000 RSI: 0000000020000040 RDI: 0000000000000004
+RBP: 000000000073bf00 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 00007fa96d6436d4
+R13: 00000000004c6790 R14: 00000000004db3e8 R15: 00000000ffffffff
+Modules linked in:
+---[ end trace 88f78024ddc40fcd ]---
+RIP: 0010:strlen+0x1f/0xa0 lib/string.c:516
+Code: 00 66 2e 0f 1f 84 00 00 00 00 00 48 b8 00 00 00 00 00 fc ff df 55 48  
+89 fa 48 89 e5 48 c1 ea 03 41 54 49 89 fc 53 48 83 ec 08 <0f> b6 04 02 48  
+89 fa 83 e2 07 38 d0 7f 04 84 c0 75 4d 41 80 3c 24
+RSP: 0018:ffff88803eacf488 EFLAGS: 00010096
+RAX: dffffc0000000000 RBX: ffff8880a4dba828 RCX: 0000000000000000
+RDX: 00000000200002ce RSI: ffff888093223440 RDI: 0000000100001674
+RBP: ffff88803eacf4a0 R08: 0000000000000000 R09: 0000000000000001
+R10: ffffed1015d06bdf R11: 0000000000000001 R12: 0000000100001674
+R13: 0000000000000000 R14: ffff888093223440 R15: ffff88803eacf570
+FS:  00007fa96d643700(0000) GS:ffff8880ae800000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000000000738000 CR3: 00000000a8324000 CR4: 00000000001426f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+
+
 ---
- Documentation/devicetree/bindings/usb/s3c2410-usb.txt | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-diff --git a/Documentation/devicetree/bindings/usb/s3c2410-usb.txt b/Documentation/devicetree/bindings/usb/s3c2410-usb.txt
-index e45b38ce2986..26c85afd0b53 100644
---- a/Documentation/devicetree/bindings/usb/s3c2410-usb.txt
-+++ b/Documentation/devicetree/bindings/usb/s3c2410-usb.txt
-@@ -4,7 +4,7 @@ OHCI
- 
- Required properties:
-  - compatible: should be "samsung,s3c2410-ohci" for USB host controller
-- - reg: address and lenght of the controller memory mapped region
-+ - reg: address and length of the controller memory mapped region
-  - interrupts: interrupt number for the USB OHCI controller
-  - clocks: Should reference the bus and host clocks
-  - clock-names: Should contain two strings
--- 
-2.18.0
-
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
