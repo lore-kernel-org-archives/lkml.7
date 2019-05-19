@@ -2,87 +2,96 @@ Return-Path: <SRS0=AA30=TT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.2 required=3.0 tests=DATE_IN_PAST_12_24,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0BCFC04AB4
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 May 2019 18:20:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5353BC04AB4
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 May 2019 18:23:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B5A3520449
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 May 2019 18:20:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2161320675
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 May 2019 18:23:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="he4EegSm"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bDPww6T9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729678AbfESSUU (ORCPT
+        id S1729714AbfESSXP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 19 May 2019 14:20:20 -0400
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:33341 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726090AbfESSUU (ORCPT
+        Sun, 19 May 2019 14:23:15 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:42372 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726040AbfESSXP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 19 May 2019 14:20:20 -0400
-Received: by mail-oi1-f194.google.com with SMTP id q186so1759316oia.0
-        for <linux-kernel@vger.kernel.org>; Sun, 19 May 2019 11:20:19 -0700 (PDT)
+        Sun, 19 May 2019 14:23:15 -0400
+Received: by mail-pg1-f196.google.com with SMTP id 145so5653503pgg.9;
+        Sun, 19 May 2019 11:23:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=gj9Btx/jtZWCRzYf1e68GHq9hnNL+Ogbx99PZIgoB74=;
-        b=he4EegSmAY2zYl4r6S9HGzKLVkT8LcOlIiHygVYp7zaifYHKTOnLMI3o86dBf9LnbA
-         hNpn27eEyN+qjhPr4EWsh41NZcuWKx0QV/Lm3hbJvmg4w/a4SM3A6yP64JFNN7ArzrWN
-         LmBZN1YUxjOCOk3FCPXXbnD3ysP2yAjgaksZCoteXGH8VH61lmvwvYl8cSGa8tPvrlXr
-         xPan3agZZxXKJmJ5Js9Nz6/gSEQCRSxaaZuflHI0xI3I3tFi+kBW1X+kpQ85pzisWSZk
-         tKdYRCV0JX/Fq5SKy2oGR4hlkUeMEXHgWn14Ltr+Tbi08WwF6ZAeblRmiNNtO42MgwiT
-         kfCw==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=WzJCr5Mqo7KDli7/APapwgRQAN+3Dg6ZabacVkfKewY=;
+        b=bDPww6T9HxL4G0YBVqH8QA8CxtSPz0B8H38YvWR1qMuAfAhv4ImEaMvavxWgzBbY1S
+         Ui44qaJO1e7sKwZqpav6+PoKS0jvRoCz9DpNUi5xytn1plf4WNQLdnOT1TDrSmIXZp8d
+         7oMmJdHlmSP6IYMH1mxvfdm2/zWKht5zkFz13Y793V+GqLq3HlJP84FizNUIccz/qyV5
+         DbW7830t96KocxtQu56drxYLzDznc1tgK4OCQoewDb4X0otT3bIhuWQpt9x5Si07IzQM
+         1/XKlnL5gWsRnOy/gtTyPK0NXhSluLir8CnznHsvMMFnskMVDYOUoVB1EExDZ+qmlIgb
+         jVuw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=gj9Btx/jtZWCRzYf1e68GHq9hnNL+Ogbx99PZIgoB74=;
-        b=qTd0Rf2xh2SHPyHWSVkS//kxGZNk9FDHOXm64JhKCbb1G0Nkj3/qiLa4sHcM3LYxat
-         lne4QRoEE42cnKyCGC/leqmfFDu+roPDe/inHicseOpGfoNVjJuyMJK5IRvpR28bUcM6
-         NEEleILLonIaDQlFD+4j+7QRYan22Ny20U8PZFqzG5zyUopsJKdZ6mru85buqoUILax1
-         CTp6wnbgLcgYgCBc/u9unW6feERKqX1DDMkNvINeH6O7JIdADhda/OktcJELjBh6Czsc
-         wcOkXBvHU2BTvooJMs/3ZUnS/0+j1PQO3N8UTuIZFDDoU6sYPpDqq6a9tXzRubB2fpvb
-         bu/A==
-X-Gm-Message-State: APjAAAW4FgkMKfWmTzfzdNVJjv3zvKby8S3iBFxXykoN7cAf2bVwgRb6
-        NR1FQcxQePJRS3ZKzc4aGOeTlk4gRRkZVfB4Hw2atFsk
-X-Google-Smtp-Source: APXvYqzKuIF7DjE9geOB0iP+nbKCvx7yts/nthzaKm8X4SzrLuLauoovdM83byX6mPO6HfMrjjhanslT2cwm2r59jc8=
-X-Received: by 2002:aca:ab07:: with SMTP id u7mr2335808oie.73.1558241173924;
- Sat, 18 May 2019 21:46:13 -0700 (PDT)
-MIME-Version: 1.0
-References: <155805321833.867447.3864104616303535270.stgit@dwillia2-desk3.amr.corp.intel.com>
- <20190517084739.GB20550@quack2.suse.cz> <CAPcyv4iZZCgcC657ZOysBP9=1ejp3jfFj=VETVBPrgmfg7xUEw@mail.gmail.com>
- <201905170855.8E2E1AC616@keescook> <CAPcyv4g9HpMaifC+Qe2RVbgL_qq9vQvjwr-Jw813xhxcviehYQ@mail.gmail.com>
- <201905171225.29F9564BA2@keescook>
-In-Reply-To: <201905171225.29F9564BA2@keescook>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Sat, 18 May 2019 21:46:03 -0700
-Message-ID: <CAPcyv4iSeUPWFeSZW-dmYz9TnWhqVCx1Y1VjtUv+125_ZSQaYg@mail.gmail.com>
-Subject: Re: [PATCH] libnvdimm/pmem: Bypass CONFIG_HARDENED_USERCOPY overhead
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Jan Kara <jack@suse.cz>, linux-nvdimm <linux-nvdimm@lists.01.org>,
-        stable <stable@vger.kernel.org>, Jeff Moyer <jmoyer@redhat.com>,
-        Ingo Molnar <mingo@redhat.com>, Christoph Hellwig <hch@lst.de>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Matthew Wilcox <willy@infradead.org>,
-        Jeff Smits <jeff.smits@intel.com>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=WzJCr5Mqo7KDli7/APapwgRQAN+3Dg6ZabacVkfKewY=;
+        b=JOA8G4vnC+ZN8Ji9NdHzNieDoZoxfulruErsJ+br3Ivx7Ib/t4UX0eyYqNa0mxcMtc
+         kOgj7Ri08XNyTRsSKIbmUhKJG+EghWyfwwD7PUz6HOq9W9isfoz0wYMZm7MnpeHwjgGj
+         DnnLyGI1OCfEnfmVi+CS+ta+KhHP3s0rqhDqnfB8SX6a76YUfpKX3+C9gfkvWbR/aHQq
+         9y05FtYfA3A4VXrKCTTEf3ajbuESc+4Rkllcnq5/hswIRV0kzs7Yc0KvEThCcnjm0dKB
+         xVp2NsoqfRpmoY67Zni2/Bx1TGf2rExnpo3h6CLxQdWsDkeYQGX0QfZ6lUrIK0V8Uxo6
+         TbIA==
+X-Gm-Message-State: APjAAAXJVyqvTqnVD5fJQYaSyGd3NXSM7GL8Ui44IytjK81UYw0vSyBK
+        hDrGwPQgPrbKmvMWQAhskvqtCaYEHHZbfA==
+X-Google-Smtp-Source: APXvYqzUDhR+agkX0dI26XmwhEq48+gxrghmc6If8Xc5OS7eLq2qfmYj8EnWhg/A70HjcFg2S8X8Iw==
+X-Received: by 2002:aa7:90ca:: with SMTP id k10mr72091047pfk.20.1558235368251;
+        Sat, 18 May 2019 20:09:28 -0700 (PDT)
+Received: from localhost ([43.224.245.181])
+        by smtp.gmail.com with ESMTPSA id n127sm13217809pga.57.2019.05.18.20.09.27
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sat, 18 May 2019 20:09:27 -0700 (PDT)
+From:   Weitao Hou <houweitaoo@gmail.com>
+To:     nbd@nbd.name, lorenzo.bianconi83@gmail.com, ryder.lee@mediatek.com,
+        royluo@google.com, kvalo@codeaurora.org, davem@davemloft.net,
+        matthias.bgg@gmail.com
+Cc:     linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Weitao Hou <houweitaoo@gmail.com>
+Subject: [PATCH] net: fix typos in code comments
+Date:   Sun, 19 May 2019 11:09:23 +0800
+Message-Id: <20190519030923.18343-1-houweitaoo@gmail.com>
+X-Mailer: git-send-email 2.18.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 17, 2019 at 12:25 PM Kees Cook <keescook@chromium.org> wrote:
-> On Fri, May 17, 2019 at 10:28:48AM -0700, Dan Williams wrote:
-> > It seems dax_iomap_actor() is not a path where we'd be worried about
-> > needing hardened user copy checks.
->
-> I would agree: I think the proposed patch makes sense. :)
+fix lenght to length
 
-Sounds like an acked-by to me.
+Signed-off-by: Weitao Hou <houweitaoo@gmail.com>
+---
+ drivers/net/wireless/mediatek/mt76/mt76x02_usb_core.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/net/wireless/mediatek/mt76/mt76x02_usb_core.c b/drivers/net/wireless/mediatek/mt76/mt76x02_usb_core.c
+index 6b89f7eab26c..e0f5e6202a27 100644
+--- a/drivers/net/wireless/mediatek/mt76/mt76x02_usb_core.c
++++ b/drivers/net/wireless/mediatek/mt76/mt76x02_usb_core.c
+@@ -53,7 +53,7 @@ int mt76x02u_skb_dma_info(struct sk_buff *skb, int port, u32 flags)
+ 	pad = round_up(skb->len, 4) + 4 - skb->len;
+ 
+ 	/* First packet of a A-MSDU burst keeps track of the whole burst
+-	 * length, need to update lenght of it and the last packet.
++	 * length, need to update length of it and the last packet.
+ 	 */
+ 	skb_walk_frags(skb, iter) {
+ 		last = iter;
+-- 
+2.18.0
+
