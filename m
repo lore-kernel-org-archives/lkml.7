@@ -2,289 +2,186 @@ Return-Path: <SRS0=lq4r=TU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=AC_FROM_MANY_DOTS,
-	DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80DD0C04AAC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 23:53:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A5F4C04E87
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 23:53:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3EEE32173E
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 23:53:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 23E9E2173C
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 23:53:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="MSjTdtlw"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Dx4+lU9j"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727657AbfETXxV (ORCPT
+        id S1727692AbfETXxb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 19:53:21 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:47216 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726586AbfETXxU (ORCPT
+        Mon, 20 May 2019 19:53:31 -0400
+Received: from mail-vs1-f67.google.com ([209.85.217.67]:43661 "EHLO
+        mail-vs1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727414AbfETXxU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 20 May 2019 19:53:20 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x4KNiicA157571;
-        Mon, 20 May 2019 23:52:34 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=message-id :
- mime-version : date : from : to : cc : subject : content-type :
- content-transfer-encoding; s=corp-2018-07-02;
- bh=nsVYcJhBHE0MCxil9cQ6DL7qZC57z9pYUm8jRrBLYs8=;
- b=MSjTdtlwDKm3vwdmcRXDPCWBtB9QzGfeOTeCf2g8oA/0A2DEk+PbqZ6aNAVnpmcUsjF/
- JHvjvvj5Nf3QiGRwTMCXtNL5yVkweneqZla2XCJuk2wZPTy2/Ndb1TuUPYXCsxs5diYc
- rIzRkhx/N3tVmDOn4SNdCESfJbZnOZd4x+x2j3YstxBcBI8ZU+Uj9QGFtE8PmZ5qZFeh
- mZ3DoEA86e+7cdI8jClXjjomurFqLAIrq7jUm1/lO7rz2a+/HTqCt4QwnY3oN/hivWgG
- acysfxR99GibU3WDcy7OCGQ+/GSj2imYybiaj/ygGdpS3Q9hhpxhSEERqupgDpV8DksH xw== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2130.oracle.com with ESMTP id 2sj9fta39m-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 20 May 2019 23:52:34 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x4KNq3JF129709;
-        Mon, 20 May 2019 23:52:33 GMT
-Received: from pps.reinject (localhost [127.0.0.1])
-        by userp3020.oracle.com with ESMTP id 2sks1j4kux-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 20 May 2019 23:52:33 +0000
-Received: from userp3020.oracle.com (userp3020.oracle.com [127.0.0.1])
-        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x4KNqXHH130450;
-        Mon, 20 May 2019 23:52:33 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by userp3020.oracle.com with ESMTP id 2sks1j4kut-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 20 May 2019 23:52:33 +0000
-Received: from abhmp0009.oracle.com (abhmp0009.oracle.com [141.146.116.15])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x4KNqWYI006444;
-        Mon, 20 May 2019 23:52:32 GMT
-Message-Id: <201905202352.x4KNqWYI006444@userv0122.oracle.com>
-Received: from localhost (/10.159.211.99) by default (Oracle Beehive Gateway
- v4.0) with ESMTP ; Mon, 20 May 2019 23:52:31 +0000
+Received: by mail-vs1-f67.google.com with SMTP id d128so10039184vsc.10
+        for <linux-kernel@vger.kernel.org>; Mon, 20 May 2019 16:53:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=DOow0La3W2Essx5H031uTOWFbAnDcBGJlXVfamcoL3w=;
+        b=Dx4+lU9jqXDtln/17Mrd8EV4Dxp/5zASL+1Y8Niio9Pqb06rC0aI8wedP3ohgziyEW
+         jppEZzDyXiAo/njLuzUnS0cZqB4tlCDf5SInO7A6W3spDccr9FtwpNa39rs9vTjn9Pol
+         gFjx66w14oqATAsCg/4xevDnAIAQo2Q0YzZMa3Njt5yFKOelm+SuxVUsWhk4woonxC/+
+         9D5FC/UAWBXCau72ARfrLZBFx2zGvzGs/3QYXrUb8NFYR9FnDOYRxbwkdocqirkPGsSw
+         AxoIYh3MeUP070fRiIy388VcetefsVsnX0FjFahzGTgGe2zBg5LkCE8dqpCaiB/D65kK
+         79Pw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=DOow0La3W2Essx5H031uTOWFbAnDcBGJlXVfamcoL3w=;
+        b=tPlH4TmljhrNeGmnfpyeEDiCcfTMWVz8tRDJAZ2QEo+ppeEwg0YvJXr8rfyd5top95
+         h5y4rQLkZXHJmyYHjWyd+lC0MG85+nnBIox9ZsfxDix6GNiqGuFCV7uttWqmvSqn17p5
+         7wHwQkf5ejpuZ3lA0W7KByL++0UBabosYbOL1TqObpU+O84UjtT9jEMuhBG2qp5myqzi
+         rA+qXH3UeYg2MI6QcTzfmGIEiCHh75P5yhGYIEv5n3lGt1YLkLdjeS4TQ65ibSPuVqB+
+         PWioQ9aNd6f/UP7xK6RIZ86PjqrPfADYTWxyETRECCCc9kqFjDwgrO9mGmYT+Kdsb8uS
+         J/ag==
+X-Gm-Message-State: APjAAAUfWOm0z94zZj3//SRTcH9jcifjqmvbw1C3AVqrdiCOkKgdq3V2
+        MKKIM8NE2w30afkj9akgsI5XafOKqGu+yEt40sL1Ximf/YIj2Q==
+X-Google-Smtp-Source: APXvYqyR0JsazypV3hCmWgdEzYpNKlJ3PjKF8ENA0Fjbz+eEGES/3XAyQs/kAm4YlbOIpNAtAAzvW9GW3+g1GtceCfY=
+X-Received: by 2002:a67:be17:: with SMTP id x23mr26047761vsq.173.1558396399029;
+ Mon, 20 May 2019 16:53:19 -0700 (PDT)
 MIME-Version: 1.0
-Date:   Mon, 20 May 2019 23:52:32 +0000 (UTC)
-From:   Kris Van Hees <kris.van.hees@oracle.com>
-To:     netdev@vger.kernel.org, bpf@vger.kernel.org,
-        dtrace-devel@oss.oracle.com, linux-kernel@vger.kernel.org
-Cc:     rostedt@goodmis.org, mhiramat@kernel.org, acme@kernel.org,
-        ast@kernel.org, daniel@iogearbox.net
-Subject: [RFC PATCH 08/11] perf: add perf_output_begin_forward_in_page
-Content-Type: text/plain
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9263 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=1 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1905200146
+References: <cover.1557160186.git.andreyknvl@google.com> <20190517144931.GA56186@arrakis.emea.arm.com>
+In-Reply-To: <20190517144931.GA56186@arrakis.emea.arm.com>
+From:   Evgenii Stepanov <eugenis@google.com>
+Date:   Mon, 20 May 2019 16:53:07 -0700
+Message-ID: <CAFKCwrj6JEtp4BzhqO178LFJepmepoMx=G+YdC8sqZ3bcBp3EQ@mail.gmail.com>
+Subject: Re: [PATCH v15 00/17] arm64: untag user pointers passed to the kernel
+To:     Catalin Marinas <catalin.marinas@arm.com>
+Cc:     Andrey Konovalov <andreyknvl@google.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Memory Management List <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        linux-rdma@vger.kernel.org, linux-media@vger.kernel.org,
+        kvm@vger.kernel.org,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Kees Cook <keescook@chromium.org>,
+        Yishai Hadas <yishaih@mellanox.com>,
+        Felix Kuehling <Felix.Kuehling@amd.com>,
+        Alexander Deucher <Alexander.Deucher@amd.com>,
+        Christian Koenig <Christian.Koenig@amd.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Jens Wiklander <jens.wiklander@linaro.org>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Leon Romanovsky <leon@kernel.org>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Kostya Serebryany <kcc@google.com>,
+        Lee Smith <Lee.Smith@arm.com>,
+        Ramana Radhakrishnan <Ramana.Radhakrishnan@arm.com>,
+        Jacob Bramley <Jacob.Bramley@arm.com>,
+        Ruben Ayrapetyan <Ruben.Ayrapetyan@arm.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
+        Dave Martin <Dave.Martin@arm.com>,
+        Kevin Brodsky <kevin.brodsky@arm.com>,
+        Szabolcs Nagy <Szabolcs.Nagy@arm.com>,
+        Elliott Hughes <enh@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Right now, BPF programs can only write to a perf event ring buffer by
-constructing a sample (as an arbitrary chunk of memory of a given size),
-and calling perf_event_output() to have it written to the ring buffer.
+On Fri, May 17, 2019 at 7:49 AM Catalin Marinas <catalin.marinas@arm.com> wrote:
+>
+> Hi Andrey,
+>
+> On Mon, May 06, 2019 at 06:30:46PM +0200, Andrey Konovalov wrote:
+> > One of the alternative approaches to untagging that was considered is to
+> > completely strip the pointer tag as the pointer enters the kernel with
+> > some kind of a syscall wrapper, but that won't work with the countless
+> > number of different ioctl calls. With this approach we would need a custom
+> > wrapper for each ioctl variation, which doesn't seem practical.
+>
+> The more I look at this problem, the less convinced I am that we can
+> solve it in a way that results in a stable ABI covering ioctls(). While
+> for the Android kernel codebase it could be simpler as you don't upgrade
+> the kernel version every 2.5 months, for the mainline kernel this
+> doesn't scale. Any run-time checks are relatively limited in terms of
+> drivers covered. Better static checking would be nice as a long term
+> solution but we didn't get anywhere with the discussion last year.
+>
+> IMO (RFC for now), I see two ways forward:
+>
+> 1. Make this a user space problem and do not allow tagged pointers into
+>    the syscall ABI. A libc wrapper would have to convert structures,
+>    parameters before passing them into the kernel. Note that we can
+>    still support the hardware MTE in the kernel by enabling tagged
+>    memory ranges, saving/restoring tags etc. but not allowing tagged
+>    addresses at the syscall boundary.
+>
+> 2. Similar shim to the above libc wrapper but inside the kernel
+>    (arch/arm64 only; most pointer arguments could be covered with an
+>    __SC_CAST similar to the s390 one). There are two differences from
+>    what we've discussed in the past:
+>
+>    a) this is an opt-in by the user which would have to explicitly call
+>       prctl(). If it returns -ENOTSUPP etc., the user won't be allowed
+>       to pass tagged pointers to the kernel. This would probably be the
+>       responsibility of the C lib to make sure it doesn't tag heap
+>       allocations. If the user did not opt-in, the syscalls are routed
+>       through the normal path (no untagging address shim).
+>
+>    b) ioctl() and other blacklisted syscalls (prctl) will not accept
+>       tagged pointers (to be documented in Vicenzo's ABI patches).
+>
+> It doesn't solve the problems we are trying to address but 2.a saves us
+> from blindly relaxing the ABI without knowing how to easily assess new
+> code being merged (over 500K lines between kernel versions). Existing
+> applications (who don't opt-in) won't inadvertently start using the new
+> ABI which could risk becoming de-facto ABI that we need to support on
+> the long run.
+>
+> Option 1 wouldn't solve the ioctl() problem either and while it makes
+> things simpler for the kernel, I am aware that it's slightly more
+> complicated in user space (but I really don't mind if you prefer option
+> 1 ;)).
+>
+> The tagged pointers (whether hwasan or MTE) should ideally be a
+> transparent feature for the application writer but I don't think we can
+> solve it entirely and make it seamless for the multitude of ioctls().
+> I'd say you only opt in to such feature if you know what you are doing
+> and the user code takes care of specific cases like ioctl(), hence the
+> prctl() proposal even for the hwasan.
+>
+> Comments welcomed.
 
-A new implementation of DTrace (based on BPF) avoids constructing the
-data sample prior to writing it to the ring buffer.  Instead, it expects
-to be able to reserve a block of memory of a given size, write to that
-memory region as it sees fit, and then finalize the written data (making
-it available for reading from userspace).
+Any userspace shim approach is problematic for Android because of the
+apps that use raw system calls. AFAIK, all apps written in Go are in
+that camp - I'm not sure how common they are, but getting them all
+recompiled is probably not realistic.
 
-This can (in part) be accomplished as follows:
-1. reserve buffer space
-    Call perf_output_begin_forward_in_page(&handle, event, size) passing
-    in a handle to be used for this data output session, an event that
-    identifies the output buffer, and the size (in bytes) to set aside.
+The way I see it, a patch that breaks handling of tagged pointers is
+not that different from, say, a patch that adds a wild pointer
+dereference. Both are bugs; the difference is that (a) the former
+breaks a relatively uncommon target and (b) it's arguably an easier
+mistake to make. If MTE adoption goes well, (a) will not be the case
+for long.
 
-2. write data
-    Perform store operations to the buffer space that was set aside.
-    The buffer is a writable buffer in the BPF program context, which
-    means that operations like *(u32 *)&buf[offset] = val can be used.
+This is a bit of a chicken-and-egg problem. In a world where memory
+allocators on one or several popular platforms generate pointers with
+non-zero tags, any such breakage will be caught in testing.
+Unfortunately to reach that state we need the kernel to start
+accepting tagged pointers first, and then hold on for a couple of
+years until userspace catches up.
 
-3. finalize the output session
-    Call perf_output_end(&handle) to finalize the output and make the
-    new data available for reading from userspace by updating the head
-    of the ring buffer.
-
-The one caveat is that ring buffers may be allocated from non-contiguous
-pages in kernel memory.  This means that a reserved block of memory could
-be spread across two non-consecutive pages, and accessing the buffer
-space using buf[offset] is no longer safe.  Forcing the ring buffer to be
-allocated using vmalloc would avoid this problem, but that would impose
-a limitation on all perf event output buffers which is not an acceptable
-cost.
-
-The solution implemented here adds a flag to the __perf_output_begin()
-function that performs the reserving of buffer space.  The new flag
-(stay_in_page) indicates whether the requested chunk of memory must be
-on a single page.  In this case, the requested size cannot exceed the
-page size.  If the request cannot be satisfied within the current page,
-the unused portion of the current page is filled with 0s.
-
-A new function perf_output_begin_forward_in_page() is to be used to
-commence output that cannot cross page boundaries.
-
-Signed-off-by: Kris Van Hees <kris.van.hees@oracle.com>
-Reviewed-by: Nick Alcock <nick.alcock@oracle.com>
----
- include/linux/perf_event.h  |  3 ++
- kernel/events/ring_buffer.c | 65 ++++++++++++++++++++++++++++++++-----
- 2 files changed, 59 insertions(+), 9 deletions(-)
-
-diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
-index 15a82ff0aefe..2b35d1ce61f8 100644
---- a/include/linux/perf_event.h
-+++ b/include/linux/perf_event.h
-@@ -1291,6 +1291,9 @@ extern int perf_output_begin(struct perf_output_handle *handle,
- extern int perf_output_begin_forward(struct perf_output_handle *handle,
- 				    struct perf_event *event,
- 				    unsigned int size);
-+extern int perf_output_begin_forward_in_page(struct perf_output_handle *handle,
-+					     struct perf_event *event,
-+					     unsigned int size);
- extern int perf_output_begin_backward(struct perf_output_handle *handle,
- 				      struct perf_event *event,
- 				      unsigned int size);
-diff --git a/kernel/events/ring_buffer.c b/kernel/events/ring_buffer.c
-index 674b35383491..01ba540e3ee0 100644
---- a/kernel/events/ring_buffer.c
-+++ b/kernel/events/ring_buffer.c
-@@ -116,9 +116,11 @@ ring_buffer_has_space(unsigned long head, unsigned long tail,
- static __always_inline int
- __perf_output_begin(struct perf_output_handle *handle,
- 		    struct perf_event *event, unsigned int size,
--		    bool backward)
-+		    bool backward, bool stay_in_page)
- {
- 	struct ring_buffer *rb;
-+	unsigned int adj_size;
-+	unsigned int gap_size;
- 	unsigned long tail, offset, head;
- 	int have_lost, page_shift;
- 	struct {
-@@ -144,6 +146,13 @@ __perf_output_begin(struct perf_output_handle *handle,
- 		goto out;
- 	}
- 
-+	page_shift = PAGE_SHIFT + page_order(rb);
-+
-+	if (unlikely(stay_in_page)) {
-+		if (size > (1UL << page_shift))
-+			goto out;
-+	}
-+
- 	handle->rb    = rb;
- 	handle->event = event;
- 
-@@ -156,13 +165,24 @@ __perf_output_begin(struct perf_output_handle *handle,
- 
- 	perf_output_get_handle(handle);
- 
-+	gap_size = 0;
-+	adj_size = size;
- 	do {
- 		tail = READ_ONCE(rb->user_page->data_tail);
- 		offset = head = local_read(&rb->head);
-+
-+		if (unlikely(stay_in_page)) {
-+			gap_size = (1UL << page_shift) -
-+				   (offset & ((1UL << page_shift) - 1));
-+			if (gap_size < size)
-+				adj_size += gap_size;
-+		}
-+
- 		if (!rb->overwrite) {
- 			if (unlikely(!ring_buffer_has_space(head, tail,
- 							    perf_data_size(rb),
--							    size, backward)))
-+							    adj_size,
-+							    backward)))
- 				goto fail;
- 		}
- 
-@@ -179,9 +199,9 @@ __perf_output_begin(struct perf_output_handle *handle,
- 		 */
- 
- 		if (!backward)
--			head += size;
-+			head += adj_size;
- 		else
--			head -= size;
-+			head -= adj_size;
- 	} while (local_cmpxchg(&rb->head, offset, head) != offset);
- 
- 	if (backward) {
-@@ -189,6 +209,22 @@ __perf_output_begin(struct perf_output_handle *handle,
- 		head = (u64)(-head);
- 	}
- 
-+	/*
-+	 * If we had to skip over the remainder of the current page because it
-+	 * is not large enough to hold the sample and the sample is not allowed
-+	 * to cross a page boundary, we need to clear the remainder of the page
-+	 * (fill it with 0s so it is clear we skipped it), and adjust the start
-+	 * of the sample (offset).
-+	 */
-+	if (stay_in_page && gap_size > 0) {
-+		int page = (offset >> page_shift) & (rb->nr_pages - 1);
-+
-+		offset &= (1UL << page_shift) - 1;
-+		memset(rb->data_pages[page] + offset, 0, gap_size);
-+
-+		offset = head - size;
-+	}
-+
- 	/*
- 	 * We rely on the implied barrier() by local_cmpxchg() to ensure
- 	 * none of the data stores below can be lifted up by the compiler.
-@@ -197,8 +233,6 @@ __perf_output_begin(struct perf_output_handle *handle,
- 	if (unlikely(head - local_read(&rb->wakeup) > rb->watermark))
- 		local_add(rb->watermark, &rb->wakeup);
- 
--	page_shift = PAGE_SHIFT + page_order(rb);
--
- 	handle->page = (offset >> page_shift) & (rb->nr_pages - 1);
- 	offset &= (1UL << page_shift) - 1;
- 	handle->addr = rb->data_pages[handle->page] + offset;
-@@ -233,13 +267,26 @@ __perf_output_begin(struct perf_output_handle *handle,
- int perf_output_begin_forward(struct perf_output_handle *handle,
- 			     struct perf_event *event, unsigned int size)
- {
--	return __perf_output_begin(handle, event, size, false);
-+	return __perf_output_begin(handle, event, size, false, false);
-+}
-+
-+/*
-+ * Prepare the ring buffer for 'size' bytes of output for the given event.
-+ * This particular version is used when the event data is not allowed to cross
-+ * a page boundary.  This means size cannot be more than PAGE_SIZE.  It also
-+ * ensures that any unused portion of a page is filled with zeros.
-+ */
-+int perf_output_begin_forward_in_page(struct perf_output_handle *handle,
-+				      struct perf_event *event,
-+				      unsigned int size)
-+{
-+	return __perf_output_begin(handle, event, size, false, true);
- }
- 
- int perf_output_begin_backward(struct perf_output_handle *handle,
- 			       struct perf_event *event, unsigned int size)
- {
--	return __perf_output_begin(handle, event, size, true);
-+	return __perf_output_begin(handle, event, size, true, false);
- }
- 
- int perf_output_begin(struct perf_output_handle *handle,
-@@ -247,7 +294,7 @@ int perf_output_begin(struct perf_output_handle *handle,
- {
- 
- 	return __perf_output_begin(handle, event, size,
--				   unlikely(is_write_backward(event)));
-+				   unlikely(is_write_backward(event)), false);
- }
- 
- unsigned int perf_output_copy(struct perf_output_handle *handle,
--- 
-2.20.1
-
+Perhaps we can start by whitelisting ioctls by driver?
