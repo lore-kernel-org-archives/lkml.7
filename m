@@ -2,196 +2,281 @@ Return-Path: <SRS0=lq4r=TU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
 	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67CEAC04AAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 04:49:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6874EC04AAF
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 04:49:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 24203204FD
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 04:49:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 32E42204FD
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 04:49:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ozlabs-ru.20150623.gappssmtp.com header.i=@ozlabs-ru.20150623.gappssmtp.com header.b="KEAbAEMK"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="C+HZQjhB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730174AbfETEtB (ORCPT
+        id S1730207AbfETEtb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 00:49:01 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:36261 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725372AbfETEtA (ORCPT
+        Mon, 20 May 2019 00:49:31 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:39814 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730175AbfETEtb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 00:49:00 -0400
-Received: by mail-pf1-f196.google.com with SMTP id v80so6575293pfa.3
-        for <linux-kernel@vger.kernel.org>; Sun, 19 May 2019 21:49:00 -0700 (PDT)
+        Mon, 20 May 2019 00:49:31 -0400
+Received: by mail-pl1-f193.google.com with SMTP id g9so6097301plm.6;
+        Sun, 19 May 2019 21:49:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ozlabs-ru.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=v2QhUfzoZBiO/EQI4ooSugv7a5sMTVN0Eqfnv9FkHek=;
-        b=KEAbAEMK9UM8Amtb/tJowTo3q6nulx3hiviulno0Y4HTHa4fTKaebl7pSy0HKOyvLl
-         kPpxnNycVpkerHvWosOlot9K9+J8bKMWWcxkgEddSJdZdj818XZJuVwtTWJEbzwa+Wop
-         XFwfwZvXRVTBJNJlgZYNKViONwy/NhX5wd2fX2d1Led0ijyxzkD5BxVhoUoNypIoY4p7
-         8rlpQLxQDf2hsErsFk6tvbZrrBN1oQmxCl/+dcEOSuGOl3b/v5+sVvZR2vhCU+XLZsyd
-         BFuuOlTorvREjP8plyuPPp8clDFDKMrmGAJ0TNoWj7RF76QpxfhOv7xJmArE3eLMvfAu
-         ntKQ==
+        d=gmail.com; s=20161025;
+        h=date:from:subject:to:cc:references:in-reply-to:mime-version
+         :user-agent:message-id:content-transfer-encoding;
+        bh=FfAUYEg+Y4R8++7nKVf7QwMzqkS7T9NF0tY9FUe281I=;
+        b=C+HZQjhBRLztdOxCCdisjxLPqf+REKkTl0AbwQ6zVrN8btlVkNpecUAMKG+cL21sBk
+         NXM9doymE0F92bvpdIfZ/mmJsjymInuJvxaxLMrGKJoO/YqOIQKCCc2ghjJYJ4dQ8CWy
+         ixb0tugwN+CsdhLVCfRrIdWUSvvi4DHZfynivUGVAQ81yI2zqH3c8huyX7psgCPTId5d
+         OFOjoBj7w25iwijNTzkrrunwvOOrItgYN1jze4U3LVnNABUxojQVHqW5QJX0ZzJM68Tr
+         jYCWR5qYfRwsGKRTNjY59rBorQjYExjsGtYJT9eBUUQIVNeE1EjS0LhENoHCpvzDApnS
+         bE6w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=v2QhUfzoZBiO/EQI4ooSugv7a5sMTVN0Eqfnv9FkHek=;
-        b=KTy0OjXyCCHfsWpHZAeuCiIA8X+sZmzKHkNlCEreFuGoWZKVay/+04frFAQNvQtVsf
-         02FeTNU+M2MVLZTULxBDBBWAveRK/vNa9wtZ8JV926jg1ZB1m89/W5WSB5kSVZYZCjpB
-         oNe1zWuLbxBksZeGgDLUtdKnUsutkWLPhXFphDrl0cWWet3/AOrf2lTVRQVr7nI1LiMh
-         1dnYxiDswf8dXhCUmk/rGC8AafpJTcSpAJcRUheD6ObP2UIYUpa8sRB778p475iwMmGJ
-         iIFtPbN4CLMgi3bxII7mXrHVeIQ6+E+uxz25GL5XQD+LhSWdgrhhogdKQ6HofWa1YtY5
-         vnVw==
-X-Gm-Message-State: APjAAAXWvT97pWW9sCzi2e1uPEygQ0bnR/Sfyjs060F4a+w4TvsHTJjp
-        7ECW485ZnxaGuVHikNGuqlm+kg==
-X-Google-Smtp-Source: APXvYqxisMdRXcpxN0fK7oTDRjPPy4gz+pTVX/wDHZ2vlS6r6sTd8F3dB90StU3IcXX1iCdh1H9spw==
-X-Received: by 2002:a62:4c5:: with SMTP id 188mr17806974pfe.19.1558327740012;
-        Sun, 19 May 2019 21:49:00 -0700 (PDT)
-Received: from [10.61.2.175] ([122.99.82.10])
-        by smtp.gmail.com with ESMTPSA id g19sm38444725pgj.75.2019.05.19.21.48.57
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 19 May 2019 21:48:59 -0700 (PDT)
-Subject: Re: [PATCH] vfio: vfio_pci_nvlink2: use a vma helper function
-To:     Alex Williamson <alex.williamson@redhat.com>,
-        "richard.peng@oppo.com" <richard.peng@oppo.com>
-Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>
-References: <2019051620382477288130@oppo.com>
- <20190516084833.757140bc@x1.home>
-From:   Alexey Kardashevskiy <aik@ozlabs.ru>
-Openpgp: preference=signencrypt
-Autocrypt: addr=aik@ozlabs.ru; keydata=
- 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
-Message-ID: <b0ccc2f8-4d6a-bfa4-509d-e5d919efb3cd@ozlabs.ru>
-Date:   Mon, 20 May 2019 14:48:56 +1000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        h=x-gm-message-state:date:from:subject:to:cc:references:in-reply-to
+         :mime-version:user-agent:message-id:content-transfer-encoding;
+        bh=FfAUYEg+Y4R8++7nKVf7QwMzqkS7T9NF0tY9FUe281I=;
+        b=GqAJdRaEYUNJmooZZxy3m/CFQhN5ZeoBj/MLL57jfuUvRqjtlFyirM7bq+ZAsNxbMP
+         J/m98NJkL8ZUoSEVrje7iraRXDTtri0zTHICEinvSE2PcuoSBSo76hpnEBDzp3da78J6
+         ZCPZTuFk0s1b9lGm5CXjMNhj4Ij3XNXEUWxmIfXVoQpwpWlU9R4jhDswh/CbsEBDn30r
+         zFrTuNSRQ67da7IAx/gI5SInGIQA9w1Baygr35oki+ymvN6xJzsaZa3Kjn/afs5feBbv
+         DWPBdGin57NSOKrNAvKuoZstQHa+bbi2kPXRMg5MCrmIrwAKifNBaMWjsH+Bzfm3pDYQ
+         ZG/g==
+X-Gm-Message-State: APjAAAW3ZFHQNX2UC+czYlggRTAUJxVXdmPSjV4cjSSleu8SK0DxK+IG
+        h96eoMhlEues6zX5KtK70+c=
+X-Google-Smtp-Source: APXvYqwj6WrJnjhBNzQvnmV3/Ob1XB5+fNO2deVNG2T8zU4h8bWv0AD0J9T1O1jf2FppFxh3Joqwng==
+X-Received: by 2002:a17:902:aa0a:: with SMTP id be10mr10078782plb.293.1558327770404;
+        Sun, 19 May 2019 21:49:30 -0700 (PDT)
+Received: from localhost (193-116-79-244.tpgi.com.au. [193.116.79.244])
+        by smtp.gmail.com with ESMTPSA id g22sm18822827pfo.28.2019.05.19.21.49.29
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Sun, 19 May 2019 21:49:29 -0700 (PDT)
+Date:   Mon, 20 May 2019 14:48:35 +1000
+From:   Nicholas Piggin <npiggin@gmail.com>
+Subject: Re: PROBLEM: Power9: kernel oops on memory hotunplug from ppc64le
+ guest
+To:     bharata@linux.ibm.com, Michael Ellerman <mpe@ellerman.id.au>
+Cc:     aneesh.kumar@linux.ibm.com, bharata@linux.vnet.ibm.com,
+        linux-kernel@vger.kernel.org, linux-next@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org,
+        srikanth <sraithal@linux.vnet.ibm.com>
+References: <16a7a635-c592-27e2-75b4-d02071833278@linux.vnet.ibm.com>
+        <20190518141434.GA22939@in.ibm.com>
+        <878sv1993k.fsf@concordia.ellerman.id.au>
+        <20190520042533.GB22939@in.ibm.com>
+In-Reply-To: <20190520042533.GB22939@in.ibm.com>
 MIME-Version: 1.0
-In-Reply-To: <20190516084833.757140bc@x1.home>
+User-Agent: astroid/0.14.0 (https://github.com/astroidmail/astroid)
+Message-Id: <1558327521.633yjtl8ki.astroid@bobo.none>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Bharata B Rao's on May 20, 2019 2:25 pm:
+> On Mon, May 20, 2019 at 12:02:23PM +1000, Michael Ellerman wrote:
+>> Bharata B Rao <bharata@linux.ibm.com> writes:
+>> > On Thu, May 16, 2019 at 07:44:20PM +0530, srikanth wrote:
+>> >> Hello,
+>> >>=20
+>> >> On power9 host, performing memory hotunplug from ppc64le guest result=
+s in
+>> >> kernel oops.
+>> >>=20
+>> >> Kernel used : https://github.com/torvalds/linux/tree/v5.1 built using
+>> >> ppc64le_defconfig for host and ppc64le_guest_defconfig for guest.
+>> >>=20
+>> >> Recreation steps:
+>> >>=20
+>> >> 1. Boot a guest with below mem configuration:
+>> >> =C2=A0 <maxMemory slots=3D'32' unit=3D'KiB'>33554432</maxMemory>
+>> >> =C2=A0 <memory unit=3D'KiB'>8388608</memory>
+>> >> =C2=A0 <currentMemory unit=3D'KiB'>4194304</currentMemory>
+>> >> =C2=A0 <cpu>
+>> >> =C2=A0=C2=A0=C2=A0 <numa>
+>> >> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 <cell id=3D'0' cpus=3D'0-31' memory=3D=
+'8388608' unit=3D'KiB'/>
+>> >> =C2=A0=C2=A0=C2=A0 </numa>
+>> >> =C2=A0 </cpu>
+>> >>=20
+>> >> 2. From host hotplug 8G memory -> verify memory hotadded succesfully =
+-> now
+>> >> reboot guest -> once guest comes back try to unplug 8G memory
+>> >>=20
+>> >> mem.xml used:
+>> >> <memory model=3D'dimm'>
+>> >> <target>
+>> >> <size unit=3D'GiB'>8</size>
+>> >> <node>0</node>
+>> >> </target>
+>> >> </memory>
+>> >>=20
+>> >> Memory attach and detach commands used:
+>> >> =C2=A0=C2=A0=C2=A0 virsh attach-device vm1 ./mem.xml --live
+>> >> =C2=A0=C2=A0=C2=A0 virsh detach-device vm1 ./mem.xml --live
+>> >>=20
+>> >> Trace seen inside guest after unplug, guest just hangs there forever:
+>> >>=20
+>> >> [=C2=A0=C2=A0 21.962986] kernel BUG at arch/powerpc/mm/pgtable-frag.c=
+:113!
+>> >> [=C2=A0=C2=A0 21.963064] Oops: Exception in kernel mode, sig: 5 [#1]
+>> >> [=C2=A0=C2=A0 21.963090] LE PAGE_SIZE=3D64K MMU=3DRadix MMU=3DHash SM=
+P NR_CPUS=3D2048 NUMA
+>> >> pSeries
+>> >> [=C2=A0=C2=A0 21.963131] Modules linked in: xt_tcpudp iptable_filter =
+squashfs fuse
+>> >> vmx_crypto ib_iser rdma_cm iw_cm ib_cm ib_core libiscsi scsi_transpor=
+t_iscsi
+>> >> ip_tables x_tables autofs4 btrfs zstd_decompress zstd_compress lzo_co=
+mpress
+>> >> raid10 raid456 async_raid6_recov async_memcpy async_pq async_xor asyn=
+c_tx
+>> >> xor raid6_pq multipath crc32c_vpmsum
+>> >> [=C2=A0=C2=A0 21.963281] CPU: 11 PID: 316 Comm: kworker/u64:5 Kdump: =
+loaded Not
+>> >> tainted 5.1.0-dirty #2
+>> >> [=C2=A0=C2=A0 21.963323] Workqueue: pseries hotplug workque pseries_h=
+p_work_fn
+>> >> [=C2=A0=C2=A0 21.963355] NIP:=C2=A0 c000000000079e18 LR: c000000000c7=
+9308 CTR:
+>> >> 0000000000008000
+>> >> [=C2=A0=C2=A0 21.963392] REGS: c0000003f88034f0 TRAP: 0700=C2=A0=C2=
+=A0 Not tainted (5.1.0-dirty)
+>> >> [=C2=A0=C2=A0 21.963422] MSR:=C2=A0 800000000282b033 <SF,VEC,VSX,EE,F=
+P,ME,IR,DR,RI,LE>=C2=A0 CR:
+>> >> 28002884=C2=A0 XER: 20040000
+>> >> [=C2=A0=C2=A0 21.963470] CFAR: c000000000c79304 IRQMASK: 0
+>> >> [=C2=A0=C2=A0 21.963470] GPR00: c000000000c79308 c0000003f8803780 c00=
+0000001521000
+>> >> 0000000000fff8c0
+>> >> [=C2=A0=C2=A0 21.963470] GPR04: 0000000000000001 00000000ffe30005 000=
+0000000000005
+>> >> 0000000000000020
+>> >> [=C2=A0=C2=A0 21.963470] GPR08: 0000000000000000 0000000000000001 c00=
+a000000fff8e0
+>> >> c0000000016d21a0
+>> >> [=C2=A0=C2=A0 21.963470] GPR12: c0000000016e7b90 c000000007ff2700 c00=
+a000000a00000
+>> >> c0000003ffe30100
+>> >> [=C2=A0=C2=A0 21.963470] GPR16: c0000003ffe30000 c0000000014aa4de c00=
+a0000009f0000
+>> >> c0000000016d21b0
+>> >> [=C2=A0=C2=A0 21.963470] GPR20: c0000000014de588 0000000000000001 c00=
+00000016d21b8
+>> >> c00a000000a00000
+>> >> [=C2=A0=C2=A0 21.963470] GPR24: 0000000000000000 ffffffffffffffff c00=
+a000000a00000
+>> >> c0000003ffe96000
+>> >> [=C2=A0=C2=A0 21.963470] GPR28: c00a000000a00000 c00a000000a00000 c00=
+00003fffec000
+>> >> c00a000000fff8c0
+>> >> [=C2=A0=C2=A0 21.963802] NIP [c000000000079e18] pte_fragment_free+0x4=
+8/0xd0
+>> >> [=C2=A0=C2=A0 21.963838] LR [c000000000c79308] remove_pagetable+0x49c=
+/0x5b4
+>> >> [=C2=A0=C2=A0 21.963873] Call Trace:
+>> >> [=C2=A0=C2=A0 21.963890] [c0000003f8803780] [c0000003ffe997f0] 0xc000=
+0003ffe997f0
+>> >> (unreliable)
+>> >> [=C2=A0=C2=A0 21.963933] [c0000003f88037b0] [0000000000000000] (null)
+>> >> [=C2=A0=C2=A0 21.963969] [c0000003f88038c0] [c00000000006f038]
+>> >> vmemmap_free+0x218/0x2e0
+>> >> [=C2=A0=C2=A0 21.964006] [c0000003f8803940] [c00000000036f100]
+>> >> sparse_remove_one_section+0xd0/0x138
+>> >> [=C2=A0=C2=A0 21.964050] [c0000003f8803980] [c000000000383a50]
+>> >> __remove_pages+0x410/0x560
+>> >> [=C2=A0=C2=A0 21.964093] [c0000003f8803a90] [c000000000c784d8]
+>> >> arch_remove_memory+0x68/0xdc
+>> >> [=C2=A0=C2=A0 21.964136] [c0000003f8803ad0] [c000000000385d74]
+>> >> __remove_memory+0xc4/0x110
+>> >> [=C2=A0=C2=A0 21.964180] [c0000003f8803b10] [c0000000000d44e4]
+>> >> dlpar_remove_lmb+0x94/0x140
+>> >> [=C2=A0=C2=A0 21.964223] [c0000003f8803b50] [c0000000000d52b4]
+>> >> dlpar_memory+0x464/0xd00
+>> >> [=C2=A0=C2=A0 21.964259] [c0000003f8803be0] [c0000000000cd5c0]
+>> >> handle_dlpar_errorlog+0xc0/0x190
+>> >> [=C2=A0=C2=A0 21.964303] [c0000003f8803c50] [c0000000000cd6bc]
+>> >> pseries_hp_work_fn+0x2c/0x60
+>> >> [=C2=A0=C2=A0 21.964346] [c0000003f8803c80] [c00000000013a4a0]
+>> >> process_one_work+0x2b0/0x5a0
+>> >> [=C2=A0=C2=A0 21.964388] [c0000003f8803d10] [c00000000013a818]
+>> >> worker_thread+0x88/0x610
+>> >> [=C2=A0=C2=A0 21.964434] [c0000003f8803db0] [c000000000143884] kthrea=
+d+0x1a4/0x1b0
+>> >> [=C2=A0=C2=A0 21.964468] [c0000003f8803e20] [c00000000000bdc4]
+>> >> ret_from_kernel_thread+0x5c/0x78
+>> >> [=C2=A0=C2=A0 21.964506] Instruction dump:
+>> >> [=C2=A0=C2=A0 21.964527] fbe1fff8 f821ffd1 78638502 78633664 ebe90000=
+ 7fff1a14
+>> >> 395f0020 813f0020
+>> >> [=C2=A0=C2=A0 21.964569] 7d2907b4 7d2900d0 79290fe0 69290001 <0b09000=
+0> 7c0004ac
+>> >> 7d205028 3129ffff
+>> >> [=C2=A0=C2=A0 21.964613] ---[ end trace aaa571aa1636fee6 ]---
+>> >> [=C2=A0=C2=A0 21.966349]
+>> >> [=C2=A0=C2=A0 21.966383] Sending IPI to other CPUs
+>> >> [=C2=A0=C2=A0 21.978335] IPI complete
+>> >> [=C2=A0=C2=A0 21.981354] kexec: Starting switchover sequence.
+>> >> I'm in purgatory
+>> >
+>> > git bisect points to
+>> >
+>> > commit 4231aba000f5a4583dd9f67057aadb68c3eca99d
+>> > Author: Nicholas Piggin <npiggin@gmail.com>
+>> > Date:   Fri Jul 27 21:48:17 2018 +1000
+>> >
+>> >     powerpc/64s: Fix page table fragment refcount race vs speculative =
+references
+>> >
+>> >     The page table fragment allocator uses the main page refcount raci=
+ly
+>> >     with respect to speculative references. A customer observed a BUG =
+due
+>> >     to page table page refcount underflow in the fragment allocator. T=
+his
+>> >     can be caused by the fragment allocator set_page_count stomping on=
+ a
+>> >     speculative reference, and then the speculative failure handler
+>> >     decrements the new reference, and the underflow eventually pops wh=
+en
+>> >     the page tables are freed.
+>> >
+>> >     Fix this by using a dedicated field in the struct page for the pag=
+e
+>> >     table fragment allocator.
+>> >
+>> >     Fixes: 5c1f6ee9a31c ("powerpc: Reduce PTE table memory wastage")
+>> >     Cc: stable@vger.kernel.org # v3.10+
+>>=20
+>> That's the commit that added the BUG_ON(), so prior to that you won't
+>> see the crash.
+>=20
+> Right, but the commit says it fixes page table page refcount underflow by
+> introducing a new field &page->pt_frag_refcount. Now we are hitting the u=
+nderflow
+> for this pt_frag_refcount.
 
+The fixed underflow is caused by a bug (race on page count) that got=20
+fixed by that patch. You are hitting a different underflow here. It's
+not certain my patch caused it, I'm just trying to reproduce now.
 
-On 17/05/2019 00:48, Alex Williamson wrote:
-> [Cc Alexey + kvm]
-> 
-> On Thu, 16 May 2019 20:38:26 +0800
-> "richard.peng@oppo.com" <richard.peng@oppo.com> wrote:
-> 
->> Use a vma helper function to simply code.
->>
->> Signed-off-by: Peng Hao <richard.peng@oppo.com>
->> ---
->>  drivers/vfio/pci/vfio_pci_nvlink2.c | 3 +--
->>  1 file changed, 1 insertion(+), 2 deletions(-)
->>
->> diff --git a/drivers/vfio/pci/vfio_pci_nvlink2.c b/drivers/vfio/pci/vfio_pci_nvlink2.c
->> index 32f695ffe128..dc42aa0e47f6 100644
->> --- a/drivers/vfio/pci/vfio_pci_nvlink2.c
->> +++ b/drivers/vfio/pci/vfio_pci_nvlink2.c
->> @@ -161,8 +161,7 @@ static int vfio_pci_nvgpu_mmap(struct vfio_pci_device *vdev,
->>  
->>  	atomic_inc(&data->mm->mm_count);
->>  	ret = (int) mm_iommu_newdev(data->mm, data->useraddr,
->> -			(vma->vm_end - vma->vm_start) >> PAGE_SHIFT,
->> -			data->gpu_hpa, &data->mem);
->> +			vma_pages(vma), data->gpu_hpa, &data->mem);
+>=20
+> BTW, if I go below this commit, I don't hit the pagecount
+>=20
+> VM_BUG_ON_PAGE(page_ref_count(page) =3D=3D 0, page);
+>=20
+> which is in pte_fragment_free() path.
 
+Do you have CONFIG_DEBUG_VM=3Dy?
 
-I did not realize we have been having this mighty helper since 2005 :)
+Thanks,
+Nick
 
-Reviewed-by: Alexey Kardashevskiy <aik@ozlabs.ru>
-
-
-
->>  
->>  	trace_vfio_pci_nvgpu_mmap(vdev->pdev, data->gpu_hpa, data->useraddr,
->>  			vma->vm_end - vma->vm_start, ret);
->> -- 
->> 2.20.1
-
--- 
-Alexey
+=
