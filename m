@@ -2,84 +2,98 @@ Return-Path: <SRS0=lq4r=TU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 036F0C072A4
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 06:58:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C333C04AAF
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 06:59:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C390A20815
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 06:58:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="sJWiX3EH"
+	by mail.kernel.org (Postfix) with ESMTP id D978D213F2
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 06:59:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730868AbfETG6k (ORCPT
+        id S1730869AbfETG7N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 02:58:40 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:53948 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726126AbfETG6j (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 02:58:39 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        MIME-Version:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:
-        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-        Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=TjqTyf/kATJ8gNJlCjxVaaIrHquChWso/9puDre/evU=; b=sJWiX3EH4zQasg+oANpWkJZQh
-        F3a7GF2yhetYBwfh0nN0Cv14ArKWEx0nPUZ62CthyXrs7R6/yALOmIkcRreLuoYC1a7R3QV4kC0J+
-        f8EmoQDfPS//0/QSXQUyGCso97V8koScq81FDW3qrVY4aHvDBxhDXaRRZfR6QNjzBNu2A05SxnhfE
-        6lPXlZ94UfUHb72QPZRFwl/ekRivS8r5jEeUi3krkyWe2JngcERDX/1vlxPNWrXDkdl78h10KMMTM
-        Jh0GCyd727qx84zQGUr0EpkRVjOFKrx9Kso+nVxVfoifpknxpiwJiYIHyUsIr4tSheVIilsPH9HT/
-        lfM97/MQw==;
-Received: from 089144206147.atnat0015.highway.bob.at ([89.144.206.147] helo=localhost)
-        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hScFq-0007WP-MK; Mon, 20 May 2019 06:58:39 +0000
-From:   Christoph Hellwig <hch@lst.de>
-To:     will.deacon@arm.com
-Cc:     jean-philippe.brucker@arm.com, lorenzo.pieralisi@arm.com,
-        linux-acpi@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] ACPI/IORT: Fix build without CONFIG_IOMMU_API
-Date:   Mon, 20 May 2019 08:57:46 +0200
-Message-Id: <20190520065746.17068-1-hch@lst.de>
-X-Mailer: git-send-email 2.20.1
+        Mon, 20 May 2019 02:59:13 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:37894 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726126AbfETG7M (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 02:59:12 -0400
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 48212356CA;
+        Mon, 20 May 2019 06:59:12 +0000 (UTC)
+Received: from krava (ovpn-204-182.brq.redhat.com [10.40.204.182])
+        by smtp.corp.redhat.com (Postfix) with SMTP id EFBBF2B5A1;
+        Mon, 20 May 2019 06:59:07 +0000 (UTC)
+Date:   Mon, 20 May 2019 08:59:06 +0200
+From:   Jiri Olsa <jolsa@redhat.com>
+To:     Cong Wang <xiyou.wangcong@gmail.com>
+Cc:     linux-kernel@vger.kernel.org, Andi Kleen <ak@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>, Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>
+Subject: Re: [Patch] perf stat: always separate stalled cycles per insn
+Message-ID: <20190520065906.GC8068@krava>
+References: <20190517221039.8975-1-xiyou.wangcong@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190517221039.8975-1-xiyou.wangcong@gmail.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.30]); Mon, 20 May 2019 06:59:12 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-IOMMU_FWSPEC_PCI_RC_ATS is only defined if CONFIG_IOMMU_API is
-enabled.
+On Fri, May 17, 2019 at 03:10:39PM -0700, Cong Wang wrote:
+> The "stalled cycles per insn" is appended to "instructions" when
+> the CPU has this hardware counter directly. We should always make it
+> a separate line, which also aligns to the output when we hit the
+> "if (total && avg)" branch.
+> 
+> Before:
+> $ sudo perf stat --all-cpus --field-separator , --log-fd 1 -einstructions,cycles -- sleep 1
+> 4565048704,,instructions,64114578096,100.00,1.34,insn per cycle,,
+> 3396325133,,cycles,64146628546,100.00,,
+> 
+> After:
+> $ sudo ./tools/perf/perf stat --all-cpus --field-separator , --log-fd 1 -einstructions,cycles -- sleep 1
+> 6721924,,instructions,24026790339,100.00,0.22,insn per cycle
+> ,,,,,0.00,stalled cycles per insn
+> 30939953,,cycles,24025512526,100.00,,
+> 
+> Cc: Andi Kleen <ak@linux.intel.com>
+> Cc: Jiri Olsa <jolsa@kernel.org>
+> Cc: Ingo Molnar <mingo@redhat.com>
+> Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
+> Signed-off-by: Cong Wang <xiyou.wangcong@gmail.com>
 
-Fixes: 5702ee24182f ("ACPI/IORT: Check ATS capability in root complex nodes")
-Signed-off-by: Christoph Hellwig <hch@lst.de>
----
- drivers/acpi/arm64/iort.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+Acked-by: Jiri Olsa <jolsa@kernel.org>
 
-diff --git a/drivers/acpi/arm64/iort.c b/drivers/acpi/arm64/iort.c
-index 9058cb084b91..3e542b5d2a2d 100644
---- a/drivers/acpi/arm64/iort.c
-+++ b/drivers/acpi/arm64/iort.c
-@@ -1074,9 +1074,10 @@ const struct iommu_ops *iort_iommu_configure(struct device *dev)
- 		info.node = node;
- 		err = pci_for_each_dma_alias(to_pci_dev(dev),
- 					     iort_pci_iommu_init, &info);
--
-+#ifdef CONFIG_IOMMU_API
- 		if (!err && iort_pci_rc_supports_ats(node))
- 			dev->iommu_fwspec->flags |= IOMMU_FWSPEC_PCI_RC_ATS;
-+#endif
- 	} else {
- 		int i = 0;
- 
--- 
-2.20.1
+thanks,
+jirka
 
+> ---
+>  tools/perf/util/stat-shadow.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+> 
+> diff --git a/tools/perf/util/stat-shadow.c b/tools/perf/util/stat-shadow.c
+> index 83d8094be4fe..5c5e012e99c4 100644
+> --- a/tools/perf/util/stat-shadow.c
+> +++ b/tools/perf/util/stat-shadow.c
+> @@ -800,7 +800,8 @@ void perf_stat__print_shadow_stats(struct perf_stat_config *config,
+>  					"stalled cycles per insn",
+>  					ratio);
+>  		} else if (have_frontend_stalled) {
+> -			print_metric(config, ctxp, NULL, NULL,
+> +			out->new_line(config, ctxp);
+> +			print_metric(config, ctxp, NULL, "%7.2f ",
+>  				     "stalled cycles per insn", 0);
+>  		}
+>  	} else if (perf_evsel__match(evsel, HARDWARE, HW_BRANCH_MISSES)) {
+> -- 
+> 2.21.0
+> 
