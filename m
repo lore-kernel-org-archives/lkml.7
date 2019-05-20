@@ -2,118 +2,184 @@ Return-Path: <SRS0=lq4r=TU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FA6BC46470
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 23:18:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AC96C04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 23:20:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3272D2173C
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 23:18:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE1D42183F
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 23:20:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="mKU0+nJk"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="eQRQDPc6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727211AbfETXSv (ORCPT
+        id S1727250AbfETXUC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 19:18:51 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:45225 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727069AbfETXSv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 19:18:51 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 457FFh4GMdz9s55;
-        Tue, 21 May 2019 09:18:48 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1558394329;
-        bh=JYol2MzGdH9WwO5vYX2Xr7O0c8+WxkYebEOnFkhaYzk=;
-        h=Date:From:To:Cc:Subject:From;
-        b=mKU0+nJk4Snis4KoTcoYVl0vW/KC+Yb/TQRYbntq/QfkisQbIItSYTV9WKnKrPDrO
-         vzGzVjHTv67bMdA5ht92m1UbMxQX1GZxb6bnsLHSOD+bztgyDa5R6E1JL0zYrI18UR
-         ncm/+aXcnI+3tcbQFK5FJ5AVtrykqh0UIio9g3183NlGK+QejwohJF6fKk2bkFKfUD
-         37qqmr4g4pmIz9lKgR+RMAySfYM+Pzo+vLSvPpZcvdBA+w20/JULb6COPbGFsKIq+B
-         ekDduyVsexUKyYHV1CxtmvW18gE1C9V5iX1isxRCOfoj0EJ8Jv5KKfTBcYhOSq+sXX
-         ndDCQvr92lvdg==
-Date:   Tue, 21 May 2019 09:18:30 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Maxime Ripard <maxime.ripard@bootlin.com>,
-        Chen-Yu Tsai <wens@csie.org>, Shawn Guo <shawnguo@kernel.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Yangtao Li <tiny.windzz@gmail.com>,
-        Leonard Crestez <leonard.crestez@nxp.com>
-Subject: linux-next: manual merge of the sunxi tree with the imx-mxs tree
-Message-ID: <20190521091830.25a6cc27@canb.auug.org.au>
+        Mon, 20 May 2019 19:20:02 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:35734 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726357AbfETXUC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 19:20:02 -0400
+Received: by mail-pg1-f194.google.com with SMTP id t1so6090886pgc.2
+        for <linux-kernel@vger.kernel.org>; Mon, 20 May 2019 16:20:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ziH51J2YkDxbiEVM2GrMAlpVSd+QVOkC6hl+iSpS1bQ=;
+        b=eQRQDPc6uBU2Qk0F/htZOfYUHATfTVBNkYwDN/tGGT85UVF+0kNNU6JxQEi80X2jLd
+         nOecMr02fvsUklEjSkgaRZyFW8oTUFJ0vBMXfd8I0clvZdaInAdo9I3e++bv+isAWIAS
+         SbVUWwQ2uCxdPrlrZR8tJJBmOkDwJZLP5OV3E=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ziH51J2YkDxbiEVM2GrMAlpVSd+QVOkC6hl+iSpS1bQ=;
+        b=QDaEyaPGpn6DpZHBVwVnbTs+oEgKC9qjpdpAkDoPvaMHqaFd3hq+qiYrGqxJSOgAzU
+         btb8oghH5nz3twB3KFHXadNHL1K6qqg4fYLyTiLzVpzpUkNeGdnL/U+5ZnIS62uh/r88
+         Z2UTLzLY1VSJ/VcxeQ3YtqH53P9zfd2x9n5+h+H6+KJo+Uf4nygKGUpFbWgSbYTZwLTh
+         D+MDCaVXdIcHbu5vTBmTBZ8v07eJ5H+KCf+RymCbbxR4ldO8HrjmMA8A3fRfwOWCv1M4
+         EFcFLfxB8s4xycE900K/nIYse0xZOHeDF5usM28filS4bUBQB72JKXcfU0dAHspJqj+7
+         xUgw==
+X-Gm-Message-State: APjAAAWXrFv0hDcf7ciBjR+5vfuoN02ioAvrIJT/4DjXKu8TKen4YGW8
+        PRzsa1f1zOUypipXXjWu6bdbqA==
+X-Google-Smtp-Source: APXvYqyF4jfnvmglKBHVKthuceEzZGxOmZsOsky8xSLS2H68VewsiuHrWgBWYJrlDb7GE/qEMLwOnw==
+X-Received: by 2002:a63:317:: with SMTP id 23mr78257345pgd.414.1558394401009;
+        Mon, 20 May 2019 16:20:01 -0700 (PDT)
+Received: from skynet.sea.corp.google.com ([2620:0:1008:1100:c4b5:ec23:d87b:d6d3])
+        by smtp.gmail.com with ESMTPSA id h13sm19350861pgk.55.2019.05.20.16.19.59
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 20 May 2019 16:20:00 -0700 (PDT)
+From:   Thomas Garnier <thgarnie@chromium.org>
+To:     kernel-hardening@lists.openwall.com
+Cc:     kristen@linux.intel.com, Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        Andy Lutomirski <luto@kernel.org>,
+        Juergen Gross <jgross@suse.com>,
+        Alok Kataria <akataria@vmware.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Garnier <thgarnie@google.com>,
+        Nadav Amit <namit@vmware.com>, Jann Horn <jannh@google.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Feng Tang <feng.tang@intel.com>,
+        Jan Beulich <JBeulich@suse.com>,
+        Maran Wilson <maran.wilson@oracle.com>,
+        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
+        virtualization@lists.linux-foundation.org, linux-pm@vger.kernel.org
+Subject: [PATCH v7 00/12] x86: PIE support to extend KASLR randomization
+Date:   Mon, 20 May 2019 16:19:25 -0700
+Message-Id: <20190520231948.49693-1-thgarnie@chromium.org>
+X-Mailer: git-send-email 2.21.0.1020.gf2820cf01a-goog
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/qOlJ1zMtDwGZkVziBHNfKg3"; protocol="application/pgp-signature"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/qOlJ1zMtDwGZkVziBHNfKg3
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Splitting the previous serie in two. This part contains assembly code
+changes required for PIE but without any direct dependencies with the
+rest of the patchset.
 
-Hi all,
+Changes:
+ - patch v7 (assembly):
+   - Split patchset and reorder changes.
+ - patch v6:
+   - Rebase on latest changes in jump tables and crypto.
+   - Fix wording on couple commits.
+   - Revisit checkpatch warnings.
+   - Moving to @chromium.org.
+ - patch v5:
+   - Adapt new crypto modules for PIE.
+   - Improve per-cpu commit message.
+   - Fix xen 32-bit build error with .quad.
+   - Remove extra code for ftrace.
+ - patch v4:
+   - Simplify early boot by removing global variables.
+   - Modify the mcount location script for __mcount_loc intead of the address
+     read in the ftrace implementation.
+   - Edit commit description to explain better where the kernel can be located.
+   - Streamlined the testing done on each patch proposal. Always testing
+     hibernation, suspend, ftrace and kprobe to ensure no regressions.
+ - patch v3:
+   - Update on message to describe longer term PIE goal.
+   - Minor change on ftrace if condition.
+   - Changed code using xchgq.
+ - patch v2:
+   - Adapt patch to work post KPTI and compiler changes
+   - Redo all performance testing with latest configs and compilers
+   - Simplify mov macro on PIE (MOVABS now)
+   - Reduce GOT footprint
+ - patch v1:
+   - Simplify ftrace implementation.
+   - Use gcc mstack-protector-guard-reg=%gs with PIE when possible.
+ - rfc v3:
+   - Use --emit-relocs instead of -pie to reduce dynamic relocation space on
+     mapped memory. It also simplifies the relocation process.
+   - Move the start the module section next to the kernel. Remove the need for
+     -mcmodel=large on modules. Extends module space from 1 to 2G maximum.
+   - Support for XEN PVH as 32-bit relocations can be ignored with
+     --emit-relocs.
+   - Support for GOT relocations previously done automatically with -pie.
+   - Remove need for dynamic PLT in modules.
+   - Support dymamic GOT for modules.
+ - rfc v2:
+   - Add support for global stack cookie while compiler default to fs without
+     mcmodel=kernel
+   - Change patch 7 to correctly jump out of the identity mapping on kexec load
+     preserve.
 
-Today's linux-next merge of the sunxi tree got a conflict in:
+These patches make some of the changes necessary to build the kernel as
+Position Independent Executable (PIE) on x86_64. Another patchset will
+add the PIE option and larger architecture changes.
 
-  arch/arm64/configs/defconfig
+The patches:
+ - 1-2, 4-12: Change in assembly code to be PIE compliant.
+ - 3: Add a new _ASM_MOVABS macro to fetch a symbol address generically.
 
-between commit:
+diffstat:
+ crypto/aegis128-aesni-asm.S         |    6 +-
+ crypto/aegis128l-aesni-asm.S        |    8 +--
+ crypto/aegis256-aesni-asm.S         |    6 +-
+ crypto/aes-x86_64-asm_64.S          |   45 ++++++++++------
+ crypto/aesni-intel_asm.S            |    8 +--
+ crypto/camellia-aesni-avx-asm_64.S  |   42 +++++++--------
+ crypto/camellia-aesni-avx2-asm_64.S |   44 ++++++++--------
+ crypto/camellia-x86_64-asm_64.S     |    8 +--
+ crypto/cast5-avx-x86_64-asm_64.S    |   50 ++++++++++--------
+ crypto/cast6-avx-x86_64-asm_64.S    |   44 +++++++++-------
+ crypto/des3_ede-asm_64.S            |   96 ++++++++++++++++++++++++------------
+ crypto/ghash-clmulni-intel_asm.S    |    4 -
+ crypto/glue_helper-asm-avx.S        |    4 -
+ crypto/glue_helper-asm-avx2.S       |    6 +-
+ crypto/morus1280-avx2-asm.S         |    4 -
+ crypto/morus1280-sse2-asm.S         |    8 +--
+ crypto/morus640-sse2-asm.S          |    6 +-
+ crypto/sha256-avx2-asm.S            |   23 +++++---
+ entry/entry_64.S                    |   16 ++++--
+ include/asm/alternative.h           |    6 +-
+ include/asm/asm.h                   |    1 
+ include/asm/jump_label.h            |    8 +--
+ include/asm/paravirt_types.h        |   12 +++-
+ include/asm/pm-trace.h              |    2 
+ include/asm/processor.h             |    6 +-
+ kernel/acpi/wakeup_64.S             |   31 ++++++-----
+ kernel/head_64.S                    |   16 +++---
+ kernel/relocate_kernel_64.S         |    2 
+ power/hibernate_asm_64.S            |    4 -
+ 29 files changed, 299 insertions(+), 217 deletions(-)
 
-  4aaa1c7a05db ("arm64: defconfig: NVMEM_IMX_OCOTP=3Dy for imx8m")
+Patchset is based on next-20190515.
 
-from the imx-mxs tree and commit:
 
-  296bcfa05640 ("arm64: defconfig: add allwinner sid support")
-
-from the sunxi tree.
-
-I fixed it up (see below) and can carry the fix as necessary. This
-is now fixed as far as linux-next is concerned, but any non trivial
-conflicts should be mentioned to your upstream maintainer when your tree
-is submitted for merging.  You may also want to consider cooperating
-with the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
-
---=20
-Cheers,
-Stephen Rothwell
-
-diff --cc arch/arm64/configs/defconfig
-index 33fac4e62a16,f981a882c546..000000000000
---- a/arch/arm64/configs/defconfig
-+++ b/arch/arm64/configs/defconfig
-@@@ -762,7 -741,7 +762,8 @@@ CONFIG_PHY_TEGRA_XUSB=3D
-  CONFIG_HISI_PMU=3Dy
-  CONFIG_QCOM_L2_PMU=3Dy
-  CONFIG_QCOM_L3_PMU=3Dy
- +CONFIG_NVMEM_IMX_OCOTP=3Dy
-+ CONFIG_NVMEM_SUNXI_SID=3Dy
-  CONFIG_QCOM_QFPROM=3Dy
-  CONFIG_ROCKCHIP_EFUSE=3Dy
-  CONFIG_UNIPHIER_EFUSE=3Dy
-
---Sig_/qOlJ1zMtDwGZkVziBHNfKg3
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAlzjNcYACgkQAVBC80lX
-0Gz0Kwf9GQoooOHnEQBjKHSRnhPfmUaeVynYsAbKyrvfOZtRhDMf8lSGAdZxErpT
-ULA4PyA+Dgs36+Px4/U+4tKk4mF7xXVpfwPm2oSmu4yVz+C89JkbP8W6Mkke5rgz
-rUk4FvZyC3FcpbTaDenv8e/W27HAc7vOkjUvF2VDludd0AH/Z0dVtZ0gBXFf7W3g
-B46zH/xdPwjrTTlsyH0zbE2p6fVizGY8ySIPyIwX2aADeKScJ6rFlt/9wTOiiFm2
-Dr9i00HuEXVtZbgkikxfcku9GWcaVJgGX/xI7Im37Q/dOleyM9JqWvaSGl9qHL2X
-aqLCaoNlBAXpk5XMKS7N08v+sKc0+Q==
-=jz9e
------END PGP SIGNATURE-----
-
---Sig_/qOlJ1zMtDwGZkVziBHNfKg3--
