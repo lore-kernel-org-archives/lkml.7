@@ -7,52 +7,46 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 487B8C04AAC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:46:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3A6EC04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:46:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1872D204FD
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:46:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D8FF204FD
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:46:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558356372;
-	bh=hcCWdm8G1C81OZqG9T6IE40vqZ2g7WBEfGBUW8Mt+Bg=;
+	s=default; t=1558356375;
+	bh=kYit0N1s3XyiwEJ9BAPv+JHUmMpjAlox7xrrRbfxqOI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2hOPYk9SAw2pX3RTc3C/orux7HFujx8nLcAb6g2QurU1pyM1QqwY6J5mNTo++USmz
-	 ETqWabn9OFoJ3lY7dOpAql8pJAgOkWzDhpDAW73DngnGNjv264rVzJdxruA2aaRzy2
-	 HRyF0cC8nVl7SEelVr5J75EV4DGkANDotEB5FX1Y=
+	b=hsTePFpiyb1Znq9Ck+qC3JGS/Mz3aTzobGrVbmuXGw18C5ZtXo8zIqtxencTFOKWq
+	 +Bjc8qaLHHys3jHqW8LEDyDNp3ZebpTxKh23Ssm0IkP6LE4uRxNYTKj4uEva0s+Gy5
+	 2O7tyMY/3+cFbf7ALUCZNgmvm9flpiWGSZq/f9sk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389247AbfETM0G (ORCPT
+        id S2389225AbfETM0B (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 08:26:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41382 "EHLO mail.kernel.org"
+        Mon, 20 May 2019 08:26:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41264 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388273AbfETM0D (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 08:26:03 -0400
+        id S2388503AbfETMZ5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 08:25:57 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 811E6214DA;
-        Mon, 20 May 2019 12:26:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3089F21479;
+        Mon, 20 May 2019 12:25:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558355162;
-        bh=hcCWdm8G1C81OZqG9T6IE40vqZ2g7WBEfGBUW8Mt+Bg=;
+        s=default; t=1558355156;
+        bh=kYit0N1s3XyiwEJ9BAPv+JHUmMpjAlox7xrrRbfxqOI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sUzVLYp8SsdgQqUpNg3pGRJHDY9p2Ibr/9A6we3+ClJf9aC/iTHTn9m0FSnLaw8Td
-         zx+KxM7pEb3czhjdrPpHc2B57FHyeav1CtaNA4pZ6TwWV6oYitm59fLPZc8Bgj01r6
-         uBoX6iWc0/D74oFVn1ZGQy0NsPrOuNnZRRhP+35o=
+        b=XrHHa80+GiUQX7Fwhho+e87iqtHiwjmCW9vG6GKwzmrda061wLFNkFUNd6ZAWahXI
+         MtKwNwevoDaUMR966OztgqozBNB4PetJFtI9ik4Rh/2g+bTf9jLELdpNTvY7evx9k7
+         b6FvRpT1s6n7jgKSSv+LOwmGrC7rAkj45f954vmU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Andy Lutomirski <luto@kernel.org>,
-        Borislav Petkov <bp@suse.de>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Jon Masters <jcm@redhat.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>
-Subject: [PATCH 5.0 003/123] x86/speculation/mds: Improve CPU buffer clear documentation
-Date:   Mon, 20 May 2019 14:13:03 +0200
-Message-Id: <20190520115245.587746818@linuxfoundation.org>
+        stable@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>,
+        Sebastian Reichel <sebastian.reichel@collabora.com>
+Subject: [PATCH 5.0 013/123] power: supply: axp288_fuel_gauge: Add ACEPC T8 and T11 mini PCs to the blacklist
+Date:   Mon, 20 May 2019 14:13:13 +0200
+Message-Id: <20190520115245.968557214@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190520115245.439864225@linuxfoundation.org>
 References: <20190520115245.439864225@linuxfoundation.org>
@@ -65,80 +59,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andy Lutomirski <luto@kernel.org>
+From: Hans de Goede <hdegoede@redhat.com>
 
-commit 9d8d0294e78a164d407133dea05caf4b84247d6a upstream.
+commit 9274c78305e12c5f461bec15f49c38e0f32ca705 upstream.
 
-On x86_64, all returns to usermode go through
-prepare_exit_to_usermode(), with the sole exception of do_nmi().
-This even includes machine checks -- this was added several years
-ago to support MCE recovery.  Update the documentation.
+The ACEPC T8 and T11 Cherry Trail Z8350 mini PCs use an AXP288 and as PCs,
+rather then portables, they does not have a battery. Still for some
+reason the AXP288 not only thinks there is a battery, it actually
+thinks it is discharging while the PC is running, slowly going to
+0% full, causing userspace to shutdown the system due to the battery
+being critically low after a while.
 
-Signed-off-by: Andy Lutomirski <luto@kernel.org>
-Cc: Borislav Petkov <bp@suse.de>
-Cc: Frederic Weisbecker <frederic@kernel.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Jon Masters <jcm@redhat.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
+This commit adds the ACEPC T8 and T11 to the axp288 fuel-gauge driver
+blacklist, so that we stop reporting bogus battery readings on this device.
+
+BugLink: https://bugzilla.redhat.com/show_bug.cgi?id=1690852
 Cc: stable@vger.kernel.org
-Fixes: 04dcbdb80578 ("x86/speculation/mds: Clear CPU buffers on exit to user")
-Link: http://lkml.kernel.org/r/999fa9e126ba6a48e9d214d2f18dbde5c62ac55c.1557865329.git.luto@kernel.org
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- Documentation/x86/mds.rst |   39 +++++++--------------------------------
- 1 file changed, 7 insertions(+), 32 deletions(-)
+ drivers/power/supply/axp288_fuel_gauge.c |   20 ++++++++++++++++++++
+ 1 file changed, 20 insertions(+)
 
---- a/Documentation/x86/mds.rst
-+++ b/Documentation/x86/mds.rst
-@@ -142,38 +142,13 @@ Mitigation points
-    mds_user_clear.
- 
-    The mitigation is invoked in prepare_exit_to_usermode() which covers
--   most of the kernel to user space transitions. There are a few exceptions
--   which are not invoking prepare_exit_to_usermode() on return to user
--   space. These exceptions use the paranoid exit code.
--
--   - Non Maskable Interrupt (NMI):
--
--     Access to sensible data like keys, credentials in the NMI context is
--     mostly theoretical: The CPU can do prefetching or execute a
--     misspeculated code path and thereby fetching data which might end up
--     leaking through a buffer.
--
--     But for mounting other attacks the kernel stack address of the task is
--     already valuable information. So in full mitigation mode, the NMI is
--     mitigated on the return from do_nmi() to provide almost complete
--     coverage.
--
--   - Machine Check Exception (#MC):
--
--     Another corner case is a #MC which hits between the CPU buffer clear
--     invocation and the actual return to user. As this still is in kernel
--     space it takes the paranoid exit path which does not clear the CPU
--     buffers. So the #MC handler repopulates the buffers to some
--     extent. Machine checks are not reliably controllable and the window is
--     extremly small so mitigation would just tick a checkbox that this
--     theoretical corner case is covered. To keep the amount of special
--     cases small, ignore #MC.
--
--   - Debug Exception (#DB):
--
--     This takes the paranoid exit path only when the INT1 breakpoint is in
--     kernel space. #DB on a user space address takes the regular exit path,
--     so no extra mitigation required.
-+   all but one of the kernel to user space transitions.  The exception
-+   is when we return from a Non Maskable Interrupt (NMI), which is
-+   handled directly in do_nmi().
-+
-+   (The reason that NMI is special is that prepare_exit_to_usermode() can
-+    enable IRQs.  In NMI context, NMIs are blocked, and we don't want to
-+    enable IRQs with NMIs blocked.)
- 
- 
- 2. C-State transition
+--- a/drivers/power/supply/axp288_fuel_gauge.c
++++ b/drivers/power/supply/axp288_fuel_gauge.c
+@@ -696,6 +696,26 @@ intr_failed:
+  */
+ static const struct dmi_system_id axp288_fuel_gauge_blacklist[] = {
+ 	{
++		/* ACEPC T8 Cherry Trail Z8350 mini PC */
++		.matches = {
++			DMI_EXACT_MATCH(DMI_BOARD_VENDOR, "To be filled by O.E.M."),
++			DMI_EXACT_MATCH(DMI_BOARD_NAME, "Cherry Trail CR"),
++			DMI_EXACT_MATCH(DMI_PRODUCT_SKU, "T8"),
++			/* also match on somewhat unique bios-version */
++			DMI_EXACT_MATCH(DMI_BIOS_VERSION, "1.000"),
++		},
++	},
++	{
++		/* ACEPC T11 Cherry Trail Z8350 mini PC */
++		.matches = {
++			DMI_EXACT_MATCH(DMI_BOARD_VENDOR, "To be filled by O.E.M."),
++			DMI_EXACT_MATCH(DMI_BOARD_NAME, "Cherry Trail CR"),
++			DMI_EXACT_MATCH(DMI_PRODUCT_SKU, "T11"),
++			/* also match on somewhat unique bios-version */
++			DMI_EXACT_MATCH(DMI_BIOS_VERSION, "1.000"),
++		},
++	},
++	{
+ 		/* Intel Cherry Trail Compute Stick, Windows version */
+ 		.matches = {
+ 			DMI_MATCH(DMI_SYS_VENDOR, "Intel Corporation"),
 
 
