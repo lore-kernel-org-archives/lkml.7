@@ -4,58 +4,58 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EBDB2C04E87
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 11:32:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E200C04E87
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 11:32:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B88892081C
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 11:32:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 331C320656
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 11:32:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="tSv5fPUT"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="sflEPPU6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732904AbfETLcj (ORCPT
+        id S1732917AbfETLcn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 07:32:39 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:45161 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730274AbfETLci (ORCPT
+        Mon, 20 May 2019 07:32:43 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:37751 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732770AbfETLcn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 07:32:38 -0400
-Received: by mail-pl1-f193.google.com with SMTP id a5so6569568pls.12
-        for <linux-kernel@vger.kernel.org>; Mon, 20 May 2019 04:32:37 -0700 (PDT)
+        Mon, 20 May 2019 07:32:43 -0400
+Received: by mail-pl1-f196.google.com with SMTP id p15so6602468pll.4
+        for <linux-kernel@vger.kernel.org>; Mon, 20 May 2019 04:32:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :in-reply-to:references;
-        bh=Pu70ShnJxUdtWer7PLRUZo2fIfEap/6ISYxXnxlKkFM=;
-        b=tSv5fPUTNSCsf6Ukd/lSAyUahMBsuc98eyjNM/qYxJeGXkwXVbkgNJc+pFwwZNwv2I
-         Scn3L30ZnZrh9pzJAS7Meka65ldkpHDUxxklBTFrXzLQCxefgHwNPeqldbEfdzqoduEM
-         pTuac3U1VGESKok+UbgmEytjjjr2gT+RbqAUNzQOVoM4Sxre2l02WmG5IoLOn/sX6LQX
-         vg81cGBQVbG4FEE6CgSXlvQm1VweLAbyQf/2saQPC28lXohZr907F2vyCvk8jX08yTCl
-         8uaY04tYzl4kT8BSqqHpTtAVSWnAndVIQlXLRfe2ou8slxwxC8J8LlE7FFcia65HeMW9
-         bRhQ==
+        bh=SH6bOeq9QaZcFruKHetHjcR5Vxn/cn2SAhXtcAspD6Q=;
+        b=sflEPPU61og2VFcVypItpwuhuRDg9RrZEU06pKHkq2dyUELMdFIRetA3Amp70Gtasf
+         LhfWjt1c9cmf+TG5FSEfkVz+lZS0jhnu+radx8ygtiMy6DUBV6VY/q7zmVwRrpmQQgY2
+         B9Dc9sKeRreukolUt81y2EoSpDcHlDSNm3QhtmO5fmJhtkfyi6KzETanmpcUjlCFpOcf
+         Q26N+Ofg3YiM4/uR0pX24XqD7mW/EcgeKAO2TfSrLASTOTfUwr2snO69Ns6Zc+0XQf1M
+         LBwZV3ZxwK9YX1i7P0cXIqNlvHWZPbknS8ZDFw4g+tubEeoIjZHWwcDoF3THlN+Gxy0Y
+         vhJw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:in-reply-to:references;
-        bh=Pu70ShnJxUdtWer7PLRUZo2fIfEap/6ISYxXnxlKkFM=;
-        b=oCh0aZLXpyE3In0zZFV+0c+XFUd8COcRYwC5FkO6CscvGxE1Ki44yeeKNkZcL3q3F0
-         DSfDXtnwlWTfF5OozFkipNXg2NOD0hjST695BGrRYqDWU3TV60Vouz798bSm3R+LdC7Q
-         3/l8NydPTKJLQ5URc3Ul+7xb7eKyQRTAiylHaBe/yt3aEUZhrhk/7+ERbHp4kvoogtZ6
-         WRUch4P7ph+AMbHRW52bSODqUMgeScJYzUgW/vMS8ghp3t108XpmxbHy2ymUg5wgYM2G
-         vFqYYfDDD+ZZcNpEdSI43Qpqz4enepo/88PtqP4CQkwYMy6gkyb3eoxHkzYZZrV/Ohnc
-         /ElQ==
-X-Gm-Message-State: APjAAAW0AU65AtsvbIESilhNOLL1ez4trXT9hJkLNcy0YpPmKpdhFdMa
-        641q7Jf65hscnq+a/7ZSd2U/zQ==
-X-Google-Smtp-Source: APXvYqwHu74YjBkzbQE6BKlSW/l5+RvOSNMRXBkWCZa08ZuVF8USsRLbC/WnBBD/UHKRmsu6Y6DNcQ==
-X-Received: by 2002:a17:902:9a9:: with SMTP id 38mr31813396pln.10.1558351957443;
-        Mon, 20 May 2019 04:32:37 -0700 (PDT)
+        bh=SH6bOeq9QaZcFruKHetHjcR5Vxn/cn2SAhXtcAspD6Q=;
+        b=D2b0CuvdIDkfSX3oBTDsZLChrHOi3c+flA5k+zH8OhtCv9uIV83qEKJHJoCmgR7z0N
+         SJVKmg44UzL5pqSJnDr6dMfjFT6SEPgyjzwhiiMHRI5FXLd16rJdrp1mZ8W9zJupZECd
+         UIKmxTU1AdF3hrdoPU+6KS9Nw16qPYFxtDmoCA301PdlEKTfJJzmK7+tsBgQp6ekjRS3
+         QbZH3ALaOJhHnMFmLE1Yv32g/JJHgXM5HrFktt2aheMo1auB4XtuSHucCGD/KlVxYqt1
+         ve6SsOmAYtWR7jW8g1CsBByWhyg0OW1WYuZboNIq/njnUwo7gv1uh1HqJApoY1Hri5Kp
+         gyJA==
+X-Gm-Message-State: APjAAAVX36Mj1EpPiO10PEkad2NdnWKggwSKAtP7ruN0b9e5Wk/eCjC5
+        FPG5+h7M/KIpvu4mBa1xejUnaw==
+X-Google-Smtp-Source: APXvYqw5fPKlpPwCDX8Prno12aw6CFqlLCWkN1e77syboLkhzA1LnbIZ14RetfpmMHPjpaxnXWlwXw==
+X-Received: by 2002:a17:902:a81:: with SMTP id 1mr29319466plp.287.1558351962410;
+        Mon, 20 May 2019 04:32:42 -0700 (PDT)
 Received: from baolinwangubtpc.spreadtrum.com ([117.18.48.102])
-        by smtp.gmail.com with ESMTPSA id z124sm21310020pfz.116.2019.05.20.04.32.31
+        by smtp.gmail.com with ESMTPSA id z124sm21310020pfz.116.2019.05.20.04.32.37
         (version=TLS1 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Mon, 20 May 2019 04:32:36 -0700 (PDT)
+        Mon, 20 May 2019 04:32:42 -0700 (PDT)
 From:   Baolin Wang <baolin.wang@linaro.org>
 To:     dan.j.williams@intel.com, vkoul@kernel.org
 Cc:     thierry.reding@gmail.com, jonathanh@nvidia.com,
@@ -65,9 +65,9 @@ Cc:     thierry.reding@gmail.com, jonathanh@nvidia.com,
         jroedel@suse.de, vincent.guittot@linaro.org,
         baolin.wang@linaro.org, dmaengine@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: [PATCH v2 1/8] dmaengine: Add matching device node validation in __dma_request_channel()
-Date:   Mon, 20 May 2019 19:32:14 +0800
-Message-Id: <5eb3a0099f7ade7e81226c69bfab5443e83c03cc.1558351667.git.baolin.wang@linaro.org>
+Subject: [PATCH v2 2/8] soc: tegra: fuse: Use dma_request_channel instead of __dma_request_channel()
+Date:   Mon, 20 May 2019 19:32:15 +0800
+Message-Id: <f1dc31b78b6852bc12a126380816ee32cf78a3f5.1558351667.git.baolin.wang@linaro.org>
 X-Mailer: git-send-email 1.7.9.5
 In-Reply-To: <cover.1558351667.git.baolin.wang@linaro.org>
 References: <cover.1558351667.git.baolin.wang@linaro.org>
@@ -78,119 +78,28 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When user try to request one DMA channel by __dma_request_channel(), it won't
-validate if it is the correct DMA device to request, that will lead each DMA
-engine driver to validate the correct device node in their filter function
-if it is necessary.
+The __dma_request_channel() prototype has been changed to help to do
+device node validation, thus we can use dma_request_channel() instead
+of __dma_request_channel() to keep kernel bisectable.
 
-Thus we can add the matching device node validation in the DMA engine core,
-to remove all of device node validation in the drivers.
-
-Tested-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
 Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
 ---
- drivers/dma/dmaengine.c   |   10 ++++++++--
- drivers/dma/of-dma.c      |    4 ++--
- include/linux/dmaengine.h |   12 ++++++++----
- 3 files changed, 18 insertions(+), 8 deletions(-)
+ drivers/soc/tegra/fuse/fuse-tegra20.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/dma/dmaengine.c b/drivers/dma/dmaengine.c
-index 3a11b10..610080c 100644
---- a/drivers/dma/dmaengine.c
-+++ b/drivers/dma/dmaengine.c
-@@ -641,11 +641,13 @@ struct dma_chan *dma_get_any_slave_channel(struct dma_device *device)
-  * @mask: capabilities that the channel must satisfy
-  * @fn: optional callback to disposition available channels
-  * @fn_param: opaque parameter to pass to dma_filter_fn
-+ * @np: device node to look for DMA channels
-  *
-  * Returns pointer to appropriate DMA channel on success or NULL.
-  */
- struct dma_chan *__dma_request_channel(const dma_cap_mask_t *mask,
--				       dma_filter_fn fn, void *fn_param)
-+				       dma_filter_fn fn, void *fn_param,
-+				       struct device_node *np)
- {
- 	struct dma_device *device, *_d;
- 	struct dma_chan *chan = NULL;
-@@ -653,6 +655,10 @@ struct dma_chan *__dma_request_channel(const dma_cap_mask_t *mask,
- 	/* Find a channel */
- 	mutex_lock(&dma_list_mutex);
- 	list_for_each_entry_safe(device, _d, &dma_device_list, global_node) {
-+		/* Finds a DMA controller with matching device node */
-+		if (np && device->dev->of_node && np != device->dev->of_node)
-+			continue;
-+
- 		chan = find_candidate(device, mask, fn, fn_param);
- 		if (!IS_ERR(chan))
- 			break;
-@@ -769,7 +775,7 @@ struct dma_chan *dma_request_chan_by_mask(const dma_cap_mask_t *mask)
- 	if (!mask)
- 		return ERR_PTR(-ENODEV);
+diff --git a/drivers/soc/tegra/fuse/fuse-tegra20.c b/drivers/soc/tegra/fuse/fuse-tegra20.c
+index 49ff017..f40a06f 100644
+--- a/drivers/soc/tegra/fuse/fuse-tegra20.c
++++ b/drivers/soc/tegra/fuse/fuse-tegra20.c
+@@ -110,7 +110,7 @@ static int tegra20_fuse_probe(struct tegra_fuse *fuse)
+ 	dma_cap_zero(mask);
+ 	dma_cap_set(DMA_SLAVE, mask);
  
--	chan = __dma_request_channel(mask, NULL, NULL);
-+	chan = __dma_request_channel(mask, NULL, NULL, NULL);
- 	if (!chan) {
- 		mutex_lock(&dma_list_mutex);
- 		if (list_empty(&dma_device_list))
-diff --git a/drivers/dma/of-dma.c b/drivers/dma/of-dma.c
-index 91fd395..6b43d04 100644
---- a/drivers/dma/of-dma.c
-+++ b/drivers/dma/of-dma.c
-@@ -316,8 +316,8 @@ struct dma_chan *of_dma_simple_xlate(struct of_phandle_args *dma_spec,
- 	if (count != 1)
- 		return NULL;
+-	fuse->apbdma.chan = __dma_request_channel(&mask, dma_filter, NULL);
++	fuse->apbdma.chan = dma_request_channel(mask, dma_filter, NULL);
+ 	if (!fuse->apbdma.chan)
+ 		return -EPROBE_DEFER;
  
--	return dma_request_channel(info->dma_cap, info->filter_fn,
--			&dma_spec->args[0]);
-+	return __dma_request_channel(&info->dma_cap, info->filter_fn,
-+				     &dma_spec->args[0], dma_spec->np);
- }
- EXPORT_SYMBOL_GPL(of_dma_simple_xlate);
- 
-diff --git a/include/linux/dmaengine.h b/include/linux/dmaengine.h
-index d49ec5c..504085b 100644
---- a/include/linux/dmaengine.h
-+++ b/include/linux/dmaengine.h
-@@ -1314,7 +1314,8 @@ static inline enum dma_status dma_async_is_complete(dma_cookie_t cookie,
- enum dma_status dma_wait_for_async_tx(struct dma_async_tx_descriptor *tx);
- void dma_issue_pending_all(void);
- struct dma_chan *__dma_request_channel(const dma_cap_mask_t *mask,
--					dma_filter_fn fn, void *fn_param);
-+				       dma_filter_fn fn, void *fn_param,
-+				       struct device_node *np);
- struct dma_chan *dma_request_slave_channel(struct device *dev, const char *name);
- 
- struct dma_chan *dma_request_chan(struct device *dev, const char *name);
-@@ -1339,7 +1340,9 @@ static inline void dma_issue_pending_all(void)
- {
- }
- static inline struct dma_chan *__dma_request_channel(const dma_cap_mask_t *mask,
--					      dma_filter_fn fn, void *fn_param)
-+						     dma_filter_fn fn,
-+						     void *fn_param,
-+						     struct device_node *np)
- {
- 	return NULL;
- }
-@@ -1411,7 +1414,8 @@ static inline int dmaengine_desc_free(struct dma_async_tx_descriptor *desc)
- void dma_run_dependencies(struct dma_async_tx_descriptor *tx);
- struct dma_chan *dma_get_slave_channel(struct dma_chan *chan);
- struct dma_chan *dma_get_any_slave_channel(struct dma_device *device);
--#define dma_request_channel(mask, x, y) __dma_request_channel(&(mask), x, y)
-+#define dma_request_channel(mask, x, y) \
-+	__dma_request_channel(&(mask), x, y, NULL)
- #define dma_request_slave_channel_compat(mask, x, y, dev, name) \
- 	__dma_request_slave_channel_compat(&(mask), x, y, dev, name)
- 
-@@ -1429,6 +1433,6 @@ static inline int dmaengine_desc_free(struct dma_async_tx_descriptor *desc)
- 	if (!fn || !fn_param)
- 		return NULL;
- 
--	return __dma_request_channel(mask, fn, fn_param);
-+	return __dma_request_channel(mask, fn, fn_param, NULL);
- }
- #endif /* DMAENGINE_H */
 -- 
 1.7.9.5
 
