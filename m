@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E11AC04E87
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:47:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA0B3C04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:47:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 146D7204FD
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:47:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BFF0C2054F
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:47:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558356440;
-	bh=U/UhdSkP/Uv2xbOHKg0Lg/vOLioCsjgta5iok3jmmE0=;
+	s=default; t=1558356442;
+	bh=rbaUw09nTDaxvuLdWWQ0id19Ppq7bCyJwobak7LfE4U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Sf1x1kzXVdwllEQFL2QvlTi3L1Z7c/NCmXriDEdBaYy6szVb4TNRHTq4ErzuzfwQj
-	 P/2bBTmYYDuWuOoxreqg6W82Xq+FZt98jennFTRPigHFAxQ4PpsQPUZCk0qodByKS3
-	 cp33ByIdWs8HO1W761Y8XBzvyWuUOMYiNVE0Xq6Q=
+	b=qygg3dLdbPHNJktFBGWAtC8t31l15cCPD8XrX6kIC2lwp8AXfyYxZs8VavoUL0Uyk
+	 FD/qVDYEudtoETUZSgJNeG/2s5U/KJGYiANZ02TjjHd/QewuhO94js7TeUUBk/VO5d
+	 fJtx3XYXsTmjE/px0hrNFjBj259fpne2uCIgy9xM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388806AbfETMYW (ORCPT
+        id S2388794AbfETMYU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 08:24:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39076 "EHLO mail.kernel.org"
+        Mon, 20 May 2019 08:24:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38952 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388779AbfETMYR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 08:24:17 -0400
+        id S2388764AbfETMYI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 08:24:08 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3AF6720815;
-        Mon, 20 May 2019 12:24:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7D72520815;
+        Mon, 20 May 2019 12:24:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558355055;
-        bh=U/UhdSkP/Uv2xbOHKg0Lg/vOLioCsjgta5iok3jmmE0=;
+        s=default; t=1558355048;
+        bh=rbaUw09nTDaxvuLdWWQ0id19Ppq7bCyJwobak7LfE4U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=V/UWtavrYgA2RGJy8mtthqcp3sd0LLLp0nEIinLBULZ+4X6RlUP6/dOm/VDGYKt2G
-         M4y6EzPN8ugINC2twFAFiSFDlnPjLIOnM7ZCPg1gGBhNwzW7/BB3u/0G/HMnE01Wuk
-         YCKvea3P4cB9OYIOCoKe1KIjicxC0U0iDlklYx9U=
+        b=KBiR8rsifdGbyiHoKwFacQdkZooBh9IL6kBV45i9pTQuTMeopW24fYu+R/onyBbGU
+         8KOgnk7gNZKQRiW+MapB0xvb0HQ+BAdCd1g5L4+0yhyUC6J6OTOzBnlkS9+CKavMJs
+         1NHtRZps7K42juwO+gfryF31MOEMS60CpxSC9l5g=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Liang Chen <liangchen.linux@gmail.com>,
-        Coly Li <colyli@suse.de>, Jens Axboe <axboe@kernel.dk>
-Subject: [PATCH 4.19 079/105] bcache: fix a race between cache register and cacheset unregister
-Date:   Mon, 20 May 2019 14:14:25 +0200
-Message-Id: <20190520115252.726150063@linuxfoundation.org>
+        stable@vger.kernel.org, Filipe Manana <fdmanana@suse.com>,
+        David Sterba <dsterba@suse.com>
+Subject: [PATCH 4.19 076/105] Btrfs: send, flush dellaloc in order to avoid data loss
+Date:   Mon, 20 May 2019 14:14:22 +0200
+Message-Id: <20190520115252.487467638@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190520115247.060821231@linuxfoundation.org>
 References: <20190520115247.060821231@linuxfoundation.org>
@@ -59,81 +59,135 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Liang Chen <liangchen.linux@gmail.com>
+From: Filipe Manana <fdmanana@suse.com>
 
-commit a4b732a248d12cbdb46999daf0bf288c011335eb upstream.
+commit 9f89d5de8631c7930898a601b6612e271aa2261c upstream.
 
-There is a race between cache device register and cache set unregister.
-For an already registered cache device, register_bcache will call
-bch_is_open to iterate through all cachesets and check every cache
-there. The race occurs if cache_set_free executes at the same time and
-clears the caches right before ca is dereferenced in bch_is_open_cache.
-To close the race, let's make sure the clean up work is protected by
-the bch_register_lock as well.
+When we set a subvolume to read-only mode we do not flush dellaloc for any
+of its inodes (except if the filesystem is mounted with -o flushoncommit),
+since it does not affect correctness for any subsequent operations - except
+for a future send operation. The send operation will not be able to see the
+delalloc data since the respective file extent items, inode item updates,
+backreferences, etc, have not hit yet the subvolume and extent trees.
 
-This issue can be reproduced as follows,
-while true; do echo /dev/XXX> /sys/fs/bcache/register ; done&
-while true; do echo 1> /sys/block/XXX/bcache/set/unregister ; done &
+Effectively this means data loss, since the send stream will not contain
+any data from existing delalloc. Another problem from this is that if the
+writeback starts and finishes while the send operation is in progress, we
+have the subvolume tree being being modified concurrently which can result
+in send failing unexpectedly with EIO or hitting runtime errors, assertion
+failures or hitting BUG_ONs, etc.
 
-and results in the following oops,
+Simple reproducer:
 
-[  +0.000053] BUG: unable to handle kernel NULL pointer dereference at 0000000000000998
-[  +0.000457] #PF error: [normal kernel read fault]
-[  +0.000464] PGD 800000003ca9d067 P4D 800000003ca9d067 PUD 3ca9c067 PMD 0
-[  +0.000388] Oops: 0000 [#1] SMP PTI
-[  +0.000269] CPU: 1 PID: 3266 Comm: bash Not tainted 5.0.0+ #6
-[  +0.000346] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.11.0-2.fc28 04/01/2014
-[  +0.000472] RIP: 0010:register_bcache+0x1829/0x1990 [bcache]
-[  +0.000344] Code: b0 48 83 e8 50 48 81 fa e0 e1 10 c0 0f 84 a9 00 00 00 48 89 c6 48 89 ca 0f b7 ba 54 04 00 00 4c 8b 82 60 0c 00 00 85 ff 74 2f <49> 3b a8 98 09 00 00 74 4e 44 8d 47 ff 31 ff 49 c1 e0 03 eb 0d
-[  +0.000839] RSP: 0018:ffff92ee804cbd88 EFLAGS: 00010202
-[  +0.000328] RAX: ffffffffc010e190 RBX: ffff918b5c6b5000 RCX: ffff918b7d8e0000
-[  +0.000399] RDX: ffff918b7d8e0000 RSI: ffffffffc010e190 RDI: 0000000000000001
-[  +0.000398] RBP: ffff918b7d318340 R08: 0000000000000000 R09: ffffffffb9bd2d7a
-[  +0.000385] R10: ffff918b7eb253c0 R11: ffffb95980f51200 R12: ffffffffc010e1a0
-[  +0.000411] R13: fffffffffffffff2 R14: 000000000000000b R15: ffff918b7e232620
-[  +0.000384] FS:  00007f955bec2740(0000) GS:ffff918b7eb00000(0000) knlGS:0000000000000000
-[  +0.000420] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[  +0.000801] CR2: 0000000000000998 CR3: 000000003cad6000 CR4: 00000000001406e0
-[  +0.000837] Call Trace:
-[  +0.000682]  ? _cond_resched+0x10/0x20
-[  +0.000691]  ? __kmalloc+0x131/0x1b0
-[  +0.000710]  kernfs_fop_write+0xfa/0x170
-[  +0.000733]  __vfs_write+0x2e/0x190
-[  +0.000688]  ? inode_security+0x10/0x30
-[  +0.000698]  ? selinux_file_permission+0xd2/0x120
-[  +0.000752]  ? security_file_permission+0x2b/0x100
-[  +0.000753]  vfs_write+0xa8/0x1a0
-[  +0.000676]  ksys_write+0x4d/0xb0
-[  +0.000699]  do_syscall_64+0x3a/0xf0
-[  +0.000692]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+  $ mkfs.btrfs -f /dev/sdb
+  $ mount /dev/sdb /mnt
 
-Signed-off-by: Liang Chen <liangchen.linux@gmail.com>
-Cc: stable@vger.kernel.org
-Signed-off-by: Coly Li <colyli@suse.de>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+  $ btrfs subvolume create /mnt/sv
+  $ xfs_io -f -c "pwrite -S 0xea 0 108K" /mnt/sv/foo
+
+  $ btrfs property set /mnt/sv ro true
+  $ btrfs send -f /tmp/send.stream /mnt/sv
+
+  $ od -t x1 -A d /mnt/sv/foo
+  0000000 ea ea ea ea ea ea ea ea ea ea ea ea ea ea ea ea
+  *
+  0110592
+
+  $ umount /mnt
+  $ mkfs.btrfs -f /dev/sdc
+  $ mount /dev/sdc /mnt
+
+  $ btrfs receive -f /tmp/send.stream /mnt
+  $ echo $?
+  0
+  $ od -t x1 -A d /mnt/sv/foo
+  0000000
+  # ---> empty file
+
+Since this a problem that affects send only, fix it in send by flushing
+dellaloc for all the roots used by the send operation before send starts
+to process the commit roots.
+
+This is a problem that affects send since it was introduced (commit
+31db9f7c23fbf7 ("Btrfs: introduce BTRFS_IOC_SEND for btrfs send/receive"))
+but backporting it to older kernels has some dependencies:
+
+- For kernels between 3.19 and 4.20, it depends on commit 3cd24c698004d2
+  ("btrfs: use tagged writepage to mitigate livelock of snapshot") because
+  the function btrfs_start_delalloc_snapshot() does not exist before that
+  commit. So one has to either pick that commit or replace the calls to
+  btrfs_start_delalloc_snapshot() in this patch with calls to
+  btrfs_start_delalloc_inodes().
+
+- For kernels older than 3.19 it also requires commit e5fa8f865b3324
+  ("Btrfs: ensure send always works on roots without orphans") because
+  it depends on the function ensure_commit_roots_uptodate() which that
+  commits introduced.
+
+- No dependencies for 5.0+ kernels.
+
+A test case for fstests follows soon.
+
+CC: stable@vger.kernel.org # 3.19+
+Signed-off-by: Filipe Manana <fdmanana@suse.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/md/bcache/super.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/btrfs/send.c |   36 ++++++++++++++++++++++++++++++++++++
+ 1 file changed, 36 insertions(+)
 
---- a/drivers/md/bcache/super.c
-+++ b/drivers/md/bcache/super.c
-@@ -1511,6 +1511,7 @@ static void cache_set_free(struct closur
- 	bch_btree_cache_free(c);
- 	bch_journal_free(c);
+--- a/fs/btrfs/send.c
++++ b/fs/btrfs/send.c
+@@ -6583,6 +6583,38 @@ commit_trans:
+ 	return btrfs_commit_transaction(trans);
+ }
  
-+	mutex_lock(&bch_register_lock);
- 	for_each_cache(ca, c, i)
- 		if (ca) {
- 			ca->set = NULL;
-@@ -1529,7 +1530,6 @@ static void cache_set_free(struct closur
- 	mempool_exit(&c->search);
- 	kfree(c->devices);
++/*
++ * Make sure any existing dellaloc is flushed for any root used by a send
++ * operation so that we do not miss any data and we do not race with writeback
++ * finishing and changing a tree while send is using the tree. This could
++ * happen if a subvolume is in RW mode, has delalloc, is turned to RO mode and
++ * a send operation then uses the subvolume.
++ * After flushing delalloc ensure_commit_roots_uptodate() must be called.
++ */
++static int flush_delalloc_roots(struct send_ctx *sctx)
++{
++	struct btrfs_root *root = sctx->parent_root;
++	int ret;
++	int i;
++
++	if (root) {
++		ret = btrfs_start_delalloc_snapshot(root);
++		if (ret)
++			return ret;
++		btrfs_wait_ordered_extents(root, U64_MAX, 0, U64_MAX);
++	}
++
++	for (i = 0; i < sctx->clone_roots_cnt; i++) {
++		root = sctx->clone_roots[i].root;
++		ret = btrfs_start_delalloc_snapshot(root);
++		if (ret)
++			return ret;
++		btrfs_wait_ordered_extents(root, U64_MAX, 0, U64_MAX);
++	}
++
++	return 0;
++}
++
+ static void btrfs_root_dec_send_in_progress(struct btrfs_root* root)
+ {
+ 	spin_lock(&root->root_item_lock);
+@@ -6807,6 +6839,10 @@ long btrfs_ioctl_send(struct file *mnt_f
+ 			NULL);
+ 	sort_clone_roots = 1;
  
--	mutex_lock(&bch_register_lock);
- 	list_del(&c->list);
- 	mutex_unlock(&bch_register_lock);
- 
++	ret = flush_delalloc_roots(sctx);
++	if (ret)
++		goto out;
++
+ 	ret = ensure_commit_roots_uptodate(sctx);
+ 	if (ret)
+ 		goto out;
 
 
