@@ -2,97 +2,101 @@ Return-Path: <SRS0=lq4r=TU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31486C04AAC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:41:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64A35C46460
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:41:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F17E7204FD
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:41:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="PIxO99nw"
+	by mail.kernel.org (Postfix) with ESMTP id 3AAD721479
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:41:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1558356089;
+	bh=ZvBc6xseuzdpDAbWQrLLjEtwnUyRl3awfzeV6QFCcPc=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=N+aipjLrFWm0hu0KU3KJa4t+oaPCs2Fshrh0+dpuMDjSPM8xK3JiY/KsmhYT/ylwr
+	 SgFpACq1Ahl7r1cl2LB68hTPJUip704cFuYzWCmuUaKaOcXG+ZIxYVP1PF4KeSk7TG
+	 SUcCjk7H6FlRKD7+egjhxkr7pXbUnyodoUcAegRY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391445AbfETMlX (ORCPT
+        id S2391450AbfETMl2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 08:41:23 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:40167 "EHLO vps0.lunn.ch"
+        Mon, 20 May 2019 08:41:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47986 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390361AbfETMlS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 08:41:18 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=nBnRj/EK3sEUMzbkUvHuqcjTW3RRt/lB/8667Tiwik0=; b=PIxO99nwMHUosViOpBy5S6+McG
-        ntWcm8Dksr3pquMWAWjk9qa209ixnC3c1CT3RDC6L5i3oOI50Mnw3LqOhXldniCOjNl4xM5RR/yon
-        ZufQiR/rE0WR96qFsheL83jH77gJjfvhDVA19cEmP+Jja4plYPVovfuxOX1XIVQKHQsY=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.89)
-        (envelope-from <andrew@lunn.ch>)
-        id 1hShbH-0006pg-IA; Mon, 20 May 2019 14:41:07 +0200
-Date:   Mon, 20 May 2019 14:41:07 +0200
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Sagar Shrikant Kadam <sagar.kadam@sifive.com>
-Cc:     robh+dt@kernel.org, mark.rutland@arm.com, peter@korsgaard.com,
-        palmer@sifive.com, paul.walmsley@sifive.com,
-        linux-i2c@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 3/3] i2c-ocores: sifive: add polling mode workaround
- for FU540-C000 SoC
-Message-ID: <20190520124107.GA25785@lunn.ch>
-References: <1558354817-12034-1-git-send-email-sagar.kadam@sifive.com>
- <1558354817-12034-4-git-send-email-sagar.kadam@sifive.com>
+        id S2388538AbfETMbZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 08:31:25 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9BAF920675;
+        Mon, 20 May 2019 12:31:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1558355485;
+        bh=ZvBc6xseuzdpDAbWQrLLjEtwnUyRl3awfzeV6QFCcPc=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=s1LvCsjgOmTIBCiDlmu7XA91GBbGlt6Ikskn0E+UyY0fZfuSURU8TNbQPJQeK33UQ
+         AwcSj8ZzioNX9PK3OQB1wocjbAk0qYyy1bMmW2IWVCsNLdKCnCNPiJkE950trueLyl
+         0kj2ETPlJVOCbmrOZymkzpkKLDjvVtOrxfkKZp8Y=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Sebastian Reichel <sebastian.reichel@collabora.com>
+Subject: [PATCH 5.1 013/128] power: supply: axp288_charger: Fix unchecked return value
+Date:   Mon, 20 May 2019 14:13:20 +0200
+Message-Id: <20190520115250.356740292@linuxfoundation.org>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190520115249.449077487@linuxfoundation.org>
+References: <20190520115249.449077487@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1558354817-12034-4-git-send-email-sagar.kadam@sifive.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> @@ -406,7 +416,7 @@ static int ocores_xfer(struct i2c_adapter *adap,
->  {
->  	struct ocores_i2c *i2c = i2c_get_adapdata(adap);
->  
-> -	if (i2c->flags & OCORES_FLAG_POLL)
-> +	if ((i2c->flags & (OCORES_FLAG_POLL | OCORES_FLAG_BROKEN_IRQ)))
->  		return ocores_xfer_polling(adap, msgs, num);
->  	return ocores_xfer_core(i2c, msgs, num, false);
->  }
+From: Gustavo A. R. Silva <gustavo@embeddedor.com>
 
-You are not listening to what i said. All you need to know here is
-that you must poll. It does not matter if the IRQ is broken or not.
+commit c3422ad5f84a66739ec6a37251ca27638c85b6be upstream.
 
->  	irq = platform_get_irq(pdev, 0);
->  	if (irq == -ENXIO) {
-> -		i2c->flags |= OCORES_FLAG_POLL;
+Currently there is no check on platform_get_irq() return value
+in case it fails, hence never actually reporting any errors and
+causing unexpected behavior when using such value as argument
+for function regmap_irq_get_virq().
 
-If there is no interrupt, you need to poll. So keep this line.
+Fix this by adding a proper check, a message reporting any errors
+and returning *pirq*
 
-> +		/*
-> +		 * Set a OCORES_FLAG_BROKEN_IRQ to enable workaround for
-> +		 * FU540-C000 SoC in polling mode interface of i2c-ocore driver.
-> +		 * Else enable default polling mode interface for SIFIVE/OCORE
-> +		 * device types.
-> +		 */
-> +		match = of_match_node(ocores_i2c_match, pdev->dev.of_node);
-> +		if (match && (long)match->data == TYPE_SIFIVE_REV0)
-> +			i2c->flags |= OCORES_FLAG_BROKEN_IRQ;
+Addresses-Coverity-ID: 1443940 ("Improper use of negative value")
+Fixes: 843735b788a4 ("power: axp288_charger: axp288 charger driver")
+Cc: stable@vger.kernel.org
+Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+Reviewed-by: Hans de Goede <hdegoede@redhat.com>
+Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-If it is a OCORE, IRQ is broken, so OR in OCORES_FLAG_BROKEN_IRQ.
+---
+ drivers/power/supply/axp288_charger.c |    4 ++++
+ 1 file changed, 4 insertions(+)
 
->  
-> -	if (!(i2c->flags & OCORES_FLAG_POLL)) {
-> +	if (!(i2c->flags & (OCORES_FLAG_POLL | OCORES_FLAG_BROKEN_IRQ))) {
->  		ret = devm_request_irq(&pdev->dev, irq, ocores_isr, 0,
->  				       pdev->name, i2c);
+--- a/drivers/power/supply/axp288_charger.c
++++ b/drivers/power/supply/axp288_charger.c
+@@ -833,6 +833,10 @@ static int axp288_charger_probe(struct p
+ 	/* Register charger interrupts */
+ 	for (i = 0; i < CHRG_INTR_END; i++) {
+ 		pirq = platform_get_irq(info->pdev, i);
++		if (pirq < 0) {
++			dev_err(&pdev->dev, "Failed to get IRQ: %d\n", pirq);
++			return pirq;
++		}
+ 		info->irq[i] = regmap_irq_get_virq(info->regmap_irqc, pirq);
+ 		if (info->irq[i] < 0) {
+ 			dev_warn(&info->pdev->dev,
 
-Here you just need to know if you are polling. Broken IRQ does not
-matter.
 
-	Andrew
