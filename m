@@ -2,62 +2,70 @@ Return-Path: <SRS0=lq4r=TU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A3EDC04AAC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 13:35:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43644C04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 13:38:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 59556213F2
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 13:35:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 15C0C20856
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 13:38:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="Wu/evQfL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388773AbfETNf6 (ORCPT
+        id S1732430AbfETNh7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 09:35:58 -0400
-Received: from mx2.mailbox.org ([80.241.60.215]:10828 "EHLO mx2.mailbox.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725951AbfETNf4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 09:35:56 -0400
-Received: from smtp2.mailbox.org (smtp2.mailbox.org [80.241.60.241])
-        (using TLSv1.2 with cipher ECDHE-RSA-CHACHA20-POLY1305 (256/256 bits))
-        (No client certificate requested)
-        by mx2.mailbox.org (Postfix) with ESMTPS id C59DBA1156;
-        Mon, 20 May 2019 15:35:51 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at heinlein-support.de
-Received: from smtp2.mailbox.org ([80.241.60.241])
-        by spamfilter04.heinlein-hosting.de (spamfilter04.heinlein-hosting.de [80.241.56.122]) (amavisd-new, port 10030)
-        with ESMTP id MekZNDxt4WEW; Mon, 20 May 2019 15:35:47 +0200 (CEST)
-From:   Aleksa Sarai <cyphar@cyphar.com>
-To:     Al Viro <viro@zeniv.linux.org.uk>,
-        Jeff Layton <jlayton@kernel.org>,
-        "J. Bruce Fields" <bfields@fieldses.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        David Howells <dhowells@redhat.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Shuah Khan <skhan@linuxfoundation.org>
-Cc:     Aleksa Sarai <cyphar@cyphar.com>,
-        Eric Biederman <ebiederm@xmission.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Jann Horn <jannh@google.com>,
-        Christian Brauner <christian@brauner.io>,
-        Tycho Andersen <tycho@tycho.ws>,
-        David Drysdale <drysdale@google.com>,
-        Chanho Min <chanho.min@lge.com>,
-        Oleg Nesterov <oleg@redhat.com>, Aleksa Sarai <asarai@suse.de>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        containers@lists.linux-foundation.org,
-        linux-kselftest@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-api@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arch@vger.kernel.org
-Subject: [PATCH RFC v8 10/10] selftests: add resolveat(2) selftests
-Date:   Mon, 20 May 2019 23:33:05 +1000
-Message-Id: <20190520133305.11925-11-cyphar@cyphar.com>
-In-Reply-To: <20190520133305.11925-1-cyphar@cyphar.com>
-References: <20190520133305.11925-1-cyphar@cyphar.com>
+        Mon, 20 May 2019 09:37:59 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:32843 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730555AbfETNh6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 09:37:58 -0400
+Received: by mail-wr1-f68.google.com with SMTP id d9so1696939wrx.0
+        for <linux-kernel@vger.kernel.org>; Mon, 20 May 2019 06:37:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=I6G0MyMU3h5OB0O4nHOQOZaH9nZxvNQnPCN8hItt310=;
+        b=Wu/evQfLtHMDRV7nVLyUt9S+NgZOjI0Xpdpf7vk+eLfcfhsI4H8ZD8fg/9is2Heb83
+         1iECSj30NX8xy9OQXoOApX7n+lsgz70UoK4txOLhlg2cWvAabO88f0mo/itWsp5Oo1Fo
+         k25caGap24naJPEvMoSo1VfTPA6broJ53cy3iY0rnatOlDLOjH5554AZ3HLVlmiN+v+T
+         ZEb4p9IPO/9/a+EPo9C7EAAvscMQnIeLCYseDB+rJWbqOf0kbvHXrSKDwbJt2YDDcv5p
+         +JPVRDikhVtu9pGNIN/Zill4tpS+6swH5OKWVdyV3M1SGFo0V6NELkfibFcjUaJveo0b
+         W+hQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=I6G0MyMU3h5OB0O4nHOQOZaH9nZxvNQnPCN8hItt310=;
+        b=NTVhUl2OrxZt8Itbxrb18LVtze4I8ecCvyIga3fSMssihngIhKxxJlE/unUCQ0SkEm
+         y8zG29DEPzAFWIQQzYZiMT3om18qL5/QCg9LD1fNU3oD/6DofoJPWn+e68sSeNruryLR
+         xmv2fbrJUu2yOYFmhj07FHSeMFL29BTBBzk0ThIXkuIzpuFR4aOchOxMBl7axMJ2Zpsg
+         LUJh+vxsD6RIYrhPsSt+6YEQjOP+Sg/snzVjW7mwvFXtW3GyyobipB9/oeck7ycRo9J8
+         T/qMOVH5KuzElQNp/3auBLHZxab/Ga7s0P3+0fCW+b7BIBL5U6lOyWT6ZKkQzNUWrSwU
+         6Ffw==
+X-Gm-Message-State: APjAAAULnuEU1wki/61is9Vr4xMhV0KL8AE4tvO+i/X2eFxMdwmrA+mv
+        AulH+3yAq6Ua3uYGwyinBVY86A==
+X-Google-Smtp-Source: APXvYqyUsx6BWDMbs6M/qDpPzB1MW+xaQ5meKg2UcdD2zHeFLRipUXrqqBZ2pzKqNcgOvybYHGCFKA==
+X-Received: by 2002:adf:e845:: with SMTP id d5mr18649788wrn.154.1558359476773;
+        Mon, 20 May 2019 06:37:56 -0700 (PDT)
+Received: from bender.baylibre.local (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
+        by smtp.gmail.com with ESMTPSA id t19sm12167059wmi.42.2019.05.20.06.37.55
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Mon, 20 May 2019 06:37:56 -0700 (PDT)
+From:   Neil Armstrong <narmstrong@baylibre.com>
+To:     a.hajda@samsung.com, Laurent.pinchart@ideasonboard.com
+Cc:     jonas@kwiboo.se, hverkuil@xs4all.nl,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        dri-devel@lists.freedesktop.org, jernej.skrabec@siol.net,
+        heiko@sntech.de, maxime.ripard@bootlin.com, hjc@rock-chips.com,
+        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 0/5] drm/meson: Add support for HDMI2.0 YUV420 4k60
+Date:   Mon, 20 May 2019 15:37:48 +0200
+Message-Id: <20190520133753.23871-1-narmstrong@baylibre.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -65,976 +73,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Test all of the various resolveat(2) flags, as well as how file
-descriptor re-opening works. A small stress-test of a symlink-rename
-attack is included to show that the protections against ".."-based
-attacks are sufficient.
+The Synopsys DW-HDMI CSC does not support downsampling to YUV420, so
+the encoder must downsamle before, feeding the controller with a YUV420
+pixel stream.
 
-Signed-off-by: Aleksa Sarai <cyphar@cyphar.com>
----
- tools/testing/selftests/Makefile              |   1 +
- tools/testing/selftests/resolveat/.gitignore  |   1 +
- tools/testing/selftests/resolveat/Makefile    |   6 +
- tools/testing/selftests/resolveat/helpers.h   | 195 +++++++++
- .../selftests/resolveat/linkmode_test.c       | 306 ++++++++++++++
- .../selftests/resolveat/resolveat_test.c      | 400 ++++++++++++++++++
- 6 files changed, 909 insertions(+)
- create mode 100644 tools/testing/selftests/resolveat/.gitignore
- create mode 100644 tools/testing/selftests/resolveat/Makefile
- create mode 100644 tools/testing/selftests/resolveat/helpers.h
- create mode 100644 tools/testing/selftests/resolveat/linkmode_test.c
- create mode 100644 tools/testing/selftests/resolveat/resolveat_test.c
+The encoder must declare the new bus format enc encoding the bridge, in
+order to take it in account.
 
-diff --git a/tools/testing/selftests/Makefile b/tools/testing/selftests/Makefile
-index 971fc8428117..f558d6f21c4b 100644
---- a/tools/testing/selftests/Makefile
-+++ b/tools/testing/selftests/Makefile
-@@ -37,6 +37,7 @@ TARGETS += powerpc
- TARGETS += proc
- TARGETS += pstore
- TARGETS += ptrace
-+TARGETS += resolveat
- TARGETS += rseq
- TARGETS += rtc
- TARGETS += seccomp
-diff --git a/tools/testing/selftests/resolveat/.gitignore b/tools/testing/selftests/resolveat/.gitignore
-new file mode 100644
-index 000000000000..bd68f6c3fd07
---- /dev/null
-+++ b/tools/testing/selftests/resolveat/.gitignore
-@@ -0,0 +1 @@
-+/*_test
-diff --git a/tools/testing/selftests/resolveat/Makefile b/tools/testing/selftests/resolveat/Makefile
-new file mode 100644
-index 000000000000..375eaf4a55e7
---- /dev/null
-+++ b/tools/testing/selftests/resolveat/Makefile
-@@ -0,0 +1,6 @@
-+CFLAGS += -g -I../../../../usr/include/
-+
-+TEST_GEN_PROGS := linkmode_test resolveat_test
-+
-+include ../lib.mk
-+
-diff --git a/tools/testing/selftests/resolveat/helpers.h b/tools/testing/selftests/resolveat/helpers.h
-new file mode 100644
-index 000000000000..c765f606cdbc
---- /dev/null
-+++ b/tools/testing/selftests/resolveat/helpers.h
-@@ -0,0 +1,195 @@
-+// SPDX-License-Identifier: GPL-2.0-or-later
-+/*
-+ * Author: Aleksa Sarai <cyphar@cyphar.com>
-+ * Copyright (C) 2018-2019 SUSE LLC.
-+ */
-+
-+#ifndef __RESOLVEAT_H__
-+#define __RESOLVEAT_H__
-+
-+#define _GNU_SOURCE
-+#include <errno.h>
-+#include <fcntl.h>
-+#include <sched.h>
-+#include <sys/stat.h>
-+#include <sys/types.h>
-+#include <sys/mount.h>
-+#include <stdio.h>
-+#include <stdlib.h>
-+#include <stdbool.h>
-+#include <string.h>
-+#include <syscall.h>
-+#include <limits.h>
-+#include <unistd.h>
-+
-+#include "../kselftest.h"
-+
-+#define ARRAY_LEN(X) (sizeof (X) / sizeof (*(X)))
-+
-+#ifndef __NR_resolveat
-+#define __NR_resolveat 435
-+#define RESOLVE_UPGRADE_NOWRITE	0x002 /* Disallow re-opening for write. */
-+#define RESOLVE_UPGRADE_NOREAD	0x004 /* Disallow re-opening for read. */
-+#define RESOLVE_NO_FOLLOW	0x008 /* Don't follow trailing symlinks. */
-+#define RESOLVE_BENEATH		0x010 /* Block "lexical" trickery like "..", symlinks, absolute paths, etc. */
-+#define RESOLVE_XDEV		0x020 /* Block mount-point crossings (includes bind-mounts). */
-+#define RESOLVE_NO_MAGICLINKS	0x040 /* Block procfs-style "magic" symlinks. */
-+#define RESOLVE_NO_SYMLINKS	0x080 /* Block all symlinks (implies AT_NO_MAGICLINKS). */
-+#define RESOLVE_IN_ROOT		0x100 /* Scope ".." and "/" resolution to dirfd (like chroot(2)). */
-+#endif /* __NR_resolveat */
-+
-+#ifndef O_EMPTYPATH
-+#define O_EMPTYPATH 040000000
-+#endif /* O_EMPTYPATH */
-+
-+#define E_func(func, ...)						\
-+	do {								\
-+		if (func(__VA_ARGS__) < 0)				\
-+			ksft_exit_fail_msg("%s:%d %s failed\n", \
-+					   __FILE__, __LINE__, #func);\
-+	} while (0)
-+
-+#define E_mkdirat(...)   E_func(mkdirat,   __VA_ARGS__)
-+#define E_symlinkat(...) E_func(symlinkat, __VA_ARGS__)
-+#define E_touchat(...)   E_func(touchat,   __VA_ARGS__)
-+#define E_readlink(...)  E_func(readlink,  __VA_ARGS__)
-+#define E_fstatat(...)   E_func(fstatat,   __VA_ARGS__)
-+#define E_asprintf(...)  E_func(asprintf,  __VA_ARGS__)
-+#define E_fchdir(...)    E_func(fchdir,    __VA_ARGS__)
-+#define E_mount(...)     E_func(mount,     __VA_ARGS__)
-+#define E_unshare(...)   E_func(unshare,   __VA_ARGS__)
-+#define E_setresuid(...) E_func(setresuid, __VA_ARGS__)
-+#define E_chmod(...)     E_func(chmod,     __VA_ARGS__)
-+
-+#define E_assert(expr, msg, ...)					\
-+	do {								\
-+		if (!(expr))						\
-+			ksft_exit_fail_msg("ASSERT(%s:%d) failed (%s): " msg "\n", \
-+					   __FILE__, __LINE__, #expr, ##__VA_ARGS__); \
-+	} while (0)
-+
-+typedef int (*openfunc_t)(int dfd, const char *path, unsigned int flags);
-+
-+static int sys_resolveat(int dfd, const char *path, unsigned int flags)
-+{
-+	int ret = syscall(__NR_resolveat, dfd, path, flags);
-+	return ret >= 0 ? ret : -errno;
-+}
-+
-+static int sys_openat(int dfd, const char *path, unsigned int flags)
-+{
-+	int ret = openat(dfd, path, flags);
-+	return ret >= 0 ? ret : -errno;
-+}
-+
-+static int sys_execveat(int dfd, const char *path,
-+			char *const argv[], char *const envp[], int flags)
-+{
-+	int ret = syscall(SYS_execveat, dfd, path, argv, envp, flags);
-+	return ret >= 0 ? ret : -errno;
-+}
-+
-+static char *resolveat_flags(unsigned int flags)
-+{
-+	char *flagset, *p;
-+
-+	E_asprintf(&flagset, "%s%s%s%s%s%s%s%s0",
-+		   (flags & RESOLVE_UPGRADE_NOWRITE)	? "RESOLVE_UPGRADE_NOWRITE|" : "",
-+		   (flags & RESOLVE_UPGRADE_NOREAD)	? "RESOLVE_UPGRADE_NOREAD|" : "",
-+		   (flags & RESOLVE_NO_FOLLOW)		? "RESOLVE_NO_FOLLOW|" : "",
-+		   (flags & RESOLVE_BENEATH)		? "RESOLVE_BENEATH|" : "",
-+		   (flags & RESOLVE_XDEV)		? "RESOLVE_XDEV|" : "",
-+		   (flags & RESOLVE_NO_MAGICLINKS)	? "RESOLVE_NO_MAGICLINKS|" : "",
-+		   (flags & RESOLVE_NO_SYMLINKS)	? "RESOLVE_NO_SYMLINKS|" : "",
-+		   (flags & RESOLVE_IN_ROOT)		? "RESOLVE_IN_ROOT|" : "");
-+
-+	/* Fix up the trailing |0. */
-+	p = strstr(flagset, "|0");
-+	if (p)
-+		*p = '\0';
-+	return flagset;
-+}
-+
-+static char *openat_flags(unsigned int flags)
-+{
-+	char *flagset;
-+	const char *modeflag = "(none)";
-+
-+	/* Handle the peculiarity of the ACC_MODE flags. */
-+	switch (flags & 0x03) {
-+		case O_RDWR:
-+			modeflag = "O_RDWR";
-+			break;
-+		case O_RDONLY:
-+			modeflag = "O_RDONLY";
-+			break;
-+		case O_WRONLY:
-+			modeflag = "O_WRONLY";
-+			break;
-+	}
-+
-+	/* TODO: Add more open flags. */
-+	E_asprintf(&flagset, "%s", modeflag);
-+	return flagset;
-+}
-+
-+static int touchat(int dfd, const char *path)
-+{
-+	int fd = openat(dfd, path, O_CREAT);
-+	if (fd >= 0)
-+		close(fd);
-+	return fd;
-+}
-+
-+static char *fdreadlink(int fd)
-+{
-+	char *target, *tmp;
-+
-+	E_asprintf(&tmp, "/proc/self/fd/%d", fd);
-+
-+	target = malloc(PATH_MAX);
-+	if (!target)
-+		ksft_exit_fail_msg("fdreadlink: malloc failed\n");
-+	memset(target, 0, PATH_MAX);
-+
-+	E_readlink(tmp, target, PATH_MAX);
-+	free(tmp);
-+	return target;
-+}
-+
-+static bool fdequal(int fd, int dfd, const char *path)
-+{
-+	char *fdpath, *dfdpath, *other;
-+	bool cmp;
-+
-+	fdpath = fdreadlink(fd);
-+	dfdpath = fdreadlink(dfd);
-+
-+	if (!path)
-+		E_asprintf(&other, "%s", dfdpath);
-+	else if (*path == '/')
-+		E_asprintf(&other, "%s", path);
-+	else
-+		E_asprintf(&other, "%s/%s", dfdpath, path);
-+
-+	cmp = !strcmp(fdpath, other);
-+	if (!cmp)
-+		ksft_print_msg("fdequal: expected '%s' but got '%s'\n", other, fdpath);
-+
-+	free(fdpath);
-+	free(dfdpath);
-+	free(other);
-+	return cmp;
-+}
-+
-+static void test_resolveat_supported(void)
-+{
-+	int fd = sys_resolveat(AT_FDCWD, ".", 0);
-+	if (fd == -ENOSYS)
-+		ksft_exit_skip("resolveat(2) unsupported on this kernel\n");
-+	if (fd < 0)
-+		ksft_exit_fail_msg("resolveat(2) supported check failed: %s\n", strerror(-fd));
-+	close(fd);
-+}
-+
-+#endif /* __RESOLVEAT_H__ */
-diff --git a/tools/testing/selftests/resolveat/linkmode_test.c b/tools/testing/selftests/resolveat/linkmode_test.c
-new file mode 100644
-index 000000000000..b60375099494
---- /dev/null
-+++ b/tools/testing/selftests/resolveat/linkmode_test.c
-@@ -0,0 +1,306 @@
-+// SPDX-License-Identifier: GPL-2.0-or-later
-+/*
-+ * Author: Aleksa Sarai <cyphar@cyphar.com>
-+ * Copyright (C) 2018-2019 SUSE LLC.
-+ */
-+
-+#define _GNU_SOURCE
-+#include <libgen.h>
-+#include <errno.h>
-+#include <fcntl.h>
-+#include <sched.h>
-+#include <sys/stat.h>
-+#include <sys/types.h>
-+#include <sys/mount.h>
-+#include <stdio.h>
-+#include <stdlib.h>
-+#include <stdbool.h>
-+#include <string.h>
-+#include <syscall.h>
-+#include <limits.h>
-+#include <unistd.h>
-+
-+#include "../kselftest.h"
-+#include "helpers.h"
-+
-+static mode_t fdmode(int fd)
-+{
-+	char *fdpath;
-+	struct stat statbuf;
-+	mode_t mode;
-+
-+	E_asprintf(&fdpath, "/proc/self/fd/%d", fd);
-+	E_fstatat(AT_FDCWD, fdpath, &statbuf, AT_SYMLINK_NOFOLLOW);
-+	mode = (statbuf.st_mode & ~S_IFMT);
-+	free(fdpath);
-+
-+	return mode;
-+}
-+
-+static int reopen_proc(int fd, unsigned int flags)
-+{
-+	int ret, saved_errno;
-+	char *fdpath;
-+
-+	E_asprintf(&fdpath, "/proc/self/fd/%d", fd);
-+	ret = open(fdpath, flags);
-+	saved_errno = errno;
-+	free(fdpath);
-+
-+	return ret >= 0 ? ret : -saved_errno;
-+}
-+
-+static int reopen_oemptypath(int fd, unsigned int flags)
-+{
-+	int ret = openat(fd, "", O_EMPTYPATH | flags);
-+	return ret >= 0 ? ret : -errno;
-+}
-+
-+struct reopen_test {
-+	openfunc_t open;
-+	mode_t chmod_mode;
-+	struct {
-+		unsigned int flags;
-+		mode_t mode;
-+		int err;
-+	} orig, new;
-+};
-+
-+static bool reopen(int fd, struct reopen_test *test)
-+{
-+	int newfd;
-+	mode_t proc_mode;
-+	bool failed = false;
-+
-+	/* Check that the proc mode is correct. */
-+	proc_mode = fdmode(fd);
-+	if (proc_mode != test->orig.mode) {
-+		ksft_print_msg("incorrect fdmode (got[%o] != want[%o])\n",
-+			       proc_mode, test->orig.mode);
-+		failed = true;
-+	}
-+
-+	/* Re-open through /proc. */
-+	newfd = reopen_proc(fd, test->new.flags);
-+	if (newfd != test->new.err && (newfd < 0 || test->new.err < 0)) {
-+		ksft_print_msg("/proc failure (%d != %d [%s])\n",
-+			       newfd, test->new.err, strerror(-test->new.err));
-+		failed = true;
-+	}
-+	if (newfd >= 0) {
-+		proc_mode = fdmode(newfd);
-+		if (proc_mode != test->new.mode) {
-+			ksft_print_msg("/proc wrong fdmode (got[%o] != want[%o])\n",
-+				       proc_mode, test->new.mode);
-+			failed = true;
-+		}
-+		close(newfd);
-+	}
-+
-+	/* Re-open with O_EMPTYPATH. */
-+	newfd = reopen_oemptypath(fd, test->new.flags);
-+	if (newfd != test->new.err && (newfd < 0 || test->new.err < 0)) {
-+		ksft_print_msg("O_EMPTYPATH failure (%d != %d [%s])\n",
-+			       newfd, test->new.err, strerror(-test->new.err));
-+		failed = true;
-+	}
-+	if (newfd >= 0) {
-+		proc_mode = fdmode(newfd);
-+		if (proc_mode != test->new.mode) {
-+			ksft_print_msg("O_EMPTYPATH wrong fdmode (got[%o] != want[%o])\n",
-+				       proc_mode, test->new.mode);
-+			failed = true;
-+		}
-+		close(newfd);
-+	}
-+
-+	return failed;
-+}
-+
-+void test_reopen_ordinary(bool privileged)
-+{
-+	int fd;
-+	int err_access = privileged ? 0 : -EACCES;
-+	char tmpfile[] = "/tmp/reopen-testfile.XXXXXX";
-+
-+	fd = mkstemp(tmpfile);
-+	E_assert(fd >= 0, "mkstemp failed: %m\n");
-+	close(fd);
-+
-+	struct reopen_test tests[] = {
-+		/* Re-opening with the same mode should succeed. */
-+		{ .open = sys_openat,	  .chmod_mode = 0400,
-+		  .orig.flags = O_RDONLY, .orig.mode  = privileged ? 0777 : 0555,
-+		  .new.flags  = O_RDONLY, .new.mode   = privileged ? 0777 : 0555},
-+		{ .open = sys_openat,	  .chmod_mode = 0200,
-+		  .orig.flags = O_WRONLY, .orig.mode  = privileged ? 0777 : 0333,
-+		  .new.flags  = O_WRONLY, .new.mode   = privileged ? 0777 : 0333 },
-+		{ .open = sys_openat,	  .chmod_mode = 0600,
-+		  .orig.flags =   O_RDWR, .orig.mode  = 0777,
-+		  .new.flags  =   O_RDWR, .new.mode   = 0777 },
-+		{ .open = sys_openat,	  .chmod_mode = 0600,
-+		  .orig.flags =   O_RDWR, .orig.mode  = 0777,
-+		  .new.flags  = O_RDONLY, .new.mode   = 0777 },
-+		{ .open = sys_openat,	  .chmod_mode = 0600,
-+		  .orig.flags =   O_RDWR, .orig.mode  = 0777,
-+		  .new.flags  = O_WRONLY, .new.mode   = 0777 },
-+
-+		/*
-+		 * Upgrading the mode of a normal file works if the user had the
-+		 * required access at original-open time.
-+		 */
-+		{ .open = sys_openat,	  .chmod_mode = 0600,
-+		  .orig.flags = O_RDONLY, .orig.mode  = 0777,
-+		  .new.flags  = O_WRONLY, .new.mode   = 0777 },
-+		{ .open = sys_openat,	  .chmod_mode = 0600,
-+		  .orig.flags = O_WRONLY, .orig.mode  = 0777,
-+		  .new.flags  = O_RDONLY, .new.mode   = 0777 },
-+		{ .open = sys_openat,	  .chmod_mode = 0600,
-+		  .orig.flags = O_RDONLY, .orig.mode  = 0777,
-+		  .new.flags  =   O_RDWR, .new.mode   = 0777 },
-+		{ .open = sys_openat,	  .chmod_mode = 0600,
-+		  .orig.flags = O_WRONLY, .orig.mode  = 0777,
-+		  .new.flags  =   O_RDWR, .new.mode   = 0777 },
-+
-+		/* However, re-open will be blocked given insufficient permissions. */
-+		{ .open = sys_openat,	  .chmod_mode = 0400,
-+		  .orig.flags = O_RDONLY, .orig.mode  = privileged ? 0777 : 0555,
-+		  .new.flags  = O_WRONLY, .new.mode   = 0777, .new.err = err_access },
-+		{ .open = sys_openat,	  .chmod_mode = 0200,
-+		  .orig.flags = O_WRONLY, .orig.mode  = privileged ? 0777 : 0333,
-+		  .new.flags  = O_RDONLY, .new.mode   = 0777, .new.err = err_access },
-+		{ .open = sys_openat,	  .chmod_mode = 0400,
-+		  .orig.flags = O_RDONLY, .orig.mode  = privileged ? 0777 : 0555,
-+		  .new.flags  =   O_RDWR, .new.mode   = 0777, .new.err = err_access },
-+		{ .open = sys_openat,	  .chmod_mode = 0200,
-+		  .orig.flags = O_WRONLY, .orig.mode  = privileged ? 0777 : 0333,
-+		  .new.flags  =   O_RDWR, .new.mode   = 0777, .new.err = err_access },
-+
-+		/* O_PATH re-opens (of ordinary files) will always work. */
-+		{ .open = sys_openat,	  .chmod_mode = 0000,
-+		  .orig.flags =   O_PATH, .orig.mode  = 0777,
-+		  .new.flags  = O_WRONLY, .new.mode   = 0777 },
-+		{ .open = sys_resolveat,  .chmod_mode = 0000,
-+		  .orig.flags =        0, .orig.mode  = 0777,
-+		  .new.flags  = O_WRONLY, .new.mode   = 0777 },
-+		{ .open = sys_openat,	  .chmod_mode = 0000,
-+		  .orig.flags =   O_PATH, .orig.mode  = 0777,
-+		  .new.flags  = O_RDONLY, .new.mode   = 0777 },
-+		{ .open = sys_resolveat,  .chmod_mode = 0000,
-+		  .orig.flags =        0, .orig.mode  = 0777,
-+		  .new.flags  = O_RDONLY, .new.mode   = 0777 },
-+		{ .open = sys_openat,	  .chmod_mode = 0000,
-+		  .orig.flags =   O_PATH, .orig.mode  = 0777,
-+		  .new.flags  =   O_RDWR, .new.mode   = 0777 },
-+		{ .open = sys_resolveat,  .chmod_mode = 0000,
-+		  .orig.flags =        0, .orig.mode  = 0777,
-+		  .new.flags  =   O_RDWR, .new.mode   = 0777 },
-+
-+		/*
-+		 * resolveat(2) RESOLVE_UPGRADE_NO* flags. In the privileged case, the
-+		 * re-open will work but the mode will still be scoped to the mode
-+		 * (or'd with the open acc_mode).
-+		 */
-+		{ .open = sys_resolveat,  .chmod_mode = 0000,
-+		  .orig.flags = RESOLVE_UPGRADE_NOREAD | RESOLVE_UPGRADE_NOWRITE,
-+		                          .orig.mode  = 0111,
-+		  .new.flags  = O_RDONLY, .new.mode   = 0555, .new.err = err_access },
-+		{ .open = sys_resolveat,  .chmod_mode = 0000,
-+		  .orig.flags = RESOLVE_UPGRADE_NOREAD | RESOLVE_UPGRADE_NOWRITE,
-+		                          .orig.mode  = 0111,
-+		  .new.flags  = O_WRONLY, .new.mode   = 0333, .new.err = err_access },
-+		{ .open = sys_resolveat,  .chmod_mode = 0000,
-+		  .orig.flags = RESOLVE_UPGRADE_NOREAD | RESOLVE_UPGRADE_NOWRITE,
-+		                          .orig.mode  = 0111,
-+		  .new.flags  =   O_RDWR, .new.mode   = 0777, .new.err = err_access },
-+		{ .open = sys_resolveat,  .chmod_mode = 0000,
-+		  .orig.flags = RESOLVE_UPGRADE_NOWRITE,
-+		                          .orig.mode  = 0555,
-+		  .new.flags  = O_RDONLY, .new.mode   = 0555 },
-+		{ .open = sys_resolveat,  .chmod_mode = 0000,
-+		  .orig.flags = RESOLVE_UPGRADE_NOREAD,
-+		                          .orig.mode  = 0333,
-+		  .new.flags  = O_WRONLY, .new.mode   = 0333 },
-+		{ .open = sys_resolveat,  .chmod_mode = 0000,
-+		  .orig.flags = RESOLVE_UPGRADE_NOWRITE,
-+		                          .orig.mode  = 0555,
-+		  .new.flags  = O_RDONLY, .new.mode   = 0555 },
-+		{ .open = sys_resolveat,  .chmod_mode = 0000,
-+		  .orig.flags = RESOLVE_UPGRADE_NOREAD,
-+		                          .orig.mode  = 0333,
-+		  .new.flags  = O_RDONLY, .new.mode   = 0777, .new.err = err_access },
-+		{ .open = sys_resolveat,  .chmod_mode = 0000,
-+		  .orig.flags = RESOLVE_UPGRADE_NOWRITE,
-+		                          .orig.mode  = 0555,
-+		  .new.flags  = O_WRONLY, .new.mode   = 0777, .new.err = err_access },
-+	};
-+
-+	for (int i = 0; i < ARRAY_LEN(tests); i++) {
-+		int fd;
-+		char *orig_flagset, *new_flagset;
-+		struct reopen_test *test = &tests[i];
-+		void (*resultfn)(const char *msg, ...) = ksft_test_result_pass;
-+
-+		E_chmod(tmpfile, test->chmod_mode);
-+
-+		fd = test->open(AT_FDCWD, tmpfile, test->orig.flags);
-+		E_assert(fd >= 0, "open '%s' failed: %m\n", tmpfile);
-+
-+		/* Make sure that any EACCES we see is not from inode permissions. */
-+		E_chmod(tmpfile, 0777);
-+
-+		if (reopen(fd, test))
-+			resultfn = ksft_test_result_fail;
-+
-+		close(fd);
-+
-+		new_flagset = openat_flags(test->new.flags);
-+		if (test->open == sys_openat)
-+			orig_flagset = openat_flags(test->orig.flags);
-+		else if (test->open == sys_resolveat)
-+			orig_flagset = resolveat_flags(test->orig.flags);
-+		else
-+			ksft_exit_fail_msg("unknown test->open\n");
-+
-+		resultfn("%sordinary reopen of (orig[%s]=%s, new=%s) chmod=%.3o %s\n",
-+			 privileged ? "privileged " : "",
-+			 test->open == sys_openat ? "openat" : "resolveat",
-+			 orig_flagset, new_flagset, test->chmod_mode,
-+			 test->new.err < 0 ? strerror(-test->new.err) : "works");
-+
-+		free(new_flagset);
-+		free(orig_flagset);
-+	}
-+
-+	unlink(tmpfile);
-+}
-+
-+
-+int main(int argc, char **argv)
-+{
-+	bool privileged;
-+
-+	ksft_print_header();
-+	test_resolveat_supported();
-+
-+	/*
-+	 * Technically we should be checking CAP_DAC_OVERRIDE, but it's easier to
-+	 * just assume that euid=0 has the full capability set.
-+	 */
-+	privileged = (geteuid() == 0);
-+	if (!privileged)
-+		ksft_test_result_skip("privileged tests require euid == 0\n");
-+	else {
-+		test_reopen_ordinary(privileged);
-+
-+		E_setresuid(65534, 65534, 65534);
-+		privileged = (geteuid() == 0);
-+	}
-+
-+	test_reopen_ordinary(privileged);
-+
-+	if (ksft_get_fail_cnt() + ksft_get_error_cnt() > 0)
-+		ksft_exit_fail();
-+	else
-+		ksft_exit_pass();
-+}
-diff --git a/tools/testing/selftests/resolveat/resolveat_test.c b/tools/testing/selftests/resolveat/resolveat_test.c
-new file mode 100644
-index 000000000000..72f2e8c5dfe0
---- /dev/null
-+++ b/tools/testing/selftests/resolveat/resolveat_test.c
-@@ -0,0 +1,400 @@
-+// SPDX-License-Identifier: GPL-2.0-or-later
-+/*
-+ * Author: Aleksa Sarai <cyphar@cyphar.com>
-+ * Copyright (C) 2018-2019 SUSE LLC.
-+ */
-+
-+#define _GNU_SOURCE
-+#include <libgen.h>
-+#include <errno.h>
-+#include <fcntl.h>
-+#include <sched.h>
-+#include <sys/stat.h>
-+#include <sys/types.h>
-+#include <sys/mount.h>
-+#include <sys/mman.h>
-+#include <stdio.h>
-+#include <stdlib.h>
-+#include <stdbool.h>
-+#include <string.h>
-+#include <syscall.h>
-+#include <limits.h>
-+#include <unistd.h>
-+
-+#include "../kselftest.h"
-+#include "helpers.h"
-+
-+/*
-+ * Construct a test directory with the following structure:
-+ *
-+ * root/
-+ * |-- procexe -> /proc/self/exe
-+ * |-- procroot -> /proc/self/root
-+ * |-- root/
-+ * |-- mnt/ [mountpoint]
-+ * |   |-- self -> ../mnt/
-+ * |   `-- absself -> /mnt/
-+ * |-- etc/
-+ * |   `-- passwd
-+ * |-- relsym -> etc/passwd
-+ * |-- abssym -> /etc/passwd
-+ * |-- abscheeky -> /cheeky
-+ * |-- abscheeky -> /cheeky
-+ * `-- cheeky/
-+ *     |-- absself -> /
-+ *     |-- self -> ../../root/
-+ *     |-- garbageself -> /../../root/
-+ *     |-- passwd -> ../cheeky/../cheeky/../etc/../etc/passwd
-+ *     |-- abspasswd -> /../cheeky/../cheeky/../etc/../etc/passwd
-+ *     |-- dotdotlink -> ../../../../../../../../../../../../../../etc/passwd
-+ *     `-- garbagelink -> /../../../../../../../../../../../../../../etc/passwd
-+ */
-+int setup_testdir(void)
-+{
-+	int dfd, tmpfd;
-+	char dirname[] = "/tmp/resolveat-testdir.XXXXXX";
-+
-+	/* Unshare and make /tmp a new directory. */
-+	E_unshare(CLONE_NEWNS);
-+	E_mount("", "/tmp", "", MS_PRIVATE, "");
-+
-+	/* Make the top-level directory. */
-+	if (!mkdtemp(dirname))
-+		ksft_exit_fail_msg("setup_testdir: failed to create tmpdir\n");
-+	dfd = open(dirname, O_PATH | O_DIRECTORY);
-+	if (dfd < 0)
-+		ksft_exit_fail_msg("setup_testdir: failed to open tmpdir\n");
-+
-+	/* A sub-directory which is actually used for tests. */
-+	E_mkdirat(dfd, "root", 0755);
-+	tmpfd = openat(dfd, "root", O_PATH | O_DIRECTORY);
-+	if (tmpfd < 0)
-+		ksft_exit_fail_msg("setup_testdir: failed to open tmpdir\n");
-+	close(dfd);
-+	dfd = tmpfd;
-+
-+	E_symlinkat("/proc/self/exe", dfd, "procexe");
-+	E_symlinkat("/proc/self/root", dfd, "procroot");
-+	E_mkdirat(dfd, "root", 0755);
-+
-+	/* There is no mountat(2), so use chdir. */
-+	E_mkdirat(dfd, "mnt", 0755);
-+	E_fchdir(dfd);
-+	E_mount("tmpfs", "./mnt", "tmpfs", MS_NOSUID | MS_NODEV, "");
-+	E_symlinkat("../mnt/", dfd, "mnt/self");
-+	E_symlinkat("/mnt/", dfd, "mnt/absself");
-+
-+	E_mkdirat(dfd, "etc", 0755);
-+	E_touchat(dfd, "etc/passwd");
-+
-+	E_symlinkat("etc/passwd", dfd, "relsym");
-+	E_symlinkat("/etc/passwd", dfd, "abssym");
-+	E_symlinkat("/cheeky", dfd, "abscheeky");
-+
-+	E_mkdirat(dfd, "cheeky", 0755);
-+
-+	E_symlinkat("/", dfd, "cheeky/absself");
-+	E_symlinkat("../../root/", dfd, "cheeky/self");
-+	E_symlinkat("/../../root/", dfd, "cheeky/garbageself");
-+
-+	E_symlinkat("../cheeky/../etc/../etc/passwd", dfd, "cheeky/passwd");
-+	E_symlinkat("/../cheeky/../etc/../etc/passwd", dfd, "cheeky/abspasswd");
-+
-+	E_symlinkat("../../../../../../../../../../../../../../etc/passwd",
-+		    dfd, "cheeky/dotdotlink");
-+	E_symlinkat("/../../../../../../../../../../../../../../etc/passwd",
-+		    dfd, "cheeky/garbagelink");
-+
-+	return dfd;
-+}
-+
-+struct basic_test {
-+	const char *dir;
-+	const char *path;
-+	unsigned int flags;
-+	bool pass;
-+	union {
-+		int err;
-+		const char *path;
-+	} out;
-+};
-+
-+void test_resolveat_basic_tests(void)
-+{
-+	int rootfd;
-+	char *procselfexe;
-+
-+	E_asprintf(&procselfexe, "/proc/%d/exe", getpid());
-+	rootfd = setup_testdir();
-+
-+	struct basic_test tests[] = {
-+		/** RESOLVE_BENEATH **/
-+		/* Attempts to cross dirfd should be blocked. */
-+		{ .path = "/",			.flags = RESOLVE_BENEATH,
-+		  .out.err = -EXDEV,		.pass = false },
-+		{ .path = "cheeky/absself",	.flags = RESOLVE_BENEATH,
-+		  .out.err = -EXDEV,		.pass = false },
-+		{ .path = "abscheeky/absself",	.flags = RESOLVE_BENEATH,
-+		  .out.err = -EXDEV,		.pass = false },
-+		{ .path = "..",			.flags = RESOLVE_BENEATH,
-+		  .out.err = -EXDEV,		.pass = false },
-+		{ .path = "../root/",		.flags = RESOLVE_BENEATH,
-+		  .out.err = -EXDEV,		.pass = false },
-+		{ .path = "cheeky/self",	.flags = RESOLVE_BENEATH,
-+		  .out.err = -EXDEV,		.pass = false },
-+		{ .path = "abscheeky/self",	.flags = RESOLVE_BENEATH,
-+		  .out.err = -EXDEV,		.pass = false },
-+		{ .path = "cheeky/garbageself",	.flags = RESOLVE_BENEATH,
-+		  .out.err = -EXDEV,		.pass = false },
-+		{ .path = "abscheeky/garbageself", .flags = RESOLVE_BENEATH,
-+		  .out.err = -EXDEV,		.pass = false },
-+		/* Only relative paths that stay inside dirfd should work. */
-+		{ .path = "root",		.flags = RESOLVE_BENEATH,
-+		  .out.path = "root",		.pass = true },
-+		{ .path = "etc",		.flags = RESOLVE_BENEATH,
-+		  .out.path = "etc",		.pass = true },
-+		{ .path = "etc/passwd",		.flags = RESOLVE_BENEATH,
-+		  .out.path = "etc/passwd",	.pass = true },
-+		{ .path = "relsym",		.flags = RESOLVE_BENEATH,
-+		  .out.path = "etc/passwd",	.pass = true },
-+		{ .path = "cheeky/passwd",	.flags = RESOLVE_BENEATH,
-+		  .out.path = "etc/passwd",	.pass = true },
-+		{ .path = "abscheeky/passwd",	.flags = RESOLVE_BENEATH,
-+		  .out.err = -EXDEV,		.pass = false },
-+		{ .path = "abssym",		.flags = RESOLVE_BENEATH,
-+		  .out.err = -EXDEV,		.pass = false },
-+		{ .path = "/etc/passwd",	.flags = RESOLVE_BENEATH,
-+		  .out.err = -EXDEV,		.pass = false },
-+		{ .path = "cheeky/abspasswd",	.flags = RESOLVE_BENEATH,
-+		  .out.err = -EXDEV,		.pass = false },
-+		{ .path = "abscheeky/abspasswd", .flags = RESOLVE_BENEATH,
-+		  .out.err = -EXDEV,		.pass = false },
-+		/* Tricky paths should fail. */
-+		{ .path = "cheeky/dotdotlink",	.flags = RESOLVE_BENEATH,
-+		  .out.err = -EXDEV,		.pass = false },
-+		{ .path = "abscheeky/dotdotlink", .flags = RESOLVE_BENEATH,
-+		  .out.err = -EXDEV,		.pass = false },
-+		{ .path = "cheeky/garbagelink",	.flags = RESOLVE_BENEATH,
-+		  .out.err = -EXDEV,		.pass = false },
-+		{ .path = "abscheeky/garbagelink", .flags = RESOLVE_BENEATH,
-+		  .out.err = -EXDEV,		.pass = false },
-+
-+		/** RESOLVE_IN_ROOT **/
-+		/* All attempts to cross the dirfd will be scoped-to-root. */
-+		{ .path = "/",			.flags = RESOLVE_IN_ROOT,
-+		  .out.path = NULL,		.pass = true },
-+		{ .path = "cheeky/absself",	.flags = RESOLVE_IN_ROOT,
-+		  .out.path = NULL,		.pass = true },
-+		{ .path = "abscheeky/absself",	.flags = RESOLVE_IN_ROOT,
-+		  .out.path = NULL,		.pass = true },
-+		{ .path = "..",			.flags = RESOLVE_IN_ROOT,
-+		  .out.path = NULL,		.pass = true },
-+		{ .path = "../root/",		.flags = RESOLVE_IN_ROOT,
-+		  .out.path = "root",		.pass = true },
-+		{ .path = "../root/",		.flags = RESOLVE_IN_ROOT,
-+		  .out.path = "root",		.pass = true },
-+		{ .path = "cheeky/self",	.flags = RESOLVE_IN_ROOT,
-+		  .out.path = "root",		.pass = true },
-+		{ .path = "cheeky/garbageself",	.flags = RESOLVE_IN_ROOT,
-+		  .out.path = "root",		.pass = true },
-+		{ .path = "abscheeky/garbageself", .flags = RESOLVE_IN_ROOT,
-+		  .out.path = "root",		.pass = true },
-+		{ .path = "root",		.flags = RESOLVE_IN_ROOT,
-+		  .out.path = "root",		.pass = true },
-+		{ .path = "etc",		.flags = RESOLVE_IN_ROOT,
-+		  .out.path = "etc",		.pass = true },
-+		{ .path = "etc/passwd",		.flags = RESOLVE_IN_ROOT,
-+		  .out.path = "etc/passwd",	.pass = true },
-+		{ .path = "relsym",		.flags = RESOLVE_IN_ROOT,
-+		  .out.path = "etc/passwd",	.pass = true },
-+		{ .path = "cheeky/passwd",	.flags = RESOLVE_IN_ROOT,
-+		  .out.path = "etc/passwd",	.pass = true },
-+		{ .path = "abscheeky/passwd",	.flags = RESOLVE_IN_ROOT,
-+		  .out.path = "etc/passwd",	.pass = true },
-+		{ .path = "abssym",		.flags = RESOLVE_IN_ROOT,
-+		  .out.path = "etc/passwd",	.pass = true },
-+		{ .path = "/etc/passwd",	.flags = RESOLVE_IN_ROOT,
-+		  .out.path = "etc/passwd",	.pass = true },
-+		{ .path = "cheeky/abspasswd",	.flags = RESOLVE_IN_ROOT,
-+		  .out.path = "etc/passwd",	.pass = true },
-+		{ .path = "abscheeky/abspasswd",.flags = RESOLVE_IN_ROOT,
-+		  .out.path = "etc/passwd",	.pass = true },
-+		{ .path = "cheeky/dotdotlink",	.flags = RESOLVE_IN_ROOT,
-+		  .out.path = "etc/passwd",	.pass = true },
-+		{ .path = "abscheeky/dotdotlink", .flags = RESOLVE_IN_ROOT,
-+		  .out.path = "etc/passwd",	.pass = true },
-+		{ .path = "/../../../../abscheeky/dotdotlink", .flags = RESOLVE_IN_ROOT,
-+		  .out.path = "etc/passwd",	.pass = true },
-+		{ .path = "cheeky/garbagelink",	.flags = RESOLVE_IN_ROOT,
-+		  .out.path = "etc/passwd",	.pass = true },
-+		{ .path = "abscheeky/garbagelink", .flags = RESOLVE_IN_ROOT,
-+		  .out.path = "etc/passwd",	.pass = true },
-+		{ .path = "/../../../../abscheeky/garbagelink", .flags = RESOLVE_IN_ROOT,
-+		  .out.path = "etc/passwd",	.pass = true },
-+
-+		/** RESOLVE_XDEV **/
-+		/* Crossing *down* into a mountpoint is disallowed. */
-+		{ .path = "mnt",		.flags = RESOLVE_XDEV,
-+		  .out.err = -EXDEV,		.pass = false },
-+		{ .path = "mnt/",		.flags = RESOLVE_XDEV,
-+		  .out.err = -EXDEV,		.pass = false },
-+		{ .path = "mnt/.",		.flags = RESOLVE_XDEV,
-+		  .out.err = -EXDEV,		.pass = false },
-+		/* Crossing *up* out of a mountpoint is disallowed. */
-+		{ .dir = "mnt", .path = ".",	.flags = RESOLVE_XDEV,
-+		  .out.path = "mnt",		.pass = true },
-+		{ .dir = "mnt", .path = "..",	.flags = RESOLVE_XDEV,
-+		  .out.err = -EXDEV,		.pass = false },
-+		{ .dir = "mnt", .path = "../mnt", .flags = RESOLVE_XDEV,
-+		  .out.err = -EXDEV,		.pass = false },
-+		{ .dir = "mnt", .path = "self",	.flags = RESOLVE_XDEV,
-+		  .out.err = -EXDEV,		.pass = false },
-+		{ .dir = "mnt", .path = "absself", .flags = RESOLVE_XDEV,
-+		  .out.err = -EXDEV,		.pass = false },
-+		/* Jumping to "/" is ok, but later components cannot cross. */
-+		{ .dir = "mnt", .path = "/",	.flags = RESOLVE_XDEV,
-+		  .out.path = "/",		.pass = true },
-+		{ .dir = "/", .path = "/",	.flags = RESOLVE_XDEV,
-+		  .out.path = "/",		.pass = true },
-+		{ .path = "/proc/1",		.flags = RESOLVE_XDEV,
-+		  .out.err = -EXDEV,		.pass = false },
-+		{ .path = "/tmp",		.flags = RESOLVE_XDEV,
-+		  .out.err = -EXDEV,		.pass = false },
-+
-+		/** RESOLVE_NO_MAGICLINKS **/
-+		/* Regular symlinks should work. */
-+		{ .path = "relsym",		.flags = RESOLVE_NO_MAGICLINKS,
-+		  .out.path = "etc/passwd",	.pass = true },
-+		/* Magic-links should not work. */
-+		{ .path = "procexe",		.flags = RESOLVE_NO_MAGICLINKS,
-+		  .out.err = -ELOOP,		.pass = false },
-+		{ .path = "/proc/self/exe",	.flags = RESOLVE_NO_MAGICLINKS,
-+		  .out.err = -ELOOP,		.pass = false },
-+		{ .path = "procroot/etc",	.flags = RESOLVE_NO_MAGICLINKS,
-+		  .out.err = -ELOOP,		.pass = false },
-+		{ .path = "/proc/self/root/etc", .flags = RESOLVE_NO_MAGICLINKS,
-+		  .out.err = -ELOOP,		.pass = false },
-+		{ .path = "/proc/self/root/etc", .flags = RESOLVE_NO_MAGICLINKS | RESOLVE_NO_FOLLOW,
-+		  .out.err = -ELOOP,		.pass = false },
-+		{ .path = "/proc/self/exe",	.flags = RESOLVE_NO_MAGICLINKS | RESOLVE_NO_FOLLOW,
-+		  .out.path = procselfexe,	.pass = true },
-+
-+		/** RESOLVE_NO_SYMLINKS **/
-+		/* Normal paths should work. */
-+		{ .path = ".",			.flags = RESOLVE_NO_SYMLINKS,
-+		  .out.path = NULL,		.pass = true },
-+		{ .path = "root",		.flags = RESOLVE_NO_SYMLINKS,
-+		  .out.path = "root",		.pass = true },
-+		{ .path = "etc",		.flags = RESOLVE_NO_SYMLINKS,
-+		  .out.path = "etc",		.pass = true },
-+		{ .path = "etc/passwd",		.flags = RESOLVE_NO_SYMLINKS,
-+		  .out.path = "etc/passwd",	.pass = true },
-+		/* Regular symlinks are blocked. */
-+		{ .path = "relsym",		.flags = RESOLVE_NO_SYMLINKS,
-+		  .out.err = -ELOOP,		.pass = false },
-+		{ .path = "abssym",		.flags = RESOLVE_NO_SYMLINKS,
-+		  .out.err = -ELOOP,		.pass = false },
-+		{ .path = "cheeky/garbagelink",	.flags = RESOLVE_NO_SYMLINKS,
-+		  .out.err = -ELOOP,		.pass = false },
-+		{ .path = "abscheeky/garbagelink", .flags = RESOLVE_NO_SYMLINKS,
-+		  .out.err = -ELOOP,		.pass = false },
-+		{ .path = "abscheeky/absself",	.flags = RESOLVE_NO_SYMLINKS,
-+		  .out.err = -ELOOP,		.pass = false },
-+		/* Trailing symlinks with NO_FOLLOW. */
-+		{ .path = "relsym",		.flags = RESOLVE_NO_SYMLINKS | RESOLVE_NO_FOLLOW,
-+		  .out.path = "relsym",		.pass = true },
-+		{ .path = "abssym",		.flags = RESOLVE_NO_SYMLINKS | RESOLVE_NO_FOLLOW,
-+		  .out.path = "abssym",		.pass = true },
-+		{ .path = "cheeky/garbagelink",	.flags = RESOLVE_NO_SYMLINKS | RESOLVE_NO_FOLLOW,
-+		  .out.path = "cheeky/garbagelink", .pass = true },
-+		{ .path = "abscheeky/garbagelink", .flags = RESOLVE_NO_SYMLINKS | RESOLVE_NO_FOLLOW,
-+		  .out.err = -ELOOP,		.pass = false },
-+		{ .path = "abscheeky/absself",	.flags = RESOLVE_NO_SYMLINKS | RESOLVE_NO_FOLLOW,
-+		  .out.err = -ELOOP,		.pass = false },
-+	};
-+
-+	for (int i = 0; i < ARRAY_LEN(tests); i++) {
-+		int dfd, fd;
-+		bool failed;
-+		void (*resultfn)(const char *msg, ...) = ksft_test_result_pass;
-+
-+		struct basic_test *test = &tests[i];
-+		char *flagstr = resolveat_flags(test->flags);
-+
-+		if (test->dir)
-+			dfd = openat(rootfd, test->dir, O_PATH | O_DIRECTORY);
-+		else
-+			dfd = dup(rootfd);
-+		if (dfd < 0) {
-+			resultfn = ksft_test_result_error;
-+			goto next;
-+		}
-+
-+		fd = sys_resolveat(dfd, test->path, test->flags);
-+		if (test->pass)
-+			failed = (fd < 0 || !fdequal(fd, rootfd, test->out.path));
-+		else
-+			failed = (fd != test->out.err);
-+		if (fd >= 0)
-+			close(fd);
-+		close(dfd);
-+
-+		if (failed)
-+			resultfn = ksft_test_result_fail;
-+
-+next:
-+		if (test->pass)
-+			resultfn("resolveat(root[%s], %s, %s) ==> %s\n",
-+				 test->dir ?: ".", test->path, flagstr,
-+				 test->out.path ?: ".");
-+		else
-+			resultfn("resolveat(root[%s], %s, %s) ==> %d (%s)\n",
-+				 test->dir ?: ".", test->path, flagstr,
-+				 test->out.err, strerror(-test->out.err));
-+		free(flagstr);
-+	}
-+
-+	free(procselfexe);
-+	close(rootfd);
-+}
-+
-+
-+static int proc_exec(int fd)
-+{
-+	int err, saved_errno;
-+	char *procpath;
-+	char *argv[] = {"foo", NULL};
-+	char *envp[] = {"bar", NULL};
-+
-+	E_asprintf(&procpath, "/proc/self/fd/%d", fd);
-+	err = execve(procpath, argv, envp);
-+	saved_errno = errno;
-+	free(procpath);
-+
-+	return err >= 0 ? err : -saved_errno;
-+}
-+
-+static int fd_exec(int fd)
-+{
-+	char *argv[] = {"foo", NULL};
-+	char *envp[] = {"bar", NULL};
-+
-+	return sys_execveat(fd, "", argv, envp, AT_EMPTY_PATH);
-+}
-+
-+int main(int argc, char **argv)
-+{
-+	ksft_print_header();
-+	test_resolveat_supported();
-+
-+	/* NOTE: We should be checking for CAP_SYS_ADMIN here... */
-+	if (geteuid() != 0)
-+		ksft_exit_skip("resolveat(2) tests require euid == 0\n");
-+
-+	test_resolveat_basic_tests();
-+
-+	if (ksft_get_fail_cnt() + ksft_get_error_cnt() > 0)
-+		ksft_exit_fail();
-+	else
-+		ksft_exit_pass();
-+}
+To solve this, a new format_set() bridge op is added, permitting setting
+a new input bus format and encoding to the bridge chain.
+
+This solves YUV420 setup, but also solved setting 10bit, 12bit or 16bit
+input bus format in order to support HDMI >8bit depths.
+
+The DW-HDMI controller is updated to dynamically select a coherent output
+bus format depending on the input bus format and on the internal CSC
+supported modes.
+
+The DW-HDMI is also updated to support the connector display_info bus_formats
+entry to permit forcing a specific output bus format to force, for example,
+an YUV444 output format instead of the default RGB output bus format.
+
+Only the meson DRM dw_hdmi glue allows ycbcr420 modes, so no breakage
+is expected here.
+
+The remaining patches adds support for 4:2:0 output and clock setup for
+the meson DW-HDMI glue, and how YUV444 output can be forced.
+
+Changes since rfc:
+* Fixed small logic error in drm_bridge_format_set()
+* rebased on v5.2-rc1
+
+Neil Armstrong (5):
+  drm/bridge: dw-hdmi: allow ycbcr420 modes for >= 0x200a
+  drm/bridge: add encoder support to specify bridge input format
+  drm/bridge: dw-hdmi: Add support for dynamic output format setup
+  drm/meson: Add YUV420 output support
+  drm/meson: Output in YUV444 if sink supports it
+
+ drivers/gpu/drm/bridge/synopsys/dw-hdmi.c | 127 ++++++++++++++++++++--
+ drivers/gpu/drm/drm_bridge.c              |  35 ++++++
+ drivers/gpu/drm/meson/meson_dw_hdmi.c     | 111 ++++++++++++++++---
+ drivers/gpu/drm/meson/meson_vclk.c        |  93 ++++++++++++----
+ drivers/gpu/drm/meson/meson_vclk.h        |   7 +-
+ drivers/gpu/drm/meson/meson_venc.c        |   6 +-
+ drivers/gpu/drm/meson/meson_venc.h        |  11 ++
+ drivers/gpu/drm/meson/meson_venc_cvbs.c   |   3 +-
+ include/drm/bridge/dw_hdmi.h              |   1 +
+ include/drm/drm_bridge.h                  |  19 ++++
+ 10 files changed, 358 insertions(+), 55 deletions(-)
+
 -- 
 2.21.0
 
