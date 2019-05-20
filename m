@@ -2,86 +2,107 @@ Return-Path: <SRS0=lq4r=TU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC4C7C04AAC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 11:05:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BCAEBC04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 11:07:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B29FF20862
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 11:05:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558350312;
-	bh=VwQSMr5Rvx+iTC5OoVTUamKLhLW6uSee5o3V25yr4TY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=XGaGiE1w9fLaMNoN42d3gjeHE5Sd9YBWPNHr9v2pPx8eu5D0xgXlsFDYFIs46ZgOs
-	 1LKmQSCsFqCUoauIf+to3i7xL1vmvwNgdbFAyIzZ0w5bJkXwoQsdbJmRnVN2yeRPyD
-	 YJPb2VOu4CgXwgvnW/edWELKeSnQbU6FUXlwVgYo=
+	by mail.kernel.org (Postfix) with ESMTP id 8AF9D208C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 11:07:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732302AbfETLFL (ORCPT
+        id S1732323AbfETLHu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 07:05:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58090 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732235AbfETLFL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 07:05:11 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 41B2A206B6;
-        Mon, 20 May 2019 11:05:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558350310;
-        bh=VwQSMr5Rvx+iTC5OoVTUamKLhLW6uSee5o3V25yr4TY=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=fF9P8PNhrc6oWUssYT1FD3oqgs7I5ECIp9YF3zNo77k9bLGVbFI+SbCOjbHjn9Syf
-         zeb2/LeLpac4nqYDKzrZFfOByIPFnWqxIFvvn7A/RBJ1m8X1IJ67qBnOT2m3wJuWOn
-         LA7yOl3IQbLmLAAdWusF0cdD9LkXYGrJmYLpogGo=
-Date:   Mon, 20 May 2019 13:05:08 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     Lech Perczak <l.perczak@camlintechnologies.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Eric Dumazet <edumazet@google.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Piotr Figiel <p.figiel@camlintechnologies.com>,
-        Krzysztof =?utf-8?Q?Drobi=C5=84ski?= 
-        <k.drobinski@camlintechnologies.com>,
-        Pawel Lenkow <p.lenkow@camlintechnologies.com>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>
-Subject: Re: Recurring warning in page_copy_sane (inside copy_page_to_iter)
- when running stress tests involving drop_caches
-Message-ID: <20190520110508.GA20211@kroah.com>
-References: <d68c83ba-bf5a-f6e8-44dd-be98f45fc97a@camlintechnologies.com>
- <14c9e6f4-3fb8-ca22-91cc-6970f1d52265@camlintechnologies.com>
- <011a16e4-6aff-104c-a19b-d2bd11caba99@camlintechnologies.com>
- <20190515144352.GC31704@bombadil.infradead.org>
- <20190515150406.GA22540@kroah.com>
- <20190515152035.GE31704@bombadil.infradead.org>
+        Mon, 20 May 2019 07:07:50 -0400
+Received: from relay7-d.mail.gandi.net ([217.70.183.200]:60329 "EHLO
+        relay7-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731781AbfETLHu (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 07:07:50 -0400
+X-Originating-IP: 90.88.22.185
+Received: from localhost (aaubervilliers-681-1-80-185.w90-88.abo.wanadoo.fr [90.88.22.185])
+        (Authenticated sender: maxime.ripard@bootlin.com)
+        by relay7-d.mail.gandi.net (Postfix) with ESMTPSA id 941102000B;
+        Mon, 20 May 2019 11:07:42 +0000 (UTC)
+Date:   Mon, 20 May 2019 13:07:42 +0200
+From:   Maxime Ripard <maxime.ripard@bootlin.com>
+To:     Luca Weiss <luca@z3ntu.xyz>
+Cc:     Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "moderated list:ARM/Allwinner sunXi SoC support" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] arm64: dts: allwinner: a64: Add lradc node
+Message-ID: <20190520110742.ykgxwaabzzwovgpl@flea>
+References: <20190518170929.24789-1-luca@z3ntu.xyz>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="2tvwy2f7gcggtbhz"
 Content-Disposition: inline
-In-Reply-To: <20190515152035.GE31704@bombadil.infradead.org>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+In-Reply-To: <20190518170929.24789-1-luca@z3ntu.xyz>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 15, 2019 at 08:20:35AM -0700, Matthew Wilcox wrote:
-> On Wed, May 15, 2019 at 05:04:06PM +0200, Greg Kroah-Hartman wrote:
-> > > Greg, can you consider 6daef95b8c914866a46247232a048447fff97279 for
-> > > backporting to stable?  Nobody realised it was a bugfix at the time it
-> > > went in.  I suspect there aren't too many of us running HIGHMEM kernels
-> > > any more.
-> > > 
-> > 
-> > Sure, what kernel version(s) should this go to?  4.19 and newer?
-> 
-> Looks like the problem was introduced with commit
-> a90bcb86ae700c12432446c4aa1819e7b8e172ec so 4.14 and newer, I think.
 
-Thanks, now queued up.
+--2tvwy2f7gcggtbhz
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-greg k-h
+Hi!
+
+On Sat, May 18, 2019 at 07:09:30PM +0200, Luca Weiss wrote:
+> Add a node describing the KEYADC on the A64.
+>
+> Signed-off-by: Luca Weiss <luca@z3ntu.xyz>
+> ---
+>  arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi | 7 +++++++
+>  1 file changed, 7 insertions(+)
+>
+> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
+> index 7734f70e1057..dc1bf8c1afb5 100644
+> --- a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
+> +++ b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
+> @@ -704,6 +704,13 @@
+>  			status = "disabled";
+>  		};
+>
+> +		lradc: lradc@1c21800 {
+> +			compatible = "allwinner,sun4i-a10-lradc-keys";
+> +			reg = <0x01c21800 0x100>;
+> +			interrupts = <GIC_SPI 30 IRQ_TYPE_LEVEL_HIGH>;
+> +			status = "disabled";
+> +		};
+> +
+
+The controller is pretty different on the A64 compared to the A10. The
+A10 has two channels for example, while the A64 has only one.
+
+It looks like the one in the A83t though, so you can use that
+compatible instead.
+
+Maxime
+
+--
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+
+--2tvwy2f7gcggtbhz
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXOKKfgAKCRDj7w1vZxhR
+xQtDAQDRqheEYCsPyl3AeW0fjU9b+loQ9xMJslojYXUeY00sCAEAwj5O5rO1Q8Tw
+C6Mk9UGH1BCkUcHPRpTCOaOAmurSpgA=
+=fEN1
+-----END PGP SIGNATURE-----
+
+--2tvwy2f7gcggtbhz--
