@@ -2,230 +2,120 @@ Return-Path: <SRS0=lq4r=TU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9B42C04AAC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 19:45:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29628C04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 19:52:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B3CEB20863
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 19:45:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 08343206B6
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 19:52:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726834AbfETTpQ (ORCPT
+        id S1726052AbfETTwT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 15:45:16 -0400
-Received: from mx.allycomm.com ([138.68.30.55]:63158 "EHLO mx.allycomm.com"
+        Mon, 20 May 2019 15:52:19 -0400
+Received: from inva021.nxp.com ([92.121.34.21]:47270 "EHLO inva021.nxp.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725554AbfETTpP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 15:45:15 -0400
-Received: from allycomm.com (184-23-191-215.vpn.dynamic.sonic.net [184.23.191.215])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx.allycomm.com (Postfix) with ESMTPSA id 0F5D53BCD8;
-        Mon, 20 May 2019 12:45:13 -0700 (PDT)
-From:   Jeff Kletsky <lede@allycomm.com>
-To:     Miquel Raynal <miquel.raynal@bootlin.com>,
-        Boris Brezillon <bbrezillon@kernel.org>,
-        Richard Weinberger <richard@nod.at>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Brian Norris <computersforpeace@gmail.com>,
-        Marek Vasut <marek.vasut@gmail.com>
-Cc:     Jeff Kletsky <git-commits@allycomm.com>,
-        Frieder Schrempf <frieder.schrempf@kontron.de>,
-        linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v3 3/3] mtd: spinand: Add support for GigaDevice GD5F1GQ4UFxxG
-Date:   Mon, 20 May 2019 12:44:54 -0700
-Message-Id: <20190520194454.32175-4-lede@allycomm.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190520194454.32175-1-lede@allycomm.com>
-References: <20190520194454.32175-1-lede@allycomm.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        id S1725372AbfETTwT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 15:52:19 -0400
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id CFFE4200281;
+        Mon, 20 May 2019 21:52:16 +0200 (CEST)
+Received: from smtp.na-rdc02.nxp.com (inv1260.us-phx01.nxp.com [134.27.49.11])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 961EA20027D;
+        Mon, 20 May 2019 21:52:16 +0200 (CEST)
+Received: from someleo.am.freescale.net (someleo.am.freescale.net [10.81.32.93])
+        by inv1260.us-phx01.nxp.com (Postfix) with ESMTP id D956040CF2;
+        Mon, 20 May 2019 12:52:15 -0700 (MST)
+From:   Li Yang <leoyang.li@nxp.com>
+To:     arm@kernel.org
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        shawnguo@kernel.org
+Subject: [GIT PULL] updates to soc/fsl drivers for v5.3
+Date:   Mon, 20 May 2019 14:52:15 -0500
+Message-Id: <20190520195215.26515-1-leoyang.li@nxp.com>
+X-Mailer: git-send-email 2.17.1
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jeff Kletsky <git-commits@allycomm.com>
+Hi arm-soc maintainers,
 
-The GigaDevice GD5F1GQ4UFxxG SPI NAND is in current production devices
-and, while it has the same logical layout as the E-series devices,
-it differs in the SPI interfacing in significant ways.
+This is a rebase of patches that missed 5.2 merge window.  Please
+help to review and merge it.  Thanks.
 
-This support is contingent on previous commits to:
 
-  * Add support for two-byte device IDs
-  * Define macros for page-read ops with three-byte addresses
+Regards,
+Leo
 
-http://www.gigadevice.com/datasheet/gd5f1gq4xfxxg/
+The following changes since commit a188339ca5a396acc588e5851ed7e19f66b0ebd9:
 
-Signed-off-by: Jeff Kletsky <git-commits@allycomm.com>
+  Linux 5.2-rc1 (2019-05-19 15:47:09 -0700)
 
-Reviewed-by: Frieder Schrempf <frieder.schrempf@kontron.de>
----
- drivers/mtd/nand/spi/gigadevice.c | 79 +++++++++++++++++++++++++------
- 1 file changed, 64 insertions(+), 15 deletions(-)
+are available in the Git repository at:
 
-diff --git a/drivers/mtd/nand/spi/gigadevice.c b/drivers/mtd/nand/spi/gigadevice.c
-index 0b49d8264bef..d6497ac4c5d8 100644
---- a/drivers/mtd/nand/spi/gigadevice.c
-+++ b/drivers/mtd/nand/spi/gigadevice.c
-@@ -9,11 +9,17 @@
- #include <linux/mtd/spinand.h>
- 
- #define SPINAND_MFR_GIGADEVICE			0xC8
-+
- #define GD5FXGQ4XA_STATUS_ECC_1_7_BITFLIPS	(1 << 4)
- #define GD5FXGQ4XA_STATUS_ECC_8_BITFLIPS	(3 << 4)
- 
- #define GD5FXGQ4UEXXG_REG_STATUS2		0xf0
- 
-+#define GD5FXGQ4UXFXXG_STATUS_ECC_MASK		(7 << 4)
-+#define GD5FXGQ4UXFXXG_STATUS_ECC_NO_BITFLIPS	(0 << 4)
-+#define GD5FXGQ4UXFXXG_STATUS_ECC_1_3_BITFLIPS	(1 << 4)
-+#define GD5FXGQ4UXFXXG_STATUS_ECC_UNCOR_ERROR	(7 << 4)
-+
- static SPINAND_OP_VARIANTS(read_cache_variants,
- 		SPINAND_PAGE_READ_FROM_CACHE_QUADIO_OP(0, 2, NULL, 0),
- 		SPINAND_PAGE_READ_FROM_CACHE_X4_OP(0, 1, NULL, 0),
-@@ -22,6 +28,14 @@ static SPINAND_OP_VARIANTS(read_cache_variants,
- 		SPINAND_PAGE_READ_FROM_CACHE_OP(true, 0, 1, NULL, 0),
- 		SPINAND_PAGE_READ_FROM_CACHE_OP(false, 0, 1, NULL, 0));
- 
-+static SPINAND_OP_VARIANTS(read_cache_variants_f,
-+		SPINAND_PAGE_READ_FROM_CACHE_QUADIO_OP(0, 2, NULL, 0),
-+		SPINAND_PAGE_READ_FROM_CACHE_X4_OP_3A(0, 1, NULL, 0),
-+		SPINAND_PAGE_READ_FROM_CACHE_DUALIO_OP(0, 1, NULL, 0),
-+		SPINAND_PAGE_READ_FROM_CACHE_X2_OP_3A(0, 1, NULL, 0),
-+		SPINAND_PAGE_READ_FROM_CACHE_OP_3A(true, 0, 1, NULL, 0),
-+		SPINAND_PAGE_READ_FROM_CACHE_OP_3A(false, 0, 0, NULL, 0));
-+
- static SPINAND_OP_VARIANTS(write_cache_variants,
- 		SPINAND_PROG_LOAD_X4(true, 0, NULL, 0),
- 		SPINAND_PROG_LOAD(true, 0, NULL, 0));
-@@ -59,6 +73,11 @@ static int gd5fxgq4xa_ooblayout_free(struct mtd_info *mtd, int section,
- 	return 0;
- }
- 
-+static const struct mtd_ooblayout_ops gd5fxgq4xa_ooblayout = {
-+	.ecc = gd5fxgq4xa_ooblayout_ecc,
-+	.free = gd5fxgq4xa_ooblayout_free,
-+};
-+
- static int gd5fxgq4xa_ecc_get_status(struct spinand_device *spinand,
- 					 u8 status)
- {
-@@ -83,7 +102,7 @@ static int gd5fxgq4xa_ecc_get_status(struct spinand_device *spinand,
- 	return -EINVAL;
- }
- 
--static int gd5fxgq4uexxg_ooblayout_ecc(struct mtd_info *mtd, int section,
-+static int gd5fxgq4_variant2_ooblayout_ecc(struct mtd_info *mtd, int section,
- 				       struct mtd_oob_region *region)
- {
- 	if (section)
-@@ -95,7 +114,7 @@ static int gd5fxgq4uexxg_ooblayout_ecc(struct mtd_info *mtd, int section,
- 	return 0;
- }
- 
--static int gd5fxgq4uexxg_ooblayout_free(struct mtd_info *mtd, int section,
-+static int gd5fxgq4_variant2_ooblayout_free(struct mtd_info *mtd, int section,
- 					struct mtd_oob_region *region)
- {
- 	if (section)
-@@ -108,6 +127,11 @@ static int gd5fxgq4uexxg_ooblayout_free(struct mtd_info *mtd, int section,
- 	return 0;
- }
- 
-+static const struct mtd_ooblayout_ops gd5fxgq4_variant2_ooblayout = {
-+	.ecc = gd5fxgq4_variant2_ooblayout_ecc,
-+	.free = gd5fxgq4_variant2_ooblayout_free,
-+};
-+
- static int gd5fxgq4uexxg_ecc_get_status(struct spinand_device *spinand,
- 					u8 status)
- {
-@@ -150,15 +174,25 @@ static int gd5fxgq4uexxg_ecc_get_status(struct spinand_device *spinand,
- 	return -EINVAL;
- }
- 
--static const struct mtd_ooblayout_ops gd5fxgq4xa_ooblayout = {
--	.ecc = gd5fxgq4xa_ooblayout_ecc,
--	.free = gd5fxgq4xa_ooblayout_free,
--};
-+static int gd5fxgq4ufxxg_ecc_get_status(struct spinand_device *spinand,
-+					u8 status)
-+{
-+	switch (status & GD5FXGQ4UXFXXG_STATUS_ECC_MASK) {
-+	case GD5FXGQ4UXFXXG_STATUS_ECC_NO_BITFLIPS:
-+		return 0;
- 
--static const struct mtd_ooblayout_ops gd5fxgq4uexxg_ooblayout = {
--	.ecc = gd5fxgq4uexxg_ooblayout_ecc,
--	.free = gd5fxgq4uexxg_ooblayout_free,
--};
-+	case GD5FXGQ4UXFXXG_STATUS_ECC_1_3_BITFLIPS:
-+		return 3;
-+
-+	case GD5FXGQ4UXFXXG_STATUS_ECC_UNCOR_ERROR:
-+		return -EBADMSG;
-+
-+	default: /* (2 << 4) through (6 << 4) are 4-8 corrected errors */
-+		return ((status & GD5FXGQ4UXFXXG_STATUS_ECC_MASK) >> 4) + 2;
-+	}
-+
-+	return -EINVAL;
-+}
- 
- static const struct spinand_info gigadevice_spinand_table[] = {
- 	SPINAND_INFO("GD5F1GQ4xA", 0xF1,
-@@ -195,25 +229,40 @@ static const struct spinand_info gigadevice_spinand_table[] = {
- 					      &write_cache_variants,
- 					      &update_cache_variants),
- 		     0,
--		     SPINAND_ECCINFO(&gd5fxgq4uexxg_ooblayout,
-+		     SPINAND_ECCINFO(&gd5fxgq4_variant2_ooblayout,
- 				     gd5fxgq4uexxg_ecc_get_status)),
-+	SPINAND_INFO("GD5F1GQ4UFxxG", 0xb148,
-+		     NAND_MEMORG(1, 2048, 128, 64, 1024, 1, 1, 1),
-+		     NAND_ECCREQ(8, 512),
-+		     SPINAND_INFO_OP_VARIANTS(&read_cache_variants_f,
-+					      &write_cache_variants,
-+					      &update_cache_variants),
-+		     0,
-+		     SPINAND_ECCINFO(&gd5fxgq4_variant2_ooblayout,
-+				     gd5fxgq4ufxxg_ecc_get_status)),
- };
- 
- static int gigadevice_spinand_detect(struct spinand_device *spinand)
- {
- 	u8 *id = spinand->id.data;
-+	u16 did;
- 	int ret;
- 
- 	/*
--	 * For GD NANDs, There is an address byte needed to shift in before IDs
--	 * are read out, so the first byte in raw_id is dummy.
-+	 * Earlier GDF5-series devices (A,E) return [0][MID][DID]
-+	 * Later (F) devices return [MID][DID1][DID2]
- 	 */
--	if (id[1] != SPINAND_MFR_GIGADEVICE)
-+
-+	if (id[0] == SPINAND_MFR_GIGADEVICE)
-+		did = (id[1] << 8) + id[2];
-+	else if (id[0] == 0 && id[1] == SPINAND_MFR_GIGADEVICE)
-+		did = id[2];
-+	else
- 		return 0;
- 
- 	ret = spinand_match_and_init(spinand, gigadevice_spinand_table,
- 				     ARRAY_SIZE(gigadevice_spinand_table),
--				     id[2]);
-+				     did);
- 	if (ret)
- 		return ret;
- 
--- 
-2.20.1
+  git://git.kernel.org/pub/scm/linux/kernel/git/leo/linux.git tags/soc-fsl-next-v5.3
 
+for you to fetch changes up to 5d1d046e2868fc876a69231eb2f24f000b521f1c:
+
+  soc: fsl: qbman_portals: add APIs to retrieve the probing status (2019-05-20 14:28:16 -0500)
+
+----------------------------------------------------------------
+NXP/FSL SoC driver updates for v5.3
+
+DPAA2 Console driver
+- Add driver to export two char devices to dump logs for MC and
+  AIOP
+
+DPAA2 DPIO driver
+- Add support for memory backed QBMan portals
+- Increase the timeout period to prevent false error
+- Add APIs to retrieve QBMan portal probing status
+
+DPAA Qman driver
+- Only make liodn fixup on powerpc SoCs with PAMU iommu
+
+----------------------------------------------------------------
+Ioana Ciornei (2):
+      Documentation: DT: Add entry for DPAA2 console
+      soc: fsl: add DPAA2 console support
+
+Laurentiu Tudor (2):
+      soc: fsl: qman: fixup liodns only on ppc targets
+      soc: fsl: qbman_portals: add APIs to retrieve the probing status
+
+Roy Pledge (2):
+      bus: mc-bus: Add support for mapping shareable portals
+      soc: fsl: dpio: Add support for memory backed QBMan portals
+
+Vabhav Sharma (1):
+      soc: fsl: guts: Add definition for LX2160A
+
+Youri Querry (1):
+      soc: fsl: dpio: Increase timeout for QBMan Management Commands
+
+ .../devicetree/bindings/misc/fsl,dpaa2-console.txt |  11 +
+ MAINTAINERS                                        |   1 +
+ drivers/bus/fsl-mc/dprc.c                          |  30 +-
+ drivers/bus/fsl-mc/fsl-mc-bus.c                    |  15 +-
+ drivers/bus/fsl-mc/fsl-mc-private.h                |  17 +-
+ drivers/soc/fsl/Kconfig                            |  10 +
+ drivers/soc/fsl/Makefile                           |   1 +
+ drivers/soc/fsl/dpaa2-console.c                    | 329 +++++++++++++++++++++
+ drivers/soc/fsl/dpio/dpio-driver.c                 |  23 +-
+ drivers/soc/fsl/dpio/qbman-portal.c                | 148 +++++++--
+ drivers/soc/fsl/dpio/qbman-portal.h                |   9 +-
+ drivers/soc/fsl/guts.c                             |   6 +
+ drivers/soc/fsl/qbman/bman_portal.c                |  20 +-
+ drivers/soc/fsl/qbman/qman_ccsr.c                  |   2 +-
+ drivers/soc/fsl/qbman/qman_portal.c                |  21 +-
+ drivers/soc/fsl/qbman/qman_priv.h                  |   9 +-
+ include/soc/fsl/bman.h                             |   8 +
+ include/soc/fsl/qman.h                             |   9 +
+ 18 files changed, 618 insertions(+), 51 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/misc/fsl,dpaa2-console.txt
+ create mode 100644 drivers/soc/fsl/dpaa2-console.c
