@@ -8,55 +8,55 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A64EDC04AAC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 22:51:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EF20C04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 22:51:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7A3FA20862
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 22:51:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E5AE520862
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 22:51:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Jqqqv4aI"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cPKte+l2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727384AbfETWvB (ORCPT
+        id S1727421AbfETWvN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 18:51:01 -0400
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:44681 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727247AbfETWuj (ORCPT
+        Mon, 20 May 2019 18:51:13 -0400
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:36220 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726584AbfETWuf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 18:50:39 -0400
-Received: by mail-lf1-f68.google.com with SMTP id n134so11493253lfn.11;
-        Mon, 20 May 2019 15:50:37 -0700 (PDT)
+        Mon, 20 May 2019 18:50:35 -0400
+Received: by mail-lf1-f65.google.com with SMTP id y10so11554002lfl.3;
+        Mon, 20 May 2019 15:50:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=rs6UcDEPHghR8cLHYXDtwpVUwKvGeIGqNO+qV7fU/Y8=;
-        b=Jqqqv4aIPPFB3lnmqpiKFCGIvWuuiVwTcc37XWGSqmhI0OFXOUAnnjmVw3N/zaTUtz
-         G/crC8GJVCjuhf3ukOFRt3otZI9d30YuH7EBKJCwd3OTdupVz+fARRwbn5OOyrNLV+Hl
-         IMCqCfTiJ6RJvBuBM63CsA6Fg/HYcYz5XNf6bEvrKGJOq7+MN0WjW5NmyTtx287wnxPm
-         iZJaZXXs/GqDNE7RuTx42l1VxspOY7RKv8Y513QClrMSC0B6sS2EQ2wBbJJ5jTFg9R07
-         LMGF9SwBqMIWGxXAxswAi9ET/UMhuzUTFlj/12qdcU+tSNNB4zpsWKHaGnSm24QULiK1
-         pamQ==
+        bh=Vxf6jf0I3TNkNsrZiapyq8fbjujSIosIG2y16ynybBA=;
+        b=cPKte+l2qZ4j+ifr+H9BD/YTN4+qCpvm4PqiW4AsAGuOwDsFPhaAkyVA5Uqe69hgN6
+         WjG+vSt/obII1rjN06w4ZNtggFlIMXhjxmeOpnP3TAa2cL2EH4I4EC/3lqf+dJvtWvyE
+         DSY4KwzMUD06suAcdr/fY9/loNVjfDTRZqQpwZUgzEfcwfoMjZwc346NKwZQnRfzK+IS
+         IrtuMWYeFuSbkvz96K0fvOTkbKPFAz82Oiy2OqhieGfVJ0Gq60ttHtwoHjajpx8lVAie
+         zIHBD7ceytsULxLRheDaOo7/Eu3b8xIp1hApNVO4CcFysAqlMRxdu7ybyJYBuZC84Bcy
+         ye9Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=rs6UcDEPHghR8cLHYXDtwpVUwKvGeIGqNO+qV7fU/Y8=;
-        b=h9ODroV/9CpLEuqBqWlHCx3VXvrkxcdsCy5qjFWB5WnMrSWh1J9at0p5ilJYsTr/D+
-         wRTxXJCr3n8woDfAQ/Jo+XR98pBqlr0CRe/CrnayDCthsKVSiRZdv5hWUeCkdNhVlPdN
-         TB9O35fM6V0a51RojVWGm1Mh8CcagMDzZ/9llLZhDQPN0Jr3e8NhJWPHbFuTqgwVr96+
-         JqctAwwOrMF8D4FpPCXL3zcVNAly/0ZvKYOjGu9bRfGTZfbGTsHFnHJyxgsMRHiJrjVI
-         nuTSigfe4Sgx7DLKU1K24xdgvz50vPl3Vbh5kXPu+tqvUTqB/3CB29ib99wygxMlANuw
-         SOIQ==
-X-Gm-Message-State: APjAAAXT/HnQEaoothdXRtZA6pyBwFovDS1Ejt7vnTwtI/JOXTMweP+E
-        XbtPrcRNZg5i6LVK9tRvZOUQ3Y7IUBA=
-X-Google-Smtp-Source: APXvYqz8K224U3tcSw51U0kihcPnj4Po/Sv2twtRlab76JyrMIb8ojrbaiLr9q6HXXiLZFQKQNz05g==
-X-Received: by 2002:ac2:5986:: with SMTP id w6mr39346785lfn.147.1558392637317;
-        Mon, 20 May 2019 15:50:37 -0700 (PDT)
+        bh=Vxf6jf0I3TNkNsrZiapyq8fbjujSIosIG2y16ynybBA=;
+        b=frdtAuuFrLeLZvGlLlZ3Yfot5uMz9HJCLclpuBk+ODBTQNRkXq9vQKKOHX7Y4fY9rp
+         gWXW+a+V672g3NhwMRcUS/LBMpYFFGcNZPJmS+jmOelvL0Npz+ydMK/BSH3OvUL0dJK5
+         Q6MSXzytTgrFN1AI7JmpWDHA3kJUAlAmI0tSY0EDF+F3EmrAWU+cHBiosnNoa+6Tr7ru
+         AQ/upy9wspJKgLb95DeW0c7hrt4bkcacyG+2XQ98cBM9Wzr8bJZji/FvAS5RHGrZPrGg
+         jqkUDF64yw9skoVaYyvMgFsvOqSoHbSyhCERq411HQ18vg7+RXgemFVfDtRJUsBo4wyK
+         PiJQ==
+X-Gm-Message-State: APjAAAV7zkcrwHtipLPSEMxYLyYzqiORJVg7IY4rN3q6VZ+WOfrMgLjZ
+        U+J1sNBgcGI1hPA0j1L0lVM=
+X-Google-Smtp-Source: APXvYqxlM6gWuNzP4Te1EnZSGJxSQC5D3uHa5MNgaDvgeQmCARPSQA6Kt3myJWreUEXW1NxDCA963g==
+X-Received: by 2002:ac2:4c93:: with SMTP id d19mr19052117lfl.116.1558392632679;
+        Mon, 20 May 2019 15:50:32 -0700 (PDT)
 Received: from z50.gdansk-morena.vectranet.pl (109241207190.gdansk.vectranet.pl. [109.241.207.190])
-        by smtp.gmail.com with ESMTPSA id t13sm2371646lji.47.2019.05.20.15.50.36
+        by smtp.gmail.com with ESMTPSA id t13sm2371646lji.47.2019.05.20.15.50.31
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 20 May 2019 15:50:36 -0700 (PDT)
+        Mon, 20 May 2019 15:50:32 -0700 (PDT)
 From:   Janusz Krzysztofik <jmkrzyszt@gmail.com>
 To:     Mauro Carvalho Chehab <mchehab@kernel.org>
 Cc:     Sakari Ailus <sakari.ailus@linux.intel.com>,
@@ -64,9 +64,9 @@ Cc:     Sakari Ailus <sakari.ailus@linux.intel.com>,
         linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
         Janusz Krzysztofik <jmkrzyszt@gmail.com>,
         stable@vger.kernel.org
-Subject: [PATCH v2 6/9] media: ov6650: Fix .get_fmt() V4L2_SUBDEV_FORMAT_TRY support
-Date:   Tue, 21 May 2019 00:50:04 +0200
-Message-Id: <20190520225007.2308-7-jmkrzyszt@gmail.com>
+Subject: [PATCH v2 2/9] media: ov6650: Fix control handler not freed on init error
+Date:   Tue, 21 May 2019 00:50:00 +0200
+Message-Id: <20190520225007.2308-3-jmkrzyszt@gmail.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190520225007.2308-1-jmkrzyszt@gmail.com>
 References: <20190520225007.2308-1-jmkrzyszt@gmail.com>
@@ -77,48 +77,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit da298c6d98d5 ("[media] v4l2: replace video op g_mbus_fmt by pad
-op get_fmt") converted a former ov6650_g_fmt() video operation callback
-to an ov6650_get_fmt() pad operation callback.  However, the converted
-function disregards a format->which flag that pad operations should
-obey and always returns active frame format settings.
+Since commit afd9690c72c3 ("[media] ov6650: convert to the control
+framework"), if an error occurs during initialization of a control
+handler, resources possibly allocated to the handler are not freed
+before device initialiaton is aborted.  Fix it.
 
-That can be fixed by always responding to V4L2_SUBDEV_FORMAT_TRY with
--EINVAL, or providing the response from a pad config argument, likely
-updated by a former user call to V4L2_SUBDEV_FORMAT_TRY .set_fmt().
-Since implementation of the latter is trivial, go for it.
-
-Fixes: da298c6d98d5 ("[media] v4l2: replace video op g_mbus_fmt by pad op get_fmt")
+Fixes: afd9690c72c3 ("[media] ov6650: convert to the control framework")
 Signed-off-by: Janusz Krzysztofik <jmkrzyszt@gmail.com>
 Cc: stable@vger.kernel.org
 ---
- drivers/media/i2c/ov6650.c | 12 +++++++++---
- 1 file changed, 9 insertions(+), 3 deletions(-)
+ drivers/media/i2c/ov6650.c | 12 ++++++++----
+ 1 file changed, 8 insertions(+), 4 deletions(-)
 
 diff --git a/drivers/media/i2c/ov6650.c b/drivers/media/i2c/ov6650.c
-index 731b03bef7a5..1915a43bff87 100644
+index a3d00afcb0c8..007f0ca24913 100644
 --- a/drivers/media/i2c/ov6650.c
 +++ b/drivers/media/i2c/ov6650.c
-@@ -528,10 +528,16 @@ static int ov6650_get_fmt(struct v4l2_subdev *sd,
- 	*mf = ov6650_def_fmt;
+@@ -992,8 +992,10 @@ static int ov6650_probe(struct i2c_client *client,
+ 			V4L2_CID_GAMMA, 0, 0xff, 1, 0x12);
  
- 	/* update media bus format code and frame size */
--	mf->width	= priv->rect.width >> priv->half_scale;
--	mf->height	= priv->rect.height >> priv->half_scale;
--	mf->code	= priv->code;
-+	if (format->which == V4L2_SUBDEV_FORMAT_TRY) {
-+		mf->width = cfg->try_fmt.width;
-+		mf->height = cfg->try_fmt.height;
-+		mf->code = cfg->try_fmt.code;
- 
-+	} else {
-+		mf->width = priv->rect.width >> priv->half_scale;
-+		mf->height = priv->rect.height >> priv->half_scale;
-+		mf->code = priv->code;
+ 	priv->subdev.ctrl_handler = &priv->hdl;
+-	if (priv->hdl.error)
+-		return priv->hdl.error;
++	if (priv->hdl.error) {
++		ret = priv->hdl.error;
++		goto ectlhdlfree;
 +	}
- 	return 0;
- }
  
+ 	v4l2_ctrl_auto_cluster(2, &priv->autogain, 0, true);
+ 	v4l2_ctrl_auto_cluster(3, &priv->autowb, 0, true);
+@@ -1012,8 +1014,10 @@ static int ov6650_probe(struct i2c_client *client,
+ 	priv->subdev.flags |= V4L2_SUBDEV_FL_HAS_DEVNODE;
+ 
+ 	ret = v4l2_async_register_subdev(&priv->subdev);
+-	if (ret)
+-		v4l2_ctrl_handler_free(&priv->hdl);
++	if (!ret)
++		return 0;
++ectlhdlfree:
++	v4l2_ctrl_handler_free(&priv->hdl);
+ 
+ 	return ret;
+ }
 -- 
 2.21.0
 
