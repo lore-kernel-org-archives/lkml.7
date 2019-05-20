@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54D4AC04AAC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:38:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55CE4C04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:38:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1F8DC20645
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:38:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2720720645
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:38:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558355921;
-	bh=IJt24hyJCvJF3H0FS0NaVCue6qeX16pkGyBl5737TZg=;
+	s=default; t=1558355926;
+	bh=2wWBihBIdFOPpn/F9t1gsy4+dUr4Dp7TCq6/SXD8nt0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TlB33NlHJTiWEPXUoodJAW+VtYshmiDGnxj3ZWdO2LAe7lNVIsbWtMbiIk4v8q2sn
-	 dpIlhSGtSNLusWpZE58UN5WM+vMzvPzYcP7jglaRC9NG7Qi7TIqz+HvZhkab85TXiv
-	 ca5iRbDz1sXFiUHGnECnxTjV+YL66MezXfLpdYpw=
+	b=W3AmxMsqTytPJzjIV8kSUrPetKrnaR/hyDmWb00Du20ldCoOZTVW6aBp5IDUMsD9r
+	 EKAMQBS++ZB1iq0G6DslBEUCstc68Pa65X/EVlzPSyex2syhGtTdlmOooLqSsI1kOh
+	 LFLqWSNCjqwJV+3Hv+wPnzy045QgBNV602E8EYYY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391413AbfETMik (ORCPT
+        id S2391315AbfETMgq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 08:38:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52256 "EHLO mail.kernel.org"
+        Mon, 20 May 2019 08:36:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55766 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390987AbfETMeo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 08:34:44 -0400
+        id S2390993AbfETMgk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 08:36:40 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1B54B21479;
-        Mon, 20 May 2019 12:34:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 379F820645;
+        Mon, 20 May 2019 12:36:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558355683;
-        bh=IJt24hyJCvJF3H0FS0NaVCue6qeX16pkGyBl5737TZg=;
+        s=default; t=1558355799;
+        bh=2wWBihBIdFOPpn/F9t1gsy4+dUr4Dp7TCq6/SXD8nt0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pejclhSDekRzD8kYg3H9E1EjutUzbxwraeiv9wFHVDGfOhiiZBs//vgEAnf6rk+dK
-         TFFZQEGx0vbGspiS14FZ2sZ+FVR9OemRTIHVA9qv7NYOiZHaRFTKiNWLa7lNHxVqzh
-         iik6rEUVCFWKiBxZA1oAlprMWZyw4i1tsYQ/nSLI=
+        b=cm3Ah2IIJI9AB2VltoJjUw4+jS6SOKqlSP5n+5u/9NkzSBtmhk09uZoqwY50VJ2Fq
+         UKGIBRaEIUT9RfoQLhOzO8S75dZzM/CCFeThnsNLf4JnEnZigqlVN+fM6hc6LYtoDw
+         2MCAe6LnW/ReVqtsGfDA94fpdDLES/0qLsboVC0g=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Christoph Muellner <christoph.muellner@theobroma-systems.com>,
-        Philipp Tomsich <philipp.tomsich@theobroma-systems.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>
-Subject: [PATCH 5.1 044/128] dt-bindings: mmc: Add disable-cqe-dcmd property.
-Date:   Mon, 20 May 2019 14:13:51 +0200
-Message-Id: <20190520115252.709304225@linuxfoundation.org>
+        syzbot+f584efa0ac7213c226b7@syzkaller.appspotmail.com,
+        Jan Kara <jack@suse.cz>, Barret Rhoden <brho@google.com>,
+        Theodore Tso <tytso@mit.edu>
+Subject: [PATCH 5.1 089/128] ext4: fix use-after-free race with debug_want_extra_isize
+Date:   Mon, 20 May 2019 14:14:36 +0200
+Message-Id: <20190520115255.425335286@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190520115249.449077487@linuxfoundation.org>
 References: <20190520115249.449077487@linuxfoundation.org>
@@ -61,35 +61,106 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christoph Muellner <christoph.muellner@theobroma-systems.com>
+From: Barret Rhoden <brho@google.com>
 
-commit 28f22fb755ecf9f933f045bc0afdb8140641b01c upstream.
+commit 7bc04c5c2cc467c5b40f2b03ba08da174a0d5fa7 upstream.
 
-Add disable-cqe-dcmd as optional property for MMC hosts.
-This property allows to disable or not enable the direct command
-features of the command queue engine.
+When remounting with debug_want_extra_isize, we were not performing the
+same checks that we do during a normal mount.  That allowed us to set a
+value for s_want_extra_isize that reached outside the s_inode_size.
 
-Signed-off-by: Christoph Muellner <christoph.muellner@theobroma-systems.com>
-Signed-off-by: Philipp Tomsich <philipp.tomsich@theobroma-systems.com>
-Fixes: 84362d79f436 ("mmc: sdhci-of-arasan: Add CQHCI support for arasan,sdhci-5.1")
+Fixes: e2b911c53584 ("ext4: clean up feature test macros with predicate functions")
+Reported-by: syzbot+f584efa0ac7213c226b7@syzkaller.appspotmail.com
+Reviewed-by: Jan Kara <jack@suse.cz>
+Signed-off-by: Barret Rhoden <brho@google.com>
+Signed-off-by: Theodore Ts'o <tytso@mit.edu>
 Cc: stable@vger.kernel.org
-Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- Documentation/devicetree/bindings/mmc/mmc.txt |    2 ++
- 1 file changed, 2 insertions(+)
+ fs/ext4/super.c |   58 ++++++++++++++++++++++++++++++++------------------------
+ 1 file changed, 34 insertions(+), 24 deletions(-)
 
---- a/Documentation/devicetree/bindings/mmc/mmc.txt
-+++ b/Documentation/devicetree/bindings/mmc/mmc.txt
-@@ -64,6 +64,8 @@ Optional properties:
-   whether pwrseq-simple is used. Default to 10ms if no available.
- - supports-cqe : The presence of this property indicates that the corresponding
-   MMC host controller supports HW command queue feature.
-+- disable-cqe-dcmd: This property indicates that the MMC controller's command
-+  queue engine (CQE) does not support direct commands (DCMDs).
+--- a/fs/ext4/super.c
++++ b/fs/ext4/super.c
+@@ -3513,6 +3513,37 @@ int ext4_calculate_overhead(struct super
+ 	return 0;
+ }
  
- *NOTE* on CD and WP polarity. To use common for all SD/MMC host controllers line
- polarity properties, we have to fix the meaning of the "normal" and "inverted"
++static void ext4_clamp_want_extra_isize(struct super_block *sb)
++{
++	struct ext4_sb_info *sbi = EXT4_SB(sb);
++	struct ext4_super_block *es = sbi->s_es;
++
++	/* determine the minimum size of new large inodes, if present */
++	if (sbi->s_inode_size > EXT4_GOOD_OLD_INODE_SIZE &&
++	    sbi->s_want_extra_isize == 0) {
++		sbi->s_want_extra_isize = sizeof(struct ext4_inode) -
++						     EXT4_GOOD_OLD_INODE_SIZE;
++		if (ext4_has_feature_extra_isize(sb)) {
++			if (sbi->s_want_extra_isize <
++			    le16_to_cpu(es->s_want_extra_isize))
++				sbi->s_want_extra_isize =
++					le16_to_cpu(es->s_want_extra_isize);
++			if (sbi->s_want_extra_isize <
++			    le16_to_cpu(es->s_min_extra_isize))
++				sbi->s_want_extra_isize =
++					le16_to_cpu(es->s_min_extra_isize);
++		}
++	}
++	/* Check if enough inode space is available */
++	if (EXT4_GOOD_OLD_INODE_SIZE + sbi->s_want_extra_isize >
++							sbi->s_inode_size) {
++		sbi->s_want_extra_isize = sizeof(struct ext4_inode) -
++						       EXT4_GOOD_OLD_INODE_SIZE;
++		ext4_msg(sb, KERN_INFO,
++			 "required extra inode space not available");
++	}
++}
++
+ static void ext4_set_resv_clusters(struct super_block *sb)
+ {
+ 	ext4_fsblk_t resv_clusters;
+@@ -4387,30 +4418,7 @@ no_journal:
+ 	} else if (ret)
+ 		goto failed_mount4a;
+ 
+-	/* determine the minimum size of new large inodes, if present */
+-	if (sbi->s_inode_size > EXT4_GOOD_OLD_INODE_SIZE &&
+-	    sbi->s_want_extra_isize == 0) {
+-		sbi->s_want_extra_isize = sizeof(struct ext4_inode) -
+-						     EXT4_GOOD_OLD_INODE_SIZE;
+-		if (ext4_has_feature_extra_isize(sb)) {
+-			if (sbi->s_want_extra_isize <
+-			    le16_to_cpu(es->s_want_extra_isize))
+-				sbi->s_want_extra_isize =
+-					le16_to_cpu(es->s_want_extra_isize);
+-			if (sbi->s_want_extra_isize <
+-			    le16_to_cpu(es->s_min_extra_isize))
+-				sbi->s_want_extra_isize =
+-					le16_to_cpu(es->s_min_extra_isize);
+-		}
+-	}
+-	/* Check if enough inode space is available */
+-	if (EXT4_GOOD_OLD_INODE_SIZE + sbi->s_want_extra_isize >
+-							sbi->s_inode_size) {
+-		sbi->s_want_extra_isize = sizeof(struct ext4_inode) -
+-						       EXT4_GOOD_OLD_INODE_SIZE;
+-		ext4_msg(sb, KERN_INFO, "required extra inode space not"
+-			 "available");
+-	}
++	ext4_clamp_want_extra_isize(sb);
+ 
+ 	ext4_set_resv_clusters(sb);
+ 
+@@ -5194,6 +5202,8 @@ static int ext4_remount(struct super_blo
+ 		goto restore_opts;
+ 	}
+ 
++	ext4_clamp_want_extra_isize(sb);
++
+ 	if ((old_opts.s_mount_opt & EXT4_MOUNT_JOURNAL_CHECKSUM) ^
+ 	    test_opt(sb, JOURNAL_CHECKSUM)) {
+ 		ext4_msg(sb, KERN_ERR, "changing journal_checksum "
 
 
