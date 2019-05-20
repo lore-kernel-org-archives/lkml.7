@@ -2,117 +2,465 @@ Return-Path: <SRS0=lq4r=TU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EA45C04AAC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 15:56:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27669C04AAF
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 15:56:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6B4632171F
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 15:56:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DED3C2171F
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 15:56:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=brauner.io header.i=@brauner.io header.b="Uoy/GkHj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391034AbfETP4C (ORCPT
+        id S2392410AbfETP4k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 11:56:02 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:25309 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389005AbfETP4C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 11:56:02 -0400
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 1549785365;
-        Mon, 20 May 2019 15:56:02 +0000 (UTC)
-Received: from llong.remote.csb (dhcp-17-85.bos.redhat.com [10.18.17.85])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 9437F27C4B;
-        Mon, 20 May 2019 15:56:01 +0000 (UTC)
-Subject: Re: [PATCH] scsi: ses: Fix out-of-bounds memory access in
- ses_enclosure_data_process()
-To:     James Bottomley <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>
-Cc:     linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20190501180535.26718-1-longman@redhat.com>
- <1fd39969-4413-2f11-86b2-729787680efa@redhat.com>
- <1558363938.3742.1.camel@linux.ibm.com>
- <3385cf54-7b6c-3f28-e037-f0d4037368eb@redhat.com>
- <1558367212.3742.10.camel@linux.ibm.com>
-From:   Waiman Long <longman@redhat.com>
-Organization: Red Hat
-Message-ID: <8080a1ae-027e-ecdb-d8f1-5786a6b8853b@redhat.com>
-Date:   Mon, 20 May 2019 11:56:01 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Mon, 20 May 2019 11:56:40 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:36745 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389005AbfETP4j (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 11:56:39 -0400
+Received: by mail-wr1-f66.google.com with SMTP id s17so15237154wru.3
+        for <linux-kernel@vger.kernel.org>; Mon, 20 May 2019 08:56:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=brauner.io; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=5Ye/RmFMItXzE12u+vbzBLX6mCfmP5lx2MksIaE4TPM=;
+        b=Uoy/GkHjdv7Mwzfk2KewD0Yp3Z6KHsmVIn+R6mRo5J8ayNChXBzcEIpuYVp9jkiOAW
+         GxYNouW6nEq+Ms02/Mc2Oc21D5GiZwPyywx+KJM9SLpD5Dq1dfSERkw+wgUXNaNEblKU
+         UwLDk+FHnGYNupR3MW3NwKidoE9wia84jViXZna1/uIkorhSZUouW7ghGxQmhwL5gd80
+         d4iumXVyfDy/vCM/8VzPwWz93H7vffamPYYgOFV0OTz2KsO+L8RYAtiA2FFcQLRC035+
+         Qmn26wHXakvjkasrs34sulcnVhQay6mr41qcFXRlE1QwMJiEi5BHQeKp1I0jgfLYWPLI
+         flqA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=5Ye/RmFMItXzE12u+vbzBLX6mCfmP5lx2MksIaE4TPM=;
+        b=gGVWJ0N76Xd2eUFNl6InlF429g9tBpZ/c8O4698Ul6XrmujOgtPrnl972zz3OZALj6
+         PmWkIYlof+bKc4FfvHAkxJCalBgIoJQ7wof9C1vrJfwOIH4D5lqdV/c9Lh1lMqfcOmes
+         o2poK2uioOWS9PQymqAcQJrelkgIAn4A2ZBri1apjwybbu9P6pb5rJmSFj4nCllpYLvS
+         9nQ7v/IFqEjYBCacK2FZXy7aP+z83RDQN+BThXHuzQbrd3GLe/smQXWRlMJNeZs3OCKv
+         BOFud+3gRYqHVMUsiiQdUlirTnxEE9rqVP0i0pemzghoCN4uEhRVzeMDdzn7QyPGL89Y
+         iL7w==
+X-Gm-Message-State: APjAAAXwnDq87SAeqR63di/lj3OqQ6Grz2TYl5Ds0K/Y/MfwB8BvrQBY
+        U/h3oq2OSHReFhybCLghf6MMKw==
+X-Google-Smtp-Source: APXvYqz8DNEAKgeVYpEU4a17q3a18iHiyA7XJT3DlI7OEgi3U9TulYgg+Wvwnf/oyOcVLVaacLccow==
+X-Received: by 2002:adf:fa03:: with SMTP id m3mr44998450wrr.323.1558367796588;
+        Mon, 20 May 2019 08:56:36 -0700 (PDT)
+Received: from localhost.localdomain ([212.91.227.56])
+        by smtp.gmail.com with ESMTPSA id t19sm12577789wmi.42.2019.05.20.08.56.34
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 20 May 2019 08:56:35 -0700 (PDT)
+From:   Christian Brauner <christian@brauner.io>
+To:     jannh@google.com, oleg@redhat.com, viro@zeniv.linux.org.uk,
+        torvalds@linux-foundation.org, linux-kernel@vger.kernel.org,
+        arnd@arndb.de
+Cc:     akpm@linux-foundation.org, cyphar@cyphar.com, dhowells@redhat.com,
+        ebiederm@xmission.com, elena.reshetova@intel.com,
+        keescook@chromium.org, luto@amacapital.net, luto@kernel.org,
+        tglx@linutronix.de, linux-alpha@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org,
+        linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
+        linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
+        sparclinux@vger.kernel.org, linux-xtensa@linux-xtensa.org,
+        linux-api@vger.kernel.org, linux-arch@vger.kernel.org,
+        linux-kselftest@vger.kernel.org, joel@joelfernandes.org,
+        dancol@google.com, serge@hallyn.com, surenb@google.com,
+        kernel-team@android.com, Christian Brauner <christian@brauner.io>
+Subject: [PATCH v3 1/2] pid: add pidfd_open()
+Date:   Mon, 20 May 2019 17:56:29 +0200
+Message-Id: <20190520155630.21684-1-christian@brauner.io>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-In-Reply-To: <1558367212.3742.10.camel@linux.ibm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.25]); Mon, 20 May 2019 15:56:02 +0000 (UTC)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/20/19 11:46 AM, James Bottomley wrote:
-> On Mon, 2019-05-20 at 11:24 -0400, Waiman Long wrote:
->> On 5/20/19 10:52 AM, James Bottomley wrote:
->>> On Mon, 2019-05-20 at 10:41 -0400, Waiman Long wrote:
->>> [...]
->>>>> --- a/drivers/scsi/ses.c
->>>>> +++ b/drivers/scsi/ses.c
->>>>> @@ -605,9 +605,14 @@ static void
->>>>> ses_enclosure_data_process(struct
->>>>> enclosure_device *edev,
->>>>>  			     /* these elements are optional */
->>>>>  			     type_ptr[0] ==
->>>>> ENCLOSURE_COMPONENT_SCSI_TARGET_PORT ||
->>>>>  			     type_ptr[0] ==
->>>>> ENCLOSURE_COMPONENT_SCSI_INITIATOR_PORT ||
->>>>> -			     type_ptr[0] ==
->>>>> ENCLOSURE_COMPONENT_CONTROLLER_ELECTRONICS))
->>>>> +			     type_ptr[0] ==
->>>>> ENCLOSURE_COMPONENT_CONTROLLER_ELECTRONICS)) {
->>>>>  				addl_desc_ptr +=
->>>>> addl_desc_ptr[1]
->>>>> + 2;
->>>>>  
->>>>> +				/* Ensure no out-of-bounds
->>>>> memory
->>>>> access */
->>>>> +				if (addl_desc_ptr >= ses_dev-
->>>>>> page10 +
->>>>> +						     ses_dev-
->>>>>> page10_len)
->>>>> +					addl_desc_ptr = NULL;
->>>>> +			}
->>>>>  		}
->>>>>  	}
->>>>>  	kfree(buf);
->>>> Ping! Any comment on this patch.
->>> The update looks fine to me:
->>>
->>> Reviewed-by: James E.J. Bottomley <jejb@linux.ibm.com>
->>>
->>> It might also be interesting to find out how the proliant is
->>> structuring this descriptor array to precipitate the out of bounds:
->>> Is it just an off by one or something more serious?
->> I didn't look into the detail the enclosure message returned by the
->> hardware, but I believe it may have more description entries (page7)
->> than extended description entries (page10).
->>
->> I can try to reserve the system and find out what exactly is wrong
->> with that system if you really want to find that out.
-> Please.  What I'm interested in is whether this is simply a bug in the
-> array firmware, in which case the fix is sufficient, or whether there's
-> some problem with the parser, like mismatched expectations over added
-> trailing nulls or something.
->
-> James
->
-OK, will let you know once I get hold of the system.
+This adds the pidfd_open() syscall. It allows a caller to retrieve pollable
+pidfds for a process which did not get created via CLONE_PIDFD, i.e. for a
+process that is created via traditional fork()/clone() calls that is only
+referenced by a PID:
 
-Cheers,
-Longman
+int pidfd = pidfd_open(1234, 0);
+ret = pidfd_send_signal(pidfd, SIGSTOP, NULL, 0);
+
+With the introduction of pidfds through CLONE_PIDFD it is possible to
+created pidfds at process creation time.
+However, a lot of processes get created with traditional PID-based calls
+such as fork() or clone() (without CLONE_PIDFD). For these processes a
+caller can currently not create a pollable pidfd. This is a problem for
+Android's low memory killer (LMK) and service managers such as systemd.
+Both are examples of tools that want to make use of pidfds to get reliable
+notification of process exit for non-parents (pidfd polling) and race-free
+signal sending (pidfd_send_signal()). They intend to switch to this API for
+process supervision/management as soon as possible. Having no way to get
+pollable pidfds from PID-only processes is one of the biggest blockers for
+them in adopting this api. With pidfd_open() making it possible to retrieve
+pidfds for PID-based processes we enable them to adopt this api.
+
+In line with Arnd's recent changes to consolidate syscall numbers across
+architectures, I have added the pidfd_open() syscall to all architectures
+at the same time.
+
+Signed-off-by: Christian Brauner <christian@brauner.io>
+Reviewed-by: Oleg Nesterov <oleg@redhat.com>
+Acked-by: Arnd Bergmann <arnd@arndb.de>
+Cc: "Eric W. Biederman" <ebiederm@xmission.com>
+Cc: Kees Cook <keescook@chromium.org>
+Cc: Joel Fernandes (Google) <joel@joelfernandes.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Jann Horn <jannh@google.com>
+Cc: David Howells <dhowells@redhat.com>
+Cc: Andy Lutomirsky <luto@kernel.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Aleksa Sarai <cyphar@cyphar.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Al Viro <viro@zeniv.linux.org.uk>
+Cc: linux-api@vger.kernel.org
+---
+v1:
+- kbuild test robot <lkp@intel.com>:
+  - add missing entry for pidfd_open to arch/arm/tools/syscall.tbl
+- Oleg Nesterov <oleg@redhat.com>:
+  - use simpler thread-group leader check
+v2:
+- Oleg Nesterov <oleg@redhat.com>:
+  - avoid using additional variable
+  - remove unneeded comment
+- Arnd Bergmann <arnd@arndb.de>:
+  - switch from 428 to 434 since the new mount api has taken it
+  - bump syscall numbers in arch/arm64/include/asm/unistd.h
+- Joel Fernandes (Google) <joel@joelfernandes.org>:
+  - switch from ESRCH to EINVAL when the passed-in pid does not refer to a
+    thread-group leader
+- Christian Brauner <christian@brauner.io>:
+  - rebase on v5.2-rc1
+  - adapt syscall number to account for new mount api syscalls
+v3:
+- Arnd Bergmann <arnd@arndb.de>:
+  - add missing syscall entries for mips-o32 and mips-n64
+---
+ arch/alpha/kernel/syscalls/syscall.tbl      |  1 +
+ arch/arm/tools/syscall.tbl                  |  1 +
+ arch/arm64/include/asm/unistd.h             |  2 +-
+ arch/arm64/include/asm/unistd32.h           |  2 +
+ arch/ia64/kernel/syscalls/syscall.tbl       |  1 +
+ arch/m68k/kernel/syscalls/syscall.tbl       |  1 +
+ arch/microblaze/kernel/syscalls/syscall.tbl |  1 +
+ arch/mips/kernel/syscalls/syscall_n32.tbl   |  1 +
+ arch/mips/kernel/syscalls/syscall_n64.tbl   |  1 +
+ arch/mips/kernel/syscalls/syscall_o32.tbl   |  1 +
+ arch/parisc/kernel/syscalls/syscall.tbl     |  1 +
+ arch/powerpc/kernel/syscalls/syscall.tbl    |  1 +
+ arch/s390/kernel/syscalls/syscall.tbl       |  1 +
+ arch/sh/kernel/syscalls/syscall.tbl         |  1 +
+ arch/sparc/kernel/syscalls/syscall.tbl      |  1 +
+ arch/x86/entry/syscalls/syscall_32.tbl      |  1 +
+ arch/x86/entry/syscalls/syscall_64.tbl      |  1 +
+ arch/xtensa/kernel/syscalls/syscall.tbl     |  1 +
+ include/linux/pid.h                         |  1 +
+ include/linux/syscalls.h                    |  1 +
+ include/uapi/asm-generic/unistd.h           |  4 +-
+ kernel/fork.c                               |  2 +-
+ kernel/pid.c                                | 43 +++++++++++++++++++++
+ 23 files changed, 68 insertions(+), 3 deletions(-)
+
+diff --git a/arch/alpha/kernel/syscalls/syscall.tbl b/arch/alpha/kernel/syscalls/syscall.tbl
+index 9e7704e44f6d..1db9bbcfb84e 100644
+--- a/arch/alpha/kernel/syscalls/syscall.tbl
++++ b/arch/alpha/kernel/syscalls/syscall.tbl
+@@ -473,3 +473,4 @@
+ 541	common	fsconfig			sys_fsconfig
+ 542	common	fsmount				sys_fsmount
+ 543	common	fspick				sys_fspick
++544	common	pidfd_open			sys_pidfd_open
+diff --git a/arch/arm/tools/syscall.tbl b/arch/arm/tools/syscall.tbl
+index aaf479a9e92d..81e6e1817c45 100644
+--- a/arch/arm/tools/syscall.tbl
++++ b/arch/arm/tools/syscall.tbl
+@@ -447,3 +447,4 @@
+ 431	common	fsconfig			sys_fsconfig
+ 432	common	fsmount				sys_fsmount
+ 433	common	fspick				sys_fspick
++434	common	pidfd_open			sys_pidfd_open
+diff --git a/arch/arm64/include/asm/unistd.h b/arch/arm64/include/asm/unistd.h
+index 70e6882853c0..e8f7d95a1481 100644
+--- a/arch/arm64/include/asm/unistd.h
++++ b/arch/arm64/include/asm/unistd.h
+@@ -44,7 +44,7 @@
+ #define __ARM_NR_compat_set_tls		(__ARM_NR_COMPAT_BASE + 5)
+ #define __ARM_NR_COMPAT_END		(__ARM_NR_COMPAT_BASE + 0x800)
+ 
+-#define __NR_compat_syscalls		434
++#define __NR_compat_syscalls		435
+ #endif
+ 
+ #define __ARCH_WANT_SYS_CLONE
+diff --git a/arch/arm64/include/asm/unistd32.h b/arch/arm64/include/asm/unistd32.h
+index c39e90600bb3..7a3158ccd68e 100644
+--- a/arch/arm64/include/asm/unistd32.h
++++ b/arch/arm64/include/asm/unistd32.h
+@@ -886,6 +886,8 @@ __SYSCALL(__NR_fsconfig, sys_fsconfig)
+ __SYSCALL(__NR_fsmount, sys_fsmount)
+ #define __NR_fspick 433
+ __SYSCALL(__NR_fspick, sys_fspick)
++#define __NR_pidfd_open 434
++__SYSCALL(__NR_pidfd_open, sys_pidfd_open)
+ 
+ /*
+  * Please add new compat syscalls above this comment and update
+diff --git a/arch/ia64/kernel/syscalls/syscall.tbl b/arch/ia64/kernel/syscalls/syscall.tbl
+index e01df3f2f80d..ecc44926737b 100644
+--- a/arch/ia64/kernel/syscalls/syscall.tbl
++++ b/arch/ia64/kernel/syscalls/syscall.tbl
+@@ -354,3 +354,4 @@
+ 431	common	fsconfig			sys_fsconfig
+ 432	common	fsmount				sys_fsmount
+ 433	common	fspick				sys_fspick
++434	common	pidfd_open			sys_pidfd_open
+diff --git a/arch/m68k/kernel/syscalls/syscall.tbl b/arch/m68k/kernel/syscalls/syscall.tbl
+index 7e3d0734b2f3..9a3eb2558568 100644
+--- a/arch/m68k/kernel/syscalls/syscall.tbl
++++ b/arch/m68k/kernel/syscalls/syscall.tbl
+@@ -433,3 +433,4 @@
+ 431	common	fsconfig			sys_fsconfig
+ 432	common	fsmount				sys_fsmount
+ 433	common	fspick				sys_fspick
++434	common	pidfd_open			sys_pidfd_open
+diff --git a/arch/microblaze/kernel/syscalls/syscall.tbl b/arch/microblaze/kernel/syscalls/syscall.tbl
+index 26339e417695..ad706f83c755 100644
+--- a/arch/microblaze/kernel/syscalls/syscall.tbl
++++ b/arch/microblaze/kernel/syscalls/syscall.tbl
+@@ -439,3 +439,4 @@
+ 431	common	fsconfig			sys_fsconfig
+ 432	common	fsmount				sys_fsmount
+ 433	common	fspick				sys_fspick
++434	common	pidfd_open			sys_pidfd_open
+diff --git a/arch/mips/kernel/syscalls/syscall_n32.tbl b/arch/mips/kernel/syscalls/syscall_n32.tbl
+index 0e2dd68ade57..97035e19ad03 100644
+--- a/arch/mips/kernel/syscalls/syscall_n32.tbl
++++ b/arch/mips/kernel/syscalls/syscall_n32.tbl
+@@ -372,3 +372,4 @@
+ 431	n32	fsconfig			sys_fsconfig
+ 432	n32	fsmount				sys_fsmount
+ 433	n32	fspick				sys_fspick
++434	n32	pidfd_open			sys_pidfd_open
+diff --git a/arch/mips/kernel/syscalls/syscall_n64.tbl b/arch/mips/kernel/syscalls/syscall_n64.tbl
+index 5eebfa0d155c..d7292722d3b0 100644
+--- a/arch/mips/kernel/syscalls/syscall_n64.tbl
++++ b/arch/mips/kernel/syscalls/syscall_n64.tbl
+@@ -348,3 +348,4 @@
+ 431	n64	fsconfig			sys_fsconfig
+ 432	n64	fsmount				sys_fsmount
+ 433	n64	fspick				sys_fspick
++434	n64	pidfd_open			sys_pidfd_open
+diff --git a/arch/mips/kernel/syscalls/syscall_o32.tbl b/arch/mips/kernel/syscalls/syscall_o32.tbl
+index 3cc1374e02d0..dba084c92f14 100644
+--- a/arch/mips/kernel/syscalls/syscall_o32.tbl
++++ b/arch/mips/kernel/syscalls/syscall_o32.tbl
+@@ -421,3 +421,4 @@
+ 431	o32	fsconfig			sys_fsconfig
+ 432	o32	fsmount				sys_fsmount
+ 433	o32	fspick				sys_fspick
++434	o32	pidfd_open			sys_pidfd_open
+diff --git a/arch/parisc/kernel/syscalls/syscall.tbl b/arch/parisc/kernel/syscalls/syscall.tbl
+index c9e377d59232..5022b9e179c2 100644
+--- a/arch/parisc/kernel/syscalls/syscall.tbl
++++ b/arch/parisc/kernel/syscalls/syscall.tbl
+@@ -430,3 +430,4 @@
+ 431	common	fsconfig			sys_fsconfig
+ 432	common	fsmount				sys_fsmount
+ 433	common	fspick				sys_fspick
++434	common	pidfd_open			sys_pidfd_open
+diff --git a/arch/powerpc/kernel/syscalls/syscall.tbl b/arch/powerpc/kernel/syscalls/syscall.tbl
+index 103655d84b4b..f2c3bda2d39f 100644
+--- a/arch/powerpc/kernel/syscalls/syscall.tbl
++++ b/arch/powerpc/kernel/syscalls/syscall.tbl
+@@ -515,3 +515,4 @@
+ 431	common	fsconfig			sys_fsconfig
+ 432	common	fsmount				sys_fsmount
+ 433	common	fspick				sys_fspick
++434	common	pidfd_open			sys_pidfd_open
+diff --git a/arch/s390/kernel/syscalls/syscall.tbl b/arch/s390/kernel/syscalls/syscall.tbl
+index e822b2964a83..6ebacfeaf853 100644
+--- a/arch/s390/kernel/syscalls/syscall.tbl
++++ b/arch/s390/kernel/syscalls/syscall.tbl
+@@ -436,3 +436,4 @@
+ 431  common	fsconfig		sys_fsconfig			sys_fsconfig
+ 432  common	fsmount			sys_fsmount			sys_fsmount
+ 433  common	fspick			sys_fspick			sys_fspick
++434  common	pidfd_open		sys_pidfd_open			sys_pidfd_open
+diff --git a/arch/sh/kernel/syscalls/syscall.tbl b/arch/sh/kernel/syscalls/syscall.tbl
+index 016a727d4357..834c9c7d79fa 100644
+--- a/arch/sh/kernel/syscalls/syscall.tbl
++++ b/arch/sh/kernel/syscalls/syscall.tbl
+@@ -436,3 +436,4 @@
+ 431	common	fsconfig			sys_fsconfig
+ 432	common	fsmount				sys_fsmount
+ 433	common	fspick				sys_fspick
++434	common	pidfd_open			sys_pidfd_open
+diff --git a/arch/sparc/kernel/syscalls/syscall.tbl b/arch/sparc/kernel/syscalls/syscall.tbl
+index e047480b1605..c58e71f21129 100644
+--- a/arch/sparc/kernel/syscalls/syscall.tbl
++++ b/arch/sparc/kernel/syscalls/syscall.tbl
+@@ -479,3 +479,4 @@
+ 431	common	fsconfig			sys_fsconfig
+ 432	common	fsmount				sys_fsmount
+ 433	common	fspick				sys_fspick
++434	common	pidfd_open			sys_pidfd_open
+diff --git a/arch/x86/entry/syscalls/syscall_32.tbl b/arch/x86/entry/syscalls/syscall_32.tbl
+index ad968b7bac72..43e4429a5272 100644
+--- a/arch/x86/entry/syscalls/syscall_32.tbl
++++ b/arch/x86/entry/syscalls/syscall_32.tbl
+@@ -438,3 +438,4 @@
+ 431	i386	fsconfig		sys_fsconfig			__ia32_sys_fsconfig
+ 432	i386	fsmount			sys_fsmount			__ia32_sys_fsmount
+ 433	i386	fspick			sys_fspick			__ia32_sys_fspick
++434	i386	pidfd_open		sys_pidfd_open			__ia32_sys_pidfd_open
+diff --git a/arch/x86/entry/syscalls/syscall_64.tbl b/arch/x86/entry/syscalls/syscall_64.tbl
+index b4e6f9e6204a..1bee0a77fdd3 100644
+--- a/arch/x86/entry/syscalls/syscall_64.tbl
++++ b/arch/x86/entry/syscalls/syscall_64.tbl
+@@ -355,6 +355,7 @@
+ 431	common	fsconfig		__x64_sys_fsconfig
+ 432	common	fsmount			__x64_sys_fsmount
+ 433	common	fspick			__x64_sys_fspick
++434	common	pidfd_open		__x64_sys_pidfd_open
+ 
+ #
+ # x32-specific system call numbers start at 512 to avoid cache impact
+diff --git a/arch/xtensa/kernel/syscalls/syscall.tbl b/arch/xtensa/kernel/syscalls/syscall.tbl
+index 5fa0ee1c8e00..782b81945ccc 100644
+--- a/arch/xtensa/kernel/syscalls/syscall.tbl
++++ b/arch/xtensa/kernel/syscalls/syscall.tbl
+@@ -404,3 +404,4 @@
+ 431	common	fsconfig			sys_fsconfig
+ 432	common	fsmount				sys_fsmount
+ 433	common	fspick				sys_fspick
++434	common	pidfd_open			sys_pidfd_open
+diff --git a/include/linux/pid.h b/include/linux/pid.h
+index 3c8ef5a199ca..c938a92eab99 100644
+--- a/include/linux/pid.h
++++ b/include/linux/pid.h
+@@ -67,6 +67,7 @@ struct pid
+ extern struct pid init_struct_pid;
+ 
+ extern const struct file_operations pidfd_fops;
++extern int pidfd_create(struct pid *pid);
+ 
+ static inline struct pid *get_pid(struct pid *pid)
+ {
+diff --git a/include/linux/syscalls.h b/include/linux/syscalls.h
+index e2870fe1be5b..989055e0b501 100644
+--- a/include/linux/syscalls.h
++++ b/include/linux/syscalls.h
+@@ -929,6 +929,7 @@ asmlinkage long sys_clock_adjtime32(clockid_t which_clock,
+ 				struct old_timex32 __user *tx);
+ asmlinkage long sys_syncfs(int fd);
+ asmlinkage long sys_setns(int fd, int nstype);
++asmlinkage long sys_pidfd_open(pid_t pid, unsigned int flags);
+ asmlinkage long sys_sendmmsg(int fd, struct mmsghdr __user *msg,
+ 			     unsigned int vlen, unsigned flags);
+ asmlinkage long sys_process_vm_readv(pid_t pid,
+diff --git a/include/uapi/asm-generic/unistd.h b/include/uapi/asm-generic/unistd.h
+index a87904daf103..e5684a4512c0 100644
+--- a/include/uapi/asm-generic/unistd.h
++++ b/include/uapi/asm-generic/unistd.h
+@@ -844,9 +844,11 @@ __SYSCALL(__NR_fsconfig, sys_fsconfig)
+ __SYSCALL(__NR_fsmount, sys_fsmount)
+ #define __NR_fspick 433
+ __SYSCALL(__NR_fspick, sys_fspick)
++#define __NR_pidfd_open 434
++__SYSCALL(__NR_pidfd_open, sys_pidfd_open)
+ 
+ #undef __NR_syscalls
+-#define __NR_syscalls 434
++#define __NR_syscalls 435
+ 
+ /*
+  * 32 bit systems traditionally used different
+diff --git a/kernel/fork.c b/kernel/fork.c
+index b4cba953040a..c3df226f47a1 100644
+--- a/kernel/fork.c
++++ b/kernel/fork.c
+@@ -1724,7 +1724,7 @@ const struct file_operations pidfd_fops = {
+  * Return: On success, a cloexec pidfd is returned.
+  *         On error, a negative errno number will be returned.
+  */
+-static int pidfd_create(struct pid *pid)
++int pidfd_create(struct pid *pid)
+ {
+ 	int fd;
+ 
+diff --git a/kernel/pid.c b/kernel/pid.c
+index 89548d35eefb..8fc9d94f6ac1 100644
+--- a/kernel/pid.c
++++ b/kernel/pid.c
+@@ -37,6 +37,7 @@
+ #include <linux/syscalls.h>
+ #include <linux/proc_ns.h>
+ #include <linux/proc_fs.h>
++#include <linux/sched/signal.h>
+ #include <linux/sched/task.h>
+ #include <linux/idr.h>
+ 
+@@ -450,6 +451,48 @@ struct pid *find_ge_pid(int nr, struct pid_namespace *ns)
+ 	return idr_get_next(&ns->idr, &nr);
+ }
+ 
++/**
++ * pidfd_open() - Open new pid file descriptor.
++ *
++ * @pid:   pid for which to retrieve a pidfd
++ * @flags: flags to pass
++ *
++ * This creates a new pid file descriptor with the O_CLOEXEC flag set for
++ * the process identified by @pid. Currently, the process identified by
++ * @pid must be a thread-group leader. This restriction currently exists
++ * for all aspects of pidfds including pidfd creation (CLONE_PIDFD cannot
++ * be used with CLONE_THREAD) and pidfd polling (only supports thread group
++ * leaders).
++ *
++ * Return: On success, a cloexec pidfd is returned.
++ *         On error, a negative errno number will be returned.
++ */
++SYSCALL_DEFINE2(pidfd_open, pid_t, pid, unsigned int, flags)
++{
++	int fd, ret;
++	struct pid *p;
++
++	if (flags)
++		return -EINVAL;
++
++	if (pid <= 0)
++		return -EINVAL;
++
++	p = find_get_pid(pid);
++	if (!p)
++		return -ESRCH;
++
++	ret = 0;
++	rcu_read_lock();
++	if (!pid_task(p, PIDTYPE_TGID))
++		ret = -EINVAL;
++	rcu_read_unlock();
++
++	fd = ret ?: pidfd_create(p);
++	put_pid(p);
++	return fd;
++}
++
+ void __init pid_idr_init(void)
+ {
+ 	/* Verify no one has done anything silly: */
+-- 
+2.21.0
 
