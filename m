@@ -2,137 +2,144 @@ Return-Path: <SRS0=lq4r=TU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12A3AC04AAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 05:56:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A592BC04AAF
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 05:57:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E4F7420815
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 05:56:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8294920859
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 05:57:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730348AbfETF4h (ORCPT
+        id S1730442AbfETF47 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 01:56:37 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:49012 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725829AbfETF4g (ORCPT
+        Mon, 20 May 2019 01:56:59 -0400
+Received: from Mailgw01.mediatek.com ([1.203.163.78]:58710 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725829AbfETF47 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 01:56:36 -0400
-Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4K5qD14128076
-        for <linux-kernel@vger.kernel.org>; Mon, 20 May 2019 01:56:35 -0400
-Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2skmwakcfr-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Mon, 20 May 2019 01:56:35 -0400
-Received: from localhost
-        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <bharata@linux.ibm.com>;
-        Mon, 20 May 2019 06:56:33 +0100
-Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
-        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Mon, 20 May 2019 06:56:30 +0100
-Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
-        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x4K5uTST24838354
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 20 May 2019 05:56:29 GMT
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id C65D4A404D;
-        Mon, 20 May 2019 05:56:29 +0000 (GMT)
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 5FDF4A4057;
-        Mon, 20 May 2019 05:56:28 +0000 (GMT)
-Received: from in.ibm.com (unknown [9.124.35.55])
-        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
-        Mon, 20 May 2019 05:56:28 +0000 (GMT)
-Date:   Mon, 20 May 2019 11:26:22 +0530
-From:   Bharata B Rao <bharata@linux.ibm.com>
-To:     Nicholas Piggin <npiggin@gmail.com>
-Cc:     Michael Ellerman <mpe@ellerman.id.au>, aneesh.kumar@linux.ibm.com,
-        bharata@linux.vnet.ibm.com, linux-kernel@vger.kernel.org,
-        linux-next@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        srikanth <sraithal@linux.vnet.ibm.com>
-Subject: Re: PROBLEM: Power9: kernel oops on memory hotunplug from ppc64le
- guest
-Reply-To: bharata@linux.ibm.com
-References: <16a7a635-c592-27e2-75b4-d02071833278@linux.vnet.ibm.com>
- <20190518141434.GA22939@in.ibm.com>
- <878sv1993k.fsf@concordia.ellerman.id.au>
- <20190520042533.GB22939@in.ibm.com>
- <1558327521.633yjtl8ki.astroid@bobo.none>
+        Mon, 20 May 2019 01:56:59 -0400
+X-UUID: 05bdecd6d289420d988b3d3773fce335-20190520
+X-UUID: 05bdecd6d289420d988b3d3773fce335-20190520
+Received: from mtkcas32.mediatek.inc [(172.27.4.253)] by mailgw01.mediatek.com
+        (envelope-from <ck.hu@mediatek.com>)
+        (mailgw01.mediatek.com ESMTP with TLS)
+        with ESMTP id 1874507480; Mon, 20 May 2019 13:56:54 +0800
+Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
+ MTKMBS33N2.mediatek.inc (172.27.4.76) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Mon, 20 May 2019 13:56:53 +0800
+Received: from [172.21.77.4] (172.21.77.4) by MTKCAS06.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Mon, 20 May 2019 13:56:46 +0800
+Message-ID: <1558331806.7311.26.camel@mtksdaap41>
+Subject: Re: [v4 2/5] drm/mediatek: dpi dual edge support
+From:   CK Hu <ck.hu@mediatek.com>
+To:     Jitao Shi <jitao.shi@mediatek.com>
+CC:     Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>,
+        "Mark Rutland" <mark.rutland@arm.com>,
+        Ian Campbell <ijc+devicetree@hellion.org.uk>,
+        Kumar Gala <galak@codeaurora.org>, <linux-pwm@vger.kernel.org>,
+        David Airlie <airlied@linux.ie>,
+        "Matthias Brugger" <matthias.bgg@gmail.com>,
+        Thierry Reding <treding@nvidia.com>,
+        "Ajay Kumar" <ajaykumar.rs@samsung.com>,
+        Inki Dae <inki.dae@samsung.com>,
+        "Rahul Sharma" <rahul.sharma@samsung.com>,
+        Sean Paul <seanpaul@chromium.org>,
+        Vincent Palatin <vpalatin@chromium.org>,
+        Andy Yan <andy.yan@rock-chips.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        "Russell King" <rmk+kernel@arm.linux.org.uk>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <dri-devel@lists.freedesktop.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <srv_heupstream@mediatek.com>,
+        Sascha Hauer <kernel@pengutronix.de>,
+        <yingjoe.chen@mediatek.com>, <eddie.huang@mediatek.com>,
+        <cawa.cheng@mediatek.com>, <bibby.hsieh@mediatek.com>,
+        <stonea168@163.com>
+Date:   Mon, 20 May 2019 13:56:46 +0800
+In-Reply-To: <20190518095618.18454-3-jitao.shi@mediatek.com>
+References: <20190518095618.18454-1-jitao.shi@mediatek.com>
+         <20190518095618.18454-3-jitao.shi@mediatek.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.10.4-0ubuntu2 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1558327521.633yjtl8ki.astroid@bobo.none>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-TM-AS-GCONF: 00
-x-cbid: 19052005-0020-0000-0000-0000033E71BD
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19052005-0021-0000-0000-0000219145CD
-Message-Id: <20190520055622.GC22939@in.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-20_03:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=2 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1905200043
+Content-Transfer-Encoding: 7bit
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 20, 2019 at 02:48:35PM +1000, Nicholas Piggin wrote:
-> >> > git bisect points to
-> >> >
-> >> > commit 4231aba000f5a4583dd9f67057aadb68c3eca99d
-> >> > Author: Nicholas Piggin <npiggin@gmail.com>
-> >> > Date:   Fri Jul 27 21:48:17 2018 +1000
-> >> >
-> >> >     powerpc/64s: Fix page table fragment refcount race vs speculative references
-> >> >
-> >> >     The page table fragment allocator uses the main page refcount racily
-> >> >     with respect to speculative references. A customer observed a BUG due
-> >> >     to page table page refcount underflow in the fragment allocator. This
-> >> >     can be caused by the fragment allocator set_page_count stomping on a
-> >> >     speculative reference, and then the speculative failure handler
-> >> >     decrements the new reference, and the underflow eventually pops when
-> >> >     the page tables are freed.
-> >> >
-> >> >     Fix this by using a dedicated field in the struct page for the page
-> >> >     table fragment allocator.
-> >> >
-> >> >     Fixes: 5c1f6ee9a31c ("powerpc: Reduce PTE table memory wastage")
-> >> >     Cc: stable@vger.kernel.org # v3.10+
-> >> 
-> >> That's the commit that added the BUG_ON(), so prior to that you won't
-> >> see the crash.
-> > 
-> > Right, but the commit says it fixes page table page refcount underflow by
-> > introducing a new field &page->pt_frag_refcount. Now we are hitting the underflow
-> > for this pt_frag_refcount.
-> 
-> The fixed underflow is caused by a bug (race on page count) that got 
-> fixed by that patch. You are hitting a different underflow here. It's
-> not certain my patch caused it, I'm just trying to reproduce now.
+Hi, Jitao:
 
-Ok.
+On Sat, 2019-05-18 at 17:56 +0800, Jitao Shi wrote:
+> DPI sample the data both rising and falling edge.
+> It can reduce half data io pins.
 
-> 
-> > 
-> > BTW, if I go below this commit, I don't hit the pagecount
-> > 
-> > VM_BUG_ON_PAGE(page_ref_count(page) == 0, page);
-> > 
-> > which is in pte_fragment_free() path.
-> 
-> Do you have CONFIG_DEBUG_VM=y?
-
-Yes.
+All the registers which you control in this patch exist in MT8173. So I
+think this is not a SoC-level feature. This feature depends on how much
+io pins you want to use in this platform. Could we get the io pins
+information from device tree or calling any driver's api to get? If
+there is no way to get this information, I could just temporarily apply
+this patch and need plan to fix this temporary solution.
 
 Regards,
-Bharata.
+CK
+
+> 
+> Signed-off-by: Jitao Shi <jitao.shi@mediatek.com>
+> ---
+>  drivers/gpu/drm/mediatek/mtk_dpi.c | 13 ++++++++++++-
+>  1 file changed, 12 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/gpu/drm/mediatek/mtk_dpi.c b/drivers/gpu/drm/mediatek/mtk_dpi.c
+> index 22e68a100e7b..ccef3ac1c560 100644
+> --- a/drivers/gpu/drm/mediatek/mtk_dpi.c
+> +++ b/drivers/gpu/drm/mediatek/mtk_dpi.c
+> @@ -117,6 +117,7 @@ struct mtk_dpi_conf {
+>  	unsigned int (*cal_factor)(int clock);
+>  	u32 reg_h_fre_con;
+>  	bool edge_sel_en;
+> +	bool dual_edge;
+>  };
+>  
+>  static void mtk_dpi_mask(struct mtk_dpi *dpi, u32 offset, u32 val, u32 mask)
+> @@ -353,6 +354,13 @@ static void mtk_dpi_config_disable_edge(struct mtk_dpi *dpi)
+>  		mtk_dpi_mask(dpi, dpi->conf->reg_h_fre_con, 0, EDGE_SEL_EN);
+>  }
+>  
+> +static void mtk_dpi_enable_dual_edge(struct mtk_dpi *dpi)
+> +{
+> +	mtk_dpi_mask(dpi, DPI_DDR_SETTING, DDR_EN | DDR_4PHASE,
+> +		     DDR_EN | DDR_4PHASE);
+> +	mtk_dpi_mask(dpi, DPI_OUTPUT_SETTING, EDGE_SEL, EDGE_SEL);
+> +}
+> +
+>  static void mtk_dpi_config_color_format(struct mtk_dpi *dpi,
+>  					enum mtk_dpi_out_color_format format)
+>  {
+> @@ -444,7 +452,8 @@ static int mtk_dpi_set_display_mode(struct mtk_dpi *dpi,
+>  	pll_rate = clk_get_rate(dpi->tvd_clk);
+>  
+>  	vm.pixelclock = pll_rate / factor;
+> -	clk_set_rate(dpi->pixel_clk, vm.pixelclock);
+> +	clk_set_rate(dpi->pixel_clk,
+> +		     vm.pixelclock * (dpi->conf->dual_edge ? 2 : 1));
+>  	vm.pixelclock = clk_get_rate(dpi->pixel_clk);
+>  
+>  	dev_dbg(dpi->dev, "Got  PLL %lu Hz, pixel clock %lu Hz\n",
+> @@ -509,6 +518,8 @@ static int mtk_dpi_set_display_mode(struct mtk_dpi *dpi,
+>  	mtk_dpi_config_color_format(dpi, dpi->color_format);
+>  	mtk_dpi_config_2n_h_fre(dpi);
+>  	mtk_dpi_config_disable_edge(dpi);
+> +	if (dpi->conf->dual_edge)
+> +		mtk_dpi_enable_dual_edge(dpi);
+>  	mtk_dpi_sw_reset(dpi, false);
+>  
+>  	return 0;
+
 
