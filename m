@@ -6,111 +6,103 @@ X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E69BC04AAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 09:21:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7893DC04AAF
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 09:21:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 49812206B6
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 09:21:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 55D1920675
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 09:21:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730808AbfETJVP (ORCPT
+        id S1730982AbfETJVy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 05:21:15 -0400
-Received: from foss.arm.com ([217.140.101.70]:41536 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729598AbfETJVP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 05:21:15 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 73538374;
-        Mon, 20 May 2019 02:21:14 -0700 (PDT)
-Received: from [10.1.196.69] (e112269-lin.cambridge.arm.com [10.1.196.69])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id BB4DF3F575;
-        Mon, 20 May 2019 02:21:11 -0700 (PDT)
-Subject: Re: [PATCH v2 2/3] drm: shmem: Add drm_gem_shmem_map_offset() wrapper
-To:     Rob Herring <robh@kernel.org>,
-        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
-        Alyssa Rosenzweig <alyssa@rosenzweig.io>,
-        Chris Wilson <chris@chris-wilson.co.uk>,
-        David Airlie <airlied@linux.ie>,
-        Inki Dae <inki.dae@samsung.com>,
-        Joonyoung Shim <jy0922.shim@samsung.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Kukjin Kim <kgene@kernel.org>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Sean Paul <sean@poorly.run>,
-        Seung-Woo Kim <sw0312.kim@samsung.com>,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-References: <20190516141447.46839-1-steven.price@arm.com>
- <20190516141447.46839-3-steven.price@arm.com>
- <20190516202644.GE3851@phenom.ffwll.local>
-From:   Steven Price <steven.price@arm.com>
-Message-ID: <b4d04dfd-3f45-e456-e944-9c337a6538a5@arm.com>
-Date:   Mon, 20 May 2019 10:21:09 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Mon, 20 May 2019 05:21:54 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:47338 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729598AbfETJVy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 05:21:54 -0400
+Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 0EEAD27CBFAFCBE3E065;
+        Mon, 20 May 2019 17:21:52 +0800 (CST)
+Received: from [127.0.0.1] (10.177.19.180) by DGGEMS404-HUB.china.huawei.com
+ (10.3.19.204) with Microsoft SMTP Server id 14.3.439.0; Mon, 20 May 2019
+ 17:21:41 +0800
+Subject: Re: [PATCH 1/2] hwtracing: stm: fix vfree() nonexistent vm_area
+To:     Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-kernel@vger.kernel.org>
+CC:     Hulk Robot <hulkci@huawei.com>
+References: <20190520091315.27898-1-wangkefeng.wang@huawei.com>
+From:   Kefeng Wang <wangkefeng.wang@huawei.com>
+Message-ID: <57ffbd01-2624-e7b4-bd27-d93cd49fbc9f@huawei.com>
+Date:   Mon, 20 May 2019 17:19:49 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.3.1
 MIME-Version: 1.0
-In-Reply-To: <20190516202644.GE3851@phenom.ffwll.local>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <20190520091315.27898-1-wangkefeng.wang@huawei.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-Originating-IP: [10.177.19.180]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 16/05/2019 21:26, Daniel Vetter wrote:
-> On Thu, May 16, 2019 at 03:14:46PM +0100, Steven Price wrote:
->> Provide a wrapper for drm_gem_map_offset() for clients of shmem. This
->> wrapper provides the correct semantics for the drm_gem_shmem_mmap()
->> callback.
->>
->> Signed-off-by: Steven Price <steven.price@arm.com>
->> ---
->>  drivers/gpu/drm/drm_gem_shmem_helper.c | 20 ++++++++++++++++++++
->>  include/drm/drm_gem_shmem_helper.h     |  2 ++
->>  2 files changed, 22 insertions(+)
->>
->> diff --git a/drivers/gpu/drm/drm_gem_shmem_helper.c b/drivers/gpu/drm/drm_gem_shmem_helper.c
->> index 1ee208c2c85e..9dbebc4897d1 100644
->> --- a/drivers/gpu/drm/drm_gem_shmem_helper.c
->> +++ b/drivers/gpu/drm/drm_gem_shmem_helper.c
->> @@ -400,6 +400,26 @@ int drm_gem_shmem_dumb_create(struct drm_file *file, struct drm_device *dev,
->>  }
->>  EXPORT_SYMBOL_GPL(drm_gem_shmem_dumb_create);
->>  
->> +/**
->> + * drm_gem_map_offset - return the fake mmap offset for a gem object
->> + * @file: drm file-private structure containing the gem object
->> + * @dev: corresponding drm_device
->> + * @handle: gem object handle
->> + * @offset: return location for the fake mmap offset
->> + *
->> + * This provides an offset suitable for user space to return to the
->> + * drm_gem_shmem_mmap() callback via an mmap() call.
->> + *
->> + * Returns:
->> + * 0 on success or a negative error code on failure.
->> + */
->> +int drm_gem_shmem_map_offset(struct drm_file *file, struct drm_device *dev,
->> +			     u32 handle, u64 *offset)
->> +{
->> +	return drm_gem_map_offset(file, dev, handle, offset);
->> +}
->> +EXPORT_SYMBOL_GPL(drm_gem_shmem_map_offset);
-> 
-> Not seeing the point of this mapper, since drm_gem_shmem_map_offset isn't
-> speficic at all. It works for dumb, shmem, cma and private objects all
-> equally well. I'd drop this and just directly call the underlying thing,
-> no need to layer helpers.
-> -Daniel
+sorry, send wrong version,  please ignore.
 
-Ok, I'll drop it. I may have misunderstood, but I think Chris Wilson was
-asking for it because shmem is the source of the particular requirements
-of what can be mmap()d. But I think a helper can be added very easily if
-anything changes, so this patch is probably premature.
+On 2019/5/20 17:13, Kefeng Wang wrote:
+> If device_add() in stm_register_device() fails, stm_device_release()
+> is called to free stm, free stm again on err_device path will trigger
+> following warning,
+>
+>   Trying to vfree() nonexistent vm area (0000000054b5e7bc)
+>   WARNING: CPU: 0 PID: 6004 at mm/vmalloc.c:1595 __vunmap+0x72/0x480 mm/vmalloc.c:1594
+>   Kernel panic - not syncing: panic_on_warn set ...
+>   CPU: 0 PID: 6004 Comm: syz-executor.0 Tainted: G         C 5.1.0+ #28
+>   Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.10.2-1ubuntu1 04/01/2014
+>   Call Trace:
+>    __vfree+0x2a/0x80 mm/vmalloc.c:1658
+>    _vfree+0x49/0x70 mm/vmalloc.c:1688
+>    stm_register_device+0x295/0x330 [stm_core]
+>    dummy_stm_init+0xfe/0x1e0 [dummy_stm]
+>    do_one_initcall+0xb9/0x3b5 init/main.c:914
+>    do_init_module+0xe0/0x330 kernel/module.c:3468
+>    load_module+0x38eb/0x4270 kernel/module.c:3819
+>    __do_sys_finit_module+0x162/0x190 kernel/module.c:3909
+>    do_syscall_64+0x72/0x2a0 arch/x86/entry/common.c:298
+>    entry_SYSCALL_64_after_hwframe+0x49/0xbe
+>
+> Only free stm once if device_add() fails to fix it.
+>
+> Reported-by: Hulk Robot <hulkci@huawei.com>
+> Signed-off-by: Kefeng Wang <wangkefeng.wang@huawei.com>
+> ---
+>  drivers/hwtracing/stm/core.c | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
+>
+> diff --git a/drivers/hwtracing/stm/core.c b/drivers/hwtracing/stm/core.c
+> index e55b902560de..7b2ab7b2cc4d 100644
+> --- a/drivers/hwtracing/stm/core.c
+> +++ b/drivers/hwtracing/stm/core.c
+> @@ -864,6 +864,7 @@ static void stm_device_release(struct device *dev)
+>  	struct stm_device *stm = to_stm_device(dev);
+>  
+>  	vfree(stm);
+> +	stm->data->stm = NULL;
+>  }
+>  
+>  int stm_register_device(struct device *parent, struct stm_data *stm_data,
+> @@ -933,7 +934,8 @@ int stm_register_device(struct device *parent, struct stm_data *stm_data,
+>  	/* matches device_initialize() above */
+>  	put_device(&stm->dev);
+>  err_free:
+> -	vfree(stm);
+> +	if (stm->data->stm)
+> +		vfree(stm);
+>  
+>  	return err;
+>  }
 
-I'll resend the series with this patch dropped.
-
-Thanks,
-Steve
