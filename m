@@ -2,68 +2,107 @@ Return-Path: <SRS0=lq4r=TU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_NEOMUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B150C04AAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 16:08:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99F60C04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 16:08:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4B11921721
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 16:08:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 78C8121726
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 16:08:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392011AbfETQIC (ORCPT
+        id S2392547AbfETQIu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 12:08:02 -0400
-Received: from helcar.hmeau.com ([216.24.177.18]:50786 "EHLO deadmen.hmeau.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2387973AbfETQIB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 12:08:01 -0400
-X-Greylist: delayed 2127 seconds by postgrey-1.27 at vger.kernel.org; Mon, 20 May 2019 12:08:01 EDT
-Received: from gondobar.mordor.me.apana.org.au ([192.168.128.4] helo=gondobar)
-        by deadmen.hmeau.com with esmtps (Exim 4.89 #2 (Debian))
-        id 1hSkH4-00086s-4a; Mon, 20 May 2019 23:32:26 +0800
-Received: from herbert by gondobar with local (Exim 4.89)
-        (envelope-from <herbert@gondor.apana.org.au>)
-        id 1hSkGx-00023C-KB; Mon, 20 May 2019 23:32:19 +0800
-Date:   Mon, 20 May 2019 23:32:19 +0800
-From:   Herbert Xu <herbert@gondor.apana.org.au>
-To:     Anirudh Gupta <anirudhrudr@gmail.com>
-Cc:     Steffen Klassert <steffen.klassert@secunet.com>,
-        Anirudh Gupta <anirudh.gupta@sophos.com>,
-        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net] xfrm: Fix xfrm sel prefix length validation
-Message-ID: <20190520153219.oq3se5wvkasgbtkp@gondor.apana.org.au>
-References: <20190520093157.59825-1-anirudh.gupta@sophos.com>
+        Mon, 20 May 2019 12:08:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39190 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387513AbfETQIu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 12:08:50 -0400
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B1F0E216B7;
+        Mon, 20 May 2019 16:08:48 +0000 (UTC)
+Date:   Mon, 20 May 2019 12:08:47 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Anton Ivanov <anton.ivanov@cambridgegreys.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Jiri Kosina <jkosina@suse.cz>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Jeff Dike <jdike@addtoit.com>,
+        Richard Weinberger <richard@nod.at>,
+        linux-um@lists.infradead.org
+Subject: Re: [PATCH] x86: Hide the int3_emulate_call/jmp functions from UML
+Message-ID: <20190520120847.2ca3eac1@gandalf.local.home>
+In-Reply-To: <41bc0b7b-9f51-6a10-6182-811163aa0890@cambridgegreys.com>
+References: <20190511083954.23a60052@gandalf.local.home>
+        <41bc0b7b-9f51-6a10-6182-811163aa0890@cambridgegreys.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190520093157.59825-1-anirudh.gupta@sophos.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 20, 2019 at 03:01:56PM +0530, Anirudh Gupta wrote:
->
-> diff --git a/net/xfrm/xfrm_user.c b/net/xfrm/xfrm_user.c
-> index eb8d14389601..fc2a8c08091b 100644
-> --- a/net/xfrm/xfrm_user.c
-> +++ b/net/xfrm/xfrm_user.c
-> @@ -149,7 +149,7 @@ static int verify_newsa_info(struct xfrm_usersa_info *p,
->  	int err;
->  
->  	err = -EINVAL;
-> -	switch (p->family) {
-> +	switch (p->sel.family) {
->  	case AF_INET:
->  		if (p->sel.prefixlen_d > 32 || p->sel.prefixlen_s > 32)
->  			goto out;
+On Mon, 20 May 2019 09:08:01 +0100
+Anton Ivanov <anton.ivanov@cambridgegreys.com> wrote:
 
-You just removed the only verification of p->family...
--- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+> On 11/05/2019 13:39, Steven Rostedt wrote:
+> > 
+> > From: "Steven Rostedt (VMware)" <rostedt@goodmis.org>
+> > 
+> > User Mode Linux does not have access to the ip or sp fields of the
+> > pt_regs, and accessing them causes UML to fail to build. Hide the
+> > int3_emulate_jmp() and int3_emulate_call() instructions from UML, as it
+> > doesn't need them anyway.
+> > 
+> > Reported-by: kbuild test robot <lkp@intel.com>
+> > Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+> > ---
+> > 
+> > [ I added this to my queue to test too ]
+
+Looks like when I added this text, claws-mail, decided to line wrap the
+patch :-p
+
+
+> > 
+> >   arch/x86/include/asm/text-patching.h | 4 +++-
+> >   1 file changed, 3 insertions(+), 1 deletion(-)
+> > 
+> > diff --git a/arch/x86/include/asm/text-patching.h
+> > b/arch/x86/include/asm/text-patching.h index 05861cc08787..0bbb07eaed6b
+> > 100644 --- a/arch/x86/include/asm/text-patching.h
+> > +++ b/arch/x86/include/asm/text-patching.h
+> > @@ -39,6 +39,7 @@ extern int poke_int3_handler(struct pt_regs *regs);
+> >   extern void *text_poke_bp(void *addr, const void *opcode, size_t len,
+> > void *handler); extern int after_bootmem;
+> >   
+> > +#ifndef CONFIG_UML_X86
+> >   static inline void int3_emulate_jmp(struct pt_regs *regs, unsigned
+> > long ip) {
+> >   	regs->ip = ip;
+> > @@ -65,6 +66,7 @@ static inline void int3_emulate_call(struct pt_regs
+> > *regs, unsigned long func) int3_emulate_push(regs, regs->ip -
+> > INT3_INSN_SIZE + CALL_INSN_SIZE); int3_emulate_jmp(regs, func);
+> >   }
+> > -#endif
+> > +#endif /* CONFIG_X86_64 */
+> > +#endif /* !CONFIG_UML_X86 */
+> >   
+> >   #endif /* _ASM_X86_TEXT_PATCHING_H */
+> >   
+> The patch has been garbled by an auto-wrap. Can you resend it please.
+> 
+
+Anyway, it's already in Linus's tree. It was required to keep UML
+compiling with other changes that needed to get into the merge window.
+
+-- Steve
+
