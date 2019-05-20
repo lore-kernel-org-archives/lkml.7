@@ -2,139 +2,285 @@ Return-Path: <SRS0=lq4r=TU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9A6CC04AAC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 10:13:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 841A7C04E87
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 10:19:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 818A5206B6
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 10:13:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 45040206B6
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 10:19:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="dg9voSlk"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="fAeOqnI2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732546AbfETKNG (ORCPT
+        id S1730385AbfETKT5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 06:13:06 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:33174 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732535AbfETKND (ORCPT
+        Mon, 20 May 2019 06:19:57 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:34285 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729912AbfETKT4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 06:13:03 -0400
-Received: by mail-pl1-f195.google.com with SMTP id y3so6528094plp.0
-        for <linux-kernel@vger.kernel.org>; Mon, 20 May 2019 03:13:02 -0700 (PDT)
+        Mon, 20 May 2019 06:19:56 -0400
+Received: by mail-wr1-f65.google.com with SMTP id f8so7536201wrt.1
+        for <linux-kernel@vger.kernel.org>; Mon, 20 May 2019 03:19:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :in-reply-to:references;
-        bh=ap6Go4OzNxJ532m09L3XvGYt1ETDxtVIslcDJHxqhh8=;
-        b=dg9voSlkL9Tcl87q88SNV55S8GA0JmQ0duHA+37dyzDY6OcpNFosrqe5mS3YzRmQOK
-         KPzF/tT9V0EzWBhy2zsLMNsoshKCx2xZyxd4iwz9E9Z+2nn92gIHu5ZHF9a2rvSKpInj
-         ca0v4q6NwLwD/s3f1bL/W4RAqzlQCYCkHWlRExJXrGi1L4hv02Om0lUPuSKo3CmzH1mz
-         d34F0kjxLbephXWC09QvmFZSnEu6Ekd6KSVve5DHXWh8KKISDCiIzD1Vjtqw0xlrah4s
-         Fmbp7jB3XlkVoe7T9o5bHTcpAiwbDpZHyq8FlWAt8RUnDgGdDJmKqnmM8+kdwtqJT8jL
-         8bLw==
+        h=from:message-id:mime-version:subject:date:in-reply-to:cc:to
+         :references;
+        bh=NwlnnO8ESeSxRw5I4cSTLQD2eWjIGGdF4E5YUL4sVio=;
+        b=fAeOqnI2tkRWtCPWlJF7KOL2rZ6fIISdVjNIqB3Lv7Bxh9XfXkfPmpxvPqEkR4X54I
+         aFuP6tqomqaxs9D49vDgbyzY7OpGuYSdY0CGjUoCDGqsw0p+TRLAPtIgZyehV+DwB5tI
+         Bdj3K4ZYQuz+wThYUbsCAurjUcCpUIQfG+4KhbwkriHMYfVbJVZjpRcHQftlaejPYI+8
+         WZFnR+zW4uwmMal5Dl2kI3OUy2OVPKH9Y60RU2o6htHTKnwvOPHx/dulutbwccFAPS9T
+         9ct51ALpTxHBpEogLDVOc+PY4PajGm90K1Fd/aHl+pGbH0TL1aGLvyztnZ2EJUntDwt7
+         BaKg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:in-reply-to:references;
-        bh=ap6Go4OzNxJ532m09L3XvGYt1ETDxtVIslcDJHxqhh8=;
-        b=J1X3lpCVx6DAZfXV63jTqvYn1l7xd3Jqttefo4IS1Kw1rGvQMAeTUBbJltkuTnOTZP
-         +/RBPK2fsxEroPl1BHBH4ly4Hny3jG5sHTDvjd/5ne5v3JZG8GaKK3O/pVhIBV/Q8uTj
-         FDfjm5/e46BicDS/KOCnr1s1U2D4i1lqAeBS0J7ocfXDgZJ9NZ5AfHmlamE6g49Z/bzn
-         Oazc+iErowCsR+O+Gm0L31D1J6EWuwtcD5d9oBGJEYHYSVF+oWYR8E2i1ye+evn7dZ8g
-         OAM5NOybYC8BJYKZ4eqRIHbzkOzCnrvFkN+zdC3XHfnKC+fZ6n3+TgIKnzkIXzDPBYtU
-         yUag==
-X-Gm-Message-State: APjAAAWMnebOEUMKq+XNfS6MJPNbLSm1XOQt6SpXj41f584w6zDEHZp1
-        +tzMNRh47LfUXatJbW+AJ1FKkw==
-X-Google-Smtp-Source: APXvYqz/VZ5IYWao7ZtNYoD6jisYi4sIXfq0npMXqR3qxjBzeqk+s2PVbN80bOiH+xksI9cdfVZ8gQ==
-X-Received: by 2002:a17:902:bb06:: with SMTP id l6mr16803820pls.78.1558347182324;
-        Mon, 20 May 2019 03:13:02 -0700 (PDT)
-Received: from baolinwangubtpc.spreadtrum.com ([117.18.48.102])
-        by smtp.gmail.com with ESMTPSA id b3sm30098127pfr.146.2019.05.20.03.12.58
-        (version=TLS1 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Mon, 20 May 2019 03:13:01 -0700 (PDT)
-From:   Baolin Wang <baolin.wang@linaro.org>
-To:     adrian.hunter@intel.com, ulf.hansson@linaro.org,
-        zhang.lyra@gmail.com, orsonzhai@gmail.com, robh+dt@kernel.org,
-        mark.rutland@arm.com, arnd@arndb.de, olof@lixom.net
-Cc:     baolin.wang@linaro.org, vincent.guittot@linaro.org, arm@kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-mmc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Subject: [PATCH 9/9] arm64: dts: sprd: Add Spreadtrum SD host controller support
-Date:   Mon, 20 May 2019 18:12:02 +0800
-Message-Id: <7fc6cd63966bda900b07ac9b2156e313a6f2ac17.1558346019.git.baolin.wang@linaro.org>
-X-Mailer: git-send-email 1.7.9.5
-In-Reply-To: <cover.1558346019.git.baolin.wang@linaro.org>
-References: <cover.1558346019.git.baolin.wang@linaro.org>
-In-Reply-To: <cover.1558346019.git.baolin.wang@linaro.org>
-References: <cover.1558346019.git.baolin.wang@linaro.org>
+        h=x-gm-message-state:from:message-id:mime-version:subject:date
+         :in-reply-to:cc:to:references;
+        bh=NwlnnO8ESeSxRw5I4cSTLQD2eWjIGGdF4E5YUL4sVio=;
+        b=kLcQdo5HvvQUjWCR3ggiKxXYBk4jvs1Nda9Ce9tH2ftetKIBMrm8LMeKCvDhcSQrrW
+         DrhKIBYacVjIdhxHCv2/gcTOJJMEXsTcrXiWUIEgcykPeQyUixrbq+uFDcS0EXp6Us47
+         az0tiV372j8HyHYvXYgSk0W9O04Nh3gcsgUhWcIEnPrzqsi/yKZhCuS+BOiOypvxqB0Z
+         OK1j1urPWWvheUhgKqGZucGuMLN+S8FDQLc3U/QEqAuzhmxXSgiGm91XBdYPzOOu8wIf
+         JH9iqlg/5kjQIMxAzBpfV3sB0RtOs3O9r46GXlDD9JOx0DzuiSoxt6uCLwfrTzX/ZmL1
+         Bwfg==
+X-Gm-Message-State: APjAAAXGmTLALv3Pn33SF8M1J2aWvKX5/FPsAAv17W14RQyHH0FVzlkA
+        Kah6UOkucAOrJ1WmYWfVHsDnOw==
+X-Google-Smtp-Source: APXvYqx52K77ouRWnzbrZV/5ooOeTACW32zdewSNSqifd0mODVN3MQr613HERnftnokuquE4p6GB+w==
+X-Received: by 2002:adf:9c0a:: with SMTP id f10mr4504745wrc.248.1558347594134;
+        Mon, 20 May 2019 03:19:54 -0700 (PDT)
+Received: from [192.168.0.100] ([88.147.73.106])
+        by smtp.gmail.com with ESMTPSA id s11sm31793721wrb.71.2019.05.20.03.19.51
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 20 May 2019 03:19:52 -0700 (PDT)
+From:   Paolo Valente <paolo.valente@linaro.org>
+Message-Id: <07D11833-8285-49C2-943D-E4C1D23E8859@linaro.org>
+Content-Type: multipart/signed;
+        boundary="Apple-Mail=_0E3633DD-4248-4655-9843-6C90BDFC002D";
+        protocol="application/pgp-signature";
+        micalg=pgp-sha256
+Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.8\))
+Subject: Re: CFQ idling kills I/O performance on ext4 with blkio cgroup
+ controller
+Date:   Mon, 20 May 2019 12:19:50 +0200
+In-Reply-To: <46c6a4be-f567-3621-2e16-0e341762b828@csail.mit.edu>
+Cc:     linux-fsdevel@vger.kernel.org,
+        linux-block <linux-block@vger.kernel.org>,
+        linux-ext4@vger.kernel.org, cgroups@vger.kernel.org,
+        kernel list <linux-kernel@vger.kernel.org>,
+        Jens Axboe <axboe@kernel.dk>, Jan Kara <jack@suse.cz>,
+        jmoyer@redhat.com, tytso@mit.edu, amakhalov@vmware.com,
+        anishs@vmware.com, srivatsab@vmware.com
+To:     "Srivatsa S. Bhat" <srivatsa@csail.mit.edu>
+References: <8d72fcf7-bbb4-2965-1a06-e9fc177a8938@csail.mit.edu>
+ <1812E450-14EF-4D5A-8F31-668499E13652@linaro.org>
+ <46c6a4be-f567-3621-2e16-0e341762b828@csail.mit.edu>
+X-Mailer: Apple Mail (2.3445.104.8)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add one Spreadtrum SD host controller to support eMMC card for Spreadtrum
-SC9860 platform.
 
-Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
----
- arch/arm64/boot/dts/sprd/whale2.dtsi |   35 ++++++++++++++++++++++++++++++++++
- 1 file changed, 35 insertions(+)
+--Apple-Mail=_0E3633DD-4248-4655-9843-6C90BDFC002D
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain;
+	charset=us-ascii
 
-diff --git a/arch/arm64/boot/dts/sprd/whale2.dtsi b/arch/arm64/boot/dts/sprd/whale2.dtsi
-index b5c5dce..86ec2b0 100644
---- a/arch/arm64/boot/dts/sprd/whale2.dtsi
-+++ b/arch/arm64/boot/dts/sprd/whale2.dtsi
-@@ -168,6 +168,34 @@
- 				vdd-supply = <&vddusb33>;
- 				sprd,vdd-voltage = <3300000>;
- 			};
-+
-+			sdio3: sdio@50430000 {
-+				compatible  = "sprd,sdhci-r11";
-+				reg = <0 0x50430000 0 0x1000>;
-+				interrupts = <GIC_SPI 41 IRQ_TYPE_LEVEL_HIGH>;
-+
-+				clock-names = "sdio", "enable", "2x_enable";
-+				clocks = <&aon_prediv CLK_EMMC_2X>,
-+				       <&apahb_gate CLK_EMMC_EB>,
-+				       <&aon_gate CLK_EMMC_2X_EN>;
-+				assigned-clocks = <&aon_prediv CLK_EMMC_2X>;
-+				assigned-clock-parents = <&clk_l0_409m6>;
-+
-+				sprd,phy-delay-mmc-hs400 = <0x44 0x7f 0x2e 0x2e>;
-+				sprd,phy-delay-mmc-hs200 = <0x0 0x8c 0x8c 0x8c>;
-+				sprd,phy-delay-mmc-ddr52 = <0x3f 0x75 0x14 0x14>;
-+				sprd,phy-delay-mmc-hs400es = <0x3f 0x3f 0x2e 0x2e>;
-+				vmmc-supply = <&vddemmccore>;
-+				bus-width = <8>;
-+				non-removable;
-+				no-sdio;
-+				no-sd;
-+				cap-mmc-hw-reset;
-+				mmc-hs400-enhanced-strobe;
-+				mmc-hs400-1_8v;
-+				mmc-hs200-1_8v;
-+				mmc-ddr-1_8v;
-+			};
- 		};
- 
- 		aon {
-@@ -310,4 +338,11 @@
- 		clock-frequency = <100000000>;
- 		clock-output-names = "ext-rco-100m";
- 	};
-+
-+	clk_l0_409m6: clk_l0_409m6 {
-+		compatible = "fixed-clock";
-+		#clock-cells = <0>;
-+		clock-frequency = <409600000>;
-+		clock-output-names = "ext-409m6";
-+	};
- };
--- 
-1.7.9.5
 
+
+> Il giorno 18 mag 2019, alle ore 22:50, Srivatsa S. Bhat =
+<srivatsa@csail.mit.edu> ha scritto:
+>=20
+> On 5/18/19 11:39 AM, Paolo Valente wrote:
+>> I've addressed these issues in my last batch of improvements for BFQ,
+>> which landed in the upcoming 5.2. If you give it a try, and still see
+>> the problem, then I'll be glad to reproduce it, and hopefully fix it
+>> for you.
+>>=20
+>=20
+> Hi Paolo,
+>=20
+> Thank you for looking into this!
+>=20
+> I just tried current mainline at commit 72cf0b07, but unfortunately
+> didn't see any improvement:
+>=20
+> dd if=3D/dev/zero of=3D/root/test.img bs=3D512 count=3D10000 =
+oflag=3Ddsync
+>=20
+> With mq-deadline, I get:
+>=20
+> 5120000 bytes (5.1 MB, 4.9 MiB) copied, 3.90981 s, 1.3 MB/s
+>=20
+> With bfq, I get:
+> 5120000 bytes (5.1 MB, 4.9 MiB) copied, 84.8216 s, 60.4 kB/s
+>=20
+
+Hi Srivatsa,
+thanks for reproducing this on mainline.  I seem to have reproduced a
+bonsai-tree version of this issue.  Before digging into the block
+trace, I'd like to ask you for some feedback.
+
+First, in my test, the total throughput of the disk happens to be
+about 20 times as high as that enjoyed by dd, regardless of the I/O
+scheduler.  I guess this massive overhead is normal with dsync, but
+I'd like know whether it is about the same on your side.  This will
+help me understand whether I'll actually be analyzing about the same
+problem as yours.
+
+Second, the commands I used follow.  Do they implement your test case
+correctly?
+
+[root@localhost tmp]# mkdir /sys/fs/cgroup/blkio/testgrp
+[root@localhost tmp]# echo $BASHPID > =
+/sys/fs/cgroup/blkio/testgrp/cgroup.procs
+[root@localhost tmp]# cat /sys/block/sda/queue/scheduler
+[mq-deadline] bfq none
+[root@localhost tmp]# dd if=3D/dev/zero of=3D/root/test.img bs=3D512 =
+count=3D10000 oflag=3Ddsync
+10000+0 record dentro
+10000+0 record fuori
+5120000 bytes (5,1 MB, 4,9 MiB) copied, 14,6892 s, 349 kB/s
+[root@localhost tmp]# echo bfq > /sys/block/sda/queue/scheduler
+[root@localhost tmp]# dd if=3D/dev/zero of=3D/root/test.img bs=3D512 =
+count=3D10000 oflag=3Ddsync
+10000+0 record dentro
+10000+0 record fuori
+5120000 bytes (5,1 MB, 4,9 MiB) copied, 20,1953 s, 254 kB/s
+
+Thanks,
+Paolo
+
+> Please let me know if any more info about my setup might be helpful.
+>=20
+> Thank you!
+>=20
+> Regards,
+> Srivatsa
+> VMware Photon OS
+>=20
+>>=20
+>>> Il giorno 18 mag 2019, alle ore 00:16, Srivatsa S. Bhat =
+<srivatsa@csail.mit.edu> ha scritto:
+>>>=20
+>>>=20
+>>> Hi,
+>>>=20
+>>> One of my colleagues noticed upto 10x - 30x drop in I/O throughput
+>>> running the following command, with the CFQ I/O scheduler:
+>>>=20
+>>> dd if=3D/dev/zero of=3D/root/test.img bs=3D512 count=3D10000 =
+oflags=3Ddsync
+>>>=20
+>>> Throughput with CFQ: 60 KB/s
+>>> Throughput with noop or deadline: 1.5 MB/s - 2 MB/s
+>>>=20
+>>> I spent some time looking into it and found that this is caused by =
+the
+>>> undesirable interaction between 4 different components:
+>>>=20
+>>> - blkio cgroup controller enabled
+>>> - ext4 with the jbd2 kthread running in the root blkio cgroup
+>>> - dd running on ext4, in any other blkio cgroup than that of jbd2
+>>> - CFQ I/O scheduler with defaults for slice_idle and group_idle
+>>>=20
+>>>=20
+>>> When docker is enabled, systemd creates a blkio cgroup called
+>>> system.slice to run system services (and docker) under it, and a
+>>> separate blkio cgroup called user.slice for user processes. So, when
+>>> dd is invoked, it runs under user.slice.
+>>>=20
+>>> The dd command above includes the dsync flag, which performs an
+>>> fdatasync after every write to the output file. Since dd is writing =
+to
+>>> a file on ext4, jbd2 will be active, committing transactions
+>>> corresponding to those fdatasync requests from dd. (In other words, =
+dd
+>>> depends on jdb2, in order to make forward progress). But jdb2 being =
+a
+>>> kernel thread, runs in the root blkio cgroup, as opposed to dd, =
+which
+>>> runs under user.slice.
+>>>=20
+>>> Now, if the I/O scheduler in use for the underlying block device is
+>>> CFQ, then its inter-queue/inter-group idling takes effect (via the
+>>> slice_idle and group_idle parameters, both of which default to 8ms).
+>>> Therefore, everytime CFQ switches between processing requests from =
+dd
+>>> vs jbd2, this 8ms idle time is injected, which slows down the =
+overall
+>>> throughput tremendously!
+>>>=20
+>>> To verify this theory, I tried various experiments, and in all =
+cases,
+>>> the 4 pre-conditions mentioned above were necessary to reproduce =
+this
+>>> performance drop. For example, if I used an XFS filesystem (which
+>>> doesn't use a separate kthread like jbd2 for journaling), or if I =
+dd'ed
+>>> directly to a block device, I couldn't reproduce the performance
+>>> issue. Similarly, running dd in the root blkio cgroup (where jbd2
+>>> runs) also gets full performance; as does using the noop or deadline
+>>> I/O schedulers; or even CFQ itself, with slice_idle and group_idle =
+set
+>>> to zero.
+>>>=20
+>>> These results were reproduced on a Linux VM (kernel v4.19) on ESXi,
+>>> both with virtualized storage as well as with disk pass-through,
+>>> backed by a rotational hard disk in both cases. The same problem was
+>>> also seen with the BFQ I/O scheduler in kernel v5.1.
+>>>=20
+>>> Searching for any earlier discussions of this problem, I found an =
+old
+>>> thread on LKML that encountered this behavior [1], as well as a =
+docker
+>>> github issue [2] with similar symptoms (mentioned later in the
+>>> thread).
+>>>=20
+>>> So, I'm curious to know if this is a well-understood problem and if
+>>> anybody has any thoughts on how to fix it.
+>>>=20
+>>> Thank you very much!
+>>>=20
+>>>=20
+>>> [1]. https://lkml.org/lkml/2015/11/19/359
+>>>=20
+>>> [2]. https://github.com/moby/moby/issues/21485
+>>>    https://github.com/moby/moby/issues/21485#issuecomment-222941103
+>>>=20
+>>> Regards,
+>>> Srivatsa
+>>=20
+>=20
+
+
+--Apple-Mail=_0E3633DD-4248-4655-9843-6C90BDFC002D
+Content-Transfer-Encoding: 7bit
+Content-Disposition: attachment;
+	filename=signature.asc
+Content-Type: application/pgp-signature;
+	name=signature.asc
+Content-Description: Message signed with OpenPGP
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEEpYoduex+OneZyvO8OAkCLQGo9oMFAlzif0YACgkQOAkCLQGo
+9oM5xQ//dvsiY41qM7W/y79e3ViCl5oabT79tXKDHAGnXMLPWIScoMuI0CpONuBA
+hRvnLCO8Wvwl8aXbJzfVnv0J5XkBCiRlIEBf2XXvhgXWjwSOIRtLXoKfnyZ26h1Z
+GGrC8q4pY+s/2d8wUanLHlOo+ExsJoU+5xWzL9Wx45XafzaG88aOl/yCb8mGgw2S
+/kkSWIVGMn930yRgGqr4b+dNqivNg2euqSRpjfhRNm0hCkM7q2r1En2Xyef5eEeP
+3d1SO+qQo6kIylYEtu8Y6foZZfqlBQLWUV/oCdaQ0Os77Z1cqfjIxUOLkkEU+QKi
+gHSXwCoM/S1pOL74o7TkDbWoL4MpyK9AaatNSULRxE1yWDYF2dd/31Tc/ZLcutYE
+VYG0SWUXx2diM5ccCWVedHEHhs9VVxUP4ftipt6tAzdsyT0RCxTwQPapn4NToMUj
+3DlFpM8DUdYNuiVrQhpr3/+gB0OJ64XC3bgQM80rzFO2AWuGmydlUc6Tle8AqNNG
+qAHUZ25+VOBwPrOptJOH249yWYrSgT0FHqWEppNmCi0JyVLjbOJuLT06/IT7q2AW
+Ob5N/G2PxFiXuCDLeJlC7UIl8Ua7Sg5v+MmJVDgL0qDUctZvJHNZZdMbeedk1ZHH
+XH0SX/3JDNrmO2XdjIrzAWSdQX3Ev1Yv2jOkHnMAs6Na+1H+vf4=
+=lPeU
+-----END PGP SIGNATURE-----
+
+--Apple-Mail=_0E3633DD-4248-4655-9843-6C90BDFC002D--
