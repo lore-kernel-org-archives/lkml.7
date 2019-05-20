@@ -2,126 +2,151 @@ Return-Path: <SRS0=lq4r=TU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 191CDC072A4
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 06:06:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 587DBC072A4
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 06:10:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EC7D320815
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 06:06:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 22DA520657
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 06:10:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="S5GgdV/J"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730678AbfETGGq (ORCPT
+        id S1730689AbfETGKS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 02:06:46 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:27154 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1730368AbfETGGq (ORCPT
+        Mon, 20 May 2019 02:10:18 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:43548 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725959AbfETGKR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 02:06:46 -0400
-X-UUID: 6b1714260d78452591e3b4401a4f0fd5-20190520
-X-UUID: 6b1714260d78452591e3b4401a4f0fd5-20190520
-Received: from mtkcas08.mediatek.inc [(172.21.101.126)] by mailgw02.mediatek.com
-        (envelope-from <chun-hung.wu@mediatek.com>)
-        (mhqrelay.mediatek.com ESMTP with TLS)
-        with ESMTP id 2012965388; Mon, 20 May 2019 14:06:40 +0800
-Received: from mtkcas09.mediatek.inc (172.21.101.178) by
- mtkmbs03n2.mediatek.inc (172.21.101.182) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Mon, 20 May 2019 14:06:38 +0800
-Received: from [172.21.77.33] (172.21.77.33) by mtkcas09.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Mon, 20 May 2019 14:06:38 +0800
-Message-ID: <1558332398.11080.9.camel@mtkswgap22>
-Subject: Re: [PATCH 4/4] iio: auxadc: mediatek: change to subsys_initcall
-From:   Chun-Hung Wu <chun-hung.wu@mediatek.com>
-To:     Jonathan Cameron <jic23@kernel.org>
-CC:     Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        <linux-iio@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <wsd_upstream@mediatek.com>,
-        <peter.wang@mediatek.com>, <kuohong.wang@mediatek.com>,
-        <jg_poxu@mediatek.com>
-Date:   Mon, 20 May 2019 14:06:38 +0800
-In-Reply-To: <20190518113643.53a42976@archlinux>
-References: <1557994247-16739-1-git-send-email-chun-hung.wu@mediatek.com>
-         <1557994247-16739-5-git-send-email-chun-hung.wu@mediatek.com>
-         <20190518113643.53a42976@archlinux>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.2.3-0ubuntu6 
-Content-Transfer-Encoding: 7bit
+        Mon, 20 May 2019 02:10:17 -0400
+Received: by mail-pg1-f194.google.com with SMTP id t22so6229662pgi.10;
+        Sun, 19 May 2019 23:10:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=EtCrzdF26Only4uUvmUSQS6DqLBRvSsL0zNTScPkmCA=;
+        b=S5GgdV/JlgWXgEzAK5a6Fs1L8HVPSgtNmWwZ1fLgEQbPK6mKX2B7Qz1TybIVsdHYRj
+         PGLn5Xqc4X3qS0Y2rLNS3kZePMLn1sXbnoCVEx7NEGiWS/VAgItngZ5Yur6A/D1MhQze
+         nZ7sGQXyO/rIIvxrsCng3hjDv3Xr4m3KK/blQcZdZLXKw4+HoSktKC5t24yOnGhVHkwQ
+         kZhomS5aMVQYkPUjT+JX6/Li51j44O4p6bMQnZsl2VZ0Zrrn0aZIL7QqOmx3Aj/X3mLp
+         lh8IrYe8DU1cWuDXl5ved9UTWdeAMwGkut+DhkYcEaRoBdIXI5U0DAvF9sceuZlHiieG
+         O1KQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=EtCrzdF26Only4uUvmUSQS6DqLBRvSsL0zNTScPkmCA=;
+        b=FgCikrgWXmFYGi214R8dAlBta2pEeuVbi0JMiSVgWqW9rPxFxyaaQVLd2hGBTBXNL5
+         rnueJDu/wmv5Fy8Rg+y5sxyMzHeQ1gDNVYkWpZM6rAjmqaRamxatCa4arO+65IcDtVbR
+         +9upj8bAyX5IQm9Pg/Sla6ZHnbwBhzFqD4jm6pBwBKBpunBoexIJWW6KI/almWb8dWvz
+         Y7Ejh0qr4VcA9Z7eDphmR2s6SqMFZNOdqPqeqAGWylEMnIiYmJreVILWxD2QaILPQKaj
+         RakLugiGYMDI7+74iIBVlx6ogKa3y8TMFqHtWLjXPQxK2i2RPDTHwSt39apXhv0xxLsj
+         165g==
+X-Gm-Message-State: APjAAAW2ZvIQWXrPjESwvcnPdCXig97Ax6FoCNA4Xhly+yc57QjNgoa9
+        nho/sD5ETSqQmIuaMq6Ii0E=
+X-Google-Smtp-Source: APXvYqx2+ES/Zm6mJG5Ui9U/ofzrn8oYSPp+hHXhmZR0UKq0PWWOZ4+HuGiv4oMvYgBzG5bsJ6oFTw==
+X-Received: by 2002:aa7:8a11:: with SMTP id m17mr55997757pfa.122.1558332616888;
+        Sun, 19 May 2019 23:10:16 -0700 (PDT)
+Received: from mail.google.com ([104.238.181.70])
+        by smtp.gmail.com with ESMTPSA id a9sm24734044pgw.72.2019.05.19.23.10.16
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Sun, 19 May 2019 23:10:16 -0700 (PDT)
+Date:   Mon, 20 May 2019 06:10:15 +0000
+From:   Changbin Du <changbin.du@gmail.com>
+To:     bhelgaas@google.com, corbet@lwn.net
+Cc:     linux-pci@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, mchehab+samsung@kernel.org,
+        changbin.du@gmail.com
+Subject: Re: [PATCH v6 00/12] Include linux PCI docs into Sphinx TOC tree
+Message-ID: <20190520061014.qtq6tc366pnnqcio@mail.google.com>
+References: <20190514144734.19760-1-changbin.du@gmail.com>
 MIME-Version: 1.0
-X-TM-SNTS-SMTP: 2F0B7CBF20F89F7C6C59579E9C4CCAF43409E6EB9A5EC6F37009CE4AC58C707A2000:8
-X-MTK:  N
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190514144734.19760-1-changbin.du@gmail.com>
+User-Agent: NeoMutt/20180716-508-7c9a6d
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jonathan,
+Bjorn and Jonathan,
+Could we consider to merge this serias now? Thanks.
 
-On Sat, 2019-05-18 at 11:36 +0100, Jonathan Cameron wrote:
-> On Thu, 16 May 2019 16:10:47 +0800
-> Chun-Hung Wu <chun-hung.wu@mediatek.com> wrote:
+On Tue, May 14, 2019 at 10:47:22PM +0800, Changbin Du wrote:
+> Hi all,
 > 
-> >   Move auxadc platform_driver_register() from module_init
-> > to subsys_initcall because auxadc user drivers
-> > are all moudle drivers, need to gurantee
-> > auxadc driver ready before module_init.
-> > 
-> Is it not possible to make them use deferred handling to come
-> back later if this isn't yet available?
+> The kernel now uses Sphinx to generate intelligent and beautiful documentation
+> from reStructuredText files. I converted most of the Linux PCI docs to rst
+> format in this serias.
 > 
-> subsys_initcall often ends up being a more fragile approach.
+> For you to preview, please visit below url:
+> http://www.bytemem.com:8080/kernel-doc/PCI/index.html
+> 
+> Thank you!
+> 
+> v2: trivial style update.
+> v3: update titles. (Bjorn Helgaas)
+> v4: fix comments from Mauro Carvalho Chehab
+> v5: update MAINTAINERS (Joe Perches)
+> v6: fix comments.
+> 
+> Changbin Du (12):
+>   Documentation: add Linux PCI to Sphinx TOC tree
+>   Documentation: PCI: convert pci.txt to reST
+>   Documentation: PCI: convert PCIEBUS-HOWTO.txt to reST
+>   Documentation: PCI: convert pci-iov-howto.txt to reST
+>   Documentation: PCI: convert MSI-HOWTO.txt to reST
+>   Documentation: PCI: convert acpi-info.txt to reST
+>   Documentation: PCI: convert pci-error-recovery.txt to reST
+>   Documentation: PCI: convert pcieaer-howto.txt to reST
+>   Documentation: PCI: convert endpoint/pci-endpoint.txt to reST
+>   Documentation: PCI: convert endpoint/pci-endpoint-cfs.txt to reST
+>   Documentation: PCI: convert endpoint/pci-test-function.txt to reST
+>   Documentation: PCI: convert endpoint/pci-test-howto.txt to reST
+> 
+>  .../PCI/{acpi-info.txt => acpi-info.rst}      |  15 +-
+>  Documentation/PCI/endpoint/index.rst          |  13 +
+>  ...-endpoint-cfs.txt => pci-endpoint-cfs.rst} |  99 ++---
+>  .../{pci-endpoint.txt => pci-endpoint.rst}    |  92 +++--
+>  ...est-function.txt => pci-test-function.rst} |  84 +++--
+>  ...{pci-test-howto.txt => pci-test-howto.rst} |  81 ++--
+>  Documentation/PCI/index.rst                   |  18 +
+>  .../PCI/{MSI-HOWTO.txt => msi-howto.rst}      |  85 +++--
+>  ...or-recovery.txt => pci-error-recovery.rst} | 287 +++++++-------
+>  .../{pci-iov-howto.txt => pci-iov-howto.rst}  | 161 ++++----
+>  Documentation/PCI/{pci.txt => pci.rst}        | 356 ++++++++----------
+>  .../{pcieaer-howto.txt => pcieaer-howto.rst}  | 156 +++++---
+>  .../{PCIEBUS-HOWTO.txt => picebus-howto.rst}  | 140 ++++---
+>  Documentation/index.rst                       |   1 +
+>  MAINTAINERS                                   |   4 +-
+>  include/linux/mod_devicetable.h               |  19 +
+>  include/linux/pci.h                           |  37 ++
+>  17 files changed, 938 insertions(+), 710 deletions(-)
+>  rename Documentation/PCI/{acpi-info.txt => acpi-info.rst} (96%)
+>  create mode 100644 Documentation/PCI/endpoint/index.rst
+>  rename Documentation/PCI/endpoint/{pci-endpoint-cfs.txt => pci-endpoint-cfs.rst} (64%)
+>  rename Documentation/PCI/endpoint/{pci-endpoint.txt => pci-endpoint.rst} (83%)
+>  rename Documentation/PCI/endpoint/{pci-test-function.txt => pci-test-function.rst} (55%)
+>  rename Documentation/PCI/endpoint/{pci-test-howto.txt => pci-test-howto.rst} (78%)
+>  create mode 100644 Documentation/PCI/index.rst
+>  rename Documentation/PCI/{MSI-HOWTO.txt => msi-howto.rst} (88%)
+>  rename Documentation/PCI/{pci-error-recovery.txt => pci-error-recovery.rst} (67%)
+>  rename Documentation/PCI/{pci-iov-howto.txt => pci-iov-howto.rst} (63%)
+>  rename Documentation/PCI/{pci.txt => pci.rst} (68%)
+>  rename Documentation/PCI/{pcieaer-howto.txt => pcieaer-howto.rst} (72%)
+>  rename Documentation/PCI/{PCIEBUS-HOWTO.txt => picebus-howto.rst} (70%)
+> 
+> -- 
+> 2.20.1
+> 
 
-Agreed, I will ask auxadc driver users to add deferred handling
-instead of moving auxadc platform_driver_register() from module_init
-to subsys_initcall.
-
-Thanks,
-Chun-hung
-
-> 
-> Thanks,
-> 
-> Jonathan
-> 
-> > Signed-off-by: Chun-Hung Wu <chun-hung.wu@mediatek.com>
-> > ---
-> >  drivers/iio/adc/mt6577_auxadc.c | 14 +++++++++++++-
-> >  1 file changed, 13 insertions(+), 1 deletion(-)
-> > 
-> > diff --git a/drivers/iio/adc/mt6577_auxadc.c b/drivers/iio/adc/mt6577_auxadc.c
-> > index 58d7cb2..cb8e3dd 100644
-> > --- a/drivers/iio/adc/mt6577_auxadc.c
-> > +++ b/drivers/iio/adc/mt6577_auxadc.c
-> > @@ -350,7 +350,19 @@ static int mt6577_auxadc_remove(struct platform_device *pdev)
-> >  	.probe	= mt6577_auxadc_probe,
-> >  	.remove	= mt6577_auxadc_remove,
-> >  };
-> > -module_platform_driver(mt6577_auxadc_driver);
-> > +
-> > +static int __init mt6577_auxadc_init(void)
-> > +{
-> > +	return platform_driver_register(&mt6577_auxadc_driver);
-> > +}
-> > +
-> > +static void __exit mt6577_auxadc_exit(void)
-> > +{
-> > +	platform_driver_unregister(&mt6577_auxadc_driver);
-> > +}
-> > +
-> > +subsys_initcall(mt6577_auxadc_init);
-> > +module_exit(mt6577_auxadc_exit);
-> >  
-> >  MODULE_AUTHOR("Zhiyong Tao <zhiyong.tao@mediatek.com>");
-> >  MODULE_DESCRIPTION("MTK AUXADC Device Driver");
-> 
-
-
+-- 
+Cheers,
+Changbin Du
