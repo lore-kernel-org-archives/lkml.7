@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3448C04AAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:42:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37ED6C46460
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:42:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 94253204FD
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:42:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0D2CF20815
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:42:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558356173;
-	bh=dLb2N2hX7UKXH6OrDatTHd+ApsBFdBnB33FzCvux9UM=;
+	s=default; t=1558356178;
+	bh=DBGX2oj/oOpoUbOD+YZNLeqUupMQg52GiLvBkERzb3w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LQ3WPrAtLWkoXz+P4syMAgEPAwSrsDjnGPlJigtY5j7aGBUmaR0nqdkCd+L0RtdDB
-	 xkqEI9NhcshU6m0QyGvASic8pucChk6y29MV/qjpJuZ2EnXwNBmd8ofYY0pIpxn2FQ
-	 zucGOJcFSGrqWEtkh18p9iSV+t8gcH2viklxh9v0=
+	b=LiaPmUOS9N0N3kVThcLl0XT3alU9StIP7xhKcQLfI4opS7JqQczl92M9mHW7dbCsg
+	 0SPONJ02wTPWh+Hr3rxVnnhGyZHErkla+aAVlw3rmbzfQ/rk8YgpcoQbxXctlghN/s
+	 VyuOvj/3swajvJFhIC/iC/2qzvxXhG6l5TzyIr1g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389941AbfETM3j (ORCPT
+        id S2389521AbfETM3b (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 08:29:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45726 "EHLO mail.kernel.org"
+        Mon, 20 May 2019 08:29:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45574 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389921AbfETM3g (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 08:29:36 -0400
+        id S2389896AbfETM32 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 08:29:28 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C0CF9216C4;
-        Mon, 20 May 2019 12:29:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E39D220675;
+        Mon, 20 May 2019 12:29:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558355375;
-        bh=dLb2N2hX7UKXH6OrDatTHd+ApsBFdBnB33FzCvux9UM=;
+        s=default; t=1558355367;
+        bh=DBGX2oj/oOpoUbOD+YZNLeqUupMQg52GiLvBkERzb3w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FzyqeSPc3QJAxPNMVvmFriPEYemJt2KMC/boTHk1+7NkIgm5I4AUmfVS+EOvJbKjW
-         bz7+2HEyRbJjOyoO+VHT/q84mnedZX78tSXAUDNC18CMdAYZ1fcBU6Uhiwyk2/tBOm
-         0dTy4JiTv2jDEKNLY2u4DPhU/LtxfBTz1Lmhl9JY=
+        b=rkwMDcsHprHvAAiQkCtcBIOqOMgJkzabhGvbDnoAaKbqzwQlBaMEUR+cUk/IlA9qU
+         RLBjI4b4nHwtkpD8EZPTkzWfA3MpwjOyB48JE4wSAZQmu8+HFI5yuzcOmqV1Wgn/Fv
+         42B5nWike/A6wI3O7sqqTK0Sp+oFc0+XfgryeRVs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Zygo Blaxell <ce3g8jdj@umail.furryterror.org>,
-        Filipe Manana <fdmanana@suse.com>,
+        stable@vger.kernel.org, Nikolay Borisov <nborisov@suse.com>,
         David Sterba <dsterba@suse.com>
-Subject: [PATCH 5.0 094/123] Btrfs: do not start a transaction at iterate_extent_inodes()
-Date:   Mon, 20 May 2019 14:14:34 +0200
-Message-Id: <20190520115251.228581786@linuxfoundation.org>
+Subject: [PATCH 5.0 091/123] btrfs: Honour FITRIM range constraints during free space trim
+Date:   Mon, 20 May 2019 14:14:31 +0200
+Message-Id: <20190520115250.986341927@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190520115245.439864225@linuxfoundation.org>
 References: <20190520115245.439864225@linuxfoundation.org>
@@ -61,116 +59,90 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Filipe Manana <fdmanana@suse.com>
+From: Nikolay Borisov <nborisov@suse.com>
 
-commit bfc61c36260ca990937539cd648ede3cd749bc10 upstream.
+commit c2d1b3aae33605a61cbab445d8ae1c708ccd2698 upstream.
 
-When finding out which inodes have references on a particular extent, done
-by backref.c:iterate_extent_inodes(), from the BTRFS_IOC_LOGICAL_INO (both
-v1 and v2) ioctl and from scrub we use the transaction join API to grab a
-reference on the currently running transaction, since in order to give
-accurate results we need to inspect the delayed references of the currently
-running transaction.
+Up until now trimming the freespace was done irrespective of what the
+arguments of the FITRIM ioctl were. For example fstrim's -o/-l arguments
+will be entirely ignored. Fix it by correctly handling those paramter.
+This requires breaking if the found freespace extent is after the end of
+the passed range as well as completing trim after trimming
+fstrim_range::len bytes.
 
-However, if there is currently no running transaction, the join operation
-will create a new transaction. This is inefficient as the transaction will
-eventually be committed, doing unnecessary IO and introducing a potential
-point of failure that will lead to a transaction abort due to -ENOSPC, as
-recently reported [1].
-
-That's because the join, creates the transaction but does not reserve any
-space, so when attempting to update the root item of the root passed to
-btrfs_join_transaction(), during the transaction commit, we can end up
-failling with -ENOSPC. Users of a join operation are supposed to actually
-do some filesystem changes and reserve space by some means, which is not
-the case of iterate_extent_inodes(), it is a read-only operation for all
-contextes from which it is called.
-
-The reported [1] -ENOSPC failure stack trace is the following:
-
- heisenberg kernel: ------------[ cut here ]------------
- heisenberg kernel: BTRFS: Transaction aborted (error -28)
- heisenberg kernel: WARNING: CPU: 0 PID: 7137 at fs/btrfs/root-tree.c:136 btrfs_update_root+0x22b/0x320 [btrfs]
-(...)
- heisenberg kernel: CPU: 0 PID: 7137 Comm: btrfs-transacti Not tainted 4.19.0-4-amd64 #1 Debian 4.19.28-2
- heisenberg kernel: Hardware name: FUJITSU LIFEBOOK U757/FJNB2A5, BIOS Version 1.21 03/19/2018
- heisenberg kernel: RIP: 0010:btrfs_update_root+0x22b/0x320 [btrfs]
-(...)
- heisenberg kernel: RSP: 0018:ffffb5448828bd40 EFLAGS: 00010286
- heisenberg kernel: RAX: 0000000000000000 RBX: ffff8ed56bccef50 RCX: 0000000000000006
- heisenberg kernel: RDX: 0000000000000007 RSI: 0000000000000092 RDI: ffff8ed6bda166a0
- heisenberg kernel: RBP: 00000000ffffffe4 R08: 00000000000003df R09: 0000000000000007
- heisenberg kernel: R10: 0000000000000000 R11: 0000000000000001 R12: ffff8ed63396a078
- heisenberg kernel: R13: ffff8ed092d7c800 R14: ffff8ed64f5db028 R15: ffff8ed6bd03d068
- heisenberg kernel: FS:  0000000000000000(0000) GS:ffff8ed6bda00000(0000) knlGS:0000000000000000
- heisenberg kernel: CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
- heisenberg kernel: CR2: 00007f46f75f8000 CR3: 0000000310a0a002 CR4: 00000000003606f0
- heisenberg kernel: DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
- heisenberg kernel: DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
- heisenberg kernel: Call Trace:
- heisenberg kernel:  commit_fs_roots+0x166/0x1d0 [btrfs]
- heisenberg kernel:  ? _cond_resched+0x15/0x30
- heisenberg kernel:  ? btrfs_run_delayed_refs+0xac/0x180 [btrfs]
- heisenberg kernel:  btrfs_commit_transaction+0x2bd/0x870 [btrfs]
- heisenberg kernel:  ? start_transaction+0x9d/0x3f0 [btrfs]
- heisenberg kernel:  transaction_kthread+0x147/0x180 [btrfs]
- heisenberg kernel:  ? btrfs_cleanup_transaction+0x530/0x530 [btrfs]
- heisenberg kernel:  kthread+0x112/0x130
- heisenberg kernel:  ? kthread_bind+0x30/0x30
- heisenberg kernel:  ret_from_fork+0x35/0x40
- heisenberg kernel: ---[ end trace 05de912e30e012d9 ]---
-
-So fix that by using the attach API, which does not create a transaction
-when there is currently no running transaction.
-
-[1] https://lore.kernel.org/linux-btrfs/b2a668d7124f1d3e410367f587926f622b3f03a4.camel@scientia.net/
-
-Reported-by: Zygo Blaxell <ce3g8jdj@umail.furryterror.org>
+Fixes: 499f377f49f0 ("btrfs: iterate over unused chunk space in FITRIM")
 CC: stable@vger.kernel.org # 4.4+
-Signed-off-by: Filipe Manana <fdmanana@suse.com>
+Signed-off-by: Nikolay Borisov <nborisov@suse.com>
 Reviewed-by: David Sterba <dsterba@suse.com>
 Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/btrfs/backref.c |   18 ++++++++++++------
- 1 file changed, 12 insertions(+), 6 deletions(-)
+ fs/btrfs/extent-tree.c |   25 +++++++++++++++++++------
+ 1 file changed, 19 insertions(+), 6 deletions(-)
 
---- a/fs/btrfs/backref.c
-+++ b/fs/btrfs/backref.c
-@@ -1910,13 +1910,19 @@ int iterate_extent_inodes(struct btrfs_f
- 			extent_item_objectid);
+--- a/fs/btrfs/extent-tree.c
++++ b/fs/btrfs/extent-tree.c
+@@ -11192,9 +11192,9 @@ int btrfs_error_unpin_extent_range(struc
+  * held back allocations.
+  */
+ static int btrfs_trim_free_extents(struct btrfs_device *device,
+-				   u64 minlen, u64 *trimmed)
++				   struct fstrim_range *range, u64 *trimmed)
+ {
+-	u64 start = 0, len = 0;
++	u64 start = range->start, len = 0;
+ 	int ret;
  
- 	if (!search_commit_root) {
--		trans = btrfs_join_transaction(fs_info->extent_root);
--		if (IS_ERR(trans))
--			return PTR_ERR(trans);
-+		trans = btrfs_attach_transaction(fs_info->extent_root);
-+		if (IS_ERR(trans)) {
-+			if (PTR_ERR(trans) != -ENOENT &&
-+			    PTR_ERR(trans) != -EROFS)
-+				return PTR_ERR(trans);
-+			trans = NULL;
+ 	*trimmed = 0;
+@@ -11237,8 +11237,8 @@ static int btrfs_trim_free_extents(struc
+ 		if (!trans)
+ 			up_read(&fs_info->commit_root_sem);
+ 
+-		ret = find_free_dev_extent_start(trans, device, minlen, start,
+-						 &start, &len);
++		ret = find_free_dev_extent_start(trans, device, range->minlen,
++						 start, &start, &len);
+ 		if (trans) {
+ 			up_read(&fs_info->commit_root_sem);
+ 			btrfs_put_transaction(trans);
+@@ -11251,6 +11251,16 @@ static int btrfs_trim_free_extents(struc
+ 			break;
+ 		}
+ 
++		/* If we are out of the passed range break */
++		if (start > range->start + range->len - 1) {
++			mutex_unlock(&fs_info->chunk_mutex);
++			ret = 0;
++			break;
 +		}
-+	}
 +
-+	if (trans)
- 		btrfs_get_tree_mod_seq(fs_info, &tree_mod_seq_elem);
--	} else {
-+	else
- 		down_read(&fs_info->commit_root_sem);
--	}
++		start = max(range->start, start);
++		len = min(range->len, len);
++
+ 		ret = btrfs_issue_discard(device->bdev, start, len, &bytes);
+ 		mutex_unlock(&fs_info->chunk_mutex);
  
- 	ret = btrfs_find_all_leafs(trans, fs_info, extent_item_objectid,
- 				   tree_mod_seq_elem.seq, &refs,
-@@ -1949,7 +1955,7 @@ int iterate_extent_inodes(struct btrfs_f
+@@ -11260,6 +11270,10 @@ static int btrfs_trim_free_extents(struc
+ 		start += len;
+ 		*trimmed += bytes;
  
- 	free_leaf_list(refs);
- out:
--	if (!search_commit_root) {
-+	if (trans) {
- 		btrfs_put_tree_mod_seq(fs_info, &tree_mod_seq_elem);
- 		btrfs_end_transaction(trans);
- 	} else {
++		/* We've trimmed enough */
++		if (*trimmed >= range->len)
++			break;
++
+ 		if (fatal_signal_pending(current)) {
+ 			ret = -ERESTARTSYS;
+ 			break;
+@@ -11343,8 +11357,7 @@ int btrfs_trim_fs(struct btrfs_fs_info *
+ 	mutex_lock(&fs_info->fs_devices->device_list_mutex);
+ 	devices = &fs_info->fs_devices->devices;
+ 	list_for_each_entry(device, devices, dev_list) {
+-		ret = btrfs_trim_free_extents(device, range->minlen,
+-					      &group_trimmed);
++		ret = btrfs_trim_free_extents(device, range, &group_trimmed);
+ 		if (ret) {
+ 			dev_failed++;
+ 			dev_ret = ret;
 
 
