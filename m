@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DFAFEC04AAC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:30:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40C87C04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:30:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AC20721479
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:30:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 17BC320645
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:30:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558355408;
-	bh=N9QFeO4yQVMQCWzkv0CVm3igV/vAF6zg1t8BEEZGIbY=;
+	s=default; t=1558355412;
+	bh=UH6JkK6X0kuRS9HGzftnJ0yrDm0rxbG8gjI3mS3bbjs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=oJRVnC9HyY03GS3B6eghjsYNwkQPbs+/TtCPABAEHDJa8oZhI483xdu6TZfZU+uKL
-	 zR+5xaXbV4okKwH8Y0F4RiGMwBhs+0bT9KNwneW2IhpfKyECRYW/zCleMnY9SqVs17
-	 RmIyPNLvKddTbmJ6AsZLDbo++guQEYPen2AOxODc=
+	b=Dcg9Snzx6LCIIc4IWPv+GhM/XIEyFUu3KyqL4wqDvG5SL9hOF5EzRurTbPauxGpTZ
+	 hIy4UgVNqA/e2Oasc2RbOD02L5Pdo9qHjpXFGCclZOOmLKJhGtRKy7JEVSkPn8tqVD
+	 7H6FFaIdS+oXYJEtF6Ro8bWaLvwk+h9mrFWT/F5g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390031AbfETMaH (ORCPT
+        id S2390043AbfETMaL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 08:30:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46274 "EHLO mail.kernel.org"
+        Mon, 20 May 2019 08:30:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46326 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390019AbfETMaC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 08:30:02 -0400
+        id S2389584AbfETMaF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 08:30:05 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 96FDD20645;
-        Mon, 20 May 2019 12:30:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4881421479;
+        Mon, 20 May 2019 12:30:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558355402;
-        bh=N9QFeO4yQVMQCWzkv0CVm3igV/vAF6zg1t8BEEZGIbY=;
+        s=default; t=1558355404;
+        bh=UH6JkK6X0kuRS9HGzftnJ0yrDm0rxbG8gjI3mS3bbjs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UTYN4nPTb3+TFBbaPSImEcS2aed5ThrLf2/uU/EKJU5ow83PFZrq+fia7916yXczw
-         MU2Ew7UCDsLK37W9T/awlSJ5iBPR2tbJ5GVhSnlGmoinNsWtj/BHDaMtm6RajtuWyF
-         MRez9lFPlWZDR1Do1BBwJplPY02vCkR1Q7noaQQU=
+        b=crIPmrwABNaxYXhQ8xH0YxnN5a8BbKZYTJo0BzZTHxJ/00og/iX37pPaI8jpqg3Es
+         oaV/wHKS9RDDtTlDWpJATA5Gf+qTexriIhX0qDl33ITKuapVLrz0BYlGmE0vyvnu+m
+         XzeNkyRn5p5IecQj4B/lHmtFUpOemAi3NoE92Q44=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Ofir Drang <ofir.drang@arm.com>,
         Gilad Ben-Yossef <gilad@benyossef.com>,
         Herbert Xu <herbert@gondor.apana.org.au>
-Subject: [PATCH 5.0 064/123] crypto: ccree - HOST_POWER_DOWN_EN should be the last CC access during suspend
-Date:   Mon, 20 May 2019 14:14:04 +0200
-Message-Id: <20190520115249.067751301@linuxfoundation.org>
+Subject: [PATCH 5.0 065/123] crypto: ccree - add function to handle cryptocell tee fips error
+Date:   Mon, 20 May 2019 14:14:05 +0200
+Message-Id: <20190520115249.137222777@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190520115245.439864225@linuxfoundation.org>
 References: <20190520115245.439864225@linuxfoundation.org>
@@ -62,12 +62,11 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Ofir Drang <ofir.drang@arm.com>
 
-commit 3499efbeed39d114873267683b9e776bcb34b058 upstream.
+commit 897ab2316910a66bb048f1c9cefa25e6a592dcd7 upstream.
 
-During power management suspend the driver need to prepare the device
-for the power down operation and as a last indication write to the
-HOST_POWER_DOWN_EN register which signals to the hardware that
-The ccree is ready for power down.
+Adds function that checks if cryptocell tee fips error occurred
+and in such case triggers system error through kernel panic.
+Change fips function to use this new routine.
 
 Signed-off-by: Ofir Drang <ofir.drang@arm.com>
 Signed-off-by: Gilad Ben-Yossef <gilad@benyossef.com>
@@ -76,25 +75,74 @@ Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/crypto/ccree/cc_pm.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/crypto/ccree/cc_fips.c |   23 +++++++++++++++--------
+ drivers/crypto/ccree/cc_fips.h |    2 ++
+ 2 files changed, 17 insertions(+), 8 deletions(-)
 
---- a/drivers/crypto/ccree/cc_pm.c
-+++ b/drivers/crypto/ccree/cc_pm.c
-@@ -25,13 +25,13 @@ int cc_pm_suspend(struct device *dev)
- 	int rc;
+--- a/drivers/crypto/ccree/cc_fips.c
++++ b/drivers/crypto/ccree/cc_fips.c
+@@ -72,20 +72,28 @@ static inline void tee_fips_error(struct
+ 		dev_err(dev, "TEE reported error!\n");
+ }
  
- 	dev_dbg(dev, "set HOST_POWER_DOWN_EN\n");
--	cc_iowrite(drvdata, CC_REG(HOST_POWER_DOWN_EN), POWER_DOWN_ENABLE);
- 	rc = cc_suspend_req_queue(drvdata);
- 	if (rc) {
- 		dev_err(dev, "cc_suspend_req_queue (%x)\n", rc);
- 		return rc;
++/*
++ * This function check if cryptocell tee fips error occurred
++ * and in such case triggers system error
++ */
++void cc_tee_handle_fips_error(struct cc_drvdata *p_drvdata)
++{
++	struct device *dev = drvdata_to_dev(p_drvdata);
++
++	if (!cc_get_tee_fips_status(p_drvdata))
++		tee_fips_error(dev);
++}
++
+ /* Deferred service handler, run as interrupt-fired tasklet */
+ static void fips_dsr(unsigned long devarg)
+ {
+ 	struct cc_drvdata *drvdata = (struct cc_drvdata *)devarg;
+-	struct device *dev = drvdata_to_dev(drvdata);
+-	u32 irq, state, val;
++	u32 irq, val;
+ 
+ 	irq = (drvdata->irq & (CC_GPR0_IRQ_MASK));
+ 
+ 	if (irq) {
+-		state = cc_ioread(drvdata, CC_REG(GPR_HOST));
+-
+-		if (state != (CC_FIPS_SYNC_TEE_STATUS | CC_FIPS_SYNC_MODULE_OK))
+-			tee_fips_error(dev);
++		cc_tee_handle_fips_error(drvdata);
  	}
- 	fini_cc_regs(drvdata);
-+	cc_iowrite(drvdata, CC_REG(HOST_POWER_DOWN_EN), POWER_DOWN_ENABLE);
- 	cc_clk_off(drvdata);
+ 
+ 	/* after verifing that there is nothing to do,
+@@ -113,8 +121,7 @@ int cc_fips_init(struct cc_drvdata *p_dr
+ 	dev_dbg(dev, "Initializing fips tasklet\n");
+ 	tasklet_init(&fips_h->tasklet, fips_dsr, (unsigned long)p_drvdata);
+ 
+-	if (!cc_get_tee_fips_status(p_drvdata))
+-		tee_fips_error(dev);
++	cc_tee_handle_fips_error(p_drvdata);
+ 
  	return 0;
  }
+--- a/drivers/crypto/ccree/cc_fips.h
++++ b/drivers/crypto/ccree/cc_fips.h
+@@ -18,6 +18,7 @@ int cc_fips_init(struct cc_drvdata *p_dr
+ void cc_fips_fini(struct cc_drvdata *drvdata);
+ void fips_handler(struct cc_drvdata *drvdata);
+ void cc_set_ree_fips_status(struct cc_drvdata *drvdata, bool ok);
++void cc_tee_handle_fips_error(struct cc_drvdata *p_drvdata);
+ 
+ #else  /* CONFIG_CRYPTO_FIPS */
+ 
+@@ -30,6 +31,7 @@ static inline void cc_fips_fini(struct c
+ static inline void cc_set_ree_fips_status(struct cc_drvdata *drvdata,
+ 					  bool ok) {}
+ static inline void fips_handler(struct cc_drvdata *drvdata) {}
++static inline void cc_tee_handle_fips_error(struct cc_drvdata *p_drvdata) {}
+ 
+ #endif /* CONFIG_CRYPTO_FIPS */
+ 
 
 
