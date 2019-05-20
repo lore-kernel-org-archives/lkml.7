@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AD00C072A4
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:38:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B578AC04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:38:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 283BF204FD
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:38:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 880FD204FD
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:38:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558355893;
-	bh=bUrpkPG9EvsqvYWC0sEWmB2EMOMb11lNz/mUWzxCLPo=;
+	s=default; t=1558355905;
+	bh=55R11hn68ok3pmwLcWUc8/u/Khor9f6UQacwivXnHnI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QKEmqQB4f9sZeawDwI3b4veXNfyQf/QBnBvPCcJDakuaX0x6nQo4e/iECXQ/jir9J
-	 JSKiKV6mV1GgtZpx7XicuCdRqZp4dieLZ9MsyL/kQ4nPUWt9/C5oLIEotriFXOWCVC
-	 VnuXD8KNkN8qctevEGcnK7FWAH0vFT6wLs4COXQc=
+	b=VWRUaRI0rqq7l8DLxtl9eXKPWE0gEe3osadwSdp7/jPoPWy4fKjFllt3b1E4dzE0t
+	 YlRAtZDfucc0HwE0wSlVPHEgjoYsrv6s+xMBfqfkzJAqChL9vQQfG9w3snmek1SZ/q
+	 FcQ0j+L6FqZOH52KabAT10O3rf2SnvPW0wLnLGRw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391175AbfETMiM (ORCPT
+        id S2391270AbfETMiZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 08:38:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53598 "EHLO mail.kernel.org"
+        Mon, 20 May 2019 08:38:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52960 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391074AbfETMfX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 08:35:23 -0400
+        id S2390550AbfETMfF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 08:35:05 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4784720815;
-        Mon, 20 May 2019 12:35:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0CCB8204FD;
+        Mon, 20 May 2019 12:35:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558355722;
-        bh=bUrpkPG9EvsqvYWC0sEWmB2EMOMb11lNz/mUWzxCLPo=;
+        s=default; t=1558355704;
+        bh=55R11hn68ok3pmwLcWUc8/u/Khor9f6UQacwivXnHnI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MCPqiC28k32eaML/9N4j/EjIkMqahkpVlcpC0PKvWnCCJChz8YNPY/7wjZNFvTidX
-         AJjjywd1KYKotmUTIIuyjolAcTGoD9l8F7uLRQstowG9p2xWDflKu69sJCMbl8z6Jd
-         ZjDLgscgqAwVL1Zih+/sSzc6oQNyLutrqH0lN5eo=
+        b=2C7X05gDZvkTN4s4xpzAFDw6gBShTesYypTzLZhTsn6ijS6BEjp55Rlv7Y7JR+5eq
+         Dfto8AV8WlT886BIhF6ej+cubRX4umWdktvrYgFrMnWaFxE+VciYBRPqY1pg5NB7Az
+         tD25nS9rP6yb+0Y2fgwgKDwu8wjj4t3QMG7c4L9s=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Ren <renzhen@linux.alibaba.com>,
-        Jiufei Xue <jiufei.xue@linux.alibaba.com>,
-        Theodore Tso <tytso@mit.edu>, Jan Kara <jack@suse.cz>,
-        stable@kernel.org
-Subject: [PATCH 5.1 084/128] jbd2: check superblock mapped prior to committing
-Date:   Mon, 20 May 2019 14:14:31 +0200
-Message-Id: <20190520115255.230136659@linuxfoundation.org>
+        stable@vger.kernel.org, Filipe Manana <fdmanana@suse.com>,
+        David Sterba <dsterba@suse.com>
+Subject: [PATCH 5.1 095/128] Btrfs: send, flush dellaloc in order to avoid data loss
+Date:   Mon, 20 May 2019 14:14:42 +0200
+Message-Id: <20190520115255.704058582@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190520115249.449077487@linuxfoundation.org>
 References: <20190520115249.449077487@linuxfoundation.org>
@@ -61,49 +59,135 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jiufei Xue <jiufei.xue@linux.alibaba.com>
+From: Filipe Manana <fdmanana@suse.com>
 
-commit 742b06b5628f2cd23cb51a034cb54dc33c6162c5 upstream.
+commit 9f89d5de8631c7930898a601b6612e271aa2261c upstream.
 
-We hit a BUG at fs/buffer.c:3057 if we detached the nbd device
-before unmounting ext4 filesystem.
+When we set a subvolume to read-only mode we do not flush dellaloc for any
+of its inodes (except if the filesystem is mounted with -o flushoncommit),
+since it does not affect correctness for any subsequent operations - except
+for a future send operation. The send operation will not be able to see the
+delalloc data since the respective file extent items, inode item updates,
+backreferences, etc, have not hit yet the subvolume and extent trees.
 
-The typical chain of events leading to the BUG:
-jbd2_write_superblock
-  submit_bh
-    submit_bh_wbc
-      BUG_ON(!buffer_mapped(bh));
+Effectively this means data loss, since the send stream will not contain
+any data from existing delalloc. Another problem from this is that if the
+writeback starts and finishes while the send operation is in progress, we
+have the subvolume tree being being modified concurrently which can result
+in send failing unexpectedly with EIO or hitting runtime errors, assertion
+failures or hitting BUG_ONs, etc.
 
-The block device is removed and all the pages are invalidated. JBD2
-was trying to write journal superblock to the block device which is
-no longer present.
+Simple reproducer:
 
-Fix this by checking the journal superblock's buffer head prior to
-submitting.
+  $ mkfs.btrfs -f /dev/sdb
+  $ mount /dev/sdb /mnt
 
-Reported-by: Eric Ren <renzhen@linux.alibaba.com>
-Signed-off-by: Jiufei Xue <jiufei.xue@linux.alibaba.com>
-Signed-off-by: Theodore Ts'o <tytso@mit.edu>
-Reviewed-by: Jan Kara <jack@suse.cz>
-Cc: stable@kernel.org
+  $ btrfs subvolume create /mnt/sv
+  $ xfs_io -f -c "pwrite -S 0xea 0 108K" /mnt/sv/foo
+
+  $ btrfs property set /mnt/sv ro true
+  $ btrfs send -f /tmp/send.stream /mnt/sv
+
+  $ od -t x1 -A d /mnt/sv/foo
+  0000000 ea ea ea ea ea ea ea ea ea ea ea ea ea ea ea ea
+  *
+  0110592
+
+  $ umount /mnt
+  $ mkfs.btrfs -f /dev/sdc
+  $ mount /dev/sdc /mnt
+
+  $ btrfs receive -f /tmp/send.stream /mnt
+  $ echo $?
+  0
+  $ od -t x1 -A d /mnt/sv/foo
+  0000000
+  # ---> empty file
+
+Since this a problem that affects send only, fix it in send by flushing
+dellaloc for all the roots used by the send operation before send starts
+to process the commit roots.
+
+This is a problem that affects send since it was introduced (commit
+31db9f7c23fbf7 ("Btrfs: introduce BTRFS_IOC_SEND for btrfs send/receive"))
+but backporting it to older kernels has some dependencies:
+
+- For kernels between 3.19 and 4.20, it depends on commit 3cd24c698004d2
+  ("btrfs: use tagged writepage to mitigate livelock of snapshot") because
+  the function btrfs_start_delalloc_snapshot() does not exist before that
+  commit. So one has to either pick that commit or replace the calls to
+  btrfs_start_delalloc_snapshot() in this patch with calls to
+  btrfs_start_delalloc_inodes().
+
+- For kernels older than 3.19 it also requires commit e5fa8f865b3324
+  ("Btrfs: ensure send always works on roots without orphans") because
+  it depends on the function ensure_commit_roots_uptodate() which that
+  commits introduced.
+
+- No dependencies for 5.0+ kernels.
+
+A test case for fstests follows soon.
+
+CC: stable@vger.kernel.org # 3.19+
+Signed-off-by: Filipe Manana <fdmanana@suse.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/jbd2/journal.c |    4 ++++
- 1 file changed, 4 insertions(+)
+ fs/btrfs/send.c |   36 ++++++++++++++++++++++++++++++++++++
+ 1 file changed, 36 insertions(+)
 
---- a/fs/jbd2/journal.c
-+++ b/fs/jbd2/journal.c
-@@ -1350,6 +1350,10 @@ static int jbd2_write_superblock(journal
- 	journal_superblock_t *sb = journal->j_superblock;
- 	int ret;
+--- a/fs/btrfs/send.c
++++ b/fs/btrfs/send.c
+@@ -6579,6 +6579,38 @@ commit_trans:
+ 	return btrfs_commit_transaction(trans);
+ }
  
-+	/* Buffer got discarded which means block device got invalidated */
-+	if (!buffer_mapped(bh))
-+		return -EIO;
++/*
++ * Make sure any existing dellaloc is flushed for any root used by a send
++ * operation so that we do not miss any data and we do not race with writeback
++ * finishing and changing a tree while send is using the tree. This could
++ * happen if a subvolume is in RW mode, has delalloc, is turned to RO mode and
++ * a send operation then uses the subvolume.
++ * After flushing delalloc ensure_commit_roots_uptodate() must be called.
++ */
++static int flush_delalloc_roots(struct send_ctx *sctx)
++{
++	struct btrfs_root *root = sctx->parent_root;
++	int ret;
++	int i;
 +
- 	trace_jbd2_write_superblock(journal, write_flags);
- 	if (!(journal->j_flags & JBD2_BARRIER))
- 		write_flags &= ~(REQ_FUA | REQ_PREFLUSH);
++	if (root) {
++		ret = btrfs_start_delalloc_snapshot(root);
++		if (ret)
++			return ret;
++		btrfs_wait_ordered_extents(root, U64_MAX, 0, U64_MAX);
++	}
++
++	for (i = 0; i < sctx->clone_roots_cnt; i++) {
++		root = sctx->clone_roots[i].root;
++		ret = btrfs_start_delalloc_snapshot(root);
++		if (ret)
++			return ret;
++		btrfs_wait_ordered_extents(root, U64_MAX, 0, U64_MAX);
++	}
++
++	return 0;
++}
++
+ static void btrfs_root_dec_send_in_progress(struct btrfs_root* root)
+ {
+ 	spin_lock(&root->root_item_lock);
+@@ -6803,6 +6835,10 @@ long btrfs_ioctl_send(struct file *mnt_f
+ 			NULL);
+ 	sort_clone_roots = 1;
+ 
++	ret = flush_delalloc_roots(sctx);
++	if (ret)
++		goto out;
++
+ 	ret = ensure_commit_roots_uptodate(sctx);
+ 	if (ret)
+ 		goto out;
 
 
