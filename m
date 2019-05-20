@@ -7,46 +7,58 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0967CC04AAC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:28:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB262C04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:28:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D277020675
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:28:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B170920675
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:28:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558355301;
-	bh=tYzvmzxlgCAbu7295+HojwnrPPuXKNiISilXMntA4Lc=;
+	s=default; t=1558355304;
+	bh=FnOiAWCxbxKZVe4E+ZcIN19Am0EYnQ0noptC7Y+yIqM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=X5F8s5RYndyKIbHyi98+1GdnpI0EjJOttHofED099mcvFjCgR8YUrfs6dd1TF2bLx
-	 zmqeUaMi37nDuodywdcY2NBiUV+tM4nLcIK6Ra61ugzoHCak7Pb0IS28yRDuIwt6Fm
-	 D0kpgxJVENW3xAhZe/wsf/INYhTsJqGF6N83MBVc=
+	b=J9ySRseAJHRToEQWaYePpJOw4VXedJ+jCG4pvnwi1emoD6swn1KXff7dUfvYHg8Uu
+	 Cir+aXvqiuhKCJ+sNZ87yeaNWv2TufZft46s6VuMm8AIf88W9VP36L+MI5ZoRASmNI
+	 mJwWWKBJ/Ywo5EGEYbauI6YjJbzfT6KdLanfnEHM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389655AbfETM2U (ORCPT
+        id S2389664AbfETM2X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 08:28:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43988 "EHLO mail.kernel.org"
+        Mon, 20 May 2019 08:28:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44088 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389644AbfETM2P (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 08:28:15 -0400
+        id S2389652AbfETM2V (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 08:28:21 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6214C20645;
-        Mon, 20 May 2019 12:28:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6E9F920645;
+        Mon, 20 May 2019 12:28:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558355294;
-        bh=tYzvmzxlgCAbu7295+HojwnrPPuXKNiISilXMntA4Lc=;
+        s=default; t=1558355299;
+        bh=FnOiAWCxbxKZVe4E+ZcIN19Am0EYnQ0noptC7Y+yIqM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CF/735w5b5Ksle5ba3que3kM8RfG1AgG8GqUmBnjxyt3P6O4tDNphjRdAtydpdA8f
-         c0IOV7YgD9NXZ1Hj8o+5j0AVCHX5n7SC9PogwzFCn9VcSk6j6BmslNvqxv9AQqCwNP
-         G4I0p8r4Fq4WE/jDYSd7ctK9U7uprQhrGmzvlzSM=
+        b=w26Es2slubSqI3hUNn8PQadivD89vfaH50ps3oxZahs/PYVei4EULVLKvrXdDmZa6
+         xNnRfKOKZWMuHMQo76bHYwkMPkjBjMsMHE+kpkaRwCs/2zBCUS1sJ8Gr2BaZKqRcHB
+         QU5AG/YWxK1mOPBZrz9mab/5V17kHswvPW01s7dg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Boyang Zhou <zhouby_cn@126.com>,
-        Will Deacon <will.deacon@arm.com>
-Subject: [PATCH 5.0 014/123] arm64: mmap: Ensure file offset is treated as unsigned
-Date:   Mon, 20 May 2019 14:13:14 +0200
-Message-Id: <20190520115246.007140417@linuxfoundation.org>
+        stable@vger.kernel.org, Jiri Kosina <jkosina@suse.cz>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Josh Snyder <joshs@netflix.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Dave Chinner <david@fromorbit.com>,
+        Kevin Easton <kevin@guarana.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        Cyril Hrubis <chrubis@suse.cz>, Tejun Heo <tj@kernel.org>,
+        "Kirill A. Shutemov" <kirill@shutemov.name>,
+        Daniel Gruss <daniel@gruss.cc>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Dominique Martinet <asmadeus@codewreck.org>
+Subject: [PATCH 5.0 067/123] mm/mincore.c: make mincore() more conservative
+Date:   Mon, 20 May 2019 14:14:07 +0200
+Message-Id: <20190520115249.289498697@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190520115245.439864225@linuxfoundation.org>
 References: <20190520115245.439864225@linuxfoundation.org>
@@ -59,40 +71,95 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Boyang Zhou <zhouby_cn@126.com>
+From: Jiri Kosina <jkosina@suse.cz>
 
-commit f08cae2f28db24d95be5204046b60618d8de4ddc upstream.
+commit 134fca9063ad4851de767d1768180e5dede9a881 upstream.
 
-The file offset argument to the arm64 sys_mmap() implementation is
-scaled from bytes to pages by shifting right by PAGE_SHIFT.
-Unfortunately, the offset is passed in as a signed 'off_t' type and
-therefore large offsets (i.e. with the top bit set) are incorrectly
-sign-extended by the shift. This has been observed to cause false mmap()
-failures when mapping GPU doorbells on an arm64 server part.
+The semantics of what mincore() considers to be resident is not
+completely clear, but Linux has always (since 2.3.52, which is when
+mincore() was initially done) treated it as "page is available in page
+cache".
 
-Change the type of the file offset argument to sys_mmap() from 'off_t'
-to 'unsigned long' so that the shifting scales the value as expected.
+That's potentially a problem, as that [in]directly exposes
+meta-information about pagecache / memory mapping state even about
+memory not strictly belonging to the process executing the syscall,
+opening possibilities for sidechannel attacks.
 
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Boyang Zhou <zhouby_cn@126.com>
-[will: rewrote commit message]
-Signed-off-by: Will Deacon <will.deacon@arm.com>
+Change the semantics of mincore() so that it only reveals pagecache
+information for non-anonymous mappings that belog to files that the
+calling process could (if it tried to) successfully open for writing;
+otherwise we'd be including shared non-exclusive mappings, which
+
+ - is the sidechannel
+
+ - is not the usecase for mincore(), as that's primarily used for data,
+   not (shared) text
+
+[jkosina@suse.cz: v2]
+  Link: http://lkml.kernel.org/r/20190312141708.6652-2-vbabka@suse.cz
+[mhocko@suse.com: restructure can_do_mincore() conditions]
+Link: http://lkml.kernel.org/r/nycvar.YFH.7.76.1903062342020.19912@cbobk.fhfr.pm
+Signed-off-by: Jiri Kosina <jkosina@suse.cz>
+Signed-off-by: Vlastimil Babka <vbabka@suse.cz>
+Acked-by: Josh Snyder <joshs@netflix.com>
+Acked-by: Michal Hocko <mhocko@suse.com>
+Originally-by: Linus Torvalds <torvalds@linux-foundation.org>
+Originally-by: Dominique Martinet <asmadeus@codewreck.org>
+Cc: Andy Lutomirski <luto@amacapital.net>
+Cc: Dave Chinner <david@fromorbit.com>
+Cc: Kevin Easton <kevin@guarana.org>
+Cc: Matthew Wilcox <willy@infradead.org>
+Cc: Cyril Hrubis <chrubis@suse.cz>
+Cc: Tejun Heo <tj@kernel.org>
+Cc: Kirill A. Shutemov <kirill@shutemov.name>
+Cc: Daniel Gruss <daniel@gruss.cc>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/arm64/kernel/sys.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ mm/mincore.c |   23 ++++++++++++++++++++++-
+ 1 file changed, 22 insertions(+), 1 deletion(-)
 
---- a/arch/arm64/kernel/sys.c
-+++ b/arch/arm64/kernel/sys.c
-@@ -31,7 +31,7 @@
+--- a/mm/mincore.c
++++ b/mm/mincore.c
+@@ -169,6 +169,22 @@ out:
+ 	return 0;
+ }
  
- SYSCALL_DEFINE6(mmap, unsigned long, addr, unsigned long, len,
- 		unsigned long, prot, unsigned long, flags,
--		unsigned long, fd, off_t, off)
-+		unsigned long, fd, unsigned long, off)
- {
- 	if (offset_in_page(off) != 0)
- 		return -EINVAL;
++static inline bool can_do_mincore(struct vm_area_struct *vma)
++{
++	if (vma_is_anonymous(vma))
++		return true;
++	if (!vma->vm_file)
++		return false;
++	/*
++	 * Reveal pagecache information only for non-anonymous mappings that
++	 * correspond to the files the calling process could (if tried) open
++	 * for writing; otherwise we'd be including shared non-exclusive
++	 * mappings, which opens a side channel.
++	 */
++	return inode_owner_or_capable(file_inode(vma->vm_file)) ||
++		inode_permission(file_inode(vma->vm_file), MAY_WRITE) == 0;
++}
++
+ /*
+  * Do a chunk of "sys_mincore()". We've already checked
+  * all the arguments, we hold the mmap semaphore: we should
+@@ -189,8 +205,13 @@ static long do_mincore(unsigned long add
+ 	vma = find_vma(current->mm, addr);
+ 	if (!vma || addr < vma->vm_start)
+ 		return -ENOMEM;
+-	mincore_walk.mm = vma->vm_mm;
+ 	end = min(vma->vm_end, addr + (pages << PAGE_SHIFT));
++	if (!can_do_mincore(vma)) {
++		unsigned long pages = DIV_ROUND_UP(end - addr, PAGE_SIZE);
++		memset(vec, 1, pages);
++		return pages;
++	}
++	mincore_walk.mm = vma->vm_mm;
+ 	err = walk_page_range(addr, end, &mincore_walk);
+ 	if (err < 0)
+ 		return err;
 
 
