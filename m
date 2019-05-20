@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74996C04AAC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:49:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6B02C04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:49:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4789C2054F
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:49:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B21C2054F
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:49:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558356551;
-	bh=NELJ4Hu6YiJbJlmxwVlRRrxhcEXBUQ4E/XUnMCsrArw=;
+	s=default; t=1558356558;
+	bh=brbknLHE7yJVvOZb/Zphk7t5bwLxvePh41BHFAzt/wg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zQfAl6eU/vi0Qap+J6LpazKGa8LwGMGzgTmbErs0d1qcEO1NVunbVfaoNYeHZfa9R
-	 6M4AWeFG2SMRhRJp9fxVvYNr1mzfnZRmXiucZGJEdFWbr9GQHQmuZ4bvA9WF5FFiKs
-	 oE4KYV/aMVuDS5pTCuibjkicwmKkdAyecFA0tf00=
+	b=G0CqvvC1cPPJlXLIbj2tj/kGDo3MHk1u7VegMzPTzkhuf9wI3Sl4Wlt/vV+QSjj5Z
+	 ugOwbEE7yJVSaJPxNkJ6anHNelJAgvpGPICt4OvuChsiDyJZ1amD1cz/2UyPfoQpWe
+	 C+sqyYCSLzr2MMBWp+Hn+FZmEpbQvQAkdG3ZZSG0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387802AbfETMV4 (ORCPT
+        id S2388832AbfETMtR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 08:21:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35700 "EHLO mail.kernel.org"
+        Mon, 20 May 2019 08:49:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35622 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387779AbfETMVv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 08:21:51 -0400
+        id S2388308AbfETMVt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 08:21:49 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B42D4213F2;
-        Mon, 20 May 2019 12:21:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2573E2173E;
+        Mon, 20 May 2019 12:21:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558354911;
-        bh=NELJ4Hu6YiJbJlmxwVlRRrxhcEXBUQ4E/XUnMCsrArw=;
+        s=default; t=1558354908;
+        bh=brbknLHE7yJVvOZb/Zphk7t5bwLxvePh41BHFAzt/wg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nCBfx5bdpa8UtMNl8tp/e4L/nbxtTkRKgMULqcV14qvTCi4sLzeETU4+sZSA8UiOl
-         KmiajdEAJpIZPE8SANfV23rlAmYAa2RInX+6rij4xjvegihjN2sYYfsR1r4x5Q8fqN
-         LmDiX/eaOsBxWMoUWzz7be4zKrisjqsiiu50o5ME=
+        b=Kxa/11oS66QXDe/mIK8lQg/YXX5yq+R6nfox0R8Gj1FMe7MVSSqSas6f/6Ea1FHR7
+         dnksePG2QOUZ6yUDVvOvMGyjUKbX5wHAtHlUcHOEvuOMrl/8apu25spikX4iEVZ+XA
+         09m6cgh4zShxHbB+80yHRIUnUY8o6a804VC/RfYs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tim Chen <tim.c.chen@linux.intel.com>,
-        Eric Biggers <ebiggers@google.com>,
+        stable@vger.kernel.org, Eric Biggers <ebiggers@google.com>,
         Herbert Xu <herbert@gondor.apana.org.au>
-Subject: [PATCH 4.19 025/105] crypto: crct10dif-generic - fix use via crypto_shash_digest()
-Date:   Mon, 20 May 2019 14:13:31 +0200
-Message-Id: <20190520115248.764429973@linuxfoundation.org>
+Subject: [PATCH 4.19 024/105] crypto: skcipher - dont WARN on unprocessed data after slow walk step
+Date:   Mon, 20 May 2019 14:13:30 +0200
+Message-Id: <20190520115248.690508157@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190520115247.060821231@linuxfoundation.org>
 References: <20190520115247.060821231@linuxfoundation.org>
@@ -62,63 +61,54 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Eric Biggers <ebiggers@google.com>
 
-commit 307508d1072979f4435416f87936f87eaeb82054 upstream.
+commit dcaca01a42cc2c425154a13412b4124293a6e11e upstream.
 
-The ->digest() method of crct10dif-generic reads the current CRC value
-from the shash_desc context.  But this value is uninitialized, causing
-crypto_shash_digest() to compute the wrong result.  Fix it.
+skcipher_walk_done() assumes it's a bug if, after the "slow" path is
+executed where the next chunk of data is processed via a bounce buffer,
+the algorithm says it didn't process all bytes.  Thus it WARNs on this.
 
-Probably this wasn't noticed before because lib/crc-t10dif.c only uses
-crypto_shash_update(), not crypto_shash_digest().  Likewise,
-crypto_shash_digest() is not yet tested by the crypto self-tests because
-those only test the ahash API which only uses shash init/update/final.
+However, this can happen legitimately when the message needs to be
+evenly divisible into "blocks" but isn't, and the algorithm has a
+'walksize' greater than the block size.  For example, ecb-aes-neonbs
+sets 'walksize' to 128 bytes and only supports messages evenly divisible
+into 16-byte blocks.  If, say, 17 message bytes remain but they straddle
+scatterlist elements, the skcipher_walk code will take the "slow" path
+and pass the algorithm all 17 bytes in the bounce buffer.  But the
+algorithm will only be able to process 16 bytes, triggering the WARN.
+
+Fix this by just removing the WARN_ON().  Returning -EINVAL, as the code
+already does, is the right behavior.
 
 This bug was detected by my patches that improve testmgr to fuzz
 algorithms against their generic implementation.
 
-Fixes: 2d31e518a428 ("crypto: crct10dif - Wrap crc_t10dif function all to use crypto transform framework")
-Cc: <stable@vger.kernel.org> # v3.11+
-Cc: Tim Chen <tim.c.chen@linux.intel.com>
+Fixes: b286d8b1a690 ("crypto: skcipher - Add skcipher walk interface")
+Cc: <stable@vger.kernel.org> # v4.10+
 Signed-off-by: Eric Biggers <ebiggers@google.com>
 Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- crypto/crct10dif_generic.c |   11 ++++-------
- 1 file changed, 4 insertions(+), 7 deletions(-)
+ crypto/skcipher.c |    9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
 
---- a/crypto/crct10dif_generic.c
-+++ b/crypto/crct10dif_generic.c
-@@ -65,10 +65,9 @@ static int chksum_final(struct shash_des
- 	return 0;
- }
- 
--static int __chksum_finup(__u16 *crcp, const u8 *data, unsigned int len,
--			u8 *out)
-+static int __chksum_finup(__u16 crc, const u8 *data, unsigned int len, u8 *out)
- {
--	*(__u16 *)out = crc_t10dif_generic(*crcp, data, len);
-+	*(__u16 *)out = crc_t10dif_generic(crc, data, len);
- 	return 0;
- }
- 
-@@ -77,15 +76,13 @@ static int chksum_finup(struct shash_des
- {
- 	struct chksum_desc_ctx *ctx = shash_desc_ctx(desc);
- 
--	return __chksum_finup(&ctx->crc, data, len, out);
-+	return __chksum_finup(ctx->crc, data, len, out);
- }
- 
- static int chksum_digest(struct shash_desc *desc, const u8 *data,
- 			 unsigned int length, u8 *out)
- {
--	struct chksum_desc_ctx *ctx = shash_desc_ctx(desc);
--
--	return __chksum_finup(&ctx->crc, data, length, out);
-+	return __chksum_finup(0, data, length, out);
- }
- 
- static struct shash_alg alg = {
+--- a/crypto/skcipher.c
++++ b/crypto/skcipher.c
+@@ -131,8 +131,13 @@ unmap_src:
+ 		memcpy(walk->dst.virt.addr, walk->page, n);
+ 		skcipher_unmap_dst(walk);
+ 	} else if (unlikely(walk->flags & SKCIPHER_WALK_SLOW)) {
+-		if (WARN_ON(err)) {
+-			/* unexpected case; didn't process all bytes */
++		if (err) {
++			/*
++			 * Didn't process all bytes.  Either the algorithm is
++			 * broken, or this was the last step and it turned out
++			 * the message wasn't evenly divisible into blocks but
++			 * the algorithm requires it.
++			 */
+ 			err = -EINVAL;
+ 			goto finish;
+ 		}
 
 
