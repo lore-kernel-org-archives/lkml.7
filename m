@@ -2,247 +2,232 @@ Return-Path: <SRS0=lq4r=TU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6008C04AAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 08:33:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A24D4C04AAF
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 08:34:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9C36C2081C
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 08:33:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 786D320863
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 08:34:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731229AbfETIdu (ORCPT
+        id S1731341AbfETIe0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 04:33:50 -0400
-Received: from mx2.suse.de ([195.135.220.15]:57426 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729354AbfETIdu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 04:33:50 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 9D3FAAF8D;
-        Mon, 20 May 2019 08:33:48 +0000 (UTC)
-Subject: Re: [PATCH 10/33] fbcon: call fbcon_fb_(un)registered directly
-To:     Daniel Vetter <daniel.vetter@ffwll.ch>,
-        DRI Development <dri-devel@lists.freedesktop.org>
-Cc:     Intel Graphics Development <intel-gfx@lists.freedesktop.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Daniel Vetter <daniel.vetter@intel.com>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        =?UTF-8?Q?Noralf_Tr=c3=b8nnes?= <noralf@tronnes.org>,
-        Yisheng Xie <ysxie@foxmail.com>, Peter Rosin <peda@axentia.se>,
-        =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>,
-        Mikulas Patocka <mpatocka@redhat.com>,
-        linux-fbdev@vger.kernel.org
-References: <20190520082216.26273-1-daniel.vetter@ffwll.ch>
- <20190520082216.26273-11-daniel.vetter@ffwll.ch>
-From:   Thomas Zimmermann <tzimmermann@suse.de>
-Openpgp: preference=signencrypt
-Autocrypt: addr=tzimmermann@suse.de; keydata=
- xsBNBFs50uABCADEHPidWt974CaxBVbrIBwqcq/WURinJ3+2WlIrKWspiP83vfZKaXhFYsdg
- XH47fDVbPPj+d6tQrw5lPQCyqjwrCPYnq3WlIBnGPJ4/jreTL6V+qfKRDlGLWFjZcsrPJGE0
- BeB5BbqP5erN1qylK9i3gPoQjXGhpBpQYwRrEyQyjuvk+Ev0K1Jc5tVDeJAuau3TGNgah4Yc
- hdHm3bkPjz9EErV85RwvImQ1dptvx6s7xzwXTgGAsaYZsL8WCwDaTuqFa1d1jjlaxg6+tZsB
- 9GluwvIhSezPgnEmimZDkGnZRRSFiGP8yjqTjjWuf0bSj5rUnTGiyLyRZRNGcXmu6hjlABEB
- AAHNKFRob21hcyBaaW1tZXJtYW5uIDx0emltbWVybWFubkBzdXNlLmNvbT7CwJQEEwEIAD4W
- IQRyF/usjOnPY0ShaOVoDcEdUwt6IwUCWznTtgIbAwUJA8JnAAULCQgHAgYVCgkICwIEFgID
- AQIeAQIXgAAKCRBoDcEdUwt6I7D7CACBK42XW+7mCiK8ioXMEy1NzGbXC51RzGea8N83oEJS
- 1KVUtQxrkDxgrW/WLSl/TfqHFsJpdEFOv1XubWbleun3uKPy0e5vZCd5UjZPkeNjnqfCYTDy
- hVVsdOuFbtWDppJyJrThLqr9AgSFmoCNNUt1SVpYEEOLNE6C32BhlnSq21VLC+YXTgO/ZHTa
- YXkq54hHj63jwrcjkBSCkXLh37kHeqnl++GHpN+3R+o3w2OpwHAlvVjdKPT27v1tVkiydsFG
- 65Vd0n3m/ft+IOrGgxQM1C20uqKvsZGB4r3OGR50ekAybO7sjEJJ1Obl4ge/6RRqcvKz4LMb
- tGs85D6tPIeFzsBNBFs50uABCADGJj+DP1fk+UWOWrf4O61HTbC4Vr9QD2K4fUUHnzg2B6zU
- R1BPXqLGG0+lzK8kfYU/F5RjmEcClsIkAaFkg4kzKP14tvY1J5+AV3yNqcdg018HNtiyrSwI
- E0Yz/qm1Ot2NMZ0DdvVBg22IMsiudQ1tx9CH9mtyTbIXgACvl3PW2o9CxiHPE/bohFhwZwh/
- kXYYAE51lhinQ3oFEeQZA3w4OTvxSEspiQR8dg8qJJb+YOAc5IKk6sJmmM7JfFMWSr22satM
- 23oQ3WvJb4RV6HTRTAIEyyZS7g2DhiytgMG60t0qdABG5KXSQW+OKlZRpuWwKWaLh3if/p/u
- 69dvpanbABEBAAHCwHwEGAEIACYWIQRyF/usjOnPY0ShaOVoDcEdUwt6IwUCWznS4AIbDAUJ
- A8JnAAAKCRBoDcEdUwt6I6X3CACJ8D+TpXBCqJE5xwog08+Dp8uBpx0T9n1wE0GQisZruACW
- NofYn8PTX9k4wmegDLwt7YQDdKxQ4+eTfZeLNQqWg6OCftH5Kx7sjWnJ09tOgniVdROzWJ7c
- VJ/i0okazncsJ+nq48UYvRGE1Swh3A4QRIyphWX4OADOBmTFl9ZYNPnh23eaC9WrNvFr7yP7
- iGjMlfEW8l6Lda//EC5VpXVNza0xeae0zFNst2R9pn+bLkihwDLWxOIyifGRxTqNxoS4I1aw
- VhxPSVztPMSpIA/sOr/N/p6JrBLn+gui2K6mP7bGb8hF+szfArYqz3T1rv1VzUWAJf5Wre5U
- iNx9uqqx
-Message-ID: <423eba4b-15e1-f10b-ae2d-855b8a585688@suse.de>
-Date:   Mon, 20 May 2019 10:33:40 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Mon, 20 May 2019 04:34:26 -0400
+Received: from mailgw02.mediatek.com ([1.203.163.81]:21342 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1729354AbfETIe0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 04:34:26 -0400
+X-UUID: b58bd22e58254f2384bdf69571e7c1ac-20190520
+X-UUID: b58bd22e58254f2384bdf69571e7c1ac-20190520
+Received: from mtkcas32.mediatek.inc [(172.27.4.253)] by mailgw02.mediatek.com
+        (envelope-from <ck.hu@mediatek.com>)
+        (mailgw01.mediatek.com ESMTP with TLS)
+        with ESMTP id 1035860400; Mon, 20 May 2019 16:34:18 +0800
+Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
+ MTKMBS33N1.mediatek.inc (172.27.4.75) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Mon, 20 May 2019 16:34:16 +0800
+Received: from [172.21.77.4] (172.21.77.4) by MTKCAS06.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Mon, 20 May 2019 16:34:09 +0800
+Message-ID: <1558341248.7311.42.camel@mtksdaap41>
+Subject: Re: [v2 2/5] drm/mediatek: CMDQ reg address of mt8173 is different
+ with mt2701
+From:   CK Hu <ck.hu@mediatek.com>
+To:     Jitao Shi <jitao.shi@mediatek.com>
+CC:     Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>,
+        "Mark Rutland" <mark.rutland@arm.com>,
+        Ian Campbell <ijc+devicetree@hellion.org.uk>,
+        Kumar Gala <galak@codeaurora.org>, <linux-pwm@vger.kernel.org>,
+        David Airlie <airlied@linux.ie>,
+        "Matthias Brugger" <matthias.bgg@gmail.com>,
+        Thierry Reding <treding@nvidia.com>,
+        "Ajay Kumar" <ajaykumar.rs@samsung.com>,
+        Inki Dae <inki.dae@samsung.com>,
+        "Rahul Sharma" <rahul.sharma@samsung.com>,
+        Sean Paul <seanpaul@chromium.org>,
+        Vincent Palatin <vpalatin@chromium.org>,
+        Andy Yan <andy.yan@rock-chips.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        "Russell King" <rmk+kernel@arm.linux.org.uk>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <dri-devel@lists.freedesktop.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <srv_heupstream@mediatek.com>,
+        Sascha Hauer <kernel@pengutronix.de>,
+        <yingjoe.chen@mediatek.com>, <eddie.huang@mediatek.com>,
+        <cawa.cheng@mediatek.com>, <bibby.hsieh@mediatek.com>,
+        <stonea168@163.com>
+Date:   Mon, 20 May 2019 16:34:08 +0800
+In-Reply-To: <1558258406.367.2.camel@mszsdaap41>
+References: <20190416060501.76276-1-jitao.shi@mediatek.com>
+         <20190416060501.76276-3-jitao.shi@mediatek.com>
+         <1557283144.31731.4.camel@mtksdaap41> <1558258406.367.2.camel@mszsdaap41>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.10.4-0ubuntu2 
 MIME-Version: 1.0
-In-Reply-To: <20190520082216.26273-11-daniel.vetter@ffwll.ch>
-Content-Type: multipart/signed; micalg=pgp-sha256;
- protocol="application/pgp-signature";
- boundary="10BkQrmXYiTb3owcb8YFUe0uLWcOVDCw7"
+Content-Transfer-Encoding: 7bit
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---10BkQrmXYiTb3owcb8YFUe0uLWcOVDCw7
-Content-Type: multipart/mixed; boundary="4hhIUX5t4MYIJcRw4vNqCe8B7g9KtfXzI";
- protected-headers="v1"
-From: Thomas Zimmermann <tzimmermann@suse.de>
-To: Daniel Vetter <daniel.vetter@ffwll.ch>,
- DRI Development <dri-devel@lists.freedesktop.org>
-Cc: Intel Graphics Development <intel-gfx@lists.freedesktop.org>,
- LKML <linux-kernel@vger.kernel.org>, Daniel Vetter
- <daniel.vetter@intel.com>,
- Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
- Hans de Goede <hdegoede@redhat.com>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- =?UTF-8?Q?Noralf_Tr=c3=b8nnes?= <noralf@tronnes.org>,
- Yisheng Xie <ysxie@foxmail.com>, Peter Rosin <peda@axentia.se>,
- =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>,
- Mikulas Patocka <mpatocka@redhat.com>, linux-fbdev@vger.kernel.org
-Message-ID: <423eba4b-15e1-f10b-ae2d-855b8a585688@suse.de>
-Subject: Re: [PATCH 10/33] fbcon: call fbcon_fb_(un)registered directly
-References: <20190520082216.26273-1-daniel.vetter@ffwll.ch>
- <20190520082216.26273-11-daniel.vetter@ffwll.ch>
-In-Reply-To: <20190520082216.26273-11-daniel.vetter@ffwll.ch>
+Hi, Jitao:
 
---4hhIUX5t4MYIJcRw4vNqCe8B7g9KtfXzI
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
+On Sun, 2019-05-19 at 17:33 +0800, Jitao Shi wrote:
+> On Wed, 2019-05-08 at 10:39 +0800, CK Hu wrote:
+> > On Tue, 2019-04-16 at 14:04 +0800, Jitao Shi wrote:
+> > > Config the different CMDQ reg address in driver data.
+> > > 
+> > For MT8173, you change reg_cmd_off from 0x180 to 0x200, so this patch is
+> > a bug fix. You should add a 'Fixes' tag.
+> > 
+> > > Signed-off-by: Jitao Shi <jitao.shi@mediatek.com>
+> > > ---
+> > >  drivers/gpu/drm/mediatek/mtk_dsi.c | 39 +++++++++++++++++++++++-------
+> > >  1 file changed, 30 insertions(+), 9 deletions(-)
+> > > 
+> > > diff --git a/drivers/gpu/drm/mediatek/mtk_dsi.c b/drivers/gpu/drm/mediatek/mtk_dsi.c
+> > > index 6c4ac37f983d..573e6bec6d36 100644
+> > > --- a/drivers/gpu/drm/mediatek/mtk_dsi.c
+> > > +++ b/drivers/gpu/drm/mediatek/mtk_dsi.c
+> > > @@ -131,7 +131,6 @@
+> > >  #define VM_CMD_EN			BIT(0)
+> > >  #define TS_VFP_EN			BIT(5)
+> > >  
+> > > -#define DSI_CMDQ0		0x180
+> > >  #define CONFIG				(0xff << 0)
+> > >  #define SHORT_PACKET			0
+> > >  #define LONG_PACKET			2
+> > > @@ -156,6 +155,10 @@
+> > >  
+> > >  struct phy;
+> > >  
+> > > +struct mtk_dsi_driver_data {
+> > > +	const u32 reg_cmdq_off;
+> > > +};
+> > > +
+> > >  struct mtk_dsi {
+> > >  	struct mtk_ddp_comp ddp_comp;
+> > >  	struct device *dev;
+> > > @@ -182,6 +185,7 @@ struct mtk_dsi {
+> > >  	bool enabled;
+> > >  	u32 irq_data;
+> > >  	wait_queue_head_t irq_wait_queue;
+> > > +	struct mtk_dsi_driver_data *driver_data;
+> > >  };
+> > >  
+> > >  static inline struct mtk_dsi *encoder_to_dsi(struct drm_encoder *e)
+> > > @@ -934,6 +938,7 @@ static void mtk_dsi_cmdq(struct mtk_dsi *dsi, const struct mipi_dsi_msg *msg)
+> > >  	const char *tx_buf = msg->tx_buf;
+> > >  	u8 config, cmdq_size, cmdq_off, type = msg->type;
+> > >  	u32 reg_val, cmdq_mask, i;
+> > > +	u32 reg_cmdq_off = dsi->driver_data->reg_cmdq_off;
+> > >  
+> > >  	if (MTK_DSI_HOST_IS_READ(type))
+> > >  		config = BTA;
+> > > @@ -953,9 +958,11 @@ static void mtk_dsi_cmdq(struct mtk_dsi *dsi, const struct mipi_dsi_msg *msg)
+> > >  	}
+> > >  
+> > >  	for (i = 0; i < msg->tx_len; i++)
+> > > -		writeb(tx_buf[i], dsi->regs + DSI_CMDQ0 + cmdq_off + i);
+> > > +		mtk_dsi_mask(dsi, (reg_cmdq_off + cmdq_off + i) & (~0x3U),
+> > > +			     (0xffUL << (((i + cmdq_off) & 3U) * 8U)),
+> > > +			     tx_buf[i] << (((i + cmdq_off) & 3U) * 8U));
+> > 
+> > You say you would follow Nicolas' suggestion here.
+> > 
+> 
+> If i replace mtk_dsi_mask with writeb, i can't get right value from
+> registers. I don't know why this.
 
-Hi
+I remember that Shaoming has also meet some error about writeb(), but he
+finally fix this bug. You may get some hint from him. If we can not use
+writeb(), this modification should be two patches: one is changing
+DSI_CMDQ0 to reg_cmdq_off, another one is changing writeb() to
+mtk_dsi_mask().
 
-Am 20.05.19 um 10:21 schrieb Daniel Vetter:
-=2E..
-> diff --git a/drivers/video/fbdev/core/fbmem.c b/drivers/video/fbdev/cor=
-e/fbmem.c
-> index fc3d34a8ea5b..ae2db31eeba7 100644
-> --- a/drivers/video/fbdev/core/fbmem.c
-> +++ b/drivers/video/fbdev/core/fbmem.c
-> @@ -1660,7 +1660,6 @@ MODULE_PARM_DESC(lockless_register_fb,
->  static int do_register_framebuffer(struct fb_info *fb_info)
->  {
->  	int i, ret;
-> -	struct fb_event event;
->  	struct fb_videomode mode;
-> =20
->  	if (fb_check_foreignness(fb_info))
-> @@ -1723,7 +1722,6 @@ static int do_register_framebuffer(struct fb_info=
- *fb_info)
->  	fb_add_videomode(&mode, &fb_info->modelist);
->  	registered_fb[i] =3D fb_info;
-> =20
-> -	event.info =3D fb_info;
->  	if (!lockless_register_fb)
->  		console_lock();
->  	else
-> @@ -1732,9 +1730,8 @@ static int do_register_framebuffer(struct fb_info=
- *fb_info)
->  		ret =3D -ENODEV;
->  		goto unlock_console;
->  	}
-> -	ret =3D 0;
-> =20
-> -	fb_notifier_call_chain(FB_EVENT_FB_REGISTERED, &event);
-> +	ret =3D fbcon_fb_registered(fb_info);
+Regards,
+CK
 
-What about backlight drivers? [1] Apparently these also use the
-notifiers. [2] From my understanding, backlight drivers would stop
-working with this change.
-
-Best regards
-Thomas
-
-[1]
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/d=
-rivers/video/backlight
-[2]
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/d=
-rivers/video/backlight/backlight.c#n40
-
->  	unlock_fb_info(fb_info);
->  unlock_console:
->  	if (!lockless_register_fb)
-> @@ -1771,7 +1768,6 @@ static int __unlink_framebuffer(struct fb_info *f=
-b_info);
-> =20
->  static int do_unregister_framebuffer(struct fb_info *fb_info)
->  {
-> -	struct fb_event event;
->  	int ret;
-> =20
->  	ret =3D unbind_console(fb_info);
-> @@ -1789,9 +1785,8 @@ static int do_unregister_framebuffer(struct fb_in=
-fo *fb_info)
->  	registered_fb[fb_info->node] =3D NULL;
->  	num_registered_fb--;
->  	fb_cleanup_device(fb_info);
-> -	event.info =3D fb_info;
->  	console_lock();
-> -	fb_notifier_call_chain(FB_EVENT_FB_UNREGISTERED, &event);
-> +	fbcon_fb_unregistered(fb_info);
->  	console_unlock();
-> =20
->  	/* this may free fb info */
-> diff --git a/include/linux/fb.h b/include/linux/fb.h
-> index f52ef0ad6781..701abaf79c87 100644
-> --- a/include/linux/fb.h
-> +++ b/include/linux/fb.h
-> @@ -136,10 +136,6 @@ struct fb_cursor_user {
->  #define FB_EVENT_RESUME			0x03
->  /*      An entry from the modelist was removed */
->  #define FB_EVENT_MODE_DELETE            0x04
-> -/*      A driver registered itself */
-> -#define FB_EVENT_FB_REGISTERED          0x05
-> -/*      A driver unregistered itself */
-> -#define FB_EVENT_FB_UNREGISTERED        0x06
->  /*      CONSOLE-SPECIFIC: get console to framebuffer mapping */
->  #define FB_EVENT_GET_CONSOLE_MAP        0x07
->  /*      CONSOLE-SPECIFIC: set console to framebuffer mapping */
-> diff --git a/include/linux/fbcon.h b/include/linux/fbcon.h
-> index f68a7db14165..94a71e9e1257 100644
-> --- a/include/linux/fbcon.h
-> +++ b/include/linux/fbcon.h
-> @@ -4,9 +4,13 @@
->  #ifdef CONFIG_FRAMEBUFFER_CONSOLE
->  void __init fb_console_init(void);
->  void __exit fb_console_exit(void);
-> +int fbcon_fb_registered(struct fb_info *info);
-> +void fbcon_fb_unregistered(struct fb_info *info);
->  #else
->  static inline void fb_console_init(void) {}
->  static inline void fb_console_exit(void) {}
-> +static inline int fbcon_fb_registered(struct fb_info *info) { return 0=
-; }
-> +static inline void fbcon_fb_unregistered(struct fb_info *info) {}
->  #endif
-> =20
->  #endif /* _LINUX_FBCON_H */
->=20
-
---=20
-Thomas Zimmermann
-Graphics Driver Developer
-SUSE Linux GmbH, Maxfeldstrasse 5, 90409 Nuernberg, Germany
-GF: Felix Imend=C3=B6rffer, Mary Higgins, Sri Rasiah
-HRB 21284 (AG N=C3=BCrnberg)
+> 
+> > >  
+> > > -	mtk_dsi_mask(dsi, DSI_CMDQ0, cmdq_mask, reg_val);
+> > > +	mtk_dsi_mask(dsi, reg_cmdq_off, cmdq_mask, reg_val);
+> > >  	mtk_dsi_mask(dsi, DSI_CMDQ_SIZE, CMDQ_SIZE, cmdq_size);
+> > >  }
+> > >  
+> > > @@ -1074,10 +1081,27 @@ static const struct component_ops mtk_dsi_component_ops = {
+> > >  	.unbind = mtk_dsi_unbind,
+> > >  };
+> > >  
+> > > +static const struct mtk_dsi_driver_data mt8173_dsi_driver_data = {
+> > > +	.reg_cmdq_off = 0x200,
+> > > +};
+> > > +
+> > > +static const struct mtk_dsi_driver_data mt2701_dsi_driver_data = {
+> > > +	.reg_cmdq_off = 0x180,
+> > > +};
+> > > +
+> > > +static const struct of_device_id mtk_dsi_of_match[] = {
+> > > +	{ .compatible = "mediatek,mt2701-dsi",
+> > > +	  .data = &mt2701_dsi_driver_data },
+> > > +	{ .compatible = "mediatek,mt8173-dsi",
+> > > +	  .data = &mt8173_dsi_driver_data },
+> > > +	{ },
+> > > +};
+> > > +
+> > >  static int mtk_dsi_probe(struct platform_device *pdev)
+> > >  {
+> > >  	struct mtk_dsi *dsi;
+> > >  	struct device *dev = &pdev->dev;
+> > > +	const struct of_device_id *of_id;
+> > >  	struct resource *regs;
+> > >  	int irq_num;
+> > >  	int comp_id;
+> > > @@ -1101,6 +1125,9 @@ static int mtk_dsi_probe(struct platform_device *pdev)
+> > >  	if (ret)
+> > >  		goto err_unregister_host;
+> > >  
+> > > +	of_id = of_match_device(mtk_dsi_of_match, &pdev->dev);
+> > > +	dsi->driver_data = of_id->data;
+> > 
+> > Maybe use of_device_get_match_data() is a more simple way. You could
+> > refer to [1].
+> > 
+> > [1]
+> > https://elixir.bootlin.com/linux/v5.1/source/drivers/gpu/drm/mediatek/mtk_disp_ovl.c#L300
+> > 
+> > Regards,
+> > CK
+> > 
+> 
+> I'll fix it next version.
+> 
+> > > +
+> > >  	dsi->engine_clk = devm_clk_get(dev, "engine");
+> > >  	if (IS_ERR(dsi->engine_clk)) {
+> > >  		ret = PTR_ERR(dsi->engine_clk);
+> > > @@ -1193,12 +1220,6 @@ static int mtk_dsi_remove(struct platform_device *pdev)
+> > >  	return 0;
+> > >  }
+> > >  
+> > > -static const struct of_device_id mtk_dsi_of_match[] = {
+> > > -	{ .compatible = "mediatek,mt2701-dsi" },
+> > > -	{ .compatible = "mediatek,mt8173-dsi" },
+> > > -	{ },
+> > > -};
+> > > -
+> > >  struct platform_driver mtk_dsi_driver = {
+> > >  	.probe = mtk_dsi_probe,
+> > >  	.remove = mtk_dsi_remove,
+> > 
+> > 
+> 
+> 
 
 
---4hhIUX5t4MYIJcRw4vNqCe8B7g9KtfXzI--
-
---10BkQrmXYiTb3owcb8YFUe0uLWcOVDCw7
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEEchf7rIzpz2NEoWjlaA3BHVMLeiMFAlziZmoACgkQaA3BHVML
-eiNAngf/ZQOl9FM5aGOYTl4o6aIfgLH22To1SqJNHKjRpMHr4Zh+YwCPOGzft9F6
-6Ybw9yK4Ozwzm/A9gTvgCkgw5CpSpLekcZX8Mpl+x2M8LpBwKSkZdK3chQpBtxuA
-t06+umoBi9AG1yqcXEkv/2H81ENylNFCt0IkcC7eSje0N8bbN7imqIOkBoxF2t+7
-KdrIB09zrg46OiFYz0SBUn+yim6y0GkntcPkfOD7KSvaHuvB5t7rfecY3Ckl8EYS
-99bZ7B+D97+eUENCo6e84GQGoPa4n7RkIPeRPGH9WJoq0047Z6QViyTkBqg7gH8N
-mxwBpGU9UYbpiZMsiiSB9wdiGBciyg==
-=j0QV
------END PGP SIGNATURE-----
-
---10BkQrmXYiTb3owcb8YFUe0uLWcOVDCw7--
