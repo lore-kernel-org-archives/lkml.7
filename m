@@ -4,30 +4,30 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40A86C04AAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 23:50:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F0B0C04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 23:50:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 082862173E
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 23:50:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 025712173E
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 23:50:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="icuRmovm"
+	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="KWEviyah"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727524AbfETXum (ORCPT
+        id S1727537AbfETXup (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 19:50:42 -0400
-Received: from vps.xff.cz ([195.181.215.36]:58574 "EHLO vps.xff.cz"
+        Mon, 20 May 2019 19:50:45 -0400
+Received: from vps.xff.cz ([195.181.215.36]:58544 "EHLO vps.xff.cz"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726879AbfETXuO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726703AbfETXuO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 20 May 2019 19:50:14 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=megous.com; s=mail;
-        t=1558396212; bh=lmN/vA2/QcSdUuzR1xKNkZ8E+T7fPttQ3k8QpH5igsQ=;
+        t=1558396211; bh=W1eysqnIHUZkksJlW6Nnyz1rUD5/k0fxV0/y2AwBQ70=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=icuRmovmqEiyTkx1kZjdynNoQSk4c78preJIjNGDecNXCTpka+1z9503Aodfx2L88
-         6sOPPpp5L2sC2XXN6VuIHqWX1c97ZiYpULA+xILVHEybnqSj3gIIu2jnLkXhLVSlH5
-         V6knXlNvxgV1UUKlgvFu1bsGDIuZjLwsN46MtJdw=
+        b=KWEviyahsEjLVuUlatHPmAGNs/v+gXdFNXAQeIPBRYiu29UWwYVGVtcHd6EKOt3nY
+         ajO+RdF2gPLR2dKSkWDQBQUbs4RMVoreWG/hFuLn+pm0HLElUrk/ozTNyEwONfqYER
+         2747mF41pq6c7eGqIzAfMh+CXMPzZ/HZwM5/mkSc=
 From:   megous@megous.com
 To:     linux-sunxi@googlegroups.com,
         Maxime Ripard <maxime.ripard@bootlin.com>,
@@ -44,9 +44,9 @@ Cc:     Icenowy Zheng <icenowy@aosc.io>, David Airlie <airlied@linux.ie>,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         netdev@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com,
         Ondrej Jirman <megous@megous.com>
-Subject: [PATCH v5 2/6] net: stmmac: sun8i: force select external PHY when no internal one
-Date:   Tue, 21 May 2019 01:50:05 +0200
-Message-Id: <20190520235009.16734-3-megous@megous.com>
+Subject: [PATCH v5 1/6] net: stmmac: sun8i: add support for Allwinner H6 EMAC
+Date:   Tue, 21 May 2019 01:50:04 +0200
+Message-Id: <20190520235009.16734-2-megous@megous.com>
 In-Reply-To: <20190520235009.16734-1-megous@megous.com>
 References: <20190520235009.16734-1-megous@megous.com>
 MIME-Version: 1.0
@@ -58,39 +58,52 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Icenowy Zheng <icenowy@aosc.io>
 
-The PHY selection bit also exists on SoCs without an internal PHY; if it's
-set to 1 (internal PHY, default value) then the MAC will not make use of
-any PHY such SoCs.
+The EMAC on Allwinner H6 is just like the one on A64. The "internal PHY" on
+H6 is on a co-packaged AC200 chip, and it's not really internal (it's
+connected via RMII at PA GPIO bank).
 
-This problem appears when adapting for H6, which has no real internal PHY
-(the "internal PHY" on H6 is not on-die, but on a co-packaged AC200 chip,
-connected via RMII interface at GPIO bank A).
-
-Force the PHY selection bit to 0 when the SOC doesn't have an internal PHY,
-to address the problem of a wrong default value.
+Add support for the Allwinner H6 EMAC in the dwmac-sun8i driver.
 
 Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
 Signed-off-by: Ondrej Jirman <megous@megous.com>
 ---
- drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ .../net/ethernet/stmicro/stmmac/dwmac-sun8i.c    | 16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
 
 diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c b/drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c
-index 3258dec84d55..0484c289f328 100644
+index ba124a4da793..3258dec84d55 100644
 --- a/drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c
 +++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c
-@@ -907,6 +907,11 @@ static int sun8i_dwmac_set_syscon(struct stmmac_priv *priv)
- 		 * address. No need to mask it again.
- 		 */
- 		reg |= 1 << H3_EPHY_ADDR_SHIFT;
-+	} else {
-+		/* For SoCs without internal PHY the PHY selection bit should be
-+		 * set to 0 (external PHY).
-+		 */
-+		reg &= ~H3_EPHY_SELECT;
- 	}
+@@ -147,6 +147,20 @@ static const struct emac_variant emac_variant_a64 = {
+ 	.tx_delay_max = 7,
+ };
  
- 	if (!of_property_read_u32(node, "allwinner,tx-delay-ps", &val)) {
++static const struct emac_variant emac_variant_h6 = {
++	.default_syscon_value = 0x50000,
++	.syscon_field = &sun8i_syscon_reg_field,
++	/* The "Internal PHY" of H6 is not on the die. It's on the
++	 * co-packaged AC200 chip instead.
++	 */
++	.soc_has_internal_phy = false,
++	.support_mii = true,
++	.support_rmii = true,
++	.support_rgmii = true,
++	.rx_delay_max = 31,
++	.tx_delay_max = 7,
++};
++
+ #define EMAC_BASIC_CTL0 0x00
+ #define EMAC_BASIC_CTL1 0x04
+ #define EMAC_INT_STA    0x08
+@@ -1212,6 +1226,8 @@ static const struct of_device_id sun8i_dwmac_match[] = {
+ 		.data = &emac_variant_r40 },
+ 	{ .compatible = "allwinner,sun50i-a64-emac",
+ 		.data = &emac_variant_a64 },
++	{ .compatible = "allwinner,sun50i-h6-emac",
++		.data = &emac_variant_h6 },
+ 	{ }
+ };
+ MODULE_DEVICE_TABLE(of, sun8i_dwmac_match);
 -- 
 2.21.0
 
