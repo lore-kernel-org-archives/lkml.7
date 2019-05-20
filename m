@@ -3,33 +3,33 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DCED0C04AAC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 14:22:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA97AC04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 14:22:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B22E721783
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 14:22:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 86CB021783
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 14:22:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390307AbfETOWQ (ORCPT
+        id S2391284AbfETOWT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 10:22:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48950 "EHLO mail.kernel.org"
+        Mon, 20 May 2019 10:22:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49042 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388861AbfETOWA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S2388913AbfETOWA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 20 May 2019 10:22:00 -0400
 Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1712F21743;
+        by mail.kernel.org (Postfix) with ESMTPSA id C77BD21734;
         Mon, 20 May 2019 14:21:59 +0000 (UTC)
 Received: from rostedt by gandalf.local.home with local (Exim 4.92)
         (envelope-from <rostedt@goodmis.org>)
-        id 1hSjAs-0003Sk-6G; Mon, 20 May 2019 10:21:58 -0400
-Message-Id: <20190520142158.081920368@goodmis.org>
+        id 1hSjAs-0003Ug-Oq; Mon, 20 May 2019 10:21:58 -0400
+Message-Id: <20190520142158.655759375@goodmis.org>
 User-Agent: quilt/0.65
-Date:   Mon, 20 May 2019 10:20:11 -0400
+Date:   Mon, 20 May 2019 10:20:15 -0400
 From:   Steven Rostedt <rostedt@goodmis.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Ingo Molnar <mingo@kernel.org>,
@@ -44,8 +44,7 @@ Cc:     Ingo Molnar <mingo@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Namhyung Kim <namhyung@kernel.org>,
         "Frank Ch. Eigler" <fche@redhat.com>
-Subject: [RFC][PATCH 10/14 v2] function_graph: Move set_graph_function tests to shadow stack global
- var
+Subject: [RFC][PATCH 14/14 v2] function_graph: Add selftest for passing local variables
 References: <20190520142001.270067280@goodmis.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-15
@@ -56,201 +55,193 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: "Steven Rostedt (VMware)" <rostedt@goodmis.org>
 
-The use of the task->trace_recursion for the logic used for the
-set_graph_funnction was a bit of an abuse of that variable. Now that there
-exists global vars that are per stack for registered graph traces, use that
-instead.
+Add boot up selftest that passes variables from a function entry to a
+function exit, and make sure that they do get passed around.
 
 Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 ---
- kernel/trace/trace.h                 | 37 +++++++++++++++++-----------
- kernel/trace/trace_functions_graph.c |  6 ++---
- kernel/trace/trace_irqsoff.c         |  4 +--
- kernel/trace/trace_sched_wakeup.c    |  4 +--
- 4 files changed, 29 insertions(+), 22 deletions(-)
+ kernel/trace/trace_selftest.c | 161 ++++++++++++++++++++++++++++++++++
+ 1 file changed, 161 insertions(+)
 
-diff --git a/kernel/trace/trace.h b/kernel/trace/trace.h
-index 73eb570eb24c..08e79334c8ca 100644
---- a/kernel/trace/trace.h
-+++ b/kernel/trace/trace.h
-@@ -567,9 +567,6 @@ enum {
-  */
- 	TRACE_IRQ_BIT,
+diff --git a/kernel/trace/trace_selftest.c b/kernel/trace/trace_selftest.c
+index facd5d1c05e7..9318677b5bf2 100644
+--- a/kernel/trace/trace_selftest.c
++++ b/kernel/trace/trace_selftest.c
+@@ -718,6 +718,165 @@ trace_selftest_startup_function(struct tracer *trace, struct trace_array *tr)
  
--	/* Set if the function is in the set_graph_function file */
--	TRACE_GRAPH_BIT,
--
- 	/*
- 	 * In the very unlikely case that an interrupt came in
- 	 * at a start of graph tracing, and we want to trace
-@@ -583,7 +580,7 @@ enum {
- 	 * that preempted a softirq start of a function that
- 	 * preempted normal context!!!! Luckily, it can't be
- 	 * greater than 3, so the next two bits are a mask
--	 * of what the depth is when we set TRACE_GRAPH_BIT
-+	 * of what the depth is when we set TRACE_GRAPH_FL
- 	 */
+ #ifdef CONFIG_FUNCTION_GRAPH_TRACER
  
- 	TRACE_GRAPH_DEPTH_START_BIT,
-@@ -937,11 +934,16 @@ extern void init_array_fgraph_ops(struct trace_array *tr, struct ftrace_ops *ops
- extern int allocate_fgraph_ops(struct trace_array *tr, struct ftrace_ops *ops);
- extern void free_fgraph_ops(struct trace_array *tr);
- 
-+enum {
-+	TRACE_GRAPH_FL		= 1,
++#ifdef CONFIG_DYNAMIC_FTRACE
++
++#define BYTE_NUMBER 123
++#define SHORT_NUMBER 12345
++#define WORD_NUMBER 1234567890
++#define LONG_NUMBER 1234567890123456789LL
++
++static int fgraph_store_size __initdata;
++static const char *fgraph_store_type_name __initdata;
++static char *fgraph_error_str __initdata;
++static char fgraph_error_str_buf[128] __initdata;
++
++static __init int store_entry(struct ftrace_graph_ent *trace,
++			      struct fgraph_ops *gops)
++{
++	const char *type = fgraph_store_type_name;
++	int size = fgraph_store_size;
++	void *p;
++
++	p = fgraph_reserve_data(size);
++	if (!p) {
++		snprintf(fgraph_error_str_buf, sizeof(fgraph_error_str_buf),
++			 "Failed to reserve %s\n", type);
++		fgraph_error_str = fgraph_error_str_buf;
++		return 0;
++	}
++
++	switch (fgraph_store_size) {
++	case 1:
++		*(char *)p = BYTE_NUMBER;
++		break;
++	case 2:
++		*(short *)p = SHORT_NUMBER;
++		break;
++	case 4:
++		*(int *)p = WORD_NUMBER;
++		break;
++	case 8:
++		*(long long *)p = LONG_NUMBER;
++		break;
++	}
++
++	return 1;
++}
++
++static __init void store_return(struct ftrace_graph_ret *trace,
++				struct fgraph_ops *gops)
++{
++	const char *type = fgraph_store_type_name;
++	long long expect = 0;
++	long long found = -1;
++	char *p;
++
++	p = fgraph_retrieve_data();
++	if (!p) {
++		snprintf(fgraph_error_str_buf, sizeof(fgraph_error_str_buf),
++			 "Failed to retrieve %s\n", type);
++		fgraph_error_str = fgraph_error_str_buf;
++		return;
++	}
++
++	switch (fgraph_store_size) {
++	case 1:
++		expect = BYTE_NUMBER;
++		found = *(char *)p;
++		break;
++	case 2:
++		expect = SHORT_NUMBER;
++		found = *(short *)p;
++		break;
++	case 4:
++		expect = WORD_NUMBER;
++		found = *(int *)p;
++		break;
++	case 8:
++		expect = LONG_NUMBER;
++		found = *(long long *)p;
++		break;
++	}
++
++	if (found != expect) {
++		snprintf(fgraph_error_str_buf, sizeof(fgraph_error_str_buf),
++			 "%s returned not %lld but %lld\n", type, expect, found);
++		fgraph_error_str = fgraph_error_str_buf;
++		return;
++	}
++	fgraph_error_str = NULL;
++}
++
++static struct fgraph_ops store_bytes __initdata = {
++	.entryfunc		= store_entry,
++	.retfunc		= store_return,
 +};
 +
- #ifdef CONFIG_DYNAMIC_FTRACE
- extern struct ftrace_hash *ftrace_graph_hash;
- extern struct ftrace_hash *ftrace_graph_notrace_hash;
++static int __init test_graph_storage_type(const char *name, int size)
++{
++	char *func_name;
++	int len;
++	int ret;
++
++	fgraph_store_type_name = name;
++	fgraph_store_size = size;
++
++	snprintf(fgraph_error_str_buf, sizeof(fgraph_error_str_buf),
++		 "Failed to execute storage %s\n", name);
++	fgraph_error_str = fgraph_error_str_buf;
++
++	printk(KERN_CONT "PASSED\n");
++	pr_info("Testing fgraph storage of %d byte%s: ", size, size > 1 ? "s" : "");
++
++	func_name = "*" __stringify(DYN_FTRACE_TEST_NAME);
++	len = strlen(func_name);
++
++	ret = ftrace_set_filter(&store_bytes.ops, func_name, len, 1);
++	if (ret && ret != -ENODEV) {
++		pr_cont("*Could not set filter* ");
++		return -1;
++	}
++
++	ret = register_ftrace_graph(&store_bytes);
++	if (ret) {
++		printk(KERN_WARNING "Failed to init store_bytes fgraph tracing\n");
++		return -1;
++	}
++
++	DYN_FTRACE_TEST_NAME();
++
++	unregister_ftrace_graph(&store_bytes);
++
++	if (fgraph_error_str) {
++		printk(KERN_CONT "*** %s ***", fgraph_error_str);
++		return -1;
++	}
++
++	return 0;
++}
++/* Test the storage passed across function_graph entry and return */
++static __init int test_graph_storage(void)
++{
++	int ret;
++
++	ret = test_graph_storage_type("byte", 1);
++	if (ret)
++		return ret;
++	ret = test_graph_storage_type("short", 2);
++	if (ret)
++		return ret;
++	ret = test_graph_storage_type("word", 4);
++	if (ret)
++		return ret;
++	ret = test_graph_storage_type("long long", 8);
++	if (ret)
++		return ret;
++	return 0;
++}
++#else
++static inline int test_graph_storage(void) { return 0; }
++#endif /* CONFIG_DYNAMIC_FTRACE */
++
+ /* Maximum number of functions to trace before diagnosing a hang */
+ #define GRAPH_MAX_FUNC_TEST	100000000
  
--static inline int ftrace_graph_addr(struct ftrace_graph_ent *trace)
-+static inline int
-+ftrace_graph_addr(unsigned long *task_var, struct ftrace_graph_ent *trace)
- {
- 	unsigned long addr = trace->func;
- 	int ret = 0;
-@@ -954,12 +956,11 @@ static inline int ftrace_graph_addr(struct ftrace_graph_ent *trace)
+@@ -805,6 +964,8 @@ trace_selftest_startup_function_graph(struct tracer *trace,
+ 		goto out;
  	}
  
- 	if (ftrace_lookup_ip(ftrace_graph_hash, addr)) {
--
- 		/*
- 		 * This needs to be cleared on the return functions
- 		 * when the depth is zero.
- 		 */
--		trace_recursion_set(TRACE_GRAPH_BIT);
-+		*task_var |= TRACE_GRAPH_FL;
- 		trace_recursion_set_depth(trace->depth);
- 
- 		/*
-@@ -979,11 +980,14 @@ static inline int ftrace_graph_addr(struct ftrace_graph_ent *trace)
- 	return ret;
- }
- 
--static inline void ftrace_graph_addr_finish(struct ftrace_graph_ret *trace)
-+static inline void
-+ftrace_graph_addr_finish(struct fgraph_ops *gops, struct ftrace_graph_ret *trace)
- {
--	if (trace_recursion_test(TRACE_GRAPH_BIT) &&
-+	unsigned long *task_var = fgraph_get_task_var(gops);
++	ret = test_graph_storage();
 +
-+	if ((*task_var & TRACE_GRAPH_FL) &&
- 	    trace->depth == trace_recursion_depth())
--		trace_recursion_clear(TRACE_GRAPH_BIT);
-+		*task_var &= ~TRACE_GRAPH_FL;
- }
+ 	/* Don't test dynamic tracing, the function tracer already did */
  
- static inline int ftrace_graph_notrace_addr(unsigned long addr)
-@@ -1000,7 +1004,7 @@ static inline int ftrace_graph_notrace_addr(unsigned long addr)
- }
- 
- #else
--static inline int ftrace_graph_addr(struct ftrace_graph_ent *trace)
-+static inline int ftrace_graph_addr(unsigned long *task_var, struct ftrace_graph_ent *trace)
- {
- 	return 1;
- }
-@@ -1009,17 +1013,20 @@ static inline int ftrace_graph_notrace_addr(unsigned long addr)
- {
- 	return 0;
- }
--static inline void ftrace_graph_addr_finish(struct ftrace_graph_ret *trace)
-+static inline void ftrace_graph_addr_finish(struct fgraph_ops *gops, struct ftrace_graph_ret *trace)
- { }
- #endif /* CONFIG_DYNAMIC_FTRACE */
- 
- extern unsigned int fgraph_max_depth;
- 
--static inline bool ftrace_graph_ignore_func(struct ftrace_graph_ent *trace)
-+static inline bool
-+ftrace_graph_ignore_func(struct fgraph_ops *gops, struct ftrace_graph_ent *trace)
- {
-+	unsigned long *task_var = fgraph_get_task_var(gops);
-+
- 	/* trace it when it is-nested-in or is a function enabled. */
--	return !(trace_recursion_test(TRACE_GRAPH_BIT) ||
--		 ftrace_graph_addr(trace)) ||
-+	return !((*task_var & TRACE_GRAPH_FL) ||
-+		 ftrace_graph_addr(task_var, trace)) ||
- 		(trace->depth < 0) ||
- 		(fgraph_max_depth && trace->depth >= fgraph_max_depth);
- }
-diff --git a/kernel/trace/trace_functions_graph.c b/kernel/trace/trace_functions_graph.c
-index 0434e6052650..054ec91e5086 100644
---- a/kernel/trace/trace_functions_graph.c
-+++ b/kernel/trace/trace_functions_graph.c
-@@ -148,7 +148,7 @@ int trace_graph_entry(struct ftrace_graph_ent *trace,
- 	if (!ftrace_trace_task(tr))
- 		return 0;
- 
--	if (ftrace_graph_ignore_func(trace))
-+	if (ftrace_graph_ignore_func(gops, trace))
- 		return 0;
- 
- 	if (ftrace_graph_ignore_irqs())
-@@ -246,7 +246,7 @@ void trace_graph_return(struct ftrace_graph_ret *trace,
- 	int cpu;
- 	int pc;
- 
--	ftrace_graph_addr_finish(trace);
-+	ftrace_graph_addr_finish(gops, trace);
- 
- 	if (trace_recursion_test(TRACE_GRAPH_NOTRACE_BIT)) {
- 		trace_recursion_clear(TRACE_GRAPH_NOTRACE_BIT);
-@@ -268,7 +268,7 @@ void trace_graph_return(struct ftrace_graph_ret *trace,
- static void trace_graph_thresh_return(struct ftrace_graph_ret *trace,
- 				      struct fgraph_ops *gops)
- {
--	ftrace_graph_addr_finish(trace);
-+	ftrace_graph_addr_finish(gops, trace);
- 
- 	if (trace_recursion_test(TRACE_GRAPH_NOTRACE_BIT)) {
- 		trace_recursion_clear(TRACE_GRAPH_NOTRACE_BIT);
-diff --git a/kernel/trace/trace_irqsoff.c b/kernel/trace/trace_irqsoff.c
-index 55c547f6e31d..7e31f0a2ef58 100644
---- a/kernel/trace/trace_irqsoff.c
-+++ b/kernel/trace/trace_irqsoff.c
-@@ -181,7 +181,7 @@ static int irqsoff_graph_entry(struct ftrace_graph_ent *trace,
- 	int ret;
- 	int pc;
- 
--	if (ftrace_graph_ignore_func(trace))
-+	if (ftrace_graph_ignore_func(gops, trace))
- 		return 0;
- 	/*
- 	 * Do not trace a function if it's filtered by set_graph_notrace.
-@@ -211,7 +211,7 @@ static void irqsoff_graph_return(struct ftrace_graph_ret *trace,
- 	unsigned long flags;
- 	int pc;
- 
--	ftrace_graph_addr_finish(trace);
-+	ftrace_graph_addr_finish(gops, trace);
- 
- 	if (!func_prolog_dec(tr, &data, &flags))
- 		return;
-diff --git a/kernel/trace/trace_sched_wakeup.c b/kernel/trace/trace_sched_wakeup.c
-index 9da1062a8181..a04e59f6f13f 100644
---- a/kernel/trace/trace_sched_wakeup.c
-+++ b/kernel/trace/trace_sched_wakeup.c
-@@ -120,7 +120,7 @@ static int wakeup_graph_entry(struct ftrace_graph_ent *trace,
- 	unsigned long flags;
- 	int pc, ret = 0;
- 
--	if (ftrace_graph_ignore_func(trace))
-+	if (ftrace_graph_ignore_func(gops, trace))
- 		return 0;
- 	/*
- 	 * Do not trace a function if it's filtered by set_graph_notrace.
-@@ -151,7 +151,7 @@ static void wakeup_graph_return(struct ftrace_graph_ret *trace,
- 	unsigned long flags;
- 	int pc;
- 
--	ftrace_graph_addr_finish(trace);
-+	ftrace_graph_addr_finish(gops, trace);
- 
- 	if (!func_prolog_preempt_disable(tr, &data, &pc))
- 		return;
+ out:
 -- 
 2.20.1
 
