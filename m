@@ -2,412 +2,165 @@ Return-Path: <SRS0=lq4r=TU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20AB8C04AAC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 19:55:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B0B8C04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 19:56:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DD88C20863
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 19:55:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EA55320863
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 19:56:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="eptz8QMM"
+	dkim=pass (1024-bit key) header.d=erdfelt.com header.i=@erdfelt.com header.b="tQk3X2I4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726645AbfETTzH (ORCPT
+        id S1726672AbfETT41 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 15:55:07 -0400
-Received: from mail-eopbgr80045.outbound.protection.outlook.com ([40.107.8.45]:54276
-        "EHLO EUR04-VI1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725954AbfETTzE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 15:55:04 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=iWOiq682iGAXLRj9G0ymbsh40L9Fuwjt+yCKKOL6Kuw=;
- b=eptz8QMMtdQfILzmKNitZDHRzyskpPw1vGYsZVbO1zlYlxHXL/NkuUg23vFVQL4bK6+zTJs+vzrZm20NDPSN8uAsD93dkyRYHG0NcP9j6Jf/WYLOQQc9ABixFrRpGrt1UWI4MgzDxznxKfkVlfWJHwhxpeFjx+ZkE5PvAzvAfHI=
-Received: from VI1PR0501MB2271.eurprd05.prod.outlook.com (10.169.134.149) by
- VI1PR0501MB2384.eurprd05.prod.outlook.com (10.168.135.18) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1900.16; Mon, 20 May 2019 19:54:59 +0000
-Received: from VI1PR0501MB2271.eurprd05.prod.outlook.com
- ([fe80::a0a7:7e01:762e:58e0]) by VI1PR0501MB2271.eurprd05.prod.outlook.com
- ([fe80::a0a7:7e01:762e:58e0%6]) with mapi id 15.20.1900.020; Mon, 20 May 2019
- 19:54:59 +0000
-From:   Parav Pandit <parav@mellanox.com>
-To:     Parav Pandit <parav@mellanox.com>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "cohuck@redhat.com" <cohuck@redhat.com>,
-        "kwankhede@nvidia.com" <kwankhede@nvidia.com>,
-        "alex.williamson@redhat.com" <alex.williamson@redhat.com>
-CC:     "cjia@nvidia.com" <cjia@nvidia.com>
-Subject: RE: [PATCHv3 1/3] vfio/mdev: Improve the create/remove sequence
-Thread-Topic: [PATCHv3 1/3] vfio/mdev: Improve the create/remove sequence
-Thread-Index: AQHVDD9o/mxSVG1oh0uHfLZmDCQyjKZ0ckdQ
-Date:   Mon, 20 May 2019 19:54:59 +0000
-Message-ID: <VI1PR0501MB2271652CB38FC0C33656DC89D1060@VI1PR0501MB2271.eurprd05.prod.outlook.com>
-References: <20190516233034.16407-1-parav@mellanox.com>
- <20190516233034.16407-2-parav@mellanox.com>
-In-Reply-To: <20190516233034.16407-2-parav@mellanox.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=parav@mellanox.com; 
-x-originating-ip: [208.176.44.194]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: a618e63b-1a28-4489-5707-08d6dd5d0a4a
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:VI1PR0501MB2384;
-x-ms-traffictypediagnostic: VI1PR0501MB2384:
-x-microsoft-antispam-prvs: <VI1PR0501MB23843185867417F279652C58D1060@VI1PR0501MB2384.eurprd05.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:10000;
-x-forefront-prvs: 004395A01C
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(136003)(346002)(39860400002)(366004)(396003)(376002)(199004)(189003)(13464003)(6436002)(6506007)(64756008)(4326008)(14444005)(76116006)(102836004)(476003)(256004)(53546011)(305945005)(11346002)(74316002)(66946007)(73956011)(7696005)(66446008)(14454004)(66476007)(486006)(66556008)(2906002)(68736007)(110136005)(26005)(33656002)(76176011)(3846002)(6116002)(66066001)(446003)(229853002)(7736002)(186003)(6246003)(86362001)(478600001)(2201001)(81166006)(81156014)(8676002)(25786009)(55016002)(9686003)(99286004)(71190400001)(71200400001)(8936002)(52536014)(2501003)(53936002)(5660300002)(316002)(30864003);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR0501MB2384;H:VI1PR0501MB2271.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: mellanox.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: c6VhegxgdnrCffgd6dGw4JuKBaYZ6IHgFXoYtpQgd0Ev84pH9LZmXTFbNIHlcTFiIsvTr5XbMlKgKlRpaVwe4BeY9m3UD+/wxQB2f2Dc7B9P87v1MG2k8o8Exidqy29ZDk0s3Qq7HiK0fCa+BSZfnPeQQUjRvFiprJv0YPpnxl5Cx9jPR2aeubY9ssLaIrNAQodIaM3Y5+Mby+VUbjsxy9hb2+RX2sO6OBpOkRgOd462FEUTokTisO6BCdp16pTRC7ID1LTIPofvlwjLacvtYf8kViJfdrCd56GvlGDwqMMXs4mrdAJgKKpICmSrF2rrk1tPVZszHn1nB6vlQzIUKzrrr+T8D5OU+QOIL2MJ24yIV66TAkIEhWsEWl7Ughok3SUNj83G4cWKuG8qoula4U8eEm03BXHFKP/Euu/+rrI=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Mon, 20 May 2019 15:56:27 -0400
+Received: from out.bound.email ([141.193.244.10]:40810 "EHLO out.bound.email"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725951AbfETT40 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 15:56:26 -0400
+X-Greylist: delayed 429 seconds by postgrey-1.27 at vger.kernel.org; Mon, 20 May 2019 15:56:25 EDT
+Received: from mail.sventech.com (localhost [127.0.0.1])
+        by out.bound.email (Postfix) with ESMTP id CE4718A0E7F;
+        Mon, 20 May 2019 12:49:15 -0700 (PDT)
+Received: by mail.sventech.com (Postfix, from userid 1000)
+        id AFFD41600410; Mon, 20 May 2019 12:49:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=erdfelt.com;
+        s=default; t=1558381755;
+        bh=oZso2p1ld/yWyzQANIKklBxHpoVt65FCEMCZ1z7xtQk=;
+        h=Date:From:To:Subject:From;
+        b=tQk3X2I4GZp9iWe9qCA8R6a2+xeow6B7LEofril0pQcBmeMDVWbZUf3EWA85YCCmb
+         rrtWhw2JcZLK5WgiUZ3ykNh+hGJEhPuF1NKOmUYqdqKZIf6/pYI6hRn5/510e1r+WM
+         t5l0w8tWM2yRz9ZGWUllj7tKTBaKkUmmmCHFeV/0=
+Date:   Mon, 20 May 2019 12:49:15 -0700
+From:   Johannes Erdfelt <johannes@erdfelt.com>
+To:     Josh Poimboeuf <jpoimboe@redhat.com>, Jessica Yu <jeyu@redhat.com>,
+        Jiri Kosina <jikos@kernel.org>,
+        Miroslav Benes <mbenes@suse.cz>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ingo Molnar <mingo@redhat.com>, live-patching@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Oops caused by race between livepatch and ftrace
+Message-ID: <20190520194915.GB1646@sventech.com>
 MIME-Version: 1.0
-X-OriginatorOrg: Mellanox.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: a618e63b-1a28-4489-5707-08d6dd5d0a4a
-X-MS-Exchange-CrossTenant-originalarrivaltime: 20 May 2019 19:54:59.2724
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0501MB2384
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Alex, Cornelia,
+There exists a race condition between livepatch and ftrace that can
+cause an oops similar to this one:
 
+  BUG: unable to handle page fault for address: ffffffffc005b1d9
+  #PF: supervisor write access in kernel mode
+  #PF: error_code(0x0003) - permissions violation
+  PGD 3ea0c067 P4D 3ea0c067 PUD 3ea0e067 PMD 3cc13067 PTE 3b8a1061
+  Oops: 0003 [#1] PREEMPT SMP PTI
+  CPU: 1 PID: 453 Comm: insmod Tainted: G           O  K   5.2.0-rc1-a188339ca5 #1
+  Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.12.0-20181126_142135-anatol 04/01/2014
+  RIP: 0010:apply_relocate_add+0xbe/0x14c
+  Code: fa 0b 74 21 48 83 fa 18 74 38 48 83 fa 0a 75 40 eb 08 48 83 38 00 74 33 eb 53 83 38 00 75 4e 89 08 89 c8 eb 0a 83 38 00 75 43 <89> 08 48 63 c1 48 39 c8 74 2e eb 48 83 38 00 75 32 48 29 c1 89 08
+  RSP: 0018:ffffb223c00dbb10 EFLAGS: 00010246
+  RAX: ffffffffc005b1d9 RBX: 0000000000000000 RCX: ffffffff8b200060
+  RDX: 000000000000000b RSI: 0000004b0000000b RDI: ffff96bdfcd33000
+  RBP: ffffb223c00dbb38 R08: ffffffffc005d040 R09: ffffffffc005c1f0
+  R10: ffff96bdfcd33c40 R11: ffff96bdfcd33b80 R12: 0000000000000018
+  R13: ffffffffc005c1f0 R14: ffffffffc005e708 R15: ffffffff8b2fbc74
+  FS:  00007f5f447beba8(0000) GS:ffff96bdff900000(0000) knlGS:0000000000000000
+  CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+  CR2: ffffffffc005b1d9 CR3: 000000003cedc002 CR4: 0000000000360ea0
+  DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+  DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+  Call Trace:
+   klp_init_object_loaded+0x10f/0x219
+   ? preempt_latency_start+0x21/0x57
+   klp_enable_patch+0x662/0x809
+   ? virt_to_head_page+0x3a/0x3c
+   ? kfree+0x8c/0x126
+   patch_init+0x2ed/0x1000 [livepatch_test02]
+   ? 0xffffffffc0060000
+   do_one_initcall+0x9f/0x1c5
+   ? kmem_cache_alloc_trace+0xc4/0xd4
+   ? do_init_module+0x27/0x210
+   do_init_module+0x5f/0x210
+   load_module+0x1c41/0x2290
+   ? fsnotify_path+0x3b/0x42
+   ? strstarts+0x2b/0x2b
+   ? kernel_read+0x58/0x65
+   __do_sys_finit_module+0x9f/0xc3
+   ? __do_sys_finit_module+0x9f/0xc3
+   __x64_sys_finit_module+0x1a/0x1c
+   do_syscall_64+0x52/0x61
+   entry_SYSCALL_64_after_hwframe+0x44/0xa9
+  RIP: 0033:0x7f5f44764881
+  Code: 0e 4c 8b 44 24 10 4d 8d 48 08 4c 89 4c 24 10 44 8b 4c 24 08 4d 8b 00 4c 01 c9 41 83 f9 2f 76 05 48 8b 4c 24 10 4c 8b 09 0f 05 <48> 89 c7 e8 f7 e9 fd ff 48 83 c4 58 c3 56 31 d2 be 02 00 08 00 bf
+  RSP: 002b:00007ffcf1e64b80 EFLAGS: 00000212 ORIG_RAX: 0000000000000139
+  RAX: ffffffffffffffda RBX: 00000000006229a0 RCX: 00007f5f44764881
+  RDX: 0000000000000000 RSI: 000000000041a506 RDI: 0000000000000003
+  RBP: 000000000041a506 R08: 0000000000000000 R09: 00007ffcf1e64c48
+  R10: 0000000000000003 R11: 0000000000000212 R12: 0000000000000000
+  R13: 00000000006228c0 R14: 0000000000000000 R15: 0000000000000000
+  Modules linked in: livepatch_test03(OK+) livepatch_test01(OK+) livepatch_test11(OK+) livepatch_test06(OK+) livepatch_test04(OK+) livepatch_test02(OK+) livepatch_test10(OK+) livepatch_test16(OK+) livepatch_test18(OK-) livepatch_test12(OK)
+  CR2: ffffffffc005b1d9
+  ---[ end trace 52fee0aa635dd5a1 ]---
 
-> -----Original Message-----
-> From: linux-kernel-owner@vger.kernel.org <linux-kernel-
-> owner@vger.kernel.org> On Behalf Of Parav Pandit
-> Sent: Thursday, May 16, 2019 6:31 PM
-> To: kvm@vger.kernel.org; linux-kernel@vger.kernel.org; cohuck@redhat.com;
-> kwankhede@nvidia.com; alex.williamson@redhat.com
-> Cc: cjia@nvidia.com; Parav Pandit <parav@mellanox.com>
-> Subject: [PATCHv3 1/3] vfio/mdev: Improve the create/remove sequence
->=20
-> This patch addresses below two issues and prepares the code to address 3r=
-d
-> issue listed below.
->=20
-> 1. mdev device is placed on the mdev bus before it is created in the vend=
-or
-> driver. Once a device is placed on the mdev bus without creating its
-> supporting underlying vendor device, mdev driver's probe() gets triggered=
-.
-> However there isn't a stable mdev available to work on.
->=20
->    create_store()
->      mdev_create_device()
->        device_register()
->           ...
->          vfio_mdev_probe()
->         [...]
->         parent->ops->create()
->           vfio_ap_mdev_create()
->             mdev_set_drvdata(mdev, matrix_mdev);
->             /* Valid pointer set above */
->=20
-> Due to this way of initialization, mdev driver who wants to use the mdev,
-> doesn't have a valid mdev to work on.
->=20
-> 2. Current creation sequence is,
->    parent->ops_create()
->    groups_register()
->=20
-> Remove sequence is,
->    parent->ops->remove()
->    groups_unregister()
->=20
-> However, remove sequence should be exact mirror of creation sequence.
-> Once this is achieved, all users of the mdev will be terminated first bef=
-ore
-> removing underlying vendor device.
-> (Follow standard linux driver model).
-> At that point vendor's remove() ops shouldn't fail because taking the dev=
-ice
-> off the bus should terminate any usage.
->=20
-> 3. When remove operation fails, mdev sysfs removal attempts to add the fi=
-le
-> back on already removed device. Following call trace [1] is observed.
->=20
-> [1] call trace:
-> kernel: WARNING: CPU: 2 PID: 9348 at fs/sysfs/file.c:327
-> sysfs_create_file_ns+0x7f/0x90
-> kernel: CPU: 2 PID: 9348 Comm: bash Kdump: loaded Not tainted 5.1.0-rc6-
-> vdevbus+ #6
-> kernel: Hardware name: Supermicro SYS-6028U-TR4+/X10DRU-i+, BIOS 2.0b
-> 08/09/2016
-> kernel: RIP: 0010:sysfs_create_file_ns+0x7f/0x90
-> kernel: Call Trace:
-> kernel: remove_store+0xdc/0x100 [mdev]
-> kernel: kernfs_fop_write+0x113/0x1a0
-> kernel: vfs_write+0xad/0x1b0
-> kernel: ksys_write+0x5a/0xe0
-> kernel: do_syscall_64+0x5a/0x210
-> kernel: entry_SYSCALL_64_after_hwframe+0x49/0xbe
->=20
-> Therefore, mdev core is improved in following ways.
->=20
-> 1. Split the device registration/deregistration sequence so that some thi=
-ngs
-> can be done between initialization of the device and hooking it up to the
-> bus respectively after deregistering it from the bus but before giving up=
- our
-> final reference.
-> In particular, this means invoking the ->create and ->remove callbacks in
-> those new windows. This gives the vendor driver an initialized mdev devic=
-e
-> to work with during creation.
-> At the same time, a bus driver who wish to bind to mdev driver also gets
-> initialized mdev device.
->=20
-> This follows standard Linux kernel bus and device model.
->=20
-> 2. During remove flow, first remove the device from the bus. This ensures
-> that any bus specific devices are removed.
-> Once device is taken off the mdev bus, invoke remove() of mdev from the
-> vendor driver.
->=20
-> 3. The driver core device model provides way to register and auto unregis=
-ter
-> the device sysfs attribute groups at dev->groups.
-> Make use of dev->groups to let core create the groups and eliminate code =
-to
-> avoid explicit groups creation and removal.
->=20
-> To ensure, that new sequence is solid, a below stack dump of a process is
-> taken who attempts to remove the device while device is in use by vfio
-> driver and user application.
-> This stack dump validates that vfio driver guards against such device rem=
-oval
-> when device is in use.
->=20
->  cat /proc/21962/stack
-> [<0>] vfio_del_group_dev+0x216/0x3c0 [vfio] [<0>] mdev_remove+0x21/0x40
-> [mdev] [<0>] device_release_driver_internal+0xe8/0x1b0
-> [<0>] bus_remove_device+0xf9/0x170
-> [<0>] device_del+0x168/0x350
-> [<0>] mdev_device_remove_common+0x1d/0x50 [mdev] [<0>]
-> mdev_device_remove+0x8c/0xd0 [mdev] [<0>] remove_store+0x71/0x90
-> [mdev] [<0>] kernfs_fop_write+0x113/0x1a0 [<0>] vfs_write+0xad/0x1b0
-> [<0>] ksys_write+0x5a/0xe0 [<0>] do_syscall_64+0x5a/0x210 [<0>]
-> entry_SYSCALL_64_after_hwframe+0x49/0xbe
-> [<0>] 0xffffffffffffffff
->=20
-> This prepares the code to eliminate calling device_create_file() in subsq=
-uent
-> patch.
->=20
-> Signed-off-by: Parav Pandit <parav@mellanox.com>
-> ---
->  drivers/vfio/mdev/mdev_core.c    | 94 +++++++++-----------------------
->  drivers/vfio/mdev/mdev_private.h |  2 +-
->  drivers/vfio/mdev/mdev_sysfs.c   |  2 +-
->  3 files changed, 27 insertions(+), 71 deletions(-)
->=20
-> diff --git a/drivers/vfio/mdev/mdev_core.c b/drivers/vfio/mdev/mdev_core.=
-c
-> index 3cc1a05fde1c..0bef0cae1d4b 100644
-> --- a/drivers/vfio/mdev/mdev_core.c
-> +++ b/drivers/vfio/mdev/mdev_core.c
-> @@ -102,55 +102,10 @@ static void mdev_put_parent(struct mdev_parent
-> *parent)
->  		kref_put(&parent->ref, mdev_release_parent);  }
->=20
-> -static int mdev_device_create_ops(struct kobject *kobj,
-> -				  struct mdev_device *mdev)
-> -{
-> -	struct mdev_parent *parent =3D mdev->parent;
-> -	int ret;
-> -
-> -	ret =3D parent->ops->create(kobj, mdev);
-> -	if (ret)
-> -		return ret;
-> -
-> -	ret =3D sysfs_create_groups(&mdev->dev.kobj,
-> -				  parent->ops->mdev_attr_groups);
-> -	if (ret)
-> -		parent->ops->remove(mdev);
-> -
-> -	return ret;
-> -}
-> -
-> -/*
-> - * mdev_device_remove_ops gets called from sysfs's 'remove' and when
-> parent
-> - * device is being unregistered from mdev device framework.
-> - * - 'force_remove' is set to 'false' when called from sysfs's 'remove' =
-which
-> - *   indicates that if the mdev device is active, used by VMM or userspa=
-ce
-> - *   application, vendor driver could return error then don't remove the
-> device.
-> - * - 'force_remove' is set to 'true' when called from
-> mdev_unregister_device()
-> - *   which indicate that parent device is being removed from mdev device
-> - *   framework so remove mdev device forcefully.
-> - */
-> -static int mdev_device_remove_ops(struct mdev_device *mdev, bool
-> force_remove) -{
-> -	struct mdev_parent *parent =3D mdev->parent;
-> -	int ret;
-> -
-> -	/*
-> -	 * Vendor driver can return error if VMM or userspace application is
-> -	 * using this mdev device.
-> -	 */
-> -	ret =3D parent->ops->remove(mdev);
-> -	if (ret && !force_remove)
-> -		return ret;
-> -
-> -	sysfs_remove_groups(&mdev->dev.kobj, parent->ops-
-> >mdev_attr_groups);
-> -	return 0;
-> -}
-> -
->  static int mdev_device_remove_cb(struct device *dev, void *data)  {
->  	if (dev_is_mdev(dev))
-> -		mdev_device_remove(dev, true);
-> +		mdev_device_remove(dev);
->=20
->  	return 0;
->  }
-> @@ -310,41 +265,43 @@ int mdev_device_create(struct kobject *kobj,
->=20
->  	mdev->parent =3D parent;
->=20
-> +	device_initialize(&mdev->dev);
->  	mdev->dev.parent  =3D dev;
->  	mdev->dev.bus     =3D &mdev_bus_type;
->  	mdev->dev.release =3D mdev_device_release;
->  	dev_set_name(&mdev->dev, "%pUl", uuid);
-> +	mdev->dev.groups =3D parent->ops->mdev_attr_groups;
-> +	mdev->type_kobj =3D kobj;
->=20
-> -	ret =3D device_register(&mdev->dev);
-> -	if (ret) {
-> -		put_device(&mdev->dev);
-> -		goto mdev_fail;
-> -	}
-> +	ret =3D parent->ops->create(kobj, mdev);
-> +	if (ret)
-> +		goto ops_create_fail;
->=20
-> -	ret =3D mdev_device_create_ops(kobj, mdev);
-> +	ret =3D device_add(&mdev->dev);
->  	if (ret)
-> -		goto create_fail;
-> +		goto add_fail;
->=20
->  	ret =3D mdev_create_sysfs_files(&mdev->dev, type);
-> -	if (ret) {
-> -		mdev_device_remove_ops(mdev, true);
-> -		goto create_fail;
-> -	}
-> +	if (ret)
-> +		goto sysfs_fail;
->=20
-> -	mdev->type_kobj =3D kobj;
->  	mdev->active =3D true;
->  	dev_dbg(&mdev->dev, "MDEV: created\n");
->=20
->  	return 0;
->=20
-> -create_fail:
-> -	device_unregister(&mdev->dev);
-> +sysfs_fail:
-> +	device_del(&mdev->dev);
-> +add_fail:
-> +	parent->ops->remove(mdev);
-> +ops_create_fail:
-> +	put_device(&mdev->dev);
->  mdev_fail:
->  	mdev_put_parent(parent);
->  	return ret;
->  }
->=20
-> -int mdev_device_remove(struct device *dev, bool force_remove)
-> +int mdev_device_remove(struct device *dev)
->  {
->  	struct mdev_device *mdev, *tmp;
->  	struct mdev_parent *parent;
-> @@ -373,16 +330,15 @@ int mdev_device_remove(struct device *dev, bool
-> force_remove)
->  	mutex_unlock(&mdev_list_lock);
->=20
->  	type =3D to_mdev_type(mdev->type_kobj);
-> +	mdev_remove_sysfs_files(dev, type);
-> +	device_del(&mdev->dev);
->  	parent =3D mdev->parent;
-> +	ret =3D parent->ops->remove(mdev);
-> +	if (ret)
-> +		dev_err(&mdev->dev, "Remove failed: err=3D%d\n", ret);
->=20
-> -	ret =3D mdev_device_remove_ops(mdev, force_remove);
-> -	if (ret) {
-> -		mdev->active =3D true;
-> -		return ret;
-> -	}
-> -
-> -	mdev_remove_sysfs_files(dev, type);
-> -	device_unregister(dev);
-> +	/* Balances with device_initialize() */
-> +	put_device(&mdev->dev);
->  	mdev_put_parent(parent);
->=20
->  	return 0;
-> diff --git a/drivers/vfio/mdev/mdev_private.h
-> b/drivers/vfio/mdev/mdev_private.h
-> index 36cbbdb754de..924ed2274941 100644
-> --- a/drivers/vfio/mdev/mdev_private.h
-> +++ b/drivers/vfio/mdev/mdev_private.h
-> @@ -60,6 +60,6 @@ void mdev_remove_sysfs_files(struct device *dev, struct
-> mdev_type *type);
->=20
->  int  mdev_device_create(struct kobject *kobj,
->  			struct device *dev, const guid_t *uuid); -int
-> mdev_device_remove(struct device *dev, bool force_remove);
-> +int  mdev_device_remove(struct device *dev);
->=20
->  #endif /* MDEV_PRIVATE_H */
-> diff --git a/drivers/vfio/mdev/mdev_sysfs.c b/drivers/vfio/mdev/mdev_sysf=
-s.c
-> index cbf94b8165ea..9f774b91d275 100644
-> --- a/drivers/vfio/mdev/mdev_sysfs.c
-> +++ b/drivers/vfio/mdev/mdev_sysfs.c
-> @@ -236,7 +236,7 @@ static ssize_t remove_store(struct device *dev, struc=
-t
-> device_attribute *attr,
->  	if (val && device_remove_file_self(dev, attr)) {
->  		int ret;
->=20
-> -		ret =3D mdev_device_remove(dev, false);
-> +		ret =3D mdev_device_remove(dev);
->  		if (ret) {
->  			device_create_file(dev, attr);
->  			return ret;
-> --
-> 2.19.2
+The oops occurs because both livepatch and ftrace remap the module text
+section at the same. After ftrace is done, it can leave the module text
+text section mapped RO when the livepatch code is expecting it to be RW.
 
-Seems 3rd patch will take few more days to settle down with new flag and it=
-s review.
-Given that fix of 3rd patch is fixing a different race condition, if patch =
-1 and 2 look ok, shall we move forward with those 2 fixes it in 5.2-rc?
-Fixes 1,2 prepare mdev to be usable for non vfio use case for the series we=
- are working on.
+CPU A			CPU B
+--------		--------
+			set_all_modules_text_rw		(module is now RW)
+module_disable_ro					(module is still RW)
+			set_all_modules_text_ro		(module is now RO)
+apply_relocate_add					(oops)
+
+I've reproduced it from the latest code in git (a188339ca5a3), 5.0.17,
+4.19.44, 4.14.120, 4.9.177 and some kernels in between. I haven't tried
+reproducing on any kernel older than 4.9. From looking at the older
+versions in git, it will likely be harder to reproduce since the kernel
+switched in 4.5 to remapping RW once from remapping on every write.
+
+The oops will only occur if CONFIG_STRICT_MODULE_RWX is enabled
+(previously called CONFIG_DEBUG_SET_MODULE_RONX).
+
+I've found two ways the race condition can be reproduced:
+1) loading multiple livepatches at the same time
+2) loading a livepatch at the same time ftrace is patching code
+
+They are both ultimately the same root cause since livepatch uses ftrace
+to perform the patching.
+
+I have put together a test case that can reproduce the crash using
+KVM. The tarball includes a minimal kernel and initramfs, along with
+a script to run qemu and the .config used to build the kernel. By
+default it will attempt to reproduce by loading multiple livepatches
+at the same time. Passing 'test=ftrace' to the script will attempt to
+reproduce by racing with ftrace.
+
+My test setup reproduces the race and oops more reliably by loading
+multiple livepatches at the same time than with the ftrace method. It's
+not 100% reproducible, so the test case may need to be run multiple
+times.
+
+It can be found here (not attached because of its size):
+http://johannes.erdfelt.com/5.2.0-rc1-a188339ca5-livepatch-race.tar.gz
+
+The simple patch of extending the module_mutex lock over the entirety
+of klp_init_object_loaded fixes it from the livepatch side. This
+mostly works because set_all_modules_text_{rw,ro} acquires module_mutex
+as well, but it still leaves a hole in the ftrace code. A lock should
+probably be held over the entirety of remapping the text sections RW.
+
+This is complicated by the fact that remapping the text section in
+ftrace is handled by arch specific code. I'm not sure what a good
+solution to this is yet.
+
+JE
+
