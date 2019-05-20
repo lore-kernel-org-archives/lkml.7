@@ -2,109 +2,155 @@ Return-Path: <SRS0=lq4r=TU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CAF79C04AAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 09:37:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61BE4C04AAF
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 09:37:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9F83920675
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 09:37:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3741520675
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 09:37:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cogentembedded-com.20150623.gappssmtp.com header.i=@cogentembedded-com.20150623.gappssmtp.com header.b="CItiLunt"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="BIhkYpEP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732246AbfETJg7 (ORCPT
+        id S1732257AbfETJhK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 05:36:59 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:41071 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732174AbfETJg7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 05:36:59 -0400
-Received: by mail-lj1-f193.google.com with SMTP id q16so781289ljj.8
-        for <linux-kernel@vger.kernel.org>; Mon, 20 May 2019 02:36:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cogentembedded-com.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=SVmG+KgAS/L8zReuTwf2tG62bM9a7Io4idy5Ia1ZZIw=;
-        b=CItiLuntAhzOMGH2VJ//VLpv/1cTB8FN7h7gueSZp7+ondzT4GAkchg89CIMQlKFCH
-         +PTP10KnFd3DEk6wgkzuQkb6WmUByoW1S17NW/sqSFxs/pJAl0n1/KOiI5NwUo53VuN/
-         3WhWE0Fo0J0Aw6fOq1nQ8XXjwhj9eeTaEnllHzRAz3S2QVQ8NX0gp02/99F/FWQnHm2o
-         qk7JJ1qPEtuOeMjLcCwP+/Ht+TvyGGm6x5OONe8RshUFKQIwvWXfR4rJ/+NbLE5fz4qO
-         59F+Ga0fmI6oNS5NlIUbmYUQ9/00bX0wh08LL65062trdQZW43TGqsruRXx6pgzJ0AQx
-         IKEg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=SVmG+KgAS/L8zReuTwf2tG62bM9a7Io4idy5Ia1ZZIw=;
-        b=Oy4leXVmJ2moODaUmQB7M2DJNtKLBQTlIlb/kmt2RceTKjdDdNC0UZ/dhD7vpTYf9k
-         gBceSWlEdm/uTULw8NOytFLNEA6GrkyRrFJk6GrxqR38cIJtbX2bjXSZJEVrbfxMjek4
-         vsUkMBRBCLwbgv19ZOChBOq5iQ7FN/XsZG/U20jBQ6Xb02BIfsaj3N6Itoy+zHVtvIF1
-         +rKpIYOPiv1keFr9d3rqA7uftYYKJJiL5YGPaWrOhtXn5Qb2jwk18WbqCZAcB6YOgqOt
-         f2v6NeybPDdC5uhVwPVa9jq7GxfuRCCY5yGqqpHQGq1Irh0d6qXddVBnFTKFbwtBVFhf
-         dNHw==
-X-Gm-Message-State: APjAAAWAw5liUrDypueBO9L9e/ijsK7xwB0ErBUYCYhzj+3BdsawC/Mp
-        nsk5K6IJqI5MftKJX/61U7b4LqalZWw=
-X-Google-Smtp-Source: APXvYqwaXw2NIta4ydW0the9uuNpiHIG2CIaAvFEtua7oAjOr+r4sGkRe1H8tyT2JKQhRZXwIrjRmg==
-X-Received: by 2002:a2e:9410:: with SMTP id i16mr7604284ljh.152.1558345016801;
-        Mon, 20 May 2019 02:36:56 -0700 (PDT)
-Received: from [192.168.0.199] ([31.173.81.27])
-        by smtp.gmail.com with ESMTPSA id h25sm3594162ljb.80.2019.05.20.02.36.55
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 20 May 2019 02:36:56 -0700 (PDT)
-Subject: Re: [PATCH] of_net: fix of_get_mac_address retval if compiled without
- CONFIG_OF
-To:     =?UTF-8?Q?Petr_=c5=a0tetiar?= <ynezz@true.cz>,
-        Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>
-Cc:     Mirko Lindner <mlindner@marvell.com>,
-        Stephen Hemminger <stephen@networkplumber.org>,
-        netdev@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <1558268324-5596-1-git-send-email-ynezz@true.cz>
-From:   Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Message-ID: <421e4a76-dbd7-73ac-d8cd-af0bcd789a03@cogentembedded.com>
-Date:   Mon, 20 May 2019 12:36:50 +0300
-User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
-MIME-Version: 1.0
-In-Reply-To: <1558268324-5596-1-git-send-email-ynezz@true.cz>
-Content-Type: text/plain; charset=utf-8; format=flowed
+        Mon, 20 May 2019 05:37:10 -0400
+Received: from mail-eopbgr140072.outbound.protection.outlook.com ([40.107.14.72]:6430
+        "EHLO EUR01-VE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727720AbfETJhJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 05:37:09 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Qo/4lm080txNdB8vZoo7pHmI2Q8NtdG6gVqwj+AIAIY=;
+ b=BIhkYpEP7Iy57h06f/4qh2G9Y2wyw6Oygih6uZT/ZYjtA0kXsLUXySPFad8QNAkniOOd4bnzU44BEnX0c+hIO+ETbbFBCZexAq0HQ3z9p9bPxqoo7WYJ+KJfyygbKf+HPK1C1W20mnXAYnsJbNnhueVhetiUKZozkyaDDw+zQQ0=
+Received: from AM0PR04MB4481.eurprd04.prod.outlook.com (52.135.147.15) by
+ AM0PR04MB6596.eurprd04.prod.outlook.com (20.179.255.25) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1900.18; Mon, 20 May 2019 09:37:05 +0000
+Received: from AM0PR04MB4481.eurprd04.prod.outlook.com
+ ([fe80::3173:24:d401:2378]) by AM0PR04MB4481.eurprd04.prod.outlook.com
+ ([fe80::3173:24:d401:2378%6]) with mapi id 15.20.1900.020; Mon, 20 May 2019
+ 09:37:04 +0000
+From:   Peng Fan <peng.fan@nxp.com>
+To:     Leonard Crestez <leonard.crestez@nxp.com>,
+        "srinivas.kandagatla@linaro.org" <srinivas.kandagatla@linaro.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>
+CC:     "festevam@gmail.com" <festevam@gmail.com>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [RFC 1/2] dt-bindings: imx-ocotp: Add fusable-node property
+Thread-Topic: [RFC 1/2] dt-bindings: imx-ocotp: Add fusable-node property
+Thread-Index: AQHVDrkIcB6j+hDf/kC51b4HJvSviKZzwQ2A
+Date:   Mon, 20 May 2019 09:37:04 +0000
+Message-ID: <AM0PR04MB44813D1223FDB9266C9F90D388060@AM0PR04MB4481.eurprd04.prod.outlook.com>
+References: <20190520032020.7920-1-peng.fan@nxp.com>
+ <AM0PR04MB643466338B440374D97F2805EE060@AM0PR04MB6434.eurprd04.prod.outlook.com>
+In-Reply-To: <AM0PR04MB643466338B440374D97F2805EE060@AM0PR04MB6434.eurprd04.prod.outlook.com>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=peng.fan@nxp.com; 
+x-originating-ip: [119.31.174.71]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: fedb471d-2867-4ce1-f3f5-08d6dd06b839
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:AM0PR04MB6596;
+x-ms-traffictypediagnostic: AM0PR04MB6596:
+x-ms-exchange-purlcount: 1
+x-microsoft-antispam-prvs: <AM0PR04MB6596AE3A5D9ABD804AA95EFB88060@AM0PR04MB6596.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-forefront-prvs: 004395A01C
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(136003)(396003)(376002)(346002)(366004)(39860400002)(189003)(199004)(305945005)(66476007)(64756008)(76116006)(66446008)(66946007)(66556008)(256004)(14444005)(73956011)(2906002)(186003)(316002)(71200400001)(71190400001)(66066001)(26005)(110136005)(7416002)(5660300002)(7736002)(33656002)(102836004)(11346002)(476003)(54906003)(3846002)(6116002)(99286004)(966005)(74316002)(9686003)(76176011)(44832011)(14454004)(486006)(7696005)(53546011)(6506007)(8936002)(68736007)(81166006)(81156014)(6436002)(6246003)(86362001)(8676002)(2201001)(478600001)(53936002)(6306002)(25786009)(52536014)(55016002)(2501003)(446003)(229853002)(4326008);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR04MB6596;H:AM0PR04MB4481.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: nAoXYNwnOcLA/ASD8hstzYykuYIyuFj4NnwIQYO+kkLv9R0Ja4PVGiDrtU1WK5CVutb4JZOebop3wGgp7Tajo8bkZOyCF7f6n+4awpYga6JSA9aky4mb1p0V25/JtpVmVwjjdsAL4VUP5YdNv6QAGjrgSNQmUBt5i4MiczpcT0qQElX+9+BBAjRU+HOW1ErI5nQF7svudm3wAlsMBjUdrmtawoQEJuYQgGJND+8t6qa/tmLvsnOZap2LWn3eReVduJNhmc7snfNDGbNdgEpnGMbsdSbu9hYzK9J/QM+rzLZMUyC+4HOlDdj5jvk/FaSFIOCCM04Ki1LfaJ+8n/XHhcK1oTKTYADci3Vv0R2QyKPFAvPVmYgR1ZkmaUasUjOp2/ZyMIQYybOa2j04sFcmXSv4X7++oTOeHBXn9glMvqI=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: fedb471d-2867-4ce1-f3f5-08d6dd06b839
+X-MS-Exchange-CrossTenant-originalarrivaltime: 20 May 2019 09:37:04.8992
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB6596
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello!
+> Subject: Re: [RFC 1/2] dt-bindings: imx-ocotp: Add fusable-node property
+>=20
+> On 20.05.2019 06:06, Peng Fan wrote:
+> > Introduce fusable-node property for i.MX OCOTP driver.
+> > The property will only be used by Firmware(eg. U-Boot) to runtime
+> > disable the nodes.
+> >
+> > Take i.MX6ULL for example, there are several parts that only have
+> > limited modules enabled controlled by OCOTP fuse. It is not flexible
+> > to provide several dts for the serval parts, instead we could provide
+> > one device tree and let Firmware to runtime disable the device tree
+> > nodes for those modules that are disable(fused).
+> >
+> > Signed-off-by: Peng Fan <peng.fan@nxp.com>
+> > ---
+> >
+> > Currently NXP vendor use U-Boot to set status to disabled for devices
+> > that could not function,
+> >
+> https://source.codeaurora.org/external/imx/uboot-imx/tree/arch/arm/mac
+> > h-imx/mx6/module_fuse.c?h=3Dimx_v2018.03_4.14.98_2.0.0_ga#n149
+> > But this approach is will not work if kernel dts node path changed.
+> >
+> > There are two approaches to resolve:
+> >
+> > 1. This patch is to add a fusable-node property, and Firmware will pars=
+e
+> >     the property and read fuse to decide whether to disable or keeep
+> enable
+> >     the nodes.
+> >
+> > 2. There is another approach is that add nvmem-cells for all nodes that
+> >     could be disabled(fused). Then in each linux driver to use nvmem
+> >     api to detect fused or not, or in linux driver common code to check
+> >     device functionable or not with nvmem API.
+> >
+> >
+> > To make it easy to work, we choose [1] here. Please advise whether it
+> > is acceptable, because the property is not used by linux driver in
+> > approach [1]. Or you prefer [2] or please advise if any better solution=
+.
+>=20
+> Couldn't firmware parse nvmem-cells? Even without a full nvmem subsystem
+> it would be possible for imx-specific code to walk the entire device tree=
+, parse
+> nvmem-cells and disable nodes which are disabled by fuse.
 
-On 19.05.2019 15:18, Petr Štetiar wrote:
+Firmware could parse nvmem-cells, but there are lots of modules that could
+be fused. If using nvmem-cells, that means need to add nvmem property
+for all the modules that could be fused. To make is looks cleaner, so intro=
+duced
+a fusable-node property.
 
-> of_get_mac_address prior to commit d01f449c008a ("of_net: add NVMEM
-> support to of_get_mac_address") could return only valid pointer or NULL,
-> after this change it could return only valid pointer or ERR_PTR encoded
-> error value, but I've forget to change the return value of
+Regards,
+Peng.
 
-    It's either "I've forgotten" or just "I forgot".
-
-> of_get_mac_address in case where the kernel is compiled without
-> CONFIG_OF, so I'm doing so now.
-
-    Well, better late... :-)
-
-> Cc: Mirko Lindner <mlindner@marvell.com>
-> Cc: Stephen Hemminger <stephen@networkplumber.org>
-> Fixes: d01f449c008a ("of_net: add NVMEM support to of_get_mac_address")
-> Reported-by: Octavio Alvarez <octallk1@alvarezp.org>
-> Signed-off-by: Petr Štetiar <ynezz@true.cz>
-[...]
-
-MBR, Sergei
+>=20
+> --
+> Regards,
+> Leonard
