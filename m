@@ -2,129 +2,223 @@ Return-Path: <SRS0=lq4r=TU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ADA54C04AAC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 11:09:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38781C04E87
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 11:10:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8176120856
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 11:09:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558350575;
-	bh=xdE8V/8ROdDMJBxU1DJwKw3mMX0oiKOiXtH4jn4mbsA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=pPRw1iXgM5NKpPg+2AIc1zpELBVEtSSdokGDW90i4osQ9fCQzVrS9xnrw/nA7FgZM
-	 NsIA9DaUfF+ucQ1LQzWgwzubTzIZC2esctOuxH3ISLtXBhswSwxtHzYfe3V5/bxvwo
-	 eqH7tFeIOpJx8fFrPOK1TxVzehr0w00jmmz033vc=
+	by mail.kernel.org (Postfix) with ESMTP id 0E94E20856
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 11:10:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732419AbfETLJe (ORCPT
+        id S1732469AbfETLK4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 07:09:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59558 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732368AbfETLJe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 07:09:34 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B95A920675;
-        Mon, 20 May 2019 11:09:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558350573;
-        bh=xdE8V/8ROdDMJBxU1DJwKw3mMX0oiKOiXtH4jn4mbsA=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=wOVNCDxENKYO0q/G1lnr6pHS2TvfvKKbdZY26Wc07DPYhlcHtBlWtMBI1Z/GNHH+M
-         TM70+y+emNI8iJvcY/HDv5rWhNudKkRclkpSM1nrD+Q3sHnrdMUEFtaQlz5fn2IZkr
-         bLp4RG9Emu+UfROJ7RmYE8u++Kbk5/voPKSJx1Uo=
-Date:   Mon, 20 May 2019 13:09:30 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Martin Schwidefsky <schwidefsky@de.ibm.com>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Christoph Hellwig <hch@infradead.org>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        linuxppc-dev@lists.ozlabs.org,
-        linux-s390 <linux-s390@vger.kernel.org>
-Subject: Re: Linux 5.1-rc5
-Message-ID: <20190520110930.GC20211@kroah.com>
-References: <CAHk-=wjvcuyCQGnfOhooaL1H4H63qXO=xgo+9yncSOG=eK+kbA@mail.gmail.com>
- <20190415051919.GA31481@infradead.org>
- <CAHk-=wj7jgMOVFW0tiU-X+zhg6+Rn7mEBTej+f26rV3zXezOSA@mail.gmail.com>
- <20190502122128.GA2670@kroah.com>
- <20190502161758.26972bb2@mschwideX1>
- <20190502143110.GC17577@kroah.com>
- <20190502171055.132f023c@mschwideX1>
+        Mon, 20 May 2019 07:10:56 -0400
+Received: from relay5-d.mail.gandi.net ([217.70.183.197]:36853 "EHLO
+        relay5-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730634AbfETLK4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 07:10:56 -0400
+X-Originating-IP: 90.88.22.185
+Received: from localhost (aaubervilliers-681-1-80-185.w90-88.abo.wanadoo.fr [90.88.22.185])
+        (Authenticated sender: maxime.ripard@bootlin.com)
+        by relay5-d.mail.gandi.net (Postfix) with ESMTPSA id 75B681C0007;
+        Mon, 20 May 2019 11:10:49 +0000 (UTC)
+Date:   Mon, 20 May 2019 13:10:49 +0200
+From:   Maxime Ripard <maxime.ripard@bootlin.com>
+To:     Chen-Yu Tsai <wens@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree <devicetree@vger.kernel.org>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
+        Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>,
+        Yong Deng <yong.deng@magewell.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        linux-clk <linux-clk@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Linux Media Mailing List <linux-media@vger.kernel.org>
+Subject: Re: [PATCH 4/6] ARM: dts: sun8i: a83t: Add device node for CSI
+ (Camera Sensor Interface)
+Message-ID: <20190520111048.cnh435fnmz7esyks@flea>
+References: <20190408165744.11672-1-wens@kernel.org>
+ <20190408165744.11672-5-wens@kernel.org>
+ <20190409075804.4zrwjil7ie2gjigu@flea>
+ <CAGb2v64CYV68Q0a7x5p-XabS74vaQWP3paPopodmqQPTOrq2gQ@mail.gmail.com>
+ <20190409082818.z33mq2qrxethldzf@flea>
+ <CAGb2v67pX+7ccihmGEWPKrXg8mMhht-vh37p2auWYgt=qGDA6A@mail.gmail.com>
+ <20190409145225.2ltluiyqa5xha4zd@flea>
+ <20190519135422.l2bnumyjr3dxehhx@core.my.home>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="qkatogddc44c6dds"
 Content-Disposition: inline
-In-Reply-To: <20190502171055.132f023c@mschwideX1>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+In-Reply-To: <20190519135422.l2bnumyjr3dxehhx@core.my.home>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 02, 2019 at 05:10:55PM +0200, Martin Schwidefsky wrote:
-> On Thu, 2 May 2019 16:31:10 +0200
-> Greg KH <gregkh@linuxfoundation.org> wrote:
-> 
-> > On Thu, May 02, 2019 at 04:17:58PM +0200, Martin Schwidefsky wrote:
-> > > On Thu, 2 May 2019 14:21:28 +0200
-> > > Greg KH <gregkh@linuxfoundation.org> wrote:
-> > >   
-> > > > On Mon, Apr 15, 2019 at 09:17:10AM -0700, Linus Torvalds wrote:  
-> > > > > On Sun, Apr 14, 2019 at 10:19 PM Christoph Hellwig <hch@infradead.org> wrote:    
+
+--qkatogddc44c6dds
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+Hi Ond=C5=99ej,
+
+On Sun, May 19, 2019 at 03:54:22PM +0200, Ond=C5=99ej Jirman wrote:
+> On Tue, Apr 09, 2019 at 04:52:25PM +0200, Maxime Ripard wrote:
+> > On Tue, Apr 09, 2019 at 04:40:40PM +0800, Chen-Yu Tsai wrote:
+> > > On Tue, Apr 9, 2019 at 4:28 PM Maxime Ripard <maxime.ripard@bootlin.c=
+om> wrote:
+> > > >
+> > > > On Tue, Apr 09, 2019 at 04:07:34PM +0800, Chen-Yu Tsai wrote:
+> > > > > On Tue, Apr 9, 2019 at 3:58 PM Maxime Ripard <maxime.ripard@bootl=
+in.com> wrote:
+> > > > > > On Tue, Apr 09, 2019 at 12:57:42AM +0800, Chen-Yu Tsai wrote:
+> > > > > > > From: Chen-Yu Tsai <wens@csie.org>
+> > > > > > >
+> > > > > > > The A83T SoC has a camera sensor interface (known as CSI in A=
+llwinner
+> > > > > > > lingo), which is similar to the one found on the A64 and H3. =
+The only
+> > > > > > > difference seems to be that support of MIPI CSI through a con=
+nected
+> > > > > > > MIPI CSI-2 bridge.
+> > > > > > >
+> > > > > > > Add a device node for it, and pinctrl nodes for the commonly =
+used MCLK
+> > > > > > > and 8-bit parallel interface. The property /omit-if-no-ref/ i=
+s added to
+> > > > > > > the pinctrl nodes to keep the device tree blob size down if t=
+hey are
+> > > > > > > unused.
+> > > > > > >
+> > > > > > > Signed-off-by: Chen-Yu Tsai <wens@csie.org>
+> > > > > > > ---
+> > > > > > >  arch/arm/boot/dts/sun8i-a83t.dtsi | 31 +++++++++++++++++++++=
+++++++++++
+> > > > > > >  1 file changed, 31 insertions(+)
+> > > > > > >
+> > > > > > > diff --git a/arch/arm/boot/dts/sun8i-a83t.dtsi b/arch/arm/boo=
+t/dts/sun8i-a83t.dtsi
+> > > > > > > index f739b88efb53..0c52f945fd5f 100644
+> > > > > > > --- a/arch/arm/boot/dts/sun8i-a83t.dtsi
+> > > > > > > +++ b/arch/arm/boot/dts/sun8i-a83t.dtsi
+> > > > > > > @@ -682,6 +682,20 @@
+> > > > > > >                       #interrupt-cells =3D <3>;
+> > > > > > >                       #gpio-cells =3D <3>;
+> > > > > > >
+> > > > > > > +                     /omit-if-no-ref/
+> > > > > > > +                     csi_8bit_parallel_pins: csi-8bit-parall=
+el-pins {
+> > > > > > > +                             pins =3D "PE0", "PE2", "PE3", "=
+PE6", "PE7",
+> > > > > > > +                                    "PE8", "PE9", "PE10", "P=
+E11",
+> > > > > > > +                                    "PE12", "PE13";
+> > > > > > > +                             function =3D "csi";
+> > > > > > > +                     };
+> > > > > > > +
+> > > > > > > +                     /omit-if-no-ref/
+> > > > > > > +                     csi_mclk_pin: csi-mclk-pin {
+> > > > > > > +                             pins =3D "PE1";
+> > > > > > > +                             function =3D "csi";
+> > > > > > > +                     };
+> > > > > > > +
+> > > > > > >                       emac_rgmii_pins: emac-rgmii-pins {
+> > > > > > >                               pins =3D "PD2", "PD3", "PD4", "=
+PD5", "PD6", "PD7",
+> > > > > > >                                      "PD11", "PD12", "PD13", =
+"PD14", "PD18",
+> > > > > > > @@ -994,6 +1008,23 @@
+> > > > > > >                       interrupts =3D <GIC_PPI 9 (GIC_CPU_MASK=
+_SIMPLE(8) | IRQ_TYPE_LEVEL_HIGH)>;
+> > > > > > >               };
+> > > > > > >
+> > > > > > > +             csi: camera@1cb0000 {
+> > > > > > > +                     compatible =3D "allwinner,sun8i-a83t-cs=
+i";
+> > > > > > > +                     reg =3D <0x01cb0000 0x1000>;
+> > > > > > > +                     interrupts =3D <GIC_SPI 84 IRQ_TYPE_LEV=
+EL_HIGH>;
+> > > > > > > +                     clocks =3D <&ccu CLK_BUS_CSI>,
+> > > > > > > +                              <&ccu CLK_CSI_SCLK>,
+> > > > > > > +                              <&ccu CLK_DRAM_CSI>;
+> > > > > > > +                     clock-names =3D "bus", "mod", "ram";
+> > > > > > > +                     resets =3D <&ccu RST_BUS_CSI>;
+> > > > > > > +                     status =3D "disabled";
+> > > > > > > +
+> > > > > > > +                     csi_in: port {
+> > > > > > > +                             #address-cells =3D <1>;
+> > > > > > > +                             #size-cells =3D <0>;
 > > > > > >
-> > > > > > Can we please have the page refcount overflow fixes out on the list
-> > > > > > for review, even if it is after the fact?    
-> > > > > 
-> > > > > They were actually on a list for review long before the fact, but it
-> > > > > was the security mailing list. The issue actually got discussed back
-> > > > > in January along with early versions of the patches, but then we
-> > > > > dropped the ball because it just wasn't on anybody's radar and it got
-> > > > > resurrected late March. Willy wrote a rather bigger patch-series, and
-> > > > > review of that is what then resulted in those commits. So they may
-> > > > > look recent, but that's just because the original patches got
-> > > > > seriously edited down and rewritten.
-> > > > > 
-> > > > > That said, powerpc and s390 should at least look at maybe adding a
-> > > > > check for the page ref in their gup paths too. Powerpc has the special
-> > > > > gup_hugepte() case, and s390 has its own version of gup entirely. I
-> > > > > was actually hoping the s390 guys would look at using the generic gup
-> > > > > code.
-> > > > > 
-> > > > > I ruthlessly also entirely ignored MIPS, SH and sparc, since they seem
-> > > > > largely irrelevant, partly since even theoretically this whole issue
-> > > > > needs a _lot_ of memory.
-> > > > > 
-> > > > > Michael, Martin, see commit 6b3a70773630 ("Merge branch 'page-refs'
-> > > > > (page ref overflow)"). You may or may not really care.    
-> > > > 
-> > > > I've now queued these patches up for the next round of stable releases,
-> > > > as some people seem to care about these.
-> > > > 
-> > > > I didn't see any follow-on patches for s390 or ppc64 hit the tree for
-> > > > these changes, am I just missing them and should also queue up a few
-> > > > more to handle this issue on those platforms?  
-> > > 
-> > > I fixed that with a different approach. The following two patches are
-> > > queued for the next merge window:
-> > > 
-> > > d1874a0c2805 "s390/mm: make the pxd_offset functions more robust"
-> > > 1a42010cdc26 "s390/mm: convert to the generic get_user_pages_fast code"
-> > > 
-> > > With these two s390 now uses the generic gup code in mm/gup.c  
-> > 
-> > Nice!  Do you want me to queue those up for the stable backports once
-> > they hit a public -rc release?
-> 
-> Yes please!
+> > > > > > If we expect a single enpoint, then we don't need the address-c=
+ells
+> > > > > > and size-cells properties.
+> > > > >
+> > > > > I wouldn't bet on anything. The way the Q8 tablets did front/back=
+ cameras
+> > > > > is kind of genius if not very hacky. They have two "identical" se=
+nsors
+> > > > > on the same I2C bus and CSI bus, with shared reset line but separ=
+ate
+> > > > > shutdown lines. Since they are identical, they also have the same=
+ I2C
+> > > > > address. I haven't figured out how to model this in the device tr=
+ee.
+> > > > >
+> > > > > The point is, it's perfectly possible to have two or more sensors=
+ use
+> > > > > the same controller, provided only one be active at a time.
+> > > >
+> > > > Right, but I guess the common case would be to have a single sensor,
+> > > > where that wouldn't be needed.
+> > > >
+> > > > In odd cases, we can always specify it in the DTS, and if it becomes
+> > > > common enough, we can move it to the DTSI.
+> > >
+> > > Makes sense. Do you want me to re-spin?
+> >
+> > If there's no other comment, we'll fix it when applying.
+>
+> This patch series seems to have been forgotten. It doesn't seem there are=
+ any
+> blockers.
 
-Now queued up to 5.0 and 5.1, but did not apply to 4.19 or older :(
+Sorry about that :/
 
-thanks,
+> Can you please apply it now? I have some further series (camera module
+> support for TBS-A711) that depend on this.
 
-greg k-h
+Some parts of it will have to be merged through v4l2, and I can't
+apply those patches.
+
+Can you resend that series, and ping on a regular basis (like once a
+week) if you don't get any feedback?
+
+Thanks!
+Maxime
+
+--
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+
+--qkatogddc44c6dds
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXOKLOAAKCRDj7w1vZxhR
+xcUUAQD7Jfd29f0QBa+jm16CGAaZx4LxWkZ47YM74jycMwsRPQD+JbLPWMLy39fT
+gI37QUUND5p2czBiA+hpbcz3sQLb8w8=
+=a/4m
+-----END PGP SIGNATURE-----
+
+--qkatogddc44c6dds--
