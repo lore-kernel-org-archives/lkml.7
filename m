@@ -2,191 +2,179 @@ Return-Path: <SRS0=lq4r=TU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45292C04AAC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:21:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2710C04AAF
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:21:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1C11F21019
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:21:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558354892;
-	bh=JDbR6yD0S0b+vjlwwNjCZXrruQmzJ3nnstiZDzZHZ2I=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Ti00Uld2z4adFWEyL7VDtXmmN7wElR6wlWqEjtFR+GaW2MLYpb+FuBG7RAvwpm0bS
-	 kaiPwEgV59RZexvhEZvjPlaFkL5AhLaJOJzzplPMC7n/3W1dirf658Hsl+m0fnv+BY
-	 24WJbMHJDqnQ9u6dFFeYa13eRZlcSxmDvjXG2gYY=
+	by mail.kernel.org (Postfix) with ESMTP id C84FC214AE
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:21:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="KYgnyTby"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388182AbfETMVb (ORCPT
+        id S2388193AbfETMVe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 08:21:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35136 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387506AbfETMV2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 08:21:28 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CC9D5213F2;
-        Mon, 20 May 2019 12:21:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558354887;
-        bh=JDbR6yD0S0b+vjlwwNjCZXrruQmzJ3nnstiZDzZHZ2I=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=eGl1M/jFDYoS13k/JyBENb8W+N0vVcwEVZ0NTEbcOzJlz2dlF54P2eNpB+ZwrImNx
-         SGKyWMOKht3850Pz6ccOwf2FK6zhMxYjdmsNIfsDGIuCa9NhhnRwxSVgeH0Yydnegb
-         y8XJQQyrnoatsE9dCYZqD8ha6BumoJn9jgehd1BE=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Julien Thierry <julien.thierry@arm.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Borislav Petkov <bp@alien8.de>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>, stable@kernel.org,
-        Ingo Molnar <mingo@kernel.org>
-Subject: [PATCH 4.19 017/105] sched/x86: Save [ER]FLAGS on context switch
-Date:   Mon, 20 May 2019 14:13:23 +0200
-Message-Id: <20190520115248.202554691@linuxfoundation.org>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190520115247.060821231@linuxfoundation.org>
-References: <20190520115247.060821231@linuxfoundation.org>
-User-Agent: quilt/0.66
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+        Mon, 20 May 2019 08:21:34 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:38384 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388172AbfETMV3 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 08:21:29 -0400
+Received: by mail-pg1-f195.google.com with SMTP id j26so6735461pgl.5
+        for <linux-kernel@vger.kernel.org>; Mon, 20 May 2019 05:21:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sifive.com; s=google;
+        h=from:to:subject:date:message-id:in-reply-to:references;
+        bh=1F+KZPAPMFeFMbiX0oM9Kae2RtfpGXHWIoUQp9WZh+E=;
+        b=KYgnyTbypH81lTw1Oa6iQ9HeadARRY8S9w9/UlRXArrgHKiBMGEYhKJeSuIpXXsbKk
+         1qZu3Zqnta9hT8R573OIeIWVsOEPLz2aU43BJuXNw5mhHGQkVONdVxYdWeaQ95NCogss
+         KSstGBKg2paFZomP0Hy42ULP2JLZdEPMPKW2/C/wFOGiik7AlEZ4Fx0hbVsNrmJCnV8U
+         fNMhEhvJxtmnL1MCXD95m4kt+5So0hLJTn7bPmAa4qdVaNNSxRj205i0CfB0r/U4HSF1
+         2vaBX0uxMYAjP8l1Ve6jfhnAuECoZ4SXoUGHPb/UkUTX7qlGvhNROIM3dKiKkt3oAn4W
+         4Wtg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
+         :references;
+        bh=1F+KZPAPMFeFMbiX0oM9Kae2RtfpGXHWIoUQp9WZh+E=;
+        b=EHpq17ScVYuE8+IPyu8/gN5DsBXLnN91mpTzT8MlNSR7/DYuY6HZ8gBgOtQCqoxq95
+         IOOWp3lF8GKT8CtnK0ypA04F9PI2N0yABBtxXCc0ymGcpU2yv4pZ10wDTuSQ8vMnbP3Q
+         1CT9iJOi/idx0HbzZVGkw5guUNCUqCinuASJX5VF6vgaAAhVzTZ94qd5O3+LkTLF+jTl
+         WtA1FTmo8xJ/fGtBJUDHIIMMARMeoYUMbdaRVk6soFXTsJL6RVlfZI1ZbzWiz15/vJjn
+         qJT5vBEOLNwYtMcKiC9ytW78eQau5RUP/DcTPHE2HJCiO/DjcR3FylmQsIzyOVYeYit8
+         qfiQ==
+X-Gm-Message-State: APjAAAUUV1SKkJ9t7BZ7uCT/CvPCyBLjsdYZaTAJXFaTBMDmJOKDiNZc
+        AS0epyK5SFfNF35xT2PGpfFsXg==
+X-Google-Smtp-Source: APXvYqy6uHSJq2TpsRPL8u7EOfG1DUaVBd57X2uhsmPc7CQkmkrZZww5RFpC7rQaq+VRfsPBth4cyw==
+X-Received: by 2002:a62:3085:: with SMTP id w127mr56962535pfw.170.1558354888733;
+        Mon, 20 May 2019 05:21:28 -0700 (PDT)
+Received: from buildserver-90.open-silicon.com ([114.143.65.226])
+        by smtp.googlemail.com with ESMTPSA id n27sm38137077pfb.129.2019.05.20.05.21.25
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Mon, 20 May 2019 05:21:28 -0700 (PDT)
+From:   Sagar Shrikant Kadam <sagar.kadam@sifive.com>
+To:     robh+dt@kernel.org, mark.rutland@arm.com, peter@korsgaard.com,
+        andrew@lunn.ch, palmer@sifive.com, paul.walmsley@sifive.com,
+        sagar.kadam@sifive.com, linux-i2c@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-riscv@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v4 3/3] i2c-ocores: sifive: add polling mode workaround for FU540-C000 SoC
+Date:   Mon, 20 May 2019 17:50:17 +0530
+Message-Id: <1558354817-12034-4-git-send-email-sagar.kadam@sifive.com>
+X-Mailer: git-send-email 1.9.1
+In-Reply-To: <1558354817-12034-1-git-send-email-sagar.kadam@sifive.com>
+References: <1558354817-12034-1-git-send-email-sagar.kadam@sifive.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Peter Zijlstra <peterz@infradead.org>
+The i2c-ocore driver already has a polling mode interface.But it needs
+a workaround for FU540 Chipset on HiFive unleashed board (RevA00).
+There is an erratum in FU540 chip that prevents interrupt driven i2c
+transfers from working, and also the I2C controller's interrupt bit
+cannot be cleared if set, due to this the existing i2c polling mode
+interface added in mainline earlier doesn't work, and CPU stall's
+infinitely, when-ever i2c transfer is initiated.
 
-commit 6690e86be83ac75832e461c141055b5d601c0a6d upstream.
+Ref:previous polling mode support in mainline
 
-Effectively reverts commit:
+	commit 69c8c0c0efa8 ("i2c: ocores: add polling interface")
 
-  2c7577a75837 ("sched/x86_64: Don't save flags on context switch")
+The workaround / fix under OCORES_FLAG_BROKEN_IRQ is particularly for
+FU540-COOO SoC.
 
-Specifically because SMAP uses FLAGS.AC which invalidates the claim
-that the kernel has clean flags.
-
-In particular; while preemption from interrupt return is fine (the
-IRET frame on the exception stack contains FLAGS) it breaks any code
-that does synchonous scheduling, including preempt_enable().
-
-This has become a significant issue ever since commit:
-
-  5b24a7a2aa20 ("Add 'unsafe' user access functions for batched accesses")
-
-provided for means of having 'normal' C code between STAC / CLAC,
-exposing the FLAGS.AC state. So far this hasn't led to trouble,
-however fix it before it comes apart.
-
-Reported-by: Julien Thierry <julien.thierry@arm.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Acked-by: Andy Lutomirski <luto@amacapital.net>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: Josh Poimboeuf <jpoimboe@redhat.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: stable@kernel.org
-Fixes: 5b24a7a2aa20 ("Add 'unsafe' user access functions for batched accesses")
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Sagar Shrikant Kadam <sagar.kadam@sifive.com>
 ---
- arch/x86/entry/entry_32.S        |    2 ++
- arch/x86/entry/entry_64.S        |    2 ++
- arch/x86/include/asm/switch_to.h |    1 +
- arch/x86/kernel/process_32.c     |    7 +++++++
- arch/x86/kernel/process_64.c     |    8 ++++++++
- 5 files changed, 20 insertions(+)
+ drivers/i2c/busses/i2c-ocores.c | 31 ++++++++++++++++++++++++++-----
+ 1 file changed, 26 insertions(+), 5 deletions(-)
 
---- a/arch/x86/entry/entry_32.S
-+++ b/arch/x86/entry/entry_32.S
-@@ -648,6 +648,7 @@ ENTRY(__switch_to_asm)
- 	pushl	%ebx
- 	pushl	%edi
- 	pushl	%esi
-+	pushfl
+diff --git a/drivers/i2c/busses/i2c-ocores.c b/drivers/i2c/busses/i2c-ocores.c
+index aee1d86..e0d7f24 100644
+--- a/drivers/i2c/busses/i2c-ocores.c
++++ b/drivers/i2c/busses/i2c-ocores.c
+@@ -27,6 +27,7 @@
+ #include <linux/jiffies.h>
  
- 	/* switch stack */
- 	movl	%esp, TASK_threadsp(%eax)
-@@ -670,6 +671,7 @@ ENTRY(__switch_to_asm)
- #endif
+ #define OCORES_FLAG_POLL BIT(0)
++#define OCORES_FLAG_BROKEN_IRQ BIT(1) /* Broken IRQ for FU540-C000 SoC */
  
- 	/* restore callee-saved registers */
-+	popfl
- 	popl	%esi
- 	popl	%edi
- 	popl	%ebx
---- a/arch/x86/entry/entry_64.S
-+++ b/arch/x86/entry/entry_64.S
-@@ -352,6 +352,7 @@ ENTRY(__switch_to_asm)
- 	pushq	%r13
- 	pushq	%r14
- 	pushq	%r15
-+	pushfq
+ /*
+  * 'process_lock' exists because ocores_process() and ocores_process_timeout()
+@@ -239,9 +240,13 @@ static irqreturn_t ocores_isr(int irq, void *dev_id)
+ 	struct ocores_i2c *i2c = dev_id;
+ 	u8 stat = oc_getreg(i2c, OCI2C_STATUS);
  
- 	/* switch stack */
- 	movq	%rsp, TASK_threadsp(%rdi)
-@@ -374,6 +375,7 @@ ENTRY(__switch_to_asm)
- #endif
+-	if (!(stat & OCI2C_STAT_IF))
++	if (i2c->flags & OCORES_FLAG_BROKEN_IRQ) {
++		if (stat & OCI2C_STAT_IF)
++			if (!(stat & OCI2C_STAT_BUSY))
++				return IRQ_NONE;
++	} else if (!(stat & OCI2C_STAT_IF)) {
+ 		return IRQ_NONE;
+-
++	}
+ 	ocores_process(i2c, stat);
  
- 	/* restore callee-saved registers */
-+	popfq
- 	popq	%r15
- 	popq	%r14
- 	popq	%r13
---- a/arch/x86/include/asm/switch_to.h
-+++ b/arch/x86/include/asm/switch_to.h
-@@ -40,6 +40,7 @@ asmlinkage void ret_from_fork(void);
-  * order of the fields must match the code in __switch_to_asm().
-  */
- struct inactive_task_frame {
-+	unsigned long flags;
- #ifdef CONFIG_X86_64
- 	unsigned long r15;
- 	unsigned long r14;
---- a/arch/x86/kernel/process_32.c
-+++ b/arch/x86/kernel/process_32.c
-@@ -130,6 +130,13 @@ int copy_thread_tls(unsigned long clone_
- 	struct task_struct *tsk;
- 	int err;
+ 	return IRQ_HANDLED;
+@@ -356,6 +361,11 @@ static void ocores_process_polling(struct ocores_i2c *i2c)
+ 		ret = ocores_isr(-1, i2c);
+ 		if (ret == IRQ_NONE)
+ 			break; /* all messages have been transferred */
++		else {
++			if (i2c->flags & OCORES_FLAG_BROKEN_IRQ)
++				if (i2c->state == STATE_DONE)
++					break;
++		}
+ 	}
+ }
  
-+	/*
-+	 * For a new task use the RESET flags value since there is no before.
-+	 * All the status flags are zero; DF and all the system flags must also
-+	 * be 0, specifically IF must be 0 because we context switch to the new
-+	 * task with interrupts disabled.
-+	 */
-+	frame->flags = X86_EFLAGS_FIXED;
- 	frame->bp = 0;
- 	frame->ret_addr = (unsigned long) ret_from_fork;
- 	p->thread.sp = (unsigned long) fork_frame;
---- a/arch/x86/kernel/process_64.c
-+++ b/arch/x86/kernel/process_64.c
-@@ -300,6 +300,14 @@ int copy_thread_tls(unsigned long clone_
- 	childregs = task_pt_regs(p);
- 	fork_frame = container_of(childregs, struct fork_frame, regs);
- 	frame = &fork_frame->frame;
-+
-+	/*
-+	 * For a new task use the RESET flags value since there is no before.
-+	 * All the status flags are zero; DF and all the system flags must also
-+	 * be 0, specifically IF must be 0 because we context switch to the new
-+	 * task with interrupts disabled.
-+	 */
-+	frame->flags = X86_EFLAGS_FIXED;
- 	frame->bp = 0;
- 	frame->ret_addr = (unsigned long) ret_from_fork;
- 	p->thread.sp = (unsigned long) fork_frame;
-
+@@ -406,7 +416,7 @@ static int ocores_xfer(struct i2c_adapter *adap,
+ {
+ 	struct ocores_i2c *i2c = i2c_get_adapdata(adap);
+ 
+-	if (i2c->flags & OCORES_FLAG_POLL)
++	if ((i2c->flags & (OCORES_FLAG_POLL | OCORES_FLAG_BROKEN_IRQ)))
+ 		return ocores_xfer_polling(adap, msgs, num);
+ 	return ocores_xfer_core(i2c, msgs, num, false);
+ }
+@@ -601,6 +611,7 @@ static int ocores_i2c_probe(struct platform_device *pdev)
+ {
+ 	struct ocores_i2c *i2c;
+ 	struct ocores_i2c_platform_data *pdata;
++	const struct of_device_id *match;
+ 	struct resource *res;
+ 	int irq;
+ 	int ret;
+@@ -682,13 +693,23 @@ static int ocores_i2c_probe(struct platform_device *pdev)
+ 
+ 	irq = platform_get_irq(pdev, 0);
+ 	if (irq == -ENXIO) {
+-		i2c->flags |= OCORES_FLAG_POLL;
++		/*
++		 * Set a OCORES_FLAG_BROKEN_IRQ to enable workaround for
++		 * FU540-C000 SoC in polling mode interface of i2c-ocore driver.
++		 * Else enable default polling mode interface for SIFIVE/OCORE
++		 * device types.
++		 */
++		match = of_match_node(ocores_i2c_match, pdev->dev.of_node);
++		if (match && (long)match->data == TYPE_SIFIVE_REV0)
++			i2c->flags |= OCORES_FLAG_BROKEN_IRQ;
++		else
++			i2c->flags |= OCORES_FLAG_POLL;
+ 	} else {
+ 		if (irq < 0)
+ 			return irq;
+ 	}
+ 
+-	if (!(i2c->flags & OCORES_FLAG_POLL)) {
++	if (!(i2c->flags & (OCORES_FLAG_POLL | OCORES_FLAG_BROKEN_IRQ))) {
+ 		ret = devm_request_irq(&pdev->dev, irq, ocores_isr, 0,
+ 				       pdev->name, i2c);
+ 		if (ret) {
+-- 
+1.9.1
 
