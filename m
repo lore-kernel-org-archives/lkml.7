@@ -2,165 +2,254 @@ Return-Path: <SRS0=lq4r=TU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.8 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UPPERCASE_50_75,
-	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=AC_FROM_MANY_DOTS,
+	DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D07A2C04AAC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 23:54:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80655C04E87
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 23:55:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8A3DF2083B
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 23:54:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4747B2083B
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 23:55:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="nCPg27Kh"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="1Z7AEGQY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727387AbfETXyq (ORCPT
+        id S1727389AbfETXzp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 19:54:46 -0400
-Received: from mail-pg1-f201.google.com ([209.85.215.201]:46687 "EHLO
-        mail-pg1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727156AbfETXyq (ORCPT
+        Mon, 20 May 2019 19:55:45 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:49014 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726677AbfETXzo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 19:54:46 -0400
-Received: by mail-pg1-f201.google.com with SMTP id t16so10803890pgv.13
-        for <linux-kernel@vger.kernel.org>; Mon, 20 May 2019 16:54:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=pO+T3YM/eg4pYPScPkRyTQ6bvK/T9SG3Sddd2C72QZ4=;
-        b=nCPg27KhSaoV69UNbxgZeb4MsHG4oh6+KXAWftJW3FpQ/H3Z4RD31XVcnhrNgmCxcr
-         9PiV3wPS6vt9T6PMbFpHJQWx0bULg/TCwLdj2QTvOt3SB4W5OfEYuTlIBopBKFuZCUW5
-         XyxBQgzel0r98VphvtvGAJJBKLQ2S/zr1SGd/AMZwX8xlZGMg67TNp9+dcROd3GuCo7i
-         ipApDrq3Bb1KQdKW/kgsOLa3btI3sQ+JBbw2AZlw/sn+N7Ej3bzMpJ0UQYriXgPU420y
-         fmNNsDVM4hItmYdgIG/gX8qQ5Ar6QWrOcC8yiUb6yVqGdEkx9ATBZB9fhKJaImc5/bm/
-         A9Kg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=pO+T3YM/eg4pYPScPkRyTQ6bvK/T9SG3Sddd2C72QZ4=;
-        b=TcZacGuIeaY5pn/3M9MrPAO+uzXCspIK9m04mrYnsh+ACxykjcPq0SDV97ivDbBP57
-         bnONLB8bX4U7PGyDgPJi1ukHz6LC0705iXwKp0jqklcZxV8v00VNVQXPwJhcwk8z7aSp
-         UbqorykmwckpKGpNSstGgU0hM2qEWybKOPJS7T6Kt+Uwyxukf/3pTGvFVcJ50AmZuAMO
-         +0piGbVeckXj7J6qKVu94sa+qQckT5EHvQyIirAS+rrwBVRWel4ln7C06FJ215SIiPAn
-         t0Hv0CLmGeTn8DwwnxDz+rqpIHBVyNiwSNO8CTXgFUENwYO/x+aCuCzHnDzBgpLIl6YZ
-         ulcw==
-X-Gm-Message-State: APjAAAXHmdnBzUlPreQdUg6PohL84WTT7oweRPV0vi+q/YOyqVQsQfNr
-        Wz6uxplyGulcmhEWqmZzXrlrIo+onPSdjcC5kM4Vq6ptXh0iOmJvwKUv1VEKlvBQJKZ3Vm5IxiA
-        UDU/rn8fNLVjTGJzR5WxzdBjZbXMf2f+vZyFFEq2zjvnSSIUAImNKWkodvlnNqFuaF6WSXZeP
-X-Google-Smtp-Source: APXvYqz6/l3SYtpqg8PAF9CsRv1ez8umZPkuigZyUWUKucY3RCbdZ3NsDg3QChMxRaQQTspUffYpsdFk9/6U
-X-Received: by 2002:a63:1354:: with SMTP id 20mr76949322pgt.356.1558396485001;
- Mon, 20 May 2019 16:54:45 -0700 (PDT)
-Date:   Mon, 20 May 2019 16:54:24 -0700
-Message-Id: <20190520235424.196961-1-eranian@google.com>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.21.0.1020.gf2820cf01a-goog
-Subject: [PATCH] perf/x86/intel/ds: fix EVENT vs. UEVENT PEBS constraints
-From:   Stephane Eranian <eranian@google.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     mingo@kernel.org, peterz@infradead.org, ak@linux.intel.com,
-        kan.liang@intel.com, jolsa@redhat.com, vincent.weaver@maine.edu
-Content-Type: text/plain; charset="UTF-8"
+        Mon, 20 May 2019 19:55:44 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x4KNirUO157600;
+        Mon, 20 May 2019 23:54:59 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=message-id :
+ mime-version : date : from : to : cc : subject : content-type :
+ content-transfer-encoding; s=corp-2018-07-02;
+ bh=nNWD1RaJ4Mnuvxj6CYJ/9h+G++k56gswIg/ChEIRvEg=;
+ b=1Z7AEGQYss8iaW6qUblq1vtcD6yFLvoEaqPeDaHNUTjdVBoawuEyS6ix6MOnAkPpSLxM
+ 5QD95Yp1VY6A0AEpZ15JWHZdFX45VPdqotkoItKTs6OrB+nb97+4cCmrByJaKvYhGKyR
+ n578j4qylXbP4VVn6sVyUFnbOhPQV7fnN6JIm+MgT+ov+1yZQ5qlemquKD0Ee/CyBIq0
+ oC1vqTqYKb9RFJpJiWa/q/ZRs0At3BF0GHfPQpNFAfS+tGDZgCEWd0RutOeuzcLK7h0u
+ nx2t3Oo3a5S7567huH9YFqxeHk16OT3i2noLvqq8K/nNVG1RlmGe+c7rsD77GZ4rXM6X Iw== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by userp2130.oracle.com with ESMTP id 2sj9fta3e1-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 20 May 2019 23:54:58 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x4KNsVS9144706;
+        Mon, 20 May 2019 23:54:58 GMT
+Received: from pps.reinject (localhost [127.0.0.1])
+        by userp3030.oracle.com with ESMTP id 2skudb2kyt-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 20 May 2019 23:54:58 +0000
+Received: from userp3030.oracle.com (userp3030.oracle.com [127.0.0.1])
+        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x4KNswtd145393;
+        Mon, 20 May 2019 23:54:58 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by userp3030.oracle.com with ESMTP id 2skudb2kyk-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 20 May 2019 23:54:58 +0000
+Received: from abhmp0008.oracle.com (abhmp0008.oracle.com [141.146.116.14])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x4KNsvcf001229;
+        Mon, 20 May 2019 23:54:57 GMT
+Message-Id: <201905202354.x4KNsvcf001229@aserv0121.oracle.com>
+Received: from localhost (/10.159.211.99) by default (Oracle Beehive Gateway
+ v4.0) with ESMTP ; Mon, 20 May 2019 23:54:56 +0000
+MIME-Version: 1.0
+Date:   Mon, 20 May 2019 23:54:56 +0000 (UTC)
+From:   Kris Van Hees <kris.van.hees@oracle.com>
+To:     netdev@vger.kernel.org, bpf@vger.kernel.org,
+        dtrace-devel@oss.oracle.com, linux-kernel@vger.kernel.org
+Cc:     rostedt@goodmis.org, mhiramat@kernel.org, acme@kernel.org,
+        ast@kernel.org, daniel@iogearbox.net
+Subject: [RFC PATCH 10/11] bpf: add bpf_buffer_reserve and bpf_buffer_commit
+ helpers
+Content-Type: text/plain
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9263 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=1 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1905200146
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch fixes an issue revealed by the following commit:
-Commit 6b89d4c1ae85 ("perf/x86/intel: Fix INTEL_FLAGS_EVENT_CONSTRAINT* masking")
+Add two helpers that are primarily used in combination with the
+writable-buffer support.  The bpf_buffer_reserve() helper sets aside
+a chunk of buffer space that can be written to, and once all data
+has been written, the bpf_buffer_commit() helper is used to make the
+data in the ring buffer visible to userspace.
 
-That patch modified INTEL_FLAGS_EVENT_CONSTRAINT() to only look at the event code
-when matching a constraint. If code+umask were needed, then the
-INTEL_FLAGS_UEVENT_CONSTRAINT() macro was needed instead.
-This broke with some of the constraints for PEBS events.
-Several of them, including the one used for cycles:p, cycles:pp, cycles:ppp
-fell in that category and caused the event to be rejected in PEBS mode.
-In other words, on some platforms a cmdline such as:
-
-  $ perf top -e cycles:pp
-
-  would fail with EINVAL.
-
-This patch fixes this issue by properly using INTEL_FLAGS_UEVENT_CONSTRAINT()
-when needed in the PEBS constraint tables.
-
-Reported-by: Ingo Molnar <mingo@kernel.org>
-Signed-off-by: Stephane Eranian <eranian@google.com>
+Signed-off-by: Kris Van Hees <kris.van.hees@oracle.com>
+Reviewed-by: Nick Alcock <nick.alcock@oracle.com>
 ---
- arch/x86/events/intel/ds.c | 20 ++++++++++----------
- 1 file changed, 10 insertions(+), 10 deletions(-)
+ include/uapi/linux/bpf.h                  | 39 ++++++++++++++++++++++-
+ kernel/bpf/verifier.c                     |  6 +++-
+ tools/include/uapi/linux/bpf.h            | 39 ++++++++++++++++++++++-
+ tools/testing/selftests/bpf/bpf_helpers.h |  4 +++
+ 4 files changed, 85 insertions(+), 3 deletions(-)
 
-diff --git a/arch/x86/events/intel/ds.c b/arch/x86/events/intel/ds.c
-index ea2cb6b7e456..88e73652a10c 100644
---- a/arch/x86/events/intel/ds.c
-+++ b/arch/x86/events/intel/ds.c
-@@ -743,7 +743,7 @@ struct event_constraint intel_westmere_pebs_event_constraints[] = {
- 	INTEL_FLAGS_EVENT_CONSTRAINT(0xcb, 0xf),    /* MEM_LOAD_RETIRED.* */
- 	INTEL_FLAGS_EVENT_CONSTRAINT(0xf7, 0xf),    /* FP_ASSIST.* */
- 	/* INST_RETIRED.ANY_P, inv=1, cmask=16 (cycles:p). */
--	INTEL_FLAGS_EVENT_CONSTRAINT(0x108000c0, 0x0f),
-+	INTEL_FLAGS_UEVENT_CONSTRAINT(0x108000c0, 0x0f),
- 	EVENT_CONSTRAINT_END
- };
+diff --git a/include/uapi/linux/bpf.h b/include/uapi/linux/bpf.h
+index 7bcb707539d1..2b7772aa00b6 100644
+--- a/include/uapi/linux/bpf.h
++++ b/include/uapi/linux/bpf.h
+@@ -2681,6 +2681,41 @@ union bpf_attr {
+  *		the implementing program type.
+  *	Return
+  *		0 on success, or a negative error in case of failure.
++ *
++ * int bpf_buffer_reserve(void *ctx, int id, struct bpf_map *map, int size)
++ *	Description
++ *		Reserve *size* bytes in the output buffer for the special BPF
++ *		BPF perf event referenced by *map*, a BPF map of type
++ *		**BPF_MAP_TYPE_PERF_EVENT_ARRAY**. The perf event must have
++ *		the attributes: **PERF_SAMPLE_RAW** as **sample_type**,
++ *		**PERF_TYPE_SOFTWARE** as **type**, and
++ *		**PERF_COUNT_SW_BPF_OUTPUT** as **config**.  The reserved space
++ *		will be available as the writable buffer identified with
++ *		numeric ID **id** in the context.
++ *
++ *		The amount of reserved bytes cannot exceed the page size.
++ *		The chunk of buffer space will be reserved within a single
++ *		page, and if this results in unused space at the end of the
++ *		previous page in the ring-buffer, that unsused space will be
++ *		filled with zeros.
++ *	Return
++ *		0 on success, or a negative error in case of failure.
++ *
++ * int bpf_buffer_commit(void *ctx, int id, struct bpf_map *map)
++ *	Description
++ *		FInalize the previously reserved space in the output buffer
++ *		for the special BPF perf event referenced by *map*, a BPF map
++ *		of type **BPF_MAP_TYPE_PERF_EVENT_ARRAY**. The perf event must
++ *		have the attributes: **PERF_SAMPLE_RAW** as **sample_type**,
++ *		**PERF_TYPE_SOFTWARE** as **type**, and
++ *		**PERF_COUNT_SW_BPF_OUTPUT** as **config**.
++ *
++ *		The writable buffer identified with numeric ID **id** in the
++ *		context will be invalidated, and can no longer be used to
++ *		write data to until a new **bpf_buffer_reserve**\ () has been
++ *		invoked.
++ *	Return
++ *		0 on success, or a negative error in case of failure.
+  */
+ #define __BPF_FUNC_MAPPER(FN)		\
+ 	FN(unspec),			\
+@@ -2792,7 +2827,9 @@ union bpf_attr {
+ 	FN(strtoul),			\
+ 	FN(sk_storage_get),		\
+ 	FN(sk_storage_delete),		\
+-	FN(finalize_context),
++	FN(finalize_context),		\
++	FN(buffer_reserve),		\
++	FN(buffer_commit),
  
-@@ -752,7 +752,7 @@ struct event_constraint intel_snb_pebs_event_constraints[] = {
- 	INTEL_PLD_CONSTRAINT(0x01cd, 0x8),    /* MEM_TRANS_RETIRED.LAT_ABOVE_THR */
- 	INTEL_PST_CONSTRAINT(0x02cd, 0x8),    /* MEM_TRANS_RETIRED.PRECISE_STORES */
- 	/* UOPS_RETIRED.ALL, inv=1, cmask=16 (cycles:p). */
--	INTEL_FLAGS_EVENT_CONSTRAINT(0x108001c2, 0xf),
-+	INTEL_FLAGS_UEVENT_CONSTRAINT(0x108001c2, 0xf),
-         INTEL_EXCLEVT_CONSTRAINT(0xd0, 0xf),    /* MEM_UOP_RETIRED.* */
-         INTEL_EXCLEVT_CONSTRAINT(0xd1, 0xf),    /* MEM_LOAD_UOPS_RETIRED.* */
-         INTEL_EXCLEVT_CONSTRAINT(0xd2, 0xf),    /* MEM_LOAD_UOPS_LLC_HIT_RETIRED.* */
-@@ -767,9 +767,9 @@ struct event_constraint intel_ivb_pebs_event_constraints[] = {
-         INTEL_PLD_CONSTRAINT(0x01cd, 0x8),    /* MEM_TRANS_RETIRED.LAT_ABOVE_THR */
- 	INTEL_PST_CONSTRAINT(0x02cd, 0x8),    /* MEM_TRANS_RETIRED.PRECISE_STORES */
- 	/* UOPS_RETIRED.ALL, inv=1, cmask=16 (cycles:p). */
--	INTEL_FLAGS_EVENT_CONSTRAINT(0x108001c2, 0xf),
-+	INTEL_FLAGS_UEVENT_CONSTRAINT(0x108001c2, 0xf),
- 	/* INST_RETIRED.PREC_DIST, inv=1, cmask=16 (cycles:ppp). */
--	INTEL_FLAGS_EVENT_CONSTRAINT(0x108001c0, 0x2),
-+	INTEL_FLAGS_UEVENT_CONSTRAINT(0x108001c0, 0x2),
- 	INTEL_EXCLEVT_CONSTRAINT(0xd0, 0xf),    /* MEM_UOP_RETIRED.* */
- 	INTEL_EXCLEVT_CONSTRAINT(0xd1, 0xf),    /* MEM_LOAD_UOPS_RETIRED.* */
- 	INTEL_EXCLEVT_CONSTRAINT(0xd2, 0xf),    /* MEM_LOAD_UOPS_LLC_HIT_RETIRED.* */
-@@ -783,9 +783,9 @@ struct event_constraint intel_hsw_pebs_event_constraints[] = {
- 	INTEL_FLAGS_UEVENT_CONSTRAINT(0x01c0, 0x2), /* INST_RETIRED.PRECDIST */
- 	INTEL_PLD_CONSTRAINT(0x01cd, 0xf),    /* MEM_TRANS_RETIRED.* */
- 	/* UOPS_RETIRED.ALL, inv=1, cmask=16 (cycles:p). */
--	INTEL_FLAGS_EVENT_CONSTRAINT(0x108001c2, 0xf),
-+	INTEL_FLAGS_UEVENT_CONSTRAINT(0x108001c2, 0xf),
- 	/* INST_RETIRED.PREC_DIST, inv=1, cmask=16 (cycles:ppp). */
--	INTEL_FLAGS_EVENT_CONSTRAINT(0x108001c0, 0x2),
-+	INTEL_FLAGS_UEVENT_CONSTRAINT(0x108001c0, 0x2),
- 	INTEL_FLAGS_UEVENT_CONSTRAINT_DATALA_NA(0x01c2, 0xf), /* UOPS_RETIRED.ALL */
- 	INTEL_FLAGS_UEVENT_CONSTRAINT_DATALA_XLD(0x11d0, 0xf), /* MEM_UOPS_RETIRED.STLB_MISS_LOADS */
- 	INTEL_FLAGS_UEVENT_CONSTRAINT_DATALA_XLD(0x21d0, 0xf), /* MEM_UOPS_RETIRED.LOCK_LOADS */
-@@ -806,9 +806,9 @@ struct event_constraint intel_bdw_pebs_event_constraints[] = {
- 	INTEL_FLAGS_UEVENT_CONSTRAINT(0x01c0, 0x2), /* INST_RETIRED.PRECDIST */
- 	INTEL_PLD_CONSTRAINT(0x01cd, 0xf),    /* MEM_TRANS_RETIRED.* */
- 	/* UOPS_RETIRED.ALL, inv=1, cmask=16 (cycles:p). */
--	INTEL_FLAGS_EVENT_CONSTRAINT(0x108001c2, 0xf),
-+	INTEL_FLAGS_UEVENT_CONSTRAINT(0x108001c2, 0xf),
- 	/* INST_RETIRED.PREC_DIST, inv=1, cmask=16 (cycles:ppp). */
--	INTEL_FLAGS_EVENT_CONSTRAINT(0x108001c0, 0x2),
-+	INTEL_FLAGS_UEVENT_CONSTRAINT(0x108001c0, 0x2),
- 	INTEL_FLAGS_UEVENT_CONSTRAINT_DATALA_NA(0x01c2, 0xf), /* UOPS_RETIRED.ALL */
- 	INTEL_FLAGS_UEVENT_CONSTRAINT_DATALA_LD(0x11d0, 0xf), /* MEM_UOPS_RETIRED.STLB_MISS_LOADS */
- 	INTEL_FLAGS_UEVENT_CONSTRAINT_DATALA_LD(0x21d0, 0xf), /* MEM_UOPS_RETIRED.LOCK_LOADS */
-@@ -829,9 +829,9 @@ struct event_constraint intel_bdw_pebs_event_constraints[] = {
- struct event_constraint intel_skl_pebs_event_constraints[] = {
- 	INTEL_FLAGS_UEVENT_CONSTRAINT(0x1c0, 0x2),	/* INST_RETIRED.PREC_DIST */
- 	/* INST_RETIRED.PREC_DIST, inv=1, cmask=16 (cycles:ppp). */
--	INTEL_FLAGS_EVENT_CONSTRAINT(0x108001c0, 0x2),
-+	INTEL_FLAGS_UEVENT_CONSTRAINT(0x108001c0, 0x2),
- 	/* INST_RETIRED.TOTAL_CYCLES_PS (inv=1, cmask=16) (cycles:p). */
--	INTEL_FLAGS_EVENT_CONSTRAINT(0x108000c0, 0x0f),
-+	INTEL_FLAGS_UEVENT_CONSTRAINT(0x108000c0, 0x0f),
- 	INTEL_PLD_CONSTRAINT(0x1cd, 0xf),		      /* MEM_TRANS_RETIRED.* */
- 	INTEL_FLAGS_UEVENT_CONSTRAINT_DATALA_LD(0x11d0, 0xf), /* MEM_INST_RETIRED.STLB_MISS_LOADS */
- 	INTEL_FLAGS_UEVENT_CONSTRAINT_DATALA_ST(0x12d0, 0xf), /* MEM_INST_RETIRED.STLB_MISS_STORES */
+ /* integer value in 'imm' field of BPF_CALL instruction selects which helper
+  * function eBPF program intends to call
+diff --git a/kernel/bpf/verifier.c b/kernel/bpf/verifier.c
+index 90ae04b4d5c7..ff73ed743a58 100644
+--- a/kernel/bpf/verifier.c
++++ b/kernel/bpf/verifier.c
+@@ -2763,7 +2763,9 @@ static int check_map_func_compatibility(struct bpf_verifier_env *env,
+ 	case BPF_MAP_TYPE_PERF_EVENT_ARRAY:
+ 		if (func_id != BPF_FUNC_perf_event_read &&
+ 		    func_id != BPF_FUNC_perf_event_output &&
+-		    func_id != BPF_FUNC_perf_event_read_value)
++		    func_id != BPF_FUNC_perf_event_read_value &&
++		    func_id != BPF_FUNC_buffer_reserve &&
++		    func_id != BPF_FUNC_buffer_commit)
+ 			goto error;
+ 		break;
+ 	case BPF_MAP_TYPE_STACK_TRACE:
+@@ -2848,6 +2850,8 @@ static int check_map_func_compatibility(struct bpf_verifier_env *env,
+ 	case BPF_FUNC_perf_event_read:
+ 	case BPF_FUNC_perf_event_output:
+ 	case BPF_FUNC_perf_event_read_value:
++	case BPF_FUNC_buffer_reserve:
++	case BPF_FUNC_buffer_commit:
+ 		if (map->map_type != BPF_MAP_TYPE_PERF_EVENT_ARRAY)
+ 			goto error;
+ 		break;
+diff --git a/tools/include/uapi/linux/bpf.h b/tools/include/uapi/linux/bpf.h
+index 7bcb707539d1..2b7772aa00b6 100644
+--- a/tools/include/uapi/linux/bpf.h
++++ b/tools/include/uapi/linux/bpf.h
+@@ -2681,6 +2681,41 @@ union bpf_attr {
+  *		the implementing program type.
+  *	Return
+  *		0 on success, or a negative error in case of failure.
++ *
++ * int bpf_buffer_reserve(void *ctx, int id, struct bpf_map *map, int size)
++ *	Description
++ *		Reserve *size* bytes in the output buffer for the special BPF
++ *		BPF perf event referenced by *map*, a BPF map of type
++ *		**BPF_MAP_TYPE_PERF_EVENT_ARRAY**. The perf event must have
++ *		the attributes: **PERF_SAMPLE_RAW** as **sample_type**,
++ *		**PERF_TYPE_SOFTWARE** as **type**, and
++ *		**PERF_COUNT_SW_BPF_OUTPUT** as **config**.  The reserved space
++ *		will be available as the writable buffer identified with
++ *		numeric ID **id** in the context.
++ *
++ *		The amount of reserved bytes cannot exceed the page size.
++ *		The chunk of buffer space will be reserved within a single
++ *		page, and if this results in unused space at the end of the
++ *		previous page in the ring-buffer, that unsused space will be
++ *		filled with zeros.
++ *	Return
++ *		0 on success, or a negative error in case of failure.
++ *
++ * int bpf_buffer_commit(void *ctx, int id, struct bpf_map *map)
++ *	Description
++ *		FInalize the previously reserved space in the output buffer
++ *		for the special BPF perf event referenced by *map*, a BPF map
++ *		of type **BPF_MAP_TYPE_PERF_EVENT_ARRAY**. The perf event must
++ *		have the attributes: **PERF_SAMPLE_RAW** as **sample_type**,
++ *		**PERF_TYPE_SOFTWARE** as **type**, and
++ *		**PERF_COUNT_SW_BPF_OUTPUT** as **config**.
++ *
++ *		The writable buffer identified with numeric ID **id** in the
++ *		context will be invalidated, and can no longer be used to
++ *		write data to until a new **bpf_buffer_reserve**\ () has been
++ *		invoked.
++ *	Return
++ *		0 on success, or a negative error in case of failure.
+  */
+ #define __BPF_FUNC_MAPPER(FN)		\
+ 	FN(unspec),			\
+@@ -2792,7 +2827,9 @@ union bpf_attr {
+ 	FN(strtoul),			\
+ 	FN(sk_storage_get),		\
+ 	FN(sk_storage_delete),		\
+-	FN(finalize_context),
++	FN(finalize_context),		\
++	FN(buffer_reserve),		\
++	FN(buffer_commit),
+ 
+ /* integer value in 'imm' field of BPF_CALL instruction selects which helper
+  * function eBPF program intends to call
+diff --git a/tools/testing/selftests/bpf/bpf_helpers.h b/tools/testing/selftests/bpf/bpf_helpers.h
+index d98a62b3b56c..72af8157d4db 100644
+--- a/tools/testing/selftests/bpf/bpf_helpers.h
++++ b/tools/testing/selftests/bpf/bpf_helpers.h
+@@ -218,6 +218,10 @@ static int (*bpf_sk_storage_delete)(void *map, struct bpf_sock *sk) =
+ 	(void *)BPF_FUNC_sk_storage_delete;
+ static int (*bpf_finalize_context)(void *ctx, void *map) =
+ 	(void *) BPF_FUNC_finalize_context;
++static int (*bpf_buffer_reserve)(void *ctx, int id, void *map, int size) =
++	(void *) BPF_FUNC_buffer_reserve;
++static int (*bpf_buffer_commit)(void *ctx, int id, void *map) =
++	(void *) BPF_FUNC_buffer_commit;
+ 
+ /* llvm builtin functions that eBPF C program may use to
+  * emit BPF_LD_ABS and BPF_LD_IND instructions
 -- 
-2.21.0.1020.gf2820cf01a-goog
+2.20.1
 
