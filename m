@@ -2,172 +2,568 @@ Return-Path: <SRS0=lq4r=TU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC0E8C04AAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 09:22:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1CB8C072A4
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 09:23:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CA4C820675
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 09:22:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C82B20675
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 09:23:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1558344182;
+	bh=CHleqL3mtq0sz8GTW5xoZdfohyiEl+x+FctS04+PQic=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=w+ivOI6l+gWsE0s69y3Gnxuh4VCLHFVJ+WNOn/2WoCiGSNAnTkV23gjdCf2EDKIKM
+	 RcsLF7So8cczT6FUUYru65G8TKDxHYC5Rpxiav+wYRCtdAmF5uVuZg5IUQKmknacul
+	 jPcyNyJdbSllJKAlwvGh8/tTOck/Tc+rDqWtGy/Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731162AbfETJWp (ORCPT
+        id S1731887AbfETJXB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 05:22:45 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:41728 "EHLO huawei.com"
+        Mon, 20 May 2019 05:23:01 -0400
+Received: from mx2.suse.de ([195.135.220.15]:38882 "EHLO mx1.suse.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729598AbfETJWo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 05:22:44 -0400
-Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id D299CDB958CE3EFD0220;
-        Mon, 20 May 2019 17:22:42 +0800 (CST)
-Received: from [127.0.0.1] (10.177.19.180) by DGGEMS408-HUB.china.huawei.com
- (10.3.19.208) with Microsoft SMTP Server id 14.3.439.0; Mon, 20 May 2019
- 17:22:36 +0800
-Subject: Re: [PATCH 2/2] hwtracing: stm: fix double-free in
- stm_source_register_device()
-To:     Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-kernel@vger.kernel.org>
-CC:     Hulk Robot <hulkci@huawei.com>
-References: <20190520091315.27898-1-wangkefeng.wang@huawei.com>
- <20190520091315.27898-2-wangkefeng.wang@huawei.com>
-From:   Kefeng Wang <wangkefeng.wang@huawei.com>
-Message-ID: <edba9581-3a7b-e8c6-8bb5-89846d84cf98@huawei.com>
-Date:   Mon, 20 May 2019 17:20:43 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.3.1
+        id S1729598AbfETJXB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 05:23:01 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 2FB58AF5F;
+        Mon, 20 May 2019 09:22:59 +0000 (UTC)
+Date:   Mon, 20 May 2019 11:22:58 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Minchan Kim <minchan@kernel.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-mm <linux-mm@kvack.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Tim Murray <timmurray@google.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Suren Baghdasaryan <surenb@google.com>,
+        Daniel Colascione <dancol@google.com>,
+        Shakeel Butt <shakeelb@google.com>,
+        Sonny Rao <sonnyrao@google.com>,
+        Brian Geffon <bgeffon@google.com>, linux-api@vger.kernel.org
+Subject: Re: [RFC 6/7] mm: extend process_madvise syscall to support vector
+ arrary
+Message-ID: <20190520092258.GZ6836@dhcp22.suse.cz>
+References: <20190520035254.57579-1-minchan@kernel.org>
+ <20190520035254.57579-7-minchan@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20190520091315.27898-2-wangkefeng.wang@huawei.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-Originating-IP: [10.177.19.180]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190520035254.57579-7-minchan@kernel.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-sorry, send wrong version,  please ignore.
+[Cc linux-api]
 
-On 2019/5/20 17:13, Kefeng Wang wrote:
-> If device_add() in stm_source_register_device() fails,
-> stm_source_device_release() is called to free src, free
-> src again on err path will trigger double free issue.
->
-> BUG: KASAN: double-free or invalid-free in stm_source_register_device+0xd0/0x1a0 [stm_core]
->
-> CPU: 1 PID: 8556 Comm: syz-executor.0 Tainted: G         C        5.1.0+ #28
-> Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.10.2-1ubuntu1 04/01/2014
-> Call Trace:
->  __dump_stack lib/dump_stack.c:77 [inline]
->  dump_stack+0xa9/0x10e lib/dump_stack.c:113
->  print_address_description+0x65/0x270 mm/kasan/report.c:188
->  kasan_report_invalid_free+0x60/0xa0 mm/kasan/report.c:279
->  __kasan_slab_free+0x159/0x180 mm/kasan/common.c:430
->  slab_free_hook mm/slub.c:1420 [inline]
->  slab_free_freelist_hook mm/slub.c:1447 [inline]
->  slab_free mm/slub.c:2994 [inline]
->  kfree+0xe1/0x270 mm/slub.c:3949
->  stm_source_register_device+0xd0/0x1a0 [stm_core]
->  stm_heartbeat_init+0xb6/0x1b0 [stm_heartbeat]
->  do_one_initcall+0xb9/0x3b5 init/main.c:914
->  do_init_module+0xe0/0x330 kernel/module.c:3468
->  load_module+0x38eb/0x4270 kernel/module.c:3819
->  __do_sys_finit_module+0x162/0x190 kernel/module.c:3909
->  do_syscall_64+0x72/0x2a0 arch/x86/entry/common.c:298
->  entry_SYSCALL_64_after_hwframe+0x49/0xbe
->
->  ...
->
-> Allocated by task 8556:
->  save_stack+0x19/0x80 mm/kasan/common.c:71
->  set_track mm/kasan/common.c:79 [inline]
->  __kasan_kmalloc.constprop.2+0xa0/0xd0 mm/kasan/common.c:489
->  stm_source_register_device+0x46/0x1a0 [stm_core]
->  stm_heartbeat_init+0xb6/0x1b0 [stm_heartbeat]
->  do_one_initcall+0xb9/0x3b5 init/main.c:914
->  do_init_module+0xe0/0x330 kernel/module.c:3468
->  load_module+0x38eb/0x4270 kernel/module.c:3819
->  __do_sys_finit_module+0x162/0x190 kernel/module.c:3909
->  do_syscall_64+0x72/0x2a0 arch/x86/entry/common.c:298
->  entry_SYSCALL_64_after_hwframe+0x49/0xbe
->
-> Freed by task 8556:
->  save_stack+0x19/0x80 mm/kasan/common.c:71
->  set_track mm/kasan/common.c:79 [inline]
->  __kasan_slab_free+0x130/0x180 mm/kasan/common.c:451
->  slab_free_hook mm/slub.c:1420 [inline]
->  slab_free_freelist_hook mm/slub.c:1447 [inline]
->  slab_free mm/slub.c:2994 [inline]
->  kfree+0xe1/0x270 mm/slub.c:3949
->  device_release+0x46/0x100 drivers/base/core.c:1064
->  kobject_cleanup lib/kobject.c:691 [inline]
->  kobject_release lib/kobject.c:720 [inline]
->  kref_put include/linux/kref.h:67 [inline]
->  kobject_put+0x1a8/0x220 lib/kobject.c:737
->  put_device+0x1b/0x30 drivers/base/core.c:2210
->  stm_source_register_device+0xc8/0x1a0 [stm_core]
->  stm_heartbeat_init+0xb6/0x1b0 [stm_heartbeat]
->  do_one_initcall+0xb9/0x3b5 init/main.c:914
->  do_init_module+0xe0/0x330 kernel/module.c:3468
->  load_module+0x38eb/0x4270 kernel/module.c:3819
->  __do_sys_finit_module+0x162/0x190 kernel/module.c:3909
->  do_syscall_64+0x72/0x2a0 arch/x86/entry/common.c:298
->  entry_SYSCALL_64_after_hwframe+0x49/0xbe
->
-> Don't call kfree(src) if device_add() fails to fix it.
->
-> Reported-by: Hulk Robot <hulkci@huawei.com>
-> Signed-off-by: Kefeng Wang <wangkefeng.wang@huawei.com>
+On Mon 20-05-19 12:52:53, Minchan Kim wrote:
+> Currently, process_madvise syscall works for only one address range
+> so user should call the syscall several times to give hints to
+> multiple address range.
+
+Is that a problem? How big of a problem? Any numbers?
+
+> This patch extends process_madvise syscall to support multiple
+> hints, address ranges and return vaules so user could give hints
+> all at once.
+> 
+> struct pr_madvise_param {
+>     int size;                       /* the size of this structure */
+>     const struct iovec __user *vec; /* address range array */
+> }
+> 
+> int process_madvise(int pidfd, ssize_t nr_elem,
+> 		    int *behavior,
+> 		    struct pr_madvise_param *results,
+> 		    struct pr_madvise_param *ranges,
+> 		    unsigned long flags);
+> 
+> - pidfd
+> 
+> target process fd
+> 
+> - nr_elem
+> 
+> the number of elemenent of array behavior, results, ranges
+> 
+> - behavior
+> 
+> hints for each address range in remote process so that user could
+> give different hints for each range.
+
+What is the guarantee of a single call? Do all hints get applied or the
+first failure backs of? What are the atomicity guarantees?
+
+> 
+> - results
+> 
+> array of buffers to get results for associated remote address range
+> action.
+> 
+> - ranges
+> 
+> array to buffers to have remote process's address ranges to be
+> processed
+> 
+> - flags
+> 
+> extra argument for the future. It should be zero this moment.
+> 
+> Example)
+> 
+> struct pr_madvise_param {
+>         int size;
+>         const struct iovec *vec;
+> };
+> 
+> int main(int argc, char *argv[])
+> {
+>         struct pr_madvise_param retp, rangep;
+>         struct iovec result_vec[2], range_vec[2];
+>         int hints[2];
+>         long ret[2];
+>         void *addr[2];
+> 
+>         pid_t pid;
+>         char cmd[64] = {0,};
+>         addr[0] = mmap(NULL, ALLOC_SIZE, PROT_READ|PROT_WRITE,
+>                           MAP_POPULATE|MAP_PRIVATE|MAP_ANONYMOUS, 0, 0);
+> 
+>         if (MAP_FAILED == addr[0])
+>                 return 1;
+> 
+>         addr[1] = mmap(NULL, ALLOC_SIZE, PROT_READ|PROT_WRITE,
+>                           MAP_POPULATE|MAP_PRIVATE|MAP_ANONYMOUS, 0, 0);
+> 
+>         if (MAP_FAILED == addr[1])
+>                 return 1;
+> 
+>         hints[0] = MADV_COLD;
+> 	range_vec[0].iov_base = addr[0];
+>         range_vec[0].iov_len = ALLOC_SIZE;
+>         result_vec[0].iov_base = &ret[0];
+>         result_vec[0].iov_len = sizeof(long);
+> 	retp.vec = result_vec;
+>         retp.size = sizeof(struct pr_madvise_param);
+> 
+>         hints[1] = MADV_COOL;
+>         range_vec[1].iov_base = addr[1];
+>         range_vec[1].iov_len = ALLOC_SIZE;
+>         result_vec[1].iov_base = &ret[1];
+>         result_vec[1].iov_len = sizeof(long);
+>         rangep.vec = range_vec;
+>         rangep.size = sizeof(struct pr_madvise_param);
+> 
+>         pid = fork();
+>         if (!pid) {
+>                 sleep(10);
+>         } else {
+>                 int pidfd = open(cmd,  O_DIRECTORY | O_CLOEXEC);
+>                 if (pidfd < 0)
+>                         return 1;
+> 
+>                 /* munmap to make pages private for the child */
+>                 munmap(addr[0], ALLOC_SIZE);
+>                 munmap(addr[1], ALLOC_SIZE);
+>                 system("cat /proc/vmstat | egrep 'pswpout|deactivate'");
+>                 if (syscall(__NR_process_madvise, pidfd, 2, behaviors,
+> 						&retp, &rangep, 0))
+>                         perror("process_madvise fail\n");
+>                 system("cat /proc/vmstat | egrep 'pswpout|deactivate'");
+>         }
+> 
+>         return 0;
+> }
+> 
+> Signed-off-by: Minchan Kim <minchan@kernel.org>
 > ---
->  drivers/hwtracing/stm/core.c | 17 ++++++++---------
->  1 file changed, 8 insertions(+), 9 deletions(-)
->
-> diff --git a/drivers/hwtracing/stm/core.c b/drivers/hwtracing/stm/core.c
-> index 7b2ab7b2cc4d..5ce30f8f8c4f 100644
-> --- a/drivers/hwtracing/stm/core.c
-> +++ b/drivers/hwtracing/stm/core.c
-> @@ -1258,15 +1258,20 @@ int stm_source_register_device(struct device *parent,
->  	src->dev.release = stm_source_device_release;
+>  include/uapi/asm-generic/mman-common.h |   5 +
+>  mm/madvise.c                           | 184 +++++++++++++++++++++----
+>  2 files changed, 166 insertions(+), 23 deletions(-)
+> 
+> diff --git a/include/uapi/asm-generic/mman-common.h b/include/uapi/asm-generic/mman-common.h
+> index b9b51eeb8e1a..b8e230de84a6 100644
+> --- a/include/uapi/asm-generic/mman-common.h
+> +++ b/include/uapi/asm-generic/mman-common.h
+> @@ -74,4 +74,9 @@
+>  #define PKEY_ACCESS_MASK	(PKEY_DISABLE_ACCESS |\
+>  				 PKEY_DISABLE_WRITE)
 >  
->  	err = kobject_set_name(&src->dev.kobj, "%s", data->name);
-> -	if (err)
-> +	if (err) {
-> +		put_device(&src->dev);
-> +		kfree(src);
->  		goto err;
-> +	}
+> +struct pr_madvise_param {
+> +	int size;			/* the size of this structure */
+> +	const struct iovec __user *vec;	/* address range array */
+> +};
+> +
+>  #endif /* __ASM_GENERIC_MMAN_COMMON_H */
+> diff --git a/mm/madvise.c b/mm/madvise.c
+> index af02aa17e5c1..f4f569dac2bd 100644
+> --- a/mm/madvise.c
+> +++ b/mm/madvise.c
+> @@ -320,6 +320,7 @@ static int madvise_cool_pte_range(pmd_t *pmd, unsigned long addr,
+>  	struct page *page;
+>  	struct vm_area_struct *vma = walk->vma;
+>  	unsigned long next;
+> +	long nr_pages = 0;
 >  
->  	pm_runtime_no_callbacks(&src->dev);
->  	pm_runtime_forbid(&src->dev);
+>  	next = pmd_addr_end(addr, end);
+>  	if (pmd_trans_huge(*pmd)) {
+> @@ -380,9 +381,12 @@ static int madvise_cool_pte_range(pmd_t *pmd, unsigned long addr,
 >  
->  	err = device_add(&src->dev);
-> -	if (err)
-> -		goto err;
-> +	if (err) {
-> +		put_device(&src->dev);
-> +		return err;
-> +	}
+>  		ptep_test_and_clear_young(vma, addr, pte);
+>  		deactivate_page(page);
+> +		nr_pages++;
+> +
+>  	}
 >  
->  	stm_output_init(&src->output);
->  	spin_lock_init(&src->link_lock);
-> @@ -1275,12 +1280,6 @@ int stm_source_register_device(struct device *parent,
->  	data->src = src;
+>  	pte_unmap_unlock(orig_pte, ptl);
+> +	*(long *)walk->private += nr_pages;
+>  	cond_resched();
 >  
 >  	return 0;
-> -
-> -err:
-> -	put_device(&src->dev);
-> -	kfree(src);
-> -
-> -	return err;
->  }
->  EXPORT_SYMBOL_GPL(stm_source_register_device);
+> @@ -390,11 +394,13 @@ static int madvise_cool_pte_range(pmd_t *pmd, unsigned long addr,
 >  
+>  static void madvise_cool_page_range(struct mmu_gather *tlb,
+>  			     struct vm_area_struct *vma,
+> -			     unsigned long addr, unsigned long end)
+> +			     unsigned long addr, unsigned long end,
+> +			     long *nr_pages)
+>  {
+>  	struct mm_walk cool_walk = {
+>  		.pmd_entry = madvise_cool_pte_range,
+>  		.mm = vma->vm_mm,
+> +		.private = nr_pages
+>  	};
+>  
+>  	tlb_start_vma(tlb, vma);
+> @@ -403,7 +409,8 @@ static void madvise_cool_page_range(struct mmu_gather *tlb,
+>  }
+>  
+>  static long madvise_cool(struct vm_area_struct *vma,
+> -			unsigned long start_addr, unsigned long end_addr)
+> +			unsigned long start_addr, unsigned long end_addr,
+> +			long *nr_pages)
+>  {
+>  	struct mm_struct *mm = vma->vm_mm;
+>  	struct mmu_gather tlb;
+> @@ -413,7 +420,7 @@ static long madvise_cool(struct vm_area_struct *vma,
+>  
+>  	lru_add_drain();
+>  	tlb_gather_mmu(&tlb, mm, start_addr, end_addr);
+> -	madvise_cool_page_range(&tlb, vma, start_addr, end_addr);
+> +	madvise_cool_page_range(&tlb, vma, start_addr, end_addr, nr_pages);
+>  	tlb_finish_mmu(&tlb, start_addr, end_addr);
+>  
+>  	return 0;
+> @@ -429,6 +436,7 @@ static int madvise_cold_pte_range(pmd_t *pmd, unsigned long addr,
+>  	int isolated = 0;
+>  	struct vm_area_struct *vma = walk->vma;
+>  	unsigned long next;
+> +	long nr_pages = 0;
+>  
+>  	next = pmd_addr_end(addr, end);
+>  	if (pmd_trans_huge(*pmd)) {
+> @@ -492,7 +500,7 @@ static int madvise_cold_pte_range(pmd_t *pmd, unsigned long addr,
+>  		list_add(&page->lru, &page_list);
+>  		if (isolated >= SWAP_CLUSTER_MAX) {
+>  			pte_unmap_unlock(orig_pte, ptl);
+> -			reclaim_pages(&page_list);
+> +			nr_pages += reclaim_pages(&page_list);
+>  			isolated = 0;
+>  			pte = pte_offset_map_lock(vma->vm_mm, pmd, addr, &ptl);
+>  			orig_pte = pte;
+> @@ -500,19 +508,22 @@ static int madvise_cold_pte_range(pmd_t *pmd, unsigned long addr,
+>  	}
+>  
+>  	pte_unmap_unlock(orig_pte, ptl);
+> -	reclaim_pages(&page_list);
+> +	nr_pages += reclaim_pages(&page_list);
+>  	cond_resched();
+>  
+> +	*(long *)walk->private += nr_pages;
+>  	return 0;
+>  }
+>  
+>  static void madvise_cold_page_range(struct mmu_gather *tlb,
+>  			     struct vm_area_struct *vma,
+> -			     unsigned long addr, unsigned long end)
+> +			     unsigned long addr, unsigned long end,
+> +			     long *nr_pages)
+>  {
+>  	struct mm_walk warm_walk = {
+>  		.pmd_entry = madvise_cold_pte_range,
+>  		.mm = vma->vm_mm,
+> +		.private = nr_pages,
+>  	};
+>  
+>  	tlb_start_vma(tlb, vma);
+> @@ -522,7 +533,8 @@ static void madvise_cold_page_range(struct mmu_gather *tlb,
+>  
+>  
+>  static long madvise_cold(struct vm_area_struct *vma,
+> -			unsigned long start_addr, unsigned long end_addr)
+> +			unsigned long start_addr, unsigned long end_addr,
+> +			long *nr_pages)
+>  {
+>  	struct mm_struct *mm = vma->vm_mm;
+>  	struct mmu_gather tlb;
+> @@ -532,7 +544,7 @@ static long madvise_cold(struct vm_area_struct *vma,
+>  
+>  	lru_add_drain();
+>  	tlb_gather_mmu(&tlb, mm, start_addr, end_addr);
+> -	madvise_cold_page_range(&tlb, vma, start_addr, end_addr);
+> +	madvise_cold_page_range(&tlb, vma, start_addr, end_addr, nr_pages);
+>  	tlb_finish_mmu(&tlb, start_addr, end_addr);
+>  
+>  	return 0;
+> @@ -922,7 +934,7 @@ static int madvise_inject_error(int behavior,
+>  static long
+>  madvise_vma(struct task_struct *tsk, struct vm_area_struct *vma,
+>  		struct vm_area_struct **prev, unsigned long start,
+> -		unsigned long end, int behavior)
+> +		unsigned long end, int behavior, long *nr_pages)
+>  {
+>  	switch (behavior) {
+>  	case MADV_REMOVE:
+> @@ -930,9 +942,9 @@ madvise_vma(struct task_struct *tsk, struct vm_area_struct *vma,
+>  	case MADV_WILLNEED:
+>  		return madvise_willneed(vma, prev, start, end);
+>  	case MADV_COOL:
+> -		return madvise_cool(vma, start, end);
+> +		return madvise_cool(vma, start, end, nr_pages);
+>  	case MADV_COLD:
+> -		return madvise_cold(vma, start, end);
+> +		return madvise_cold(vma, start, end, nr_pages);
+>  	case MADV_FREE:
+>  	case MADV_DONTNEED:
+>  		return madvise_dontneed_free(tsk, vma, prev, start,
+> @@ -981,7 +993,7 @@ madvise_behavior_valid(int behavior)
+>  }
+>  
+>  static int madvise_core(struct task_struct *tsk, unsigned long start,
+> -			size_t len_in, int behavior)
+> +			size_t len_in, int behavior, long *nr_pages)
+>  {
+>  	unsigned long end, tmp;
+>  	struct vm_area_struct *vma, *prev;
+> @@ -996,6 +1008,7 @@ static int madvise_core(struct task_struct *tsk, unsigned long start,
+>  
+>  	if (start & ~PAGE_MASK)
+>  		return error;
+> +
+>  	len = (len_in + ~PAGE_MASK) & PAGE_MASK;
+>  
+>  	/* Check to see whether len was rounded up from small -ve to zero */
+> @@ -1035,6 +1048,8 @@ static int madvise_core(struct task_struct *tsk, unsigned long start,
+>  	blk_start_plug(&plug);
+>  	for (;;) {
+>  		/* Still start < end. */
+> +		long pages = 0;
+> +
+>  		error = -ENOMEM;
+>  		if (!vma)
+>  			goto out;
+> @@ -1053,9 +1068,11 @@ static int madvise_core(struct task_struct *tsk, unsigned long start,
+>  			tmp = end;
+>  
+>  		/* Here vma->vm_start <= start < tmp <= (end|vma->vm_end). */
+> -		error = madvise_vma(tsk, vma, &prev, start, tmp, behavior);
+> +		error = madvise_vma(tsk, vma, &prev, start, tmp,
+> +					behavior, &pages);
+>  		if (error)
+>  			goto out;
+> +		*nr_pages += pages;
+>  		start = tmp;
+>  		if (prev && start < prev->vm_end)
+>  			start = prev->vm_end;
+> @@ -1140,26 +1157,137 @@ static int madvise_core(struct task_struct *tsk, unsigned long start,
+>   */
+>  SYSCALL_DEFINE3(madvise, unsigned long, start, size_t, len_in, int, behavior)
+>  {
+> -	return madvise_core(current, start, len_in, behavior);
+> +	unsigned long dummy;
+> +
+> +	return madvise_core(current, start, len_in, behavior, &dummy);
+>  }
+>  
+> -SYSCALL_DEFINE4(process_madvise, int, pidfd, unsigned long, start,
+> -		size_t, len_in, int, behavior)
+> +static int pr_madvise_copy_param(struct pr_madvise_param __user *u_param,
+> +		struct pr_madvise_param *param)
+> +{
+> +	u32 size;
+> +	int ret;
+> +
+> +	memset(param, 0, sizeof(*param));
+> +
+> +	ret = get_user(size, &u_param->size);
+> +	if (ret)
+> +		return ret;
+> +
+> +	if (size > PAGE_SIZE)
+> +		return -E2BIG;
+> +
+> +	if (!size || size > sizeof(struct pr_madvise_param))
+> +		return -EINVAL;
+> +
+> +	ret = copy_from_user(param, u_param, size);
+> +	if (ret)
+> +		return -EFAULT;
+> +
+> +	return ret;
+> +}
+> +
+> +static int process_madvise_core(struct task_struct *tsk, int *behaviors,
+> +				struct iov_iter *iter,
+> +				const struct iovec *range_vec,
+> +				unsigned long riovcnt,
+> +				unsigned long flags)
+> +{
+> +	int i;
+> +	long err;
+> +
+> +	for (err = 0, i = 0; i < riovcnt && iov_iter_count(iter); i++) {
+> +		long ret = 0;
+> +
+> +		err = madvise_core(tsk, (unsigned long)range_vec[i].iov_base,
+> +				range_vec[i].iov_len, behaviors[i],
+> +				&ret);
+> +		if (err)
+> +			ret = err;
+> +
+> +		if (copy_to_iter(&ret, sizeof(long), iter) !=
+> +				sizeof(long)) {
+> +			err = -EFAULT;
+> +			break;
+> +		}
+> +
+> +		err = 0;
+> +	}
+> +
+> +	return err;
+> +}
+> +
+> +SYSCALL_DEFINE6(process_madvise, int, pidfd, ssize_t, nr_elem,
+> +			const int __user *, hints,
+> +			struct pr_madvise_param __user *, results,
+> +			struct pr_madvise_param __user *, ranges,
+> +			unsigned long, flags)
+>  {
+>  	int ret;
+>  	struct fd f;
+>  	struct pid *pid;
+>  	struct task_struct *tsk;
+>  	struct mm_struct *mm;
+> +	struct pr_madvise_param result_p, range_p;
+> +	const struct iovec __user *result_vec, __user *range_vec;
+> +	int *behaviors;
+> +	struct iovec iovstack_result[UIO_FASTIOV];
+> +	struct iovec iovstack_r[UIO_FASTIOV];
+> +	struct iovec *iov_l = iovstack_result;
+> +	struct iovec *iov_r = iovstack_r;
+> +	struct iov_iter iter;
+> +
+> +	if (flags != 0)
+> +		return -EINVAL;
+> +
+> +	ret = pr_madvise_copy_param(results, &result_p);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = pr_madvise_copy_param(ranges, &range_p);
+> +	if (ret)
+> +		return ret;
+> +
+> +	result_vec = result_p.vec;
+> +	range_vec = range_p.vec;
+> +
+> +	if (result_p.size != sizeof(struct pr_madvise_param) ||
+> +			range_p.size != sizeof(struct pr_madvise_param))
+> +		return -EINVAL;
+> +
+> +	behaviors = kmalloc_array(nr_elem, sizeof(int), GFP_KERNEL);
+> +	if (!behaviors)
+> +		return -ENOMEM;
+> +
+> +	ret = copy_from_user(behaviors, hints, sizeof(int) * nr_elem);
+> +	if (ret < 0)
+> +		goto free_behavior_vec;
+> +
+> +	ret = import_iovec(READ, result_vec, nr_elem, UIO_FASTIOV,
+> +				&iov_l, &iter);
+> +	if (ret < 0)
+> +		goto free_behavior_vec;
+> +
+> +	if (!iov_iter_count(&iter)) {
+> +		ret = -EINVAL;
+> +		goto free_iovecs;
+> +	}
+> +
+> +	ret = rw_copy_check_uvector(CHECK_IOVEC_ONLY, range_vec, nr_elem,
+> +				UIO_FASTIOV, iovstack_r, &iov_r);
+> +	if (ret <= 0)
+> +		goto free_iovecs;
+>  
+>  	f = fdget(pidfd);
+> -	if (!f.file)
+> -		return -EBADF;
+> +	if (!f.file) {
+> +		ret = -EBADF;
+> +		goto free_iovecs;
+> +	}
+>  
+>  	pid = pidfd_to_pid(f.file);
+>  	if (IS_ERR(pid)) {
+>  		ret = PTR_ERR(pid);
+> -		goto err;
+> +		goto put_fd;
+>  	}
+>  
+>  	ret = -EINVAL;
+> @@ -1167,7 +1295,7 @@ SYSCALL_DEFINE4(process_madvise, int, pidfd, unsigned long, start,
+>  	tsk = pid_task(pid, PIDTYPE_PID);
+>  	if (!tsk) {
+>  		rcu_read_unlock();
+> -		goto err;
+> +		goto put_fd;
+>  	}
+>  	get_task_struct(tsk);
+>  	rcu_read_unlock();
+> @@ -1176,12 +1304,22 @@ SYSCALL_DEFINE4(process_madvise, int, pidfd, unsigned long, start,
+>  		ret = IS_ERR(mm) ? PTR_ERR(mm) : -ESRCH;
+>  		if (ret == -EACCES)
+>  			ret = -EPERM;
+> -		goto err;
+> +		goto put_task;
+>  	}
+> -	ret = madvise_core(tsk, start, len_in, behavior);
+> +
+> +	ret = process_madvise_core(tsk, behaviors, &iter, iov_r,
+> +					nr_elem, flags);
+>  	mmput(mm);
+> +put_task:
+>  	put_task_struct(tsk);
+> -err:
+> +put_fd:
+>  	fdput(f);
+> +free_iovecs:
+> +	if (iov_r != iovstack_r)
+> +		kfree(iov_r);
+> +	kfree(iov_l);
+> +free_behavior_vec:
+> +	kfree(behaviors);
+> +
+>  	return ret;
+>  }
+> -- 
+> 2.21.0.1020.gf2820cf01a-goog
+> 
 
+-- 
+Michal Hocko
+SUSE Labs
