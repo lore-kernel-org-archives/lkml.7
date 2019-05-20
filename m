@@ -2,246 +2,97 @@ Return-Path: <SRS0=lq4r=TU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D649C04E87
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 17:17:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B778BC04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 17:18:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0AB3120675
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 17:17:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D503214AE
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 17:18:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="W6H3wrKJ"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="m6r2swPC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392813AbfETRRq (ORCPT
+        id S2392814AbfETRSI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 13:17:46 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:39111 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2392787AbfETRRp (ORCPT
+        Mon, 20 May 2019 13:18:08 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:45660 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389885AbfETRSI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 13:17:45 -0400
-Received: by mail-pf1-f193.google.com with SMTP id z26so7541145pfg.6
-        for <linux-kernel@vger.kernel.org>; Mon, 20 May 2019 10:17:45 -0700 (PDT)
+        Mon, 20 May 2019 13:18:08 -0400
+Received: by mail-pg1-f193.google.com with SMTP id i21so7073434pgi.12
+        for <linux-kernel@vger.kernel.org>; Mon, 20 May 2019 10:18:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=2FjhOwFKrVIJAl2LxDN32kEB+6yjli62tiwHSqu8m3Y=;
-        b=W6H3wrKJKcaUjX12VWVVjTzD+FZk9cPmlEyg+n4tTPMRomuqZN8oGiT8ftSwORrLWu
-         SrU1sNgEtcmMHUQTG5Q+SGNl1x4eWyTP86Wa72FlIcB6b23JStrVyE4xHjlS7usHaDNb
-         At223MiDbKz8gzE6A3qG9pLtUnhxudhyFQeBmLqGQLc2gwhMkrIzVaaBPyi3S0ZQ4JNk
-         +i6gOtm8/AxGiZ8TnZJT5tuZOrKikNFZz96dr/BoRQFccYpQnuMedMXUdbXaJ7sVkU5+
-         jaQ+yGo4yqEBt6urvlbJm6Xe4n9DzeSTKBnvXSp/Y0cnamgtP3DqTCSRheQVi9muWH6D
-         dTMQ==
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:in-reply-to:message-id:references
+         :user-agent:mime-version;
+        bh=PX3SK8wlBrqBu7wO9d/mgUry+iQ7KlUhXOd5Ab/YVwQ=;
+        b=m6r2swPC5kWUMMSAtMK4/783ntjwFjvDijgj6mgQt/YUrZSGOuM/YgVgSFWibmljXv
+         RXfsjZnHPT3yHeamwmF0aUZwHhV0SaAOxMo1hY10visSNA8P31lITP+EKpQ/wAOI4pQY
+         dJwKT+XBEkcG0TQmUjrzBt9O3gI4QVhWBXsiYWqg8y6onNfcvhTKN3iTdAtqj/OZ6HJO
+         6/wJrAlR+dg1irA6W8KYlzGHFpTl3aH08bTjYdgyLUSbmoz7vEFbdawl+n+Ou0UlTEdF
+         db3iFpcXEAKx/iiMwpWPf5JQx5EfIbdyWWwWzeWI8KyKw/8Z0VuJlc2UWs+K7wH6p0kH
+         Rypg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=2FjhOwFKrVIJAl2LxDN32kEB+6yjli62tiwHSqu8m3Y=;
-        b=AD4u7S6X6UpiH5s1C9U92kupbKW7PzgG+ozpNc9JXpUiwmYt5qKBWzdMM3Za4nRfZ/
-         ONl9V+pEgLugeq37/6U1PoHZj0iIISH5hKFp3iYd7eE/6LYRqcWsn7HqGHFEBjTfGMYP
-         HKNsETJv/09nRkaR4PXA6VplYb611s39UEmZWyPBIXiOjSHwWmutWlxwkM7c5x9r0sMz
-         JGZEBQi2EsYzLH0cScZHdoQH7GWzNhIT3F86S97+dM+DG8yBC/SF6i7GwgVNxx+snXju
-         hs+aMiaQHred06qcStV5GZZcRumoZfRZyR/Y/Q4xOTUqiH/KDSpgY39B6xDoPGkiDQTz
-         u1YQ==
-X-Gm-Message-State: APjAAAWFXICbvnlQJBQK8QeJnBdwBmHa7SeUG71NFylopMn693N5G/+y
-        0LmQV1nZZPEMZkVvrASexJgnBA==
-X-Google-Smtp-Source: APXvYqxGJODZVZZkYCQrDnuhEME1l3MVyx+Qrn7x3ga7XFxkr9lg/WGqNAAC5bsYmf2gHA+/s9ScVw==
-X-Received: by 2002:a65:42ca:: with SMTP id l10mr23345678pgp.181.1558372664547;
-        Mon, 20 May 2019 10:17:44 -0700 (PDT)
-Received: from tuxbook-pro (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id h11sm20833183pfn.170.2019.05.20.10.17.43
+        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
+         :references:user-agent:mime-version;
+        bh=PX3SK8wlBrqBu7wO9d/mgUry+iQ7KlUhXOd5Ab/YVwQ=;
+        b=lSdKMX8r74SptafdNgm8+EiQG42FPL01IipdOOow+oVgHhMH4Q8tpMBUYUAm/BsCFG
+         pVh1g6h3pI+GGYRu8KK4b3P8J9S5nzmBPG58p5AFr5/fyJ560RBeRxir8RaGEUdtSbhc
+         pWMHMgVyMVyWfIv1oXyeyvTg/lqYNOY22pM/tpdgpltwb+vVqP56nqqYgd4GK0Crn4vu
+         4mdh0NjzmYpskVY85IgxHC/vr+4T5MxtcJqe+mc/jgl40Cfz/yyf5S+Hj1MtJrDqgiVT
+         bL2IhsVpcL7u7TeimZjImDzcVhjRtTFtXVhyWvrNmizkM1ptceefjn449YTD+ArG4OU6
+         gFXA==
+X-Gm-Message-State: APjAAAUZtB5pmgQbArNY6/mYY6+XJ9Z99Ma/WjY2mKk+Rs93kGYxxKNy
+        pYZNE+Q+FZh1EjaEazU5X3BUbQ==
+X-Google-Smtp-Source: APXvYqy3liAXBoXBna1vQrQA3a+41azQeKFrkkEh+b97s623lHqxninIVBzsI9Krsk3batRc+c3EVw==
+X-Received: by 2002:a65:5886:: with SMTP id d6mr76297081pgu.295.1558372687639;
+        Mon, 20 May 2019 10:18:07 -0700 (PDT)
+Received: from [2620:15c:17:3:3a5:23a7:5e32:4598] ([2620:15c:17:3:3a5:23a7:5e32:4598])
+        by smtp.gmail.com with ESMTPSA id s134sm28571578pfc.110.2019.05.20.10.18.05
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 20 May 2019 10:17:44 -0700 (PDT)
-Date:   Mon, 20 May 2019 10:18:11 -0700
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Alex Elder <elder@linaro.org>
-Cc:     arnd@arndb.de, subashab@codeaurora.org, david.brown@linaro.org,
-        agross@kernel.org, davem@davemloft.net,
-        ilias.apalodimas@linaro.org, cpratapa@codeaurora.org,
-        syadagir@codeaurora.org, evgreen@chromium.org, benchan@google.com,
-        ejcaruso@google.com, netdev@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 8/8] net: introduce "include/linux/if_rmnet.h"
-Message-ID: <20190520171811.GW2085@tuxbook-pro>
-References: <20190520135354.18628-1-elder@linaro.org>
- <20190520135354.18628-9-elder@linaro.org>
+        Mon, 20 May 2019 10:18:06 -0700 (PDT)
+Date:   Mon, 20 May 2019 10:18:05 -0700 (PDT)
+From:   David Rientjes <rientjes@google.com>
+X-X-Sender: rientjes@chino.kir.corp.google.com
+To:     Qian Cai <cai@lca.pw>
+cc:     akpm@linux-foundation.org, cl@linux.com, penberg@kernel.org,
+        iamjoonsoo.kim@lge.com, catalin.marinas@arm.com,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Subject: Re: [RESEND PATCH] slab: skip kmemleak_object in leaks_show()
+In-Reply-To: <20190514144741.39460-1-cai@lca.pw>
+Message-ID: <alpine.DEB.2.21.1905201017420.96074@chino.kir.corp.google.com>
+References: <20190514144741.39460-1-cai@lca.pw>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190520135354.18628-9-elder@linaro.org>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon 20 May 06:53 PDT 2019, Alex Elder wrote:
+On Tue, 14 May 2019, Qian Cai wrote:
 
-> The IPA driver requires some (but not all) symbols defined in
-> "drivers/net/ethernet/qualcomm/rmnet/rmnet_map.h".  Create a new
-> public header file "include/linux/if_rmnet.h" and move the needed
-> definitions there.
+> Running tests on a debug kernel will usually generate a large number of
+> kmemleak objects.
 > 
+>   # grep kmemleak /proc/slabinfo
+>   kmemleak_object   2243606 3436210 ...
+> 
+> As the result, reading /proc/slab_allocators could easily loop forever
+> while processing the kmemleak_object cache and any additional freeing or
+> allocating objects will trigger a reprocessing. To make a situation
+> worse, soft-lockups could easily happen in this sitatuion which will
+> call printk() to allocate more kmemleak objects to guarantee a livelock.
+> 
+> Since kmemleak_object has a single call site (create_object()), there
+> isn't much new information compared with slabinfo. Just skip it.
+> 
+> Signed-off-by: Qian Cai <cai@lca.pw>
 
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-
-> Signed-off-by: Alex Elder <elder@linaro.org>
-> ---
->  .../ethernet/qualcomm/rmnet/rmnet_handlers.c  |  1 +
->  .../net/ethernet/qualcomm/rmnet/rmnet_map.h   | 31 -------------
->  .../qualcomm/rmnet/rmnet_map_command.c        |  1 +
->  .../ethernet/qualcomm/rmnet/rmnet_map_data.c  |  1 +
->  .../net/ethernet/qualcomm/rmnet/rmnet_vnd.c   |  1 +
->  include/linux/if_rmnet.h                      | 45 +++++++++++++++++++
->  6 files changed, 49 insertions(+), 31 deletions(-)
->  create mode 100644 include/linux/if_rmnet.h
-> 
-> diff --git a/drivers/net/ethernet/qualcomm/rmnet/rmnet_handlers.c b/drivers/net/ethernet/qualcomm/rmnet/rmnet_handlers.c
-> index 5fff6c78ecd5..8e00e14f4ac9 100644
-> --- a/drivers/net/ethernet/qualcomm/rmnet/rmnet_handlers.c
-> +++ b/drivers/net/ethernet/qualcomm/rmnet/rmnet_handlers.c
-> @@ -18,6 +18,7 @@
->  #include <linux/netdev_features.h>
->  #include <linux/if_arp.h>
->  #include <net/sock.h>
-> +#include <linux/if_rmnet.h>
->  #include "rmnet_private.h"
->  #include "rmnet_config.h"
->  #include "rmnet_vnd.h"
-> diff --git a/drivers/net/ethernet/qualcomm/rmnet/rmnet_map.h b/drivers/net/ethernet/qualcomm/rmnet/rmnet_map.h
-> index 775b98d34e94..d101cabb04c3 100644
-> --- a/drivers/net/ethernet/qualcomm/rmnet/rmnet_map.h
-> +++ b/drivers/net/ethernet/qualcomm/rmnet/rmnet_map.h
-> @@ -39,37 +39,6 @@ enum rmnet_map_commands {
->  	RMNET_MAP_COMMAND_ENUM_LENGTH
->  };
->  
-> -struct rmnet_map_header {
-> -	u8  cmd_pad_len;	/* RMNET_MAP_* */
-> -	u8  mux_id;
-> -	__be16 pkt_len;
-> -}  __aligned(1);
-> -
-> -#define RMNET_MAP_CMD_FMASK		GENMASK(0, 0)   /* 0: data; 1: cmd */
-> -#define RMNET_MAP_RESERVED_FMASK	GENMASK(1, 1)
-> -#define RMNET_MAP_PAD_LEN_FMASK		GENMASK(7, 2)
-> -
-> -struct rmnet_map_dl_csum_trailer {
-> -	u8  reserved1;
-> -	u8  flags;		/* RMNET_MAP_DL_* */
-> -	__be16 csum_start_offset;
-> -	__be16 csum_length;
-> -	__be16 csum_value;
-> -} __aligned(1);
-> -
-> -#define RMNET_MAP_DL_CSUM_VALID_FMASK	GENMASK(0, 0)
-> -#define RMNET_MAP_DL_RESERVED_FMASK	GENMASK(7, 1)
-> -
-> -struct rmnet_map_ul_csum_header {
-> -	__be16 csum_start_offset;
-> -	__be16 csum_info;	/* RMNET_MAP_UL_* */
-> -} __aligned(1);
-> -
-> -/* NOTE:  These field masks are defined in CPU byte order */
-> -#define RMNET_MAP_UL_CSUM_INSERT_FMASK	GENMASK(13, 0)
-> -#define RMNET_MAP_UL_CSUM_UDP_FMASK	GENMASK(14, 14)   /* 0: IP; 1: UDP */
-> -#define RMNET_MAP_UL_CSUM_ENABLED_FMASK	GENMASK(15, 15)
-> -
->  #define RMNET_MAP_COMMAND_REQUEST     0
->  #define RMNET_MAP_COMMAND_ACK         1
->  #define RMNET_MAP_COMMAND_UNSUPPORTED 2
-> diff --git a/drivers/net/ethernet/qualcomm/rmnet/rmnet_map_command.c b/drivers/net/ethernet/qualcomm/rmnet/rmnet_map_command.c
-> index f675f47c3495..6832c5939cae 100644
-> --- a/drivers/net/ethernet/qualcomm/rmnet/rmnet_map_command.c
-> +++ b/drivers/net/ethernet/qualcomm/rmnet/rmnet_map_command.c
-> @@ -11,6 +11,7 @@
->   */
->  
->  #include <linux/netdevice.h>
-> +#include <linux/if_rmnet.h>
->  #include "rmnet_config.h"
->  #include "rmnet_map.h"
->  #include "rmnet_private.h"
-> diff --git a/drivers/net/ethernet/qualcomm/rmnet/rmnet_map_data.c b/drivers/net/ethernet/qualcomm/rmnet/rmnet_map_data.c
-> index 61b7dbab2056..370aee7402e0 100644
-> --- a/drivers/net/ethernet/qualcomm/rmnet/rmnet_map_data.c
-> +++ b/drivers/net/ethernet/qualcomm/rmnet/rmnet_map_data.c
-> @@ -18,6 +18,7 @@
->  #include <linux/ip.h>
->  #include <linux/ipv6.h>
->  #include <net/ip6_checksum.h>
-> +#include <linux/if_rmnet.h>
->  #include "rmnet_config.h"
->  #include "rmnet_map.h"
->  #include "rmnet_private.h"
-> diff --git a/drivers/net/ethernet/qualcomm/rmnet/rmnet_vnd.c b/drivers/net/ethernet/qualcomm/rmnet/rmnet_vnd.c
-> index d11c16aeb19a..6b39d4d8e523 100644
-> --- a/drivers/net/ethernet/qualcomm/rmnet/rmnet_vnd.c
-> +++ b/drivers/net/ethernet/qualcomm/rmnet/rmnet_vnd.c
-> @@ -17,6 +17,7 @@
->  #include <linux/etherdevice.h>
->  #include <linux/if_arp.h>
->  #include <net/pkt_sched.h>
-> +#include <linux/if_rmnet.h>
->  #include "rmnet_config.h"
->  #include "rmnet_handlers.h"
->  #include "rmnet_private.h"
-> diff --git a/include/linux/if_rmnet.h b/include/linux/if_rmnet.h
-> new file mode 100644
-> index 000000000000..ae60472ecc79
-> --- /dev/null
-> +++ b/include/linux/if_rmnet.h
-> @@ -0,0 +1,45 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +
-> +/* Copyright (c) 2013-2018, The Linux Foundation. All rights reserved.
-> + * Copyright (C) 2019 Linaro Ltd.
-> + */
-> +#ifndef _LINUX_IF_RMNET_H_
-> +#define _LINUX_IF_RMNET_H_
-> +
-> +#include <linux/types.h>
-> +
-> +/* Header structure that precedes packets in ETH_P_MAP protocol */
-> +struct rmnet_map_header {
-> +	u8  cmd_pad_len;	/* RMNET_MAP_* */
-> +	u8  mux_id;
-> +	__be16 pkt_len;
-> +}  __aligned(1);
-> +
-> +#define RMNET_MAP_CMD_FMASK		GENMASK(0, 0)   /* 0: data; 1: cmd */
-> +#define RMNET_MAP_RESERVED_FMASK	GENMASK(1, 1)
-> +#define RMNET_MAP_PAD_LEN_FMASK		GENMASK(7, 2)
-> +
-> +/* Checksum offload metadata header for outbound packets*/
-> +struct rmnet_map_ul_csum_header {
-> +	__be16 csum_start_offset;
-> +	__be16 csum_info;	/* RMNET_MAP_UL_* */
-> +} __aligned(1);
-> +
-> +/* NOTE:  These field masks are defined in CPU byte order */
-> +#define RMNET_MAP_UL_CSUM_INSERT_FMASK	GENMASK(13, 0)
-> +#define RMNET_MAP_UL_CSUM_UDP_FMASK	GENMASK(14, 14)   /* 0: IP; 1: UDP */
-> +#define RMNET_MAP_UL_CSUM_ENABLED_FMASK	GENMASK(15, 15)
-> +
-> +/* Checksum offload metadata trailer for inbound packets */
-> +struct rmnet_map_dl_csum_trailer {
-> +	u8  reserved1;
-> +	u8  flags;		/* RMNET_MAP_DL_* */
-> +	__be16 csum_start_offset;
-> +	__be16 csum_length;
-> +	__be16 csum_value;
-> +} __aligned(1);
-> +
-> +#define RMNET_MAP_DL_CSUM_VALID_FMASK	GENMASK(0, 0)
-> +#define RMNET_MAP_DL_RESERVED_FMASK	GENMASK(7, 1)
-> +
-> +#endif /* _LINUX_IF_RMNET_H_ */
-> -- 
-> 2.20.1
-> 
+I assume this is now obsolete since commit 7878c231dae0 ("slab: remove 
+/proc/slab_allocators").
