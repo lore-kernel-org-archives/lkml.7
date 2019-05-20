@@ -2,910 +2,267 @@ Return-Path: <SRS0=lq4r=TU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86A36C04AB4
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 02:48:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E609DC04AB4
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 02:54:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 342BA20863
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 02:48:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A369C2085A
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 02:54:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1558320853;
+	bh=+g4e3b9eEUCN0L+u953TbAQRbNQcFr58iPoiy/FcfxQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=hFLjbld3u7oUtSb90pF1RSgyb0JYyms0W1426/B7TiqUMLsuu2CuXgHMgdToND0au
+	 pgIPU8i0Hzfl2fjp/8Iu5Z7x8MOGUvIvaS2q2uov3BGFe19emLfv2CThAOd/42mmma
+	 U3zjdUiA9sW5VzsqfjmbGjhDfj0n1k4OTZc9VJFU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729754AbfETCsk (ORCPT
+        id S1728954AbfETCyM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 19 May 2019 22:48:40 -0400
-Received: from mailgw02.mediatek.com ([1.203.163.81]:52223 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726940AbfETCsk (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 19 May 2019 22:48:40 -0400
-X-UUID: 3456f21435a74dc9a87a0d4aeae923c9-20190520
-X-UUID: 3456f21435a74dc9a87a0d4aeae923c9-20190520
-Received: from mtkcas34.mediatek.inc [(172.27.4.253)] by mailgw02.mediatek.com
-        (envelope-from <ck.hu@mediatek.com>)
-        (mailgw01.mediatek.com ESMTP with TLS)
-        with ESMTP id 677581422; Mon, 20 May 2019 10:48:24 +0800
-Received: from mtkcas09.mediatek.inc (172.21.101.178) by
- MTKMBS33N1.mediatek.inc (172.27.4.75) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Mon, 20 May 2019 10:48:22 +0800
-Received: from [172.21.77.4] (172.21.77.4) by mtkcas09.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Mon, 20 May 2019 10:48:22 +0800
-Message-ID: <1558320502.19121.2.camel@mtksdaap41>
-Subject: Re: [v3 2/3] drm/mediatek: separate mipi_tx to different file
-From:   CK Hu <ck.hu@mediatek.com>
-To:     Jitao Shi <jitao.shi@mediatek.com>
-CC:     Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>,
-        "Mark Rutland" <mark.rutland@arm.com>,
-        Ian Campbell <ijc+devicetree@hellion.org.uk>,
-        Kumar Gala <galak@codeaurora.org>, <linux-pwm@vger.kernel.org>,
-        David Airlie <airlied@linux.ie>,
-        "Matthias Brugger" <matthias.bgg@gmail.com>,
-        Thierry Reding <treding@nvidia.com>,
-        "Ajay Kumar" <ajaykumar.rs@samsung.com>,
-        Inki Dae <inki.dae@samsung.com>,
-        "Rahul Sharma" <rahul.sharma@samsung.com>,
-        Sean Paul <seanpaul@chromium.org>,
-        Vincent Palatin <vpalatin@chromium.org>,
-        Andy Yan <andy.yan@rock-chips.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        "Russell King" <rmk+kernel@arm.linux.org.uk>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <dri-devel@lists.freedesktop.org>,
+        Sun, 19 May 2019 22:54:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42074 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727087AbfETCyM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 19 May 2019 22:54:12 -0400
+Received: from dragon (98.142.130.235.16clouds.com [98.142.130.235])
+        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B5DE620644;
+        Mon, 20 May 2019 02:54:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1558320851;
+        bh=+g4e3b9eEUCN0L+u953TbAQRbNQcFr58iPoiy/FcfxQ=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=V05ZVw2Vl7FzAsocbUrTF0YIaxJr6PFjmbgjR7GS4tMvPliBoYP5WRInjHKnqNPrB
+         4jkEWypFuiyKne2/BrJsbMBvv4Clu3rXVwWZSRjHcDpTPrScTOwwTZ58xuc/+YlO+H
+         RFYn6su8hExdGV8Vf1qG6AY4FegxrQJANaKbFhI0=
+Date:   Mon, 20 May 2019 10:53:21 +0800
+From:   Shawn Guo <shawnguo@kernel.org>
+To:     Pramod Kumar <pramod.kumar_1@nxp.com>
+Cc:     "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "manivannan.sadhasivam@linaro.org" <manivannan.sadhasivam@linaro.org>,
+        Aisheng Dong <aisheng.dong@nxp.com>,
+        "Michal.Vokac@ysoft.com" <Michal.Vokac@ysoft.com>,
+        Leo Li <leoyang.li@nxp.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
         <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>,
-        <srv_heupstream@mediatek.com>,
-        Sascha Hauer <kernel@pengutronix.de>,
-        <yingjoe.chen@mediatek.com>, <eddie.huang@mediatek.com>,
-        <cawa.cheng@mediatek.com>, <bibby.hsieh@mediatek.com>,
-        <stonea168@163.com>
-Date:   Mon, 20 May 2019 10:48:22 +0800
-In-Reply-To: <20190518082227.14507-3-jitao.shi@mediatek.com>
-References: <20190518082227.14507-1-jitao.shi@mediatek.com>
-         <20190518082227.14507-3-jitao.shi@mediatek.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
+        Vabhav Sharma <vabhav.sharma@nxp.com>
+Subject: Re: [PATCH v2 2/3] arm64: dts: nxp: add ls1046a-frwy board support
+Message-ID: <20190520025319.GJ15856@dragon>
+References: <20190510130207.14330-1-pramod.kumar_1@nxp.com>
+ <20190510130207.14330-3-pramod.kumar_1@nxp.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-MTK:  N
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190510130207.14330-3-pramod.kumar_1@nxp.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi, Jitao:
-
-On Sat, 2019-05-18 at 16:22 +0800, Jitao Shi wrote:
-> Different IC has different mipi_tx setting of dsi.
-> This patch separates the mipi_tx hardware relate part for mt8173.
-
-This patch looks good to me except the last blank line, I'll remove it
-before I apply this patch.
-
-Reviewed-by: CK Hu <ck.hu@mediatek.com>
-
+On Fri, May 10, 2019 at 01:00:20PM +0000, Pramod Kumar wrote:
+> ls1046afrwy board is based on nxp ls1046a SoC.
+> Board support's 4GB ddr memory, i2c, microSD card,
+> serial console,qspi nor flash,ifc nand flash,qsgmii network interface,
+> usb 3.0 and serdes interface to support two x1gen3 pcie interface.
 > 
-> Signed-off-by: Jitao Shi <jitao.shi@mediatek.com>
+> Signed-off-by: Vabhav Sharma <vabhav.sharma@nxp.com>
+> Signed-off-by: Pramod Kumar <pramod.kumar_1@nxp.com>
 > ---
->  drivers/gpu/drm/mediatek/Makefile             |   1 +
->  drivers/gpu/drm/mediatek/mtk_mipi_tx.c        | 342 ++----------------
->  drivers/gpu/drm/mediatek/mtk_mipi_tx.h        |  49 +++
->  drivers/gpu/drm/mediatek/mtk_mt8173_mipi_tx.c | 289 +++++++++++++++
->  4 files changed, 362 insertions(+), 319 deletions(-)
->  create mode 100644 drivers/gpu/drm/mediatek/mtk_mipi_tx.h
->  create mode 100644 drivers/gpu/drm/mediatek/mtk_mt8173_mipi_tx.c
+>  arch/arm64/boot/dts/freescale/Makefile        |   1 +
+>  .../boot/dts/freescale/fsl-ls1046a-frwy.dts   | 156 ++++++++++++++++++
+>  2 files changed, 157 insertions(+)
+>  create mode 100644 arch/arm64/boot/dts/freescale/fsl-ls1046a-frwy.dts
 > 
-> diff --git a/drivers/gpu/drm/mediatek/Makefile b/drivers/gpu/drm/mediatek/Makefile
-> index 82ae49c64221..2c8de1f5a5ee 100644
-> --- a/drivers/gpu/drm/mediatek/Makefile
-> +++ b/drivers/gpu/drm/mediatek/Makefile
-> @@ -12,6 +12,7 @@ mediatek-drm-y := mtk_disp_color.o \
->  		  mtk_drm_plane.o \
->  		  mtk_dsi.o \
->  		  mtk_mipi_tx.o \
-> +		  mtk_mt8173_mipi_tx.o \
->  		  mtk_dpi.o
->  
->  obj-$(CONFIG_DRM_MEDIATEK) += mediatek-drm.o
-> diff --git a/drivers/gpu/drm/mediatek/mtk_mipi_tx.c b/drivers/gpu/drm/mediatek/mtk_mipi_tx.c
-> index 90e913108950..46bc02cfe85c 100644
-> --- a/drivers/gpu/drm/mediatek/mtk_mipi_tx.c
-> +++ b/drivers/gpu/drm/mediatek/mtk_mipi_tx.c
-> @@ -11,292 +11,39 @@
->   * GNU General Public License for more details.
->   */
->  
-> -#include <linux/clk.h>
-> -#include <linux/clk-provider.h>
-> -#include <linux/delay.h>
-> -#include <linux/io.h>
-> -#include <linux/module.h>
-> -#include <linux/of_device.h>
-> -#include <linux/platform_device.h>
-> -#include <linux/phy/phy.h>
-> -
-> -#define MIPITX_DSI_CON		0x00
-> -#define RG_DSI_LDOCORE_EN		BIT(0)
-> -#define RG_DSI_CKG_LDOOUT_EN		BIT(1)
-> -#define RG_DSI_BCLK_SEL			(3 << 2)
-> -#define RG_DSI_LD_IDX_SEL		(7 << 4)
-> -#define RG_DSI_PHYCLK_SEL		(2 << 8)
-> -#define RG_DSI_DSICLK_FREQ_SEL		BIT(10)
-> -#define RG_DSI_LPTX_CLMP_EN		BIT(11)
-> -
-> -#define MIPITX_DSI_CLOCK_LANE	0x04
-> -#define MIPITX_DSI_DATA_LANE0	0x08
-> -#define MIPITX_DSI_DATA_LANE1	0x0c
-> -#define MIPITX_DSI_DATA_LANE2	0x10
-> -#define MIPITX_DSI_DATA_LANE3	0x14
-> -#define RG_DSI_LNTx_LDOOUT_EN		BIT(0)
-> -#define RG_DSI_LNTx_CKLANE_EN		BIT(1)
-> -#define RG_DSI_LNTx_LPTX_IPLUS1		BIT(2)
-> -#define RG_DSI_LNTx_LPTX_IPLUS2		BIT(3)
-> -#define RG_DSI_LNTx_LPTX_IMINUS		BIT(4)
-> -#define RG_DSI_LNTx_LPCD_IPLUS		BIT(5)
-> -#define RG_DSI_LNTx_LPCD_IMINUS		BIT(6)
-> -#define RG_DSI_LNTx_RT_CODE		(0xf << 8)
-> -
-> -#define MIPITX_DSI_TOP_CON	0x40
-> -#define RG_DSI_LNT_INTR_EN		BIT(0)
-> -#define RG_DSI_LNT_HS_BIAS_EN		BIT(1)
-> -#define RG_DSI_LNT_IMP_CAL_EN		BIT(2)
-> -#define RG_DSI_LNT_TESTMODE_EN		BIT(3)
-> -#define RG_DSI_LNT_IMP_CAL_CODE		(0xf << 4)
-> -#define RG_DSI_LNT_AIO_SEL		(7 << 8)
-> -#define RG_DSI_PAD_TIE_LOW_EN		BIT(11)
-> -#define RG_DSI_DEBUG_INPUT_EN		BIT(12)
-> -#define RG_DSI_PRESERVE			(7 << 13)
-> -
-> -#define MIPITX_DSI_BG_CON	0x44
-> -#define RG_DSI_BG_CORE_EN		BIT(0)
-> -#define RG_DSI_BG_CKEN			BIT(1)
-> -#define RG_DSI_BG_DIV			(0x3 << 2)
-> -#define RG_DSI_BG_FAST_CHARGE		BIT(4)
-> -#define RG_DSI_VOUT_MSK			(0x3ffff << 5)
-> -#define RG_DSI_V12_SEL			(7 << 5)
-> -#define RG_DSI_V10_SEL			(7 << 8)
-> -#define RG_DSI_V072_SEL			(7 << 11)
-> -#define RG_DSI_V04_SEL			(7 << 14)
-> -#define RG_DSI_V032_SEL			(7 << 17)
-> -#define RG_DSI_V02_SEL			(7 << 20)
-> -#define RG_DSI_BG_R1_TRIM		(0xf << 24)
-> -#define RG_DSI_BG_R2_TRIM		(0xf << 28)
-> -
-> -#define MIPITX_DSI_PLL_CON0	0x50
-> -#define RG_DSI_MPPLL_PLL_EN		BIT(0)
-> -#define RG_DSI_MPPLL_DIV_MSK		(0x1ff << 1)
-> -#define RG_DSI_MPPLL_PREDIV		(3 << 1)
-> -#define RG_DSI_MPPLL_TXDIV0		(3 << 3)
-> -#define RG_DSI_MPPLL_TXDIV1		(3 << 5)
-> -#define RG_DSI_MPPLL_POSDIV		(7 << 7)
-> -#define RG_DSI_MPPLL_MONVC_EN		BIT(10)
-> -#define RG_DSI_MPPLL_MONREF_EN		BIT(11)
-> -#define RG_DSI_MPPLL_VOD_EN		BIT(12)
-> -
-> -#define MIPITX_DSI_PLL_CON1	0x54
-> -#define RG_DSI_MPPLL_SDM_FRA_EN		BIT(0)
-> -#define RG_DSI_MPPLL_SDM_SSC_PH_INIT	BIT(1)
-> -#define RG_DSI_MPPLL_SDM_SSC_EN		BIT(2)
-> -#define RG_DSI_MPPLL_SDM_SSC_PRD	(0xffff << 16)
-> -
-> -#define MIPITX_DSI_PLL_CON2	0x58
-> -
-> -#define MIPITX_DSI_PLL_TOP	0x64
-> -#define RG_DSI_MPPLL_PRESERVE		(0xff << 8)
-> -
-> -#define MIPITX_DSI_PLL_PWR	0x68
-> -#define RG_DSI_MPPLL_SDM_PWR_ON		BIT(0)
-> -#define RG_DSI_MPPLL_SDM_ISO_EN		BIT(1)
-> -#define RG_DSI_MPPLL_SDM_PWR_ACK	BIT(8)
-> -
-> -#define MIPITX_DSI_SW_CTRL	0x80
-> -#define SW_CTRL_EN			BIT(0)
-> -
-> -#define MIPITX_DSI_SW_CTRL_CON0	0x84
-> -#define SW_LNTC_LPTX_PRE_OE		BIT(0)
-> -#define SW_LNTC_LPTX_OE			BIT(1)
-> -#define SW_LNTC_LPTX_P			BIT(2)
-> -#define SW_LNTC_LPTX_N			BIT(3)
-> -#define SW_LNTC_HSTX_PRE_OE		BIT(4)
-> -#define SW_LNTC_HSTX_OE			BIT(5)
-> -#define SW_LNTC_HSTX_ZEROCLK		BIT(6)
-> -#define SW_LNT0_LPTX_PRE_OE		BIT(7)
-> -#define SW_LNT0_LPTX_OE			BIT(8)
-> -#define SW_LNT0_LPTX_P			BIT(9)
-> -#define SW_LNT0_LPTX_N			BIT(10)
-> -#define SW_LNT0_HSTX_PRE_OE		BIT(11)
-> -#define SW_LNT0_HSTX_OE			BIT(12)
-> -#define SW_LNT0_LPRX_EN			BIT(13)
-> -#define SW_LNT1_LPTX_PRE_OE		BIT(14)
-> -#define SW_LNT1_LPTX_OE			BIT(15)
-> -#define SW_LNT1_LPTX_P			BIT(16)
-> -#define SW_LNT1_LPTX_N			BIT(17)
-> -#define SW_LNT1_HSTX_PRE_OE		BIT(18)
-> -#define SW_LNT1_HSTX_OE			BIT(19)
-> -#define SW_LNT2_LPTX_PRE_OE		BIT(20)
-> -#define SW_LNT2_LPTX_OE			BIT(21)
-> -#define SW_LNT2_LPTX_P			BIT(22)
-> -#define SW_LNT2_LPTX_N			BIT(23)
-> -#define SW_LNT2_HSTX_PRE_OE		BIT(24)
-> -#define SW_LNT2_HSTX_OE			BIT(25)
-> -
-> -struct mtk_mipitx_data {
-> -	const u32 mppll_preserve;
-> -};
-> -
-> -struct mtk_mipi_tx {
-> -	struct device *dev;
-> -	void __iomem *regs;
-> -	u32 data_rate;
-> -	const struct mtk_mipitx_data *driver_data;
-> -	struct clk_hw pll_hw;
-> -	struct clk *pll;
-> -};
-> +#include "mtk_mipi_tx.h"
->  
-> -static inline struct mtk_mipi_tx *mtk_mipi_tx_from_clk_hw(struct clk_hw *hw)
-> +inline struct mtk_mipi_tx *mtk_mipi_tx_from_clk_hw(struct clk_hw *hw)
->  {
->  	return container_of(hw, struct mtk_mipi_tx, pll_hw);
->  }
->  
-> -static void mtk_mipi_tx_clear_bits(struct mtk_mipi_tx *mipi_tx, u32 offset,
-> -				   u32 bits)
-> +void mtk_mipi_tx_clear_bits(struct mtk_mipi_tx *mipi_tx, u32 offset,
-> +			    u32 bits)
->  {
->  	u32 temp = readl(mipi_tx->regs + offset);
->  
->  	writel(temp & ~bits, mipi_tx->regs + offset);
->  }
->  
-> -static void mtk_mipi_tx_set_bits(struct mtk_mipi_tx *mipi_tx, u32 offset,
-> -				 u32 bits)
-> +void mtk_mipi_tx_set_bits(struct mtk_mipi_tx *mipi_tx, u32 offset,
-> +			  u32 bits)
->  {
->  	u32 temp = readl(mipi_tx->regs + offset);
->  
->  	writel(temp | bits, mipi_tx->regs + offset);
->  }
->  
-> -static void mtk_mipi_tx_update_bits(struct mtk_mipi_tx *mipi_tx, u32 offset,
-> -				    u32 mask, u32 data)
-> +void mtk_mipi_tx_update_bits(struct mtk_mipi_tx *mipi_tx, u32 offset,
-> +			     u32 mask, u32 data)
->  {
->  	u32 temp = readl(mipi_tx->regs + offset);
->  
->  	writel((temp & ~mask) | (data & mask), mipi_tx->regs + offset);
->  }
->  
-> -static int mtk_mipi_tx_pll_prepare(struct clk_hw *hw)
-> -{
-> -	struct mtk_mipi_tx *mipi_tx = mtk_mipi_tx_from_clk_hw(hw);
-> -	u8 txdiv, txdiv0, txdiv1;
-> -	u64 pcw;
-> -
-> -	dev_dbg(mipi_tx->dev, "prepare: %u Hz\n", mipi_tx->data_rate);
-> -
-> -	if (mipi_tx->data_rate >= 500000000) {
-> -		txdiv = 1;
-> -		txdiv0 = 0;
-> -		txdiv1 = 0;
-> -	} else if (mipi_tx->data_rate >= 250000000) {
-> -		txdiv = 2;
-> -		txdiv0 = 1;
-> -		txdiv1 = 0;
-> -	} else if (mipi_tx->data_rate >= 125000000) {
-> -		txdiv = 4;
-> -		txdiv0 = 2;
-> -		txdiv1 = 0;
-> -	} else if (mipi_tx->data_rate > 62000000) {
-> -		txdiv = 8;
-> -		txdiv0 = 2;
-> -		txdiv1 = 1;
-> -	} else if (mipi_tx->data_rate >= 50000000) {
-> -		txdiv = 16;
-> -		txdiv0 = 2;
-> -		txdiv1 = 2;
-> -	} else {
-> -		return -EINVAL;
-> -	}
-> -
-> -	mtk_mipi_tx_update_bits(mipi_tx, MIPITX_DSI_BG_CON,
-> -				RG_DSI_VOUT_MSK |
-> -				RG_DSI_BG_CKEN | RG_DSI_BG_CORE_EN,
-> -				(4 << 20) | (4 << 17) | (4 << 14) |
-> -				(4 << 11) | (4 << 8) | (4 << 5) |
-> -				RG_DSI_BG_CKEN | RG_DSI_BG_CORE_EN);
-> -
-> -	usleep_range(30, 100);
-> -
-> -	mtk_mipi_tx_update_bits(mipi_tx, MIPITX_DSI_TOP_CON,
-> -				RG_DSI_LNT_IMP_CAL_CODE | RG_DSI_LNT_HS_BIAS_EN,
-> -				(8 << 4) | RG_DSI_LNT_HS_BIAS_EN);
-> -
-> -	mtk_mipi_tx_set_bits(mipi_tx, MIPITX_DSI_CON,
-> -			     RG_DSI_CKG_LDOOUT_EN | RG_DSI_LDOCORE_EN);
-> -
-> -	mtk_mipi_tx_update_bits(mipi_tx, MIPITX_DSI_PLL_PWR,
-> -				RG_DSI_MPPLL_SDM_PWR_ON |
-> -				RG_DSI_MPPLL_SDM_ISO_EN,
-> -				RG_DSI_MPPLL_SDM_PWR_ON);
-> -
-> -	mtk_mipi_tx_clear_bits(mipi_tx, MIPITX_DSI_PLL_CON0,
-> -			       RG_DSI_MPPLL_PLL_EN);
-> -
-> -	mtk_mipi_tx_update_bits(mipi_tx, MIPITX_DSI_PLL_CON0,
-> -				RG_DSI_MPPLL_TXDIV0 | RG_DSI_MPPLL_TXDIV1 |
-> -				RG_DSI_MPPLL_PREDIV,
-> -				(txdiv0 << 3) | (txdiv1 << 5));
-> -
-> -	/*
-> -	 * PLL PCW config
-> -	 * PCW bit 24~30 = integer part of pcw
-> -	 * PCW bit 0~23 = fractional part of pcw
-> -	 * pcw = data_Rate*4*txdiv/(Ref_clk*2);
-> -	 * Post DIV =4, so need data_Rate*4
-> -	 * Ref_clk is 26MHz
-> -	 */
-> -	pcw = div_u64(((u64)mipi_tx->data_rate * 2 * txdiv) << 24,
-> -		      26000000);
-> -	writel(pcw, mipi_tx->regs + MIPITX_DSI_PLL_CON2);
-> -
-> -	mtk_mipi_tx_set_bits(mipi_tx, MIPITX_DSI_PLL_CON1,
-> -			     RG_DSI_MPPLL_SDM_FRA_EN);
-> -
-> -	mtk_mipi_tx_set_bits(mipi_tx, MIPITX_DSI_PLL_CON0, RG_DSI_MPPLL_PLL_EN);
-> -
-> -	usleep_range(20, 100);
-> -
-> -	mtk_mipi_tx_clear_bits(mipi_tx, MIPITX_DSI_PLL_CON1,
-> -			       RG_DSI_MPPLL_SDM_SSC_EN);
-> -
-> -	mtk_mipi_tx_update_bits(mipi_tx, MIPITX_DSI_PLL_TOP,
-> -				RG_DSI_MPPLL_PRESERVE,
-> -				mipi_tx->driver_data->mppll_preserve);
-> -
-> -	return 0;
-> -}
-> -
-> -static void mtk_mipi_tx_pll_unprepare(struct clk_hw *hw)
-> -{
-> -	struct mtk_mipi_tx *mipi_tx = mtk_mipi_tx_from_clk_hw(hw);
-> -
-> -	dev_dbg(mipi_tx->dev, "unprepare\n");
-> -
-> -	mtk_mipi_tx_clear_bits(mipi_tx, MIPITX_DSI_PLL_CON0,
-> -			       RG_DSI_MPPLL_PLL_EN);
-> -
-> -	mtk_mipi_tx_update_bits(mipi_tx, MIPITX_DSI_PLL_TOP,
-> -				RG_DSI_MPPLL_PRESERVE, 0);
-> -
-> -	mtk_mipi_tx_update_bits(mipi_tx, MIPITX_DSI_PLL_PWR,
-> -				RG_DSI_MPPLL_SDM_ISO_EN |
-> -				RG_DSI_MPPLL_SDM_PWR_ON,
-> -				RG_DSI_MPPLL_SDM_ISO_EN);
-> -
-> -	mtk_mipi_tx_clear_bits(mipi_tx, MIPITX_DSI_TOP_CON,
-> -			       RG_DSI_LNT_HS_BIAS_EN);
-> -
-> -	mtk_mipi_tx_clear_bits(mipi_tx, MIPITX_DSI_CON,
-> -			       RG_DSI_CKG_LDOOUT_EN | RG_DSI_LDOCORE_EN);
-> -
-> -	mtk_mipi_tx_clear_bits(mipi_tx, MIPITX_DSI_BG_CON,
-> -			       RG_DSI_BG_CKEN | RG_DSI_BG_CORE_EN);
-> -
-> -	mtk_mipi_tx_clear_bits(mipi_tx, MIPITX_DSI_PLL_CON0,
-> -			       RG_DSI_MPPLL_DIV_MSK);
-> -}
-> -
-> -static long mtk_mipi_tx_pll_round_rate(struct clk_hw *hw, unsigned long rate,
-> -				       unsigned long *prate)
-> -{
-> -	return clamp_val(rate, 50000000, 1250000000);
-> -}
-> -
-> -static int mtk_mipi_tx_pll_set_rate(struct clk_hw *hw, unsigned long rate,
-> -				    unsigned long parent_rate)
-> +int mtk_mipi_tx_pll_set_rate(struct clk_hw *hw, unsigned long rate,
-> +			     unsigned long parent_rate)
->  {
->  	struct mtk_mipi_tx *mipi_tx = mtk_mipi_tx_from_clk_hw(hw);
->  
-> @@ -307,37 +54,14 @@ static int mtk_mipi_tx_pll_set_rate(struct clk_hw *hw, unsigned long rate,
->  	return 0;
->  }
->  
-> -static unsigned long mtk_mipi_tx_pll_recalc_rate(struct clk_hw *hw,
-> -						 unsigned long parent_rate)
-> +unsigned long mtk_mipi_tx_pll_recalc_rate(struct clk_hw *hw,
-> +					  unsigned long parent_rate)
->  {
->  	struct mtk_mipi_tx *mipi_tx = mtk_mipi_tx_from_clk_hw(hw);
->  
->  	return mipi_tx->data_rate;
->  }
->  
-> -static const struct clk_ops mtk_mipi_tx_pll_ops = {
-> -	.prepare = mtk_mipi_tx_pll_prepare,
-> -	.unprepare = mtk_mipi_tx_pll_unprepare,
-> -	.round_rate = mtk_mipi_tx_pll_round_rate,
-> -	.set_rate = mtk_mipi_tx_pll_set_rate,
-> -	.recalc_rate = mtk_mipi_tx_pll_recalc_rate,
-> -};
-> -
-> -static int mtk_mipi_tx_power_on_signal(struct phy *phy)
-> -{
-> -	struct mtk_mipi_tx *mipi_tx = phy_get_drvdata(phy);
-> -	u32 reg;
-> -
-> -	for (reg = MIPITX_DSI_CLOCK_LANE;
-> -	     reg <= MIPITX_DSI_DATA_LANE3; reg += 4)
-> -		mtk_mipi_tx_set_bits(mipi_tx, reg, RG_DSI_LNTx_LDOOUT_EN);
-> -
-> -	mtk_mipi_tx_clear_bits(mipi_tx, MIPITX_DSI_TOP_CON,
-> -			       RG_DSI_PAD_TIE_LOW_EN);
-> -
-> -	return 0;
-> -}
-> -
->  static int mtk_mipi_tx_power_on(struct phy *phy)
->  {
->  	struct mtk_mipi_tx *mipi_tx = phy_get_drvdata(phy);
-> @@ -349,30 +73,16 @@ static int mtk_mipi_tx_power_on(struct phy *phy)
->  		return ret;
->  
->  	/* Enable DSI Lane LDO outputs, disable pad tie low */
-> -	mtk_mipi_tx_power_on_signal(phy);
-> -
-> +	mipi_tx->driver_data->mipi_tx_enable_signal(phy);
->  	return 0;
->  }
->  
-> -static void mtk_mipi_tx_power_off_signal(struct phy *phy)
-> -{
-> -	struct mtk_mipi_tx *mipi_tx = phy_get_drvdata(phy);
-> -	u32 reg;
-> -
-> -	mtk_mipi_tx_set_bits(mipi_tx, MIPITX_DSI_TOP_CON,
-> -			     RG_DSI_PAD_TIE_LOW_EN);
-> -
-> -	for (reg = MIPITX_DSI_CLOCK_LANE;
-> -	     reg <= MIPITX_DSI_DATA_LANE3; reg += 4)
-> -		mtk_mipi_tx_clear_bits(mipi_tx, reg, RG_DSI_LNTx_LDOOUT_EN);
-> -}
-> -
->  static int mtk_mipi_tx_power_off(struct phy *phy)
->  {
->  	struct mtk_mipi_tx *mipi_tx = phy_get_drvdata(phy);
->  
->  	/* Enable pad tie low, disable DSI Lane LDO outputs */
-> -	mtk_mipi_tx_power_off_signal(phy);
-> +	mipi_tx->driver_data->mipi_tx_disable_signal(phy);
->  
->  	/* Disable PLL and power down core */
->  	clk_disable_unprepare(mipi_tx->pll);
-> @@ -391,10 +101,8 @@ static int mtk_mipi_tx_probe(struct platform_device *pdev)
->  	struct device *dev = &pdev->dev;
->  	struct mtk_mipi_tx *mipi_tx;
->  	struct resource *mem;
-> -	struct clk *ref_clk;
->  	const char *ref_clk_name;
->  	struct clk_init_data clk_init = {
-> -		.ops = &mtk_mipi_tx_pll_ops,
->  		.num_parents = 1,
->  		.parent_names = (const char * const *)&ref_clk_name,
->  		.flags = CLK_SET_RATE_GATE,
-> @@ -408,6 +116,7 @@ static int mtk_mipi_tx_probe(struct platform_device *pdev)
->  		return -ENOMEM;
->  
->  	mipi_tx->driver_data = of_device_get_match_data(dev);
-> +
->  	mem = platform_get_resource(pdev, IORESOURCE_MEM, 0);
->  	mipi_tx->regs = devm_ioremap_resource(dev, mem);
->  	if (IS_ERR(mipi_tx->regs)) {
-> @@ -416,13 +125,14 @@ static int mtk_mipi_tx_probe(struct platform_device *pdev)
->  		return ret;
->  	}
->  
-> -	ref_clk = devm_clk_get(dev, NULL);
-> -	if (IS_ERR(ref_clk)) {
-> -		ret = PTR_ERR(ref_clk);
-> +	mipi_tx->ref_clk = devm_clk_get(dev, NULL);
-> +	if (IS_ERR(mipi_tx->ref_clk)) {
-> +		ret = PTR_ERR(mipi_tx->ref_clk);
->  		dev_err(dev, "Failed to get reference clock: %d\n", ret);
->  		return ret;
->  	}
-> -	ref_clk_name = __clk_get_name(ref_clk);
-> +
-> +	ref_clk_name = __clk_get_name(mipi_tx->ref_clk);
->  
->  	ret = of_property_read_string(dev->of_node, "clock-output-names",
->  				      &clk_init.name);
-> @@ -431,6 +141,8 @@ static int mtk_mipi_tx_probe(struct platform_device *pdev)
->  		return ret;
->  	}
->  
-> +	clk_init.ops = mipi_tx->driver_data->mipi_tx_clk_ops;
-> +
->  	mipi_tx->pll_hw.init = &clk_init;
->  	mipi_tx->pll = devm_clk_register(dev, &mipi_tx->pll_hw);
->  	if (IS_ERR(mipi_tx->pll)) {
-> @@ -465,20 +177,12 @@ static int mtk_mipi_tx_remove(struct platform_device *pdev)
->  	return 0;
->  }
->  
-> -static const struct mtk_mipitx_data mt2701_mipitx_data = {
-> -	.mppll_preserve = (3 << 8)
-> -};
-> -
-> -static const struct mtk_mipitx_data mt8173_mipitx_data = {
-> -	.mppll_preserve = (0 << 8)
-> -};
-> -
->  static const struct of_device_id mtk_mipi_tx_match[] = {
->  	{ .compatible = "mediatek,mt2701-mipi-tx",
->  	  .data = &mt2701_mipitx_data },
->  	{ .compatible = "mediatek,mt8173-mipi-tx",
->  	  .data = &mt8173_mipitx_data },
-> -	{},
-> +	{ },
->  };
->  
->  struct platform_driver mtk_mipi_tx_driver = {
-> diff --git a/drivers/gpu/drm/mediatek/mtk_mipi_tx.h b/drivers/gpu/drm/mediatek/mtk_mipi_tx.h
+> diff --git a/arch/arm64/boot/dts/freescale/Makefile b/arch/arm64/boot/dts/freescale/Makefile
+> index 13604e558dc1..84ff6995b41e 100644
+> --- a/arch/arm64/boot/dts/freescale/Makefile
+> +++ b/arch/arm64/boot/dts/freescale/Makefile
+> @@ -8,6 +8,7 @@ dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-ls1028a-qds.dtb
+>  dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-ls1028a-rdb.dtb
+>  dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-ls1043a-qds.dtb
+>  dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-ls1043a-rdb.dtb
+> +dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-ls1046a-frwy.dtb
+>  dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-ls1046a-qds.dtb
+>  dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-ls1046a-rdb.dtb
+>  dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-ls1088a-qds.dtb
+> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1046a-frwy.dts b/arch/arm64/boot/dts/freescale/fsl-ls1046a-frwy.dts
 > new file mode 100644
-> index 000000000000..660726924992
+> index 000000000000..de0d19c02944
 > --- /dev/null
-> +++ b/drivers/gpu/drm/mediatek/mtk_mipi_tx.h
-> @@ -0,0 +1,49 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
+> +++ b/arch/arm64/boot/dts/freescale/fsl-ls1046a-frwy.dts
+> @@ -0,0 +1,156 @@
+> +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
 > +/*
-> + * Copyright (c) 2019 MediaTek Inc.
-> + * Author: Jitao Shi <jitao.shi@mediatek.com>
+> + * Device Tree Include file for Freescale Layerscape-1046A family SoC.
+> + *
+> + * Copyright 2019 NXP.
+> + *
 > + */
 > +
-> +#ifndef _MTK_MIPI_TX_H
-> +#define _MTK_MIPI_TX_H
+> +/dts-v1/;
 > +
-> +#include <linux/clk.h>
-> +#include <linux/clk-provider.h>
-> +#include <linux/delay.h>
-> +#include <linux/io.h>
-> +#include <linux/module.h>
-> +#include <linux/of_device.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/phy/phy.h>
+> +#include "fsl-ls1046a.dtsi"
 > +
-> +struct mtk_mipitx_data {
-> +	const u32 mppll_preserve;
-> +	const struct clk_ops *mipi_tx_clk_ops;
-> +	void (*mipi_tx_enable_signal)(struct phy *phy);
-> +	void (*mipi_tx_disable_signal)(struct phy *phy);
+> +/ {
+> +	model = "LS1046A FRWY Board";
+> +	compatible = "fsl,ls1046a-frwy", "fsl,ls1046a";
+> +
+> +	aliases {
+> +		serial0 = &duart0;
+> +		serial1 = &duart1;
+> +		serial2 = &duart2;
+> +		serial3 = &duart3;
+> +	};
+> +
+> +	chosen {
+> +		stdout-path = "serial0:115200n8";
+> +	};
+> +
+> +	sb_3v3: regulator-sb3v3 {
+> +		compatible = "regulator-fixed";
+> +		regulator-name = "LT8642SEV-3.3V";
+> +		regulator-min-microvolt = <3300000>;
+> +		regulator-max-microvolt = <3300000>;
+> +		regulator-boot-on;
+> +		regulator-always-on;
+> +	};
 > +};
 > +
-> +struct mtk_mipi_tx {
-> +	struct device *dev;
-> +	void __iomem *regs;
-> +	u32 data_rate;
-> +	struct clk *ref_clk;
-> +	const struct mtk_mipitx_data *driver_data;
-> +	struct clk_hw pll_hw;
-> +	struct clk *pll;
+> +&duart0 {
+> +	status = "okay";
 > +};
 > +
-> +struct mtk_mipi_tx *mtk_mipi_tx_from_clk_hw(struct clk_hw *hw);
-> +void mtk_mipi_tx_clear_bits(struct mtk_mipi_tx *mipi_tx, u32 offset, u32 bits);
-> +void mtk_mipi_tx_set_bits(struct mtk_mipi_tx *mipi_tx, u32 offset, u32 bits);
-> +void mtk_mipi_tx_update_bits(struct mtk_mipi_tx *mipi_tx, u32 offset, u32 mask,
-> +			     u32 data);
-> +int mtk_mipi_tx_pll_set_rate(struct clk_hw *hw, unsigned long rate,
-> +			     unsigned long parent_rate);
-> +unsigned long mtk_mipi_tx_pll_recalc_rate(struct clk_hw *hw,
-> +					  unsigned long parent_rate);
-> +
-> +extern const struct mtk_mipitx_data mt2701_mipitx_data;
-> +extern const struct mtk_mipitx_data mt8173_mipitx_data;
-> +
-> +#endif
-> diff --git a/drivers/gpu/drm/mediatek/mtk_mt8173_mipi_tx.c b/drivers/gpu/drm/mediatek/mtk_mt8173_mipi_tx.c
-> new file mode 100644
-> index 000000000000..95ef0c5252b9
-> --- /dev/null
-> +++ b/drivers/gpu/drm/mediatek/mtk_mt8173_mipi_tx.c
-> @@ -0,0 +1,289 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Copyright (c) 2019 MediaTek Inc.
-> + * Author: jitao.shi <jitao.shi@mediatek.com>
-> + */
-> +
-> +#include "mtk_mipi_tx.h"
-> +
-> +#define MIPITX_DSI_CON		0x00
-> +#define RG_DSI_LDOCORE_EN		BIT(0)
-> +#define RG_DSI_CKG_LDOOUT_EN		BIT(1)
-> +#define RG_DSI_BCLK_SEL			(3 << 2)
-> +#define RG_DSI_LD_IDX_SEL		(7 << 4)
-> +#define RG_DSI_PHYCLK_SEL		(2 << 8)
-> +#define RG_DSI_DSICLK_FREQ_SEL		BIT(10)
-> +#define RG_DSI_LPTX_CLMP_EN		BIT(11)
-> +
-> +#define MIPITX_DSI_CLOCK_LANE	0x04
-> +#define MIPITX_DSI_DATA_LANE0	0x08
-> +#define MIPITX_DSI_DATA_LANE1	0x0c
-> +#define MIPITX_DSI_DATA_LANE2	0x10
-> +#define MIPITX_DSI_DATA_LANE3	0x14
-> +#define RG_DSI_LNTx_LDOOUT_EN		BIT(0)
-> +#define RG_DSI_LNTx_CKLANE_EN		BIT(1)
-> +#define RG_DSI_LNTx_LPTX_IPLUS1		BIT(2)
-> +#define RG_DSI_LNTx_LPTX_IPLUS2		BIT(3)
-> +#define RG_DSI_LNTx_LPTX_IMINUS		BIT(4)
-> +#define RG_DSI_LNTx_LPCD_IPLUS		BIT(5)
-> +#define RG_DSI_LNTx_LPCD_IMINUS		BIT(6)
-> +#define RG_DSI_LNTx_RT_CODE		(0xf << 8)
-> +
-> +#define MIPITX_DSI_TOP_CON	0x40
-> +#define RG_DSI_LNT_INTR_EN		BIT(0)
-> +#define RG_DSI_LNT_HS_BIAS_EN		BIT(1)
-> +#define RG_DSI_LNT_IMP_CAL_EN		BIT(2)
-> +#define RG_DSI_LNT_TESTMODE_EN		BIT(3)
-> +#define RG_DSI_LNT_IMP_CAL_CODE		(0xf << 4)
-> +#define RG_DSI_LNT_AIO_SEL		(7 << 8)
-> +#define RG_DSI_PAD_TIE_LOW_EN		BIT(11)
-> +#define RG_DSI_DEBUG_INPUT_EN		BIT(12)
-> +#define RG_DSI_PRESERVE			(7 << 13)
-> +
-> +#define MIPITX_DSI_BG_CON	0x44
-> +#define RG_DSI_BG_CORE_EN		BIT(0)
-> +#define RG_DSI_BG_CKEN			BIT(1)
-> +#define RG_DSI_BG_DIV			(0x3 << 2)
-> +#define RG_DSI_BG_FAST_CHARGE		BIT(4)
-> +#define RG_DSI_VOUT_MSK			(0x3ffff << 5)
-> +#define RG_DSI_V12_SEL			(7 << 5)
-> +#define RG_DSI_V10_SEL			(7 << 8)
-> +#define RG_DSI_V072_SEL			(7 << 11)
-> +#define RG_DSI_V04_SEL			(7 << 14)
-> +#define RG_DSI_V032_SEL			(7 << 17)
-> +#define RG_DSI_V02_SEL			(7 << 20)
-> +#define RG_DSI_BG_R1_TRIM		(0xf << 24)
-> +#define RG_DSI_BG_R2_TRIM		(0xf << 28)
-> +
-> +#define MIPITX_DSI_PLL_CON0	0x50
-> +#define RG_DSI_MPPLL_PLL_EN		BIT(0)
-> +#define RG_DSI_MPPLL_DIV_MSK		(0x1ff << 1)
-> +#define RG_DSI_MPPLL_PREDIV		(3 << 1)
-> +#define RG_DSI_MPPLL_TXDIV0		(3 << 3)
-> +#define RG_DSI_MPPLL_TXDIV1		(3 << 5)
-> +#define RG_DSI_MPPLL_POSDIV		(7 << 7)
-> +#define RG_DSI_MPPLL_MONVC_EN		BIT(10)
-> +#define RG_DSI_MPPLL_MONREF_EN		BIT(11)
-> +#define RG_DSI_MPPLL_VOD_EN		BIT(12)
-> +
-> +#define MIPITX_DSI_PLL_CON1	0x54
-> +#define RG_DSI_MPPLL_SDM_FRA_EN		BIT(0)
-> +#define RG_DSI_MPPLL_SDM_SSC_PH_INIT	BIT(1)
-> +#define RG_DSI_MPPLL_SDM_SSC_EN		BIT(2)
-> +#define RG_DSI_MPPLL_SDM_SSC_PRD	(0xffff << 16)
-> +
-> +#define MIPITX_DSI_PLL_CON2	0x58
-> +
-> +#define MIPITX_DSI_PLL_TOP	0x64
-> +#define RG_DSI_MPPLL_PRESERVE		(0xff << 8)
-> +
-> +#define MIPITX_DSI_PLL_PWR	0x68
-> +#define RG_DSI_MPPLL_SDM_PWR_ON		BIT(0)
-> +#define RG_DSI_MPPLL_SDM_ISO_EN		BIT(1)
-> +#define RG_DSI_MPPLL_SDM_PWR_ACK	BIT(8)
-> +
-> +#define MIPITX_DSI_SW_CTRL	0x80
-> +#define SW_CTRL_EN			BIT(0)
-> +
-> +#define MIPITX_DSI_SW_CTRL_CON0	0x84
-> +#define SW_LNTC_LPTX_PRE_OE		BIT(0)
-> +#define SW_LNTC_LPTX_OE			BIT(1)
-> +#define SW_LNTC_LPTX_P			BIT(2)
-> +#define SW_LNTC_LPTX_N			BIT(3)
-> +#define SW_LNTC_HSTX_PRE_OE		BIT(4)
-> +#define SW_LNTC_HSTX_OE			BIT(5)
-> +#define SW_LNTC_HSTX_ZEROCLK		BIT(6)
-> +#define SW_LNT0_LPTX_PRE_OE		BIT(7)
-> +#define SW_LNT0_LPTX_OE			BIT(8)
-> +#define SW_LNT0_LPTX_P			BIT(9)
-> +#define SW_LNT0_LPTX_N			BIT(10)
-> +#define SW_LNT0_HSTX_PRE_OE		BIT(11)
-> +#define SW_LNT0_HSTX_OE			BIT(12)
-> +#define SW_LNT0_LPRX_EN			BIT(13)
-> +#define SW_LNT1_LPTX_PRE_OE		BIT(14)
-> +#define SW_LNT1_LPTX_OE			BIT(15)
-> +#define SW_LNT1_LPTX_P			BIT(16)
-> +#define SW_LNT1_LPTX_N			BIT(17)
-> +#define SW_LNT1_HSTX_PRE_OE		BIT(18)
-> +#define SW_LNT1_HSTX_OE			BIT(19)
-> +#define SW_LNT2_LPTX_PRE_OE		BIT(20)
-> +#define SW_LNT2_LPTX_OE			BIT(21)
-> +#define SW_LNT2_LPTX_P			BIT(22)
-> +#define SW_LNT2_LPTX_N			BIT(23)
-> +#define SW_LNT2_HSTX_PRE_OE		BIT(24)
-> +#define SW_LNT2_HSTX_OE			BIT(25)
-> +
-> +static int mtk_mipi_tx_pll_prepare(struct clk_hw *hw)
-> +{
-> +	struct mtk_mipi_tx *mipi_tx = mtk_mipi_tx_from_clk_hw(hw);
-> +	u8 txdiv, txdiv0, txdiv1;
-> +	u64 pcw;
-> +
-> +	dev_dbg(mipi_tx->dev, "prepare: %u Hz\n", mipi_tx->data_rate);
-> +
-> +	if (mipi_tx->data_rate >= 500000000) {
-> +		txdiv = 1;
-> +		txdiv0 = 0;
-> +		txdiv1 = 0;
-> +	} else if (mipi_tx->data_rate >= 250000000) {
-> +		txdiv = 2;
-> +		txdiv0 = 1;
-> +		txdiv1 = 0;
-> +	} else if (mipi_tx->data_rate >= 125000000) {
-> +		txdiv = 4;
-> +		txdiv0 = 2;
-> +		txdiv1 = 0;
-> +	} else if (mipi_tx->data_rate > 62000000) {
-> +		txdiv = 8;
-> +		txdiv0 = 2;
-> +		txdiv1 = 1;
-> +	} else if (mipi_tx->data_rate >= 50000000) {
-> +		txdiv = 16;
-> +		txdiv0 = 2;
-> +		txdiv1 = 2;
-> +	} else {
-> +		return -EINVAL;
-> +	}
-> +
-> +	mtk_mipi_tx_update_bits(mipi_tx, MIPITX_DSI_BG_CON,
-> +				RG_DSI_VOUT_MSK |
-> +				RG_DSI_BG_CKEN | RG_DSI_BG_CORE_EN,
-> +				(4 << 20) | (4 << 17) | (4 << 14) |
-> +				(4 << 11) | (4 << 8) | (4 << 5) |
-> +				RG_DSI_BG_CKEN | RG_DSI_BG_CORE_EN);
-> +
-> +	usleep_range(30, 100);
-> +
-> +	mtk_mipi_tx_update_bits(mipi_tx, MIPITX_DSI_TOP_CON,
-> +				RG_DSI_LNT_IMP_CAL_CODE | RG_DSI_LNT_HS_BIAS_EN,
-> +				(8 << 4) | RG_DSI_LNT_HS_BIAS_EN);
-> +
-> +	mtk_mipi_tx_set_bits(mipi_tx, MIPITX_DSI_CON,
-> +			     RG_DSI_CKG_LDOOUT_EN | RG_DSI_LDOCORE_EN);
-> +
-> +	mtk_mipi_tx_update_bits(mipi_tx, MIPITX_DSI_PLL_PWR,
-> +				RG_DSI_MPPLL_SDM_PWR_ON |
-> +				RG_DSI_MPPLL_SDM_ISO_EN,
-> +				RG_DSI_MPPLL_SDM_PWR_ON);
-> +
-> +	mtk_mipi_tx_clear_bits(mipi_tx, MIPITX_DSI_PLL_CON0,
-> +			       RG_DSI_MPPLL_PLL_EN);
-> +
-> +	mtk_mipi_tx_update_bits(mipi_tx, MIPITX_DSI_PLL_CON0,
-> +				RG_DSI_MPPLL_TXDIV0 | RG_DSI_MPPLL_TXDIV1 |
-> +				RG_DSI_MPPLL_PREDIV,
-> +				(txdiv0 << 3) | (txdiv1 << 5));
-> +
-> +	/*
-> +	 * PLL PCW config
-> +	 * PCW bit 24~30 = integer part of pcw
-> +	 * PCW bit 0~23 = fractional part of pcw
-> +	 * pcw = data_Rate*4*txdiv/(Ref_clk*2);
-> +	 * Post DIV =4, so need data_Rate*4
-> +	 * Ref_clk is 26MHz
-> +	 */
-> +	pcw = div_u64(((u64)mipi_tx->data_rate * 2 * txdiv) << 24,
-> +		      26000000);
-> +	writel(pcw, mipi_tx->regs + MIPITX_DSI_PLL_CON2);
-> +
-> +	mtk_mipi_tx_set_bits(mipi_tx, MIPITX_DSI_PLL_CON1,
-> +			     RG_DSI_MPPLL_SDM_FRA_EN);
-> +
-> +	mtk_mipi_tx_set_bits(mipi_tx, MIPITX_DSI_PLL_CON0, RG_DSI_MPPLL_PLL_EN);
-> +
-> +	usleep_range(20, 100);
-> +
-> +	mtk_mipi_tx_clear_bits(mipi_tx, MIPITX_DSI_PLL_CON1,
-> +			       RG_DSI_MPPLL_SDM_SSC_EN);
-> +
-> +	mtk_mipi_tx_update_bits(mipi_tx, MIPITX_DSI_PLL_TOP,
-> +				RG_DSI_MPPLL_PRESERVE,
-> +				mipi_tx->driver_data->mppll_preserve);
-> +
-> +	return 0;
-> +}
-> +
-> +static void mtk_mipi_tx_pll_unprepare(struct clk_hw *hw)
-> +{
-> +	struct mtk_mipi_tx *mipi_tx = mtk_mipi_tx_from_clk_hw(hw);
-> +
-> +	dev_dbg(mipi_tx->dev, "unprepare\n");
-> +
-> +	mtk_mipi_tx_clear_bits(mipi_tx, MIPITX_DSI_PLL_CON0,
-> +			       RG_DSI_MPPLL_PLL_EN);
-> +
-> +	mtk_mipi_tx_update_bits(mipi_tx, MIPITX_DSI_PLL_TOP,
-> +				RG_DSI_MPPLL_PRESERVE, 0);
-> +
-> +	mtk_mipi_tx_update_bits(mipi_tx, MIPITX_DSI_PLL_PWR,
-> +				RG_DSI_MPPLL_SDM_ISO_EN |
-> +				RG_DSI_MPPLL_SDM_PWR_ON,
-> +				RG_DSI_MPPLL_SDM_ISO_EN);
-> +
-> +	mtk_mipi_tx_clear_bits(mipi_tx, MIPITX_DSI_TOP_CON,
-> +			       RG_DSI_LNT_HS_BIAS_EN);
-> +
-> +	mtk_mipi_tx_clear_bits(mipi_tx, MIPITX_DSI_CON,
-> +			       RG_DSI_CKG_LDOOUT_EN | RG_DSI_LDOCORE_EN);
-> +
-> +	mtk_mipi_tx_clear_bits(mipi_tx, MIPITX_DSI_BG_CON,
-> +			       RG_DSI_BG_CKEN | RG_DSI_BG_CORE_EN);
-> +
-> +	mtk_mipi_tx_clear_bits(mipi_tx, MIPITX_DSI_PLL_CON0,
-> +			       RG_DSI_MPPLL_DIV_MSK);
-> +}
-> +
-> +static long mtk_mipi_tx_pll_round_rate(struct clk_hw *hw, unsigned long rate,
-> +				       unsigned long *prate)
-> +{
-> +	return clamp_val(rate, 50000000, 1250000000);
-> +}
-> +
-> +static const struct clk_ops mtk_mipi_tx_pll_ops = {
-> +	.prepare = mtk_mipi_tx_pll_prepare,
-> +	.unprepare = mtk_mipi_tx_pll_unprepare,
-> +	.round_rate = mtk_mipi_tx_pll_round_rate,
-> +	.set_rate = mtk_mipi_tx_pll_set_rate,
-> +	.recalc_rate = mtk_mipi_tx_pll_recalc_rate,
+> +&duart1 {
+> +	status = "okay";
 > +};
 > +
-> +static void mtk_mipi_tx_power_on_signal(struct phy *phy)
-> +{
-> +	struct mtk_mipi_tx *mipi_tx = phy_get_drvdata(phy);
-> +	u32 reg;
-> +
-> +	for (reg = MIPITX_DSI_CLOCK_LANE;
-> +	     reg <= MIPITX_DSI_DATA_LANE3; reg += 4)
-> +		mtk_mipi_tx_set_bits(mipi_tx, reg, RG_DSI_LNTx_LDOOUT_EN);
-> +
-> +	mtk_mipi_tx_clear_bits(mipi_tx, MIPITX_DSI_TOP_CON,
-> +			       RG_DSI_PAD_TIE_LOW_EN);
-> +}
-> +
-> +static void mtk_mipi_tx_power_off_signal(struct phy *phy)
-> +{
-> +	struct mtk_mipi_tx *mipi_tx = phy_get_drvdata(phy);
-> +	u32 reg;
-> +
-> +	mtk_mipi_tx_set_bits(mipi_tx, MIPITX_DSI_TOP_CON,
-> +			     RG_DSI_PAD_TIE_LOW_EN);
-> +
-> +	for (reg = MIPITX_DSI_CLOCK_LANE;
-> +	     reg <= MIPITX_DSI_DATA_LANE3; reg += 4)
-> +		mtk_mipi_tx_clear_bits(mipi_tx, reg, RG_DSI_LNTx_LDOOUT_EN);
-> +}
-> +
-> +const struct mtk_mipitx_data mt2701_mipitx_data = {
-> +	.mppll_preserve = (3 << 8),
-> +	.mipi_tx_clk_ops = &mtk_mipi_tx_pll_ops,
-> +	.mipi_tx_enable_signal = mtk_mipi_tx_power_on_signal,
-> +	.mipi_tx_disable_signal = mtk_mipi_tx_power_off_signal,
+> +&duart2 {
+> +	status = "okay";
 > +};
 > +
-> +const struct mtk_mipitx_data mt8173_mipitx_data = {
-> +	.mppll_preserve = (0 << 8),
-> +	.mipi_tx_clk_ops = &mtk_mipi_tx_pll_ops,
-> +	.mipi_tx_enable_signal = mtk_mipi_tx_power_on_signal,
-> +	.mipi_tx_disable_signal = mtk_mipi_tx_power_off_signal,
+> +&duart3 {
+> +	status = "okay";
 > +};
 > +
+> +&i2c0 {
+> +	status = "okay";
+> +
+> +	i2c-mux@77 {
+> +		compatible = "nxp,pca9546";
+> +		reg = <0x77>;
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +		i2c-mux-never-disable;
 
+Undocumented property?
 
+> +
+> +		i2c@0 {
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +			reg = <0>;
+> +
+> +			eeprom@52 {
+> +				compatible = "atmel,24c512";
+> +				reg = <0x52>;
+> +			};
+> +
+> +			eeprom@53 {
+> +				compatible = "atmel,24c512";
+> +				reg = <0x53>;
+> +			};
+> +
+> +			power-monitor@40 {
+
+Sort the nodes in unit-address.
+
+Shawn
+
+> +				compatible = "ti,ina220";
+> +				reg = <0x40>;
+> +				shunt-resistor = <1000>;
+> +			};
+> +
+> +			rtc@51 {
+> +				compatible = "nxp,pcf2129";
+> +				reg = <0x51>;
+> +			};
+> +
+> +			temperature-sensor@4c {
+> +				compatible = "nxp,sa56004";
+> +				reg = <0x4c>;
+> +				vcc-supply = <&sb_3v3>;
+> +			};
+> +
+> +		};
+> +	};
+> +};
+> +
+> +&ifc {
+> +	#address-cells = <2>;
+> +	#size-cells = <1>;
+> +	/* NAND Flash */
+> +	ranges = <0x0 0x0 0x0 0x7e800000 0x00010000>;
+> +	status = "okay";
+> +
+> +	nand@0,0 {
+> +		compatible = "fsl,ifc-nand";
+> +		#address-cells = <1>;
+> +		#size-cells = <1>;
+> +		reg = <0x0 0x0 0x10000>;
+> +	};
+> +
+> +};
+> +
+> +#include "fsl-ls1046-post.dtsi"
+> +
+> +&fman0 {
+> +	ethernet@e0000 {
+> +		phy-handle = <&qsgmii_phy4>;
+> +		phy-connection-type = "qsgmii";
+> +	};
+> +
+> +	ethernet@e8000 {
+> +		phy-handle = <&qsgmii_phy2>;
+> +		phy-connection-type = "qsgmii";
+> +	};
+> +
+> +	ethernet@ea000 {
+> +		phy-handle = <&qsgmii_phy1>;
+> +		phy-connection-type = "qsgmii";
+> +	};
+> +
+> +	ethernet@f2000 {
+> +		phy-handle = <&qsgmii_phy3>;
+> +		phy-connection-type = "qsgmii";
+> +	};
+> +
+> +	mdio@fd000 {
+> +		qsgmii_phy1: ethernet-phy@1c {
+> +			reg = <0x1c>;
+> +		};
+> +
+> +		qsgmii_phy2: ethernet-phy@1d {
+> +			reg = <0x1d>;
+> +		};
+> +
+> +		qsgmii_phy3: ethernet-phy@1e {
+> +			reg = <0x1e>;
+> +		};
+> +
+> +		qsgmii_phy4: ethernet-phy@1f {
+> +			reg = <0x1f>;
+> +		};
+> +	};
+> +};
+> -- 
+> 2.17.1
+> 
