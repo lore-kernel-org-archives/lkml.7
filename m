@@ -2,124 +2,123 @@ Return-Path: <SRS0=lq4r=TU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13A7DC04AAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 08:59:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5058AC072A4
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 09:03:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D34B7204FD
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 08:59:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=onstation.org header.i=@onstation.org header.b="FUo5HUbT"
+	by mail.kernel.org (Postfix) with ESMTP id 2FA1820644
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 09:03:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731743AbfETI7D (ORCPT
+        id S1731552AbfETJDc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 04:59:03 -0400
-Received: from onstation.org ([52.200.56.107]:50840 "EHLO onstation.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730385AbfETI7C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 04:59:02 -0400
-Received: from localhost.localdomain (c-98-239-145-235.hsd1.wv.comcast.net [98.239.145.235])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: masneyb)
-        by onstation.org (Postfix) with ESMTPSA id 622303E8D7;
-        Mon, 20 May 2019 08:59:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=onstation.org;
-        s=default; t=1558342741;
-        bh=Xgy3+Rs3yBvZB0BUXAIyl2U75vWOzK4nucJwFwG9y2o=;
-        h=From:To:Cc:Subject:Date:From;
-        b=FUo5HUbTH+MqwO7mv9H2UE6JE1Sw2F8UVEDBoN+IxsVWDh5m9P5Ab0zxNHG9foqtj
-         olCdm1bIrFG8JpiNW0bUFdGMKcEHtgLUvdPv/dg0f5OHVNQ2cmNIeI6Rtssn/XNhZP
-         dY0Z915b7AkymZkdCxWHtrd6AX+cLnqC/KZZasJA=
-From:   Brian Masney <masneyb@onstation.org>
-To:     robh+dt@kernel.org, lee.jones@linaro.org
-Cc:     daniel.thompson@linaro.org, jingoohan1@gmail.com,
-        jacek.anaszewski@gmail.com, pavel@ucw.cz, mark.rutland@arm.com,
-        b.zolnierkie@samsung.com, dri-devel@lists.freedesktop.org,
-        linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-fbdev@vger.kernel.org,
-        dmurphy@ti.com, jonathan@marek.ca
-Subject: [PATCH] dt-bindings: backlight: lm3630a: correct schema validation
-Date:   Mon, 20 May 2019 04:58:46 -0400
-Message-Id: <20190520085846.22320-1-masneyb@onstation.org>
-X-Mailer: git-send-email 2.20.1
+        Mon, 20 May 2019 05:03:32 -0400
+Received: from relay3-d.mail.gandi.net ([217.70.183.195]:51373 "EHLO
+        relay3-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727301AbfETJDc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 05:03:32 -0400
+X-Originating-IP: 90.88.22.185
+Received: from localhost (aaubervilliers-681-1-80-185.w90-88.abo.wanadoo.fr [90.88.22.185])
+        (Authenticated sender: maxime.ripard@bootlin.com)
+        by relay3-d.mail.gandi.net (Postfix) with ESMTPSA id 89B0960010;
+        Mon, 20 May 2019 09:03:27 +0000 (UTC)
+Date:   Mon, 20 May 2019 11:03:27 +0200
+From:   Maxime Ripard <maxime.ripard@bootlin.com>
+To:     Chen-Yu Tsai <wens@kernel.org>
+Cc:     Stephen Boyd <sboyd@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Chen-Yu Tsai <wens@csie.org>,
+        linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 00/25] clk: sunxi-ng: clk parent rewrite part 1
+Message-ID: <20190520090327.iejd3q7c3iwomzlz@flea>
+References: <20190520080421.12575-1-wens@kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="2ypype76y25ofynl"
+Content-Disposition: inline
+In-Reply-To: <20190520080421.12575-1-wens@kernel.org>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The '#address-cells' and '#size-cells' properties were not defined in
-the lm3630a bindings and would cause the following error when
-attempting to validate the examples against the schema:
 
-Documentation/devicetree/bindings/leds/backlight/lm3630a-backlight.example.dt.yaml:
-'#address-cells', '#size-cells' do not match any of the regexes:
-'^led@[01]$', 'pinctrl-[0-9]+'
+--2ypype76y25ofynl
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Correct this by adding those two properties.
+On Mon, May 20, 2019 at 04:03:56PM +0800, Chen-Yu Tsai wrote:
+> From: Chen-Yu Tsai <wens@csie.org>
+>
+> Hi everyone,
+>
+> This is series is the first part of a large series (I haven't done the
+> rest) of patches to rewrite the clk parent relationship handling within
+> the sunxi-ng clk driver. This is based on Stephen's recent work allowing
+> clk drivers to specify clk parents using struct clk_hw * or parsing DT
+> phandles in the clk node.
+>
+> This series can be split into a few major parts:
+>
+> 1) The first patch is a small fix for clk debugfs representation. This
+>    was done before commit 1a079560b145 ("clk: Cache core in
+>    clk_fetch_parent_index() without names") was posted, so it might or
+>    might not be needed. Found this when checking my work using
+>    clk_possible_parents.
+>
+> 2) A bunch of CLK_HW_INIT_* helper macros are added. These cover the
+>    situations I encountered, or assume I will encounter, such as single
+>    internal (struct clk_hw *) parent, single DT (struct clk_parent_data
+>    .fw_name), multiple internal parents, and multiple mixed (internal +
+>    DT) parents. A special variant for just an internal single parent is
+>    added, CLK_HW_INIT_HWS, which lets the driver share the singular
+>    list, instead of having the compiler create a compound literal every
+>    time. It might even make sense to only keep this variant.
+>
+> 3) A bunch of CLK_FIXED_FACTOR_* helper macros are added. The rationale
+>    is the same as the single parent CLK_HW_INIT_* helpers.
+>
+> 4) Bulk conversion of CLK_FIXED_FACTOR to use local parent references,
+>    either struct clk_hw * or DT .fw_name types, whichever the hardware
+>    requires.
+>
+> 5) The beginning of SUNXI_CCU_GATE conversion to local parent
+>    references. This part is not done. They are included as justification
+>    and examples for the shared list of clk parents case.
 
-While we're here, move the ti,linear-mapping-mode property to the
-led@[01] child nodes to correct the following validation error:
+That series is pretty neat. As far as sunxi is concerned, you can add my
+Acked-by: Maxime Ripard <maxime.ripard@bootlin.com>
 
-Documentation/devicetree/bindings/leds/backlight/lm3630a-backlight.example.dt.yaml:
-led@0: 'ti,linear-mapping-mode' does not match any of the regexes:
-'pinctrl-[0-9]+'
+> I realize this is going to be many patches every time I convert a clock
+> type. Going forward would the people involved prefer I send out
+> individual patches like this series, or squash them all together?
 
-Fixes: 32fcb75c66a0 ("dt-bindings: backlight: Add lm3630a bindings")
-Signed-off-by: Brian Masney <masneyb@onstation.org>
-Reported-by: Rob Herring <robh+dt@kernel.org>
----
- .../leds/backlight/lm3630a-backlight.yaml     | 20 +++++++++++++------
- 1 file changed, 14 insertions(+), 6 deletions(-)
+For bisection, I guess it would be good to keep the approach you've
+had in this series. If this is really too much, I guess we can always
+change oru mind later on.
 
-diff --git a/Documentation/devicetree/bindings/leds/backlight/lm3630a-backlight.yaml b/Documentation/devicetree/bindings/leds/backlight/lm3630a-backlight.yaml
-index 4d61fe0a98a4..f0855e248ae5 100644
---- a/Documentation/devicetree/bindings/leds/backlight/lm3630a-backlight.yaml
-+++ b/Documentation/devicetree/bindings/leds/backlight/lm3630a-backlight.yaml
-@@ -23,16 +23,17 @@ properties:
-   reg:
-     maxItems: 1
- 
--  ti,linear-mapping-mode:
--    description: |
--      Enable linear mapping mode. If disabled, then it will use exponential
--      mapping mode in which the ramp up/down appears to have a more uniform
--      transition to the human eye.
--    type: boolean
-+  '#address-cells':
-+    const: 1
-+
-+  '#size-cells':
-+    const: 0
- 
- required:
-   - compatible
-   - reg
-+  - '#address-cells'
-+  - '#size-cells'
- 
- patternProperties:
-   "^led@[01]$":
-@@ -73,6 +74,13 @@ patternProperties:
-         minimum: 0
-         maximum: 255
- 
-+      ti,linear-mapping-mode:
-+        description: |
-+          Enable linear mapping mode. If disabled, then it will use exponential
-+          mapping mode in which the ramp up/down appears to have a more uniform
-+          transition to the human eye.
-+        type: boolean
-+
-     required:
-       - reg
- 
--- 
-2.20.1
+Thanks!
+Maxime
 
+--
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+
+--2ypype76y25ofynl
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXOJtXgAKCRDj7w1vZxhR
+xQfkAQDQX2OO7NWM6Uc/mv7S2HQgLu755CMRobYRqL6EDMn5twD/WlNMYOlQibvH
+Kk0T6Z3CVuTDEoh9v+fpo5OUWhc1qw4=
+=G/SF
+-----END PGP SIGNATURE-----
+
+--2ypype76y25ofynl--
