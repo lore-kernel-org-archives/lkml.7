@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50B7CC04AAC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:16:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B064DC04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:16:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2601720656
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:16:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 84C7321019
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:16:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558354587;
-	bh=uhh8Vg9x5wvRtl1mwTABIvrWtt1cWlVM/KKhsPkU4vE=;
+	s=default; t=1558354589;
+	bh=RjfGTwubJ9rofGAXrt25Mfq6Oq61L+xelgbY4AQ5uRI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=d7+JO6vaw6orFyx+oFGZFK2nTnOPpEVDvOHZuOrj5u7Beps/TWQv6kKECeNFsLJ/6
-	 QqPdOfGDJ9vsWLE+wpkdeR5uJJ67rMgOpvXxKHFjpuLBf2u/8t/QCrQ7C0dTWUG8P5
-	 u0LXGjCU4tsofyLyM9pflOxe84YfRWCoAF84Bs60=
+	b=d1RnK/Lc9TUpW4z8d4gZZTJVBVrSiZE3Fa1oO8DvltgIXDoCzsBATuUu1M4/j9HhC
+	 OJml6i38TO6mclsTl3LGac20770rajKE8GXwPjqX5fIy5S3d6dUBYE8p/AkSNmDnTp
+	 qWHNeJx5IGvGYXPXifZjC5f36fE4AqQxhdsQcE2k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732961AbfETMQ0 (ORCPT
+        id S1733007AbfETMQ2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 08:16:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57142 "EHLO mail.kernel.org"
+        Mon, 20 May 2019 08:16:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57190 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732845AbfETMQX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 08:16:23 -0400
+        id S1732945AbfETMQ0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 08:16:26 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C4AC820815;
-        Mon, 20 May 2019 12:16:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6842220863;
+        Mon, 20 May 2019 12:16:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558354583;
-        bh=uhh8Vg9x5wvRtl1mwTABIvrWtt1cWlVM/KKhsPkU4vE=;
+        s=default; t=1558354585;
+        bh=RjfGTwubJ9rofGAXrt25Mfq6Oq61L+xelgbY4AQ5uRI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WrmPtC0UwNn8L2hSvMQPEPDhb4FF36r1pD1cXenx5CaOBr0u6KDHUyKw8XvFUo8f3
-         0fAGkur5FoEZo8U3Aht7QyO5Zm2ugm7dGN5gFKFOFkFro5W0AugOq6hmdDsCOb09Vt
-         To29bDzK9eWTReTri+SIfWsK4ozKP34kMl1h23LI=
+        b=hlTw9e4POw/2qG+FRGKXGVwIEI013Djy/IOhd8WGjMp/BMc4dTxTOhhH1yXHKLR0V
+         he9UW1VCmx9WY/rTpw+1UceDYOj0ECTxdYVbdrzXGOOqOBAQ55KD9+c8xeSD+LlYeH
+         DOwnfqor57RQ7/0j6+lyYWftynKpnE8UI3XO9U7o=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tim Chen <tim.c.chen@linux.intel.com>,
-        Eric Biggers <ebiggers@google.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>
-Subject: [PATCH 4.9 15/44] crypto: x86/crct10dif-pcl - fix use via crypto_shash_digest()
-Date:   Mon, 20 May 2019 14:14:04 +0200
-Message-Id: <20190520115232.749904531@linuxfoundation.org>
+        stable@vger.kernel.org, Wenwen Wang <wang6495@umn.edu>,
+        Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 4.9 16/44] ALSA: usb-audio: Fix a memory leak bug
+Date:   Mon, 20 May 2019 14:14:05 +0200
+Message-Id: <20190520115232.820086524@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190520115230.720347034@linuxfoundation.org>
 References: <20190520115230.720347034@linuxfoundation.org>
@@ -60,68 +59,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Biggers <ebiggers@google.com>
+From: Wenwen Wang <wang6495@umn.edu>
 
-commit dec3d0b1071a0f3194e66a83d26ecf4aa8c5910e upstream.
+commit cb5173594d50c72b7bfa14113dfc5084b4d2f726 upstream.
 
-The ->digest() method of crct10dif-pclmul reads the current CRC value
-from the shash_desc context.  But this value is uninitialized, causing
-crypto_shash_digest() to compute the wrong result.  Fix it.
+In parse_audio_selector_unit(), the string array 'namelist' is allocated
+through kmalloc_array(), and each string pointer in this array, i.e.,
+'namelist[]', is allocated through kmalloc() in the following for loop.
+Then, a control instance 'kctl' is created by invoking snd_ctl_new1(). If
+an error occurs during the creation process, the string array 'namelist',
+including all string pointers in the array 'namelist[]', should be freed,
+before the error code ENOMEM is returned. However, the current code does
+not free 'namelist[]', resulting in memory leaks.
 
-Probably this wasn't noticed before because lib/crc-t10dif.c only uses
-crypto_shash_update(), not crypto_shash_digest().  Likewise,
-crypto_shash_digest() is not yet tested by the crypto self-tests because
-those only test the ahash API which only uses shash init/update/final.
+To fix the above issue, free all string pointers 'namelist[]' in a loop.
 
-Fixes: 0b95a7f85718 ("crypto: crct10dif - Glue code to cast accelerated CRCT10DIF assembly as a crypto transform")
-Cc: <stable@vger.kernel.org> # v3.11+
-Cc: Tim Chen <tim.c.chen@linux.intel.com>
-Signed-off-by: Eric Biggers <ebiggers@google.com>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Signed-off-by: Wenwen Wang <wang6495@umn.edu>
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/crypto/crct10dif-pclmul_glue.c |   13 +++++--------
- 1 file changed, 5 insertions(+), 8 deletions(-)
+ sound/usb/mixer.c |    2 ++
+ 1 file changed, 2 insertions(+)
 
---- a/arch/x86/crypto/crct10dif-pclmul_glue.c
-+++ b/arch/x86/crypto/crct10dif-pclmul_glue.c
-@@ -76,15 +76,14 @@ static int chksum_final(struct shash_des
- 	return 0;
- }
- 
--static int __chksum_finup(__u16 *crcp, const u8 *data, unsigned int len,
--			u8 *out)
-+static int __chksum_finup(__u16 crc, const u8 *data, unsigned int len, u8 *out)
- {
- 	if (irq_fpu_usable()) {
- 		kernel_fpu_begin();
--		*(__u16 *)out = crc_t10dif_pcl(*crcp, data, len);
-+		*(__u16 *)out = crc_t10dif_pcl(crc, data, len);
- 		kernel_fpu_end();
- 	} else
--		*(__u16 *)out = crc_t10dif_generic(*crcp, data, len);
-+		*(__u16 *)out = crc_t10dif_generic(crc, data, len);
- 	return 0;
- }
- 
-@@ -93,15 +92,13 @@ static int chksum_finup(struct shash_des
- {
- 	struct chksum_desc_ctx *ctx = shash_desc_ctx(desc);
- 
--	return __chksum_finup(&ctx->crc, data, len, out);
-+	return __chksum_finup(ctx->crc, data, len, out);
- }
- 
- static int chksum_digest(struct shash_desc *desc, const u8 *data,
- 			 unsigned int length, u8 *out)
- {
--	struct chksum_desc_ctx *ctx = shash_desc_ctx(desc);
--
--	return __chksum_finup(&ctx->crc, data, length, out);
-+	return __chksum_finup(0, data, length, out);
- }
- 
- static struct shash_alg alg = {
+--- a/sound/usb/mixer.c
++++ b/sound/usb/mixer.c
+@@ -2178,6 +2178,8 @@ static int parse_audio_selector_unit(str
+ 	kctl = snd_ctl_new1(&mixer_selectunit_ctl, cval);
+ 	if (! kctl) {
+ 		usb_audio_err(state->chip, "cannot malloc kcontrol\n");
++		for (i = 0; i < desc->bNrInPins; i++)
++			kfree(namelist[i]);
+ 		kfree(namelist);
+ 		kfree(cval);
+ 		return -ENOMEM;
 
 
