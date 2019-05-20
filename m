@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5D67C04AAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:23:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51589C04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:23:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 855CC20675
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:23:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 281C320645
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:23:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558355020;
-	bh=L/Cv3EAR9jLgZ9/NL7/jp4JloC3gs6Kc1Nk8kU4hPu8=;
+	s=default; t=1558355023;
+	bh=gjf+mOszHMrKvbqtvIw9132vFb8gT0KeTwcDppoOEo0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZcdtaemRxperkMSdfSa05W4W1Af4+CfgWrFyYsJmaWAxBAQbgOGcSHSKn66eCTbNH
-	 lVLx2trg8CDy5ctXMFGLovIsqVUdRJn2fxNTR8bCvFsuF1hDLNGpgtL91Nee/cEsOF
-	 rmhBMdULUROkzqetxaB3OcSdiXJRQpJw66N5xfiw=
+	b=jzkNTI1MSDCPXuRSlGD16C/Z4TX8Fr0JzX1RYOaLrshKFNnGspq1NatldC7iOHAQK
+	 mE/2d/gcrhnsf7k/boQfm9L8IDZKTapZC0z03WWaR8kKpRyGkvsaZv5HeeVhPVYXpc
+	 IRU45wv8WS1tHWkQaEtVH5SxGbNdVCM9DNMa0uIo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388650AbfETMXj (ORCPT
+        id S2388662AbfETMXm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 08:23:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38132 "EHLO mail.kernel.org"
+        Mon, 20 May 2019 08:23:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38212 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388637AbfETMXh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 08:23:37 -0400
+        id S2388637AbfETMXk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 08:23:40 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5162C20645;
-        Mon, 20 May 2019 12:23:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EF22020645;
+        Mon, 20 May 2019 12:23:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558355016;
-        bh=L/Cv3EAR9jLgZ9/NL7/jp4JloC3gs6Kc1Nk8kU4hPu8=;
+        s=default; t=1558355019;
+        bh=gjf+mOszHMrKvbqtvIw9132vFb8gT0KeTwcDppoOEo0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZsbPERi01uLxASVFAAxMTj0jIdaSxxpKeRw0gs5oQnQR9tfiQTejzq+eHt0qwV12J
-         p1o1SPoBhQs6g5L9x/QkYdJR6qMVl8sP912ai4j7Go+tGnRNv8FZudeTvTfFmPq/HX
-         MX02rJUMzNJwu5tvLigxk00rPANaK1y+a3dvoi+M=
+        b=rCH0ReiBA6o3rLmcr7TrhKcFr0S7MQcrSMCKu0s7SAszwhp/nRmHdLv08LvczxvJb
+         0EFDaamJgxpheu9PNtR5tyH3ZSzLI/DUWfvyE8c5FBIe6EtZdjCxxsgrz4AigJzgt0
+         jr09hBhQO7XqBGclWijEuGO92AkPTN3r/X8o1kyI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Ren <renzhen@linux.alibaba.com>,
-        Jiufei Xue <jiufei.xue@linux.alibaba.com>,
-        Theodore Tso <tytso@mit.edu>, Jan Kara <jack@suse.cz>,
-        stable@kernel.org
-Subject: [PATCH 4.19 065/105] jbd2: check superblock mapped prior to committing
-Date:   Mon, 20 May 2019 14:14:11 +0200
-Message-Id: <20190520115251.665060078@linuxfoundation.org>
+        stable@vger.kernel.org, Jan Kara <jack@suse.cz>,
+        Theodore Tso <tytso@mit.edu>, stable@kernel.org
+Subject: [PATCH 4.19 066/105] ext4: make sanity check in mballoc more strict
+Date:   Mon, 20 May 2019 14:14:12 +0200
+Message-Id: <20190520115251.734458015@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190520115247.060821231@linuxfoundation.org>
 References: <20190520115247.060821231@linuxfoundation.org>
@@ -61,49 +59,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jiufei Xue <jiufei.xue@linux.alibaba.com>
+From: Jan Kara <jack@suse.cz>
 
-commit 742b06b5628f2cd23cb51a034cb54dc33c6162c5 upstream.
+commit 31562b954b60f02acb91b7349dc6432d3f8c3c5f upstream.
 
-We hit a BUG at fs/buffer.c:3057 if we detached the nbd device
-before unmounting ext4 filesystem.
+The sanity check in mb_find_extent() only checked that returned extent
+does not extend past blocksize * 8, however it should not extend past
+EXT4_CLUSTERS_PER_GROUP(sb). This can happen when clusters_per_group <
+blocksize * 8 and the tail of the bitmap is not properly filled by 1s
+which happened e.g. when ancient kernels have grown the filesystem.
 
-The typical chain of events leading to the BUG:
-jbd2_write_superblock
-  submit_bh
-    submit_bh_wbc
-      BUG_ON(!buffer_mapped(bh));
-
-The block device is removed and all the pages are invalidated. JBD2
-was trying to write journal superblock to the block device which is
-no longer present.
-
-Fix this by checking the journal superblock's buffer head prior to
-submitting.
-
-Reported-by: Eric Ren <renzhen@linux.alibaba.com>
-Signed-off-by: Jiufei Xue <jiufei.xue@linux.alibaba.com>
+Signed-off-by: Jan Kara <jack@suse.cz>
 Signed-off-by: Theodore Ts'o <tytso@mit.edu>
-Reviewed-by: Jan Kara <jack@suse.cz>
 Cc: stable@kernel.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/jbd2/journal.c |    4 ++++
- 1 file changed, 4 insertions(+)
+ fs/ext4/mballoc.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/fs/jbd2/journal.c
-+++ b/fs/jbd2/journal.c
-@@ -1366,6 +1366,10 @@ static int jbd2_write_superblock(journal
- 	journal_superblock_t *sb = journal->j_superblock;
- 	int ret;
+--- a/fs/ext4/mballoc.c
++++ b/fs/ext4/mballoc.c
+@@ -1539,7 +1539,7 @@ static int mb_find_extent(struct ext4_bu
+ 		ex->fe_len += 1 << order;
+ 	}
  
-+	/* Buffer got discarded which means block device got invalidated */
-+	if (!buffer_mapped(bh))
-+		return -EIO;
-+
- 	trace_jbd2_write_superblock(journal, write_flags);
- 	if (!(journal->j_flags & JBD2_BARRIER))
- 		write_flags &= ~(REQ_FUA | REQ_PREFLUSH);
+-	if (ex->fe_start + ex->fe_len > (1 << (e4b->bd_blkbits + 3))) {
++	if (ex->fe_start + ex->fe_len > EXT4_CLUSTERS_PER_GROUP(e4b->bd_sb)) {
+ 		/* Should never happen! (but apparently sometimes does?!?) */
+ 		WARN_ON(1);
+ 		ext4_error(e4b->bd_sb, "corruption or bug in mb_find_extent "
 
 
