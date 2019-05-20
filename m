@@ -2,273 +2,300 @@ Return-Path: <SRS0=lq4r=TU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_NEOMUTT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54865C04E87
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 14:42:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8EE2C04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 14:42:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1FADF216FD
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 14:42:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF5082054F
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 14:42:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391917AbfETOmG (ORCPT
+        id S2387594AbfETOmv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 10:42:06 -0400
-Received: from mail-wr1-f43.google.com ([209.85.221.43]:42403 "EHLO
-        mail-wr1-f43.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732661AbfETOmE (ORCPT
+        Mon, 20 May 2019 10:42:51 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:55720 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1732661AbfETOmu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 10:42:04 -0400
-Received: by mail-wr1-f43.google.com with SMTP id l2so14917854wrb.9
-        for <linux-kernel@vger.kernel.org>; Mon, 20 May 2019 07:42:03 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=qvb4/MYOh/F4z+jslECvXrNmSGK3orIs9ar0F2P/zn0=;
-        b=gufPss1uRT6AaphHiW9ep9KCv4QfJlBkYOcNrfaTGd+569R5odhI8khfgeoN7ZRULn
-         /WMrku7hEt4i3uC2j2Cu1Fm3oPRlbXSv8ydZzmmjMB3toKl3xldk0X9OdBgA26t1m5qx
-         Up/CV14kfBHF7idysIlXepJz842izeUC8UTv62AQTt65/p/YlK724Iz9Y6W/KfEbxdVa
-         /ku6vjoYWTw4dSpAbLgUGCw/mHH+9zmBJ/+RWcAqoYdWPuWTvdB98K5blOv5NxHZPs6o
-         SZ27NQCdrNDvqVyrYL0L49MkYuq4INFFyDfytB76S3NfXmgCQFJbGSBIRDcsyMm4wltx
-         lQtA==
-X-Gm-Message-State: APjAAAUUaKSjOh3HkE2A4UPldSQLIEe8avZK7u9kvi6J/nk+RF498KGD
-        Kk2JlaXizWtLE2qOMF3MdMDnyQ==
-X-Google-Smtp-Source: APXvYqz+psEb5MNkYrRCQUkFi+XkddM/38OApyYNxcdepWDdLvxUIQLUB5+UzdDZRBlgPldzrZ+t2w==
-X-Received: by 2002:a05:6000:1150:: with SMTP id d16mr9294845wrx.63.1558363322592;
-        Mon, 20 May 2019 07:42:02 -0700 (PDT)
-Received: from localhost (nat-pool-brq-t.redhat.com. [213.175.37.10])
-        by smtp.gmail.com with ESMTPSA id o8sm32493773wra.4.2019.05.20.07.42.01
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 20 May 2019 07:42:01 -0700 (PDT)
-Date:   Mon, 20 May 2019 16:42:00 +0200
-From:   Oleksandr Natalenko <oleksandr@redhat.com>
-To:     Minchan Kim <minchan@kernel.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-mm <linux-mm@kvack.org>, Michal Hocko <mhocko@suse.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Tim Murray <timmurray@google.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Suren Baghdasaryan <surenb@google.com>,
-        Daniel Colascione <dancol@google.com>,
-        Shakeel Butt <shakeelb@google.com>,
-        Sonny Rao <sonnyrao@google.com>,
-        Brian Geffon <bgeffon@google.com>
-Subject: Re: [RFC 0/7] introduce memory hinting API for external process
-Message-ID: <20190520144200.cpiqhxxbxyovmk7h@butterfly.localdomain>
-References: <20190520035254.57579-1-minchan@kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190520035254.57579-1-minchan@kernel.org>
-User-Agent: NeoMutt/20180716
+        Mon, 20 May 2019 10:42:50 -0400
+Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4KERweG085645
+        for <linux-kernel@vger.kernel.org>; Mon, 20 May 2019 10:42:48 -0400
+Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2skvmjcxjn-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Mon, 20 May 2019 10:42:48 -0400
+Received: from localhost
+        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <tmricht@linux.ibm.com>;
+        Mon, 20 May 2019 15:42:46 +0100
+Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
+        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Mon, 20 May 2019 15:42:45 +0100
+Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
+        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x4KEgiaI44105888
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 20 May 2019 14:42:44 GMT
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 47B43A4040;
+        Mon, 20 May 2019 14:42:44 +0000 (GMT)
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id F027DA404D;
+        Mon, 20 May 2019 14:42:43 +0000 (GMT)
+Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
+        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Mon, 20 May 2019 14:42:43 +0000 (GMT)
+From:   Thomas Richter <tmricht@linux.ibm.com>
+To:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        acme@kernel.org
+Cc:     brueckner@linux.vnet.ibm.com, schwidefsky@de.ibm.com,
+        heiko.carstens@de.ibm.com, Thomas Richter <tmricht@linux.ibm.com>
+Subject: [PATCH] pert/report: Support s390 diag event display on x86
+Date:   Mon, 20 May 2019 16:42:42 +0200
+X-Mailer: git-send-email 2.17.1
+X-TM-AS-GCONF: 00
+x-cbid: 19052014-0028-0000-0000-0000036FA2D9
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19052014-0029-0000-0000-0000242F48C3
+Message-Id: <20190520144242.53207-1-tmricht@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-20_07:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1905200096
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi.
+Perf report fails to display s390 specific event numbered bd000
+on an x86 platform. For example on s390 this works without error:
 
-On Mon, May 20, 2019 at 12:52:47PM +0900, Minchan Kim wrote:
-> - Background
-> 
-> The Android terminology used for forking a new process and starting an app
-> from scratch is a cold start, while resuming an existing app is a hot start.
-> While we continually try to improve the performance of cold starts, hot
-> starts will always be significantly less power hungry as well as faster so
-> we are trying to make hot start more likely than cold start.
-> 
-> To increase hot start, Android userspace manages the order that apps should
-> be killed in a process called ActivityManagerService. ActivityManagerService
-> tracks every Android app or service that the user could be interacting with
-> at any time and translates that into a ranked list for lmkd(low memory
-> killer daemon). They are likely to be killed by lmkd if the system has to
-> reclaim memory. In that sense they are similar to entries in any other cache.
-> Those apps are kept alive for opportunistic performance improvements but
-> those performance improvements will vary based on the memory requirements of
-> individual workloads.
-> 
-> - Problem
-> 
-> Naturally, cached apps were dominant consumers of memory on the system.
-> However, they were not significant consumers of swap even though they are
-> good candidate for swap. Under investigation, swapping out only begins
-> once the low zone watermark is hit and kswapd wakes up, but the overall
-> allocation rate in the system might trip lmkd thresholds and cause a cached
-> process to be killed(we measured performance swapping out vs. zapping the
-> memory by killing a process. Unsurprisingly, zapping is 10x times faster
-> even though we use zram which is much faster than real storage) so kill
-> from lmkd will often satisfy the high zone watermark, resulting in very
-> few pages actually being moved to swap.
-> 
-> - Approach
-> 
-> The approach we chose was to use a new interface to allow userspace to
-> proactively reclaim entire processes by leveraging platform information.
-> This allowed us to bypass the inaccuracy of the kernel’s LRUs for pages
-> that are known to be cold from userspace and to avoid races with lmkd
-> by reclaiming apps as soon as they entered the cached state. Additionally,
-> it could provide many chances for platform to use much information to
-> optimize memory efficiency.
-> 
-> IMHO we should spell it out that this patchset complements MADV_WONTNEED
-> and MADV_FREE by adding non-destructive ways to gain some free memory
-> space. MADV_COLD is similar to MADV_WONTNEED in a way that it hints the
-> kernel that memory region is not currently needed and should be reclaimed
-> immediately; MADV_COOL is similar to MADV_FREE in a way that it hints the
-> kernel that memory region is not currently needed and should be reclaimed
-> when memory pressure rises.
-> 
-> To achieve the goal, the patchset introduce two new options for madvise.
-> One is MADV_COOL which will deactive activated pages and the other is
-> MADV_COLD which will reclaim private pages instantly. These new options
-> complement MADV_DONTNEED and MADV_FREE by adding non-destructive ways to
-> gain some free memory space. MADV_COLD is similar to MADV_DONTNEED in a way
-> that it hints the kernel that memory region is not currently needed and
-> should be reclaimed immediately; MADV_COOL is similar to MADV_FREE in a way
-> that it hints the kernel that memory region is not currently needed and
-> should be reclaimed when memory pressure rises.
-> 
-> This approach is similar in spirit to madvise(MADV_WONTNEED), but the
-> information required to make the reclaim decision is not known to the app.
-> Instead, it is known to a centralized userspace daemon, and that daemon
-> must be able to initiate reclaim on its own without any app involvement.
-> To solve the concern, this patch introduces new syscall -
-> 
-> 	struct pr_madvise_param {
-> 		int size;
-> 		const struct iovec *vec;
-> 	}
-> 
-> 	int process_madvise(int pidfd, ssize_t nr_elem, int *behavior,
-> 				struct pr_madvise_param *restuls,
-> 				struct pr_madvise_param *ranges,
-> 				unsigned long flags);
-> 
-> The syscall get pidfd to give hints to external process and provides
-> pair of result/ranges vector arguments so that it could give several
-> hints to each address range all at once.
-> 
-> I guess others have different ideas about the naming of syscall and options
-> so feel free to suggest better naming.
-> 
-> - Experiment
-> 
-> We did bunch of testing with several hundreds of real users, not artificial
-> benchmark on android. We saw about 17% cold start decreasement without any
-> significant battery/app startup latency issues. And with artificial benchmark
-> which launches and switching apps, we saw average 7% app launching improvement,
-> 18% less lmkd kill and good stat from vmstat.
-> 
-> A is vanilla and B is process_madvise.
-> 
-> 
->                                        A          B      delta   ratio(%)
->                allocstall_dma          0          0          0       0.00
->            allocstall_movable       1464        457      -1007     -69.00
->             allocstall_normal     263210     190763     -72447     -28.00
->              allocstall_total     264674     191220     -73454     -28.00
->           compact_daemon_wake      26912      25294      -1618      -7.00
->                  compact_fail      17885      14151      -3734     -21.00
->          compact_free_scanned 4204766409 3835994922 -368771487      -9.00
->              compact_isolated    3446484    2967618    -478866     -14.00
->       compact_migrate_scanned 1621336411 1324695710 -296640701     -19.00
->                 compact_stall      19387      15343      -4044     -21.00
->               compact_success       1502       1192       -310     -21.00
-> kswapd_high_wmark_hit_quickly        234        184        -50     -22.00
->             kswapd_inodesteal     221635     233093      11458       5.00
->  kswapd_low_wmark_hit_quickly      66065      54009     -12056     -19.00
->                    nr_dirtied     259934     296476      36542      14.00
->   nr_vmscan_immediate_reclaim       2587       2356       -231      -9.00
->               nr_vmscan_write    1274232    2661733    1387501     108.00
->                    nr_written    1514060    2937560    1423500      94.00
->                    pageoutrun      67561      55133     -12428     -19.00
->                    pgactivate    2335060    1984882    -350178     -15.00
->                   pgalloc_dma   13743011   14096463     353452       2.00
->               pgalloc_movable          0          0          0       0.00
->                pgalloc_normal   18742440   16802065   -1940375     -11.00
->                 pgalloc_total   32485451   30898528   -1586923      -5.00
->                  pgdeactivate    4262210    2930670   -1331540     -32.00
->                       pgfault   30812334   31085065     272731       0.00
->                        pgfree   33553970   31765164   -1788806      -6.00
->                  pginodesteal      33411      15084     -18327     -55.00
->                   pglazyfreed          0          0          0       0.00
->                    pgmajfault     551312    1508299     956987     173.00
->                pgmigrate_fail      43927      29330     -14597     -34.00
->             pgmigrate_success    1399851    1203922    -195929     -14.00
->                        pgpgin   24141776   19032156   -5109620     -22.00
->                       pgpgout     959344    1103316     143972      15.00
->                  pgpgoutclean    4639732    3765868    -873864     -19.00
->                      pgrefill    4884560    3006938   -1877622     -39.00
->                     pgrotated      37828      25897     -11931     -32.00
->                 pgscan_direct    1456037     957567    -498470     -35.00
->        pgscan_direct_throttle          0          0          0       0.00
->                 pgscan_kswapd    6667767    5047360   -1620407     -25.00
->                  pgscan_total    8123804    6004927   -2118877     -27.00
->                    pgskip_dma          0          0          0       0.00
->                pgskip_movable          0          0          0       0.00
->                 pgskip_normal      14907      25382      10475      70.00
->                  pgskip_total      14907      25382      10475      70.00
->                pgsteal_direct    1118986     690215    -428771     -39.00
->                pgsteal_kswapd    4750223    3657107   -1093116     -24.00
->                 pgsteal_total    5869209    4347322   -1521887     -26.00
->                        pswpin     417613    1392647     975034     233.00
->                       pswpout    1274224    2661731    1387507     108.00
->                 slabs_scanned   13686905   10807200   -2879705     -22.00
->           workingset_activate     668966     569444     -99522     -15.00
->        workingset_nodereclaim      38957      32621      -6336     -17.00
->            workingset_refault    2816795    2179782    -637013     -23.00
->            workingset_restore     294320     168601    -125719     -43.00
-> 
-> pgmajfault is increased by 173% because swapin is increased by 200% by
-> process_madvise hint. However, swap read based on zram is much cheaper
-> than file IO in performance point of view and app hot start by swapin is
-> also cheaper than cold start from the beginning of app which needs many IO
-> from storage and initialization steps.
-> 
-> This patchset is against on next-20190517.
-> 
-> Minchan Kim (7):
->   mm: introduce MADV_COOL
->   mm: change PAGEREF_RECLAIM_CLEAN with PAGE_REFRECLAIM
->   mm: introduce MADV_COLD
->   mm: factor out madvise's core functionality
->   mm: introduce external memory hinting API
->   mm: extend process_madvise syscall to support vector arrary
->   mm: madvise support MADV_ANONYMOUS_FILTER and MADV_FILE_FILTER
-> 
->  arch/x86/entry/syscalls/syscall_32.tbl |   1 +
->  arch/x86/entry/syscalls/syscall_64.tbl |   1 +
->  include/linux/page-flags.h             |   1 +
->  include/linux/page_idle.h              |  15 +
->  include/linux/proc_fs.h                |   1 +
->  include/linux/swap.h                   |   2 +
->  include/linux/syscalls.h               |   2 +
->  include/uapi/asm-generic/mman-common.h |  12 +
->  include/uapi/asm-generic/unistd.h      |   2 +
->  kernel/signal.c                        |   2 +-
->  kernel/sys_ni.c                        |   1 +
->  mm/madvise.c                           | 600 +++++++++++++++++++++----
->  mm/swap.c                              |  43 ++
->  mm/vmscan.c                            |  80 +++-
->  14 files changed, 680 insertions(+), 83 deletions(-)
-> 
-> -- 
-> 2.21.0.1020.gf2820cf01a-goog
-> 
+[root@m35lp76 perf]# uname -m
+s390x
+[root@m35lp76 perf]# ./perf record -e rbd000 -- find / >/dev/null
+[ perf record: Woken up 3 times to write data ]
+[ perf record: Captured and wrote 0.549 MB perf.data ]
+[root@m35lp76 perf]# ./perf report -D --stdio  > /dev/null
+[root@m35lp76 perf]#
 
-Please Cc me for the next iteration since I was working on the very same
-thing recently [1].
+Transfering this perf.data file to an x86 platform and executing
+the same report command produces:
 
-Thank you.
+[root@f29 perf]# uname -m
+x86_64
+[root@f29 perf]# ./perf report -i ~/perf.data.m35lp76 --stdio
+interpreting bpf_prog_info from systems with endianity is not yet supported
+interpreting btf from systems with endianity is not yet supported
+0x8c890 [0x8]: failed to process type: 68
+Error:
+failed to process sample
 
-[1] https://gitlab.com/post-factum/pf-kernel/commits/remote-madvise-v3
+Event bd000 generates auxiliary data which is stored in big endian
+format in the perf data file.
+This error is caused by missing endianess handling on the x86 platform
+when the data is displayed. Fix this by handling s390 auxiliary event
+data depending on the local platform endianness.
 
+Output after on x86:
+
+[root@f29 perf]# ./perf report -D -i ~/perf.data.m35lp76 --stdio > /dev/null
+interpreting bpf_prog_info from systems with endianity is not yet supported
+interpreting btf from systems with endianity is not yet supported
+[root@f29 perf]#
+
+Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
+---
+ tools/perf/util/s390-cpumsf.c | 95 ++++++++++++++++++++++++++++-------
+ 1 file changed, 77 insertions(+), 18 deletions(-)
+
+diff --git a/tools/perf/util/s390-cpumsf.c b/tools/perf/util/s390-cpumsf.c
+index c215704931dc..884ac79528ff 100644
+--- a/tools/perf/util/s390-cpumsf.c
++++ b/tools/perf/util/s390-cpumsf.c
+@@ -17,8 +17,8 @@
+  *	see Documentation/perf.data-file-format.txt.
+  * PERF_RECORD_AUXTRACE_INFO:
+  *	Defines a table of contains for PERF_RECORD_AUXTRACE records. This
+- *	record is generated during 'perf record' command. Each record contains up
+- *	to 256 entries describing offset and size of the AUXTRACE data in the
++ *	record is generated during 'perf record' command. Each record contains
++ *	up to 256 entries describing offset and size of the AUXTRACE data in the
+  *	perf.data file.
+  * PERF_RECORD_AUXTRACE_ERROR:
+  *	Indicates an error during AUXTRACE collection such as buffer overflow.
+@@ -237,10 +237,33 @@ static int s390_cpumcf_dumpctr(struct s390_cpumsf *sf,
+ 	return rc;
+ }
+ 
+-/* Display s390 CPU measurement facility basic-sampling data entry */
++/* Display s390 CPU measurement facility basic-sampling data entry
++ * Data written on s390 in big endian byte order and contains bit
++ * fields across byte boundaries.
++ */
+ static bool s390_cpumsf_basic_show(const char *color, size_t pos,
+-				   struct hws_basic_entry *basic)
++				   struct hws_basic_entry *basicp)
+ {
++	struct hws_basic_entry *basic = basicp;
++#if __BYTE_ORDER == __LITTLE_ENDIAN
++	struct hws_basic_entry local;
++	unsigned long word = be64toh(*(unsigned long *)basicp);
++
++	memset(&local, 0, sizeof(local));
++	local.def = be16toh(basicp->def);
++	local.prim_asn = word & 0xffff;
++	local.CL = word >> 30 & 0x3;
++	local.I = word >> 32 & 0x1;
++	local.AS = word >> 33 & 0x3;
++	local.P = word >> 35 & 0x1;
++	local.W = word >> 36 & 0x1;
++	local.T = word >> 37 & 0x1;
++	local.U = word >> 40 & 0xf;
++	local.ia = be64toh(basicp->ia);
++	local.gpp = be64toh(basicp->gpp);
++	local.hpp = be64toh(basicp->hpp);
++	basic = &local;
++#endif
+ 	if (basic->def != 1) {
+ 		pr_err("Invalid AUX trace basic entry [%#08zx]\n", pos);
+ 		return false;
+@@ -258,10 +281,22 @@ static bool s390_cpumsf_basic_show(const char *color, size_t pos,
+ 	return true;
+ }
+ 
+-/* Display s390 CPU measurement facility diagnostic-sampling data entry */
++/* Display s390 CPU measurement facility diagnostic-sampling data entry.
++ * Data written on s390 in big endian byte order and contains bit
++ * fields across byte boundaries.
++ */
+ static bool s390_cpumsf_diag_show(const char *color, size_t pos,
+-				  struct hws_diag_entry *diag)
++				  struct hws_diag_entry *diagp)
+ {
++	struct hws_diag_entry *diag = diagp;
++#if __BYTE_ORDER == __LITTLE_ENDIAN
++	struct hws_diag_entry local;
++	unsigned long word = be64toh(*(unsigned long *)diagp);
++
++	local.def = be16toh(diagp->def);
++	local.I = word >> 32 & 0x1;
++	diag = &local;
++#endif
+ 	if (diag->def < S390_CPUMSF_DIAG_DEF_FIRST) {
+ 		pr_err("Invalid AUX trace diagnostic entry [%#08zx]\n", pos);
+ 		return false;
+@@ -272,35 +307,51 @@ static bool s390_cpumsf_diag_show(const char *color, size_t pos,
+ }
+ 
+ /* Return TOD timestamp contained in an trailer entry */
+-static unsigned long long trailer_timestamp(struct hws_trailer_entry *te)
++static unsigned long long trailer_timestamp(struct hws_trailer_entry *te,
++					    int idx)
+ {
+ 	/* te->t set: TOD in STCKE format, bytes 8-15
+ 	 * to->t not set: TOD in STCK format, bytes 0-7
+ 	 */
+ 	unsigned long long ts;
+ 
+-	memcpy(&ts, &te->timestamp[te->t], sizeof(ts));
+-	return ts;
++	memcpy(&ts, &te->timestamp[idx], sizeof(ts));
++	return be64toh(ts);
+ }
+ 
+ /* Display s390 CPU measurement facility trailer entry */
+ static bool s390_cpumsf_trailer_show(const char *color, size_t pos,
+ 				     struct hws_trailer_entry *te)
+ {
++#if __BYTE_ORDER == __LITTLE_ENDIAN
++	struct hws_trailer_entry local;
++
++	memset(&local, 0, sizeof(local));
++	local.f = be64toh(te->flags) >> 63 & 0x1;
++	local.a = be64toh(te->flags) >> 62 & 0x1;
++	local.t = be64toh(te->flags) >> 61 & 0x1;
++	local.bsdes = be16toh((be64toh(te->flags) >> 16 & 0xffff));
++	local.dsdes = be16toh((be64toh(te->flags) & 0xffff));
++	memcpy(&local.timestamp, te->timestamp, sizeof(te->timestamp));
++	local.overflow = be64toh(te->overflow);
++	local.clock_base = be64toh(te->progusage[0]) >> 63 & 1;
++	local.progusage2 = be64toh(te->progusage2);
++	te = &local;
++#endif
+ 	if (te->bsdes != sizeof(struct hws_basic_entry)) {
+ 		pr_err("Invalid AUX trace trailer entry [%#08zx]\n", pos);
+ 		return false;
+ 	}
+ 	color_fprintf(stdout, color, "    [%#08zx] Trailer %c%c%c bsdes:%d"
+ 		      " dsdes:%d Overflow:%lld Time:%#llx\n"
+-		      "\t\tC:%d TOD:%#lx 1:%#llx 2:%#llx\n",
++		      "\t\tC:%d TOD:%#lx\n",
+ 		      pos,
+ 		      te->f ? 'F' : ' ',
+ 		      te->a ? 'A' : ' ',
+ 		      te->t ? 'T' : ' ',
+ 		      te->bsdes, te->dsdes, te->overflow,
+-		      trailer_timestamp(te), te->clock_base, te->progusage2,
+-		      te->progusage[0], te->progusage[1]);
++		      trailer_timestamp(te, te->clock_base),
++		      te->clock_base, te->progusage2);
+ 	return true;
+ }
+ 
+@@ -327,13 +378,13 @@ static bool s390_cpumsf_validate(int machine_type,
+ 	*dsdes = *bsdes = 0;
+ 	if (len & (S390_CPUMSF_PAGESZ - 1))	/* Illegal size */
+ 		return false;
+-	if (basic->def != 1)		/* No basic set entry, must be first */
++	if (be16toh(basic->def) != 1)	/* No basic set entry, must be first */
+ 		return false;
+ 	/* Check for trailer entry at end of SDB */
+ 	te = (struct hws_trailer_entry *)(buf + S390_CPUMSF_PAGESZ
+ 					      - sizeof(*te));
+-	*bsdes = te->bsdes;
+-	*dsdes = te->dsdes;
++	*bsdes = be16toh(te->bsdes);
++	*dsdes = be16toh(te->dsdes);
+ 	if (!te->bsdes && !te->dsdes) {
+ 		/* Very old hardware, use CPUID */
+ 		switch (machine_type) {
+@@ -495,19 +546,27 @@ static bool s390_cpumsf_make_event(size_t pos,
+ static unsigned long long get_trailer_time(const unsigned char *buf)
+ {
+ 	struct hws_trailer_entry *te;
+-	unsigned long long aux_time;
++	unsigned long long aux_time, progusage2;
++	bool clock_base;
+ 
+ 	te = (struct hws_trailer_entry *)(buf + S390_CPUMSF_PAGESZ
+ 					      - sizeof(*te));
+ 
+-	if (!te->clock_base)	/* TOD_CLOCK_BASE value missing */
++#if __BYTE_ORDER == __LITTLE_ENDIAN
++	clock_base = be64toh(te->progusage[0]) >> 63 & 0x1;
++	progusage2 = be64toh(te->progusage[1]);
++#else
++	clock_base = te->clock_base;
++	progusage2 = te->progusage2;
++#endif
++	if (!clock_base)	/* TOD_CLOCK_BASE value missing */
+ 		return 0;
+ 
+ 	/* Correct calculation to convert time stamp in trailer entry to
+ 	 * nano seconds (taken from arch/s390 function tod_to_ns()).
+ 	 * TOD_CLOCK_BASE is stored in trailer entry member progusage2.
+ 	 */
+-	aux_time = trailer_timestamp(te) - te->progusage2;
++	aux_time = trailer_timestamp(te, clock_base) - progusage2;
+ 	aux_time = (aux_time >> 9) * 125 + (((aux_time & 0x1ff) * 125) >> 9);
+ 	return aux_time;
+ }
 -- 
-  Best regards,
-    Oleksandr Natalenko (post-factum)
-    Senior Software Maintenance Engineer
+2.19.1
+
