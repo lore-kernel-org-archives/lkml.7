@@ -2,113 +2,145 @@ Return-Path: <SRS0=lq4r=TU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FB82C04E87
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 13:58:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EAE57C04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 13:59:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D695C21734
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 13:58:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558360692;
-	bh=1XoNRY35+5XtWIU4NY/RtwTEWQpObRguoYyOqsTa+s8=;
-	h=Date:From:To:To:To:Cc:Cc:Subject:In-Reply-To:References:List-ID:
-	 From;
-	b=GnR2SuLFW/hZMPGlLqMQLGO7+F7N0XJkEvl7+M+2qwLYYeVcO+OV/xLy5zCGde8UA
-	 Lm7LCwLA8eq79V3zRqK+ZNSxA7NajE/4IRhQgopTHsnCf5oDaA7AbynIZwewLMOVnH
-	 /VUg/A6VlSU6tPnLAKWDF5FAVdGfrDTTzqK4fdZU=
+	by mail.kernel.org (Postfix) with ESMTP id BB2FE216B7
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 13:59:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="awR0zC0C"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732202AbfETN6M (ORCPT
+        id S2388233AbfETN7c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 09:58:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36448 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730162AbfETN6L (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 09:58:11 -0400
-Received: from localhost (unknown [23.100.24.84])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BDF25216B7;
-        Mon, 20 May 2019 13:58:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558360691;
-        bh=1XoNRY35+5XtWIU4NY/RtwTEWQpObRguoYyOqsTa+s8=;
-        h=Date:From:To:To:To:Cc:Cc:Subject:In-Reply-To:References:From;
-        b=NKct5ysb99xTVVxCKjqZzaSq/dX1G6ZE+TnCjVZGmpXcx+6159Zt4fZbZkteHrrk1
-         I7YTBpwQLCczH7GD5GJ/s6+GesNMmQMWlX3ZZXrX/nMWU4etIuj+pW0jrTgei+y2QM
-         iB6GQkbvZRQfBpS3bNMegNMUPB6A9C9liXllFDc8=
-Date:   Mon, 20 May 2019 13:58:09 +0000
-From:   Sasha Levin <sashal@kernel.org>
-To:     Sasha Levin <sashal@kernel.org>
-To:     Adrian Hunter <adrian.hunter@intel.com>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Jiri Olsa <jolsa@redhat.com>, linux-kernel@vger.kernel.org
-Cc:     stable@vger.kernel.org
-Subject: Re: [PATCH 01/22] perf intel-pt: Fix itrace defaults for perf script
-In-Reply-To: <20190520113728.14389-2-adrian.hunter@intel.com>
-References: <20190520113728.14389-2-adrian.hunter@intel.com>
-Message-Id: <20190520135810.BDF25216B7@mail.kernel.org>
+        Mon, 20 May 2019 09:59:32 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:53464 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732337AbfETN7c (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 09:59:32 -0400
+Received: by mail-wm1-f68.google.com with SMTP id 198so13425843wme.3
+        for <linux-kernel@vger.kernel.org>; Mon, 20 May 2019 06:59:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=q5ikjbPSCHRQAZ8XpjIGvp4CtMI7esI83aWB/BOoRdA=;
+        b=awR0zC0C6HFr9b+KPaXLWOpAnbu221RHYXarKhSh5QVhQCIUpOl/GvA2qPQ5L33p2P
+         o5CRGqdQnMiBe5rWjcK/rDcppaRl5MlkbFNYiZ6KaYYEsLNFUxxzHUrQXFOae4LcVx2M
+         PC01GUr1oAb9WU8U3d9XUUo5ShpD0g7H+HmcFkd8o72S1FIAVGAeRTOKO8CyzVcS+u4c
+         55qW8yPjKPP3YV2pR6eypGCux9OJbg0jybdRC5N7JUAZ3L687pG4GyQdXV/0dRVORR+Y
+         MP2ecLHwImCRUSqrQ3w7N7wtSi0GEe2K8d8Ibf5v3LczhihtxlM8neeFRX4hFgPDY22c
+         o53A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=q5ikjbPSCHRQAZ8XpjIGvp4CtMI7esI83aWB/BOoRdA=;
+        b=HldEsEbjm8G4MAJfuI1kpHzjjzsWPM4qXZIodDDTzRZhA2EPOWdasFVLS9+qS7G86m
+         LgTm9Kiqd8UigZ3f5Abg0FtumxYP0T3Bujypakghl5+1nJKdycZJkoaIjsmawOq4PtGG
+         14NLbFRMETJ5cxTh7HMUNAE72FsHnAVDOsYTnzwF/9ff+6/2TDsDnfSwr2hFaD8HGkDz
+         mvUpzY4tULQDvAIdiPqM3+mK6QPq1axBEv8DgA7BBCGzJsraigzPZjT+dRQ/GzRr80Dv
+         d4yQXD9iNlgF66bY377Um5WwXPlKT66aMyglWv3o7MtHd8dEHfApl4G9QHrv07iDBK3T
+         nP3Q==
+X-Gm-Message-State: APjAAAW9lvIUtwJUwVlTcLo1mXlH8TdqihSvBDNZaNBpMeLPJWrnNuZK
+        1iXHvZ3p/cbjztyIKQAcBkizB57DqeuD7w==
+X-Google-Smtp-Source: APXvYqwrDN1EXgltWlHOS1575AFZtbDm/X11UixJxY9eQPsiyR3/VBNmZ9AXkQgbylxOmR70AcvHyA==
+X-Received: by 2002:a1c:cf4f:: with SMTP id f76mr9385856wmg.18.1558360769988;
+        Mon, 20 May 2019 06:59:29 -0700 (PDT)
+Received: from bender.baylibre.local (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
+        by smtp.gmail.com with ESMTPSA id s124sm20858819wmf.42.2019.05.20.06.59.29
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Mon, 20 May 2019 06:59:29 -0700 (PDT)
+From:   Neil Armstrong <narmstrong@baylibre.com>
+To:     mpm@selenic.com, herbert@gondor.apana.org.au
+Cc:     linux-crypto@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Neil Armstrong <narmstrong@baylibre.com>
+Subject: [PATCH] char: hw_random: meson-rng: update with SPDX Licence identifier
+Date:   Mon, 20 May 2019 15:59:19 +0200
+Message-Id: <20190520135919.28946-1-narmstrong@baylibre.com>
+X-Mailer: git-send-email 2.21.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+---
+ drivers/char/hw_random/meson-rng.c | 52 +-----------------------------
+ 1 file changed, 1 insertion(+), 51 deletions(-)
 
-[This is an automated email]
+diff --git a/drivers/char/hw_random/meson-rng.c b/drivers/char/hw_random/meson-rng.c
+index 2e23be802a62..76e693da5dde 100644
+--- a/drivers/char/hw_random/meson-rng.c
++++ b/drivers/char/hw_random/meson-rng.c
+@@ -1,58 +1,8 @@
++// SPDX-License-Identifier: GPL-2.0 OR BSD-3-Clause
+ /*
+- * This file is provided under a dual BSD/GPLv2 license.  When using or
+- * redistributing this file, you may do so under either license.
+- *
+- * GPL LICENSE SUMMARY
+- *
+  * Copyright (c) 2016 BayLibre, SAS.
+  * Author: Neil Armstrong <narmstrong@baylibre.com>
+  * Copyright (C) 2014 Amlogic, Inc.
+- *
+- * This program is free software; you can redistribute it and/or modify
+- * it under the terms of version 2 of the GNU General Public License as
+- * published by the Free Software Foundation.
+- *
+- * This program is distributed in the hope that it will be useful, but
+- * WITHOUT ANY WARRANTY; without even the implied warranty of
+- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+- * General Public License for more details.
+- *
+- * You should have received a copy of the GNU General Public License
+- * along with this program; if not, see <http://www.gnu.org/licenses/>.
+- * The full GNU General Public License is included in this distribution
+- * in the file called COPYING.
+- *
+- * BSD LICENSE
+- *
+- * Copyright (c) 2016 BayLibre, SAS.
+- * Author: Neil Armstrong <narmstrong@baylibre.com>
+- * Copyright (C) 2014 Amlogic, Inc.
+- *
+- * Redistribution and use in source and binary forms, with or without
+- * modification, are permitted provided that the following conditions
+- * are met:
+- *
+- *   * Redistributions of source code must retain the above copyright
+- *     notice, this list of conditions and the following disclaimer.
+- *   * Redistributions in binary form must reproduce the above copyright
+- *     notice, this list of conditions and the following disclaimer in
+- *     the documentation and/or other materials provided with the
+- *     distribution.
+- *   * Neither the name of Intel Corporation nor the names of its
+- *     contributors may be used to endorse or promote products derived
+- *     from this software without specific prior written permission.
+- *
+- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+- * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+- * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+- * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+- * OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+- * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+- * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+- * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+- * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+- * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+- * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+  */
+ #include <linux/err.h>
+ #include <linux/module.h>
+-- 
+2.21.0
 
-This commit has been processed because it contains a "Fixes:" tag,
-fixing commit: 90e457f7be08 perf tools: Add Intel PT support.
-
-The bot has tested the following trees: v5.1.3, v5.0.17, v4.19.44, v4.14.120, v4.9.177, v4.4.180.
-
-v5.1.3: Build OK!
-v5.0.17: Build OK!
-v4.19.44: Failed to apply! Possible dependencies:
-    4eb068157121 ("perf script: Make itrace script default to all calls")
-
-v4.14.120: Failed to apply! Possible dependencies:
-    20d9c478b01a ("pert tools: Add queue management functionality")
-    440a23b34c06 ("perf tools: Add initial entry point for decoder CoreSight traces")
-    4eb068157121 ("perf script: Make itrace script default to all calls")
-    68ffe3902898 ("perf tools: Add decoder mechanic to support dumping trace data")
-    9f878b29da96 ("perf tools: Add full support for CoreSight trace decoding")
-    b12235b113cf ("perf tools: Add mechanic to synthesise CoreSight trace packets")
-    ffd3d18c20b8 ("perf tools: Add ARM Statistical Profiling Extensions (SPE) support")
-
-v4.9.177: Failed to apply! Possible dependencies:
-    20d9c478b01a ("pert tools: Add queue management functionality")
-    3bdafdffa9ba ("perf auxtrace: Add itrace option to output ptwrite events")
-    440a23b34c06 ("perf tools: Add initial entry point for decoder CoreSight traces")
-    4eb068157121 ("perf script: Make itrace script default to all calls")
-    68ffe3902898 ("perf tools: Add decoder mechanic to support dumping trace data")
-    70d110d77599 ("perf auxtrace: Add itrace option to output power events")
-    9f878b29da96 ("perf tools: Add full support for CoreSight trace decoding")
-    b12235b113cf ("perf tools: Add mechanic to synthesise CoreSight trace packets")
-    ffd3d18c20b8 ("perf tools: Add ARM Statistical Profiling Extensions (SPE) support")
-
-v4.4.180: Failed to apply! Possible dependencies:
-    3bdafdffa9ba ("perf auxtrace: Add itrace option to output ptwrite events")
-    3becf4525d9c ("perf tools: Add sink configuration for cs_etm PMU")
-    403cacb8a25e ("perf unwind: Don't mix LIBUNWIND_LIBS into LIBUNWIND_LDFLAGS")
-    440a23b34c06 ("perf tools: Add initial entry point for decoder CoreSight traces")
-    4eb068157121 ("perf script: Make itrace script default to all calls")
-    5a155bb77a67 ("perf build: Remove all condition feature check {C,LD}FLAGS")
-    68ffe3902898 ("perf tools: Add decoder mechanic to support dumping trace data")
-    70d110d77599 ("perf auxtrace: Add itrace option to output power events")
-    7e21b0d579a4 ("perf tools: Make coresight PMU listable")
-    9d8e14d306ef ("perf unwind: Separate local/remote libunwind config")
-    9f878b29da96 ("perf tools: Add full support for CoreSight trace decoding")
-    a818c563ae16 ("perf tools: Add coresight etm PMU record capabilities")
-    b12235b113cf ("perf tools: Add mechanic to synthesise CoreSight trace packets")
-    d1706b39f0af ("perf tools: Add support for skipping itrace instructions")
-    ffd3d18c20b8 ("perf tools: Add ARM Statistical Profiling Extensions (SPE) support")
-
-
-How should we proceed with this patch?
-
---
-Thanks,
-Sasha
