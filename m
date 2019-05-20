@@ -2,85 +2,70 @@ Return-Path: <SRS0=lq4r=TU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AC96C04AAC
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9AD9C072A4
 	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 23:20:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CE1D42183F
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 23:20:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD2C82171F
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 23:20:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="eQRQDPc6"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ERQB0e/P"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727250AbfETXUC (ORCPT
+        id S1727354AbfETXUK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 19:20:02 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:35734 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726357AbfETXUC (ORCPT
+        Mon, 20 May 2019 19:20:10 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:44477 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727320AbfETXUJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 19:20:02 -0400
-Received: by mail-pg1-f194.google.com with SMTP id t1so6090886pgc.2
-        for <linux-kernel@vger.kernel.org>; Mon, 20 May 2019 16:20:01 -0700 (PDT)
+        Mon, 20 May 2019 19:20:09 -0400
+Received: by mail-pg1-f193.google.com with SMTP id n2so832632pgp.11
+        for <linux-kernel@vger.kernel.org>; Mon, 20 May 2019 16:20:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=ziH51J2YkDxbiEVM2GrMAlpVSd+QVOkC6hl+iSpS1bQ=;
-        b=eQRQDPc6uBU2Qk0F/htZOfYUHATfTVBNkYwDN/tGGT85UVF+0kNNU6JxQEi80X2jLd
-         nOecMr02fvsUklEjSkgaRZyFW8oTUFJ0vBMXfd8I0clvZdaInAdo9I3e++bv+isAWIAS
-         SbVUWwQ2uCxdPrlrZR8tJJBmOkDwJZLP5OV3E=
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=nGg2Bf2w3MsVGdZaS2JSU4wTchs3K+c20QEWcpV3rEI=;
+        b=ERQB0e/P/lRXortlWIvM98+deOc4OBxaHJswmyMJMwN9AnRICP7O7xG5wHxdekxpip
+         dVMA+/UHxaBWcNsOnnphQV7FP76TIavW2uK/wSid2a3PiFEtLKfG07ueDAPodcbMKcY9
+         hB/qqPWjpM+LkCjxrt8yNsfc/gHSs5GoTKR+4=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=ziH51J2YkDxbiEVM2GrMAlpVSd+QVOkC6hl+iSpS1bQ=;
-        b=QDaEyaPGpn6DpZHBVwVnbTs+oEgKC9qjpdpAkDoPvaMHqaFd3hq+qiYrGqxJSOgAzU
-         btb8oghH5nz3twB3KFHXadNHL1K6qqg4fYLyTiLzVpzpUkNeGdnL/U+5ZnIS62uh/r88
-         Z2UTLzLY1VSJ/VcxeQ3YtqH53P9zfd2x9n5+h+H6+KJo+Uf4nygKGUpFbWgSbYTZwLTh
-         D+MDCaVXdIcHbu5vTBmTBZ8v07eJ5H+KCf+RymCbbxR4ldO8HrjmMA8A3fRfwOWCv1M4
-         EFcFLfxB8s4xycE900K/nIYse0xZOHeDF5usM28filS4bUBQB72JKXcfU0dAHspJqj+7
-         xUgw==
-X-Gm-Message-State: APjAAAWXrFv0hDcf7ciBjR+5vfuoN02ioAvrIJT/4DjXKu8TKen4YGW8
-        PRzsa1f1zOUypipXXjWu6bdbqA==
-X-Google-Smtp-Source: APXvYqyF4jfnvmglKBHVKthuceEzZGxOmZsOsky8xSLS2H68VewsiuHrWgBWYJrlDb7GE/qEMLwOnw==
-X-Received: by 2002:a63:317:: with SMTP id 23mr78257345pgd.414.1558394401009;
-        Mon, 20 May 2019 16:20:01 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=nGg2Bf2w3MsVGdZaS2JSU4wTchs3K+c20QEWcpV3rEI=;
+        b=exzlJpUaqVn/5qeQHo6ZspXCzLMnlXWg27KkanQ8JbM62gapaaGBmDkpTaoKMZc/7O
+         LC4KxWKXHHlA9aRZ9dkwRn59rXetpw+rH0a3W8Gi3j44nqjza0tCU0U5l8KleYPiLABd
+         +cdK+X7WdugDCfTOZ6+sxfpeh1yezFvSnP26CwFA+sSkfnEYBirDh937zo2Y/sg0l7I8
+         Loh21cTvXzyF7YIlI3eKyKOVe83CFRcCjc8dlORHHTiZrxUUHqJGY5oLMsq4DMtaeZZo
+         k0ncG2LJs8fX9cS2lGC8E6KMPZ+LGavMy1CdUb9drNvLsFC+Bl8Z4K0f003sZ9nsYJJ8
+         1UIA==
+X-Gm-Message-State: APjAAAVI+nDYHu8pEYKJ4tW6Yjnycie2x3WcIrobtHRoafkbOx4qcMyD
+        +icFIXCqFhaKPf01iEwmGZcLgg==
+X-Google-Smtp-Source: APXvYqwCz/NeyhSKhhkjC1U3Pv0Ghct2bpZ0T1Gy0WqWYRztBFt7DlYc23EJLLkNN75S8gKKS6khNQ==
+X-Received: by 2002:a62:e201:: with SMTP id a1mr82910863pfi.67.1558394409379;
+        Mon, 20 May 2019 16:20:09 -0700 (PDT)
 Received: from skynet.sea.corp.google.com ([2620:0:1008:1100:c4b5:ec23:d87b:d6d3])
-        by smtp.gmail.com with ESMTPSA id h13sm19350861pgk.55.2019.05.20.16.19.59
+        by smtp.gmail.com with ESMTPSA id h13sm19350861pgk.55.2019.05.20.16.20.08
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 20 May 2019 16:20:00 -0700 (PDT)
+        Mon, 20 May 2019 16:20:08 -0700 (PDT)
 From:   Thomas Garnier <thgarnie@chromium.org>
 To:     kernel-hardening@lists.openwall.com
-Cc:     kristen@linux.intel.com, Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>,
+Cc:     kristen@linux.intel.com, Thomas Garnier <thgarnie@google.com>,
         Thomas Gleixner <tglx@linutronix.de>,
         Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
         "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        Andy Lutomirski <luto@kernel.org>,
-        Juergen Gross <jgross@suse.com>,
-        Alok Kataria <akataria@vmware.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Garnier <thgarnie@google.com>,
-        Nadav Amit <namit@vmware.com>, Jann Horn <jannh@google.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Feng Tang <feng.tang@intel.com>,
-        Jan Beulich <JBeulich@suse.com>,
-        Maran Wilson <maran.wilson@oracle.com>,
-        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
-        virtualization@lists.linux-foundation.org, linux-pm@vger.kernel.org
-Subject: [PATCH v7 00/12] x86: PIE support to extend KASLR randomization
-Date:   Mon, 20 May 2019 16:19:25 -0700
-Message-Id: <20190520231948.49693-1-thgarnie@chromium.org>
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v7 04/12] x86: relocate_kernel - Adapt assembly for PIE support
+Date:   Mon, 20 May 2019 16:19:29 -0700
+Message-Id: <20190520231948.49693-5-thgarnie@chromium.org>
 X-Mailer: git-send-email 2.21.0.1020.gf2820cf01a-goog
+In-Reply-To: <20190520231948.49693-1-thgarnie@chromium.org>
+References: <20190520231948.49693-1-thgarnie@chromium.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -88,98 +73,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Splitting the previous serie in two. This part contains assembly code
-changes required for PIE but without any direct dependencies with the
-rest of the patchset.
+From: Thomas Garnier <thgarnie@google.com>
 
-Changes:
- - patch v7 (assembly):
-   - Split patchset and reorder changes.
- - patch v6:
-   - Rebase on latest changes in jump tables and crypto.
-   - Fix wording on couple commits.
-   - Revisit checkpatch warnings.
-   - Moving to @chromium.org.
- - patch v5:
-   - Adapt new crypto modules for PIE.
-   - Improve per-cpu commit message.
-   - Fix xen 32-bit build error with .quad.
-   - Remove extra code for ftrace.
- - patch v4:
-   - Simplify early boot by removing global variables.
-   - Modify the mcount location script for __mcount_loc intead of the address
-     read in the ftrace implementation.
-   - Edit commit description to explain better where the kernel can be located.
-   - Streamlined the testing done on each patch proposal. Always testing
-     hibernation, suspend, ftrace and kprobe to ensure no regressions.
- - patch v3:
-   - Update on message to describe longer term PIE goal.
-   - Minor change on ftrace if condition.
-   - Changed code using xchgq.
- - patch v2:
-   - Adapt patch to work post KPTI and compiler changes
-   - Redo all performance testing with latest configs and compilers
-   - Simplify mov macro on PIE (MOVABS now)
-   - Reduce GOT footprint
- - patch v1:
-   - Simplify ftrace implementation.
-   - Use gcc mstack-protector-guard-reg=%gs with PIE when possible.
- - rfc v3:
-   - Use --emit-relocs instead of -pie to reduce dynamic relocation space on
-     mapped memory. It also simplifies the relocation process.
-   - Move the start the module section next to the kernel. Remove the need for
-     -mcmodel=large on modules. Extends module space from 1 to 2G maximum.
-   - Support for XEN PVH as 32-bit relocations can be ignored with
-     --emit-relocs.
-   - Support for GOT relocations previously done automatically with -pie.
-   - Remove need for dynamic PLT in modules.
-   - Support dymamic GOT for modules.
- - rfc v2:
-   - Add support for global stack cookie while compiler default to fs without
-     mcmodel=kernel
-   - Change patch 7 to correctly jump out of the identity mapping on kexec load
-     preserve.
+Change the assembly code to use only absolute references of symbols for the
+kernel to be PIE compatible.
 
-These patches make some of the changes necessary to build the kernel as
-Position Independent Executable (PIE) on x86_64. Another patchset will
-add the PIE option and larger architecture changes.
+Position Independent Executable (PIE) support will allow to extend the
+KASLR randomization range below 0xffffffff80000000.
 
-The patches:
- - 1-2, 4-12: Change in assembly code to be PIE compliant.
- - 3: Add a new _ASM_MOVABS macro to fetch a symbol address generically.
+Signed-off-by: Thomas Garnier <thgarnie@google.com>
+---
+ arch/x86/kernel/relocate_kernel_64.S | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diffstat:
- crypto/aegis128-aesni-asm.S         |    6 +-
- crypto/aegis128l-aesni-asm.S        |    8 +--
- crypto/aegis256-aesni-asm.S         |    6 +-
- crypto/aes-x86_64-asm_64.S          |   45 ++++++++++------
- crypto/aesni-intel_asm.S            |    8 +--
- crypto/camellia-aesni-avx-asm_64.S  |   42 +++++++--------
- crypto/camellia-aesni-avx2-asm_64.S |   44 ++++++++--------
- crypto/camellia-x86_64-asm_64.S     |    8 +--
- crypto/cast5-avx-x86_64-asm_64.S    |   50 ++++++++++--------
- crypto/cast6-avx-x86_64-asm_64.S    |   44 +++++++++-------
- crypto/des3_ede-asm_64.S            |   96 ++++++++++++++++++++++++------------
- crypto/ghash-clmulni-intel_asm.S    |    4 -
- crypto/glue_helper-asm-avx.S        |    4 -
- crypto/glue_helper-asm-avx2.S       |    6 +-
- crypto/morus1280-avx2-asm.S         |    4 -
- crypto/morus1280-sse2-asm.S         |    8 +--
- crypto/morus640-sse2-asm.S          |    6 +-
- crypto/sha256-avx2-asm.S            |   23 +++++---
- entry/entry_64.S                    |   16 ++++--
- include/asm/alternative.h           |    6 +-
- include/asm/asm.h                   |    1 
- include/asm/jump_label.h            |    8 +--
- include/asm/paravirt_types.h        |   12 +++-
- include/asm/pm-trace.h              |    2 
- include/asm/processor.h             |    6 +-
- kernel/acpi/wakeup_64.S             |   31 ++++++-----
- kernel/head_64.S                    |   16 +++---
- kernel/relocate_kernel_64.S         |    2 
- power/hibernate_asm_64.S            |    4 -
- 29 files changed, 299 insertions(+), 217 deletions(-)
-
-Patchset is based on next-20190515.
-
+diff --git a/arch/x86/kernel/relocate_kernel_64.S b/arch/x86/kernel/relocate_kernel_64.S
+index 11eda21eb697..3320368b6ec9 100644
+--- a/arch/x86/kernel/relocate_kernel_64.S
++++ b/arch/x86/kernel/relocate_kernel_64.S
+@@ -208,7 +208,7 @@ identity_mapped:
+ 	movq	%rax, %cr3
+ 	lea	PAGE_SIZE(%r8), %rsp
+ 	call	swap_pages
+-	movq	$virtual_mapped, %rax
++	movabsq	$virtual_mapped, %rax
+ 	pushq	%rax
+ 	ret
+ 
+-- 
+2.21.0.1020.gf2820cf01a-goog
 
