@@ -2,130 +2,106 @@ Return-Path: <SRS0=lq4r=TU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C733C072A4
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 09:11:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 505C3C04AAF
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 09:16:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E6AF020815
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 09:11:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558343496;
-	bh=U76uCPWwkjAlQMoQuk81T5lqeD1YoluVf7Go70H7KkY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=zw/np+Me0Jezah8MK+jKzFkiMyKviEPiBVBTbrHHG/tyHiO8Y6ct7GBbd/BEHxbWx
-	 2EOpiMb8PlB3/6M6ylSeI9A+Ti6henJhUdrQO8pJ5KrSga1QaYFEM3jHeYRHV1uXr3
-	 i8dL0JvjBjTVgyRZqQn8DigCXxFu7WpQtV3kxzK0=
+	by mail.kernel.org (Postfix) with ESMTP id 2DCD720675
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 09:16:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731976AbfETJLf (ORCPT
+        id S1731984AbfETJQC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 05:11:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36816 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731095AbfETJLe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 05:11:34 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CC74420656;
-        Mon, 20 May 2019 09:11:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558343494;
-        bh=U76uCPWwkjAlQMoQuk81T5lqeD1YoluVf7Go70H7KkY=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=RVY8Ip1ZIHJa47llpQIR+xlhZFIjFM2mNqU7bQOaQCZKKmr0HZdum/SK2Ufw9j+N5
-         haRFjmJW2ZHWFyjvr9ABoHwQBGKA8ZCvG5A/7WjMFZSnzObB2AtBY/VIwBGeg8QNzv
-         16GBOD3fLTHAClbFFk6ZinGouARHnBWxm2nl6RmQ=
-Date:   Mon, 20 May 2019 11:11:31 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     David Ahern <dsahern@gmail.com>
-Cc:     Nathan Chancellor <natechancellor@gmail.com>,
-        linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Thomas Haller <thaller@redhat.com>,
-        Hangbin Liu <liuhangbin@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org
-Subject: Re: [PATCH 4.9 41/51] fib_rules: return 0 directly if an exactly
- same rule exists when NLM_F_EXCL not supplied
-Message-ID: <20190520091131.GA1593@kroah.com>
-References: <20190515090616.669619870@linuxfoundation.org>
- <20190515090628.066392616@linuxfoundation.org>
- <20190519154348.GA113991@archlinux-epyc>
- <a36e3204-b52d-0bf0-f956-654189a18156@gmail.com>
- <20190520090429.GA25812@kroah.com>
+        Mon, 20 May 2019 05:16:02 -0400
+Received: from mx2.suse.de ([195.135.220.15]:37692 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1730677AbfETJQC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 05:16:02 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id BE23FAE4B;
+        Mon, 20 May 2019 09:15:59 +0000 (UTC)
+Received: by quack2.suse.cz (Postfix, from userid 1000)
+        id F16311E3C5F; Mon, 20 May 2019 11:15:58 +0200 (CEST)
+Date:   Mon, 20 May 2019 11:15:58 +0200
+From:   Jan Kara <jack@suse.cz>
+To:     Theodore Ts'o <tytso@mit.edu>
+Cc:     Paolo Valente <paolo.valente@linaro.org>,
+        "Srivatsa S. Bhat" <srivatsa@csail.mit.edu>,
+        linux-fsdevel@vger.kernel.org,
+        linux-block <linux-block@vger.kernel.org>,
+        linux-ext4@vger.kernel.org, cgroups@vger.kernel.org,
+        linux-kernel@vger.kernel.org, axboe@kernel.dk, jack@suse.cz,
+        jmoyer@redhat.com, amakhalov@vmware.com, anishs@vmware.com,
+        srivatsab@vmware.com
+Subject: Re: CFQ idling kills I/O performance on ext4 with blkio cgroup
+ controller
+Message-ID: <20190520091558.GC2172@quack2.suse.cz>
+References: <8d72fcf7-bbb4-2965-1a06-e9fc177a8938@csail.mit.edu>
+ <1812E450-14EF-4D5A-8F31-668499E13652@linaro.org>
+ <20190518192847.GB14277@mit.edu>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190520090429.GA25812@kroah.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+In-Reply-To: <20190518192847.GB14277@mit.edu>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 20, 2019 at 11:04:29AM +0200, Greg Kroah-Hartman wrote:
-> On Sun, May 19, 2019 at 06:29:19PM -0600, David Ahern wrote:
-> > On 5/19/19 9:43 AM, Nathan Chancellor wrote:
-> > > Hi all,
-> > > 
-> > > This commit is causing issues on Android devices when Wi-Fi and mobile
-> > > data are both enabled. The device will do a soft reboot consistently.
-> > > So far, I've had reports on the Pixel 3 XL, OnePlus 6, Pocophone, and
-> > > Note 9 and I can reproduce on my OnePlus 6.
-> > > 
-> > > Sorry for taking so long to report this, I just figured out how to
-> > > reproduce it today and I didn't want to report it without that.
-> > > 
-> > > Attached is a full dmesg and the relevant snippet from Android's logcat.
-> > > 
-> > > Let me know what I can do to help debug,
-> > > Nathan
-> > > 
-> > 
-> > It's a backport problem. err needs to be reset to 0 before the goto.
+On Sat 18-05-19 15:28:47, Theodore Ts'o wrote:
+> On Sat, May 18, 2019 at 08:39:54PM +0200, Paolo Valente wrote:
+> > I've addressed these issues in my last batch of improvements for
+> > BFQ, which landed in the upcoming 5.2. If you give it a try, and
+> > still see the problem, then I'll be glad to reproduce it, and
+> > hopefully fix it for you.
 > 
-> Ah, I see it, let me go queue up a fix for this.
+> Hi Paolo, I'm curious if you could give a quick summary about what you
+> changed in BFQ?
+> 
+> I was considering adding support so that if userspace calls fsync(2)
+> or fdatasync(2), to attach the process's CSS to the transaction, and
+> then charge all of the journal metadata writes the process's CSS.  If
+> there are multiple fsync's batched into the transaction, the first
+> process which forced the early transaction commit would get charged
+> the entire journal write.  OTOH, journal writes are sequential I/O, so
+> the amount of disk time for writing the journal is going to be
+> relatively small, and especially, the fact that work from other
+> cgroups is going to be minimal, especially if hadn't issued an
+> fsync().
 
-Here's the fix I'm queueing up now:
+But this makes priority-inversion problems with ext4 journal worse, doesn't
+it? If we submit journal commit in blkio cgroup of some random process, it
+may get throttled which then effectively blocks the whole filesystem. Or do
+you want to implement a more complex back-pressure mechanism where you'd
+just account to different blkio cgroup during journal commit and then
+throttle as different point where you are not blocking other tasks from
+progress?
 
+> In the case where you have three cgroups all issuing fsync(2) and they
+> all landed in the same jbd2 transaction thanks to commit batching, in
+> the ideal world we would split up the disk time usage equally across
+> those three cgroups.  But it's probably not worth doing that...
+> 
+> That being said, we probably do need some BFQ support, since in the
+> case where we have multiple processes doing buffered writes w/o fsync,
+> we do charnge the data=ordered writeback to each block cgroup.  Worse,
+> the commit can't complete until the all of the data integrity
+> writebacks have completed.  And if there are N cgroups with dirty
+> inodes, and slice_idle set to 8ms, there is going to be 8*N ms worth
+> of idle time tacked onto the commit time.
 
-From b42f0ebbe4431ff7ce99c916555418f4a4c2be67 Mon Sep 17 00:00:00 2001
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Date: Mon, 20 May 2019 11:07:29 +0200
-Subject: [PATCH] fib_rules: fix error in backport of e9919a24d302 ("fib_rules:
- return 0...")
+Yeah. At least in some cases, we know there won't be any more IO from a
+particular cgroup in the near future (e.g. transaction commit completing,
+or when the layers above IO scheduler already know which IO they are going
+to submit next) and in that case idling is just a waste of time. But so far
+I haven't decided how should look a reasonably clean interface for this
+that isn't specific to a particular IO scheduler implementation.
 
-When commit e9919a24d302 ("fib_rules: return 0 directly if an exactly
-same rule exists when NLM_F_EXCL not supplied") was backported to 4.9.y,
-it changed the logic a bit as err should have been reset before exiting
-the test, like it happens in the original logic.
-
-If this is not set, errors happen :(
-
-Reported-by: Nathan Chancellor <natechancellor@gmail.com>
-Reported-by: David Ahern <dsahern@gmail.com>
-Reported-by: Florian Westphal <fw@strlen.de>
-Cc: Hangbin Liu <liuhangbin@gmail.com>
-Cc: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- net/core/fib_rules.c | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/net/core/fib_rules.c b/net/core/fib_rules.c
-index bb26457e8c21..c03dd2104d33 100644
---- a/net/core/fib_rules.c
-+++ b/net/core/fib_rules.c
-@@ -430,6 +430,7 @@ int fib_nl_newrule(struct sk_buff *skb, struct nlmsghdr *nlh)
- 		goto errout_free;
- 
- 	if (rule_exists(ops, frh, tb, rule)) {
-+		err = 0;
- 		if (nlh->nlmsg_flags & NLM_F_EXCL)
- 			err = -EEXIST;
- 		goto errout_free;
+								Honza
 -- 
-2.21.0
-
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
