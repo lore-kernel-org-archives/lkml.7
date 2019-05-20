@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BF18C04AAC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:36:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CB8DC04E87
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:36:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 51E13216C4
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:36:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 08159216C4
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:36:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558355775;
-	bh=awA+Wv5nCbFiijRTlWSxq+pxtJHd9RM2npntWANCrqI=;
+	s=default; t=1558355779;
+	bh=ekJd2Q1d/UpW8siTLHEETVBkSt/8+dxoZ1rgaPCogCM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nao0AoSNbVtJt7J8Yu1s4+G54E5GZ31lPNXGFpzlvcglYWhncPLnz7PtMTUAXZ2JQ
-	 qO3BLbAZHA1CobaZFVnYJY6DSsCNe7TAcYqixAAz0/pR4BUGWwo8hTJ6xYuyuJR0dz
-	 FBRXZhOQUsAUU+V1fx/UEat9OmXEYWP6Ly2UP1PY=
+	b=vrvCyMAdecuhcJ3M6kHFaPEBPx/p2uLSYkarqyqV5jNkD9J1FGW6457AJ35nFwkyT
+	 hBy97w7IkeQX//EhM7hVcaug9MmCLAIHrUwv5PZGOy6B7qg/VPo1/SoHebzbAwdkz6
+	 Z3t0EPlj5ry0eEkV3G0+gpHdqAvwF8xLDssUPdAs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391240AbfETMgO (ORCPT
+        id S2391252AbfETMgS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 08:36:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55176 "EHLO mail.kernel.org"
+        Mon, 20 May 2019 08:36:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55254 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391078AbfETMgK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 08:36:10 -0400
+        id S2391236AbfETMgN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 08:36:13 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EC7DC21721;
-        Mon, 20 May 2019 12:36:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9E84C21726;
+        Mon, 20 May 2019 12:36:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558355770;
-        bh=awA+Wv5nCbFiijRTlWSxq+pxtJHd9RM2npntWANCrqI=;
+        s=default; t=1558355773;
+        bh=ekJd2Q1d/UpW8siTLHEETVBkSt/8+dxoZ1rgaPCogCM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EAdqDXEzjceu0Ld5dEOc/RHNHjQkXUPfcxjnr3Bk4sBDQeoTG7PqWL9RK4pw7Hg3f
-         /OVrXaOwr82HjsiwVqjqoKe5EpxCf5atkbaJrsH9nalUONGYy3kU3P8nROo5ipwNwR
-         iveoX+cUO53jF1KLKfLq2dXHm1yKjcCwbOvM2+Bc=
+        b=BfZctMvXt6Lnb80j18TMRodFL7kohfqL//FvL8eReFO8x2vIK6uhykQsvdI4ecIB4
+         66M3G0NTlikoW4lSMz6HclKgj+t+MxAza02ff3n3NBeSjHdh5sAaXEZ76czzPYMJRd
+         03UkWF/1zCsAmXPFdlkxnGznwQT3ZUJqOSAyq75w=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Wanpeng Li <wanpengli@tencent.com>,
-        Liran Alon <liran.alon@oracle.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Subject: [PATCH 5.1 118/128] KVM: lapic: Busy wait for timer to expire when using hv_timer
-Date:   Mon, 20 May 2019 14:15:05 +0200
-Message-Id: <20190520115256.717288883@linuxfoundation.org>
+        stable@vger.kernel.org, Steve French <stfrench@microsoft.com>,
+        Pavel Shilovsky <pshilov@microsoft.com>
+Subject: [PATCH 5.1 119/128] smb3: display session id in debug data
+Date:   Mon, 20 May 2019 14:15:06 +0200
+Message-Id: <20190520115256.755226302@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190520115249.449077487@linuxfoundation.org>
 References: <20190520115249.449077487@linuxfoundation.org>
@@ -61,37 +59,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sean Christopherson <sean.j.christopherson@intel.com>
+From: Steve French <stfrench@microsoft.com>
 
-commit ee66e453db13d4837a0dcf9d43efa7a88603161b upstream.
+commit b63a9de02d64ecd5ff0749e90253f5b30ba5b9c0 upstream.
 
-...now that VMX's preemption timer, i.e. the hv_timer, also adjusts its
-programmed time based on lapic_timer_advance_ns.  Without the delay, a
-guest can see a timer interrupt arrive before the requested time when
-KVM is using the hv_timer to emulate the guest's interrupt.
+Displaying the session id in /proc/fs/cifs/DebugData
+is needed in order to correlate Linux client information
+with network and server traces for many common support
+scenarios.  Turned out to be very important for debugging.
 
-Fixes: c5ce8235cffa0 ("KVM: VMX: Optimize tscdeadline timer latency")
-Cc: <stable@vger.kernel.org>
-Cc: Wanpeng Li <wanpengli@tencent.com>
-Reviewed-by: Liran Alon <liran.alon@oracle.com>
-Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+Signed-off-by: Steve French <stfrench@microsoft.com>
+CC: Stable <stable@vger.kernel.org>
+Reviewed-by: Pavel Shilovsky <pshilov@microsoft.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/kvm/lapic.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/cifs/cifs_debug.c |    2 ++
+ 1 file changed, 2 insertions(+)
 
---- a/arch/x86/kvm/lapic.c
-+++ b/arch/x86/kvm/lapic.c
-@@ -1454,7 +1454,7 @@ static void apic_timer_expired(struct kv
- 	if (swait_active(q))
- 		swake_up_one(q);
- 
--	if (apic_lvtt_tscdeadline(apic))
-+	if (apic_lvtt_tscdeadline(apic) || ktimer->hv_timer_in_use)
- 		ktimer->expired_tscdeadline = ktimer->tscdeadline;
- }
- 
+--- a/fs/cifs/cifs_debug.c
++++ b/fs/cifs/cifs_debug.c
+@@ -376,6 +376,8 @@ skip_rdma:
+ 				atomic_read(&server->in_send),
+ 				atomic_read(&server->num_waiters));
+ #endif
++			/* dump session id helpful for use with network trace */
++			seq_printf(m, " SessionId: 0x%llx", ses->Suid);
+ 			if (ses->session_flags & SMB2_SESSION_FLAG_ENCRYPT_DATA)
+ 				seq_puts(m, " encrypted");
+ 			if (ses->sign)
 
 
