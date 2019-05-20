@@ -2,70 +2,93 @@ Return-Path: <SRS0=lq4r=TU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF607C04AAC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 13:52:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8968CC04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 13:52:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C3DC5214AE
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 13:52:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C2A420815
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 13:52:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1558360344;
+	bh=zLJE7fSlwx12Tuz3qbPRzVc45vPUmMh4VY0VfsaR9RM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=X9d/EsuMY27SfjFDPkicFveufXR9PIKJCLk7kzokPfbBbu7s519IMoD5U9z1cFlac
+	 6Xg29FGWBAJUxaJergab0hqyW6/LIlAuYhsw4iRm3Z314wSP4GdtOa/IUoTS6ScIzK
+	 eGbhPRPM9TS6tTHFT62xvyk8srBrOEO/b2uHWuAg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390115AbfETNwT (ORCPT
+        id S2390169AbfETNwW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Mon, 20 May 2019 09:52:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33582 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731680AbfETNwT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 20 May 2019 09:52:19 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:7664 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1731648AbfETNwS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 09:52:18 -0400
-Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 1F7CA5F45FA0FA683575;
-        Mon, 20 May 2019 21:52:16 +0800 (CST)
-Received: from [127.0.0.1] (10.202.227.238) by DGGEMS404-HUB.china.huawei.com
- (10.3.19.204) with Microsoft SMTP Server id 14.3.439.0; Mon, 20 May 2019
- 21:52:04 +0800
-Subject: Re: [PATCH v2] scsi: libsas: no need to join wide port again in
- sas_ex_discover_dev()
-To:     Jason Yan <yanaijie@huawei.com>, <martin.petersen@oracle.com>,
-        <jejb@linux.vnet.ibm.com>
-References: <20190520140600.22861-1-yanaijie@huawei.com>
-CC:     <linux-scsi@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <hare@suse.com>, <dan.j.williams@intel.com>, <jthumshirn@suse.de>,
-        <hch@lst.de>, <huangdaode@hisilicon.com>,
-        <chenxiang66@hisilicon.com>, <miaoxie@huawei.com>,
-        <zhaohongjiang@huawei.com>
-From:   John Garry <john.garry@huawei.com>
-Message-ID: <7b7c51db-15f3-d06b-ba58-8b6ef618f7d2@huawei.com>
-Date:   Mon, 20 May 2019 14:51:57 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:45.0) Gecko/20100101
- Thunderbird/45.3.0
+Received: from localhost (unknown [37.142.3.125])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B45FD20815;
+        Mon, 20 May 2019 13:52:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1558360338;
+        bh=zLJE7fSlwx12Tuz3qbPRzVc45vPUmMh4VY0VfsaR9RM=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=BOiDe3tf3f0Ln5UOM5A2JNH33E918pBqbFredvvn4u+nDJF37rujbMacv2USRbBD3
+         StIl13N2S13xocm/FFLwNWTKXPhw+TN1Nm17+MI3CQd7VnoaBK4d1eoQxStwDmTxue
+         ARyppLCzzAqLuPJTgO+1MZysDYDf3KgRJsfUI+n8=
+Date:   Mon, 20 May 2019 16:52:14 +0300
+From:   Leon Romanovsky <leon@kernel.org>
+To:     Joe Perches <joe@perches.com>
+Cc:     Michal Kalderon <mkalderon@marvell.com>,
+        "apw@canonical.com" <apw@canonical.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        David Miller <davem@davemloft.net>
+Subject: Re: [EXT] Re: [PATCH] checkpatch: add test for empty line after
+ Fixes statement
+Message-ID: <20190520135214.GM4573@mtr-leonro.mtl.com>
+References: <20190520124238.10298-1-michal.kalderon@marvell.com>
+ <ed26df86d7d0e12263404842895460b1611def61.camel@perches.com>
+ <MN2PR18MB318292E37F3AB9383D9FBE0FA1060@MN2PR18MB3182.namprd18.prod.outlook.com>
+ <60717bc4cdf327ffe671c328d47c315eefd385c8.camel@perches.com>
 MIME-Version: 1.0
-In-Reply-To: <20190520140600.22861-1-yanaijie@huawei.com>
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.202.227.238]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <60717bc4cdf327ffe671c328d47c315eefd385c8.camel@perches.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 20/05/2019 15:06, Jason Yan wrote:
-> Since we are processing events synchronously now, the second call of
-> sas_ex_join_wide_port() in sas_ex_discover_dev() is not needed. There
-> will be no races with other works in disco workqueue. So remove the
-> second sas_ex_join_wide_port().
+On Mon, May 20, 2019 at 06:34:49AM -0700, Joe Perches wrote:
+> On Mon, 2019-05-20 at 13:16 +0000, Michal Kalderon wrote:
+> > > From: Joe Perches <joe@perches.com>
+> > > Sent: Monday, May 20, 2019 3:57 PM
+> > > Subject: [EXT] Re: [PATCH] checkpatch: add test for empty line after Fixes
+> > > statement
+> > >
+> > > External Email
+> > >
+> > > ----------------------------------------------------------------------
+> > > On Mon, 2019-05-20 at 15:42 +0300, Michal Kalderon wrote:
+> > > > Check that there is no empty line after a fixes statement
+> > >
+> > > why?
+> > >
+> > This comment is given a lot on the netdev and rdma mailing lists when patches are submitted with
+> > an empty line between Fixes: tag and SOB tags. Since "Fixes:" is just another tag and should be kept
+> > together with the other ones.
 >
-> I did not change the return value of 'res' to error when discover failed
-> because we need to continue to discover other phys if one phy discover
-> failed. So let's keep that logic as before and just add a debug log to
-> detect the failure. And directly return if second fanout expander
-> attatched to the parent expander because it has nothing to do after the
-> phy is disabled.
+> So test that all signature blocks and Fixes do not have
+> blank lines between them instead of just the "Fixes:" line.
 >
-> Signed-off-by: Jason Yan <yanaijie@huawei.com>
-> ---
+> And if there is some specific ordering required, perhaps a
+> test for that ordering should be added as well.
 
-Reviewed-by: John Garry <john.garry@huawei.com>
+I'm aware of only one request - Fixes above SOB.
 
+Thanks
+
+>
