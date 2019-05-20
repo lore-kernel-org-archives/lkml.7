@@ -2,149 +2,120 @@ Return-Path: <SRS0=lq4r=TU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,T_HK_NAME_DR,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39A70C04AAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 09:41:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77EF8C04AAF
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 09:42:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0E7B120675
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 09:41:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 58BED20675
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 09:42:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732298AbfETJlv (ORCPT
+        id S1732324AbfETJmT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 05:41:51 -0400
-Received: from wind.enjellic.com ([76.10.64.91]:32972 "EHLO wind.enjellic.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726126AbfETJlu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 05:41:50 -0400
-Received: from wind.enjellic.com (localhost [127.0.0.1])
-        by wind.enjellic.com (8.15.2/8.15.2) with ESMTP id x4K9cIa4007978;
-        Mon, 20 May 2019 04:38:18 -0500
-Received: (from greg@localhost)
-        by wind.enjellic.com (8.15.2/8.15.2/Submit) id x4K9cFlE007977;
-        Mon, 20 May 2019 04:38:15 -0500
-Date:   Mon, 20 May 2019 04:38:15 -0500
-From:   "Dr. Greg" <greg@enjellic.com>
-To:     James Morris <jmorris@namei.org>
-Cc:     Andy Lutomirski <luto@kernel.org>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        LSM List <linux-security-module@vger.kernel.org>,
-        Paul Moore <paul@paul-moore.com>,
-        Stephen Smalley <sds@tycho.nsa.gov>,
-        Eric Paris <eparis@parisplace.org>, selinux@vger.kernel.org,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Jethro Beekman <jethro@fortanix.com>,
-        "Xing, Cedric" <cedric.xing@intel.com>,
-        "Hansen, Dave" <dave.hansen@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "Dr. Greg" <greg@enjellic.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
-        "linux-sgx@vger.kernel.org" <linux-sgx@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "nhorman@redhat.com" <nhorman@redhat.com>,
-        "npmccallum@redhat.com" <npmccallum@redhat.com>,
-        "Ayoun, Serge" <serge.ayoun@intel.com>,
-        "Katz-zamir, Shay" <shay.katz-zamir@intel.com>,
-        "Huang, Haitao" <haitao.huang@intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        "Svahn, Kai" <kai.svahn@intel.com>, Borislav Petkov <bp@alien8.de>,
-        Josh Triplett <josh@joshtriplett.org>,
-        "Huang, Kai" <kai.huang@intel.com>,
-        David Rientjes <rientjes@google.com>
-Subject: Re: SGX vs LSM (Re: [PATCH v20 00/28] Intel SGX1 support)
-Message-ID: <20190520093815.GA7187@wind.enjellic.com>
-Reply-To: "Dr. Greg" <greg@enjellic.com>
-References: <CALCETrVbgTCnPo=PAq0-KoaRwt--urrPzn==quAJ8wodCpkBkw@mail.gmail.com> <20190514204527.GC1977@linux.intel.com> <CALCETrX6aL367mMJh5+Y1Seznfu-AvhPV6P7GkWF4Dhu0GV8cw@mail.gmail.com> <20190515013031.GF1977@linux.intel.com> <CALCETrXf8mSK45h7sTK5Wf+pXLVn=Bjsc_RLpgO-h-qdzBRo5Q@mail.gmail.com> <alpine.LRH.2.21.1905160543070.19802@namei.org> <CALCETrX_Q6qwNRNF0TL2tgfm1j6DKLX7NVHHmWbMFtk3WnHDKw@mail.gmail.com> <alpine.LRH.2.21.1905160844130.29250@namei.org> <CALCETrX2ovRx3Rre+1_xC-q6CiybyLjQ-gmB4FZF_qCZ-Qd+4A@mail.gmail.com> <alpine.LRH.2.21.1905161716460.23647@namei.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <alpine.LRH.2.21.1905161716460.23647@namei.org>
-User-Agent: Mutt/1.4i
-X-Greylist: Sender passed SPF test, not delayed by milter-greylist-4.2.3 (wind.enjellic.com [127.0.0.1]); Mon, 20 May 2019 04:38:18 -0500 (CDT)
+        Mon, 20 May 2019 05:42:19 -0400
+Received: from relay11.mail.gandi.net ([217.70.178.231]:40301 "EHLO
+        relay11.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732151AbfETJmT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 05:42:19 -0400
+Received: from aptenodytes (aaubervilliers-681-1-80-185.w90-88.abo.wanadoo.fr [90.88.22.185])
+        (Authenticated sender: paul.kocialkowski@bootlin.com)
+        by relay11.mail.gandi.net (Postfix) with ESMTPSA id 8254E100005;
+        Mon, 20 May 2019 09:42:15 +0000 (UTC)
+Message-ID: <5966b22a64602ce297f9a3b4bfd4ff7af72bab32.camel@bootlin.com>
+Subject: Re: [PATCH v3 1/7] drm/rockchip: Change the scl_vop_cal_scl_fac to
+ pass drm_format_info
+From:   Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+To:     Maxime Ripard <maxime.ripard@bootlin.com>,
+        Daniel Vetter <daniel.vetter@intel.com>,
+        David Airlie <airlied@linux.ie>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Sean Paul <seanpaul@chromium.org>
+Cc:     linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org
+Date:   Mon, 20 May 2019 11:42:14 +0200
+In-Reply-To: <27b0041c7977402df4a087c78d2849ffe51c9f1c.1558002671.git-series.maxime.ripard@bootlin.com>
+References: <27b0041c7977402df4a087c78d2849ffe51c9f1c.1558002671.git-series.maxime.ripard@bootlin.com>
+Organization: Bootlin
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.32.2 
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 16, 2019 at 05:24:33PM +1000, James Morris wrote:
+Hi,
 
-Good morning, I hope everyone had a pleasant weekend.
-
-James, I believe the last time our paths crossed was at the Linux
-Security Summit in Seattle, I trust you have been well since then.
-
-> On Wed, 15 May 2019, Andy Lutomirski wrote:
+On Thu, 2019-05-16 at 12:31 +0200, Maxime Ripard wrote:
+> The Rockchip VOP driver has a function, scl_vop_cal_scl_fac, that will
+> lookup the drm_format_info structure from the fourcc passed to it by its
+> caller.
 > 
-> > On Wed, May 15, 2019 at 3:46 PM James Morris <jmorris@namei.org> wrote:
-> > >
-> > > You could try user.sigstruct, which does not require any privs.
-> > >
-> > 
-> > I don't think I understand your proposal.  What file would this
-> > attribute be on?  What would consume it?
+> However, its only caller already derefences the drm_format_info structure
+> it has access to to retrieve that fourcc. Change the prototype of that
+> function to pass the drm_format_info structure directly, removing the need
+> for an extra lookup.
+> 
+> Suggested-by: Philipp Zabel <p.zabel@pengutronix.de>
+> Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
 
-> It would be on the enclave file, so you keep the sigstruct bound to
-> it, rather than needing a separate file to manage.  It would
-> simplify any LSM policy check.
->
-> It would be consumed by (I guess) the SGX_INIT_THE_ENCLAVE ioctl in your 
-> example, instead of having a 2nd fd.
+Reviewed-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
 
-I've watched this discussion regarding LSM, sigstructs and file
-descriptors with some fascination, since all of this infrastructure
-already exists and should be well understood by anyone who has been
-active in SGX runtime development.  There would thus seem to be a
-disconnect between SGX driver developers and the consumers of the
-services of the driver.
+Cheers,
 
-The existing enclave format, codified by the silo within Intel that is
-responsible for the existing SDK/PSW, implements a notes section
-stored inside a standard ELF shared library image.  The notes section
-contains a significant amount of metadata that is used to direct the
-instantiation of what will be the initialized enclave image.  Said
-metadata includes a copy of the sigstruct that was generated when the
-enclave was signed, which is the event that triggers metadata
-generation.
+Paul
 
-All of this means that any enclave that gets loaded effectively
-triggers both LSM and IMA checks.
+> ---
+>  drivers/gpu/drm/rockchip/rockchip_drm_vop.c | 11 ++++-------
+>  1 file changed, 4 insertions(+), 7 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/rockchip/rockchip_drm_vop.c b/drivers/gpu/drm/rockchip/rockchip_drm_vop.c
+> index 20a9c296d027..9c0d6b367709 100644
+> --- a/drivers/gpu/drm/rockchip/rockchip_drm_vop.c
+> +++ b/drivers/gpu/drm/rockchip/rockchip_drm_vop.c
+> @@ -315,14 +315,13 @@ static uint16_t scl_vop_cal_scale(enum scale_mode mode, uint32_t src,
+>  
+>  static void scl_vop_cal_scl_fac(struct vop *vop, const struct vop_win_data *win,
+>  			     uint32_t src_w, uint32_t src_h, uint32_t dst_w,
+> -			     uint32_t dst_h, uint32_t pixel_format)
+> +			     uint32_t dst_h, const struct drm_format_info *info)
+>  {
+>  	uint16_t yrgb_hor_scl_mode, yrgb_ver_scl_mode;
+>  	uint16_t cbcr_hor_scl_mode = SCALE_NONE;
+>  	uint16_t cbcr_ver_scl_mode = SCALE_NONE;
+> -	int hsub = drm_format_horz_chroma_subsampling(pixel_format);
+> -	int vsub = drm_format_vert_chroma_subsampling(pixel_format);
+> -	const struct drm_format_info *info;
+> +	int hsub = drm_format_horz_chroma_subsampling(info->format);
+> +	int vsub = drm_format_vert_chroma_subsampling(info->format);
+>  	bool is_yuv = false;
+>  	uint16_t cbcr_src_w = src_w / hsub;
+>  	uint16_t cbcr_src_h = src_h / vsub;
+> @@ -331,8 +330,6 @@ static void scl_vop_cal_scl_fac(struct vop *vop, const struct vop_win_data *win,
+>  	uint32_t val;
+>  	int vskiplines;
+>  
+> -	info = drm_format_info(pixel_format);
+> -
+>  	if (info->is_yuv)
+>  		is_yuv = true;
+>  
+> @@ -856,7 +853,7 @@ static void vop_plane_atomic_update(struct drm_plane *plane,
+>  	if (win->phy->scl)
+>  		scl_vop_cal_scl_fac(vop, win, actual_w, actual_h,
+>  				    drm_rect_width(dest), drm_rect_height(dest),
+> -				    fb->format->format);
+> +				    fb->format);
+>  
+>  	VOP_WIN_SET(vop, win, act_info, act_info);
+>  	VOP_WIN_SET(vop, win, dsp_info, dsp_info);
+> 
+> base-commit: a802303934b3bd4df6e2fc8bf2e4ebced1c37556
+-- 
+Paul Kocialkowski, Bootlin
+Embedded Linux and kernel engineering
+https://bootlin.com
 
-James, if you remember, the paper that we presented in Seattle
-described the initial implementation of an extension to the Linux IMA
-infrastructure that tracks whether or not processes can be 'trusted'.
-That work has gone on to include running the trust modeling and
-disciplining engine inside of a namespace specific SGX enclave.  We
-would be happy to make available execution trajectory logs that
-clearly document IMA and LSM checks being conducted on enclaves.
-
-There is a strong probability that we will be maintaining and
-supporting a modified version of whatever driver that goes upstream.
-In support of this we are putting together a white paper discussing
-security architecture concerns inherent in an SGX driver.  With the
-intent of avoiding LKML verbosity we will post a URL to the paper when
-it is available if there is interest.
-
-The issue of EDMM has already come up, suffice it to say that EDMM
-makes LSM inspection of enclave content, while desirable, largely
-irrelevant from a security perspective.
-
-> James Morris
-
-Best wishes for a productive week.
-
-Dr. Greg
-
-As always,
-Dr. G.W. Wettstein, Ph.D.   Enjellic Systems Development, LLC.
-4206 N. 19th Ave.           Specializing in information infra-structure
-Fargo, ND  58102            development.
-PH: 701-281-1686            EMAIL: greg@enjellic.com
-------------------------------------------------------------------------------
-"If you plugged up your nose and mouth right before you sneezed, would
- the sneeze go out your ears or would your head explode?  Either way I'm
- afraid to try."
-                                -- Nick Kean
