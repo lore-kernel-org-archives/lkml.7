@@ -2,116 +2,126 @@ Return-Path: <SRS0=lq4r=TU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0ED80C04AAC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 17:05:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2602EC04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 17:05:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D94BA21726
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 17:05:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EDD1E216B7
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 17:05:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="Rg3JGm7c"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Gwww3aaU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392704AbfETRFc (ORCPT
+        id S2392721AbfETRFi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 13:05:32 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:41212 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390006AbfETRFb (ORCPT
+        Mon, 20 May 2019 13:05:38 -0400
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:41759 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390006AbfETRFi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 13:05:31 -0400
-Received: by mail-pg1-f196.google.com with SMTP id z3so7071811pgp.8
-        for <linux-kernel@vger.kernel.org>; Mon, 20 May 2019 10:05:31 -0700 (PDT)
+        Mon, 20 May 2019 13:05:38 -0400
+Received: by mail-ed1-f68.google.com with SMTP id m4so24908908edd.8;
+        Mon, 20 May 2019 10:05:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=4ZOI+jnwXBptD9UIpostnVMZFPCwcvxnpKvL3qurL40=;
-        b=Rg3JGm7cAcDM+AZNutQuRwGkJ3ubXbt1UCwOCgZnkJntyOzhCrWnunCiEjWY7ROSIZ
-         kVmBbyBsGGB57A5oVMp546xpWJgwU/oSoyDYqohN31no/hHulLW0cV3TFXQxHRGm3Arh
-         oZI0B0sNElaQefwHOOurYmhojHza1z+7f0MdJSYwJgf0UX78I0BFmHNhkkyTJP+ysJgA
-         1oq4KvyqLM9FGoFmGF0bhA3gzuw3Xcn/MOZUKRVRWJpoiE+3D/NOeDKnUVfhlEhq8tFr
-         ACelj15Q04D4dmGoY8dB6fOkc4qS2Hmb9f4IVHnDWYoNGwTJItV3oZNqdJ6Lf+b5E2oC
-         /1IA==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=OXzVLW5EpqxY+BN5u1Vsu4+duiB4QcdQ8sWM4u2JA90=;
+        b=Gwww3aaU7y7zOHYkwmwbAcjKvlfAz1HeiKD4eRIU+qd+YGOBBI56iOegMUzaDNtS5/
+         tPdvuZ3Z+U/Io2cAZF/KT1/OhZRlGWqAePyYuoxibxy28XmvUa0kxOgh6T7RgglrPGjG
+         ZOKjTrS7GzJ1yAFQpgUYCNziSE6qCu4+dCczcnc1f4vXlrCz3tDiJHEuCa6rIN/99t2I
+         2Pq2mxvREq1171PWoBo8NTGIKLqwoZ3Lt1isLRShBUuSm1ly6sTpJ4yizWr0I6UQ6qTO
+         J2PEj3xurmc1ZCYOa9ndBgma1FoXnWlh222pMhCthpz+2QI8/Ih09tLUTXyodLk3h/vF
+         hmxQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=4ZOI+jnwXBptD9UIpostnVMZFPCwcvxnpKvL3qurL40=;
-        b=tdQ0b/McJPpDZIqnN7SeA5ylS0nv3sgIDtu9QiArsGaXyxBBNhnZ2AACfzBHcyPNae
-         n00zpRy53G2zZN3PkCKqxxX2KU6bFW1Ksrmn5e0Z1nD3Z7i2hwgrVtVrs9zhsaJidrkE
-         AYdSkd/QxDYkmYh65wwIjDHyaOGDXl6HxirjmuJ5E7Cx4MKEoa/ySVnMeOVDpOAf2HWy
-         8uWRorsLyk7bhpXWY2NWPoWXCurOMVOnJAefAMyh9QY5xmDN9it33WB7lZfyc1rUQ3SB
-         G22RG6ARCxZ27X+Jg6z+9Wnyjlfw1lOKVi0sEOIvcOeHzyxJ35nKY97+bTON+Yjq7SHS
-         91sA==
-X-Gm-Message-State: APjAAAVdA255nny5gWJcESo7WD9kqre8UdJBcFFpVoxdjNYcmDsz8NCK
-        GIrNdtUMo6/NvrqPhtZLMwJFdw==
-X-Google-Smtp-Source: APXvYqwYUPMF0FEJQ8SH6f6V9L+pAAf6oW7lozkMuesu1RZqnBX5kL/J9WlcSj5ZD7fx0NEgV+if8A==
-X-Received: by 2002:a63:1045:: with SMTP id 5mr32327108pgq.55.1558371931150;
-        Mon, 20 May 2019 10:05:31 -0700 (PDT)
-Received: from localhost ([2620:10d:c091:500::3:df5f])
-        by smtp.gmail.com with ESMTPSA id u76sm21219972pgc.84.2019.05.20.10.05.29
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 20 May 2019 10:05:30 -0700 (PDT)
-Date:   Mon, 20 May 2019 13:05:28 -0400
-From:   Johannes Weiner <hannes@cmpxchg.org>
-To:     Shakeel Butt <shakeelb@google.com>
-Cc:     Vladimir Davydov <vdavydov.dev@gmail.com>,
-        Michal Hocko <mhocko@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Roman Gushchin <guro@fb.com>,
-        Chris Down <chris@chrisdown.name>, linux-mm@kvack.org,
-        cgroups@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] mm, memcg: introduce memory.events.local
-Message-ID: <20190520170528.GC11665@cmpxchg.org>
-References: <20190518001818.193336-1-shakeelb@google.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=OXzVLW5EpqxY+BN5u1Vsu4+duiB4QcdQ8sWM4u2JA90=;
+        b=YlvnNKFUM0nntVAKwUzpk1j8ANkdMn1/Lpx2t0skSJk/sMxDKfa0+fEzxmAEC1vQi5
+         ofuiQJapCuaCNG1KGaHtIb/haCBFzel0UC6cJ3H38VEutmIXyJlVQME+qJFrv3+4y87v
+         yflTHPYsS9rrPZqJWajCSUIa8RvGKe2uywsLeiYiZyq1xRD973gZr90wxluO89LxG2fd
+         9T/ceLM7YebJjoVC3tXniLkqIY93Zx2Ln3RFmm2JU5/vAg7j2RSrBL6Xo3nuSNG22RSO
+         Kbk/m2uGZgPhHujDJTxtvVCqF8tN2g2aX8v9XkPmiNCQGXE24uAVy4vJ8DscZEk6s6ad
+         9wmQ==
+X-Gm-Message-State: APjAAAWLGLdsWW+eKUwTqsVgxCDioulOB9fMAysGdme2QS4Ce+pm1KuP
+        3XyzkQRIxYxxOy4b+W6gZayVWQveITjDzZrPdOo=
+X-Google-Smtp-Source: APXvYqwAWYjUqNwga3IGqyvDXRz6Ayeuvbmx8E0yma/gdydaSLC2gGlrdIps5FN3Mr4TU31/EVCepxajOSqZgABdl9g=
+X-Received: by 2002:a50:9968:: with SMTP id l37mr76248294edb.143.1558371936408;
+ Mon, 20 May 2019 10:05:36 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190518001818.193336-1-shakeelb@google.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+References: <20190520093157.59825-1-anirudh.gupta@sophos.com> <20190520153219.oq3se5wvkasgbtkp@gondor.apana.org.au>
+In-Reply-To: <20190520153219.oq3se5wvkasgbtkp@gondor.apana.org.au>
+From:   Anirudh Gupta <anirudhrudr@gmail.com>
+Date:   Mon, 20 May 2019 22:35:24 +0530
+Message-ID: <CAN2cbVc3bbEcDB87S4UpySnMtC7oi40bWPK8bd4wW_nv5qEDJg@mail.gmail.com>
+Subject: Re: [PATCH net] xfrm: Fix xfrm sel prefix length validation
+To:     Herbert Xu <herbert@gondor.apana.org.au>
+Cc:     Steffen Klassert <steffen.klassert@secunet.com>,
+        Anirudh Gupta <anirudh.gupta@sophos.com>,
+        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 17, 2019 at 05:18:18PM -0700, Shakeel Butt wrote:
-> The memory controller in cgroup v2 exposes memory.events file for each
-> memcg which shows the number of times events like low, high, max, oom
-> and oom_kill have happened for the whole tree rooted at that memcg.
-> Users can also poll or register notification to monitor the changes in
-> that file. Any event at any level of the tree rooted at memcg will
-> notify all the listeners along the path till root_mem_cgroup. There are
-> existing users which depend on this behavior.
-> 
-> However there are users which are only interested in the events
-> happening at a specific level of the memcg tree and not in the events in
-> the underlying tree rooted at that memcg. One such use-case is a
-> centralized resource monitor which can dynamically adjust the limits of
-> the jobs running on a system. The jobs can create their sub-hierarchy
-> for their own sub-tasks. The centralized monitor is only interested in
-> the events at the top level memcgs of the jobs as it can then act and
-> adjust the limits of the jobs. Using the current memory.events for such
-> centralized monitor is very inconvenient. The monitor will keep
-> receiving events which it is not interested and to find if the received
-> event is interesting, it has to read memory.event files of the next
-> level and compare it with the top level one. So, let's introduce
-> memory.events.local to the memcg which shows and notify for the events
-> at the memcg level.
-> 
-> Now, does memory.stat and memory.pressure need their local versions.
-> IMHO no due to the no internal process contraint of the cgroup v2. The
-> memory.stat file of the top level memcg of a job shows the stats and
-> vmevents of the whole tree. The local stats or vmevents of the top level
-> memcg will only change if there is a process running in that memcg but
-> v2 does not allow that. Similarly for memory.pressure there will not be
-> any process in the internal nodes and thus no chance of local pressure.
-> 
-> Signed-off-by: Shakeel Butt <shakeelb@google.com>
+Hi Herbert,
+Yes, I notice that is the only verification of p->family from userspace.
+However, the underlying conditions added in commit '07bf7908950a',
+validates the selector src/dest prefix len.
 
-This looks reasonable to me. Thanks for working out a clear use case
-and also addressing how it compares to the stats and pressure files.
+So, In case when adding a new SA entry, the family of Selector src/dst
+is IPv6 and state id src/dst family is IPv4.
+Then, the IPv6 selector prefix verification falls in IPv4 switch case.
+This results in not being able to provide prefix length of more than
+32, even for IPv6 src/dst.
 
-Acked-by: Johannes Weiner <hannes@cmpxchg.org>
+The above mentioned behaviour can easily be reproduced using below
+command having IPv6 selector src/dst with greater than 32 prefix
+length.
+ip xfrm state add src 1.1.6.1 dst 1.1.6.2 proto esp spi 4260196 \
+reqid 20004 mode tunnel aead "rfc4106(gcm(aes))" \
+0x1111016400000000000000000000000044440001 128 \
+sel src 1011:1:4::2/128 sel dst 1021:1:4::2/128 dev Port5
+
+Please let me know, if I fail to explain my point or I am overlooking anything.
+
+Thanks & Regards,
+Anirudh
+
+
+On Mon, May 20, 2019 at 9:02 PM Herbert Xu <herbert@gondor.apana.org.au> wrote:
+>
+> On Mon, May 20, 2019 at 03:01:56PM +0530, Anirudh Gupta wrote:
+> >
+> > diff --git a/net/xfrm/xfrm_user.c b/net/xfrm/xfrm_user.c
+> > index eb8d14389601..fc2a8c08091b 100644
+> > --- a/net/xfrm/xfrm_user.c
+> > +++ b/net/xfrm/xfrm_user.c
+> > @@ -149,7 +149,7 @@ static int verify_newsa_info(struct xfrm_usersa_info *p,
+> >       int err;
+> >
+> >       err = -EINVAL;
+> > -     switch (p->family) {
+> > +     switch (p->sel.family) {
+> >       case AF_INET:
+> >               if (p->sel.prefixlen_d > 32 || p->sel.prefixlen_s > 32)
+> >                       goto out;
+>
+> You just removed the only verification of p->family...
+> --
+> Email: Herbert Xu <herbert@gondor.apana.org.au>
+> Home Page: http://gondor.apana.org.au/~herbert/
+> PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+
+
+
+-- 
+Regards
+
+Anirudh Gupta
