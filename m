@@ -2,104 +2,147 @@ Return-Path: <SRS0=lq4r=TU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CF6DC04AAC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 14:41:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03E7AC04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 14:41:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D8311216FD
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 14:41:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="GL1kPF/z"
+	by mail.kernel.org (Postfix) with ESMTP id DB4D8216B7
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 14:41:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391842AbfETOle (ORCPT
+        id S2391901AbfETOlr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 10:41:34 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:36986 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389518AbfETOl0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 10:41:26 -0400
-Received: by mail-wr1-f66.google.com with SMTP id e15so14927179wrs.4
-        for <linux-kernel@vger.kernel.org>; Mon, 20 May 2019 07:41:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=eyDz/kU6Wjim2biRU2q8CqgWCCB8KF6iAcPXPEhI4iE=;
-        b=GL1kPF/zUzZXKB5Un27WiEJQ0HNwcqqnlgkMiO94zM4OnjMJI1m+TNzvxK4Yn+Gx/8
-         5O8+gBuLemwUJVEipgg/GahnWgcjh0WLtWb0wr61aGUmUtQopw70+M3+d5YBam07vBvP
-         ooVf8RaJCsspmSiwvNglwLoisdmIU4WgXxqjHO3jt/BzyV0M4bBrMlx7gLFStGfEPh8k
-         FP6DpQyiBbQf80owDtMzoOOv0DRnv/0FMnhZUSG8Dn9+Dwucxn9Xotr9GoZ9AzOJ/Fte
-         a7SJQMwvLQPrdlFVrmy02dW86PGusTvFGXn0n8frBI/zylHHeuBpPZG9eloWHuoydEm6
-         8KPw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=eyDz/kU6Wjim2biRU2q8CqgWCCB8KF6iAcPXPEhI4iE=;
-        b=YReZNzZ9H20d86ATyxQFia4novdyqZ1COwgLAOS4ro474XS0bpelik2msKItzWn1bR
-         WudNda8hLNyrsQWAdiK6NwuU352III5Ez39F6ij+pvdOamSwCaBw/+kKro5sAkS6qYO+
-         ml8/ArFKqARCN6OXaagaHReS8ikWdANAuVKqdN/SRhM0Uzq0/JcBseneTmWeOyAqcfdO
-         ybfFloo/JliRKQRZdeeYv0wNMZAloVJREljZNfmgPhq6UVvaaMs//kjc3SX2q4VkH77f
-         8NfEETLSfVFBHxUZCQ6XMKHsyzx0voYp7IAAPXQXhQEWfYfZdm8dVUUCuayeGBgXrfet
-         1NRA==
-X-Gm-Message-State: APjAAAUSd/mox2+XGJMU7poIUzpBodbPrn3PuvDi2L4IA/y98iDpDdnx
-        ckRSRn9o43Q4WBNER/TulVXkPw==
-X-Google-Smtp-Source: APXvYqwNFE1d2hRxTr4yNHyu/Qt22C88efwwzfb2tPMpnZSFiu3ODusoG5pkwtkQFTWj5bADDe/gBw==
-X-Received: by 2002:adf:ec8c:: with SMTP id z12mr36194064wrn.209.1558363284655;
-        Mon, 20 May 2019 07:41:24 -0700 (PDT)
-Received: from bender.baylibre.local (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
-        by smtp.gmail.com with ESMTPSA id w3sm6743679wrv.25.2019.05.20.07.41.23
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Mon, 20 May 2019 07:41:23 -0700 (PDT)
-From:   Neil Armstrong <narmstrong@baylibre.com>
-To:     linus.walleij@linaro.org
-Cc:     linux-gpio@vger.kernel.org, linux-amlogic@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Neil Armstrong <narmstrong@baylibre.com>
-Subject: [PATCH 5/5] dt-bindings: gpio: meson8b-gpio: update with SPDX Licence identifier
-Date:   Mon, 20 May 2019 16:41:08 +0200
-Message-Id: <20190520144108.3787-6-narmstrong@baylibre.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190520144108.3787-1-narmstrong@baylibre.com>
-References: <20190520144108.3787-1-narmstrong@baylibre.com>
+        Mon, 20 May 2019 10:41:47 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:38642 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2391882AbfETOlo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 10:41:44 -0400
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 557FE3082B44;
+        Mon, 20 May 2019 14:41:44 +0000 (UTC)
+Received: from llong.remote.csb (dhcp-17-85.bos.redhat.com [10.18.17.85])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id C834460BEC;
+        Mon, 20 May 2019 14:41:43 +0000 (UTC)
+Subject: Re: [PATCH] scsi: ses: Fix out-of-bounds memory access in
+ ses_enclosure_data_process()
+To:     "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>
+Cc:     linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20190501180535.26718-1-longman@redhat.com>
+From:   Waiman Long <longman@redhat.com>
+Organization: Red Hat
+Message-ID: <1fd39969-4413-2f11-86b2-729787680efa@redhat.com>
+Date:   Mon, 20 May 2019 10:41:43 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190501180535.26718-1-longman@redhat.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.45]); Mon, 20 May 2019 14:41:44 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
----
- include/dt-bindings/gpio/meson8b-gpio.h | 8 +-------
- 1 file changed, 1 insertion(+), 7 deletions(-)
+On 5/1/19 2:05 PM, Waiman Long wrote:
+> KASAN has found a slab-out-of-bounds error in ses_enclosure_data_process().
+>
+> [   27.298092] BUG: KASAN: slab-out-of-bounds in ses_enclosure_data_process+0x919/0xe80 [ses]
+> [   27.306407] Read of size 1 at addr ffff8807c99048b1 by task systemd-udevd/1563
+> [   27.315173] CPU: 18 PID: 1563 Comm: systemd-udevd Not tainted 4.18.0-80.23.el8.x86_64+debug #1
+> [   27.323835] Hardware name: HPE ProLiant XL450 Gen10/ProLiant XL450 Gen10, BIOS U40 10/02/2018
+> [   27.332410] Call Trace:
+>   :
+> [   27.348557]  kasan_report.cold.6+0x92/0x1a6
+> [   27.352771]  ses_enclosure_data_process+0x919/0xe80 [ses]
+> [   27.358211]  ? kfree+0xd6/0x2e0
+> [   27.361376]  ses_intf_add+0xa23/0xef1 [ses]
+> [   27.365590]  ? class_dev_iter_next+0x6c/0xc0
+> [   27.370034]  class_interface_register+0x298/0x400
+> [   27.374769]  ? tsc_cs_mark_unstable+0x60/0x60
+> [   27.379163]  ? class_dev_iter_exit+0x10/0x10
+> [   27.384857]  ? 0xffffffffc0838000
+> [   27.389580]  ses_init+0x12/0x1000 [ses]
+> [   27.394832]  do_one_initcall+0xe9/0x5fd
+>   :
+> [   27.562322] Allocated by task 1563:
+> [   27.562330]  kasan_kmalloc+0xbf/0xe0
+> [   27.569433]  __kmalloc+0x150/0x360
+> [   27.572858]  ses_intf_add+0x76a/0xef1 [ses]
+> [   27.577068]  class_interface_register+0x298/0x400
+> [   27.581803]  ses_init+0x12/0x1000 [ses]
+> [   27.587053]  do_one_initcall+0xe9/0x5fd
+> [   27.592309]  do_init_module+0x1f2/0x710
+> [   27.597564]  load_module+0x3e19/0x5910
+> [   27.601336]  __do_sys_init_module+0x1dd/0x260
+> [   27.606673]  do_syscall_64+0xa5/0x4a0
+> [   27.610359]  entry_SYSCALL_64_after_hwframe+0x6a/0xdf
+>   :
+> [   27.624932] The buggy address belongs to the object at ffff8807c9904400
+>                 which belongs to the cache kmalloc-2048 of size 2048
+> [   27.637701] The buggy address is located 1201 bytes inside of
+>                 2048-byte region [ffff8807c9904400, ffff8807c9904c00)
+> [   27.649683] The buggy address belongs to the page:
+> [   27.654503] page:ffffea001f264000 count:1 mapcount:0 mapping:ffff880107c15d80 index:0x0 compound_mapcount: 0
+> [   27.664393] flags: 0x17ffffc0008100(slab|head)
+> [   27.668865] raw: 0017ffffc0008100 dead000000000100 dead000000000200 ffff880107c15d80
+> [   27.676656] raw: 0000000000000000 00000000800f000f 00000001ffffffff 0000000000000000
+> [   27.684444] page dumped because: kasan: bad access detected
+>
+> The out-of-bounds memory access happens to ses_dev->page10 which has a
+> size of 1200 bytes in this case. The invalid memory access happens in:
+>
+>  600 if (addl_desc_ptr &&
+>  601     /* only find additional descriptions for specific devices */
+>  602     (type_ptr[0] == ENCLOSURE_COMPONENT_DEVICE ||
+>  603      type_ptr[0] == ENCLOSURE_COMPONENT_ARRAY_DEVICE ||
+>  604      type_ptr[0] == ENCLOSURE_COMPONENT_SAS_EXPANDER ||
+>  605      /* these elements are optional */
+>  606      type_ptr[0] == ENCLOSURE_COMPONENT_SCSI_TARGET_PORT ||
+>  607      type_ptr[0] == ENCLOSURE_COMPONENT_SCSI_INITIATOR_PORT ||
+>  608      type_ptr[0] == ENCLOSURE_COMPONENT_CONTROLLER_ELECTRONICS))
+>  609         addl_desc_ptr += addl_desc_ptr[1] + 2; <-- here
+>
+> To fix the out-of-bounds memory access, code is now added to make sure
+> that addl_desc_ptr will never point to an address outside of its bounds.
+>
+> With this patch, the KASAN warning is gone.
+>
+> Signed-off-by: Waiman Long <longman@redhat.com>
+> ---
+>  drivers/scsi/ses.c | 7 ++++++-
+>  1 file changed, 6 insertions(+), 1 deletion(-)
+>
+> diff --git a/drivers/scsi/ses.c b/drivers/scsi/ses.c
+> index 0fc39224ce1e..dbc9acc2df2f 100644
+> --- a/drivers/scsi/ses.c
+> +++ b/drivers/scsi/ses.c
+> @@ -605,9 +605,14 @@ static void ses_enclosure_data_process(struct enclosure_device *edev,
+>  			     /* these elements are optional */
+>  			     type_ptr[0] == ENCLOSURE_COMPONENT_SCSI_TARGET_PORT ||
+>  			     type_ptr[0] == ENCLOSURE_COMPONENT_SCSI_INITIATOR_PORT ||
+> -			     type_ptr[0] == ENCLOSURE_COMPONENT_CONTROLLER_ELECTRONICS))
+> +			     type_ptr[0] == ENCLOSURE_COMPONENT_CONTROLLER_ELECTRONICS)) {
+>  				addl_desc_ptr += addl_desc_ptr[1] + 2;
+>  
+> +				/* Ensure no out-of-bounds memory access */
+> +				if (addl_desc_ptr >= ses_dev->page10 +
+> +						     ses_dev->page10_len)
+> +					addl_desc_ptr = NULL;
+> +			}
+>  		}
+>  	}
+>  	kfree(buf);
 
-diff --git a/include/dt-bindings/gpio/meson8b-gpio.h b/include/dt-bindings/gpio/meson8b-gpio.h
-index bf0d76fa0e7b..e75d09b6087b 100644
---- a/include/dt-bindings/gpio/meson8b-gpio.h
-+++ b/include/dt-bindings/gpio/meson8b-gpio.h
-@@ -1,15 +1,9 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
- /*
-  * GPIO definitions for Amlogic Meson8b SoCs
-  *
-  * Copyright (C) 2015 Endless Mobile, Inc.
-  * Author: Carlo Caione <carlo@endlessm.com>
-- *
-- * This program is free software; you can redistribute it and/or
-- * modify it under the terms of the GNU General Public License
-- * version 2 as published by the Free Software Foundation.
-- *
-- * You should have received a copy of the GNU General Public License
-- * along with this program. If not, see <http://www.gnu.org/licenses/>.
-  */
- 
- #ifndef _DT_BINDINGS_MESON8B_GPIO_H
--- 
-2.21.0
+Ping! Any comment on this patch.
+
+Cheers,
+Longman
 
