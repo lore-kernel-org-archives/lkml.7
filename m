@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DE72C04AAC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:43:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DC94C04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:43:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1773421479
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:43:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A052204FD
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:43:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558356226;
-	bh=Vc76SIEwx46ODrXQqltdqyN2/mHnKSGbQiibyzx/1hQ=;
+	s=default; t=1558356230;
+	bh=7msc1tKFakpzZ9gI2yrE7V/oN5Mph5vD65JhgljuaQs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UkjpNwozxzpYFwxiP263/AiPsaelpvWi8+BStowA//yVogMKLXhCzVi2dEsuZvmIq
-	 rB4RFpIxsIwuIiQP3No+TQmaP7vX9p1WMX+cJajJCZEaL7sWsRz4oOsOQao9gX93HE
-	 SH7JVhLNjhZE/Azbm8H/aBnwws7fpzQLS2cB6pzA=
+	b=sKFz4TbAtArU2Q5w9grp2Y3i2ILgAaIwCf68FlCddhk+3+t3MzjRP58sHuG5r83Ry
+	 JkoqJS850eWcLdfwMCKP8qm7byQauPxb+NOhyPlyCv7rCsE+TRs+UMPKncsFs/RMzH
+	 VYRkW0uunyVeD0xVE7EE9+i+Hjizsk6iPdQKpaJM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390969AbfETMnp (ORCPT
+        id S2389737AbfETM2o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 08:43:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44662 "EHLO mail.kernel.org"
+        Mon, 20 May 2019 08:28:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44564 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389741AbfETM2q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 08:28:46 -0400
+        id S2389724AbfETM2k (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 08:28:40 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DB4BA20645;
-        Mon, 20 May 2019 12:28:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BCBF8214DA;
+        Mon, 20 May 2019 12:28:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558355325;
-        bh=Vc76SIEwx46ODrXQqltdqyN2/mHnKSGbQiibyzx/1hQ=;
+        s=default; t=1558355320;
+        bh=7msc1tKFakpzZ9gI2yrE7V/oN5Mph5vD65JhgljuaQs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=u3fL8GWx5H2E4fXJg3vZp359nb0eI5emHn+kqjplqzM/GTfYpaMckmXA6Pl+TPpx6
-         oBvKj/PkRcW4OkY+ZYpHidy4Nsmf99tghxty7lPg4VjJJuhIiNO6n2a9yLd+Edrm1r
-         HhBsRxGBZDRHdEPFnrMaX3ptgIWKFiet+Q2YJlkM=
+        b=eB6vmEYNj7u0XjLFg7SiC1iR2vtz8nJNuaXY99YMn1dF/1xqkjePZBLqIT2suV17S
+         vszIBP8fmix7No8LXUd1ZpEAB8sYi8s6Fg8idI/M5JibJsENf+PGDad6Dq1bmjr9EM
+         UUdHNnO97Pp8qD9c5IS3pf+8iFTglRWVotdGnTHg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Gilad Ben-Yossef <gilad@benyossef.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>
-Subject: [PATCH 5.0 059/123] crypto: ccree - fix mem leak on error path
-Date:   Mon, 20 May 2019 14:13:59 +0200
-Message-Id: <20190520115248.697804651@linuxfoundation.org>
+        stable@vger.kernel.org, Dmitry Osipenko <digetx@gmail.com>,
+        Lee Jones <lee.jones@linaro.org>
+Subject: [PATCH 5.0 075/123] mfd: max77620: Fix swapped FPS_PERIOD_MAX_US values
+Date:   Mon, 20 May 2019 14:14:15 +0200
+Message-Id: <20190520115249.830342843@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190520115245.439864225@linuxfoundation.org>
 References: <20190520115245.439864225@linuxfoundation.org>
@@ -59,55 +59,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Gilad Ben-Yossef <gilad@benyossef.com>
+From: Dmitry Osipenko <digetx@gmail.com>
 
-commit d574b707c873d6ef1a2a155f8cfcfecd821e9a2e upstream.
+commit ea611d1cc180fbb56982c83cd5142a2b34881f5c upstream.
 
-Fix a memory leak on the error path of IV generation code.
+The FPS_PERIOD_MAX_US definitions are swapped for MAX20024 and MAX77620,
+fix it.
 
-Signed-off-by: Gilad Ben-Yossef <gilad@benyossef.com>
-Cc: stable@vger.kernel.org # v4.19+
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Cc: stable <stable@vger.kernel.org>
+Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+Signed-off-by: Lee Jones <lee.jones@linaro.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/crypto/ccree/cc_ivgen.c |    9 +++------
- 1 file changed, 3 insertions(+), 6 deletions(-)
+ include/linux/mfd/max77620.h |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/drivers/crypto/ccree/cc_ivgen.c
-+++ b/drivers/crypto/ccree/cc_ivgen.c
-@@ -154,9 +154,6 @@ void cc_ivgen_fini(struct cc_drvdata *dr
- 	}
+--- a/include/linux/mfd/max77620.h
++++ b/include/linux/mfd/max77620.h
+@@ -136,8 +136,8 @@
+ #define MAX77620_FPS_PERIOD_MIN_US		40
+ #define MAX20024_FPS_PERIOD_MIN_US		20
  
- 	ivgen_ctx->pool = NULL_SRAM_ADDR;
--
--	/* release "this" context */
--	kfree(ivgen_ctx);
- }
+-#define MAX77620_FPS_PERIOD_MAX_US		2560
+-#define MAX20024_FPS_PERIOD_MAX_US		5120
++#define MAX20024_FPS_PERIOD_MAX_US		2560
++#define MAX77620_FPS_PERIOD_MAX_US		5120
  
- /*!
-@@ -174,10 +171,12 @@ int cc_ivgen_init(struct cc_drvdata *drv
- 	int rc;
- 
- 	/* Allocate "this" context */
--	ivgen_ctx = kzalloc(sizeof(*ivgen_ctx), GFP_KERNEL);
-+	ivgen_ctx = devm_kzalloc(device, sizeof(*ivgen_ctx), GFP_KERNEL);
- 	if (!ivgen_ctx)
- 		return -ENOMEM;
- 
-+	drvdata->ivgen_handle = ivgen_ctx;
-+
- 	/* Allocate pool's header for initial enc. key/IV */
- 	ivgen_ctx->pool_meta = dma_alloc_coherent(device, CC_IVPOOL_META_SIZE,
- 						  &ivgen_ctx->pool_meta_dma,
-@@ -196,8 +195,6 @@ int cc_ivgen_init(struct cc_drvdata *drv
- 		goto out;
- 	}
- 
--	drvdata->ivgen_handle = ivgen_ctx;
--
- 	return cc_init_iv_sram(drvdata);
- 
- out:
+ #define MAX77620_REG_FPS_GPIO1			0x54
+ #define MAX77620_REG_FPS_GPIO2			0x55
 
 
