@@ -4,55 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6052C04AAC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:34:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 190DCC04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:34:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8E33321721
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:34:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E35E920815
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:34:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558355655;
-	bh=3BdsCKCwZOr6nPEyqN8v/LGY99gnYcCoYtt+UsPGw54=;
+	s=default; t=1558355658;
+	bh=OBYT2VnOQ5myBB1lnPNUSWhpcXsLMps3PXjm+pkB0BE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=STODulXacCPzYf8rdOrrRGIAxxycpjghOesGOAzr1YZwhauCTz1R/iKxWsPvi/YY7
-	 X682pDeXS+dWwCpR/+7dCq5iKTe6V0hSwZNqOqAZRhpgg30NhjWJRUGpjtdq1Qsdaf
-	 ad1MlHZ0RW9ISfeskxUu9YwQ2sDqodwA8dnCjEUU=
+	b=kb9fUdN77MELehP8nMi0fdn+eF81yA08uyyskyIhd5al6TCh1FSlw66jaFU5kj5BZ
+	 apWDKAEL+XnTqa867E+7MUVtaIKwHEiAIHpRYdbK+4TLTVT3mmfLzWGTHU+Dp4GoV5
+	 FpCbaJit63BtIHP/PDUZCFZpTUEi1XMOONXDKy9c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390886AbfETMeO (ORCPT
+        id S2390875AbfETMeM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 08:34:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51402 "EHLO mail.kernel.org"
+        Mon, 20 May 2019 08:34:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51344 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390859AbfETMeL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 08:34:11 -0400
+        id S2390500AbfETMeI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 08:34:08 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5B78E216C4;
-        Mon, 20 May 2019 12:34:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DCF6C214DA;
+        Mon, 20 May 2019 12:34:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558355649;
-        bh=3BdsCKCwZOr6nPEyqN8v/LGY99gnYcCoYtt+UsPGw54=;
+        s=default; t=1558355647;
+        bh=OBYT2VnOQ5myBB1lnPNUSWhpcXsLMps3PXjm+pkB0BE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YnU77tfoIS0tj9vcHpP3LJBxYuNOEtpQvsa2WlVGQTO38hkiHm9BQ8qDyt54HzUjM
-         nlQXZrCHJvA9mmkLENFAiAsJCDbGEkx8Rz63lJchZSI16ehQm9uEiSXTYVizyMRy/Z
-         23hnWa6ypMvUQvkVnKcu0CTk1cmuKQjm/4S6Hz/4=
+        b=TFDTiViqDMt4wAoOpEG3db95tYvUaesS4r+O1h3j9xTcAxsJdwh1IRXfhtzntwl0Y
+         JZzBlIz6GkgPAhUDpzboE+D6eORR1FMX1q+OeCAib/V1yqxxR6nwR1ozIIDZzXMH5Y
+         TPMayWCv4dRON2GaSUktZcjeB31tu8lONhqJ76rc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Mike Kravetz <mike.kravetz@oracle.com>,
-        Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>,
-        Davidlohr Bueso <dbueso@suse.de>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
-        Michal Hocko <mhocko@kernel.org>,
+        stable@vger.kernel.org, Kai Shen <shenkai8@huawei.com>,
+        Feilong Lin <linfeilong@huawei.com>,
+        Wang Wang <wangwang2@huawei.com>,
+        Oscar Salvador <osalvador@suse.de>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
         Andrew Morton <akpm@linux-foundation.org>,
+        Michal Hocko <mhocko@suse.com>,
         Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 5.1 072/128] hugetlb: use same fault hash key for shared and private mappings
-Date:   Mon, 20 May 2019 14:14:19 +0200
-Message-Id: <20190520115254.651928070@linuxfoundation.org>
+Subject: [PATCH 5.1 071/128] mm/hugetlb.c: dont put_page in lock of hugetlb_lock
+Date:   Mon, 20 May 2019 14:14:18 +0200
+Message-Id: <20190520115254.598581725@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190520115249.449077487@linuxfoundation.org>
 References: <20190520115249.449077487@linuxfoundation.org>
@@ -65,177 +65,77 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mike Kravetz <mike.kravetz@oracle.com>
+From: Kai Shen <shenkai8@huawei.com>
 
-commit 1b426bac66e6cc83c9f2d92b96e4e72acf43419a upstream.
+commit 2bf753e64b4a702e27ce26ff520c59563c62f96b upstream.
 
-hugetlb uses a fault mutex hash table to prevent page faults of the
-same pages concurrently.  The key for shared and private mappings is
-different.  Shared keys off address_space and file index.  Private keys
-off mm and virtual address.  Consider a private mappings of a populated
-hugetlbfs file.  A fault will map the page from the file and if needed
-do a COW to map a writable page.
+spinlock recursion happened when do LTP test:
+#!/bin/bash
+./runltp -p -f hugetlb &
+./runltp -p -f hugetlb &
+./runltp -p -f hugetlb &
+./runltp -p -f hugetlb &
+./runltp -p -f hugetlb &
 
-Hugetlbfs hole punch uses the fault mutex to prevent mappings of file
-pages.  It uses the address_space file index key.  However, private
-mappings will use a different key and could race with this code to map
-the file page.  This causes problems (BUG) for the page cache remove
-code as it expects the page to be unmapped.  A sample stack is:
+The dtor returned by get_compound_page_dtor in __put_compound_page may be
+the function of free_huge_page which will lock the hugetlb_lock, so don't
+put_page in lock of hugetlb_lock.
 
-page dumped because: VM_BUG_ON_PAGE(page_mapped(page))
-kernel BUG at mm/filemap.c:169!
-...
-RIP: 0010:unaccount_page_cache_page+0x1b8/0x200
-...
-Call Trace:
-__delete_from_page_cache+0x39/0x220
-delete_from_page_cache+0x45/0x70
-remove_inode_hugepages+0x13c/0x380
-? __add_to_page_cache_locked+0x162/0x380
-hugetlbfs_fallocate+0x403/0x540
-? _cond_resched+0x15/0x30
-? __inode_security_revalidate+0x5d/0x70
-? selinux_file_permission+0x100/0x130
-vfs_fallocate+0x13f/0x270
-ksys_fallocate+0x3c/0x80
-__x64_sys_fallocate+0x1a/0x20
-do_syscall_64+0x5b/0x180
-entry_SYSCALL_64_after_hwframe+0x44/0xa9
+ BUG: spinlock recursion on CPU#0, hugemmap05/1079
+  lock: hugetlb_lock+0x0/0x18, .magic: dead4ead, .owner: hugemmap05/1079, .owner_cpu: 0
+ Call trace:
+  dump_backtrace+0x0/0x198
+  show_stack+0x24/0x30
+  dump_stack+0xa4/0xcc
+  spin_dump+0x84/0xa8
+  do_raw_spin_lock+0xd0/0x108
+  _raw_spin_lock+0x20/0x30
+  free_huge_page+0x9c/0x260
+  __put_compound_page+0x44/0x50
+  __put_page+0x2c/0x60
+  alloc_surplus_huge_page.constprop.19+0xf0/0x140
+  hugetlb_acct_memory+0x104/0x378
+  hugetlb_reserve_pages+0xe0/0x250
+  hugetlbfs_file_mmap+0xc0/0x140
+  mmap_region+0x3e8/0x5b0
+  do_mmap+0x280/0x460
+  vm_mmap_pgoff+0xf4/0x128
+  ksys_mmap_pgoff+0xb4/0x258
+  __arm64_sys_mmap+0x34/0x48
+  el0_svc_common+0x78/0x130
+  el0_svc_handler+0x38/0x78
+  el0_svc+0x8/0xc
 
-There seems to be another potential COW issue/race with this approach
-of different private and shared keys as noted in commit 8382d914ebf7
-("mm, hugetlb: improve page-fault scalability").
-
-Since every hugetlb mapping (even anon and private) is actually a file
-mapping, just use the address_space index key for all mappings.  This
-results in potentially more hash collisions.  However, this should not
-be the common case.
-
-Link: http://lkml.kernel.org/r/20190328234704.27083-3-mike.kravetz@oracle.com
-Link: http://lkml.kernel.org/r/20190412165235.t4sscoujczfhuiyt@linux-r8p5
-Fixes: b5cec28d36f5 ("hugetlbfs: truncate_hugepages() takes a range of pages")
-Signed-off-by: Mike Kravetz <mike.kravetz@oracle.com>
-Reviewed-by: Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>
-Reviewed-by: Davidlohr Bueso <dbueso@suse.de>
-Cc: Joonsoo Kim <iamjoonsoo.kim@lge.com>
-Cc: "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>
-Cc: Michal Hocko <mhocko@kernel.org>
+Link: http://lkml.kernel.org/r/b8ade452-2d6b-0372-32c2-703644032b47@huawei.com
+Fixes: 9980d744a0 ("mm, hugetlb: get rid of surplus page accounting tricks")
+Signed-off-by: Kai Shen <shenkai8@huawei.com>
+Signed-off-by: Feilong Lin <linfeilong@huawei.com>
+Reported-by: Wang Wang <wangwang2@huawei.com>
+Reviewed-by: Oscar Salvador <osalvador@suse.de>
+Reviewed-by: Mike Kravetz <mike.kravetz@oracle.com>
+Reviewed-by: Andrew Morton <akpm@linux-foundation.org>
+Acked-by: Michal Hocko <mhocko@suse.com>
 Cc: <stable@vger.kernel.org>
 Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
 Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/hugetlbfs/inode.c    |    7 ++-----
- include/linux/hugetlb.h |    4 +---
- mm/hugetlb.c            |   22 ++++++----------------
- mm/userfaultfd.c        |    3 +--
- 4 files changed, 10 insertions(+), 26 deletions(-)
+ mm/hugetlb.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/fs/hugetlbfs/inode.c
-+++ b/fs/hugetlbfs/inode.c
-@@ -440,9 +440,7 @@ static void remove_inode_hugepages(struc
- 			u32 hash;
- 
- 			index = page->index;
--			hash = hugetlb_fault_mutex_hash(h, current->mm,
--							&pseudo_vma,
--							mapping, index, 0);
-+			hash = hugetlb_fault_mutex_hash(h, mapping, index, 0);
- 			mutex_lock(&hugetlb_fault_mutex_table[hash]);
- 
- 			/*
-@@ -639,8 +637,7 @@ static long hugetlbfs_fallocate(struct f
- 		addr = index * hpage_size;
- 
- 		/* mutex taken here, fault path and hole punch */
--		hash = hugetlb_fault_mutex_hash(h, mm, &pseudo_vma, mapping,
--						index, addr);
-+		hash = hugetlb_fault_mutex_hash(h, mapping, index, addr);
- 		mutex_lock(&hugetlb_fault_mutex_table[hash]);
- 
- 		/* See if already present in mapping to avoid alloc/free */
---- a/include/linux/hugetlb.h
-+++ b/include/linux/hugetlb.h
-@@ -123,9 +123,7 @@ void move_hugetlb_state(struct page *old
- void free_huge_page(struct page *page);
- void hugetlb_fix_reserve_counts(struct inode *inode);
- extern struct mutex *hugetlb_fault_mutex_table;
--u32 hugetlb_fault_mutex_hash(struct hstate *h, struct mm_struct *mm,
--				struct vm_area_struct *vma,
--				struct address_space *mapping,
-+u32 hugetlb_fault_mutex_hash(struct hstate *h, struct address_space *mapping,
- 				pgoff_t idx, unsigned long address);
- 
- pte_t *huge_pmd_share(struct mm_struct *mm, unsigned long addr, pud_t *pud);
 --- a/mm/hugetlb.c
 +++ b/mm/hugetlb.c
-@@ -3778,8 +3778,7 @@ retry:
- 			 * handling userfault.  Reacquire after handling
- 			 * fault to make calling code simpler.
- 			 */
--			hash = hugetlb_fault_mutex_hash(h, mm, vma, mapping,
--							idx, haddr);
-+			hash = hugetlb_fault_mutex_hash(h, mapping, idx, haddr);
- 			mutex_unlock(&hugetlb_fault_mutex_table[hash]);
- 			ret = handle_userfault(&vmf, VM_UFFD_MISSING);
- 			mutex_lock(&hugetlb_fault_mutex_table[hash]);
-@@ -3887,21 +3886,14 @@ backout_unlocked:
- }
- 
- #ifdef CONFIG_SMP
--u32 hugetlb_fault_mutex_hash(struct hstate *h, struct mm_struct *mm,
--			    struct vm_area_struct *vma,
--			    struct address_space *mapping,
-+u32 hugetlb_fault_mutex_hash(struct hstate *h, struct address_space *mapping,
- 			    pgoff_t idx, unsigned long address)
- {
- 	unsigned long key[2];
- 	u32 hash;
- 
--	if (vma->vm_flags & VM_SHARED) {
--		key[0] = (unsigned long) mapping;
--		key[1] = idx;
--	} else {
--		key[0] = (unsigned long) mm;
--		key[1] = address >> huge_page_shift(h);
--	}
-+	key[0] = (unsigned long) mapping;
-+	key[1] = idx;
- 
- 	hash = jhash2((u32 *)&key, sizeof(key)/sizeof(u32), 0);
- 
-@@ -3912,9 +3904,7 @@ u32 hugetlb_fault_mutex_hash(struct hsta
-  * For uniprocesor systems we always use a single mutex, so just
-  * return 0 and avoid the hashing overhead.
-  */
--u32 hugetlb_fault_mutex_hash(struct hstate *h, struct mm_struct *mm,
--			    struct vm_area_struct *vma,
--			    struct address_space *mapping,
-+u32 hugetlb_fault_mutex_hash(struct hstate *h, struct address_space *mapping,
- 			    pgoff_t idx, unsigned long address)
- {
- 	return 0;
-@@ -3959,7 +3949,7 @@ vm_fault_t hugetlb_fault(struct mm_struc
- 	 * get spurious allocation failures if two CPUs race to instantiate
- 	 * the same page in the page cache.
+@@ -1574,8 +1574,9 @@ static struct page *alloc_surplus_huge_p
  	 */
--	hash = hugetlb_fault_mutex_hash(h, mm, vma, mapping, idx, haddr);
-+	hash = hugetlb_fault_mutex_hash(h, mapping, idx, haddr);
- 	mutex_lock(&hugetlb_fault_mutex_table[hash]);
- 
- 	entry = huge_ptep_get(ptep);
---- a/mm/userfaultfd.c
-+++ b/mm/userfaultfd.c
-@@ -271,8 +271,7 @@ retry:
- 		 */
- 		idx = linear_page_index(dst_vma, dst_addr);
- 		mapping = dst_vma->vm_file->f_mapping;
--		hash = hugetlb_fault_mutex_hash(h, dst_mm, dst_vma, mapping,
--								idx, dst_addr);
-+		hash = hugetlb_fault_mutex_hash(h, mapping, idx, dst_addr);
- 		mutex_lock(&hugetlb_fault_mutex_table[hash]);
- 
- 		err = -ENOMEM;
+ 	if (h->surplus_huge_pages >= h->nr_overcommit_huge_pages) {
+ 		SetPageHugeTemporary(page);
++		spin_unlock(&hugetlb_lock);
+ 		put_page(page);
+-		page = NULL;
++		return NULL;
+ 	} else {
+ 		h->surplus_huge_pages++;
+ 		h->surplus_huge_pages_node[page_to_nid(page)]++;
 
 
