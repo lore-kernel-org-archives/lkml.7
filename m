@@ -2,342 +2,104 @@ Return-Path: <SRS0=lq4r=TU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63805C04AAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 09:05:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 703FEC04AAF
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 09:06:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2EC2020656
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 09:05:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E5A120656
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 09:06:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731705AbfETJFX (ORCPT
+        id S1730665AbfETJGK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 05:05:23 -0400
-Received: from mga09.intel.com ([134.134.136.24]:27087 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726316AbfETJFX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 05:05:23 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 May 2019 02:05:21 -0700
-X-ExtLoop1: 1
-Received: from twinkler-lnx.jer.intel.com ([10.12.91.48])
-  by fmsmga004.fm.intel.com with ESMTP; 20 May 2019 02:05:19 -0700
-From:   Tomas Winkler <tomas.winkler@intel.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Alexander Usyskin <alexander.usyskin@intel.com>,
-        linux-kernel@vger.kernel.org,
-        Vitaly Lubart <vitaly.lubart@intel.com>,
-        Tomas Winkler <tomas.winkler@intel.com>
-Subject: [char-misc-next] mei: Convert to use DEFINE_SHOW_ATTRIBUTE macro
-Date:   Mon, 20 May 2019 11:55:39 +0300
-Message-Id: <20190520085539.6013-1-tomas.winkler@intel.com>
-X-Mailer: git-send-email 2.20.1
+        Mon, 20 May 2019 05:06:10 -0400
+Received: from mail-vs1-f65.google.com ([209.85.217.65]:35863 "EHLO
+        mail-vs1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725772AbfETJGJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 05:06:09 -0400
+Received: by mail-vs1-f65.google.com with SMTP id l20so8463634vsp.3
+        for <linux-kernel@vger.kernel.org>; Mon, 20 May 2019 02:06:09 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=NtXp1qUqcm3uZCNPXqEQ7xEuqH7F3Cd1oa/vGsVVX9M=;
+        b=JzrKXmsSHYT/3Pbueww8hYrwL5xey0MdOwd+dzLtpQN4UP563o9EnECbmxpPRc02n7
+         cQJKwpUJagV1SB20mRFqtumcFj0iC/nt22sXNavnBcO4tdW0tLHriYsnwBdcKfwWx/up
+         iBg4DorCWjM9Vn+0l8PC53ZESijN6UJRkPMOTyUepyqVxU2txx+PaJo6C8M6v7oWpDYO
+         eFiTdLVbjxHeuEkceoLmKL7k9ZsbjYuzBEtR6JzYFsq/wv/85K/3H2yfnbcwY54QgpXl
+         kjwvOYpdgy/SyHACt9zJstXOm29LWI2fBSBpuxiskjMfGQ3c5VuuXaqdXsTEx4X3BGRC
+         YanA==
+X-Gm-Message-State: APjAAAVEOdyrY5oB/Fqgcg9u0J2SOa+Sw4XJIqfs09J9iy29JrRzJLw9
+        ZiBkzq+3zwKJaP5PuJjyeyfyCCpyv5nIUZauPvg=
+X-Google-Smtp-Source: APXvYqyUShVi/8PDt7r6nhmGOzPit4HgmJvzxn18tzzLapn32MIxpElZyBHIwWigYtyEy7flMfCjer/20VatpkU6+Bk=
+X-Received: by 2002:a67:f303:: with SMTP id p3mr23011462vsf.166.1558343169054;
+ Mon, 20 May 2019 02:06:09 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20190520082216.26273-1-daniel.vetter@ffwll.ch> <20190520082216.26273-21-daniel.vetter@ffwll.ch>
+In-Reply-To: <20190520082216.26273-21-daniel.vetter@ffwll.ch>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Mon, 20 May 2019 11:05:57 +0200
+Message-ID: <CAMuHMdVuu062bkOb4sPv-m-WUF4L=K9Q5-hGPHTb8OhPbQdSEg@mail.gmail.com>
+Subject: Re: [PATCH 20/33] fbdev/sh_mob: Remove fb notifier callback
+To:     Daniel Vetter <daniel.vetter@ffwll.ch>
+Cc:     DRI Development <dri-devel@lists.freedesktop.org>,
+        Intel Graphics Development <intel-gfx@lists.freedesktop.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Daniel Vetter <daniel.vetter@intel.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Markus Elfring <elfring@users.sourceforge.net>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Wolfram Sang <wsa+renesas@sang-engineering.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vitaly Lubart <vitaly.lubart@intel.com>
+On Mon, May 20, 2019 at 10:22 AM Daniel Vetter <daniel.vetter@ffwll.ch> wrote:
+> This seems to be entirely defunct:
+>
+> - The FB_EVEN_SUSPEND/RESUME events are only sent out by
+>   fb_set_suspend. Which is supposed to be called by drivers in their
+>   suspend/resume hooks, and not itself call into drivers. Luckily
+>   sh_mob doesn't call fb_set_suspend, so this seems to do nothing
+>   useful.
+>
+> - The notify hook calls sh_mobile_fb_reconfig() which in turn can
+>   call into the fb notifier. Or attempt too, since that would
+>   deadlock.
+>
+> So looks like leftover hacks from when this was originally introduced
+> in
+>
+> commit 6011bdeaa6089d49c02de69f05980da7bad314ab
+> Author: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
+> Date:   Wed Jul 21 10:13:21 2010 +0000
+>
+>     fbdev: sh-mobile: HDMI support for SH-Mobile SoCs
+>
+> So let's just remove it.
+>
+> Signed-off-by: Daniel Vetter <daniel.vetter@intel.com>
 
-Use DEFINE_SHOW_ATTRIBUTE macro to simplify the code.
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-Signed-off-by: Vitaly Lubart <vitaly.lubart@intel.com>
-Signed-off-by: Tomas Winkler <tomas.winkler@intel.com>
----
- drivers/misc/mei/debugfs.c | 184 +++++++++++--------------------------
- 1 file changed, 52 insertions(+), 132 deletions(-)
+Display still works fine on Armadillo800-EVA, before and after system
+suspend/resume, so:
 
-diff --git a/drivers/misc/mei/debugfs.c b/drivers/misc/mei/debugfs.c
-index 0970142bcace..47cfd5005e1b 100644
---- a/drivers/misc/mei/debugfs.c
-+++ b/drivers/misc/mei/debugfs.c
-@@ -8,6 +8,7 @@
- #include <linux/kernel.h>
- #include <linux/device.h>
- #include <linux/debugfs.h>
-+#include <linux/seq_file.h>
- 
- #include <linux/mei.h>
- 
-@@ -15,104 +16,56 @@
- #include "client.h"
- #include "hw.h"
- 
--static ssize_t mei_dbgfs_read_meclients(struct file *fp, char __user *ubuf,
--					size_t cnt, loff_t *ppos)
-+static int mei_dbgfs_meclients_show(struct seq_file *m, void *unused)
- {
--	struct mei_device *dev = fp->private_data;
-+	struct mei_device *dev = m->private;
- 	struct mei_me_client *me_cl;
--	size_t bufsz = 1;
--	char *buf;
- 	int i = 0;
--	int pos = 0;
--	int ret;
- 
--#define HDR \
--"  |id|fix|         UUID                       |con|msg len|sb|refc|\n"
-+	if (!dev)
-+		return -ENODEV;
- 
- 	down_read(&dev->me_clients_rwsem);
--	list_for_each_entry(me_cl, &dev->me_clients, list)
--		bufsz++;
- 
--	bufsz *= sizeof(HDR) + 1;
--	buf = kzalloc(bufsz, GFP_KERNEL);
--	if (!buf) {
--		up_read(&dev->me_clients_rwsem);
--		return -ENOMEM;
--	}
--
--	pos += scnprintf(buf + pos, bufsz - pos, HDR);
--#undef HDR
-+	seq_puts(m, "  |id|fix|         UUID                       |con|msg len|sb|refc|\n");
- 
- 	/*  if the driver is not enabled the list won't be consistent */
- 	if (dev->dev_state != MEI_DEV_ENABLED)
- 		goto out;
- 
- 	list_for_each_entry(me_cl, &dev->me_clients, list) {
--
--		if (mei_me_cl_get(me_cl)) {
--			pos += scnprintf(buf + pos, bufsz - pos,
--				"%2d|%2d|%3d|%pUl|%3d|%7d|%2d|%4d|\n",
--				i++, me_cl->client_id,
--				me_cl->props.fixed_address,
--				&me_cl->props.protocol_name,
--				me_cl->props.max_number_of_connections,
--				me_cl->props.max_msg_length,
--				me_cl->props.single_recv_buf,
--				kref_read(&me_cl->refcnt));
--
--			mei_me_cl_put(me_cl);
--		}
-+		if (!mei_me_cl_get(me_cl))
-+			continue;
-+
-+		seq_printf(m, "%2d|%2d|%3d|%pUl|%3d|%7d|%2d|%4d|\n",
-+			   i++, me_cl->client_id,
-+			   me_cl->props.fixed_address,
-+			   &me_cl->props.protocol_name,
-+			   me_cl->props.max_number_of_connections,
-+			   me_cl->props.max_msg_length,
-+			   me_cl->props.single_recv_buf,
-+			   kref_read(&me_cl->refcnt));
-+		mei_me_cl_put(me_cl);
- 	}
- 
- out:
- 	up_read(&dev->me_clients_rwsem);
--	ret = simple_read_from_buffer(ubuf, cnt, ppos, buf, pos);
--	kfree(buf);
--	return ret;
-+	return 0;
- }
-+DEFINE_SHOW_ATTRIBUTE(mei_dbgfs_meclients);
- 
--static const struct file_operations mei_dbgfs_fops_meclients = {
--	.open = simple_open,
--	.read = mei_dbgfs_read_meclients,
--	.llseek = generic_file_llseek,
--};
--
--static ssize_t mei_dbgfs_read_active(struct file *fp, char __user *ubuf,
--					size_t cnt, loff_t *ppos)
-+static int mei_dbgfs_active_show(struct seq_file *m, void *unused)
- {
--	struct mei_device *dev = fp->private_data;
-+	struct mei_device *dev = m->private;
- 	struct mei_cl *cl;
--	size_t bufsz = 1;
--	char *buf;
- 	int i = 0;
--	int pos = 0;
--	int ret;
--
--#define HDR "   |me|host|state|rd|wr|wrq\n"
- 
- 	if (!dev)
- 		return -ENODEV;
- 
- 	mutex_lock(&dev->device_lock);
- 
--	/*
--	 * if the driver is not enabled the list won't be consistent,
--	 * we output empty table
--	 */
--	if (dev->dev_state == MEI_DEV_ENABLED)
--		list_for_each_entry(cl, &dev->file_list, link)
--			bufsz++;
--
--	bufsz *= sizeof(HDR) + 1;
--
--	buf = kzalloc(bufsz, GFP_KERNEL);
--	if  (!buf) {
--		mutex_unlock(&dev->device_lock);
--		return -ENOMEM;
--	}
--
--	pos += scnprintf(buf + pos, bufsz - pos, HDR);
--#undef HDR
-+	seq_puts(m, "   |me|host|state|rd|wr|wrq\n");
- 
- 	/*  if the driver is not enabled the list won't be consistent */
- 	if (dev->dev_state != MEI_DEV_ENABLED)
-@@ -120,76 +73,44 @@ static ssize_t mei_dbgfs_read_active(struct file *fp, char __user *ubuf,
- 
- 	list_for_each_entry(cl, &dev->file_list, link) {
- 
--		pos += scnprintf(buf + pos, bufsz - pos,
--			"%3d|%2d|%4d|%5d|%2d|%2d|%3u\n",
--			i, mei_cl_me_id(cl), cl->host_client_id, cl->state,
--			!list_empty(&cl->rd_completed), cl->writing_state,
--			cl->tx_cb_queued);
-+		seq_printf(m, "%3d|%2d|%4d|%5d|%2d|%2d|%3u\n",
-+			   i, mei_cl_me_id(cl), cl->host_client_id, cl->state,
-+			   !list_empty(&cl->rd_completed), cl->writing_state,
-+			   cl->tx_cb_queued);
- 		i++;
- 	}
- out:
- 	mutex_unlock(&dev->device_lock);
--	ret = simple_read_from_buffer(ubuf, cnt, ppos, buf, pos);
--	kfree(buf);
--	return ret;
-+	return 0;
- }
-+DEFINE_SHOW_ATTRIBUTE(mei_dbgfs_active);
- 
--static const struct file_operations mei_dbgfs_fops_active = {
--	.open = simple_open,
--	.read = mei_dbgfs_read_active,
--	.llseek = generic_file_llseek,
--};
--
--static ssize_t mei_dbgfs_read_devstate(struct file *fp, char __user *ubuf,
--					size_t cnt, loff_t *ppos)
-+static int mei_dbgfs_devstate_show(struct seq_file *m, void *unused)
- {
--	struct mei_device *dev = fp->private_data;
--	const size_t bufsz = 1024;
--	char *buf = kzalloc(bufsz, GFP_KERNEL);
--	int pos = 0;
--	int ret;
--
--	if  (!buf)
--		return -ENOMEM;
-+	struct mei_device *dev = m->private;
- 
--	pos += scnprintf(buf + pos, bufsz - pos, "dev: %s\n",
--			mei_dev_state_str(dev->dev_state));
--	pos += scnprintf(buf + pos, bufsz - pos, "hbm: %s\n",
--			mei_hbm_state_str(dev->hbm_state));
-+	seq_printf(m, "dev: %s\n", mei_dev_state_str(dev->dev_state));
-+	seq_printf(m, "hbm: %s\n", mei_hbm_state_str(dev->hbm_state));
- 
- 	if (dev->hbm_state >= MEI_HBM_ENUM_CLIENTS &&
- 	    dev->hbm_state <= MEI_HBM_STARTED) {
--		pos += scnprintf(buf + pos, bufsz - pos, "hbm features:\n");
--		pos += scnprintf(buf + pos, bufsz - pos, "\tPG: %01d\n",
--				 dev->hbm_f_pg_supported);
--		pos += scnprintf(buf + pos, bufsz - pos, "\tDC: %01d\n",
--				 dev->hbm_f_dc_supported);
--		pos += scnprintf(buf + pos, bufsz - pos, "\tIE: %01d\n",
--				 dev->hbm_f_ie_supported);
--		pos += scnprintf(buf + pos, bufsz - pos, "\tDOT: %01d\n",
--				 dev->hbm_f_dot_supported);
--		pos += scnprintf(buf + pos, bufsz - pos, "\tEV: %01d\n",
--				 dev->hbm_f_ev_supported);
--		pos += scnprintf(buf + pos, bufsz - pos, "\tFA: %01d\n",
--				 dev->hbm_f_fa_supported);
--		pos += scnprintf(buf + pos, bufsz - pos, "\tOS: %01d\n",
--				 dev->hbm_f_os_supported);
--		pos += scnprintf(buf + pos, bufsz - pos, "\tDR: %01d\n",
--				 dev->hbm_f_dr_supported);
-+		seq_puts(m, "hbm features:\n");
-+		seq_printf(m, "\tPG: %01d\n", dev->hbm_f_pg_supported);
-+		seq_printf(m, "\tDC: %01d\n", dev->hbm_f_dc_supported);
-+		seq_printf(m, "\tIE: %01d\n", dev->hbm_f_ie_supported);
-+		seq_printf(m, "\tDOT: %01d\n", dev->hbm_f_dot_supported);
-+		seq_printf(m, "\tEV: %01d\n", dev->hbm_f_ev_supported);
-+		seq_printf(m, "\tFA: %01d\n", dev->hbm_f_fa_supported);
-+		seq_printf(m, "\tOS: %01d\n", dev->hbm_f_os_supported);
-+		seq_printf(m, "\tDR: %01d\n", dev->hbm_f_dr_supported);
- 	}
- 
--	pos += scnprintf(buf + pos, bufsz - pos, "pg:  %s, %s\n",
--			mei_pg_is_enabled(dev) ? "ENABLED" : "DISABLED",
--			mei_pg_state_str(mei_pg_state(dev)));
--	ret = simple_read_from_buffer(ubuf, cnt, ppos, buf, pos);
--	kfree(buf);
--	return ret;
-+	seq_printf(m, "pg:  %s, %s\n",
-+		   mei_pg_is_enabled(dev) ? "ENABLED" : "DISABLED",
-+		   mei_pg_state_str(mei_pg_state(dev)));
-+	return 0;
- }
--static const struct file_operations mei_dbgfs_fops_devstate = {
--	.open = simple_open,
--	.read = mei_dbgfs_read_devstate,
--	.llseek = generic_file_llseek,
--};
-+DEFINE_SHOW_ATTRIBUTE(mei_dbgfs_devstate);
- 
- static ssize_t mei_dbgfs_write_allow_fa(struct file *file,
- 					const char __user *user_buf,
-@@ -208,7 +129,7 @@ static ssize_t mei_dbgfs_write_allow_fa(struct file *file,
- 	return ret;
- }
- 
--static const struct file_operations mei_dbgfs_fops_allow_fa = {
-+static const struct file_operations mei_dbgfs_allow_fa_fops = {
- 	.open = simple_open,
- 	.read = debugfs_read_file_bool,
- 	.write = mei_dbgfs_write_allow_fa,
-@@ -247,26 +168,26 @@ int mei_dbgfs_register(struct mei_device *dev, const char *name)
- 	dev->dbgfs_dir = dir;
- 
- 	f = debugfs_create_file("meclients", S_IRUSR, dir,
--				dev, &mei_dbgfs_fops_meclients);
-+				dev, &mei_dbgfs_meclients_fops);
- 	if (!f) {
- 		dev_err(dev->dev, "meclients: registration failed\n");
- 		goto err;
- 	}
- 	f = debugfs_create_file("active", S_IRUSR, dir,
--				dev, &mei_dbgfs_fops_active);
-+				dev, &mei_dbgfs_active_fops);
- 	if (!f) {
- 		dev_err(dev->dev, "active: registration failed\n");
- 		goto err;
- 	}
- 	f = debugfs_create_file("devstate", S_IRUSR, dir,
--				dev, &mei_dbgfs_fops_devstate);
-+				dev, &mei_dbgfs_devstate_fops);
- 	if (!f) {
- 		dev_err(dev->dev, "devstate: registration failed\n");
- 		goto err;
- 	}
- 	f = debugfs_create_file("allow_fixed_address", S_IRUSR | S_IWUSR, dir,
- 				&dev->allow_fixed_address,
--				&mei_dbgfs_fops_allow_fa);
-+				&mei_dbgfs_allow_fa_fops);
- 	if (!f) {
- 		dev_err(dev->dev, "allow_fixed_address: registration failed\n");
- 		goto err;
-@@ -276,4 +197,3 @@ int mei_dbgfs_register(struct mei_device *dev, const char *name)
- 	mei_dbgfs_deregister(dev);
- 	return -ENODEV;
- }
--
+Tested-by: Geert Uytterhoeven <geert+renesas@glider.be>
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
 -- 
-2.20.1
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
