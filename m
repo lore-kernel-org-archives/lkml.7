@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F2BBC04AAC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:18:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75F44C04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:18:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5A5A3213F2
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:18:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3CAB520815
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:18:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558354683;
-	bh=sxpB7FQt5hq7U4zwTHL6qIJiFR+nyeKVpLctJir5EYE=;
+	s=default; t=1558354687;
+	bh=3cbeNFZjDYtiNUPJwWdnvJ2QlJeexinkSH9ggi0b/14=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vWKx1XjD/qpBOgTiI3yoZ51hxb0bBQ4/8Voed70nXn+keT6UANQEvp2v/7STzDG/+
-	 qzqBBDlew/WSkOe8Cexf9KYs3miO7IuXYztxLoymvZnILQs/9VnJVjdqrGOP54e9d+
-	 7rZ5w3eNvvV8Nh3c9j126ZTFTHbTpFNEZ9XrAerQ=
+	b=0attXRXch1W/HJuohzW1dZ+GQb9nA0S+zkvqghshAUoIGYAj0r9W9ywWZcVaY3f4u
+	 ruUZWSCfDv0qZl20UPI/ydM+cfNSqWs4xB/c+kMoomdJVLgCBNfTcJkmVVmo67C6ti
+	 DDjevymnfnu8k3kRMq22cq6wtNd755L0PxzQYTgE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387691AbfETMSC (ORCPT
+        id S2387698AbfETMSG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 08:18:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59090 "EHLO mail.kernel.org"
+        Mon, 20 May 2019 08:18:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59144 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733054AbfETMSA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 08:18:00 -0400
+        id S1730757AbfETMSC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 08:18:02 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D2C24213F2;
-        Mon, 20 May 2019 12:17:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 71DD820815;
+        Mon, 20 May 2019 12:18:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558354679;
-        bh=sxpB7FQt5hq7U4zwTHL6qIJiFR+nyeKVpLctJir5EYE=;
+        s=default; t=1558354681;
+        bh=3cbeNFZjDYtiNUPJwWdnvJ2QlJeexinkSH9ggi0b/14=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qTuHHc0TzZ9zz/We1C6Gvk9MEN7uNLT9EUw0IRB3/K/uy0lcn1s066DhaWJedcuLB
-         bQ0N/zj1uF1Z9pWG0GVsadnM0bk32ArE6ExDIE7sKClDq5AO6yFWYe2sy75tqBqTl3
-         oM3Z/wwFKSEtpKvVu2pjm+8VkVizAthF1QNNX1Ck=
+        b=u7NWRb/hV+JWwblpZ7Tm4C3DjD5RcfK5kvsD+A1vTfFdilYBy/tLUQr5emOnOiW+A
+         XIo3MefUPNOTPSIwxoXbmGcKdz4Wlxso43hCHy4ynJfRYzaWrnm6F+ZH33TXbPvC5F
+         XLEHoyQzfpCXrqnE39rXgc9+eEo0v2o0Bl+HIrro=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jiri Slaby <jslaby@suse.com>,
-        Sergei Trofimovich <slyfox@gentoo.org>
-Subject: [PATCH 4.9 26/44] tty/vt: fix write/write race in ioctl(KDSKBSENT) handler
-Date:   Mon, 20 May 2019 14:14:15 +0200
-Message-Id: <20190520115234.061590481@linuxfoundation.org>
+        stable@vger.kernel.org, Eric Ren <renzhen@linux.alibaba.com>,
+        Jiufei Xue <jiufei.xue@linux.alibaba.com>,
+        Theodore Tso <tytso@mit.edu>, Jan Kara <jack@suse.cz>,
+        stable@kernel.org
+Subject: [PATCH 4.9 27/44] jbd2: check superblock mapped prior to committing
+Date:   Mon, 20 May 2019 14:14:16 +0200
+Message-Id: <20190520115234.268070147@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190520115230.720347034@linuxfoundation.org>
 References: <20190520115230.720347034@linuxfoundation.org>
@@ -59,183 +61,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sergei Trofimovich <slyfox@gentoo.org>
+From: Jiufei Xue <jiufei.xue@linux.alibaba.com>
 
-commit 46ca3f735f345c9d87383dd3a09fa5d43870770e upstream.
+commit 742b06b5628f2cd23cb51a034cb54dc33c6162c5 upstream.
 
-The bug manifests as an attempt to access deallocated memory:
+We hit a BUG at fs/buffer.c:3057 if we detached the nbd device
+before unmounting ext4 filesystem.
 
-    BUG: unable to handle kernel paging request at ffff9c8735448000
-    #PF error: [PROT] [WRITE]
-    PGD 288a05067 P4D 288a05067 PUD 288a07067 PMD 7f60c2063 PTE 80000007f5448161
-    Oops: 0003 [#1] PREEMPT SMP
-    CPU: 6 PID: 388 Comm: loadkeys Tainted: G         C        5.0.0-rc6-00153-g5ded5871030e #91
-    Hardware name: Gigabyte Technology Co., Ltd. To be filled by O.E.M./H77M-D3H, BIOS F12 11/14/2013
-    RIP: 0010:__memmove+0x81/0x1a0
-    Code: 4c 89 4f 10 4c 89 47 18 48 8d 7f 20 73 d4 48 83 c2 20 e9 a2 00 00 00 66 90 48 89 d1 4c 8b 5c 16 f8 4c 8d 54 17 f8 48 c1 e9 03 <f3> 48 a5 4d 89 1a e9 0c 01 00 00 0f 1f 40 00 48 89 d1 4c 8b 1e 49
-    RSP: 0018:ffffa1b9002d7d08 EFLAGS: 00010203
-    RAX: ffff9c873541af43 RBX: ffff9c873541af43 RCX: 00000c6f105cd6bf
-    RDX: 0000637882e986b6 RSI: ffff9c8735447ffb RDI: ffff9c8735447ffb
-    RBP: ffff9c8739cd3800 R08: ffff9c873b802f00 R09: 00000000fffff73b
-    R10: ffffffffb82b35f1 R11: 00505b1b004d5b1b R12: 0000000000000000
-    R13: ffff9c873541af3d R14: 000000000000000b R15: 000000000000000c
-    FS:  00007f450c390580(0000) GS:ffff9c873f180000(0000) knlGS:0000000000000000
-    CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-    CR2: ffff9c8735448000 CR3: 00000007e213c002 CR4: 00000000000606e0
-    Call Trace:
-     vt_do_kdgkb_ioctl+0x34d/0x440
-     vt_ioctl+0xba3/0x1190
-     ? __bpf_prog_run32+0x39/0x60
-     ? mem_cgroup_commit_charge+0x7b/0x4e0
-     tty_ioctl+0x23f/0x920
-     ? preempt_count_sub+0x98/0xe0
-     ? __seccomp_filter+0x67/0x600
-     do_vfs_ioctl+0xa2/0x6a0
-     ? syscall_trace_enter+0x192/0x2d0
-     ksys_ioctl+0x3a/0x70
-     __x64_sys_ioctl+0x16/0x20
-     do_syscall_64+0x54/0xe0
-     entry_SYSCALL_64_after_hwframe+0x49/0xbe
+The typical chain of events leading to the BUG:
+jbd2_write_superblock
+  submit_bh
+    submit_bh_wbc
+      BUG_ON(!buffer_mapped(bh));
 
-The bug manifests on systemd systems with multiple vtcon devices:
-  # cat /sys/devices/virtual/vtconsole/vtcon0/name
-  (S) dummy device
-  # cat /sys/devices/virtual/vtconsole/vtcon1/name
-  (M) frame buffer device
+The block device is removed and all the pages are invalidated. JBD2
+was trying to write journal superblock to the block device which is
+no longer present.
 
-There systemd runs 'loadkeys' tool in tapallel for each vtcon
-instance. This causes two parallel ioctl(KDSKBSENT) calls to
-race into adding the same entry into 'func_table' array at:
+Fix this by checking the journal superblock's buffer head prior to
+submitting.
 
-    drivers/tty/vt/keyboard.c:vt_do_kdgkb_ioctl()
-
-The function has no locking around writes to 'func_table'.
-
-The simplest reproducer is to have initrams with the following
-init on a 8-CPU machine x86_64:
-
-    #!/bin/sh
-
-    loadkeys -q windowkeys ru4 &
-    loadkeys -q windowkeys ru4 &
-    loadkeys -q windowkeys ru4 &
-    loadkeys -q windowkeys ru4 &
-
-    loadkeys -q windowkeys ru4 &
-    loadkeys -q windowkeys ru4 &
-    loadkeys -q windowkeys ru4 &
-    loadkeys -q windowkeys ru4 &
-    wait
-
-The change adds lock on write path only. Reads are still racy.
-
-CC: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-CC: Jiri Slaby <jslaby@suse.com>
-Link: https://lkml.org/lkml/2019/2/17/256
-Signed-off-by: Sergei Trofimovich <slyfox@gentoo.org>
-Cc: stable <stable@vger.kernel.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Reported-by: Eric Ren <renzhen@linux.alibaba.com>
+Signed-off-by: Jiufei Xue <jiufei.xue@linux.alibaba.com>
+Signed-off-by: Theodore Ts'o <tytso@mit.edu>
+Reviewed-by: Jan Kara <jack@suse.cz>
+Cc: stable@kernel.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/tty/vt/keyboard.c |   33 +++++++++++++++++++++++++++------
- 1 file changed, 27 insertions(+), 6 deletions(-)
+ fs/jbd2/journal.c |    4 ++++
+ 1 file changed, 4 insertions(+)
 
---- a/drivers/tty/vt/keyboard.c
-+++ b/drivers/tty/vt/keyboard.c
-@@ -121,6 +121,7 @@ static const int NR_TYPES = ARRAY_SIZE(m
- static struct input_handler kbd_handler;
- static DEFINE_SPINLOCK(kbd_event_lock);
- static DEFINE_SPINLOCK(led_lock);
-+static DEFINE_SPINLOCK(func_buf_lock); /* guard 'func_buf'  and friends */
- static unsigned long key_down[BITS_TO_LONGS(KEY_CNT)];	/* keyboard key bitmap */
- static unsigned char shift_down[NR_SHIFT];		/* shift state counters.. */
- static bool dead_key_next;
-@@ -1959,11 +1960,12 @@ int vt_do_kdgkb_ioctl(int cmd, struct kb
- 	char *p;
- 	u_char *q;
- 	u_char __user *up;
--	int sz;
-+	int sz, fnw_sz;
- 	int delta;
- 	char *first_free, *fj, *fnw;
- 	int i, j, k;
+--- a/fs/jbd2/journal.c
++++ b/fs/jbd2/journal.c
+@@ -1339,6 +1339,10 @@ static int jbd2_write_superblock(journal
+ 	journal_superblock_t *sb = journal->j_superblock;
  	int ret;
-+	unsigned long flags;
  
- 	if (!capable(CAP_SYS_TTY_CONFIG))
- 		perm = 0;
-@@ -2006,7 +2008,14 @@ int vt_do_kdgkb_ioctl(int cmd, struct kb
- 			goto reterr;
- 		}
- 
-+		fnw = NULL;
-+		fnw_sz = 0;
-+		/* race aginst other writers */
-+		again:
-+		spin_lock_irqsave(&func_buf_lock, flags);
- 		q = func_table[i];
++	/* Buffer got discarded which means block device got invalidated */
++	if (!buffer_mapped(bh))
++		return -EIO;
 +
-+		/* fj pointer to next entry after 'q' */
- 		first_free = funcbufptr + (funcbufsize - funcbufleft);
- 		for (j = i+1; j < MAX_NR_FUNC && !func_table[j]; j++)
- 			;
-@@ -2014,10 +2023,12 @@ int vt_do_kdgkb_ioctl(int cmd, struct kb
- 			fj = func_table[j];
- 		else
- 			fj = first_free;
--
-+		/* buffer usage increase by new entry */
- 		delta = (q ? -strlen(q) : 1) + strlen(kbs->kb_string);
-+
- 		if (delta <= funcbufleft) { 	/* it fits in current buf */
- 		    if (j < MAX_NR_FUNC) {
-+			/* make enough space for new entry at 'fj' */
- 			memmove(fj + delta, fj, first_free - fj);
- 			for (k = j; k < MAX_NR_FUNC; k++)
- 			    if (func_table[k])
-@@ -2030,20 +2041,28 @@ int vt_do_kdgkb_ioctl(int cmd, struct kb
- 		    sz = 256;
- 		    while (sz < funcbufsize - funcbufleft + delta)
- 		      sz <<= 1;
--		    fnw = kmalloc(sz, GFP_KERNEL);
--		    if(!fnw) {
--		      ret = -ENOMEM;
--		      goto reterr;
-+		    if (fnw_sz != sz) {
-+		      spin_unlock_irqrestore(&func_buf_lock, flags);
-+		      kfree(fnw);
-+		      fnw = kmalloc(sz, GFP_KERNEL);
-+		      fnw_sz = sz;
-+		      if (!fnw) {
-+			ret = -ENOMEM;
-+			goto reterr;
-+		      }
-+		      goto again;
- 		    }
- 
- 		    if (!q)
- 		      func_table[i] = fj;
-+		    /* copy data before insertion point to new location */
- 		    if (fj > funcbufptr)
- 			memmove(fnw, funcbufptr, fj - funcbufptr);
- 		    for (k = 0; k < j; k++)
- 		      if (func_table[k])
- 			func_table[k] = fnw + (func_table[k] - funcbufptr);
- 
-+		    /* copy data after insertion point to new location */
- 		    if (first_free > fj) {
- 			memmove(fnw + (fj - funcbufptr) + delta, fj, first_free - fj);
- 			for (k = j; k < MAX_NR_FUNC; k++)
-@@ -2056,7 +2075,9 @@ int vt_do_kdgkb_ioctl(int cmd, struct kb
- 		    funcbufleft = funcbufleft - delta + sz - funcbufsize;
- 		    funcbufsize = sz;
- 		}
-+		/* finally insert item itself */
- 		strcpy(func_table[i], kbs->kb_string);
-+		spin_unlock_irqrestore(&func_buf_lock, flags);
- 		break;
- 	}
- 	ret = 0;
+ 	trace_jbd2_write_superblock(journal, write_flags);
+ 	if (!(journal->j_flags & JBD2_BARRIER))
+ 		write_flags &= ~(REQ_FUA | REQ_PREFLUSH);
 
 
