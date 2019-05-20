@@ -2,53 +2,51 @@ Return-Path: <SRS0=lq4r=TU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1218FC04AAC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:25:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8508C04AAF
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:25:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D3909216FD
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:25:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AEA7D2173B
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:25:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558355139;
-	bh=AKbEKwcOJ3m1dz7P1Ldurh2Qf2+9jI6jVxDWugo79ek=;
+	s=default; t=1558355142;
+	bh=09QVKkQqMoheB3aUsH33wCiXmOFBHYceqh6lQ2WyUM8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SK37+31fM2SsjsPrzyBwt1pJD8tEhaZ02popLYAUmxM2fn4U+X0C3m85YsIR8LtgU
-	 POX+gz+w1KAqkD292l8dXXyCFMAPGLlQkFce+4T+RQTXvM4f5Mk3ZTD/I5MLUKvY5x
-	 6SyE6zRxDyPVXjQcSyVPAq4OEZ+y/KNGPm/Jp5JQ=
+	b=QPOeP8pC7w2RxB5VJv558VKD7yF4fXgE3BMWIp6/oPSvCsN5AxfJsdM+LoIzSlxkK
+	 qW1cIeaj7XGre7w+fAx5ln7jAT5ImtpxPJ1m7wwqw6uqcHglW2lQzyXttfEi6RKHFP
+	 VbcfdfFzBJeXMnwJ+o7smmbdgoEDmQZRXuSZtpM8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389126AbfETMZj (ORCPT
+        id S2389137AbfETMZl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 08:25:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40758 "EHLO mail.kernel.org"
+        Mon, 20 May 2019 08:25:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40830 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389115AbfETMZg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 08:25:36 -0400
+        id S2389122AbfETMZj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 08:25:39 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7841A20675;
-        Mon, 20 May 2019 12:25:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 12372216FD;
+        Mon, 20 May 2019 12:25:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558355136;
-        bh=AKbEKwcOJ3m1dz7P1Ldurh2Qf2+9jI6jVxDWugo79ek=;
+        s=default; t=1558355138;
+        bh=09QVKkQqMoheB3aUsH33wCiXmOFBHYceqh6lQ2WyUM8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Lk/D5ORTVajCEGWEtwxPGrq8UtqBs5ITseb/hcjIpGbVY9tWiae8ndwodBfpGoznR
-         /4fnpLyBYzT4/l6eJ5h1NLCF/KYZGAuirriI1TNujcuAQLUGBQVm4b2k5GGeE6WsBF
-         gdylh6PXv7m7Z3hrJxdtUt/V8+fPy4YHmqXzS8X8=
+        b=B6qyOIyXwgqtXWestOv1a6pepEiLfTB/Xmh6LFtylDfQ+IrcZgsnz7C8Zvi8k8NZi
+         8SQKkS59uuEhBXyqZSpMZ466pbe8SNcpELmKSbDApn9ybeOtBNP+TNRWC+Z8KVKwrZ
+         kf0J+Nw7bYc7Y3j8wXxsHIC02O5QKg78TKSwlKa0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Wanpeng Li <wanpengli@tencent.com>,
-        Liran Alon <liran.alon@oracle.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Subject: [PATCH 4.19 094/105] KVM: lapic: Busy wait for timer to expire when using hv_timer
-Date:   Mon, 20 May 2019 14:14:40 +0200
-Message-Id: <20190520115253.743557788@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Masahiro Yamada <yamada.masahiro@socionext.com>
+Subject: [PATCH 4.19 095/105] kbuild: turn auto.conf.cmd into a mandatory include file
+Date:   Mon, 20 May 2019 14:14:41 +0200
+Message-Id: <20190520115253.800079090@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190520115247.060821231@linuxfoundation.org>
 References: <20190520115247.060821231@linuxfoundation.org>
@@ -61,37 +59,92 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sean Christopherson <sean.j.christopherson@intel.com>
+From: Masahiro Yamada <yamada.masahiro@socionext.com>
 
-commit ee66e453db13d4837a0dcf9d43efa7a88603161b upstream.
+commit d2f8ae0e4c5c754f1b2a7b8388d19a1a977e698a upstream.
 
-...now that VMX's preemption timer, i.e. the hv_timer, also adjusts its
-programmed time based on lapic_timer_advance_ns.  Without the delay, a
-guest can see a timer interrupt arrive before the requested time when
-KVM is using the hv_timer to emulate the guest's interrupt.
+syncconfig is responsible for keeping auto.conf up-to-date, so if it
+fails for any reason, the build must be terminated immediately.
 
-Fixes: c5ce8235cffa0 ("KVM: VMX: Optimize tscdeadline timer latency")
-Cc: <stable@vger.kernel.org>
-Cc: Wanpeng Li <wanpengli@tencent.com>
-Reviewed-by: Liran Alon <liran.alon@oracle.com>
-Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+However, since commit 9390dff66a52 ("kbuild: invoke syncconfig if
+include/config/auto.conf.cmd is missing"), Kbuild continues running
+even after syncconfig fails.
+
+You can confirm this by intentionally making syncconfig error out:
+
+#  diff --git a/scripts/kconfig/confdata.c b/scripts/kconfig/confdata.c
+#  index 08ba146..307b9de 100644
+#  --- a/scripts/kconfig/confdata.c
+#  +++ b/scripts/kconfig/confdata.c
+#  @@ -1023,6 +1023,9 @@ int conf_write_autoconf(int overwrite)
+#          FILE *out, *tristate, *out_h;
+#          int i;
+#
+#  +       if (overwrite)
+#  +               return 1;
+#  +
+#          if (!overwrite && is_present(autoconf_name))
+#                  return 0;
+
+Then, syncconfig fails, but Make would not stop:
+
+  $ make -s mrproper allyesconfig defconfig
+  $ make
+  scripts/kconfig/conf  --syncconfig Kconfig
+
+  *** Error during sync of the configuration.
+
+  make[2]: *** [scripts/kconfig/Makefile;69: syncconfig] Error 1
+  make[1]: *** [Makefile;557: syncconfig] Error 2
+  make: *** [include/config/auto.conf.cmd] Deleting file 'include/config/tristate.conf'
+  make: Failed to remake makefile 'include/config/auto.conf'.
+    SYSTBL  arch/x86/include/generated/asm/syscalls_32.h
+    SYSHDR  arch/x86/include/generated/asm/unistd_32_ia32.h
+    SYSHDR  arch/x86/include/generated/asm/unistd_64_x32.h
+    SYSTBL  arch/x86/include/generated/asm/syscalls_64.h
+  [ continue running ... ]
+
+The reason is in the behavior of a pattern rule with multi-targets.
+
+  %/auto.conf %/auto.conf.cmd %/tristate.conf: $(KCONFIG_CONFIG)
+          $(Q)$(MAKE) -f $(srctree)/Makefile syncconfig
+
+GNU Make knows this rule is responsible for making all the three files
+simultaneously. As far as examined, auto.conf.cmd is the target in
+question when this rule is invoked. It is probably because auto.conf.cmd
+is included below the inclusion of auto.conf.
+
+The inclusion of auto.conf is mandatory, while that of auto.conf.cmd
+is optional. GNU Make does not care about the failure in the process
+of updating optional include files.
+
+I filed this issue (https://savannah.gnu.org/bugs/?56301) in case this
+behavior could be improved somehow in future releases of GNU Make.
+Anyway, it is quite easy to fix our Makefile.
+
+Given that auto.conf is already a mandatory include file, there is no
+reason to stick auto.conf.cmd optional. Make it mandatory as well.
+
+Cc: linux-stable <stable@vger.kernel.org> # 5.0+
+Fixes: 9390dff66a52 ("kbuild: invoke syncconfig if include/config/auto.conf.cmd is missing")
+Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+[commented out diff above to keep patch happy - gregkh]
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/kvm/lapic.c |    2 +-
+ Makefile |    2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/arch/x86/kvm/lapic.c
-+++ b/arch/x86/kvm/lapic.c
-@@ -1449,7 +1449,7 @@ static void apic_timer_expired(struct kv
- 	if (swait_active(q))
- 		swake_up_one(q);
+--- a/Makefile
++++ b/Makefile
+@@ -623,7 +623,7 @@ ifeq ($(may-sync-config),1)
+ # Read in dependencies to all Kconfig* files, make sure to run syncconfig if
+ # changes are detected. This should be included after arch/$(SRCARCH)/Makefile
+ # because some architectures define CROSS_COMPILE there.
+--include include/config/auto.conf.cmd
++include include/config/auto.conf.cmd
  
--	if (apic_lvtt_tscdeadline(apic))
-+	if (apic_lvtt_tscdeadline(apic) || ktimer->hv_timer_in_use)
- 		ktimer->expired_tscdeadline = ktimer->tscdeadline;
- }
- 
+ # To avoid any implicit rule to kick in, define an empty command
+ $(KCONFIG_CONFIG): ;
 
 
