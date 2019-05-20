@@ -3,352 +3,116 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47CC0C04AAC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 22:12:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8832C04E87
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 22:17:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1747221479
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 22:12:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 87B7121479
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 22:17:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726653AbfETWM1 (ORCPT
+        id S1726893AbfETWRw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 18:12:27 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:55732 "EHLO mx1.redhat.com"
+        Mon, 20 May 2019 18:17:52 -0400
+Received: from mga09.intel.com ([134.134.136.24]:20368 "EHLO mga09.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725776AbfETWM1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 18:12:27 -0400
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 48E7885539;
-        Mon, 20 May 2019 22:12:26 +0000 (UTC)
-Received: from x1.home (ovpn-117-92.phx2.redhat.com [10.3.117.92])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id BD5E35D719;
-        Mon, 20 May 2019 22:12:25 +0000 (UTC)
-Date:   Mon, 20 May 2019 16:12:25 -0600
-From:   Alex Williamson <alex.williamson@redhat.com>
-To:     Parav Pandit <parav@mellanox.com>
-Cc:     Cornelia Huck <cohuck@redhat.com>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        id S1725989AbfETWRw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 18:17:52 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 May 2019 15:17:51 -0700
+X-ExtLoop1: 1
+Received: from orsmsx102.amr.corp.intel.com ([10.22.225.129])
+  by fmsmga006.fm.intel.com with ESMTP; 20 May 2019 15:17:50 -0700
+Received: from orsmsx154.amr.corp.intel.com (10.22.226.12) by
+ ORSMSX102.amr.corp.intel.com (10.22.225.129) with Microsoft SMTP Server (TLS)
+ id 14.3.408.0; Mon, 20 May 2019 15:17:49 -0700
+Received: from orsmsx112.amr.corp.intel.com ([169.254.3.79]) by
+ ORSMSX154.amr.corp.intel.com ([169.254.11.101]) with mapi id 14.03.0415.000;
+ Mon, 20 May 2019 15:17:49 -0700
+From:   "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>
+To:     "linux-mm@kvack.org" <linux-mm@kvack.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "kwankhede@nvidia.com" <kwankhede@nvidia.com>,
-        "cjia@nvidia.com" <cjia@nvidia.com>
-Subject: Re: [PATCHv3 3/3] vfio/mdev: Synchronize device create/remove with
- parent removal
-Message-ID: <20190520161225.5d7321e9@x1.home>
-In-Reply-To: <VI1PR0501MB227135A8EE8B0E6CFA7870E3D1060@VI1PR0501MB2271.eurprd05.prod.outlook.com>
-References: <20190516233034.16407-1-parav@mellanox.com>
-        <20190516233034.16407-4-parav@mellanox.com>
-        <20190517132207.12d823f2.cohuck@redhat.com>
-        <VI1PR0501MB227162B10E46947E7C4A1C83D10B0@VI1PR0501MB2271.eurprd05.prod.outlook.com>
-        <20190520132911.4d56bfe5.cohuck@redhat.com>
-        <VI1PR0501MB227135A8EE8B0E6CFA7870E3D1060@VI1PR0501MB2271.eurprd05.prod.outlook.com>
-Organization: Red Hat
+        "peterz@infradead.org" <peterz@infradead.org>,
+        "mroos@linux.ee" <mroos@linux.ee>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "sparclinux@vger.kernel.org" <sparclinux@vger.kernel.org>
+CC:     "bp@alien8.de" <bp@alien8.de>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "luto@kernel.org" <luto@kernel.org>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "namit@vmware.com" <namit@vmware.com>,
+        "Hansen, Dave" <dave.hansen@intel.com>
+Subject: Re: [PATCH v2] vmalloc: Fix issues with flush flag
+Thread-Topic: [PATCH v2] vmalloc: Fix issues with flush flag
+Thread-Index: AQHVD0ezpbXySuUS5EinefGl750kkaZ0/uwAgAALkwA=
+Date:   Mon, 20 May 2019 22:17:49 +0000
+Message-ID: <c6020a01e81d08342e1a2b3ae7e03d55858480ba.camel@intel.com>
+References: <20190520200703.15997-1-rick.p.edgecombe@intel.com>
+         <90f8a4e1-aa71-0c10-1a91-495ba0cb329b@linux.ee>
+In-Reply-To: <90f8a4e1-aa71-0c10-1a91-495ba0cb329b@linux.ee>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Evolution 3.30.1 (3.30.1-1.fc29) 
+x-originating-ip: [10.254.114.95]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <2752FAF46305AF449FC03AABF0EBFDE7@intel.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.28]); Mon, 20 May 2019 22:12:26 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 20 May 2019 19:15:15 +0000
-Parav Pandit <parav@mellanox.com> wrote:
-
-> > -----Original Message-----
-> > From: Cornelia Huck <cohuck@redhat.com>
-> > Sent: Monday, May 20, 2019 6:29 AM
-> > To: Parav Pandit <parav@mellanox.com>
-> > Cc: kvm@vger.kernel.org; linux-kernel@vger.kernel.org;
-> > kwankhede@nvidia.com; alex.williamson@redhat.com; cjia@nvidia.com
-> > Subject: Re: [PATCHv3 3/3] vfio/mdev: Synchronize device create/remove
-> > with parent removal
-> > 
-> > On Fri, 17 May 2019 14:18:26 +0000
-> > Parav Pandit <parav@mellanox.com> wrote:
-> >   
-> > > > > @@ -206,14 +214,27 @@ void mdev_unregister_device(struct device  
-> > *dev)  
-> > > > >  	dev_info(dev, "MDEV: Unregistering\n");
-> > > > >
-> > > > >  	list_del(&parent->next);
-> > > > > +	mutex_unlock(&parent_list_lock);
-> > > > > +
-> > > > > +	/* Release the initial reference so that new create cannot start */
-> > > > > +	mdev_put_parent(parent);  
-> > > >
-> > > > The comment is confusing: We do drop one reference, but this does
-> > > > not imply we're going to 0 (which would be the one thing that would
-> > > > block creating new devices).
-> > > >  
-> > > Ok. How about below comment.
-> > > /* Balance with initial reference init */  
-> > 
-> > Well, 'release the initial reference' is fine; it's just the second part that is
-> > confusing.
-> > 
-> > One thing that continues to irk me (and I'm sorry if I sound like a broken
-> > record) is that you give up the initial reference and then continue to use
-> > parent. For the more usual semantics of a reference count, that would be a
-> > bug (as the structure would be freed if the reference count dropped to zero),
-> > even though it is not a bug here.
-> >   
-> Well, refcount cannot drop to zero if user is using it.
-> But I understand that mdev_device caches it the parent in it, and hence it uses it.
-> However, mdev_device child devices are terminated first when parent goes away, ensuring that no more parent user is active.
-> So as you mentioned, its not a bug here.
-> 
-> > >  
-> > > > > +
-> > > > > +	/*
-> > > > > +	 * Wait for all the create and remove references to drop.
-> > > > > +	 */
-> > > > > +	wait_for_completion(&parent->unreg_completion);  
-> > > >
-> > > > It only reaches 0 after this wait.
-> > > >  
-> > > Yes.
-> > >  
-> > > > > +
-> > > > > +	/*
-> > > > > +	 * New references cannot be taken and all users are done
-> > > > > +	 * using the parent. So it is safe to unregister parent.
-> > > > > +	 */
-> > > > >  	class_compat_remove_link(mdev_bus_compat_class, dev, NULL);
-> > > > >
-> > > > >  	device_for_each_child(dev, NULL, mdev_device_remove_cb);
-> > > > >
-> > > > >  	parent_remove_sysfs_files(parent);
-> > > > > -
-> > > > > -	mutex_unlock(&parent_list_lock);
-> > > > > -	mdev_put_parent(parent);
-> > > > > +	kfree(parent);
-> > > > > +	put_device(dev);
-> > > > >  }
-> > > > >  EXPORT_SYMBOL(mdev_unregister_device);
-> > > > >
-> > > > > @@ -237,10 +258,11 @@ int mdev_device_create(struct kobject *kobj,
-> > > > >  	struct mdev_parent *parent;
-> > > > >  	struct mdev_type *type = to_mdev_type(kobj);
-> > > > >
-> > > > > -	parent = mdev_get_parent(type->parent);
-> > > > > -	if (!parent)
-> > > > > +	if (!mdev_try_get_parent(type->parent))  
-> > > >
-> > > > If other calls are still running, the refcount won't be 0, and this
-> > > > will succeed, even if we really want to get rid of the device.
-> > > >  
-> > > Sure, if other calls are running, refcount won't be 0. Process creating them  
-> > will eventually complete, and refcount will drop to zero.  
-> > > And new processes won't be able to start any more.
-> > > So there is no differentiation between 'already in creation stage' and  
-> > 'about to start' processes.
-> > 
-> > Does it really make sense to allow creation to start if the parent is going
-> > away?
-> >   
-> Its really a small time window, on how we draw the line.
-> But it has important note that if user continues to keep creating, removing, parent is blocked on removal.
-> 
-> > >  
-> > > > >  		return -EINVAL;
-> > > > >
-> > > > > +	parent = type->parent;
-> > > > > +
-> > > > >  	mutex_lock(&mdev_list_lock);
-> > > > >
-> > > > >  	/* Check for duplicate */
-> > > > > @@ -287,6 +309,7 @@ int mdev_device_create(struct kobject *kobj,
-> > > > >
-> > > > >  	mdev->active = true;
-> > > > >  	dev_dbg(&mdev->dev, "MDEV: created\n");
-> > > > > +	mdev_put_parent(parent);
-> > > > >
-> > > > >  	return 0;
-> > > > >
-> > > > > @@ -306,7 +329,6 @@ int mdev_device_remove(struct device *dev)
-> > > > >  	struct mdev_device *mdev, *tmp;
-> > > > >  	struct mdev_parent *parent;
-> > > > >  	struct mdev_type *type;
-> > > > > -	int ret;
-> > > > >
-> > > > >  	mdev = to_mdev_device(dev);
-> > > > >
-> > > > > @@ -330,15 +352,17 @@ int mdev_device_remove(struct device *dev)
-> > > > >  	mutex_unlock(&mdev_list_lock);
-> > > > >
-> > > > >  	type = to_mdev_type(mdev->type_kobj);
-> > > > > -	mdev_remove_sysfs_files(dev, type);
-> > > > > -	device_del(&mdev->dev);
-> > > > > -	parent = mdev->parent;
-> > > > > -	ret = parent->ops->remove(mdev);
-> > > > > -	if (ret)
-> > > > > -		dev_err(&mdev->dev, "Remove failed: err=%d\n", ret);
-> > > > > +	if (!mdev_try_get_parent(type->parent)) {  
-> > > >
-> > > > Same here: Is there really a guarantee that the refcount is 0 when
-> > > > the parent is going away?  
-> > > A WARN_ON after wait_for_completion or in freeing the parent is good to  
-> > catch bugs.
-> > 
-> > I'd rather prefer to avoid having to add WARN_ONs :)
-> > 
-> > This looks like it is supposed to be an early exit.   
-> remove() is doing early exit if it doesn't get reference to its parent.
-> mdev_device_remove_common().
-> 
-> > However, if some
-> > other thread does any create or remove operation at the same time,
-> > we'll still do the remove, and we still might have have a race window
-> > (and this is getting really hard to follow in the code).
-> >   
-> Which part?
-> We have only 4 functions to follow, register_device(), unregister_device(), create() and remove().
-> 
-> If you meant, two removes racing with each other?
-> If so, that is currently guarded using not_so_well_defined active flag.
-> I will cleanup that later once this series is done.
-> 
-> > >  
-> > > >  
-> > > > > +		/*
-> > > > > +		 * Parent unregistration have started.
-> > > > > +		 * No need to remove here.
-> > > > > +		 */
-> > > > > +		mutex_unlock(&mdev_list_lock);  
-> > > >
-> > > > Btw., you already unlocked above.
-> > > >  
-> > > You are right. This unlock is wrong. I will revise the patch.
-> > >  
-> > > > > +		return -ENODEV;
-> > > > > +	}
-> > > > >
-> > > > > -	/* Balances with device_initialize() */
-> > > > > -	put_device(&mdev->dev);
-> > > > > +	parent = mdev->parent;
-> > > > > +	mdev_device_remove_common(mdev);
-> > > > >  	mdev_put_parent(parent);
-> > > > >
-> > > > >  	return 0;
-> > > > > diff --git a/drivers/vfio/mdev/mdev_private.h
-> > > > > b/drivers/vfio/mdev/mdev_private.h
-> > > > > index 924ed2274941..55ebab0af7b0 100644
-> > > > > --- a/drivers/vfio/mdev/mdev_private.h
-> > > > > +++ b/drivers/vfio/mdev/mdev_private.h
-> > > > > @@ -19,7 +19,11 @@ void mdev_bus_unregister(void);  struct  
-> > > > mdev_parent  
-> > > > > {
-> > > > >  	struct device *dev;
-> > > > >  	const struct mdev_parent_ops *ops;
-> > > > > -	struct kref ref;
-> > > > > +	/* Protects unregistration to wait until create/remove
-> > > > > +	 * are completed.
-> > > > > +	 */
-> > > > > +	refcount_t refcount;
-> > > > > +	struct completion unreg_completion;
-> > > > >  	struct list_head next;
-> > > > >  	struct kset *mdev_types_kset;
-> > > > >  	struct list_head type_list;  
-> > > >
-> > > > I think what's really needed is to split up the different needs and not
-> > > > overload the 'refcount' concept.
-> > > >  
-> > > Refcount tells that how many active references are present for this parent  
-> > device.  
-> > > Those active reference could be create/remove processes and mdev core  
-> > itself.  
-> > >
-> > > So when parent unregisters, mdev module publishes that it is going away  
-> > through this refcount.  
-> > > Hence new users cannot start.  
-> > 
-> > But it does not actually do that -- if there are other create/remove
-> > operations running, userspace can still trigger a new create/remove. If
-> > it triggers enough create/remove processes, it can keep the parent
-> > around (even though that really is a pathological case.)
-> >   
-> Yes. I agree that is still possible. And an extra flag can guard it.
-> I see it as try_get_parent() can be improved as incremental to implement and honor that flag.
-> Do you want to roll that flag in same patch in v4?
-> 
-> > >  
-> > > > - If we need to make sure that a reference to the parent is held so
-> > > >   that the parent may not go away while still in use, we should
-> > > >   continue to use the kref (in the idiomatic way it is used before this
-> > > >   patch.)
-> > > > - We need to protect against creation of new devices if the parent is
-> > > >   going away. Maybe set a going_away marker in the parent structure for
-> > > >   that so that creation bails out immediately?  
-> > > Such marker will help to not start new processes.
-> > > So an additional marker can be added to improve mdev_try_get_parent().
-> > > But I couldn't justify why differentiating those two users on time scale is  
-> > desired.  
-> > > One reason could be that user continuously tries to create mdev and  
-> > parent never gets a chance, to unregister?  
-> > > I guess, parent will run out mdev devices before this can happen.  
-> > 
-> > They can also run remove tasks in parallel (see above).
-> >   
-> Yes, remove() is guarded using active flag.
-> 
-> > >
-> > > Additionally a stop marker is needed (counter) to tell that all users are  
-> > done accessing it.  
-> > > Both purposes are served using a refcount scheme.  
-> > 
-> > Why not stop new create/remove tasks on remove, and do the final
-> > cleanup asynchronously? I think a refcount is fine to track accesses,
-> > but not to block new tasks.
-> >   
-> So a new flag will guard new create/remove tasks by enhancing try_get_parent().
-> I just didn't see it as critical fix, but it's doable. See above.
-> 
-> Async is certainly not a good idea.
-> mdev_release_parent() in current code doesn't nothing other than freeing memory and parent reference.
-> It take away the parent from the list early on, which is also wrong, because it was added to the list at the end.
-> Unregister() sequence should be mirror image.
-> Parent device files has to be removed before unregister_device() finishes, because they were added in register_device().
-> Otherwise, parent device_del() might be done, but files are still created under it.
-> 
-> If we want to keep the memory around of parent, until kref drops, than we need two refcounts.
-> One ensure that create and remove are done using it, other one that ensures that child are done using it.
-> I fail to justify adding complexity of two counters, because such two_counter_desire hints that somehow child devices may be still active even after remove() calls are finished.
-> And that should not be the case. Unless I miss such case.
-> 
-> > >  
-> > > > What happens if the
-> > > >   creation has already started when parent removal kicks in, though?  
-> > > That particular creation will succeed but newer cannot start, because  
-> > mdev_put_parent() is done.  
-> > >  
-> > > >   Do we need some child list locking and an indication whether a child
-> > > >   is in progress of being registered/unregistered?
-> > > > - We also need to protect against removal of devices while unregister
-> > > >   is in progress (same mechanism as above?) The second issue you
-> > > >   describe above should be fixed then if the children keep a reference
-> > > >   of the parent.  
-> > > Parent unregistration publishes that its going away first, so no new device  
-> > removal from user can start.
-> > 
-> > I don't think that this actually works as intended (see above).
-> >   
-> It does work in most cases. Only if user space is creating hundreds of processes for creating mdevs, before they actually run out of creating new one.
-> But as we talked a flag will guard it.
-> 
-> So if refcount is ok, I can enhance it for flag.
-
-I agree with Connie's dislike of the refcount, where it seems we're
-really just using it as a read-writer lock.  So why not simply use a
-rwsem?  The parent unregistration path would do a down_write() and all
-the ancillary paths would do a down_read_trylock() as they should never
-see read contention unless the parent is being removed.  As a bonus, we
-don't need to invent our own fairness algorithm, nor do we need to
-remove the krefs as they're at least useful to validate we haven't
-missed anyone.  Thanks,
-
-Alex
+T24gVHVlLCAyMDE5LTA1LTIxIGF0IDAwOjM2ICswMzAwLCBNZWVsaXMgUm9vcyB3cm90ZToNCj4g
+PiBTd2l0Y2ggVk1fRkxVU0hfUkVTRVRfUEVSTVMgdG8gdXNlIGEgcmVndWxhciBUTEIgZmx1c2gg
+aW50ZWFkIG9mDQo+ID4gdm1fdW5tYXBfYWxpYXNlcygpIGFuZCBmaXggY2FsY3VsYXRpb24gb2Yg
+dGhlIGRpcmVjdCBtYXAgZm9yIHRoZQ0KPiA+IENPTkZJR19BUkNIX0hBU19TRVRfRElSRUNUX01B
+UCBjYXNlLg0KPiA+IA0KPiA+IE1lZWxpcyBSb29zIHJlcG9ydGVkIGlzc3VlcyB3aXRoIHRoZSBu
+ZXcgVk1fRkxVU0hfUkVTRVRfUEVSTVMgZmxhZw0KPiA+IG9uIGENCj4gPiBzcGFyYyBtYWNoaW5l
+LiBPbiBpbnZlc3RpZ2F0aW9uIHNvbWUgaXNzdWVzIHdlcmUgbm90aWNlZDoNCj4gPiANCj4gPiAx
+LiBUaGUgY2FsY3VsYXRpb24gb2YgdGhlIGRpcmVjdCBtYXAgYWRkcmVzcyByYW5nZSB0byBmbHVz
+aCB3YXMNCj4gPiB3cm9uZy4NCj4gPiBUaGlzIGNvdWxkIGNhdXNlIHByb2JsZW1zIG9uIHg4NiBp
+ZiBhIFJPIGRpcmVjdCBtYXAgYWxpYXMgZXZlciBnb3QNCj4gPiBsb2FkZWQNCj4gPiBpbnRvIHRo
+ZSBUTEIuIFRoaXMgc2hvdWxkbid0IG5vcm1hbGx5IGhhcHBlbiwgYnV0IGl0IGNvdWxkIGNhdXNl
+DQo+ID4gdGhlDQo+ID4gcGVybWlzc2lvbnMgdG8gcmVtYWluIFJPIG9uIHRoZSBkaXJlY3QgbWFw
+IGFsaWFzLCBhbmQgdGhlbiB0aGUgcGFnZQ0KPiA+IHdvdWxkIHJldHVybiBmcm9tIHRoZSBwYWdl
+IGFsbG9jYXRvciB0byBzb21lIG90aGVyIGNvbXBvbmVudCBhcyBSTw0KPiA+IGFuZA0KPiA+IGNh
+dXNlIGEgY3Jhc2guDQo+ID4gDQo+ID4gMi4gQ2FsbGluZyB2bV91bm1hcF9hbGlhcygpIG9uIHZm
+cmVlIGNvdWxkIHBvdGVudGlhbGx5IGJlIGEgbG90IG9mDQo+ID4gd29yayB0bw0KPiA+IGRvIG9u
+IGEgZnJlZSBvcGVyYXRpb24uIFNpbXBseSBmbHVzaGluZyB0aGUgVExCIGluc3RlYWQgb2YgdGhl
+DQo+ID4gd2hvbGUNCj4gPiB2bV91bm1hcF9hbGlhcygpIG9wZXJhdGlvbiBtYWtlcyB0aGUgZnJl
+ZXMgZmFzdGVyIGFuZCBwdXNoZXMgdGhlDQo+ID4gaGVhdnkNCj4gPiB3b3JrIHRvIGhhcHBlbiBv
+biBhbGxvY2F0aW9uIHdoZXJlIGl0IHdvdWxkIGJlIG1vcmUgZXhwZWN0ZWQuDQo+ID4gSW4gYWRk
+aXRpb24gdG8gdGhlIGV4dHJhIHdvcmssIHZtX3VubWFwX2FsaWFzKCkgdGFrZXMgc29tZSBsb2Nr
+cw0KPiA+IGluY2x1ZGluZw0KPiA+IGEgbG9uZyBob2xkIG9mIHZtYXBfcHVyZ2VfbG9jaywgd2hp
+Y2ggd2lsbCBtYWtlIGFsbCBvdGhlcg0KPiA+IFZNX0ZMVVNIX1JFU0VUX1BFUk1TIHZmcmVlcyB3
+YWl0IHdoaWxlIHRoZSBwdXJnZSBvcGVyYXRpb24gaGFwcGVucy4NCj4gPiANCj4gPiAzLiBwYWdl
+X2FkZHJlc3MoKSBjYW4gaGF2ZSBsb2NraW5nIG9uIHNvbWUgY29uZmlndXJhdGlvbnMsIHNvIHNr
+aXANCj4gPiBjYWxsaW5nDQo+ID4gdGhpcyB3aGVuIHBvc3NpYmxlIHRvIGZ1cnRoZXIgc3BlZWQg
+dGhpcyB1cC4NCj4gPiANCj4gPiBGaXhlczogODY4YjEwNGQ3Mzc5ICgibW0vdm1hbGxvYzogQWRk
+IGZsYWcgZm9yIGZyZWVpbmcgb2Ygc3BlY2lhbA0KPiA+IHBlcm1zaXNzaW9ucyIpDQo+ID4gUmVw
+b3J0ZWQtYnk6IE1lZWxpcyBSb29zPG1yb29zQGxpbnV4LmVlPg0KPiA+IENjOiBNZWVsaXMgUm9v
+czxtcm9vc0BsaW51eC5lZT4NCj4gPiBDYzogUGV0ZXIgWmlqbHN0cmE8cGV0ZXJ6QGluZnJhZGVh
+ZC5vcmc+DQo+ID4gQ2M6ICJEYXZpZCBTLiBNaWxsZXIiPGRhdmVtQGRhdmVtbG9mdC5uZXQ+DQo+
+ID4gQ2M6IERhdmUgSGFuc2VuPGRhdmUuaGFuc2VuQGludGVsLmNvbT4NCj4gPiBDYzogQm9yaXNs
+YXYgUGV0a292PGJwQGFsaWVuOC5kZT4NCj4gPiBDYzogQW5keSBMdXRvbWlyc2tpPGx1dG9Aa2Vy
+bmVsLm9yZz4NCj4gPiBDYzogSW5nbyBNb2xuYXI8bWluZ29AcmVkaGF0LmNvbT4NCj4gPiBDYzog
+TmFkYXYgQW1pdDxuYW1pdEB2bXdhcmUuY29tPg0KPiA+IFNpZ25lZC1vZmYtYnk6IFJpY2sgRWRn
+ZWNvbWJlPHJpY2sucC5lZGdlY29tYmVAaW50ZWwuY29tPg0KPiA+IC0tLQ0KPiA+IA0KPiA+IENo
+YW5nZXMgc2luY2UgdjE6DQo+ID4gICAtIFVwZGF0ZSBjb21taXQgbWVzc2FnZSB3aXRoIG1vcmUg
+ZGV0YWlsDQo+ID4gICAtIEZpeCBmbHVzaCBlbmQgcmFuZ2Ugb24gIUNPTkZJR19BUkNIX0hBU19T
+RVRfRElSRUNUX01BUCBjYXNlDQo+IA0KPiBJdCBkb2VzIG5vdCB3b3JrIG9uIG15IFY0NDUgd2hl
+cmUgdGhlIGluaXRpYWwgcHJvYmxlbSBoYXBwZW5lZC4NCj4gDQpUaGFua3MgZm9yIHRlc3Rpbmcu
+IFNvIEkgZ3Vlc3MgdGhhdCBzdWdnZXN0cyBpdCdzIHRoZSBUTEIgZmx1c2ggY2F1c2luZw0KdGhl
+IHByb2JsZW0gb24gc3BhcmMgYW5kIG5vdCBhbnkgbGF6eSBwdXJnZSBkZWFkbG9jay4gSSBoYWQg
+c2VudCBNZWVsaXMNCmFub3RoZXIgdGVzdCBwYXRjaCB0aGF0IGp1c3QgZmx1c2hlZCB0aGUgZW50
+aXJlIDAgdG8gVUxPTkdfTUFYIHJhbmdlIHRvDQp0cnkgdG8gYWx3YXlzIHRoZSBnZXQgdGhlICJm
+bHVzaCBhbGwiIGxvZ2ljIGFuZCBhcHByZW50bHkgaXQgZGlkbid0DQpib290IG1vc3RseSBlaXRo
+ZXIuIEl0IGFsc28gc2hvd2VkIHRoYXQgaXQncyBub3QgZ2V0dGluZyBzdHVjayBhbnl3aGVyZQ0K
+aW4gdGhlIHZtX3JlbW92ZV9hbGlhcygpIGZ1bmN0aW9uLiBTb21ldGhpbmcganVzdCBoYW5ncyBs
+YXRlci4NCg0KDQo=
