@@ -2,83 +2,95 @@ Return-Path: <SRS0=lq4r=TU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 831C0C46460
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 10:34:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5BEEC04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 10:35:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 543B320675
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 10:34:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A785220862
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 10:35:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731559AbfETKe5 (ORCPT
+        id S1731625AbfETKfB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 06:34:57 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:7661 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1731455AbfETKe5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 06:34:57 -0400
-Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 926B8E26C95E4047DF58;
-        Mon, 20 May 2019 18:34:54 +0800 (CST)
-Received: from [127.0.0.1] (10.177.223.23) by DGGEMS407-HUB.china.huawei.com
- (10.3.19.207) with Microsoft SMTP Server id 14.3.439.0; Mon, 20 May 2019
- 18:34:51 +0800
-Subject: Re: [PATCH] ACPI/IORT: Fix build without CONFIG_IOMMU_API
-To:     Christoph Hellwig <hch@lst.de>, <will.deacon@arm.com>
-CC:     <jean-philippe.brucker@arm.com>, <lorenzo.pieralisi@arm.com>,
-        <linux-acpi@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20190520065746.17068-1-hch@lst.de>
-From:   Hanjun Guo <guohanjun@huawei.com>
-Message-ID: <dc52ba2d-76d7-ebb1-7284-bdcd71f6e010@huawei.com>
-Date:   Mon, 20 May 2019 18:34:04 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.5.0
+        Mon, 20 May 2019 06:35:01 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:40524 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731376AbfETKfA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 06:35:00 -0400
+Received: by mail-wm1-f65.google.com with SMTP id 15so8423954wmg.5
+        for <linux-kernel@vger.kernel.org>; Mon, 20 May 2019 03:34:59 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=TDeq1R0ZlxS3eYDtruCGOeX8Ha3Jxa2VQZkw5KkPaxY=;
+        b=BRZpdPbCwDQ2OqC+pdmDexHkdOLyTpjhaJ9i/JvF3rLkiusfyWNZgNVksRxyYAxLqa
+         k+D6LMqxXei4AYUNP4yNqpvihY8KQPOFo18oQwcfADnVxFBOUUyAeTesCw+EDfAIUmGT
+         9XmmLMssjerUAcEJ5IhzDtcc4sqqGhqCBpA8QkZ7XtZX0nGtDtwtjhE4brjBoTFqCi9V
+         L7QALMORJv12avOlEKHW5/ZnNE8R00ehSrsPTa7d+F2XVRxLorZuxHGTwn38KhvDiSE6
+         81i5Bt6epnjNxvI1xSwC2LrKvbWeyL9fJKFLI8wW2rDzh5dDwUaBwF7pY4H/8aJQAGpU
+         R55w==
+X-Gm-Message-State: APjAAAUlvk1JIaEqRWcjjCs+VMu0nylbgJnkDprWSuR3SZpFQWSJgYr5
+        lghc0GiBx36bZsbkNeDVe3J0+LXGg5Y=
+X-Google-Smtp-Source: APXvYqwn/wTJt8p+PuqGYx7YYCzZyxsT5ZwMQNjlbn4FMnuwgXauUwZBRMlrQ25Gm7MW5C+8kJe+sQ==
+X-Received: by 2002:a1c:a904:: with SMTP id s4mr16653129wme.92.1558348498438;
+        Mon, 20 May 2019 03:34:58 -0700 (PDT)
+Received: from ?IPv6:2001:b07:6468:f312:ac04:eef9:b257:b844? ([2001:b07:6468:f312:ac04:eef9:b257:b844])
+        by smtp.gmail.com with ESMTPSA id x6sm25589007wru.36.2019.05.20.03.34.57
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 20 May 2019 03:34:57 -0700 (PDT)
+Subject: Re: [PATCH RESEND 2/4] KVM: X86: Emulate MSR_IA32_MISC_ENABLE MWAIT
+ bit
+To:     Wanpeng Li <kernellwp@gmail.com>, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org
+Cc:     =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Liran Alon <liran.alon@oracle.com>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
+References: <1558082990-7822-1-git-send-email-wanpengli@tencent.com>
+ <1558082990-7822-2-git-send-email-wanpengli@tencent.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Message-ID: <e96eecd6-7095-58b3-32a7-2cfde2f2ebcc@redhat.com>
+Date:   Mon, 20 May 2019 12:34:56 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <20190520065746.17068-1-hch@lst.de>
-Content-Type: text/plain; charset="utf-8"
+In-Reply-To: <1558082990-7822-2-git-send-email-wanpengli@tencent.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.177.223.23]
-X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019/5/20 14:57, Christoph Hellwig wrote:
-> IOMMU_FWSPEC_PCI_RC_ATS is only defined if CONFIG_IOMMU_API is
-> enabled.
+On 17/05/19 10:49, Wanpeng Li wrote:
+> MSR IA32_MSIC_ENABLE bit 18, according to SDM:
 > 
-> Fixes: 5702ee24182f ("ACPI/IORT: Check ATS capability in root complex nodes")
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
-> ---
->  drivers/acpi/arm64/iort.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
+> | When this bit is set to 0, the MONITOR feature flag is not set (CPUID.01H:ECX[bit 3] = 0).
+> | This indicates that MONITOR/MWAIT are not supported.
+> |
+> | Software attempts to execute MONITOR/MWAIT will cause #UD when this bit is 0.
+> |
+> | When this bit is set to 1 (default), MONITOR/MWAIT are supported (CPUID.01H:ECX[bit 3] = 1).
 > 
-> diff --git a/drivers/acpi/arm64/iort.c b/drivers/acpi/arm64/iort.c
-> index 9058cb084b91..3e542b5d2a2d 100644
-> --- a/drivers/acpi/arm64/iort.c
-> +++ b/drivers/acpi/arm64/iort.c
-> @@ -1074,9 +1074,10 @@ const struct iommu_ops *iort_iommu_configure(struct device *dev)
->  		info.node = node;
->  		err = pci_for_each_dma_alias(to_pci_dev(dev),
->  					     iort_pci_iommu_init, &info);
-> -
-> +#ifdef CONFIG_IOMMU_API
->  		if (!err && iort_pci_rc_supports_ats(node))
->  			dev->iommu_fwspec->flags |= IOMMU_FWSPEC_PCI_RC_ATS;
-> +#endif
->  	} else {
->  		int i = 0;
+> The CPUID.01H:ECX[bit 3] ought to mirror the value of the MSR bit,
+> CPUID.01H:ECX[bit 3] is a better guard than kvm_mwait_in_guest().
+> kvm_mwait_in_guest() affects the behavior of MONITOR/MWAIT, not its
+> guest visibility.
+> 
+> This patch implements toggling of the CPUID bit based on guest writes
+> to the MSR.
 
-This was reported, please refer to this patch from Lorenzo:
+Won't this disable mwait after migration, unless IA32_MISC_ENABLE is set
+correctly by firmware or userspace?  I think you need to hide this
+behind KVM_CAP_DISABLE_QUIRKS.  (Also, what is the reason for this
+change in general besides making behavior closer to real hardware?)
 
-https://patchwork.kernel.org/patch/10946845/
+Thanks,
 
-Thanks
-Hanjun
-
+Paolo
