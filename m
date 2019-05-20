@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BE7AC04AAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:20:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA6D2C04AAF
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:20:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E5E9521019
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:20:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A0FA720815
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:20:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558354822;
-	bh=SouYgWQauP5ZFkhFFMqWevfg1i6+eLajnGKQ+6SjZq4=;
+	s=default; t=1558354824;
+	bh=SJ3bvGNHGX5MTf8QAP45iUrPWgiuSOwtd791qLhdx14=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DlH6eIhzcdpYmvVpYEemT7AZFzZKPsOlLilQ1u8AWE70WzAhUTuIQzoOvkGeEapS7
-	 wyiOzbdNNgr9Ezrj8UeqcD/v3dJSpVroCb40Fd54cv1+0z5mdfaQzJZat4HSErbgwp
-	 J6ypSWBANQBfcEjrsknwZWGTVllzoMixL3+KzUi4=
+	b=tbAcojDC4vQgK3zVNmKBj82ZtPEQ+4MbnjVzvfGUN/OoJlx9ogWE2KpsEDsiMCd3o
+	 uX6uSDbSqzs+u+paRlmzBslTmcIejpOi1feIOxaa55sNDE/HS+OpPydosjPKyQ0qSq
+	 PoFUyJXXL+6SRT+T9BQkajc440iVPejV3+AIrtgs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387978AbfETMUU (ORCPT
+        id S2387989AbfETMUX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 08:20:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33690 "EHLO mail.kernel.org"
+        Mon, 20 May 2019 08:20:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33718 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387969AbfETMUT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 08:20:19 -0400
+        id S1731076AbfETMUW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 08:20:22 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 43BC120656;
-        Mon, 20 May 2019 12:20:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BEA2120815;
+        Mon, 20 May 2019 12:20:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558354818;
-        bh=SouYgWQauP5ZFkhFFMqWevfg1i6+eLajnGKQ+6SjZq4=;
+        s=default; t=1558354821;
+        bh=SJ3bvGNHGX5MTf8QAP45iUrPWgiuSOwtd791qLhdx14=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=l28Rxt1otr9s43vDW6TEIqQglVMfhFD8iNEdJqtw/GwsHc3DT00CRiPn9INFX9Djy
-         X1FKnBfe69IXzFHbmfKK6GUAMKG7139jPLihzvI+DPLmYsaw6NebZbXiylUqL1hLr3
-         Oh5H/W2umeSNDH3pkNH8MUktRZGfhcL4oRbCWlOY=
+        b=tlTgAKljLq1nzELyFxiJEyMrd568F2hvxZyZ6z0XCD1oHsdc4aDREbG2x3Uaga9Ad
+         UCHpAkIz+MgWjegU3X9QzcYymD1WGc0gXPsUR86dUmKmHNKWSr11oOd+Uqt/HVkVMP
+         /rgxnSqZZTG4czXNjzoEzdiS4jCURaHE4/xOvFeI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Martin Willi <martin@strongswan.org>,
-        Eric Biggers <ebiggers@google.com>,
+        stable@vger.kernel.org, Eric Biggers <ebiggers@google.com>,
         Herbert Xu <herbert@gondor.apana.org.au>
-Subject: [PATCH 4.14 17/63] crypto: chacha20poly1305 - set cra_name correctly
-Date:   Mon, 20 May 2019 14:13:56 +0200
-Message-Id: <20190520115232.959361482@linuxfoundation.org>
+Subject: [PATCH 4.14 53/63] crypto: salsa20 - dont access already-freed walk.iv
+Date:   Mon, 20 May 2019 14:14:32 +0200
+Message-Id: <20190520115236.857849617@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190520115231.137981521@linuxfoundation.org>
 References: <20190520115231.137981521@linuxfoundation.org>
@@ -62,44 +61,43 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Eric Biggers <ebiggers@google.com>
 
-commit 5e27f38f1f3f45a0c938299c3a34a2d2db77165a upstream.
+commit edaf28e996af69222b2cb40455dbb5459c2b875a upstream.
 
-If the rfc7539 template is instantiated with specific implementations,
-e.g. "rfc7539(chacha20-generic,poly1305-generic)" rather than
-"rfc7539(chacha20,poly1305)", then the implementation names end up
-included in the instance's cra_name.  This is incorrect because it then
-prevents all users from allocating "rfc7539(chacha20,poly1305)", if the
-highest priority implementations of chacha20 and poly1305 were selected.
-Also, the self-tests aren't run on an instance allocated in this way.
+If the user-provided IV needs to be aligned to the algorithm's
+alignmask, then skcipher_walk_virt() copies the IV into a new aligned
+buffer walk.iv.  But skcipher_walk_virt() can fail afterwards, and then
+if the caller unconditionally accesses walk.iv, it's a use-after-free.
 
-Fix it by setting the instance's cra_name from the underlying
-algorithms' actual cra_names, rather than from the requested names.
-This matches what other templates do.
+salsa20-generic doesn't set an alignmask, so currently it isn't affected
+by this despite unconditionally accessing walk.iv.  However this is more
+subtle than desired, and it was actually broken prior to the alignmask
+being removed by commit b62b3db76f73 ("crypto: salsa20-generic - cleanup
+and convert to skcipher API").
 
-Fixes: 71ebc4d1b27d ("crypto: chacha20poly1305 - Add a ChaCha20-Poly1305 AEAD construction, RFC7539")
-Cc: <stable@vger.kernel.org> # v4.2+
-Cc: Martin Willi <martin@strongswan.org>
+Since salsa20-generic does not update the IV and does not need any IV
+alignment, update it to use req->iv instead of walk.iv.
+
+Fixes: 2407d60872dd ("[CRYPTO] salsa20: Salsa20 stream cipher")
+Cc: stable@vger.kernel.org
 Signed-off-by: Eric Biggers <ebiggers@google.com>
-Reviewed-by: Martin Willi <martin@strongswan.org>
 Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
----
- crypto/chacha20poly1305.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/crypto/chacha20poly1305.c
-+++ b/crypto/chacha20poly1305.c
-@@ -647,8 +647,8 @@ static int chachapoly_create(struct cryp
+---
+ crypto/salsa20_generic.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+--- a/crypto/salsa20_generic.c
++++ b/crypto/salsa20_generic.c
+@@ -186,7 +186,7 @@ static int encrypt(struct blkcipher_desc
+ 	blkcipher_walk_init(&walk, dst, src, nbytes);
+ 	err = blkcipher_walk_virt_block(desc, &walk, 64);
  
- 	err = -ENAMETOOLONG;
- 	if (snprintf(inst->alg.base.cra_name, CRYPTO_MAX_ALG_NAME,
--		     "%s(%s,%s)", name, chacha_name,
--		     poly_name) >= CRYPTO_MAX_ALG_NAME)
-+		     "%s(%s,%s)", name, chacha->base.cra_name,
-+		     poly->cra_name) >= CRYPTO_MAX_ALG_NAME)
- 		goto out_drop_chacha;
- 	if (snprintf(inst->alg.base.cra_driver_name, CRYPTO_MAX_ALG_NAME,
- 		     "%s(%s,%s)", name, chacha->base.cra_driver_name,
+-	salsa20_ivsetup(ctx, walk.iv);
++	salsa20_ivsetup(ctx, desc->info);
+ 
+ 	while (walk.nbytes >= 64) {
+ 		salsa20_encrypt_bytes(ctx, walk.dst.virt.addr,
 
 
