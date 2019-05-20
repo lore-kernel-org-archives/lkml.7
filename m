@@ -7,50 +7,46 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E31AC04AAC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:53:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89756C04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:53:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5324C20645
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:53:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5EC2921479
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:53:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558356814;
-	bh=udL3M1vP8B8S3V4S/JWx04LQMK+eLIfFE9fbigQye/0=;
+	s=default; t=1558356838;
+	bh=oSL33nRfEDexHbU6H9ttwFQneATHUrvFkictUQE1daU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Ldw/Jti/7EKADeKA4J+iExhEnV3FKLvy0DZ8s3NioAlRpM6lmS4uKAyBSfN4oPds5
-	 YlNMWmpeOHZX8VFFnDy0ldlV27x13YJY0BoOsRhNHDbjeyxqkQecXCw7Q7srMqpS/g
-	 KZh+jSDd5tEdzqt8xdZkEp4z2qZsFuc8iD1/9n+4=
+	b=S1t26uSb6eGl7BIWxPkZxz6DNYwnyesjG58fe8hEQBWIm4sEgwqdDWfCvgKjWvCZb
+	 atl6GQSBvLJwgf0gny25mAl/f8hPAz7ybH40+TFp96NTCYDZg9E5+s7i6/qxkoH0iz
+	 Oq5ibJM1bDRJvg94TKs01xChr5tWhmJ2ekJDExQw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732159AbfETMRd (ORCPT
+        id S2387879AbfETMx5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 08:17:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58528 "EHLO mail.kernel.org"
+        Mon, 20 May 2019 08:53:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57780 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387561AbfETMRb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 08:17:31 -0400
+        id S1732115AbfETMQ5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 08:16:57 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4AED920815;
-        Mon, 20 May 2019 12:17:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6AC60208C3;
+        Mon, 20 May 2019 12:16:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558354650;
-        bh=udL3M1vP8B8S3V4S/JWx04LQMK+eLIfFE9fbigQye/0=;
+        s=default; t=1558354616;
+        bh=oSL33nRfEDexHbU6H9ttwFQneATHUrvFkictUQE1daU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sGjYFNxZXYYxYDC2Xh5KAhJ+4g6DyasTmpDU0o5eBjHfoDq9kEMXtRmzakfF3m36S
-         GePuXYBj9a2M9A8miFNUskbhjKzDpZyDDBZ64DqeLiMKqu60gwl0fvoeMvRAVa9FYy
-         Z+PK3Uo6sQ3nbClKLBCQvg4e0pGc/zMpmjAzoXuY=
+        b=d9nBlIsINf3z8e6zr8dK7wUH/N7U1eWVQ9u/Pz/7vB/OQvmMQR2X7uiO+VPaCi4v4
+         jaass0g7zEPBnFs4wjOCy7+Ave6YU7QnpCTatH7Zl2HI7fKngmZX41/pyKNLLYNQ/S
+         c6UTUYJHiCIC683WElXAEmzNJ/mu7UlyJR78d05g=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        David Ahern <dsahern@gmail.com>,
-        Florian Westphal <fw@strlen.de>,
-        Hangbin Liu <liuhangbin@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.9 38/44] fib_rules: fix error in backport of e9919a24d302 ("fib_rules: return 0...")
-Date:   Mon, 20 May 2019 14:14:27 +0200
-Message-Id: <20190520115235.482112363@linuxfoundation.org>
+        stable@vger.kernel.org, Wen Yang <wen.yang99@zte.com.cn>,
+        Krzysztof Kozlowski <krzk@kernel.org>
+Subject: [PATCH 4.9 07/44] ARM: exynos: Fix a leaked reference by adding missing of_node_put
+Date:   Mon, 20 May 2019 14:13:56 +0200
+Message-Id: <20190520115231.853415633@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190520115230.720347034@linuxfoundation.org>
 References: <20190520115230.720347034@linuxfoundation.org>
@@ -63,34 +59,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+From: Wen Yang <wen.yang99@zte.com.cn>
 
-When commit e9919a24d302 ("fib_rules: return 0 directly if an exactly
-same rule exists when NLM_F_EXCL not supplied") was backported to 4.9.y,
-it changed the logic a bit as err should have been reset before exiting
-the test, like it happens in the original logic.
+commit 629266bf7229cd6a550075f5961f95607b823b59 upstream.
 
-If this is not set, errors happen :(
+The call to of_get_next_child returns a node pointer with refcount
+incremented thus it must be explicitly decremented after the last
+usage.
 
-Reported-by: Nathan Chancellor <natechancellor@gmail.com>
-Reported-by: David Ahern <dsahern@gmail.com>
-Reported-by: Florian Westphal <fw@strlen.de>
-Cc: Hangbin Liu <liuhangbin@gmail.com>
-Cc: David S. Miller <davem@davemloft.net>
+Detected by coccinelle with warnings like:
+    arch/arm/mach-exynos/firmware.c:201:2-8: ERROR: missing of_node_put;
+        acquired a node pointer with refcount incremented on line 193,
+        but without a corresponding object release within this function.
+
+Cc: stable@vger.kernel.org
+Signed-off-by: Wen Yang <wen.yang99@zte.com.cn>
+Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- net/core/fib_rules.c |    1 +
- 1 file changed, 1 insertion(+)
 
---- a/net/core/fib_rules.c
-+++ b/net/core/fib_rules.c
-@@ -430,6 +430,7 @@ int fib_nl_newrule(struct sk_buff *skb,
- 		goto errout_free;
+---
+ arch/arm/mach-exynos/firmware.c |    1 +
+ arch/arm/mach-exynos/suspend.c  |    2 ++
+ 2 files changed, 3 insertions(+)
+
+--- a/arch/arm/mach-exynos/firmware.c
++++ b/arch/arm/mach-exynos/firmware.c
+@@ -205,6 +205,7 @@ void __init exynos_firmware_init(void)
+ 		return;
  
- 	if (rule_exists(ops, frh, tb, rule)) {
-+		err = 0;
- 		if (nlh->nlmsg_flags & NLM_F_EXCL)
- 			err = -EEXIST;
- 		goto errout_free;
+ 	addr = of_get_address(nd, 0, NULL, NULL);
++	of_node_put(nd);
+ 	if (!addr) {
+ 		pr_err("%s: No address specified.\n", __func__);
+ 		return;
+--- a/arch/arm/mach-exynos/suspend.c
++++ b/arch/arm/mach-exynos/suspend.c
+@@ -715,8 +715,10 @@ void __init exynos_pm_init(void)
+ 
+ 	if (WARN_ON(!of_find_property(np, "interrupt-controller", NULL))) {
+ 		pr_warn("Outdated DT detected, suspend/resume will NOT work\n");
++		of_node_put(np);
+ 		return;
+ 	}
++	of_node_put(np);
+ 
+ 	pm_data = (const struct exynos_pm_data *) match->data;
+ 
 
 
