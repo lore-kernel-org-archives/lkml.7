@@ -2,112 +2,116 @@ Return-Path: <SRS0=lq4r=TU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 468BEC04AAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 21:19:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A17F5C04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 21:19:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2679D216B7
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 21:19:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5AE2E216B7
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 21:19:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="o0zTjoaj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726807AbfETVTY (ORCPT
+        id S1727093AbfETVTb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 17:19:24 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:34898 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726814AbfETVTX (ORCPT
+        Mon, 20 May 2019 17:19:31 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:38088 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726814AbfETVTb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 17:19:23 -0400
-Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4KL1pDL083696
-        for <linux-kernel@vger.kernel.org>; Mon, 20 May 2019 17:19:22 -0400
-Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2sm3ashjfa-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Mon, 20 May 2019 17:19:22 -0400
-Received: from localhost
-        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
-        Mon, 20 May 2019 22:19:20 +0100
-Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
-        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Mon, 20 May 2019 22:19:16 +0100
-Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
-        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x4KLJF2158130518
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 20 May 2019 21:19:15 GMT
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 6E4E6AE051;
-        Mon, 20 May 2019 21:19:15 +0000 (GMT)
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 44269AE045;
-        Mon, 20 May 2019 21:19:14 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.80.80.109])
-        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Mon, 20 May 2019 21:19:14 +0000 (GMT)
-Subject: Re: [PATCH 1/4] evm: check hash algorithm passed to init_desc()
-From:   Mimi Zohar <zohar@linux.ibm.com>
-To:     Roberto Sassu <roberto.sassu@huawei.com>,
-        dmitry.kasatkin@huawei.com, mjg59@google.com
-Cc:     linux-integrity@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        linux-kernel@vger.kernel.org, silviu.vlasceanu@huawei.com,
-        stable@vger.kernel.org
-Date:   Mon, 20 May 2019 17:19:03 -0400
-In-Reply-To: <20190516161257.6640-1-roberto.sassu@huawei.com>
-References: <20190516161257.6640-1-roberto.sassu@huawei.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-x-cbid: 19052021-0028-0000-0000-0000036FBB40
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19052021-0029-0000-0000-0000242F6259
-Message-Id: <1558387143.4039.74.camel@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-20_08:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1905200132
+        Mon, 20 May 2019 17:19:31 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x4KLJGvR098218;
+        Mon, 20 May 2019 16:19:16 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1558387156;
+        bh=5KQWvFfE5qVNkLN90w84u0hBO49O6BvLTGp8FoqxAU4=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=o0zTjoajMbo0iwJ7IMQncJT1xAKBJk/WaHj2H8BIWoZqBLnkCEdylePdHod73z2Xw
+         S/3hi8s3r3Sgtq5hCM+o5ZsvpcBM1tAbfwixDOVAGKXIIaQs58lsoGSworBcs/EPZD
+         /w6PBqKG258UNQfrSLqJRF46yGdRJ4IRBFgBzvSU=
+Received: from DLEE113.ent.ti.com (dlee113.ent.ti.com [157.170.170.24])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x4KLJGvT045333
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 20 May 2019 16:19:16 -0500
+Received: from DLEE109.ent.ti.com (157.170.170.41) by DLEE113.ent.ti.com
+ (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Mon, 20
+ May 2019 16:19:16 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE109.ent.ti.com
+ (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Mon, 20 May 2019 16:19:16 -0500
+Received: from [10.250.90.63] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x4KLJG9w105948;
+        Mon, 20 May 2019 16:19:16 -0500
+Subject: Re: [PATCH v4 6/6] leds: lm36274: Introduce the TI LM36274 LED driver
+To:     Jacek Anaszewski <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>
+CC:     <lee.jones@linaro.org>, <rdunlap@infradead.org>,
+        <linux-leds@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <20190507201159.13940-1-dmurphy@ti.com>
+ <20190507201159.13940-7-dmurphy@ti.com>
+ <77f1ed5b-bfd2-510c-edd5-1b702f2d1d45@gmail.com>
+From:   Dan Murphy <dmurphy@ti.com>
+Message-ID: <8d126925-9e71-dba4-eb88-50fd6e6c06d8@ti.com>
+Date:   Mon, 20 May 2019 16:19:15 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
+MIME-Version: 1.0
+In-Reply-To: <77f1ed5b-bfd2-510c-edd5-1b702f2d1d45@gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2019-05-16 at 18:12 +0200, Roberto Sassu wrote:
-> This patch prevents memory access beyond the evm_tfm array by checking the
-> validity of the index (hash algorithm) passed to init_desc(). The hash
-> algorithm can be arbitrarily set if the security.ima xattr type is not
-> EVM_XATTR_HMAC.
+Jacek
+
+On 5/20/19 2:54 PM, Jacek Anaszewski wrote:
+> Hi Dan,
 > 
-> Fixes: 5feeb61183dde ("evm: Allow non-SHA1 digital signatures")
-> Signed-off-by: Roberto Sassu <roberto.sassu@huawei.com>
-> Cc: stable@vger.kernel.org
-
-Thanks!
-
-> ---
->  security/integrity/evm/evm_crypto.c | 3 +++
->  1 file changed, 3 insertions(+)
+> On 5/7/19 10:11 PM, Dan Murphy wrote:
+>> Introduce the LM36274 LED driver.  This driver uses the ti-lmu
+>> MFD driver to probe this LED driver.  The driver configures only the
+>> LED registers and enables the outputs according to the config file.
+>>
+>> The driver utilizes the TI LMU (Lighting Management Unit) LED common
+>> framework to set the brightness bits.
+>>
+>> Signed-off-by: Dan Murphy <dmurphy@ti.com>
+>> ---
+>>   drivers/leds/Kconfig        |   7 ++
+>>   drivers/leds/Makefile       |   1 +
+>>   drivers/leds/leds-lm36274.c | 174 ++++++++++++++++++++++++++++++++++++
+>>   3 files changed, 182 insertions(+)
+>>   create mode 100644 drivers/leds/leds-lm36274.c
+>>
+>> diff --git a/drivers/leds/Kconfig b/drivers/leds/Kconfig
+>> index 255fdd5e8491..db83a3feca01 100644
+>> --- a/drivers/leds/Kconfig
+>> +++ b/drivers/leds/Kconfig
+>> @@ -791,6 +791,13 @@ config LEDS_LM3697
+>>         Say Y to enable the LM3697 LED driver for TI LMU devices.
+>>         This supports the LED device LM3697.
+>>   +config LEDS_LM36274
+>> +    tristate "LED driver for LM36274"
+>> +    depends on LEDS_TI_LMU_COMMON
 > 
-> diff --git a/security/integrity/evm/evm_crypto.c b/security/integrity/evm/evm_crypto.c
-> index e11564eb645b..82a38e801ee4 100644
-> --- a/security/integrity/evm/evm_crypto.c
-> +++ b/security/integrity/evm/evm_crypto.c
-> @@ -89,6 +89,9 @@ static struct shash_desc *init_desc(char type, uint8_t hash_algo)
->  		tfm = &hmac_tfm;
->  		algo = evm_hmac;
->  	} else {
-> +		if (hash_algo >= HASH_ALGO__LAST)
-> +			return ERR_PTR(-EINVAL);
-> +
->  		tfm = &evm_tfm[hash_algo];
->  		algo = hash_algo_name[hash_algo];
->  	}
+> Shouldn't we have "depends on MFD_TI_LMU" as well here?
+> 
 
+Actually the LEDS_TI_LMU_COMMON flag should depend on MFD_TI_LMU.
+Then it would inherit that dependency.
+
+Dan
+
+>> +    help
+>> +      Say Y to enable the LM36274 LED driver for TI LMU devices.
+>> +      This supports the LED device LM36274.
+> 
