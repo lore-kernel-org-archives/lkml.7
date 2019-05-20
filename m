@@ -2,251 +2,348 @@ Return-Path: <SRS0=lq4r=TU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CA90C04AAC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 14:01:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04DF4C04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 14:01:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F40432173B
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 14:01:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C6A1F216FD
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 14:01:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391208AbfETOBV (ORCPT
+        id S2403782AbfETOB0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 10:01:21 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:8226 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2390963AbfETOBQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 10:01:16 -0400
-Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id C5264D5D5FC9A1680A67;
-        Mon, 20 May 2019 22:01:12 +0800 (CST)
-Received: from HGHY1l002753561.china.huawei.com (10.177.23.164) by
- DGGEMS407-HUB.china.huawei.com (10.3.19.207) with Microsoft SMTP Server id
- 14.3.439.0; Mon, 20 May 2019 22:01:06 +0800
-From:   Zhen Lei <thunder.leizhen@huawei.com>
-To:     Jean-Philippe Brucker <jean-philippe.brucker@arm.com>,
-        John Garry <john.garry@huawei.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        linux-doc <linux-doc@vger.kernel.org>,
-        Sebastian Ott <sebott@linux.ibm.com>,
-        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
-        "Martin Schwidefsky" <schwidefsky@de.ibm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        "Michael Ellerman" <mpe@ellerman.id.au>,
-        Tony Luck <tony.luck@intel.com>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>,
-        David Woodhouse <dwmw2@infradead.org>,
-        iommu <iommu@lists.linux-foundation.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-s390 <linux-s390@vger.kernel.org>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        x86 <x86@kernel.org>, linux-ia64 <linux-ia64@vger.kernel.org>
-CC:     Zhen Lei <thunder.leizhen@huawei.com>,
-        Hanjun Guo <guohanjun@huawei.com>
-Subject: [PATCH v7 1/1] iommu: enhance IOMMU dma mode build options
-Date:   Mon, 20 May 2019 21:59:47 +0800
-Message-ID: <20190520135947.14960-2-thunder.leizhen@huawei.com>
-X-Mailer: git-send-email 2.19.2.windows.1
-In-Reply-To: <20190520135947.14960-1-thunder.leizhen@huawei.com>
-References: <20190520135947.14960-1-thunder.leizhen@huawei.com>
+        Mon, 20 May 2019 10:01:26 -0400
+Received: from relay.sw.ru ([185.231.240.75]:39924 "EHLO relay.sw.ru"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2390963AbfETOBZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 10:01:25 -0400
+Received: from [172.16.25.169] (helo=localhost.localdomain)
+        by relay.sw.ru with esmtp (Exim 4.91)
+        (envelope-from <ktkhai@virtuozzo.com>)
+        id 1hSiqF-00084l-Gn; Mon, 20 May 2019 17:00:39 +0300
+Subject: [PATCH v2 7/7] mm: Add process_vm_mmap()
+From:   Kirill Tkhai <ktkhai@virtuozzo.com>
+To:     akpm@linux-foundation.org, dan.j.williams@intel.com,
+        ktkhai@virtuozzo.com, mhocko@suse.com, keith.busch@intel.com,
+        kirill.shutemov@linux.intel.com, alexander.h.duyck@linux.intel.com,
+        ira.weiny@intel.com, andreyknvl@google.com, arunks@codeaurora.org,
+        vbabka@suse.cz, cl@linux.com, riel@surriel.com,
+        keescook@chromium.org, hannes@cmpxchg.org, npiggin@gmail.com,
+        mathieu.desnoyers@efficios.com, shakeelb@google.com, guro@fb.com,
+        aarcange@redhat.com, hughd@google.com, jglisse@redhat.com,
+        mgorman@techsingularity.net, daniel.m.jordan@oracle.com,
+        jannh@google.com, kilobyte@angband.pl, linux-api@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org
+Date:   Mon, 20 May 2019 17:00:39 +0300
+Message-ID: <155836083941.2441.1939229815005692644.stgit@localhost.localdomain>
+In-Reply-To: <155836064844.2441.10911127801797083064.stgit@localhost.localdomain>
+References: <155836064844.2441.10911127801797083064.stgit@localhost.localdomain>
+User-Agent: StGit/0.18
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.177.23.164]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-First, add build option IOMMU_DEFAULT_{LAZY|STRICT}, so that we have the
-opportunity to set {lazy|strict} mode as default at build time. Then put
-the three config options in an choice, make people can only choose one of
-the three at a time.
+This adds a new syscall to duplicate a VMA of other
+process to current. Flag PVMMAP_FIXED may be specified,
+its meaning is similar to mmap()'s MAP_FIXED.
 
-The default IOMMU dma modes on each ARCHs have no change.
+VMA are merged on destination, i.e. if source task
+has VMA with address [start; end], and we map it sequentially
+twice:
 
-Signed-off-by: Zhen Lei <thunder.leizhen@huawei.com>
+process_vm_mmap(@pid, start, start + (end - start)/2, ...);
+process_vm_mmap(@pid, start + (end - start)/2, end,   ...);
+
+the destination task will have single vma [start, end].
+
+v2:
+    Add PVMMAP_FIXED_NOREPLACE flag.
+    Use find_vma_without_flags() and may_mmap_overlapped_region() helpers.
+    Fix whitespaces.
+
+    Previous version has a possibility to duplicate VMA from
+    current to remote process, but there was a error, so I
+    removed that. It's needed to advance get_unmapped_area
+    to make it working with remote VMA (which I missed
+    initially). This requires a lot of refactoring, which
+    may hide the main logic away from a reader, so let's
+    I do that later in a separate series.
+
+Signed-off-by: Kirill Tkhai <ktkhai@virtuozzo.com>
 ---
- arch/ia64/kernel/pci-dma.c                |  2 +-
- arch/powerpc/platforms/powernv/pci-ioda.c |  3 ++-
- arch/s390/pci/pci_dma.c                   |  2 +-
- arch/x86/kernel/pci-dma.c                 |  7 ++---
- drivers/iommu/Kconfig                     | 44 ++++++++++++++++++++++++++-----
- drivers/iommu/amd_iommu_init.c            |  3 ++-
- drivers/iommu/intel-iommu.c               |  2 +-
- drivers/iommu/iommu.c                     |  3 ++-
- 8 files changed, 48 insertions(+), 18 deletions(-)
+ include/linux/mm.h                     |    4 +
+ include/linux/mm_types.h               |    2 +
+ include/uapi/asm-generic/mman-common.h |    6 ++
+ mm/mmap.c                              |  107 ++++++++++++++++++++++++++++++++
+ mm/process_vm_access.c                 |   69 +++++++++++++++++++++
+ 5 files changed, 188 insertions(+)
 
-diff --git a/arch/ia64/kernel/pci-dma.c b/arch/ia64/kernel/pci-dma.c
-index fe988c49f01ce6a..655511dbf3c3b34 100644
---- a/arch/ia64/kernel/pci-dma.c
-+++ b/arch/ia64/kernel/pci-dma.c
-@@ -22,7 +22,7 @@
- int force_iommu __read_mostly;
- #endif
-
--int iommu_pass_through;
-+int iommu_pass_through = IS_ENABLED(CONFIG_IOMMU_DEFAULT_PASSTHROUGH);
-
- static int __init pci_iommu_init(void)
- {
-diff --git a/arch/powerpc/platforms/powernv/pci-ioda.c b/arch/powerpc/platforms/powernv/pci-ioda.c
-index 3ead4c237ed0ec9..383e082a9bb985c 100644
---- a/arch/powerpc/platforms/powernv/pci-ioda.c
-+++ b/arch/powerpc/platforms/powernv/pci-ioda.c
-@@ -85,7 +85,8 @@ void pe_level_printk(const struct pnv_ioda_pe *pe, const char *level,
- 	va_end(args);
- }
-
--static bool pnv_iommu_bypass_disabled __read_mostly;
-+static bool pnv_iommu_bypass_disabled __read_mostly =
-+			!IS_ENABLED(CONFIG_IOMMU_DEFAULT_PASSTHROUGH);
- static bool pci_reset_phbs __read_mostly;
-
- static int __init iommu_setup(char *str)
-diff --git a/arch/s390/pci/pci_dma.c b/arch/s390/pci/pci_dma.c
-index 9e52d1527f71495..784ad1e0acecfb1 100644
---- a/arch/s390/pci/pci_dma.c
-+++ b/arch/s390/pci/pci_dma.c
-@@ -17,7 +17,7 @@
-
- static struct kmem_cache *dma_region_table_cache;
- static struct kmem_cache *dma_page_table_cache;
--static int s390_iommu_strict;
-+static int s390_iommu_strict = IS_ENABLED(CONFIG_IOMMU_DEFAULT_STRICT);
-
- static int zpci_refresh_global(struct zpci_dev *zdev)
- {
-diff --git a/arch/x86/kernel/pci-dma.c b/arch/x86/kernel/pci-dma.c
-index d460998ae828514..fb2bab42a0a3173 100644
---- a/arch/x86/kernel/pci-dma.c
-+++ b/arch/x86/kernel/pci-dma.c
-@@ -43,11 +43,8 @@
-  * It is also possible to disable by default in kernel config, and enable with
-  * iommu=nopt at boot time.
+diff --git a/include/linux/mm.h b/include/linux/mm.h
+index 65ceb56acd44..9d1c79a44128 100644
+--- a/include/linux/mm.h
++++ b/include/linux/mm.h
+@@ -2385,6 +2385,10 @@ extern int __do_munmap(struct mm_struct *, unsigned long, size_t,
+ 		       struct list_head *uf, bool downgrade);
+ extern int do_munmap(struct mm_struct *, unsigned long, size_t,
+ 		     struct list_head *uf);
++extern unsigned long mmap_process_vm(struct mm_struct *, unsigned long,
++				     struct mm_struct *, unsigned long,
++				     unsigned long, unsigned long,
++				     struct list_head *);
+ 
+ static inline unsigned long
+ do_mmap_pgoff(struct file *file, unsigned long addr,
+diff --git a/include/linux/mm_types.h b/include/linux/mm_types.h
+index 1815fbc40926..885f256f2fb7 100644
+--- a/include/linux/mm_types.h
++++ b/include/linux/mm_types.h
+@@ -261,11 +261,13 @@ struct vm_region {
+ 
+ #ifdef CONFIG_USERFAULTFD
+ #define NULL_VM_UFFD_CTX ((struct vm_userfaultfd_ctx) { NULL, })
++#define IS_NULL_VM_UFFD_CTX(uctx) ((uctx)->ctx == NULL)
+ struct vm_userfaultfd_ctx {
+ 	struct userfaultfd_ctx *ctx;
+ };
+ #else /* CONFIG_USERFAULTFD */
+ #define NULL_VM_UFFD_CTX ((struct vm_userfaultfd_ctx) {})
++#define IS_NULL_VM_UFFD_CTX(uctx) (true)
+ struct vm_userfaultfd_ctx {};
+ #endif /* CONFIG_USERFAULTFD */
+ 
+diff --git a/include/uapi/asm-generic/mman-common.h b/include/uapi/asm-generic/mman-common.h
+index abd238d0f7a4..91803e6ada7c 100644
+--- a/include/uapi/asm-generic/mman-common.h
++++ b/include/uapi/asm-generic/mman-common.h
+@@ -28,6 +28,12 @@
+ /* 0x0100 - 0x80000 flags are defined in asm-generic/mman.h */
+ #define MAP_FIXED_NOREPLACE	0x100000	/* MAP_FIXED which doesn't unmap underlying mapping */
+ 
++/*
++ * Flags for process_vm_mmap
++ */
++#define PVMMAP_FIXED		0x01
++#define PVMMAP_FIXED_NOREPLACE	0x02		/* PVMAP_FIXED which doesn't unmap underlying mapping */
++
+ /*
+  * Flags for mlock
   */
--#ifdef CONFIG_IOMMU_DEFAULT_PASSTHROUGH
--int iommu_pass_through __read_mostly = 1;
--#else
--int iommu_pass_through __read_mostly;
--#endif
-+int iommu_pass_through __read_mostly =
-+			IS_ENABLED(CONFIG_IOMMU_DEFAULT_PASSTHROUGH);
-
- extern struct iommu_table_entry __iommu_table[], __iommu_table_end[];
-
-diff --git a/drivers/iommu/Kconfig b/drivers/iommu/Kconfig
-index 6f07f3b21816c64..8a1f1793cde76b4 100644
---- a/drivers/iommu/Kconfig
-+++ b/drivers/iommu/Kconfig
-@@ -74,17 +74,47 @@ config IOMMU_DEBUGFS
- 	  debug/iommu directory, and then populate a subdirectory with
- 	  entries as required.
-
--config IOMMU_DEFAULT_PASSTHROUGH
--	bool "IOMMU passthrough by default"
-+choice
-+	prompt "IOMMU default DMA mode"
- 	depends on IOMMU_API
--        help
--	  Enable passthrough by default, removing the need to pass in
--	  iommu.passthrough=on or iommu=pt through command line. If this
--	  is enabled, you can still disable with iommu.passthrough=off
--	  or iommu=nopt depending on the architecture.
-+	default IOMMU_DEFAULT_PASSTHROUGH if (PPC_POWERNV && PCI)
-+	default IOMMU_DEFAULT_LAZY if (AMD_IOMMU || INTEL_IOMMU || S390_IOMMU)
-+	default IOMMU_DEFAULT_STRICT
-+	help
-+	  This option allows IOMMU DMA mode to be chose at build time, to
-+	  override the default DMA mode of each ARCHs, removing the need to
-+	  pass in kernel parameters through command line. You can still use
-+	  ARCHs specific boot options to override this option again.
+diff --git a/mm/mmap.c b/mm/mmap.c
+index 260e47e917e6..3123ecee5fb8 100644
+--- a/mm/mmap.c
++++ b/mm/mmap.c
+@@ -3282,6 +3282,113 @@ struct vm_area_struct *copy_vma(struct vm_area_struct **vmap,
+ 	return NULL;
+ }
+ 
++static int do_mmap_process_vm(struct vm_area_struct *src_vma,
++			      unsigned long src_addr,
++			      struct mm_struct *dst_mm,
++			      unsigned long dst_addr,
++			      unsigned long len,
++			      struct list_head *uf)
++{
++	struct vm_area_struct *dst_vma;
++	unsigned long pgoff, ret;
++	bool unused;
 +
-+config IOMMU_DEFAULT_PASSTHROUGH
-+	bool "passthrough"
-+	help
-+	  In this mode, the DMA access through IOMMU without any addresses
-+	  translation. That means, the wrong or illegal DMA access can not
-+	  be caught, no error information will be reported.
-
- 	  If unsure, say N here.
-
-+config IOMMU_DEFAULT_LAZY
-+	bool "lazy"
-+	help
-+	  Support lazy mode, where for every IOMMU DMA unmap operation, the
-+	  flush operation of IOTLB and the free operation of IOVA are deferred.
-+	  They are only guaranteed to be done before the related IOVA will be
-+	  reused.
++	if (do_munmap(dst_mm, dst_addr, len, uf))
++		return -ENOMEM;
 +
-+config IOMMU_DEFAULT_STRICT
-+	bool "strict"
-+	help
-+	  For every IOMMU DMA unmap operation, the flush operation of IOTLB and
-+	  the free operation of IOVA are guaranteed to be done in the unmap
-+	  function.
++	if (src_vma->vm_flags & VM_ACCOUNT) {
++		if (security_vm_enough_memory_mm(dst_mm, len >> PAGE_SHIFT))
++			return -ENOMEM;
++	}
 +
-+	  This mode is safer than the two above, but it maybe slower in some
-+	  high performace scenarios.
++	pgoff = src_vma->vm_pgoff +
++			((src_addr - src_vma->vm_start) >> PAGE_SHIFT);
++	dst_vma = copy_vma(&src_vma, dst_mm, dst_addr,
++			   len, pgoff, &unused, false);
++	if (!dst_vma) {
++		ret = -ENOMEM;
++		goto unacct;
++	}
 +
-+endchoice
++	ret = copy_page_range(dst_mm, src_vma->vm_mm, src_vma,
++			      dst_addr, src_addr, src_addr + len);
++	if (ret) {
++		do_munmap(dst_mm, dst_addr, len, uf);
++		return -ENOMEM;
++	}
 +
- config OF_IOMMU
-        def_bool y
-        depends on OF && IOMMU_API
-diff --git a/drivers/iommu/amd_iommu_init.c b/drivers/iommu/amd_iommu_init.c
-index ff40ba758cf365e..16c02b08adb4cb2 100644
---- a/drivers/iommu/amd_iommu_init.c
-+++ b/drivers/iommu/amd_iommu_init.c
-@@ -166,7 +166,8 @@ struct ivmd_header {
- 					   to handle */
- LIST_HEAD(amd_iommu_unity_map);		/* a list of required unity mappings
- 					   we find in ACPI */
--bool amd_iommu_unmap_flush;		/* if true, flush on every unmap */
-+bool amd_iommu_unmap_flush = IS_ENABLED(CONFIG_IOMMU_DEFAULT_STRICT);
-+					/* if true, flush on every unmap */
-
- LIST_HEAD(amd_iommu_list);		/* list of all AMD IOMMUs in the
- 					   system */
-diff --git a/drivers/iommu/intel-iommu.c b/drivers/iommu/intel-iommu.c
-index 28cb713d728ceef..0c3cc716210f35a 100644
---- a/drivers/iommu/intel-iommu.c
-+++ b/drivers/iommu/intel-iommu.c
-@@ -362,7 +362,7 @@ static int domain_detach_iommu(struct dmar_domain *domain,
-
- static int dmar_map_gfx = 1;
- static int dmar_forcedac;
--static int intel_iommu_strict;
-+static int intel_iommu_strict = IS_ENABLED(CONFIG_IOMMU_DEFAULT_STRICT);
- static int intel_iommu_superpage = 1;
- static int intel_iommu_sm;
- static int iommu_identity_mapping;
-diff --git a/drivers/iommu/iommu.c b/drivers/iommu/iommu.c
-index 109de67d5d727c2..0ec5952ac60e2a3 100644
---- a/drivers/iommu/iommu.c
-+++ b/drivers/iommu/iommu.c
-@@ -43,7 +43,8 @@
- #else
- static unsigned int iommu_def_domain_type = IOMMU_DOMAIN_DMA;
- #endif
--static bool iommu_dma_strict __read_mostly = true;
-+static bool iommu_dma_strict __read_mostly =
-+			IS_ENABLED(CONFIG_IOMMU_DEFAULT_STRICT);
-
- struct iommu_group {
- 	struct kobject kobj;
---
-1.8.3
-
++	if (dst_vma->vm_file)
++		uprobe_mmap(dst_vma);
++	perf_event_mmap(dst_vma);
++
++	dst_vma->vm_flags |= VM_SOFTDIRTY;
++	vma_set_page_prot(dst_vma);
++
++	vm_stat_account(dst_mm, dst_vma->vm_flags, len >> PAGE_SHIFT);
++	return 0;
++
++unacct:
++	vm_unacct_memory(len >> PAGE_SHIFT);
++	return ret;
++}
++
++unsigned long mmap_process_vm(struct mm_struct *src_mm,
++			      unsigned long src_addr,
++			      struct mm_struct *dst_mm,
++			      unsigned long dst_addr,
++			      unsigned long len,
++			      unsigned long flags,
++			      struct list_head *uf)
++{
++	struct vm_area_struct *src_vma, *dst_vma;
++	unsigned long gua_flags = 0;
++	unsigned long ret;
++
++	src_vma = find_vma_without_flags(src_mm, src_addr, len,
++				VM_HUGETLB|VM_DONTEXPAND|VM_PFNMAP|VM_IO);
++	if (IS_ERR(src_vma))
++		return -EFAULT;
++	if (dst_mm->map_count > sysctl_max_map_count - 2)
++		return -ENOMEM;
++	if (!IS_NULL_VM_UFFD_CTX(&src_vma->vm_userfaultfd_ctx))
++		return -ENOTSUPP;
++
++	if (src_vma->vm_flags & VM_SHARED)
++		gua_flags |= MAP_SHARED;
++	else
++		gua_flags |= MAP_PRIVATE;
++	if (vma_is_anonymous(src_vma) || vma_is_shmem(src_vma))
++		gua_flags |= MAP_ANONYMOUS;
++	if (flags & PVMMAP_FIXED)
++		gua_flags |= MAP_FIXED;
++	if (flags & PVMMAP_FIXED_NOREPLACE)
++		gua_flags |= MAP_FIXED | MAP_FIXED_NOREPLACE;
++
++	ret = get_unmapped_area(src_vma->vm_file, dst_addr, len,
++				src_vma->vm_pgoff +
++				((src_addr - src_vma->vm_start) >> PAGE_SHIFT),
++				gua_flags);
++	if (offset_in_page(ret))
++                return ret;
++	if (flags & PVMMAP_FIXED_NOREPLACE) {
++		dst_vma = find_vma(dst_mm, dst_addr);
++		if (dst_vma && dst_vma->vm_start < dst_addr + len)
++			return -EEXIST;
++	}
++
++	dst_addr = ret;
++
++	/* Check against address space limit. */
++	if (!may_mmap_overlapped_region(dst_mm, src_vma->vm_flags, dst_addr, len))
++		return -ENOMEM;
++
++	ret = do_mmap_process_vm(src_vma, src_addr, dst_mm, dst_addr, len, uf);
++	if (ret)
++                return ret;
++
++	return dst_addr;
++}
++
+ /*
+  * Return true if the calling process may expand its vm space by the passed
+  * number of pages
+diff --git a/mm/process_vm_access.c b/mm/process_vm_access.c
+index a447092d4635..e2073f52415b 100644
+--- a/mm/process_vm_access.c
++++ b/mm/process_vm_access.c
+@@ -17,6 +17,8 @@
+ #include <linux/ptrace.h>
+ #include <linux/slab.h>
+ #include <linux/syscalls.h>
++#include <linux/mman.h>
++#include <linux/userfaultfd_k.h>
+ 
+ #ifdef CONFIG_COMPAT
+ #include <linux/compat.h>
+@@ -295,6 +297,66 @@ static ssize_t process_vm_rw(pid_t pid,
+ 	return rc;
+ }
+ 
++static unsigned long process_vm_mmap(pid_t pid, unsigned long src_addr,
++				     unsigned long len, unsigned long dst_addr,
++				     unsigned long flags)
++{
++	struct mm_struct *src_mm, *dst_mm;
++	struct task_struct *task;
++	unsigned long ret;
++	int depth = 0;
++	LIST_HEAD(uf);
++
++	len = PAGE_ALIGN(len);
++	src_addr = round_down(src_addr, PAGE_SIZE);
++	if (flags & PVMMAP_FIXED)
++		dst_addr = round_down(dst_addr, PAGE_SIZE);
++	else
++		dst_addr = round_hint_to_min(dst_addr);
++
++	if ((flags & ~(PVMMAP_FIXED|PVMMAP_FIXED_NOREPLACE)) ||
++	    len == 0 || len > TASK_SIZE || src_addr == 0 ||
++	    dst_addr > TASK_SIZE - len || pid <= 0)
++		return -EINVAL;
++	task = find_get_task_by_vpid(pid);
++	if (!task)
++		return -ESRCH;
++	if (unlikely(task->flags & PF_KTHREAD)) {
++		ret = -EINVAL;
++		goto out_put_task;
++	}
++
++	src_mm = mm_access(task, PTRACE_MODE_ATTACH_REALCREDS);
++	if (!src_mm || IS_ERR(src_mm)) {
++		ret = IS_ERR(src_mm) ? PTR_ERR(src_mm) : -ESRCH;
++		goto out_put_task;
++	}
++	dst_mm = current->mm;
++	mmget(dst_mm);
++
++	/* Double lock mm in address order: smallest is the first */
++	if (src_mm < dst_mm) {
++		down_write(&src_mm->mmap_sem);
++		depth = SINGLE_DEPTH_NESTING;
++	}
++	down_write_nested(&dst_mm->mmap_sem, depth);
++	if (src_mm > dst_mm)
++		down_write_nested(&src_mm->mmap_sem, SINGLE_DEPTH_NESTING);
++
++	ret = mmap_process_vm(src_mm, src_addr, dst_mm, dst_addr, len, flags, &uf);
++
++	up_write(&dst_mm->mmap_sem);
++	if (dst_mm != src_mm)
++		up_write(&src_mm->mmap_sem);
++
++	userfaultfd_unmap_complete(dst_mm, &uf);
++	mmput(src_mm);
++	mmput(dst_mm);
++out_put_task:
++	put_task_struct(task);
++	return ret;
++}
++
+ SYSCALL_DEFINE6(process_vm_readv, pid_t, pid, const struct iovec __user *, lvec,
+ 		unsigned long, liovcnt, const struct iovec __user *, rvec,
+ 		unsigned long, riovcnt,	unsigned long, flags)
+@@ -310,6 +372,13 @@ SYSCALL_DEFINE6(process_vm_writev, pid_t, pid,
+ 	return process_vm_rw(pid, lvec, liovcnt, rvec, riovcnt, flags, 1);
+ }
+ 
++SYSCALL_DEFINE5(process_vm_mmap, pid_t, pid,
++		unsigned long, src_addr, unsigned long, len,
++		unsigned long, dst_addr, unsigned long, flags)
++{
++	return process_vm_mmap(pid, src_addr, len, dst_addr, flags);
++}
++
+ #ifdef CONFIG_COMPAT
+ 
+ static ssize_t
 
