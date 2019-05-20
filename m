@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7E88C04AAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:25:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 483E0C04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:25:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BD7F020645
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:25:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F49020675
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:25:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558355112;
-	bh=g+LiIFWUKzTKBJwpmGwYkeqEN7TNVfGGtCtw2bIfbs0=;
+	s=default; t=1558355115;
+	bh=CaVc0Vmf0CTBvhnD/hDvXM9q76PEYULHxwWmImXaQsw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=E8+7nCF4JoDABzvNEu268vLhwPC82sGsL9/wW5n41uCgKbEDpFx67MRkCHmnsNrtE
-	 tSDTk72egaFJekW7bj9SWUfwaRRRfWfYi9m7WB4HlmzcFRnG18sUVQyDEmjxjFrV+k
-	 L4JTDK10tjO8bQ6SPfYzbtVPzZU0adXhkseoQWds=
+	b=N6MqyJDrAERb38XGjyOgZiyyQQiunNfp4J4YtcZBZ14f7G68p25UBFE/mfVB808Pn
+	 wtDIRRzd6GfduWO5dfcm5rypEg82VpUyfCOpuZsOaZGRkW3aR8AjzBFnxZbvPtsiZx
+	 HDM5jTD4CgUB2DBW7vgdeCNwlx7DnBGWhBVToTfI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389014AbfETMZM (ORCPT
+        id S2389026AbfETMZO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 08:25:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40176 "EHLO mail.kernel.org"
+        Mon, 20 May 2019 08:25:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40238 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389000AbfETMZK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 08:25:10 -0400
+        id S2389015AbfETMZM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 08:25:12 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E97E020645;
-        Mon, 20 May 2019 12:25:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8ACF420815;
+        Mon, 20 May 2019 12:25:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558355109;
-        bh=g+LiIFWUKzTKBJwpmGwYkeqEN7TNVfGGtCtw2bIfbs0=;
+        s=default; t=1558355112;
+        bh=CaVc0Vmf0CTBvhnD/hDvXM9q76PEYULHxwWmImXaQsw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HEoqgwRshE/Sw0Gtmv78FevFi5TvUO9DCkX5S0El1H+DnJQVauZm4/owBfYofQmQ1
-         2nDDlgF8pt4FMpqe/lBJVfjeCKSFGN01ezBHkw8ma2PNoG6nwlHu8rzQA+3EUBDQUO
-         XXgwp2m7vVeBbNgUKuK51wlSdNumXFAcou1z5DXw=
+        b=w5SLnySF24iZH8gY8UuvFp8C2qqzIvhZoGWWoOMetDSEr6jOIrKx8BVbsNp9BLz08
+         J+N/3COhw0pNDNcOmdRNPyAS8dqPIAtVbDieqG9+DbFMxF+TWp6tDfoJoojN3B0rE1
+         ardcI4beoNd3tjEHxXikO8nPYdD0xAOaKaQ1BKR0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kees Cook <keescook@chromium.org>,
-        Guenter Roeck <groeck@chromium.org>
-Subject: [PATCH 4.19 101/105] pstore: Refactor compression initialization
-Date:   Mon, 20 May 2019 14:14:47 +0200
-Message-Id: <20190520115254.199143364@linuxfoundation.org>
+        stable@vger.kernel.org, Colin Ian King <colin.king@canonical.com>,
+        Theodore Tso <tytso@mit.edu>
+Subject: [PATCH 4.19 102/105] ext4: unsigned int compared against zero
+Date:   Mon, 20 May 2019 14:14:48 +0200
+Message-Id: <20190520115254.280651714@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190520115247.060821231@linuxfoundation.org>
 References: <20190520115247.060821231@linuxfoundation.org>
@@ -59,111 +59,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kees Cook <keescook@chromium.org>
+From: Colin Ian King <colin.king@canonical.com>
 
-commit 95047b0519c17a28e09df5f38750f5354e3db4c4 upstream.
+commit fbbbbd2f28aec991f3fbc248df211550fbdfd58c upstream.
 
-This refactors compression initialization slightly to better handle
-getting potentially called twice (via early pstore_register() calls
-and later pstore_init()) and improves the comments and reporting to be
-more verbose.
+There are two cases where u32 variables n and err are being checked
+for less than zero error values, the checks is always false because
+the variables are not signed. Fix this by making the variables ints.
 
-Signed-off-by: Kees Cook <keescook@chromium.org>
-Tested-by: Guenter Roeck <groeck@chromium.org>
+Addresses-Coverity: ("Unsigned compared against 0")
+Fixes: 345c0dbf3a30 ("ext4: protect journal inode's blocks using block_validity")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+Signed-off-by: Theodore Ts'o <tytso@mit.edu>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/pstore/platform.c |   48 +++++++++++++++++++++++++++++++++---------------
- 1 file changed, 33 insertions(+), 15 deletions(-)
+ fs/ext4/block_validity.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/fs/pstore/platform.c
-+++ b/fs/pstore/platform.c
-@@ -274,36 +274,56 @@ static int pstore_decompress(void *in, v
+--- a/fs/ext4/block_validity.c
++++ b/fs/ext4/block_validity.c
+@@ -142,7 +142,8 @@ static int ext4_protect_reserved_inode(s
+ 	struct inode *inode;
+ 	struct ext4_sb_info *sbi = EXT4_SB(sb);
+ 	struct ext4_map_blocks map;
+-	u32 i = 0, err = 0, num, n;
++	u32 i = 0, num;
++	int err = 0, n;
  
- static void allocate_buf_for_compression(void)
- {
-+	struct crypto_comp *ctx;
-+	int size;
-+	char *buf;
-+
-+	/* Skip if not built-in or compression backend not selected yet. */
- 	if (!IS_ENABLED(CONFIG_PSTORE_COMPRESS) || !zbackend)
- 		return;
- 
-+	/* Skip if no pstore backend yet or compression init already done. */
-+	if (!psinfo || tfm)
-+		return;
-+
- 	if (!crypto_has_comp(zbackend->name, 0, 0)) {
--		pr_err("No %s compression\n", zbackend->name);
-+		pr_err("Unknown compression: %s\n", zbackend->name);
- 		return;
- 	}
- 
--	big_oops_buf_sz = zbackend->zbufsize(psinfo->bufsize);
--	if (big_oops_buf_sz <= 0)
-+	size = zbackend->zbufsize(psinfo->bufsize);
-+	if (size <= 0) {
-+		pr_err("Invalid compression size for %s: %d\n",
-+		       zbackend->name, size);
- 		return;
-+	}
- 
--	big_oops_buf = kmalloc(big_oops_buf_sz, GFP_KERNEL);
--	if (!big_oops_buf) {
--		pr_err("allocate compression buffer error!\n");
-+	buf = kmalloc(size, GFP_KERNEL);
-+	if (!buf) {
-+		pr_err("Failed %d byte compression buffer allocation for: %s\n",
-+		       size, zbackend->name);
- 		return;
- 	}
- 
--	tfm = crypto_alloc_comp(zbackend->name, 0, 0);
--	if (IS_ERR_OR_NULL(tfm)) {
--		kfree(big_oops_buf);
--		big_oops_buf = NULL;
--		pr_err("crypto_alloc_comp() failed!\n");
-+	ctx = crypto_alloc_comp(zbackend->name, 0, 0);
-+	if (IS_ERR_OR_NULL(ctx)) {
-+		kfree(buf);
-+		pr_err("crypto_alloc_comp('%s') failed: %ld\n", zbackend->name,
-+		       PTR_ERR(ctx));
- 		return;
- 	}
-+
-+	/* A non-NULL big_oops_buf indicates compression is available. */
-+	tfm = ctx;
-+	big_oops_buf_sz = size;
-+	big_oops_buf = buf;
-+
-+	pr_info("Using compression: %s\n", zbackend->name);
- }
- 
- static void free_buf_for_compression(void)
- {
--	if (IS_ENABLED(CONFIG_PSTORE_COMPRESS) && !IS_ERR_OR_NULL(tfm))
-+	if (IS_ENABLED(CONFIG_PSTORE_COMPRESS) && tfm)
- 		crypto_free_comp(tfm);
- 	kfree(big_oops_buf);
- 	big_oops_buf = NULL;
-@@ -774,7 +794,6 @@ void __init pstore_choose_compression(vo
- 	for (step = zbackends; step->name; step++) {
- 		if (!strcmp(compress, step->name)) {
- 			zbackend = step;
--			pr_info("using %s compression\n", zbackend->name);
- 			return;
- 		}
- 	}
-@@ -791,8 +810,7 @@ static int __init pstore_init(void)
- 	 * initialize compression because crypto was not ready. If so,
- 	 * initialize compression now.
- 	 */
--	if (psinfo && !tfm)
--		allocate_buf_for_compression();
-+	allocate_buf_for_compression();
- 
- 	ret = pstore_init_fs();
- 	if (ret)
+ 	if ((ino < EXT4_ROOT_INO) ||
+ 	    (ino > le32_to_cpu(sbi->s_es->s_inodes_count)))
 
 
