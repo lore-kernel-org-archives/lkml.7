@@ -2,133 +2,102 @@ Return-Path: <SRS0=lq4r=TU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60DAAC04AAC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 18:28:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13050C04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 18:28:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3BCEA2173E
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 18:28:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E449421783
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 18:28:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernelci-org.20150623.gappssmtp.com header.i=@kernelci-org.20150623.gappssmtp.com header.b="pxIC6RjX"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="MKO23OSa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725993AbfETS2S (ORCPT
+        id S1726112AbfETS2s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 14:28:18 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:51316 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725601AbfETS2R (ORCPT
+        Mon, 20 May 2019 14:28:48 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:34110 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725601AbfETS2r (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 14:28:17 -0400
-Received: by mail-wm1-f68.google.com with SMTP id c77so347097wmd.1
-        for <linux-kernel@vger.kernel.org>; Mon, 20 May 2019 11:28:16 -0700 (PDT)
+        Mon, 20 May 2019 14:28:47 -0400
+Received: by mail-wr1-f68.google.com with SMTP id f8so9317049wrt.1
+        for <linux-kernel@vger.kernel.org>; Mon, 20 May 2019 11:28:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernelci-org.20150623.gappssmtp.com; s=20150623;
-        h=message-id:date:mime-version:content-transfer-encoding:in-reply-to
-         :references:subject:to:from:cc;
-        bh=HmGLQrCdMJnuW0msOlZFsmWFSYM8a4SlYwckrQhrmPc=;
-        b=pxIC6RjXIlSAHmHgcibUXYxYkRk/OfkzCKXfgjYuNxbmItg01fawJDeg47wU+LdeQ6
-         tBOnKdqMKgVLefMnEd42QcutXOi1t5sAuc5EZLWgcmZ3YyxKEHjRE/5gZraqCqFwFYgC
-         ZpwAqPK0xNyxnGoc0xS6C9sZEuA3ySqh1AKfj62ay3cB9nGzXJ1sTFX6k31lpyka8t0+
-         BaWsyeMP4vWyB4eI60+5xSn54OZGPlxkv6p9VMTKz3ze9K6UNO83YKfCy5iVMjtEclXD
-         R/+v2zZmOJBx2uLtVak0sChaQJaiB4QPEh8ppCE/aM2Ewc1xXZ6SZgyOLPqNBj/xA994
-         NVbQ==
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=message-id:date:from:user-agent:mime-version:to:cc:subject
+         :references:in-reply-to:content-transfer-encoding;
+        bh=1FK2DXKOFB3m2S1KpmmuQv43CteVea0a4jQ56pD1zGU=;
+        b=MKO23OSaVzWu2iXq1D/NoheHxvM//TR5El/kkQWNWAzfwY7e7J8R+enPDRvIUbcqyZ
+         NGjqLknvjtxjieY11283DVblu86q3rTCxZdPRE6GthHzIt14xZqzra6jDX8IfVhEOK1/
+         /dEo62OMajZdNoyVKHqPkx+lHxc1FV3t3UhJnYKtkjDl2Y8it0vSpPJvUDkDMsMGfn6a
+         gA0PWm0KnRhdrdWs3nwI8OEBx+LXru7EBryVdEbd4vsoerDD76wUxbeTHeNylKy0aBbA
+         muSMpvm/t3fHZZPRMZ/auAhltKn3kuz76uRjZVNj2P8gpjWuBFOPvKqhGhAug5LKeXrZ
+         v5Rw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:date:mime-version
-         :content-transfer-encoding:in-reply-to:references:subject:to:from:cc;
-        bh=HmGLQrCdMJnuW0msOlZFsmWFSYM8a4SlYwckrQhrmPc=;
-        b=XpOgAeJz37Jqcljlc1oRw3vLPayUm0cpj6Tnt6XmUTOZuGI8naowkYme+3+tLubMVW
-         GGcxwgBNRP7BW1SXd0ICa9SlwQ4S5Ldkycemqme+zdiAeBRisHwDIP8v/BS/rxNIxz9J
-         CUTeoDt7Xrh5SJXztAzzJfqWOERUEENK5WwA8etMyHY8o7OxqptkyY9lNQGnVPudIXU3
-         6Jn9fdjybHJrRoSueHCQO+8C4YLjsuHGS3yWanAA3RGQGOE631u0QSDdRMfAMtVH86B+
-         vxxwgKrFXAKUMkHcXouxcTOx1f/FPJP7ASNiaEesYH28hGSUFGiix0U/JobqhVH8VFK7
-         nxjw==
-X-Gm-Message-State: APjAAAXBGcxsg18aywtOi9KGUoXI6SOmiT32EfAVw2l7Dsm/TiIFI8fN
-        LTrvFRcXOezR4IcFjbIEpex1dg==
-X-Google-Smtp-Source: APXvYqyM/JxSNjJ+fSfxCOiK5054Q8CKIbdo6owX1RblhrlSQ9V78BYQOLZe90/nJXfg9D1K6mznyQ==
-X-Received: by 2002:a1c:f507:: with SMTP id t7mr341285wmh.149.1558376895848;
-        Mon, 20 May 2019 11:28:15 -0700 (PDT)
-Received: from [148.251.42.114] ([2a01:4f8:201:9271::2])
-        by smtp.gmail.com with ESMTPSA id s11sm34074338wrb.71.2019.05.20.11.28.15
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 20 May 2019 11:28:15 -0700 (PDT)
-Message-ID: <5ce2f1bf.1c69fb81.602b9.a71a@mx.google.com>
-Date:   Mon, 20 May 2019 11:28:15 -0700 (PDT)
-Content-Type: text/plain; charset="utf-8"
+        h=x-gm-message-state:message-id:date:from:user-agent:mime-version:to
+         :cc:subject:references:in-reply-to:content-transfer-encoding;
+        bh=1FK2DXKOFB3m2S1KpmmuQv43CteVea0a4jQ56pD1zGU=;
+        b=INhctiXJ8KcY98klr2+X4G/r2vFo3C6y5mClLnqSezezzNFVCAz/3sX5zrMA/KcMgW
+         EruWOiWDP2xd5QL1oiXvM3hrQT9AtzhVBIAsD4RXpjB7PnMYEYJdVsoNuD89ttHCxlgy
+         GokABKebsMdsFAnzVXybcW8QXS00VUBkLMgEfyn5V55Xc6DCOoDhKcxb9fkzCWjC9e/8
+         3EUDAcGDysVRQACPIPf4cv5MQR9oSMJOUVa49f4zlchZ60JSKujSrgiSqMStcFo4gs7W
+         EfEEYq0nKe3+3Hdii5RwBtMPkfvbsjdFl7a0lxcH1RcZoEu9a56NdYNxyr5iiitepRJT
+         gw0A==
+X-Gm-Message-State: APjAAAXnPV4Dj6UwrYJNZBbPb2nAuzRrMmIKpwgLGvmymUAWOOp+n0Ln
+        o20Ng1XButSwJ+VtIwZcCfUqkA==
+X-Google-Smtp-Source: APXvYqz1r9onPeVavfsoGIY5wwRXwdggSKOmpXExBfHgCEti4JqdGoRECSwavjBIMt+Lt5YrV3VNfg==
+X-Received: by 2002:a5d:51d0:: with SMTP id n16mr34573876wrv.167.1558376926448;
+        Mon, 20 May 2019 11:28:46 -0700 (PDT)
+Received: from [192.168.1.77] (wal59-h01-176-150-251-154.dsl.sta.abo.bbox.fr. [176.150.251.154])
+        by smtp.gmail.com with ESMTPSA id a62sm600078wmh.11.2019.05.20.11.28.45
+        (version=TLS1 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Mon, 20 May 2019 11:28:45 -0700 (PDT)
+Message-ID: <5CE2F1DD.4070700@baylibre.com>
+Date:   Mon, 20 May 2019 20:28:45 +0200
+From:   Neil Armstrong <narmstrong@baylibre.com>
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.13; rv:24.0) Gecko/20100101 Thunderbird/24.6.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Kernelci-Report-Type: boot
-X-Kernelci-Tree: stable-rc
-X-Kernelci-Branch: linux-4.14.y
-X-Kernelci-Kernel: v4.14.120-64-gffedd7fd95e8
-In-Reply-To: <20190520115231.137981521@linuxfoundation.org>
-References: <20190520115231.137981521@linuxfoundation.org>
-Subject: Re: [PATCH 4.14 00/63] 4.14.121-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org
-From:   "kernelci.org bot" <bot@kernelci.org>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        torvalds@linux-foundation.org, akpm@linux-foundation.org,
-        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org
+To:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+CC:     jic23@kernel.org, knaack.h@gmx.de, lars@metafoo.de,
+        pmeerw@pmeerw.net, linux-iio@vger.kernel.org,
+        linux-amlogic@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] iio: adc: meson_saradc: update with SPDX Licence identifier
+References: <20190520140228.29325-1-narmstrong@baylibre.com> <CAFBinCD8Gkb0aRXWPb1uuezSHuS9DxQmnhuuSttspDzWHNAV1w@mail.gmail.com>
+In-Reply-To: <CAFBinCD8Gkb0aRXWPb1uuezSHuS9DxQmnhuuSttspDzWHNAV1w@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-stable-rc/linux-4.14.y boot: 117 boots: 1 failed, 113 passed with 1 offline=
-, 1 untried/unknown, 1 conflict (v4.14.120-64-gffedd7fd95e8)
+Hi Martin,
 
-Full Boot Summary: https://kernelci.org/boot/all/job/stable-rc/branch/linux=
--4.14.y/kernel/v4.14.120-64-gffedd7fd95e8/
-Full Build Summary: https://kernelci.org/build/stable-rc/branch/linux-4.14.=
-y/kernel/v4.14.120-64-gffedd7fd95e8/
+Le 20/05/2019 19:55, Martin Blumenstingl a écrit :
+> Hi Neil,
+> 
+> On Mon, May 20, 2019 at 4:02 PM Neil Armstrong <narmstrong@baylibre.com> wrote:
+>>
+>> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+>> ---
+>>  drivers/iio/adc/meson_saradc.c | 8 +-------
+>>  1 file changed, 1 insertion(+), 7 deletions(-)
+>>
+>> diff --git a/drivers/iio/adc/meson_saradc.c b/drivers/iio/adc/meson_saradc.c
+>> index 510d8b7ef3a0..e39d95734496 100644
+>> --- a/drivers/iio/adc/meson_saradc.c
+>> +++ b/drivers/iio/adc/meson_saradc.c
+>> @@ -1,14 +1,8 @@
+>> +// SPDX-License-Identifier: GPL-2.0+
+> the original license text didn't mention "... or later"
+> personally I'm happy with either GPL-2.0 or GPL-2.0+
+> 
 
-Tree: stable-rc
-Branch: linux-4.14.y
-Git Describe: v4.14.120-64-gffedd7fd95e8
-Git Commit: ffedd7fd95e8d03834094434754a33dbc060770d
-Git URL: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stabl=
-e-rc.git
-Tested: 62 unique boards, 24 SoC families, 14 builds out of 201
+I'll fix and re-spin, thanks for reviewing.
 
-Boot Regressions Detected:
-
-arm:
-
-    omap2plus_defconfig:
-        gcc-8:
-          omap4-panda:
-              lab-baylibre: new failure (last pass: v4.14.120)
-
-Boot Failure Detected:
-
-arm64:
-    defconfig:
-        gcc-8:
-            rk3399-firefly: 1 failed lab
-
-Offline Platforms:
-
-arm:
-
-    multi_v7_defconfig:
-        gcc-8
-            stih410-b2120: 1 offline lab
-
-Conflicting Boot Failure Detected: (These likely are not failures as other =
-labs are reporting PASS. Needs review.)
-
-arm:
-    omap2plus_defconfig:
-        omap4-panda:
-            lab-baylibre: FAIL (gcc-8)
-            lab-baylibre-seattle: PASS (gcc-8)
-
----
-For more info write to <info@kernelci.org>
+Neil
