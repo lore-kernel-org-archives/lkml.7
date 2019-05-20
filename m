@@ -2,105 +2,102 @@ Return-Path: <SRS0=lq4r=TU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 144EAC04AAC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 11:40:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F3B4C04E87
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 11:41:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D5CAC20645
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 11:40:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bHr8RLIt"
+	by mail.kernel.org (Postfix) with ESMTP id 3D2F620645
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 11:41:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731447AbfETLkA (ORCPT
+        id S1730798AbfETLlV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 07:40:00 -0400
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:33757 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730708AbfETLkA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 07:40:00 -0400
-Received: by mail-oi1-f193.google.com with SMTP id q186so3027635oia.0;
-        Mon, 20 May 2019 04:39:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=44L6cEnx4TRmAaeTvxDONBxhfaF21/upIkBICkfjKkY=;
-        b=bHr8RLIt91biK7iigtLZcjVNFcOwKVPjNeVI687TtYDUi1JjPrExUi2+P1Iptq7Mg0
-         USm/LztXpGWXUV4PC2RaEmSaCYVp4U3pp/NeoALvMa5kclANhUrVr+IzDLz9BePad5b9
-         c+5FLsLiFS7mDKdYMy/eMFMdjO9mvVLz7nUBVVe4c5GR365pfRgggCbLQHAkOIlmKhmS
-         XZVzhKsEaqKj7EV7q9Pge7toXiv2fzB9XNWwdg+wXOjNjKp+ilNlQyebFF1bDq/etThh
-         afoQ+hO2ayyXNIRk1yXgFPqcu0Fs3BEjwBJgyMCK75Uda5CAviqRWcsV4lPKsKL36vbc
-         CT6Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=44L6cEnx4TRmAaeTvxDONBxhfaF21/upIkBICkfjKkY=;
-        b=IdnumE8hybWlnIio/Oco2H1wX/ziiO2B2D+O3XWYLXmEFOCAbb1Zu4h3NLwu7sB5FE
-         40FxJZZcLFhubSqjrpARWqbi6b+fYTfrGKyDfBiwJkXg/72R0QOI8ZqutG3c4NzettUW
-         vXtmoBHkzOb4YsWgo97yNOuN2f7EJkZ8D/o+0wAtTzmo1M9fXrg7O+Hzkc3ci3nfYP9J
-         y+8z7lq+3oQhrAmcEPYRnW4JqWzax0j/U9GHIDX69uptfBplcasFcazyIs/cSMBx/cOb
-         3wA8OqKY/6j6wfcVE84GMjGLCHqzovruSdhTGPtdqyK2zJg+CpM5EqBWyGIKznyG+sfp
-         JhlA==
-X-Gm-Message-State: APjAAAWvNITLSiG4cSjkI0NAu0ohYF4MfObNo2QMesGlaOw2+H0qVcDG
-        M3Hdry7T/CjdaJno3ul/5IcEm4GmlehmTS0YOuoB9A==
-X-Google-Smtp-Source: APXvYqx9PctHUEASD2bRyy2WbrCEnqfZjZV/8lGUIXbMnRESp8XKe1Ed9sqZ2qK3AQY5MChbfRJX3p8qOfKT/uYooO8=
-X-Received: by 2002:aca:da07:: with SMTP id r7mr23708730oig.5.1558352399589;
- Mon, 20 May 2019 04:39:59 -0700 (PDT)
+        Mon, 20 May 2019 07:41:21 -0400
+Received: from mga05.intel.com ([192.55.52.43]:25986 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727108AbfETLlV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 07:41:21 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 May 2019 04:41:18 -0700
+X-ExtLoop1: 1
+Received: from mhauser-mobl.ger.corp.intel.com (HELO localhost) ([10.252.47.244])
+  by orsmga006.jf.intel.com with ESMTP; 20 May 2019 04:41:07 -0700
+Date:   Mon, 20 May 2019 14:41:05 +0300
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     Andy Lutomirski <luto@kernel.org>
+Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
+        James Morris <jmorris@namei.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        LSM List <linux-security-module@vger.kernel.org>,
+        Paul Moore <paul@paul-moore.com>,
+        Stephen Smalley <sds@tycho.nsa.gov>,
+        Eric Paris <eparis@parisplace.org>, selinux@vger.kernel.org,
+        Jethro Beekman <jethro@fortanix.com>,
+        "Xing, Cedric" <cedric.xing@intel.com>,
+        "Hansen, Dave" <dave.hansen@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "Dr. Greg" <greg@enjellic.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
+        "linux-sgx@vger.kernel.org" <linux-sgx@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "nhorman@redhat.com" <nhorman@redhat.com>,
+        "npmccallum@redhat.com" <npmccallum@redhat.com>,
+        "Ayoun, Serge" <serge.ayoun@intel.com>,
+        "Katz-zamir, Shay" <shay.katz-zamir@intel.com>,
+        "Huang, Haitao" <haitao.huang@intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        "Svahn, Kai" <kai.svahn@intel.com>, Borislav Petkov <bp@alien8.de>,
+        Josh Triplett <josh@joshtriplett.org>,
+        "Huang, Kai" <kai.huang@intel.com>,
+        David Rientjes <rientjes@google.com>
+Subject: Re: SGX vs LSM (Re: [PATCH v20 00/28] Intel SGX1 support)
+Message-ID: <20190520114105.GD27805@linux.intel.com>
+References: <CALCETrWCZQwg-TUCm58DVG43=xCKRsMe1tVHrR8vdt06hf4fWA@mail.gmail.com>
+ <20190513102926.GD8743@linux.intel.com>
+ <20190514104323.GA7591@linux.intel.com>
+ <CALCETrVbgTCnPo=PAq0-KoaRwt--urrPzn==quAJ8wodCpkBkw@mail.gmail.com>
+ <20190514204527.GC1977@linux.intel.com>
+ <CALCETrX6aL367mMJh5+Y1Seznfu-AvhPV6P7GkWF4Dhu0GV8cw@mail.gmail.com>
+ <20190515013031.GF1977@linux.intel.com>
+ <CALCETrXf8mSK45h7sTK5Wf+pXLVn=Bjsc_RLpgO-h-qdzBRo5Q@mail.gmail.com>
+ <20190517000331.GD11204@linux.intel.com>
+ <CALCETrWxw7xALE0kmiYBzomaSMAeXEVq-7rX7xeqPtDPeDQiCA@mail.gmail.com>
 MIME-Version: 1.0
-References: <1558082990-7822-1-git-send-email-wanpengli@tencent.com>
- <1558082990-7822-2-git-send-email-wanpengli@tencent.com> <e96eecd6-7095-58b3-32a7-2cfde2f2ebcc@redhat.com>
-In-Reply-To: <e96eecd6-7095-58b3-32a7-2cfde2f2ebcc@redhat.com>
-From:   Wanpeng Li <kernellwp@gmail.com>
-Date:   Mon, 20 May 2019 19:39:50 +0800
-Message-ID: <CANRm+Cze1YGtsXibqmRvL=XNHNETH3ZcpH4HEy-7qwE4qPnA9Q@mail.gmail.com>
-Subject: Re: [PATCH RESEND 2/4] KVM: X86: Emulate MSR_IA32_MISC_ENABLE MWAIT bit
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>, kvm <kvm@vger.kernel.org>,
-        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Liran Alon <liran.alon@oracle.com>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CALCETrWxw7xALE0kmiYBzomaSMAeXEVq-7rX7xeqPtDPeDQiCA@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 20 May 2019 at 18:34, Paolo Bonzini <pbonzini@redhat.com> wrote:
->
-> On 17/05/19 10:49, Wanpeng Li wrote:
-> > MSR IA32_MSIC_ENABLE bit 18, according to SDM:
-> >
-> > | When this bit is set to 0, the MONITOR feature flag is not set (CPUID.01H:ECX[bit 3] = 0).
-> > | This indicates that MONITOR/MWAIT are not supported.
-> > |
-> > | Software attempts to execute MONITOR/MWAIT will cause #UD when this bit is 0.
-> > |
-> > | When this bit is set to 1 (default), MONITOR/MWAIT are supported (CPUID.01H:ECX[bit 3] = 1).
-> >
-> > The CPUID.01H:ECX[bit 3] ought to mirror the value of the MSR bit,
-> > CPUID.01H:ECX[bit 3] is a better guard than kvm_mwait_in_guest().
-> > kvm_mwait_in_guest() affects the behavior of MONITOR/MWAIT, not its
-> > guest visibility.
-> >
-> > This patch implements toggling of the CPUID bit based on guest writes
-> > to the MSR.
->
-> Won't this disable mwait after migration, unless IA32_MISC_ENABLE is set
-> correctly by firmware or userspace?  I think you need to hide this
+On Thu, May 16, 2019 at 05:26:15PM -0700, Andy Lutomirski wrote:
+> Is userspace actually requred to mmap() the enclave prior to EADDing things?
 
-Agreed.
+Nope, not since v20. Here is what I wrote about API to the kernel
+documentation:
 
-> behind KVM_CAP_DISABLE_QUIRKS.  (Also, what is the reason for this
-> change in general besides making behavior closer to real hardware?)
+"The enclave life-cycle starts by opening `/dev/sgx/enclave`. After this
+there is already a data structure inside kernel tracking the enclave
+that is initially uncreated. After this a set of ioctl's can be used to
+create, populate and initialize the enclave.
 
-Just making behavior closer to real hardware. :)
+You can close (if you want) the fd after you've mmap()'d. As long as the
+file is open the enclave stays alive so you might want to do that after
+you don't need it anymore. Even munmap() won't destruct the enclave if
+the file is open.  Neither will closing the fd as long as you have
+mmap() done over the fd (even if it does not across the range defined in
+SECS)."
 
-Regards,
-Wanpeng Li
+Enclave can be created and initialized without doing a single mmap()
+call.
+
+/Jarkko
