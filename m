@@ -2,244 +2,271 @@ Return-Path: <SRS0=lq4r=TU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD28CC04AAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 07:18:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C978EC04AAF
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 07:24:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9DB922081C
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 07:18:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B02220851
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 07:24:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730520AbfETHSm (ORCPT
+        id S1730591AbfETHYm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 03:18:42 -0400
-Received: from mailgw02.mediatek.com ([1.203.163.81]:47882 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1730045AbfETHSm (ORCPT
+        Mon, 20 May 2019 03:24:42 -0400
+Received: from twhmllg3.macronix.com ([211.75.127.131]:27729 "EHLO
+        TWHMLLG3.macronix.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726114AbfETHYm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 03:18:42 -0400
-X-UUID: 3add5f435c494bd8a406e1c906e6e739-20190520
-X-UUID: 3add5f435c494bd8a406e1c906e6e739-20190520
-Received: from mtkcas32.mediatek.inc [(172.27.4.253)] by mailgw02.mediatek.com
-        (envelope-from <ck.hu@mediatek.com>)
-        (mailgw01.mediatek.com ESMTP with TLS)
-        with ESMTP id 1245372766; Mon, 20 May 2019 15:18:25 +0800
-Received: from mtkcas09.mediatek.inc (172.21.101.178) by
- MTKMBS33DR.mediatek.inc (172.27.6.106) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Mon, 20 May 2019 15:18:23 +0800
-Received: from [172.21.77.4] (172.21.77.4) by mtkcas09.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Mon, 20 May 2019 15:18:23 +0800
-Message-ID: <1558336703.7311.37.camel@mtksdaap41>
-Subject: Re: [v3 1/7] drm/mediatek: move mipi_dsi_host_register to probe
-From:   CK Hu <ck.hu@mediatek.com>
-To:     Jitao Shi <jitao.shi@mediatek.com>
-CC:     Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>,
+        Mon, 20 May 2019 03:24:42 -0400
+Received: from twhfmlp1.macronix.com (twhfm1p1.macronix.com [172.17.20.91])
+        by TWHMLLG3.macronix.com with ESMTP id x4K7NvO7058232;
+        Mon, 20 May 2019 15:23:57 +0800 (GMT-8)
+        (envelope-from masonccyang@mxic.com.tw)
+Received: from MXML06C.mxic.com.tw (mxml06c.macronix.com [172.17.14.55])
+        by Forcepoint Email with ESMTP id 7AACD5EAB919A0026F8D;
+        Mon, 20 May 2019 15:23:57 +0800 (CST)
+In-Reply-To: <44bc8f0a-cbdc-db4a-9a46-b8bae5cc37a2@cogentembedded.com>
+References: <1556092536-17095-1-git-send-email-masonccyang@mxic.com.tw> <20190424212356.GA27103@bogus> <65853dc2-6f3c-1494-7e72-54877797cdd2@gmail.com> <20190507125730.GD29524@dell> <OF08A5650B.8AE8977C-ON482583F4.000E5B1E-482583F4.000F7215@mxic.com.tw> <d229b19e-351c-c576-b5c4-716d10dad1a0@gmail.com> <20190508061119.GB7627@dell> <OFE86674B9.06D723A0-ON482583F5.000AD50C-482583F5.000BA075@mxic.com.tw> <a05cff8f-7df2-1938-c0e7-f9366bece607@cogentembedded.com> <OFB19BCE91.6EBBAA77-ON482583F6.000234E2-482583F6.00061290@mxic.com.tw> <CAMuHMdUP8KU3Dbv6cwOvrY0hWOcm1xqVcsi20+GvazYMDLGGZg@mail.gmail.com> <OFD932ABFC.E3FFCEB8-ON482583F9.003412B1-482583F9.0034D5CA@mxic.com.tw> <b51d1cb7-b3b5-208f-ab4c-145ecb57805d@cogentembedded.com> <OFAD9AA573.86373
+ <44bc8f0a-cbdc-db4a-9a46-b8bae5cc37a2@cogentembedded.com>
+To:     "Sergei Shtylyov" <sergei.shtylyov@cogentembedded.com>,
+        "Geert Uytterhoeven" <geert@linux-m68k.org>,
+        "Lee Jones" <lee.jones@linaro.org>
+Cc:     "Boris Brezillon" <bbrezillon@kernel.org>,
+        "Mark Brown" <broonie@kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "Geert Uytterhoeven" <geert@linux-m68k.org>,
+        "Geert Uytterhoeven" <geert+renesas@glider.be>,
+        "Simon Horman" <horms@verge.net.au>, juliensu@mxic.com.tw,
+        "Lee Jones" <lee.jones@linaro.org>,
+        "Linux Kernel Mailing List" <linux-kernel@vger.kernel.org>,
+        "Linux-Renesas" <linux-renesas-soc@vger.kernel.org>,
+        "linux-spi" <linux-spi@vger.kernel.org>,
+        "Marek Vasut" <marek.vasut@gmail.com>,
         "Mark Rutland" <mark.rutland@arm.com>,
-        Ian Campbell <ijc+devicetree@hellion.org.uk>,
-        Kumar Gala <galak@codeaurora.org>, <linux-pwm@vger.kernel.org>,
-        David Airlie <airlied@linux.ie>,
-        "Matthias Brugger" <matthias.bgg@gmail.com>,
-        Thierry Reding <treding@nvidia.com>,
-        "Ajay Kumar" <ajaykumar.rs@samsung.com>,
-        Inki Dae <inki.dae@samsung.com>,
-        "Rahul Sharma" <rahul.sharma@samsung.com>,
-        Sean Paul <seanpaul@chromium.org>,
-        Vincent Palatin <vpalatin@chromium.org>,
-        Andy Yan <andy.yan@rock-chips.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        "Russell King" <rmk+kernel@arm.linux.org.uk>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <dri-devel@lists.freedesktop.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>,
-        <srv_heupstream@mediatek.com>,
-        Sascha Hauer <kernel@pengutronix.de>,
-        <yingjoe.chen@mediatek.com>, <eddie.huang@mediatek.com>,
-        <cawa.cheng@mediatek.com>, <bibby.hsieh@mediatek.com>,
-        <stonea168@163.com>
-Date:   Mon, 20 May 2019 15:18:23 +0800
-In-Reply-To: <20190519092537.69053-2-jitao.shi@mediatek.com>
-References: <20190519092537.69053-1-jitao.shi@mediatek.com>
-         <20190519092537.69053-2-jitao.shi@mediatek.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
+        "Rob Herring" <robh@kernel.org>, zhengxunli@mxic.com.tw,
+        "Miquel Raynal" <miquel.raynal@bootlin.com>
+Subject: Re: [PATCH v12 3/3] dt-bindings: mfd: Document Renesas R-Car Gen3 RPC-IF
+ MFD bindings
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-MTK:  N
+X-KeepSent: 5AF00898:3CE87C98-48258400:00259B16;
+ type=4; name=$KeepSent
+X-Mailer: Lotus Notes Release 8.5.3FP4 SHF90 June 10, 2013
+Message-ID: <OF5AF00898.3CE87C98-ON48258400.00259B16-48258400.0028A4F5@mxic.com.tw>
+From:   masonccyang@mxic.com.tw
+Date:   Mon, 20 May 2019 15:23:57 +0800
+X-MIMETrack: Serialize by Router on MXML06C/TAIWAN/MXIC(Release 9.0.1FP10 HF265|July 25, 2018) at
+ 2019/05/20 PM 03:23:57,
+        Serialize complete at 2019/05/20 PM 03:23:57
+Content-Type: text/plain; charset="US-ASCII"
+X-MAIL: TWHMLLG3.macronix.com x4K7NvO7058232
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi, Jitao:
 
-On Sun, 2019-05-19 at 17:25 +0800, Jitao Shi wrote:
-> DSI panel driver need attach function which is inculde in
-> mipi_dsi_host_ops.
+Hi Sergei, 
+
+> >>> -------------------------------------------------------------->
+> >>>
+> >>> Renesas R-Car Gen3 RPC-IF controller Device Tree Bindings
+> >>> ---------------------------------------------------------
+> >>>
+> >>>   RPC-IF supports both SPI NOR and HyperFlash (CFI-compliant flash)
+> >>>
+> >>>   Required properties:
+> >>>   - compatible: should be an SoC-specific compatible value, followed 
+
+> > by
+> >>>                   "renesas,rcar-gen3-rpc" as a fallback.
+> >>>                   supported SoC-specific values are:
+> >>>                   "renesas,r8a77995-rpc"  (R-Car D3)
+> >>>   - reg: should contain three register areas:
+> >>>           first for the base address of RPC-IF registers,
+> >>
+> >>    I'd drop "the base address" here.
+> > 
+> > okay.
+> > 
+> >>>           second for the direct mapping read mode and
+> >>>           third for the write buffer area.
+> >>>   - reg-names: should contain "regs", "dirmap" and "wbuf"
+> >>>   - clocks: should contain 1 entries for the module's clock
+> >>>   - clock-names: should contain "rpc"
+> >>
+> >>    I suspect we'd need the RPC/RPCD2 clocks mentioned as well (not 
+sure 
+> > yet)...
+> > 
+> > Need it ?
 > 
-> If mipi_dsi_host_register is not in probe, dsi panel will
-> probe fail or more delay.
+>    You seem to call clk_get_rate() on the module clock, I doubt that's
+> correct topologically...
 
-In [1], you have agreed this patch just for delay not for probe fail
-Remove 'probe fail'.in commit message.
+I think it's correct but just like Geert mentioned that there is no any 
+patch
+in drivers/clk/renesas/r8a77995-cpg-mssr.c adding RPC-related clocks.
 
-[1]
-http://lists.infradead.org/pipermail/linux-mediatek/2019-May/019836.html
 
+I patched dt-bindings/clock/r8a77995-cpg-mssr.h for some simple testing
+
+-#define R8A77995_CLK_RPC               29
+-#define R8A77995_CLK_RPCD2             30
++#define R8A77995_CLK_RPC               31
++#define R8A77995_CLK_RPCD2             32
+
+by clk_prepare_enable() & clk_disable_unprepare() with CPG_MOD 917 
+on D3 draak board, it is working fine.
+
+
+> >>
+> >>>   - SPI mode:git
+> >>>
+> >>>           rpc: rpc-if@ee200000 {
+> >>
+> >>    The node names should be generic, based on the device class. And 
+in 
+> > this
+> >> case I'd like to use "spi@ee200000" as otherwise dtc keeps bitching 
+like 
+> > below:
+> > 
+> > okay, patch to
+> > 
+> > rpc_if: spi@<...>
 > 
-> So move the mipi_dsi_host_register to probe from bind.
+>    That, or just keep the node label.
+
+okay.
+
+
+> >>>   - HF mode:
+> >>>           rpc: rpc-if@ee200000 {
+> >>
+> >>    Again, spi@<...>.
+> > 
+> > what about rpc_if: hf@<...>
 > 
-> Signed-off-by: Jitao Shi <jitao.shi@mediatek.com>
-> ---
->  drivers/gpu/drm/mediatek/mtk_dsi.c | 50 ++++++++++++++++++------------
->  1 file changed, 30 insertions(+), 20 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/mediatek/mtk_dsi.c b/drivers/gpu/drm/mediatek/mtk_dsi.c
-> index b00eb2d2e086..6c4ac37f983d 100644
-> --- a/drivers/gpu/drm/mediatek/mtk_dsi.c
-> +++ b/drivers/gpu/drm/mediatek/mtk_dsi.c
-> @@ -1045,12 +1045,6 @@ static int mtk_dsi_bind(struct device *dev, struct device *master, void *data)
->  		return ret;
->  	}
->  
-> -	ret = mipi_dsi_host_register(&dsi->host);
-> -	if (ret < 0) {
-> -		dev_err(dev, "failed to register DSI host: %d\n", ret);
-> -		goto err_ddp_comp_unregister;
-> -	}
-> -
->  	ret = mtk_dsi_create_conn_enc(drm, dsi);
->  	if (ret) {
->  		DRM_ERROR("Encoder create failed with %d\n", ret);
-> @@ -1060,8 +1054,6 @@ static int mtk_dsi_bind(struct device *dev, struct device *master, void *data)
->  	return 0;
->  
->  err_unregister:
-> -	mipi_dsi_host_unregister(&dsi->host);
-> -err_ddp_comp_unregister:
->  	mtk_ddp_comp_unregister(drm, &dsi->ddp_comp);
->  	return ret;
->  }
-> @@ -1097,31 +1089,37 @@ static int mtk_dsi_probe(struct platform_device *pdev)
->  
->  	dsi->host.ops = &mtk_dsi_ops;
->  	dsi->host.dev = dev;
-> +	dsi->dev = dev;
+>    Can't change the node name, as it's declared in the .dtsi files, not 
+*.dts
+> ones. And "spi" works for the HF case as well -- no complaints from dtc. 
+:-)
 
-This is for debug message, not for the timing of
-mipi_dsi_host_register(), so move to an independent patch.
+okay,
 
-Regards,
-CK
+ 
+Patch DTS to
+===============================================================> 
++Renesas R-Car Gen3 RPC-IF controller Device Tree Bindings
++---------------------------------------------------------
++
++RPC-IF supports both SPI NOR and HyperFlash (CFI-compliant flash)
++
++Required properties:
++- compatible: should be an SoC-specific compatible value, followed by
++                                "renesas,rcar-gen3-rpc" as a fallback.
++                                supported SoC-specific values are:
++                                "renesas,r8a77995-rpc"          (R-Car 
+D3)
++- reg: should contain three register areas:
++                first for RPC-IF registers,
++                second for the direct mapping read mode and
++                third for the write buffer area.
++- reg-names: should contain "regs", "dirmap" and "wbuf"
++- clocks: should contain 1 entries for the module's clock
++- clock-names: should contain "rpc"
++- power-domains: should contain system-controller(sysc) for 
+power-domain-cell
++- resets: should contain clock pulse generator(cpg) for reset-cell,
++                  power-domain-cell and clock-cell
++- #address-cells: should be 1
++- #size-cells: should be 0
++
++Example:
++- SPI mode:
++
++                rpc: spi@ee200000 {
++                                compatible = "renesas,r8a77995-rpc", 
+"renesas,rcar-gen3-rpc";
++                                reg = <0 0xee200000 0 0x200>, <0 
+0x08000000 0 0x4000000>,
++                                      <0 0xee208000 0 0x100>;
++                                reg-names = "regs", "dirmap", "wbuf";
++                                clocks = <&cpg CPG_MOD 917>;
++                                clock-names = "rpc";
++                                power-domains = <&sysc 
+R8A77995_PD_ALWAYS_ON>;
++                                resets = <&cpg 917>;
++                                #address-cells = <1>;
++                                #size-cells = <0>;
++
++                                flash@0 {
++                                                compatible = 
+"jedec,spi-nor";
++                                                reg = <0>;
++                                                spi-max-frequency = 
+<40000000>;
++                                                spi-tx-bus-width = <1>;
++                                                spi-rx-bus-width = <1>;
++                                };
++                };
++
++- HF mode:
++                rpc: spi@ee200000 {
++                                compatible = "renesas,r8a77995-rpc", 
+"renesas,rcar-gen3-rpc";
++                                reg = <0 0xee200000 0 0x200>, <0 
+0x08000000 0 0x4000000>,
++                                      <0 0xee208000 0 0x100>;
++                                reg-names = "regs", "dirmap", "wbuf";
++                                clocks = <&cpg CPG_MOD 917>;
++                                clock-names = "rpc";
++                                power-domains = <&sysc 
+R8A77995_PD_ALWAYS_ON>;
++                                resets = <&cpg 917>;
++                                #address-cells = <1>;
++                                #size-cells = <0>;
++
++                                flash@0 {
++                                                compatible = 
+"cypress,hyperflash", "cfi-flash";
++                                                reg = <0>;
++                                };
++                };
+===============================================================<
 
-> +	ret = mipi_dsi_host_register(&dsi->host);
-> +	if (ret < 0) {
-> +		dev_err(dev, "failed to register DSI host: %d\n", ret);
-> +		return ret;
-> +	}
->  
->  	ret = drm_of_find_panel_or_bridge(dev->of_node, 0, 0,
->  					  &dsi->panel, &dsi->bridge);
->  	if (ret)
-> -		return ret;
-> +		goto err_unregister_host;
->  
->  	dsi->engine_clk = devm_clk_get(dev, "engine");
->  	if (IS_ERR(dsi->engine_clk)) {
->  		ret = PTR_ERR(dsi->engine_clk);
->  		dev_err(dev, "Failed to get engine clock: %d\n", ret);
-> -		return ret;
-> +		goto err_unregister_host;
->  	}
->  
->  	dsi->digital_clk = devm_clk_get(dev, "digital");
->  	if (IS_ERR(dsi->digital_clk)) {
->  		ret = PTR_ERR(dsi->digital_clk);
->  		dev_err(dev, "Failed to get digital clock: %d\n", ret);
-> -		return ret;
-> +		goto err_unregister_host;
->  	}
->  
->  	dsi->hs_clk = devm_clk_get(dev, "hs");
->  	if (IS_ERR(dsi->hs_clk)) {
->  		ret = PTR_ERR(dsi->hs_clk);
->  		dev_err(dev, "Failed to get hs clock: %d\n", ret);
-> -		return ret;
-> +		goto err_unregister_host;
->  	}
->  
->  	regs = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> @@ -1129,33 +1127,35 @@ static int mtk_dsi_probe(struct platform_device *pdev)
->  	if (IS_ERR(dsi->regs)) {
->  		ret = PTR_ERR(dsi->regs);
->  		dev_err(dev, "Failed to ioremap memory: %d\n", ret);
-> -		return ret;
-> +		goto err_unregister_host;
->  	}
->  
->  	dsi->phy = devm_phy_get(dev, "dphy");
->  	if (IS_ERR(dsi->phy)) {
->  		ret = PTR_ERR(dsi->phy);
->  		dev_err(dev, "Failed to get MIPI-DPHY: %d\n", ret);
-> -		return ret;
-> +		goto err_unregister_host;
->  	}
->  
->  	comp_id = mtk_ddp_comp_get_id(dev->of_node, MTK_DSI);
->  	if (comp_id < 0) {
->  		dev_err(dev, "Failed to identify by alias: %d\n", comp_id);
-> -		return comp_id;
-> +		ret = comp_id;
-> +		goto err_unregister_host;
->  	}
->  
->  	ret = mtk_ddp_comp_init(dev, dev->of_node, &dsi->ddp_comp, comp_id,
->  				&mtk_dsi_funcs);
->  	if (ret) {
->  		dev_err(dev, "Failed to initialize component: %d\n", ret);
-> -		return ret;
-> +		goto err_unregister_host;
->  	}
->  
->  	irq_num = platform_get_irq(pdev, 0);
->  	if (irq_num < 0) {
-> -		dev_err(&pdev->dev, "failed to request dsi irq resource\n");
-> -		return -EPROBE_DEFER;
-> +		dev_err(&pdev->dev, "failed to get dsi irq_num: %d\n", irq_num);
-> +		ret = irq_num;
-> +		goto err_unregister_host;
->  	}
->  
->  	irq_set_status_flags(irq_num, IRQ_TYPE_LEVEL_LOW);
-> @@ -1163,14 +1163,24 @@ static int mtk_dsi_probe(struct platform_device *pdev)
->  			       IRQF_TRIGGER_LOW, dev_name(&pdev->dev), dsi);
->  	if (ret) {
->  		dev_err(&pdev->dev, "failed to request mediatek dsi irq\n");
-> -		return -EPROBE_DEFER;
-> +		goto err_unregister_host;
->  	}
->  
->  	init_waitqueue_head(&dsi->irq_wait_queue);
->  
->  	platform_set_drvdata(pdev, dsi);
->  
-> -	return component_add(&pdev->dev, &mtk_dsi_component_ops);
-> +	ret = component_add(&pdev->dev, &mtk_dsi_component_ops);
-> +	if (ret) {
-> +		dev_err(&pdev->dev, "failed to add component: %d\n", ret);
-> +		goto err_unregister_host;
-> +	}
-> +
-> +	return 0;
-> +
-> +err_unregister_host:
-> +	mipi_dsi_host_unregister(&dsi->host);
-> +	return ret;
->  }
->  
->  static int mtk_dsi_remove(struct platform_device *pdev)
+thanks & best regards,
+Mason
 
+
+CONFIDENTIALITY NOTE:
+
+This e-mail and any attachments may contain confidential information 
+and/or personal data, which is protected by applicable laws. Please be 
+reminded that duplication, disclosure, distribution, or use of this e-mail 
+(and/or its attachments) or any part thereof is prohibited. If you receive 
+this e-mail in error, please notify us immediately and delete this mail as 
+well as its attachment(s) from your system. In addition, please be 
+informed that collection, processing, and/or use of personal data is 
+prohibited unless expressly permitted by personal data protection laws. 
+Thank you for your attention and cooperation.
+
+Macronix International Co., Ltd.
+
+=====================================================================
+
+
+
+============================================================================
+
+CONFIDENTIALITY NOTE:
+
+This e-mail and any attachments may contain confidential information and/or personal data, which is protected by applicable laws. Please be reminded that duplication, disclosure, distribution, or use of this e-mail (and/or its attachments) or any part thereof is prohibited. If you receive this e-mail in error, please notify us immediately and delete this mail as well as its attachment(s) from your system. In addition, please be informed that collection, processing, and/or use of personal data is prohibited unless expressly permitted by personal data protection laws. Thank you for your attention and cooperation.
+
+Macronix International Co., Ltd.
+
+=====================================================================
 
