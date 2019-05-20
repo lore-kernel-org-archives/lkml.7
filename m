@@ -2,130 +2,96 @@ Return-Path: <SRS0=lq4r=TU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2A39C04AB4
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 02:30:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09570C072AD
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 02:34:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8922020675
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 02:30:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CBB442082E
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 02:34:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1558319653;
+	bh=ju+3KOQugsflVCr4eHF7IRJuhvpcf8WSl+CMXgavYLk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=O9ttmAFei1c9VsaYM5h1K+R9yOXstqwq2MlPZvwHDBh98p9xKirLpSVekWWddMThH
+	 Su5DjlB983XV+P8W5SVLuPcF1XrL4Wiha25j8PMlr79U3jJNzdEN4Biifym6hiyBBE
+	 n2xI3udHNZMx3W+KHML/GLuyF+f+xa1GBEOEoS9s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730052AbfETCaG (ORCPT
+        id S1730077AbfETCeM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 19 May 2019 22:30:06 -0400
-Received: from mailgw02.mediatek.com ([1.203.163.81]:6456 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1729975AbfETCaF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 19 May 2019 22:30:05 -0400
-X-UUID: 2c25f6d257554899b5db5360f97876a1-20190520
-X-UUID: 2c25f6d257554899b5db5360f97876a1-20190520
-Received: from mtkcas35.mediatek.inc [(172.27.4.253)] by mailgw02.mediatek.com
-        (envelope-from <chunfeng.yun@mediatek.com>)
-        (mailgw01.mediatek.com ESMTP with TLS)
-        with ESMTP id 1068025239; Mon, 20 May 2019 10:29:51 +0800
-Received: from MTKCAS36.mediatek.inc (172.27.4.186) by MTKMBS31N2.mediatek.inc
- (172.27.4.87) with Microsoft SMTP Server (TLS) id 15.0.1395.4; Mon, 20 May
- 2019 10:29:50 +0800
-Received: from [10.17.3.153] (172.27.4.253) by MTKCAS36.mediatek.inc
- (172.27.4.170) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Mon, 20 May 2019 10:29:49 +0800
-Message-ID: <1558319389.10179.347.camel@mhfsdcap03>
-Subject: Re: [v3 PATCH] dt-binding: usb: add usb-role-switch property
-From:   Chunfeng Yun <chunfeng.yun@mediatek.com>
-To:     Heikki Krogerus <heikki.krogerus@linux.intel.com>
-CC:     Rob Herring <robh+dt@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sun, 19 May 2019 22:34:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37904 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726102AbfETCeM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 19 May 2019 22:34:12 -0400
+Received: from dragon (98.142.130.235.16clouds.com [98.142.130.235])
+        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id EA50020675;
+        Mon, 20 May 2019 02:34:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1558319651;
+        bh=ju+3KOQugsflVCr4eHF7IRJuhvpcf8WSl+CMXgavYLk=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=jrxS4/h37zf79nS70kW2xHZzvBgXySi9WZikYoXk80RNIoziudZdyfx/IjHE5rdh8
+         gPP8eToB0AJRjIWv8lMM11zSIudBpnl+JPymfn5JO0IPs4XYvm4T0bzuiHqnh/cupF
+         gzLEMHOGoRvwpzposYs8pRBMqAppE1wBNQy49+Aw=
+Date:   Mon, 20 May 2019 10:33:16 +0800
+From:   Shawn Guo <shawnguo@kernel.org>
+To:     Leo Yan <leo.yan@linaro.org>
+Cc:     Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        "Matthias Brugger" <matthias.bgg@gmail.com>,
-        <linux-usb@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>,
-        Biju Das <biju.das@bp.renesas.com>,
-        Yu Chen <chenyu56@huawei.com>, Min Guo <min.guo@mediatek.com>,
-        Felipe Balbi <felipe.balbi@linux.intel.com>
-Date:   Mon, 20 May 2019 10:29:49 +0800
-In-Reply-To: <20190517132721.GB1887@kuha.fi.intel.com>
-References: <c3596e996c9ab39c6b9bc14b93309244c4a55014.1557306151.git.chunfeng.yun@mediatek.com>
-         <20190517132721.GB1887@kuha.fi.intel.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.2.3-0ubuntu6 
-Content-Transfer-Encoding: 7bit
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Mike Leach <mike.leach@linaro.org>,
+        Wei Xu <xuwei5@hisilicon.com>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Andy Gross <agross@kernel.org>,
+        David Brown <david.brown@linaro.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Liviu Dudau <liviu.dudau@arm.com>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Orson Zhai <orsonzhai@gmail.com>,
+        Baolin Wang <baolin.wang@linaro.org>,
+        Chunyan Zhang <zhang.lyra@gmail.com>,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        Chris Healy <cphealy@gmail.com>, Andrew Lunn <andrew@lunn.ch>
+Subject: Re: [PATCH v2 02/11] ARM: dts: imx7s: Update coresight DT bindings
+Message-ID: <20190520023315.GI15856@dragon>
+References: <20190508021902.10358-1-leo.yan@linaro.org>
+ <20190508021902.10358-3-leo.yan@linaro.org>
 MIME-Version: 1.0
-X-MTK:  N
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190508021902.10358-3-leo.yan@linaro.org>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 2019-05-17 at 16:27 +0300, Heikki Krogerus wrote:
-> On Wed, May 08, 2019 at 05:17:44PM +0800, Chunfeng Yun wrote:
-> > Add a property usb-role-switch to tell the driver that use
-> > USB Role Switch framework to handle the role switch,
-> > it's useful when the driver has already supported other ways,
-> > such as extcon framework etc.
-> > 
-> > Cc: Biju Das <biju.das@bp.renesas.com>
-> > Cc: Yu Chen <chenyu56@huawei.com>
-> > Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
+On Wed, May 08, 2019 at 10:18:53AM +0800, Leo Yan wrote:
+> CoreSight DT bindings have been updated, thus the old compatible strings
+> are obsolete and the drivers will report warning if DTS uses these
+> obsolete strings.
 > 
-> Who is meant to pick this? 
+> This patch switches to the new bindings for CoreSight dynamic funnel and
+> static replicator, so can dismiss warning during initialisation.
+> 
+> Cc: Shawn Guo <shawnguo@kernel.org>
+> Cc: Chris Healy <cphealy@gmail.com>
+> Cc: Andrew Lunn <andrew@lunn.ch>
+> Cc: Fabio Estevam <festevam@gmail.com>
+> Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
+> Cc: Suzuki K Poulose <suzuki.poulose@arm.com>
+> Signed-off-by: Leo Yan <leo.yan@linaro.org>
 
-> Can you include this in your series where
-> you introduce that USB Type-B GPIO connector driver?
-> 
-Ok, I'll do it if need
-
-> FWIW:
-> 
-> Reviewed-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-> 
-> > ---
-> > v3:
-> >     add property type, modify description suggested by Heikki
-> > 
-> > v2:
-> >     describe it in terms of h/w functionality suggested by Rob
-> > 
-> > v1:
-> >     the property is discussed in:
-> >     [v2,2/7] dt-bindings: usb: renesas_usb3: add usb-role-switch property
-> >     https://patchwork.kernel.org/patch/10852497/
-> > 
-> >     Mediatek and Hisilicon also try to use it:
-> >     [v4,3/6] dt-bindings: usb: mtu3: add properties about USB Role Switch
-> >     https://patchwork.kernel.org/patch/10918385/
-> >     [v4,6/6] usb: mtu3: register a USB Role Switch for dual role mode
-> >     https://patchwork.kernel.org/patch/10918367/
-> > 
-> >     [v6,10/13] usb: dwc3: Registering a role switch in the DRD code
-> >     https://patchwork.kernel.org/patch/10909981/
-> > ---
-> >  Documentation/devicetree/bindings/usb/generic.txt | 4 ++++
-> >  1 file changed, 4 insertions(+)
-> > 
-> > diff --git a/Documentation/devicetree/bindings/usb/generic.txt b/Documentation/devicetree/bindings/usb/generic.txt
-> > index 0a74ab8dfdc2..cf5a1ad456e6 100644
-> > --- a/Documentation/devicetree/bindings/usb/generic.txt
-> > +++ b/Documentation/devicetree/bindings/usb/generic.txt
-> > @@ -30,6 +30,10 @@ Optional properties:
-> >  			optional for OTG device.
-> >   - adp-disable: tells OTG controllers we want to disable OTG ADP, ADP is
-> >  			optional for OTG device.
-> > + - usb-role-switch: boolean, indicates that the device is capable of assigning
-> > +			the USB data role (USB host or USB device) for a given
-> > +			USB connector, such as Type-C, Type-B(micro).
-> > +			see connector/usb-connector.txt.
-> >  
-> >  This is an attribute to a USB controller such as:
-> >  
-> > -- 
-> > 2.21.0
-> 
-> thanks,
-> 
-
-
+Applied, thanks.
