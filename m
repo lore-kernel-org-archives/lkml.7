@@ -2,74 +2,172 @@ Return-Path: <SRS0=lq4r=TU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68420C04AAC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 19:19:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12027C04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 19:19:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 323C5206B6
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 19:19:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="IRgkt9b9"
+	by mail.kernel.org (Postfix) with ESMTP id E4905206B6
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 19:19:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726199AbfETTTC (ORCPT
+        id S1725985AbfETTTq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 15:19:02 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:36120 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725536AbfETTTC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 15:19:02 -0400
-Received: by mail-ot1-f66.google.com with SMTP id c3so14075806otr.3;
-        Mon, 20 May 2019 12:19:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ILhuswdCRnMUMBRmoi3Za/asPHf+23D/dshJBOh3X34=;
-        b=IRgkt9b9zjWY7xSWKf3ivsymx+TC/KfBZhHDWrkSWQqWt6cYLLu0r0mMd+cd1BFYUz
-         cK3qTiWLGAVnFU035zQqlNUcbIC17/XLJbfFmd74MeixlEr0o9e3+PtNAAqkTVN7zf2o
-         LeX6rTJy6W4L/MtBXIU5piiG5DlQKQnwFsRmpq96AC3IXTiqCTT5EEmqUNMDc7ON2FY2
-         tg8M4yNg4Z22Na3rD4AB3Ji5+OWe/fXvUxsy6HQ189KOgw6it7Zdiy7wFbDwJAow9sTk
-         NJ/2Czl6OhEa9KaxX5Wd9IWIQaeBy2w5I/VoAChefH6yUqlSfD4Yn2pn4wNHKuo9fkDX
-         WCBA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ILhuswdCRnMUMBRmoi3Za/asPHf+23D/dshJBOh3X34=;
-        b=EryjcNzR3iVXbl30T3uR+IcwcMCtCuhuFbqAiiemNDbjIEXhXZ4TSHHorz9vJxfmam
-         sW+7dn2RLxNA1jTCpmRiVEJPW7tqqX2nzRGutZIpzXkaGQPiAK6YysUf1+P7ynTo/3F/
-         TFQCEExbIjOJOZXlEUysexRRI4W1dV8iMiXgBChb4NDgFRRJg61SFHPglgUXhDJlaaxY
-         J5PNIiH3VrcUBP2+Rno5COu6CF//BTQ5pBjAus1tY1v1CidxIszUXxZpY3pIqQCh0gpk
-         voFBQgEOE53t9UfDulfkgid9q490/9DRLtT9ZcSIZyx4vB+9T1teoxNsYnGbiVvW2zwU
-         Ivvw==
-X-Gm-Message-State: APjAAAUjgQOoBQ2jgJcIXc7KSmH6Lh0+DeCpYZlqP71cxi1GUqHDnzpU
-        4GCBqYii/WrZ4KcCfJevaJ7g9TUUYXORcjKtgzcvTpf8Or8=
-X-Google-Smtp-Source: APXvYqxOKdOcy+woeXdOWs7xjYQizw+lQeSDcB2n1Zo2IaRnDlaZSguwn9t7esINb/joJB11sVjoVDP/NqKnjOr2KuM=
-X-Received: by 2002:a9d:744d:: with SMTP id p13mr26102765otk.96.1558379940532;
- Mon, 20 May 2019 12:19:00 -0700 (PDT)
+        Mon, 20 May 2019 15:19:46 -0400
+Received: from mga09.intel.com ([134.134.136.24]:8432 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725372AbfETTTp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 15:19:45 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 May 2019 12:19:45 -0700
+X-ExtLoop1: 1
+Received: from jacob-builder.jf.intel.com (HELO jacob-builder) ([10.7.199.155])
+  by orsmga002.jf.intel.com with ESMTP; 20 May 2019 12:19:45 -0700
+Date:   Mon, 20 May 2019 12:22:41 -0700
+From:   Jacob Pan <jacob.jun.pan@linux.intel.com>
+To:     Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
+Cc:     iommu@lists.linux-foundation.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        Joerg Roedel <joro@8bytes.org>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Eric Auger <eric.auger@redhat.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        "Tian, Kevin" <kevin.tian@intel.com>,
+        Raj Ashok <ashok.raj@intel.com>,
+        Andriy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        jacob.jun.pan@linux.intel.com
+Subject: Re: [PATCH v3 09/16] iommu: Introduce guest PASID bind function
+Message-ID: <20190520122241.0db13f14@jacob-builder>
+In-Reply-To: <20190516091429.6d06f7e1@jacob-builder>
+References: <1556922737-76313-1-git-send-email-jacob.jun.pan@linux.intel.com>
+        <1556922737-76313-10-git-send-email-jacob.jun.pan@linux.intel.com>
+        <d652546a-c6ca-1cc6-1924-b016bd81a792@arm.com>
+        <20190516091429.6d06f7e1@jacob-builder>
+Organization: OTC
+X-Mailer: Claws Mail 3.13.2 (GTK+ 2.24.30; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-References: <20190520140421.30074-1-narmstrong@baylibre.com>
-In-Reply-To: <20190520140421.30074-1-narmstrong@baylibre.com>
-From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Date:   Mon, 20 May 2019 21:18:49 +0200
-Message-ID: <CAFBinCBi_tSMMq9sUuGeTU8-KWDWczwJ=utAv4oARVTNgiDUJw@mail.gmail.com>
-Subject: Re: [PATCH] pwm: pwm-meson: update with SPDX Licence identifier
-To:     Neil Armstrong <narmstrong@baylibre.com>
-Cc:     thierry.reding@gmail.com, linux-pwm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-amlogic@lists.infradead.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 20, 2019 at 4:04 PM Neil Armstrong <narmstrong@baylibre.com> wrote:
->
-> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
-Reviewed-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+On Thu, 16 May 2019 09:14:29 -0700
+Jacob Pan <jacob.jun.pan@linux.intel.com> wrote:
+
+> On Thu, 16 May 2019 15:14:40 +0100
+> Jean-Philippe Brucker <jean-philippe.brucker@arm.com> wrote:
+> 
+> > Hi Jacob,
+> > 
+> > On 03/05/2019 23:32, Jacob Pan wrote:  
+> > > +/**
+> > > + * struct gpasid_bind_data - Information about device and guest
+> > > PASID binding
+> > > + * @gcr3:	Guest CR3 value from guest mm
+> > > + * @pasid:	Process address space ID used for the guest mm
+> > > + * @addr_width:	Guest address width. Paging mode can also
+> > > be derived.
+> > > + */
+> > > +struct gpasid_bind_data {
+> > > +	__u64 gcr3;
+> > > +	__u32 pasid;
+> > > +	__u32 addr_width;
+> > > +	__u32 flags;
+> > > +#define	IOMMU_SVA_GPASID_SRE	BIT(0) /* supervisor
+> > > request */
+> > > +	__u8 padding[4];
+> > > +};    
+> > 
+> > Could you wrap this structure into a generic one like we now do for
+> > bind_pasid_table? It would make the API easier to extend, because if
+> > we ever add individual PASID bind on Arm (something I'd like to do
+> > for virtio-iommu, eventually) it will have different parameters, as
+> > our PASID table entry has a lot of fields describing the page table
+> > format.
+> > 
+> > Maybe something like the following would do?
+> > 
+> > struct gpasid_bind_data {
+> > #define IOMMU_GPASID_BIND_VERSION_1 1
+> > 	__u32 version;
+> > #define IOMMU_GPASID_BIND_FORMAT_INTEL_VTD	1
+> > 	__u32 format;
+> > 	union {
+> > 		// the current gpasid_bind_data:
+> > 		struct gpasid_bind_intel_vtd vtd;
+> > 	};
+> > };
+> >   
+
+Could you review the struct below? I am trying to extract the
+common fileds as much as possible. Didn't do exactly as you suggested
+to keep vendor specific data in separate struct under the same union.
+
+Also, can you review the v3 ioasid allocator common code patches? I am
+hoping we can get the common code in v5.3 so that we can focus on the
+vendor specific part. The common code should include bind_guest_pasid
+and ioasid allocator.
+https://lkml.org/lkml/2019/5/3/787
+https://lkml.org/lkml/2019/5/3/780
+
+Thanks,
+
+Jacob
+
+
+/**
+ * struct gpasid_bind_data_vtd - Intel VT-d specific data on device and guest
+ * SVA binding.
+ *
+ * @flags:	VT-d PASID table entry attributes
+ * @pat:	Page attribute table data to compute effective memory type
+ * @emt:	Extended memory type
+ *
+ * Only guest vIOMMU selectable and effective options are passed down to
+ * the host IOMMU.
+ */
+struct gpasid_bind_data_vtd {
+#define	IOMMU_SVA_VTD_GPASID_SRE	BIT(0) /* supervisor request */
+#define	IOMMU_SVA_VTD_GPASID_EAFE	BIT(1) /* extended access enable */
+#define	IOMMU_SVA_VTD_GPASID_PCD	BIT(2) /* page-level cache disable */
+#define	IOMMU_SVA_VTD_GPASID_PWT	BIT(3) /* page-level write through */
+#define	IOMMU_SVA_VTD_GPASID_EMTE	BIT(4) /* extended memory type enable */
+#define	IOMMU_SVA_VTD_GPASID_CD		BIT(5) /* PASID-level cache disable */
+	__u64 flags;
+	__u32 pat;
+	__u32 emt;
+};
+
+/**
+ * struct gpasid_bind_data - Information about device and guest PASID binding
+ * @version:	Version of this data structure
+ * @format:	PASID table entry format
+ * @flags:	Additional information on guest bind request
+ * @gpgd:	Guest page directory base of the guest mm to bind
+ * @hpasid:	Process address space ID used for the guest mm in host IOMMU
+ * @gpasid:	Process address space ID used for the guest mm in guest IOMMU
+ * @addr_width:	Guest address width. Paging mode can also be derived.
+ * @vtd:	Intel VT-d specific data
+ */
+struct gpasid_bind_data {
+#define IOMMU_GPASID_BIND_VERSION_1	1
+	__u32 version;
+#define IOMMU_PASID_FORMAT_INTEL_VTD	1
+	__u32 format;
+#define	IOMMU_SVA_GPASID_VAL	BIT(1) /* guest PASID valid */
+	__u64 flags;
+	__u64 gpgd;
+	__u64 hpasid;
+	__u64 gpasid;
+	__u32 addr_width;
+	/* Vendor specific data */
+	union {
+		struct gpasid_bind_data_vtd vtd;
+	};
+};
+
