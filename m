@@ -2,188 +2,110 @@ Return-Path: <SRS0=lq4r=TU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95D89C04AAC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 15:53:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB0EFC04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 15:54:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5DAC421726
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 15:53:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558367610;
-	bh=ac1b1jCxLjY2FZmceWcc+JaCxsTCvtllKwsgmNg1va8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=xuif5Zjb0Byq1TN0D9rWl9fWEP0QIBxUXNb3gURVZPgBJJdlcpJDG/KarYXBS05AH
-	 afyCGN3fjaVtAE97dVCrUJmGO8ZkStAqxORYKAqIS6MvDGpYu5HbUfes4fuSeTs6ye
-	 jSMfKhPbZNDLfeWlyEJCYapbuwW6GjQIp9SdnCqc=
+	by mail.kernel.org (Postfix) with ESMTP id C994F2171F
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 15:54:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392374AbfETPx3 (ORCPT
+        id S2388940AbfETPyW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 11:53:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33294 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732739AbfETPx2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 11:53:28 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DAA062171F;
-        Mon, 20 May 2019 15:53:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558367607;
-        bh=ac1b1jCxLjY2FZmceWcc+JaCxsTCvtllKwsgmNg1va8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Xo4ZHT4ml6AeVQ6aPR0ZrojY+F5puItLp/Mpg85/Y29AxD13EHRmJHLfOoXfHRLbA
-         snfUyh6yWOzFoqp9Drcl803jpNQOI6/7jhVwByE92ud2sbYgzI8xPY4q1/Zd0x8gX4
-         EWLK5X/UpCJkRZEpJhAiID4sjmSRv+eFU/Y59MAU=
-Date:   Mon, 20 May 2019 17:53:25 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Liming Sun <lsun@mellanox.com>
-Cc:     Andy Shevchenko <andy@infradead.org>,
-        Darren Hart <dvhart@infradead.org>,
-        Vadim Pasternak <vadimp@mellanox.com>,
-        David Woods <dwoods@mellanox.com>,
-        "platform-driver-x86@vger.kernel.org" 
-        <platform-driver-x86@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        "Paul E. McKenney" <paulmck@linux.ibm.com>
-Subject: Re: [PATCH v5 2/2] platform/mellanox/mlxbf-bootctl: Add the ABI
- definitions
-Message-ID: <20190520155325.GA13939@kroah.com>
-References: <0b74e9ad12360b56bc0a3c2ca972798c424f2610.1548790896.git.lsun@mellanox.com>
- <1558115345-32476-2-git-send-email-lsun@mellanox.com>
- <20190517175926.GA24535@kroah.com>
- <DB6PR05MB32235A6F891E438131471CE2A10B0@DB6PR05MB3223.eurprd05.prod.outlook.com>
- <20190518063501.GA26163@kroah.com>
- <DB6PR05MB322356D29192EAED104AA47EA1060@DB6PR05MB3223.eurprd05.prod.outlook.com>
+        Mon, 20 May 2019 11:54:22 -0400
+Received: from relay7-d.mail.gandi.net ([217.70.183.200]:53239 "EHLO
+        relay7-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732031AbfETPyV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 11:54:21 -0400
+X-Originating-IP: 90.88.22.185
+Received: from windsurf (aaubervilliers-681-1-80-185.w90-88.abo.wanadoo.fr [90.88.22.185])
+        (Authenticated sender: thomas.petazzoni@bootlin.com)
+        by relay7-d.mail.gandi.net (Postfix) with ESMTPSA id E5F2D20011;
+        Mon, 20 May 2019 15:54:10 +0000 (UTC)
+Date:   Mon, 20 May 2019 17:54:10 +0200
+From:   Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+To:     Heinrich Schuchardt <xypron.glpk@gmx.de>
+Cc:     Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>,
+        Gregory Clement <gregory.clement@bootlin.com>,
+        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Rob Herring <robh+dt@kernel.org>,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH 1/1] arm64: dts: marvell: mcbin: enlarge PCI memory
+ window
+Message-ID: <20190520175410.4c941bfc@windsurf>
+In-Reply-To: <20190517161123.9293-1-xypron.glpk@gmx.de>
+References: <20190517161123.9293-1-xypron.glpk@gmx.de>
+Organization: Bootlin
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <DB6PR05MB322356D29192EAED104AA47EA1060@DB6PR05MB3223.eurprd05.prod.outlook.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 20, 2019 at 03:20:02PM +0000, Liming Sun wrote:
-> Please see response inline.
+Hello Heinrich,
+
+On Fri, 17 May 2019 18:11:23 +0200
+Heinrich Schuchardt <xypron.glpk@gmx.de> wrote:
+
+> Running a graphics adapter on the MACCHIATObin fails due to an
+> insufficently sized memory window.
 > 
-> > -----Original Message-----
-> > From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> > Sent: Saturday, May 18, 2019 2:35 AM
-> > To: Liming Sun <lsun@mellanox.com>
-> > Cc: Andy Shevchenko <andy@infradead.org>; Darren Hart <dvhart@infradead.org>; Vadim Pasternak <vadimp@mellanox.com>; David
-> > Woods <dwoods@mellanox.com>; platform-driver-x86@vger.kernel.org; linux-kernel@vger.kernel.org; David S. Miller
-> > <davem@davemloft.net>; Mauro Carvalho Chehab <mchehab+samsung@kernel.org>; Jonathan Cameron
-> > <Jonathan.Cameron@huawei.com>; Nicolas Ferre <nicolas.ferre@microchip.com>; Paul E. McKenney <paulmck@linux.ibm.com>
-> > Subject: Re: [PATCH v5 2/2] platform/mellanox/mlxbf-bootctl: Add the ABI definitions
-> > 
-> > On Fri, May 17, 2019 at 08:36:53PM +0000, Liming Sun wrote:
-> > > Thanks Greg for the comments!  Please see my response inline.
-> > >
-> > > Regards,
-> > > - Liming
-> > >
-> > > > -----Original Message-----
-> > > > From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> > > > Sent: Friday, May 17, 2019 1:59 PM
-> > > > To: Liming Sun <lsun@mellanox.com>
-> > > > Cc: Andy Shevchenko <andy@infradead.org>; Darren Hart <dvhart@infradead.org>; Vadim Pasternak <vadimp@mellanox.com>;
-> > David
-> > > > Woods <dwoods@mellanox.com>; platform-driver-x86@vger.kernel.org; linux-kernel@vger.kernel.org; David S. Miller
-> > > > <davem@davemloft.net>; Mauro Carvalho Chehab <mchehab+samsung@kernel.org>; Jonathan Cameron
-> > > > <Jonathan.Cameron@huawei.com>; Nicolas Ferre <nicolas.ferre@microchip.com>; Paul E. McKenney <paulmck@linux.ibm.com>
-> > > > Subject: Re: [PATCH v5 2/2] platform/mellanox/mlxbf-bootctl: Add the ABI definitions
-> > > >
-> > > > On Fri, May 17, 2019 at 01:49:05PM -0400, Liming Sun wrote:
-> > > > > This commit adds the ABI definitions exposed to userspace for
-> > > > > the platform/mellanox/mlxbf-bootctl driver.
-> > > > >
-> > > > > Reviewed-by: Vadim Pasternak <vadimp@mellanox.com>
-> > > > > Signed-off-by: Liming Sun <lsun@mellanox.com>
-> > > > > ---
-> > > > >  .../ABI/testing/sysfs-platform-mellanox-bootctl    | 58 ++++++++++++++++++++++
-> > > > >  MAINTAINERS                                        |  1 +
-> > > > >  2 files changed, 59 insertions(+)
-> > > > >  create mode 100644 Documentation/ABI/testing/sysfs-platform-mellanox-bootctl
-> > > > >
-> > > > > diff --git a/Documentation/ABI/testing/sysfs-platform-mellanox-bootctl b/Documentation/ABI/testing/sysfs-platform-mellanox-
-> > > > bootctl
-> > > > > new file mode 100644
-> > > > > index 0000000..19a14db
-> > > > > --- /dev/null
-> > > > > +++ b/Documentation/ABI/testing/sysfs-platform-mellanox-bootctl
-> > > > > @@ -0,0 +1,58 @@
-> > > > > +What:		/sys/bus/platform/drivers/mlxbf-bootctl/lifecycle_state
-> > > > > +Date:		May 2019
-> > > > > +KernelVersion:	5.3
-> > > > > +Contact:	"Liming Sun <lsun@mellanox.com>"
-> > > > > +Description:
-> > > > > +		The Life-cycle state of the SoC, which could be one of the
-> > > > > +		following values.
-> > > > > +		  Production - Production state and can be updated to secure
-> > > > > +		  GA Secured - Secure chip and not able to change state
-> > > > > +		  GA Non-Secured - Non-Secure chip and not able to change state
-> > > > > +		  RMA - Return Merchandise Authorization
-> > > >
-> > > > A "driver" does not have a lifecycle state, a "device" does.
-> > > >
-> > > > You are putting all of these attributes in the wrong place.  Put them on
-> > > > your device please, not the driver.  driver-specific attributes are
-> > > > _VERY_ rare, and only for things that can modify/show for all devices
-> > > > attached to that driver.
-> > >
-> > > This driver is running on the ARM processor of the SoC. The 'device' is
-> > > the SoC itself. That's to say, there is only one device here attached to
-> > > the driver and the driver state will also be the device state.
-> > 
-> > That might be true today, but maybe not tomorrow :)
-> > 
-> > Anyway, again, this is device state, not driver state.
+> Enlarge the memory window for the PCIe slot to 512 MiB.
 > 
-> Yes, I agree. I discussed with the team and will move these attributes
-> under device (since they could be all considered as device state).
-
-Great.
-
-> > > This interface has been used by user-space applications for a couple of
-> > > releases. It'll be great if it could stay in such way for compatibility. Please
-> > > advise if this is strongly preferred to move them under devices.
-> > 
-> > So this is code that is already in the tree, and is just now being
-> > documented?  What .c file(s) is this referring to?
+> With the patch I am able to use a GT710 graphics adapter with 1 GB onboard
+> memory.
 > 
-> This code is not in the kernel tree yet. It has been in Mellanox BlueField
-> SW packages for a couple of releases and is trying to be up-streamed now.
-
-Ok, then whatever happened in the past, before anyone in the community
-reviewed your code, and merged it into the kernel tree, does not count :)
-
-Where is the first patch in this series?  I'll be glad to review your
-actual sysfs implementation if you point me at it.
-
-> > As for "comptability", sysfs is made such that if a file is not present,
-> > userspace should be able to survive, that is why it is
-> > one-value-per-file.  What tool is using this, and where is the source
-> > for it?
+> These are the mapped memory areas that the graphics adapter is actually
+> using:
 > 
-> The latest 2.0 code can be found at link
-> https://github.com/Mellanox/mlxbf-bootctl/tree/2.0
+> Region 0: Memory at cc000000 (32-bit, non-prefetchable) [size=16M]
+> Region 1: Memory at c0000000 (64-bit, prefetchable) [size=128M]
+> Region 3: Memory at c8000000 (64-bit, prefetchable) [size=32M]
+> Region 5: I/O ports at 1000 [size=128]
+> Expansion ROM at ca000000 [disabled] [size=512K]
 > 
-> In file mlxbf-bootctl.c, currently it uses the 'drivers' path as sysfs path.
-> #define SYS_PATH "/sys/bus/platform/drivers/mlx-bootctl". We could
-> update it to support both paths.
+> Signed-off-by: Heinrich Schuchardt <xypron.glpk@gmx.de>
+> ---
+>  arch/arm64/boot/dts/marvell/armada-8040-mcbin.dtsi | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/marvell/armada-8040-mcbin.dtsi b/arch/arm64/boot/dts/marvell/armada-8040-mcbin.dtsi
+> index 329f8ceeebea..205071b45a32 100644
+> --- a/arch/arm64/boot/dts/marvell/armada-8040-mcbin.dtsi
+> +++ b/arch/arm64/boot/dts/marvell/armada-8040-mcbin.dtsi
+> @@ -184,6 +184,8 @@
+>  	num-lanes = <4>;
+>  	num-viewport = <8>;
+>  	reset-gpios = <&cp0_gpio2 20 GPIO_ACTIVE_LOW>;
+> +	ranges = <0x81000000 0x0 0xf9010000 0x0 0xf9010000 0x0 0x10000
+> +		  0x82000000 0x0 0xc0000000 0x0 0xc0000000 0x0 0x20000000>;
 
-Please do so.
+While I understand the change, I find it is a bit of a "one-off"
+solution, which will only work specifically for the MacchiatoBin. But
+admittedly, there isn't really a good generic solution: depending on
+the number of PCIe ports and what you connect to them, you will need
+windows of different sizes.
 
-thanks,
+On older Armada platforms, it works a bit better because we have a
+single PCIe MEM aperture and a single PCIe I/O aperture, from which all
+PCIe ports allocate: each PCIe interface is a child bus of an emulated
+root port.
 
-greg k-h
+Unfortunately, on Armada 7K/8K, each PCIe interface is seen as an
+independent root complex, so we have one PCIe I/O aperture and one PCIe
+MEM aperture for each.
+
+Thomas
+-- 
+Thomas Petazzoni, CTO, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
