@@ -2,95 +2,99 @@ Return-Path: <SRS0=lq4r=TU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CBB6DC04AAC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 21:44:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D716EC04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 21:44:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 978182171F
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 21:44:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9AEFA2171F
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 21:44:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aLWsAGV9"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="F4GXlucu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726262AbfETVoo (ORCPT
+        id S1726646AbfETVoq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 17:44:44 -0400
-Received: from mail-qt1-f176.google.com ([209.85.160.176]:36253 "EHLO
-        mail-qt1-f176.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725978AbfETVon (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 17:44:43 -0400
-Received: by mail-qt1-f176.google.com with SMTP id a17so18169053qth.3
-        for <linux-kernel@vger.kernel.org>; Mon, 20 May 2019 14:44:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=syIucGvkYPsk144lQ5pJgQSBGwyVOOPuqC44FRwBLoY=;
-        b=aLWsAGV9r9wzM/rvq4OOno1lkAx/+8EPCBmykRQWhQnOe5zfw9nI5r1rN7eAOL0o0P
-         pHiWhuWoGsSepg+riMty2MO0Vlauv4tBnK8Zo9QeGNjyKpKnNFCT/tIChi5IzRk/vTtq
-         Wk3m3d0XDPg6qP/XpmmICgDVQkhbSOgVED0PbIO8V4a5dpiJMGDKg7ujs8EVkg0MBRGL
-         rV0vCQg6sfcG2kevGcHxTX9sPCmJHYy8FRc16CW19LaFyyfft6CTlW5Zr/iUaDZUa77F
-         DmwJLzTKldxlvUl9m0gBdZ8gFcR382rvnS7Q3RIcBdJl7GGyigXJj526mxgbsNiWyGDe
-         6sUQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=syIucGvkYPsk144lQ5pJgQSBGwyVOOPuqC44FRwBLoY=;
-        b=cSFPLVpgFukCVyid9Snjy0sr67raGwTaQFSuaGwkX2ZY2a5nolaY8iMxIGNJ+dMro4
-         5ORE7zt5TdpvOkl7v9B0yK/01IbN0SMzh7hZAFF07pVN7hSIlEiFAKgfFWTRnDjQzvpA
-         DbjuXO/cHQX/FdWhkm4q2Bu9sTJAhSQHQMfhzlD9eZOn0U09vevhLxCwv7R7dwuMGIG+
-         YqErwZKlLgoXjrVxqGnSYTfYIISvK/IE/pJSdeLNE03D1xuCDIWeQOENaK25Y1tUEAPg
-         kz/hclI6XKoxiwwbuVq6pUkAnsBM2JmaMN7tyfV911ZK6iP71loPABPaI7FCrveCNB3d
-         kL0w==
-X-Gm-Message-State: APjAAAUCO0vcsytDKJyzqgaef2H8+pcvsGJzDtrQ5Xf6biAkeuAULutW
-        64t9kW+KScT23ujurTdxp+KUhatV
-X-Google-Smtp-Source: APXvYqwOyBqwZAtDzmUFi7dkBtCIdNUoDg6WfEsDHAj9WuD4UrN/QQ4AkQt341XaSCsRsI41ExGQ7Q==
-X-Received: by 2002:a0c:9654:: with SMTP id 20mr60930126qvy.109.1558388682123;
-        Mon, 20 May 2019 14:44:42 -0700 (PDT)
-Received: from localhost.localdomain ([179.185.210.219])
-        by smtp.gmail.com with ESMTPSA id t30sm11427530qtc.80.2019.05.20.14.44.39
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 20 May 2019 14:44:41 -0700 (PDT)
-From:   Marcos Paulo de Souza <marcos.souza.org@gmail.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Marcos Paulo de Souza <marcos.souza.org@gmail.com>
-Subject: [PATCH 0/5] raid1-10 and raid0 cleanups
-Date:   Mon, 20 May 2019 18:44:23 -0300
-Message-Id: <20190520214427.18729-1-marcos.souza.org@gmail.com>
-X-Mailer: git-send-email 2.21.0
+        Mon, 20 May 2019 17:44:46 -0400
+Received: from ozlabs.org ([203.11.71.1]:47289 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725978AbfETVop (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 17:44:45 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 457C965Z0Vz9s9T;
+        Tue, 21 May 2019 07:44:42 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1558388683;
+        bh=HVxZBFmlkHReoHXPhmJDd/bzuwCJbZjr6MZwdbFJasY=;
+        h=Date:From:To:Cc:Subject:From;
+        b=F4GXlucuK/N1NHNXw0PDM0KLBk9dDB9yEPts5F4LfkrFTrEBy6pm0KWrnNZ8Rkdqr
+         4I8xANJF+UbBK6uSXjH8bmbwFpCEl71Twao4N9wTFpuOmETi+g8rapwCqrCQRS1f+f
+         j+OVizMY/czkvpg97XRVUfJUVBOFcNUhC6BYBfUEeGkfgPEajU30Cx3aDQ+ecrmUSS
+         UJthsw+7/4V+jhWrdiNNvpuU8nVLVhX6+kdAXOxmoVTLL09LLmS2JJG6f2ysnRjf9t
+         ydHCuys7cOwz1oXqHxTbEgv3eje7Mn3W/87ECTevT35vBCMx5xrs/EaSWomzBNWymt
+         2HTkkxJS8x6gg==
+Date:   Tue, 21 May 2019 07:44:35 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Jonathan Corbet <corbet@lwn.net>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Sven Eckelmann <sven@narfation.org>
+Subject: linux-next: Fixes tag needs some work in the jc_docs tree
+Message-ID: <20190521074435.7a277fd6@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/V4O.sG0YFJXoinnNPT=P0d="; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The first patch is just removing some code duplicated in raid1 and raid10, and
-the other three patches are just cleanups.
+--Sig_/V4O.sG0YFJXoinnNPT=P0d=
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-These patches were based in "drivers: md: Unify common definitions of raid1 and
-raid10", sent a few weeks ago. Let me know if these patches can be improved.
+Hi all,
 
-Thanks
+In commit
 
-Marcos Paulo de Souza (5):
-  md cleanup
-  raid1-10: Unify r{1,10}bio_pool_free
-  raid0: Remove return statement from void function
-  md: raid0: Return md_integrity_register result directly
-  md: raid0: Make ret local in raid0_run
+  9eaa65e8aad5 ("scripts/spdxcheck.py: Add dual license subdirectory")
 
- drivers/md/raid0.c    |  8 ++------
- drivers/md/raid1-10.c | 30 ++++++++++++++++++++++++++++++
- drivers/md/raid1.c    | 42 ++++++------------------------------------
- drivers/md/raid10.c   | 38 ++++----------------------------------
- 4 files changed, 42 insertions(+), 76 deletions(-)
+Fixes tag
 
--- 
-2.21.0
+  Fixes: 99871f2f9a4d ("scripts/spdxcheck.py: Fix path to deprecated licens=
+es")
 
+has these problem(s):
+
+  - Target SHA1 does not exist
+
+Did you mean
+
+Fixes: e6d319f68d4d ("scripts/spdxcheck.py: Fix path to deprecated licenses=
+")
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/V4O.sG0YFJXoinnNPT=P0d=
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAlzjH8MACgkQAVBC80lX
+0GzBOgf/QfSfS+HQRpf3I36LDtv+x/5+F5QiUXWyRAx1FTTkCf53Z7QRNu+qhyQn
+yBM0eHrOdluiX4DpBKNC2VheMFeSY5Ic8i30fHM2JPvOE8mSpDJ52UIg7qptA1nS
+q6Lv+GmOtwNpXFUF35SXGrkllTluTri8hiRU51zq6VOOumBMrZSsnMXfxrs4whck
+8kuFTZcL0Lma5ZGx1WaYsTizaj2BdFuIzAWUyvdBVWO7FVMA2xqc6DDyEh1C2U+J
+pt5m8Jp1cT2CYT01Z+N2h0Hjxe9WvdJh9zmewSP0Lf0UUsOkxNOYLz+yfW2D9RlR
+fCXU6vvYdAbtxaocFlnzfR5TyArCrg==
+=FpY+
+-----END PGP SIGNATURE-----
+
+--Sig_/V4O.sG0YFJXoinnNPT=P0d=--
