@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A117EC04AAC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:19:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D6E9C04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:19:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6D31021019
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:19:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E7693208C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:19:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558354744;
-	bh=I/hI+umuXa770PYF5SVFB/mKMzPbTnYS3RdF0RFdZPk=;
+	s=default; t=1558354747;
+	bh=pjlpeQRC0hgc3Z+jegXSlr/lM/s+iZPx3nHcu6SNf1U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=G0W/odBSh04DBi1EY0SF+7a12cIArE8nVoktjAZp8O2iD3AquWauNlItZUlOwRvVh
-	 5N+bH/iI+RYH/tX4qqXJmrByX3+XostgSugXKnWXC1peqpyF/xZ4ekoYuuMn7RFrHA
-	 tbTOc8pcOl9HMlr6ynPKiDTE/jKof6ofBdgepGhw=
+	b=IHfy5qvw3xfZG8L6+9WyZGCnwa1QMfQgzgQOaI9nClyFgVld2mk7ijli68RLHSYl+
+	 uZFe9vziXPLxTAoFg+zYmPiqtJhW3X210vICYglolaxevjy9Txm5UiDJs43L7flcmK
+	 a/YOfhUWy3drx7toS4EtuRBcCIpayWcEG7DXepy4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387771AbfETMTD (ORCPT
+        id S1730378AbfETMTG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 08:19:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60114 "EHLO mail.kernel.org"
+        Mon, 20 May 2019 08:19:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60220 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387756AbfETMSx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 08:18:53 -0400
+        id S1733048AbfETMS6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 08:18:58 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 25BED213F2;
-        Mon, 20 May 2019 12:18:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 76D84213F2;
+        Mon, 20 May 2019 12:18:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558354732;
-        bh=I/hI+umuXa770PYF5SVFB/mKMzPbTnYS3RdF0RFdZPk=;
+        s=default; t=1558354738;
+        bh=pjlpeQRC0hgc3Z+jegXSlr/lM/s+iZPx3nHcu6SNf1U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ssbB+Y7RkEXtwzIF2Aug20Lz39pSG49OckijV3n0eJG7J2sxPEBEGhxNhnB4k3/cd
-         T8BsKgtyuYKzFHigaYgPA61qJcIawKXCdfWKkUI+Eo2/xvNiTXIzArqtEHIaowOXqr
-         0+L7lNwAzHIBuaYwLiam+AuaFP8n9uZpKnlEgHMs=
+        b=jfS3dzbwHohdC7ZRZ2hFLBFepZoZ3A7vLVFTILzJaOSvN2dkXt76TCaYA+V9TSDzd
+         JlNip/NTfI/Q8/6Ggazd9O1Q24+Y9rMVKOVcap1ZPAfuXvEGL5kcwxXUK4Hf9jU7Ko
+         93CK1fYd66XH3OtzDfWRa59DEHHpFqLJRwRHbKgQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Jean-Philippe Brucker <jean-philippe.brucker@arm.com>,
-        Will Deacon <will.deacon@arm.com>
-Subject: [PATCH 4.14 14/63] arm64: Clear OSDLR_EL1 on CPU boot
-Date:   Mon, 20 May 2019 14:13:53 +0200
-Message-Id: <20190520115232.667190980@linuxfoundation.org>
+        stable@vger.kernel.org, Eric Biggers <ebiggers@google.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>
+Subject: [PATCH 4.14 24/63] crypto: arm/aes-neonbs - dont access already-freed walk.iv
+Date:   Mon, 20 May 2019 14:14:03 +0200
+Message-Id: <20190520115233.722741281@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190520115231.137981521@linuxfoundation.org>
 References: <20190520115231.137981521@linuxfoundation.org>
@@ -60,31 +59,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
+From: Eric Biggers <ebiggers@google.com>
 
-commit 6fda41bf12615ee7c3ddac88155099b1a8cf8d00 upstream.
+commit 767f015ea0b7ab9d60432ff6cd06b664fd71f50f upstream.
 
-Some firmwares may reboot CPUs with OS Double Lock set. Make sure that
-it is unlocked, in order to use debug exceptions.
+If the user-provided IV needs to be aligned to the algorithm's
+alignmask, then skcipher_walk_virt() copies the IV into a new aligned
+buffer walk.iv.  But skcipher_walk_virt() can fail afterwards, and then
+if the caller unconditionally accesses walk.iv, it's a use-after-free.
 
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
-Signed-off-by: Will Deacon <will.deacon@arm.com>
+arm32 xts-aes-neonbs doesn't set an alignmask, so currently it isn't
+affected by this despite unconditionally accessing walk.iv.  However
+this is more subtle than desired, and it was actually broken prior to
+the alignmask being removed by commit cc477bf64573 ("crypto: arm/aes -
+replace bit-sliced OpenSSL NEON code").  Thus, update xts-aes-neonbs to
+start checking the return value of skcipher_walk_virt().
+
+Fixes: e4e7f10bfc40 ("ARM: add support for bit sliced AES using NEON instructions")
+Cc: <stable@vger.kernel.org> # v3.13+
+Signed-off-by: Eric Biggers <ebiggers@google.com>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/arm64/kernel/debug-monitors.c |    1 +
- 1 file changed, 1 insertion(+)
+ arch/arm/crypto/aes-neonbs-glue.c |    2 ++
+ 1 file changed, 2 insertions(+)
 
---- a/arch/arm64/kernel/debug-monitors.c
-+++ b/arch/arm64/kernel/debug-monitors.c
-@@ -133,6 +133,7 @@ NOKPROBE_SYMBOL(disable_debug_monitors);
-  */
- static int clear_os_lock(unsigned int cpu)
- {
-+	write_sysreg(0, osdlr_el1);
- 	write_sysreg(0, oslar_el1);
- 	isb();
- 	return 0;
+--- a/arch/arm/crypto/aes-neonbs-glue.c
++++ b/arch/arm/crypto/aes-neonbs-glue.c
+@@ -280,6 +280,8 @@ static int __xts_crypt(struct skcipher_r
+ 	int err;
+ 
+ 	err = skcipher_walk_virt(&walk, req, true);
++	if (err)
++		return err;
+ 
+ 	crypto_cipher_encrypt_one(ctx->tweak_tfm, walk.iv, walk.iv);
+ 
 
 
