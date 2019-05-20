@@ -2,107 +2,94 @@ Return-Path: <SRS0=lq4r=TU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21139C04AAC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 13:17:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A274C46460
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 13:17:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F402D20815
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 13:17:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 35F1D21479
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 13:17:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pGnU4Tek"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732076AbfETNRD (ORCPT
+        id S2387898AbfETNRx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 09:17:03 -0400
-Received: from mail-qk1-f194.google.com ([209.85.222.194]:45784 "EHLO
-        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727319AbfETNRC (ORCPT
+        Mon, 20 May 2019 09:17:53 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:43064 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727319AbfETNRx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 09:17:02 -0400
-Received: by mail-qk1-f194.google.com with SMTP id j1so8718784qkk.12
-        for <linux-kernel@vger.kernel.org>; Mon, 20 May 2019 06:17:02 -0700 (PDT)
+        Mon, 20 May 2019 09:17:53 -0400
+Received: by mail-pf1-f194.google.com with SMTP id c6so7210462pfa.10;
+        Mon, 20 May 2019 06:17:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=D9M/M2T3Rq8qtCDChAbOi+aqSufBlSPfODs6++Et7Xc=;
+        b=pGnU4TekWP/LCapQEn6fgC5nH9uKsqOe8kk/0r8JU7LUXtj7nSQrEo5qbrg3mc/YLn
+         zNZEgQyAcZq76DgVnwCp3I4vfOD/UPIkb7lMJ8FGmH+fpU1HHNaWN1cD6SDjQxvx8ocR
+         J+ADURnF3GjaRNMI7Nb+l8scGjGCGvk4Zm+RClq9ON5Ru/g9GCqpjPttd7roP8JHN2i8
+         hGOB2RP8cVGDh0WCGr/LpIP5YWoamOdTcd/r8qqZgA0lv1deP1ZLVwJwxLWEbxDi+5Rl
+         fVjTLXSma+AJaNHCiwDVNP4auyxLhL5+9G/GaKaR8VFaD8EjGOj+IXVyUNhptFOiqaq3
+         Qnlw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=bZcyqtPfiR8OnSe7X+YvU6P3WmrTts8Lp+0qyg4aj2M=;
-        b=otTZ8hslW6f26HeQGPPbVC9gSkBoKmbGfUTypf7xs0j65RiRHRhaTVTvaIASO6graT
-         H+5ftdBZnZCnKJACBEeKPyjGAJ3woYdulbV5G/NOZ4/kqsIZaGle+mlHIv3LJJTpnVa8
-         uA4eNTGTmcgQX9s7osiR+5b1Tew8g/C+ZzAIQJ/jvfw2ASA8jzsT5j7GmQRYvAm44emr
-         WNwKJnG5tQWgIEufO1mbJ7gAjJ2RXz4bIp+vRmOaFCMk7Pqi2dwpQWuAQU5MOiNBQo2a
-         5emHL2+WB52mAtO+D1cIC7MjMScclVusEL2m/VZHzdhiQaD+wNdeRhLr9u17pTbUFGTc
-         1hCg==
-X-Gm-Message-State: APjAAAXtU4AIV/RjxWCurndkNnbl1uBfbIoB634uADVwbXzCMW3NMOGI
-        Sj0mJcs04zus0CvRiMUlLTDPDQ==
-X-Google-Smtp-Source: APXvYqw0FqLkxwDq3if4j/PtdUGJI5ox1BH3UIwaju3gNcXX5ayK/jpLunGqH+2wq+Rcle7lAXdfbA==
-X-Received: by 2002:a37:4c02:: with SMTP id z2mr46791719qka.1.1558358222050;
-        Mon, 20 May 2019 06:17:02 -0700 (PDT)
-Received: from redhat.com (pool-173-76-105-71.bstnma.fios.verizon.net. [173.76.105.71])
-        by smtp.gmail.com with ESMTPSA id d16sm11577917qtd.73.2019.05.20.06.16.59
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 20 May 2019 06:17:00 -0700 (PDT)
-Date:   Mon, 20 May 2019 09:16:57 -0400
-From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     Thiago Jung Bauermann <bauerman@linux.ibm.com>
-Cc:     virtualization@lists.linux-foundation.org,
-        linuxppc-dev@lists.ozlabs.org, iommu@lists.linux-foundation.org,
-        linux-kernel@vger.kernel.org, Jason Wang <jasowang@redhat.com>,
-        Christoph Hellwig <hch@lst.de>,
-        David Gibson <david@gibson.dropbear.id.au>,
-        Alexey Kardashevskiy <aik@linux.ibm.com>,
-        Paul Mackerras <paulus@ozlabs.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Ram Pai <linuxram@us.ibm.com>,
-        Jean-Philippe Brucker <jean-philippe.brucker@arm.com>,
-        Michael Roth <mdroth@linux.vnet.ibm.com>,
-        Mike Anderson <andmike@linux.ibm.com>
-Subject: Re: [RFC PATCH] virtio_ring: Use DMA API if guest memory is encrypted
-Message-ID: <20190520090939-mutt-send-email-mst@kernel.org>
-References: <87zhrj8kcp.fsf@morokweng.localdomain>
- <87womn8inf.fsf@morokweng.localdomain>
- <20190129134750-mutt-send-email-mst@kernel.org>
- <877eefxvyb.fsf@morokweng.localdomain>
- <20190204144048-mutt-send-email-mst@kernel.org>
- <87ef71seve.fsf@morokweng.localdomain>
- <20190320171027-mutt-send-email-mst@kernel.org>
- <87tvfvbwpb.fsf@morokweng.localdomain>
- <20190323165456-mutt-send-email-mst@kernel.org>
- <87a7go71hz.fsf@morokweng.localdomain>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87a7go71hz.fsf@morokweng.localdomain>
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=D9M/M2T3Rq8qtCDChAbOi+aqSufBlSPfODs6++Et7Xc=;
+        b=aLdQWtMTf4BaHDnYkPYzbhOcxx1eTcTdaaH1iw6q9K3DpReReD97nIwlDCVqfAN9ah
+         tEPnc2S0dRe5l68xzxkdp/tVZa+N1JgI5sUTtnROYHsVg/OCj92QIvecUgjG/i2Z2WNb
+         e/lRp6z4kJj7m5TT1Aiqil2PZ1ZPYou9KC3y8OtIcGe/rXvjzNvpKaDWF/fcEDokOyeu
+         mHn+/+p/YtdinaYPPLV3oyFqlbBPajDen3acGJsSUkHL90SLIyrMSYQzzq8JdlbZQEy7
+         orY0sthNtkd/L0uQgBI7SE6nsLma0yCqbU7vtU44v0LEz+i1t+mL+0FiIxWfQ3lkuDel
+         WHqA==
+X-Gm-Message-State: APjAAAW0ZxHLfmu4BVgtuaOli7jXDB3LKu2vpNJLTaHBfk7US7i+isWK
+        0iWdpWNVnTKz65wgPKrshqs=
+X-Google-Smtp-Source: APXvYqxbFTs17yLE40Srkn3Egq5bzs3E3ybbE6o0Z9fc9rRAMHklc9PzwU+Fgsc+SnAQ8jstG19ihg==
+X-Received: by 2002:a62:585:: with SMTP id 127mr60151821pff.231.1558358272474;
+        Mon, 20 May 2019 06:17:52 -0700 (PDT)
+Received: from e69a04389.et15sqa.tbsite.net ([106.11.237.203])
+        by smtp.gmail.com with ESMTPSA id b186sm20954819pga.5.2019.05.20.06.17.50
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 20 May 2019 06:17:51 -0700 (PDT)
+From:   Hao Zheng <mowendugu@gmail.com>
+To:     bhelgaas@google.com
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Hao Zheng <mowendugu@gmail.com>, Quan Xu <quan.xu0@gmail.com>
+Subject: [PATCH 1/1] PCI/IOV: Fix VF0 cached config space size for other VFs
+Date:   Mon, 20 May 2019 21:17:24 +0800
+Message-Id: <1558358244-35832-1-git-send-email-mowendugu@gmail.com>
+X-Mailer: git-send-email 1.8.3.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 17, 2019 at 06:42:00PM -0300, Thiago Jung Bauermann wrote:
-> I rephrased it in terms of address translation. What do you think of
-> this version? The flag name is slightly different too:
-> 
-> 
-> VIRTIO_F_ACCESS_PLATFORM_NO_TRANSLATION This feature has the same
->     meaning as VIRTIO_F_ACCESS_PLATFORM both when set and when not set,
->     with the exception that address translation is guaranteed to be
->     unnecessary when accessing memory addresses supplied to the device
->     by the driver. Which is to say, the device will always use physical
->     addresses matching addresses used by the driver (typically meaning
->     physical addresses used by the CPU) and not translated further. This
->     flag should be set by the guest if offered, but to allow for
->     backward-compatibility device implementations allow for it to be
->     left unset by the guest. It is an error to set both this flag and
->     VIRTIO_F_ACCESS_PLATFORM.
+Set the pcie_cap field before getting the config space size for
+other VFs. Otherwise, the config space size of other VFs are error
+set to 256, while the size of VF0 is 4096.
 
+Signed-off-by: Hao Zheng <mowendugu@gmail.com>
+Signed-off-by: Quan Xu <quan.xu0@gmail.com>
+---
+ drivers/pci/iov.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-OK so VIRTIO_F_ACCESS_PLATFORM is designed to allow unpriveledged
-drivers. This is why devices fail when it's not negotiated.
-
-This confuses me.
-If driver is unpriveledged then what happens with this flag?
-It can supply any address it wants. Will that corrupt kernel
-memory?
-
+diff --git a/drivers/pci/iov.c b/drivers/pci/iov.c
+index 3aa115e..239fad1 100644
+--- a/drivers/pci/iov.c
++++ b/drivers/pci/iov.c
+@@ -133,6 +133,7 @@ static void pci_read_vf_config_common(struct pci_dev *virtfn)
+ 	pci_read_config_word(virtfn, PCI_SUBSYSTEM_ID,
+ 			     &physfn->sriov->subsystem_device);
+ 
++	set_pcie_port_type(virtfn);
+ 	physfn->sriov->cfg_size = pci_cfg_space_size(virtfn);
+ }
+ 
 -- 
-MST
+1.8.3.1
+
