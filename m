@@ -4,30 +4,30 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F03B7C04AAC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 15:06:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D696DC04AAF
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 15:06:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BA87A20856
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 15:06:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB6FF20856
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 15:06:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="Tw+3dUk9"
+	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="rQhfQbp2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388040AbfETPGm (ORCPT
+        id S2388154AbfETPGq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 11:06:42 -0400
-Received: from vps.xff.cz ([195.181.215.36]:54770 "EHLO vps.xff.cz"
+        Mon, 20 May 2019 11:06:46 -0400
+Received: from vps.xff.cz ([195.181.215.36]:54782 "EHLO vps.xff.cz"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732195AbfETPGl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 11:06:41 -0400
+        id S1733010AbfETPGm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 11:06:42 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=megous.com; s=mail;
-        t=1558364800; bh=Jp2qNvMK98ELurd2YTl1GqZcvgQt1Q6332x0ej9quDM=;
+        t=1558364800; bh=rVjMF+TqkJ/FvHNWAdCJqFuT4fG2WrGc2hjCFSuXWa4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Tw+3dUk9jK2N+LApBCGA0v+mYAaO6l36DQipEs80mGHXJYG6yk5TKKn1KYenZSiGd
-         4iwulI3AZCWQM2uT/ddHSNYPp5WS/bSpNy/coo4vNhqfuqvFYtsDoXcZMwTj7qdS0g
-         LlywseekDgX8++HiDHWoJIpWoE7XY/ZOlwPxXVtA=
+        b=rQhfQbp2x63PPAn7Ojxchslau4MFbCKFqSHsg+upPxRhrIHhl0cWE5xDLMytcKjah
+         eC+OGNdhGc5TpOp0WYcI/LFwf7bQ8+G90ZEyos72XJeLKZUZ4HpolRi6dhVJSOJrxQ
+         0c537OvoVhWw3b4n4YCIaW6tILJTT/rphDhUaayA=
 From:   megous@megous.com
 To:     Chen-Yu Tsai <wens@kernel.org>,
         Maxime Ripard <maxime.ripard@bootlin.com>,
@@ -41,10 +41,10 @@ Cc:     Chen-Yu Tsai <wens@csie.org>, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org,
         Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
         linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-media@vger.kernel.org
-Subject: [PATCH v2 2/3] media: sun6i: Support A83T variant
-Date:   Mon, 20 May 2019 17:06:36 +0200
-Message-Id: <20190520150637.23557-3-megous@megous.com>
+        linux-media@vger.kernel.org, Ondrej Jirman <megous@megous.com>
+Subject: [PATCH v2 3/3] ARM: dts: sun8i: a83t: Add device node for CSI (Camera Sensor Interface)
+Date:   Mon, 20 May 2019 17:06:37 +0200
+Message-Id: <20190520150637.23557-4-megous@megous.com>
 In-Reply-To: <20190520150637.23557-1-megous@megous.com>
 References: <20190520150637.23557-1-megous@megous.com>
 MIME-Version: 1.0
@@ -61,26 +61,64 @@ lingo), which is similar to the one found on the A64 and H3. The only
 difference seems to be that support of MIPI CSI through a connected
 MIPI CSI-2 bridge.
 
-Add support for this variant.
+Add a device node for it, and pinctrl nodes for the commonly used MCLK
+and 8-bit parallel interface. The property /omit-if-no-ref/ is added to
+the pinctrl nodes to keep the device tree blob size down if they are
+unused.
 
 Signed-off-by: Chen-Yu Tsai <wens@csie.org>
-Acked-by: Maxime Ripard <maxime.ripard@bootlin.com>
+Signed-off-by: Ondrej Jirman <megous@megous.com>
 ---
- drivers/media/platform/sunxi/sun6i-csi/sun6i_csi.c | 1 +
- 1 file changed, 1 insertion(+)
+ arch/arm/boot/dts/sun8i-a83t.dtsi | 29 +++++++++++++++++++++++++++++
+ 1 file changed, 29 insertions(+)
 
-diff --git a/drivers/media/platform/sunxi/sun6i-csi/sun6i_csi.c b/drivers/media/platform/sunxi/sun6i-csi/sun6i_csi.c
-index 4c79eb64a7a7..6e0e894154f4 100644
---- a/drivers/media/platform/sunxi/sun6i-csi/sun6i_csi.c
-+++ b/drivers/media/platform/sunxi/sun6i-csi/sun6i_csi.c
-@@ -924,6 +924,7 @@ static int sun6i_csi_remove(struct platform_device *pdev)
+diff --git a/arch/arm/boot/dts/sun8i-a83t.dtsi b/arch/arm/boot/dts/sun8i-a83t.dtsi
+index 392b0cabbf0d..ada6d08bc540 100644
+--- a/arch/arm/boot/dts/sun8i-a83t.dtsi
++++ b/arch/arm/boot/dts/sun8i-a83t.dtsi
+@@ -679,6 +679,20 @@
+ 			#interrupt-cells = <3>;
+ 			#gpio-cells = <3>;
  
- static const struct of_device_id sun6i_csi_of_match[] = {
- 	{ .compatible = "allwinner,sun6i-a31-csi", },
-+	{ .compatible = "allwinner,sun8i-a83t-csi", },
- 	{ .compatible = "allwinner,sun8i-h3-csi", },
- 	{ .compatible = "allwinner,sun8i-v3s-csi", },
- 	{ .compatible = "allwinner,sun50i-a64-csi", },
++			/omit-if-no-ref/
++			csi_8bit_parallel_pins: csi-8bit-parallel-pins {
++				pins = "PE0", "PE2", "PE3", "PE6", "PE7",
++				       "PE8", "PE9", "PE10", "PE11",
++				       "PE12", "PE13";
++				function = "csi";
++			};
++
++			/omit-if-no-ref/
++			csi_mclk_pin: csi-mclk-pin {
++				pins = "PE1";
++				function = "csi";
++			};
++
+ 			emac_rgmii_pins: emac-rgmii-pins {
+ 				pins = "PD2", "PD3", "PD4", "PD5", "PD6", "PD7",
+ 				       "PD11", "PD12", "PD13", "PD14", "PD18",
+@@ -997,6 +1011,21 @@
+ 			interrupts = <GIC_PPI 9 (GIC_CPU_MASK_SIMPLE(8) | IRQ_TYPE_LEVEL_HIGH)>;
+ 		};
+ 
++		csi: camera@1cb0000 {
++			compatible = "allwinner,sun8i-a83t-csi";
++			reg = <0x01cb0000 0x1000>;
++			interrupts = <GIC_SPI 84 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&ccu CLK_BUS_CSI>,
++				 <&ccu CLK_CSI_SCLK>,
++				 <&ccu CLK_DRAM_CSI>;
++			clock-names = "bus", "mod", "ram";
++			resets = <&ccu RST_BUS_CSI>;
++			status = "disabled";
++
++			csi_in: port {
++			};
++		};
++
+ 		hdmi: hdmi@1ee0000 {
+ 			compatible = "allwinner,sun8i-a83t-dw-hdmi";
+ 			reg = <0x01ee0000 0x10000>;
 -- 
 2.21.0
 
