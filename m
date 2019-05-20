@@ -2,94 +2,79 @@ Return-Path: <SRS0=lq4r=TU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2A95C04AAC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 10:39:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5B81C04AAF
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 10:40:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A38FC2081C
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 10:39:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9BAB220856
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 10:40:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731667AbfETKjd (ORCPT
+        id S1731707AbfETKkC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 06:39:33 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:36270 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730476AbfETKjd (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 06:39:33 -0400
-Received: by mail-wr1-f65.google.com with SMTP id s17so14024565wru.3
-        for <linux-kernel@vger.kernel.org>; Mon, 20 May 2019 03:39:32 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=LSXvvjLM2HBXWG9qhIrfISHU3rhydRFpcgUUVJCwNBc=;
-        b=VZraEzg68ZpC+WzQY6ikz0XG/B+q+Dn81e1b80dZfXXXzl1tAzMv40S++tVXJT+xB3
-         R/HbsHVDVIRXW07Fwk5osNzS11/+TfZevUhqvTRJWQe4dQc2Hm5rQtNidgadunKuug4H
-         CrTEHX+59cO1VEkGq1X89SWGfFT81SoXLVUulnk+TU38Zq4tbCczgG7EEnyLy2vC7s0V
-         bhJJVeGOQkd5nRo5nNrP1zUSMr/vSPb1XlDsTw04LlBpTER1e7qrEWiAxn/dWx0/KW9k
-         OR0l2mMJyrILejF3y3OJ4qnqh9ucR48OiQCcm14UMTk3YQgNUlhU+nZERBq7YwG13UZ0
-         2CVg==
-X-Gm-Message-State: APjAAAVL1KHiNhU9ySnK7Fo8S7U5r56qpUkDYv1cWMncXiFbcHPY4dJq
-        M0lBZAIIB0YtvmPy7kH8RWb+IS8aFQXBkA==
-X-Google-Smtp-Source: APXvYqxfM+AbzlMq4FVA03dUQrFO7n+VwiQjUOMIWGa8PFwNSVyl0na3x5bC/WWRAhmCS1nkMNk3pA==
-X-Received: by 2002:a5d:5743:: with SMTP id q3mr5645987wrw.92.1558348771961;
-        Mon, 20 May 2019 03:39:31 -0700 (PDT)
-Received: from ?IPv6:2001:b07:6468:f312:ac04:eef9:b257:b844? ([2001:b07:6468:f312:ac04:eef9:b257:b844])
-        by smtp.gmail.com with ESMTPSA id z202sm2751084wmc.18.2019.05.20.03.39.31
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Mon, 20 May 2019 03:39:31 -0700 (PDT)
-Subject: Re: [PATCH] kvm: vmx: Fix -Wmissing-prototypes warnings
-To:     Yi Wang <wang.yi59@zte.com.cn>
-Cc:     rkrcmar@redhat.com, tglx@linutronix.de, mingo@redhat.com,
-        bp@alien8.de, hpa@zytor.com, x86@kernel.org, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <1558326467-48530-1-git-send-email-wang.yi59@zte.com.cn>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <4babb584-27d6-a5be-c8a9-828079920130@redhat.com>
-Date:   Mon, 20 May 2019 12:39:30 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Mon, 20 May 2019 06:40:02 -0400
+Received: from mga01.intel.com ([192.55.52.88]:54204 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728551AbfETKkB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 06:40:01 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 May 2019 03:40:00 -0700
+X-ExtLoop1: 1
+Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.157])
+  by fmsmga001.fm.intel.com with SMTP; 20 May 2019 03:39:58 -0700
+Received: by lahna (sSMTP sendmail emulation); Mon, 20 May 2019 13:39:57 +0300
+Date:   Mon, 20 May 2019 13:39:57 +0300
+From:   Mika Westerberg <mika.westerberg@linux.intel.com>
+To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc:     Linux PCI <linux-pci@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Linux ACPI <linux-acpi@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        Keith Busch <kbusch@kernel.org>
+Subject: Re: [PATCH] PCI: PM: Avoid possible suspend-to-idle issue
+Message-ID: <20190520103957.GL2781@lahna.fi.intel.com>
+References: <2315917.ZGeXE6pBFC@kreacher>
 MIME-Version: 1.0
-In-Reply-To: <1558326467-48530-1-git-send-email-wang.yi59@zte.com.cn>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <2315917.ZGeXE6pBFC@kreacher>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 20/05/19 06:27, Yi Wang wrote:
-> We get a warning when build kernel W=1:
-> arch/x86/kvm/vmx/vmx.c:6365:6: warning: no previous prototype for ‘vmx_update_host_rsp’ [-Wmissing-prototypes]
->  void vmx_update_host_rsp(struct vcpu_vmx *vmx, unsigned long host_rsp)
+On Fri, May 17, 2019 at 11:08:50AM +0200, Rafael J. Wysocki wrote:
+> From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 > 
-> Add the missing declaration to fix this.
+> If a PCI driver leaves the device handled by it in D0 and calls
+> pci_save_state() on the device in its ->suspend() or ->suspend_late()
+> callback, it can expect the device to stay in D0 over the whole
+> s2idle cycle.  However, that may not be the case if there is a
+> spurious wakeup while the system is suspended, because in that case
+> pci_pm_suspend_noirq() will run again after pci_pm_resume_noirq()
+> which calls pci_restore_state(), via pci_pm_default_resume_early(),
+> so state_saved is cleared and the second iteration of
+> pci_pm_suspend_noirq() will invoke pci_prepare_to_sleep() which
+> may change the power state of the device.
 > 
-> Signed-off-by: Yi Wang <wang.yi59@zte.com.cn>
-> ---
->  arch/x86/kvm/vmx/vmx.h | 1 +
->  1 file changed, 1 insertion(+)
+> To avoid that, add a new internal flag, skip_bus_pm, that will be set
+> by pci_pm_suspend_noirq() when it runs for the first time during the
+> given system suspend-resume cycle if the state of the device has
+> been saved already and the device is still in D0.  Setting that flag
+> will cause the next iterations of pci_pm_suspend_noirq() to set
+> state_saved for pci_pm_resume_noirq(), so that it always restores the
+> device state from the originally saved data, and avoid calling
+> pci_prepare_to_sleep() for the device.
 > 
-> diff --git a/arch/x86/kvm/vmx/vmx.h b/arch/x86/kvm/vmx/vmx.h
-> index f879529..9cd72de 100644
-> --- a/arch/x86/kvm/vmx/vmx.h
-> +++ b/arch/x86/kvm/vmx/vmx.h
-> @@ -314,6 +314,7 @@ struct kvm_vmx {
->  void vmx_set_virtual_apic_mode(struct kvm_vcpu *vcpu);
->  struct shared_msr_entry *find_msr_entry(struct vcpu_vmx *vmx, u32 msr);
->  void pt_update_intercept_for_msr(struct vcpu_vmx *vmx);
-> +void vmx_update_host_rsp(struct vcpu_vmx *vmx, unsigned long host_rsp);
->  
->  #define POSTED_INTR_ON  0
->  #define POSTED_INTR_SN  1
-> 
+> Fixes: 33e4f80ee69b ("ACPI / PM: Ignore spurious SCI wakeups from suspend-to-idle")
+> Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 
-Queued, thanks.
-
-Paolo
+Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
