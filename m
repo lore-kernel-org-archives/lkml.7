@@ -7,59 +7,59 @@ X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CE85C04AAC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 19:32:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C417C04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 19:33:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 792E6204EC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 19:32:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 679B8216B7
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 19:33:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="P7jgFUeH"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OlhGz3hX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726173AbfETTcV (ORCPT
+        id S1726474AbfETTdO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 15:32:21 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:38027 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725554AbfETTcV (ORCPT
+        Mon, 20 May 2019 15:33:14 -0400
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:33916 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725554AbfETTdO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 15:32:21 -0400
-Received: by mail-lj1-f194.google.com with SMTP id 14so13595129ljj.5;
-        Mon, 20 May 2019 12:32:20 -0700 (PDT)
+        Mon, 20 May 2019 15:33:14 -0400
+Received: by mail-lf1-f67.google.com with SMTP id v18so11223975lfi.1;
+        Mon, 20 May 2019 12:33:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=5CJy2dAeiox6uSZJUrT6ntHN0iGf8wFFMkB5gRGvXDA=;
-        b=P7jgFUeHCs7+AjBG2AuXEKKQm5HcQoiMOoF6dgnHtTQWgFTGB3HAfSrc5U2ov3Em/L
-         b79q/0mf/FFYJypHSacZs8WRGrSlp9cgw+zcrCpOR1ntwuDY9EATpN8iT/YRz8P1qNqe
-         KIEARqWbHtJzyNCTJ+khfi+ZXKBl2rHzEAuxO4BXV22mIkN7ySEi+NjY9qUeAja/cVA/
-         IDIm81sG289xyiGnqBYD47UafLoPCgUfglPwxPv6xusBU9eeho31r7FzUMJXfJzGZ4v/
-         eCQRo9ES5JkNExo4UiGGqj6LyOtYicz7ScHR6Ntt86Si15X7J2ciD+kGPYXxIm8l7ZyI
-         A3pA==
+        bh=Yz8Y8j4LrokiV0kHGKvYwP2NDd57XNHFUFDJFy1gO6M=;
+        b=OlhGz3hX9ttMhH0DBkznm5Hzb3CE0esiN2TGXVrnCfKVux3ap139WFhixnnjcuj8Uw
+         eXfMa/kv7mROD0/mhmUVGiRFJwtePrDwcTQW7/B/tdXhnmcv0QRvMMF5zbF9/p9/bmDr
+         O1urDaNv5xouz1I+cXyIvUiYBkyh0pZpgFD/ERUY5IQWB/faVMwohjpZScS/W80vTgjC
+         0lAlN3/Q4/RgH2mIerMYYoR7EKIakurSrEltaxgdnPPpzSPS7FlgWElxwaNYnYP2sOJs
+         qIo+ZrKfZI26iPV840NnsVDgC0DKNm5+uBngJcrDG92FN930DQaAv1onmvWe4Kd9v06n
+         SeFQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=5CJy2dAeiox6uSZJUrT6ntHN0iGf8wFFMkB5gRGvXDA=;
-        b=gyyMBS5NYDxI31y//yhFcUgm/Y2OUeXLgJvTa9Q0uWVXGZiRVbSEHL1MxWND4xjB4D
-         ZRAsWPDlrV+D3UuQrG6shyrCgnYyEiyQujmWAvMpxGRc2GtZZkZC/08CO2c3Pea2u1HG
-         h4xA1zkvzbpH+0xLumGHSqVZvz5StW46yGPATIS8LsRaYOitTlEy3KKCvdCQSgQguqSZ
-         FzIdjMnLF8RJkbE9KTbR0ZohIoJJy7ycmhxje+kdYqhMc0wc70KMKnIM7h1cQVAKYWxi
-         vjXqGmir+f6W1ff0sSkguDNXRBmUgPCgw797LYDvj2ZF369aVoXrcV7zq79U5emVZgke
-         f7qg==
-X-Gm-Message-State: APjAAAWh7VzlNx2m90fMq00r7Z1NXRmrqDXDMGXGwPui2KI6OyWVp62W
-        x1ubBgHKJKpk5dcb3Tt0sRYGUecLYb+t/39fFb4=
-X-Google-Smtp-Source: APXvYqway49cEPUGdvZjJ+hP18SCMMVwpRB8TXHDrRQznMNpDxg0nRMzVHOAdVngIuP5ja63eqiL/FnRQg2ZgigufaQ=
-X-Received: by 2002:a2e:1f02:: with SMTP id f2mr37741905ljf.86.1558380739291;
- Mon, 20 May 2019 12:32:19 -0700 (PDT)
+        bh=Yz8Y8j4LrokiV0kHGKvYwP2NDd57XNHFUFDJFy1gO6M=;
+        b=TPYxaHQsfHI5rGl0kAF/E0b3cW/wayTSO5w3cLNQ8AGKRtnT2cZt5yS7GXbZ9iLscD
+         3hvd14Gbebqm5FfjbDVDMCryU6HQxw9U8XiFAhiWNBFEr9/N38RrpddxxIQFoGtT2kkG
+         /x0RggAS+Q/F6cJULfuoxbGqSwPj8EMXsU5i++g4KL2j+qzm89rUsJv/j20Qsfj/Jy/i
+         6BI4G44EkUDnCkmljwoSmM+0c8c07aX+VpPKfdcr9mII/AatiLgx89ZU+YZikdX8gIfI
+         +1KFPecZu93+pLrSiNKuSg8nvj17qPOYu49Fq/DGSsHiTQATdGiB8nbb3sNIrmrQ0+F2
+         XlTw==
+X-Gm-Message-State: APjAAAVLuYf20QR6aMV1zpJE3kvzbNvlnCkrXJgscavcppEMC5tzpQ+r
+        GZj9VZUTvQNsv/B0l9hIGnp58ronfPp6LlTrGHo=
+X-Google-Smtp-Source: APXvYqwMGtpeI+8XdPSNDz1LKzf/YqJGUe9ectHzyz4W3M6PXY5URxGKWcyo6ZNyMSayfoXCbU+EFQIkzQAGe+lFTsk=
+X-Received: by 2002:a19:a50b:: with SMTP id o11mr24145346lfe.2.1558380792220;
+ Mon, 20 May 2019 12:33:12 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190515144210.25596-1-daniel.baluta@nxp.com> <20190515144210.25596-3-daniel.baluta@nxp.com>
- <CAOMZO5A6Gv5k3up0AtKrhQPyMLMe_8SXift68KEP2J+j8D_cJg@mail.gmail.com>
-In-Reply-To: <CAOMZO5A6Gv5k3up0AtKrhQPyMLMe_8SXift68KEP2J+j8D_cJg@mail.gmail.com>
+References: <20190515144210.25596-1-daniel.baluta@nxp.com> <20190515144210.25596-2-daniel.baluta@nxp.com>
+ <CAOMZO5Avmjf9GpGWBbMJrOxWdvdBTyXMoOPQw_uOQHhCayuHtg@mail.gmail.com>
+In-Reply-To: <CAOMZO5Avmjf9GpGWBbMJrOxWdvdBTyXMoOPQw_uOQHhCayuHtg@mail.gmail.com>
 From:   Fabio Estevam <festevam@gmail.com>
-Date:   Mon, 20 May 2019 16:32:14 -0300
-Message-ID: <CAOMZO5BTqwnun6d7G1vcHUu_Rs+xfvgxTzamWnBPy76W7eeF_A@mail.gmail.com>
-Subject: Re: [PATCH v3 2/2] arm64: dts: imx8mm-evk: Enable audio codec wm8524
+Date:   Mon, 20 May 2019 16:33:07 -0300
+Message-ID: <CAOMZO5BO7fXFX=qQh29P7Eji7WaAVsjR++BwiyRbkO9EtfNWxg@mail.gmail.com>
+Subject: Re: [PATCH v3 1/2] arm64: dts: imx8mm: Add SAI nodes
 To:     Daniel Baluta <daniel.baluta@nxp.com>
 Cc:     "shawnguo@kernel.org" <shawnguo@kernel.org>,
         "mark.rutland@arm.com" <mark.rutland@arm.com>,
@@ -81,20 +81,30 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 16, 2019 at 3:35 PM Fabio Estevam <festevam@gmail.com> wrote:
+On Thu, May 16, 2019 at 3:33 PM Fabio Estevam <festevam@gmail.com> wrote:
+>
+> Hi Daniel,
 >
 > On Wed, May 15, 2019 at 11:42 AM Daniel Baluta <daniel.baluta@nxp.com> wrote:
+> >
+> > i.MX8MM has 5 SAI instances with the following base
+> > addresses according to RM.
+> >
+> > SAI1 base address: 3001_0000h
+> > SAI2 base address: 3002_0000h
+> > SAI3 base address: 3003_0000h
+> > SAI5 base address: 3005_0000h
+> > SAI6 base address: 3006_0000h
 >
-> > +               simple-audio-card,codec {
-> > +                       sound-dai = <&wm8524>;
-> > +                       clocks = <&clk IMX8MM_CLK_SAI3_ROOT>;
+> No SAI4?
 >
-> IMX8MM_CLK_SAI3_ROOT is the internal clock that drives the SAI3
-> interface, not an external clock that feeds the codec.
+> I know the RM does not show the SAI4 in the memory map, but the clock
+> driver does show a SAI4 clock gate.
 >
-> It seems you should remove this 'clocks' entry.
+> So it seems we have a contradiction in the reference manual. Could you
+> please double check with the internal folks?
 
-Just checked the schematics and the SAI3_MCLK pin clocks the codec, so
-the representation is correct:
+Despite the SAI4 confusion, the current patch correctly describe the
+SAI interfaces as per the Reference Manual, so:
 
 Reviewed-by: Fabio Estevam <festevam@gmail.com>
