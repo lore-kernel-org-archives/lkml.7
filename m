@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7F3CC04AAC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:33:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00A50C04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:34:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ADE2E204FD
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:33:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CAE8020645
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:34:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558355635;
-	bh=N9QFeO4yQVMQCWzkv0CVm3igV/vAF6zg1t8BEEZGIbY=;
+	s=default; t=1558355640;
+	bh=JKuqmvvUtsBI5oCflPx+jie8Y+HL1Ah3hRbWlU+reOg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qB0+7jcrqOHRmFoI6ltAWbm1Br5kZvaU+xGX2IHUJmStAiTDiFZrr3SbM0OePKsA/
-	 JJYu0sKvcW1hUTD1yEyfCBqoJHQgLJGsR0spCSUW9BdiwkerUec3g9YeKw88wLpMDH
-	 b8pzFsybWocCzuMN1BaDdfNCufrY/ZZRnBivkUdo=
+	b=HESn3YVhS3L8yd46qBm6mifNkJ4EXRsi262chakjEuYPKlx85BXHJ+S7oaBGIamOo
+	 eSC4ceTPgCM7HhdoAM0CJ8ipsRBo+qWGHcuynfxId8n4uMjih6s5pBgXRAFZjSsnGt
+	 6BY+oeksJduQU5w7Igl68/iFbiFItMJFoUirQeFE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390823AbfETMdy (ORCPT
+        id S2390833AbfETMd7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 08:33:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51014 "EHLO mail.kernel.org"
+        Mon, 20 May 2019 08:33:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51066 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390807AbfETMdw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 08:33:52 -0400
+        id S2390821AbfETMdz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 08:33:55 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 22295204FD;
-        Mon, 20 May 2019 12:33:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D91AB20645;
+        Mon, 20 May 2019 12:33:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558355631;
-        bh=N9QFeO4yQVMQCWzkv0CVm3igV/vAF6zg1t8BEEZGIbY=;
+        s=default; t=1558355634;
+        bh=JKuqmvvUtsBI5oCflPx+jie8Y+HL1Ah3hRbWlU+reOg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=w+pOkUbpOVhMb+J/2Q+eKdsE7FBJhDA10aLQhUnQpMZ8UUTsfnw9Dz9D4pCJHfyrq
-         8WPUZj+7uBRrMWjqLCJzxB2QjtjeniMMsdB9TG6vJXGw9JaAuC7cYOAzMLkDXT8XmS
-         cGBm2Zig3rNvHvEBZeTyxDzGjBlskFloolQ7ufFc=
+        b=AcsUFQD5v4PPqfbS4yEVA9HSGi+G0uPbj4wMyqG16mPt9drRJzKP2PNUZZZ226aNi
+         tR11xhJQWzV3iy98iIjxZKUSAz4eF7uIf8VnQYRThVn4rwsIZjeDDpLrelTuKBua8Z
+         uHh2a/MFu4s4pJc9bwjxP33OEE16R8AJDa9XdpjI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ofir Drang <ofir.drang@arm.com>,
-        Gilad Ben-Yossef <gilad@benyossef.com>,
+        stable@vger.kernel.org,
+        =?UTF-8?q?Horia=20Geant=C4=83?= <horia.geanta@nxp.com>,
         Herbert Xu <herbert@gondor.apana.org.au>
-Subject: [PATCH 5.1 066/128] crypto: ccree - HOST_POWER_DOWN_EN should be the last CC access during suspend
-Date:   Mon, 20 May 2019 14:14:13 +0200
-Message-Id: <20190520115254.272856830@linuxfoundation.org>
+Subject: [PATCH 5.1 040/128] crypto: caam/qi2 - generate hash keys in-place
+Date:   Mon, 20 May 2019 14:13:47 +0200
+Message-Id: <20190520115252.428105270@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190520115249.449077487@linuxfoundation.org>
 References: <20190520115249.449077487@linuxfoundation.org>
@@ -60,41 +60,120 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ofir Drang <ofir.drang@arm.com>
+From: Horia Geantă <horia.geanta@nxp.com>
 
-commit 3499efbeed39d114873267683b9e776bcb34b058 upstream.
+commit 418cd20e4dcdca97e6f6d59e6336228dacf2e45d upstream.
 
-During power management suspend the driver need to prepare the device
-for the power down operation and as a last indication write to the
-HOST_POWER_DOWN_EN register which signals to the hardware that
-The ccree is ready for power down.
+Commit 307244452d3d ("crypto: caam - generate hash keys in-place")
+fixed ahash implementation in caam/jr driver such that user-provided key
+buffer is not DMA mapped, since it's not guaranteed to be DMAable.
 
-Signed-off-by: Ofir Drang <ofir.drang@arm.com>
-Signed-off-by: Gilad Ben-Yossef <gilad@benyossef.com>
-Cc: stable@vger.kernel.org # v4.19+
+Apply a similar fix for caam/qi2 driver.
+
+Cc: <stable@vger.kernel.org> # v4.20+
+Fixes: 3f16f6c9d632 ("crypto: caam/qi2 - add support for ahash algorithms")
+Signed-off-by: Horia Geantă <horia.geanta@nxp.com>
 Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/crypto/ccree/cc_pm.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/crypto/caam/caamalg_qi2.c |   41 +++++++++++++-------------------------
+ 1 file changed, 15 insertions(+), 26 deletions(-)
 
---- a/drivers/crypto/ccree/cc_pm.c
-+++ b/drivers/crypto/ccree/cc_pm.c
-@@ -25,13 +25,13 @@ int cc_pm_suspend(struct device *dev)
- 	int rc;
- 
- 	dev_dbg(dev, "set HOST_POWER_DOWN_EN\n");
--	cc_iowrite(drvdata, CC_REG(HOST_POWER_DOWN_EN), POWER_DOWN_ENABLE);
- 	rc = cc_suspend_req_queue(drvdata);
- 	if (rc) {
- 		dev_err(dev, "cc_suspend_req_queue (%x)\n", rc);
- 		return rc;
- 	}
- 	fini_cc_regs(drvdata);
-+	cc_iowrite(drvdata, CC_REG(HOST_POWER_DOWN_EN), POWER_DOWN_ENABLE);
- 	cc_clk_off(drvdata);
- 	return 0;
+--- a/drivers/crypto/caam/caamalg_qi2.c
++++ b/drivers/crypto/caam/caamalg_qi2.c
+@@ -3020,13 +3020,13 @@ static void split_key_sh_done(void *cbk_
  }
+ 
+ /* Digest hash size if it is too large */
+-static int hash_digest_key(struct caam_hash_ctx *ctx, const u8 *key_in,
+-			   u32 *keylen, u8 *key_out, u32 digestsize)
++static int hash_digest_key(struct caam_hash_ctx *ctx, u32 *keylen, u8 *key,
++			   u32 digestsize)
+ {
+ 	struct caam_request *req_ctx;
+ 	u32 *desc;
+ 	struct split_key_sh_result result;
+-	dma_addr_t src_dma, dst_dma;
++	dma_addr_t key_dma;
+ 	struct caam_flc *flc;
+ 	dma_addr_t flc_dma;
+ 	int ret = -ENOMEM;
+@@ -3043,17 +3043,10 @@ static int hash_digest_key(struct caam_h
+ 	if (!flc)
+ 		goto err_flc;
+ 
+-	src_dma = dma_map_single(ctx->dev, (void *)key_in, *keylen,
+-				 DMA_TO_DEVICE);
+-	if (dma_mapping_error(ctx->dev, src_dma)) {
+-		dev_err(ctx->dev, "unable to map key input memory\n");
+-		goto err_src_dma;
+-	}
+-	dst_dma = dma_map_single(ctx->dev, (void *)key_out, digestsize,
+-				 DMA_FROM_DEVICE);
+-	if (dma_mapping_error(ctx->dev, dst_dma)) {
+-		dev_err(ctx->dev, "unable to map key output memory\n");
+-		goto err_dst_dma;
++	key_dma = dma_map_single(ctx->dev, key, *keylen, DMA_BIDIRECTIONAL);
++	if (dma_mapping_error(ctx->dev, key_dma)) {
++		dev_err(ctx->dev, "unable to map key memory\n");
++		goto err_key_dma;
+ 	}
+ 
+ 	desc = flc->sh_desc;
+@@ -3078,14 +3071,14 @@ static int hash_digest_key(struct caam_h
+ 
+ 	dpaa2_fl_set_final(in_fle, true);
+ 	dpaa2_fl_set_format(in_fle, dpaa2_fl_single);
+-	dpaa2_fl_set_addr(in_fle, src_dma);
++	dpaa2_fl_set_addr(in_fle, key_dma);
+ 	dpaa2_fl_set_len(in_fle, *keylen);
+ 	dpaa2_fl_set_format(out_fle, dpaa2_fl_single);
+-	dpaa2_fl_set_addr(out_fle, dst_dma);
++	dpaa2_fl_set_addr(out_fle, key_dma);
+ 	dpaa2_fl_set_len(out_fle, digestsize);
+ 
+ 	print_hex_dump_debug("key_in@" __stringify(__LINE__)": ",
+-			     DUMP_PREFIX_ADDRESS, 16, 4, key_in, *keylen, 1);
++			     DUMP_PREFIX_ADDRESS, 16, 4, key, *keylen, 1);
+ 	print_hex_dump_debug("shdesc@" __stringify(__LINE__)": ",
+ 			     DUMP_PREFIX_ADDRESS, 16, 4, desc, desc_bytes(desc),
+ 			     1);
+@@ -3105,17 +3098,15 @@ static int hash_digest_key(struct caam_h
+ 		wait_for_completion(&result.completion);
+ 		ret = result.err;
+ 		print_hex_dump_debug("digested key@" __stringify(__LINE__)": ",
+-				     DUMP_PREFIX_ADDRESS, 16, 4, key_in,
++				     DUMP_PREFIX_ADDRESS, 16, 4, key,
+ 				     digestsize, 1);
+ 	}
+ 
+ 	dma_unmap_single(ctx->dev, flc_dma, sizeof(flc->flc) + desc_bytes(desc),
+ 			 DMA_TO_DEVICE);
+ err_flc_dma:
+-	dma_unmap_single(ctx->dev, dst_dma, digestsize, DMA_FROM_DEVICE);
+-err_dst_dma:
+-	dma_unmap_single(ctx->dev, src_dma, *keylen, DMA_TO_DEVICE);
+-err_src_dma:
++	dma_unmap_single(ctx->dev, key_dma, *keylen, DMA_BIDIRECTIONAL);
++err_key_dma:
+ 	kfree(flc);
+ err_flc:
+ 	kfree(req_ctx);
+@@ -3137,12 +3128,10 @@ static int ahash_setkey(struct crypto_ah
+ 	dev_dbg(ctx->dev, "keylen %d blocksize %d\n", keylen, blocksize);
+ 
+ 	if (keylen > blocksize) {
+-		hashed_key = kmalloc_array(digestsize, sizeof(*hashed_key),
+-					   GFP_KERNEL | GFP_DMA);
++		hashed_key = kmemdup(key, keylen, GFP_KERNEL | GFP_DMA);
+ 		if (!hashed_key)
+ 			return -ENOMEM;
+-		ret = hash_digest_key(ctx, key, &keylen, hashed_key,
+-				      digestsize);
++		ret = hash_digest_key(ctx, &keylen, hashed_key, digestsize);
+ 		if (ret)
+ 			goto bad_free_key;
+ 		key = hashed_key;
 
 
