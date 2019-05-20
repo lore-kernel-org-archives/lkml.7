@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 964FAC04AAC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:25:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8DE1C04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:25:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6975421479
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:25:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8EEBE21479
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:25:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558355101;
-	bh=K54YEflfXLM4VSAwoRJKIcxe1vnu5XR84RhZ3XiT9mE=;
+	s=default; t=1558355104;
+	bh=0pBuoUQ/MsGpZKKsbJ6wezWXwWTvffx32ikV0Olb63c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TH/Prd2v70JNovCMaHbyBpAGoagC+/Y9tEvgKgzUR5et62dVT+GrzRa+qPsZ6gGrs
-	 kWbSfPyhQiKVjWPmODBN9vKOBmRoSlhloSx+iA2MUPXO1MqW4m5+RRR0OsIFw9rjWL
-	 /b4V1nhhYx2zLFW8wpfil/qstc3WFuSO/4a1uYbg=
+	b=DZFe4fuTnuBNmYByy0VzjLZHZZusIOWXgbyIma8zdcWNj5Wqi32n1kZOh0FkLRtrv
+	 s7q7AVGJ7i1m5bRRU2k8JKN6yEEdvSVLp7xFCWmjFc4yW3AVJc2pjUcA8f47BSJReR
+	 J8uKiz/qD2VmsyEGO64oBTW4v/5wRqV2Mx/Z0yHk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388963AbfETMZA (ORCPT
+        id S2388976AbfETMZD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 08:25:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39910 "EHLO mail.kernel.org"
+        Mon, 20 May 2019 08:25:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40030 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388944AbfETMYz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 08:24:55 -0400
+        id S2388944AbfETMZC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 08:25:02 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D35BD216C4;
-        Mon, 20 May 2019 12:24:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4D58020815;
+        Mon, 20 May 2019 12:25:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558355095;
-        bh=K54YEflfXLM4VSAwoRJKIcxe1vnu5XR84RhZ3XiT9mE=;
+        s=default; t=1558355101;
+        bh=0pBuoUQ/MsGpZKKsbJ6wezWXwWTvffx32ikV0Olb63c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=r1GyGmAQqqEgDqvBO6k9qyh1oNIjmZqSeJC9cY8Z35KTUYhQV7pveaim99qcLG8sC
-         ENTexBSk8NUzE9vXaLySJdTE2v5GsmC+ylFnuAu9Hz1PjRMOiA6X1f1odcd62gG5T8
-         P8962vE1UPbr5dFK8uhSo+V7d98SE3Hu1lUqOsk8=
+        b=xp2ucKI8RI8CseTIFuWRYTdwkeQgtEkud/Y50X7idZKFTPLV5T3FRJaerixvEBCuL
+         gmuAINJFkYiw0bXtquqYjGOOGHlNZGoKxkVK+tbhowWp4SGJRudtegZgD8q1N9UlQl
+         jfHxVcOaHHljcGPio+0+1x6eeaFn7Fn8BjD+w8QU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jan Kara <jack@suse.cz>,
-        Theodore Tso <tytso@mit.edu>, stable@kernel.org
-Subject: [PATCH 4.19 088/105] ext4: avoid panic during forced reboot due to aborted journal
-Date:   Mon, 20 May 2019 14:14:34 +0200
-Message-Id: <20190520115253.365916423@linuxfoundation.org>
+        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Matthew Wilcox <willy@infradead.org>
+Subject: [PATCH 4.19 098/105] iov_iter: optimize page_copy_sane()
+Date:   Mon, 20 May 2019 14:14:44 +0200
+Message-Id: <20190520115253.993660256@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190520115247.060821231@linuxfoundation.org>
 References: <20190520115247.060821231@linuxfoundation.org>
@@ -59,35 +60,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jan Kara <jack@suse.cz>
+From: Eric Dumazet <edumazet@google.com>
 
-commit 2c1d0e3631e5732dba98ef49ac0bec1388776793 upstream.
+commit 6daef95b8c914866a46247232a048447fff97279 upstream.
 
-Handling of aborted journal is a special code path different from
-standard ext4_error() one and it can call panic() as well. Commit
-1dc1097ff60e ("ext4: avoid panic during forced reboot") forgot to update
-this path so fix that omission.
+Avoid cache line miss dereferencing struct page if we can.
 
-Fixes: 1dc1097ff60e ("ext4: avoid panic during forced reboot")
-Signed-off-by: Jan Kara <jack@suse.cz>
-Signed-off-by: Theodore Ts'o <tytso@mit.edu>
-Cc: stable@kernel.org # 5.1
+page_copy_sane() mostly deals with order-0 pages.
+
+Extra cache line miss is visible on TCP recvmsg() calls dealing
+with GRO packets (typically 45 page frags are attached to one skb).
+
+Bringing the 45 struct pages into cpu cache while copying the data
+is not free, since the freeing of the skb (and associated
+page frags put_page()) can happen after cache lines have been evicted.
+
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Cc: Al Viro <viro@zeniv.linux.org.uk>
+Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
+Cc: Matthew Wilcox <willy@infradead.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/ext4/super.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ lib/iov_iter.c |   17 +++++++++++++++--
+ 1 file changed, 15 insertions(+), 2 deletions(-)
 
---- a/fs/ext4/super.c
-+++ b/fs/ext4/super.c
-@@ -698,7 +698,7 @@ void __ext4_abort(struct super_block *sb
- 			jbd2_journal_abort(EXT4_SB(sb)->s_journal, -EIO);
- 		save_error_info(sb, function, line);
- 	}
--	if (test_opt(sb, ERRORS_PANIC)) {
-+	if (test_opt(sb, ERRORS_PANIC) && !system_going_down()) {
- 		if (EXT4_SB(sb)->s_journal &&
- 		  !(EXT4_SB(sb)->s_journal->j_flags & JBD2_REC_ERR))
- 			return;
+--- a/lib/iov_iter.c
++++ b/lib/iov_iter.c
+@@ -817,8 +817,21 @@ EXPORT_SYMBOL(_copy_from_iter_full_nocac
+ 
+ static inline bool page_copy_sane(struct page *page, size_t offset, size_t n)
+ {
+-	struct page *head = compound_head(page);
+-	size_t v = n + offset + page_address(page) - page_address(head);
++	struct page *head;
++	size_t v = n + offset;
++
++	/*
++	 * The general case needs to access the page order in order
++	 * to compute the page size.
++	 * However, we mostly deal with order-0 pages and thus can
++	 * avoid a possible cache line miss for requests that fit all
++	 * page orders.
++	 */
++	if (n <= v && v <= PAGE_SIZE)
++		return true;
++
++	head = compound_head(page);
++	v += (page - head) << PAGE_SHIFT;
+ 
+ 	if (likely(n <= v && v <= (PAGE_SIZE << compound_order(head))))
+ 		return true;
 
 
