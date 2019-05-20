@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83A3DC04AAC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:19:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F23B6C04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:19:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 594AF20815
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:19:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C960D216C4
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:19:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558354749;
-	bh=QPkA6PZYomjL9QkDO+aj/i1Q25zp4DPXfd9KtfCtPK8=;
+	s=default; t=1558354751;
+	bh=SMlUCFzB7D9IhOqhz8J3MWnfPtLj/lM1tXz0zcqXkWs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yF1mL8tQmu2/0VggbAKUxJYEpaK6rzNQ86XYgSk7tIxxziGD7n46aybDDR+EJsVXZ
-	 pH1jeeaSvZlWXYjCk5izYZ56bY8oOAxSJZAOZEIzACrqNVPOadl8oHrW8W2zH5difC
-	 iDLBUKv2q1brYm5I9U9Kzpz5HMQgPdAyCqrez3kg=
+	b=DpcScE9yQIFTsMgZ/WhHqR6frrcN1hnXJujt/p3rxTwqHl3UV3zSSMEBtB/ktyf4v
+	 7rbKODS4vyXJxZgL0TTHr4BkmrfxQ3FinAF8xs+xgVKiWxjqHWYoc6VKOzyFYuS/nF
+	 5dWnwN54uhKV9duM0yCfxFrOcwc5l1CEyOfapHEk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731629AbfETMTG (ORCPT
+        id S2387787AbfETMTK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 08:19:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60266 "EHLO mail.kernel.org"
+        Mon, 20 May 2019 08:19:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60362 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730685AbfETMTC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 08:19:02 -0400
+        id S1731059AbfETMTG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 08:19:06 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0C483214AE;
-        Mon, 20 May 2019 12:18:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 403A621019;
+        Mon, 20 May 2019 12:19:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558354740;
-        bh=QPkA6PZYomjL9QkDO+aj/i1Q25zp4DPXfd9KtfCtPK8=;
+        s=default; t=1558354745;
+        bh=SMlUCFzB7D9IhOqhz8J3MWnfPtLj/lM1tXz0zcqXkWs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=eZXtneuq5cNEMIOtUwiDoH22GTu0/NvvRymEWmKRFcMbc/uYNli89Z+PQ6LVtwNLJ
-         xoQIke30HaqvfWtSWmekR8EoS6gUHJ3Bhwn2sm0KEgBLEO7YepsCGjouJBpjqO8Nz6
-         Nhkd7H1p0D2wmuukD78OG9z5YRQPJz4xGwYmCPw0=
+        b=iNn1W6URj2VWeytp7iIrAegAvWgOCHrhKnIGLktUU53i8rTr7xjtgb9Sx2Zx9eklM
+         8uvSzbuf85p0LIda3lk9MNWXNe38F1IRN4l2u8SP1wtu6ajRaFJWrDmKyLYD7Fhoxl
+         j7cI7h9DpWVwdzmIy3nM1/c+NUJsdbE2TZpBVKGA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Wenwen Wang <wang6495@umn.edu>,
+        stable@vger.kernel.org, Hui Wang <hui.wang@canonical.com>,
         Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 4.14 25/63] ALSA: usb-audio: Fix a memory leak bug
-Date:   Mon, 20 May 2019 14:14:04 +0200
-Message-Id: <20190520115233.859492728@linuxfoundation.org>
+Subject: [PATCH 4.14 27/63] ALSA: hda/hdmi - Consider eld_valid when reporting jack event
+Date:   Mon, 20 May 2019 14:14:06 +0200
+Message-Id: <20190520115234.116870531@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190520115231.137981521@linuxfoundation.org>
 References: <20190520115231.137981521@linuxfoundation.org>
@@ -59,40 +59,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wenwen Wang <wang6495@umn.edu>
+From: Hui Wang <hui.wang@canonical.com>
 
-commit cb5173594d50c72b7bfa14113dfc5084b4d2f726 upstream.
+commit 7f641e26a6df9269cb25dd7a4b0a91d6586ed441 upstream.
 
-In parse_audio_selector_unit(), the string array 'namelist' is allocated
-through kmalloc_array(), and each string pointer in this array, i.e.,
-'namelist[]', is allocated through kmalloc() in the following for loop.
-Then, a control instance 'kctl' is created by invoking snd_ctl_new1(). If
-an error occurs during the creation process, the string array 'namelist',
-including all string pointers in the array 'namelist[]', should be freed,
-before the error code ENOMEM is returned. However, the current code does
-not free 'namelist[]', resulting in memory leaks.
+On the machines with AMD GPU or Nvidia GPU, we often meet this issue:
+after s3, there are 4 HDMI/DP audio devices in the gnome-sound-setting
+even there is no any monitors plugged.
 
-To fix the above issue, free all string pointers 'namelist[]' in a loop.
+When this problem happens, we check the /proc/asound/cardX/eld#N.M, we
+will find the monitor_present=1, eld_valid=0.
 
-Signed-off-by: Wenwen Wang <wang6495@umn.edu>
+The root cause is BIOS or GPU driver makes the PRESENCE valid even no
+monitor plugged, and of course the driver will not get the valid
+eld_data subsequently.
+
+In this situation, we should not report the jack_plugged event, to do
+so, let us change the function hdmi_present_sense_via_verbs(). In this
+function, it reads the pin_sense via snd_hda_pin_sense(), after
+calling this function, the jack_dirty is 0, and before exiting
+via_verbs(), we change the shadow pin_sense according to both
+monitor_present and eld_valid, then in the snd_hda_jack_report_sync(),
+since the jack_dirty is still 0, it will report jack event according
+to this modified shadow pin_sense.
+
+After this change, the driver will not report Jack_is_plugged event
+through hdmi_present_sense_via_verbs() if monitor_present is 1 and
+eld_valid is 0.
+
+Signed-off-by: Hui Wang <hui.wang@canonical.com>
 Cc: <stable@vger.kernel.org>
 Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/usb/mixer.c |    2 ++
- 1 file changed, 2 insertions(+)
+ sound/pci/hda/patch_hdmi.c |    6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
---- a/sound/usb/mixer.c
-+++ b/sound/usb/mixer.c
-@@ -2184,6 +2184,8 @@ static int parse_audio_selector_unit(str
- 	kctl = snd_ctl_new1(&mixer_selectunit_ctl, cval);
- 	if (! kctl) {
- 		usb_audio_err(state->chip, "cannot malloc kcontrol\n");
-+		for (i = 0; i < desc->bNrInPins; i++)
-+			kfree(namelist[i]);
- 		kfree(namelist);
- 		kfree(cval);
- 		return -ENOMEM;
+--- a/sound/pci/hda/patch_hdmi.c
++++ b/sound/pci/hda/patch_hdmi.c
+@@ -1549,9 +1549,11 @@ static bool hdmi_present_sense_via_verbs
+ 	ret = !repoll || !eld->monitor_present || eld->eld_valid;
+ 
+ 	jack = snd_hda_jack_tbl_get(codec, pin_nid);
+-	if (jack)
++	if (jack) {
+ 		jack->block_report = !ret;
+-
++		jack->pin_sense = (eld->monitor_present && eld->eld_valid) ?
++			AC_PINSENSE_PRESENCE : 0;
++	}
+ 	mutex_unlock(&per_pin->lock);
+ 	return ret;
+ }
 
 
