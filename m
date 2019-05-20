@@ -2,127 +2,134 @@ Return-Path: <SRS0=lq4r=TU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 741C2C04AAC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 21:50:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76E2CC04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 21:51:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 48AC72173C
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 21:50:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4DF4A21743
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 21:51:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="j1R3pnfz"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="10gtItmO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726896AbfETVuG (ORCPT
+        id S1726793AbfETVvO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 17:50:06 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:46117 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725776AbfETVuG (ORCPT
+        Mon, 20 May 2019 17:51:14 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:35288 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725763AbfETVvO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 17:50:06 -0400
-Received: by mail-pl1-f193.google.com with SMTP id r18so7313656pls.13
-        for <linux-kernel@vger.kernel.org>; Mon, 20 May 2019 14:50:05 -0700 (PDT)
+        Mon, 20 May 2019 17:51:14 -0400
+Received: by mail-wm1-f67.google.com with SMTP id q15so803198wmj.0
+        for <linux-kernel@vger.kernel.org>; Mon, 20 May 2019 14:51:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=AjggmU90pDPJr60wE2nNAnEDRr3oK/LD2TBSCV+YnF4=;
-        b=j1R3pnfz3VcFlZcJ5FRFu0iye2uGUG1wVoYLoBjZ94+h3WvE/NVpedepLX5XSiBqWu
-         8T6tR4NPquHftfOo1osxWquMw/h+AlkZ6vHPPmcKmWRB9D24eE3/2hawA76PHUMqd1GH
-         idEB7QIqNGB6FV4TPY8zNnH8YTPOrb2FnvOVY=
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=message-id:subject:from:to:cc:date:in-reply-to:references
+         :user-agent:mime-version:content-transfer-encoding;
+        bh=suG0F0UoWiaM1rg1kA32ZVwY8eEO38Fk254vRSf8mBg=;
+        b=10gtItmO4VM4P1eUEBvLxn2dalHadbbCVYyxG+5wqFl6o7xBJEF1GodNxN7/DKFY+e
+         EgSUO11pCntSYZVWb3SQeoXYQfyJYrQ1ApRPWeHpSHnshIL663Dwz4id0LJHhH4fLb7k
+         FFivLYNEc/QQOHW6HlMix2bSCey96AxYoTFsNUC/ZFzc+Mw0fJfx7ZJmQzxuXdL7MMwK
+         0czeVM9YR/LbUd7STCqRasjeuvSDkZvWN36/rr0vrwuZnCmqhRUASStu9xJkdj+T4BMX
+         2ciigQmSWhiWZBB9OxTMZwmH/+bAnEpuG7ws2502Y4aXxO9pv/AbbHyr35zAIgfS9OWd
+         Il9A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=AjggmU90pDPJr60wE2nNAnEDRr3oK/LD2TBSCV+YnF4=;
-        b=maSh2zBtHnDj7u9LQb4BSgEQP3NVuXoH/vwlH96MwAX4MixW11Z/ZZLVjz4bVUigpu
-         UhMJ71F4TtQhWDzz4DzoxCl/xGFjUjb5oNBIhhm8M0rDXRrQOjEkMPIvTv1yQDwJKNfG
-         JTaA5seBJaWDBVT+CcKHDjLZkffhrgB1wsbF+Lm4PHdD/2LQNXnFaTJGy7H6SI5JHNzj
-         inXFUm457fx38DC4FqLDu417GkUVjXIaN6C/NeHj0drHU3X6wn/t53DJXG5NX+PGyfpd
-         v9eJTv2OIRER/Z4eyhbj9c6kLfgJ68TnR6E5Y2+rB2SWrdyhnxvpwdl74lmouM6j6Njj
-         jGRA==
-X-Gm-Message-State: APjAAAW2czSSVNajUbrRicGtuwQa+0l992/6DpCyT3duCE9ToayHajpw
-        ZZIkED+PC+YmoLvxTLS9lr7r1N7N5AI=
-X-Google-Smtp-Source: APXvYqwkO/MxVX4k6hJVbuRvCLVJ6hWVXqWke/9oTdO2/sUrJRHJBfNZFPkq64H0g6SD6MZz+J/3og==
-X-Received: by 2002:a17:902:bd06:: with SMTP id p6mr4630769pls.112.1558389005535;
-        Mon, 20 May 2019 14:50:05 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id a11sm11573602pff.128.2019.05.20.14.50.04
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 20 May 2019 14:50:04 -0700 (PDT)
-Date:   Mon, 20 May 2019 14:50:03 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Takashi Iwai <tiwai@suse.de>
-Cc:     shuah <shuah@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/5] firmware: Add support for loading compressed files
-Message-ID: <201905201446.B1CE073E@keescook>
-References: <20190520092647.8622-1-tiwai@suse.de>
- <20190520093929.GB15326@kroah.com>
- <s5hwoil5gwm.wl-tiwai@suse.de>
- <s5h7ealb1d3.wl-tiwai@suse.de>
- <s5ho93xqenb.wl-tiwai@suse.de>
- <5a3a0649-ece0-c3e3-3ebb-9d8d19d9499f@kernel.org>
- <s5h36l980f6.wl-tiwai@suse.de>
- <s5hwoil6jgd.wl-tiwai@suse.de>
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:user-agent:mime-version:content-transfer-encoding;
+        bh=suG0F0UoWiaM1rg1kA32ZVwY8eEO38Fk254vRSf8mBg=;
+        b=Hry9BINVEuOh4mW6UwSNLnT/50dc2rT5smZwlODcXO+6/s26rd5FDPhxdjmHrSepiO
+         uqTRxzEwKfcNFiJut3T771B+lhc5H9qry+Oe+uE0zUTS10XrAekZETN6ZQ7MEm5J7Qui
+         /28HUZfmgrQkn6l0xz/IbfO+GBw565wMB3ec/jehhD91tgU1i5KHPw8aiwONdggH0ffy
+         gAamveUwAEakEYs+Pe+2RPBqC0JExjJDr30L6MJ96jU0pRa3v46xmM13q84yNrWcnBQV
+         VIXtT+8D/8hOikV3ojnbAPqksS5vAEAgslnUIpKQrE6pDQUUWp0IoXuhnPwpNodqCAjC
+         orLA==
+X-Gm-Message-State: APjAAAU8CjB3mf995jodxJgAXtt1G+gbK1mbF1DQrq8J0qenA4wpwF/l
+        LvOZvvf0lHwSio/yVTMu7D3lvw==
+X-Google-Smtp-Source: APXvYqzyO1M/CnCLWf6cAnnORJuCPlXz906OZjZZljzCcjQtkTxx24tsTI99NINeG4zlq2iYc88zJQ==
+X-Received: by 2002:a1c:f009:: with SMTP id a9mr832063wmb.110.1558389071947;
+        Mon, 20 May 2019 14:51:11 -0700 (PDT)
+Received: from boomer.baylibre.com (cag06-3-82-243-161-21.fbx.proxad.net. [82.243.161.21])
+        by smtp.gmail.com with ESMTPSA id m13sm18131299wrs.87.2019.05.20.14.51.10
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Mon, 20 May 2019 14:51:11 -0700 (PDT)
+Message-ID: <97cde329c44eade402deb517211a15fd70103f01.camel@baylibre.com>
+Subject: Re: [PATCH v2 3/5] arm64: dts: meson: g12a: add mdio multiplexer
+From:   Jerome Brunet <jbrunet@baylibre.com>
+To:     Andrew Lunn <andrew@lunn.ch>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Cc:     Kevin Hilman <khilman@baylibre.com>, devicetree@vger.kernel.org,
+        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org,
+        f.fainelli@gmail.com, hkallweit1@gmail.com
+Date:   Mon, 20 May 2019 23:51:09 +0200
+In-Reply-To: <20190520190533.GF22024@lunn.ch>
+References: <20190520131401.11804-1-jbrunet@baylibre.com>
+         <20190520131401.11804-4-jbrunet@baylibre.com>
+         <CAFBinCA_XE86eqCMpEFc3xMZDH8J7wVQPRj7bFZyqDxQx-w-qw@mail.gmail.com>
+         <20190520190533.GF22024@lunn.ch>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <s5hwoil6jgd.wl-tiwai@suse.de>
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 20, 2019 at 08:59:14PM +0200, Takashi Iwai wrote:
-> So the problem is obvious: the commit above adjusts the stdout to be
-> unbuffered via stdbuf, hence each invocation like
->   echo -n abc > /sys/....
+On Mon, 2019-05-20 at 21:05 +0200, Andrew Lunn wrote:
+> > > +                               int_mdio: mdio@1 {
+> > > +                                       reg = <1>;
+> > > +                                       #address-cells = <1>;
+> > > +                                       #size-cells = <0>;
+> > > +
+> > > +                                       internal_ephy: ethernet_phy@8 {
+> > > +                                               compatible = "ethernet-phy-id0180.3301",
+> > > +                                                            "ethernet-phy-ieee802.3-c22";
+> > Based on your comment on v1 of this patch [0] the Ethernet PHY ID is
+> > defined by this "mdio-multiplexer" (write arbitrary value to a
+> > register then that's the PHY ID which will show up on the bus)
+> > I'm fine with explicitly listing the ID which the PHY driver binds to
+> > because I don't know a better way.
+
+... 
+
 > 
-> would become writes of "a", "b" and "c", instead of "abc".
+> Does reading the ID registers give the correct ID, once you have poked
+> registers in the mdio-multiplexer? If so, you don't need this
+> compatible string.
+
+Hi Andrew,
+
+In 5.1 the mdio-mux set a wrong simply because I got it wrong. I pushed a
+fix for that, and maybe it has already hit mainline.
+
+As I pointed to Martin on v1, this situation just shows that this setting is
+weaker than the usual phy setup.
+
+I do understand why we don't want to put the PHY id in DT. If the PHY fitted on
+the board changes, we want to pick it up. This particular phy is embedded in
+SoC, we know it won't change for this SoC, whatever the mdio-mux sets.
+
+So yes it should (soon) work as usual, setting this id is not strictly
+necessary but it nicely reflect that this particular phy is integrated in
+the SoC and we know which driver to use. 
+
+So, if this is ok with you, I'd prefer to keep this particular id around.
+
 > 
-> Although we can work around it in each test unit, I'm afraid that
-> enforcing the unbuffered stdio is too fragile for scripts like the
-> above case.
+> If the read is giving the wrong ID, then yes, you do want this. But
+> then please add a comment in the DT blob. This is very unusual, so
+> should have some explanation why it is needed.
 
-Oh this is nasty. Looks like stdbuf overrides all child processes too...
-yeah, that's very broken. Let me try to see if I can find an
-alternative.
+Sure, can add a comment. I suggest to do it in follow-up. At least it keeps
+things aligned between the gxl, which has been like this for quite a while now,
+and g12a.
 
-Shuah, in the meantime, if you want a fix to restore test behavior,
-but regress output flushing, this will work:
 
-diff --git a/tools/testing/selftests/kselftest/runner.sh b/tools/testing/selftests/kselftest/runner.sh
-index eff3ee303d0d..a529c19240fc 100644
---- a/tools/testing/selftests/kselftest/runner.sh
-+++ b/tools/testing/selftests/kselftest/runner.sh
-@@ -27,11 +27,11 @@ tap_prefix()
- # If stdbuf is unavailable, we must fall back to line-at-a-time piping.
- tap_unbuffer()
- {
--	if ! which stdbuf >/dev/null ; then
-+	#if ! which asdfstdbuf >/dev/null ; then
- 		"$@"
--	else
--		stdbuf -i0 -o0 -e0 "$@"
--	fi
-+	#else
-+	#	stdbuf -i0 -o0 -e0 "$@"
-+	#fi
- }
- 
- run_one()
+> 
+> Thanks
+> 	Andrew
 
-Some tests will no longer show their output until they're entirely done,
-but at least no test pass/fail results should regress.
 
-I'll keep looking at solutions...
-
--- 
-Kees Cook
