@@ -7,46 +7,50 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 134B4C04AAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:28:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 381A6C04E87
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:28:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DDA0221479
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:28:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0EB72214DA
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:28:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558355321;
-	bh=iR/CRwxw8Y9GNxIe6y43msCHgJFVvMtFrS9EgdCBTTo=;
+	s=default; t=1558355328;
+	bh=5QImTVuc0lxp89bL2HI9b6Gh4NBrFme6P7Laz59P0CI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=foHrGDh4Bg6BuYHxIyTqLHmRSC9TDEUh/FflwexdnNKWivfk+N3Gf+Vhb4hEZSC21
-	 nESQ3sOtRgkN89DqSBRaAhB0NnQN35/6zeHkvMPJTFmH8icoC5vsNpt3HuArAqa6Qx
-	 OuecRseI22mMtzDo4HL19lsueYN93YHdos7h4E0o=
+	b=QlSOEaOFDp6lTTIyKMyRMbUJ9sPcam+iCyhpxaOkHzXxSwnakSStmTT76tn0cK7tI
+	 yDtIR0UY9VNOG02fe5G6hMdv9ccHE6hdY8jSj9T3kPKpYwxnA264t1TxQu1LQCZ2e+
+	 VCnxOsIpmNfwyuhkHCWu9ObOR6LfhYxrx3FS4ISw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389728AbfETM2l (ORCPT
+        id S2389749AbfETM2r (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 08:28:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44448 "EHLO mail.kernel.org"
+        Mon, 20 May 2019 08:28:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44624 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389099AbfETM2f (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 08:28:35 -0400
+        id S2387876AbfETM2n (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 08:28:43 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9481B216C4;
-        Mon, 20 May 2019 12:28:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4DDD4214DA;
+        Mon, 20 May 2019 12:28:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558355315;
-        bh=iR/CRwxw8Y9GNxIe6y43msCHgJFVvMtFrS9EgdCBTTo=;
+        s=default; t=1558355322;
+        bh=5QImTVuc0lxp89bL2HI9b6Gh4NBrFme6P7Laz59P0CI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LrLoHtowAeggcW71vR5EvulvLIY/xQ02XIktRsA7ZsTYlNi/tn2J81Lyi3K8qyR6P
-         D1OOHDF6TBHPJCeAz/yy2GL1r/PaXBTNuh8nAcd5fAXXKpxOPyr6uqtnDnb8CIwp2C
-         aoz/RqKp6LTcV+yCP48vm40eAgpUIuxlO0TRylOE=
+        b=XjRwu3rGpTDPD/rykJO7z6Cxo1q1LFG/UesZJJWrC8FQYNE+XFPREfjGN8UGckz5S
+         C3wFZgmAWKYZ8f/BMojCuNJf3xyIAHQbIwv0ylUiIP+ye9gFvsd6WhGkZTYLCiyRHo
+         yCH/R6yGeBqajN/BVSzK6sc44T6gK5N4V5lY5Sno=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Rajat Jain <rajatja@google.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
-Subject: [PATCH 5.0 073/123] ACPI: PM: Set enable_for_wake for wakeup GPEs during suspend-to-idle
-Date:   Mon, 20 May 2019 14:14:13 +0200
-Message-Id: <20190520115249.698856898@linuxfoundation.org>
+        stable@vger.kernel.org, Romain Porte <romain.porte@nokia.com>,
+        Pascal Fabreges <pascal.fabreges@nokia.com>,
+        Alexander Sverdlin <alexander.sverdlin@nokia.com>,
+        Tudor Ambarus <tudor.ambarus@microchip.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>
+Subject: [PATCH 5.0 076/123] mtd: spi-nor: intel-spi: Avoid crossing 4K address boundary on read/write
+Date:   Mon, 20 May 2019 14:14:16 +0200
+Message-Id: <20190520115249.901773602@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190520115245.439864225@linuxfoundation.org>
 References: <20190520115245.439864225@linuxfoundation.org>
@@ -59,86 +63,69 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rajat Jain <rajatja@google.com>
+From: Alexander Sverdlin <alexander.sverdlin@nokia.com>
 
-commit 2f844b61db8297a1f7a06adf2eb5c43381f2c183 upstream.
+commit 2b75ebeea6f4937d4d05ec4982c471cef9a29b7f upstream.
 
-I noticed that recently multiple systems (chromebooks) couldn't wake
-from S0ix using LID or Keyboard after updating to a newer kernel. I
-bisected and it turned up commit f941d3e41da7 ("ACPI: EC / PM: Disable
-non-wakeup GPEs for suspend-to-idle"). I checked that the issue got
-fixed if that commit was reverted.
+It was observed that reads crossing 4K address boundary are failing.
 
-I debugged and found that although PNP0C0D:00 (representing the LID)
-is wake capable and should wakeup the system per the code in
-acpi_wakeup_gpe_init() and in drivers/acpi/button.c:
+This limitation is mentioned in Intel documents:
 
-localhost /sys # cat /proc/acpi/wakeup
-Device  S-state   Status   Sysfs node
-LID0      S4    *enabled   platform:PNP0C0D:00
-CREC      S5    *disabled  platform:GOOG0004:00
-                *disabled  platform:cros-ec-dev.1.auto
-                *disabled  platform:cros-ec-accel.0
-                *disabled  platform:cros-ec-accel.1
-                *disabled  platform:cros-ec-gyro.0
-                *disabled  platform:cros-ec-ring.0
-                *disabled  platform:cros-usbpd-charger.2.auto
-                *disabled  platform:cros-usbpd-logger.3.auto
-D015      S3    *enabled   i2c:i2c-ELAN0000:00
-PENH      S3    *enabled   platform:PRP0001:00
-XHCI      S3    *enabled   pci:0000:00:14.0
-GLAN      S4    *disabled
-WIFI      S3    *disabled  pci:0000:00:14.3
-localhost /sys #
+Intel(R) 9 Series Chipset Family Platform Controller Hub (PCH) Datasheet:
 
-On debugging, I found that its corresponding GPE is not being enabled.
-The particular GPE's "gpe_register_info->enable_for_wake" does not
-have any bits set when acpi_enable_all_wakeup_gpes() comes around to
-use it. I looked at code and could not find any other code path that
-should set the bits in "enable_for_wake" bitmask for the wake enabled
-devices for s2idle.  [I do see that it happens for S3 in
-acpi_sleep_prepare()].
+"5.26.3 Flash Access
+Program Register Access:
+* Program Register Accesses are not allowed to cross a 4 KB boundary..."
 
-Thus I used the same call to enable the GPEs for wake enabled devices,
-and verified that this fixes the regression I was seeing on multiple
-of my devices.
+Enhanced Serial Peripheral Interface (eSPI)
+Interface Base Specification (for Client and Server Platforms):
 
-[ rjw: The problem is that commit f941d3e41da7 ("ACPI: EC / PM:
-  Disable non-wakeup GPEs for suspend-to-idle") forgot to add
-  the acpi_enable_wakeup_devices() call for s2idle along with
-  acpi_enable_all_wakeup_gpes(). ]
+"5.1.4 Address
+For other memory transactions, the address may start or end at any byte
+boundary. However, the address and payload length combination must not
+cross the naturally aligned address boundary of the corresponding Maximum
+Payload Size. It must not cross a 4 KB address boundary."
 
-Fixes: f941d3e41da7 ("ACPI: EC / PM: Disable non-wakeup GPEs for suspend-to-idle")
-Link: https://bugzilla.kernel.org/show_bug.cgi?id=203579
-Signed-off-by: Rajat Jain <rajatja@google.com>
-[ rjw: Subject & changelog ]
-Cc: 5.0+ <stable@vger.kernel.org> # 5.0+
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Avoid this by splitting an operation crossing the boundary into two
+operations.
+
+Fixes: 8afda8b26d01 ("spi-nor: Add support for Intel SPI serial flash controller")
+Cc: stable@vger.kernel.org
+Reported-by: Romain Porte <romain.porte@nokia.com>
+Tested-by: Pascal Fabreges <pascal.fabreges@nokia.com>
+Signed-off-by: Alexander Sverdlin <alexander.sverdlin@nokia.com>
+Reviewed-by: Tudor Ambarus <tudor.ambarus@microchip.com>
+Acked-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/acpi/sleep.c |    4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/mtd/spi-nor/intel-spi.c |    8 ++++++++
+ 1 file changed, 8 insertions(+)
 
---- a/drivers/acpi/sleep.c
-+++ b/drivers/acpi/sleep.c
-@@ -977,6 +977,8 @@ static int acpi_s2idle_prepare(void)
- 	if (acpi_sci_irq_valid())
- 		enable_irq_wake(acpi_sci_irq);
+--- a/drivers/mtd/spi-nor/intel-spi.c
++++ b/drivers/mtd/spi-nor/intel-spi.c
+@@ -632,6 +632,10 @@ static ssize_t intel_spi_read(struct spi
+ 	while (len > 0) {
+ 		block_size = min_t(size_t, len, INTEL_SPI_FIFO_SZ);
  
-+	acpi_enable_wakeup_devices(ACPI_STATE_S0);
++		/* Read cannot cross 4K boundary */
++		block_size = min_t(loff_t, from + block_size,
++				   round_up(from + 1, SZ_4K)) - from;
 +
- 	/* Change the configuration of GPEs to avoid spurious wakeup. */
- 	acpi_enable_all_wakeup_gpes();
- 	acpi_os_wait_events_complete();
-@@ -1027,6 +1029,8 @@ static void acpi_s2idle_restore(void)
- {
- 	acpi_enable_all_runtime_gpes();
+ 		writel(from, ispi->base + FADDR);
  
-+	acpi_disable_wakeup_devices(ACPI_STATE_S0);
+ 		val = readl(ispi->base + HSFSTS_CTL);
+@@ -685,6 +689,10 @@ static ssize_t intel_spi_write(struct sp
+ 	while (len > 0) {
+ 		block_size = min_t(size_t, len, INTEL_SPI_FIFO_SZ);
+ 
++		/* Write cannot cross 4K boundary */
++		block_size = min_t(loff_t, to + block_size,
++				   round_up(to + 1, SZ_4K)) - to;
 +
- 	if (acpi_sci_irq_valid())
- 		disable_irq_wake(acpi_sci_irq);
+ 		writel(to, ispi->base + FADDR);
  
+ 		val = readl(ispi->base + HSFSTS_CTL);
 
 
