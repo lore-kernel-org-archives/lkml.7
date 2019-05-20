@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EBD50C04E87
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:29:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AFC48C04AAF
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:29:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B77CB20675
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:29:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8571921479
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:29:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558355396;
-	bh=wqitfvQoqJOsPmhghHQsmAcxGumwKfJ6hI6k9UAFJKw=;
+	s=default; t=1558355399;
+	bh=onfGMYicXDP3MCBWfPIOJpbs01/cprEgL1AT+ll7nso=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mutzKtwdYLh3ug1wO1OsjG4+FkhY1pUPmhiehTIrKPd7G2LZul3gej7Qpr1UQGotW
-	 fOG5BN2MzZGkJd9g5wv/BrziUWOriI4U/1Rpco1pgLaqIEKDmhWWJC7AeD4rydJqYZ
-	 SW6m/iokBLZfUGHQ9HigsT0eXigb34SOJSk0+yMs=
+	b=eOd6T7cmG2q8P3xqT4xb0nQv86NGeeq41x3odO37mXlbcXeiEZVuJn9ZH0zmnC3ob
+	 d4I039GkUvwd9kv8sCN5jILrFfLSF1d4WuGJdAZERfm+8IJLymNVJXckRSOCoSdQOO
+	 mW9uTMEdJSyfiwTFm5L/QbPLoyxOaDSYHUZBpbpA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389596AbfETM34 (ORCPT
+        id S2388264AbfETM36 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 08:29:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46022 "EHLO mail.kernel.org"
+        Mon, 20 May 2019 08:29:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46062 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389985AbfETM3w (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 08:29:52 -0400
+        id S2389975AbfETM3z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 08:29:55 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E003120675;
-        Mon, 20 May 2019 12:29:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9679920645;
+        Mon, 20 May 2019 12:29:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558355391;
-        bh=wqitfvQoqJOsPmhghHQsmAcxGumwKfJ6hI6k9UAFJKw=;
+        s=default; t=1558355394;
+        bh=onfGMYicXDP3MCBWfPIOJpbs01/cprEgL1AT+ll7nso=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Q5X+C67q6ue9PWahXWrx05iXeH6lfOtl6tecsw2YTXmnUlIASqgWRtzDHz12zw17K
-         yL3pOg2keVbtBo5YJSXJUAadC3L4WO+P+hThc0MTvkNZmP5gXGYIRZh+xLjPv2CxWj
-         +89DdsSf/DFQVzVi7N7Yuygfjr3cm2/H6rdnsXbw=
+        b=vTI65A+CHpCnNq6O7dwPIFcsf0GrYQlyGCx62rIknslYdlSJBu2OhulVAZyOpJa+n
+         zh/71XCFRpTZhpPaFrbOATkwGLauu2c39/NlHy5iuSv0wRw+r68xL7TO9HMy0ualZ+
+         nR4jmQDiefD9eEx+7Z75Ho41GxyJbLSoco1cYClw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Biggers <ebiggers@google.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>
-Subject: [PATCH 5.0 099/123] crypto: ccm - fix incompatibility between "ccm" and "ccm_base"
-Date:   Mon, 20 May 2019 14:14:39 +0200
-Message-Id: <20190520115251.612601715@linuxfoundation.org>
+        stable@vger.kernel.org, Jiufei Xue <jiufei.xue@linux.alibaba.com>,
+        Tejun Heo <tj@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 5.0 100/123] fs/writeback.c: use rcu_barrier() to wait for inflight wb switches going into workqueue when umount
+Date:   Mon, 20 May 2019 14:14:40 +0200
+Message-Id: <20190520115251.686329530@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190520115245.439864225@linuxfoundation.org>
 References: <20190520115245.439864225@linuxfoundation.org>
@@ -59,148 +61,75 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Biggers <ebiggers@google.com>
+From: Jiufei Xue <jiufei.xue@linux.alibaba.com>
 
-commit 6a1faa4a43f5fabf9cbeaa742d916e7b5e73120f upstream.
+commit ec084de929e419e51bcdafaafe567d9e7d0273b7 upstream.
 
-CCM instances can be created by either the "ccm" template, which only
-allows choosing the block cipher, e.g. "ccm(aes)"; or by "ccm_base",
-which allows choosing the ctr and cbcmac implementations, e.g.
-"ccm_base(ctr(aes-generic),cbcmac(aes-generic))".
+synchronize_rcu() didn't wait for call_rcu() callbacks, so inode wb
+switch may not go to the workqueue after synchronize_rcu().  Thus
+previous scheduled switches was not finished even flushing the
+workqueue, which will cause a NULL pointer dereferenced followed below.
 
-However, a "ccm_base" instance prevents a "ccm" instance from being
-registered using the same implementations.  Nor will the instance be
-found by lookups of "ccm".  This can be used as a denial of service.
-Moreover, "ccm_base" instances are never tested by the crypto
-self-tests, even if there are compatible "ccm" tests.
+  VFS: Busy inodes after unmount of vdd. Self-destruct in 5 seconds.  Have a nice day...
+  BUG: unable to handle kernel NULL pointer dereference at 0000000000000278
+    evict+0xb3/0x180
+    iput+0x1b0/0x230
+    inode_switch_wbs_work_fn+0x3c0/0x6a0
+    worker_thread+0x4e/0x490
+    ? process_one_work+0x410/0x410
+    kthread+0xe6/0x100
+    ret_from_fork+0x39/0x50
 
-The root cause of these problems is that instances of the two templates
-use different cra_names.  Therefore, fix these problems by making
-"ccm_base" instances set the same cra_name as "ccm" instances, e.g.
-"ccm(aes)" instead of "ccm_base(ctr(aes-generic),cbcmac(aes-generic))".
+Replace the synchronize_rcu() call with a rcu_barrier() to wait for all
+pending callbacks to finish.  And inc isw_nr_in_flight after call_rcu()
+in inode_switch_wbs() to make more sense.
 
-This requires extracting the block cipher name from the name of the ctr
-and cbcmac algorithms.  It also requires starting to verify that the
-algorithms are really ctr and cbcmac using the same block cipher, not
-something else entirely.  But it would be bizarre if anyone were
-actually using non-ccm-compatible algorithms with ccm_base, so this
-shouldn't break anyone in practice.
-
-Fixes: 4a49b499dfa0 ("[CRYPTO] ccm: Added CCM mode")
-Cc: stable@vger.kernel.org
-Signed-off-by: Eric Biggers <ebiggers@google.com>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Link: http://lkml.kernel.org/r/20190429024108.54150-1-jiufei.xue@linux.alibaba.com
+Signed-off-by: Jiufei Xue <jiufei.xue@linux.alibaba.com>
+Acked-by: Tejun Heo <tj@kernel.org>
+Suggested-by: Tejun Heo <tj@kernel.org>
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-
 ---
- crypto/ccm.c |   44 ++++++++++++++++++--------------------------
- 1 file changed, 18 insertions(+), 26 deletions(-)
+ fs/fs-writeback.c |   11 ++++++++---
+ 1 file changed, 8 insertions(+), 3 deletions(-)
 
---- a/crypto/ccm.c
-+++ b/crypto/ccm.c
-@@ -458,7 +458,6 @@ static void crypto_ccm_free(struct aead_
+--- a/fs/fs-writeback.c
++++ b/fs/fs-writeback.c
+@@ -523,8 +523,6 @@ static void inode_switch_wbs(struct inod
  
- static int crypto_ccm_create_common(struct crypto_template *tmpl,
- 				    struct rtattr **tb,
--				    const char *full_name,
- 				    const char *ctr_name,
- 				    const char *mac_name)
- {
-@@ -486,7 +485,8 @@ static int crypto_ccm_create_common(stru
+ 	isw->inode = inode;
  
- 	mac = __crypto_hash_alg_common(mac_alg);
- 	err = -EINVAL;
--	if (mac->digestsize != 16)
-+	if (strncmp(mac->base.cra_name, "cbcmac(", 7) != 0 ||
-+	    mac->digestsize != 16)
- 		goto out_put_mac;
- 
- 	inst = kzalloc(sizeof(*inst) + sizeof(*ictx), GFP_KERNEL);
-@@ -509,23 +509,27 @@ static int crypto_ccm_create_common(stru
- 
- 	ctr = crypto_spawn_skcipher_alg(&ictx->ctr);
- 
--	/* Not a stream cipher? */
-+	/* The skcipher algorithm must be CTR mode, using 16-byte blocks. */
- 	err = -EINVAL;
--	if (ctr->base.cra_blocksize != 1)
-+	if (strncmp(ctr->base.cra_name, "ctr(", 4) != 0 ||
-+	    crypto_skcipher_alg_ivsize(ctr) != 16 ||
-+	    ctr->base.cra_blocksize != 1)
- 		goto err_drop_ctr;
- 
--	/* We want the real thing! */
--	if (crypto_skcipher_alg_ivsize(ctr) != 16)
-+	/* ctr and cbcmac must use the same underlying block cipher. */
-+	if (strcmp(ctr->base.cra_name + 4, mac->base.cra_name + 7) != 0)
- 		goto err_drop_ctr;
- 
- 	err = -ENAMETOOLONG;
-+	if (snprintf(inst->alg.base.cra_name, CRYPTO_MAX_ALG_NAME,
-+		     "ccm(%s", ctr->base.cra_name + 4) >= CRYPTO_MAX_ALG_NAME)
-+		goto err_drop_ctr;
+-	atomic_inc(&isw_nr_in_flight);
+-
+ 	/*
+ 	 * In addition to synchronizing among switchers, I_WB_SWITCH tells
+ 	 * the RCU protected stat update paths to grab the i_page
+@@ -532,6 +530,9 @@ static void inode_switch_wbs(struct inod
+ 	 * Let's continue after I_WB_SWITCH is guaranteed to be visible.
+ 	 */
+ 	call_rcu(&isw->rcu_head, inode_switch_wbs_rcu_fn);
 +
- 	if (snprintf(inst->alg.base.cra_driver_name, CRYPTO_MAX_ALG_NAME,
- 		     "ccm_base(%s,%s)", ctr->base.cra_driver_name,
- 		     mac->base.cra_driver_name) >= CRYPTO_MAX_ALG_NAME)
- 		goto err_drop_ctr;
++	atomic_inc(&isw_nr_in_flight);
++
+ 	goto out_unlock;
  
--	memcpy(inst->alg.base.cra_name, full_name, CRYPTO_MAX_ALG_NAME);
--
- 	inst->alg.base.cra_flags = ctr->base.cra_flags & CRYPTO_ALG_ASYNC;
- 	inst->alg.base.cra_priority = (mac->base.cra_priority +
- 				       ctr->base.cra_priority) / 2;
-@@ -567,7 +571,6 @@ static int crypto_ccm_create(struct cryp
- 	const char *cipher_name;
- 	char ctr_name[CRYPTO_MAX_ALG_NAME];
- 	char mac_name[CRYPTO_MAX_ALG_NAME];
--	char full_name[CRYPTO_MAX_ALG_NAME];
- 
- 	cipher_name = crypto_attr_alg_name(tb[1]);
- 	if (IS_ERR(cipher_name))
-@@ -581,12 +584,7 @@ static int crypto_ccm_create(struct cryp
- 		     cipher_name) >= CRYPTO_MAX_ALG_NAME)
- 		return -ENAMETOOLONG;
- 
--	if (snprintf(full_name, CRYPTO_MAX_ALG_NAME, "ccm(%s)", cipher_name) >=
--	    CRYPTO_MAX_ALG_NAME)
--		return -ENAMETOOLONG;
--
--	return crypto_ccm_create_common(tmpl, tb, full_name, ctr_name,
--					mac_name);
-+	return crypto_ccm_create_common(tmpl, tb, ctr_name, mac_name);
- }
- 
- static struct crypto_template crypto_ccm_tmpl = {
-@@ -599,23 +597,17 @@ static int crypto_ccm_base_create(struct
- 				  struct rtattr **tb)
+ out_free:
+@@ -901,7 +902,11 @@ restart:
+ void cgroup_writeback_umount(void)
  {
- 	const char *ctr_name;
--	const char *cipher_name;
--	char full_name[CRYPTO_MAX_ALG_NAME];
-+	const char *mac_name;
- 
- 	ctr_name = crypto_attr_alg_name(tb[1]);
- 	if (IS_ERR(ctr_name))
- 		return PTR_ERR(ctr_name);
- 
--	cipher_name = crypto_attr_alg_name(tb[2]);
--	if (IS_ERR(cipher_name))
--		return PTR_ERR(cipher_name);
--
--	if (snprintf(full_name, CRYPTO_MAX_ALG_NAME, "ccm_base(%s,%s)",
--		     ctr_name, cipher_name) >= CRYPTO_MAX_ALG_NAME)
--		return -ENAMETOOLONG;
-+	mac_name = crypto_attr_alg_name(tb[2]);
-+	if (IS_ERR(mac_name))
-+		return PTR_ERR(mac_name);
- 
--	return crypto_ccm_create_common(tmpl, tb, full_name, ctr_name,
--					cipher_name);
-+	return crypto_ccm_create_common(tmpl, tb, ctr_name, mac_name);
+ 	if (atomic_read(&isw_nr_in_flight)) {
+-		synchronize_rcu();
++		/*
++		 * Use rcu_barrier() to wait for all pending callbacks to
++		 * ensure that all in-flight wb switches are in the workqueue.
++		 */
++		rcu_barrier();
+ 		flush_workqueue(isw_wq);
+ 	}
  }
- 
- static struct crypto_template crypto_ccm_base_tmpl = {
 
 
