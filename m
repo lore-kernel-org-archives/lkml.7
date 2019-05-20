@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD283C04AAC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:36:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF7ABC04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:36:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AA09620645
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:36:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A182F20815
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:36:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558355802;
-	bh=cuCka6+D/zHu/Ia0WcLVoONDemKDc45zUEKXJ1Ae6fM=;
+	s=default; t=1558355805;
+	bh=wftdP+bcB8N5/08oAw9aWqUvzWDJItRf/5W8fKgiDR8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QyupPA+bGrqqm0jBrv52fdpQ4bswwR0ZYy0B4VwWAlL4gtYd8aq3BD/8wsiS6oeAZ
-	 lqUQowWWTIhVECYR/YCfm9VzWQSvb/2PJrmii7M0vwx0qlcM6aZ8clcNHGpB+xJa8v
-	 KaWtO2Dt20UKPrtUJWE9ajkA8KjgsOxA/rI3Occo=
+	b=ohMStXL8lStuSbJzoWYX27ESVLLaqcfaBfRqCTalbyec+xjtY5MFkO5Z6yijfgYjX
+	 aE1a/ouLESYn3fXhwrWx/0RLvGzjXYYOsUvYcvj/IAWZdevs5NsNUHR7PLRLvfbP9c
+	 WRC5lvrxwKCV9wSxJRFDKJnKyGpAVaECB7CLiUf0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403897AbfETMgm (ORCPT
+        id S2403890AbfETMgk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 08:36:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55694 "EHLO mail.kernel.org"
+        Mon, 20 May 2019 08:36:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55656 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390990AbfETMgh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 08:36:37 -0400
+        id S2403876AbfETMgf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 08:36:35 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7CE60204FD;
-        Mon, 20 May 2019 12:36:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DBAD0204FD;
+        Mon, 20 May 2019 12:36:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558355797;
-        bh=cuCka6+D/zHu/Ia0WcLVoONDemKDc45zUEKXJ1Ae6fM=;
+        s=default; t=1558355794;
+        bh=wftdP+bcB8N5/08oAw9aWqUvzWDJItRf/5W8fKgiDR8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=d9S8Vnwv2jl1dORM08T6NH7FAgd3TQzfjTVeZo73GIcDj8dGEuKgF518Oy2RL37D5
-         bccNGy8hH+4+SmyDRGpeRQI4uVOiWdjoX4UZM1lzjHrfDqdcwX8viIUTk8cMJcaojt
-         bnm1VtKiCA80fwLfyn7YZZhes45Ta3bqrUNXbDU4=
+        b=hIRrBU7YfJaADhlDzfQ12S5/9h/v89MFRKY8NwvCyvhws590A0m0+Vj2pUBtqiTLB
+         +CNslXcVcCipLp+wz4TjHkZdksxUqGjsVHriAuZ3YfZoOZgzVUYN3l6FurJ76mmIK7
+         WZt03cI2Vn4ePT3EjcjplhZOyx1n+qN1Eyqj46EA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Pan Bian <bianpan2016@163.com>,
-        Theodore Tso <tytso@mit.edu>, Jan Kara <jack@suse.cz>,
+        stable@vger.kernel.org, Theodore Tso <tytso@mit.edu>,
         stable@kernel.org
-Subject: [PATCH 5.1 088/128] ext4: avoid drop reference to iloc.bh twice
-Date:   Mon, 20 May 2019 14:14:35 +0200
-Message-Id: <20190520115255.387100373@linuxfoundation.org>
+Subject: [PATCH 5.1 087/128] ext4: ignore e_value_offs for xattrs with value-in-ea-inode
+Date:   Mon, 20 May 2019 14:14:34 +0200
+Message-Id: <20190520115255.349328649@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190520115249.449077487@linuxfoundation.org>
 References: <20190520115249.449077487@linuxfoundation.org>
@@ -60,34 +59,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pan Bian <bianpan2016@163.com>
+From: Theodore Ts'o <tytso@mit.edu>
 
-commit 8c380ab4b7b59c0c602743810be1b712514eaebc upstream.
+commit e5d01196c0428a206f307e9ee5f6842964098ff0 upstream.
 
-The reference to iloc.bh has been dropped in ext4_mark_iloc_dirty.
-However, the reference is dropped again if error occurs during
-ext4_handle_dirty_metadata, which may result in use-after-free bugs.
+In other places in fs/ext4/xattr.c, if e_value_inum is non-zero, the
+code ignores the value in e_value_offs.  The e_value_offs *should* be
+zero, but we shouldn't depend upon it, since it might not be true in a
+corrupted/fuzzed file system.
 
-Fixes: fb265c9cb49e("ext4: add ext4_sb_bread() to disambiguate ENOMEM cases")
-Signed-off-by: Pan Bian <bianpan2016@163.com>
+Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=202897
+Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=202877
 Signed-off-by: Theodore Ts'o <tytso@mit.edu>
-Reviewed-by: Jan Kara <jack@suse.cz>
 Cc: stable@kernel.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/ext4/resize.c |    1 +
- 1 file changed, 1 insertion(+)
+ fs/ext4/xattr.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/fs/ext4/resize.c
-+++ b/fs/ext4/resize.c
-@@ -874,6 +874,7 @@ static int add_new_gdb(handle_t *handle,
- 	err = ext4_handle_dirty_metadata(handle, NULL, gdb_bh);
- 	if (unlikely(err)) {
- 		ext4_std_error(sb, err);
-+		iloc.bh = NULL;
- 		goto errout;
- 	}
- 	brelse(dind);
+--- a/fs/ext4/xattr.c
++++ b/fs/ext4/xattr.c
+@@ -1696,7 +1696,7 @@ static int ext4_xattr_set_entry(struct e
+ 
+ 	/* No failures allowed past this point. */
+ 
+-	if (!s->not_found && here->e_value_size && here->e_value_offs) {
++	if (!s->not_found && here->e_value_size && !here->e_value_inum) {
+ 		/* Remove the old value. */
+ 		void *first_val = s->base + min_offs;
+ 		size_t offs = le16_to_cpu(here->e_value_offs);
 
 
