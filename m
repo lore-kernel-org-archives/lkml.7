@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25734C04AAC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:29:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8E84C04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:30:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E648821479
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:29:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8FC67214DA
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:30:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558355394;
-	bh=RFoZ3jeziuJ6r1BSpEWc6IiRxtwNs2eooGT9dLw8uJA=;
+	s=default; t=1558355403;
+	bh=2TRMfZDviT4+xoulx6yedoRHajY+kmB/koE91teu8Ro=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YmC8XHT0/sno2EPzLOLhVaKlaIOOceUEdKPHGqFUysrLG+0qIGXrm2+2D7IAJyZz0
-	 0UC/tNO+yds/KshmC+MpiNQSqlARITW/kc+ENZ2ymyOYiaaJQuOlw1ylPkwmk686gC
-	 zrAoghG/+KOu+7LC3QR3Sq18HcCpwP6Qn2W2P85A=
+	b=Ri/wDMSWcXGkCXQJCaKzSoEOQPgeRze5kFYZjTvp+6mTA77UzCpXzeSdgO9waEymq
+	 J2ismteqMXz98VYUOP2RkVIhRIjrfGOUjaB4HB/8HmyOG02rKgSYizpmEIrTBNW5uA
+	 w4j4neLwnBwdwlUbigajn1sh7Wd9jkpaI5L1CXYg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389989AbfETM3x (ORCPT
+        id S2390018AbfETMaC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 08:29:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45954 "EHLO mail.kernel.org"
+        Mon, 20 May 2019 08:30:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46120 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389975AbfETM3t (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 08:29:49 -0400
+        id S2390007AbfETM35 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 08:29:57 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4FEFC20645;
-        Mon, 20 May 2019 12:29:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2CDAE20645;
+        Mon, 20 May 2019 12:29:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558355388;
-        bh=RFoZ3jeziuJ6r1BSpEWc6IiRxtwNs2eooGT9dLw8uJA=;
+        s=default; t=1558355396;
+        bh=2TRMfZDviT4+xoulx6yedoRHajY+kmB/koE91teu8Ro=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BPAm1nCVbVMglBA5kBxFuLy2bgNZ+Oq5nSQIA+97oGKiVaMZngFPC75nc2sQqK9Aw
-         Puj/GZ1ii2WsekH1aWLg5bI3dhRud0Y2Fu2MNACXOMNPfIlai25RHCuK+me6GGGKvK
-         7WM3lMTidn7YO4+CHhAOB9SBF1Ntf+TvkNnfm6v0=
+        b=DZz3Ba05G4fCi7W/CN8xH764Ed663rTGo9pxsATVcKGu/rJ06dtmxQIOPdmcH1f4f
+         N2nxACrhOTvCXNbtqokg23Vii1ZrzhbN7/GlyDmEpxCMslXa/Ld/QRID9ItO9nvzrA
+         0XXp9DsGunVDLfCR4mVXu47qWdZk2Y8cLN2sV3Cg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kiran Kolukuluru <kirank@ami.com>,
-        Kamlakant Patel <kamlakantp@marvell.com>,
-        Corey Minyard <cminyard@mvista.com>
-Subject: [PATCH 5.0 098/123] ipmi:ssif: compare block number correctly for multi-part return messages
-Date:   Mon, 20 May 2019 14:14:38 +0200
-Message-Id: <20190520115251.534792655@linuxfoundation.org>
+        stable@vger.kernel.org, Gilad Ben-Yossef <gilad@benyossef.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>
+Subject: [PATCH 5.0 062/123] crypto: ccree - dont map AEAD key and IV on stack
+Date:   Mon, 20 May 2019 14:14:02 +0200
+Message-Id: <20190520115248.925921091@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190520115245.439864225@linuxfoundation.org>
 References: <20190520115245.439864225@linuxfoundation.org>
@@ -60,50 +59,120 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kamlakant Patel <kamlakantp@marvell.com>
+From: Gilad Ben-Yossef <gilad@benyossef.com>
 
-commit 55be8658c7e2feb11a5b5b33ee031791dbd23a69 upstream.
+commit e8662a6a5f8f7f2cadc0edb934aef622d96ac3ee upstream.
 
-According to ipmi spec, block number is a number that is incremented,
-starting with 0, for each new block of message data returned using the
-middle transaction.
+The AEAD authenc key and IVs might be passed to us on stack. Copy it to
+a slab buffer before mapping to gurantee proper DMA mapping.
 
-Here, the 'blocknum' is data[0] which always starts from zero(0) and
-'ssif_info->multi_pos' starts from 1.
-So, we need to add +1 to blocknum while comparing with multi_pos.
-
-Fixes: 7d6380cd40f79 ("ipmi:ssif: Fix handling of multi-part return messages").
-Reported-by: Kiran Kolukuluru <kirank@ami.com>
-Signed-off-by: Kamlakant Patel <kamlakantp@marvell.com>
-Message-Id: <1556106615-18722-1-git-send-email-kamlakantp@marvell.com>
-[Also added a debug log if the block numbers don't match.]
-Signed-off-by: Corey Minyard <cminyard@mvista.com>
-Cc: stable@vger.kernel.org # 4.4
+Signed-off-by: Gilad Ben-Yossef <gilad@benyossef.com>
+Cc: stable@vger.kernel.org # v4.19+
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/char/ipmi/ipmi_ssif.c |    6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ drivers/crypto/ccree/cc_aead.c       |   11 ++++++++++-
+ drivers/crypto/ccree/cc_buffer_mgr.c |   15 ++++++++++++---
+ drivers/crypto/ccree/cc_driver.h     |    1 +
+ 3 files changed, 23 insertions(+), 4 deletions(-)
 
---- a/drivers/char/ipmi/ipmi_ssif.c
-+++ b/drivers/char/ipmi/ipmi_ssif.c
-@@ -690,12 +690,16 @@ static void msg_done_handler(struct ssif
- 			/* End of read */
- 			len = ssif_info->multi_len;
- 			data = ssif_info->data;
--		} else if (blocknum != ssif_info->multi_pos) {
-+		} else if (blocknum + 1 != ssif_info->multi_pos) {
- 			/*
- 			 * Out of sequence block, just abort.  Block
- 			 * numbers start at zero for the second block,
- 			 * but multi_pos starts at one, so the +1.
- 			 */
-+			if (ssif_info->ssif_debug & SSIF_DEBUG_MSG)
-+				dev_dbg(&ssif_info->client->dev,
-+					"Received message out of sequence, expected %u, got %u\n",
-+					ssif_info->multi_pos - 1, blocknum);
- 			result = -EIO;
- 		} else {
- 			ssif_inc_stat(ssif_info, received_message_parts);
+--- a/drivers/crypto/ccree/cc_aead.c
++++ b/drivers/crypto/ccree/cc_aead.c
+@@ -424,7 +424,7 @@ static int validate_keys_sizes(struct cc
+ /* This function prepers the user key so it can pass to the hmac processing
+  * (copy to intenral buffer or hash in case of key longer than block
+  */
+-static int cc_get_plain_hmac_key(struct crypto_aead *tfm, const u8 *key,
++static int cc_get_plain_hmac_key(struct crypto_aead *tfm, const u8 *authkey,
+ 				 unsigned int keylen)
+ {
+ 	dma_addr_t key_dma_addr = 0;
+@@ -437,6 +437,7 @@ static int cc_get_plain_hmac_key(struct
+ 	unsigned int hashmode;
+ 	unsigned int idx = 0;
+ 	int rc = 0;
++	u8 *key = NULL;
+ 	struct cc_hw_desc desc[MAX_AEAD_SETKEY_SEQ];
+ 	dma_addr_t padded_authkey_dma_addr =
+ 		ctx->auth_state.hmac.padded_authkey_dma_addr;
+@@ -455,11 +456,17 @@ static int cc_get_plain_hmac_key(struct
+ 	}
+ 
+ 	if (keylen != 0) {
++
++		key = kmemdup(authkey, keylen, GFP_KERNEL);
++		if (!key)
++			return -ENOMEM;
++
+ 		key_dma_addr = dma_map_single(dev, (void *)key, keylen,
+ 					      DMA_TO_DEVICE);
+ 		if (dma_mapping_error(dev, key_dma_addr)) {
+ 			dev_err(dev, "Mapping key va=0x%p len=%u for DMA failed\n",
+ 				key, keylen);
++			kzfree(key);
+ 			return -ENOMEM;
+ 		}
+ 		if (keylen > blocksize) {
+@@ -542,6 +549,8 @@ static int cc_get_plain_hmac_key(struct
+ 	if (key_dma_addr)
+ 		dma_unmap_single(dev, key_dma_addr, keylen, DMA_TO_DEVICE);
+ 
++	kzfree(key);
++
+ 	return rc;
+ }
+ 
+--- a/drivers/crypto/ccree/cc_buffer_mgr.c
++++ b/drivers/crypto/ccree/cc_buffer_mgr.c
+@@ -560,6 +560,7 @@ void cc_unmap_aead_request(struct device
+ 	if (areq_ctx->gen_ctx.iv_dma_addr) {
+ 		dma_unmap_single(dev, areq_ctx->gen_ctx.iv_dma_addr,
+ 				 hw_iv_size, DMA_BIDIRECTIONAL);
++		kzfree(areq_ctx->gen_ctx.iv);
+ 	}
+ 
+ 	/* Release pool */
+@@ -664,19 +665,27 @@ static int cc_aead_chain_iv(struct cc_dr
+ 	struct aead_req_ctx *areq_ctx = aead_request_ctx(req);
+ 	unsigned int hw_iv_size = areq_ctx->hw_iv_size;
+ 	struct device *dev = drvdata_to_dev(drvdata);
++	gfp_t flags = cc_gfp_flags(&req->base);
+ 	int rc = 0;
+ 
+ 	if (!req->iv) {
+ 		areq_ctx->gen_ctx.iv_dma_addr = 0;
++		areq_ctx->gen_ctx.iv = NULL;
+ 		goto chain_iv_exit;
+ 	}
+ 
+-	areq_ctx->gen_ctx.iv_dma_addr = dma_map_single(dev, req->iv,
+-						       hw_iv_size,
+-						       DMA_BIDIRECTIONAL);
++	areq_ctx->gen_ctx.iv = kmemdup(req->iv, hw_iv_size, flags);
++	if (!areq_ctx->gen_ctx.iv)
++		return -ENOMEM;
++
++	areq_ctx->gen_ctx.iv_dma_addr =
++		dma_map_single(dev, areq_ctx->gen_ctx.iv, hw_iv_size,
++			       DMA_BIDIRECTIONAL);
+ 	if (dma_mapping_error(dev, areq_ctx->gen_ctx.iv_dma_addr)) {
+ 		dev_err(dev, "Mapping iv %u B at va=%pK for DMA failed\n",
+ 			hw_iv_size, req->iv);
++		kzfree(areq_ctx->gen_ctx.iv);
++		areq_ctx->gen_ctx.iv = NULL;
+ 		rc = -ENOMEM;
+ 		goto chain_iv_exit;
+ 	}
+--- a/drivers/crypto/ccree/cc_driver.h
++++ b/drivers/crypto/ccree/cc_driver.h
+@@ -170,6 +170,7 @@ struct cc_alg_template {
+ 
+ struct async_gen_req_ctx {
+ 	dma_addr_t iv_dma_addr;
++	u8 *iv;
+ 	enum drv_crypto_direction op_type;
+ };
+ 
 
 
