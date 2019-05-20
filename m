@@ -2,319 +2,116 @@ Return-Path: <SRS0=lq4r=TU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32C39C04AAC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 17:03:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0ED80C04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 17:05:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EF227216B7
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 17:03:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D94BA21726
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 17:05:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="S/XJsMIy"
+	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="Rg3JGm7c"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392695AbfETRDd (ORCPT
+        id S2392704AbfETRFc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 13:03:33 -0400
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:42454 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390006AbfETRDc (ORCPT
+        Mon, 20 May 2019 13:05:32 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:41212 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390006AbfETRFb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 13:03:32 -0400
-Received: by mail-qt1-f193.google.com with SMTP id j53so17125591qta.9;
-        Mon, 20 May 2019 10:03:31 -0700 (PDT)
+        Mon, 20 May 2019 13:05:31 -0400
+Received: by mail-pg1-f196.google.com with SMTP id z3so7071811pgp.8
+        for <linux-kernel@vger.kernel.org>; Mon, 20 May 2019 10:05:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
+        d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=8nYD/wBghMjI7r+sxYc83dAfSUCCIPAsTu8Qqxt/jkE=;
-        b=S/XJsMIyYLprGStC8Zt2qzRXDcAVTnhtaxSy2sqDq/tNuuvgyAG7Mnwjp8sLeqPWgs
-         lEEbyWbQ7KkVMn4y3fYCDwerOb5EmNnyAP+EFui6sCdoMyiZWbK0Nq06QN9sH9eKKQM6
-         8AzLFo14qmmwFHWvuMsF0+WbLmEqd4fK2ggzw9Gg1lc9IMZJ6whhgCmfdo20ktMHGlDS
-         /e2niFuxfRvi6jvmTergBnvdXgtH9mgwWNRYIS2HeAvxude/ZlwTMoaJXsBbNTp5x8AS
-         LT0DUlaE291xUagCC2rI8rgfNk6jy+rR/YP/AADHRSmh0WRbobqoYPP1VMf+Jp1lDCZF
-         7XpA==
+        bh=4ZOI+jnwXBptD9UIpostnVMZFPCwcvxnpKvL3qurL40=;
+        b=Rg3JGm7cAcDM+AZNutQuRwGkJ3ubXbt1UCwOCgZnkJntyOzhCrWnunCiEjWY7ROSIZ
+         kVmBbyBsGGB57A5oVMp546xpWJgwU/oSoyDYqohN31no/hHulLW0cV3TFXQxHRGm3Arh
+         oZI0B0sNElaQefwHOOurYmhojHza1z+7f0MdJSYwJgf0UX78I0BFmHNhkkyTJP+ysJgA
+         1oq4KvyqLM9FGoFmGF0bhA3gzuw3Xcn/MOZUKRVRWJpoiE+3D/NOeDKnUVfhlEhq8tFr
+         ACelj15Q04D4dmGoY8dB6fOkc4qS2Hmb9f4IVHnDWYoNGwTJItV3oZNqdJ6Lf+b5E2oC
+         /1IA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=8nYD/wBghMjI7r+sxYc83dAfSUCCIPAsTu8Qqxt/jkE=;
-        b=c8b77PloM+cz48fPiITW/3g6np1h99b1Le0A5nyZgKeYQDc7yNFDAePK5XdXoxIrjt
-         BwJoogdKwt2tza/vL4BaKtvyAKB7K/hp1cqTz26xSAA1ZsLs2GnHdAWBmSEzSUQGGQmO
-         /AmVhqdZSnKalTPniv33KR/QTdw24kvq8k7Ain7B6WoIc3QOVXa3JCXmNIF8KERIwN2q
-         Hl2gjf9l/0Q+U4fjCeqe+B6q3TqzsvbfFxecUt3uhjSa1jh2AZsqcnxZUff/Z0vhYION
-         B5o5CN+/sdrKGCvmXHU4jD/PG1LrGPJ4lmmJrPlG7fHrOL0AyvJ+h85cRIQQPaNQrdKQ
-         BN+w==
-X-Gm-Message-State: APjAAAXVH/IgfVD1YgdUC8DYz+CV+KuFQx9z7YejJ8mTFdvF10r6081o
-        pWBR+1RXE2MXqG7fmZ1lKD7Auvlt
-X-Google-Smtp-Source: APXvYqzn75gjiw2pq1ki1IyfGXYmUIKUlcnTQ/n3B/KAtvsWn3SUzafe1skG0L9dy155192yTEWCfw==
-X-Received: by 2002:ac8:2291:: with SMTP id f17mr11906528qta.51.1558371810658;
-        Mon, 20 May 2019 10:03:30 -0700 (PDT)
-Received: from quaco.ghostprotocols.net (179-241-218-42.3g.claro.net.br. [179.241.218.42])
-        by smtp.gmail.com with ESMTPSA id c9sm11695580qtc.39.2019.05.20.10.03.28
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 20 May 2019 10:03:29 -0700 (PDT)
-From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id ADF43404A1; Mon, 20 May 2019 14:03:22 -0300 (-03)
-Date:   Mon, 20 May 2019 14:03:22 -0300
-To:     Thomas Richter <tmricht@linux.ibm.com>
-Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        brueckner@linux.vnet.ibm.com, schwidefsky@de.ibm.com,
-        heiko.carstens@de.ibm.com
-Subject: Re: [PATCH] pert/report: Support s390 diag event display on x86
-Message-ID: <20190520170322.GN8945@kernel.org>
-References: <20190520144242.53207-1-tmricht@linux.ibm.com>
+        bh=4ZOI+jnwXBptD9UIpostnVMZFPCwcvxnpKvL3qurL40=;
+        b=tdQ0b/McJPpDZIqnN7SeA5ylS0nv3sgIDtu9QiArsGaXyxBBNhnZ2AACfzBHcyPNae
+         n00zpRy53G2zZN3PkCKqxxX2KU6bFW1Ksrmn5e0Z1nD3Z7i2hwgrVtVrs9zhsaJidrkE
+         AYdSkd/QxDYkmYh65wwIjDHyaOGDXl6HxirjmuJ5E7Cx4MKEoa/ySVnMeOVDpOAf2HWy
+         8uWRorsLyk7bhpXWY2NWPoWXCurOMVOnJAefAMyh9QY5xmDN9it33WB7lZfyc1rUQ3SB
+         G22RG6ARCxZ27X+Jg6z+9Wnyjlfw1lOKVi0sEOIvcOeHzyxJ35nKY97+bTON+Yjq7SHS
+         91sA==
+X-Gm-Message-State: APjAAAVdA255nny5gWJcESo7WD9kqre8UdJBcFFpVoxdjNYcmDsz8NCK
+        GIrNdtUMo6/NvrqPhtZLMwJFdw==
+X-Google-Smtp-Source: APXvYqwYUPMF0FEJQ8SH6f6V9L+pAAf6oW7lozkMuesu1RZqnBX5kL/J9WlcSj5ZD7fx0NEgV+if8A==
+X-Received: by 2002:a63:1045:: with SMTP id 5mr32327108pgq.55.1558371931150;
+        Mon, 20 May 2019 10:05:31 -0700 (PDT)
+Received: from localhost ([2620:10d:c091:500::3:df5f])
+        by smtp.gmail.com with ESMTPSA id u76sm21219972pgc.84.2019.05.20.10.05.29
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 20 May 2019 10:05:30 -0700 (PDT)
+Date:   Mon, 20 May 2019 13:05:28 -0400
+From:   Johannes Weiner <hannes@cmpxchg.org>
+To:     Shakeel Butt <shakeelb@google.com>
+Cc:     Vladimir Davydov <vdavydov.dev@gmail.com>,
+        Michal Hocko <mhocko@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Roman Gushchin <guro@fb.com>,
+        Chris Down <chris@chrisdown.name>, linux-mm@kvack.org,
+        cgroups@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] mm, memcg: introduce memory.events.local
+Message-ID: <20190520170528.GC11665@cmpxchg.org>
+References: <20190518001818.193336-1-shakeelb@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190520144242.53207-1-tmricht@linux.ibm.com>
-X-Url:  http://acmel.wordpress.com
-User-Agent: Mutt/1.11.3 (2019-02-01)
+In-Reply-To: <20190518001818.193336-1-shakeelb@google.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Mon, May 20, 2019 at 04:42:42PM +0200, Thomas Richter escreveu:
-> Perf report fails to display s390 specific event numbered bd000
-> on an x86 platform. For example on s390 this works without error:
+On Fri, May 17, 2019 at 05:18:18PM -0700, Shakeel Butt wrote:
+> The memory controller in cgroup v2 exposes memory.events file for each
+> memcg which shows the number of times events like low, high, max, oom
+> and oom_kill have happened for the whole tree rooted at that memcg.
+> Users can also poll or register notification to monitor the changes in
+> that file. Any event at any level of the tree rooted at memcg will
+> notify all the listeners along the path till root_mem_cgroup. There are
+> existing users which depend on this behavior.
 > 
-> [root@m35lp76 perf]# uname -m
-> s390x
-> [root@m35lp76 perf]# ./perf record -e rbd000 -- find / >/dev/null
-> [ perf record: Woken up 3 times to write data ]
-> [ perf record: Captured and wrote 0.549 MB perf.data ]
-> [root@m35lp76 perf]# ./perf report -D --stdio  > /dev/null
-> [root@m35lp76 perf]#
+> However there are users which are only interested in the events
+> happening at a specific level of the memcg tree and not in the events in
+> the underlying tree rooted at that memcg. One such use-case is a
+> centralized resource monitor which can dynamically adjust the limits of
+> the jobs running on a system. The jobs can create their sub-hierarchy
+> for their own sub-tasks. The centralized monitor is only interested in
+> the events at the top level memcgs of the jobs as it can then act and
+> adjust the limits of the jobs. Using the current memory.events for such
+> centralized monitor is very inconvenient. The monitor will keep
+> receiving events which it is not interested and to find if the received
+> event is interesting, it has to read memory.event files of the next
+> level and compare it with the top level one. So, let's introduce
+> memory.events.local to the memcg which shows and notify for the events
+> at the memcg level.
 > 
-> Transfering this perf.data file to an x86 platform and executing
-> the same report command produces:
+> Now, does memory.stat and memory.pressure need their local versions.
+> IMHO no due to the no internal process contraint of the cgroup v2. The
+> memory.stat file of the top level memcg of a job shows the stats and
+> vmevents of the whole tree. The local stats or vmevents of the top level
+> memcg will only change if there is a process running in that memcg but
+> v2 does not allow that. Similarly for memory.pressure there will not be
+> any process in the internal nodes and thus no chance of local pressure.
 > 
-> [root@f29 perf]# uname -m
-> x86_64
-> [root@f29 perf]# ./perf report -i ~/perf.data.m35lp76 --stdio
-> interpreting bpf_prog_info from systems with endianity is not yet supported
-> interpreting btf from systems with endianity is not yet supported
-> 0x8c890 [0x8]: failed to process type: 68
-> Error:
-> failed to process sample
-> 
-> Event bd000 generates auxiliary data which is stored in big endian
-> format in the perf data file.
-> This error is caused by missing endianess handling on the x86 platform
-> when the data is displayed. Fix this by handling s390 auxiliary event
-> data depending on the local platform endianness.
-> 
-> Output after on x86:
-> 
-> [root@f29 perf]# ./perf report -D -i ~/perf.data.m35lp76 --stdio > /dev/null
-> interpreting bpf_prog_info from systems with endianity is not yet supported
-> interpreting btf from systems with endianity is not yet supported
-> [root@f29 perf]#
-> 
-> Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
-> ---
->  tools/perf/util/s390-cpumsf.c | 95 ++++++++++++++++++++++++++++-------
->  1 file changed, 77 insertions(+), 18 deletions(-)
-> 
-> diff --git a/tools/perf/util/s390-cpumsf.c b/tools/perf/util/s390-cpumsf.c
-> index c215704931dc..884ac79528ff 100644
-> --- a/tools/perf/util/s390-cpumsf.c
-> +++ b/tools/perf/util/s390-cpumsf.c
-> @@ -17,8 +17,8 @@
->   *	see Documentation/perf.data-file-format.txt.
->   * PERF_RECORD_AUXTRACE_INFO:
->   *	Defines a table of contains for PERF_RECORD_AUXTRACE records. This
-> - *	record is generated during 'perf record' command. Each record contains up
-> - *	to 256 entries describing offset and size of the AUXTRACE data in the
-> + *	record is generated during 'perf record' command. Each record contains
-> + *	up to 256 entries describing offset and size of the AUXTRACE data in the
+> Signed-off-by: Shakeel Butt <shakeelb@google.com>
 
-What is this for? Just a text reflow?
+This looks reasonable to me. Thanks for working out a clear use case
+and also addressing how it compares to the stats and pressure files.
 
-Also, can you get a Reviewed-by from some other person that works with
-s/390?
-
-- Arnaldo
-
->   *	perf.data file.
->   * PERF_RECORD_AUXTRACE_ERROR:
->   *	Indicates an error during AUXTRACE collection such as buffer overflow.
-> @@ -237,10 +237,33 @@ static int s390_cpumcf_dumpctr(struct s390_cpumsf *sf,
->  	return rc;
->  }
->  
-> -/* Display s390 CPU measurement facility basic-sampling data entry */
-> +/* Display s390 CPU measurement facility basic-sampling data entry
-> + * Data written on s390 in big endian byte order and contains bit
-> + * fields across byte boundaries.
-> + */
->  static bool s390_cpumsf_basic_show(const char *color, size_t pos,
-> -				   struct hws_basic_entry *basic)
-> +				   struct hws_basic_entry *basicp)
->  {
-> +	struct hws_basic_entry *basic = basicp;
-> +#if __BYTE_ORDER == __LITTLE_ENDIAN
-> +	struct hws_basic_entry local;
-> +	unsigned long word = be64toh(*(unsigned long *)basicp);
-> +
-> +	memset(&local, 0, sizeof(local));
-> +	local.def = be16toh(basicp->def);
-> +	local.prim_asn = word & 0xffff;
-> +	local.CL = word >> 30 & 0x3;
-> +	local.I = word >> 32 & 0x1;
-> +	local.AS = word >> 33 & 0x3;
-> +	local.P = word >> 35 & 0x1;
-> +	local.W = word >> 36 & 0x1;
-> +	local.T = word >> 37 & 0x1;
-> +	local.U = word >> 40 & 0xf;
-> +	local.ia = be64toh(basicp->ia);
-> +	local.gpp = be64toh(basicp->gpp);
-> +	local.hpp = be64toh(basicp->hpp);
-> +	basic = &local;
-> +#endif
->  	if (basic->def != 1) {
->  		pr_err("Invalid AUX trace basic entry [%#08zx]\n", pos);
->  		return false;
-> @@ -258,10 +281,22 @@ static bool s390_cpumsf_basic_show(const char *color, size_t pos,
->  	return true;
->  }
->  
-> -/* Display s390 CPU measurement facility diagnostic-sampling data entry */
-> +/* Display s390 CPU measurement facility diagnostic-sampling data entry.
-> + * Data written on s390 in big endian byte order and contains bit
-> + * fields across byte boundaries.
-> + */
->  static bool s390_cpumsf_diag_show(const char *color, size_t pos,
-> -				  struct hws_diag_entry *diag)
-> +				  struct hws_diag_entry *diagp)
->  {
-> +	struct hws_diag_entry *diag = diagp;
-> +#if __BYTE_ORDER == __LITTLE_ENDIAN
-> +	struct hws_diag_entry local;
-> +	unsigned long word = be64toh(*(unsigned long *)diagp);
-> +
-> +	local.def = be16toh(diagp->def);
-> +	local.I = word >> 32 & 0x1;
-> +	diag = &local;
-> +#endif
->  	if (diag->def < S390_CPUMSF_DIAG_DEF_FIRST) {
->  		pr_err("Invalid AUX trace diagnostic entry [%#08zx]\n", pos);
->  		return false;
-> @@ -272,35 +307,51 @@ static bool s390_cpumsf_diag_show(const char *color, size_t pos,
->  }
->  
->  /* Return TOD timestamp contained in an trailer entry */
-> -static unsigned long long trailer_timestamp(struct hws_trailer_entry *te)
-> +static unsigned long long trailer_timestamp(struct hws_trailer_entry *te,
-> +					    int idx)
->  {
->  	/* te->t set: TOD in STCKE format, bytes 8-15
->  	 * to->t not set: TOD in STCK format, bytes 0-7
->  	 */
->  	unsigned long long ts;
->  
-> -	memcpy(&ts, &te->timestamp[te->t], sizeof(ts));
-> -	return ts;
-> +	memcpy(&ts, &te->timestamp[idx], sizeof(ts));
-> +	return be64toh(ts);
->  }
->  
->  /* Display s390 CPU measurement facility trailer entry */
->  static bool s390_cpumsf_trailer_show(const char *color, size_t pos,
->  				     struct hws_trailer_entry *te)
->  {
-> +#if __BYTE_ORDER == __LITTLE_ENDIAN
-> +	struct hws_trailer_entry local;
-> +
-> +	memset(&local, 0, sizeof(local));
-> +	local.f = be64toh(te->flags) >> 63 & 0x1;
-> +	local.a = be64toh(te->flags) >> 62 & 0x1;
-> +	local.t = be64toh(te->flags) >> 61 & 0x1;
-> +	local.bsdes = be16toh((be64toh(te->flags) >> 16 & 0xffff));
-> +	local.dsdes = be16toh((be64toh(te->flags) & 0xffff));
-> +	memcpy(&local.timestamp, te->timestamp, sizeof(te->timestamp));
-> +	local.overflow = be64toh(te->overflow);
-> +	local.clock_base = be64toh(te->progusage[0]) >> 63 & 1;
-> +	local.progusage2 = be64toh(te->progusage2);
-> +	te = &local;
-> +#endif
->  	if (te->bsdes != sizeof(struct hws_basic_entry)) {
->  		pr_err("Invalid AUX trace trailer entry [%#08zx]\n", pos);
->  		return false;
->  	}
->  	color_fprintf(stdout, color, "    [%#08zx] Trailer %c%c%c bsdes:%d"
->  		      " dsdes:%d Overflow:%lld Time:%#llx\n"
-> -		      "\t\tC:%d TOD:%#lx 1:%#llx 2:%#llx\n",
-> +		      "\t\tC:%d TOD:%#lx\n",
->  		      pos,
->  		      te->f ? 'F' : ' ',
->  		      te->a ? 'A' : ' ',
->  		      te->t ? 'T' : ' ',
->  		      te->bsdes, te->dsdes, te->overflow,
-> -		      trailer_timestamp(te), te->clock_base, te->progusage2,
-> -		      te->progusage[0], te->progusage[1]);
-> +		      trailer_timestamp(te, te->clock_base),
-> +		      te->clock_base, te->progusage2);
->  	return true;
->  }
->  
-> @@ -327,13 +378,13 @@ static bool s390_cpumsf_validate(int machine_type,
->  	*dsdes = *bsdes = 0;
->  	if (len & (S390_CPUMSF_PAGESZ - 1))	/* Illegal size */
->  		return false;
-> -	if (basic->def != 1)		/* No basic set entry, must be first */
-> +	if (be16toh(basic->def) != 1)	/* No basic set entry, must be first */
->  		return false;
->  	/* Check for trailer entry at end of SDB */
->  	te = (struct hws_trailer_entry *)(buf + S390_CPUMSF_PAGESZ
->  					      - sizeof(*te));
-> -	*bsdes = te->bsdes;
-> -	*dsdes = te->dsdes;
-> +	*bsdes = be16toh(te->bsdes);
-> +	*dsdes = be16toh(te->dsdes);
->  	if (!te->bsdes && !te->dsdes) {
->  		/* Very old hardware, use CPUID */
->  		switch (machine_type) {
-> @@ -495,19 +546,27 @@ static bool s390_cpumsf_make_event(size_t pos,
->  static unsigned long long get_trailer_time(const unsigned char *buf)
->  {
->  	struct hws_trailer_entry *te;
-> -	unsigned long long aux_time;
-> +	unsigned long long aux_time, progusage2;
-> +	bool clock_base;
->  
->  	te = (struct hws_trailer_entry *)(buf + S390_CPUMSF_PAGESZ
->  					      - sizeof(*te));
->  
-> -	if (!te->clock_base)	/* TOD_CLOCK_BASE value missing */
-> +#if __BYTE_ORDER == __LITTLE_ENDIAN
-> +	clock_base = be64toh(te->progusage[0]) >> 63 & 0x1;
-> +	progusage2 = be64toh(te->progusage[1]);
-> +#else
-> +	clock_base = te->clock_base;
-> +	progusage2 = te->progusage2;
-> +#endif
-> +	if (!clock_base)	/* TOD_CLOCK_BASE value missing */
->  		return 0;
->  
->  	/* Correct calculation to convert time stamp in trailer entry to
->  	 * nano seconds (taken from arch/s390 function tod_to_ns()).
->  	 * TOD_CLOCK_BASE is stored in trailer entry member progusage2.
->  	 */
-> -	aux_time = trailer_timestamp(te) - te->progusage2;
-> +	aux_time = trailer_timestamp(te, clock_base) - progusage2;
->  	aux_time = (aux_time >> 9) * 125 + (((aux_time & 0x1ff) * 125) >> 9);
->  	return aux_time;
->  }
-> -- 
-> 2.19.1
-
--- 
-
-- Arnaldo
+Acked-by: Johannes Weiner <hannes@cmpxchg.org>
