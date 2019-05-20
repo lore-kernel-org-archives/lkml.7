@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87E4CC04AAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:21:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 061D6C04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:21:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5EF4E20656
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:21:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D104420815
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:21:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558354886;
-	bh=any/DlHXg37Ff7AbRPFC1GetjoVK2j3ZkSLPNafzbrk=;
+	s=default; t=1558354888;
+	bh=RjZ8OXCMB15G5CMO1j9gNDPu9pHkuM/Pdu1KK0RfFRs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uxLJzaShlV8UeRRDNueD5KXwOK4GBd2yG5Ju2fZPaX8PYtsgNgA+Dk6hi2MphaO9M
-	 EMRtv4Uu0B+0FIDpGS/ELQkZ2ti+ghUtWfwHBB3KdEvZZVNzVvmsEyspfXh2qYSQiC
-	 Q3dpBDdKUAbibQpaErs3w7a02oBi0ZK9YQ/Jkbqs=
+	b=NRO4KEr0k2kovG/hHFTI6hDHSjnNq52PHF06Bj6u+Dk7wDq32PhE+EUeOJ9I7w5+F
+	 0uO1oxAnYSBGyqyY7PUxwXpFRUdMsdegamBvAsCuexvp1lJBcwcivSdQvj8ySJNKqQ
+	 meURQRYaUa8faA14C2UxAgb20am1lKl9sI7ATIoA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388158AbfETMVZ (ORCPT
+        id S2388168AbfETMV2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 08:21:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34984 "EHLO mail.kernel.org"
+        Mon, 20 May 2019 08:21:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35060 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388147AbfETMVW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 08:21:22 -0400
+        id S2387413AbfETMVZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 08:21:25 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C62A8213F2;
-        Mon, 20 May 2019 12:21:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6E85820815;
+        Mon, 20 May 2019 12:21:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558354882;
-        bh=any/DlHXg37Ff7AbRPFC1GetjoVK2j3ZkSLPNafzbrk=;
+        s=default; t=1558354884;
+        bh=RjZ8OXCMB15G5CMO1j9gNDPu9pHkuM/Pdu1KK0RfFRs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LEj1lFCvBRj8g1BXD6J2fs6h2KSyQaRnSEPswQgEB8+Xo24s9SmBMX6Tlg37hYxwS
-         d8ouxJ1G/ySUeabvIB6xZy6Z3cRA/I93+kvXgCz2wOF7VYqhuXpSgYnrJpPZRDnw8L
-         tOMYm/cBTLrMXsP09LYIhVTgtTZEXhgtsLec0u90=
+        b=V4AJRtcjBIKltOHm5gXnEGM5TySQW1wDOOpEsBNv4o1iwnG+RVWRB1DsDrchVdrvT
+         BfsFMQruDzFHMyWQDRG1M+jnqjqoPrz7UWGi7jbmIQm0nJfW9zZhMFWMH3fFoF87wc
+         +9REW70tbrxbBO/F30YzOX5yuy0QRl/jNro04FfA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
         Jean-Philippe Brucker <jean-philippe.brucker@arm.com>,
         Will Deacon <will.deacon@arm.com>
-Subject: [PATCH 4.19 015/105] arm64: Clear OSDLR_EL1 on CPU boot
-Date:   Mon, 20 May 2019 14:13:21 +0200
-Message-Id: <20190520115248.079427103@linuxfoundation.org>
+Subject: [PATCH 4.19 016/105] arm64: Save and restore OSDLR_EL1 across suspend/resume
+Date:   Mon, 20 May 2019 14:13:22 +0200
+Message-Id: <20190520115248.146098415@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190520115247.060821231@linuxfoundation.org>
 References: <20190520115247.060821231@linuxfoundation.org>
@@ -62,10 +62,11 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
 
-commit 6fda41bf12615ee7c3ddac88155099b1a8cf8d00 upstream.
+commit 827a108e354db633698f0b4a10c1ffd2b1f8d1d0 upstream.
 
-Some firmwares may reboot CPUs with OS Double Lock set. Make sure that
-it is unlocked, in order to use debug exceptions.
+When the CPU comes out of suspend, the firmware may have modified the OS
+Double Lock Register. Save it in an unused slot of cpu_suspend_ctx, and
+restore it on resume.
 
 Cc: <stable@vger.kernel.org>
 Signed-off-by: Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
@@ -73,18 +74,69 @@ Signed-off-by: Will Deacon <will.deacon@arm.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/arm64/kernel/debug-monitors.c |    1 +
- 1 file changed, 1 insertion(+)
+ arch/arm64/mm/proc.S |   34 ++++++++++++++++++----------------
+ 1 file changed, 18 insertions(+), 16 deletions(-)
 
---- a/arch/arm64/kernel/debug-monitors.c
-+++ b/arch/arm64/kernel/debug-monitors.c
-@@ -135,6 +135,7 @@ NOKPROBE_SYMBOL(disable_debug_monitors);
-  */
- static int clear_os_lock(unsigned int cpu)
- {
-+	write_sysreg(0, osdlr_el1);
- 	write_sysreg(0, oslar_el1);
- 	isb();
- 	return 0;
+--- a/arch/arm64/mm/proc.S
++++ b/arch/arm64/mm/proc.S
+@@ -70,24 +70,25 @@ ENTRY(cpu_do_suspend)
+ 	mrs	x2, tpidr_el0
+ 	mrs	x3, tpidrro_el0
+ 	mrs	x4, contextidr_el1
+-	mrs	x5, cpacr_el1
+-	mrs	x6, tcr_el1
+-	mrs	x7, vbar_el1
+-	mrs	x8, mdscr_el1
+-	mrs	x9, oslsr_el1
+-	mrs	x10, sctlr_el1
++	mrs	x5, osdlr_el1
++	mrs	x6, cpacr_el1
++	mrs	x7, tcr_el1
++	mrs	x8, vbar_el1
++	mrs	x9, mdscr_el1
++	mrs	x10, oslsr_el1
++	mrs	x11, sctlr_el1
+ alternative_if_not ARM64_HAS_VIRT_HOST_EXTN
+-	mrs	x11, tpidr_el1
++	mrs	x12, tpidr_el1
+ alternative_else
+-	mrs	x11, tpidr_el2
++	mrs	x12, tpidr_el2
+ alternative_endif
+-	mrs	x12, sp_el0
++	mrs	x13, sp_el0
+ 	stp	x2, x3, [x0]
+-	stp	x4, xzr, [x0, #16]
+-	stp	x5, x6, [x0, #32]
+-	stp	x7, x8, [x0, #48]
+-	stp	x9, x10, [x0, #64]
+-	stp	x11, x12, [x0, #80]
++	stp	x4, x5, [x0, #16]
++	stp	x6, x7, [x0, #32]
++	stp	x8, x9, [x0, #48]
++	stp	x10, x11, [x0, #64]
++	stp	x12, x13, [x0, #80]
+ 	ret
+ ENDPROC(cpu_do_suspend)
+ 
+@@ -110,8 +111,8 @@ ENTRY(cpu_do_resume)
+ 	msr	cpacr_el1, x6
+ 
+ 	/* Don't change t0sz here, mask those bits when restoring */
+-	mrs	x5, tcr_el1
+-	bfi	x8, x5, TCR_T0SZ_OFFSET, TCR_TxSZ_WIDTH
++	mrs	x7, tcr_el1
++	bfi	x8, x7, TCR_T0SZ_OFFSET, TCR_TxSZ_WIDTH
+ 
+ 	msr	tcr_el1, x8
+ 	msr	vbar_el1, x9
+@@ -135,6 +136,7 @@ alternative_endif
+ 	/*
+ 	 * Restore oslsr_el1 by writing oslar_el1
+ 	 */
++	msr	osdlr_el1, x5
+ 	ubfx	x11, x11, #1, #1
+ 	msr	oslar_el1, x11
+ 	reset_pmuserenr_el0 x0			// Disable PMU access from EL0
 
 
