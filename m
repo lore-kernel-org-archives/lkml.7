@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2AABC04AAC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:50:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CD2EC04E87
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:51:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C6BB420815
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:50:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0378B2054F
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:51:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558356651;
-	bh=o1/rNX20DjlCczabEvoAUEIDbXG/Birwp6TcGz9eaRY=;
+	s=default; t=1558356662;
+	bh=4aaPn3LrBIPLPHNrCNB+LQSAkpLaxCb335jdyp1Sg18=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GUEOpDDywbf2OXJ3bbJRDaNrHAFWyDdkT6QsycceKlC6s5cLyzh1s9eGU1fRUFMRZ
-	 NqKfMtz0rUbipltjKjvX5nD6tZwg/7coF6BewuxLM2NKQybJb3Iv2p8cggDUsTMdNW
-	 jB7jzRBIER2MaHcZE97tB2WqIBXwgRLiJYAOhUB0=
+	b=k89bIXZIa9LzvejRqkBQ/sp52yB46ccBtFTL3VqcOlPS+l7PY5mSAAHtX8v9iy26y
+	 WXbS1k9fjD+0+yk/Q7qzHNXudY8jre1IDfn4oscE41wjPoM9datY/PVYA86VM6Vpgm
+	 xGJ0lZZldrLEQjGNI5HJPuWjW+4lgz3x9Bzy6WE4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391491AbfETMuv (ORCPT
+        id S2387931AbfETMUJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 08:50:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33632 "EHLO mail.kernel.org"
+        Mon, 20 May 2019 08:20:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33378 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387960AbfETMUQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 08:20:16 -0400
+        id S2387923AbfETMUE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 08:20:04 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A7D4020815;
-        Mon, 20 May 2019 12:20:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 53E4C21734;
+        Mon, 20 May 2019 12:20:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558354816;
-        bh=o1/rNX20DjlCczabEvoAUEIDbXG/Birwp6TcGz9eaRY=;
+        s=default; t=1558354802;
+        bh=4aaPn3LrBIPLPHNrCNB+LQSAkpLaxCb335jdyp1Sg18=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wrt13EWtFVF0oJS4gIMrB6PtwigJXCSjX8lDK0YRcbN3+TXuT7+v45VU9pmMONTZR
-         8PGwqn+sepoSWxC2pQTYvrjo3YAS9P0mjfcCziEbvzYn2GzvZOpVnx0qB0Fun0o+df
-         7UfcNd5LneMRt3TK5vQ650zvX/J1bt1wFNHO0DF8=
+        b=HJYkpjU4grG0oEN4jdZi+UoVHayiwTaZbjA1Hq5jCHhs79t4xS3gRvW79gVQWh81v
+         LmCuJFQU0ck0jf5NeF/bKIWG6MdYFF/FdDZYzTr1GxS5kniFMj3mkgvgMrULrPtcPl
+         3zu2P+i0Z0WYS9f7mURtysLOJqc5OWBp7CsXFOSs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Biggers <ebiggers@google.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>
-Subject: [PATCH 4.14 52/63] crypto: arm64/aes-neonbs - dont access already-freed walk.iv
-Date:   Mon, 20 May 2019 14:14:31 +0200
-Message-Id: <20190520115236.777081682@linuxfoundation.org>
+        stable@vger.kernel.org, Coly Li <colyli@suse.de>,
+        Hannes Reinecke <hare@suse.com>, Jens Axboe <axboe@kernel.dk>
+Subject: [PATCH 4.14 47/63] bcache: never set KEY_PTRS of journal key to 0 in journal_reclaim()
+Date:   Mon, 20 May 2019 14:14:26 +0200
+Message-Id: <20190520115236.273590377@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190520115231.137981521@linuxfoundation.org>
 References: <20190520115231.137981521@linuxfoundation.org>
@@ -59,42 +59,96 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Biggers <ebiggers@google.com>
+From: Coly Li <colyli@suse.de>
 
-commit 4a8108b70508df0b6c4ffa4a3974dab93dcbe851 upstream.
+commit 1bee2addc0c8470c8aaa65ef0599eeae96dd88bc upstream.
 
-If the user-provided IV needs to be aligned to the algorithm's
-alignmask, then skcipher_walk_virt() copies the IV into a new aligned
-buffer walk.iv.  But skcipher_walk_virt() can fail afterwards, and then
-if the caller unconditionally accesses walk.iv, it's a use-after-free.
+In journal_reclaim() ja->cur_idx of each cache will be update to
+reclaim available journal buckets. Variable 'int n' is used to count how
+many cache is successfully reclaimed, then n is set to c->journal.key
+by SET_KEY_PTRS(). Later in journal_write_unlocked(), a for_each_cache()
+loop will write the jset data onto each cache.
 
-xts-aes-neonbs doesn't set an alignmask, so currently it isn't affected
-by this despite unconditionally accessing walk.iv.  However this is more
-subtle than desired, and unconditionally accessing walk.iv has caused a
-real problem in other algorithms.  Thus, update xts-aes-neonbs to start
-checking the return value of skcipher_walk_virt().
+The problem is, if all jouranl buckets on each cache is full, the
+following code in journal_reclaim(),
 
-Fixes: 1abee99eafab ("crypto: arm64/aes - reimplement bit-sliced ARM/NEON implementation for arm64")
-Cc: <stable@vger.kernel.org> # v4.11+
-Signed-off-by: Eric Biggers <ebiggers@google.com>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+529 for_each_cache(ca, c, iter) {
+530       struct journal_device *ja = &ca->journal;
+531       unsigned int next = (ja->cur_idx + 1) % ca->sb.njournal_buckets;
+532
+533       /* No space available on this device */
+534       if (next == ja->discard_idx)
+535               continue;
+536
+537       ja->cur_idx = next;
+538       k->ptr[n++] = MAKE_PTR(0,
+539                         bucket_to_sector(c, ca->sb.d[ja->cur_idx]),
+540                         ca->sb.nr_this_dev);
+541 }
+542
+543 bkey_init(k);
+544 SET_KEY_PTRS(k, n);
+
+If there is no available bucket to reclaim, the if() condition at line
+534 will always true, and n remains 0. Then at line 544, SET_KEY_PTRS()
+will set KEY_PTRS field of c->journal.key to 0.
+
+Setting KEY_PTRS field of c->journal.key to 0 is wrong. Because in
+journal_write_unlocked() the journal data is written in following loop,
+
+649	for (i = 0; i < KEY_PTRS(k); i++) {
+650-671		submit journal data to cache device
+672	}
+
+If KEY_PTRS field is set to 0 in jouranl_reclaim(), the journal data
+won't be written to cache device here. If system crahed or rebooted
+before bkeys of the lost journal entries written into btree nodes, data
+corruption will be reported during bcache reload after rebooting the
+system.
+
+Indeed there is only one cache in a cache set, there is no need to set
+KEY_PTRS field in journal_reclaim() at all. But in order to keep the
+for_each_cache() logic consistent for now, this patch fixes the above
+problem by not setting 0 KEY_PTRS of journal key, if there is no bucket
+available to reclaim.
+
+Signed-off-by: Coly Li <colyli@suse.de>
+Reviewed-by: Hannes Reinecke <hare@suse.com>
+Cc: stable@vger.kernel.org
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-
 ---
- arch/arm64/crypto/aes-neonbs-glue.c |    2 ++
- 1 file changed, 2 insertions(+)
+ drivers/md/bcache/journal.c |   11 +++++++----
+ 1 file changed, 7 insertions(+), 4 deletions(-)
 
---- a/arch/arm64/crypto/aes-neonbs-glue.c
-+++ b/arch/arm64/crypto/aes-neonbs-glue.c
-@@ -307,6 +307,8 @@ static int __xts_crypt(struct skcipher_r
- 	int err;
+--- a/drivers/md/bcache/journal.c
++++ b/drivers/md/bcache/journal.c
+@@ -512,11 +512,11 @@ static void journal_reclaim(struct cache
+ 				  ca->sb.nr_this_dev);
+ 	}
  
- 	err = skcipher_walk_virt(&walk, req, true);
-+	if (err)
-+		return err;
+-	bkey_init(k);
+-	SET_KEY_PTRS(k, n);
+-
+-	if (n)
++	if (n) {
++		bkey_init(k);
++		SET_KEY_PTRS(k, n);
+ 		c->journal.blocks_free = c->sb.bucket_size >> c->block_bits;
++	}
+ out:
+ 	if (!journal_full(&c->journal))
+ 		__closure_wake_up(&c->journal.wait);
+@@ -641,6 +641,9 @@ static void journal_write_unlocked(struc
+ 		ca->journal.seq[ca->journal.cur_idx] = w->data->seq;
+ 	}
  
- 	kernel_neon_begin();
- 
++	/* If KEY_PTRS(k) == 0, this jset gets lost in air */
++	BUG_ON(i == 0);
++
+ 	atomic_dec_bug(&fifo_back(&c->journal.pin));
+ 	bch_journal_next(&c->journal);
+ 	journal_reclaim(c);
 
 
