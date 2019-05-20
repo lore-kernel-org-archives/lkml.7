@@ -2,124 +2,96 @@ Return-Path: <SRS0=lq4r=TU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40391C04E87
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 14:37:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F14BC04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 14:37:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 147A3213F2
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 14:37:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558363023;
-	bh=knrqwf5MAsU6lMqPaPAX06elGTJ1YYogOCMk0BvpCBs=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=VtE2yCrPXFGbKXCtF/oyv0sCVW8KL8WDk5Wp9fhCwfMfTjlDTNelByDqBEouxTaJQ
-	 tCokor+7hwKQfedmAOBRj0ZuB7+NxfaNVsooIYglOUYroKiY+gwvD8m1UjWO36EwLy
-	 DU54XLefypfupSXQyQLOVDoKTq3kY1F3F75D5bKY=
+	by mail.kernel.org (Postfix) with ESMTP id 5EF19216B7
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 14:37:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391652AbfETOhC (ORCPT
+        id S2391673AbfETOhY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 10:37:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54490 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730966AbfETOhB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 10:37:01 -0400
-Received: from mail-qk1-f181.google.com (mail-qk1-f181.google.com [209.85.222.181])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1710C21721;
-        Mon, 20 May 2019 14:37:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558363020;
-        bh=knrqwf5MAsU6lMqPaPAX06elGTJ1YYogOCMk0BvpCBs=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=f+g3cxGKZSYjQDxSwzvKTrnbkxGEz0+zDhjdW6xxHIddsfd3cH3pdiRKSsYEs5Syo
-         0mu+TLKXYy+EBgR4SPTNArk/zXFRGLxmARAIU1hSJ0JlhaqJq0XOylTb7v+I+4F/B/
-         am2ErhBpPKCK8CBWVUsqov+2h6WyoDKvJWy48JO4=
-Received: by mail-qk1-f181.google.com with SMTP id a64so8947613qkg.5;
-        Mon, 20 May 2019 07:37:00 -0700 (PDT)
-X-Gm-Message-State: APjAAAU7Wz/LAMF89TK39hx3ypY9zFiA5cIcQFEAyrT+UMpcIVB5qi3W
-        DiJW0pMfBJY6fVCTtjCjeFuZ9+HD4g+fmgd4ag==
-X-Google-Smtp-Source: APXvYqwOf9Z8nbXUZPSOt15qYtcOeclLXjXToptke87YGvm4/v/PJxK1Ifu47Dtn/ZUAoLrSKRzG6YspjAeBF/yeABM=
-X-Received: by 2002:a37:a8d7:: with SMTP id r206mr46423501qke.264.1558363019267;
- Mon, 20 May 2019 07:36:59 -0700 (PDT)
+        Mon, 20 May 2019 10:37:24 -0400
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:36052 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731837AbfETOhX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 10:37:23 -0400
+Received: by mail-qk1-f193.google.com with SMTP id c14so8968045qke.3;
+        Mon, 20 May 2019 07:37:21 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Z/2L5o2AoOKLKFPcdkjNIAmz2G/5ZFe52UTQRqPzuYk=;
+        b=DV3jVCYnKcYK5l9o1u8iwTMUtREqHQ8NhUc5CrfrrjoCQyudywF7NVNcUATvxJPQc0
+         IfxQfRVKad2p/2KrIzd5K5z4vfqvgq+KNkSPZzF46vHUhjQjY+0WTN2uTZdTZ4xYBun7
+         uSXsEWZSgRAZ6bKcsh23qjLoqSH5pXuH2attLD/4dIE+LUuumtb4I5m9wlAC52y7akhH
+         HFwNd4K0EGWfMTO1nTL/6gQ3NciBUxM5BpzS7zDC7Oplp553GkihCRWSZSBLT0WHTf3h
+         rOBxfVAI8YIE72CYVHD52TC2gYcHcjouW+wjRIBaW1QUw5lkO6mvzOBR4UJqvOf+dIsV
+         sDDw==
+X-Gm-Message-State: APjAAAXMKWh+uCHSSDCF1f5hhuWeW4jIGQo8ihVjltulq3A2Eafk5rXu
+        zpN9EO1bcMJVO9LZEY87ekKh4QwFFBPDXb+I9s0=
+X-Google-Smtp-Source: APXvYqw/K0JoPhQjbioFloDoxv8hPwsc8PzdGxaBHlE2BolGJGFffF+O1yZKUKyE5ZdibkGoaW8RhPzIvapSmk2bhfM=
+X-Received: by 2002:a05:620a:5ed:: with SMTP id z13mr21969541qkg.84.1558363041328;
+ Mon, 20 May 2019 07:37:21 -0700 (PDT)
 MIME-Version: 1.0
-References: <1558361478-4381-1-git-send-email-sagar.kadam@sifive.com> <1558361478-4381-2-git-send-email-sagar.kadam@sifive.com>
-In-Reply-To: <1558361478-4381-2-git-send-email-sagar.kadam@sifive.com>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Mon, 20 May 2019 09:36:48 -0500
-X-Gmail-Original-Message-ID: <CAL_Jsq+6uL+wqi=5cp1X9JdBfmLDzGz5UjwfqKCCESyhsemnhQ@mail.gmail.com>
-Message-ID: <CAL_Jsq+6uL+wqi=5cp1X9JdBfmLDzGz5UjwfqKCCESyhsemnhQ@mail.gmail.com>
-Subject: Re: [PATCH v5 1/3] dt-bindings: i2c: extend existing opencore bindings.
-To:     Sagar Shrikant Kadam <sagar.kadam@sifive.com>
-Cc:     Mark Rutland <mark.rutland@arm.com>, peter@korsgaard.com,
-        Andrew Lunn <andrew@lunn.ch>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Linux I2C <linux-i2c@vger.kernel.org>,
-        devicetree@vger.kernel.org, linux-riscv@lists.infradead.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <20190520134605.29116-1-christian@brauner.io>
+In-Reply-To: <20190520134605.29116-1-christian@brauner.io>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Mon, 20 May 2019 16:37:03 +0200
+Message-ID: <CAK8P3a1cZZ6SQe5mGjhga=MgTvCGF6OKyjvosR8J6z6EpH+rVA@mail.gmail.com>
+Subject: Re: [PATCH v2 1/2] pid: add pidfd_open()
+To:     Christian Brauner <christian@brauner.io>
+Cc:     Jann Horn <jannh@google.com>, Oleg Nesterov <oleg@redhat.com>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>, cyphar@cyphar.com,
+        David Howells <dhowells@redhat.com>,
+        "Eric W . Biederman" <ebiederm@xmission.com>,
+        "Reshetova, Elena" <elena.reshetova@intel.com>,
+        Kees Cook <keescook@chromium.org>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Andy Lutomirski <luto@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        alpha <linux-alpha@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-ia64@vger.kernel.org,
+        linux-m68k <linux-m68k@lists.linux-m68k.org>,
+        linux-mips@vger.kernel.org,
+        Parisc List <linux-parisc@vger.kernel.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        linux-s390 <linux-s390@vger.kernel.org>,
+        Linux-sh list <linux-sh@vger.kernel.org>,
+        sparclinux <sparclinux@vger.kernel.org>,
+        linux-xtensa@linux-xtensa.org,
+        Linux API <linux-api@vger.kernel.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Daniel Colascione <dancol@google.com>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        Suren Baghdasaryan <surenb@google.com>,
+        Android Kernel Team <kernel-team@android.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 20, 2019 at 9:12 AM Sagar Shrikant Kadam
-<sagar.kadam@sifive.com> wrote:
+On Mon, May 20, 2019 at 3:46 PM Christian Brauner <christian@brauner.io> wrote:
 >
-> Add FU540-C000 specific device tree bindings to already
-> available i2-ocores file. This device is available on
-> HiFive Unleashed Rev A00 board. Move interrupt and interrupt
-> parents under optional property list as these can be optional.
->
-> The FU540-C000 SoC from sifive, has an Opencore's I2C block
-> reimplementation.
->
-> The DT compatibility string for this IP is present in HDL and available at.
-> https://github.com/sifive/sifive-blocks/blob/master/src/main/scala/devices/i2c/I2C.scala#L73
->
-> Signed-off-by: Sagar Shrikant Kadam <sagar.kadam@sifive.com>
-> ---
->  Documentation/devicetree/bindings/i2c/i2c-ocores.txt | 7 ++++++-
->  1 file changed, 6 insertions(+), 1 deletion(-)
->
-> diff --git a/Documentation/devicetree/bindings/i2c/i2c-ocores.txt b/Documentation/devicetree/bindings/i2c/i2c-ocores.txt
-> index 17bef9a..b73960e 100644
-> --- a/Documentation/devicetree/bindings/i2c/i2c-ocores.txt
-> +++ b/Documentation/devicetree/bindings/i2c/i2c-ocores.txt
-> @@ -2,8 +2,11 @@ Device tree configuration for i2c-ocores
->
->  Required properties:
->  - compatible      : "opencores,i2c-ocores" or "aeroflexgaisler,i2cmst"
-> +                    "sifive,fu540-c000-i2c" or "sifive,i2c0".
+> In line with Arnd's recent changes to consolidate syscall numbers across
+> architectures, I have added the pidfd_open() syscall to all architectures
+> at the same time.
 
-It's not an OR because both are required. Please reformat to 1 valid
-combination per line.
+Thanks! I've checked that the ones you have added are all
+done correctly. However, double-checking that you got all of them,
+I noticed that you missed mips-o32 and mips-n64. With those added:
 
-> +                   for Opencore based I2C IP block reimplemented in
-> +                   FU540-C000 SoC.Please refer sifive-blocks-ip-versioning.txt
-> +                   for additional details.
->  - reg             : bus address start and address range size of device
-> -- interrupts      : interrupt number
->  - clocks          : handle to the controller clock; see the note below.
->                      Mutually exclusive with opencores,ip-clock-frequency
->  - opencores,ip-clock-frequency: frequency of the controller clock in Hz;
-> @@ -12,6 +15,8 @@ Required properties:
->  - #size-cells     : should be <0>
->
->  Optional properties:
-> +- interrupt-parent: handle to interrupt controller.
-
-Drop this. interrupt-parent is implied.
-
-> +- interrupts      : interrupt number.
->  - clock-frequency : frequency of bus clock in Hz; see the note below.
->                      Defaults to 100 KHz when the property is not specified
->  - reg-shift       : device register offsets are shifted by this value
-> --
-> 1.9.1
->
+Acked-by: Arnd Bergmann <arnd@arndb.de>
