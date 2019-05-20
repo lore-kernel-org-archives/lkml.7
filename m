@@ -2,94 +2,93 @@ Return-Path: <SRS0=lq4r=TU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A274C46460
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 13:17:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE162C04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 13:18:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 35F1D21479
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 13:17:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pGnU4Tek"
+	by mail.kernel.org (Postfix) with ESMTP id CC53A20815
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 13:18:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387898AbfETNRx (ORCPT
+        id S2387929AbfETNSv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 09:17:53 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:43064 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727319AbfETNRx (ORCPT
+        Mon, 20 May 2019 09:18:51 -0400
+Received: from relay5-d.mail.gandi.net ([217.70.183.197]:39103 "EHLO
+        relay5-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727319AbfETNSu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 09:17:53 -0400
-Received: by mail-pf1-f194.google.com with SMTP id c6so7210462pfa.10;
-        Mon, 20 May 2019 06:17:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=D9M/M2T3Rq8qtCDChAbOi+aqSufBlSPfODs6++Et7Xc=;
-        b=pGnU4TekWP/LCapQEn6fgC5nH9uKsqOe8kk/0r8JU7LUXtj7nSQrEo5qbrg3mc/YLn
-         zNZEgQyAcZq76DgVnwCp3I4vfOD/UPIkb7lMJ8FGmH+fpU1HHNaWN1cD6SDjQxvx8ocR
-         J+ADURnF3GjaRNMI7Nb+l8scGjGCGvk4Zm+RClq9ON5Ru/g9GCqpjPttd7roP8JHN2i8
-         hGOB2RP8cVGDh0WCGr/LpIP5YWoamOdTcd/r8qqZgA0lv1deP1ZLVwJwxLWEbxDi+5Rl
-         fVjTLXSma+AJaNHCiwDVNP4auyxLhL5+9G/GaKaR8VFaD8EjGOj+IXVyUNhptFOiqaq3
-         Qnlw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=D9M/M2T3Rq8qtCDChAbOi+aqSufBlSPfODs6++Et7Xc=;
-        b=aLdQWtMTf4BaHDnYkPYzbhOcxx1eTcTdaaH1iw6q9K3DpReReD97nIwlDCVqfAN9ah
-         tEPnc2S0dRe5l68xzxkdp/tVZa+N1JgI5sUTtnROYHsVg/OCj92QIvecUgjG/i2Z2WNb
-         e/lRp6z4kJj7m5TT1Aiqil2PZ1ZPYou9KC3y8OtIcGe/rXvjzNvpKaDWF/fcEDokOyeu
-         mHn+/+p/YtdinaYPPLV3oyFqlbBPajDen3acGJsSUkHL90SLIyrMSYQzzq8JdlbZQEy7
-         orY0sthNtkd/L0uQgBI7SE6nsLma0yCqbU7vtU44v0LEz+i1t+mL+0FiIxWfQ3lkuDel
-         WHqA==
-X-Gm-Message-State: APjAAAW0ZxHLfmu4BVgtuaOli7jXDB3LKu2vpNJLTaHBfk7US7i+isWK
-        0iWdpWNVnTKz65wgPKrshqs=
-X-Google-Smtp-Source: APXvYqxbFTs17yLE40Srkn3Egq5bzs3E3ybbE6o0Z9fc9rRAMHklc9PzwU+Fgsc+SnAQ8jstG19ihg==
-X-Received: by 2002:a62:585:: with SMTP id 127mr60151821pff.231.1558358272474;
-        Mon, 20 May 2019 06:17:52 -0700 (PDT)
-Received: from e69a04389.et15sqa.tbsite.net ([106.11.237.203])
-        by smtp.gmail.com with ESMTPSA id b186sm20954819pga.5.2019.05.20.06.17.50
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 20 May 2019 06:17:51 -0700 (PDT)
-From:   Hao Zheng <mowendugu@gmail.com>
-To:     bhelgaas@google.com
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Hao Zheng <mowendugu@gmail.com>, Quan Xu <quan.xu0@gmail.com>
-Subject: [PATCH 1/1] PCI/IOV: Fix VF0 cached config space size for other VFs
-Date:   Mon, 20 May 2019 21:17:24 +0800
-Message-Id: <1558358244-35832-1-git-send-email-mowendugu@gmail.com>
-X-Mailer: git-send-email 1.8.3.1
+        Mon, 20 May 2019 09:18:50 -0400
+X-Originating-IP: 90.88.22.185
+Received: from localhost (aaubervilliers-681-1-80-185.w90-88.abo.wanadoo.fr [90.88.22.185])
+        (Authenticated sender: maxime.ripard@bootlin.com)
+        by relay5-d.mail.gandi.net (Postfix) with ESMTPSA id F2F5F1C0013;
+        Mon, 20 May 2019 13:18:46 +0000 (UTC)
+Date:   Mon, 20 May 2019 15:18:46 +0200
+From:   Maxime Ripard <maxime.ripard@bootlin.com>
+To:     Rob Herring <robh@kernel.org>
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] dt-bindings: Convert vendor prefixes to json-schema
+Message-ID: <20190520131846.tqx7h7sjyw6sgka5@flea>
+References: <20190510194018.28206-1-robh@kernel.org>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="26jxfkzgkqsicu7x"
+Content-Disposition: inline
+In-Reply-To: <20190510194018.28206-1-robh@kernel.org>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Set the pcie_cap field before getting the config space size for
-other VFs. Otherwise, the config space size of other VFs are error
-set to 256, while the size of VF0 is 4096.
 
-Signed-off-by: Hao Zheng <mowendugu@gmail.com>
-Signed-off-by: Quan Xu <quan.xu0@gmail.com>
----
- drivers/pci/iov.c | 1 +
- 1 file changed, 1 insertion(+)
+--26jxfkzgkqsicu7x
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-diff --git a/drivers/pci/iov.c b/drivers/pci/iov.c
-index 3aa115e..239fad1 100644
---- a/drivers/pci/iov.c
-+++ b/drivers/pci/iov.c
-@@ -133,6 +133,7 @@ static void pci_read_vf_config_common(struct pci_dev *virtfn)
- 	pci_read_config_word(virtfn, PCI_SUBSYSTEM_ID,
- 			     &physfn->sriov->subsystem_device);
- 
-+	set_pcie_port_type(virtfn);
- 	physfn->sriov->cfg_size = pci_cfg_space_size(virtfn);
- }
- 
--- 
-1.8.3.1
+Hi Rob,
 
+On Fri, May 10, 2019 at 02:40:18PM -0500, Rob Herring wrote:
+> Convert the vendor prefix registry to a schema. This will enable checking
+> that new vendor prefixes are added (in addition to the less than perfect
+> checkpatch.pl check) and will also check against adding other prefixes
+> which are not vendors.
+>
+> Converted vendor-prefixes.txt using the following sed script:
+>
+> sed -e 's/\([a-zA-Z0-9\-]*\)[[:space:]]*\([a-zA-Z0-9].*\)/  "^\1,\.\*\":\n    description: \2/'
+>
+> Signed-off-by: Rob Herring <robh@kernel.org>
+> ---
+> As vendor prefix updates come in via multiple trees, I plan to merge
+> this before -rc1 to avoid cross tree conflicts.
+
+I just tried this with the 5.2-rc1 release, and this very
+significantly slows down the validation.
+
+With a dtbs_check run on (arm's) sunxi_defconfig, on my core-i5 with 4
+threads, I go from 1.30 minutes to more than 12.
+
+Should we improve the dt-validate tool before merging this patch?
+
+Maxime
+
+--
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+
+--26jxfkzgkqsicu7x
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXOKpNgAKCRDj7w1vZxhR
+xaU/AP4sEcxQ75aEnI0xMbq88t3BZzAEW0xMBgZRESwC/0YwUwEA3Wu9L5Uir8PG
+cDc3z03Kswww+O1DXoE+XNDbc1gMHwc=
+=aMcg
+-----END PGP SIGNATURE-----
+
+--26jxfkzgkqsicu7x--
