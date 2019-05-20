@@ -7,46 +7,50 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9DA1C04AAC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:32:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EED6CC04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:32:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B449320815
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:32:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C48A1216C4
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:32:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558355560;
-	bh=HSEcMdBbRhVoEvlUEFHINEss+Whux1fiVFniM0l20Lc=;
+	s=default; t=1558355563;
+	bh=N/CsrdJhnFDOCLTNZZloqC2A4BflCaL1DGI0+4xV6lo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nWXSg8x/BgwIJWAKb0eHtXI0mka2ePFeQHJNEdiMn8Y6wlDbQF+M0NpsJ20x1j4O8
-	 VSFivoc57zteq91yeSv7S3qNQdk7d9HJLGfxBW1n9/AOdsKG4irJ2MjA6vbojEOzK2
-	 g20ah11KFl8zzYMi74oz4Xp+UL/VI8Pog98IuxBY=
+	b=h5GPBDx+0ecYPat5jgiCgL+iYGPBmatrsDtlbqtJeBFjgKsdGaKTDEdc/qk6A2XNe
+	 rtBtmjp+tgfeJxQyQZVSA6Kp9QwR5jPpLHo72nYgvrUtkg54gBeG+w8UQgZSllKJVa
+	 e3Av51fO95ExTen5jvB5mz+8vU1Ibg6/guITXv/c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390598AbfETMcj (ORCPT
+        id S2390607AbfETMcm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 08:32:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49542 "EHLO mail.kernel.org"
+        Mon, 20 May 2019 08:32:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49568 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390577AbfETMcg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 08:32:36 -0400
+        id S2390591AbfETMci (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 08:32:38 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C2858204FD;
-        Mon, 20 May 2019 12:32:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 531EA20645;
+        Mon, 20 May 2019 12:32:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558355555;
-        bh=HSEcMdBbRhVoEvlUEFHINEss+Whux1fiVFniM0l20Lc=;
+        s=default; t=1558355557;
+        bh=N/CsrdJhnFDOCLTNZZloqC2A4BflCaL1DGI0+4xV6lo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=c6o2UyWdaQ+fAcBrklvjGhRQx2LKhh30nQP8bhgOY4kRNFvk3dL39ceK8T6+Vv7ps
-         5oV3dalF4xTo25WVZchRHMJfLoaL5FNCravcJMqKQt8NgUSogP9W3WSW6oPIPPno/0
-         x+jMWDxozbX1eZswbrTZmalO2DZwMkwRw3c7ybkg=
+        b=mqew0ssOYrhe+mhOwBEpA+hMA9V+quuuaXrclkDgIo+TIMYZEq8yXoq/LK8l4JFYd
+         CqZVR6y/RQ0z1Hb5UEd3BOZNDTecjxftl35q9w8o3UFAa/pKQheDpcTTaUH/F6A1ZY
+         fDbEE0/b1sfecfCeSpFFW5p2Fw5qDvE922Zdaj4M=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Biggers <ebiggers@google.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>
-Subject: [PATCH 5.1 036/128] crypto: gcm - fix incompatibility between "gcm" and "gcm_base"
-Date:   Mon, 20 May 2019 14:13:43 +0200
-Message-Id: <20190520115252.112924967@linuxfoundation.org>
+        stable@vger.kernel.org, kbuild test robot <lkp@intel.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>
+Subject: [PATCH 5.1 004/128] objtool: Fix function fallthrough detection
+Date:   Mon, 20 May 2019 14:13:11 +0200
+Message-Id: <20190520115249.738184641@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190520115249.449077487@linuxfoundation.org>
 References: <20190520115249.449077487@linuxfoundation.org>
@@ -59,137 +63,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Biggers <ebiggers@google.com>
+From: Josh Poimboeuf <jpoimboe@redhat.com>
 
-commit f699594d436960160f6d5ba84ed4a222f20d11cd upstream.
+commit e6f393bc939d566ce3def71232d8013de9aaadde upstream.
 
-GCM instances can be created by either the "gcm" template, which only
-allows choosing the block cipher, e.g. "gcm(aes)"; or by "gcm_base",
-which allows choosing the ctr and ghash implementations, e.g.
-"gcm_base(ctr(aes-generic),ghash-generic)".
+When a function falls through to the next function due to a compiler
+bug, objtool prints some obscure warnings.  For example:
 
-However, a "gcm_base" instance prevents a "gcm" instance from being
-registered using the same implementations.  Nor will the instance be
-found by lookups of "gcm".  This can be used as a denial of service.
-Moreover, "gcm_base" instances are never tested by the crypto
-self-tests, even if there are compatible "gcm" tests.
+  drivers/regulator/core.o: warning: objtool: regulator_count_voltages()+0x95: return with modified stack frame
+  drivers/regulator/core.o: warning: objtool: regulator_count_voltages()+0x0: stack state mismatch: cfa1=7+32 cfa2=7+8
 
-The root cause of these problems is that instances of the two templates
-use different cra_names.  Therefore, fix these problems by making
-"gcm_base" instances set the same cra_name as "gcm" instances, e.g.
-"gcm(aes)" instead of "gcm_base(ctr(aes-generic),ghash-generic)".
+Instead it should be printing:
 
-This requires extracting the block cipher name from the name of the ctr
-algorithm.  It also requires starting to verify that the algorithms are
-really ctr and ghash, not something else entirely.  But it would be
-bizarre if anyone were actually using non-gcm-compatible algorithms with
-gcm_base, so this shouldn't break anyone in practice.
+  drivers/regulator/core.o: warning: objtool: regulator_supply_is_couple() falls through to next function regulator_count_voltages()
 
-Fixes: d00aa19b507b ("[CRYPTO] gcm: Allow block cipher parameter")
-Cc: stable@vger.kernel.org
-Signed-off-by: Eric Biggers <ebiggers@google.com>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+This used to work, but was broken by the following commit:
+
+  13810435b9a7 ("objtool: Support GCC 8's cold subfunctions")
+
+The padding nops at the end of a function aren't actually part of the
+function, as defined by the symbol table.  So the 'func' variable in
+validate_branch() is getting cleared to NULL when a padding nop is
+encountered, breaking the fallthrough detection.
+
+If the current instruction doesn't have a function associated with it,
+just consider it to be part of the previously detected function by not
+overwriting the previous value of 'func'.
+
+Reported-by: kbuild test robot <lkp@intel.com>
+Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: <stable@vger.kernel.org>
+Fixes: 13810435b9a7 ("objtool: Support GCC 8's cold subfunctions")
+Link: http://lkml.kernel.org/r/546d143820cd08a46624ae8440d093dd6c902cae.1557766718.git.jpoimboe@redhat.com
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- crypto/gcm.c |   34 +++++++++++-----------------------
- 1 file changed, 11 insertions(+), 23 deletions(-)
+ tools/objtool/check.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/crypto/gcm.c
-+++ b/crypto/gcm.c
-@@ -597,7 +597,6 @@ static void crypto_gcm_free(struct aead_
+--- a/tools/objtool/check.c
++++ b/tools/objtool/check.c
+@@ -1832,7 +1832,8 @@ static int validate_branch(struct objtoo
+ 			return 1;
+ 		}
  
- static int crypto_gcm_create_common(struct crypto_template *tmpl,
- 				    struct rtattr **tb,
--				    const char *full_name,
- 				    const char *ctr_name,
- 				    const char *ghash_name)
- {
-@@ -638,7 +637,8 @@ static int crypto_gcm_create_common(stru
- 		goto err_free_inst;
+-		func = insn->func ? insn->func->pfunc : NULL;
++		if (insn->func)
++			func = insn->func->pfunc;
  
- 	err = -EINVAL;
--	if (ghash->digestsize != 16)
-+	if (strcmp(ghash->base.cra_name, "ghash") != 0 ||
-+	    ghash->digestsize != 16)
- 		goto err_drop_ghash;
- 
- 	crypto_set_skcipher_spawn(&ctx->ctr, aead_crypto_instance(inst));
-@@ -650,24 +650,24 @@ static int crypto_gcm_create_common(stru
- 
- 	ctr = crypto_spawn_skcipher_alg(&ctx->ctr);
- 
--	/* We only support 16-byte blocks. */
-+	/* The skcipher algorithm must be CTR mode, using 16-byte blocks. */
- 	err = -EINVAL;
--	if (crypto_skcipher_alg_ivsize(ctr) != 16)
-+	if (strncmp(ctr->base.cra_name, "ctr(", 4) != 0 ||
-+	    crypto_skcipher_alg_ivsize(ctr) != 16 ||
-+	    ctr->base.cra_blocksize != 1)
- 		goto out_put_ctr;
- 
--	/* Not a stream cipher? */
--	if (ctr->base.cra_blocksize != 1)
-+	err = -ENAMETOOLONG;
-+	if (snprintf(inst->alg.base.cra_name, CRYPTO_MAX_ALG_NAME,
-+		     "gcm(%s", ctr->base.cra_name + 4) >= CRYPTO_MAX_ALG_NAME)
- 		goto out_put_ctr;
- 
--	err = -ENAMETOOLONG;
- 	if (snprintf(inst->alg.base.cra_driver_name, CRYPTO_MAX_ALG_NAME,
- 		     "gcm_base(%s,%s)", ctr->base.cra_driver_name,
- 		     ghash_alg->cra_driver_name) >=
- 	    CRYPTO_MAX_ALG_NAME)
- 		goto out_put_ctr;
- 
--	memcpy(inst->alg.base.cra_name, full_name, CRYPTO_MAX_ALG_NAME);
--
- 	inst->alg.base.cra_flags = (ghash->base.cra_flags |
- 				    ctr->base.cra_flags) & CRYPTO_ALG_ASYNC;
- 	inst->alg.base.cra_priority = (ghash->base.cra_priority +
-@@ -709,7 +709,6 @@ static int crypto_gcm_create(struct cryp
- {
- 	const char *cipher_name;
- 	char ctr_name[CRYPTO_MAX_ALG_NAME];
--	char full_name[CRYPTO_MAX_ALG_NAME];
- 
- 	cipher_name = crypto_attr_alg_name(tb[1]);
- 	if (IS_ERR(cipher_name))
-@@ -719,12 +718,7 @@ static int crypto_gcm_create(struct cryp
- 	    CRYPTO_MAX_ALG_NAME)
- 		return -ENAMETOOLONG;
- 
--	if (snprintf(full_name, CRYPTO_MAX_ALG_NAME, "gcm(%s)", cipher_name) >=
--	    CRYPTO_MAX_ALG_NAME)
--		return -ENAMETOOLONG;
--
--	return crypto_gcm_create_common(tmpl, tb, full_name,
--					ctr_name, "ghash");
-+	return crypto_gcm_create_common(tmpl, tb, ctr_name, "ghash");
- }
- 
- static int crypto_gcm_base_create(struct crypto_template *tmpl,
-@@ -732,7 +726,6 @@ static int crypto_gcm_base_create(struct
- {
- 	const char *ctr_name;
- 	const char *ghash_name;
--	char full_name[CRYPTO_MAX_ALG_NAME];
- 
- 	ctr_name = crypto_attr_alg_name(tb[1]);
- 	if (IS_ERR(ctr_name))
-@@ -742,12 +735,7 @@ static int crypto_gcm_base_create(struct
- 	if (IS_ERR(ghash_name))
- 		return PTR_ERR(ghash_name);
- 
--	if (snprintf(full_name, CRYPTO_MAX_ALG_NAME, "gcm_base(%s,%s)",
--		     ctr_name, ghash_name) >= CRYPTO_MAX_ALG_NAME)
--		return -ENAMETOOLONG;
--
--	return crypto_gcm_create_common(tmpl, tb, full_name,
--					ctr_name, ghash_name);
-+	return crypto_gcm_create_common(tmpl, tb, ctr_name, ghash_name);
- }
- 
- static int crypto_rfc4106_setkey(struct crypto_aead *parent, const u8 *key,
+ 		if (func && insn->ignore) {
+ 			WARN_FUNC("BUG: why am I validating an ignored function?",
 
 
