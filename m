@@ -4,52 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38BABC04AAC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:31:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BC6CC04E87
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:31:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0EB2E216FD
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:31:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EEDD7216C4
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:31:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558355485;
-	bh=mKAMmo5lwnwFG02xpzRZChvX/xc2kbA2BzCwLAZ1sE0=;
+	s=default; t=1558355489;
+	bh=GGte2Vf7wiE+9+k9pkk8adb1T/XIjxDDA2GrzUEYLyo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GeEh2vrNGYNDQpThP37risS4WZwj0tWzxgdXmDvn22AXE6D2mmvX/6rkIoT7yiR7a
-	 M3gDglivgqYiMio7l0P+LTSiTl3MNxwkxhNVC0tk3I5npgEyyo0J2vE7nAqDfeymPs
-	 EmwHbeBn0csxTayIoNh8Szste2/Tr46sddIOeET8=
+	b=E5XiT3uYd4ga7yeNYOTOFa+h/emX5+T3GH0vDVIKsk6Pq5OcIHBLsHYtOxiR3X0qW
+	 zZ0LpV8TA/VYIRDnavGs+EY51f3lxY3cnH2WEmVRDu3gr+KD82oj8u2vjYbfLfW0R5
+	 44IUspZ8WNBn1UpNnwJcd112h9dHudg5AUzUK3FE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389894AbfETMbX (ORCPT
+        id S2390334AbfETMb2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 08:31:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47888 "EHLO mail.kernel.org"
+        Mon, 20 May 2019 08:31:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47954 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732749AbfETMbU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 08:31:20 -0400
+        id S2390284AbfETMbX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 08:31:23 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 422A120675;
-        Mon, 20 May 2019 12:31:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C7484214DA;
+        Mon, 20 May 2019 12:31:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558355479;
-        bh=mKAMmo5lwnwFG02xpzRZChvX/xc2kbA2BzCwLAZ1sE0=;
+        s=default; t=1558355482;
+        bh=GGte2Vf7wiE+9+k9pkk8adb1T/XIjxDDA2GrzUEYLyo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pyJVsAz/lXOn+ivtpbf2k+FQQYbP6SaSgzlpVkIpvpMeZFxhPxzViyqXlZUFInrJ7
-         XOSq7vDsWQKFJIVCNJtdeQ40WTDM0zP84mfAtse+fgisN/Jjkvw3k/VFmfYd0UTjfq
-         Bqt9IYXx74KfEZJ8GDwk2YrqBJB24jCubdoXC4zM=
+        b=Ra6uIIqejLOqdkWvu09NgYwuxAmEzTjamK4bPrefXxVgyKNjBEGhFbYokWQs3imo9
+         lqYYlw8pLbPBLkAnz3Lvgxkm6G2KC+EB7Wx2adItvGvABlE87dzziH/O4E9jG8YStJ
+         x0+ivXYBWGewJMKDJcNbZMyEQ9VrX83xDAZ7giMw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Christoph Muellner <christoph.muellner@theobroma-systems.com>,
-        Philipp Tomsich <philipp.tomsich@theobroma-systems.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>
-Subject: [PATCH 5.1 011/128] mmc: sdhci-of-arasan: Add DTS property to disable DCMDs.
-Date:   Mon, 20 May 2019 14:13:18 +0200
-Message-Id: <20190520115250.215156422@linuxfoundation.org>
+        stable@vger.kernel.org, Wen Yang <wen.yang99@zte.com.cn>,
+        Krzysztof Kozlowski <krzk@kernel.org>
+Subject: [PATCH 5.1 012/128] ARM: exynos: Fix a leaked reference by adding missing of_node_put
+Date:   Mon, 20 May 2019 14:13:19 +0200
+Message-Id: <20190520115250.283892975@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190520115249.449077487@linuxfoundation.org>
 References: <20190520115249.449077487@linuxfoundation.org>
@@ -62,43 +59,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christoph Muellner <christoph.muellner@theobroma-systems.com>
+From: Wen Yang <wen.yang99@zte.com.cn>
 
-commit 7bda9482e7ed4d27d83c1f9cb5cbe3b34ddac3e8 upstream.
+commit 629266bf7229cd6a550075f5961f95607b823b59 upstream.
 
-Direct commands (DCMDs) are an optional feature of eMMC 5.1's command
-queue engine (CQE). The Arasan eMMC 5.1 controller uses the CQHCI,
-which exposes a control register bit to enable the feature.
-The current implementation sets this bit unconditionally.
+The call to of_get_next_child returns a node pointer with refcount
+incremented thus it must be explicitly decremented after the last
+usage.
 
-This patch allows to suppress the feature activation,
-by specifying the property disable-cqe-dcmd.
+Detected by coccinelle with warnings like:
+    arch/arm/mach-exynos/firmware.c:201:2-8: ERROR: missing of_node_put;
+        acquired a node pointer with refcount incremented on line 193,
+        but without a corresponding object release within this function.
 
-Signed-off-by: Christoph Muellner <christoph.muellner@theobroma-systems.com>
-Signed-off-by: Philipp Tomsich <philipp.tomsich@theobroma-systems.com>
-Acked-by: Adrian Hunter <adrian.hunter@intel.com>
-Fixes: 84362d79f436 ("mmc: sdhci-of-arasan: Add CQHCI support for arasan,sdhci-5.1")
 Cc: stable@vger.kernel.org
-Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+Signed-off-by: Wen Yang <wen.yang99@zte.com.cn>
+Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/mmc/host/sdhci-of-arasan.c |    5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ arch/arm/mach-exynos/firmware.c |    1 +
+ arch/arm/mach-exynos/suspend.c  |    2 ++
+ 2 files changed, 3 insertions(+)
 
---- a/drivers/mmc/host/sdhci-of-arasan.c
-+++ b/drivers/mmc/host/sdhci-of-arasan.c
-@@ -832,7 +832,10 @@ static int sdhci_arasan_probe(struct pla
- 		host->mmc_host_ops.start_signal_voltage_switch =
- 					sdhci_arasan_voltage_switch;
- 		sdhci_arasan->has_cqe = true;
--		host->mmc->caps2 |= MMC_CAP2_CQE | MMC_CAP2_CQE_DCMD;
-+		host->mmc->caps2 |= MMC_CAP2_CQE;
-+
-+		if (!of_property_read_bool(np, "disable-cqe-dcmd"))
-+			host->mmc->caps2 |= MMC_CAP2_CQE_DCMD;
- 	}
+--- a/arch/arm/mach-exynos/firmware.c
++++ b/arch/arm/mach-exynos/firmware.c
+@@ -196,6 +196,7 @@ bool __init exynos_secure_firmware_avail
+ 		return false;
  
- 	ret = sdhci_arasan_add_host(sdhci_arasan);
+ 	addr = of_get_address(nd, 0, NULL, NULL);
++	of_node_put(nd);
+ 	if (!addr) {
+ 		pr_err("%s: No address specified.\n", __func__);
+ 		return false;
+--- a/arch/arm/mach-exynos/suspend.c
++++ b/arch/arm/mach-exynos/suspend.c
+@@ -639,8 +639,10 @@ void __init exynos_pm_init(void)
+ 
+ 	if (WARN_ON(!of_find_property(np, "interrupt-controller", NULL))) {
+ 		pr_warn("Outdated DT detected, suspend/resume will NOT work\n");
++		of_node_put(np);
+ 		return;
+ 	}
++	of_node_put(np);
+ 
+ 	pm_data = (const struct exynos_pm_data *) match->data;
+ 
 
 
