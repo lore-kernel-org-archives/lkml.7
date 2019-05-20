@@ -2,182 +2,175 @@ Return-Path: <SRS0=lq4r=TU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 611E6C04AAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 08:12:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9468C04AAF
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 08:12:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3F4BD2081C
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 08:12:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9EC4E20656
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 08:12:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="Xou2uT1h"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730975AbfETIMJ (ORCPT
+        id S1731221AbfETIMM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 04:12:09 -0400
-Received: from regular1.263xmail.com ([211.150.70.199]:60552 "EHLO
-        regular1.263xmail.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728551AbfETIMJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 04:12:09 -0400
-X-Greylist: delayed 466 seconds by postgrey-1.27 at vger.kernel.org; Mon, 20 May 2019 04:12:07 EDT
-Received: from wxt?rock-chips.com (unknown [192.168.167.161])
-        by regular1.263xmail.com (Postfix) with ESMTP id 1F4D63EE;
-        Mon, 20 May 2019 16:04:14 +0800 (CST)
-X-263anti-spam: KSV:0;BIG:0;
-X-MAIL-GRAY: 0
-X-MAIL-DELIVERY: 1
-X-KSVirus-check: 0
-X-ADDR-CHECKED4: 1
-X-ABS-CHECKED: 1
-X-SKE-CHECKED: 1
-X-ANTISPAM-LEVEL: 2
-Received: from [172.16.21.194] (unknown [58.22.7.114])
-        by smtp.263.net (postfix) whith ESMTP id P32757T140039436609280S1558339450334725_;
-        Mon, 20 May 2019 16:04:11 +0800 (CST)
-X-IP-DOMAINF: 1
-X-UNIQUE-TAG: <c6a2d7109fd86b9f3d455bed21fbadbc>
-X-RL-SENDER: wxt@rock-chips.com
-X-SENDER: wxt@rock-chips.com
-X-LOGIN-NAME: wxt@rock-chips.com
-X-FST-TO: hjc@rock-chips.com
-X-SENDER-IP: 58.22.7.114
-X-ATTACHMENT-NUM: 0
-X-DNS-TYPE: 0
-Subject: Re: [PATCH] phy: rockchip-dp: Avoid power leak by leaving the PHY
- power on
-To:     Douglas Anderson <dianders@chromium.org>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Heiko Stuebner <heiko@sntech.de>
-Cc:     hl@rock-chips.com, linux-rockchip@lists.infradead.org,
-        dbasehore@chromium.org, mka@chromium.org, ryandcase@chromium.org,
-        groeck@chromium.org, Elaine Zhang <zhangqing@rock-chips.com>,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        "nickey.yang (nickey.yang@rock-chips.com)" 
-        <nickey.yang@rock-chips.com>, wzz <wzz@rock-chips.com>,
-        Huang Jiachai <hjc@rock-chips.com>
-References: <20190507234857.81414-1-dianders@chromium.org>
-From:   Caesar Wang <wxt@rock-chips.com>
-Message-ID: <79ca5499-6b7d-fe55-2030-283f5cfb1d27@rock-chips.com>
-Date:   Mon, 20 May 2019 16:04:11 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
-MIME-Version: 1.0
-In-Reply-To: <20190507234857.81414-1-dianders@chromium.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+        Mon, 20 May 2019 04:12:12 -0400
+Received: from mail-eopbgr80045.outbound.protection.outlook.com ([40.107.8.45]:43914
+        "EHLO EUR04-VI1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1730445AbfETIML (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 04:12:11 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=QO6v2+9Q+oADiaXWyc2Lm1KtzVYLG6nKk2XzKVg3ow4=;
+ b=Xou2uT1hbXirRseG/wIeBmHzAusiVnGCea2K3qi6b9EbfqZN+kInJZdvLFVoDJu+QzT1KHVsMnVDziKKdciYbYs9FWFqAds+ZhZZ3BajzfJlep8CXSxlNdJBaTUi2dc+yCWrG/QugdZP/78VXFX3tFeU1wW5iLbrz2QwGdib/so=
+Received: from AM5PR04MB3299.eurprd04.prod.outlook.com (10.173.255.158) by
+ AM5PR04MB3185.eurprd04.prod.outlook.com (10.173.255.30) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1900.17; Mon, 20 May 2019 08:12:06 +0000
+Received: from AM5PR04MB3299.eurprd04.prod.outlook.com
+ ([fe80::15e3:bb28:7e33:1adb]) by AM5PR04MB3299.eurprd04.prod.outlook.com
+ ([fe80::15e3:bb28:7e33:1adb%7]) with mapi id 15.20.1900.020; Mon, 20 May 2019
+ 08:12:06 +0000
+From:   Xiaowei Bao <xiaowei.bao@nxp.com>
+To:     Arnd Bergmann <arnd@arndb.de>
+CC:     Bjorn Helgaas <bhelgaas@google.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Shawn Guo <shawnguo@kernel.org>, Leo Li <leoyang.li@nxp.com>,
+        Kishon <kishon@ti.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        gregkh <gregkh@linuxfoundation.org>,
+        "M.h. Lian" <minghuan.lian@nxp.com>,
+        Mingkai Hu <mingkai.hu@nxp.com>, Roy Zang <roy.zang@nxp.com>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        Philippe Ombredanne <pombredanne@nexb.com>,
+        Shawn Lin <shawn.lin@rock-chips.com>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        DTML <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>
+Subject: RE: [EXT] Re: [PATCH 2/3] arm64: dts: ls1028a: Add PCIe controller DT
+ nodes
+Thread-Topic: [EXT] Re: [PATCH 2/3] arm64: dts: ls1028a: Add PCIe controller
+ DT nodes
+Thread-Index: AQHVCvDcQiDXhQiDJU+q/k8vTUL4F6Zr0/6AgALH2dCAAGu0gIAEp57w
+Date:   Mon, 20 May 2019 08:12:06 +0000
+Message-ID: <AM5PR04MB329911C71C671C52925495B6F5060@AM5PR04MB3299.eurprd04.prod.outlook.com>
+References: <20190515072747.39941-1-xiaowei.bao@nxp.com>
+ <20190515072747.39941-2-xiaowei.bao@nxp.com>
+ <CAK8P3a3AXRp_v_7hkoJA28tUCiSh1eYzbk4Q4h29OqL6y-KL8A@mail.gmail.com>
+ <AM5PR04MB329934765FB8EB1828743D79F50B0@AM5PR04MB3299.eurprd04.prod.outlook.com>
+ <CAK8P3a0kKb7njiJvUkwJYwf-yc-hEyErSiWcvbdf0XnMoctzrg@mail.gmail.com>
+In-Reply-To: <CAK8P3a0kKb7njiJvUkwJYwf-yc-hEyErSiWcvbdf0XnMoctzrg@mail.gmail.com>
+Accept-Language: en-US
 Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=xiaowei.bao@nxp.com; 
+x-originating-ip: [119.31.174.73]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: fed7f85d-fc29-45da-a19e-08d6dcfad97c
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:AM5PR04MB3185;
+x-ms-traffictypediagnostic: AM5PR04MB3185:
+x-microsoft-antispam-prvs: <AM5PR04MB3185B66690DB51613E170726F5060@AM5PR04MB3185.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8273;
+x-forefront-prvs: 004395A01C
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(376002)(366004)(136003)(346002)(39860400002)(396003)(189003)(199004)(13464003)(8676002)(99286004)(44832011)(25786009)(53546011)(6436002)(6506007)(86362001)(229853002)(316002)(54906003)(66946007)(52536014)(5660300002)(53936002)(9686003)(68736007)(6916009)(76116006)(73956011)(66446008)(64756008)(66556008)(66476007)(256004)(74316002)(2906002)(305945005)(14444005)(66066001)(7416002)(14454004)(33656002)(186003)(7736002)(4326008)(446003)(11346002)(102836004)(71200400001)(55016002)(8936002)(476003)(81156014)(478600001)(81166006)(486006)(7696005)(76176011)(6116002)(71190400001)(3846002)(26005)(6246003);DIR:OUT;SFP:1101;SCL:1;SRVR:AM5PR04MB3185;H:AM5PR04MB3299.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: eR1bepXtERoaalI8zAbub3pAfqDDAdbnJ9ub/IzLfZ/Za8kPLsyMrItjzEC2iPySi0FH7bhKX//5/NUxdAfqXQiaTr8n2NIKeb0QxtUBR+edWIAonVsqXswgI94sAz074Zg8TGqI8ihm/+PfVSB/673oZuIBlUcGiiXwdBh16V45oLoZDyMq9vDlBGGYVvmrJqNdiU9p1Rn9GnSYfa4DtK0iEjrwwX71UxD56RcFiejYDw2jvAlhAn4cEypof2Geu4bz/2PKYblLlo79A8k389cKvnkxcscmfGK8P7qGLkdUpy56+MWq5vRf1cvOntVrVLobR60/VttP18oSMfyrTUPJDAZ6SMpurD3FqK5RkX9sVxtR3NS1JD4q+nYctpYeYp2rYl9azLwXhHaOy2KUlpYF3y3WnLIsVrDdRcvu74k=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: fed7f85d-fc29-45da-a19e-08d6dcfad97c
+X-MS-Exchange-CrossTenant-originalarrivaltime: 20 May 2019 08:12:06.7732
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM5PR04MB3185
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Doug,
-
-For now,  nobody of rockchip is responsible for this driver.
-Cc: Nickey, Zain, Hjc
-
-
-On 5/8/19 7:48 AM, Douglas Anderson wrote:
-> While testing a newer kernel on rk3288-based Chromebooks I found that
-> the power draw in suspend was higher on newer kernels compared to the
-> downstream Chrome OS 3.14 kernel.  Specifically the power of an
-> rk3288-veyron-jerry board that I tested (as measured by the smart
-> battery) was ~16 mA on Chrome OS 3.14 and ~21 mA on a newer kernel.
->
-> I tracked the regression down to the fact that the "DP PHY" driver
-> didn't exist in our downstream 3.14.  We relied on the eDP driver to
-> turn on the clock and relied on the fact that the power for the PHY
-> was default turned on.
->
-> Specifically the thing that caused the power regression was turning
-> the eDP PHY _off_.  Presumably there is some sort of power leak in the
-> system and when we turn the PHY off something is leaching power from
-> something else and causing excessive power draw.
->
-> Doing a search through device trees shows that this PHY is only ever
-> used on rk3288.  Presumably this power leak is present on all
-> rk3288-SoCs running upstream Linux so let's just whack the driver to
-> make sure we never turn off power.  We'll still leave the parts that
-> turn _on_ the power and grab the clock, though.
->
-> NOTES:
-> A) If someone can identify what this power leak is and fix it in some
->     other way we can revert this patch.
-> B) If someone can show that their particular board doesn't have this
->     power leak (maybe they have rails hooked up differently?) we can
->     perhaps add a device tree property indicating that for some boards
->     it's OK to turn this rail off.  I don't want to add this property
->     until I know of a board that needs it.
->
-> Fixes: fd968973de95 ("phy: Add driver for rockchip Display Port PHY")
-> Signed-off-by: Douglas Anderson <dianders@chromium.org>
-
-
-Reviewed-by: Caesar Wang <wxt@rock-chips.com>
-
-> ---
-> As far as I know Yakir (the original author) is no longer at Rockchip.
-> I've added a few other Rockchip people and hopefully one of them can
-> help direct even if they're not directly responsible.
->
->   drivers/phy/rockchip/phy-rockchip-dp.c | 11 +++++++----
->   1 file changed, 7 insertions(+), 4 deletions(-)
->
-> diff --git a/drivers/phy/rockchip/phy-rockchip-dp.c b/drivers/phy/rockchip/phy-rockchip-dp.c
-> index 8b267a746576..10bbcd69d6f5 100644
-> --- a/drivers/phy/rockchip/phy-rockchip-dp.c
-> +++ b/drivers/phy/rockchip/phy-rockchip-dp.c
-> @@ -35,7 +35,7 @@ struct rockchip_dp_phy {
->   static int rockchip_set_phy_state(struct phy *phy, bool enable)
->   {
->   	struct rockchip_dp_phy *dp = phy_get_drvdata(phy);
-> -	int ret;
-> +	int ret = 0;
->   
->   	if (enable) {
->   		ret = regmap_write(dp->grf, GRF_SOC_CON12,
-> @@ -50,9 +50,12 @@ static int rockchip_set_phy_state(struct phy *phy, bool enable)
->   	} else {
->   		clk_disable_unprepare(dp->phy_24m);
->   
-> -		ret = regmap_write(dp->grf, GRF_SOC_CON12,
-> -				   GRF_EDP_PHY_SIDDQ_HIWORD_MASK |
-> -				   GRF_EDP_PHY_SIDDQ_OFF);
-> +		/*
-> +		 * Intentionally don't turn SIDDQ off when disabling
-> +		 * the PHY.  There is a power leak on rk3288 and
-> +		 * suspend power _increases_ by 5 mA if you turn this
-> +		 * off.
-> +		 */
-
-
-As described by TRM, The “GRF_EDP_PHY_SIDDQ_OFF” that all circuits are 
-power down, all
-IO are high-Z. That should make sure the PD_VIO[0] was disabled first, 
-no active.
-But the rk3288 can't turn pd_vio off at the moment.
-
-[0]
-PD_VIO Which clock are device clocks:
-              *    clocks        devices
-              *    *_IEP        IEP:Image Enhancement Processor
-              *    *_ISP        ISP:Image Signal Processing
-              *    *_VIP        VIP:Video Input Processor
-              *    *_VOP*        VOP:Visual Output Processor
-              *    *_RGA        RGA
-              *    *_EDP*        EDP
-              *    *_LVDS_*    LVDS
-              *    *_HDMI        HDMI
-              *    *_MIPI_*    MIPI
-
-
-Thanks,
--Caesar
-
-
->   	}
->   
->   	return ret;
-
-
+SGkgQXJuZHTvvIwNCg0KLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCkZyb206IEFybmQgQmVy
+Z21hbm4gPGFybmRAYXJuZGIuZGU+IA0KU2VudDogMjAxOeW5tDXmnIgxN+aXpSAxNjo1OQ0KVG86
+IFhpYW93ZWkgQmFvIDx4aWFvd2VpLmJhb0BueHAuY29tPg0KQ2M6IEJqb3JuIEhlbGdhYXMgPGJo
+ZWxnYWFzQGdvb2dsZS5jb20+OyBSb2IgSGVycmluZyA8cm9iaCtkdEBrZXJuZWwub3JnPjsgTWFy
+ayBSdXRsYW5kIDxtYXJrLnJ1dGxhbmRAYXJtLmNvbT47IFNoYXduIEd1byA8c2hhd25ndW9Aa2Vy
+bmVsLm9yZz47IExlbyBMaSA8bGVveWFuZy5saUBueHAuY29tPjsgS2lzaG9uIDxraXNob25AdGku
+Y29tPjsgTG9yZW56byBQaWVyYWxpc2kgPGxvcmVuem8ucGllcmFsaXNpQGFybS5jb20+OyBncmVn
+a2ggPGdyZWdraEBsaW51eGZvdW5kYXRpb24ub3JnPjsgTS5oLiBMaWFuIDxtaW5naHVhbi5saWFu
+QG54cC5jb20+OyBNaW5na2FpIEh1IDxtaW5na2FpLmh1QG54cC5jb20+OyBSb3kgWmFuZyA8cm95
+LnphbmdAbnhwLmNvbT47IEthdGUgU3Rld2FydCA8a3N0ZXdhcnRAbGludXhmb3VuZGF0aW9uLm9y
+Zz47IFBoaWxpcHBlIE9tYnJlZGFubmUgPHBvbWJyZWRhbm5lQG5leGIuY29tPjsgU2hhd24gTGlu
+IDxzaGF3bi5saW5Acm9jay1jaGlwcy5jb20+OyBsaW51eC1wY2kgPGxpbnV4LXBjaUB2Z2VyLmtl
+cm5lbC5vcmc+OyBEVE1MIDxkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZz47IExpbnV4IEtlcm5l
+bCBNYWlsaW5nIExpc3QgPGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc+OyBMaW51eCBBUk0g
+PGxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZz47IGxpbnV4cHBjLWRldiA8bGlu
+dXhwcGMtZGV2QGxpc3RzLm96bGFicy5vcmc+DQpTdWJqZWN0OiBSZTogW0VYVF0gUmU6IFtQQVRD
+SCAyLzNdIGFybTY0OiBkdHM6IGxzMTAyOGE6IEFkZCBQQ0llIGNvbnRyb2xsZXIgRFQgbm9kZXMN
+Cg0KQ2F1dGlvbjogRVhUIEVtYWlsDQoNCk9uIEZyaSwgTWF5IDE3LCAyMDE5IGF0IDU6MjEgQU0g
+WGlhb3dlaSBCYW8gPHhpYW93ZWkuYmFvQG54cC5jb20+IHdyb3RlOg0KPiAtLS0tLU9yaWdpbmFs
+IE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBBcm5kIEJlcmdtYW5uIDxhcm5kQGFybmRiLmRlPg0KPiBP
+biBXZWQsIE1heSAxNSwgMjAxOSBhdCA5OjM2IEFNIFhpYW93ZWkgQmFvIDx4aWFvd2VpLmJhb0Bu
+eHAuY29tPiB3cm90ZToNCj4gPiBTaWduZWQtb2ZmLWJ5OiBYaWFvd2VpIEJhbyA8eGlhb3dlaS5i
+YW9AbnhwLmNvbT4NCj4gPiAtLS0NCj4gPiAgYXJjaC9hcm02NC9ib290L2R0cy9mcmVlc2NhbGUv
+ZnNsLWxzMTAyOGEuZHRzaSB8ICAgNTIgKysrKysrKysrKysrKysrKysrKysrKysrDQo+ID4gIDEg
+ZmlsZXMgY2hhbmdlZCwgNTIgaW5zZXJ0aW9ucygrKSwgMCBkZWxldGlvbnMoLSkNCj4gPg0KPiA+
+IGRpZmYgLS1naXQgYS9hcmNoL2FybTY0L2Jvb3QvZHRzL2ZyZWVzY2FsZS9mc2wtbHMxMDI4YS5k
+dHNpIA0KPiA+IGIvYXJjaC9hcm02NC9ib290L2R0cy9mcmVlc2NhbGUvZnNsLWxzMTAyOGEuZHRz
+aQ0KPiA+IGluZGV4IGIwNDU4MTIuLjUwYjU3OWIgMTAwNjQ0DQo+ID4gLS0tIGEvYXJjaC9hcm02
+NC9ib290L2R0cy9mcmVlc2NhbGUvZnNsLWxzMTAyOGEuZHRzaQ0KPiA+ICsrKyBiL2FyY2gvYXJt
+NjQvYm9vdC9kdHMvZnJlZXNjYWxlL2ZzbC1sczEwMjhhLmR0c2kNCj4gPiBAQCAtMzk4LDYgKzM5
+OCw1OCBAQA0KPiA+ICAgICAgICAgICAgICAgICAgICAgICAgIHN0YXR1cyA9ICJkaXNhYmxlZCI7
+DQo+ID4gICAgICAgICAgICAgICAgIH07DQo+ID4NCj4gPiArICAgICAgICAgICAgICAgcGNpZUAz
+NDAwMDAwIHsNCj4gPiArICAgICAgICAgICAgICAgICAgICAgICBjb21wYXRpYmxlID0gImZzbCxs
+czEwMjhhLXBjaWUiOw0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAgIHJlZyA9IDwweDAwIDB4
+MDM0MDAwMDAgMHgwIDB4MDAxMDAwMDAgICAvKiBjb250cm9sbGVyIHJlZ2lzdGVycyAqLw0KPiA+
+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAweDgwIDB4MDAwMDAwMDAgMHgwIDB4MDAw
+MDIwMDA+OyAvKiBjb25maWd1cmF0aW9uIHNwYWNlICovDQo+ID4gKyAgICAgICAgICAgICAgICAg
+ICAgICAgcmVnLW5hbWVzID0gInJlZ3MiLCAiY29uZmlnIjsNCj4gPiArICAgICAgICAgICAgICAg
+ICAgICAgICBpbnRlcnJ1cHRzID0gPEdJQ19TUEkgMTA4IElSUV9UWVBFX0xFVkVMX0hJR0g+LCAv
+KiBQTUUgaW50ZXJydXB0ICovDQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgIDxHSUNfU1BJIDEwOSBJUlFfVFlQRV9MRVZFTF9ISUdIPjsgLyogYWVyIGludGVycnVwdCAq
+Lw0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAgIGludGVycnVwdC1uYW1lcyA9ICJwbWUiLCAi
+YWVyIjsNCj4gPiArICAgICAgICAgICAgICAgICAgICAgICAjYWRkcmVzcy1jZWxscyA9IDwzPjsN
+Cj4gPiArICAgICAgICAgICAgICAgICAgICAgICAjc2l6ZS1jZWxscyA9IDwyPjsNCj4gPiArICAg
+ICAgICAgICAgICAgICAgICAgICBkZXZpY2VfdHlwZSA9ICJwY2kiOw0KPiA+ICsgICAgICAgICAg
+ICAgICAgICAgICAgIGRtYS1jb2hlcmVudDsNCj4gPiArICAgICAgICAgICAgICAgICAgICAgICBu
+dW0tbGFuZXMgPSA8ND47DQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgYnVzLXJhbmdlID0g
+PDB4MCAweGZmPjsNCj4gPiArICAgICAgICAgICAgICAgICAgICAgICByYW5nZXMgPSA8MHg4MTAw
+MDAwMCAweDAgMHgwMDAwMDAwMCAweDgwIDB4MDAwMTAwMDAgMHgwIDB4MDAwMTAwMDAgICAvKiBk
+b3duc3RyZWFtIEkvTyAqLw0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAw
+eDgyMDAwMDAwIDB4MCAweDQwMDAwMDAwIDB4ODAgDQo+ID4gKyAweDQwMDAwMDAwIDB4MCAweDQw
+MDAwMDAwPjsgLyogbm9uLXByZWZldGNoYWJsZSBtZW1vcnkgKi8NCj4NCj4gQXJlIHlvdSBzdXJl
+IHRoZXJlIGlzIG5vIHN1cHBvcnQgZm9yIDY0LWJpdCBCQVJzIG9yIHByZWZldGNoYWJsZSBtZW1v
+cnk/DQo+IFtYaWFvd2VpIEJhb10gc29ycnkgZm9yIGxhdGUgcmVwbHksIFRob3VnaHQgdGhhdCBv
+dXIgTGF5ZXJzY2FwZSBwbGF0Zm9ybSBoYXMgbm90IGFkZGVkIHByZWZldGNoYWJsZSBtZW1vcnkg
+c3VwcG9ydCBpbiBEVFMsIHNvIHRoaXMgcGxhdGZvcm0gaGFzIG5vdCBiZWVuIGFkZGVkLCBJIHdp
+bGwgc3VibWl0IGEgc2VwYXJhdGUgcGF0Y2ggdG8gYWRkIHByZWZldGNoYWJsZSBtZW1vcnkgc3Vw
+cG9ydCBmb3IgYWxsIExheWVyc2NhcGUgcGxhdGZvcm1zLg0KDQpPaywgdGhhbmtzLg0KDQo+IE9m
+IGNvdXJzZSwgdGhlIHByZWZldGNoYWJsZSBQQ0lFIGRldmljZSBjYW4gd29yayBpbiBvdXIgYm9h
+cmRzLCANCj4gYmVjYXVzZSB0aGUgUkMgd2lsbCBhc3NpZ24gbm9uLXByZWZldGNoYWJsZSBtZW1v
+cnkgZm9yIHRoaXMgZGV2aWNlLiBXZSANCj4gcmVzZXJ2ZSAxRyBuby1wcmVmZXRjaGFibGUgbWVt
+b3J5IGZvciBQQ0lFIGRldmljZSwgaXQgaXMgZW5vdWdoIGZvciBnZW5lcmFsIGRldmljZXMuDQoN
+ClN1cmUsIG1hbnkgZGV2aWNlcyB3b3JrIGp1c3QgZmluZSwgdGhpcyBpcyBtb3N0bHkgYSBxdWVz
+dGlvbiBvZiBzdXBwb3J0aW5nIHRob3NlIGRldmljZXMgdGhhdCBkbyByZXF1aXJlIG11bHRpcGxl
+IGdpZ2FieXRlcywgb3IgdGhhdCBuZWVkIHByZWZldGNoYWJsZSBtZW1vcnkgc2VtYW50aWNzIHRv
+IGdldCB0aGUgZXhwZWN0ZWQgcGVyZm9ybWFuY2UuIEdQVXMgYXJlIHRoZSBvYnZpb3VzIGV4YW1w
+bGUsIGJ1dCBJIHRoaW5rIHRoZXJlIGFyZSBvdGhlcnMgKGluZmluaWJhbmQ/KS4NCltYaWFvd2Vp
+IEJhb10gc29ycnksIEkgZG9uJ3Qga25vdyBtdWNoIGFib3V0IGluZmluaWJhbmQgYW5kIEdQVSwg
+YXMgeW91IHNhaWQsIEkgdGhpbmsgbWFueSBkZXZpY2VzIHdvcmtzIGZpbmUgd2l0aCB0aGlzIERU
+UywgSSB3aWxsIGFkZCB0aGUgcHJlZmV0Y2hhYmxlIG1lbW9yeSBlbnRyeSBpbiBEVFMgZnV0dXJl
+IGFuZCBzdWJtaXQgYW5vdGhlciBwYXRjaC4NCg0KICAgICAgQXJuZA0K
