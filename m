@@ -2,152 +2,115 @@ Return-Path: <SRS0=lq4r=TU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C195EC04AB4
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 02:14:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0C4FC04E87
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 02:15:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8C11820848
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 02:14:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F7272082E
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 02:15:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="DyU8Fm6x"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="iYO1AG+V"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729978AbfETCOf (ORCPT
+        id S1730010AbfETCPz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 19 May 2019 22:14:35 -0400
-Received: from conssluserg-04.nifty.com ([210.131.2.83]:20958 "EHLO
-        conssluserg-04.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726062AbfETCOe (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 19 May 2019 22:14:34 -0400
-Received: from mail-vs1-f50.google.com (mail-vs1-f50.google.com [209.85.217.50]) (authenticated)
-        by conssluserg-04.nifty.com with ESMTP id x4K2EPZf010599;
-        Mon, 20 May 2019 11:14:26 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-04.nifty.com x4K2EPZf010599
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1558318466;
-        bh=VZT+dBEuTUp2nvsq0QEUtjKPQOjNBhC01YI0fClrYlk=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=DyU8Fm6xABp6oXu+Q6UXe5wuciIdp7MayAmm9B87C794CycMFkF9q+TUHpVH8PqHu
-         6pBOsE/pKyYiEgm9Q07SHIjkujg6YksS4PLjvg836RPFkNQHgpz8CDR8ZQ24YQ4zPQ
-         VHAgidzdnOKzeZSpLVcYRbYCkDAniNaSdxbE62v+nOSYUAbwMY7YsrFFoAT8YUL1zZ
-         pZbG+ZnzlW1us3cgSPNokqf2DGokdGSvCeHuo+b56vy7QOr3iwwjwRms4vU//XrXpC
-         ubH0SYMfA278Q1IOME4KCR+iVVljVmzPuA8Jf1HaDYLIaZ777mBR0Q8/A66GR4a+zG
-         1HcQGRcuSP3zQ==
-X-Nifty-SrcIP: [209.85.217.50]
-Received: by mail-vs1-f50.google.com with SMTP id m1so7973537vsr.6;
-        Sun, 19 May 2019 19:14:26 -0700 (PDT)
-X-Gm-Message-State: APjAAAWB+NaLLNYFeF35evqKqd3O3tCtVjzFYZXr+0/g4/vdNhuS+10M
-        uUDlwMyNE6M06L1BdJdpLwJ420ZozGtLth6Rdvs=
-X-Google-Smtp-Source: APXvYqwkqsmntlg/Va89Mxc0iu7T5p37ceRTEIAyBXMJbw5KLG1VQoHw0HcvFyL4sBSZv9FYEfrG6TiIqLiVLPo96qA=
-X-Received: by 2002:a67:ad0f:: with SMTP id t15mr15737470vsl.179.1558318465161;
- Sun, 19 May 2019 19:14:25 -0700 (PDT)
-MIME-Version: 1.0
-References: <1558109235-23042-1-git-send-email-yamada.masahiro@socionext.com> <20190520095147.2021c218@canb.auug.org.au>
-In-Reply-To: <20190520095147.2021c218@canb.auug.org.au>
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Mon, 20 May 2019 11:13:48 +0900
-X-Gmail-Original-Message-ID: <CAK7LNAQc1XjTCo0FdYMxCrGP-iqNj1s464WepCVcxUun3=OvMg@mail.gmail.com>
-Message-ID: <CAK7LNAQc1XjTCo0FdYMxCrGP-iqNj1s464WepCVcxUun3=OvMg@mail.gmail.com>
-Subject: Re: [PATCH v3] kbuild: check uniqueness of module names
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Sun, 19 May 2019 22:15:55 -0400
+Received: from mail-eopbgr30084.outbound.protection.outlook.com ([40.107.3.84]:32482
+        "EHLO EUR03-AM5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726062AbfETCPz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 19 May 2019 22:15:55 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Leql0F4HY/Qi8RQupnp9smr0mCdyoDM/R5FK7F/0AUg=;
+ b=iYO1AG+VzPCb79eIu5+LP7u0A1B7z0wMRg1jejiXnOel5jiSpUwp4Cw8MEKuUiYBjLIM+Odf8san5KT/2WMcsVx2hrv4e6x+dqf5qUEOz9Aonf9x0aY4uwKht1lw/6C/wqqqH8dH3RpjsCqJ3WI8aoO1Mlvaagy701EXQbHcR+8=
+Received: from AM5PR0402MB2865.eurprd04.prod.outlook.com (10.175.44.16) by
+ AM5PR0402MB2820.eurprd04.prod.outlook.com (10.175.40.142) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1900.16; Mon, 20 May 2019 02:15:50 +0000
+Received: from AM5PR0402MB2865.eurprd04.prod.outlook.com
+ ([fe80::d8ed:b418:4ee9:a51]) by AM5PR0402MB2865.eurprd04.prod.outlook.com
+ ([fe80::d8ed:b418:4ee9:a51%9]) with mapi id 15.20.1900.020; Mon, 20 May 2019
+ 02:15:50 +0000
+From:   Ran Wang <ran.wang_1@nxp.com>
+To:     Pavel Machek <pavel@denx.de>
+CC:     Leo Li <leoyang.li@nxp.com>, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <len.brown@intel.com>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Arnd Bergmann <arnd@arndb.de>, Jessica Yu <jeyu@kernel.org>,
-        Lucas De Marchi <lucas.demarchi@intel.com>,
-        Michael Schmitz <schmitzmic@gmail.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Rusty Russell <rusty@rustcorp.com.au>,
-        Kees Cook <keescook@chromium.org>,
-        Bernd Petrovitsch <bernd@petrovitsch.priv.at>,
-        Alexander Kapshuk <alexander.kapshuk@gmail.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>
+Subject: RE: [PATCH V2 1/3] PM: wakeup: Add routine to help fetch wakeup
+ source object.
+Thread-Topic: [PATCH V2 1/3] PM: wakeup: Add routine to help fetch wakeup
+ source object.
+Thread-Index: AQHVDGHy6riuNjMX8Emng4J8Z2yFlqZy/KSAgABOAOA=
+Date:   Mon, 20 May 2019 02:15:50 +0000
+Message-ID: <AM5PR0402MB2865ED4DFB84BF2AE85EF0ABF1060@AM5PR0402MB2865.eurprd04.prod.outlook.com>
+References: <20190517033946.30763-1-ran.wang_1@nxp.com>
+ <20190519213457.GG31403@amd>
+In-Reply-To: <20190519213457.GG31403@amd>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=ran.wang_1@nxp.com; 
+x-originating-ip: [92.121.36.198]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: cb738bf7-bd63-4a94-d47c-08d6dcc91457
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:AM5PR0402MB2820;
+x-ms-traffictypediagnostic: AM5PR0402MB2820:
+x-microsoft-antispam-prvs: <AM5PR0402MB28209683DF9DC204FB00E4D2F1060@AM5PR0402MB2820.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:2043;
+x-forefront-prvs: 004395A01C
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(376002)(39860400002)(346002)(396003)(136003)(366004)(189003)(199004)(66476007)(66446008)(76116006)(66556008)(64756008)(66946007)(11346002)(446003)(6506007)(53546011)(4744005)(486006)(73956011)(476003)(305945005)(7696005)(26005)(99286004)(186003)(76176011)(66066001)(81166006)(81156014)(8676002)(54906003)(102836004)(7736002)(8936002)(68736007)(9686003)(6436002)(229853002)(478600001)(55016002)(14454004)(14444005)(5024004)(53936002)(316002)(25786009)(256004)(33656002)(2906002)(7416002)(3846002)(6116002)(4326008)(52536014)(71200400001)(74316002)(5660300002)(71190400001)(6246003)(86362001)(6916009);DIR:OUT;SFP:1101;SCL:1;SRVR:AM5PR0402MB2820;H:AM5PR0402MB2865.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: VP2r1rc65WSFI5jZupwR6kx226WYNoqlBtLUPFzb0NGGbxb+WP1wUwPjj5jxW/qxxvClnav/lD1AZXuv0dkYHf3pUs6mMzh0vW2+psB3yAT2nA0DKeQmT60V8//8ezP4N0M/xPjkaRxS/1KHB8iVvLRSBSz0d8FMY2430eBoaX8MXJdTr1ERSC1H41hheEkcPoMO02JQseBVnNu5QG8hSETAK86ehdfUZwI162En03HdmfljIdWQ6ZTXTAK3P+3fjQ1gUMJN8yynTqC+/rmBtypW5u/mlS1ger7s70uYCQAHv9nKHA+qXBzHTee1UfRimqbaWKgxJM0n8Qs0NhH2vOXL312Lr51n5++8m3XRkNIXhdOiQZTPJPPryIVKiOUhSW3Jhsv50NZoAP2VnB6ZiG/pLuAZjDK3d7aE5J3+GC4=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: cb738bf7-bd63-4a94-d47c-08d6dcc91457
+X-MS-Exchange-CrossTenant-originalarrivaltime: 20 May 2019 02:15:50.5690
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM5PR0402MB2820
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Stephen,
+Hi Pavel,
 
-On Mon, May 20, 2019 at 8:52 AM Stephen Rothwell <sfr@canb.auug.org.au> wrote:
->
-> Hi Masahiro,
->
-> On Sat, 18 May 2019 01:07:15 +0900 Masahiro Yamada <yamada.masahiro@socionext.com> wrote:
+On Monday, May 20, 2019 05:35, Pavel Machek wrote:
+>=20
+> > --- a/include/linux/pm_wakeup.h
+>=20
+> > @@ -70,6 +71,7 @@ struct wakeup_source {
+> >  	unsigned long		wakeup_count;
+> >  	bool			active:1;
+> >  	bool			autosleep_enabled:1;
+> > +	struct device	*attached_dev;
+> >  };
 > >
-> > It checks not only real modules, but also built-in modules (i.e.
-> > controlled by tristate CONFIG option, but currently compiled with =y).
-> > Non-unique names for built-in modules also cause problems because
-> > /sys/modules/ would fall over.
-> >
-> > I tested allmodconfig on the latest kernel, and it detected the
-> > following:
->
-> A powerpc ppc64_defconfig produces:
->
-> warning: same basename if the following are built as modules:
->   arch/powerpc/platforms/powermac/nvram.ko
->   drivers/char/nvram.ko
->
-> Which is a false positive since
-> arch/powerpc/platforms/powermac/Makefile has
->
-> # CONFIG_NVRAM is an arch. independent tristate symbol, for pmac32 we really
-> # need this to be a bool.  Cheat here and pretend CONFIG_NVRAM=m is really
-> # CONFIG_NVRAM=y
-> obj-$(CONFIG_NVRAM:m=y)         += nvram.o
->
-> Which means that this nvram.o will never be built as a module.
+> >  #ifdef CONFIG_PM_SLEEP
+>=20
+> You might want to format this similary to the rest...
 
-Indeed.
+OK, will update, thanks.
 
-I thought it was a good idea to check built-in modules,
-but I do not have a good way to avoid false positives.
-
-I think we should not check modules.builtin.
-Anyway, allmodconfig has a good test coverage.
-
-The following is the planned fix.
-(I folded your sed code.)
-
-
-
-
-diff --git a/scripts/modules-check.sh b/scripts/modules-check.sh
-index 2f659530e1ec..39e8cb36ba19 100755
---- a/scripts/modules-check.sh
-+++ b/scripts/modules-check.sh
-@@ -6,10 +6,10 @@ set -e
- # Check uniqueness of module names
- check_same_name_modules()
- {
--       for m in $(sed 's:.*/::' modules.order modules.builtin | sort | uniq -d)
-+       for m in $(sed 's:.*/::' modules.order | sort | uniq -d)
-        do
--               echo "warning: same basename if the following are
-built as modules:" >&2
--               sed "/\/$m/!d;s:^kernel/:  :" modules.order modules.builtin >&2
-+               echo "warning: same module names found:" >&2
-+               sed -n "/\/$m/s:^kernel/:  :p" modules.order >&2
-        done
- }
-
-
-
-
-
-
-> --
-> Cheers,
-> Stephen Rothwell
-
-
-
---
-Best Regards
-Masahiro Yamada
+Regards,
+Ran
