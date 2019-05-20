@@ -4,49 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39A39C04AAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:48:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46224C04AAF
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:48:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0DE8421744
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:48:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 18FC520645
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:48:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558356490;
-	bh=cm3X3sPLFncga0AO6FdB7CwX0XUcBLx38ZGNlPvHQfM=;
+	s=default; t=1558356495;
+	bh=kPYkZs+7xmFT1AoNTthj4X68llA5Q+UXWNyYNbN2oR0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WweW2XZhTKlAmIiV/A3QW7fAkv8qE4rWprQqmCEzYHuyE/1nJW9ViKxHDWDs+5QyF
-	 LQWswK2HRqDHDbNoQfszHt6XRYOZixH3hiYpKEkr7pPXd22hkq5Rg8uJqlHaiqviNS
-	 Ss0xaZogAmy08ia4lqy8bp3ARO99MSMs3dhFKhwM=
+	b=mmy0JFe93HZqmKJlUJEOm4r1yM9LgC8sVeczOqiPuQ33X8vPPs3Zz4luy3RtzfCYH
+	 6QBgdeT0lUPE+xNgUW8OXG+9BWHTryxXeZi02yFsWDXc611Ipmuz3RW+rqsq40m6gI
+	 ggWlk9akW/Nwxrowa81QYL/HB/Rx2iteSrArvVwQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391452AbfETMsJ (ORCPT
+        id S2388553AbfETMXP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 08:48:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37648 "EHLO mail.kernel.org"
+        Mon, 20 May 2019 08:23:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37418 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388129AbfETMXU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 08:23:20 -0400
+        id S2388069AbfETMXJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 08:23:09 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2EBBD21479;
-        Mon, 20 May 2019 12:23:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F0BAE20815;
+        Mon, 20 May 2019 12:23:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558354998;
-        bh=cm3X3sPLFncga0AO6FdB7CwX0XUcBLx38ZGNlPvHQfM=;
+        s=default; t=1558354988;
+        bh=kPYkZs+7xmFT1AoNTthj4X68llA5Q+UXWNyYNbN2oR0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ERYY2z9wgAszGxTtv1RW/P0hG/cgmSWqP9m6P0xVJ+RjO9Y49Sz/5UrQNiXZjLGKU
-         ZPBTzQzvXvtvGYXUMKpdz2ZyT0jr1yuB601QjgGIW+tCJkSeQd240ARD4gRvv1Swxm
-         HEIdHwor0aOYOgepkTC360ELFsOz/lBjgRX2uOkQ=
+        b=LJE2g1auZ7cxJOAFzjZP+LJ0p6XLY5V+6BgYvYWxMb/hThK8egfwbBQsCWH6sb4pH
+         WSH38u9RHWiGRTIzJAifKuKHZtyMt0KCFp9wpUsGZFlBDjGQrfbEuYm3KerhjT03+8
+         A1Zz1KEJlVHTH4zNEN6NXQJ5vxHeJ438XFURMI80=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Rajat Jain <rajatja@google.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
-Subject: [PATCH 4.19 059/105] ACPI: PM: Set enable_for_wake for wakeup GPEs during suspend-to-idle
-Date:   Mon, 20 May 2019 14:14:05 +0200
-Message-Id: <20190520115251.197424915@linuxfoundation.org>
+        stable@vger.kernel.org, Kai Shen <shenkai8@huawei.com>,
+        Feilong Lin <linfeilong@huawei.com>,
+        Wang Wang <wangwang2@huawei.com>,
+        Oscar Salvador <osalvador@suse.de>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Michal Hocko <mhocko@suse.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 4.19 055/105] mm/hugetlb.c: dont put_page in lock of hugetlb_lock
+Date:   Mon, 20 May 2019 14:14:01 +0200
+Message-Id: <20190520115250.869848075@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190520115247.060821231@linuxfoundation.org>
 References: <20190520115247.060821231@linuxfoundation.org>
@@ -59,86 +65,77 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rajat Jain <rajatja@google.com>
+From: Kai Shen <shenkai8@huawei.com>
 
-commit 2f844b61db8297a1f7a06adf2eb5c43381f2c183 upstream.
+commit 2bf753e64b4a702e27ce26ff520c59563c62f96b upstream.
 
-I noticed that recently multiple systems (chromebooks) couldn't wake
-from S0ix using LID or Keyboard after updating to a newer kernel. I
-bisected and it turned up commit f941d3e41da7 ("ACPI: EC / PM: Disable
-non-wakeup GPEs for suspend-to-idle"). I checked that the issue got
-fixed if that commit was reverted.
+spinlock recursion happened when do LTP test:
+#!/bin/bash
+./runltp -p -f hugetlb &
+./runltp -p -f hugetlb &
+./runltp -p -f hugetlb &
+./runltp -p -f hugetlb &
+./runltp -p -f hugetlb &
 
-I debugged and found that although PNP0C0D:00 (representing the LID)
-is wake capable and should wakeup the system per the code in
-acpi_wakeup_gpe_init() and in drivers/acpi/button.c:
+The dtor returned by get_compound_page_dtor in __put_compound_page may be
+the function of free_huge_page which will lock the hugetlb_lock, so don't
+put_page in lock of hugetlb_lock.
 
-localhost /sys # cat /proc/acpi/wakeup
-Device  S-state   Status   Sysfs node
-LID0      S4    *enabled   platform:PNP0C0D:00
-CREC      S5    *disabled  platform:GOOG0004:00
-                *disabled  platform:cros-ec-dev.1.auto
-                *disabled  platform:cros-ec-accel.0
-                *disabled  platform:cros-ec-accel.1
-                *disabled  platform:cros-ec-gyro.0
-                *disabled  platform:cros-ec-ring.0
-                *disabled  platform:cros-usbpd-charger.2.auto
-                *disabled  platform:cros-usbpd-logger.3.auto
-D015      S3    *enabled   i2c:i2c-ELAN0000:00
-PENH      S3    *enabled   platform:PRP0001:00
-XHCI      S3    *enabled   pci:0000:00:14.0
-GLAN      S4    *disabled
-WIFI      S3    *disabled  pci:0000:00:14.3
-localhost /sys #
+ BUG: spinlock recursion on CPU#0, hugemmap05/1079
+  lock: hugetlb_lock+0x0/0x18, .magic: dead4ead, .owner: hugemmap05/1079, .owner_cpu: 0
+ Call trace:
+  dump_backtrace+0x0/0x198
+  show_stack+0x24/0x30
+  dump_stack+0xa4/0xcc
+  spin_dump+0x84/0xa8
+  do_raw_spin_lock+0xd0/0x108
+  _raw_spin_lock+0x20/0x30
+  free_huge_page+0x9c/0x260
+  __put_compound_page+0x44/0x50
+  __put_page+0x2c/0x60
+  alloc_surplus_huge_page.constprop.19+0xf0/0x140
+  hugetlb_acct_memory+0x104/0x378
+  hugetlb_reserve_pages+0xe0/0x250
+  hugetlbfs_file_mmap+0xc0/0x140
+  mmap_region+0x3e8/0x5b0
+  do_mmap+0x280/0x460
+  vm_mmap_pgoff+0xf4/0x128
+  ksys_mmap_pgoff+0xb4/0x258
+  __arm64_sys_mmap+0x34/0x48
+  el0_svc_common+0x78/0x130
+  el0_svc_handler+0x38/0x78
+  el0_svc+0x8/0xc
 
-On debugging, I found that its corresponding GPE is not being enabled.
-The particular GPE's "gpe_register_info->enable_for_wake" does not
-have any bits set when acpi_enable_all_wakeup_gpes() comes around to
-use it. I looked at code and could not find any other code path that
-should set the bits in "enable_for_wake" bitmask for the wake enabled
-devices for s2idle.  [I do see that it happens for S3 in
-acpi_sleep_prepare()].
-
-Thus I used the same call to enable the GPEs for wake enabled devices,
-and verified that this fixes the regression I was seeing on multiple
-of my devices.
-
-[ rjw: The problem is that commit f941d3e41da7 ("ACPI: EC / PM:
-  Disable non-wakeup GPEs for suspend-to-idle") forgot to add
-  the acpi_enable_wakeup_devices() call for s2idle along with
-  acpi_enable_all_wakeup_gpes(). ]
-
-Fixes: f941d3e41da7 ("ACPI: EC / PM: Disable non-wakeup GPEs for suspend-to-idle")
-Link: https://bugzilla.kernel.org/show_bug.cgi?id=203579
-Signed-off-by: Rajat Jain <rajatja@google.com>
-[ rjw: Subject & changelog ]
-Cc: 5.0+ <stable@vger.kernel.org> # 5.0+
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Link: http://lkml.kernel.org/r/b8ade452-2d6b-0372-32c2-703644032b47@huawei.com
+Fixes: 9980d744a0 ("mm, hugetlb: get rid of surplus page accounting tricks")
+Signed-off-by: Kai Shen <shenkai8@huawei.com>
+Signed-off-by: Feilong Lin <linfeilong@huawei.com>
+Reported-by: Wang Wang <wangwang2@huawei.com>
+Reviewed-by: Oscar Salvador <osalvador@suse.de>
+Reviewed-by: Mike Kravetz <mike.kravetz@oracle.com>
+Reviewed-by: Andrew Morton <akpm@linux-foundation.org>
+Acked-by: Michal Hocko <mhocko@suse.com>
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/acpi/sleep.c |    4 ++++
- 1 file changed, 4 insertions(+)
+ mm/hugetlb.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/drivers/acpi/sleep.c
-+++ b/drivers/acpi/sleep.c
-@@ -977,6 +977,8 @@ static int acpi_s2idle_prepare(void)
- 	if (acpi_sci_irq_valid())
- 		enable_irq_wake(acpi_sci_irq);
- 
-+	acpi_enable_wakeup_devices(ACPI_STATE_S0);
-+
- 	/* Change the configuration of GPEs to avoid spurious wakeup. */
- 	acpi_enable_all_wakeup_gpes();
- 	acpi_os_wait_events_complete();
-@@ -1026,6 +1028,8 @@ static void acpi_s2idle_restore(void)
- {
- 	acpi_enable_all_runtime_gpes();
- 
-+	acpi_disable_wakeup_devices(ACPI_STATE_S0);
-+
- 	if (acpi_sci_irq_valid())
- 		disable_irq_wake(acpi_sci_irq);
- 
+--- a/mm/hugetlb.c
++++ b/mm/hugetlb.c
+@@ -1572,8 +1572,9 @@ static struct page *alloc_surplus_huge_p
+ 	 */
+ 	if (h->surplus_huge_pages >= h->nr_overcommit_huge_pages) {
+ 		SetPageHugeTemporary(page);
++		spin_unlock(&hugetlb_lock);
+ 		put_page(page);
+-		page = NULL;
++		return NULL;
+ 	} else {
+ 		h->surplus_huge_pages++;
+ 		h->surplus_huge_pages_node[page_to_nid(page)]++;
 
 
