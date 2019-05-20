@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04066C04AAC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:17:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 948E2C04AAF
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:17:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CDDCE21019
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:17:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B989214AE
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:17:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558354641;
-	bh=nokEs38bjUraDYfSWIKhMLapxnq4jYlSU8FJAQUzuyM=;
+	s=default; t=1558354643;
+	bh=9WsSvO/ZYAemycEEPmwo5X7jWRagg1S1SsUuhQ1A66A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OmcySTzhp4OOG7Ss/QTTE0U72lZFmp7Uhvay5ngIk3vX7qKy9uO1Tgd6r69SH1dnz
-	 UJZcLbhLSvvbn+QXQfhEFvkY4ezzhposwgymqPsaXJTDGq84gJWgULTagRciuzbFIF
-	 WVxj1Z8f86Hp7I+MppFt9gAmsEc53nCtWcEf64+E=
+	b=gY3yxoWgozm+KQR/RJYo2NTDpXycU77kLE+PRQGm94Px94F4/Z/OVKEzAdQSBywun
+	 3+N/3pZjGzhZTNW3iw5YqErSms4wjWBN/QXi0Hwa7EVnUKfb5sXQ9mgpze5Kq4gXWZ
+	 oWx/ov1RBRloLj9VCJiS0XB2O7ElN1JaTSHXr+3s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387525AbfETMRU (ORCPT
+        id S2387536AbfETMRW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 08:17:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58240 "EHLO mail.kernel.org"
+        Mon, 20 May 2019 08:17:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58298 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387513AbfETMRS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 08:17:18 -0400
+        id S2387523AbfETMRU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 08:17:20 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 191BE216B7;
-        Mon, 20 May 2019 12:17:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BE31920815;
+        Mon, 20 May 2019 12:17:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558354637;
-        bh=nokEs38bjUraDYfSWIKhMLapxnq4jYlSU8FJAQUzuyM=;
+        s=default; t=1558354640;
+        bh=9WsSvO/ZYAemycEEPmwo5X7jWRagg1S1SsUuhQ1A66A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VLrPidz7Efy+KqrOUFnLOyKVayo/0tmHKr9qA7tKlRDQptnTl6N5qEo+1tBHYD3vw
-         Ned2cl8K/GYhlLLJH85x1qEjuwGzTmFSSP8zlyXosn7gJ0wRbOqlgDRxkhZJpUVpm3
-         HlAjM/7HIpvJuGOqanVM0/K5qqboxaI2+MRlzdNI=
+        b=q2RDnUjnftXPkSUzqsIgwaZTTh36J1dKJqxtpTfe817u3mJKcMb8W5WSjiQYOguu2
+         8zI2lJRmwQ6Cyh9ng7uUKgqJjIW797SYp6Ei247Kj5Z6JJT8e+SWckitoYcOmaiW96
+         yi/v5lK3B4u+nupxmyvJMDtlXZY0fM8bRPwL9wYI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kiran Kolukuluru <kirank@ami.com>,
-        Kamlakant Patel <kamlakantp@marvell.com>,
-        Corey Minyard <cminyard@mvista.com>
-Subject: [PATCH 4.9 33/44] ipmi:ssif: compare block number correctly for multi-part return messages
-Date:   Mon, 20 May 2019 14:14:22 +0200
-Message-Id: <20190520115235.096491510@linuxfoundation.org>
+        stable@vger.kernel.org, Wei Yongjun <weiyongjun1@huawei.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>
+Subject: [PATCH 4.9 34/44] crypto: gcm - Fix error return code in crypto_gcm_create_common()
+Date:   Mon, 20 May 2019 14:14:23 +0200
+Message-Id: <20190520115235.180288663@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190520115230.720347034@linuxfoundation.org>
 References: <20190520115230.720347034@linuxfoundation.org>
@@ -60,50 +59,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kamlakant Patel <kamlakantp@marvell.com>
+From: Wei Yongjun <weiyongjun1@huawei.com>
 
-commit 55be8658c7e2feb11a5b5b33ee031791dbd23a69 upstream.
+commit 9b40f79c08e81234d759f188b233980d7e81df6c upstream.
 
-According to ipmi spec, block number is a number that is incremented,
-starting with 0, for each new block of message data returned using the
-middle transaction.
+Fix to return error code -EINVAL from the invalid alg ivsize error
+handling case instead of 0, as done elsewhere in this function.
 
-Here, the 'blocknum' is data[0] which always starts from zero(0) and
-'ssif_info->multi_pos' starts from 1.
-So, we need to add +1 to blocknum while comparing with multi_pos.
-
-Fixes: 7d6380cd40f79 ("ipmi:ssif: Fix handling of multi-part return messages").
-Reported-by: Kiran Kolukuluru <kirank@ami.com>
-Signed-off-by: Kamlakant Patel <kamlakantp@marvell.com>
-Message-Id: <1556106615-18722-1-git-send-email-kamlakantp@marvell.com>
-[Also added a debug log if the block numbers don't match.]
-Signed-off-by: Corey Minyard <cminyard@mvista.com>
-Cc: stable@vger.kernel.org # 4.4
+Signed-off-by: Wei Yongjun <weiyongjun1@huawei.com>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/char/ipmi/ipmi_ssif.c |    6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ crypto/gcm.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/char/ipmi/ipmi_ssif.c
-+++ b/drivers/char/ipmi/ipmi_ssif.c
-@@ -699,12 +699,16 @@ static void msg_done_handler(struct ssif
- 			/* End of read */
- 			len = ssif_info->multi_len;
- 			data = ssif_info->data;
--		} else if (blocknum != ssif_info->multi_pos) {
-+		} else if (blocknum + 1 != ssif_info->multi_pos) {
- 			/*
- 			 * Out of sequence block, just abort.  Block
- 			 * numbers start at zero for the second block,
- 			 * but multi_pos starts at one, so the +1.
- 			 */
-+			if (ssif_info->ssif_debug & SSIF_DEBUG_MSG)
-+				dev_dbg(&ssif_info->client->dev,
-+					"Received message out of sequence, expected %u, got %u\n",
-+					ssif_info->multi_pos - 1, blocknum);
- 			result = -EIO;
- 		} else {
- 			ssif_inc_stat(ssif_info, received_message_parts);
+--- a/crypto/gcm.c
++++ b/crypto/gcm.c
+@@ -670,11 +670,11 @@ static int crypto_gcm_create_common(stru
+ 	ctr = crypto_spawn_skcipher_alg(&ctx->ctr);
+ 
+ 	/* We only support 16-byte blocks. */
++	err = -EINVAL;
+ 	if (crypto_skcipher_alg_ivsize(ctr) != 16)
+ 		goto out_put_ctr;
+ 
+ 	/* Not a stream cipher? */
+-	err = -EINVAL;
+ 	if (ctr->base.cra_blocksize != 1)
+ 		goto out_put_ctr;
+ 
 
 
