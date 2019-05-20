@@ -2,117 +2,109 @@ Return-Path: <SRS0=lq4r=TU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13E9BC04AAC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 18:33:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48CC9C04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 18:34:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E54B9214DA
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 18:33:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2529A214DA
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 18:34:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ekCEzlBb"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="DBxlmCZE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726447AbfETSda (ORCPT
+        id S1726129AbfETSef (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 14:33:30 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:42293 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725976AbfETSd3 (ORCPT
+        Mon, 20 May 2019 14:34:35 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:43043 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725468AbfETSef (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 14:33:29 -0400
-Received: by mail-wr1-f67.google.com with SMTP id l2so15716728wrb.9
-        for <linux-kernel@vger.kernel.org>; Mon, 20 May 2019 11:33:28 -0700 (PDT)
+        Mon, 20 May 2019 14:34:35 -0400
+Received: by mail-wr1-f66.google.com with SMTP id r4so15695488wro.10
+        for <linux-kernel@vger.kernel.org>; Mon, 20 May 2019 11:34:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=632+c6IqzK2BjCuWL6WJ+2pWVzzX6ijbqjHnP9tGBNo=;
-        b=ekCEzlBbb16dcmDM2i7++5oq1yDSWABTDI0lNiL2HxJr1DMsWpttMTWJPfFwSp/tMp
-         iG/sqo4wTFuEzMiLKTlYGq+gX6jl6el1X/zfh13X78mLJZMm8qt2QLvi1WKMgchdJ4pe
-         UR4FnetITwQvgr4DIc6PZBOC+DRO9325Qsp4YS1V6qqRJhzux8+s1PcjnlRp9YXH+3Ii
-         eZEW9n+paE2oHGZfJWhmdguK+aEwIVC0Crm9ZOfyOFW1C2x18GeZFMOL/IqbqVj1Ij8J
-         sSukDskZ7qElHkQBKSm9AEsxyZSWLTVWFkm3/QLpB7RkfMWsGQCGPWm6H6J4JPtMQ0xk
-         SqQQ==
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=message-id:date:from:user-agent:mime-version:to:cc:subject
+         :references:in-reply-to:content-transfer-encoding;
+        bh=wCpNgUaSRqQ+NRb8eHf40n9iQjypeZPQ4KDEREuAn30=;
+        b=DBxlmCZEUqtTCDkrut51v8cijQmVeobqeWrZn7uMddx1ZvlZOOYvagsiLBgOp3+rus
+         S4i1vhieKERLcAviEsFOI0OkAbSMYlVEv+z1Jj7GV1PBG9L6XjQV44pdVhnMkkF2HpH5
+         8oWLWsXKoOxuLD+POD8brFU5TbH3/c65p7V3DtnIQp2vE/obNG1rj9z5+9Nm6kOy6sSJ
+         7H+ibnJql0Ywk/3jjSmrobfZ6TMD6sf0yposEXQfjZpzEU66Ufx+QaQYp9enLyLADJ5S
+         g5NEjtzbkYkoQDr3T8t6+yHo183LNES/9DeeGmRGuU1lBSmsv+g9xgEcz3qovO1QaLQv
+         XRaw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=632+c6IqzK2BjCuWL6WJ+2pWVzzX6ijbqjHnP9tGBNo=;
-        b=owR0kJ8NjRfacfz2AKPmDv9qTR5mWPeMZHraFJnsM3tysnI14IwN0h6u9VtqLs7rdl
-         0PKgQgHtUE9rylP4u+BWv5JeDUCSIWfJ8qYv3fHRt0tZdEDXvfp7WF9eL909wVrSl5+e
-         bah14rr8UbodRjST+ZEgkXEt7kgJaEQf/6xSQBWxQ72sehtj5NZ7bqutIU1rIdKZl1RE
-         IyUrXtbRpdKRO7PhszddBikjiAAn7p7H5XsmLH5vpWXpoPblCjkS/114Z5kccswZaBcU
-         YUUpwNOWxVSRl6yOK7FtCR+EME7t+06xAM8fFBifxdrlCIZacAmIvzRz7A1XTUNE9eP0
-         DHlw==
-X-Gm-Message-State: APjAAAUoXuUcVHo4TEXYhEGnJfXP9NIxs310KaJ0C542U909hKC4VeyU
-        bYIvZfZE1sXHSy8u29cu1ex4sPp0oEbmtnGBoPMcyA==
-X-Google-Smtp-Source: APXvYqwt3G9jviKenTL+rRfOnizevWGrAzRjnqp0RfxuoTG9FygdyFOjs5HHMu222ux92N+pxvaHPqhpF4oC93bBtgI=
-X-Received: by 2002:a5d:618b:: with SMTP id j11mr3562517wru.36.1558377208186;
- Mon, 20 May 2019 11:33:28 -0700 (PDT)
+        h=x-gm-message-state:message-id:date:from:user-agent:mime-version:to
+         :cc:subject:references:in-reply-to:content-transfer-encoding;
+        bh=wCpNgUaSRqQ+NRb8eHf40n9iQjypeZPQ4KDEREuAn30=;
+        b=mpngrEAeISi2JM9pLAYIXilIA8ZT/rh02F5agHgIJIhP4EQgmFrOZkAbjLQq8vrf1V
+         0j3oTf2QMszNH0igwW4fqq8r9l7fQQqhCau0miJRdXxyLtbDNMCwm4mMnagAoGcqiccd
+         NhkQM3QFoN+lD0hmCQpOz9X/CYmD9ahB5BKAKLwWR8A4QTL0h+HtPfK1LcPNqsmD6A94
+         22yYHYLSBaZT+ZTpxBUuPVOwoURG5ejocBT1BURXpp/xyPl262cHrWAhBohnhXUISgjH
+         InUtNxmwS1nas0wWvcGiHzmzv2g0/IeKdPdneAUXjzwgna6qJAvjERDL3ttnPJNAdS8V
+         /tlA==
+X-Gm-Message-State: APjAAAUvRfaXApw0AwWS2Q+vEL0LsjEmVr1SD0q6oJoSRm/yv/t2zhtb
+        TGX4zKEilHZVFgz0XXYsR4YDiA==
+X-Google-Smtp-Source: APXvYqyVIBqjTKvFY23aNyMKIltNloLDsuWfNj5r52gjwtDfVYWPC7Y4McdoKdcDIaa8uMytlfuXAA==
+X-Received: by 2002:a5d:68c7:: with SMTP id p7mr24241576wrw.23.1558377272966;
+        Mon, 20 May 2019 11:34:32 -0700 (PDT)
+Received: from [192.168.1.77] (wal59-h01-176-150-251-154.dsl.sta.abo.bbox.fr. [176.150.251.154])
+        by smtp.gmail.com with ESMTPSA id v5sm37487367wra.83.2019.05.20.11.34.31
+        (version=TLS1 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Mon, 20 May 2019 11:34:32 -0700 (PDT)
+Message-ID: <5CE2F337.9060207@baylibre.com>
+Date:   Mon, 20 May 2019 20:34:31 +0200
+From:   Neil Armstrong <narmstrong@baylibre.com>
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.13; rv:24.0) Gecko/20100101 Thunderbird/24.6.0
 MIME-Version: 1.0
-References: <CALAqxLUMRaNxwTUi9QS7-Cy-Ve4+vteBm8-jW4yzZg_QTJVChA@mail.gmail.com>
- <7caebeb2-ea96-2276-3078-1e53f09ce227@collabora.com> <CALAqxLUfJYUtmQDC_aDMxW7KcPUawGoRq-PNUfmzQuNKh97FmQ@mail.gmail.com>
- <CALAqxLVUFfrPVVjR74V3PhhtcCytfp=cUYjo=BcJ14D1fkVXTw@mail.gmail.com>
- <7ec57c29-d1ab-dc4c-755d-a6009b9132b5@collabora.com> <CALAqxLUgnTB7aZ4edXCaG8SJsJzfY1_yNEPc6Losssw5Xy9-XA@mail.gmail.com>
- <36620156-d119-b1b2-989e-0c13b783296e@collabora.com> <db5665cf-6274-c254-720c-798fec79d131@collabora.com>
- <02E7334B1630744CBDC55DA8586225837F884D53@ORSMSX103.amr.corp.intel.com>
-In-Reply-To: <02E7334B1630744CBDC55DA8586225837F884D53@ORSMSX103.amr.corp.intel.com>
-From:   John Stultz <john.stultz@linaro.org>
-Date:   Mon, 20 May 2019 11:33:16 -0700
-Message-ID: <CALAqxLWVc6DnRHJ9gQ8orY7f53g4j+x3BWnoJdBv3sXDZVNpVg@mail.gmail.com>
-Subject: Re: [REGRESSION] usb: gadget: f_fs: Allow scatter-gather buffers
-To:     "Yang, Fei" <fei.yang@intel.com>
-Cc:     Andrzej Pietrasiewicz <andrzej.p@collabora.com>,
-        Felipe Balbi <balbi@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Chen Yu <chenyu56@huawei.com>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Linux USB List <linux-usb@vger.kernel.org>,
-        Amit Pundir <amit.pundir@linaro.org>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        "kernel@collabora.com" <kernel@collabora.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+To:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+CC:     khilman@baylibre.com, linux-amlogic@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH 00/10] ARM: meson: update with SPDX Licence identifier
+References: <20190520143812.2801-1-narmstrong@baylibre.com> <CAFBinCCEi8OjeDaWxfhyfoQOu3GVsw=U9jBLQ2LEkPn7Ataf7w@mail.gmail.com>
+In-Reply-To: <CAFBinCCEi8OjeDaWxfhyfoQOu3GVsw=U9jBLQ2LEkPn7Ataf7w@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 20, 2019 at 9:23 AM Yang, Fei <fei.yang@intel.com> wrote:
->
-> >> One question that comes to my mind is this: Does the USB transmission
-> >> stall (e.g. endpoint stall) or not? In other words, is adb connection
-> >> broken because USB stops transmitting anything, or because the data is
-> >> transmitted but its integrity is broken during transmission and that
-> >> causes adb/adbd confusion which results in stopping their operation?
-> >> Does anything keep happening on FunctionFS when adb connection is
-> >> broken?
-> >
-> >Any discoveries about the problem?
->
-> In my debugging, I'm seeing a lot of requests queued up through ffs_epfil=
-e_io (returning -EIOCBQUEUED), but
-> only a few of them came back through ffs_epfile_async_io_complete -> ffs_=
-user_copy_worker.
-> I don=E2=80=99t think there is a USB transmission stall though, because i=
-f I manually disable io_data->use_sg, everything
-> goes back to normal. So it looks more likely to be a buffer handling prob=
-lem in the DWC3 driver.
 
-Yea, I also did reconfirm that reverting 772a7a724f6, or setting
-gadget->sg_supported to false makes the isssue go away.
 
-And after spending a bunch of time trying to trace through the code
-last week, in particular the sg_supported checks, but I'm not seeing
-anything that is standing out with the f_fs logic.
+Le 20/05/2019 20:06, Martin Blumenstingl a écrit :
+> Hi Neil,
+> 
+> On Mon, May 20, 2019 at 4:38 PM Neil Armstrong <narmstrong@baylibre.com> wrote:
+>>
+>> Update the SPDX Licence identifier for the Amlogic DT and mach-meson
+>> files.
+>>
+>> Neil Armstrong (10):
+>>   ARM: dts: meson: update with SPDX Licence identifier
+>>   ARM: dts: meson6-atv1200: update with SPDX Licence identifier
+>>   ARM: dts: meson6: update with SPDX Licence identifier
+>>   ARM: dts: meson8-minix-neo-x8: update with SPDX Licence identifier
+>>   ARM: dts: meson8: update with SPDX Licence identifier
+>>   ARM: dts: meson8b-mxq: update with SPDX Licence identifier
+>>   ARM: dts: meson8b-odroidc1: update with SPDX Licence identifier
+>>   ARM: dts: meson8b: update with SPDX Licence identifier
+> please check the .dts updates with my comment on the meson8b patch
+> because I believe there are two typos (which managed to sneak into the
+> rest of the patches)
 
-I'd start to agree it might be a buffer handling problem in dwc3, but
-it feels odd that I'm also seeing this w/ dwc2 hardware as well. Maybe
-the  same bug was copied into both drivers?
+You are right, thanks for pointing me to the licenses texts subtleties, I was misled by
+the "of the GPL or the X11 license"... but looking closely clearly shows
+a MIT license.
 
-I'll try to dig a little on that theory today.
+Will re-spin.
 
-thanks
--john
+Neil
+
+> 
+> 
+> Martin
+> 
