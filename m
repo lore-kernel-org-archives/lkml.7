@@ -2,133 +2,115 @@ Return-Path: <SRS0=lq4r=TU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ADE26C04AAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 09:19:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E69BC04AAF
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 09:21:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8247320675
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 09:19:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="XhAgVCfp"
+	by mail.kernel.org (Postfix) with ESMTP id 49812206B6
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 09:21:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732019AbfETJTw (ORCPT
+        id S1730808AbfETJVP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 05:19:52 -0400
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:47072 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729598AbfETJTw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 05:19:52 -0400
-Received: by mail-oi1-f193.google.com with SMTP id 203so9416739oid.13
-        for <linux-kernel@vger.kernel.org>; Mon, 20 May 2019 02:19:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=26qzizuvow48Xzf0mvcO4dXWRF3h0YYiGVUKw+vGork=;
-        b=XhAgVCfpg+LZqqWAlefw8B8o6jjpLKy77SAcw6yz9yOGQoo6GMWeQXdEEuC6mdzOpL
-         JzhAeLd9MeT3gv7/FzSuX3V+WAgIt9F4AP4WlebIP2ILHibj5k0J+t7YNwSdmo3vDK1X
-         2bytoUhFRNUaRJVhvusj7XOgXC5DsVMB0h2tw=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=26qzizuvow48Xzf0mvcO4dXWRF3h0YYiGVUKw+vGork=;
-        b=RA+ICm4WAxTOfLnXHKXLig8qajuVYzQauhgGoI2j6G3o+JSKl3OXQmzaAryKHJCl4O
-         Ov7qzBCeAwAVz9OJTrrb8PMaC0jLW6FTdDfWbaAcma5OvhO71s1p2IxUzOim59FnYvr5
-         Ec4XjpJkjc2hUXMWYmtTGQ7QCs2My1XqaLEkJ+eXbLfDh9fipOMUH7Vpj6bCdFbIvvfW
-         TC+4txuqD09LWGb5JuLJEMqXsdmblg2UexCObr/aUtXSJ2ohNkrLP1IhJblob02ATwSz
-         6exYGFNHZe5uo6DQGQgGT/tOaWaIGtql6J720wT5mbxUHYTyJgRccPVXBs5suFlkWoSf
-         n0AA==
-X-Gm-Message-State: APjAAAX8fPMLVJxJCJOyBlC7dH9QpyUOiU3IzZGYEKyuTIS7K69RDDKi
-        AWdrausPLWy0Z1ABo0txY80vgXEeQCYbyOBmDhe+zA==
-X-Google-Smtp-Source: APXvYqx6gV2i8yLCBLSS6Xce0gF4sIDhYOXx+llnio3aigAWnajjawlUTjqRvm8jW3Gl3I5stpM0sAcuIS8Gcue8PJM=
-X-Received: by 2002:aca:31cf:: with SMTP id x198mr2881468oix.132.1558343991215;
- Mon, 20 May 2019 02:19:51 -0700 (PDT)
+        Mon, 20 May 2019 05:21:15 -0400
+Received: from foss.arm.com ([217.140.101.70]:41536 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729598AbfETJVP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 05:21:15 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 73538374;
+        Mon, 20 May 2019 02:21:14 -0700 (PDT)
+Received: from [10.1.196.69] (e112269-lin.cambridge.arm.com [10.1.196.69])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id BB4DF3F575;
+        Mon, 20 May 2019 02:21:11 -0700 (PDT)
+Subject: Re: [PATCH v2 2/3] drm: shmem: Add drm_gem_shmem_map_offset() wrapper
+To:     Rob Herring <robh@kernel.org>,
+        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
+        Alyssa Rosenzweig <alyssa@rosenzweig.io>,
+        Chris Wilson <chris@chris-wilson.co.uk>,
+        David Airlie <airlied@linux.ie>,
+        Inki Dae <inki.dae@samsung.com>,
+        Joonyoung Shim <jy0922.shim@samsung.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Kukjin Kim <kgene@kernel.org>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Sean Paul <sean@poorly.run>,
+        Seung-Woo Kim <sw0312.kim@samsung.com>,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+References: <20190516141447.46839-1-steven.price@arm.com>
+ <20190516141447.46839-3-steven.price@arm.com>
+ <20190516202644.GE3851@phenom.ffwll.local>
+From:   Steven Price <steven.price@arm.com>
+Message-ID: <b4d04dfd-3f45-e456-e944-9c337a6538a5@arm.com>
+Date:   Mon, 20 May 2019 10:21:09 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-References: <20190520082216.26273-1-daniel.vetter@ffwll.ch>
- <20190520082216.26273-21-daniel.vetter@ffwll.ch> <CAMuHMdVuu062bkOb4sPv-m-WUF4L=K9Q5-hGPHTb8OhPbQdSEg@mail.gmail.com>
-In-Reply-To: <CAMuHMdVuu062bkOb4sPv-m-WUF4L=K9Q5-hGPHTb8OhPbQdSEg@mail.gmail.com>
-From:   Daniel Vetter <daniel.vetter@ffwll.ch>
-Date:   Mon, 20 May 2019 11:19:39 +0200
-Message-ID: <CAKMK7uE19LvpDLrZ7Kjk0yrZe1x1q5yyMuy5ScAWzf8u-RbNgA@mail.gmail.com>
-Subject: Re: [PATCH 20/33] fbdev/sh_mob: Remove fb notifier callback
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     DRI Development <dri-devel@lists.freedesktop.org>,
-        Intel Graphics Development <intel-gfx@lists.freedesktop.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Daniel Vetter <daniel.vetter@intel.com>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Markus Elfring <elfring@users.sourceforge.net>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Wolfram Sang <wsa+renesas@sang-engineering.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190516202644.GE3851@phenom.ffwll.local>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 20, 2019 at 11:06 AM Geert Uytterhoeven
-<geert@linux-m68k.org> wrote:
->
-> On Mon, May 20, 2019 at 10:22 AM Daniel Vetter <daniel.vetter@ffwll.ch> wrote:
-> > This seems to be entirely defunct:
-> >
-> > - The FB_EVEN_SUSPEND/RESUME events are only sent out by
-> >   fb_set_suspend. Which is supposed to be called by drivers in their
-> >   suspend/resume hooks, and not itself call into drivers. Luckily
-> >   sh_mob doesn't call fb_set_suspend, so this seems to do nothing
-> >   useful.
-> >
-> > - The notify hook calls sh_mobile_fb_reconfig() which in turn can
-> >   call into the fb notifier. Or attempt too, since that would
-> >   deadlock.
-> >
-> > So looks like leftover hacks from when this was originally introduced
-> > in
-> >
-> > commit 6011bdeaa6089d49c02de69f05980da7bad314ab
-> > Author: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
-> > Date:   Wed Jul 21 10:13:21 2010 +0000
-> >
-> >     fbdev: sh-mobile: HDMI support for SH-Mobile SoCs
-> >
-> > So let's just remove it.
-> >
-> > Signed-off-by: Daniel Vetter <daniel.vetter@intel.com>
->
-> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
->
-> Display still works fine on Armadillo800-EVA, before and after system
-> suspend/resume, so:
->
-> Tested-by: Geert Uytterhoeven <geert+renesas@glider.be>
+On 16/05/2019 21:26, Daniel Vetter wrote:
+> On Thu, May 16, 2019 at 03:14:46PM +0100, Steven Price wrote:
+>> Provide a wrapper for drm_gem_map_offset() for clients of shmem. This
+>> wrapper provides the correct semantics for the drm_gem_shmem_mmap()
+>> callback.
+>>
+>> Signed-off-by: Steven Price <steven.price@arm.com>
+>> ---
+>>  drivers/gpu/drm/drm_gem_shmem_helper.c | 20 ++++++++++++++++++++
+>>  include/drm/drm_gem_shmem_helper.h     |  2 ++
+>>  2 files changed, 22 insertions(+)
+>>
+>> diff --git a/drivers/gpu/drm/drm_gem_shmem_helper.c b/drivers/gpu/drm/drm_gem_shmem_helper.c
+>> index 1ee208c2c85e..9dbebc4897d1 100644
+>> --- a/drivers/gpu/drm/drm_gem_shmem_helper.c
+>> +++ b/drivers/gpu/drm/drm_gem_shmem_helper.c
+>> @@ -400,6 +400,26 @@ int drm_gem_shmem_dumb_create(struct drm_file *file, struct drm_device *dev,
+>>  }
+>>  EXPORT_SYMBOL_GPL(drm_gem_shmem_dumb_create);
+>>  
+>> +/**
+>> + * drm_gem_map_offset - return the fake mmap offset for a gem object
+>> + * @file: drm file-private structure containing the gem object
+>> + * @dev: corresponding drm_device
+>> + * @handle: gem object handle
+>> + * @offset: return location for the fake mmap offset
+>> + *
+>> + * This provides an offset suitable for user space to return to the
+>> + * drm_gem_shmem_mmap() callback via an mmap() call.
+>> + *
+>> + * Returns:
+>> + * 0 on success or a negative error code on failure.
+>> + */
+>> +int drm_gem_shmem_map_offset(struct drm_file *file, struct drm_device *dev,
+>> +			     u32 handle, u64 *offset)
+>> +{
+>> +	return drm_gem_map_offset(file, dev, handle, offset);
+>> +}
+>> +EXPORT_SYMBOL_GPL(drm_gem_shmem_map_offset);
+> 
+> Not seeing the point of this mapper, since drm_gem_shmem_map_offset isn't
+> speficic at all. It works for dumb, shmem, cma and private objects all
+> equally well. I'd drop this and just directly call the underlying thing,
+> no need to layer helpers.
+> -Daniel
 
-I'm impressed, I honestly think I do not fully understand what the
-shmob driver is doing here, so thank you very much for giving this a
-spin!
+Ok, I'll drop it. I may have misunderstood, but I think Chris Wilson was
+asking for it because shmem is the source of the particular requirements
+of what can be mmap()d. But I think a helper can be added very easily if
+anything changes, so this patch is probably premature.
 
-Cheers, Daniel
+I'll resend the series with this patch dropped.
 
->
-> Gr{oetje,eeting}s,
->
->                         Geert
->
-> --
-> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
->
-> In personal conversations with technical people, I call myself a hacker. But
-> when I'm talking to journalists I just say "programmer" or something like that.
->                                 -- Linus Torvalds
-
-
-
--- 
-Daniel Vetter
-Software Engineer, Intel Corporation
-+41 (0) 79 365 57 48 - http://blog.ffwll.ch
+Thanks,
+Steve
