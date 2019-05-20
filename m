@@ -2,142 +2,102 @@ Return-Path: <SRS0=lq4r=TU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91AD2C04AAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 07:01:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C050C04AAF
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 07:03:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5DAEF20815
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 07:01:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lYLwGxL3"
+	by mail.kernel.org (Postfix) with ESMTP id 5F0512081C
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 07:03:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1558335802;
+	bh=63r9BLz2SlEFadDywWVMhR7P4kqkRTUqGZSXkwDtMko=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=UlhGRdlZLFQrMoTUQXjWyZKR8Ehh4+XMgX3mXK8CZgh8O1M/shRTBWXXKecRPav7X
+	 jgZXd1amgQRwrqoXA0Cvx/N8e8S1mVaiEuu9uGOJ+YK+e7/tsAZe9phb1N/+nuDhts
+	 Hq/7dFaIIgE1yIpaNta5izsq+3QRemh+rdKtoghM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729801AbfETHBV (ORCPT
+        id S1730092AbfETHDV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 03:01:21 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:46302 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725372AbfETHBV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 03:01:21 -0400
-Received: by mail-pl1-f196.google.com with SMTP id r18so6247377pls.13;
-        Mon, 20 May 2019 00:01:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:subject:to:cc:references:in-reply-to:mime-version
-         :user-agent:message-id:content-transfer-encoding;
-        bh=08DG43aOD+Euaff1im+598ddGTX4txkr6BAgSvzzebg=;
-        b=lYLwGxL3wK2u4wZzmtQ37p/dK5KP31YOg+9GaIBPjcXpzSKOvrN0rUCR6eJ5ammzSj
-         nCsA4dCKFmP64zrGVCk4PkF7w5usqGCROsUGpEZbd1F788v7n1N2GefY0kOTMpHt7Hyt
-         4G8CQGeHMGeXi1C6OGpo9vIh73RK3KAqRQSiINaIft9hRrRLSLaFr0kQFwdTMS5/e2R/
-         iAQZkSXK64YEgRVVqevqYZa8F/EW2Vkw+0B//9D+T3Cf0C75/ey05tdQdtodOFj7Ol/s
-         ihBQ+ZOI3OoxCEVWWkZf41FeiCGJvRbGp3w1ssCe+2nDUjmgT/xXKPkSmz9nO+fFhpLe
-         FhuQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:subject:to:cc:references:in-reply-to
-         :mime-version:user-agent:message-id:content-transfer-encoding;
-        bh=08DG43aOD+Euaff1im+598ddGTX4txkr6BAgSvzzebg=;
-        b=mXMoKn81cxf7Tr0HelpZSYoLJ1LSkNJG77SuCabYf8Uh6m/ETaz0SkushqWPPx0r7Z
-         FxPXclLACHZtKSpah+V1mzpATMIa6qz/ZLryM1kRT1JM5UZ++6CXCPFG0I5zuS14Rqtn
-         Jmj6Fna8xGApYBF9vv0oAud8hSUwIHoB/EqJiqYGbvGq4kWqeLgNuFYCfMzPwGE8QK1N
-         /yESG6FIA6QTLNP3oClGEY+T1zY/E++9S8ZMaNmEP9PiYIEK36hAIiISbnx8LLOAXYXU
-         Ey44H61Zo8LGg1E6UOKxk1sUqpuLI2/4OTnHuyuXt3wsIL6x79nslXqa/RliTmpjUAcb
-         cTww==
-X-Gm-Message-State: APjAAAVi6OnV6XrdlYKFt8UbOxMGbLDp36s0gmisDsRUtloa/Tnrlq7B
-        UUFf+D3nzPe4JSxykWY06xY=
-X-Google-Smtp-Source: APXvYqyZ9yhaosf5utP1M5IvBH9z10LRioY4qvrROs5RLMZ+ssuniXnSj2koK4Tlw+OmDnuU9ok4+w==
-X-Received: by 2002:a17:902:aa85:: with SMTP id d5mr73024563plr.245.1558335680631;
-        Mon, 20 May 2019 00:01:20 -0700 (PDT)
-Received: from localhost (193-116-79-244.tpgi.com.au. [193.116.79.244])
-        by smtp.gmail.com with ESMTPSA id x28sm17981692pfo.78.2019.05.20.00.01.19
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 20 May 2019 00:01:20 -0700 (PDT)
-Date:   Mon, 20 May 2019 17:00:21 +1000
-From:   Nicholas Piggin <npiggin@gmail.com>
-Subject: Re: PROBLEM: Power9: kernel oops on memory hotunplug from ppc64le
- guest
-To:     bharata@linux.ibm.com
-Cc:     aneesh.kumar@linux.ibm.com, bharata@linux.vnet.ibm.com,
-        linux-kernel@vger.kernel.org, linux-next@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        srikanth <sraithal@linux.vnet.ibm.com>
-References: <16a7a635-c592-27e2-75b4-d02071833278@linux.vnet.ibm.com>
-        <20190518141434.GA22939@in.ibm.com>
-        <878sv1993k.fsf@concordia.ellerman.id.au>
-        <20190520042533.GB22939@in.ibm.com>
-        <1558327521.633yjtl8ki.astroid@bobo.none>
-        <20190520055622.GC22939@in.ibm.com>
-In-Reply-To: <20190520055622.GC22939@in.ibm.com>
+        Mon, 20 May 2019 03:03:21 -0400
+Received: from mx2.suse.de ([195.135.220.15]:39790 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725372AbfETHDU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 03:03:20 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 6293CAE48;
+        Mon, 20 May 2019 07:03:19 +0000 (UTC)
+Date:   Mon, 20 May 2019 09:03:17 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Pavel Tatashin <pasha.tatashin@soleen.com>
+Cc:     "Verma, Vishal L" <vishal.l.verma@intel.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "jmorris@namei.org" <jmorris@namei.org>,
+        "tiwai@suse.de" <tiwai@suse.de>,
+        "sashal@kernel.org" <sashal@kernel.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
+        "david@redhat.com" <david@redhat.com>, "bp@suse.de" <bp@suse.de>,
+        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
+        "linux-nvdimm@lists.01.org" <linux-nvdimm@lists.01.org>,
+        "jglisse@redhat.com" <jglisse@redhat.com>,
+        "zwisler@kernel.org" <zwisler@kernel.org>,
+        "Jiang, Dave" <dave.jiang@intel.com>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "Busch, Keith" <keith.busch@intel.com>,
+        "thomas.lendacky@amd.com" <thomas.lendacky@amd.com>,
+        "Huang, Ying" <ying.huang@intel.com>,
+        "Wu, Fengguang" <fengguang.wu@intel.com>,
+        "baiyaowei@cmss.chinamobile.com" <baiyaowei@cmss.chinamobile.com>
+Subject: Re: NULL pointer dereference during memory hotremove
+Message-ID: <20190520070317.GU6836@dhcp22.suse.cz>
+References: <CA+CK2bBeOJPnnyWBgj0CJ7E1z9GVWVg_EJAmDs07BSJDp3PYfQ@mail.gmail.com>
+ <20190517143816.GO6836@dhcp22.suse.cz>
+ <CA+CK2bA+2+HaV4GWNUNP04fjjTPKbEGQHSPrSrmY7HLD57au1Q@mail.gmail.com>
+ <CA+CK2bDq+2qu28afO__4kzO4=cnLH1P4DcHjc62rt0UtYwLm0A@mail.gmail.com>
+ <CA+CK2bCgF7z5UHqrGCYu4JgG=5o6uXbjutTo9VSYAkqu3dqn5w@mail.gmail.com>
 MIME-Version: 1.0
-User-Agent: astroid/0.14.0 (https://github.com/astroidmail/astroid)
-Message-Id: <1558335484.9inx69a7ea.astroid@bobo.none>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CA+CK2bCgF7z5UHqrGCYu4JgG=5o6uXbjutTo9VSYAkqu3dqn5w@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Bharata B Rao's on May 20, 2019 3:56 pm:
-> On Mon, May 20, 2019 at 02:48:35PM +1000, Nicholas Piggin wrote:
->> >> > git bisect points to
->> >> >
->> >> > commit 4231aba000f5a4583dd9f67057aadb68c3eca99d
->> >> > Author: Nicholas Piggin <npiggin@gmail.com>
->> >> > Date:   Fri Jul 27 21:48:17 2018 +1000
->> >> >
->> >> >     powerpc/64s: Fix page table fragment refcount race vs speculati=
-ve references
->> >> >
->> >> >     The page table fragment allocator uses the main page refcount r=
-acily
->> >> >     with respect to speculative references. A customer observed a B=
-UG due
->> >> >     to page table page refcount underflow in the fragment allocator=
-. This
->> >> >     can be caused by the fragment allocator set_page_count stomping=
- on a
->> >> >     speculative reference, and then the speculative failure handler
->> >> >     decrements the new reference, and the underflow eventually pops=
- when
->> >> >     the page tables are freed.
->> >> >
->> >> >     Fix this by using a dedicated field in the struct page for the =
-page
->> >> >     table fragment allocator.
->> >> >
->> >> >     Fixes: 5c1f6ee9a31c ("powerpc: Reduce PTE table memory wastage"=
-)
->> >> >     Cc: stable@vger.kernel.org # v3.10+
->> >>=20
->> >> That's the commit that added the BUG_ON(), so prior to that you won't
->> >> see the crash.
->> >=20
->> > Right, but the commit says it fixes page table page refcount underflow=
- by
->> > introducing a new field &page->pt_frag_refcount. Now we are hitting th=
-e underflow
->> > for this pt_frag_refcount.
->>=20
->> The fixed underflow is caused by a bug (race on page count) that got=20
->> fixed by that patch. You are hitting a different underflow here. It's
->> not certain my patch caused it, I'm just trying to reproduce now.
->=20
-> Ok.
+On Fri 17-05-19 13:33:25, Pavel Tatashin wrote:
+> On Fri, May 17, 2019 at 1:24 PM Pavel Tatashin
+> <pasha.tatashin@soleen.com> wrote:
+> >
+> > On Fri, May 17, 2019 at 1:22 PM Pavel Tatashin
+> > <pasha.tatashin@soleen.com> wrote:
+> > >
+> > > On Fri, May 17, 2019 at 10:38 AM Michal Hocko <mhocko@kernel.org> wrote:
+> > > >
+> > > > On Fri 17-05-19 10:20:38, Pavel Tatashin wrote:
+> > > > > This panic is unrelated to circular lock issue that I reported in a
+> > > > > separate thread, that also happens during memory hotremove.
+> > > > >
+> > > > > xakep ~/x/linux$ git describe
+> > > > > v5.1-12317-ga6a4b66bd8f4
+> > > >
+> > > > Does this happen on 5.0 as well?
+> > >
+> > > Yes, just reproduced it on 5.0 as well. Unfortunately, I do not have a
+> > > script, and have to do it manually, also it does not happen every
+> > > time, it happened on 3rd time for me.
+> >
+> > Actually, sorry, I have not tested 5.0, I compiled 5.0, but my script
+> > still tested v5.1-12317-ga6a4b66bd8f4 build. I will report later if I
+> > am able to reproduce it on 5.0.
+> 
+> OK, confirmed on 5.0 as well, took 4 tries to reproduce:
 
-Can't reproduce I'm afraid, tried adding and removing 8GB memory from a
-4GB guest (via host adding / removing memory device), and it just works.
-
-It's likely to be an edge case like an off by one or rounding error
-that just happens to trigger in your config. Might be easiest if you
-could test with a debug patch.
-
-Thanks,
-Nick
-
-=
+What is the last version that survives? Can you bisect?
+-- 
+Michal Hocko
+SUSE Labs
