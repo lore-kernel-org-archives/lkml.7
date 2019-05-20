@@ -2,94 +2,168 @@ Return-Path: <SRS0=lq4r=TU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F3BBC04AAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 08:03:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B622C04AAF
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 08:04:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 64F69206BA
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 08:03:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DDE562081C
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 08:04:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730556AbfETIDy (ORCPT
+        id S1730610AbfETIEI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 04:03:54 -0400
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:39178 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725772AbfETIDy (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 04:03:54 -0400
-Received: by mail-ed1-f67.google.com with SMTP id e24so22444456edq.6;
-        Mon, 20 May 2019 01:03:53 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=jiVgtLJVaSK+kBnj7Ae+LR1x0hOyccWrwqfEKZcrZlk=;
-        b=RIxtaAxaQX/+uUdcE71QpfR2HyBgnK5Mr0bj5/7vyq8NLekFSaOPwrcTQldOmx/wvm
-         6q5Xny9vkB05dxlOlFeXfU+3+kvbCdXE1BB5GGdC2gm0UpSnbFKvNU74gj+Q0f0DnzyZ
-         hHwXreebaNncBrruaT5y8SNJpPihArrYb2NTiz5W0qSR7EkDcT17ue5Wi58KifO7GSdi
-         SDPBeDJs8t/8ka3PsZyDmJscsiOMM8OJfblH+ZgPfWJNJXxIc4scIvDdNWS6NJnAb6If
-         GUsoZa66JVr5Pvb28hoJ7yh1GLUogY8JTupPs9PVXSt/PLRkO24k9cyNixUVMZjTK2ke
-         KKoA==
-X-Gm-Message-State: APjAAAWlPPHtuEjFARkyQqv+IPWFxnpugrq0uKjJm2VY7+GkD6+jjVWO
-        NoCGj/Oy9BFKK40EOUEL+5/RkDmHScM=
-X-Google-Smtp-Source: APXvYqxRFI05G003Nokm9VLzZDqyjqdh9m4BaMvaGzc2GgDxferoMzid2vsay8Sc8EUyvV3qlHSP7g==
-X-Received: by 2002:a50:87b5:: with SMTP id a50mr71788047eda.118.1558339432080;
-        Mon, 20 May 2019 01:03:52 -0700 (PDT)
-Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com. [209.85.221.49])
-        by smtp.gmail.com with ESMTPSA id r14sm3019734eja.77.2019.05.20.01.03.51
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 20 May 2019 01:03:51 -0700 (PDT)
-Received: by mail-wr1-f49.google.com with SMTP id w8so13424030wrl.6;
-        Mon, 20 May 2019 01:03:51 -0700 (PDT)
-X-Received: by 2002:adf:dfc4:: with SMTP id q4mr41065855wrn.201.1558338984633;
- Mon, 20 May 2019 00:56:24 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190516154943.239E668B05@newverein.lst.de> <20190516155139.E6EE568C65@newverein.lst.de>
-In-Reply-To: <20190516155139.E6EE568C65@newverein.lst.de>
-From:   Chen-Yu Tsai <wens@csie.org>
-Date:   Mon, 20 May 2019 15:56:13 +0800
-X-Gmail-Original-Message-ID: <CAGb2v64xKk1r1iqSVm5pVvHVkyQ175MUFB7JPUkvQX9ecOZDDQ@mail.gmail.com>
-Message-ID: <CAGb2v64xKk1r1iqSVm5pVvHVkyQ175MUFB7JPUkvQX9ecOZDDQ@mail.gmail.com>
-Subject: Re: [PATCH v2 3/4] arm64: DTS: allwinner: a64: Enable audio on Teres-I
-To:     Torsten Duwe <duwe@lst.de>
-Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>,
+        Mon, 20 May 2019 04:04:08 -0400
+Received: from mga18.intel.com ([134.134.136.126]:19097 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725772AbfETIEH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 04:04:07 -0400
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 May 2019 01:04:06 -0700
+X-ExtLoop1: 1
+Received: from kuha.fi.intel.com ([10.237.72.189])
+  by fmsmga001.fm.intel.com with SMTP; 20 May 2019 01:04:00 -0700
+Received: by kuha.fi.intel.com (sSMTP sendmail emulation); Mon, 20 May 2019 11:03:59 +0300
+Date:   Mon, 20 May 2019 11:03:59 +0300
+From:   Heikki Krogerus <heikki.krogerus@linux.intel.com>
+To:     Chunfeng Yun <chunfeng.yun@mediatek.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Archit Taneja <architt@codeaurora.org>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        Icenowy Zheng <icenowy@aosc.io>,
-        Sean Paul <seanpaul@chromium.org>,
-        Vasily Khoruzhick <anarsoul@gmail.com>,
-        Harald Geyer <harald@ccbib.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Adam Thomson <Adam.Thomson.Opensource@diasemi.com>,
+        Li Jun <jun.li@nxp.com>,
+        Badhri Jagan Sridharan <badhri@google.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Min Guo <min.guo@mediatek.com>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org,
+        Biju Das <biju.das@bp.renesas.com>,
+        Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v5 4/6] usb: roles: add API to get usb_role_switch by node
+Message-ID: <20190520080359.GC1887@kuha.fi.intel.com>
+References: <1557823643-8616-1-git-send-email-chunfeng.yun@mediatek.com>
+ <1557823643-8616-5-git-send-email-chunfeng.yun@mediatek.com>
+ <20190517103736.GA1490@kuha.fi.intel.com>
+ <20190517130511.GA1887@kuha.fi.intel.com>
+ <1558319951.10179.352.camel@mhfsdcap03>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1558319951.10179.352.camel@mhfsdcap03>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 16, 2019 at 11:52 PM Torsten Duwe <duwe@lst.de> wrote:
->
-> From: Harald Geyer <harald@ccbib.org>
->
-> The TERES-I has internal speakers (left, right), internal microphone
-> and a headset combo jack (headphones + mic), "CTIA" (android) pinout.
->
-> The headphone and mic detect lines of the A64 are connected properly,
-> but AFAIK currently unsupported by the driver.
->
-> Signed-off-by: Harald Geyer <harald@ccbib.org>
-> Signed-off-by: Torsten Duwe <duwe@suse.de>
+On Mon, May 20, 2019 at 10:39:11AM +0800, Chunfeng Yun wrote:
+> Hi,
+> On Fri, 2019-05-17 at 16:05 +0300, Heikki Krogerus wrote:
+> > Hi,
+> > 
+> > On Fri, May 17, 2019 at 01:37:36PM +0300, Heikki Krogerus wrote:
+> > > On Tue, May 14, 2019 at 04:47:21PM +0800, Chunfeng Yun wrote:
+> > > > Add fwnode_usb_role_switch_get() to make easier to get
+> > > > usb_role_switch by fwnode which register it.
+> > > > It's useful when there is not device_connection registered
+> > > > between two drivers and only knows the fwnode which register
+> > > > usb_role_switch.
+> > > > 
+> > > > Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
+> > > > Tested-by: Biju Das <biju.das@bp.renesas.com>
+> > > 
+> > > Acked-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+> > 
+> > Hold on. I just noticed Rob's comment on patch 2/6, where he points out
+> > that you don't need to use device graph since the controller is the
+> > parent of the connector. Doesn't that mean you don't really need this
+> > API?
+> No, I still need it. 
+> The change is about the way how to get fwnode;
+> when use device graph, get fwnode by of_graph_get_remote_node();
+> but now will get fwnode by of_get_parent();
 
-Looks good to me.
+OK, I get that, but I'm still not convinced about if something like
+this function is needed at all. I also have concerns regarding how you
+are using the function. I'll explain in comment to the patch 5/6 in
+this series...
 
-Reviewed-by: Chen-Yu Tsai <wens@csie.org>
+> > > > ---
+> > > > v5 changes:
+> > > >  1. remove linux/of.h suggested by Biju
+> > > >  2. add tested by Biju
+> > > > 
+> > > > Note: still depends on [1]
+> > > >  [1]: [v6,08/13] usb: roles: Introduce stubs for the exiting functions in role.h
+> > > >       https://patchwork.kernel.org/patch/10909971/
+> > > > 
+> > > > v4 changes:
+> > > >   1. use switch_fwnode_match() to find fwnode suggested by Heikki
+> > > >   2. this patch now depends on [1]
+> > > > 
+> > > >  [1] [v6,08/13] usb: roles: Introduce stubs for the exiting functions in role.h
+> > > >     https://patchwork.kernel.org/patch/10909971/
+> > > > 
+> > > > v3 changes:
+> > > >   1. use fwnodes instead of node suggested by Andy
+> > > >   2. rebuild the API suggested by Heikki
+> > > > 
+> > > > v2 no changes
+> > > > ---
+> > > >  drivers/usb/roles/class.c | 24 ++++++++++++++++++++++++
+> > > >  include/linux/usb/role.h  |  8 ++++++++
+> > > >  2 files changed, 32 insertions(+)
+> > > > 
+> > > > diff --git a/drivers/usb/roles/class.c b/drivers/usb/roles/class.c
+> > > > index f45d8df5cfb8..4a1f09a41ec0 100644
+> > > > --- a/drivers/usb/roles/class.c
+> > > > +++ b/drivers/usb/roles/class.c
+> > > > @@ -135,6 +135,30 @@ struct usb_role_switch *usb_role_switch_get(struct device *dev)
+> > > >  }
+> > > >  EXPORT_SYMBOL_GPL(usb_role_switch_get);
+> > > >  
+> > > > +/**
+> > > > + * fwnode_usb_role_switch_get - Find USB role switch by it's parent fwnode
+> > > > + * @fwnode: The fwnode that register USB role switch
+> > > > + *
+> > > > + * Finds and returns role switch registered by @fwnode. The reference count
+> > > > + * for the found switch is incremented.
+> > > > + */
+> > > > +struct usb_role_switch *
+> > > > +fwnode_usb_role_switch_get(struct fwnode_handle *fwnode)
+> > > > +{
+> > > > +	struct usb_role_switch *sw;
+> > > > +	struct device *dev;
+> > > > +
+> > > > +	dev = class_find_device(role_class, NULL, fwnode, switch_fwnode_match);
+> > > > +	if (!dev)
+> > > > +		return ERR_PTR(-EPROBE_DEFER);
+> > > > +
+> > > > +	sw = to_role_switch(dev);
+> > > > +	WARN_ON(!try_module_get(sw->dev.parent->driver->owner));
+> > > > +
+> > > > +	return sw;
+> > > > +}
+> > > > +EXPORT_SYMBOL_GPL(fwnode_usb_role_switch_get);
+> > 
+> > This function only basically converts the fwnode to usb_role_switch,
+> > but I would actually prefer that we walked through the device graph
+> > here instead of expecting the caller to do that.
+> > 
+> > So this function should probable be called fwnode_to_usb_role_switch()
+> > and not fwnode_usb_role_switch_get(), but I guess you don't need it
+> > at all, right?
+> > 
+> > 
+> > thanks,
+> > 
+> 
+
+-- 
+heikki
