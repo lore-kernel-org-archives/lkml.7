@@ -2,97 +2,83 @@ Return-Path: <SRS0=lq4r=TU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2186FC04E87
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 13:41:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8E59C04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 13:43:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DD471216B7
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 13:41:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="DOrQVVyi"
+	by mail.kernel.org (Postfix) with ESMTP id BF3E820856
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 13:43:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389306AbfETNlW (ORCPT
+        id S2389354AbfETNnM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 09:41:22 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:52525 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731144AbfETNlV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 09:41:21 -0400
-Received: by mail-wm1-f68.google.com with SMTP id y3so13381900wmm.2
-        for <linux-kernel@vger.kernel.org>; Mon, 20 May 2019 06:41:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=a7cfIiCWiicKqtrPSknAcBLN0KCAEwC5ns6XxWqRMAE=;
-        b=DOrQVVyiOmSy1XrUQsrfKhDXCtzEAde/ZUwe0lqGPHxkY88sbqHxmd1xZzurOC6la9
-         uufgFNhf6Z+zDMzkRFkeApC6qXyvsUy1fev56SUjkXrNRFBbCL46d4wsXPrvixlG5YKw
-         GAG9ZR9NfMQzy7O2HnOuTJ0Q3CKzTBqctqKBHoJQZ2qX/wdb9EaJ7qSEKQB//xaTuLug
-         EJ/08r60d8mAl8uaFOa0gUSPvn1pRuEjHuX3n5du4CeAEq0LFAROPIBOd8kPNojGKqz1
-         WahhBljCfbqL1r0Bx51vvFwJBG1zOEYoO1LyOWFv3rY9kM3H207yZaJXrACDQJ1FEn7E
-         brkQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=a7cfIiCWiicKqtrPSknAcBLN0KCAEwC5ns6XxWqRMAE=;
-        b=fTImCOFWIpI3+R+TF0equAldY2RO6TjbCkqzfwc7eOoadIVOHnPNCIJAZqd86IlAAc
-         m33hUuF8Ts3xRug+M2emmBXMgD6NB+vJXQ0hlJeC9vaovV74IpKMgxsICNWtf2Gq9gqD
-         5XCtYwZ6c3pUoZ2WLAo9IehIwIRV3LS07gX8a7Bf5/MbjEiq+e32ePoGQoXJ0Nxv5r27
-         JL9GxXFFCHqyg38SVxr086hIQXkGd/1SuuPE1pCgKsN8eSfJ3HGAbsN6rTobWKdpkxB2
-         tCGkzMrawbnYJcuceXJuKie432BwbvJXBIOprNKERQvSoU8yvnEb9m9a0TOhBqh9G9cn
-         91iA==
-X-Gm-Message-State: APjAAAVm6G6Sy/aRB9IxPLFteCIv5P2QpObFfu5G8fIyKZFgX2vEDvnP
-        VY1UY2zjCbh0+39t2dgBLenCZA==
-X-Google-Smtp-Source: APXvYqyNGp4vfLo3G057FlGQGxZbnPryHolj/aJnovIvWRHGyJ4Ald96z+gZgFe/8GEp9irFPlv9hQ==
-X-Received: by 2002:a1c:c144:: with SMTP id r65mr36553133wmf.24.1558359679306;
-        Mon, 20 May 2019 06:41:19 -0700 (PDT)
-Received: from bender.baylibre.local (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
-        by smtp.gmail.com with ESMTPSA id o11sm5406678wrp.23.2019.05.20.06.41.18
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Mon, 20 May 2019 06:41:18 -0700 (PDT)
-From:   Neil Armstrong <narmstrong@baylibre.com>
-To:     marcel@holtmann.org, johan.hedberg@gmail.com
-Cc:     Neil Armstrong <narmstrong@baylibre.com>,
-        linux-bluetooth@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] Bluetooth: btbcm: Add entry for BCM4359C0 UART bluetooth
-Date:   Mon, 20 May 2019 15:41:04 +0200
-Message-Id: <20190520134104.24575-1-narmstrong@baylibre.com>
-X-Mailer: git-send-email 2.21.0
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Mon, 20 May 2019 09:43:12 -0400
+Received: from mga07.intel.com ([134.134.136.100]:25194 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388106AbfETNnL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 09:43:11 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 May 2019 06:43:11 -0700
+X-ExtLoop1: 1
+Received: from gklab-127-091.igk.intel.com (HELO gklab-125-020.igk.intel.com) ([10.91.125.20])
+  by orsmga004.jf.intel.com with ESMTP; 20 May 2019 06:43:09 -0700
+From:   Lukasz Odzioba <lukasz.odzioba@intel.com>
+To:     linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org
+Cc:     dwmw2@infradead.org, joro@8bytes.org, lukasz.odzioba@intel.com,
+        grzegorz.andrejczuk@intel.com
+Subject: [PATCH 1/1] iommu/vt-d: Remove unnecessary rcu_read_locks
+Date:   Mon, 20 May 2019 15:41:28 +0200
+Message-Id: <1558359688-21804-1-git-send-email-lukasz.odzioba@intel.com>
+X-Mailer: git-send-email 1.8.3.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The BCM4359C0 BT/Wi-Fi compo chip needs an entry to be discovered
-by the btbcm driver.
+We use RCU's for rarely updated lists like iommus, rmrr, atsr units.
 
-Tested using an AP6398S module from Ampak.
+I'm not sure why domain_remove_dev_info() in domain_exit() was surrounded
+by rcu_read_lock. Lock was present before refactoring in d160aca527,
+but it was related to rcu list, not domain_remove_dev_info function.
 
-Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+dmar_remove_one_dev_info() doesn't touch any of those lists, so it doesn't
+require a lock. In fact it is called 6 times without it anyway.
+
+Fixes: d160aca5276d ("iommu/vt-d: Unify domain->iommu attach/detachment")
+
+Signed-off-by: Lukasz Odzioba <lukasz.odzioba@intel.com>
 ---
- drivers/bluetooth/btbcm.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/iommu/intel-iommu.c | 4 ----
+ 1 file changed, 4 deletions(-)
 
-diff --git a/drivers/bluetooth/btbcm.c b/drivers/bluetooth/btbcm.c
-index d5d6e6e5da3b..b9eac94c503d 100644
---- a/drivers/bluetooth/btbcm.c
-+++ b/drivers/bluetooth/btbcm.c
-@@ -342,6 +342,7 @@ static const struct bcm_subver_table bcm_uart_subver_table[] = {
- 	{ 0x230f, "BCM4356A2"	},	/* 001.003.015 */
- 	{ 0x220e, "BCM20702A1"  },	/* 001.002.014 */
- 	{ 0x4217, "BCM4329B1"   },	/* 002.002.023 */
-+	{ 0x6106, "BCM4359C0"	},	/* 003.001.006 */
- 	{ }
- };
+diff --git a/drivers/iommu/intel-iommu.c b/drivers/iommu/intel-iommu.c
+index a209199..1b7ad80 100644
+--- a/drivers/iommu/intel-iommu.c
++++ b/drivers/iommu/intel-iommu.c
+@@ -1911,9 +1911,7 @@ static void domain_exit(struct dmar_domain *domain)
+ 	struct page *freelist;
  
+ 	/* Remove associated devices and clear attached or cached domains */
+-	rcu_read_lock();
+ 	domain_remove_dev_info(domain);
+-	rcu_read_unlock();
+ 
+ 	/* destroy iovas */
+ 	put_iova_domain(&domain->iovad);
+@@ -5254,9 +5252,7 @@ static int intel_iommu_attach_device(struct iommu_domain *domain,
+ 
+ 		old_domain = find_domain(dev);
+ 		if (old_domain) {
+-			rcu_read_lock();
+ 			dmar_remove_one_dev_info(dev);
+-			rcu_read_unlock();
+ 
+ 			if (!domain_type_is_vm_or_si(old_domain) &&
+ 			    list_empty(&old_domain->devices))
 -- 
-2.21.0
+1.8.3.1
 
