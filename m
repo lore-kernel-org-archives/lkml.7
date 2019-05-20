@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD3A3C04AAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:31:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C953C04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:31:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9803420645
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:31:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 29DDB20645
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:31:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558355465;
-	bh=9Lc2Xqg651QpBxUDV8+3G3GlLbdEU1hToyKIoZ7fvQE=;
+	s=default; t=1558355468;
+	bh=AVWiOWEc1qqNr7Nj3IfW3zZKYO8A2OhvSJw+SaAvmuY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WPiv/jb+qU298SPKtAFNVPWtdk7oYRjWWi4s6nu8UJktn3JVmwADTQpT9uiifD47b
-	 2KHfIOuWcgZpKWaFK8t/qZbuyaPVOoFdkOibCOUkYXLhS0uxCXosIH0IbE+E4l9fQY
-	 bvzG813rsWa20749COPJbW0RiZUbJyHW/SwY3rbQ=
+	b=DvG78IH4/JlkP9eIIQeHoIr0UIayA0x5Y8zZhLya103iQzNuuLJZ6SFlNBsN8wY8N
+	 lroRap8IebEBEAgJ12LKIaWVdggpxUqOt0v0iQ33qcA64XLMN7YPT0MZohLJLYxBu6
+	 e6EF5miSamMsfdLI4mERmaDs9cczXWlVkrwoqP1A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390245AbfETMbE (ORCPT
+        id S2390254AbfETMbH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 08:31:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47450 "EHLO mail.kernel.org"
+        Mon, 20 May 2019 08:31:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47484 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390218AbfETMbB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 08:31:01 -0400
+        id S2390238AbfETMbE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 08:31:04 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 95ADE20645;
-        Mon, 20 May 2019 12:31:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 56A0520645;
+        Mon, 20 May 2019 12:31:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558355461;
-        bh=9Lc2Xqg651QpBxUDV8+3G3GlLbdEU1hToyKIoZ7fvQE=;
+        s=default; t=1558355463;
+        bh=AVWiOWEc1qqNr7Nj3IfW3zZKYO8A2OhvSJw+SaAvmuY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=eiIJI3eJZ4ZzkkyNg69BqS0NCF3yhdPDqXWYVYzNwu5NtkTaDDERFukQp/u1bX3HC
-         AKDDDQIgK6WKYqNwI9ifJSq1mWSJrhCjc9dZsZ6CQAF/UoxnyNY3KqHAvdZyqaZz2z
-         KcKC1OdrKYy39GTudg27+qp9uiaXyyaJrOQ1UCp4=
+        b=kSyDRQg4umS2svJKr60lWlz6p9k58YAYOXTpIKQ39ix29qyrbR98rGV39uajkdOjZ
+         vkOWcdv5FewtS5H3y8EHNwr70QHUoYimPQpWN/jLvSqUmxGpRkWg67v7wZvfBxdGa1
+         3zco0QgUzp74SfFfSz4rSJ+FPlRr2FM0B/Fx7I4Q=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kailang Yang <kailang@realtek.com>,
+        stable@vger.kernel.org,
+        =?UTF-8?q?Micha=C5=82=20Wadowski?= <wadosm@gmail.com>,
         Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 5.0 107/123] ALSA: hda/realtek - Fixup headphone noise via runtime suspend
-Date:   Mon, 20 May 2019 14:14:47 +0200
-Message-Id: <20190520115252.183128858@linuxfoundation.org>
+Subject: [PATCH 5.0 108/123] ALSA: hda/realtek - Fix for Lenovo B50-70 inverted internal microphone bug
+Date:   Mon, 20 May 2019 14:14:48 +0200
+Message-Id: <20190520115252.272801135@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190520115245.439864225@linuxfoundation.org>
 References: <20190520115245.439864225@linuxfoundation.org>
@@ -59,110 +60,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kailang Yang <kailang@realtek.com>
+From: Michał Wadowski <wadosm@gmail.com>
 
-commit dad3197da7a3817f27bb24f7fd3c135ffa707202 upstream.
+commit 56df90b631fc027fe28b70d41352d820797239bb upstream.
 
-Dell platform with ALC298.
-system enter to runtime suspend. Headphone had noise.
-Let Headset Mic not shutup will solve this issue.
+Add patch for realtek codec in Lenovo B50-70 that fixes inverted
+internal microphone channel.
+Device IdeaPad Y410P has the same PCI SSID as Lenovo B50-70,
+but first one is about fix the noise and it didn't seem help in a
+later kernel version.
+So I replaced IdeaPad Y410P device description with B50-70 and apply
+inverted microphone fix.
 
-[ Fixed minor coding style issues by tiwai ]
-
-Signed-off-by: Kailang Yang <kailang@realtek.com>
+Bugzilla: https://bugs.launchpad.net/ubuntu/+source/alsa-driver/+bug/1524215
+Signed-off-by: Michał Wadowski <wadosm@gmail.com>
 Cc: <stable@vger.kernel.org>
 Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/pci/hda/patch_realtek.c |   59 ++++++++++++++++++++++++------------------
- 1 file changed, 35 insertions(+), 24 deletions(-)
+ sound/pci/hda/patch_realtek.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 --- a/sound/pci/hda/patch_realtek.c
 +++ b/sound/pci/hda/patch_realtek.c
-@@ -477,12 +477,45 @@ static void alc_auto_setup_eapd(struct h
- 		set_eapd(codec, *p, on);
- }
- 
-+static int find_ext_mic_pin(struct hda_codec *codec);
-+
-+static void alc_headset_mic_no_shutup(struct hda_codec *codec)
-+{
-+	const struct hda_pincfg *pin;
-+	int mic_pin = find_ext_mic_pin(codec);
-+	int i;
-+
-+	/* don't shut up pins when unloading the driver; otherwise it breaks
-+	 * the default pin setup at the next load of the driver
-+	 */
-+	if (codec->bus->shutdown)
-+		return;
-+
-+	snd_array_for_each(&codec->init_pins, i, pin) {
-+		/* use read here for syncing after issuing each verb */
-+		if (pin->nid != mic_pin)
-+			snd_hda_codec_read(codec, pin->nid, 0,
-+					AC_VERB_SET_PIN_WIDGET_CONTROL, 0);
-+	}
-+
-+	codec->pins_shutup = 1;
-+}
-+
- static void alc_shutup_pins(struct hda_codec *codec)
- {
- 	struct alc_spec *spec = codec->spec;
- 
--	if (!spec->no_shutup_pins)
--		snd_hda_shutup_pins(codec);
-+	switch (codec->core.vendor_id) {
-+	case 0x10ec0286:
-+	case 0x10ec0288:
-+	case 0x10ec0298:
-+		alc_headset_mic_no_shutup(codec);
-+		break;
-+	default:
-+		if (!spec->no_shutup_pins)
-+			snd_hda_shutup_pins(codec);
-+		break;
-+	}
- }
- 
- /* generic shutup callback;
-@@ -2923,27 +2956,6 @@ static int alc269_parse_auto_config(stru
- 	return alc_parse_auto_config(codec, alc269_ignore, ssids);
- }
- 
--static int find_ext_mic_pin(struct hda_codec *codec);
--
--static void alc286_shutup(struct hda_codec *codec)
--{
--	const struct hda_pincfg *pin;
--	int i;
--	int mic_pin = find_ext_mic_pin(codec);
--	/* don't shut up pins when unloading the driver; otherwise it breaks
--	 * the default pin setup at the next load of the driver
--	 */
--	if (codec->bus->shutdown)
--		return;
--	snd_array_for_each(&codec->init_pins, i, pin) {
--		/* use read here for syncing after issuing each verb */
--		if (pin->nid != mic_pin)
--			snd_hda_codec_read(codec, pin->nid, 0,
--					AC_VERB_SET_PIN_WIDGET_CONTROL, 0);
--	}
--	codec->pins_shutup = 1;
--}
--
- static void alc269vb_toggle_power_output(struct hda_codec *codec, int power_up)
- {
- 	alc_update_coef_idx(codec, 0x04, 1 << 11, power_up ? (1 << 11) : 0);
-@@ -7705,7 +7717,6 @@ static int patch_alc269(struct hda_codec
- 	case 0x10ec0286:
- 	case 0x10ec0288:
- 		spec->codec_variant = ALC269_TYPE_ALC286;
--		spec->shutup = alc286_shutup;
- 		break;
- 	case 0x10ec0298:
- 		spec->codec_variant = ALC269_TYPE_ALC298;
+@@ -6988,7 +6988,7 @@ static const struct snd_pci_quirk alc269
+ 	SND_PCI_QUIRK(0x17aa, 0x313c, "ThinkCentre Station", ALC294_FIXUP_LENOVO_MIC_LOCATION),
+ 	SND_PCI_QUIRK(0x17aa, 0x3902, "Lenovo E50-80", ALC269_FIXUP_DMIC_THINKPAD_ACPI),
+ 	SND_PCI_QUIRK(0x17aa, 0x3977, "IdeaPad S210", ALC283_FIXUP_INT_MIC),
+-	SND_PCI_QUIRK(0x17aa, 0x3978, "IdeaPad Y410P", ALC269_FIXUP_NO_SHUTUP),
++	SND_PCI_QUIRK(0x17aa, 0x3978, "Lenovo B50-70", ALC269_FIXUP_DMIC_THINKPAD_ACPI),
+ 	SND_PCI_QUIRK(0x17aa, 0x5013, "Thinkpad", ALC269_FIXUP_LIMIT_INT_MIC_BOOST),
+ 	SND_PCI_QUIRK(0x17aa, 0x501a, "Thinkpad", ALC283_FIXUP_INT_MIC),
+ 	SND_PCI_QUIRK(0x17aa, 0x501e, "Thinkpad L440", ALC292_FIXUP_TPT440_DOCK),
 
 
