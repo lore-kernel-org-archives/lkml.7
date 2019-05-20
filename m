@@ -2,174 +2,128 @@ Return-Path: <SRS0=lq4r=TU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71546C04AAC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 20:21:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A788C04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 20:21:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4CA1D216B7
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 20:21:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1511E2173B
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 20:21:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="UUk3ytbR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726541AbfETUVR (ORCPT
+        id S1726691AbfETUVs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 16:21:17 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:50864 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725995AbfETUVQ (ORCPT
+        Mon, 20 May 2019 16:21:48 -0400
+Received: from mail-vs1-f66.google.com ([209.85.217.66]:42672 "EHLO
+        mail-vs1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725902AbfETUVr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 16:21:16 -0400
-Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4KK7xIU011696;
-        Mon, 20 May 2019 16:21:03 -0400
-Received: from ppma01dal.us.ibm.com (83.d6.3fa9.ip4.static.sl-reverse.com [169.63.214.131])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2sm2m315hu-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 20 May 2019 16:21:02 -0400
-Received: from pps.filterd (ppma01dal.us.ibm.com [127.0.0.1])
-        by ppma01dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x4KJbcLI014553;
-        Mon, 20 May 2019 19:39:10 GMT
-Received: from b01cxnp23033.gho.pok.ibm.com (b01cxnp23033.gho.pok.ibm.com [9.57.198.28])
-        by ppma01dal.us.ibm.com with ESMTP id 2sj9p3k7w9-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 20 May 2019 19:39:10 +0000
-Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
-        by b01cxnp23033.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x4KKJjFt34210286
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 20 May 2019 20:19:45 GMT
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id CA3C5B2068;
-        Mon, 20 May 2019 20:19:45 +0000 (GMT)
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 2DCD9B2064;
-        Mon, 20 May 2019 20:19:45 +0000 (GMT)
-Received: from talon7.ibm.com (unknown [9.41.179.222])
-        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
-        Mon, 20 May 2019 20:19:45 +0000 (GMT)
-From:   Eddie James <eajames@linux.ibm.com>
-To:     linux-aspeed@lists.ozlabs.org
-Cc:     linux-kernel@vger.kernel.org, arnd@arndb.de, robh+dt@kernel.org,
-        mark.rutland@arm.com, devicetree@vger.kernel.org, joel@jms.id.au,
-        andrew@aj.id.au, Eddie James <eajames@linux.ibm.com>
-Subject: [PATCH v2 4/7] drivers/soc: xdma: Add PCI device configuration sysfs
-Date:   Mon, 20 May 2019 15:19:22 -0500
-Message-Id: <1558383565-11821-5-git-send-email-eajames@linux.ibm.com>
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <1558383565-11821-1-git-send-email-eajames@linux.ibm.com>
-References: <1558383565-11821-1-git-send-email-eajames@linux.ibm.com>
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-20_08:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=3 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1905200126
+        Mon, 20 May 2019 16:21:47 -0400
+Received: by mail-vs1-f66.google.com with SMTP id z11so9739034vsq.9
+        for <linux-kernel@vger.kernel.org>; Mon, 20 May 2019 13:21:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=+cwBfmNJOYYnLoNWnVRRnVYNxdiZh0AA2x8O10NbLoM=;
+        b=UUk3ytbRvoMJoCb1BDVV+bhMWyNCfP4VAtjMhf1lzGoGdYLBnk+w1DzR1J257pctAl
+         Z1sIhOH/IrWFoh7qnyLcIMvuCkh8fkDTGFrKquN9TP9ipVXj2ksMpQf/2h+xNxqCH3K2
+         oiIVhVB2Wc5K/vc4KJ88h0vfB7fgjFsM3M9kY=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=+cwBfmNJOYYnLoNWnVRRnVYNxdiZh0AA2x8O10NbLoM=;
+        b=k4BpxqIXZrAzLHGpXTkHIrRvPgZp3HUFkyYy/8+s6V/MQbxiHoP0J8Lx9DPqYVha/Y
+         eqAdlEJEuhLMSPpx4/qL3osarsicrH/GgTIauzcOPRp0W/Xc2Htrwh1VDpCD7OJXowbw
+         1dLkeUcaMs9G3gHJlCm8sf8QxYXnKjRbJA7zJprpyszN8iJ35MgHaQDum7m4KCynZz4I
+         ak/0bp2yMwRl7jh7A7+i0pkzDUX0LU+MmTKwrR1ZG1IdEW3gYAfiBbW5lWu0k8dVWjb1
+         L6/ESrEri6UPgmM3QZXuBOnWNKyHXrLoq0HD7YlqybD75rfZeM3IciMm/S+DjsCbxNnz
+         lfEA==
+X-Gm-Message-State: APjAAAUyJyMqsa7v7z98leem2cplUIivRWll75JB9gGPqPszrmDzo+pG
+        OxIDUkiY1DPheX/hnIWGpA4Mo0+EXkc=
+X-Google-Smtp-Source: APXvYqxp1nEvdJ2w+BjTguNWg67kjmvNt1JGLZAQGrblM6t2EwsmEsCOQ/xbiz04SoYzXKsrYVsELw==
+X-Received: by 2002:a67:6801:: with SMTP id d1mr39168130vsc.209.1558383706572;
+        Mon, 20 May 2019 13:21:46 -0700 (PDT)
+Received: from mail-vs1-f54.google.com (mail-vs1-f54.google.com. [209.85.217.54])
+        by smtp.gmail.com with ESMTPSA id b2sm8006206vkf.16.2019.05.20.13.21.45
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Mon, 20 May 2019 13:21:45 -0700 (PDT)
+Received: by mail-vs1-f54.google.com with SMTP id x8so5835962vsx.13
+        for <linux-kernel@vger.kernel.org>; Mon, 20 May 2019 13:21:45 -0700 (PDT)
+X-Received: by 2002:a67:dd8e:: with SMTP id i14mr31790963vsk.149.1558383705071;
+ Mon, 20 May 2019 13:21:45 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190520170132.91571-1-mka@chromium.org> <20190520170132.91571-2-mka@chromium.org>
+In-Reply-To: <20190520170132.91571-2-mka@chromium.org>
+From:   Doug Anderson <dianders@chromium.org>
+Date:   Mon, 20 May 2019 13:21:33 -0700
+X-Gmail-Original-Message-ID: <CAD=FV=Vr2thgHYTH_khqka27_SdGcSEShpSRp+u2E=O5eyxLMQ@mail.gmail.com>
+Message-ID: <CAD=FV=Vr2thgHYTH_khqka27_SdGcSEShpSRp+u2E=O5eyxLMQ@mail.gmail.com>
+Subject: Re: [PATCH 2/2] ARM: dts: rockchip: Configure the GPU thermal zone
+ for mickey
+To:     Matthias Kaehlcke <mka@chromium.org>
+Cc:     Heiko Stuebner <heiko@sntech.de>, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
+        devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The AST2500 has two PCI devices embedded. The XDMA engine can use either
-device to perform DMA transfers. Users need the capability to choose
-which device to use. This commit therefore adds two sysfs files that
-toggle the AST2500 and XDMA engine between the two PCI devices.
+Hi,
 
-Signed-off-by: Eddie James <eajames@linux.ibm.com>
----
- drivers/soc/aspeed/aspeed-xdma.c | 64 ++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 64 insertions(+)
+On Mon, May 20, 2019 at 10:01 AM Matthias Kaehlcke <mka@chromium.org> wrote=
+:
+>
+> mickey crams a lot of hardware into a tiny package, which requires
+> more aggressive thermal throttling than for devices with a larger
+> footprint. Configure the GPU thermal zone to throttle the GPU
+> progressively at temperatures >=3D 60=C2=B0C. Heat dissipated by the
+> CPUs also affects the GPU temperature, hence we cap the CPU
+> frequency to 1.4 GHz for temperatures above 65=C2=B0C. Further throttling
+> of the CPUs may be performed by the CPU thermal zone.
+>
+> The configuration matches that of the downstram Chrome OS 3.14
 
-diff --git a/drivers/soc/aspeed/aspeed-xdma.c b/drivers/soc/aspeed/aspeed-xdma.c
-index 2162ca0..002b571 100644
---- a/drivers/soc/aspeed/aspeed-xdma.c
-+++ b/drivers/soc/aspeed/aspeed-xdma.c
-@@ -667,6 +667,64 @@ static void aspeed_xdma_free_vga_blks(struct aspeed_xdma *ctx)
- 	}
- }
- 
-+static int aspeed_xdma_change_pcie_conf(struct aspeed_xdma *ctx, u32 conf)
-+{
-+	int rc;
-+
-+	mutex_lock(&ctx->start_lock);
-+	rc = wait_event_interruptible_timeout(ctx->wait,
-+					      !test_bit(XDMA_IN_PRG,
-+							&ctx->flags),
-+					      msecs_to_jiffies(1000));
-+	if (rc < 0) {
-+		mutex_unlock(&ctx->start_lock);
-+		return -EINTR;
-+	}
-+
-+	/* previous op didn't complete, wake up waiters anyway */
-+	if (!rc)
-+		wake_up_interruptible_all(&ctx->wait);
-+
-+	reset_control_assert(ctx->reset);
-+	msleep(10);
-+
-+	aspeed_scu_pcie_write(ctx, conf);
-+	msleep(10);
-+
-+	reset_control_deassert(ctx->reset);
-+	msleep(10);
-+
-+	aspeed_xdma_init_eng(ctx);
-+
-+	mutex_unlock(&ctx->start_lock);
-+
-+	return 0;
-+}
-+
-+static ssize_t aspeed_xdma_use_bmc(struct device *dev,
-+				   struct device_attribute *attr,
-+				   const char *buf, size_t count)
-+{
-+	int rc;
-+	struct aspeed_xdma *ctx = dev_get_drvdata(dev);
-+
-+	rc = aspeed_xdma_change_pcie_conf(ctx, aspeed_xdma_bmc_pcie_conf);
-+	return rc ?: count;
-+}
-+static DEVICE_ATTR(use_bmc, 0200, NULL, aspeed_xdma_use_bmc);
-+
-+static ssize_t aspeed_xdma_use_vga(struct device *dev,
-+				   struct device_attribute *attr,
-+				   const char *buf, size_t count)
-+{
-+	int rc;
-+	struct aspeed_xdma *ctx = dev_get_drvdata(dev);
-+
-+	rc = aspeed_xdma_change_pcie_conf(ctx, aspeed_xdma_vga_pcie_conf);
-+	return rc ?: count;
-+}
-+static DEVICE_ATTR(use_vga, 0200, NULL, aspeed_xdma_use_vga);
-+
- static int aspeed_xdma_probe(struct platform_device *pdev)
- {
- 	int irq;
-@@ -745,6 +803,9 @@ static int aspeed_xdma_probe(struct platform_device *pdev)
- 		return rc;
- 	}
- 
-+	device_create_file(dev, &dev_attr_use_bmc);
-+	device_create_file(dev, &dev_attr_use_vga);
-+
- 	return 0;
- }
- 
-@@ -752,6 +813,9 @@ static int aspeed_xdma_remove(struct platform_device *pdev)
- {
- 	struct aspeed_xdma *ctx = platform_get_drvdata(pdev);
- 
-+	device_remove_file(ctx->dev, &dev_attr_use_vga);
-+	device_remove_file(ctx->dev, &dev_attr_use_bmc);
-+
- 	misc_deregister(&ctx->misc);
- 
- 	aspeed_xdma_free_vga_blks(ctx);
--- 
-1.8.3.1
+s/downstram/downstream
 
+
+> +       cooling-maps {
+> +               /* After 1st level throttle the GPU down to as low as 400=
+ MHz */
+> +               gpu_warmish_limit_gpu {
+> +                       trip =3D <&gpu_alert_warmish>;
+> +                       cooling-device =3D <&gpu THERMAL_NO_LIMIT 1>;
+
+As per my comment in patch #1, you are probably ending up throttling
+to 500 MHz, not 400 MHz.  Below will all have similar problems unless
+we actually delete the 500 MHz operating point.
+
+
+> +               };
+> +
+> +               /*
+> +                * Slightly after we throttle the GPU, we'll also make su=
+re that
+> +                * the CPU can't go faster than 1.4 GHz.  Note that we wo=
+n't
+> +                * throttle the CPU lower than 1.4 GHz due to GPU heat--w=
+e'll
+> +                * let the CPU do the rest itself.
+> +                */
+> +               gpu_warm_limit_cpu {
+> +                       trip =3D <&gpu_alert_warm>;
+> +                       cooling-device =3D <&cpu0 4 4>;
+
+Shouldn't you list cpu1, cpu2, and cpu3 too?  That'd match what
+upstream did elsewhere in this file?
