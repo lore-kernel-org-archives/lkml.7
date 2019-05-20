@@ -2,85 +2,120 @@ Return-Path: <SRS0=lq4r=TU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DATE_IN_FUTURE_06_12,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3AF0C04AAC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 21:38:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0ACE3C04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 21:39:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7EC622171F
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 21:38:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DC8C62173E
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 21:39:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726792AbfETViB (ORCPT
+        id S1726794AbfETVjO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 17:38:01 -0400
-Received: from mga17.intel.com ([192.55.52.151]:54415 "EHLO mga17.intel.com"
+        Mon, 20 May 2019 17:39:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48436 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726584AbfETViB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 17:38:01 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 May 2019 14:38:00 -0700
-X-ExtLoop1: 1
-Received: from wvoon-ilbpg2.png.intel.com ([10.88.227.88])
-  by orsmga001.jf.intel.com with ESMTP; 20 May 2019 14:37:58 -0700
-From:   Weifeng Voon <weifeng.voon@intel.com>
-To:     "David S. Miller" <davem@davemloft.net>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Jose Abreu <joabreu@synopsys.com>,
-        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Ong Boon Leong <boon.leong.ong@intel.com>,
-        Weifeng Voon <weifeng.voon@intel.com>
-Subject: [PATCH net] net: stmmac: dma channel control register need to be init first
-Date:   Tue, 21 May 2019 13:38:38 +0800
-Message-Id: <1558417118-28985-1-git-send-email-weifeng.voon@intel.com>
-X-Mailer: git-send-email 1.9.1
+        id S1725763AbfETVjN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 17:39:13 -0400
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0548D2171F;
+        Mon, 20 May 2019 21:39:11 +0000 (UTC)
+Date:   Mon, 20 May 2019 17:39:10 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Josh Poimboeuf <jpoimboe@redhat.com>
+Cc:     Johannes Erdfelt <johannes@erdfelt.com>,
+        Joe Lawrence <joe.lawrence@redhat.com>,
+        Jessica Yu <jeyu@kernel.org>, Jiri Kosina <jikos@kernel.org>,
+        Miroslav Benes <mbenes@suse.cz>,
+        Ingo Molnar <mingo@redhat.com>, live-patching@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: Oops caused by race between livepatch and ftrace
+Message-ID: <20190520173910.6da9ddaf@gandalf.local.home>
+In-Reply-To: <20190520211931.vokbqxkx5kb6k2bz@treble>
+References: <20190520194915.GB1646@sventech.com>
+        <90f78070-95ec-ce49-1641-19d061abecf4@redhat.com>
+        <20190520210905.GC1646@sventech.com>
+        <20190520211931.vokbqxkx5kb6k2bz@treble>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-stmmac_init_chan() needs to be called before stmmac_init_rx_chan() and
-stmmac_init_tx_chan(). This is because if PBLx8 is to be used,
-"DMA_CH(#i)_Control.PBLx8" needs to be set before programming
-"DMA_CH(#i)_TX_Control.TxPBL" and "DMA_CH(#i)_RX_Control.RxPBL".
+On Mon, 20 May 2019 16:19:31 -0500
+Josh Poimboeuf <jpoimboe@redhat.com> wrote:
 
-Fixes: 47f2a9ce527a ("net: stmmac: dma channel init prepared for multiple queues")
-Reviewed-by: Zhang, Baoli <baoli.zhang@intel.com>
-Signed-off-by: Ong Boon Leong <boon.leong.ong@intel.com>
-Signed-off-by: Weifeng Voon <weifeng.voon@intel.com>
+> diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
+> index a12aff849c04..8259d4ba8b00 100644
+> --- a/kernel/trace/ftrace.c
+> +++ b/kernel/trace/ftrace.c
+> @@ -34,6 +34,7 @@
+>  #include <linux/hash.h>
+>  #include <linux/rcupdate.h>
+>  #include <linux/kprobes.h>
+> +#include <linux/memory.h>
+>  
+>  #include <trace/events/sched.h>
+>  
+> @@ -2610,10 +2611,12 @@ static void ftrace_run_update_code(int command)
+>  {
+>  	int ret;
+>  
+> +	mutex_lock(&text_mutex);
+> +
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-index 5678b869cbff..2a1052704885 100644
---- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-@@ -2208,6 +2208,10 @@ static int stmmac_init_dma_engine(struct stmmac_priv *priv)
- 	if (priv->plat->axi)
- 		stmmac_axi(priv, priv->ioaddr, priv->plat->axi);
- 
-+	/* DMA CSR Channel configuration */
-+	for (chan = 0; chan < dma_csr_ch; chan++)
-+		stmmac_init_chan(priv, priv->ioaddr, priv->plat->dma_cfg, chan);
-+
- 	/* DMA RX Channel Configuration */
- 	for (chan = 0; chan < rx_channels_count; chan++) {
- 		rx_q = &priv->rx_queue[chan];
-@@ -2233,10 +2237,6 @@ static int stmmac_init_dma_engine(struct stmmac_priv *priv)
- 				       tx_q->tx_tail_addr, chan);
- 	}
- 
--	/* DMA CSR Channel configuration */
--	for (chan = 0; chan < dma_csr_ch; chan++)
--		stmmac_init_chan(priv, priv->ioaddr, priv->plat->dma_cfg, chan);
--
- 	return ret;
- }
- 
--- 
-1.9.1
+Hmm, this may blow up with lockdep, as I believe we already have a
+locking dependency of:
+
+ text_mutex -> ftrace_lock
+
+And this will reverses it. (kprobes appears to take the locks in this
+order).
+
+Perhaps have live kernel patching grab ftrace_lock?
+
+-- Steve
+
+
+>  	ret = ftrace_arch_code_modify_prepare();
+>  	FTRACE_WARN_ON(ret);
+>  	if (ret)
+> -		return;
+> +		goto out_unlock;
+>  
+>  	/*
+>  	 * By default we use stop_machine() to modify the code.
+> @@ -2625,6 +2628,9 @@ static void ftrace_run_update_code(int command)
+>  
+>  	ret = ftrace_arch_code_modify_post_process();
+>  	FTRACE_WARN_ON(ret);
+> +
+> +out_unlock:
+> +	mutex_unlock(&text_mutex);
+>  }
+>  
+>  static void ftrace_run_modify_code(struct ftrace_ops *ops, int command,
+> @@ -5776,6 +5782,7 @@ void ftrace_module_enable(struct module *mod)
+>  	struct ftrace_page *pg;
+>  
+>  	mutex_lock(&ftrace_lock);
+> +	mutex_lock(&text_mutex);
+>  
+>  	if (ftrace_disabled)
+>  		goto out_unlock;
+> @@ -5837,6 +5844,7 @@ void ftrace_module_enable(struct module *mod)
+>  		ftrace_arch_code_modify_post_process();
+>  
+>   out_unlock:
+> +	mutex_unlock(&text_mutex);
+>  	mutex_unlock(&ftrace_lock);
+>  
+>  	process_cached_mods(mod->name);
 
