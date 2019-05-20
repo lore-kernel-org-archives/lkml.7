@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69E1BC04AAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:42:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE93DC04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:42:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3EFC9216FD
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:42:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8DAF520645
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:42:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558356145;
-	bh=pG9QVVwTCrWu1/a+2JBTJJv+pI6hR25fD62xnOp5PG4=;
+	s=default; t=1558356152;
+	bh=W0oY8n1wZzk02zCfdndXOv6JwnP2410FS28E60iwQiE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zKlNfj5svSg2LfcKXTOAoW+jOQsg4pdwIaA7f+gGg3LAmzSsj8cqQI6jYK8PsP7P4
-	 Rw7YPClcuUVNFEx5NwecpFbTVGgrfOLsT+y0LMO53n7/OrNTO60aAPzqcN7SgYzXXW
-	 I9lsVr884i5YkKQVxg03UYQq63a1l5me9dE7Kels=
+	b=Y6IbydSirOrMOUnnsgMf32pMXWtvcyHOhA0+5xU7N8k/zJFDfQiiou1/cQayiNuh1
+	 k92/jhti/Qnd92zEXDVB7RHxIsYj05l3CGip9ifzIUwyLE6bywbShOufc1Z9DYu70w
+	 XeDSWuURdMUL1Rx0ojZ1FKnVq0KkUpYrUyeG44sM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390062AbfETMaS (ORCPT
+        id S2390747AbfETMmb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 08:30:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46528 "EHLO mail.kernel.org"
+        Mon, 20 May 2019 08:42:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46440 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388778AbfETMaQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 08:30:16 -0400
+        id S2390041AbfETMaK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 08:30:10 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0AAF820645;
-        Mon, 20 May 2019 12:30:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9E4A821479;
+        Mon, 20 May 2019 12:30:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558355415;
-        bh=pG9QVVwTCrWu1/a+2JBTJJv+pI6hR25fD62xnOp5PG4=;
+        s=default; t=1558355410;
+        bh=W0oY8n1wZzk02zCfdndXOv6JwnP2410FS28E60iwQiE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Avr4QiQfhBJ5wXSL0HU+w3a9xC1PHVecSi1RmNmjOxefG+FXXyG1SLGRWN+2BC/9K
-         KRK8q/TwR2qUzeu8pe3Q61TQd2ir5qIQNceGzBCIcrt+jEps64HjX7Fxty/ZaaOAu/
-         MsmLhiSwwkfOHKQsdOEoCF2yzTCtnMfiVygs9WYc=
+        b=kIbrwc4aNosJEDhQUwF9C6ECglQ0YrqTr2WWK4shOxODHSUUnlOqPYoTEv88v2Twv
+         QL7CtaVmvNQmOcyen/+3+HaGhAgaLyR1xIIFOpDKzFcKpPjO9J4aeiRaJDtKufOh29
+         1aCc2BgVKzNts6Vi19/v9xLBB5L9gYiqAFsOI/LM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Subject: [PATCH 5.0 111/123] KVM: x86: Skip EFER vs. guest CPUID checks for host-initiated writes
-Date:   Mon, 20 May 2019 14:14:51 +0200
-Message-Id: <20190520115252.485546577@linuxfoundation.org>
+        stable@vger.kernel.org, Will Deacon <will.deacon@arm.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Jean-Philippe Brucker <jean-philippe.brucker@arm.com>,
+        Alexei Starovoitov <ast@kernel.org>
+Subject: [PATCH 5.0 057/123] bpf, arm64: remove prefetch insn in xadd mapping
+Date:   Mon, 20 May 2019 14:13:57 +0200
+Message-Id: <20190520115248.555156585@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190520115245.439864225@linuxfoundation.org>
 References: <20190520115245.439864225@linuxfoundation.org>
@@ -60,99 +61,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sean Christopherson <sean.j.christopherson@intel.com>
+From: Daniel Borkmann <daniel@iogearbox.net>
 
-commit 11988499e62b310f3bf6f6d0a807a06d3f9ccc96 upstream.
+commit 8968c67a82ab7501bc3b9439c3624a49b42fe54c upstream.
 
-KVM allows userspace to violate consistency checks related to the
-guest's CPUID model to some degree.  Generally speaking, userspace has
-carte blanche when it comes to guest state so long as jamming invalid
-state won't negatively affect the host.
+Prefetch-with-intent-to-write is currently part of the XADD mapping in
+the AArch64 JIT and follows the kernel's implementation of atomic_add.
+This may interfere with other threads executing the LDXR/STXR loop,
+leading to potential starvation and fairness issues. Drop the optional
+prefetch instruction.
 
-Currently this is seems to be a non-issue as most of the interesting
-EFER checks are missing, e.g. NX and LME, but those will be added
-shortly.  Proactively exempt userspace from the CPUID checks so as not
-to break userspace.
-
-Note, the efer_reserved_bits check still applies to userspace writes as
-that mask reflects the host's capabilities, e.g. KVM shouldn't allow a
-guest to run with NX=1 if it has been disabled in the host.
-
-Fixes: d80174745ba39 ("KVM: SVM: Only allow setting of EFER_SVME when CPUID SVM is set")
-Cc: stable@vger.kernel.org
-Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+Fixes: 85f68fe89832 ("bpf, arm64: implement jiting of BPF_XADD")
+Reported-by: Will Deacon <will.deacon@arm.com>
+Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
+Acked-by: Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
+Acked-by: Will Deacon <will.deacon@arm.com>
+Signed-off-by: Alexei Starovoitov <ast@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/kvm/x86.c |   37 ++++++++++++++++++++++++-------------
- 1 file changed, 24 insertions(+), 13 deletions(-)
+ arch/arm64/net/bpf_jit.h      |    6 ------
+ arch/arm64/net/bpf_jit_comp.c |    1 -
+ 2 files changed, 7 deletions(-)
 
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -1262,31 +1262,42 @@ static int do_get_msr_feature(struct kvm
- 	return 0;
- }
+--- a/arch/arm64/net/bpf_jit.h
++++ b/arch/arm64/net/bpf_jit.h
+@@ -100,12 +100,6 @@
+ #define A64_STXR(sf, Rt, Rn, Rs) \
+ 	A64_LSX(sf, Rt, Rn, Rs, STORE_EX)
  
--bool kvm_valid_efer(struct kvm_vcpu *vcpu, u64 efer)
-+static bool __kvm_valid_efer(struct kvm_vcpu *vcpu, u64 efer)
- {
--	if (efer & efer_reserved_bits)
--		return false;
+-/* Prefetch */
+-#define A64_PRFM(Rn, type, target, policy) \
+-	aarch64_insn_gen_prefetch(Rn, AARCH64_INSN_PRFM_TYPE_##type, \
+-				  AARCH64_INSN_PRFM_TARGET_##target, \
+-				  AARCH64_INSN_PRFM_POLICY_##policy)
 -
- 	if (efer & EFER_FFXSR && !guest_cpuid_has(vcpu, X86_FEATURE_FXSR_OPT))
--			return false;
-+		return false;
- 
- 	if (efer & EFER_SVME && !guest_cpuid_has(vcpu, X86_FEATURE_SVM))
--			return false;
-+		return false;
- 
- 	return true;
-+
-+}
-+bool kvm_valid_efer(struct kvm_vcpu *vcpu, u64 efer)
-+{
-+	if (efer & efer_reserved_bits)
-+		return false;
-+
-+	return __kvm_valid_efer(vcpu, efer);
- }
- EXPORT_SYMBOL_GPL(kvm_valid_efer);
- 
--static int set_efer(struct kvm_vcpu *vcpu, u64 efer)
-+static int set_efer(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
- {
- 	u64 old_efer = vcpu->arch.efer;
-+	u64 efer = msr_info->data;
- 
--	if (!kvm_valid_efer(vcpu, efer))
--		return 1;
-+	if (efer & efer_reserved_bits)
-+		return false;
- 
--	if (is_paging(vcpu)
--	    && (vcpu->arch.efer & EFER_LME) != (efer & EFER_LME))
--		return 1;
-+	if (!msr_info->host_initiated) {
-+		if (!__kvm_valid_efer(vcpu, efer))
-+			return 1;
-+
-+		if (is_paging(vcpu) &&
-+		    (vcpu->arch.efer & EFER_LME) != (efer & EFER_LME))
-+			return 1;
-+	}
- 
- 	efer &= ~EFER_LMA;
- 	efer |= vcpu->arch.efer & EFER_LMA;
-@@ -2456,7 +2467,7 @@ int kvm_set_msr_common(struct kvm_vcpu *
- 		vcpu->arch.arch_capabilities = data;
- 		break;
- 	case MSR_EFER:
--		return set_efer(vcpu, data);
-+		return set_efer(vcpu, msr_info);
- 	case MSR_K7_HWCR:
- 		data &= ~(u64)0x40;	/* ignore flush filter disable */
- 		data &= ~(u64)0x100;	/* ignore ignne emulation enable */
+ /* Add/subtract (immediate) */
+ #define A64_ADDSUB_IMM(sf, Rd, Rn, imm12, type) \
+ 	aarch64_insn_gen_add_sub_imm(Rd, Rn, imm12, \
+--- a/arch/arm64/net/bpf_jit_comp.c
++++ b/arch/arm64/net/bpf_jit_comp.c
+@@ -739,7 +739,6 @@ emit_cond_jmp:
+ 	case BPF_STX | BPF_XADD | BPF_DW:
+ 		emit_a64_mov_i(1, tmp, off, ctx);
+ 		emit(A64_ADD(1, tmp, tmp, dst), ctx);
+-		emit(A64_PRFM(tmp, PST, L1, STRM), ctx);
+ 		emit(A64_LDXR(isdw, tmp2, tmp), ctx);
+ 		emit(A64_ADD(isdw, tmp2, tmp2, src), ctx);
+ 		emit(A64_STXR(isdw, tmp2, tmp, tmp3), ctx);
 
 
