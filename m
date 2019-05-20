@@ -2,128 +2,243 @@ Return-Path: <SRS0=lq4r=TU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A5F2C04AAC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 11:30:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 820ACC04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 11:30:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 08AF720644
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 11:30:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E94420644
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 11:30:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JFaGZzNi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732847AbfETLai (ORCPT
+        id S1732862AbfETLao (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 07:30:38 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:44414 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731193AbfETLah (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 07:30:37 -0400
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 3B7B8368B1;
-        Mon, 20 May 2019 11:30:37 +0000 (UTC)
-Received: from thuth.remote.csb (ovpn-117-9.ams2.redhat.com [10.36.117.9])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 058B95C553;
-        Mon, 20 May 2019 11:30:31 +0000 (UTC)
-Subject: Re: [RFC PATCH 0/4] KVM selftests for s390x
-To:     Paolo Bonzini <pbonzini@redhat.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Janosch Frank <frankja@linux.ibm.com>, kvm@vger.kernel.org,
-        Andrew Jones <drjones@redhat.com>
-Cc:     =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Shuah Khan <shuah@kernel.org>,
-        David Hildenbrand <david@redhat.com>,
-        Cornelia Huck <cohuck@redhat.com>,
-        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        linux-s390@vger.kernel.org
-References: <20190516111253.4494-1-thuth@redhat.com>
- <b412e591-3983-ebef-510b-43f9b7be4147@redhat.com>
-From:   Thomas Huth <thuth@redhat.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=thuth@redhat.com; keydata=
- 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
-Organization: Red Hat
-Message-ID: <9423ba89-b10e-5e6e-3cc8-8088f3088233@redhat.com>
-Date:   Mon, 20 May 2019 13:30:31 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Mon, 20 May 2019 07:30:44 -0400
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:41222 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732850AbfETLam (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 07:30:42 -0400
+Received: by mail-oi1-f194.google.com with SMTP id y10so9674480oia.8;
+        Mon, 20 May 2019 04:30:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=nyKZfAuaROY2BjFNib6WMeJ7XG4lSb4BAQnu9LjW4yQ=;
+        b=JFaGZzNiBg1xlxHlRz6WI7/41fnkwKy6Cd5nvHzSSi8pSDhT2V7TYwPRt4qou/23tB
+         ZS1byABLyJ2BkGDZ/1FCYzEHCIL+CV80MqN9gEGFPl5PKPI4kgJh4kVYuteGz74evnvD
+         S6Rs6CDMFSB1EtBq1U6mewSejwQhsiD0/XPcwmGDJHRPU0vFjHJo07VR0d8zuUgdhhDv
+         s16Z9keGM1fm8BZTq2M6FtdIgzzFbcu6gOa/B759dhzJPl2ipgAAXIo58iYQycT9s3hS
+         dTPwImjjCCTyo/vgf+c1yJvILO7gaDFt9ABAPzFj+UyOjw+yNzU8/XrDsi9PG0FaxAJF
+         4G6A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=nyKZfAuaROY2BjFNib6WMeJ7XG4lSb4BAQnu9LjW4yQ=;
+        b=lig8YaYpBByhCR21T0kGmZB797Cz/78S/EFXk/M+je63Ks78vFPMCqEG11GbaKOrOx
+         bceFQVVFYwDrQlAue8A5np2+m9h7M5ftt0FRZIUih1dQF9rQXoK50chknAMI3hQP1BIE
+         sZGtDFdDUlUQdu84OBf8oqTaYAateP8WLsHCIO4ut1llwQh5Sb6Br3i5r60KdwaObOh7
+         bBJBbyY9mj3fDzsCgLX+D7cQbtFUNN1SBCirZ2JoVwEIcSVz4c+k6yAPBieQSq9z7bpQ
+         GrOHGEU8Fwzo2alTzHcRJNzyasZSG6yaqLczxj1ns7F5c6NpiNUq8EL/NQ17q3tpCZQm
+         cNDQ==
+X-Gm-Message-State: APjAAAXDLeaxmKzkG272rfU6cLHtU59TWQrGUQlEl55i5+w9JeXQd9dY
+        nszmisza+IDO46028r8GIatzHAT57GOAtIVzEt4=
+X-Google-Smtp-Source: APXvYqy+hBIDWN7ld5J5EKHCPKrNI1j9comLjyZhCaZbYTVL4OGVddZSvMuPc1sNUxi24GFPtT/cwcMQhqJLamDnLdk=
+X-Received: by 2002:aca:6208:: with SMTP id w8mr22583932oib.128.1558351841160;
+ Mon, 20 May 2019 04:30:41 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <b412e591-3983-ebef-510b-43f9b7be4147@redhat.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.30]); Mon, 20 May 2019 11:30:37 +0000 (UTC)
+References: <20190518224036.29596-1-joao.marques.oliveira@usp.br> <20190519122944.3326e803@archlinux>
+In-Reply-To: <20190519122944.3326e803@archlinux>
+From:   Alexandru Ardelean <ardeleanalex@gmail.com>
+Date:   Mon, 20 May 2019 14:30:29 +0300
+Message-ID: <CA+U=DsrqzW6c1dR68PztzrQ9S7mYD0tZ50GdEdboN0pocVw5SQ@mail.gmail.com>
+Subject: Re: [PATCH] dt-bindings: iio: ad7949: switch binding to yaml
+To:     Jonathan Cameron <jic23@kernel.org>
+Cc:     =?UTF-8?Q?Jo=C3=A3o_Victor_Marques_de_Oliveira?= 
+        <joao.marques.oliveira@usp.br>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Michael Hennerich <Michael.Hennerich@analog.com>,
+        Stefan Popa <stefan.popa@analog.com>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        linux-iio@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        kernel-usp@googlegroups.com,
+        "Thiago L . A . Miller" <tmiller@mochsl.org.br>,
+        "Osvaldo M . Yasuda" <omyasuda@yahoo.com.br>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 20/05/2019 13.20, Paolo Bonzini wrote:
-> On 16/05/19 13:12, Thomas Huth wrote:
->> This patch series enables the KVM selftests for s390x. As a first
->> test, the sync_regs from x86 has been adapted to s390x.
->>
->> Please note that the ucall() interface is not used yet - since
->> s390x neither has PIO nor MMIO, this needs some more work first
->> before it becomes usable (we likely should use a DIAG hypercall
->> here, which is what the sync_reg test is currently using, too...).
-> 
-> No objections at all, though it would be like to have ucall plumbed in
-> from the beginning.
+On Sun, May 19, 2019 at 8:29 PM Jonathan Cameron <jic23@kernel.org> wrote:
+>
+> On Sat, 18 May 2019 19:40:36 -0300
+> Jo=C3=A3o Victor Marques de Oliveira         <joao.marques.oliveira@usp.b=
+r> wrote:
+>
+> > Changes switches from old text bindings, to YAML bindings, and also
+> > include adi,reference-select property to specify the source for the
+> > reference voltage signal.
+> >
+> > Signed-off-by: Jo=C3=A3o Victor Marques de Oliveira <joao.marques.olive=
+ira@usp.br>
+> > Signed-off-by: Thiago L. A. Miller <tmiller@mochsl.org.br>
+> > Co-developed-by: Thiago L. A. Miller <tmiller@mochsl.org.br>
+> > Signed-off-by: Osvaldo M. Yasuda <omyasuda@yahoo.com.br>
+> > Co-developed-by: Osvaldo M. Yasuda <omyasuda@yahoo.com.br>
+> > ---
+> > We're adding Charles-Antoine Couret as main dt maintainer since we have
+> > just switched documentation to yaml format.
+>
+> Hmm. I'm not sure it makes sense to list you all as maintainers
+> of this rather simple binding.
+>
+> We also just went through some changes on the reference handling so
+> I think you are based on stale information here.
+>
+> Thanks,
+>
+> Jonathan
+>
+> >
+> >  .../devicetree/bindings/iio/adc/ad7949.txt    | 16 -----
+> >  .../devicetree/bindings/iio/adc/ad7949.yaml   | 71 +++++++++++++++++++
+> >  2 files changed, 71 insertions(+), 16 deletions(-)
+> >  delete mode 100644 Documentation/devicetree/bindings/iio/adc/ad7949.tx=
+t
+> >  create mode 100644 Documentation/devicetree/bindings/iio/adc/ad7949.ya=
+ml
 
-I'm still looking at the ucall interface ... what I don't quite get yet
-is the question why the ucall_type there is selectable during runtime?
+Maybe also update the MAINTAINERS file with this.
 
-Are there plans to have test that could either use UCALL_PIO or
-UCALL_MMIO? If not, what about moving ucall_init() and ucall() to
-architecture specific code in tools/testing/selftests/kvm/lib/aarch64/
-and tools/testing/selftests/kvm/lib/x86_64 instead, and to remove the
-ucall_type stuff again (so that x86 is hard-wired to PIO and aarch64
-is hard-wired to MMIO)? ... then I could add a DIAG-based ucall
-on s390x more easily, I think.
+> >
+> > diff --git a/Documentation/devicetree/bindings/iio/adc/ad7949.txt b/Doc=
+umentation/devicetree/bindings/iio/adc/ad7949.txt
+> > deleted file mode 100644
+> > index c7f5057356b1..000000000000
+> > --- a/Documentation/devicetree/bindings/iio/adc/ad7949.txt
+> > +++ /dev/null
+> > @@ -1,16 +0,0 @@
+> > -* Analog Devices AD7949/AD7682/AD7689
+> > -
+> > -Required properties:
+> > - - compatible: Should be one of
+> > -     * "adi,ad7949"
+> > -     * "adi,ad7682"
+> > -     * "adi,ad7689"
+> > - - reg: spi chip select number for the device
+> > - - vref-supply: The regulator supply for ADC reference voltage
+> > -
+> > -Example:
+> > -adc@0 {
+> > -     compatible =3D "adi,ad7949";
+> > -     reg =3D <0>;
+> > -     vref-supply =3D <&vdd_supply>;
+> > -};
+> > diff --git a/Documentation/devicetree/bindings/iio/adc/ad7949.yaml b/Do=
+cumentation/devicetree/bindings/iio/adc/ad7949.yaml
+> > new file mode 100644
+> > index 000000000000..111c9e26f8e7
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/iio/adc/ad7949.yaml
+> > @@ -0,0 +1,71 @@
+> > +# SPDX-License-Identifier: GPL-2.0
+> > +%YAML 1.2
+> > +---
+> > +$id: http://devicetree.org/schemas/iio/adc/ad7949.yaml#
+> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > +
+> > +
 
- Thomas
+nitpick: extra line
 
+> > +title: Analog Devices AD7949/AD7682/AD7689
+> > +
+> > +maintainers:
+> > +  - Charles-Antoine Couret <charles-antoine.couret@essensium.com>
+> > +  - Jo=C3=A3o Victor Marques de Oliveira <joao.marques.oliveira@usp.br=
+>
+> > +  - Thiago L. A. Miller <tmiller@mochsl.org.br>
+> > +  - Osvaldo M. Yasuda <omyasuda@yahoo.com.br>
+> > +
+> > +properties:
+> > +  compatible:
+> > +    enum:
+> > +      - adi,ad7949
+> > +      - adi,ad7682
+> > +      - adi,ad7689
+> > +
+> > +  reg:
+> > +    description:
+> > +      spi chip select number for the device
+
+this doesn't need a description
+it's a standard property
+
+> > +    maxItems: 1
+> > +
+> > +  vref-supply:
+> > +    description:
+> > +      The regulator supply for ADC reference voltage
+> > +    maxItems: 1
+> > +
+> > +  adi,reference-select:
+> > +    enum: [0, 1, 2, 3, 6, 7]
+> > +    description:
+> > +        Select the reference voltage source to use when converting the=
+ input voltages.
+> > +            0 - Internal 2.5V reference; temperature sensor enabled
+> > +            1 - Internal 4.096V reference; temperature sensor enabled
+> > +            2 - External reference, temperature sensor enabled, no buf=
+fer
+> > +            3 - External reference, temperature sensor enabled, buffer=
+ enabled
+> > +            6 - External reference, temperature sensor disabled, no bu=
+ffer
+> > +            7 - External reference, temperature sensor disabled, buffe=
+r enabled
+> This is changing...
+>
+> > +    maxItems: 1
+> > +
+> > +required:
+> > +  - compatible
+> > +  - reg
+> > +  - vref-supply
+> > +
+> > +examples:
+> > +  - |
+> > +    spi0 {
+> > +        #address-cells =3D <0x1>;
+> > +        #size-cells =3D <0x0>;
+> > +        adc@0 {
+> > +            compatible =3D "adi,ad7949";
+> > +            reg =3D <0>;
+> > +            adi,reference-select =3D <0>;
+> > +            vref-supply =3D <&vdd_supply>;
+> > +        };
+> > +    };
+
+One example is enough in this case.
+They don't differ much.
+
+> > +  - |
+> > +    spi0 {
+> > +        #address-cells =3D <0x1>;
+> > +        #size-cells =3D <0x0>;
+> > +        adc@0 {
+> > +            compatible =3D "adi,ad7949";
+> > +            reg =3D <0>;
+> > +            adi,reference-select =3D <0>;
+> > +        };
+> > +    };
+>
