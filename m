@@ -2,167 +2,135 @@ Return-Path: <SRS0=lq4r=TU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0103C072A4
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 09:28:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23FECC04AAF
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 09:28:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 96ACD20675
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 09:28:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558344485;
-	bh=EKfPNsMFWQzoi30nh+a2rg7J8OUMcq40Yfw5vVIDYIE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=O7i0JR/gaMSfgSGLkUfkdPXw59gzPzA1AhO0DOPpiTkw5diF2csLyqO5BwcXWZIgm
-	 sYmgWbAQ5y9tSZhsdadoaQWaa4qROZlOnUF+Vsb4wn+u5rHALWa8YPK50YxEnFVhws
-	 IowihsX1K1ae6QaRE5GguEIm756MBzAdB8y24a8M=
+	by mail.kernel.org (Postfix) with ESMTP id F272120675
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 09:28:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732133AbfETJ2F (ORCPT
+        id S1732135AbfETJ2j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 05:28:05 -0400
-Received: from mx2.suse.de ([195.135.220.15]:40018 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1731436AbfETJ2E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 05:28:04 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id AAA62ABD7;
-        Mon, 20 May 2019 09:28:02 +0000 (UTC)
-Date:   Mon, 20 May 2019 11:28:01 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Minchan Kim <minchan@kernel.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-mm <linux-mm@kvack.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Tim Murray <timmurray@google.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Suren Baghdasaryan <surenb@google.com>,
-        Daniel Colascione <dancol@google.com>,
-        Shakeel Butt <shakeelb@google.com>,
-        Sonny Rao <sonnyrao@google.com>,
-        Brian Geffon <bgeffon@google.com>, linux-api@vger.kernel.org
-Subject: Re: [RFC 7/7] mm: madvise support MADV_ANONYMOUS_FILTER and
- MADV_FILE_FILTER
-Message-ID: <20190520092801.GA6836@dhcp22.suse.cz>
-References: <20190520035254.57579-1-minchan@kernel.org>
- <20190520035254.57579-8-minchan@kernel.org>
+        Mon, 20 May 2019 05:28:39 -0400
+Received: from mail-qk1-f195.google.com ([209.85.222.195]:39751 "EHLO
+        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731432AbfETJ2j (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 05:28:39 -0400
+Received: by mail-qk1-f195.google.com with SMTP id z128so8373128qkb.6;
+        Mon, 20 May 2019 02:28:38 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=W+kdZnR5O8JiU3Pf1A/YdEoIBjaqE0FCtwtKzSb3tcg=;
+        b=XOUaZ6tKPHB5e8NU0aRlRK0a8cEAN1B/O8hz2itl1/h6Qj/HI5irTsmM+Xagm4eTpw
+         xWGwSb6YHehFFrP/lQLRsZWS5jC27HuEwoig8STsYiRjamO/fvhSpGaOaDQ7LhjQmmn3
+         eIJCkEnOJAS8JGgz1HSUOidEuV2gmSFnRLIMaICbNtBdqlbM8BR+M4O39ysmJS6691Tp
+         hGOu85Amk5zDeUr+Vfw5jrM5zNNWF7PBMU7T7hcqmww0xL/e+ZZji5G2cAajfToB9LIR
+         asx9wRX90vac0nuSXsv7QLpGoPaXxIB6X8pvyLP86q0ZUweq1sm2t3EsklM2u4rtugSu
+         HJrQ==
+X-Gm-Message-State: APjAAAU683S2RMlcAEUBzfYJaoncp98mbC0OLjJPI3r3z0QjFppxM5BX
+        hhVy99EqKJK5GqDC19aj3ZU3csTiloOoTqHbjKM=
+X-Google-Smtp-Source: APXvYqzng8ZEkla+MZbzTUYbwhgNGW+KYBn7MR1JRscH3T5Z56wO65FYLg4J4qPz+H5lfMoc/JUf9DqLsjfY2F/VnDs=
+X-Received: by 2002:a37:a8ce:: with SMTP id r197mr28099585qke.269.1558344518379;
+ Mon, 20 May 2019 02:28:38 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190520035254.57579-8-minchan@kernel.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20190520025437.13825-1-yamada.masahiro@socionext.com>
+In-Reply-To: <20190520025437.13825-1-yamada.masahiro@socionext.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Mon, 20 May 2019 11:28:20 +0200
+Message-ID: <CAK8P3a2nth2sNPT46_e8G=s=D-J8LtsrA4kO2esu804_pWVs-Q@mail.gmail.com>
+Subject: Re: [PATCH] kbuild: do not check name uniqueness of builtin modules
+To:     Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Jessica Yu <jeyu@kernel.org>,
+        Lucas De Marchi <lucas.de.marchi@gmail.com>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Michael Schmitz <schmitzmic@gmail.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Rusty Russell <rusty@rustcorp.com.au>,
+        Kees Cook <keescook@chromium.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Lucas De Marchi <lucas.demarchi@intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[cc linux-api]
+On Mon, May 20, 2019 at 4:57 AM Masahiro Yamada
+<yamada.masahiro@socionext.com> wrote:
+>
+> I just thought it was a good idea to scan builtin.modules in the name
+> uniqueness checking, but Stephen reported a false positive.
+>
+> ppc64_defconfig produces:
+>
+>   warning: same basename if the following are built as modules:
+>     arch/powerpc/platforms/powermac/nvram.ko
+>     drivers/char/nvram.ko
+>
+> ..., which is a false positive because the former is never built as
+> a module as you see in arch/powerpc/platforms/powermac/Makefile:
+>
+>   # CONFIG_NVRAM is an arch. independent tristate symbol, for pmac32 we really
+>   # need this to be a bool.  Cheat here and pretend CONFIG_NVRAM=m is really
+>   # CONFIG_NVRAM=y
+>   obj-$(CONFIG_NVRAM:m=y)         += nvram.o
+>
+> Since we cannot predict how tricky Makefiles are written in wild,
+> builtin.modules may potentially contain false positives. I do not
+> think it is a big deal as far as kmod is concerned, but false positive
+> warnings in the kernel build makes people upset. It is better to not
+> do it.
+>
+> Even without checking builtin.modules, we have enough (and more solid)
+> test coverage with allmodconfig.
+>
+> While I touched this part, I replaced the sed code with neater one
+> provided by Stephen.
+>
+> Link: https://lkml.org/lkml/2019/5/19/120
+> Link: https://lkml.org/lkml/2019/5/19/123
+> Fixes: 3a48a91901c5 ("kbuild: check uniqueness of module names")
+> Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
+> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
 
-On Mon 20-05-19 12:52:54, Minchan Kim wrote:
-> System could have much faster swap device like zRAM. In that case, swapping
-> is extremely cheaper than file-IO on the low-end storage.
-> In this configuration, userspace could handle different strategy for each
-> kinds of vma. IOW, they want to reclaim anonymous pages by MADV_COLD
-> while it keeps file-backed pages in inactive LRU by MADV_COOL because
-> file IO is more expensive in this case so want to keep them in memory
-> until memory pressure happens.
-> 
-> To support such strategy easier, this patch introduces
-> MADV_ANONYMOUS_FILTER and MADV_FILE_FILTER options in madvise(2) like
-> that /proc/<pid>/clear_refs already has supported same filters.
-> They are filters could be Ored with other existing hints using top two bits
-> of (int behavior).
+Looks good to me
 
-madvise operates on top of ranges and it is quite trivial to do the
-filtering from the userspace so why do we need any additional filtering?
+Acked-by: Arnd Bergmann <arnd@arndb.de>
 
-> Once either of them is set, the hint could affect only the interested vma
-> either anonymous or file-backed.
-> 
-> With that, user could call a process_madvise syscall simply with a entire
-> range(0x0 - 0xFFFFFFFFFFFFFFFF) but either of MADV_ANONYMOUS_FILTER and
-> MADV_FILE_FILTER so there is no need to call the syscall range by range.
-
-OK, so here is the reason you want that. The immediate question is why
-cannot the monitor do the filtering from the userspace. Slightly more
-work, all right, but less of an API to expose and that itself is a
-strong argument against.
-
-> * from v1r2
->   * use consistent check with clear_refs to identify anon/file vma - surenb
-> 
-> * from v1r1
->   * use naming "filter" for new madvise option - dancol
-> 
-> Signed-off-by: Minchan Kim <minchan@kernel.org>
 > ---
->  include/uapi/asm-generic/mman-common.h |  5 +++++
->  mm/madvise.c                           | 14 ++++++++++++++
->  2 files changed, 19 insertions(+)
-> 
-> diff --git a/include/uapi/asm-generic/mman-common.h b/include/uapi/asm-generic/mman-common.h
-> index b8e230de84a6..be59a1b90284 100644
-> --- a/include/uapi/asm-generic/mman-common.h
-> +++ b/include/uapi/asm-generic/mman-common.h
-> @@ -66,6 +66,11 @@
->  #define MADV_WIPEONFORK 18		/* Zero memory on fork, child only */
->  #define MADV_KEEPONFORK 19		/* Undo MADV_WIPEONFORK */
->  
-> +#define MADV_BEHAVIOR_MASK (~(MADV_ANONYMOUS_FILTER|MADV_FILE_FILTER))
-> +
-> +#define MADV_ANONYMOUS_FILTER	(1<<31)	/* works for only anonymous vma */
-> +#define MADV_FILE_FILTER	(1<<30)	/* works for only file-backed vma */
-> +
->  /* compatibility flags */
->  #define MAP_FILE	0
->  
-> diff --git a/mm/madvise.c b/mm/madvise.c
-> index f4f569dac2bd..116131243540 100644
-> --- a/mm/madvise.c
-> +++ b/mm/madvise.c
-> @@ -1002,7 +1002,15 @@ static int madvise_core(struct task_struct *tsk, unsigned long start,
->  	int write;
->  	size_t len;
->  	struct blk_plug plug;
-> +	bool anon_only, file_only;
->  
-> +	anon_only = behavior & MADV_ANONYMOUS_FILTER;
-> +	file_only = behavior & MADV_FILE_FILTER;
-> +
-> +	if (anon_only && file_only)
-> +		return error;
-> +
-> +	behavior = behavior & MADV_BEHAVIOR_MASK;
->  	if (!madvise_behavior_valid(behavior))
->  		return error;
->  
-> @@ -1067,12 +1075,18 @@ static int madvise_core(struct task_struct *tsk, unsigned long start,
->  		if (end < tmp)
->  			tmp = end;
->  
-> +		if (anon_only && vma->vm_file)
-> +			goto next;
-> +		if (file_only && !vma->vm_file)
-> +			goto next;
-> +
->  		/* Here vma->vm_start <= start < tmp <= (end|vma->vm_end). */
->  		error = madvise_vma(tsk, vma, &prev, start, tmp,
->  					behavior, &pages);
->  		if (error)
->  			goto out;
->  		*nr_pages += pages;
-> +next:
->  		start = tmp;
->  		if (prev && start < prev->vm_end)
->  			start = prev->vm_end;
-> -- 
-> 2.21.0.1020.gf2820cf01a-goog
-> 
-
--- 
-Michal Hocko
-SUSE Labs
+>
+>  scripts/modules-check.sh | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
+>
+> diff --git a/scripts/modules-check.sh b/scripts/modules-check.sh
+> index 2f659530e1ec..39e8cb36ba19 100755
+> --- a/scripts/modules-check.sh
+> +++ b/scripts/modules-check.sh
+> @@ -6,10 +6,10 @@ set -e
+>  # Check uniqueness of module names
+>  check_same_name_modules()
+>  {
+> -       for m in $(sed 's:.*/::' modules.order modules.builtin | sort | uniq -d)
+> +       for m in $(sed 's:.*/::' modules.order | sort | uniq -d)
+>         do
+> -               echo "warning: same basename if the following are built as modules:" >&2
+> -               sed "/\/$m/!d;s:^kernel/:  :" modules.order modules.builtin >&2
+> +               echo "warning: same module names found:" >&2
+> +               sed -n "/\/$m/s:^kernel/:  :p" modules.order >&2
+>         done
+>  }
+>
+> --
+> 2.17.1
+>
