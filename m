@@ -2,127 +2,122 @@ Return-Path: <SRS0=lq4r=TU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_NEOMUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E9D9C04AAC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 14:43:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A145C04E87
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 14:44:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2C8412054F
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 14:43:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0816C2054F
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 14:44:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403899AbfETOnU (ORCPT
+        id S2391952AbfETOoI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 10:43:20 -0400
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:44116 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732661AbfETOnT (ORCPT
+        Mon, 20 May 2019 10:44:08 -0400
+Received: from relay8-d.mail.gandi.net ([217.70.183.201]:45975 "EHLO
+        relay8-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729847AbfETOoH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 10:43:19 -0400
-Received: by mail-qt1-f193.google.com with SMTP id f24so16542089qtk.11
-        for <linux-kernel@vger.kernel.org>; Mon, 20 May 2019 07:43:19 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=wVbH8yFCTvDnL4KvntlUkLZ6kVZPj088jURz/EO5+k4=;
-        b=RnCtlZtqhejz/PN6bQXV1AHUFK3Ct2n7zo4GVCQLqJ6+yAFTcmmbg19EfJGv4kAfGw
-         0V+XFARQPVnCOxrGOuJGlrTqgBTXQEA4uB+x21rVPn1e5vjc6lRqKclcvc4b1wbJCVSD
-         ze8YKas5z/ctrxCLzMcB3HXdeHpa0SsPPjfXCvOOMprBihrsfhg7dGUlY3zmg/a4bdTy
-         1AD9sXIMOhUPlbHiEDl7pMGlRr+DbYJbKgarZLvXjm4Nd9vBIirCFahemorkTUgYCt++
-         upyfuWS5BqdsYUPNhsdFMkGHqZ3CU3UL7ghUv0MyswtsVLz2aZZrR7VWag/z7oDkumQb
-         BuJQ==
-X-Gm-Message-State: APjAAAVgtterkLlqIcSXQY9Zw9Em5zuP0MYc2ESZ0mtjEmfiePl94LAP
-        Zo6LE64YELjJ2/GpDJF+AQ7T26oNTSTgCxkddnc=
-X-Google-Smtp-Source: APXvYqzeQ/JsUpL3OqXOSLdEPvWsH4Ws8y0TmLbiOXXUjuxdurnq83izX4qvEWQ6qvlwqSzU8jQ0BJFvab6PfubqtyQ=
-X-Received: by 2002:ac8:1c51:: with SMTP id j17mr62734037qtk.7.1558363398695;
- Mon, 20 May 2019 07:43:18 -0700 (PDT)
+        Mon, 20 May 2019 10:44:07 -0400
+X-Originating-IP: 90.88.22.185
+Received: from localhost (aaubervilliers-681-1-80-185.w90-88.abo.wanadoo.fr [90.88.22.185])
+        (Authenticated sender: maxime.ripard@bootlin.com)
+        by relay8-d.mail.gandi.net (Postfix) with ESMTPSA id F0B831BF216;
+        Mon, 20 May 2019 14:44:04 +0000 (UTC)
+Date:   Mon, 20 May 2019 16:44:04 +0200
+From:   Maxime Ripard <maxime.ripard@bootlin.com>
+To:     =?utf-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
+Cc:     Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Chen-Yu Tsai <wens@csie.org>, linux-watchdog@vger.kernel.org,
+        devicetree <devicetree@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v3 2/4] arm64: dts: allwinner: h6: add watchdog node
+Message-ID: <20190520144404.zprbuqt3d7uuxgr2@flea>
+References: <20190518152355.11134-1-peron.clem@gmail.com>
+ <20190518152355.11134-3-peron.clem@gmail.com>
+ <20190520073652.itk452vrpnicta5v@flea>
+ <CAJiuCceEL9xH45P6Gj99YTir_1tkyraf5HefDNfm9p+UtdLs8w@mail.gmail.com>
 MIME-Version: 1.0
-References: <20190512012508.10608-1-elder@linaro.org> <20190512012508.10608-10-elder@linaro.org>
- <CAK8P3a0eYWN6mMwft5OSu8wQQo=kWh5safGFFNkDCELZJyiMmQ@mail.gmail.com>
- <14a040b6-8187-3fbc-754d-2e267d587858@linaro.org> <CAK8P3a37bPRZTHZcrg8KrYRLAhCr9pk8v4yuo_wSyUONs2OysQ@mail.gmail.com>
- <4a34d381-d31d-ea49-d6d3-3c4f632958e3@linaro.org> <dcd648f2-5305-04dd-8997-be87a9961fd9@linaro.org>
- <CAK8P3a0FfSvTF8kkQ8pyKFNX9-fSXvtEyMBYTjtM+VOPxMPkWg@mail.gmail.com> <d3d4670f-eb8b-7dcf-f91a-1ec1d4d96f67@linaro.org>
-In-Reply-To: <d3d4670f-eb8b-7dcf-f91a-1ec1d4d96f67@linaro.org>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Mon, 20 May 2019 16:43:02 +0200
-Message-ID: <CAK8P3a12+3a-p2pNuQrJu01dOJJuCoQ4ttt=Y0g97wTtBmQO5w@mail.gmail.com>
-Subject: Re: [PATCH 09/18] soc: qcom: ipa: GSI transactions
-To:     Alex Elder <elder@linaro.org>
-Cc:     David Miller <davem@davemloft.net>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Ilias Apalodimas <ilias.apalodimas@linaro.org>,
-        syadagir@codeaurora.org, mjavid@codeaurora.org,
-        evgreen@chromium.org, Ben Chan <benchan@google.com>,
-        Eric Caruso <ejcaruso@google.com>, abhishek.esse@gmail.com,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="ilnq5ytbw3qmunv6"
+Content-Disposition: inline
+In-Reply-To: <CAJiuCceEL9xH45P6Gj99YTir_1tkyraf5HefDNfm9p+UtdLs8w@mail.gmail.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 20, 2019 at 2:50 PM Alex Elder <elder@linaro.org> wrote:
->
-> On 5/20/19 4:25 AM, Arnd Bergmann wrote:
-> > On Sun, May 19, 2019 at 7:11 PM Alex Elder <elder@linaro.org> wrote:
-> >> On 5/17/19 1:44 PM, Alex Elder wrote:
-> >>> On 5/17/19 1:33 PM, Arnd Bergmann wrote:
-> >>>> On Fri, May 17, 2019 at 8:08 PM Alex Elder <elder@linaro.org>
-> >>
-> >> So it seems that I must *not* apply a volatile qualifier,
-> >> because doing so restricts the compiler from making the
-> >> single instruction optimization.
-> >
-> > Right, I guess that makes sense.
-> >
-> >> If I've missed something and you have another suggestion for
-> >> me to try let me know and I'll try it.
-> >
-> > A memcpy() might do the right thing as well. Another idea would
->
-> I find memcpy() does the right thing.
->
-> > be a cast to __int128 like
->
-> I find that my environment supports 128 bit integers.  But...
->
-> > #ifdef CONFIG_ARCH_SUPPORTS_INT128
-> > typedef __int128 tre128_t;
-> > #else
-> > typedef struct { __u64 a; __u64 b; } tre128_t;
-> > #else
-> >
-> > static inline void set_tre(struct gsi_tre *dest_tre, struct gs_tre *src_tre)
-> > {
-> >      *(volatile tre128_t *)dest_tre = *(tre128_t *)src_tre;
-> > }
-> ...this produces two 8-bit assignments.  Could it be because
-> it's implemented as two 64-bit values?  I think so.  Dropping
-> the volatile qualifier produces a single "stp" instruction.
 
-I have no idea how two 8-bit assignments could do that,
-it sounds like a serious gcc bug, unless you mean two
-8-byte assignments, which would be within the range
-of expected behavior. If it's actually 8-bit stores, please
-open a bug against gcc with a minimized test case.
+--ilnq5ytbw3qmunv6
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> The only other thing I thought I could do to encourage
-> the compiler to do the right thing is define the type (or
-> variables) to have 128-bit alignment.  And doing that for
-> the original simple assignment didn't change the (desirable)
-> outcome, but I don't think it's really necessary in this
-> case, considering the single instruction uses two 64-bit
-> registers.
+On Mon, May 20, 2019 at 10:21:40AM +0200, Cl=E9ment P=E9ron wrote:
+> Hi,
 >
-> I'm going to leave it as it was originally; it's the simplest:
->         *dest_tre = tre;
+> On Mon, 20 May 2019 at 09:36, Maxime Ripard <maxime.ripard@bootlin.com> w=
+rote:
+> >
+> > On Sat, May 18, 2019 at 05:23:53PM +0200, Cl=E9ment P=E9ron wrote:
+> > > Allwinner H6 has a watchog node which seems broken
+> > > on some boards.
+> > >
+> > > Test has been performed on several boards.
+> > >
+> > > Chen-Yu Tsai boards:
+> > > Pine H64 - H6448BA 7782 =3D> OK
+> > > OrangePi Lite 2 - H8068BA 61C2 =3D> KO
+> > >
+> > > Martin Ayotte boards:
+> > > Pine H64 - H8069BA 6892 =3D> OK
+> > > OrangePi 3 - HA047BA 69W2 =3D> KO
+> > > OrangePi One Plus - H7310BA 6842 =3D> KO
+> > > OrangePi Lite2 - H6448BA 6662 =3D> KO
+> > >
+> > > Cl=E9ment P=E9ron board:
+> > > Beelink GS1 - H7309BA 6842 =3D> KO
+> > >
+> > > As it seems not fixable for now, declare the node
+> > > but leave it disable with a comment.
+> > >
+> > > Signed-off-by: Cl=E9ment P=E9ron <peron.clem@gmail.com>
+> >
+> > If it doesn't work most boards, then why do we need to merge that
+> > patch in the first place?
 >
-> I added a comment about structuring the code this way with
-> the intention of getting the single instruction.  If a different
-> compiler produces different result.
+> My personnal opinion, is that having the IP declared and disabled with
+> a comment saying "it's broken on some boards" in the device-tree is
+> better than not having at all.
+>
+> This will explicit say "the IP exist but don't use it!".
+> Maybe some people with a functionnal board would like to explicitly
+> use it on their dts.
 
-Ok, that's probably the best we can do then.
+Yeah, that makes sense. Chen-Yu, any opinion on the matter?
 
-      Arnd
+Maxime
+
+--
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+
+--ilnq5ytbw3qmunv6
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXOK9NAAKCRDj7w1vZxhR
+xTPcAP41As2dmsqJWuZDGwrGeXjz5+67O+gfyWMVpwNTjBfB3wD+LDkh8o3xUFs7
+x5b2IjWeOW15lbD6dJpdtyxuRX4coQg=
+=178x
+-----END PGP SIGNATURE-----
+
+--ilnq5ytbw3qmunv6--
