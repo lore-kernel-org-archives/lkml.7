@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B7F7C46470
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:44:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9E5BC04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:44:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 583EC20815
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:44:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF5BA204FD
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:44:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558356292;
-	bh=any/DlHXg37Ff7AbRPFC1GetjoVK2j3ZkSLPNafzbrk=;
+	s=default; t=1558356294;
+	bh=QKkgWnxCvEUleqodsfOqFcETT19LNPLxow/QSmRYFwM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XYil/GPNycnu/lrfQCXvyHD/S0Nsyf9K9pkdgAFO8MCIbGDMO0ivkg5UmbRitqLeu
-	 CkDbeRn5gzOYSgzbuHdBjIn+dG5D7vyzzRfx3CIzNP2POzGpwxYb+tRKC7HpvkWnE3
-	 yR3TfJRrJwQaNC43OLr5BgJHGJDqPapKk29+aulo=
+	b=qPt0th9HHwXOGgKRdiRoCiVrx6QDfi4aCuOP73hcdYW8Lj5FNEGQwCcm3dYJH49Pp
+	 HisosI+QtzOYefbfwbjHfUApfn7tS62JKruZDg+watAR3VzrccIr/n5JajTUaw76sd
+	 ufRe/Upvuw6feD9LOC78xasYzd8OtaKtc8qorAMc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388354AbfETM11 (ORCPT
+        id S2391333AbfETMox (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 08:27:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42962 "EHLO mail.kernel.org"
+        Mon, 20 May 2019 08:44:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43040 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389479AbfETM1W (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 08:27:22 -0400
+        id S2389465AbfETM11 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 08:27:27 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6AB5A21019;
-        Mon, 20 May 2019 12:27:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BE80521019;
+        Mon, 20 May 2019 12:27:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558355241;
-        bh=any/DlHXg37Ff7AbRPFC1GetjoVK2j3ZkSLPNafzbrk=;
+        s=default; t=1558355247;
+        bh=QKkgWnxCvEUleqodsfOqFcETT19LNPLxow/QSmRYFwM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NH7sqQj1mNPgKvfjvQV/SUFyP48IWwdxUuJjNLb6Dugx+sQMNiDBMVlgizFeCmSJa
-         6mOE1WjvwZzlBWU4K/KnxTr7ibMXtZpeqT5G2Ah+quf9mTuvtseoB+SZXMDGjMTPdh
-         G6k5oHg/ZS9D8TnKt+SmtfCZhKkIe1H0M8I6/qks=
+        b=z48OTGoI3vbJ/upBdNeZWO12W+2c1ATWjUkmxAn1vSt/0De4lHLZvBiQrSHvZPoMB
+         k3H9+e2InZZTKz9lhMF/rPieiPCk9tYnNcL0w6uw30s9t7/KNjhVxvqCCaURvShw9H
+         gKpNUoieNN0+0L6uaXoNZhmAFSxVJ2V11zSu1uNU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Jean-Philippe Brucker <jean-philippe.brucker@arm.com>,
-        Will Deacon <will.deacon@arm.com>
-Subject: [PATCH 5.0 017/123] arm64: Clear OSDLR_EL1 on CPU boot
-Date:   Mon, 20 May 2019 14:13:17 +0200
-Message-Id: <20190520115246.116346676@linuxfoundation.org>
+        stable@vger.kernel.org, Raul E Rangel <rrangel@chromium.org>,
+        Jens Axboe <axboe@kernel.dk>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>
+Subject: [PATCH 5.0 045/123] mmc: core: Fix tag set memory leak
+Date:   Mon, 20 May 2019 14:13:45 +0200
+Message-Id: <20190520115247.735630174@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190520115245.439864225@linuxfoundation.org>
 References: <20190520115245.439864225@linuxfoundation.org>
@@ -60,31 +61,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
+From: Raul E Rangel <rrangel@chromium.org>
 
-commit 6fda41bf12615ee7c3ddac88155099b1a8cf8d00 upstream.
+commit 43d8dabb4074cf7f3b1404bfbaeba5aa6f3e5cfc upstream.
 
-Some firmwares may reboot CPUs with OS Double Lock set. Make sure that
-it is unlocked, in order to use debug exceptions.
+The tag set is allocated in mmc_init_queue but never freed. This results
+in a memory leak. This change makes sure we free the tag set when the
+queue is also freed.
 
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
-Signed-off-by: Will Deacon <will.deacon@arm.com>
+Signed-off-by: Raul E Rangel <rrangel@chromium.org>
+Reviewed-by: Jens Axboe <axboe@kernel.dk>
+Acked-by: Adrian Hunter <adrian.hunter@intel.com>
+Fixes: 81196976ed94 ("mmc: block: Add blk-mq support")
+Cc: stable@vger.kernel.org
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/arm64/kernel/debug-monitors.c |    1 +
+ drivers/mmc/core/queue.c |    1 +
  1 file changed, 1 insertion(+)
 
---- a/arch/arm64/kernel/debug-monitors.c
-+++ b/arch/arm64/kernel/debug-monitors.c
-@@ -135,6 +135,7 @@ NOKPROBE_SYMBOL(disable_debug_monitors);
-  */
- static int clear_os_lock(unsigned int cpu)
- {
-+	write_sysreg(0, osdlr_el1);
- 	write_sysreg(0, oslar_el1);
- 	isb();
- 	return 0;
+--- a/drivers/mmc/core/queue.c
++++ b/drivers/mmc/core/queue.c
+@@ -473,6 +473,7 @@ void mmc_cleanup_queue(struct mmc_queue
+ 		blk_mq_unquiesce_queue(q);
+ 
+ 	blk_cleanup_queue(q);
++	blk_mq_free_tag_set(&mq->tag_set);
+ 
+ 	/*
+ 	 * A request can be completed before the next request, potentially
 
 
