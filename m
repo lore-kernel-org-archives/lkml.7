@@ -2,91 +2,155 @@ Return-Path: <SRS0=lq4r=TU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D317C04AAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 09:06:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 263F0C04AAF
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 09:07:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E1D6420644
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 09:06:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 89D3620644
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 09:07:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="D19AjoC0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731742AbfETJGm (ORCPT
+        id S1731791AbfETJHN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 05:06:42 -0400
-Received: from mx0b-001ae601.pphosted.com ([67.231.152.168]:45410 "EHLO
-        mx0b-001ae601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730238AbfETJGl (ORCPT
+        Mon, 20 May 2019 05:07:13 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:44431 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725764AbfETJHN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 05:06:41 -0400
-Received: from pps.filterd (m0077474.ppops.net [127.0.0.1])
-        by mx0b-001ae601.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4K93rBt011872;
-        Mon, 20 May 2019 04:06:30 -0500
-Authentication-Results: ppops.net;
-        spf=none smtp.mailfrom=ckeepax@opensource.cirrus.com
-Received: from mail2.cirrus.com (mail2.cirrus.com [141.131.128.20])
-        by mx0b-001ae601.pphosted.com with ESMTP id 2sjefmt40x-1;
-        Mon, 20 May 2019 04:06:29 -0500
-Received: from EDIEX01.ad.cirrus.com (unknown [198.61.84.80])
-        by mail2.cirrus.com (Postfix) with ESMTP id 5717C605A6A0;
-        Mon, 20 May 2019 04:06:29 -0500 (CDT)
-Received: from EDIEX01.ad.cirrus.com (198.61.84.80) by EDIEX01.ad.cirrus.com
- (198.61.84.80) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1591.10; Mon, 20 May
- 2019 10:06:28 +0100
-Received: from ediswmail.ad.cirrus.com (198.61.86.93) by EDIEX01.ad.cirrus.com
- (198.61.84.80) with Microsoft SMTP Server id 15.1.1591.10 via Frontend
- Transport; Mon, 20 May 2019 10:06:28 +0100
-Received: from algalon.ad.cirrus.com (algalon.ad.cirrus.com [198.90.251.122])
-        by ediswmail.ad.cirrus.com (Postfix) with ESMTP id AE9F42DB;
-        Mon, 20 May 2019 10:06:28 +0100 (BST)
-From:   Charles Keepax <ckeepax@opensource.cirrus.com>
-To:     <lee.jones@linaro.org>
-CC:     <arnd@arndb.de>, <natechancellor@gmail.com>,
-        <ottosabart@seberm.com>, <linux-kernel@vger.kernel.org>,
-        <patches@opensource.cirrus.com>
-Subject: [PATCH 3/4] mfd: madera: Fix potential uninitialised use of variable
-Date:   Mon, 20 May 2019 10:06:27 +0100
-Message-ID: <20190520090628.29061-3-ckeepax@opensource.cirrus.com>
-X-Mailer: git-send-email 2.11.0
-In-Reply-To: <20190520090628.29061-1-ckeepax@opensource.cirrus.com>
-References: <20190520090628.29061-1-ckeepax@opensource.cirrus.com>
+        Mon, 20 May 2019 05:07:13 -0400
+Received: by mail-pl1-f196.google.com with SMTP id c5so6396618pll.11
+        for <linux-kernel@vger.kernel.org>; Mon, 20 May 2019 02:07:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=amarulasolutions.com; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=5cW/Ykas8y/ulbRnNYCc1U7OJGD9GTeKEiiivcIo+lE=;
+        b=D19AjoC0eMZThH2guQSI02LbCXWxIu9yFHbIFGyjKVoGdpanTTC1WH7LHFeWV3LN9c
+         d+yGjqnD+B5OyZm2YFjaXIFqcJ595lDsnFX1pVaqXzeFzILB+N3gsgqf8ztcbrMrnWiF
+         9sRtvb5LzYCHUKcbV/RZZSIPazKFf+S+J4nbg=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=5cW/Ykas8y/ulbRnNYCc1U7OJGD9GTeKEiiivcIo+lE=;
+        b=Ef/wqlJQaYRM939FQuBuF+zLQymwZ0zRniUNo5PiLqYDvcrcUcmF9lU5MiuHjntcVH
+         fhG/X+yxXje4eUNYZrvx+mOmOySbmssnytvwu1wgNvHoMs3EtlU9MrAqWE2ZYMqct+VE
+         6m2K5QTFUbuSwuH4mb6ImUCd/nSb6wh7D8HmR7YX7BRsYrD0RYvKJZExpYK+6qBGt+fQ
+         fywJGnGogmBOKoLp8s5/Gvwb4qJ0s9TKN4pwQ2Qy1mbn3o6Pv+ANIDIUl0+z+R7mUxRy
+         588w117HojylaGhm0Ifplx0sfGvJTMJFkkMELqmS7LutXdO9D3pOqJfNL6U5QfPKiLlu
+         oWQQ==
+X-Gm-Message-State: APjAAAXLnG8kb78t477FNnEVz7lCrmxphTnENELnJsb1nJP6xNLTfoiY
+        OQeX7TPosZzKe6Ilt+BVMePUzQ==
+X-Google-Smtp-Source: APXvYqz8pwdU8mC+t3ZXYb6Q+Pg04mL44SIkX5k3pYjBHVjtKxFYa0Qa7kCCe3U/5VkpdkgVqE12iA==
+X-Received: by 2002:a17:902:2a07:: with SMTP id i7mr76936917plb.125.1558343232148;
+        Mon, 20 May 2019 02:07:12 -0700 (PDT)
+Received: from localhost.localdomain ([183.82.227.193])
+        by smtp.gmail.com with ESMTPSA id d15sm51671614pfm.186.2019.05.20.02.07.07
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 20 May 2019 02:07:11 -0700 (PDT)
+From:   Jagan Teki <jagan@amarulasolutions.com>
+To:     Maxime Ripard <maxime.ripard@bootlin.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>, Chen-Yu Tsai <wens@csie.org>,
+        dri-devel@lists.freedesktop.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc:     bshah@mykolab.com, Vasily Khoruzhick <anarsoul@gmail.com>,
+        powerpan@qq.com, michael@amarulasolutions.com,
+        linux-amarula@amarulasolutions.com, linux-sunxi@googlegroups.com,
+        Jagan Teki <jagan@amarulasolutions.com>
+Subject: [PATCH v10 00/11] drm/sun4i: dsi: Fixes/updates (A33 reworked!)
+Date:   Mon, 20 May 2019 14:33:07 +0530
+Message-Id: <20190520090318.27570-1-jagan@amarulasolutions.com>
+X-Mailer: git-send-email 2.18.0.321.gffc6fa0e3
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=1 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=892 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1905200066
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stuart Henderson <stuarth@opensource.cirrus.com>
+Most of these issues are reproduced while supporting Allwinner A64
+MIPI-DSI [1] but to confirm it with other SoC this series is reworked
+on A33 since the controller tested it A33 as of now.
 
-regmap_read won't set val to anything if an ACKed bus fails.
+Since we don't have proper evidence and documentation for dsi controller
+in Allwinner, these changes are more likely to rely on new working BSP
+codes (even the initial driver written as per this rule).
 
-Signed-off-by: Stuart Henderson <stuarth@opensource.cirrus.com>
-Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
----
- drivers/mfd/madera-core.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+All these fixes/updates are tested in "bananapi,s070wv20-ct16" panel
+on Allwinner A33, the same panel timings are available in panel-simple
+in mainline tree.
 
-diff --git a/drivers/mfd/madera-core.c b/drivers/mfd/madera-core.c
-index 2a77988d04625..1b78c5c844a81 100644
---- a/drivers/mfd/madera-core.c
-+++ b/drivers/mfd/madera-core.c
-@@ -139,7 +139,7 @@ EXPORT_SYMBOL_GPL(madera_name_from_type);
- static int madera_wait_for_boot(struct madera *madera)
- {
- 	ktime_t timeout;
--	unsigned int val;
-+	unsigned int val = 0;
- 	int ret = 0;
- 
- 	/*
+Changes for v10:
+- reworked previous "Fixes/updates" patches on A33
+- reworked previous A64 DSI fixes on A33
+- added proper detailed commit messages with logs
+- tested on BPI-M2M board.
+Changes for v9:
+- rebase on drm-misc
+- update commit messages
+- add hsync_porch overflow patch
+Changes for v8:
+- rebase on master
+- rework on commit messages
+- rework video start delay
+- include drq changes from previous version
+Changes for v7:
+- rebase on master
+- collect Merlijn Wajer Tested-by credits.
+Changes for v6:
+- fixed all burst mode patches as per previous version comments
+- rebase on master
+- update proper commit message
+- dropped unneeded comments
+- order the patches that make review easy
+Changes for v5, v4, v3, v2:
+- use existing driver code construct for hblk computation
+- create separate function for vblk computation
+- cleanup commit messages
+- update proper commit messages
+- fixed checkpatch warnings/errors
+- use proper return value for tcon0 probe
+- add logic to get tcon0 divider values
+- simplify timings code to support burst mode
+- fix drq computation return values
+- rebase on master
+
+Any inputs?
+Jagan.
+
+[1] https://patchwork.freedesktop.org/series/57834/
+
+Jagan Teki (11):
+  drm/sun4i: dsi: Fix TCON DRQ set bits
+  drm/sun4i: dsi: Update start value in video start delay
+  drm/sun4i: dsi: Fix video start delay computation
+  drm/sun4i: tcon: Compute DCLK dividers based on format, lanes
+  drm/sun4i: tcon: Export get tcon0 routine
+  drm/sun4i: dsi: Probe tcon0 during dsi_bind
+  drm/sun4i: dsi: Get tcon0_div at runtime
+  dt-bindings: sun6i-dsi: Add VCC-DSI supply property
+  drm/sun4i: sun6i_mipi_dsi: Add VCC-DSI regulator support
+  [DO NOT MERGE] drm/panel: Add Bananapi S070WV20-CT16 ICN6211 MIPI-DSI to RGB bridge
+  [DO NOT MERGE] ARM: dts: sun8i: bananapi-m2m: Enable Bananapi S070WV20-CT16 DSI panel
+
+ .../bindings/display/sunxi/sun6i-dsi.txt      |   1 +
+ arch/arm/boot/dts/sun8i-r16-bananapi-m2m.dts  |  40 +++
+ drivers/gpu/drm/panel/Kconfig                 |   9 +
+ drivers/gpu/drm/panel/Makefile                |   1 +
+ .../panel/panel-bananapi-s070wv20-icn6211.c   | 293 ++++++++++++++++++
+ drivers/gpu/drm/sun4i/sun4i_tcon.c            |   7 +-
+ drivers/gpu/drm/sun4i/sun4i_tcon.h            |   1 +
+ drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c        |  46 ++-
+ drivers/gpu/drm/sun4i/sun6i_mipi_dsi.h        |   4 +-
+ 9 files changed, 393 insertions(+), 9 deletions(-)
+ create mode 100644 drivers/gpu/drm/panel/panel-bananapi-s070wv20-icn6211.c
+
 -- 
-2.11.0
+2.18.0.321.gffc6fa0e3
 
