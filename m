@@ -2,190 +2,254 @@ Return-Path: <SRS0=lq4r=TU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ACB6AC04AAC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 10:46:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85946C04E87
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 10:46:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 772182081C
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 10:46:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5215620856
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 10:46:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Yx3Oh9sd"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XOfACpjn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731859AbfETKqG (ORCPT
+        id S1731942AbfETKqt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 06:46:06 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:40694 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731780AbfETKqE (ORCPT
+        Mon, 20 May 2019 06:46:49 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:35863 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728000AbfETKqt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 06:46:04 -0400
-Received: by mail-wm1-f68.google.com with SMTP id 15so8459143wmg.5
-        for <linux-kernel@vger.kernel.org>; Mon, 20 May 2019 03:46:02 -0700 (PDT)
+        Mon, 20 May 2019 06:46:49 -0400
+Received: by mail-ot1-f68.google.com with SMTP id c3so12540896otr.3;
+        Mon, 20 May 2019 03:46:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:message-id:mime-version:subject:date:in-reply-to:cc:to
-         :references;
-        bh=FNQffb8QL8IgGta8QHGMIkJOjNxQ6yOoFcpL2RGNOxo=;
-        b=Yx3Oh9sdjhtxkjy2qUZOvGLEh/omRfY9Mkk8SZgdDDixIStb27nmcn3B7LNLkywYKf
-         JSJs2y09yTFai60dfvSU6bs3U2Y+HZSEgZwWN6UlzEZ1wASRtjIcHxGBtD4y6tsAuqVS
-         3ujdLIe/3srn1f0SjS94N6OmFmNXyQjA8jYYAeTVbdE87jeskYdVzPBwTuGiV5VXMofg
-         Qcc4TKaT9Wtzyo5PNWXoXjNZN8OY3QNXt/d/SPjmZQCZVqxth/sR5PvwpcgaROR92mOk
-         Z6Us/2nTa0Du6iMydUy7SM5zXTl+W32h+hkN9oHJisAKE0vA0TrVU7YYUAkZEQA//CVY
-         df6Q==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=8N0PH3dZDygXmaG/OOoHIYOZvPVg+97Y5Hud9ub3XDs=;
+        b=XOfACpjnInC015ZclQO9HPkjk/rSY9yOcHeMHR4G32GvI7Q8qM8eT4EJ7a54FSUeF/
+         UGBogReReOS6mMgR2TIqjTgUCMrDnlwFYxxF/ZhOkJ/DepZnyodcMiXunZ+LUToAxZxZ
+         fOkC48G/Gj3DJ72Ezh9xsoSyOGPEsA+KwYBAI6NNDhMVnPMeQYWloMMk1GgaMOwXQjoM
+         qMrjvAs1onhQ7gQWsSB8fsqdEOaVaVT6Fvbez9THpIuFnr4NbP3PnXReNoeMr0cfeXSO
+         TGDNiJX+NXtn8TNkPH2oZn/+MYuyM0h776Nxb5UHJzTw29JvrvVJRBb8N46iFrKU4OSJ
+         LsFw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:message-id:mime-version:subject:date
-         :in-reply-to:cc:to:references;
-        bh=FNQffb8QL8IgGta8QHGMIkJOjNxQ6yOoFcpL2RGNOxo=;
-        b=iah2X7Lq/PKeD8d3WwfNxUtCcOYA9Z8MMeLI/MrS+7FHL6Q2yO2tcq0ZhDid7DzHie
-         /ApXOeSYk+6GwO4JMS8Yj5HK4461pKuA9ySeJqAZ4T53kx6gpXZKPZqoqcdNXz94ILRO
-         zTl8Zs10z/rPRIItsgC0kNmoIFYjv2Y2FvF84+wz26ixUH4IOZfMXJ3hbkIokR6TAVE0
-         YjaqQUUAjzygKorGD2TWN9PVX2hbeGZK6WX/mCLDXA9VNkaW6dwjvXYNkNIbAcWtiphk
-         cc0W8V8inqTzvT9TMqjhoNTdWzpE1w+DZVt2c0PM99d0ZoLa+mS/Grcqg0c1QWeT/hm3
-         NFLQ==
-X-Gm-Message-State: APjAAAWjN0V2rtaSV1jZEUk5NnALrl+vxxCc918cmRhgC0lUxCR17lh0
-        u17r8JNQhjikA0Vce18W+hC6wQ==
-X-Google-Smtp-Source: APXvYqwf9Bs8lTKBrSvqq/FNc2Kp0ccnjoaTSSxl7jXQW63EXQ+RaXppUqT7Z5tC+EpLaW9/edIhpA==
-X-Received: by 2002:a1c:385:: with SMTP id 127mr11200126wmd.109.1558349161708;
-        Mon, 20 May 2019 03:46:01 -0700 (PDT)
-Received: from [192.168.0.100] ([88.147.73.106])
-        by smtp.gmail.com with ESMTPSA id x187sm18555952wmb.33.2019.05.20.03.45.59
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 20 May 2019 03:46:00 -0700 (PDT)
-From:   Paolo Valente <paolo.valente@linaro.org>
-Message-Id: <1C0A2FC8-620C-4AFE-A921-35EDAC377BD4@linaro.org>
-Content-Type: multipart/signed;
-        boundary="Apple-Mail=_695B9A4F-9A68-4C92-B622-6C792D193B9F";
-        protocol="application/pgp-signature";
-        micalg=pgp-sha256
-Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.8\))
-Subject: Re: CFQ idling kills I/O performance on ext4 with blkio cgroup
- controller
-Date:   Mon, 20 May 2019 12:45:58 +0200
-In-Reply-To: <20190520091558.GC2172@quack2.suse.cz>
-Cc:     Theodore Ts'o <tytso@mit.edu>,
-        "Srivatsa S. Bhat" <srivatsa@csail.mit.edu>,
-        linux-fsdevel@vger.kernel.org,
-        linux-block <linux-block@vger.kernel.org>,
-        linux-ext4@vger.kernel.org, cgroups@vger.kernel.org,
-        linux-kernel@vger.kernel.org, axboe@kernel.dk, jmoyer@redhat.com,
-        amakhalov@vmware.com, anishs@vmware.com, srivatsab@vmware.com
-To:     Jan Kara <jack@suse.cz>
-References: <8d72fcf7-bbb4-2965-1a06-e9fc177a8938@csail.mit.edu>
- <1812E450-14EF-4D5A-8F31-668499E13652@linaro.org>
- <20190518192847.GB14277@mit.edu> <20190520091558.GC2172@quack2.suse.cz>
-X-Mailer: Apple Mail (2.3445.104.8)
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=8N0PH3dZDygXmaG/OOoHIYOZvPVg+97Y5Hud9ub3XDs=;
+        b=oSWrVKFWbuO7tBrrM4l5SHJEd2zPGiNVnNctzXhbRrNbl/j191RnHqZvOsRFoJ0EcG
+         WpCfq7LV1j9dft9zXqeA6CS3pJVMHbHuh10n2DY2mi4X6tuSX4/typM8ct6xbGM5M7GT
+         SM35g2VM/LaJ0QrqqYqARx6UsRoiBP/hlp7R2daz1fISZqFlD3X4M/QuBg7TKQxqnjQs
+         eycvitmoqe71bdW1j/Ed1wvccaru+jOZtTtNi16rnbbqkjm2f10cgkt3mgu9Xv3ZR6F/
+         fhG030y2Xl8G4+ngK01viM/JhjX5PiqoVEiBsfu0jUvRwo0r2hvS5/esgSbgmD6vKWbt
+         GchQ==
+X-Gm-Message-State: APjAAAVflmGmC1fqa0tt9ldsXmPFJZ1FHaDFkkyJG6vQstcMFNs3EYVf
+        JBKHL6C5yLnilPFkrIJQkGzcjeN3nUnutyJIUxk=
+X-Google-Smtp-Source: APXvYqyQaYijHFhzHSNuJJm/K7mUvoPkwsQvIyx9Xic0uKpsRDi9L17EUyNDAXBS6EPApkMCLoXdp355Op26T39b7LM=
+X-Received: by 2002:a9d:6e96:: with SMTP id a22mr10979550otr.207.1558349208470;
+ Mon, 20 May 2019 03:46:48 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190518215542.25140-1-lucasseikioshiro@gmail.com> <20190519122418.7722641b@archlinux>
+In-Reply-To: <20190519122418.7722641b@archlinux>
+From:   Alexandru Ardelean <ardeleanalex@gmail.com>
+Date:   Mon, 20 May 2019 13:46:37 +0300
+Message-ID: <CA+U=DsrvRcAARa+jZB8GKQ+q+wWWqAh7dmnHymLd9cpFGC2QSw@mail.gmail.com>
+Subject: Re: [PATCH] dt-bindings: iio: accel: adxl372: switch to YAML bindings
+To:     Jonathan Cameron <jic23@kernel.org>
+Cc:     Lucas Oshiro <lucasseikioshiro@gmail.com>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Stefan Popa <stefan.popa@analog.com>,
+        linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>, kernel-usp@googlegroups.com,
+        Rodrigo Ribeiro <rodrigorsdc@gmail.com>,
+        Alexandru Ardelean <alexandru.ardelean@analog.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Sun, May 19, 2019 at 8:27 PM Jonathan Cameron <jic23@kernel.org> wrote:
+>
+> On Sat, 18 May 2019 18:55:42 -0300
+> Lucas Oshiro <lucasseikioshiro@gmail.com> wrote:
+>
+> > Convert the old device tree documentation to yaml format.
+> >
+> > Signed-off-by: Lucas Oshiro <lucasseikioshiro@gmail.com>
+> > Signed-off-by: Rodrigo Ribeiro <rodrigorsdc@gmail.com>
+> > Co-developed-by: Rodrigo Ribeiro <rodrigorsdc@gmail.com>
+> > ---
+> >
+> > Hello,
+> > We've added Stefan Popa as maintainer of the yaml documentation of this driver
+> > because we found through git that he was the author of the older documentation.
+>
+> Definitely going to need an Ack from Stefan for that ;)
 
---Apple-Mail=_695B9A4F-9A68-4C92-B622-6C792D193B9F
-Content-Transfer-Encoding: 7bit
-Content-Type: text/plain;
-	charset=us-ascii
+CC-ing my work-email
+There are some issues with it and mailing lists; I'll hopefully sort
+them out in the next weeks.
 
+Stefan is out-of-office.
+He'll take a look when he comes back.
 
+I'll add a few notes until then.
 
-> Il giorno 20 mag 2019, alle ore 11:15, Jan Kara <jack@suse.cz> ha scritto:
-> 
-> On Sat 18-05-19 15:28:47, Theodore Ts'o wrote:
->> On Sat, May 18, 2019 at 08:39:54PM +0200, Paolo Valente wrote:
->>> I've addressed these issues in my last batch of improvements for
->>> BFQ, which landed in the upcoming 5.2. If you give it a try, and
->>> still see the problem, then I'll be glad to reproduce it, and
->>> hopefully fix it for you.
->> 
->> Hi Paolo, I'm curious if you could give a quick summary about what you
->> changed in BFQ?
->> 
->> I was considering adding support so that if userspace calls fsync(2)
->> or fdatasync(2), to attach the process's CSS to the transaction, and
->> then charge all of the journal metadata writes the process's CSS.  If
->> there are multiple fsync's batched into the transaction, the first
->> process which forced the early transaction commit would get charged
->> the entire journal write.  OTOH, journal writes are sequential I/O, so
->> the amount of disk time for writing the journal is going to be
->> relatively small, and especially, the fact that work from other
->> cgroups is going to be minimal, especially if hadn't issued an
->> fsync().
-> 
-> But this makes priority-inversion problems with ext4 journal worse, doesn't
-> it? If we submit journal commit in blkio cgroup of some random process, it
-> may get throttled which then effectively blocks the whole filesystem. Or do
-> you want to implement a more complex back-pressure mechanism where you'd
-> just account to different blkio cgroup during journal commit and then
-> throttle as different point where you are not blocking other tasks from
-> progress?
-> 
->> In the case where you have three cgroups all issuing fsync(2) and they
->> all landed in the same jbd2 transaction thanks to commit batching, in
->> the ideal world we would split up the disk time usage equally across
->> those three cgroups.  But it's probably not worth doing that...
->> 
->> That being said, we probably do need some BFQ support, since in the
->> case where we have multiple processes doing buffered writes w/o fsync,
->> we do charnge the data=ordered writeback to each block cgroup. Worse,
->> the commit can't complete until the all of the data integrity
->> writebacks have completed.  And if there are N cgroups with dirty
->> inodes, and slice_idle set to 8ms, there is going to be 8*N ms worth
->> of idle time tacked onto the commit time.
-> 
-> Yeah. At least in some cases, we know there won't be any more IO from a
-> particular cgroup in the near future (e.g. transaction commit completing,
-> or when the layers above IO scheduler already know which IO they are going
-> to submit next) and in that case idling is just a waste of time.
+I'd still like Stefan's ack to be final.
 
-Yep.  Issues like this are targeted exactly by the improvement I
-mentioned in my previous reply.
+>
+> I've not really gotten yaml formats into my head yet, but from a quick
+> look I think this is fine.  I will however be looking for review from others
+> on these.
+>
+> Thanks,
+>
+> Jonathan
+>
+> >
+> >  .../bindings/iio/accel/adi,adxl372.yaml       | 66 +++++++++++++++++++
+> >  .../devicetree/bindings/iio/accel/adxl372.txt | 33 ----------
+> >  2 files changed, 66 insertions(+), 33 deletions(-)
+> >  create mode 100644 Documentation/devicetree/bindings/iio/accel/adi,adxl372.yaml
+> >  delete mode 100644 Documentation/devicetree/bindings/iio/accel/adxl372.txt
 
-> But so far
-> I haven't decided how should look a reasonably clean interface for this
-> that isn't specific to a particular IO scheduler implementation.
-> 
+Also update the MAINTAINERS file when changing this.
+For reference, many things can be borrowed from the ADXL345, which is
+similar (from a dt-binding doc perspective only).
 
-That's an interesting point.  So far, I've assumed that nobody would
-have told anything to BFQ.  But if you guys think that such a
-communication may be acceptable at some degree, then I'd be glad to
-try to come up with some solution.  For instance: some hook that any
-I/O scheduler may export if meaningful.
+> >
+> > diff --git a/Documentation/devicetree/bindings/iio/accel/adi,adxl372.yaml b/Documentation/devicetree/bindings/iio/accel/adi,adxl372.yaml
+> > new file mode 100644
+> > index 000000000000..a6e2893d2ab1
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/iio/accel/adi,adxl372.yaml
+> > @@ -0,0 +1,66 @@
+> > +# SPDX-License-Identifier: GPL-2.0
+> > +%YAML 1.2
+> > +---
+> > +$id: http://devicetree.org/schemas/iio/accelerometers/adi,adxl372.yaml#
+> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > +
+> > +title: Analog Devices ADXL372 3-Axis, +/-(200g) Digital Accelerometer
+> > +
+> > +maintainers:
+> > +  - Stefan Popa <stefan.popa@analog.com>
+> > +
+> > +description: |
+> > +  Analog Devices ADXL372 3-Axis, +/-(200g) Digital Accelerometer that supports
+> > +  both I2C & SPI interfaces
+> > +    https://www.analog.com/en/products/adxl372.html
+> > +
+> > +properties:
+> > +  compatible:
+> > +    enum:
+> > +      - adi,adxl372
+> > +
+> > +  reg:
+> > +    description: the I2C address or SPI chip select number for the device
 
-Thanks,
-Paolo
+no need to add a description for reg
+it's a standard property
 
-> 								Honza
-> --
-> Jan Kara <jack@suse.com>
-> SUSE Labs, CR
+> > +    maxItems: 1
+> > +
+> > +  interrupts:
+> > +    description:
+> > +      interrupt mapping for IRQ as documented in
+> > +      Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
 
+no need to describe this either
 
---Apple-Mail=_695B9A4F-9A68-4C92-B622-6C792D193B9F
-Content-Transfer-Encoding: 7bit
-Content-Disposition: attachment;
-	filename=signature.asc
-Content-Type: application/pgp-signature;
-	name=signature.asc
-Content-Description: Message signed with OpenPGP
+> > +    maxItems: 1
+> > +
+> > +required:
+> > +  - compatible
+> > +  - reg
 
------BEGIN PGP SIGNATURE-----
+I think interrupts is also required.
 
-iQIzBAEBCAAdFiEEpYoduex+OneZyvO8OAkCLQGo9oMFAlzihWYACgkQOAkCLQGo
-9oPXOA//SHPnVMxI3rHezSW0oYnbHoHp+FGr9dlhy3tQXGYXlhkAVnAO5z8rFFiF
-l3i0Rm84B/BLL/v/a2NMj50boLqfrjMA7YhUscj+uoGyQgmA8LZGfMv9RmSQt2mf
-6KZfuJL4UdDkbjagKpWOaRjuOnvrP1L2psg0rbngdSil8ZS/D60FbWL6f8NmDSmz
-tb/s/ZS8YM4b58Qp6rtoMLwQVfj6vT+4QJib4C/YNbo9wY8+JULuuJRllRYqATsL
-cxOJFGwfL5fvcvQ/agaqp4lorVBLrMMMNEi9NpH6AFcQ8ALAZ2jEzKANOmrP8f43
-cQpuLhsOVBAZuWQpmAYwX5au9VUaGTZsrhqYPEeMWY23Q0LHmJt8k4FoEF4wZRnt
-F7pVokpmMlwjcgw0+OzFm+OngQHdXFxbFwY8boWtmSXdSiZiZ61nbTfAnYNlp+/W
-Of0RlXgzZTMH5gqRLaFjZamQUIE5oWTtIvCPC9cF4CE2+tyQVHbla7Azgo/JvFRw
-LEbg21BDrSUxUfJukpaYrjtZ+LIyuFG3R+Wn3HN1qVAmUW+T3imrTN9U+xXft3c1
-mkp8LwHND/8tnCGOsxYZXpEK4SmPykGOPpJS8Zjc+XWcr70HYXw8xMcajb0Fsl9p
-y9BLh0rZNMYmI58YAucv5thw+MbdtdoKCWh2R+Oebh7Il2+0kLM=
-=xSol
------END PGP SIGNATURE-----
+> > +
+> > +examples:
+> > +  - |
+> > +        #include <dt-bindings/gpio/gpio.h>
+> > +        #include <dt-bindings/interrupt-controller/irq.h>
+> > +        i2c0 {
+> > +                #address-cells = <1>;
+> > +                #size-cells = <0>;
+> > +
+> > +                /* Example for a I2C device node */
+> > +                accelerometer@53 {
+> > +                        compatible = "adi,adxl372";
+> > +                        reg = <0x53>;
+> > +                        interrupt-parent = <&gpio>;
+> > +                        interrupts = <25 IRQ_TYPE_EDGE_FALLING>;
+> > +                };
+> > +        };
+> > +  - |
+> > +        #include <dt-bindings/gpio/gpio.h>
+> > +        #include <dt-bindings/interrupt-controller/irq.h>
+> > +        spi0 {
+> > +                #address-cells = <1>;
+> > +                #size-cells = <0>;
+> > +
+> > +                accelerometer@0 {
+> > +                        compatible = "adi,adxl372";
+> > +                        reg = <0>;
+> > +                        spi-max-frequency = <1000000>;
+> > +                        interrupt-parent = <&gpio>;
+> > +                        interrupts = <25 IRQ_TYPE_EDGE_FALLING>;
+> > +                };
+> > +        };
 
---Apple-Mail=_695B9A4F-9A68-4C92-B622-6C792D193B9F--
+Rest looks good.
+
+> > diff --git a/Documentation/devicetree/bindings/iio/accel/adxl372.txt b/Documentation/devicetree/bindings/iio/accel/adxl372.txt
+> > deleted file mode 100644
+> > index a289964756a7..000000000000
+> > --- a/Documentation/devicetree/bindings/iio/accel/adxl372.txt
+> > +++ /dev/null
+> > @@ -1,33 +0,0 @@
+> > -Analog Devices ADXL372 3-Axis, +/-(200g) Digital Accelerometer
+> > -
+> > -http://www.analog.com/media/en/technical-documentation/data-sheets/adxl372.pdf
+> > -
+> > -Required properties:
+> > - - compatible : should be "adi,adxl372"
+> > - - reg: the I2C address or SPI chip select number for the device
+> > -
+> > -Required properties for SPI bus usage:
+> > - - spi-max-frequency: Max SPI frequency to use
+> > -
+> > -Optional properties:
+> > - - interrupts: interrupt mapping for IRQ as documented in
+> > -   Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
+> > -
+> > -Example for a I2C device node:
+> > -
+> > -     accelerometer@53 {
+> > -             compatible = "adi,adxl372";
+> > -             reg = <0x53>;
+> > -             interrupt-parent = <&gpio>;
+> > -             interrupts = <25 IRQ_TYPE_EDGE_FALLING>;
+> > -     };
+> > -
+> > -Example for a SPI device node:
+> > -
+> > -     accelerometer@0 {
+> > -             compatible = "adi,adxl372";
+> > -             reg = <0>;
+> > -             spi-max-frequency = <1000000>;
+> > -             interrupt-parent = <&gpio>;
+> > -             interrupts = <25 IRQ_TYPE_EDGE_FALLING>;
+> > -     };
+>
