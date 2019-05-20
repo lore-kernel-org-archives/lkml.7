@@ -4,166 +4,340 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7A61C04E87
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 09:04:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63805C04AAF
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 09:05:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A700C2085A
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 09:04:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2EC2020656
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 09:05:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731776AbfETJEm (ORCPT
+        id S1731705AbfETJFX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 05:04:42 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:8219 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1731763AbfETJEl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 05:04:41 -0400
-Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id CD27E70C92FBE0086081;
-        Mon, 20 May 2019 17:04:38 +0800 (CST)
-Received: from localhost.localdomain.localdomain (10.175.113.25) by
- DGGEMS411-HUB.china.huawei.com (10.3.19.211) with Microsoft SMTP Server id
- 14.3.439.0; Mon, 20 May 2019 17:04:29 +0800
-From:   Kefeng Wang <wangkefeng.wang@huawei.com>
-To:     Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-kernel@vger.kernel.org>
-CC:     Kefeng Wang <wangkefeng.wang@huawei.com>,
-        Hulk Robot <hulkci@huawei.com>
-Subject: [PATCH 2/2] hwtracing: stm: fix double-free in stm_source_register_device()
-Date:   Mon, 20 May 2019 17:13:15 +0800
-Message-ID: <20190520091315.27898-2-wangkefeng.wang@huawei.com>
+        Mon, 20 May 2019 05:05:23 -0400
+Received: from mga09.intel.com ([134.134.136.24]:27087 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726316AbfETJFX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 05:05:23 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 May 2019 02:05:21 -0700
+X-ExtLoop1: 1
+Received: from twinkler-lnx.jer.intel.com ([10.12.91.48])
+  by fmsmga004.fm.intel.com with ESMTP; 20 May 2019 02:05:19 -0700
+From:   Tomas Winkler <tomas.winkler@intel.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Alexander Usyskin <alexander.usyskin@intel.com>,
+        linux-kernel@vger.kernel.org,
+        Vitaly Lubart <vitaly.lubart@intel.com>,
+        Tomas Winkler <tomas.winkler@intel.com>
+Subject: [char-misc-next] mei: Convert to use DEFINE_SHOW_ATTRIBUTE macro
+Date:   Mon, 20 May 2019 11:55:39 +0300
+Message-Id: <20190520085539.6013-1-tomas.winkler@intel.com>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190520091315.27898-1-wangkefeng.wang@huawei.com>
-References: <20190520091315.27898-1-wangkefeng.wang@huawei.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.175.113.25]
-X-CFilter-Loop: Reflected
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If device_add() in stm_source_register_device() fails,
-stm_source_device_release() is called to free src, free
-src again on err path will trigger double free issue.
+From: Vitaly Lubart <vitaly.lubart@intel.com>
 
-BUG: KASAN: double-free or invalid-free in stm_source_register_device+0xd0/0x1a0 [stm_core]
+Use DEFINE_SHOW_ATTRIBUTE macro to simplify the code.
 
-CPU: 1 PID: 8556 Comm: syz-executor.0 Tainted: G         C        5.1.0+ #28
-Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.10.2-1ubuntu1 04/01/2014
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0xa9/0x10e lib/dump_stack.c:113
- print_address_description+0x65/0x270 mm/kasan/report.c:188
- kasan_report_invalid_free+0x60/0xa0 mm/kasan/report.c:279
- __kasan_slab_free+0x159/0x180 mm/kasan/common.c:430
- slab_free_hook mm/slub.c:1420 [inline]
- slab_free_freelist_hook mm/slub.c:1447 [inline]
- slab_free mm/slub.c:2994 [inline]
- kfree+0xe1/0x270 mm/slub.c:3949
- stm_source_register_device+0xd0/0x1a0 [stm_core]
- stm_heartbeat_init+0xb6/0x1b0 [stm_heartbeat]
- do_one_initcall+0xb9/0x3b5 init/main.c:914
- do_init_module+0xe0/0x330 kernel/module.c:3468
- load_module+0x38eb/0x4270 kernel/module.c:3819
- __do_sys_finit_module+0x162/0x190 kernel/module.c:3909
- do_syscall_64+0x72/0x2a0 arch/x86/entry/common.c:298
- entry_SYSCALL_64_after_hwframe+0x49/0xbe
-
- ...
-
-Allocated by task 8556:
- save_stack+0x19/0x80 mm/kasan/common.c:71
- set_track mm/kasan/common.c:79 [inline]
- __kasan_kmalloc.constprop.2+0xa0/0xd0 mm/kasan/common.c:489
- stm_source_register_device+0x46/0x1a0 [stm_core]
- stm_heartbeat_init+0xb6/0x1b0 [stm_heartbeat]
- do_one_initcall+0xb9/0x3b5 init/main.c:914
- do_init_module+0xe0/0x330 kernel/module.c:3468
- load_module+0x38eb/0x4270 kernel/module.c:3819
- __do_sys_finit_module+0x162/0x190 kernel/module.c:3909
- do_syscall_64+0x72/0x2a0 arch/x86/entry/common.c:298
- entry_SYSCALL_64_after_hwframe+0x49/0xbe
-
-Freed by task 8556:
- save_stack+0x19/0x80 mm/kasan/common.c:71
- set_track mm/kasan/common.c:79 [inline]
- __kasan_slab_free+0x130/0x180 mm/kasan/common.c:451
- slab_free_hook mm/slub.c:1420 [inline]
- slab_free_freelist_hook mm/slub.c:1447 [inline]
- slab_free mm/slub.c:2994 [inline]
- kfree+0xe1/0x270 mm/slub.c:3949
- device_release+0x46/0x100 drivers/base/core.c:1064
- kobject_cleanup lib/kobject.c:691 [inline]
- kobject_release lib/kobject.c:720 [inline]
- kref_put include/linux/kref.h:67 [inline]
- kobject_put+0x1a8/0x220 lib/kobject.c:737
- put_device+0x1b/0x30 drivers/base/core.c:2210
- stm_source_register_device+0xc8/0x1a0 [stm_core]
- stm_heartbeat_init+0xb6/0x1b0 [stm_heartbeat]
- do_one_initcall+0xb9/0x3b5 init/main.c:914
- do_init_module+0xe0/0x330 kernel/module.c:3468
- load_module+0x38eb/0x4270 kernel/module.c:3819
- __do_sys_finit_module+0x162/0x190 kernel/module.c:3909
- do_syscall_64+0x72/0x2a0 arch/x86/entry/common.c:298
- entry_SYSCALL_64_after_hwframe+0x49/0xbe
-
-Don't call kfree(src) if device_add() fails to fix it.
-
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: Kefeng Wang <wangkefeng.wang@huawei.com>
+Signed-off-by: Vitaly Lubart <vitaly.lubart@intel.com>
+Signed-off-by: Tomas Winkler <tomas.winkler@intel.com>
 ---
- drivers/hwtracing/stm/core.c | 17 ++++++++---------
- 1 file changed, 8 insertions(+), 9 deletions(-)
+ drivers/misc/mei/debugfs.c | 184 +++++++++++--------------------------
+ 1 file changed, 52 insertions(+), 132 deletions(-)
 
-diff --git a/drivers/hwtracing/stm/core.c b/drivers/hwtracing/stm/core.c
-index 7b2ab7b2cc4d..5ce30f8f8c4f 100644
---- a/drivers/hwtracing/stm/core.c
-+++ b/drivers/hwtracing/stm/core.c
-@@ -1258,15 +1258,20 @@ int stm_source_register_device(struct device *parent,
- 	src->dev.release = stm_source_device_release;
+diff --git a/drivers/misc/mei/debugfs.c b/drivers/misc/mei/debugfs.c
+index 0970142bcace..47cfd5005e1b 100644
+--- a/drivers/misc/mei/debugfs.c
++++ b/drivers/misc/mei/debugfs.c
+@@ -8,6 +8,7 @@
+ #include <linux/kernel.h>
+ #include <linux/device.h>
+ #include <linux/debugfs.h>
++#include <linux/seq_file.h>
  
- 	err = kobject_set_name(&src->dev.kobj, "%s", data->name);
--	if (err)
-+	if (err) {
-+		put_device(&src->dev);
-+		kfree(src);
- 		goto err;
-+	}
+ #include <linux/mei.h>
  
- 	pm_runtime_no_callbacks(&src->dev);
- 	pm_runtime_forbid(&src->dev);
+@@ -15,104 +16,56 @@
+ #include "client.h"
+ #include "hw.h"
  
- 	err = device_add(&src->dev);
--	if (err)
--		goto err;
-+	if (err) {
-+		put_device(&src->dev);
-+		return err;
-+	}
+-static ssize_t mei_dbgfs_read_meclients(struct file *fp, char __user *ubuf,
+-					size_t cnt, loff_t *ppos)
++static int mei_dbgfs_meclients_show(struct seq_file *m, void *unused)
+ {
+-	struct mei_device *dev = fp->private_data;
++	struct mei_device *dev = m->private;
+ 	struct mei_me_client *me_cl;
+-	size_t bufsz = 1;
+-	char *buf;
+ 	int i = 0;
+-	int pos = 0;
+-	int ret;
  
- 	stm_output_init(&src->output);
- 	spin_lock_init(&src->link_lock);
-@@ -1275,12 +1280,6 @@ int stm_source_register_device(struct device *parent,
- 	data->src = src;
+-#define HDR \
+-"  |id|fix|         UUID                       |con|msg len|sb|refc|\n"
++	if (!dev)
++		return -ENODEV;
  
- 	return 0;
+ 	down_read(&dev->me_clients_rwsem);
+-	list_for_each_entry(me_cl, &dev->me_clients, list)
+-		bufsz++;
+ 
+-	bufsz *= sizeof(HDR) + 1;
+-	buf = kzalloc(bufsz, GFP_KERNEL);
+-	if (!buf) {
+-		up_read(&dev->me_clients_rwsem);
+-		return -ENOMEM;
+-	}
 -
--err:
--	put_device(&src->dev);
--	kfree(src);
+-	pos += scnprintf(buf + pos, bufsz - pos, HDR);
+-#undef HDR
++	seq_puts(m, "  |id|fix|         UUID                       |con|msg len|sb|refc|\n");
+ 
+ 	/*  if the driver is not enabled the list won't be consistent */
+ 	if (dev->dev_state != MEI_DEV_ENABLED)
+ 		goto out;
+ 
+ 	list_for_each_entry(me_cl, &dev->me_clients, list) {
 -
--	return err;
+-		if (mei_me_cl_get(me_cl)) {
+-			pos += scnprintf(buf + pos, bufsz - pos,
+-				"%2d|%2d|%3d|%pUl|%3d|%7d|%2d|%4d|\n",
+-				i++, me_cl->client_id,
+-				me_cl->props.fixed_address,
+-				&me_cl->props.protocol_name,
+-				me_cl->props.max_number_of_connections,
+-				me_cl->props.max_msg_length,
+-				me_cl->props.single_recv_buf,
+-				kref_read(&me_cl->refcnt));
+-
+-			mei_me_cl_put(me_cl);
+-		}
++		if (!mei_me_cl_get(me_cl))
++			continue;
++
++		seq_printf(m, "%2d|%2d|%3d|%pUl|%3d|%7d|%2d|%4d|\n",
++			   i++, me_cl->client_id,
++			   me_cl->props.fixed_address,
++			   &me_cl->props.protocol_name,
++			   me_cl->props.max_number_of_connections,
++			   me_cl->props.max_msg_length,
++			   me_cl->props.single_recv_buf,
++			   kref_read(&me_cl->refcnt));
++		mei_me_cl_put(me_cl);
+ 	}
+ 
+ out:
+ 	up_read(&dev->me_clients_rwsem);
+-	ret = simple_read_from_buffer(ubuf, cnt, ppos, buf, pos);
+-	kfree(buf);
+-	return ret;
++	return 0;
  }
- EXPORT_SYMBOL_GPL(stm_source_register_device);
++DEFINE_SHOW_ATTRIBUTE(mei_dbgfs_meclients);
  
+-static const struct file_operations mei_dbgfs_fops_meclients = {
+-	.open = simple_open,
+-	.read = mei_dbgfs_read_meclients,
+-	.llseek = generic_file_llseek,
+-};
+-
+-static ssize_t mei_dbgfs_read_active(struct file *fp, char __user *ubuf,
+-					size_t cnt, loff_t *ppos)
++static int mei_dbgfs_active_show(struct seq_file *m, void *unused)
+ {
+-	struct mei_device *dev = fp->private_data;
++	struct mei_device *dev = m->private;
+ 	struct mei_cl *cl;
+-	size_t bufsz = 1;
+-	char *buf;
+ 	int i = 0;
+-	int pos = 0;
+-	int ret;
+-
+-#define HDR "   |me|host|state|rd|wr|wrq\n"
+ 
+ 	if (!dev)
+ 		return -ENODEV;
+ 
+ 	mutex_lock(&dev->device_lock);
+ 
+-	/*
+-	 * if the driver is not enabled the list won't be consistent,
+-	 * we output empty table
+-	 */
+-	if (dev->dev_state == MEI_DEV_ENABLED)
+-		list_for_each_entry(cl, &dev->file_list, link)
+-			bufsz++;
+-
+-	bufsz *= sizeof(HDR) + 1;
+-
+-	buf = kzalloc(bufsz, GFP_KERNEL);
+-	if  (!buf) {
+-		mutex_unlock(&dev->device_lock);
+-		return -ENOMEM;
+-	}
+-
+-	pos += scnprintf(buf + pos, bufsz - pos, HDR);
+-#undef HDR
++	seq_puts(m, "   |me|host|state|rd|wr|wrq\n");
+ 
+ 	/*  if the driver is not enabled the list won't be consistent */
+ 	if (dev->dev_state != MEI_DEV_ENABLED)
+@@ -120,76 +73,44 @@ static ssize_t mei_dbgfs_read_active(struct file *fp, char __user *ubuf,
+ 
+ 	list_for_each_entry(cl, &dev->file_list, link) {
+ 
+-		pos += scnprintf(buf + pos, bufsz - pos,
+-			"%3d|%2d|%4d|%5d|%2d|%2d|%3u\n",
+-			i, mei_cl_me_id(cl), cl->host_client_id, cl->state,
+-			!list_empty(&cl->rd_completed), cl->writing_state,
+-			cl->tx_cb_queued);
++		seq_printf(m, "%3d|%2d|%4d|%5d|%2d|%2d|%3u\n",
++			   i, mei_cl_me_id(cl), cl->host_client_id, cl->state,
++			   !list_empty(&cl->rd_completed), cl->writing_state,
++			   cl->tx_cb_queued);
+ 		i++;
+ 	}
+ out:
+ 	mutex_unlock(&dev->device_lock);
+-	ret = simple_read_from_buffer(ubuf, cnt, ppos, buf, pos);
+-	kfree(buf);
+-	return ret;
++	return 0;
+ }
++DEFINE_SHOW_ATTRIBUTE(mei_dbgfs_active);
+ 
+-static const struct file_operations mei_dbgfs_fops_active = {
+-	.open = simple_open,
+-	.read = mei_dbgfs_read_active,
+-	.llseek = generic_file_llseek,
+-};
+-
+-static ssize_t mei_dbgfs_read_devstate(struct file *fp, char __user *ubuf,
+-					size_t cnt, loff_t *ppos)
++static int mei_dbgfs_devstate_show(struct seq_file *m, void *unused)
+ {
+-	struct mei_device *dev = fp->private_data;
+-	const size_t bufsz = 1024;
+-	char *buf = kzalloc(bufsz, GFP_KERNEL);
+-	int pos = 0;
+-	int ret;
+-
+-	if  (!buf)
+-		return -ENOMEM;
++	struct mei_device *dev = m->private;
+ 
+-	pos += scnprintf(buf + pos, bufsz - pos, "dev: %s\n",
+-			mei_dev_state_str(dev->dev_state));
+-	pos += scnprintf(buf + pos, bufsz - pos, "hbm: %s\n",
+-			mei_hbm_state_str(dev->hbm_state));
++	seq_printf(m, "dev: %s\n", mei_dev_state_str(dev->dev_state));
++	seq_printf(m, "hbm: %s\n", mei_hbm_state_str(dev->hbm_state));
+ 
+ 	if (dev->hbm_state >= MEI_HBM_ENUM_CLIENTS &&
+ 	    dev->hbm_state <= MEI_HBM_STARTED) {
+-		pos += scnprintf(buf + pos, bufsz - pos, "hbm features:\n");
+-		pos += scnprintf(buf + pos, bufsz - pos, "\tPG: %01d\n",
+-				 dev->hbm_f_pg_supported);
+-		pos += scnprintf(buf + pos, bufsz - pos, "\tDC: %01d\n",
+-				 dev->hbm_f_dc_supported);
+-		pos += scnprintf(buf + pos, bufsz - pos, "\tIE: %01d\n",
+-				 dev->hbm_f_ie_supported);
+-		pos += scnprintf(buf + pos, bufsz - pos, "\tDOT: %01d\n",
+-				 dev->hbm_f_dot_supported);
+-		pos += scnprintf(buf + pos, bufsz - pos, "\tEV: %01d\n",
+-				 dev->hbm_f_ev_supported);
+-		pos += scnprintf(buf + pos, bufsz - pos, "\tFA: %01d\n",
+-				 dev->hbm_f_fa_supported);
+-		pos += scnprintf(buf + pos, bufsz - pos, "\tOS: %01d\n",
+-				 dev->hbm_f_os_supported);
+-		pos += scnprintf(buf + pos, bufsz - pos, "\tDR: %01d\n",
+-				 dev->hbm_f_dr_supported);
++		seq_puts(m, "hbm features:\n");
++		seq_printf(m, "\tPG: %01d\n", dev->hbm_f_pg_supported);
++		seq_printf(m, "\tDC: %01d\n", dev->hbm_f_dc_supported);
++		seq_printf(m, "\tIE: %01d\n", dev->hbm_f_ie_supported);
++		seq_printf(m, "\tDOT: %01d\n", dev->hbm_f_dot_supported);
++		seq_printf(m, "\tEV: %01d\n", dev->hbm_f_ev_supported);
++		seq_printf(m, "\tFA: %01d\n", dev->hbm_f_fa_supported);
++		seq_printf(m, "\tOS: %01d\n", dev->hbm_f_os_supported);
++		seq_printf(m, "\tDR: %01d\n", dev->hbm_f_dr_supported);
+ 	}
+ 
+-	pos += scnprintf(buf + pos, bufsz - pos, "pg:  %s, %s\n",
+-			mei_pg_is_enabled(dev) ? "ENABLED" : "DISABLED",
+-			mei_pg_state_str(mei_pg_state(dev)));
+-	ret = simple_read_from_buffer(ubuf, cnt, ppos, buf, pos);
+-	kfree(buf);
+-	return ret;
++	seq_printf(m, "pg:  %s, %s\n",
++		   mei_pg_is_enabled(dev) ? "ENABLED" : "DISABLED",
++		   mei_pg_state_str(mei_pg_state(dev)));
++	return 0;
+ }
+-static const struct file_operations mei_dbgfs_fops_devstate = {
+-	.open = simple_open,
+-	.read = mei_dbgfs_read_devstate,
+-	.llseek = generic_file_llseek,
+-};
++DEFINE_SHOW_ATTRIBUTE(mei_dbgfs_devstate);
+ 
+ static ssize_t mei_dbgfs_write_allow_fa(struct file *file,
+ 					const char __user *user_buf,
+@@ -208,7 +129,7 @@ static ssize_t mei_dbgfs_write_allow_fa(struct file *file,
+ 	return ret;
+ }
+ 
+-static const struct file_operations mei_dbgfs_fops_allow_fa = {
++static const struct file_operations mei_dbgfs_allow_fa_fops = {
+ 	.open = simple_open,
+ 	.read = debugfs_read_file_bool,
+ 	.write = mei_dbgfs_write_allow_fa,
+@@ -247,26 +168,26 @@ int mei_dbgfs_register(struct mei_device *dev, const char *name)
+ 	dev->dbgfs_dir = dir;
+ 
+ 	f = debugfs_create_file("meclients", S_IRUSR, dir,
+-				dev, &mei_dbgfs_fops_meclients);
++				dev, &mei_dbgfs_meclients_fops);
+ 	if (!f) {
+ 		dev_err(dev->dev, "meclients: registration failed\n");
+ 		goto err;
+ 	}
+ 	f = debugfs_create_file("active", S_IRUSR, dir,
+-				dev, &mei_dbgfs_fops_active);
++				dev, &mei_dbgfs_active_fops);
+ 	if (!f) {
+ 		dev_err(dev->dev, "active: registration failed\n");
+ 		goto err;
+ 	}
+ 	f = debugfs_create_file("devstate", S_IRUSR, dir,
+-				dev, &mei_dbgfs_fops_devstate);
++				dev, &mei_dbgfs_devstate_fops);
+ 	if (!f) {
+ 		dev_err(dev->dev, "devstate: registration failed\n");
+ 		goto err;
+ 	}
+ 	f = debugfs_create_file("allow_fixed_address", S_IRUSR | S_IWUSR, dir,
+ 				&dev->allow_fixed_address,
+-				&mei_dbgfs_fops_allow_fa);
++				&mei_dbgfs_allow_fa_fops);
+ 	if (!f) {
+ 		dev_err(dev->dev, "allow_fixed_address: registration failed\n");
+ 		goto err;
+@@ -276,4 +197,3 @@ int mei_dbgfs_register(struct mei_device *dev, const char *name)
+ 	mei_dbgfs_deregister(dev);
+ 	return -ENODEV;
+ }
+-
 -- 
 2.20.1
 
