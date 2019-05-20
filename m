@@ -2,206 +2,72 @@ Return-Path: <SRS0=lq4r=TU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50C48C46460
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 02:59:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 466A8C04AB4
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 03:00:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 30CA32082E
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 02:59:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C72220833
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 03:00:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1558321218;
+	bh=jfXJLpbE4kXVGEV+hjaGh9tglvbqgZpjqOPGuhlXhw8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Z5KRx2+dQUaP3IflFPnL5IsBVqMX123SXwZhdJwcQ4/QYMFz/3h4Ic1+5FLu0l+Cj
+	 hpzGyEDtaYs8ephL06hHWdZ5dCgdrarFHYkWwDYfQhE0i0eyBSHZKH0etiFIsS8PjQ
+	 ojQ1q1xgnlRTmKmiAP4uSaPaJywxwswe4ZyW9uEo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730123AbfETC7u (ORCPT
+        id S1730149AbfETDAR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 19 May 2019 22:59:50 -0400
-Received: from out30-45.freemail.mail.aliyun.com ([115.124.30.45]:56883 "EHLO
-        out30-45.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725959AbfETC7u (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 19 May 2019 22:59:50 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R181e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e07486;MF=yang.shi@linux.alibaba.com;NM=1;PH=DS;RN=9;SR=0;TI=SMTPD_---0TSAtmJS_1558321155;
-Received: from US-143344MP.local(mailfrom:yang.shi@linux.alibaba.com fp:SMTPD_---0TSAtmJS_1558321155)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Mon, 20 May 2019 10:59:45 +0800
-Subject: Re: [v2 PATCH] mm: mmu_gather: remove __tlb_reset_range() for force
- flush
-To:     Jan Stancek <jstancek@redhat.com>,
-        Will Deacon <will.deacon@arm.com>
-Cc:     peterz@infradead.org, namit@vmware.com, minchan@kernel.org,
-        mgorman@suse.de, stable@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-References: <1557444414-12090-1-git-send-email-yang.shi@linux.alibaba.com>
- <20190513163804.GB10754@fuggles.cambridge.arm.com>
- <360170d7-b16f-f130-f930-bfe54be9747a@linux.alibaba.com>
- <20190514145445.GB2825@fuggles.cambridge.arm.com>
- <1158926942.23199905.1558020575293.JavaMail.zimbra@redhat.com>
-From:   Yang Shi <yang.shi@linux.alibaba.com>
-Message-ID: <ca6ab067-1d0c-941d-9c8b-7806af3521be@linux.alibaba.com>
-Date:   Mon, 20 May 2019 10:59:07 +0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.12; rv:52.0)
- Gecko/20100101 Thunderbird/52.7.0
+        Sun, 19 May 2019 23:00:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43422 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725959AbfETDAQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 19 May 2019 23:00:16 -0400
+Received: from dragon (98.142.130.235.16clouds.com [98.142.130.235])
+        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 89B5D20644;
+        Mon, 20 May 2019 03:00:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1558321216;
+        bh=jfXJLpbE4kXVGEV+hjaGh9tglvbqgZpjqOPGuhlXhw8=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Q04B34MHld4TgcGDc2o8fyDiFEHWoWvO3RVgFsIzdQXhPoJ5V8FHCymqVcamGjl17
+         cL2yBja8Ycz72rJgso+rQEPMEjf5HZcsDa+kQrSbmG9bcOQW3i2gdSKw9Yl4n6V4oC
+         IqowJfnhugvmFMzNVO0J3SVwxICZoSaSQxBU7G+I=
+Date:   Mon, 20 May 2019 10:59:28 +0800
+From:   Shawn Guo <shawnguo@kernel.org>
+To:     Anson Huang <anson.huang@nxp.com>
+Cc:     "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        dl-linux-imx <linux-imx@nxp.com>
+Subject: Re: [PATCH RESEND] ARM: dts: imx6ul: add clock-frequency to CPU node
+Message-ID: <20190520025927.GM15856@dragon>
+References: <1557651135-12109-1-git-send-email-Anson.Huang@nxp.com>
 MIME-Version: 1.0
-In-Reply-To: <1158926942.23199905.1558020575293.JavaMail.zimbra@redhat.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1557651135-12109-1-git-send-email-Anson.Huang@nxp.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Sun, May 12, 2019 at 08:57:16AM +0000, Anson Huang wrote:
+> Add clock-frequency property to CPU node. Avoids warnings like
+> "/cpus/cpu@0 missing clock-frequency property" for "arm,cortex-a7".
+> 
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 
-
-On 5/16/19 11:29 PM, Jan Stancek wrote:
->
-> ----- Original Message -----
->> On Mon, May 13, 2019 at 04:01:09PM -0700, Yang Shi wrote:
->>>
->>> On 5/13/19 9:38 AM, Will Deacon wrote:
->>>> On Fri, May 10, 2019 at 07:26:54AM +0800, Yang Shi wrote:
->>>>> diff --git a/mm/mmu_gather.c b/mm/mmu_gather.c
->>>>> index 99740e1..469492d 100644
->>>>> --- a/mm/mmu_gather.c
->>>>> +++ b/mm/mmu_gather.c
->>>>> @@ -245,14 +245,39 @@ void tlb_finish_mmu(struct mmu_gather *tlb,
->>>>>    {
->>>>>    	/*
->>>>>    	 * If there are parallel threads are doing PTE changes on same range
->>>>> -	 * under non-exclusive lock(e.g., mmap_sem read-side) but defer TLB
->>>>> -	 * flush by batching, a thread has stable TLB entry can fail to flush
->>>>> -	 * the TLB by observing pte_none|!pte_dirty, for example so flush TLB
->>>>> -	 * forcefully if we detect parallel PTE batching threads.
->>>>> +	 * under non-exclusive lock (e.g., mmap_sem read-side) but defer TLB
->>>>> +	 * flush by batching, one thread may end up seeing inconsistent PTEs
->>>>> +	 * and result in having stale TLB entries.  So flush TLB forcefully
->>>>> +	 * if we detect parallel PTE batching threads.
->>>>> +	 *
->>>>> +	 * However, some syscalls, e.g. munmap(), may free page tables, this
->>>>> +	 * needs force flush everything in the given range. Otherwise this
->>>>> +	 * may result in having stale TLB entries for some architectures,
->>>>> +	 * e.g. aarch64, that could specify flush what level TLB.
->>>>>    	 */
->>>>> -	if (mm_tlb_flush_nested(tlb->mm)) {
->>>>> -		__tlb_reset_range(tlb);
->>>>> -		__tlb_adjust_range(tlb, start, end - start);
->>>>> +	if (mm_tlb_flush_nested(tlb->mm) && !tlb->fullmm) {
->>>>> +		/*
->>>>> +		 * Since we can't tell what we actually should have
->>>>> +		 * flushed, flush everything in the given range.
->>>>> +		 */
->>>>> +		tlb->freed_tables = 1;
->>>>> +		tlb->cleared_ptes = 1;
->>>>> +		tlb->cleared_pmds = 1;
->>>>> +		tlb->cleared_puds = 1;
->>>>> +		tlb->cleared_p4ds = 1;
->>>>> +
->>>>> +		/*
->>>>> +		 * Some architectures, e.g. ARM, that have range invalidation
->>>>> +		 * and care about VM_EXEC for I-Cache invalidation, need force
->>>>> +		 * vma_exec set.
->>>>> +		 */
->>>>> +		tlb->vma_exec = 1;
->>>>> +
->>>>> +		/* Force vma_huge clear to guarantee safer flush */
->>>>> +		tlb->vma_huge = 0;
->>>>> +
->>>>> +		tlb->start = start;
->>>>> +		tlb->end = end;
->>>>>    	}
->>>> Whilst I think this is correct, it would be interesting to see whether
->>>> or not it's actually faster than just nuking the whole mm, as I mentioned
->>>> before.
->>>>
->>>> At least in terms of getting a short-term fix, I'd prefer the diff below
->>>> if it's not measurably worse.
->>> I did a quick test with ebizzy (96 threads with 5 iterations) on my x86 VM,
->>> it shows slightly slowdown on records/s but much more sys time spent with
->>> fullmm flush, the below is the data.
->>>
->>>                                      nofullmm                 fullmm
->>> ops (records/s)              225606                  225119
->>> sys (s)                            0.69                        1.14
->>>
->>> It looks the slight reduction of records/s is caused by the increase of sys
->>> time.
->> That's not what I expected, and I'm unable to explain why moving to fullmm
->> would /increase/ the system time. I would've thought the time spent doing
->> the invalidation would decrease, with the downside that the TLB is cold
->> when returning back to userspace.
->>
-> I tried ebizzy with various parameters (malloc vs mmap, ran it for hour),
-> but performance was very similar for both patches.
->
-> So, I was looking for workload that would demonstrate the largest difference.
-> Inspired by python xml-rpc, which can handle each request in new thread,
-> I tried following [1]:
->
-> 16 threads, each looping 100k times over:
->    mmap(16M)
->    touch 1 page
->    madvise(DONTNEED)
->    munmap(16M)
->
-> This yields quite significant difference for 2 patches when running on
-> my 46 CPU arm host. I checked it twice - applied patch, recompiled, rebooted,
-> but numbers stayed +- couple seconds the same.
-
-Thanks for the testing. I'm a little bit surprised by the significant 
-difference.
-
-I did the same test on my x86 VM (24 cores), they yield almost same number.
-
-Given the significant improvement on arm64 with fullmm version, I'm 
-going to respin the patch.
-
->
-> Does it somewhat match your expectation?
->
-> v2 patch
-> ---------
-> real    2m33.460s
-> user    0m3.359s
-> sys     15m32.307s
->
-> real    2m33.895s
-> user    0m2.749s
-> sys     16m34.500s
->
-> real    2m35.666s
-> user    0m3.528s
-> sys     15m23.377s
->
-> real    2m32.898s
-> user    0m2.789s
-> sys     16m18.801s
->
-> real    2m33.087s
-> user    0m3.565s
-> sys     16m23.815s
->
->
-> fullmm version
-> ---------------
-> real    0m46.811s
-> user    0m1.596s
-> sys     1m47.500s
->
-> real    0m47.322s
-> user    0m1.803s
-> sys     1m48.449s
->
-> real    0m46.668s
-> user    0m1.508s
-> sys     1m47.352s
->
-> real    0m46.742s
-> user    0m2.007s
-> sys     1m47.217s
->
-> real    0m46.948s
-> user    0m1.785s
-> sys     1m47.906s
->
-> [1] https://github.com/jstancek/reproducers/blob/master/kernel/page_fault_stall/mmap8.c
-
+Applied, thanks.
