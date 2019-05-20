@@ -4,49 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CCB2C04AAC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:35:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EBB18C04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:35:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0CC89204FD
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:35:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B575A20645
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:35:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558355727;
-	bh=HC/idoCOQyV14h07TYHc6VAt31gFUcHJfANAqMDzakQ=;
+	s=default; t=1558355732;
+	bh=oWRqpruyTfVtDUHPIxkYLjTTV3J6ynx0f5y1Btlj9h0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nqfrZmvzSI2gPqizUEx1XEAz+oHb1MAL0BS4ffdbtHQe6vtQZRCtsXT8dMQBcCdJg
-	 BNCV+cVuZIaA5+ri4RDxVQJaVIfDaJCfoJL3FAHBl897tV2SmlTTTK0kWBl9me+9DG
-	 1eCZtwSdP1/W5IfG0n7YfwbFr7+oO4GIHTWWZmko=
+	b=sYsuK3G6oiaBtv/S6lp7l11qv2umnoNZI0cVCTZY8nwB639T7/euqZHjVCRGvsUP+
+	 sSI0OInf1VmxuB00PfnsrtR4+jQ0dRKDbYZLipUosoGQGoZXeplwwALxcttFyzaKVZ
+	 8Nu4y+/s9RJPFGZf7CgGFccWwbcFFta/rFwpTxWk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403828AbfETMfZ (ORCPT
+        id S2391091AbfETMfb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 08:35:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53502 "EHLO mail.kernel.org"
+        Mon, 20 May 2019 08:35:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53826 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390407AbfETMfV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 08:35:21 -0400
+        id S2403836AbfETMf3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 08:35:29 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A4542204FD;
-        Mon, 20 May 2019 12:35:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8397A204FD;
+        Mon, 20 May 2019 12:35:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558355720;
-        bh=HC/idoCOQyV14h07TYHc6VAt31gFUcHJfANAqMDzakQ=;
+        s=default; t=1558355728;
+        bh=oWRqpruyTfVtDUHPIxkYLjTTV3J6ynx0f5y1Btlj9h0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZsPtb5jOkb93YTj6/ddGZ2QhNTxP/AqK2IOa/edPljdtk5DdSSLjsWdNV5aIzmaZx
-         YMl+V9YwThuSqX7HAgtGCNot+LiIWwh/ydzXl+n4/L81QFFmwFhD8ctUJu+JKGRUtJ
-         TVGidr9RG8R5U3qRAbnqQKXp7JFvl3ifliktsSYI=
+        b=m93fsQJAI/SXCqcS5v42A8M3F92ZRHo7oYA+hQTqAkS8y0pkx2cxTcKfjDlsgRKCd
+         NMYQhooO6PrGaTq6Fb+O2wUA1cShvS90n3pdAdJGznDa1oHu8nsSZ9YcirthEWE7HU
+         lUlKDdFzfdWyjnjXCXjLkm9YtDIi1Vsgrf9zpG8U=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kamlakant Patel <kamlakantp@marvell.com>,
-        Corey Minyard <cminyard@mvista.com>
-Subject: [PATCH 5.1 101/128] ipmi: Add the i2c-addr property for SSIF interfaces
-Date:   Mon, 20 May 2019 14:14:48 +0200
-Message-Id: <20190520115256.000435552@linuxfoundation.org>
+        stable@vger.kernel.org, Fabio Estevam <festevam@gmail.com>,
+        Baruch Siach <baruch@tkos.co.il>, Soeren Moch <smoch@web.de>,
+        Steve Twiss <stwiss.opensource@diasemi.com>,
+        Adam Thomson <Adam.Thomson@diasemi.com>,
+        Marc Kleine-Budde <mkl@pengutronix.de>,
+        Shawn Guo <shawnguo@kernel.org>,
+        "George G. Davis" <george_davis@mentor.com>
+Subject: [PATCH 5.1 103/128] ARM: dts: imx: Fix the AR803X phy-mode
+Date:   Mon, 20 May 2019 14:14:50 +0200
+Message-Id: <20190520115256.092178525@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190520115249.449077487@linuxfoundation.org>
 References: <20190520115249.449077487@linuxfoundation.org>
@@ -59,125 +64,206 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Corey Minyard <cminyard@mvista.com>
+From: Fabio Estevam <festevam@gmail.com>
 
-commit d73236383eb1cd4b7b65c33a09f0ed45f6781f40 upstream.
+commit 0672d22a19244cdb0e5c753125c1a55a120db5d0 upstream.
 
-This is required for SSIF to work.
+Commit 6d4cd041f0af ("net: phy: at803x: disable delay only for RGMII mode")
+exposed an issue on imx DTS files using AR8031/AR8035 PHYs.
 
-There was no way to know if the interface being added was SI
-or SSIF from the platform data, but that was required so the
-i2c-addr is only added for SSIF interfaces.  So add a field
-for that.
+The end result is that the boards can no longer obtain an IP address
+via UDHCP, for example.
 
-Also rework the logic a bit so that ipmi-type is not set
-for SSIF interfaces, as it is not necessary for that.
+Quoting Andrew Lunn:
 
-Fixes: 3cd83bac481d ("ipmi: Consolidate the adding of platform devices")
-Reported-by: Kamlakant Patel <kamlakantp@marvell.com>
-Signed-off-by: Corey Minyard <cminyard@mvista.com>
-Cc: stable@vger.kernel.org # 5.1
+"The problem here is, all the DTs were broken since day 0. However,
+because the PHY driver was also broken, nobody noticed and it
+worked. Now that the PHY driver has been fixed, all the bugs in the
+DTs now become an issue"
+
+To fix this problem, the phy-mode property needs to be "rgmii-id",  which
+has the following meaning as per
+Documentation/devicetree/bindings/net/ethernet.txt:
+
+"RGMII with internal RX and TX delays provided by the PHY, the MAC should
+not add the RX or TX delays in this case)"
+
+Tested on imx6-sabresd, imx6sx-sdb and imx7d-pico boards with
+successfully restored networking.
+
+Based on the initial submission from Steve Twiss for the
+imx6qdl-sabresd.
+
+Signed-off-by: Fabio Estevam <festevam@gmail.com>
+Tested-by: Baruch Siach <baruch@tkos.co.il>
+Tested-by: Soeren Moch <smoch@web.de>
+Tested-by: Steve Twiss <stwiss.opensource@diasemi.com>
+Tested-by: Adam Thomson <Adam.Thomson@diasemi.com>
+Signed-off-by: Steve Twiss <stwiss.opensource@diasemi.com>
+Tested-by: Marc Kleine-Budde <mkl@pengutronix.de>
+Signed-off-by: Marc Kleine-Budde <mkl@pengutronix.de>
+Signed-off-by: Shawn Guo <shawnguo@kernel.org>
+Cc: "George G. Davis" <george_davis@mentor.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/char/ipmi/ipmi_dmi.c         |    2 ++
- drivers/char/ipmi/ipmi_plat_data.c   |   27 +++++++++++++++------------
- drivers/char/ipmi/ipmi_plat_data.h   |    3 +++
- drivers/char/ipmi/ipmi_si_hardcode.c |    1 +
- drivers/char/ipmi/ipmi_si_hotmod.c   |    1 +
- 5 files changed, 22 insertions(+), 12 deletions(-)
+ arch/arm/boot/dts/imx6-logicpd-baseboard.dtsi |    2 +-
+ arch/arm/boot/dts/imx6dl-riotboard.dts        |    2 +-
+ arch/arm/boot/dts/imx6q-ba16.dtsi             |    2 +-
+ arch/arm/boot/dts/imx6q-marsboard.dts         |    2 +-
+ arch/arm/boot/dts/imx6q-tbs2910.dts           |    2 +-
+ arch/arm/boot/dts/imx6qdl-apf6.dtsi           |    2 +-
+ arch/arm/boot/dts/imx6qdl-sabreauto.dtsi      |    2 +-
+ arch/arm/boot/dts/imx6qdl-sabresd.dtsi        |    2 +-
+ arch/arm/boot/dts/imx6qdl-sr-som.dtsi         |    2 +-
+ arch/arm/boot/dts/imx6qdl-wandboard.dtsi      |    2 +-
+ arch/arm/boot/dts/imx6sx-sabreauto.dts        |    2 +-
+ arch/arm/boot/dts/imx6sx-sdb.dtsi             |    2 +-
+ arch/arm/boot/dts/imx7d-pico.dtsi             |    2 +-
+ 13 files changed, 13 insertions(+), 13 deletions(-)
 
---- a/drivers/char/ipmi/ipmi_dmi.c
-+++ b/drivers/char/ipmi/ipmi_dmi.c
-@@ -47,9 +47,11 @@ static void __init dmi_add_platform_ipmi
- 	memset(&p, 0, sizeof(p));
+--- a/arch/arm/boot/dts/imx6-logicpd-baseboard.dtsi
++++ b/arch/arm/boot/dts/imx6-logicpd-baseboard.dtsi
+@@ -216,7 +216,7 @@
+ &fec {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&pinctrl_enet>;
+-	phy-mode = "rgmii";
++	phy-mode = "rgmii-id";
+ 	phy-reset-duration = <10>;
+ 	phy-reset-gpios = <&gpio1 24 GPIO_ACTIVE_LOW>;
+ 	phy-supply = <&reg_enet>;
+--- a/arch/arm/boot/dts/imx6dl-riotboard.dts
++++ b/arch/arm/boot/dts/imx6dl-riotboard.dts
+@@ -92,7 +92,7 @@
+ &fec {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&pinctrl_enet>;
+-	phy-mode = "rgmii";
++	phy-mode = "rgmii-id";
+ 	phy-reset-gpios = <&gpio3 31 GPIO_ACTIVE_LOW>;
+ 	interrupts-extended = <&gpio1 6 IRQ_TYPE_LEVEL_HIGH>,
+ 			      <&intc 0 119 IRQ_TYPE_LEVEL_HIGH>;
+--- a/arch/arm/boot/dts/imx6q-ba16.dtsi
++++ b/arch/arm/boot/dts/imx6q-ba16.dtsi
+@@ -171,7 +171,7 @@
+ &fec {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&pinctrl_enet>;
+-	phy-mode = "rgmii";
++	phy-mode = "rgmii-id";
+ 	status = "okay";
+ };
  
- 	name = "dmi-ipmi-si";
-+	p.iftype = IPMI_PLAT_IF_SI;
- 	switch (type) {
- 	case IPMI_DMI_TYPE_SSIF:
- 		name = "dmi-ipmi-ssif";
-+		p.iftype = IPMI_PLAT_IF_SSIF;
- 		p.type = SI_TYPE_INVALID;
- 		break;
- 	case IPMI_DMI_TYPE_BT:
---- a/drivers/char/ipmi/ipmi_plat_data.c
-+++ b/drivers/char/ipmi/ipmi_plat_data.c
-@@ -12,7 +12,7 @@ struct platform_device *ipmi_platform_ad
- 					  struct ipmi_plat_data *p)
- {
- 	struct platform_device *pdev;
--	unsigned int num_r = 1, size, pidx = 0;
-+	unsigned int num_r = 1, size = 0, pidx = 0;
- 	struct resource r[4];
- 	struct property_entry pr[6];
- 	u32 flags;
-@@ -21,19 +21,22 @@ struct platform_device *ipmi_platform_ad
- 	memset(pr, 0, sizeof(pr));
- 	memset(r, 0, sizeof(r));
- 
--	if (p->type == SI_BT)
--		size = 3;
--	else if (p->type == SI_TYPE_INVALID)
--		size = 0;
--	else
--		size = 2;
-+	if (p->iftype == IPMI_PLAT_IF_SI) {
-+		if (p->type == SI_BT)
-+			size = 3;
-+		else if (p->type != SI_TYPE_INVALID)
-+			size = 2;
- 
--	if (p->regsize == 0)
--		p->regsize = DEFAULT_REGSIZE;
--	if (p->regspacing == 0)
--		p->regspacing = p->regsize;
-+		if (p->regsize == 0)
-+			p->regsize = DEFAULT_REGSIZE;
-+		if (p->regspacing == 0)
-+			p->regspacing = p->regsize;
-+
-+		pr[pidx++] = PROPERTY_ENTRY_U8("ipmi-type", p->type);
-+	} else if (p->iftype == IPMI_PLAT_IF_SSIF) {
-+		pr[pidx++] = PROPERTY_ENTRY_U16("i2c-addr", p->addr);
-+	}
- 
--	pr[pidx++] = PROPERTY_ENTRY_U8("ipmi-type", p->type);
- 	if (p->slave_addr)
- 		pr[pidx++] = PROPERTY_ENTRY_U8("slave-addr", p->slave_addr);
- 	pr[pidx++] = PROPERTY_ENTRY_U8("addr-source", p->addr_source);
---- a/drivers/char/ipmi/ipmi_plat_data.h
-+++ b/drivers/char/ipmi/ipmi_plat_data.h
-@@ -6,7 +6,10 @@
- 
- #include <linux/ipmi.h>
- 
-+enum ipmi_plat_interface_type { IPMI_PLAT_IF_SI, IPMI_PLAT_IF_SSIF };
-+
- struct ipmi_plat_data {
-+	enum ipmi_plat_interface_type iftype;
- 	unsigned int type; /* si_type for si, SI_INVALID for others */
- 	unsigned int space; /* addr_space for si, intf# for ssif. */
- 	unsigned long addr;
---- a/drivers/char/ipmi/ipmi_si_hardcode.c
-+++ b/drivers/char/ipmi/ipmi_si_hardcode.c
-@@ -83,6 +83,7 @@ static void __init ipmi_hardcode_init_on
- 
- 	memset(&p, 0, sizeof(p));
- 
-+	p.iftype = IPMI_PLAT_IF_SI;
- 	if (!si_type_str || !*si_type_str || strcmp(si_type_str, "kcs") == 0) {
- 		p.type = SI_KCS;
- 	} else if (strcmp(si_type_str, "smic") == 0) {
---- a/drivers/char/ipmi/ipmi_si_hotmod.c
-+++ b/drivers/char/ipmi/ipmi_si_hotmod.c
-@@ -108,6 +108,7 @@ static int parse_hotmod_str(const char *
- 	int rv;
- 	unsigned int ival;
- 
-+	h->iftype = IPMI_PLAT_IF_SI;
- 	rv = parse_str(hotmod_ops, &ival, "operation", &curr);
- 	if (rv)
- 		return rv;
+--- a/arch/arm/boot/dts/imx6q-marsboard.dts
++++ b/arch/arm/boot/dts/imx6q-marsboard.dts
+@@ -110,7 +110,7 @@
+ &fec {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&pinctrl_enet>;
+-	phy-mode = "rgmii";
++	phy-mode = "rgmii-id";
+ 	phy-reset-gpios = <&gpio3 31 GPIO_ACTIVE_LOW>;
+ 	status = "okay";
+ };
+--- a/arch/arm/boot/dts/imx6q-tbs2910.dts
++++ b/arch/arm/boot/dts/imx6q-tbs2910.dts
+@@ -98,7 +98,7 @@
+ &fec {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&pinctrl_enet>;
+-	phy-mode = "rgmii";
++	phy-mode = "rgmii-id";
+ 	phy-reset-gpios = <&gpio1 25 GPIO_ACTIVE_LOW>;
+ 	status = "okay";
+ };
+--- a/arch/arm/boot/dts/imx6qdl-apf6.dtsi
++++ b/arch/arm/boot/dts/imx6qdl-apf6.dtsi
+@@ -51,7 +51,7 @@
+ &fec {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&pinctrl_enet>;
+-	phy-mode = "rgmii";
++	phy-mode = "rgmii-id";
+ 	phy-reset-duration = <10>;
+ 	phy-reset-gpios = <&gpio1 24 GPIO_ACTIVE_LOW>;
+ 	status = "okay";
+--- a/arch/arm/boot/dts/imx6qdl-sabreauto.dtsi
++++ b/arch/arm/boot/dts/imx6qdl-sabreauto.dtsi
+@@ -292,7 +292,7 @@
+ &fec {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&pinctrl_enet>;
+-	phy-mode = "rgmii";
++	phy-mode = "rgmii-id";
+ 	interrupts-extended = <&gpio1 6 IRQ_TYPE_LEVEL_HIGH>,
+ 			      <&intc 0 119 IRQ_TYPE_LEVEL_HIGH>;
+ 	fsl,err006687-workaround-present;
+--- a/arch/arm/boot/dts/imx6qdl-sabresd.dtsi
++++ b/arch/arm/boot/dts/imx6qdl-sabresd.dtsi
+@@ -202,7 +202,7 @@
+ &fec {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&pinctrl_enet>;
+-	phy-mode = "rgmii";
++	phy-mode = "rgmii-id";
+ 	phy-reset-gpios = <&gpio1 25 GPIO_ACTIVE_LOW>;
+ 	status = "okay";
+ };
+--- a/arch/arm/boot/dts/imx6qdl-sr-som.dtsi
++++ b/arch/arm/boot/dts/imx6qdl-sr-som.dtsi
+@@ -53,7 +53,7 @@
+ &fec {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&pinctrl_microsom_enet_ar8035>;
+-	phy-mode = "rgmii";
++	phy-mode = "rgmii-id";
+ 	phy-reset-duration = <2>;
+ 	phy-reset-gpios = <&gpio4 15 GPIO_ACTIVE_LOW>;
+ 	status = "okay";
+--- a/arch/arm/boot/dts/imx6qdl-wandboard.dtsi
++++ b/arch/arm/boot/dts/imx6qdl-wandboard.dtsi
+@@ -224,7 +224,7 @@
+ &fec {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&pinctrl_enet>;
+-	phy-mode = "rgmii";
++	phy-mode = "rgmii-id";
+ 	phy-reset-gpios = <&gpio3 29 GPIO_ACTIVE_LOW>;
+ 	interrupts-extended = <&gpio1 6 IRQ_TYPE_LEVEL_HIGH>,
+ 			      <&intc 0 119 IRQ_TYPE_LEVEL_HIGH>;
+--- a/arch/arm/boot/dts/imx6sx-sabreauto.dts
++++ b/arch/arm/boot/dts/imx6sx-sabreauto.dts
+@@ -75,7 +75,7 @@
+ &fec1 {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&pinctrl_enet1>;
+-	phy-mode = "rgmii";
++	phy-mode = "rgmii-id";
+ 	phy-handle = <&ethphy1>;
+ 	fsl,magic-packet;
+ 	status = "okay";
+--- a/arch/arm/boot/dts/imx6sx-sdb.dtsi
++++ b/arch/arm/boot/dts/imx6sx-sdb.dtsi
+@@ -191,7 +191,7 @@
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&pinctrl_enet1>;
+ 	phy-supply = <&reg_enet_3v3>;
+-	phy-mode = "rgmii";
++	phy-mode = "rgmii-id";
+ 	phy-handle = <&ethphy1>;
+ 	phy-reset-gpios = <&gpio2 7 GPIO_ACTIVE_LOW>;
+ 	status = "okay";
+--- a/arch/arm/boot/dts/imx7d-pico.dtsi
++++ b/arch/arm/boot/dts/imx7d-pico.dtsi
+@@ -92,7 +92,7 @@
+ 			  <&clks IMX7D_ENET1_TIME_ROOT_CLK>;
+ 	assigned-clock-parents = <&clks IMX7D_PLL_ENET_MAIN_100M_CLK>;
+ 	assigned-clock-rates = <0>, <100000000>;
+-	phy-mode = "rgmii";
++	phy-mode = "rgmii-id";
+ 	phy-handle = <&ethphy0>;
+ 	fsl,magic-packet;
+ 	phy-reset-gpios = <&gpio6 11 GPIO_ACTIVE_LOW>;
 
 
