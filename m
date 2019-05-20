@@ -2,110 +2,104 @@ Return-Path: <SRS0=lq4r=TU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CB1EC04AAC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:52:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2214C04E87
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:53:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 42EC720645
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:52:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558356777;
-	bh=SLAe6/IoBPDUbYUdq+rzQEmI9w4plC6PgcfwdwJjL3Y=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UMHZouVKAqd05kgj7wtHNQxdP0InVy0jF5msfdNLpA7AKBhO7pvr7Z6e4faCioCgS
-	 VV1HnLVQjUMzo8EQp+ktrD2i+GlMtvxCAqwPB80UuJgclbFK3R0ZbsmSQ/iz0znLip
-	 4fP0kqBZQ4MCPOo0xN3RdeM4Sw6iqgamkEM/ID1s=
+	by mail.kernel.org (Postfix) with ESMTP id 761E5216B7
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:53:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=benyossef-com.20150623.gappssmtp.com header.i=@benyossef-com.20150623.gappssmtp.com header.b="Yx6LH/QB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391520AbfETMw4 (ORCPT
+        id S2391547AbfETMxB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 08:52:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59284 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733119AbfETMSK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 08:18:10 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7C55220815;
-        Mon, 20 May 2019 12:18:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558354690;
-        bh=SLAe6/IoBPDUbYUdq+rzQEmI9w4plC6PgcfwdwJjL3Y=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YGOF2DVjVmEG2F1ijVjS5RrQk7yF0w2E9OxcrQOig6S91cHN5gQIv796cHTy1HirJ
-         g3pv6DOKe5QTjseMGJP6lVFIJ94IRPMZxuH5sf552eHdGZE3MvCgXxnCC2bO6VpxmD
-         gWLcqt3Pthv19ZmJgweBWEwEDJGRWIC0mhB52CBY=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jon Hunter <jonathanh@nvidia.com>,
-        Mark Brown <broonie@kernel.org>
-Subject: [PATCH 4.9 20/44] ASoC: max98090: Fix restore of DAPM Muxes
-Date:   Mon, 20 May 2019 14:14:09 +0200
-Message-Id: <20190520115233.222877603@linuxfoundation.org>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190520115230.720347034@linuxfoundation.org>
-References: <20190520115230.720347034@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Mon, 20 May 2019 08:53:01 -0400
+Received: from mail-vk1-f196.google.com ([209.85.221.196]:43303 "EHLO
+        mail-vk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387687AbfETMSC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 08:18:02 -0400
+Received: by mail-vk1-f196.google.com with SMTP id h72so3775460vkh.10
+        for <linux-kernel@vger.kernel.org>; Mon, 20 May 2019 05:18:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=benyossef-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=5kXQ6vS4Br8b/GkN8FOpSIOl9zcEW2Y4KrZy5M2Bkl4=;
+        b=Yx6LH/QBl9AFZ1DfZ3Mwi+k36+t6Xj5HfRu5wUC6OlUof7wTBotOL3t1bRiVkZ1XTr
+         kBXZTpQ/OMpZ0PkZskacBuBO2xAWvS17siok2nvGgnQD5AxPW+ZcXuad/XakbtWYtZvo
+         T1belaPyupntkOEmLZRAwYRX7ttz5yM5rcFeASiVLucqVMNXDoWD60wcCK1JRV2Pt33l
+         zTQckKj8Ho2tFI8GH4rgB1WREuRPozYS2ZflbTJOLmVCHoaMvQ6tA5n6eZCAc0iirkSi
+         ObdBdoTbsVEk3SwqddZ7u53K3WRIyN+H/ew9oeBvwTVzKBwPOh4O2bJOTNJWfTDGWCms
+         QOKw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=5kXQ6vS4Br8b/GkN8FOpSIOl9zcEW2Y4KrZy5M2Bkl4=;
+        b=clzVlKC/dROYCRnpM4NCkvsGZc3vuB1Zjyiz0qG4FTJevYBFfzghaEvQfzGfSwD77J
+         7nJgpqmWR5FPtANS5RX3t12q+mzueqJgga9IopE2rGpbSyEVEcHMMYu84ymUCeJ7eek9
+         sITTr+B0pZtx6KFlhM3549ZxsvF2Cqemk83/nfo1w+3HvISQsyu68w+8CP5g1/gFYXoU
+         bONUdMz8S+Mn1dlLGVDX4ImBwBMaBsP/Omp8GMbSQxggG5rojKEglas4UR5aIkP8iR29
+         xmdNnw/3j6f6w9LKtQFs4lu+8AEt1sORNHjOx8cwC4jIft1ww4IQgyvbYGcgvhXfBuwi
+         YpDw==
+X-Gm-Message-State: APjAAAUL/dkUJrPQ2EtEx1onKzlPJKrUaFZdTC6tNqWdADJq3t2WaZR/
+        OPcc5vwM95FPoANwx+ohqbTqYdI02MDN3pwpE+MPlg==
+X-Google-Smtp-Source: APXvYqz3r+hI9oibZ9dmSgzGJipU45wIDIXpfO13g+0ueygZn7O/8r1kzEQ38a+qqAQTN6Mb/8jTggg0KGPxm80/Rh8=
+X-Received: by 2002:a1f:2e8e:: with SMTP id u136mr6454712vku.1.1558354681339;
+ Mon, 20 May 2019 05:18:01 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20190520115025.16457-1-gilad@benyossef.com> <20190520115025.16457-2-gilad@benyossef.com>
+ <20190520120903.GB13524@kroah.com>
+In-Reply-To: <20190520120903.GB13524@kroah.com>
+From:   Gilad Ben-Yossef <gilad@benyossef.com>
+Date:   Mon, 20 May 2019 15:17:48 +0300
+Message-ID: <CAOtvUMedfV_Zb4Y7YW7nmv2LUfQPfgGixmaOj7VFasHKmApwkg@mail.gmail.com>
+Subject: Re: [STABLE PATCH 1/2] crypto: ccree: zap entire sg on aead request unmap
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>, stable@vger.kernel.org,
+        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
+        Linux kernel mailing list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jon Hunter <jonathanh@nvidia.com>
+On Mon, May 20, 2019 at 3:09 PM Greg KH <gregkh@linuxfoundation.org> wrote:
+>
+> On Mon, May 20, 2019 at 02:50:23PM +0300, Gilad Ben-Yossef wrote:
+> > We were trying to be clever zapping out of the cache only the required
+> > length out of scatter list on AEAD request completion and getting it
+> > wrong.
+> >
+> > As Knuth said: "when in douby, use brute force". Zap the whole length o=
+f
+> > the scatter list.
+> >
+> > Signed-off-by: Gilad Ben-Yossef <gilad@benyossef.com>
+> > ---
+> >  drivers/crypto/ccree/cc_buffer_mgr.c | 18 ++----------------
+> >  1 file changed, 2 insertions(+), 16 deletions(-)
+>
+> This does not apply on top of my latest 4.19 tree with the current
+> pending queue applied, nor does it apply to 5.1 or 5.0.
+>
+> How about waiting a few days and resending after I do the next round of
+> stable updates, so you can rebase on top of them easier?
 
-commit ecb2795c08bc825ebd604997e5be440b060c5b18 upstream.
+Yes, will do.
 
-The max98090 driver defines 3 DAPM muxes; one for the right line output
-(LINMOD Mux), one for the left headphone mixer source (MIXHPLSEL Mux)
-and one for the right headphone mixer source (MIXHPRSEL Mux). The same
-bit is used for the mux as well as the DAPM enable, and although the mux
-can be correctly configured, after playback has completed, the mux will
-be reset during the disable phase. This is preventing the state of these
-muxes from being saved and restored correctly on system reboot. Fix this
-by marking these muxes as SND_SOC_NOPM.
+Thanks,
+Gilad
 
-Note this has been verified this on the Tegra124 Nyan Big which features
-the MAX98090 codec.
+--=20
+Gilad Ben-Yossef
+Chief Coffee Drinker
 
-Signed-off-by: Jon Hunter <jonathanh@nvidia.com>
-Signed-off-by: Mark Brown <broonie@kernel.org>
-Cc: stable@vger.kernel.org
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
----
- sound/soc/codecs/max98090.c |   12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
-
---- a/sound/soc/codecs/max98090.c
-+++ b/sound/soc/codecs/max98090.c
-@@ -1209,14 +1209,14 @@ static const struct snd_soc_dapm_widget
- 		&max98090_right_rcv_mixer_controls[0],
- 		ARRAY_SIZE(max98090_right_rcv_mixer_controls)),
- 
--	SND_SOC_DAPM_MUX("LINMOD Mux", M98090_REG_LOUTR_MIXER,
--		M98090_LINMOD_SHIFT, 0, &max98090_linmod_mux),
-+	SND_SOC_DAPM_MUX("LINMOD Mux", SND_SOC_NOPM, 0, 0,
-+		&max98090_linmod_mux),
- 
--	SND_SOC_DAPM_MUX("MIXHPLSEL Mux", M98090_REG_HP_CONTROL,
--		M98090_MIXHPLSEL_SHIFT, 0, &max98090_mixhplsel_mux),
-+	SND_SOC_DAPM_MUX("MIXHPLSEL Mux", SND_SOC_NOPM, 0, 0,
-+		&max98090_mixhplsel_mux),
- 
--	SND_SOC_DAPM_MUX("MIXHPRSEL Mux", M98090_REG_HP_CONTROL,
--		M98090_MIXHPRSEL_SHIFT, 0, &max98090_mixhprsel_mux),
-+	SND_SOC_DAPM_MUX("MIXHPRSEL Mux", SND_SOC_NOPM, 0, 0,
-+		&max98090_mixhprsel_mux),
- 
- 	SND_SOC_DAPM_PGA("HP Left Out", M98090_REG_OUTPUT_ENABLE,
- 		M98090_HPLEN_SHIFT, 0, NULL, 0),
-
-
+values of =CE=B2 will give rise to dom!
