@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D45CC04AAC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:25:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1EDCC04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:25:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 10CC221479
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:25:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7CA0121479
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:25:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558355145;
-	bh=yk4aF3+3CUmWowkLP/XwgQN2IGk4lmHrWxdYxoIbi+8=;
+	s=default; t=1558355147;
+	bh=Y+8Y21qUCRMYjTUDfur/iQJvKkhuVBO32bLyVOUL494=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BJb7HcRs77fIlEwC4qICoHmIC1vCYseibfB76yXagl2PSOx+cYJG9eO9o1clYYFey
-	 bQ7umGbl6PjVwO01SsJXF6v+DzTOmoA8AMBnC3Pzq0q0I07VMI6WXkNtYcUBpZBfAv
-	 /k488GJpTBMkVA5E/kkNfkUNH/GJs/V/ZmZrdL3M=
+	b=JWXS80EPtzEuyusTsd3JIr1Puw4L/a7cnxk25CKgCzMMirmn5LoZW8nkLtWA+KXWz
+	 eb2YvnjLFyWV/Rm1NYGwYwYwG0Gv8i4cFL94APWoAyg8KEMmYY4mlYP2brOwzpcgbU
+	 XLwUs8IRitSbk+Z9RIntSUUVqlynWxjK77uPrpk8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389150AbfETMZo (ORCPT
+        id S2389163AbfETMZq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 08:25:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40870 "EHLO mail.kernel.org"
+        Mon, 20 May 2019 08:25:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40958 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389138AbfETMZl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 08:25:41 -0400
+        id S2389147AbfETMZo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 08:25:44 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A5C8721721;
-        Mon, 20 May 2019 12:25:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 46BB3214DA;
+        Mon, 20 May 2019 12:25:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558355141;
-        bh=yk4aF3+3CUmWowkLP/XwgQN2IGk4lmHrWxdYxoIbi+8=;
+        s=default; t=1558355143;
+        bh=Y+8Y21qUCRMYjTUDfur/iQJvKkhuVBO32bLyVOUL494=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2abbYaitgosUsZyVi+GMY5OrCNJQwKmRuNcyGTCnTsbqQr7w7/VsK/7YIkEv7FKHl
-         C/+f6gWhM3Spc6C1cea5qjQBMU9fYlYZQ48sA9F/w6hUU/9K4f3AsEPxjVFf9pySBt
-         8VCqjiWt1z4vjgD0fT74iXtmIb1+Zu7KLf+iDrHY=
+        b=kzm46XQ8snnfvLOD4aoSluf2zRdhGJJ+sqVCtPIVDcyFpy8UjzLoC9SQiduxGd668
+         RPdfbOErynIFto5+WWO2VZ2GL+cdE4X9M1bdKnWoAMvz4VIFZkqWgFbvNo9UUtw98c
+         zVrnZ0TNfcQKT6FXVGxqFLwTWhJEHjHph6QcFaO4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        =?UTF-8?q?Roger=20Pau=20Monn=C3=A9?= <roger.pau@citrix.com>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>
-Subject: [PATCH 4.19 096/105] xen/pvh: set xen_domain_type to HVM in xen_pvh_init
-Date:   Mon, 20 May 2019 14:14:42 +0200
-Message-Id: <20190520115253.861262520@linuxfoundation.org>
+        stable@vger.kernel.org, Sahitya Tummala <stummala@codeaurora.org>,
+        Theodore Tso <tytso@mit.edu>,
+        Andreas Dilger <adilger@dilger.ca>, stable@kernel.org
+Subject: [PATCH 4.19 087/105] ext4: fix use-after-free in dx_release()
+Date:   Mon, 20 May 2019 14:14:33 +0200
+Message-Id: <20190520115253.290028376@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190520115247.060821231@linuxfoundation.org>
 References: <20190520115247.060821231@linuxfoundation.org>
@@ -60,31 +60,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Roger Pau Monne <roger.pau@citrix.com>
+From: Sahitya Tummala <stummala@codeaurora.org>
 
-commit c9f804d64bb93c8dbf957df1d7e9de11380e522d upstream.
+commit 08fc98a4d6424af66eb3ac4e2cedd2fc927ed436 upstream.
 
-Or else xen_domain() returns false despite xen_pvh being set.
+The buffer_head (frames[0].bh) and it's corresping page can be
+potentially free'd once brelse() is done inside the for loop
+but before the for loop exits in dx_release(). It can be free'd
+in another context, when the page cache is flushed via
+drop_caches_sysctl_handler(). This results into below data abort
+when accessing info->indirect_levels in dx_release().
 
-Signed-off-by: Roger Pau Monné <roger.pau@citrix.com>
-Reviewed-by: Boris Ostrovsky <boris.ostrovsky@oracle.com>
-Signed-off-by: Boris Ostrovsky <boris.ostrovsky@oracle.com>
-Cc: stable@vger.kernel.org # 4.19+
+Unable to handle kernel paging request at virtual address ffffffc17ac3e01e
+Call trace:
+ dx_release+0x70/0x90
+ ext4_htree_fill_tree+0x2d4/0x300
+ ext4_readdir+0x244/0x6f8
+ iterate_dir+0xbc/0x160
+ SyS_getdents64+0x94/0x174
+
+Signed-off-by: Sahitya Tummala <stummala@codeaurora.org>
+Signed-off-by: Theodore Ts'o <tytso@mit.edu>
+Reviewed-by: Andreas Dilger <adilger@dilger.ca>
+Cc: stable@kernel.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/xen/enlighten_pvh.c |    1 +
- 1 file changed, 1 insertion(+)
+ fs/ext4/namei.c |    5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
---- a/arch/x86/xen/enlighten_pvh.c
-+++ b/arch/x86/xen/enlighten_pvh.c
-@@ -97,6 +97,7 @@ void __init xen_prepare_pvh(void)
- 	}
+--- a/fs/ext4/namei.c
++++ b/fs/ext4/namei.c
+@@ -871,12 +871,15 @@ static void dx_release(struct dx_frame *
+ {
+ 	struct dx_root_info *info;
+ 	int i;
++	unsigned int indirect_levels;
  
- 	xen_pvh = 1;
-+	xen_domain_type = XEN_HVM_DOMAIN;
- 	xen_start_flags = pvh_start_info.flags;
+ 	if (frames[0].bh == NULL)
+ 		return;
  
- 	msr = cpuid_ebx(xen_cpuid_base() + 2);
+ 	info = &((struct dx_root *)frames[0].bh->b_data)->info;
+-	for (i = 0; i <= info->indirect_levels; i++) {
++	/* save local copy, "info" may be freed after brelse() */
++	indirect_levels = info->indirect_levels;
++	for (i = 0; i <= indirect_levels; i++) {
+ 		if (frames[i].bh == NULL)
+ 			break;
+ 		brelse(frames[i].bh);
 
 
