@@ -2,54 +2,52 @@ Return-Path: <SRS0=lq4r=TU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20089C04AAC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:16:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50B7CC04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:16:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E9F3620863
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:16:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2601720656
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:16:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558354583;
-	bh=GV2YVUH8HKMj4chMjjgTEuLD9Qveafzk1fUnzvnwZyQ=;
+	s=default; t=1558354587;
+	bh=uhh8Vg9x5wvRtl1mwTABIvrWtt1cWlVM/KKhsPkU4vE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=V4sJ25sBrCzgT/61Tw9TZC/cqVCoW437aBEfrPMhR3bMC1K1vMsfhGToqn60PDdoA
-	 iieZjwIT5IUemU1206SOYL7t+e680FEeGyumDjiuUo3ddZvJKbc1NdZUz6nPuD7yGn
-	 KWD1+aV6xGVAnwef/A0UTgqDE3oid64EUEitSvX4=
+	b=d7+JO6vaw6orFyx+oFGZFK2nTnOPpEVDvOHZuOrj5u7Beps/TWQv6kKECeNFsLJ/6
+	 QqPdOfGDJ9vsWLE+wpkdeR5uJJ67rMgOpvXxKHFjpuLBf2u/8t/QCrQ7C0dTWUG8P5
+	 u0LXGjCU4tsofyLyM9pflOxe84YfRWCoAF84Bs60=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732921AbfETMQW (ORCPT
+        id S1732961AbfETMQ0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 08:16:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57026 "EHLO mail.kernel.org"
+        Mon, 20 May 2019 08:16:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57142 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732845AbfETMQS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 08:16:18 -0400
+        id S1732845AbfETMQX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 08:16:23 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8981620815;
-        Mon, 20 May 2019 12:16:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C4AC820815;
+        Mon, 20 May 2019 12:16:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558354578;
-        bh=GV2YVUH8HKMj4chMjjgTEuLD9Qveafzk1fUnzvnwZyQ=;
+        s=default; t=1558354583;
+        bh=uhh8Vg9x5wvRtl1mwTABIvrWtt1cWlVM/KKhsPkU4vE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dFLa5QmnGEqZR71GddF+ue3LuX1YIsnyqi3rPb7/1twjcrtoHj9PCIfHPcEqMQnLs
-         WLwQXpObdYFPa7+LaEB1BGhmbqLc24q0OfGJMFqj5IzPdvXX3ql0BsJrt/pqEcq8Nj
-         9kl/YPkq4je/G/9fW73j0C6NYq8A+Ir5Es4ulWZU=
+        b=WrmPtC0UwNn8L2hSvMQPEPDhb4FF36r1pD1cXenx5CaOBr0u6KDHUyKw8XvFUo8f3
+         0fAGkur5FoEZo8U3Aht7QyO5Zm2ugm7dGN5gFKFOFkFro5W0AugOq6hmdDsCOb09Vt
+         To29bDzK9eWTReTri+SIfWsK4ozKP34kMl1h23LI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        =?UTF-8?q?Ondrej=20Mosn=C3=A1=C4=8Dek?= <omosnacek@gmail.com>,
-        Daniel Axtens <dja@axtens.net>,
-        Michael Ellerman <mpe@ellerman.id.au>,
+        stable@vger.kernel.org, Tim Chen <tim.c.chen@linux.intel.com>,
+        Eric Biggers <ebiggers@google.com>,
         Herbert Xu <herbert@gondor.apana.org.au>
-Subject: [PATCH 4.9 13/44] crypto: vmx - fix copy-paste error in CTR mode
-Date:   Mon, 20 May 2019 14:14:02 +0200
-Message-Id: <20190520115232.605785186@linuxfoundation.org>
+Subject: [PATCH 4.9 15/44] crypto: x86/crct10dif-pcl - fix use via crypto_shash_digest()
+Date:   Mon, 20 May 2019 14:14:04 +0200
+Message-Id: <20190520115232.749904531@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190520115230.720347034@linuxfoundation.org>
 References: <20190520115230.720347034@linuxfoundation.org>
@@ -62,53 +60,68 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Daniel Axtens <dja@axtens.net>
+From: Eric Biggers <ebiggers@google.com>
 
-commit dcf7b48212c0fab7df69e84fab22d6cb7c8c0fb9 upstream.
+commit dec3d0b1071a0f3194e66a83d26ecf4aa8c5910e upstream.
 
-The original assembly imported from OpenSSL has two copy-paste
-errors in handling CTR mode. When dealing with a 2 or 3 block tail,
-the code branches to the CBC decryption exit path, rather than to
-the CTR exit path.
+The ->digest() method of crct10dif-pclmul reads the current CRC value
+from the shash_desc context.  But this value is uninitialized, causing
+crypto_shash_digest() to compute the wrong result.  Fix it.
 
-This leads to corruption of the IV, which leads to subsequent blocks
-being corrupted.
+Probably this wasn't noticed before because lib/crc-t10dif.c only uses
+crypto_shash_update(), not crypto_shash_digest().  Likewise,
+crypto_shash_digest() is not yet tested by the crypto self-tests because
+those only test the ahash API which only uses shash init/update/final.
 
-This can be detected with libkcapi test suite, which is available at
-https://github.com/smuellerDD/libkcapi
-
-Reported-by: Ondrej Mosnáček <omosnacek@gmail.com>
-Fixes: 5c380d623ed3 ("crypto: vmx - Add support for VMS instructions by ASM")
-Cc: stable@vger.kernel.org
-Signed-off-by: Daniel Axtens <dja@axtens.net>
-Tested-by: Michael Ellerman <mpe@ellerman.id.au>
-Tested-by: Ondrej Mosnacek <omosnacek@gmail.com>
+Fixes: 0b95a7f85718 ("crypto: crct10dif - Glue code to cast accelerated CRCT10DIF assembly as a crypto transform")
+Cc: <stable@vger.kernel.org> # v3.11+
+Cc: Tim Chen <tim.c.chen@linux.intel.com>
+Signed-off-by: Eric Biggers <ebiggers@google.com>
 Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/crypto/vmx/aesp8-ppc.pl |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/x86/crypto/crct10dif-pclmul_glue.c |   13 +++++--------
+ 1 file changed, 5 insertions(+), 8 deletions(-)
 
---- a/drivers/crypto/vmx/aesp8-ppc.pl
-+++ b/drivers/crypto/vmx/aesp8-ppc.pl
-@@ -1815,7 +1815,7 @@ Lctr32_enc8x_three:
- 	stvx_u		$out1,$x10,$out
- 	stvx_u		$out2,$x20,$out
- 	addi		$out,$out,0x30
--	b		Lcbc_dec8x_done
-+	b		Lctr32_enc8x_done
+--- a/arch/x86/crypto/crct10dif-pclmul_glue.c
++++ b/arch/x86/crypto/crct10dif-pclmul_glue.c
+@@ -76,15 +76,14 @@ static int chksum_final(struct shash_des
+ 	return 0;
+ }
  
- .align	5
- Lctr32_enc8x_two:
-@@ -1827,7 +1827,7 @@ Lctr32_enc8x_two:
- 	stvx_u		$out0,$x00,$out
- 	stvx_u		$out1,$x10,$out
- 	addi		$out,$out,0x20
--	b		Lcbc_dec8x_done
-+	b		Lctr32_enc8x_done
+-static int __chksum_finup(__u16 *crcp, const u8 *data, unsigned int len,
+-			u8 *out)
++static int __chksum_finup(__u16 crc, const u8 *data, unsigned int len, u8 *out)
+ {
+ 	if (irq_fpu_usable()) {
+ 		kernel_fpu_begin();
+-		*(__u16 *)out = crc_t10dif_pcl(*crcp, data, len);
++		*(__u16 *)out = crc_t10dif_pcl(crc, data, len);
+ 		kernel_fpu_end();
+ 	} else
+-		*(__u16 *)out = crc_t10dif_generic(*crcp, data, len);
++		*(__u16 *)out = crc_t10dif_generic(crc, data, len);
+ 	return 0;
+ }
  
- .align	5
- Lctr32_enc8x_one:
+@@ -93,15 +92,13 @@ static int chksum_finup(struct shash_des
+ {
+ 	struct chksum_desc_ctx *ctx = shash_desc_ctx(desc);
+ 
+-	return __chksum_finup(&ctx->crc, data, len, out);
++	return __chksum_finup(ctx->crc, data, len, out);
+ }
+ 
+ static int chksum_digest(struct shash_desc *desc, const u8 *data,
+ 			 unsigned int length, u8 *out)
+ {
+-	struct chksum_desc_ctx *ctx = shash_desc_ctx(desc);
+-
+-	return __chksum_finup(&ctx->crc, data, length, out);
++	return __chksum_finup(0, data, length, out);
+ }
+ 
+ static struct shash_alg alg = {
 
 
