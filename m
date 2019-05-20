@@ -2,31 +2,31 @@ Return-Path: <SRS0=lq4r=TU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6D40C04AAC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 14:15:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D90CFC04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 14:15:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C5D40214AE
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 14:15:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B87ED216FD
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 14:15:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390755AbfETOPN (ORCPT
+        id S2390976AbfETOPQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 10:15:13 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:57026 "EHLO mx1.redhat.com"
+        Mon, 20 May 2019 10:15:16 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:29061 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389951AbfETOPL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 10:15:11 -0400
+        id S2390783AbfETOPO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 10:15:14 -0400
 Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id A4C7C81F1B;
-        Mon, 20 May 2019 14:15:11 +0000 (UTC)
+        by mx1.redhat.com (Postfix) with ESMTPS id 8DEBE81DFC;
+        Mon, 20 May 2019 14:15:06 +0000 (UTC)
 Received: from llong.com (dhcp-17-85.bos.redhat.com [10.18.17.85])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id C50841001DD9;
-        Mon, 20 May 2019 14:15:10 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 4579710027BC;
+        Mon, 20 May 2019 14:14:59 +0000 (UTC)
 From:   Waiman Long <longman@redhat.com>
 To:     Thomas Gleixner <tglx@linutronix.de>,
         Andrew Morton <akpm@linux-foundation.org>
@@ -35,88 +35,82 @@ Cc:     linux-kernel@vger.kernel.org,
         "Joel Fernandes (Google)" <joel@joelfernandes.org>,
         Qian Cai <cai@gmx.us>, Zhong Jiang <zhongjiang@huawei.com>,
         Waiman Long <longman@redhat.com>
-Subject: [PATCH 3/5] debugobjects: Reduce number of pool_lock acquisitions in fill_pool()
-Date:   Mon, 20 May 2019 10:14:48 -0400
-Message-Id: <20190520141450.7575-4-longman@redhat.com>
-In-Reply-To: <20190520141450.7575-1-longman@redhat.com>
-References: <20190520141450.7575-1-longman@redhat.com>
+Subject: [PATCH 0/5] debugobjects: Reduce global pool_lock contention
+Date:   Mon, 20 May 2019 10:14:45 -0400
+Message-Id: <20190520141450.7575-1-longman@redhat.com>
 X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.27]); Mon, 20 May 2019 14:15:11 +0000 (UTC)
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.25]); Mon, 20 May 2019 14:15:13 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In fill_pool(), the pool_lock is acquired and then released once per
-debug object. If many objects are to be filled, the constant lock and
-unlock operations are extra overhead. To reduce these overhead, we
-batch them up and do an allocation of 4 objects per lock/unlock sequence.
+Many large workloads require the kernel to acquire a lot of objects
+and then free them when the work is done. When the debug objects code
+is configured, this will cause a lot of debug objects to be allocated and
+then free later on. For instance, after a kernel boot up and 3 parallel
+kernel builds, the partial output of the debug objects stats file was:
 
-Signed-off-by: Waiman Long <longman@redhat.com>
----
- lib/debugobjects.c | 24 ++++++++++++++++--------
- 1 file changed, 16 insertions(+), 8 deletions(-)
+  pool_free     :3082
+  pool_min_free :498
+  pool_used     :108488
+  pool_max_used :170127
+  on_free_list  :0
+  objs_allocated:34954917
+  objs_freed    :34844371
 
-diff --git a/lib/debugobjects.c b/lib/debugobjects.c
-index c30c9d308e9f..7573c736da7d 100644
---- a/lib/debugobjects.c
-+++ b/lib/debugobjects.c
-@@ -120,7 +120,7 @@ static const char *obj_states[ODEBUG_STATE_MAX] = {
- static void fill_pool(void)
- {
- 	gfp_t gfp = GFP_ATOMIC | __GFP_NORETRY | __GFP_NOWARN;
--	struct debug_obj *new, *obj;
-+	struct debug_obj *obj;
- 	unsigned long flags;
- 
- 	if (likely(obj_pool_free >= debug_objects_pool_min_level))
-@@ -136,7 +136,7 @@ static void fill_pool(void)
- 		 * Recheck with the lock held as the worker thread might have
- 		 * won the race and freed the global free list already.
- 		 */
--		if (obj_nr_tofree) {
-+		while (obj_nr_tofree && (obj_pool_free < obj_pool_min_free)) {
- 			obj = hlist_entry(obj_to_free.first, typeof(*obj), node);
- 			hlist_del(&obj->node);
- 			obj_nr_tofree--;
-@@ -150,15 +150,23 @@ static void fill_pool(void)
- 		return;
- 
- 	while (obj_pool_free < debug_objects_pool_min_level) {
-+		struct debug_obj *new[ODEBUG_BATCH_SIZE];
-+		int cnt;
- 
--		new = kmem_cache_zalloc(obj_cache, gfp);
--		if (!new)
-+		for (cnt = 0; cnt < ODEBUG_BATCH_SIZE; cnt++) {
-+			new[cnt] = kmem_cache_zalloc(obj_cache, gfp);
-+			if (!new[cnt])
-+				break;
-+		}
-+		if (!cnt)
- 			return;
- 
- 		raw_spin_lock_irqsave(&pool_lock, flags);
--		hlist_add_head(&new->node, &obj_pool);
--		debug_objects_allocated++;
--		obj_pool_free++;
-+		while (cnt) {
-+			hlist_add_head(&new[--cnt]->node, &obj_pool);
-+			debug_objects_allocated++;
-+			obj_pool_free++;
-+		}
- 		raw_spin_unlock_irqrestore(&pool_lock, flags);
- 	}
- }
-@@ -280,7 +288,7 @@ static void free_obj_work(struct work_struct *work)
- 	/*
- 	 * The objs on the pool list might be allocated before the work is
- 	 * run, so recheck if pool list it full or not, if not fill pool
--	 * list from the global free list
-+	 * list from the global free list.
- 	 */
- 	while (obj_nr_tofree && obj_pool_free < debug_objects_pool_size) {
- 		obj = hlist_entry(obj_to_free.first, typeof(*obj), node);
+It can be seen that a lot of debug objects were allocated and freed
+during those operations. All these debug object allocation and free
+operations require grabbing the global pool_lock. On systems with many
+CPUs, the contention on this single global lock can become one of the
+bottlenecks.
+
+This patchset tries to reduce the level of contention on this global
+pool_lock by the following means:
+ 1) Add a percpu free object pool to serve as a cache so that object
+    allocation and freeing can be done without acquiring pool_lock when
+    is not empty or full.
+ 2) Batching up multiple operations in a single lock/unlock critical
+    section to reduce the number of times the pool_lock is to be
+    acquired.
+ 3) Make the actual freeing of the debug objects via the workqueue less
+    aggressive to minimize the actual number of slab allocation and
+    freeing calls.
+
+In addition, this patchset also tries to move the printk() call out
+of the raw db->lock critical section to reduce the lock hold time as
+much as possible.
+
+With or without these changes, the times to do a parallel kernel build
+on a 2-socket 36-core 72-thread Haswell system were:
+
+   Kernel         Elapsed time      System time
+   ------         ------------      -----------
+   Pre-patch        4m51.01s         83m11.53s
+   Post-patch       4m47.45s         80m25.78s
+
+The post-patch partial debug objects stats file for the same operations
+was:
+
+  pool_free     :5901
+  pool_pcp_free :3742
+  pool_min_free :1022
+  pool_used     :104805
+  pool_max_used :168081
+  on_free_list  :0
+  objs_allocated:5796864
+  objs_freed    :5687182
+
+Waiman Long (5):
+  debugobjects: Add percpu free pools
+  debugobjects: Percpu pool lookahead freeing/allocation
+  debugobjects: Reduce number of pool_lock acquisitions in fill_pool()
+  debugobjects: Less aggressive freeing of excess debug objects
+  debugobjects: Move printk out of db lock critical sections
+
+ lib/debugobjects.c | 308 ++++++++++++++++++++++++++++++++++++---------
+ 1 file changed, 252 insertions(+), 56 deletions(-)
+
 -- 
 2.18.1
 
