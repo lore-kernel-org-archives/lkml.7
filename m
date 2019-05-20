@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D0C8C04E87
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:52:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46C19C04AAF
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:52:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4A1552054F
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:52:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 184FF213F2
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:52:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558356728;
-	bh=CZRVU31dZULyKcCEAMxasoPnU3bpa03K3WE0vrvrDA4=;
+	s=default; t=1558356736;
+	bh=W6/X+FsS7lgY0ci9ipL3DN72hdu/rw1yHfoWA9Ns1Uk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TlfsSyUU8ijK4onJtYen9TaiRilXG8gaOl6z8Eq/QKcgIbJElVHZfKsVoz/btCx7a
-	 2B3VJEYl3VlAM0cDnsPzO7EBnJWSTtVyah6v8XZJP2UF233G0BUW8/YTKHnewftDi5
-	 cfF0m14/ffFrtsmx5JgLMH1CrP0S9q+zN0ebjIsE=
+	b=zXCIwdHZhOb42hAP4yx3WEyXf240f3iiaQOg8onWqjSYC9E2yK/S4/AiRWOderHWS
+	 xjRVZYsTg/tEUhLBKBByDcvnCsVSOK/jskAMTxIN07kobvbcwzUnnm0W3uXFwr/qvy
+	 VN2icSx53NorIfZo1nWeUxC0PTUriR0gmjwJ09zc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388402AbfETMwH (ORCPT
+        id S1730764AbfETMwP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 08:52:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60312 "EHLO mail.kernel.org"
+        Mon, 20 May 2019 08:52:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60144 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387773AbfETMTD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 08:19:03 -0400
+        id S2387769AbfETMS4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 08:18:56 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B163B208C3;
-        Mon, 20 May 2019 12:19:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BBD1C21019;
+        Mon, 20 May 2019 12:18:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558354743;
-        bh=CZRVU31dZULyKcCEAMxasoPnU3bpa03K3WE0vrvrDA4=;
+        s=default; t=1558354735;
+        bh=W6/X+FsS7lgY0ci9ipL3DN72hdu/rw1yHfoWA9Ns1Uk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YmKbUl051mXDUpYLwUn1MPCC8DLvYjcFScTZXr6127nWmYKFHKhzL8qxWrxhNjdo2
-         DND/SrDGZh95AMqZo8FxaO6wsxiIdIhs4SAXCnSsyknIlIOM/+ZKiJTqClaFdBdelu
-         M+f085nVRvJWU4SeSd3XhXVKMkBLWU8DlOztOelM=
+        b=hd9zbMUYtBD66HNLPonM5N85hDP7a8hQgD8Fq2uYgCEQDZVkJ/PeXpXYO0zY+q6GY
+         SmB9XdDZODG80e02iGCeNCg9WvEIFI4QvrbFqP+Abs7c2kApfdCIC7n2VrRPhSzutz
+         NuB+K4hW4ioi0AZZEWWdFXsNtFAf0AeULxhVf+/0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hui Wang <hui.wang@canonical.com>,
-        Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 4.14 26/63] ALSA: hda/hdmi - Read the pin sense from register when repolling
-Date:   Mon, 20 May 2019 14:14:05 +0200
-Message-Id: <20190520115234.015809861@linuxfoundation.org>
+        stable@vger.kernel.org, Eric Biggers <ebiggers@google.com>,
+        Zhang Zhijie <zhangzj@rock-chips.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>
+Subject: [PATCH 4.14 23/63] crypto: rockchip - update IV buffer to contain the next IV
+Date:   Mon, 20 May 2019 14:14:02 +0200
+Message-Id: <20190520115233.577744541@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190520115231.137981521@linuxfoundation.org>
 References: <20190520115231.137981521@linuxfoundation.org>
@@ -59,45 +60,68 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hui Wang <hui.wang@canonical.com>
+From: Zhang Zhijie <zhangzj@rock-chips.com>
 
-commit 8c2e6728c2bf95765b724e07d0278ae97cd1ee0d upstream.
+commit f0cfd57b43fec65761ca61d3892b983a71515f23 upstream.
 
-The driver will check the monitor presence when resuming from suspend,
-starting poll or interrupt triggers. In these 3 situations, the
-jack_dirty will be set to 1 first, then the hda_jack.c reads the
-pin_sense from register, after reading the register, the jack_dirty
-will be set to 0. But hdmi_repoll_work() is enabled in these 3
-situations, It will read the pin_sense a couple of times subsequently,
-since the jack_dirty is 0 now, It does not read the register anymore,
-instead it uses the shadow pin_sense which is read at the first time.
+The Kernel Crypto API request output the next IV data to
+IV buffer for CBC implementation. So the last block data of
+ciphertext should be copid into assigned IV buffer.
 
-It is meaningless to check the shadow pin_sense a couple of times,
-we need to read the register to check the real plugging state, so
-we set the jack_dirty to 1 in the hdmi_repoll_work().
-
-Signed-off-by: Hui Wang <hui.wang@canonical.com>
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Reported-by: Eric Biggers <ebiggers@google.com>
+Fixes: 433cd2c617bf ("crypto: rockchip - add crypto driver for rk3288")
+Cc: <stable@vger.kernel.org> # v4.5+
+Signed-off-by: Zhang Zhijie <zhangzj@rock-chips.com>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/pci/hda/patch_hdmi.c |    5 +++++
- 1 file changed, 5 insertions(+)
+ drivers/crypto/rockchip/rk3288_crypto_ablkcipher.c |   25 +++++++++++++++------
+ 1 file changed, 18 insertions(+), 7 deletions(-)
 
---- a/sound/pci/hda/patch_hdmi.c
-+++ b/sound/pci/hda/patch_hdmi.c
-@@ -1661,6 +1661,11 @@ static void hdmi_repoll_eld(struct work_
- 	container_of(to_delayed_work(work), struct hdmi_spec_per_pin, work);
- 	struct hda_codec *codec = per_pin->codec;
- 	struct hdmi_spec *spec = codec->spec;
-+	struct hda_jack_tbl *jack;
-+
-+	jack = snd_hda_jack_tbl_get(codec, per_pin->pin_nid);
-+	if (jack)
-+		jack->jack_dirty = 1;
+--- a/drivers/crypto/rockchip/rk3288_crypto_ablkcipher.c
++++ b/drivers/crypto/rockchip/rk3288_crypto_ablkcipher.c
+@@ -250,9 +250,14 @@ static int rk_set_data_start(struct rk_c
+ 	u8 *src_last_blk = page_address(sg_page(dev->sg_src)) +
+ 		dev->sg_src->offset + dev->sg_src->length - ivsize;
  
- 	if (per_pin->repoll_count++ > 6)
- 		per_pin->repoll_count = 0;
+-	/* store the iv that need to be updated in chain mode */
+-	if (ctx->mode & RK_CRYPTO_DEC)
++	/* Store the iv that need to be updated in chain mode.
++	 * And update the IV buffer to contain the next IV for decryption mode.
++	 */
++	if (ctx->mode & RK_CRYPTO_DEC) {
+ 		memcpy(ctx->iv, src_last_blk, ivsize);
++		sg_pcopy_to_buffer(dev->first, dev->src_nents, req->info,
++				   ivsize, dev->total - ivsize);
++	}
+ 
+ 	err = dev->load_data(dev, dev->sg_src, dev->sg_dst);
+ 	if (!err)
+@@ -288,13 +293,19 @@ static void rk_iv_copyback(struct rk_cry
+ 	struct ablkcipher_request *req =
+ 		ablkcipher_request_cast(dev->async_req);
+ 	struct crypto_ablkcipher *tfm = crypto_ablkcipher_reqtfm(req);
++	struct rk_cipher_ctx *ctx = crypto_ablkcipher_ctx(tfm);
+ 	u32 ivsize = crypto_ablkcipher_ivsize(tfm);
+ 
+-	if (ivsize == DES_BLOCK_SIZE)
+-		memcpy_fromio(req->info, dev->reg + RK_CRYPTO_TDES_IV_0,
+-			      ivsize);
+-	else if (ivsize == AES_BLOCK_SIZE)
+-		memcpy_fromio(req->info, dev->reg + RK_CRYPTO_AES_IV_0, ivsize);
++	/* Update the IV buffer to contain the next IV for encryption mode. */
++	if (!(ctx->mode & RK_CRYPTO_DEC)) {
++		if (dev->aligned) {
++			memcpy(req->info, sg_virt(dev->sg_dst) +
++				dev->sg_dst->length - ivsize, ivsize);
++		} else {
++			memcpy(req->info, dev->addr_vir +
++				dev->count - ivsize, ivsize);
++		}
++	}
+ }
+ 
+ static void rk_update_iv(struct rk_crypto_info *dev)
 
 
