@@ -2,57 +2,65 @@ Return-Path: <SRS0=lq4r=TU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64A35C46460
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:41:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28F69C04E87
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:41:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3AAD721479
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:41:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F066720645
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:41:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558356089;
-	bh=ZvBc6xseuzdpDAbWQrLLjEtwnUyRl3awfzeV6QFCcPc=;
+	s=default; t=1558356093;
+	bh=GmTb07UMxQ8LwlQL7RhlNeNdc5N0RHqvgDWXvshl5g8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=N+aipjLrFWm0hu0KU3KJa4t+oaPCs2Fshrh0+dpuMDjSPM8xK3JiY/KsmhYT/ylwr
-	 SgFpACq1Ahl7r1cl2LB68hTPJUip704cFuYzWCmuUaKaOcXG+ZIxYVP1PF4KeSk7TG
-	 SUcCjk7H6FlRKD7+egjhxkr7pXbUnyodoUcAegRY=
+	b=sAstTFolmjJJHZ4Mt1QSjAX/WMOJKBTRknLKYIYpiAJU6sBJDZjKyM3xcuM7rK7PI
+	 JL7CbL6mxz1yQ9IcTiknIaShBN+ya1cuuLXuH9iz8+b0K2i0JMaRN5jceDC75p2I7S
+	 FtJ6yF4fs8FC77Kjf3QYH/mZAlfbFyMJyiZaDbc8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391450AbfETMl2 (ORCPT
+        id S2390313AbfETMbW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 08:41:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47986 "EHLO mail.kernel.org"
+        Mon, 20 May 2019 08:31:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47750 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388538AbfETMbZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 08:31:25 -0400
+        id S2390284AbfETMbP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 08:31:15 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9BAF920675;
-        Mon, 20 May 2019 12:31:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C842D20645;
+        Mon, 20 May 2019 12:31:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558355485;
-        bh=ZvBc6xseuzdpDAbWQrLLjEtwnUyRl3awfzeV6QFCcPc=;
+        s=default; t=1558355474;
+        bh=GmTb07UMxQ8LwlQL7RhlNeNdc5N0RHqvgDWXvshl5g8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=s1LvCsjgOmTIBCiDlmu7XA91GBbGlt6Ikskn0E+UyY0fZfuSURU8TNbQPJQeK33UQ
-         AwcSj8ZzioNX9PK3OQB1wocjbAk0qYyy1bMmW2IWVCsNLdKCnCNPiJkE950trueLyl
-         0kj2ETPlJVOCbmrOZymkzpkKLDjvVtOrxfkKZp8Y=
+        b=bB5o+VZhcrESfxfHZTQ2Yf3/u4+PAjMpZwPu0sfPY/nybTZRKQdukQBbSSuWhdJw0
+         8UDQ9rfmIxREwxt1tp7XcjzJag+PJ9b6oY82+dzwZjGDMqPnAnq0TcsBjVAEGpP+ww
+         cWq5JQ8c2VMg9d9WwhsUYTLQt9wI+2kE0O+x8b3M=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Sebastian Reichel <sebastian.reichel@collabora.com>
-Subject: [PATCH 5.1 013/128] power: supply: axp288_charger: Fix unchecked return value
-Date:   Mon, 20 May 2019 14:13:20 +0200
-Message-Id: <20190520115250.356740292@linuxfoundation.org>
+        stable@vger.kernel.org, Waiman Long <longman@redhat.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Tim Chen <tim.c.chen@linux.intel.com>,
+        Will Deacon <will.deacon@arm.com>,
+        huang ying <huang.ying.caritas@gmail.com>,
+        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.1 001/128] locking/rwsem: Prevent decrement of reader count before increment
+Date:   Mon, 20 May 2019 14:13:08 +0200
+Message-Id: <20190520115249.551262196@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190520115249.449077487@linuxfoundation.org>
 References: <20190520115249.449077487@linuxfoundation.org>
 User-Agent: quilt/0.66
+X-stable: review
+X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -61,42 +69,129 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Gustavo A. R. Silva <gustavo@embeddedor.com>
+[ Upstream commit a9e9bcb45b1525ba7aea26ed9441e8632aeeda58 ]
 
-commit c3422ad5f84a66739ec6a37251ca27638c85b6be upstream.
+During my rwsem testing, it was found that after a down_read(), the
+reader count may occasionally become 0 or even negative. Consequently,
+a writer may steal the lock at that time and execute with the reader
+in parallel thus breaking the mutual exclusion guarantee of the write
+lock. In other words, both readers and writer can become rwsem owners
+simultaneously.
 
-Currently there is no check on platform_get_irq() return value
-in case it fails, hence never actually reporting any errors and
-causing unexpected behavior when using such value as argument
-for function regmap_irq_get_virq().
+The current reader wakeup code does it in one pass to clear waiter->task
+and put them into wake_q before fully incrementing the reader count.
+Once waiter->task is cleared, the corresponding reader may see it,
+finish the critical section and do unlock to decrement the count before
+the count is incremented. This is not a problem if there is only one
+reader to wake up as the count has been pre-incremented by 1.  It is
+a problem if there are more than one readers to be woken up and writer
+can steal the lock.
 
-Fix this by adding a proper check, a message reporting any errors
-and returning *pirq*
+The wakeup was actually done in 2 passes before the following v4.9 commit:
 
-Addresses-Coverity-ID: 1443940 ("Improper use of negative value")
-Fixes: 843735b788a4 ("power: axp288_charger: axp288 charger driver")
-Cc: stable@vger.kernel.org
-Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
-Reviewed-by: Hans de Goede <hdegoede@redhat.com>
-Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+  70800c3c0cc5 ("locking/rwsem: Scan the wait_list for readers only once")
 
+To fix this problem, the wakeup is now done in two passes
+again. In the first pass, we collect the readers and count them.
+The reader count is then fully incremented. In the second pass, the
+waiter->task is then cleared and they are put into wake_q to be woken
+up later.
+
+Signed-off-by: Waiman Long <longman@redhat.com>
+Acked-by: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: Davidlohr Bueso <dave@stgolabs.net>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Tim Chen <tim.c.chen@linux.intel.com>
+Cc: Will Deacon <will.deacon@arm.com>
+Cc: huang ying <huang.ying.caritas@gmail.com>
+Fixes: 70800c3c0cc5 ("locking/rwsem: Scan the wait_list for readers only once")
+Link: http://lkml.kernel.org/r/20190428212557.13482-2-longman@redhat.com
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/power/supply/axp288_charger.c |    4 ++++
- 1 file changed, 4 insertions(+)
+ kernel/locking/rwsem-xadd.c | 44 +++++++++++++++++++++++++------------
+ 1 file changed, 30 insertions(+), 14 deletions(-)
 
---- a/drivers/power/supply/axp288_charger.c
-+++ b/drivers/power/supply/axp288_charger.c
-@@ -833,6 +833,10 @@ static int axp288_charger_probe(struct p
- 	/* Register charger interrupts */
- 	for (i = 0; i < CHRG_INTR_END; i++) {
- 		pirq = platform_get_irq(info->pdev, i);
-+		if (pirq < 0) {
-+			dev_err(&pdev->dev, "Failed to get IRQ: %d\n", pirq);
-+			return pirq;
-+		}
- 		info->irq[i] = regmap_irq_get_virq(info->regmap_irqc, pirq);
- 		if (info->irq[i] < 0) {
- 			dev_warn(&info->pdev->dev,
+diff --git a/kernel/locking/rwsem-xadd.c b/kernel/locking/rwsem-xadd.c
+index fbe96341beeed..59b801de8dd5c 100644
+--- a/kernel/locking/rwsem-xadd.c
++++ b/kernel/locking/rwsem-xadd.c
+@@ -130,6 +130,7 @@ static void __rwsem_mark_wake(struct rw_semaphore *sem,
+ {
+ 	struct rwsem_waiter *waiter, *tmp;
+ 	long oldcount, woken = 0, adjustment = 0;
++	struct list_head wlist;
+ 
+ 	/*
+ 	 * Take a peek at the queue head waiter such that we can determine
+@@ -188,18 +189,42 @@ static void __rwsem_mark_wake(struct rw_semaphore *sem,
+ 	 * of the queue. We know that woken will be at least 1 as we accounted
+ 	 * for above. Note we increment the 'active part' of the count by the
+ 	 * number of readers before waking any processes up.
++	 *
++	 * We have to do wakeup in 2 passes to prevent the possibility that
++	 * the reader count may be decremented before it is incremented. It
++	 * is because the to-be-woken waiter may not have slept yet. So it
++	 * may see waiter->task got cleared, finish its critical section and
++	 * do an unlock before the reader count increment.
++	 *
++	 * 1) Collect the read-waiters in a separate list, count them and
++	 *    fully increment the reader count in rwsem.
++	 * 2) For each waiters in the new list, clear waiter->task and
++	 *    put them into wake_q to be woken up later.
+ 	 */
+-	list_for_each_entry_safe(waiter, tmp, &sem->wait_list, list) {
+-		struct task_struct *tsk;
+-
++	list_for_each_entry(waiter, &sem->wait_list, list) {
+ 		if (waiter->type == RWSEM_WAITING_FOR_WRITE)
+ 			break;
+ 
+ 		woken++;
+-		tsk = waiter->task;
++	}
++	list_cut_before(&wlist, &sem->wait_list, &waiter->list);
++
++	adjustment = woken * RWSEM_ACTIVE_READ_BIAS - adjustment;
++	if (list_empty(&sem->wait_list)) {
++		/* hit end of list above */
++		adjustment -= RWSEM_WAITING_BIAS;
++	}
++
++	if (adjustment)
++		atomic_long_add(adjustment, &sem->count);
++
++	/* 2nd pass */
++	list_for_each_entry_safe(waiter, tmp, &wlist, list) {
++		struct task_struct *tsk;
+ 
++		tsk = waiter->task;
+ 		get_task_struct(tsk);
+-		list_del(&waiter->list);
++
+ 		/*
+ 		 * Ensure calling get_task_struct() before setting the reader
+ 		 * waiter to nil such that rwsem_down_read_failed() cannot
+@@ -213,15 +238,6 @@ static void __rwsem_mark_wake(struct rw_semaphore *sem,
+ 		 */
+ 		wake_q_add_safe(wake_q, tsk);
+ 	}
+-
+-	adjustment = woken * RWSEM_ACTIVE_READ_BIAS - adjustment;
+-	if (list_empty(&sem->wait_list)) {
+-		/* hit end of list above */
+-		adjustment -= RWSEM_WAITING_BIAS;
+-	}
+-
+-	if (adjustment)
+-		atomic_long_add(adjustment, &sem->count);
+ }
+ 
+ /*
+-- 
+2.20.1
+
 
 
