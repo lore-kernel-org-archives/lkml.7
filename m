@@ -2,215 +2,99 @@ Return-Path: <SRS0=lq4r=TU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50697C04AAC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 14:44:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE4B2C04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 14:44:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 233FE2054F
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 14:44:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 829E42054F
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 14:44:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="QwSEtpG+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391969AbfETOoX (ORCPT
+        id S2391981AbfETOo2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 10:44:23 -0400
-Received: from iolanthe.rowland.org ([192.131.102.54]:58812 "HELO
-        iolanthe.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with SMTP id S1730476AbfETOoW (ORCPT
+        Mon, 20 May 2019 10:44:28 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:36221 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730476AbfETOoY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 10:44:22 -0400
-Received: (qmail 2121 invoked by uid 2102); 20 May 2019 10:44:21 -0400
-Received: from localhost (sendmail-bs@127.0.0.1)
-  by localhost with SMTP; 20 May 2019 10:44:21 -0400
-Date:   Mon, 20 May 2019 10:44:21 -0400 (EDT)
-From:   Alan Stern <stern@rowland.harvard.edu>
-X-X-Sender: stern@iolanthe.rowland.org
-To:     Christian Lamparter <chunkeey@gmail.com>
-cc:     syzbot <syzbot+200d4bb11b23d929335f@syzkaller.appspotmail.com>,
-        <kvalo@codeaurora.org>, <davem@davemloft.net>,
-        <andreyknvl@google.com>, <syzkaller-bugs@googlegroups.com>,
-        Kernel development list <linux-kernel@vger.kernel.org>,
-        USB list <linux-usb@vger.kernel.org>,
-        <linux-wireless@vger.kernel.org>, <netdev@vger.kernel.org>
-Subject: [PATCH] network: wireless: p54u: Fix race between disconnect and
- firmware loading
-In-Reply-To: <5014675.0cgHOJIxtM@debian64>
-Message-ID: <Pine.LNX.4.44L0.1905201042110.1498-100000@iolanthe.rowland.org>
+        Mon, 20 May 2019 10:44:24 -0400
+Received: by mail-io1-f68.google.com with SMTP id e19so11249312iob.3
+        for <linux-kernel@vger.kernel.org>; Mon, 20 May 2019 07:44:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=HsQVgglgMq1psBbmdCp/J5du6WO5ck+uTZsUbAD0TTs=;
+        b=QwSEtpG+HlPcpMvr+jaK+zM2t1ivvQaI74KMgcKuhBZ6xzeJ+Utr3UXY2sqrVptD6L
+         fyCdPT6rEUbO1RQZYIsLrSB92GNnXUIs+iQ12ulkiMxjGOBrykwvs0xi8PsVRL8jbj89
+         1f+tXLaxeObXCWOmlCZ0QfPwDzBz2qaGwllIBgwWcqm/MNU+U1XvzivVOk4Tex4gS2io
+         J/CZPy16AUj8VP4YOeSTh9EMFmdRR7ZYziICk7S8wk4RE+HNYWky/cU1AxpTj2NlRDkk
+         phpc2RJqGnStBIDydur0ws6WIQYkKY9rQyKYrPsbywd8L/BT30cOR491szyoG6/i1Qga
+         b8hg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=HsQVgglgMq1psBbmdCp/J5du6WO5ck+uTZsUbAD0TTs=;
+        b=kHt6MF9mpZrm1zo13tbpESbf9QFnqtJczOoabmTBmz35g/JkmciQCSLWOZ2w72jE6+
+         XF8kuDp1EUhNYB7Gzy2GG42DfaJqHXs5JIzm5cdzHo4Py1pgUB9Qb70gunETDGd1RCbj
+         aG5fOVoA1CFS7pVCm2kX15bRjIwzUAQf4v7JumgdE1KdJYONSLv+7DIPrZ4lALTWzpbz
+         /3OATRwbHfc9zO6zGRplERuJ5ssBlcfpU0WKjTlUfSYBep6Ls7CMoFhAiwFt6j+Nr6tg
+         CaRe+ZoQqLhWS+iAvwDJXlt6Aj6qw2x+2TrBSvxt0rE5B6ORDL19d1bDKsyvDi6wNHkA
+         RUIw==
+X-Gm-Message-State: APjAAAWQGaQ+xu2bMfmQuNbbQTViYxPYr3mu+hO3Q91qkbiHrVG5fZI4
+        XA2BOLVFxmRvF3C99gShm+FDO3y5s9c=
+X-Google-Smtp-Source: APXvYqzmLCjwDYUNPQbPu4wuBcjc7xMYR7/qQWebH8hWpZ5iUuE+KGmOmGElpi++MFpSaPGKzr9zLw==
+X-Received: by 2002:a6b:5814:: with SMTP id m20mr41477359iob.293.1558363463516;
+        Mon, 20 May 2019 07:44:23 -0700 (PDT)
+Received: from [172.22.22.26] (c-71-195-29-92.hsd1.mn.comcast.net. [71.195.29.92])
+        by smtp.googlemail.com with ESMTPSA id w194sm5025733itb.33.2019.05.20.07.44.21
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 20 May 2019 07:44:22 -0700 (PDT)
+Subject: Re: [PATCH 09/18] soc: qcom: ipa: GSI transactions
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     David Miller <davem@davemloft.net>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Ilias Apalodimas <ilias.apalodimas@linaro.org>,
+        syadagir@codeaurora.org, mjavid@codeaurora.org,
+        evgreen@chromium.org, Ben Chan <benchan@google.com>,
+        Eric Caruso <ejcaruso@google.com>, abhishek.esse@gmail.com,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <20190512012508.10608-1-elder@linaro.org>
+ <20190512012508.10608-10-elder@linaro.org>
+ <CAK8P3a0eYWN6mMwft5OSu8wQQo=kWh5safGFFNkDCELZJyiMmQ@mail.gmail.com>
+ <14a040b6-8187-3fbc-754d-2e267d587858@linaro.org>
+ <CAK8P3a37bPRZTHZcrg8KrYRLAhCr9pk8v4yuo_wSyUONs2OysQ@mail.gmail.com>
+ <4a34d381-d31d-ea49-d6d3-3c4f632958e3@linaro.org>
+ <dcd648f2-5305-04dd-8997-be87a9961fd9@linaro.org>
+ <CAK8P3a0FfSvTF8kkQ8pyKFNX9-fSXvtEyMBYTjtM+VOPxMPkWg@mail.gmail.com>
+ <d3d4670f-eb8b-7dcf-f91a-1ec1d4d96f67@linaro.org>
+ <CAK8P3a12+3a-p2pNuQrJu01dOJJuCoQ4ttt=Y0g97wTtBmQO5w@mail.gmail.com>
+From:   Alex Elder <elder@linaro.org>
+Message-ID: <8040fa0e-8446-1ec0-cf75-ac1c17331da5@linaro.org>
+Date:   Mon, 20 May 2019 09:44:21 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
+In-Reply-To: <CAK8P3a12+3a-p2pNuQrJu01dOJJuCoQ4ttt=Y0g97wTtBmQO5w@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The syzbot fuzzer found a bug in the p54 USB wireless driver.  The
-issue involves a race between disconnect and the firmware-loader
-callback routine, and it has several aspects.
+On 5/20/19 9:43 AM, Arnd Bergmann wrote:
+> I have no idea how two 8-bit assignments could do that,
+> it sounds like a serious gcc bug, unless you mean two
+> 8-byte assignments, which would be within the range
+> of expected behavior. If it's actually 8-bit stores, please
+> open a bug against gcc with a minimized test case.
 
-One big problem is that when the firmware can't be loaded, the
-callback routine tries to unbind the driver from the USB _device_ (by
-calling device_release_driver) instead of from the USB _interface_ to
-which it is actually bound (by calling usb_driver_release_interface).
-
-The race involves access to the private data structure.  The driver's
-disconnect handler waits for a completion that is signalled by the
-firmware-loader callback routine.  As soon as the completion is
-signalled, you have to assume that the private data structure may have
-been deallocated by the disconnect handler -- even if the firmware was
-loaded without errors.  However, the callback routine does access the
-private data several times after that point.
-
-Another problem is that, in order to ensure that the USB device
-structure hasn't been freed when the callback routine runs, the driver
-takes a reference to it.  This isn't good enough any more, because now
-that the callback routine calls usb_driver_release_interface, it has
-to ensure that the interface structure hasn't been freed.
-
-Finally, the driver takes an unnecessary reference to the USB device
-structure in the probe function and drops the reference in the
-disconnect handler.  This extra reference doesn't accomplish anything,
-because the USB core already guarantees that a device structure won't
-be deallocated while a driver is still bound to any of its interfaces.
-
-To fix these problems, this patch makes the following changes:
-
-	Call usb_driver_release_interface() rather than
-	device_release_driver().
-
-	Don't signal the completion until after the important
-	information has been copied out of the private data structure,
-	and don't refer to the private data at all thereafter.
-
-	Lock udev (the interface's parent) before unbinding the driver
-	instead of locking udev->parent.
-
-	During the firmware loading process, take a reference to the
-	USB interface instead of the USB device.
-
-	Don't take an unnecessary reference to the device during probe
-	(and then don't drop it during disconnect).
-
-Signed-off-by: Alan Stern <stern@rowland.harvard.edu>
-Reported-and-tested-by: syzbot+200d4bb11b23d929335f@syzkaller.appspotmail.com
-CC: <stable@vger.kernel.org>
-
----
-
-
-[as1899]
-
-
- drivers/net/wireless/intersil/p54/p54usb.c |   43 ++++++++++++-----------------
- 1 file changed, 18 insertions(+), 25 deletions(-)
-
-Index: usb-devel/drivers/net/wireless/intersil/p54/p54usb.c
-===================================================================
---- usb-devel.orig/drivers/net/wireless/intersil/p54/p54usb.c
-+++ usb-devel/drivers/net/wireless/intersil/p54/p54usb.c
-@@ -33,6 +33,8 @@ MODULE_ALIAS("prism54usb");
- MODULE_FIRMWARE("isl3886usb");
- MODULE_FIRMWARE("isl3887usb");
- 
-+static struct usb_driver p54u_driver;
-+
- /*
-  * Note:
-  *
-@@ -921,9 +923,9 @@ static void p54u_load_firmware_cb(const
- {
- 	struct p54u_priv *priv = context;
- 	struct usb_device *udev = priv->udev;
-+	struct usb_interface *intf = priv->intf;
- 	int err;
- 
--	complete(&priv->fw_wait_load);
- 	if (firmware) {
- 		priv->fw = firmware;
- 		err = p54u_start_ops(priv);
-@@ -932,26 +934,22 @@ static void p54u_load_firmware_cb(const
- 		dev_err(&udev->dev, "Firmware not found.\n");
- 	}
- 
--	if (err) {
--		struct device *parent = priv->udev->dev.parent;
--
--		dev_err(&udev->dev, "failed to initialize device (%d)\n", err);
--
--		if (parent)
--			device_lock(parent);
-+	complete(&priv->fw_wait_load);
-+	/*
-+	 * At this point p54u_disconnect may have already freed
-+	 * the "priv" context. Do not use it anymore!
-+	 */
-+	priv = NULL;
- 
--		device_release_driver(&udev->dev);
--		/*
--		 * At this point p54u_disconnect has already freed
--		 * the "priv" context. Do not use it anymore!
--		 */
--		priv = NULL;
-+	if (err) {
-+		dev_err(&intf->dev, "failed to initialize device (%d)\n", err);
- 
--		if (parent)
--			device_unlock(parent);
-+		usb_lock_device(udev);
-+		usb_driver_release_interface(&p54u_driver, intf);
-+		usb_unlock_device(udev);
- 	}
- 
--	usb_put_dev(udev);
-+	usb_put_intf(intf);
- }
- 
- static int p54u_load_firmware(struct ieee80211_hw *dev,
-@@ -972,14 +970,14 @@ static int p54u_load_firmware(struct iee
- 	dev_info(&priv->udev->dev, "Loading firmware file %s\n",
- 	       p54u_fwlist[i].fw);
- 
--	usb_get_dev(udev);
-+	usb_get_intf(intf);
- 	err = request_firmware_nowait(THIS_MODULE, 1, p54u_fwlist[i].fw,
- 				      device, GFP_KERNEL, priv,
- 				      p54u_load_firmware_cb);
- 	if (err) {
- 		dev_err(&priv->udev->dev, "(p54usb) cannot load firmware %s "
- 					  "(%d)!\n", p54u_fwlist[i].fw, err);
--		usb_put_dev(udev);
-+		usb_put_intf(intf);
- 	}
- 
- 	return err;
-@@ -1011,8 +1009,6 @@ static int p54u_probe(struct usb_interfa
- 	skb_queue_head_init(&priv->rx_queue);
- 	init_usb_anchor(&priv->submitted);
- 
--	usb_get_dev(udev);
--
- 	/* really lazy and simple way of figuring out if we're a 3887 */
- 	/* TODO: should just stick the identification in the device table */
- 	i = intf->altsetting->desc.bNumEndpoints;
-@@ -1053,10 +1049,8 @@ static int p54u_probe(struct usb_interfa
- 		priv->upload_fw = p54u_upload_firmware_net2280;
- 	}
- 	err = p54u_load_firmware(dev, intf);
--	if (err) {
--		usb_put_dev(udev);
-+	if (err)
- 		p54_free_common(dev);
--	}
- 	return err;
- }
- 
-@@ -1072,7 +1066,6 @@ static void p54u_disconnect(struct usb_i
- 	wait_for_completion(&priv->fw_wait_load);
- 	p54_unregister_common(dev);
- 
--	usb_put_dev(interface_to_usbdev(intf));
- 	release_firmware(priv->fw);
- 	p54_free_common(dev);
- }
-
+Sorry, it's 8 *byte* assignments, not 8 bit.	-Alex
