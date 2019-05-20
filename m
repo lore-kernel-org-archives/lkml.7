@@ -3,102 +3,146 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_NEOMUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2062FC072A4
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 07:36:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B46C9C04AAF
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 07:37:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0109520856
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 07:36:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 917A12085A
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 07:37:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730254AbfETHg5 (ORCPT
+        id S1730368AbfETHh5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 03:36:57 -0400
-Received: from relay8-d.mail.gandi.net ([217.70.183.201]:57973 "EHLO
-        relay8-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726940AbfETHg5 (ORCPT
+        Mon, 20 May 2019 03:37:57 -0400
+Received: from mail-vs1-f66.google.com ([209.85.217.66]:43088 "EHLO
+        mail-vs1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725983AbfETHh5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 03:36:57 -0400
-X-Originating-IP: 90.88.22.185
-Received: from localhost (aaubervilliers-681-1-80-185.w90-88.abo.wanadoo.fr [90.88.22.185])
-        (Authenticated sender: maxime.ripard@bootlin.com)
-        by relay8-d.mail.gandi.net (Postfix) with ESMTPSA id 384921BF20F;
-        Mon, 20 May 2019 07:36:53 +0000 (UTC)
-Date:   Mon, 20 May 2019 09:36:52 +0200
-From:   Maxime Ripard <maxime.ripard@bootlin.com>
-To:     =?utf-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
-Cc:     Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Guenter Roeck <linux@roeck-us.net>,
+        Mon, 20 May 2019 03:37:57 -0400
+Received: by mail-vs1-f66.google.com with SMTP id d128so8304606vsc.10;
+        Mon, 20 May 2019 00:37:56 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ZzFqnIOsi8p6z+3XrmxUiH+3WXG0rfBF0N579QptVnw=;
+        b=XHlzanKfUZa49Qnj7RTchm/p+lSZvbWxzVhVGdoDtEEfmSlQnhMxXxtEMjbfIpOfQJ
+         cPK3Sf6EWE72eSHCTDJD6hWY/CC1gFkRNFwoWOhgUP69M3n6lJdCcyqc6QWN3h4fqxzg
+         IJnJM3S478GUZq1QwJn/TmjlJuAjz6tNiBm4VandNuz2qfnek2vSW4L2nvDLELzMFDrg
+         qMg4C5Bvpj9+QDDQq/GeZDCXxqyJB+HrTModIDBUeXKSBkWyhagZoBSQqPNsdJJYtTm/
+         K0ZV4Wi/EhAmQu9a6Ker0LLJUSr0cPbxo0wPo4yBm6Rc9tG0JUzYXF2WQFxDnhxarntK
+         qpnw==
+X-Gm-Message-State: APjAAAVFF04Nikw+/bnoHdVrVEO8xI2dnLQZXfuQYLo1/G7rilI4cDES
+        249i1nOnYzyG0CH4W4SCNyuI+U+QtHE/oICDB4o=
+X-Google-Smtp-Source: APXvYqyUussoat3RoiVGfWvPbqvmfPyaaXxlv6lPx8B2T1BSZy0HJO2KEIQH+Mu9ccoM18jhu0wEOGioz6Sr2M5lBWk=
+X-Received: by 2002:a67:fdd4:: with SMTP id l20mr28417242vsq.63.1558337876203;
+ Mon, 20 May 2019 00:37:56 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190504004258.23574-1-erosca@de.adit-jv.com> <20190504004258.23574-3-erosca@de.adit-jv.com>
+ <CAMuHMdWnuvQvugqfMjE1R_QDvf-Pma8POb1x5YjRr97+M-=HHg@mail.gmail.com>
+ <20190506194233.GA32430@vmlxhi-102.adit-jv.com> <OSBPR01MB3174C93C0A49701EC72F9D82D8060@OSBPR01MB3174.jpnprd01.prod.outlook.com>
+In-Reply-To: <OSBPR01MB3174C93C0A49701EC72F9D82D8060@OSBPR01MB3174.jpnprd01.prod.outlook.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Mon, 20 May 2019 09:37:43 +0200
+Message-ID: <CAMuHMdVR4idTqOiNWMi3GAS0D-V+SMsYSsukgEMYyz5zDcuPbw@mail.gmail.com>
+Subject: Re: [PATCH 2/6] Revert "arm64: dts: renesas: r8a7796: Enable DMA for SCIF2"
+To:     Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Cc:     "REE erosca@DE.ADIT-JV.COM" <erosca@de.adit-jv.com>,
+        Eugeniu Rosca <roscaeugeniu@gmail.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Simon Horman <horms+renesas@verge.net.au>,
+        Chris Brandt <Chris.Brandt@renesas.com>,
+        Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        Ulrich Hecht <ulrich.hecht+renesas@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "George G . Davis" <george_davis@mentor.com>,
+        Andy Lowe <andy_lowe@mentor.com>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Magnus Damm <magnus.damm@gmail.com>,
         Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Chen-Yu Tsai <wens@csie.org>, linux-watchdog@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 2/4] arm64: dts: allwinner: h6: add watchdog node
-Message-ID: <20190520073652.itk452vrpnicta5v@flea>
-References: <20190518152355.11134-1-peron.clem@gmail.com>
- <20190518152355.11134-3-peron.clem@gmail.com>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="e276a7us3gg53ua6"
-Content-Disposition: inline
-In-Reply-To: <20190518152355.11134-3-peron.clem@gmail.com>
-User-Agent: NeoMutt/20180716
+        Michael Rodin <mrodin@de.adit-jv.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Shimoda-san,
 
---e276a7us3gg53ua6
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Thanks for your analysis!
 
-On Sat, May 18, 2019 at 05:23:53PM +0200, Cl=E9ment P=E9ron wrote:
-> Allwinner H6 has a watchog node which seems broken
-> on some boards.
+On Mon, May 20, 2019 at 4:18 AM Yoshihiro Shimoda
+<yoshihiro.shimoda.uh@renesas.com> wrote:
+> > From: Eugeniu Rosca, Sent: Tuesday, May 7, 2019 4:43 AM
+> <snip>
+> > > > [0] v5.0-rc6 commit 97f26702bc95b5 ("arm64: dts: renesas: r8a7796: Enable DMA for SCIF2")
+> > > > [1] v4.14.106 commit 703db5d1b1759f ("arm64: dts: renesas: r8a7796: Enable DMA for SCIF2")
+> > > > [2] scif (DEBUG) and rcar-dmac logs:
+> > > >     https://gist.github.com/erosca/132cce76a619724a9e4fa61d1db88c66
+> <snip>
+> > Enabling DEBUG in drivers/dma/sh/rcar-dmac.c, I can notice that one of
+> > the symptoms is a NULL dst_addr revealed by:
+> >
+> > rcar-dmac e7300000.dma-controller: chan0: queue chunk (____ptrval____): 0@0xffff800639eb8090 -> 0x0000000000000000
+> >
+> > In working scenarios, dst_addr is never zero. Does it give any hints?
 >
-> Test has been performed on several boards.
+> Thank you for the report! It's very helpful to me.
+> I think we should fix the sh-sci driver at least.
 >
-> Chen-Yu Tsai boards:
-> Pine H64 - H6448BA 7782 =3D> OK
-> OrangePi Lite 2 - H8068BA 61C2 =3D> KO
+> According to the [2] log above,
 >
-> Martin Ayotte boards:
-> Pine H64 - H8069BA 6892 =3D> OK
-> OrangePi 3 - HA047BA 69W2 =3D> KO
-> OrangePi One Plus - H7310BA 6842 =3D> KO
-> OrangePi Lite2 - H6448BA 6662 =3D> KO
+> [    4.379716] sh-sci e6e88000.serial: sci_dma_tx_work_fn: ffff800639b55000: 0...0, cookie 126
 >
-> Cl=E9ment P=E9ron board:
-> Beelink GS1 - H7309BA 6842 =3D> KO
+> This "0...0" means the s->tx_dma_len on the sci_dma_tx_work_fn will be zero. And,
+
+How can this happen? schedule_work(&s->work_tx) is called only if
+!uart_circ_empty(), and while holding the port lock? So the circular
+buffer must be made empty in between the call to schedule_work() and the
+work function sci_dma_tx_work_fn() being called.
+
+I think this can happen if uart_flush_buffer() is called at the right
+moment?
+
+> > rcar-dmac e7300000.dma-controller: chan0: queue chunk (____ptrval____): 0@0xffff800639eb8090 -> 0x0000000000000000
 >
-> As it seems not fixable for now, declare the node
-> but leave it disable with a comment.
+> This means the chunk->dst_addr is not set to the "dst_addr" for SCIF because the len on rcar_dmac_chan_prep_sg is zero.
+> So, I'm thinking:
+>  - we have to fix the sh_sci driver to avoid "tx_dma_len = 0" transferring.
+
+That sounds like just a simple check for !s->tx_dma_len in
+sci_dma_tx_work_fn(), to return early, _and_ reset s->cookie_tx to
+-EINVAL.
+
+However, uart_flush_buffer() may still be called in between the check
+and the calls to dmaengine_prep_slave_single() /
+dma_sync_single_for_device(), clearing s->tx_dma_len again.
+Unless something has changed recently, these two calls cannot be moved
+inside the spinlock-protected section?
+Using a cached value of s->tx_dma_len for the dmaengine calls might
+work, though.
+
+> and
 >
-> Signed-off-by: Cl=E9ment P=E9ron <peron.clem@gmail.com>
+>  - also we have to fix the rcar-dmac driver to avoid this issue because the DMA Engine API
+>    guide doesn't prevent the len = 0.
 
-If it doesn't work most boards, then why do we need to merge that
-patch in the first place?
+I guess returning an error makes most sense?
+Else we have to fix it deeper into the driver, where handling becomes
+more complex.
 
-Maxime
+Gr{oetje,eeting}s,
 
---
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+                        Geert
 
---e276a7us3gg53ua6
-Content-Type: application/pgp-signature; name="signature.asc"
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXOJZFAAKCRDj7w1vZxhR
-xQh1AQD1wT9FiJDFc3HyLL1R5Zfgdvvje9Gm40LwAYtcqbVztQD/WWrr2dC4yL3m
-eySG7yJU57b661i7G27N2vwjLCO0Wg4=
-=Vx+h
------END PGP SIGNATURE-----
-
---e276a7us3gg53ua6--
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
