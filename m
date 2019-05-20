@@ -2,114 +2,147 @@ Return-Path: <SRS0=lq4r=TU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14EEEC04AAC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:50:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A177C04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:50:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DC40E20815
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:50:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558356615;
-	bh=YFU/QKlpZL71fZy6JIevh2vlJq1wS1U6jP3tgfScQ7A=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tDg4AXp24nD4w8XSKEpJkJUSKtOClUArWx7lyWBsK2mg9TOFOVR6YhdK7GXnsAsJb
-	 ezgZfzLAdCNkW9vcNLhGFyyQwVzCUDCBlQL5etUAwabiBRP3YNoBnaj0rSbtHjOhqq
-	 fy9knSRqo4GFd6/3hgGJs4BweVwR/jNrevfnj2h4=
+	by mail.kernel.org (Postfix) with ESMTP id 3929A2054F
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:50:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="lIwpRk82"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388086AbfETMVC (ORCPT
+        id S2389109AbfETMu0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 08:21:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34476 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388067AbfETMU6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 08:20:58 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3D23C214AE;
-        Mon, 20 May 2019 12:20:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558354857;
-        bh=YFU/QKlpZL71fZy6JIevh2vlJq1wS1U6jP3tgfScQ7A=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yifoIw2t/17DAI73z7QpPitXX+FBCcNUw7P4LblF6jYtwLpseuPdU4hCx+b6wRO70
-         GFp4dFumMFXeikKZLiW+WKLIh/TPi+HNXRx6GfTmQCt4F2nIVyKCTIDTY8UtgHeT8c
-         iDqAmK8Dm4opSjtmj94IKln4LBx40ZVPhbrobJlk=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Matthew Wilcox <willy@infradead.org>
-Subject: [PATCH 4.14 62/63] iov_iter: optimize page_copy_sane()
-Date:   Mon, 20 May 2019 14:14:41 +0200
-Message-Id: <20190520115237.780771243@linuxfoundation.org>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190520115231.137981521@linuxfoundation.org>
-References: <20190520115231.137981521@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Mon, 20 May 2019 08:50:26 -0400
+Received: from mail-it1-f194.google.com ([209.85.166.194]:40416 "EHLO
+        mail-it1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730404AbfETMuY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 08:50:24 -0400
+Received: by mail-it1-f194.google.com with SMTP id h11so1244198itf.5
+        for <linux-kernel@vger.kernel.org>; Mon, 20 May 2019 05:50:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=Qx87YI2gjVMlfmpnZTr12jvkaOAAGprsDuNFTZhY9mU=;
+        b=lIwpRk82jVA169lGfPnbVTNNmG3yENbUfBAKq+tGpn8kWVNVKBNmGTnXt301hGMoJS
+         kH+jQGss4CbbxeYSYpZ7IbzEbdhi/iFz0d2K65D9qCpunXtM+HlkmqnkJp9U4xI0H0iX
+         TcUtQoc2d81L3velqghzct5aupzuvpjfhjdAGRg3iGDNEcQIyqLjOaAlJeQM/E0utx7E
+         1QojRPlj2tRGEvHtWzXvlIr2jOH12LfYpfnuZfZ5OX6mNmfD/XhyOe5Va/hCr9O7J31h
+         kkFsMiS1/gTyAGrQJ17oKGupS8RVE2xFOX/J+AcpWiA0m3h9DnjVDvEjDF0zWYG0uh3u
+         DvPQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=Qx87YI2gjVMlfmpnZTr12jvkaOAAGprsDuNFTZhY9mU=;
+        b=VyewteQHnxfCWWm1MeGFNFr8T8BMcmSkWam+tcp90Ww1Nv8PTiMh8QNiXOpjDmqUAF
+         k5zanMhqnAYe9wNpiDPv6x6B7nfRYqD0g3MMn+L/5tRnjhZZX6sVdelhXIPErDqKhq1O
+         MtbJnj2Z78eKEXIEch0WJEe+eQXxjL1rJodIDJ+CZDe6JVgnEi0+pZqjqDm4mD58RyYr
+         JrGoMoBckRoD2C4sojvOWu9gvVSq+AwYEgzUKvtGJ1BSXhK6dRLotc71l7nFQdXfTGQ1
+         UrHRJ2O4wul/FSJG8m434T1ZSlCU+aupb0vXWufln181MOE2Y15jcTFvvh9ZqG741nkH
+         Q3Sg==
+X-Gm-Message-State: APjAAAXKJrR1//a255CDW0myqwK73j2Y1IE0tVIcIs+2GdJ/xoI8SmLr
+        jjamHmeqqOw/BgjoDenPHz9rgGX5jR8=
+X-Google-Smtp-Source: APXvYqw3eYQFmiU2P80F3YK/n1+jYIrr8BZKprDfqo6BJhP36N/o4ae7Go1mhoVwFjFPnHWLn0T0jA==
+X-Received: by 2002:a05:660c:6c8:: with SMTP id z8mr29501887itk.51.1558356622660;
+        Mon, 20 May 2019 05:50:22 -0700 (PDT)
+Received: from [172.22.22.26] (c-71-195-29-92.hsd1.mn.comcast.net. [71.195.29.92])
+        by smtp.googlemail.com with ESMTPSA id 74sm4796440itk.3.2019.05.20.05.50.20
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 20 May 2019 05:50:21 -0700 (PDT)
+Subject: Re: [PATCH 09/18] soc: qcom: ipa: GSI transactions
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     David Miller <davem@davemloft.net>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Ilias Apalodimas <ilias.apalodimas@linaro.org>,
+        syadagir@codeaurora.org, mjavid@codeaurora.org,
+        evgreen@chromium.org, Ben Chan <benchan@google.com>,
+        Eric Caruso <ejcaruso@google.com>, abhishek.esse@gmail.com,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <20190512012508.10608-1-elder@linaro.org>
+ <20190512012508.10608-10-elder@linaro.org>
+ <CAK8P3a0eYWN6mMwft5OSu8wQQo=kWh5safGFFNkDCELZJyiMmQ@mail.gmail.com>
+ <14a040b6-8187-3fbc-754d-2e267d587858@linaro.org>
+ <CAK8P3a37bPRZTHZcrg8KrYRLAhCr9pk8v4yuo_wSyUONs2OysQ@mail.gmail.com>
+ <4a34d381-d31d-ea49-d6d3-3c4f632958e3@linaro.org>
+ <dcd648f2-5305-04dd-8997-be87a9961fd9@linaro.org>
+ <CAK8P3a0FfSvTF8kkQ8pyKFNX9-fSXvtEyMBYTjtM+VOPxMPkWg@mail.gmail.com>
+From:   Alex Elder <elder@linaro.org>
+Message-ID: <d3d4670f-eb8b-7dcf-f91a-1ec1d4d96f67@linaro.org>
+Date:   Mon, 20 May 2019 07:50:20 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAK8P3a0FfSvTF8kkQ8pyKFNX9-fSXvtEyMBYTjtM+VOPxMPkWg@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Dumazet <edumazet@google.com>
+On 5/20/19 4:25 AM, Arnd Bergmann wrote:
+> On Sun, May 19, 2019 at 7:11 PM Alex Elder <elder@linaro.org> wrote:
+>> On 5/17/19 1:44 PM, Alex Elder wrote:
+>>> On 5/17/19 1:33 PM, Arnd Bergmann wrote:
+>>>> On Fri, May 17, 2019 at 8:08 PM Alex Elder <elder@linaro.org>
+>>
+>> So it seems that I must *not* apply a volatile qualifier,
+>> because doing so restricts the compiler from making the
+>> single instruction optimization.
+> 
+> Right, I guess that makes sense.
+> 
+>> If I've missed something and you have another suggestion for
+>> me to try let me know and I'll try it.
+> 
+> A memcpy() might do the right thing as well. Another idea would
 
-commit 6daef95b8c914866a46247232a048447fff97279 upstream.
+I find memcpy() does the right thing.
 
-Avoid cache line miss dereferencing struct page if we can.
+> be a cast to __int128 like
 
-page_copy_sane() mostly deals with order-0 pages.
+I find that my environment supports 128 bit integers.  But...
 
-Extra cache line miss is visible on TCP recvmsg() calls dealing
-with GRO packets (typically 45 page frags are attached to one skb).
+> #ifdef CONFIG_ARCH_SUPPORTS_INT128
+> typedef __int128 tre128_t;
+> #else
+> typedef struct { __u64 a; __u64 b; } tre128_t;
+> #else
+> 
+> static inline void set_tre(struct gsi_tre *dest_tre, struct gs_tre *src_tre)
+> {
+>      *(volatile tre128_t *)dest_tre = *(tre128_t *)src_tre;
+> }
+...this produces two 8-bit assignments.  Could it be because
+it's implemented as two 64-bit values?  I think so.  Dropping
+the volatile qualifier produces a single "stp" instruction.
 
-Bringing the 45 struct pages into cpu cache while copying the data
-is not free, since the freeing of the skb (and associated
-page frags put_page()) can happen after cache lines have been evicted.
+The only other thing I thought I could do to encourage
+the compiler to do the right thing is define the type (or
+variables) to have 128-bit alignment.  And doing that for
+the original simple assignment didn't change the (desirable)
+outcome, but I don't think it's really necessary in this
+case, considering the single instruction uses two 64-bit
+registers.
 
-Signed-off-by: Eric Dumazet <edumazet@google.com>
-Cc: Al Viro <viro@zeniv.linux.org.uk>
-Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
-Cc: Matthew Wilcox <willy@infradead.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+I'm going to leave it as it was originally; it's the simplest:
+	*dest_tre = tre;
 
----
- lib/iov_iter.c |   17 +++++++++++++++--
- 1 file changed, 15 insertions(+), 2 deletions(-)
+I added a comment about structuring the code this way with
+the intention of getting the single instruction.  If a different
+compiler produces different result
 
---- a/lib/iov_iter.c
-+++ b/lib/iov_iter.c
-@@ -687,8 +687,21 @@ EXPORT_SYMBOL(_copy_from_iter_full_nocac
- 
- static inline bool page_copy_sane(struct page *page, size_t offset, size_t n)
- {
--	struct page *head = compound_head(page);
--	size_t v = n + offset + page_address(page) - page_address(head);
-+	struct page *head;
-+	size_t v = n + offset;
-+
-+	/*
-+	 * The general case needs to access the page order in order
-+	 * to compute the page size.
-+	 * However, we mostly deal with order-0 pages and thus can
-+	 * avoid a possible cache line miss for requests that fit all
-+	 * page orders.
-+	 */
-+	if (n <= v && v <= PAGE_SIZE)
-+		return true;
-+
-+	head = compound_head(page);
-+	v += (page - head) << PAGE_SHIFT;
- 
- 	if (likely(n <= v && v <= (PAGE_SIZE << compound_order(head))))
- 		return true;
+					-Alex
 
+> 
+>       Arnd
+> 
 
