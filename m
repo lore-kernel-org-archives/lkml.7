@@ -2,43 +2,43 @@ Return-Path: <SRS0=lq4r=TU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-3.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1414CC04AAC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:28:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD44AC04AAF
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:28:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DEC8F20675
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:28:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8405521479
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:28:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558355294;
-	bh=5QtOyxNW/y+7Hcy7rOPEPdbZxZW89eKydDTuooqxbr4=;
+	s=default; t=1558355297;
+	bh=yNCRd+eOXOTE0d/MEkfYEESKg8Bn3wudNisrxhdpgho=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Ba5nAqGrLSxOwhOznkIfjJLBNPq7VqGkh0c5zBAy7NFZhXfxLka3pz809iEuBiSog
-	 KNZWsvVMHOJV3fSgzwRXoJMpSZqsX74FDAjaabYl1fIAdYQjdSAW8nbqgJZ4altjU0
-	 7/MW+3v88RyYLcVGJQSHu+CBAUWkGtytHgroAgOQ=
+	b=dWy7aKMnwfmVqnW/kx+XnhPTNbJAHyZ4w6wHaoKI6w2OETVZZrVq7yO61oveu5W56
+	 ss7mpr0RTRudcJTJhpNT/xgSk91Ay3AQDGh3uQHTeQiyryZgB0v5YLAMZEvm4gTJuE
+	 C1Ls1HoZ6fIFiW8Zj/jHEQpSGGS2jJKo270keNCs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389639AbfETM2O (ORCPT
+        id S2388283AbfETM2Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 08:28:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43734 "EHLO mail.kernel.org"
+        Mon, 20 May 2019 08:28:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43936 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389590AbfETM2F (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 08:28:05 -0400
+        id S2389621AbfETM2N (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 08:28:13 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0C24921019;
-        Mon, 20 May 2019 12:28:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CA88B2171F;
+        Mon, 20 May 2019 12:28:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558355284;
-        bh=5QtOyxNW/y+7Hcy7rOPEPdbZxZW89eKydDTuooqxbr4=;
+        s=default; t=1558355292;
+        bh=yNCRd+eOXOTE0d/MEkfYEESKg8Bn3wudNisrxhdpgho=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Ltmk8T0F1EHAcRAkGtbu+4U/X/9ZNUQoIzc5gYOexqVqqQMF4XNGSv+W5IpQkaER1
-         2U7EpBpDa6xrIXebeTSwfsQPy9VSdEUDYx5PEqvAB4HREPx40WIkbsUhRsLqK50J1v
-         2lo1/jaT+TJjOoN1uXMXCnqhLi6KxgfeWVbmcyXI=
+        b=I1IAWiEdNypDJ8uEiC24RlaeFqRcMuEQ/7LjBJi6Izx7nfazwoMeDPb1T8jKynURw
+         ZJc8SuVYpKfCrpXBefexO1tkO1nkweXLYsTYMGGUprRezDUFKGZdqx27QOEORulp88
+         5oN9i9bpf3DvRsVC28Ud3VwJrG83YbpKB5VC2aEo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -48,14 +48,13 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
         Pu Wen <puwen@hygon.cn>, Qiuxu Zhuo <qiuxu.zhuo@intel.com>,
         "rafal@milecki.pl" <rafal@milecki.pl>,
-        Shirish S <Shirish.S@amd.com>,
         Thomas Gleixner <tglx@linutronix.de>,
         Tony Luck <tony.luck@intel.com>,
         Vishal Verma <vishal.l.verma@intel.com>,
         x86-ml <x86@kernel.org>
-Subject: [PATCH 5.0 020/123] x86/MCE: Add an MCE-record filtering function
-Date:   Mon, 20 May 2019 14:13:20 +0200
-Message-Id: <20190520115246.231324489@linuxfoundation.org>
+Subject: [PATCH 5.0 023/123] x86/MCE: Group AMD function prototypes in <asm/mce.h>
+Date:   Mon, 20 May 2019 14:13:23 +0200
+Message-Id: <20190520115246.373480039@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190520115245.439864225@linuxfoundation.org>
 References: <20190520115245.439864225@linuxfoundation.org>
@@ -70,20 +69,14 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Yazen Ghannam <yazen.ghannam@amd.com>
 
-commit 45d4b7b9cb88526f6d5bd4c03efab88d75d10e4f upstream.
+commit 9308fd4074551f222f30322d1ee8c5aff18e9747 upstream.
 
-Some systems may report spurious MCA errors. In general, spurious MCA
-errors may be disabled by clearing a particular bit in MCA_CTL. However,
-clearing a bit in MCA_CTL may not be recommended for some errors, so the
-only option is to ignore them.
+There are two groups of "ifdef CONFIG_X86_MCE_AMD" function prototypes
+in <asm/mce.h>. Merge these two groups.
 
-An MCA error is printed and handled after it has been added to the MCE
-event pool. So an MCA error can be ignored by not adding it to that pool
-in the first place.
+No functional change.
 
-Add such a filtering function.
-
- [ bp: Move function prototype to the internal header and massage. ]
+ [ bp: align vertically. ]
 
 Signed-off-by: Yazen Ghannam <yazen.ghannam@amd.com>
 Signed-off-by: Borislav Petkov <bp@suse.de>
@@ -94,56 +87,59 @@ Cc: Ingo Molnar <mingo@redhat.com>
 Cc: Pu Wen <puwen@hygon.cn>
 Cc: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
 Cc: "rafal@milecki.pl" <rafal@milecki.pl>
-Cc: Shirish S <Shirish.S@amd.com>
-Cc: <stable@vger.kernel.org> # 5.0.x
 Cc: Thomas Gleixner <tglx@linutronix.de>
 Cc: Tony Luck <tony.luck@intel.com>
 Cc: Vishal Verma <vishal.l.verma@intel.com>
 Cc: x86-ml <x86@kernel.org>
-Link: https://lkml.kernel.org/r/20190325163410.171021-1-Yazen.Ghannam@amd.com
+Link: https://lkml.kernel.org/r/20190322202848.20749-3-Yazen.Ghannam@amd.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/kernel/cpu/mce/core.c     |    5 +++++
- arch/x86/kernel/cpu/mce/genpool.c  |    3 +++
- arch/x86/kernel/cpu/mce/internal.h |    3 +++
- 3 files changed, 11 insertions(+)
+ arch/x86/include/asm/mce.h |   25 +++++++++++--------------
+ 1 file changed, 11 insertions(+), 14 deletions(-)
 
---- a/arch/x86/kernel/cpu/mce/core.c
-+++ b/arch/x86/kernel/cpu/mce/core.c
-@@ -1801,6 +1801,11 @@ static void __mcheck_cpu_init_timer(void
- 	mce_start_timer(t);
- }
+--- a/arch/x86/include/asm/mce.h
++++ b/arch/x86/include/asm/mce.h
+@@ -209,16 +209,6 @@ static inline void cmci_rediscover(void)
+ static inline void cmci_recheck(void) {}
+ #endif
  
-+bool filter_mce(struct mce *m)
-+{
-+	return false;
-+}
+-#ifdef CONFIG_X86_MCE_AMD
+-void mce_amd_feature_init(struct cpuinfo_x86 *c);
+-int umc_normaddr_to_sysaddr(u64 norm_addr, u16 nid, u8 umc, u64 *sys_addr);
+-#else
+-static inline void mce_amd_feature_init(struct cpuinfo_x86 *c) { }
+-static inline int umc_normaddr_to_sysaddr(u64 norm_addr, u16 nid, u8 umc, u64 *sys_addr) { return -EINVAL; };
+-#endif
+-
+-static inline void mce_hygon_feature_init(struct cpuinfo_x86 *c) { return mce_amd_feature_init(c); }
+-
+ int mce_available(struct cpuinfo_x86 *c);
+ bool mce_is_memory_error(struct mce *m);
+ bool mce_is_correctable(struct mce *m);
+@@ -338,12 +328,19 @@ extern bool amd_mce_is_memory_error(stru
+ extern int mce_threshold_create_device(unsigned int cpu);
+ extern int mce_threshold_remove_device(unsigned int cpu);
+ 
+-#else
++void mce_amd_feature_init(struct cpuinfo_x86 *c);
++int umc_normaddr_to_sysaddr(u64 norm_addr, u16 nid, u8 umc, u64 *sys_addr);
+ 
+-static inline int mce_threshold_create_device(unsigned int cpu) { return 0; };
+-static inline int mce_threshold_remove_device(unsigned int cpu) { return 0; };
+-static inline bool amd_mce_is_memory_error(struct mce *m) { return false; };
++#else
+ 
++static inline int mce_threshold_create_device(unsigned int cpu)		{ return 0; };
++static inline int mce_threshold_remove_device(unsigned int cpu)		{ return 0; };
++static inline bool amd_mce_is_memory_error(struct mce *m)		{ return false; };
++static inline void mce_amd_feature_init(struct cpuinfo_x86 *c)		{ }
++static inline int
++umc_normaddr_to_sysaddr(u64 norm_addr, u16 nid, u8 umc, u64 *sys_addr)	{ return -EINVAL; };
+ #endif
+ 
++static inline void mce_hygon_feature_init(struct cpuinfo_x86 *c)	{ return mce_amd_feature_init(c); }
 +
- /* Handle unconfigured int18 (should never happen) */
- static void unexpected_machine_check(struct pt_regs *regs, long error_code)
- {
---- a/arch/x86/kernel/cpu/mce/genpool.c
-+++ b/arch/x86/kernel/cpu/mce/genpool.c
-@@ -99,6 +99,9 @@ int mce_gen_pool_add(struct mce *mce)
- {
- 	struct mce_evt_llist *node;
- 
-+	if (filter_mce(mce))
-+		return -EINVAL;
-+
- 	if (!mce_evt_pool)
- 		return -EINVAL;
- 
---- a/arch/x86/kernel/cpu/mce/internal.h
-+++ b/arch/x86/kernel/cpu/mce/internal.h
-@@ -173,4 +173,7 @@ struct mca_msr_regs {
- 
- extern struct mca_msr_regs msr_ops;
- 
-+/* Decide whether to add MCE record to MCE event pool or filter it out. */
-+extern bool filter_mce(struct mce *m);
-+
- #endif /* __X86_MCE_INTERNAL_H__ */
+ #endif /* _ASM_X86_MCE_H */
 
 
