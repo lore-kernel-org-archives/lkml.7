@@ -4,32 +4,33 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ECD10C072A4
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 08:49:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F33FC04AAF
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 08:49:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CB985206BA
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 08:49:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2F9B3206BA
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 08:49:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731404AbfETItq (ORCPT
+        id S1731502AbfETItv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 04:49:46 -0400
-Received: from mx0b-001ae601.pphosted.com ([67.231.152.168]:44190 "EHLO
+        Mon, 20 May 2019 04:49:51 -0400
+Received: from mx0b-001ae601.pphosted.com ([67.231.152.168]:44192 "EHLO
         mx0b-001ae601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1731334AbfETItp (ORCPT
+        by vger.kernel.org with ESMTP id S1731338AbfETItq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 04:49:45 -0400
+        Mon, 20 May 2019 04:49:46 -0400
 Received: from pps.filterd (m0077474.ppops.net [127.0.0.1])
-        by mx0b-001ae601.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4K8i21b030385;
+        by mx0b-001ae601.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4K8i3sk030392;
         Mon, 20 May 2019 03:49:38 -0500
 Authentication-Results: ppops.net;
         spf=none smtp.mailfrom=ckeepax@opensource.cirrus.com
 Received: from mail1.cirrus.com (mail1.cirrus.com [141.131.3.20])
-        by mx0b-001ae601.pphosted.com with ESMTP id 2sjefmt3em-1;
-        Mon, 20 May 2019 03:49:37 -0500
+        by mx0b-001ae601.pphosted.com with ESMTP id 2sjefmt3en-1;
+        Mon, 20 May 2019 03:49:38 -0500
 Received: from EDIEX02.ad.cirrus.com (unknown [198.61.84.81])
-        by mail1.cirrus.com (Postfix) with ESMTP id 8D997611C8BD;
+        by mail1.cirrus.com (Postfix) with ESMTP id E4AB4611C8B9;
         Mon, 20 May 2019 03:49:37 -0500 (CDT)
 Received: from EDIEX01.ad.cirrus.com (198.61.84.80) by EDIEX02.ad.cirrus.com
  (198.61.84.81) with Microsoft SMTP Server (version=TLS1_2,
@@ -39,16 +40,16 @@ Received: from ediswmail.ad.cirrus.com (198.61.86.93) by EDIEX01.ad.cirrus.com
  (198.61.84.80) with Microsoft SMTP Server id 15.1.1591.10 via Frontend
  Transport; Mon, 20 May 2019 09:49:36 +0100
 Received: from algalon.ad.cirrus.com (algalon.ad.cirrus.com [198.90.251.122])
-        by ediswmail.ad.cirrus.com (Postfix) with ESMTP id 9FE6645;
+        by ediswmail.ad.cirrus.com (Postfix) with ESMTP id 8BFFB2DD;
         Mon, 20 May 2019 09:49:36 +0100 (BST)
 From:   Charles Keepax <ckeepax@opensource.cirrus.com>
 To:     <wsa@the-dreams.de>, <mika.westerberg@linux.intel.com>
 CC:     <linux-i2c@vger.kernel.org>, <linux-acpi@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>, <benjamin.tissoires@redhat.com>,
         <jbroadus@gmail.com>, <patches@opensource.cirrus.com>
-Subject: [PATCH 5/5] i2c: core: Tidy up handling of init_irq
-Date:   Mon, 20 May 2019 09:49:36 +0100
-Message-ID: <20190520084936.10590-6-ckeepax@opensource.cirrus.com>
+Subject: [PATCH 3/5] i2c: core: Move ACPI IRQ handling to probe time
+Date:   Mon, 20 May 2019 09:49:34 +0100
+Message-ID: <20190520084936.10590-4-ckeepax@opensource.cirrus.com>
 X-Mailer: git-send-email 2.11.0
 In-Reply-To: <20190520084936.10590-1-ckeepax@opensource.cirrus.com>
 References: <20190520084936.10590-1-ckeepax@opensource.cirrus.com>
@@ -64,44 +65,84 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Only set init_irq during i2c_device_new and only handle client->irq on
-the probe/remove paths.
+Bring the ACPI path in sync with the device tree path and handle all the
+IRQ fetching at probe time. This leaves the only IRQ handling at device
+registration time being that which is passed directly through the board
+info as either a resource or an actual IRQ number.
 
-Suggested-by: Benjamin Tissoires <benjamin.tissoires@redhat.com>
 Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
 ---
- drivers/i2c/i2c-core-base.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ drivers/i2c/i2c-core-acpi.c | 6 ++----
+ drivers/i2c/i2c-core-base.c | 6 +++++-
+ drivers/i2c/i2c-core.h      | 7 +++++++
+ 3 files changed, 14 insertions(+), 5 deletions(-)
 
+diff --git a/drivers/i2c/i2c-core-acpi.c b/drivers/i2c/i2c-core-acpi.c
+index 764cd10420a74..e332760bf9ebc 100644
+--- a/drivers/i2c/i2c-core-acpi.c
++++ b/drivers/i2c/i2c-core-acpi.c
+@@ -148,8 +148,9 @@ static int i2c_acpi_add_resource(struct acpi_resource *ares, void *data)
+ 	return 1; /* No need to add resource to the list */
+ }
+ 
+-static int i2c_acpi_get_irq(struct acpi_device *adev, int *irq)
++int i2c_acpi_get_irq(struct i2c_client *client, int *irq)
+ {
++	struct acpi_device *adev = ACPI_COMPANION(&client->adapter->dev);
+ 	struct list_head resource_list;
+ 	int ret;
+ 
+@@ -201,9 +202,6 @@ static int i2c_acpi_get_info(struct acpi_device *adev,
+ 	if (adapter_handle)
+ 		*adapter_handle = lookup.adapter_handle;
+ 
+-	/* Then fill IRQ number if any */
+-	i2c_acpi_get_irq(adev, &info->irq);
+-
+ 	acpi_set_modalias(adev, dev_name(&adev->dev), info->type,
+ 			  sizeof(info->type));
+ 
 diff --git a/drivers/i2c/i2c-core-base.c b/drivers/i2c/i2c-core-base.c
-index f958b50c78c04..c0a52802d23e7 100644
+index 84bf11b25a120..c1afa17a76bfc 100644
 --- a/drivers/i2c/i2c-core-base.c
 +++ b/drivers/i2c/i2c-core-base.c
-@@ -322,6 +322,8 @@ static int i2c_device_probe(struct device *dev)
- 
- 	driver = to_i2c_driver(dev->driver);
- 
-+	client->irq = client->init_irq;
+@@ -335,7 +335,11 @@ static int i2c_device_probe(struct device *dev)
+ 			if (irq == -EINVAL || irq == -ENODATA)
+ 				irq = of_irq_get(dev->of_node, 0);
+ 		} else if (ACPI_COMPANION(dev)) {
+-			irq = acpi_dev_gpio_irq_get(ACPI_COMPANION(dev), 0);
++			i2c_acpi_get_irq(client, &irq);
 +
- 	if (!client->irq && !driver->disable_i2c_core_irq_mapping) {
- 		int irq = -ENOENT;
- 
-@@ -432,7 +434,7 @@ static int i2c_device_remove(struct device *dev)
- 	dev_pm_clear_wake_irq(&client->dev);
- 	device_init_wakeup(&client->dev, false);
- 
--	client->irq = client->init_irq;
-+	client->irq = 0;
- 	if (client->flags & I2C_CLIENT_HOST_NOTIFY)
- 		pm_runtime_put(&client->adapter->dev);
- 
-@@ -749,7 +751,6 @@ i2c_new_client_device(struct i2c_adapter *adap, struct i2c_board_info const *inf
- 	if (!client->init_irq)
- 		client->init_irq = i2c_dev_irq_from_resources(info->resources,
- 							 info->num_resources);
--	client->irq = client->init_irq;
- 
- 	strlcpy(client->name, info->type, sizeof(client->name));
++			if (irq == -ENOENT)
++				irq = acpi_dev_gpio_irq_get(ACPI_COMPANION(dev),
++							    0);
+ 		}
+ 		if (irq == -EPROBE_DEFER)
+ 			return irq;
+diff --git a/drivers/i2c/i2c-core.h b/drivers/i2c/i2c-core.h
+index 8f3a08dc73a25..6bec145ab7d74 100644
+--- a/drivers/i2c/i2c-core.h
++++ b/drivers/i2c/i2c-core.h
+@@ -72,6 +72,8 @@ const struct acpi_device_id *
+ i2c_acpi_match_device(const struct acpi_device_id *matches,
+ 		      struct i2c_client *client);
+ void i2c_acpi_register_devices(struct i2c_adapter *adap);
++
++int i2c_acpi_get_irq(struct i2c_client *client, int *irq);
+ #else /* CONFIG_ACPI */
+ static inline void i2c_acpi_register_devices(struct i2c_adapter *adap) { }
+ static inline const struct acpi_device_id *
+@@ -80,6 +82,11 @@ i2c_acpi_match_device(const struct acpi_device_id *matches,
+ {
+ 	return NULL;
+ }
++
++static inline int i2c_acpi_get_irq(struct i2c_client *client, int *irq)
++{
++	return 0;
++}
+ #endif /* CONFIG_ACPI */
+ extern struct notifier_block i2c_acpi_notifier;
  
 -- 
 2.11.0
