@@ -2,155 +2,199 @@ Return-Path: <SRS0=lq4r=TU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61BE4C04AAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 09:37:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 798E2C04AAF
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 09:37:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3741520675
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 09:37:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="BIhkYpEP"
+	by mail.kernel.org (Postfix) with ESMTP id 4F0E020675
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 09:37:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732257AbfETJhK (ORCPT
+        id S1732268AbfETJhP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 05:37:10 -0400
-Received: from mail-eopbgr140072.outbound.protection.outlook.com ([40.107.14.72]:6430
-        "EHLO EUR01-VE1-obe.outbound.protection.outlook.com"
+        Mon, 20 May 2019 05:37:15 -0400
+Received: from szxga03-in.huawei.com ([45.249.212.189]:2584 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727720AbfETJhJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 05:37:09 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Qo/4lm080txNdB8vZoo7pHmI2Q8NtdG6gVqwj+AIAIY=;
- b=BIhkYpEP7Iy57h06f/4qh2G9Y2wyw6Oygih6uZT/ZYjtA0kXsLUXySPFad8QNAkniOOd4bnzU44BEnX0c+hIO+ETbbFBCZexAq0HQ3z9p9bPxqoo7WYJ+KJfyygbKf+HPK1C1W20mnXAYnsJbNnhueVhetiUKZozkyaDDw+zQQ0=
-Received: from AM0PR04MB4481.eurprd04.prod.outlook.com (52.135.147.15) by
- AM0PR04MB6596.eurprd04.prod.outlook.com (20.179.255.25) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1900.18; Mon, 20 May 2019 09:37:05 +0000
-Received: from AM0PR04MB4481.eurprd04.prod.outlook.com
- ([fe80::3173:24:d401:2378]) by AM0PR04MB4481.eurprd04.prod.outlook.com
- ([fe80::3173:24:d401:2378%6]) with mapi id 15.20.1900.020; Mon, 20 May 2019
- 09:37:04 +0000
-From:   Peng Fan <peng.fan@nxp.com>
-To:     Leonard Crestez <leonard.crestez@nxp.com>,
-        "srinivas.kandagatla@linaro.org" <srinivas.kandagatla@linaro.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>
-CC:     "festevam@gmail.com" <festevam@gmail.com>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [RFC 1/2] dt-bindings: imx-ocotp: Add fusable-node property
-Thread-Topic: [RFC 1/2] dt-bindings: imx-ocotp: Add fusable-node property
-Thread-Index: AQHVDrkIcB6j+hDf/kC51b4HJvSviKZzwQ2A
-Date:   Mon, 20 May 2019 09:37:04 +0000
-Message-ID: <AM0PR04MB44813D1223FDB9266C9F90D388060@AM0PR04MB4481.eurprd04.prod.outlook.com>
-References: <20190520032020.7920-1-peng.fan@nxp.com>
- <AM0PR04MB643466338B440374D97F2805EE060@AM0PR04MB6434.eurprd04.prod.outlook.com>
-In-Reply-To: <AM0PR04MB643466338B440374D97F2805EE060@AM0PR04MB6434.eurprd04.prod.outlook.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=peng.fan@nxp.com; 
-x-originating-ip: [119.31.174.71]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: fedb471d-2867-4ce1-f3f5-08d6dd06b839
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:AM0PR04MB6596;
-x-ms-traffictypediagnostic: AM0PR04MB6596:
-x-ms-exchange-purlcount: 1
-x-microsoft-antispam-prvs: <AM0PR04MB6596AE3A5D9ABD804AA95EFB88060@AM0PR04MB6596.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
-x-forefront-prvs: 004395A01C
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(136003)(396003)(376002)(346002)(366004)(39860400002)(189003)(199004)(305945005)(66476007)(64756008)(76116006)(66446008)(66946007)(66556008)(256004)(14444005)(73956011)(2906002)(186003)(316002)(71200400001)(71190400001)(66066001)(26005)(110136005)(7416002)(5660300002)(7736002)(33656002)(102836004)(11346002)(476003)(54906003)(3846002)(6116002)(99286004)(966005)(74316002)(9686003)(76176011)(44832011)(14454004)(486006)(7696005)(53546011)(6506007)(8936002)(68736007)(81166006)(81156014)(6436002)(6246003)(86362001)(8676002)(2201001)(478600001)(53936002)(6306002)(25786009)(52536014)(55016002)(2501003)(446003)(229853002)(4326008);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR04MB6596;H:AM0PR04MB4481.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: nAoXYNwnOcLA/ASD8hstzYykuYIyuFj4NnwIQYO+kkLv9R0Ja4PVGiDrtU1WK5CVutb4JZOebop3wGgp7Tajo8bkZOyCF7f6n+4awpYga6JSA9aky4mb1p0V25/JtpVmVwjjdsAL4VUP5YdNv6QAGjrgSNQmUBt5i4MiczpcT0qQElX+9+BBAjRU+HOW1ErI5nQF7svudm3wAlsMBjUdrmtawoQEJuYQgGJND+8t6qa/tmLvsnOZap2LWn3eReVduJNhmc7snfNDGbNdgEpnGMbsdSbu9hYzK9J/QM+rzLZMUyC+4HOlDdj5jvk/FaSFIOCCM04Ki1LfaJ+8n/XHhcK1oTKTYADci3Vv0R2QyKPFAvPVmYgR1ZkmaUasUjOp2/ZyMIQYybOa2j04sFcmXSv4X7++oTOeHBXn9glMvqI=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        id S1727720AbfETJhN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 05:37:13 -0400
+Received: from DGGEMM402-HUB.china.huawei.com (unknown [172.30.72.55])
+        by Forcepoint Email with ESMTP id E4455BE35A774639F6A0;
+        Mon, 20 May 2019 17:37:11 +0800 (CST)
+Received: from dggeme763-chm.china.huawei.com (10.3.19.109) by
+ DGGEMM402-HUB.china.huawei.com (10.3.20.210) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Mon, 20 May 2019 17:37:11 +0800
+Received: from szvp000201624.huawei.com (10.120.216.130) by
+ dggeme763-chm.china.huawei.com (10.3.19.109) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.1591.10; Mon, 20 May 2019 17:37:11 +0800
+From:   Chao Yu <yuchao0@huawei.com>
+To:     <jaegeuk@kernel.org>
+CC:     <linux-f2fs-devel@lists.sourceforge.net>,
+        <linux-kernel@vger.kernel.org>, <chao@kernel.org>,
+        Chao Yu <yuchao0@huawei.com>
+Subject: [PATCH] f2fs: fix to avoid deadloop if data_flush is on
+Date:   Mon, 20 May 2019 17:36:59 +0800
+Message-ID: <20190520093659.50755-1-yuchao0@huawei.com>
+X-Mailer: git-send-email 2.18.0.rc1
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: fedb471d-2867-4ce1-f3f5-08d6dd06b839
-X-MS-Exchange-CrossTenant-originalarrivaltime: 20 May 2019 09:37:04.8992
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB6596
+Content-Type: text/plain
+X-Originating-IP: [10.120.216.130]
+X-ClientProxiedBy: dggeme708-chm.china.huawei.com (10.1.199.104) To
+ dggeme763-chm.china.huawei.com (10.3.19.109)
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> Subject: Re: [RFC 1/2] dt-bindings: imx-ocotp: Add fusable-node property
->=20
-> On 20.05.2019 06:06, Peng Fan wrote:
-> > Introduce fusable-node property for i.MX OCOTP driver.
-> > The property will only be used by Firmware(eg. U-Boot) to runtime
-> > disable the nodes.
-> >
-> > Take i.MX6ULL for example, there are several parts that only have
-> > limited modules enabled controlled by OCOTP fuse. It is not flexible
-> > to provide several dts for the serval parts, instead we could provide
-> > one device tree and let Firmware to runtime disable the device tree
-> > nodes for those modules that are disable(fused).
-> >
-> > Signed-off-by: Peng Fan <peng.fan@nxp.com>
-> > ---
-> >
-> > Currently NXP vendor use U-Boot to set status to disabled for devices
-> > that could not function,
-> >
-> https://source.codeaurora.org/external/imx/uboot-imx/tree/arch/arm/mac
-> > h-imx/mx6/module_fuse.c?h=3Dimx_v2018.03_4.14.98_2.0.0_ga#n149
-> > But this approach is will not work if kernel dts node path changed.
-> >
-> > There are two approaches to resolve:
-> >
-> > 1. This patch is to add a fusable-node property, and Firmware will pars=
-e
-> >     the property and read fuse to decide whether to disable or keeep
-> enable
-> >     the nodes.
-> >
-> > 2. There is another approach is that add nvmem-cells for all nodes that
-> >     could be disabled(fused). Then in each linux driver to use nvmem
-> >     api to detect fused or not, or in linux driver common code to check
-> >     device functionable or not with nvmem API.
-> >
-> >
-> > To make it easy to work, we choose [1] here. Please advise whether it
-> > is acceptable, because the property is not used by linux driver in
-> > approach [1]. Or you prefer [2] or please advise if any better solution=
-.
->=20
-> Couldn't firmware parse nvmem-cells? Even without a full nvmem subsystem
-> it would be possible for imx-specific code to walk the entire device tree=
-, parse
-> nvmem-cells and disable nodes which are disabled by fuse.
+As Hagbard Celine reported:
 
-Firmware could parse nvmem-cells, but there are lots of modules that could
-be fused. If using nvmem-cells, that means need to add nvmem property
-for all the modules that could be fused. To make is looks cleaner, so intro=
-duced
-a fusable-node property.
+[  615.697824] INFO: task kworker/u16:5:344 blocked for more than 120 seconds.
+[  615.697825]       Not tainted 5.0.15-gentoo-f2fslog #4
+[  615.697826] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs"
+disables this message.
+[  615.697827] kworker/u16:5   D    0   344      2 0x80000000
+[  615.697831] Workqueue: writeback wb_workfn (flush-259:0)
+[  615.697832] Call Trace:
+[  615.697836]  ? __schedule+0x2c5/0x8b0
+[  615.697839]  schedule+0x32/0x80
+[  615.697841]  schedule_preempt_disabled+0x14/0x20
+[  615.697842]  __mutex_lock.isra.8+0x2ba/0x4d0
+[  615.697845]  ? log_store+0xf5/0x260
+[  615.697848]  f2fs_write_data_pages+0x133/0x320
+[  615.697851]  ? trace_hardirqs_on+0x2c/0xe0
+[  615.697854]  do_writepages+0x41/0xd0
+[  615.697857]  __filemap_fdatawrite_range+0x81/0xb0
+[  615.697859]  f2fs_sync_dirty_inodes+0x1dd/0x200
+[  615.697861]  f2fs_balance_fs_bg+0x2a7/0x2c0
+[  615.697863]  ? up_read+0x5/0x20
+[  615.697865]  ? f2fs_do_write_data_page+0x2cb/0x940
+[  615.697867]  f2fs_balance_fs+0xe5/0x2c0
+[  615.697869]  __write_data_page+0x1c8/0x6e0
+[  615.697873]  f2fs_write_cache_pages+0x1e0/0x450
+[  615.697878]  f2fs_write_data_pages+0x14b/0x320
+[  615.697880]  ? trace_hardirqs_on+0x2c/0xe0
+[  615.697883]  do_writepages+0x41/0xd0
+[  615.697885]  __filemap_fdatawrite_range+0x81/0xb0
+[  615.697887]  f2fs_sync_dirty_inodes+0x1dd/0x200
+[  615.697889]  f2fs_balance_fs_bg+0x2a7/0x2c0
+[  615.697891]  f2fs_write_node_pages+0x51/0x220
+[  615.697894]  do_writepages+0x41/0xd0
+[  615.697897]  __writeback_single_inode+0x3d/0x3d0
+[  615.697899]  writeback_sb_inodes+0x1e8/0x410
+[  615.697902]  __writeback_inodes_wb+0x5d/0xb0
+[  615.697904]  wb_writeback+0x28f/0x340
+[  615.697906]  ? cpumask_next+0x16/0x20
+[  615.697908]  wb_workfn+0x33e/0x420
+[  615.697911]  process_one_work+0x1a1/0x3d0
+[  615.697913]  worker_thread+0x30/0x380
+[  615.697915]  ? process_one_work+0x3d0/0x3d0
+[  615.697916]  kthread+0x116/0x130
+[  615.697918]  ? kthread_create_worker_on_cpu+0x70/0x70
+[  615.697921]  ret_from_fork+0x3a/0x50
 
-Regards,
-Peng.
+There is still deadloop in below condition:
 
->=20
-> --
-> Regards,
-> Leonard
+d A
+- do_writepages
+ - f2fs_write_node_pages
+  - f2fs_balance_fs_bg
+   - f2fs_sync_dirty_inodes
+    - f2fs_write_cache_pages
+     - mutex_lock(&sbi->writepages)	-- lock once
+     - __write_data_page
+      - f2fs_balance_fs_bg
+       - f2fs_sync_dirty_inodes
+        - f2fs_write_data_pages
+         - mutex_lock(&sbi->writepages)	-- lock again
+
+Thread A			Thread B
+- do_writepages
+ - f2fs_write_node_pages
+  - f2fs_balance_fs_bg
+   - f2fs_sync_dirty_inodes
+    - .cp_task = current
+				- f2fs_sync_dirty_inodes
+				 - .cp_task = current
+				 - filemap_fdatawrite
+				 - .cp_task = NULL
+    - filemap_fdatawrite
+     - f2fs_write_cache_pages
+      - enter f2fs_balance_fs_bg since .cp_task is NULL
+    - .cp_task = NULL
+
+Change as below to avoid this:
+- add condition to avoid holding .writepages mutex lock in path
+of data flush
+- introduce mutex lock sbi.flush_lock to exclude concurrent data
+flush in background.
+
+Signed-off-by: Chao Yu <yuchao0@huawei.com>
+---
+ fs/f2fs/data.c    | 3 +++
+ fs/f2fs/f2fs.h    | 1 +
+ fs/f2fs/segment.c | 4 ++++
+ fs/f2fs/super.c   | 1 +
+ 4 files changed, 9 insertions(+)
+
+diff --git a/fs/f2fs/data.c b/fs/f2fs/data.c
+index eda4181d2092..923923603a7d 100644
+--- a/fs/f2fs/data.c
++++ b/fs/f2fs/data.c
+@@ -2262,6 +2262,9 @@ static inline bool __should_serialize_io(struct inode *inode,
+ 		return false;
+ 	if (IS_NOQUOTA(inode))
+ 		return false;
++	/* to avoid deadlock in path of data flush */
++	if (F2FS_I(inode)->cp_task)
++		return false;
+ 	if (wbc->sync_mode != WB_SYNC_ALL)
+ 		return true;
+ 	if (get_dirty_pages(inode) >= SM_I(F2FS_I_SB(inode))->min_seq_blocks)
+diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
+index 71710e8336f4..832ce03768c7 100644
+--- a/fs/f2fs/f2fs.h
++++ b/fs/f2fs/f2fs.h
+@@ -1220,6 +1220,7 @@ struct f2fs_sb_info {
+ 	/* for inode management */
+ 	struct list_head inode_list[NR_INODE_TYPE];	/* dirty inode list */
+ 	spinlock_t inode_lock[NR_INODE_TYPE];	/* for dirty inode list lock */
++	struct mutex flush_lock;		/* for flush exclusion */
+ 
+ 	/* for extent tree cache */
+ 	struct radix_tree_root extent_tree_root;/* cache extent cache entries */
+diff --git a/fs/f2fs/segment.c b/fs/f2fs/segment.c
+index b5f21909356f..23cbca6d6ab6 100644
+--- a/fs/f2fs/segment.c
++++ b/fs/f2fs/segment.c
+@@ -546,9 +546,13 @@ void f2fs_balance_fs_bg(struct f2fs_sb_info *sbi)
+ 		if (test_opt(sbi, DATA_FLUSH)) {
+ 			struct blk_plug plug;
+ 
++			mutex_lock(&sbi->flush_lock);
++
+ 			blk_start_plug(&plug);
+ 			f2fs_sync_dirty_inodes(sbi, FILE_INODE);
+ 			blk_finish_plug(&plug);
++
++			mutex_unlock(&sbi->flush_lock);
+ 		}
+ 		f2fs_sync_fs(sbi->sb, true);
+ 		stat_inc_bg_cp_count(sbi->stat_info);
+diff --git a/fs/f2fs/super.c b/fs/f2fs/super.c
+index 3c71b9a71932..0d2307809bac 100644
+--- a/fs/f2fs/super.c
++++ b/fs/f2fs/super.c
+@@ -3305,6 +3305,7 @@ static int f2fs_fill_super(struct super_block *sb, void *data, int silent)
+ 		INIT_LIST_HEAD(&sbi->inode_list[i]);
+ 		spin_lock_init(&sbi->inode_lock[i]);
+ 	}
++	mutex_init(&sbi->flush_lock);
+ 
+ 	f2fs_init_extent_cache_info(sbi);
+ 
+-- 
+2.18.0.rc1
+
