@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A17EDC04AAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 06:01:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40168C04AAF
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 06:01:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 728D620815
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 06:01:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 13CBB20851
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 06:01:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="tWllbJkM"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="SsvCezzM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730646AbfETGBn (ORCPT
+        id S1730581AbfETGBW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 02:01:43 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:47300 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730586AbfETGBW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 20 May 2019 02:01:22 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:46832 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725772AbfETGBT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 02:01:19 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
         MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
         :Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From
         :Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
         List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=ngUiwEDQptjC481jfdI3glduioMsRJldRZETJeFfRw8=; b=tWllbJkM0+gq/92RkxJXus5kXz
-        QBnmf6zrANZ+wzjcxXpRuU6gO6nZk+96nOSFMFSwetj5SRvYCtkf0u5vjaKfuGCI4jqiyJePzpzic
-        tdJuke4XxfyG+HKakDB+7bCKV0dqLZOONFeOUNGnudYJmjR6xGaXiQt7jwZd/a/ROkVaeXMrFtKMx
-        HWP5BgtEyfy8J9kdrL1QB6L0QKQW0NS4z3KVckU5YR/6fFufanf1B0cc3AkDPWhWD16xBEco6syGX
-        3//SUCrGccT/oqtjkGINSg+o9fx8tXw3PkWZALAdes/Ikb3QvA8WmHmk4G5SU7IDAvq5pvdc7eHgu
-        0ouF+ouA==;
+        bh=KGd8rrVNl49bwhKIdfBGkUdoNPU8y+rpheud4/Do5C0=; b=SsvCezzMM+/d8kHb4ZfONCb4R1
+        6d/cEG+4ahVe5sYI2krysy0kUUq2eEyF1DYqUK2Ym3LI82WIV0Kp9y7cjNEwCbU5Ebl+pf5slee6K
+        AkDUgTnfwZ1zfr/E+ZlUtY19k/N8XZmbutZyxkwxJOiKuNgR19xbyFoU0uNdHc1LHmO2djuhOhukl
+        HnQASbPATogBml9NRdb01ATz2BU/7lUeBg7um0dwdPLBjp7naktn3HeD25IW+6IEu94hkbmT4x51W
+        55aSeXwrl85Hi3C+iA+p+8qRFx+ot93IY6mVWX68dPLd7QHoYrAy5PMxmYdpvvbUJG5zW2dB+QSoD
+        FArM2iEw==;
 Received: from 089144206147.atnat0015.highway.bob.at ([89.144.206.147] helo=localhost)
         by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hSbMM-0001Z4-Fi; Mon, 20 May 2019 06:01:19 +0000
+        id 1hSbMH-0001T5-7v; Mon, 20 May 2019 06:01:13 +0000
 From:   Christoph Hellwig <hch@lst.de>
 To:     Oleg Nesterov <oleg@redhat.com>, Arnd Bergmann <arnd@arndb.de>
 Cc:     x86@kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-mips@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
         linux-sh@vger.kernel.org, linux-arch@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 3/5] sh: don't use asm-generic/ptrace.h
-Date:   Mon, 20 May 2019 08:00:16 +0200
-Message-Id: <20190520060018.25569-4-hch@lst.de>
+        linux-kernel@vger.kernel.org,
+        Catalin Marinas <catalin.marinas@arm.com>
+Subject: [PATCH 1/5] arm64: don't use asm-generic/ptrace.h
+Date:   Mon, 20 May 2019 08:00:14 +0200
+Message-Id: <20190520060018.25569-2-hch@lst.de>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190520060018.25569-1-hch@lst.de>
 References: <20190520060018.25569-1-hch@lst.de>
@@ -64,20 +65,42 @@ makes them harder to read, so implement the helpers directly.
 Note that only the helpers actually used are implemented now.
 
 Signed-off-by: Christoph Hellwig <hch@lst.de>
+Acked-by: Catalin Marinas <catalin.marinas@arm.com>
 ---
- arch/sh/include/asm/ptrace.h | 29 +++++++++++++++++++++++++----
- 1 file changed, 25 insertions(+), 4 deletions(-)
+ arch/arm64/include/asm/ptrace.h | 31 +++++++++++++++++++------------
+ 1 file changed, 19 insertions(+), 12 deletions(-)
 
-diff --git a/arch/sh/include/asm/ptrace.h b/arch/sh/include/asm/ptrace.h
-index 9143c7babcbe..6c89e3e04cee 100644
---- a/arch/sh/include/asm/ptrace.h
-+++ b/arch/sh/include/asm/ptrace.h
-@@ -16,8 +16,31 @@
- #define user_mode(regs)			(((regs)->sr & 0x40000000)==0)
- #define kernel_stack_pointer(_regs)	((unsigned long)(_regs)->regs[15])
+diff --git a/arch/arm64/include/asm/ptrace.h b/arch/arm64/include/asm/ptrace.h
+index b2de32939ada..584261e00619 100644
+--- a/arch/arm64/include/asm/ptrace.h
++++ b/arch/arm64/include/asm/ptrace.h
+@@ -228,11 +228,12 @@ static inline void forget_syscall(struct pt_regs *regs)
+ #define fast_interrupts_enabled(regs) \
+ 	(!((regs)->pstate & PSR_F_BIT))
  
--#define GET_FP(regs)	((regs)->regs[14])
--#define GET_USP(regs)	((regs)->regs[15])
+-#define GET_USP(regs) \
+-	(!compat_user_mode(regs) ? (regs)->sp : (regs)->compat_sp)
+-
+-#define SET_USP(ptregs, value) \
+-	(!compat_user_mode(regs) ? ((regs)->sp = value) : ((regs)->compat_sp = value))
++static inline unsigned long user_stack_pointer(struct pt_regs *regs)
++{
++	if (compat_user_mode(regs))
++		return regs->compat_sp;
++	return regs->sp;
++}
+ 
+ extern int regs_query_register_offset(const char *name);
+ extern unsigned long regs_get_kernel_stack_nth(struct pt_regs *regs,
+@@ -331,13 +332,20 @@ static inline unsigned long regs_get_kernel_argument(struct pt_regs *regs,
+ struct task_struct;
+ int valid_user_regs(struct user_pt_regs *regs, struct task_struct *task);
+ 
+-#define GET_IP(regs)		((unsigned long)(regs)->pc)
+-#define SET_IP(regs, value)	((regs)->pc = ((u64) (value)))
+-
+-#define GET_FP(ptregs)		((unsigned long)(ptregs)->regs[29])
+-#define SET_FP(ptregs, value)	((ptregs)->regs[29] = ((u64) (value)))
 +static inline unsigned long instruction_pointer(struct pt_regs *regs)
 +{
 +	return regs->pc;
@@ -87,33 +110,23 @@ index 9143c7babcbe..6c89e3e04cee 100644
 +{
 +	regs->pc = val;
 +}
-+
-+static inline unsigned long frame_pointer(struct pt_regs *regs)
-+{
-+	return regs->regs[14];
-+}
-+
-+static inline unsigned long user_stack_pointer(struct pt_regs *regs)
-+{
-+	return regs->regs[15];
-+}
-+
-+static inline void user_stack_pointer_set(struct pt_regs *regs,
-+		unsigned long val)
-+{
-+	regs->regs[15] = val;
-+}
- 
- #define arch_has_single_step()	(1)
- 
-@@ -112,7 +135,5 @@ static inline unsigned long profile_pc(struct pt_regs *regs)
- 
- 	return pc;
- }
--#define profile_pc profile_pc
  
 -#include <asm-generic/ptrace.h>
- #endif /* __ASM_SH_PTRACE_H */
++static inline unsigned long frame_pointer(struct pt_regs *regs)
++{
++	return regs->regs[29];
++}
+ 
+ #define procedure_link_pointer(regs)	((regs)->regs[30])
+ 
+@@ -347,7 +355,6 @@ static inline void procedure_link_pointer_set(struct pt_regs *regs,
+ 	procedure_link_pointer(regs) = val;
+ }
+ 
+-#undef profile_pc
+ extern unsigned long profile_pc(struct pt_regs *regs);
+ 
+ #endif /* __ASSEMBLY__ */
 -- 
 2.20.1
 
