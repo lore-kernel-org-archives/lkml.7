@@ -2,262 +2,113 @@ Return-Path: <SRS0=lq4r=TU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB9F7C04AAC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 11:33:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E03F4C04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 11:33:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C1DC020863
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 11:33:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B28FC21019
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 11:33:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="kGzjAWx0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732995AbfETLdH (ORCPT
+        id S1732984AbfETLdG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 07:33:07 -0400
-Received: from relay8-d.mail.gandi.net ([217.70.183.201]:37373 "EHLO
-        relay8-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732957AbfETLdG (ORCPT
+        Mon, 20 May 2019 07:33:06 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:40561 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732972AbfETLdG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 20 May 2019 07:33:06 -0400
-X-Originating-IP: 90.88.22.185
-Received: from aptenodytes (aaubervilliers-681-1-80-185.w90-88.abo.wanadoo.fr [90.88.22.185])
-        (Authenticated sender: paul.kocialkowski@bootlin.com)
-        by relay8-d.mail.gandi.net (Postfix) with ESMTPSA id 7FDA81BF20D;
-        Mon, 20 May 2019 11:32:59 +0000 (UTC)
-Date:   Mon, 20 May 2019 13:32:59 +0200
-From:   Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-To:     Maxime Ripard <maxime.ripard@bootlin.com>
-Cc:     Daniel Vetter <daniel.vetter@intel.com>,
-        David Airlie <airlied@linux.ie>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Sean Paul <seanpaul@chromium.org>,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        Emil Velikov <emil.velikov@collabora.com>
-Subject: Re: [PATCH v3 5/7] drm/fourcc: Pass the format_info pointer to
- drm_format_plane_width/height
-Message-ID: <20190520113258.GC6789@aptenodytes>
-References: <27b0041c7977402df4a087c78d2849ffe51c9f1c.1558002671.git-series.maxime.ripard@bootlin.com>
- <514af1d489d80b8b1767e3716b663ce5103da6eb.1558002671.git-series.maxime.ripard@bootlin.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <514af1d489d80b8b1767e3716b663ce5103da6eb.1558002671.git-series.maxime.ripard@bootlin.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+Received: by mail-pg1-f193.google.com with SMTP id d30so6670620pgm.7
+        for <linux-kernel@vger.kernel.org>; Mon, 20 May 2019 04:33:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :in-reply-to:references;
+        bh=S4gzzO6EwH6f41hdnpuqebXlIsK5G8TT4DFszJQHgV0=;
+        b=kGzjAWx09b8i614qTj93eApuhAYdKFfSCQb0+hZtpocLm2MSIaH0rF9+HiZf0A+vcj
+         DFTljdFN5pWcPxuYfUOJ68tQFKj30ZgtibGH2S3BXHbVCKNLZZhwrhp/XsRkXdFInukP
+         Xjk9fWaCFqZJ8jZcXhR3aezzU8FJfnpD/f2ytgb8QX23t5dF/R+yuoTqXH0C0ZF9DjXK
+         kK/Z6PNz6xn9BbWuEogWU+jIyoiUOisWLQVu90JBLpFdeKSeAFeaYkcaW1tllFwwnKdZ
+         nJfsJF6cAcVhHJ/woNRx2z15cQYdmwdMhtceda3QpfeXnUfr/bh84yM2S2fBpXB8Pd1R
+         Y6ZQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:in-reply-to:references;
+        bh=S4gzzO6EwH6f41hdnpuqebXlIsK5G8TT4DFszJQHgV0=;
+        b=kE82bO7m2nhGyE5dV8MD53cGtqNV0orliJDh24HOJlwsLBh5tVeGsc2pISjhHmFbOI
+         LbCSdjDlPUZxs6z8+YfG3OScVXaEQDtLxV3TNzlkK2CVXV4SSgKT5U1SlgDX6H82fYYz
+         nrsVbGnwpNfqAcKM8GiKtbzZ9syqwiGd68jdWnR0ABNSHWOz2+1uVxb99j7eS58aehrT
+         o1Cn347j7bsMsEDCgHRdbLzLDc4O7ojIxfqqp1AEJuT+gEXB0eYSaBzR0FY2hCwJe8zx
+         UwXoK/5O2tjmkHgvHXfOWASSWuVCaYmKPQiE0jNwNMyUZNRUVTQJ5xmAAL6M6o0x15WL
+         8ijg==
+X-Gm-Message-State: APjAAAX1aHppyj/VsvlXV60J6tkqf0/v8kRCjGgSNolg+6M5LCklerdU
+        NLxPm3XKEKL3tigqa4H8jNmgbA==
+X-Google-Smtp-Source: APXvYqz1+ao7UVqG40GQmasG5WxCT+39UIx+E5Jw485BRv+ugxfxElvHdFQ11VJd43Wx3nTx7nGipA==
+X-Received: by 2002:a63:6cc5:: with SMTP id h188mr13909311pgc.105.1558351985496;
+        Mon, 20 May 2019 04:33:05 -0700 (PDT)
+Received: from baolinwangubtpc.spreadtrum.com ([117.18.48.102])
+        by smtp.gmail.com with ESMTPSA id z124sm21310020pfz.116.2019.05.20.04.33.00
+        (version=TLS1 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Mon, 20 May 2019 04:33:05 -0700 (PDT)
+From:   Baolin Wang <baolin.wang@linaro.org>
+To:     dan.j.williams@intel.com, vkoul@kernel.org
+Cc:     thierry.reding@gmail.com, jonathanh@nvidia.com,
+        linux-tegra@vger.kernel.org, shawnguo@kernel.org,
+        s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
+        linux-imx@nxp.com, wsa+renesas@sang-engineering.com,
+        jroedel@suse.de, vincent.guittot@linaro.org,
+        baolin.wang@linaro.org, dmaengine@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: [PATCH v2 7/8] dmaengine: sh: rcar-dmac: Let the core do the device node validation
+Date:   Mon, 20 May 2019 19:32:20 +0800
+Message-Id: <6e544656cea22f93bdb2626620b381b00d1b38bf.1558351667.git.baolin.wang@linaro.org>
+X-Mailer: git-send-email 1.7.9.5
+In-Reply-To: <cover.1558351667.git.baolin.wang@linaro.org>
+References: <cover.1558351667.git.baolin.wang@linaro.org>
+In-Reply-To: <cover.1558351667.git.baolin.wang@linaro.org>
+References: <cover.1558351667.git.baolin.wang@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Let the DMA engine core do the device node validation instead of drivers.
 
-On Thu 16 May 19, 12:31, Maxime Ripard wrote:
-> So far, the drm_format_plane_height/width functions were operating on the
-> format's fourcc and was doing a lookup to retrieve the drm_format_info
-> structure and return the cpp.
-> 
-> However, this is inefficient since in most cases, we will have the
-> drm_format_info pointer already available so we shouldn't have to perform a
-> new lookup. Some drm_fourcc functions also already operate on the
-> drm_format_info pointer for that reason, so the API is quite inconsistent
-> there.
-> 
-> Let's follow the latter pattern and remove the extra lookup while being a
-> bit more consistent.
-> 
-> In order to be extra consistent, also rename that function to
-> drm_format_info_plane_cpp and to a static function in the header to match
-> the current policy. The parameters order have also be changed to match the
-> other functions prototype.
+Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
+---
+ drivers/dma/sh/rcar-dmac.c |    6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-Same comment about plane being int instead of unsigned int, but I think we
-can fix that later.
-
-Another thing that I find odd is that the division by vsub/hsub is not
-rounded up, but again, it's something independent from your patch.
-
-Reviewed-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-
-Cheers,
-
-Paul
-
-> Reviewed-by: Emil Velikov <emil.velikov@collabora.com>
-> Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
-> ---
->  drivers/gpu/drm/drm_fourcc.c          | 48 +----------------------------
->  drivers/gpu/drm/meson/meson_overlay.c | 12 +++----
->  include/drm/drm_fourcc.h              | 46 +++++++++++++++++++++++++--
->  3 files changed, 50 insertions(+), 56 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/drm_fourcc.c b/drivers/gpu/drm/drm_fourcc.c
-> index 5f63fc74e265..35b459d186c5 100644
-> --- a/drivers/gpu/drm/drm_fourcc.c
-> +++ b/drivers/gpu/drm/drm_fourcc.c
-> @@ -333,54 +333,6 @@ drm_get_format_info(struct drm_device *dev,
->  EXPORT_SYMBOL(drm_get_format_info);
->  
->  /**
-> - * drm_format_plane_width - width of the plane given the first plane
-> - * @width: width of the first plane
-> - * @format: pixel format
-> - * @plane: plane index
-> - *
-> - * Returns:
-> - * The width of @plane, given that the width of the first plane is @width.
-> - */
-> -int drm_format_plane_width(int width, uint32_t format, int plane)
-> -{
-> -	const struct drm_format_info *info;
-> -
-> -	info = drm_format_info(format);
-> -	if (!info || plane >= info->num_planes)
-> -		return 0;
-> -
-> -	if (plane == 0)
-> -		return width;
-> -
-> -	return width / info->hsub;
-> -}
-> -EXPORT_SYMBOL(drm_format_plane_width);
-> -
-> -/**
-> - * drm_format_plane_height - height of the plane given the first plane
-> - * @height: height of the first plane
-> - * @format: pixel format
-> - * @plane: plane index
-> - *
-> - * Returns:
-> - * The height of @plane, given that the height of the first plane is @height.
-> - */
-> -int drm_format_plane_height(int height, uint32_t format, int plane)
-> -{
-> -	const struct drm_format_info *info;
-> -
-> -	info = drm_format_info(format);
-> -	if (!info || plane >= info->num_planes)
-> -		return 0;
-> -
-> -	if (plane == 0)
-> -		return height;
-> -
-> -	return height / info->vsub;
-> -}
-> -EXPORT_SYMBOL(drm_format_plane_height);
-> -
-> -/**
->   * drm_format_info_block_width - width in pixels of block.
->   * @info: pixel format info
->   * @plane: plane index
-> diff --git a/drivers/gpu/drm/meson/meson_overlay.c b/drivers/gpu/drm/meson/meson_overlay.c
-> index fb8515b2860c..55b3f2f2e608 100644
-> --- a/drivers/gpu/drm/meson/meson_overlay.c
-> +++ b/drivers/gpu/drm/meson/meson_overlay.c
-> @@ -466,8 +466,8 @@ static void meson_overlay_atomic_update(struct drm_plane *plane,
->  		priv->viu.vd1_addr2 = gem->paddr + fb->offsets[2];
->  		priv->viu.vd1_stride2 = fb->pitches[2];
->  		priv->viu.vd1_height2 =
-> -			drm_format_plane_height(fb->height,
-> -						fb->format->format, 2);
-> +			drm_format_info_plane_height(fb->format,
-> +						fb->height, 2);
->  		DRM_DEBUG("plane 2 addr 0x%x stride %d height %d\n",
->  			 priv->viu.vd1_addr2,
->  			 priv->viu.vd1_stride2,
-> @@ -478,8 +478,8 @@ static void meson_overlay_atomic_update(struct drm_plane *plane,
->  		priv->viu.vd1_addr1 = gem->paddr + fb->offsets[1];
->  		priv->viu.vd1_stride1 = fb->pitches[1];
->  		priv->viu.vd1_height1 =
-> -			drm_format_plane_height(fb->height,
-> -						fb->format->format, 1);
-> +			drm_format_info_plane_height(fb->format,
-> +						fb->height, 1);
->  		DRM_DEBUG("plane 1 addr 0x%x stride %d height %d\n",
->  			 priv->viu.vd1_addr1,
->  			 priv->viu.vd1_stride1,
-> @@ -490,8 +490,8 @@ static void meson_overlay_atomic_update(struct drm_plane *plane,
->  		priv->viu.vd1_addr0 = gem->paddr + fb->offsets[0];
->  		priv->viu.vd1_stride0 = fb->pitches[0];
->  		priv->viu.vd1_height0 =
-> -			drm_format_plane_height(fb->height,
-> -						fb->format->format, 0);
-> +			drm_format_info_plane_height(fb->format,
-> +						fb->height, 0);
->  		DRM_DEBUG("plane 0 addr 0x%x stride %d height %d\n",
->  			 priv->viu.vd1_addr0,
->  			 priv->viu.vd1_stride0,
-> diff --git a/include/drm/drm_fourcc.h b/include/drm/drm_fourcc.h
-> index 6b5a82b31bc4..4ef8ccb5d236 100644
-> --- a/include/drm/drm_fourcc.h
-> +++ b/include/drm/drm_fourcc.h
-> @@ -277,6 +277,50 @@ int drm_format_info_plane_cpp(const struct drm_format_info *info, int plane)
->  	return info->cpp[plane];
->  }
->  
-> +/**
-> + * drm_format_info_plane_width - width of the plane given the first plane
-> + * @format: pixel format info
-> + * @width: width of the first plane
-> + * @plane: plane index
-> + *
-> + * Returns:
-> + * The width of @plane, given that the width of the first plane is @width.
-> + */
-> +static inline
-> +int drm_format_info_plane_width(const struct drm_format_info *info, int width,
-> +				int plane)
-> +{
-> +	if (!info || plane >= info->num_planes)
-> +		return 0;
-> +
-> +	if (plane == 0)
-> +		return width;
-> +
-> +	return width / info->hsub;
-> +}
-> +
-> +/**
-> + * drm_format_info_plane_height - height of the plane given the first plane
-> + * @format: pixel format info
-> + * @height: height of the first plane
-> + * @plane: plane index
-> + *
-> + * Returns:
-> + * The height of @plane, given that the height of the first plane is @height.
-> + */
-> +static inline
-> +int drm_format_info_plane_height(const struct drm_format_info *info, int height,
-> +				 int plane)
-> +{
-> +	if (!info || plane >= info->num_planes)
-> +		return 0;
-> +
-> +	if (plane == 0)
-> +		return height;
-> +
-> +	return height / info->vsub;
-> +}
-> +
->  const struct drm_format_info *__drm_format_info(u32 format);
->  const struct drm_format_info *drm_format_info(u32 format);
->  const struct drm_format_info *
-> @@ -285,8 +329,6 @@ drm_get_format_info(struct drm_device *dev,
->  uint32_t drm_mode_legacy_fb_format(uint32_t bpp, uint32_t depth);
->  uint32_t drm_driver_legacy_fb_format(struct drm_device *dev,
->  				     uint32_t bpp, uint32_t depth);
-> -int drm_format_plane_width(int width, uint32_t format, int plane);
-> -int drm_format_plane_height(int height, uint32_t format, int plane);
->  unsigned int drm_format_info_block_width(const struct drm_format_info *info,
->  					 int plane);
->  unsigned int drm_format_info_block_height(const struct drm_format_info *info,
-> -- 
-> git-series 0.9.1
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/dri-devel
-
+diff --git a/drivers/dma/sh/rcar-dmac.c b/drivers/dma/sh/rcar-dmac.c
+index 33ab1b6..67df54a 100644
+--- a/drivers/dma/sh/rcar-dmac.c
++++ b/drivers/dma/sh/rcar-dmac.c
+@@ -1654,8 +1654,7 @@ static bool rcar_dmac_chan_filter(struct dma_chan *chan, void *arg)
+ 	 * Forcing it to call dma_request_channel() and iterate through all
+ 	 * channels from all controllers is just pointless.
+ 	 */
+-	if (chan->device->device_config != rcar_dmac_device_config ||
+-	    dma_spec->np != chan->device->dev->of_node)
++	if (chan->device->device_config != rcar_dmac_device_config)
+ 		return false;
+ 
+ 	return !test_and_set_bit(dma_spec->args[0], dmac->modules);
+@@ -1675,7 +1674,8 @@ static struct dma_chan *rcar_dmac_of_xlate(struct of_phandle_args *dma_spec,
+ 	dma_cap_zero(mask);
+ 	dma_cap_set(DMA_SLAVE, mask);
+ 
+-	chan = dma_request_channel(mask, rcar_dmac_chan_filter, dma_spec);
++	chan = __dma_request_channel(&mask, rcar_dmac_chan_filter, dma_spec,
++				     ofdma->of_node);
+ 	if (!chan)
+ 		return NULL;
+ 
 -- 
-Paul Kocialkowski, Bootlin
-Embedded Linux and kernel engineering
-https://bootlin.com
+1.7.9.5
+
