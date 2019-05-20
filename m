@@ -2,92 +2,153 @@ Return-Path: <SRS0=lq4r=TU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2246C04AAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 14:24:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B9ECC04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 14:24:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7C65020657
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 14:24:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=akkea.ca header.i=@akkea.ca header.b="uxTVy4kY";
-	dkim=pass (1024-bit key) header.d=akkea.ca header.i=@akkea.ca header.b="uxTVy4kY"
+	by mail.kernel.org (Postfix) with ESMTP id ECB24214AE
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 14:24:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1558362246;
+	bh=1H6jNgjdKG51yQncAPvUpcb+kCoMrUikgzLhAgTXm0c=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=Y+3kvW+UaBFEGTeIBXZiJ4qPWIQOC4XV2fISXYTMFzPVlxPitQLXCf2G6tWs2+03l
+	 KCq1V/kVciuo01VlxcNPp6WrrhAvmyR0cFiqT9FjClN7vlTGaBz/mcwoRmSvtRoxPH
+	 MFmoqH19d66pVoD1gpVmzChqaWRNuNAMbvJBoveE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391515AbfETOYB (ORCPT
+        id S2391538AbfETOYF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Mon, 20 May 2019 10:24:05 -0400
+Received: from casper.infradead.org ([85.118.1.10]:46420 "EHLO
+        casper.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732407AbfETOYB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 20 May 2019 10:24:01 -0400
-Received: from node.akkea.ca ([192.155.83.177]:50732 "EHLO node.akkea.ca"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730549AbfETOXi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 10:23:38 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by node.akkea.ca (Postfix) with ESMTP id B93AF4E2051;
-        Mon, 20 May 2019 14:23:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=akkea.ca; s=mail;
-        t=1558362217; bh=Ru5/wWVJ5n4Ox9lI7TeMXEImkM/yOICYH0UWN7Qj7CE=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References;
-        b=uxTVy4kYJOzZkEzPz374r2smV5M0y26J54DkKtY8y5PaoDm43V1Gb7l4n6ug3m3B0
-         i/ee/p+WwFTB29pEOif5L354FgTZim4BK7so1wR7f+XsBcBV4aDCMDfH3HeYm5Jh6t
-         q3cdvVsoOwWgeMewWsmPCBoT4VN3fvfzSqtrZ/Xo=
-X-Virus-Scanned: Debian amavisd-new at mail.akkea.ca
-Received: from node.akkea.ca ([127.0.0.1])
-        by localhost (mail.akkea.ca [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id R2z0Wxzn4ig0; Mon, 20 May 2019 14:23:37 +0000 (UTC)
-Received: from midas.localdomain (S0106788a2041785e.gv.shawcable.net [70.66.86.75])
-        by node.akkea.ca (Postfix) with ESMTPSA id AB2FC4E204D;
-        Mon, 20 May 2019 14:23:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=akkea.ca; s=mail;
-        t=1558362217; bh=Ru5/wWVJ5n4Ox9lI7TeMXEImkM/yOICYH0UWN7Qj7CE=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References;
-        b=uxTVy4kYJOzZkEzPz374r2smV5M0y26J54DkKtY8y5PaoDm43V1Gb7l4n6ug3m3B0
-         i/ee/p+WwFTB29pEOif5L354FgTZim4BK7so1wR7f+XsBcBV4aDCMDfH3HeYm5Jh6t
-         q3cdvVsoOwWgeMewWsmPCBoT4VN3fvfzSqtrZ/Xo=
-From:   "Angus Ainslie (Purism)" <angus@akkea.ca>
-To:     angus.ainslie@puri.sm
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org,
-        "Angus Ainslie (Purism)" <angus@akkea.ca>
-Subject: [PATCH v13 1/4] MAINTAINERS: add an entry for for arm64 imx devicetrees
-Date:   Mon, 20 May 2019 07:23:27 -0700
-Message-Id: <20190520142330.3556-2-angus@akkea.ca>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190520142330.3556-1-angus@akkea.ca>
-References: <20190520142330.3556-1-angus@akkea.ca>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
+        MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:From:Date:Sender
+        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=qpo5LDUiv3RWeUdYDR/6jtqrxtFTQ421WWKV/4Yo++s=; b=sBE2ufPAs9Lbu3ZiZBgfLpymrB
+        eaqOa+E+pqMdpORzpIo/4/4njkz0LMfduZrLzGtN0vQqMtyd/4rkf6P1DU2TQrHOaiwNUNJvKotfq
+        MaJ1k0ncxBp/fVd5tuiWSUNGpU3PuoNXrea0pqP/+c5iQhicbGpbXfQWzmLCj3mQIV/NPafQ3sj3M
+        udHReu4B9ZoIgAjA/c1dbcE/S1bv1Mk6jeUAdP83CZnhK3Y1iQoKc7U6+knEOv9e/JlzUWX3o9WRi
+        V1Scd5qCIVNWfNFgB1bUo64y4Z7mtcP9751F64j93doJsre86cax4CYrmMFf4UM+e74RhuSF8yR1c
+        7OWfYb0Q==;
+Received: from 179.176.119.151.dynamic.adsl.gvt.net.br ([179.176.119.151] helo=coco.lan)
+        by casper.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hSjCm-0003xd-CA; Mon, 20 May 2019 14:23:56 +0000
+Date:   Mon, 20 May 2019 11:23:50 -0300
+From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+To:     Changbin Du <changbin.du@gmail.com>
+Cc:     bhelgaas@google.com, corbet@lwn.net, linux-pci@vger.kernel.org,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v6 00/12] Include linux PCI docs into Sphinx TOC tree
+Message-ID: <20190520112350.4679df1c@coco.lan>
+In-Reply-To: <20190520061014.qtq6tc366pnnqcio@mail.google.com>
+References: <20190514144734.19760-1-changbin.du@gmail.com>
+        <20190520061014.qtq6tc366pnnqcio@mail.google.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add an explicit reference to imx* devicetrees
+Em Mon, 20 May 2019 06:10:15 +0000
+Changbin Du <changbin.du@gmail.com> escreveu:
 
-Signed-off-by: Angus Ainslie (Purism) <angus@akkea.ca>
-Reviewed-by: Fabio Estevam <festevam@gmail.com>
----
- MAINTAINERS | 1 +
- 1 file changed, 1 insertion(+)
+> Bjorn and Jonathan,
+> Could we consider to merge this serias now? Thanks.
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index a2cd3690b6b1..019c945d308d 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -1630,6 +1630,7 @@ R:	NXP Linux Team <linux-imx@nxp.com>
- L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
- S:	Maintained
- T:	git git://git.kernel.org/pub/scm/linux/kernel/git/shawnguo/linux.git
-+F:	arch/arm64/boot/dts/freescale/imx*
- N:	imx
- N:	mxs
- X:	drivers/media/i2c/
--- 
-2.17.1
+Before merging it, did you check if the renames won't cause broken
+reference links? There were such breakages with your x86 and acpi
+patch series. I'm sending the fixes right now, but it would be
+great if you could run the ./scripts/documentation-file-ref-check
+script and address any file name change this series would be
+introducing. There's even a --fix option there that allows
+to automatically fix them (you need to double-check the results).
 
+Regards,
+Mauro
+
+> 
+> On Tue, May 14, 2019 at 10:47:22PM +0800, Changbin Du wrote:
+> > Hi all,
+> > 
+> > The kernel now uses Sphinx to generate intelligent and beautiful documentation
+> > from reStructuredText files. I converted most of the Linux PCI docs to rst
+> > format in this serias.
+> > 
+> > For you to preview, please visit below url:
+> > http://www.bytemem.com:8080/kernel-doc/PCI/index.html
+> > 
+> > Thank you!
+> > 
+> > v2: trivial style update.
+> > v3: update titles. (Bjorn Helgaas)
+> > v4: fix comments from Mauro Carvalho Chehab
+> > v5: update MAINTAINERS (Joe Perches)
+> > v6: fix comments.
+> > 
+> > Changbin Du (12):
+> >   Documentation: add Linux PCI to Sphinx TOC tree
+> >   Documentation: PCI: convert pci.txt to reST
+> >   Documentation: PCI: convert PCIEBUS-HOWTO.txt to reST
+> >   Documentation: PCI: convert pci-iov-howto.txt to reST
+> >   Documentation: PCI: convert MSI-HOWTO.txt to reST
+> >   Documentation: PCI: convert acpi-info.txt to reST
+> >   Documentation: PCI: convert pci-error-recovery.txt to reST
+> >   Documentation: PCI: convert pcieaer-howto.txt to reST
+> >   Documentation: PCI: convert endpoint/pci-endpoint.txt to reST
+> >   Documentation: PCI: convert endpoint/pci-endpoint-cfs.txt to reST
+> >   Documentation: PCI: convert endpoint/pci-test-function.txt to reST
+> >   Documentation: PCI: convert endpoint/pci-test-howto.txt to reST
+> > 
+> >  .../PCI/{acpi-info.txt => acpi-info.rst}      |  15 +-
+> >  Documentation/PCI/endpoint/index.rst          |  13 +
+> >  ...-endpoint-cfs.txt => pci-endpoint-cfs.rst} |  99 ++---
+> >  .../{pci-endpoint.txt => pci-endpoint.rst}    |  92 +++--
+> >  ...est-function.txt => pci-test-function.rst} |  84 +++--
+> >  ...{pci-test-howto.txt => pci-test-howto.rst} |  81 ++--
+> >  Documentation/PCI/index.rst                   |  18 +
+> >  .../PCI/{MSI-HOWTO.txt => msi-howto.rst}      |  85 +++--
+> >  ...or-recovery.txt => pci-error-recovery.rst} | 287 +++++++-------
+> >  .../{pci-iov-howto.txt => pci-iov-howto.rst}  | 161 ++++----
+> >  Documentation/PCI/{pci.txt => pci.rst}        | 356 ++++++++----------
+> >  .../{pcieaer-howto.txt => pcieaer-howto.rst}  | 156 +++++---
+> >  .../{PCIEBUS-HOWTO.txt => picebus-howto.rst}  | 140 ++++---
+> >  Documentation/index.rst                       |   1 +
+> >  MAINTAINERS                                   |   4 +-
+> >  include/linux/mod_devicetable.h               |  19 +
+> >  include/linux/pci.h                           |  37 ++
+> >  17 files changed, 938 insertions(+), 710 deletions(-)
+> >  rename Documentation/PCI/{acpi-info.txt => acpi-info.rst} (96%)
+> >  create mode 100644 Documentation/PCI/endpoint/index.rst
+> >  rename Documentation/PCI/endpoint/{pci-endpoint-cfs.txt => pci-endpoint-cfs.rst} (64%)
+> >  rename Documentation/PCI/endpoint/{pci-endpoint.txt => pci-endpoint.rst} (83%)
+> >  rename Documentation/PCI/endpoint/{pci-test-function.txt => pci-test-function.rst} (55%)
+> >  rename Documentation/PCI/endpoint/{pci-test-howto.txt => pci-test-howto.rst} (78%)
+> >  create mode 100644 Documentation/PCI/index.rst
+> >  rename Documentation/PCI/{MSI-HOWTO.txt => msi-howto.rst} (88%)
+> >  rename Documentation/PCI/{pci-error-recovery.txt => pci-error-recovery.rst} (67%)
+> >  rename Documentation/PCI/{pci-iov-howto.txt => pci-iov-howto.rst} (63%)
+> >  rename Documentation/PCI/{pci.txt => pci.rst} (68%)
+> >  rename Documentation/PCI/{pcieaer-howto.txt => pcieaer-howto.rst} (72%)
+> >  rename Documentation/PCI/{PCIEBUS-HOWTO.txt => picebus-howto.rst} (70%)
+> > 
+> > -- 
+> > 2.20.1
+> >   
+> 
+
+
+
+Thanks,
+Mauro
