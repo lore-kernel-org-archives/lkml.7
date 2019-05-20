@@ -6,27 +6,27 @@ X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AD8FC04AAC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 21:00:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E4B2C04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 21:00:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4D9C32171F
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 21:00:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 619552171F
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 21:00:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727223AbfETVA1 (ORCPT
+        id S1727198AbfETVAZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 17:00:27 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:35122 "EHLO mx1.redhat.com"
+        Mon, 20 May 2019 17:00:25 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:42398 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727175AbfETVAW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 17:00:22 -0400
+        id S1725772AbfETVAY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 17:00:24 -0400
 Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 0E81A6698C;
-        Mon, 20 May 2019 21:00:22 +0000 (UTC)
+        by mx1.redhat.com (Postfix) with ESMTPS id 706F55D61E;
+        Mon, 20 May 2019 21:00:23 +0000 (UTC)
 Received: from llong.com (dhcp-17-85.bos.redhat.com [10.18.17.85])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id B9589643D6;
-        Mon, 20 May 2019 21:00:20 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 2D60F64049;
+        Mon, 20 May 2019 21:00:22 +0000 (UTC)
 From:   Waiman Long <longman@redhat.com>
 To:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
@@ -40,120 +40,125 @@ Cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
         Tim Chen <tim.c.chen@linux.intel.com>,
         huang ying <huang.ying.caritas@gmail.com>,
         Waiman Long <longman@redhat.com>
-Subject: [PATCH v8 18/19] locking/rwsem: Remove redundant computation of writer lock word
-Date:   Mon, 20 May 2019 16:59:17 -0400
-Message-Id: <20190520205918.22251-19-longman@redhat.com>
+Subject: [PATCH v8 19/19] locking/rwsem: Disable preemption in down_read*() if owner in count
+Date:   Mon, 20 May 2019 16:59:18 -0400
+Message-Id: <20190520205918.22251-20-longman@redhat.com>
 In-Reply-To: <20190520205918.22251-1-longman@redhat.com>
 References: <20190520205918.22251-1-longman@redhat.com>
 X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.38]); Mon, 20 May 2019 21:00:22 +0000 (UTC)
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.39]); Mon, 20 May 2019 21:00:23 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 64-bit architectures, each rwsem writer will have its unique lock
-word for acquiring the lock. Right now, the writer code recomputes the
-lock word every time it tries to acquire the lock. This is a waste of
-time. The lock word is now cached and reused when it is needed.
+It is very unlikely that successive preemption at the middle of
+down_read's inc-check-dec sequence will cause the reader count to
+overflow, For absolute correctness, however, we still need to prevent
+that possibility from happening. So preemption will be disabled during
+the down_read*() call.
 
-When CONFIG_RWSEM_OWNER_COUNT isn't defined, the extra constant argument
-to rwsem_try_write_lock() and rwsem_try_write_lock_unqueued() should
-be optimized out by the compiler.
+For PREEMPT=n kernels, there isn't much overhead in doing that.
+For PREEMPT=y kernels, there will be some additional cost. RT kernels
+have their own rwsem code, so it will not be a problem for them.
+
+If MERGE_OWNER_INTO_COUNT isn't defined, we don't need to worry about
+reader count overflow and so we don't need to disable preemption.
 
 Signed-off-by: Waiman Long <longman@redhat.com>
 ---
- kernel/locking/rwsem.c | 20 ++++++++++++--------
- 1 file changed, 12 insertions(+), 8 deletions(-)
+ kernel/locking/rwsem.c | 38 ++++++++++++++++++++++++++++++++++----
+ 1 file changed, 34 insertions(+), 4 deletions(-)
 
 diff --git a/kernel/locking/rwsem.c b/kernel/locking/rwsem.c
-index 8196ace2d4a2..29f0e0e5b62e 100644
+index 29f0e0e5b62e..cede2f99220b 100644
 --- a/kernel/locking/rwsem.c
 +++ b/kernel/locking/rwsem.c
-@@ -706,6 +706,7 @@ static void rwsem_mark_wake(struct rw_semaphore *sem,
-  * bit is set or the lock is acquired with handoff bit cleared.
-  */
- static inline bool rwsem_try_write_lock(struct rw_semaphore *sem,
-+					const long wlock,
- 					enum writer_wait_state wstate)
- {
- 	long count, new;
-@@ -727,7 +728,7 @@ static inline bool rwsem_try_write_lock(struct rw_semaphore *sem,
+@@ -356,6 +356,24 @@ static inline void rwsem_set_nonspinnable(struct rw_semaphore *sem)
+ }
  
- 			new |= RWSEM_FLAG_HANDOFF;
- 		} else {
--			new |= RWSEM_WRITER_LOCKED;
-+			new |= wlock;
- 			new &= ~RWSEM_FLAG_HANDOFF;
- 
- 			if (list_is_singular(&sem->wait_list))
-@@ -774,13 +775,14 @@ static inline bool rwsem_try_read_lock_unqueued(struct rw_semaphore *sem)
+ #ifdef MERGE_OWNER_INTO_COUNT
++/*
++ * It is very unlikely that successive preemption at the middle of
++ * down_read's inc-check-dec sequence will cause the reader count to
++ * overflow, For absolute correctness, we still need to prevent
++ * that possibility from happening. So preemption will be disabled
++ * during the down_read*() call.
++ *
++ * For PREEMPT=n kernels, there isn't much overhead in doing that.
++ * For PREEMPT=y kernels, there will be some additional cost.
++ *
++ * If MERGE_OWNER_INTO_COUNT isn't defined, we don't need to worry
++ * about reader count overflow and so we don't need to disable
++ * preemption.
++ */
++#define rwsem_preempt_disable()			preempt_disable()
++#define rwsem_preempt_enable()			preempt_enable()
++#define rwsem_schedule_preempt_disabled()	schedule_preempt_disabled()
++
  /*
-  * Try to acquire write lock before the writer has been put on wait queue.
+  * Get the owner value from count to have early access to the task structure.
   */
--static inline bool rwsem_try_write_lock_unqueued(struct rw_semaphore *sem)
-+static inline bool rwsem_try_write_lock_unqueued(struct rw_semaphore *sem,
-+						 const long wlock)
- {
- 	long count = atomic_long_read(&sem->count);
+@@ -420,6 +438,10 @@ late_initcall(rwsem_show_count_status);
  
- 	while (!(count & (RWSEM_LOCK_MASK|RWSEM_FLAG_HANDOFF))) {
- 		if (atomic_long_try_cmpxchg_acquire(&sem->count, &count,
--					count | RWSEM_WRITER_LOCKED)) {
-+					count | wlock)) {
- 			rwsem_set_owner(sem);
- 			lockevent_inc(rwsem_opt_wlock);
- 			return true;
-@@ -925,7 +927,7 @@ static inline u64 rwsem_rspin_threshold(struct rw_semaphore *sem)
- 	return sched_clock() + delta;
- }
+ #else /* !MERGE_OWNER_INTO_COUNT */
  
--static bool rwsem_optimistic_spin(struct rw_semaphore *sem, bool wlock)
-+static bool rwsem_optimistic_spin(struct rw_semaphore *sem, const long wlock)
- {
- 	bool taken = false;
- 	int prev_owner_state = OWNER_NULL;
-@@ -956,7 +958,7 @@ static bool rwsem_optimistic_spin(struct rw_semaphore *sem, bool wlock)
- 		/*
- 		 * Try to acquire the lock
- 		 */
--		taken = wlock ? rwsem_try_write_lock_unqueued(sem)
-+		taken = wlock ? rwsem_try_write_lock_unqueued(sem, wlock)
- 			      : rwsem_try_read_lock_unqueued(sem);
- 
- 		if (taken)
-@@ -1109,7 +1111,8 @@ static inline bool rwsem_can_spin_on_owner(struct rw_semaphore *sem,
- 	return false;
- }
- 
--static inline bool rwsem_optimistic_spin(struct rw_semaphore *sem, bool wlock)
-+static inline bool rwsem_optimistic_spin(struct rw_semaphore *sem,
-+					 const long wlock)
- {
- 	return false;
- }
-@@ -1288,10 +1291,11 @@ rwsem_down_write_slowpath(struct rw_semaphore *sem, int state)
- 	struct rwsem_waiter waiter;
- 	struct rw_semaphore *ret = sem;
- 	DEFINE_WAKE_Q(wake_q);
-+	const long wlock = RWSEM_WRITER_LOCKED;
- 
- 	/* do optimistic spinning and steal lock if possible */
- 	if (rwsem_can_spin_on_owner(sem, RWSEM_WR_NONSPINNABLE) &&
--	    rwsem_optimistic_spin(sem, true))
-+	    rwsem_optimistic_spin(sem, wlock))
- 		return sem;
- 
- 	/*
-@@ -1353,7 +1357,7 @@ rwsem_down_write_slowpath(struct rw_semaphore *sem, int state)
- 	/* wait until we successfully acquire the lock */
- 	set_current_state(state);
- 	while (true) {
--		if (rwsem_try_write_lock(sem, wstate))
-+		if (rwsem_try_write_lock(sem, wlock, wstate))
++#define rwsem_preempt_disable()
++#define rwsem_preempt_enable()
++#define rwsem_schedule_preempt_disabled()	schedule()
++
+ /*
+  * Return just the real task structure pointer of the owner
+  */
+@@ -1247,7 +1269,7 @@ rwsem_down_read_slowpath(struct rw_semaphore *sem, int state, long adjustment)
+ 			raw_spin_unlock_irq(&sem->wait_lock);
  			break;
+ 		}
+-		schedule();
++		rwsem_schedule_preempt_disabled();
+ 		lockevent_inc(rwsem_sleep_reader);
+ 	}
  
- 		raw_spin_unlock_irq(&sem->wait_lock);
+@@ -1472,28 +1494,36 @@ static struct rw_semaphore *rwsem_downgrade_wake(struct rw_semaphore *sem)
+  */
+ inline void __down_read(struct rw_semaphore *sem)
+ {
+-	long tmp, adjustment = rwsem_read_trylock(sem, &tmp);
++	long tmp, adjustment;
+ 
++	rwsem_preempt_disable();
++	adjustment = rwsem_read_trylock(sem, &tmp);
+ 	if (unlikely(tmp & RWSEM_READ_FAILED_MASK)) {
+ 		rwsem_down_read_slowpath(sem, TASK_UNINTERRUPTIBLE, adjustment);
+ 		DEBUG_RWSEMS_WARN_ON(!is_rwsem_reader_owned(sem), sem);
+ 	} else {
+ 		rwsem_set_reader_owned(sem);
+ 	}
++	rwsem_preempt_enable();
+ }
+ 
+ static inline int __down_read_killable(struct rw_semaphore *sem)
+ {
+-	long tmp, adjustment = rwsem_read_trylock(sem, &tmp);
++	long tmp, adjustment;
+ 
++	rwsem_preempt_disable();
++	adjustment = rwsem_read_trylock(sem, &tmp);
+ 	if (unlikely(tmp & RWSEM_READ_FAILED_MASK)) {
+ 		if (IS_ERR(rwsem_down_read_slowpath(sem, TASK_KILLABLE,
+-						    adjustment)))
++						    adjustment))) {
++			rwsem_preempt_enable();
+ 			return -EINTR;
++		}
+ 		DEBUG_RWSEMS_WARN_ON(!is_rwsem_reader_owned(sem), sem);
+ 	} else {
+ 		rwsem_set_reader_owned(sem);
+ 	}
++	rwsem_preempt_enable();
+ 	return 0;
+ }
+ 
 -- 
 2.18.1
 
