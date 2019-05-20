@@ -2,267 +2,111 @@ Return-Path: <SRS0=lq4r=TU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E609DC04AB4
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 02:54:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 511D7C04AB4
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 02:55:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A369C2085A
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 02:54:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558320853;
-	bh=+g4e3b9eEUCN0L+u953TbAQRbNQcFr58iPoiy/FcfxQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=hFLjbld3u7oUtSb90pF1RSgyb0JYyms0W1426/B7TiqUMLsuu2CuXgHMgdToND0au
-	 pgIPU8i0Hzfl2fjp/8Iu5Z7x8MOGUvIvaS2q2uov3BGFe19emLfv2CThAOd/42mmma
-	 U3zjdUiA9sW5VzsqfjmbGjhDfj0n1k4OTZc9VJFU=
+	by mail.kernel.org (Postfix) with ESMTP id 1096420848
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 02:55:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="g5iH+3h8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728954AbfETCyM (ORCPT
+        id S1729799AbfETCzf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 19 May 2019 22:54:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42074 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727087AbfETCyM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 19 May 2019 22:54:12 -0400
-Received: from dragon (98.142.130.235.16clouds.com [98.142.130.235])
-        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B5DE620644;
-        Mon, 20 May 2019 02:54:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558320851;
-        bh=+g4e3b9eEUCN0L+u953TbAQRbNQcFr58iPoiy/FcfxQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=V05ZVw2Vl7FzAsocbUrTF0YIaxJr6PFjmbgjR7GS4tMvPliBoYP5WRInjHKnqNPrB
-         4jkEWypFuiyKne2/BrJsbMBvv4Clu3rXVwWZSRjHcDpTPrScTOwwTZ58xuc/+YlO+H
-         RFYn6su8hExdGV8Vf1qG6AY4FegxrQJANaKbFhI0=
-Date:   Mon, 20 May 2019 10:53:21 +0800
-From:   Shawn Guo <shawnguo@kernel.org>
-To:     Pramod Kumar <pramod.kumar_1@nxp.com>
-Cc:     "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "manivannan.sadhasivam@linaro.org" <manivannan.sadhasivam@linaro.org>,
-        Aisheng Dong <aisheng.dong@nxp.com>,
-        "Michal.Vokac@ysoft.com" <Michal.Vokac@ysoft.com>,
-        Leo Li <leoyang.li@nxp.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Sun, 19 May 2019 22:55:35 -0400
+Received: from mail-eopbgr60048.outbound.protection.outlook.com ([40.107.6.48]:43566
+        "EHLO EUR04-DB3-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727087AbfETCze (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 19 May 2019 22:55:34 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Xu1JBhVGFfB2amgaocljRqmfE6NLZWYDynBMDXaq35c=;
+ b=g5iH+3h80oSl3Nl+gYT/MhBxbZD7Up/E6St2YBgFzk39rNVXbIs9unUwLaRdDdKx8gEuQfzzaL38rHZN1wcwydYvquYmRw+k+ovM21j6cWcKWf9A1SC+RUQ3+FhVjqfSEOo97NSvKRTmT0dsRQHbrylZti5Wc7Nvk+5eFiR/gso=
+Received: from VI1PR0401MB2237.eurprd04.prod.outlook.com (10.169.132.138) by
+ VI1PR0401MB2688.eurprd04.prod.outlook.com (10.168.66.135) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1900.16; Mon, 20 May 2019 02:55:29 +0000
+Received: from VI1PR0401MB2237.eurprd04.prod.outlook.com
+ ([fe80::b091:6395:e853:5986]) by VI1PR0401MB2237.eurprd04.prod.outlook.com
+ ([fe80::b091:6395:e853:5986%3]) with mapi id 15.20.1900.020; Mon, 20 May 2019
+ 02:55:29 +0000
+From:   "Y.b. Lu" <yangbo.lu@nxp.com>
+To:     Claudiu Manoil <claudiu.manoil@nxp.com>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        Richard Cochran <richardcochran@gmail.com>,
+        David Miller <davem@davemloft.net>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>
+CC:     "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
         "linux-arm-kernel@lists.infradead.org" 
         <linux-arm-kernel@lists.infradead.org>,
-        Vabhav Sharma <vabhav.sharma@nxp.com>
-Subject: Re: [PATCH v2 2/3] arm64: dts: nxp: add ls1046a-frwy board support
-Message-ID: <20190520025319.GJ15856@dragon>
-References: <20190510130207.14330-1-pramod.kumar_1@nxp.com>
- <20190510130207.14330-3-pramod.kumar_1@nxp.com>
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH 1/3] enetc: add hardware timestamping support
+Thread-Topic: [PATCH 1/3] enetc: add hardware timestamping support
+Thread-Index: AQHVC84AyxJ95TkLo0SObQ6CRQsOGKZtv6UAgAWXbVA=
+Date:   Mon, 20 May 2019 02:55:28 +0000
+Message-ID: <VI1PR0401MB22373507628D6D133B8D5F2AF8060@VI1PR0401MB2237.eurprd04.prod.outlook.com>
+References: <20190516100028.48256-1-yangbo.lu@nxp.com>
+ <20190516100028.48256-2-yangbo.lu@nxp.com>
+ <VI1PR04MB4880C3E6D24AB7A53887D9C9960A0@VI1PR04MB4880.eurprd04.prod.outlook.com>
+In-Reply-To: <VI1PR04MB4880C3E6D24AB7A53887D9C9960A0@VI1PR04MB4880.eurprd04.prod.outlook.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=yangbo.lu@nxp.com; 
+x-originating-ip: [119.31.174.73]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 33170ad1-74b4-4a4a-3fbe-08d6dcce9dfe
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:VI1PR0401MB2688;
+x-ms-traffictypediagnostic: VI1PR0401MB2688:
+x-microsoft-antispam-prvs: <VI1PR0401MB26889A06E1B2436DEBC2F345F8060@VI1PR0401MB2688.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:7691;
+x-forefront-prvs: 004395A01C
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(136003)(39860400002)(396003)(346002)(376002)(366004)(189003)(199004)(13464003)(33656002)(52536014)(486006)(256004)(54906003)(55016002)(74316002)(110136005)(71200400001)(71190400001)(476003)(4744005)(53546011)(5660300002)(6506007)(99286004)(102836004)(9686003)(76176011)(3846002)(6116002)(7696005)(53936002)(229853002)(186003)(2501003)(81166006)(81156014)(2906002)(8676002)(25786009)(8936002)(6246003)(316002)(478600001)(14454004)(73956011)(7736002)(66946007)(66556008)(66446008)(64756008)(66476007)(446003)(11346002)(86362001)(305945005)(76116006)(68736007)(4326008)(66066001)(6436002)(26005);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR0401MB2688;H:VI1PR0401MB2237.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: RBeDLRZhNb2iVs4YR8r3jszk+z0doFiXJp5twDcmlDP232mhPP5KQnv1nNVkBDNS4z5a3qskcgd1BGkI4WyA2bOpTOaHWTZOlTHkemDeDfPX5+J4q3SWc3QspVu2rtfg8WWjmb8TwD9EltQFPMDDlRC336dTGy3n1+1ylvGw/H+sVxo1yUZccbU7sjWULN3w4R/33EoCQk0XSPJm34Q8YWxvtpQqV5S8XmofTR9+NrgfjARggQAqJ2M2KTa9naeW2wZahfht7qZx4/JBtpAwNysThcorMTjpXXlrvdZ7Pvk6k+FM+OnNgsCp6jo23bo5/vgsBXo8mLgS8idzydKES06bQg8Mr/2QSLw6/3eKqLaDeANkN/SjKSmXqUAs8U+d/KOF1r3Z3QBV350haxVce/m8pWYwc2W4pozd/fjWAqE=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190510130207.14330-3-pramod.kumar_1@nxp.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 33170ad1-74b4-4a4a-3fbe-08d6dcce9dfe
+X-MS-Exchange-CrossTenant-originalarrivaltime: 20 May 2019 02:55:28.9961
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0401MB2688
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 10, 2019 at 01:00:20PM +0000, Pramod Kumar wrote:
-> ls1046afrwy board is based on nxp ls1046a SoC.
-> Board support's 4GB ddr memory, i2c, microSD card,
-> serial console,qspi nor flash,ifc nand flash,qsgmii network interface,
-> usb 3.0 and serdes interface to support two x1gen3 pcie interface.
-> 
-> Signed-off-by: Vabhav Sharma <vabhav.sharma@nxp.com>
-> Signed-off-by: Pramod Kumar <pramod.kumar_1@nxp.com>
-> ---
->  arch/arm64/boot/dts/freescale/Makefile        |   1 +
->  .../boot/dts/freescale/fsl-ls1046a-frwy.dts   | 156 ++++++++++++++++++
->  2 files changed, 157 insertions(+)
->  create mode 100644 arch/arm64/boot/dts/freescale/fsl-ls1046a-frwy.dts
-> 
-> diff --git a/arch/arm64/boot/dts/freescale/Makefile b/arch/arm64/boot/dts/freescale/Makefile
-> index 13604e558dc1..84ff6995b41e 100644
-> --- a/arch/arm64/boot/dts/freescale/Makefile
-> +++ b/arch/arm64/boot/dts/freescale/Makefile
-> @@ -8,6 +8,7 @@ dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-ls1028a-qds.dtb
->  dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-ls1028a-rdb.dtb
->  dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-ls1043a-qds.dtb
->  dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-ls1043a-rdb.dtb
-> +dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-ls1046a-frwy.dtb
->  dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-ls1046a-qds.dtb
->  dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-ls1046a-rdb.dtb
->  dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-ls1088a-qds.dtb
-> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1046a-frwy.dts b/arch/arm64/boot/dts/freescale/fsl-ls1046a-frwy.dts
-> new file mode 100644
-> index 000000000000..de0d19c02944
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/freescale/fsl-ls1046a-frwy.dts
-> @@ -0,0 +1,156 @@
-> +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-> +/*
-> + * Device Tree Include file for Freescale Layerscape-1046A family SoC.
-> + *
-> + * Copyright 2019 NXP.
-> + *
-> + */
-> +
-> +/dts-v1/;
-> +
-> +#include "fsl-ls1046a.dtsi"
-> +
-> +/ {
-> +	model = "LS1046A FRWY Board";
-> +	compatible = "fsl,ls1046a-frwy", "fsl,ls1046a";
-> +
-> +	aliases {
-> +		serial0 = &duart0;
-> +		serial1 = &duart1;
-> +		serial2 = &duart2;
-> +		serial3 = &duart3;
-> +	};
-> +
-> +	chosen {
-> +		stdout-path = "serial0:115200n8";
-> +	};
-> +
-> +	sb_3v3: regulator-sb3v3 {
-> +		compatible = "regulator-fixed";
-> +		regulator-name = "LT8642SEV-3.3V";
-> +		regulator-min-microvolt = <3300000>;
-> +		regulator-max-microvolt = <3300000>;
-> +		regulator-boot-on;
-> +		regulator-always-on;
-> +	};
-> +};
-> +
-> +&duart0 {
-> +	status = "okay";
-> +};
-> +
-> +&duart1 {
-> +	status = "okay";
-> +};
-> +
-> +&duart2 {
-> +	status = "okay";
-> +};
-> +
-> +&duart3 {
-> +	status = "okay";
-> +};
-> +
-> +&i2c0 {
-> +	status = "okay";
-> +
-> +	i2c-mux@77 {
-> +		compatible = "nxp,pca9546";
-> +		reg = <0x77>;
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +		i2c-mux-never-disable;
-
-Undocumented property?
-
-> +
-> +		i2c@0 {
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +			reg = <0>;
-> +
-> +			eeprom@52 {
-> +				compatible = "atmel,24c512";
-> +				reg = <0x52>;
-> +			};
-> +
-> +			eeprom@53 {
-> +				compatible = "atmel,24c512";
-> +				reg = <0x53>;
-> +			};
-> +
-> +			power-monitor@40 {
-
-Sort the nodes in unit-address.
-
-Shawn
-
-> +				compatible = "ti,ina220";
-> +				reg = <0x40>;
-> +				shunt-resistor = <1000>;
-> +			};
-> +
-> +			rtc@51 {
-> +				compatible = "nxp,pcf2129";
-> +				reg = <0x51>;
-> +			};
-> +
-> +			temperature-sensor@4c {
-> +				compatible = "nxp,sa56004";
-> +				reg = <0x4c>;
-> +				vcc-supply = <&sb_3v3>;
-> +			};
-> +
-> +		};
-> +	};
-> +};
-> +
-> +&ifc {
-> +	#address-cells = <2>;
-> +	#size-cells = <1>;
-> +	/* NAND Flash */
-> +	ranges = <0x0 0x0 0x0 0x7e800000 0x00010000>;
-> +	status = "okay";
-> +
-> +	nand@0,0 {
-> +		compatible = "fsl,ifc-nand";
-> +		#address-cells = <1>;
-> +		#size-cells = <1>;
-> +		reg = <0x0 0x0 0x10000>;
-> +	};
-> +
-> +};
-> +
-> +#include "fsl-ls1046-post.dtsi"
-> +
-> +&fman0 {
-> +	ethernet@e0000 {
-> +		phy-handle = <&qsgmii_phy4>;
-> +		phy-connection-type = "qsgmii";
-> +	};
-> +
-> +	ethernet@e8000 {
-> +		phy-handle = <&qsgmii_phy2>;
-> +		phy-connection-type = "qsgmii";
-> +	};
-> +
-> +	ethernet@ea000 {
-> +		phy-handle = <&qsgmii_phy1>;
-> +		phy-connection-type = "qsgmii";
-> +	};
-> +
-> +	ethernet@f2000 {
-> +		phy-handle = <&qsgmii_phy3>;
-> +		phy-connection-type = "qsgmii";
-> +	};
-> +
-> +	mdio@fd000 {
-> +		qsgmii_phy1: ethernet-phy@1c {
-> +			reg = <0x1c>;
-> +		};
-> +
-> +		qsgmii_phy2: ethernet-phy@1d {
-> +			reg = <0x1d>;
-> +		};
-> +
-> +		qsgmii_phy3: ethernet-phy@1e {
-> +			reg = <0x1e>;
-> +		};
-> +
-> +		qsgmii_phy4: ethernet-phy@1f {
-> +			reg = <0x1f>;
-> +		};
-> +	};
-> +};
-> -- 
-> 2.17.1
-> 
+PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBDbGF1ZGl1IE1hbm9pbA0KPiBT
+ZW50OiBUaHVyc2RheSwgTWF5IDE2LCAyMDE5IDk6MzEgUE0NCj4gVG86IFkuYi4gTHUgPHlhbmdi
+by5sdUBueHAuY29tPjsgbmV0ZGV2QHZnZXIua2VybmVsLm9yZzsgUmljaGFyZCBDb2NocmFuDQo+
+IDxyaWNoYXJkY29jaHJhbkBnbWFpbC5jb20+OyBEYXZpZCBNaWxsZXIgPGRhdmVtQGRhdmVtbG9m
+dC5uZXQ+OyBTaGF3bg0KPiBHdW8gPHNoYXduZ3VvQGtlcm5lbC5vcmc+OyBSb2IgSGVycmluZyA8
+cm9iaCtkdEBrZXJuZWwub3JnPg0KPiBDYzogZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmc7IGxp
+bnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZzsNCj4gbGludXgta2VybmVsQHZnZXIu
+a2VybmVsLm9yZw0KPiBTdWJqZWN0OiBSRTogW1BBVENIIDEvM10gZW5ldGM6IGFkZCBoYXJkd2Fy
+ZSB0aW1lc3RhbXBpbmcgc3VwcG9ydA0KPiANCj4gPi0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0t
+DQo+ID5Gcm9tOiBZLmIuIEx1DQo+IFsuLi5dDQo+ID5TdWJqZWN0OiBbUEFUQ0ggMS8zXSBlbmV0
+YzogYWRkIGhhcmR3YXJlIHRpbWVzdGFtcGluZyBzdXBwb3J0DQo+ID4NCj4gWy4uLl0NCj4gDQo+
+IEhpIFlhbmdibywNCj4gDQo+IFRoZXNlIGVuZXRjIHBhdGNoZXMgdGFyZ2V0aW5nIG5ldC1uZXh0
+IHdpbGwgaGF2ZSB0byBiZSByZWJhc2VkIG9uIHRoZSBsYXRlc3QNCj4gZW5ldGMgbmV0LmdpdCBj
+b21taXRzLCBvdGhlcndpc2UgdGhlcmUgd2lsbCBiZSBzb21lIG1lcmdlIGNvbmZsaWN0cyBmb3Ig
+ZW5ldGMuYw0KPiBhbmQgZW5ldGNfZXRodG9vbC5jLg0KPiBUaGFua3MsDQo+IENsYXVkaXUNCj4g
+DQo+IHNlZQ0KPiAyMmZiNDNmMzYwMDYgImVuZXRjOiBBZGQgbWlzc2luZyBsaW5rIHN0YXRlIGlu
+Zm8gZm9yIGV0aHRvb2wiDQo+IGY0YTBiZTg0ZDczZSAiZW5ldGM6IEZpeCBOVUxMIGRtYSBhZGRy
+ZXNzIHVubWFwIGZvciBUeCBCRCBleHRlbnNpb25zIg0KDQpbWS5iLiBMdV0gVGhhbmtzIENsYXVk
+aXUuIEkgc2hvdWxkIGhhdmUgbm90aWNlZCB0aGF0LiBMZXQgbWUgc2VuZCB2MiBhZnRlciBuZXQt
+bmV4dCBpcyBvcGVuLg0K
