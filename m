@@ -2,92 +2,107 @@ Return-Path: <SRS0=lq4r=TU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AD1CC04AAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 08:48:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ECD10C072A4
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 08:49:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E416A20856
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 08:48:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558342135;
-	bh=NcGHUP5bfjC+KvBqbjpW3Rz+kDpoXWvwotRjq0NhZes=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=iEQQW2zbmz0aDWBzjhfpx6SVje5VF9HL7Q/gDTy5jD55P0i0r/wi8uwSIr+NUSFXG
-	 KTl8hslW+LPKK18cQCbJEgTE838X0hRQQsancmDxOjA3s3flGzBvawYpTJuvpJBZSL
-	 SvXKJsoHiGBbHXGgadYzep7nHC393xEV4Dq2PM/k=
+	by mail.kernel.org (Postfix) with ESMTP id CB985206BA
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 08:49:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731306AbfETIsy (ORCPT
+        id S1731404AbfETItq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 04:48:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54882 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726053AbfETIsx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 04:48:53 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BD81E206BA;
-        Mon, 20 May 2019 08:48:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558342133;
-        bh=NcGHUP5bfjC+KvBqbjpW3Rz+kDpoXWvwotRjq0NhZes=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=bE9NkMdtE28blg0UokXhR1YvVgQAauR4AcLN+luyqhyUXtYu9J9qrZO/TytqsOQe8
-         WrV/rGyWHaB74clMMqKclgBcIRI2ALkWmg7/p9EOv9tD1JFpeEss3X+nnAxqHLtgAD
-         R7EPilrv+UyoNe/DOEIrOkU/bfSkaFas5p2ONIt4=
-Date:   Mon, 20 May 2019 10:48:50 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Moses Christopher <moseschristopherb@gmail.com>
-Cc:     linux-kernel@vger.kernel.org, Larry.Finger@lwfinger.net,
-        david.kershner@unisys.com, forest@alittletooquiet.net,
-        davem@davemloft.net, ruxandra.radulescu@nxp.com, yangbo.lu@nxp.com,
-        arnd@arndb.de, christian.gromm@microchip.com, insafonov@gmail.com,
-        hdegoede@redhat.com, devel@driverdev.osuosl.org,
-        sparmaintainer@unisys.com
-Subject: Re: [PATCH v1 5/6] staging: rtl8723bs: use help instead of
- ---help--- in Kconfig
-Message-ID: <20190520084850.GA703@kroah.com>
-References: <20190518063341.11178-1-moseschristopherb@gmail.com>
- <20190518063341.11178-6-moseschristopherb@gmail.com>
+        Mon, 20 May 2019 04:49:46 -0400
+Received: from mx0b-001ae601.pphosted.com ([67.231.152.168]:44190 "EHLO
+        mx0b-001ae601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1731334AbfETItp (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 04:49:45 -0400
+Received: from pps.filterd (m0077474.ppops.net [127.0.0.1])
+        by mx0b-001ae601.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4K8i21b030385;
+        Mon, 20 May 2019 03:49:38 -0500
+Authentication-Results: ppops.net;
+        spf=none smtp.mailfrom=ckeepax@opensource.cirrus.com
+Received: from mail1.cirrus.com (mail1.cirrus.com [141.131.3.20])
+        by mx0b-001ae601.pphosted.com with ESMTP id 2sjefmt3em-1;
+        Mon, 20 May 2019 03:49:37 -0500
+Received: from EDIEX02.ad.cirrus.com (unknown [198.61.84.81])
+        by mail1.cirrus.com (Postfix) with ESMTP id 8D997611C8BD;
+        Mon, 20 May 2019 03:49:37 -0500 (CDT)
+Received: from EDIEX01.ad.cirrus.com (198.61.84.80) by EDIEX02.ad.cirrus.com
+ (198.61.84.81) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1591.10; Mon, 20 May
+ 2019 09:49:36 +0100
+Received: from ediswmail.ad.cirrus.com (198.61.86.93) by EDIEX01.ad.cirrus.com
+ (198.61.84.80) with Microsoft SMTP Server id 15.1.1591.10 via Frontend
+ Transport; Mon, 20 May 2019 09:49:36 +0100
+Received: from algalon.ad.cirrus.com (algalon.ad.cirrus.com [198.90.251.122])
+        by ediswmail.ad.cirrus.com (Postfix) with ESMTP id 9FE6645;
+        Mon, 20 May 2019 09:49:36 +0100 (BST)
+From:   Charles Keepax <ckeepax@opensource.cirrus.com>
+To:     <wsa@the-dreams.de>, <mika.westerberg@linux.intel.com>
+CC:     <linux-i2c@vger.kernel.org>, <linux-acpi@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <benjamin.tissoires@redhat.com>,
+        <jbroadus@gmail.com>, <patches@opensource.cirrus.com>
+Subject: [PATCH 5/5] i2c: core: Tidy up handling of init_irq
+Date:   Mon, 20 May 2019 09:49:36 +0100
+Message-ID: <20190520084936.10590-6-ckeepax@opensource.cirrus.com>
+X-Mailer: git-send-email 2.11.0
+In-Reply-To: <20190520084936.10590-1-ckeepax@opensource.cirrus.com>
+References: <20190520084936.10590-1-ckeepax@opensource.cirrus.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190518063341.11178-6-moseschristopherb@gmail.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+Content-Type: text/plain
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=985 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1905200064
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, May 18, 2019 at 12:03:40PM +0530, Moses Christopher wrote:
->   - Resolve the following warning from the Kconfig,
->     "WARNING: prefer 'help' over '---help---' for new help texts"
-> 
-> Signed-off-by: Moses Christopher <moseschristopherb@gmail.com>
-> ---
->  drivers/staging/rtl8723bs/Kconfig | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/staging/rtl8723bs/Kconfig b/drivers/staging/rtl8723bs/Kconfig
-> index 744091d46f4c..a88467334dac 100644
-> --- a/drivers/staging/rtl8723bs/Kconfig
-> +++ b/drivers/staging/rtl8723bs/Kconfig
-> @@ -5,7 +5,7 @@ config RTL8723BS
->  	depends on m
->  	select WIRELESS_EXT
->  	select WEXT_PRIV
-> -	---help---
-> +	help
->  	This option enables support for RTL8723BS SDIO drivers, such as
->  	the wifi found on the 1st gen Intel Compute Stick, the CHIP
->  	and many other Intel Atom and ARM based devices.
+Only set init_irq during i2c_device_new and only handle client->irq on
+the probe/remove paths.
 
-No indentation here?  Why not?
+Suggested-by: Benjamin Tissoires <benjamin.tissoires@redhat.com>
+Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
+---
+ drivers/i2c/i2c-core-base.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-thanks,
+diff --git a/drivers/i2c/i2c-core-base.c b/drivers/i2c/i2c-core-base.c
+index f958b50c78c04..c0a52802d23e7 100644
+--- a/drivers/i2c/i2c-core-base.c
++++ b/drivers/i2c/i2c-core-base.c
+@@ -322,6 +322,8 @@ static int i2c_device_probe(struct device *dev)
+ 
+ 	driver = to_i2c_driver(dev->driver);
+ 
++	client->irq = client->init_irq;
++
+ 	if (!client->irq && !driver->disable_i2c_core_irq_mapping) {
+ 		int irq = -ENOENT;
+ 
+@@ -432,7 +434,7 @@ static int i2c_device_remove(struct device *dev)
+ 	dev_pm_clear_wake_irq(&client->dev);
+ 	device_init_wakeup(&client->dev, false);
+ 
+-	client->irq = client->init_irq;
++	client->irq = 0;
+ 	if (client->flags & I2C_CLIENT_HOST_NOTIFY)
+ 		pm_runtime_put(&client->adapter->dev);
+ 
+@@ -749,7 +751,6 @@ i2c_new_client_device(struct i2c_adapter *adap, struct i2c_board_info const *inf
+ 	if (!client->init_irq)
+ 		client->init_irq = i2c_dev_irq_from_resources(info->resources,
+ 							 info->num_resources);
+-	client->irq = client->init_irq;
+ 
+ 	strlcpy(client->name, info->type, sizeof(client->name));
+ 
+-- 
+2.11.0
 
-greg k-h
