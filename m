@@ -2,112 +2,114 @@ Return-Path: <SRS0=lq4r=TU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E1F4C072AD
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 01:20:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86802C04E87
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 01:29:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 34598206B6
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 01:20:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XdL3IWjA"
+	by mail.kernel.org (Postfix) with ESMTP id 5EEE420815
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 01:29:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729873AbfETBUa (ORCPT
+        id S1729901AbfETB31 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 19 May 2019 21:20:30 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:46513 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726741AbfETBUa (ORCPT
+        Sun, 19 May 2019 21:29:27 -0400
+Received: from 59-120-53-16.HINET-IP.hinet.net ([59.120.53.16]:22374 "EHLO
+        ATCSQR.andestech.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726741AbfETB31 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 19 May 2019 21:20:30 -0400
-Received: by mail-pg1-f195.google.com with SMTP id t187so5912272pgb.13;
-        Sun, 19 May 2019 18:20:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=dLGowd605TGgiEF9LE+kSadzQc7KbvCMX2YqZwW09gY=;
-        b=XdL3IWjAD1FV+MhMS67oSDrUskQtqgM7vvr4+6/AJ0ASseWPJxbwHSzZaepORKwrR6
-         CWxsdrla0ghPoAKf1VKpMtVswkSEL5Y4Me+UnJFPDMJ9nbJ0U/Nbu2SsUGUh4oKYhkrm
-         +tdGobM3RlgQ5v4HI/EVGpr0DB57dQBMn7h1eZFhrYlykkqTWxy1BU5QiAhK8dHKSn7U
-         aGAXLYo4fbCTBWT2IPU+/6801/bpnaBb0Y6ZyPX9pAqEpm3nKCD13hbuXsrj7Gb0DMC5
-         a8rd1iSGNviyHsSPiVmKIg6zrOmPCsltalEcnS5s04EgEuOE+diFsiyNopzSBZjthIIt
-         SRKg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=dLGowd605TGgiEF9LE+kSadzQc7KbvCMX2YqZwW09gY=;
-        b=jJrfJvVQGME+HBYTkwD56L0XQ4oU3DTtwafvyuBDg7IIRnQ/uAU+wSVqsVVksH31+d
-         1pI070hcNHvOMAnfKGUaw/GLSWAdx5b+cr/YY/O7l7tyfZSffZCNdxCaWvh0M4mJfMOr
-         UaHu35J3gzfJ6Gqe8nTjwEdn/zWIkPmIYuKfxmABnZlM3p5herzRY4BNLvJomHdlTJdU
-         I2dGkqTpGzasi3gyBskUxIoESolRRInrLWTYubgnOm4VgxLpOAcEtQQqZmG/iS2Gy21h
-         xVT89XxPhxjP2oDhpF+A2LKhGGTmzt5mJ+Uuds6nbGpi4u+rTkytDl80gMZwzLLe+5g7
-         5xtg==
-X-Gm-Message-State: APjAAAUBH8wicDrAVQjnFUm0Jj7vefJZTOSE7MVEvwkPDruUUHGO+Peu
-        mQUypahz5RuWIX2x+p9V7DeLopZPrvwkRxLxLwMzjQ==
-X-Google-Smtp-Source: APXvYqw7Ze0TS0tXKiVTrOqkkzcY/f2Enpq+/Q7SuIXcZOdzLP+S/wVb8jcgB218cBW61fSaAICw6itdksz96UWv7eY=
-X-Received: by 2002:a62:2b82:: with SMTP id r124mr68797198pfr.235.1558315229268;
- Sun, 19 May 2019 18:20:29 -0700 (PDT)
+        Sun, 19 May 2019 21:29:27 -0400
+X-Greylist: delayed 471 seconds by postgrey-1.27 at vger.kernel.org; Sun, 19 May 2019 21:29:26 EDT
+Received: from ATCSQR.andestech.com (localhost [127.0.0.2] (may be forged))
+        by ATCSQR.andestech.com with ESMTP id x4K1GmAg045473;
+        Mon, 20 May 2019 09:16:48 +0800 (GMT-8)
+        (envelope-from vincentc@andestech.com)
+Received: from mail.andestech.com (atcpcs16.andestech.com [10.0.1.222])
+        by ATCSQR.andestech.com with ESMTP id x4K1GZ9r045438;
+        Mon, 20 May 2019 09:16:35 +0800 (GMT-8)
+        (envelope-from vincentc@andestech.com)
+Received: from atcsqa06.andestech.com (10.0.15.65) by ATCPCS16.andestech.com
+ (10.0.1.222) with Microsoft SMTP Server id 14.3.123.3; Mon, 20 May 2019
+ 09:21:18 +0800
+From:   Vincent Chen <vincentc@andestech.com>
+To:     <linux-kernel@vger.kernel.org>, <arnd@arndb.de>,
+        <linux-arch@vger.kernel.org>, <greentime@andestech.com>,
+        <green.hu@gmail.com>, <deanbo422@gmail.com>
+CC:     <vincentc@andestech.com>
+Subject: [PATCH 0/2] nds32: Prevent FPU emulator from incorrectly modifying IEX status
+Date:   Mon, 20 May 2019 09:21:11 +0800
+Message-ID: <1558315273-2795-1-git-send-email-vincentc@andestech.com>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
-References: <20190517081233.11764-1-colin.king@canonical.com>
-In-Reply-To: <20190517081233.11764-1-colin.king@canonical.com>
-From:   Steve French <smfrench@gmail.com>
-Date:   Sun, 19 May 2019 20:20:18 -0500
-Message-ID: <CAH2r5muO=GLx2Hh77rTPqCZ1yP6a0r5yjSEu5j58o__Mni1bsQ@mail.gmail.com>
-Subject: Re: [PATCH] cifs: fix memory leak of pneg_inbuf on -EOPNOTSUPP ioctl case
-To:     Colin King <colin.king@canonical.com>
-Cc:     Steve French <sfrench@samba.org>,
-        CIFS <linux-cifs@vger.kernel.org>,
-        samba-technical <samba-technical@lists.samba.org>,
-        kernel-janitors <kernel-janitors@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-Originating-IP: [10.0.15.65]
+X-DNSRBL: 
+X-MAIL: ATCSQR.andestech.com x4K1GZ9r045438
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-merged into cifs-2.6.git for-next (and added cc:stable #v5.1)
+  In order for kernel to capture each denormalized output, the UDF
+trapping enable bit is always raised in $fpcsr. Because underflow case will
+issue not an underflow exception but also an inexact exception, it causes
+that the IEX, IEX cumulative exception, flag in $fpcsr to be raised in each
+denormalized output handling. To make the emulation transparent to the
+user, the emulator needs to clear the IEX flag in $fpcsr if the result is a
+denormalized number. However, if the IEX flag has been raised before this
+floating point emulation, this cleanup may be incorrect. To avoid the IEX
+flags in $fpcsr be raised in each denormalized output handling, the 1st
+patch always enable IEX trap to fix this issue.
 
-On Fri, May 17, 2019 at 3:42 AM Colin King <colin.king@canonical.com> wrote:
->
-> From: Colin Ian King <colin.king@canonical.com>
->
-> Currently in the case where SMB2_ioctl returns the -EOPNOTSUPP error
-> there is a memory leak of pneg_inbuf. Fix this by returning via
-> the out_free_inbuf exit path that will perform the relevant kfree.
->
-> Addresses-Coverity: ("Resource leak")
-> Fixes: 969ae8e8d4ee ("cifs: Accept validate negotiate if server return NT_STATUS_NOT_SUPPORTED")
-> Signed-off-by: Colin Ian King <colin.king@canonical.com>
-> ---
->  fs/cifs/smb2pdu.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
->
-> diff --git a/fs/cifs/smb2pdu.c b/fs/cifs/smb2pdu.c
-> index 710ceb875161..5b8d1482ffbd 100644
-> --- a/fs/cifs/smb2pdu.c
-> +++ b/fs/cifs/smb2pdu.c
-> @@ -1054,7 +1054,8 @@ int smb3_validate_negotiate(const unsigned int xid, struct cifs_tcon *tcon)
->                  * not supported error. Client should accept it.
->                  */
->                 cifs_dbg(VFS, "Server does not support validate negotiate\n");
-> -               return 0;
-> +               rc = 0;
-> +               goto out_free_inbuf;
->         } else if (rc != 0) {
->                 cifs_dbg(VFS, "validate protocol negotiate failed: %d\n", rc);
->                 rc = -EIO;
-> --
-> 2.20.1
->
+    The existing floating point emulations is only available for floating
+instruction that possibly issue denormalized input and underflow
+exceptions. These existing FPU emulations are not sufficient when IEx
+Trap is enabled because some floating point instructions only issue inexact
+exception. The 2nd patch adds the emulations of such floating point
+instructions.
 
+Vincent Chen (2):
+  nds32: enable IEX trap too when kernel supports denormalized output
+  nds32: add new emulations for floating point instruction
 
--- 
-Thanks,
+ arch/nds32/include/asm/bitfield.h            |    2 +-
+ arch/nds32/include/asm/fpu.h                 |    2 +-
+ arch/nds32/include/asm/fpuemu.h              |   12 +++++
+ arch/nds32/include/asm/syscalls.h            |    2 +-
+ arch/nds32/include/uapi/asm/fp_udfiex_crtl.h |   16 +++++++
+ arch/nds32/include/uapi/asm/sigcontext.h     |   24 ++++++++---
+ arch/nds32/include/uapi/asm/udftrap.h        |   13 ------
+ arch/nds32/include/uapi/asm/unistd.h         |    4 +-
+ arch/nds32/kernel/fpu.c                      |   15 +++----
+ arch/nds32/kernel/sys_nds32.c                |   26 ++++++-----
+ arch/nds32/math-emu/Makefile                 |    5 ++-
+ arch/nds32/math-emu/fd2si.c                  |   30 +++++++++++++
+ arch/nds32/math-emu/fd2siz.c                 |   30 +++++++++++++
+ arch/nds32/math-emu/fd2ui.c                  |   30 +++++++++++++
+ arch/nds32/math-emu/fd2uiz.c                 |   30 +++++++++++++
+ arch/nds32/math-emu/fpuemu.c                 |   57 ++++++++++++++++++++++++--
+ arch/nds32/math-emu/fs2si.c                  |   29 +++++++++++++
+ arch/nds32/math-emu/fs2siz.c                 |   29 +++++++++++++
+ arch/nds32/math-emu/fs2ui.c                  |   29 +++++++++++++
+ arch/nds32/math-emu/fs2uiz.c                 |   30 +++++++++++++
+ arch/nds32/math-emu/fsi2d.c                  |   22 ++++++++++
+ arch/nds32/math-emu/fsi2s.c                  |   22 ++++++++++
+ arch/nds32/math-emu/fui2d.c                  |   22 ++++++++++
+ arch/nds32/math-emu/fui2s.c                  |   22 ++++++++++
+ 24 files changed, 452 insertions(+), 51 deletions(-)
+ create mode 100644 arch/nds32/include/uapi/asm/fp_udfiex_crtl.h
+ delete mode 100644 arch/nds32/include/uapi/asm/udftrap.h
+ create mode 100644 arch/nds32/math-emu/fd2si.c
+ create mode 100644 arch/nds32/math-emu/fd2siz.c
+ create mode 100644 arch/nds32/math-emu/fd2ui.c
+ create mode 100644 arch/nds32/math-emu/fd2uiz.c
+ create mode 100644 arch/nds32/math-emu/fs2si.c
+ create mode 100644 arch/nds32/math-emu/fs2siz.c
+ create mode 100644 arch/nds32/math-emu/fs2ui.c
+ create mode 100644 arch/nds32/math-emu/fs2uiz.c
+ create mode 100644 arch/nds32/math-emu/fsi2d.c
+ create mode 100644 arch/nds32/math-emu/fsi2s.c
+ create mode 100644 arch/nds32/math-emu/fui2d.c
+ create mode 100644 arch/nds32/math-emu/fui2s.c
 
-Steve
