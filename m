@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0507BC04AAC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:33:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7F3CC04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:33:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C4E9920645
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:33:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ADE2E204FD
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:33:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558355632;
-	bh=Uw0pF31YOHlAKBRVzNCneThPQgBmKK3R8VVsUrLP+AI=;
+	s=default; t=1558355635;
+	bh=N9QFeO4yQVMQCWzkv0CVm3igV/vAF6zg1t8BEEZGIbY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=A1c3NRkji88ujmZ6tSCCUzqcQJ41g0IvDyfG/65up8LcH1RzEomevntufE2orEX3Q
-	 5fo+7sSc5aGg8NVpuxtyXRxhxXpedJTarzOSOrZLfFEbrLge4w//O6NFhUYzWCvln2
-	 d2yEoTvWQYOeZzDM1ue1hWAlXR5nDE8GxRTDoI9Q=
+	b=qB0+7jcrqOHRmFoI6ltAWbm1Br5kZvaU+xGX2IHUJmStAiTDiFZrr3SbM0OePKsA/
+	 JJYu0sKvcW1hUTD1yEyfCBqoJHQgLJGsR0spCSUW9BdiwkerUec3g9YeKw88wLpMDH
+	 b8pzFsybWocCzuMN1BaDdfNCufrY/ZZRnBivkUdo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390811AbfETMdw (ORCPT
+        id S2390823AbfETMdy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 08:33:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50978 "EHLO mail.kernel.org"
+        Mon, 20 May 2019 08:33:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51014 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390464AbfETMdt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 08:33:49 -0400
+        id S2390807AbfETMdw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 08:33:52 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 858F3214DA;
-        Mon, 20 May 2019 12:33:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 22295204FD;
+        Mon, 20 May 2019 12:33:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558355629;
-        bh=Uw0pF31YOHlAKBRVzNCneThPQgBmKK3R8VVsUrLP+AI=;
+        s=default; t=1558355631;
+        bh=N9QFeO4yQVMQCWzkv0CVm3igV/vAF6zg1t8BEEZGIbY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qb1Miz7DnCy45IpKju43H1zO9LCUOtBO4VY57sey63GJ0EHBEaq9pMBbkW/BLF/6p
-         zjfvsC918oPLW3XEzq/742C/FAiawp5cv3hTfhejt940dY02z2PhKCYfgA06csK2gK
-         W82Cn5xvEvXCRl5VfjlFc6gccl7ChYz7dd5Z6rYA=
+        b=w+pOkUbpOVhMb+J/2Q+eKdsE7FBJhDA10aLQhUnQpMZ8UUTsfnw9Dz9D4pCJHfyrq
+         8WPUZj+7uBRrMWjqLCJzxB2QjtjeniMMsdB9TG6vJXGw9JaAuC7cYOAzMLkDXT8XmS
+         cGBm2Zig3rNvHvEBZeTyxDzGjBlskFloolQ7ufFc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Ofir Drang <ofir.drang@arm.com>,
         Gilad Ben-Yossef <gilad@benyossef.com>,
         Herbert Xu <herbert@gondor.apana.org.au>
-Subject: [PATCH 5.1 065/128] crypto: ccree - pm resume first enable the source clk
-Date:   Mon, 20 May 2019 14:14:12 +0200
-Message-Id: <20190520115254.191615570@linuxfoundation.org>
+Subject: [PATCH 5.1 066/128] crypto: ccree - HOST_POWER_DOWN_EN should be the last CC access during suspend
+Date:   Mon, 20 May 2019 14:14:13 +0200
+Message-Id: <20190520115254.272856830@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190520115249.449077487@linuxfoundation.org>
 References: <20190520115249.449077487@linuxfoundation.org>
@@ -62,10 +62,12 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Ofir Drang <ofir.drang@arm.com>
 
-commit 7766dd774d80463cec7b81d90c8672af91de2da1 upstream.
+commit 3499efbeed39d114873267683b9e776bcb34b058 upstream.
 
-On power management resume function first enable the device clk source
-to allow access to the device registers.
+During power management suspend the driver need to prepare the device
+for the power down operation and as a last indication write to the
+HOST_POWER_DOWN_EN register which signals to the hardware that
+The ccree is ready for power down.
 
 Signed-off-by: Ofir Drang <ofir.drang@arm.com>
 Signed-off-by: Gilad Ben-Yossef <gilad@benyossef.com>
@@ -74,28 +76,25 @@ Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/crypto/ccree/cc_pm.c |    5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ drivers/crypto/ccree/cc_pm.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 --- a/drivers/crypto/ccree/cc_pm.c
 +++ b/drivers/crypto/ccree/cc_pm.c
-@@ -42,14 +42,15 @@ int cc_pm_resume(struct device *dev)
- 	struct cc_drvdata *drvdata = dev_get_drvdata(dev);
+@@ -25,13 +25,13 @@ int cc_pm_suspend(struct device *dev)
+ 	int rc;
  
- 	dev_dbg(dev, "unset HOST_POWER_DOWN_EN\n");
--	cc_iowrite(drvdata, CC_REG(HOST_POWER_DOWN_EN), POWER_DOWN_DISABLE);
--
-+	/* Enables the device source clk */
- 	rc = cc_clk_on(drvdata);
+ 	dev_dbg(dev, "set HOST_POWER_DOWN_EN\n");
+-	cc_iowrite(drvdata, CC_REG(HOST_POWER_DOWN_EN), POWER_DOWN_ENABLE);
+ 	rc = cc_suspend_req_queue(drvdata);
  	if (rc) {
- 		dev_err(dev, "failed getting clock back on. We're toast.\n");
+ 		dev_err(dev, "cc_suspend_req_queue (%x)\n", rc);
  		return rc;
  	}
- 
-+	cc_iowrite(drvdata, CC_REG(HOST_POWER_DOWN_EN), POWER_DOWN_DISABLE);
-+
- 	rc = init_cc_regs(drvdata, false);
- 	if (rc) {
- 		dev_err(dev, "init_cc_regs (%x)\n", rc);
+ 	fini_cc_regs(drvdata);
++	cc_iowrite(drvdata, CC_REG(HOST_POWER_DOWN_EN), POWER_DOWN_ENABLE);
+ 	cc_clk_off(drvdata);
+ 	return 0;
+ }
 
 
