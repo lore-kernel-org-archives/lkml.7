@@ -2,64 +2,57 @@ Return-Path: <SRS0=lq4r=TU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1321FC04E87
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:17:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3699DC04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:17:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D23AB20862
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:17:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0C594216C4
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:17:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558354629;
-	bh=pMhJBov8FCnLw4exJBoL5XcFYktewII0T/VxOTtlouk=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=GGtkqiszbHMvbRI90LVQlI+LB2tFi8jnMa4s4D/dGWUtehPFRfkf/hopJIkProz08
-	 UFciPu4DJMXJVCfa81kLGsf3xRsGOQp7jL6N5GwEgrYOx+xWKEOZN4zdKzESj+oMxL
-	 6hP2TqhAWLvOkOldR7UhVhbLSuRObxo92UcjEdmE=
+	s=default; t=1558354632;
+	bh=UiuYeVOdzbq/S50Dj8jcg/2b3A6n1zaxu9b9gA2SFEA=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=mWS7U78sUut290hBDI8Hm8x+luwkPo2SviyVMyftY6w6T2fOEmdNZM17u4C+Ie9k3
+	 Ej3KXIejpSqBtpOddX3sGvl3hnZy97RhqTWoQWBMJBs20tdzaXsK9jTosrEhUz3CdE
+	 FjruETXtyNwFA3qWnhvIHAjdTHaAnQud75UwAGL0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387466AbfETMRJ (ORCPT
+        id S2387475AbfETMRL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 08:17:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57918 "EHLO mail.kernel.org"
+        Mon, 20 May 2019 08:17:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57976 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387446AbfETMRF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 08:17:05 -0400
+        id S1732747AbfETMRH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 08:17:07 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 372C0214DA;
-        Mon, 20 May 2019 12:17:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C395720656;
+        Mon, 20 May 2019 12:17:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558354624;
-        bh=pMhJBov8FCnLw4exJBoL5XcFYktewII0T/VxOTtlouk=;
-        h=From:To:Cc:Subject:Date:From;
-        b=uhNEl19iJ3DKhAB6vjafMkn8H6iZ1nW+F4ldpqHu7597agDWnI4jlveJs8lPT7/9s
-         nFl6hgntXufWSaf3vfPvkPykj4BvJecqM64CN/K+OCj40pMkdk2+DL9fssDhQrjKMs
-         jnh651swNvIDjM1uc/Wng+l8ldwgQTavKiI10t2E=
+        s=default; t=1558354627;
+        bh=UiuYeVOdzbq/S50Dj8jcg/2b3A6n1zaxu9b9gA2SFEA=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=O+eH70zBUpsfcMymLED6bF4Agd+AwrqD14BGrFaeRRe0bV0dRwWxWQFPF1sFn9qhF
+         Ol0Ks8R7y9MU8uevhLZKwWSUkz0I5VRbnLQeit3VWWAoq09XDE9YlJl6lqWG1h3oAu
+         Ev2l34CqyLeoxTdQa+HE+NpAReo9g107PBYMRlkw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        torvalds@linux-foundation.org, akpm@linux-foundation.org,
-        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org
-Subject: [PATCH 4.9 00/44] 4.9.178-stable review
-Date:   Mon, 20 May 2019 14:13:49 +0200
-Message-Id: <20190520115230.720347034@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Curtis Malainey <cujomalainey@chromium.org>,
+        Ben Zhang <benzh@chromium.org>, Mark Brown <broonie@kernel.org>
+Subject: [PATCH 4.9 21/44] ASoC: RT5677-SPI: Disable 16Bit SPI Transfers
+Date:   Mon, 20 May 2019 14:14:10 +0200
+Message-Id: <20190520115233.268253010@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
-MIME-Version: 1.0
+In-Reply-To: <20190520115230.720347034@linuxfoundation.org>
+References: <20190520115230.720347034@linuxfoundation.org>
 User-Agent: quilt/0.66
-X-stable: review
-X-Patchwork-Hint: ignore
-X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.9.178-rc1.gz
-X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
-X-KernelTest-Branch: linux-4.9.y
-X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
-X-KernelTest-Version: 4.9.178-rc1
-X-KernelTest-Deadline: 2019-05-22T11:52+00:00
+MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -67,215 +60,131 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is the start of the stable review cycle for the 4.9.178 release.
-There are 44 patches in this series, all will be posted as a response
-to this one.  If anyone has any issues with these being applied, please
-let me know.
+From: Curtis Malainey <cujomalainey@chromium.org>
 
-Responses should be made by Wed 22 May 2019 11:50:58 AM UTC.
-Anything received after that time might be too late.
+commit a46eb523220e242affb9a6bc9bb8efc05f4f7459 upstream.
 
-The whole patch series can be found in one patch at:
-	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.9.178-rc1.gz
-or in the git tree and branch at:
-	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.9.y
-and the diffstat can be found below.
+The current algorithm allows 3 types of transfers, 16bit, 32bit and
+burst. According to Realtek, 16bit transfers have a special restriction
+in that it is restricted to the memory region of
+0x18020000 ~ 0x18021000. This region is the memory location of the I2C
+registers. The current algorithm does not uphold this restriction and
+therefore fails to complete writes.
 
-thanks,
+Since this has been broken for some time it likely no one is using it.
+Better to simply disable the 16 bit writes. This will allow users to
+properly load firmware over SPI without data corruption.
 
-greg k-h
+Signed-off-by: Curtis Malainey <cujomalainey@chromium.org>
+Reviewed-by: Ben Zhang <benzh@chromium.org>
+Signed-off-by: Mark Brown <broonie@kernel.org>
+Cc: stable@vger.kernel.org
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
--------------
-Pseudo-Shortlog of commits:
+---
+ sound/soc/codecs/rt5677-spi.c |   35 ++++++++++++++++-------------------
+ 1 file changed, 16 insertions(+), 19 deletions(-)
 
-Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-    Linux 4.9.178-rc1
-
-Sean Christopherson <sean.j.christopherson@intel.com>
-    KVM: x86: Skip EFER vs. guest CPUID checks for host-initiated writes
-
-Michał Wadowski <wadosm@gmail.com>
-    ALSA: hda/realtek - Fix for Lenovo B50-70 inverted internal microphone bug
-
-Lukas Czerner <lczerner@redhat.com>
-    ext4: fix data corruption caused by overlapping unaligned and aligned IO
-
-Sriram Rajagopalan <sriramr@arista.com>
-    ext4: zero out the unused memory region in the extent tree block
-
-Jiufei Xue <jiufei.xue@linux.alibaba.com>
-    fs/writeback.c: use rcu_barrier() to wait for inflight wb switches going into workqueue when umount
-
-Tejun Heo <tj@kernel.org>
-    writeback: synchronize sync(2) against cgroup writeback membership switches
-
-Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-    fib_rules: fix error in backport of e9919a24d302 ("fib_rules: return 0...")
-
-Eric Biggers <ebiggers@google.com>
-    crypto: arm/aes-neonbs - don't access already-freed walk.iv
-
-Eric Biggers <ebiggers@google.com>
-    crypto: salsa20 - don't access already-freed walk.iv
-
-Eric Biggers <ebiggers@google.com>
-    crypto: gcm - fix incompatibility between "gcm" and "gcm_base"
-
-Wei Yongjun <weiyongjun1@huawei.com>
-    crypto: gcm - Fix error return code in crypto_gcm_create_common()
-
-Kamlakant Patel <kamlakantp@marvell.com>
-    ipmi:ssif: compare block number correctly for multi-part return messages
-
-Coly Li <colyli@suse.de>
-    bcache: never set KEY_PTRS of journal key to 0 in journal_reclaim()
-
-Liang Chen <liangchen.linux@gmail.com>
-    bcache: fix a race between cache register and cacheset unregister
-
-Filipe Manana <fdmanana@suse.com>
-    Btrfs: do not start a transaction at iterate_extent_inodes()
-
-Debabrata Banerjee <dbanerje@akamai.com>
-    ext4: fix ext4_show_options for file systems w/o journal
-
-Kirill Tkhai <ktkhai@virtuozzo.com>
-    ext4: actually request zeroing of inode table after grow
-
-Jiufei Xue <jiufei.xue@linux.alibaba.com>
-    jbd2: check superblock mapped prior to committing
-
-Sergei Trofimovich <slyfox@gentoo.org>
-    tty/vt: fix write/write race in ioctl(KDSKBSENT) handler
-
-Dmitry Osipenko <digetx@gmail.com>
-    mfd: max77620: Fix swapped FPS_PERIOD_MAX_US values
-
-Steve Twiss <stwiss.opensource@diasemi.com>
-    mfd: da9063: Fix OTP control register names to match datasheets for DA9063/63L
-
-Shuning Zhang <sunny.s.zhang@oracle.com>
-    ocfs2: fix ocfs2 read inode data panic in ocfs2_iget
-
-Jiri Kosina <jkosina@suse.cz>
-    mm/mincore.c: make mincore() more conservative
-
-Curtis Malainey <cujomalainey@chromium.org>
-    ASoC: RT5677-SPI: Disable 16Bit SPI Transfers
-
-Jon Hunter <jonathanh@nvidia.com>
-    ASoC: max98090: Fix restore of DAPM Muxes
-
-Kailang Yang <kailang@realtek.com>
-    ALSA: hda/realtek - EAPD turn on later
-
-Hui Wang <hui.wang@canonical.com>
-    ALSA: hda/hdmi - Consider eld_valid when reporting jack event
-
-Hui Wang <hui.wang@canonical.com>
-    ALSA: hda/hdmi - Read the pin sense from register when repolling
-
-Wenwen Wang <wang6495@umn.edu>
-    ALSA: usb-audio: Fix a memory leak bug
-
-Eric Biggers <ebiggers@google.com>
-    crypto: x86/crct10dif-pcl - fix use via crypto_shash_digest()
-
-Eric Biggers <ebiggers@google.com>
-    crypto: crct10dif-generic - fix use via crypto_shash_digest()
-
-Daniel Axtens <dja@axtens.net>
-    crypto: vmx - fix copy-paste error in CTR mode
-
-Eric Biggers <ebiggers@google.com>
-    crypto: chacha20poly1305 - set cra_name correctly
-
-Peter Zijlstra <peterz@infradead.org>
-    sched/x86: Save [ER]FLAGS on context switch
-
-Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
-    arm64: Clear OSDLR_EL1 on CPU boot
-
-Vincenzo Frascino <vincenzo.frascino@arm.com>
-    arm64: compat: Reduce address limit
-
-Gustavo A. R. Silva <gustavo@embeddedor.com>
-    power: supply: axp288_charger: Fix unchecked return value
-
-Wen Yang <wen.yang99@zte.com.cn>
-    ARM: exynos: Fix a leaked reference by adding missing of_node_put
-
-Josh Poimboeuf <jpoimboe@redhat.com>
-    objtool: Fix function fallthrough detection
-
-Andy Lutomirski <luto@kernel.org>
-    x86/speculation/mds: Improve CPU buffer clear documentation
-
-Andy Lutomirski <luto@kernel.org>
-    x86/speculation/mds: Revert CPU buffer clear on double fault exit
-
-Dexuan Cui <decui@microsoft.com>
-    PCI: hv: Fix a memory leak in hv_eject_device_work()
-
-Waiman Long <longman@redhat.com>
-    locking/rwsem: Prevent decrement of reader count before increment
-
-Sasha Levin <sashal@kernel.org>
-    net: core: another layer of lists, around PF_MEMALLOC skb handling
-
-
--------------
-
-Diffstat:
-
- Documentation/x86/mds.rst               | 44 ++++------------------------
- Makefile                                |  4 +--
- arch/arm/crypto/aesbs-glue.c            |  4 +++
- arch/arm/mach-exynos/firmware.c         |  1 +
- arch/arm/mach-exynos/suspend.c          |  2 ++
- arch/arm64/include/asm/processor.h      |  8 ++++++
- arch/arm64/kernel/debug-monitors.c      |  1 +
- arch/x86/crypto/crct10dif-pclmul_glue.c | 13 ++++-----
- arch/x86/entry/entry_32.S               |  2 ++
- arch/x86/entry/entry_64.S               |  2 ++
- arch/x86/include/asm/switch_to.h        |  1 +
- arch/x86/kernel/process_32.c            |  7 +++++
- arch/x86/kernel/process_64.c            |  8 ++++++
- arch/x86/kernel/traps.c                 |  8 ------
- arch/x86/kvm/x86.c                      | 33 ++++++++++++++-------
- crypto/chacha20poly1305.c               |  4 +--
- crypto/crct10dif_generic.c              | 11 +++----
- crypto/gcm.c                            | 36 ++++++++---------------
- crypto/salsa20_generic.c                |  2 +-
- drivers/char/ipmi/ipmi_ssif.c           |  6 +++-
- drivers/crypto/vmx/aesp8-ppc.pl         |  4 +--
- drivers/md/bcache/journal.c             | 11 ++++---
- drivers/md/bcache/super.c               |  2 +-
- drivers/pci/host/pci-hyperv.c           |  1 +
- drivers/power/supply/axp288_charger.c   |  4 +++
- drivers/tty/vt/keyboard.c               | 33 +++++++++++++++++----
- fs/btrfs/backref.c                      | 18 ++++++++----
- fs/ext4/extents.c                       | 17 +++++++++--
- fs/ext4/file.c                          |  7 +++++
- fs/ext4/ioctl.c                         |  2 +-
- fs/ext4/super.c                         |  2 +-
- fs/fs-writeback.c                       | 51 +++++++++++++++++++++++++++++----
- fs/jbd2/journal.c                       |  4 +++
- fs/ocfs2/export.c                       | 30 ++++++++++++++++++-
- include/linux/backing-dev-defs.h        |  1 +
- include/linux/list.h                    | 30 +++++++++++++++++++
- include/linux/mfd/da9063/registers.h    |  6 ++--
- include/linux/mfd/max77620.h            |  4 +--
- kernel/locking/rwsem-xadd.c             | 44 +++++++++++++++++++---------
- mm/backing-dev.c                        |  1 +
- mm/mincore.c                            | 23 ++++++++++++++-
- net/core/fib_rules.c                    |  1 +
- sound/pci/hda/patch_hdmi.c              | 11 +++++--
- sound/pci/hda/patch_realtek.c           |  5 ++--
- sound/soc/codecs/max98090.c             | 12 ++++----
- sound/soc/codecs/rt5677-spi.c           | 35 +++++++++++-----------
- sound/usb/mixer.c                       |  2 ++
- tools/objtool/check.c                   |  3 +-
- 48 files changed, 379 insertions(+), 182 deletions(-)
+--- a/sound/soc/codecs/rt5677-spi.c
++++ b/sound/soc/codecs/rt5677-spi.c
+@@ -60,13 +60,15 @@ static DEFINE_MUTEX(spi_mutex);
+  * RT5677_SPI_READ/WRITE_32:	Transfer 4 bytes
+  * RT5677_SPI_READ/WRITE_BURST:	Transfer any multiples of 8 bytes
+  *
+- * For example, reading 260 bytes at 0x60030002 uses the following commands:
+- * 0x60030002 RT5677_SPI_READ_16	2 bytes
++ * Note:
++ * 16 Bit writes and reads are restricted to the address range
++ * 0x18020000 ~ 0x18021000
++ *
++ * For example, reading 256 bytes at 0x60030004 uses the following commands:
+  * 0x60030004 RT5677_SPI_READ_32	4 bytes
+  * 0x60030008 RT5677_SPI_READ_BURST	240 bytes
+  * 0x600300F8 RT5677_SPI_READ_BURST	8 bytes
+  * 0x60030100 RT5677_SPI_READ_32	4 bytes
+- * 0x60030104 RT5677_SPI_READ_16	2 bytes
+  *
+  * Input:
+  * @read: true for read commands; false for write commands
+@@ -81,15 +83,13 @@ static u8 rt5677_spi_select_cmd(bool rea
+ {
+ 	u8 cmd;
+ 
+-	if (align == 2 || align == 6 || remain == 2) {
+-		cmd = RT5677_SPI_READ_16;
+-		*len = 2;
+-	} else if (align == 4 || remain <= 6) {
++	if (align == 4 || remain <= 4) {
+ 		cmd = RT5677_SPI_READ_32;
+ 		*len = 4;
+ 	} else {
+ 		cmd = RT5677_SPI_READ_BURST;
+-		*len = min_t(u32, remain & ~7, RT5677_SPI_BURST_LEN);
++		*len = (((remain - 1) >> 3) + 1) << 3;
++		*len = min_t(u32, *len, RT5677_SPI_BURST_LEN);
+ 	}
+ 	return read ? cmd : cmd + 1;
+ }
+@@ -110,7 +110,7 @@ static void rt5677_spi_reverse(u8 *dst,
+ 	}
+ }
+ 
+-/* Read DSP address space using SPI. addr and len have to be 2-byte aligned. */
++/* Read DSP address space using SPI. addr and len have to be 4-byte aligned. */
+ int rt5677_spi_read(u32 addr, void *rxbuf, size_t len)
+ {
+ 	u32 offset;
+@@ -126,7 +126,7 @@ int rt5677_spi_read(u32 addr, void *rxbu
+ 	if (!g_spi)
+ 		return -ENODEV;
+ 
+-	if ((addr & 1) || (len & 1)) {
++	if ((addr & 3) || (len & 3)) {
+ 		dev_err(&g_spi->dev, "Bad read align 0x%x(%zu)\n", addr, len);
+ 		return -EACCES;
+ 	}
+@@ -161,13 +161,13 @@ int rt5677_spi_read(u32 addr, void *rxbu
+ }
+ EXPORT_SYMBOL_GPL(rt5677_spi_read);
+ 
+-/* Write DSP address space using SPI. addr has to be 2-byte aligned.
+- * If len is not 2-byte aligned, an extra byte of zero is written at the end
++/* Write DSP address space using SPI. addr has to be 4-byte aligned.
++ * If len is not 4-byte aligned, then extra zeros are written at the end
+  * as padding.
+  */
+ int rt5677_spi_write(u32 addr, const void *txbuf, size_t len)
+ {
+-	u32 offset, len_with_pad = len;
++	u32 offset;
+ 	int status = 0;
+ 	struct spi_transfer t;
+ 	struct spi_message m;
+@@ -180,22 +180,19 @@ int rt5677_spi_write(u32 addr, const voi
+ 	if (!g_spi)
+ 		return -ENODEV;
+ 
+-	if (addr & 1) {
++	if (addr & 3) {
+ 		dev_err(&g_spi->dev, "Bad write align 0x%x(%zu)\n", addr, len);
+ 		return -EACCES;
+ 	}
+ 
+-	if (len & 1)
+-		len_with_pad = len + 1;
+-
+ 	memset(&t, 0, sizeof(t));
+ 	t.tx_buf = buf;
+ 	t.speed_hz = RT5677_SPI_FREQ;
+ 	spi_message_init_with_transfers(&m, &t, 1);
+ 
+-	for (offset = 0; offset < len_with_pad;) {
++	for (offset = 0; offset < len;) {
+ 		spi_cmd = rt5677_spi_select_cmd(false, (addr + offset) & 7,
+-				len_with_pad - offset, &t.len);
++				len - offset, &t.len);
+ 
+ 		/* Construct SPI message header */
+ 		buf[0] = spi_cmd;
 
 
