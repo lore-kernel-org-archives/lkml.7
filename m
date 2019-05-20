@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6546C04AAC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:32:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC642C04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:32:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 84123204FD
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:32:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BBBB4216E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:32:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558355573;
-	bh=xxLEzmsGULtUDU3Io0agV8eEWFU+4vqzpgbIFY8kxKE=;
+	s=default; t=1558355579;
+	bh=HUlE6eld3Vz365AqDvX9J8cq8xUzH8sCmhT7MGuFSh8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vsW0YMqZsawDJB4Cae11A2fP6eVH1BtbU3tLcbNEFIpuuMEuWLLk8dbxcCpIrCv2Q
-	 ZD6e7IssjEeUna4jnt3foHZB6BXfxc9e/UuYuZ/BLcM8qpEAgktNTn/3LSfKrLibSo
-	 g1s+VR3oBvW1nzgCb+HXPLEHz9IgNS70ciNwJLsA=
+	b=SJnzsT4QkA3OMWvmBLgMrzTji4xCBzEAUgOaa2VQYl/bHUNsTcIb5aatcywdZWjqo
+	 fI366d9s19tDjHY6oWE4ZlSP1nbVEtARzt97K4AB6w5C1X3O9p0Y9BitMrEFxoBjG+
+	 TfKKah1ihC0hX87yzu4V7P4T3zRW98vhT/x5HosU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390426AbfETMcw (ORCPT
+        id S2390452AbfETMc7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 08:32:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49816 "EHLO mail.kernel.org"
+        Mon, 20 May 2019 08:32:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49988 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390035AbfETMcs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 08:32:48 -0400
+        id S2390429AbfETMc4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 08:32:56 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C89E720645;
-        Mon, 20 May 2019 12:32:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D417B214DA;
+        Mon, 20 May 2019 12:32:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558355568;
-        bh=xxLEzmsGULtUDU3Io0agV8eEWFU+4vqzpgbIFY8kxKE=;
+        s=default; t=1558355576;
+        bh=HUlE6eld3Vz365AqDvX9J8cq8xUzH8sCmhT7MGuFSh8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=taPYH1olIIlE3qRaFQqK3oJK2xwLp1LtJuEA9YG9IvxJmmolBDyJ5HqEm5oms2s0q
-         hjTeby32HAZmt3k1a08S4W2Y5cSjXObTpkM4y4ZoAK/TupHxiaZpEZ/VZjYWYlNawx
-         cbiViUdphgFjWKln6tdvlmrgAWa6mFDum9KC8yfg=
+        b=ALwkqDKtLLhrrnnpeFaoOqk8cyjycD30Te0PsxIcAVUH4dbHg3i3fyGkfFRtf7Rfv
+         YigPMm830VcIHOGt2qbWPThkHRcYxPMSVRe85/6Vq1y0lsWeCIufL031XnXFKi+AXZ
+         aptMkvSA0VQ++pmFo7gJrM6a5u0clIguT/v4LIMU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Stuart Menefy <stuart.menefy@mathembedded.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [PATCH 5.1 008/128] ARM: dts: exynos: Fix interrupt for shared EINTs on Exynos5260
-Date:   Mon, 20 May 2019 14:13:15 +0200
-Message-Id: <20190520115250.009565716@linuxfoundation.org>
+        =?UTF-8?q?Horia=20Geant=C4=83?= <horia.geanta@nxp.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>
+Subject: [PATCH 5.1 038/128] crypto: caam/qi2 - fix zero-length buffer DMA mapping
+Date:   Mon, 20 May 2019 14:13:45 +0200
+Message-Id: <20190520115252.276812081@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190520115249.449077487@linuxfoundation.org>
 References: <20190520115249.449077487@linuxfoundation.org>
@@ -60,33 +60,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stuart Menefy <stuart.menefy@mathembedded.com>
+From: Horia Geantă <horia.geanta@nxp.com>
 
-commit b7ed69d67ff0788d8463e599dd5dd1b45c701a7e upstream.
+commit 07586d3ddf284dd7a1a6579579d8efa7296fe60f upstream.
 
-Fix the interrupt information for the GPIO lines with a shared EINT
-interrupt.
+Commit 04e6d25c5bb2 ("crypto: caam - fix zero-length buffer DMA mapping")
+fixed an issue in caam/jr driver where ahash implementation was
+DMA mapping a zero-length buffer.
 
-Fixes: 16d7ff2642e7 ("ARM: dts: add dts files for exynos5260 SoC")
-Cc: stable@vger.kernel.org
-Signed-off-by: Stuart Menefy <stuart.menefy@mathembedded.com>
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+Current commit applies a similar fix for caam/qi2 driver.
+
+Cc: <stable@vger.kernel.org> # v4.20+
+Fixes: 3f16f6c9d632 ("crypto: caam/qi2 - add support for ahash algorithms")
+Signed-off-by: Horia Geantă <horia.geanta@nxp.com>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/arm/boot/dts/exynos5260.dtsi |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/crypto/caam/caamalg_qi2.c |   25 ++++++++++++++++++-------
+ 1 file changed, 18 insertions(+), 7 deletions(-)
 
---- a/arch/arm/boot/dts/exynos5260.dtsi
-+++ b/arch/arm/boot/dts/exynos5260.dtsi
-@@ -223,7 +223,7 @@
- 			wakeup-interrupt-controller {
- 				compatible = "samsung,exynos4210-wakeup-eint";
- 				interrupt-parent = <&gic>;
--				interrupts = <GIC_SPI 32 IRQ_TYPE_LEVEL_HIGH>;
-+				interrupts = <GIC_SPI 48 IRQ_TYPE_LEVEL_HIGH>;
- 			};
- 		};
+--- a/drivers/crypto/caam/caamalg_qi2.c
++++ b/drivers/crypto/caam/caamalg_qi2.c
+@@ -3755,10 +3755,13 @@ static int ahash_final_no_ctx(struct aha
+ 	if (!edesc)
+ 		return ret;
  
+-	state->buf_dma = dma_map_single(ctx->dev, buf, buflen, DMA_TO_DEVICE);
+-	if (dma_mapping_error(ctx->dev, state->buf_dma)) {
+-		dev_err(ctx->dev, "unable to map src\n");
+-		goto unmap;
++	if (buflen) {
++		state->buf_dma = dma_map_single(ctx->dev, buf, buflen,
++						DMA_TO_DEVICE);
++		if (dma_mapping_error(ctx->dev, state->buf_dma)) {
++			dev_err(ctx->dev, "unable to map src\n");
++			goto unmap;
++		}
+ 	}
+ 
+ 	edesc->dst_dma = dma_map_single(ctx->dev, req->result, digestsize,
+@@ -3771,9 +3774,17 @@ static int ahash_final_no_ctx(struct aha
+ 
+ 	memset(&req_ctx->fd_flt, 0, sizeof(req_ctx->fd_flt));
+ 	dpaa2_fl_set_final(in_fle, true);
+-	dpaa2_fl_set_format(in_fle, dpaa2_fl_single);
+-	dpaa2_fl_set_addr(in_fle, state->buf_dma);
+-	dpaa2_fl_set_len(in_fle, buflen);
++	/*
++	 * crypto engine requires the input entry to be present when
++	 * "frame list" FD is used.
++	 * Since engine does not support FMT=2'b11 (unused entry type), leaving
++	 * in_fle zeroized (except for "Final" flag) is the best option.
++	 */
++	if (buflen) {
++		dpaa2_fl_set_format(in_fle, dpaa2_fl_single);
++		dpaa2_fl_set_addr(in_fle, state->buf_dma);
++		dpaa2_fl_set_len(in_fle, buflen);
++	}
+ 	dpaa2_fl_set_format(out_fle, dpaa2_fl_single);
+ 	dpaa2_fl_set_addr(out_fle, edesc->dst_dma);
+ 	dpaa2_fl_set_len(out_fle, digestsize);
 
 
