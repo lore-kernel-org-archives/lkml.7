@@ -4,35 +4,35 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2A9FC04AAC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 23:50:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40A86C04AAF
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 23:50:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 875A92173E
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 23:50:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 082862173E
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 23:50:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="pDlKtgV3"
+	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="icuRmovm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727470AbfETXud (ORCPT
+        id S1727524AbfETXum (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 19:50:33 -0400
-Received: from vps.xff.cz ([195.181.215.36]:58634 "EHLO vps.xff.cz"
+        Mon, 20 May 2019 19:50:42 -0400
+Received: from vps.xff.cz ([195.181.215.36]:58574 "EHLO vps.xff.cz"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727099AbfETXuP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 19:50:15 -0400
+        id S1726879AbfETXuO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 19:50:14 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=megous.com; s=mail;
-        t=1558396213; bh=YFp7iMAT2SUi48E3lCp5Rb+wby06G1ktJEOG3j6izbk=;
+        t=1558396212; bh=lmN/vA2/QcSdUuzR1xKNkZ8E+T7fPttQ3k8QpH5igsQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pDlKtgV3gowwb66fp7eLoyeuRKnsWrlXZequAZFW3Ab4/pDqG7UhNsbKMQEzRzxFf
-         3cyYV77hezdzWb0n5471o0qbWoSP5qpx/n5vH3L5mJkH6rdekZhoz6x4dxPUKcbOMi
-         pMRrd0iWvkbn8ODVX6x2FGfptjfm64Ls7gcAp68w=
+        b=icuRmovmqEiyTkx1kZjdynNoQSk4c78preJIjNGDecNXCTpka+1z9503Aodfx2L88
+         6sOPPpp5L2sC2XXN6VuIHqWX1c97ZiYpULA+xILVHEybnqSj3gIIu2jnLkXhLVSlH5
+         V6knXlNvxgV1UUKlgvFu1bsGDIuZjLwsN46MtJdw=
 From:   megous@megous.com
 To:     linux-sunxi@googlegroups.com,
         Maxime Ripard <maxime.ripard@bootlin.com>,
         Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>
-Cc:     Ondrej Jirman <megous@megous.com>, David Airlie <airlied@linux.ie>,
+Cc:     Icenowy Zheng <icenowy@aosc.io>, David Airlie <airlied@linux.ie>,
         Daniel Vetter <daniel@ffwll.ch>,
         Mark Rutland <mark.rutland@arm.com>,
         Giuseppe Cavallaro <peppe.cavallaro@st.com>,
@@ -42,10 +42,11 @@ Cc:     Ondrej Jirman <megous@megous.com>, David Airlie <airlied@linux.ie>,
         Maxime Coquelin <mcoquelin.stm32@gmail.com>,
         dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com
-Subject: [PATCH v5 4/6] dt-bindings: display: hdmi-connector: Support DDC bus enable
-Date:   Tue, 21 May 2019 01:50:07 +0200
-Message-Id: <20190520235009.16734-5-megous@megous.com>
+        netdev@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com,
+        Ondrej Jirman <megous@megous.com>
+Subject: [PATCH v5 2/6] net: stmmac: sun8i: force select external PHY when no internal one
+Date:   Tue, 21 May 2019 01:50:05 +0200
+Message-Id: <20190520235009.16734-3-megous@megous.com>
 In-Reply-To: <20190520235009.16734-1-megous@megous.com>
 References: <20190520235009.16734-1-megous@megous.com>
 MIME-Version: 1.0
@@ -55,32 +56,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ondrej Jirman <megous@megous.com>
+From: Icenowy Zheng <icenowy@aosc.io>
 
-Some Allwinner SoC using boards (Orange Pi 3 for example) need to enable
-on-board voltage shifting logic for the DDC bus using a gpio to be able
-to access DDC bus. Use ddc-en-gpios property on the hdmi-connector to
-model this.
+The PHY selection bit also exists on SoCs without an internal PHY; if it's
+set to 1 (internal PHY, default value) then the MAC will not make use of
+any PHY such SoCs.
 
-Add binding documentation for optional ddc-en-gpios property.
+This problem appears when adapting for H6, which has no real internal PHY
+(the "internal PHY" on H6 is not on-die, but on a co-packaged AC200 chip,
+connected via RMII interface at GPIO bank A).
 
+Force the PHY selection bit to 0 when the SOC doesn't have an internal PHY,
+to address the problem of a wrong default value.
+
+Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
 Signed-off-by: Ondrej Jirman <megous@megous.com>
 ---
- .../devicetree/bindings/display/connector/hdmi-connector.txt     | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/display/connector/hdmi-connector.txt b/Documentation/devicetree/bindings/display/connector/hdmi-connector.txt
-index 508aee461e0d..aeb07c4bd703 100644
---- a/Documentation/devicetree/bindings/display/connector/hdmi-connector.txt
-+++ b/Documentation/devicetree/bindings/display/connector/hdmi-connector.txt
-@@ -9,6 +9,7 @@ Optional properties:
- - label: a symbolic name for the connector
- - hpd-gpios: HPD GPIO number
- - ddc-i2c-bus: phandle link to the I2C controller used for DDC EDID probing
-+- ddc-en-gpios: signal to enable DDC bus
+diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c b/drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c
+index 3258dec84d55..0484c289f328 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c
++++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c
+@@ -907,6 +907,11 @@ static int sun8i_dwmac_set_syscon(struct stmmac_priv *priv)
+ 		 * address. No need to mask it again.
+ 		 */
+ 		reg |= 1 << H3_EPHY_ADDR_SHIFT;
++	} else {
++		/* For SoCs without internal PHY the PHY selection bit should be
++		 * set to 0 (external PHY).
++		 */
++		reg &= ~H3_EPHY_SELECT;
+ 	}
  
- Required nodes:
- - Video port for HDMI input
+ 	if (!of_property_read_u32(node, "allwinner,tx-delay-ps", &val)) {
 -- 
 2.21.0
 
