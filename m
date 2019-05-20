@@ -2,103 +2,124 @@ Return-Path: <SRS0=lq4r=TU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B431C04AAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 14:36:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40391C04E87
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 14:37:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 71B19213F2
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 14:36:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="Ch2584po"
+	by mail.kernel.org (Postfix) with ESMTP id 147A3213F2
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 14:37:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1558363023;
+	bh=knrqwf5MAsU6lMqPaPAX06elGTJ1YYogOCMk0BvpCBs=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=VtE2yCrPXFGbKXCtF/oyv0sCVW8KL8WDk5Wp9fhCwfMfTjlDTNelByDqBEouxTaJQ
+	 tCokor+7hwKQfedmAOBRj0ZuB7+NxfaNVsooIYglOUYroKiY+gwvD8m1UjWO36EwLy
+	 DU54XLefypfupSXQyQLOVDoKTq3kY1F3F75D5bKY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391639AbfETOgz (ORCPT
+        id S2391652AbfETOhC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 10:36:55 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:34894 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730966AbfETOgx (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 10:36:53 -0400
-Received: by mail-wr1-f68.google.com with SMTP id m3so1933560wrv.2
-        for <linux-kernel@vger.kernel.org>; Mon, 20 May 2019 07:36:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=Xr+p9+oV/45aNpqnSTpfxQs3ZF3NmaIezU85bCSPol8=;
-        b=Ch2584po8Kd0TeHViJj7L0nIvT3rohiPNenEsT1/KQd2Cq+nUFmot2P1/acoSMtXZt
-         ZZ1v1fIWMXGtUUgXqUhOmKFs6G7uD/oHDoFEceeJUG4DBNaEiRlYDGKTcCHYjkTmsg3E
-         3jOE30AxuUojQ9wQfdLPxEf6P1JWTxYq2uedN7nf/p2PbF9oDyekGNk+DjS3GVrXWm0z
-         FM06h/C/Ykt0UErAijScXMAEDedzRUTsjPtLTYz0QpbUjEnPOqMdUNLkR614+CmS08vx
-         17y4i+yPTUjuSk78DZ21Ewa6UhHfqgIM/izYdsJqmWhWccbbIK+6ccT8qLVYLZlhKGgV
-         AMiw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=Xr+p9+oV/45aNpqnSTpfxQs3ZF3NmaIezU85bCSPol8=;
-        b=gbnAD3h5ly9kHXpdPgIALfc5J0JnccEw7/OlmvkuD+GqZVjQlOW4A1PPNCTZAKoDEY
-         xrae+D76AZyZI2nIc+7AJHBzFOpGMQdaVnfRBDQP3bqJ/ykQLRCfMwUngBCitDimQMNt
-         qpe2FVzuaI3HwDYDIdwS1y13axrebZx4/EXIslz54Ezk4UffGUYyTmjW/Ev9DpBMSQbc
-         cGMMLs/lGBajQIckuA1BvHnMGpxK5p9wSu20TVIirGuJkaRiWJkC1W0o3qb58hgkSRt7
-         /zp6n3ubUSnDM1zA61717Qjp4v2bHR93E7k8sabCt+dXQG9Q3OY6C/T06BL/7hSO9Aus
-         /oUA==
-X-Gm-Message-State: APjAAAXTV86aNtelRk9hFTVq4H3AkM7RCvpcVan2yFkii6W/VegLT8DX
-        0pV3eAISD0gKxmkUncE96EhQ9Q==
-X-Google-Smtp-Source: APXvYqzmmeDy34jQY80IKaTb1i3fodpM6cHRtDfLjCzQsNb17ZPb7mhlh0dJ7te7e7NWiXdVL2lH4Q==
-X-Received: by 2002:a5d:5192:: with SMTP id k18mr32363253wrv.229.1558363012289;
-        Mon, 20 May 2019 07:36:52 -0700 (PDT)
-Received: from bender.baylibre.local (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
-        by smtp.gmail.com with ESMTPSA id a10sm20518729wrm.94.2019.05.20.07.36.51
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Mon, 20 May 2019 07:36:51 -0700 (PDT)
-From:   Neil Armstrong <narmstrong@baylibre.com>
-To:     ulf.hansson@linaro.org
-Cc:     linux-mmc@vger.kernel.org, linux-amlogic@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Neil Armstrong <narmstrong@baylibre.com>
-Subject: [PATCH 2/2] mmc: meson-mx-sdio: update with SPDX Licence identifier
-Date:   Mon, 20 May 2019 16:36:47 +0200
-Message-Id: <20190520143647.2503-3-narmstrong@baylibre.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190520143647.2503-1-narmstrong@baylibre.com>
-References: <20190520143647.2503-1-narmstrong@baylibre.com>
+        Mon, 20 May 2019 10:37:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54490 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730966AbfETOhB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 10:37:01 -0400
+Received: from mail-qk1-f181.google.com (mail-qk1-f181.google.com [209.85.222.181])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1710C21721;
+        Mon, 20 May 2019 14:37:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1558363020;
+        bh=knrqwf5MAsU6lMqPaPAX06elGTJ1YYogOCMk0BvpCBs=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=f+g3cxGKZSYjQDxSwzvKTrnbkxGEz0+zDhjdW6xxHIddsfd3cH3pdiRKSsYEs5Syo
+         0mu+TLKXYy+EBgR4SPTNArk/zXFRGLxmARAIU1hSJ0JlhaqJq0XOylTb7v+I+4F/B/
+         am2ErhBpPKCK8CBWVUsqov+2h6WyoDKvJWy48JO4=
+Received: by mail-qk1-f181.google.com with SMTP id a64so8947613qkg.5;
+        Mon, 20 May 2019 07:37:00 -0700 (PDT)
+X-Gm-Message-State: APjAAAU7Wz/LAMF89TK39hx3ypY9zFiA5cIcQFEAyrT+UMpcIVB5qi3W
+        DiJW0pMfBJY6fVCTtjCjeFuZ9+HD4g+fmgd4ag==
+X-Google-Smtp-Source: APXvYqwOf9Z8nbXUZPSOt15qYtcOeclLXjXToptke87YGvm4/v/PJxK1Ifu47Dtn/ZUAoLrSKRzG6YspjAeBF/yeABM=
+X-Received: by 2002:a37:a8d7:: with SMTP id r206mr46423501qke.264.1558363019267;
+ Mon, 20 May 2019 07:36:59 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <1558361478-4381-1-git-send-email-sagar.kadam@sifive.com> <1558361478-4381-2-git-send-email-sagar.kadam@sifive.com>
+In-Reply-To: <1558361478-4381-2-git-send-email-sagar.kadam@sifive.com>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Mon, 20 May 2019 09:36:48 -0500
+X-Gmail-Original-Message-ID: <CAL_Jsq+6uL+wqi=5cp1X9JdBfmLDzGz5UjwfqKCCESyhsemnhQ@mail.gmail.com>
+Message-ID: <CAL_Jsq+6uL+wqi=5cp1X9JdBfmLDzGz5UjwfqKCCESyhsemnhQ@mail.gmail.com>
+Subject: Re: [PATCH v5 1/3] dt-bindings: i2c: extend existing opencore bindings.
+To:     Sagar Shrikant Kadam <sagar.kadam@sifive.com>
+Cc:     Mark Rutland <mark.rutland@arm.com>, peter@korsgaard.com,
+        Andrew Lunn <andrew@lunn.ch>,
+        Palmer Dabbelt <palmer@sifive.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Linux I2C <linux-i2c@vger.kernel.org>,
+        devicetree@vger.kernel.org, linux-riscv@lists.infradead.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
----
- drivers/mmc/host/meson-mx-sdio.c | 6 +-----
- 1 file changed, 1 insertion(+), 5 deletions(-)
+On Mon, May 20, 2019 at 9:12 AM Sagar Shrikant Kadam
+<sagar.kadam@sifive.com> wrote:
+>
+> Add FU540-C000 specific device tree bindings to already
+> available i2-ocores file. This device is available on
+> HiFive Unleashed Rev A00 board. Move interrupt and interrupt
+> parents under optional property list as these can be optional.
+>
+> The FU540-C000 SoC from sifive, has an Opencore's I2C block
+> reimplementation.
+>
+> The DT compatibility string for this IP is present in HDL and available at.
+> https://github.com/sifive/sifive-blocks/blob/master/src/main/scala/devices/i2c/I2C.scala#L73
+>
+> Signed-off-by: Sagar Shrikant Kadam <sagar.kadam@sifive.com>
+> ---
+>  Documentation/devicetree/bindings/i2c/i2c-ocores.txt | 7 ++++++-
+>  1 file changed, 6 insertions(+), 1 deletion(-)
+>
+> diff --git a/Documentation/devicetree/bindings/i2c/i2c-ocores.txt b/Documentation/devicetree/bindings/i2c/i2c-ocores.txt
+> index 17bef9a..b73960e 100644
+> --- a/Documentation/devicetree/bindings/i2c/i2c-ocores.txt
+> +++ b/Documentation/devicetree/bindings/i2c/i2c-ocores.txt
+> @@ -2,8 +2,11 @@ Device tree configuration for i2c-ocores
+>
+>  Required properties:
+>  - compatible      : "opencores,i2c-ocores" or "aeroflexgaisler,i2cmst"
+> +                    "sifive,fu540-c000-i2c" or "sifive,i2c0".
 
-diff --git a/drivers/mmc/host/meson-mx-sdio.c b/drivers/mmc/host/meson-mx-sdio.c
-index b61de360f26f..b2a7288cdec8 100644
---- a/drivers/mmc/host/meson-mx-sdio.c
-+++ b/drivers/mmc/host/meson-mx-sdio.c
-@@ -1,14 +1,10 @@
-+// SPDX-License-Identifier: GPL-2.0+
- /*
-  * meson-mx-sdio.c - Meson6, Meson8 and Meson8b SDIO/MMC Host Controller
-  *
-  * Copyright (C) 2015 Endless Mobile, Inc.
-  * Author: Carlo Caione <carlo@endlessm.com>
-  * Copyright (C) 2017 Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-- *
-- * This program is free software; you can redistribute it and/or modify
-- * it under the terms of the GNU General Public License as published by
-- * the Free Software Foundation; either version 2 of the License, or (at
-- * your option) any later version.
-  */
- 
- #include <linux/bitfield.h>
--- 
-2.21.0
+It's not an OR because both are required. Please reformat to 1 valid
+combination per line.
 
+> +                   for Opencore based I2C IP block reimplemented in
+> +                   FU540-C000 SoC.Please refer sifive-blocks-ip-versioning.txt
+> +                   for additional details.
+>  - reg             : bus address start and address range size of device
+> -- interrupts      : interrupt number
+>  - clocks          : handle to the controller clock; see the note below.
+>                      Mutually exclusive with opencores,ip-clock-frequency
+>  - opencores,ip-clock-frequency: frequency of the controller clock in Hz;
+> @@ -12,6 +15,8 @@ Required properties:
+>  - #size-cells     : should be <0>
+>
+>  Optional properties:
+> +- interrupt-parent: handle to interrupt controller.
+
+Drop this. interrupt-parent is implied.
+
+> +- interrupts      : interrupt number.
+>  - clock-frequency : frequency of bus clock in Hz; see the note below.
+>                      Defaults to 100 KHz when the property is not specified
+>  - reg-shift       : device register offsets are shifted by this value
+> --
+> 1.9.1
+>
