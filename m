@@ -2,150 +2,153 @@ Return-Path: <SRS0=lq4r=TU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B863DC04AAC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:52:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6308DC04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:52:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 969E1213F2
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:52:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3059F20645
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:52:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1558356756;
+	bh=ofEIYAS8+rvPfYlANzMOn0TgjZ0h4w0AB+vYOudGgtE=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=HECiGnsMtaw9sFS/Q4xl3VlhrgNq14U3SBy11rm+azDNqZ0mNEkmg8itOVOXHSU5B
+	 uz2nA9Slmy80wj83X8uSjQ5BapTyjEp7ps0MbYNOONe2dUtPAUYCKHWJS8WWbvZWGU
+	 2jKIRchtyPZXoZnnV0wJrX/cS6Tx7wGcKdcwv6pE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391539AbfETMw2 (ORCPT
+        id S1731643AbfETMSo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 08:52:28 -0400
-Received: from lhrrgout.huawei.com ([185.176.76.210]:32957 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2387725AbfETMSs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 08:18:48 -0400
-Received: from LHREML714-CAH.china.huawei.com (unknown [172.18.7.107])
-        by Forcepoint Email with ESMTP id 48F69DF4E0C69AB1F29D;
-        Mon, 20 May 2019 13:18:47 +0100 (IST)
-Received: from [10.220.96.108] (10.220.96.108) by smtpsuk.huawei.com
- (10.201.108.37) with Microsoft SMTP Server (TLS) id 14.3.408.0; Mon, 20 May
- 2019 13:18:45 +0100
-Subject: Re: [PATCH 2/3 v5] add a new template field buf to contain the buffer
-To:     prakhar srivastava <prsriva02@gmail.com>
-CC:     <linux-integrity@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        "Mimi Zohar" <zohar@linux.ibm.com>, <ebiederm@xmission.com>,
-        <vgoyal@redhat.com>, Prakhar Srivastava <prsriva@microsoft.com>
-References: <20190510223744.10154-1-prsriva02@gmail.com>
- <20190510223744.10154-3-prsriva02@gmail.com>
- <45344b2f-d9ea-f7df-e45f-18037e2ba5ca@huawei.com>
- <CAEFn8qJVvNivP6Lmx+nVewPcHjH=V2OrR_HyHR6nOeuVQW0A4w@mail.gmail.com>
- <ec8ee6f7-3a1d-6498-e009-f85e677b448a@huawei.com>
- <CAEFn8qKgH5FMLaudqTH6W0k7NpSoWV_NHbmiVduaQPbUNF_4Lg@mail.gmail.com>
-From:   Roberto Sassu <roberto.sassu@huawei.com>
-Message-ID: <50235394-58da-18a6-c149-c385efa080cc@huawei.com>
-Date:   Mon, 20 May 2019 14:18:52 +0200
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.3.0
+        Mon, 20 May 2019 08:18:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59734 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387725AbfETMSh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 08:18:37 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 14E36208C3;
+        Mon, 20 May 2019 12:18:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1558354716;
+        bh=ofEIYAS8+rvPfYlANzMOn0TgjZ0h4w0AB+vYOudGgtE=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=v81g+zm+KjoM2/7suwioOoBlqz3Wq8LidTX9hB5ALljZzPoRbAm3vA75mQAx9lQYU
+         7SXOALMavJVq1jibTePGaMTqxWkzcxt548vnkNqqr4GdR8iVn3wmXhUZrtecrKCpuf
+         uvb7X9v3tASC4DkVndpiCbtz8J2jKtWhFALUpAXE=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Dexuan Cui <decui@microsoft.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Stephen Hemminger <stephen@networkplumber.org>,
+        Michael Kelley <mikelley@microsoft.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 05/63] PCI: hv: Add pci_destroy_slot() in pci_devices_present_work(), if necessary
+Date:   Mon, 20 May 2019 14:13:44 +0200
+Message-Id: <20190520115231.834981202@linuxfoundation.org>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190520115231.137981521@linuxfoundation.org>
+References: <20190520115231.137981521@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-In-Reply-To: <CAEFn8qKgH5FMLaudqTH6W0k7NpSoWV_NHbmiVduaQPbUNF_4Lg@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.220.96.108]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/18/2019 1:32 AM, prakhar srivastava wrote:
-> On Tue, May 14, 2019 at 6:22 AM Roberto Sassu <roberto.sassu@huawei.com> wrote:
->>
->> On 5/14/2019 7:07 AM, prakhar srivastava wrote:
->>> On Mon, May 13, 2019 at 6:48 AM Roberto Sassu <roberto.sassu@huawei.com> wrote:
->>>>
->>>> On 5/11/2019 12:37 AM, Prakhar Srivastava wrote:
->>>>> From: Prakhar Srivastava <prsriva02@gmail.com>
->>>>>
->>>>> The buffer(cmdline args) added to the ima log cannot be attested
->>>>> without having the actual buffer. Thus to make the measured buffer
->>>>> available to store/read a new ima template (buf) is added.
->>>>
->>>> Hi Prakhar
->>>>
->>>> please fix the typos. More comments below.
->>>>
->>>>
->>>>> +     buffer_event_data->type = IMA_XATTR_BUFFER;
->>>>> +     buffer_event_data->buf_length = size;
->>>>> +     memcpy(buffer_event_data->buf, buf, size);
->>>>> +
->>>>> +     event_data.xattr_value = (struct evm_ima_xattr_data *)buffer_event_data;
->>>>> +     event_data.xattr_len = alloc_length;
->>>>
->>>> I would prefer that you introduce two new fields in the ima_event_data
->>>> structure. You can initialize them directly with the parameters of
->>>> process_buffer_measurement().
->>> I will make the edits, this will definitely save the kzalloc in this code
->>> path.
->>>>
->>>> ima_write_template_field_data() will make
->>>> a copy.
->>>>
->>> Since event_data->type is used to distinguish what the template field
->>>    should contain.
->>> Removing the type and subsequent check in the template_init,
->>>    buf template fmt will result in the whole event_Data structure
->>> being added to the log, which is not the expected output.
->>> For buffer entries, the buf template fmt will contains the buffer itself.
-> 
->>
->> The purpose of ima_event_data is to pass data to the init method of
->> template fields. Each method takes the data it needs.
->>
->> If you pass event_data->buf and event_data->buf_len to
->> ima_write_template_field_data() this should be fine.
-> 
-> Hi Roberto,
-> I did some testing after making the needed code changes,
-> the output is as expected the buf template field only contains
-> the buf when the ima_event_data.buf is set.
-> 
-> However i just want to double check if adding two new fields to
-> the struct ima_event_data is approach you want me to take?
-> Mimi any concerns?
+[ Upstream commit 340d455699400f2c2c0f9b3f703ade3085cdb501 ]
 
-I think it should not be a problem. ima_event_data was introduced to
-pass more information to a function for a new template field, without
-changing the definition of existing functions.
+When we hot-remove a device, usually the host sends us a PCI_EJECT message,
+and a PCI_BUS_RELATIONS message with bus_rel->device_count == 0.
 
+When we execute the quick hot-add/hot-remove test, the host may not send
+us the PCI_EJECT message if the guest has not fully finished the
+initialization by sending the PCI_RESOURCES_ASSIGNED* message to the
+host, so it's potentially unsafe to only depend on the
+pci_destroy_slot() in hv_eject_device_work() because the code path
 
-> what all tests do i need to run to confirm i am not
-> in-inadvertently breaking some thing else?
+create_root_hv_pci_bus()
+ -> hv_pci_assign_slots()
 
-ima_event_data is not used for marshaling/unmarshaling. Adding two new
-members to the structure won't change the behavior of existing code.
+is not called in this case. Note: in this case, the host still sends the
+guest a PCI_BUS_RELATIONS message with bus_rel->device_count == 0.
 
-Roberto
+In the quick hot-add/hot-remove test, we can have such a race before
+the code path
 
+pci_devices_present_work()
+ -> new_pcichild_device()
 
-> Thanks,
-> Prakhar Srivastava
->>
->> Roberto
->>
->>
->>>>> +      .field_show = ima_show_template_buf},
->>>>
->>>> Please update Documentation/security/IMA-templates.rst
->>> Will update the documentation.
->>>
->>> Thanks,
->>> Prakhar Srivastava
->>>>
->>>> Thanks
->>>>
->>>> Roberto
->>
->> --
->> HUAWEI TECHNOLOGIES Duesseldorf GmbH, HRB 56063
->> Managing Director: Bo PENG, Jian LI, Yanli SHI
+adds the new device into the hbus->children list, we may have already
+received the PCI_EJECT message, and since the tasklet handler
 
+hv_pci_onchannelcallback()
+
+may fail to find the "hpdev" by calling
+
+get_pcichild_wslot(hbus, dev_message->wslot.slot)
+
+hv_pci_eject_device() is not called; Later, by continuing execution
+
+create_root_hv_pci_bus()
+ -> hv_pci_assign_slots()
+
+creates the slot and the PCI_BUS_RELATIONS message with
+bus_rel->device_count == 0 removes the device from hbus->children, and
+we end up being unable to remove the slot in
+
+hv_pci_remove()
+ -> hv_pci_remove_slots()
+
+Remove the slot in pci_devices_present_work() when the device
+is removed to address this race.
+
+pci_devices_present_work() and hv_eject_device_work() run in the
+singled-threaded hbus->wq, so there is not a double-remove issue for the
+slot.
+
+We cannot offload hv_pci_eject_device() from hv_pci_onchannelcallback()
+to the workqueue, because we need the hv_pci_onchannelcallback()
+synchronously call hv_pci_eject_device() to poll the channel
+ringbuffer to work around the "hangs in hv_compose_msi_msg()" issue
+fixed in commit de0aa7b2f97d ("PCI: hv: Fix 2 hang issues in
+hv_compose_msi_msg()")
+
+Fixes: a15f2c08c708 ("PCI: hv: support reporting serial number as slot information")
+Signed-off-by: Dexuan Cui <decui@microsoft.com>
+[lorenzo.pieralisi@arm.com: rewritten commit log]
+Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Reviewed-by: Stephen Hemminger <stephen@networkplumber.org>
+Reviewed-by:  Michael Kelley <mikelley@microsoft.com>
+Cc: stable@vger.kernel.org
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/pci/host/pci-hyperv.c | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/drivers/pci/host/pci-hyperv.c b/drivers/pci/host/pci-hyperv.c
+index a5825bbcded72..f591de23f3d35 100644
+--- a/drivers/pci/host/pci-hyperv.c
++++ b/drivers/pci/host/pci-hyperv.c
+@@ -1824,6 +1824,10 @@ static void pci_devices_present_work(struct work_struct *work)
+ 		hpdev = list_first_entry(&removed, struct hv_pci_dev,
+ 					 list_entry);
+ 		list_del(&hpdev->list_entry);
++
++		if (hpdev->pci_slot)
++			pci_destroy_slot(hpdev->pci_slot);
++
+ 		put_pcichild(hpdev, hv_pcidev_ref_initial);
+ 	}
+ 
 -- 
-HUAWEI TECHNOLOGIES Duesseldorf GmbH, HRB 56063
-Managing Director: Bo PENG, Jian LI, Yanli SHI
+2.20.1
+
+
+
