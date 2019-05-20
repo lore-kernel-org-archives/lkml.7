@@ -2,113 +2,149 @@ Return-Path: <SRS0=lq4r=TU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55EB4C04AAC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 17:24:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C89DC04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 17:25:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2B8FB214DA
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 17:24:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 04624208C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 17:25:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="SWnk3hMR"
+	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="MxkyDNPT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392922AbfETRYx (ORCPT
+        id S2390715AbfETRZl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 13:24:53 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:37253 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2392908AbfETRYt (ORCPT
+        Mon, 20 May 2019 13:25:41 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:42890 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388761AbfETRZk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 13:24:49 -0400
-Received: by mail-wm1-f68.google.com with SMTP id 7so161135wmo.2
-        for <linux-kernel@vger.kernel.org>; Mon, 20 May 2019 10:24:47 -0700 (PDT)
+        Mon, 20 May 2019 13:25:40 -0400
+Received: by mail-ot1-f66.google.com with SMTP id i2so8364059otr.9
+        for <linux-kernel@vger.kernel.org>; Mon, 20 May 2019 10:25:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=amarulasolutions.com; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=z1UNYn9aAe8JQscyQQ3gmPIO3RF1hK/HxqPmp/TEvUE=;
-        b=SWnk3hMRMWA1Ywzo9sYOJLzsc26fwYiCJTgaYBEo4y5L3YXG/1R0ukyAVRH8Y+bg+B
-         f0BVbHk0x70KIIUy5TUhVxgGfxOufrsp25rNvY1f3kN/MxBujPb8v9nl7VA+0wMwq6G/
-         iztjCKbYwbdD3Y+TsXpqQWLo9btyRAuA5DuRQ=
+        d=ffwll.ch; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=p+IGewVPK/3sUNtWjN0J1v9qG0o9ZctDOQFJRjZs3v4=;
+        b=MxkyDNPTF+GcBwtvga785KdKzkeJok9neVtLb0YWhEJFqdZvQ3jCn1KUbxAtA/EC7e
+         ikhd2kpZAoHjIzLMMH9EWQ3PMGbYb4S8mIo2pyOdOdW338UMv3Ze/uuBHSwaQNk49O6k
+         CaXpO9mH/y6qSHuYZ+HZtmDe2Tw/P5rQssSV0=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=z1UNYn9aAe8JQscyQQ3gmPIO3RF1hK/HxqPmp/TEvUE=;
-        b=PwAQUKIgeGBkLFRnN8wHOmV0XcXlKldrh7t/EnqoBTm3nxIYcVbtp/drlPGuqtHlgR
-         kcrP2QdZm7T7lYZs91NQgiaxmICNWzFrBHdDCiBEYAGcap9gefpco+nL8izvS8k9Je6M
-         ky7yori8wkF1claKC8GwhFkj+VWoIRvlHbBWRYcF+IGSNEZdfl73wgOKD14hP9Ehk4b6
-         Cbdsmece8YQCtJPvvdjU1I0o7Wb4ust/Xv/StR0BouHnrtfXm81J7WsfqUowOwFYyW/M
-         3WDBdfnHR2LD4g+IKooU2FhT0sjmQ1xVgurZI6QQaXxM21FWDFBg7HnAdJozBEtPiW5n
-         iLhw==
-X-Gm-Message-State: APjAAAURIA2kgv9HOTMUeY/sngcaz+1fUEftLc8AIiGtY8Qcr6UbwRMy
-        JQ8uDkVnyRkDGpWmWW5cKWYOC+V/8KscxA==
-X-Google-Smtp-Source: APXvYqxVu0ryN3dGrAHTImcZaVGZEuUna03629XF/XZ4NdSwQQQFMOvDysXzuR7tpScTcpzb4h2yMw==
-X-Received: by 2002:a05:600c:21d7:: with SMTP id x23mr156500wmj.105.1558373086550;
-        Mon, 20 May 2019 10:24:46 -0700 (PDT)
-Received: from localhost.localdomain ([91.253.179.221])
-        by smtp.gmail.com with ESMTPSA id b12sm180021wmg.27.2019.05.20.10.24.44
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Mon, 20 May 2019 10:24:46 -0700 (PDT)
-From:   Andrea Parri <andrea.parri@amarulasolutions.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Andrea Parri <andrea.parri@amarulasolutions.com>,
-        stable@vger.kernel.org, "Yan, Zheng" <zyan@redhat.com>,
-        Sage Weil <sage@redhat.com>, Ilya Dryomov <idryomov@gmail.com>,
-        ceph-devel@vger.kernel.org,
-        "Paul E. McKenney" <paulmck@linux.ibm.com>,
-        Peter Zijlstra <peterz@infradead.org>
-Subject: [PATCH 4/4] ceph: fix improper use of smp_mb__before_atomic()
-Date:   Mon, 20 May 2019 19:23:58 +0200
-Message-Id: <1558373038-5611-5-git-send-email-andrea.parri@amarulasolutions.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1558373038-5611-1-git-send-email-andrea.parri@amarulasolutions.com>
-References: <1558373038-5611-1-git-send-email-andrea.parri@amarulasolutions.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=p+IGewVPK/3sUNtWjN0J1v9qG0o9ZctDOQFJRjZs3v4=;
+        b=t96+XfPF7FtM30NqkoK74m14mj4RNk1YD+Fyuu27/5dP/774ZCKY2DrPNQBdSluODV
+         8fp392moulP8ll3BQFJ7xZW/gIbzPgtqYxSMXfefidPoeI1Qb+FzuGXm88zdC8uDhUqQ
+         DmMUktq36Ss+C5dBskQoeyIZsU74X0qcf96z6xG7VCJXiZVz+DB8u3aB4hQTiMFhYhe0
+         Y/kWgaaU0iWBlyapJDROSI9taJyraOSOyVXn7s6Z9NpY7dilG0VCUwJ22ELvwBS485rC
+         WrDIGMxW2pmYKJ5FNiKn95DOmuOJVppF7996ulu7mJqbskURtvJKCCvmA/71Uyy1+1d1
+         efkg==
+X-Gm-Message-State: APjAAAWAWEw3OmkUhS3kIZZ9DiF4c7+Hkwmrlh1C5gY73gRoeBjoR5iT
+        +1EOBTXc2UEqAhnsSqovOuEvnW68qcHsX+sBwJ0jqQ==
+X-Google-Smtp-Source: APXvYqzVxIgdQlO/YdvYOV5mGXBZTR4aGXDhff4jSmBlpuQLUW6acY4OVOfHwYJiTVqpqlqr4sTv4zfSpLMjUvn/RH0=
+X-Received: by 2002:a9d:7414:: with SMTP id n20mr18557548otk.106.1558373139972;
+ Mon, 20 May 2019 10:25:39 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190520082216.26273-1-daniel.vetter@ffwll.ch>
+ <20190520082216.26273-11-daniel.vetter@ffwll.ch> <20190520170820.GA27230@ravnborg.org>
+In-Reply-To: <20190520170820.GA27230@ravnborg.org>
+From:   Daniel Vetter <daniel.vetter@ffwll.ch>
+Date:   Mon, 20 May 2019 19:25:28 +0200
+Message-ID: <CAKMK7uHQo83UZmkV=gd3hHCMpusSdK_6O_UQnnHdSm+kLMgmmA@mail.gmail.com>
+Subject: Re: [PATCH 10/33] fbcon: call fbcon_fb_(un)registered directly
+To:     Sam Ravnborg <sam@ravnborg.org>
+Cc:     DRI Development <dri-devel@lists.freedesktop.org>,
+        Linux Fbdev development list <linux-fbdev@vger.kernel.org>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Intel Graphics Development <intel-gfx@lists.freedesktop.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>,
+        Yisheng Xie <ysxie@foxmail.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Mikulas Patocka <mpatocka@redhat.com>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Daniel Vetter <daniel.vetter@intel.com>,
+        Peter Rosin <peda@axentia.se>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This barrier only applies to the read-modify-write operations; in
-particular, it does not apply to the atomic64_set() primitive.
+On Mon, May 20, 2019 at 7:08 PM Sam Ravnborg <sam@ravnborg.org> wrote:
+>
+> Hi Daniel.
+>
+> While browsing this nice patch series I stumbled upon a detail.
+>
+> On Mon, May 20, 2019 at 10:21:53AM +0200, Daniel Vetter wrote:
+> > With
+> >
+> > commit 6104c37094e729f3d4ce65797002112735d49cd1
+> > Author: Daniel Vetter <daniel.vetter@ffwll.ch>
+> > Date:   Tue Aug 1 17:32:07 2017 +0200
+> >
+> >     fbcon: Make fbcon a built-time depency for fbdev
+> >
+> > we have a static dependency between fbcon and fbdev, and we can
+> > replace the indirection through the notifier chain with a function
+> > call.
+> >
+> > Signed-off-by: Daniel Vetter <daniel.vetter@intel.com>
+> > Cc: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+> > Cc: Daniel Vetter <daniel.vetter@ffwll.ch>
+> > Cc: Hans de Goede <hdegoede@redhat.com>
+> > Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> > Cc: "Noralf Tr=C3=B8nnes" <noralf@tronnes.org>
+> > Cc: Yisheng Xie <ysxie@foxmail.com>
+> > Cc: Peter Rosin <peda@axentia.se>
+> > Cc: "Micha=C5=82 Miros=C5=82aw" <mirq-linux@rere.qmqm.pl>
+> > Cc: Thomas Zimmermann <tzimmermann@suse.de>
+> > Cc: Mikulas Patocka <mpatocka@redhat.com>
+> > Cc: linux-fbdev@vger.kernel.org
+> > ---
+> > diff --git a/include/linux/fb.h b/include/linux/fb.h
+> > index f52ef0ad6781..701abaf79c87 100644
+> > --- a/include/linux/fb.h
+> > +++ b/include/linux/fb.h
+> > @@ -136,10 +136,6 @@ struct fb_cursor_user {
+> >  #define FB_EVENT_RESUME                      0x03
+> >  /*      An entry from the modelist was removed */
+> >  #define FB_EVENT_MODE_DELETE            0x04
+> > -/*      A driver registered itself */
+> > -#define FB_EVENT_FB_REGISTERED          0x05
+> > -/*      A driver unregistered itself */
+> > -#define FB_EVENT_FB_UNREGISTERED        0x06
+> >  /*      CONSOLE-SPECIFIC: get console to framebuffer mapping */
+> >  #define FB_EVENT_GET_CONSOLE_MAP        0x07
+> >  /*      CONSOLE-SPECIFIC: set console to framebuffer mapping */
+>
+> This breaks build of arch/arm/mach-pxa/am200epd.c thats uses
+> FB_EVENT_FB_*REGISTERED:
+>
+>
+>        if (event =3D=3D FB_EVENT_FB_REGISTERED)
+>                 return am200_share_video_mem(info);
+>         else if (event =3D=3D FB_EVENT_FB_UNREGISTERED)
+>                 return am200_unshare_video_mem(info);
+>
+>
+> Found while grepping for "FB_EVENT" so this is not a build
+> error I triggered.
 
-Replace the barrier with an smp_mb().
+Oh this is glorious :-/
 
-Fixes: fdd4e15838e59 ("ceph: rework dcache readdir")
-Cc: stable@vger.kernel.org
-Reported-by: "Paul E. McKenney" <paulmck@linux.ibm.com>
-Reported-by: Peter Zijlstra <peterz@infradead.org>
-Signed-off-by: Andrea Parri <andrea.parri@amarulasolutions.com>
-Cc: "Yan, Zheng" <zyan@redhat.com>
-Cc: Sage Weil <sage@redhat.com>
-Cc: Ilya Dryomov <idryomov@gmail.com>
-Cc: ceph-devel@vger.kernel.org
-Cc: "Paul E. McKenney" <paulmck@linux.ibm.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
----
- fs/ceph/super.h | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
-
-diff --git a/fs/ceph/super.h b/fs/ceph/super.h
-index 6edab9a750f8a..e02f4ff0be3f1 100644
---- a/fs/ceph/super.h
-+++ b/fs/ceph/super.h
-@@ -541,7 +541,12 @@ static inline void __ceph_dir_set_complete(struct ceph_inode_info *ci,
- 					   long long release_count,
- 					   long long ordered_count)
- {
--	smp_mb__before_atomic();
-+	/*
-+	 * Makes sure operations that setup readdir cache (update page
-+	 * cache and i_size) are strongly ordered w.r.t. the following
-+	 * atomic64_set() operations.
-+	 */
-+	smp_mb();
- 	atomic64_set(&ci->i_complete_seq[0], release_count);
- 	atomic64_set(&ci->i_complete_seq[1], ordered_count);
- }
--- 
-2.7.4
-
+Thanks a lot for spotting this, I guess I need to hack around on
+metronomefb a bit ...
+-Daniel
+--=20
+Daniel Vetter
+Software Engineer, Intel Corporation
++41 (0) 79 365 57 48 - http://blog.ffwll.ch
