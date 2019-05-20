@@ -2,1048 +2,168 @@ Return-Path: <SRS0=lq4r=TU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UPPERCASE_75_100,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 683F9C04AAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 09:16:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1585AC04AAF
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 09:16:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 28AE020675
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 09:16:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E61D6206B6
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 09:16:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731996AbfETJQV (ORCPT
+        id S1731103AbfETJQo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 05:16:21 -0400
-Received: from andre.telenet-ops.be ([195.130.132.53]:58790 "EHLO
-        andre.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731933AbfETJQU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 05:16:20 -0400
-Received: from ramsan ([84.194.111.163])
-        by andre.telenet-ops.be with bizsmtp
-        id EZGC2000W3XaVaC01ZGCdr; Mon, 20 May 2019 11:16:12 +0200
-Received: from rox.of.borg ([192.168.97.57])
-        by ramsan with esmtp (Exim 4.90_1)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1hSeOy-0005vJ-Bt; Mon, 20 May 2019 11:16:12 +0200
-Received: from geert by rox.of.borg with local (Exim 4.90_1)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1hSeOy-0007UM-AH; Mon, 20 May 2019 11:16:12 +0200
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-To:     linux-m68k@lists.linux-m68k.org
-Cc:     linux-kernel@vger.kernel.org,
-        Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: [PATCH] m68k: defconfig: Update defconfigs for v5.2-rc1
-Date:   Mon, 20 May 2019 11:16:11 +0200
-Message-Id: <20190520091611.28744-1-geert@linux-m68k.org>
-X-Mailer: git-send-email 2.17.1
+        Mon, 20 May 2019 05:16:44 -0400
+Received: from mga17.intel.com ([192.55.52.151]:12516 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730302AbfETJQo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 05:16:44 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 May 2019 02:16:44 -0700
+X-ExtLoop1: 1
+Received: from jnikula-mobl3.fi.intel.com (HELO localhost) ([10.237.66.150])
+  by fmsmga001.fm.intel.com with ESMTP; 20 May 2019 02:16:41 -0700
+From:   Jani Nikula <jani.nikula@intel.com>
+To:     Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc:     Michal Marek <michal.lkml@markovi.net>,
+        intel-gfx@lists.freedesktop.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>
+Subject: Re: [Intel-gfx] [RFC 1/3] kbuild: add support for ensuring headers are self-contained
+In-Reply-To: <CAK7LNAQv-fm2iV6HW_FM0Fe6hNDeJ25c9CS2SbroSOneoepFMQ@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+References: <20190516194818.29230-1-jani.nikula@intel.com> <CAK7LNAQv-fm2iV6HW_FM0Fe6hNDeJ25c9CS2SbroSOneoepFMQ@mail.gmail.com>
+Date:   Mon, 20 May 2019 12:20:01 +0300
+Message-ID: <87zhnh8ou6.fsf@intel.com>
+MIME-Version: 1.0
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Actual changes:
-    +# CONFIG_BACKLIGHT_CLASS_DEVICE is not set
-    +CONFIG_CRYPTO_ECRDSA=m
-    -CONFIG_CRYPTO_STREEBOG=m
-    -CONFIG_INET_XFRM_MODE_BEET=m
-    -CONFIG_INET_XFRM_MODE_TRANSPORT=m
-    -CONFIG_INET_XFRM_MODE_TUNNEL=m
-    +# CONFIG_LCD_CLASS_DEVICE is not set
-    -CONFIG_NFT_CHAIN_ROUTE_IPV4=m
-    -CONFIG_NFT_CHAIN_ROUTE_IPV6=m
-    +CONFIG_TEST_STRSCPY=m
-    -# CONFIG_UEVENT_HELPER is not set
+On Sat, 18 May 2019, Masahiro Yamada <yamada.masahiro@socionext.com> wrote:
+> On Fri, May 17, 2019 at 4:48 AM Jani Nikula <jani.nikula@intel.com> wrote:
+>>
+>> Sometimes it's useful to be able to explicitly ensure certain headers
+>> remain self-contained, i.e. that they are compilable as standalone
+>> units, by including and/or forward declaring everything they depend on.
+>>
+>> Add special target header-test-y where individual Makefiles can add
+>> headers to be tested if CONFIG_HEADER_TEST is enabled. This will
+>> generate a dummy C file per header that gets built as part of extra-y.
+>>
+>> Cc: Chris Wilson <chris@chris-wilson.co.uk>
+>> Cc: Masahiro Yamada <yamada.masahiro@socionext.com>
+>> Cc: Michal Marek <michal.lkml@markovi.net>
+>> Signed-off-by: Jani Nikula <jani.nikula@intel.com>
+>> ---
+>>  Documentation/kbuild/makefiles.txt |  7 +++++++
+>>  init/Kconfig                       |  9 +++++++++
+>>  scripts/Makefile.build             | 10 ++++++++++
+>>  scripts/Makefile.lib               |  3 +++
+>>  4 files changed, 29 insertions(+)
+>>
+>> diff --git a/Documentation/kbuild/makefiles.txt b/Documentation/kbuild/makefiles.txt
+>> index 03c065855eaf..73df58e5ea0c 100644
+>> --- a/Documentation/kbuild/makefiles.txt
+>> +++ b/Documentation/kbuild/makefiles.txt
+>> @@ -1036,6 +1036,13 @@ When kbuild executes, the following steps are followed (roughly):
+>>         In this example, extra-y is used to list object files that
+>>         shall be built, but shall not be linked as part of built-in.a.
+>>
+>> +    header-test-y
+>> +
+>> +       header-test-y specifies headers (*.h) in the current directory that
+>> +       should be compile tested to ensure they are self-contained,
+>> +       i.e. compilable as standalone units. If CONFIG_HEADER_TEST is enabled,
+>> +       this autogenerates dummy sources to include the headers, and builds them
+>> +       as part of extra-y.
+>>
+>>  --- 6.7 Commands useful for building a boot image
+>>
+>> diff --git a/init/Kconfig b/init/Kconfig
+>> index 4592bf7997c0..d91b157201b1 100644
+>> --- a/init/Kconfig
+>> +++ b/init/Kconfig
+>> @@ -95,6 +95,15 @@ config COMPILE_TEST
+>>           here. If you are a user/distributor, say N here to exclude useless
+>>           drivers to be distributed.
+>>
+>> +config HEADER_TEST
+>> +       bool "Compile test headers that should be standalone compilable"
+>> +       help
+>> +         Compile test headers listed in header-test-y target to ensure they are
+>> +         self-contained, i.e. compilable as standalone units.
+>> +
+>> +         If you are a developer or tester and want to ensure the requested
+>> +         headers are self-contained, say Y here. Otherwise, choose N.
+>> +
+>>  config LOCALVERSION
+>>         string "Local version - append to kernel release"
+>>         help
+>> diff --git a/scripts/Makefile.build b/scripts/Makefile.build
+>> index 76ca30cc4791..4d4bf698467a 100644
+>> --- a/scripts/Makefile.build
+>> +++ b/scripts/Makefile.build
+>> @@ -291,6 +291,16 @@ quiet_cmd_cc_lst_c = MKLST   $@
+>>  $(obj)/%.lst: $(src)/%.c FORCE
+>>         $(call if_changed_dep,cc_lst_c)
+>>
+>> +# Dummy C sources for header test (header-test-y target)
+>> +# ---------------------------------------------------------------------------
+>> +
+>> +quiet_cmd_header_test = HDRTEST $@
+>> +      cmd_header_test = echo "\#include \"$(<F)\"" > $@
+>> +
+>> +# FIXME: would be nice to be able to limit this implicit rule to header-test-y
+>> +$(obj)/%.header_test.c: $(src)/%.h FORCE
+>> +       $(call if_changed,header_test)
+>> +
+>>  # Compile assembler sources (.S)
+>>  # ---------------------------------------------------------------------------
+>>
+>> diff --git a/scripts/Makefile.lib b/scripts/Makefile.lib
+>> index 8a1f64f17740..c2839de06485 100644
+>> --- a/scripts/Makefile.lib
+>> +++ b/scripts/Makefile.lib
+>> @@ -66,6 +66,9 @@ extra-y += $(patsubst %.dtb,%.dt.yaml, $(dtb-y))
+>>  extra-$(CONFIG_OF_ALL_DTBS) += $(patsubst %.dtb,%.dt.yaml, $(dtb-))
+>>  endif
+>>
+>> +# Test self-contained headers
+>> +extra-$(CONFIG_HEADER_TEST) += $(patsubst %.h,%.header_test.o,$(header-test-y))
+>> +
+>>  # Add subdir path
+>>
+>>  extra-y                := $(addprefix $(obj)/,$(extra-y))
+>> --
+>> 2.20.1
+>>
+>
+>
+> Thanks, probably we should do this.
+>
+> At least, this check will be useful
+> for uapi headers since the kernel does not
+> test the self-containedness of
+> exported headers, (then turned out be problematic
+> later in user-space).
+>
+> I will take a little time to considier
+> how far we can extend the idea about
+> "headers should be self-contained".
 
-Signed-off-by: Geert Uytterhoeven <geert@linux-m68k.org>
----
- arch/m68k/configs/amiga_defconfig    | 17 +++++++----------
- arch/m68k/configs/apollo_defconfig   | 17 +++++++----------
- arch/m68k/configs/atari_defconfig    | 17 +++++++----------
- arch/m68k/configs/bvme6000_defconfig | 17 +++++++----------
- arch/m68k/configs/hp300_defconfig    | 17 +++++++----------
- arch/m68k/configs/mac_defconfig      | 17 +++++++----------
- arch/m68k/configs/multi_defconfig    | 17 +++++++----------
- arch/m68k/configs/mvme147_defconfig  | 17 +++++++----------
- arch/m68k/configs/mvme16x_defconfig  | 17 +++++++----------
- arch/m68k/configs/q40_defconfig      | 17 +++++++----------
- arch/m68k/configs/sun3_defconfig     | 17 +++++++----------
- arch/m68k/configs/sun3x_defconfig    | 17 +++++++----------
- 12 files changed, 84 insertions(+), 120 deletions(-)
+Thanks! Please let me know if/when you need further action from me, I
+won't post new versions until then.
 
-diff --git a/arch/m68k/configs/amiga_defconfig b/arch/m68k/configs/amiga_defconfig
-index fea392cfcf1be142..04e0f211afb38925 100644
---- a/arch/m68k/configs/amiga_defconfig
-+++ b/arch/m68k/configs/amiga_defconfig
-@@ -71,9 +71,6 @@ CONFIG_INET_AH=m
- CONFIG_INET_ESP=m
- CONFIG_INET_ESP_OFFLOAD=m
- CONFIG_INET_IPCOMP=m
--CONFIG_INET_XFRM_MODE_TRANSPORT=m
--CONFIG_INET_XFRM_MODE_TUNNEL=m
--CONFIG_INET_XFRM_MODE_BEET=m
- CONFIG_INET_DIAG=m
- CONFIG_INET_UDP_DIAG=m
- CONFIG_INET_RAW_DIAG=m
-@@ -205,7 +202,6 @@ CONFIG_IP_SET_HASH_NETNET=m
- CONFIG_IP_SET_HASH_NETPORT=m
- CONFIG_IP_SET_HASH_NETIFACE=m
- CONFIG_IP_SET_LIST_SET=m
--CONFIG_NFT_CHAIN_ROUTE_IPV4=m
- CONFIG_NFT_DUP_IPV4=m
- CONFIG_NFT_FIB_IPV4=m
- CONFIG_NF_TABLES_ARP=y
-@@ -231,7 +227,6 @@ CONFIG_IP_NF_RAW=m
- CONFIG_IP_NF_ARPTABLES=m
- CONFIG_IP_NF_ARPFILTER=m
- CONFIG_IP_NF_ARP_MANGLE=m
--CONFIG_NFT_CHAIN_ROUTE_IPV6=m
- CONFIG_NFT_DUP_IPV6=m
- CONFIG_NFT_FIB_IPV6=m
- CONFIG_NF_FLOW_TABLE_IPV6=m
-@@ -308,7 +303,6 @@ CONFIG_AF_KCM=m
- # CONFIG_WIRELESS is not set
- CONFIG_PSAMPLE=m
- CONFIG_NET_IFE=m
--# CONFIG_UEVENT_HELPER is not set
- CONFIG_DEVTMPFS=y
- CONFIG_DEVTMPFS_MOUNT=y
- CONFIG_TEST_ASYNC_DRIVER_PROBE=m
-@@ -436,6 +430,8 @@ CONFIG_FB_AMIGA_OCS=y
- CONFIG_FB_AMIGA_ECS=y
- CONFIG_FB_AMIGA_AGA=y
- CONFIG_FB_FM2=y
-+# CONFIG_LCD_CLASS_DEVICE is not set
-+# CONFIG_BACKLIGHT_CLASS_DEVICE is not set
- CONFIG_FRAMEBUFFER_CONSOLE=y
- CONFIG_LOGO=y
- CONFIG_SOUND=m
-@@ -553,13 +549,14 @@ CONFIG_NLS_MAC_TURKISH=m
- CONFIG_DLM=m
- CONFIG_ENCRYPTED_KEYS=m
- CONFIG_HARDENED_USERCOPY=y
--CONFIG_CRYPTO_RSA=m
--CONFIG_CRYPTO_DH=m
--CONFIG_CRYPTO_ECDH=m
- CONFIG_CRYPTO_MANAGER=y
- CONFIG_CRYPTO_USER=m
- CONFIG_CRYPTO_CRYPTD=m
- CONFIG_CRYPTO_TEST=m
-+CONFIG_CRYPTO_RSA=m
-+CONFIG_CRYPTO_DH=m
-+CONFIG_CRYPTO_ECDH=m
-+CONFIG_CRYPTO_ECRDSA=m
- CONFIG_CRYPTO_CHACHA20POLY1305=m
- CONFIG_CRYPTO_AEGIS128=m
- CONFIG_CRYPTO_AEGIS128L=m
-@@ -583,7 +580,6 @@ CONFIG_CRYPTO_RMD256=m
- CONFIG_CRYPTO_RMD320=m
- CONFIG_CRYPTO_SHA3=m
- CONFIG_CRYPTO_SM3=m
--CONFIG_CRYPTO_STREEBOG=m
- CONFIG_CRYPTO_TGR192=m
- CONFIG_CRYPTO_WP512=m
- CONFIG_CRYPTO_AES_TI=m
-@@ -626,6 +622,7 @@ CONFIG_ATOMIC64_SELFTEST=m
- CONFIG_ASYNC_RAID6_TEST=m
- CONFIG_TEST_HEXDUMP=m
- CONFIG_TEST_STRING_HELPERS=m
-+CONFIG_TEST_STRSCPY=m
- CONFIG_TEST_KSTRTOX=m
- CONFIG_TEST_PRINTF=m
- CONFIG_TEST_BITMAP=m
-diff --git a/arch/m68k/configs/apollo_defconfig b/arch/m68k/configs/apollo_defconfig
-index 2474d267460e9a62..c6abbb535878cc1d 100644
---- a/arch/m68k/configs/apollo_defconfig
-+++ b/arch/m68k/configs/apollo_defconfig
-@@ -67,9 +67,6 @@ CONFIG_INET_AH=m
- CONFIG_INET_ESP=m
- CONFIG_INET_ESP_OFFLOAD=m
- CONFIG_INET_IPCOMP=m
--CONFIG_INET_XFRM_MODE_TRANSPORT=m
--CONFIG_INET_XFRM_MODE_TUNNEL=m
--CONFIG_INET_XFRM_MODE_BEET=m
- CONFIG_INET_DIAG=m
- CONFIG_INET_UDP_DIAG=m
- CONFIG_INET_RAW_DIAG=m
-@@ -201,7 +198,6 @@ CONFIG_IP_SET_HASH_NETNET=m
- CONFIG_IP_SET_HASH_NETPORT=m
- CONFIG_IP_SET_HASH_NETIFACE=m
- CONFIG_IP_SET_LIST_SET=m
--CONFIG_NFT_CHAIN_ROUTE_IPV4=m
- CONFIG_NFT_DUP_IPV4=m
- CONFIG_NFT_FIB_IPV4=m
- CONFIG_NF_TABLES_ARP=y
-@@ -227,7 +223,6 @@ CONFIG_IP_NF_RAW=m
- CONFIG_IP_NF_ARPTABLES=m
- CONFIG_IP_NF_ARPFILTER=m
- CONFIG_IP_NF_ARP_MANGLE=m
--CONFIG_NFT_CHAIN_ROUTE_IPV6=m
- CONFIG_NFT_DUP_IPV6=m
- CONFIG_NFT_FIB_IPV6=m
- CONFIG_NF_FLOW_TABLE_IPV6=m
-@@ -304,7 +299,6 @@ CONFIG_AF_KCM=m
- # CONFIG_WIRELESS is not set
- CONFIG_PSAMPLE=m
- CONFIG_NET_IFE=m
--# CONFIG_UEVENT_HELPER is not set
- CONFIG_DEVTMPFS=y
- CONFIG_DEVTMPFS_MOUNT=y
- CONFIG_TEST_ASYNC_DRIVER_PROBE=m
-@@ -397,6 +391,8 @@ CONFIG_PPS_CLIENT_LDISC=m
- CONFIG_PTP_1588_CLOCK=m
- # CONFIG_HWMON is not set
- CONFIG_FB=y
-+# CONFIG_LCD_CLASS_DEVICE is not set
-+# CONFIG_BACKLIGHT_CLASS_DEVICE is not set
- CONFIG_FRAMEBUFFER_CONSOLE=y
- CONFIG_LOGO=y
- # CONFIG_LOGO_LINUX_VGA16 is not set
-@@ -513,13 +509,14 @@ CONFIG_NLS_MAC_TURKISH=m
- CONFIG_DLM=m
- CONFIG_ENCRYPTED_KEYS=m
- CONFIG_HARDENED_USERCOPY=y
--CONFIG_CRYPTO_RSA=m
--CONFIG_CRYPTO_DH=m
--CONFIG_CRYPTO_ECDH=m
- CONFIG_CRYPTO_MANAGER=y
- CONFIG_CRYPTO_USER=m
- CONFIG_CRYPTO_CRYPTD=m
- CONFIG_CRYPTO_TEST=m
-+CONFIG_CRYPTO_RSA=m
-+CONFIG_CRYPTO_DH=m
-+CONFIG_CRYPTO_ECDH=m
-+CONFIG_CRYPTO_ECRDSA=m
- CONFIG_CRYPTO_CHACHA20POLY1305=m
- CONFIG_CRYPTO_AEGIS128=m
- CONFIG_CRYPTO_AEGIS128L=m
-@@ -543,7 +540,6 @@ CONFIG_CRYPTO_RMD256=m
- CONFIG_CRYPTO_RMD320=m
- CONFIG_CRYPTO_SHA3=m
- CONFIG_CRYPTO_SM3=m
--CONFIG_CRYPTO_STREEBOG=m
- CONFIG_CRYPTO_TGR192=m
- CONFIG_CRYPTO_WP512=m
- CONFIG_CRYPTO_AES_TI=m
-@@ -586,6 +582,7 @@ CONFIG_ATOMIC64_SELFTEST=m
- CONFIG_ASYNC_RAID6_TEST=m
- CONFIG_TEST_HEXDUMP=m
- CONFIG_TEST_STRING_HELPERS=m
-+CONFIG_TEST_STRSCPY=m
- CONFIG_TEST_KSTRTOX=m
- CONFIG_TEST_PRINTF=m
- CONFIG_TEST_BITMAP=m
-diff --git a/arch/m68k/configs/atari_defconfig b/arch/m68k/configs/atari_defconfig
-index 3b25adb98f020900..8d3ab79415acc2ea 100644
---- a/arch/m68k/configs/atari_defconfig
-+++ b/arch/m68k/configs/atari_defconfig
-@@ -74,9 +74,6 @@ CONFIG_INET_AH=m
- CONFIG_INET_ESP=m
- CONFIG_INET_ESP_OFFLOAD=m
- CONFIG_INET_IPCOMP=m
--CONFIG_INET_XFRM_MODE_TRANSPORT=m
--CONFIG_INET_XFRM_MODE_TUNNEL=m
--CONFIG_INET_XFRM_MODE_BEET=m
- CONFIG_INET_DIAG=m
- CONFIG_INET_UDP_DIAG=m
- CONFIG_INET_RAW_DIAG=m
-@@ -208,7 +205,6 @@ CONFIG_IP_SET_HASH_NETNET=m
- CONFIG_IP_SET_HASH_NETPORT=m
- CONFIG_IP_SET_HASH_NETIFACE=m
- CONFIG_IP_SET_LIST_SET=m
--CONFIG_NFT_CHAIN_ROUTE_IPV4=m
- CONFIG_NFT_DUP_IPV4=m
- CONFIG_NFT_FIB_IPV4=m
- CONFIG_NF_TABLES_ARP=y
-@@ -234,7 +230,6 @@ CONFIG_IP_NF_RAW=m
- CONFIG_IP_NF_ARPTABLES=m
- CONFIG_IP_NF_ARPFILTER=m
- CONFIG_IP_NF_ARP_MANGLE=m
--CONFIG_NFT_CHAIN_ROUTE_IPV6=m
- CONFIG_NFT_DUP_IPV6=m
- CONFIG_NFT_FIB_IPV6=m
- CONFIG_NF_FLOW_TABLE_IPV6=m
-@@ -311,7 +306,6 @@ CONFIG_AF_KCM=m
- # CONFIG_WIRELESS is not set
- CONFIG_PSAMPLE=m
- CONFIG_NET_IFE=m
--# CONFIG_UEVENT_HELPER is not set
- CONFIG_DEVTMPFS=y
- CONFIG_DEVTMPFS_MOUNT=y
- CONFIG_TEST_ASYNC_DRIVER_PROBE=m
-@@ -421,6 +415,8 @@ CONFIG_PTP_1588_CLOCK=m
- # CONFIG_HWMON is not set
- CONFIG_FB=y
- CONFIG_FB_ATARI=y
-+# CONFIG_LCD_CLASS_DEVICE is not set
-+# CONFIG_BACKLIGHT_CLASS_DEVICE is not set
- CONFIG_FRAMEBUFFER_CONSOLE=y
- CONFIG_LOGO=y
- CONFIG_SOUND=m
-@@ -542,13 +538,14 @@ CONFIG_NLS_MAC_TURKISH=m
- CONFIG_DLM=m
- CONFIG_ENCRYPTED_KEYS=m
- CONFIG_HARDENED_USERCOPY=y
--CONFIG_CRYPTO_RSA=m
--CONFIG_CRYPTO_DH=m
--CONFIG_CRYPTO_ECDH=m
- CONFIG_CRYPTO_MANAGER=y
- CONFIG_CRYPTO_USER=m
- CONFIG_CRYPTO_CRYPTD=m
- CONFIG_CRYPTO_TEST=m
-+CONFIG_CRYPTO_RSA=m
-+CONFIG_CRYPTO_DH=m
-+CONFIG_CRYPTO_ECDH=m
-+CONFIG_CRYPTO_ECRDSA=m
- CONFIG_CRYPTO_CHACHA20POLY1305=m
- CONFIG_CRYPTO_AEGIS128=m
- CONFIG_CRYPTO_AEGIS128L=m
-@@ -572,7 +569,6 @@ CONFIG_CRYPTO_RMD256=m
- CONFIG_CRYPTO_RMD320=m
- CONFIG_CRYPTO_SHA3=m
- CONFIG_CRYPTO_SM3=m
--CONFIG_CRYPTO_STREEBOG=m
- CONFIG_CRYPTO_TGR192=m
- CONFIG_CRYPTO_WP512=m
- CONFIG_CRYPTO_AES_TI=m
-@@ -615,6 +611,7 @@ CONFIG_ATOMIC64_SELFTEST=m
- CONFIG_ASYNC_RAID6_TEST=m
- CONFIG_TEST_HEXDUMP=m
- CONFIG_TEST_STRING_HELPERS=m
-+CONFIG_TEST_STRSCPY=m
- CONFIG_TEST_KSTRTOX=m
- CONFIG_TEST_PRINTF=m
- CONFIG_TEST_BITMAP=m
-diff --git a/arch/m68k/configs/bvme6000_defconfig b/arch/m68k/configs/bvme6000_defconfig
-index 699df9fdf8668d5a..5616b94053b64633 100644
---- a/arch/m68k/configs/bvme6000_defconfig
-+++ b/arch/m68k/configs/bvme6000_defconfig
-@@ -64,9 +64,6 @@ CONFIG_INET_AH=m
- CONFIG_INET_ESP=m
- CONFIG_INET_ESP_OFFLOAD=m
- CONFIG_INET_IPCOMP=m
--CONFIG_INET_XFRM_MODE_TRANSPORT=m
--CONFIG_INET_XFRM_MODE_TUNNEL=m
--CONFIG_INET_XFRM_MODE_BEET=m
- CONFIG_INET_DIAG=m
- CONFIG_INET_UDP_DIAG=m
- CONFIG_INET_RAW_DIAG=m
-@@ -198,7 +195,6 @@ CONFIG_IP_SET_HASH_NETNET=m
- CONFIG_IP_SET_HASH_NETPORT=m
- CONFIG_IP_SET_HASH_NETIFACE=m
- CONFIG_IP_SET_LIST_SET=m
--CONFIG_NFT_CHAIN_ROUTE_IPV4=m
- CONFIG_NFT_DUP_IPV4=m
- CONFIG_NFT_FIB_IPV4=m
- CONFIG_NF_TABLES_ARP=y
-@@ -224,7 +220,6 @@ CONFIG_IP_NF_RAW=m
- CONFIG_IP_NF_ARPTABLES=m
- CONFIG_IP_NF_ARPFILTER=m
- CONFIG_IP_NF_ARP_MANGLE=m
--CONFIG_NFT_CHAIN_ROUTE_IPV6=m
- CONFIG_NFT_DUP_IPV6=m
- CONFIG_NFT_FIB_IPV6=m
- CONFIG_NF_FLOW_TABLE_IPV6=m
-@@ -301,7 +296,6 @@ CONFIG_AF_KCM=m
- # CONFIG_WIRELESS is not set
- CONFIG_PSAMPLE=m
- CONFIG_NET_IFE=m
--# CONFIG_UEVENT_HELPER is not set
- CONFIG_DEVTMPFS=y
- CONFIG_DEVTMPFS_MOUNT=y
- CONFIG_TEST_ASYNC_DRIVER_PROBE=m
-@@ -394,6 +388,8 @@ CONFIG_NTP_PPS=y
- CONFIG_PPS_CLIENT_LDISC=m
- CONFIG_PTP_1588_CLOCK=m
- # CONFIG_HWMON is not set
-+# CONFIG_LCD_CLASS_DEVICE is not set
-+# CONFIG_BACKLIGHT_CLASS_DEVICE is not set
- CONFIG_HID=m
- CONFIG_HIDRAW=y
- CONFIG_UHID=m
-@@ -506,13 +502,14 @@ CONFIG_NLS_MAC_TURKISH=m
- CONFIG_DLM=m
- CONFIG_ENCRYPTED_KEYS=m
- CONFIG_HARDENED_USERCOPY=y
--CONFIG_CRYPTO_RSA=m
--CONFIG_CRYPTO_DH=m
--CONFIG_CRYPTO_ECDH=m
- CONFIG_CRYPTO_MANAGER=y
- CONFIG_CRYPTO_USER=m
- CONFIG_CRYPTO_CRYPTD=m
- CONFIG_CRYPTO_TEST=m
-+CONFIG_CRYPTO_RSA=m
-+CONFIG_CRYPTO_DH=m
-+CONFIG_CRYPTO_ECDH=m
-+CONFIG_CRYPTO_ECRDSA=m
- CONFIG_CRYPTO_CHACHA20POLY1305=m
- CONFIG_CRYPTO_AEGIS128=m
- CONFIG_CRYPTO_AEGIS128L=m
-@@ -536,7 +533,6 @@ CONFIG_CRYPTO_RMD256=m
- CONFIG_CRYPTO_RMD320=m
- CONFIG_CRYPTO_SHA3=m
- CONFIG_CRYPTO_SM3=m
--CONFIG_CRYPTO_STREEBOG=m
- CONFIG_CRYPTO_TGR192=m
- CONFIG_CRYPTO_WP512=m
- CONFIG_CRYPTO_AES_TI=m
-@@ -579,6 +575,7 @@ CONFIG_ATOMIC64_SELFTEST=m
- CONFIG_ASYNC_RAID6_TEST=m
- CONFIG_TEST_HEXDUMP=m
- CONFIG_TEST_STRING_HELPERS=m
-+CONFIG_TEST_STRSCPY=m
- CONFIG_TEST_KSTRTOX=m
- CONFIG_TEST_PRINTF=m
- CONFIG_TEST_BITMAP=m
-diff --git a/arch/m68k/configs/hp300_defconfig b/arch/m68k/configs/hp300_defconfig
-index b508022553247e82..1106521f3b56f6df 100644
---- a/arch/m68k/configs/hp300_defconfig
-+++ b/arch/m68k/configs/hp300_defconfig
-@@ -66,9 +66,6 @@ CONFIG_INET_AH=m
- CONFIG_INET_ESP=m
- CONFIG_INET_ESP_OFFLOAD=m
- CONFIG_INET_IPCOMP=m
--CONFIG_INET_XFRM_MODE_TRANSPORT=m
--CONFIG_INET_XFRM_MODE_TUNNEL=m
--CONFIG_INET_XFRM_MODE_BEET=m
- CONFIG_INET_DIAG=m
- CONFIG_INET_UDP_DIAG=m
- CONFIG_INET_RAW_DIAG=m
-@@ -200,7 +197,6 @@ CONFIG_IP_SET_HASH_NETNET=m
- CONFIG_IP_SET_HASH_NETPORT=m
- CONFIG_IP_SET_HASH_NETIFACE=m
- CONFIG_IP_SET_LIST_SET=m
--CONFIG_NFT_CHAIN_ROUTE_IPV4=m
- CONFIG_NFT_DUP_IPV4=m
- CONFIG_NFT_FIB_IPV4=m
- CONFIG_NF_TABLES_ARP=y
-@@ -226,7 +222,6 @@ CONFIG_IP_NF_RAW=m
- CONFIG_IP_NF_ARPTABLES=m
- CONFIG_IP_NF_ARPFILTER=m
- CONFIG_IP_NF_ARP_MANGLE=m
--CONFIG_NFT_CHAIN_ROUTE_IPV6=m
- CONFIG_NFT_DUP_IPV6=m
- CONFIG_NFT_FIB_IPV6=m
- CONFIG_NF_FLOW_TABLE_IPV6=m
-@@ -303,7 +298,6 @@ CONFIG_AF_KCM=m
- # CONFIG_WIRELESS is not set
- CONFIG_PSAMPLE=m
- CONFIG_NET_IFE=m
--# CONFIG_UEVENT_HELPER is not set
- CONFIG_DEVTMPFS=y
- CONFIG_DEVTMPFS_MOUNT=y
- CONFIG_TEST_ASYNC_DRIVER_PROBE=m
-@@ -399,6 +393,8 @@ CONFIG_PPS_CLIENT_LDISC=m
- CONFIG_PTP_1588_CLOCK=m
- # CONFIG_HWMON is not set
- CONFIG_FB=y
-+# CONFIG_LCD_CLASS_DEVICE is not set
-+# CONFIG_BACKLIGHT_CLASS_DEVICE is not set
- CONFIG_FRAMEBUFFER_CONSOLE=y
- CONFIG_LOGO=y
- # CONFIG_LOGO_LINUX_MONO is not set
-@@ -515,13 +511,14 @@ CONFIG_NLS_MAC_TURKISH=m
- CONFIG_DLM=m
- CONFIG_ENCRYPTED_KEYS=m
- CONFIG_HARDENED_USERCOPY=y
--CONFIG_CRYPTO_RSA=m
--CONFIG_CRYPTO_DH=m
--CONFIG_CRYPTO_ECDH=m
- CONFIG_CRYPTO_MANAGER=y
- CONFIG_CRYPTO_USER=m
- CONFIG_CRYPTO_CRYPTD=m
- CONFIG_CRYPTO_TEST=m
-+CONFIG_CRYPTO_RSA=m
-+CONFIG_CRYPTO_DH=m
-+CONFIG_CRYPTO_ECDH=m
-+CONFIG_CRYPTO_ECRDSA=m
- CONFIG_CRYPTO_CHACHA20POLY1305=m
- CONFIG_CRYPTO_AEGIS128=m
- CONFIG_CRYPTO_AEGIS128L=m
-@@ -545,7 +542,6 @@ CONFIG_CRYPTO_RMD256=m
- CONFIG_CRYPTO_RMD320=m
- CONFIG_CRYPTO_SHA3=m
- CONFIG_CRYPTO_SM3=m
--CONFIG_CRYPTO_STREEBOG=m
- CONFIG_CRYPTO_TGR192=m
- CONFIG_CRYPTO_WP512=m
- CONFIG_CRYPTO_AES_TI=m
-@@ -588,6 +584,7 @@ CONFIG_ATOMIC64_SELFTEST=m
- CONFIG_ASYNC_RAID6_TEST=m
- CONFIG_TEST_HEXDUMP=m
- CONFIG_TEST_STRING_HELPERS=m
-+CONFIG_TEST_STRSCPY=m
- CONFIG_TEST_KSTRTOX=m
- CONFIG_TEST_PRINTF=m
- CONFIG_TEST_BITMAP=m
-diff --git a/arch/m68k/configs/mac_defconfig b/arch/m68k/configs/mac_defconfig
-index 04e7d70f6030e77c..226c6c063cd44cce 100644
---- a/arch/m68k/configs/mac_defconfig
-+++ b/arch/m68k/configs/mac_defconfig
-@@ -65,9 +65,6 @@ CONFIG_INET_AH=m
- CONFIG_INET_ESP=m
- CONFIG_INET_ESP_OFFLOAD=m
- CONFIG_INET_IPCOMP=m
--CONFIG_INET_XFRM_MODE_TRANSPORT=m
--CONFIG_INET_XFRM_MODE_TUNNEL=m
--CONFIG_INET_XFRM_MODE_BEET=m
- CONFIG_INET_DIAG=m
- CONFIG_INET_UDP_DIAG=m
- CONFIG_INET_RAW_DIAG=m
-@@ -199,7 +196,6 @@ CONFIG_IP_SET_HASH_NETNET=m
- CONFIG_IP_SET_HASH_NETPORT=m
- CONFIG_IP_SET_HASH_NETIFACE=m
- CONFIG_IP_SET_LIST_SET=m
--CONFIG_NFT_CHAIN_ROUTE_IPV4=m
- CONFIG_NFT_DUP_IPV4=m
- CONFIG_NFT_FIB_IPV4=m
- CONFIG_NF_TABLES_ARP=y
-@@ -225,7 +221,6 @@ CONFIG_IP_NF_RAW=m
- CONFIG_IP_NF_ARPTABLES=m
- CONFIG_IP_NF_ARPFILTER=m
- CONFIG_IP_NF_ARP_MANGLE=m
--CONFIG_NFT_CHAIN_ROUTE_IPV6=m
- CONFIG_NFT_DUP_IPV6=m
- CONFIG_NFT_FIB_IPV6=m
- CONFIG_NF_FLOW_TABLE_IPV6=m
-@@ -305,7 +300,6 @@ CONFIG_AF_KCM=m
- # CONFIG_WIRELESS is not set
- CONFIG_PSAMPLE=m
- CONFIG_NET_IFE=m
--# CONFIG_UEVENT_HELPER is not set
- CONFIG_DEVTMPFS=y
- CONFIG_DEVTMPFS_MOUNT=y
- CONFIG_TEST_ASYNC_DRIVER_PROBE=m
-@@ -423,6 +417,8 @@ CONFIG_PTP_1588_CLOCK=m
- CONFIG_FB=y
- CONFIG_FB_VALKYRIE=y
- CONFIG_FB_MAC=y
-+# CONFIG_LCD_CLASS_DEVICE is not set
-+# CONFIG_BACKLIGHT_CLASS_DEVICE is not set
- CONFIG_FRAMEBUFFER_CONSOLE=y
- CONFIG_LOGO=y
- CONFIG_HID=m
-@@ -537,13 +533,14 @@ CONFIG_NLS_MAC_TURKISH=m
- CONFIG_DLM=m
- CONFIG_ENCRYPTED_KEYS=m
- CONFIG_HARDENED_USERCOPY=y
--CONFIG_CRYPTO_RSA=m
--CONFIG_CRYPTO_DH=m
--CONFIG_CRYPTO_ECDH=m
- CONFIG_CRYPTO_MANAGER=y
- CONFIG_CRYPTO_USER=m
- CONFIG_CRYPTO_CRYPTD=m
- CONFIG_CRYPTO_TEST=m
-+CONFIG_CRYPTO_RSA=m
-+CONFIG_CRYPTO_DH=m
-+CONFIG_CRYPTO_ECDH=m
-+CONFIG_CRYPTO_ECRDSA=m
- CONFIG_CRYPTO_CHACHA20POLY1305=m
- CONFIG_CRYPTO_AEGIS128=m
- CONFIG_CRYPTO_AEGIS128L=m
-@@ -567,7 +564,6 @@ CONFIG_CRYPTO_RMD256=m
- CONFIG_CRYPTO_RMD320=m
- CONFIG_CRYPTO_SHA3=m
- CONFIG_CRYPTO_SM3=m
--CONFIG_CRYPTO_STREEBOG=m
- CONFIG_CRYPTO_TGR192=m
- CONFIG_CRYPTO_WP512=m
- CONFIG_CRYPTO_AES_TI=m
-@@ -610,6 +606,7 @@ CONFIG_ATOMIC64_SELFTEST=m
- CONFIG_ASYNC_RAID6_TEST=m
- CONFIG_TEST_HEXDUMP=m
- CONFIG_TEST_STRING_HELPERS=m
-+CONFIG_TEST_STRSCPY=m
- CONFIG_TEST_KSTRTOX=m
- CONFIG_TEST_PRINTF=m
- CONFIG_TEST_BITMAP=m
-diff --git a/arch/m68k/configs/multi_defconfig b/arch/m68k/configs/multi_defconfig
-index 5e1cc4c17852259d..39f603417928f31e 100644
---- a/arch/m68k/configs/multi_defconfig
-+++ b/arch/m68k/configs/multi_defconfig
-@@ -85,9 +85,6 @@ CONFIG_INET_AH=m
- CONFIG_INET_ESP=m
- CONFIG_INET_ESP_OFFLOAD=m
- CONFIG_INET_IPCOMP=m
--CONFIG_INET_XFRM_MODE_TRANSPORT=m
--CONFIG_INET_XFRM_MODE_TUNNEL=m
--CONFIG_INET_XFRM_MODE_BEET=m
- CONFIG_INET_DIAG=m
- CONFIG_INET_UDP_DIAG=m
- CONFIG_INET_RAW_DIAG=m
-@@ -219,7 +216,6 @@ CONFIG_IP_SET_HASH_NETNET=m
- CONFIG_IP_SET_HASH_NETPORT=m
- CONFIG_IP_SET_HASH_NETIFACE=m
- CONFIG_IP_SET_LIST_SET=m
--CONFIG_NFT_CHAIN_ROUTE_IPV4=m
- CONFIG_NFT_DUP_IPV4=m
- CONFIG_NFT_FIB_IPV4=m
- CONFIG_NF_TABLES_ARP=y
-@@ -245,7 +241,6 @@ CONFIG_IP_NF_RAW=m
- CONFIG_IP_NF_ARPTABLES=m
- CONFIG_IP_NF_ARPFILTER=m
- CONFIG_IP_NF_ARP_MANGLE=m
--CONFIG_NFT_CHAIN_ROUTE_IPV6=m
- CONFIG_NFT_DUP_IPV6=m
- CONFIG_NFT_FIB_IPV6=m
- CONFIG_NF_FLOW_TABLE_IPV6=m
-@@ -325,7 +320,6 @@ CONFIG_AF_KCM=m
- # CONFIG_WIRELESS is not set
- CONFIG_PSAMPLE=m
- CONFIG_NET_IFE=m
--# CONFIG_UEVENT_HELPER is not set
- CONFIG_DEVTMPFS=y
- CONFIG_DEVTMPFS_MOUNT=y
- CONFIG_TEST_ASYNC_DRIVER_PROBE=m
-@@ -499,6 +493,8 @@ CONFIG_FB_FM2=y
- CONFIG_FB_ATARI=y
- CONFIG_FB_VALKYRIE=y
- CONFIG_FB_MAC=y
-+# CONFIG_LCD_CLASS_DEVICE is not set
-+# CONFIG_BACKLIGHT_CLASS_DEVICE is not set
- CONFIG_FRAMEBUFFER_CONSOLE=y
- CONFIG_LOGO=y
- CONFIG_SOUND=m
-@@ -619,13 +615,14 @@ CONFIG_NLS_MAC_TURKISH=m
- CONFIG_DLM=m
- CONFIG_ENCRYPTED_KEYS=m
- CONFIG_HARDENED_USERCOPY=y
--CONFIG_CRYPTO_RSA=m
--CONFIG_CRYPTO_DH=m
--CONFIG_CRYPTO_ECDH=m
- CONFIG_CRYPTO_MANAGER=y
- CONFIG_CRYPTO_USER=m
- CONFIG_CRYPTO_CRYPTD=m
- CONFIG_CRYPTO_TEST=m
-+CONFIG_CRYPTO_RSA=m
-+CONFIG_CRYPTO_DH=m
-+CONFIG_CRYPTO_ECDH=m
-+CONFIG_CRYPTO_ECRDSA=m
- CONFIG_CRYPTO_CHACHA20POLY1305=m
- CONFIG_CRYPTO_AEGIS128=m
- CONFIG_CRYPTO_AEGIS128L=m
-@@ -649,7 +646,6 @@ CONFIG_CRYPTO_RMD256=m
- CONFIG_CRYPTO_RMD320=m
- CONFIG_CRYPTO_SHA3=m
- CONFIG_CRYPTO_SM3=m
--CONFIG_CRYPTO_STREEBOG=m
- CONFIG_CRYPTO_TGR192=m
- CONFIG_CRYPTO_WP512=m
- CONFIG_CRYPTO_AES_TI=m
-@@ -692,6 +688,7 @@ CONFIG_ATOMIC64_SELFTEST=m
- CONFIG_ASYNC_RAID6_TEST=m
- CONFIG_TEST_HEXDUMP=m
- CONFIG_TEST_STRING_HELPERS=m
-+CONFIG_TEST_STRSCPY=m
- CONFIG_TEST_KSTRTOX=m
- CONFIG_TEST_PRINTF=m
- CONFIG_TEST_BITMAP=m
-diff --git a/arch/m68k/configs/mvme147_defconfig b/arch/m68k/configs/mvme147_defconfig
-index 170ac8792c2df754..175a607f576cc75a 100644
---- a/arch/m68k/configs/mvme147_defconfig
-+++ b/arch/m68k/configs/mvme147_defconfig
-@@ -63,9 +63,6 @@ CONFIG_INET_AH=m
- CONFIG_INET_ESP=m
- CONFIG_INET_ESP_OFFLOAD=m
- CONFIG_INET_IPCOMP=m
--CONFIG_INET_XFRM_MODE_TRANSPORT=m
--CONFIG_INET_XFRM_MODE_TUNNEL=m
--CONFIG_INET_XFRM_MODE_BEET=m
- CONFIG_INET_DIAG=m
- CONFIG_INET_UDP_DIAG=m
- CONFIG_INET_RAW_DIAG=m
-@@ -197,7 +194,6 @@ CONFIG_IP_SET_HASH_NETNET=m
- CONFIG_IP_SET_HASH_NETPORT=m
- CONFIG_IP_SET_HASH_NETIFACE=m
- CONFIG_IP_SET_LIST_SET=m
--CONFIG_NFT_CHAIN_ROUTE_IPV4=m
- CONFIG_NFT_DUP_IPV4=m
- CONFIG_NFT_FIB_IPV4=m
- CONFIG_NF_TABLES_ARP=y
-@@ -223,7 +219,6 @@ CONFIG_IP_NF_RAW=m
- CONFIG_IP_NF_ARPTABLES=m
- CONFIG_IP_NF_ARPFILTER=m
- CONFIG_IP_NF_ARP_MANGLE=m
--CONFIG_NFT_CHAIN_ROUTE_IPV6=m
- CONFIG_NFT_DUP_IPV6=m
- CONFIG_NFT_FIB_IPV6=m
- CONFIG_NF_FLOW_TABLE_IPV6=m
-@@ -300,7 +295,6 @@ CONFIG_AF_KCM=m
- # CONFIG_WIRELESS is not set
- CONFIG_PSAMPLE=m
- CONFIG_NET_IFE=m
--# CONFIG_UEVENT_HELPER is not set
- CONFIG_DEVTMPFS=y
- CONFIG_DEVTMPFS_MOUNT=y
- CONFIG_TEST_ASYNC_DRIVER_PROBE=m
-@@ -393,6 +387,8 @@ CONFIG_NTP_PPS=y
- CONFIG_PPS_CLIENT_LDISC=m
- CONFIG_PTP_1588_CLOCK=m
- # CONFIG_HWMON is not set
-+# CONFIG_LCD_CLASS_DEVICE is not set
-+# CONFIG_BACKLIGHT_CLASS_DEVICE is not set
- CONFIG_HID=m
- CONFIG_HIDRAW=y
- CONFIG_UHID=m
-@@ -505,13 +501,14 @@ CONFIG_NLS_MAC_TURKISH=m
- CONFIG_DLM=m
- CONFIG_ENCRYPTED_KEYS=m
- CONFIG_HARDENED_USERCOPY=y
--CONFIG_CRYPTO_RSA=m
--CONFIG_CRYPTO_DH=m
--CONFIG_CRYPTO_ECDH=m
- CONFIG_CRYPTO_MANAGER=y
- CONFIG_CRYPTO_USER=m
- CONFIG_CRYPTO_CRYPTD=m
- CONFIG_CRYPTO_TEST=m
-+CONFIG_CRYPTO_RSA=m
-+CONFIG_CRYPTO_DH=m
-+CONFIG_CRYPTO_ECDH=m
-+CONFIG_CRYPTO_ECRDSA=m
- CONFIG_CRYPTO_CHACHA20POLY1305=m
- CONFIG_CRYPTO_AEGIS128=m
- CONFIG_CRYPTO_AEGIS128L=m
-@@ -535,7 +532,6 @@ CONFIG_CRYPTO_RMD256=m
- CONFIG_CRYPTO_RMD320=m
- CONFIG_CRYPTO_SHA3=m
- CONFIG_CRYPTO_SM3=m
--CONFIG_CRYPTO_STREEBOG=m
- CONFIG_CRYPTO_TGR192=m
- CONFIG_CRYPTO_WP512=m
- CONFIG_CRYPTO_AES_TI=m
-@@ -578,6 +574,7 @@ CONFIG_ATOMIC64_SELFTEST=m
- CONFIG_ASYNC_RAID6_TEST=m
- CONFIG_TEST_HEXDUMP=m
- CONFIG_TEST_STRING_HELPERS=m
-+CONFIG_TEST_STRSCPY=m
- CONFIG_TEST_KSTRTOX=m
- CONFIG_TEST_PRINTF=m
- CONFIG_TEST_BITMAP=m
-diff --git a/arch/m68k/configs/mvme16x_defconfig b/arch/m68k/configs/mvme16x_defconfig
-index d865592a423e353f..f41c34d3cdd0a893 100644
---- a/arch/m68k/configs/mvme16x_defconfig
-+++ b/arch/m68k/configs/mvme16x_defconfig
-@@ -64,9 +64,6 @@ CONFIG_INET_AH=m
- CONFIG_INET_ESP=m
- CONFIG_INET_ESP_OFFLOAD=m
- CONFIG_INET_IPCOMP=m
--CONFIG_INET_XFRM_MODE_TRANSPORT=m
--CONFIG_INET_XFRM_MODE_TUNNEL=m
--CONFIG_INET_XFRM_MODE_BEET=m
- CONFIG_INET_DIAG=m
- CONFIG_INET_UDP_DIAG=m
- CONFIG_INET_RAW_DIAG=m
-@@ -198,7 +195,6 @@ CONFIG_IP_SET_HASH_NETNET=m
- CONFIG_IP_SET_HASH_NETPORT=m
- CONFIG_IP_SET_HASH_NETIFACE=m
- CONFIG_IP_SET_LIST_SET=m
--CONFIG_NFT_CHAIN_ROUTE_IPV4=m
- CONFIG_NFT_DUP_IPV4=m
- CONFIG_NFT_FIB_IPV4=m
- CONFIG_NF_TABLES_ARP=y
-@@ -224,7 +220,6 @@ CONFIG_IP_NF_RAW=m
- CONFIG_IP_NF_ARPTABLES=m
- CONFIG_IP_NF_ARPFILTER=m
- CONFIG_IP_NF_ARP_MANGLE=m
--CONFIG_NFT_CHAIN_ROUTE_IPV6=m
- CONFIG_NFT_DUP_IPV6=m
- CONFIG_NFT_FIB_IPV6=m
- CONFIG_NF_FLOW_TABLE_IPV6=m
-@@ -301,7 +296,6 @@ CONFIG_AF_KCM=m
- # CONFIG_WIRELESS is not set
- CONFIG_PSAMPLE=m
- CONFIG_NET_IFE=m
--# CONFIG_UEVENT_HELPER is not set
- CONFIG_DEVTMPFS=y
- CONFIG_DEVTMPFS_MOUNT=y
- CONFIG_TEST_ASYNC_DRIVER_PROBE=m
-@@ -394,6 +388,8 @@ CONFIG_NTP_PPS=y
- CONFIG_PPS_CLIENT_LDISC=m
- CONFIG_PTP_1588_CLOCK=m
- # CONFIG_HWMON is not set
-+# CONFIG_LCD_CLASS_DEVICE is not set
-+# CONFIG_BACKLIGHT_CLASS_DEVICE is not set
- CONFIG_HID=m
- CONFIG_HIDRAW=y
- CONFIG_UHID=m
-@@ -506,13 +502,14 @@ CONFIG_NLS_MAC_TURKISH=m
- CONFIG_DLM=m
- CONFIG_ENCRYPTED_KEYS=m
- CONFIG_HARDENED_USERCOPY=y
--CONFIG_CRYPTO_RSA=m
--CONFIG_CRYPTO_DH=m
--CONFIG_CRYPTO_ECDH=m
- CONFIG_CRYPTO_MANAGER=y
- CONFIG_CRYPTO_USER=m
- CONFIG_CRYPTO_CRYPTD=m
- CONFIG_CRYPTO_TEST=m
-+CONFIG_CRYPTO_RSA=m
-+CONFIG_CRYPTO_DH=m
-+CONFIG_CRYPTO_ECDH=m
-+CONFIG_CRYPTO_ECRDSA=m
- CONFIG_CRYPTO_CHACHA20POLY1305=m
- CONFIG_CRYPTO_AEGIS128=m
- CONFIG_CRYPTO_AEGIS128L=m
-@@ -536,7 +533,6 @@ CONFIG_CRYPTO_RMD256=m
- CONFIG_CRYPTO_RMD320=m
- CONFIG_CRYPTO_SHA3=m
- CONFIG_CRYPTO_SM3=m
--CONFIG_CRYPTO_STREEBOG=m
- CONFIG_CRYPTO_TGR192=m
- CONFIG_CRYPTO_WP512=m
- CONFIG_CRYPTO_AES_TI=m
-@@ -579,6 +575,7 @@ CONFIG_ATOMIC64_SELFTEST=m
- CONFIG_ASYNC_RAID6_TEST=m
- CONFIG_TEST_HEXDUMP=m
- CONFIG_TEST_STRING_HELPERS=m
-+CONFIG_TEST_STRSCPY=m
- CONFIG_TEST_KSTRTOX=m
- CONFIG_TEST_PRINTF=m
- CONFIG_TEST_BITMAP=m
-diff --git a/arch/m68k/configs/q40_defconfig b/arch/m68k/configs/q40_defconfig
-index 034a9de904846371..c9d2cb0a1cf4c970 100644
---- a/arch/m68k/configs/q40_defconfig
-+++ b/arch/m68k/configs/q40_defconfig
-@@ -65,9 +65,6 @@ CONFIG_INET_AH=m
- CONFIG_INET_ESP=m
- CONFIG_INET_ESP_OFFLOAD=m
- CONFIG_INET_IPCOMP=m
--CONFIG_INET_XFRM_MODE_TRANSPORT=m
--CONFIG_INET_XFRM_MODE_TUNNEL=m
--CONFIG_INET_XFRM_MODE_BEET=m
- CONFIG_INET_DIAG=m
- CONFIG_INET_UDP_DIAG=m
- CONFIG_INET_RAW_DIAG=m
-@@ -199,7 +196,6 @@ CONFIG_IP_SET_HASH_NETNET=m
- CONFIG_IP_SET_HASH_NETPORT=m
- CONFIG_IP_SET_HASH_NETIFACE=m
- CONFIG_IP_SET_LIST_SET=m
--CONFIG_NFT_CHAIN_ROUTE_IPV4=m
- CONFIG_NFT_DUP_IPV4=m
- CONFIG_NFT_FIB_IPV4=m
- CONFIG_NF_TABLES_ARP=y
-@@ -225,7 +221,6 @@ CONFIG_IP_NF_RAW=m
- CONFIG_IP_NF_ARPTABLES=m
- CONFIG_IP_NF_ARPFILTER=m
- CONFIG_IP_NF_ARP_MANGLE=m
--CONFIG_NFT_CHAIN_ROUTE_IPV6=m
- CONFIG_NFT_DUP_IPV6=m
- CONFIG_NFT_FIB_IPV6=m
- CONFIG_NF_FLOW_TABLE_IPV6=m
-@@ -302,7 +297,6 @@ CONFIG_AF_KCM=m
- # CONFIG_WIRELESS is not set
- CONFIG_PSAMPLE=m
- CONFIG_NET_IFE=m
--# CONFIG_UEVENT_HELPER is not set
- CONFIG_DEVTMPFS=y
- CONFIG_DEVTMPFS_MOUNT=y
- CONFIG_TEST_ASYNC_DRIVER_PROBE=m
-@@ -408,6 +402,8 @@ CONFIG_PPS_CLIENT_PARPORT=m
- CONFIG_PTP_1588_CLOCK=m
- # CONFIG_HWMON is not set
- CONFIG_FB=y
-+# CONFIG_LCD_CLASS_DEVICE is not set
-+# CONFIG_BACKLIGHT_CLASS_DEVICE is not set
- CONFIG_FRAMEBUFFER_CONSOLE=y
- CONFIG_LOGO=y
- CONFIG_SOUND=m
-@@ -524,13 +520,14 @@ CONFIG_NLS_MAC_TURKISH=m
- CONFIG_DLM=m
- CONFIG_ENCRYPTED_KEYS=m
- CONFIG_HARDENED_USERCOPY=y
--CONFIG_CRYPTO_RSA=m
--CONFIG_CRYPTO_DH=m
--CONFIG_CRYPTO_ECDH=m
- CONFIG_CRYPTO_MANAGER=y
- CONFIG_CRYPTO_USER=m
- CONFIG_CRYPTO_CRYPTD=m
- CONFIG_CRYPTO_TEST=m
-+CONFIG_CRYPTO_RSA=m
-+CONFIG_CRYPTO_DH=m
-+CONFIG_CRYPTO_ECDH=m
-+CONFIG_CRYPTO_ECRDSA=m
- CONFIG_CRYPTO_CHACHA20POLY1305=m
- CONFIG_CRYPTO_AEGIS128=m
- CONFIG_CRYPTO_AEGIS128L=m
-@@ -554,7 +551,6 @@ CONFIG_CRYPTO_RMD256=m
- CONFIG_CRYPTO_RMD320=m
- CONFIG_CRYPTO_SHA3=m
- CONFIG_CRYPTO_SM3=m
--CONFIG_CRYPTO_STREEBOG=m
- CONFIG_CRYPTO_TGR192=m
- CONFIG_CRYPTO_WP512=m
- CONFIG_CRYPTO_AES_TI=m
-@@ -597,6 +593,7 @@ CONFIG_ATOMIC64_SELFTEST=m
- CONFIG_ASYNC_RAID6_TEST=m
- CONFIG_TEST_HEXDUMP=m
- CONFIG_TEST_STRING_HELPERS=m
-+CONFIG_TEST_STRSCPY=m
- CONFIG_TEST_KSTRTOX=m
- CONFIG_TEST_PRINTF=m
- CONFIG_TEST_BITMAP=m
-diff --git a/arch/m68k/configs/sun3_defconfig b/arch/m68k/configs/sun3_defconfig
-index 49be0f9fcd8dd68a..79a64fdd6bf06e63 100644
---- a/arch/m68k/configs/sun3_defconfig
-+++ b/arch/m68k/configs/sun3_defconfig
-@@ -61,9 +61,6 @@ CONFIG_INET_AH=m
- CONFIG_INET_ESP=m
- CONFIG_INET_ESP_OFFLOAD=m
- CONFIG_INET_IPCOMP=m
--CONFIG_INET_XFRM_MODE_TRANSPORT=m
--CONFIG_INET_XFRM_MODE_TUNNEL=m
--CONFIG_INET_XFRM_MODE_BEET=m
- CONFIG_INET_DIAG=m
- CONFIG_INET_UDP_DIAG=m
- CONFIG_INET_RAW_DIAG=m
-@@ -195,7 +192,6 @@ CONFIG_IP_SET_HASH_NETNET=m
- CONFIG_IP_SET_HASH_NETPORT=m
- CONFIG_IP_SET_HASH_NETIFACE=m
- CONFIG_IP_SET_LIST_SET=m
--CONFIG_NFT_CHAIN_ROUTE_IPV4=m
- CONFIG_NFT_DUP_IPV4=m
- CONFIG_NFT_FIB_IPV4=m
- CONFIG_NF_TABLES_ARP=y
-@@ -221,7 +217,6 @@ CONFIG_IP_NF_RAW=m
- CONFIG_IP_NF_ARPTABLES=m
- CONFIG_IP_NF_ARPFILTER=m
- CONFIG_IP_NF_ARP_MANGLE=m
--CONFIG_NFT_CHAIN_ROUTE_IPV6=m
- CONFIG_NFT_DUP_IPV6=m
- CONFIG_NFT_FIB_IPV6=m
- CONFIG_NF_FLOW_TABLE_IPV6=m
-@@ -298,7 +293,6 @@ CONFIG_AF_KCM=m
- # CONFIG_WIRELESS is not set
- CONFIG_PSAMPLE=m
- CONFIG_NET_IFE=m
--# CONFIG_UEVENT_HELPER is not set
- CONFIG_DEVTMPFS=y
- CONFIG_DEVTMPFS_MOUNT=y
- CONFIG_TEST_ASYNC_DRIVER_PROBE=m
-@@ -394,6 +388,8 @@ CONFIG_PPS_CLIENT_LDISC=m
- CONFIG_PTP_1588_CLOCK=m
- # CONFIG_HWMON is not set
- CONFIG_FB=y
-+# CONFIG_LCD_CLASS_DEVICE is not set
-+# CONFIG_BACKLIGHT_CLASS_DEVICE is not set
- CONFIG_FRAMEBUFFER_CONSOLE=y
- CONFIG_LOGO=y
- CONFIG_HID=m
-@@ -508,13 +504,14 @@ CONFIG_NLS_MAC_TURKISH=m
- CONFIG_DLM=m
- CONFIG_ENCRYPTED_KEYS=m
- CONFIG_HARDENED_USERCOPY=y
--CONFIG_CRYPTO_RSA=m
--CONFIG_CRYPTO_DH=m
--CONFIG_CRYPTO_ECDH=m
- CONFIG_CRYPTO_MANAGER=y
- CONFIG_CRYPTO_USER=m
- CONFIG_CRYPTO_CRYPTD=m
- CONFIG_CRYPTO_TEST=m
-+CONFIG_CRYPTO_RSA=m
-+CONFIG_CRYPTO_DH=m
-+CONFIG_CRYPTO_ECDH=m
-+CONFIG_CRYPTO_ECRDSA=m
- CONFIG_CRYPTO_CHACHA20POLY1305=m
- CONFIG_CRYPTO_AEGIS128=m
- CONFIG_CRYPTO_AEGIS128L=m
-@@ -538,7 +535,6 @@ CONFIG_CRYPTO_RMD256=m
- CONFIG_CRYPTO_RMD320=m
- CONFIG_CRYPTO_SHA3=m
- CONFIG_CRYPTO_SM3=m
--CONFIG_CRYPTO_STREEBOG=m
- CONFIG_CRYPTO_TGR192=m
- CONFIG_CRYPTO_WP512=m
- CONFIG_CRYPTO_AES_TI=m
-@@ -581,6 +577,7 @@ CONFIG_ATOMIC64_SELFTEST=m
- CONFIG_ASYNC_RAID6_TEST=m
- CONFIG_TEST_HEXDUMP=m
- CONFIG_TEST_STRING_HELPERS=m
-+CONFIG_TEST_STRSCPY=m
- CONFIG_TEST_KSTRTOX=m
- CONFIG_TEST_PRINTF=m
- CONFIG_TEST_BITMAP=m
-diff --git a/arch/m68k/configs/sun3x_defconfig b/arch/m68k/configs/sun3x_defconfig
-index a71acf4a6004c0d9..e3402a5d165b0bbd 100644
---- a/arch/m68k/configs/sun3x_defconfig
-+++ b/arch/m68k/configs/sun3x_defconfig
-@@ -61,9 +61,6 @@ CONFIG_INET_AH=m
- CONFIG_INET_ESP=m
- CONFIG_INET_ESP_OFFLOAD=m
- CONFIG_INET_IPCOMP=m
--CONFIG_INET_XFRM_MODE_TRANSPORT=m
--CONFIG_INET_XFRM_MODE_TUNNEL=m
--CONFIG_INET_XFRM_MODE_BEET=m
- CONFIG_INET_DIAG=m
- CONFIG_INET_UDP_DIAG=m
- CONFIG_INET_RAW_DIAG=m
-@@ -195,7 +192,6 @@ CONFIG_IP_SET_HASH_NETNET=m
- CONFIG_IP_SET_HASH_NETPORT=m
- CONFIG_IP_SET_HASH_NETIFACE=m
- CONFIG_IP_SET_LIST_SET=m
--CONFIG_NFT_CHAIN_ROUTE_IPV4=m
- CONFIG_NFT_DUP_IPV4=m
- CONFIG_NFT_FIB_IPV4=m
- CONFIG_NF_TABLES_ARP=y
-@@ -221,7 +217,6 @@ CONFIG_IP_NF_RAW=m
- CONFIG_IP_NF_ARPTABLES=m
- CONFIG_IP_NF_ARPFILTER=m
- CONFIG_IP_NF_ARP_MANGLE=m
--CONFIG_NFT_CHAIN_ROUTE_IPV6=m
- CONFIG_NFT_DUP_IPV6=m
- CONFIG_NFT_FIB_IPV6=m
- CONFIG_NF_FLOW_TABLE_IPV6=m
-@@ -298,7 +293,6 @@ CONFIG_AF_KCM=m
- # CONFIG_WIRELESS is not set
- CONFIG_PSAMPLE=m
- CONFIG_NET_IFE=m
--# CONFIG_UEVENT_HELPER is not set
- CONFIG_DEVTMPFS=y
- CONFIG_DEVTMPFS_MOUNT=y
- CONFIG_TEST_ASYNC_DRIVER_PROBE=m
-@@ -393,6 +387,8 @@ CONFIG_PPS_CLIENT_LDISC=m
- CONFIG_PTP_1588_CLOCK=m
- # CONFIG_HWMON is not set
- CONFIG_FB=y
-+# CONFIG_LCD_CLASS_DEVICE is not set
-+# CONFIG_BACKLIGHT_CLASS_DEVICE is not set
- CONFIG_FRAMEBUFFER_CONSOLE=y
- CONFIG_LOGO=y
- CONFIG_HID=m
-@@ -507,13 +503,14 @@ CONFIG_NLS_MAC_TURKISH=m
- CONFIG_DLM=m
- CONFIG_ENCRYPTED_KEYS=m
- CONFIG_HARDENED_USERCOPY=y
--CONFIG_CRYPTO_RSA=m
--CONFIG_CRYPTO_DH=m
--CONFIG_CRYPTO_ECDH=m
- CONFIG_CRYPTO_MANAGER=y
- CONFIG_CRYPTO_USER=m
- CONFIG_CRYPTO_CRYPTD=m
- CONFIG_CRYPTO_TEST=m
-+CONFIG_CRYPTO_RSA=m
-+CONFIG_CRYPTO_DH=m
-+CONFIG_CRYPTO_ECDH=m
-+CONFIG_CRYPTO_ECRDSA=m
- CONFIG_CRYPTO_CHACHA20POLY1305=m
- CONFIG_CRYPTO_AEGIS128=m
- CONFIG_CRYPTO_AEGIS128L=m
-@@ -537,7 +534,6 @@ CONFIG_CRYPTO_RMD256=m
- CONFIG_CRYPTO_RMD320=m
- CONFIG_CRYPTO_SHA3=m
- CONFIG_CRYPTO_SM3=m
--CONFIG_CRYPTO_STREEBOG=m
- CONFIG_CRYPTO_TGR192=m
- CONFIG_CRYPTO_WP512=m
- CONFIG_CRYPTO_AES_TI=m
-@@ -580,6 +576,7 @@ CONFIG_ATOMIC64_SELFTEST=m
- CONFIG_ASYNC_RAID6_TEST=m
- CONFIG_TEST_HEXDUMP=m
- CONFIG_TEST_STRING_HELPERS=m
-+CONFIG_TEST_STRSCPY=m
- CONFIG_TEST_KSTRTOX=m
- CONFIG_TEST_PRINTF=m
- CONFIG_TEST_BITMAP=m
+
+BR,
+Jani.
+
+
 -- 
-2.17.1
-
+Jani Nikula, Intel Open Source Graphics Center
