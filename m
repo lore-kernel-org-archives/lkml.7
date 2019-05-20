@@ -2,108 +2,99 @@ Return-Path: <SRS0=lq4r=TU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46B0AC04E87
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:43:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B3EDC04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:43:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1D36120645
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:43:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558356199;
-	bh=L/Cv3EAR9jLgZ9/NL7/jp4JloC3gs6Kc1Nk8kU4hPu8=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BkvC891MhA5XYTO3h51NxfRUlSrpduTzgKwz71yUQF4PvD6nUDrXS/olky7FDgUv5
-	 RqZCcoBuz5+EpMMfroICqwuRKSs6j6Y1PbG7ZMua+bUNu4AM527t68ukt4hSHrzPMV
-	 osF2XwvCDCLmc3VgwKFsTddX1n41dWIsQkVGgBus=
+	by mail.kernel.org (Postfix) with ESMTP id 2A3D021479
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:43:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Dj6rxER+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389024AbfETM3E (ORCPT
+        id S2390509AbfETMn2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 08:29:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44936 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389773AbfETM26 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 08:28:58 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DE7B220815;
-        Mon, 20 May 2019 12:28:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558355338;
-        bh=L/Cv3EAR9jLgZ9/NL7/jp4JloC3gs6Kc1Nk8kU4hPu8=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SK2pPgzKktoB3kiUohi9nnyIfOOazAf4AOPEzCVDmBtifWDOMOnvQGIyc2kxBdAiP
-         F4Q/nVLShO4eolAo6IWWdjgdrtsNHoYW45SZ91CBbBM35V9cHCAYOQQnv2OmR+xSh9
-         7YT8x/p+d48l0q79kEcsuFf4+XGCwumYMLvF/sWQ=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Ren <renzhen@linux.alibaba.com>,
-        Jiufei Xue <jiufei.xue@linux.alibaba.com>,
-        Theodore Tso <tytso@mit.edu>, Jan Kara <jack@suse.cz>,
-        stable@kernel.org
-Subject: [PATCH 5.0 081/123] jbd2: check superblock mapped prior to committing
-Date:   Mon, 20 May 2019 14:14:21 +0200
-Message-Id: <20190520115250.234230887@linuxfoundation.org>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190520115245.439864225@linuxfoundation.org>
-References: <20190520115245.439864225@linuxfoundation.org>
-User-Agent: quilt/0.66
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+        Mon, 20 May 2019 08:43:28 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:43999 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389397AbfETM2z (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 08:28:55 -0400
+Received: by mail-pg1-f196.google.com with SMTP id f25so189909pgv.10;
+        Mon, 20 May 2019 05:28:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=hB3PHyrs53San/vhDwKRpRyPdI0a/I1a2f3pjFTkUE4=;
+        b=Dj6rxER+7wkxWxh9ncQ8235KU6jkkd6A60sumII2etXOJfRWzKRMI+PilghA5nj4EG
+         jRr+1A3Q7sDU1MIUwj5Ln1rQmAzYMjqW0wXbeHqt4fmdseaVwTVi4djbj/JdjOHxFNLR
+         pyamqSgmB1aFeaW4Z9n8kmVJrpWDvw1Gn/4nn8Lw1A7aA3SSsppCi4fWPgJqbclRf4Sl
+         7d6v4T7sX1kRHyCxbwC8lhdpDbY9e3DOsZZvvNdVzKJ+o/XDxhaPYlbxIeGMfuge4vUa
+         ArvAoihzT4Y3V9a1Sw7sbFd9GWzgmA1HCuzhhHJY+2JaYHiwq5IXOugEoKcGvJ+AtYlC
+         VJxg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=hB3PHyrs53San/vhDwKRpRyPdI0a/I1a2f3pjFTkUE4=;
+        b=I7sQpabtCwB/Lsz/eCdLSbectA4U2npASBlXeL4ttTNk97BxjFRZoSIdIOHyD75tA6
+         Ujvf3Pt6APhLV2OmgF6/TP6siQ3ZXnYMSFno1mb6xIcmXUE764pcHW09NXPz8FiqSdRm
+         iur64syb55wJDi+dY4dWgHiMfyNaJBibe/nndTpoj0Bm8qWhvgg7ES8QX6IE82tewG1x
+         AGbm5ewEbm72fPARGoezOIOuSlluAmbA+Zme7n/xkLpzsxQrI4Nx6Do+QDpY4F284kFn
+         r5wYIwH+WtETQhVScmBWWpV7OpnlOI4PcZm8IcBi/lhrPWD898YW1eURnuMtf4IAJDom
+         PohA==
+X-Gm-Message-State: APjAAAXmFFMhfddaPAyJYothzyp3XrkhfZgq3VzAISj0kQ5jA16wnhu/
+        PjkVqv9cL6maolktBMZDImI=
+X-Google-Smtp-Source: APXvYqwaLDrWw7c0Fs1bKjKOaDP5fyg9p7qm+2PKXEbMZux7rZ1ZmgUv7+LmqyKVykIc0nPFeA/87Q==
+X-Received: by 2002:a63:7909:: with SMTP id u9mr68890137pgc.223.1558355334363;
+        Mon, 20 May 2019 05:28:54 -0700 (PDT)
+Received: from localhost ([43.224.245.181])
+        by smtp.gmail.com with ESMTPSA id s2sm16226302pfe.105.2019.05.20.05.28.53
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 20 May 2019 05:28:53 -0700 (PDT)
+From:   Weitao Hou <houweitaoo@gmail.com>
+To:     arend.vanspriel@broadcom.com, franky.lin@broadcom.com,
+        hante.meuleman@broadcom.com, chi-hsien.lin@cypress.com,
+        wright.feng@cypress.com, kvalo@codeaurora.org, davem@davemloft.net,
+        houweitaoo@gmail.com, rafal@milecki.pl
+Cc:     linux-wireless@vger.kernel.org,
+        brcm80211-dev-list.pdl@broadcom.com,
+        brcm80211-dev-list@cypress.com, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v2] brcmfmac: fix typos in code comments
+Date:   Mon, 20 May 2019 20:28:25 +0800
+Message-Id: <20190520122825.981-1-houweitaoo@gmail.com>
+X-Mailer: git-send-email 2.18.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jiufei Xue <jiufei.xue@linux.alibaba.com>
+fix lengh to length
 
-commit 742b06b5628f2cd23cb51a034cb54dc33c6162c5 upstream.
-
-We hit a BUG at fs/buffer.c:3057 if we detached the nbd device
-before unmounting ext4 filesystem.
-
-The typical chain of events leading to the BUG:
-jbd2_write_superblock
-  submit_bh
-    submit_bh_wbc
-      BUG_ON(!buffer_mapped(bh));
-
-The block device is removed and all the pages are invalidated. JBD2
-was trying to write journal superblock to the block device which is
-no longer present.
-
-Fix this by checking the journal superblock's buffer head prior to
-submitting.
-
-Reported-by: Eric Ren <renzhen@linux.alibaba.com>
-Signed-off-by: Jiufei Xue <jiufei.xue@linux.alibaba.com>
-Signed-off-by: Theodore Ts'o <tytso@mit.edu>
-Reviewed-by: Jan Kara <jack@suse.cz>
-Cc: stable@kernel.org
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Weitao Hou <houweitaoo@gmail.com>
 ---
- fs/jbd2/journal.c |    4 ++++
- 1 file changed, 4 insertions(+)
+- fix prefix
+---
+ drivers/net/wireless/broadcom/brcm80211/brcmfmac/fwil.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/fs/jbd2/journal.c
-+++ b/fs/jbd2/journal.c
-@@ -1366,6 +1366,10 @@ static int jbd2_write_superblock(journal
- 	journal_superblock_t *sb = journal->j_superblock;
- 	int ret;
+diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/fwil.c b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/fwil.c
+index 8ea27489734e..edd2f09613d8 100644
+--- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/fwil.c
++++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/fwil.c
+@@ -314,7 +314,7 @@ brcmf_create_bsscfg(s32 bsscfgidx, char *name, char *data, u32 datalen,
+ 		return brcmf_create_iovar(name, data, datalen, buf, buflen);
  
-+	/* Buffer got discarded which means block device got invalidated */
-+	if (!buffer_mapped(bh))
-+		return -EIO;
-+
- 	trace_jbd2_write_superblock(journal, write_flags);
- 	if (!(journal->j_flags & JBD2_BARRIER))
- 		write_flags &= ~(REQ_FUA | REQ_PREFLUSH);
-
+ 	prefixlen = strlen(prefix);
+-	namelen = strlen(name) + 1; /* lengh of iovar  name + null */
++	namelen = strlen(name) + 1; /* length of iovar  name + null */
+ 	iolen = prefixlen + namelen + sizeof(bsscfgidx_le) + datalen;
+ 
+ 	if (buflen < iolen) {
+-- 
+2.18.0
 
