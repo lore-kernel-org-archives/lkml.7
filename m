@@ -1,119 +1,132 @@
 Return-Path: <SRS0=lq4r=TU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
-X-Spam-Level: *
-X-Spam-Status: No, score=1.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_MUTT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Level: 
+X-Spam-Status: No, score=-4.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E44AC04AAC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 22:55:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32BB8C04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 22:57:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2137421773
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 22:55:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 00BD721773
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 22:57:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558392943;
-	bh=bQlT2+PAw2QbHrj7co1lcsg/+wlFZlFr2GGAgy4OBNs=;
+	s=default; t=1558393076;
+	bh=5f5+3koTds52bPW4n2ppSAg8BvUhI/oklac/Pnx3ojc=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Jw4OMMJxfeBUOh/mxiAozsIVqfNU3p69uEQaRAUZXR+dI0Tsu/MyCZ1lRIdNw4SAQ
-	 37IKzHerBxRSwCYPRVvQV44xdjz4OYdX0WMP3wYDOPNTJy2KBYvUlNeNjzw7ept2LF
-	 xh9zblCJFS6kaJVcNywm+qOF7BlxXwNaVWymtsy0=
+	b=GaOy5/GwmTftSs/gKfkyGO7m/2UbNulNo89/ozHyW8Dg7DyZVOax8KPoZFlgzrQ9w
+	 GYCi0xVDSDW35RCKaGjdXVkHbX0Q1SZsz8/YpAgkuM+cBENcXhCUcblIghJvf5fADW
+	 e5ZCs8iMnJIUga3P0u/O462u8C6CkVUR6Y/HRPIE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727144AbfETWzm (ORCPT
+        id S1727110AbfETW5z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 18:55:42 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:35302 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727000AbfETWzm (ORCPT
+        Mon, 20 May 2019 18:57:55 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:39038 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725978AbfETW5z (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 18:55:42 -0400
-Received: by mail-pl1-f196.google.com with SMTP id p1so2023572plo.2;
-        Mon, 20 May 2019 15:55:42 -0700 (PDT)
+        Mon, 20 May 2019 18:57:55 -0400
+Received: by mail-pg1-f196.google.com with SMTP id w22so7485497pgi.6
+        for <linux-kernel@vger.kernel.org>; Mon, 20 May 2019 15:57:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=sender:date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=BjbgkbeOHTGhsjCy7OuxJHMPPkUmdjz23iAfUR7ljPg=;
-        b=HU8isgRW3uguKD67qSirZnoX4T/2EhG93h+rxlkXP9HrUQdNZlN3JzqdO53jOxACQZ
-         TpDriJVeoXal6/RRj+iro8d4y7zPjtd81wCOX6ryGb0T7YFUXT4YcH7hKeMxQ/bMNEU5
-         uo3j1EWgLO7v17RGewOfi7a3lq70dv/VQTvYaqf8DaM3H/2gi8+4rk6VaoSrPk1tydkC
-         LFOis+L8NAFZ/HXut1M1Yh65814eJVhO2rQvRJuMsnS2LuZZQr9aJMFvycEO3o5oBbwE
-         WWFn7i54Xv2t8aDBLGQbW9T+w4Nn2kL/1MYzJc2IS0KHkCE2y9YcwDkUPdiZrBmGfKT7
-         SXvw==
+        bh=rQtjqxgsh4qf6+R3w9WQYkuPaS8z+4gcRAW4fvUK8PA=;
+        b=m7aNIAIk79+/sPSFc8fsRue1WTcfLQ8h+JWoFZXgVHRSWPcaDmTrdh2j+iJlwHBNR1
+         kwey7G7A9RXpSCKWyHw8TA+JzwwkGnBZjJ0vbyimyDXjx5C1hKIVvd8Q8dX0cZ4lcJ9o
+         XML8DCo/iN2IH8D7C5fERQqQoZC/nm8IcTRdNgue67JmDMKAJB3sRPErJISlHY9Ybh0r
+         ZvUrzLAmJnogN16jrMiwuZQQeM0Ii6VWbaEet9CTcnlSo+16+HfcIqeSoUMaBdHr1Jxv
+         xiGCrW/ywdc1H/6KqtEL1x4uKxUdk7ujhb2S+x5m3BnNVky7FhAaJ4BLr8lEsF6XFN+y
+         bDsw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
          :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=BjbgkbeOHTGhsjCy7OuxJHMPPkUmdjz23iAfUR7ljPg=;
-        b=i/wSWIR9LBAHmzlAUfxRe/GU0wrO5pEXhSVu8z4QSQ4M65Y9+VvJBIzTPzVU8YYJcP
-         93445dgF4ZctPIFXkRBauDvVdwcoUS0kWRn/eb5LgMiKcRk09YcrQGsSWgD3ljpoFR6G
-         FiWYUThCSsqYDwA9v9oVXxcNxOgo9PPw1/xIhKrqg9+OMIZAorHfqMUgzW2k3GIr0Uo5
-         XSpfuG1o5eZXqrV/puey3puCCbtMFg2zo8eJTO5AGXGEHY7uxrIbauKEQhmYdcVdDsfa
-         dKUWRmRSFlVHrneQdghWyServ1cOOoz3ekp8Sedd/JI+BJFTAY0JIDn3Y8HEnWQYfGWo
-         OA6A==
-X-Gm-Message-State: APjAAAVGcYD6zyPolRusG8unlWzTj5/Z6Shfgkaqrr4hIaDzDNdwA50y
-        so17RC36AUKatdOdBpE1Ouk=
-X-Google-Smtp-Source: APXvYqxJcDWonzZ2CUXr8a8hGMt9fD1MNq+9Q9WdoNmZaquGBn5NDx28goXyWcXD3JYa+LYamNjjvg==
-X-Received: by 2002:a17:902:2de4:: with SMTP id p91mr61953894plb.300.1558392941633;
-        Mon, 20 May 2019 15:55:41 -0700 (PDT)
+        bh=rQtjqxgsh4qf6+R3w9WQYkuPaS8z+4gcRAW4fvUK8PA=;
+        b=ZRjVtPrOayv5Ut8dJ8ruPApjLK2wYdcZckd7dPg75PZgw0DqzkQZAjd6iBOQLYbTcu
+         iryp5OIN2td0mOgoaQnWUThvi9bbTJ3anckBVbMsCdkdCvk1Bl7a2mxs1la95f1xQYhu
+         FiELk5fw53jZ76R0EvL9xB2JH79w9tLrR+v+DzTiT6XB9qzn12cLtgyuwsisLOz/G2PG
+         rPF6xMOVpW7eBW2Px5TYIVkIvRXLhjvjlBK5lQGYD5+MyDLN7DjS29y6AWk+z3RRju8s
+         8GzPuEg0Ky9+tRjXKDQaLWXiGbYYhyCxswej4WrOndXlAnNuQyAybJA3H3P7HK5V2HlG
+         u3CQ==
+X-Gm-Message-State: APjAAAXHZglahnqhWTrcDHbvqEbwC4g0has2kDAqhKZ8aKp9sK64Jx3f
+        uH4xnKU7f7SI4w1H7+Uq0yAKS2Sb
+X-Google-Smtp-Source: APXvYqwIpXfTnN6FB15wCLD1NBqVQmTzR/Ojff3wL4gw0pzgL9CWZ1vxbSQt9fyp/BOgC/3Ksq6cRQ==
+X-Received: by 2002:a63:dc09:: with SMTP id s9mr37019321pgg.425.1558393074279;
+        Mon, 20 May 2019 15:57:54 -0700 (PDT)
 Received: from google.com ([2401:fa00:d:0:98f1:8b3d:1f37:3e8])
-        by smtp.gmail.com with ESMTPSA id k3sm25292163pfa.36.2019.05.20.15.55.37
+        by smtp.gmail.com with ESMTPSA id s66sm20733434pfb.37.2019.05.20.15.57.49
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 20 May 2019 15:55:40 -0700 (PDT)
-Date:   Tue, 21 May 2019 07:55:34 +0900
+        Mon, 20 May 2019 15:57:52 -0700 (PDT)
+Date:   Tue, 21 May 2019 07:57:47 +0900
 From:   Minchan Kim <minchan@kernel.org>
-To:     Michal Hocko <mhocko@kernel.org>
+To:     Johannes Weiner <hannes@cmpxchg.org>
 Cc:     Andrew Morton <akpm@linux-foundation.org>,
         LKML <linux-kernel@vger.kernel.org>,
-        linux-mm <linux-mm@kvack.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
+        linux-mm <linux-mm@kvack.org>, Michal Hocko <mhocko@suse.com>,
         Tim Murray <timmurray@google.com>,
         Joel Fernandes <joel@joelfernandes.org>,
         Suren Baghdasaryan <surenb@google.com>,
         Daniel Colascione <dancol@google.com>,
         Shakeel Butt <shakeelb@google.com>,
         Sonny Rao <sonnyrao@google.com>,
-        Brian Geffon <bgeffon@google.com>, linux-api@vger.kernel.org
-Subject: Re: [RFC 1/7] mm: introduce MADV_COOL
-Message-ID: <20190520225534.GB10039@google.com>
+        Brian Geffon <bgeffon@google.com>
+Subject: Re: [RFC 2/7] mm: change PAGEREF_RECLAIM_CLEAN with PAGE_REFRECLAIM
+Message-ID: <20190520225747.GC10039@google.com>
 References: <20190520035254.57579-1-minchan@kernel.org>
- <20190520035254.57579-2-minchan@kernel.org>
- <20190520081621.GV6836@dhcp22.suse.cz>
- <20190520081943.GW6836@dhcp22.suse.cz>
+ <20190520035254.57579-3-minchan@kernel.org>
+ <20190520165013.GB11665@cmpxchg.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190520081943.GW6836@dhcp22.suse.cz>
+In-Reply-To: <20190520165013.GB11665@cmpxchg.org>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 20, 2019 at 10:19:43AM +0200, Michal Hocko wrote:
-> On Mon 20-05-19 10:16:21, Michal Hocko wrote:
-> > [CC linux-api]
+On Mon, May 20, 2019 at 12:50:13PM -0400, Johannes Weiner wrote:
+> On Mon, May 20, 2019 at 12:52:49PM +0900, Minchan Kim wrote:
+> > The local variable references in shrink_page_list is PAGEREF_RECLAIM_CLEAN
+> > as default. It is for preventing to reclaim dirty pages when CMA try to
+> > migrate pages. Strictly speaking, we don't need it because CMA didn't allow
+> > to write out by .may_writepage = 0 in reclaim_clean_pages_from_list.
+> >
+> > Moreover, it has a problem to prevent anonymous pages's swap out even
+> > though force_reclaim = true in shrink_page_list on upcoming patch.
+> > So this patch makes references's default value to PAGEREF_RECLAIM and
+> > rename force_reclaim with skip_reference_check to make it more clear.
 > > 
-> > On Mon 20-05-19 12:52:48, Minchan Kim wrote:
-> > > When a process expects no accesses to a certain memory range
-> > > it could hint kernel that the pages can be reclaimed
-> > > when memory pressure happens but data should be preserved
-> > > for future use.  This could reduce workingset eviction so it
-> > > ends up increasing performance.
-> > > 
-> > > This patch introduces the new MADV_COOL hint to madvise(2)
-> > > syscall. MADV_COOL can be used by a process to mark a memory range
-> > > as not expected to be used in the near future. The hint can help
-> > > kernel in deciding which pages to evict early during memory
-> > > pressure.
+> > This is a preparatory work for next patch.
 > > 
-> > I do not want to start naming fight but MADV_COOL sounds a bit
-> > misleading. Everybody thinks his pages are cool ;). Probably MADV_COLD
-> > or MADV_DONTNEED_PRESERVE.
+> > Signed-off-by: Minchan Kim <minchan@kernel.org>
 > 
-> OK, I can see that you have used MADV_COLD for a different mode.
-> So this one is effectively a non destructive MADV_FREE alternative
-> so MADV_FREE_PRESERVE would sound like a good fit. Your MADV_COLD
-> in other patch would then be MADV_DONTNEED_PRESERVE. Right?
+> Looks good to me, just one nit below.
+> 
+> Acked-by: Johannes Weiner <hannes@cmpxchg.org>
 
-Correct.
+Thanks, Johannes.
+
+> 
+> > ---
+> >  mm/vmscan.c | 6 +++---
+> >  1 file changed, 3 insertions(+), 3 deletions(-)
+> > 
+> > diff --git a/mm/vmscan.c b/mm/vmscan.c
+> > index d9c3e873eca6..a28e5d17b495 100644
+> > --- a/mm/vmscan.c
+> > +++ b/mm/vmscan.c
+> > @@ -1102,7 +1102,7 @@ static unsigned long shrink_page_list(struct list_head *page_list,
+> >  				      struct scan_control *sc,
+> >  				      enum ttu_flags ttu_flags,
+> >  				      struct reclaim_stat *stat,
+> > -				      bool force_reclaim)
+> > +				      bool skip_reference_check)
+> 
+> "ignore_references" would be better IMO
+
+Sure.
