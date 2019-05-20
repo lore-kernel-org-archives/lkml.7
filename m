@@ -3,215 +3,104 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02A48C04AAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 06:44:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C29D5C04E87
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 06:47:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D2B96206B6
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 06:44:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F20820856
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 06:47:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730802AbfETGoS (ORCPT
+        id S1730523AbfETGrd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 02:44:18 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:45354 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726052AbfETGoR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 02:44:17 -0400
-Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 4091F328E263561A6020;
-        Mon, 20 May 2019 14:44:15 +0800 (CST)
-Received: from [127.0.0.1] (10.184.191.73) by DGGEMS405-HUB.china.huawei.com
- (10.3.19.205) with Microsoft SMTP Server id 14.3.439.0; Mon, 20 May 2019
- 14:44:08 +0800
-To:     "davem@davemloft.net" <davem@davemloft.net>,
-        <jon.maloy@ericsson.com>, <ying.xue@windriver.com>,
-        <willemdebruijn.kernel@gmail.com>, <sfr@canb.auug.org.au>
-CC:     <netdev@vger.kernel.org>, <tipc-discussion@lists.sourceforge.net>,
-        <linux-kernel@vger.kernel.org>, <mingfangsen@huawei.com>
-From:   hujunwei <hujunwei4@huawei.com>
-Subject: [PATCH v4] tipc: fix modprobe tipc failed after switch order of
- device registration
-Message-ID: <624f5be3-12b4-cbd4-39e2-5419b976624b@huawei.com>
-Date:   Mon, 20 May 2019 14:43:59 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
+        Mon, 20 May 2019 02:47:33 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:27037 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1729657AbfETGrc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 02:47:32 -0400
+X-UUID: 51613d8a8e634b58a4335f57e3397874-20190520
+X-UUID: 51613d8a8e634b58a4335f57e3397874-20190520
+Received: from mtkcas07.mediatek.inc [(172.21.101.84)] by mailgw02.mediatek.com
+        (envelope-from <chun-hung.wu@mediatek.com>)
+        (mhqrelay.mediatek.com ESMTP with TLS)
+        with ESMTP id 101237753; Mon, 20 May 2019 14:47:26 +0800
+Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
+ mtkmbs03n2.mediatek.inc (172.21.101.182) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Mon, 20 May 2019 14:47:24 +0800
+Received: from [172.21.77.33] (172.21.77.33) by MTKCAS06.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Mon, 20 May 2019 14:47:24 +0800
+Message-ID: <1558334844.13182.7.camel@mtkswgap22>
+Subject: Re: [PATCH 1/4] dt-bindings: iio: adc: mediatek: Add document for
+ mt6765
+From:   Chun-Hung Wu <chun-hung.wu@mediatek.com>
+To:     Jonathan Cameron <jic23@kernel.org>
+CC:     Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        <linux-iio@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <wsd_upstream@mediatek.com>,
+        <peter.wang@mediatek.com>, <kuohong.wang@mediatek.com>,
+        <jg_poxu@mediatek.com>
+Date:   Mon, 20 May 2019 14:47:24 +0800
+In-Reply-To: <20190518113356.1cf99a31@archlinux>
+References: <1557994247-16739-1-git-send-email-chun-hung.wu@mediatek.com>
+         <1557994247-16739-2-git-send-email-chun-hung.wu@mediatek.com>
+         <20190518113356.1cf99a31@archlinux>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.2.3-0ubuntu6 
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.184.191.73]
-X-CFilter-Loop: Reflected
+MIME-Version: 1.0
+X-TM-SNTS-SMTP: 136E65FE89BA7E502B30A204F640972BA020EFA250DD3943DEB1B7A03C25AD6D2000:8
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Junwei Hu <hujunwei4@huawei.com>
+Hi Jonathan,
 
-Error message printed:
-modprobe: ERROR: could not insert 'tipc': Address family not
-supported by protocol.
-when modprobe tipc after the following patch: switch order of
-device registration, commit 7e27e8d6130c
-("tipc: switch order of device registration to fix a crash")
+On Sat, 2019-05-18 at 11:33 +0100, Jonathan Cameron wrote:
+> On Thu, 16 May 2019 16:10:44 +0800
+> Chun-Hung Wu <chun-hung.wu@mediatek.com> wrote:
+> 
+> > Add compatible node for mt6765 auxadc
+> > 
+> > Signed-off-by: Chun-Hung Wu <chun-hung.wu@mediatek.com>
+> Applied, but in numeric order.  There was also another clashing patch
+> that caused some fuzz.
+No problem, thanks!
 
-Because sock_create_kern(net, AF_TIPC, ...) called by
-tipc_topsrv_create_listener() in the initialization process
-of tipc_init_net(), so tipc_socket_init() must be execute before that.
-Meanwhile, tipc_net_id need to be initialized when sock_create()
-called, and tipc_socket_init() is no need to be called for each namespace.
+regards,
+Chun-Hung
+> 
+> thanks,
+> 
+> Jonathan
+> 
+> > ---
+> >  Documentation/devicetree/bindings/iio/adc/mt6577_auxadc.txt | 1 +
+> >  1 file changed, 1 insertion(+)
+> > 
+> > diff --git a/Documentation/devicetree/bindings/iio/adc/mt6577_auxadc.txt b/Documentation/devicetree/bindings/iio/adc/mt6577_auxadc.txt
+> > index 0df9bef..ab7efab 100644
+> > --- a/Documentation/devicetree/bindings/iio/adc/mt6577_auxadc.txt
+> > +++ b/Documentation/devicetree/bindings/iio/adc/mt6577_auxadc.txt
+> > @@ -15,6 +15,7 @@ Required properties:
+> >      - "mediatek,mt2712-auxadc": For MT2712 family of SoCs
+> >      - "mediatek,mt7622-auxadc": For MT7622 family of SoCs
+> >      - "mediatek,mt8173-auxadc": For MT8173 family of SoCs
+> > +    - "mediatek,mt6765-auxadc": For MT6765 family of SoCs
+> >    - reg: Address range of the AUXADC unit.
+> >    - clocks: Should contain a clock specifier for each entry in clock-names
+> >    - clock-names: Should contain "main".
+> 
 
-I add a variable tipc_topsrv_net_ops, and split the
-register_pernet_subsys() of tipc into two parts, and split
-tipc_socket_init() with initialization of pernet params.
-
-By the way, I fixed resources rollback error when tipc_bcast_init()
-failed in tipc_init_net().
-
-Fixes: 7e27e8d6130c ("tipc: switch order of device registration to fix a crash")
-Signed-off-by: Junwei Hu <hujunwei4@huawei.com>
-Reported-by: Wang Wang <wangwang2@huawei.com>
-Reported-by: syzbot+1e8114b61079bfe9cbc5@syzkaller.appspotmail.com
-Reviewed-by: Kang Zhou <zhoukang7@huawei.com>
-Reviewed-by: Suanming Mou <mousuanming@huawei.com>
----
-V1->V2:
-- split the register_pernet_subsys() of tipc into two parts
-V2->V3:
-- update Reported-by
-V2->V4:
-- update Fixes tag
----
- net/tipc/core.c   | 18 ++++++++++++------
- net/tipc/subscr.h |  5 +++--
- net/tipc/topsrv.c | 14 ++++++++++++--
- 3 files changed, 27 insertions(+), 10 deletions(-)
-
-diff --git a/net/tipc/core.c b/net/tipc/core.c
-index ddd2e0f67c07..ed536c05252a 100644
---- a/net/tipc/core.c
-+++ b/net/tipc/core.c
-@@ -77,9 +77,6 @@ static int __net_init tipc_init_net(struct net *net)
- 		goto out_nametbl;
-
- 	INIT_LIST_HEAD(&tn->dist_queue);
--	err = tipc_topsrv_start(net);
--	if (err)
--		goto out_subscr;
-
- 	err = tipc_bcast_init(net);
- 	if (err)
-@@ -88,8 +85,6 @@ static int __net_init tipc_init_net(struct net *net)
- 	return 0;
-
- out_bclink:
--	tipc_bcast_stop(net);
--out_subscr:
- 	tipc_nametbl_stop(net);
- out_nametbl:
- 	tipc_sk_rht_destroy(net);
-@@ -99,7 +94,6 @@ static int __net_init tipc_init_net(struct net *net)
-
- static void __net_exit tipc_exit_net(struct net *net)
- {
--	tipc_topsrv_stop(net);
- 	tipc_net_stop(net);
- 	tipc_bcast_stop(net);
- 	tipc_nametbl_stop(net);
-@@ -113,6 +107,11 @@ static struct pernet_operations tipc_net_ops = {
- 	.size = sizeof(struct tipc_net),
- };
-
-+static struct pernet_operations tipc_topsrv_net_ops = {
-+	.init = tipc_topsrv_init_net,
-+	.exit = tipc_topsrv_exit_net,
-+};
-+
- static int __init tipc_init(void)
- {
- 	int err;
-@@ -143,6 +142,10 @@ static int __init tipc_init(void)
- 	if (err)
- 		goto out_socket;
-
-+	err = register_pernet_subsys(&tipc_topsrv_net_ops);
-+	if (err)
-+		goto out_pernet_topsrv;
-+
- 	err = tipc_bearer_setup();
- 	if (err)
- 		goto out_bearer;
-@@ -150,6 +153,8 @@ static int __init tipc_init(void)
- 	pr_info("Started in single node mode\n");
- 	return 0;
- out_bearer:
-+	unregister_pernet_subsys(&tipc_topsrv_net_ops);
-+out_pernet_topsrv:
- 	tipc_socket_stop();
- out_socket:
- 	unregister_pernet_subsys(&tipc_net_ops);
-@@ -167,6 +172,7 @@ static int __init tipc_init(void)
- static void __exit tipc_exit(void)
- {
- 	tipc_bearer_cleanup();
-+	unregister_pernet_subsys(&tipc_topsrv_net_ops);
- 	tipc_socket_stop();
- 	unregister_pernet_subsys(&tipc_net_ops);
- 	tipc_netlink_stop();
-diff --git a/net/tipc/subscr.h b/net/tipc/subscr.h
-index d793b4343885..aa015c233898 100644
---- a/net/tipc/subscr.h
-+++ b/net/tipc/subscr.h
-@@ -77,8 +77,9 @@ void tipc_sub_report_overlap(struct tipc_subscription *sub,
- 			     u32 found_lower, u32 found_upper,
- 			     u32 event, u32 port, u32 node,
- 			     u32 scope, int must);
--int tipc_topsrv_start(struct net *net);
--void tipc_topsrv_stop(struct net *net);
-+
-+int __net_init tipc_topsrv_init_net(struct net *net);
-+void __net_exit tipc_topsrv_exit_net(struct net *net);
-
- void tipc_sub_put(struct tipc_subscription *subscription);
- void tipc_sub_get(struct tipc_subscription *subscription);
-diff --git a/net/tipc/topsrv.c b/net/tipc/topsrv.c
-index b45932d78004..f345662890a6 100644
---- a/net/tipc/topsrv.c
-+++ b/net/tipc/topsrv.c
-@@ -635,7 +635,7 @@ static void tipc_topsrv_work_stop(struct tipc_topsrv *s)
- 	destroy_workqueue(s->send_wq);
- }
-
--int tipc_topsrv_start(struct net *net)
-+static int tipc_topsrv_start(struct net *net)
- {
- 	struct tipc_net *tn = tipc_net(net);
- 	const char name[] = "topology_server";
-@@ -668,7 +668,7 @@ int tipc_topsrv_start(struct net *net)
- 	return ret;
- }
-
--void tipc_topsrv_stop(struct net *net)
-+static void tipc_topsrv_stop(struct net *net)
- {
- 	struct tipc_topsrv *srv = tipc_topsrv(net);
- 	struct socket *lsock = srv->listener;
-@@ -693,3 +693,13 @@ void tipc_topsrv_stop(struct net *net)
- 	idr_destroy(&srv->conn_idr);
- 	kfree(srv);
- }
-+
-+int __net_init tipc_topsrv_init_net(struct net *net)
-+{
-+	return tipc_topsrv_start(net);
-+}
-+
-+void __net_exit tipc_topsrv_exit_net(struct net *net)
-+{
-+	tipc_topsrv_stop(net);
-+}
--- 
-2.21.GIT
 
