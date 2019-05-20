@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55FFAC04AAC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:44:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A463FC04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:44:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2C8A0204FD
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:44:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 74155204FD
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:44:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558356271;
-	bh=OldcNS/8cfAStbn9CYCK1KVQwgBRyRmGuLt9D8O4Hx4=;
+	s=default; t=1558356274;
+	bh=ZcfGYjcTJYQ2Gn8coona0MK2VNNKyljTHwHSF+fKYWE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZMGZdSoRKMeAwyPiS1aP4oY0pk6I5TXGhFiHWx2rzfekZunK6H2ZWSSxkp/dlWEU+
-	 UzzuM/v2taS+MHXNHX8PJo6GBkgbijAlCIJV9/xD1sERP4lJbFH7HDfvO+c4WX5k0d
-	 Y8FQNpVLfkj4sZlwcrcBXoU/Uc0Z7YM//LMiS/OY=
+	b=kGlksxT3jJk955NlXZVFSmGAtJHnnzpT9lGJuHT0XmcgIdZ5gl105p+CuJQsE4QJE
+	 35nVr36l9MrPA+cHbdiqmhuMY4qwboJdcFh9L9RYwHwpN6hIyZ49NZkEgEMiaZpH+c
+	 1PuUDeaBZx71CzA2FygC8pGOo9+515qMhsLJ8CQw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389995AbfETMoa (ORCPT
+        id S2389551AbfETM1r (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 08:44:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43478 "EHLO mail.kernel.org"
+        Mon, 20 May 2019 08:27:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43284 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730759AbfETM1z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 08:27:55 -0400
+        id S2389171AbfETM1l (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 08:27:41 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7B87B20675;
-        Mon, 20 May 2019 12:27:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4ED1920675;
+        Mon, 20 May 2019 12:27:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558355274;
-        bh=OldcNS/8cfAStbn9CYCK1KVQwgBRyRmGuLt9D8O4Hx4=;
+        s=default; t=1558355260;
+        bh=ZcfGYjcTJYQ2Gn8coona0MK2VNNKyljTHwHSF+fKYWE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KYlxN09hMinr81oWoFVL/JZU3pCzOxNLKdOywjHH4SMAerVfWZ2RigOA0YzI8H69K
-         uqvvTnv2p4wZ3lIpnYahkw8Ct42cvHrdk83OZLe0GgrwS3A2EICpqF/EuwBZB1g6bc
-         Qj8QB2eFpB0YkjPIMD99YB1eXxTw+xdWITbLuVeU=
+        b=KwHhH/ny9NVpUM22YVcFPSul0jR4rsS4lBgm3Ndluw3W0cBhtJlAc6pj+Zsm7Ay4w
+         kiP511iwWzlFSZs3UqJKytseA2dggWnqBJ/J+xsSOY09oAfTpd1WN48GPZSsl5i5b2
+         jc46F2PQUfWpArJO1Snta6HuMeVWwPRuk3xwETJM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Curtis Malainey <cujomalainey@chromium.org>,
-        Ben Zhang <benzh@chromium.org>, Mark Brown <broonie@kernel.org>
-Subject: [PATCH 5.0 054/123] ASoC: RT5677-SPI: Disable 16Bit SPI Transfers
-Date:   Mon, 20 May 2019 14:13:54 +0200
-Message-Id: <20190520115248.335064901@linuxfoundation.org>
+        stable@vger.kernel.org, Hui Wang <hui.wang@canonical.com>,
+        Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 5.0 050/123] ALSA: hda/hdmi - Consider eld_valid when reporting jack event
+Date:   Mon, 20 May 2019 14:13:50 +0200
+Message-Id: <20190520115248.060176587@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190520115245.439864225@linuxfoundation.org>
 References: <20190520115245.439864225@linuxfoundation.org>
@@ -60,131 +59,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Curtis Malainey <cujomalainey@chromium.org>
+From: Hui Wang <hui.wang@canonical.com>
 
-commit a46eb523220e242affb9a6bc9bb8efc05f4f7459 upstream.
+commit 7f641e26a6df9269cb25dd7a4b0a91d6586ed441 upstream.
 
-The current algorithm allows 3 types of transfers, 16bit, 32bit and
-burst. According to Realtek, 16bit transfers have a special restriction
-in that it is restricted to the memory region of
-0x18020000 ~ 0x18021000. This region is the memory location of the I2C
-registers. The current algorithm does not uphold this restriction and
-therefore fails to complete writes.
+On the machines with AMD GPU or Nvidia GPU, we often meet this issue:
+after s3, there are 4 HDMI/DP audio devices in the gnome-sound-setting
+even there is no any monitors plugged.
 
-Since this has been broken for some time it likely no one is using it.
-Better to simply disable the 16 bit writes. This will allow users to
-properly load firmware over SPI without data corruption.
+When this problem happens, we check the /proc/asound/cardX/eld#N.M, we
+will find the monitor_present=1, eld_valid=0.
 
-Signed-off-by: Curtis Malainey <cujomalainey@chromium.org>
-Reviewed-by: Ben Zhang <benzh@chromium.org>
-Signed-off-by: Mark Brown <broonie@kernel.org>
-Cc: stable@vger.kernel.org
+The root cause is BIOS or GPU driver makes the PRESENCE valid even no
+monitor plugged, and of course the driver will not get the valid
+eld_data subsequently.
+
+In this situation, we should not report the jack_plugged event, to do
+so, let us change the function hdmi_present_sense_via_verbs(). In this
+function, it reads the pin_sense via snd_hda_pin_sense(), after
+calling this function, the jack_dirty is 0, and before exiting
+via_verbs(), we change the shadow pin_sense according to both
+monitor_present and eld_valid, then in the snd_hda_jack_report_sync(),
+since the jack_dirty is still 0, it will report jack event according
+to this modified shadow pin_sense.
+
+After this change, the driver will not report Jack_is_plugged event
+through hdmi_present_sense_via_verbs() if monitor_present is 1 and
+eld_valid is 0.
+
+Signed-off-by: Hui Wang <hui.wang@canonical.com>
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/soc/codecs/rt5677-spi.c |   35 ++++++++++++++++-------------------
- 1 file changed, 16 insertions(+), 19 deletions(-)
+ sound/pci/hda/patch_hdmi.c |    6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
---- a/sound/soc/codecs/rt5677-spi.c
-+++ b/sound/soc/codecs/rt5677-spi.c
-@@ -57,13 +57,15 @@ static DEFINE_MUTEX(spi_mutex);
-  * RT5677_SPI_READ/WRITE_32:	Transfer 4 bytes
-  * RT5677_SPI_READ/WRITE_BURST:	Transfer any multiples of 8 bytes
-  *
-- * For example, reading 260 bytes at 0x60030002 uses the following commands:
-- * 0x60030002 RT5677_SPI_READ_16	2 bytes
-+ * Note:
-+ * 16 Bit writes and reads are restricted to the address range
-+ * 0x18020000 ~ 0x18021000
-+ *
-+ * For example, reading 256 bytes at 0x60030004 uses the following commands:
-  * 0x60030004 RT5677_SPI_READ_32	4 bytes
-  * 0x60030008 RT5677_SPI_READ_BURST	240 bytes
-  * 0x600300F8 RT5677_SPI_READ_BURST	8 bytes
-  * 0x60030100 RT5677_SPI_READ_32	4 bytes
-- * 0x60030104 RT5677_SPI_READ_16	2 bytes
-  *
-  * Input:
-  * @read: true for read commands; false for write commands
-@@ -78,15 +80,13 @@ static u8 rt5677_spi_select_cmd(bool rea
- {
- 	u8 cmd;
+--- a/sound/pci/hda/patch_hdmi.c
++++ b/sound/pci/hda/patch_hdmi.c
+@@ -1548,9 +1548,11 @@ static bool hdmi_present_sense_via_verbs
+ 	ret = !repoll || !eld->monitor_present || eld->eld_valid;
  
--	if (align == 2 || align == 6 || remain == 2) {
--		cmd = RT5677_SPI_READ_16;
--		*len = 2;
--	} else if (align == 4 || remain <= 6) {
-+	if (align == 4 || remain <= 4) {
- 		cmd = RT5677_SPI_READ_32;
- 		*len = 4;
- 	} else {
- 		cmd = RT5677_SPI_READ_BURST;
--		*len = min_t(u32, remain & ~7, RT5677_SPI_BURST_LEN);
-+		*len = (((remain - 1) >> 3) + 1) << 3;
-+		*len = min_t(u32, *len, RT5677_SPI_BURST_LEN);
- 	}
- 	return read ? cmd : cmd + 1;
- }
-@@ -107,7 +107,7 @@ static void rt5677_spi_reverse(u8 *dst,
- 	}
- }
- 
--/* Read DSP address space using SPI. addr and len have to be 2-byte aligned. */
-+/* Read DSP address space using SPI. addr and len have to be 4-byte aligned. */
- int rt5677_spi_read(u32 addr, void *rxbuf, size_t len)
- {
- 	u32 offset;
-@@ -123,7 +123,7 @@ int rt5677_spi_read(u32 addr, void *rxbu
- 	if (!g_spi)
- 		return -ENODEV;
- 
--	if ((addr & 1) || (len & 1)) {
-+	if ((addr & 3) || (len & 3)) {
- 		dev_err(&g_spi->dev, "Bad read align 0x%x(%zu)\n", addr, len);
- 		return -EACCES;
- 	}
-@@ -158,13 +158,13 @@ int rt5677_spi_read(u32 addr, void *rxbu
- }
- EXPORT_SYMBOL_GPL(rt5677_spi_read);
- 
--/* Write DSP address space using SPI. addr has to be 2-byte aligned.
-- * If len is not 2-byte aligned, an extra byte of zero is written at the end
-+/* Write DSP address space using SPI. addr has to be 4-byte aligned.
-+ * If len is not 4-byte aligned, then extra zeros are written at the end
-  * as padding.
-  */
- int rt5677_spi_write(u32 addr, const void *txbuf, size_t len)
- {
--	u32 offset, len_with_pad = len;
-+	u32 offset;
- 	int status = 0;
- 	struct spi_transfer t;
- 	struct spi_message m;
-@@ -177,22 +177,19 @@ int rt5677_spi_write(u32 addr, const voi
- 	if (!g_spi)
- 		return -ENODEV;
- 
--	if (addr & 1) {
-+	if (addr & 3) {
- 		dev_err(&g_spi->dev, "Bad write align 0x%x(%zu)\n", addr, len);
- 		return -EACCES;
- 	}
- 
--	if (len & 1)
--		len_with_pad = len + 1;
+ 	jack = snd_hda_jack_tbl_get(codec, pin_nid);
+-	if (jack)
++	if (jack) {
+ 		jack->block_report = !ret;
 -
- 	memset(&t, 0, sizeof(t));
- 	t.tx_buf = buf;
- 	t.speed_hz = RT5677_SPI_FREQ;
- 	spi_message_init_with_transfers(&m, &t, 1);
- 
--	for (offset = 0; offset < len_with_pad;) {
-+	for (offset = 0; offset < len;) {
- 		spi_cmd = rt5677_spi_select_cmd(false, (addr + offset) & 7,
--				len_with_pad - offset, &t.len);
-+				len - offset, &t.len);
- 
- 		/* Construct SPI message header */
- 		buf[0] = spi_cmd;
++		jack->pin_sense = (eld->monitor_present && eld->eld_valid) ?
++			AC_PINSENSE_PRESENCE : 0;
++	}
+ 	mutex_unlock(&per_pin->lock);
+ 	return ret;
+ }
 
 
