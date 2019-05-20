@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91DB8C04AAC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:29:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EBD50C04E87
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:29:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 66FFF20675
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:29:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B77CB20675
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:29:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558355390;
-	bh=gDXp1YTVd1ZDb9dpxjABJtOXO5WdHbIWePTo2Hqkyqk=;
+	s=default; t=1558355396;
+	bh=wqitfvQoqJOsPmhghHQsmAcxGumwKfJ6hI6k9UAFJKw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=oMFsI6Z9YX0nbaryIm3wIIEvdHO8MAANRhSR/bvAjvG5CBBnxjs/8Pq3MDVF7rSTi
-	 VhxABDMvBQEC48LoDU1vPSzCHmzqWoBQeLE0zGSgFghP/VZ6EW2SED/ytoA0gHv6qG
-	 O5F0+zZeVQp2icm17DRdULb96mWg1s86HeTUBZos=
+	b=mutzKtwdYLh3ug1wO1OsjG4+FkhY1pUPmhiehTIrKPd7G2LZul3gej7Qpr1UQGotW
+	 fOG5BN2MzZGkJd9g5wv/BrziUWOriI4U/1Rpco1pgLaqIEKDmhWWJC7AeD4rydJqYZ
+	 SW6m/iokBLZfUGHQ9HigsT0eXigb34SOJSk0+yMs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389586AbfETM3t (ORCPT
+        id S2389596AbfETM34 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 08:29:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45920 "EHLO mail.kernel.org"
+        Mon, 20 May 2019 08:29:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46022 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389959AbfETM3r (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 08:29:47 -0400
+        id S2389985AbfETM3w (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 08:29:52 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8429A20675;
-        Mon, 20 May 2019 12:29:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E003120675;
+        Mon, 20 May 2019 12:29:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558355386;
-        bh=gDXp1YTVd1ZDb9dpxjABJtOXO5WdHbIWePTo2Hqkyqk=;
+        s=default; t=1558355391;
+        bh=wqitfvQoqJOsPmhghHQsmAcxGumwKfJ6hI6k9UAFJKw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=M2SxiAqJXyrYn+9h66uAtI/hcQ7davda2Akk1ajGbrxvrWLzUyehD6xB913AJYTZg
-         nx5GLGb1Yl55DC63oxeiqn0YQJrTauU0jrHkl2XhyxSf+cXXNd4x0YKvWcxGFGL7v4
-         ZGIUjBog2yADSZnYsALzlEJPYYxx7XztQkS0izdM=
+        b=Q5X+C67q6ue9PWahXWrx05iXeH6lfOtl6tecsw2YTXmnUlIASqgWRtzDHz12zw17K
+         yL3pOg2keVbtBo5YJSXJUAadC3L4WO+P+hThc0MTvkNZmP5gXGYIRZh+xLjPv2CxWj
+         +89DdsSf/DFQVzVi7N7Yuygfjr3cm2/H6rdnsXbw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Coly Li <colyli@suse.de>,
-        Hannes Reinecke <hare@suse.com>, Jens Axboe <axboe@kernel.dk>
-Subject: [PATCH 5.0 097/123] bcache: never set KEY_PTRS of journal key to 0 in journal_reclaim()
-Date:   Mon, 20 May 2019 14:14:37 +0200
-Message-Id: <20190520115251.461190489@linuxfoundation.org>
+        stable@vger.kernel.org, Eric Biggers <ebiggers@google.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>
+Subject: [PATCH 5.0 099/123] crypto: ccm - fix incompatibility between "ccm" and "ccm_base"
+Date:   Mon, 20 May 2019 14:14:39 +0200
+Message-Id: <20190520115251.612601715@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190520115245.439864225@linuxfoundation.org>
 References: <20190520115245.439864225@linuxfoundation.org>
@@ -59,96 +59,148 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Coly Li <colyli@suse.de>
+From: Eric Biggers <ebiggers@google.com>
 
-commit 1bee2addc0c8470c8aaa65ef0599eeae96dd88bc upstream.
+commit 6a1faa4a43f5fabf9cbeaa742d916e7b5e73120f upstream.
 
-In journal_reclaim() ja->cur_idx of each cache will be update to
-reclaim available journal buckets. Variable 'int n' is used to count how
-many cache is successfully reclaimed, then n is set to c->journal.key
-by SET_KEY_PTRS(). Later in journal_write_unlocked(), a for_each_cache()
-loop will write the jset data onto each cache.
+CCM instances can be created by either the "ccm" template, which only
+allows choosing the block cipher, e.g. "ccm(aes)"; or by "ccm_base",
+which allows choosing the ctr and cbcmac implementations, e.g.
+"ccm_base(ctr(aes-generic),cbcmac(aes-generic))".
 
-The problem is, if all jouranl buckets on each cache is full, the
-following code in journal_reclaim(),
+However, a "ccm_base" instance prevents a "ccm" instance from being
+registered using the same implementations.  Nor will the instance be
+found by lookups of "ccm".  This can be used as a denial of service.
+Moreover, "ccm_base" instances are never tested by the crypto
+self-tests, even if there are compatible "ccm" tests.
 
-529 for_each_cache(ca, c, iter) {
-530       struct journal_device *ja = &ca->journal;
-531       unsigned int next = (ja->cur_idx + 1) % ca->sb.njournal_buckets;
-532
-533       /* No space available on this device */
-534       if (next == ja->discard_idx)
-535               continue;
-536
-537       ja->cur_idx = next;
-538       k->ptr[n++] = MAKE_PTR(0,
-539                         bucket_to_sector(c, ca->sb.d[ja->cur_idx]),
-540                         ca->sb.nr_this_dev);
-541 }
-542
-543 bkey_init(k);
-544 SET_KEY_PTRS(k, n);
+The root cause of these problems is that instances of the two templates
+use different cra_names.  Therefore, fix these problems by making
+"ccm_base" instances set the same cra_name as "ccm" instances, e.g.
+"ccm(aes)" instead of "ccm_base(ctr(aes-generic),cbcmac(aes-generic))".
 
-If there is no available bucket to reclaim, the if() condition at line
-534 will always true, and n remains 0. Then at line 544, SET_KEY_PTRS()
-will set KEY_PTRS field of c->journal.key to 0.
+This requires extracting the block cipher name from the name of the ctr
+and cbcmac algorithms.  It also requires starting to verify that the
+algorithms are really ctr and cbcmac using the same block cipher, not
+something else entirely.  But it would be bizarre if anyone were
+actually using non-ccm-compatible algorithms with ccm_base, so this
+shouldn't break anyone in practice.
 
-Setting KEY_PTRS field of c->journal.key to 0 is wrong. Because in
-journal_write_unlocked() the journal data is written in following loop,
-
-649	for (i = 0; i < KEY_PTRS(k); i++) {
-650-671		submit journal data to cache device
-672	}
-
-If KEY_PTRS field is set to 0 in jouranl_reclaim(), the journal data
-won't be written to cache device here. If system crahed or rebooted
-before bkeys of the lost journal entries written into btree nodes, data
-corruption will be reported during bcache reload after rebooting the
-system.
-
-Indeed there is only one cache in a cache set, there is no need to set
-KEY_PTRS field in journal_reclaim() at all. But in order to keep the
-for_each_cache() logic consistent for now, this patch fixes the above
-problem by not setting 0 KEY_PTRS of journal key, if there is no bucket
-available to reclaim.
-
-Signed-off-by: Coly Li <colyli@suse.de>
-Reviewed-by: Hannes Reinecke <hare@suse.com>
+Fixes: 4a49b499dfa0 ("[CRYPTO] ccm: Added CCM mode")
 Cc: stable@vger.kernel.org
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Eric Biggers <ebiggers@google.com>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
----
- drivers/md/bcache/journal.c |   11 +++++++----
- 1 file changed, 7 insertions(+), 4 deletions(-)
 
---- a/drivers/md/bcache/journal.c
-+++ b/drivers/md/bcache/journal.c
-@@ -540,11 +540,11 @@ static void journal_reclaim(struct cache
- 				  ca->sb.nr_this_dev);
- 	}
+---
+ crypto/ccm.c |   44 ++++++++++++++++++--------------------------
+ 1 file changed, 18 insertions(+), 26 deletions(-)
+
+--- a/crypto/ccm.c
++++ b/crypto/ccm.c
+@@ -458,7 +458,6 @@ static void crypto_ccm_free(struct aead_
  
--	bkey_init(k);
--	SET_KEY_PTRS(k, n);
--
--	if (n)
-+	if (n) {
-+		bkey_init(k);
-+		SET_KEY_PTRS(k, n);
- 		c->journal.blocks_free = c->sb.bucket_size >> c->block_bits;
-+	}
- out:
- 	if (!journal_full(&c->journal))
- 		__closure_wake_up(&c->journal.wait);
-@@ -671,6 +671,9 @@ static void journal_write_unlocked(struc
- 		ca->journal.seq[ca->journal.cur_idx] = w->data->seq;
- 	}
+ static int crypto_ccm_create_common(struct crypto_template *tmpl,
+ 				    struct rtattr **tb,
+-				    const char *full_name,
+ 				    const char *ctr_name,
+ 				    const char *mac_name)
+ {
+@@ -486,7 +485,8 @@ static int crypto_ccm_create_common(stru
  
-+	/* If KEY_PTRS(k) == 0, this jset gets lost in air */
-+	BUG_ON(i == 0);
+ 	mac = __crypto_hash_alg_common(mac_alg);
+ 	err = -EINVAL;
+-	if (mac->digestsize != 16)
++	if (strncmp(mac->base.cra_name, "cbcmac(", 7) != 0 ||
++	    mac->digestsize != 16)
+ 		goto out_put_mac;
+ 
+ 	inst = kzalloc(sizeof(*inst) + sizeof(*ictx), GFP_KERNEL);
+@@ -509,23 +509,27 @@ static int crypto_ccm_create_common(stru
+ 
+ 	ctr = crypto_spawn_skcipher_alg(&ictx->ctr);
+ 
+-	/* Not a stream cipher? */
++	/* The skcipher algorithm must be CTR mode, using 16-byte blocks. */
+ 	err = -EINVAL;
+-	if (ctr->base.cra_blocksize != 1)
++	if (strncmp(ctr->base.cra_name, "ctr(", 4) != 0 ||
++	    crypto_skcipher_alg_ivsize(ctr) != 16 ||
++	    ctr->base.cra_blocksize != 1)
+ 		goto err_drop_ctr;
+ 
+-	/* We want the real thing! */
+-	if (crypto_skcipher_alg_ivsize(ctr) != 16)
++	/* ctr and cbcmac must use the same underlying block cipher. */
++	if (strcmp(ctr->base.cra_name + 4, mac->base.cra_name + 7) != 0)
+ 		goto err_drop_ctr;
+ 
+ 	err = -ENAMETOOLONG;
++	if (snprintf(inst->alg.base.cra_name, CRYPTO_MAX_ALG_NAME,
++		     "ccm(%s", ctr->base.cra_name + 4) >= CRYPTO_MAX_ALG_NAME)
++		goto err_drop_ctr;
 +
- 	atomic_dec_bug(&fifo_back(&c->journal.pin));
- 	bch_journal_next(&c->journal);
- 	journal_reclaim(c);
+ 	if (snprintf(inst->alg.base.cra_driver_name, CRYPTO_MAX_ALG_NAME,
+ 		     "ccm_base(%s,%s)", ctr->base.cra_driver_name,
+ 		     mac->base.cra_driver_name) >= CRYPTO_MAX_ALG_NAME)
+ 		goto err_drop_ctr;
+ 
+-	memcpy(inst->alg.base.cra_name, full_name, CRYPTO_MAX_ALG_NAME);
+-
+ 	inst->alg.base.cra_flags = ctr->base.cra_flags & CRYPTO_ALG_ASYNC;
+ 	inst->alg.base.cra_priority = (mac->base.cra_priority +
+ 				       ctr->base.cra_priority) / 2;
+@@ -567,7 +571,6 @@ static int crypto_ccm_create(struct cryp
+ 	const char *cipher_name;
+ 	char ctr_name[CRYPTO_MAX_ALG_NAME];
+ 	char mac_name[CRYPTO_MAX_ALG_NAME];
+-	char full_name[CRYPTO_MAX_ALG_NAME];
+ 
+ 	cipher_name = crypto_attr_alg_name(tb[1]);
+ 	if (IS_ERR(cipher_name))
+@@ -581,12 +584,7 @@ static int crypto_ccm_create(struct cryp
+ 		     cipher_name) >= CRYPTO_MAX_ALG_NAME)
+ 		return -ENAMETOOLONG;
+ 
+-	if (snprintf(full_name, CRYPTO_MAX_ALG_NAME, "ccm(%s)", cipher_name) >=
+-	    CRYPTO_MAX_ALG_NAME)
+-		return -ENAMETOOLONG;
+-
+-	return crypto_ccm_create_common(tmpl, tb, full_name, ctr_name,
+-					mac_name);
++	return crypto_ccm_create_common(tmpl, tb, ctr_name, mac_name);
+ }
+ 
+ static struct crypto_template crypto_ccm_tmpl = {
+@@ -599,23 +597,17 @@ static int crypto_ccm_base_create(struct
+ 				  struct rtattr **tb)
+ {
+ 	const char *ctr_name;
+-	const char *cipher_name;
+-	char full_name[CRYPTO_MAX_ALG_NAME];
++	const char *mac_name;
+ 
+ 	ctr_name = crypto_attr_alg_name(tb[1]);
+ 	if (IS_ERR(ctr_name))
+ 		return PTR_ERR(ctr_name);
+ 
+-	cipher_name = crypto_attr_alg_name(tb[2]);
+-	if (IS_ERR(cipher_name))
+-		return PTR_ERR(cipher_name);
+-
+-	if (snprintf(full_name, CRYPTO_MAX_ALG_NAME, "ccm_base(%s,%s)",
+-		     ctr_name, cipher_name) >= CRYPTO_MAX_ALG_NAME)
+-		return -ENAMETOOLONG;
++	mac_name = crypto_attr_alg_name(tb[2]);
++	if (IS_ERR(mac_name))
++		return PTR_ERR(mac_name);
+ 
+-	return crypto_ccm_create_common(tmpl, tb, full_name, ctr_name,
+-					cipher_name);
++	return crypto_ccm_create_common(tmpl, tb, ctr_name, mac_name);
+ }
+ 
+ static struct crypto_template crypto_ccm_base_tmpl = {
 
 
