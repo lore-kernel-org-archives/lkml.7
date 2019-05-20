@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AFD4C04E87
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:23:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 742FFC04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:23:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 720EF214DA
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:23:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4B337214DA
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:23:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558355029;
-	bh=iT4yjMJcKkltvxB7A3R4I/OGGLjYhEBIkJulcqRNo5E=;
+	s=default; t=1558355032;
+	bh=cuCka6+D/zHu/Ia0WcLVoONDemKDc45zUEKXJ1Ae6fM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=shLrILi3BogO3bu50zyAHQCdX5kIZ8f2q6fO+X9UQeKlzY8lPmWbvpzvukUwKZ+aa
-	 mKe1YLg3NxBiSwZaG859dvrFRTbDdf1dsMECN46gsWHjVoFpjVIKDuR2wq/Jb+cveg
-	 eJ0uM11QIebT/yFDVaWkvqcKKHAQkx8ypjqhhW5I=
+	b=ar4JUmvLJZwgz4JUWfRTPL77rlIPdhHgC9ttMEtaJ6kP2wkE6S7pDxvBIOJPdK0pC
+	 7mPMb1hOXn+BxmWhyOFqKwJ00z0xmjs5Ht7huZ263r77WzQ1IFknESBJXBSGoSl5kU
+	 30O2UUbBlmHFfgNzjLwEa3xNPY9nqIAQyhuUgIIs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388688AbfETMXs (ORCPT
+        id S2388699AbfETMXv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 08:23:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38290 "EHLO mail.kernel.org"
+        Mon, 20 May 2019 08:23:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38410 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388637AbfETMXm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 08:23:42 -0400
+        id S2388680AbfETMXr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 08:23:47 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9C56420675;
-        Mon, 20 May 2019 12:23:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C627621019;
+        Mon, 20 May 2019 12:23:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558355022;
-        bh=iT4yjMJcKkltvxB7A3R4I/OGGLjYhEBIkJulcqRNo5E=;
+        s=default; t=1558355027;
+        bh=cuCka6+D/zHu/Ia0WcLVoONDemKDc45zUEKXJ1Ae6fM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0kc0qPmMYznXmitgw2wDP/t/K+1UMCGsFOFkzxvJldjAgBI/+Z5ok0yPAE4Jq1KVT
-         QOjrNNZKuGNFgYVzLPNBxWxQVuS6MPKtmbve2lZhRUxIWMVJW6NSxqUUUrLooRoXMQ
-         85Fb0KPWOOl1ZrOQOgiV/jm9f9MtUHgiU0AiVjL0=
+        b=HzOX4XVUiVWTMKT2f+CSVqnGUgvBa2X+t7dQkKpbhcI0NFbqxiUoy14i5lLCX8tpM
+         3Olnjl38M0d8U1He1Dh+1eijLfYkJWIWRZCJ21jfJG9KwrCev+vZ+wrMiJQ+80CmCl
+         glBRa44gJ0/s53tKefjmSZet/ASQAQS/OnC7ZdLk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Theodore Tso <tytso@mit.edu>,
+        stable@vger.kernel.org, Pan Bian <bianpan2016@163.com>,
+        Theodore Tso <tytso@mit.edu>, Jan Kara <jack@suse.cz>,
         stable@kernel.org
-Subject: [PATCH 4.19 067/105] ext4: protect journal inodes blocks using block_validity
-Date:   Mon, 20 May 2019 14:14:13 +0200
-Message-Id: <20190520115251.802050920@linuxfoundation.org>
+Subject: [PATCH 4.19 069/105] ext4: avoid drop reference to iloc.bh twice
+Date:   Mon, 20 May 2019 14:14:15 +0200
+Message-Id: <20190520115251.952565717@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190520115247.060821231@linuxfoundation.org>
 References: <20190520115247.060821231@linuxfoundation.org>
@@ -59,101 +60,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Theodore Ts'o <tytso@mit.edu>
+From: Pan Bian <bianpan2016@163.com>
 
-commit 345c0dbf3a30872d9b204db96b5857cd00808cae upstream.
+commit 8c380ab4b7b59c0c602743810be1b712514eaebc upstream.
 
-Add the blocks which belong to the journal inode to block_validity's
-system zone so attempts to deallocate or overwrite the journal due a
-corrupted file system where the journal blocks are also claimed by
-another inode.
+The reference to iloc.bh has been dropped in ext4_mark_iloc_dirty.
+However, the reference is dropped again if error occurs during
+ext4_handle_dirty_metadata, which may result in use-after-free bugs.
 
-Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=202879
+Fixes: fb265c9cb49e("ext4: add ext4_sb_bread() to disambiguate ENOMEM cases")
+Signed-off-by: Pan Bian <bianpan2016@163.com>
 Signed-off-by: Theodore Ts'o <tytso@mit.edu>
+Reviewed-by: Jan Kara <jack@suse.cz>
 Cc: stable@kernel.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/ext4/block_validity.c |   48 +++++++++++++++++++++++++++++++++++++++++++++++
- fs/ext4/inode.c          |    4 +++
- 2 files changed, 52 insertions(+)
+ fs/ext4/resize.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/fs/ext4/block_validity.c
-+++ b/fs/ext4/block_validity.c
-@@ -137,6 +137,48 @@ static void debug_print_tree(struct ext4
- 	printk(KERN_CONT "\n");
- }
- 
-+static int ext4_protect_reserved_inode(struct super_block *sb, u32 ino)
-+{
-+	struct inode *inode;
-+	struct ext4_sb_info *sbi = EXT4_SB(sb);
-+	struct ext4_map_blocks map;
-+	u32 i = 0, err = 0, num, n;
-+
-+	if ((ino < EXT4_ROOT_INO) ||
-+	    (ino > le32_to_cpu(sbi->s_es->s_inodes_count)))
-+		return -EINVAL;
-+	inode = ext4_iget(sb, ino, EXT4_IGET_SPECIAL);
-+	if (IS_ERR(inode))
-+		return PTR_ERR(inode);
-+	num = (inode->i_size + sb->s_blocksize - 1) >> sb->s_blocksize_bits;
-+	while (i < num) {
-+		map.m_lblk = i;
-+		map.m_len = num - i;
-+		n = ext4_map_blocks(NULL, inode, &map, 0);
-+		if (n < 0) {
-+			err = n;
-+			break;
-+		}
-+		if (n == 0) {
-+			i++;
-+		} else {
-+			if (!ext4_data_block_valid(sbi, map.m_pblk, n)) {
-+				ext4_error(sb, "blocks %llu-%llu from inode %u "
-+					   "overlap system zone", map.m_pblk,
-+					   map.m_pblk + map.m_len - 1, ino);
-+				err = -EFSCORRUPTED;
-+				break;
-+			}
-+			err = add_system_zone(sbi, map.m_pblk, n);
-+			if (err < 0)
-+				break;
-+			i += n;
-+		}
-+	}
-+	iput(inode);
-+	return err;
-+}
-+
- int ext4_setup_system_zone(struct super_block *sb)
- {
- 	ext4_group_t ngroups = ext4_get_groups_count(sb);
-@@ -171,6 +213,12 @@ int ext4_setup_system_zone(struct super_
- 		if (ret)
- 			return ret;
+--- a/fs/ext4/resize.c
++++ b/fs/ext4/resize.c
+@@ -874,6 +874,7 @@ static int add_new_gdb(handle_t *handle,
+ 	err = ext4_handle_dirty_metadata(handle, NULL, gdb_bh);
+ 	if (unlikely(err)) {
+ 		ext4_std_error(sb, err);
++		iloc.bh = NULL;
+ 		goto errout;
  	}
-+	if (ext4_has_feature_journal(sb) && sbi->s_es->s_journal_inum) {
-+		ret = ext4_protect_reserved_inode(sb,
-+				le32_to_cpu(sbi->s_es->s_journal_inum));
-+		if (ret)
-+			return ret;
-+	}
- 
- 	if (test_opt(sb, DEBUG))
- 		debug_print_tree(sbi);
---- a/fs/ext4/inode.c
-+++ b/fs/ext4/inode.c
-@@ -399,6 +399,10 @@ static int __check_block_validity(struct
- 				unsigned int line,
- 				struct ext4_map_blocks *map)
- {
-+	if (ext4_has_feature_journal(inode->i_sb) &&
-+	    (inode->i_ino ==
-+	     le32_to_cpu(EXT4_SB(inode->i_sb)->s_es->s_journal_inum)))
-+		return 0;
- 	if (!ext4_data_block_valid(EXT4_SB(inode->i_sb), map->m_pblk,
- 				   map->m_len)) {
- 		ext4_error_inode(inode, func, line, map->m_pblk,
+ 	brelse(dind);
 
 
