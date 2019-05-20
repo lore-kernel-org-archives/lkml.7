@@ -4,58 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30361C04AAC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:31:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA835C04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:31:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 073DF21721
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:31:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C01212171F
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:31:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558355515;
-	bh=fkRdBE7+wJgGRTAv29egV76taB++1geA7te/ppBXoiM=;
+	s=default; t=1558355517;
+	bh=34pvu7oNa5wqsc3tntV2i9diO3rjJi8DbuOwL65B550=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=G88vSEWssmmb/KEY8dsIQViaUk1Watmup3Fgg5MYNu3u5IeSFnSVe8Qe0p4xdXKN2
-	 po7HA8Og2DtLrZMyLo2lY80mZOFGEtrAwPy78USjV/zUbD0aK2kgJmP4y0hb3cri5M
-	 1iH29MLP1mUSlb8Pn9DKrY0TOfJIi1gqwVfAECGc=
+	b=gvogBg8RmeLjoqHZNgQ3FtQdnZVNjV7eGzKVmjU6Kr3jA5GVfrPEmuJ99cDGNk54+
+	 aFj3pmhUzOGP0FvKhXO/Mf1Jg/blgHiGu8yl5YPgj+U/hjY1C9NPp3FgiuET0WvhNA
+	 Hdiy8O6IngIGgY9IXdT0zqENyKgT4TZJVNblWBrE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390478AbfETMby (ORCPT
+        id S2390433AbfETMb5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 08:31:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48486 "EHLO mail.kernel.org"
+        Mon, 20 May 2019 08:31:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48648 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390461AbfETMbt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 08:31:49 -0400
+        id S2390461AbfETMby (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 08:31:54 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3EE8C20815;
-        Mon, 20 May 2019 12:31:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7417921726;
+        Mon, 20 May 2019 12:31:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558355508;
-        bh=fkRdBE7+wJgGRTAv29egV76taB++1geA7te/ppBXoiM=;
+        s=default; t=1558355513;
+        bh=34pvu7oNa5wqsc3tntV2i9diO3rjJi8DbuOwL65B550=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FHhAAF7Bff6Ck7wAPCTLVLo47hjHAt0nbk1cmw14FO6EdryXUR3LT1gAab3zeGwIT
-         YqEyfeAjh4AmOgKgHrnZZz25APJJyy8nKinW7dMU5LUwO4yu4WinW7h4uiTPZlm58m
-         SszIhSyksSrPbb3oUK1ousDXi9ii1c6rGHvbW25k=
+        b=iK7j9b9T/KxR9E7DjsGLB0SU8V5r51MPsfpmtByL2OLP3RIRJuKMpqQWZ201WFU+t
+         KYw4v5IX5sq3gITaVBp7FfI/2gvj4JtohSvDIWGNZ7i4o3Rpfwl69jStW26hKA28NA
+         5yH/CjGvh2HXVvRfpX2a8ciULMCVP0Dp+pPnp1bg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Yazen Ghannam <yazen.ghannam@amd.com>,
-        Borislav Petkov <bp@suse.de>, Arnd Bergmann <arnd@arndb.de>,
-        "clemej@gmail.com" <clemej@gmail.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
-        Pu Wen <puwen@hygon.cn>, Qiuxu Zhuo <qiuxu.zhuo@intel.com>,
-        "rafal@milecki.pl" <rafal@milecki.pl>,
-        Shirish S <Shirish.S@amd.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Tony Luck <tony.luck@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        x86-ml <x86@kernel.org>
-Subject: [PATCH 5.1 021/128] x86/MCE: Add an MCE-record filtering function
-Date:   Mon, 20 May 2019 14:13:28 +0200
-Message-Id: <20190520115250.956333908@linuxfoundation.org>
+        stable@vger.kernel.org, Christian Lamparter <chunkeey@gmail.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>
+Subject: [PATCH 5.1 023/128] crypto: crypto4xx - fix ctr-aes missing output IV
+Date:   Mon, 20 May 2019 14:13:30 +0200
+Message-Id: <20190520115251.121636001@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190520115249.449077487@linuxfoundation.org>
 References: <20190520115249.449077487@linuxfoundation.org>
@@ -68,82 +59,73 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yazen Ghannam <yazen.ghannam@amd.com>
+From: Christian Lamparter <chunkeey@gmail.com>
 
-commit 45d4b7b9cb88526f6d5bd4c03efab88d75d10e4f upstream.
+commit 25baaf8e2c93197d063b372ef7b62f2767c7ac0b upstream.
 
-Some systems may report spurious MCA errors. In general, spurious MCA
-errors may be disabled by clearing a particular bit in MCA_CTL. However,
-clearing a bit in MCA_CTL may not be recommended for some errors, so the
-only option is to ignore them.
+Commit 8efd972ef96a ("crypto: testmgr - support checking skcipher output IV")
+caused the crypto4xx driver to produce the following error:
 
-An MCA error is printed and handled after it has been added to the MCE
-event pool. So an MCA error can be ignored by not adding it to that pool
-in the first place.
+| ctr-aes-ppc4xx encryption test failed (wrong output IV)
+| on test vector 0, cfg="in-place"
 
-Add such a filtering function.
+This patch fixes this by reworking the crypto4xx_setkey_aes()
+function to:
 
- [ bp: Move function prototype to the internal header and massage. ]
+ - not save the iv for ECB (as per 18.2.38 CRYP0_SA_CMD_0:
+   "This bit mut be cleared for DES ECB mode or AES ECB mode,
+   when no IV is used.")
 
-Signed-off-by: Yazen Ghannam <yazen.ghannam@amd.com>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Cc: Arnd Bergmann <arnd@arndb.de>
-Cc: "clemej@gmail.com" <clemej@gmail.com>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Pu Wen <puwen@hygon.cn>
-Cc: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
-Cc: "rafal@milecki.pl" <rafal@milecki.pl>
-Cc: Shirish S <Shirish.S@amd.com>
-Cc: <stable@vger.kernel.org> # 5.0.x
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Tony Luck <tony.luck@intel.com>
-Cc: Vishal Verma <vishal.l.verma@intel.com>
-Cc: x86-ml <x86@kernel.org>
-Link: https://lkml.kernel.org/r/20190325163410.171021-1-Yazen.Ghannam@amd.com
+ - instruct the hardware to save the generated IV for all
+   other modes of operations that have IV and then supply
+   it back to the callee in pretty much the same way as we
+   do it for cbc-aes already.
+
+ - make it clear that the DIR_(IN|OUT)BOUND is the important
+   bit that tells the hardware to encrypt or decrypt the data.
+   (this is cosmetic - but it hopefully prevents me from
+    getting confused again).
+
+ - don't load any bogus hash when we don't use any hash
+   operation to begin with.
+
+Cc: stable@vger.kernel.org
+Fixes: f2a13e7cba9e ("crypto: crypto4xx - enable AES RFC3686, ECB, CFB and OFB offloads")
+Signed-off-by: Christian Lamparter <chunkeey@gmail.com>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/kernel/cpu/mce/core.c     |    5 +++++
- arch/x86/kernel/cpu/mce/genpool.c  |    3 +++
- arch/x86/kernel/cpu/mce/internal.h |    3 +++
- 3 files changed, 11 insertions(+)
+ drivers/crypto/amcc/crypto4xx_alg.c |   12 +++++++++---
+ 1 file changed, 9 insertions(+), 3 deletions(-)
 
---- a/arch/x86/kernel/cpu/mce/core.c
-+++ b/arch/x86/kernel/cpu/mce/core.c
-@@ -1771,6 +1771,11 @@ static void __mcheck_cpu_init_timer(void
- 	mce_start_timer(t);
+--- a/drivers/crypto/amcc/crypto4xx_alg.c
++++ b/drivers/crypto/amcc/crypto4xx_alg.c
+@@ -141,9 +141,10 @@ static int crypto4xx_setkey_aes(struct c
+ 	/* Setup SA */
+ 	sa = ctx->sa_in;
+ 
+-	set_dynamic_sa_command_0(sa, SA_NOT_SAVE_HASH, (cm == CRYPTO_MODE_CBC ?
+-				 SA_SAVE_IV : SA_NOT_SAVE_IV),
+-				 SA_LOAD_HASH_FROM_SA, SA_LOAD_IV_FROM_STATE,
++	set_dynamic_sa_command_0(sa, SA_NOT_SAVE_HASH, (cm == CRYPTO_MODE_ECB ?
++				 SA_NOT_SAVE_IV : SA_SAVE_IV),
++				 SA_NOT_LOAD_HASH, (cm == CRYPTO_MODE_ECB ?
++				 SA_LOAD_IV_FROM_SA : SA_LOAD_IV_FROM_STATE),
+ 				 SA_NO_HEADER_PROC, SA_HASH_ALG_NULL,
+ 				 SA_CIPHER_ALG_AES, SA_PAD_TYPE_ZERO,
+ 				 SA_OP_GROUP_BASIC, SA_OPCODE_DECRYPT,
+@@ -162,6 +163,11 @@ static int crypto4xx_setkey_aes(struct c
+ 	memcpy(ctx->sa_out, ctx->sa_in, ctx->sa_len * 4);
+ 	sa = ctx->sa_out;
+ 	sa->sa_command_0.bf.dir = DIR_OUTBOUND;
++	/*
++	 * SA_OPCODE_ENCRYPT is the same value as SA_OPCODE_DECRYPT.
++	 * it's the DIR_(IN|OUT)BOUND that matters
++	 */
++	sa->sa_command_0.bf.opcode = SA_OPCODE_ENCRYPT;
+ 
+ 	return 0;
  }
- 
-+bool filter_mce(struct mce *m)
-+{
-+	return false;
-+}
-+
- /* Handle unconfigured int18 (should never happen) */
- static void unexpected_machine_check(struct pt_regs *regs, long error_code)
- {
---- a/arch/x86/kernel/cpu/mce/genpool.c
-+++ b/arch/x86/kernel/cpu/mce/genpool.c
-@@ -99,6 +99,9 @@ int mce_gen_pool_add(struct mce *mce)
- {
- 	struct mce_evt_llist *node;
- 
-+	if (filter_mce(mce))
-+		return -EINVAL;
-+
- 	if (!mce_evt_pool)
- 		return -EINVAL;
- 
---- a/arch/x86/kernel/cpu/mce/internal.h
-+++ b/arch/x86/kernel/cpu/mce/internal.h
-@@ -173,4 +173,7 @@ struct mca_msr_regs {
- 
- extern struct mca_msr_regs msr_ops;
- 
-+/* Decide whether to add MCE record to MCE event pool or filter it out. */
-+extern bool filter_mce(struct mce *m);
-+
- #endif /* __X86_MCE_INTERNAL_H__ */
 
 
