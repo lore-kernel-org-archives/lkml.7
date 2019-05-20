@@ -2,88 +2,147 @@ Return-Path: <SRS0=lq4r=TU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1EC7C04AAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 17:37:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46DB9C04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 17:37:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 81D3A206B6
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 17:37:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1518E214AE
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 17:37:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=semihalf-com.20150623.gappssmtp.com header.i=@semihalf-com.20150623.gappssmtp.com header.b="CwchGZjI"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="upnc6m1Z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392885AbfETRhc (ORCPT
+        id S2393013AbfETRhi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 13:37:32 -0400
-Received: from mail-ua1-f68.google.com ([209.85.222.68]:40302 "EHLO
-        mail-ua1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389405AbfETRhb (ORCPT
+        Mon, 20 May 2019 13:37:38 -0400
+Received: from mail-wm1-f49.google.com ([209.85.128.49]:51951 "EHLO
+        mail-wm1-f49.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389405AbfETRhh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 13:37:31 -0400
-Received: by mail-ua1-f68.google.com with SMTP id d4so5561137uaj.7
-        for <linux-kernel@vger.kernel.org>; Mon, 20 May 2019 10:37:31 -0700 (PDT)
+        Mon, 20 May 2019 13:37:37 -0400
+Received: by mail-wm1-f49.google.com with SMTP id c77so209822wmd.1
+        for <linux-kernel@vger.kernel.org>; Mon, 20 May 2019 10:37:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=semihalf-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=vDBzgk3+2zzaDlSxwytUrA3Kc0EghhVaruTPNWK1ttg=;
-        b=CwchGZjIFzmqStPHXdkdMvjtXevOL6aMDz0RbbxhvTvOywv3R7HbSxVIiPR86vVgVJ
-         28yp6/OUTu6GifEPNjnYBzsfPg5Y7BbwwV5Ty4ILdR7ZbBYLoKzOGlZ1hMwqgeyZohQS
-         a9Xty3qBzDrM1VhvrAeqYsd8bm4McRK6eMvwStNI7jp8RC5DjasBTN49ChbDaScmiIHc
-         LTl2jGq3y/n5qeMsGBeWktpO3+3aP8DzWvndvfXt1nfhBIsEP6nW4S6oWCWrYYgtNWmE
-         SMz99yiCt+Utdgd/gzX6yrRr7ihWyoWsQAjda+WeCB98a3ybcjj/r3oR4U9vY176w7BS
-         0c3w==
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=3Vf0t/ouAxFnWmTUOCdQKbqp5RUs5h8S4gFpSetf+kQ=;
+        b=upnc6m1Zkjz20NEStJZGKcZ0j/syqoVGU0LeGPJfyfnt2GBPK9tGWpWqXKm+5rduzo
+         e25BVpgpnNLM+U9vItUmoYw4K8dBwEQLTP0o3VAigdknEPd/DeXBkAoLaJFizrVNcWlM
+         2Ioym0Ulr+MiZ13sHKlouCRYgkXi7ZLr5XC9FwdSraZEYQ50fDQ3X7qhz32Kgav0C7GD
+         Nza8YkAeXwboQwy+Cc3dhXGqxmkkMhMT1xGjRixmx7Q5u+vpfEL80NHR9EefaXZ20IiU
+         Z5Kwhx9Cre1Zi7nhu/994sZsdECJH0m+i7KCglfFNldGXtlDhIi1LKyiGlVh6cIMiK8W
+         XfNw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=vDBzgk3+2zzaDlSxwytUrA3Kc0EghhVaruTPNWK1ttg=;
-        b=Ir+xREt3Bg8yEJsCVRP8Xina3xefOTn4RP0LBPgmrytmnTwjd4M2kqO4wVqaA92iq5
-         1HP7Zx0egithXV2ERSY6/nf3+o7yt9xA2OpKiRWZXJeAyDYotz3IBCa9x+g0lpyuZcAK
-         Y3whnj+3NW/O0C+X/k8VzNgB59x891VUWaH1iRN+JrelMbbJl7upQfwyqVd7hFWxXkQ4
-         ZjWB50mmq4LywVlJDP6F2I/Wilu/pxPhYG+2IjjcjJTlg+wat2mmuZYI5Xz2BCb7XrPv
-         rDOYV5UaS4YhK5ngv5tnd1zS5HrW+Cn/BnEksREfsj/MrX4RFvH6TGhIJszJaSoqPFxS
-         8CSg==
-X-Gm-Message-State: APjAAAVqfrCF6ERw0QfJXG4llCKlV0yEz4M1crv/pCIlnjBhlAupbN1W
-        wNiPNNU1r27Xs7da5sOQEVoQJb9kK7MvC/PCHOkBlA==
-X-Google-Smtp-Source: APXvYqxP8zxzm4jZKGosdcwN4a0RkbFAaC28vOtz1R97u76s4VbaoqHPsL53swQmuIAJyZjvBa85qqDRttnmEtWmwhM=
-X-Received: by 2002:ab0:670c:: with SMTP id q12mr13594032uam.106.1558373850690;
- Mon, 20 May 2019 10:37:30 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=3Vf0t/ouAxFnWmTUOCdQKbqp5RUs5h8S4gFpSetf+kQ=;
+        b=ZViR3xTIQO0uoaqlDwex2rnYcekWa4djrBkDVTRrPmN00rr6dTNoPR+U9vHII8jcOZ
+         7nKSjESrofUmYt6Qm12DEM0KEeTMGM3pl7zkg9QdHhI85Dru/5/oVarcVJji4ZIuVyzH
+         qULl600Rfb44ycteD7k+dvsvZmLzDAwT3qB+ttfRwQg7w3ctfPRT/9QXqhLcTF00dr8M
+         5qMzwx/WQvnWatKwNr7LfZp1Fz3vOBroqYjoASkBTXdYzuG8IZrdANEiwONohg+0Cz+O
+         nOXvda55JBk6ZOXBx09N4ACJ7wenKmAg115WICg/ZqtVuiJdxQ0qckON1PeJcSF1xc4C
+         /cMg==
+X-Gm-Message-State: APjAAAWXiMIuyruGYq5vgpOJwjf6x8ih3hN8tyJCRs5ONAfY7Fe2Wda4
+        sMu1LfRtD62Pen7S8gu31Nc=
+X-Google-Smtp-Source: APXvYqxJI6Hoesmt9I6qguvgnQHDhBlmOs/DdcHUvt2qWU089X0nZPsmXM8kJtT2R6XGYE4l9p88DA==
+X-Received: by 2002:a1c:eb0c:: with SMTP id j12mr191811wmh.55.1558373854929;
+        Mon, 20 May 2019 10:37:34 -0700 (PDT)
+Received: from [10.67.49.52] ([192.19.223.252])
+        by smtp.googlemail.com with ESMTPSA id 34sm32674005wre.32.2019.05.20.10.37.33
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 20 May 2019 10:37:33 -0700 (PDT)
+Subject: Re: [PATCH] MAINTAINERS: Update Stefan Wahren email address
+To:     Stefan Wahren <wahrenst@gmx.net>, Eric Anholt <eric@anholt.net>
+Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+References: <1556740055-4962-1-git-send-email-wahrenst@gmx.net>
+ <8c07c0b0-5610-bd5f-73d5-373178af6502@gmx.net>
+From:   Florian Fainelli <f.fainelli@gmail.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=f.fainelli@gmail.com; prefer-encrypt=mutual; keydata=
+ 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
+ M5kY0ACeNhCZJvZ5g4C2Lc9fcTHu8jxmEkI=
+Message-ID: <7d306fbf-bfdd-2017-0a80-7f480799a2f7@gmail.com>
+Date:   Mon, 20 May 2019 10:37:25 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-References: <20190517213918.26045-1-matthewgarrett@google.com>
-In-Reply-To: <20190517213918.26045-1-matthewgarrett@google.com>
-From:   Bartosz Szczepanek <bsz@semihalf.com>
-Date:   Mon, 20 May 2019 19:37:19 +0200
-Message-ID: <CABLO=+mSkR8fwm5dDB2757OK=BKZGM9jHR6OuCkzazgFcVy=dg@mail.gmail.com>
-Subject: Re: [PATCH V6 0/4] Add support for crypto agile TPM event logs
-To:     Matthew Garrett <matthewgarrett@google.com>
-Cc:     linux-integrity <linux-integrity@vger.kernel.org>,
-        Peter Huewe <peterhuewe@gmx.de>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Roberto Sassu <roberto.sassu@huawei.com>,
-        linux-efi <linux-efi@vger.kernel.org>,
-        LSM List <linux-security-module@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        =?UTF-8?Q?Thi=C3=A9baud_Weksteen?= <tweek@google.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <8c07c0b0-5610-bd5f-73d5-373178af6502@gmx.net>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Matthew,
+On 5/20/19 10:33 AM, Stefan Wahren wrote:
+> Hi Florian,
+> 
+> Am 01.05.19 um 21:47 schrieb Stefan Wahren:
+>> I2SE has been acquired, so i decided to use my private address now.
+>>
+>> Signed-off-by: Stefan Wahren <wahrenst@gmx.net>
+> should i send a pull request or can you pick it up directly?
 
-On Fri, May 17, 2019 at 11:39 PM Matthew Garrett
-<matthewgarrett@google.com> wrote:
->
-> Updated with the fixes from Bartosz and the header fixes folded in.
-> Bartosz, my machine still doesn't generate any final event log entries -
-> are you able to give this a test and make sure it's good?
-
-Yes, I'll check that and let you know. May be later this week.
-
-Best regards,
-Bartosz
+I will pick it up directly and send it as part of the fixes I have
+queued up for 5.2, thanks!
+-- 
+Florian
