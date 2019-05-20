@@ -2,114 +2,223 @@ Return-Path: <SRS0=lq4r=TU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EC07C04AAC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 13:50:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34DEBC04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 13:50:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3C7B021479
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 13:50:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=vmware.com header.i=@vmware.com header.b="Dm0+vC4G"
+	by mail.kernel.org (Postfix) with ESMTP id 08FB321479
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 13:50:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390029AbfETNuO (ORCPT
+        id S2390095AbfETNua (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 09:50:14 -0400
-Received: from mail-eopbgr760053.outbound.protection.outlook.com ([40.107.76.53]:59971
-        "EHLO NAM02-CY1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1731680AbfETNuN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 09:50:13 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vmware.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=rhHkYTpBK3+lU7Fk+rIuWDJwzh0ps9k52SW4uzjDH6I=;
- b=Dm0+vC4GK+GhGY80/qFfB5bC5HIaazvDQITgNSFAcTxNLybBQWJIhW1wS62JxeTybZ5mDWo5ZnwH/kb2jbitgBl857IR42+hOQVmwcVM3bHKp10cW9rWBauysCBoAINl9qeVfU1EIka0sPZe1qx9rG7Xe1XT5pvPLuSwM68dbS8=
-Received: from MN2PR05MB6141.namprd05.prod.outlook.com (20.178.241.217) by
- MN2PR05MB6702.namprd05.prod.outlook.com (20.178.247.91) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1922.10; Mon, 20 May 2019 13:50:03 +0000
-Received: from MN2PR05MB6141.namprd05.prod.outlook.com
- ([fe80::c19e:e8f8:b151:9ad]) by MN2PR05MB6141.namprd05.prod.outlook.com
- ([fe80::c19e:e8f8:b151:9ad%6]) with mapi id 15.20.1922.011; Mon, 20 May 2019
- 13:50:03 +0000
-From:   Thomas Hellstrom <thellstrom@vmware.com>
-To:     "murray.mcallister@gmail.com" <murray.mcallister@gmail.com>
-CC:     "daniel@ffwll.ch" <daniel@ffwll.ch>,
-        Linux-graphics-maintainer <Linux-graphics-maintainer@vmware.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "airlied@linux.ie" <airlied@linux.ie>
-Subject: Re: [PATCH] drm/vmwgfx: integer underflow in vmw_cmd_dx_set_shader()
- leading to an invalid read
-Thread-Topic: [PATCH] drm/vmwgfx: integer underflow in vmw_cmd_dx_set_shader()
- leading to an invalid read
-Thread-Index: AQHVDvKlN/fpmZU6PEeeQapES7AzUqZ0B/IA
-Date:   Mon, 20 May 2019 13:50:03 +0000
-Message-ID: <03eb2b3900505c7aba39846b533abb04f9e5682c.camel@vmware.com>
-References: <20190520095734.4655-1-murray.mcallister@gmail.com>
-In-Reply-To: <20190520095734.4655-1-murray.mcallister@gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=thellstrom@vmware.com; 
-x-originating-ip: [155.4.205.35]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 08c206fb-ebe7-4d8a-e19a-08d6dd2a0f7b
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(2017052603328)(7193020);SRVR:MN2PR05MB6702;
-x-ms-traffictypediagnostic: MN2PR05MB6702:
-x-ld-processed: b39138ca-3cee-4b4a-a4d6-cd83d9dd62f0,ExtAddr
-x-microsoft-antispam-prvs: <MN2PR05MB670280D229C7C55A17967790A1060@MN2PR05MB6702.namprd05.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:5797;
-x-forefront-prvs: 004395A01C
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(376002)(396003)(346002)(39860400002)(136003)(366004)(199004)(189003)(68736007)(256004)(1361003)(76176011)(14444005)(2351001)(102836004)(53936002)(6246003)(71200400001)(71190400001)(229853002)(316002)(6486002)(25786009)(6512007)(6436002)(5640700003)(64756008)(86362001)(66556008)(4326008)(6506007)(118296001)(7736002)(5660300002)(76116006)(54906003)(26005)(73956011)(186003)(91956017)(305945005)(66476007)(2906002)(6916009)(14454004)(66946007)(99286004)(36756003)(81166006)(81156014)(6116002)(8676002)(486006)(3846002)(446003)(11346002)(2616005)(478600001)(476003)(66066001)(8936002)(2501003)(66446008);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR05MB6702;H:MN2PR05MB6141.namprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: vmware.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: d6XXuCRag6W2IlwFhAFwSkL4znGFoTakvnhiixee9BG4cHyW41dvMwi709lg8xMavmYcsxfF6pxr7Zr9TECAFzwm6XFkJaMv1PeXzCS8bMAe9+08ox1Up1ifA5yR5mT6T4LcsPAw7Q4V8R92GqUGWON9oUDieKPZirf6KorCYWH5rJWR1BzjdPtIIZtClykd4KQYErG7Xtf7qYKdMil3QnA0ufKBs9eUtCGriJgX0IJpcbdFwXAa9pvrLpfILdgtbZ22I5LnRlerKCcQvX3mIzRpqz2eTaVcRQ5wJtfi3kWyndoRDL7VbwaoFc2xPgMCZNTDlYtAc/iTNhPh0agfa8onILyDh0VXQtqkEY+hFPzD/LXaUax5hvIToTFgpk2fnEPg903FkjWGr0auKFJ0MIQ7IsLgbK+HKgRmOXsaw3o=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <B0E31CDD1807F34981146390CAAE5CFE@namprd05.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Mon, 20 May 2019 09:50:30 -0400
+Received: from mga06.intel.com ([134.134.136.31]:33552 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731680AbfETNu3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 09:50:29 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 May 2019 06:50:29 -0700
+X-ExtLoop1: 1
+Received: from ejleta-mobl.amr.corp.intel.com (HELO [10.254.104.211]) ([10.254.104.211])
+  by orsmga006.jf.intel.com with ESMTP; 20 May 2019 06:50:28 -0700
+Subject: Re: [alsa-devel] [PATCH] ASoC: Intel: bytcr_5640.c:Refactored if
+ statement and removed buffer
+To:     Hans de Goede <hdegoede@redhat.com>,
+        nariman <narimantos@gmail.com>, broonie@kernel.org,
+        linux-kernel@vger.kernel.org, alsa-devel@alsa-project.org
+References: <20190519175706.3998-1-narimantos@gmail.com>
+ <783c330c-b706-9d19-467d-a19d2f414a05@redhat.com>
+From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Message-ID: <b4e2ee77-cab9-5457-9649-2ff0804fc2b9@linux.intel.com>
+Date:   Mon, 20 May 2019 08:50:28 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-X-OriginatorOrg: vmware.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 08c206fb-ebe7-4d8a-e19a-08d6dd2a0f7b
-X-MS-Exchange-CrossTenant-originalarrivaltime: 20 May 2019 13:50:03.6166
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: b39138ca-3cee-4b4a-a4d6-cd83d9dd62f0
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: thellstrom@vmware.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR05MB6702
+In-Reply-To: <783c330c-b706-9d19-467d-a19d2f414a05@redhat.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-VGhhbmtzLCBNdXJyYXksDQoNCkknbGwgaW5jbHVkZSBpbiB0aGUgbmV4dCB2bXdnZngtZml4ZXMg
-cHVsbCByZXF1ZXN0Lg0KDQpPbiBNb24sIDIwMTktMDUtMjAgYXQgMjE6NTcgKzEyMDAsIE11cnJh
-eSBNY0FsbGlzdGVyIHdyb3RlOg0KPiBJZiBTVkdBXzNEX0NNRF9EWF9TRVRfU0hBREVSIGlzIGNh
-bGxlZCB3aXRoIGEgc2hhZGVyIElEDQo+IG9mIFNWR0EzRF9JTlZBTElEX0lELCBhbmQgYSBzaGFk
-ZXIgdHlwZSBvZg0KPiBTVkdBM0RfU0hBREVSVFlQRV9JTlZBTElELCB0aGUgY2FsY3VsYXRlZCBi
-aW5kaW5nLnNoYWRlcl9zbG90DQo+IHdpbGwgYmUgNDI5NDk2NzI5NSwgbGVhZGluZyB0byBhbiBv
-dXQtb2YtYm91bmRzIHJlYWQgaW4NCj4gdm13X2JpbmRpbmdfbG9jKCkNCj4gd2hlbiB0aGUgb2Zm
-c2V0IGlzIGNhbGN1bGF0ZWQuDQo+IA0KPiBTaWduZWQtb2ZmLWJ5OiBNdXJyYXkgTWNBbGxpc3Rl
-ciA8bXVycmF5Lm1jYWxsaXN0ZXJAZ21haWwuY29tPg0KPiAtLS0NCj4gIGRyaXZlcnMvZ3B1L2Ry
-bS92bXdnZngvdm13Z2Z4X2V4ZWNidWYuYyB8IDMgKystDQo+ICAxIGZpbGUgY2hhbmdlZCwgMiBp
-bnNlcnRpb25zKCspLCAxIGRlbGV0aW9uKC0pDQo+IA0KPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9n
-cHUvZHJtL3Ztd2dmeC92bXdnZnhfZXhlY2J1Zi5jDQo+IGIvZHJpdmVycy9ncHUvZHJtL3Ztd2dm
-eC92bXdnZnhfZXhlY2J1Zi5jDQo+IGluZGV4IDJmZjdiYTA0ZDhjOC4uOWFlYjU0NDhjZmMxIDEw
-MDY0NA0KPiAtLS0gYS9kcml2ZXJzL2dwdS9kcm0vdm13Z2Z4L3Ztd2dmeF9leGVjYnVmLmMNCj4g
-KysrIGIvZHJpdmVycy9ncHUvZHJtL3Ztd2dmeC92bXdnZnhfZXhlY2J1Zi5jDQo+IEBAIC0yMTkz
-LDcgKzIxOTMsOCBAQCBzdGF0aWMgaW50IHZtd19jbWRfZHhfc2V0X3NoYWRlcihzdHJ1Y3QNCj4g
-dm13X3ByaXZhdGUgKmRldl9wcml2LA0KPiAgDQo+ICAJY21kID0gY29udGFpbmVyX29mKGhlYWRl
-ciwgdHlwZW9mKCpjbWQpLCBoZWFkZXIpOw0KPiAgDQo+IC0JaWYgKGNtZC0+Ym9keS50eXBlID49
-IFNWR0EzRF9TSEFERVJUWVBFX0RYMTBfTUFYKSB7DQo+ICsJaWYgKGNtZC0+Ym9keS50eXBlID49
-IFNWR0EzRF9TSEFERVJUWVBFX0RYMTBfTUFYIHx8DQo+ICsJICAgIGNtZC0+Ym9keS50eXBlIDwg
-U1ZHQTNEX1NIQURFUlRZUEVfTUlOKSB7DQo+ICAJCVZNV19ERUJVR19VU0VSKCJJbGxlZ2FsIHNo
-YWRlciB0eXBlICV1LlxuIiwNCj4gIAkJCSAgICAgICAodW5zaWduZWQgaW50KSBjbWQtPmJvZHku
-dHlwZSk7DQo+ICAJCXJldHVybiAtRUlOVkFMOw0K
+
+
+On 5/20/19 3:37 AM, Hans de Goede wrote:
+> Hi all,
+> 
+> On 19-05-19 19:57, nariman wrote:
+>> From: Nariman Etemadi <narimantos@gmail.com>
+>>
+>> in function snd_byt_rt5640_mc_probe and removed buffer 
+>> yt_rt5640_codec_aif_name & byt_rt5640_cpu_dai_name
+>>
+>> Signed-off-by: Nariman Etemadi <narimantos@gmail.com>
+> 
+> Series (all 4 patches) look good to me:
+> 
+> Reviewed-by: Hans de Goede <hdegoede@redhat.com>
+
+Thanks for the update (I believe it's the v2, yes?)
+
+the code is fine but can be polished to fix a couple of
+alignment issues
+
++	bits = 16;
+  	} else {
+
+and checkpatch.pl --strict is quite verbose here. Some reports look like 
+false-alarms but the commit message should be wrapped and alignement fixed.
+
+---------------------------------------------------------
+0001-ASoC-Intel-bytcr_5640.c-refactored-codec_fixup.patch
+---------------------------------------------------------
+CHECK: Alignment should match open parenthesis
+#86: FILE: sound/soc/intel/boards/bytcr_rt5640.c:980:
++	ret = snd_soc_dai_set_fmt(rtd->cpu_dai,
++		SND_SOC_DAIFMT_I2S     |
+
+total: 0 errors, 0 warnings, 1 checks, 82 lines checked
+
+NOTE: For some of the reported defects, checkpatch may be able to
+       mechanically convert to the typical style using --fix or 
+--fix-inplace.
+
+0001-ASoC-Intel-bytcr_5640.c-refactored-codec_fixup.patch has style 
+problems, please review.
+---------------------------------------------------------------
+0002-ASoC-Intel-bytcr_5640.c-Refactored-if-statement-and-.patch
+---------------------------------------------------------------
+WARNING: Possible unwrapped commit description (prefer a maximum 75 
+chars per line)
+#7:
+in function snd_byt_rt5640_mc_probe and removed buffer 
+yt_rt5640_codec_aif_name & byt_rt5640_cpu_dai_name
+
+total: 0 errors, 1 warnings, 0 checks, 40 lines checked
+
+NOTE: For some of the reported defects, checkpatch may be able to
+       mechanically convert to the typical style using --fix or 
+--fix-inplace.
+
+0002-ASoC-Intel-bytcr_5640.c-Refactored-if-statement-and-.patch has 
+style problems, please review.
+---------------------------------------------------------------
+0003-ASoC-Intel-bytcr_rt5651.c-remove-string-buffers-byt_.patch
+---------------------------------------------------------------
+WARNING: Possible unwrapped commit description (prefer a maximum 75 
+chars per line)
+#7:
+The snprintf calls filling byt_rt5651_cpu_dai_name / 
+byt_rt5651_cpu_dai_name always fill them with the same string 
+(ssp0-port" resp "rt5651-aif2"). So instead of keeping these buffers 
+around and making the cpu_dai_name / codec_dai_name point to this, 
+simply update the foo_dai_name pointers to directly point to a string 
+constant containing the desired string.
+
+total: 0 errors, 1 warnings, 0 checks, 38 lines checked
+
+NOTE: For some of the reported defects, checkpatch may be able to
+       mechanically convert to the typical style using --fix or 
+--fix-inplace.
+
+0003-ASoC-Intel-bytcr_rt5651.c-remove-string-buffers-byt_.patch has 
+style problems, please review.
+---------------------------------------------------------------
+0004-ASoC-Intel-cht_bsw_rt5645.c-Remove-buffer-and-snprin.patch
+---------------------------------------------------------------
+WARNING: Possible unwrapped commit description (prefer a maximum 75 
+chars per line)
+#7:
+The snprintf calls filling cht_rt5645_cpu_dai_name / 
+cht_rt5645_codec_aif_name
+
+WARNING: suspect code indent for conditional statements (8, 24)
+#35: FILE: sound/soc/intel/boards/cht_bsw_rt5645.c:642:
+  	if ((cht_rt5645_quirk & CHT_RT5645_SSP2_AIF2) ||
+[...]
++			cht_dailink[dai_index].codec_dai_name = "rt5645-aif2";
+
+WARNING: suspect code indent for conditional statements (8, 24)
+#49: FILE: sound/soc/intel/boards/cht_bsw_rt5645.c:646:
+  	if ((cht_rt5645_quirk & CHT_RT5645_SSP0_AIF1) ||
+[...]
++			cht_dailink[dai_index].cpu_dai_name = "ssp0-port";
+
+total: 0 errors, 3 warnings, 0 checks, 40 lines checked
+
+NOTE: For some of the reported defects, checkpatch may be able to
+       mechanically convert to the typical style using --fix or 
+--fix-inplace.
+
+0004-ASoC-Intel-cht_bsw_rt5645.c-Remove-buffer-and-snprin.patch has 
+style problems, please review.
+
+
+
+> 
+> Regards,
+> 
+> Hans
+> 
+> 
+>> ---
+>>   sound/soc/intel/boards/bytcr_rt5640.c | 26 ++++----------------------
+>>   1 file changed, 4 insertions(+), 22 deletions(-)
+>>
+>> diff --git a/sound/soc/intel/boards/bytcr_rt5640.c 
+>> b/sound/soc/intel/boards/bytcr_rt5640.c
+>> index 940eb27158da..0d91642ca287 100644
+>> --- a/sound/soc/intel/boards/bytcr_rt5640.c
+>> +++ b/sound/soc/intel/boards/bytcr_rt5640.c
+>> @@ -1075,8 +1075,6 @@ static struct snd_soc_dai_link byt_rt5640_dais[] 
+>> = {
+>>   /* SoC card */
+>>   static char byt_rt5640_codec_name[SND_ACPI_I2C_ID_LEN];
+>> -static char byt_rt5640_codec_aif_name[12]; /*  = "rt5640-aif[1|2]" */
+>> -static char byt_rt5640_cpu_dai_name[10]; /*  = "ssp[0|2]-port" */
+>>   static char byt_rt5640_long_name[40]; /* = 
+>> "bytcr-rt5640-*-spk-*-mic" */
+>>   static int byt_rt5640_suspend(struct snd_soc_card *card)
+>> @@ -1268,28 +1266,12 @@ static int snd_byt_rt5640_mc_probe(struct 
+>> platform_device *pdev)
+>>       log_quirks(&pdev->dev);
+>>       if ((byt_rt5640_quirk & BYT_RT5640_SSP2_AIF2) ||
+>> -        (byt_rt5640_quirk & BYT_RT5640_SSP0_AIF2)) {
+>> -
+>> -        /* fixup codec aif name */
+>> -        snprintf(byt_rt5640_codec_aif_name,
+>> -            sizeof(byt_rt5640_codec_aif_name),
+>> -            "%s", "rt5640-aif2");
+>> -
+>> -        byt_rt5640_dais[dai_index].codec_dai_name =
+>> -            byt_rt5640_codec_aif_name;
+>> -    }
+>> +        (byt_rt5640_quirk & BYT_RT5640_SSP0_AIF2))
+>> +        byt_rt5640_dais[dai_index].codec_dai_name = "rt5640-aif2";
+>>       if ((byt_rt5640_quirk & BYT_RT5640_SSP0_AIF1) ||
+>> -        (byt_rt5640_quirk & BYT_RT5640_SSP0_AIF2)) {
+>> -
+>> -        /* fixup cpu dai name name */
+>> -        snprintf(byt_rt5640_cpu_dai_name,
+>> -            sizeof(byt_rt5640_cpu_dai_name),
+>> -            "%s", "ssp0-port");
+>> -
+>> -        byt_rt5640_dais[dai_index].cpu_dai_name =
+>> -            byt_rt5640_cpu_dai_name;
+>> -    }
+>> +        (byt_rt5640_quirk & BYT_RT5640_SSP0_AIF2))
+>> +        byt_rt5640_dais[dai_index].cpu_dai_name = "ssp0-port";
+>>       if (byt_rt5640_quirk & BYT_RT5640_MCLK_EN) {
+>>           priv->mclk = devm_clk_get(&pdev->dev, "pmc_plt_clk_3");
+>>
+> _______________________________________________
+> Alsa-devel mailing list
+> Alsa-devel@alsa-project.org
+> https://mailman.alsa-project.org/mailman/listinfo/alsa-devel
