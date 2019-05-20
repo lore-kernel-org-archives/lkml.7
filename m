@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2B0FC04AAC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:34:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED6D6C04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:34:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9DFF320645
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:34:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C1B2720645
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:34:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558355684;
-	bh=qFmpTGVLbRz4mBAxDSw8NvsVt8gaTA3Jkk/yCGfbfOQ=;
+	s=default; t=1558355687;
+	bh=T8dAJpl6NQ3up2szpVSvaWP2GQMjzLSzmhNE8uxP6YY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=h9x/u91md39/oG7rdq3OpljcBG3eKKpqsF3ZZ7WMO+LiveR0BWUF5gTazj5bQJapP
-	 cVyjdFsuJQ/ScDj5O/79h5Danzzua3nX62n3MnP1e8Ryg5WnNXRthO4/AGMi5dotjQ
-	 MUH4FPL4g2tr/DPyQvD+Dz71zG2nJB6qiG/F1nto=
+	b=hvRd6pcweRlde78xuES/hboLrMEJl9tcRWOVXp7Sf72JqnPBi7Gp5G9BIytAkOEEo
+	 GamQ0sp/NQTue5BsPDHLXErRb27gEGNhUBURFxFJRGjwSzJo49axsYHeLvoljNNN0N
+	 KeX3ycK7cDnxAoKJtHXikNRNeE4otuhL4I29dG8E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390989AbfETMen (ORCPT
+        id S2390999AbfETMeq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 08:34:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52084 "EHLO mail.kernel.org"
+        Mon, 20 May 2019 08:34:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52168 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390961AbfETMei (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 08:34:38 -0400
+        id S2387444AbfETMel (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 08:34:41 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C403920815;
-        Mon, 20 May 2019 12:34:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7758320645;
+        Mon, 20 May 2019 12:34:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558355678;
-        bh=qFmpTGVLbRz4mBAxDSw8NvsVt8gaTA3Jkk/yCGfbfOQ=;
+        s=default; t=1558355681;
+        bh=T8dAJpl6NQ3up2szpVSvaWP2GQMjzLSzmhNE8uxP6YY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zxZukvHpB3yOw8q2J/Szab1VZ0U7MQiEeMz7SQFpHmShPhWtBBaYpOzPgE8FCo9XM
-         5kvHPrAJJI6XqC6fJo/xn1ctGsNEtEr5UhyIA/2JPkLISsGg5KR6Wo2aqIVqkp3WRZ
-         xfwtXAYJbtlXj7TAphXFHXGvcCdfbIJJI21dwHfc=
+        b=zxABOdsmYE+WXf1bvj+PYKKuDdzkpBJ2uU39F1UYvpo13SodPtEddnxzkHiqFWMkK
+         xAlRpF9z5z1Zoqn3liRDGdEXTxu/xU0z2/zHQ9HPXIiB3jKCZaI8hhI3/dQKBg7UBM
+         mVtZr5DlpgooBtwuvjS2UMaBVsKAX+kfPOLwBEmo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Biggers <ebiggers@google.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>
-Subject: [PATCH 5.1 042/128] crypto: arm64/aes-neonbs - dont access already-freed walk.iv
-Date:   Mon, 20 May 2019 14:13:49 +0200
-Message-Id: <20190520115252.564916767@linuxfoundation.org>
+        stable@vger.kernel.org,
+        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
+        Dan Williams <dan.j.williams@intel.com>
+Subject: [PATCH 5.1 043/128] drivers/dax: Allow to include DEV_DAX_PMEM as builtin
+Date:   Mon, 20 May 2019 14:13:50 +0200
+Message-Id: <20190520115252.634655843@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190520115249.449077487@linuxfoundation.org>
 References: <20190520115249.449077487@linuxfoundation.org>
@@ -59,41 +60,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Biggers <ebiggers@google.com>
+From: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
 
-commit 4a8108b70508df0b6c4ffa4a3974dab93dcbe851 upstream.
+commit 67476656febd7ec5f1fe1aeec3c441fcf53b1e45 upstream.
 
-If the user-provided IV needs to be aligned to the algorithm's
-alignmask, then skcipher_walk_virt() copies the IV into a new aligned
-buffer walk.iv.  But skcipher_walk_virt() can fail afterwards, and then
-if the caller unconditionally accesses walk.iv, it's a use-after-free.
+This move the dependency to DEV_DAX_PMEM_COMPAT such that only
+if DEV_DAX_PMEM is built as module we can allow the compat support.
 
-xts-aes-neonbs doesn't set an alignmask, so currently it isn't affected
-by this despite unconditionally accessing walk.iv.  However this is more
-subtle than desired, and unconditionally accessing walk.iv has caused a
-real problem in other algorithms.  Thus, update xts-aes-neonbs to start
-checking the return value of skcipher_walk_virt().
+This allows to test the new code easily in a emulation setup where we
+often build things without module support.
 
-Fixes: 1abee99eafab ("crypto: arm64/aes - reimplement bit-sliced ARM/NEON implementation for arm64")
-Cc: <stable@vger.kernel.org> # v4.11+
-Signed-off-by: Eric Biggers <ebiggers@google.com>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Cc: <stable@vger.kernel.org>
+Fixes: 730926c3b099 ("device-dax: Add /sys/class/dax backwards compatibility")
+Signed-off-by: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
+Signed-off-by: Dan Williams <dan.j.williams@intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/arm64/crypto/aes-neonbs-glue.c |    2 ++
- 1 file changed, 2 insertions(+)
+ drivers/dax/Kconfig |    3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
---- a/arch/arm64/crypto/aes-neonbs-glue.c
-+++ b/arch/arm64/crypto/aes-neonbs-glue.c
-@@ -304,6 +304,8 @@ static int __xts_crypt(struct skcipher_r
- 	int err;
+--- a/drivers/dax/Kconfig
++++ b/drivers/dax/Kconfig
+@@ -23,7 +23,6 @@ config DEV_DAX
+ config DEV_DAX_PMEM
+ 	tristate "PMEM DAX: direct access to persistent memory"
+ 	depends on LIBNVDIMM && NVDIMM_DAX && DEV_DAX
+-	depends on m # until we can kill DEV_DAX_PMEM_COMPAT
+ 	default DEV_DAX
+ 	help
+ 	  Support raw access to persistent memory.  Note that this
+@@ -50,7 +49,7 @@ config DEV_DAX_KMEM
  
- 	err = skcipher_walk_virt(&walk, req, false);
-+	if (err)
-+		return err;
- 
- 	kernel_neon_begin();
- 	neon_aes_ecb_encrypt(walk.iv, walk.iv, ctx->twkey, ctx->key.rounds, 1);
+ config DEV_DAX_PMEM_COMPAT
+ 	tristate "PMEM DAX: support the deprecated /sys/class/dax interface"
+-	depends on DEV_DAX_PMEM
++	depends on m && DEV_DAX_PMEM=m
+ 	default DEV_DAX_PMEM
+ 	help
+ 	  Older versions of the libdaxctl library expect to find all
 
 
