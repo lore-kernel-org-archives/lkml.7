@@ -2,186 +2,165 @@ Return-Path: <SRS0=lq4r=TU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.8 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UPPERCASE_50_75,
+	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A5F4C04E87
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 23:53:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D07A2C04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 23:54:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 23E9E2173C
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 23:53:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8A3DF2083B
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 23:54:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Dx4+lU9j"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="nCPg27Kh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727692AbfETXxb (ORCPT
+        id S1727387AbfETXyq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 19:53:31 -0400
-Received: from mail-vs1-f67.google.com ([209.85.217.67]:43661 "EHLO
-        mail-vs1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727414AbfETXxU (ORCPT
+        Mon, 20 May 2019 19:54:46 -0400
+Received: from mail-pg1-f201.google.com ([209.85.215.201]:46687 "EHLO
+        mail-pg1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727156AbfETXyq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 19:53:20 -0400
-Received: by mail-vs1-f67.google.com with SMTP id d128so10039184vsc.10
-        for <linux-kernel@vger.kernel.org>; Mon, 20 May 2019 16:53:19 -0700 (PDT)
+        Mon, 20 May 2019 19:54:46 -0400
+Received: by mail-pg1-f201.google.com with SMTP id t16so10803890pgv.13
+        for <linux-kernel@vger.kernel.org>; Mon, 20 May 2019 16:54:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=DOow0La3W2Essx5H031uTOWFbAnDcBGJlXVfamcoL3w=;
-        b=Dx4+lU9jqXDtln/17Mrd8EV4Dxp/5zASL+1Y8Niio9Pqb06rC0aI8wedP3ohgziyEW
-         jppEZzDyXiAo/njLuzUnS0cZqB4tlCDf5SInO7A6W3spDccr9FtwpNa39rs9vTjn9Pol
-         gFjx66w14oqATAsCg/4xevDnAIAQo2Q0YzZMa3Njt5yFKOelm+SuxVUsWhk4woonxC/+
-         9D5FC/UAWBXCau72ARfrLZBFx2zGvzGs/3QYXrUb8NFYR9FnDOYRxbwkdocqirkPGsSw
-         AxoIYh3MeUP070fRiIy388VcetefsVsnX0FjFahzGTgGe2zBg5LkCE8dqpCaiB/D65kK
-         79Pw==
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=pO+T3YM/eg4pYPScPkRyTQ6bvK/T9SG3Sddd2C72QZ4=;
+        b=nCPg27KhSaoV69UNbxgZeb4MsHG4oh6+KXAWftJW3FpQ/H3Z4RD31XVcnhrNgmCxcr
+         9PiV3wPS6vt9T6PMbFpHJQWx0bULg/TCwLdj2QTvOt3SB4W5OfEYuTlIBopBKFuZCUW5
+         XyxBQgzel0r98VphvtvGAJJBKLQ2S/zr1SGd/AMZwX8xlZGMg67TNp9+dcROd3GuCo7i
+         ipApDrq3Bb1KQdKW/kgsOLa3btI3sQ+JBbw2AZlw/sn+N7Ej3bzMpJ0UQYriXgPU420y
+         fmNNsDVM4hItmYdgIG/gX8qQ5Ar6QWrOcC8yiUb6yVqGdEkx9ATBZB9fhKJaImc5/bm/
+         A9Kg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=DOow0La3W2Essx5H031uTOWFbAnDcBGJlXVfamcoL3w=;
-        b=tPlH4TmljhrNeGmnfpyeEDiCcfTMWVz8tRDJAZ2QEo+ppeEwg0YvJXr8rfyd5top95
-         h5y4rQLkZXHJmyYHjWyd+lC0MG85+nnBIox9ZsfxDix6GNiqGuFCV7uttWqmvSqn17p5
-         7wHwQkf5ejpuZ3lA0W7KByL++0UBabosYbOL1TqObpU+O84UjtT9jEMuhBG2qp5myqzi
-         rA+qXH3UeYg2MI6QcTzfmGIEiCHh75P5yhGYIEv5n3lGt1YLkLdjeS4TQ65ibSPuVqB+
-         PWioQ9aNd6f/UP7xK6RIZ86PjqrPfADYTWxyETRECCCc9kqFjDwgrO9mGmYT+Kdsb8uS
-         J/ag==
-X-Gm-Message-State: APjAAAUfWOm0z94zZj3//SRTcH9jcifjqmvbw1C3AVqrdiCOkKgdq3V2
-        MKKIM8NE2w30afkj9akgsI5XafOKqGu+yEt40sL1Ximf/YIj2Q==
-X-Google-Smtp-Source: APXvYqyR0JsazypV3hCmWgdEzYpNKlJ3PjKF8ENA0Fjbz+eEGES/3XAyQs/kAm4YlbOIpNAtAAzvW9GW3+g1GtceCfY=
-X-Received: by 2002:a67:be17:: with SMTP id x23mr26047761vsq.173.1558396399029;
- Mon, 20 May 2019 16:53:19 -0700 (PDT)
-MIME-Version: 1.0
-References: <cover.1557160186.git.andreyknvl@google.com> <20190517144931.GA56186@arrakis.emea.arm.com>
-In-Reply-To: <20190517144931.GA56186@arrakis.emea.arm.com>
-From:   Evgenii Stepanov <eugenis@google.com>
-Date:   Mon, 20 May 2019 16:53:07 -0700
-Message-ID: <CAFKCwrj6JEtp4BzhqO178LFJepmepoMx=G+YdC8sqZ3bcBp3EQ@mail.gmail.com>
-Subject: Re: [PATCH v15 00/17] arm64: untag user pointers passed to the kernel
-To:     Catalin Marinas <catalin.marinas@arm.com>
-Cc:     Andrey Konovalov <andreyknvl@google.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Memory Management List <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        linux-rdma@vger.kernel.org, linux-media@vger.kernel.org,
-        kvm@vger.kernel.org,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Kees Cook <keescook@chromium.org>,
-        Yishai Hadas <yishaih@mellanox.com>,
-        Felix Kuehling <Felix.Kuehling@amd.com>,
-        Alexander Deucher <Alexander.Deucher@amd.com>,
-        Christian Koenig <Christian.Koenig@amd.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Jens Wiklander <jens.wiklander@linaro.org>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Leon Romanovsky <leon@kernel.org>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Kostya Serebryany <kcc@google.com>,
-        Lee Smith <Lee.Smith@arm.com>,
-        Ramana Radhakrishnan <Ramana.Radhakrishnan@arm.com>,
-        Jacob Bramley <Jacob.Bramley@arm.com>,
-        Ruben Ayrapetyan <Ruben.Ayrapetyan@arm.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
-        Dave Martin <Dave.Martin@arm.com>,
-        Kevin Brodsky <kevin.brodsky@arm.com>,
-        Szabolcs Nagy <Szabolcs.Nagy@arm.com>,
-        Elliott Hughes <enh@google.com>
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=pO+T3YM/eg4pYPScPkRyTQ6bvK/T9SG3Sddd2C72QZ4=;
+        b=TcZacGuIeaY5pn/3M9MrPAO+uzXCspIK9m04mrYnsh+ACxykjcPq0SDV97ivDbBP57
+         bnONLB8bX4U7PGyDgPJi1ukHz6LC0705iXwKp0jqklcZxV8v00VNVQXPwJhcwk8z7aSp
+         UbqorykmwckpKGpNSstGgU0hM2qEWybKOPJS7T6Kt+Uwyxukf/3pTGvFVcJ50AmZuAMO
+         +0piGbVeckXj7J6qKVu94sa+qQckT5EHvQyIirAS+rrwBVRWel4ln7C06FJ215SIiPAn
+         t0Hv0CLmGeTn8DwwnxDz+rqpIHBVyNiwSNO8CTXgFUENwYO/x+aCuCzHnDzBgpLIl6YZ
+         ulcw==
+X-Gm-Message-State: APjAAAXHmdnBzUlPreQdUg6PohL84WTT7oweRPV0vi+q/YOyqVQsQfNr
+        Wz6uxplyGulcmhEWqmZzXrlrIo+onPSdjcC5kM4Vq6ptXh0iOmJvwKUv1VEKlvBQJKZ3Vm5IxiA
+        UDU/rn8fNLVjTGJzR5WxzdBjZbXMf2f+vZyFFEq2zjvnSSIUAImNKWkodvlnNqFuaF6WSXZeP
+X-Google-Smtp-Source: APXvYqz6/l3SYtpqg8PAF9CsRv1ez8umZPkuigZyUWUKucY3RCbdZ3NsDg3QChMxRaQQTspUffYpsdFk9/6U
+X-Received: by 2002:a63:1354:: with SMTP id 20mr76949322pgt.356.1558396485001;
+ Mon, 20 May 2019 16:54:45 -0700 (PDT)
+Date:   Mon, 20 May 2019 16:54:24 -0700
+Message-Id: <20190520235424.196961-1-eranian@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.21.0.1020.gf2820cf01a-goog
+Subject: [PATCH] perf/x86/intel/ds: fix EVENT vs. UEVENT PEBS constraints
+From:   Stephane Eranian <eranian@google.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     mingo@kernel.org, peterz@infradead.org, ak@linux.intel.com,
+        kan.liang@intel.com, jolsa@redhat.com, vincent.weaver@maine.edu
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 17, 2019 at 7:49 AM Catalin Marinas <catalin.marinas@arm.com> wrote:
->
-> Hi Andrey,
->
-> On Mon, May 06, 2019 at 06:30:46PM +0200, Andrey Konovalov wrote:
-> > One of the alternative approaches to untagging that was considered is to
-> > completely strip the pointer tag as the pointer enters the kernel with
-> > some kind of a syscall wrapper, but that won't work with the countless
-> > number of different ioctl calls. With this approach we would need a custom
-> > wrapper for each ioctl variation, which doesn't seem practical.
->
-> The more I look at this problem, the less convinced I am that we can
-> solve it in a way that results in a stable ABI covering ioctls(). While
-> for the Android kernel codebase it could be simpler as you don't upgrade
-> the kernel version every 2.5 months, for the mainline kernel this
-> doesn't scale. Any run-time checks are relatively limited in terms of
-> drivers covered. Better static checking would be nice as a long term
-> solution but we didn't get anywhere with the discussion last year.
->
-> IMO (RFC for now), I see two ways forward:
->
-> 1. Make this a user space problem and do not allow tagged pointers into
->    the syscall ABI. A libc wrapper would have to convert structures,
->    parameters before passing them into the kernel. Note that we can
->    still support the hardware MTE in the kernel by enabling tagged
->    memory ranges, saving/restoring tags etc. but not allowing tagged
->    addresses at the syscall boundary.
->
-> 2. Similar shim to the above libc wrapper but inside the kernel
->    (arch/arm64 only; most pointer arguments could be covered with an
->    __SC_CAST similar to the s390 one). There are two differences from
->    what we've discussed in the past:
->
->    a) this is an opt-in by the user which would have to explicitly call
->       prctl(). If it returns -ENOTSUPP etc., the user won't be allowed
->       to pass tagged pointers to the kernel. This would probably be the
->       responsibility of the C lib to make sure it doesn't tag heap
->       allocations. If the user did not opt-in, the syscalls are routed
->       through the normal path (no untagging address shim).
->
->    b) ioctl() and other blacklisted syscalls (prctl) will not accept
->       tagged pointers (to be documented in Vicenzo's ABI patches).
->
-> It doesn't solve the problems we are trying to address but 2.a saves us
-> from blindly relaxing the ABI without knowing how to easily assess new
-> code being merged (over 500K lines between kernel versions). Existing
-> applications (who don't opt-in) won't inadvertently start using the new
-> ABI which could risk becoming de-facto ABI that we need to support on
-> the long run.
->
-> Option 1 wouldn't solve the ioctl() problem either and while it makes
-> things simpler for the kernel, I am aware that it's slightly more
-> complicated in user space (but I really don't mind if you prefer option
-> 1 ;)).
->
-> The tagged pointers (whether hwasan or MTE) should ideally be a
-> transparent feature for the application writer but I don't think we can
-> solve it entirely and make it seamless for the multitude of ioctls().
-> I'd say you only opt in to such feature if you know what you are doing
-> and the user code takes care of specific cases like ioctl(), hence the
-> prctl() proposal even for the hwasan.
->
-> Comments welcomed.
+This patch fixes an issue revealed by the following commit:
+Commit 6b89d4c1ae85 ("perf/x86/intel: Fix INTEL_FLAGS_EVENT_CONSTRAINT* masking")
 
-Any userspace shim approach is problematic for Android because of the
-apps that use raw system calls. AFAIK, all apps written in Go are in
-that camp - I'm not sure how common they are, but getting them all
-recompiled is probably not realistic.
+That patch modified INTEL_FLAGS_EVENT_CONSTRAINT() to only look at the event code
+when matching a constraint. If code+umask were needed, then the
+INTEL_FLAGS_UEVENT_CONSTRAINT() macro was needed instead.
+This broke with some of the constraints for PEBS events.
+Several of them, including the one used for cycles:p, cycles:pp, cycles:ppp
+fell in that category and caused the event to be rejected in PEBS mode.
+In other words, on some platforms a cmdline such as:
 
-The way I see it, a patch that breaks handling of tagged pointers is
-not that different from, say, a patch that adds a wild pointer
-dereference. Both are bugs; the difference is that (a) the former
-breaks a relatively uncommon target and (b) it's arguably an easier
-mistake to make. If MTE adoption goes well, (a) will not be the case
-for long.
+  $ perf top -e cycles:pp
 
-This is a bit of a chicken-and-egg problem. In a world where memory
-allocators on one or several popular platforms generate pointers with
-non-zero tags, any such breakage will be caught in testing.
-Unfortunately to reach that state we need the kernel to start
-accepting tagged pointers first, and then hold on for a couple of
-years until userspace catches up.
+  would fail with EINVAL.
 
-Perhaps we can start by whitelisting ioctls by driver?
+This patch fixes this issue by properly using INTEL_FLAGS_UEVENT_CONSTRAINT()
+when needed in the PEBS constraint tables.
+
+Reported-by: Ingo Molnar <mingo@kernel.org>
+Signed-off-by: Stephane Eranian <eranian@google.com>
+---
+ arch/x86/events/intel/ds.c | 20 ++++++++++----------
+ 1 file changed, 10 insertions(+), 10 deletions(-)
+
+diff --git a/arch/x86/events/intel/ds.c b/arch/x86/events/intel/ds.c
+index ea2cb6b7e456..88e73652a10c 100644
+--- a/arch/x86/events/intel/ds.c
++++ b/arch/x86/events/intel/ds.c
+@@ -743,7 +743,7 @@ struct event_constraint intel_westmere_pebs_event_constraints[] = {
+ 	INTEL_FLAGS_EVENT_CONSTRAINT(0xcb, 0xf),    /* MEM_LOAD_RETIRED.* */
+ 	INTEL_FLAGS_EVENT_CONSTRAINT(0xf7, 0xf),    /* FP_ASSIST.* */
+ 	/* INST_RETIRED.ANY_P, inv=1, cmask=16 (cycles:p). */
+-	INTEL_FLAGS_EVENT_CONSTRAINT(0x108000c0, 0x0f),
++	INTEL_FLAGS_UEVENT_CONSTRAINT(0x108000c0, 0x0f),
+ 	EVENT_CONSTRAINT_END
+ };
+ 
+@@ -752,7 +752,7 @@ struct event_constraint intel_snb_pebs_event_constraints[] = {
+ 	INTEL_PLD_CONSTRAINT(0x01cd, 0x8),    /* MEM_TRANS_RETIRED.LAT_ABOVE_THR */
+ 	INTEL_PST_CONSTRAINT(0x02cd, 0x8),    /* MEM_TRANS_RETIRED.PRECISE_STORES */
+ 	/* UOPS_RETIRED.ALL, inv=1, cmask=16 (cycles:p). */
+-	INTEL_FLAGS_EVENT_CONSTRAINT(0x108001c2, 0xf),
++	INTEL_FLAGS_UEVENT_CONSTRAINT(0x108001c2, 0xf),
+         INTEL_EXCLEVT_CONSTRAINT(0xd0, 0xf),    /* MEM_UOP_RETIRED.* */
+         INTEL_EXCLEVT_CONSTRAINT(0xd1, 0xf),    /* MEM_LOAD_UOPS_RETIRED.* */
+         INTEL_EXCLEVT_CONSTRAINT(0xd2, 0xf),    /* MEM_LOAD_UOPS_LLC_HIT_RETIRED.* */
+@@ -767,9 +767,9 @@ struct event_constraint intel_ivb_pebs_event_constraints[] = {
+         INTEL_PLD_CONSTRAINT(0x01cd, 0x8),    /* MEM_TRANS_RETIRED.LAT_ABOVE_THR */
+ 	INTEL_PST_CONSTRAINT(0x02cd, 0x8),    /* MEM_TRANS_RETIRED.PRECISE_STORES */
+ 	/* UOPS_RETIRED.ALL, inv=1, cmask=16 (cycles:p). */
+-	INTEL_FLAGS_EVENT_CONSTRAINT(0x108001c2, 0xf),
++	INTEL_FLAGS_UEVENT_CONSTRAINT(0x108001c2, 0xf),
+ 	/* INST_RETIRED.PREC_DIST, inv=1, cmask=16 (cycles:ppp). */
+-	INTEL_FLAGS_EVENT_CONSTRAINT(0x108001c0, 0x2),
++	INTEL_FLAGS_UEVENT_CONSTRAINT(0x108001c0, 0x2),
+ 	INTEL_EXCLEVT_CONSTRAINT(0xd0, 0xf),    /* MEM_UOP_RETIRED.* */
+ 	INTEL_EXCLEVT_CONSTRAINT(0xd1, 0xf),    /* MEM_LOAD_UOPS_RETIRED.* */
+ 	INTEL_EXCLEVT_CONSTRAINT(0xd2, 0xf),    /* MEM_LOAD_UOPS_LLC_HIT_RETIRED.* */
+@@ -783,9 +783,9 @@ struct event_constraint intel_hsw_pebs_event_constraints[] = {
+ 	INTEL_FLAGS_UEVENT_CONSTRAINT(0x01c0, 0x2), /* INST_RETIRED.PRECDIST */
+ 	INTEL_PLD_CONSTRAINT(0x01cd, 0xf),    /* MEM_TRANS_RETIRED.* */
+ 	/* UOPS_RETIRED.ALL, inv=1, cmask=16 (cycles:p). */
+-	INTEL_FLAGS_EVENT_CONSTRAINT(0x108001c2, 0xf),
++	INTEL_FLAGS_UEVENT_CONSTRAINT(0x108001c2, 0xf),
+ 	/* INST_RETIRED.PREC_DIST, inv=1, cmask=16 (cycles:ppp). */
+-	INTEL_FLAGS_EVENT_CONSTRAINT(0x108001c0, 0x2),
++	INTEL_FLAGS_UEVENT_CONSTRAINT(0x108001c0, 0x2),
+ 	INTEL_FLAGS_UEVENT_CONSTRAINT_DATALA_NA(0x01c2, 0xf), /* UOPS_RETIRED.ALL */
+ 	INTEL_FLAGS_UEVENT_CONSTRAINT_DATALA_XLD(0x11d0, 0xf), /* MEM_UOPS_RETIRED.STLB_MISS_LOADS */
+ 	INTEL_FLAGS_UEVENT_CONSTRAINT_DATALA_XLD(0x21d0, 0xf), /* MEM_UOPS_RETIRED.LOCK_LOADS */
+@@ -806,9 +806,9 @@ struct event_constraint intel_bdw_pebs_event_constraints[] = {
+ 	INTEL_FLAGS_UEVENT_CONSTRAINT(0x01c0, 0x2), /* INST_RETIRED.PRECDIST */
+ 	INTEL_PLD_CONSTRAINT(0x01cd, 0xf),    /* MEM_TRANS_RETIRED.* */
+ 	/* UOPS_RETIRED.ALL, inv=1, cmask=16 (cycles:p). */
+-	INTEL_FLAGS_EVENT_CONSTRAINT(0x108001c2, 0xf),
++	INTEL_FLAGS_UEVENT_CONSTRAINT(0x108001c2, 0xf),
+ 	/* INST_RETIRED.PREC_DIST, inv=1, cmask=16 (cycles:ppp). */
+-	INTEL_FLAGS_EVENT_CONSTRAINT(0x108001c0, 0x2),
++	INTEL_FLAGS_UEVENT_CONSTRAINT(0x108001c0, 0x2),
+ 	INTEL_FLAGS_UEVENT_CONSTRAINT_DATALA_NA(0x01c2, 0xf), /* UOPS_RETIRED.ALL */
+ 	INTEL_FLAGS_UEVENT_CONSTRAINT_DATALA_LD(0x11d0, 0xf), /* MEM_UOPS_RETIRED.STLB_MISS_LOADS */
+ 	INTEL_FLAGS_UEVENT_CONSTRAINT_DATALA_LD(0x21d0, 0xf), /* MEM_UOPS_RETIRED.LOCK_LOADS */
+@@ -829,9 +829,9 @@ struct event_constraint intel_bdw_pebs_event_constraints[] = {
+ struct event_constraint intel_skl_pebs_event_constraints[] = {
+ 	INTEL_FLAGS_UEVENT_CONSTRAINT(0x1c0, 0x2),	/* INST_RETIRED.PREC_DIST */
+ 	/* INST_RETIRED.PREC_DIST, inv=1, cmask=16 (cycles:ppp). */
+-	INTEL_FLAGS_EVENT_CONSTRAINT(0x108001c0, 0x2),
++	INTEL_FLAGS_UEVENT_CONSTRAINT(0x108001c0, 0x2),
+ 	/* INST_RETIRED.TOTAL_CYCLES_PS (inv=1, cmask=16) (cycles:p). */
+-	INTEL_FLAGS_EVENT_CONSTRAINT(0x108000c0, 0x0f),
++	INTEL_FLAGS_UEVENT_CONSTRAINT(0x108000c0, 0x0f),
+ 	INTEL_PLD_CONSTRAINT(0x1cd, 0xf),		      /* MEM_TRANS_RETIRED.* */
+ 	INTEL_FLAGS_UEVENT_CONSTRAINT_DATALA_LD(0x11d0, 0xf), /* MEM_INST_RETIRED.STLB_MISS_LOADS */
+ 	INTEL_FLAGS_UEVENT_CONSTRAINT_DATALA_ST(0x12d0, 0xf), /* MEM_INST_RETIRED.STLB_MISS_STORES */
+-- 
+2.21.0.1020.gf2820cf01a-goog
+
