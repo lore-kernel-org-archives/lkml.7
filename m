@@ -2,53 +2,54 @@ Return-Path: <SRS0=lq4r=TU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF226C46470
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:52:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E293BC04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:52:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 99BF0213F2
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:52:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B945820645
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:52:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558356765;
-	bh=cKO9/xSxyH2xpC+xVrRNNnOCL61zENGJ0t5X4aAQJwc=;
+	s=default; t=1558356768;
+	bh=g+JruYIfqgO+BWwlMhcvFwYfPn/bYDmBg8KUOWPJY0U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mxkWuDazSWOYEG6L+Zu04iNlWMYHFGjeaQwpAYGmy+/h95Q7lLTro4Oxq6cRU9y5u
-	 vRNVzRNBLU0Lge9ron/rT4xWjiOznWAecg2+ivgeadaw8GKodKV03salA8iJqevvay
-	 8phrD82UIbB8uVJFuM5tVCV+PDptXBlXYQbI+8Pg=
+	b=iercPLPpfxgKV/y5A8HuNUnHhwLL3rEavzZHE4mPV+2I5tZyaUIqQ+nfzjFBS6QRs
+	 M1+EALvKoBrMj19+HJHUEvQckGGKkPBCxre8mbMNiwn2eabA0UjjegSTKwpnpr+QEA
+	 BGaau/I10q/J21/ptSOqtO02E8Hl44YqgsMUWyyk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387721AbfETMSe (ORCPT
+        id S2391532AbfETMwr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 08:18:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59522 "EHLO mail.kernel.org"
+        Mon, 20 May 2019 08:52:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59636 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733208AbfETMS0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 08:18:26 -0400
+        id S1730819AbfETMSb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 08:18:31 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6C64220656;
-        Mon, 20 May 2019 12:18:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CA1E5208C3;
+        Mon, 20 May 2019 12:18:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558354705;
-        bh=cKO9/xSxyH2xpC+xVrRNNnOCL61zENGJ0t5X4aAQJwc=;
+        s=default; t=1558354711;
+        bh=g+JruYIfqgO+BWwlMhcvFwYfPn/bYDmBg8KUOWPJY0U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cDjCBvVN1bpCdsiAl5w1KhgjkTZw/UfYRnKbMEiBMS5EjPkPh01/J3Oh2l/K5TuK3
-         5CyaYQiR5q1DOSqAb/M/bo0lEt+qml65KAYN/BlSZK6JcWyWnujryhQFowatVWK5Dp
-         fHlBdXSVseVqUB65Segu0iVNz+LLYkomsDRqLS1c=
+        b=VQBg8SsLq9XnMbpX5rzaeX/1XhunP+0QEyVP/8WbnoM6dVwA9XZQ7i9QoMnlyJsoR
+         Uwrvnfv40Gbv0G6EZHpzFbK6M+in6cVf1y/muZQC5nePyMgalmhxJgs8jSsU9sIgf7
+         xBxtGtkZVq5SP+5dL3Db3NXFnB+eCB2WvP+NLJmA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Sebastian Reichel <sebastian.reichel@collabora.com>
-Subject: [PATCH 4.14 12/63] power: supply: axp288_charger: Fix unchecked return value
-Date:   Mon, 20 May 2019 14:13:51 +0200
-Message-Id: <20190520115232.528988173@linuxfoundation.org>
+        stable@vger.kernel.org, Dexuan Cui <decui@microsoft.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Stephen Hemminger <stephen@networkplumber.org>,
+        Michael Kelley <mikelley@microsoft.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 03/63] PCI: hv: Fix a memory leak in hv_eject_device_work()
+Date:   Mon, 20 May 2019 14:13:42 +0200
+Message-Id: <20190520115231.555170179@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190520115231.137981521@linuxfoundation.org>
 References: <20190520115231.137981521@linuxfoundation.org>
@@ -61,42 +62,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Gustavo A. R. Silva <gustavo@embeddedor.com>
+[ Upstream commit 05f151a73ec2b23ffbff706e5203e729a995cdc2 ]
 
-commit c3422ad5f84a66739ec6a37251ca27638c85b6be upstream.
+When a device is created in new_pcichild_device(), hpdev->refs is set
+to 2 (i.e. the initial value of 1 plus the get_pcichild()).
 
-Currently there is no check on platform_get_irq() return value
-in case it fails, hence never actually reporting any errors and
-causing unexpected behavior when using such value as argument
-for function regmap_irq_get_virq().
+When we hot remove the device from the host, in a Linux VM we first call
+hv_pci_eject_device(), which increases hpdev->refs by get_pcichild() and
+then schedules a work of hv_eject_device_work(), so hpdev->refs becomes
+3 (let's ignore the paired get/put_pcichild() in other places). But in
+hv_eject_device_work(), currently we only call put_pcichild() twice,
+meaning the 'hpdev' struct can't be freed in put_pcichild().
 
-Fix this by adding a proper check, a message reporting any errors
-and returning *pirq*
+Add one put_pcichild() to fix the memory leak.
 
-Addresses-Coverity-ID: 1443940 ("Improper use of negative value")
-Fixes: 843735b788a4 ("power: axp288_charger: axp288 charger driver")
+The device can also be removed when we run "rmmod pci-hyperv". On this
+path (hv_pci_remove() -> hv_pci_bus_exit() -> hv_pci_devices_present()),
+hpdev->refs is 2, and we do correctly call put_pcichild() twice in
+pci_devices_present_work().
+
+Fixes: 4daace0d8ce8 ("PCI: hv: Add paravirtual PCI front-end for Microsoft Hyper-V VMs")
+Signed-off-by: Dexuan Cui <decui@microsoft.com>
+[lorenzo.pieralisi@arm.com: commit log rework]
+Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Reviewed-by: Stephen Hemminger <stephen@networkplumber.org>
+Reviewed-by:  Michael Kelley <mikelley@microsoft.com>
 Cc: stable@vger.kernel.org
-Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
-Reviewed-by: Hans de Goede <hdegoede@redhat.com>
-Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/power/supply/axp288_charger.c |    4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/pci/host/pci-hyperv.c | 1 +
+ 1 file changed, 1 insertion(+)
 
---- a/drivers/power/supply/axp288_charger.c
-+++ b/drivers/power/supply/axp288_charger.c
-@@ -881,6 +881,10 @@ static int axp288_charger_probe(struct p
- 	/* Register charger interrupts */
- 	for (i = 0; i < CHRG_INTR_END; i++) {
- 		pirq = platform_get_irq(info->pdev, i);
-+		if (pirq < 0) {
-+			dev_err(&pdev->dev, "Failed to get IRQ: %d\n", pirq);
-+			return pirq;
-+		}
- 		info->irq[i] = regmap_irq_get_virq(info->regmap_irqc, pirq);
- 		if (info->irq[i] < 0) {
- 			dev_warn(&info->pdev->dev,
+diff --git a/drivers/pci/host/pci-hyperv.c b/drivers/pci/host/pci-hyperv.c
+index 53d1c08cef4dc..292450c7da625 100644
+--- a/drivers/pci/host/pci-hyperv.c
++++ b/drivers/pci/host/pci-hyperv.c
+@@ -1941,6 +1941,7 @@ static void hv_eject_device_work(struct work_struct *work)
+ 			 VM_PKT_DATA_INBAND, 0);
+ 
+ 	put_pcichild(hpdev, hv_pcidev_ref_childlist);
++	put_pcichild(hpdev, hv_pcidev_ref_initial);
+ 	put_pcichild(hpdev, hv_pcidev_ref_pnp);
+ 	put_hvpcibus(hpdev->hbus);
+ }
+-- 
+2.20.1
+
 
 
