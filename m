@@ -4,50 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8490BC04AAC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:31:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09C11C04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:31:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5BA4D20675
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:31:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D26EF21721
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:31:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558355504;
-	bh=ER4pHEa6jbloSOcKWZTW+PRDGIwHAHL4rxxZ5h2au30=;
+	s=default; t=1558355510;
+	bh=NCDK5kKw/YwnzQiirH2mwfFcNMh1wB260dm/lpAejMo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ULKHf+cNSNfcYztNKgpPEwktKfyCYHnX1zmfuNzDTJWcn5i0ls6CvCXi2xUFEvKnN
-	 THf2HILVm6D7c3lWqtcz7FSTvdVzz9ofpvvu8sCPEdPRq7BXH4L8NmU0vzLSovDZmz
-	 kKR3r0qxE/6aDGpNljwSpCF+KtYy592vd62C3Tvc=
+	b=AqpaJ/4RyEVmN8YqEHlPMUOyX/bLx0T1dcA8HDYtBddfVolxZLo/nu0FWoKOqn4Wc
+	 1E5VyDdKOW+M8N6lYQzU5NukJF/RtZYPy2YPx3VMF52SqrLFdtLxYS2hFwDKvWVTdY
+	 kkmBk36w+5w0b3Wz6Z9rbpO7VLW1nQgYxHE9tZ/Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390401AbfETMbn (ORCPT
+        id S2389986AbfETMbt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 08:31:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48324 "EHLO mail.kernel.org"
+        Mon, 20 May 2019 08:31:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48376 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389946AbfETMbl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 08:31:41 -0400
+        id S2389946AbfETMbo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 08:31:44 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AB8C520815;
-        Mon, 20 May 2019 12:31:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3D71E216C4;
+        Mon, 20 May 2019 12:31:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558355501;
-        bh=ER4pHEa6jbloSOcKWZTW+PRDGIwHAHL4rxxZ5h2au30=;
+        s=default; t=1558355503;
+        bh=NCDK5kKw/YwnzQiirH2mwfFcNMh1wB260dm/lpAejMo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=13A+VtDKI+iPjAOM7FPUPAYeOF8mL6D0qZq4VT/hM7+UG24S8Uv70XH/3zRWc3GMt
-         QBoyC1RkUwWxg/4635SnuMjk08xbiD+50x5TSDRDa8ZIL2wIIaL4/nXA7HsjbJ04De
-         0hv8TQNLP2vaNUhr+SKderWUrC+JFE91Wnz3IIoo=
+        b=uoumWS6QZiv6GfXaVRpgTP4ya7uS+S4FSeI+ZtdSdN4xbdLzGO83VdkO1ksxtDmZa
+         Z2Stol2z3I9TBc/4MLeDCieCh4/cFuure/BcoT/ua+zw7OK6TeKMKzdvUYLpeHx8ta
+         jdUaTtnDjWLjGNA7Cv6Ew503MzrFpz9Hgh6WIWqk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Jean-Philippe Brucker <jean-philippe.brucker@arm.com>,
-        Will Deacon <will.deacon@arm.com>
-Subject: [PATCH 5.1 019/128] arm64: Save and restore OSDLR_EL1 across suspend/resume
-Date:   Mon, 20 May 2019 14:13:26 +0200
-Message-Id: <20190520115250.792818707@linuxfoundation.org>
+        stable@vger.kernel.org, Andy Lutomirski <luto@kernel.org>,
+        Borislav Petkov <bp@suse.de>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Jon Masters <jcm@redhat.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>
+Subject: [PATCH 5.1 002/128] x86/speculation/mds: Revert CPU buffer clear on double fault exit
+Date:   Mon, 20 May 2019 14:13:09 +0200
+Message-Id: <20190520115249.613887217@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190520115249.449077487@linuxfoundation.org>
 References: <20190520115249.449077487@linuxfoundation.org>
@@ -60,83 +65,73 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
+From: Andy Lutomirski <luto@kernel.org>
 
-commit 827a108e354db633698f0b4a10c1ffd2b1f8d1d0 upstream.
+commit 88640e1dcd089879530a49a8d212d1814678dfe7 upstream.
 
-When the CPU comes out of suspend, the firmware may have modified the OS
-Double Lock Register. Save it in an unused slot of cpu_suspend_ctx, and
-restore it on resume.
+The double fault ESPFIX path doesn't return to user mode at all --
+it returns back to the kernel by simulating a #GP fault.
+prepare_exit_to_usermode() will run on the way out of
+general_protection before running user code.
 
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
-Signed-off-by: Will Deacon <will.deacon@arm.com>
+Signed-off-by: Andy Lutomirski <luto@kernel.org>
+Cc: Borislav Petkov <bp@suse.de>
+Cc: Frederic Weisbecker <frederic@kernel.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Jon Masters <jcm@redhat.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: stable@vger.kernel.org
+Fixes: 04dcbdb80578 ("x86/speculation/mds: Clear CPU buffers on exit to user")
+Link: http://lkml.kernel.org/r/ac97612445c0a44ee10374f6ea79c222fe22a5c4.1557865329.git.luto@kernel.org
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/arm64/mm/proc.S |   34 ++++++++++++++++++----------------
- 1 file changed, 18 insertions(+), 16 deletions(-)
+ Documentation/x86/mds.rst |    7 -------
+ arch/x86/kernel/traps.c   |    8 --------
+ 2 files changed, 15 deletions(-)
 
---- a/arch/arm64/mm/proc.S
-+++ b/arch/arm64/mm/proc.S
-@@ -65,24 +65,25 @@ ENTRY(cpu_do_suspend)
- 	mrs	x2, tpidr_el0
- 	mrs	x3, tpidrro_el0
- 	mrs	x4, contextidr_el1
--	mrs	x5, cpacr_el1
--	mrs	x6, tcr_el1
--	mrs	x7, vbar_el1
--	mrs	x8, mdscr_el1
--	mrs	x9, oslsr_el1
--	mrs	x10, sctlr_el1
-+	mrs	x5, osdlr_el1
-+	mrs	x6, cpacr_el1
-+	mrs	x7, tcr_el1
-+	mrs	x8, vbar_el1
-+	mrs	x9, mdscr_el1
-+	mrs	x10, oslsr_el1
-+	mrs	x11, sctlr_el1
- alternative_if_not ARM64_HAS_VIRT_HOST_EXTN
--	mrs	x11, tpidr_el1
-+	mrs	x12, tpidr_el1
- alternative_else
--	mrs	x11, tpidr_el2
-+	mrs	x12, tpidr_el2
- alternative_endif
--	mrs	x12, sp_el0
-+	mrs	x13, sp_el0
- 	stp	x2, x3, [x0]
--	stp	x4, xzr, [x0, #16]
--	stp	x5, x6, [x0, #32]
--	stp	x7, x8, [x0, #48]
--	stp	x9, x10, [x0, #64]
--	stp	x11, x12, [x0, #80]
-+	stp	x4, x5, [x0, #16]
-+	stp	x6, x7, [x0, #32]
-+	stp	x8, x9, [x0, #48]
-+	stp	x10, x11, [x0, #64]
-+	stp	x12, x13, [x0, #80]
- 	ret
- ENDPROC(cpu_do_suspend)
+--- a/Documentation/x86/mds.rst
++++ b/Documentation/x86/mds.rst
+@@ -158,13 +158,6 @@ Mitigation points
+      mitigated on the return from do_nmi() to provide almost complete
+      coverage.
  
-@@ -105,8 +106,8 @@ ENTRY(cpu_do_resume)
- 	msr	cpacr_el1, x6
+-   - Double fault (#DF):
+-
+-     A double fault is usually fatal, but the ESPFIX workaround, which can
+-     be triggered from user space through modify_ldt(2) is a recoverable
+-     double fault. #DF uses the paranoid exit path, so explicit mitigation
+-     in the double fault handler is required.
+-
+    - Machine Check Exception (#MC):
  
- 	/* Don't change t0sz here, mask those bits when restoring */
--	mrs	x5, tcr_el1
--	bfi	x8, x5, TCR_T0SZ_OFFSET, TCR_TxSZ_WIDTH
-+	mrs	x7, tcr_el1
-+	bfi	x8, x7, TCR_T0SZ_OFFSET, TCR_TxSZ_WIDTH
+      Another corner case is a #MC which hits between the CPU buffer clear
+--- a/arch/x86/kernel/traps.c
++++ b/arch/x86/kernel/traps.c
+@@ -58,7 +58,6 @@
+ #include <asm/alternative.h>
+ #include <asm/fpu/xstate.h>
+ #include <asm/trace/mpx.h>
+-#include <asm/nospec-branch.h>
+ #include <asm/mpx.h>
+ #include <asm/vm86.h>
+ #include <asm/umip.h>
+@@ -368,13 +367,6 @@ dotraplinkage void do_double_fault(struc
+ 		regs->ip = (unsigned long)general_protection;
+ 		regs->sp = (unsigned long)&gpregs->orig_ax;
  
- 	msr	tcr_el1, x8
- 	msr	vbar_el1, x9
-@@ -130,6 +131,7 @@ alternative_endif
- 	/*
- 	 * Restore oslsr_el1 by writing oslar_el1
- 	 */
-+	msr	osdlr_el1, x5
- 	ubfx	x11, x11, #1, #1
- 	msr	oslar_el1, x11
- 	reset_pmuserenr_el0 x0			// Disable PMU access from EL0
+-		/*
+-		 * This situation can be triggered by userspace via
+-		 * modify_ldt(2) and the return does not take the regular
+-		 * user space exit, so a CPU buffer clear is required when
+-		 * MDS mitigation is enabled.
+-		 */
+-		mds_user_clear_cpu_buffers();
+ 		return;
+ 	}
+ #endif
 
 
