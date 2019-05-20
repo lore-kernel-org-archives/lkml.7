@@ -2,134 +2,99 @@ Return-Path: <SRS0=lq4r=TU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86F2CC04E87
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 03:46:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B7B3C072A4
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 03:47:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 55E1E20657
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 03:46:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="RC6FAw52"
+	by mail.kernel.org (Postfix) with ESMTP id 58E7B20657
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 03:47:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730289AbfETDqa (ORCPT
+        id S1730301AbfETDrn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 19 May 2019 23:46:30 -0400
-Received: from gate2.alliedtelesis.co.nz ([202.36.163.20]:32935 "EHLO
-        gate2.alliedtelesis.co.nz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730273AbfETDq3 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 19 May 2019 23:46:29 -0400
-Received: from mmarshal3.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id 8AAA48365B;
-        Mon, 20 May 2019 15:46:24 +1200 (NZST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
-        s=mail181024; t=1558323984;
-        bh=Mc4litiz+eviFEgR440Fcubu8b/SJu7ZJd7zHMM0+7c=;
-        h=From:To:Cc:Subject:Date;
-        b=RC6FAw528RK69BdiaJepOf6T3tvImMC263l2jP2Pw3S8Xv4nu/eDehrfL+oRf+RwX
-         ysYrOumxSBfQw079gibiWFwtgPRfluesXn5tPVaNW/MvEz+280Hutl4K2RjZrJOEmW
-         wbp8v4HG4tpdVhg7kT9fwdBPtGY+rfL9bt8PDZbrLw3AkCUQv7h2Xr3qekSvISNQqh
-         c9gARELJdjM/s7FtIazkpKkn7ycfgdHaaHmzbd8Xj+HF98IcqQ7GCRvGDOHeg0NBX2
-         36yApvd8khXBoGgwMt5hJF87Zt1uWQrh5nHJE5BT4SSnvhKpr5w/BIeQej8jJw9HiS
-         giG8JazR2F8mw==
-Received: from smtp (Not Verified[10.32.16.33]) by mmarshal3.atlnz.lc with Trustwave SEG (v7,5,8,10121)
-        id <B5ce222f60000>; Mon, 20 May 2019 15:46:03 +1200
-Received: from chrisp-dl.ws.atlnz.lc (chrisp-dl.ws.atlnz.lc [10.33.22.30])
-        by smtp (Postfix) with ESMTP id 0BD0913ED45;
-        Mon, 20 May 2019 15:45:59 +1200 (NZST)
-Received: by chrisp-dl.ws.atlnz.lc (Postfix, from userid 1030)
-        id 610801E1E39; Mon, 20 May 2019 15:45:57 +1200 (NZST)
-From:   Chris Packham <chris.packham@alliedtelesis.co.nz>
-To:     jon.maloy@ericsson.com, ying.xue@windriver.com,
-        davem@davemloft.net, niveditas98@gmail.com
-Cc:     netdev@vger.kernel.org, tipc-discussion@lists.sourceforge.net,
-        linux-kernel@vger.kernel.org,
-        Chris Packham <chris.packham@alliedtelesis.co.nz>
-Subject: [PATCH v2] tipc: Avoid copying bytes beyond the supplied data
-Date:   Mon, 20 May 2019 15:45:36 +1200
-Message-Id: <20190520034536.22782-1-chris.packham@alliedtelesis.co.nz>
-X-Mailer: git-send-email 2.21.0
+        Sun, 19 May 2019 23:47:43 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:56734 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726014AbfETDrn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 19 May 2019 23:47:43 -0400
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id CC0F9308A963;
+        Mon, 20 May 2019 03:47:42 +0000 (UTC)
+Received: from colo-mx.corp.redhat.com (colo-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.20])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id B0F8E611A1;
+        Mon, 20 May 2019 03:47:42 +0000 (UTC)
+Received: from zmail21.collab.prod.int.phx2.redhat.com (zmail21.collab.prod.int.phx2.redhat.com [10.5.83.24])
+        by colo-mx.corp.redhat.com (Postfix) with ESMTP id 786E518089C8;
+        Mon, 20 May 2019 03:47:42 +0000 (UTC)
+Date:   Sun, 19 May 2019 23:47:42 -0400 (EDT)
+From:   Pankaj Gupta <pagupta@redhat.com>
+To:     Jakub =?utf-8?Q?Staro=C5=84?= <jstaron@google.com>
+Cc:     cohuck@redhat.com, jack@suse.cz, kvm@vger.kernel.org,
+        mst@redhat.com, jasowang@redhat.com, david@fromorbit.com,
+        qemu-devel@nongnu.org, virtualization@lists.linux-foundation.org,
+        adilger kernel <adilger.kernel@dilger.ca>, smbarber@google.com,
+        zwisler@kernel.org, aarcange@redhat.com,
+        dave jiang <dave.jiang@intel.com>, linux-nvdimm@lists.01.org,
+        vishal l verma <vishal.l.verma@intel.com>, david@redhat.com,
+        willy@infradead.org, hch@infradead.org, linux-acpi@vger.kernel.org,
+        jmoyer@redhat.com, linux-ext4@vger.kernel.org, lenb@kernel.org,
+        kilobyte@angband.pl, riel@surriel.com,
+        yuval shaia <yuval.shaia@oracle.com>, stefanha@redhat.com,
+        imammedo@redhat.com, dan j williams <dan.j.williams@intel.com>,
+        lcapitulino@redhat.com, kwolf@redhat.com, nilal@redhat.com,
+        tytso@mit.edu, xiaoguangrong eric <xiaoguangrong.eric@gmail.com>,
+        darrick wong <darrick.wong@oracle.com>, rjw@rjwysocki.net,
+        linux-kernel@vger.kernel.org, linux-xfs@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, pbonzini@redhat.com
+Message-ID: <68418388.29774907.1558324062441.JavaMail.zimbra@redhat.com>
+In-Reply-To: <1902045958.29774859.1558323977950.JavaMail.zimbra@redhat.com>
+References: <20190514145422.16923-1-pagupta@redhat.com> <20190514145422.16923-3-pagupta@redhat.com> <c06514fd-8675-ba74-4b7b-ff0eb4a91605@google.com> <1954162775.29408078.1558071358974.JavaMail.zimbra@redhat.com> <5e27fa73-53f5-007a-e0c1-f32f83e5764f@google.com> <1902045958.29774859.1558323977950.JavaMail.zimbra@redhat.com>
+Subject: Re: [Qemu-devel] [PATCH v9 2/7] virtio-pmem: Add virtio pmem driver
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-x-atlnz-ls: pat
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.67.116.42, 10.4.195.12]
+Thread-Topic: virtio-pmem: Add virtio pmem driver
+Thread-Index: 4LLaKD2mAqtUZ1AopBm+Wwx4LVVjgdYM8BfX
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.41]); Mon, 20 May 2019 03:47:43 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-TLV_SET is called with a data pointer and a len parameter that tells us
-how many bytes are pointed to by data. When invoking memcpy() we need
-to careful to only copy len bytes.
 
-Previously we would copy TLV_LENGTH(len) bytes which would copy an extra
-4 bytes past the end of the data pointer which newer GCC versions
-complain about.
+> 
+> 
+> > On 5/16/19 10:35 PM, Pankaj Gupta wrote:
+> > > Can I take it your reviewed/acked-by? or tested-by tag? for the virtio
+> > > patch :)I don't feel that I have enough expertise to give the reviewed-by
+> > > tag, but you can
+> > take my acked-by + tested-by.
+> > 
+> > Acked-by: Jakub Staron <jstaron@google.com>
+> > Tested-by: Jakub Staron <jstaron@google.com>
+> > 
+> > No kernel panics/stalls encountered during testing this patches (v9) with
+> > QEMU + xfstests.
+> 
+> Thank you for testing and confirming the results. I will add your tested &
+> acked-by in v10.
+> 
+> > Some CPU stalls encountered while testing with crosvm instead of QEMU with
+> > xfstests
+> > (test generic/464) but no repro for QEMU, so the fault may be on the side
+> > of
+> > crosvm.
+> 
+> yes, looks like crosvm related as we did not see any of this in my and your
+> testing with Qemu.
 
- In file included from test.c:17:
- In function 'TLV_SET',
-     inlined from 'test' at test.c:186:5:
- /usr/include/linux/tipc_config.h:317:3:
- warning: 'memcpy' forming offset [33, 36] is out of the bounds [0, 32]
- of object 'bearer_name' with type 'char[32]' [-Warray-bounds]
-     memcpy(TLV_DATA(tlv_ptr), data, tlv_len);
-     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
- test.c: In function 'test':
- test.c::161:10: note:
- 'bearer_name' declared here
-     char bearer_name[TIPC_MAX_BEARER_NAME];
-          ^~~~~~~~~~~
+Also, they don't seem to be related with virtio-pmem.
 
-We still want to ensure any padding bytes at the end are initialised, do
-this with a explicit memset() rather than copy bytes past the end of
-data. Apply the same logic to TCM_SET.
-
-Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
----
-
-Changes in v2:
-- Ensure padding bytes are initialised in both TLV_SET and TCM_SET
-
- include/uapi/linux/tipc_config.h | 10 +++++++---
- 1 file changed, 7 insertions(+), 3 deletions(-)
-
-diff --git a/include/uapi/linux/tipc_config.h b/include/uapi/linux/tipc_c=
-onfig.h
-index 4b2c93b1934c..4955e1a9f1bc 100644
---- a/include/uapi/linux/tipc_config.h
-+++ b/include/uapi/linux/tipc_config.h
-@@ -307,8 +307,10 @@ static inline int TLV_SET(void *tlv, __u16 type, voi=
-d *data, __u16 len)
- 	tlv_ptr =3D (struct tlv_desc *)tlv;
- 	tlv_ptr->tlv_type =3D htons(type);
- 	tlv_ptr->tlv_len  =3D htons(tlv_len);
--	if (len && data)
--		memcpy(TLV_DATA(tlv_ptr), data, tlv_len);
-+	if (len && data) {
-+		memcpy(TLV_DATA(tlv_ptr), data, len);
-+		memset(TLV_DATA(tlv_ptr) + len, 0, TLV_SPACE(len) - tlv_len);
-+	}
- 	return TLV_SPACE(len);
- }
-=20
-@@ -405,8 +407,10 @@ static inline int TCM_SET(void *msg, __u16 cmd, __u1=
-6 flags,
- 	tcm_hdr->tcm_len   =3D htonl(msg_len);
- 	tcm_hdr->tcm_type  =3D htons(cmd);
- 	tcm_hdr->tcm_flags =3D htons(flags);
--	if (data_len && data)
-+	if (data_len && data) {
- 		memcpy(TCM_DATA(msg), data, data_len);
-+		memset(TCM_DATA(msg) + data_len, 0, TCM_SPACE(data_len) - msg_len);
-+	}
- 	return TCM_SPACE(data_len);
- }
-=20
---=20
-2.21.0
-
+Thanks,
+Pankaj
