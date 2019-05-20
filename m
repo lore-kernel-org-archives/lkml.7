@@ -2,146 +2,183 @@ Return-Path: <SRS0=lq4r=TU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B21C9C04AAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 06:48:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 731E2C04AAF
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 06:48:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 877F7206B6
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 06:48:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="MmgHf+Ka"
+	by mail.kernel.org (Postfix) with ESMTP id 50F2B20815
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 06:48:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730809AbfETGsR (ORCPT
+        id S1730814AbfETGsp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 02:48:17 -0400
-Received: from mail-eopbgr60068.outbound.protection.outlook.com ([40.107.6.68]:18715
-        "EHLO EUR04-DB3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726052AbfETGsR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 02:48:17 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=33YX5R8PmkzdWm+eur9703rXCTwKjIvAQ3tNLBN8u/4=;
- b=MmgHf+Kaqd89N/aQ6IBnsC6tiI03CZ1Le1UtCRiNngxVaPXyOLphIK4O8rn56XDBx1weH2LOR2INPD6rG0z7woLOP/gswxphwskq61TIWn3mStDH87UYPsNit8j6iVTDVx5uFvYzhphT4Q6tfrLPCaAngNissvbpEQvD4UeYEas=
-Received: from AM5PR0402MB2865.eurprd04.prod.outlook.com (10.175.44.16) by
- AM5PR0402MB2689.eurprd04.prod.outlook.com (10.175.46.18) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1900.16; Mon, 20 May 2019 06:48:13 +0000
-Received: from AM5PR0402MB2865.eurprd04.prod.outlook.com
- ([fe80::d8ed:b418:4ee9:a51]) by AM5PR0402MB2865.eurprd04.prod.outlook.com
- ([fe80::d8ed:b418:4ee9:a51%9]) with mapi id 15.20.1900.020; Mon, 20 May 2019
- 06:48:13 +0000
-From:   Ran Wang <ran.wang_1@nxp.com>
-To:     Pavel Machek <pavel@denx.de>
-CC:     Leo Li <leoyang.li@nxp.com>, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <len.brown@intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
-        "linux-arm-kernel@lists.infradead.org" 
+        Mon, 20 May 2019 02:48:45 -0400
+Received: from Mailgw01.mediatek.com ([1.203.163.78]:41107 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726052AbfETGsp (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 02:48:45 -0400
+X-UUID: df6bf8f9060a436fbbf524ddfc74a8a6-20190520
+X-UUID: df6bf8f9060a436fbbf524ddfc74a8a6-20190520
+Received: from mtkcas34.mediatek.inc [(172.27.4.253)] by mailgw01.mediatek.com
+        (envelope-from <ck.hu@mediatek.com>)
+        (mailgw01.mediatek.com ESMTP with TLS)
+        with ESMTP id 1552444152; Mon, 20 May 2019 14:48:30 +0800
+Received: from mtkcas09.mediatek.inc (172.21.101.178) by
+ MTKMBS33N1.mediatek.inc (172.27.4.75) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Mon, 20 May 2019 14:48:29 +0800
+Received: from [172.21.77.4] (172.21.77.4) by mtkcas09.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Mon, 20 May 2019 14:48:28 +0800
+Message-ID: <1558334909.7311.27.camel@mtksdaap41>
+Subject: Re: [v4 4/5] drm/mediatek: control dpi pins dpi or gpio mode in on
+ or off
+From:   CK Hu <ck.hu@mediatek.com>
+To:     Jitao Shi <jitao.shi@mediatek.com>
+CC:     Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>,
+        "Mark Rutland" <mark.rutland@arm.com>,
+        Ian Campbell <ijc+devicetree@hellion.org.uk>,
+        Kumar Gala <galak@codeaurora.org>, <linux-pwm@vger.kernel.org>,
+        David Airlie <airlied@linux.ie>,
+        "Matthias Brugger" <matthias.bgg@gmail.com>,
+        Thierry Reding <treding@nvidia.com>,
+        "Ajay Kumar" <ajaykumar.rs@samsung.com>,
+        Inki Dae <inki.dae@samsung.com>,
+        "Rahul Sharma" <rahul.sharma@samsung.com>,
+        Sean Paul <seanpaul@chromium.org>,
+        Vincent Palatin <vpalatin@chromium.org>,
+        Andy Yan <andy.yan@rock-chips.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        "Russell King" <rmk+kernel@arm.linux.org.uk>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <dri-devel@lists.freedesktop.org>,
         <linux-arm-kernel@lists.infradead.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>
-Subject: RE: [PATCH V2 3/3] soc: fsl: add RCPM driver
-Thread-Topic: [PATCH V2 3/3] soc: fsl: add RCPM driver
-Thread-Index: AQHVDGHzIQrvIPzRX0ytn5pxhdLuLqZy/bMAgACX+4A=
-Date:   Mon, 20 May 2019 06:48:13 +0000
-Message-ID: <AM5PR0402MB2865EC5E1EF12C6C1D3C5566F1060@AM5PR0402MB2865.eurprd04.prod.outlook.com>
-References: <20190517033946.30763-1-ran.wang_1@nxp.com>
- <20190517033946.30763-3-ran.wang_1@nxp.com> <20190519213844.GH31403@amd>
-In-Reply-To: <20190519213844.GH31403@amd>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=ran.wang_1@nxp.com; 
-x-originating-ip: [92.121.36.198]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 5d0f9db8-930c-42dc-005c-08d6dcef215a
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:AM5PR0402MB2689;
-x-ms-traffictypediagnostic: AM5PR0402MB2689:
-x-microsoft-antispam-prvs: <AM5PR0402MB26891593F97955049CBE6E5AF1060@AM5PR0402MB2689.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:4125;
-x-forefront-prvs: 004395A01C
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(376002)(39860400002)(136003)(396003)(346002)(366004)(189003)(199004)(26005)(186003)(305945005)(9686003)(7736002)(55016002)(2906002)(3846002)(99286004)(7416002)(6116002)(76176011)(33656002)(316002)(25786009)(5660300002)(53546011)(6506007)(74316002)(68736007)(7696005)(52536014)(446003)(11346002)(476003)(486006)(4326008)(6916009)(6436002)(14444005)(256004)(102836004)(229853002)(53936002)(86362001)(64756008)(66946007)(66556008)(66476007)(73956011)(76116006)(66446008)(8936002)(71200400001)(71190400001)(54906003)(81156014)(6246003)(8676002)(66066001)(478600001)(14454004)(81166006);DIR:OUT;SFP:1101;SCL:1;SRVR:AM5PR0402MB2689;H:AM5PR0402MB2865.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: GPFJe1rRXtwMD0DZ7BXyf/zcy3pI4o6DSiAVXZwVRIaHUfSDmfyJ50ibcznwpXuQmiY6vshHb+xb4IRfKSuoxgu9NQghvNA9dFQIK1mzUKz+MG+q5QEKvKPJRLY29FqHIPdh4n+0ajP6Y+G8YMwJOZGeHfTQ/gN4f6OSAqTb7VurEZVH16m+Pg76+zXNyXp77SRPpdfcvPU82nsR6WeislODehwvMnM2I5QJwpTynQFKohDYsqu66FO57Dxzs9a1guHAMuFB7oJP0HUJesiYO0J4yP6EQDLIzY/yyO81B0gGFlNwaMNMsiDblrSqRSQgZwgtZDhlZovVI+X3rsphlFHG5UElZHmk4J83zH2LCOD/UINnXlSGsHjXPymWc+YyeTlfjF2B3h1iqfn0wjB2PrhIO3bJiJb002x7X7dTE54=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        <linux-mediatek@lists.infradead.org>,
+        <srv_heupstream@mediatek.com>,
+        Sascha Hauer <kernel@pengutronix.de>,
+        <yingjoe.chen@mediatek.com>, <eddie.huang@mediatek.com>,
+        <cawa.cheng@mediatek.com>, <bibby.hsieh@mediatek.com>,
+        <stonea168@163.com>
+Date:   Mon, 20 May 2019 14:48:29 +0800
+In-Reply-To: <20190518095618.18454-5-jitao.shi@mediatek.com>
+References: <20190518095618.18454-1-jitao.shi@mediatek.com>
+         <20190518095618.18454-5-jitao.shi@mediatek.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.10.4-0ubuntu2 
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5d0f9db8-930c-42dc-005c-08d6dcef215a
-X-MS-Exchange-CrossTenant-originalarrivaltime: 20 May 2019 06:48:13.3584
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM5PR0402MB2689
+Content-Transfer-Encoding: 7bit
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Pavel,
+Hi, Jitao:
 
-On Monday, May 20, 2019 05:39, Pavel Machek wrote:
->=20
-> Hi!
->=20
->=20
-> > +
-> > +struct rcpm {
-> > +	unsigned int wakeup_cells;
-> > +	void __iomem *ippdexpcr_base;
-> > +	bool	little_endian;
-> > +};
->=20
-> Inconsistent whitespace
+On Sat, 2019-05-18 at 17:56 +0800, Jitao Shi wrote:
+> Pull dpi pins low when dpi has nothing to display. Aovid leakage
+> current from some dpi pins (Hsync Vsync DE ... ).
+> 
+> Some chips have dpi pins, but there are some chip don't have pins.
+> So this function is controlled by chips driver data.
+> 
+> Signed-off-by: Jitao Shi <jitao.shi@mediatek.com>
+> ---
+>  drivers/gpu/drm/mediatek/mtk_dpi.c | 35 +++++++++++++++++++++++++++++-
+>  1 file changed, 34 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/gpu/drm/mediatek/mtk_dpi.c b/drivers/gpu/drm/mediatek/mtk_dpi.c
+> index 77e6e0f99188..0c4ba0a2be27 100644
+> --- a/drivers/gpu/drm/mediatek/mtk_dpi.c
+> +++ b/drivers/gpu/drm/mediatek/mtk_dpi.c
+> @@ -17,10 +17,12 @@
+>  #include <drm/drm_of.h>
+>  #include <linux/kernel.h>
+>  #include <linux/component.h>
+> -#include <linux/platform_device.h>
+>  #include <linux/of.h>
+>  #include <linux/of_device.h>
+> +#include <linux/of_gpio.h>
+>  #include <linux/of_graph.h>
+> +#include <linux/pinctrl/consumer.h>
+> +#include <linux/platform_device.h>
+>  #include <linux/interrupt.h>
+>  #include <linux/types.h>
+>  #include <linux/clk.h>
+> @@ -79,6 +81,9 @@ struct mtk_dpi {
+>  	enum mtk_dpi_out_yc_map yc_map;
+>  	enum mtk_dpi_out_bit_num bit_num;
+>  	enum mtk_dpi_out_channel_swap channel_swap;
+> +	struct pinctrl *pinctrl;
+> +	struct pinctrl_state *pins_default;
+> +	struct pinctrl_state *pins_dpi;
+>  	int refcount;
+>  };
+>  
+> @@ -118,6 +123,7 @@ struct mtk_dpi_conf {
+>  	u32 reg_h_fre_con;
+>  	bool edge_sel_en;
+>  	bool dual_edge;
+> +	bool dpi_pin_ctrl;
+>  };
+>  
+>  static void mtk_dpi_mask(struct mtk_dpi *dpi, u32 offset, u32 val, u32 mask)
+> @@ -392,6 +398,9 @@ static void mtk_dpi_power_off(struct mtk_dpi *dpi)
+>  	if (--dpi->refcount != 0)
+>  		return;
+>  
+> +	if (dpi->conf->dpi_pin_ctrl)
+> +		pinctrl_select_state(dpi->pinctrl, dpi->pins_default);
+> +
+>  	mtk_dpi_disable(dpi);
+>  	clk_disable_unprepare(dpi->pixel_clk);
+>  	clk_disable_unprepare(dpi->engine_clk);
+> @@ -416,6 +425,9 @@ static int mtk_dpi_power_on(struct mtk_dpi *dpi)
+>  		goto err_pixel;
+>  	}
+>  
+> +	if (dpi->conf->dpi_pin_ctrl)
+> +		pinctrl_select_state(dpi->pinctrl, dpi->pins_dpi);
+> +
+>  	mtk_dpi_enable(dpi);
+>  	return 0;
+>  
+> @@ -724,6 +736,27 @@ static int mtk_dpi_probe(struct platform_device *pdev)
+>  	dpi->dev = dev;
+>  	dpi->conf = (struct mtk_dpi_conf *)of_device_get_match_data(dev);
+>  
+> +	if (dpi->conf->dpi_pin_ctrl) {
+> +		dpi->pinctrl = devm_pinctrl_get(&pdev->dev);
 
-OK, will make them aligned.
-
->=20
-> > +static int rcpm_pm_prepare(struct device *dev) {
-> > +	struct device_node *np =3D dev->of_node;
-> > +	struct wakeup_source *ws;
-> > +	struct rcpm *rcpm;
-> > +	u32 value[RCPM_WAKEUP_CELL_MAX_SIZE + 1], tmp;
-> > +	int i, ret;
-> > +
-> > +	rcpm =3D dev_get_drvdata(dev);
-> > +	if (!rcpm)
-> > +		return -EINVAL;
-> > +
-> > +	/* Begin with first registered wakeup source */
-> > +	ws =3D wakeup_source_get_next(NULL);
-> > +	while (ws) {
->=20
-> while (ws =3D wakeup_source_get_next(NULL)) ?
-
-Actually, we only pass NULL to wakeup_source_get_next() at very first
-call to get 1st wakeup source. Then in the while loop, we will fetch
-next source but not 1st, that's different. I am afraid your suggestion
-is not quite correct.
-
->=20
-> > +static int rcpm_probe(struct platform_device *pdev) {
-> > +	struct device	*dev =3D &pdev->dev;
-> > +	struct resource *r;
-> > +	struct rcpm		*rcpm;
-> > +	int ret;
->=20
-> Whitespace.
-
-OK, will update, thanks for your review.
+Please describe this in binding document.
 
 Regards,
-Ran
+CK
+
+> +		if (IS_ERR(dpi->pinctrl)) {
+> +			dev_err(&pdev->dev, "Cannot find pinctrl!\n");
+> +			return PTR_ERR(dpi->pinctrl);
+> +		}
+> +
+> +		dpi->pins_default = pinctrl_lookup_state(dpi->pinctrl,
+> +							 "default");
+> +		if (IS_ERR(dpi->pins_default)) {
+> +			dev_err(&pdev->dev, "Cannot find pinctrl default!\n");
+> +			return PTR_ERR(dpi->pins_default);
+> +		}
+> +
+> +		dpi->pins_dpi = pinctrl_lookup_state(dpi->pinctrl, "dpimode");
+> +		if (IS_ERR(dpi->pins_dpi)) {
+> +			dev_err(&pdev->dev, "Cannot find pinctrl dpimode!\n");
+> +			return PTR_ERR(dpi->pins_dpi);
+> +		}
+> +	}
+> +
+>  	mem = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+>  	dpi->regs = devm_ioremap_resource(dev, mem);
+>  	if (IS_ERR(dpi->regs)) {
+
+
