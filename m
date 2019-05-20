@@ -2,99 +2,243 @@ Return-Path: <SRS0=lq4r=TU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE4B2C04AAC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 14:44:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19048C04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 14:44:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 829E42054F
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 14:44:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D45D32054F
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 14:44:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="QwSEtpG+"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b="FcuGOrg5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391981AbfETOo2 (ORCPT
+        id S2391999AbfETOoo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 10:44:28 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:36221 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730476AbfETOoY (ORCPT
+        Mon, 20 May 2019 10:44:44 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:39925 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2391984AbfETOom (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 10:44:24 -0400
-Received: by mail-io1-f68.google.com with SMTP id e19so11249312iob.3
-        for <linux-kernel@vger.kernel.org>; Mon, 20 May 2019 07:44:24 -0700 (PDT)
+        Mon, 20 May 2019 10:44:42 -0400
+Received: by mail-wr1-f66.google.com with SMTP id w8so14944139wrl.6
+        for <linux-kernel@vger.kernel.org>; Mon, 20 May 2019 07:44:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=HsQVgglgMq1psBbmdCp/J5du6WO5ck+uTZsUbAD0TTs=;
-        b=QwSEtpG+HlPcpMvr+jaK+zM2t1ivvQaI74KMgcKuhBZ6xzeJ+Utr3UXY2sqrVptD6L
-         fyCdPT6rEUbO1RQZYIsLrSB92GNnXUIs+iQ12ulkiMxjGOBrykwvs0xi8PsVRL8jbj89
-         1f+tXLaxeObXCWOmlCZ0QfPwDzBz2qaGwllIBgwWcqm/MNU+U1XvzivVOk4Tex4gS2io
-         J/CZPy16AUj8VP4YOeSTh9EMFmdRR7ZYziICk7S8wk4RE+HNYWky/cU1AxpTj2NlRDkk
-         phpc2RJqGnStBIDydur0ws6WIQYkKY9rQyKYrPsbywd8L/BT30cOR491szyoG6/i1Qga
-         b8hg==
+        d=szeredi.hu; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=VceX0inl+xJT/Seg5xxtqBb9C3XXmdQzMS78vGAaEms=;
+        b=FcuGOrg5reg1S0l1itKbd/lBbVqFPDu+TpXhYmKxOt4riBJtk788L6qVrB2kNxtIjT
+         wChiwClJr+wp9uSjs+mxOmHyqFBahIdNrjOemwQVoibbcG1ucDEGvhyaULJH486swnpG
+         M7azSxVKQItYeJojw0rwBFxFvde4EN/0byzg0=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=HsQVgglgMq1psBbmdCp/J5du6WO5ck+uTZsUbAD0TTs=;
-        b=kHt6MF9mpZrm1zo13tbpESbf9QFnqtJczOoabmTBmz35g/JkmciQCSLWOZ2w72jE6+
-         XF8kuDp1EUhNYB7Gzy2GG42DfaJqHXs5JIzm5cdzHo4Py1pgUB9Qb70gunETDGd1RCbj
-         aG5fOVoA1CFS7pVCm2kX15bRjIwzUAQf4v7JumgdE1KdJYONSLv+7DIPrZ4lALTWzpbz
-         /3OATRwbHfc9zO6zGRplERuJ5ssBlcfpU0WKjTlUfSYBep6Ls7CMoFhAiwFt6j+Nr6tg
-         CaRe+ZoQqLhWS+iAvwDJXlt6Aj6qw2x+2TrBSvxt0rE5B6ORDL19d1bDKsyvDi6wNHkA
-         RUIw==
-X-Gm-Message-State: APjAAAWQGaQ+xu2bMfmQuNbbQTViYxPYr3mu+hO3Q91qkbiHrVG5fZI4
-        XA2BOLVFxmRvF3C99gShm+FDO3y5s9c=
-X-Google-Smtp-Source: APXvYqzmLCjwDYUNPQbPu4wuBcjc7xMYR7/qQWebH8hWpZ5iUuE+KGmOmGElpi++MFpSaPGKzr9zLw==
-X-Received: by 2002:a6b:5814:: with SMTP id m20mr41477359iob.293.1558363463516;
-        Mon, 20 May 2019 07:44:23 -0700 (PDT)
-Received: from [172.22.22.26] (c-71-195-29-92.hsd1.mn.comcast.net. [71.195.29.92])
-        by smtp.googlemail.com with ESMTPSA id w194sm5025733itb.33.2019.05.20.07.44.21
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 20 May 2019 07:44:22 -0700 (PDT)
-Subject: Re: [PATCH 09/18] soc: qcom: ipa: GSI transactions
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     David Miller <davem@davemloft.net>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Ilias Apalodimas <ilias.apalodimas@linaro.org>,
-        syadagir@codeaurora.org, mjavid@codeaurora.org,
-        evgreen@chromium.org, Ben Chan <benchan@google.com>,
-        Eric Caruso <ejcaruso@google.com>, abhishek.esse@gmail.com,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-References: <20190512012508.10608-1-elder@linaro.org>
- <20190512012508.10608-10-elder@linaro.org>
- <CAK8P3a0eYWN6mMwft5OSu8wQQo=kWh5safGFFNkDCELZJyiMmQ@mail.gmail.com>
- <14a040b6-8187-3fbc-754d-2e267d587858@linaro.org>
- <CAK8P3a37bPRZTHZcrg8KrYRLAhCr9pk8v4yuo_wSyUONs2OysQ@mail.gmail.com>
- <4a34d381-d31d-ea49-d6d3-3c4f632958e3@linaro.org>
- <dcd648f2-5305-04dd-8997-be87a9961fd9@linaro.org>
- <CAK8P3a0FfSvTF8kkQ8pyKFNX9-fSXvtEyMBYTjtM+VOPxMPkWg@mail.gmail.com>
- <d3d4670f-eb8b-7dcf-f91a-1ec1d4d96f67@linaro.org>
- <CAK8P3a12+3a-p2pNuQrJu01dOJJuCoQ4ttt=Y0g97wTtBmQO5w@mail.gmail.com>
-From:   Alex Elder <elder@linaro.org>
-Message-ID: <8040fa0e-8446-1ec0-cf75-ac1c17331da5@linaro.org>
-Date:   Mon, 20 May 2019 09:44:21 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=VceX0inl+xJT/Seg5xxtqBb9C3XXmdQzMS78vGAaEms=;
+        b=IBUDo5QmGImeF+ZSDtXhfQVywzRkjnV4ioYE1eW6SzHmVL9HKpukyTVRrIIS886q1p
+         2ltjWDhkJhsBK1ws1XKsu9EcrCd1K+8+Z6I8dcshihzanPhUoWdyxJc1E+a5W2nmu4sf
+         WV7GTXx9RBQ3UfMGGY0uy/pV7AXIlrxMAxYfB7Ed7LFfz2cou9FzcAPXHz62PHKFbMUj
+         Ne0RaH1JZTjN2sbiOfr2mEOzTAFUnqch6RYPU+bkToS6/lWZ7iA3scaG2wwHvfxMWW+h
+         Y57Qy+onrdZSOUZ4yOdQAGkFX+gVZxjCX51YZgJMwTZJQwgiK3kiop0WkYfVHK0GnOis
+         aw0w==
+X-Gm-Message-State: APjAAAWYUCLJp+wL+/bMswIHCFenxy6eo2VKNcFz7IuxBy8F/8QHaXKm
+        DMGV1Lc5D6Dpcgpkrupuoh0a8Q==
+X-Google-Smtp-Source: APXvYqwUDHLwWvqd8kuS304lx0z2yG9BSoE7TWQycdCiYRe7kl6qYXKvUo5n5KhEpN6Ls7rcR5k6/A==
+X-Received: by 2002:adf:f487:: with SMTP id l7mr47404596wro.127.1558363480523;
+        Mon, 20 May 2019 07:44:40 -0700 (PDT)
+Received: from localhost.localdomain (catv-212-96-48-140.catv.broadband.hu. [212.96.48.140])
+        by smtp.gmail.com with ESMTPSA id y184sm18241241wmg.7.2019.05.20.07.44.38
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 20 May 2019 07:44:39 -0700 (PDT)
+Date:   Mon, 20 May 2019 16:44:37 +0200
+From:   Miklos Szeredi <miklos@szeredi.hu>
+To:     Vivek Goyal <vgoyal@redhat.com>
+Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org, linux-nvdimm@lists.01.org,
+        stefanha@redhat.com, dgilbert@redhat.com, swhiteho@redhat.com
+Subject: Re: [PATCH v2 02/30] fuse: Clear setuid bit even in cache=never path
+Message-ID: <20190520144437.GB24093@localhost.localdomain>
+References: <20190515192715.18000-1-vgoyal@redhat.com>
+ <20190515192715.18000-3-vgoyal@redhat.com>
+ <20190520144137.GA24093@localhost.localdomain>
 MIME-Version: 1.0
-In-Reply-To: <CAK8P3a12+3a-p2pNuQrJu01dOJJuCoQ4ttt=Y0g97wTtBmQO5w@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/mixed; boundary="KsGdsel6WgEHnImy"
+Content-Disposition: inline
+In-Reply-To: <20190520144137.GA24093@localhost.localdomain>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/20/19 9:43 AM, Arnd Bergmann wrote:
-> I have no idea how two 8-bit assignments could do that,
-> it sounds like a serious gcc bug, unless you mean two
-> 8-byte assignments, which would be within the range
-> of expected behavior. If it's actually 8-bit stores, please
-> open a bug against gcc with a minimized test case.
 
-Sorry, it's 8 *byte* assignments, not 8 bit.	-Alex
+--KsGdsel6WgEHnImy
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+On Mon, May 20, 2019 at 04:41:37PM +0200, Miklos Szeredi wrote:
+> On Wed, May 15, 2019 at 03:26:47PM -0400, Vivek Goyal wrote:
+> > If fuse daemon is started with cache=never, fuse falls back to direct IO.
+> > In that write path we don't call file_remove_privs() and that means setuid
+> > bit is not cleared if unpriviliged user writes to a file with setuid bit set.
+> > 
+> > pjdfstest chmod test 12.t tests this and fails.
+> 
+> I think better sulution is to tell the server if the suid bit needs to be
+> removed, so it can do so in a race free way.
+> 
+> Here's the kernel patch, and I'll reply with the libfuse patch.
+
+Here are the patches for libfuse and passthrough_ll.
+
+--KsGdsel6WgEHnImy
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: attachment; filename="libfuse-add-fuse_write_kill_priv.patch"
+
+---
+ include/fuse_common.h |    5 ++++-
+ include/fuse_kernel.h |    2 ++
+ lib/fuse_lowlevel.c   |   12 ++++++++----
+ 3 files changed, 14 insertions(+), 5 deletions(-)
+
+--- a/include/fuse_common.h
++++ b/include/fuse_common.h
+@@ -64,8 +64,11 @@ struct fuse_file_info {
+ 	   May only be set in ->release(). */
+ 	unsigned int flock_release : 1;
+ 
++	/* Kill suid and sgid bits on write */
++	unsigned int write_kill_priv : 1;
++
+ 	/** Padding.  Do not use*/
+-	unsigned int padding : 27;
++	unsigned int padding : 26;
+ 
+ 	/** File handle.  May be filled in by filesystem in open().
+ 	    Available in all other file operations */
+--- a/include/fuse_kernel.h
++++ b/include/fuse_kernel.h
+@@ -304,9 +304,11 @@ struct fuse_file_lock {
+  *
+  * FUSE_WRITE_CACHE: delayed write from page cache, file handle is guessed
+  * FUSE_WRITE_LOCKOWNER: lock_owner field is valid
++ * FUSE_WRITE_KILL_PRIV: kill suid and sgid bits
+  */
+ #define FUSE_WRITE_CACHE	(1 << 0)
+ #define FUSE_WRITE_LOCKOWNER	(1 << 1)
++#define FUSE_WRITE_KILL_PRIV	(1 << 2)
+ 
+ /**
+  * Read flags
+--- a/lib/fuse_lowlevel.c
++++ b/lib/fuse_lowlevel.c
+@@ -1315,12 +1315,14 @@ static void do_write(fuse_req_t req, fus
+ 
+ 	memset(&fi, 0, sizeof(fi));
+ 	fi.fh = arg->fh;
+-	fi.writepage = (arg->write_flags & 1) != 0;
++	fi.writepage = (arg->write_flags & FUSE_WRITE_CACHE) != 0;
++	fi.write_kill_priv = (arg->write_flags & FUSE_WRITE_KILL_PRIV) != 0;
+ 
+ 	if (req->se->conn.proto_minor < 9) {
+ 		param = ((char *) arg) + FUSE_COMPAT_WRITE_IN_SIZE;
+ 	} else {
+-		fi.lock_owner = arg->lock_owner;
++		if (arg->write_flags & FUSE_WRITE_LOCKOWNER)
++			fi.lock_owner = arg->lock_owner;
+ 		fi.flags = arg->flags;
+ 		param = PARAM(arg);
+ 	}
+@@ -1345,7 +1347,8 @@ static void do_write_buf(fuse_req_t req,
+ 
+ 	memset(&fi, 0, sizeof(fi));
+ 	fi.fh = arg->fh;
+-	fi.writepage = arg->write_flags & 1;
++	fi.writepage = (arg->write_flags & FUSE_WRITE_CACHE) != 0;
++	fi.write_kill_priv = (arg->write_flags & FUSE_WRITE_KILL_PRIV) != 0;
+ 
+ 	if (se->conn.proto_minor < 9) {
+ 		bufv.buf[0].mem = ((char *) arg) + FUSE_COMPAT_WRITE_IN_SIZE;
+@@ -1353,7 +1356,8 @@ static void do_write_buf(fuse_req_t req,
+ 			FUSE_COMPAT_WRITE_IN_SIZE;
+ 		assert(!(bufv.buf[0].flags & FUSE_BUF_IS_FD));
+ 	} else {
+-		fi.lock_owner = arg->lock_owner;
++		if (arg->write_flags & FUSE_WRITE_LOCKOWNER)
++			fi.lock_owner = arg->lock_owner;
+ 		fi.flags = arg->flags;
+ 		if (!(bufv.buf[0].flags & FUSE_BUF_IS_FD))
+ 			bufv.buf[0].mem = PARAM(arg);
+
+--KsGdsel6WgEHnImy
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: attachment; filename="passthrough_ll-kill-suid.patch"
+
+---
+ example/passthrough_ll.c |   29 ++++++++++++++++++++++++++++-
+ 1 file changed, 28 insertions(+), 1 deletion(-)
+
+--- a/example/passthrough_ll.c
++++ b/example/passthrough_ll.c
+@@ -56,6 +56,7 @@
+ #include <sys/file.h>
+ #include <sys/xattr.h>
+ #include <sys/syscall.h>
++#include <sys/capability.h>
+ 
+ /* We are re-using pointers to our `struct lo_inode` and `struct
+    lo_dirp` elements as inodes. This means that we must be able to
+@@ -965,6 +966,11 @@ static void lo_write_buf(fuse_req_t req,
+ 	(void) ino;
+ 	ssize_t res;
+ 	struct fuse_bufvec out_buf = FUSE_BUFVEC_INIT(fuse_buf_size(in_buf));
++	struct __user_cap_header_struct cap_hdr = {
++		.version = _LINUX_CAPABILITY_VERSION_1,
++	};
++	struct __user_cap_data_struct cap_orig;
++	struct __user_cap_data_struct cap_new;
+ 
+ 	out_buf.buf[0].flags = FUSE_BUF_IS_FD | FUSE_BUF_FD_SEEK;
+ 	out_buf.buf[0].fd = fi->fh;
+@@ -974,7 +980,28 @@ static void lo_write_buf(fuse_req_t req,
+ 		fprintf(stderr, "lo_write(ino=%" PRIu64 ", size=%zd, off=%lu)\n",
+ 			ino, out_buf.buf[0].size, (unsigned long) off);
+ 
++	if (fi->write_kill_priv) {
++		res = capget(&cap_hdr, &cap_orig);
++		if (res == -1) {
++			fuse_reply_err(req, errno);
++			return;
++		}
++		cap_new = cap_orig;
++		cap_new.effective &= ~(1 << CAP_FSETID);
++		res = capset(&cap_hdr, &cap_new);
++		if (res == -1) {
++			fuse_reply_err(req, errno);
++			return;
++		}
++	}
++
+ 	res = fuse_buf_copy(&out_buf, in_buf, 0);
++
++	if (fi->write_kill_priv) {
++		if (capset(&cap_hdr, &cap_orig) != 0)
++			abort();
++	}
++
+ 	if(res < 0)
+ 		fuse_reply_err(req, -res);
+ 	else
+@@ -1215,7 +1242,7 @@ static void lo_copy_file_range(fuse_req_
+ 	res = copy_file_range(fi_in->fh, &off_in, fi_out->fh, &off_out, len,
+ 			      flags);
+ 	if (res < 0)
+-		fuse_reply_err(req, -errno);
++		fuse_reply_err(req, errno);
+ 	else
+ 		fuse_reply_write(req, res);
+ }
+
+--KsGdsel6WgEHnImy--
