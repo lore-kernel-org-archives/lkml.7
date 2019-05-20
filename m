@@ -2,130 +2,130 @@ Return-Path: <SRS0=lq4r=TU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DCA4C04AAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 09:07:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71EF2C04AAF
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 09:07:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E4E332085A
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 09:07:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="izXs0xnF"
+	by mail.kernel.org (Postfix) with ESMTP id 506C0214D8
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 09:07:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731899AbfETJHv (ORCPT
+        id S1731912AbfETJHy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 05:07:51 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:41384 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725764AbfETJHu (ORCPT
+        Mon, 20 May 2019 05:07:54 -0400
+Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:48070 "EHLO
+        atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726242AbfETJHv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 05:07:50 -0400
-Received: by mail-pg1-f194.google.com with SMTP id z3so6483132pgp.8
-        for <linux-kernel@vger.kernel.org>; Mon, 20 May 2019 02:07:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=amarulasolutions.com; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=l8/eiiMRzRHMeJJfg+NtIFfqaA+aEUt7A5oo1QrAYME=;
-        b=izXs0xnF9WrDgcEPHUWlWp9gc4k0omlI5ON8oHnDXGfiCLU6GPTMi1TD53H72OhRJ9
-         07OMMo1ZEK+83bw3/ptHwy7G9/QEAx4InSSgtV6dQkAuKRvQpPcDFEGDovibhbsGZ46q
-         q87tXjbcR5kzwiL8RKIASnKXgb7PvMxBB0tQA=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=l8/eiiMRzRHMeJJfg+NtIFfqaA+aEUt7A5oo1QrAYME=;
-        b=UJEQZjk7x0SXHQC5HPdvKRGSubSkROQVI13vjxQM5Rau3o2zPA9gWEIsMv5gNdWdke
-         v2L1GtGTenq7zxJ/Le27CI36NREdrPVnkg4tmBjdlTXj3qDAuvFziQ+4YYZyR4cothL2
-         ukX18xNQeuo3FBCirpBhXhJgds6EoUHvGwZ/H6ZsTpygH0cBIStu+KEIbDcQIVVkrZbT
-         HlMYcmINSyz0E5G5pZMJnW6ArcYDPCR4NQllP+KQr7+ZIPRtgSw7Ub6h2wJjuUJaqN6I
-         GQ8ysDDfo4d7zNKQI6MYF4P4S3gV36aw2pZgfTowgbbMGCJEdIfnZua1B/B+XOET/p2L
-         2Imw==
-X-Gm-Message-State: APjAAAVgsI2h4uqh8hFQy1mnJdi0RpJO0wuFHiPPifKGUmQaCQLjp7OQ
-        BwIW4yRufJEZH5frrVq6jqeEzg==
-X-Google-Smtp-Source: APXvYqwLHvSwqQ0wDLSPdTFaZir99tjNhatCm3penvvdzh6SsenDaTxMVKo4xU4l8s1GExXu5p1q5Q==
-X-Received: by 2002:a62:51c2:: with SMTP id f185mr18546991pfb.16.1558343269570;
-        Mon, 20 May 2019 02:07:49 -0700 (PDT)
-Received: from localhost.localdomain ([183.82.227.193])
-        by smtp.gmail.com with ESMTPSA id d15sm51671614pfm.186.2019.05.20.02.07.45
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 20 May 2019 02:07:49 -0700 (PDT)
-From:   Jagan Teki <jagan@amarulasolutions.com>
-To:     Maxime Ripard <maxime.ripard@bootlin.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>, Chen-Yu Tsai <wens@csie.org>,
-        dri-devel@lists.freedesktop.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc:     bshah@mykolab.com, Vasily Khoruzhick <anarsoul@gmail.com>,
-        powerpan@qq.com, michael@amarulasolutions.com,
-        linux-amarula@amarulasolutions.com, linux-sunxi@googlegroups.com,
-        Jagan Teki <jagan@amarulasolutions.com>
-Subject: [PATCH v10 07/11] drm/sun4i: dsi: Get tcon0_div at runtime
-Date:   Mon, 20 May 2019 14:33:14 +0530
-Message-Id: <20190520090318.27570-8-jagan@amarulasolutions.com>
-X-Mailer: git-send-email 2.18.0.321.gffc6fa0e3
-In-Reply-To: <20190520090318.27570-1-jagan@amarulasolutions.com>
-References: <20190520090318.27570-1-jagan@amarulasolutions.com>
+        Mon, 20 May 2019 05:07:51 -0400
+Received: by atrey.karlin.mff.cuni.cz (Postfix, from userid 512)
+        id 8BC7080450; Mon, 20 May 2019 11:07:39 +0200 (CEST)
+Date:   Mon, 20 May 2019 11:07:49 +0200
+From:   Pavel Machek <pavel@denx.de>
+To:     Ran Wang <ran.wang_1@nxp.com>
+Cc:     Pavel Machek <pavel@denx.de>, Leo Li <leoyang.li@nxp.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <len.brown@intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>
+Subject: Re: [PATCH V2 3/3] soc: fsl: add RCPM driver
+Message-ID: <20190520090748.GB9748@amd>
+References: <20190517033946.30763-1-ran.wang_1@nxp.com>
+ <20190517033946.30763-3-ran.wang_1@nxp.com>
+ <20190519213844.GH31403@amd>
+ <AM5PR0402MB2865EC5E1EF12C6C1D3C5566F1060@AM5PR0402MB2865.eurprd04.prod.outlook.com>
+ <20190520085647.GA9748@amd>
+ <AM5PR0402MB2865F4574B19761848B001F9F1060@AM5PR0402MB2865.eurprd04.prod.outlook.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="8GpibOaaTibBMecb"
+Content-Disposition: inline
+In-Reply-To: <AM5PR0402MB2865F4574B19761848B001F9F1060@AM5PR0402MB2865.eurprd04.prod.outlook.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-tcon0 divider is used while computing drq edge0 for burst mode
-devices, currently driver is using default macro value 4 via
-SUN6I_DSI_TCON_DIV.
 
-Unfortunately not all the panel devices are working with this
-default divider value 4, so to make future changes on this divider
-value get the divider from tcon dot clock at runtime instead of
-static macro value.
+--8GpibOaaTibBMecb
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Tested-by: Merlijn Wajer <merlijn@wizzup.org>
-Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
----
- drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c | 8 +++++++-
- drivers/gpu/drm/sun4i/sun6i_mipi_dsi.h | 2 --
- 2 files changed, 7 insertions(+), 3 deletions(-)
+On Mon 2019-05-20 09:03:50, Ran Wang wrote:
+> Hi Pavel,
+>=20
+> On Monday, May 20, 2019 16:57, Pavel Machek wrote:
+> >=20
+> > Hi!
+> >=20
+> > > > > +static int rcpm_pm_prepare(struct device *dev) {
+> > > > > +	struct device_node *np =3D dev->of_node;
+> > > > > +	struct wakeup_source *ws;
+> > > > > +	struct rcpm *rcpm;
+> > > > > +	u32 value[RCPM_WAKEUP_CELL_MAX_SIZE + 1], tmp;
+> > > > > +	int i, ret;
+> > > > > +
+> > > > > +	rcpm =3D dev_get_drvdata(dev);
+> > > > > +	if (!rcpm)
+> > > > > +		return -EINVAL;
+> > > > > +
+> > > > > +	/* Begin with first registered wakeup source */
+> > > > > +	ws =3D wakeup_source_get_next(NULL);
+> > > > > +	while (ws) {
+> > > >
+> > > > while (ws =3D wakeup_source_get_next(NULL)) ?
+> > >
+> > > Actually, we only pass NULL to wakeup_source_get_next() at very first
+> > > call to get 1st wakeup source. Then in the while loop, we will fetch
+> > > next source but not 1st, that's different. I am afraid your suggestion
+> > > is not quite correct.
+> >=20
+> > Sorry, I seen your next version before seeing this explanation.
+> >=20
+> > You are right, but the current code is "interesting". What about
+> >=20
+> >     ws =3D NULL;
+> >     while (ws =3D wakeup_source_get_next(NULL)) ...
+> >=20
+> > then?
+>=20
+> Did you mean:
+>      ws =3D NULL;
+>      while (ws =3D wakeup_source_get_next(ws)) ...
+>=20
+>    Yes, that will be the same to my original logic, do you recommend to c=
+hange
+> to this? :)
 
-diff --git a/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c b/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
-index 1f9ed2642a47..5584e9c2f8bd 100644
---- a/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
-+++ b/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
-@@ -396,9 +396,15 @@ static u16 sun6i_dsi_get_drq_edge0(struct sun6i_dsi *dsi,
- 				   struct drm_display_mode *mode,
- 				   u16 line_num, u16 edge1)
- {
-+	struct sun4i_tcon *tcon = dsi->tcon;
-+	unsigned long dclk_rate, dclk_parent_rate, tcon0_div;
- 	u16 edge0 = edge1;
- 
--	edge0 += (mode->hdisplay + 40) * SUN6I_DSI_TCON_DIV / 8;
-+	dclk_rate = clk_get_rate(tcon->dclk);
-+	dclk_parent_rate = clk_get_rate(clk_get_parent(tcon->dclk));
-+	tcon0_div = dclk_parent_rate / dclk_rate;
-+
-+	edge0 += (mode->hdisplay + 40) * tcon0_div / 8;
- 
- 	if (edge0 > line_num)
- 		return edge0 - line_num;
-diff --git a/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.h b/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.h
-index f2826e3ea165..156523859d82 100644
---- a/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.h
-+++ b/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.h
-@@ -13,8 +13,6 @@
- #include <drm/drm_encoder.h>
- #include <drm/drm_mipi_dsi.h>
- 
--#define SUN6I_DSI_TCON_DIV	4
--
- struct sun6i_dsi {
- 	struct drm_connector	connector;
- 	struct drm_encoder	encoder;
--- 
-2.18.0.321.gffc6fa0e3
+Yes please. It will be less confusing to the reader.
 
+Thanks (and sorry for cross-talk),
+								Pavel
+--=20
+DENX Software Engineering GmbH,      Managing Director: Wolfgang Denk
+HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
+
+--8GpibOaaTibBMecb
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAlzibmQACgkQMOfwapXb+vJOsgCgqGW6NAUYHlbtL2j5RhCyhuS2
+zxMAn1WDZj1TbQDXI+hk99qNzljFSRtI
+=XWgf
+-----END PGP SIGNATURE-----
+
+--8GpibOaaTibBMecb--
