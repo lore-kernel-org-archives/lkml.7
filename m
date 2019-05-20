@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 972DAC04AAC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:31:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF04CC04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:31:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6E1FF2171F
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:31:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A43842171F
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:31:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558355493;
-	bh=ljhw1NtefORkXSEcsCILjXYghqr+KIzORm1z49WSosU=;
+	s=default; t=1558355495;
+	bh=tYzvmzxlgCAbu7295+HojwnrPPuXKNiISilXMntA4Lc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kh5bFHaLy+LwvU9PJeJIFESXUAfcl2u+T3ORNGBWjLcwjB2et9kq/23kpChccxAkE
-	 LWDqrGju8To7uX0Hlh1Piyy+OnRJ0PYuc51f5xhIjCdbZPwk/QFgLZ83tcCe2SA7kq
-	 ZGiKztIYej26JARjJ2u1LYImTeidAf9b4b0Omntc=
+	b=Rz4YVDbWiy86+OB6Fc1qTe9ZEymmoawHTjmk6W2hfwkpppERqxnpj0b3ywttZpbkO
+	 EzoIVkfAl1MrIcMCJ3ivZKCqQgO83j3Y5BEHbxAxhuM0qWXCyyQAu3hE8y9kLDz/Ue
+	 d7EABuJTQGelawhfQieUYSDhARRTbxmi4/hfVt7g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390348AbfETMbc (ORCPT
+        id S2390360AbfETMbe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 08:31:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48056 "EHLO mail.kernel.org"
+        Mon, 20 May 2019 08:31:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48100 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390331AbfETMb2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 08:31:28 -0400
+        id S2390338AbfETMba (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 08:31:30 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 305C020645;
-        Mon, 20 May 2019 12:31:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0CB38216C4;
+        Mon, 20 May 2019 12:31:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558355487;
-        bh=ljhw1NtefORkXSEcsCILjXYghqr+KIzORm1z49WSosU=;
+        s=default; t=1558355490;
+        bh=tYzvmzxlgCAbu7295+HojwnrPPuXKNiISilXMntA4Lc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=h5a+P1EvFnWbi5sTKJj4TKGf1Cz13Gm8x9zPHI56imDaM/x5qgNE9++5fpDv/wJlC
-         0DnzbQ2L8Jgjv/6Jwy9f2Qr7w5Je2Xrmf01Hk7a3sol57/eTaz+4Vx4Pyr8M9C627E
-         T7mMZDIwN+ydzWbscN3YXmnu65FVCocgt8BS9oDc=
+        b=BIe5IM4rDM3oueUuAs+3fOEKcmLVzYgo1oKc6uceq+0nyLxL76cOazndl6Lhc/Bcs
+         neaY6sZzdkB3QF0Nyvaq9v9kz4UjIenjN9QLmLaW4lnLqPv2MEdXyt1c+1nsEkNhuj
+         o1rD/e365e1roZK2+IU1Hnl8JpQLEuLVD2eZedJ0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>,
-        Sebastian Reichel <sebastian.reichel@collabora.com>
-Subject: [PATCH 5.1 014/128] power: supply: axp288_fuel_gauge: Add ACEPC T8 and T11 mini PCs to the blacklist
-Date:   Mon, 20 May 2019 14:13:21 +0200
-Message-Id: <20190520115250.424049155@linuxfoundation.org>
+        stable@vger.kernel.org, Boyang Zhou <zhouby_cn@126.com>,
+        Will Deacon <will.deacon@arm.com>
+Subject: [PATCH 5.1 015/128] arm64: mmap: Ensure file offset is treated as unsigned
+Date:   Mon, 20 May 2019 14:13:22 +0200
+Message-Id: <20190520115250.499836920@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190520115249.449077487@linuxfoundation.org>
 References: <20190520115249.449077487@linuxfoundation.org>
@@ -59,58 +59,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hans de Goede <hdegoede@redhat.com>
+From: Boyang Zhou <zhouby_cn@126.com>
 
-commit 9274c78305e12c5f461bec15f49c38e0f32ca705 upstream.
+commit f08cae2f28db24d95be5204046b60618d8de4ddc upstream.
 
-The ACEPC T8 and T11 Cherry Trail Z8350 mini PCs use an AXP288 and as PCs,
-rather then portables, they does not have a battery. Still for some
-reason the AXP288 not only thinks there is a battery, it actually
-thinks it is discharging while the PC is running, slowly going to
-0% full, causing userspace to shutdown the system due to the battery
-being critically low after a while.
+The file offset argument to the arm64 sys_mmap() implementation is
+scaled from bytes to pages by shifting right by PAGE_SHIFT.
+Unfortunately, the offset is passed in as a signed 'off_t' type and
+therefore large offsets (i.e. with the top bit set) are incorrectly
+sign-extended by the shift. This has been observed to cause false mmap()
+failures when mapping GPU doorbells on an arm64 server part.
 
-This commit adds the ACEPC T8 and T11 to the axp288 fuel-gauge driver
-blacklist, so that we stop reporting bogus battery readings on this device.
+Change the type of the file offset argument to sys_mmap() from 'off_t'
+to 'unsigned long' so that the shifting scales the value as expected.
 
-BugLink: https://bugzilla.redhat.com/show_bug.cgi?id=1690852
-Cc: stable@vger.kernel.org
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Boyang Zhou <zhouby_cn@126.com>
+[will: rewrote commit message]
+Signed-off-by: Will Deacon <will.deacon@arm.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/power/supply/axp288_fuel_gauge.c |   20 ++++++++++++++++++++
- 1 file changed, 20 insertions(+)
+ arch/arm64/kernel/sys.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/power/supply/axp288_fuel_gauge.c
-+++ b/drivers/power/supply/axp288_fuel_gauge.c
-@@ -686,6 +686,26 @@ intr_failed:
-  */
- static const struct dmi_system_id axp288_fuel_gauge_blacklist[] = {
- 	{
-+		/* ACEPC T8 Cherry Trail Z8350 mini PC */
-+		.matches = {
-+			DMI_EXACT_MATCH(DMI_BOARD_VENDOR, "To be filled by O.E.M."),
-+			DMI_EXACT_MATCH(DMI_BOARD_NAME, "Cherry Trail CR"),
-+			DMI_EXACT_MATCH(DMI_PRODUCT_SKU, "T8"),
-+			/* also match on somewhat unique bios-version */
-+			DMI_EXACT_MATCH(DMI_BIOS_VERSION, "1.000"),
-+		},
-+	},
-+	{
-+		/* ACEPC T11 Cherry Trail Z8350 mini PC */
-+		.matches = {
-+			DMI_EXACT_MATCH(DMI_BOARD_VENDOR, "To be filled by O.E.M."),
-+			DMI_EXACT_MATCH(DMI_BOARD_NAME, "Cherry Trail CR"),
-+			DMI_EXACT_MATCH(DMI_PRODUCT_SKU, "T11"),
-+			/* also match on somewhat unique bios-version */
-+			DMI_EXACT_MATCH(DMI_BIOS_VERSION, "1.000"),
-+		},
-+	},
-+	{
- 		/* Intel Cherry Trail Compute Stick, Windows version */
- 		.matches = {
- 			DMI_MATCH(DMI_SYS_VENDOR, "Intel Corporation"),
+--- a/arch/arm64/kernel/sys.c
++++ b/arch/arm64/kernel/sys.c
+@@ -31,7 +31,7 @@
+ 
+ SYSCALL_DEFINE6(mmap, unsigned long, addr, unsigned long, len,
+ 		unsigned long, prot, unsigned long, flags,
+-		unsigned long, fd, off_t, off)
++		unsigned long, fd, unsigned long, off)
+ {
+ 	if (offset_in_page(off) != 0)
+ 		return -EINVAL;
 
 
