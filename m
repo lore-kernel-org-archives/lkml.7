@@ -2,164 +2,106 @@ Return-Path: <SRS0=lq4r=TU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AAA8DC04AAC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 17:32:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1C24C04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 17:33:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8061D208C3
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 17:32:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AAD1F208C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 17:33:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uCo/hGgL"
+	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="N4IM6ASU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391236AbfETRcE (ORCPT
+        id S2392833AbfETRds (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 13:32:04 -0400
-Received: from mail-it1-f193.google.com ([209.85.166.193]:53312 "EHLO
-        mail-it1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390654AbfETRcE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 13:32:04 -0400
-Received: by mail-it1-f193.google.com with SMTP id m141so342209ita.3
-        for <linux-kernel@vger.kernel.org>; Mon, 20 May 2019 10:32:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=xcLMbjckTZ6l/D4OPRbALZW9nrjKg92nkD4l8fduoc8=;
-        b=uCo/hGgLQmhpZOrTu1shzmnvLf9unrWslOUc0OcezlzbX99EGVTuRJzR/Iw7BhYNTU
-         ZyPo93KCrwffiZW2yUgcZ+axPm2p9kG+ZUIq/D+l7fEUodflNoSPliJsuaruEQABP2Jf
-         zPrV6Ay+NjfwTljpnHMlgWSIdTgnlxA3U+/bsxgmEtaoMwp7t3031e3uJvm5pOBrA+TL
-         kvvWYqUrNPjj0ERFdUpLVmv0l27hV0RRb+Z6fn6i2DrgUOApSvLm4GR37IV6AecBIcT2
-         ThT6lWOIVV3NlUOHCWzjD0OWyeQGr1OpWaDJlyvPFsLulOdIj9YgEvIAYJBGTDAkep53
-         YZXA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=xcLMbjckTZ6l/D4OPRbALZW9nrjKg92nkD4l8fduoc8=;
-        b=sNmB1+swJGaqNb6Hcp3nDWb0GWb7mFoS8WoTSBi5rDwJdai6QaP2M0HUSzjqU8qZj5
-         Rf84G/MxyZLJgfc2r0SzE7/vF7J4vIc0LLhy2fHeAug4BbdJVFbujHW3E0k1hDcZL6vg
-         PvSAvvVxwcY00nIkJoz6gOip4GMpK2m2SNY2t/wf8zyMdv9gPrQpLvaZY7qw5/qIEn2U
-         rz6ysvjmpZRVBXFYqcew9XotcbZx/ntq4lJ9kK9V8/lbGKXLMxBCau1SneqoQ7IL8gUy
-         O83KjX7vlMb/LyYk/xiy3ZYXa+jbwifK6foxXamJaK/ruY4pidFEvuV4IWpNNqwfbmSe
-         zHPg==
-X-Gm-Message-State: APjAAAVkLyUQczVU74hWaW3mX6CpW8W00G2EjUm4YC5tLiobhxsIF0oZ
-        oYP/01kxQ/wZaGLTPAl/xrxw2226wSbSNNRWJMpk3A==
-X-Google-Smtp-Source: APXvYqxMSSP1oqTIxbcg+oz1+JAy+IJiK1E3y1OXF4FdCTX/NR9OwpR5L0j8G7kuvH+21np1Zkbotqy/mL1jlYbEixw=
-X-Received: by 2002:a24:6294:: with SMTP id d142mr184616itc.102.1558373523378;
- Mon, 20 May 2019 10:32:03 -0700 (PDT)
+        Mon, 20 May 2019 13:33:48 -0400
+Received: from mout.gmx.net ([212.227.15.18]:49409 "EHLO mout.gmx.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387560AbfETRds (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 13:33:48 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1558373616;
+        bh=mQs3SYPmcbZjpGgryO5QDTUYaOixaOst/TPnLx2UjpQ=;
+        h=X-UI-Sender-Class:Subject:Cc:References:To:From:Date:In-Reply-To;
+        b=N4IM6ASUD5u8cjyKxdbRiXO77lRCNWNcmStfTAx1IfYKV40hAQi08AXpus3TH3dEc
+         cWJD1egfQtqr5Yghq8Q0nx0lAwfjv8/f1+ZhXFqnO191ySuLzIJaFX5aieUUgoMYRK
+         U+wEK7+6SuGR+8ke0WoI03Q4fqXktA3hXxeJW0ro=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from [192.168.1.166] ([37.4.249.160]) by mail.gmx.com (mrgmx001
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 0LvE2c-1gSOGj3xw2-010OtB; Mon, 20
+ May 2019 19:33:36 +0200
+Subject: Re: [PATCH] MAINTAINERS: Update Stefan Wahren email address
+Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+References: <1556740055-4962-1-git-send-email-wahrenst@gmx.net>
+To:     Florian Fainelli <f.fainelli@gmail.com>,
+        Eric Anholt <eric@anholt.net>
+From:   Stefan Wahren <wahrenst@gmx.net>
+Message-ID: <8c07c0b0-5610-bd5f-73d5-373178af6502@gmx.net>
+Date:   Mon, 20 May 2019 19:33:34 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-References: <1558117914-35807-1-git-send-email-kdasu.kdev@gmail.com>
- <1558117914-35807-2-git-send-email-kdasu.kdev@gmail.com> <20190520144436.67e42f00@xps13>
-In-Reply-To: <20190520144436.67e42f00@xps13>
-From:   Kamal Dasu <kdasu.kdev@gmail.com>
-Date:   Mon, 20 May 2019 13:31:52 -0400
-Message-ID: <CAC=U0a0bZHgM2yQzz5SupRNWcBg7rpqpGh_o9cvSQNNKsSp9Cg@mail.gmail.com>
-Subject: Re: [PATCH 2/2] mtd: nand: raw: brcmnand: fallback to detected
- ecc-strength, ecc-step-size
-To:     Miquel Raynal <miquel.raynal@bootlin.com>
-Cc:     MTD Maling List <linux-mtd@lists.infradead.org>,
-        bcm-kernel-feedback-list@broadcom.com,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Brian Norris <computersforpeace@gmail.com>,
-        Richard Weinberger <richard@nod.at>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Marek Vasut <marek.vasut@gmail.com>,
-        Vignesh Raghavendra <vigneshr@ti.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <1556740055-4962-1-git-send-email-wahrenst@gmx.net>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Provags-ID: V03:K1:VdyJZS/+FYNTQ1T0daX0em3koSMMFR+R4XeZzL8DaV6zBayV1xE
+ 34n/frAQY+qoLAOdPSK+WJXBhHDufPkxXRUj6zqVU/HgXXUV8QgCeHhY9qwd9yV01Ylz5CG
+ RLbU2xYha1pW8aA5Y2urSmKaBx5tikbPhT2jqDK8GnCrxgrERILJkf2tnZ4EjXp+cI4qJ8Y
+ ZhvNlTYGQsL3VKYlrbTLg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:j218esgr/Xo=:j/sJUMSu0jqFtkxbMj9uLf
+ cBvdYem5ZzAe1gnFDclc747Q9fiF3CZD1KF2YiaYU2mwg/ejEPERGbFPubEpTKLUL3UxLKyyi
+ PJJu291ZiyDvGYuV1Vg+SjsvLrBFJ0Y0cKVlwyIjajRiBUJDry5Ej/Znk2vu8QwRPk3xYhris
+ oH7HpCFlnmCx1aTjghPoPA/drdp3Dxi3ULMKVq9oeB02Nq/VS8UvICwqGVx77J/8QA4a5qukf
+ UjpV0kZr634UmYNGhqdlt6tq8bg3ogQ6CRUULKUHBTvxWpcoBYyIiwcHEnVDe5PXv8H/blIyM
+ jEb48r5rQrnZfdzAU6uvF7OA5kRZcd0uHyU3TNsJ0snqHwXFcwZKT+Irk0lIE8UenXfydha0P
+ 87k301Io9SjibsziM/URsj4/M6VglSYXky28hSJ1opBdy9zRwFk3FhbPzExZNZuJ8Tlk9EGNc
+ 8z+oLODvl9M9y4mqugCTzOQIqVy+4udi8AgPQ180iOLoQpjroETn+xSHJvamaj4fJMHWck+7V
+ ywNYBuJEadTobCw9Zq+Zvk1mq/leBt7NXnIY74DxGm91HWSAclUvRThynHUzeU5uNlbQ8wR4G
+ hrFBpM+IdwLJvCsx6fJxBfCOjJyfBl1HFxhN6b1gbFkJ5oDEREI+3qGKjDWoyhogmeVTWMftP
+ XJo67zdsCOhgjTWri3+iQDTg/+HY6VNJXpBnY4e9YGgp97dQ2UJwyRNE8UVksRJ+gcz5ko7mo
+ 0hgJ2bJC51rHTjGKTtLgslinenxP0jGKv7iWOoxKeeu150GvgVuvrhLHTA0m06d1xt7G6HCcO
+ 6NtTejhLCVLYiRelnnF+T97jmN6ilb8r/7imYDEKn6ctaXkpMNCrUluI9+QYZOCGujEcaZ3av
+ gR7j0+JqfyWRFE03Y0wdzbrjCnzYGTIAjaEe+lO9mFBvDNt7wgZT1GjWE2H6MgmpZsMxUnUdL
+ e6iYn/QxYxaiVNaOTO+oGJ/ipt1j/PhQZyJD+i9ujkwmCsyfyy5nL
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Will make the changes and send a V2 patch.
+Hi Florian,
 
-On Mon, May 20, 2019 at 8:44 AM Miquel Raynal <miquel.raynal@bootlin.com> w=
-rote:
+Am 01.05.19 um 21:47 schrieb Stefan Wahren:
+> I2SE has been acquired, so i decided to use my private address now.
 >
-> Hi Kamal,
+> Signed-off-by: Stefan Wahren <wahrenst@gmx.net>
+should i send a pull request or can you pick it up directly?
+> ---
+>  MAINTAINERS | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 >
-> Kamal Dasu <kdasu.kdev@gmail.com> wrote on Fri, 17 May 2019 14:29:55
-> -0400:
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 2c7d4e1..75a7876 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -3068,7 +3068,7 @@ F:	arch/arm/mach-bcm/
 >
-> > This change supports nand-ecc-step-size and nand-ecc-strenght fields in
->
->                                                        strength
->
-> > brcmnand dt node to be  optional.
->
->            DT            ^ extra space
->
-> > see: Documentation/devicetree/bindings/mtd/brcm,brcmnand.txt
-> >
-> > If both nand-ecc-strength and nand-ecc-step-size are not specified in
-> > device tree node for NAND, nand_base driver does detect onfi ext ecc
->
-> s/nand_base driver/the raw NAND layer/
-> s/onfi/ONFI/
-> s/ecc/ECC/
->
-> What is "ext"? Please use plain English here.
->
-> > info from ONFI extended parameter page for parts using ONFI >=3D 2.1. I=
-n
->
-> s/info/information/
->
-> > case of non-onfi NAND there could be a nand_id table entry with the ecc
->
-> s/ecc/ECC/
->
-> > info. If there is a valid  device tree entry for nand-ecc-strength and
-> > nand-ecc-step-size fields it still shall override the detected values.
-> >
-> > Signed-off-by: Kamal Dasu <kdasu.kdev@gmail.com>
-> > ---
-> >  drivers/mtd/nand/raw/brcmnand/brcmnand.c | 10 ++++++++++
-> >  1 file changed, 10 insertions(+)
-> >
-> > diff --git a/drivers/mtd/nand/raw/brcmnand/brcmnand.c b/drivers/mtd/nan=
-d/raw/brcmnand/brcmnand.c
-> > index ce0b8ff..e967b30 100644
-> > --- a/drivers/mtd/nand/raw/brcmnand/brcmnand.c
-> > +++ b/drivers/mtd/nand/raw/brcmnand/brcmnand.c
-> > @@ -2144,6 +2144,16 @@ static int brcmnand_setup_dev(struct brcmnand_ho=
-st *host)
-> >               return -EINVAL;
-> >       }
-> >
-> > +     if (!(chip->ecc.size > 0 && chip->ecc.strength > 0) &&
->
-> Is the case where only size OR strength is valid handled?
-
-Both strength and need to be valid, else the driver will behave like
-before and will fail the probe.
-
->
-> > +         (chip->base.eccreq.strength > 0 &&
-> > +          chip->base.eccreq.step_size > 0)) {
-> > +             /* use detected ecc parameters */
->
->                    Use          ECC
->
-> > +             chip->ecc.size =3D chip->base.eccreq.step_size;
-> > +             chip->ecc.strength =3D chip->base.eccreq.strength;
-> > +             pr_info("Using detected nand-ecc-step-size %d, nand-ecc-s=
-trength %d\n",
-> > +                     chip->ecc.size, chip->ecc.strength);
-> > +     }
-> > +
-> >       switch (chip->ecc.size) {
-> >       case 512:
-> >               if (chip->ecc.algo =3D=3D NAND_ECC_HAMMING)
+>  BROADCOM BCM2835 ARM ARCHITECTURE
+>  M:	Eric Anholt <eric@anholt.net>
+> -M:	Stefan Wahren <stefan.wahren@i2se.com>
+> +M:	Stefan Wahren <wahrenst@gmx.net>
+>  L:	linux-rpi-kernel@lists.infradead.org (moderated for non-subscribers)
+>  L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
+>  T:	git git://github.com/anholt/linux
+> --
+> 2.7.4
 >
 >
-> Thanks,
-> Miqu=C3=A8l
-
-Kamal
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
