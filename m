@@ -2,165 +2,120 @@ Return-Path: <SRS0=lq4r=TU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B0B8C04AAC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 19:56:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47505C04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 19:59:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EA55320863
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 19:56:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F40020863
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 19:59:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=erdfelt.com header.i=@erdfelt.com header.b="tQk3X2I4"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XHD4K5/q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726672AbfETT41 (ORCPT
+        id S1726015AbfETT7p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 15:56:27 -0400
-Received: from out.bound.email ([141.193.244.10]:40810 "EHLO out.bound.email"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725951AbfETT40 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 15:56:26 -0400
-X-Greylist: delayed 429 seconds by postgrey-1.27 at vger.kernel.org; Mon, 20 May 2019 15:56:25 EDT
-Received: from mail.sventech.com (localhost [127.0.0.1])
-        by out.bound.email (Postfix) with ESMTP id CE4718A0E7F;
-        Mon, 20 May 2019 12:49:15 -0700 (PDT)
-Received: by mail.sventech.com (Postfix, from userid 1000)
-        id AFFD41600410; Mon, 20 May 2019 12:49:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=erdfelt.com;
-        s=default; t=1558381755;
-        bh=oZso2p1ld/yWyzQANIKklBxHpoVt65FCEMCZ1z7xtQk=;
-        h=Date:From:To:Subject:From;
-        b=tQk3X2I4GZp9iWe9qCA8R6a2+xeow6B7LEofril0pQcBmeMDVWbZUf3EWA85YCCmb
-         rrtWhw2JcZLK5WgiUZ3ykNh+hGJEhPuF1NKOmUYqdqKZIf6/pYI6hRn5/510e1r+WM
-         t5l0w8tWM2yRz9ZGWUllj7tKTBaKkUmmmCHFeV/0=
-Date:   Mon, 20 May 2019 12:49:15 -0700
-From:   Johannes Erdfelt <johannes@erdfelt.com>
-To:     Josh Poimboeuf <jpoimboe@redhat.com>, Jessica Yu <jeyu@redhat.com>,
-        Jiri Kosina <jikos@kernel.org>,
-        Miroslav Benes <mbenes@suse.cz>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ingo Molnar <mingo@redhat.com>, live-patching@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Oops caused by race between livepatch and ftrace
-Message-ID: <20190520194915.GB1646@sventech.com>
+        Mon, 20 May 2019 15:59:45 -0400
+Received: from mail-it1-f194.google.com ([209.85.166.194]:53661 "EHLO
+        mail-it1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725554AbfETT7p (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 15:59:45 -0400
+Received: by mail-it1-f194.google.com with SMTP id m141so1078544ita.3
+        for <linux-kernel@vger.kernel.org>; Mon, 20 May 2019 12:59:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=VVW9wD/qxMbb1dV3/1vl/BKh7b6QCqLkCa88/L/fMdE=;
+        b=XHD4K5/qHii8YIULZlh3fl3uulbU8JGAJR1V8KgW858HapYARaDH8bLwjPqyccwr87
+         qSxee6YFzJ/AscPA0JEIfmxlA1FHjXCR195sPKocydebYX7aE+ed2uqAJCf4vTWa6pdT
+         P92YkSfgUChnukOk9283EjvJv/cChX488FOTIBVy87wx8/qj2XY+OHCiYVQ08RFlRT4/
+         pNTvkKbHcxu4Hc+9NbASZhL6NX5jdY+cRlgFVzAnnEmbQvtD4/u1S9d//W4hsaPcw0jx
+         8VnwmymQ85Ubrg21gK04PtucAwN4RNk26K+uUaTaK3dhXUB/0n+xOZVBZBovuE+eOtLj
+         xE9A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=VVW9wD/qxMbb1dV3/1vl/BKh7b6QCqLkCa88/L/fMdE=;
+        b=Xm8AfRJ/X2zLhqzyK+CpmL0L584LUXdIX+UPzOhaGleoGzxFVIeZwV0PsOIpNl3U4A
+         c9vi17ftL32ka8xcVaNir0jPquZB0lgLXeJzhOnrflM27MzFQt+vJrePQCdHrB5uE5TU
+         WNqRQT3jHwqUmYmbHmGFhoNnyab1d8034lCXzqBDbloOFtSzLPBdXufd9uqUYXrh2kDo
+         n3Z22KkQQDX8iEcFLoP0V6vv/v7Iv5ppbsmCuVKQD0+k4uFPY6geHD48ny8Vd27Ws9sy
+         6s+CEAfH3cjA8SOxiDmKPCmiHYxSn1Sll3rUWh1imMUGU0J0HA7iIu4pqN5sSdjvgRAe
+         NrAw==
+X-Gm-Message-State: APjAAAWo0fhPaX7qJifBaTE7ADI+UaoYz5udJHZjPNlfym7Q97jwk4+H
+        a1tHkNU4KgwfIdCKvza03nVZw1YfVnXhQmKs244=
+X-Google-Smtp-Source: APXvYqw+JTSio1QmKKLc3SXdlT+4eq6mkw0FklRjcsewxKjdEsoC4iDutSx4sLkL0+2iud+NEj7/Q/BMG1iKqMaUNGg=
+X-Received: by 2002:a02:9381:: with SMTP id z1mr11574837jah.130.1558382384204;
+ Mon, 20 May 2019 12:59:44 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.11.4 (2019-03-13)
+References: <1558115396-3244-1-git-send-email-oscargomezf@gmail.com>
+ <CAGngYiUZmfnuj5WUnwk18szijmsQjF27j=OxQfJtp5bNORppRQ@mail.gmail.com> <CAGngYiUCedv6oqTPOS+eFwnQJajor3hwKjxeNRcKq031giZeXg@mail.gmail.com>
+In-Reply-To: <CAGngYiUCedv6oqTPOS+eFwnQJajor3hwKjxeNRcKq031giZeXg@mail.gmail.com>
+From:   Oscar Gomez Fuente <oscargomezf@gmail.com>
+Date:   Mon, 20 May 2019 21:59:08 +0200
+Message-ID: <CALtfCQbccsEioqWRZn_cnQZmykXYce6Xc8qAdxYubN9CuJMW9A@mail.gmail.com>
+Subject: Re: [PATCH] staging: fieldbus: solve warning incorrect type dev_core.c
+To:     Sven Van Asbroeck <thesven73@gmail.com>
+Cc:     Greg KH <gregkh@linuxfoundation.org>, devel@driverdev.osuosl.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There exists a race condition between livepatch and ftrace that can
-cause an oops similar to this one:
+Hi Sven,
 
-  BUG: unable to handle page fault for address: ffffffffc005b1d9
-  #PF: supervisor write access in kernel mode
-  #PF: error_code(0x0003) - permissions violation
-  PGD 3ea0c067 P4D 3ea0c067 PUD 3ea0e067 PMD 3cc13067 PTE 3b8a1061
-  Oops: 0003 [#1] PREEMPT SMP PTI
-  CPU: 1 PID: 453 Comm: insmod Tainted: G           O  K   5.2.0-rc1-a188339ca5 #1
-  Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.12.0-20181126_142135-anatol 04/01/2014
-  RIP: 0010:apply_relocate_add+0xbe/0x14c
-  Code: fa 0b 74 21 48 83 fa 18 74 38 48 83 fa 0a 75 40 eb 08 48 83 38 00 74 33 eb 53 83 38 00 75 4e 89 08 89 c8 eb 0a 83 38 00 75 43 <89> 08 48 63 c1 48 39 c8 74 2e eb 48 83 38 00 75 32 48 29 c1 89 08
-  RSP: 0018:ffffb223c00dbb10 EFLAGS: 00010246
-  RAX: ffffffffc005b1d9 RBX: 0000000000000000 RCX: ffffffff8b200060
-  RDX: 000000000000000b RSI: 0000004b0000000b RDI: ffff96bdfcd33000
-  RBP: ffffb223c00dbb38 R08: ffffffffc005d040 R09: ffffffffc005c1f0
-  R10: ffff96bdfcd33c40 R11: ffff96bdfcd33b80 R12: 0000000000000018
-  R13: ffffffffc005c1f0 R14: ffffffffc005e708 R15: ffffffff8b2fbc74
-  FS:  00007f5f447beba8(0000) GS:ffff96bdff900000(0000) knlGS:0000000000000000
-  CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-  CR2: ffffffffc005b1d9 CR3: 000000003cedc002 CR4: 0000000000360ea0
-  DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-  DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-  Call Trace:
-   klp_init_object_loaded+0x10f/0x219
-   ? preempt_latency_start+0x21/0x57
-   klp_enable_patch+0x662/0x809
-   ? virt_to_head_page+0x3a/0x3c
-   ? kfree+0x8c/0x126
-   patch_init+0x2ed/0x1000 [livepatch_test02]
-   ? 0xffffffffc0060000
-   do_one_initcall+0x9f/0x1c5
-   ? kmem_cache_alloc_trace+0xc4/0xd4
-   ? do_init_module+0x27/0x210
-   do_init_module+0x5f/0x210
-   load_module+0x1c41/0x2290
-   ? fsnotify_path+0x3b/0x42
-   ? strstarts+0x2b/0x2b
-   ? kernel_read+0x58/0x65
-   __do_sys_finit_module+0x9f/0xc3
-   ? __do_sys_finit_module+0x9f/0xc3
-   __x64_sys_finit_module+0x1a/0x1c
-   do_syscall_64+0x52/0x61
-   entry_SYSCALL_64_after_hwframe+0x44/0xa9
-  RIP: 0033:0x7f5f44764881
-  Code: 0e 4c 8b 44 24 10 4d 8d 48 08 4c 89 4c 24 10 44 8b 4c 24 08 4d 8b 00 4c 01 c9 41 83 f9 2f 76 05 48 8b 4c 24 10 4c 8b 09 0f 05 <48> 89 c7 e8 f7 e9 fd ff 48 83 c4 58 c3 56 31 d2 be 02 00 08 00 bf
-  RSP: 002b:00007ffcf1e64b80 EFLAGS: 00000212 ORIG_RAX: 0000000000000139
-  RAX: ffffffffffffffda RBX: 00000000006229a0 RCX: 00007f5f44764881
-  RDX: 0000000000000000 RSI: 000000000041a506 RDI: 0000000000000003
-  RBP: 000000000041a506 R08: 0000000000000000 R09: 00007ffcf1e64c48
-  R10: 0000000000000003 R11: 0000000000000212 R12: 0000000000000000
-  R13: 00000000006228c0 R14: 0000000000000000 R15: 0000000000000000
-  Modules linked in: livepatch_test03(OK+) livepatch_test01(OK+) livepatch_test11(OK+) livepatch_test06(OK+) livepatch_test04(OK+) livepatch_test02(OK+) livepatch_test10(OK+) livepatch_test16(OK+) livepatch_test18(OK-) livepatch_test12(OK)
-  CR2: ffffffffc005b1d9
-  ---[ end trace 52fee0aa635dd5a1 ]---
+Yes.
 
-The oops occurs because both livepatch and ftrace remap the module text
-section at the same. After ftrace is done, it can leave the module text
-text section mapped RO when the livepatch code is expecting it to be RW.
+Oscar Gomez Fuente
 
-CPU A			CPU B
---------		--------
-			set_all_modules_text_rw		(module is now RW)
-module_disable_ro					(module is still RW)
-			set_all_modules_text_ro		(module is now RO)
-apply_relocate_add					(oops)
 
-I've reproduced it from the latest code in git (a188339ca5a3), 5.0.17,
-4.19.44, 4.14.120, 4.9.177 and some kernels in between. I haven't tried
-reproducing on any kernel older than 4.9. From looking at the older
-versions in git, it will likely be harder to reproduce since the kernel
-switched in 4.5 to remapping RW once from remapping on every write.
+=C3=93scar G=C3=B3mez Fuente
+Electronic Engineer & Degree in Physical Sciences
+Mobile: 659.28.97.90
+Email: oscargomezf@gmail.com
+Website: www.oscargomezf.com
 
-The oops will only occur if CONFIG_STRICT_MODULE_RWX is enabled
-(previously called CONFIG_DEBUG_SET_MODULE_RONX).
 
-I've found two ways the race condition can be reproduced:
-1) loading multiple livepatches at the same time
-2) loading a livepatch at the same time ftrace is patching code
 
-They are both ultimately the same root cause since livepatch uses ftrace
-to perform the patching.
-
-I have put together a test case that can reproduce the crash using
-KVM. The tarball includes a minimal kernel and initramfs, along with
-a script to run qemu and the .config used to build the kernel. By
-default it will attempt to reproduce by loading multiple livepatches
-at the same time. Passing 'test=ftrace' to the script will attempt to
-reproduce by racing with ftrace.
-
-My test setup reproduces the race and oops more reliably by loading
-multiple livepatches at the same time than with the ftrace method. It's
-not 100% reproducible, so the test case may need to be run multiple
-times.
-
-It can be found here (not attached because of its size):
-http://johannes.erdfelt.com/5.2.0-rc1-a188339ca5-livepatch-race.tar.gz
-
-The simple patch of extending the module_mutex lock over the entirety
-of klp_init_object_loaded fixes it from the livepatch side. This
-mostly works because set_all_modules_text_{rw,ro} acquires module_mutex
-as well, but it still leaves a hole in the ftrace code. A lock should
-probably be held over the entirety of remapping the text sections RW.
-
-This is complicated by the fact that remapping the text section in
-ftrace is handled by arch specific code. I'm not sure what a good
-solution to this is yet.
-
-JE
-
+On Mon, 20 May 2019 at 21:39, Sven Van Asbroeck <thesven73@gmail.com> wrote=
+:
+>
+> On Mon, May 20, 2019 at 2:35 PM Sven Van Asbroeck <thesven73@gmail.com> w=
+rote:
+> >
+> > Hi Oscar, thank you for your contribution! I have a question, see inlin=
+e.
+> >
+> > On Fri, May 17, 2019 at 1:50 PM Oscar Gomez Fuente
+> > <oscargomezf@gmail.com> wrote:
+> > >
+> > > These changes solve a warning realated to an incorrect type inilizer =
+in the function
+> > > fieldbus_poll.
+> > >
+>
+> This warning was generated by sparse, right?
+>
+> $ make C=3D2 drivers/staging/fieldbus/
+> <snip>
+>   CHECK   drivers/staging/fieldbus/dev_core.c
+> drivers/staging/fieldbus/dev_core.c:232:27: warning: incorrect type in
+> initializer (different base types)
+> drivers/staging/fieldbus/dev_core.c:232:27:    expected restricted
+> __poll_t ( *poll )( ... )
+> drivers/staging/fieldbus/dev_core.c:232:27:    got unsigned int (
+> *<noident> )( ... )
+> <snip>
+>
+> I will test your patch on actual h/w, probably tomorrow.
+> I don't expect to see any problems.
+>
+> Sven
