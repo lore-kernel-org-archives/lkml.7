@@ -2,119 +2,99 @@ Return-Path: <SRS0=lq4r=TU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
+X-Spam-Status: No, score=-13.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BBA7C04AAC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 16:50:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB73CC04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 16:51:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3F67D214DA
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 16:50:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="Askw2Dy/"
+	by mail.kernel.org (Postfix) with ESMTP id C143B214DA
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 16:51:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390217AbfETQuR (ORCPT
+        id S2392179AbfETQvx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 12:50:17 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:37153 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388598AbfETQuQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 12:50:16 -0400
-Received: by mail-pl1-f196.google.com with SMTP id p15so6985391pll.4
-        for <linux-kernel@vger.kernel.org>; Mon, 20 May 2019 09:50:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=K2nbzJiUbqitAe/vmw6KZ2Et+OZPFA/JK7MysTmH6vQ=;
-        b=Askw2Dy/VRvGu3WZOwFDDolHJLJQt0vmzbsQp+Cjadu48CZiIfEEWpPzeAsy+nTPKB
-         dxNDUb0wvk/qMauQPlQYiE42IIUFK/X03vC1FsrQq+WsvryUhA6Ck09WMQ4YcNObgZLa
-         AboM37uBqIjpZkwpxIiSLmjQvtILHebnGIiVjR/T4vvoLW/fpf+DMRHo3PyAls280rCk
-         diEfGB4rl1Wux2CUZgkLXXhjDcTUA77lH2bA7yJWzP/gcd5z1uBjzRvqxd1E6oNgkDQJ
-         V6ZZfwHikUzlUzCd7k8rNRRas8HAsxHgcf30hCZn3tuGUTWvKoIYNfP3MJ9NtSHZ7cx+
-         QnYA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=K2nbzJiUbqitAe/vmw6KZ2Et+OZPFA/JK7MysTmH6vQ=;
-        b=fiwbPqy5SgzrFTO4lP9YZ0kEZlMCR2FcZczJOS5j2AWAynCZ6wUTsHRCLt2GrEArx9
-         7TJIHWjn5uW8Mgy4weHbBDGL482efCqmYu/0IOsr2yB9oXs2dacXGMdQazTQZQ2ZcDg1
-         fwPrhrzVD8b/r2HHfdb57HV1jw75CYtKxF2CiOePKcPcaiEQiZeLQjwAnI+tRpmlljgv
-         jyswhljJ5UisFjdfoftC16JguI8/ivyLVjSFT5y2/QdovhJLE1POx/h6d4Bzlb028dSq
-         TJfXYZNzInrlI17Kj0oW9e0yAecW3SlzpXzPZcxWI+O7fQAmHmb8Zkm7yTrlhLox+Kj1
-         kOVw==
-X-Gm-Message-State: APjAAAXr2L5WF9zKlKwlJVDL3GTDDd/zsDU0mk6ma3MhDexL2NJofe+c
-        bydOruVFJzs9/qSk0T/Dh/4qjQ==
-X-Google-Smtp-Source: APXvYqyAP5erzaLtIGoxn8EHRf6PIwFDu2SBNbb4v+K+AAUyEPJ5bcPtDafLb6k1FMVQiJbhcbpi6A==
-X-Received: by 2002:a17:902:ba8d:: with SMTP id k13mr63146469pls.52.1558371016198;
-        Mon, 20 May 2019 09:50:16 -0700 (PDT)
-Received: from localhost ([2620:10d:c091:500::3:df5f])
-        by smtp.gmail.com with ESMTPSA id 19sm21507630pfz.84.2019.05.20.09.50.14
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 20 May 2019 09:50:15 -0700 (PDT)
-Date:   Mon, 20 May 2019 12:50:13 -0400
-From:   Johannes Weiner <hannes@cmpxchg.org>
-To:     Minchan Kim <minchan@kernel.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-mm <linux-mm@kvack.org>, Michal Hocko <mhocko@suse.com>,
-        Tim Murray <timmurray@google.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Suren Baghdasaryan <surenb@google.com>,
-        Daniel Colascione <dancol@google.com>,
-        Shakeel Butt <shakeelb@google.com>,
-        Sonny Rao <sonnyrao@google.com>,
-        Brian Geffon <bgeffon@google.com>
-Subject: Re: [RFC 2/7] mm: change PAGEREF_RECLAIM_CLEAN with PAGE_REFRECLAIM
-Message-ID: <20190520165013.GB11665@cmpxchg.org>
-References: <20190520035254.57579-1-minchan@kernel.org>
- <20190520035254.57579-3-minchan@kernel.org>
+        Mon, 20 May 2019 12:51:53 -0400
+Received: from mx2.suse.de ([195.135.220.15]:56658 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2388598AbfETQvw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 12:51:52 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 86AA1AF99;
+        Mon, 20 May 2019 16:51:51 +0000 (UTC)
+Received: by ds.suse.cz (Postfix, from userid 10065)
+        id D2D85DA86C; Mon, 20 May 2019 18:52:48 +0200 (CEST)
+From:   David Sterba <dsterba@suse.com>
+To:     torvalds@linux-foundation.org
+Cc:     David Sterba <dsterba@suse.com>, clm@fb.com,
+        linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [GIT PULL] Btrfs fixes for 5.2-rc2
+Date:   Mon, 20 May 2019 18:52:43 +0200
+Message-Id: <cover.1558370339.git.dsterba@suse.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190520035254.57579-3-minchan@kernel.org>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 20, 2019 at 12:52:49PM +0900, Minchan Kim wrote:
-> The local variable references in shrink_page_list is PAGEREF_RECLAIM_CLEAN
-> as default. It is for preventing to reclaim dirty pages when CMA try to
-> migrate pages. Strictly speaking, we don't need it because CMA didn't allow
-> to write out by .may_writepage = 0 in reclaim_clean_pages_from_list.
->
-> Moreover, it has a problem to prevent anonymous pages's swap out even
-> though force_reclaim = true in shrink_page_list on upcoming patch.
-> So this patch makes references's default value to PAGEREF_RECLAIM and
-> rename force_reclaim with skip_reference_check to make it more clear.
-> 
-> This is a preparatory work for next patch.
-> 
-> Signed-off-by: Minchan Kim <minchan@kernel.org>
+Hi,
 
-Looks good to me, just one nit below.
+the branch contains fixes, notable hilights:
 
-Acked-by: Johannes Weiner <hannes@cmpxchg.org>
+* fixes for some long-standing bugs in fsync that were quite hard to
+  catch but now finaly fixed
 
-> ---
->  mm/vmscan.c | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
-> 
-> diff --git a/mm/vmscan.c b/mm/vmscan.c
-> index d9c3e873eca6..a28e5d17b495 100644
-> --- a/mm/vmscan.c
-> +++ b/mm/vmscan.c
-> @@ -1102,7 +1102,7 @@ static unsigned long shrink_page_list(struct list_head *page_list,
->  				      struct scan_control *sc,
->  				      enum ttu_flags ttu_flags,
->  				      struct reclaim_stat *stat,
-> -				      bool force_reclaim)
-> +				      bool skip_reference_check)
+* some fixups to error handling paths that did not properly clean up
+  (locking, memory)
 
-"ignore_references" would be better IMO
+* fix to space reservation for inheriting properties
+
+No merge conflicts, please pull. Thanks.
+
+----------------------------------------------------------------
+The following changes since commit b1c16ac978fd40ae636e629bb69a652df7eebdc2:
+
+  btrfs: Use kvmalloc for allocating compressed path context (2019-05-02 13:48:19 +0200)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/kdave/linux.git for-5.2-rc1-tag
+
+for you to fetch changes up to 4e9845eff5a8027b5181d5bff56a02991fe46d48:
+
+  Btrfs: tree-checker: detect file extent items with overlapping ranges (2019-05-16 14:33:51 +0200)
+
+----------------------------------------------------------------
+Filipe Manana (4):
+      Btrfs: do not abort transaction at btrfs_update_root() after failure to COW path
+      Btrfs: avoid fallback to transaction commit during fsync of files with holes
+      Btrfs: fix race between ranged fsync and writeback of adjacent ranges
+      Btrfs: tree-checker: detect file extent items with overlapping ranges
+
+Johnny Chang (1):
+      btrfs: Check the compression level before getting a workspace
+
+Josef Bacik (2):
+      btrfs: don't double unlock on error in btrfs_punch_hole
+      btrfs: use the existing reserved items for our first prop for inheritance
+
+Qu Wenruo (1):
+      btrfs: extent-tree: Fix a bug that btrfs is unable to add pinned bytes
+
+Tobin C. Harding (2):
+      btrfs: sysfs: Fix error path kobject memory leak
+      btrfs: sysfs: don't leak memory when failing add fsid
+
+ fs/btrfs/compression.c  |  1 +
+ fs/btrfs/extent-tree.c  | 15 ++++++++-------
+ fs/btrfs/file.c         | 16 +++++++++++++---
+ fs/btrfs/props.c        | 30 ++++++++++++++++++++++--------
+ fs/btrfs/root-tree.c    |  4 +---
+ fs/btrfs/sysfs.c        |  7 ++++++-
+ fs/btrfs/tree-checker.c | 49 +++++++++++++++++++++++++++++++++++++++++++++----
+ fs/btrfs/tree-log.c     |  1 +
+ 8 files changed, 97 insertions(+), 26 deletions(-)
