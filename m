@@ -4,66 +4,66 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B737CC04AAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 08:31:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3783C04AAF
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 08:31:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8C24020815
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 08:31:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A13120815
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 08:31:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="eh592mys"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="KyWXseoP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731152AbfETIbW (ORCPT
+        id S1731253AbfETIb2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 04:31:22 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:39609 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729882AbfETIbW (ORCPT
+        Mon, 20 May 2019 04:31:28 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:42233 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731153AbfETIb2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 04:31:22 -0400
-Received: by mail-pf1-f196.google.com with SMTP id z26so6861507pfg.6
-        for <linux-kernel@vger.kernel.org>; Mon, 20 May 2019 01:31:21 -0700 (PDT)
+        Mon, 20 May 2019 04:31:28 -0400
+Received: by mail-pg1-f196.google.com with SMTP id 145so6430502pgg.9
+        for <linux-kernel@vger.kernel.org>; Mon, 20 May 2019 01:31:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=YDxVfW0Drk7B/WkdvCIQOYRuq9nRhmzNbEq0alSDlGc=;
-        b=eh592mysWWaYmUlTdrJu5JmfPhAPRF044bjHqVn0RRF+Cc2Qvpf8BdsBT/qFoMgXr2
-         5WYW6pVaaaLsonApbGcCNPZ64vDP375PnN9spMsi/O/4+77Pa5K5j+U0G1JW8Hdlyk26
-         ZaQGBEK8AmtDo3XTJyJ/tr1m7f1jRs8XBBzfie8q34ToPxL2G5ZgqZta6ZbrlNa0QKBP
-         9+5BtOhM+2XG1ULJyQ48cve2UX73EL2Pf0oCJiVjDqWl2NMnFFNFgylX31O0ATpjy7It
-         F0a3ZSGbmOfL7Ps8dHG3idQuEu8vAl7OWF/agtQUTaHdNgLG8oZuNVZB47QJDzevNA+4
-         Zztw==
+        bh=OWo8Uulihvaq9zy3I0w67p1cVDmaIdDDpV04dYtjBE8=;
+        b=KyWXseoPwNWVph/2LYqJ7XtWB++4XFV14lGAlh0XyfkDC+WFnwSAVrpHZ7LnWmVHNE
+         /+OJJm/I2OI/6rwUZL4YNI3DV3sZnUqWe4nbib6CR3PGfaFrxtjJA+ARiJLuKXPl3Phx
+         +IV8YI7LAA1WxsrFW7o8lOnwnfdUpYfktee+Xfhf8BFt9z9OXSsOg2OTQufei6iVkOk5
+         n0Hf31CIwq3xCOKdcff7Aa3ZMywrRrX0OuIoYetcoEBGCPpFNCPswN+wekoiwwKAsxbp
+         g5VELbnAmdPMNGrjkCRCj4rg6G2ebRtzIxPjYaslK+2OBBXeC/3kod5v1EtN43HxCMJ9
+         oLIA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=YDxVfW0Drk7B/WkdvCIQOYRuq9nRhmzNbEq0alSDlGc=;
-        b=WVRaVn2ADdOOqP959y4tZywgXFXYEz9AeL3nOPzl5UYXQn/oKFLtZM6MSHVLSNn7BA
-         fzQT0GYGsjxrivGJXT+3VXVsnUlMLXUUAt9egrFgzesa6WfUTreu99bvg+srYMa+DapX
-         50BWXl0Qp9cLX9O/aiyqjGKVamhlUQzXra1FoSiRFdsHVqeWIjMkDrETPLENbq/y0sTr
-         xBOSc3kQn4vXJxw59RcLpu/IUrYpnUhObL8GdKg0iw9E1VSYairyHcyFhTRhaNrzuMsl
-         w10+Pz4Ade6Vr4rjvqAgCzQ2Lfo9cgd/mgoCBL7sLv9vAkT3VTDhd290rcraSuXfqGDM
-         GONg==
-X-Gm-Message-State: APjAAAWWUNOarAdwntppovULRvUuANb7KzFYwhQ1D8FLwDy4mpcR+LOF
-        goOS571z4+PnvG+JDQadk9Id
-X-Google-Smtp-Source: APXvYqwIB4PznKqCQ1cB5xDX9ohSxJ3Q8ajVmP/fHvwxtLD7sXxbiRog+BtNITGhoESjpgVTOlJXAA==
-X-Received: by 2002:a63:7909:: with SMTP id u9mr67807558pgc.223.1558341081560;
-        Mon, 20 May 2019 01:31:21 -0700 (PDT)
+        bh=OWo8Uulihvaq9zy3I0w67p1cVDmaIdDDpV04dYtjBE8=;
+        b=eATqlhid33whmkKKsAOHoIhHQ0CgIEmdkvNQ4Ll5PO1/MMGOrObKvSFTJmXUB0Bs6z
+         iixpfoB4oSnIYNcu32X1Qm8dKJk/V6EhX+j6ZH0u/ozB/N9c7UwSaqdthR/qVjm3Rg24
+         2xkx8EoUzj6fzjBMeyLQWTBnaqx3aSCOVW7JbpKAPOy/7+QKR1vWK7ySZQGJR2rRzVBp
+         O3QsbTygP1ISOWThhYcUCKaNSSqYp5v4dRC7gExnsiYNWS66LWa5wRfmmlEKq/WCsuo4
+         PSeEuTUFHPMHpV2kbFae32HS1rqi22QG8RfWaMA8jcn7nonQFEvbahIS6IDifx3Y9/3O
+         Hb4Q==
+X-Gm-Message-State: APjAAAXR8051MaF2E1z7ocPyIGxmERyk1CPccWlySVSPqZNehViNN16f
+        PmSfpJWki9DDvWPIOeCnidOu
+X-Google-Smtp-Source: APXvYqwba4qh7qxpJyc9Shot/nunx5rmufZCNsCBbq7hfOm3Lnju8hTbLBzaiGhYCaJd7E7ncz5dew==
+X-Received: by 2002:a63:e406:: with SMTP id a6mr75142659pgi.132.1558341087636;
+        Mon, 20 May 2019 01:31:27 -0700 (PDT)
 Received: from localhost.localdomain ([2405:204:7203:2717:7d22:7fdb:b76e:242c])
-        by smtp.gmail.com with ESMTPSA id s72sm24068220pgc.65.2019.05.20.01.31.17
+        by smtp.gmail.com with ESMTPSA id s72sm24068220pgc.65.2019.05.20.01.31.21
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 20 May 2019 01:31:21 -0700 (PDT)
+        Mon, 20 May 2019 01:31:27 -0700 (PDT)
 From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 To:     linus.walleij@linaro.org, robh+dt@kernel.org
 Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         haitao.suo@bitmain.com, darren.tsao@bitmain.com,
         linux-gpio@vger.kernel.org, alec.lin@bitmain.com,
         Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Subject: [PATCH 1/5] dt-bindings: pinctrl: Modify pinctrl memory map
-Date:   Mon, 20 May 2019 14:00:57 +0530
-Message-Id: <20190520083101.10229-2-manivannan.sadhasivam@linaro.org>
+Subject: [PATCH 2/5] arm64: dts: bitmain: Modify pin controller memory map
+Date:   Mon, 20 May 2019 14:00:58 +0530
+Message-Id: <20190520083101.10229-3-manivannan.sadhasivam@linaro.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190520083101.10229-1-manivannan.sadhasivam@linaro.org>
 References: <20190520083101.10229-1-manivannan.sadhasivam@linaro.org>
@@ -74,31 +74,31 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 Earlier, the PWM registers were included as part of the pinctrl memory
 map, but this turned to be useless as the muxing is being handled by the
-SoC pin controller itself. So, lets modify the pinctrl memory map to
-reflect the same.
+SoC pin controller itself. Hence, this commit removes the pwm register
+mapping from the pinctrl node to make it more clean.
 
-Fixes: 07b734fbdea2 ("dt-bindings: pinctrl: Add BM1880 pinctrl binding")
+Fixes: af2ff87de413 ("arm64: dts: bitmain: Add pinctrl support for BM1880 SoC")
 Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 ---
- .../devicetree/bindings/pinctrl/bitmain,bm1880-pinctrl.txt    | 4 ++--
+ arch/arm64/boot/dts/bitmain/bm1880.dtsi | 4 ++--
  1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/pinctrl/bitmain,bm1880-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/bitmain,bm1880-pinctrl.txt
-index ed34bb1ee81c..cc9a89aa4170 100644
---- a/Documentation/devicetree/bindings/pinctrl/bitmain,bm1880-pinctrl.txt
-+++ b/Documentation/devicetree/bindings/pinctrl/bitmain,bm1880-pinctrl.txt
-@@ -85,9 +85,9 @@ Required Properties:
-                   spi0
+diff --git a/arch/arm64/boot/dts/bitmain/bm1880.dtsi b/arch/arm64/boot/dts/bitmain/bm1880.dtsi
+index ee7e6abcc813..b2497a090402 100644
+--- a/arch/arm64/boot/dts/bitmain/bm1880.dtsi
++++ b/arch/arm64/boot/dts/bitmain/bm1880.dtsi
+@@ -88,9 +88,9 @@
+ 			#size-cells = <1>;
+ 			ranges = <0x0 0x0 0x50010000 0x1000>;
  
- Example:
--        pinctrl: pinctrl@50 {
-+        pinctrl: pinctrl@400 {
-                 compatible = "bitmain,bm1880-pinctrl";
--                reg = <0x50 0x4B0>;
-+                reg = <0x400 0x120>;
+-			pinctrl: pinctrl@50 {
++			pinctrl: pinctrl@400 {
+ 				compatible = "bitmain,bm1880-pinctrl";
+-				reg = <0x50 0x4B0>;
++				reg = <0x400 0x120>;
+ 			};
  
-                 pinctrl_uart0_default: uart0-default {
-                         pinmux {
+ 			rst: reset-controller@c00 {
 -- 
 2.17.1
 
