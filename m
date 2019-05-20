@@ -2,142 +2,159 @@ Return-Path: <SRS0=lq4r=TU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF082C04AAC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 20:12:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C43CEC04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 20:17:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 806D620815
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 20:12:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 967D9216B7
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 20:17:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="X0rJDgs1"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="KQMm8dHl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726651AbfETUMY (ORCPT
+        id S1726186AbfETURB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 16:12:24 -0400
-Received: from mout.web.de ([212.227.17.12]:38761 "EHLO mout.web.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725372AbfETUMX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 16:12:23 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1558383122;
-        bh=ff64PCuMJeBfpkk5ZZwdYDpdPR3e6g8dV4UJpwufT4Q=;
-        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
-        b=X0rJDgs17KqFeTaibKUPyNLzp1cvO9x93ldqahpZxK08+Zb6xi2mjP84DJtbiIq2q
-         31Z4UY6YP9ONlWcMt0F/rMu1Cq9IYKJ3OQiYdcNM2FieqwB4puGPHvazyieyz1wX2/
-         vS6QtgkY7e4Zh1Ac9x8yS9jkAjuNV0ZRHjpi+0OM=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.3] ([78.49.172.132]) by smtp.web.de (mrweb101
- [213.165.67.124]) with ESMTPSA (Nemesis) id 0LbrQm-1gm5yQ31e8-00jGoZ; Mon, 20
- May 2019 22:12:02 +0200
-Subject: Re: Coccinelle: semantic patch for missing of_node_put
-To:     Julia Lawall <julia.lawall@lip6.fr>
-Cc:     Sasha Levin <sashal@kernel.org>, Pavel Machek <pavel@ucw.cz>,
-        Gilles Muller <Gilles.Muller@lip6.fr>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Nicolas Palix <nicolas.palix@imag.fr>,
-        Wen Yang <wen.yang99@zte.com.cn>,
-        Coccinelle <cocci@systeme.lip6.fr>,
-        LKML <linux-kernel@vger.kernel.org>
-References: <201905171432571474636@zte.com.cn>
- <alpine.DEB.2.20.1905170912590.4014@hadrien>
- <20190520093303.GA9320@atrey.karlin.mff.cuni.cz>
- <alpine.DEB.2.21.1905201152040.2543@hadrien>
- <20190520172041.GH11972@sasha-vm>
- <alpine.DEB.2.21.1905202151140.2561@hadrien>
-From:   Markus Elfring <Markus.Elfring@web.de>
-Openpgp: preference=signencrypt
-Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
- 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 FEE=
-Message-ID: <60d87dff-3b4e-d77b-a4e5-e00b010d414b@web.de>
-Date:   Mon, 20 May 2019 22:11:53 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Mon, 20 May 2019 16:17:01 -0400
+Received: from mail-ua1-f66.google.com ([209.85.222.66]:44067 "EHLO
+        mail-ua1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725954AbfETURB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 16:17:01 -0400
+Received: by mail-ua1-f66.google.com with SMTP id p13so5753487uaa.11
+        for <linux-kernel@vger.kernel.org>; Mon, 20 May 2019 13:17:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=6B2h64c7BAIXdqgTD3mb8/lcaBqFTG1vyJC0fwpx6wE=;
+        b=KQMm8dHlW0EX+V6h+USfLko9QjquRn3QzW/5J7l+0b/pQy5Dvztidqe8NZWI0647aR
+         L+PuY1rYGscMwG+2Fo1tk6DfjcAF7p0K4i5eFnOfAg7Bpnw5pktbNUrmUsFEF+4M1AQW
+         bDUzBrJzXsa9FJ/B/992ypQfJjcTM2UtqhbRU=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=6B2h64c7BAIXdqgTD3mb8/lcaBqFTG1vyJC0fwpx6wE=;
+        b=Z8sCUS0zN6EuVI5PaGGVebmWa0NsJl1FQqNqAaGXKN6l55jZRFngU5zZcM5HO01fUY
+         sjhGISRS5voSXzZmXtsHdy9NPS682MCHJ0XGUL5gryeIjwk1uVIAQ70Fvk0SmWpaOEEw
+         /5fdSovVvfcOCyGbKghtsUvDYW6X7lqY2OXlcCSu8hgFF9igihcib4fL14nn9eNIClKz
+         lJc+ZsILof/XSHNeFqqw8DmSGSZpWFdM29FViyt7useG171YZ3CxBDFB422rV8BLjtlG
+         bMNvhbPyOJlKBI9MZciIXypf47PjnupVerE35HdlPcwnXWQ1CKPy4DMub9YhwzRU+MCH
+         MFUg==
+X-Gm-Message-State: APjAAAWz9U0EcAvO86ssu0ciLuwIKNY3rBVlEY+9L0M86XVY4m42KdAi
+        FxKAZ4zZkLFIgACpqfR9Ndx+DyKhP0w=
+X-Google-Smtp-Source: APXvYqwhlmkX0ZyTGDK311a6NsKbZNMTVbBd/FQqEhfxlRR790yYHzK+hGIBeymzWUC5tu/jOHtenw==
+X-Received: by 2002:ab0:670c:: with SMTP id q12mr14702277uam.106.1558383419199;
+        Mon, 20 May 2019 13:16:59 -0700 (PDT)
+Received: from mail-vs1-f42.google.com (mail-vs1-f42.google.com. [209.85.217.42])
+        by smtp.gmail.com with ESMTPSA id e62sm11078184vsc.24.2019.05.20.13.16.58
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Mon, 20 May 2019 13:16:58 -0700 (PDT)
+Received: by mail-vs1-f42.google.com with SMTP id g187so9735416vsc.8
+        for <linux-kernel@vger.kernel.org>; Mon, 20 May 2019 13:16:58 -0700 (PDT)
+X-Received: by 2002:a67:dd8e:: with SMTP id i14mr31757112vsk.149.1558383417594;
+ Mon, 20 May 2019 13:16:57 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <alpine.DEB.2.21.1905202151140.2561@hadrien>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-X-Provags-ID: V03:K1:MzYnUDWMSddPVS8EDeHy/BnJM/s4AmRJ/26NNrm2Vv49L+mbLdR
- GVrclo8i+4q8d75iwT8gp3gjZtcpV7zyAdXHjaa/7EYD4xd/7V743rRlQDa9HE87QDh5Gmj
- rs6ATqUTt/OK7IDepSWQ6KGDCl9Op/Syi8qTrL2sGEE7HiEjU7F8OI/vZHGGMRiW8HMqXSq
- t2QhCC3Lx+tOzr5TyJAFg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:Ee762KM2lFk=:BlIMdCVXl9hw+8RJzrZ2A5
- 3OljbS3qotNWh/15GcfArxWYdm/D/4hBJgDBdfgMfvhn1aYJ+OJYzikYuWkqhloJeUpu9ITdI
- 6ENZNj5ilvvgJIJ2oh4ipk3HF3FblmvyUbAXqeaA+mjrHYaOGP3GS7425YSkiLbBIpElAQhli
- /fmggdvQLaHexN5ZM/TKBi1wP1jnXLgO0ZKezsPIZo9I/Ko2ZmzPrCZWDxhpxzDnt5stnkEHn
- qePJEjr6Y1VgmC3J3VvWVr0O1EOpE1mw4ptMNDExU6XN9R/dpbC/pRWCTw0yiNkr6vxCIoZpA
- cRnJ+9fuxN24UCUQac3fRHa3XN6wg+SABVBPBBWEo/krNdjAgAeI726sOdW6thZQG8MEGvEZd
- 93JkNL+YMNbbdJGtIGvC6ZuGNpdJIfVrMWyARY6hGvjiu7lcgXx1C40dsc0seFY5ltsuQhOQk
- 1y8Fa/dq1n3xjRZv6owaAeP4gK0pEAWY1K0SNRuGolLedIZJGMVdhMl4uybNTWjpbFSW1LseM
- kHw/ANWFqN2V0mh4WbI1uG7T0DzwqlGC9wK7fAazgLSg4YvF2OXekRlOoC9iXL5jhSplrm88S
- 5kB+0bnPeqshhtOgvK95qKaMJf+m0nnszWl+Yi8Na/QmwnrwIYyYG9kR7Cof/HrD49CoHHKrQ
- 8AOgcM1Qvskvo5zmQIWRb3+kOyM3eO0tpmLcq2eLsR1VIF1twqqZig6bOdnXY/kPggWtfIEhs
- HjOK1K1HMZBPnqxiuecL0L7hGG69pcPh7MKKq92yM9TwJiorEm0jd+nXjHUA/V/U4aRMdyhbQ
- t5G/5u7kQ34lYI0Gkv7zlR0m9t3e8Mj9BTcYPR68NXJtsRR18yMDcluWtYwBZB+juXMHErsX7
- RxsWCn6q3EiiM9WCxd2FIVuOpjxYMHJIQ7OYSJ4NkUHLMgxIIbisgwaF16dBiIYfX5LILTXE6
- mbp9ZE7SOqQqUvBDCqTETW0Pmh8qpIWdOth7pGFkP2uhbaoicjhbq
+References: <20190520170132.91571-1-mka@chromium.org>
+In-Reply-To: <20190520170132.91571-1-mka@chromium.org>
+From:   Doug Anderson <dianders@chromium.org>
+Date:   Mon, 20 May 2019 13:16:46 -0700
+X-Gmail-Original-Message-ID: <CAD=FV=VGA_i=vM4_OrqXnv0WC__Fcdced3oOZjzcPO=i8Q+SdA@mail.gmail.com>
+Message-ID: <CAD=FV=VGA_i=vM4_OrqXnv0WC__Fcdced3oOZjzcPO=i8Q+SdA@mail.gmail.com>
+Subject: Re: [PATCH 1/2] ARM: dts: rockchip: Limit GPU frequency on veyron
+ mickey to 300 MHz when the CPU gets very hot
+To:     Matthias Kaehlcke <mka@chromium.org>
+Cc:     Heiko Stuebner <heiko@sntech.de>, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
+        devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> On the other hand, I don't know if the one that seemed to cause a crash
-> really caused a crash.  It was detected by syzkaller, and it is also
-> possible that git bisect ended up at the wrong place.
+Hi,
 
-Do you refer to any known bug report here?
+On Mon, May 20, 2019 at 10:01 AM Matthias Kaehlcke <mka@chromium.org> wrote=
+:
+>
+> On rk3288 the CPU and GPU temperatures are correlated. Limit the GPU
+> frequency on veyron mickey to 300 MHz for CPU temperatures >=3D 85=C2=B0C=
+.
+>
+> This matches the configuration of the downstream Chrome OS 3.14 kernel,
+> the 'official' kernel for mickey.
+>
+> Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
+> ---
+> Note: this patch depends on "ARM: dts: rockchip: Add #cooling-cells
+> entry for rk3288 GPU" (https://lore.kernel.org/patchwork/patch/1075005/)
+> ---
+>  arch/arm/boot/dts/rk3288-veyron-mickey.dts | 6 ++++++
+>  1 file changed, 6 insertions(+)
+>
+> diff --git a/arch/arm/boot/dts/rk3288-veyron-mickey.dts b/arch/arm/boot/d=
+ts/rk3288-veyron-mickey.dts
+> index d889ab3c8235..f118d92a49d0 100644
+> --- a/arch/arm/boot/dts/rk3288-veyron-mickey.dts
+> +++ b/arch/arm/boot/dts/rk3288-veyron-mickey.dts
+> @@ -125,6 +125,12 @@
+>                                          <&cpu2 8 THERMAL_NO_LIMIT>,
+>                                          <&cpu3 8 THERMAL_NO_LIMIT>;
+>                 };
+> +
+> +               /* At very hot, don't let GPU go over 300 MHz */
+> +               cpu_very_hot_limit_gpu {
+> +                       trip =3D <&cpu_alert_very_hot>;
+> +                       cooling-device =3D <&gpu 2 2>;
+> +               };
+
+Two things:
+
+A) If I'm reading things properly, you're actually limiting things to
+400 MHz.  This is because you don't have <https://crrev.com/c/1574579>
+which deletes the 500 MHz GPU operating point.  So on upstream the
+available points are:
+
+0: 600 MHz
+1: 500 MHz
+2: 400 MHz
+3: 300 MHz
+4: 200 MHz
+5: 100 MHz
+
+...and downstream:
+
+0: 600 MHz
+1: 400 MHz
+2: 300 MHz
+3: 200 MHz
+4: 100 MHz
+
+Thinking about it more, I bet Heiko would actually be OK deleting the
+500 MHz GPU operating point for veyron.  Technically it's not needed
+upstream because upstream doesn't have our hacks to allow re-purposing
+NPLL for HDMI (so they _can_ make 500 MHz) but maybe we can make the
+argument that these laptops have only ever been tested with the 500
+MHz operating point removed and also that eventually someonje will
+probably figure out a way to re-purpose NPLL for HDMI even upstream...
 
 
-> In any case, forgetting an of_node_put will normally just waste a little
-> memory, so probably stable kernels don't care.
+B) It seems like in the same patch you'd want to introduce
+"cpu_warm_limit_gpu", AKA:
 
-Will it be nice to achieve better exception handling also for these
-software versions over time?
+cpu_warm_limit_gpu {
+  trip =3D <&cpu_alert_warm>;
+  cooling-device =3D
+  <&gpu 1 1>;
+};
 
-Regards,
-Markus
+
+-Doug
