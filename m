@@ -2,120 +2,56 @@ Return-Path: <SRS0=lq4r=TU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA525C04AAC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 10:01:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75062C04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 10:02:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 879F2206B6
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 10:01:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 53FD5206B6
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 10:02:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732255AbfETKBR (ORCPT
+        id S1732347AbfETKCK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 06:01:17 -0400
-Received: from 8.mo68.mail-out.ovh.net ([46.105.74.219]:55632 "EHLO
-        8.mo68.mail-out.ovh.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730146AbfETKBR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 06:01:17 -0400
-X-Greylist: delayed 8825 seconds by postgrey-1.27 at vger.kernel.org; Mon, 20 May 2019 06:01:16 EDT
-Received: from player760.ha.ovh.net (unknown [10.109.146.5])
-        by mo68.mail-out.ovh.net (Postfix) with ESMTP id C4CD712E5F1
-        for <linux-kernel@vger.kernel.org>; Mon, 20 May 2019 09:34:09 +0200 (CEST)
-Received: from armadeus.com (lfbn-1-7591-179.w90-126.abo.wanadoo.fr [90.126.248.179])
-        (Authenticated sender: sebastien.szymanski@armadeus.com)
-        by player760.ha.ovh.net (Postfix) with ESMTPSA id 064FF5F24312;
-        Mon, 20 May 2019 07:33:54 +0000 (UTC)
-Subject: Re: [PATCH RE-RESEND 1/2] drm/panel: Add support for Armadeus ST0700
- Adapt
-To:     Sam Ravnborg <sam@ravnborg.org>
-References: <20190507152713.27494-1-sebastien.szymanski@armadeus.com>
- <CAOMZO5B2nMsVNO6O_D+YTSjux=-DjNPGxhkEi3AQquOZVODumA@mail.gmail.com>
- <20190507161950.GA24879@ravnborg.org>
- <20190508083303.GR17751@phenom.ffwll.local>
- <20190508090612.GT17751@phenom.ffwll.local>
-Cc:     Fabio Estevam <festevam@gmail.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, David Airlie <airlied@linux.ie>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        DRI mailing list <dri-devel@lists.freedesktop.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        stable <stable@vger.kernel.org>, Shawn Guo <shawnguo@kernel.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>
-From:   =?UTF-8?Q?S=c3=a9bastien_Szymanski?= 
-        <sebastien.szymanski@armadeus.com>
-Openpgp: preference=signencrypt
-Message-ID: <0c5d70db-e7c1-5d02-9c33-65dabd431a68@armadeus.com>
-Date:   Mon, 20 May 2019 09:34:24 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Mon, 20 May 2019 06:02:10 -0400
+Received: from mx2.suse.de ([195.135.220.15]:46452 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725951AbfETKCK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 06:02:10 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 05869AFBE;
+        Mon, 20 May 2019 10:02:08 +0000 (UTC)
+Date:   Mon, 20 May 2019 12:02:07 +0200
+From:   Cyril Hrubis <chrubis@suse.cz>
+To:     kernel test robot <rong.a.chen@intel.com>
+Cc:     Johannes Weiner <hannes@cmpxchg.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>, lkp@01.org,
+        Roman Gushchin <guro@fb.com>, ltp@lists.linux.it
+Subject: Re: [LTP] [mm]  8c7829b04c: ltp.overcommit_memory01.fail
+Message-ID: <20190520100207.GC25405@rei.lan>
+References: <20190520032018.GW31424@shao2-debian>
 MIME-Version: 1.0
-In-Reply-To: <20190508090612.GT17751@phenom.ffwll.local>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Ovh-Tracer-Id: 6372874948130854140
-X-VR-SPAMSTATE: OK
-X-VR-SPAMSCORE: -100
-X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgeduuddruddtjedguddvgecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfqggfjpdevjffgvefmvefgnecuuegrihhlohhuthemucehtddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190520032018.GW31424@shao2-debian>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Sam,
+Hi!
+> commit: 8c7829b04c523cdc732cb77f59f03320e09f3386 ("mm: fix false-positive OVERCOMMIT_GUESS failures")
 
-On 5/8/19 11:06 AM, Daniel Vetter wrote:
-> On Wed, May 08, 2019 at 10:33:03AM +0200, Daniel Vetter wrote:
->> On Tue, May 07, 2019 at 06:19:50PM +0200, Sam Ravnborg wrote:
->>> Hi Fabio
->>>
->>> On Tue, May 07, 2019 at 12:33:39PM -0300, Fabio Estevam wrote:
->>>> [Adding Sam, who is helping to review/collect panel-simple patches]
->>>>
->>>> On Tue, May 7, 2019 at 12:27 PM Sébastien Szymanski
->>>> <sebastien.szymanski@armadeus.com> wrote:
->>>>>
->>>>> This patch adds support for the Armadeus ST0700 Adapt. It comes with a
->>>>> Santek ST0700I5Y-RBSLW 7.0" WVGA (800x480) TFT and an adapter board so
->>>>> that it can be connected on the TFT header of Armadeus Dev boards.
->>>>>
->>>>> Cc: stable@vger.kernel.org # v4.19
->>>>> Reviewed-by: Rob Herring <robh@kernel.org>
->>>>> Signed-off-by: Sébastien Szymanski <sebastien.szymanski@armadeus.com>
->>> Reviewed-by: Sam Ravnborg <sam@ravnborg.org>
->>>
->>> If you wil lresend the patch I can apply it.
->>> I have lost the original mail.
->>
->> Usually patchwork should have it already (and you can pipe the raw
->> patchwork mbox into dim apply), but somehow it's not there either.
->> Not sure why, sometimes this is because mails are stuck in moderation,
->> sometimes because people do interesting things with their mails (e.g. smtp
->> servers mangling formatting).
-> 
-> patchwork was just a bit slow, it's there now:
-> 
-> https://patchwork.freedesktop.org/series/60408/
-> 
+This has been reported on the LTP ML already, LTP tests needs to be
+adjusted, see:
 
-Will you take the patch from patchwork or should I resent it ?
-
-Regards,
-
-> Cheers, Daniel
-> 
-
+http://lists.linux.it/pipermail/ltp/2019-May/011962.html
 
 -- 
-Sébastien Szymanski
-Software engineer, Armadeus Systems
-Tel: +33 (0)9 72 29 41 44
-Fax: +33 (0)9 72 28 79 26
+Cyril Hrubis
+chrubis@suse.cz
