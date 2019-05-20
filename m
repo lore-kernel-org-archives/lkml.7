@@ -2,120 +2,142 @@ Return-Path: <SRS0=lq4r=TU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 957E6C04AAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:52:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF31FC04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:52:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6AA22213F2
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:52:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558356741;
-	bh=sL+t5AjFEQojtzLpmh7ftp1Yt8bKym9IQMcQwFTwJEg=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0uKMyimzDio/nqZ6FuvaYZhYjS+N05nAWOJ1+guANmkzXQNe2GLIlj/MsHw0MryF8
-	 K6yuIVXDvU6H4CT60Oah7h8QN5zUI1OHMMZs4mBgsUaMJjEapL7xw9eToZKBBCGVSd
-	 Y+m7K0EZhjZ2qIfpB9D1EADJDdnEnbOdJ8UHimo4=
+	by mail.kernel.org (Postfix) with ESMTP id A95DF213F2
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:52:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387755AbfETMSw (ORCPT
+        id S2391518AbfETMw0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 08:18:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59926 "EHLO mail.kernel.org"
+        Mon, 20 May 2019 08:52:26 -0400
+Received: from mga01.intel.com ([192.55.52.88]:60527 "EHLO mga01.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387733AbfETMSp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 08:18:45 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1E092208C3;
-        Mon, 20 May 2019 12:18:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558354724;
-        bh=sL+t5AjFEQojtzLpmh7ftp1Yt8bKym9IQMcQwFTwJEg=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qYRqJh6zw7CBGG0yR0qAes5HBRtMpCKHgdTSrdy9Z3YL4kMKrb0ygtGozG1q6vkoA
-         g2s939mFkSpYBliCwhxrI5ryLPG+mHtnBlTY4fGWw5MqcO4RIQXC78ekX8EEMjujp6
-         fij/52ptWFMDFICkRibc58eyshprucySXcsLSF8k=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, kbuild test robot <lkp@intel.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>
-Subject: [PATCH 4.14 08/63] objtool: Fix function fallthrough detection
-Date:   Mon, 20 May 2019 14:13:47 +0200
-Message-Id: <20190520115232.235909099@linuxfoundation.org>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190520115231.137981521@linuxfoundation.org>
-References: <20190520115231.137981521@linuxfoundation.org>
-User-Agent: quilt/0.66
+        id S2387769AbfETMwV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 08:52:21 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 May 2019 05:52:20 -0700
+X-ExtLoop1: 1
+Received: from paasikivi.fi.intel.com ([10.237.72.42])
+  by orsmga006.jf.intel.com with ESMTP; 20 May 2019 05:52:19 -0700
+Received: by paasikivi.fi.intel.com (Postfix, from userid 1000)
+        id 06C7C20788; Mon, 20 May 2019 15:52:17 +0300 (EEST)
+Date:   Mon, 20 May 2019 15:52:17 +0300
+From:   Sakari Ailus <sakari.ailus@linux.intel.com>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1] device property: Add helpers to count items in an
+ array
+Message-ID: <20190520125217.q65fkmqtizb54gnb@paasikivi.fi.intel.com>
+References: <20190520123848.56422-1-andriy.shevchenko@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190520123848.56422-1-andriy.shevchenko@linux.intel.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Josh Poimboeuf <jpoimboe@redhat.com>
+Hi Andy,
 
-commit e6f393bc939d566ce3def71232d8013de9aaadde upstream.
+On Mon, May 20, 2019 at 03:38:48PM +0300, Andy Shevchenko wrote:
+> The usual pattern to allocate the necessary space for an array of properties is
+> to count them fist using:
 
-When a function falls through to the next function due to a compiler
-bug, objtool prints some obscure warnings.  For example:
+s/fist/first/
 
-  drivers/regulator/core.o: warning: objtool: regulator_count_voltages()+0x95: return with modified stack frame
-  drivers/regulator/core.o: warning: objtool: regulator_count_voltages()+0x0: stack state mismatch: cfa1=7+32 cfa2=7+8
+With that,
 
-Instead it should be printing:
+Acked-by: Sakari Ailus <sakari.ailus@linux.intel.com>
 
-  drivers/regulator/core.o: warning: objtool: regulator_supply_is_couple() falls through to next function regulator_count_voltages()
+> 
+>   count = device_property_read_uXX_array(dev, propname, NULL, 0);
+> 
+> Introduce helpers device_property_count_uXX() to count items by supplying hard
+> coded last two parameters to device_property_readXX_array().
+> 
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> ---
+>  include/linux/property.h | 44 ++++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 44 insertions(+)
+> 
+> diff --git a/include/linux/property.h b/include/linux/property.h
+> index a29369c89e6e..65e31c090f9f 100644
+> --- a/include/linux/property.h
+> +++ b/include/linux/property.h
+> @@ -144,6 +144,26 @@ static inline int device_property_read_u64(struct device *dev,
+>  	return device_property_read_u64_array(dev, propname, val, 1);
+>  }
+>  
+> +static inline int device_property_count_u8(struct device *dev, const char *propname)
+> +{
+> +	return device_property_read_u8_array(dev, propname, NULL, 0);
+> +}
+> +
+> +static inline int device_property_count_u16(struct device *dev, const char *propname)
+> +{
+> +	return device_property_read_u16_array(dev, propname, NULL, 0);
+> +}
+> +
+> +static inline int device_property_count_u32(struct device *dev, const char *propname)
+> +{
+> +	return device_property_read_u32_array(dev, propname, NULL, 0);
+> +}
+> +
+> +static inline int device_property_count_u64(struct device *dev, const char *propname)
+> +{
+> +	return device_property_read_u64_array(dev, propname, NULL, 0);
+> +}
+> +
+>  static inline bool fwnode_property_read_bool(const struct fwnode_handle *fwnode,
+>  					     const char *propname)
+>  {
+> @@ -174,6 +194,30 @@ static inline int fwnode_property_read_u64(const struct fwnode_handle *fwnode,
+>  	return fwnode_property_read_u64_array(fwnode, propname, val, 1);
+>  }
+>  
+> +static inline int fwnode_property_count_u8(const struct fwnode_handle *fwnode,
+> +					   const char *propname)
+> +{
+> +	return fwnode_property_read_u8_array(fwnode, propname, NULL, 0);
+> +}
+> +
+> +static inline int fwnode_property_count_u16(const struct fwnode_handle *fwnode,
+> +					    const char *propname)
+> +{
+> +	return fwnode_property_read_u16_array(fwnode, propname, NULL, 0);
+> +}
+> +
+> +static inline int fwnode_property_count_u32(const struct fwnode_handle *fwnode,
+> +					    const char *propname)
+> +{
+> +	return fwnode_property_read_u32_array(fwnode, propname, NULL, 0);
+> +}
+> +
+> +static inline int fwnode_property_count_u64(const struct fwnode_handle *fwnode,
+> +					    const char *propname)
+> +{
+> +	return fwnode_property_read_u64_array(fwnode, propname, NULL, 0);
+> +}
+> +
+>  /**
+>   * struct property_entry - "Built-in" device property representation.
+>   * @name: Name of the property.
+> -- 
+> 2.20.1
+> 
 
-This used to work, but was broken by the following commit:
-
-  13810435b9a7 ("objtool: Support GCC 8's cold subfunctions")
-
-The padding nops at the end of a function aren't actually part of the
-function, as defined by the symbol table.  So the 'func' variable in
-validate_branch() is getting cleared to NULL when a padding nop is
-encountered, breaking the fallthrough detection.
-
-If the current instruction doesn't have a function associated with it,
-just consider it to be part of the previously detected function by not
-overwriting the previous value of 'func'.
-
-Reported-by: kbuild test robot <lkp@intel.com>
-Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: <stable@vger.kernel.org>
-Fixes: 13810435b9a7 ("objtool: Support GCC 8's cold subfunctions")
-Link: http://lkml.kernel.org/r/546d143820cd08a46624ae8440d093dd6c902cae.1557766718.git.jpoimboe@redhat.com
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
----
- tools/objtool/check.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
-
---- a/tools/objtool/check.c
-+++ b/tools/objtool/check.c
-@@ -1779,7 +1779,8 @@ static int validate_branch(struct objtoo
- 			return 1;
- 		}
- 
--		func = insn->func ? insn->func->pfunc : NULL;
-+		if (insn->func)
-+			func = insn->func->pfunc;
- 
- 		if (func && insn->ignore) {
- 			WARN_FUNC("BUG: why am I validating an ignored function?",
-
-
+-- 
+Sakari Ailus
+sakari.ailus@linux.intel.com
