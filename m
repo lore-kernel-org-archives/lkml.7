@@ -2,231 +2,99 @@ Return-Path: <SRS0=lq4r=TU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA7CBC04AAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 08:19:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E19AC04AAF
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 08:20:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B703120656
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 08:19:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PGe3Dtvj"
+	by mail.kernel.org (Postfix) with ESMTP id 57DE220656
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 08:20:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731258AbfETIT5 (ORCPT
+        id S1730821AbfETIU0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 04:19:57 -0400
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:39614 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726186AbfETIT5 (ORCPT
+        Mon, 20 May 2019 04:20:26 -0400
+Received: from mslow2.mail.gandi.net ([217.70.178.242]:47666 "EHLO
+        mslow2.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725372AbfETIU0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 04:19:57 -0400
-Received: by mail-oi1-f194.google.com with SMTP id v2so9326400oie.6;
-        Mon, 20 May 2019 01:19:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=Io8U2uxD7AxFcrvz9R7N8axfmbAkr2qEV9G+U3v4mUM=;
-        b=PGe3DtvjNrOxtHbxnpL666wCxe3YyG46ZOiZiiygJ/JZ6zcpkZR3tZghhSUCHZ6RpU
-         9qfMxyv0F7AbQB9aOEWtXcaLDIndkW28fTC+aRlxzn1awXUnvNXk8+S77h2h2AXWWBRn
-         d9UMM4tgXXP+bWhyKjPZYy0PUkPmYNLE37Vx1LS+p5UWk7FSTuY8rrZWNzGVB5Ogd5l6
-         l6mvMg3MrZC33Y09Fz8SluXr97z5044KVJBFZ8bQUgpmzIbNpVmLi8Fmy2L3BWetPZ9b
-         9y5HuBNZOa5074aW04kDJlyG74FKE4XpLCuwQt9O/w0UoorkbzZFftOrieYICqaZK+cU
-         VXpw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=Io8U2uxD7AxFcrvz9R7N8axfmbAkr2qEV9G+U3v4mUM=;
-        b=iQsozkLfNXXVPI/YcQSXi+hPaJnT6Y33LoPy/VpS1graJLHJrxmy9nHuazDd+Y0vso
-         6etHZ+AFwq8qZNjW1yfm8w9kZwO/7YsJlIKYSFkEzcj9z1AaVep7THpmFbdkY5tTdN9v
-         QJ8JrSviCAZ2H8WQyjVddJWnEnwSg1NW5xaRruohTVN9GRCoUKlQ4fjGeoBCMALPR7aJ
-         Zf6eba8/qp5fCid3vW+s/9RkLLcfhj6vBH3PXwce79O33oi85GN62CkcS+0AHNiVCUQu
-         1wN1qyXlmkNMemuzokE1Nt6YNgVIlrHTWgFlAZ3zT5rJIV0xrY4TwySgIJYjDUY5+Y9s
-         IyAQ==
-X-Gm-Message-State: APjAAAV9BmlGqkoE8Rr94l9FLK+G/HHOtpaYakuXyupWlhJgq8bYkBjw
-        ai/lRMwS/2nrHrG2yDChKDtZrgChKdExm75Tsxo=
-X-Google-Smtp-Source: APXvYqxwBPJTrJRMWYDJHKYX+JLUubFq4AZB+BrSKFkshE8IDhEU8yoGvoIEdwo3CZps18UUrSiTsXiu9H43mA6+BCk=
-X-Received: by 2002:aca:ea55:: with SMTP id i82mr22043801oih.33.1558340396639;
- Mon, 20 May 2019 01:19:56 -0700 (PDT)
+        Mon, 20 May 2019 04:20:26 -0400
+Received: from relay3-d.mail.gandi.net (unknown [217.70.183.195])
+        by mslow2.mail.gandi.net (Postfix) with ESMTP id 123303A740B;
+        Mon, 20 May 2019 07:42:27 +0000 (UTC)
+X-Originating-IP: 90.88.22.185
+Received: from localhost (aaubervilliers-681-1-80-185.w90-88.abo.wanadoo.fr [90.88.22.185])
+        (Authenticated sender: maxime.ripard@bootlin.com)
+        by relay3-d.mail.gandi.net (Postfix) with ESMTPSA id 5047A60003;
+        Mon, 20 May 2019 07:42:11 +0000 (UTC)
+Date:   Mon, 20 May 2019 09:42:11 +0200
+From:   Maxime Ripard <maxime.ripard@bootlin.com>
+To:     Torsten Duwe <duwe@lst.de>
+Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Archit Taneja <architt@codeaurora.org>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        Icenowy Zheng <icenowy@aosc.io>,
+        Sean Paul <seanpaul@chromium.org>,
+        Vasily Khoruzhick <anarsoul@gmail.com>,
+        Harald Geyer <harald@ccbib.org>,
+        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 1/4] arm64: DTS: allwinner: a64: Add pinmux for RGB666
+ LCD
+Message-ID: <20190520074211.mq2au6gt7tyxijrv@flea>
+References: <20190516154943.239E668B05@newverein.lst.de>
+ <20190516155130.8A52768B20@newverein.lst.de>
 MIME-Version: 1.0
-References: <1557975980-9875-1-git-send-email-wanpengli@tencent.com>
- <1557975980-9875-6-git-send-email-wanpengli@tencent.com> <20190517195049.GI15006@linux.intel.com>
-In-Reply-To: <20190517195049.GI15006@linux.intel.com>
-From:   Wanpeng Li <kernellwp@gmail.com>
-Date:   Mon, 20 May 2019 16:19:47 +0800
-Message-ID: <CANRm+CwfDbVS2tYG0XCD8Gvx6GtszGLphiTvFMBYmwdt13P=1Q@mail.gmail.com>
-Subject: Re: [PATCH v3 5/5] KVM: LAPIC: Optimize timer latency further
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>, kvm <kvm@vger.kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Liran Alon <liran.alon@oracle.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="nmucr3o54tqc5cok"
+Content-Disposition: inline
+In-Reply-To: <20190516155130.8A52768B20@newverein.lst.de>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 18 May 2019 at 03:50, Sean Christopherson
-<sean.j.christopherson@intel.com> wrote:
->
-> On Thu, May 16, 2019 at 11:06:20AM +0800, Wanpeng Li wrote:
-> > From: Wanpeng Li <wanpengli@tencent.com>
-> >
-> > Advance lapic timer tries to hidden the hypervisor overhead between the
-> > host emulated timer fires and the guest awares the timer is fired. Howe=
-ver,
-> > it just hidden the time between apic_timer_fn/handle_preemption_timer -=
->
-> > wait_lapic_expire, instead of the real position of vmentry which is
-> > mentioned in the orignial commit d0659d946be0 ("KVM: x86: add option to
-> > advance tscdeadline hrtimer expiration"). There is 700+ cpu cycles betw=
-een
-> > the end of wait_lapic_expire and before world switch on my haswell desk=
-top.
-> >
-> > This patch tries to narrow the last gap(wait_lapic_expire -> world swit=
-ch),
-> > it takes the real overhead time between apic_timer_fn/handle_preemption=
-_timer
-> > and before world switch into consideration when adaptively tuning timer
-> > advancement. The patch can reduce 40% latency (~1600+ cycles to ~1000+ =
-cycles
-> > on a haswell desktop) for kvm-unit-tests/tscdeadline_latency when testi=
-ng
-> > busy waits.
-> >
-> > Cc: Paolo Bonzini <pbonzini@redhat.com>
-> > Cc: Radim Kr=C4=8Dm=C3=A1=C5=99 <rkrcmar@redhat.com>
-> > Cc: Sean Christopherson <sean.j.christopherson@intel.com>
-> > Cc: Liran Alon <liran.alon@oracle.com>
-> > Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
-> > ---
-> >  arch/x86/kvm/lapic.c   | 3 ++-
-> >  arch/x86/kvm/lapic.h   | 2 +-
-> >  arch/x86/kvm/svm.c     | 4 ++++
-> >  arch/x86/kvm/vmx/vmx.c | 4 ++++
-> >  arch/x86/kvm/x86.c     | 3 ---
-> >  5 files changed, 11 insertions(+), 5 deletions(-)
-> >
-> > diff --git a/arch/x86/kvm/lapic.c b/arch/x86/kvm/lapic.c
-> > index af38ece..63513de 100644
-> > --- a/arch/x86/kvm/lapic.c
-> > +++ b/arch/x86/kvm/lapic.c
-> > @@ -1531,7 +1531,7 @@ static inline void adaptive_tune_timer_advancemen=
-t(struct kvm_vcpu *vcpu,
-> >       apic->lapic_timer.timer_advance_ns =3D timer_advance_ns;
-> >  }
-> >
-> > -void wait_lapic_expire(struct kvm_vcpu *vcpu)
-> > +void kvm_wait_lapic_expire(struct kvm_vcpu *vcpu)
-> >  {
-> >       struct kvm_lapic *apic =3D vcpu->arch.apic;
-> >       u64 guest_tsc, tsc_deadline;
-> > @@ -1553,6 +1553,7 @@ void wait_lapic_expire(struct kvm_vcpu *vcpu)
-> >       if (unlikely(!apic->lapic_timer.timer_advance_adjust_done))
-> >               adaptive_tune_timer_advancement(vcpu, apic->lapic_timer.a=
-dvance_expire_delta);
-> >  }
-> > +EXPORT_SYMBOL_GPL(kvm_wait_lapic_expire);
-> >
-> >  static void start_sw_tscdeadline(struct kvm_lapic *apic)
-> >  {
-> > diff --git a/arch/x86/kvm/lapic.h b/arch/x86/kvm/lapic.h
-> > index 3e72a25..f974a3d 100644
-> > --- a/arch/x86/kvm/lapic.h
-> > +++ b/arch/x86/kvm/lapic.h
-> > @@ -220,7 +220,7 @@ static inline int kvm_lapic_latched_init(struct kvm=
-_vcpu *vcpu)
-> >
-> >  bool kvm_apic_pending_eoi(struct kvm_vcpu *vcpu, int vector);
-> >
-> > -void wait_lapic_expire(struct kvm_vcpu *vcpu);
-> > +void kvm_wait_lapic_expire(struct kvm_vcpu *vcpu);
-> >
-> >  bool kvm_intr_is_single_vcpu_fast(struct kvm *kvm, struct kvm_lapic_ir=
-q *irq,
-> >                       struct kvm_vcpu **dest_vcpu);
-> > diff --git a/arch/x86/kvm/svm.c b/arch/x86/kvm/svm.c
-> > index 6b92eaf..955cfcb 100644
-> > --- a/arch/x86/kvm/svm.c
-> > +++ b/arch/x86/kvm/svm.c
-> > @@ -5638,6 +5638,10 @@ static void svm_vcpu_run(struct kvm_vcpu *vcpu)
-> >       clgi();
-> >       kvm_load_guest_xcr0(vcpu);
-> >
-> > +     if (lapic_in_kernel(vcpu) &&
-> > +             vcpu->arch.apic->lapic_timer.timer_advance_ns)
->
-> Nit: align the two lines of the if statement, doing so makes it easier to
->      differentiate between the condition and execution, e.g.:
->
->         if (lapic_in_kernel(vcpu) &&
->             vcpu->arch.apic->lapic_timer.timer_advance_ns)
->                 kvm_wait_lapic_expire(vcpu);
 
-This can result in checkpatch.pl complain:
+--nmucr3o54tqc5cok
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-WARNING: suspect code indent for conditional statements (8, 24)
-#94: FILE: arch/x86/kvm/vmx/vmx.c:6436:
-+    if (lapic_in_kernel(vcpu) &&
-[...]
-+            kvm_wait_lapic_expire(vcpu);
+On Thu, May 16, 2019 at 05:51:30PM +0200, Torsten Duwe wrote:
+> From: Icenowy Zheng <icenowy@aosc.io>
+>
+> Allwinner A64's TCON0 can output RGB666 LCD signal.
+>
+> Add its pinmux.
+>
+> Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
+> Signed-off-by: Vasily Khoruzhick <anarsoul@gmail.com>
+> Signed-off-by: Torsten Duwe <duwe@suse.de>
 
-Regards,
-Wanpeng Li
+Applied, with sed/DTS/dts/ in the commit title
 
->
-> > +             kvm_wait_lapic_expire(vcpu);
-> > +
-> >       /*
-> >        * If this vCPU has touched SPEC_CTRL, restore the guest's value =
-if
-> >        * it's non-zero. Since vmentry is serialising on affected CPUs, =
-there
-> > diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-> > index e1fa935..771d3bf 100644
-> > --- a/arch/x86/kvm/vmx/vmx.c
-> > +++ b/arch/x86/kvm/vmx/vmx.c
-> > @@ -6423,6 +6423,10 @@ static void vmx_vcpu_run(struct kvm_vcpu *vcpu)
-> >
-> >       vmx_update_hv_timer(vcpu);
-> >
-> > +     if (lapic_in_kernel(vcpu) &&
-> > +             vcpu->arch.apic->lapic_timer.timer_advance_ns)
-> > +             kvm_wait_lapic_expire(vcpu);
->
-> Same comment as above.  With those fixed:
->
-> Reviewed-by: Sean Christopherson <sean.j.christopherson@intel.com>
->
-> > +
-> >       /*
-> >        * If this vCPU has touched SPEC_CTRL, restore the guest's value =
-if
-> >        * it's non-zero. Since vmentry is serialising on affected CPUs, =
-there
-> > diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-> > index 4a7b00c..e154f52 100644
-> > --- a/arch/x86/kvm/x86.c
-> > +++ b/arch/x86/kvm/x86.c
-> > @@ -7903,9 +7903,6 @@ static int vcpu_enter_guest(struct kvm_vcpu *vcpu=
-)
-> >       }
-> >
-> >       trace_kvm_entry(vcpu->vcpu_id);
-> > -     if (lapic_in_kernel(vcpu) &&
-> > -         vcpu->arch.apic->lapic_timer.timer_advance_ns)
-> > -             wait_lapic_expire(vcpu);
-> >       guest_enter_irqoff();
-> >
-> >       fpregs_assert_state_consistent();
-> > --
-> > 2.7.4
-> >
+Maxime
+
+--
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+
+--nmucr3o54tqc5cok
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXOJaUwAKCRDj7w1vZxhR
+xeRpAP9JHeg2w3hIcKAnJSqyT4MAdUGk3w86iyTzdo8MN3q3FwEAiizS3iTsBbIV
+WSkjcMS/7QscOwCwAxJe8Na87XN4owM=
+=CwT1
+-----END PGP SIGNATURE-----
+
+--nmucr3o54tqc5cok--
