@@ -4,55 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69B1AC072A4
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:35:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A88EC04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:35:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 43A7621726
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:35:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E40F7204FD
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:35:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558355735;
-	bh=TyRe+nhpDCWpalDOwUOSPsTUF5/+mga5C0UipCilX2E=;
+	s=default; t=1558355737;
+	bh=onfGMYicXDP3MCBWfPIOJpbs01/cprEgL1AT+ll7nso=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Hvq3aq2gpcOla2ECZxAQrMhOWzdLCcEnZJ2R7zPpQTOkVwEljtEayu6JarG9yrV9R
-	 19g+eKa9dZoZUHQF34aonh9VAb6atYJYYJSutcIkJlhbOPPmtXv/inW8T23Bdhv2uJ
-	 RuMyPf/Fi/+rYU+6vl2mf/nl32WVakYrj0S2vc/8=
+	b=pfCrcWovV/Q+g4w3YU12BW8XZ1HiXC914vymSJHEqxpZmElIWcxmBwxVRkkKG6oPf
+	 LXIwH1Xo5UVwZlV6wtH+OpXptUvp/nPTpqH3uz9SE6KbOHZo6Ox5keVhATyMrVrYUC
+	 8Z4PHl675rPo2wLg+JRohRTzC3G+f39qjlTwfM7s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391104AbfETMfe (ORCPT
+        id S2403846AbfETMfg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 08:35:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53922 "EHLO mail.kernel.org"
+        Mon, 20 May 2019 08:35:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54026 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391085AbfETMfb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 08:35:31 -0400
+        id S2387524AbfETMfd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 08:35:33 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EB10120815;
-        Mon, 20 May 2019 12:35:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 84B35204FD;
+        Mon, 20 May 2019 12:35:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558355730;
-        bh=TyRe+nhpDCWpalDOwUOSPsTUF5/+mga5C0UipCilX2E=;
+        s=default; t=1558355733;
+        bh=onfGMYicXDP3MCBWfPIOJpbs01/cprEgL1AT+ll7nso=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hRqdmkOu7TG+sRaRSI47qxmUfcd7UEu7PjowZABJfGXKhO3YAAN+KFDiaxdFGrsUb
-         j6g5wA5Vo8hLYqTRJHDde6BvXQhxm8lyJJ30Vn8bJIVq9aE89HHCy3QdlZNqeXoOjM
-         P5QvmE251TQaIrZahnqDjpOvZyq9uFTv3KfgZQ1A=
+        b=klIrhwYKtt8BKmLIZyGXjBo+5P83GQmKV/Jp6SMbuImMXysO5xzw4EJwPmAW4NRFM
+         mmUDav9m0zec5h3liwgCyrJHoBWOl71WQS56OrZlS6GF1U+hZfoYFbhCK3MwxV4/Tj
+         1aObwDoZS/xHtPu0YDwIFy9ja04DjFQQd0cwFG4o=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Mel Gorman <mgorman@techsingularity.net>,
-        syzbot+d84c80f9fe26a0f7a734@syzkaller.appspotmail.com,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Qian Cai <cai@lca.pw>, Michal Hocko <mhocko@suse.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
+        stable@vger.kernel.org, Jiufei Xue <jiufei.xue@linux.alibaba.com>,
+        Tejun Heo <tj@kernel.org>,
         Andrew Morton <akpm@linux-foundation.org>,
         Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 5.1 104/128] mm/compaction.c: correct zone boundary handling when isolating pages from a pageblock
-Date:   Mon, 20 May 2019 14:14:51 +0200
-Message-Id: <20190520115256.150172611@linuxfoundation.org>
+Subject: [PATCH 5.1 105/128] fs/writeback.c: use rcu_barrier() to wait for inflight wb switches going into workqueue when umount
+Date:   Mon, 20 May 2019 14:14:52 +0200
+Message-Id: <20190520115256.193163793@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190520115249.449077487@linuxfoundation.org>
 References: <20190520115249.449077487@linuxfoundation.org>
@@ -65,95 +61,75 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mel Gorman <mgorman@techsingularity.net>
+From: Jiufei Xue <jiufei.xue@linux.alibaba.com>
 
-commit 60fce36afa9c77c7ccbf980c4f670f3be3651fce upstream.
+commit ec084de929e419e51bcdafaafe567d9e7d0273b7 upstream.
 
-syzbot reported the following error from a tree with a head commit of
-baf76f0c58ae ("slip: make slhc_free() silently accept an error pointer")
+synchronize_rcu() didn't wait for call_rcu() callbacks, so inode wb
+switch may not go to the workqueue after synchronize_rcu().  Thus
+previous scheduled switches was not finished even flushing the
+workqueue, which will cause a NULL pointer dereferenced followed below.
 
-  BUG: unable to handle kernel paging request at ffffea0003348000
-  #PF error: [normal kernel read fault]
-  PGD 12c3f9067 P4D 12c3f9067 PUD 12c3f8067 PMD 0
-  Oops: 0000 [#1] PREEMPT SMP KASAN
-  CPU: 1 PID: 28916 Comm: syz-executor.2 Not tainted 5.1.0-rc6+ #89
-  Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-  RIP: 0010:constant_test_bit arch/x86/include/asm/bitops.h:314 [inline]
-  RIP: 0010:PageCompound include/linux/page-flags.h:186 [inline]
-  RIP: 0010:isolate_freepages_block+0x1c0/0xd40 mm/compaction.c:579
-  Code: 01 d8 ff 4d 85 ed 0f 84 ef 07 00 00 e8 29 00 d8 ff 4c 89 e0 83 85 38 ff
-  ff ff 01 48 c1 e8 03 42 80 3c 38 00 0f 85 31 0a 00 00 <4d> 8b 2c 24 31 ff 49
-  c1 ed 10 41 83 e5 01 44 89 ee e8 3a 01 d8 ff
-  RSP: 0018:ffff88802b31eab8 EFLAGS: 00010246
-  RAX: 1ffffd4000669000 RBX: 00000000000cd200 RCX: ffffc9000a235000
-  RDX: 000000000001ca5e RSI: ffffffff81988cc7 RDI: 0000000000000001
-  RBP: ffff88802b31ebd8 R08: ffff88805af700c0 R09: 0000000000000000
-  R10: 0000000000000000 R11: 0000000000000000 R12: ffffea0003348000
-  R13: 0000000000000000 R14: ffff88802b31f030 R15: dffffc0000000000
-  FS:  00007f61648dc700(0000) GS:ffff8880ae900000(0000) knlGS:0000000000000000
-  CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-  CR2: ffffea0003348000 CR3: 0000000037c64000 CR4: 00000000001426e0
-  Call Trace:
-   fast_isolate_around mm/compaction.c:1243 [inline]
-   fast_isolate_freepages mm/compaction.c:1418 [inline]
-   isolate_freepages mm/compaction.c:1438 [inline]
-   compaction_alloc+0x1aee/0x22e0 mm/compaction.c:1550
+  VFS: Busy inodes after unmount of vdd. Self-destruct in 5 seconds.  Have a nice day...
+  BUG: unable to handle kernel NULL pointer dereference at 0000000000000278
+    evict+0xb3/0x180
+    iput+0x1b0/0x230
+    inode_switch_wbs_work_fn+0x3c0/0x6a0
+    worker_thread+0x4e/0x490
+    ? process_one_work+0x410/0x410
+    kthread+0xe6/0x100
+    ret_from_fork+0x39/0x50
 
-There is no reproducer and it is difficult to hit -- 1 crash every few
-days.  The issue is very similar to the fix in commit 6b0868c820ff
-("mm/compaction.c: correct zone boundary handling when resetting pageblock
-skip hints").  When isolating free pages around a target pageblock, the
-boundary handling is off by one and can stray into the next pageblock.
-Triggering the syzbot error requires that the end of pageblock is section
-or zone aligned, and that the next section is unpopulated.
+Replace the synchronize_rcu() call with a rcu_barrier() to wait for all
+pending callbacks to finish.  And inc isw_nr_in_flight after call_rcu()
+in inode_switch_wbs() to make more sense.
 
-A more subtle consequence of the bug is that pageblocks were being
-improperly used as migration targets which potentially hurts fragmentation
-avoidance in the long-term one page at a time.
-
-A debugging patch revealed that it's definitely possible to stray outside
-of a pageblock which is not intended.  While syzbot cannot be used to
-verify this patch, it was confirmed that the debugging warning no longer
-triggers with this patch applied.  It has also been confirmed that the THP
-allocation stress tests are not degraded by this patch.
-
-Link: http://lkml.kernel.org/r/20190510182124.GI18914@techsingularity.net
-Fixes: e332f741a8dd ("mm, compaction: be selective about what pageblocks to clear skip hints")
-Signed-off-by: Mel Gorman <mgorman@techsingularity.net>
-Reported-by: syzbot+d84c80f9fe26a0f7a734@syzkaller.appspotmail.com
-Cc: Dmitry Vyukov <dvyukov@google.com>
-Cc: Andrey Ryabinin <aryabinin@virtuozzo.com>
-Cc: Qian Cai <cai@lca.pw>
-Cc: Michal Hocko <mhocko@suse.com>
-Cc: Vlastimil Babka <vbabka@suse.cz>
-Cc: <stable@vger.kernel.org> # v5.1+
+Link: http://lkml.kernel.org/r/20190429024108.54150-1-jiufei.xue@linux.alibaba.com
+Signed-off-by: Jiufei Xue <jiufei.xue@linux.alibaba.com>
+Acked-by: Tejun Heo <tj@kernel.org>
+Suggested-by: Tejun Heo <tj@kernel.org>
+Cc: <stable@vger.kernel.org>
 Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
 Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- mm/compaction.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ fs/fs-writeback.c |   11 ++++++++---
+ 1 file changed, 8 insertions(+), 3 deletions(-)
 
---- a/mm/compaction.c
-+++ b/mm/compaction.c
-@@ -1228,7 +1228,7 @@ fast_isolate_around(struct compact_contr
+--- a/fs/fs-writeback.c
++++ b/fs/fs-writeback.c
+@@ -523,8 +523,6 @@ static void inode_switch_wbs(struct inod
  
- 	/* Pageblock boundaries */
- 	start_pfn = pageblock_start_pfn(pfn);
--	end_pfn = min(start_pfn + pageblock_nr_pages, zone_end_pfn(cc->zone));
-+	end_pfn = min(pageblock_end_pfn(pfn), zone_end_pfn(cc->zone)) - 1;
+ 	isw->inode = inode;
  
- 	/* Scan before */
- 	if (start_pfn != pfn) {
-@@ -1239,7 +1239,7 @@ fast_isolate_around(struct compact_contr
+-	atomic_inc(&isw_nr_in_flight);
+-
+ 	/*
+ 	 * In addition to synchronizing among switchers, I_WB_SWITCH tells
+ 	 * the RCU protected stat update paths to grab the i_page
+@@ -532,6 +530,9 @@ static void inode_switch_wbs(struct inod
+ 	 * Let's continue after I_WB_SWITCH is guaranteed to be visible.
+ 	 */
+ 	call_rcu(&isw->rcu_head, inode_switch_wbs_rcu_fn);
++
++	atomic_inc(&isw_nr_in_flight);
++
+ 	goto out_unlock;
  
- 	/* Scan after */
- 	start_pfn = pfn + nr_isolated;
--	if (start_pfn != end_pfn)
-+	if (start_pfn < end_pfn)
- 		isolate_freepages_block(cc, &start_pfn, end_pfn, &cc->freepages, 1, false);
- 
- 	/* Skip this pageblock in the future as it's full or nearly full */
+ out_free:
+@@ -901,7 +902,11 @@ restart:
+ void cgroup_writeback_umount(void)
+ {
+ 	if (atomic_read(&isw_nr_in_flight)) {
+-		synchronize_rcu();
++		/*
++		 * Use rcu_barrier() to wait for all pending callbacks to
++		 * ensure that all in-flight wb switches are in the workqueue.
++		 */
++		rcu_barrier();
+ 		flush_workqueue(isw_wq);
+ 	}
+ }
 
 
