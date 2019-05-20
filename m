@@ -2,142 +2,178 @@ Return-Path: <SRS0=lq4r=TU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02B58C04AAC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 18:07:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E14D2C04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 18:07:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D39BE208C3
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 18:07:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=akkea.ca header.i=@akkea.ca header.b="NZ/lQ9Z6";
-	dkim=pass (1024-bit key) header.d=akkea.ca header.i=@akkea.ca header.b="fPG2NCT1"
+	by mail.kernel.org (Postfix) with ESMTP id C9CCE214AE
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 18:07:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727392AbfETSHf (ORCPT
+        id S1727412AbfETSHm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 14:07:35 -0400
-Received: from node.akkea.ca ([192.155.83.177]:58454 "EHLO node.akkea.ca"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727342AbfETSH2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 14:07:42 -0400
+Received: from mx2.suse.de ([195.135.220.15]:43744 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725951AbfETSH2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 20 May 2019 14:07:28 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by node.akkea.ca (Postfix) with ESMTP id 6E2134E2051;
-        Mon, 20 May 2019 18:07:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=akkea.ca; s=mail;
-        t=1558375647; bh=m8cdXZ8FfH0krHWZKQDnrPe9eKnA6LedLfVz+I5dPck=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References;
-        b=NZ/lQ9Z66p9K4I4tS3uinE/saUc49yrO98R6dyqM5rV96jllHwQHTYoireeyc2RNV
-         GptpgSic9UD9Ub2mb+AIFzYe6CS0/e6qMQ9eMkwp7+fNLlxsfsn80ND3CB7zYNYeD9
-         Ib6WZCmDeAdJvGcN4poaxVCn5eGlTHCvVMhvuyL8=
-X-Virus-Scanned: Debian amavisd-new at mail.akkea.ca
-Received: from node.akkea.ca ([127.0.0.1])
-        by localhost (mail.akkea.ca [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id SVYSlngOg6vY; Mon, 20 May 2019 18:07:27 +0000 (UTC)
-Received: from midas.localdomain (S0106788a2041785e.gv.shawcable.net [70.66.86.75])
-        by node.akkea.ca (Postfix) with ESMTPSA id 988094E204D;
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 0F507ABE9;
         Mon, 20 May 2019 18:07:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=akkea.ca; s=mail;
-        t=1558375646; bh=m8cdXZ8FfH0krHWZKQDnrPe9eKnA6LedLfVz+I5dPck=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References;
-        b=fPG2NCT1oq+LRMus8ji9WZO99Lj8z7KD+b3CONi+8CFpARsAp1b1cat+ri3vRq2yW
-         LXm4XrhTkBo2dr20mvYdETSKmlQVvSY4aVCnw2gGILNvhzJ+3rvZzZib4ebjE+9dJ+
-         OaQzHdMh8zhNMw7hgPb+Er4REQ6Hb5SQKRjuP9b0=
-From:   "Angus Ainslie (Purism)" <angus@akkea.ca>
-To:     angus.ainslie@puri.sm
-Cc:     Sebastian Reichel <sre@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>, linux-pm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Eric Kuzmenko <eric.kuzmenko@puri.sm>,
-        Angus Ainslie <angus@akkea.ca>
-Subject: [PATCH 1/2] power: supply: bq25890: Add support for setting bq25890 and bq25896's VINDPM
-Date:   Mon, 20 May 2019 11:07:11 -0700
-Message-Id: <20190520180712.32405-2-angus@akkea.ca>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190520180712.32405-1-angus@akkea.ca>
-References: <20190520180712.32405-1-angus@akkea.ca>
+Date:   Mon, 20 May 2019 20:07:25 +0200
+Message-ID: <s5h36l980f6.wl-tiwai@suse.de>
+From:   Takashi Iwai <tiwai@suse.de>
+To:     shuah <shuah@kernel.org>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        "Rafael J . Wysocki" <rafael@kernel.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 0/5] firmware: Add support for loading compressed files
+In-Reply-To: <5a3a0649-ece0-c3e3-3ebb-9d8d19d9499f@kernel.org>
+References: <20190520092647.8622-1-tiwai@suse.de>
+        <20190520093929.GB15326@kroah.com>
+        <s5hwoil5gwm.wl-tiwai@suse.de>
+        <s5h7ealb1d3.wl-tiwai@suse.de>
+        <s5ho93xqenb.wl-tiwai@suse.de>
+        <5a3a0649-ece0-c3e3-3ebb-9d8d19d9499f@kernel.org>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI/1.14.6 (Maruoka)
+ FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 Emacs/25.3
+ (x86_64-suse-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI 1.14.6 - "Maruoka")
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Kuzmenko <eric.kuzmenko@puri.sm>
+On Mon, 20 May 2019 19:26:59 +0200,
+shuah wrote:
+> 
+> On 5/20/19 10:22 AM, Takashi Iwai wrote:
+> > On Mon, 20 May 2019 17:18:48 +0200,
+> > Takashi Iwai wrote:
+> >>
+> >> On Mon, 20 May 2019 16:39:37 +0200,
+> >> Takashi Iwai wrote:
+> >>>
+> >>> On Mon, 20 May 2019 11:39:29 +0200,
+> >>> Greg Kroah-Hartman wrote:
+> >>>>
+> >>>> On Mon, May 20, 2019 at 11:26:42AM +0200, Takashi Iwai wrote:
+> >>>>> Hi,
+> >>>>>
+> >>>>> this is a patch set to add the support for loading compressed firmware
+> >>>>> files.
+> >>>>>
+> >>>>> The primary motivation is to reduce the storage size; e.g. currently
+> >>>>> the amount of /lib/firmware on my machine counts up to 419MB, and this
+> >>>>> can be reduced to 130MB file compression.  No bad deal.
+> >>>>>
+> >>>>> The feature adds only fallback to the compressed file, so it should
+> >>>>> work as it was as long as the normal firmware file is present.  The
+> >>>>> f/w loader decompresses the content, so that there is no change needed
+> >>>>> in the caller side.
+> >>>>>
+> >>>>> Currently only XZ format is supported.  A caveat is that the kernel XZ
+> >>>>> helper code supports only CRC32 (or none) integrity check type, so
+> >>>>> you'll have to compress the files via xz -C crc32 option.
+> >>>>>
+> >>>>> The patch set begins with a few other improvements and refactoring,
+> >>>>> followed by the compression support.
+> >>>>>
+> >>>>> In addition to this, dracut needs a small fix to deal with the *.xz
+> >>>>> files.
+> >>>>>
+> >>>>> Also, the latest patchset is found in topic/fw-decompress branch of my
+> >>>>> sound.git tree:
+> >>>>>    git://git.kernel.org/pub/scm/linux/kernel/git/tiwai/sound.git
+> >>>>
+> >>>> After a quick review, these all look good to me, nice job.
+> >>>>
+> >>>> One recommendation, can we add support for testing this to the
+> >>>> tools/testing/selftests/firmware/ tests?  And you did run those
+> >>>> regression tests to verify that you didn't get any of the config options
+> >>>> messed up, right? :)
+> >>>
+> >>> Now I've been testing the firmware selftest, and this turned out to be
+> >>> surprisingly difficult on my system.  By some reason, the test always
+> >>> fails at the point triggering the request (line 58 of
+> >>> fw_filesystem.sh):
+> >>>
+> >>>    if ! echo -n "$NAME" >"$DIR"/trigger_request ; then
+> >>> 	....
+> >>>
+> >>> Judging from the strace output, this echo writes only the first byte
+> >>> of $NAME.  Then kernfs write op is invoked and it deals this one byte
+> >>> input as if a whole argument were passed, leading to an error.
+> >>>
+> >>> My temporary workaround was to replace the all "echo" call with
+> >>> "/usr/bin/echo".
+> >>>
+> >>> Then it hits a similar write error at the places like:
+> >>>
+> >>> 	echo 1 > $DIR/config_sync_direct
+> >>>
+> >>> This could be worked around by adding -n option to echo.
+> >>>
+> >>> Finally, I noticed that the user-fallback doesn't work on my system
+> >>> any longer and the test stopped.  This is expected, so it implies that
+> >>> all direct loading tests passed.
+> >>>
+> >>> FWIW, my system is openSUSE Leap 15.1.  Does anyone experience a
+> >>> similar problem?
+> >>
+> >> This seems to be a regression on 5.2-rc1.
+> >> The tests on 4.20 worked fine.  5.1 worked, but gave the error at
+> >> fallback test instead of skipping.  This is likely another regression,
+> >> but irrelevant with the major issue as above.
+> >>
+> >> Now bisecting...
+> >
+> > Still in bisection, but it's timeout, I'll have to leave now...
+> >
+> > FWIW, the regression seems to have been introduced around the latest
+> > kselftest merge.
+> > The commit 4c7b63a32d54 is bad, and the commit 9cbda1bddb4c good.
+> >
+> > Shuah, could you check it?
+> >
+> >
+> 
+> Kees,
+> 
+> Could this be related to your selftest Makefile test run output
+> refactoring work?
+> 
+> I did a quick test on 5.2 after my first kselftest update without
+> the refactor work - firmware test worked.
+> 
+> I am thinking this is related to
+> 
+> eff3ee303d0d
+> selftests: Extract single-test shell logic from lib.mk
 
-The bq25890 has low voltage protection on VIN. Allow the register
-to be set from the device tree.
+OK, I could identify the culprit commit.  It's 5c069b6dedef
+    selftests: Move test output to diagnostic lines
 
-Signed-off-by: Eric Kuzmenko <eric.kuzmenko@puri.sm>
-Signed-off-by: Angus Ainslie (Purism) <angus@akkea.ca>
----
- drivers/power/supply/bq25890_charger.c | 13 ++++++++++++-
- 1 file changed, 12 insertions(+), 1 deletion(-)
+It seems that stdbuf usage caused a regression, at least on my
+system.
 
-diff --git a/drivers/power/supply/bq25890_charger.c b/drivers/power/supply/bq25890_charger.c
-index 66991e6f75d9..34fc89776994 100644
---- a/drivers/power/supply/bq25890_charger.c
-+++ b/drivers/power/supply/bq25890_charger.c
-@@ -75,6 +75,8 @@ struct bq25890_init_data {
- 	u8 boosti;	/* boost current limit		*/
- 	u8 boostf;	/* boost frequency		*/
- 	u8 ilim_en;	/* enable ILIM pin		*/
-+	u8 force_vindpm;/* force vinmin threshold	*/
-+	u8 vindpm;	/* vinmin threshold		*/
- 	u8 treg;	/* thermal regulation threshold */
- };
- 
-@@ -250,6 +252,7 @@ enum bq25890_table_ids {
- 	TBL_VREG,
- 	TBL_BOOSTV,
- 	TBL_SYSVMIN,
-+	TBL_VINDPM,
- 
- 	/* lookup tables */
- 	TBL_TREG,
-@@ -289,6 +292,7 @@ static const union {
- 	[TBL_VREG] =	{ .rt = {3840000, 4608000, 16000} },	 /* uV */
- 	[TBL_BOOSTV] =	{ .rt = {4550000, 5510000, 64000} },	 /* uV */
- 	[TBL_SYSVMIN] = { .rt = {3000000, 3700000, 100000} },	 /* uV */
-+	[TBL_VINDPM] =	{ .rt = {2600000, 15300000, 100000} },	 /* uV */
- 
- 	/* lookup tables */
- 	[TBL_TREG] =	{ .lt = {bq25890_treg_tbl, BQ25890_TREG_TBL_SIZE} },
-@@ -621,6 +625,8 @@ static int bq25890_hw_init(struct bq25890_device *bq)
- 		{F_BOOSTI,	 bq->init_data.boosti},
- 		{F_BOOSTF,	 bq->init_data.boostf},
- 		{F_EN_ILIM,	 bq->init_data.ilim_en},
-+		{F_FORCE_VINDPM, bq->init_data.force_vindpm},
-+		{F_VINDPM,	 bq->init_data.vindpm},
- 		{F_TREG,	 bq->init_data.treg}
- 	};
- 
-@@ -783,11 +789,14 @@ static int bq25890_fw_read_u32_props(struct bq25890_device *bq)
- 		{"ti,boost-max-current", false, TBL_BOOSTI, &init->boosti},
- 
- 		/* optional properties */
--		{"ti,thermal-regulation-threshold", true, TBL_TREG, &init->treg}
-+		{"ti,thermal-regulation-threshold",
-+			true, TBL_TREG, &init->treg},
-+		{"ti,vinmin-threshold", true, TBL_VINDPM, &init->vindpm}
- 	};
- 
- 	/* initialize data for optional properties */
- 	init->treg = 3; /* 120 degrees Celsius */
-+	init->vindpm = 0x12; /* 4.4V */
- 
- 	for (i = 0; i < ARRAY_SIZE(props); i++) {
- 		ret = device_property_read_u32(bq->dev, props[i].name,
-@@ -820,6 +829,8 @@ static int bq25890_fw_probe(struct bq25890_device *bq)
- 
- 	init->ilim_en = device_property_read_bool(bq->dev, "ti,use-ilim-pin");
- 	init->boostf = device_property_read_bool(bq->dev, "ti,boost-low-freq");
-+	init->force_vindpm =
-+		device_property_read_bool(bq->dev, "ti,use-vinmin-threshold");
- 
- 	return 0;
- }
--- 
-2.17.1
 
+Takashi
+
+> 
+> bash vs. sh difference in "echo" command behavior is the cause
+> is my best guess. Will you be able to take a look at this?
+> 
+> sudo make -C tools/testing/selftests/firmware/ run_tests
+> 
+> will show the difference.
+> 
+> thanks,
+> -- Shuah
+> 
