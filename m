@@ -2,82 +2,145 @@ Return-Path: <SRS0=lq4r=TU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69801C04E87
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 11:34:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3435C04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 11:34:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3CAA420656
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 11:34:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C2C402081C
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 11:34:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731865AbfETLe2 (ORCPT
+        id S1732212AbfETLec (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 07:34:28 -0400
-Received: from mail-vs1-f66.google.com ([209.85.217.66]:41166 "EHLO
-        mail-vs1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727626AbfETLe2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 07:34:28 -0400
-Received: by mail-vs1-f66.google.com with SMTP id g187so8661419vsc.8;
-        Mon, 20 May 2019 04:34:27 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=UH9/sjkGYt1CAC9BwyrRGZX8SnvoZEXpFocwJkf4y3o=;
-        b=CQRAciDj6OhZ1qUjPhQHhhkjx56LDjgdpmiP679SGfztnM+yxje5NO92xvRaEzaJg1
-         qMaIkEe6MO+SZCwVChf3wSw1/qYrPxx6CWz+mAws7VSnTbis+O2TwG1sBwbSEALncjOZ
-         9ReCHEAY7mkvtr0/YMUt0wreNoc7oyuc+K4ybuh/lKUyaTUN+n35qPOzc/5M5aBkKhCS
-         z9T6xk8bihaC+46zcfZTg+DVLP5Ta3VXZkRsPFS1P9NEarP9eDKZzAsKy6nCnEmf5RqO
-         irla7YsuWphsvfVU+4U6YnUAFbX+H0XcoDylL87A774PIyS2a+lyBDbT6wE/ORfpJqVG
-         CeUg==
-X-Gm-Message-State: APjAAAVfTMmG/gt/jq8sbUF+szQefzSSCDr5sIDquazO0uvVhDfyPHhX
-        2e7XdOiMw7mxs+h+rZJqvW6UYdFPw1WvvjNcgJw=
-X-Google-Smtp-Source: APXvYqyc41w0n4cC6rucCM5nf/3OFkR/HW/qIjxhDxrg/CU/4dtojTyg+SiGmK4Y5TBLGWzAQyPBgCihEslvgsK0O/4=
-X-Received: by 2002:a67:7c93:: with SMTP id x141mr25866170vsc.96.1558352066991;
- Mon, 20 May 2019 04:34:26 -0700 (PDT)
+        Mon, 20 May 2019 07:34:32 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:8222 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727626AbfETLeb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 07:34:31 -0400
+Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 711B07BA39250D23F014;
+        Mon, 20 May 2019 19:34:29 +0800 (CST)
+Received: from localhost.localdomain (10.67.212.132) by
+ DGGEMS411-HUB.china.huawei.com (10.3.19.211) with Microsoft SMTP Server id
+ 14.3.439.0; Mon, 20 May 2019 19:34:19 +0800
+From:   Shaokun Zhang <zhangshaokun@hisilicon.com>
+To:     <linux-kernel@vger.kernel.org>
+CC:     Shaokun Zhang <zhangshaokun@hisilicon.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: [PATCH v2] intel_th: msu: Fix unused variable warning on arm64 platform
+Date:   Mon, 20 May 2019 19:32:53 +0800
+Message-ID: <1558351973-62643-1-git-send-email-zhangshaokun@hisilicon.com>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
-References: <20190520093446.30895-1-wsa+renesas@sang-engineering.com> <20190520093446.30895-3-wsa+renesas@sang-engineering.com>
-In-Reply-To: <20190520093446.30895-3-wsa+renesas@sang-engineering.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Mon, 20 May 2019 13:34:15 +0200
-Message-ID: <CAMuHMdXio8Ve3GGfAr+gHqN9_kP2Y3jUv0Wd-dhoaw1qQK5kDA@mail.gmail.com>
-Subject: Re: [PATCH RESEND 2/3] regulator: da9063: move definitions out of a
- header into the driver
-To:     Wolfram Sang <wsa+renesas@sang-engineering.com>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Mark Brown <broonie@kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Steve Twiss <stwiss.opensource@diasemi.com>,
-        Simon Horman <horms+renesas@verge.net.au>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.67.212.132]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 20, 2019 at 12:46 PM Wolfram Sang
-<wsa+renesas@sang-engineering.com> wrote:
-> Those definitions are only used within the driver meanwhile, so put them
-> there.
->
-> Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
-> Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
-> Acked-by: Steve Twiss <stwiss.opensource@diasemi.com>
-> Tested-by: Steve Twiss <stwiss.opensource@diasemi.com>
+drivers/hwtracing/intel_th/msu.c: In function ‘msc_buffer_win_alloc’:
+drivers/hwtracing/intel_th/msu.c:783:21: warning: unused variable ‘i’ [-Wunused-variable]
+  int ret = -ENOMEM, i;
+                     ^
+drivers/hwtracing/intel_th/msu.c: In function ‘msc_buffer_win_free’:
+drivers/hwtracing/intel_th/msu.c:863:6: warning: unused variable ‘i’ [-Wunused-variable]
+  int i;
+      ^
+Fix this compiler warning on arm64 platform.
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Suggested-by: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Signed-off-by: Shaokun Zhang <zhangshaokun@hisilicon.com>
+---
+ drivers/hwtracing/intel_th/msu.c | 40 +++++++++++++++++++++++++++-------------
+ 1 file changed, 27 insertions(+), 13 deletions(-)
 
-Gr{oetje,eeting}s,
+diff --git a/drivers/hwtracing/intel_th/msu.c b/drivers/hwtracing/intel_th/msu.c
+index 81bb54fa3ce8..49e64ca760e6 100644
+--- a/drivers/hwtracing/intel_th/msu.c
++++ b/drivers/hwtracing/intel_th/msu.c
+@@ -767,6 +767,30 @@ static int __msc_buffer_win_alloc(struct msc_window *win,
+ 	return -ENOMEM;
+ }
+ 
++#ifdef CONFIG_X86
++static void msc_buffer_set_uc(struct msc_window *win, unsigned int nr_blocks)
++{
++	int i;
++
++	for (i = 0; i < nr_blocks; i++)
++		/* Set the page as uncached */
++		set_memory_uc((unsigned long)msc_win_block(win, i), 1);
++}
++
++static void msc_buffer_set_wb(struct msc_window *win)
++{
++	int i;
++
++	for (i = 0; i < win->nr_blocks; i++)
++		/* Reset the page to write-back */
++		set_memory_wb((unsigned long)msc_win_block(win, i), 1);
++}
++#else /* !X86 */
++static inline void msc_buffer_set_uc(struct msc_window *win,
++				     unsigned int nr_blocks) {}
++static inline void msc_buffer_set_wb(struct msc_window *win) {}
++#endif /* CONFIG_X86 */
++
+ /**
+  * msc_buffer_win_alloc() - alloc a window for a multiblock mode
+  * @msc:	MSC device
+@@ -780,7 +804,7 @@ static int __msc_buffer_win_alloc(struct msc_window *win,
+ static int msc_buffer_win_alloc(struct msc *msc, unsigned int nr_blocks)
+ {
+ 	struct msc_window *win;
+-	int ret = -ENOMEM, i;
++	int ret = -ENOMEM;
+ 
+ 	if (!nr_blocks)
+ 		return 0;
+@@ -811,11 +835,7 @@ static int msc_buffer_win_alloc(struct msc *msc, unsigned int nr_blocks)
+ 	if (ret < 0)
+ 		goto err_nomem;
+ 
+-#ifdef CONFIG_X86
+-	for (i = 0; i < ret; i++)
+-		/* Set the page as uncached */
+-		set_memory_uc((unsigned long)msc_win_block(win, i), 1);
+-#endif
++	msc_buffer_set_uc(win, ret);
+ 
+ 	win->nr_blocks = ret;
+ 
+@@ -860,8 +880,6 @@ static void __msc_buffer_win_free(struct msc *msc, struct msc_window *win)
+  */
+ static void msc_buffer_win_free(struct msc *msc, struct msc_window *win)
+ {
+-	int i;
+-
+ 	msc->nr_pages -= win->nr_blocks;
+ 
+ 	list_del(&win->entry);
+@@ -870,11 +888,7 @@ static void msc_buffer_win_free(struct msc *msc, struct msc_window *win)
+ 		msc->base_addr = 0;
+ 	}
+ 
+-#ifdef CONFIG_X86
+-	for (i = 0; i < win->nr_blocks; i++)
+-		/* Reset the page to write-back */
+-		set_memory_wb((unsigned long)msc_win_block(win, i), 1);
+-#endif
++	msc_buffer_set_wb(win);
+ 
+ 	__msc_buffer_win_free(msc, win);
+ 
+-- 
+2.7.4
 
-                        Geert
-
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
