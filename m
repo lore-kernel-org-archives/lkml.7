@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58A87C04AAC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:27:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B870C04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:27:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2F07E20815
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:27:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E6BD121019
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:27:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558355274;
-	bh=SLAe6/IoBPDUbYUdq+rzQEmI9w4plC6PgcfwdwJjL3Y=;
+	s=default; t=1558355278;
+	bh=rEAbe9tJjKeSiNz+SGz1+y60zU+ppV1EBFLMiGPkidg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=o1SlxxOrj8dfgCbx+gzz+2t1JT+KalGkywjcQS+822bGxsrKE8swii91pGYEwXYdx
-	 d7V2slVr5tcXrNr3tf096zPKETw8036MEh2/JjLNKF6SsGhrclE4HRYfYzv1R0OdWN
-	 uh8gx5kBdUvJkZIXsdy06+g8UmhJUifUPE0w/7Ac=
+	b=F6wCWDfpDhkDcFG/js9Ur1RvRJ/BpJH+4YDwPXbYaYI9j7ObN8qmkygmgPD3c0sJF
+	 Xo8smAkmdWai3NltYkK3f5NzNrrRz55m7J0QhQ1eZ8pynhx1ml821T6DNINM/W8gyF
+	 dQxQJ9iRaQNAlz8uUgAlTiZ7WDRn9n3Eh+9x9MQo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389571AbfETM1w (ORCPT
+        id S2389580AbfETM15 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 08:27:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43400 "EHLO mail.kernel.org"
+        Mon, 20 May 2019 08:27:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43456 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389527AbfETM1t (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 08:27:49 -0400
+        id S2389565AbfETM1v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 08:27:51 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2B2BB20645;
-        Mon, 20 May 2019 12:27:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E204B20645;
+        Mon, 20 May 2019 12:27:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558355268;
-        bh=SLAe6/IoBPDUbYUdq+rzQEmI9w4plC6PgcfwdwJjL3Y=;
+        s=default; t=1558355271;
+        bh=rEAbe9tJjKeSiNz+SGz1+y60zU+ppV1EBFLMiGPkidg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GIHEuOVv2DIlE/lumVp+HegUClhm4puWTAsEs5BrcqWfm85L2YkZ5pmiFw0ehSCP3
-         F9l3jz9YqzslQ0dyxHe5IiMhE9fXlqipoTmNhxc8/sNvvL0hUUAdDkU+RHU5Oo0WAk
-         xy3Bw/uUOZtywAh7AZ36v/tHOJKfb0QyEAvLJ5U0=
+        b=katH2zM/zgEc1tlQ0C9AQHzbLP9Ssv/5bGisedOJzXIurDVTvyw1aAzdKoEWkuMkk
+         rH7OeVCKAy/ku+GzHJHLneLucjayhyR6Bj6Ur3WlcdvTqwgwSJe1CIGK7jpp8D7J6s
+         qfsfx+N+LRj+TnTRwVM7KejMwyCrZ4WN0KsX/1dg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jon Hunter <jonathanh@nvidia.com>,
-        Mark Brown <broonie@kernel.org>
-Subject: [PATCH 5.0 053/123] ASoC: max98090: Fix restore of DAPM Muxes
-Date:   Mon, 20 May 2019 14:13:53 +0200
-Message-Id: <20190520115248.268952638@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Jean-Philippe Brucker <jean-philippe.brucker@arm.com>,
+        Will Deacon <will.deacon@arm.com>
+Subject: [PATCH 5.0 018/123] arm64: Save and restore OSDLR_EL1 across suspend/resume
+Date:   Mon, 20 May 2019 14:13:18 +0200
+Message-Id: <20190520115246.153498043@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190520115245.439864225@linuxfoundation.org>
 References: <20190520115245.439864225@linuxfoundation.org>
@@ -59,53 +60,83 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jon Hunter <jonathanh@nvidia.com>
+From: Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
 
-commit ecb2795c08bc825ebd604997e5be440b060c5b18 upstream.
+commit 827a108e354db633698f0b4a10c1ffd2b1f8d1d0 upstream.
 
-The max98090 driver defines 3 DAPM muxes; one for the right line output
-(LINMOD Mux), one for the left headphone mixer source (MIXHPLSEL Mux)
-and one for the right headphone mixer source (MIXHPRSEL Mux). The same
-bit is used for the mux as well as the DAPM enable, and although the mux
-can be correctly configured, after playback has completed, the mux will
-be reset during the disable phase. This is preventing the state of these
-muxes from being saved and restored correctly on system reboot. Fix this
-by marking these muxes as SND_SOC_NOPM.
+When the CPU comes out of suspend, the firmware may have modified the OS
+Double Lock Register. Save it in an unused slot of cpu_suspend_ctx, and
+restore it on resume.
 
-Note this has been verified this on the Tegra124 Nyan Big which features
-the MAX98090 codec.
-
-Signed-off-by: Jon Hunter <jonathanh@nvidia.com>
-Signed-off-by: Mark Brown <broonie@kernel.org>
-Cc: stable@vger.kernel.org
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
+Signed-off-by: Will Deacon <will.deacon@arm.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/soc/codecs/max98090.c |   12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+ arch/arm64/mm/proc.S |   34 ++++++++++++++++++----------------
+ 1 file changed, 18 insertions(+), 16 deletions(-)
 
---- a/sound/soc/codecs/max98090.c
-+++ b/sound/soc/codecs/max98090.c
-@@ -1209,14 +1209,14 @@ static const struct snd_soc_dapm_widget
- 		&max98090_right_rcv_mixer_controls[0],
- 		ARRAY_SIZE(max98090_right_rcv_mixer_controls)),
+--- a/arch/arm64/mm/proc.S
++++ b/arch/arm64/mm/proc.S
+@@ -76,24 +76,25 @@ ENTRY(cpu_do_suspend)
+ 	mrs	x2, tpidr_el0
+ 	mrs	x3, tpidrro_el0
+ 	mrs	x4, contextidr_el1
+-	mrs	x5, cpacr_el1
+-	mrs	x6, tcr_el1
+-	mrs	x7, vbar_el1
+-	mrs	x8, mdscr_el1
+-	mrs	x9, oslsr_el1
+-	mrs	x10, sctlr_el1
++	mrs	x5, osdlr_el1
++	mrs	x6, cpacr_el1
++	mrs	x7, tcr_el1
++	mrs	x8, vbar_el1
++	mrs	x9, mdscr_el1
++	mrs	x10, oslsr_el1
++	mrs	x11, sctlr_el1
+ alternative_if_not ARM64_HAS_VIRT_HOST_EXTN
+-	mrs	x11, tpidr_el1
++	mrs	x12, tpidr_el1
+ alternative_else
+-	mrs	x11, tpidr_el2
++	mrs	x12, tpidr_el2
+ alternative_endif
+-	mrs	x12, sp_el0
++	mrs	x13, sp_el0
+ 	stp	x2, x3, [x0]
+-	stp	x4, xzr, [x0, #16]
+-	stp	x5, x6, [x0, #32]
+-	stp	x7, x8, [x0, #48]
+-	stp	x9, x10, [x0, #64]
+-	stp	x11, x12, [x0, #80]
++	stp	x4, x5, [x0, #16]
++	stp	x6, x7, [x0, #32]
++	stp	x8, x9, [x0, #48]
++	stp	x10, x11, [x0, #64]
++	stp	x12, x13, [x0, #80]
+ 	ret
+ ENDPROC(cpu_do_suspend)
  
--	SND_SOC_DAPM_MUX("LINMOD Mux", M98090_REG_LOUTR_MIXER,
--		M98090_LINMOD_SHIFT, 0, &max98090_linmod_mux),
-+	SND_SOC_DAPM_MUX("LINMOD Mux", SND_SOC_NOPM, 0, 0,
-+		&max98090_linmod_mux),
+@@ -116,8 +117,8 @@ ENTRY(cpu_do_resume)
+ 	msr	cpacr_el1, x6
  
--	SND_SOC_DAPM_MUX("MIXHPLSEL Mux", M98090_REG_HP_CONTROL,
--		M98090_MIXHPLSEL_SHIFT, 0, &max98090_mixhplsel_mux),
-+	SND_SOC_DAPM_MUX("MIXHPLSEL Mux", SND_SOC_NOPM, 0, 0,
-+		&max98090_mixhplsel_mux),
+ 	/* Don't change t0sz here, mask those bits when restoring */
+-	mrs	x5, tcr_el1
+-	bfi	x8, x5, TCR_T0SZ_OFFSET, TCR_TxSZ_WIDTH
++	mrs	x7, tcr_el1
++	bfi	x8, x7, TCR_T0SZ_OFFSET, TCR_TxSZ_WIDTH
  
--	SND_SOC_DAPM_MUX("MIXHPRSEL Mux", M98090_REG_HP_CONTROL,
--		M98090_MIXHPRSEL_SHIFT, 0, &max98090_mixhprsel_mux),
-+	SND_SOC_DAPM_MUX("MIXHPRSEL Mux", SND_SOC_NOPM, 0, 0,
-+		&max98090_mixhprsel_mux),
- 
- 	SND_SOC_DAPM_PGA("HP Left Out", M98090_REG_OUTPUT_ENABLE,
- 		M98090_HPLEN_SHIFT, 0, NULL, 0),
+ 	msr	tcr_el1, x8
+ 	msr	vbar_el1, x9
+@@ -141,6 +142,7 @@ alternative_endif
+ 	/*
+ 	 * Restore oslsr_el1 by writing oslar_el1
+ 	 */
++	msr	osdlr_el1, x5
+ 	ubfx	x11, x11, #1, #1
+ 	msr	oslar_el1, x11
+ 	reset_pmuserenr_el0 x0			// Disable PMU access from EL0
 
 
