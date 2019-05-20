@@ -2,98 +2,144 @@ Return-Path: <SRS0=lq4r=TU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7050EC04AAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 09:35:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22A2AC072A4
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 09:36:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5007B206BA
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 09:35:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E9A9020675
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 09:36:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="G1evNGX5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732232AbfETJfQ (ORCPT
+        id S1732162AbfETJgu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 05:35:16 -0400
-Received: from sauhun.de ([88.99.104.3]:49576 "EHLO pokefinder.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727720AbfETJfI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 05:35:08 -0400
-Received: from localhost (p54B333DA.dip0.t-ipconnect.de [84.179.51.218])
-        by pokefinder.org (Postfix) with ESMTPSA id DE2372C6EF1;
-        Mon, 20 May 2019 11:35:06 +0200 (CEST)
-From:   Wolfram Sang <wsa+renesas@sang-engineering.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Mark Brown <broonie@kernel.org>, linux-renesas-soc@vger.kernel.org,
-        Steve Twiss <stwiss.opensource@diasemi.com>,
-        Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        Simon Horman <horms+renesas@verge.net.au>
-Subject: [PATCH RESEND 3/3] regulator: da9063: platform_data is gone, depend on OF
-Date:   Mon, 20 May 2019 11:34:46 +0200
-Message-Id: <20190520093446.30895-4-wsa+renesas@sang-engineering.com>
-X-Mailer: git-send-email 2.19.1
-In-Reply-To: <20190520093446.30895-1-wsa+renesas@sang-engineering.com>
-References: <20190520093446.30895-1-wsa+renesas@sang-engineering.com>
+        Mon, 20 May 2019 05:36:50 -0400
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:39361 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731261AbfETJgu (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 05:36:50 -0400
+Received: by mail-oi1-f196.google.com with SMTP id v2so9473944oie.6;
+        Mon, 20 May 2019 02:36:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=AZBDC+/mCFRo3qw+a99U/avIYwiJEL/Csf0BsRkNo7k=;
+        b=G1evNGX580CvL1Bg9yjWgDSUqgqFd18SsqtZARCMpgDaW1aknB3f1KfTra3Hq62ZJC
+         eHzW+oLbXj5JpRSoAT7+0M1lb2KjhBfpwMmx5ti/FC+6fE14Eu61/cylCQl9zyq25i7h
+         Qj1zDQFJshUfwvtOyHaZ1vXbjDY0/b7R1wIMjUoT9zPx8C3W6+e8WI514mr2PmGyJ8ya
+         T9fPzt4NcM3iScE/V6QSFx9oLnTxmikU8AANHq2DJqXH82sTz6udC/rZ+4xFHK0/wVXs
+         D15F79EQbLUfdR+OOK0lhnX2oOh+F/Ix3zL3SJcJsi4uNqLw2xcDe7ZwQ27ne+KpIxw5
+         REVQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=AZBDC+/mCFRo3qw+a99U/avIYwiJEL/Csf0BsRkNo7k=;
+        b=Zmo8Yp5ySCMdFLDR3J7Nt6kRNBr4BLzheRHaD6NwUEDaNICuRjbqac7fpunfDTjTbV
+         VeXuVsi4Pb1kYmTURY5ZeHcKVIHyy+RfGE5gGlEKK+4MByjo+vzFAz/gPiEAqIJvg2sQ
+         Ci4CATw6Dn6lrPyakTgd7VQsNKOoEUuA0y815o5JgU9R6B/065ur+1x2H2Zec2ie7LaC
+         5twPdD2hIZyd0m3iIPP28mToqVke0PEz9CBbCkSUc/vEzBHhif07FaB7R1Q/K3P5m1T/
+         uN5k09cSDeVo3MN7odYPdjGkQzK10UOhzs+TQbpL9nYC46zJWm3mxJpF6NXoFB0COkSL
+         /Smg==
+X-Gm-Message-State: APjAAAW60rAtmtzCpb+H0czGk1uVpcQJehfhz/iyfUp0Z6iCGxLpIuET
+        ny2zncG3NlzRqz/N+4NSm7KTsQwMtxArjAhr8fg=
+X-Google-Smtp-Source: APXvYqyuKbNFJw8EKBMqbxucAuXTt5WEc0gs5Vo/FU3lCWpjMCU6PTXubunFnLlGtFewQE9Cfa3pVvpqD/hAgm+NiuM=
+X-Received: by 2002:aca:4341:: with SMTP id q62mr17730671oia.140.1558345009093;
+ Mon, 20 May 2019 02:36:49 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20190518224333.18067-1-barbara.fernandes@usp.br> <20190519114400.5cc29c77@archlinux>
+In-Reply-To: <20190519114400.5cc29c77@archlinux>
+From:   Alexandru Ardelean <ardeleanalex@gmail.com>
+Date:   Mon, 20 May 2019 12:36:37 +0300
+Message-ID: <CA+U=Dsqir6Qyk_8yaBw1ei2dhR_TFmVWiMp6qsAOL4yL+nO7AA@mail.gmail.com>
+Subject: Re: [RESEND PATCH] staging: iio: adt7316: create of_device_id array
+To:     Jonathan Cameron <jic23@kernel.org>
+Cc:     =?UTF-8?Q?B=C3=A1rbara_Fernandes?= <barbara.fernandes@usp.br>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Michael Hennerich <Michael.Hennerich@analog.com>,
+        Stefan Popa <stefan.popa@analog.com>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-iio@vger.kernel.org, devel@driverdev.osuosl.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        Wilson Sales <spoonm@spoonm.org>,
+        Alexandru Ardelean <alexandru.ardelean@analog.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-With OF being the only configuration possibility left, depend on it to
-simplify some code.
+On Sun, May 19, 2019 at 8:54 PM Jonathan Cameron <jic23@kernel.org> wrote:
+>
+> On Sat, 18 May 2019 19:43:33 -0300
+> B=C3=A1rbara Fernandes <barbara.fernandes@usp.br> wrote:
+>
+> > Create structure of type of_device_id in order to register all devices
+> > the driver is able to manage.
+> >
+> > Signed-off-by: B=C3=A1rbara Fernandes <barbara.fernandes@usp.br>
+> > Signed-off-by: Wilson Sales <spoonm@spoonm.org>
+> > Co-developed-by: Wilson Sales <spoonm@spoonm.org>
+> Looks good to me.
+>
+> Applied to the togreg branch of iio.git and pushed out as testing
+> for the autobuilders to play with it.
+>
+> Thanks,
 
-Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
-Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
-Acked-by: Steve Twiss <stwiss.opensource@diasemi.com>
-Tested-by: Steve Twiss <stwiss.opensource@diasemi.com>
----
- drivers/regulator/Kconfig            |  2 +-
- drivers/regulator/da9063-regulator.c | 10 ----------
- 2 files changed, 1 insertion(+), 11 deletions(-)
+Also,
 
-diff --git a/drivers/regulator/Kconfig b/drivers/regulator/Kconfig
-index 6c37f0df9323..d63d8cbbee1d 100644
---- a/drivers/regulator/Kconfig
-+++ b/drivers/regulator/Kconfig
-@@ -257,7 +257,7 @@ config REGULATOR_DA9062
- 
- config REGULATOR_DA9063
- 	tristate "Dialog Semiconductor DA9063 regulators"
--	depends on MFD_DA9063
-+	depends on MFD_DA9063 && OF
- 	help
- 	  Say y here to support the BUCKs and LDOs regulators found on
- 	  DA9063 PMICs.
-diff --git a/drivers/regulator/da9063-regulator.c b/drivers/regulator/da9063-regulator.c
-index da95197fdb4f..02f816318fba 100644
---- a/drivers/regulator/da9063-regulator.c
-+++ b/drivers/regulator/da9063-regulator.c
-@@ -634,7 +634,6 @@ static const struct regulator_init_data *da9063_get_regulator_initdata(
- 	return NULL;
- }
- 
--#ifdef CONFIG_OF
- static struct of_regulator_match da9063_matches[] = {
- 	[DA9063_ID_BCORE1]           = { .name = "bcore1"           },
- 	[DA9063_ID_BCORE2]           = { .name = "bcore2"           },
-@@ -712,15 +711,6 @@ static struct da9063_regulators_pdata *da9063_parse_regulators_dt(
- 	*da9063_reg_matches = da9063_matches;
- 	return pdata;
- }
--#else
--static struct da9063_regulators_pdata *da9063_parse_regulators_dt(
--		struct platform_device *pdev,
--		struct of_regulator_match **da9063_reg_matches)
--{
--	*da9063_reg_matches = NULL;
--	return ERR_PTR(-ENODEV);
--}
--#endif
- 
- static int da9063_regulator_probe(struct platform_device *pdev)
- {
--- 
-2.19.1
+Acked-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
 
+CC-ing my work-email
+There are some issues with it and mailing lists; I'll hopefully sort
+them out in the next weeks.
+
+
+>
+> Jonathan
+>
+> > ---
+> >  drivers/staging/iio/addac/adt7316-spi.c | 13 +++++++++++++
+> >  1 file changed, 13 insertions(+)
+> >
+> > diff --git a/drivers/staging/iio/addac/adt7316-spi.c b/drivers/staging/=
+iio/addac/adt7316-spi.c
+> > index 8294b9c1e3c2..9968775f1d23 100644
+> > --- a/drivers/staging/iio/addac/adt7316-spi.c
+> > +++ b/drivers/staging/iio/addac/adt7316-spi.c
+> > @@ -127,9 +127,22 @@ static const struct spi_device_id adt7316_spi_id[]=
+ =3D {
+> >
+> >  MODULE_DEVICE_TABLE(spi, adt7316_spi_id);
+> >
+> > +static const struct of_device_id adt7316_of_spi_match[] =3D {
+> > +     { .compatible =3D "adi,adt7316" },
+> > +     { .compatible =3D "adi,adt7317" },
+> > +     { .compatible =3D "adi,adt7318" },
+> > +     { .compatible =3D "adi,adt7516" },
+> > +     { .compatible =3D "adi,adt7517" },
+> > +     { .compatible =3D "adi,adt7519" },
+> > +     { }
+> > +};
+> > +
+> > +MODULE_DEVICE_TABLE(of, adt7316_of_spi_match);
+> > +
+> >  static struct spi_driver adt7316_driver =3D {
+> >       .driver =3D {
+> >               .name =3D "adt7316",
+> > +             .of_match_table =3D adt7316_of_spi_match,
+> >               .pm =3D ADT7316_PM_OPS,
+> >       },
+> >       .probe =3D adt7316_spi_probe,
+>
