@@ -2,57 +2,54 @@ Return-Path: <SRS0=lq4r=TU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E293BC04AAC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:52:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CB1EC04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:52:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B945820645
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:52:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 42EC720645
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:52:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558356768;
-	bh=g+JruYIfqgO+BWwlMhcvFwYfPn/bYDmBg8KUOWPJY0U=;
+	s=default; t=1558356777;
+	bh=SLAe6/IoBPDUbYUdq+rzQEmI9w4plC6PgcfwdwJjL3Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=iercPLPpfxgKV/y5A8HuNUnHhwLL3rEavzZHE4mPV+2I5tZyaUIqQ+nfzjFBS6QRs
-	 M1+EALvKoBrMj19+HJHUEvQckGGKkPBCxre8mbMNiwn2eabA0UjjegSTKwpnpr+QEA
-	 BGaau/I10q/J21/ptSOqtO02E8Hl44YqgsMUWyyk=
+	b=UMHZouVKAqd05kgj7wtHNQxdP0InVy0jF5msfdNLpA7AKBhO7pvr7Z6e4faCioCgS
+	 VV1HnLVQjUMzo8EQp+ktrD2i+GlMtvxCAqwPB80UuJgclbFK3R0ZbsmSQ/iz0znLip
+	 4fP0kqBZQ4MCPOo0xN3RdeM4Sw6iqgamkEM/ID1s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391532AbfETMwr (ORCPT
+        id S2391520AbfETMw4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 08:52:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59636 "EHLO mail.kernel.org"
+        Mon, 20 May 2019 08:52:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59284 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730819AbfETMSb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 08:18:31 -0400
+        id S1733119AbfETMSK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 08:18:10 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CA1E5208C3;
-        Mon, 20 May 2019 12:18:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7C55220815;
+        Mon, 20 May 2019 12:18:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558354711;
-        bh=g+JruYIfqgO+BWwlMhcvFwYfPn/bYDmBg8KUOWPJY0U=;
+        s=default; t=1558354690;
+        bh=SLAe6/IoBPDUbYUdq+rzQEmI9w4plC6PgcfwdwJjL3Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VQBg8SsLq9XnMbpX5rzaeX/1XhunP+0QEyVP/8WbnoM6dVwA9XZQ7i9QoMnlyJsoR
-         Uwrvnfv40Gbv0G6EZHpzFbK6M+in6cVf1y/muZQC5nePyMgalmhxJgs8jSsU9sIgf7
-         xBxtGtkZVq5SP+5dL3Db3NXFnB+eCB2WvP+NLJmA=
+        b=YGOF2DVjVmEG2F1ijVjS5RrQk7yF0w2E9OxcrQOig6S91cHN5gQIv796cHTy1HirJ
+         g3pv6DOKe5QTjseMGJP6lVFIJ94IRPMZxuH5sf552eHdGZE3MvCgXxnCC2bO6VpxmD
+         gWLcqt3Pthv19ZmJgweBWEwEDJGRWIC0mhB52CBY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dexuan Cui <decui@microsoft.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Stephen Hemminger <stephen@networkplumber.org>,
-        Michael Kelley <mikelley@microsoft.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 03/63] PCI: hv: Fix a memory leak in hv_eject_device_work()
-Date:   Mon, 20 May 2019 14:13:42 +0200
-Message-Id: <20190520115231.555170179@linuxfoundation.org>
+        stable@vger.kernel.org, Jon Hunter <jonathanh@nvidia.com>,
+        Mark Brown <broonie@kernel.org>
+Subject: [PATCH 4.9 20/44] ASoC: max98090: Fix restore of DAPM Muxes
+Date:   Mon, 20 May 2019 14:14:09 +0200
+Message-Id: <20190520115233.222877603@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190520115231.137981521@linuxfoundation.org>
-References: <20190520115231.137981521@linuxfoundation.org>
+In-Reply-To: <20190520115230.720347034@linuxfoundation.org>
+References: <20190520115230.720347034@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -62,51 +59,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 05f151a73ec2b23ffbff706e5203e729a995cdc2 ]
+From: Jon Hunter <jonathanh@nvidia.com>
 
-When a device is created in new_pcichild_device(), hpdev->refs is set
-to 2 (i.e. the initial value of 1 plus the get_pcichild()).
+commit ecb2795c08bc825ebd604997e5be440b060c5b18 upstream.
 
-When we hot remove the device from the host, in a Linux VM we first call
-hv_pci_eject_device(), which increases hpdev->refs by get_pcichild() and
-then schedules a work of hv_eject_device_work(), so hpdev->refs becomes
-3 (let's ignore the paired get/put_pcichild() in other places). But in
-hv_eject_device_work(), currently we only call put_pcichild() twice,
-meaning the 'hpdev' struct can't be freed in put_pcichild().
+The max98090 driver defines 3 DAPM muxes; one for the right line output
+(LINMOD Mux), one for the left headphone mixer source (MIXHPLSEL Mux)
+and one for the right headphone mixer source (MIXHPRSEL Mux). The same
+bit is used for the mux as well as the DAPM enable, and although the mux
+can be correctly configured, after playback has completed, the mux will
+be reset during the disable phase. This is preventing the state of these
+muxes from being saved and restored correctly on system reboot. Fix this
+by marking these muxes as SND_SOC_NOPM.
 
-Add one put_pcichild() to fix the memory leak.
+Note this has been verified this on the Tegra124 Nyan Big which features
+the MAX98090 codec.
 
-The device can also be removed when we run "rmmod pci-hyperv". On this
-path (hv_pci_remove() -> hv_pci_bus_exit() -> hv_pci_devices_present()),
-hpdev->refs is 2, and we do correctly call put_pcichild() twice in
-pci_devices_present_work().
-
-Fixes: 4daace0d8ce8 ("PCI: hv: Add paravirtual PCI front-end for Microsoft Hyper-V VMs")
-Signed-off-by: Dexuan Cui <decui@microsoft.com>
-[lorenzo.pieralisi@arm.com: commit log rework]
-Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Reviewed-by: Stephen Hemminger <stephen@networkplumber.org>
-Reviewed-by:  Michael Kelley <mikelley@microsoft.com>
+Signed-off-by: Jon Hunter <jonathanh@nvidia.com>
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Cc: stable@vger.kernel.org
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/pci/host/pci-hyperv.c | 1 +
- 1 file changed, 1 insertion(+)
+ sound/soc/codecs/max98090.c |   12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/pci/host/pci-hyperv.c b/drivers/pci/host/pci-hyperv.c
-index 53d1c08cef4dc..292450c7da625 100644
---- a/drivers/pci/host/pci-hyperv.c
-+++ b/drivers/pci/host/pci-hyperv.c
-@@ -1941,6 +1941,7 @@ static void hv_eject_device_work(struct work_struct *work)
- 			 VM_PKT_DATA_INBAND, 0);
+--- a/sound/soc/codecs/max98090.c
++++ b/sound/soc/codecs/max98090.c
+@@ -1209,14 +1209,14 @@ static const struct snd_soc_dapm_widget
+ 		&max98090_right_rcv_mixer_controls[0],
+ 		ARRAY_SIZE(max98090_right_rcv_mixer_controls)),
  
- 	put_pcichild(hpdev, hv_pcidev_ref_childlist);
-+	put_pcichild(hpdev, hv_pcidev_ref_initial);
- 	put_pcichild(hpdev, hv_pcidev_ref_pnp);
- 	put_hvpcibus(hpdev->hbus);
- }
--- 
-2.20.1
-
+-	SND_SOC_DAPM_MUX("LINMOD Mux", M98090_REG_LOUTR_MIXER,
+-		M98090_LINMOD_SHIFT, 0, &max98090_linmod_mux),
++	SND_SOC_DAPM_MUX("LINMOD Mux", SND_SOC_NOPM, 0, 0,
++		&max98090_linmod_mux),
+ 
+-	SND_SOC_DAPM_MUX("MIXHPLSEL Mux", M98090_REG_HP_CONTROL,
+-		M98090_MIXHPLSEL_SHIFT, 0, &max98090_mixhplsel_mux),
++	SND_SOC_DAPM_MUX("MIXHPLSEL Mux", SND_SOC_NOPM, 0, 0,
++		&max98090_mixhplsel_mux),
+ 
+-	SND_SOC_DAPM_MUX("MIXHPRSEL Mux", M98090_REG_HP_CONTROL,
+-		M98090_MIXHPRSEL_SHIFT, 0, &max98090_mixhprsel_mux),
++	SND_SOC_DAPM_MUX("MIXHPRSEL Mux", SND_SOC_NOPM, 0, 0,
++		&max98090_mixhprsel_mux),
+ 
+ 	SND_SOC_DAPM_PGA("HP Left Out", M98090_REG_OUTPUT_ENABLE,
+ 		M98090_HPLEN_SHIFT, 0, NULL, 0),
 
 
