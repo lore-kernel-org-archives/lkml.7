@@ -2,135 +2,252 @@ Return-Path: <SRS0=lq4r=TU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23FECC04AAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 09:28:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AC22C04AAF
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 09:29:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F272120675
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 09:28:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0333E20675
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 09:29:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1558344540;
+	bh=+++zo0Eoif5H4s+kPpWZQ8LIU0GV3pvTSNxyYCSanzg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=uYIvmq+F4oBKzS+d2ciTYPkHv23OcfNdkJsI7pO1ong1QqInGcNijviABkEmmSv8Z
+	 Ux7LXFVfidaUaHjX7Ku8cG02YT5onG/Ktk5cJGR0thhMIGqw94huAHkGuV7J09vDYn
+	 EpPVWKpbLmGdl+G3RFeP84TJLkzISBCXouTmZJ2U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732135AbfETJ2j (ORCPT
+        id S1732145AbfETJ26 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 05:28:39 -0400
-Received: from mail-qk1-f195.google.com ([209.85.222.195]:39751 "EHLO
-        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731432AbfETJ2j (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 05:28:39 -0400
-Received: by mail-qk1-f195.google.com with SMTP id z128so8373128qkb.6;
-        Mon, 20 May 2019 02:28:38 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=W+kdZnR5O8JiU3Pf1A/YdEoIBjaqE0FCtwtKzSb3tcg=;
-        b=XOUaZ6tKPHB5e8NU0aRlRK0a8cEAN1B/O8hz2itl1/h6Qj/HI5irTsmM+Xagm4eTpw
-         xWGwSb6YHehFFrP/lQLRsZWS5jC27HuEwoig8STsYiRjamO/fvhSpGaOaDQ7LhjQmmn3
-         eIJCkEnOJAS8JGgz1HSUOidEuV2gmSFnRLIMaICbNtBdqlbM8BR+M4O39ysmJS6691Tp
-         hGOu85Amk5zDeUr+Vfw5jrM5zNNWF7PBMU7T7hcqmww0xL/e+ZZji5G2cAajfToB9LIR
-         asx9wRX90vac0nuSXsv7QLpGoPaXxIB6X8pvyLP86q0ZUweq1sm2t3EsklM2u4rtugSu
-         HJrQ==
-X-Gm-Message-State: APjAAAU683S2RMlcAEUBzfYJaoncp98mbC0OLjJPI3r3z0QjFppxM5BX
-        hhVy99EqKJK5GqDC19aj3ZU3csTiloOoTqHbjKM=
-X-Google-Smtp-Source: APXvYqzng8ZEkla+MZbzTUYbwhgNGW+KYBn7MR1JRscH3T5Z56wO65FYLg4J4qPz+H5lfMoc/JUf9DqLsjfY2F/VnDs=
-X-Received: by 2002:a37:a8ce:: with SMTP id r197mr28099585qke.269.1558344518379;
- Mon, 20 May 2019 02:28:38 -0700 (PDT)
+        Mon, 20 May 2019 05:28:58 -0400
+Received: from mx2.suse.de ([195.135.220.15]:40172 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1731432AbfETJ26 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 05:28:58 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 169B6ABD7;
+        Mon, 20 May 2019 09:28:55 +0000 (UTC)
+Date:   Mon, 20 May 2019 11:28:54 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Minchan Kim <minchan@kernel.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-mm <linux-mm@kvack.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Tim Murray <timmurray@google.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Suren Baghdasaryan <surenb@google.com>,
+        Daniel Colascione <dancol@google.com>,
+        Shakeel Butt <shakeelb@google.com>,
+        Sonny Rao <sonnyrao@google.com>,
+        Brian Geffon <bgeffon@google.com>, linux-api@vger.kernel.org
+Subject: Re: [RFC 0/7] introduce memory hinting API for external process
+Message-ID: <20190520092854.GB6836@dhcp22.suse.cz>
+References: <20190520035254.57579-1-minchan@kernel.org>
 MIME-Version: 1.0
-References: <20190520025437.13825-1-yamada.masahiro@socionext.com>
-In-Reply-To: <20190520025437.13825-1-yamada.masahiro@socionext.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Mon, 20 May 2019 11:28:20 +0200
-Message-ID: <CAK8P3a2nth2sNPT46_e8G=s=D-J8LtsrA4kO2esu804_pWVs-Q@mail.gmail.com>
-Subject: Re: [PATCH] kbuild: do not check name uniqueness of builtin modules
-To:     Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Jessica Yu <jeyu@kernel.org>,
-        Lucas De Marchi <lucas.de.marchi@gmail.com>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Michael Schmitz <schmitzmic@gmail.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Rusty Russell <rusty@rustcorp.com.au>,
-        Kees Cook <keescook@chromium.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Lucas De Marchi <lucas.demarchi@intel.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190520035254.57579-1-minchan@kernel.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 20, 2019 at 4:57 AM Masahiro Yamada
-<yamada.masahiro@socionext.com> wrote:
->
-> I just thought it was a good idea to scan builtin.modules in the name
-> uniqueness checking, but Stephen reported a false positive.
->
-> ppc64_defconfig produces:
->
->   warning: same basename if the following are built as modules:
->     arch/powerpc/platforms/powermac/nvram.ko
->     drivers/char/nvram.ko
->
-> ..., which is a false positive because the former is never built as
-> a module as you see in arch/powerpc/platforms/powermac/Makefile:
->
->   # CONFIG_NVRAM is an arch. independent tristate symbol, for pmac32 we really
->   # need this to be a bool.  Cheat here and pretend CONFIG_NVRAM=m is really
->   # CONFIG_NVRAM=y
->   obj-$(CONFIG_NVRAM:m=y)         += nvram.o
->
-> Since we cannot predict how tricky Makefiles are written in wild,
-> builtin.modules may potentially contain false positives. I do not
-> think it is a big deal as far as kmod is concerned, but false positive
-> warnings in the kernel build makes people upset. It is better to not
-> do it.
->
-> Even without checking builtin.modules, we have enough (and more solid)
-> test coverage with allmodconfig.
->
-> While I touched this part, I replaced the sed code with neater one
-> provided by Stephen.
->
-> Link: https://lkml.org/lkml/2019/5/19/120
-> Link: https://lkml.org/lkml/2019/5/19/123
-> Fixes: 3a48a91901c5 ("kbuild: check uniqueness of module names")
-> Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
-> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+[Cc linux-api]
 
-Looks good to me
+On Mon 20-05-19 12:52:47, Minchan Kim wrote:
+> - Background
+> 
+> The Android terminology used for forking a new process and starting an app
+> from scratch is a cold start, while resuming an existing app is a hot start.
+> While we continually try to improve the performance of cold starts, hot
+> starts will always be significantly less power hungry as well as faster so
+> we are trying to make hot start more likely than cold start.
+> 
+> To increase hot start, Android userspace manages the order that apps should
+> be killed in a process called ActivityManagerService. ActivityManagerService
+> tracks every Android app or service that the user could be interacting with
+> at any time and translates that into a ranked list for lmkd(low memory
+> killer daemon). They are likely to be killed by lmkd if the system has to
+> reclaim memory. In that sense they are similar to entries in any other cache.
+> Those apps are kept alive for opportunistic performance improvements but
+> those performance improvements will vary based on the memory requirements of
+> individual workloads.
+> 
+> - Problem
+> 
+> Naturally, cached apps were dominant consumers of memory on the system.
+> However, they were not significant consumers of swap even though they are
+> good candidate for swap. Under investigation, swapping out only begins
+> once the low zone watermark is hit and kswapd wakes up, but the overall
+> allocation rate in the system might trip lmkd thresholds and cause a cached
+> process to be killed(we measured performance swapping out vs. zapping the
+> memory by killing a process. Unsurprisingly, zapping is 10x times faster
+> even though we use zram which is much faster than real storage) so kill
+> from lmkd will often satisfy the high zone watermark, resulting in very
+> few pages actually being moved to swap.
+> 
+> - Approach
+> 
+> The approach we chose was to use a new interface to allow userspace to
+> proactively reclaim entire processes by leveraging platform information.
+> This allowed us to bypass the inaccuracy of the kernel’s LRUs for pages
+> that are known to be cold from userspace and to avoid races with lmkd
+> by reclaiming apps as soon as they entered the cached state. Additionally,
+> it could provide many chances for platform to use much information to
+> optimize memory efficiency.
+> 
+> IMHO we should spell it out that this patchset complements MADV_WONTNEED
+> and MADV_FREE by adding non-destructive ways to gain some free memory
+> space. MADV_COLD is similar to MADV_WONTNEED in a way that it hints the
+> kernel that memory region is not currently needed and should be reclaimed
+> immediately; MADV_COOL is similar to MADV_FREE in a way that it hints the
+> kernel that memory region is not currently needed and should be reclaimed
+> when memory pressure rises.
+> 
+> To achieve the goal, the patchset introduce two new options for madvise.
+> One is MADV_COOL which will deactive activated pages and the other is
+> MADV_COLD which will reclaim private pages instantly. These new options
+> complement MADV_DONTNEED and MADV_FREE by adding non-destructive ways to
+> gain some free memory space. MADV_COLD is similar to MADV_DONTNEED in a way
+> that it hints the kernel that memory region is not currently needed and
+> should be reclaimed immediately; MADV_COOL is similar to MADV_FREE in a way
+> that it hints the kernel that memory region is not currently needed and
+> should be reclaimed when memory pressure rises.
+> 
+> This approach is similar in spirit to madvise(MADV_WONTNEED), but the
+> information required to make the reclaim decision is not known to the app.
+> Instead, it is known to a centralized userspace daemon, and that daemon
+> must be able to initiate reclaim on its own without any app involvement.
+> To solve the concern, this patch introduces new syscall -
+> 
+> 	struct pr_madvise_param {
+> 		int size;
+> 		const struct iovec *vec;
+> 	}
+> 
+> 	int process_madvise(int pidfd, ssize_t nr_elem, int *behavior,
+> 				struct pr_madvise_param *restuls,
+> 				struct pr_madvise_param *ranges,
+> 				unsigned long flags);
+> 
+> The syscall get pidfd to give hints to external process and provides
+> pair of result/ranges vector arguments so that it could give several
+> hints to each address range all at once.
+> 
+> I guess others have different ideas about the naming of syscall and options
+> so feel free to suggest better naming.
+> 
+> - Experiment
+> 
+> We did bunch of testing with several hundreds of real users, not artificial
+> benchmark on android. We saw about 17% cold start decreasement without any
+> significant battery/app startup latency issues. And with artificial benchmark
+> which launches and switching apps, we saw average 7% app launching improvement,
+> 18% less lmkd kill and good stat from vmstat.
+> 
+> A is vanilla and B is process_madvise.
+> 
+> 
+>                                        A          B      delta   ratio(%)
+>                allocstall_dma          0          0          0       0.00
+>            allocstall_movable       1464        457      -1007     -69.00
+>             allocstall_normal     263210     190763     -72447     -28.00
+>              allocstall_total     264674     191220     -73454     -28.00
+>           compact_daemon_wake      26912      25294      -1618      -7.00
+>                  compact_fail      17885      14151      -3734     -21.00
+>          compact_free_scanned 4204766409 3835994922 -368771487      -9.00
+>              compact_isolated    3446484    2967618    -478866     -14.00
+>       compact_migrate_scanned 1621336411 1324695710 -296640701     -19.00
+>                 compact_stall      19387      15343      -4044     -21.00
+>               compact_success       1502       1192       -310     -21.00
+> kswapd_high_wmark_hit_quickly        234        184        -50     -22.00
+>             kswapd_inodesteal     221635     233093      11458       5.00
+>  kswapd_low_wmark_hit_quickly      66065      54009     -12056     -19.00
+>                    nr_dirtied     259934     296476      36542      14.00
+>   nr_vmscan_immediate_reclaim       2587       2356       -231      -9.00
+>               nr_vmscan_write    1274232    2661733    1387501     108.00
+>                    nr_written    1514060    2937560    1423500      94.00
+>                    pageoutrun      67561      55133     -12428     -19.00
+>                    pgactivate    2335060    1984882    -350178     -15.00
+>                   pgalloc_dma   13743011   14096463     353452       2.00
+>               pgalloc_movable          0          0          0       0.00
+>                pgalloc_normal   18742440   16802065   -1940375     -11.00
+>                 pgalloc_total   32485451   30898528   -1586923      -5.00
+>                  pgdeactivate    4262210    2930670   -1331540     -32.00
+>                       pgfault   30812334   31085065     272731       0.00
+>                        pgfree   33553970   31765164   -1788806      -6.00
+>                  pginodesteal      33411      15084     -18327     -55.00
+>                   pglazyfreed          0          0          0       0.00
+>                    pgmajfault     551312    1508299     956987     173.00
+>                pgmigrate_fail      43927      29330     -14597     -34.00
+>             pgmigrate_success    1399851    1203922    -195929     -14.00
+>                        pgpgin   24141776   19032156   -5109620     -22.00
+>                       pgpgout     959344    1103316     143972      15.00
+>                  pgpgoutclean    4639732    3765868    -873864     -19.00
+>                      pgrefill    4884560    3006938   -1877622     -39.00
+>                     pgrotated      37828      25897     -11931     -32.00
+>                 pgscan_direct    1456037     957567    -498470     -35.00
+>        pgscan_direct_throttle          0          0          0       0.00
+>                 pgscan_kswapd    6667767    5047360   -1620407     -25.00
+>                  pgscan_total    8123804    6004927   -2118877     -27.00
+>                    pgskip_dma          0          0          0       0.00
+>                pgskip_movable          0          0          0       0.00
+>                 pgskip_normal      14907      25382      10475      70.00
+>                  pgskip_total      14907      25382      10475      70.00
+>                pgsteal_direct    1118986     690215    -428771     -39.00
+>                pgsteal_kswapd    4750223    3657107   -1093116     -24.00
+>                 pgsteal_total    5869209    4347322   -1521887     -26.00
+>                        pswpin     417613    1392647     975034     233.00
+>                       pswpout    1274224    2661731    1387507     108.00
+>                 slabs_scanned   13686905   10807200   -2879705     -22.00
+>           workingset_activate     668966     569444     -99522     -15.00
+>        workingset_nodereclaim      38957      32621      -6336     -17.00
+>            workingset_refault    2816795    2179782    -637013     -23.00
+>            workingset_restore     294320     168601    -125719     -43.00
+> 
+> pgmajfault is increased by 173% because swapin is increased by 200% by
+> process_madvise hint. However, swap read based on zram is much cheaper
+> than file IO in performance point of view and app hot start by swapin is
+> also cheaper than cold start from the beginning of app which needs many IO
+> from storage and initialization steps.
+> 
+> This patchset is against on next-20190517.
+> 
+> Minchan Kim (7):
+>   mm: introduce MADV_COOL
+>   mm: change PAGEREF_RECLAIM_CLEAN with PAGE_REFRECLAIM
+>   mm: introduce MADV_COLD
+>   mm: factor out madvise's core functionality
+>   mm: introduce external memory hinting API
+>   mm: extend process_madvise syscall to support vector arrary
+>   mm: madvise support MADV_ANONYMOUS_FILTER and MADV_FILE_FILTER
+> 
+>  arch/x86/entry/syscalls/syscall_32.tbl |   1 +
+>  arch/x86/entry/syscalls/syscall_64.tbl |   1 +
+>  include/linux/page-flags.h             |   1 +
+>  include/linux/page_idle.h              |  15 +
+>  include/linux/proc_fs.h                |   1 +
+>  include/linux/swap.h                   |   2 +
+>  include/linux/syscalls.h               |   2 +
+>  include/uapi/asm-generic/mman-common.h |  12 +
+>  include/uapi/asm-generic/unistd.h      |   2 +
+>  kernel/signal.c                        |   2 +-
+>  kernel/sys_ni.c                        |   1 +
+>  mm/madvise.c                           | 600 +++++++++++++++++++++----
+>  mm/swap.c                              |  43 ++
+>  mm/vmscan.c                            |  80 +++-
+>  14 files changed, 680 insertions(+), 83 deletions(-)
+> 
+> -- 
+> 2.21.0.1020.gf2820cf01a-goog
+> 
 
-Acked-by: Arnd Bergmann <arnd@arndb.de>
-
-> ---
->
->  scripts/modules-check.sh | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
->
-> diff --git a/scripts/modules-check.sh b/scripts/modules-check.sh
-> index 2f659530e1ec..39e8cb36ba19 100755
-> --- a/scripts/modules-check.sh
-> +++ b/scripts/modules-check.sh
-> @@ -6,10 +6,10 @@ set -e
->  # Check uniqueness of module names
->  check_same_name_modules()
->  {
-> -       for m in $(sed 's:.*/::' modules.order modules.builtin | sort | uniq -d)
-> +       for m in $(sed 's:.*/::' modules.order | sort | uniq -d)
->         do
-> -               echo "warning: same basename if the following are built as modules:" >&2
-> -               sed "/\/$m/!d;s:^kernel/:  :" modules.order modules.builtin >&2
-> +               echo "warning: same module names found:" >&2
-> +               sed -n "/\/$m/s:^kernel/:  :p" modules.order >&2
->         done
->  }
->
-> --
-> 2.17.1
->
+-- 
+Michal Hocko
+SUSE Labs
