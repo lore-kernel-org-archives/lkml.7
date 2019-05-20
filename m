@@ -2,148 +2,123 @@ Return-Path: <SRS0=lq4r=TU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68DC5C04AAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 14:48:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E913C04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 14:48:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3EE8A2054F
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 14:48:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558363707;
-	bh=YTEjs04hZCWVpALwCo0ona+k3Z9Xs305DgRYTn+PT7U=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=I44qYOE2+Oj/GXtpWkESHV00zuwk32aXgbavadedMPQ39tdxrpQuS6iTO1yOAU1c3
-	 n88PJa2FNdvcGVi2dD+HGkl8PZ1MRtC7VLYpQCpyvwCQbya2yPnlJnpduS+O7BRhJe
-	 Rw3mVIWnccXo5gaCp72tYbDKiwi6Xt5BZhMP0vFY=
+	by mail.kernel.org (Postfix) with ESMTP id EC369216B7
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 14:48:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=brauner.io header.i=@brauner.io header.b="DauQZ4rg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731510AbfETOs0 (ORCPT
+        id S2392094AbfETOsb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 10:48:26 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:36698 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731397AbfETOsQ (ORCPT
+        Mon, 20 May 2019 10:48:31 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:38539 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2391899AbfETOs1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 10:48:16 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Sender:Content-Transfer-Encoding:
-        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
-        Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=ET29ju1+oMQpwZnUmWoRWQU4cUr3EcBdPbSqKU0nYKk=; b=OA8WyV8mZW126dJEwkOg5DObVB
-        pEQaizBVUyu9HII4fMkL9MR+SSj3h38hZgZ5jsy/VDyqG6Qc1VoS4MAJ5oJLZ5Xj7zODJYWxSL40k
-        A61w4wDxysl2y2IBIo1/YlgTSO5Fc5/vdp3rzVVx0DNwO2cMdvgaYGOxHbqZXD3hMPZouB4xDABRV
-        lqETq9KgST3a0uM59LMNWd/STeXpBDKqjItfrWGY6QNxTfX+K0cSEyfya/L5yU5RBG5RTXs+5AxeL
-        hc+kJ46ZigW7Hr3f7Nd8M+0/Uro62UtsZHKuH0714+CrXklbZu5LOJ4Xi2JDYEDJ6pfrDDIGJE1Rc
-        Z9VQP3Lw==;
-Received: from [179.176.119.151] (helo=bombadil.infradead.org)
-        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hSjaD-0000W1-I9; Mon, 20 May 2019 14:48:09 +0000
-Received: from mchehab by bombadil.infradead.org with local (Exim 4.92)
-        (envelope-from <mchehab@bombadil.infradead.org>)
-        id 1hSjZy-00011I-71; Mon, 20 May 2019 11:47:54 -0300
-From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
-Cc:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Mauro Carvalho Chehab <mchehab@infradead.org>,
-        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        Liang Yang <liang.yang@amlogic.com>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Brian Norris <computersforpeace@gmail.com>,
-        Marek Vasut <marek.vasut@gmail.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Richard Weinberger <richard@nod.at>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Marc Gonzalez <marc.w.gonzalez@free.fr>,
-        Mans Rullgard <mans@mansr.com>, linux-mtd@lists.infradead.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-amlogic@lists.infradead.org
-Subject: [PATCH 09/10] dt: fix broken references to nand.txt
-Date:   Mon, 20 May 2019 11:47:38 -0300
-Message-Id: <ce7602ba4d42e094a8b7fcf1dc2a01d25192a602.1558362030.git.mchehab+samsung@kernel.org>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <cover.1558362030.git.mchehab+samsung@kernel.org>
-References: <cover.1558362030.git.mchehab+samsung@kernel.org>
+        Mon, 20 May 2019 10:48:27 -0400
+Received: by mail-wm1-f68.google.com with SMTP id t5so11993974wmh.3
+        for <linux-kernel@vger.kernel.org>; Mon, 20 May 2019 07:48:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=brauner.io; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=N7wB0bhMnAowtyDk7cjOKmaZEhZ6/2E0ef5LypbT5pM=;
+        b=DauQZ4rgS8TTJobEVuVF04IQ8OrrQsWx/7I3dVssObK0ub6Wu5l3OX+dW7klHHK0qm
+         VTzmbSB41r23etZTCBjrd8m+r36Fu5u/KMx97MMxNxqrc49IzLJgxrXuPKJbtCw731N2
+         2I/Or4zAH6edPPIHVOmx0J8f7ho+EcxpE4+E0tEGBsS3gW21YphO/NArsQ/NQg3lEiKL
+         oDh24dU1R+R5HUs2yW4HElupA/gn8GbEgZeLHFFkjPe+prcmClURRdntkwM4xCV3R301
+         oyEP0r/asVzA0N6Yse3cdeLbDHxEh1gQMX/6fsFKeqmxjgm0wnRNCfyORqg0I7sZtKZ1
+         ZpMQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=N7wB0bhMnAowtyDk7cjOKmaZEhZ6/2E0ef5LypbT5pM=;
+        b=tV0DG+lkrFfdnGEXJn1GzCY8jkBvuDU1v+P8YeA9HP3hkjfjDfS0Bs/nRmJnvibs5l
+         4JnxglynHQ0hF2oUw7m9PmOfKMVbq/uJxXPT+eYrMaSCqsIQNDkgic5jx1t33PpjCR1p
+         wYAgilbdQf+Dlg0oQY0pRmjomq5H3f3qR2dKvoI/Mr81+5horO0xPBcI9DSmAfR0xixk
+         uVaj5IIURWcGXWaEmg3AN/r5tXRUbwb+rr1MOBfaRZxohfRf2H9oaUPdPxwxuEVGoC2/
+         DD3hinc18jcABIzbNmEipY+YILcOwXszNUw1z+BEUAuMrcw7m4OiOWEa8/9XJWzX1dCr
+         mPJQ==
+X-Gm-Message-State: APjAAAUvSZ9j0Nsdx6/X23Pjii/pUR/oKedfcFBHfuDB13aWxIy4l9og
+        62G2hWmpyBprqyR2pRSSpLrS/g==
+X-Google-Smtp-Source: APXvYqzgUfAfX/fOEqJpAu0H05y9iE6v85VXR9NGZP9lcwztHn9oG8QSJSLuvfJRMuYHnyshwQXXCQ==
+X-Received: by 2002:a1c:6a0e:: with SMTP id f14mr17177633wmc.69.1558363705786;
+        Mon, 20 May 2019 07:48:25 -0700 (PDT)
+Received: from brauner.io ([212.91.227.56])
+        by smtp.gmail.com with ESMTPSA id z1sm3308970wrl.91.2019.05.20.07.48.24
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Mon, 20 May 2019 07:48:25 -0700 (PDT)
+Date:   Mon, 20 May 2019 16:48:23 +0200
+From:   Christian Brauner <christian@brauner.io>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Jann Horn <jannh@google.com>, Oleg Nesterov <oleg@redhat.com>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>, cyphar@cyphar.com,
+        David Howells <dhowells@redhat.com>,
+        "Eric W . Biederman" <ebiederm@xmission.com>,
+        "Reshetova, Elena" <elena.reshetova@intel.com>,
+        Kees Cook <keescook@chromium.org>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Andy Lutomirski <luto@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        alpha <linux-alpha@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-ia64@vger.kernel.org,
+        linux-m68k <linux-m68k@lists.linux-m68k.org>,
+        linux-mips@vger.kernel.org,
+        Parisc List <linux-parisc@vger.kernel.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        linux-s390 <linux-s390@vger.kernel.org>,
+        Linux-sh list <linux-sh@vger.kernel.org>,
+        sparclinux <sparclinux@vger.kernel.org>,
+        linux-xtensa@linux-xtensa.org,
+        Linux API <linux-api@vger.kernel.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Daniel Colascione <dancol@google.com>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        Suren Baghdasaryan <surenb@google.com>,
+        Android Kernel Team <kernel-team@android.com>
+Subject: Re: [PATCH v2 1/2] pid: add pidfd_open()
+Message-ID: <20190520144822.xfaifawi65jus6ng@brauner.io>
+References: <20190520134605.29116-1-christian@brauner.io>
+ <CAK8P3a1cZZ6SQe5mGjhga=MgTvCGF6OKyjvosR8J6z6EpH+rVA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <CAK8P3a1cZZ6SQe5mGjhga=MgTvCGF6OKyjvosR8J6z6EpH+rVA@mail.gmail.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The Documentation/devicetree/bindings/mtd/nand.txt were both renamed
-and converted to YAML on a single patch, without updating references
-to it. That caused several cross-references to break.
+On Mon, May 20, 2019 at 04:37:03PM +0200, Arnd Bergmann wrote:
+> On Mon, May 20, 2019 at 3:46 PM Christian Brauner <christian@brauner.io> wrote:
+> >
+> > In line with Arnd's recent changes to consolidate syscall numbers across
+> > architectures, I have added the pidfd_open() syscall to all architectures
+> > at the same time.
+> 
+> Thanks! I've checked that the ones you have added are all
+> done correctly. However, double-checking that you got all of them,
+> I noticed that you missed mips-o32 and mips-n64. With those added:
+> 
+> Acked-by: Arnd Bergmann <arnd@arndb.de>
 
-Fixes: 212e49693592 ("dt-bindings: mtd: Add YAML schemas for the generic NAND options")
-
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
----
- Documentation/devicetree/bindings/mtd/amlogic,meson-nand.txt | 2 +-
- Documentation/devicetree/bindings/mtd/gpmc-nand.txt          | 2 +-
- Documentation/devicetree/bindings/mtd/marvell-nand.txt       | 2 +-
- Documentation/devicetree/bindings/mtd/tango-nand.txt         | 2 +-
- 4 files changed, 4 insertions(+), 4 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/mtd/amlogic,meson-nand.txt b/Documentation/devicetree/bindings/mtd/amlogic,meson-nand.txt
-index 3983c11e062c..5794ab1147c1 100644
---- a/Documentation/devicetree/bindings/mtd/amlogic,meson-nand.txt
-+++ b/Documentation/devicetree/bindings/mtd/amlogic,meson-nand.txt
-@@ -24,7 +24,7 @@ Optional children nodes:
- Children nodes represent the available nand chips.
- 
- Other properties:
--see Documentation/devicetree/bindings/mtd/nand.txt for generic bindings.
-+see Documentation/devicetree/bindings/mtd/nand-controller.yaml for generic bindings.
- 
- Example demonstrate on AXG SoC:
- 
-diff --git a/Documentation/devicetree/bindings/mtd/gpmc-nand.txt b/Documentation/devicetree/bindings/mtd/gpmc-nand.txt
-index c059ab74ed88..44919d48d241 100644
---- a/Documentation/devicetree/bindings/mtd/gpmc-nand.txt
-+++ b/Documentation/devicetree/bindings/mtd/gpmc-nand.txt
-@@ -8,7 +8,7 @@ explained in a separate documents - please refer to
- Documentation/devicetree/bindings/memory-controllers/omap-gpmc.txt
- 
- For NAND specific properties such as ECC modes or bus width, please refer to
--Documentation/devicetree/bindings/mtd/nand.txt
-+Documentation/devicetree/bindings/mtd/nand-controller.yaml
- 
- 
- Required properties:
-diff --git a/Documentation/devicetree/bindings/mtd/marvell-nand.txt b/Documentation/devicetree/bindings/mtd/marvell-nand.txt
-index e0c790706b9b..7eeef1e1ed30 100644
---- a/Documentation/devicetree/bindings/mtd/marvell-nand.txt
-+++ b/Documentation/devicetree/bindings/mtd/marvell-nand.txt
-@@ -58,7 +58,7 @@ Optional properties:
-   Step sizes are not completely random for all and follow certain
-   patterns described in AN-379, "Marvell SoC NFC ECC".
- 
--See Documentation/devicetree/bindings/mtd/nand.txt for more details on
-+See Documentation/devicetree/bindings/mtd/nand-controller.yaml for more details on
- generic bindings.
- 
- 
-diff --git a/Documentation/devicetree/bindings/mtd/tango-nand.txt b/Documentation/devicetree/bindings/mtd/tango-nand.txt
-index cd1bf2ac9055..91c8420241af 100644
---- a/Documentation/devicetree/bindings/mtd/tango-nand.txt
-+++ b/Documentation/devicetree/bindings/mtd/tango-nand.txt
-@@ -11,7 +11,7 @@ Required properties:
- - #size-cells: <0>
- 
- Children nodes represent the available NAND chips.
--See Documentation/devicetree/bindings/mtd/nand.txt for generic bindings.
-+See Documentation/devicetree/bindings/mtd/nand-controller.yaml for generic bindings.
- 
- Example:
- 
--- 
-2.21.0
-
+Perfect, will plumb mips-o32 and mips-n64 and resend once more with your
+ack added.
+Sidenote: You plan on merging the common syscall tables or will there be
+a script to do this work per-arch in the future?
