@@ -2,57 +2,53 @@ Return-Path: <SRS0=lq4r=TU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 190DCC04AAC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:34:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B016BC04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:34:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E35E920815
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:34:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7619E21726
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:34:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558355658;
-	bh=OBYT2VnOQ5myBB1lnPNUSWhpcXsLMps3PXjm+pkB0BE=;
+	s=default; t=1558355666;
+	bh=KfIra1FsUZtFZlfjeFS4uKyu9mEjfoNOlzLNspPbGf4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kb9fUdN77MELehP8nMi0fdn+eF81yA08uyyskyIhd5al6TCh1FSlw66jaFU5kj5BZ
-	 apWDKAEL+XnTqa867E+7MUVtaIKwHEiAIHpRYdbK+4TLTVT3mmfLzWGTHU+Dp4GoV5
-	 FpCbaJit63BtIHP/PDUZCFZpTUEi1XMOONXDKy9c=
+	b=lxgRUS+Ag1Vrf5UKrJdjPkm2NGe181HrJcHAti0v6Ytj6nIt1ROrNnGOsbST11CvE
+	 MrEv2gaJmlGSoSd8lmtdrNw7bxjyrqrIDKrrmDZfSQshLzn5S9zy7QF3CJd152SaiD
+	 xLRxsALkvdBUGM5cLvccPZrBKR+HjZVRcGJQYt/w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390875AbfETMeM (ORCPT
+        id S2390921AbfETMeZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 08:34:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51344 "EHLO mail.kernel.org"
+        Mon, 20 May 2019 08:34:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51634 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390500AbfETMeI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 08:34:08 -0400
+        id S2390112AbfETMeU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 08:34:20 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DCF6C214DA;
-        Mon, 20 May 2019 12:34:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6202F20815;
+        Mon, 20 May 2019 12:34:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558355647;
-        bh=OBYT2VnOQ5myBB1lnPNUSWhpcXsLMps3PXjm+pkB0BE=;
+        s=default; t=1558355659;
+        bh=KfIra1FsUZtFZlfjeFS4uKyu9mEjfoNOlzLNspPbGf4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TFDTiViqDMt4wAoOpEG3db95tYvUaesS4r+O1h3j9xTcAxsJdwh1IRXfhtzntwl0Y
-         JZzBlIz6GkgPAhUDpzboE+D6eORR1FMX1q+OeCAib/V1yqxxR6nwR1ozIIDZzXMH5Y
-         TPMayWCv4dRON2GaSUktZcjeB31tu8lONhqJ76rc=
+        b=dmmIR3k3pUPbEG15QID2AcfBZ8a/LYEci4ze6aAJGC74jrMKPona0iaKE6BvZQJxv
+         GQcbHtSntwlzCYYBSr2eIaotPZRu7GHrILQBW6MArDspaNL0BpfEz/cH2AU6eDq3bW
+         LsEcamUyB50QrTKzLcmvTXWEeJ+VvHMmKcNY204k=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kai Shen <shenkai8@huawei.com>,
-        Feilong Lin <linfeilong@huawei.com>,
-        Wang Wang <wangwang2@huawei.com>,
-        Oscar Salvador <osalvador@suse.de>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Michal Hocko <mhocko@suse.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 5.1 071/128] mm/hugetlb.c: dont put_page in lock of hugetlb_lock
-Date:   Mon, 20 May 2019 14:14:18 +0200
-Message-Id: <20190520115254.598581725@linuxfoundation.org>
+        stable@vger.kernel.org, Gabriel C <nix.or.die@gmail.com>,
+        Erik Schmauss <erik.schmauss@intel.com>,
+        Bob Moore <robert.moore@intel.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+Subject: [PATCH 5.1 076/128] ACPICA: Linux: move ACPI_DEBUG_DEFAULT flag out of ifndef
+Date:   Mon, 20 May 2019 14:14:23 +0200
+Message-Id: <20190520115254.864496798@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190520115249.449077487@linuxfoundation.org>
 References: <20190520115249.449077487@linuxfoundation.org>
@@ -65,77 +61,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kai Shen <shenkai8@huawei.com>
+From: Erik Schmauss <erik.schmauss@intel.com>
 
-commit 2bf753e64b4a702e27ce26ff520c59563c62f96b upstream.
+commit 11207b4dc2737f1f01695979ad5eac6c8ecc8031 upstream.
 
-spinlock recursion happened when do LTP test:
-#!/bin/bash
-./runltp -p -f hugetlb &
-./runltp -p -f hugetlb &
-./runltp -p -f hugetlb &
-./runltp -p -f hugetlb &
-./runltp -p -f hugetlb &
+ACPICA commit c14f17fa0acf8c93497ce04b9a7f4ada51b69383
 
-The dtor returned by get_compound_page_dtor in __put_compound_page may be
-the function of free_huge_page which will lock the hugetlb_lock, so don't
-put_page in lock of hugetlb_lock.
+This flag should not be included in #ifndef CONFIG_ACPI. It should be
+used unconditionally.
 
- BUG: spinlock recursion on CPU#0, hugemmap05/1079
-  lock: hugetlb_lock+0x0/0x18, .magic: dead4ead, .owner: hugemmap05/1079, .owner_cpu: 0
- Call trace:
-  dump_backtrace+0x0/0x198
-  show_stack+0x24/0x30
-  dump_stack+0xa4/0xcc
-  spin_dump+0x84/0xa8
-  do_raw_spin_lock+0xd0/0x108
-  _raw_spin_lock+0x20/0x30
-  free_huge_page+0x9c/0x260
-  __put_compound_page+0x44/0x50
-  __put_page+0x2c/0x60
-  alloc_surplus_huge_page.constprop.19+0xf0/0x140
-  hugetlb_acct_memory+0x104/0x378
-  hugetlb_reserve_pages+0xe0/0x250
-  hugetlbfs_file_mmap+0xc0/0x140
-  mmap_region+0x3e8/0x5b0
-  do_mmap+0x280/0x460
-  vm_mmap_pgoff+0xf4/0x128
-  ksys_mmap_pgoff+0xb4/0x258
-  __arm64_sys_mmap+0x34/0x48
-  el0_svc_common+0x78/0x130
-  el0_svc_handler+0x38/0x78
-  el0_svc+0x8/0xc
-
-Link: http://lkml.kernel.org/r/b8ade452-2d6b-0372-32c2-703644032b47@huawei.com
-Fixes: 9980d744a0 ("mm, hugetlb: get rid of surplus page accounting tricks")
-Signed-off-by: Kai Shen <shenkai8@huawei.com>
-Signed-off-by: Feilong Lin <linfeilong@huawei.com>
-Reported-by: Wang Wang <wangwang2@huawei.com>
-Reviewed-by: Oscar Salvador <osalvador@suse.de>
-Reviewed-by: Mike Kravetz <mike.kravetz@oracle.com>
-Reviewed-by: Andrew Morton <akpm@linux-foundation.org>
-Acked-by: Michal Hocko <mhocko@suse.com>
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Link: https://github.com/acpica/acpica/commit/c14f17fa
+Fixes: aa9aaa4d61c0 ("ACPI: use different default debug value than ACPICA")
+Reported-by: Gabriel C <nix.or.die@gmail.com>
+Tested-by: Gabriel C <nix.or.die@gmail.com>
+Signed-off-by: Erik Schmauss <erik.schmauss@intel.com>
+Signed-off-by: Bob Moore <robert.moore@intel.com>
+Cc: 5.1+ <stable@vger.kernel.org> 5.1+
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- mm/hugetlb.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ include/acpi/platform/aclinux.h |   10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
---- a/mm/hugetlb.c
-+++ b/mm/hugetlb.c
-@@ -1574,8 +1574,9 @@ static struct page *alloc_surplus_huge_p
- 	 */
- 	if (h->surplus_huge_pages >= h->nr_overcommit_huge_pages) {
- 		SetPageHugeTemporary(page);
-+		spin_unlock(&hugetlb_lock);
- 		put_page(page);
--		page = NULL;
-+		return NULL;
- 	} else {
- 		h->surplus_huge_pages++;
- 		h->surplus_huge_pages_node[page_to_nid(page)]++;
+--- a/include/acpi/platform/aclinux.h
++++ b/include/acpi/platform/aclinux.h
+@@ -66,6 +66,11 @@
+ 
+ #define ACPI_INIT_FUNCTION __init
+ 
++/* Use a specific bugging default separate from ACPICA */
++
++#undef ACPI_DEBUG_DEFAULT
++#define ACPI_DEBUG_DEFAULT          (ACPI_LV_INFO | ACPI_LV_REPAIR)
++
+ #ifndef CONFIG_ACPI
+ 
+ /* External globals for __KERNEL__, stubs is needed */
+@@ -82,11 +87,6 @@
+ #define ACPI_NO_ERROR_MESSAGES
+ #undef ACPI_DEBUG_OUTPUT
+ 
+-/* Use a specific bugging default separate from ACPICA */
+-
+-#undef ACPI_DEBUG_DEFAULT
+-#define ACPI_DEBUG_DEFAULT          (ACPI_LV_INFO | ACPI_LV_REPAIR)
+-
+ /* External interface for __KERNEL__, stub is needed */
+ 
+ #define ACPI_EXTERNAL_RETURN_STATUS(prototype) \
 
 
