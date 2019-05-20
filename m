@@ -2,142 +2,146 @@ Return-Path: <SRS0=lq4r=TU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B06BCC04AAC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 15:09:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F039C04E87
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 15:10:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3B752213F2
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 15:09:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 580E220863
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 15:10:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="18QrCSk8"
+	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="MRX9WqxN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390182AbfETPJF (ORCPT
+        id S2388464AbfETPKH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 11:09:05 -0400
-Received: from conssluserg-04.nifty.com ([210.131.2.83]:49774 "EHLO
-        conssluserg-04.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1733027AbfETPJE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 11:09:04 -0400
-Received: from mail-vs1-f52.google.com (mail-vs1-f52.google.com [209.85.217.52]) (authenticated)
-        by conssluserg-04.nifty.com with ESMTP id x4KF8umi027391;
-        Tue, 21 May 2019 00:08:57 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-04.nifty.com x4KF8umi027391
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1558364937;
-        bh=95HwtbpMEdAllrN7F4zNPVZ+pNQZoCbwUigUV2ddKeY=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=18QrCSk8G+t+XAukQYfqtvqpNID+j398DC9uzCU6kAmT0bQ4JmxnX9Zw2aDtN8EUw
-         z/xBYfXyn+DZRmfB9j8Rzt9oNI0n4SBX1RJVrseq41aTfL/VzMGIKZTrwQkcuVweX3
-         f+aKAbitf/1HlUptdjYiCwbmJo0Ur/UNZ+BsLo2VL0vnQ+P7Tc56sWOLrVkBVHfAad
-         W43Utwl8zrUrFRr9/ouHnfrsh+mjWH7KWVgPWSzeMjgKncJeTsS2bmax9vx9ZfYi5h
-         Fos+RhgWy+AkC3tu7oAzk+y+ULC4lajYp6t/kXwvu2e2Cktlj7BFoiAvt6EPjbW236
-         4EyoKuP2aMROA==
-X-Nifty-SrcIP: [209.85.217.52]
-Received: by mail-vs1-f52.google.com with SMTP id x184so8089811vsb.5;
-        Mon, 20 May 2019 08:08:57 -0700 (PDT)
-X-Gm-Message-State: APjAAAWdN0sWKe6PwZXvsfUFwCAKfFVtgX1Uo/9mV3TMK/b9geOeUnC2
-        FcfnA8YVz+JoUoBY0MJkS1VX82PwAW+kHIv9zA8=
-X-Google-Smtp-Source: APXvYqzxDQvhelDYO1GqpUaZUlQvPgAMk4p/UNpmJQRQFDak7rLxLzf7T+QCeN0IC4L32Vrt8CzBRFBSIQ6QIJk+n+o=
-X-Received: by 2002:a67:d382:: with SMTP id b2mr19939121vsj.155.1558364935894;
- Mon, 20 May 2019 08:08:55 -0700 (PDT)
+        Mon, 20 May 2019 11:10:07 -0400
+Received: from vps.xff.cz ([195.181.215.36]:54942 "EHLO vps.xff.cz"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731033AbfETPKH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 11:10:07 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=megous.com; s=mail;
+        t=1558365003; bh=8nCbuBb8AQYXYxa/0A6aE2P2rf6UNECJI6ZQ3RM4O4s=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=MRX9WqxNodPeHwXsP4QSCQe787L8IZiRWDj4v4DP7Lp8fp5wsoxbbq+5AkoHEN7fl
+         /5/RfXuSI0p9l/ZB2m2yZUQ1ncOLA4igNcBYBKvIcskxHYbT/7wrVS/4eSU9mpCkX6
+         TY7gnn18kr+fNhSYjct+LUD0IuX88Jl6/DISY0eU=
+Date:   Mon, 20 May 2019 17:10:03 +0200
+From:   =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>
+To:     Chen-Yu Tsai <wens@kernel.org>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Yong Deng <yong.deng@magewell.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
+        Chen-Yu Tsai <wens@csie.org>, linux-clk@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
+Subject: Re: [PATCH v2 0/3] ARM: sun8i: a83t: Support Camera Sensor Interface
+ controller
+Message-ID: <20190520151003.uklhhak5clxi5zpf@core.my.home>
+Mail-Followup-To: Chen-Yu Tsai <wens@kernel.org>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Yong Deng <yong.deng@magewell.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
+        Chen-Yu Tsai <wens@csie.org>, linux-clk@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
+References: <20190520150637.23557-1-megous@megous.com>
 MIME-Version: 1.0
-References: <20190423212741.12219-1-ndesaulniers@google.com>
-In-Reply-To: <20190423212741.12219-1-ndesaulniers@google.com>
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Tue, 21 May 2019 00:08:19 +0900
-X-Gmail-Original-Message-ID: <CAK7LNARdZa16J56AxhM5bcr9oHdAw+zpa4EDjPpF8YO77==Etw@mail.gmail.com>
-Message-ID: <CAK7LNARdZa16J56AxhM5bcr9oHdAw+zpa4EDjPpF8YO77==Etw@mail.gmail.com>
-Subject: Re: [PATCH] kbuild: drop support for cc-ldoption
-To:     Nick Desaulniers <ndesaulniers@google.com>
-Cc:     Michal Marek <michal.lkml@markovi.net>,
-        Jonathan Corbet <corbet@lwn.net>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190520150637.23557-1-megous@megous.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 24, 2019 at 6:27 AM Nick Desaulniers
-<ndesaulniers@google.com> wrote:
->
-> If you want to see if your linker supports a certain flag, then ask the
-> linker directly with ld-option (not the compiler with cc-ldoption).
-> Checking for linker flag support is an antipattern that complicates the
-> usage of various linkers other than bfd via -fuse-ld={bfd|gold|lld}.
->
-> Cc: clang-built-linux@googlegroups.com
-> Suggested-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-> Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
-> ---
+On Mon, May 20, 2019 at 05:06:34PM +0200, verejna wrote:
+> From: Ondrej Jirman <megous@megous.com>
+> 
+> This is a re-send of Chen-Yu's A83T CSI patch series with review tags
+> applied and removed address/size cells from csi_in port. Already applied
+> patches from v1  were dropped.
+> 
+> The series is ready to be merged:
+> 
+>   Patch 1 and 2 via sunxi tree
+>   Patch 3 via media tree
 
-Applied to linux-kbuild. Thanks.
+Sorry, wrong numbers. 2 is for media tree, 3 is for sunxi, 1 is a dt-bindings
+patch, where I'm not sure.
 
+thanks,
+	Ondrej
 
-
-
-> This should probably wait until all of the call sites have been cleaned
-> up. Masahiro sent them for arm and arm64, while I sent cleanups for all
-> the rest.
->
->
->  Documentation/kbuild/makefiles.txt | 14 --------------
->  scripts/Kbuild.include             |  5 -----
->  2 files changed, 19 deletions(-)
->
-> diff --git a/Documentation/kbuild/makefiles.txt b/Documentation/kbuild/makefiles.txt
-> index 03c065855eaf..d65ad5746f94 100644
-> --- a/Documentation/kbuild/makefiles.txt
-> +++ b/Documentation/kbuild/makefiles.txt
-> @@ -437,20 +437,6 @@ more details, with real examples.
->         The second argument is optional, and if supplied will be used
->         if first argument is not supported.
->
-> -    cc-ldoption
-> -       cc-ldoption is used to check if $(CC) when used to link object files
-> -       supports the given option.  An optional second option may be
-> -       specified if first option are not supported.
-> -
-> -       Example:
-> -               #arch/x86/kernel/Makefile
-> -               vsyscall-flags += $(call cc-ldoption, -Wl$(comma)--hash-style=sysv)
-> -
-> -       In the above example, vsyscall-flags will be assigned the option
-> -       -Wl$(comma)--hash-style=sysv if it is supported by $(CC).
-> -       The second argument is optional, and if supplied will be used
-> -       if first argument is not supported.
-> -
->      as-instr
->         as-instr checks if the assembler reports a specific instruction
->         and then outputs either option1 or option2
-> diff --git a/scripts/Kbuild.include b/scripts/Kbuild.include
-> index 7484b9d8272f..fbfb37d1bcc8 100644
-> --- a/scripts/Kbuild.include
-> +++ b/scripts/Kbuild.include
-> @@ -138,11 +138,6 @@ cc-disable-warning = $(call try-run,\
->  # Usage:  EXTRA_CFLAGS += $(call cc-ifversion, -lt, 0402, -O1)
->  cc-ifversion = $(shell [ $(CONFIG_GCC_VERSION)0 $(1) $(2)000 ] && echo $(3) || echo $(4))
->
-> -# cc-ldoption
-> -# Usage: ldflags += $(call cc-ldoption, -Wl$(comma)--hash-style=both)
-> -cc-ldoption = $(call try-run,\
-> -       $(CC) $(1) $(KBUILD_CPPFLAGS) $(CC_OPTION_CFLAGS) -nostdlib -x c /dev/null -o "$$TMP",$(1),$(2))
-> -
->  # ld-option
->  # Usage: KBUILD_LDFLAGS += $(call ld-option, -X, -Y)
->  ld-option = $(call try-run, $(LD) $(KBUILD_LDFLAGS) $(1) -v,$(1),$(2),$(3))
-> --
-> 2.21.0.593.g511ec345e18-goog
->
-
-
--- 
-Best Regards
-Masahiro Yamada
+> v2:
+> - dropped address/size cells from csi_in port
+> - added review tags
+> 
+> Please take a look and merge.
+> 
+> Thank you,
+> 	Ondrej
+> 
+> --------------------------
+> Original description:
+> 
+> Hi everyone,
+> 
+> This series adds support for the camera sensor interface controller
+> found on the Allwinner A83T SoC. The controller is similar to the one
+> found on  the H3, with the addition of a MIPI CSI-2 interface. However,
+> this series only supports parallel and BT.656 interfaces, based on the
+> existing driver.
+> 
+> Patch 1 adds an undocumented clock parent of the CSI MCLK. This was
+> found after finding the default value to sometimes work and sometimes
+> not, and then comparing against BSP code.
+> 
+> Patch 2 adds a compatible string for the A83T variant.
+> 
+> Patch 3 adds support for the A83T variant to the existing sun6i-csi
+> driver.
+> 
+> Patch 4 adds a device node for the controller, as well as commonly
+> used pin muxing options.
+> 
+> Patch 5 adds a pin muxing option for I2C1 on the PE pins, used in
+> conjunction with the CSI pins.
+> 
+> Patch 6 provides an example usage of the CSI controller: the Bananapi M3
+> with its camera module attached.
+> 
+> Please have a look.
+> 
+> Regards
+> ChenYu
+> 
+> Chen-Yu Tsai (3):
+>   dt-bindings: media: sun6i-csi: Add compatible string for A83T variant
+>   media: sun6i: Support A83T variant
+>   ARM: dts: sun8i: a83t: Add device node for CSI (Camera Sensor
+>     Interface)
+> 
+>  .../devicetree/bindings/media/sun6i-csi.txt   |  1 +
+>  arch/arm/boot/dts/sun8i-a83t.dtsi             | 29 +++++++++++++++++++
+>  .../platform/sunxi/sun6i-csi/sun6i_csi.c      |  1 +
+>  3 files changed, 31 insertions(+)
+> 
+> -- 
+> 2.21.0
+> 
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
