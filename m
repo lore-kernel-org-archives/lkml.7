@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC753C04AAC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:50:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F147BC04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:50:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C0EE120815
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:50:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C229D20645
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:50:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558356633;
-	bh=QOAseeH2yv1IQXokjrSetFhF2bK4kHRU9OJPRZHBuFU=;
+	s=default; t=1558356640;
+	bh=brbknLHE7yJVvOZb/Zphk7t5bwLxvePh41BHFAzt/wg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tCPwRaydgmuqjTs6TaQeQmanT4SeioK8UmOKc6fESiBB+2dWB1B4yfAtj9u8A9Jh7
-	 opTQGFNm/9SH6VX7iO72u6iezMPluvpYvKmQaTpo5/FFocwE0AvcC+1HOsTJ+IU0XZ
-	 MKp6ZGaS+C9uxniqlouSFvpFmzBhITKYbOUcm/Qc=
+	b=dDH833k47OG5IdmJFcLGZtuuYcWdptUsGPZsLOFYoaK0lKFunX2m970//F+CxIea0
+	 VxxtCKCeme058mulkynaq5782XOrEhJd2LLgJwhbbr3NAP7+5Rr2bUXzQfMNAaZlSW
+	 7gjcJ4a1+dHppnKzTkSZKRH8SPrK1V34eikWn43s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389415AbfETMuc (ORCPT
+        id S2391490AbfETMuk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 08:50:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34262 "EHLO mail.kernel.org"
+        Mon, 20 May 2019 08:50:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33944 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732569AbfETMUr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 08:20:47 -0400
+        id S1729598AbfETMUc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 08:20:32 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A2AE2214AE;
-        Mon, 20 May 2019 12:20:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 24C0520815;
+        Mon, 20 May 2019 12:20:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558354847;
-        bh=QOAseeH2yv1IQXokjrSetFhF2bK4kHRU9OJPRZHBuFU=;
+        s=default; t=1558354831;
+        bh=brbknLHE7yJVvOZb/Zphk7t5bwLxvePh41BHFAzt/wg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uF8kx5BdhNRLEy8v8Qo5bdy9B3td8z1MIlytRqz9buS2f0hGeQskf4Fr4fraH/Q0o
-         aH3WvwFpn3sfsgEmMyGa5K33KT4eEDL44AZsIGfIck0P/p1rE7ALKNI+3a9ZxuKSfh
-         1iZS9t0q7HOVle1Uni0g0ZeFMH/zo5ehscCPbikg=
+        b=k2/x7FzGUwDsdNrXh+tXORqLFJa+40/XtP/P82adsvU2LSL5QVVKAv5VBNbwbvq06
+         T7Hu02mkPRJUkzgEZaARdL8+7ktqibutWIrAstCTaAdgd2Z8Z203s/y7ypBYT3VMps
+         13Ve08yr7edEgI7Jq4UV6a6nnilJdfoRxElZm/pg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Lukas Czerner <lczerner@redhat.com>,
-        Theodore Tso <tytso@mit.edu>, stable@kernel.org
-Subject: [PATCH 4.14 58/63] ext4: fix data corruption caused by overlapping unaligned and aligned IO
-Date:   Mon, 20 May 2019 14:14:37 +0200
-Message-Id: <20190520115237.335124529@linuxfoundation.org>
+        stable@vger.kernel.org, Eric Biggers <ebiggers@google.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>
+Subject: [PATCH 4.14 19/63] crypto: skcipher - dont WARN on unprocessed data after slow walk step
+Date:   Mon, 20 May 2019 14:13:58 +0200
+Message-Id: <20190520115233.160753327@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190520115231.137981521@linuxfoundation.org>
 References: <20190520115231.137981521@linuxfoundation.org>
@@ -59,49 +59,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lukas Czerner <lczerner@redhat.com>
+From: Eric Biggers <ebiggers@google.com>
 
-commit 57a0da28ced8707cb9f79f071a016b9d005caf5a upstream.
+commit dcaca01a42cc2c425154a13412b4124293a6e11e upstream.
 
-Unaligned AIO must be serialized because the zeroing of partial blocks
-of unaligned AIO can result in data corruption in case it's overlapping
-another in flight IO.
+skcipher_walk_done() assumes it's a bug if, after the "slow" path is
+executed where the next chunk of data is processed via a bounce buffer,
+the algorithm says it didn't process all bytes.  Thus it WARNs on this.
 
-Currently we wait for all unwritten extents before we submit unaligned
-AIO which protects data in case of unaligned AIO is following overlapping
-IO. However if a unaligned AIO is followed by overlapping aligned AIO we
-can still end up corrupting data.
+However, this can happen legitimately when the message needs to be
+evenly divisible into "blocks" but isn't, and the algorithm has a
+'walksize' greater than the block size.  For example, ecb-aes-neonbs
+sets 'walksize' to 128 bytes and only supports messages evenly divisible
+into 16-byte blocks.  If, say, 17 message bytes remain but they straddle
+scatterlist elements, the skcipher_walk code will take the "slow" path
+and pass the algorithm all 17 bytes in the bounce buffer.  But the
+algorithm will only be able to process 16 bytes, triggering the WARN.
 
-To fix this, we must make sure that the unaligned AIO is the only IO in
-flight by waiting for unwritten extents conversion not just before the
-IO submission, but right after it as well.
+Fix this by just removing the WARN_ON().  Returning -EINVAL, as the code
+already does, is the right behavior.
 
-This problem can be reproduced by xfstest generic/538
+This bug was detected by my patches that improve testmgr to fuzz
+algorithms against their generic implementation.
 
-Signed-off-by: Lukas Czerner <lczerner@redhat.com>
-Signed-off-by: Theodore Ts'o <tytso@mit.edu>
-Cc: stable@kernel.org
+Fixes: b286d8b1a690 ("crypto: skcipher - Add skcipher walk interface")
+Cc: <stable@vger.kernel.org> # v4.10+
+Signed-off-by: Eric Biggers <ebiggers@google.com>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/ext4/file.c |    7 +++++++
- 1 file changed, 7 insertions(+)
+ crypto/skcipher.c |    9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
 
---- a/fs/ext4/file.c
-+++ b/fs/ext4/file.c
-@@ -262,6 +262,13 @@ ext4_file_write_iter(struct kiocb *iocb,
- 	}
- 
- 	ret = __generic_file_write_iter(iocb, from);
-+	/*
-+	 * Unaligned direct AIO must be the only IO in flight. Otherwise
-+	 * overlapping aligned IO after unaligned might result in data
-+	 * corruption.
-+	 */
-+	if (ret == -EIOCBQUEUED && unaligned_aio)
-+		ext4_unwritten_wait(inode);
- 	inode_unlock(inode);
- 
- 	if (ret > 0)
+--- a/crypto/skcipher.c
++++ b/crypto/skcipher.c
+@@ -131,8 +131,13 @@ unmap_src:
+ 		memcpy(walk->dst.virt.addr, walk->page, n);
+ 		skcipher_unmap_dst(walk);
+ 	} else if (unlikely(walk->flags & SKCIPHER_WALK_SLOW)) {
+-		if (WARN_ON(err)) {
+-			/* unexpected case; didn't process all bytes */
++		if (err) {
++			/*
++			 * Didn't process all bytes.  Either the algorithm is
++			 * broken, or this was the last step and it turned out
++			 * the message wasn't evenly divisible into blocks but
++			 * the algorithm requires it.
++			 */
+ 			err = -EINVAL;
+ 			goto finish;
+ 		}
 
 
