@@ -2,113 +2,81 @@ Return-Path: <SRS0=lq4r=TU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56B6DC04AAC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 19:02:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E269C04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 19:05:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3FD04205ED
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 19:02:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 67240205ED
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 19:05:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="d1TmZCCk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726481AbfETTB7 (ORCPT
+        id S1726198AbfETTFm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 15:01:59 -0400
-Received: from mga05.intel.com ([192.55.52.43]:65229 "EHLO mga05.intel.com"
+        Mon, 20 May 2019 15:05:42 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:40921 "EHLO vps0.lunn.ch"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725995AbfETTB6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 15:01:58 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 May 2019 12:01:58 -0700
-X-ExtLoop1: 1
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.36])
-  by FMSMGA003.fm.intel.com with ESMTP; 20 May 2019 12:01:58 -0700
-Date:   Mon, 20 May 2019 12:01:58 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-Subject: Re: [PATCH 2/2] KVM: x86/pmu: do not mask the value that is written
- to fixed PMUs
-Message-ID: <20190520190158.GE28482@linux.intel.com>
-References: <1558366951-19259-1-git-send-email-pbonzini@redhat.com>
- <1558366951-19259-3-git-send-email-pbonzini@redhat.com>
+        id S1725536AbfETTFm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 15:05:42 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=hr/1iGRppucKUPs7Jd/NpqKBvJMNwEtcN7Vo/hR52/Y=; b=d1TmZCCktRBG0kT3B2zm851Rcq
+        Oq8vGbMMGgpwEBZ9ZdSa5IHBD/v5MLv5h9tM6dI1VVWjQlDc5+N8VGv7b95g762H67pv4Xw0v0852
+        hrkH2UWVrEPyYE7JTy1tlvY2fDG41ksB4Nyk7ShaeXNwLx6lYORQHCHkvryzT9ximM2M=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.89)
+        (envelope-from <andrew@lunn.ch>)
+        id 1hSnbJ-0002qk-7O; Mon, 20 May 2019 21:05:33 +0200
+Date:   Mon, 20 May 2019 21:05:33 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Cc:     Jerome Brunet <jbrunet@baylibre.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        devicetree@vger.kernel.org, linux-amlogic@lists.infradead.org,
+        linux-kernel@vger.kernel.org, f.fainelli@gmail.com,
+        hkallweit1@gmail.com
+Subject: Re: [PATCH v2 3/5] arm64: dts: meson: g12a: add mdio multiplexer
+Message-ID: <20190520190533.GF22024@lunn.ch>
+References: <20190520131401.11804-1-jbrunet@baylibre.com>
+ <20190520131401.11804-4-jbrunet@baylibre.com>
+ <CAFBinCA_XE86eqCMpEFc3xMZDH8J7wVQPRj7bFZyqDxQx-w-qw@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1558366951-19259-3-git-send-email-pbonzini@redhat.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <CAFBinCA_XE86eqCMpEFc3xMZDH8J7wVQPRj7bFZyqDxQx-w-qw@mail.gmail.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 20, 2019 at 05:42:31PM +0200, Paolo Bonzini wrote:
-> According to the SDM, for MSR_IA32_PERFCTR0/1 "the lower-order 32 bits of
-> each MSR may be written with any value, and the high-order 8 bits are
-> sign-extended according to the value of bit 31", but the fixed counters
-> in real hardware appear to be limited to the width of the fixed counters.
-> Fix KVM to do the same.
+> > +                               int_mdio: mdio@1 {
+> > +                                       reg = <1>;
+> > +                                       #address-cells = <1>;
+> > +                                       #size-cells = <0>;
+> > +
+> > +                                       internal_ephy: ethernet_phy@8 {
+> > +                                               compatible = "ethernet-phy-id0180.3301",
+> > +                                                            "ethernet-phy-ieee802.3-c22";
+> Based on your comment on v1 of this patch [0] the Ethernet PHY ID is
+> defined by this "mdio-multiplexer" (write arbitrary value to a
+> register then that's the PHY ID which will show up on the bus)
+> I'm fine with explicitly listing the ID which the PHY driver binds to
+> because I don't know a better way.
 
-The section of the SDM you're quoting relates to P6 behavior, which
-predates the architectural perfmons.  Section 18.2.1.1 "Architectural
-Performance Monitoring Version 1 Facilities" has a more relevant blurb
-for the MSR_IA32_PERFCTRx change (slightly modified to eliminate
-embarassing typos in the SDM):
+Does reading the ID registers give the correct ID, once you have poked
+registers in the mdio-multiplexer? If so, you don't need this
+compatible string.
 
-  The bit width of an IA32_PMCx MSR is reported using CPUID.0AH:EAXH[23:16].
-  This is the number of valid bits for read operation.  On write operations,
-  the lower-order 32-bits of the MSR may be written with any value, and the
-  high-order bits are sign-extended from the value of bit 31.
+If the read is giving the wrong ID, then yes, you do want this. But
+then please add a comment in the DT blob. This is very unusual, so
+should have some explanation why it is needed.
 
-And for the fixed counters, section 18.2.2 "Architectural Performance
-Monitoring Version 2":
-
-  The facilities provided by architectural performance monitoring version 2
-  can be queried from CPUID leaf 0AH by examinng the content of register EDX:
-
-    - Bits 5 through 12 of CPUID.0AH.EDX indicates the bit-width of fixed-
-      function performance counters.  Bits beyond the width of the fixed-
-      function counter are reserved and must be written as zeros.
-
-> 
-> Reported-by: Nadav Amit <nadav.amit@gmail.com>
-> Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
-> ---
->  arch/x86/kvm/vmx/pmu_intel.c | 13 ++++++++-----
->  1 file changed, 8 insertions(+), 5 deletions(-)
-> 
-> diff --git a/arch/x86/kvm/vmx/pmu_intel.c b/arch/x86/kvm/vmx/pmu_intel.c
-> index b6f5157445fe..a99613a060dd 100644
-> --- a/arch/x86/kvm/vmx/pmu_intel.c
-> +++ b/arch/x86/kvm/vmx/pmu_intel.c
-> @@ -240,11 +240,14 @@ static int intel_pmu_set_msr(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
->  		}
->  		break;
->  	default:
-> -		if ((pmc = get_gp_pmc(pmu, msr, MSR_IA32_PERFCTR0)) ||
-> -		    (pmc = get_fixed_pmc(pmu, msr))) {
-> -			if (!msr_info->host_initiated)
-> -				data = (s64)(s32)data;
-> -			pmc->counter += data - pmc_read_counter(pmc);
-> +		if ((pmc = get_gp_pmc(pmu, msr, MSR_IA32_PERFCTR0))) {
-> +			if (msr_info->host_initiated)
-> +				pmc->counter = data;
-> +			else
-> +				pmc->counter = (s32)data;
-> +			return 0;
-> +		} else if ((pmc = get_fixed_pmc(pmu, msr))) {
-> +			pmc->counter = data;
-
-Would it make sense to inject a #GP if the guest attempts to set bits that
-are reserved to be zero, e.g. based on guest CPUID?
-
->  			return 0;
->  		} else if ((pmc = get_gp_pmc(pmu, msr, MSR_P6_EVNTSEL0))) {
->  			if (data == pmc->eventsel)
-> -- 
-> 1.8.3.1
-> 
+Thanks
+	Andrew
