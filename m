@@ -4,50 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11421C04AAC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:16:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CBF4C04AAF
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:16:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D832620863
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:16:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D58120815
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:16:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558354572;
-	bh=R7+OcQ0pRtTFgra2O4wzWliBW/uQmdF2ZzODnmYQO8w=;
+	s=default; t=1558354577;
+	bh=hSBsjb0qBcj82K4Q4as66E42q3kuDe2ckcAVEud7e94=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DoXwTVR7K0Iv7VV7pCi/mn79laUv+OLVKs5XAeCBvqmTdFxi2YupMov2n7e+9MG+G
-	 k5+Tskf94s8CkGBMjZ0CZYHSeQ8yv8AqPy8vnDTjE9Rl8YkfBUp4XcdkN+74UXkEUN
-	 2TuBBXpJ6BWq6pyU+PK8dzGUKk5uOv7yy9r+U7ms=
+	b=zZXYPz/Vl+5c4Hap1rhf8mbnytRboPjv1Z5G5Zd2Gd6crx7EQTx4LTgxvUa051zDX
+	 MeIrif2nAmXeGnx4eQVebC4aUSh3zmdAiau/0G+rXiOHpCqjwDQeKCFafYzCsFPRgO
+	 lGgcM4njU1ZeTEPyVao73sC00tbvo4B5JXH6d/bw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732792AbfETMQM (ORCPT
+        id S1731441AbfETMQP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 08:16:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56828 "EHLO mail.kernel.org"
+        Mon, 20 May 2019 08:16:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56888 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731553AbfETMQK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 08:16:10 -0400
+        id S1732794AbfETMQN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 08:16:13 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CD8BE20815;
-        Mon, 20 May 2019 12:16:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3E92C20862;
+        Mon, 20 May 2019 12:16:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558354570;
-        bh=R7+OcQ0pRtTFgra2O4wzWliBW/uQmdF2ZzODnmYQO8w=;
+        s=default; t=1558354572;
+        bh=hSBsjb0qBcj82K4Q4as66E42q3kuDe2ckcAVEud7e94=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xEAsFLF1woPWHhBlaj2tYk9FW7CUCe/527uPLkekxoOUTyyYXglwmHdf7+FCcW+Eg
-         N89qJ9MxYR4ckf8AgyhNrUmkQ+dI3Z2vQPT+3gm8YaOneA/GMJUypDxNV+Ux85c3Ia
-         36HxPnhtDstL4TJsKMeLNXOdjONhB/B2JKjmZvJM=
+        b=f4wrao6xPLWLrHsR1ptcdjSLujSlYkIbI1m0607WJlyZZKkjLJFYi3yqko2azmsRi
+         PS1wcR0LsHpUwUyLcEZEE6ywiem95V/Zm06HvAC+rF22M5dJ3VIUieshacWa5bGzDO
+         ukhqes/+gvJhF2hAJV93m6z/kKekTrZxe9EhBENI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Jean-Philippe Brucker <jean-philippe.brucker@arm.com>,
-        Will Deacon <will.deacon@arm.com>
-Subject: [PATCH 4.9 10/44] arm64: Clear OSDLR_EL1 on CPU boot
-Date:   Mon, 20 May 2019 14:13:59 +0200
-Message-Id: <20190520115232.246013965@linuxfoundation.org>
+        stable@vger.kernel.org, Julien Thierry <julien.thierry@arm.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Borislav Petkov <bp@alien8.de>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>, stable@kernel.org,
+        Ingo Molnar <mingo@kernel.org>
+Subject: [PATCH 4.9 11/44] sched/x86: Save [ER]FLAGS on context switch
+Date:   Mon, 20 May 2019 14:14:00 +0200
+Message-Id: <20190520115232.329399629@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190520115230.720347034@linuxfoundation.org>
 References: <20190520115230.720347034@linuxfoundation.org>
@@ -60,31 +65,128 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
+From: Peter Zijlstra <peterz@infradead.org>
 
-commit 6fda41bf12615ee7c3ddac88155099b1a8cf8d00 upstream.
+commit 6690e86be83ac75832e461c141055b5d601c0a6d upstream.
 
-Some firmwares may reboot CPUs with OS Double Lock set. Make sure that
-it is unlocked, in order to use debug exceptions.
+Effectively reverts commit:
 
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
-Signed-off-by: Will Deacon <will.deacon@arm.com>
+  2c7577a75837 ("sched/x86_64: Don't save flags on context switch")
+
+Specifically because SMAP uses FLAGS.AC which invalidates the claim
+that the kernel has clean flags.
+
+In particular; while preemption from interrupt return is fine (the
+IRET frame on the exception stack contains FLAGS) it breaks any code
+that does synchonous scheduling, including preempt_enable().
+
+This has become a significant issue ever since commit:
+
+  5b24a7a2aa20 ("Add 'unsafe' user access functions for batched accesses")
+
+provided for means of having 'normal' C code between STAC / CLAC,
+exposing the FLAGS.AC state. So far this hasn't led to trouble,
+however fix it before it comes apart.
+
+Reported-by: Julien Thierry <julien.thierry@arm.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Acked-by: Andy Lutomirski <luto@amacapital.net>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: Josh Poimboeuf <jpoimboe@redhat.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: stable@kernel.org
+Fixes: 5b24a7a2aa20 ("Add 'unsafe' user access functions for batched accesses")
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/arm64/kernel/debug-monitors.c |    1 +
- 1 file changed, 1 insertion(+)
+ arch/x86/entry/entry_32.S        |    2 ++
+ arch/x86/entry/entry_64.S        |    2 ++
+ arch/x86/include/asm/switch_to.h |    1 +
+ arch/x86/kernel/process_32.c     |    7 +++++++
+ arch/x86/kernel/process_64.c     |    8 ++++++++
+ 5 files changed, 20 insertions(+)
 
---- a/arch/arm64/kernel/debug-monitors.c
-+++ b/arch/arm64/kernel/debug-monitors.c
-@@ -132,6 +132,7 @@ NOKPROBE_SYMBOL(disable_debug_monitors);
-  */
- static int clear_os_lock(unsigned int cpu)
- {
-+	write_sysreg(0, osdlr_el1);
- 	write_sysreg(0, oslar_el1);
- 	isb();
- 	return 0;
+--- a/arch/x86/entry/entry_32.S
++++ b/arch/x86/entry/entry_32.S
+@@ -219,6 +219,7 @@ ENTRY(__switch_to_asm)
+ 	pushl	%ebx
+ 	pushl	%edi
+ 	pushl	%esi
++	pushfl
+ 
+ 	/* switch stack */
+ 	movl	%esp, TASK_threadsp(%eax)
+@@ -241,6 +242,7 @@ ENTRY(__switch_to_asm)
+ #endif
+ 
+ 	/* restore callee-saved registers */
++	popfl
+ 	popl	%esi
+ 	popl	%edi
+ 	popl	%ebx
+--- a/arch/x86/entry/entry_64.S
++++ b/arch/x86/entry/entry_64.S
+@@ -313,6 +313,7 @@ ENTRY(__switch_to_asm)
+ 	pushq	%r13
+ 	pushq	%r14
+ 	pushq	%r15
++	pushfq
+ 
+ 	/* switch stack */
+ 	movq	%rsp, TASK_threadsp(%rdi)
+@@ -335,6 +336,7 @@ ENTRY(__switch_to_asm)
+ #endif
+ 
+ 	/* restore callee-saved registers */
++	popfq
+ 	popq	%r15
+ 	popq	%r14
+ 	popq	%r13
+--- a/arch/x86/include/asm/switch_to.h
++++ b/arch/x86/include/asm/switch_to.h
+@@ -35,6 +35,7 @@ asmlinkage void ret_from_fork(void);
+ 
+ /* data that is pointed to by thread.sp */
+ struct inactive_task_frame {
++	unsigned long flags;
+ #ifdef CONFIG_X86_64
+ 	unsigned long r15;
+ 	unsigned long r14;
+--- a/arch/x86/kernel/process_32.c
++++ b/arch/x86/kernel/process_32.c
+@@ -129,6 +129,13 @@ int copy_thread_tls(unsigned long clone_
+ 	struct task_struct *tsk;
+ 	int err;
+ 
++	/*
++	 * For a new task use the RESET flags value since there is no before.
++	 * All the status flags are zero; DF and all the system flags must also
++	 * be 0, specifically IF must be 0 because we context switch to the new
++	 * task with interrupts disabled.
++	 */
++	frame->flags = X86_EFLAGS_FIXED;
+ 	frame->bp = 0;
+ 	frame->ret_addr = (unsigned long) ret_from_fork;
+ 	p->thread.sp = (unsigned long) fork_frame;
+--- a/arch/x86/kernel/process_64.c
++++ b/arch/x86/kernel/process_64.c
+@@ -268,6 +268,14 @@ int copy_thread_tls(unsigned long clone_
+ 	childregs = task_pt_regs(p);
+ 	fork_frame = container_of(childregs, struct fork_frame, regs);
+ 	frame = &fork_frame->frame;
++
++	/*
++	 * For a new task use the RESET flags value since there is no before.
++	 * All the status flags are zero; DF and all the system flags must also
++	 * be 0, specifically IF must be 0 because we context switch to the new
++	 * task with interrupts disabled.
++	 */
++	frame->flags = X86_EFLAGS_FIXED;
+ 	frame->bp = 0;
+ 	frame->ret_addr = (unsigned long) ret_from_fork;
+ 	p->thread.sp = (unsigned long) fork_frame;
 
 
