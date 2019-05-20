@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C739DC04AAC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:48:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 681F8C04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:49:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 90C0E2054F
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:48:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 33A142054F
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:49:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558356525;
-	bh=Y5gLgaKUCRhk57m/UXAViF0p7JGbNm1P9I90M+EkMGM=;
+	s=default; t=1558356541;
+	bh=+haWhBeLMgW5hj6mugJTA23hdoTpHOeeUglrpzTFYug=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nmigUl9Fmh55Z3h03AIaY1WrdBhTHRflokOphtGiHP4cq95lM4xuTdUXlDS14dlKN
-	 JMYxfXki+cnXl8ChmrP1sB2qwcdc9LIXaMewJp2Qz4+0VEaCEnwc137wwh84i/6CzC
-	 QvrrDZjJP4/o/14cYc8wyZte3v2PAoJuiN/VkfwY=
+	b=VLBxj3T+7cwopGOH3T63dda4MdSPISpNMrkJST2rhf5fLqTQKq64r/KWYCerxeuRW
+	 KQMdF5/OqPO/R+bnk6yLeEyQJ9Ci3UX5V8Vz2ApL8QKGDy3+1E7fa2S59f9NfhYcDZ
+	 yVzJ0kNbrE7Mp14BZQFD0i/kDzMlQhH5v7bxMkDo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388421AbfETMWa (ORCPT
+        id S1731653AbfETMtA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 08:22:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36480 "EHLO mail.kernel.org"
+        Mon, 20 May 2019 08:49:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36106 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732404AbfETMW0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 08:22:26 -0400
+        id S2387576AbfETMWK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 08:22:10 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 80014205ED;
-        Mon, 20 May 2019 12:22:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 797A4213F2;
+        Mon, 20 May 2019 12:22:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558354946;
-        bh=Y5gLgaKUCRhk57m/UXAViF0p7JGbNm1P9I90M+EkMGM=;
+        s=default; t=1558354930;
+        bh=+haWhBeLMgW5hj6mugJTA23hdoTpHOeeUglrpzTFYug=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GwnuAaJSdQARw36SOiOi8e28MjmvKxw4yUL4VYIeYpqTlRJcMrEPWGO+OPCRIX4rI
-         NnZ6OOmiRT20rP7/eHPyjCCNaapmTfPx8Rz3DSmUPSNs3YgT7esFLsEy5rYw8ZBZbA
-         IeigvSwWhmu+s7RvwBtyq2F/f0xgFytkItCKqo+w=
+        b=muz36mvP3VC7AHktTCBCLQf1lj2BGkwUedhxz9kbduy1ESYqqyiR7UE5aNMQB+qor
+         g2yZ5860keZFayKDpSnps8hrmTpIjaX6zDnkgloSat44RWW5b0bAmUU1IWbfEs7unN
+         wC69HRpJHZlEiQNm4S+41CYbAetb6PzDV4VjjO+c=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kailang Yang <kailang@realtek.com>,
-        Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 4.19 037/105] ALSA: hda/realtek - EAPD turn on later
-Date:   Mon, 20 May 2019 14:13:43 +0200
-Message-Id: <20190520115249.596686160@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Christoph Muellner <christoph.muellner@theobroma-systems.com>,
+        Philipp Tomsich <philipp.tomsich@theobroma-systems.com>,
+        Heiko Stuebner <heiko@sntech.de>
+Subject: [PATCH 4.19 005/105] arm64: dts: rockchip: Disable DCMDs on RK3399s eMMC controller.
+Date:   Mon, 20 May 2019 14:13:11 +0200
+Message-Id: <20190520115247.424974813@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190520115247.060821231@linuxfoundation.org>
 References: <20190520115247.060821231@linuxfoundation.org>
@@ -59,40 +61,83 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kailang Yang <kailang@realtek.com>
+From: Christoph Muellner <christoph.muellner@theobroma-systems.com>
 
-commit 607ca3bd220f4022e6f5356026b19dafc363863a upstream.
+commit a3eec13b8fd2b9791a21fa16e38dfea8111579bf upstream.
 
-Let EAPD turn on after set pin output.
+When using direct commands (DCMDs) on an RK3399, we get spurious
+CQE completion interrupts for the DCMD transaction slot (#31):
 
-[ NOTE: This change is supposed to reduce the possible click noises at
-  (runtime) PM resume.  The functionality should be same (i.e. the
-  verbs are executed correctly) no matter which order is, so this
-  should be safe to apply for all codecs -- tiwai ]
+[  931.196520] ------------[ cut here ]------------
+[  931.201702] mmc1: cqhci: spurious TCN for tag 31
+[  931.206906] WARNING: CPU: 0 PID: 1433 at /usr/src/kernel/drivers/mmc/host/cqhci.c:725 cqhci_irq+0x2e4/0x490
+[  931.206909] Modules linked in:
+[  931.206918] CPU: 0 PID: 1433 Comm: irq/29-mmc1 Not tainted 4.19.8-rt6-funkadelic #1
+[  931.206920] Hardware name: Theobroma Systems RK3399-Q7 SoM (DT)
+[  931.206924] pstate: 40000005 (nZcv daif -PAN -UAO)
+[  931.206927] pc : cqhci_irq+0x2e4/0x490
+[  931.206931] lr : cqhci_irq+0x2e4/0x490
+[  931.206933] sp : ffff00000e54bc80
+[  931.206934] x29: ffff00000e54bc80 x28: 0000000000000000
+[  931.206939] x27: 0000000000000001 x26: ffff000008f217e8
+[  931.206944] x25: ffff8000f02ef030 x24: ffff0000091417b0
+[  931.206948] x23: ffff0000090aa000 x22: ffff8000f008b000
+[  931.206953] x21: 0000000000000002 x20: 000000000000001f
+[  931.206957] x19: ffff8000f02ef018 x18: ffffffffffffffff
+[  931.206961] x17: 0000000000000000 x16: 0000000000000000
+[  931.206966] x15: ffff0000090aa6c8 x14: 0720072007200720
+[  931.206970] x13: 0720072007200720 x12: 0720072007200720
+[  931.206975] x11: 0720072007200720 x10: 0720072007200720
+[  931.206980] x9 : 0720072007200720 x8 : 0720072007200720
+[  931.206984] x7 : 0720073107330720 x6 : 00000000000005a0
+[  931.206988] x5 : ffff00000860d4b0 x4 : 0000000000000000
+[  931.206993] x3 : 0000000000000001 x2 : 0000000000000001
+[  931.206997] x1 : 1bde3a91b0d4d900 x0 : 0000000000000000
+[  931.207001] Call trace:
+[  931.207005]  cqhci_irq+0x2e4/0x490
+[  931.207009]  sdhci_arasan_cqhci_irq+0x5c/0x90
+[  931.207013]  sdhci_irq+0x98/0x930
+[  931.207019]  irq_forced_thread_fn+0x2c/0xa0
+[  931.207023]  irq_thread+0x114/0x1c0
+[  931.207027]  kthread+0x128/0x130
+[  931.207032]  ret_from_fork+0x10/0x20
+[  931.207035] ---[ end trace 0000000000000002 ]---
 
-Signed-off-by: Kailang Yang <kailang@realtek.com>
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+The driver shows this message only for the first spurious interrupt
+by using WARN_ONCE(). Changing this to WARN() shows, that this is
+happening quite frequently (up to once a second).
+
+Since the eMMC 5.1 specification, where CQE and CQHCI are specified,
+does not mention that spurious TCN interrupts for DCMDs can be simply
+ignored, we must assume that using this feature is not working reliably.
+
+The current implementation uses DCMD for REQ_OP_FLUSH only, and
+I could not see any performance/power impact when disabling
+this optional feature for RK3399.
+
+Therefore this patch disables DCMDs for RK3399.
+
+Signed-off-by: Christoph Muellner <christoph.muellner@theobroma-systems.com>
+Signed-off-by: Philipp Tomsich <philipp.tomsich@theobroma-systems.com>
+Fixes: 84362d79f436 ("mmc: sdhci-of-arasan: Add CQHCI support for arasan,sdhci-5.1")
+Cc: stable@vger.kernel.org
+[the corresponding code changes are queued for 5.2 so doing that as well]
+Signed-off-by: Heiko Stuebner <heiko@sntech.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/pci/hda/patch_realtek.c |    3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ arch/arm64/boot/dts/rockchip/rk3399.dtsi |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/sound/pci/hda/patch_realtek.c
-+++ b/sound/pci/hda/patch_realtek.c
-@@ -803,11 +803,10 @@ static int alc_init(struct hda_codec *co
- 	if (spec->init_hook)
- 		spec->init_hook(codec);
+--- a/arch/arm64/boot/dts/rockchip/rk3399.dtsi
++++ b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
+@@ -305,6 +305,7 @@
+ 		phys = <&emmc_phy>;
+ 		phy-names = "phy_arasan";
+ 		power-domains = <&power RK3399_PD_EMMC>;
++		disable-cqe-dcmd;
+ 		status = "disabled";
+ 	};
  
-+	snd_hda_gen_init(codec);
- 	alc_fix_pll(codec);
- 	alc_auto_init_amp(codec, spec->init_amp);
- 
--	snd_hda_gen_init(codec);
--
- 	snd_hda_apply_fixup(codec, HDA_FIXUP_ACT_INIT);
- 
- 	return 0;
 
 
