@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1418DC04AAC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:29:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DEDAC04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:29:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DE1C320675
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:29:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5931820645
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:29:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558355349;
-	bh=wftdP+bcB8N5/08oAw9aWqUvzWDJItRf/5W8fKgiDR8=;
+	s=default; t=1558355352;
+	bh=cuCka6+D/zHu/Ia0WcLVoONDemKDc45zUEKXJ1Ae6fM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OY0vyBi/OFWl4rrAEYlvdmaeIWqMyYdWmOoVJPKlIkQV0y9ZOqekp5cJ5IYqPDd2l
-	 Pb07YIXq07qZNt7fcovl9da/dWGXMxx/w0nx6BYqLzj5shZdpYdMZG7yLVhasiB8zz
-	 TkyGMG+rbJirnncdonPcsnZmMN2ae2S1iaovNo4s=
+	b=Ev/Qa1A4OfCQZ8VysCP36UUBj7BcdQPn9XI8goyuM9toxnIsYK3vId6j8FgFF0NdL
+	 imyTYlr6WE2qIaCKuyelH7/aeNAhR6awFB0wAVi4Mk4o3zt7A5Uy71KUo4d7KKQPhi
+	 hyIU+JhZdpXqtfAB/HwfncPNV/esEiWdXnMrF5gc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389825AbfETM3I (ORCPT
+        id S2389835AbfETM3L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 08:29:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45096 "EHLO mail.kernel.org"
+        Mon, 20 May 2019 08:29:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45154 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389814AbfETM3G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 08:29:06 -0400
+        id S2389824AbfETM3J (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 08:29:09 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9B91920645;
-        Mon, 20 May 2019 12:29:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2E18620645;
+        Mon, 20 May 2019 12:29:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558355346;
-        bh=wftdP+bcB8N5/08oAw9aWqUvzWDJItRf/5W8fKgiDR8=;
+        s=default; t=1558355348;
+        bh=cuCka6+D/zHu/Ia0WcLVoONDemKDc45zUEKXJ1Ae6fM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dZ7Mp19LItncg857Ugo8bT5y2BjG/K/uoLBaZexUkLmkLySnk7KaWwxlgZjmHds6E
-         40ZF3bjeeCxwMI9p/mqZQEuLoCch5IlLcNNdAgFcPgczQjTFj4JsJAcQ9vBIVeBqSx
-         WkPX8FWDYWtS+8YRIibjsCAePnlrNfLyqJi1y2kw=
+        b=v38jnpxCpQAZSJpH3i/Qj7PijDUFDTUxLbFEVRjskO5TEflYJAKL6zWdkHSPxKINC
+         +tuMT4qQYYnK1FmZmYmAAFpBgQZAglUuRJi7cpiP3v/PElGdaWuLgsPx5lThzq7o0l
+         r/jgEdS/2QOvQbmFuVSjteISvzJ2YR5aUkMPv1pQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Theodore Tso <tytso@mit.edu>,
+        stable@vger.kernel.org, Pan Bian <bianpan2016@163.com>,
+        Theodore Tso <tytso@mit.edu>, Jan Kara <jack@suse.cz>,
         stable@kernel.org
-Subject: [PATCH 5.0 084/123] ext4: ignore e_value_offs for xattrs with value-in-ea-inode
-Date:   Mon, 20 May 2019 14:14:24 +0200
-Message-Id: <20190520115250.439643411@linuxfoundation.org>
+Subject: [PATCH 5.0 085/123] ext4: avoid drop reference to iloc.bh twice
+Date:   Mon, 20 May 2019 14:14:25 +0200
+Message-Id: <20190520115250.523168314@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190520115245.439864225@linuxfoundation.org>
 References: <20190520115245.439864225@linuxfoundation.org>
@@ -59,35 +60,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Theodore Ts'o <tytso@mit.edu>
+From: Pan Bian <bianpan2016@163.com>
 
-commit e5d01196c0428a206f307e9ee5f6842964098ff0 upstream.
+commit 8c380ab4b7b59c0c602743810be1b712514eaebc upstream.
 
-In other places in fs/ext4/xattr.c, if e_value_inum is non-zero, the
-code ignores the value in e_value_offs.  The e_value_offs *should* be
-zero, but we shouldn't depend upon it, since it might not be true in a
-corrupted/fuzzed file system.
+The reference to iloc.bh has been dropped in ext4_mark_iloc_dirty.
+However, the reference is dropped again if error occurs during
+ext4_handle_dirty_metadata, which may result in use-after-free bugs.
 
-Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=202897
-Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=202877
+Fixes: fb265c9cb49e("ext4: add ext4_sb_bread() to disambiguate ENOMEM cases")
+Signed-off-by: Pan Bian <bianpan2016@163.com>
 Signed-off-by: Theodore Ts'o <tytso@mit.edu>
+Reviewed-by: Jan Kara <jack@suse.cz>
 Cc: stable@kernel.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/ext4/xattr.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/ext4/resize.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/fs/ext4/xattr.c
-+++ b/fs/ext4/xattr.c
-@@ -1696,7 +1696,7 @@ static int ext4_xattr_set_entry(struct e
- 
- 	/* No failures allowed past this point. */
- 
--	if (!s->not_found && here->e_value_size && here->e_value_offs) {
-+	if (!s->not_found && here->e_value_size && !here->e_value_inum) {
- 		/* Remove the old value. */
- 		void *first_val = s->base + min_offs;
- 		size_t offs = le16_to_cpu(here->e_value_offs);
+--- a/fs/ext4/resize.c
++++ b/fs/ext4/resize.c
+@@ -874,6 +874,7 @@ static int add_new_gdb(handle_t *handle,
+ 	err = ext4_handle_dirty_metadata(handle, NULL, gdb_bh);
+ 	if (unlikely(err)) {
+ 		ext4_std_error(sb, err);
++		iloc.bh = NULL;
+ 		goto errout;
+ 	}
+ 	brelse(dind);
 
 
