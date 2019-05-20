@@ -2,112 +2,106 @@ Return-Path: <SRS0=lq4r=TU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6427C04AAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 09:29:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A8CFC072A4
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 09:30:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 75B95206BA
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 09:29:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="w2SjOATd"
+	by mail.kernel.org (Postfix) with ESMTP id 25B05206BA
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 09:30:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1558344615;
+	bh=5Ih4ArUAWK//Nx2oUT0KcJI/at5Zl82NJS59rQmq708=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=aiqhMDGCAJUpGtEJx8u8pDQlHEzc5dn+oM6epeK9UO1naj3eR6AYqffG9hRcy+mP6
+	 O1PFDinO0CSf3UXwKFx+MHwSA3dvD/cqvPav6f11I4GHYaAVF5z5/Zv2S4ELQcMufB
+	 /3FntJfVY3uxwDd9yZHknmw/IdH3HOz2HFxiO1co=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732153AbfETJ3m (ORCPT
+        id S1732164AbfETJaO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 05:29:42 -0400
-Received: from conuserg-11.nifty.com ([210.131.2.78]:38104 "EHLO
-        conuserg-11.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730966AbfETJ3m (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 05:29:42 -0400
-Received: from localhost.localdomain (p14092-ipngnfx01kyoto.kyoto.ocn.ne.jp [153.142.97.92]) (authenticated)
-        by conuserg-11.nifty.com with ESMTP id x4K9T4UJ030614;
-        Mon, 20 May 2019 18:29:04 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-11.nifty.com x4K9T4UJ030614
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1558344545;
-        bh=7zNhByx278yRPPSei/tiEqUup3t3T64vzIvnm89UL8A=;
-        h=From:To:Cc:Subject:Date:From;
-        b=w2SjOATdXkW9Tf4JJCsQMIRmdAeKSbp4HXC08a/3RWMYotNOM4k5quOwB52AUKAkd
-         W8h4pFo/7KHAR9mE0qNQhVu79YDzV0wIdr62Z+kqv3FaA8x1Oz5e66PRiWPqN+u5pT
-         TaTkfIGdtQY/C/9jCaA71In1oO3vGZy6gkWIRT4wuyS43R/1hLHXJruHUQXkptCCMu
-         DjNXOi1Nbhr3LXaYt0SGjSn6iUf22Pg6EXy1o190unxDgHcLUlQgME6j9BrBOgV0V4
-         CbDshgde9vjjfZy1BgCKZHv38R8FpGst3YwzUBZsNm0RvVaE9u6G6O1UvF3cD/ob1h
-         cnO/Cg8ISAz7g==
-X-Nifty-SrcIP: [153.142.97.92]
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-To:     Felipe Balbi <felipe.balbi@linux.intel.com>
-Cc:     linux-usb@vger.kernel.org,
-        Thinh Nguyen <Thinh.Nguyen@synopsys.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Felipe Balbi <balbi@kernel.org>, linux-kernel@vger.kernel.org
-Subject: [PATCH] usb: dwc3: move core validatation after clock enable and reset deassert
-Date:   Mon, 20 May 2019 18:28:56 +0900
-Message-Id: <20190520092856.26307-1-yamada.masahiro@socionext.com>
-X-Mailer: git-send-email 2.17.1
+        Mon, 20 May 2019 05:30:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42982 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730966AbfETJaO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 05:30:14 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9557320675;
+        Mon, 20 May 2019 09:30:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1558344611;
+        bh=5Ih4ArUAWK//Nx2oUT0KcJI/at5Zl82NJS59rQmq708=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=h7HLue19It3sE0XIVt6GtgiE9KZ2l5YsIdaLSMqP9udJvHgM1W/3D2zY7CLEJ59gS
+         qPKXq5wbOocvjHpSxckWlgpcp4KmkMWWpHaFn+yFq41YKgtBHcNZGYy2pWcSjLuMIo
+         bvcHMothVb+eikfwlgUSqoqp+36a4/20aU94Sd4Q=
+Date:   Mon, 20 May 2019 11:30:08 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Gilad Ben-Yossef <gilad@benyossef.com>
+Cc:     Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>, stable@vger.kernel.org,
+        Ofir Drang <ofir.drang@arm.com>,
+        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
+        Linux kernel mailing list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 00/35] crypto: ccree: features and bug fixes for 5.2
+Message-ID: <20190520093008.GA4476@kroah.com>
+References: <20190418133913.9122-1-gilad@benyossef.com>
+ <CAOtvUMd9WUZAFgTqVH0U2ZZp8bbHXNg9Ae_ZFvGKJTSKNct8JA@mail.gmail.com>
+ <20190517145235.GB10613@kroah.com>
+ <CAOtvUMc++UtTP3fvXofuJA4JpdT86s5gbSx6WRtDK=sWnuUZrg@mail.gmail.com>
+ <CAOtvUMcfXHv0UxytEEdGJG5LM-SfyyVHbnbE0RNALMfBD1zuEQ@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAOtvUMcfXHv0UxytEEdGJG5LM-SfyyVHbnbE0RNALMfBD1zuEQ@mail.gmail.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since commit b873e2d0ea1e ("usb: dwc3: Do core validation early on
-probe"), the DWC3 USB3 does not work for Socionext UniPhier platform.
+On Sun, May 19, 2019 at 11:28:05AM +0300, Gilad Ben-Yossef wrote:
+> On Sat, May 18, 2019 at 10:36 AM Gilad Ben-Yossef <gilad@benyossef.com> wrote:
+> >
+> > Hi
+> >
+> > On Fri, May 17, 2019 at 5:52 PM Greg KH <gregkh@linuxfoundation.org> wrote:
+> > >
+> > > On Sun, Apr 21, 2019 at 11:52:55AM +0300, Gilad Ben-Yossef wrote:
+> > > > On Thu, Apr 18, 2019 at 4:39 PM Gilad Ben-Yossef <gilad@benyossef.com> wrote:
+> > > > >
+> > > > > A set of new features, mostly support for CryptoCell 713
+> > > > > features including protected keys, security disable mode and
+> > > > > new HW revision indetification interface alongside many bug fixes.
+> > > >
+> > > > FYI,
+> > > >
+> > > > A port of those patches from this patch series which have been marked
+> > > > for stable is available at
+> > > > https://github.com/gby/linux/tree/4.19-ccree
+> > >
+> > > Hm, all I seem to need are 2 patches that failed to apply.  Can you just
+> > > provide backports for them?
+> >
+> > Sure, I'll send them early next week.
+> 
+> hm...  I've just fetched the latest from
+> git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable.git,
+> rebased that branch against the linux-4.19.y branch and it all went
+> smooth.
+> 
+> What am I'm missing? is there some other tree I should be doing this on?
 
-It moved dwc3_core_is_valid() really early, where no clock is enabled,
-no reset is deasserted. Any attempt to register access causes the
-system stall on my platform.
+I do not know, can you just send the 2 patches that I said failed for
+me?  Those are the only ones that I need here.
 
-Move it after clk_bulk_enable(), and still before dwc3_get_dr_mode().
+I can't use random github trees, sorry, let's stick to email for patches
+please.
 
-Fixes: b873e2d0ea1e ("usb: dwc3: Do core validation early on probe")
-Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
----
+thanks,
 
- drivers/usb/dwc3/core.c | 13 +++++++------
- 1 file changed, 7 insertions(+), 6 deletions(-)
-
-diff --git a/drivers/usb/dwc3/core.c b/drivers/usb/dwc3/core.c
-index 4aff1d8dbc4f..93b96e6abddb 100644
---- a/drivers/usb/dwc3/core.c
-+++ b/drivers/usb/dwc3/core.c
-@@ -1423,11 +1423,6 @@ static int dwc3_probe(struct platform_device *pdev)
- 	dwc->regs	= regs;
- 	dwc->regs_size	= resource_size(&dwc_res);
- 
--	if (!dwc3_core_is_valid(dwc)) {
--		dev_err(dwc->dev, "this is not a DesignWare USB3 DRD Core\n");
--		return -ENODEV;
--	}
--
- 	dwc3_get_properties(dwc);
- 
- 	dwc->reset = devm_reset_control_get_optional_shared(dev, NULL);
-@@ -1460,6 +1455,12 @@ static int dwc3_probe(struct platform_device *pdev)
- 	if (ret)
- 		goto unprepare_clks;
- 
-+	if (!dwc3_core_is_valid(dwc)) {
-+		dev_err(dwc->dev, "this is not a DesignWare USB3 DRD Core\n");
-+		ret = -ENODEV;
-+		goto disable_clks;
-+	}
-+
- 	platform_set_drvdata(pdev, dwc);
- 	dwc3_cache_hwparams(dwc);
- 
-@@ -1524,7 +1525,7 @@ static int dwc3_probe(struct platform_device *pdev)
- err1:
- 	pm_runtime_put_sync(&pdev->dev);
- 	pm_runtime_disable(&pdev->dev);
--
-+disable_clks:
- 	clk_bulk_disable(dwc->num_clks, dwc->clks);
- unprepare_clks:
- 	clk_bulk_unprepare(dwc->num_clks, dwc->clks);
--- 
-2.17.1
-
+greg k-h
