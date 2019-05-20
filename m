@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D32FC04AAC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:40:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0766C04E87
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:40:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 07CC2204FD
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:40:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B5CD9204FD
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:40:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558356037;
-	bh=nWPuQFxqZUgeHjRnCjzBs8qkng3cSOzOIt2yESDSQ7E=;
+	s=default; t=1558356044;
+	bh=9w1eD9LOYu+B0ZhLMva+4PilKq5GI79QCCu43FAARhA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=c5Hy8c094DS44SDWLuLVcMPW1Aj1cNN1HfIwNxIpyws5e7gfs5KKQOEXp+b67HdI7
-	 IXlE6gTMjLNcjYkaMklH5lfwCjKcGMQsmruzcN78boN/f6VAMd8+e6I4YJPjXpeqAF
-	 L5TBzz2buJVpQSq1varvsKQwUVKfRN5EcfHrgOXk=
+	b=HudBuvIVUZQuMG15M2FVxe+fvd7k2T7X1QLOpifnpyP9E9WZYctaqUMaPsN81FwNx
+	 tr9v59yFlnphmY60Z51cAQea6YTKNgG25ArkkuRajEtD7zh8mOv8nwRdL3Y+4UVZlt
+	 XEHNcv0zPqO6dt5BH5e+DSgt9BHJKfZPl6vZZGhA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391243AbfETMkg (ORCPT
+        id S2390573AbfETMce (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 08:40:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49636 "EHLO mail.kernel.org"
+        Mon, 20 May 2019 08:32:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49442 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388722AbfETMcl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 08:32:41 -0400
+        id S2388240AbfETMca (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 08:32:30 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E535D204FD;
-        Mon, 20 May 2019 12:32:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8FA39204FD;
+        Mon, 20 May 2019 12:32:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558355560;
-        bh=nWPuQFxqZUgeHjRnCjzBs8qkng3cSOzOIt2yESDSQ7E=;
+        s=default; t=1558355550;
+        bh=9w1eD9LOYu+B0ZhLMva+4PilKq5GI79QCCu43FAARhA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zdNBZClTABhYeW11SGulRCZg1AZhKN5c5Th3ZuOocmD3f+gEV4FuHJtrYsMQGJ5TR
-         cw4aGtQopYO3CRsRNQ6xzBY68ait7KpPF+M2UjW3+9eNmkoBMk6Vhf0DYn8DOuAH0o
-         DD/lnJZ/UetE8wMK4qSCDBovIENkRheF2wxB/Ld0=
+        b=C1TfCIaQw+pTftBdt65J88YUM6yNuPuwuabc+B7IHesrDBzcB9xNjlJPM4NaiZM3+
+         dYizlRTN1RbLY2Gnh4qaEvBxLWLwgbE3x8yUeFuKPkaw95t8YATMJTsSU964WGdDvn
+         ezIE+7WiC9g/GToh/FKI/zvznPMKem6kcnmA1wpY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Robin Murphy <robin.murphy@arm.com>,
-        Katsuhiro Suzuki <katsuhiro@katsuster.net>,
-        Heiko Stuebner <heiko@sntech.de>
-Subject: [PATCH 5.1 005/128] arm64: dts: rockchip: fix IO domain voltage setting of APIO5 on rockpro64
-Date:   Mon, 20 May 2019 14:13:12 +0200
-Message-Id: <20190520115249.812882782@linuxfoundation.org>
+        stable@vger.kernel.org, Tim Chen <tim.c.chen@linux.intel.com>,
+        Eric Biggers <ebiggers@google.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>
+Subject: [PATCH 5.1 034/128] crypto: x86/crct10dif-pcl - fix use via crypto_shash_digest()
+Date:   Mon, 20 May 2019 14:13:41 +0200
+Message-Id: <20190520115251.962802118@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190520115249.449077487@linuxfoundation.org>
 References: <20190520115249.449077487@linuxfoundation.org>
@@ -60,39 +60,68 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Katsuhiro Suzuki <katsuhiro@katsuster.net>
+From: Eric Biggers <ebiggers@google.com>
 
-commit 798689e45190756c2eca6656ee4c624370a5012a upstream.
+commit dec3d0b1071a0f3194e66a83d26ecf4aa8c5910e upstream.
 
-This patch fixes IO domain voltage setting that is related to
-audio_gpio3d4a_ms (bit 1) of GRF_IO_VSEL.
+The ->digest() method of crct10dif-pclmul reads the current CRC value
+from the shash_desc context.  But this value is uninitialized, causing
+crypto_shash_digest() to compute the wrong result.  Fix it.
 
-This is because RockPro64 schematics P.16 says that regulator
-supplies 3.0V power to APIO5_VDD. So audio_gpio3d4a_ms bit should
-be clear (means 3.0V). Power domain map is saying different thing
-(supplies 1.8V) but I believe P.16 is actual connectings.
+Probably this wasn't noticed before because lib/crc-t10dif.c only uses
+crypto_shash_update(), not crypto_shash_digest().  Likewise,
+crypto_shash_digest() is not yet tested by the crypto self-tests because
+those only test the ahash API which only uses shash init/update/final.
 
-Fixes: e4f3fb490967 ("arm64: dts: rockchip: add initial dts support for Rockpro64")
-Cc: stable@vger.kernel.org
-Suggested-by: Robin Murphy <robin.murphy@arm.com>
-Signed-off-by: Katsuhiro Suzuki <katsuhiro@katsuster.net>
-Signed-off-by: Heiko Stuebner <heiko@sntech.de>
+Fixes: 0b95a7f85718 ("crypto: crct10dif - Glue code to cast accelerated CRCT10DIF assembly as a crypto transform")
+Cc: <stable@vger.kernel.org> # v3.11+
+Cc: Tim Chen <tim.c.chen@linux.intel.com>
+Signed-off-by: Eric Biggers <ebiggers@google.com>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/arm64/boot/dts/rockchip/rk3399-rockpro64.dts |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/x86/crypto/crct10dif-pclmul_glue.c |   13 +++++--------
+ 1 file changed, 5 insertions(+), 8 deletions(-)
 
---- a/arch/arm64/boot/dts/rockchip/rk3399-rockpro64.dts
-+++ b/arch/arm64/boot/dts/rockchip/rk3399-rockpro64.dts
-@@ -504,7 +504,7 @@
- 	status = "okay";
+--- a/arch/x86/crypto/crct10dif-pclmul_glue.c
++++ b/arch/x86/crypto/crct10dif-pclmul_glue.c
+@@ -70,15 +70,14 @@ static int chksum_final(struct shash_des
+ 	return 0;
+ }
  
- 	bt656-supply = <&vcc1v8_dvp>;
--	audio-supply = <&vcca1v8_codec>;
-+	audio-supply = <&vcc_3v0>;
- 	sdmmc-supply = <&vcc_sdio>;
- 	gpio1830-supply = <&vcc_3v0>;
- };
+-static int __chksum_finup(__u16 *crcp, const u8 *data, unsigned int len,
+-			u8 *out)
++static int __chksum_finup(__u16 crc, const u8 *data, unsigned int len, u8 *out)
+ {
+ 	if (len >= 16 && irq_fpu_usable()) {
+ 		kernel_fpu_begin();
+-		*(__u16 *)out = crc_t10dif_pcl(*crcp, data, len);
++		*(__u16 *)out = crc_t10dif_pcl(crc, data, len);
+ 		kernel_fpu_end();
+ 	} else
+-		*(__u16 *)out = crc_t10dif_generic(*crcp, data, len);
++		*(__u16 *)out = crc_t10dif_generic(crc, data, len);
+ 	return 0;
+ }
+ 
+@@ -87,15 +86,13 @@ static int chksum_finup(struct shash_des
+ {
+ 	struct chksum_desc_ctx *ctx = shash_desc_ctx(desc);
+ 
+-	return __chksum_finup(&ctx->crc, data, len, out);
++	return __chksum_finup(ctx->crc, data, len, out);
+ }
+ 
+ static int chksum_digest(struct shash_desc *desc, const u8 *data,
+ 			 unsigned int length, u8 *out)
+ {
+-	struct chksum_desc_ctx *ctx = shash_desc_ctx(desc);
+-
+-	return __chksum_finup(&ctx->crc, data, length, out);
++	return __chksum_finup(0, data, length, out);
+ }
+ 
+ static struct shash_alg alg = {
 
 
