@@ -2,94 +2,112 @@ Return-Path: <SRS0=lq4r=TU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A0D4C04AAC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 21:18:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 468BEC04AAF
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 21:19:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 533D52173C
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 21:18:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="avfP3RQd"
+	by mail.kernel.org (Postfix) with ESMTP id 2679D216B7
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 21:19:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727065AbfETVSh (ORCPT
+        id S1726807AbfETVTY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 17:18:37 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:38407 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726061AbfETVSh (ORCPT
+        Mon, 20 May 2019 17:19:24 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:34898 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726814AbfETVTX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 17:18:37 -0400
-Received: by mail-pf1-f195.google.com with SMTP id b76so7846724pfb.5
-        for <linux-kernel@vger.kernel.org>; Mon, 20 May 2019 14:18:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:in-reply-to:references:date:message-id
-         :mime-version;
-        bh=KwAzvLOrsGrLdW37rNbsYgX7kOv9ZoeLzS/6hKC6W6g=;
-        b=avfP3RQdwhppd/vstRNn/zdW5SsXvba3ffCdxGlgjEJ1y6rQJXDbRpyDlYvvwGXY98
-         bJj0wY65p9eLbsYplwq5bLdQryZ/HRWp4gPRCsLmiQIkmnZkf2Y3wDlXMhktx9hMKHUo
-         i7XrrouEq2/wvpTqBya5HHdVLVGid1h0UVlwEZtP9McnxzbBZzRUuiQdHPYHNKqANb/L
-         /aZCjVMDIf9vegrCIhgarS6AUHfdKAjkb3IAsP/CdlxCVymAoX63nc02FRwDDFs0SZxB
-         t8HuXTOw65xD1U1yggoT7YqcVQRONJ1JXbeiGKtRgL/FPs6iD9qU0FTcx0lAMcY3g/Yt
-         1uQw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=KwAzvLOrsGrLdW37rNbsYgX7kOv9ZoeLzS/6hKC6W6g=;
-        b=hwA7fVljJ1Jc1yAHeXx1euldl7ucW7N1y/uwdrghzhenHUa8+uEqnM4VNwjYwQQePI
-         0GPyt3U0sZcQOMWgxEM77y+YmOB5VZlfKtCodJkuWuJDTmd6ZNm6AzXTwE4l/HAwoLFd
-         1R93p/PXy89qeGmieS2zEsyhnH/+rbuP75LVl71ZbxkGaNSrtDN1jwhhSWg0WSJlLZfV
-         e57KJh7xuyzugIra64JhN90RzavaeDgdn35WCjUmtPj69Gj/C6I6xqSFXO/X4r4m2gMm
-         Nyt3IamcF2YDWGgIVv9WUsAhJLziJqQOccNt0r1xEBSxkJ/NKru4OKfppBmx4nAltI3w
-         Z7dQ==
-X-Gm-Message-State: APjAAAVLTjdEtD9M91nznyDKZudPGC3K0J1MjbRB+4n3Ic9R5IYQuwwn
-        /IoR/VC/Dozi60feYg94h0FNDg==
-X-Google-Smtp-Source: APXvYqzSIOWReUBiSn5i9wiYls/tM3XVkbWOxHp5XkIIqOVylQGiSjT/FlLpBfs58MuEO6WmTc0QOw==
-X-Received: by 2002:a62:fb10:: with SMTP id x16mr18663984pfm.112.1558387116318;
-        Mon, 20 May 2019 14:18:36 -0700 (PDT)
-Received: from localhost ([2601:602:9200:a1a5:e483:1cc0:e2c2:140d])
-        by smtp.googlemail.com with ESMTPSA id c15sm22024029pfi.172.2019.05.20.14.18.35
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 20 May 2019 14:18:35 -0700 (PDT)
-From:   Kevin Hilman <khilman@baylibre.com>
-To:     Jerome Brunet <jbrunet@baylibre.com>
-Cc:     Jerome Brunet <jbrunet@baylibre.com>, devicetree@vger.kernel.org,
-        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] arm64: dts: meson: g12a: add tohdmitx
-In-Reply-To: <20190516143216.6193-1-jbrunet@baylibre.com>
-References: <20190516143216.6193-1-jbrunet@baylibre.com>
-Date:   Mon, 20 May 2019 14:18:34 -0700
-Message-ID: <7hr28s7rkl.fsf@baylibre.com>
-MIME-Version: 1.0
-Content-Type: text/plain
+        Mon, 20 May 2019 17:19:23 -0400
+Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4KL1pDL083696
+        for <linux-kernel@vger.kernel.org>; Mon, 20 May 2019 17:19:22 -0400
+Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2sm3ashjfa-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Mon, 20 May 2019 17:19:22 -0400
+Received: from localhost
+        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
+        Mon, 20 May 2019 22:19:20 +0100
+Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
+        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Mon, 20 May 2019 22:19:16 +0100
+Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
+        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x4KLJF2158130518
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 20 May 2019 21:19:15 GMT
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 6E4E6AE051;
+        Mon, 20 May 2019 21:19:15 +0000 (GMT)
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 44269AE045;
+        Mon, 20 May 2019 21:19:14 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.80.80.109])
+        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Mon, 20 May 2019 21:19:14 +0000 (GMT)
+Subject: Re: [PATCH 1/4] evm: check hash algorithm passed to init_desc()
+From:   Mimi Zohar <zohar@linux.ibm.com>
+To:     Roberto Sassu <roberto.sassu@huawei.com>,
+        dmitry.kasatkin@huawei.com, mjg59@google.com
+Cc:     linux-integrity@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-security-module@vger.kernel.org,
+        linux-kernel@vger.kernel.org, silviu.vlasceanu@huawei.com,
+        stable@vger.kernel.org
+Date:   Mon, 20 May 2019 17:19:03 -0400
+In-Reply-To: <20190516161257.6640-1-roberto.sassu@huawei.com>
+References: <20190516161257.6640-1-roberto.sassu@huawei.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+x-cbid: 19052021-0028-0000-0000-0000036FBB40
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19052021-0029-0000-0000-0000242F6259
+Message-Id: <1558387143.4039.74.camel@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-20_08:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1905200132
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Jerome Brunet <jbrunet@baylibre.com> writes:
+On Thu, 2019-05-16 at 18:12 +0200, Roberto Sassu wrote:
+> This patch prevents memory access beyond the evm_tfm array by checking the
+> validity of the index (hash algorithm) passed to init_desc(). The hash
+> algorithm can be arbitrarily set if the security.ima xattr type is not
+> EVM_XATTR_HMAC.
+> 
+> Fixes: 5feeb61183dde ("evm: Allow non-SHA1 digital signatures")
+> Signed-off-by: Roberto Sassu <roberto.sassu@huawei.com>
+> Cc: stable@vger.kernel.org
 
-> Add the hdmitx glue device linking the SoC audio interfaces to the
-> embedded Synopsys hdmi controller.
->
-> Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
+Thanks!
 
-Queued for v5.3,
+> ---
+>  security/integrity/evm/evm_crypto.c | 3 +++
+>  1 file changed, 3 insertions(+)
+> 
+> diff --git a/security/integrity/evm/evm_crypto.c b/security/integrity/evm/evm_crypto.c
+> index e11564eb645b..82a38e801ee4 100644
+> --- a/security/integrity/evm/evm_crypto.c
+> +++ b/security/integrity/evm/evm_crypto.c
+> @@ -89,6 +89,9 @@ static struct shash_desc *init_desc(char type, uint8_t hash_algo)
+>  		tfm = &hmac_tfm;
+>  		algo = evm_hmac;
+>  	} else {
+> +		if (hash_algo >= HASH_ALGO__LAST)
+> +			return ERR_PTR(-EINVAL);
+> +
+>  		tfm = &evm_tfm[hash_algo];
+>  		algo = hash_algo_name[hash_algo];
+>  	}
 
->  Hi Kevin,
->
->  The related device driver and dt-binding have been merged in the ASoC
->  tree, for-5.3 branch [0]
->
->  This patch is based on the audio series I have just sent [1]. Like the
->  patches I have sent this week, they are all based on Linus's master
->  branch. This is done so it applies nicely when setup your branch based
->  on 5.2-rc1
-
-Thanks, for the detailed description,
-
-Kevin
