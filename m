@@ -4,56 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4487CC04AAC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:34:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6052C04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:34:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1215C216FD
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:34:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8E33321721
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:34:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558355651;
-	bh=JheYeRemG7ge/RLfTC3Z7uqYXL7mC8+knXY/kzQ4Qac=;
+	s=default; t=1558355655;
+	bh=3BdsCKCwZOr6nPEyqN8v/LGY99gnYcCoYtt+UsPGw54=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HqoZqqWybtdNz2t0CyASUtOkTCWuiM/WlnzYNKgtcN4320mfO1t/+QXyPS50h37iw
-	 k1iGooXgpiPOfFm9YWCHVfOWqHV9SSHJKQEe+b+EGqwRaRKtIi9gUwMFk1HZ+bjDfc
-	 sHtnnOjMVwFaVmXpfBMWL4hTdTIi+OXaOsTWUgOw=
+	b=STODulXacCPzYf8rdOrrRGIAxxycpjghOesGOAzr1YZwhauCTz1R/iKxWsPvi/YY7
+	 X682pDeXS+dWwCpR/+7dCq5iKTe6V0hSwZNqOqAZRhpgg30NhjWJRUGpjtdq1Qsdaf
+	 ad1MlHZ0RW9ISfeskxUu9YwQ2sDqodwA8dnCjEUU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390863AbfETMeK (ORCPT
+        id S2390886AbfETMeO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 08:34:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51282 "EHLO mail.kernel.org"
+        Mon, 20 May 2019 08:34:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51402 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390216AbfETMeG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 08:34:06 -0400
+        id S2390859AbfETMeL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 08:34:11 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4F837204FD;
-        Mon, 20 May 2019 12:34:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5B78E216C4;
+        Mon, 20 May 2019 12:34:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558355644;
-        bh=JheYeRemG7ge/RLfTC3Z7uqYXL7mC8+knXY/kzQ4Qac=;
+        s=default; t=1558355649;
+        bh=3BdsCKCwZOr6nPEyqN8v/LGY99gnYcCoYtt+UsPGw54=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UWGsgT0nNzCN8gwBw4oDReC3lJoOIS2XHzWa4okV1QW4bUzc1nOwirfl5D64gEO16
-         hIUzdVp+jfrmwPWnyHvHVULzIdTQbtjvhFVlvz70826fiIIHwuoLqcimX3SmrR+Ikb
-         FQzJobBqanGeG16qYZ4IOX77pv7N+LZBX1zAcIWw=
+        b=YnU77tfoIS0tj9vcHpP3LJBxYuNOEtpQvsa2WlVGQTO38hkiHm9BQ8qDyt54HzUjM
+         nlQXZrCHJvA9mmkLENFAiAsJCDbGEkx8Rz63lJchZSI16ehQm9uEiSXTYVizyMRy/Z
+         23hnWa6ypMvUQvkVnKcu0CTk1cmuKQjm/4S6Hz/4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dan Williams <dan.j.williams@intel.com>,
-        Piotr Balcer <piotr.balcer@intel.com>,
-        Yan Ma <yan.ma@intel.com>, Pankaj Gupta <pagupta@redhat.com>,
-        Matthew Wilcox <willy@infradead.org>, Jan Kara <jack@suse.cz>,
-        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
-        Chandan Rajendra <chandan@linux.ibm.com>,
-        Souptick Joarder <jrdr.linux@gmail.com>,
+        stable@vger.kernel.org, Mike Kravetz <mike.kravetz@oracle.com>,
+        Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>,
+        Davidlohr Bueso <dbueso@suse.de>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
+        Michal Hocko <mhocko@kernel.org>,
         Andrew Morton <akpm@linux-foundation.org>,
         Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 5.1 070/128] mm/huge_memory: fix vmf_insert_pfn_{pmd, pud}() crash, handle unaligned addresses
-Date:   Mon, 20 May 2019 14:14:17 +0200
-Message-Id: <20190520115254.543150708@linuxfoundation.org>
+Subject: [PATCH 5.1 072/128] hugetlb: use same fault hash key for shared and private mappings
+Date:   Mon, 20 May 2019 14:14:19 +0200
+Message-Id: <20190520115254.651928070@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190520115249.449077487@linuxfoundation.org>
 References: <20190520115249.449077487@linuxfoundation.org>
@@ -66,171 +65,177 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dan Williams <dan.j.williams@intel.com>
+From: Mike Kravetz <mike.kravetz@oracle.com>
 
-commit fce86ff5802bac3a7b19db171aa1949ef9caac31 upstream.
+commit 1b426bac66e6cc83c9f2d92b96e4e72acf43419a upstream.
 
-Starting with c6f3c5ee40c1 ("mm/huge_memory.c: fix modifying of page
-protection by insert_pfn_pmd()") vmf_insert_pfn_pmd() internally calls
-pmdp_set_access_flags().  That helper enforces a pmd aligned @address
-argument via VM_BUG_ON() assertion.
+hugetlb uses a fault mutex hash table to prevent page faults of the
+same pages concurrently.  The key for shared and private mappings is
+different.  Shared keys off address_space and file index.  Private keys
+off mm and virtual address.  Consider a private mappings of a populated
+hugetlbfs file.  A fault will map the page from the file and if needed
+do a COW to map a writable page.
 
-Update the implementation to take a 'struct vm_fault' argument directly
-and apply the address alignment fixup internally to fix crash signatures
-like:
+Hugetlbfs hole punch uses the fault mutex to prevent mappings of file
+pages.  It uses the address_space file index key.  However, private
+mappings will use a different key and could race with this code to map
+the file page.  This causes problems (BUG) for the page cache remove
+code as it expects the page to be unmapped.  A sample stack is:
 
-    kernel BUG at arch/x86/mm/pgtable.c:515!
-    invalid opcode: 0000 [#1] SMP NOPTI
-    CPU: 51 PID: 43713 Comm: java Tainted: G           OE     4.19.35 #1
-    [..]
-    RIP: 0010:pmdp_set_access_flags+0x48/0x50
-    [..]
-    Call Trace:
-     vmf_insert_pfn_pmd+0x198/0x350
-     dax_iomap_fault+0xe82/0x1190
-     ext4_dax_huge_fault+0x103/0x1f0
-     ? __switch_to_asm+0x40/0x70
-     __handle_mm_fault+0x3f6/0x1370
-     ? __switch_to_asm+0x34/0x70
-     ? __switch_to_asm+0x40/0x70
-     handle_mm_fault+0xda/0x200
-     __do_page_fault+0x249/0x4f0
-     do_page_fault+0x32/0x110
-     ? page_fault+0x8/0x30
-     page_fault+0x1e/0x30
+page dumped because: VM_BUG_ON_PAGE(page_mapped(page))
+kernel BUG at mm/filemap.c:169!
+...
+RIP: 0010:unaccount_page_cache_page+0x1b8/0x200
+...
+Call Trace:
+__delete_from_page_cache+0x39/0x220
+delete_from_page_cache+0x45/0x70
+remove_inode_hugepages+0x13c/0x380
+? __add_to_page_cache_locked+0x162/0x380
+hugetlbfs_fallocate+0x403/0x540
+? _cond_resched+0x15/0x30
+? __inode_security_revalidate+0x5d/0x70
+? selinux_file_permission+0x100/0x130
+vfs_fallocate+0x13f/0x270
+ksys_fallocate+0x3c/0x80
+__x64_sys_fallocate+0x1a/0x20
+do_syscall_64+0x5b/0x180
+entry_SYSCALL_64_after_hwframe+0x44/0xa9
 
-Link: http://lkml.kernel.org/r/155741946350.372037.11148198430068238140.stgit@dwillia2-desk3.amr.corp.intel.com
-Fixes: c6f3c5ee40c1 ("mm/huge_memory.c: fix modifying of page protection by insert_pfn_pmd()")
-Signed-off-by: Dan Williams <dan.j.williams@intel.com>
-Reported-by: Piotr Balcer <piotr.balcer@intel.com>
-Tested-by: Yan Ma <yan.ma@intel.com>
-Tested-by: Pankaj Gupta <pagupta@redhat.com>
-Reviewed-by: Matthew Wilcox <willy@infradead.org>
-Reviewed-by: Jan Kara <jack@suse.cz>
-Reviewed-by: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
-Cc: Chandan Rajendra <chandan@linux.ibm.com>
-Cc: Souptick Joarder <jrdr.linux@gmail.com>
+There seems to be another potential COW issue/race with this approach
+of different private and shared keys as noted in commit 8382d914ebf7
+("mm, hugetlb: improve page-fault scalability").
+
+Since every hugetlb mapping (even anon and private) is actually a file
+mapping, just use the address_space index key for all mappings.  This
+results in potentially more hash collisions.  However, this should not
+be the common case.
+
+Link: http://lkml.kernel.org/r/20190328234704.27083-3-mike.kravetz@oracle.com
+Link: http://lkml.kernel.org/r/20190412165235.t4sscoujczfhuiyt@linux-r8p5
+Fixes: b5cec28d36f5 ("hugetlbfs: truncate_hugepages() takes a range of pages")
+Signed-off-by: Mike Kravetz <mike.kravetz@oracle.com>
+Reviewed-by: Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>
+Reviewed-by: Davidlohr Bueso <dbueso@suse.de>
+Cc: Joonsoo Kim <iamjoonsoo.kim@lge.com>
+Cc: "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>
+Cc: Michal Hocko <mhocko@kernel.org>
 Cc: <stable@vger.kernel.org>
 Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
 Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/dax/device.c    |    6 ++----
- fs/dax.c                |    6 ++----
- include/linux/huge_mm.h |    6 ++----
- mm/huge_memory.c        |   16 ++++++++++------
- 4 files changed, 16 insertions(+), 18 deletions(-)
+ fs/hugetlbfs/inode.c    |    7 ++-----
+ include/linux/hugetlb.h |    4 +---
+ mm/hugetlb.c            |   22 ++++++----------------
+ mm/userfaultfd.c        |    3 +--
+ 4 files changed, 10 insertions(+), 26 deletions(-)
 
---- a/drivers/dax/device.c
-+++ b/drivers/dax/device.c
-@@ -184,8 +184,7 @@ static vm_fault_t __dev_dax_pmd_fault(st
+--- a/fs/hugetlbfs/inode.c
++++ b/fs/hugetlbfs/inode.c
+@@ -440,9 +440,7 @@ static void remove_inode_hugepages(struc
+ 			u32 hash;
  
- 	*pfn = phys_to_pfn_t(phys, dax_region->pfn_flags);
+ 			index = page->index;
+-			hash = hugetlb_fault_mutex_hash(h, current->mm,
+-							&pseudo_vma,
+-							mapping, index, 0);
++			hash = hugetlb_fault_mutex_hash(h, mapping, index, 0);
+ 			mutex_lock(&hugetlb_fault_mutex_table[hash]);
  
--	return vmf_insert_pfn_pmd(vmf->vma, vmf->address, vmf->pmd, *pfn,
--			vmf->flags & FAULT_FLAG_WRITE);
-+	return vmf_insert_pfn_pmd(vmf, *pfn, vmf->flags & FAULT_FLAG_WRITE);
+ 			/*
+@@ -639,8 +637,7 @@ static long hugetlbfs_fallocate(struct f
+ 		addr = index * hpage_size;
+ 
+ 		/* mutex taken here, fault path and hole punch */
+-		hash = hugetlb_fault_mutex_hash(h, mm, &pseudo_vma, mapping,
+-						index, addr);
++		hash = hugetlb_fault_mutex_hash(h, mapping, index, addr);
+ 		mutex_lock(&hugetlb_fault_mutex_table[hash]);
+ 
+ 		/* See if already present in mapping to avoid alloc/free */
+--- a/include/linux/hugetlb.h
++++ b/include/linux/hugetlb.h
+@@ -123,9 +123,7 @@ void move_hugetlb_state(struct page *old
+ void free_huge_page(struct page *page);
+ void hugetlb_fix_reserve_counts(struct inode *inode);
+ extern struct mutex *hugetlb_fault_mutex_table;
+-u32 hugetlb_fault_mutex_hash(struct hstate *h, struct mm_struct *mm,
+-				struct vm_area_struct *vma,
+-				struct address_space *mapping,
++u32 hugetlb_fault_mutex_hash(struct hstate *h, struct address_space *mapping,
+ 				pgoff_t idx, unsigned long address);
+ 
+ pte_t *huge_pmd_share(struct mm_struct *mm, unsigned long addr, pud_t *pud);
+--- a/mm/hugetlb.c
++++ b/mm/hugetlb.c
+@@ -3778,8 +3778,7 @@ retry:
+ 			 * handling userfault.  Reacquire after handling
+ 			 * fault to make calling code simpler.
+ 			 */
+-			hash = hugetlb_fault_mutex_hash(h, mm, vma, mapping,
+-							idx, haddr);
++			hash = hugetlb_fault_mutex_hash(h, mapping, idx, haddr);
+ 			mutex_unlock(&hugetlb_fault_mutex_table[hash]);
+ 			ret = handle_userfault(&vmf, VM_UFFD_MISSING);
+ 			mutex_lock(&hugetlb_fault_mutex_table[hash]);
+@@ -3887,21 +3886,14 @@ backout_unlocked:
  }
  
- #ifdef CONFIG_HAVE_ARCH_TRANSPARENT_HUGEPAGE_PUD
-@@ -235,8 +234,7 @@ static vm_fault_t __dev_dax_pud_fault(st
- 
- 	*pfn = phys_to_pfn_t(phys, dax_region->pfn_flags);
- 
--	return vmf_insert_pfn_pud(vmf->vma, vmf->address, vmf->pud, *pfn,
--			vmf->flags & FAULT_FLAG_WRITE);
-+	return vmf_insert_pfn_pud(vmf, *pfn, vmf->flags & FAULT_FLAG_WRITE);
- }
- #else
- static vm_fault_t __dev_dax_pud_fault(struct dev_dax *dev_dax,
---- a/fs/dax.c
-+++ b/fs/dax.c
-@@ -1575,8 +1575,7 @@ static vm_fault_t dax_iomap_pmd_fault(st
- 		}
- 
- 		trace_dax_pmd_insert_mapping(inode, vmf, PMD_SIZE, pfn, entry);
--		result = vmf_insert_pfn_pmd(vma, vmf->address, vmf->pmd, pfn,
--					    write);
-+		result = vmf_insert_pfn_pmd(vmf, pfn, write);
- 		break;
- 	case IOMAP_UNWRITTEN:
- 	case IOMAP_HOLE:
-@@ -1686,8 +1685,7 @@ dax_insert_pfn_mkwrite(struct vm_fault *
- 		ret = vmf_insert_mixed_mkwrite(vmf->vma, vmf->address, pfn);
- #ifdef CONFIG_FS_DAX_PMD
- 	else if (order == PMD_ORDER)
--		ret = vmf_insert_pfn_pmd(vmf->vma, vmf->address, vmf->pmd,
--			pfn, true);
-+		ret = vmf_insert_pfn_pmd(vmf, pfn, FAULT_FLAG_WRITE);
- #endif
- 	else
- 		ret = VM_FAULT_FALLBACK;
---- a/include/linux/huge_mm.h
-+++ b/include/linux/huge_mm.h
-@@ -47,10 +47,8 @@ extern bool move_huge_pmd(struct vm_area
- extern int change_huge_pmd(struct vm_area_struct *vma, pmd_t *pmd,
- 			unsigned long addr, pgprot_t newprot,
- 			int prot_numa);
--vm_fault_t vmf_insert_pfn_pmd(struct vm_area_struct *vma, unsigned long addr,
--			pmd_t *pmd, pfn_t pfn, bool write);
--vm_fault_t vmf_insert_pfn_pud(struct vm_area_struct *vma, unsigned long addr,
--			pud_t *pud, pfn_t pfn, bool write);
-+vm_fault_t vmf_insert_pfn_pmd(struct vm_fault *vmf, pfn_t pfn, bool write);
-+vm_fault_t vmf_insert_pfn_pud(struct vm_fault *vmf, pfn_t pfn, bool write);
- enum transparent_hugepage_flag {
- 	TRANSPARENT_HUGEPAGE_FLAG,
- 	TRANSPARENT_HUGEPAGE_REQ_MADV_FLAG,
---- a/mm/huge_memory.c
-+++ b/mm/huge_memory.c
-@@ -793,11 +793,13 @@ out_unlock:
- 		pte_free(mm, pgtable);
- }
- 
--vm_fault_t vmf_insert_pfn_pmd(struct vm_area_struct *vma, unsigned long addr,
--			pmd_t *pmd, pfn_t pfn, bool write)
-+vm_fault_t vmf_insert_pfn_pmd(struct vm_fault *vmf, pfn_t pfn, bool write)
+ #ifdef CONFIG_SMP
+-u32 hugetlb_fault_mutex_hash(struct hstate *h, struct mm_struct *mm,
+-			    struct vm_area_struct *vma,
+-			    struct address_space *mapping,
++u32 hugetlb_fault_mutex_hash(struct hstate *h, struct address_space *mapping,
+ 			    pgoff_t idx, unsigned long address)
  {
-+	unsigned long addr = vmf->address & PMD_MASK;
-+	struct vm_area_struct *vma = vmf->vma;
- 	pgprot_t pgprot = vma->vm_page_prot;
- 	pgtable_t pgtable = NULL;
-+
- 	/*
- 	 * If we had pmd_special, we could avoid all these restrictions,
- 	 * but we need to be consistent with PTEs and architectures that
-@@ -820,7 +822,7 @@ vm_fault_t vmf_insert_pfn_pmd(struct vm_
+ 	unsigned long key[2];
+ 	u32 hash;
  
- 	track_pfn_insert(vma, &pgprot, pfn);
+-	if (vma->vm_flags & VM_SHARED) {
+-		key[0] = (unsigned long) mapping;
+-		key[1] = idx;
+-	} else {
+-		key[0] = (unsigned long) mm;
+-		key[1] = address >> huge_page_shift(h);
+-	}
++	key[0] = (unsigned long) mapping;
++	key[1] = idx;
  
--	insert_pfn_pmd(vma, addr, pmd, pfn, pgprot, write, pgtable);
-+	insert_pfn_pmd(vma, addr, vmf->pmd, pfn, pgprot, write, pgtable);
- 	return VM_FAULT_NOPAGE;
- }
- EXPORT_SYMBOL_GPL(vmf_insert_pfn_pmd);
-@@ -869,10 +871,12 @@ out_unlock:
- 	spin_unlock(ptl);
- }
+ 	hash = jhash2((u32 *)&key, sizeof(key)/sizeof(u32), 0);
  
--vm_fault_t vmf_insert_pfn_pud(struct vm_area_struct *vma, unsigned long addr,
--			pud_t *pud, pfn_t pfn, bool write)
-+vm_fault_t vmf_insert_pfn_pud(struct vm_fault *vmf, pfn_t pfn, bool write)
+@@ -3912,9 +3904,7 @@ u32 hugetlb_fault_mutex_hash(struct hsta
+  * For uniprocesor systems we always use a single mutex, so just
+  * return 0 and avoid the hashing overhead.
+  */
+-u32 hugetlb_fault_mutex_hash(struct hstate *h, struct mm_struct *mm,
+-			    struct vm_area_struct *vma,
+-			    struct address_space *mapping,
++u32 hugetlb_fault_mutex_hash(struct hstate *h, struct address_space *mapping,
+ 			    pgoff_t idx, unsigned long address)
  {
-+	unsigned long addr = vmf->address & PUD_MASK;
-+	struct vm_area_struct *vma = vmf->vma;
- 	pgprot_t pgprot = vma->vm_page_prot;
-+
- 	/*
- 	 * If we had pud_special, we could avoid all these restrictions,
- 	 * but we need to be consistent with PTEs and architectures that
-@@ -889,7 +893,7 @@ vm_fault_t vmf_insert_pfn_pud(struct vm_
+ 	return 0;
+@@ -3959,7 +3949,7 @@ vm_fault_t hugetlb_fault(struct mm_struc
+ 	 * get spurious allocation failures if two CPUs race to instantiate
+ 	 * the same page in the page cache.
+ 	 */
+-	hash = hugetlb_fault_mutex_hash(h, mm, vma, mapping, idx, haddr);
++	hash = hugetlb_fault_mutex_hash(h, mapping, idx, haddr);
+ 	mutex_lock(&hugetlb_fault_mutex_table[hash]);
  
- 	track_pfn_insert(vma, &pgprot, pfn);
+ 	entry = huge_ptep_get(ptep);
+--- a/mm/userfaultfd.c
++++ b/mm/userfaultfd.c
+@@ -271,8 +271,7 @@ retry:
+ 		 */
+ 		idx = linear_page_index(dst_vma, dst_addr);
+ 		mapping = dst_vma->vm_file->f_mapping;
+-		hash = hugetlb_fault_mutex_hash(h, dst_mm, dst_vma, mapping,
+-								idx, dst_addr);
++		hash = hugetlb_fault_mutex_hash(h, mapping, idx, dst_addr);
+ 		mutex_lock(&hugetlb_fault_mutex_table[hash]);
  
--	insert_pfn_pud(vma, addr, pud, pfn, pgprot, write);
-+	insert_pfn_pud(vma, addr, vmf->pud, pfn, pgprot, write);
- 	return VM_FAULT_NOPAGE;
- }
- EXPORT_SYMBOL_GPL(vmf_insert_pfn_pud);
+ 		err = -ENOMEM;
 
 
