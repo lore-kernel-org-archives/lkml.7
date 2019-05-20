@@ -2,54 +2,51 @@ Return-Path: <SRS0=lq4r=TU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6308DC04AAC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:52:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BF3CC04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:52:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3059F20645
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:52:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 25767213F2
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:52:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558356756;
-	bh=ofEIYAS8+rvPfYlANzMOn0TgjZ0h4w0AB+vYOudGgtE=;
+	s=default; t=1558356761;
+	bh=7msc1tKFakpzZ9gI2yrE7V/oN5Mph5vD65JhgljuaQs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HECiGnsMtaw9sFS/Q4xl3VlhrgNq14U3SBy11rm+azDNqZ0mNEkmg8itOVOXHSU5B
-	 uz2nA9Slmy80wj83X8uSjQ5BapTyjEp7ps0MbYNOONe2dUtPAUYCKHWJS8WWbvZWGU
-	 2jKIRchtyPZXoZnnV0wJrX/cS6Tx7wGcKdcwv6pE=
+	b=ozCZ4E96MmFAAeEU1YW/7cf3ToLhfnSfpJf/TZmnxxbevf/8DJc4l5NI9UKRhi9Ux
+	 v5LL0berAoAsovBIMeMbEpChhEO9u3HuYQUJbZDj0tbWSmWkZuvVmTzsm1VD6CX7Dx
+	 vg2fyeUBkxpXZGg7qi7jnWa1uwJQ4BuTRM3eVJ4Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731643AbfETMSo (ORCPT
+        id S2391543AbfETMwk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 08:18:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59734 "EHLO mail.kernel.org"
+        Mon, 20 May 2019 08:52:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60944 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387725AbfETMSh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 08:18:37 -0400
+        id S2387812AbfETMTc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 08:19:32 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 14E36208C3;
-        Mon, 20 May 2019 12:18:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6D9F820656;
+        Mon, 20 May 2019 12:19:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558354716;
-        bh=ofEIYAS8+rvPfYlANzMOn0TgjZ0h4w0AB+vYOudGgtE=;
+        s=default; t=1558354771;
+        bh=7msc1tKFakpzZ9gI2yrE7V/oN5Mph5vD65JhgljuaQs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=v81g+zm+KjoM2/7suwioOoBlqz3Wq8LidTX9hB5ALljZzPoRbAm3vA75mQAx9lQYU
-         7SXOALMavJVq1jibTePGaMTqxWkzcxt548vnkNqqr4GdR8iVn3wmXhUZrtecrKCpuf
-         uvb7X9v3tASC4DkVndpiCbtz8J2jKtWhFALUpAXE=
+        b=SdsSu4wiYWp4YEzaJJ/sHQTr3+ql45yQWAunxl3RdkscoiSOXERTU+6ysE0WCa9iz
+         hquUmBTFyjEOZug/jzJkacQdawKwblo2XP6EtefUWVksre5N0kejQYJ/Nisti9oL8S
+         cVQ56YwaBieChfgPvGf4xKkA0J/f9gl5aAkrIHZo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dexuan Cui <decui@microsoft.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Stephen Hemminger <stephen@networkplumber.org>,
-        Michael Kelley <mikelley@microsoft.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 05/63] PCI: hv: Add pci_destroy_slot() in pci_devices_present_work(), if necessary
-Date:   Mon, 20 May 2019 14:13:44 +0200
-Message-Id: <20190520115231.834981202@linuxfoundation.org>
+        stable@vger.kernel.org, Dmitry Osipenko <digetx@gmail.com>,
+        Lee Jones <lee.jones@linaro.org>
+Subject: [PATCH 4.14 36/63] mfd: max77620: Fix swapped FPS_PERIOD_MAX_US values
+Date:   Mon, 20 May 2019 14:14:15 +0200
+Message-Id: <20190520115235.210391284@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190520115231.137981521@linuxfoundation.org>
 References: <20190520115231.137981521@linuxfoundation.org>
@@ -62,93 +59,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 340d455699400f2c2c0f9b3f703ade3085cdb501 ]
+From: Dmitry Osipenko <digetx@gmail.com>
 
-When we hot-remove a device, usually the host sends us a PCI_EJECT message,
-and a PCI_BUS_RELATIONS message with bus_rel->device_count == 0.
+commit ea611d1cc180fbb56982c83cd5142a2b34881f5c upstream.
 
-When we execute the quick hot-add/hot-remove test, the host may not send
-us the PCI_EJECT message if the guest has not fully finished the
-initialization by sending the PCI_RESOURCES_ASSIGNED* message to the
-host, so it's potentially unsafe to only depend on the
-pci_destroy_slot() in hv_eject_device_work() because the code path
+The FPS_PERIOD_MAX_US definitions are swapped for MAX20024 and MAX77620,
+fix it.
 
-create_root_hv_pci_bus()
- -> hv_pci_assign_slots()
+Cc: stable <stable@vger.kernel.org>
+Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+Signed-off-by: Lee Jones <lee.jones@linaro.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-is not called in this case. Note: in this case, the host still sends the
-guest a PCI_BUS_RELATIONS message with bus_rel->device_count == 0.
-
-In the quick hot-add/hot-remove test, we can have such a race before
-the code path
-
-pci_devices_present_work()
- -> new_pcichild_device()
-
-adds the new device into the hbus->children list, we may have already
-received the PCI_EJECT message, and since the tasklet handler
-
-hv_pci_onchannelcallback()
-
-may fail to find the "hpdev" by calling
-
-get_pcichild_wslot(hbus, dev_message->wslot.slot)
-
-hv_pci_eject_device() is not called; Later, by continuing execution
-
-create_root_hv_pci_bus()
- -> hv_pci_assign_slots()
-
-creates the slot and the PCI_BUS_RELATIONS message with
-bus_rel->device_count == 0 removes the device from hbus->children, and
-we end up being unable to remove the slot in
-
-hv_pci_remove()
- -> hv_pci_remove_slots()
-
-Remove the slot in pci_devices_present_work() when the device
-is removed to address this race.
-
-pci_devices_present_work() and hv_eject_device_work() run in the
-singled-threaded hbus->wq, so there is not a double-remove issue for the
-slot.
-
-We cannot offload hv_pci_eject_device() from hv_pci_onchannelcallback()
-to the workqueue, because we need the hv_pci_onchannelcallback()
-synchronously call hv_pci_eject_device() to poll the channel
-ringbuffer to work around the "hangs in hv_compose_msi_msg()" issue
-fixed in commit de0aa7b2f97d ("PCI: hv: Fix 2 hang issues in
-hv_compose_msi_msg()")
-
-Fixes: a15f2c08c708 ("PCI: hv: support reporting serial number as slot information")
-Signed-off-by: Dexuan Cui <decui@microsoft.com>
-[lorenzo.pieralisi@arm.com: rewritten commit log]
-Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Reviewed-by: Stephen Hemminger <stephen@networkplumber.org>
-Reviewed-by:  Michael Kelley <mikelley@microsoft.com>
-Cc: stable@vger.kernel.org
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pci/host/pci-hyperv.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ include/linux/mfd/max77620.h |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/pci/host/pci-hyperv.c b/drivers/pci/host/pci-hyperv.c
-index a5825bbcded72..f591de23f3d35 100644
---- a/drivers/pci/host/pci-hyperv.c
-+++ b/drivers/pci/host/pci-hyperv.c
-@@ -1824,6 +1824,10 @@ static void pci_devices_present_work(struct work_struct *work)
- 		hpdev = list_first_entry(&removed, struct hv_pci_dev,
- 					 list_entry);
- 		list_del(&hpdev->list_entry);
-+
-+		if (hpdev->pci_slot)
-+			pci_destroy_slot(hpdev->pci_slot);
-+
- 		put_pcichild(hpdev, hv_pcidev_ref_initial);
- 	}
+--- a/include/linux/mfd/max77620.h
++++ b/include/linux/mfd/max77620.h
+@@ -136,8 +136,8 @@
+ #define MAX77620_FPS_PERIOD_MIN_US		40
+ #define MAX20024_FPS_PERIOD_MIN_US		20
  
--- 
-2.20.1
-
+-#define MAX77620_FPS_PERIOD_MAX_US		2560
+-#define MAX20024_FPS_PERIOD_MAX_US		5120
++#define MAX20024_FPS_PERIOD_MAX_US		2560
++#define MAX77620_FPS_PERIOD_MAX_US		5120
+ 
+ #define MAX77620_REG_FPS_GPIO1			0x54
+ #define MAX77620_REG_FPS_GPIO2			0x55
 
 
