@@ -2,106 +2,72 @@ Return-Path: <SRS0=lq4r=TU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,LOCALPART_IN_SUBJECT,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E8B0C04AAC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 23:37:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53F3CC04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 23:39:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E1FE321479
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 23:37:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="A53J2VX+"
+	by mail.kernel.org (Postfix) with ESMTP id 2EF6C21479
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 23:39:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727069AbfETXht (ORCPT
+        id S1727256AbfETXjF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 19:37:49 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:36083 "EHLO ozlabs.org"
+        Mon, 20 May 2019 19:39:05 -0400
+Received: from mga03.intel.com ([134.134.136.65]:25217 "EHLO mga03.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725681AbfETXht (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 19:37:49 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 457FgW4Ykfz9s55;
-        Tue, 21 May 2019 09:37:43 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1558395466;
-        bh=NF6T8uXrXjAK9LT8iy22TRXHVorJ6rb199nxaLmJkzw=;
-        h=Date:From:To:Cc:Subject:From;
-        b=A53J2VX+n1TTtp+PXexl/UjP2vBOLFWUNJq2nxC+yfiABcQfIozOYO9XKHxWB8hn9
-         6M7eSrRg1D+EFbKdyU7ISOuoBdFK2WQVZQV9AmaVZeqbkcgHZJzzoQwHDWEnUaFozJ
-         tRI3oQeeZ0IowUt4xJzMp+CrVsGdTZ1Dbe37vPfNcVw91qdoEtL/BcA+I9VTNFOsxg
-         fYghqyqxP2LE8Uef3lwDxLkgUtlL21PvsX1wHRqi/GXRo4eXHiv3wMS6/jbqNA8ArP
-         ZRXZI8QzXXgpjsFSVoecTrL4lm1Ew7rkd2HZ8j0Fk9ehbRNfAvOB3HY/lz3XkoSPwx
-         EXjXjQQHPZKiQ==
-Date:   Tue, 21 May 2019 09:37:43 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Linux Next Mailing List <linux-next@vger.kernel.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Antoine Tenart <antoine.tenart@bootlin.com>,
-        Kukjin Kim <kgene.kim@samsung.com>,
-        Rich Felker <dalias@libc.org>,
-        Luis de Bethencourt <luisbg@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Jiri Kosina <jikos@kernel.org>,
-        "Nicholas A. Bellinger" <nab@linux-iscsi.org>,
-        Bart Van Assche <bart.vanassche@gmail.com>,
-        David Howells <dhowells@redhat.com>
-Subject: linux-next: removed trees
-Message-ID: <20190521093743.5afaaadf@canb.auug.org.au>
+        id S1725681AbfETXjF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 19:39:05 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 May 2019 16:39:04 -0700
+X-ExtLoop1: 1
+Received: from rpedgeco-mobl.amr.corp.intel.com (HELO localhost.intel.com) ([10.254.114.95])
+  by fmsmga008.fm.intel.com with ESMTP; 20 May 2019 16:39:03 -0700
+From:   Rick Edgecombe <rick.p.edgecombe@intel.com>
+To:     linux-kernel@vger.kernel.org, peterz@infradead.org,
+        sparclinux@vger.kernel.org, linux-mm@kvack.org,
+        netdev@vger.kernel.org, luto@amacapital.net
+Cc:     dave.hansen@intel.com, namit@vmware.com, davem@davemloft.net,
+        Rick Edgecombe <rick.p.edgecombe@intel.com>
+Subject: [PATCH v2 0/2] Fix issues with vmalloc flush flag
+Date:   Mon, 20 May 2019 16:38:39 -0700
+Message-Id: <20190520233841.17194-1-rick.p.edgecombe@intel.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/qV4__MSYD94jb/_zn_wgk+5"; protocol="application/pgp-signature"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/qV4__MSYD94jb/_zn_wgk+5
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+These two patches address issues with the recently added
+VM_FLUSH_RESET_PERMS vmalloc flag. It is now split into two patches, which
+made sense to me, but can split it further if desired.
 
-Hi all,
+Patch 1 is the most critical and addresses an issue that could cause a
+crash on x86.
 
-The following trees have been removed from linux-next since they have
-not been updated in more than a year.  All the contacts for these trees
-are cc'd to this email.  If you want a tree reinstated, just let me
-know.
+Patch 2 is to try to reduce the work done in the free operation to push
+it to allocation time where it would be more expected. This shouldn't be
+a big issue most of the time, but I thought it was slightly better.
 
-alpine
-samsung
-sh
-befs
-kconfig
-dwmw2-iommu
-trivial
-target-updates
-target-bva
-init_task
+v2->v3:
+ - Split into two patches
 
---=20
-Cheers,
-Stephen Rothwell
+v1->v2:
+ - Update commit message with more detail
+ - Fix flush end range on !CONFIG_ARCH_HAS_SET_DIRECT_MAP case
 
---Sig_/qV4__MSYD94jb/_zn_wgk+5
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+Rick Edgecombe (2):
+  vmalloc: Fix calculation of direct map addr range
+  vmalloc: Remove work as from vfree path
 
------BEGIN PGP SIGNATURE-----
+ mm/vmalloc.c | 23 +++++++++++++----------
+ 1 file changed, 13 insertions(+), 10 deletions(-)
 
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAlzjOkcACgkQAVBC80lX
-0GydLQf8D7+63Nd52glmAydK9CJpfUEr3D0PvktazS5wpUjmxyt1iqB5Ohq7YkZE
-/2ib1WYbIAqEgFfwbW2z+gY2A8qRU6vA05+5QjV0HwLOO763o/GQ2Lujmp7KMqmF
-+vpIoGxM56O+m/qLggKL7SZBdhbwX70r9Pwlj8qf59jGzVwkkySsNqVd4ZeG6roD
-afzin133cQsMKo4FjOlzUNFjIxtUy3rDXhlzHMBQraw5BXLesYaVFZVMCOu51dWU
-BXc2w27NsRvEDXMCdiqykv43pvu3krxaPDaIR4SLeRYzMYkgc9CRB4vd864M0HyX
-lOKD1xl4alpb8b4Hr+iZBp5a6SAxiw==
-=bxw7
------END PGP SIGNATURE-----
+-- 
+2.20.1
 
---Sig_/qV4__MSYD94jb/_zn_wgk+5--
