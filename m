@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7387EC04AAC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:33:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4ED7C04E87
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:33:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4A041204FD
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:33:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB4D920815
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:33:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558355598;
-	bh=r932CAIzrxKcyMXHbNYtwSh4ds4op5ZJLCuQeblnZYE=;
+	s=default; t=1558355602;
+	bh=/mtt9tf5LsHEjSLv56CpO1i0sXmNW3qd+8lvZYSAgwU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=A0sVlyvr+ttpIE4zPtMxZUu48nAeGRisRk/YvWqyfnz6uIm7NNzJarzVoyxEIFe1L
-	 6nn15sLWp0LNHLUj00nJET/uDDFriG0Yg+7KUMfI1HBGJQnD6z4ACs7vNUTYP27HZg
-	 CApzIEONGWovBJ3N9l42J8brjDIygVKcB4GqQMmQ=
+	b=xTyGB9A3R90w62liC8eoIsdy46C1sULUZrcUeraWXDHQLx2E++lQlxvgB0utrdVhm
+	 y8pGwEGqvCCbCxNaq/X6weOip1bB3itZExVb35N93fGmvDhZDOXeI7FD0sMhPbZb3g
+	 pkH7jJXlhGZgnyQnzrHe0Nqrv3BY1cVNY3UgdJlg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390687AbfETMdR (ORCPT
+        id S2390697AbfETMdW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 08:33:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50300 "EHLO mail.kernel.org"
+        Mon, 20 May 2019 08:33:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50352 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733069AbfETMdP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 08:33:15 -0400
+        id S2390685AbfETMdR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 08:33:17 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E91AE20645;
-        Mon, 20 May 2019 12:33:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 86AC3204FD;
+        Mon, 20 May 2019 12:33:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558355594;
-        bh=r932CAIzrxKcyMXHbNYtwSh4ds4op5ZJLCuQeblnZYE=;
+        s=default; t=1558355597;
+        bh=/mtt9tf5LsHEjSLv56CpO1i0sXmNW3qd+8lvZYSAgwU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qOgIpT2+UiRNIW2ghQ7SUkyQ3YIgOtB/eB1loVAd9FDd0U3p02QH2oTx07vjJM72S
-         gAxgqG84MVU8qQ4yZIdz7iy4NUTIA2NPi4iPsVDXJU0qA2RLMFp12eF6mDqmI0WFpv
-         h3xevIW9e7XZqzTUEETfU1bvsNz6EZW279KJG6zw=
+        b=lB5Z2Z0vc1crgrYv4Fwzyejwpl5WU5BMlxqcVkSvUG7P6VmB+fhAJNFao4zJStO0Z
+         RUYU4h2Aysy4MzQ2ogd+e3aJjzyb3B2fwYpXzBc9efedBI1QTyEq71bo8wj8wPMdLd
+         EfENQh4Dl14XmiJYIzvTIGCqwnqFg7lgcPRPgYeM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jeremy Soller <jeremy@system76.com>,
-        Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 5.1 053/128] ALSA: hdea/realtek - Headset fixup for System76 Gazelle (gaze14)
-Date:   Mon, 20 May 2019 14:14:00 +0200
-Message-Id: <20190520115253.375944530@linuxfoundation.org>
+        stable@vger.kernel.org, Jon Hunter <jonathanh@nvidia.com>,
+        Mark Brown <broonie@kernel.org>
+Subject: [PATCH 5.1 054/128] ASoC: max98090: Fix restore of DAPM Muxes
+Date:   Mon, 20 May 2019 14:14:01 +0200
+Message-Id: <20190520115253.450167710@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190520115249.449077487@linuxfoundation.org>
 References: <20190520115249.449077487@linuxfoundation.org>
@@ -59,36 +59,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jeremy Soller <jeremy@system76.com>
+From: Jon Hunter <jonathanh@nvidia.com>
 
-commit 80a5052db75131423b67f38b21958555d7d970e4 upstream.
+commit ecb2795c08bc825ebd604997e5be440b060c5b18 upstream.
 
-On the System76 Gazelle (gaze14), there is a headset microphone input
-attached to 0x1a that does not have a jack detect. In order to get it
-working, the pin configuration needs to be set correctly, and the
-ALC269_FIXUP_HEADSET_MODE_NO_HP_MIC fixup needs to be applied. This is
-identical to the patch already applied for the System76 Darter Pro
-(darp5).
+The max98090 driver defines 3 DAPM muxes; one for the right line output
+(LINMOD Mux), one for the left headphone mixer source (MIXHPLSEL Mux)
+and one for the right headphone mixer source (MIXHPRSEL Mux). The same
+bit is used for the mux as well as the DAPM enable, and although the mux
+can be correctly configured, after playback has completed, the mux will
+be reset during the disable phase. This is preventing the state of these
+muxes from being saved and restored correctly on system reboot. Fix this
+by marking these muxes as SND_SOC_NOPM.
 
-Signed-off-by: Jeremy Soller <jeremy@system76.com>
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Note this has been verified this on the Tegra124 Nyan Big which features
+the MAX98090 codec.
+
+Signed-off-by: Jon Hunter <jonathanh@nvidia.com>
+Signed-off-by: Mark Brown <broonie@kernel.org>
+Cc: stable@vger.kernel.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/pci/hda/patch_realtek.c |    2 ++
- 1 file changed, 2 insertions(+)
+ sound/soc/codecs/max98090.c |   12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
---- a/sound/pci/hda/patch_realtek.c
-+++ b/sound/pci/hda/patch_realtek.c
-@@ -6932,6 +6932,8 @@ static const struct snd_pci_quirk alc269
- 	SND_PCI_QUIRK(0x1462, 0xb120, "MSI Cubi MS-B120", ALC283_FIXUP_HEADSET_MIC),
- 	SND_PCI_QUIRK(0x1462, 0xb171, "Cubi N 8GL (MS-B171)", ALC283_FIXUP_HEADSET_MIC),
- 	SND_PCI_QUIRK(0x1558, 0x1325, "System76 Darter Pro (darp5)", ALC293_FIXUP_SYSTEM76_MIC_NO_PRESENCE),
-+	SND_PCI_QUIRK(0x1558, 0x8550, "System76 Gazelle (gaze14)", ALC293_FIXUP_SYSTEM76_MIC_NO_PRESENCE),
-+	SND_PCI_QUIRK(0x1558, 0x8560, "System76 Gazelle (gaze14)", ALC293_FIXUP_SYSTEM76_MIC_NO_PRESENCE),
- 	SND_PCI_QUIRK(0x17aa, 0x1036, "Lenovo P520", ALC233_FIXUP_LENOVO_MULTI_CODECS),
- 	SND_PCI_QUIRK(0x17aa, 0x20f2, "Thinkpad SL410/510", ALC269_FIXUP_SKU_IGNORE),
- 	SND_PCI_QUIRK(0x17aa, 0x215e, "Thinkpad L512", ALC269_FIXUP_SKU_IGNORE),
+--- a/sound/soc/codecs/max98090.c
++++ b/sound/soc/codecs/max98090.c
+@@ -1194,14 +1194,14 @@ static const struct snd_soc_dapm_widget
+ 		&max98090_right_rcv_mixer_controls[0],
+ 		ARRAY_SIZE(max98090_right_rcv_mixer_controls)),
+ 
+-	SND_SOC_DAPM_MUX("LINMOD Mux", M98090_REG_LOUTR_MIXER,
+-		M98090_LINMOD_SHIFT, 0, &max98090_linmod_mux),
++	SND_SOC_DAPM_MUX("LINMOD Mux", SND_SOC_NOPM, 0, 0,
++		&max98090_linmod_mux),
+ 
+-	SND_SOC_DAPM_MUX("MIXHPLSEL Mux", M98090_REG_HP_CONTROL,
+-		M98090_MIXHPLSEL_SHIFT, 0, &max98090_mixhplsel_mux),
++	SND_SOC_DAPM_MUX("MIXHPLSEL Mux", SND_SOC_NOPM, 0, 0,
++		&max98090_mixhplsel_mux),
+ 
+-	SND_SOC_DAPM_MUX("MIXHPRSEL Mux", M98090_REG_HP_CONTROL,
+-		M98090_MIXHPRSEL_SHIFT, 0, &max98090_mixhprsel_mux),
++	SND_SOC_DAPM_MUX("MIXHPRSEL Mux", SND_SOC_NOPM, 0, 0,
++		&max98090_mixhprsel_mux),
+ 
+ 	SND_SOC_DAPM_PGA("HP Left Out", M98090_REG_OUTPUT_ENABLE,
+ 		M98090_HPLEN_SHIFT, 0, NULL, 0),
 
 
