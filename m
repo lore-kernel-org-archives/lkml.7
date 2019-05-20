@@ -2,28 +2,30 @@ Return-Path: <SRS0=lq4r=TU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AE1FC04E87
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 14:01:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 912D6C04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 14:01:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4BEA3216C4
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 14:01:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 67AD92171F
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 14:01:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390763AbfETOAw (ORCPT
+        id S2390958AbfETOBD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 10:00:52 -0400
-Received: from relay.sw.ru ([185.231.240.75]:39780 "EHLO relay.sw.ru"
+        Mon, 20 May 2019 10:01:03 -0400
+Received: from relay.sw.ru ([185.231.240.75]:39784 "EHLO relay.sw.ru"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732633AbfETOAv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 10:00:51 -0400
+        id S1732639AbfETOAx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 10:00:53 -0400
 Received: from [172.16.25.169] (helo=localhost.localdomain)
         by relay.sw.ru with esmtp (Exim 4.91)
         (envelope-from <ktkhai@virtuozzo.com>)
-        id 1hSipz-00083D-HH; Mon, 20 May 2019 17:00:23 +0300
-Subject: [PATCH v2 4/7] mm: Export round_hint_to_min()
+        id 1hSipd-00082V-Un; Mon, 20 May 2019 17:00:02 +0300
+Content-Transfer-Encoding: 7bit
+Subject: [PATCH v2 0/7] mm: process_vm_mmap() -- syscall for duplication a
+ process mapping
 From:   Kirill Tkhai <ktkhai@virtuozzo.com>
 To:     akpm@linux-foundation.org, dan.j.williams@intel.com,
         ktkhai@virtuozzo.com, mhocko@suse.com, keith.busch@intel.com,
@@ -36,79 +38,182 @@ To:     akpm@linux-foundation.org, dan.j.williams@intel.com,
         mgorman@techsingularity.net, daniel.m.jordan@oracle.com,
         jannh@google.com, kilobyte@angband.pl, linux-api@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-mm@kvack.org
-Date:   Mon, 20 May 2019 17:00:23 +0300
-Message-ID: <155836082337.2441.15115541609966690918.stgit@localhost.localdomain>
-In-Reply-To: <155836064844.2441.10911127801797083064.stgit@localhost.localdomain>
-References: <155836064844.2441.10911127801797083064.stgit@localhost.localdomain>
+Date:   Mon, 20 May 2019 17:00:01 +0300
+Message-ID: <155836064844.2441.10911127801797083064.stgit@localhost.localdomain>
 User-Agent: StGit/0.18
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Signed-off-by: Kirill Tkhai <ktkhai@virtuozzo.com>
+v2: Add PVMMAP_FIXED_NOREPLACE flag.
+    Use find_vma_without_flags() and may_mmap_overlapped_region() helpers,
+    so even more code became reused.
+    Syscall number is changed.
+    Fix whitespaces.
+
+    Prohibited a cloning from local to remote process. Only mapping
+    to local process mm is allowed, since I missed initially, that
+    get_unmapped_area() can't be used for remote process. This may
+    be very simply solved by passing @mm argument to all .get_unmapped_area
+    handlers. In this patchset I don't do this, since this gives a lot
+    of cleanup patches, which hides main logic away. I'm going to
+    send them later, as another series, after we finish with this.
+
+[Summary]
+
+New syscall, which allows to clone a remote process VMA
+into local process VM. The remote process's page table
+entries related to the VMA are cloned into local process's
+page table (in any desired address, which makes this different
+from that happens during fork()). Huge pages are handled
+appropriately.
+
+This allows to improve performance in significant way like
+it's shows in the example below.
+
+[Description] 
+
+This patchset adds a new syscall, which makes possible
+to clone a VMA from a process to current process.
+The syscall supplements the functionality provided
+by process_vm_writev() and process_vm_readv() syscalls,
+and it may be useful in many situation.
+
+For example, it allows to make a zero copy of data,
+when process_vm_writev() was previously used:
+
+	struct iovec local_iov, remote_iov;
+	void *buf;
+
+	buf = mmap(NULL, n * PAGE_SIZE, PROT_READ|PROT_WRITE,
+		   MAP_PRIVATE|MAP_ANONYMOUS, ...);
+	recv(sock, buf, n * PAGE_SIZE, 0);
+
+	local_iov->iov_base = buf;
+	local_iov->iov_len = n * PAGE_SIZE;
+	remove_iov = ...;
+
+	process_vm_writev(pid, &local_iov, 1, &remote_iov, 1 0);
+	munmap(buf, n * PAGE_SIZE);
+
+	(Note, that above completely ignores error handling)
+
+There are several problems with process_vm_writev() in this example:
+
+1)it causes pagefault on remote process memory, and it forces
+  allocation of a new page (if was not preallocated);
+
+2)amount of memory for this example is doubled in a moment --
+  n pages in current and n pages in remote tasks are occupied
+  at the same time;
+
+3)received data has no a chance to be properly swapped for
+  a long time.
+
+The third is the most critical in case of remote process touches
+the data pages some time after process_vm_writev() was made.
+Imagine, node is under memory pressure:
+
+a)kernel moves @buf pages into swap right after recv();
+b)process_vm_writev() reads the data back from swap to pages;
+c)process_vm_writev() allocates duplicate pages in remote
+  process and populates them;
+d)munmap() unmaps @buf;
+e)5 minutes later remote task touches data.
+
+In stages "a" and "b" kernel submits unneeded IO and makes
+system IO throughput worse. To make "b" and "c", kernel
+reclaims memory, and moves pages of some other processes
+to swap, so they have to read pages from swap back. Also,
+unneeded copying of pages is occured, while zero-copy is
+more preferred.
+
+We observe similar problem during online migration of big enough
+containers, when after doubling of container's size, the time
+increases 100 times. The system resides under high IO and
+throwing out of useful cashes.
+
+The proposed syscall aims to introduce an interface, which
+supplements currently existing process_vm_writev() and
+process_vm_readv(), and allows to solve the problem with
+anonymous memory transfer. The above example may be rewritten as:
+
+[Task 1]
+	void *buf;
+
+	buf = mmap(NULL, n * PAGE_SIZE, PROT_READ|PROT_WRITE,
+		   MAP_PRIVATE|MAP_ANONYMOUS, ...);
+	recv(sock, buf, n * PAGE_SIZE, 0);
+
+[Task 2]
+	buf2 = process_vm_mmap(pid_of_task1, buf, n * PAGE_SIZE, NULL, 0);
+
+This creates a copy of VMA related to buf from task1 in task2's VM.
+Task1's page table entries are copied into corresponding page table
+entries of VM of task2.
+
+It is swap-friendly: in case of memory is swapped right after recv(),
+the syscall just copies pagetable entries like we do on fork(),
+so real access to pages does not occurs, and no IO is needed.
+No excess pages are reclaimed, and number of pages is not doubled.
+Also, zero-copy takes a place, and this also reduces overhead.
+
+The patchset does not introduce much new code, since we simply
+reuse existing copy_page_range() and copy_vma() functions.
+We extend copy_vma() to be able merge VMAs in remote task [2/7],
+and teach copy_page_range() to work with different local and
+remote addresses [3/7]. Patch [7/7] introduces the syscall logic,
+which mostly consists of sanity checks. The rest of patches
+are preparations.
+
+This syscall may be used for page servers like in example
+above, for migration (I assume, even virtual machines may
+want something like this), for zero-copy desiring users
+of process_vm_writev() and process_vm_readv(), for debug
+purposes, etc. It requires the same permittions like
+existing proc_vm_xxx() syscalls have.
+
+The tests I used may be obtained here (UPDATED):
+
+[1]https://gist.github.com/tkhai/ce46502fc53580372da35e8c3b7818b9
+[2]https://gist.github.com/tkhai/40bda78e304d2fe0d90863214b9ac5b5
+
+Previous version (RFC):
+[3]https://lore.kernel.org/lkml/CAG48ez0itiEE1x=SXeMbjKvMGkrj7wxjM6c+ZB00LpXAAhqmiw@mail.gmail.com/T/
+
 ---
- include/linux/mman.h |   14 ++++++++++++++
- mm/mmap.c            |   13 -------------
- 2 files changed, 14 insertions(+), 13 deletions(-)
 
-diff --git a/include/linux/mman.h b/include/linux/mman.h
-index 4b08e9c9c538..69feb3144c12 100644
---- a/include/linux/mman.h
-+++ b/include/linux/mman.h
-@@ -4,6 +4,7 @@
- 
- #include <linux/mm.h>
- #include <linux/percpu_counter.h>
-+#include <linux/security.h>
- 
- #include <linux/atomic.h>
- #include <uapi/linux/mman.h>
-@@ -73,6 +74,19 @@ static inline void vm_unacct_memory(long pages)
- 	vm_acct_memory(-pages);
- }
- 
-+/*
-+ * If a hint addr is less than mmap_min_addr change hint to be as
-+ * low as possible but still greater than mmap_min_addr
-+ */
-+static inline unsigned long round_hint_to_min(unsigned long hint)
-+{
-+	hint &= PAGE_MASK;
-+	if (((void *)hint != NULL) &&
-+	    (hint < mmap_min_addr))
-+		return PAGE_ALIGN(mmap_min_addr);
-+	return hint;
-+}
-+
- /*
-  * Allow architectures to handle additional protection bits
-  */
-diff --git a/mm/mmap.c b/mm/mmap.c
-index 99778e724ad1..e4ced5366643 100644
---- a/mm/mmap.c
-+++ b/mm/mmap.c
-@@ -1318,19 +1318,6 @@ struct anon_vma *find_mergeable_anon_vma(struct vm_area_struct *vma)
- 	return NULL;
- }
- 
--/*
-- * If a hint addr is less than mmap_min_addr change hint to be as
-- * low as possible but still greater than mmap_min_addr
-- */
--static inline unsigned long round_hint_to_min(unsigned long hint)
--{
--	hint &= PAGE_MASK;
--	if (((void *)hint != NULL) &&
--	    (hint < mmap_min_addr))
--		return PAGE_ALIGN(mmap_min_addr);
--	return hint;
--}
--
- static inline int mlock_future_check(struct mm_struct *mm,
- 				     unsigned long flags,
- 				     unsigned long len)
+Kirill Tkhai (7):
+      mm: Add process_vm_mmap() syscall declaration
+      mm: Extend copy_vma()
+      mm: Extend copy_page_range()
+      mm: Export round_hint_to_min()
+      mm: Introduce may_mmap_overlapped_region() helper
+      mm: Introduce find_vma_filter_flags() helper
+      mm: Add process_vm_mmap()
 
+
+ arch/x86/entry/syscalls/syscall_32.tbl |    1 
+ arch/x86/entry/syscalls/syscall_64.tbl |    2 
+ include/linux/huge_mm.h                |    6 +
+ include/linux/mm.h                     |   14 ++
+ include/linux/mm_types.h               |    2 
+ include/linux/mman.h                   |   14 ++
+ include/linux/syscalls.h               |    5 +
+ include/uapi/asm-generic/mman-common.h |    6 +
+ include/uapi/asm-generic/unistd.h      |    5 +
+ init/Kconfig                           |    9 +-
+ kernel/fork.c                          |    5 +
+ kernel/sys_ni.c                        |    2 
+ mm/huge_memory.c                       |   30 ++++-
+ mm/memory.c                            |  165 +++++++++++++++++++---------
+ mm/mmap.c                              |  186 ++++++++++++++++++++++++++------
+ mm/mremap.c                            |   43 +++++--
+ mm/process_vm_access.c                 |   69 ++++++++++++
+ 17 files changed, 439 insertions(+), 125 deletions(-)
+
+--
+Signed-off-by: Kirill Tkhai <ktkhai@virtuozzo.com>
