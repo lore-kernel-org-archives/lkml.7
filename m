@@ -2,55 +2,54 @@ Return-Path: <SRS0=lq4r=TU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69EA3C04AAC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:20:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0CDEC04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:20:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3F865213F2
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:20:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 97E0720656
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:20:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558354831;
-	bh=TsPPkJYp+ZBdS1q8wsLMPm+8Niv0sOmwjalvpw3DW0o=;
+	s=default; t=1558354834;
+	bh=GV2YVUH8HKMj4chMjjgTEuLD9Qveafzk1fUnzvnwZyQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SBZjsPuf3mKR5MYcS4DHPZc7FRm3VHpguRYtPDNBSlxC5/tVqjOvhCFdI2HFsdhEA
-	 2s4iFiBXrHvyOlYM6NOs2o3oXqr4vtwospzyht46kVzTDvu2jPSZVNznPrmZYISpOX
-	 304B0QgyLVhh6LWbZkrTQWtMkhtCYQt8kozZt330=
+	b=axq0Piks2uWzU7WBKgZxx3SDeS0qeRoRIFJmQVz5dWgJZ0W5+1ek3/7Qi8v/YBnwo
+	 oWCD8HB05G4K/slJwWaleQ6SiQwpghwUihsFT8l6a4BJ1XdfNZZ9S1r+zvhBNBSGWn
+	 b3qJWf/95mHe+HyrKzzsBV9WDOJaYfDtLo307vDM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388009AbfETMUa (ORCPT
+        id S1731204AbfETMUd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 08:20:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33830 "EHLO mail.kernel.org"
+        Mon, 20 May 2019 08:20:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33878 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387995AbfETMU0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 08:20:26 -0400
+        id S2388003AbfETMU3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 08:20:29 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DD60220815;
-        Mon, 20 May 2019 12:20:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7F6ED20656;
+        Mon, 20 May 2019 12:20:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558354826;
-        bh=TsPPkJYp+ZBdS1q8wsLMPm+8Niv0sOmwjalvpw3DW0o=;
+        s=default; t=1558354829;
+        bh=GV2YVUH8HKMj4chMjjgTEuLD9Qveafzk1fUnzvnwZyQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EtBHMK2u1DnaR5Ocqm+HnOWbniux0V9xD1A6d0/pHMhca5WZltiE9QxPYTwBSy1H4
-         MydbztGcK70c7JGvN422N95gYTKdcOgQoJsfaA2FVinF2Hiepgl3GxcLutBQZBsHvT
-         FRtj0tRPJzWOTw8Wn1HiCtcJWv2fzhPHKkiMnhTk=
+        b=xslCeFa9Zseh+T+n3/0GMd7EVzz4V8V31WtQkW0XlxbqAdHfyZPXXkxArQa7DjGi1
+         5vkVfN748xX0NoObJ1kws75zGA9euwMkYFuEV0tnjvKkgV6NXsmRdOMkzQg79m+pmk
+         Qa3826g8Ia55Lnm1f1Ro5K8vwZuJU+SKlLvGu8o4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        David Ahern <dsahern@gmail.com>,
-        Florian Westphal <fw@strlen.de>,
-        Hangbin Liu <liuhangbin@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.14 55/63] fib_rules: fix error in backport of e9919a24d302 ("fib_rules: return 0...")
-Date:   Mon, 20 May 2019 14:14:34 +0200
-Message-Id: <20190520115237.123078911@linuxfoundation.org>
+        =?UTF-8?q?Ondrej=20Mosn=C3=A1=C4=8Dek?= <omosnacek@gmail.com>,
+        Daniel Axtens <dja@axtens.net>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Herbert Xu <herbert@gondor.apana.org.au>
+Subject: [PATCH 4.14 18/63] crypto: vmx - fix copy-paste error in CTR mode
+Date:   Mon, 20 May 2019 14:13:57 +0200
+Message-Id: <20190520115233.031473631@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190520115231.137981521@linuxfoundation.org>
 References: <20190520115231.137981521@linuxfoundation.org>
@@ -63,39 +62,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+From: Daniel Axtens <dja@axtens.net>
 
-When commit e9919a24d302 ("fib_rules: return 0 directly if an exactly
-same rule exists when NLM_F_EXCL not supplied") was backported to 4.9.y,
-it changed the logic a bit as err should have been reset before exiting
-the test, like it happens in the original logic.
+commit dcf7b48212c0fab7df69e84fab22d6cb7c8c0fb9 upstream.
 
-If this is not set, errors happen :(
+The original assembly imported from OpenSSL has two copy-paste
+errors in handling CTR mode. When dealing with a 2 or 3 block tail,
+the code branches to the CBC decryption exit path, rather than to
+the CTR exit path.
 
-Reported-by: Nathan Chancellor <natechancellor@gmail.com>
-Reported-by: David Ahern <dsahern@gmail.com>
-Reported-by: Florian Westphal <fw@strlen.de>
-Cc: Hangbin Liu <liuhangbin@gmail.com>
-Cc: David S. Miller <davem@davemloft.net>
+This leads to corruption of the IV, which leads to subsequent blocks
+being corrupted.
+
+This can be detected with libkcapi test suite, which is available at
+https://github.com/smuellerDD/libkcapi
+
+Reported-by: Ondrej Mosnáček <omosnacek@gmail.com>
+Fixes: 5c380d623ed3 ("crypto: vmx - Add support for VMS instructions by ASM")
+Cc: stable@vger.kernel.org
+Signed-off-by: Daniel Axtens <dja@axtens.net>
+Tested-by: Michael Ellerman <mpe@ellerman.id.au>
+Tested-by: Ondrej Mosnacek <omosnacek@gmail.com>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- net/core/fib_rules.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/crypto/vmx/aesp8-ppc.pl |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/net/core/fib_rules.c b/net/core/fib_rules.c
-index bb26457e8c21..c03dd2104d33 100644
---- a/net/core/fib_rules.c
-+++ b/net/core/fib_rules.c
-@@ -430,6 +430,7 @@ int fib_nl_newrule(struct sk_buff *skb, struct nlmsghdr *nlh)
- 		goto errout_free;
+--- a/drivers/crypto/vmx/aesp8-ppc.pl
++++ b/drivers/crypto/vmx/aesp8-ppc.pl
+@@ -1815,7 +1815,7 @@ Lctr32_enc8x_three:
+ 	stvx_u		$out1,$x10,$out
+ 	stvx_u		$out2,$x20,$out
+ 	addi		$out,$out,0x30
+-	b		Lcbc_dec8x_done
++	b		Lctr32_enc8x_done
  
- 	if (rule_exists(ops, frh, tb, rule)) {
-+		err = 0;
- 		if (nlh->nlmsg_flags & NLM_F_EXCL)
- 			err = -EEXIST;
- 		goto errout_free;
--- 
-2.21.0
-
+ .align	5
+ Lctr32_enc8x_two:
+@@ -1827,7 +1827,7 @@ Lctr32_enc8x_two:
+ 	stvx_u		$out0,$x00,$out
+ 	stvx_u		$out1,$x10,$out
+ 	addi		$out,$out,0x20
+-	b		Lcbc_dec8x_done
++	b		Lctr32_enc8x_done
+ 
+ .align	5
+ Lctr32_enc8x_one:
 
 
