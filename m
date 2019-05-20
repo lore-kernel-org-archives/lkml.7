@@ -2,213 +2,161 @@ Return-Path: <SRS0=lq4r=TU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FAB2C04AAC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 19:36:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 184BEC04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 19:37:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 67F0E216B7
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 19:36:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E6AA8216B7
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 19:37:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="Keiu7hqy"
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="OjJQYTl5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726599AbfETTgL (ORCPT
+        id S1726610AbfETThB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 15:36:11 -0400
-Received: from mo4-p00-ob.smtp.rzone.de ([81.169.146.220]:25460 "EHLO
-        mo4-p00-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725983AbfETTgL (ORCPT
+        Mon, 20 May 2019 15:37:01 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:34361 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725958AbfETThA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 15:36:11 -0400
-X-Greylist: delayed 15652 seconds by postgrey-1.27 at vger.kernel.org; Mon, 20 May 2019 15:36:08 EDT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1558380967;
-        s=strato-dkim-0002; d=goldelico.com;
-        h=To:References:Message-Id:Cc:Date:In-Reply-To:From:Subject:
-        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=GZ00u1TKRqlCZd0pNtzmyGsnEPdVkfLRzcUw4N5xhc4=;
-        b=Keiu7hqyYhhsFgMM87REL67vRhw/2RLjf3x0QBlfOvNf+Tw54mAISNEJugpZimcFn7
-        6v34abPP4R4eN7ZD0JujOW5JOHb67fvJLR3oKuMFOksXJjN528s+zbINnthbLqEYEF/D
-        rlBu604H3AzkgwlzEpcjk9TLCp11q9su75MMU7xE6hlBFaq4W1PD80l3Zk1s0T8wfEse
-        7yKgqX/W6XUnakffFU86nFEGAGOtISJcpUs+ZrrKWEi+B2a+QRKUSDpZT1fyrs1NwXHe
-        fo1tSMwnr6GhT3Ng7QX23MNa1/WVTmgp0/axwqcD99GnGuMPlHx7xx4agFFIO/RX0oJe
-        D75w==
-X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMgPgp8VKxflSZ1P34KBj4Qpw9iZeHmAhw47tiH8="
-X-RZG-CLASS-ID: mo00
-Received: from imac.fritz.box
-        by smtp.strato.de (RZmta 44.18 DYNA|AUTH)
-        with ESMTPSA id j04dc1v4KJZkDJk
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (curve secp521r1 with 521 ECDH bits, eq. 15360 bits RSA))
-        (Client did not present a certificate);
-        Mon, 20 May 2019 21:35:46 +0200 (CEST)
-Content-Type: text/plain; charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
-Subject: Re: [BUG v5.2-rc1] ARM build broken
-From:   "H. Nikolaus Schaller" <hns@goldelico.com>
-In-Reply-To: <201905201142.CF71598A@keescook>
-Date:   Mon, 20 May 2019 21:35:45 +0200
-Cc:     lkml <linux-kernel@vger.kernel.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Chris Packham <chris.packham@alliedtelesis.co.nz>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Discussions about the Letux Kernel 
-        <letux-kernel@openphoenux.org>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <9A29E642-3A9D-4BBF-A203-9179D8FADA31@goldelico.com>
-References: <4DB08A04-D03A-4441-85DE-64A13E6D709C@goldelico.com> <201905200855.391A921AB@keescook> <D8F987B2-8F41-46DE-B298-89541D7A9774@goldelico.com> <201905201142.CF71598A@keescook>
-To:     Kees Cook <keescook@chromium.org>
-X-Mailer: Apple Mail (2.3124)
+        Mon, 20 May 2019 15:37:00 -0400
+Received: by mail-ot1-f66.google.com with SMTP id l17so14127662otq.1
+        for <linux-kernel@vger.kernel.org>; Mon, 20 May 2019 12:37:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=googlemail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=XVji6EW7+3Muo/zfup6MVTf/3d/utIq25qSjoZ1JLts=;
+        b=OjJQYTl5xqc9g9jBo9P61CScZaOFd89JYM+lXP+wWpwnM5V85ht/CH5QBwe3G6xum/
+         NQacpr0MMdVXwY77pd9fHReGdHexG8HnZY9OPu0ByLOaJkfRoOWt5rSZX0LQ3T5LEBwr
+         JNO9ZzQCC4Ft8SIiXHjQIUjPl6wGB78mKQw9jXsyQp0kRZYTwbGU15l7UTVqVAQJePUR
+         woyvknrDveua2kKithc9BI89DXCEoU2ghvohNcAT3ZUhr1qdIeU/ZRJlgEHpLoTtQ6Gt
+         yTHm3Kc9d0Mhy/F8gIAjHwX5U8l7KCmlcTzq1mTQnwMgp9+gadfZ9EjixHDrVt5FWj4M
+         ENSw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=XVji6EW7+3Muo/zfup6MVTf/3d/utIq25qSjoZ1JLts=;
+        b=mcQOoPlVtpX73Yw/m0+KivtVjAoIJWp99mTeVSY4CpDXCVaBy3c18VgYCHpePGBefK
+         6M/mVlhW4hksrBOBtSAYMoe0y0LuM9dhcNPDDXnvvMgGw7unVl2VyzRTYOdM3N2cVFPE
+         UPcAZ4eADja/SuJceQw35bvPna2oVZ5F/KWq7saHJ2SgGpl2C41CKUvJRaCb4/knEoeZ
+         rU+qbMUYB85N/1/SCkhPS42ZdeDLEESv7Rx8HmZbjZ6cqVtz/q3vE05cF5+rMZUgWv0V
+         Jy2S85iBOOps1xWmmlf3u/VZMp9g9IPMZl6loQqT0Y/+e0U6SkLDmAkEIoPzxv+cLEoa
+         f3qw==
+X-Gm-Message-State: APjAAAXTmBoKoLWgBNBp9h5p1Rqg63Ik/wQUbR9dlz/fetzYnYAPegGL
+        nDl2bMT+ML6Dl34I6atKM2SAuJlR0LSuoDsbbsCoj+QBj9g=
+X-Google-Smtp-Source: APXvYqy9xz0BM+Jt3/1MqM1Qd0gyzmKhktCKQkV64no6FtpQKOWujanY15J3MAYELu3Ppdok5fMkBGK/kEKzFRI2cWg=
+X-Received: by 2002:a9d:69c8:: with SMTP id v8mr46812783oto.6.1558381020106;
+ Mon, 20 May 2019 12:37:00 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190413171532.25967-1-martin.blumenstingl@googlemail.com>
+ <CAHStOZ5Pe9LvDk4cKAVB4SS5wgFcK-bweFTqU_mnEhOAyZKHuA@mail.gmail.com>
+ <CAFBinCD4OnBbU0YR5P5cAhut==XXUxdHSxHQkBVm28DHZWkbAw@mail.gmail.com> <CAHStOZ4O=sdHaKrY_DwkhDHVBsa_Dg4xWEBrS77LHG-WbZ6-Cw@mail.gmail.com>
+In-Reply-To: <CAHStOZ4O=sdHaKrY_DwkhDHVBsa_Dg4xWEBrS77LHG-WbZ6-Cw@mail.gmail.com>
+From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Date:   Mon, 20 May 2019 21:36:49 +0200
+Message-ID: <CAFBinCBKK7+dvkTwa=b7uBCAxLimzLnnvOSo4VD+5AVRiuynug@mail.gmail.com>
+Subject: Re: [PATCH 0/3] 32-bit Meson: add the canvas module
+To:     Maxime Jourdan <maxi.jourdan@wanadoo.fr>
+Cc:     linux-amlogic <linux-amlogic@lists.infradead.org>,
+        Kevin Hilman <khilman@baylibre.com>, mjourdan@baylibre.com,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Hi Maxime,
 
-> Am 20.05.2019 um 20:53 schrieb Kees Cook <keescook@chromium.org>:
->=20
-> [Adding Chris and Ard, who might have more compiler versions that =
-me...]
->=20
-> On Mon, May 20, 2019 at 07:08:39PM +0200, H. Nikolaus Schaller wrote:
->>> Am 20.05.2019 um 17:59 schrieb Kees Cook <keescook@chromium.org>:
->>>=20
->>> On Mon, May 20, 2019 at 05:15:02PM +0200, H. Nikolaus Schaller =
-wrote:
->>>> Hi,
->>>> it seems as if ARM build is broken since ARM now hard enables =
-CONFIG_HAVE_GCC_PLUGINS
->>>> which indirectly enables CONFIG_GCC_PLUGIN_ARM_SSP_PER_TASK. =
-Compiling this breaks
->>>> on my system (Darwin build host) due to conflicts in system headers =
-and Linux headers.
->>>>=20
->>>> So how can I turn off all these GCC_PLUGINS?
->>>>=20
->>>> The offending patch seems to be
->>>>=20
->>>> 	security: Create "kernel hardening" config area
->>>>=20
->>>> especially the new "default y" for GCC_PLUGINS. After removing that =
-line from
->>>> scripts/gcc-plugins/Kconfig makes my compile succeed.
->>>=20
->>> The intention is to enable it _if_ the plugins are available as part =
-of
->>> the build environment. The "default y" on GCC_PLUGINS is mediated =
-by:
->>>       depends on HAVE_GCC_PLUGINS
->>=20
->> HAVE_GCC_PLUGINS has the following description:
->>=20
->> 	An arch should select this symbol if it supports building with
->>          GCC plugins.
->>=20
->> So an ARCH (ARM) selects it unconditionally of the build environment.
->>=20
->>>       depends on PLUGIN_HOSTCC !=3D ""
->>=20
->> Well, we have it set to "g++" for ages and it was not a problem.
->> So both conditions are true.
->=20
-> PLUGIN_HOSTCC should have passed the scripts/gcc-plugin.sh test, so
-> that's correct. And the result (CONFIG_GCC_PLUGINS) is correct: it
-> doesn't enable or disable anything itself.
->=20
-> What you want is to disable CONFIG_STACKPROTECTOR_PER_TASK, which
-> is the knob for the feature:
->=20
-> config STACKPROTECTOR_PER_TASK
->        bool "Use a unique stack canary value for each task"
->        depends on GCC_PLUGINS && STACKPROTECTOR && SMP && =
-!XIP_DEFLATED_DATA
->        select GCC_PLUGIN_ARM_SSP_PER_TASK
->        default y
+On Mon, May 20, 2019 at 9:21 PM Maxime Jourdan <maxi.jourdan@wanadoo.fr> wrote:
+>
+> Hey Martin, so sorry for forgetting about this.
+>
+> On Thu, Apr 18, 2019 at 9:50 PM Martin Blumenstingl
+> <martin.blumenstingl@googlemail.com> wrote:
+> >
+> > Hi Maxime,
+> >
+> > On Sat, Apr 13, 2019 at 8:54 PM Maxime Jourdan <maxi.jourdan@wanadoo.fr> wrote:
+> > >
+> > > Hi Martin,
+> > > On Sat, Apr 13, 2019 at 7:15 PM Martin Blumenstingl
+> > > <martin.blumenstingl@googlemail.com> wrote:
+> > > >
+> > > > This adds the canvas module on Meson8, Meson8b and Meson8m2. The canvas
+> > > > IP is used by the video decoder hardware as well as the VPU (video
+> > > > output) hardware.
+> > > >
+> > > > Neither the VPU nor the video decoder driver support the 32-bit SoCs
+> > > > yet. However, we can still add the canvas module to have it available
+> > > > once these drivers gain support for the older SoCs.
+> > > >
+> > > > I have tested this on my Meson8m2 board by hacking the VPU driver to
+> > > > not re-initialize the VPU (and to use the configuration set by u-boot).
+> > > > With that hack I could get some image out of the CVBS connector. No
+> > > > changes to the canvas driver were required.
+> > > >
+> > > > Due to lack of hardware I could not test Meson8, but I'm following (as
+> > > > always) what the Amlogic 3.10 vendor kernel uses.
+> > > > Meson8b is also not tested because u-boot of my EC-100 doesn't have
+> > > > video output enabled (so I couldn't use the same hack I used on my
+> > > > Meson8m2 board).
+> > > >
+> > > > This series meant to be applied on top of "Meson8b: add support for the
+> > > > RTC on EC-100 and Odroid-C1" from [0]
+> > > >
+> > > >
+> > >
+> > > The series looks good to me, however I wonder if we should maybe add a
+> > > new compatible ?
+> > >
+> > > The canvas IP before the GX* generation does not handle what Amlogic
+> > > calls "endianness", the field that allows doing some byte-switching to
+> > > get proper NV12/NV21. So the following defines are unusable:
+> > >
+> > > #define MESON_CANVAS_ENDIAN_SWAP16 0x1
+> > > #define MESON_CANVAS_ENDIAN_SWAP32 0x3
+> > > #define MESON_CANVAS_ENDIAN_SWAP64 0x7
+> > > #define MESON_CANVAS_ENDIAN_SWAP128 0xf
+> > I didn't know about this - thank you for pointing this out.
+> >
+> > your suggestions to add new compatible strings is a good idea for that case.
+> > Amlogic uses different defines for Meson8 and Meson8m2 in their vendor
+> > kernel and they keep Meson8b different.
+> > I will add three new compatibles, one for each SoC (Meson8, Meson8b,
+> > Meson8m2) just to be on the safe side if we discover differences in
+> > the canvas IP on these SoCs.
+> >
+> > what do you think?
+> >
+>
+> Sure thing. Keep an eye out for any hints regarding the amount of
+> canvases as well, I *think* I remember some old SoCs having only 192
+> but I haven't been able to find it again.
+Meson6 and older are limited to 192, Meson8 and newer already support
+256. source: [0]
 
-Ah, disabling this makes it compile.
+> > > It wouldn't change much functionally, but we could have e.g a warning
+> > > if a m8 canvas user tries to set endianness even though it does
+> > > nothing.
+> > this is a good idea, that will make it easier to spot why something
+> > doesn't work.
+> > we can also return -EINVAL, like you already do for the case where the
+> > canvas ID is already used.
+> >
+>
+> Yes, returning an error is a good idea.
+OK, I'll send an updated series later.
 
-Unfortunately it is not explicitly disabled by e.g. omap2plus_defconfig =
-and therefore
-automatically set through the "default y". So I have to manipulate the =
-defconfig first.
 
->=20
->> Build error:
->>=20
->> HOSTCXX -fPIC scripts/gcc-plugins/arm_ssp_per_task_plugin.o - due to: =
-scripts/gcc-plugins/gcc-common.h
->> In file included from =
-scripts/gcc-plugins/arm_ssp_per_task_plugin.c:3:0:
->> scripts/gcc-plugins/gcc-common.h:153:0: warning: "__unused" redefined
->> #define __unused __attribute__((__unused__))
->> ^
->=20
-> Does the following patch fix your build? (I assume that line is just a
-> warning, but if not...)
->=20
-> diff --git a/scripts/gcc-plugins/gcc-common.h =
-b/scripts/gcc-plugins/gcc-common.h
-> index 552d5efd7cb7..17f06079a712 100644
-> --- a/scripts/gcc-plugins/gcc-common.h
-> +++ b/scripts/gcc-plugins/gcc-common.h
-> @@ -150,8 +150,12 @@ void print_gimple_expr(FILE *, gimple, int, int);
-> void dump_gimple_stmt(pretty_printer *, gimple, int, int);
-> #endif
->=20
-> +#ifndef __unused
-> #define __unused __attribute__((__unused__))
-> +#endif
-> +#ifndef __visible
-> #define __visible __attribute__((visibility("default")))
-> +#endif
->=20
-> #define DECL_NAME_POINTER(node) IDENTIFIER_POINTER(DECL_NAME(node))
-> #define DECL_NAME_LENGTH(node) IDENTIFIER_LENGTH(DECL_NAME(node))
+Martin
 
-Yes, fixes this issue.
 
->=20
->> HOSTLLD -shared scripts/gcc-plugins/arm_ssp_per_task_plugin.so - due =
-to target missing
->> Undefined symbols for architecture x86_64:
->> "gen_reg_rtx(machine_mode)", referenced from:
->>     (anonymous namespace)::arm_pertask_ssp_rtl_pass::execute() in =
-arm_ssp_per_task_plugin.o
->=20
-> However, this part sounds more like what was fixed with
-> 259799ea5a9a ("gcc-plugins: arm_ssp_per_task_plugin: Fix for older GCC =
-< 6")
->=20
-> And maybe some additional fixes for 4.9 are needed?
-
-Looks similar although not a compiler but linker error. Which indicates =
-a library search issue.
-
-Unfortunately gcc plugins is something I didn't even know that it exists =
-until some hours ago :)
-
-So I have no idea where e.g. _plugin_default_version_check, =
-_default_target_rtl or _register_callback
-should be provided.
-
-If it is part of the gcc build-from-source tree I may have a chance to =
-add the path to the CCXFLAGS.
-Or is it to be provided from the kernel tree?
-
->=20
->> This is because CONFIG_GCC_PLUGIN_ARM_SSP_PER_TASK became =
-automatically enabled and was never
->> before. So the compiler may lack some library search path for =
-building this plugin (which we
->> did never miss).
->=20
-> Right -- maybe CONFIG_STACKPROTECTOR_PER_TASK doesn't work with old =
-gcc
-> 4.9.2? I'll see if I can find that compiler version...
-
-I think Debian Jessie used the same compiler version as default gcc.
-
-BR and thanks,
-Nikolaus Schaller
-
+[0] https://github.com/endlessm/linux-meson/blob/5cb4882cdda584878a29132aeb9a90497a121df9/drivers/amlogic/canvas/canvas.c#L41
