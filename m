@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49D28C04AAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:48:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39A39C04AAF
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:48:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 130482054F
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:48:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0DE8421744
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:48:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558356488;
-	bh=47h56TplLtOuTZk9bZBytonkt83xqba2oE7Wh9cojE4=;
+	s=default; t=1558356490;
+	bh=cm3X3sPLFncga0AO6FdB7CwX0XUcBLx38ZGNlPvHQfM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2ZAhZLpaY3ku5jak2LAS3x94XG2alkK7Vb26t7f1/NPMoPVPB6g78rohKO6tkQ6wl
-	 k1ZZwTVGKeup5jf5qTSKFfkcgpxTUXQNME95Tu1frfsuoNYldB1E6EnERESSPm7Z9N
-	 FUgChNE74s0iTI5MC30QTwa/6AAjThnGw/Q7VUhg=
+	b=WweW2XZhTKlAmIiV/A3QW7fAkv8qE4rWprQqmCEzYHuyE/1nJW9ViKxHDWDs+5QyF
+	 LQWswK2HRqDHDbNoQfszHt6XRYOZixH3hiYpKEkr7pPXd22hkq5Rg8uJqlHaiqviNS
+	 Ss0xaZogAmy08ia4lqy8bp3ARO99MSMs3dhFKhwM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389953AbfETMsH (ORCPT
+        id S2391452AbfETMsJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 08:48:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37712 "EHLO mail.kernel.org"
+        Mon, 20 May 2019 08:48:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37648 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387859AbfETMXV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 08:23:21 -0400
+        id S2388129AbfETMXU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 08:23:20 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C327320675;
-        Mon, 20 May 2019 12:23:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2EBBD21479;
+        Mon, 20 May 2019 12:23:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558355001;
-        bh=47h56TplLtOuTZk9bZBytonkt83xqba2oE7Wh9cojE4=;
+        s=default; t=1558354998;
+        bh=cm3X3sPLFncga0AO6FdB7CwX0XUcBLx38ZGNlPvHQfM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=koTnrXlQTiXM1uUqQdszqjLB+F+txVnaq+uF0dOo3dqIgcQ3beOmjJelP2f2Ae21Y
-         lvkET2PQcynnIXQYMSvkIA1+Cvn79kU1UnsqYHcL+kNEC5VvmcHcD81Ah77lpQSdIN
-         xPt1cWRTcIkLlgJX/3rYhWFFRsjqmOlB3DVuwZHQ=
+        b=ERYY2z9wgAszGxTtv1RW/P0hG/cgmSWqP9m6P0xVJ+RjO9Y49Sz/5UrQNiXZjLGKU
+         ZPBTzQzvXvtvGYXUMKpdz2ZyT0jr1yuB601QjgGIW+tCJkSeQd240ARD4gRvv1Swxm
+         HEIdHwor0aOYOgepkTC360ELFsOz/lBjgRX2uOkQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Steve Twiss <stwiss.opensource@diasemi.com>,
-        Lee Jones <lee.jones@linaro.org>
-Subject: [PATCH 4.19 060/105] mfd: da9063: Fix OTP control register names to match datasheets for DA9063/63L
-Date:   Mon, 20 May 2019 14:14:06 +0200
-Message-Id: <20190520115251.271410956@linuxfoundation.org>
+        stable@vger.kernel.org, Rajat Jain <rajatja@google.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+Subject: [PATCH 4.19 059/105] ACPI: PM: Set enable_for_wake for wakeup GPEs during suspend-to-idle
+Date:   Mon, 20 May 2019 14:14:05 +0200
+Message-Id: <20190520115251.197424915@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190520115247.060821231@linuxfoundation.org>
 References: <20190520115247.060821231@linuxfoundation.org>
@@ -60,39 +59,86 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Steve Twiss <stwiss.opensource@diasemi.com>
+From: Rajat Jain <rajatja@google.com>
 
-commit 6b4814a9451add06d457e198be418bf6a3e6a990 upstream.
+commit 2f844b61db8297a1f7a06adf2eb5c43381f2c183 upstream.
 
-Mismatch between what is found in the Datasheets for DA9063 and DA9063L
-provided by Dialog Semiconductor, and the register names provided in the
-MFD registers file. The changes are for the OTP (one-time-programming)
-control registers. The two naming errors are OPT instead of OTP, and
-COUNT instead of CONT (i.e. control).
+I noticed that recently multiple systems (chromebooks) couldn't wake
+from S0ix using LID or Keyboard after updating to a newer kernel. I
+bisected and it turned up commit f941d3e41da7 ("ACPI: EC / PM: Disable
+non-wakeup GPEs for suspend-to-idle"). I checked that the issue got
+fixed if that commit was reverted.
 
-Cc: Stable <stable@vger.kernel.org>
-Signed-off-by: Steve Twiss <stwiss.opensource@diasemi.com>
-Signed-off-by: Lee Jones <lee.jones@linaro.org>
+I debugged and found that although PNP0C0D:00 (representing the LID)
+is wake capable and should wakeup the system per the code in
+acpi_wakeup_gpe_init() and in drivers/acpi/button.c:
+
+localhost /sys # cat /proc/acpi/wakeup
+Device  S-state   Status   Sysfs node
+LID0      S4    *enabled   platform:PNP0C0D:00
+CREC      S5    *disabled  platform:GOOG0004:00
+                *disabled  platform:cros-ec-dev.1.auto
+                *disabled  platform:cros-ec-accel.0
+                *disabled  platform:cros-ec-accel.1
+                *disabled  platform:cros-ec-gyro.0
+                *disabled  platform:cros-ec-ring.0
+                *disabled  platform:cros-usbpd-charger.2.auto
+                *disabled  platform:cros-usbpd-logger.3.auto
+D015      S3    *enabled   i2c:i2c-ELAN0000:00
+PENH      S3    *enabled   platform:PRP0001:00
+XHCI      S3    *enabled   pci:0000:00:14.0
+GLAN      S4    *disabled
+WIFI      S3    *disabled  pci:0000:00:14.3
+localhost /sys #
+
+On debugging, I found that its corresponding GPE is not being enabled.
+The particular GPE's "gpe_register_info->enable_for_wake" does not
+have any bits set when acpi_enable_all_wakeup_gpes() comes around to
+use it. I looked at code and could not find any other code path that
+should set the bits in "enable_for_wake" bitmask for the wake enabled
+devices for s2idle.  [I do see that it happens for S3 in
+acpi_sleep_prepare()].
+
+Thus I used the same call to enable the GPEs for wake enabled devices,
+and verified that this fixes the regression I was seeing on multiple
+of my devices.
+
+[ rjw: The problem is that commit f941d3e41da7 ("ACPI: EC / PM:
+  Disable non-wakeup GPEs for suspend-to-idle") forgot to add
+  the acpi_enable_wakeup_devices() call for s2idle along with
+  acpi_enable_all_wakeup_gpes(). ]
+
+Fixes: f941d3e41da7 ("ACPI: EC / PM: Disable non-wakeup GPEs for suspend-to-idle")
+Link: https://bugzilla.kernel.org/show_bug.cgi?id=203579
+Signed-off-by: Rajat Jain <rajatja@google.com>
+[ rjw: Subject & changelog ]
+Cc: 5.0+ <stable@vger.kernel.org> # 5.0+
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- include/linux/mfd/da9063/registers.h |    6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/acpi/sleep.c |    4 ++++
+ 1 file changed, 4 insertions(+)
 
---- a/include/linux/mfd/da9063/registers.h
-+++ b/include/linux/mfd/da9063/registers.h
-@@ -215,9 +215,9 @@
+--- a/drivers/acpi/sleep.c
++++ b/drivers/acpi/sleep.c
+@@ -977,6 +977,8 @@ static int acpi_s2idle_prepare(void)
+ 	if (acpi_sci_irq_valid())
+ 		enable_irq_wake(acpi_sci_irq);
  
- /* DA9063 Configuration registers */
- /* OTP */
--#define	DA9063_REG_OPT_COUNT		0x101
--#define	DA9063_REG_OPT_ADDR		0x102
--#define	DA9063_REG_OPT_DATA		0x103
-+#define	DA9063_REG_OTP_CONT		0x101
-+#define	DA9063_REG_OTP_ADDR		0x102
-+#define	DA9063_REG_OTP_DATA		0x103
++	acpi_enable_wakeup_devices(ACPI_STATE_S0);
++
+ 	/* Change the configuration of GPEs to avoid spurious wakeup. */
+ 	acpi_enable_all_wakeup_gpes();
+ 	acpi_os_wait_events_complete();
+@@ -1026,6 +1028,8 @@ static void acpi_s2idle_restore(void)
+ {
+ 	acpi_enable_all_runtime_gpes();
  
- /* Customer Trim and Configuration */
- #define	DA9063_REG_T_OFFSET		0x104
++	acpi_disable_wakeup_devices(ACPI_STATE_S0);
++
+ 	if (acpi_sci_irq_valid())
+ 		disable_irq_wake(acpi_sci_irq);
+ 
 
 
