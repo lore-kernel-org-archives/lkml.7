@@ -2,142 +2,214 @@ Return-Path: <SRS0=lq4r=TU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED9A7C04AAC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 18:20:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C847C04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 18:21:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CD36F208C3
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 18:20:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="oYB6QTOA"
+	by mail.kernel.org (Postfix) with ESMTP id 05517208C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 18:21:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727517AbfETSUk (ORCPT
+        id S1727506AbfETSVV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 14:20:40 -0400
-Received: from mail-vs1-f66.google.com ([209.85.217.66]:43374 "EHLO
-        mail-vs1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727361AbfETSUj (ORCPT
+        Mon, 20 May 2019 14:21:21 -0400
+Received: from gateway22.websitewelcome.com ([192.185.47.228]:27787 "EHLO
+        gateway22.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725902AbfETSVU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 14:20:39 -0400
-Received: by mail-vs1-f66.google.com with SMTP id d128so9490511vsc.10
-        for <linux-kernel@vger.kernel.org>; Mon, 20 May 2019 11:20:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=cEsXYaOHHpFfqvOIf/R9j2mgz7hkA3ZSG0hiHjJfsfQ=;
-        b=oYB6QTOAyrW+xrurBLaMKPFnUo9r8uSNIw0B5/zqa2y0TSIR3nr+FiEhLSwmdmx4XT
-         PSW8n6oIFIvgbr1Q8u1FLhEjC2pMWGPcFrxz9D/vDnrjHb6YxdngV4/rsvj4XVMkiS7u
-         zji43e+I4SpiwFIfKB7pf85C9sv2FuOd9EGRk=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=cEsXYaOHHpFfqvOIf/R9j2mgz7hkA3ZSG0hiHjJfsfQ=;
-        b=o1UzQQp1RDbjh2nHcWNWAeV0gj6kwgdnLpKx6rupHXcSylfuptdCXjFBK/hu/lVNOO
-         MX/39wDJwwcL0rSAcmJovYbvS3ZZGQy/lwP2MZE2eyaFmAKtf0D0r0oE/yhtAz0e0AID
-         d0T1nWzUzFvpF1kmbUm0n5TJ8N5obigFO7yQh7cATpfEuEELLdjQVJ6TZXc0ylYAI06g
-         OxH+Tlp7DACy0BvR1hQ+MhDDra7eo0l5cv8me0lKJHg3PeqlIzTbauZQg7pwEb2tCphs
-         uBXEvZtwYkuCij7s3cbELXipLO2QMghQtLn6bbPdeOzGgIKOSrdA/MP6FHpQ1JmUz5rP
-         iksQ==
-X-Gm-Message-State: APjAAAUUpvp06yWveqZWQ+UX1p2IFOofzit/O7/D6BT4a9dtP07fNtgt
-        oD2Clskzr9iZkk8iuNjGI2jRdrimXtE=
-X-Google-Smtp-Source: APXvYqx6tvmqJsmEDv/aDQTv2cQsvAfccgX2Q9zvB7zSfEN5dpmFzczY+EEj1y7IAfhvOPUWrnrzFw==
-X-Received: by 2002:a05:6102:382:: with SMTP id m2mr17617742vsq.134.1558376438361;
-        Mon, 20 May 2019 11:20:38 -0700 (PDT)
-Received: from mail-ua1-f45.google.com (mail-ua1-f45.google.com. [209.85.222.45])
-        by smtp.gmail.com with ESMTPSA id n23sm11555732vsj.27.2019.05.20.11.20.34
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Mon, 20 May 2019 11:20:34 -0700 (PDT)
-Received: by mail-ua1-f45.google.com with SMTP id u4so5602715uau.10
-        for <linux-kernel@vger.kernel.org>; Mon, 20 May 2019 11:20:34 -0700 (PDT)
-X-Received: by 2002:a9f:24a3:: with SMTP id 32mr13553176uar.109.1558376433588;
- Mon, 20 May 2019 11:20:33 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190517225420.176893-1-dianders@chromium.org>
- <20190517225420.176893-2-dianders@chromium.org> <e3f54bcb-8d10-1336-1458-2bd11cfc1010@broadcom.com>
-In-Reply-To: <e3f54bcb-8d10-1336-1458-2bd11cfc1010@broadcom.com>
-From:   Doug Anderson <dianders@chromium.org>
-Date:   Mon, 20 May 2019 11:20:22 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=Uvc1wUQe-W1Jvm_gQ722pFm2a4OWvJDNVtkyQynFe4Gw@mail.gmail.com>
-Message-ID: <CAD=FV=Uvc1wUQe-W1Jvm_gQ722pFm2a4OWvJDNVtkyQynFe4Gw@mail.gmail.com>
-Subject: Re: [PATCH 1/3] brcmfmac: re-enable command decode in sdio_aos for
- BRCM 4354
-To:     Arend Van Spriel <arend.vanspriel@broadcom.com>
-Cc:     Ulf Hansson <ulf.hansson@linaro.org>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
-        Double Lo <double.lo@cypress.com>,
-        Brian Norris <briannorris@chromium.org>,
-        Madhan Mohan R <madhanmohan.r@cypress.com>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Wright Feng <wright.feng@cypress.com>,
-        Chi-Hsien Lin <chi-hsien.lin@cypress.com>,
-        brcm80211-dev-list.pdl@broadcom.com,
-        Franky Lin <franky.lin@broadcom.com>,
-        netdev <netdev@vger.kernel.org>,
-        linux-wireless <linux-wireless@vger.kernel.org>,
+        Mon, 20 May 2019 14:21:20 -0400
+Received: from cm14.websitewelcome.com (cm14.websitewelcome.com [100.42.49.7])
+        by gateway22.websitewelcome.com (Postfix) with ESMTP id 609DE1A979
+        for <linux-kernel@vger.kernel.org>; Mon, 20 May 2019 13:21:19 -0500 (CDT)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id SmuVhHDKE2qH7SmuVhWgNB; Mon, 20 May 2019 13:21:19 -0500
+X-Authority-Reason: nr=8
+Received: from [189.250.71.100] (port=36326 helo=[192.168.1.76])
+        by gator4166.hostgator.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
+        (Exim 4.91)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1hSmuS-002cjf-EH; Mon, 20 May 2019 13:21:18 -0500
+To:     xiaolinkui <xiaolinkui@kylinos.cn>
+Cc:     "Deucher, Alexander" <alexander.deucher@amd.com>,
+        Christian Koenig <christian.koenig@amd.com>,
+        Chunming Zhou <David1.Zhou@amd.com>,
+        Dave Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        xinhui pan <xinhui.pan@amd.com>,
+        "Quan, Evan" <evan.quan@amd.com>,
+        Maling list - DRI developers 
+        <dri-devel@lists.freedesktop.org>,
+        amd-gfx list <amd-gfx@lists.freedesktop.org>,
         LKML <linux-kernel@vger.kernel.org>,
-        Hante Meuleman <hante.meuleman@broadcom.com>,
-        Naveen Gupta <naveen.gupta@cypress.com>,
-        brcm80211-dev-list@cypress.com, YueHaibing <yuehaibing@huawei.com>,
-        "David S. Miller" <davem@davemloft.net>
-Content-Type: text/plain; charset="UTF-8"
+        Alex Deucher <alexdeucher@gmail.com>
+References: <1558082760-4915-1-git-send-email-xiaolinkui@kylinos.cn>
+ <CADnq5_PE-mvW2zwNeHn6prvTQvh-en9E9F7VE-hCS=a8jJWhAQ@mail.gmail.com>
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=gustavo@embeddedor.com; keydata=
+ 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
+ VtSixD1uOgytAP7RWS474w==
+Subject: Re: [PATCH] gpu: drm: use struct_size() in kmalloc()
+Message-ID: <f17d994b-c498-4002-dd72-2999574d84ec@embeddedor.com>
+Date:   Mon, 20 May 2019 13:21:14 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
+MIME-Version: 1.0
+In-Reply-To: <CADnq5_PE-mvW2zwNeHn6prvTQvh-en9E9F7VE-hCS=a8jJWhAQ@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 189.250.71.100
+X-Source-L: No
+X-Exim-ID: 1hSmuS-002cjf-EH
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: ([192.168.1.76]) [189.250.71.100]:36326
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 11
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-
-On Mon, May 20, 2019 at 1:09 AM Arend Van Spriel
-<arend.vanspriel@broadcom.com> wrote:
->
-> On 5/18/2019 12:54 AM, Douglas Anderson wrote:
-> > In commit 29f6589140a1 ("brcmfmac: disable command decode in
-> > sdio_aos") we disabled something called "command decode in sdio_aos"
-> > for a whole bunch of Broadcom SDIO WiFi parts.
-> >
-> > After that patch landed I find that my kernel log on
-> > rk3288-veyron-minnie and rk3288-veyron-speedy is filled with:
-> >    brcmfmac: brcmf_sdio_bus_sleep: error while changing bus sleep state -110
-> >
-> > This seems to happen every time the Broadcom WiFi transitions out of
-> > sleep mode.  Reverting the part of the commit that affects the WiFi on
-> > my boards fixes the problem for me, so that's what this patch does.
->
-> This sounds very similar to the issue we had during integration of wifi
-> on rk3288 chromebooks years ago.
-
-I'm working on those same Chromebooks.  ;-)  I'm working on trying to
-make them well on newer kernels.
-
-...but I guess you're saying that the problem faced by the people who
-wanted commit 29f6589140a1 ("brcmfmac: disable command decode in
-sdio_aos") are similar to the problems we saw in the past on those
-Chromebooks.  I'd tend to agree.  In general it's difficult to get a
-SD Host Controller to be fully robust in the fact of any/all errors on
-the bus.  While dw_mmc is pretty robust these days I'm assuming that
-some other host controllers aren't.
 
 
-> > Note that, in general, the justification in the original commit seemed
-> > a little weak.  It looked like someone was testing on a SD card
-> > controller that would sometimes die if there were CRC errors on the
-> > bus.  This used to happen back in early days of dw_mmc (the controller
-> > on my boards), but we fixed it.  Disabling a feature on all boards
-> > just because one SD card controller is broken seems bad.  ...so
-> > instead of just this patch possibly the right thing to do is to fully
-> > revert the original commit.
->
-> I am leaning towards a full revert, but let's wait for more background info.
+On 5/20/19 12:41 PM, Alex Deucher wrote:
+> On Fri, May 17, 2019 at 8:43 AM xiaolinkui <xiaolinkui@kylinos.cn> wrote:
+>>
+>> Use struct_size() helper to keep code simple.
+>>
 
-I'd be fine with a full revert too.  Presumably that will break
-someone but maybe they need to come up with a better solution?
+Again, this is not the reason why this helper was created.
 
--Doug
+>> Signed-off-by: xiaolinkui <xiaolinkui@kylinos.cn>
+>> ---
+>>  drivers/gpu/drm/amd/amdgpu/amdgpu_ras.c | 3 +--
+>>  1 file changed, 1 insertion(+), 2 deletions(-)
+> 
+> This patch results in the following build error:
+>   DESCEND  objtool
+>   CALL    scripts/checksyscalls.sh
+>   CHK     include/generated/compile.h
+>   CC [M]  drivers/gpu/drm/amd/amdgpu/amdgpu_ras.o
+> In file included from ./include/linux/kernel.h:15,
+>                  from ./include/linux/list.h:9,
+>                  from ./include/linux/wait.h:7,
+>                  from ./include/linux/wait_bit.h:8,
+>                  from ./include/linux/fs.h:6,
+>                  from ./include/linux/debugfs.h:15,
+>                  from drivers/gpu/drm/amd/amdgpu/amdgpu_ras.c:24:
+> drivers/gpu/drm/amd/amdgpu/amdgpu_ras.c: In function ‘amdgpu_ras_init’:
+> ./include/linux/build_bug.h:16:45: error: negative width in bit-field
+> ‘<anonymous>’
+>  #define BUILD_BUG_ON_ZERO(e) (sizeof(struct { int:(-!!(e)); }))
+>                                              ^
+> ./include/linux/compiler.h:349:28: note: in expansion of macro
+> ‘BUILD_BUG_ON_ZERO’
+>  #define __must_be_array(a) BUILD_BUG_ON_ZERO(__same_type((a), &(a)[0]))
+>                             ^~~~~~~~~~~~~~~~~
+> ./include/linux/overflow.h:306:30: note: in expansion of macro ‘__must_be_array’
+>        sizeof(*(p)->member) + __must_be_array((p)->member),\
+>                               ^~~~~~~~~~~~~~~
+> drivers/gpu/drm/amd/amdgpu/amdgpu_ras.c:1556:16: note: in expansion of
+> macro ‘struct_size’
+>   con = kmalloc(struct_size(con, objs, AMDGPU_RAS_BLOCK_COUNT),
+>                 ^~~~~~~~~~~
+> make[4]: *** [scripts/Makefile.build:276:
+> drivers/gpu/drm/amd/amdgpu/amdgpu_ras.o] Error 1
+> make[4]: *** Waiting for unfinished jobs....
+> make[3]: *** [scripts/Makefile.build:492: drivers/gpu/drm/amd/amdgpu] Error 2
+> make[3]: *** Waiting for unfinished jobs....
+> make[2]: *** [scripts/Makefile.build:492: drivers/gpu/drm] Error 2
+> make[1]: *** [scripts/Makefile.build:492: drivers/gpu] Error 2
+> make: *** [Makefile:1042: drivers] Error 2
+> 
+> Alex
+> 
+
+You continue[1][2] sending these sorts of patches without really understanding what
+you are doing. And you don't even compile them. Why?
+
+--
+Gustavo
+
+[1] https://lore.kernel.org/lkml/d83390a9-33be-3d76-3e23-b97f0a05b72f@kernel.dk/
+[2] https://lore.kernel.org/lkml/b4d33107-75d5-fa18-536e-6d21c96e4972@kernel.dk/
+
+> 
+>>
+>> diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_ras.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_ras.c
+>> index 22bd21e..4717a64 100644
+>> --- a/drivers/gpu/drm/amd/amdgpu/amdgpu_ras.c
+>> +++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_ras.c
+>> @@ -1375,8 +1375,7 @@ int amdgpu_ras_init(struct amdgpu_device *adev)
+>>         if (con)
+>>                 return 0;
+>>
+>> -       con = kmalloc(sizeof(struct amdgpu_ras) +
+>> -                       sizeof(struct ras_manager) * AMDGPU_RAS_BLOCK_COUNT,
+>> +       con = kmalloc(struct_size(con, objs, AMDGPU_RAS_BLOCK_COUNT),
+>>                         GFP_KERNEL|__GFP_ZERO);
+>>         if (!con)
+>>                 return -ENOMEM;
+>> --
+>> 2.7.4
+>>
+>>
+>>
+>> _______________________________________________
+>> amd-gfx mailing list
+>> amd-gfx@lists.freedesktop.org
+>> https://lists.freedesktop.org/mailman/listinfo/amd-gfx
