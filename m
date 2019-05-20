@@ -2,203 +2,120 @@ Return-Path: <SRS0=lq4r=TU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
-	USER_AGENT_NEOMUTT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE8A1C04AAC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 15:31:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77BFCC04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 15:32:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8DE4D2081C
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 15:31:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4B1D12081C
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 15:32:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="LDlo2Jtn"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="aCs7wcUo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392181AbfETPbh (ORCPT
+        id S2392189AbfETPcY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 11:31:37 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:42886 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731262AbfETPbh (ORCPT
+        Mon, 20 May 2019 11:32:24 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:55240 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731262AbfETPcY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 11:31:37 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x4KFIvpF144705;
-        Mon, 20 May 2019 15:30:35 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2018-07-02;
- bh=SXUGhLzqu7OWeZA9OhKeGyoXs0a41JQJFMDBXBRPnVs=;
- b=LDlo2JtnsgqOL7mMI0IvGprzfGCy4to4pDQltq8uHsDWRMZ5fLF/GBmkz/DPJG16d8+E
- AphQu0yTg9IX/1qILAVa03FMrn/a0QMIcIuzCfG1x9RXcoTeKLnRbqhxI/u2l3T5i+FO
- sRlFZbwrPkqowmNwuDTdSihMC/nz2onnFmvR1s6zTFTGeAGe8PUto+cDd13QJ16HajNT
- QbD1ITdOCo1utBuP6VExYHrORa14RnduNx9MSIKtrhSnSUFWInHvA7sGpIa4C3sHrOG/
- WMBhF9YM8ifc8XjdVeMUyguDzXTtV5vjfUAJ6BjL40xkPh1CGr3Uvt8OkhE+dqxwuqE3 /g== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2130.oracle.com with ESMTP id 2sj9ft7sn9-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 20 May 2019 15:30:35 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x4KFTuDs046722;
-        Mon, 20 May 2019 15:30:34 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by aserp3020.oracle.com with ESMTP id 2sks18nr8g-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 20 May 2019 15:30:34 +0000
-Received: from abhmp0002.oracle.com (abhmp0002.oracle.com [141.146.116.8])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x4KFUL5K012431;
-        Mon, 20 May 2019 15:30:21 GMT
-Received: from ca-dmjordan1.us.oracle.com (/10.211.9.48)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 20 May 2019 15:30:21 +0000
-Date:   Mon, 20 May 2019 11:30:20 -0400
-From:   Daniel Jordan <daniel.m.jordan@oracle.com>
-To:     Alexey Kardashevskiy <aik@ozlabs.ru>
-Cc:     Daniel Jordan <daniel.m.jordan@oracle.com>,
-        akpm@linux-foundation.org, Alan Tull <atull@kernel.org>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Christoph Lameter <cl@linux.com>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Moritz Fischer <mdf@kernel.org>,
-        Paul Mackerras <paulus@ozlabs.org>,
-        Steve Sistare <steven.sistare@oracle.com>,
-        Wu Hao <hao.wu@intel.com>, linux-mm@kvack.org,
-        kvm@vger.kernel.org, kvm-ppc@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-fpga@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] mm: add account_locked_vm utility function
-Message-ID: <20190520153020.mzvjsjwefwxz6cau@ca-dmjordan1.us.oracle.com>
-References: <20190503201629.20512-1-daniel.m.jordan@oracle.com>
- <4b42057f-b998-f87c-4e0f-a91abcb366f9@ozlabs.ru>
+        Mon, 20 May 2019 11:32:24 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
+        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=jKdrdCTZgDXkXxUUja9CogRGjradAVpD3DVJ1Pki/4I=; b=aCs7wcUoxJB8THDFLmuZN/+csc
+        5NGo+6Hhw0XMmUbANSxQ7NJU2gfKmJHnzo44SwBSayzJeCPWccr8FscvvREcDy1WjOGho6C2htYE+
+        mIxTx79sMlV//glSG7G9LDo/4SFf6NpH9ECirOYqMWXAAgULqtthi9lseEemVvXaWNXSeTU63aDYR
+        2iRbTBZQVAplgi2JJdiEiDIdxlwgGj2kC+PZckcbpRI6eWrCKo6P30LxYKl2vuiqOhkmn06iObX01
+        AWPdB8eTatr1a4x0fGuHHLzgjlEt7r4TiCZqnpq9jbXFBZJOoOCCjHe9MnLEGfnuPPRrseTfLA+DU
+        veo0VVig==;
+Received: from static-50-53-52-16.bvtn.or.frontiernet.net ([50.53.52.16] helo=midway.dunlab)
+        by merlin.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hSkGy-0000J5-UT; Mon, 20 May 2019 15:32:21 +0000
+Subject: Re: linux-next: Tree for May 20 (amdgpu)
+To:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Oded Gabbay <oded.gabbay@gmail.com>
+References: <20190520115530.46cf100d@canb.auug.org.au>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <9e9c29f2-bb6e-572e-5486-7ddde2982ba0@infradead.org>
+Date:   Mon, 20 May 2019 08:32:18 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <4b42057f-b998-f87c-4e0f-a91abcb366f9@ozlabs.ru>
-User-Agent: NeoMutt/20180323-268-5a959c
-X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9262 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=18 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1905200100
-X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9262 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=18 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1905200100
+In-Reply-To: <20190520115530.46cf100d@canb.auug.org.au>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 20, 2019 at 04:19:34PM +1000, Alexey Kardashevskiy wrote:
-> On 04/05/2019 06:16, Daniel Jordan wrote:
-> > locked_vm accounting is done roughly the same way in five places, so
-> > unify them in a helper.  Standardize the debug prints, which vary
-> > slightly.
+On 5/19/19 6:55 PM, Stephen Rothwell wrote:
+> Hi all,
 > 
-> And I rather liked that prints were different and tell precisely which
-> one of three each printk is.
-
-I'm not following.  One of three...callsites?  But there were five callsites.
-
-Anyway, I added a _RET_IP_ to the debug print so you can differentiate.
-
-> I commented below but in general this seems working.
+> Changes since 20190517:
 > 
-> Tested-by: Alexey Kardashevskiy <aik@ozlabs.ru>
-
-Thanks!  And for the review as well.
-
-> > diff --git a/drivers/vfio/vfio_iommu_spapr_tce.c b/drivers/vfio/vfio_iommu_spapr_tce.c
-> > index 6b64e45a5269..d39a1b830d82 100644
-> > --- a/drivers/vfio/vfio_iommu_spapr_tce.c
-> > +++ b/drivers/vfio/vfio_iommu_spapr_tce.c
-> > @@ -34,49 +35,13 @@
-> >  static void tce_iommu_detach_group(void *iommu_data,
-> >  		struct iommu_group *iommu_group);
-> >  
-> > -static long try_increment_locked_vm(struct mm_struct *mm, long npages)
-> > +static int tce_account_locked_vm(struct mm_struct *mm, unsigned long npages,
-> > +				 bool inc)
-> >  {
-> > -	long ret = 0, locked, lock_limit;
-> > -
-> >  	if (WARN_ON_ONCE(!mm))
-> >  		return -EPERM;
+> Non-merge commits (relative to Linus' tree): 553
+>  519 files changed, 11723 insertions(+), 3396 deletions(-)
 > 
+> ----------------------------------------------------------------------------
 > 
-> If this WARN_ON is the only reason for having tce_account_locked_vm()
-> instead of calling account_locked_vm() directly, you can then ditch the
-> check as I have never ever seen this triggered.
+> I have created today's linux-next tree at
+> git://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git
+> (patches at http://www.kernel.org/pub/linux/kernel/next/ ).  If you
+> are tracking the linux-next tree using git, you should not use "git pull"
+> to do so as that will try to merge the new linux-next release with the
+> old one.  You should use "git fetch" and checkout or reset to the new
+> master.
+> 
+> You can see which trees have been included by looking in the Next/Trees
+> file in the source.  There are also quilt-import.log and merge.log
+> files in the Next directory.  Between each merge, the tree was built
+> with a ppc64_defconfig for powerpc, an allmodconfig for x86_64, a
+> multi_v7_defconfig for arm and a native build of tools/perf. After
+> the final fixups (if any), I do an x86_64 modules_install followed by
+> builds for x86_64 allnoconfig, powerpc allnoconfig (32 and 64 bit),
+> ppc44x_defconfig, allyesconfig and pseries_le_defconfig and i386, sparc
+> and sparc64 defconfig. And finally, a simple boot test of the powerpc
+> pseries_le_defconfig kernel in qemu (with and without kvm enabled).
+> 
+> Below is a summary of the state of the merge.
+> 
+> I am currently merging 298 trees (counting Linus' and 69 trees of bug
+> fix patches pending for the current merge release).
+> 
+> Stats about the size of the tree over time can be seen at
+> http://neuling.org/linux-next-size.html .
+> 
+> Status of my local build tests will be at
+> http://kisskb.ellerman.id.au/linux-next .  If maintainers want to give
+> advice about cross compilers/configs that work, we are always open to add
+> more builds.
+> 
+> Thanks to Randy Dunlap for doing many randconfig builds.  And to Paul
+> Gortmaker for triage and bug fixes.
+> 
 
-Great, will do.
+on i386, when built as loadable module:
 
-> > diff --git a/drivers/vfio/vfio_iommu_type1.c b/drivers/vfio/vfio_iommu_type1.c
-> > index d0f731c9920a..15ac76171ccd 100644
-> > --- a/drivers/vfio/vfio_iommu_type1.c
-> > +++ b/drivers/vfio/vfio_iommu_type1.c
-> > @@ -273,25 +273,14 @@ static int vfio_lock_acct(struct vfio_dma *dma, long npage, bool async)
-> >  		return -ESRCH; /* process exited */
-> >  
-> >  	ret = down_write_killable(&mm->mmap_sem);
-> > -	if (!ret) {
-> > -		if (npage > 0) {
-> > -			if (!dma->lock_cap) {
-> > -				unsigned long limit;
-> > -
-> > -				limit = task_rlimit(dma->task,
-> > -						RLIMIT_MEMLOCK) >> PAGE_SHIFT;
-> > -
-> > -				if (mm->locked_vm + npage > limit)
-> > -					ret = -ENOMEM;
-> > -			}
-> > -		}
-> > +	if (ret)
-> > +		goto out;
-> 
-> 
-> A single "goto" to jump just 3 lines below seems unnecessary.
+in amdgpu_ras_sysfs_badpages_read():
+ERROR: "__divdi3" [drivers/gpu/drm/amd/amdgpu/amdgpu.ko] undefined!
 
-No strong preference here, I'll take out the goto.
+or when builtin:
+ld: drivers/gpu/drm/amd/amdgpu/amdgpu_ras.o: in function `amdgpu_ras_sysfs_badpages_read':
+amdgpu_ras.c:(.text+0x9ec): undefined reference to `__divdi3'
+ld: amdgpu_ras.c:(.text+0xa0a): undefined reference to `__divdi3'
 
-> > +int __account_locked_vm(struct mm_struct *mm, unsigned long pages, bool inc,
-> > +			struct task_struct *task, bool bypass_rlim)
-> > +{
-> > +	unsigned long locked_vm, limit;
-> > +	int ret = 0;
-> > +
-> > +	locked_vm = mm->locked_vm;
-> > +	if (inc) {
-> > +		if (!bypass_rlim) {
-> > +			limit = task_rlimit(task, RLIMIT_MEMLOCK) >> PAGE_SHIFT;
-> > +			if (locked_vm + pages > limit) {
-> > +				ret = -ENOMEM;
-> > +				goto out;
-> > +			}
-> > +		}
-> 
-> Nit:
-> 
-> if (!ret)
-> 
-> and then you don't need "goto out".
 
-Ok, sure.
 
-> > +		mm->locked_vm = locked_vm + pages;
-> > +	} else {
-> > +		WARN_ON_ONCE(pages > locked_vm);
-> > +		mm->locked_vm = locked_vm - pages;
-> 
-> 
-> Can go negative here. Not a huge deal but inaccurate imo.
-
-I hear you, but setting a negative value to zero, as we had done previously,
-doesn't make much sense to me.
+-- 
+~Randy
