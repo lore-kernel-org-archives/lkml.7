@@ -8,99 +8,113 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3FDDC04AAC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 19:06:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B951C04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 19:06:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A310D205ED
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 19:06:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B789205ED
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 19:06:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bvEQWMOc"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="axsFtOim"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726382AbfETTGD (ORCPT
+        id S1726535AbfETTGN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 15:06:03 -0400
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:44587 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725536AbfETTGD (ORCPT
+        Mon, 20 May 2019 15:06:13 -0400
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:42897 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725536AbfETTGM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 15:06:03 -0400
-Received: by mail-ed1-f65.google.com with SMTP id b8so25376985edm.11;
-        Mon, 20 May 2019 12:06:02 -0700 (PDT)
+        Mon, 20 May 2019 15:06:12 -0400
+Received: by mail-ed1-f66.google.com with SMTP id l25so25387047eda.9
+        for <linux-kernel@vger.kernel.org>; Mon, 20 May 2019 12:06:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=QLcESIrpuKvmGLuYzNttnrvxoFbU5Wzb2EEq5RaQWcI=;
-        b=bvEQWMOcSw18XS8JoBz0bG4i2ezv+hVW585GGY5YJPSTvmuCLYqn1fNBPYsb8Ymg4B
-         NhpnWTr2rwIvjX0dw1cwM408YbXHiQVGgwh8XbKzbd3prPdn4OQhGfNSeBB5GnR/F3XT
-         64vcExWjTl5djcEgJWho45n+pRl4xeVRK580K6LPTelNw/5aac4JLR2kiUTdGb6wWot8
-         139YRlWWFt8Jg9ySuN8k99GoOKa1SvtYa+MCgMC+9nlfIaCnS9sjFQgdxgEJiQoI8OSp
-         RfiJfH8HZlSqKLfBa+1AiZn+cvrErjtV98LAqy62N580ls1EbNj6xgc5PUOBPrxm79ar
-         yn6A==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=Ha5skDnnLVo1GJdX/CM9NCe/isDa5RVzOLC2hACwN2I=;
+        b=axsFtOim/WJJUWbZJz8/i03Ph3xHSdnz2DNiFe2Q6ydh5h1ov4vVORzsbiXKu4xf3q
+         T8qv/PEpxWr/0XCWg+dWz8Fbaqo589CjX1+CVNrsRQPm6vq6/RXK4BqJzc9BhtvujQrZ
+         demB+VLNkgwH1e0xE3eug2/mCTuZFgVuDohU1BXXR1t0EH3Y4i/vbvv0uxYEIFLqOCEC
+         TPGQYB4l2GEP/AQW0Gok9TgGpg3Cw1wI6/Ut7kpZeQzBoL8bJ232hzUu8gdtfCfJfWHN
+         EjgU7pK/15Z32ja3bM/p+QKiSiu6Yy0oYnjSC4CtNuX0geMW+vdVUWmEhToZq0HwBiug
+         6bBA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=QLcESIrpuKvmGLuYzNttnrvxoFbU5Wzb2EEq5RaQWcI=;
-        b=Y7jf38yWDBXidrly3CM/1q/SWO/ifAFWE5BUIs7ESEbq4ODz16EXmmwF0KT+819x7q
-         1sXV1lxMTlc7v0coHXi8xe0j5lrKvuRCjvY6dQ/acoR3EF0nWPvJwP1Fgy1F/9/ZHkVf
-         49FnfRLR/scCi5gX+7JpvEmXXt9o01cSiUblwFTYA2+ZpBdHtm1AYnb+YkTRZDpBDQ2k
-         1hNZcw0qLqzY3iC521gNX4qEVAriwm/OFfIMD9CQsoju1SZzM/d7b2O4gs0of+ARECQG
-         hD1yTI62cV1lItNg6SHBf43pSd3YZfsqODkMKD9/sSaqydkQ42PgQC2LlyeAQg3B0fsh
-         2rtA==
-X-Gm-Message-State: APjAAAXUR7B4OIU/aGRKXVxxObr3+1tYe2e1tN7z5ejQeC7Q09wnSEiQ
-        lB+ubumf9BxheW5SKvPCfXI=
-X-Google-Smtp-Source: APXvYqy1cvBYRYvUUPBq3x7QnOhRgMyNfx+sQ7tJyAHNBw0AcvHwtSZToEfucyN4dWcRcWP70hRsnA==
-X-Received: by 2002:a50:b487:: with SMTP id w7mr79029009edd.45.1558379161539;
-        Mon, 20 May 2019 12:06:01 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=Ha5skDnnLVo1GJdX/CM9NCe/isDa5RVzOLC2hACwN2I=;
+        b=nTnIKglAJFzLXqj0WnioMvvjbXPAkt4BsG0OAM+TB5PiYXAyHF/7WBgPQvNBpmWPkZ
+         fHYTsULzfamu0IOZb+FYux3Nety1c/XwPnIWlFpIr09jocJwsTm1ot43wrUyKXLEVkZT
+         OILw7mQNRN9vcrRixnQuMyDLAMVZtSvmU4dN1GasaL9jvwEJQSEpGysE1mkRiRdj8yp/
+         TmGblMm9ab454glE3XnvHI5WG6Qr45BCa8NcSlxwkeHOwFpXctnPwpEdLRZRrmljtxeQ
+         TH6WsIBLmJKSLNTnvplMwSg2Ze8gl/T6VCY1y/8hE0JSO4ttOyh7yfQc2TpKxVMRNHSD
+         DH1w==
+X-Gm-Message-State: APjAAAWKhwD0lwBd6h+27X6TG0qCb3kPbqFUJlE+ynoZf2C2uJYZ+rBq
+        bbfYe4ErcLRx83kz85TROTA=
+X-Google-Smtp-Source: APXvYqyWvFHznLLZAKJYcWfcC8Mw2lOlwRgpCokpiyR1YDPRGyEJ1tL7Kq0aOnmIeJBSNK8fKiOsAQ==
+X-Received: by 2002:a17:906:1303:: with SMTP id w3mr8731735ejb.196.1558379171104;
+        Mon, 20 May 2019 12:06:11 -0700 (PDT)
 Received: from mail.broadcom.com ([192.19.231.250])
-        by smtp.gmail.com with ESMTPSA id 11sm3201967ejv.64.2019.05.20.12.05.59
+        by smtp.gmail.com with ESMTPSA id 11sm3201967ejv.64.2019.05.20.12.06.09
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 20 May 2019 12:06:00 -0700 (PDT)
+        Mon, 20 May 2019 12:06:10 -0700 (PDT)
 From:   Kamal Dasu <kdasu.kdev@gmail.com>
 To:     linux-mtd@lists.infradead.org
 Cc:     bcm-kernel-feedback-list@broadcom.com,
         linux-kernel@vger.kernel.org, Kamal Dasu <kdasu.kdev@gmail.com>,
-        David Woodhouse <dwmw2@infradead.org>,
         Brian Norris <computersforpeace@gmail.com>,
-        Marek Vasut <marek.vasut@gmail.com>,
         Miquel Raynal <miquel.raynal@bootlin.com>,
         Richard Weinberger <richard@nod.at>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
-Subject: [PATCH v2 1/2] dt-bindings: mtd: brcmnand: Make nand-ecc-strength and nand-ecc-step-size optional
-Date:   Mon, 20 May 2019 15:05:11 -0400
-Message-Id: <1558379144-28283-1-git-send-email-kdasu.kdev@gmail.com>
+        David Woodhouse <dwmw2@infradead.org>,
+        Marek Vasut <marek.vasut@gmail.com>,
+        Vignesh Raghavendra <vigneshr@ti.com>
+Subject: [PATCH v2 2/2] mtd: nand: raw: brcmnand: fallback to detected ecc-strength, ecc-step-size
+Date:   Mon, 20 May 2019 15:05:12 -0400
+Message-Id: <1558379144-28283-2-git-send-email-kdasu.kdev@gmail.com>
 X-Mailer: git-send-email 1.9.0.138.g2de3478
+In-Reply-To: <1558379144-28283-1-git-send-email-kdasu.kdev@gmail.com>
+References: <1558379144-28283-1-git-send-email-kdasu.kdev@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-nand-ecc-strength and nand-ecc-step-size can be made optional as
-brcmnand driver can support using raw NAND layer detected values.
+This change supports nand-ecc-step-size and nand-ecc-strength fields in
+brcmnand DT node to be optional.
+see: Documentation/devicetree/bindings/mtd/brcm,brcmnand.txt
+
+If both nand-ecc-strength and nand-ecc-step-size are not specified in
+device tree node for NAND, raw NAND layer does detect ECC information by
+reading ONFI extended parameter page for parts using ONFI >= 2.1.
+In case of non-ONFI NAND parts there could be a nand_id table entry with
+ECC information. If there is valid device tree entry for nand-ecc-strength
+and nand-ecc-step-size fields it still shall override the detected values.
 
 Signed-off-by: Kamal Dasu <kdasu.kdev@gmail.com>
 ---
- Documentation/devicetree/bindings/mtd/brcm,brcmnand.txt | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/mtd/nand/raw/brcmnand/brcmnand.c | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/mtd/brcm,brcmnand.txt b/Documentation/devicetree/bindings/mtd/brcm,brcmnand.txt
-index bcda1df..29feaba 100644
---- a/Documentation/devicetree/bindings/mtd/brcm,brcmnand.txt
-+++ b/Documentation/devicetree/bindings/mtd/brcm,brcmnand.txt
-@@ -101,10 +101,10 @@ Required properties:
-                               number (e.g., 0, 1, 2, etc.)
- - #address-cells            : see partition.txt
- - #size-cells               : see partition.txt
--- nand-ecc-strength         : see nand.txt
--- nand-ecc-step-size        : must be 512 or 1024. See nand.txt
+diff --git a/drivers/mtd/nand/raw/brcmnand/brcmnand.c b/drivers/mtd/nand/raw/brcmnand/brcmnand.c
+index ce0b8ff..a4d2057 100644
+--- a/drivers/mtd/nand/raw/brcmnand/brcmnand.c
++++ b/drivers/mtd/nand/raw/brcmnand/brcmnand.c
+@@ -2144,6 +2144,17 @@ static int brcmnand_setup_dev(struct brcmnand_host *host)
+ 		return -EINVAL;
+ 	}
  
- Optional properties:
-+- nand-ecc-strength         : see nand.txt
-+- nand-ecc-step-size        : must be 512 or 1024. See nand.txt
- - nand-on-flash-bbt         : boolean, to enable the on-flash BBT for this
-                               chip-select. See nand.txt
- - brcm,nand-oob-sector-size : integer, to denote the spare area sector size
++	if (chip->ecc.mode != NAND_ECC_NONE &&
++	    (!chip->ecc.size || !chip->ecc.strength)) {
++		if (chip->base.eccreq.step_size && chip->base.eccreq.strength) {
++			/* use detected ECC parameters */
++			chip->ecc.size = chip->base.eccreq.step_size;
++			chip->ecc.strength = chip->base.eccreq.strength;
++			pr_info("Using ECC step-size %d, strength %d\n",
++				chip->ecc.size, chip->ecc.strength);
++		}
++	}
++
+ 	switch (chip->ecc.size) {
+ 	case 512:
+ 		if (chip->ecc.algo == NAND_ECC_HAMMING)
 -- 
 1.9.0.138.g2de3478
 
