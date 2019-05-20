@@ -2,120 +2,148 @@ Return-Path: <SRS0=lq4r=TU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0D4FC04AAC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 16:53:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D11FC04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 16:55:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B53B5216B7
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 16:53:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=fomichev-me.20150623.gappssmtp.com header.i=@fomichev-me.20150623.gappssmtp.com header.b="x6exvqB1"
+	by mail.kernel.org (Postfix) with ESMTP id 28BF6216B7
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 16:55:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392364AbfETQxY (ORCPT
+        id S2392440AbfETQzH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 12:53:24 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:41760 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388746AbfETQxY (ORCPT
+        Mon, 20 May 2019 12:55:07 -0400
+Received: from gateway33.websitewelcome.com ([192.185.146.119]:31663 "EHLO
+        gateway33.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2388746AbfETQzH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 12:53:24 -0400
-Received: by mail-pf1-f194.google.com with SMTP id q17so7499740pfq.8
-        for <linux-kernel@vger.kernel.org>; Mon, 20 May 2019 09:53:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=fomichev-me.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=c20f3Uy5AB/Gpwno1cTjtsaMqlmM2s5OZcsDjKv33Gg=;
-        b=x6exvqB1OaLuoM/xTiWeSQdbIEXNbyjWXnZRBmL+g2ZZMe3hd+o7640/p7qsiaTP5w
-         YeRJt7aoK8jBv2DKS7z0F9Sx6bYhOMvuTSqpXojvsPXjT1ZZFb+ujclCy7ljg653sEB1
-         AmJeuNL6lUkF8vcSARDLqFL8iDbu/xiLz0mYarz0FK9VmjhUgL1bBne7TZAJ9McuIl+3
-         vZiJMo+riMWztQ8K6fvfhmjfFUtio+9UH/T86P5BfsCJxcHSZ/K+AOCYyiYu5oUHRws8
-         jPw4cOty4/yPUpmBKG5PA/ApMGHqVKRwqdC86vHbVWHACmYSmrSvuahUUR4KuNxipXGS
-         Dvyw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=c20f3Uy5AB/Gpwno1cTjtsaMqlmM2s5OZcsDjKv33Gg=;
-        b=U+T38/qHNlTRmU1euL46E5mewgUVsxx5R673JL57eSwJDc4MpMeO2zXVHgLmCPesj1
-         J9aG1MmBVN5nfnoVe2HlcOEjw0bZrvGbgnSGhSGNbDxaCpBpyBrq0PPYThMvzfJ/l+QI
-         K3hHL10zUDQei2KFJfa4I2mBfJkd79Z6qxqNRsZwIqR2h/WxKnGIY7RYV5dpkkoG5kIJ
-         obYeK1q3HS/KyzWVbYALzFdb6/2tagH644+02FsXlfm3xbXOtKdBFzaFyzvi83XC6apf
-         qAI5mP/rSQEUYwcqrr7DxgSTkbil+3cc4eUyTC4pxI3BV2sMZLHfhXpQr55BmUEjXV4L
-         Tjig==
-X-Gm-Message-State: APjAAAUVXGE+YW4S1sf6pJ49lZb2o2zjPNPyDvAe50iFfQ8MuxqIz3Yc
-        CTHIHUG77YXDdirRCjlXkvSfPh9MFi4=
-X-Google-Smtp-Source: APXvYqwNXBSATkDA+MTsDrIhuYp39xzy7Plfkd7vDczjkfCUq8ddFXOENvNKA9O8rggfnMmevZUPww==
-X-Received: by 2002:a62:575b:: with SMTP id l88mr80907008pfb.143.1558371203496;
-        Mon, 20 May 2019 09:53:23 -0700 (PDT)
-Received: from localhost ([2601:646:8f00:18d9:d0fa:7a4b:764f:de48])
-        by smtp.gmail.com with ESMTPSA id k13sm14575196pgr.90.2019.05.20.09.53.22
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 20 May 2019 09:53:22 -0700 (PDT)
-Date:   Mon, 20 May 2019 09:53:22 -0700
-From:   Stanislav Fomichev <sdf@fomichev.me>
-To:     Matteo Croce <mcroce@redhat.com>
-Cc:     xdp-newbies@vger.kernel.org, bpf@vger.kernel.org,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>
-Subject: Re: [PATCH 2/5] libbpf: add missing typedef
-Message-ID: <20190520165322.GH10244@mini-arch>
-References: <20190518004639.20648-1-mcroce@redhat.com>
- <20190518004639.20648-2-mcroce@redhat.com>
+        Mon, 20 May 2019 12:55:07 -0400
+Received: from cm16.websitewelcome.com (cm16.websitewelcome.com [100.42.49.19])
+        by gateway33.websitewelcome.com (Postfix) with ESMTP id 5C2E463B1C
+        for <linux-kernel@vger.kernel.org>; Mon, 20 May 2019 11:55:05 -0500 (CDT)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id SlZ3hw6Kq4FKpSlZ3hJ3u9; Mon, 20 May 2019 11:55:05 -0500
+X-Authority-Reason: nr=8
+Received: from [189.250.71.100] (port=32782 helo=[192.168.1.76])
+        by gator4166.hostgator.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
+        (Exim 4.91)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1hSlZ2-001nri-VA; Mon, 20 May 2019 11:55:05 -0500
+Subject: Re: net: atm: Spectre v1 fix introduced bug in bcb964012d1b in
+ -stable
+To:     Pavel Machek <pavel@denx.de>
+Cc:     stable@kernel.org, kernel list <linux-kernel@vger.kernel.org>,
+        davem@davemloft.net, gregkh@linuxfoundation.org
+References: <20190520124014.GA5205@amd>
+ <02622e60-8ce9-8db3-8d16-fa1a32e063bf@embeddedor.com>
+ <20190520161549.GB25789@amd>
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=gustavo@embeddedor.com; keydata=
+ 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
+ VtSixD1uOgytAP7RWS474w==
+Message-ID: <2afe2a95-6297-4448-3942-9ba10e306e96@embeddedor.com>
+Date:   Mon, 20 May 2019 11:54:59 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190518004639.20648-2-mcroce@redhat.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+In-Reply-To: <20190520161549.GB25789@amd>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 189.250.71.100
+X-Source-L: No
+X-Exim-ID: 1hSlZ2-001nri-VA
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: ([192.168.1.76]) [189.250.71.100]:32782
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 3
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 05/18, Matteo Croce wrote:
-> Sync tools/include/linux/types.h with the UAPI one to fix this build error:
-> 
-> make -C samples/bpf/../../tools/lib/bpf/ RM='rm -rf' LDFLAGS= srctree=samples/bpf/../../ O=
->   HOSTCC  samples/bpf/sock_example
-> In file included from samples/bpf/sock_example.c:27:
-> /usr/include/linux/ip.h:102:2: error: unknown type name ‘__sum16’
->   102 |  __sum16 check;
->       |  ^~~~~~~
-> make[2]: *** [scripts/Makefile.host:92: samples/bpf/sock_example] Error 1
-> make[1]: *** [Makefile:1763: samples/bpf/] Error 2
-> 
-> Signed-off-by: Matteo Croce <mcroce@redhat.com>
-> ---
->  tools/include/linux/types.h | 3 +++
->  1 file changed, 3 insertions(+)
-> 
-> diff --git a/tools/include/linux/types.h b/tools/include/linux/types.h
-> index 154eb4e3ca7c..5266dbfee945 100644
-> --- a/tools/include/linux/types.h
-> +++ b/tools/include/linux/types.h
-> @@ -58,6 +58,9 @@ typedef __u32 __bitwise __be32;
->  typedef __u64 __bitwise __le64;
->  typedef __u64 __bitwise __be64;
->  
-> +typedef __u16 __bitwise __sum16;
-> +typedef __u32 __bitwise __wsum;
-If you do that, you should probably remove 'typedef __u16 __sum16;'
-from test_progs.h:
 
-https://git.kernel.org/pub/scm/linux/kernel/git/bpf/bpf.git/tree/tools/testing/selftests/bpf/test_progs.h#n13
 
-> +
->  typedef struct {
->  	int counter;
->  } atomic_t;
-> -- 
-> 2.21.0
+On 5/20/19 11:15 AM, Pavel Machek wrote:
+> On Mon 2019-05-20 09:15:50, Gustavo A. R. Silva wrote:
+>>
+>>
+>> On 5/20/19 7:40 AM, Pavel Machek wrote:
+>>>
+>>> In lecd_attach, if arg is < 0, it was treated as 0. Spectre v1 fix
+>>> changed that. Bug does not exist in mainline AFAICT.
+>>>
+>>
+>> NACK
+>>
+>> array_index_nospec() macro returns zero if *arg* is out of bounds.
 > 
+> No, it does not. Take a look:
+> 
+> #define array_index_nospec(index, size)
+> ...
+>         (typeof(_i)) (_i & _mask);
+> })
+> 	
+
+Tell me more about that _mask.
+
+Also, don't ignore the backward compatibility; otherwise you
+would be forking your own kernel.
+
+--
+Gustavo
