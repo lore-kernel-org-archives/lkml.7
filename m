@@ -2,373 +2,738 @@ Return-Path: <SRS0=lq4r=TU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 674B7C04AAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 09:38:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 976CDC072A4
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 09:39:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2088120815
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 09:38:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 41EE820675
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 09:39:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nBXlLYBU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732276AbfETJiz (ORCPT
+        id S1732288AbfETJjS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 05:38:55 -0400
-Received: from baptiste.telenet-ops.be ([195.130.132.51]:32944 "EHLO
-        baptiste.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727720AbfETJiy (ORCPT
+        Mon, 20 May 2019 05:39:18 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:32798 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727720AbfETJjR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 05:38:54 -0400
-Received: from ramsan ([84.194.111.163])
-        by baptiste.telenet-ops.be with bizsmtp
-        id EZei2000J3XaVaC01ZeiYF; Mon, 20 May 2019 11:38:42 +0200
-Received: from rox.of.borg ([192.168.97.57])
-        by ramsan with esmtp (Exim 4.90_1)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1hSekk-0005xV-LB
-        for linux-kernel@vger.kernel.org; Mon, 20 May 2019 11:38:42 +0200
-Received: from geert by rox.of.borg with local (Exim 4.90_1)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1hSekk-00013K-Jn
-        for linux-kernel@vger.kernel.org; Mon, 20 May 2019 11:38:42 +0200
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
+        Mon, 20 May 2019 05:39:17 -0400
+Received: by mail-wr1-f66.google.com with SMTP id d9so810850wrx.0;
+        Mon, 20 May 2019 02:39:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=u9iZXeO5bPn3FMs/pMHTVdUm3Z/mJIi+4s4z/QoGb2Q=;
+        b=nBXlLYBUT9cl3yghnjTyeBok2/JIKbRLxpTFKjbhr3BuRv04ZgNxy010g1XaycyHAd
+         RMSIhBsPHh7RS9vjzpVqXFrkWuG3O4DKqj1VnBsLObFOXvNrsflLYmJLFKQpQ1e1ZGsD
+         ijxQ5T4UQDvb9XpAntQhgLwOt9KflZp+igx3Dyv5pWpUL4Z4Mtwm2mcJoPm5JwOggUim
+         RTErFmbGGh+JSul6ox9stwZi9MSc+NaBljMMiBZopCXHkTB65/mv5Vy+zUoGWPInk8sh
+         /77bjWdXZZEseYjacirr9UF1qwHRJz8yQODjWhz1Fcic4K3gzclynMh30z2IvcfTaCuF
+         7cOw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=u9iZXeO5bPn3FMs/pMHTVdUm3Z/mJIi+4s4z/QoGb2Q=;
+        b=hqwA6pQul7Otv1g0WVgG0iwu4HN+HPzRn5yrk4R6/6azt0aJEXGc+8WIXGxjfsym1a
+         tEeOj6c1N3r3aDEsWgH0paVmqufhGckljTxxUacDdNg3lgbSK14ijq5sd0pwk7pBVXR/
+         6BRrSAZo+0DIGfLsiH7fwZQ980kg+Qsq0tkOYyKn5JK85LVcDUyAGzTGOpwCJ0jrt/H0
+         h2U5oyAQ44fDhXBkx2y9eks5xCTP5RdIfx0IMTY1H74yuPNZHBMnZfEYcFgGIBzuxOQg
+         ri+gIkDaJy4HyB5WoGEC+pYj472XULjSsuQ08nBO6LuL9DnNc1NYFmALMJIVt4EQnIE2
+         MZnw==
+X-Gm-Message-State: APjAAAV4YhdxIrRQKVwpabjpAkhc5HST/PQnxcp01UyHBQv+z+wwtSHI
+        BoaWjP0Z/ECi9SJ8jgHcKfaOormm
+X-Google-Smtp-Source: APXvYqzGh4xF4uctJ+O6LyHWFfYrOpLW7JKRqSE95dnjQYGOyFozk4epJm6YdG/9StobsE58gRVGrw==
+X-Received: by 2002:adf:dc8e:: with SMTP id r14mr28920251wrj.121.1558345153426;
+        Mon, 20 May 2019 02:39:13 -0700 (PDT)
+Received: from localhost.localdomain ([31.147.208.18])
+        by smtp.googlemail.com with ESMTPSA id j28sm25787346wrd.64.2019.05.20.02.39.12
+        (version=TLS1 cipher=AES128-SHA bits=128/128);
+        Mon, 20 May 2019 02:39:12 -0700 (PDT)
+From:   =?UTF-8?q?Tomislav=20Po=C5=BEega?= <pozega.tomislav@gmail.com>
 To:     linux-kernel@vger.kernel.org
-Subject: Build regressions/improvements in v5.2-rc1
-Date:   Mon, 20 May 2019 11:38:42 +0200
-Message-Id: <20190520093842.3990-1-geert@linux-m68k.org>
-X-Mailer: git-send-email 2.17.1
+Cc:     stable@vger.kernel.org, Benjamin Berg <benjamin@sipsolutions.net>,
+        Simon Wunderlich <sw@simonwunderlich.de>,
+        Mathias Kretschmer <mathias.kretschmer@fit.fraunhofer.de>,
+        Kalle Valo <kvalo@qca.qualcomm.com>
+Subject: [PATCH 4.9] ath10k: allow setting coverage class
+Date:   Mon, 20 May 2019 11:39:09 +0200
+Message-Id: <1558345149-3274-1-git-send-email-pozega.tomislav@gmail.com>
+X-Mailer: git-send-email 1.7.0.4
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Below is the list of build error/warning regressions/improvements in
-v5.2-rc1[1] compared to v5.1[2].
+From: Benjamin Berg <benjamin@sipsolutions.net>
 
-Summarized:
-  - build errors: +4/-0
-  - build warnings: +141/-145
+Unfortunately ath10k does not generally allow modifying the coverage class
+with the stock firmware and Qualcomm has so far refused to implement this
+feature so that it can be properly supported in ath10k. If we however know
+the registers that need to be modified for proper operation with a higher
+coverage class, then we can do these modifications from the driver.
 
-Note that there may be false regressions, as some logs are incomplete.
-Still, they're build errors/warnings.
+This is a hack and might cause subtle problems but as it's not enabled by
+default (only when user space changes the coverage class explicitly) it should
+not cause new problems for existing setups. But still this should be considered
+as an experimental feature and used with caution.
 
-Happy fixing! ;-)
+This patch implements the support for first generation cards (QCA9880, QCA9887
+and so on) which are based on a core that is similar to ath9k. The registers
+are modified in place and need to be re-written every time the firmware sets
+them. To achieve this the register status is verified after certain WMI events
+from the firmware.
 
-Thanks to the linux-next team for providing the build service.
+The coverage class may not be modified temporarily right after the card
+re-initializes the registers. This is for example the case during scanning.
 
-[1] http://kisskb.ellerman.id.au/kisskb/branch/linus/head/a188339ca5a396acc588e5851ed7e19f66b0ebd9/ (all 240 configs)
-[2] http://kisskb.ellerman.id.au/kisskb/branch/linus/head/e93c9c99a629c61837d5a7fc2120cd2b6c70dbdd/ (236 out of 240 configs)
+Thanks to Sebastian Gottschall <s.gottschall@dd-wrt.com> for initially
+working on a userspace support for this. This patch wouldn't have been
+possible without this documentation.
 
+Signed-off-by: Benjamin Berg <benjamin@sipsolutions.net>
+Signed-off-by: Simon Wunderlich <sw@simonwunderlich.de>
+Signed-off-by: Mathias Kretschmer <mathias.kretschmer@fit.fraunhofer.de>
+Signed-off-by: Kalle Valo <kvalo@qca.qualcomm.com>
+Signed-off-by: Tomislav Požega <pozega.tomislav@gmail.com>
+---
 
-*** ERRORS ***
+v2:
 
-4 error regressions:
-  + /kisskb/src/arch/s390/include/asm/cpacf.h: error: impossible constraint in 'asm':  => 171:2
-  + /kisskb/src/arch/xtensa/include/asm/uaccess.h: error: implicit declaration of function 'uaccess_kernel' [-Werror=implicit-function-declaration]:  => 40:22
-  + /kisskb/src/drivers/pinctrl/pinctrl-stmfx.c: error: 'struct gpio_chip' has no member named 'of_node':  => 651:17
-  + error: "__udivdi3" [drivers/infiniband/hw/mlx5/mlx5_ib.ko] undefined!:  => N/A
+* cc linux-wireless
+* fold "ath10k: Fix spinlock use in coverage class hack" into this one (Benjamin)
+* emphasise more on the commit log that this is a hack
+* remove unnecessary use of unlikely(), this is not in hotpath
+* workaround ifdef CONFIG_ATH10K_DEBUGFS with adding
+  ath10k_debug_get_fw_dbglog_[mask|level]()
 
+ drivers/net/wireless/ath/ath10k/core.c  |   11 +++
+ drivers/net/wireless/ath/ath10k/core.h  |   13 +++
+ drivers/net/wireless/ath/ath10k/debug.h |   22 +++++
+ drivers/net/wireless/ath/ath10k/hw.c    |  142 +++++++++++++++++++++++++++++++
+ drivers/net/wireless/ath/ath10k/hw.h    |   28 +++++-
+ drivers/net/wireless/ath/ath10k/mac.c   |   19 +++++
+ drivers/net/wireless/ath/ath10k/wmi.c   |   48 +++++++++++
+ 7 files changed, 282 insertions(+), 1 deletion(-)
 
-*** WARNINGS ***
-
-141 warning regressions:
-  + /kisskb/src/arch/parisc/math-emu/cnv_float.h: warning: '<<' in boolean context, did you mean '<' ? [-Wint-in-bool-context]:  => 63:52, 71:27, 67:21, 75:31
-  + /kisskb/src/arch/s390/include/asm/cpacf.h: warning: asm operand 3 probably doesn't match constraints [enabled by default]:  => 171:2
-  + /kisskb/src/arch/s390/include/asm/cpacf.h: warning: asm operand 3 probably doesn't match constraints:  => 171:2
-  + /kisskb/src/arch/s390/include/asm/uaccess.h: warning: 'rc' may be used uninitialized in this function [-Wuninitialized]:  => 113:2, 143:2
-  + /kisskb/src/arch/s390/mm/fault.c: warning: 'asce' may be used uninitialized in this function [-Wmaybe-uninitialized]:  => 127:15
-  + /kisskb/src/arch/um/os-Linux/signal.c: warning: the frame size of 2960 bytes is larger than 1024 bytes [-Wframe-larger-than=]:  => 93:1, 51:1
-  + /kisskb/src/arch/um/os-Linux/signal.c: warning: the frame size of 2960 bytes is larger than 2048 bytes [-Wframe-larger-than=]:  => 93:1
-  + /kisskb/src/arch/um/os-Linux/signal.c: warning: the frame size of 2976 bytes is larger than 2048 bytes [-Wframe-larger-than=]:  => 51:1
-  + /kisskb/src/crypto/sha512_generic.c: warning: the frame size of 1184 bytes is larger than 1024 bytes [-Wframe-larger-than=]:  => 154:1
-  + /kisskb/src/crypto/sha512_generic.c: warning: the frame size of 1188 bytes is larger than 1024 bytes [-Wframe-larger-than=]:  => 154:1
-  + /kisskb/src/drivers/block/ps3vram.c: warning: format '%lu' expects argument of type 'long unsigned int', but argument 4 has type 'sector_t' [-Wformat]:  => 769:2
-  + /kisskb/src/drivers/hwmon/f71805f.c: warning: 'address' may be used uninitialized in this function [-Wuninitialized]:  => 1639:26
-  + /kisskb/src/drivers/hwmon/w83627hf.c: warning: 'address' may be used uninitialized in this function [-Wuninitialized]:  => 1993:27
-  + /kisskb/src/drivers/hwtracing/intel_th/msu.c: warning: unused variable 'i' [-Wunused-variable]:  => 783:21, 863:6
-  + /kisskb/src/drivers/lightnvm/core.c: warning: 't' may be used uninitialized in this function [-Wuninitialized]:  => 510:5
-  + /kisskb/src/drivers/misc/habanalabs/habanalabs_ioctl.c: warning: cast to pointer from integer of different size [-Wint-to-pointer-cast]:  => 143:23
-  + /kisskb/src/drivers/net/ethernet/marvell/mvpp2/mvpp2.h: warning: overflow in conversion from 'long unsigned int' to 'int' changes value from '18446744073709551584' to '-32' [-Woverflow]:  => 614:2
-  + /kisskb/src/drivers/net/wireless/realtek/rtw88/phy.c: warning: array subscript is above array bounds [-Warray-bounds]:  => 430:26
-  + /kisskb/src/drivers/staging/kpc2000/kpc2000/core.c: warning: format '%lx' expects argument of type 'long unsigned int', but argument 4 has type 'long long int' [-Wformat=]:  => 149:36
-  + /kisskb/src/drivers/staging/kpc2000/kpc2000/core.c: warning: format '%lx' expects argument of type 'long unsigned int', but argument 4 has type 'long long int' [-Wformat]:  => 149:9
-  + /kisskb/src/drivers/staging/kpc2000/kpc2000/fileops.c: warning: the frame size of 1040 bytes is larger than 1024 bytes [-Wframe-larger-than=]:  => 75:1
-  + /kisskb/src/drivers/staging/kpc2000/kpc2000/fileops.c: warning: the frame size of 1056 bytes is larger than 1024 bytes [-Wframe-larger-than=]:  => 75:1
-  + /kisskb/src/drivers/staging/kpc2000/kpc2000/fileops.c: warning: the frame size of 1064 bytes is larger than 1024 bytes [-Wframe-larger-than=]:  => 75:1
-  + /kisskb/src/drivers/staging/kpc2000/kpc_dma/fileops.c: warning: format '%ld' expects argument of type 'long int', but argument 7 has type 'size_t {aka unsigned int}' [-Wformat=]:  => 58:35
-  + /kisskb/src/drivers/staging/kpc2000/kpc_dma/fileops.c: warning: format '%ld' expects argument of type 'long int', but argument 7 has type 'size_t' [-Wformat]:  => 58:2
-  + /kisskb/src/drivers/staging/kpc2000/kpc_dma/fileops.c: warning: format '%ld' expects argument of type 'long int', but argument 7 has type 'size_t' {aka 'unsigned int'} [-Wformat=]:  => 58:35
-  + /kisskb/src/fs/cifs/smb2pdu.c: warning: 'in_data_buf' may be used uninitialized in this function [-Wmaybe-uninitialized]:  => 2580:19
-  + /kisskb/src/fs/cifs/smb2pdu.c: warning: 'in_data_buf' may be used uninitialized in this function [-Wuninitialized]:  => 2580:19
-  + /kisskb/src/include/linux/list.h: warning: 'head' may be used uninitialized in this function [-Wuninitialized]:  => 93:12
-  + /kisskb/src/include/linux/rhashtable.h: warning: 'next' may be used uninitialized in this function [-Wuninitialized]:  => 110:10
-  + /kisskb/src/include/linux/skbuff.h: warning: 'extra_uref' may be used uninitialized in this function [-Wmaybe-uninitialized]:  => 1406:6
-  + /kisskb/src/kernel/futex.c: warning: 'oldval' may be used uninitialized in this function [-Wmaybe-uninitialized]:  => 1658:17
-  + /kisskb/src/kernel/futex.c: warning: 'oldval' may be used uninitialized in this function [-Wuninitialized]:  => 1658:3, 1668:3
-  + /kisskb/src/kernel/locking/lockdep.c: warning: 'print_lock_trace' defined but not used [-Wunused-function]:  => 2820:13
-  + /kisskb/src/kernel/rcu/srcutree.c: warning: 'levelspread[<U 140>]' may be used uninitialized in this function [-Wuninitialized]:  => 140:32
-  + /kisskb/src/kernel/rcu/srcutree.c: warning: 'levelspread[<U 320>]' may be used uninitialized in this function [-Wuninitialized]:  => 140:32
-  + /kisskb/src/kernel/rcu/srcutree.c: warning: 'levelspread[<U 3c0>]' may be used uninitialized in this function [-Wuninitialized]:  => 121:34
-  + /kisskb/src/kernel/rcu/srcutree.c: warning: 'levelspread[<U 460>]' may be used uninitialized in this function [-Wuninitialized]:  => 121:34
-  + /kisskb/src/kernel/rcu/srcutree.c: warning: 'levelspread[<U 500>]' may be used uninitialized in this function [-Wuninitialized]:  => 121:34, 140:32
-  + /kisskb/src/kernel/rcu/srcutree.c: warning: 'levelspread[<U e60>]' may be used uninitialized in this function [-Wuninitialized]:  => 121:34
-  + /kisskb/src/kernel/rcu/srcutree.c: warning: 'levelspread[<U11e0>]' may be used uninitialized in this function [-Wuninitialized]:  => 121:34
-  + /kisskb/src/kernel/rcu/srcutree.c: warning: 'levelspread[<U1820>]' may be used uninitialized in this function [-Wuninitialized]:  => 121:34
-  + /kisskb/src/kernel/rcu/srcutree.c: warning: 'levelspread[<U25a0>]' may be used uninitialized in this function [-Wuninitialized]:  => 121:34, 140:32
-  + /kisskb/src/kernel/rcu/srcutree.c: warning: 'levelspread[<U2b40>]' may be used uninitialized in this function [-Wuninitialized]:  => 121:34
-  + /kisskb/src/kernel/rcu/srcutree.c: warning: 'levelspread[<U2c80>]' may be used uninitialized in this function [-Wuninitialized]:  => 140:32
-  + /kisskb/src/kernel/rcu/srcutree.c: warning: 'levelspread[<U3320>]' may be used uninitialized in this function [-Wuninitialized]:  => 121:34
-  + /kisskb/src/kernel/rcu/srcutree.c: warning: 'levelspread[<U3f00>]' may be used uninitialized in this function [-Wuninitialized]:  => 121:34
-  + /kisskb/src/kernel/rcu/srcutree.c: warning: 'levelspread[<U4000>]' may be used uninitialized in this function [-Wuninitialized]:  => 121:34, 140:32
-  + /kisskb/src/kernel/rcu/srcutree.c: warning: 'levelspread[<U4280>]' may be used uninitialized in this function [-Wuninitialized]:  => 121:34
-  + /kisskb/src/kernel/rcu/srcutree.c: warning: 'levelspread[<U4640>]' may be used uninitialized in this function [-Wuninitialized]:  => 140:32
-  + /kisskb/src/kernel/rcu/srcutree.c: warning: 'levelspread[<U4aa0>]' may be used uninitialized in this function [-Wuninitialized]:  => 121:34
-  + /kisskb/src/kernel/rcu/srcutree.c: warning: 'levelspread[<U50a0>]' may be used uninitialized in this function [-Wuninitialized]:  => 121:34
-  + /kisskb/src/kernel/rcu/srcutree.c: warning: 'levelspread[<U53c0>]' may be used uninitialized in this function [-Wuninitialized]:  => 121:34
-  + /kisskb/src/kernel/rcu/srcutree.c: warning: 'levelspread[<U5640>]' may be used uninitialized in this function [-Wuninitialized]:  => 121:34
-  + /kisskb/src/kernel/rcu/srcutree.c: warning: 'levelspread[<U5c80>]' may be used uninitialized in this function [-Wuninitialized]:  => 121:34
-  + /kisskb/src/kernel/rcu/srcutree.c: warning: 'levelspread[<U5e60>]' may be used uninitialized in this function [-Wuninitialized]:  => 121:34
-  + /kisskb/src/kernel/rcu/srcutree.c: warning: 'levelspread[<U6500>]' may be used uninitialized in this function [-Wuninitialized]:  => 121:34
-  + /kisskb/src/kernel/rcu/srcutree.c: warning: 'levelspread[<U6e60>]' may be used uninitialized in this function [-Wuninitialized]:  => 140:32
-  + /kisskb/src/kernel/rcu/srcutree.c: warning: 'levelspread[<U71e0>]' may be used uninitialized in this function [-Wuninitialized]:  => 121:34
-  + /kisskb/src/kernel/rcu/srcutree.c: warning: 'levelspread[<U7f00>]' may be used uninitialized in this function [-Wuninitialized]:  => 140:32
-  + /kisskb/src/kernel/rcu/srcutree.c: warning: 'levelspread[<U80a0>]' may be used uninitialized in this function [-Wuninitialized]:  => 121:34
-  + /kisskb/src/kernel/rcu/srcutree.c: warning: 'levelspread[<U83c0>]' may be used uninitialized in this function [-Wuninitialized]:  => 121:34
-  + /kisskb/src/kernel/rcu/srcutree.c: warning: 'levelspread[<U85a0>]' may be used uninitialized in this function [-Wuninitialized]:  => 140:32
-  + /kisskb/src/kernel/rcu/srcutree.c: warning: 'levelspread[<U8780>]' may be used uninitialized in this function [-Wuninitialized]:  => 121:34
-  + /kisskb/src/kernel/rcu/srcutree.c: warning: 'levelspread[<U8f00>]' may be used uninitialized in this function [-Wuninitialized]:  => 140:32
-  + /kisskb/src/kernel/rcu/srcutree.c: warning: 'levelspread[<U9320>]' may be used uninitialized in this function [-Wuninitialized]:  => 140:32
-  + /kisskb/src/kernel/rcu/srcutree.c: warning: 'levelspread[<U96e0>]' may be used uninitialized in this function [-Wuninitialized]:  => 140:32
-  + /kisskb/src/kernel/rcu/srcutree.c: warning: 'levelspread[<U98c0>]' may be used uninitialized in this function [-Wuninitialized]:  => 121:34
-  + /kisskb/src/kernel/rcu/srcutree.c: warning: 'levelspread[<Uaf00>]' may be used uninitialized in this function [-Wuninitialized]:  => 121:34
-  + /kisskb/src/kernel/rcu/srcutree.c: warning: 'levelspread[<Ub500>]' may be used uninitialized in this function [-Wuninitialized]:  => 140:32
-  + /kisskb/src/kernel/rcu/srcutree.c: warning: 'levelspread[<Ub640>]' may be used uninitialized in this function [-Wuninitialized]:  => 140:32
-  + /kisskb/src/kernel/rcu/srcutree.c: warning: 'levelspread[<Ub8c0>]' may be used uninitialized in this function [-Wuninitialized]:  => 121:34
-  + /kisskb/src/kernel/rcu/srcutree.c: warning: 'levelspread[<Ubaa0>]' may be used uninitialized in this function [-Wuninitialized]:  => 121:34
-  + /kisskb/src/kernel/rcu/srcutree.c: warning: 'levelspread[<Ubbe0>]' may be used uninitialized in this function [-Wuninitialized]:  => 140:32
-  + /kisskb/src/kernel/rcu/srcutree.c: warning: 'levelspread[<Ubc80>]' may be used uninitialized in this function [-Wuninitialized]:  => 121:34
-  + /kisskb/src/kernel/rcu/srcutree.c: warning: 'levelspread[<Uc140>]' may be used uninitialized in this function [-Wuninitialized]:  => 140:32
-  + /kisskb/src/kernel/rcu/srcutree.c: warning: 'levelspread[<Uc280>]' may be used uninitialized in this function [-Wuninitialized]:  => 121:34
-  + /kisskb/src/kernel/rcu/srcutree.c: warning: 'levelspread[<Ud140>]' may be used uninitialized in this function [-Wuninitialized]:  => 121:34
-  + /kisskb/src/kernel/rcu/srcutree.c: warning: 'levelspread[<Ud280>]' may be used uninitialized in this function [-Wuninitialized]:  => 140:32
-  + /kisskb/src/kernel/rcu/srcutree.c: warning: 'levelspread[<Ud5a0>]' may be used uninitialized in this function [-Wuninitialized]:  => 121:34
-  + /kisskb/src/kernel/rcu/srcutree.c: warning: 'levelspread[<Udb40>]' may be used uninitialized in this function [-Wuninitialized]:  => 121:34
-  + /kisskb/src/kernel/rcu/srcutree.c: warning: 'levelspread[<Ue0a0>]' may be used uninitialized in this function [-Wuninitialized]:  => 121:34
-  + /kisskb/src/kernel/rcu/srcutree.c: warning: 'levelspread[<Ue820>]' may be used uninitialized in this function [-Wuninitialized]:  => 121:34
-  + /kisskb/src/kernel/rcu/srcutree.c: warning: 'levelspread[<Uec80>]' may be used uninitialized in this function [-Wuninitialized]:  => 121:34
-  + /kisskb/src/kernel/rcu/srcutree.c: warning: 'levelspread[<Uee60>]' may be used uninitialized in this function [-Wuninitialized]:  => 121:34
-  + /kisskb/src/kernel/rcu/srcutree.c: warning: 'levelspread[<Uf500>]' may be used uninitialized in this function [-Wuninitialized]:  => 121:34
-  + /kisskb/src/kernel/rcu/srcutree.c: warning: 'levelspread[<Uf820>]' may be used uninitialized in this function [-Wuninitialized]:  => 121:34
-  + /kisskb/src/kernel/rcu/srcutree.c: warning: 'levelspread[<Ufc80>]' may be used uninitialized in this function [-Wuninitialized]:  => 140:32, 121:34
-  + /kisskb/src/kernel/rcu/srcutree.c: warning: 'levelspread[<Ufe60>]' may be used uninitialized in this function [-Wuninitialized]:  => 121:34
-  + /kisskb/src/mm/slub.c: warning: 'deactivate_slab.isra.47' uses dynamic stack allocation [enabled by default]:  => 2177:1
-  + /kisskb/src/mm/slub.c: warning: 'get_partial_node.isra.49' uses dynamic stack allocation [enabled by default]:  => 1884:1
-  + /kisskb/src/mm/slub.c: warning: 'unfreeze_partials.isra.48' uses dynamic stack allocation [enabled by default]:  => 2245:1
-  + /kisskb/src/mm/vmalloc.c: warning: 'lva' may be used uninitialized in this function [-Wuninitialized]:  => 975:28
-  + /kisskb/src/net/core/devlink.c: warning: 'err' may be used uninitialized in this function [-Wuninitialized]: 4304:6 => 4394:6, 4325:6
-  + /kisskb/src/net/ipv4/fib_semantics.c: warning: 'err' may be used uninitialized in this function [-Wmaybe-uninitialized]:  => 1027:12
-  + /kisskb/src/net/ipv4/fib_semantics.c: warning: 'err' may be used uninitialized in this function [-Wuninitialized]:  => 1027:12
-  + /kisskb/src/net/sched/sch_cake.c: warning: the frame size of 1504 bytes is larger than 1280 bytes [-Wframe-larger-than=]:  => 2905:1
-  + /kisskb/src/net/xfrm/xfrm_policy.c: warning: array subscript is above array bounds [-Warray-bounds]:  => 3492:15
-  + /kisskb/src/sound/soc/fsl/imx-audmix.c: warning: 'capture_dai_name' may be used uninitialized in this function [-Wuninitialized]:  => 277:45
-  + warning: "copy_page" [drivers/md/dm-integrity.ko] has no CRC!:  => N/A
-  + warning: same basename if the following are built as modules::  => N/A
-  + warning: unmet direct dependencies detected for MFD_STMFX:  => N/A
-  + warning: vmlinux.o(.text+0x2f2a): Section mismatch in reference from the variable start_here_multiplatform to the function .init.text:.early_setup():  => N/A
-  + warning: vmlinux.o(.text+0x2f3c): Section mismatch in reference from the variable __boot_from_prom to the function .init.text:prom_init():  => N/A
-  + warning: vmlinux.o(.text+0x302a): Section mismatch in reference from the variable start_here_multiplatform to the function .init.text:.early_setup():  => N/A
-  + warning: vmlinux.o(.text+0x30ba): Section mismatch in reference from the variable start_here_multiplatform to the function .init.text:.early_setup():  => N/A
-  + warning: vmlinux.o(.text+0x3128): Section mismatch in reference from the variable start_here_multiplatform to the function .init.text:early_setup():  => N/A
-  + warning: vmlinux.o(.text+0x312a): Section mismatch in reference from the variable start_here_multiplatform to the function .init.text:.early_setup():  => N/A
-  + warning: vmlinux.o(.text+0x3164): Section mismatch in reference from the variable start_here_common to the function .init.text:start_kernel():  => N/A
-  + warning: vmlinux.o(.text+0x322a): Section mismatch in reference from the variable start_here_multiplatform to the function .init.text:.early_setup():  => N/A
-  + warning: vmlinux.o(.text+0x325dc): Section mismatch in reference from the function setup_scache() to the function .init.text:loongson3_sc_init():  => N/A
-  + warning: vmlinux.o(.text+0x340c): Section mismatch in reference from the variable __boot_from_prom to the function .init.text:prom_init():  => N/A
-  + warning: vmlinux.o(.text+0x3474): Section mismatch in reference from the variable __boot_from_prom to the function .init.text:prom_init():  => N/A
-  + warning: vmlinux.o(.text+0x3484): Section mismatch in reference from the variable __boot_from_prom to the function .init.text:prom_init():  => N/A
-  + warning: vmlinux.o(.text+0x352a): Section mismatch in reference from the variable start_here_multiplatform to the function .init.text:.early_setup():  => N/A
-  + warning: vmlinux.o(.text+0x3628): Section mismatch in reference from the variable start_here_multiplatform to the function .init.text:early_setup():  => N/A
-  + warning: vmlinux.o(.text+0x362a): Section mismatch in reference from the variable start_here_multiplatform to the function .init.text:.early_setup():  => N/A
-  + warning: vmlinux.o(.text+0x3664): Section mismatch in reference from the variable start_here_common to the function .init.text:start_kernel():  => N/A
-  + warning: vmlinux.o(.text+0x3734): Section mismatch in reference from the variable start_here_multiplatform to the function .init.text:early_setup():  => N/A
-  + warning: vmlinux.o(.text+0x3770): Section mismatch in reference from the variable start_here_common to the function .init.text:start_kernel():  => N/A
-  + warning: vmlinux.o(.text+0x37784): Section mismatch in reference from the function mips_sc_init() to the function .init.text:mips_sc_probe_cm3():  => N/A
-  + warning: vmlinux.o(.text+0x3a14): Section mismatch in reference from the variable __boot_from_prom to the function .init.text:prom_init():  => N/A
-  + warning: vmlinux.o(.text+0x3c34): Section mismatch in reference from the variable start_here_multiplatform to the function .init.text:early_setup():  => N/A
-  + warning: vmlinux.o(.text+0x3c70): Section mismatch in reference from the variable start_here_common to the function .init.text:start_kernel():  => N/A
-  + warning: vmlinux.o(.text+0x3dc6): Section mismatch in reference from the variable start_here_multiplatform to the function .init.text:.early_setup():  => N/A
-  + warning: vmlinux.o(.text+0x40e): Section mismatch in reference from the variable start_here_multiplatform to the function .init.text:.early_setup():  => N/A
-  + warning: vmlinux.o(.text+0x42c6): Section mismatch in reference from the variable start_here_multiplatform to the function .init.text:.early_setup():  => N/A
-  + warning: vmlinux.o(.text.unlikely+0x20): Section mismatch in reference from the function populate_initrd_image() to the variable .init.ramfs.info:__initramfs_size:  => N/A
-  + warning: vmlinux.o(.text.unlikely+0x24ec4): Section mismatch in reference from the function __integrity_init_keyring() to the function .init.text:set_platform_trusted_keys():  => N/A
-  + warning: vmlinux.o(.text.unlikely+0x308): Section mismatch in reference from the function populate_initrd_image() to the function .init.text:set_reset_devices():  => N/A
-  + warning: vmlinux.o(.text.unlikely+0x30c): Section mismatch in reference from the function populate_initrd_image() to the variable .init.ramfs.info:__initramfs_size:  => N/A
-  + warning: vmlinux.o(.text.unlikely+0x32c): Section mismatch in reference from the function populate_initrd_image() to the function .init.text:set_reset_devices():  => N/A
-  + warning: vmlinux.o(.text.unlikely+0x36cc): Section mismatch in reference from the function .remove_pmd_table() to the function .meminit.text:.split_kernel_mapping():  => N/A
-  + warning: vmlinux.o(.text.unlikely+0x36e4): Section mismatch in reference from the function .remove_pmd_table() to the function .meminit.text:.split_kernel_mapping():  => N/A
-  + warning: vmlinux.o(.text.unlikely+0x38cc): Section mismatch in reference from the function .remove_pud_table() to the function .meminit.text:.split_kernel_mapping():  => N/A
-  + warning: vmlinux.o(.text.unlikely+0x3914): Section mismatch in reference from the function .remove_pud_table() to the function .meminit.text:.split_kernel_mapping():  => N/A
-  + warning: vmlinux.o(.text.unlikely+0x3928): Section mismatch in reference from the function .remove_pmd_table() to the function .meminit.text:.split_kernel_mapping():  => N/A
-  + warning: vmlinux.o(.text.unlikely+0x3b58): Section mismatch in reference from the function .remove_pud_table() to the function .meminit.text:.split_kernel_mapping():  => N/A
-  + warning: vmlinux.o(.text.unlikely+0x52): Section mismatch in reference from the function populate_initrd_image() to the function .init.text:unpack_to_rootfs():  => N/A
-  + warning: vmlinux.o(.text.unlikely+0xb2): Section mismatch in reference from the function populate_initrd_image() to the function .init.text:xwrite():  => N/A
-  + warning: vmlinux.o(.text.unlikely+0xe924): Section mismatch in reference from the function __integrity_init_keyring() to the function .init.text:set_platform_trusted_keys():  => N/A
-
-145 warning improvements:
-  - /kisskb/src/arch/s390/boot/mem_detect.c: warning: 'detect_memory' uses dynamic stack allocation [enabled by default]: 182:1 => 
-  - /kisskb/src/arch/s390/mm/pgtable.c: warning: 'pmd_alloc_map' defined but not used [-Wunused-function]: 413:15 => 
-  - /kisskb/src/arch/um/kernel/skas/uaccess.c: warning: unused variable 'buf' [-Wunused-variable]: 62:10 => 
-  - /kisskb/src/arch/um/os-Linux/umid.c: warning: ISO C90 forbids variable length array 'dir' [-Wvla]: 388:2 => 
-  - /kisskb/src/arch/um/os-Linux/umid.c: warning: ISO C90 forbids variable length array 'file' [-Wvla]: 213:2, 138:2 => 
-  - /kisskb/src/drivers/atm/ambassador.c: warning: passing argument 1 of 'virt_to_bus' discards 'volatile' qualifier from pointer target type [enabled by default]: 1762:3 => 
-  - /kisskb/src/drivers/crypto/chelsio/chtls/chtls_cm.c: warning: 'wait_for_states.constprop.23' uses dynamic stack allocation [enabled by default]: 406:1 => 
-  - /kisskb/src/drivers/gpu/drm/amd/amdgpu/../display/amdgpu_dm/amdgpu_dm.c: warning: (near initialization for 'stream_update.src') [-Wmissing-braces]: 5861:10 => 
-  - /kisskb/src/drivers/gpu/drm/amd/amdgpu/../display/amdgpu_dm/amdgpu_dm.c: warning: missing braces around initializer [-Wmissing-braces]: 5861:10 => 
-  - /kisskb/src/drivers/gpu/drm/arm/display/komeda/komeda_dev.c: warning: 'ret' may be used uninitialized in this function [-Wuninitialized]: 145:5 => 
-  - /kisskb/src/drivers/mtd/ubi/wl.c: warning: 'err' may be used uninitialized in this function [-Wuninitialized]: 1520:19 => 
-  - /kisskb/src/drivers/net/ethernet/chelsio/cxgb4/cudbg_lib.c: warning: 'rc' may be used uninitialized in this function [-Wuninitialized]: 2962:6 => 
-  - /kisskb/src/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c: warning: overflow in implicit constant conversion [-Woverflow]: 551:41 => 
-  - /kisskb/src/drivers/net/ethernet/mellanox/mlx5/core/fs_core.c: warning: 'err' may be used uninitialized in this function [-Wuninitialized]: 845:5 => 
-  - /kisskb/src/drivers/net/ethernet/neterion/vxge/vxge-config.c: warning: 'vxge_hw_device_hw_info_get' uses dynamic stack allocation [enabled by default]: 1089:1 => 
-  - /kisskb/src/drivers/net/veth.c: warning: 'veth_get_stats64' uses dynamic stack allocation [enabled by default]: 365:1 => 
-  - /kisskb/src/drivers/net/wan/lmc/lmc_main.c: warning: passing argument 1 of 'virt_to_bus' discards 'volatile' qualifier from pointer target type [enabled by default]: 1851:9, 1862:5, 1875:5, 1860:9, 1876:5, 1873:9 => 
-  - /kisskb/src/drivers/s390/net/ism_drv.c: warning: 'ism_add_vlan_id' uses dynamic stack allocation [enabled by default]: 316:1 => 
-  - /kisskb/src/drivers/s390/net/ism_drv.c: warning: 'ism_del_vlan_id' uses dynamic stack allocation [enabled by default]: 330:1 => 
-  - /kisskb/src/drivers/s390/net/ism_drv.c: warning: 'ism_dev_init' uses dynamic stack allocation [enabled by default]: 492:1 => 
-  - /kisskb/src/drivers/s390/net/ism_drv.c: warning: 'ism_query_rgid' uses dynamic stack allocation [enabled by default]: 215:1 => 
-  - /kisskb/src/drivers/s390/net/ism_drv.c: warning: 'ism_register_dmb' uses dynamic stack allocation [enabled by default]: 281:1 => 
-  - /kisskb/src/drivers/s390/net/ism_drv.c: warning: 'ism_signal_ieq' uses dynamic stack allocation [enabled by default]: 358:1 => 
-  - /kisskb/src/drivers/s390/net/ism_drv.c: warning: 'ism_unregister_dmb' uses dynamic stack allocation [enabled by default]: 302:1 => 
-  - /kisskb/src/drivers/s390/net/ism_drv.c: warning: 'query_info' uses dynamic stack allocation [enabled by default]: 84:1 => 
-  - /kisskb/src/drivers/s390/net/ism_drv.c: warning: 'register_ieq' uses dynamic stack allocation [enabled by default]: 140:1 => 
-  - /kisskb/src/drivers/s390/net/ism_drv.c: warning: 'register_sba' uses dynamic stack allocation [enabled by default]: 111:1 => 
-  - /kisskb/src/drivers/target/iscsi/cxgbit/cxgbit_target.c: warning: 'cxgbit_tx_datain_iso.isra.32' uses dynamic stack allocation [enabled by default]: 501:1 => 
-  - /kisskb/src/drivers/target/iscsi/iscsi_target.c: warning: 'iscsit_send_datain' uses dynamic stack allocation [enabled by default]: 2841:1 => 
-  - /kisskb/src/fs/btrfs/qgroup.c: warning: array subscript is below array bounds [-Warray-bounds]: 1721:17, 1720:18 => 
-  - /kisskb/src/fs/reiserfs/stree.c: warning: the frame size of 1052 bytes is larger than 1024 bytes [-Wframe-larger-than=]: 812:1 => 
-  - /kisskb/src/include/asm-generic/io.h: warning: 'px_cmd' may be used uninitialized in this function [-Wuninitialized]: 232:15 => 
-  - /kisskb/src/include/asm-generic/io.h: warning: 'px_is' may be used uninitialized in this function [-Wuninitialized]: 232:15 => 
-  - /kisskb/src/kernel/rcu/srcutree.c: warning: 'levelspread[<U  a0>]' may be used uninitialized in this function [-Wuninitialized]: 140:32 => 
-  - /kisskb/src/kernel/rcu/srcutree.c: warning: 'levelspread[<U 960>]' may be used uninitialized in this function [-Wuninitialized]: 121:34 => 
-  - /kisskb/src/kernel/rcu/srcutree.c: warning: 'levelspread[<U a00>]' may be used uninitialized in this function [-Wuninitialized]: 121:34 => 
-  - /kisskb/src/kernel/rcu/srcutree.c: warning: 'levelspread[<U be0>]' may be used uninitialized in this function [-Wuninitialized]: 140:32 => 
-  - /kisskb/src/kernel/rcu/srcutree.c: warning: 'levelspread[<U1140>]' may be used uninitialized in this function [-Wuninitialized]: 121:34 => 
-  - /kisskb/src/kernel/rcu/srcutree.c: warning: 'levelspread[<U1460>]' may be used uninitialized in this function [-Wuninitialized]: 121:34 => 
-  - /kisskb/src/kernel/rcu/srcutree.c: warning: 'levelspread[<U1640>]' may be used uninitialized in this function [-Wuninitialized]: 121:34 => 
-  - /kisskb/src/kernel/rcu/srcutree.c: warning: 'levelspread[<U16e0>]' may be used uninitialized in this function [-Wuninitialized]: 140:32 => 
-  - /kisskb/src/kernel/rcu/srcutree.c: warning: 'levelspread[<U1a00>]' may be used uninitialized in this function [-Wuninitialized]: 121:34 => 
-  - /kisskb/src/kernel/rcu/srcutree.c: warning: 'levelspread[<U1be0>]' may be used uninitialized in this function [-Wuninitialized]: 121:34 => 
-  - /kisskb/src/kernel/rcu/srcutree.c: warning: 'levelspread[<U1c80>]' may be used uninitialized in this function [-Wuninitialized]: 121:34 => 
-  - /kisskb/src/kernel/rcu/srcutree.c: warning: 'levelspread[<U2000>]' may be used uninitialized in this function [-Wuninitialized]: 121:34 => 
-  - /kisskb/src/kernel/rcu/srcutree.c: warning: 'levelspread[<U2780>]' may be used uninitialized in this function [-Wuninitialized]: 121:34 => 
-  - /kisskb/src/kernel/rcu/srcutree.c: warning: 'levelspread[<U2aa0>]' may be used uninitialized in this function [-Wuninitialized]: 121:34 => 
-  - /kisskb/src/kernel/rcu/srcutree.c: warning: 'levelspread[<U3000>]' may be used uninitialized in this function [-Wuninitialized]: 121:34 => 
-  - /kisskb/src/kernel/rcu/srcutree.c: warning: 'levelspread[<U30a0>]' may be used uninitialized in this function [-Wuninitialized]: 121:34 => 
-  - /kisskb/src/kernel/rcu/srcutree.c: warning: 'levelspread[<U3460>]' may be used uninitialized in this function [-Wuninitialized]: 121:34 => 
-  - /kisskb/src/kernel/rcu/srcutree.c: warning: 'levelspread[<U35a0>]' may be used uninitialized in this function [-Wuninitialized]: 121:34 => 
-  - /kisskb/src/kernel/rcu/srcutree.c: warning: 'levelspread[<U36e0>]' may be used uninitialized in this function [-Wuninitialized]: 140:32 => 
-  - /kisskb/src/kernel/rcu/srcutree.c: warning: 'levelspread[<U3c80>]' may be used uninitialized in this function [-Wuninitialized]: 140:32 => 
-  - /kisskb/src/kernel/rcu/srcutree.c: warning: 'levelspread[<U3d20>]' may be used uninitialized in this function [-Wuninitialized]: 121:34 => 
-  - /kisskb/src/kernel/rcu/srcutree.c: warning: 'levelspread[<U4140>]' may be used uninitialized in this function [-Wuninitialized]: 121:34 => 
-  - /kisskb/src/kernel/rcu/srcutree.c: warning: 'levelspread[<U4320>]' may be used uninitialized in this function [-Wuninitialized]: 140:32 => 
-  - /kisskb/src/kernel/rcu/srcutree.c: warning: 'levelspread[<U4500>]' may be used uninitialized in this function [-Wuninitialized]: 121:34 => 
-  - /kisskb/src/kernel/rcu/srcutree.c: warning: 'levelspread[<U4a00>]' may be used uninitialized in this function [-Wuninitialized]: 121:34 => 
-  - /kisskb/src/kernel/rcu/srcutree.c: warning: 'levelspread[<U5f00>]' may be used uninitialized in this function [-Wuninitialized]: 140:32 => 
-  - /kisskb/src/kernel/rcu/srcutree.c: warning: 'levelspread[<U66e0>]' may be used uninitialized in this function [-Wuninitialized]: 121:34 => 
-  - /kisskb/src/kernel/rcu/srcutree.c: warning: 'levelspread[<U68c0>]' may be used uninitialized in this function [-Wuninitialized]: 140:32 => 
-  - /kisskb/src/kernel/rcu/srcutree.c: warning: 'levelspread[<U6960>]' may be used uninitialized in this function [-Wuninitialized]: 140:32 => 
-  - /kisskb/src/kernel/rcu/srcutree.c: warning: 'levelspread[<U7000>]' may be used uninitialized in this function [-Wuninitialized]: 121:34 => 
-  - /kisskb/src/kernel/rcu/srcutree.c: warning: 'levelspread[<U70a0>]' may be used uninitialized in this function [-Wuninitialized]: 121:34 => 
-  - /kisskb/src/kernel/rcu/srcutree.c: warning: 'levelspread[<U73c0>]' may be used uninitialized in this function [-Wuninitialized]: 140:32 => 
-  - /kisskb/src/kernel/rcu/srcutree.c: warning: 'levelspread[<U7b40>]' may be used uninitialized in this function [-Wuninitialized]: 121:34 => 
-  - /kisskb/src/kernel/rcu/srcutree.c: warning: 'levelspread[<U8000>]' may be used uninitialized in this function [-Wuninitialized]: 140:32 => 
-  - /kisskb/src/kernel/rcu/srcutree.c: warning: 'levelspread[<U8140>]' may be used uninitialized in this function [-Wuninitialized]: 140:32 => 
-  - /kisskb/src/kernel/rcu/srcutree.c: warning: 'levelspread[<U8b40>]' may be used uninitialized in this function [-Wuninitialized]: 121:34 => 
-  - /kisskb/src/kernel/rcu/srcutree.c: warning: 'levelspread[<U9460>]' may be used uninitialized in this function [-Wuninitialized]: 121:34 => 
-  - /kisskb/src/kernel/rcu/srcutree.c: warning: 'levelspread[<U9780>]' may be used uninitialized in this function [-Wuninitialized]: 121:34 => 
-  - /kisskb/src/kernel/rcu/srcutree.c: warning: 'levelspread[<U9820>]' may be used uninitialized in this function [-Wuninitialized]: 140:32 => 
-  - /kisskb/src/kernel/rcu/srcutree.c: warning: 'levelspread[<U9c80>]' may be used uninitialized in this function [-Wuninitialized]: 121:34 => 
-  - /kisskb/src/kernel/rcu/srcutree.c: warning: 'levelspread[<Ua320>]' may be used uninitialized in this function [-Wuninitialized]: 140:32, 121:34 => 
-  - /kisskb/src/kernel/rcu/srcutree.c: warning: 'levelspread[<Uadc0>]' may be used uninitialized in this function [-Wuninitialized]: 121:34 => 
-  - /kisskb/src/kernel/rcu/srcutree.c: warning: 'levelspread[<Ub0a0>]' may be used uninitialized in this function [-Wuninitialized]: 121:34 => 
-  - /kisskb/src/kernel/rcu/srcutree.c: warning: 'levelspread[<Ub460>]' may be used uninitialized in this function [-Wuninitialized]: 140:32 => 
-  - /kisskb/src/kernel/rcu/srcutree.c: warning: 'levelspread[<Uc0a0>]' may be used uninitialized in this function [-Wuninitialized]: 121:34 => 
-  - /kisskb/src/kernel/rcu/srcutree.c: warning: 'levelspread[<Uc500>]' may be used uninitialized in this function [-Wuninitialized]: 121:34 => 
-  - /kisskb/src/kernel/rcu/srcutree.c: warning: 'levelspread[<Uca00>]' may be used uninitialized in this function [-Wuninitialized]: 140:32 => 
-  - /kisskb/src/kernel/rcu/srcutree.c: warning: 'levelspread[<Ud640>]' may be used uninitialized in this function [-Wuninitialized]: 140:32 => 
-  - /kisskb/src/kernel/rcu/srcutree.c: warning: 'levelspread[<Ud960>]' may be used uninitialized in this function [-Wuninitialized]: 140:32 => 
-  - /kisskb/src/kernel/rcu/srcutree.c: warning: 'levelspread[<Udf00>]' may be used uninitialized in this function [-Wuninitialized]: 140:32 => 
-  - /kisskb/src/kernel/rcu/srcutree.c: warning: 'levelspread[<Ue5a0>]' may be used uninitialized in this function [-Wuninitialized]: 140:32 => 
-  - /kisskb/src/kernel/rcu/srcutree.c: warning: 'levelspread[<Ueb40>]' may be used uninitialized in this function [-Wuninitialized]: 121:34 => 
-  - /kisskb/src/kernel/rcu/srcutree.c: warning: 'levelspread[<Uebe0>]' may be used uninitialized in this function [-Wuninitialized]: 121:34 => 
-  - /kisskb/src/kernel/rcu/srcutree.c: warning: 'levelspread[<Uf780>]' may be used uninitialized in this function [-Wuninitialized]: 121:34 => 
-  - /kisskb/src/kernel/rcu/srcutree.c: warning: 'levelspread[<Uf960>]' may be used uninitialized in this function [-Wuninitialized]: 121:34 => 
-  - /kisskb/src/kernel/rcu/srcutree.c: warning: 'levelspread[<Ufa00>]' may be used uninitialized in this function [-Wuninitialized]: 121:34 => 
-  - /kisskb/src/kernel/trace/trace_hwlat.c: warning: the frame size of 1696 bytes is larger than 1280 bytes [-Wframe-larger-than=]: 341:1 => 
-  - /kisskb/src/lib/rhashtable.c: warning: 'next' may be used uninitialized in this function [-Wuninitialized]: 264:2 => 
-  - /kisskb/src/lib/test_stackinit.c: warning: 'leaf_big_hole_dynamic_all' uses dynamic stack allocation [enabled by default]: 260:1 => 
-  - /kisskb/src/lib/test_stackinit.c: warning: 'leaf_big_hole_dynamic_partial.isra.29' uses dynamic stack allocation [enabled by default]: 259:1 => 
-  - /kisskb/src/lib/test_stackinit.c: warning: 'leaf_big_hole_none.isra.63' uses dynamic stack allocation [enabled by default]: 266:1 => 
-  - /kisskb/src/lib/test_stackinit.c: warning: 'leaf_big_hole_runtime_all.isra.49' uses dynamic stack allocation [enabled by default]: 263:1 => 
-  - /kisskb/src/lib/test_stackinit.c: warning: 'leaf_big_hole_runtime_partial.isra.41' uses dynamic stack allocation [enabled by default]: 262:1 => 
-  - /kisskb/src/lib/test_stackinit.c: warning: 'leaf_big_hole_static_all' uses dynamic stack allocation [enabled by default]: 257:1 => 
-  - /kisskb/src/lib/test_stackinit.c: warning: 'leaf_big_hole_static_partial.isra.17' uses dynamic stack allocation [enabled by default]: 256:1 => 
-  - /kisskb/src/lib/test_stackinit.c: warning: 'leaf_big_hole_zero.isra.9' uses dynamic stack allocation [enabled by default]: 254:1 => 
-  - /kisskb/src/lib/test_stackinit.c: warning: 'test_big_hole_dynamic_all' uses dynamic stack allocation [enabled by default]: 260:1 => 
-  - /kisskb/src/lib/test_stackinit.c: warning: 'test_big_hole_dynamic_partial' uses dynamic stack allocation [enabled by default]: 259:1 => 
-  - /kisskb/src/lib/test_stackinit.c: warning: 'test_big_hole_none' uses dynamic stack allocation [enabled by default]: 266:1 => 
-  - /kisskb/src/lib/test_stackinit.c: warning: 'test_big_hole_runtime_all' uses dynamic stack allocation [enabled by default]: 263:1 => 
-  - /kisskb/src/lib/test_stackinit.c: warning: 'test_big_hole_runtime_partial' uses dynamic stack allocation [enabled by default]: 262:1 => 
-  - /kisskb/src/lib/test_stackinit.c: warning: 'test_big_hole_static_all' uses dynamic stack allocation [enabled by default]: 257:1 => 
-  - /kisskb/src/lib/test_stackinit.c: warning: 'test_big_hole_static_partial' uses dynamic stack allocation [enabled by default]: 256:1 => 
-  - /kisskb/src/lib/test_stackinit.c: warning: 'test_big_hole_zero' uses dynamic stack allocation [enabled by default]: 254:1 => 
-  - /kisskb/src/mm/mprotect.c: warning: unused variable 'mm' [-Wunused-variable]: 42:20 => 
-  - /kisskb/src/mm/slub.c: warning: 'deactivate_slab.isra.50' uses dynamic stack allocation [enabled by default]: 2185:1 => 
-  - /kisskb/src/mm/slub.c: warning: 'get_partial_node.isra.52' uses dynamic stack allocation [enabled by default]: 1892:1 => 
-  - /kisskb/src/mm/slub.c: warning: 'unfreeze_partials.isra.51' uses dynamic stack allocation [enabled by default]: 2253:1 => 
-  - /kisskb/src/net/bridge/br_device.c: warning: 'br_get_stats64' uses dynamic stack allocation [enabled by default]: 232:1 => 
-  - /kisskb/src/net/bridge/netfilter/ebtables.c: warning: 'compat_copy_everything_to_user' uses dynamic stack allocation [enabled by default]: 1855:1 => 
-  - /kisskb/src/net/netfilter/nf_nat_masquerade.c: warning: 'masq_refcnt6' defined but not used [-Wunused-variable]: 15:21 => 
-  - /kisskb/src/net/sched/sch_cake.c: warning: the frame size of 1480 bytes is larger than 1280 bytes [-Wframe-larger-than=]: 2904:1 => 
-  - /kisskb/src/net/sunrpc/stats.c: warning: 'rpc_clnt_show_stats' uses dynamic stack allocation [enabled by default]: 268:1 => 
-  - arch/m68k/configs/multi_defconfig: warning: symbol value 'm' invalid for FS_ENCRYPTION: 534 => 
-  - arch/m68k/configs/multi_defconfig: warning: symbol value 'm' invalid for NET_DEVLINK: 333 => 
-  - arch/m68k/configs/sun3_defconfig: warning: symbol value 'm' invalid for FS_ENCRYPTION: 423 => 
-  - arch/m68k/configs/sun3_defconfig: warning: symbol value 'm' invalid for NET_DEVLINK: 306 => 
-  - warning: vmlinux.o(.text+0x2b3c): Section mismatch in reference from the variable __boot_from_prom to the function .init.text:prom_init(): N/A => 
-  - warning: vmlinux.o(.text+0x2d28): Section mismatch in reference from the variable start_here_multiplatform to the function .init.text:early_setup(): N/A => 
-  - warning: vmlinux.o(.text+0x2d5c): Section mismatch in reference from the variable start_here_common to the function .init.text:start_kernel(): N/A => 
-  - warning: vmlinux.o(.text+0x2fac): Section mismatch in reference from the variable __boot_from_prom to the function .init.text:prom_init(): N/A => 
-  - warning: vmlinux.o(.text+0x3074): Section mismatch in reference from the variable __boot_from_prom to the function .init.text:prom_init(): N/A => 
-  - warning: vmlinux.o(.text+0x3084): Section mismatch in reference from the variable __boot_from_prom to the function .init.text:prom_init(): N/A => 
-  - warning: vmlinux.o(.text+0x3228): Section mismatch in reference from the variable start_here_multiplatform to the function .init.text:early_setup(): N/A => 
-  - warning: vmlinux.o(.text+0x325c): Section mismatch in reference from the variable start_here_common to the function .init.text:start_kernel(): N/A => 
-  - warning: vmlinux.o(.text+0x3334): Section mismatch in reference from the variable start_here_multiplatform to the function .init.text:early_setup(): N/A => 
-  - warning: vmlinux.o(.text+0x3368): Section mismatch in reference from the variable start_here_common to the function .init.text:start_kernel(): N/A => 
-  - warning: vmlinux.o(.text+0x339c8): Section mismatch in reference from the function setup_scache() to the function .init.text:loongson3_sc_init(): N/A => 
-  - warning: vmlinux.o(.text+0x35a4): Section mismatch in reference from the variable __boot_from_prom to the function .init.text:prom_init(): N/A => 
-  - warning: vmlinux.o(.text+0x37c04): Section mismatch in reference from the function mips_sc_init() to the function .init.text:mips_sc_probe_cm3(): N/A => 
-  - warning: vmlinux.o(.text+0x3834): Section mismatch in reference from the variable start_here_multiplatform to the function .init.text:early_setup(): N/A => 
-  - warning: vmlinux.o(.text+0x3868): Section mismatch in reference from the variable start_here_common to the function .init.text:start_kernel(): N/A => 
-  - warning: vmlinux.o(.text+0x3d9430): Section mismatch in reference from the function .devm_memremap_pages_release() to the function .meminit.text:.arch_remove_memory(): N/A => 
-  - warning: vmlinux.o(.text+0x3d9a98): Section mismatch in reference from the function .devm_memremap_pages() to the function .meminit.text:.arch_add_memory(): N/A => 
-  - warning: vmlinux.o(.text+0x3e0c10): Section mismatch in reference from the function .devm_memremap_pages_release() to the function .meminit.text:.arch_remove_memory(): N/A => 
-  - warning: vmlinux.o(.text+0x3e1278): Section mismatch in reference from the function .devm_memremap_pages() to the function .meminit.text:.arch_add_memory(): N/A => 
-  - warning: vmlinux.o(.text+0x458810): Section mismatch in reference from the function .devm_memremap_pages_release() to the function .meminit.text:.arch_remove_memory(): N/A => 
-  - warning: vmlinux.o(.text+0x458e78): Section mismatch in reference from the function .devm_memremap_pages() to the function .meminit.text:.arch_add_memory(): N/A => 
-  - warning: vmlinux.o(.text.unlikely+0x2e18): Section mismatch in reference from the function .remove_pmd_table() to the function .meminit.text:.split_kernel_mapping(): N/A => 
-  - warning: vmlinux.o(.text.unlikely+0x2e84): Section mismatch in reference from the function .remove_pmd_table() to the function .meminit.text:.split_kernel_mapping(): N/A => 
-  - warning: vmlinux.o(.text.unlikely+0x2f90): Section mismatch in reference from the function .remove_pud_table() to the function .meminit.text:.split_kernel_mapping(): N/A => 
-  - warning: vmlinux.o(.text.unlikely+0x30a8): Section mismatch in reference from the function .remove_pud_table() to the function .meminit.text:.split_kernel_mapping(): N/A => 
-
-Gr{oetje,eeting}s,
-
-						Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-							    -- Linus Torvalds
+--- a/drivers/net/wireless/ath/ath10k/core.c
++++ b/drivers/net/wireless/ath/ath10k/core.c
+@@ -1574,6 +1574,15 @@ static void ath10k_core_restart(struct w
+ 	mutex_unlock(&ar->conf_mutex);
+ }
+ 
++static void ath10k_core_set_coverage_class_work(struct work_struct *work)
++{
++	struct ath10k *ar = container_of(work, struct ath10k,
++					 set_coverage_class_work);
++
++	if (ar->hw_params.hw_ops->set_coverage_class)
++		ar->hw_params.hw_ops->set_coverage_class(ar, -1);
++}
++
+ static int ath10k_core_init_firmware_features(struct ath10k *ar)
+ {
+ 	struct ath10k_fw_file *fw_file = &ar->normal_mode_fw.fw_file;
+@@ -2360,6 +2369,8 @@ struct ath10k *ath10k_core_create(size_t
+ 
+ 	INIT_WORK(&ar->register_work, ath10k_core_register_work);
+ 	INIT_WORK(&ar->restart_work, ath10k_core_restart);
++	INIT_WORK(&ar->set_coverage_class_work,
++		  ath10k_core_set_coverage_class_work);
+ 
+ 	init_dummy_netdev(&ar->napi_dev);
+ 
+--- a/drivers/net/wireless/ath/ath10k/core.h
++++ b/drivers/net/wireless/ath/ath10k/core.h
+@@ -911,6 +911,19 @@ struct ath10k {
+ 	struct net_device napi_dev;
+ 	struct napi_struct napi;
+ 
++	struct work_struct set_coverage_class_work;
++	/* protected by conf_mutex */
++	struct {
++		/* writing also protected by data_lock */
++		s16 coverage_class;
++
++		u32 reg_phyclk;
++		u32 reg_slottime_conf;
++		u32 reg_slottime_orig;
++		u32 reg_ack_cts_timeout_conf;
++		u32 reg_ack_cts_timeout_orig;
++	} fw_coverage;
++
+ 	/* must be last */
+ 	u8 drv_priv[0] __aligned(sizeof(void *));
+ };
+--- a/drivers/net/wireless/ath/ath10k/debug.h
++++ b/drivers/net/wireless/ath/ath10k/debug.h
+@@ -94,7 +94,19 @@ int ath10k_debug_get_et_sset_count(struc
+ void ath10k_debug_get_et_stats(struct ieee80211_hw *hw,
+ 			       struct ieee80211_vif *vif,
+ 			       struct ethtool_stats *stats, u64 *data);
++
++static inline u64 ath10k_debug_get_fw_dbglog_mask(struct ath10k *ar)
++{
++	return ar->debug.fw_dbglog_mask;
++}
++
++static inline u32 ath10k_debug_get_fw_dbglog_level(struct ath10k *ar)
++{
++	return ar->debug.fw_dbglog_level;
++}
++
+ #else
++
+ static inline int ath10k_debug_start(struct ath10k *ar)
+ {
+ 	return 0;
+@@ -144,6 +156,16 @@ ath10k_debug_get_new_fw_crash_data(struc
+ 	return NULL;
+ }
+ 
++static inline u64 ath10k_debug_get_fw_dbglog_mask(struct ath10k *ar)
++{
++	return 0;
++}
++
++static inline u32 ath10k_debug_get_fw_dbglog_level(struct ath10k *ar)
++{
++	return 0;
++}
++
+ #define ATH10K_DFS_STAT_INC(ar, c) do { } while (0)
+ 
+ #define ath10k_debug_get_et_strings NULL
+--- a/drivers/net/wireless/ath/ath10k/hw.c
++++ b/drivers/net/wireless/ath/ath10k/hw.c
+@@ -17,11 +17,14 @@
+ #include <linux/types.h>
+ #include "core.h"
+ #include "hw.h"
++#include "hif.h"
++#include "wmi-ops.h"
+ 
+ const struct ath10k_hw_regs qca988x_regs = {
+ 	.rtc_soc_base_address		= 0x00004000,
+ 	.rtc_wmac_base_address		= 0x00005000,
+ 	.soc_core_base_address		= 0x00009000,
++	.wlan_mac_base_address		= 0x00020000,
+ 	.ce_wrapper_base_address	= 0x00057000,
+ 	.ce0_base_address		= 0x00057400,
+ 	.ce1_base_address		= 0x00057800,
+@@ -48,6 +51,7 @@ const struct ath10k_hw_regs qca6174_regs
+ 	.rtc_soc_base_address			= 0x00000800,
+ 	.rtc_wmac_base_address			= 0x00001000,
+ 	.soc_core_base_address			= 0x0003a000,
++	.wlan_mac_base_address			= 0x00020000,
+ 	.ce_wrapper_base_address		= 0x00034000,
+ 	.ce0_base_address			= 0x00034400,
+ 	.ce1_base_address			= 0x00034800,
+@@ -74,6 +78,7 @@ const struct ath10k_hw_regs qca99x0_regs
+ 	.rtc_soc_base_address			= 0x00080000,
+ 	.rtc_wmac_base_address			= 0x00000000,
+ 	.soc_core_base_address			= 0x00082000,
++	.wlan_mac_base_address			= 0x00030000,
+ 	.ce_wrapper_base_address		= 0x0004d000,
+ 	.ce0_base_address			= 0x0004a000,
+ 	.ce1_base_address			= 0x0004a400,
+@@ -109,6 +114,7 @@ const struct ath10k_hw_regs qca99x0_regs
+ const struct ath10k_hw_regs qca4019_regs = {
+ 	.rtc_soc_base_address                   = 0x00080000,
+ 	.soc_core_base_address                  = 0x00082000,
++	.wlan_mac_base_address                  = 0x00030000,
+ 	.ce_wrapper_base_address                = 0x0004d000,
+ 	.ce0_base_address                       = 0x0004a000,
+ 	.ce1_base_address                       = 0x0004a400,
+@@ -220,7 +226,143 @@ void ath10k_hw_fill_survey_time(struct a
+ 	survey->time_busy = CCNT_TO_MSEC(ar, rcc);
+ }
+ 
++/* The firmware does not support setting the coverage class. Instead this
++ * function monitors and modifies the corresponding MAC registers.
++ */
++static void ath10k_hw_qca988x_set_coverage_class(struct ath10k *ar,
++						 s16 value)
++{
++	u32 slottime_reg;
++	u32 slottime;
++	u32 timeout_reg;
++	u32 ack_timeout;
++	u32 cts_timeout;
++	u32 phyclk_reg;
++	u32 phyclk;
++	u64 fw_dbglog_mask;
++	u32 fw_dbglog_level;
++
++	mutex_lock(&ar->conf_mutex);
++
++	/* Only modify registers if the core is started. */
++	if ((ar->state != ATH10K_STATE_ON) &&
++	    (ar->state != ATH10K_STATE_RESTARTED))
++		goto unlock;
++
++	/* Retrieve the current values of the two registers that need to be
++	 * adjusted.
++	 */
++	slottime_reg = ath10k_hif_read32(ar, WLAN_MAC_BASE_ADDRESS +
++					     WAVE1_PCU_GBL_IFS_SLOT);
++	timeout_reg = ath10k_hif_read32(ar, WLAN_MAC_BASE_ADDRESS +
++					    WAVE1_PCU_ACK_CTS_TIMEOUT);
++	phyclk_reg = ath10k_hif_read32(ar, WLAN_MAC_BASE_ADDRESS +
++					   WAVE1_PHYCLK);
++	phyclk = MS(phyclk_reg, WAVE1_PHYCLK_USEC) + 1;
++
++	if (value < 0)
++		value = ar->fw_coverage.coverage_class;
++
++	/* Break out if the coverage class and registers have the expected
++	 * value.
++	 */
++	if (value == ar->fw_coverage.coverage_class &&
++	    slottime_reg == ar->fw_coverage.reg_slottime_conf &&
++	    timeout_reg == ar->fw_coverage.reg_ack_cts_timeout_conf &&
++	    phyclk_reg == ar->fw_coverage.reg_phyclk)
++		goto unlock;
++
++	/* Store new initial register values from the firmware. */
++	if (slottime_reg != ar->fw_coverage.reg_slottime_conf)
++		ar->fw_coverage.reg_slottime_orig = slottime_reg;
++	if (timeout_reg != ar->fw_coverage.reg_ack_cts_timeout_conf)
++		ar->fw_coverage.reg_ack_cts_timeout_orig = timeout_reg;
++	ar->fw_coverage.reg_phyclk = phyclk_reg;
++
++	/* Calculat new value based on the (original) firmware calculation. */
++	slottime_reg = ar->fw_coverage.reg_slottime_orig;
++	timeout_reg = ar->fw_coverage.reg_ack_cts_timeout_orig;
++
++	/* Do some sanity checks on the slottime register. */
++	if (slottime_reg % phyclk) {
++		ath10k_warn(ar,
++			    "failed to set coverage class: expected integer microsecond value in register\n");
++
++		goto store_regs;
++	}
++
++	slottime = MS(slottime_reg, WAVE1_PCU_GBL_IFS_SLOT);
++	slottime = slottime / phyclk;
++	if (slottime != 9 && slottime != 20) {
++		ath10k_warn(ar,
++			    "failed to set coverage class: expected slot time of 9 or 20us in HW register. It is %uus.\n",
++			    slottime);
++
++		goto store_regs;
++	}
++
++	/* Recalculate the register values by adding the additional propagation
++	 * delay (3us per coverage class).
++	 */
++
++	slottime = MS(slottime_reg, WAVE1_PCU_GBL_IFS_SLOT);
++	slottime += value * 3 * phyclk;
++	slottime = min_t(u32, slottime, WAVE1_PCU_GBL_IFS_SLOT_MAX);
++	slottime = SM(slottime, WAVE1_PCU_GBL_IFS_SLOT);
++	slottime_reg = (slottime_reg & ~WAVE1_PCU_GBL_IFS_SLOT_MASK) | slottime;
++
++	/* Update ack timeout (lower halfword). */
++	ack_timeout = MS(timeout_reg, WAVE1_PCU_ACK_CTS_TIMEOUT_ACK);
++	ack_timeout += 3 * value * phyclk;
++	ack_timeout = min_t(u32, ack_timeout, WAVE1_PCU_ACK_CTS_TIMEOUT_MAX);
++	ack_timeout = SM(ack_timeout, WAVE1_PCU_ACK_CTS_TIMEOUT_ACK);
++
++	/* Update cts timeout (upper halfword). */
++	cts_timeout = MS(timeout_reg, WAVE1_PCU_ACK_CTS_TIMEOUT_CTS);
++	cts_timeout += 3 * value * phyclk;
++	cts_timeout = min_t(u32, cts_timeout, WAVE1_PCU_ACK_CTS_TIMEOUT_MAX);
++	cts_timeout = SM(cts_timeout, WAVE1_PCU_ACK_CTS_TIMEOUT_CTS);
++
++	timeout_reg = ack_timeout | cts_timeout;
++
++	ath10k_hif_write32(ar,
++			   WLAN_MAC_BASE_ADDRESS + WAVE1_PCU_GBL_IFS_SLOT,
++			   slottime_reg);
++	ath10k_hif_write32(ar,
++			   WLAN_MAC_BASE_ADDRESS + WAVE1_PCU_ACK_CTS_TIMEOUT,
++			   timeout_reg);
++
++	/* Ensure we have a debug level of WARN set for the case that the
++	 * coverage class is larger than 0. This is important as we need to
++	 * set the registers again if the firmware does an internal reset and
++	 * this way we will be notified of the event.
++	 */
++	fw_dbglog_mask = ath10k_debug_get_fw_dbglog_mask(ar);
++	fw_dbglog_level = ath10k_debug_get_fw_dbglog_level(ar);
++
++	if (value > 0) {
++		if (fw_dbglog_level > ATH10K_DBGLOG_LEVEL_WARN)
++			fw_dbglog_level = ATH10K_DBGLOG_LEVEL_WARN;
++		fw_dbglog_mask = ~0;
++	}
++
++	ath10k_wmi_dbglog_cfg(ar, fw_dbglog_mask, fw_dbglog_level);
++
++store_regs:
++	/* After an error we will not retry setting the coverage class. */
++	spin_lock_bh(&ar->data_lock);
++	ar->fw_coverage.coverage_class = value;
++	spin_unlock_bh(&ar->data_lock);
++
++	ar->fw_coverage.reg_slottime_conf = slottime_reg;
++	ar->fw_coverage.reg_ack_cts_timeout_conf = timeout_reg;
++
++unlock:
++	mutex_unlock(&ar->conf_mutex);
++}
++
+ const struct ath10k_hw_ops qca988x_ops = {
++	.set_coverage_class = ath10k_hw_qca988x_set_coverage_class,
+ };
+ 
+ static int ath10k_qca99x0_rx_desc_get_l3_pad_bytes(struct htt_rx_desc *rxd)
+--- a/drivers/net/wireless/ath/ath10k/hw.h
++++ b/drivers/net/wireless/ath/ath10k/hw.h
+@@ -230,6 +230,7 @@ struct ath10k_hw_regs {
+ 	u32 rtc_soc_base_address;
+ 	u32 rtc_wmac_base_address;
+ 	u32 soc_core_base_address;
++	u32 wlan_mac_base_address;
+ 	u32 ce_wrapper_base_address;
+ 	u32 ce0_base_address;
+ 	u32 ce1_base_address;
+@@ -418,6 +419,7 @@ struct htt_rx_desc;
+ /* Defines needed for Rx descriptor abstraction */
+ struct ath10k_hw_ops {
+ 	int (*rx_desc_get_l3_pad_bytes)(struct htt_rx_desc *rxd);
++	void (*set_coverage_class)(struct ath10k *ar, s16 value);
+ };
+ 
+ extern const struct ath10k_hw_ops qca988x_ops;
+@@ -614,7 +616,7 @@ ath10k_rx_desc_get_l3_pad_bytes(struct a
+ #define WLAN_SI_BASE_ADDRESS			0x00010000
+ #define WLAN_GPIO_BASE_ADDRESS			0x00014000
+ #define WLAN_ANALOG_INTF_BASE_ADDRESS		0x0001c000
+-#define WLAN_MAC_BASE_ADDRESS			0x00020000
++#define WLAN_MAC_BASE_ADDRESS			ar->regs->wlan_mac_base_address
+ #define EFUSE_BASE_ADDRESS			0x00030000
+ #define FPGA_REG_BASE_ADDRESS			0x00039000
+ #define WLAN_UART2_BASE_ADDRESS			0x00054c00
+@@ -814,4 +816,28 @@ ath10k_rx_desc_get_l3_pad_bytes(struct a
+ 
+ #define RTC_STATE_V_GET(x) (((x) & RTC_STATE_V_MASK) >> RTC_STATE_V_LSB)
+ 
++/* Register definitions for first generation ath10k cards. These cards include
++ * a mac thich has a register allocation similar to ath9k and at least some
++ * registers including the ones relevant for modifying the coverage class are
++ * identical to the ath9k definitions.
++ * These registers are usually managed by the ath10k firmware. However by
++ * overriding them it is possible to support coverage class modifications.
++ */
++#define WAVE1_PCU_ACK_CTS_TIMEOUT		0x8014
++#define WAVE1_PCU_ACK_CTS_TIMEOUT_MAX		0x00003FFF
++#define WAVE1_PCU_ACK_CTS_TIMEOUT_ACK_MASK	0x00003FFF
++#define WAVE1_PCU_ACK_CTS_TIMEOUT_ACK_LSB	0
++#define WAVE1_PCU_ACK_CTS_TIMEOUT_CTS_MASK	0x3FFF0000
++#define WAVE1_PCU_ACK_CTS_TIMEOUT_CTS_LSB	16
++
++#define WAVE1_PCU_GBL_IFS_SLOT			0x1070
++#define WAVE1_PCU_GBL_IFS_SLOT_MASK		0x0000FFFF
++#define WAVE1_PCU_GBL_IFS_SLOT_MAX		0x0000FFFF
++#define WAVE1_PCU_GBL_IFS_SLOT_LSB		0
++#define WAVE1_PCU_GBL_IFS_SLOT_RESV0		0xFFFF0000
++
++#define WAVE1_PHYCLK				0x801C
++#define WAVE1_PHYCLK_USEC_MASK			0x0000007F
++#define WAVE1_PHYCLK_USEC_LSB			0
++
+ #endif /* _HW_H_ */
+--- a/drivers/net/wireless/ath/ath10k/mac.c
++++ b/drivers/net/wireless/ath/ath10k/mac.c
+@@ -5452,6 +5452,20 @@ static void ath10k_bss_info_changed(stru
+ 	mutex_unlock(&ar->conf_mutex);
+ }
+ 
++static void ath10k_mac_op_set_coverage_class(struct ieee80211_hw *hw, s16 value)
++{
++	struct ath10k *ar = hw->priv;
++
++	/* This function should never be called if setting the coverage class
++	 * is not supported on this hardware.
++	 */
++	if (!ar->hw_params.hw_ops->set_coverage_class) {
++		WARN_ON_ONCE(1);
++		return;
++	}
++	ar->hw_params.hw_ops->set_coverage_class(ar, value);
++}
++
+ static int ath10k_hw_scan(struct ieee80211_hw *hw,
+ 			  struct ieee80211_vif *vif,
+ 			  struct ieee80211_scan_request *hw_req)
+@@ -7517,6 +7531,7 @@ static const struct ieee80211_ops ath10k
+ 	.remove_interface		= ath10k_remove_interface,
+ 	.configure_filter		= ath10k_configure_filter,
+ 	.bss_info_changed		= ath10k_bss_info_changed,
++	.set_coverage_class		= ath10k_mac_op_set_coverage_class,
+ 	.hw_scan			= ath10k_hw_scan,
+ 	.cancel_hw_scan			= ath10k_cancel_hw_scan,
+ 	.set_key			= ath10k_set_key,
+@@ -8095,6 +8110,10 @@ int ath10k_mac_register(struct ath10k *a
+ 		      ar->running_fw->fw_file.fw_features))
+ 		ar->ops->wake_tx_queue = NULL;
+ 
++	/* Disable set_coverage_class for chipsets that do not support it. */
++	if (!ar->hw_params.hw_ops->set_coverage_class)
++		ar->ops->set_coverage_class = NULL;
++
+ 	ret = ath_regd_init(&ar->ath_common.regulatory, ar->hw->wiphy,
+ 			    ath10k_reg_notifier);
+ 	if (ret) {
+--- a/drivers/net/wireless/ath/ath10k/wmi.c
++++ b/drivers/net/wireless/ath/ath10k/wmi.c
+@@ -4942,6 +4942,23 @@ exit:
+ 	return 0;
+ }
+ 
++static inline void ath10k_wmi_queue_set_coverage_class_work(struct ath10k *ar)
++{
++	if (ar->hw_params.hw_ops->set_coverage_class) {
++		spin_lock_bh(&ar->data_lock);
++
++		/* This call only ensures that the modified coverage class
++		 * persists in case the firmware sets the registers back to
++		 * their default value. So calling it is only necessary if the
++		 * coverage class has a non-zero value.
++		 */
++		if (ar->fw_coverage.coverage_class)
++			queue_work(ar->workqueue, &ar->set_coverage_class_work);
++
++		spin_unlock_bh(&ar->data_lock);
++	}
++}
++
+ static void ath10k_wmi_op_rx(struct ath10k *ar, struct sk_buff *skb)
+ {
+ 	struct wmi_cmd_hdr *cmd_hdr;
+@@ -4962,6 +4979,7 @@ static void ath10k_wmi_op_rx(struct ath1
+ 		return;
+ 	case WMI_SCAN_EVENTID:
+ 		ath10k_wmi_event_scan(ar, skb);
++		ath10k_wmi_queue_set_coverage_class_work(ar);
+ 		break;
+ 	case WMI_CHAN_INFO_EVENTID:
+ 		ath10k_wmi_event_chan_info(ar, skb);
+@@ -4971,15 +4989,18 @@ static void ath10k_wmi_op_rx(struct ath1
+ 		break;
+ 	case WMI_DEBUG_MESG_EVENTID:
+ 		ath10k_wmi_event_debug_mesg(ar, skb);
++		ath10k_wmi_queue_set_coverage_class_work(ar);
+ 		break;
+ 	case WMI_UPDATE_STATS_EVENTID:
+ 		ath10k_wmi_event_update_stats(ar, skb);
+ 		break;
+ 	case WMI_VDEV_START_RESP_EVENTID:
+ 		ath10k_wmi_event_vdev_start_resp(ar, skb);
++		ath10k_wmi_queue_set_coverage_class_work(ar);
+ 		break;
+ 	case WMI_VDEV_STOPPED_EVENTID:
+ 		ath10k_wmi_event_vdev_stopped(ar, skb);
++		ath10k_wmi_queue_set_coverage_class_work(ar);
+ 		break;
+ 	case WMI_PEER_STA_KICKOUT_EVENTID:
+ 		ath10k_wmi_event_peer_sta_kickout(ar, skb);
+@@ -4995,12 +5016,14 @@ static void ath10k_wmi_op_rx(struct ath1
+ 		break;
+ 	case WMI_ROAM_EVENTID:
+ 		ath10k_wmi_event_roam(ar, skb);
++		ath10k_wmi_queue_set_coverage_class_work(ar);
+ 		break;
+ 	case WMI_PROFILE_MATCH:
+ 		ath10k_wmi_event_profile_match(ar, skb);
+ 		break;
+ 	case WMI_DEBUG_PRINT_EVENTID:
+ 		ath10k_wmi_event_debug_print(ar, skb);
++		ath10k_wmi_queue_set_coverage_class_work(ar);
+ 		break;
+ 	case WMI_PDEV_QVIT_EVENTID:
+ 		ath10k_wmi_event_pdev_qvit(ar, skb);
+@@ -5049,6 +5072,7 @@ static void ath10k_wmi_op_rx(struct ath1
+ 		return;
+ 	case WMI_READY_EVENTID:
+ 		ath10k_wmi_event_ready(ar, skb);
++		ath10k_wmi_queue_set_coverage_class_work(ar);
+ 		break;
+ 	default:
+ 		ath10k_warn(ar, "Unknown eventid: %d\n", id);
+@@ -5092,6 +5116,7 @@ static void ath10k_wmi_10_1_op_rx(struct
+ 		return;
+ 	case WMI_10X_SCAN_EVENTID:
+ 		ath10k_wmi_event_scan(ar, skb);
++		ath10k_wmi_queue_set_coverage_class_work(ar);
+ 		break;
+ 	case WMI_10X_CHAN_INFO_EVENTID:
+ 		ath10k_wmi_event_chan_info(ar, skb);
+@@ -5101,15 +5126,18 @@ static void ath10k_wmi_10_1_op_rx(struct
+ 		break;
+ 	case WMI_10X_DEBUG_MESG_EVENTID:
+ 		ath10k_wmi_event_debug_mesg(ar, skb);
++		ath10k_wmi_queue_set_coverage_class_work(ar);
+ 		break;
+ 	case WMI_10X_UPDATE_STATS_EVENTID:
+ 		ath10k_wmi_event_update_stats(ar, skb);
+ 		break;
+ 	case WMI_10X_VDEV_START_RESP_EVENTID:
+ 		ath10k_wmi_event_vdev_start_resp(ar, skb);
++		ath10k_wmi_queue_set_coverage_class_work(ar);
+ 		break;
+ 	case WMI_10X_VDEV_STOPPED_EVENTID:
+ 		ath10k_wmi_event_vdev_stopped(ar, skb);
++		ath10k_wmi_queue_set_coverage_class_work(ar);
+ 		break;
+ 	case WMI_10X_PEER_STA_KICKOUT_EVENTID:
+ 		ath10k_wmi_event_peer_sta_kickout(ar, skb);
+@@ -5125,12 +5153,14 @@ static void ath10k_wmi_10_1_op_rx(struct
+ 		break;
+ 	case WMI_10X_ROAM_EVENTID:
+ 		ath10k_wmi_event_roam(ar, skb);
++		ath10k_wmi_queue_set_coverage_class_work(ar);
+ 		break;
+ 	case WMI_10X_PROFILE_MATCH:
+ 		ath10k_wmi_event_profile_match(ar, skb);
+ 		break;
+ 	case WMI_10X_DEBUG_PRINT_EVENTID:
+ 		ath10k_wmi_event_debug_print(ar, skb);
++		ath10k_wmi_queue_set_coverage_class_work(ar);
+ 		break;
+ 	case WMI_10X_PDEV_QVIT_EVENTID:
+ 		ath10k_wmi_event_pdev_qvit(ar, skb);
+@@ -5170,6 +5200,7 @@ static void ath10k_wmi_10_1_op_rx(struct
+ 		return;
+ 	case WMI_10X_READY_EVENTID:
+ 		ath10k_wmi_event_ready(ar, skb);
++		ath10k_wmi_queue_set_coverage_class_work(ar);
+ 		break;
+ 	case WMI_10X_PDEV_UTF_EVENTID:
+ 		/* ignore utf events */
+@@ -5216,6 +5247,7 @@ static void ath10k_wmi_10_2_op_rx(struct
+ 		return;
+ 	case WMI_10_2_SCAN_EVENTID:
+ 		ath10k_wmi_event_scan(ar, skb);
++		ath10k_wmi_queue_set_coverage_class_work(ar);
+ 		break;
+ 	case WMI_10_2_CHAN_INFO_EVENTID:
+ 		ath10k_wmi_event_chan_info(ar, skb);
+@@ -5225,15 +5257,18 @@ static void ath10k_wmi_10_2_op_rx(struct
+ 		break;
+ 	case WMI_10_2_DEBUG_MESG_EVENTID:
+ 		ath10k_wmi_event_debug_mesg(ar, skb);
++		ath10k_wmi_queue_set_coverage_class_work(ar);
+ 		break;
+ 	case WMI_10_2_UPDATE_STATS_EVENTID:
+ 		ath10k_wmi_event_update_stats(ar, skb);
+ 		break;
+ 	case WMI_10_2_VDEV_START_RESP_EVENTID:
+ 		ath10k_wmi_event_vdev_start_resp(ar, skb);
++		ath10k_wmi_queue_set_coverage_class_work(ar);
+ 		break;
+ 	case WMI_10_2_VDEV_STOPPED_EVENTID:
+ 		ath10k_wmi_event_vdev_stopped(ar, skb);
++		ath10k_wmi_queue_set_coverage_class_work(ar);
+ 		break;
+ 	case WMI_10_2_PEER_STA_KICKOUT_EVENTID:
+ 		ath10k_wmi_event_peer_sta_kickout(ar, skb);
+@@ -5249,12 +5284,14 @@ static void ath10k_wmi_10_2_op_rx(struct
+ 		break;
+ 	case WMI_10_2_ROAM_EVENTID:
+ 		ath10k_wmi_event_roam(ar, skb);
++		ath10k_wmi_queue_set_coverage_class_work(ar);
+ 		break;
+ 	case WMI_10_2_PROFILE_MATCH:
+ 		ath10k_wmi_event_profile_match(ar, skb);
+ 		break;
+ 	case WMI_10_2_DEBUG_PRINT_EVENTID:
+ 		ath10k_wmi_event_debug_print(ar, skb);
++		ath10k_wmi_queue_set_coverage_class_work(ar);
+ 		break;
+ 	case WMI_10_2_PDEV_QVIT_EVENTID:
+ 		ath10k_wmi_event_pdev_qvit(ar, skb);
+@@ -5285,15 +5322,18 @@ static void ath10k_wmi_10_2_op_rx(struct
+ 		break;
+ 	case WMI_10_2_VDEV_STANDBY_REQ_EVENTID:
+ 		ath10k_wmi_event_vdev_standby_req(ar, skb);
++		ath10k_wmi_queue_set_coverage_class_work(ar);
+ 		break;
+ 	case WMI_10_2_VDEV_RESUME_REQ_EVENTID:
+ 		ath10k_wmi_event_vdev_resume_req(ar, skb);
++		ath10k_wmi_queue_set_coverage_class_work(ar);
+ 		break;
+ 	case WMI_10_2_SERVICE_READY_EVENTID:
+ 		ath10k_wmi_event_service_ready(ar, skb);
+ 		return;
+ 	case WMI_10_2_READY_EVENTID:
+ 		ath10k_wmi_event_ready(ar, skb);
++		ath10k_wmi_queue_set_coverage_class_work(ar);
+ 		break;
+ 	case WMI_10_2_PDEV_TEMPERATURE_EVENTID:
+ 		ath10k_wmi_event_temperature(ar, skb);
+@@ -5356,12 +5396,14 @@ static void ath10k_wmi_10_4_op_rx(struct
+ 		break;
+ 	case WMI_10_4_DEBUG_MESG_EVENTID:
+ 		ath10k_wmi_event_debug_mesg(ar, skb);
++		ath10k_wmi_queue_set_coverage_class_work(ar);
+ 		break;
+ 	case WMI_10_4_SERVICE_READY_EVENTID:
+ 		ath10k_wmi_event_service_ready(ar, skb);
+ 		return;
+ 	case WMI_10_4_SCAN_EVENTID:
+ 		ath10k_wmi_event_scan(ar, skb);
++		ath10k_wmi_queue_set_coverage_class_work(ar);
+ 		break;
+ 	case WMI_10_4_CHAN_INFO_EVENTID:
+ 		ath10k_wmi_event_chan_info(ar, skb);
+@@ -5371,12 +5413,14 @@ static void ath10k_wmi_10_4_op_rx(struct
+ 		break;
+ 	case WMI_10_4_READY_EVENTID:
+ 		ath10k_wmi_event_ready(ar, skb);
++		ath10k_wmi_queue_set_coverage_class_work(ar);
+ 		break;
+ 	case WMI_10_4_PEER_STA_KICKOUT_EVENTID:
+ 		ath10k_wmi_event_peer_sta_kickout(ar, skb);
+ 		break;
+ 	case WMI_10_4_ROAM_EVENTID:
+ 		ath10k_wmi_event_roam(ar, skb);
++		ath10k_wmi_queue_set_coverage_class_work(ar);
+ 		break;
+ 	case WMI_10_4_HOST_SWBA_EVENTID:
+ 		ath10k_wmi_event_host_swba(ar, skb);
+@@ -5386,12 +5430,15 @@ static void ath10k_wmi_10_4_op_rx(struct
+ 		break;
+ 	case WMI_10_4_DEBUG_PRINT_EVENTID:
+ 		ath10k_wmi_event_debug_print(ar, skb);
++		ath10k_wmi_queue_set_coverage_class_work(ar);
+ 		break;
+ 	case WMI_10_4_VDEV_START_RESP_EVENTID:
+ 		ath10k_wmi_event_vdev_start_resp(ar, skb);
++		ath10k_wmi_queue_set_coverage_class_work(ar);
+ 		break;
+ 	case WMI_10_4_VDEV_STOPPED_EVENTID:
+ 		ath10k_wmi_event_vdev_stopped(ar, skb);
++		ath10k_wmi_queue_set_coverage_class_work(ar);
+ 		break;
+ 	case WMI_10_4_WOW_WAKEUP_HOST_EVENTID:
+ 	case WMI_10_4_PEER_RATECODE_LIST_EVENTID:
+@@ -6107,6 +6154,7 @@ void ath10k_wmi_start_scan_init(struct a
+ 		| WMI_SCAN_EVENT_COMPLETED
+ 		| WMI_SCAN_EVENT_BSS_CHANNEL
+ 		| WMI_SCAN_EVENT_FOREIGN_CHANNEL
++		| WMI_SCAN_EVENT_FOREIGN_CHANNEL_EXIT
+ 		| WMI_SCAN_EVENT_DEQUEUED;
+ 	arg->scan_ctrl_flags |= WMI_SCAN_CHAN_STAT_EVENT;
+ 	arg->n_bssids = 1;
