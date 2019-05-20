@@ -2,102 +2,134 @@ Return-Path: <SRS0=lq4r=TU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 078ECC04E87
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 23:20:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6D80C04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 23:24:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CDB2B2173C
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 23:20:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B6DE320862
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 23:24:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="UjHBMQNV"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="OFj3iaOZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727336AbfETXUK (ORCPT
+        id S1726990AbfETXYL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 19:20:10 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:33325 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727307AbfETXUH (ORCPT
+        Mon, 20 May 2019 19:24:11 -0400
+Received: from mail-it1-f195.google.com ([209.85.166.195]:50275 "EHLO
+        mail-it1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725941AbfETXYK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 19:20:07 -0400
-Received: by mail-pg1-f194.google.com with SMTP id h17so7526016pgv.0
-        for <linux-kernel@vger.kernel.org>; Mon, 20 May 2019 16:20:07 -0700 (PDT)
+        Mon, 20 May 2019 19:24:10 -0400
+Received: by mail-it1-f195.google.com with SMTP id i10so1909437ite.0
+        for <linux-kernel@vger.kernel.org>; Mon, 20 May 2019 16:24:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=u/wnY+KqFixg56gyP1D7CB7HYKg32m+bqFWSsKBa+/I=;
-        b=UjHBMQNV86pahygu8pDM7RodmVPNoOF5hJ3fT3xbyH0dL1de2+tRNhk/hUmxNtJl1q
-         +WhScnJIT/kY02tSuiJfwqhs0EkygcgfQQ2Hl2HZpixKp6zgVRzVT74gxZBzXqobqJWx
-         rLMNTGXxUbQq9oPM7H/xYWCXBM//FHTX0NQ7g=
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=XFHn2CqQ9gIGiCfwRIFED96/AC2yUgVp/k9gB9+r5g4=;
+        b=OFj3iaOZ5a55OcwXkN+86bx61mb+3FqV2wabBSAGzwE20pCc5qkwj979pSL5Gslifl
+         +iC/scKSpjmt8kaeRFV4EJ9dYJKeqD81EfLeDod9dCRscurIAo70YjYptk7/+jOJeyHl
+         fB+eF4eIDyqqsvSOdHhKqOOVUWMHZqTcKvpGq5Iw2Ghf8Pg3bPuGyFN1RB9seQJYAdnw
+         lD5mV5SHQLVWxTPf/DCac7OXGY7ABb9CrzZXn+BuLM7MomEYpmXXQeIfOaF0LMbZQVXR
+         cbLj/EqbOIg7DERQzsAUYhdBCfME8nhFD/gBBsFSTQOP0zYbj2p2a8ewhPtI/TEEjeze
+         hgwA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=u/wnY+KqFixg56gyP1D7CB7HYKg32m+bqFWSsKBa+/I=;
-        b=Jzac/yHbI+ePn6Svgv/L/bIUgGit0+AEVWJmVDU+U/qWE41T0PizKx6iu1JdOTN1qi
-         lJXOs2JzSApTc3bKwvW7UhLo20GSsMjvIIoWV3Q0+KCux7BiLjvH96nK3AnpcDCM+AIJ
-         T84S+T9rIQ03+UjukIIC3fCC3IVJdJwIIkBlOTdwxALdSm+erjIQo7rgFXbhBeNKla+7
-         zqkx6RUAjvYlWAMs8O5LurMeoIzpTaX8WtINZR7EqYQfhEUM7b8Eeno9unF+/tAZqQOP
-         gz4H/ZfYmMkZB07knKgVvNSfRFYOvHisKLW7hI/zn5Vgvx5Fxi9thF/1ErXcjMQ+iL2F
-         EnEQ==
-X-Gm-Message-State: APjAAAXryFyNXBzbdm9/nhTQ4ERWtlIenGcTNUZv/TmT9zB6gXQdk0lL
-        FHCA5XpMDTDNqa6LkQeYYXat9A==
-X-Google-Smtp-Source: APXvYqzV7SBvojMe///9CX7UEbIEQn/fen5oCvVGd76rfHpQHJwNd6ySlPIAhPdQ4X7SwFRT1BafWw==
-X-Received: by 2002:a62:2f87:: with SMTP id v129mr9812794pfv.9.1558394407163;
-        Mon, 20 May 2019 16:20:07 -0700 (PDT)
-Received: from skynet.sea.corp.google.com ([2620:0:1008:1100:c4b5:ec23:d87b:d6d3])
-        by smtp.gmail.com with ESMTPSA id h13sm19350861pgk.55.2019.05.20.16.20.06
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 20 May 2019 16:20:06 -0700 (PDT)
-From:   Thomas Garnier <thgarnie@chromium.org>
-To:     kernel-hardening@lists.openwall.com
-Cc:     kristen@linux.intel.com, Thomas Garnier <thgarnie@google.com>,
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=XFHn2CqQ9gIGiCfwRIFED96/AC2yUgVp/k9gB9+r5g4=;
+        b=eL1HZhlXsZW0MU6PjbXqZwocVNQNcdNyNMR96nyhCY0jLg9z7gGHc1JwEF3uDmy2Sv
+         GGHw39trrcSJQT4oeZd2h3C/8aAtOsKlHoSh+L97C3LkJEQxpRlsPW9aM4uSzjM5vFeE
+         OmOCgQlaofb3bHvTfNo6/u8Iz6+LuHV6kyroXWszJLaPcNRD/uIfufezlLj3ZOa8tSIA
+         NN1dSpwKMS1cTaWoGY9e3y1OL0O22YtBOi0PW74A4KocZI1bctRxDWmH9TVef20ff0fM
+         XBzzXh4Aox9aCB6vvxy7x8KR2ZaE6CDzF2ub7EcLhEFJF3+blkKYxLss6Hz7q9ijD1ru
+         vXrg==
+X-Gm-Message-State: APjAAAWkM8Q5B5kK+rJrrH/du0XfdSattQGLH1nHPs9kXuX6CYMp1qfF
+        0Qg8wOpFFoWkI5m/4HU7Bjpci2nMzT4GlG0rucWY0A==
+X-Google-Smtp-Source: APXvYqxy4e7DPNMNpm9kxNQ/AJ/M2SyMLCx1E74a0FOLGrOJRBYTPEgnniKnIw0gU9OQyKwsEsfWnK6DxnfLuqNJhV0=
+X-Received: by 2002:a02:ad09:: with SMTP id s9mr11578169jan.17.1558394649513;
+ Mon, 20 May 2019 16:24:09 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190520231948.49693-1-thgarnie@chromium.org> <20190520231948.49693-3-thgarnie@chromium.org>
+In-Reply-To: <20190520231948.49693-3-thgarnie@chromium.org>
+From:   Thomas Garnier <thgarnie@google.com>
+Date:   Mon, 20 May 2019 16:23:58 -0700
+Message-ID: <CAJcbSZEJBYOME2JqFdUxTVnb7F8uSY7PSaTDMEHf7vbEscUnbg@mail.gmail.com>
+Subject: Re: [PATCH v7 02/12] x86: Use symbol name in jump table for PIE support
+To:     Kernel Hardening <kernel-hardening@lists.openwall.com>
+Cc:     Kristen Carlson Accardi <kristen@linux.intel.com>,
         Thomas Gleixner <tglx@linutronix.de>,
         Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        Nadav Amit <namit@vmware.com>, Jann Horn <jannh@google.com>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v7 03/12] x86: Add macro to get symbol address for PIE support
-Date:   Mon, 20 May 2019 16:19:28 -0700
-Message-Id: <20190520231948.49693-4-thgarnie@chromium.org>
-X-Mailer: git-send-email 2.21.0.1020.gf2820cf01a-goog
-In-Reply-To: <20190520231948.49693-1-thgarnie@chromium.org>
-References: <20190520231948.49693-1-thgarnie@chromium.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Nadav Amit <namit@vmware.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thomas Garnier <thgarnie@google.com>
+On Mon, May 20, 2019 at 4:20 PM Thomas Garnier <thgarnie@chromium.org> wrote:
+>
+> From: Thomas Garnier <thgarnie@google.com>
+>
+> Replace the %c constraint with %P. The %c is incompatible with PIE
+> because it implies an immediate value whereas %P reference a symbol.
+> Change the _ASM_PTR reference to .long for expected relocation size and
+> add a long padding to ensure entry alignment.
+>
+> Position Independent Executable (PIE) support will allow to extend the
+> KASLR randomization range below 0xffffffff80000000.
+>
+> Signed-off-by: Thomas Garnier <thgarnie@google.com>
+> ---
+>  arch/x86/include/asm/jump_label.h | 8 ++++----
+>  1 file changed, 4 insertions(+), 4 deletions(-)
+>
+> diff --git a/arch/x86/include/asm/jump_label.h b/arch/x86/include/asm/jump_label.h
+> index 65191ce8e1cf..e47fad8ee632 100644
+> --- a/arch/x86/include/asm/jump_label.h
+> +++ b/arch/x86/include/asm/jump_label.h
+> @@ -25,9 +25,9 @@ static __always_inline bool arch_static_branch(struct static_key *key, bool bran
+>                 ".pushsection __jump_table,  \"aw\" \n\t"
+>                 _ASM_ALIGN "\n\t"
+>                 ".long 1b - ., %l[l_yes] - . \n\t"
+> -               _ASM_PTR "%c0 + %c1 - .\n\t"
+> +               _ASM_PTR "%P0 - .\n\t"
+>                 ".popsection \n\t"
+> -               : :  "i" (key), "i" (branch) : : l_yes);
+> +               : :  "X" (&((char *)key)[branch]) : : l_yes);
+>
+>         return false;
+>  l_yes:
+> @@ -42,9 +42,9 @@ static __always_inline bool arch_static_branch_jump(struct static_key *key, bool
+>                 ".pushsection __jump_table,  \"aw\" \n\t"
+>                 _ASM_ALIGN "\n\t"
+>                 ".long 1b - ., %l[l_yes] - . \n\t"
+> -               _ASM_PTR "%c0 + %c1 - .\n\t"
+> +               _ASM_PTR "%P0 - .\n\t"
+>                 ".popsection \n\t"
+> -               : :  "i" (key), "i" (branch) : : l_yes);
+> +               : : "X" (&((char *)key)[branch]) : : l_yes);
+>
+>         return false;
+>  l_yes:
+> --
+> 2.21.0.1020.gf2820cf01a-goog
+>
 
-Add a new _ASM_MOVABS macro to fetch a symbol address. It will be used
-to replace "_ASM_MOV $<symbol>, %dst" code construct that are not
-compatible with PIE.
+Realized I forgot to address a feedback from the previous iteration on
+this specific patch. Ignore it I will work to check if it can be
+remove on the next iteration.
 
-Signed-off-by: Thomas Garnier <thgarnie@google.com>
----
- arch/x86/include/asm/asm.h | 1 +
- 1 file changed, 1 insertion(+)
 
-diff --git a/arch/x86/include/asm/asm.h b/arch/x86/include/asm/asm.h
-index 3ff577c0b102..3a686057e882 100644
---- a/arch/x86/include/asm/asm.h
-+++ b/arch/x86/include/asm/asm.h
-@@ -30,6 +30,7 @@
- #define _ASM_ALIGN	__ASM_SEL(.balign 4, .balign 8)
- 
- #define _ASM_MOV	__ASM_SIZE(mov)
-+#define _ASM_MOVABS	__ASM_SEL(movl, movabsq)
- #define _ASM_INC	__ASM_SIZE(inc)
- #define _ASM_DEC	__ASM_SIZE(dec)
- #define _ASM_ADD	__ASM_SIZE(add)
 -- 
-2.21.0.1020.gf2820cf01a-goog
-
+Thomas
