@@ -4,51 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31833C04E87
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:37:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4FE8C04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:37:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F2A8D21479
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:36:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA893216FD
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:37:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558355820;
-	bh=VtIHYF/FNtOHl1ZFGK4J9744SBtaj9ublO9MAc8qAWQ=;
+	s=default; t=1558355823;
+	bh=Y0A9xRpi9i8SLLyjW/YMW8EqH6FLX4PaVTvULpNbIFU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=daibjKrSkFEMcskhRMB8DqdO9W2Zi+AKo5hu7ZlGbNnr62iiZxHmMHwOlgP3dW+LZ
-	 C43UTFWxiBwsL8aTexWBxAw5dZY1goiM9T4AC51XytH/mjTxDjEK1jLg2eKkmhW0mO
-	 3oJa0E9LQrvm9y8JURAKSF1GPqrMQS3jHsKAgC9Q=
+	b=TtZQJERLe4N5i8RQF8WU+CBwqU/n4rMVDfSIONcRKOQcpPpT0oTBGkmG3HC/EhVZp
+	 2LMXBNtPIyupGdsc3ogG93wpNW9y2+iJe+OOizURJRviyLXITvcW+jRUuVpvohwd1s
+	 OFptVe1UPmi/rsTok3cg/DRj7dUSOJ9/ZkCAjHtc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391320AbfETMg7 (ORCPT
+        id S2391346AbfETMhC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 08:36:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56088 "EHLO mail.kernel.org"
+        Mon, 20 May 2019 08:37:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56170 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387600AbfETMg5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 08:36:57 -0400
+        id S2391325AbfETMg7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 08:36:59 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3CD8820815;
-        Mon, 20 May 2019 12:36:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EDFFE20815;
+        Mon, 20 May 2019 12:36:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558355815;
-        bh=VtIHYF/FNtOHl1ZFGK4J9744SBtaj9ublO9MAc8qAWQ=;
+        s=default; t=1558355818;
+        bh=Y0A9xRpi9i8SLLyjW/YMW8EqH6FLX4PaVTvULpNbIFU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=oaUj3vpelC4MdW+G1R83Q/V1nnoorymszrWf9i8XRZBbDiplII9nnmuB+koaWvRI7
-         GmTUwn0MUrGORXx98sNLh7me6eHgGqFjgwJ3+ZfLyjbVNao8mLKj3E0UdsWG6Zn0e0
-         M98rxbchQPXNjoFUh4f8RRVzQe29YJQgV2qSuqEc=
+        b=njUkxcYzaWAD7DuR5mMnI/EjovWaag4bNwHML9T2/uSE+rMac8B0a44AEqFYs4kGI
+         KzLSS1XNGGQ4x90si+UcEqzcboYu1wckfmx62EWLPx3M/XOHcdq77bQcKbJLbpWACa
+         1uphYwsLcfIkZYmog/mRD7QE6UlYoWw4T3wMA5sA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Martin Schwidefsky <schwidefsky@de.ibm.com>
-Subject: [PATCH 5.1 126/128] s390/mm: convert to the generic get_user_pages_fast code
-Date:   Mon, 20 May 2019 14:15:13 +0200
-Message-Id: <20190520115257.092704840@linuxfoundation.org>
+        stable@vger.kernel.org, Hui Wang <hui.wang@canonical.com>,
+        Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 4.9 18/44] ALSA: hda/hdmi - Consider eld_valid when reporting jack event
+Date:   Mon, 20 May 2019 14:14:07 +0200
+Message-Id: <20190520115233.076659064@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190520115249.449077487@linuxfoundation.org>
-References: <20190520115249.449077487@linuxfoundation.org>
+In-Reply-To: <20190520115230.720347034@linuxfoundation.org>
+References: <20190520115230.720347034@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -58,359 +59,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Martin Schwidefsky <schwidefsky@de.ibm.com>
+From: Hui Wang <hui.wang@canonical.com>
 
-commit 1a42010cdc26bb7e5912984f3c91b8c6d55f089a upstream.
+commit 7f641e26a6df9269cb25dd7a4b0a91d6586ed441 upstream.
 
-Define the gup_fast_permitted to check against the asce_limit of the
-mm attached to the current task, then replace the s390 specific gup
-code with the generic implementation in mm/gup.c.
+On the machines with AMD GPU or Nvidia GPU, we often meet this issue:
+after s3, there are 4 HDMI/DP audio devices in the gnome-sound-setting
+even there is no any monitors plugged.
 
-Signed-off-by: Martin Schwidefsky <schwidefsky@de.ibm.com>
+When this problem happens, we check the /proc/asound/cardX/eld#N.M, we
+will find the monitor_present=1, eld_valid=0.
+
+The root cause is BIOS or GPU driver makes the PRESENCE valid even no
+monitor plugged, and of course the driver will not get the valid
+eld_data subsequently.
+
+In this situation, we should not report the jack_plugged event, to do
+so, let us change the function hdmi_present_sense_via_verbs(). In this
+function, it reads the pin_sense via snd_hda_pin_sense(), after
+calling this function, the jack_dirty is 0, and before exiting
+via_verbs(), we change the shadow pin_sense according to both
+monitor_present and eld_valid, then in the snd_hda_jack_report_sync(),
+since the jack_dirty is still 0, it will report jack event according
+to this modified shadow pin_sense.
+
+After this change, the driver will not report Jack_is_plugged event
+through hdmi_present_sense_via_verbs() if monitor_present is 1 and
+eld_valid is 0.
+
+Signed-off-by: Hui Wang <hui.wang@canonical.com>
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/s390/Kconfig               |    1 
- arch/s390/include/asm/pgtable.h |   12 +
- arch/s390/mm/Makefile           |    2 
- arch/s390/mm/gup.c              |  291 ----------------------------------------
- 4 files changed, 14 insertions(+), 292 deletions(-)
+ sound/pci/hda/patch_hdmi.c |    6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
---- a/arch/s390/Kconfig
-+++ b/arch/s390/Kconfig
-@@ -149,6 +149,7 @@ config S390
- 	select HAVE_FUNCTION_TRACER
- 	select HAVE_FUTEX_CMPXCHG if FUTEX
- 	select HAVE_GCC_PLUGINS
-+	select HAVE_GENERIC_GUP
- 	select HAVE_KERNEL_BZIP2
- 	select HAVE_KERNEL_GZIP
- 	select HAVE_KERNEL_LZ4
---- a/arch/s390/include/asm/pgtable.h
-+++ b/arch/s390/include/asm/pgtable.h
-@@ -1265,6 +1265,18 @@ static inline pte_t *pte_offset(pmd_t *p
- #define pte_offset_map(pmd, address) pte_offset_kernel(pmd, address)
- #define pte_unmap(pte) do { } while (0)
+--- a/sound/pci/hda/patch_hdmi.c
++++ b/sound/pci/hda/patch_hdmi.c
+@@ -1447,9 +1447,11 @@ static bool hdmi_present_sense_via_verbs
+ 	ret = !repoll || !eld->monitor_present || eld->eld_valid;
  
-+static inline bool gup_fast_permitted(unsigned long start, int nr_pages)
-+{
-+	unsigned long len, end;
-+
-+	len = (unsigned long) nr_pages << PAGE_SHIFT;
-+	end = start + len;
-+	if (end < start)
-+		return false;
-+	return end <= current->mm->context.asce_limit;
-+}
-+#define gup_fast_permitted gup_fast_permitted
-+
- #define pfn_pte(pfn,pgprot) mk_pte_phys(__pa((pfn) << PAGE_SHIFT),(pgprot))
- #define pte_pfn(x) (pte_val(x) >> PAGE_SHIFT)
- #define pte_page(x) pfn_to_page(pte_pfn(x))
---- a/arch/s390/mm/Makefile
-+++ b/arch/s390/mm/Makefile
-@@ -4,7 +4,7 @@
- #
- 
- obj-y		:= init.o fault.o extmem.o mmap.o vmem.o maccess.o
--obj-y		+= page-states.o gup.o pageattr.o pgtable.o pgalloc.o
-+obj-y		+= page-states.o pageattr.o pgtable.o pgalloc.o
- 
- obj-$(CONFIG_CMM)		+= cmm.o
- obj-$(CONFIG_HUGETLB_PAGE)	+= hugetlbpage.o
---- a/arch/s390/mm/gup.c
-+++ /dev/null
-@@ -1,291 +0,0 @@
--// SPDX-License-Identifier: GPL-2.0
--/*
-- *  Lockless get_user_pages_fast for s390
-- *
-- *  Copyright IBM Corp. 2010
-- *  Author(s): Martin Schwidefsky <schwidefsky@de.ibm.com>
-- */
--#include <linux/sched.h>
--#include <linux/mm.h>
--#include <linux/hugetlb.h>
--#include <linux/vmstat.h>
--#include <linux/pagemap.h>
--#include <linux/rwsem.h>
--#include <asm/pgtable.h>
+ 	jack = snd_hda_jack_tbl_get(codec, pin_nid);
+-	if (jack)
++	if (jack) {
+ 		jack->block_report = !ret;
 -
--/*
-- * The performance critical leaf functions are made noinline otherwise gcc
-- * inlines everything into a single function which results in too much
-- * register pressure.
-- */
--static inline int gup_pte_range(pmd_t pmd, unsigned long addr,
--		unsigned long end, int write, struct page **pages, int *nr)
--{
--	struct page *head, *page;
--	unsigned long mask;
--	pte_t *ptep, pte;
--
--	mask = (write ? _PAGE_PROTECT : 0) | _PAGE_INVALID | _PAGE_SPECIAL;
--
--	ptep = pte_offset_map(&pmd, addr);
--	do {
--		pte = *ptep;
--		barrier();
--		/* Similar to the PMD case, NUMA hinting must take slow path */
--		if (pte_protnone(pte))
--			return 0;
--		if ((pte_val(pte) & mask) != 0)
--			return 0;
--		VM_BUG_ON(!pfn_valid(pte_pfn(pte)));
--		page = pte_page(pte);
--		head = compound_head(page);
--		if (!page_cache_get_speculative(head))
--			return 0;
--		if (unlikely(pte_val(pte) != pte_val(*ptep))) {
--			put_page(head);
--			return 0;
--		}
--		VM_BUG_ON_PAGE(compound_head(page) != head, page);
--		pages[*nr] = page;
--		(*nr)++;
--
--	} while (ptep++, addr += PAGE_SIZE, addr != end);
--
--	return 1;
--}
--
--static inline int gup_huge_pmd(pmd_t *pmdp, pmd_t pmd, unsigned long addr,
--		unsigned long end, int write, struct page **pages, int *nr)
--{
--	struct page *head, *page;
--	unsigned long mask;
--	int refs;
--
--	mask = (write ? _SEGMENT_ENTRY_PROTECT : 0) | _SEGMENT_ENTRY_INVALID;
--	if ((pmd_val(pmd) & mask) != 0)
--		return 0;
--	VM_BUG_ON(!pfn_valid(pmd_val(pmd) >> PAGE_SHIFT));
--
--	refs = 0;
--	head = pmd_page(pmd);
--	page = head + ((addr & ~PMD_MASK) >> PAGE_SHIFT);
--	do {
--		VM_BUG_ON(compound_head(page) != head);
--		pages[*nr] = page;
--		(*nr)++;
--		page++;
--		refs++;
--	} while (addr += PAGE_SIZE, addr != end);
--
--	if (!page_cache_add_speculative(head, refs)) {
--		*nr -= refs;
--		return 0;
--	}
--
--	if (unlikely(pmd_val(pmd) != pmd_val(*pmdp))) {
--		*nr -= refs;
--		while (refs--)
--			put_page(head);
--		return 0;
--	}
--
--	return 1;
--}
--
--
--static inline int gup_pmd_range(pud_t pud, unsigned long addr,
--		unsigned long end, int write, struct page **pages, int *nr)
--{
--	unsigned long next;
--	pmd_t *pmdp, pmd;
--
--	pmdp = pmd_offset(&pud, addr);
--	do {
--		pmd = *pmdp;
--		barrier();
--		next = pmd_addr_end(addr, end);
--		if (pmd_none(pmd))
--			return 0;
--		if (unlikely(pmd_large(pmd))) {
--			/*
--			 * NUMA hinting faults need to be handled in the GUP
--			 * slowpath for accounting purposes and so that they
--			 * can be serialised against THP migration.
--			 */
--			if (pmd_protnone(pmd))
--				return 0;
--			if (!gup_huge_pmd(pmdp, pmd, addr, next,
--					  write, pages, nr))
--				return 0;
--		} else if (!gup_pte_range(pmd, addr, next,
--					  write, pages, nr))
--			return 0;
--	} while (pmdp++, addr = next, addr != end);
--
--	return 1;
--}
--
--static int gup_huge_pud(pud_t *pudp, pud_t pud, unsigned long addr,
--		unsigned long end, int write, struct page **pages, int *nr)
--{
--	struct page *head, *page;
--	unsigned long mask;
--	int refs;
--
--	mask = (write ? _REGION_ENTRY_PROTECT : 0) | _REGION_ENTRY_INVALID;
--	if ((pud_val(pud) & mask) != 0)
--		return 0;
--	VM_BUG_ON(!pfn_valid(pud_pfn(pud)));
--
--	refs = 0;
--	head = pud_page(pud);
--	page = head + ((addr & ~PUD_MASK) >> PAGE_SHIFT);
--	do {
--		VM_BUG_ON_PAGE(compound_head(page) != head, page);
--		pages[*nr] = page;
--		(*nr)++;
--		page++;
--		refs++;
--	} while (addr += PAGE_SIZE, addr != end);
--
--	if (!page_cache_add_speculative(head, refs)) {
--		*nr -= refs;
--		return 0;
--	}
--
--	if (unlikely(pud_val(pud) != pud_val(*pudp))) {
--		*nr -= refs;
--		while (refs--)
--			put_page(head);
--		return 0;
--	}
--
--	return 1;
--}
--
--static inline int gup_pud_range(p4d_t p4d, unsigned long addr,
--		unsigned long end, int write, struct page **pages, int *nr)
--{
--	unsigned long next;
--	pud_t *pudp, pud;
--
--	pudp = pud_offset(&p4d, addr);
--	do {
--		pud = *pudp;
--		barrier();
--		next = pud_addr_end(addr, end);
--		if (pud_none(pud))
--			return 0;
--		if (unlikely(pud_large(pud))) {
--			if (!gup_huge_pud(pudp, pud, addr, next, write, pages,
--					  nr))
--				return 0;
--		} else if (!gup_pmd_range(pud, addr, next, write, pages,
--					  nr))
--			return 0;
--	} while (pudp++, addr = next, addr != end);
--
--	return 1;
--}
--
--static inline int gup_p4d_range(pgd_t pgd, unsigned long addr,
--		unsigned long end, int write, struct page **pages, int *nr)
--{
--	unsigned long next;
--	p4d_t *p4dp, p4d;
--
--	p4dp = p4d_offset(&pgd, addr);
--	do {
--		p4d = *p4dp;
--		barrier();
--		next = p4d_addr_end(addr, end);
--		if (p4d_none(p4d))
--			return 0;
--		if (!gup_pud_range(p4d, addr, next, write, pages, nr))
--			return 0;
--	} while (p4dp++, addr = next, addr != end);
--
--	return 1;
--}
--
--/*
-- * Like get_user_pages_fast() except its IRQ-safe in that it won't fall
-- * back to the regular GUP.
-- * Note a difference with get_user_pages_fast: this always returns the
-- * number of pages pinned, 0 if no pages were pinned.
-- */
--int __get_user_pages_fast(unsigned long start, int nr_pages, int write,
--			  struct page **pages)
--{
--	struct mm_struct *mm = current->mm;
--	unsigned long addr, len, end;
--	unsigned long next, flags;
--	pgd_t *pgdp, pgd;
--	int nr = 0;
--
--	start &= PAGE_MASK;
--	addr = start;
--	len = (unsigned long) nr_pages << PAGE_SHIFT;
--	end = start + len;
--	if ((end <= start) || (end > mm->context.asce_limit))
--		return 0;
--	/*
--	 * local_irq_save() doesn't prevent pagetable teardown, but does
--	 * prevent the pagetables from being freed on s390.
--	 *
--	 * So long as we atomically load page table pointers versus teardown,
--	 * we can follow the address down to the the page and take a ref on it.
--	 */
--	local_irq_save(flags);
--	pgdp = pgd_offset(mm, addr);
--	do {
--		pgd = *pgdp;
--		barrier();
--		next = pgd_addr_end(addr, end);
--		if (pgd_none(pgd))
--			break;
--		if (!gup_p4d_range(pgd, addr, next, write, pages, &nr))
--			break;
--	} while (pgdp++, addr = next, addr != end);
--	local_irq_restore(flags);
--
--	return nr;
--}
--
--/**
-- * get_user_pages_fast() - pin user pages in memory
-- * @start:	starting user address
-- * @nr_pages:	number of pages from start to pin
-- * @write:	whether pages will be written to
-- * @pages:	array that receives pointers to the pages pinned.
-- *		Should be at least nr_pages long.
-- *
-- * Attempt to pin user pages in memory without taking mm->mmap_sem.
-- * If not successful, it will fall back to taking the lock and
-- * calling get_user_pages().
-- *
-- * Returns number of pages pinned. This may be fewer than the number
-- * requested. If nr_pages is 0 or negative, returns 0. If no pages
-- * were pinned, returns -errno.
-- */
--int get_user_pages_fast(unsigned long start, int nr_pages, int write,
--			struct page **pages)
--{
--	int nr, ret;
--
--	might_sleep();
--	start &= PAGE_MASK;
--	nr = __get_user_pages_fast(start, nr_pages, write, pages);
--	if (nr == nr_pages)
--		return nr;
--
--	/* Try to get the remaining pages with get_user_pages */
--	start += nr << PAGE_SHIFT;
--	pages += nr;
--	ret = get_user_pages_unlocked(start, nr_pages - nr, pages,
--				      write ? FOLL_WRITE : 0);
--	/* Have to be a bit careful with return values */
--	if (nr > 0)
--		ret = (ret < 0) ? nr : ret + nr;
--	return ret;
--}
++		jack->pin_sense = (eld->monitor_present && eld->eld_valid) ?
++			AC_PINSENSE_PRESENCE : 0;
++	}
+ 	mutex_unlock(&per_pin->lock);
+ 	return ret;
+ }
 
 
