@@ -2,228 +2,130 @@ Return-Path: <SRS0=lq4r=TU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92C22C072A4
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 09:09:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C733C072A4
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 09:11:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6656A20656
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 09:09:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E6AF020815
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 09:11:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1558343496;
+	bh=U76uCPWwkjAlQMoQuk81T5lqeD1YoluVf7Go70H7KkY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=zw/np+Me0Jezah8MK+jKzFkiMyKviEPiBVBTbrHHG/tyHiO8Y6ct7GBbd/BEHxbWx
+	 2EOpiMb8PlB3/6M6ylSeI9A+Ti6henJhUdrQO8pJ5KrSga1QaYFEM3jHeYRHV1uXr3
+	 i8dL0JvjBjTVgyRZqQn8DigCXxFu7WpQtV3kxzK0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731078AbfETJJt (ORCPT
+        id S1731976AbfETJLf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 05:09:49 -0400
-Received: from master.debian.org ([82.195.75.110]:47354 "EHLO
-        master.debian.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726169AbfETJJt (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 05:09:49 -0400
-X-Greylist: delayed 468 seconds by postgrey-1.27 at vger.kernel.org; Mon, 20 May 2019 05:09:47 EDT
-Received: from pabs by master.debian.org with local (Exim 4.89)
-        (envelope-from <pabs@master.debian.org>)
-        id 1hSeAn-0004YE-6T; Mon, 20 May 2019 09:01:33 +0000
-From:   Paul Wise <pabs3@bonedaddy.net>
-To:     Neil Horman <nhorman@tuxdriver.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Paul Wise <pabs3@bonedaddy.net>, Jakub Wilk <jwilk@jwilk.net>
-Subject: [PATCH] coredump: Split pipe command whitespace before expanding template
-Date:   Mon, 20 May 2019 17:01:15 +0800
-Message-Id: <20190520090115.11276-1-pabs3@bonedaddy.net>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <c8b7ecb8508895bf4adb62a748e2ea2c71854597.camel@bonedaddy.net>
-References: <c8b7ecb8508895bf4adb62a748e2ea2c71854597.camel@bonedaddy.net>
+        Mon, 20 May 2019 05:11:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36816 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731095AbfETJLe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 05:11:34 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id CC74420656;
+        Mon, 20 May 2019 09:11:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1558343494;
+        bh=U76uCPWwkjAlQMoQuk81T5lqeD1YoluVf7Go70H7KkY=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=RVY8Ip1ZIHJa47llpQIR+xlhZFIjFM2mNqU7bQOaQCZKKmr0HZdum/SK2Ufw9j+N5
+         haRFjmJW2ZHWFyjvr9ABoHwQBGKA8ZCvG5A/7WjMFZSnzObB2AtBY/VIwBGeg8QNzv
+         16GBOD3fLTHAClbFFk6ZinGouARHnBWxm2nl6RmQ=
+Date:   Mon, 20 May 2019 11:11:31 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     David Ahern <dsahern@gmail.com>
+Cc:     Nathan Chancellor <natechancellor@gmail.com>,
+        linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Thomas Haller <thaller@redhat.com>,
+        Hangbin Liu <liuhangbin@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org
+Subject: Re: [PATCH 4.9 41/51] fib_rules: return 0 directly if an exactly
+ same rule exists when NLM_F_EXCL not supplied
+Message-ID: <20190520091131.GA1593@kroah.com>
+References: <20190515090616.669619870@linuxfoundation.org>
+ <20190515090628.066392616@linuxfoundation.org>
+ <20190519154348.GA113991@archlinux-epyc>
+ <a36e3204-b52d-0bf0-f956-654189a18156@gmail.com>
+ <20190520090429.GA25812@kroah.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190520090429.GA25812@kroah.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Save the offsets of the start of each argument to avoid having to
-update pointers to each argument after every corename krealloc and
-to avoid having to duplicate the memory for the dump command.
+On Mon, May 20, 2019 at 11:04:29AM +0200, Greg Kroah-Hartman wrote:
+> On Sun, May 19, 2019 at 06:29:19PM -0600, David Ahern wrote:
+> > On 5/19/19 9:43 AM, Nathan Chancellor wrote:
+> > > Hi all,
+> > > 
+> > > This commit is causing issues on Android devices when Wi-Fi and mobile
+> > > data are both enabled. The device will do a soft reboot consistently.
+> > > So far, I've had reports on the Pixel 3 XL, OnePlus 6, Pocophone, and
+> > > Note 9 and I can reproduce on my OnePlus 6.
+> > > 
+> > > Sorry for taking so long to report this, I just figured out how to
+> > > reproduce it today and I didn't want to report it without that.
+> > > 
+> > > Attached is a full dmesg and the relevant snippet from Android's logcat.
+> > > 
+> > > Let me know what I can do to help debug,
+> > > Nathan
+> > > 
+> > 
+> > It's a backport problem. err needs to be reset to 0 before the goto.
+> 
+> Ah, I see it, let me go queue up a fix for this.
 
-Executable names containing spaces were previously being expanded from
-%e or %E and then split in the middle of the filename. This is incorrect
-behaviour since an argument list can represent arguments with spaces.
+Here's the fix I'm queueing up now:
 
-The splitting could lead to extra arguments being passed to the core dump
-handler that it might have interpreted as options or ignored completely.
 
-Core dump handlers that are not aware of this Linux kernel issue will be
-using %e or %E without considering that it may be split and so they will
-be vulnerable to processes with spaces in their names breaking their
-argument list. If their internals are otherwise well written, such as
-if they are written in shell but quote arguments, they will work better
-after this change than before. If they are not well written, then there
-is a slight chance of breakage depending on the details of the code but
-they will already be fairly broken by the split filenames.
+From b42f0ebbe4431ff7ce99c916555418f4a4c2be67 Mon Sep 17 00:00:00 2001
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Date: Mon, 20 May 2019 11:07:29 +0200
+Subject: [PATCH] fib_rules: fix error in backport of e9919a24d302 ("fib_rules:
+ return 0...")
 
-Core dump handlers that are aware of this Linux kernel issue will be
-placing %e or %E as the last item in their core_pattern and then
-aggregating all of the remaining arguments into one, separated by
-spaces. Alternatively they will be obtaining the filename via other
-methods. Both of these will be compatible with the new arrangement.
+When commit e9919a24d302 ("fib_rules: return 0 directly if an exactly
+same rule exists when NLM_F_EXCL not supplied") was backported to 4.9.y,
+it changed the logic a bit as err should have been reset before exiting
+the test, like it happens in the original logic.
 
-A side effect from this change is that unknown template types
-(for example %z) result in an empty argument to the dump handler
-instead of the argument being dropped. This is a desired change as:
+If this is not set, errors happen :(
 
-It is easier for dump handlers to process empty arguments than dropped
-ones, especially if they are written in shell or don't pass each template
-item with a preceding command-line option in order to differentiate
-between individual template types. Most core_patterns in the wild do not
-use options so they can confuse different template types (especially
-numeric ones) if an earlier one gets dropped in old kernels. If the
-kernel introduces a new template type and a core_pattern uses it, the
-core dump handler might not expect that the argument can be dropped in
-old kernels.
-
-For example, this can result in security issues when %d is dropped in old
-kernels. This happened with the corekeeper package in Debian and resulted
-in the interface between corekeeper and Linux having to be rewritten to
-use command-line options to differentiate between template types.
-
-The core_pattern for most core dump handlers is written by the handler
-author who would generally not insert unknown template types so this
-change should be compatible with all the core dump handlers that exist.
-
-Reported-by: Jakub Wilk <jwilk@jwilk.net>
-Reported-in: <20190312145043.jxjoj66kqssptolr@jwilk.net>
-Reported-by: Paul Wise <pabs3@bonedaddy.net>
-Reported-in: <c8b7ecb8508895bf4adb62a748e2ea2c71854597.camel@bonedaddy.net>
-Suggestions-from: Jakub Wilk <jwilk@jwilk.net>
-Signed-off-by: Paul Wise <pabs3@bonedaddy.net>
-See-also: https://bugs.debian.org/924398
-Fixes: commit 74aadce986052f20088c2678f589ea0e8d3a4b59
+Reported-by: Nathan Chancellor <natechancellor@gmail.com>
+Reported-by: David Ahern <dsahern@gmail.com>
+Reported-by: Florian Westphal <fw@strlen.de>
+Cc: Hangbin Liu <liuhangbin@gmail.com>
+Cc: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- fs/coredump.c | 45 ++++++++++++++++++++++++++++++++++++++++-----
- 1 file changed, 40 insertions(+), 5 deletions(-)
+ net/core/fib_rules.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/fs/coredump.c b/fs/coredump.c
-index e42e17e55bfd..40c440efb5f4 100644
---- a/fs/coredump.c
-+++ b/fs/coredump.c
-@@ -7,6 +7,7 @@
- #include <linux/stat.h>
- #include <linux/fcntl.h>
- #include <linux/swap.h>
-+#include <linux/ctype.h>
- #include <linux/string.h>
- #include <linux/init.h>
- #include <linux/pagemap.h>
-@@ -187,11 +188,13 @@ static int cn_print_exe_file(struct core_name *cn)
-  * name into corename, which must have space for at least
-  * CORENAME_MAX_SIZE bytes plus one byte for the zero terminator.
-  */
--static int format_corename(struct core_name *cn, struct coredump_params *cprm)
-+static int format_corename(struct core_name *cn, struct coredump_params *cprm,
-+			   size_t **argv, int *argc)
- {
- 	const struct cred *cred = current_cred();
- 	const char *pat_ptr = core_pattern;
- 	int ispipe = (*pat_ptr == '|');
-+	bool was_space = false;
- 	int pid_in_pattern = 0;
- 	int err = 0;
+diff --git a/net/core/fib_rules.c b/net/core/fib_rules.c
+index bb26457e8c21..c03dd2104d33 100644
+--- a/net/core/fib_rules.c
++++ b/net/core/fib_rules.c
+@@ -430,6 +430,7 @@ int fib_nl_newrule(struct sk_buff *skb, struct nlmsghdr *nlh)
+ 		goto errout_free;
  
-@@ -201,12 +204,36 @@ static int format_corename(struct core_name *cn, struct coredump_params *cprm)
- 		return -ENOMEM;
- 	cn->corename[0] = '\0';
- 
--	if (ispipe)
-+	if (ispipe) {
-+		/* sizeof(core_pattern) / 2 is the maximum number of args. */
-+		int argvs = sizeof(core_pattern) / 2;
-+		(*argvs) = kmalloc_array(argvs, sizeof(**argv), GFP_KERNEL);
-+		if (!(*argv))
-+			return -ENOMEM;
-+		(*argv)[(*argc)++] = 0;
- 		++pat_ptr;
-+	}
- 
- 	/* Repeat as long as we have more pattern to process and more output
- 	   space */
- 	while (*pat_ptr) {
-+		/*
-+		 * Split on spaces before doing template expansion so that
-+		 * %e and %E don't get split if they have spaces in them
-+		 */
-+		if (ispipe) {
-+			if (isspace(*pat_ptr)) {
-+				was_space = true;
-+				pat_ptr++;
-+				continue;
-+			} else if (was_space) {
-+				was_space = false;
-+				err = cn_printf(cn, "%c", '\0');
-+				if (err)
-+					return err;
-+				(*argv)[(*argc)++] = cn->used;
-+			}
-+		}
- 		if (*pat_ptr != '%') {
- 			err = cn_printf(cn, "%c", *pat_ptr++);
- 		} else {
-@@ -546,6 +573,8 @@ void do_coredump(const kernel_siginfo_t *siginfo)
- 	struct cred *cred;
- 	int retval = 0;
- 	int ispipe;
-+	size_t *argv = NULL;
-+	int argc = 0;
- 	struct files_struct *displaced;
- 	/* require nonrelative corefile path and be extra careful */
- 	bool need_suid_safe = false;
-@@ -592,9 +621,10 @@ void do_coredump(const kernel_siginfo_t *siginfo)
- 
- 	old_cred = override_creds(cred);
- 
--	ispipe = format_corename(&cn, &cprm);
-+	ispipe = format_corename(&cn, &cprm, &argv, &argc);
- 
- 	if (ispipe) {
-+		int argi;
- 		int dump_count;
- 		char **helper_argv;
- 		struct subprocess_info *sub_info;
-@@ -637,12 +667,16 @@ void do_coredump(const kernel_siginfo_t *siginfo)
- 			goto fail_dropcount;
- 		}
- 
--		helper_argv = argv_split(GFP_KERNEL, cn.corename, NULL);
-+		helper_argv = kmalloc_array(argc + 1, sizeof(*helper_argv),
-+					    GFP_KERNEL);
- 		if (!helper_argv) {
- 			printk(KERN_WARNING "%s failed to allocate memory\n",
- 			       __func__);
- 			goto fail_dropcount;
- 		}
-+		for (argi = 0; argi < argc; argi++)
-+			helper_argv[argi] = cn.corename + argv[argi];
-+		helper_argv[argi] = NULL;
- 
- 		retval = -ENOMEM;
- 		sub_info = call_usermodehelper_setup(helper_argv[0],
-@@ -652,7 +686,7 @@ void do_coredump(const kernel_siginfo_t *siginfo)
- 			retval = call_usermodehelper_exec(sub_info,
- 							  UMH_WAIT_EXEC);
- 
--		argv_free(helper_argv);
-+		kfree(helper_argv);
- 		if (retval) {
- 			printk(KERN_INFO "Core dump to |%s pipe failed\n",
- 			       cn.corename);
-@@ -766,6 +800,7 @@ void do_coredump(const kernel_siginfo_t *siginfo)
- 	if (ispipe)
- 		atomic_dec(&core_dump_count);
- fail_unlock:
-+	kfree(argv);
- 	kfree(cn.corename);
- 	coredump_finish(mm, core_dumped);
- 	revert_creds(old_cred);
+ 	if (rule_exists(ops, frh, tb, rule)) {
++		err = 0;
+ 		if (nlh->nlmsg_flags & NLM_F_EXCL)
+ 			err = -EEXIST;
+ 		goto errout_free;
 -- 
-2.20.1
+2.21.0
 
