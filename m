@@ -7,62 +7,62 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A079C04AAC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 17:24:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55EB4C04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 17:24:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2FB4F214AE
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 17:24:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B8FB214DA
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 17:24:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="efPBd60S"
+	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="SWnk3hMR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392912AbfETRYr (ORCPT
+        id S2392922AbfETRYx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 13:24:47 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:37065 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390525AbfETRYo (ORCPT
+        Mon, 20 May 2019 13:24:53 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:37253 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2392908AbfETRYt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 13:24:44 -0400
-Received: by mail-wr1-f67.google.com with SMTP id e15so15537370wrs.4
-        for <linux-kernel@vger.kernel.org>; Mon, 20 May 2019 10:24:44 -0700 (PDT)
+        Mon, 20 May 2019 13:24:49 -0400
+Received: by mail-wm1-f68.google.com with SMTP id 7so161135wmo.2
+        for <linux-kernel@vger.kernel.org>; Mon, 20 May 2019 10:24:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=amarulasolutions.com; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=9f53yOiq05lWNzaZ4psZ5nNqcD+KW9Z7mWrkNOPWql4=;
-        b=efPBd60SOweuaEtrPmrvEAgFFXxgKxmKmyy9bpp8zJvI5p/4b8l1Mn6o8ECeNMr/8o
-         TR/T60XAGyrFAEC62ziZN83mYFMvD8us0wEeBN1UQDPpg+6HiATagjokE0O0ckPxuq8a
-         u81B8sI9GEMzVMYxkYjOB3RafSNgh5bJD8f2s=
+        bh=z1UNYn9aAe8JQscyQQ3gmPIO3RF1hK/HxqPmp/TEvUE=;
+        b=SWnk3hMRMWA1Ywzo9sYOJLzsc26fwYiCJTgaYBEo4y5L3YXG/1R0ukyAVRH8Y+bg+B
+         f0BVbHk0x70KIIUy5TUhVxgGfxOufrsp25rNvY1f3kN/MxBujPb8v9nl7VA+0wMwq6G/
+         iztjCKbYwbdD3Y+TsXpqQWLo9btyRAuA5DuRQ=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=9f53yOiq05lWNzaZ4psZ5nNqcD+KW9Z7mWrkNOPWql4=;
-        b=tEkOvHPHV39QQOtTONLGbn3193G2cjopkrXdJVErKttZa90lEd20EkPOq+hI58HamL
-         EX5HCwp1qS22Fb5QGZMukxSLX0HhRd775Z+0Fz4zlHDD7QjQvcNfsTlgOtodoILG0nyU
-         Dnye5IaqbVxR7YTGdr4Yi5GirY8qfAZ45HwEOnnucrwneZ3OAOSA/uyuxibrFUThH+vd
-         qdO2VXOfR32aaybk7YD88VwIMNjVA+xtIMDy5+Jcjz0iGyaTWKESjSE2vOZTh7RAnJ1K
-         VQi9BxVFNaGP5nmrRDbLaoU3eU83/rPZ2gTXDBcq2aUgzS70muj+j5gQE1XrhRUpel7m
-         XbkQ==
-X-Gm-Message-State: APjAAAW43P53+4hCA2VldHvFZNWwF/q1tVyWrbdiay7oqorj0ij9KD3q
-        TGFNGoSdLV2qLoVthNiR8V+ezs48NizTLg==
-X-Google-Smtp-Source: APXvYqyx/q1u3qdOUfvt8mMH75in5zSdwv3nB5g27nP/2IT3WgDE13X8vLgZnhmLOLrTkenOvjl+Zw==
-X-Received: by 2002:adf:efc3:: with SMTP id i3mr30248014wrp.45.1558373083131;
-        Mon, 20 May 2019 10:24:43 -0700 (PDT)
+        bh=z1UNYn9aAe8JQscyQQ3gmPIO3RF1hK/HxqPmp/TEvUE=;
+        b=PwAQUKIgeGBkLFRnN8wHOmV0XcXlKldrh7t/EnqoBTm3nxIYcVbtp/drlPGuqtHlgR
+         kcrP2QdZm7T7lYZs91NQgiaxmICNWzFrBHdDCiBEYAGcap9gefpco+nL8izvS8k9Je6M
+         ky7yori8wkF1claKC8GwhFkj+VWoIRvlHbBWRYcF+IGSNEZdfl73wgOKD14hP9Ehk4b6
+         Cbdsmece8YQCtJPvvdjU1I0o7Wb4ust/Xv/StR0BouHnrtfXm81J7WsfqUowOwFYyW/M
+         3WDBdfnHR2LD4g+IKooU2FhT0sjmQ1xVgurZI6QQaXxM21FWDFBg7HnAdJozBEtPiW5n
+         iLhw==
+X-Gm-Message-State: APjAAAURIA2kgv9HOTMUeY/sngcaz+1fUEftLc8AIiGtY8Qcr6UbwRMy
+        JQ8uDkVnyRkDGpWmWW5cKWYOC+V/8KscxA==
+X-Google-Smtp-Source: APXvYqxVu0ryN3dGrAHTImcZaVGZEuUna03629XF/XZ4NdSwQQQFMOvDysXzuR7tpScTcpzb4h2yMw==
+X-Received: by 2002:a05:600c:21d7:: with SMTP id x23mr156500wmj.105.1558373086550;
+        Mon, 20 May 2019 10:24:46 -0700 (PDT)
 Received: from localhost.localdomain ([91.253.179.221])
-        by smtp.gmail.com with ESMTPSA id b12sm180021wmg.27.2019.05.20.10.24.41
+        by smtp.gmail.com with ESMTPSA id b12sm180021wmg.27.2019.05.20.10.24.44
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Mon, 20 May 2019 10:24:42 -0700 (PDT)
+        Mon, 20 May 2019 10:24:46 -0700 (PDT)
 From:   Andrea Parri <andrea.parri@amarulasolutions.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     Andrea Parri <andrea.parri@amarulasolutions.com>,
-        stable@vger.kernel.org, Jens Axboe <axboe@kernel.dk>,
-        Omar Sandoval <osandov@fb.com>, Ming Lei <ming.lei@redhat.com>,
-        linux-block@vger.kernel.org,
+        stable@vger.kernel.org, "Yan, Zheng" <zyan@redhat.com>,
+        Sage Weil <sage@redhat.com>, Ilya Dryomov <idryomov@gmail.com>,
+        ceph-devel@vger.kernel.org,
         "Paul E. McKenney" <paulmck@linux.ibm.com>,
         Peter Zijlstra <peterz@infradead.org>
-Subject: [PATCH 3/4] sbitmap: fix improper use of smp_mb__before_atomic()
-Date:   Mon, 20 May 2019 19:23:57 +0200
-Message-Id: <1558373038-5611-4-git-send-email-andrea.parri@amarulasolutions.com>
+Subject: [PATCH 4/4] ceph: fix improper use of smp_mb__before_atomic()
+Date:   Mon, 20 May 2019 19:23:58 +0200
+Message-Id: <1558373038-5611-5-git-send-email-andrea.parri@amarulasolutions.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1558373038-5611-1-git-send-email-andrea.parri@amarulasolutions.com>
 References: <1558373038-5611-1-git-send-email-andrea.parri@amarulasolutions.com>
@@ -72,39 +72,43 @@ List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 This barrier only applies to the read-modify-write operations; in
-particular, it does not apply to the atomic_set() primitive.
+particular, it does not apply to the atomic64_set() primitive.
 
 Replace the barrier with an smp_mb().
 
-Fixes: 6c0ca7ae292ad ("sbitmap: fix wakeup hang after sbq resize")
+Fixes: fdd4e15838e59 ("ceph: rework dcache readdir")
 Cc: stable@vger.kernel.org
 Reported-by: "Paul E. McKenney" <paulmck@linux.ibm.com>
 Reported-by: Peter Zijlstra <peterz@infradead.org>
 Signed-off-by: Andrea Parri <andrea.parri@amarulasolutions.com>
-Reviewed-by: Ming Lei <ming.lei@redhat.com>
-Cc: Jens Axboe <axboe@kernel.dk>
-Cc: Omar Sandoval <osandov@fb.com>
-Cc: Ming Lei <ming.lei@redhat.com>
-Cc: linux-block@vger.kernel.org
+Cc: "Yan, Zheng" <zyan@redhat.com>
+Cc: Sage Weil <sage@redhat.com>
+Cc: Ilya Dryomov <idryomov@gmail.com>
+Cc: ceph-devel@vger.kernel.org
 Cc: "Paul E. McKenney" <paulmck@linux.ibm.com>
 Cc: Peter Zijlstra <peterz@infradead.org>
 ---
- lib/sbitmap.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/ceph/super.h | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
-diff --git a/lib/sbitmap.c b/lib/sbitmap.c
-index 155fe38756ecf..4a7fc4915dfc6 100644
---- a/lib/sbitmap.c
-+++ b/lib/sbitmap.c
-@@ -435,7 +435,7 @@ static void sbitmap_queue_update_wake_batch(struct sbitmap_queue *sbq,
- 		 * to ensure that the batch size is updated before the wait
- 		 * counts.
- 		 */
--		smp_mb__before_atomic();
-+		smp_mb();
- 		for (i = 0; i < SBQ_WAIT_QUEUES; i++)
- 			atomic_set(&sbq->ws[i].wait_cnt, 1);
- 	}
+diff --git a/fs/ceph/super.h b/fs/ceph/super.h
+index 6edab9a750f8a..e02f4ff0be3f1 100644
+--- a/fs/ceph/super.h
++++ b/fs/ceph/super.h
+@@ -541,7 +541,12 @@ static inline void __ceph_dir_set_complete(struct ceph_inode_info *ci,
+ 					   long long release_count,
+ 					   long long ordered_count)
+ {
+-	smp_mb__before_atomic();
++	/*
++	 * Makes sure operations that setup readdir cache (update page
++	 * cache and i_size) are strongly ordered w.r.t. the following
++	 * atomic64_set() operations.
++	 */
++	smp_mb();
+ 	atomic64_set(&ci->i_complete_seq[0], release_count);
+ 	atomic64_set(&ci->i_complete_seq[1], ordered_count);
+ }
 -- 
 2.7.4
 
