@@ -2,289 +2,152 @@ Return-Path: <SRS0=lq4r=TU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 013BDC04AAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 14:15:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CCE49C04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 14:15:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CB4B8216FD
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 14:15:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9FAD82173C
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 14:15:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403913AbfETOPW (ORCPT
+        id S2391226AbfETOPy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 10:15:22 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:50910 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2403896AbfETOPU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 10:15:20 -0400
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 5C63E4DB10;
-        Mon, 20 May 2019 14:15:15 +0000 (UTC)
-Received: from llong.com (dhcp-17-85.bos.redhat.com [10.18.17.85])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id C92931001DD9;
-        Mon, 20 May 2019 14:15:13 +0000 (UTC)
-From:   Waiman Long <longman@redhat.com>
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        Andrew Morton <akpm@linux-foundation.org>
-Cc:     linux-kernel@vger.kernel.org,
-        Yang Shi <yang.shi@linux.alibaba.com>,
-        "Joel Fernandes (Google)" <joel@joelfernandes.org>,
-        Qian Cai <cai@gmx.us>, Zhong Jiang <zhongjiang@huawei.com>,
-        Waiman Long <longman@redhat.com>
-Subject: [PATCH 5/5] debugobjects: Move printk out of db lock critical sections
-Date:   Mon, 20 May 2019 10:14:50 -0400
-Message-Id: <20190520141450.7575-6-longman@redhat.com>
-In-Reply-To: <20190520141450.7575-1-longman@redhat.com>
-References: <20190520141450.7575-1-longman@redhat.com>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.29]); Mon, 20 May 2019 14:15:20 +0000 (UTC)
+        Mon, 20 May 2019 10:15:54 -0400
+Received: from gateway24.websitewelcome.com ([192.185.50.71]:22349 "EHLO
+        gateway24.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1730353AbfETOPy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 10:15:54 -0400
+Received: from cm14.websitewelcome.com (cm14.websitewelcome.com [100.42.49.7])
+        by gateway24.websitewelcome.com (Postfix) with ESMTP id 0DC2751BB
+        for <linux-kernel@vger.kernel.org>; Mon, 20 May 2019 09:15:53 -0500 (CDT)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id Sj4zhCnAO2qH7Sj4zhSIBF; Mon, 20 May 2019 09:15:53 -0500
+X-Authority-Reason: nr=8
+Received: from [189.250.71.100] (port=57220 helo=[192.168.1.76])
+        by gator4166.hostgator.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
+        (Exim 4.91)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1hSj4y-000MLM-Lc; Mon, 20 May 2019 09:15:52 -0500
+To:     Pavel Machek <pavel@denx.de>, stable@kernel.org,
+        kernel list <linux-kernel@vger.kernel.org>,
+        davem@davemloft.net, gregkh@linuxfoundation.org
+References: <20190520124014.GA5205@amd>
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=gustavo@embeddedor.com; keydata=
+ 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
+ VtSixD1uOgytAP7RWS474w==
+Subject: Re: net: atm: Spectre v1 fix introduced bug in bcb964012d1b in
+ -stable
+Message-ID: <02622e60-8ce9-8db3-8d16-fa1a32e063bf@embeddedor.com>
+Date:   Mon, 20 May 2019 09:15:50 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
+MIME-Version: 1.0
+In-Reply-To: <20190520124014.GA5205@amd>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 189.250.71.100
+X-Source-L: No
+X-Exim-ID: 1hSj4y-000MLM-Lc
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: ([192.168.1.76]) [189.250.71.100]:57220
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 3
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The db->lock is a raw spinlock and so the lock hold time is supposed
-to be short. This will not be the case when printk() is being involved
-in some of the critical sections. In order to avoid the long hold time,
-in case some messages need to be printed, the debug_object_is_on_stack()
-and debug_print_object() calls are now moved out of those critical
-sections.
 
-Signed-off-by: Waiman Long <longman@redhat.com>
----
- lib/debugobjects.c | 61 +++++++++++++++++++++++++++++++---------------
- 1 file changed, 42 insertions(+), 19 deletions(-)
 
-diff --git a/lib/debugobjects.c b/lib/debugobjects.c
-index 065770254899..5b6941568da0 100644
---- a/lib/debugobjects.c
-+++ b/lib/debugobjects.c
-@@ -529,6 +529,8 @@ __debug_object_init(void *addr, struct debug_obj_descr *descr, int onstack)
- 	struct debug_bucket *db;
- 	struct debug_obj *obj;
- 	unsigned long flags;
-+	bool print_object = false;
-+	bool check_stack = false;
- 
- 	fill_pool();
- 
-@@ -545,7 +547,7 @@ __debug_object_init(void *addr, struct debug_obj_descr *descr, int onstack)
- 			debug_objects_oom();
- 			return;
- 		}
--		debug_object_is_on_stack(addr, onstack);
-+		check_stack = true;
- 	}
- 
- 	switch (obj->state) {
-@@ -556,20 +558,25 @@ __debug_object_init(void *addr, struct debug_obj_descr *descr, int onstack)
- 		break;
- 
- 	case ODEBUG_STATE_ACTIVE:
--		debug_print_object(obj, "init");
- 		state = obj->state;
- 		raw_spin_unlock_irqrestore(&db->lock, flags);
-+		debug_print_object(obj, "init");
- 		debug_object_fixup(descr->fixup_init, addr, state);
- 		return;
- 
- 	case ODEBUG_STATE_DESTROYED:
--		debug_print_object(obj, "init");
-+		print_object = true;
- 		break;
- 	default:
- 		break;
- 	}
- 
- 	raw_spin_unlock_irqrestore(&db->lock, flags);
-+	if (check_stack)
-+		debug_object_is_on_stack(addr, onstack);
-+	if (print_object)
-+		debug_print_object(obj, "init");
-+
- }
- 
- /**
-@@ -627,6 +634,8 @@ int debug_object_activate(void *addr, struct debug_obj_descr *descr)
- 
- 	obj = lookup_object(addr, db);
- 	if (obj) {
-+		bool print_object = false;
-+
- 		switch (obj->state) {
- 		case ODEBUG_STATE_INIT:
- 		case ODEBUG_STATE_INACTIVE:
-@@ -635,14 +644,14 @@ int debug_object_activate(void *addr, struct debug_obj_descr *descr)
- 			break;
- 
- 		case ODEBUG_STATE_ACTIVE:
--			debug_print_object(obj, "activate");
- 			state = obj->state;
- 			raw_spin_unlock_irqrestore(&db->lock, flags);
-+			debug_print_object(obj, "activate");
- 			ret = debug_object_fixup(descr->fixup_activate, addr, state);
- 			return ret ? 0 : -EINVAL;
- 
- 		case ODEBUG_STATE_DESTROYED:
--			debug_print_object(obj, "activate");
-+			print_object = true;
- 			ret = -EINVAL;
- 			break;
- 		default:
-@@ -650,10 +659,13 @@ int debug_object_activate(void *addr, struct debug_obj_descr *descr)
- 			break;
- 		}
- 		raw_spin_unlock_irqrestore(&db->lock, flags);
-+		if (print_object)
-+			debug_print_object(obj, "activate");
- 		return ret;
- 	}
- 
- 	raw_spin_unlock_irqrestore(&db->lock, flags);
-+
- 	/*
- 	 * We are here when a static object is activated. We
- 	 * let the type specific code confirm whether this is
-@@ -685,6 +697,7 @@ void debug_object_deactivate(void *addr, struct debug_obj_descr *descr)
- 	struct debug_bucket *db;
- 	struct debug_obj *obj;
- 	unsigned long flags;
-+	bool print_object = false;
- 
- 	if (!debug_objects_enabled)
- 		return;
-@@ -702,24 +715,27 @@ void debug_object_deactivate(void *addr, struct debug_obj_descr *descr)
- 			if (!obj->astate)
- 				obj->state = ODEBUG_STATE_INACTIVE;
- 			else
--				debug_print_object(obj, "deactivate");
-+				print_object = true;
- 			break;
- 
- 		case ODEBUG_STATE_DESTROYED:
--			debug_print_object(obj, "deactivate");
-+			print_object = true;
- 			break;
- 		default:
- 			break;
- 		}
--	} else {
-+	}
-+
-+	raw_spin_unlock_irqrestore(&db->lock, flags);
-+	if (!obj) {
- 		struct debug_obj o = { .object = addr,
- 				       .state = ODEBUG_STATE_NOTAVAILABLE,
- 				       .descr = descr };
- 
- 		debug_print_object(&o, "deactivate");
-+	} else if (print_object) {
-+		debug_print_object(obj, "deactivate");
- 	}
--
--	raw_spin_unlock_irqrestore(&db->lock, flags);
- }
- EXPORT_SYMBOL_GPL(debug_object_deactivate);
- 
-@@ -734,6 +750,7 @@ void debug_object_destroy(void *addr, struct debug_obj_descr *descr)
- 	struct debug_bucket *db;
- 	struct debug_obj *obj;
- 	unsigned long flags;
-+	bool print_object = false;
- 
- 	if (!debug_objects_enabled)
- 		return;
-@@ -753,20 +770,22 @@ void debug_object_destroy(void *addr, struct debug_obj_descr *descr)
- 		obj->state = ODEBUG_STATE_DESTROYED;
- 		break;
- 	case ODEBUG_STATE_ACTIVE:
--		debug_print_object(obj, "destroy");
- 		state = obj->state;
- 		raw_spin_unlock_irqrestore(&db->lock, flags);
-+		debug_print_object(obj, "destroy");
- 		debug_object_fixup(descr->fixup_destroy, addr, state);
- 		return;
- 
- 	case ODEBUG_STATE_DESTROYED:
--		debug_print_object(obj, "destroy");
-+		print_object = true;
- 		break;
- 	default:
- 		break;
- 	}
- out_unlock:
- 	raw_spin_unlock_irqrestore(&db->lock, flags);
-+	if (print_object)
-+		debug_print_object(obj, "destroy");
- }
- EXPORT_SYMBOL_GPL(debug_object_destroy);
- 
-@@ -795,9 +814,9 @@ void debug_object_free(void *addr, struct debug_obj_descr *descr)
- 
- 	switch (obj->state) {
- 	case ODEBUG_STATE_ACTIVE:
--		debug_print_object(obj, "free");
- 		state = obj->state;
- 		raw_spin_unlock_irqrestore(&db->lock, flags);
-+		debug_print_object(obj, "free");
- 		debug_object_fixup(descr->fixup_free, addr, state);
- 		return;
- 	default:
-@@ -870,6 +889,7 @@ debug_object_active_state(void *addr, struct debug_obj_descr *descr,
- 	struct debug_bucket *db;
- 	struct debug_obj *obj;
- 	unsigned long flags;
-+	bool print_object = false;
- 
- 	if (!debug_objects_enabled)
- 		return;
-@@ -885,22 +905,25 @@ debug_object_active_state(void *addr, struct debug_obj_descr *descr,
- 			if (obj->astate == expect)
- 				obj->astate = next;
- 			else
--				debug_print_object(obj, "active_state");
-+				print_object = true;
- 			break;
- 
- 		default:
--			debug_print_object(obj, "active_state");
-+			print_object = true;
- 			break;
- 		}
--	} else {
-+	}
-+
-+	raw_spin_unlock_irqrestore(&db->lock, flags);
-+	if (!obj) {
- 		struct debug_obj o = { .object = addr,
- 				       .state = ODEBUG_STATE_NOTAVAILABLE,
- 				       .descr = descr };
- 
- 		debug_print_object(&o, "active_state");
-+	} else if (print_object) {
-+		debug_print_object(obj, "active_state");
- 	}
--
--	raw_spin_unlock_irqrestore(&db->lock, flags);
- }
- EXPORT_SYMBOL_GPL(debug_object_active_state);
- 
-@@ -935,10 +958,10 @@ static void __debug_check_no_obj_freed(const void *address, unsigned long size)
- 
- 			switch (obj->state) {
- 			case ODEBUG_STATE_ACTIVE:
--				debug_print_object(obj, "free");
- 				descr = obj->descr;
- 				state = obj->state;
- 				raw_spin_unlock_irqrestore(&db->lock, flags);
-+				debug_print_object(obj, "free");
- 				debug_object_fixup(descr->fixup_free,
- 						   (void *) oaddr, state);
- 				goto repeat;
--- 
-2.18.1
+On 5/20/19 7:40 AM, Pavel Machek wrote:
+> 
+> In lecd_attach, if arg is < 0, it was treated as 0. Spectre v1 fix
+> changed that. Bug does not exist in mainline AFAICT.
+> 
 
+NACK
+
+array_index_nospec() macro returns zero if *arg* is out of bounds.
+
+In any case, if the "bug" does not exist in mainline, what should be
+done is to port the code that fixed it in mainline to old kernels,
+not randomly add a "fix" here and there because that means we are
+breaking backward compatibility.
+
+--
+Gustavo
+
+> Signed-off-by: Pavel Machek <pavel@denx.de>
+> # for 4.19.y
+> 
+> diff --git a/net/atm/lec.c b/net/atm/lec.c
+> index ad4f829193f0..ed279cd912f4 100644
+> --- a/net/atm/lec.c
+> +++ b/net/atm/lec.c
+> @@ -731,7 +731,7 @@ static int lecd_attach(struct atm_vcc *vcc, int arg)
+>  		i = arg;
+>  	if (arg >= MAX_LEC_ITF)
+>  		return -EINVAL;
+> -	i = array_index_nospec(arg, MAX_LEC_ITF);
+> +	i = array_index_nospec(i, MAX_LEC_ITF);
+>  	if (!dev_lec[i]) {
+>  		int size;
+>  
+> 
