@@ -2,107 +2,87 @@ Return-Path: <SRS0=lq4r=TU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BCAEBC04AAC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 11:07:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CFA6BC04E87
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 11:07:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8AF9D208C3
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 11:07:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C63920856
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 11:07:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1558350478;
+	bh=gUebIO41eM4dP3W87kylj25xYXVbXqq++tSnwHd3WA8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=pbeTVhjkUBi5WAOWouaPv7n3/y7WMVXNqbMMWX6pXnZgn0mTrRNmQg8btP37FQxsI
+	 gXVR+9lifY/rmk8RgI0u6ErMvAPBw6fLvmlbfG/INDTPOe3+2nb+FLQz45GPpTflaT
+	 DL2hKFjQZPjzuOsP9ml7Y/FjZz8I0KveEMNg/Hj4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732323AbfETLHu (ORCPT
+        id S1732366AbfETLH5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 07:07:50 -0400
-Received: from relay7-d.mail.gandi.net ([217.70.183.200]:60329 "EHLO
-        relay7-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731781AbfETLHu (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 07:07:50 -0400
-X-Originating-IP: 90.88.22.185
-Received: from localhost (aaubervilliers-681-1-80-185.w90-88.abo.wanadoo.fr [90.88.22.185])
-        (Authenticated sender: maxime.ripard@bootlin.com)
-        by relay7-d.mail.gandi.net (Postfix) with ESMTPSA id 941102000B;
-        Mon, 20 May 2019 11:07:42 +0000 (UTC)
-Date:   Mon, 20 May 2019 13:07:42 +0200
-From:   Maxime Ripard <maxime.ripard@bootlin.com>
-To:     Luca Weiss <luca@z3ntu.xyz>
-Cc:     Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "moderated list:ARM/Allwinner sunXi SoC support" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] arm64: dts: allwinner: a64: Add lradc node
-Message-ID: <20190520110742.ykgxwaabzzwovgpl@flea>
-References: <20190518170929.24789-1-luca@z3ntu.xyz>
+        Mon, 20 May 2019 07:07:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58842 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731093AbfETLH5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 07:07:57 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3D1ED20675;
+        Mon, 20 May 2019 11:07:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1558350476;
+        bh=gUebIO41eM4dP3W87kylj25xYXVbXqq++tSnwHd3WA8=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=o4wQgOzUML/HjfQpBnjlFCzlds2GNuiwJ+KT3/q3i+STijwp4FQKX/zE/cFUKQgJz
+         GcBklVFWy+tTBcE3QpMYMYedrMIWmkWcyvGHxRBryAOi0Pmz/v3q/+4JrpatWB9vIC
+         olpU55Zdf4SchWdjHoAdLh1n/H8lLR4IY5rfIzn4=
+Date:   Mon, 20 May 2019 13:07:54 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Doug Anderson <dianders@chromium.org>,
+        "# 3.4.x" <stable@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "Joel Fernandes (Google)" <joel@joelfernandes.org>,
+        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Anton Vorontsov <anton@enomsg.org>,
+        Colin Cross <ccross@android.com>,
+        Tony Luck <tony.luck@intel.com>
+Subject: Re: [PATCH pstore-next v2 2/4] pstore: Allocate compression during
+ late_initcall()
+Message-ID: <20190520110754.GB20211@kroah.com>
+References: <20181018185616.14768-1-keescook@chromium.org>
+ <20181018185616.14768-3-keescook@chromium.org>
+ <CAM0oz-91yjPQKnxGDjwFThs19U=+iziuUr=9z13NSibr_uRxZQ@mail.gmail.com>
+ <20190505131654.GC25640@kroah.com>
+ <CAD=FV=UV7x-qJU86MzHxY8bqDV7rcc3XoyotKyy_+1MpMM22bA@mail.gmail.com>
+ <CAGXu5jKzH0Ttdtp5bXP_EAfp+fA+tEQwLXh=VmZ1r5q6wdpqaw@mail.gmail.com>
+ <CAGXu5jKtteYVhB=jpjBBkGqW5_XK=zpCP24Fj+mM0L8RBnhh=A@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="2tvwy2f7gcggtbhz"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190518170929.24789-1-luca@z3ntu.xyz>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <CAGXu5jKtteYVhB=jpjBBkGqW5_XK=zpCP24Fj+mM0L8RBnhh=A@mail.gmail.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, May 06, 2019 at 09:05:12AM -0700, Kees Cook wrote:
+> Doug said:
+> > > > > I'd propose that these three patches:
+> > > > >
+> > > > > 95047b0519c1 pstore: Refactor compression initialization
+> > > > > 416031653eb5 pstore: Allocate compression during late_initcall()
+> > > > > cb095afd4476 pstore: Centralize init/exit routines
+> 
+> Okay, confirmed. These look sufficient to me, and the resulting tree
+> passes my pstore tests. Greg, can you please pull these into 4.19?
 
---2tvwy2f7gcggtbhz
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+All now queued up, thanks.
 
-Hi!
-
-On Sat, May 18, 2019 at 07:09:30PM +0200, Luca Weiss wrote:
-> Add a node describing the KEYADC on the A64.
->
-> Signed-off-by: Luca Weiss <luca@z3ntu.xyz>
-> ---
->  arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi | 7 +++++++
->  1 file changed, 7 insertions(+)
->
-> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-> index 7734f70e1057..dc1bf8c1afb5 100644
-> --- a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-> +++ b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-> @@ -704,6 +704,13 @@
->  			status = "disabled";
->  		};
->
-> +		lradc: lradc@1c21800 {
-> +			compatible = "allwinner,sun4i-a10-lradc-keys";
-> +			reg = <0x01c21800 0x100>;
-> +			interrupts = <GIC_SPI 30 IRQ_TYPE_LEVEL_HIGH>;
-> +			status = "disabled";
-> +		};
-> +
-
-The controller is pretty different on the A64 compared to the A10. The
-A10 has two channels for example, while the A64 has only one.
-
-It looks like the one in the A83t though, so you can use that
-compatible instead.
-
-Maxime
-
---
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
-
---2tvwy2f7gcggtbhz
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXOKKfgAKCRDj7w1vZxhR
-xQtDAQDRqheEYCsPyl3AeW0fjU9b+loQ9xMJslojYXUeY00sCAEAwj5O5rO1Q8Tw
-C6Mk9UGH1BCkUcHPRpTCOaOAmurSpgA=
-=fEN1
------END PGP SIGNATURE-----
-
---2tvwy2f7gcggtbhz--
+greg k-h
