@@ -7,60 +7,60 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CDA03C072AF
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 03:53:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1D8EC072A4
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 03:53:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 85AF220856
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 03:53:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E06420856
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 03:53:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558324414;
-	bh=ObOj0+a2Oo4CDwwCq9IBUqEDoTpxzMttBVbuvV2zTrE=;
+	s=default; t=1558324418;
+	bh=Yz0Aeiw37vema5jJjkdVNLbZ9t3CHLf6Ybmrg9HRaa8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tQaP9wN9v5alFWLmSeVy9MPhCrv2I2puMlX9nWbATHKlkkaWmlRiIisGG4NvyRd+W
-	 PLoJyCIKzgYWy6u3Qdoa/qgyEeIyVMAp5A84T7vRoUzr/Pdf7Etu2x4LqGYuTmyNmL
-	 C+XhSFbUeDvpqIvE9yy7XXDSzgKdbMBQSJXdVROw=
+	b=JqydDBez2vipDhCUsQdPcmUYtwmBs84/dlVIRyueM1QfKjvP1bLZafbPNrrdw1r29
+	 5Y7wbv3mtA28oMpo2ufbxdCPbqhVt8CStzGCulH8Q6Gvix9N/3yO+AxwPbxrg+dfwG
+	 tHJwqwET5gJWqumBYxTYpatdH55ZmVcFKIamD2N8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730330AbfETDxd (ORCPT
+        id S1730342AbfETDxh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 19 May 2019 23:53:33 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:36603 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727626AbfETDxc (ORCPT
+        Sun, 19 May 2019 23:53:37 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:38607 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727626AbfETDxg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 19 May 2019 23:53:32 -0400
-Received: by mail-pg1-f194.google.com with SMTP id a3so6094003pgb.3
-        for <linux-kernel@vger.kernel.org>; Sun, 19 May 2019 20:53:31 -0700 (PDT)
+        Sun, 19 May 2019 23:53:36 -0400
+Received: by mail-pl1-f194.google.com with SMTP id f97so6034824plb.5
+        for <linux-kernel@vger.kernel.org>; Sun, 19 May 2019 20:53:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=sender:from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=8fBJ35agorKCunTXs811LaBEjUlFt/o9xwPOQhaevY0=;
-        b=rCgV6grFd1VFVtus7aOkg2Nhi0kCxqIOMHIRqgpyweiFaeLMopGpQwJXCZSKLwsibC
-         QgYt+TXrIKw2sHv+WiiCOfsbLvzeoIvzscG2JiDBvxnBWFBqW/JRMfK5IiyIMerLxj0v
-         oKNyq7x5uN0yJc6DDoT8UNzSaWOedLJWVbhMqTVfpBBauFJz6d1py2+RYNYursmwonRB
-         9Ia1hQqeDHdslM+lJrbutkWYR5BmmcZdz7nZslS804Sd9V71hpb0Q89SJWPb0d/+qXQZ
-         8Iy+Iee1ApriyJSBoamNpeHPHSspH0yPc0PAoQ/N9QX4UN5TXeHvXsjvosacyIOHPyW0
-         URWA==
+        bh=6eom6C+0aXRglfnsINAswRs1OeG+39R7hMy87CNGrDQ=;
+        b=XG5I+EPz86QA3OhsQLafnFpAan9eaChflXFWy43qaxMLemrkVaXoKjqy7PxZqkUxkP
+         O0Pi6kyy6arJRnGcyGSp5wdYWbuXmnvmMU9TLW9lQqedL13pwu5ot2YxbHHnH5JDECz2
+         5s7ZSy68dQ3tlt3cl5NMx33/pwti9RfeGoJWKiUEMCQZqpnPep50Djr8xxL6STY36Ujw
+         beVq6BNhkOiPzbrCyDh5fI53flkYcWi5NjAVWwKl/1j+lPu5r1E1UxZcQv/nYdEAVufF
+         I5AElncQaFNYUw4EOAGcoZbjZ6MvPKbdF3qRi76J+cqbdAOTOvWbZZqXTrDpaKJYoBkJ
+         Nunw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
          :in-reply-to:references:mime-version:content-transfer-encoding;
-        bh=8fBJ35agorKCunTXs811LaBEjUlFt/o9xwPOQhaevY0=;
-        b=WksBsZxTy9PQ1CV6ZfWkhay9dDtBV3twvU1QyuGzZJcjb6zghtlOp5USMKVImgaR42
-         8aoOC+oJqny0OiA9RcOB32jJ2Lyop0C4wXqEa429sAd36iiB7BAsSQWVqUBMiMtzdNSv
-         dGmvJZ8AYbQNTf6GbvUzCVwukXM/gXgMoAO1gbzN5ODB5USrgmkaIsEr1RDnczcVcRTu
-         re3P2H/8/FqBEhrhKPlcEi1EGgoofKP+XwP3Zwdevb++4OUly44VByDUE7NUwSRwWEo/
-         A5rRPsk+fxXuhW06MfZ0ghh4V+Gh3jhm+SfuwAjK5EJIRBdjNPOkv7iNvodV7bksklD7
-         RQVQ==
-X-Gm-Message-State: APjAAAXVWg0EihBb1+ULxMZTRpSc6eoe9gFprXFb2mQ6t0+q01WRON/0
-        vjymDWfLF93UdVT+3m9K5zw=
-X-Google-Smtp-Source: APXvYqyIBN0roIeUPC55CImKizlJCrfGac023V5GGgyvYa8R+Rw3Iny1vz3vJBv5Ytczunh6wQZSpg==
-X-Received: by 2002:a63:191b:: with SMTP id z27mr73201987pgl.327.1558324411188;
-        Sun, 19 May 2019 20:53:31 -0700 (PDT)
+        bh=6eom6C+0aXRglfnsINAswRs1OeG+39R7hMy87CNGrDQ=;
+        b=f6yTiEemTxMgPMJqqiwSxFVsSgLPr6I/hnCgzH/+NMfASfJMVl+c7A9LMkiXf14FdZ
+         aotz3MLG2+EZrTwk6O8oKwVH6wWd1Gw2BZeICV7XF2RqdifMYwBOR5UDCI3dQ5LLNbia
+         v85fKVV6ujCI7XgReFK4Ykbe3svFwV6/v5JU8IlyhER/n0PZferORnotuNXbywX7aXNF
+         QmIG03hYnpKs3F2/33Y2focz0g/w5cfIZpSnKLWbnZJC2X1Tp+k1lS9fS5YV+hdQJCO6
+         brIbjhXueo5xNodgFrLiE9SP5pvmgdBR09IhLWNIAHkZ3y2XFr1HcY+tXpoTP3ytijwr
+         MSuw==
+X-Gm-Message-State: APjAAAU9p7MIlnj+AGXTCheliqSM5kcxo3BMGXN6ZS6/lTne6hIj4kmU
+        tDUAyZ7cjlH0zwHrenv74Ck=
+X-Google-Smtp-Source: APXvYqzawjhmQskMTjHPygEFAgYiL4Q/o65j0xjkMqI2OU3MhBsEo2mDN7heff7G2XFlEjOFBY9bKg==
+X-Received: by 2002:a17:902:bc42:: with SMTP id t2mr21860026plz.55.1558324415659;
+        Sun, 19 May 2019 20:53:35 -0700 (PDT)
 Received: from bbox-2.seo.corp.google.com ([2401:fa00:d:0:98f1:8b3d:1f37:3e8])
-        by smtp.gmail.com with ESMTPSA id x66sm3312779pfx.139.2019.05.19.20.53.26
+        by smtp.gmail.com with ESMTPSA id x66sm3312779pfx.139.2019.05.19.20.53.31
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 19 May 2019 20:53:30 -0700 (PDT)
+        Sun, 19 May 2019 20:53:34 -0700 (PDT)
 From:   Minchan Kim <minchan@kernel.org>
 To:     Andrew Morton <akpm@linux-foundation.org>
 Cc:     LKML <linux-kernel@vger.kernel.org>, linux-mm <linux-mm@kvack.org>,
@@ -74,9 +74,9 @@ Cc:     LKML <linux-kernel@vger.kernel.org>, linux-mm <linux-mm@kvack.org>,
         Sonny Rao <sonnyrao@google.com>,
         Brian Geffon <bgeffon@google.com>,
         Minchan Kim <minchan@kernel.org>
-Subject: [RFC 6/7] mm: extend process_madvise syscall to support vector arrary
-Date:   Mon, 20 May 2019 12:52:53 +0900
-Message-Id: <20190520035254.57579-7-minchan@kernel.org>
+Subject: [RFC 7/7] mm: madvise support MADV_ANONYMOUS_FILTER and MADV_FILE_FILTER
+Date:   Mon, 20 May 2019 12:52:54 +0900
+Message-Id: <20190520035254.57579-8-minchan@kernel.org>
 X-Mailer: git-send-email 2.21.0.1020.gf2820cf01a-goog
 In-Reply-To: <20190520035254.57579-1-minchan@kernel.org>
 References: <20190520035254.57579-1-minchan@kernel.org>
@@ -87,497 +87,94 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently, process_madvise syscall works for only one address range
-so user should call the syscall several times to give hints to
-multiple address range.
+System could have much faster swap device like zRAM. In that case, swapping
+is extremely cheaper than file-IO on the low-end storage.
+In this configuration, userspace could handle different strategy for each
+kinds of vma. IOW, they want to reclaim anonymous pages by MADV_COLD
+while it keeps file-backed pages in inactive LRU by MADV_COOL because
+file IO is more expensive in this case so want to keep them in memory
+until memory pressure happens.
 
-This patch extends process_madvise syscall to support multiple
-hints, address ranges and return vaules so user could give hints
-all at once.
+To support such strategy easier, this patch introduces
+MADV_ANONYMOUS_FILTER and MADV_FILE_FILTER options in madvise(2) like
+that /proc/<pid>/clear_refs already has supported same filters.
+They are filters could be Ored with other existing hints using top two bits
+of (int behavior).
 
-struct pr_madvise_param {
-    int size;                       /* the size of this structure */
-    const struct iovec __user *vec; /* address range array */
-}
+Once either of them is set, the hint could affect only the interested vma
+either anonymous or file-backed.
 
-int process_madvise(int pidfd, ssize_t nr_elem,
-		    int *behavior,
-		    struct pr_madvise_param *results,
-		    struct pr_madvise_param *ranges,
-		    unsigned long flags);
+With that, user could call a process_madvise syscall simply with a entire
+range(0x0 - 0xFFFFFFFFFFFFFFFF) but either of MADV_ANONYMOUS_FILTER and
+MADV_FILE_FILTER so there is no need to call the syscall range by range.
 
-- pidfd
+* from v1r2
+  * use consistent check with clear_refs to identify anon/file vma - surenb
 
-target process fd
-
-- nr_elem
-
-the number of elemenent of array behavior, results, ranges
-
-- behavior
-
-hints for each address range in remote process so that user could
-give different hints for each range.
-
-- results
-
-array of buffers to get results for associated remote address range
-action.
-
-- ranges
-
-array to buffers to have remote process's address ranges to be
-processed
-
-- flags
-
-extra argument for the future. It should be zero this moment.
-
-Example)
-
-struct pr_madvise_param {
-        int size;
-        const struct iovec *vec;
-};
-
-int main(int argc, char *argv[])
-{
-        struct pr_madvise_param retp, rangep;
-        struct iovec result_vec[2], range_vec[2];
-        int hints[2];
-        long ret[2];
-        void *addr[2];
-
-        pid_t pid;
-        char cmd[64] = {0,};
-        addr[0] = mmap(NULL, ALLOC_SIZE, PROT_READ|PROT_WRITE,
-                          MAP_POPULATE|MAP_PRIVATE|MAP_ANONYMOUS, 0, 0);
-
-        if (MAP_FAILED == addr[0])
-                return 1;
-
-        addr[1] = mmap(NULL, ALLOC_SIZE, PROT_READ|PROT_WRITE,
-                          MAP_POPULATE|MAP_PRIVATE|MAP_ANONYMOUS, 0, 0);
-
-        if (MAP_FAILED == addr[1])
-                return 1;
-
-        hints[0] = MADV_COLD;
-	range_vec[0].iov_base = addr[0];
-        range_vec[0].iov_len = ALLOC_SIZE;
-        result_vec[0].iov_base = &ret[0];
-        result_vec[0].iov_len = sizeof(long);
-	retp.vec = result_vec;
-        retp.size = sizeof(struct pr_madvise_param);
-
-        hints[1] = MADV_COOL;
-        range_vec[1].iov_base = addr[1];
-        range_vec[1].iov_len = ALLOC_SIZE;
-        result_vec[1].iov_base = &ret[1];
-        result_vec[1].iov_len = sizeof(long);
-        rangep.vec = range_vec;
-        rangep.size = sizeof(struct pr_madvise_param);
-
-        pid = fork();
-        if (!pid) {
-                sleep(10);
-        } else {
-                int pidfd = open(cmd,  O_DIRECTORY | O_CLOEXEC);
-                if (pidfd < 0)
-                        return 1;
-
-                /* munmap to make pages private for the child */
-                munmap(addr[0], ALLOC_SIZE);
-                munmap(addr[1], ALLOC_SIZE);
-                system("cat /proc/vmstat | egrep 'pswpout|deactivate'");
-                if (syscall(__NR_process_madvise, pidfd, 2, behaviors,
-						&retp, &rangep, 0))
-                        perror("process_madvise fail\n");
-                system("cat /proc/vmstat | egrep 'pswpout|deactivate'");
-        }
-
-        return 0;
-}
+* from v1r1
+  * use naming "filter" for new madvise option - dancol
 
 Signed-off-by: Minchan Kim <minchan@kernel.org>
 ---
- include/uapi/asm-generic/mman-common.h |   5 +
- mm/madvise.c                           | 184 +++++++++++++++++++++----
- 2 files changed, 166 insertions(+), 23 deletions(-)
+ include/uapi/asm-generic/mman-common.h |  5 +++++
+ mm/madvise.c                           | 14 ++++++++++++++
+ 2 files changed, 19 insertions(+)
 
 diff --git a/include/uapi/asm-generic/mman-common.h b/include/uapi/asm-generic/mman-common.h
-index b9b51eeb8e1a..b8e230de84a6 100644
+index b8e230de84a6..be59a1b90284 100644
 --- a/include/uapi/asm-generic/mman-common.h
 +++ b/include/uapi/asm-generic/mman-common.h
-@@ -74,4 +74,9 @@
- #define PKEY_ACCESS_MASK	(PKEY_DISABLE_ACCESS |\
- 				 PKEY_DISABLE_WRITE)
+@@ -66,6 +66,11 @@
+ #define MADV_WIPEONFORK 18		/* Zero memory on fork, child only */
+ #define MADV_KEEPONFORK 19		/* Undo MADV_WIPEONFORK */
  
-+struct pr_madvise_param {
-+	int size;			/* the size of this structure */
-+	const struct iovec __user *vec;	/* address range array */
-+};
++#define MADV_BEHAVIOR_MASK (~(MADV_ANONYMOUS_FILTER|MADV_FILE_FILTER))
 +
- #endif /* __ASM_GENERIC_MMAN_COMMON_H */
++#define MADV_ANONYMOUS_FILTER	(1<<31)	/* works for only anonymous vma */
++#define MADV_FILE_FILTER	(1<<30)	/* works for only file-backed vma */
++
+ /* compatibility flags */
+ #define MAP_FILE	0
+ 
 diff --git a/mm/madvise.c b/mm/madvise.c
-index af02aa17e5c1..f4f569dac2bd 100644
+index f4f569dac2bd..116131243540 100644
 --- a/mm/madvise.c
 +++ b/mm/madvise.c
-@@ -320,6 +320,7 @@ static int madvise_cool_pte_range(pmd_t *pmd, unsigned long addr,
- 	struct page *page;
- 	struct vm_area_struct *vma = walk->vma;
- 	unsigned long next;
-+	long nr_pages = 0;
+@@ -1002,7 +1002,15 @@ static int madvise_core(struct task_struct *tsk, unsigned long start,
+ 	int write;
+ 	size_t len;
+ 	struct blk_plug plug;
++	bool anon_only, file_only;
  
- 	next = pmd_addr_end(addr, end);
- 	if (pmd_trans_huge(*pmd)) {
-@@ -380,9 +381,12 @@ static int madvise_cool_pte_range(pmd_t *pmd, unsigned long addr,
- 
- 		ptep_test_and_clear_young(vma, addr, pte);
- 		deactivate_page(page);
-+		nr_pages++;
++	anon_only = behavior & MADV_ANONYMOUS_FILTER;
++	file_only = behavior & MADV_FILE_FILTER;
 +
- 	}
- 
- 	pte_unmap_unlock(orig_pte, ptl);
-+	*(long *)walk->private += nr_pages;
- 	cond_resched();
- 
- 	return 0;
-@@ -390,11 +394,13 @@ static int madvise_cool_pte_range(pmd_t *pmd, unsigned long addr,
- 
- static void madvise_cool_page_range(struct mmu_gather *tlb,
- 			     struct vm_area_struct *vma,
--			     unsigned long addr, unsigned long end)
-+			     unsigned long addr, unsigned long end,
-+			     long *nr_pages)
- {
- 	struct mm_walk cool_walk = {
- 		.pmd_entry = madvise_cool_pte_range,
- 		.mm = vma->vm_mm,
-+		.private = nr_pages
- 	};
- 
- 	tlb_start_vma(tlb, vma);
-@@ -403,7 +409,8 @@ static void madvise_cool_page_range(struct mmu_gather *tlb,
- }
- 
- static long madvise_cool(struct vm_area_struct *vma,
--			unsigned long start_addr, unsigned long end_addr)
-+			unsigned long start_addr, unsigned long end_addr,
-+			long *nr_pages)
- {
- 	struct mm_struct *mm = vma->vm_mm;
- 	struct mmu_gather tlb;
-@@ -413,7 +420,7 @@ static long madvise_cool(struct vm_area_struct *vma,
- 
- 	lru_add_drain();
- 	tlb_gather_mmu(&tlb, mm, start_addr, end_addr);
--	madvise_cool_page_range(&tlb, vma, start_addr, end_addr);
-+	madvise_cool_page_range(&tlb, vma, start_addr, end_addr, nr_pages);
- 	tlb_finish_mmu(&tlb, start_addr, end_addr);
- 
- 	return 0;
-@@ -429,6 +436,7 @@ static int madvise_cold_pte_range(pmd_t *pmd, unsigned long addr,
- 	int isolated = 0;
- 	struct vm_area_struct *vma = walk->vma;
- 	unsigned long next;
-+	long nr_pages = 0;
- 
- 	next = pmd_addr_end(addr, end);
- 	if (pmd_trans_huge(*pmd)) {
-@@ -492,7 +500,7 @@ static int madvise_cold_pte_range(pmd_t *pmd, unsigned long addr,
- 		list_add(&page->lru, &page_list);
- 		if (isolated >= SWAP_CLUSTER_MAX) {
- 			pte_unmap_unlock(orig_pte, ptl);
--			reclaim_pages(&page_list);
-+			nr_pages += reclaim_pages(&page_list);
- 			isolated = 0;
- 			pte = pte_offset_map_lock(vma->vm_mm, pmd, addr, &ptl);
- 			orig_pte = pte;
-@@ -500,19 +508,22 @@ static int madvise_cold_pte_range(pmd_t *pmd, unsigned long addr,
- 	}
- 
- 	pte_unmap_unlock(orig_pte, ptl);
--	reclaim_pages(&page_list);
-+	nr_pages += reclaim_pages(&page_list);
- 	cond_resched();
- 
-+	*(long *)walk->private += nr_pages;
- 	return 0;
- }
- 
- static void madvise_cold_page_range(struct mmu_gather *tlb,
- 			     struct vm_area_struct *vma,
--			     unsigned long addr, unsigned long end)
-+			     unsigned long addr, unsigned long end,
-+			     long *nr_pages)
- {
- 	struct mm_walk warm_walk = {
- 		.pmd_entry = madvise_cold_pte_range,
- 		.mm = vma->vm_mm,
-+		.private = nr_pages,
- 	};
- 
- 	tlb_start_vma(tlb, vma);
-@@ -522,7 +533,8 @@ static void madvise_cold_page_range(struct mmu_gather *tlb,
- 
- 
- static long madvise_cold(struct vm_area_struct *vma,
--			unsigned long start_addr, unsigned long end_addr)
-+			unsigned long start_addr, unsigned long end_addr,
-+			long *nr_pages)
- {
- 	struct mm_struct *mm = vma->vm_mm;
- 	struct mmu_gather tlb;
-@@ -532,7 +544,7 @@ static long madvise_cold(struct vm_area_struct *vma,
- 
- 	lru_add_drain();
- 	tlb_gather_mmu(&tlb, mm, start_addr, end_addr);
--	madvise_cold_page_range(&tlb, vma, start_addr, end_addr);
-+	madvise_cold_page_range(&tlb, vma, start_addr, end_addr, nr_pages);
- 	tlb_finish_mmu(&tlb, start_addr, end_addr);
- 
- 	return 0;
-@@ -922,7 +934,7 @@ static int madvise_inject_error(int behavior,
- static long
- madvise_vma(struct task_struct *tsk, struct vm_area_struct *vma,
- 		struct vm_area_struct **prev, unsigned long start,
--		unsigned long end, int behavior)
-+		unsigned long end, int behavior, long *nr_pages)
- {
- 	switch (behavior) {
- 	case MADV_REMOVE:
-@@ -930,9 +942,9 @@ madvise_vma(struct task_struct *tsk, struct vm_area_struct *vma,
- 	case MADV_WILLNEED:
- 		return madvise_willneed(vma, prev, start, end);
- 	case MADV_COOL:
--		return madvise_cool(vma, start, end);
-+		return madvise_cool(vma, start, end, nr_pages);
- 	case MADV_COLD:
--		return madvise_cold(vma, start, end);
-+		return madvise_cold(vma, start, end, nr_pages);
- 	case MADV_FREE:
- 	case MADV_DONTNEED:
- 		return madvise_dontneed_free(tsk, vma, prev, start,
-@@ -981,7 +993,7 @@ madvise_behavior_valid(int behavior)
- }
- 
- static int madvise_core(struct task_struct *tsk, unsigned long start,
--			size_t len_in, int behavior)
-+			size_t len_in, int behavior, long *nr_pages)
- {
- 	unsigned long end, tmp;
- 	struct vm_area_struct *vma, *prev;
-@@ -996,6 +1008,7 @@ static int madvise_core(struct task_struct *tsk, unsigned long start,
- 
- 	if (start & ~PAGE_MASK)
++	if (anon_only && file_only)
++		return error;
++
++	behavior = behavior & MADV_BEHAVIOR_MASK;
+ 	if (!madvise_behavior_valid(behavior))
  		return error;
-+
- 	len = (len_in + ~PAGE_MASK) & PAGE_MASK;
  
- 	/* Check to see whether len was rounded up from small -ve to zero */
-@@ -1035,6 +1048,8 @@ static int madvise_core(struct task_struct *tsk, unsigned long start,
- 	blk_start_plug(&plug);
- 	for (;;) {
- 		/* Still start < end. */
-+		long pages = 0;
-+
- 		error = -ENOMEM;
- 		if (!vma)
- 			goto out;
-@@ -1053,9 +1068,11 @@ static int madvise_core(struct task_struct *tsk, unsigned long start,
+@@ -1067,12 +1075,18 @@ static int madvise_core(struct task_struct *tsk, unsigned long start,
+ 		if (end < tmp)
  			tmp = end;
  
++		if (anon_only && vma->vm_file)
++			goto next;
++		if (file_only && !vma->vm_file)
++			goto next;
++
  		/* Here vma->vm_start <= start < tmp <= (end|vma->vm_end). */
--		error = madvise_vma(tsk, vma, &prev, start, tmp, behavior);
-+		error = madvise_vma(tsk, vma, &prev, start, tmp,
-+					behavior, &pages);
+ 		error = madvise_vma(tsk, vma, &prev, start, tmp,
+ 					behavior, &pages);
  		if (error)
  			goto out;
-+		*nr_pages += pages;
+ 		*nr_pages += pages;
++next:
  		start = tmp;
  		if (prev && start < prev->vm_end)
  			start = prev->vm_end;
-@@ -1140,26 +1157,137 @@ static int madvise_core(struct task_struct *tsk, unsigned long start,
-  */
- SYSCALL_DEFINE3(madvise, unsigned long, start, size_t, len_in, int, behavior)
- {
--	return madvise_core(current, start, len_in, behavior);
-+	unsigned long dummy;
-+
-+	return madvise_core(current, start, len_in, behavior, &dummy);
- }
- 
--SYSCALL_DEFINE4(process_madvise, int, pidfd, unsigned long, start,
--		size_t, len_in, int, behavior)
-+static int pr_madvise_copy_param(struct pr_madvise_param __user *u_param,
-+		struct pr_madvise_param *param)
-+{
-+	u32 size;
-+	int ret;
-+
-+	memset(param, 0, sizeof(*param));
-+
-+	ret = get_user(size, &u_param->size);
-+	if (ret)
-+		return ret;
-+
-+	if (size > PAGE_SIZE)
-+		return -E2BIG;
-+
-+	if (!size || size > sizeof(struct pr_madvise_param))
-+		return -EINVAL;
-+
-+	ret = copy_from_user(param, u_param, size);
-+	if (ret)
-+		return -EFAULT;
-+
-+	return ret;
-+}
-+
-+static int process_madvise_core(struct task_struct *tsk, int *behaviors,
-+				struct iov_iter *iter,
-+				const struct iovec *range_vec,
-+				unsigned long riovcnt,
-+				unsigned long flags)
-+{
-+	int i;
-+	long err;
-+
-+	for (err = 0, i = 0; i < riovcnt && iov_iter_count(iter); i++) {
-+		long ret = 0;
-+
-+		err = madvise_core(tsk, (unsigned long)range_vec[i].iov_base,
-+				range_vec[i].iov_len, behaviors[i],
-+				&ret);
-+		if (err)
-+			ret = err;
-+
-+		if (copy_to_iter(&ret, sizeof(long), iter) !=
-+				sizeof(long)) {
-+			err = -EFAULT;
-+			break;
-+		}
-+
-+		err = 0;
-+	}
-+
-+	return err;
-+}
-+
-+SYSCALL_DEFINE6(process_madvise, int, pidfd, ssize_t, nr_elem,
-+			const int __user *, hints,
-+			struct pr_madvise_param __user *, results,
-+			struct pr_madvise_param __user *, ranges,
-+			unsigned long, flags)
- {
- 	int ret;
- 	struct fd f;
- 	struct pid *pid;
- 	struct task_struct *tsk;
- 	struct mm_struct *mm;
-+	struct pr_madvise_param result_p, range_p;
-+	const struct iovec __user *result_vec, __user *range_vec;
-+	int *behaviors;
-+	struct iovec iovstack_result[UIO_FASTIOV];
-+	struct iovec iovstack_r[UIO_FASTIOV];
-+	struct iovec *iov_l = iovstack_result;
-+	struct iovec *iov_r = iovstack_r;
-+	struct iov_iter iter;
-+
-+	if (flags != 0)
-+		return -EINVAL;
-+
-+	ret = pr_madvise_copy_param(results, &result_p);
-+	if (ret)
-+		return ret;
-+
-+	ret = pr_madvise_copy_param(ranges, &range_p);
-+	if (ret)
-+		return ret;
-+
-+	result_vec = result_p.vec;
-+	range_vec = range_p.vec;
-+
-+	if (result_p.size != sizeof(struct pr_madvise_param) ||
-+			range_p.size != sizeof(struct pr_madvise_param))
-+		return -EINVAL;
-+
-+	behaviors = kmalloc_array(nr_elem, sizeof(int), GFP_KERNEL);
-+	if (!behaviors)
-+		return -ENOMEM;
-+
-+	ret = copy_from_user(behaviors, hints, sizeof(int) * nr_elem);
-+	if (ret < 0)
-+		goto free_behavior_vec;
-+
-+	ret = import_iovec(READ, result_vec, nr_elem, UIO_FASTIOV,
-+				&iov_l, &iter);
-+	if (ret < 0)
-+		goto free_behavior_vec;
-+
-+	if (!iov_iter_count(&iter)) {
-+		ret = -EINVAL;
-+		goto free_iovecs;
-+	}
-+
-+	ret = rw_copy_check_uvector(CHECK_IOVEC_ONLY, range_vec, nr_elem,
-+				UIO_FASTIOV, iovstack_r, &iov_r);
-+	if (ret <= 0)
-+		goto free_iovecs;
- 
- 	f = fdget(pidfd);
--	if (!f.file)
--		return -EBADF;
-+	if (!f.file) {
-+		ret = -EBADF;
-+		goto free_iovecs;
-+	}
- 
- 	pid = pidfd_to_pid(f.file);
- 	if (IS_ERR(pid)) {
- 		ret = PTR_ERR(pid);
--		goto err;
-+		goto put_fd;
- 	}
- 
- 	ret = -EINVAL;
-@@ -1167,7 +1295,7 @@ SYSCALL_DEFINE4(process_madvise, int, pidfd, unsigned long, start,
- 	tsk = pid_task(pid, PIDTYPE_PID);
- 	if (!tsk) {
- 		rcu_read_unlock();
--		goto err;
-+		goto put_fd;
- 	}
- 	get_task_struct(tsk);
- 	rcu_read_unlock();
-@@ -1176,12 +1304,22 @@ SYSCALL_DEFINE4(process_madvise, int, pidfd, unsigned long, start,
- 		ret = IS_ERR(mm) ? PTR_ERR(mm) : -ESRCH;
- 		if (ret == -EACCES)
- 			ret = -EPERM;
--		goto err;
-+		goto put_task;
- 	}
--	ret = madvise_core(tsk, start, len_in, behavior);
-+
-+	ret = process_madvise_core(tsk, behaviors, &iter, iov_r,
-+					nr_elem, flags);
- 	mmput(mm);
-+put_task:
- 	put_task_struct(tsk);
--err:
-+put_fd:
- 	fdput(f);
-+free_iovecs:
-+	if (iov_r != iovstack_r)
-+		kfree(iov_r);
-+	kfree(iov_l);
-+free_behavior_vec:
-+	kfree(behaviors);
-+
- 	return ret;
- }
 -- 
 2.21.0.1020.gf2820cf01a-goog
 
