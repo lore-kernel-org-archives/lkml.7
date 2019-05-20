@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9416CC04AAC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:26:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5946C04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:26:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 690CE214AE
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:26:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7AA1320675
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:26:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558355203;
-	bh=8wo6OfwoxBhKFRN2XsFLYEb1OgS1BAfDkVDQKopJ80A=;
+	s=default; t=1558355208;
+	bh=qi3DML8mlDtblN7UzD5EbLiMc/EJcxvDlyuGK638yVc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JhqkV0gP5DVaqztLflpFpV/qysGMEQ9ZDzZ8L+lDvDvPvK49RldNNV7BWQbVgzeDr
-	 x1r7A8imyM/mjAcyjV9M0JL2qG88zFmFLeYdIpwfegEF3gRbfB3T6mF58swmGp6w0p
-	 tXfTK2TAV0UyCk1E8Qw20NoGzjEzqjbNP2VxT+no=
+	b=oNI0G60y4FnEPfAc3Ud+CrHPaT9qhISn2qugmYAG7Z42BJ1LxNf1Pbkdd9CGflSKJ
+	 ykWWwD8nYZKsC4XR9FX5OlcGkeg/ffodALlvHGJWRSa8y5oFKUJQtxyvMl78DSDyB9
+	 8sE5lOilBz//2y1vIemdaumHRkCfb4cVlYrHiIyk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388633AbfETM0m (ORCPT
+        id S2389358AbfETM0p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 08:26:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42022 "EHLO mail.kernel.org"
+        Mon, 20 May 2019 08:26:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42138 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388017AbfETM0h (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 08:26:37 -0400
+        id S2389344AbfETM0m (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 08:26:42 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 254C121479;
-        Mon, 20 May 2019 12:26:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 85B0020815;
+        Mon, 20 May 2019 12:26:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558355196;
-        bh=8wo6OfwoxBhKFRN2XsFLYEb1OgS1BAfDkVDQKopJ80A=;
+        s=default; t=1558355202;
+        bh=qi3DML8mlDtblN7UzD5EbLiMc/EJcxvDlyuGK638yVc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=j6YY194Q9axogROGSaVpEvkdMOR3WDtbhpN91u1iI+4y9uc5dZZ2YDQF11fFu2NVM
-         pOzP/IN/UOwZSDNTkM/ZK1emdYKD3+s88GSv6R4SycTUJX2FfC2ciOBaK0i5j7HsaD
-         PVdXh9MCgUkRxc/RofTe9JGjFAITI5LmfcW6IKsg=
+        b=0m1Olg0hJZpMdfjwJIuRrxuWbB9s08G5dfPYYuQbu/fU5UUbhMCAqD9vLAx0Ji5GL
+         CzbOpkFYmSK8ZF4D+ytRKbXUp1U7ogwIeP+zsPFVTGJeyqMOgl3/R611O+PlCr5fgz
+         jLXDwGVWHq2KIF7R/N5iZM7ruxj3dAZUbMWZATFM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ondrej Mosnacek <omosnace@redhat.com>,
+        stable@vger.kernel.org, Martin Willi <martin@strongswan.org>,
         Eric Biggers <ebiggers@google.com>,
         Herbert Xu <herbert@gondor.apana.org.au>
-Subject: [PATCH 5.0 028/123] crypto: lrw - dont access already-freed walk.iv
-Date:   Mon, 20 May 2019 14:13:28 +0200
-Message-Id: <20190520115246.657720313@linuxfoundation.org>
+Subject: [PATCH 5.0 030/123] crypto: chacha20poly1305 - set cra_name correctly
+Date:   Mon, 20 May 2019 14:13:30 +0200
+Message-Id: <20190520115246.776602032@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190520115245.439864225@linuxfoundation.org>
 References: <20190520115245.439864225@linuxfoundation.org>
@@ -62,45 +62,44 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Eric Biggers <ebiggers@google.com>
 
-commit aec286cd36eacfd797e3d5dab8d5d23c15d1bb5e upstream.
+commit 5e27f38f1f3f45a0c938299c3a34a2d2db77165a upstream.
 
-If the user-provided IV needs to be aligned to the algorithm's
-alignmask, then skcipher_walk_virt() copies the IV into a new aligned
-buffer walk.iv.  But skcipher_walk_virt() can fail afterwards, and then
-if the caller unconditionally accesses walk.iv, it's a use-after-free.
+If the rfc7539 template is instantiated with specific implementations,
+e.g. "rfc7539(chacha20-generic,poly1305-generic)" rather than
+"rfc7539(chacha20,poly1305)", then the implementation names end up
+included in the instance's cra_name.  This is incorrect because it then
+prevents all users from allocating "rfc7539(chacha20,poly1305)", if the
+highest priority implementations of chacha20 and poly1305 were selected.
+Also, the self-tests aren't run on an instance allocated in this way.
 
-Fix this in the LRW template by checking the return value of
-skcipher_walk_virt().
+Fix it by setting the instance's cra_name from the underlying
+algorithms' actual cra_names, rather than from the requested names.
+This matches what other templates do.
 
-This bug was detected by my patches that improve testmgr to fuzz
-algorithms against their generic implementation.  When the extra
-self-tests were run on a KASAN-enabled kernel, a KASAN use-after-free
-splat occured during lrw(aes) testing.
-
-Fixes: c778f96bf347 ("crypto: lrw - Optimize tweak computation")
-Cc: <stable@vger.kernel.org> # v4.20+
-Cc: Ondrej Mosnacek <omosnace@redhat.com>
+Fixes: 71ebc4d1b27d ("crypto: chacha20poly1305 - Add a ChaCha20-Poly1305 AEAD construction, RFC7539")
+Cc: <stable@vger.kernel.org> # v4.2+
+Cc: Martin Willi <martin@strongswan.org>
 Signed-off-by: Eric Biggers <ebiggers@google.com>
+Reviewed-by: Martin Willi <martin@strongswan.org>
 Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- crypto/lrw.c |    4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ crypto/chacha20poly1305.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/crypto/lrw.c
-+++ b/crypto/lrw.c
-@@ -162,8 +162,10 @@ static int xor_tweak(struct skcipher_req
- 	}
+--- a/crypto/chacha20poly1305.c
++++ b/crypto/chacha20poly1305.c
+@@ -645,8 +645,8 @@ static int chachapoly_create(struct cryp
  
- 	err = skcipher_walk_virt(&w, req, false);
--	iv = (__be32 *)w.iv;
-+	if (err)
-+		return err;
- 
-+	iv = (__be32 *)w.iv;
- 	counter[0] = be32_to_cpu(iv[3]);
- 	counter[1] = be32_to_cpu(iv[2]);
- 	counter[2] = be32_to_cpu(iv[1]);
+ 	err = -ENAMETOOLONG;
+ 	if (snprintf(inst->alg.base.cra_name, CRYPTO_MAX_ALG_NAME,
+-		     "%s(%s,%s)", name, chacha_name,
+-		     poly_name) >= CRYPTO_MAX_ALG_NAME)
++		     "%s(%s,%s)", name, chacha->base.cra_name,
++		     poly->cra_name) >= CRYPTO_MAX_ALG_NAME)
+ 		goto out_drop_chacha;
+ 	if (snprintf(inst->alg.base.cra_driver_name, CRYPTO_MAX_ALG_NAME,
+ 		     "%s(%s,%s)", name, chacha->base.cra_driver_name,
 
 
