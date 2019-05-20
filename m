@@ -7,39 +7,39 @@ X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78780C072A4
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 06:28:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E4BDC04E87
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 06:30:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 44A6620851
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 06:28:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EB29A20851
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 06:30:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558333735;
-	bh=Ui9uYmuCZCzF+3IjrsAp5TGAHEIpxCDWfcmShxLDVVs=;
+	s=default; t=1558333821;
+	bh=guWiZhnrQX5XOmYv/2WvChjs/sYiaG71enI6UFsxEOI=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=MG9fG3KdHZlrcfSct2Y/AloeJ49rMWc8in18Iz9yE8G2K2ARdiCgWQIPzDXTU4EPy
-	 vVWYz/cnh0q1dFHf1EUgt2O3Y1ddagXDTfhjRGKFVmeZCW0HehIQtJ+sid8Gi1m7nM
-	 KKH3U8JLVwrySf0WUker+PJk2XUutB3O5M9Udxlg=
+	b=BsPgBbwlkNTd2RBNmd2QPM3+3GF7I+0qh4W5uYsOBrieVYCFwtCUeIMwGpKUXLkcZ
+	 jQVEvfADycKTte7YX4oLmoymSRMEST6Kz1alqEEakTJ/aPvsrnxrqdlIxwhsBvbHdI
+	 I057i3m6woOzeQhikpfyg4zDd4Jvz9cgLCIeqCjA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730767AbfETG2y (ORCPT
+        id S1730264AbfETGaU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 02:28:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33724 "EHLO mail.kernel.org"
+        Mon, 20 May 2019 02:30:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34022 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726436AbfETG2x (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 02:28:53 -0400
+        id S1726436AbfETGaT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 02:30:19 -0400
 Received: from dragon (98.142.130.235.16clouds.com [98.142.130.235])
         (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DA53C206B6;
-        Mon, 20 May 2019 06:28:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D8CF6206B6;
+        Mon, 20 May 2019 06:30:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558333733;
-        bh=Ui9uYmuCZCzF+3IjrsAp5TGAHEIpxCDWfcmShxLDVVs=;
+        s=default; t=1558333819;
+        bh=guWiZhnrQX5XOmYv/2WvChjs/sYiaG71enI6UFsxEOI=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=unf+dZGw5Ovy8YsjD047mOy9G0FONojvb30WZF+p48mVLup09wvY6+RwlSsjlbxsG
-         /aMhdh+PBzxmRpNooEgYocdIhDh/a3DH5gasEwjUR+iL2m+fWe44y89zrfTXDEtfCJ
-         Pxi+N6yBq+BEq0fXqlX7Qv6w++6+OhJDbCSGaV6E=
-Date:   Mon, 20 May 2019 14:27:57 +0800
+        b=xTu87tyvie8buwqB1PTc6WMdWlduuQC6RyhF+N3zWBG2GTx4xxBmwsx0/7et1hXkl
+         9xeK3A1BcbLjpJmDBRC7Ae25lDilDfDbin1iGo7PWvS60rHzpoiFNGEQM4+YGkp8VJ
+         2TOKZU9Q6oVcMRoh4tLwLdqUj2n749/98WNgHeMU=
+Date:   Mon, 20 May 2019 14:29:28 +0800
 From:   Shawn Guo <shawnguo@kernel.org>
 To:     Anson Huang <anson.huang@nxp.com>
 Cc:     "mturquette@baylibre.com" <mturquette@baylibre.com>,
@@ -47,41 +47,30 @@ Cc:     "mturquette@baylibre.com" <mturquette@baylibre.com>,
         "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
         "kernel@pengutronix.de" <kernel@pengutronix.de>,
         "festevam@gmail.com" <festevam@gmail.com>,
-        "l.stach@pengutronix.de" <l.stach@pengutronix.de>,
         Aisheng Dong <aisheng.dong@nxp.com>,
-        "tiny.windzz@gmail.com" <tiny.windzz@gmail.com>,
-        "pp@emlix.com" <pp@emlix.com>,
-        "colin.didier@devialet.com" <colin.didier@devialet.com>,
-        "robh@kernel.org" <robh@kernel.org>, Jacky Bai <ping.bai@nxp.com>,
-        Leonard Crestez <leonard.crestez@nxp.com>,
-        "hofrat@osadl.org" <hofrat@osadl.org>,
-        "michael@amarulasolutions.com" <michael@amarulasolutions.com>,
-        "stefan@agner.ch" <stefan@agner.ch>, Abel Vesa <abel.vesa@nxp.com>,
+        "gustavo@embeddedor.com" <gustavo@embeddedor.com>,
         "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
         "linux-arm-kernel@lists.infradead.org" 
         <linux-arm-kernel@lists.infradead.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
         dl-linux-imx <linux-imx@nxp.com>
-Subject: Re: [PATCH RESEND 1/2] clk: imx: Add common API for masking MMDC
- handshake
-Message-ID: <20190520062756.GP15856@dragon>
-References: <1557656348-13040-1-git-send-email-Anson.Huang@nxp.com>
+Subject: Re: [PATCH RESEND] clk: imx7ulp: update nic1_bus_clk parent info
+Message-ID: <20190520062926.GQ15856@dragon>
+References: <1557656739-13120-1-git-send-email-Anson.Huang@nxp.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1557656348-13040-1-git-send-email-Anson.Huang@nxp.com>
+In-Reply-To: <1557656739-13120-1-git-send-email-Anson.Huang@nxp.com>
 User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, May 12, 2019 at 10:24:12AM +0000, Anson Huang wrote:
-> All i.MX6 SoCs need to mask unused MMDC channel's handshake
-> for low power modes, this patch provides common API for masking
-> the MMDC channel passed from caller.
+On Sun, May 12, 2019 at 10:30:41AM +0000, Anson Huang wrote:
+> Since i.MX7ULP B0 chip, nic1_bus_clk's parent is changed to
+> from nic0_clk directly, update it accordingly.
 > 
 > Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-> Reviewed-by: Dong Aisheng <aisheng.dong@nxp.com>
 
-Applied both, thanks.
+Applied, thanks.
