@@ -2,118 +2,81 @@ Return-Path: <SRS0=lq4r=TU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 114B4C04AAC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 21:20:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3157C04E87
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 21:20:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E553A216B7
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 21:20:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A1EFC216B7
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 21:20:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="ZBKI0me1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727189AbfETVUq (ORCPT
+        id S1727229AbfETVUt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Mon, 20 May 2019 17:20:49 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:41070 "EHLO vps0.lunn.ch"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726966AbfETVUq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 20 May 2019 17:20:46 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:37292 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726879AbfETVUo (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 17:20:44 -0400
-Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4KL32wR152245
-        for <linux-kernel@vger.kernel.org>; Mon, 20 May 2019 17:20:43 -0400
-Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2sm0tvf13k-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Mon, 20 May 2019 17:20:42 -0400
-Received: from localhost
-        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
-        Mon, 20 May 2019 22:20:40 +0100
-Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
-        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Mon, 20 May 2019 22:20:38 +0100
-Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
-        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x4KLKbil60686518
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 20 May 2019 21:20:37 GMT
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 24E49AE051;
-        Mon, 20 May 2019 21:20:37 +0000 (GMT)
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id EE5F9AE04D;
-        Mon, 20 May 2019 21:20:35 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.80.80.109])
-        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Mon, 20 May 2019 21:20:35 +0000 (GMT)
-Subject: Re: [PATCH 4/4] ima: only audit failed appraisal verifications
-From:   Mimi Zohar <zohar@linux.ibm.com>
-To:     Roberto Sassu <roberto.sassu@huawei.com>,
-        dmitry.kasatkin@huawei.com, mjg59@google.com
-Cc:     linux-integrity@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        linux-kernel@vger.kernel.org, silviu.vlasceanu@huawei.com,
-        stable@vger.kernel.org
-Date:   Mon, 20 May 2019 17:20:25 -0400
-In-Reply-To: <20190516161257.6640-4-roberto.sassu@huawei.com>
-References: <20190516161257.6640-1-roberto.sassu@huawei.com>
-         <20190516161257.6640-4-roberto.sassu@huawei.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
-Mime-Version: 1.0
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Transfer-Encoding:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=67UFBnzAcIhooBj87Gxyu93VVsiphW6C7t7vJSiFn+g=; b=ZBKI0me1jsOwkTLddaEYW8HZt/
+        4M3BvguGwnK696sXVWqWwzWVGXj1UyIjPLK9VI/QRalKwEdn8BTuS0VxgsS7umz0AWQ7+/7HqivD9
+        Cc3g7LcjM5aBeDfAxJtspBPAB2e6/v/8MskU3C/Tpc4IIjXiDeZAd0wVIxOiyC1Pmzt4=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.89)
+        (envelope-from <andrew@lunn.ch>)
+        id 1hSpi5-00048K-5r; Mon, 20 May 2019 23:20:41 +0200
+Date:   Mon, 20 May 2019 23:20:41 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Weifeng Voon <weifeng.voon@intel.com>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Jose Abreu <joabreu@synopsys.com>,
+        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Ong Boon Leong <boon.leong.ong@intel.com>,
+        Tan Tee Min <tee.min.tan@intel.com>
+Subject: Re: [PATCH net] net: stmmac: fix ethtool flow control not able to
+ get/set
+Message-ID: <20190520212041.GL22024@lunn.ch>
+References: <1558414542-28550-1-git-send-email-weifeng.voon@intel.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 19052021-0020-0000-0000-0000033EB794
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19052021-0021-0000-0000-00002191919C
-Message-Id: <1558387225.4039.78.camel@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-20_08:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1905200132
+In-Reply-To: <1558414542-28550-1-git-send-email-weifeng.voon@intel.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2019-05-16 at 18:12 +0200, Roberto Sassu wrote:
-> This patch ensures that integrity_audit_msg() is called only when the
-> status is not INTEGRITY_PASS.
+On Tue, May 21, 2019 at 12:55:42PM +0800, Weifeng Voon wrote:
+> From: "Tan, Tee Min" <tee.min.tan@intel.com>
 > 
-> Fixes: 8606404fa555c ("ima: digital signature verification support")
-> Signed-off-by: Roberto Sassu <roberto.sassu@huawei.com>
-> Cc: stable@vger.kernel.org
-> ---
->  security/integrity/ima/ima_appraise.c | 5 +++--
->  1 file changed, 3 insertions(+), 2 deletions(-)
+> Currently ethtool was not able to get/set the flow control due to a
+> missing "!". It will always return -EOPNOTSUPP even the device is
+> flow control supported.
 > 
-> diff --git a/security/integrity/ima/ima_appraise.c b/security/integrity/ima/ima_appraise.c
-> index a32ed5d7afd1..f5f4506bcb8e 100644
-> --- a/security/integrity/ima/ima_appraise.c
-> +++ b/security/integrity/ima/ima_appraise.c
-> @@ -359,8 +359,9 @@ int ima_appraise_measurement(enum ima_hooks func,
->  			status = INTEGRITY_PASS;
->  		}
->  
-> -		integrity_audit_msg(AUDIT_INTEGRITY_DATA, inode, filename,
-> -				    op, cause, rc, 0);
-> +		if (status != INTEGRITY_PASS)
-> +			integrity_audit_msg(AUDIT_INTEGRITY_DATA, inode,
-> +					    filename, op, cause, rc, 0);
+> This patch fixes the condition check for ethtool flow control get/set
+> function for ETHTOOL_LINK_MODE_Asym_Pause_BIT.
+> 
+> Fixes: 3c1bcc8614db (“net: ethernet: Convert phydev advertize and supported from u32 to link mode”)
+> Signed-off-by: Tan, Tee Min <tee.min.tan@intel.com>
+> Reviewed-by: Ong Boon Leong <boon.leong.ong@intel.com>
+> Signed-off-by: Voon, Weifeng <weifeng.voon@intel.com@intel.com>
 
-For some reason, the integrity verification has failed.  In some
-specific cases, we'll let it pass, but do we really want to remove any
-indication that it failed in all cases?
+Upps,  my bad. Sorry.
 
-Mimi
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
 
-
->  	} else {
->  		ima_cache_flags(iint, func);
->  	}
-
+    Andrew
