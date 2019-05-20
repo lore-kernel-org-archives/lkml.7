@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FA20C04AAC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:22:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CD6BC04AAF
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:22:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5465E20675
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:22:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 14A1420645
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:22:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558354966;
-	bh=aF7HKBpx3gAIndsX2zacYPEs1qyN60O2fhVkQ2N/6AQ=;
+	s=default; t=1558354969;
+	bh=vENCxlkEC564e0tIMqMIzm3b6Nb2+zQVTcPaW5XIdUQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dVJC2Fg9Prl5kZcyD4ciuYQSxXHf3dWp1QRgFcXjCdiQCbugxppnIrojXNlM9F30R
-	 ALAydUfbGFWSdgl0kR41hVA9OvMR8ULSH0j972B9xdvwOaRE0XwP/EHpiroeKKnu43
-	 gqUTxnYUp+PsPoOT4pI3dZ4JRQeuxL36yYp9OlDo=
+	b=rp/OtQWhMPre2KQHicg9xpt+VvhCgrwYcig6KLcy/DF7D9ZuOA9JoV5YC0v/nANaZ
+	 GqUjb1q5G5uSTerc0W50HN7MSt24+zVee8+rjFXzAEtSanHVvOMb4T1FMCGarfLC/e
+	 Yx0UY5pjZNnkqELHWFEY+gOUAeHY8U2XCIFLg35k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388487AbfETMWp (ORCPT
+        id S2388499AbfETMWs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 08:22:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36824 "EHLO mail.kernel.org"
+        Mon, 20 May 2019 08:22:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36878 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388474AbfETMWm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 08:22:42 -0400
+        id S2388486AbfETMWp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 08:22:45 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7460220656;
-        Mon, 20 May 2019 12:22:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1B32B20656;
+        Mon, 20 May 2019 12:22:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558354961;
-        bh=aF7HKBpx3gAIndsX2zacYPEs1qyN60O2fhVkQ2N/6AQ=;
+        s=default; t=1558354964;
+        bh=vENCxlkEC564e0tIMqMIzm3b6Nb2+zQVTcPaW5XIdUQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZbXlO3klYGoB0qHuuzY4hjOXtXYDTw7CYAxtBVvNMMo340OafyL+wlZzXQgdrdTu+
-         mFSO1s3/8Wr5XXmk6HvK4PapJU84wVRAXbl+kAaZySI7K5c994ap8jIc27Bt7yhIqo
-         e3YcrIJsGN5DvNtBkJWZQkhHuFk6y0WGn97gBhTk=
+        b=HpYajj60sNcMVtaqaNLe4ohHcpaLDz69vR7ItR2dxGihqmpbEsPQI2Uu5r2jgqLdG
+         KsC1LfvPWW8wHqB99EFaR3JI2Qy2C9js8t5gtRGn0sV2ljkCD+ryEDaJrEor3rrd2G
+         e9fXv780OY3ljNE81zQewNoZ7buYj21wMOcVFiEo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Libin Yang <libin.yang@intel.com>,
-        Takashi Iwai <tiwai@suse.de>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Mark Brown <broonie@kernel.org>
-Subject: [PATCH 4.19 042/105] ASoC: codec: hdac_hdmi add device_link to card device
-Date:   Mon, 20 May 2019 14:13:48 +0200
-Message-Id: <20190520115249.934598402@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Sylwester Nawrocki <s.nawrocki@samsung.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>
+Subject: [PATCH 4.19 007/105] ARM: dts: exynos: Fix audio (microphone) routing on Odroid XU3
+Date:   Mon, 20 May 2019 14:13:13 +0200
+Message-Id: <20190520115247.557577558@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190520115247.060821231@linuxfoundation.org>
 References: <20190520115247.060821231@linuxfoundation.org>
@@ -61,47 +60,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Libin Yang <libin.yang@intel.com>
+From: Sylwester Nawrocki <s.nawrocki@samsung.com>
 
-commit 01c8327667c249818d3712c3e25c7ad2aca7f389 upstream.
+commit 9b23e1a3e8fde76e8cc0e366ab1ed4ffb4440feb upstream.
 
-In resume from S3, HDAC HDMI codec driver dapm event callback may be
-operated before HDMI codec driver turns on the display audio power
-domain because of the contest between display driver and hdmi codec driver.
+The name of CODEC input widget to which microphone is connected through
+the "Headphone" jack is "IN12" not "IN1". This fixes microphone support
+on Odroid XU3.
 
-This patch adds the device_link between soc card device (consumer) and
-hdmi codec device (supplier) to make sure the sequence is always correct.
-
-Signed-off-by: Libin Yang <libin.yang@intel.com>
-Reviewed-by: Takashi Iwai <tiwai@suse.de>
-Acked-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Signed-off-by: Mark Brown <broonie@kernel.org>
-Cc: stable@vger.kernel.org
+Cc: <stable@vger.kernel.org> # v4.14+
+Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/soc/codecs/hdac_hdmi.c |   11 +++++++++++
- 1 file changed, 11 insertions(+)
+ arch/arm/boot/dts/exynos5422-odroidxu3-audio.dtsi |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/sound/soc/codecs/hdac_hdmi.c
-+++ b/sound/soc/codecs/hdac_hdmi.c
-@@ -1829,6 +1829,17 @@ static int hdmi_codec_probe(struct snd_s
- 	hdmi->card = dapm->card->snd_card;
+--- a/arch/arm/boot/dts/exynos5422-odroidxu3-audio.dtsi
++++ b/arch/arm/boot/dts/exynos5422-odroidxu3-audio.dtsi
+@@ -22,7 +22,7 @@
+ 			"Headphone Jack", "HPL",
+ 			"Headphone Jack", "HPR",
+ 			"Headphone Jack", "MICBIAS",
+-			"IN1", "Headphone Jack",
++			"IN12", "Headphone Jack",
+ 			"Speakers", "SPKL",
+ 			"Speakers", "SPKR";
  
- 	/*
-+	 * Setup a device_link between card device and HDMI codec device.
-+	 * The card device is the consumer and the HDMI codec device is
-+	 * the supplier. With this setting, we can make sure that the audio
-+	 * domain in display power will be always turned on before operating
-+	 * on the HDMI audio codec registers.
-+	 * Let's use the flag DL_FLAG_AUTOREMOVE_CONSUMER. This can make
-+	 * sure the device link is freed when the machine driver is removed.
-+	 */
-+	device_link_add(component->card->dev, &hdev->dev, DL_FLAG_RPM_ACTIVE |
-+			DL_FLAG_AUTOREMOVE_CONSUMER);
-+	/*
- 	 * hdac_device core already sets the state to active and calls
- 	 * get_noresume. So enable runtime and set the device to suspend.
- 	 */
 
 
