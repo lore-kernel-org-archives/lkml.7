@@ -2,194 +2,94 @@ Return-Path: <SRS0=lq4r=TU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93454C46460
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:54:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06509C04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:54:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 684E820645
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:54:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558356844;
-	bh=6c6dzpRvrL2ejRwUMcZ4Lhd68lVVW+Pkl5hcfPLvQ1o=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xytf6tSbw3hs9MpM7ezhqG2PapSrQHNSg48Je9SLtZuMBSzvcWH/6QsLEV7n9uIHt
-	 YqLJRNI3eSpqoLBwXCMoJPR8d+LV3hLZgxqXMRmT/TPhUji4c4C0KokWl5f0scHKF6
-	 l29iiJkgr8kpDLo8uWRvV7pSY6NyM2V7R813Xxn0=
+	by mail.kernel.org (Postfix) with ESMTP id CE89120645
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:54:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733308AbfETMQs (ORCPT
+        id S2388411AbfETMyH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 08:16:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57474 "EHLO mail.kernel.org"
+        Mon, 20 May 2019 08:54:07 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:57330 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733279AbfETMQo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 08:16:44 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1731662AbfETMyF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 08:54:05 -0400
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 57B1720815;
-        Mon, 20 May 2019 12:16:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558354603;
-        bh=6c6dzpRvrL2ejRwUMcZ4Lhd68lVVW+Pkl5hcfPLvQ1o=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Iv9zuDc+8T6TbjZmRW9HX/C+cnRBYm84kIL1rF+bblj2R/mP0ROz+6AcLKo5+H135
-         I+S6bePV764VAUz1pwOEgMqzvIrD0HpJUZoy8OQ48r4KFy51RJRn2T6rmhPVjSdPqC
-         F+mB9g6f3Z3o3VlyiBUyJ4d72CzcdYU4j7VYdLeg=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Waiman Long <longman@redhat.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Tim Chen <tim.c.chen@linux.intel.com>,
-        Will Deacon <will.deacon@arm.com>,
-        huang ying <huang.ying.caritas@gmail.com>,
-        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 02/44] locking/rwsem: Prevent decrement of reader count before increment
-Date:   Mon, 20 May 2019 14:13:51 +0200
-Message-Id: <20190520115231.178993431@linuxfoundation.org>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190520115230.720347034@linuxfoundation.org>
-References: <20190520115230.720347034@linuxfoundation.org>
-User-Agent: quilt/0.66
+        by mx1.redhat.com (Postfix) with ESMTPS id 5D89D3091782;
+        Mon, 20 May 2019 12:54:00 +0000 (UTC)
+Received: from horse.redhat.com (unknown [10.18.25.29])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 6BBDB6085B;
+        Mon, 20 May 2019 12:53:56 +0000 (UTC)
+Received: by horse.redhat.com (Postfix, from userid 10451)
+        id 06ECD220386; Mon, 20 May 2019 08:53:56 -0400 (EDT)
+Date:   Mon, 20 May 2019 08:53:55 -0400
+From:   Vivek Goyal <vgoyal@redhat.com>
+To:     Eric Ren <ericdotren@gmail.com>
+Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org, linux-nvdimm@lists.01.org, miklos@szeredi.hu,
+        stefanha@redhat.com, dgilbert@redhat.com, swhiteho@redhat.com
+Subject: Re: [PATCH v2 26/30] fuse: Add logic to free up a memory range
+Message-ID: <20190520125355.GA28008@redhat.com>
+References: <20190515192715.18000-1-vgoyal@redhat.com>
+ <20190515192715.18000-27-vgoyal@redhat.com>
+ <CAN+Pk99SNKSf+GjSQUUWt_eu1fSjTy_ByUOEQUXHi8zNqXY1zA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAN+Pk99SNKSf+GjSQUUWt_eu1fSjTy_ByUOEQUXHi8zNqXY1zA@mail.gmail.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.41]); Mon, 20 May 2019 12:54:05 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit a9e9bcb45b1525ba7aea26ed9441e8632aeeda58 ]
+On Sun, May 19, 2019 at 03:48:05PM +0800, Eric Ren wrote:
+> Hi,
+> 
+> @@ -1784,8 +1822,23 @@ static int fuse_iomap_begin(struct inode *inode,
+> > loff_t pos, loff_t length,
+> >                 if (pos >= i_size_read(inode))
+> >                         goto iomap_hole;
+> >
+> > -               alloc_dmap = alloc_dax_mapping(fc);
+> > -               if (!alloc_dmap)
+> > +               /* Can't do reclaim in fault path yet due to lock ordering.
+> > +                * Read path takes shared inode lock and that's not
+> > sufficient
+> > +                * for inline range reclaim. Caller needs to drop lock,
+> > wait
+> > +                * and retry.
+> > +                */
+> > +               if (flags & IOMAP_FAULT || !(flags & IOMAP_WRITE)) {
+> > +                       alloc_dmap = alloc_dax_mapping(fc);
+> > +                       if (!alloc_dmap)
+> > +                               return -ENOSPC;
+> > +               } else {
+> > +                       alloc_dmap = alloc_dax_mapping_reclaim(fc, inode);
+> >
+> 
+> alloc_dmap could be NULL as follows:
+> 
+> alloc_dax_mapping_reclaim
+>    -->fuse_dax_reclaim_first_mapping
+>              -->fuse_dax_reclaim_first_mapping_locked
+>                   --> fuse_dax_interval_tree_iter_first  ==> return NULL
+> and
+> 
+> IS_ERR(NULL) is false, so we may miss that error case.
 
-During my rwsem testing, it was found that after a down_read(), the
-reader count may occasionally become 0 or even negative. Consequently,
-a writer may steal the lock at that time and execute with the reader
-in parallel thus breaking the mutual exclusion guarantee of the write
-lock. In other words, both readers and writer can become rwsem owners
-simultaneously.
+Hi Eric,
 
-The current reader wakeup code does it in one pass to clear waiter->task
-and put them into wake_q before fully incrementing the reader count.
-Once waiter->task is cleared, the corresponding reader may see it,
-finish the critical section and do unlock to decrement the count before
-the count is incremented. This is not a problem if there is only one
-reader to wake up as the count has been pre-incremented by 1.  It is
-a problem if there are more than one readers to be woken up and writer
-can steal the lock.
+Good catch. I will fix it next version. 
 
-The wakeup was actually done in 2 passes before the following v4.9 commit:
-
-  70800c3c0cc5 ("locking/rwsem: Scan the wait_list for readers only once")
-
-To fix this problem, the wakeup is now done in two passes
-again. In the first pass, we collect the readers and count them.
-The reader count is then fully incremented. In the second pass, the
-waiter->task is then cleared and they are put into wake_q to be woken
-up later.
-
-Signed-off-by: Waiman Long <longman@redhat.com>
-Acked-by: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: Davidlohr Bueso <dave@stgolabs.net>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Tim Chen <tim.c.chen@linux.intel.com>
-Cc: Will Deacon <will.deacon@arm.com>
-Cc: huang ying <huang.ying.caritas@gmail.com>
-Fixes: 70800c3c0cc5 ("locking/rwsem: Scan the wait_list for readers only once")
-Link: http://lkml.kernel.org/r/20190428212557.13482-2-longman@redhat.com
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- kernel/locking/rwsem-xadd.c | 44 +++++++++++++++++++++++++------------
- 1 file changed, 30 insertions(+), 14 deletions(-)
-
-diff --git a/kernel/locking/rwsem-xadd.c b/kernel/locking/rwsem-xadd.c
-index be06c45cbe4f9..0cdbb636e3163 100644
---- a/kernel/locking/rwsem-xadd.c
-+++ b/kernel/locking/rwsem-xadd.c
-@@ -127,6 +127,7 @@ static void __rwsem_mark_wake(struct rw_semaphore *sem,
- {
- 	struct rwsem_waiter *waiter, *tmp;
- 	long oldcount, woken = 0, adjustment = 0;
-+	struct list_head wlist;
- 
- 	/*
- 	 * Take a peek at the queue head waiter such that we can determine
-@@ -185,18 +186,42 @@ static void __rwsem_mark_wake(struct rw_semaphore *sem,
- 	 * of the queue. We know that woken will be at least 1 as we accounted
- 	 * for above. Note we increment the 'active part' of the count by the
- 	 * number of readers before waking any processes up.
-+	 *
-+	 * We have to do wakeup in 2 passes to prevent the possibility that
-+	 * the reader count may be decremented before it is incremented. It
-+	 * is because the to-be-woken waiter may not have slept yet. So it
-+	 * may see waiter->task got cleared, finish its critical section and
-+	 * do an unlock before the reader count increment.
-+	 *
-+	 * 1) Collect the read-waiters in a separate list, count them and
-+	 *    fully increment the reader count in rwsem.
-+	 * 2) For each waiters in the new list, clear waiter->task and
-+	 *    put them into wake_q to be woken up later.
- 	 */
--	list_for_each_entry_safe(waiter, tmp, &sem->wait_list, list) {
--		struct task_struct *tsk;
--
-+	list_for_each_entry(waiter, &sem->wait_list, list) {
- 		if (waiter->type == RWSEM_WAITING_FOR_WRITE)
- 			break;
- 
- 		woken++;
--		tsk = waiter->task;
-+	}
-+	list_cut_before(&wlist, &sem->wait_list, &waiter->list);
-+
-+	adjustment = woken * RWSEM_ACTIVE_READ_BIAS - adjustment;
-+	if (list_empty(&sem->wait_list)) {
-+		/* hit end of list above */
-+		adjustment -= RWSEM_WAITING_BIAS;
-+	}
-+
-+	if (adjustment)
-+		atomic_long_add(adjustment, &sem->count);
-+
-+	/* 2nd pass */
-+	list_for_each_entry_safe(waiter, tmp, &wlist, list) {
-+		struct task_struct *tsk;
- 
-+		tsk = waiter->task;
- 		get_task_struct(tsk);
--		list_del(&waiter->list);
-+
- 		/*
- 		 * Ensure calling get_task_struct() before setting the reader
- 		 * waiter to nil such that rwsem_down_read_failed() cannot
-@@ -212,15 +237,6 @@ static void __rwsem_mark_wake(struct rw_semaphore *sem,
- 		/* wake_q_add() already take the task ref */
- 		put_task_struct(tsk);
- 	}
--
--	adjustment = woken * RWSEM_ACTIVE_READ_BIAS - adjustment;
--	if (list_empty(&sem->wait_list)) {
--		/* hit end of list above */
--		adjustment -= RWSEM_WAITING_BIAS;
--	}
--
--	if (adjustment)
--		atomic_long_add(adjustment, &sem->count);
- }
- 
- /*
--- 
-2.20.1
-
-
-
+Thanks
+Vivek
