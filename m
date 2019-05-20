@@ -2,116 +2,133 @@ Return-Path: <SRS0=lq4r=TU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF2C9C04AB4
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 00:04:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2CF7C04AB4
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 00:11:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BD8DD20815
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 00:04:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="iB3S1IwJ"
+	by mail.kernel.org (Postfix) with ESMTP id 91EB420675
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 00:11:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1558311064;
+	bh=ViChPQlVCmuJP4DeAj0GffvTOE0giQmWa+adK7cNeC8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=w6LsHQH5ZKjONph7OmmtyeaGB0cvxxfkZuyfP1PM83xCl0sjbL9d5gNvBNEDDsztn
+	 Sm7pP64Wusi/NmUcotWIPi0CQT7vZJbsqb0Av7SgtP1xTWWkZ8dRJ5g47rHV/xTZeR
+	 7L4Aa73Blg7rdEqL+WjK4OmN2x66jItFk61LlRI8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729526AbfETAEm (ORCPT
+        id S1729666AbfETALD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 19 May 2019 20:04:42 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:43469 "EHLO ozlabs.org"
+        Sun, 19 May 2019 20:11:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41330 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727720AbfETAEl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 19 May 2019 20:04:41 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        id S1727391AbfETALD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 19 May 2019 20:11:03 -0400
+Received: from localhost (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 456fK20cjwz9s3l;
-        Mon, 20 May 2019 10:04:38 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1558310678;
-        bh=pZcgB5aQrClEmkJbHCnZA6xWxdkeqKTCyUtTxpH7sYo=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=iB3S1IwJZiOzvGM5FdZcY27eyAoaF+65n6TlJ9euu6Of0clySD0G5GeGZiKE5MO6F
-         UQfUFzXDeuXwYsiQiyqrMTyA0VCFuDSvvqvMaxitNuH2RXnRw8QAWVCr4xw/DbBwy9
-         e5HAgj4xLTwORdq7uoJrFsQToiVc6qDVVbBBcvYIYrrISDVm/Vli3Y4SgMmOuK0d39
-         QSeqHHgN7e+BuCXLsDlkiTDFhGmmWBryXldImwetipuacYwbj2G9CVdUujkNsiZecc
-         /nW83IIFnhInicDqmKjVeZcUJ9Gsb0wBOY+yDHoDTLSRyjrNC+bFuwxGz+teBnPe7b
-         frLaXys4o9xxQ==
-Date:   Mon, 20 May 2019 10:04:37 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc:     linux-kbuild@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Arnd Bergmann <arnd@arndb.de>, Jessica Yu <jeyu@kernel.org>,
-        Lucas De Marchi <lucas.demarchi@intel.com>,
-        Michael Schmitz <schmitzmic@gmail.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Rusty Russell <rusty@rustcorp.com.au>,
-        Kees Cook <keescook@chromium.org>,
-        Bernd Petrovitsch <bernd@petrovitsch.priv.at>,
-        Alexander Kapshuk <alexander.kapshuk@gmail.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Michal Marek <michal.lkml@markovi.net>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3] kbuild: check uniqueness of module names
-Message-ID: <20190520100437.54142214@canb.auug.org.au>
-In-Reply-To: <1558109235-23042-1-git-send-email-yamada.masahiro@socionext.com>
-References: <1558109235-23042-1-git-send-email-yamada.masahiro@socionext.com>
+        by mail.kernel.org (Postfix) with ESMTPSA id 4324020675;
+        Mon, 20 May 2019 00:11:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1558311062;
+        bh=ViChPQlVCmuJP4DeAj0GffvTOE0giQmWa+adK7cNeC8=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=eYKhzaYHJAFt8HVFi1j65Bt//wfJFu6PyyY38G1ZMQAY1oWrDJ4Bw6ptsFHP4XAqV
+         o5uO3L6oPs3Rvl/5+wiIXztNFHaUzyc6f2nOKhLL4OWLeZQMVFpF7m+PtRjj1A1eTs
+         OerN6JTvCtpn+0NxKY0vivAm+QQXpIFPoi3bZz6E=
+Date:   Sun, 19 May 2019 20:11:01 -0400
+From:   Sasha Levin <sashal@kernel.org>
+To:     Nathan Chancellor <natechancellor@gmail.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Thomas Haller <thaller@redhat.com>,
+        Hangbin Liu <liuhangbin@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org
+Subject: Re: [PATCH 4.9 41/51] fib_rules: return 0 directly if an exactly
+ same rule exists when NLM_F_EXCL not supplied
+Message-ID: <20190520001101.GE11972@sasha-vm>
+References: <20190515090616.669619870@linuxfoundation.org>
+ <20190515090628.066392616@linuxfoundation.org>
+ <20190519154348.GA113991@archlinux-epyc>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/3dAX7L8JPnsN0p+_o1m6Pq5"; protocol="application/pgp-signature"
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20190519154348.GA113991@archlinux-epyc>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/3dAX7L8JPnsN0p+_o1m6Pq5
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Sun, May 19, 2019 at 08:43:48AM -0700, Nathan Chancellor wrote:
+>On Wed, May 15, 2019 at 12:56:16PM +0200, Greg Kroah-Hartman wrote:
+>> From: Hangbin Liu <liuhangbin@gmail.com>
+>>
+>> [ Upstream commit e9919a24d3022f72bcadc407e73a6ef17093a849 ]
+>>
+>> With commit 153380ec4b9 ("fib_rules: Added NLM_F_EXCL support to
+>> fib_nl_newrule") we now able to check if a rule already exists. But this
+>> only works with iproute2. For other tools like libnl, NetworkManager,
+>> it still could add duplicate rules with only NLM_F_CREATE flag, like
+>>
+>> [localhost ~ ]# ip rule
+>> 0:      from all lookup local
+>> 32766:  from all lookup main
+>> 32767:  from all lookup default
+>> 100000: from 192.168.7.5 lookup 5
+>> 100000: from 192.168.7.5 lookup 5
+>>
+>> As it doesn't make sense to create two duplicate rules, let's just return
+>> 0 if the rule exists.
+>>
+>> Fixes: 153380ec4b9 ("fib_rules: Added NLM_F_EXCL support to fib_nl_newrule")
+>> Reported-by: Thomas Haller <thaller@redhat.com>
+>> Signed-off-by: Hangbin Liu <liuhangbin@gmail.com>
+>> Signed-off-by: David S. Miller <davem@davemloft.net>
+>> Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+>> ---
+>>  net/core/fib_rules.c |    6 +++---
+>>  1 file changed, 3 insertions(+), 3 deletions(-)
+>>
+>> --- a/net/core/fib_rules.c
+>> +++ b/net/core/fib_rules.c
+>> @@ -429,9 +429,9 @@ int fib_nl_newrule(struct sk_buff *skb,
+>>  	if (rule->l3mdev && rule->table)
+>>  		goto errout_free;
+>>
+>> -	if ((nlh->nlmsg_flags & NLM_F_EXCL) &&
+>> -	    rule_exists(ops, frh, tb, rule)) {
+>> -		err = -EEXIST;
+>> +	if (rule_exists(ops, frh, tb, rule)) {
+>> +		if (nlh->nlmsg_flags & NLM_F_EXCL)
+>> +			err = -EEXIST;
+>>  		goto errout_free;
+>>  	}
+>>
+>>
+>>
+>
+>Hi all,
+>
+>This commit is causing issues on Android devices when Wi-Fi and mobile
+>data are both enabled. The device will do a soft reboot consistently.
+>So far, I've had reports on the Pixel 3 XL, OnePlus 6, Pocophone, and
+>Note 9 and I can reproduce on my OnePlus 6.
 
-Hi Masahiro,
+Is this something that happens with Linus's tree as well? or is this a
+backport issue?
 
-On Sat, 18 May 2019 01:07:15 +0900 Masahiro Yamada <yamada.masahiro@socione=
-xt.com> wrote:
->=20
-> +++ b/scripts/modules-check.sh
-> @@ -0,0 +1,16 @@
-> +#!/bin/sh
-> +# SPDX-License-Identifier: GPL-2.0
-> +
-> +set -e
-> +
-> +# Check uniqueness of module names
-> +check_same_name_modules()
-> +{
-> +	for m in $(sed 's:.*/::' modules.order modules.builtin | sort | uniq -d)
-> +	do
-> +		echo "warning: same basename if the following are built as modules:" >=
-&2
-> +		sed "/\/$m/!d;s:^kernel/:  :" modules.order modules.builtin >&2
+>Sorry for taking so long to report this, I just figured out how to
+>reproduce it today and I didn't want to report it without that.
 
-(bringing out my bike shed paint brush :-))
-this could be
-	sed -n "/\/$m/s:^kernel/:  :p" ...
+FWIW, if you see anything suspicious with -stable patches just let us
+know separately from a "better" bug report for upstream, then we can at
+least temporary pull it out of the stable queue while the issue is being
+addressed.
 
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/3dAX7L8JPnsN0p+_o1m6Pq5
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAlzh7xUACgkQAVBC80lX
-0GxtuQf/XV73OxF/ig8/6h1gF16geBlX31hBIHbQ/lqzfZ02xQ98N6dzkDP72cvK
-HAblUyWj3ZeGB6x4OASl1wCNHdRTFr5ex/422Si65InuHCelpVBYRqq6PfMljCKg
-pAaDVJ5+IUmlkMN/gSsvhJCdEaZ+5IS/C3k7TH2P1XNLaTe9C+LHpWNQfKeypmIZ
-MuFd9ufZ2bdSRUhmmoctBfDv35ErEJu9I4+bup2/E4K/AkTvv6Ux0s7EAPJYnP3Z
-c97dMHwaMUQoHlgmTHTVTCWP7ckpc/jPleu8Yyr7SQlzOPt+UIqsqKnDcb5ioAGZ
-YbrwTkP7ORCZv2fSxLpA/1V9/e1MKQ==
-=ycTi
------END PGP SIGNATURE-----
-
---Sig_/3dAX7L8JPnsN0p+_o1m6Pq5--
+--
+Thanks,
+Sasha
