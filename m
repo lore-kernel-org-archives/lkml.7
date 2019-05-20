@@ -2,196 +2,355 @@ Return-Path: <SRS0=lq4r=TU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_NEOMUTT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFFB2C04AAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 14:09:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3860C04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 14:10:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 842B5213F2
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 14:09:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 93ADA216C4
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 14:10:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="JgTjQXuB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732652AbfETOJo (ORCPT
+        id S1732972AbfETOKw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 10:09:44 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:39213 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731235AbfETOJo (ORCPT
+        Mon, 20 May 2019 10:10:52 -0400
+Received: from mailout2.w1.samsung.com ([210.118.77.12]:37722 "EHLO
+        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731278AbfETOKw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 10:09:44 -0400
-Received: by mail-wm1-f67.google.com with SMTP id n25so12795701wmk.4
-        for <linux-kernel@vger.kernel.org>; Mon, 20 May 2019 07:09:42 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=lPfvXgySRybnahLKkw4smuzyEidEfCcqkiUhMgN/vwA=;
-        b=lPlm4Qca/C0ZrUNoW3wCXQXGIILzfI6JVejYY2swdE1KARX34kn/ccpTP2JxnymLrO
-         DalfJrywtEe8fts7xlCAE7UXk2YX8K5TD2C7ge0HpAo7T14w+1IWDQ9EQvdERA6EXO2S
-         quq88onV9y3SZCZGodOQfKcyMpO5eGou9Nv7uMo5juXHsu0MhpVm7XRuIo1HSfH1PF90
-         endI8Wlg/IxrBhqYLSjmB60S8e20yoW40RNy4gApX67HnbggHxhzGxE0/sUDAG/QkgHT
-         00rnBwvPjeWHcgTeKJowHfJj/3PEtBragUxmE5GpaH//kOWk34vuBrtsQCtioS01NPvM
-         jGMw==
-X-Gm-Message-State: APjAAAVGFYdxQxGHzBDLHF9UYW1GpAHEMe9FIW+ZiShR6rpg+SuJ3FsA
-        nEJ1chGrXa3fILVXlKHKcrWUCw==
-X-Google-Smtp-Source: APXvYqz5GtHhBy4enUvwmz8hwk6SwMqQAZEOLjJc2ksdwfdlVMTlaXmqw84HWQ8a69KXG5cbK4bQ/w==
-X-Received: by 2002:a1c:9904:: with SMTP id b4mr31424112wme.1.1558361381659;
-        Mon, 20 May 2019 07:09:41 -0700 (PDT)
-Received: from steredhat (host151-251-static.12-87-b.business.telecomitalia.it. [87.12.251.151])
-        by smtp.gmail.com with ESMTPSA id i18sm9268216wml.33.2019.05.20.07.09.39
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 20 May 2019 07:09:40 -0700 (PDT)
-Date:   Mon, 20 May 2019 16:09:38 +0200
-From:   Stefano Garzarella <sgarzare@redhat.com>
-To:     Jason Wang <jasowang@redhat.com>
-Cc:     netdev@vger.kernel.org, "David S. Miller" <davem@davemloft.net>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        virtualization@lists.linux-foundation.org,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        Stefan Hajnoczi <stefanha@redhat.com>
-Subject: Re: [PATCH v2 0/8] vsock/virtio: optimizations to increase the
- throughput
-Message-ID: <20190520140938.f26g6jsepfpwspsy@steredhat>
-References: <20190510125843.95587-1-sgarzare@redhat.com>
- <08c7e0aa-d90d-e0ff-a68c-0e182d077ab2@redhat.com>
+        Mon, 20 May 2019 10:10:52 -0400
+Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
+        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20190520141049euoutp0209164c07c8b998ffc04ce471a1471881~gaXtJeFhG2037320373euoutp02d
+        for <linux-kernel@vger.kernel.org>; Mon, 20 May 2019 14:10:49 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20190520141049euoutp0209164c07c8b998ffc04ce471a1471881~gaXtJeFhG2037320373euoutp02d
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1558361449;
+        bh=ztZxQiy5snHcIRSug4O8b3KM0Ryq/Oaqo4hrWb/28l0=;
+        h=To:Cc:From:Subject:Date:References:From;
+        b=JgTjQXuB3kKpGX5eF+vO/+UdczFHaTqdrV9t3bNWCY2ayrAI8my8nEZ9HDtZprnZt
+         yzNK7IF4n8xkqxvQK7ASuUr7/jX5TopBEI0FGTK1PvtzTRiGifcDzdZlx3f1zco3Lg
+         kOi1saP8KMX31i24gVvuDioCK1OwKfQnenBupdxk=
+Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
+        20190520141048eucas1p24dfb9080f557e4872a674883cd1c36ee~gaXscPbUl1793417934eucas1p26;
+        Mon, 20 May 2019 14:10:48 +0000 (GMT)
+Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
+        eusmges3new.samsung.com (EUCPMTA) with SMTP id FF.FB.04325.865B2EC5; Mon, 20
+        May 2019 15:10:48 +0100 (BST)
+Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
+        20190520141047eucas1p2c6006d1ecfc3eb287b6b33d131f66180~gaXrqv1Bz1793417934eucas1p24;
+        Mon, 20 May 2019 14:10:47 +0000 (GMT)
+Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
+        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20190520141047eusmtrp2eab44ba721b56720dbabf6cd3a7d6977~gaXrcpmtN2432424324eusmtrp2R;
+        Mon, 20 May 2019 14:10:47 +0000 (GMT)
+X-AuditID: cbfec7f5-b8fff700000010e5-62-5ce2b568f2e1
+Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
+        eusmgms2.samsung.com (EUCPMTA) with SMTP id BF.C0.04140.765B2EC5; Mon, 20
+        May 2019 15:10:47 +0100 (BST)
+Received: from [106.120.51.71] (unknown [106.120.51.71]) by
+        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20190520141047eusmtip2f5ddece065d6a28547c93bcca598f7c3~gaXrDmOJA3180431804eusmtip2U;
+        Mon, 20 May 2019 14:10:47 +0000 (GMT)
+To:     Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Andrew Donnellan <ajd@linux.ibm.com>,
+        Eric Piel <eric.piel@tremplin-utc.net>,
+        Frank Haverkamp <haver@linux.ibm.com>,
+        Frederic Barrat <fbarrat@linux.ibm.com>,
+        =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>,
+        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+From:   Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Subject: [PATCH] misc: remove redundant 'default n' from Kconfig-s
+Message-ID: <1ab818ae-4d9f-d17a-f11f-7caaa5bf98bc@samsung.com>
+Date:   Mon, 20 May 2019 16:10:46 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+        Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <08c7e0aa-d90d-e0ff-a68c-0e182d077ab2@redhat.com>
-User-Agent: NeoMutt/20180716
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA01Se0hTcRjtt3t3d13NrtPwwzJrVGaQ5gO8VNqD/rgEYVR/mAl1y6uTfLH5
+        TAhRMbECH5k6ZuYqTROd03xRKk5mJqZphiim2EQNh5KPrKXmvEr+d77vO4dzDnwkJm0ROpCh
+        EdGcIoINkxFivM7wu+e4/O144IkkvQ0989KA0SvZBhGtX+nD6cqUIoJOeVFF0BPLwwK6v0lN
+        0OZfq0J6afIjOmvFmP9kIyZT04qYlsIKEdOTX4wYVVozwfSm7mTmdfsviwLEp4O4sNBYTuHm
+        e0ssL2noJqL6z8RrdNeT0BuPDGRFAuUFA+/bBRlITEqp1whqRnoxflhAULmkw/lhHsH042pi
+        S6JPNQn5QymC4ao5gh9MCBpmzJiFZUddg2dZ5g05Rr0SQHKKSmA5ENRJyHpQjizYljoPmolB
+        kQVLKF8Y7f62YYFThyGjpXiDs4fyh1GDVshzbKCzwIhbMEbZw5CxSMBjJ6g3qTeCA1UngrJ3
+        Uxif9QIMPcrdzG0LPzpqRTzeB2uNRQJeUIlgJX1qU12PoDRndVNxCvQdn9etyXULF6hqcuPX
+        5yD/6QSyrIGyhkGTDR/CGrLr8jB+LYH0NCnPPgLaEi2xZZvRWLYZjYE+4zKeiQ6qtlVTbaum
+        2lZN9T/Dc4SXI3suRhkewik9I7g4VyUbroyJCHG9ExmuQ+tv1bXasdiAmv/ebkMUiWS7JPIn
+        44FSIRurTAhvQ0BiMjuJp/NooFQSxCbc4xSRNxUxYZyyDe0lcZm9JHHH2A0pFcJGc3c5LopT
+        bF0FpJVDEoprPuQj7qlIjm8fq/erbfYKvTLpabxqDHMMONBdPB3Unfc1N3PNtBDsfFTtoa0s
+        9Q41+uA9P7UO44zHp90DwXNRwT5furxZJ12O7fTI/YAAT68Zd41DrEf/7Molvw90YkH0nLrf
+        xfyw0DqktSVvcbbzoqOG/e7P6tU1moJL1e0yXCln3Y9hCiX7DxB5LdpSAwAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrGIsWRmVeSWpSXmKPExsVy+t/xe7rpWx/FGHxYLG3xZskxZou/k46x
+        Wxz+e4nFYl3zfDaL5sXr2Sye/rjNZHF51xw2i9/f/7FafHt+itGB0+P3r0mMHhMWHWD02D93
+        DbvH+RkLGT1mte1j87jQwu3xeZNcAHuUnk1RfmlJqkJGfnGJrVK0oYWRnqGlhZ6RiaWeobF5
+        rJWRqZK+nU1Kak5mWWqRvl2CXsayHWfZCi7bVyzaFNnAuNqoi5GTQ0LAROJwy1vWLkYuDiGB
+        pYwSj5/dB3I4gBIyEsfXl0HUCEv8udbFBlHzmlHi9f7jTCA1IgIhEvsPqYDEmQWWMkn8mTeZ
+        CaSBTcBKYmL7KkYQW1jASWLR0xvsIDavgJ3E/bP32EBsFgFVia79C8FqRAUiJM68X8ECUSMo
+        cXLmEzCbWUAdaOYlZghbXOLWk/lMELa8xPa3c5gnMArMQtIyC0nLLCQts5C0LGBkWcUoklpa
+        nJueW2ykV5yYW1yal66XnJ+7iREYZ9uO/dyyg7HrXfAhRgEORiUe3owpj2KEWBPLiitzDzFK
+        cDArifAaq9+PEeJNSaysSi3Kjy8qzUktPsRoCvTQRGYp0eR8YArIK4k3NDU0t7A0NDc2Nzaz
+        UBLn7RA4GCMkkJ5YkpqdmlqQWgTTx8TBKdXAWNZcVHtoRsQflyeGta8bamuT7f/zL+1eEFVz
+        Xca298L2eQv0K5ZtyHtfqnvGNU3js8Il14ZtRzPv7N7j47OV4dtMxlWT08u8KvQb5rxXU2z0
+        EA3V/v1mUes3lX2+2rqPbZeu2VF1dL99bc1bh1dPGB7Lqx2buWnb2h6zXysnOrt1HctnqlB/
+        qMRSnJFoqMVcVJwIAEMUAUvJAgAA
+X-CMS-MailID: 20190520141047eucas1p2c6006d1ecfc3eb287b6b33d131f66180
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20190520141047eucas1p2c6006d1ecfc3eb287b6b33d131f66180
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20190520141047eucas1p2c6006d1ecfc3eb287b6b33d131f66180
+References: <CGME20190520141047eucas1p2c6006d1ecfc3eb287b6b33d131f66180@eucas1p2.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 13, 2019 at 05:33:40PM +0800, Jason Wang wrote:
-> 
-> On 2019/5/10 下午8:58, Stefano Garzarella wrote:
-> > While I was testing this new series (v2) I discovered an huge use of memory
-> > and a memory leak in the virtio-vsock driver in the guest when I sent
-> > 1-byte packets to the guest.
-> > 
-> > These issues are present since the introduction of the virtio-vsock
-> > driver. I added the patches 1 and 2 to fix them in this series in order
-> > to better track the performance trends.
-> > 
-> > v1: https://patchwork.kernel.org/cover/10885431/
-> > 
-> > v2:
-> > - Add patch 1 to limit the memory usage
-> > - Add patch 2 to avoid memory leak during the socket release
-> > - Add patch 3 to fix locking of fwd_cnt and buf_alloc
-> > - Patch 4: fix 'free_space' type (u32 instead of s64) [Stefan]
-> > - Patch 5: Avoid integer underflow of iov_len [Stefan]
-> > - Patch 5: Fix packet capture in order to see the exact packets that are
-> >             delivered. [Stefan]
-> > - Add patch 8 to make the RX buffer size tunable [Stefan]
-> > 
-> > Below are the benchmarks step by step. I used iperf3 [1] modified with VSOCK
-> > support.
-> > As Micheal suggested in the v1, I booted host and guest with 'nosmap', and I
-> > added a column with virtio-net+vhost-net performance.
-> > 
-> > A brief description of patches:
-> > - Patches 1+2: limit the memory usage with an extra copy and avoid memory leak
-> > - Patches 3+4: fix locking and reduce the number of credit update messages sent
-> >                 to the transmitter
-> > - Patches 5+6: allow the host to split packets on multiple buffers and use
-> >                 VIRTIO_VSOCK_MAX_PKT_BUF_SIZE as the max packet size allowed
-> > - Patches 7+8: increase RX buffer size to 64 KiB
-> > 
-> >                      host -> guest [Gbps]
-> > pkt_size before opt  p 1+2    p 3+4    p 5+6    p 7+8       virtio-net + vhost
-> >                                                                       TCP_NODELAY
-> > 64         0.068     0.063    0.130    0.131    0.128         0.188     0.187
-> > 256        0.274     0.236    0.392    0.338    0.282         0.749     0.654
-> > 512        0.531     0.457    0.862    0.725    0.602         1.419     1.414
-> > 1K         0.954     0.827    1.591    1.598    1.548         2.599     2.640
-> > 2K         1.783     1.543    3.731    3.637    3.469         4.530     4.754
-> > 4K         3.332     3.436    7.164    7.124    6.494         7.738     7.696
-> > 8K         5.792     5.530   11.653   11.787   11.444        12.307    11.850
-> > 16K        8.405     8.462   16.372   16.855   17.562        16.936    16.954
-> > 32K       14.208    13.669   18.945   20.009   23.128        21.980    23.015
-> > 64K       21.082    18.893   20.266   20.903   30.622        27.290    27.383
-> > 128K      20.696    20.148   20.112   21.746   32.152        30.446    30.990
-> > 256K      20.801    20.589   20.725   22.685   34.721        33.151    32.745
-> > 512K      21.220    20.465   20.432   22.106   34.496        36.847    31.096
-> > 
-> >                      guest -> host [Gbps]
-> > pkt_size before opt  p 1+2    p 3+4    p 5+6    p 7+8       virtio-net + vhost
-> >                                                                       TCP_NODELAY
-> > 64         0.089     0.091    0.120    0.115    0.117         0.274     0.272
-> > 256        0.352     0.354    0.452    0.445    0.451         1.085     1.136
-> > 512        0.705     0.704    0.893    0.858    0.898         2.131     1.882
-> > 1K         1.394     1.433    1.721    1.669    1.691         3.984     3.576
-> > 2K         2.818     2.874    3.316    3.249    3.303         6.719     6.359
-> > 4K         5.293     5.397    6.129    5.933    6.082        10.105     9.860
-> > 8K         8.890     9.151   10.990   10.545   10.519        15.239    14.868
-> > 16K       11.444    11.018   12.074   15.255   15.577        20.551    20.848
-> > 32K       11.229    10.875   10.857   24.401   25.227        26.294    26.380
-> > 64K       10.832    10.545   10.816   39.487   39.616        34.996    32.041
-> > 128K      10.435    10.241   10.500   39.813   40.012        38.379    35.055
-> > 256K      10.263     9.866    9.845   34.971   35.143        36.559    37.232
-> > 512K      10.224    10.060   10.092   35.469   34.627        34.963    33.401
-> > 
-> > As Stefan suggested in the v1, this time I measured also the efficiency in this
-> > way:
-> >      efficiency = Mbps / (%CPU_Host + %CPU_Guest)
-> > 
-> > The '%CPU_Guest' is taken inside the VM. I know that it is not the best way,
-> > but it's provided for free from iperf3 and could be an indication.
-> > 
-> >          host -> guest efficiency [Mbps / (%CPU_Host + %CPU_Guest)]
-> > pkt_size before opt  p 1+2    p 3+4    p 5+6    p 7+8       virtio-net + vhost
-> >                                                                       TCP_NODELAY
-> > 64          0.94      0.59     3.96     4.06     4.09          2.82      2.11
-> > 256         2.62      2.50     6.45     6.09     5.81          9.64      8.73
-> > 512         5.16      4.87    13.16    12.39    11.67         17.83     17.76
-> > 1K          9.16      8.85    24.98    24.97    25.01         32.57     32.04
-> > 2K         17.41     17.03    49.09    48.59    49.22         55.31     57.14
-> > 4K         32.99     33.62    90.80    90.98    91.72         91.79     91.40
-> > 8K         58.51     59.98   153.53   170.83   167.31        137.51    132.85
-> > 16K        89.32     95.29   216.98   264.18   260.95        176.05    176.05
-> > 32K       152.94    167.10   285.75   387.02   360.81        215.49    226.30
-> > 64K       250.38    307.20   317.65   489.53   472.70        238.97    244.27
-> > 128K      327.99    335.24   335.76   523.71   486.41        253.29    260.86
-> > 256K      327.06    334.24   338.64   533.76   509.85        267.78    266.22
-> > 512K      337.36    330.61   334.95   512.90   496.35        280.42    241.43
-> > 
-> >          guest -> host efficiency [Mbps / (%CPU_Host + %CPU_Guest)]
-> > pkt_size before opt  p 1+2    p 3+4    p 5+6    p 7+8       virtio-net + vhost
-> >                                                                       TCP_NODELAY
-> > 64          0.90      0.91     1.37     1.32     1.35          2.15      2.13
-> > 256         3.59      3.55     5.23     5.19     5.29          8.50      8.89
-> > 512         7.19      7.08    10.21     9.95    10.38         16.74     14.71
-> > 1K         14.15     14.34    19.85    19.06    19.33         31.44     28.11
-> > 2K         28.44     29.09    37.78    37.18    37.49         53.07     50.63
-> > 4K         55.37     57.60    71.02    69.27    70.97         81.56     79.32
-> > 8K        105.58    100.45   111.95   124.68   123.61        120.85    118.66
-> > 16K       141.63    138.24   137.67   187.41   190.20        160.43    163.00
-> > 32K       147.56    143.09   138.48   296.41   301.04        214.64    223.94
-> > 64K       144.81    143.27   138.49   433.98   462.26        298.86    269.71
-> > 128K      150.14    147.99   146.85   511.36   514.29        350.17    298.09
-> > 256K      156.69    152.25   148.69   542.19   549.97        326.42    333.32
-> > 512K      157.29    153.35   152.22   546.52   533.24        315.55    302.27
-> > 
-> > [1] https://github.com/stefano-garzarella/iperf/
-> 
-> 
-> Hi:
-> 
-> Do you have any explanation that vsock is better here? Is this because of
-> the mergeable buffer? If you, we need test with mrg_rxbuf=off.
-> 
+'default n' is the default value for any bool or tristate Kconfig
+setting so there is no need to write it explicitly.
 
-Hi Jason,
-I tried to disable the mergeable buffer but I had even worst performance
-with virtio-net.
+Also since commit f467c5640c29 ("kconfig: only write '# CONFIG_FOO
+is not set' for visible symbols") the Kconfig behavior is the same
+regardless of 'default n' being present or not:
 
-Do you think the differences could be related to the TCP/IP stack?
+    ...
+    One side effect of (and the main motivation for) this change is making
+    the following two definitions behave exactly the same:
+    
+        config FOO
+                bool
+    
+        config FOO
+                bool
+                default n
+    
+    With this change, neither of these will generate a
+    '# CONFIG_FOO is not set' line (assuming FOO isn't selected/implied).
+    That might make it clearer to people that a bare 'default n' is
+    redundant.
+    ...
 
-Thanks,
-Stefano
+Signed-off-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+---
+ drivers/misc/Kconfig              |   10 ----------
+ drivers/misc/altera-stapl/Kconfig |    1 -
+ drivers/misc/c2port/Kconfig       |    2 --
+ drivers/misc/cb710/Kconfig        |    1 -
+ drivers/misc/cxl/Kconfig          |    3 ---
+ drivers/misc/echo/Kconfig         |    1 -
+ drivers/misc/genwqe/Kconfig       |    1 -
+ drivers/misc/lis3lv02d/Kconfig    |    2 --
+ drivers/misc/ocxl/Kconfig         |    1 -
+ 9 files changed, 22 deletions(-)
+
+Index: b/drivers/misc/Kconfig
+===================================================================
+--- a/drivers/misc/Kconfig
++++ b/drivers/misc/Kconfig
+@@ -8,7 +8,6 @@ config SENSORS_LIS3LV02D
+ 	tristate
+ 	depends on INPUT
+ 	select INPUT_POLLDEV
+-	default n
+ 
+ config AD525X_DPOT
+ 	tristate "Analog Devices Digital Potentiometers"
+@@ -61,7 +60,6 @@ config ATMEL_TCLIB
+ 
+ config DUMMY_IRQ
+ 	tristate "Dummy IRQ handler"
+-	default n
+ 	---help---
+ 	  This module accepts a single 'irq' parameter, which it should register for.
+ 	  The sole purpose of this module is to help with debugging of systems on
+@@ -117,7 +115,6 @@ config PHANTOM
+ config INTEL_MID_PTI
+ 	tristate "Parallel Trace Interface for MIPI P1149.7 cJTAG standard"
+ 	depends on PCI && TTY && (X86_INTEL_MID || COMPILE_TEST)
+-	default n
+ 	help
+ 	  The PTI (Parallel Trace Interface) driver directs
+ 	  trace data routed from various parts in the system out
+@@ -193,7 +190,6 @@ config ATMEL_SSC
+ 
+ config ENCLOSURE_SERVICES
+ 	tristate "Enclosure Services"
+-	default n
+ 	help
+ 	  Provides support for intelligent enclosures (bays which
+ 	  contain storage devices).  You also need either a host
+@@ -217,7 +213,6 @@ config SGI_XP
+ config CS5535_MFGPT
+ 	tristate "CS5535/CS5536 Geode Multi-Function General Purpose Timer (MFGPT) support"
+ 	depends on MFD_CS5535
+-	default n
+ 	help
+ 	  This driver provides access to MFGPT functionality for other
+ 	  drivers that need timers.  MFGPTs are available in the CS5535 and
+@@ -250,7 +245,6 @@ config CS5535_CLOCK_EVENT_SRC
+ config HP_ILO
+ 	tristate "Channel interface driver for the HP iLO processor"
+ 	depends on PCI
+-	default n
+ 	help
+ 	  The channel interface driver allows applications to communicate
+ 	  with iLO management processors present on HP ProLiant servers.
+@@ -285,7 +279,6 @@ config QCOM_FASTRPC
+ config SGI_GRU
+ 	tristate "SGI GRU driver"
+ 	depends on X86_UV && SMP
+-	default n
+ 	select MMU_NOTIFIER
+ 	---help---
+ 	The GRU is a hardware resource located in the system chipset. The GRU
+@@ -300,7 +293,6 @@ config SGI_GRU
+ config SGI_GRU_DEBUG
+ 	bool  "SGI GRU driver debug"
+ 	depends on SGI_GRU
+-	default n
+ 	---help---
+ 	This option enables additional debugging code for the SGI GRU driver.
+ 	If you are unsure, say N.
+@@ -358,7 +350,6 @@ config SENSORS_BH1770
+ config SENSORS_APDS990X
+ 	 tristate "APDS990X combined als and proximity sensors"
+ 	 depends on I2C
+-	 default n
+ 	 ---help---
+ 	   Say Y here if you want to build a driver for Avago APDS990x
+ 	   combined ambient light and proximity sensor chip.
+@@ -386,7 +377,6 @@ config DS1682
+ config SPEAR13XX_PCIE_GADGET
+ 	bool "PCIe gadget support for SPEAr13XX platform"
+ 	depends on ARCH_SPEAR13XX && BROKEN
+-	default n
+ 	help
+ 	 This option enables gadget support for PCIe controller. If
+ 	 board file defines any controller as PCIe endpoint then a sysfs
+Index: b/drivers/misc/altera-stapl/Kconfig
+===================================================================
+--- a/drivers/misc/altera-stapl/Kconfig
++++ b/drivers/misc/altera-stapl/Kconfig
+@@ -4,6 +4,5 @@ comment "Altera FPGA firmware download m
+ config ALTERA_STAPL
+ 	tristate "Altera FPGA firmware download module"
+ 	depends on I2C
+-	default n
+ 	help
+ 	  An Altera FPGA module. Say Y when you want to support this tool.
+Index: b/drivers/misc/c2port/Kconfig
+===================================================================
+--- a/drivers/misc/c2port/Kconfig
++++ b/drivers/misc/c2port/Kconfig
+@@ -4,7 +4,6 @@
+ 
+ menuconfig C2PORT
+ 	tristate "Silicon Labs C2 port support"
+-	default n
+ 	help
+ 	  This option enables support for Silicon Labs C2 port used to
+ 	  program Silicon micro controller chips (and other 8051 compatible).
+@@ -23,7 +22,6 @@ if C2PORT
+ config C2PORT_DURAMAR_2150
+ 	tristate "C2 port support for Eurotech's Duramar 2150"
+ 	depends on X86
+-	default n
+ 	help
+ 	  This option enables C2 support for the Eurotech's Duramar 2150
+ 	  on board micro controller.
+Index: b/drivers/misc/cb710/Kconfig
+===================================================================
+--- a/drivers/misc/cb710/Kconfig
++++ b/drivers/misc/cb710/Kconfig
+@@ -14,7 +14,6 @@ config CB710_CORE
+ config CB710_DEBUG
+ 	bool "Enable driver debugging"
+ 	depends on CB710_CORE != n
+-	default n
+ 	help
+ 	  This is an option for use by developers; most people should
+ 	  say N here.  This adds a lot of debugging output to dmesg.
+Index: b/drivers/misc/cxl/Kconfig
+===================================================================
+--- a/drivers/misc/cxl/Kconfig
++++ b/drivers/misc/cxl/Kconfig
+@@ -4,16 +4,13 @@
+ 
+ config CXL_BASE
+ 	bool
+-	default n
+ 	select PPC_COPRO_BASE
+ 
+ config CXL_AFU_DRIVER_OPS
+ 	bool
+-	default n
+ 
+ config CXL_LIB
+ 	bool
+-	default n
+ 
+ config CXL
+ 	tristate "Support for IBM Coherent Accelerators (CXL)"
+Index: b/drivers/misc/echo/Kconfig
+===================================================================
+--- a/drivers/misc/echo/Kconfig
++++ b/drivers/misc/echo/Kconfig
+@@ -1,6 +1,5 @@
+ config ECHO
+ 	tristate "Line Echo Canceller support"
+-	default n
+ 	---help---
+ 	  This driver provides line echo cancelling support for mISDN and
+ 	  Zaptel drivers.
+Index: b/drivers/misc/genwqe/Kconfig
+===================================================================
+--- a/drivers/misc/genwqe/Kconfig
++++ b/drivers/misc/genwqe/Kconfig
+@@ -6,7 +6,6 @@ menuconfig GENWQE
+ 	tristate "GenWQE PCIe Accelerator"
+ 	depends on PCI && 64BIT
+ 	select CRC_ITU_T
+-	default n
+ 	help
+ 	  Enables PCIe card driver for IBM GenWQE accelerators.
+ 	  The user-space interface is described in
+Index: b/drivers/misc/lis3lv02d/Kconfig
+===================================================================
+--- a/drivers/misc/lis3lv02d/Kconfig
++++ b/drivers/misc/lis3lv02d/Kconfig
+@@ -6,7 +6,6 @@ config SENSORS_LIS3_SPI
+ 	tristate "STMicroeletronics LIS3LV02Dx three-axis digital accelerometer (SPI)"
+ 	depends on !ACPI && SPI_MASTER && INPUT
+ 	select SENSORS_LIS3LV02D
+-	default n
+ 	help
+ 	  This driver provides support for the LIS3LV02Dx accelerometer connected
+ 	  via SPI. The accelerometer data is readable via
+@@ -23,7 +22,6 @@ config SENSORS_LIS3_I2C
+ 	tristate "STMicroeletronics LIS3LV02Dx three-axis digital accelerometer (I2C)"
+ 	depends on I2C && INPUT
+ 	select SENSORS_LIS3LV02D
+-	default n
+ 	help
+ 	  This driver provides support for the LIS3LV02Dx accelerometer connected
+ 	  via I2C. The accelerometer data is readable via
+Index: b/drivers/misc/ocxl/Kconfig
+===================================================================
+--- a/drivers/misc/ocxl/Kconfig
++++ b/drivers/misc/ocxl/Kconfig
+@@ -4,7 +4,6 @@
+ 
+ config OCXL_BASE
+ 	bool
+-	default n
+ 	select PPC_COPRO_BASE
+ 
+ config OCXL
