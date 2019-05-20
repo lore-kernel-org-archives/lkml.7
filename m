@@ -2,90 +2,120 @@ Return-Path: <SRS0=lq4r=TU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E2F0C04AAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 10:00:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA525C04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 10:01:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 32C04206B6
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 10:00:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 879F2206B6
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 10:01:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731372AbfETKAt (ORCPT
+        id S1732255AbfETKBR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 06:00:49 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:40809 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730634AbfETKAs (ORCPT
+        Mon, 20 May 2019 06:01:17 -0400
+Received: from 8.mo68.mail-out.ovh.net ([46.105.74.219]:55632 "EHLO
+        8.mo68.mail-out.ovh.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730146AbfETKBR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 06:00:48 -0400
-Received: by mail-wm1-f66.google.com with SMTP id 15so8305345wmg.5
-        for <linux-kernel@vger.kernel.org>; Mon, 20 May 2019 03:00:47 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=cggXkXw7KMDRmClqjubkrp+u9dEPf8Y4XlImClCNB9M=;
-        b=lpWwsWc6wbYed8UH/tJcha+Emz1nNTugCySog0f7EjNMwXXtyrbtM0mwpv7qIEFdy3
-         /zPCqMcInB7nZgUCL9yIQsEhSD3ggPjjqP5054sSDQnZpzbnIf21ojAnqFdmX/4ZMHVe
-         SM1mLbU1NUo8uyGRpgtotIfrJUE/nvAH2lCqb41e4+mxUbKkck6HC1nenkq29r7GBYoa
-         4EsWeQyLBjbgUb7NIOVih9Oov6gozC8djKtxcZKlKV+DWMTxXOcqpi+zg2+ElQeCePkH
-         afM/v58Z/Z995NmDdJYQtcR0xZLFbACKQ4gS/my0RH1jZigxazO2QTk9mMj/pu2dWruE
-         mHPg==
-X-Gm-Message-State: APjAAAWD1pzeRKBA7/89d3KJr7doNsNiPUvfnJhE2i96W/pNzQrPXuT4
-        iJNOSrDCh0ZuTO6XaPqWwzm+I3b0sKw=
-X-Google-Smtp-Source: APXvYqwJSh8pgNUluibV031iwlxskI3nkF4L+TZgKSMcM4ttcWA9XnyT5FF+LnqIc27hKgoLwSjwUw==
-X-Received: by 2002:a1c:7dcf:: with SMTP id y198mr10603176wmc.94.1558346446594;
-        Mon, 20 May 2019 03:00:46 -0700 (PDT)
-Received: from ?IPv6:2001:b07:6468:f312:ac04:eef9:b257:b844? ([2001:b07:6468:f312:ac04:eef9:b257:b844])
-        by smtp.gmail.com with ESMTPSA id b206sm17195897wmd.28.2019.05.20.03.00.45
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 20 May 2019 03:00:45 -0700 (PDT)
-Subject: Re: [PATCH v2] KVM: selftests: Compile code with warnings enabled
-To:     Thomas Huth <thuth@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Peter Xu <peterx@redhat.com>
-Cc:     =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        linux-kselftest@vger.kernel.org, kvm@vger.kernel.org,
-        Shuah Khan <shuah@kernel.org>,
-        Andrew Jones <drjones@redhat.com>, linux-kernel@vger.kernel.org
-References: <20190517090445.4502-1-thuth@redhat.com>
- <20190517093000.GO16681@xz-x1> <8736ldquyw.fsf@vitty.brq.redhat.com>
- <1834df0f-b377-2231-0e5c-c5acd3298973@redhat.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <505274ec-e73f-f362-8130-5f70673bfc80@redhat.com>
-Date:   Mon, 20 May 2019 12:00:44 +0200
+        Mon, 20 May 2019 06:01:17 -0400
+X-Greylist: delayed 8825 seconds by postgrey-1.27 at vger.kernel.org; Mon, 20 May 2019 06:01:16 EDT
+Received: from player760.ha.ovh.net (unknown [10.109.146.5])
+        by mo68.mail-out.ovh.net (Postfix) with ESMTP id C4CD712E5F1
+        for <linux-kernel@vger.kernel.org>; Mon, 20 May 2019 09:34:09 +0200 (CEST)
+Received: from armadeus.com (lfbn-1-7591-179.w90-126.abo.wanadoo.fr [90.126.248.179])
+        (Authenticated sender: sebastien.szymanski@armadeus.com)
+        by player760.ha.ovh.net (Postfix) with ESMTPSA id 064FF5F24312;
+        Mon, 20 May 2019 07:33:54 +0000 (UTC)
+Subject: Re: [PATCH RE-RESEND 1/2] drm/panel: Add support for Armadeus ST0700
+ Adapt
+To:     Sam Ravnborg <sam@ravnborg.org>
+References: <20190507152713.27494-1-sebastien.szymanski@armadeus.com>
+ <CAOMZO5B2nMsVNO6O_D+YTSjux=-DjNPGxhkEi3AQquOZVODumA@mail.gmail.com>
+ <20190507161950.GA24879@ravnborg.org>
+ <20190508083303.GR17751@phenom.ffwll.local>
+ <20190508090612.GT17751@phenom.ffwll.local>
+Cc:     Fabio Estevam <festevam@gmail.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, David Airlie <airlied@linux.ie>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        DRI mailing list <dri-devel@lists.freedesktop.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        stable <stable@vger.kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>
+From:   =?UTF-8?Q?S=c3=a9bastien_Szymanski?= 
+        <sebastien.szymanski@armadeus.com>
+Openpgp: preference=signencrypt
+Message-ID: <0c5d70db-e7c1-5d02-9c33-65dabd431a68@armadeus.com>
+Date:   Mon, 20 May 2019 09:34:24 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <1834df0f-b377-2231-0e5c-c5acd3298973@redhat.com>
+In-Reply-To: <20190508090612.GT17751@phenom.ffwll.local>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 8bit
+X-Ovh-Tracer-Id: 6372874948130854140
+X-VR-SPAMSTATE: OK
+X-VR-SPAMSCORE: -100
+X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgeduuddruddtjedguddvgecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfqggfjpdevjffgvefmvefgnecuuegrihhlohhuthemucehtddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 17/05/19 12:07, Thomas Huth wrote:
-> 
-> lib/ucall.c: In function ‘get_ucall’:
-> lib/ucall.c:145:3: warning: dereferencing type-punned pointer will break
-> strict-aliasing rules [-Wstrict-aliasing]
->    gva = *(vm_vaddr_t *)run->mmio.data;
-> 
-> x86_64/vmx_set_nested_state_test.c: In function
-> ‘set_revision_id_for_vmcs12’:
-> x86_64/vmx_set_nested_state_test.c:78:2: warning: dereferencing
-> type-punned pointer will break strict-aliasing rules [-Wstrict-aliasing]
->   *(u32 *)(state->data) = vmcs12_revision;
-> 
-> ... how do we want to handle such spots in the kvm selftest code?
-> Compile with -fno-strict-aliasing? Or fix it with type-punning through
-> unions?
+Hello Sam,
 
-I would use memcpy.  I'll send a patch shortly.
+On 5/8/19 11:06 AM, Daniel Vetter wrote:
+> On Wed, May 08, 2019 at 10:33:03AM +0200, Daniel Vetter wrote:
+>> On Tue, May 07, 2019 at 06:19:50PM +0200, Sam Ravnborg wrote:
+>>> Hi Fabio
+>>>
+>>> On Tue, May 07, 2019 at 12:33:39PM -0300, Fabio Estevam wrote:
+>>>> [Adding Sam, who is helping to review/collect panel-simple patches]
+>>>>
+>>>> On Tue, May 7, 2019 at 12:27 PM Sébastien Szymanski
+>>>> <sebastien.szymanski@armadeus.com> wrote:
+>>>>>
+>>>>> This patch adds support for the Armadeus ST0700 Adapt. It comes with a
+>>>>> Santek ST0700I5Y-RBSLW 7.0" WVGA (800x480) TFT and an adapter board so
+>>>>> that it can be connected on the TFT header of Armadeus Dev boards.
+>>>>>
+>>>>> Cc: stable@vger.kernel.org # v4.19
+>>>>> Reviewed-by: Rob Herring <robh@kernel.org>
+>>>>> Signed-off-by: Sébastien Szymanski <sebastien.szymanski@armadeus.com>
+>>> Reviewed-by: Sam Ravnborg <sam@ravnborg.org>
+>>>
+>>> If you wil lresend the patch I can apply it.
+>>> I have lost the original mail.
+>>
+>> Usually patchwork should have it already (and you can pipe the raw
+>> patchwork mbox into dim apply), but somehow it's not there either.
+>> Not sure why, sometimes this is because mails are stuck in moderation,
+>> sometimes because people do interesting things with their mails (e.g. smtp
+>> servers mangling formatting).
+> 
+> patchwork was just a bit slow, it's there now:
+> 
+> https://patchwork.freedesktop.org/series/60408/
+> 
 
-Paolo
+Will you take the patch from patchwork or should I resent it ?
+
+Regards,
+
+> Cheers, Daniel
+> 
+
+
+-- 
+Sébastien Szymanski
+Software engineer, Armadeus Systems
+Tel: +33 (0)9 72 29 41 44
+Fax: +33 (0)9 72 28 79 26
