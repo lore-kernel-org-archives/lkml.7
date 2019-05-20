@@ -2,118 +2,104 @@ Return-Path: <SRS0=lq4r=TU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F6C5C04AAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 08:50:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F78AC04AAF
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 08:52:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1DA25206BA
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 08:50:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2D217206BA
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 08:52:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731594AbfETIux (ORCPT
+        id S1731602AbfETIwF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 04:50:53 -0400
-Received: from mx0b-001ae601.pphosted.com ([67.231.152.168]:44270 "EHLO
-        mx0b-001ae601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726053AbfETIux (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 04:50:53 -0400
-Received: from pps.filterd (m0077474.ppops.net [127.0.0.1])
-        by mx0b-001ae601.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4K8i3sj030392;
-        Mon, 20 May 2019 03:49:38 -0500
-Authentication-Results: ppops.net;
-        spf=none smtp.mailfrom=ckeepax@opensource.cirrus.com
-Received: from mail2.cirrus.com (mail2.cirrus.com [141.131.128.20])
-        by mx0b-001ae601.pphosted.com with ESMTP id 2sjefmt3ek-1;
-        Mon, 20 May 2019 03:49:37 -0500
-Received: from EDIEX01.ad.cirrus.com (unknown [198.61.84.80])
-        by mail2.cirrus.com (Postfix) with ESMTP id 55619605A6A0;
-        Mon, 20 May 2019 03:49:37 -0500 (CDT)
-Received: from EDIEX01.ad.cirrus.com (198.61.84.80) by EDIEX01.ad.cirrus.com
- (198.61.84.80) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1591.10; Mon, 20 May
- 2019 09:49:36 +0100
-Received: from ediswmail.ad.cirrus.com (198.61.86.93) by EDIEX01.ad.cirrus.com
- (198.61.84.80) with Microsoft SMTP Server id 15.1.1591.10 via Frontend
- Transport; Mon, 20 May 2019 09:49:36 +0100
-Received: from algalon.ad.cirrus.com (algalon.ad.cirrus.com [198.90.251.122])
-        by ediswmail.ad.cirrus.com (Postfix) with ESMTP id 9BD602DB;
-        Mon, 20 May 2019 09:49:36 +0100 (BST)
-From:   Charles Keepax <ckeepax@opensource.cirrus.com>
-To:     <wsa@the-dreams.de>, <mika.westerberg@linux.intel.com>
-CC:     <linux-i2c@vger.kernel.org>, <linux-acpi@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <benjamin.tissoires@redhat.com>,
-        <jbroadus@gmail.com>, <patches@opensource.cirrus.com>
-Subject: [PATCH 4/5] i2c: core: Move ACPI gpio IRQ handling into i2c_acpi_get_irq
-Date:   Mon, 20 May 2019 09:49:35 +0100
-Message-ID: <20190520084936.10590-5-ckeepax@opensource.cirrus.com>
-X-Mailer: git-send-email 2.11.0
-In-Reply-To: <20190520084936.10590-1-ckeepax@opensource.cirrus.com>
-References: <20190520084936.10590-1-ckeepax@opensource.cirrus.com>
+        Mon, 20 May 2019 04:52:05 -0400
+Received: from sauhun.de ([88.99.104.3]:49178 "EHLO pokefinder.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728958AbfETIwF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 04:52:05 -0400
+Received: from localhost (p54B333DA.dip0.t-ipconnect.de [84.179.51.218])
+        by pokefinder.org (Postfix) with ESMTPSA id 43F282C2761;
+        Mon, 20 May 2019 10:52:02 +0200 (CEST)
+Date:   Mon, 20 May 2019 10:52:01 +0200
+From:   Wolfram Sang <wsa@the-dreams.de>
+To:     Arend Van Spriel <arend.vanspriel@broadcom.com>
+Cc:     Douglas Anderson <dianders@chromium.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        linux-rockchip@lists.infradead.org,
+        Double Lo <double.lo@cypress.com>, briannorris@chromium.org,
+        Madhan Mohan R <madhanmohan.r@cypress.com>, mka@chromium.org,
+        Wright Feng <wright.feng@cypress.com>,
+        Chi-Hsien Lin <chi-hsien.lin@cypress.com>,
+        Jiong Wu <lohengrin1024@gmail.com>,
+        Ritesh Harjani <riteshh@codeaurora.org>,
+        linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Shawn Lin <shawn.lin@rock-chips.com>,
+        Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        Avri Altman <avri.altman@wdc.com>, Martin Hicks <mort@bork.org>
+Subject: Re: [PATCH 2/3] mmc: core: API for temporarily disabling
+ auto-retuning due to errors
+Message-ID: <20190520085201.GA1021@kunai>
+References: <20190517225420.176893-1-dianders@chromium.org>
+ <20190517225420.176893-3-dianders@chromium.org>
+ <20190519090642.GA2279@kunai>
+ <36cae1d3-f11c-3c71-3f04-23fdc74f8866@broadcom.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=2 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=881 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1905200064
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="sdtB3X0nJg68CQEu"
+Content-Disposition: inline
+In-Reply-To: <36cae1d3-f11c-3c71-3f04-23fdc74f8866@broadcom.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-It makes sense to contain all the ACPI IRQ handling in a single helper
-function.
 
-Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
----
+--sdtB3X0nJg68CQEu
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Note that this one is somewhat interesting, it seems the search
-through the resource list is done against the companion device
-of the adapter but the GPIO search is done against the companion
-device of the client. It feels to me like these really should
-be done on the same device, and certainly this is what SPI
-does (both against the equivalent of the adapter). Perhaps
-someone with more ACPI knowledge than myself could comment?
+On Mon, May 20, 2019 at 10:46:19AM +0200, Arend Van Spriel wrote:
+> On 5/19/2019 11:06 AM, Wolfram Sang wrote:
+> >=20
+> > > Let's add an API that the SDIO card drivers can call that will
+> > > temporarily disable the auto-tuning functionality.  Then we can add a
+> > > call to this in the Broadcom WiFi driver and any other driver that
+> > > might have similar needs.
+> >=20
+> > Can't you fix the WiFi driver to return something else than -EILSEQ
+> > before calling mmc_request_done() to skip the retuning?
+>=20
+> Not really. mmc_request_done() is for the host controller driver so the w=
+ifi
+> driver is not involved.
 
-Thanks,
-Charles
+Uh, right. Brown paper bag, please...
 
- drivers/i2c/i2c-core-acpi.c | 3 +++
- drivers/i2c/i2c-core-base.c | 4 ----
- 2 files changed, 3 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/i2c/i2c-core-acpi.c b/drivers/i2c/i2c-core-acpi.c
-index e332760bf9ebc..0c882d956e9a4 100644
---- a/drivers/i2c/i2c-core-acpi.c
-+++ b/drivers/i2c/i2c-core-acpi.c
-@@ -164,6 +164,9 @@ int i2c_acpi_get_irq(struct i2c_client *client, int *irq)
- 
- 	acpi_dev_free_resource_list(&resource_list);
- 
-+	if (*irq < 0)
-+		*irq = acpi_dev_gpio_irq_get(ACPI_COMPANION(&client->dev), 0);
-+
- 	return 0;
- }
- 
-diff --git a/drivers/i2c/i2c-core-base.c b/drivers/i2c/i2c-core-base.c
-index c1afa17a76bfc..f958b50c78c04 100644
---- a/drivers/i2c/i2c-core-base.c
-+++ b/drivers/i2c/i2c-core-base.c
-@@ -336,10 +336,6 @@ static int i2c_device_probe(struct device *dev)
- 				irq = of_irq_get(dev->of_node, 0);
- 		} else if (ACPI_COMPANION(dev)) {
- 			i2c_acpi_get_irq(client, &irq);
--
--			if (irq == -ENOENT)
--				irq = acpi_dev_gpio_irq_get(ACPI_COMPANION(dev),
--							    0);
- 		}
- 		if (irq == -EPROBE_DEFER)
- 			return irq;
--- 
-2.11.0
+--sdtB3X0nJg68CQEu
+Content-Type: application/pgp-signature; name="signature.asc"
 
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAlziaq0ACgkQFA3kzBSg
+KbaQVA//WXYFC+BIrlY0Pul+9dGBD8PAFC8f7fZUdwUGDjSC/CI1SfSMkOojpbLX
+MQvDlzKvpYj/rS3+xcrNQjgRELPn9DdKWXUEU6CZkgo+xs/cbms1H9fg65UwkVk3
+VARN5T2AgnFidWfXrxnD+LxRudQnj6LQqifhfUq6I0X+CfQ7AcDH80gC7FdPCwO5
+RM2gC+NNczRd3zxKKWQNXLvuY+yHzx71kHc5+gd5GVRqzsLYwgYQWj1wd6hpUuqY
+Ur+m6uUUoQo66teAA+FF+injciq6DJhwqZwa1pvkw7/hXorBArzBbHo3EAqch/hA
+349urJNcPBhbN+FCBzjhN+3XpoJATd4DM69v157zYHd2I1QFOiDqBukksD3OBuSk
+BRRfrSO2fcTVraEVTtTSgsl8e9eHvGP5hkpwl3GGq+1YvoC5/jOJAXwh17g4vQGD
+/wIPqA7a2Edd3Ei3uVjdquqBmmGGDQXADgE+fS9U/gbq/632tXdJ8c25eFUBlN8N
+KekuqSINDVvdEHnuy1yKTf7LU0q2hZjifSTU9in3ynzFZSe7ZghCrro/HBCeKBF3
+lPCZ2Qf3GlexViNy5/FhvNXPoWQY1sYh0fWMYzOuKm2VEdznrpt5oTtasTapIzy6
+9vf04EbfsMnAmHTPi8Hteo+jvczd+rYgFGg6hY/t8FiPtKgWwfs=
+=zF+7
+-----END PGP SIGNATURE-----
+
+--sdtB3X0nJg68CQEu--
