@@ -2,153 +2,596 @@ Return-Path: <SRS0=lq4r=TU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F48EC04AAC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 14:29:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97F32C04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 14:29:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E6A57214AE
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 14:29:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4BBFD2171F
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 14:29:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="TPP9KpyD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389304AbfETO3d (ORCPT
+        id S2391583AbfETO3f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 10:29:33 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:45982 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1732641AbfETO3c (ORCPT
+        Mon, 20 May 2019 10:29:35 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:37069 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731054AbfETO3e (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 10:29:32 -0400
-Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4KES7W7046227
-        for <linux-kernel@vger.kernel.org>; Mon, 20 May 2019 10:29:31 -0400
-Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2skwdbsuk4-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Mon, 20 May 2019 10:29:31 -0400
-Received: from localhost
-        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <bharata@linux.ibm.com>;
-        Mon, 20 May 2019 15:29:29 +0100
-Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
-        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Mon, 20 May 2019 15:29:27 +0100
-Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
-        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x4KETQk911993118
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 20 May 2019 14:29:26 GMT
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id A680BA4053;
-        Mon, 20 May 2019 14:29:26 +0000 (GMT)
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 31FE9A405F;
-        Mon, 20 May 2019 14:29:25 +0000 (GMT)
-Received: from in.ibm.com (unknown [9.199.42.100])
-        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
-        Mon, 20 May 2019 14:29:25 +0000 (GMT)
-Date:   Mon, 20 May 2019 19:59:22 +0530
-From:   Bharata B Rao <bharata@linux.ibm.com>
-To:     Nicholas Piggin <npiggin@gmail.com>
-Cc:     aneesh.kumar@linux.ibm.com, bharata@linux.vnet.ibm.com,
-        linux-kernel@vger.kernel.org, linux-next@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        srikanth <sraithal@linux.vnet.ibm.com>
-Subject: Re: PROBLEM: Power9: kernel oops on memory hotunplug from ppc64le
- guest
-Reply-To: bharata@linux.ibm.com
-References: <16a7a635-c592-27e2-75b4-d02071833278@linux.vnet.ibm.com>
- <20190518141434.GA22939@in.ibm.com>
- <878sv1993k.fsf@concordia.ellerman.id.au>
- <20190520042533.GB22939@in.ibm.com>
- <1558327521.633yjtl8ki.astroid@bobo.none>
- <20190520055622.GC22939@in.ibm.com>
- <1558335484.9inx69a7ea.astroid@bobo.none>
- <20190520082035.GD22939@in.ibm.com>
+        Mon, 20 May 2019 10:29:34 -0400
+Received: by mail-wm1-f66.google.com with SMTP id 7so13297308wmo.2
+        for <linux-kernel@vger.kernel.org>; Mon, 20 May 2019 07:29:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Og70WNEmTdPgbTBwIRYC9peTJhdQFaT0tNDc4FieJXc=;
+        b=TPP9KpyDP5vFcpOUw/yQA9W/7WkWxhJ4C6bvuAOIO3Zd0xodBwQeHmJmrNhVxvJxSo
+         9zcZepW+8OAYij4hDgHL3mkM7ndI03U2r2xQ947iq9uKcTTvVsTOicx8U3JWR+B5mtYs
+         kRjSzpEVreiB7QeDqbcDthFHNLT8jD3pnVltpt5RnmnR237hjSdNlV6eOZfRseDWe8db
+         hud0mwJpNHZvTjE88JeRa73DbQkJSLBILJ384Um7aGGmOV2sziedkUkBknuTBPwkC8u/
+         gx/ADw6WALNpBA8IPUUm8ZD0scgLV7XSQ/xZU66lEjzzWhbLJNAOabWbDrIoB17zkNkF
+         Lg4w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Og70WNEmTdPgbTBwIRYC9peTJhdQFaT0tNDc4FieJXc=;
+        b=YIkeYU8UQY8UHuTWM70peEFNgL/2o3RkYi8zYjc2eVzfJGlBHg/k6beW1nFPoM1/Q4
+         sTviB0+lLHeC9+GGUnXHYI2q3iZk961/4hK4pEGP9hESEauQ127kl2m5yflWyH/Qh0bn
+         M1qSRiNyTuU10T3DLpyG7T3pT7aYrOxiKghyT/l1XemRx9QVW7GOeYjmhSwiEpRL3B7u
+         U9AMSiRDzrZnGB0yGLjE9iH67r0KVwRjKeD/tKUEOR58dEkednsODlQV4o9Ov5IBIrAA
+         ylWxVTtoEiPhW8JsLNxp7bVxpZXZMdEPj2dw82vh0+qM73uuam0A59Ap1lp8EYSRkulF
+         z9iQ==
+X-Gm-Message-State: APjAAAUaW1u/ahEHFbkiwnivt+BRkhj43Bgb8/EHAEGSH/Eb4U2j7vdc
+        0Fvkkyf8zprDjnwP90AznhJzWw==
+X-Google-Smtp-Source: APXvYqzY3iiWaTBWNafX3BRMqsugNaiEAhJbQ39kbQ1xWgZg6oMj3evRkAqgQhnoNxmYWAjvj5Cjfg==
+X-Received: by 2002:a1c:a695:: with SMTP id p143mr12584472wme.128.1558362569098;
+        Mon, 20 May 2019 07:29:29 -0700 (PDT)
+Received: from bender.baylibre.local (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
+        by smtp.gmail.com with ESMTPSA id q13sm17750808wrn.27.2019.05.20.07.29.28
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Mon, 20 May 2019 07:29:28 -0700 (PDT)
+From:   Neil Armstrong <narmstrong@baylibre.com>
+To:     dri-devel@lists.freedesktop.org
+Cc:     linux-amlogic@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Neil Armstrong <narmstrong@baylibre.com>
+Subject: [PATCH] drm/meson: update with SPDX Licence identifier
+Date:   Mon, 20 May 2019 16:29:27 +0200
+Message-Id: <20190520142927.1009-1-narmstrong@baylibre.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190520082035.GD22939@in.ibm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-TM-AS-GCONF: 00
-x-cbid: 19052014-0020-0000-0000-0000033E9E0D
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19052014-0021-0000-0000-000021917620
-Message-Id: <20190520142922.GE22939@in.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-20_07:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1905200096
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 20, 2019 at 01:50:35PM +0530, Bharata B Rao wrote:
-> On Mon, May 20, 2019 at 05:00:21PM +1000, Nicholas Piggin wrote:
-> > Bharata B Rao's on May 20, 2019 3:56 pm:
-> > > On Mon, May 20, 2019 at 02:48:35PM +1000, Nicholas Piggin wrote:
-> > >> >> > git bisect points to
-> > >> >> >
-> > >> >> > commit 4231aba000f5a4583dd9f67057aadb68c3eca99d
-> > >> >> > Author: Nicholas Piggin <npiggin@gmail.com>
-> > >> >> > Date:   Fri Jul 27 21:48:17 2018 +1000
-> > >> >> >
-> > >> >> >     powerpc/64s: Fix page table fragment refcount race vs speculative references
-> > >> >> >
-> > >> >> >     The page table fragment allocator uses the main page refcount racily
-> > >> >> >     with respect to speculative references. A customer observed a BUG due
-> > >> >> >     to page table page refcount underflow in the fragment allocator. This
-> > >> >> >     can be caused by the fragment allocator set_page_count stomping on a
-> > >> >> >     speculative reference, and then the speculative failure handler
-> > >> >> >     decrements the new reference, and the underflow eventually pops when
-> > >> >> >     the page tables are freed.
-> > >> >> >
-> > >> >> >     Fix this by using a dedicated field in the struct page for the page
-> > >> >> >     table fragment allocator.
-> > >> >> >
-> > >> >> >     Fixes: 5c1f6ee9a31c ("powerpc: Reduce PTE table memory wastage")
-> > >> >> >     Cc: stable@vger.kernel.org # v3.10+
-> > >> >> 
-> > >> >> That's the commit that added the BUG_ON(), so prior to that you won't
-> > >> >> see the crash.
-> > >> > 
-> > >> > Right, but the commit says it fixes page table page refcount underflow by
-> > >> > introducing a new field &page->pt_frag_refcount. Now we are hitting the underflow
-> > >> > for this pt_frag_refcount.
-> > >> 
-> > >> The fixed underflow is caused by a bug (race on page count) that got 
-> > >> fixed by that patch. You are hitting a different underflow here. It's
-> > >> not certain my patch caused it, I'm just trying to reproduce now.
-> > > 
-> > > Ok.
-> > 
-> > Can't reproduce I'm afraid, tried adding and removing 8GB memory from a
-> > 4GB guest (via host adding / removing memory device), and it just works.
-> 
-> Boot, add 8G, reboot, remove 8G is the sequence to reproduce.
-> 
-> > 
-> > It's likely to be an edge case like an off by one or rounding error
-> > that just happens to trigger in your config. Might be easiest if you
-> > could test with a debug patch.
-> 
-> Sure, I will continue debugging.
+Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+---
+ drivers/gpu/drm/meson/meson_crtc.c      | 15 +--------------
+ drivers/gpu/drm/meson/meson_crtc.h      | 15 +--------------
+ drivers/gpu/drm/meson/meson_drv.c       | 15 +--------------
+ drivers/gpu/drm/meson/meson_drv.h       | 14 +-------------
+ drivers/gpu/drm/meson/meson_dw_hdmi.c   | 14 +-------------
+ drivers/gpu/drm/meson/meson_dw_hdmi.h   | 14 +-------------
+ drivers/gpu/drm/meson/meson_plane.c     | 15 +--------------
+ drivers/gpu/drm/meson/meson_plane.h     | 15 +--------------
+ drivers/gpu/drm/meson/meson_registers.h | 12 +-----------
+ drivers/gpu/drm/meson/meson_vclk.c      | 14 +-------------
+ drivers/gpu/drm/meson/meson_vclk.h      | 14 +-------------
+ drivers/gpu/drm/meson/meson_venc.c      | 14 +-------------
+ drivers/gpu/drm/meson/meson_venc.h      | 14 +-------------
+ drivers/gpu/drm/meson/meson_venc_cvbs.c | 15 +--------------
+ drivers/gpu/drm/meson/meson_venc_cvbs.h | 15 +--------------
+ drivers/gpu/drm/meson/meson_viu.c       | 14 +-------------
+ drivers/gpu/drm/meson/meson_viu.h       | 14 +-------------
+ drivers/gpu/drm/meson/meson_vpp.c       | 14 +-------------
+ drivers/gpu/drm/meson/meson_vpp.h       | 14 +-------------
+ 19 files changed, 19 insertions(+), 252 deletions(-)
 
-When the guest is rebooted after hotplug, the entire memory (which includes
-the hotplugged memory) gets remapped again freshly. However at this time
-since no slab is available yet, pt_frag_refcount never gets initialized as we
-never do pte_fragment_alloc() for these mappings. So we right away hit the
-underflow during the first unplug itself, it looks like.
-
-I will check how this can be fixed.
-
-> 
-> Regards,
-> Bharata.
+diff --git a/drivers/gpu/drm/meson/meson_crtc.c b/drivers/gpu/drm/meson/meson_crtc.c
+index 5579f8ac3e3f..a8416b6b7782 100644
+--- a/drivers/gpu/drm/meson/meson_crtc.c
++++ b/drivers/gpu/drm/meson/meson_crtc.c
+@@ -1,22 +1,9 @@
++// SPDX-License-Identifier: GPL-2.0+
+ /*
+  * Copyright (C) 2016 BayLibre, SAS
+  * Author: Neil Armstrong <narmstrong@baylibre.com>
+  * Copyright (C) 2015 Amlogic, Inc. All rights reserved.
+  * Copyright (C) 2014 Endless Mobile
+- *
+- * This program is free software; you can redistribute it and/or
+- * modify it under the terms of the GNU General Public License as
+- * published by the Free Software Foundation; either version 2 of the
+- * License, or (at your option) any later version.
+- *
+- * This program is distributed in the hope that it will be useful, but
+- * WITHOUT ANY WARRANTY; without even the implied warranty of
+- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+- * General Public License for more details.
+- *
+- * You should have received a copy of the GNU General Public License
+- * along with this program; if not, see <http://www.gnu.org/licenses/>.
+- *
+  * Written by:
+  *     Jasper St. Pierre <jstpierre@mecheye.net>
+  */
+diff --git a/drivers/gpu/drm/meson/meson_crtc.h b/drivers/gpu/drm/meson/meson_crtc.h
+index b62b9e51764d..4f0f212e51db 100644
+--- a/drivers/gpu/drm/meson/meson_crtc.h
++++ b/drivers/gpu/drm/meson/meson_crtc.h
+@@ -1,21 +1,8 @@
++/* SPDX-License-Identifier: GPL-2.0+ */
+ /*
+  * Copyright (C) 2016 BayLibre, SAS
+  * Author: Neil Armstrong <narmstrong@baylibre.com>
+  * Copyright (C) 2014 Endless Mobile
+- *
+- * This program is free software; you can redistribute it and/or
+- * modify it under the terms of the GNU General Public License as
+- * published by the Free Software Foundation; either version 2 of the
+- * License, or (at your option) any later version.
+- *
+- * This program is distributed in the hope that it will be useful, but
+- * WITHOUT ANY WARRANTY; without even the implied warranty of
+- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+- * General Public License for more details.
+- *
+- * You should have received a copy of the GNU General Public License
+- * along with this program; if not, see <http://www.gnu.org/licenses/>.
+- *
+  * Written by:
+  *     Jasper St. Pierre <jstpierre@mecheye.net>
+  */
+diff --git a/drivers/gpu/drm/meson/meson_drv.c b/drivers/gpu/drm/meson/meson_drv.c
+index 72b01e6be0d9..26be64b94237 100644
+--- a/drivers/gpu/drm/meson/meson_drv.c
++++ b/drivers/gpu/drm/meson/meson_drv.c
+@@ -1,21 +1,8 @@
++// SPDX-License-Identifier: GPL-2.0+
+ /*
+  * Copyright (C) 2016 BayLibre, SAS
+  * Author: Neil Armstrong <narmstrong@baylibre.com>
+  * Copyright (C) 2014 Endless Mobile
+- *
+- * This program is free software; you can redistribute it and/or
+- * modify it under the terms of the GNU General Public License as
+- * published by the Free Software Foundation; either version 2 of the
+- * License, or (at your option) any later version.
+- *
+- * This program is distributed in the hope that it will be useful, but
+- * WITHOUT ANY WARRANTY; without even the implied warranty of
+- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+- * General Public License for more details.
+- *
+- * You should have received a copy of the GNU General Public License
+- * along with this program; if not, see <http://www.gnu.org/licenses/>.
+- *
+  * Written by:
+  *     Jasper St. Pierre <jstpierre@mecheye.net>
+  */
+diff --git a/drivers/gpu/drm/meson/meson_drv.h b/drivers/gpu/drm/meson/meson_drv.h
+index 9614baa836b9..0d27556f2838 100644
+--- a/drivers/gpu/drm/meson/meson_drv.h
++++ b/drivers/gpu/drm/meson/meson_drv.h
+@@ -1,19 +1,7 @@
++/* SPDX-License-Identifier: GPL-2.0+ */
+ /*
+  * Copyright (C) 2016 BayLibre, SAS
+  * Author: Neil Armstrong <narmstrong@baylibre.com>
+- *
+- * This program is free software; you can redistribute it and/or
+- * modify it under the terms of the GNU General Public License as
+- * published by the Free Software Foundation; either version 2 of the
+- * License, or (at your option) any later version.
+- *
+- * This program is distributed in the hope that it will be useful, but
+- * WITHOUT ANY WARRANTY; without even the implied warranty of
+- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+- * General Public License for more details.
+- *
+- * You should have received a copy of the GNU General Public License
+- * along with this program; if not, see <http://www.gnu.org/licenses/>.
+  */
+ 
+ #ifndef __MESON_DRV_H
+diff --git a/drivers/gpu/drm/meson/meson_dw_hdmi.c b/drivers/gpu/drm/meson/meson_dw_hdmi.c
+index 779da21143b9..a42a15b87974 100644
+--- a/drivers/gpu/drm/meson/meson_dw_hdmi.c
++++ b/drivers/gpu/drm/meson/meson_dw_hdmi.c
+@@ -1,20 +1,8 @@
++// SPDX-License-Identifier: GPL-2.0+
+ /*
+  * Copyright (C) 2016 BayLibre, SAS
+  * Author: Neil Armstrong <narmstrong@baylibre.com>
+  * Copyright (C) 2015 Amlogic, Inc. All rights reserved.
+- *
+- * This program is free software; you can redistribute it and/or
+- * modify it under the terms of the GNU General Public License as
+- * published by the Free Software Foundation; either version 2 of the
+- * License, or (at your option) any later version.
+- *
+- * This program is distributed in the hope that it will be useful, but
+- * WITHOUT ANY WARRANTY; without even the implied warranty of
+- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+- * General Public License for more details.
+- *
+- * You should have received a copy of the GNU General Public License
+- * along with this program; if not, see <http://www.gnu.org/licenses/>.
+  */
+ 
+ #include <linux/kernel.h>
+diff --git a/drivers/gpu/drm/meson/meson_dw_hdmi.h b/drivers/gpu/drm/meson/meson_dw_hdmi.h
+index 03e2f0c1a2d5..4e48b5e0ffe8 100644
+--- a/drivers/gpu/drm/meson/meson_dw_hdmi.h
++++ b/drivers/gpu/drm/meson/meson_dw_hdmi.h
+@@ -1,20 +1,8 @@
++/* SPDX-License-Identifier: GPL-2.0+ */
+ /*
+  * Copyright (C) 2016 BayLibre, SAS
+  * Author: Neil Armstrong <narmstrong@baylibre.com>
+  * Copyright (C) 2015 Amlogic, Inc. All rights reserved.
+- *
+- * This program is free software; you can redistribute it and/or
+- * modify it under the terms of the GNU General Public License as
+- * published by the Free Software Foundation; either version 2 of the
+- * License, or (at your option) any later version.
+- *
+- * This program is distributed in the hope that it will be useful, but
+- * WITHOUT ANY WARRANTY; without even the implied warranty of
+- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+- * General Public License for more details.
+- *
+- * You should have received a copy of the GNU General Public License
+- * along with this program; if not, see <http://www.gnu.org/licenses/>.
+  */
+ 
+ #ifndef __MESON_DW_HDMI_H
+diff --git a/drivers/gpu/drm/meson/meson_plane.c b/drivers/gpu/drm/meson/meson_plane.c
+index bf8f1fab63aa..9f6070c4386c 100644
+--- a/drivers/gpu/drm/meson/meson_plane.c
++++ b/drivers/gpu/drm/meson/meson_plane.c
+@@ -1,22 +1,9 @@
++// SPDX-License-Identifier: GPL-2.0+
+ /*
+  * Copyright (C) 2016 BayLibre, SAS
+  * Author: Neil Armstrong <narmstrong@baylibre.com>
+  * Copyright (C) 2015 Amlogic, Inc. All rights reserved.
+  * Copyright (C) 2014 Endless Mobile
+- *
+- * This program is free software; you can redistribute it and/or
+- * modify it under the terms of the GNU General Public License as
+- * published by the Free Software Foundation; either version 2 of the
+- * License, or (at your option) any later version.
+- *
+- * This program is distributed in the hope that it will be useful, but
+- * WITHOUT ANY WARRANTY; without even the implied warranty of
+- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+- * General Public License for more details.
+- *
+- * You should have received a copy of the GNU General Public License
+- * along with this program; if not, see <http://www.gnu.org/licenses/>.
+- *
+  * Written by:
+  *     Jasper St. Pierre <jstpierre@mecheye.net>
+  */
+diff --git a/drivers/gpu/drm/meson/meson_plane.h b/drivers/gpu/drm/meson/meson_plane.h
+index e26b8b0aa1fa..1a414284d6b8 100644
+--- a/drivers/gpu/drm/meson/meson_plane.h
++++ b/drivers/gpu/drm/meson/meson_plane.h
+@@ -1,21 +1,8 @@
++/* SPDX-License-Identifier: GPL-2.0+ */
+ /*
+  * Copyright (C) 2016 BayLibre, SAS
+  * Author: Neil Armstrong <narmstrong@baylibre.com>
+  * Copyright (C) 2014 Endless Mobile
+- *
+- * This program is free software; you can redistribute it and/or
+- * modify it under the terms of the GNU General Public License as
+- * published by the Free Software Foundation; either version 2 of the
+- * License, or (at your option) any later version.
+- *
+- * This program is distributed in the hope that it will be useful, but
+- * WITHOUT ANY WARRANTY; without even the implied warranty of
+- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+- * General Public License for more details.
+- *
+- * You should have received a copy of the GNU General Public License
+- * along with this program; if not, see <http://www.gnu.org/licenses/>.
+- *
+  * Written by:
+  *     Jasper St. Pierre <jstpierre@mecheye.net>
+  */
+diff --git a/drivers/gpu/drm/meson/meson_registers.h b/drivers/gpu/drm/meson/meson_registers.h
+index cfaf90501bb1..5ba1b599c5cf 100644
+--- a/drivers/gpu/drm/meson/meson_registers.h
++++ b/drivers/gpu/drm/meson/meson_registers.h
+@@ -1,16 +1,6 @@
++/* SPDX-License-Identifier: GPL-2.0+ */
+ /*
+  * Copyright (C) 2015 Amlogic, Inc. All rights reserved.
+- *
+- * This program is free software; you can redistribute it and/or modify
+- * it under the terms of the GNU General Public License as published by
+- * the Free Software Foundation; either version 2 of the License, or
+- * (at your option) any later version.
+- *
+- * This program is distributed in the hope that it will be useful, but WITHOUT
+- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+- * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
+- * more details.
+- *
+  */
+ 
+ #ifndef __MESON_REGISTERS_H
+diff --git a/drivers/gpu/drm/meson/meson_vclk.c b/drivers/gpu/drm/meson/meson_vclk.c
+index b39034745444..69e2bebd6bd5 100644
+--- a/drivers/gpu/drm/meson/meson_vclk.c
++++ b/drivers/gpu/drm/meson/meson_vclk.c
+@@ -1,20 +1,8 @@
++// SPDX-License-Identifier: GPL-2.0+
+ /*
+  * Copyright (C) 2016 BayLibre, SAS
+  * Author: Neil Armstrong <narmstrong@baylibre.com>
+  * Copyright (C) 2015 Amlogic, Inc. All rights reserved.
+- *
+- * This program is free software; you can redistribute it and/or
+- * modify it under the terms of the GNU General Public License as
+- * published by the Free Software Foundation; either version 2 of the
+- * License, or (at your option) any later version.
+- *
+- * This program is distributed in the hope that it will be useful, but
+- * WITHOUT ANY WARRANTY; without even the implied warranty of
+- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+- * General Public License for more details.
+- *
+- * You should have received a copy of the GNU General Public License
+- * along with this program; if not, see <http://www.gnu.org/licenses/>.
+  */
+ 
+ #include <linux/kernel.h>
+diff --git a/drivers/gpu/drm/meson/meson_vclk.h b/drivers/gpu/drm/meson/meson_vclk.h
+index 4bd8752da02a..444216649e6b 100644
+--- a/drivers/gpu/drm/meson/meson_vclk.h
++++ b/drivers/gpu/drm/meson/meson_vclk.h
+@@ -1,19 +1,7 @@
++/* SPDX-License-Identifier: GPL-2.0+ */
+ /*
+  * Copyright (C) 2016 BayLibre, SAS
+  * Author: Neil Armstrong <narmstrong@baylibre.com>
+- *
+- * This program is free software; you can redistribute it and/or
+- * modify it under the terms of the GNU General Public License as
+- * published by the Free Software Foundation; either version 2 of the
+- * License, or (at your option) any later version.
+- *
+- * This program is distributed in the hope that it will be useful, but
+- * WITHOUT ANY WARRANTY; without even the implied warranty of
+- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+- * General Public License for more details.
+- *
+- * You should have received a copy of the GNU General Public License
+- * along with this program; if not, see <http://www.gnu.org/licenses/>.
+  */
+ 
+ /* Video Clock */
+diff --git a/drivers/gpu/drm/meson/meson_venc.c b/drivers/gpu/drm/meson/meson_venc.c
+index 6faca7313339..bd3bb436ce37 100644
+--- a/drivers/gpu/drm/meson/meson_venc.c
++++ b/drivers/gpu/drm/meson/meson_venc.c
+@@ -1,20 +1,8 @@
++// SPDX-License-Identifier: GPL-2.0+
+ /*
+  * Copyright (C) 2016 BayLibre, SAS
+  * Author: Neil Armstrong <narmstrong@baylibre.com>
+  * Copyright (C) 2015 Amlogic, Inc. All rights reserved.
+- *
+- * This program is free software; you can redistribute it and/or
+- * modify it under the terms of the GNU General Public License as
+- * published by the Free Software Foundation; either version 2 of the
+- * License, or (at your option) any later version.
+- *
+- * This program is distributed in the hope that it will be useful, but
+- * WITHOUT ANY WARRANTY; without even the implied warranty of
+- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+- * General Public License for more details.
+- *
+- * You should have received a copy of the GNU General Public License
+- * along with this program; if not, see <http://www.gnu.org/licenses/>.
+  */
+ 
+ #include <linux/kernel.h>
+diff --git a/drivers/gpu/drm/meson/meson_venc.h b/drivers/gpu/drm/meson/meson_venc.h
+index 97eaebbfa0c4..9ea56b7607fc 100644
+--- a/drivers/gpu/drm/meson/meson_venc.h
++++ b/drivers/gpu/drm/meson/meson_venc.h
+@@ -1,19 +1,7 @@
++/* SPDX-License-Identifier: GPL-2.0+ */
+ /*
+  * Copyright (C) 2016 BayLibre, SAS
+  * Author: Neil Armstrong <narmstrong@baylibre.com>
+- *
+- * This program is free software; you can redistribute it and/or
+- * modify it under the terms of the GNU General Public License as
+- * published by the Free Software Foundation; either version 2 of the
+- * License, or (at your option) any later version.
+- *
+- * This program is distributed in the hope that it will be useful, but
+- * WITHOUT ANY WARRANTY; without even the implied warranty of
+- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+- * General Public License for more details.
+- *
+- * You should have received a copy of the GNU General Public License
+- * along with this program; if not, see <http://www.gnu.org/licenses/>.
+  */
+ 
+ /*
+diff --git a/drivers/gpu/drm/meson/meson_venc_cvbs.c b/drivers/gpu/drm/meson/meson_venc_cvbs.c
+index 2c5341c881c4..d24ef94c7fe2 100644
+--- a/drivers/gpu/drm/meson/meson_venc_cvbs.c
++++ b/drivers/gpu/drm/meson/meson_venc_cvbs.c
+@@ -1,22 +1,9 @@
++// SPDX-License-Identifier: GPL-2.0+
+ /*
+  * Copyright (C) 2016 BayLibre, SAS
+  * Author: Neil Armstrong <narmstrong@baylibre.com>
+  * Copyright (C) 2015 Amlogic, Inc. All rights reserved.
+  * Copyright (C) 2014 Endless Mobile
+- *
+- * This program is free software; you can redistribute it and/or
+- * modify it under the terms of the GNU General Public License as
+- * published by the Free Software Foundation; either version 2 of the
+- * License, or (at your option) any later version.
+- *
+- * This program is distributed in the hope that it will be useful, but
+- * WITHOUT ANY WARRANTY; without even the implied warranty of
+- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+- * General Public License for more details.
+- *
+- * You should have received a copy of the GNU General Public License
+- * along with this program; if not, see <http://www.gnu.org/licenses/>.
+- *
+  * Written by:
+  *     Jasper St. Pierre <jstpierre@mecheye.net>
+  */
+diff --git a/drivers/gpu/drm/meson/meson_venc_cvbs.h b/drivers/gpu/drm/meson/meson_venc_cvbs.h
+index 9256ccf9d931..2c6d9006c391 100644
+--- a/drivers/gpu/drm/meson/meson_venc_cvbs.h
++++ b/drivers/gpu/drm/meson/meson_venc_cvbs.h
+@@ -1,21 +1,8 @@
++/* SPDX-License-Identifier: GPL-2.0+ */
+ /*
+  * Copyright (C) 2016 BayLibre, SAS
+  * Author: Neil Armstrong <narmstrong@baylibre.com>
+  * Copyright (C) 2014 Endless Mobile
+- *
+- * This program is free software; you can redistribute it and/or
+- * modify it under the terms of the GNU General Public License as
+- * published by the Free Software Foundation; either version 2 of the
+- * License, or (at your option) any later version.
+- *
+- * This program is distributed in the hope that it will be useful, but
+- * WITHOUT ANY WARRANTY; without even the implied warranty of
+- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+- * General Public License for more details.
+- *
+- * You should have received a copy of the GNU General Public License
+- * along with this program; if not, see <http://www.gnu.org/licenses/>.
+- *
+  * Written by:
+  *     Jasper St. Pierre <jstpierre@mecheye.net>
+  */
+diff --git a/drivers/gpu/drm/meson/meson_viu.c b/drivers/gpu/drm/meson/meson_viu.c
+index b59072342cae..f8e032df17bd 100644
+--- a/drivers/gpu/drm/meson/meson_viu.c
++++ b/drivers/gpu/drm/meson/meson_viu.c
+@@ -1,21 +1,9 @@
++// SPDX-License-Identifier: GPL-2.0+
+ /*
+  * Copyright (C) 2016 BayLibre, SAS
+  * Author: Neil Armstrong <narmstrong@baylibre.com>
+  * Copyright (C) 2015 Amlogic, Inc. All rights reserved.
+  * Copyright (C) 2014 Endless Mobile
+- *
+- * This program is free software; you can redistribute it and/or
+- * modify it under the terms of the GNU General Public License as
+- * published by the Free Software Foundation; either version 2 of the
+- * License, or (at your option) any later version.
+- *
+- * This program is distributed in the hope that it will be useful, but
+- * WITHOUT ANY WARRANTY; without even the implied warranty of
+- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+- * General Public License for more details.
+- *
+- * You should have received a copy of the GNU General Public License
+- * along with this program; if not, see <http://www.gnu.org/licenses/>.
+  */
+ 
+ #include <linux/kernel.h>
+diff --git a/drivers/gpu/drm/meson/meson_viu.h b/drivers/gpu/drm/meson/meson_viu.h
+index 0f84bddd2ff0..2b9b30655fac 100644
+--- a/drivers/gpu/drm/meson/meson_viu.h
++++ b/drivers/gpu/drm/meson/meson_viu.h
+@@ -1,19 +1,7 @@
++/* SPDX-License-Identifier: GPL-2.0+ */
+ /*
+  * Copyright (C) 2016 BayLibre, SAS
+  * Author: Neil Armstrong <narmstrong@baylibre.com>
+- *
+- * This program is free software; you can redistribute it and/or
+- * modify it under the terms of the GNU General Public License as
+- * published by the Free Software Foundation; either version 2 of the
+- * License, or (at your option) any later version.
+- *
+- * This program is distributed in the hope that it will be useful, but
+- * WITHOUT ANY WARRANTY; without even the implied warranty of
+- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+- * General Public License for more details.
+- *
+- * You should have received a copy of the GNU General Public License
+- * along with this program; if not, see <http://www.gnu.org/licenses/>.
+  */
+ 
+ /* Video Input Unit */
+diff --git a/drivers/gpu/drm/meson/meson_vpp.c b/drivers/gpu/drm/meson/meson_vpp.c
+index 8c52a3455ef4..a03ce09af8a3 100644
+--- a/drivers/gpu/drm/meson/meson_vpp.c
++++ b/drivers/gpu/drm/meson/meson_vpp.c
+@@ -1,21 +1,9 @@
++// SPDX-License-Identifier: GPL-2.0+
+ /*
+  * Copyright (C) 2016 BayLibre, SAS
+  * Author: Neil Armstrong <narmstrong@baylibre.com>
+  * Copyright (C) 2015 Amlogic, Inc. All rights reserved.
+  * Copyright (C) 2014 Endless Mobile
+- *
+- * This program is free software; you can redistribute it and/or
+- * modify it under the terms of the GNU General Public License as
+- * published by the Free Software Foundation; either version 2 of the
+- * License, or (at your option) any later version.
+- *
+- * This program is distributed in the hope that it will be useful, but
+- * WITHOUT ANY WARRANTY; without even the implied warranty of
+- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+- * General Public License for more details.
+- *
+- * You should have received a copy of the GNU General Public License
+- * along with this program; if not, see <http://www.gnu.org/licenses/>.
+  */
+ 
+ #include <linux/kernel.h>
+diff --git a/drivers/gpu/drm/meson/meson_vpp.h b/drivers/gpu/drm/meson/meson_vpp.h
+index 815177cc7dfd..de7cea1985ad 100644
+--- a/drivers/gpu/drm/meson/meson_vpp.h
++++ b/drivers/gpu/drm/meson/meson_vpp.h
+@@ -1,19 +1,7 @@
++/* SPDX-License-Identifier: GPL-2.0+ */
+ /*
+  * Copyright (C) 2016 BayLibre, SAS
+  * Author: Neil Armstrong <narmstrong@baylibre.com>
+- *
+- * This program is free software; you can redistribute it and/or
+- * modify it under the terms of the GNU General Public License as
+- * published by the Free Software Foundation; either version 2 of the
+- * License, or (at your option) any later version.
+- *
+- * This program is distributed in the hope that it will be useful, but
+- * WITHOUT ANY WARRANTY; without even the implied warranty of
+- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+- * General Public License for more details.
+- *
+- * You should have received a copy of the GNU General Public License
+- * along with this program; if not, see <http://www.gnu.org/licenses/>.
+  */
+ 
+ /* Video Post Process */
+-- 
+2.21.0
 
