@@ -2,121 +2,133 @@ Return-Path: <SRS0=lq4r=TU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EEC0C04AAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 08:57:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DEDFC04AAF
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 08:57:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DBDBD204FD
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 08:57:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F2543204FD
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 08:57:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731734AbfETI5r (ORCPT
+        id S1731723AbfETI5r convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Mon, 20 May 2019 04:57:47 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:40668 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731080AbfETI5r (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 04:57:47 -0400
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 8B11D307D90F;
-        Mon, 20 May 2019 08:57:38 +0000 (UTC)
-Received: from localhost (unknown [10.36.118.13])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 00EB75D719;
-        Mon, 20 May 2019 08:57:32 +0000 (UTC)
-Date:   Mon, 20 May 2019 09:57:31 +0100
-From:   Stefan Hajnoczi <stefanha@redhat.com>
-To:     Stefano Garzarella <sgarzare@redhat.com>
-Cc:     netdev@vger.kernel.org, "David S. Miller" <davem@davemloft.net>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        virtualization@lists.linux-foundation.org,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        Jason Wang <jasowang@redhat.com>
-Subject: Re: [PATCH v2 1/8] vsock/virtio: limit the memory used per-socket
-Message-ID: <20190520085731.GA22546@stefanha-x1.localdomain>
-References: <20190510125843.95587-1-sgarzare@redhat.com>
- <20190510125843.95587-2-sgarzare@redhat.com>
- <20190516152533.GB29808@stefanha-x1.localdomain>
- <20190517082505.ibjkuh7zibumen77@steredhat>
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:54804 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725372AbfETI5q (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 04:57:46 -0400
+Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4K8rT3A025506
+        for <linux-kernel@vger.kernel.org>; Mon, 20 May 2019 04:57:45 -0400
+Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2skrbejbu8-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Mon, 20 May 2019 04:57:45 -0400
+Received: from localhost
+        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <naveen.n.rao@linux.vnet.ibm.com>;
+        Mon, 20 May 2019 09:57:43 +0100
+Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
+        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Mon, 20 May 2019 09:57:42 +0100
+Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
+        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x4K8vfca57606158
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 20 May 2019 08:57:41 GMT
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 1910011C058;
+        Mon, 20 May 2019 08:57:41 +0000 (GMT)
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 7EAD311C04C;
+        Mon, 20 May 2019 08:57:40 +0000 (GMT)
+Received: from localhost (unknown [9.199.34.110])
+        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Mon, 20 May 2019 08:57:40 +0000 (GMT)
+Date:   Mon, 20 May 2019 14:27:38 +0530
+From:   "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>
+Subject: Re: [RFC PATCH 4/4] powerpc/ftrace: Additionally nop out the
+ preceding mflr with -mprofile-kernel
+To:     Michael Ellerman <mpe@ellerman.id.au>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>
+Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+References: <cover.1558115654.git.naveen.n.rao@linux.vnet.ibm.com>
+        <ee2a5457d98850f51bf96eb17389b375e6955bbf.1558115654.git.naveen.n.rao@linux.vnet.ibm.com>
+        <1558144594.f92d1rcmes.astroid@bobo.none>
+In-Reply-To: <1558144594.f92d1rcmes.astroid@bobo.none>
+User-Agent: astroid/0.14.0 (https://github.com/astroidmail/astroid)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="wRRV7LY7NUeQGEoC"
-Content-Disposition: inline
-In-Reply-To: <20190517082505.ibjkuh7zibumen77@steredhat>
-User-Agent: Mutt/1.11.4 (2019-03-13)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.48]); Mon, 20 May 2019 08:57:46 +0000 (UTC)
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8BIT
+X-TM-AS-GCONF: 00
+x-cbid: 19052008-0012-0000-0000-0000031D825E
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19052008-0013-0000-0000-000021562DB8
+Message-Id: <1558342515.q6rtkeahk8.naveen@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-20_04:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1905200065
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Nicholas Piggin wrote:
+> Naveen N. Rao's on May 18, 2019 5:02 am:
+>> With -mprofile-kernel, gcc emits 'mflr r0', followed by 'bl _mcount' to
+>> enable function tracing and profiling. So far, with dynamic ftrace, we
+>> used to only patch out the branch to _mcount(). However, Nick Piggin
+>> points out that "mflr is executed by the branch unit that can only
+>> execute one per cycle on POWER9 and shared with branches, so it would be
+>> nice to avoid it where possible."
+>> 
+>> We cannot simply nop out the mflr either. Michael Ellerman pointed out
+>> that when enabling function tracing, there can be a race if tracing is
+>> enabled when some thread was interrupted after executing a nop'ed out
+>> mflr. In this case, the thread would execute the now-patched-in branch
+>> to _mcount() without having executed the preceding mflr.
+>> 
+>> To solve this, we now enable function tracing in 2 steps: patch in the
+>> mflr instruction, use synchronize_rcu_tasks() to ensure all existing
+>> threads make progress, and then patch in the branch to _mcount(). We
+>> override ftrace_replace_code() with a powerpc64 variant for this
+>> purpose.
+>> 
+>> Signed-off-by: Nicholas Piggin <npiggin@gmail.com>
+>> Signed-off-by: Naveen N. Rao <naveen.n.rao@linux.vnet.ibm.com>
+> 
+> Nice! Thanks for doing a real patch. You needn't add my SOB there: my
+> hack was obviously garbage :) Suggested-by if anything, then for
+> clarity of changelog you can write the motivation directly rather than
+> quote me.
 
---wRRV7LY7NUeQGEoC
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Thanks, I meant to call out the fact that I had added your SOB before
+sending the patch, but missed doing so. Your patch was perfectly fine ;)
 
-On Fri, May 17, 2019 at 10:25:05AM +0200, Stefano Garzarella wrote:
-> On Thu, May 16, 2019 at 04:25:33PM +0100, Stefan Hajnoczi wrote:
-> > On Fri, May 10, 2019 at 02:58:36PM +0200, Stefano Garzarella wrote:
-> > > +static struct virtio_vsock_buf *
-> > > +virtio_transport_alloc_buf(struct virtio_vsock_pkt *pkt, bool zero_c=
-opy)
-> > > +{
-> > > +	struct virtio_vsock_buf *buf;
-> > > +
-> > > +	if (pkt->len =3D=3D 0)
-> > > +		return NULL;
-> > > +
-> > > +	buf =3D kzalloc(sizeof(*buf), GFP_KERNEL);
-> > > +	if (!buf)
-> > > +		return NULL;
-> > > +
-> > > +	/* If the buffer in the virtio_vsock_pkt is full, we can move it to
-> > > +	 * the new virtio_vsock_buf avoiding the copy, because we are sure =
-that
-> > > +	 * we are not use more memory than that counted by the credit mecha=
-nism.
-> > > +	 */
-> > > +	if (zero_copy && pkt->len =3D=3D pkt->buf_len) {
-> > > +		buf->addr =3D pkt->buf;
-> > > +		pkt->buf =3D NULL;
-> > > +	} else {
-> > > +		buf->addr =3D kmalloc(pkt->len, GFP_KERNEL);
-> >=20
-> > buf and buf->addr could be allocated in a single call, though I'm not
-> > sure how big an optimization this is.
-> >=20
->=20
-> IIUC, in the case of zero-copy I should allocate only the buf,
-> otherwise I should allocate both buf and buf->addr in a single call
-> when I'm doing a full-copy.
->=20
-> Is it correct?
+> 
+> I don't know the ftrace subsystem well, but the powerpc instructions
+> and patching sequence appears to match what we agreed is the right way
+> to go.
+> 
+> As a suggestion, I would perhaps add most of information from the
+> second and third paragraphs of the changelog into comments
+> (and also explain that the lone mflr r0 is harmless).
+> 
+> But otherwise it looks good
+> 
+> Reviewed-by: Nicholas Piggin <npiggin@gmail.com>
 
-Yes, but it's your choice whether optimization is worthwhile.  If it
-increases the complexity of the code and doesn't result in a measurable
-improvement, then it's not worth it.
+Thanks, I will incorporate those changes.
 
-Stefan
 
---wRRV7LY7NUeQGEoC
-Content-Type: application/pgp-signature; name="signature.asc"
+- Naveen
 
------BEGIN PGP SIGNATURE-----
 
-iQEzBAEBCAAdFiEEhpWov9P5fNqsNXdanKSrs4Grc8gFAlzia/sACgkQnKSrs4Gr
-c8j8/Qf+NOeZJ2tO8MN+lVvjuwE3gShPAFPc2joqHrqQkZPrfOMHyxNPWBjmd06G
-mJaov5ZMGAQQdvkkJatcCbnrnV2IuYLbZyGpfQAGrjVZ4S5RtU8/2VpksfxRJNDV
-KrRPS/HoPQrDfJcMnsRxXSpf0dFcG/WptgKFMOlzLPAKiwWZ62dpc/m8ghrHXbzz
-/x/TaT4NA9m4S3NwFqZYq/kTQwiXtrSU40sPo/QGk6Wn5o4sTcgNDEveJK3KsLI+
-p8KQrt7muGMn9FbRrLjwq2VytiLXksXrdFAeWugUon0qEkmxaKiUSNvbgof0/qi3
-4DwGQi4FYh6hvSyjckKOVP/y/F8jSg==
-=1IhX
------END PGP SIGNATURE-----
-
---wRRV7LY7NUeQGEoC--
