@@ -7,63 +7,63 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D75DC04AAC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 14:03:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D8C8C04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 14:03:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 13EFA216C4
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 14:03:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D41F2216B7
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 14:03:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="COuaP2MB"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="ze4d8D2u"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732791AbfETODT (ORCPT
+        id S1732834AbfETODs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 10:03:19 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:37082 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730274AbfETODO (ORCPT
+        Mon, 20 May 2019 10:03:48 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:36389 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730653AbfETODr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 10:03:14 -0400
-Received: by mail-wr1-f67.google.com with SMTP id e15so14769777wrs.4
-        for <linux-kernel@vger.kernel.org>; Mon, 20 May 2019 07:03:13 -0700 (PDT)
+        Mon, 20 May 2019 10:03:47 -0400
+Received: by mail-wr1-f65.google.com with SMTP id s17so14786402wru.3
+        for <linux-kernel@vger.kernel.org>; Mon, 20 May 2019 07:03:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=4GPEWsqSGIyKcLWUOXlYrzt0kxAdz+VJbHUnZMff5l4=;
-        b=COuaP2MBnNWmngBntTsQoeRBks/Mc7dW9Rx6RL9bbz9atupXmZyHVyM5CGPycOM/n6
-         8xVcnEnPA/L9itDuEmkLpaKMoLR83F33ROmW0vYMgSmFL5werfREgUWBvnn9NH3XsKUP
-         T7p8ES/4c276ThMeDFvFkRDy7+3D5GhEy5mhGGBsBofNwqgl+8Y8/wujjk9yGB0h3Gq3
-         fBMZRKVvffi4KNCHTppYERrvhI8vDj5br3gY40RHGQD8B1Ia6/68CjrRj4/eoIqBdQum
-         0h5X7UECzZQTBNgYqk2dmCC647QtPHtX51c0Vh09eXOX2+wx3KJ4iM9k06dtQvEXoEca
-         lcAw==
+        bh=cF0K4L8IFyt0+npCv+nWw+tKu23CAdmttAOFwktWaxI=;
+        b=ze4d8D2uXvGMxOxR01bwm1YogLCVWYOJq0Jf2Vip/qog0Nbrf/1dqaj8YjuJWp9olk
+         4nwg+kLlBqesT9srjiDvGEh7Z2ibNod1qCM0EmMxCRdZFYKpg0YsD65d4cRdl3FeUume
+         fX8sGCdRwlatBale2V+RaHJJKQTqN+m9osMvO9dkZStg5cJD29VswcNZwRpMFziFPRBY
+         /nkYJcl6n6mAgvfEiGeGdNDZxbdCzMRd43F6DleTA6+sLDAGXTeiYZW0HsGcfZGzXPfN
+         JMvGlgf1JzulyCF5TAr40vsV9w3sZZLsEVfJJvgiPeX3NoyFQ3bzFvd6j0nkxJJJ0C//
+         x/AQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=4GPEWsqSGIyKcLWUOXlYrzt0kxAdz+VJbHUnZMff5l4=;
-        b=BpHu9YBQwFOpMxpHhbaz2saVqEcwLChpvw8aUZt+f6QUeQX223RWZg/stz6k/E6urE
-         ypllSOdwYIrf8/NThtfvninA5Ax3H6euxByICItHlV0lLx2g5eIHjuLiK6Q89/EhuaUe
-         NbPJww704qu0FUEXdthVW2+04Tu5qeHhgzUoynP3ds5YuFmDW/uW1aU+nFtb/e+w4F4c
-         sU+mbcBCmZ/KXw0aQ3j0e5JOnxQ71dOI9aemh9ws/YFs7o13BKpUtMveT1wbgvDW8glq
-         F9H47fNeCGRjkIKDlTUt2/yzsIrg04z2lbVckr5uhzk0lE2wsz6CN7wgzSDsdcVQtyXZ
-         fEGg==
-X-Gm-Message-State: APjAAAWdGtEfpXetJeft0SkF0r8qPKH2GWL/NCApUPDujDYR58IJjo/x
-        hepw4kX4uMswIuSYa1tzVZK1Vw==
-X-Google-Smtp-Source: APXvYqxW2HOtstliXfUJp5IEyuxHFFP18XQUBF3m6AqmQies8+8zwfm7C97xqkPjFQbVAoamlJqbjw==
-X-Received: by 2002:adf:e691:: with SMTP id r17mr27306891wrm.50.1558360992409;
-        Mon, 20 May 2019 07:03:12 -0700 (PDT)
+        bh=cF0K4L8IFyt0+npCv+nWw+tKu23CAdmttAOFwktWaxI=;
+        b=mIiT/GJ29Dvh3LgBExsQQT+uj3288oqeVGulG1K8mwkvl1exfjciGyHwTk7czOVfBE
+         z7fHtyP0lkxRiiXoVeSha1B4IcKQHijQ1zsF363Oy07dEm7R8X1LoMWNcG7mhw7DZHnL
+         ceUfwUnNmjyRhFo+DYdrHdTNg5YBHc00T36bHLgaKrFpKn6IoxiTdivGe+erAeJxdZ5+
+         bknSQxpMJB8xBJV3znhF+CryB6O0JmqDGIDO+eL8fLpgxwwkzel5uc7VKyFcxLddBwDg
+         KASo3sPC1KujRpWeoknw/0NRKlL/ftBWqTx9KVfoaG7S0QtiPqkmgGwWiEudwK+HVmO/
+         yC8A==
+X-Gm-Message-State: APjAAAWdRZIMTME3K5OVMghifTQhPuFVqY36TYjZhYb/BTUAiYm00bWB
+        /V6St+oO3xJE21ZZWuyeUxahPQ==
+X-Google-Smtp-Source: APXvYqyLfHunGtz7iQDXkgCWa8G285wjhmipCjPg2pvdogZ/30BdgiGfT3HEUmBIyRB1mcfglKOuXQ==
+X-Received: by 2002:adf:dcc4:: with SMTP id x4mr20656573wrm.107.1558361026012;
+        Mon, 20 May 2019 07:03:46 -0700 (PDT)
 Received: from bender.baylibre.local (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
-        by smtp.gmail.com with ESMTPSA id y8sm14051419wmi.8.2019.05.20.07.03.11
+        by smtp.gmail.com with ESMTPSA id c131sm18134032wma.31.2019.05.20.07.03.45
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Mon, 20 May 2019 07:03:11 -0700 (PDT)
+        Mon, 20 May 2019 07:03:45 -0700 (PDT)
 From:   Neil Armstrong <narmstrong@baylibre.com>
-To:     tglx@linutronix.de, jason@lakedaemon.net, marc.zyngier@arm.com
-Cc:     linux-amlogic@lists.infradead.org,
+To:     mchehab@kernel.org
+Cc:     linux-media@vger.kernel.org, linux-amlogic@lists.infradead.org,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         Neil Armstrong <narmstrong@baylibre.com>
-Subject: [PATCH] irqchip: irq-meson-gpio: update with SPDX Licence identifier
-Date:   Mon, 20 May 2019 16:03:10 +0200
-Message-Id: <20190520140310.29635-1-narmstrong@baylibre.com>
+Subject: [PATCH] media: rc: meson-ir: update with SPDX Licence identifier
+Date:   Mon, 20 May 2019 16:03:43 +0200
+Message-Id: <20190520140343.29971-1-narmstrong@baylibre.com>
 X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -74,37 +74,29 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
 ---
- drivers/irqchip/irq-meson-gpio.c | 15 +--------------
- 1 file changed, 1 insertion(+), 14 deletions(-)
+ drivers/media/rc/meson-ir.c | 8 +-------
+ 1 file changed, 1 insertion(+), 7 deletions(-)
 
-diff --git a/drivers/irqchip/irq-meson-gpio.c b/drivers/irqchip/irq-meson-gpio.c
-index 7b531fd075b8..d83244ea0959 100644
---- a/drivers/irqchip/irq-meson-gpio.c
-+++ b/drivers/irqchip/irq-meson-gpio.c
-@@ -1,22 +1,9 @@
-+// SPDX-License-Identifier: GPL-2.0+
+diff --git a/drivers/media/rc/meson-ir.c b/drivers/media/rc/meson-ir.c
+index 9914c83fecb9..02914da8cce5 100644
+--- a/drivers/media/rc/meson-ir.c
++++ b/drivers/media/rc/meson-ir.c
+@@ -1,14 +1,8 @@
++// SPDX-License-Identifier: GPL-2.0
  /*
-  * Copyright (c) 2015 Endless Mobile, Inc.
-  * Author: Carlo Caione <carlo@endlessm.com>
-  * Copyright (c) 2016 BayLibre, SAS.
-  * Author: Jerome Brunet <jbrunet@baylibre.com>
+  * Driver for Amlogic Meson IR remote receiver
+  *
+  * Copyright (C) 2014 Beniamino Galvani <b.galvani@gmail.com>
 - *
-- * This program is free software; you can redistribute it and/or modify
-- * it under the terms of version 2 of the GNU General Public License as
-- * published by the Free Software Foundation.
-- *
-- * This program is distributed in the hope that it will be useful, but
-- * WITHOUT ANY WARRANTY; without even the implied warranty of
-- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-- * General Public License for more details.
+- * This program is free software; you can redistribute it and/or
+- * modify it under the terms of the GNU General Public License
+- * version 2 as published by the Free Software Foundation.
 - *
 - * You should have received a copy of the GNU General Public License
-- * along with this program; if not, see <http://www.gnu.org/licenses/>.
-- * The full GNU General Public License is included in this distribution
-- * in the file called COPYING.
+- * along with this program. If not, see <http://www.gnu.org/licenses/>.
   */
  
- #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
+ #include <linux/device.h>
 -- 
 2.21.0
 
