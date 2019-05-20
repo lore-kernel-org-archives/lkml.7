@@ -2,98 +2,130 @@ Return-Path: <SRS0=lq4r=TU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BDF90C04AAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 09:39:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D22E6C04AAF
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 09:39:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8A10620675
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 09:39:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558345174;
-	bh=97paCbirTPgcKhtTTI/XOi6yayJCD3/LphHtO7Xr+hQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=SD0+ODhgve4QH0gmJzQsQRQbXmuHiDNBjVIXtnaUZdJR0Wh8e9v2zYTR5ZcJ4sl0r
-	 R27YB+5fmmSpbk7cH/ssGh50GfiM0mN7VqnU3D1PRYXC/dnlVLr74+2QUpUle97JDN
-	 BImWzLG0DfreB+QA2hp6hBg/flt0p1kNCI49dj4k=
+	by mail.kernel.org (Postfix) with ESMTP id B116F20856
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 09:39:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732312AbfETJjd (ORCPT
+        id S1732313AbfETJju (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 05:39:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45788 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727720AbfETJjd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 05:39:33 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4115120675;
-        Mon, 20 May 2019 09:39:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558345172;
-        bh=97paCbirTPgcKhtTTI/XOi6yayJCD3/LphHtO7Xr+hQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ZiQFGhkoJenionVU7dyo8z7aa0F/TpMUd3iogH6YyeMF2fGbt7yDaNkB6B+AhVqqu
-         PbUXOpqQiTfGvaPzrKY/UcA2IuGEdeslZEgIIj8m/aiFJD3ZXWEJvzqH0D2ydARwNA
-         DASFVwJbjox8QsLee1RuqNFLLoewSTTl2v6h7ItQ=
-Date:   Mon, 20 May 2019 11:39:29 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Takashi Iwai <tiwai@suse.de>
-Cc:     Luis Chamberlain <mcgrof@kernel.org>,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/5] firmware: Add support for loading compressed files
-Message-ID: <20190520093929.GB15326@kroah.com>
-References: <20190520092647.8622-1-tiwai@suse.de>
+        Mon, 20 May 2019 05:39:50 -0400
+Received: from lhrrgout.huawei.com ([185.176.76.210]:32956 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727720AbfETJju (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 05:39:50 -0400
+Received: from LHREML714-CAH.china.huawei.com (unknown [172.18.7.107])
+        by Forcepoint Email with ESMTP id 4A75E6FA85003A8236AE;
+        Mon, 20 May 2019 10:39:48 +0100 (IST)
+Received: from [10.220.96.108] (10.220.96.108) by smtpsuk.huawei.com
+ (10.201.108.37) with Microsoft SMTP Server (TLS) id 14.3.408.0; Mon, 20 May
+ 2019 10:39:40 +0100
+Subject: Re: [PATCH v3 2/2] initramfs: introduce do_readxattrs()
+To:     Arvind Sankar <nivedita@alum.mit.edu>,
+        "H. Peter Anvin" <hpa@zytor.com>
+CC:     <viro@zeniv.linux.org.uk>, <linux-security-module@vger.kernel.org>,
+        <linux-integrity@vger.kernel.org>, <initramfs@vger.kernel.org>,
+        <linux-api@vger.kernel.org>, <linux-fsdevel@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <zohar@linux.vnet.ibm.com>,
+        <silviu.vlasceanu@huawei.com>, <dmitry.kasatkin@huawei.com>,
+        <takondra@cisco.com>, <kamensky@cisco.com>, <arnd@arndb.de>,
+        <rob@landley.net>, <james.w.mcmechan@gmail.com>,
+        <niveditas98@gmail.com>
+References: <20190517165519.11507-1-roberto.sassu@huawei.com>
+ <20190517165519.11507-3-roberto.sassu@huawei.com>
+ <CD9A4F89-7CA5-4329-A06A-F8DEB87905A5@zytor.com>
+ <20190517210219.GA5998@rani.riverdale.lan>
+ <d48f35a1-aab1-2f20-2e91-5e81a84b107f@zytor.com>
+ <20190517221731.GA11358@rani.riverdale.lan>
+From:   Roberto Sassu <roberto.sassu@huawei.com>
+Message-ID: <7bdca169-7a01-8c55-40e4-a832e876a0e5@huawei.com>
+Date:   Mon, 20 May 2019 11:39:46 +0200
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.3.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190520092647.8622-1-tiwai@suse.de>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+In-Reply-To: <20190517221731.GA11358@rani.riverdale.lan>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.220.96.108]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 20, 2019 at 11:26:42AM +0200, Takashi Iwai wrote:
-> Hi,
+On 5/18/2019 12:17 AM, Arvind Sankar wrote:
+> On Fri, May 17, 2019 at 02:47:31PM -0700, H. Peter Anvin wrote:
+>> On 5/17/19 2:02 PM, Arvind Sankar wrote:
+>>> On Fri, May 17, 2019 at 01:18:11PM -0700, hpa@zytor.com wrote:
+>>>>
+>>>> Ok... I just realized this does not work for a modular initramfs, composed at load time from multiple files, which is a very real problem. Should be easy enough to deal with: instead of one large file, use one companion file per source file, perhaps something like filename..xattrs (suggesting double dots to make it less likely to conflict with a "real" file.) No leading dot, as it makes it more likely that archivers will sort them before the file proper.
+>>> This version of the patch was changed from the previous one exactly to deal with this case --
+>>> it allows for the bootloader to load multiple initramfs archives, each
+>>> with its own .xattr-list file, and to have that work properly.
+>>> Could you elaborate on the issue that you see?
+>>>
+>>
+>> Well, for one thing, how do you define "cpio archive", each with its own
+>> .xattr-list file? Second, that would seem to depend on the ordering, no,
+>> in which case you depend critically on .xattr-list file following the
+>> files, which most archivers won't do.
+>>
+>> Either way it seems cleaner to have this per file; especially if/as it
+>> can be done without actually mucking up the format.
+>>
+>> I need to run, but I'll post a more detailed explanation of what I did
+>> in a little bit.
+>>
+>> 	-hpa
+>>
+> Not sure what you mean by how do I define it? Each cpio archive will
+> contain its own .xattr-list file with signatures for the files within
+> it, that was the idea.
 > 
-> this is a patch set to add the support for loading compressed firmware
-> files.
+> You need to review the code more closely I think -- it does not depend
+> on the .xattr-list file following the files to which it applies.
 > 
-> The primary motivation is to reduce the storage size; e.g. currently
-> the amount of /lib/firmware on my machine counts up to 419MB, and this
-> can be reduced to 130MB file compression.  No bad deal.
+> The code first extracts .xattr-list as though it was a regular file. If
+> a later dupe shows up (presumably from a second archive, although the
+> patch will actually allow a second one in the same archive), it will
+> then process the existing .xattr-list file and apply the attributes
+> listed within it. It then will proceed to read the second one and
+> overwrite the first one with it (this is the normal behaviour in the
+> kernel cpio parser). At the end once all the archives have been
+> extracted, if there is an .xattr-list file in the rootfs it will be
+> parsed (it would've been the last one encountered, which hasn't been
+> parsed yet, just extracted).
 > 
-> The feature adds only fallback to the compressed file, so it should
-> work as it was as long as the normal firmware file is present.  The
-> f/w loader decompresses the content, so that there is no change needed
-> in the caller side.
-> 
-> Currently only XZ format is supported.  A caveat is that the kernel XZ
-> helper code supports only CRC32 (or none) integrity check type, so
-> you'll have to compress the files via xz -C crc32 option.
-> 
-> The patch set begins with a few other improvements and refactoring,
-> followed by the compression support.
-> 
-> In addition to this, dracut needs a small fix to deal with the *.xz
-> files.
-> 
-> Also, the latest patchset is found in topic/fw-decompress branch of my
-> sound.git tree:
->   git://git.kernel.org/pub/scm/linux/kernel/git/tiwai/sound.git
+> Regarding the idea to use the high 16 bits of the mode field in
+> the header that's another possibility. It would just require additional
+> support in the program that actually creates the archive though, which
+> the current patch doesn't.
 
-After a quick review, these all look good to me, nice job.
+Yes, for adding signatures for a subset of files, no changes to the ram
+disk generator are necessary. Everything is done by a custom module. To
+support a generic use case, it would be necessary to modify the
+generator to execute getfattr and the awk script after files have been
+placed in the temporary directory.
 
-One recommendation, can we add support for testing this to the
-tools/testing/selftests/firmware/ tests?  And you did run those
-regression tests to verify that you didn't get any of the config options
-messed up, right? :)
+If I understood the new proposal correctly, it would be task for cpio to
+read file metadata after the content and create a new record for each
+file with mode 0x18000, type of metadata encoded in the file name and
+metadata as file content. I don't know how easy it would be to modify
+cpio. Probably the amount of changes would be reasonable.
 
-thanks,
+The kernel will behave in a similar way. It will call do_readxattrs() in
+do_copy() for each file. Since the only difference between the current
+and the new proposal would be two additional calls to do_readxattrs() in
+do_name() and unpack_to_rootfs(), maybe we could support both.
 
-greg k-h
+Roberto
+
+-- 
+HUAWEI TECHNOLOGIES Duesseldorf GmbH, HRB 56063
+Managing Director: Bo PENG, Jian LI, Yanli SHI
