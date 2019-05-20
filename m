@@ -2,106 +2,136 @@ Return-Path: <SRS0=lq4r=TU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B67BEC04AAC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 19:06:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3F42C04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 19:08:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 950D5205ED
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 19:06:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BEB9820656
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 19:08:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=atlassian-com.20150623.gappssmtp.com header.i=@atlassian-com.20150623.gappssmtp.com header.b="CBIza3B1"
+	dkim=pass (2048-bit key) header.d=kernelci-org.20150623.gappssmtp.com header.i=@kernelci-org.20150623.gappssmtp.com header.b="wMA3SnlV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726593AbfETTGT (ORCPT
+        id S1726311AbfETTIR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 15:06:19 -0400
-Received: from mail-io1-f51.google.com ([209.85.166.51]:43978 "EHLO
-        mail-io1-f51.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726539AbfETTGT (ORCPT
+        Mon, 20 May 2019 15:08:17 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:43212 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726019AbfETTIR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 15:06:19 -0400
-Received: by mail-io1-f51.google.com with SMTP id v7so11876633iob.10
-        for <linux-kernel@vger.kernel.org>; Mon, 20 May 2019 12:06:18 -0700 (PDT)
+        Mon, 20 May 2019 15:08:17 -0400
+Received: by mail-wr1-f67.google.com with SMTP id r4so15788683wro.10
+        for <linux-kernel@vger.kernel.org>; Mon, 20 May 2019 12:08:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=atlassian-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=QzZE9jFbHqOGJKb7odntY6nSTCezqxIRWPNodlHk2xo=;
-        b=CBIza3B1gqmWZ19UAfEjcgM1l7DpiemU8uY4yUS22ENov5JFyxsZ3CBksQYSdxP3fY
-         4MFg3eevc5IWAbIwbrAOTsswjBFfaH+0BBTcnQ4ayVDU2zVvSEi13iL0Kq0aduCc2Yfx
-         8yaK18JSItLIa8GLI1v1J02rpFGUD0P+y6PhlUWVLWCXiWnDA75F28HRHyXjh+Ie+c9g
-         y5E6zVLvOHr6qieIMlH4FERkw3WmsRIfzaMZYZIMv5mPCzNGPFzy5hkzMSmS/e6bYCxX
-         o4GrOZxuj85UcljKrEOIzz1c1mcYUR6cFb7e9syLlshs4GYo5nJclkGkWQZAsWh7LnUY
-         o7+A==
+        d=kernelci-org.20150623.gappssmtp.com; s=20150623;
+        h=message-id:date:mime-version:content-transfer-encoding:in-reply-to
+         :references:subject:to:from:cc;
+        bh=YzAXxaOC5xqVMd8/F/Ga0LPRdXuar3Jj9JxMXvVw7Sc=;
+        b=wMA3SnlVfagrZY+IrVonNezodI0Y22lIHeDsGtG0cIyAG7bEDsCTOZDiS/SDfK+s+X
+         FOQnnL8LEOD/F4ccOmfGbRb/UhW9oA+elSFuvK/uO98RHcYb7p6SUIH56U7e18HCLJlM
+         4f3qLVe+Pn2MmVRbHqdyOuV3c8dVShpbc97fO4zYV9fVchps1iWOVOXV8XT+kCBXNgkD
+         H27bA40hFdSdc6Fw0FmnzTr4t46VK/epVSq9DZej0fXNXDS2NM6+oAponHdlznIjU3vZ
+         Rp+OcYk4i0WsfeKCsXv12+VbXIhWj6Yq3AK8oACTdwYNMPal2VKDxoH28IPpU1abx+Zd
+         M8Mw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=QzZE9jFbHqOGJKb7odntY6nSTCezqxIRWPNodlHk2xo=;
-        b=YBJaJP3E7bbX9EwBqrePPoy0WX17Uz9qYWbvTynRXyobZ82gFviaY47R3Yr54XuuLp
-         oLhfUSwJdfw/y9xrRuMHnFsBI56am2g+veFyaJIcpML57fYedFp443+rzlXqe7Au7crG
-         2U29mGCoX0Dbx8P2bEAQpq2ZBrEQ2UNSRtotnNalOhNWhh4ZXTq3VgZdb2Rguo4qU46y
-         abNpQfaUoR4bsNy8YMcq3VgNyj2cJ0PEqV0qOT5OKXj2muyEDSL4AT8k2cm1qlL/jvj8
-         v4CPBfCp2pFKo1QknB39fR0RXi23ap6v/vOLPBBURVjIP0vNc9Wl6oKTywwFTbIPXZsy
-         jjAg==
-X-Gm-Message-State: APjAAAUcDgAVd2YbRrfKRTZvW6PddAsydWG0GNGDd5KYlCj8GMaCM3jV
-        pkd/ZVkDq+UzAQeoNZHPNCfK6f5letrHNXYksfTcKA==
-X-Google-Smtp-Source: APXvYqyloS6ZKCQ4Ac7ONK15oKaup7o7Pm35bkJPFMluGEfbd0oRHuQupykbysUKED2G5Ua3l/KlU8Pq4nc9KSYrIY4=
-X-Received: by 2002:a05:6602:95:: with SMTP id h21mr20536731iob.109.1558379178175;
- Mon, 20 May 2019 12:06:18 -0700 (PDT)
+        h=x-gm-message-state:message-id:date:mime-version
+         :content-transfer-encoding:in-reply-to:references:subject:to:from:cc;
+        bh=YzAXxaOC5xqVMd8/F/Ga0LPRdXuar3Jj9JxMXvVw7Sc=;
+        b=dcsEFfK2wARIcoWCTKVQh3MCg68lassyKHHjHMJD0YFuMhrb+xcB8PgBO4Do6oqqKn
+         ut3NfwRqVESgnlILCm0FCLlxfypBtzhmT3b3pjgEdwrSjheEyPOiDyQqeYmBciAH5TgE
+         9KiVNt1seWWAV+9flmar6ututiyOi82XfvP0huw2PwCtxHDlNvHRU0aVSUSbqkll+vYH
+         jLNV9p0+Z8Iz6TNZEPp//+k/PVQ+BXtPhrh7QnyyV9G6DQd3exLAed4L+ztZ9tf/r44h
+         y5Phs7BbTm146c+x2Xj54XYWUrr6C1XB18sLK7x6ppQwkeF5BENKV4PK8iRMd7+VhA5X
+         mRzw==
+X-Gm-Message-State: APjAAAVOB2iD/UzPLsdn5YVeh7HVN8ZWSIjgmgKKsh3ixSFQXta/t2Yo
+        giM2JP5Q/byl/iESK7B8AfwzhQ==
+X-Google-Smtp-Source: APXvYqwCDZdnaTgUywPY4vGp0YZHmTdm6mZENFhdUN3APJbFm6JQra2C2IIQqq2x13Y19c+6AXbpQA==
+X-Received: by 2002:a5d:680d:: with SMTP id w13mr7260238wru.316.1558379295861;
+        Mon, 20 May 2019 12:08:15 -0700 (PDT)
+Received: from [148.251.42.114] ([2a01:4f8:201:9271::2])
+        by smtp.gmail.com with ESMTPSA id m17sm756867wmc.6.2019.05.20.12.08.15
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 20 May 2019 12:08:15 -0700 (PDT)
+Message-ID: <5ce2fb1f.1c69fb81.b5d8f.3a76@mx.google.com>
+Date:   Mon, 20 May 2019 12:08:15 -0700 (PDT)
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-References: <xmqq36la24t1.fsf@gitster-ct.c.googlers.com>
-In-Reply-To: <xmqq36la24t1.fsf@gitster-ct.c.googlers.com>
-From:   Bryan Turner <bturner@atlassian.com>
-Date:   Mon, 20 May 2019 12:06:07 -0700
-Message-ID: <CAGyf7-F-d-n39fJmjYc_2rjqQa4d7PFCx63LwW3m7PFetEgzEw@mail.gmail.com>
-Subject: Re: [ANNOUNCE] Git v2.22.0-rc1
-To:     Junio C Hamano <gitster@pobox.com>
-Cc:     Git Users <git@vger.kernel.org>,
-        Linux Kernel <linux-kernel@vger.kernel.org>,
-        git-packagers@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Kernelci-Report-Type: boot
+X-Kernelci-Tree: stable-rc
+X-Kernelci-Branch: linux-5.0.y
+X-Kernelci-Kernel: v5.0.17-124-gbb2772791a81
+In-Reply-To: <20190520115245.439864225@linuxfoundation.org>
+References: <20190520115245.439864225@linuxfoundation.org>
+Subject: Re: [PATCH 5.0 000/123] 5.0.18-stable review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org
+From:   "kernelci.org bot" <bot@kernelci.org>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, May 19, 2019 at 10:00 AM Junio C Hamano <gitster@pobox.com> wrote:
->
->  * The diff machinery, one of the oldest parts of the system, which
->    long predates the parse-options API, uses fairly long and complex
->    handcrafted option parser.  This is being rewritten to use the
->    parse-options API.
+stable-rc/linux-5.0.y boot: 126 boots: 0 failed, 120 passed with 5 offline,=
+ 1 conflict (v5.0.17-124-gbb2772791a81)
 
-It looks like with these changes it's no longer possible to use "-U"
-(or, I'd assume, "--unified") without adding an explicit number for
-context lines.
+Full Boot Summary: https://kernelci.org/boot/all/job/stable-rc/branch/linux=
+-5.0.y/kernel/v5.0.17-124-gbb2772791a81/
+Full Build Summary: https://kernelci.org/build/stable-rc/branch/linux-5.0.y=
+/kernel/v5.0.17-124-gbb2772791a81/
 
-Was it not intended that a user could pass "-U" to explicitly say "I
-want a unified diff with the default number of context lines"? Because
-it's always worked that way, as far as I can tell (certainly since
-early 1.7.x releases). Is it possible, with the new parse-options
-code, to restore that behavior? Removing that is likely to be a pretty
-big disruption for Bitbucket Server, which has always explicitly
-passed "-U" to "git diff". If the community wants to move forward with
-the change, I understand. I'm not trying to roadblock it; I'm just
-listing an explicit example of something that will be significantly
-affected by the change. Perhaps Git 2.22 could emit a warning about
-the change in behavior and then a subsequent version could turn it
-into an error, to give us (and anyone else relying on this behavior)
-more time to make adjustments?
+Tree: stable-rc
+Branch: linux-5.0.y
+Git Describe: v5.0.17-124-gbb2772791a81
+Git Commit: bb2772791a81b9bbda82fc5b02ac84b8b8b42628
+Git URL: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stabl=
+e-rc.git
+Tested: 72 unique boards, 24 SoC families, 14 builds out of 208
 
-I'm aware a unified diff is the default output, but many commands have
-flags that essentially tell Git to do what it would do by default.
-That can help counter changes in the default, as well as safeguarding
-against new config options that allow specifying a different default
-(as it were). For example, "git diff" has "--no-color", which could
-override configuration and essentially applied the default
-behavior--until the default configuration was changed in 1.8.4 from
-"never" to "auto". By using "--no-color", even though we didn't "need"
-to, we were protected against that change in the default.
+Boot Regressions Detected:
 
-Best regards,
-Bryan Turner
+arm:
+
+    omap2plus_defconfig:
+        gcc-8:
+          omap4-panda:
+              lab-baylibre: new failure (last pass: v5.0.17-117-gc76436debf=
+df)
+
+Offline Platforms:
+
+arm:
+
+    multi_v7_defconfig:
+        gcc-8
+            stih410-b2120: 1 offline lab
+
+arm64:
+
+    defconfig:
+        gcc-8
+            meson-axg-s400: 1 offline lab
+            meson-g12a-u200: 1 offline lab
+            meson-g12a-x96-max: 1 offline lab
+            meson-gxl-s905x-libretech-cc: 1 offline lab
+
+Conflicting Boot Failure Detected: (These likely are not failures as other =
+labs are reporting PASS. Needs review.)
+
+arm:
+    omap2plus_defconfig:
+        omap4-panda:
+            lab-baylibre: FAIL (gcc-8)
+            lab-baylibre-seattle: PASS (gcc-8)
+
+---
+For more info write to <info@kernelci.org>
