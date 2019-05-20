@@ -2,55 +2,51 @@ Return-Path: <SRS0=lq4r=TU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85F67C04E87
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 05:58:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4861C46460
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 06:01:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5C58320851
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 05:58:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D47320856
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 06:01:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Re+W8BLv"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="N28ceEQU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730550AbfETF6m (ORCPT
+        id S1730562AbfETGBP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 01:58:42 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:39050 "EHLO
+        Mon, 20 May 2019 02:01:15 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:46266 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730532AbfETF6k (ORCPT
+        with ESMTP id S1725772AbfETGBO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 01:58:40 -0400
+        Mon, 20 May 2019 02:01:14 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
-        :Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From
-        :Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=/SFfD7/IVWCGE96J1VVwYbb2NenGrtf57wS4zCUzGX8=; b=Re+W8BLvyS1MgoCaapd/OQ+Qwp
-        32OBEnKBUJVLUs79jLWSzcz1kHXXyHyqcMTdwGtaPVC5xmto+sVBQqgTMzAmuURhrbIYp8FMJ3gfE
-        l3oWMhBHjJ1yeMW3XRT+kjUL9TCBoASPc1/DwkGws7eiwnp5uHSqneVFr2IX7JFO6do7L/tWTt1Q+
-        +1pQd6hkn/MqT1RLnUTMwmXA4zOT9ItdA7hEcyB2tI29txo7KqHzqzpwDpAxhlqolJNjYlR1BOTTP
-        Rkr/aD1nXh8ArmcikMSKICnWHj9XOcYz83RSs2HQrN6nrBvWm4RnQPggas+3xP5hz8S/E4U4lAclU
-        hLiQL/ZA==;
+        MIME-Version:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:
+        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+        Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=TtG/YNZz0y8mj8A1er4STirT5s0O9RpqqEC1rxfxJiw=; b=N28ceEQUAuU1xApEDffUynFzT
+        NQ7r5r90qOpUH2HTUExB3tPdnqSPlGVpwivhL8itUmf97FMJaB8XZ2cmFtxzOCEHPNUooKfq7cA9e
+        7tGLtWr/T/66PN6agyLUtVAQzhW7PcSFuJXr8DezcIfADw9m9qy0U8ANLkROi1EmdXGFy6Xn1NizG
+        3Lu0ms/lCozg4q41X4FOBQYj496+6iy1note8PX5sNKPGJ+6DVsYqWBT29+tgo+UiZQ4r26RRZh9B
+        kG6HWOVGgsRx10sxmQ7WEzY4qhWUV9Zg3LTKhxPsYZs5lEmkuh6BCnV30SqFAyKihTpLMMpJL5yO8
+        tO7LpeWyA==;
 Received: from 089144206147.atnat0015.highway.bob.at ([89.144.206.147] helo=localhost)
         by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hSbJk-0006OG-Cl; Mon, 20 May 2019 05:58:36 +0000
+        id 1hSbME-0001St-Ko; Mon, 20 May 2019 06:01:11 +0000
 From:   Christoph Hellwig <hch@lst.de>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     Sami Tolvanen <samitolvanen@google.com>,
-        Kees Cook <keescook@chromium.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        linux-mtd@lists.infradead.org, linux-nfs@vger.kernel.org,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 4/4] 9p: pass the correct prototype to read_cache_page
-Date:   Mon, 20 May 2019 07:57:31 +0200
-Message-Id: <20190520055731.24538-5-hch@lst.de>
+To:     Oleg Nesterov <oleg@redhat.com>, Arnd Bergmann <arnd@arndb.de>
+Cc:     x86@kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mips@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-sh@vger.kernel.org, linux-arch@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: remove asm-generic/ptrace.h v2
+Date:   Mon, 20 May 2019 08:00:13 +0200
+Message-Id: <20190520060018.25569-1-hch@lst.de>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190520055731.24538-1-hch@lst.de>
-References: <20190520055731.24538-1-hch@lst.de>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
@@ -59,41 +55,13 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix the callback 9p passes to read_cache_page to actually have the
-proper type expected.  Casting around function pointers can easily
-hide typing bugs, and defeats control flow protection.
+Hi all,
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
-Reviewed-by: Kees Cook <keescook@chromium.org>
----
- fs/9p/vfs_addr.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+asm-generic/ptrace.h is a little weird in that it doesn't actually
+implement any functionality, but it provided multiple layers of macros
+that just implement trivial inline functions.  We implement those
+directly in the few architectures and be off with a much simpler
+design.
 
-diff --git a/fs/9p/vfs_addr.c b/fs/9p/vfs_addr.c
-index 0bcbcc20f769..02e0fc51401e 100644
---- a/fs/9p/vfs_addr.c
-+++ b/fs/9p/vfs_addr.c
-@@ -50,8 +50,9 @@
-  * @page: structure to page
-  *
-  */
--static int v9fs_fid_readpage(struct p9_fid *fid, struct page *page)
-+static int v9fs_fid_readpage(void *data, struct page *page)
- {
-+	struct p9_fid *fid = data;
- 	struct inode *inode = page->mapping->host;
- 	struct bio_vec bvec = {.bv_page = page, .bv_len = PAGE_SIZE};
- 	struct iov_iter to;
-@@ -122,7 +123,8 @@ static int v9fs_vfs_readpages(struct file *filp, struct address_space *mapping,
- 	if (ret == 0)
- 		return ret;
- 
--	ret = read_cache_pages(mapping, pages, (void *)v9fs_vfs_readpage, filp);
-+	ret = read_cache_pages(mapping, pages, v9fs_fid_readpage,
-+			filp->private_data);
- 	p9_debug(P9_DEBUG_VFS, "  = %d\n", ret);
- 	return ret;
- }
--- 
-2.20.1
-
+Changes since v1:
+ - add a missing empty line between functions
