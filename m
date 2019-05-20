@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2767CC04E87
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:49:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07CC7C04AAF
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:49:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F0C1720645
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:49:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C873620645
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:49:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558356570;
-	bh=34pvu7oNa5wqsc3tntV2i9diO3rjJi8DbuOwL65B550=;
+	s=default; t=1558356573;
+	bh=iVm8FVhzSjc67LGrX5HDsQyAxRaS8C+6UytUP01HyhQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sWd1cA2VczTnfnKhUdXnlteV9HcHhsyd29hjCw3YabpVP6TRyaYv/4xXlpDEHGvNz
-	 nMUqA8Iwl/VmbyraWFyFy7p1YY7BY1Moaaje3miK552Kx+OV0SiIsHYf8VTVCt2FsF
-	 7kM8N2tKUrXBSTX/mjgJEDzNrG2IVL3rf6LHg57Y=
+	b=AO5HrbPbDEf0VmiIJIkq8hY+5pNkozult5+9LF8Ozw+wnJFUdxBBU4qUEc67R7qld
+	 sIefMvZli0FRtsoDSrReoEicUMvmAI0KLNIgePniy79+iUBnsA799rgckg4ql3Y9JG
+	 +Q4yzCKuu8sANIibEusx3p6/8vVCaS8OWcYWpECk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388201AbfETMVh (ORCPT
+        id S2389220AbfETMtd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 08:21:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35222 "EHLO mail.kernel.org"
+        Mon, 20 May 2019 08:49:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35364 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388174AbfETMVa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 08:21:30 -0400
+        id S2388196AbfETMVf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 08:21:35 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 69F8720815;
-        Mon, 20 May 2019 12:21:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 96D0F214DA;
+        Mon, 20 May 2019 12:21:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558354889;
-        bh=34pvu7oNa5wqsc3tntV2i9diO3rjJi8DbuOwL65B550=;
+        s=default; t=1558354895;
+        bh=iVm8FVhzSjc67LGrX5HDsQyAxRaS8C+6UytUP01HyhQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=G3zMNbuLdy5QBEFhKFzo73eB2lwCyqIYy1CjUtmTO9u+GYNHFvywWbiufM31WUueL
-         XZ8M+abBs6QNo7OREafkFC6WMJSO71WY/EUXJeCycg+a/FqTH0wImmd+QPwhKSl688
-         wcFD32yuUcnZ0XYGEjVnIsp1hR6XTJWSkSKNLhU4=
+        b=k8qYiIw/58MBz93nmfP8luWj2fTw5civan1jv1KIZsGIm2SQzHhPrApNpUGN0j9UB
+         jKNBePlnO0ia1wVsTJ3GLs3RVI+3vI7riJ8lEtS8rIKTCSbwZ7U0uv7OIZVu5f2oA8
+         CfXtqNM8zRP5QLnM+bM/Mc0+BcdefBGW66udXmik=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Christian Lamparter <chunkeey@gmail.com>,
+        stable@vger.kernel.org, Eric Biggers <ebiggers@google.com>,
         Herbert Xu <herbert@gondor.apana.org.au>
-Subject: [PATCH 4.19 018/105] crypto: crypto4xx - fix ctr-aes missing output IV
-Date:   Mon, 20 May 2019 14:13:24 +0200
-Message-Id: <20190520115248.277587088@linuxfoundation.org>
+Subject: [PATCH 4.19 020/105] crypto: salsa20 - dont access already-freed walk.iv
+Date:   Mon, 20 May 2019 14:13:26 +0200
+Message-Id: <20190520115248.416824052@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190520115247.060821231@linuxfoundation.org>
 References: <20190520115247.060821231@linuxfoundation.org>
@@ -59,73 +59,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christian Lamparter <chunkeey@gmail.com>
+From: Eric Biggers <ebiggers@google.com>
 
-commit 25baaf8e2c93197d063b372ef7b62f2767c7ac0b upstream.
+commit edaf28e996af69222b2cb40455dbb5459c2b875a upstream.
 
-Commit 8efd972ef96a ("crypto: testmgr - support checking skcipher output IV")
-caused the crypto4xx driver to produce the following error:
+If the user-provided IV needs to be aligned to the algorithm's
+alignmask, then skcipher_walk_virt() copies the IV into a new aligned
+buffer walk.iv.  But skcipher_walk_virt() can fail afterwards, and then
+if the caller unconditionally accesses walk.iv, it's a use-after-free.
 
-| ctr-aes-ppc4xx encryption test failed (wrong output IV)
-| on test vector 0, cfg="in-place"
+salsa20-generic doesn't set an alignmask, so currently it isn't affected
+by this despite unconditionally accessing walk.iv.  However this is more
+subtle than desired, and it was actually broken prior to the alignmask
+being removed by commit b62b3db76f73 ("crypto: salsa20-generic - cleanup
+and convert to skcipher API").
 
-This patch fixes this by reworking the crypto4xx_setkey_aes()
-function to:
+Since salsa20-generic does not update the IV and does not need any IV
+alignment, update it to use req->iv instead of walk.iv.
 
- - not save the iv for ECB (as per 18.2.38 CRYP0_SA_CMD_0:
-   "This bit mut be cleared for DES ECB mode or AES ECB mode,
-   when no IV is used.")
-
- - instruct the hardware to save the generated IV for all
-   other modes of operations that have IV and then supply
-   it back to the callee in pretty much the same way as we
-   do it for cbc-aes already.
-
- - make it clear that the DIR_(IN|OUT)BOUND is the important
-   bit that tells the hardware to encrypt or decrypt the data.
-   (this is cosmetic - but it hopefully prevents me from
-    getting confused again).
-
- - don't load any bogus hash when we don't use any hash
-   operation to begin with.
-
+Fixes: 2407d60872dd ("[CRYPTO] salsa20: Salsa20 stream cipher")
 Cc: stable@vger.kernel.org
-Fixes: f2a13e7cba9e ("crypto: crypto4xx - enable AES RFC3686, ECB, CFB and OFB offloads")
-Signed-off-by: Christian Lamparter <chunkeey@gmail.com>
+Signed-off-by: Eric Biggers <ebiggers@google.com>
 Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/crypto/amcc/crypto4xx_alg.c |   12 +++++++++---
- 1 file changed, 9 insertions(+), 3 deletions(-)
+ crypto/salsa20_generic.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/crypto/amcc/crypto4xx_alg.c
-+++ b/drivers/crypto/amcc/crypto4xx_alg.c
-@@ -141,9 +141,10 @@ static int crypto4xx_setkey_aes(struct c
- 	/* Setup SA */
- 	sa = ctx->sa_in;
+--- a/crypto/salsa20_generic.c
++++ b/crypto/salsa20_generic.c
+@@ -161,7 +161,7 @@ static int salsa20_crypt(struct skcipher
  
--	set_dynamic_sa_command_0(sa, SA_NOT_SAVE_HASH, (cm == CRYPTO_MODE_CBC ?
--				 SA_SAVE_IV : SA_NOT_SAVE_IV),
--				 SA_LOAD_HASH_FROM_SA, SA_LOAD_IV_FROM_STATE,
-+	set_dynamic_sa_command_0(sa, SA_NOT_SAVE_HASH, (cm == CRYPTO_MODE_ECB ?
-+				 SA_NOT_SAVE_IV : SA_SAVE_IV),
-+				 SA_NOT_LOAD_HASH, (cm == CRYPTO_MODE_ECB ?
-+				 SA_LOAD_IV_FROM_SA : SA_LOAD_IV_FROM_STATE),
- 				 SA_NO_HEADER_PROC, SA_HASH_ALG_NULL,
- 				 SA_CIPHER_ALG_AES, SA_PAD_TYPE_ZERO,
- 				 SA_OP_GROUP_BASIC, SA_OPCODE_DECRYPT,
-@@ -162,6 +163,11 @@ static int crypto4xx_setkey_aes(struct c
- 	memcpy(ctx->sa_out, ctx->sa_in, ctx->sa_len * 4);
- 	sa = ctx->sa_out;
- 	sa->sa_command_0.bf.dir = DIR_OUTBOUND;
-+	/*
-+	 * SA_OPCODE_ENCRYPT is the same value as SA_OPCODE_DECRYPT.
-+	 * it's the DIR_(IN|OUT)BOUND that matters
-+	 */
-+	sa->sa_command_0.bf.opcode = SA_OPCODE_ENCRYPT;
+ 	err = skcipher_walk_virt(&walk, req, true);
  
- 	return 0;
- }
+-	salsa20_init(state, ctx, walk.iv);
++	salsa20_init(state, ctx, req->iv);
+ 
+ 	while (walk.nbytes > 0) {
+ 		unsigned int nbytes = walk.nbytes;
 
 
