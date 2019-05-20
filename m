@@ -2,54 +2,57 @@ Return-Path: <SRS0=lq4r=TU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D6B6C04AAC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:18:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14D3FC04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:18:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 715F3208C3
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:18:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD00F21479
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:18:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558354721;
-	bh=03B4r+gdfV3zZKsrGh0pxXl2QtZADUcF3UWhdO37XDM=;
+	s=default; t=1558354727;
+	bh=tb/+fssP5jTyiPVv+dGAjtGd2G/2jTpR3YUlrEi+U70=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SDdU3U/EsDr8u7u0xt6nRpdHQ6TILYHtP7UMIIS6JYNr1G5to3MAkmtv/+xao/s0a
-	 3airhzn10o8fA35rC9ut3VYv8HD/OFmN5AU8DZie/byRxled8P8d/Ysz5c2w4lUrCD
-	 c5D6VUHJkGUMPQVaMbsB2ffjC/l8NWM9aXXZ1K+A=
+	b=CmwZnTbx9C7W1r8TMmeYc4I1xaFY2sO7Bkxntsp+gDP6OkNBcIZWCyHPxmxJGZlvM
+	 VwMawctBkvER3pAg/Yf75fvV+qpWNMpnYkuUNsoHs8uEpEfMZ43tPnGBJyJOjxb5XI
+	 Owvux6CbnbnknVV5j1My5SUAMFdnZpulXWaF9yvM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731474AbfETMSk (ORCPT
+        id S1733088AbfETMSq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 08:18:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59708 "EHLO mail.kernel.org"
+        Mon, 20 May 2019 08:18:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59786 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387720AbfETMSe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 08:18:34 -0400
+        id S1731217AbfETMSj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 08:18:39 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5923521019;
-        Mon, 20 May 2019 12:18:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A665F21019;
+        Mon, 20 May 2019 12:18:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558354713;
-        bh=03B4r+gdfV3zZKsrGh0pxXl2QtZADUcF3UWhdO37XDM=;
+        s=default; t=1558354719;
+        bh=tb/+fssP5jTyiPVv+dGAjtGd2G/2jTpR3YUlrEi+U70=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=g1qw6m9zTb0hnI5WBav8eL4V55CaScqX7S9YHxcOu6x6pmDzuxY62LWQcSx8tWPtA
-         lLx6KEXn5OurUJT95YAcNyMpQSu/2odGYWkoxDwv+tu36/qfAdH0792yDgBeRe52Al
-         hhmFlsjURL7hWeyQxf9xQbIW+swt7zcbSJcI/MOo=
+        b=jBqfrd1SwBvR8OoSdVyEez41P1oWqUsAUT9iUscV03rRZYbPDQa1iknaB0YAAIE5Y
+         HViHcX4bvLG1RqNnWch4dpPnYuj7WJhS9+cAk9pigt3qmOJSdvi7DbjN1oKOtlHKyD
+         H552YWBnvzePOUcQYbjiRbiei+/hxJZga1wizDt4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dexuan Cui <decui@microsoft.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Michael Kelley <mikelley@microsoft.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 04/63] PCI: hv: Add hv_pci_remove_slots() when we unload the driver
-Date:   Mon, 20 May 2019 14:13:43 +0200
-Message-Id: <20190520115231.769898685@linuxfoundation.org>
+        stable@vger.kernel.org, Andy Lutomirski <luto@kernel.org>,
+        Borislav Petkov <bp@suse.de>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Jon Masters <jcm@redhat.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>
+Subject: [PATCH 4.14 06/63] x86/speculation/mds: Revert CPU buffer clear on double fault exit
+Date:   Mon, 20 May 2019 14:13:45 +0200
+Message-Id: <20190520115232.010091018@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190520115231.137981521@linuxfoundation.org>
 References: <20190520115231.137981521@linuxfoundation.org>
@@ -62,80 +65,73 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 15becc2b56c6eda3d9bf5ae993bafd5661c1fad1 ]
+From: Andy Lutomirski <luto@kernel.org>
 
-When we unload the pci-hyperv host controller driver, the host does not
-send us a PCI_EJECT message.
+commit 88640e1dcd089879530a49a8d212d1814678dfe7 upstream.
 
-In this case we also need to make sure the sysfs PCI slot directory is
-removed, otherwise a command on a slot file eg:
+The double fault ESPFIX path doesn't return to user mode at all --
+it returns back to the kernel by simulating a #GP fault.
+prepare_exit_to_usermode() will run on the way out of
+general_protection before running user code.
 
-"cat /sys/bus/pci/slots/2/address"
-
-will trigger a
-
-"BUG: unable to handle kernel paging request"
-
-and, if we unload/reload the driver several times we would end up with
-stale slot entries in PCI slot directories in /sys/bus/pci/slots/
-
-root@localhost:~# ls -rtl  /sys/bus/pci/slots/
-total 0
-drwxr-xr-x 2 root root 0 Feb  7 10:49 2
-drwxr-xr-x 2 root root 0 Feb  7 10:49 2-1
-drwxr-xr-x 2 root root 0 Feb  7 10:51 2-2
-
-Add the missing code to remove the PCI slot and fix the current
-behaviour.
-
-Fixes: a15f2c08c708 ("PCI: hv: support reporting serial number as slot information")
-Signed-off-by: Dexuan Cui <decui@microsoft.com>
-[lorenzo.pieralisi@arm.com: reformatted the log]
-Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Reviewed-by: Stephen Hemminger <sthemmin@microsoft.com>
-Reviewed-by: Michael Kelley <mikelley@microsoft.com>
+Signed-off-by: Andy Lutomirski <luto@kernel.org>
+Cc: Borislav Petkov <bp@suse.de>
+Cc: Frederic Weisbecker <frederic@kernel.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Jon Masters <jcm@redhat.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
 Cc: stable@vger.kernel.org
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Fixes: 04dcbdb80578 ("x86/speculation/mds: Clear CPU buffers on exit to user")
+Link: http://lkml.kernel.org/r/ac97612445c0a44ee10374f6ea79c222fe22a5c4.1557865329.git.luto@kernel.org
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/pci/host/pci-hyperv.c | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
+ Documentation/x86/mds.rst |    7 -------
+ arch/x86/kernel/traps.c   |    8 --------
+ 2 files changed, 15 deletions(-)
 
-diff --git a/drivers/pci/host/pci-hyperv.c b/drivers/pci/host/pci-hyperv.c
-index 292450c7da625..a5825bbcded72 100644
---- a/drivers/pci/host/pci-hyperv.c
-+++ b/drivers/pci/host/pci-hyperv.c
-@@ -1513,6 +1513,21 @@ static void hv_pci_assign_slots(struct hv_pcibus_device *hbus)
- 	}
- }
+--- a/Documentation/x86/mds.rst
++++ b/Documentation/x86/mds.rst
+@@ -158,13 +158,6 @@ Mitigation points
+      mitigated on the return from do_nmi() to provide almost complete
+      coverage.
  
-+/*
-+ * Remove entries in sysfs pci slot directory.
-+ */
-+static void hv_pci_remove_slots(struct hv_pcibus_device *hbus)
-+{
-+	struct hv_pci_dev *hpdev;
-+
-+	list_for_each_entry(hpdev, &hbus->children, list_entry) {
-+		if (!hpdev->pci_slot)
-+			continue;
-+		pci_destroy_slot(hpdev->pci_slot);
-+		hpdev->pci_slot = NULL;
-+	}
-+}
-+
- /**
-  * create_root_hv_pci_bus() - Expose a new root PCI bus
-  * @hbus:	Root PCI bus, as understood by this driver
-@@ -2719,6 +2734,7 @@ static int hv_pci_remove(struct hv_device *hdev)
- 		pci_lock_rescan_remove();
- 		pci_stop_root_bus(hbus->pci_bus);
- 		pci_remove_root_bus(hbus->pci_bus);
-+		hv_pci_remove_slots(hbus);
- 		pci_unlock_rescan_remove();
- 		hbus->state = hv_pcibus_removed;
+-   - Double fault (#DF):
+-
+-     A double fault is usually fatal, but the ESPFIX workaround, which can
+-     be triggered from user space through modify_ldt(2) is a recoverable
+-     double fault. #DF uses the paranoid exit path, so explicit mitigation
+-     in the double fault handler is required.
+-
+    - Machine Check Exception (#MC):
+ 
+      Another corner case is a #MC which hits between the CPU buffer clear
+--- a/arch/x86/kernel/traps.c
++++ b/arch/x86/kernel/traps.c
+@@ -58,7 +58,6 @@
+ #include <asm/alternative.h>
+ #include <asm/fpu/xstate.h>
+ #include <asm/trace/mpx.h>
+-#include <asm/nospec-branch.h>
+ #include <asm/mpx.h>
+ #include <asm/vm86.h>
+ 
+@@ -386,13 +385,6 @@ dotraplinkage void do_double_fault(struc
+ 		regs->ip = (unsigned long)general_protection;
+ 		regs->sp = (unsigned long)&gpregs->orig_ax;
+ 
+-		/*
+-		 * This situation can be triggered by userspace via
+-		 * modify_ldt(2) and the return does not take the regular
+-		 * user space exit, so a CPU buffer clear is required when
+-		 * MDS mitigation is enabled.
+-		 */
+-		mds_user_clear_cpu_buffers();
+ 		return;
  	}
--- 
-2.20.1
-
+ #endif
 
 
