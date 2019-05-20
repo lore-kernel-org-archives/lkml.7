@@ -4,55 +4,58 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2FCCC04AAC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:28:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1414CC04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:28:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 74CC721721
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:28:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DEC8F20675
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:28:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558355287;
-	bh=0KsKzMIexvgz/Ii/Ahfc7GkrA4itaRHT2VqE7RYhjWA=;
+	s=default; t=1558355294;
+	bh=5QtOyxNW/y+7Hcy7rOPEPdbZxZW89eKydDTuooqxbr4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1jJzz1Pd/IBa+M6ayjmgsUgY2FQ8k+ID/YnZgLr0xNMkOBdLrwlmTTaFj9jPrGIrX
-	 EPhF7+Fs/ebnzrvg0HXNbBzPEeVSoVktrFYeg2mak0fm03o6ki63YE71xv6JGLKgns
-	 V1rqpV2qIeEs6IgJ6Uv7+oOiW28AZ/mypvOD2gaE=
+	b=Ba5nAqGrLSxOwhOznkIfjJLBNPq7VqGkh0c5zBAy7NFZhXfxLka3pz809iEuBiSog
+	 KNZWsvVMHOJV3fSgzwRXoJMpSZqsX74FDAjaabYl1fIAdYQjdSAW8nbqgJZ4altjU0
+	 7/MW+3v88RyYLcVGJQSHu+CBAUWkGtytHgroAgOQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389613AbfETM2G (ORCPT
+        id S2389639AbfETM2O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 08:28:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43670 "EHLO mail.kernel.org"
+        Mon, 20 May 2019 08:28:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43734 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389599AbfETM2D (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 08:28:03 -0400
+        id S2389590AbfETM2F (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 08:28:05 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6CA9C20645;
-        Mon, 20 May 2019 12:28:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0C24921019;
+        Mon, 20 May 2019 12:28:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558355282;
-        bh=0KsKzMIexvgz/Ii/Ahfc7GkrA4itaRHT2VqE7RYhjWA=;
+        s=default; t=1558355284;
+        bh=5QtOyxNW/y+7Hcy7rOPEPdbZxZW89eKydDTuooqxbr4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=M98EDTkE3+zPYErT15N1v+/kZrRgoYOoNmw4Q3bv5JpA0Iiy1Gwn/EpZVb5SIe3J0
-         HtCsF28HiO7t7nD99F3gjFYxdsqqkXFLR+pIO5jgbeaKIpbAkyFwP/ha88x3ruzckm
-         yyJLb/McDKP1XcT15i+5MeXhX404SBYPPw6jWkPE=
+        b=Ltmk8T0F1EHAcRAkGtbu+4U/X/9ZNUQoIzc5gYOexqVqqQMF4XNGSv+W5IpQkaER1
+         2U7EpBpDa6xrIXebeTSwfsQPy9VSdEUDYx5PEqvAB4HREPx40WIkbsUhRsLqK50J1v
+         2lo1/jaT+TJjOoN1uXMXCnqhLi6KxgfeWVbmcyXI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Julien Thierry <julien.thierry@arm.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Borislav Petkov <bp@alien8.de>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>, stable@kernel.org,
-        Ingo Molnar <mingo@kernel.org>
-Subject: [PATCH 5.0 019/123] sched/x86: Save [ER]FLAGS on context switch
-Date:   Mon, 20 May 2019 14:13:19 +0200
-Message-Id: <20190520115246.190287323@linuxfoundation.org>
+        stable@vger.kernel.org, Yazen Ghannam <yazen.ghannam@amd.com>,
+        Borislav Petkov <bp@suse.de>, Arnd Bergmann <arnd@arndb.de>,
+        "clemej@gmail.com" <clemej@gmail.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
+        Pu Wen <puwen@hygon.cn>, Qiuxu Zhuo <qiuxu.zhuo@intel.com>,
+        "rafal@milecki.pl" <rafal@milecki.pl>,
+        Shirish S <Shirish.S@amd.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Tony Luck <tony.luck@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        x86-ml <x86@kernel.org>
+Subject: [PATCH 5.0 020/123] x86/MCE: Add an MCE-record filtering function
+Date:   Mon, 20 May 2019 14:13:20 +0200
+Message-Id: <20190520115246.231324489@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190520115245.439864225@linuxfoundation.org>
 References: <20190520115245.439864225@linuxfoundation.org>
@@ -65,128 +68,82 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Peter Zijlstra <peterz@infradead.org>
+From: Yazen Ghannam <yazen.ghannam@amd.com>
 
-commit 6690e86be83ac75832e461c141055b5d601c0a6d upstream.
+commit 45d4b7b9cb88526f6d5bd4c03efab88d75d10e4f upstream.
 
-Effectively reverts commit:
+Some systems may report spurious MCA errors. In general, spurious MCA
+errors may be disabled by clearing a particular bit in MCA_CTL. However,
+clearing a bit in MCA_CTL may not be recommended for some errors, so the
+only option is to ignore them.
 
-  2c7577a75837 ("sched/x86_64: Don't save flags on context switch")
+An MCA error is printed and handled after it has been added to the MCE
+event pool. So an MCA error can be ignored by not adding it to that pool
+in the first place.
 
-Specifically because SMAP uses FLAGS.AC which invalidates the claim
-that the kernel has clean flags.
+Add such a filtering function.
 
-In particular; while preemption from interrupt return is fine (the
-IRET frame on the exception stack contains FLAGS) it breaks any code
-that does synchonous scheduling, including preempt_enable().
+ [ bp: Move function prototype to the internal header and massage. ]
 
-This has become a significant issue ever since commit:
-
-  5b24a7a2aa20 ("Add 'unsafe' user access functions for batched accesses")
-
-provided for means of having 'normal' C code between STAC / CLAC,
-exposing the FLAGS.AC state. So far this hasn't led to trouble,
-however fix it before it comes apart.
-
-Reported-by: Julien Thierry <julien.thierry@arm.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Acked-by: Andy Lutomirski <luto@amacapital.net>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: Josh Poimboeuf <jpoimboe@redhat.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
+Signed-off-by: Yazen Ghannam <yazen.ghannam@amd.com>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: "clemej@gmail.com" <clemej@gmail.com>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Pu Wen <puwen@hygon.cn>
+Cc: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
+Cc: "rafal@milecki.pl" <rafal@milecki.pl>
+Cc: Shirish S <Shirish.S@amd.com>
+Cc: <stable@vger.kernel.org> # 5.0.x
 Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: stable@kernel.org
-Fixes: 5b24a7a2aa20 ("Add 'unsafe' user access functions for batched accesses")
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Cc: Tony Luck <tony.luck@intel.com>
+Cc: Vishal Verma <vishal.l.verma@intel.com>
+Cc: x86-ml <x86@kernel.org>
+Link: https://lkml.kernel.org/r/20190325163410.171021-1-Yazen.Ghannam@amd.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/entry/entry_32.S        |    2 ++
- arch/x86/entry/entry_64.S        |    2 ++
- arch/x86/include/asm/switch_to.h |    1 +
- arch/x86/kernel/process_32.c     |    7 +++++++
- arch/x86/kernel/process_64.c     |    8 ++++++++
- 5 files changed, 20 insertions(+)
+ arch/x86/kernel/cpu/mce/core.c     |    5 +++++
+ arch/x86/kernel/cpu/mce/genpool.c  |    3 +++
+ arch/x86/kernel/cpu/mce/internal.h |    3 +++
+ 3 files changed, 11 insertions(+)
 
---- a/arch/x86/entry/entry_32.S
-+++ b/arch/x86/entry/entry_32.S
-@@ -650,6 +650,7 @@ ENTRY(__switch_to_asm)
- 	pushl	%ebx
- 	pushl	%edi
- 	pushl	%esi
-+	pushfl
+--- a/arch/x86/kernel/cpu/mce/core.c
++++ b/arch/x86/kernel/cpu/mce/core.c
+@@ -1801,6 +1801,11 @@ static void __mcheck_cpu_init_timer(void
+ 	mce_start_timer(t);
+ }
  
- 	/* switch stack */
- 	movl	%esp, TASK_threadsp(%eax)
-@@ -672,6 +673,7 @@ ENTRY(__switch_to_asm)
- #endif
- 
- 	/* restore callee-saved registers */
-+	popfl
- 	popl	%esi
- 	popl	%edi
- 	popl	%ebx
---- a/arch/x86/entry/entry_64.S
-+++ b/arch/x86/entry/entry_64.S
-@@ -291,6 +291,7 @@ ENTRY(__switch_to_asm)
- 	pushq	%r13
- 	pushq	%r14
- 	pushq	%r15
-+	pushfq
- 
- 	/* switch stack */
- 	movq	%rsp, TASK_threadsp(%rdi)
-@@ -313,6 +314,7 @@ ENTRY(__switch_to_asm)
- #endif
- 
- 	/* restore callee-saved registers */
-+	popfq
- 	popq	%r15
- 	popq	%r14
- 	popq	%r13
---- a/arch/x86/include/asm/switch_to.h
-+++ b/arch/x86/include/asm/switch_to.h
-@@ -40,6 +40,7 @@ asmlinkage void ret_from_fork(void);
-  * order of the fields must match the code in __switch_to_asm().
-  */
- struct inactive_task_frame {
-+	unsigned long flags;
- #ifdef CONFIG_X86_64
- 	unsigned long r15;
- 	unsigned long r14;
---- a/arch/x86/kernel/process_32.c
-+++ b/arch/x86/kernel/process_32.c
-@@ -127,6 +127,13 @@ int copy_thread_tls(unsigned long clone_
- 	struct task_struct *tsk;
- 	int err;
- 
-+	/*
-+	 * For a new task use the RESET flags value since there is no before.
-+	 * All the status flags are zero; DF and all the system flags must also
-+	 * be 0, specifically IF must be 0 because we context switch to the new
-+	 * task with interrupts disabled.
-+	 */
-+	frame->flags = X86_EFLAGS_FIXED;
- 	frame->bp = 0;
- 	frame->ret_addr = (unsigned long) ret_from_fork;
- 	p->thread.sp = (unsigned long) fork_frame;
---- a/arch/x86/kernel/process_64.c
-+++ b/arch/x86/kernel/process_64.c
-@@ -392,6 +392,14 @@ int copy_thread_tls(unsigned long clone_
- 	childregs = task_pt_regs(p);
- 	fork_frame = container_of(childregs, struct fork_frame, regs);
- 	frame = &fork_frame->frame;
++bool filter_mce(struct mce *m)
++{
++	return false;
++}
 +
-+	/*
-+	 * For a new task use the RESET flags value since there is no before.
-+	 * All the status flags are zero; DF and all the system flags must also
-+	 * be 0, specifically IF must be 0 because we context switch to the new
-+	 * task with interrupts disabled.
-+	 */
-+	frame->flags = X86_EFLAGS_FIXED;
- 	frame->bp = 0;
- 	frame->ret_addr = (unsigned long) ret_from_fork;
- 	p->thread.sp = (unsigned long) fork_frame;
+ /* Handle unconfigured int18 (should never happen) */
+ static void unexpected_machine_check(struct pt_regs *regs, long error_code)
+ {
+--- a/arch/x86/kernel/cpu/mce/genpool.c
++++ b/arch/x86/kernel/cpu/mce/genpool.c
+@@ -99,6 +99,9 @@ int mce_gen_pool_add(struct mce *mce)
+ {
+ 	struct mce_evt_llist *node;
+ 
++	if (filter_mce(mce))
++		return -EINVAL;
++
+ 	if (!mce_evt_pool)
+ 		return -EINVAL;
+ 
+--- a/arch/x86/kernel/cpu/mce/internal.h
++++ b/arch/x86/kernel/cpu/mce/internal.h
+@@ -173,4 +173,7 @@ struct mca_msr_regs {
+ 
+ extern struct mca_msr_regs msr_ops;
+ 
++/* Decide whether to add MCE record to MCE event pool or filter it out. */
++extern bool filter_mce(struct mce *m);
++
+ #endif /* __X86_MCE_INTERNAL_H__ */
 
 
