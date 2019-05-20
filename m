@@ -2,103 +2,102 @@ Return-Path: <SRS0=lq4r=TU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35EA3C04AAC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 15:24:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7F65C04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 15:24:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 14F7C2054F
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 15:24:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 781032054F
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 15:24:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZZ8qMKt2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391090AbfETPYl (ORCPT
+        id S2392076AbfETPYw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 11:24:41 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:38346 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730766AbfETPYl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 11:24:41 -0400
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 3FA22369CC;
-        Mon, 20 May 2019 15:24:41 +0000 (UTC)
-Received: from llong.remote.csb (dhcp-17-85.bos.redhat.com [10.18.17.85])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id C49D717DD0;
-        Mon, 20 May 2019 15:24:39 +0000 (UTC)
-Subject: Re: [PATCH] scsi: ses: Fix out-of-bounds memory access in
- ses_enclosure_data_process()
-To:     James Bottomley <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>
-Cc:     linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20190501180535.26718-1-longman@redhat.com>
- <1fd39969-4413-2f11-86b2-729787680efa@redhat.com>
- <1558363938.3742.1.camel@linux.ibm.com>
-From:   Waiman Long <longman@redhat.com>
-Organization: Red Hat
-Message-ID: <3385cf54-7b6c-3f28-e037-f0d4037368eb@redhat.com>
-Date:   Mon, 20 May 2019 11:24:39 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
-MIME-Version: 1.0
-In-Reply-To: <1558363938.3742.1.camel@linux.ibm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.30]); Mon, 20 May 2019 15:24:41 +0000 (UTC)
+        Mon, 20 May 2019 11:24:52 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:40586 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387783AbfETPYw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 11:24:52 -0400
+Received: by mail-pf1-f193.google.com with SMTP id u17so7393073pfn.7
+        for <linux-kernel@vger.kernel.org>; Mon, 20 May 2019 08:24:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=uk849dcKmoqtNYZ7eIsEjVmGVspH3FFqGVpKFEH8i9o=;
+        b=ZZ8qMKt246wsD17eM1gv1+70aRKyqr1s8GR/CGTaqJyuEgSqrj3cRHAfkywZzXGN3w
+         pZfZrQ+kKUdjiI2RK8SpGtGITR3IjdgF0JwqClwVAtoCz5KiySr9Q3LwokSPXZ6y7RlA
+         e4htp38Cnz/o6UGAabOHWqUnV7pwCTyjSoseSq2YBoJ5XWo2bCOLhrRPldyxbGXrbE8P
+         EQjj0yl9NFx8eZI4M3WU7KdVhr9XcN6S+t55Rvn71AXom5U3qBg4OCHmU17j2XTi+oYV
+         YRhgZq69dy+LR/lCBUqiJzZZkvg3dUz2jrtopy4txrbgJmQS1CyeXCF8zPsCu6gX2LxH
+         EiRw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=uk849dcKmoqtNYZ7eIsEjVmGVspH3FFqGVpKFEH8i9o=;
+        b=k9FldQUj6eursbf6uDt6pzLJ8f0n7Uyzyy3O2K10AYAYxdno9Xxnj69F/b5a4pf0k+
+         G5sXakKt1xiY5Iz5bUL3Zl9my3IqV8YWKsIZk1UEdfJV4xGPlykec3BAZ7dkAryJsn7X
+         Awv06V/Av0TFKw/MEpUkrVRPXu5bNYfWJLbnR/WfokbmcGtZs6ysUyQL1dy7sFWlRSS5
+         uycv2j1JRBn6iIRFE/WMekaORi/efKXJG2tqOxeOY8rWSC54tOBKONWs7WmEEBsU2q/Y
+         8Y8Y62jiyNmSKdKtb0euFTCBZKnA0MEMMagCW3rok+HhFUCESgpU7blvK7vfUr0KRjpn
+         eS0g==
+X-Gm-Message-State: APjAAAU3wn8Jb9z2yd3Dj76sKCZ3uOtmT/OiXtpmFFT0IeCHzpLtddtv
+        WSXAR5qrIeSKBZ4UeftzYNc=
+X-Google-Smtp-Source: APXvYqwyXn2QfIUSh4Bsml8Wczd1ITUi8sjw0fVBO5AhMEakb/0LrV0/oQ6eSKM8tB+PxEOC4Ou7gA==
+X-Received: by 2002:a65:6145:: with SMTP id o5mr76017985pgv.262.1558365891426;
+        Mon, 20 May 2019 08:24:51 -0700 (PDT)
+Received: from jordon-HP-15-Notebook-PC.domain.name ([106.51.19.216])
+        by smtp.gmail.com with ESMTPSA id h13sm21522895pfo.98.2019.05.20.08.24.48
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Mon, 20 May 2019 08:24:50 -0700 (PDT)
+From:   Souptick Joarder <jrdr.linux@gmail.com>
+To:     miguel.ojeda.sandonis@gmail.com
+Cc:     linux-kernel@vger.kernel.org, willy@infradead.org,
+        Souptick Joarder <jrdr.linux@gmail.com>
+Subject: [PATCH 1/2] auxdisplay/cfag12864bfb.c: Convert to use vm_map_pages_zero()
+Date:   Mon, 20 May 2019 20:58:56 +0530
+Message-Id: <1558366136-3765-1-git-send-email-jrdr.linux@gmail.com>
+X-Mailer: git-send-email 1.9.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/20/19 10:52 AM, James Bottomley wrote:
-> On Mon, 2019-05-20 at 10:41 -0400, Waiman Long wrote:
-> [...]
->>> --- a/drivers/scsi/ses.c
->>> +++ b/drivers/scsi/ses.c
->>> @@ -605,9 +605,14 @@ static void ses_enclosure_data_process(struct
->>> enclosure_device *edev,
->>>  			     /* these elements are optional */
->>>  			     type_ptr[0] ==
->>> ENCLOSURE_COMPONENT_SCSI_TARGET_PORT ||
->>>  			     type_ptr[0] ==
->>> ENCLOSURE_COMPONENT_SCSI_INITIATOR_PORT ||
->>> -			     type_ptr[0] ==
->>> ENCLOSURE_COMPONENT_CONTROLLER_ELECTRONICS))
->>> +			     type_ptr[0] ==
->>> ENCLOSURE_COMPONENT_CONTROLLER_ELECTRONICS)) {
->>>  				addl_desc_ptr += addl_desc_ptr[1]
->>> + 2;
->>>  
->>> +				/* Ensure no out-of-bounds memory
->>> access */
->>> +				if (addl_desc_ptr >= ses_dev-
->>>> page10 +
->>> +						     ses_dev-
->>>> page10_len)
->>> +					addl_desc_ptr = NULL;
->>> +			}
->>>  		}
->>>  	}
->>>  	kfree(buf);
->> Ping! Any comment on this patch.
-> The update looks fine to me:
->
-> Reviewed-by: James E.J. Bottomley <jejb@linux.ibm.com>
->
-> It might also be interesting to find out how the proliant is
-> structuring this descriptor array to precipitate the out of bounds: Is
-> it just an off by one or something more serious?
+While using mmap, the incorrect value of length and vm_pgoff are
+ignored and this driver go ahead with mapping cfag12864b_buffer
+to user vma.
 
-I didn't look into the detail the enclosure message returned by the
-hardware, but I believe it may have more description entries (page7)
-than extended description entries (page10).
+Convert vm_insert_pages() to use vm_map_pages_zero(). We could later
+"fix" these drivers to behave according to the normal vm_pgoff
+offsetting simply by removing the _zero suffix on the function name and
+if that causes regressions, it gives us an easy way to revert.
 
-I can try to reserve the system and find out what exactly is wrong with
-that system if you really want to find that out.
+Signed-off-by: Souptick Joarder <jrdr.linux@gmail.com>
+---
+ drivers/auxdisplay/cfag12864bfb.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-Cheers,
-Longman
+diff --git a/drivers/auxdisplay/cfag12864bfb.c b/drivers/auxdisplay/cfag12864bfb.c
+index 40c8a55..4074886 100644
+--- a/drivers/auxdisplay/cfag12864bfb.c
++++ b/drivers/auxdisplay/cfag12864bfb.c
+@@ -52,8 +52,9 @@
+ 
+ static int cfag12864bfb_mmap(struct fb_info *info, struct vm_area_struct *vma)
+ {
+-	return vm_insert_page(vma, vma->vm_start,
+-		virt_to_page(cfag12864b_buffer));
++	struct page *pages = virt_to_page(cfag12864b_buffer);
++
++	return vm_map_pages_zero(vma, &pages, 1);
+ }
+ 
+ static struct fb_ops cfag12864bfb_ops = {
+-- 
+1.9.1
 
