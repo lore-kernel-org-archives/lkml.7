@@ -4,61 +4,56 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6080C04AAC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:34:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4487CC04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:34:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8CBB8216C4
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:34:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1215C216FD
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:34:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558355647;
-	bh=FnOiAWCxbxKZVe4E+ZcIN19Am0EYnQ0noptC7Y+yIqM=;
+	s=default; t=1558355651;
+	bh=JheYeRemG7ge/RLfTC3Z7uqYXL7mC8+knXY/kzQ4Qac=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RLWoMoa0cHSl29d1/GrL6NfYZk85/ljzCnPryuiylNrH+pRNiZTNAu1GBVryiyhss
-	 tG8OEjqOzm13uKHi+QBD+ciqUL+rT2rMGBq1W9WzsUBUhAKAoJVvkH8FUX/cTFBC4z
-	 eWRA/xMsv1tadObyfk2oaabTdf9FElnWQmcZzGK8=
+	b=HqoZqqWybtdNz2t0CyASUtOkTCWuiM/WlnzYNKgtcN4320mfO1t/+QXyPS50h37iw
+	 k1iGooXgpiPOfFm9YWCHVfOWqHV9SSHJKQEe+b+EGqwRaRKtIi9gUwMFk1HZ+bjDfc
+	 sHtnnOjMVwFaVmXpfBMWL4hTdTIi+OXaOsTWUgOw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390364AbfETMeG (ORCPT
+        id S2390863AbfETMeK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 08:34:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51224 "EHLO mail.kernel.org"
+        Mon, 20 May 2019 08:34:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51282 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390837AbfETMeD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 08:34:03 -0400
+        id S2390216AbfETMeG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 08:34:06 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AD0C320645;
-        Mon, 20 May 2019 12:34:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4F837204FD;
+        Mon, 20 May 2019 12:34:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558355642;
-        bh=FnOiAWCxbxKZVe4E+ZcIN19Am0EYnQ0noptC7Y+yIqM=;
+        s=default; t=1558355644;
+        bh=JheYeRemG7ge/RLfTC3Z7uqYXL7mC8+knXY/kzQ4Qac=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jwuuWxv01rWcHOdkONlQZP4x2WHQolFIxgV2ZcOtHZD9jCRaJS7mtzaG06OIOD4EB
-         wz6MokLQGvitvOnpMHfszhDYNFiCflCG6U87/oJqd0P7a1147NzmON+DISpquZxVbe
-         DW9qvbSPDCoF6M23VVbeSpvryG+49Hz717NnknGI=
+        b=UWGsgT0nNzCN8gwBw4oDReC3lJoOIS2XHzWa4okV1QW4bUzc1nOwirfl5D64gEO16
+         hIUzdVp+jfrmwPWnyHvHVULzIdTQbtjvhFVlvz70826fiIIHwuoLqcimX3SmrR+Ikb
+         FQzJobBqanGeG16qYZ4IOX77pv7N+LZBX1zAcIWw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jiri Kosina <jkosina@suse.cz>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Josh Snyder <joshs@netflix.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Dave Chinner <david@fromorbit.com>,
-        Kevin Easton <kevin@guarana.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        Cyril Hrubis <chrubis@suse.cz>, Tejun Heo <tj@kernel.org>,
-        "Kirill A. Shutemov" <kirill@shutemov.name>,
-        Daniel Gruss <daniel@gruss.cc>,
+        stable@vger.kernel.org, Dan Williams <dan.j.williams@intel.com>,
+        Piotr Balcer <piotr.balcer@intel.com>,
+        Yan Ma <yan.ma@intel.com>, Pankaj Gupta <pagupta@redhat.com>,
+        Matthew Wilcox <willy@infradead.org>, Jan Kara <jack@suse.cz>,
+        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
+        Chandan Rajendra <chandan@linux.ibm.com>,
+        Souptick Joarder <jrdr.linux@gmail.com>,
         Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Dominique Martinet <asmadeus@codewreck.org>
-Subject: [PATCH 5.1 069/128] mm/mincore.c: make mincore() more conservative
-Date:   Mon, 20 May 2019 14:14:16 +0200
-Message-Id: <20190520115254.464686198@linuxfoundation.org>
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 5.1 070/128] mm/huge_memory: fix vmf_insert_pfn_{pmd, pud}() crash, handle unaligned addresses
+Date:   Mon, 20 May 2019 14:14:17 +0200
+Message-Id: <20190520115254.543150708@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190520115249.449077487@linuxfoundation.org>
 References: <20190520115249.449077487@linuxfoundation.org>
@@ -71,95 +66,171 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jiri Kosina <jkosina@suse.cz>
+From: Dan Williams <dan.j.williams@intel.com>
 
-commit 134fca9063ad4851de767d1768180e5dede9a881 upstream.
+commit fce86ff5802bac3a7b19db171aa1949ef9caac31 upstream.
 
-The semantics of what mincore() considers to be resident is not
-completely clear, but Linux has always (since 2.3.52, which is when
-mincore() was initially done) treated it as "page is available in page
-cache".
+Starting with c6f3c5ee40c1 ("mm/huge_memory.c: fix modifying of page
+protection by insert_pfn_pmd()") vmf_insert_pfn_pmd() internally calls
+pmdp_set_access_flags().  That helper enforces a pmd aligned @address
+argument via VM_BUG_ON() assertion.
 
-That's potentially a problem, as that [in]directly exposes
-meta-information about pagecache / memory mapping state even about
-memory not strictly belonging to the process executing the syscall,
-opening possibilities for sidechannel attacks.
+Update the implementation to take a 'struct vm_fault' argument directly
+and apply the address alignment fixup internally to fix crash signatures
+like:
 
-Change the semantics of mincore() so that it only reveals pagecache
-information for non-anonymous mappings that belog to files that the
-calling process could (if it tried to) successfully open for writing;
-otherwise we'd be including shared non-exclusive mappings, which
+    kernel BUG at arch/x86/mm/pgtable.c:515!
+    invalid opcode: 0000 [#1] SMP NOPTI
+    CPU: 51 PID: 43713 Comm: java Tainted: G           OE     4.19.35 #1
+    [..]
+    RIP: 0010:pmdp_set_access_flags+0x48/0x50
+    [..]
+    Call Trace:
+     vmf_insert_pfn_pmd+0x198/0x350
+     dax_iomap_fault+0xe82/0x1190
+     ext4_dax_huge_fault+0x103/0x1f0
+     ? __switch_to_asm+0x40/0x70
+     __handle_mm_fault+0x3f6/0x1370
+     ? __switch_to_asm+0x34/0x70
+     ? __switch_to_asm+0x40/0x70
+     handle_mm_fault+0xda/0x200
+     __do_page_fault+0x249/0x4f0
+     do_page_fault+0x32/0x110
+     ? page_fault+0x8/0x30
+     page_fault+0x1e/0x30
 
- - is the sidechannel
-
- - is not the usecase for mincore(), as that's primarily used for data,
-   not (shared) text
-
-[jkosina@suse.cz: v2]
-  Link: http://lkml.kernel.org/r/20190312141708.6652-2-vbabka@suse.cz
-[mhocko@suse.com: restructure can_do_mincore() conditions]
-Link: http://lkml.kernel.org/r/nycvar.YFH.7.76.1903062342020.19912@cbobk.fhfr.pm
-Signed-off-by: Jiri Kosina <jkosina@suse.cz>
-Signed-off-by: Vlastimil Babka <vbabka@suse.cz>
-Acked-by: Josh Snyder <joshs@netflix.com>
-Acked-by: Michal Hocko <mhocko@suse.com>
-Originally-by: Linus Torvalds <torvalds@linux-foundation.org>
-Originally-by: Dominique Martinet <asmadeus@codewreck.org>
-Cc: Andy Lutomirski <luto@amacapital.net>
-Cc: Dave Chinner <david@fromorbit.com>
-Cc: Kevin Easton <kevin@guarana.org>
-Cc: Matthew Wilcox <willy@infradead.org>
-Cc: Cyril Hrubis <chrubis@suse.cz>
-Cc: Tejun Heo <tj@kernel.org>
-Cc: Kirill A. Shutemov <kirill@shutemov.name>
-Cc: Daniel Gruss <daniel@gruss.cc>
+Link: http://lkml.kernel.org/r/155741946350.372037.11148198430068238140.stgit@dwillia2-desk3.amr.corp.intel.com
+Fixes: c6f3c5ee40c1 ("mm/huge_memory.c: fix modifying of page protection by insert_pfn_pmd()")
+Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+Reported-by: Piotr Balcer <piotr.balcer@intel.com>
+Tested-by: Yan Ma <yan.ma@intel.com>
+Tested-by: Pankaj Gupta <pagupta@redhat.com>
+Reviewed-by: Matthew Wilcox <willy@infradead.org>
+Reviewed-by: Jan Kara <jack@suse.cz>
+Reviewed-by: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
+Cc: Chandan Rajendra <chandan@linux.ibm.com>
+Cc: Souptick Joarder <jrdr.linux@gmail.com>
+Cc: <stable@vger.kernel.org>
 Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
 Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- mm/mincore.c |   23 ++++++++++++++++++++++-
- 1 file changed, 22 insertions(+), 1 deletion(-)
+ drivers/dax/device.c    |    6 ++----
+ fs/dax.c                |    6 ++----
+ include/linux/huge_mm.h |    6 ++----
+ mm/huge_memory.c        |   16 ++++++++++------
+ 4 files changed, 16 insertions(+), 18 deletions(-)
 
---- a/mm/mincore.c
-+++ b/mm/mincore.c
-@@ -169,6 +169,22 @@ out:
- 	return 0;
+--- a/drivers/dax/device.c
++++ b/drivers/dax/device.c
+@@ -184,8 +184,7 @@ static vm_fault_t __dev_dax_pmd_fault(st
+ 
+ 	*pfn = phys_to_pfn_t(phys, dax_region->pfn_flags);
+ 
+-	return vmf_insert_pfn_pmd(vmf->vma, vmf->address, vmf->pmd, *pfn,
+-			vmf->flags & FAULT_FLAG_WRITE);
++	return vmf_insert_pfn_pmd(vmf, *pfn, vmf->flags & FAULT_FLAG_WRITE);
  }
  
-+static inline bool can_do_mincore(struct vm_area_struct *vma)
-+{
-+	if (vma_is_anonymous(vma))
-+		return true;
-+	if (!vma->vm_file)
-+		return false;
-+	/*
-+	 * Reveal pagecache information only for non-anonymous mappings that
-+	 * correspond to the files the calling process could (if tried) open
-+	 * for writing; otherwise we'd be including shared non-exclusive
-+	 * mappings, which opens a side channel.
-+	 */
-+	return inode_owner_or_capable(file_inode(vma->vm_file)) ||
-+		inode_permission(file_inode(vma->vm_file), MAY_WRITE) == 0;
-+}
+ #ifdef CONFIG_HAVE_ARCH_TRANSPARENT_HUGEPAGE_PUD
+@@ -235,8 +234,7 @@ static vm_fault_t __dev_dax_pud_fault(st
+ 
+ 	*pfn = phys_to_pfn_t(phys, dax_region->pfn_flags);
+ 
+-	return vmf_insert_pfn_pud(vmf->vma, vmf->address, vmf->pud, *pfn,
+-			vmf->flags & FAULT_FLAG_WRITE);
++	return vmf_insert_pfn_pud(vmf, *pfn, vmf->flags & FAULT_FLAG_WRITE);
+ }
+ #else
+ static vm_fault_t __dev_dax_pud_fault(struct dev_dax *dev_dax,
+--- a/fs/dax.c
++++ b/fs/dax.c
+@@ -1575,8 +1575,7 @@ static vm_fault_t dax_iomap_pmd_fault(st
+ 		}
+ 
+ 		trace_dax_pmd_insert_mapping(inode, vmf, PMD_SIZE, pfn, entry);
+-		result = vmf_insert_pfn_pmd(vma, vmf->address, vmf->pmd, pfn,
+-					    write);
++		result = vmf_insert_pfn_pmd(vmf, pfn, write);
+ 		break;
+ 	case IOMAP_UNWRITTEN:
+ 	case IOMAP_HOLE:
+@@ -1686,8 +1685,7 @@ dax_insert_pfn_mkwrite(struct vm_fault *
+ 		ret = vmf_insert_mixed_mkwrite(vmf->vma, vmf->address, pfn);
+ #ifdef CONFIG_FS_DAX_PMD
+ 	else if (order == PMD_ORDER)
+-		ret = vmf_insert_pfn_pmd(vmf->vma, vmf->address, vmf->pmd,
+-			pfn, true);
++		ret = vmf_insert_pfn_pmd(vmf, pfn, FAULT_FLAG_WRITE);
+ #endif
+ 	else
+ 		ret = VM_FAULT_FALLBACK;
+--- a/include/linux/huge_mm.h
++++ b/include/linux/huge_mm.h
+@@ -47,10 +47,8 @@ extern bool move_huge_pmd(struct vm_area
+ extern int change_huge_pmd(struct vm_area_struct *vma, pmd_t *pmd,
+ 			unsigned long addr, pgprot_t newprot,
+ 			int prot_numa);
+-vm_fault_t vmf_insert_pfn_pmd(struct vm_area_struct *vma, unsigned long addr,
+-			pmd_t *pmd, pfn_t pfn, bool write);
+-vm_fault_t vmf_insert_pfn_pud(struct vm_area_struct *vma, unsigned long addr,
+-			pud_t *pud, pfn_t pfn, bool write);
++vm_fault_t vmf_insert_pfn_pmd(struct vm_fault *vmf, pfn_t pfn, bool write);
++vm_fault_t vmf_insert_pfn_pud(struct vm_fault *vmf, pfn_t pfn, bool write);
+ enum transparent_hugepage_flag {
+ 	TRANSPARENT_HUGEPAGE_FLAG,
+ 	TRANSPARENT_HUGEPAGE_REQ_MADV_FLAG,
+--- a/mm/huge_memory.c
++++ b/mm/huge_memory.c
+@@ -793,11 +793,13 @@ out_unlock:
+ 		pte_free(mm, pgtable);
+ }
+ 
+-vm_fault_t vmf_insert_pfn_pmd(struct vm_area_struct *vma, unsigned long addr,
+-			pmd_t *pmd, pfn_t pfn, bool write)
++vm_fault_t vmf_insert_pfn_pmd(struct vm_fault *vmf, pfn_t pfn, bool write)
+ {
++	unsigned long addr = vmf->address & PMD_MASK;
++	struct vm_area_struct *vma = vmf->vma;
+ 	pgprot_t pgprot = vma->vm_page_prot;
+ 	pgtable_t pgtable = NULL;
 +
- /*
-  * Do a chunk of "sys_mincore()". We've already checked
-  * all the arguments, we hold the mmap semaphore: we should
-@@ -189,8 +205,13 @@ static long do_mincore(unsigned long add
- 	vma = find_vma(current->mm, addr);
- 	if (!vma || addr < vma->vm_start)
- 		return -ENOMEM;
--	mincore_walk.mm = vma->vm_mm;
- 	end = min(vma->vm_end, addr + (pages << PAGE_SHIFT));
-+	if (!can_do_mincore(vma)) {
-+		unsigned long pages = DIV_ROUND_UP(end - addr, PAGE_SIZE);
-+		memset(vec, 1, pages);
-+		return pages;
-+	}
-+	mincore_walk.mm = vma->vm_mm;
- 	err = walk_page_range(addr, end, &mincore_walk);
- 	if (err < 0)
- 		return err;
+ 	/*
+ 	 * If we had pmd_special, we could avoid all these restrictions,
+ 	 * but we need to be consistent with PTEs and architectures that
+@@ -820,7 +822,7 @@ vm_fault_t vmf_insert_pfn_pmd(struct vm_
+ 
+ 	track_pfn_insert(vma, &pgprot, pfn);
+ 
+-	insert_pfn_pmd(vma, addr, pmd, pfn, pgprot, write, pgtable);
++	insert_pfn_pmd(vma, addr, vmf->pmd, pfn, pgprot, write, pgtable);
+ 	return VM_FAULT_NOPAGE;
+ }
+ EXPORT_SYMBOL_GPL(vmf_insert_pfn_pmd);
+@@ -869,10 +871,12 @@ out_unlock:
+ 	spin_unlock(ptl);
+ }
+ 
+-vm_fault_t vmf_insert_pfn_pud(struct vm_area_struct *vma, unsigned long addr,
+-			pud_t *pud, pfn_t pfn, bool write)
++vm_fault_t vmf_insert_pfn_pud(struct vm_fault *vmf, pfn_t pfn, bool write)
+ {
++	unsigned long addr = vmf->address & PUD_MASK;
++	struct vm_area_struct *vma = vmf->vma;
+ 	pgprot_t pgprot = vma->vm_page_prot;
++
+ 	/*
+ 	 * If we had pud_special, we could avoid all these restrictions,
+ 	 * but we need to be consistent with PTEs and architectures that
+@@ -889,7 +893,7 @@ vm_fault_t vmf_insert_pfn_pud(struct vm_
+ 
+ 	track_pfn_insert(vma, &pgprot, pfn);
+ 
+-	insert_pfn_pud(vma, addr, pud, pfn, pgprot, write);
++	insert_pfn_pud(vma, addr, vmf->pud, pfn, pgprot, write);
+ 	return VM_FAULT_NOPAGE;
+ }
+ EXPORT_SYMBOL_GPL(vmf_insert_pfn_pud);
 
 
