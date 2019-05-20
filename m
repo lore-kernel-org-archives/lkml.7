@@ -2,113 +2,91 @@ Return-Path: <SRS0=lq4r=TU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 915A5C04AAC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 11:33:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF463C04AAF
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 11:33:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6675521019
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 11:33:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="cPRtb7tQ"
+	by mail.kernel.org (Postfix) with ESMTP id B627A20656
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 11:33:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733008AbfETLdM (ORCPT
+        id S1733014AbfETLda (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 07:33:12 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:46744 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732996AbfETLdL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 07:33:11 -0400
-Received: by mail-pl1-f195.google.com with SMTP id r18so6586142pls.13
-        for <linux-kernel@vger.kernel.org>; Mon, 20 May 2019 04:33:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :in-reply-to:references;
-        bh=kSx/2bQ8k2nUJmyS2liy45fCcO2iYHSDnrOKKw/RGV4=;
-        b=cPRtb7tQHJTTiLOHkiEpYP+wKGEqufi5OlZI8LAVDn750p0hkPo7BlZXT75VNfp9dR
-         bKCNesFU3UCDsME+gGsOPK0VHvOUsTWH5NPfg+xK8mJwmFd5vbJmaO0EKQMFmNQ+n19H
-         U8mqxoNBif5syGeoUe2lEXsWbDC1YB0BzSBgumFCN8STOyMNeJCtTeNLvgnvh10BAtQu
-         5J6eaQFuVUuyZhLT2t+Y0NRhAjRTWOVvbNG74UrINXey6BdbxtdfZyTEs6vh0o0X64Ku
-         AulkUGud8AZoQWHpwMC3klVwa3PQ8CDJYu9MkPTAavxbcDPzAhTfuFpg/fcSO03u0aXx
-         CAKg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:in-reply-to:references;
-        bh=kSx/2bQ8k2nUJmyS2liy45fCcO2iYHSDnrOKKw/RGV4=;
-        b=KqwuHo6Wj5/hwxgcdG9sk0hE6lPMrz/WWxxPfXqTxmetbt9MrKmmHSR3s3ganm9T0a
-         uRu4sGU80msZNGB9kNvdI7oDzVcRhLLUKRFYB+qjn0KmEu0YBJvKj4P+AwyvJ/2Kv8WL
-         7ZfpvfHnX7NjHhZqb4jwZMxuZKkLy3iBbK4SwlisM1fSiNSDC7JIzkue8u3yN/r9fMkh
-         i9Y2JjgovoLBnIP2e+2GCXVUb2ygwxlP+Y6DSoUS+g6I0iGrv7LR1+aZxJ+noukC0CED
-         AuHkV+0MFb+3y9afYm4wOTsqkLEoL5fzWC4R/gHffus/54vDML1ioixd8FpUg1Ldo4+k
-         CUgg==
-X-Gm-Message-State: APjAAAWJrF/nz4um7QNDDJPRqMZ7ZpKeg+GdLUKlZVVFZ+7dA5Gqvrza
-        uCdCVOKLE0efET1qi7j6dklwqA==
-X-Google-Smtp-Source: APXvYqxhkwURFkAYdOsYEFVXpnFbD8H/TQI0K1REXB9rdjkjQNCy7pJURAn59WPfwElP41gCPmfnxw==
-X-Received: by 2002:a17:902:18b:: with SMTP id b11mr50155937plb.264.1558351990778;
-        Mon, 20 May 2019 04:33:10 -0700 (PDT)
-Received: from baolinwangubtpc.spreadtrum.com ([117.18.48.102])
-        by smtp.gmail.com with ESMTPSA id z124sm21310020pfz.116.2019.05.20.04.33.05
-        (version=TLS1 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Mon, 20 May 2019 04:33:10 -0700 (PDT)
-From:   Baolin Wang <baolin.wang@linaro.org>
-To:     dan.j.williams@intel.com, vkoul@kernel.org
-Cc:     thierry.reding@gmail.com, jonathanh@nvidia.com,
-        linux-tegra@vger.kernel.org, shawnguo@kernel.org,
-        s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
-        linux-imx@nxp.com, wsa+renesas@sang-engineering.com,
-        jroedel@suse.de, vincent.guittot@linaro.org,
-        baolin.wang@linaro.org, dmaengine@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: [PATCH v2 8/8] dmaengine: sh: usb-dmac: Let the core do the device node validation
-Date:   Mon, 20 May 2019 19:32:21 +0800
-Message-Id: <0b4418a1891261a6a4f8e8356b68e38f4ed6a1d5.1558351667.git.baolin.wang@linaro.org>
-X-Mailer: git-send-email 1.7.9.5
-In-Reply-To: <cover.1558351667.git.baolin.wang@linaro.org>
-References: <cover.1558351667.git.baolin.wang@linaro.org>
-In-Reply-To: <cover.1558351667.git.baolin.wang@linaro.org>
-References: <cover.1558351667.git.baolin.wang@linaro.org>
+        Mon, 20 May 2019 07:33:30 -0400
+Received: from mga11.intel.com ([192.55.52.93]:40492 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731422AbfETLd2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 07:33:28 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 May 2019 04:33:28 -0700
+X-ExtLoop1: 1
+Received: from mhauser-mobl.ger.corp.intel.com (HELO localhost) ([10.252.47.244])
+  by orsmga006.jf.intel.com with ESMTP; 20 May 2019 04:33:14 -0700
+Date:   Mon, 20 May 2019 14:33:13 +0300
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     Andy Lutomirski <luto@kernel.org>
+Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
+        James Morris <jmorris@namei.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        LSM List <linux-security-module@vger.kernel.org>,
+        Paul Moore <paul@paul-moore.com>,
+        Stephen Smalley <sds@tycho.nsa.gov>,
+        Eric Paris <eparis@parisplace.org>, selinux@vger.kernel.org,
+        Jethro Beekman <jethro@fortanix.com>,
+        "Xing, Cedric" <cedric.xing@intel.com>,
+        "Hansen, Dave" <dave.hansen@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "Dr. Greg" <greg@enjellic.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
+        "linux-sgx@vger.kernel.org" <linux-sgx@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "nhorman@redhat.com" <nhorman@redhat.com>,
+        "npmccallum@redhat.com" <npmccallum@redhat.com>,
+        "Ayoun, Serge" <serge.ayoun@intel.com>,
+        "Katz-zamir, Shay" <shay.katz-zamir@intel.com>,
+        "Huang, Haitao" <haitao.huang@intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        "Svahn, Kai" <kai.svahn@intel.com>, Borislav Petkov <bp@alien8.de>,
+        Josh Triplett <josh@joshtriplett.org>,
+        "Huang, Kai" <kai.huang@intel.com>,
+        David Rientjes <rientjes@google.com>
+Subject: Re: SGX vs LSM (Re: [PATCH v20 00/28] Intel SGX1 support)
+Message-ID: <20190520113313.GB27805@linux.intel.com>
+References: <CALCETrWCZQwg-TUCm58DVG43=xCKRsMe1tVHrR8vdt06hf4fWA@mail.gmail.com>
+ <20190513102926.GD8743@linux.intel.com>
+ <20190514104323.GA7591@linux.intel.com>
+ <CALCETrVbgTCnPo=PAq0-KoaRwt--urrPzn==quAJ8wodCpkBkw@mail.gmail.com>
+ <20190514204527.GC1977@linux.intel.com>
+ <CALCETrX6aL367mMJh5+Y1Seznfu-AvhPV6P7GkWF4Dhu0GV8cw@mail.gmail.com>
+ <20190515013031.GF1977@linux.intel.com>
+ <CALCETrXf8mSK45h7sTK5Wf+pXLVn=Bjsc_RLpgO-h-qdzBRo5Q@mail.gmail.com>
+ <20190516051622.GC6388@linux.intel.com>
+ <CALCETrVx1hgY67mP+73w5rT+eY+APcfS0YJ+XwtTLNz3CbVNMA@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CALCETrVx1hgY67mP+73w5rT+eY+APcfS0YJ+XwtTLNz3CbVNMA@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Let the DMA engine core do the device node validation instead of drivers.
+On Thu, May 16, 2019 at 02:02:58PM -0700, Andy Lutomirski wrote:
+> That certainly *could* be done, and I guess the decision could be left
+> to the LSMs, but I'm not convinced this adds value.  What security use
+> case does this cover that isn't already covered by requiring EXECUTE
+> (e.g. lib_t) on the enclave file and some new SIGSTRUCT right on the
+> .sigstruct?
 
-Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
----
- drivers/dma/sh/usb-dmac.c |    6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+I guess you are right as SIGSTRUCT completely shields the memory layout
+and contents of an enclave.
 
-diff --git a/drivers/dma/sh/usb-dmac.c b/drivers/dma/sh/usb-dmac.c
-index 59403f6..0afabf3 100644
---- a/drivers/dma/sh/usb-dmac.c
-+++ b/drivers/dma/sh/usb-dmac.c
-@@ -636,9 +636,6 @@ static bool usb_dmac_chan_filter(struct dma_chan *chan, void *arg)
- 	struct usb_dmac_chan *uchan = to_usb_dmac_chan(chan);
- 	struct of_phandle_args *dma_spec = arg;
- 
--	if (dma_spec->np != chan->device->dev->of_node)
--		return false;
--
- 	/* USB-DMAC should be used with fixed usb controller's FIFO */
- 	if (uchan->index != dma_spec->args[0])
- 		return false;
-@@ -659,7 +656,8 @@ static struct dma_chan *usb_dmac_of_xlate(struct of_phandle_args *dma_spec,
- 	dma_cap_zero(mask);
- 	dma_cap_set(DMA_SLAVE, mask);
- 
--	chan = dma_request_channel(mask, usb_dmac_chan_filter, dma_spec);
-+	chan = __dma_request_channel(&mask, usb_dmac_chan_filter, dma_spec,
-+				     ofdma->of_node);
- 	if (!chan)
- 		return NULL;
- 
--- 
-1.7.9.5
-
+/Jarkko
