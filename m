@@ -2,134 +2,88 @@ Return-Path: <SRS0=lq4r=TU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,FROM_EXCESS_BASE64,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=FREEMAIL_FORGED_FROMDOMAIN,
+	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE7BCC04AAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 08:14:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47BBBC46460
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 08:14:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8149620656
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 08:14:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="orGKLIRO"
+	by mail.kernel.org (Postfix) with ESMTP id 1BA4720656
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 08:14:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730884AbfETIOX (ORCPT
+        id S1731003AbfETIOn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 04:14:23 -0400
-Received: from mail-yb1-f195.google.com ([209.85.219.195]:37881 "EHLO
-        mail-yb1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727108AbfETIOW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 04:14:22 -0400
-Received: by mail-yb1-f195.google.com with SMTP id p134so5359387ybc.4;
-        Mon, 20 May 2019 01:14:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=b1Nie3BHb8c5BThPo1teBTJYFUp/LwJ6jQaWfDHPCns=;
-        b=orGKLIROZ7tGEQuodcexsNLM/J7Eloft4Fij9jIp16hMPAhZ/+C44L3zyBKn3OBND7
-         rFWx1HZgVkLm1nv2wVExi1d65uJd1Dj/1xW8fhhncmsLJNb/32cM/afhGqy80DCctZdi
-         vHoM569tfWfq+9yliuVCVdrgF8b7MtVPfFEv1HRZ4WQZBL2Mq4Rv+t6KTswgzh7zNT4B
-         z4IUQ7aFfppvp3suIYgI8jxrllUNpDaVEBp/wYa/HZqQBVeRcMSXPS4E9kE9sp23ICM1
-         BJz5oSRwzpmxzvC8HsX0sRq8jTJhK/UBkZS9E3bkgRDcJ/PNrN8coDtyP/RnAWL027p5
-         oHBA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=b1Nie3BHb8c5BThPo1teBTJYFUp/LwJ6jQaWfDHPCns=;
-        b=HhktVUhTE+BkcGYE1hNl5kkQNvk6HbxCogHbBZfo3hZM2CtEwmYUSRh4qkgF/PsYV3
-         XWAwAMitEMXLtsHAAOyPaPqzlf/BkalpeHf+yoTQeuFbxQfNqnKMX/TFJwYj/kFVoCn7
-         tGCuRhqxmayIv0gq4da0bGpyPwuyL6Hn51tV5LrsewJcOCNhuKsx87U9OvxssAyad7ED
-         Xx0Z6mc0/C40UXOzhFouy9uLolUjYrq9uR/YO8gcwjUUjGUroe8R9mLkmfmfa7wnXLvS
-         l4XWlSB4tcy8qxhej+tLWwtHjQ8/tg5j78a2q8K1I/q5M6r3RvW1PqRinfuofUd0O+PQ
-         qn9A==
-X-Gm-Message-State: APjAAAUykV6kWojHH/KWL7M+KTdcLj+P2M98KyAt4ee2NXvVdq/ARoVV
-        ohgTya18AIZ3vnr4lyIhOkJTr1LAL9ocAR5kENk=
-X-Google-Smtp-Source: APXvYqzdITGOm1uzRAMhHCqrI7yUvwqh/7HPIVaKHQ0kbZdNv8+oko8EF3XU1eHAr4qQmZTySGwd1ZSxf66Go5tE4Aw=
-X-Received: by 2002:a25:10c2:: with SMTP id 185mr32216064ybq.379.1558340061612;
- Mon, 20 May 2019 01:14:21 -0700 (PDT)
+        Mon, 20 May 2019 04:14:43 -0400
+Received: from ns.iliad.fr ([212.27.33.1]:60906 "EHLO ns.iliad.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730549AbfETIOn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 04:14:43 -0400
+Received: from ns.iliad.fr (localhost [127.0.0.1])
+        by ns.iliad.fr (Postfix) with ESMTP id 4DCA520B5F;
+        Mon, 20 May 2019 10:14:41 +0200 (CEST)
+Received: from [192.168.108.49] (freebox.vlq16.iliad.fr [213.36.7.13])
+        by ns.iliad.fr (Postfix) with ESMTP id 3973020AC3;
+        Mon, 20 May 2019 10:14:41 +0200 (CEST)
+Subject: Re: [PATCH] clk: qcom: gdsc: WARN when failing to toggle
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>
+Cc:     MSM <linux-arm-msm@vger.kernel.org>,
+        linux-clk <linux-clk@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+References: <20190504001736.8598-1-bjorn.andersson@linaro.org>
+From:   Marc Gonzalez <marc.w.gonzalez@free.fr>
+Message-ID: <68b73077-9fff-9b4c-bf6a-8aca24a814d7@free.fr>
+Date:   Mon, 20 May 2019 10:14:41 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-References: <20190518152355.11134-1-peron.clem@gmail.com> <20190518152355.11134-2-peron.clem@gmail.com>
- <20190520073529.nxptfbibexrqyzfi@flea>
-In-Reply-To: <20190520073529.nxptfbibexrqyzfi@flea>
-From:   =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
-Date:   Mon, 20 May 2019 10:14:10 +0200
-Message-ID: <CAJiuCcdrW7RcEKePCr1DaL-be8dA5oOjvHdxYkiu=h37z2e7tw@mail.gmail.com>
-Subject: Re: [PATCH v3 1/4] dt-bindings: watchdog: add Allwinner H6 watchdog
-To:     Maxime Ripard <maxime.ripard@bootlin.com>
-Cc:     Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Chen-Yu Tsai <wens@csie.org>, linux-watchdog@vger.kernel.org,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20190504001736.8598-1-bjorn.andersson@linaro.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Virus-Scanned: ClamAV using ClamSMTP ; ns.iliad.fr ; Mon May 20 10:14:41 2019 +0200 (CEST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Maxime,
+On 04/05/2019 02:17, Bjorn Andersson wrote:
 
-On Mon, 20 May 2019 at 09:35, Maxime Ripard <maxime.ripard@bootlin.com> wro=
-te:
->
-> On Sat, May 18, 2019 at 05:23:52PM +0200, Cl=C3=A9ment P=C3=A9ron wrote:
-> > Allwinner H6 has a similar watchdog as the A64 which is already
-> > a compatible of the A31.
-> >
-> > This commit sort the lines and add the H6 compatible.
-> >
-> > Signed-off-by: Cl=C3=A9ment P=C3=A9ron <peron.clem@gmail.com>
-> > ---
-> >  .../devicetree/bindings/watchdog/sunxi-wdt.txt         | 10 ++++++----
-> >  1 file changed, 6 insertions(+), 4 deletions(-)
-> >
-> > diff --git a/Documentation/devicetree/bindings/watchdog/sunxi-wdt.txt b=
-/Documentation/devicetree/bindings/watchdog/sunxi-wdt.txt
-> > index 46055254e8dd..f4810f8ad1c5 100644
-> > --- a/Documentation/devicetree/bindings/watchdog/sunxi-wdt.txt
-> > +++ b/Documentation/devicetree/bindings/watchdog/sunxi-wdt.txt
-> > @@ -3,10 +3,12 @@ Allwinner SoCs Watchdog timer
-> >  Required properties:
-> >
-> >  - compatible : should be one of
-> > -     "allwinner,sun4i-a10-wdt"
-> > -     "allwinner,sun6i-a31-wdt"
-> > -     "allwinner,sun50i-a64-wdt","allwinner,sun6i-a31-wdt"
-> > -     "allwinner,suniv-f1c100s-wdt", "allwinner,sun4i-a10-wdt"
->
-> That sorting was kind of intentional
-Arg indeed, I will remove it.
+> Failing to toggle a GDSC as the driver core is attaching the
+> power-domain to a device will cause a silent probe deferral. Provide an
+> explicit warning to the developer, in order to reduce the amount of time
+> it take to debug this.
 
+"it takes"
 
->
-> > +     - "allwinner,sun4i-a10-wdt"
-> > +     - "allwinner,sun50i-a64-wdt","allwinner,sun6i-a31-wdt"
-> > +     - "allwinner,sun50i-h6-wdt","allwinner,sun50i-a64-wdt",
-> > +       "allwinner,sun6i-a31-wdt"
->
-> Is there a reason to keep the A64 compatible?
-Yes, A64 and H6 has the exact same memory mapping looking at the datasheet.
-So if there is an errata or a new feature for the A64, it should be
-also compatible with the H6.
-Which is not the case with A31 (WDT_KEY_FIELD is not preset)
+> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> ---
+>  drivers/clk/qcom/gdsc.c | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/clk/qcom/gdsc.c b/drivers/clk/qcom/gdsc.c
+> index dd63aa36b092..6a8a4996dde3 100644
+> --- a/drivers/clk/qcom/gdsc.c
+> +++ b/drivers/clk/qcom/gdsc.c
+> @@ -149,7 +149,9 @@ static int gdsc_toggle_logic(struct gdsc *sc, enum gdsc_status status)
+>  		udelay(1);
+>  	}
+>  
+> -	return gdsc_poll_status(sc, status);
+> +	ret = gdsc_poll_status(sc, status);
+> +	WARN(ret, "%s status stuck at 'o%s'", sc->pd.name, status ? "ff" : "n");
+> +	return ret;
 
-Thanks,
-Clement
+In my opinion, the minor obfuscation of "o%s", foo ? "ff" : "n"
+does not justify the tiny space savings.
 
->
-> Thanks,
-> Maxime
->
-> --
-> Maxime Ripard, Bootlin
-> Embedded Linux and Kernel engineering
-> https://bootlin.com
+I'd spell it out: "%s", foo ? "off" : "on"
+
+In any event:
+
+Reviewed-by: Marc Gonzalez <marc.w.gonzalez@free.fr>
+
+Regards.
