@@ -2,101 +2,128 @@ Return-Path: <SRS0=lq4r=TU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF8DFC04E87
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 08:05:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 833B9C072A4
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 08:05:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8EE9E2147A
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 08:05:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558339537;
-	bh=+xkhllsSjVjbpVBqPaXjmCtg9BOWN3ILFlcR4TcmBAk=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Sleyw81hPXXDOf6WH+IPqYujTmUeFJtH+2cpAtDTbpVsiBS6WK9C0YBzr3BsoZNNh
-	 1R398uZHUor/vXYgdHwYXp1raO1MST9QybdKZv7Emou8ieGbU6o0arj+/xsxqaCpab
-	 I+KV+/WXGbimo4PQsykPbgsULgqcQBlu6sgRiDGc=
+	by mail.kernel.org (Postfix) with ESMTP id 58CE4216E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 08:05:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=brainfault-org.20150623.gappssmtp.com header.i=@brainfault-org.20150623.gappssmtp.com header.b="aN7TKzsw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730832AbfETIFg (ORCPT
+        id S1730894AbfETIFi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Mon, 20 May 2019 04:05:38 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:38249 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725772AbfETIFg (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 20 May 2019 04:05:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36250 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730564AbfETIFf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 04:05:35 -0400
-Received: from wens.tw (mirror2.csie.ntu.edu.tw [140.112.30.76])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B0A7B2085A;
-        Mon, 20 May 2019 08:05:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558339534;
-        bh=+xkhllsSjVjbpVBqPaXjmCtg9BOWN3ILFlcR4TcmBAk=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wjuAv9ojJKEQJ2xZYp00iCUNPsKCbmW2+DoqnKbsDel11gbBR/z+dO9mJlVTz+Ljh
-         r7vFtMr7Bl7eDg89WBp8COwvMlx/aRvylbixnks/mehwIoysCv9PWe7HViXETZNRSn
-         pIJjV6OdzldaYeWm6WzJcylNdI1WEDzD3GlqbZFw=
-Received: by wens.tw (Postfix, from userid 1000)
-        id 4FA2C5FF38; Mon, 20 May 2019 16:05:32 +0800 (CST)
-From:   Chen-Yu Tsai <wens@kernel.org>
-To:     Maxime Ripard <maxime.ripard@bootlin.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>
-Cc:     Chen-Yu Tsai <wens@csie.org>, linux-arm-kernel@lists.infradead.org,
-        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 03/25] clk: Add CLK_HW_INIT_FW_NAME macro using .fw_name in .parent_data
-Date:   Mon, 20 May 2019 16:03:59 +0800
-Message-Id: <20190520080421.12575-4-wens@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190520080421.12575-1-wens@kernel.org>
-References: <20190520080421.12575-1-wens@kernel.org>
+Received: by mail-wm1-f67.google.com with SMTP id t5so10603428wmh.3
+        for <linux-kernel@vger.kernel.org>; Mon, 20 May 2019 01:05:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=brainfault-org.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=N5i7/XDpfm3fWH4Ml9uuxM88EMAgEyCkLNLDzAUDSZ0=;
+        b=aN7TKzswvueSwWlYr5KtwQEUDm4FwOzq19jE5z3pv8sUvOak2w8NcLvYczOR7mVdEC
+         P2S3uIzCkjtQ2aotwBcpbuqNF8Cw3Da3lTLAWb0zExra8L3o2umg7W9woO6Xc55C0ZcB
+         dQoN0Lb5efbJMs5Qne9S1n6yybhaXFZy5FvGFUeQ0PUlIm27zEYRMTTFWxf8hhSnqryF
+         9ceGvzS6/zQ0OevUJKDf/3nlg4O9TkUuEl4tQukvHwYnP5ncA78N8Ci4Z+1kJdbTYECf
+         8C5g//rspnOOH0eaE9czErhjwXHfKaf1FO3A6PMEj4quNFYDKeK9rEge9cGMmzlLLtBE
+         +8tQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=N5i7/XDpfm3fWH4Ml9uuxM88EMAgEyCkLNLDzAUDSZ0=;
+        b=Q3RYsQWciPlNoHMlclOGEpMk81jj5S3/Mzg+NSbCLrqTyXQROjV4NGIV5sBhcWRYsz
+         aCuEynS+0IZu954WR4aV6FxatxpYl9/xubWYG5ZpXrlTffMdVxcC8Feq5ocW037R2RcB
+         7r7cJp4B/NOvKBwHnj+zlNt2TPUeBYPkVtoREWfy8FZkeVuE9/ME42cvypnCXrWVerGA
+         +45OnKBZ3+bdQgQ/2c4Dqrd4QrS5GH6ELq4x+Zx9K1B/XcdM6pcQSKHxzB1AkZ3kmd6j
+         /O6pdZk73MLlT6lZi+/RBfZhkgmVaku+IdAqkJ/mqwrlkXzvNMtnmbdZi4mB1wJgLEzg
+         wiFQ==
+X-Gm-Message-State: APjAAAWyIcZRe/ZiF3Z38ShLgX8pylXJ1LFGZwPKGV/16HYKGBged/Rd
+        1ZCDGXMGcXE3onRbKFFHH8yCOYL0EyyLW2swqGstoA==
+X-Google-Smtp-Source: APXvYqz/x+wplnWtWRAm2caTMk28mJLp0zciA4G0yf9XqQh45uE9rk6iwDlg1+yyxEcWuqSPKpaVVr0N3xBRPIdMPI4=
+X-Received: by 2002:a7b:ce10:: with SMTP id m16mr1909247wmc.10.1558339533772;
+ Mon, 20 May 2019 01:05:33 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20190515063004.3466-1-anup.patel@wdc.com>
+In-Reply-To: <20190515063004.3466-1-anup.patel@wdc.com>
+From:   Anup Patel <anup@brainfault.org>
+Date:   Mon, 20 May 2019 13:35:22 +0530
+Message-ID: <CAAhSdy3GqjS06QxCtY6OUkBZds4gygQsAkaoaa+sMj3z6qgUBQ@mail.gmail.com>
+Subject: Re: [PATCH] RISC-V: defconfig: Enable NO_HZ_IDLE and HIGH_RES_TIMERS
+To:     Anup Patel <Anup.Patel@wdc.com>
+Cc:     Palmer Dabbelt <palmer@sifive.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Atish Patra <Atish.Patra@wdc.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chen-Yu Tsai <wens@csie.org>
+On Wed, May 15, 2019 at 12:00 PM Anup Patel <Anup.Patel@wdc.com> wrote:
+>
+> This patch enables NO_HZ_IDLE (idle dynamic ticks) and HIGH_RES_TIMERS
+> (hrtimers) in RV32 and RV64 defconfigs.
+>
+> Both of the above options are enabled by default for architectures
+> such as x86, ARM, and ARM64.
+>
+> The idle dynamic ticks helps use save power by stopping timer ticks
+> when the system is idle whereas hrtimers is a much improved timer
+> subsystem compared to the old "timer wheel" based system.
+>
+> This patch is tested on SiFive Unleashed board and QEMU Virt machine.
+>
+> Signed-off-by: Anup Patel <anup.patel@wdc.com>
+> ---
+>  arch/riscv/configs/defconfig      | 2 ++
+>  arch/riscv/configs/rv32_defconfig | 2 ++
+>  2 files changed, 4 insertions(+)
+>
+> diff --git a/arch/riscv/configs/defconfig b/arch/riscv/configs/defconfig
+> index 2fd3461e50ab..f254c352ec57 100644
+> --- a/arch/riscv/configs/defconfig
+> +++ b/arch/riscv/configs/defconfig
+> @@ -1,5 +1,7 @@
+>  CONFIG_SYSVIPC=y
+>  CONFIG_POSIX_MQUEUE=y
+> +CONFIG_NO_HZ_IDLE=y
+> +CONFIG_HIGH_RES_TIMERS=y
+>  CONFIG_IKCONFIG=y
+>  CONFIG_IKCONFIG_PROC=y
+>  CONFIG_CGROUPS=y
+> diff --git a/arch/riscv/configs/rv32_defconfig b/arch/riscv/configs/rv32_defconfig
+> index 1a911ed8e772..d5449ef805a3 100644
+> --- a/arch/riscv/configs/rv32_defconfig
+> +++ b/arch/riscv/configs/rv32_defconfig
+> @@ -1,5 +1,7 @@
+>  CONFIG_SYSVIPC=y
+>  CONFIG_POSIX_MQUEUE=y
+> +CONFIG_NO_HZ_IDLE=y
+> +CONFIG_HIGH_RES_TIMERS=y
+>  CONFIG_IKCONFIG=y
+>  CONFIG_IKCONFIG_PROC=y
+>  CONFIG_CGROUPS=y
+> --
+> 2.17.1
+>
 
-With the new clk parenting code, clk_init_data was expanded to include
-.parent_data, for clk drivers that have parents referenced using a
-combination of device tree clock-names, clock indices, and/or clk_hw
-pointers.
+Hi All,
 
-Add a CLK_HW_INIT macro for specifying a single parent from the device
-tree using .fw_name in struct clk_parent_data.
+Any comments on this one?
 
-Signed-off-by: Chen-Yu Tsai <wens@csie.org>
----
- include/linux/clk-provider.h | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+@Palmer, It would be nice to have this in Linux-5.2
 
-diff --git a/include/linux/clk-provider.h b/include/linux/clk-provider.h
-index 0c241b43a802..edad4ad5d897 100644
---- a/include/linux/clk-provider.h
-+++ b/include/linux/clk-provider.h
-@@ -922,6 +922,17 @@ extern struct of_device_id __clk_of_table;
- 		.ops		= _ops,					\
- 	})
- 
-+#define CLK_HW_INIT_FW_NAME(_name, _parent, _ops, _flags)		\
-+	(&(struct clk_init_data) {					\
-+		.flags		= _flags,				\
-+		.name		= _name,				\
-+		.parent_data	= (const struct clk_parent_data[]) {	\
-+					{ .fw_name = _parent },		\
-+				  },					\
-+		.num_parents	= 1,					\
-+		.ops		= _ops,					\
-+	})
-+
- #define CLK_HW_INIT_PARENTS(_name, _parents, _ops, _flags)	\
- 	(&(struct clk_init_data) {				\
- 		.flags		= _flags,			\
--- 
-2.20.1
-
+Regards,
+Anup
