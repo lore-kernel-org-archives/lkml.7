@@ -2,271 +2,120 @@ Return-Path: <SRS0=lq4r=TU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C978EC04AAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 07:24:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF13BC04AAF
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 07:24:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9B02220851
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 07:24:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CDAC5206B6
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 07:24:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730591AbfETHYm (ORCPT
+        id S1730660AbfETHYz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 03:24:42 -0400
-Received: from twhmllg3.macronix.com ([211.75.127.131]:27729 "EHLO
-        TWHMLLG3.macronix.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726114AbfETHYm (ORCPT
+        Mon, 20 May 2019 03:24:55 -0400
+Received: from relay8-d.mail.gandi.net ([217.70.183.201]:35407 "EHLO
+        relay8-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726114AbfETHYy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 03:24:42 -0400
-Received: from twhfmlp1.macronix.com (twhfm1p1.macronix.com [172.17.20.91])
-        by TWHMLLG3.macronix.com with ESMTP id x4K7NvO7058232;
-        Mon, 20 May 2019 15:23:57 +0800 (GMT-8)
-        (envelope-from masonccyang@mxic.com.tw)
-Received: from MXML06C.mxic.com.tw (mxml06c.macronix.com [172.17.14.55])
-        by Forcepoint Email with ESMTP id 7AACD5EAB919A0026F8D;
-        Mon, 20 May 2019 15:23:57 +0800 (CST)
-In-Reply-To: <44bc8f0a-cbdc-db4a-9a46-b8bae5cc37a2@cogentembedded.com>
-References: <1556092536-17095-1-git-send-email-masonccyang@mxic.com.tw> <20190424212356.GA27103@bogus> <65853dc2-6f3c-1494-7e72-54877797cdd2@gmail.com> <20190507125730.GD29524@dell> <OF08A5650B.8AE8977C-ON482583F4.000E5B1E-482583F4.000F7215@mxic.com.tw> <d229b19e-351c-c576-b5c4-716d10dad1a0@gmail.com> <20190508061119.GB7627@dell> <OFE86674B9.06D723A0-ON482583F5.000AD50C-482583F5.000BA075@mxic.com.tw> <a05cff8f-7df2-1938-c0e7-f9366bece607@cogentembedded.com> <OFB19BCE91.6EBBAA77-ON482583F6.000234E2-482583F6.00061290@mxic.com.tw> <CAMuHMdUP8KU3Dbv6cwOvrY0hWOcm1xqVcsi20+GvazYMDLGGZg@mail.gmail.com> <OFD932ABFC.E3FFCEB8-ON482583F9.003412B1-482583F9.0034D5CA@mxic.com.tw> <b51d1cb7-b3b5-208f-ab4c-145ecb57805d@cogentembedded.com> <OFAD9AA573.86373
- <44bc8f0a-cbdc-db4a-9a46-b8bae5cc37a2@cogentembedded.com>
-To:     "Sergei Shtylyov" <sergei.shtylyov@cogentembedded.com>,
-        "Geert Uytterhoeven" <geert@linux-m68k.org>,
-        "Lee Jones" <lee.jones@linaro.org>
-Cc:     "Boris Brezillon" <bbrezillon@kernel.org>,
-        "Mark Brown" <broonie@kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "Geert Uytterhoeven" <geert@linux-m68k.org>,
-        "Geert Uytterhoeven" <geert+renesas@glider.be>,
-        "Simon Horman" <horms@verge.net.au>, juliensu@mxic.com.tw,
-        "Lee Jones" <lee.jones@linaro.org>,
-        "Linux Kernel Mailing List" <linux-kernel@vger.kernel.org>,
-        "Linux-Renesas" <linux-renesas-soc@vger.kernel.org>,
-        "linux-spi" <linux-spi@vger.kernel.org>,
-        "Marek Vasut" <marek.vasut@gmail.com>,
-        "Mark Rutland" <mark.rutland@arm.com>,
-        "Rob Herring" <robh@kernel.org>, zhengxunli@mxic.com.tw,
-        "Miquel Raynal" <miquel.raynal@bootlin.com>
-Subject: Re: [PATCH v12 3/3] dt-bindings: mfd: Document Renesas R-Car Gen3 RPC-IF
- MFD bindings
+        Mon, 20 May 2019 03:24:54 -0400
+X-Originating-IP: 90.88.22.185
+Received: from localhost (aaubervilliers-681-1-80-185.w90-88.abo.wanadoo.fr [90.88.22.185])
+        (Authenticated sender: maxime.ripard@bootlin.com)
+        by relay8-d.mail.gandi.net (Postfix) with ESMTPSA id 846DB1BF218;
+        Mon, 20 May 2019 07:24:48 +0000 (UTC)
+Date:   Mon, 20 May 2019 09:24:47 +0200
+From:   Maxime Ripard <maxime.ripard@bootlin.com>
+To:     Jernej =?utf-8?Q?=C5=A0krabec?= <jernej.skrabec@siol.net>
+Cc:     wens@csie.org, robh+dt@kernel.org, mark.rutland@arm.com,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] ARM: dts: sun8i-h3: Fix wifi in Beelink X2 DT
+Message-ID: <20190520072447.snt4phx57b5rfjv4@flea>
+References: <20190516161039.18534-1-jernej.skrabec@siol.net>
+ <20190517073048.y6mzgbhhryfmuckl@flea>
+ <36237813.UWQAqNRFN9@jernej-laptop>
 MIME-Version: 1.0
-X-KeepSent: 5AF00898:3CE87C98-48258400:00259B16;
- type=4; name=$KeepSent
-X-Mailer: Lotus Notes Release 8.5.3FP4 SHF90 June 10, 2013
-Message-ID: <OF5AF00898.3CE87C98-ON48258400.00259B16-48258400.0028A4F5@mxic.com.tw>
-From:   masonccyang@mxic.com.tw
-Date:   Mon, 20 May 2019 15:23:57 +0800
-X-MIMETrack: Serialize by Router on MXML06C/TAIWAN/MXIC(Release 9.0.1FP10 HF265|July 25, 2018) at
- 2019/05/20 PM 03:23:57,
-        Serialize complete at 2019/05/20 PM 03:23:57
-Content-Type: text/plain; charset="US-ASCII"
-X-MAIL: TWHMLLG3.macronix.com x4K7NvO7058232
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="ctmlzvhrt42rr7y5"
+Content-Disposition: inline
+In-Reply-To: <36237813.UWQAqNRFN9@jernej-laptop>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
-Hi Sergei, 
+--ctmlzvhrt42rr7y5
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> >>> -------------------------------------------------------------->
-> >>>
-> >>> Renesas R-Car Gen3 RPC-IF controller Device Tree Bindings
-> >>> ---------------------------------------------------------
-> >>>
-> >>>   RPC-IF supports both SPI NOR and HyperFlash (CFI-compliant flash)
-> >>>
-> >>>   Required properties:
-> >>>   - compatible: should be an SoC-specific compatible value, followed 
+On Sat, May 18, 2019 at 05:07:11PM +0200, Jernej =C5=A0krabec wrote:
+> Dne petek, 17. maj 2019 ob 09:30:48 CEST je Maxime Ripard napisal(a):
+> > Hi,
+> >
+> > On Thu, May 16, 2019 at 06:10:39PM +0200, Jernej Skrabec wrote:
+> > > mmc1 node where wifi module is connected doesn't have properly defined
+> > > power supplies so wifi module is never powered up. Fix that by
+> > > specifying additional power supplies.
+> > >
+> > > Additionally, this STB may have either Realtek or Broadcom based wifi
+> > > module. One based on Broadcom module also needs external clock to work
+> > > properly. Fix that by adding clock property to wifi_pwrseq node.
+> > >
+> > > Fixes: e582b47a9252 ("ARM: dts: sun8i-h3: Add dts for the Beelink X2 =
+STB")
+> > > Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
+> > > ---
+> > >
+> > >  arch/arm/boot/dts/sun8i-h3-beelink-x2.dts | 5 +++++
+> > >  1 file changed, 5 insertions(+)
+> > >
+> > > diff --git a/arch/arm/boot/dts/sun8i-h3-beelink-x2.dts
+> > > b/arch/arm/boot/dts/sun8i-h3-beelink-x2.dts index
+> > > 6277f13f3eb3..6a0ac85b4616 100644
+> > > --- a/arch/arm/boot/dts/sun8i-h3-beelink-x2.dts
+> > > +++ b/arch/arm/boot/dts/sun8i-h3-beelink-x2.dts
+> > > @@ -89,7 +89,10 @@
+> > >
+> > >  	wifi_pwrseq: wifi_pwrseq {
+> > >
+> > >  		compatible =3D "mmc-pwrseq-simple";
+> > >
+> > > +		pinctrl-names =3D "default";
+> >
+> > pinctrl-names only make sense with another pinctrl-[0-255]
+> > property. Did you forgot something here?
+>
+> No, I just took BananaPi M2+ as a example, which has pinctrl-names proper=
+ty
+> too and no "pinctrl-*". But digging through history of this DT, it seems =
+that
+> this is just leftover which somebody forgot to remove.
+>
+> I'll send v2.
 
-> > by
-> >>>                   "renesas,rcar-gen3-rpc" as a fallback.
-> >>>                   supported SoC-specific values are:
-> >>>                   "renesas,r8a77995-rpc"  (R-Car D3)
-> >>>   - reg: should contain three register areas:
-> >>>           first for the base address of RPC-IF registers,
-> >>
-> >>    I'd drop "the base address" here.
-> > 
-> > okay.
-> > 
-> >>>           second for the direct mapping read mode and
-> >>>           third for the write buffer area.
-> >>>   - reg-names: should contain "regs", "dirmap" and "wbuf"
-> >>>   - clocks: should contain 1 entries for the module's clock
-> >>>   - clock-names: should contain "rpc"
-> >>
-> >>    I suspect we'd need the RPC/RPCD2 clocks mentioned as well (not 
-sure 
-> > yet)...
-> > 
-> > Need it ?
-> 
->    You seem to call clk_get_rate() on the module clock, I doubt that's
-> correct topologically...
+This should be fixed in 5.2 thanks to the commit 75f9a058838b
 
-I think it's correct but just like Geert mentioned that there is no any 
-patch
-in drivers/clk/renesas/r8a77995-cpg-mssr.c adding RPC-related clocks.
+Maxime
 
+--
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
 
-I patched dt-bindings/clock/r8a77995-cpg-mssr.h for some simple testing
+--ctmlzvhrt42rr7y5
+Content-Type: application/pgp-signature; name="signature.asc"
 
--#define R8A77995_CLK_RPC               29
--#define R8A77995_CLK_RPCD2             30
-+#define R8A77995_CLK_RPC               31
-+#define R8A77995_CLK_RPCD2             32
+-----BEGIN PGP SIGNATURE-----
 
-by clk_prepare_enable() & clk_disable_unprepare() with CPG_MOD 917 
-on D3 draak board, it is working fine.
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXOJWPwAKCRDj7w1vZxhR
+xYE+AP9QhFtjiygFXgICwzp6Lq1kpc5kHMNcjkJ+93Xus3Y9QwD+Kfwc+m/R0CkH
+brzk6h/WxMESpp9HioHOUA0ql3LAWAk=
+=go8o
+-----END PGP SIGNATURE-----
 
-
-> >>
-> >>>   - SPI mode:git
-> >>>
-> >>>           rpc: rpc-if@ee200000 {
-> >>
-> >>    The node names should be generic, based on the device class. And 
-in 
-> > this
-> >> case I'd like to use "spi@ee200000" as otherwise dtc keeps bitching 
-like 
-> > below:
-> > 
-> > okay, patch to
-> > 
-> > rpc_if: spi@<...>
-> 
->    That, or just keep the node label.
-
-okay.
-
-
-> >>>   - HF mode:
-> >>>           rpc: rpc-if@ee200000 {
-> >>
-> >>    Again, spi@<...>.
-> > 
-> > what about rpc_if: hf@<...>
-> 
->    Can't change the node name, as it's declared in the .dtsi files, not 
-*.dts
-> ones. And "spi" works for the HF case as well -- no complaints from dtc. 
-:-)
-
-okay,
-
- 
-Patch DTS to
-===============================================================> 
-+Renesas R-Car Gen3 RPC-IF controller Device Tree Bindings
-+---------------------------------------------------------
-+
-+RPC-IF supports both SPI NOR and HyperFlash (CFI-compliant flash)
-+
-+Required properties:
-+- compatible: should be an SoC-specific compatible value, followed by
-+                                "renesas,rcar-gen3-rpc" as a fallback.
-+                                supported SoC-specific values are:
-+                                "renesas,r8a77995-rpc"          (R-Car 
-D3)
-+- reg: should contain three register areas:
-+                first for RPC-IF registers,
-+                second for the direct mapping read mode and
-+                third for the write buffer area.
-+- reg-names: should contain "regs", "dirmap" and "wbuf"
-+- clocks: should contain 1 entries for the module's clock
-+- clock-names: should contain "rpc"
-+- power-domains: should contain system-controller(sysc) for 
-power-domain-cell
-+- resets: should contain clock pulse generator(cpg) for reset-cell,
-+                  power-domain-cell and clock-cell
-+- #address-cells: should be 1
-+- #size-cells: should be 0
-+
-+Example:
-+- SPI mode:
-+
-+                rpc: spi@ee200000 {
-+                                compatible = "renesas,r8a77995-rpc", 
-"renesas,rcar-gen3-rpc";
-+                                reg = <0 0xee200000 0 0x200>, <0 
-0x08000000 0 0x4000000>,
-+                                      <0 0xee208000 0 0x100>;
-+                                reg-names = "regs", "dirmap", "wbuf";
-+                                clocks = <&cpg CPG_MOD 917>;
-+                                clock-names = "rpc";
-+                                power-domains = <&sysc 
-R8A77995_PD_ALWAYS_ON>;
-+                                resets = <&cpg 917>;
-+                                #address-cells = <1>;
-+                                #size-cells = <0>;
-+
-+                                flash@0 {
-+                                                compatible = 
-"jedec,spi-nor";
-+                                                reg = <0>;
-+                                                spi-max-frequency = 
-<40000000>;
-+                                                spi-tx-bus-width = <1>;
-+                                                spi-rx-bus-width = <1>;
-+                                };
-+                };
-+
-+- HF mode:
-+                rpc: spi@ee200000 {
-+                                compatible = "renesas,r8a77995-rpc", 
-"renesas,rcar-gen3-rpc";
-+                                reg = <0 0xee200000 0 0x200>, <0 
-0x08000000 0 0x4000000>,
-+                                      <0 0xee208000 0 0x100>;
-+                                reg-names = "regs", "dirmap", "wbuf";
-+                                clocks = <&cpg CPG_MOD 917>;
-+                                clock-names = "rpc";
-+                                power-domains = <&sysc 
-R8A77995_PD_ALWAYS_ON>;
-+                                resets = <&cpg 917>;
-+                                #address-cells = <1>;
-+                                #size-cells = <0>;
-+
-+                                flash@0 {
-+                                                compatible = 
-"cypress,hyperflash", "cfi-flash";
-+                                                reg = <0>;
-+                                };
-+                };
-===============================================================<
-
-thanks & best regards,
-Mason
-
-
-CONFIDENTIALITY NOTE:
-
-This e-mail and any attachments may contain confidential information 
-and/or personal data, which is protected by applicable laws. Please be 
-reminded that duplication, disclosure, distribution, or use of this e-mail 
-(and/or its attachments) or any part thereof is prohibited. If you receive 
-this e-mail in error, please notify us immediately and delete this mail as 
-well as its attachment(s) from your system. In addition, please be 
-informed that collection, processing, and/or use of personal data is 
-prohibited unless expressly permitted by personal data protection laws. 
-Thank you for your attention and cooperation.
-
-Macronix International Co., Ltd.
-
-=====================================================================
-
-
-
-============================================================================
-
-CONFIDENTIALITY NOTE:
-
-This e-mail and any attachments may contain confidential information and/or personal data, which is protected by applicable laws. Please be reminded that duplication, disclosure, distribution, or use of this e-mail (and/or its attachments) or any part thereof is prohibited. If you receive this e-mail in error, please notify us immediately and delete this mail as well as its attachment(s) from your system. In addition, please be informed that collection, processing, and/or use of personal data is prohibited unless expressly permitted by personal data protection laws. Thank you for your attention and cooperation.
-
-Macronix International Co., Ltd.
-
-=====================================================================
-
+--ctmlzvhrt42rr7y5--
