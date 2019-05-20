@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72695C04AAC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:47:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C29C7C04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:47:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 36575204FD
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:47:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8DE84204FD
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:47:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558356423;
-	bh=Uw0pF31YOHlAKBRVzNCneThPQgBmKK3R8VVsUrLP+AI=;
+	s=default; t=1558356433;
+	bh=Sgs9qAY+GXEt6NrUStKP3nHLtpMEpO9pltJxRwNV2Ao=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SiEp7B59XlmuxBtuYD7diKZFE5OHIFFWCYhKGfHxTb86vxC1EriagGWsZ+/DJMXxS
-	 FlvXQmRmeitbUoNoF3kgRoJWxjP5dIa3jwYfIpTqlsLDPqUxywNa4Pa91fiZbf8o76
-	 f8z/oCnPyPyXtS42pfhEvQwMQdxxafLbfp58LDIs=
+	b=oE100+x0I/o1hN01BSszWAYAdqneJhajfbxHkDxOgpShnCFlwR3Uyh9/0Zi1dU/2Z
+	 QIJn6qVxTMNxBzHO2rkohKoQNdxlcKR7ezgucci3IiK3X+ZDkO51wSc8R9nlu5wX56
+	 UGtRyW5PCeh3e9ONh+2NC0Q+zsmR4p+UFzVa6h2o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389640AbfETMrC (ORCPT
+        id S2388827AbfETMYZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 08:47:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39634 "EHLO mail.kernel.org"
+        Mon, 20 May 2019 08:24:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39164 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388895AbfETMYm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 08:24:42 -0400
+        id S2388796AbfETMYV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 08:24:21 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6909D216C4;
-        Mon, 20 May 2019 12:24:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7F7BC20645;
+        Mon, 20 May 2019 12:24:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558355081;
-        bh=Uw0pF31YOHlAKBRVzNCneThPQgBmKK3R8VVsUrLP+AI=;
+        s=default; t=1558355061;
+        bh=Sgs9qAY+GXEt6NrUStKP3nHLtpMEpO9pltJxRwNV2Ao=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fHXknbxcp5YuhxEXK4Em1yXF48PFoRnubZ9VZfxZ8NSWLy1wS/iY1p6RYqeUdhawo
-         zzATjQYDqgQ/a4maLa2YxlpLhVnK9A7hTSeWHF54zMiKZYqA95FsDtKRduznkiAFnA
-         4sXjcBewaxzjuhhb6PDjQTj0rtBWmO9NwUSaTwAU=
+        b=e13bgDR/xmQkjv0qw6CKF9Wx/j9bOx9Muk3O/Pb53AhAY9Z/T3T+IssoSuIVF9Jxa
+         bdiIB1tcpCwkXjT33ayDzLgaKmwGOYZuFu8qHPnT6TZrOaZtJM22O5X1P9jgD9R6Vv
+         3jpsyZREXYNfksqEMSYJ63zh/OnJ6YBCl0VBmatI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ofir Drang <ofir.drang@arm.com>,
-        Gilad Ben-Yossef <gilad@benyossef.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>
-Subject: [PATCH 4.19 049/105] crypto: ccree - pm resume first enable the source clk
-Date:   Mon, 20 May 2019 14:13:55 +0200
-Message-Id: <20190520115250.419216080@linuxfoundation.org>
+        stable@vger.kernel.org, Kiran Kolukuluru <kirank@ami.com>,
+        Kamlakant Patel <kamlakantp@marvell.com>,
+        Corey Minyard <cminyard@mvista.com>
+Subject: [PATCH 4.19 081/105] ipmi:ssif: compare block number correctly for multi-part return messages
+Date:   Mon, 20 May 2019 14:14:27 +0200
+Message-Id: <20190520115252.857300093@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190520115247.060821231@linuxfoundation.org>
 References: <20190520115247.060821231@linuxfoundation.org>
@@ -60,42 +60,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ofir Drang <ofir.drang@arm.com>
+From: Kamlakant Patel <kamlakantp@marvell.com>
 
-commit 7766dd774d80463cec7b81d90c8672af91de2da1 upstream.
+commit 55be8658c7e2feb11a5b5b33ee031791dbd23a69 upstream.
 
-On power management resume function first enable the device clk source
-to allow access to the device registers.
+According to ipmi spec, block number is a number that is incremented,
+starting with 0, for each new block of message data returned using the
+middle transaction.
 
-Signed-off-by: Ofir Drang <ofir.drang@arm.com>
-Signed-off-by: Gilad Ben-Yossef <gilad@benyossef.com>
-Cc: stable@vger.kernel.org # v4.19+
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Here, the 'blocknum' is data[0] which always starts from zero(0) and
+'ssif_info->multi_pos' starts from 1.
+So, we need to add +1 to blocknum while comparing with multi_pos.
+
+Fixes: 7d6380cd40f79 ("ipmi:ssif: Fix handling of multi-part return messages").
+Reported-by: Kiran Kolukuluru <kirank@ami.com>
+Signed-off-by: Kamlakant Patel <kamlakantp@marvell.com>
+Message-Id: <1556106615-18722-1-git-send-email-kamlakantp@marvell.com>
+[Also added a debug log if the block numbers don't match.]
+Signed-off-by: Corey Minyard <cminyard@mvista.com>
+Cc: stable@vger.kernel.org # 4.4
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/crypto/ccree/cc_pm.c |    5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ drivers/char/ipmi/ipmi_ssif.c |    6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
---- a/drivers/crypto/ccree/cc_pm.c
-+++ b/drivers/crypto/ccree/cc_pm.c
-@@ -42,14 +42,15 @@ int cc_pm_resume(struct device *dev)
- 	struct cc_drvdata *drvdata = dev_get_drvdata(dev);
- 
- 	dev_dbg(dev, "unset HOST_POWER_DOWN_EN\n");
--	cc_iowrite(drvdata, CC_REG(HOST_POWER_DOWN_EN), POWER_DOWN_DISABLE);
--
-+	/* Enables the device source clk */
- 	rc = cc_clk_on(drvdata);
- 	if (rc) {
- 		dev_err(dev, "failed getting clock back on. We're toast.\n");
- 		return rc;
- 	}
- 
-+	cc_iowrite(drvdata, CC_REG(HOST_POWER_DOWN_EN), POWER_DOWN_DISABLE);
-+
- 	rc = init_cc_regs(drvdata, false);
- 	if (rc) {
- 		dev_err(dev, "init_cc_regs (%x)\n", rc);
+--- a/drivers/char/ipmi/ipmi_ssif.c
++++ b/drivers/char/ipmi/ipmi_ssif.c
+@@ -688,12 +688,16 @@ static void msg_done_handler(struct ssif
+ 			/* End of read */
+ 			len = ssif_info->multi_len;
+ 			data = ssif_info->data;
+-		} else if (blocknum != ssif_info->multi_pos) {
++		} else if (blocknum + 1 != ssif_info->multi_pos) {
+ 			/*
+ 			 * Out of sequence block, just abort.  Block
+ 			 * numbers start at zero for the second block,
+ 			 * but multi_pos starts at one, so the +1.
+ 			 */
++			if (ssif_info->ssif_debug & SSIF_DEBUG_MSG)
++				dev_dbg(&ssif_info->client->dev,
++					"Received message out of sequence, expected %u, got %u\n",
++					ssif_info->multi_pos - 1, blocknum);
+ 			result = -EIO;
+ 		} else {
+ 			ssif_inc_stat(ssif_info, received_message_parts);
 
 
