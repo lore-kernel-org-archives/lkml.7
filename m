@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BF3CC04AAC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:52:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF226C46470
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:52:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 25767213F2
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:52:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 99BF0213F2
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:52:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558356761;
-	bh=7msc1tKFakpzZ9gI2yrE7V/oN5Mph5vD65JhgljuaQs=;
+	s=default; t=1558356765;
+	bh=cKO9/xSxyH2xpC+xVrRNNnOCL61zENGJ0t5X4aAQJwc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ozCZ4E96MmFAAeEU1YW/7cf3ToLhfnSfpJf/TZmnxxbevf/8DJc4l5NI9UKRhi9Ux
-	 v5LL0berAoAsovBIMeMbEpChhEO9u3HuYQUJbZDj0tbWSmWkZuvVmTzsm1VD6CX7Dx
-	 vg2fyeUBkxpXZGg7qi7jnWa1uwJQ4BuTRM3eVJ4Y=
+	b=mxkWuDazSWOYEG6L+Zu04iNlWMYHFGjeaQwpAYGmy+/h95Q7lLTro4Oxq6cRU9y5u
+	 vRNVzRNBLU0Lge9ron/rT4xWjiOznWAecg2+ivgeadaw8GKodKV03salA8iJqevvay
+	 8phrD82UIbB8uVJFuM5tVCV+PDptXBlXYQbI+8Pg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391543AbfETMwk (ORCPT
+        id S2387721AbfETMSe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 08:52:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60944 "EHLO mail.kernel.org"
+        Mon, 20 May 2019 08:18:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59522 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387812AbfETMTc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 08:19:32 -0400
+        id S1733208AbfETMS0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 08:18:26 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6D9F820656;
-        Mon, 20 May 2019 12:19:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6C64220656;
+        Mon, 20 May 2019 12:18:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558354771;
-        bh=7msc1tKFakpzZ9gI2yrE7V/oN5Mph5vD65JhgljuaQs=;
+        s=default; t=1558354705;
+        bh=cKO9/xSxyH2xpC+xVrRNNnOCL61zENGJ0t5X4aAQJwc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SdsSu4wiYWp4YEzaJJ/sHQTr3+ql45yQWAunxl3RdkscoiSOXERTU+6ysE0WCa9iz
-         hquUmBTFyjEOZug/jzJkacQdawKwblo2XP6EtefUWVksre5N0kejQYJ/Nisti9oL8S
-         cVQ56YwaBieChfgPvGf4xKkA0J/f9gl5aAkrIHZo=
+        b=cDjCBvVN1bpCdsiAl5w1KhgjkTZw/UfYRnKbMEiBMS5EjPkPh01/J3Oh2l/K5TuK3
+         5CyaYQiR5q1DOSqAb/M/bo0lEt+qml65KAYN/BlSZK6JcWyWnujryhQFowatVWK5Dp
+         fHlBdXSVseVqUB65Segu0iVNz+LLYkomsDRqLS1c=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dmitry Osipenko <digetx@gmail.com>,
-        Lee Jones <lee.jones@linaro.org>
-Subject: [PATCH 4.14 36/63] mfd: max77620: Fix swapped FPS_PERIOD_MAX_US values
-Date:   Mon, 20 May 2019 14:14:15 +0200
-Message-Id: <20190520115235.210391284@linuxfoundation.org>
+        stable@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Sebastian Reichel <sebastian.reichel@collabora.com>
+Subject: [PATCH 4.14 12/63] power: supply: axp288_charger: Fix unchecked return value
+Date:   Mon, 20 May 2019 14:13:51 +0200
+Message-Id: <20190520115232.528988173@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190520115231.137981521@linuxfoundation.org>
 References: <20190520115231.137981521@linuxfoundation.org>
@@ -59,34 +61,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dmitry Osipenko <digetx@gmail.com>
+From: Gustavo A. R. Silva <gustavo@embeddedor.com>
 
-commit ea611d1cc180fbb56982c83cd5142a2b34881f5c upstream.
+commit c3422ad5f84a66739ec6a37251ca27638c85b6be upstream.
 
-The FPS_PERIOD_MAX_US definitions are swapped for MAX20024 and MAX77620,
-fix it.
+Currently there is no check on platform_get_irq() return value
+in case it fails, hence never actually reporting any errors and
+causing unexpected behavior when using such value as argument
+for function regmap_irq_get_virq().
 
-Cc: stable <stable@vger.kernel.org>
-Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
-Signed-off-by: Lee Jones <lee.jones@linaro.org>
+Fix this by adding a proper check, a message reporting any errors
+and returning *pirq*
+
+Addresses-Coverity-ID: 1443940 ("Improper use of negative value")
+Fixes: 843735b788a4 ("power: axp288_charger: axp288 charger driver")
+Cc: stable@vger.kernel.org
+Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+Reviewed-by: Hans de Goede <hdegoede@redhat.com>
+Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- include/linux/mfd/max77620.h |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/power/supply/axp288_charger.c |    4 ++++
+ 1 file changed, 4 insertions(+)
 
---- a/include/linux/mfd/max77620.h
-+++ b/include/linux/mfd/max77620.h
-@@ -136,8 +136,8 @@
- #define MAX77620_FPS_PERIOD_MIN_US		40
- #define MAX20024_FPS_PERIOD_MIN_US		20
- 
--#define MAX77620_FPS_PERIOD_MAX_US		2560
--#define MAX20024_FPS_PERIOD_MAX_US		5120
-+#define MAX20024_FPS_PERIOD_MAX_US		2560
-+#define MAX77620_FPS_PERIOD_MAX_US		5120
- 
- #define MAX77620_REG_FPS_GPIO1			0x54
- #define MAX77620_REG_FPS_GPIO2			0x55
+--- a/drivers/power/supply/axp288_charger.c
++++ b/drivers/power/supply/axp288_charger.c
+@@ -881,6 +881,10 @@ static int axp288_charger_probe(struct p
+ 	/* Register charger interrupts */
+ 	for (i = 0; i < CHRG_INTR_END; i++) {
+ 		pirq = platform_get_irq(info->pdev, i);
++		if (pirq < 0) {
++			dev_err(&pdev->dev, "Failed to get IRQ: %d\n", pirq);
++			return pirq;
++		}
+ 		info->irq[i] = regmap_irq_get_virq(info->regmap_irqc, pirq);
+ 		if (info->irq[i] < 0) {
+ 			dev_warn(&info->pdev->dev,
 
 
