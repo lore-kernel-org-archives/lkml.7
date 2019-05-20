@@ -2,173 +2,319 @@ Return-Path: <SRS0=lq4r=TU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E52AC04AAC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 17:01:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32C39C04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 17:03:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 222D8216B7
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 17:01:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF227216B7
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 17:03:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="kMN/Oml3"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="S/XJsMIy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392687AbfETRBo (ORCPT
+        id S2392695AbfETRDd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 13:01:44 -0400
-Received: from mail-it1-f194.google.com ([209.85.166.194]:32962 "EHLO
-        mail-it1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2392639AbfETRBl (ORCPT
+        Mon, 20 May 2019 13:03:33 -0400
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:42454 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390006AbfETRDc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 13:01:41 -0400
-Received: by mail-it1-f194.google.com with SMTP id j17so427979itk.0
-        for <linux-kernel@vger.kernel.org>; Mon, 20 May 2019 10:01:41 -0700 (PDT)
+        Mon, 20 May 2019 13:03:32 -0400
+Received: by mail-qt1-f193.google.com with SMTP id j53so17125591qta.9;
+        Mon, 20 May 2019 10:03:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=qokhmyg9AkiB7tKMWMX8AGwwTlpK4uMhtkgK3NBAxgg=;
-        b=kMN/Oml37u7vJbRpOT0j2yTOznwnEEooNyxt25SS3DcSRXTuB1xPm0P7e8vbR20kre
-         LT8ziTh1f2zXBnsymYXwKEQ3FpYPOvslMACY7YqTwRwlNJ/edFwO+SiIjkhMWNGqKUcj
-         fp/rHmkPpnAylQNQMEAa4u2Vi0qYh0nDsHqXU=
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=8nYD/wBghMjI7r+sxYc83dAfSUCCIPAsTu8Qqxt/jkE=;
+        b=S/XJsMIyYLprGStC8Zt2qzRXDcAVTnhtaxSy2sqDq/tNuuvgyAG7Mnwjp8sLeqPWgs
+         lEEbyWbQ7KkVMn4y3fYCDwerOb5EmNnyAP+EFui6sCdoMyiZWbK0Nq06QN9sH9eKKQM6
+         8AzLFo14qmmwFHWvuMsF0+WbLmEqd4fK2ggzw9Gg1lc9IMZJ6whhgCmfdo20ktMHGlDS
+         /e2niFuxfRvi6jvmTergBnvdXgtH9mgwWNRYIS2HeAvxude/ZlwTMoaJXsBbNTp5x8AS
+         LT0DUlaE291xUagCC2rI8rgfNk6jy+rR/YP/AADHRSmh0WRbobqoYPP1VMf+Jp1lDCZF
+         7XpA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=qokhmyg9AkiB7tKMWMX8AGwwTlpK4uMhtkgK3NBAxgg=;
-        b=Cp1UbqTBje6TjYOcZLd5g3c2fJf8C8QPQvXpEA2hxAlqk2PHgDhYWsL28QlrTB1K0H
-         SznSABxAKWxNYiKXrZg3x0ouqPyOFum6P/WmRTVulIg6l3tALqhdfNcLIQ/GhYXOTdWp
-         j+OHtj0Bt4M0Rwd2U7c8tJSgB/JrjYkEI+817qdCtoSPqK2fqrkbqCgvbQMlmrn2zItQ
-         j8GYYm9CB03r9bttIJodM9XeMbCs1srl9EgDzPIZesaPsKTSgzwEVSEi+f1nfAtWlPPU
-         u0O3DAzneWpicKqvlDFv90xiJDQiyNPDAJ+YWQgAb8zWRcJiYEeZ3MvWc9XOv/wuyEYY
-         rOFw==
-X-Gm-Message-State: APjAAAUhtsst0S1OqmlEnFW1rAEPl8dCihck/vSo7hTVxSU9Xx4YOIs5
-        GjuWP+UuRAuWquo1Ud1Tnagqv5r4ilE=
-X-Google-Smtp-Source: APXvYqyHAk2xbHN0WR5VjQgADInV80IQzivFF7mpA00fOKKjAmpbUTNHpk3Rj+5wPik797i+kj5q4A==
-X-Received: by 2002:a02:c818:: with SMTP id p24mr3087274jao.100.1558371701136;
-        Mon, 20 May 2019 10:01:41 -0700 (PDT)
-Received: from localhost ([2620:15c:202:1:75a:3f6e:21d:9374])
-        by smtp.gmail.com with ESMTPSA id s4sm6118340ioc.76.2019.05.20.10.01.39
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 20 May 2019 10:01:40 -0700 (PDT)
-From:   Matthias Kaehlcke <mka@chromium.org>
-To:     Heiko Stuebner <heiko@sntech.de>, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-Cc:     linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Douglas Anderson <dianders@chromium.org>,
-        Matthias Kaehlcke <mka@chromium.org>
-Subject: [PATCH 2/2] ARM: dts: rockchip: Configure the GPU thermal zone for mickey
-Date:   Mon, 20 May 2019 10:01:32 -0700
-Message-Id: <20190520170132.91571-2-mka@chromium.org>
-X-Mailer: git-send-email 2.21.0.1020.gf2820cf01a-goog
-In-Reply-To: <20190520170132.91571-1-mka@chromium.org>
-References: <20190520170132.91571-1-mka@chromium.org>
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=8nYD/wBghMjI7r+sxYc83dAfSUCCIPAsTu8Qqxt/jkE=;
+        b=c8b77PloM+cz48fPiITW/3g6np1h99b1Le0A5nyZgKeYQDc7yNFDAePK5XdXoxIrjt
+         BwJoogdKwt2tza/vL4BaKtvyAKB7K/hp1cqTz26xSAA1ZsLs2GnHdAWBmSEzSUQGGQmO
+         /AmVhqdZSnKalTPniv33KR/QTdw24kvq8k7Ain7B6WoIc3QOVXa3JCXmNIF8KERIwN2q
+         Hl2gjf9l/0Q+U4fjCeqe+B6q3TqzsvbfFxecUt3uhjSa1jh2AZsqcnxZUff/Z0vhYION
+         B5o5CN+/sdrKGCvmXHU4jD/PG1LrGPJ4lmmJrPlG7fHrOL0AyvJ+h85cRIQQPaNQrdKQ
+         BN+w==
+X-Gm-Message-State: APjAAAXVH/IgfVD1YgdUC8DYz+CV+KuFQx9z7YejJ8mTFdvF10r6081o
+        pWBR+1RXE2MXqG7fmZ1lKD7Auvlt
+X-Google-Smtp-Source: APXvYqzn75gjiw2pq1ki1IyfGXYmUIKUlcnTQ/n3B/KAtvsWn3SUzafe1skG0L9dy155192yTEWCfw==
+X-Received: by 2002:ac8:2291:: with SMTP id f17mr11906528qta.51.1558371810658;
+        Mon, 20 May 2019 10:03:30 -0700 (PDT)
+Received: from quaco.ghostprotocols.net (179-241-218-42.3g.claro.net.br. [179.241.218.42])
+        by smtp.gmail.com with ESMTPSA id c9sm11695580qtc.39.2019.05.20.10.03.28
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Mon, 20 May 2019 10:03:29 -0700 (PDT)
+From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id ADF43404A1; Mon, 20 May 2019 14:03:22 -0300 (-03)
+Date:   Mon, 20 May 2019 14:03:22 -0300
+To:     Thomas Richter <tmricht@linux.ibm.com>
+Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        brueckner@linux.vnet.ibm.com, schwidefsky@de.ibm.com,
+        heiko.carstens@de.ibm.com
+Subject: Re: [PATCH] pert/report: Support s390 diag event display on x86
+Message-ID: <20190520170322.GN8945@kernel.org>
+References: <20190520144242.53207-1-tmricht@linux.ibm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190520144242.53207-1-tmricht@linux.ibm.com>
+X-Url:  http://acmel.wordpress.com
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-mickey crams a lot of hardware into a tiny package, which requires
-more aggressive thermal throttling than for devices with a larger
-footprint. Configure the GPU thermal zone to throttle the GPU
-progressively at temperatures >= 60°C. Heat dissipated by the
-CPUs also affects the GPU temperature, hence we cap the CPU
-frequency to 1.4 GHz for temperatures above 65°C. Further throttling
-of the CPUs may be performed by the CPU thermal zone.
+Em Mon, May 20, 2019 at 04:42:42PM +0200, Thomas Richter escreveu:
+> Perf report fails to display s390 specific event numbered bd000
+> on an x86 platform. For example on s390 this works without error:
+> 
+> [root@m35lp76 perf]# uname -m
+> s390x
+> [root@m35lp76 perf]# ./perf record -e rbd000 -- find / >/dev/null
+> [ perf record: Woken up 3 times to write data ]
+> [ perf record: Captured and wrote 0.549 MB perf.data ]
+> [root@m35lp76 perf]# ./perf report -D --stdio  > /dev/null
+> [root@m35lp76 perf]#
+> 
+> Transfering this perf.data file to an x86 platform and executing
+> the same report command produces:
+> 
+> [root@f29 perf]# uname -m
+> x86_64
+> [root@f29 perf]# ./perf report -i ~/perf.data.m35lp76 --stdio
+> interpreting bpf_prog_info from systems with endianity is not yet supported
+> interpreting btf from systems with endianity is not yet supported
+> 0x8c890 [0x8]: failed to process type: 68
+> Error:
+> failed to process sample
+> 
+> Event bd000 generates auxiliary data which is stored in big endian
+> format in the perf data file.
+> This error is caused by missing endianess handling on the x86 platform
+> when the data is displayed. Fix this by handling s390 auxiliary event
+> data depending on the local platform endianness.
+> 
+> Output after on x86:
+> 
+> [root@f29 perf]# ./perf report -D -i ~/perf.data.m35lp76 --stdio > /dev/null
+> interpreting bpf_prog_info from systems with endianity is not yet supported
+> interpreting btf from systems with endianity is not yet supported
+> [root@f29 perf]#
+> 
+> Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
+> ---
+>  tools/perf/util/s390-cpumsf.c | 95 ++++++++++++++++++++++++++++-------
+>  1 file changed, 77 insertions(+), 18 deletions(-)
+> 
+> diff --git a/tools/perf/util/s390-cpumsf.c b/tools/perf/util/s390-cpumsf.c
+> index c215704931dc..884ac79528ff 100644
+> --- a/tools/perf/util/s390-cpumsf.c
+> +++ b/tools/perf/util/s390-cpumsf.c
+> @@ -17,8 +17,8 @@
+>   *	see Documentation/perf.data-file-format.txt.
+>   * PERF_RECORD_AUXTRACE_INFO:
+>   *	Defines a table of contains for PERF_RECORD_AUXTRACE records. This
+> - *	record is generated during 'perf record' command. Each record contains up
+> - *	to 256 entries describing offset and size of the AUXTRACE data in the
+> + *	record is generated during 'perf record' command. Each record contains
+> + *	up to 256 entries describing offset and size of the AUXTRACE data in the
 
-The configuration matches that of the downstram Chrome OS 3.14
-kernel, the 'official' kernel for mickey.
+What is this for? Just a text reflow?
 
-Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
----
-Note: this patch depends on "ARM: dts: rockchip: Add #cooling-cells
-entry for rk3288 GPU" (https://lore.kernel.org/patchwork/patch/1075005/)
----
- arch/arm/boot/dts/rk3288-veyron-mickey.dts | 64 ++++++++++++++++++++++
- 1 file changed, 64 insertions(+)
+Also, can you get a Reviewed-by from some other person that works with
+s/390?
 
-diff --git a/arch/arm/boot/dts/rk3288-veyron-mickey.dts b/arch/arm/boot/dts/rk3288-veyron-mickey.dts
-index f118d92a49d0..f0b83afa2a60 100644
---- a/arch/arm/boot/dts/rk3288-veyron-mickey.dts
-+++ b/arch/arm/boot/dts/rk3288-veyron-mickey.dts
-@@ -138,6 +138,70 @@
- 	/delete-property/mmc-hs200-1_8v;
- };
- 
-+&gpu_thermal {
-+	/delete-node/ trips;
-+	/delete-node/ cooling-maps;
-+
-+	trips {
-+		gpu_alert_warmish: gpu_alert_warmish {
-+			temperature = <60000>; /* millicelsius */
-+			hysteresis = <2000>; /* millicelsius */
-+			type = "passive";
-+		};
-+		gpu_alert_warm: gpu_alert_warm {
-+			temperature = <65000>; /* millicelsius */
-+			hysteresis = <2000>; /* millicelsius */
-+			type = "passive";
-+		};
-+		gpu_alert_hotter: gpu_alert_hotter {
-+			temperature = <84000>; /* millicelsius */
-+			hysteresis = <2000>; /* millicelsius */
-+			type = "passive";
-+		};
-+		gpu_alert_very_very_hot: gpu_alert_very_very_hot {
-+			temperature = <86000>; /* millicelsius */
-+			hysteresis = <2000>; /* millicelsius */
-+			type = "passive";
-+		};
-+		gpu_crit: gpu_crit {
-+			temperature = <90000>; /* millicelsius */
-+			hysteresis = <2000>; /* millicelsius */
-+			type = "critical";
-+		};
-+	};
-+
-+	cooling-maps {
-+		/* After 1st level throttle the GPU down to as low as 400 MHz */
-+		gpu_warmish_limit_gpu {
-+			trip = <&gpu_alert_warmish>;
-+			cooling-device = <&gpu THERMAL_NO_LIMIT 1>;
-+		};
-+
-+		/*
-+		 * Slightly after we throttle the GPU, we'll also make sure that
-+		 * the CPU can't go faster than 1.4 GHz.  Note that we won't
-+		 * throttle the CPU lower than 1.4 GHz due to GPU heat--we'll
-+		 * let the CPU do the rest itself.
-+		 */
-+		gpu_warm_limit_cpu {
-+			trip = <&gpu_alert_warm>;
-+			cooling-device = <&cpu0 4 4>;
-+		};
-+
-+		/* When hot, GPU goes down to 300 MHz */
-+		gpu_hotter_limit_gpu {
-+			trip = <&gpu_alert_hotter>;
-+			cooling-device = <&gpu 2 2>;
-+		};
-+
-+		/* When really hot, don't let GPU go _above_ 300 MHz */
-+		gpu_very_very_hot_limit_gpu {
-+			trip = <&gpu_alert_very_very_hot>;
-+			cooling-device = <&gpu 2 THERMAL_NO_LIMIT>;
-+		};
-+	};
-+};
-+
- &i2c2 {
- 	status = "disabled";
- };
+- Arnaldo
+
+>   *	perf.data file.
+>   * PERF_RECORD_AUXTRACE_ERROR:
+>   *	Indicates an error during AUXTRACE collection such as buffer overflow.
+> @@ -237,10 +237,33 @@ static int s390_cpumcf_dumpctr(struct s390_cpumsf *sf,
+>  	return rc;
+>  }
+>  
+> -/* Display s390 CPU measurement facility basic-sampling data entry */
+> +/* Display s390 CPU measurement facility basic-sampling data entry
+> + * Data written on s390 in big endian byte order and contains bit
+> + * fields across byte boundaries.
+> + */
+>  static bool s390_cpumsf_basic_show(const char *color, size_t pos,
+> -				   struct hws_basic_entry *basic)
+> +				   struct hws_basic_entry *basicp)
+>  {
+> +	struct hws_basic_entry *basic = basicp;
+> +#if __BYTE_ORDER == __LITTLE_ENDIAN
+> +	struct hws_basic_entry local;
+> +	unsigned long word = be64toh(*(unsigned long *)basicp);
+> +
+> +	memset(&local, 0, sizeof(local));
+> +	local.def = be16toh(basicp->def);
+> +	local.prim_asn = word & 0xffff;
+> +	local.CL = word >> 30 & 0x3;
+> +	local.I = word >> 32 & 0x1;
+> +	local.AS = word >> 33 & 0x3;
+> +	local.P = word >> 35 & 0x1;
+> +	local.W = word >> 36 & 0x1;
+> +	local.T = word >> 37 & 0x1;
+> +	local.U = word >> 40 & 0xf;
+> +	local.ia = be64toh(basicp->ia);
+> +	local.gpp = be64toh(basicp->gpp);
+> +	local.hpp = be64toh(basicp->hpp);
+> +	basic = &local;
+> +#endif
+>  	if (basic->def != 1) {
+>  		pr_err("Invalid AUX trace basic entry [%#08zx]\n", pos);
+>  		return false;
+> @@ -258,10 +281,22 @@ static bool s390_cpumsf_basic_show(const char *color, size_t pos,
+>  	return true;
+>  }
+>  
+> -/* Display s390 CPU measurement facility diagnostic-sampling data entry */
+> +/* Display s390 CPU measurement facility diagnostic-sampling data entry.
+> + * Data written on s390 in big endian byte order and contains bit
+> + * fields across byte boundaries.
+> + */
+>  static bool s390_cpumsf_diag_show(const char *color, size_t pos,
+> -				  struct hws_diag_entry *diag)
+> +				  struct hws_diag_entry *diagp)
+>  {
+> +	struct hws_diag_entry *diag = diagp;
+> +#if __BYTE_ORDER == __LITTLE_ENDIAN
+> +	struct hws_diag_entry local;
+> +	unsigned long word = be64toh(*(unsigned long *)diagp);
+> +
+> +	local.def = be16toh(diagp->def);
+> +	local.I = word >> 32 & 0x1;
+> +	diag = &local;
+> +#endif
+>  	if (diag->def < S390_CPUMSF_DIAG_DEF_FIRST) {
+>  		pr_err("Invalid AUX trace diagnostic entry [%#08zx]\n", pos);
+>  		return false;
+> @@ -272,35 +307,51 @@ static bool s390_cpumsf_diag_show(const char *color, size_t pos,
+>  }
+>  
+>  /* Return TOD timestamp contained in an trailer entry */
+> -static unsigned long long trailer_timestamp(struct hws_trailer_entry *te)
+> +static unsigned long long trailer_timestamp(struct hws_trailer_entry *te,
+> +					    int idx)
+>  {
+>  	/* te->t set: TOD in STCKE format, bytes 8-15
+>  	 * to->t not set: TOD in STCK format, bytes 0-7
+>  	 */
+>  	unsigned long long ts;
+>  
+> -	memcpy(&ts, &te->timestamp[te->t], sizeof(ts));
+> -	return ts;
+> +	memcpy(&ts, &te->timestamp[idx], sizeof(ts));
+> +	return be64toh(ts);
+>  }
+>  
+>  /* Display s390 CPU measurement facility trailer entry */
+>  static bool s390_cpumsf_trailer_show(const char *color, size_t pos,
+>  				     struct hws_trailer_entry *te)
+>  {
+> +#if __BYTE_ORDER == __LITTLE_ENDIAN
+> +	struct hws_trailer_entry local;
+> +
+> +	memset(&local, 0, sizeof(local));
+> +	local.f = be64toh(te->flags) >> 63 & 0x1;
+> +	local.a = be64toh(te->flags) >> 62 & 0x1;
+> +	local.t = be64toh(te->flags) >> 61 & 0x1;
+> +	local.bsdes = be16toh((be64toh(te->flags) >> 16 & 0xffff));
+> +	local.dsdes = be16toh((be64toh(te->flags) & 0xffff));
+> +	memcpy(&local.timestamp, te->timestamp, sizeof(te->timestamp));
+> +	local.overflow = be64toh(te->overflow);
+> +	local.clock_base = be64toh(te->progusage[0]) >> 63 & 1;
+> +	local.progusage2 = be64toh(te->progusage2);
+> +	te = &local;
+> +#endif
+>  	if (te->bsdes != sizeof(struct hws_basic_entry)) {
+>  		pr_err("Invalid AUX trace trailer entry [%#08zx]\n", pos);
+>  		return false;
+>  	}
+>  	color_fprintf(stdout, color, "    [%#08zx] Trailer %c%c%c bsdes:%d"
+>  		      " dsdes:%d Overflow:%lld Time:%#llx\n"
+> -		      "\t\tC:%d TOD:%#lx 1:%#llx 2:%#llx\n",
+> +		      "\t\tC:%d TOD:%#lx\n",
+>  		      pos,
+>  		      te->f ? 'F' : ' ',
+>  		      te->a ? 'A' : ' ',
+>  		      te->t ? 'T' : ' ',
+>  		      te->bsdes, te->dsdes, te->overflow,
+> -		      trailer_timestamp(te), te->clock_base, te->progusage2,
+> -		      te->progusage[0], te->progusage[1]);
+> +		      trailer_timestamp(te, te->clock_base),
+> +		      te->clock_base, te->progusage2);
+>  	return true;
+>  }
+>  
+> @@ -327,13 +378,13 @@ static bool s390_cpumsf_validate(int machine_type,
+>  	*dsdes = *bsdes = 0;
+>  	if (len & (S390_CPUMSF_PAGESZ - 1))	/* Illegal size */
+>  		return false;
+> -	if (basic->def != 1)		/* No basic set entry, must be first */
+> +	if (be16toh(basic->def) != 1)	/* No basic set entry, must be first */
+>  		return false;
+>  	/* Check for trailer entry at end of SDB */
+>  	te = (struct hws_trailer_entry *)(buf + S390_CPUMSF_PAGESZ
+>  					      - sizeof(*te));
+> -	*bsdes = te->bsdes;
+> -	*dsdes = te->dsdes;
+> +	*bsdes = be16toh(te->bsdes);
+> +	*dsdes = be16toh(te->dsdes);
+>  	if (!te->bsdes && !te->dsdes) {
+>  		/* Very old hardware, use CPUID */
+>  		switch (machine_type) {
+> @@ -495,19 +546,27 @@ static bool s390_cpumsf_make_event(size_t pos,
+>  static unsigned long long get_trailer_time(const unsigned char *buf)
+>  {
+>  	struct hws_trailer_entry *te;
+> -	unsigned long long aux_time;
+> +	unsigned long long aux_time, progusage2;
+> +	bool clock_base;
+>  
+>  	te = (struct hws_trailer_entry *)(buf + S390_CPUMSF_PAGESZ
+>  					      - sizeof(*te));
+>  
+> -	if (!te->clock_base)	/* TOD_CLOCK_BASE value missing */
+> +#if __BYTE_ORDER == __LITTLE_ENDIAN
+> +	clock_base = be64toh(te->progusage[0]) >> 63 & 0x1;
+> +	progusage2 = be64toh(te->progusage[1]);
+> +#else
+> +	clock_base = te->clock_base;
+> +	progusage2 = te->progusage2;
+> +#endif
+> +	if (!clock_base)	/* TOD_CLOCK_BASE value missing */
+>  		return 0;
+>  
+>  	/* Correct calculation to convert time stamp in trailer entry to
+>  	 * nano seconds (taken from arch/s390 function tod_to_ns()).
+>  	 * TOD_CLOCK_BASE is stored in trailer entry member progusage2.
+>  	 */
+> -	aux_time = trailer_timestamp(te) - te->progusage2;
+> +	aux_time = trailer_timestamp(te, clock_base) - progusage2;
+>  	aux_time = (aux_time >> 9) * 125 + (((aux_time & 0x1ff) * 125) >> 9);
+>  	return aux_time;
+>  }
+> -- 
+> 2.19.1
+
 -- 
-2.21.0.1020.gf2820cf01a-goog
 
+- Arnaldo
