@@ -7,48 +7,52 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61EE7C04AAC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:32:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42CE5C04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:32:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 347B120645
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:32:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1759D20645
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:32:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558355567;
-	bh=2j4wA9QcwcPQOSKy4nWCDZfQMwJfMuCwE2+iBO7jLlM=;
+	s=default; t=1558355570;
+	bh=0KsKzMIexvgz/Ii/Ahfc7GkrA4itaRHT2VqE7RYhjWA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=P57VYcASa95zr87ijTMLdvjUXfAVgg9iJedZcJjFUZNh1N5MOxQ0HVp4Dy/wmKqoQ
-	 xZ2lObvWTgLDkDxAxrf4oYrOLri7IJzsjnkzApZ4+jg5T9WCxL81RpJLEXKFbhu9su
-	 7gXrK5kPGevgCGvPLtiIOif5reXnrBq5pmHAXyaA=
+	b=ubWRVZ1WqVTy7zVhdj5CyzZx1Jh2AbqMk50Ud81Jv2PZRqHUee9OEX/g2lF0hoJ2g
+	 Fa9WAka465nNLAJBlif58GWDZ6YWjTfe0lppfgIgYxD1V2k3ozpTO947SDXkDj6J+X
+	 wYZkBbmd4JLyYt7FCGcxBxpVagRDUVs5yKWCeGak=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390621AbfETMcq (ORCPT
+        id S2390630AbfETMct (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 08:32:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49690 "EHLO mail.kernel.org"
+        Mon, 20 May 2019 08:32:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48444 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732999AbfETMco (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 08:32:44 -0400
+        id S2390427AbfETMbq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 08:31:46 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 88D13214DA;
-        Mon, 20 May 2019 12:32:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CE8DE20675;
+        Mon, 20 May 2019 12:31:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558355563;
-        bh=2j4wA9QcwcPQOSKy4nWCDZfQMwJfMuCwE2+iBO7jLlM=;
+        s=default; t=1558355506;
+        bh=0KsKzMIexvgz/Ii/Ahfc7GkrA4itaRHT2VqE7RYhjWA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=11wHiS0T57eZzaV/OuSU2rOOIT9mP2KTQBIg2UjplxhqJZj4Ze0DuYDmcO/M1Tq7w
-         4A0HhwCkbCgmNOo2SBXVBKsywNtHJcuRfe4ltoSBZl4wq6zxjaDlzA4umkhmLgo8Pa
-         Ptdpgmmh6EObokYo8XKsrQQedsVprY8ceyaFD/6E=
+        b=QFWjfjH6o9f2/C/h4nMY6lsUEKFSmUyzK7CiJKfwimqEnK7pk+An5eT20CUS8UaMK
+         hlvrDlEMST7GjjSzC8zzBF/zHYa9MLh1xkbZEP1MnTH9+eRm98G+ASA3+VL7CEfaDi
+         j5MJIDqPoA6K1dMVQ4qU+Dm6OD3wx5KjPq2tvbCw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Christoph Muellner <christoph.muellner@theobroma-systems.com>,
-        Philipp Tomsich <philipp.tomsich@theobroma-systems.com>,
-        Heiko Stuebner <heiko@sntech.de>
-Subject: [PATCH 5.1 006/128] arm64: dts: rockchip: Disable DCMDs on RK3399s eMMC controller.
-Date:   Mon, 20 May 2019 14:13:13 +0200
-Message-Id: <20190520115249.881270787@linuxfoundation.org>
+        stable@vger.kernel.org, Julien Thierry <julien.thierry@arm.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Borislav Petkov <bp@alien8.de>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>, stable@kernel.org,
+        Ingo Molnar <mingo@kernel.org>
+Subject: [PATCH 5.1 020/128] sched/x86: Save [ER]FLAGS on context switch
+Date:   Mon, 20 May 2019 14:13:27 +0200
+Message-Id: <20190520115250.873874392@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190520115249.449077487@linuxfoundation.org>
 References: <20190520115249.449077487@linuxfoundation.org>
@@ -61,83 +65,128 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christoph Muellner <christoph.muellner@theobroma-systems.com>
+From: Peter Zijlstra <peterz@infradead.org>
 
-commit a3eec13b8fd2b9791a21fa16e38dfea8111579bf upstream.
+commit 6690e86be83ac75832e461c141055b5d601c0a6d upstream.
 
-When using direct commands (DCMDs) on an RK3399, we get spurious
-CQE completion interrupts for the DCMD transaction slot (#31):
+Effectively reverts commit:
 
-[  931.196520] ------------[ cut here ]------------
-[  931.201702] mmc1: cqhci: spurious TCN for tag 31
-[  931.206906] WARNING: CPU: 0 PID: 1433 at /usr/src/kernel/drivers/mmc/host/cqhci.c:725 cqhci_irq+0x2e4/0x490
-[  931.206909] Modules linked in:
-[  931.206918] CPU: 0 PID: 1433 Comm: irq/29-mmc1 Not tainted 4.19.8-rt6-funkadelic #1
-[  931.206920] Hardware name: Theobroma Systems RK3399-Q7 SoM (DT)
-[  931.206924] pstate: 40000005 (nZcv daif -PAN -UAO)
-[  931.206927] pc : cqhci_irq+0x2e4/0x490
-[  931.206931] lr : cqhci_irq+0x2e4/0x490
-[  931.206933] sp : ffff00000e54bc80
-[  931.206934] x29: ffff00000e54bc80 x28: 0000000000000000
-[  931.206939] x27: 0000000000000001 x26: ffff000008f217e8
-[  931.206944] x25: ffff8000f02ef030 x24: ffff0000091417b0
-[  931.206948] x23: ffff0000090aa000 x22: ffff8000f008b000
-[  931.206953] x21: 0000000000000002 x20: 000000000000001f
-[  931.206957] x19: ffff8000f02ef018 x18: ffffffffffffffff
-[  931.206961] x17: 0000000000000000 x16: 0000000000000000
-[  931.206966] x15: ffff0000090aa6c8 x14: 0720072007200720
-[  931.206970] x13: 0720072007200720 x12: 0720072007200720
-[  931.206975] x11: 0720072007200720 x10: 0720072007200720
-[  931.206980] x9 : 0720072007200720 x8 : 0720072007200720
-[  931.206984] x7 : 0720073107330720 x6 : 00000000000005a0
-[  931.206988] x5 : ffff00000860d4b0 x4 : 0000000000000000
-[  931.206993] x3 : 0000000000000001 x2 : 0000000000000001
-[  931.206997] x1 : 1bde3a91b0d4d900 x0 : 0000000000000000
-[  931.207001] Call trace:
-[  931.207005]  cqhci_irq+0x2e4/0x490
-[  931.207009]  sdhci_arasan_cqhci_irq+0x5c/0x90
-[  931.207013]  sdhci_irq+0x98/0x930
-[  931.207019]  irq_forced_thread_fn+0x2c/0xa0
-[  931.207023]  irq_thread+0x114/0x1c0
-[  931.207027]  kthread+0x128/0x130
-[  931.207032]  ret_from_fork+0x10/0x20
-[  931.207035] ---[ end trace 0000000000000002 ]---
+  2c7577a75837 ("sched/x86_64: Don't save flags on context switch")
 
-The driver shows this message only for the first spurious interrupt
-by using WARN_ONCE(). Changing this to WARN() shows, that this is
-happening quite frequently (up to once a second).
+Specifically because SMAP uses FLAGS.AC which invalidates the claim
+that the kernel has clean flags.
 
-Since the eMMC 5.1 specification, where CQE and CQHCI are specified,
-does not mention that spurious TCN interrupts for DCMDs can be simply
-ignored, we must assume that using this feature is not working reliably.
+In particular; while preemption from interrupt return is fine (the
+IRET frame on the exception stack contains FLAGS) it breaks any code
+that does synchonous scheduling, including preempt_enable().
 
-The current implementation uses DCMD for REQ_OP_FLUSH only, and
-I could not see any performance/power impact when disabling
-this optional feature for RK3399.
+This has become a significant issue ever since commit:
 
-Therefore this patch disables DCMDs for RK3399.
+  5b24a7a2aa20 ("Add 'unsafe' user access functions for batched accesses")
 
-Signed-off-by: Christoph Muellner <christoph.muellner@theobroma-systems.com>
-Signed-off-by: Philipp Tomsich <philipp.tomsich@theobroma-systems.com>
-Fixes: 84362d79f436 ("mmc: sdhci-of-arasan: Add CQHCI support for arasan,sdhci-5.1")
-Cc: stable@vger.kernel.org
-[the corresponding code changes are queued for 5.2 so doing that as well]
-Signed-off-by: Heiko Stuebner <heiko@sntech.de>
+provided for means of having 'normal' C code between STAC / CLAC,
+exposing the FLAGS.AC state. So far this hasn't led to trouble,
+however fix it before it comes apart.
+
+Reported-by: Julien Thierry <julien.thierry@arm.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Acked-by: Andy Lutomirski <luto@amacapital.net>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: Josh Poimboeuf <jpoimboe@redhat.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: stable@kernel.org
+Fixes: 5b24a7a2aa20 ("Add 'unsafe' user access functions for batched accesses")
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/arm64/boot/dts/rockchip/rk3399.dtsi |    1 +
- 1 file changed, 1 insertion(+)
+ arch/x86/entry/entry_32.S        |    2 ++
+ arch/x86/entry/entry_64.S        |    2 ++
+ arch/x86/include/asm/switch_to.h |    1 +
+ arch/x86/kernel/process_32.c     |    7 +++++++
+ arch/x86/kernel/process_64.c     |    8 ++++++++
+ 5 files changed, 20 insertions(+)
 
---- a/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-+++ b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-@@ -333,6 +333,7 @@
- 		phys = <&emmc_phy>;
- 		phy-names = "phy_arasan";
- 		power-domains = <&power RK3399_PD_EMMC>;
-+		disable-cqe-dcmd;
- 		status = "disabled";
- 	};
+--- a/arch/x86/entry/entry_32.S
++++ b/arch/x86/entry/entry_32.S
+@@ -650,6 +650,7 @@ ENTRY(__switch_to_asm)
+ 	pushl	%ebx
+ 	pushl	%edi
+ 	pushl	%esi
++	pushfl
  
+ 	/* switch stack */
+ 	movl	%esp, TASK_threadsp(%eax)
+@@ -672,6 +673,7 @@ ENTRY(__switch_to_asm)
+ #endif
+ 
+ 	/* restore callee-saved registers */
++	popfl
+ 	popl	%esi
+ 	popl	%edi
+ 	popl	%ebx
+--- a/arch/x86/entry/entry_64.S
++++ b/arch/x86/entry/entry_64.S
+@@ -291,6 +291,7 @@ ENTRY(__switch_to_asm)
+ 	pushq	%r13
+ 	pushq	%r14
+ 	pushq	%r15
++	pushfq
+ 
+ 	/* switch stack */
+ 	movq	%rsp, TASK_threadsp(%rdi)
+@@ -313,6 +314,7 @@ ENTRY(__switch_to_asm)
+ #endif
+ 
+ 	/* restore callee-saved registers */
++	popfq
+ 	popq	%r15
+ 	popq	%r14
+ 	popq	%r13
+--- a/arch/x86/include/asm/switch_to.h
++++ b/arch/x86/include/asm/switch_to.h
+@@ -40,6 +40,7 @@ asmlinkage void ret_from_fork(void);
+  * order of the fields must match the code in __switch_to_asm().
+  */
+ struct inactive_task_frame {
++	unsigned long flags;
+ #ifdef CONFIG_X86_64
+ 	unsigned long r15;
+ 	unsigned long r14;
+--- a/arch/x86/kernel/process_32.c
++++ b/arch/x86/kernel/process_32.c
+@@ -127,6 +127,13 @@ int copy_thread_tls(unsigned long clone_
+ 	struct task_struct *tsk;
+ 	int err;
+ 
++	/*
++	 * For a new task use the RESET flags value since there is no before.
++	 * All the status flags are zero; DF and all the system flags must also
++	 * be 0, specifically IF must be 0 because we context switch to the new
++	 * task with interrupts disabled.
++	 */
++	frame->flags = X86_EFLAGS_FIXED;
+ 	frame->bp = 0;
+ 	frame->ret_addr = (unsigned long) ret_from_fork;
+ 	p->thread.sp = (unsigned long) fork_frame;
+--- a/arch/x86/kernel/process_64.c
++++ b/arch/x86/kernel/process_64.c
+@@ -392,6 +392,14 @@ int copy_thread_tls(unsigned long clone_
+ 	childregs = task_pt_regs(p);
+ 	fork_frame = container_of(childregs, struct fork_frame, regs);
+ 	frame = &fork_frame->frame;
++
++	/*
++	 * For a new task use the RESET flags value since there is no before.
++	 * All the status flags are zero; DF and all the system flags must also
++	 * be 0, specifically IF must be 0 because we context switch to the new
++	 * task with interrupts disabled.
++	 */
++	frame->flags = X86_EFLAGS_FIXED;
+ 	frame->bp = 0;
+ 	frame->ret_addr = (unsigned long) ret_from_fork;
+ 	p->thread.sp = (unsigned long) fork_frame;
 
 
