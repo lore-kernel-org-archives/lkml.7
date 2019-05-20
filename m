@@ -2,96 +2,104 @@ Return-Path: <SRS0=lq4r=TU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5625C04AAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 07:30:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54DE7C04AAF
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 07:30:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7C3C120656
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 07:30:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 26F3B20656
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 07:30:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CTLFErxQ"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="B1YJ06nh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730295AbfETHaJ (ORCPT
+        id S1730715AbfETHau (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 03:30:09 -0400
-Received: from mail-pl1-f181.google.com ([209.85.214.181]:36711 "EHLO
-        mail-pl1-f181.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727319AbfETHaJ (ORCPT
+        Mon, 20 May 2019 03:30:50 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:41624 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725983AbfETHat (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 03:30:09 -0400
-Received: by mail-pl1-f181.google.com with SMTP id d21so6307861plr.3
-        for <linux-kernel@vger.kernel.org>; Mon, 20 May 2019 00:30:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to;
-        bh=M9gF003sey4m6ZmXpEUbjfnhDsoOFBA4gIaS9I0d8bE=;
-        b=CTLFErxQnOfqsBVxHwCquDeLPv1gabZlcjpr0Eg9qF6kBjUePHbkS9Lqfxw7Tww4tp
-         OCQXX8wgdu7jug44fnqGHp4P8VgF5iHlERldi04fy1ihJH9Ome48FAeD7rAR5Rk2XSTW
-         RoLng7/fPRmMMmbKFRN3qnDb614IysnQ/K9vxZO6rt8KtQXn+Rhsi7QLDw8P7IWIJcdV
-         a+XEuQe/wRS55VGZsav7g8vtVrpPyJuXfzkEgU1bW8IIfBzZXOzsuXaq26AjFu19zHpP
-         VI23HhREN+SXrBFY5sn1GgC7bZ9fJ+pFIXnfTf9FB4TM2aFwmwh3t0mC9IhqYzSrm4lt
-         P4Uw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to;
-        bh=M9gF003sey4m6ZmXpEUbjfnhDsoOFBA4gIaS9I0d8bE=;
-        b=bstnmWYN8TATfbuwdDlrNjVkvTCIxGsWBXN5/c6LP3hZU+RVo4cHUQG+CFLmPMHrfz
-         liT7TD87cGWmZX8clcQaGxQAJ/Q9aSCVC44wms8H2nkYzZMoyN5N3hlY1RCklAE9rL1x
-         hpvo0yjqC+9zwy5kQ4qY8JV0IRtQuD5xC5IKeSUjPvCfomnSt6u0rFnw0B+8Pj+Uass3
-         5ip9+OZ8JeoxBXNr7QKsrdwHi/RY5Uh+hP1S6pyCuzi7FV3ZnMUJZxcr1aWt3a6a5+BV
-         1N9IWd/0l9yHekTGyyy26zvItJELL1le2aisMaPBbSY6Y1agAbEBvZT++AXq39U6XjUY
-         Wbrg==
-X-Gm-Message-State: APjAAAVgu6/k1duYo1GzgMwEBD+AzyrGWcR8qgPE51LiNXfoMlnHibuM
-        Dzffe2P1vX8j9o1Y8Jygxl/dZTxxfJILK7q3eKP37Q==
-X-Google-Smtp-Source: APXvYqxLzd5aHV9JceB9D3o3SozeFECT3yTJWSN1dEzwVmeId+k3X6eTVdkFIJ2Ij6Z30N9L5Gxz/rZKpn1D8bfr3T0=
-X-Received: by 2002:a17:902:8c85:: with SMTP id t5mr74423655plo.23.1558337408257;
- Mon, 20 May 2019 00:30:08 -0700 (PDT)
+        Mon, 20 May 2019 03:30:49 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
+        :Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From
+        :Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=0MUoZeolyju0ppH/Ou6THzBWxw9cfiAMzAM8wvQHZow=; b=B1YJ06nhbwQxMVr57VUJOD/Fr9
+        sPMXGmELhdiVQ902kBilip0rAaZll0T7e78vfLHp3pPy3CwzKzCISId9tN3AyLEsgEVq8CtmtX4og
+        9/pIfw75//y08p15DkeebnXr9q+Zk4sy3gAiLNvHNinuapkhr4apiHxVRoltZ6iH2CwgObp8l+P8d
+        pLXEbhnWxSYt9/QsVGT9IPYNbdFDD9aIiSWdBJ51wuREk2axQA84UDSOFn+D+x/fdzcuY9mqZg+s4
+        FuHk4xfFAk/QTOtj9SkzlWg1QXu5lDTUjiw5M5X8UHT81wF+s3VfAY1jp06Dt79pMk0XZ8wLihQIX
+        n5qIT9Kw==;
+Received: from 089144206147.atnat0015.highway.bob.at ([89.144.206.147] helo=localhost)
+        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hScks-0003k0-KD; Mon, 20 May 2019 07:30:43 +0000
+From:   Christoph Hellwig <hch@lst.de>
+To:     Robin Murphy <robin.murphy@arm.com>
+Cc:     Joerg Roedel <joro@8bytes.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Tom Murphy <tmurphy@arista.com>,
+        iommu@lists.linux-foundation.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 01/24] arm64/iommu: handle non-remapped addresses in ->mmap and ->get_sgtable
+Date:   Mon, 20 May 2019 09:29:25 +0200
+Message-Id: <20190520072948.11412-2-hch@lst.de>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190520072948.11412-1-hch@lst.de>
+References: <20190520072948.11412-1-hch@lst.de>
 MIME-Version: 1.0
-References: <CAMJ=MEdS4+5Un77MU7dPxkOjA7-yAv-1tbt0vbUaZ8n4R_rrBQ@mail.gmail.com>
-In-Reply-To: <CAMJ=MEdS4+5Un77MU7dPxkOjA7-yAv-1tbt0vbUaZ8n4R_rrBQ@mail.gmail.com>
-From:   Ronny Meeus <ronny.meeus@gmail.com>
-Date:   Mon, 20 May 2019 09:29:57 +0200
-Message-ID: <CAMJ=MEcTP1Y_ZE6iqxX-MANGnzGrbzkFUs0TzBHc+KB62aEyqw@mail.gmail.com>
-Subject: Re: fs/pstore question
-To:     linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Op do 9 mei 2019 10:05 schreef Ronny Meeus <ronny.meeus@gmail.com>:
->
-> Hello
->
-> I'm using the pstore feature to log kernel crashes.
->
-> What I observe is that after reboot, always 2 entries are present in the pstore:
->
-> ls -l /mnt/pstore
-> total 0
-> -r--r--r--    1 root     root         16372 Jan  1 00:00 dmesg-ramoops-0
-> -r--r--r--    1 root     root         16372 Jan  1 00:00 dmesg-ramoops-1
->
-> If I do not delete the entries and force a new crash, only 2 new
-> entries are available
-> after the system is online again and the older entries are overwritten.
->
-> The reason for this is that the write index is always initialized to 0
-> during init.
-> Is this intentional? I would expect that existing entries are kept
-> until they are explicitly
-> deleted or the storage is full. In the latter case the oldest entries
-> can be replaced.
->
-> Best regards,
-> Ronny
+DMA allocations that can't sleep may return non-remapped addresses, but
+we do not properly handle them in the mmap and get_sgtable methods.
+Resolve non-vmalloc addresses using virt_to_page to handle this corner
+case.
 
+Signed-off-by: Christoph Hellwig <hch@lst.de>
+Reviewed-by: Robin Murphy <robin.murphy@arm.com>
+Acked-by: Catalin Marinas <catalin.marinas@arm.com>
+---
+ arch/arm64/mm/dma-mapping.c | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-Any feedback is appreciated.
-Thanks
+diff --git a/arch/arm64/mm/dma-mapping.c b/arch/arm64/mm/dma-mapping.c
+index 78c0a72f822c..674860e3e478 100644
+--- a/arch/arm64/mm/dma-mapping.c
++++ b/arch/arm64/mm/dma-mapping.c
+@@ -249,6 +249,11 @@ static int __iommu_mmap_attrs(struct device *dev, struct vm_area_struct *vma,
+ 	if (dma_mmap_from_dev_coherent(dev, vma, cpu_addr, size, &ret))
+ 		return ret;
+ 
++	if (!is_vmalloc_addr(cpu_addr)) {
++		unsigned long pfn = page_to_pfn(virt_to_page(cpu_addr));
++		return __swiotlb_mmap_pfn(vma, pfn, size);
++	}
++
+ 	if (attrs & DMA_ATTR_FORCE_CONTIGUOUS) {
+ 		/*
+ 		 * DMA_ATTR_FORCE_CONTIGUOUS allocations are always remapped,
+@@ -272,6 +277,11 @@ static int __iommu_get_sgtable(struct device *dev, struct sg_table *sgt,
+ 	unsigned int count = PAGE_ALIGN(size) >> PAGE_SHIFT;
+ 	struct vm_struct *area = find_vm_area(cpu_addr);
+ 
++	if (!is_vmalloc_addr(cpu_addr)) {
++		struct page *page = virt_to_page(cpu_addr);
++		return __swiotlb_get_sgtable_page(sgt, page, size);
++	}
++
+ 	if (attrs & DMA_ATTR_FORCE_CONTIGUOUS) {
+ 		/*
+ 		 * DMA_ATTR_FORCE_CONTIGUOUS allocations are always remapped,
+-- 
+2.20.1
+
