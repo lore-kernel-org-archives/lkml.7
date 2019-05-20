@@ -2,125 +2,104 @@ Return-Path: <SRS0=lq4r=TU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BD16C04AAC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 14:41:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49CB2C04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 14:42:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2578A216B7
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 14:41:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C0C1216B7
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 14:41:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b="Ou8A0T5a"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="EeFetSQa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391879AbfETOlw (ORCPT
+        id S2391910AbfETOl6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 10:41:52 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:36465 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2391890AbfETOlq (ORCPT
+        Mon, 20 May 2019 10:41:58 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:45879 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388595AbfETOlX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 10:41:46 -0400
-Received: by mail-wr1-f67.google.com with SMTP id s17so14944528wru.3
-        for <linux-kernel@vger.kernel.org>; Mon, 20 May 2019 07:41:45 -0700 (PDT)
+        Mon, 20 May 2019 10:41:23 -0400
+Received: by mail-wr1-f65.google.com with SMTP id b18so14865704wrq.12
+        for <linux-kernel@vger.kernel.org>; Mon, 20 May 2019 07:41:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=szeredi.hu; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=wIkoBjfIwezg37K8GyVLa4Ib4GG1DfXOe0xDWRIHC9c=;
-        b=Ou8A0T5aNjnqbPlBgwGcea2Jt9WREkncm2pZ2tzBkRLRUyzdHu/788KR2EoEZb9mkK
-         Uc0cJxu+0ZffxR3RKAwpxWA+Pa4RUhS5MdKIHC+QqTBZftrk7zJrl15NN6dttqr5OpMP
-         8xroeKkE6/8JUdYcncxaCbltjgHZuJY1yQojg=
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=30PJ+hCzDjQrVZsjGcZ/FXod6I84WDUG4kPyRzhauWE=;
+        b=EeFetSQar48eOERqadrJy/r1TMYWe3tvZZ9D73uAfTEe7xVlG9kEpGi8cKF+fZimcE
+         vm0msi4QvsnBhRfGIWhN5NNnIwMhd93/3iJtEhj5AL3iIQrATygF4+gQuTFsMqLYlFLN
+         K8lCV0yr+e+dSMqXTPM60wWxKOFL0s5xNJRlB/AXELJESu2AnSF2NWxHl/PjfcHkluhC
+         BRI320Yx0G12ddsNFsbrCxYlX3WgQFy9wj/vrNsVbEp4AfInuuV5cspNpMkKwhQHM4DR
+         PcO6080P3WqMfMpZxg0SuTR/h8UMnUQRpCWASqneD6F01V0xT4DLrhqhv9+ip0oEoCqT
+         OwLA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=wIkoBjfIwezg37K8GyVLa4Ib4GG1DfXOe0xDWRIHC9c=;
-        b=f3ahCJsoIYXTDpceZ7DjHnf1r3ek5aMtCXrGGZz1ahHASMr3vEUTLNo23GTRDU6SCY
-         aczLStldswlTg8tt727yvI9HUeP/c4hPS1VG0arPe2dXrdicqhHi8qy0TWocFNSbuKVb
-         i/7GIb/6sShCKK5pRWWc+5BFMzCc6ebYi040HMugbJ8bHi6N7KI12FuSSRp4Zr8R42yS
-         9jM/h+8gUgofy5tUWeJ2wREV6t63fbHCN+wTPrNgZIkLA838gCjzVbG0ULNYXKKM053/
-         YtPulE7x/FFDq1rfDOOWebsFDSbx4GdCWrU6KokkTrV55pErfZYoRP/0bkhJpe9CvP5n
-         5ZFg==
-X-Gm-Message-State: APjAAAUerfeTeF/7HNO0VxPwYK6DBbuZQJq6ehyTH8SSrocKfCm0iTkL
-        e2DQq5IdWG4q6pPngj35ItBHoQ==
-X-Google-Smtp-Source: APXvYqyUmEWgtNuNz/KLPkSE1Lwvd2WXTdR3OckfDP8fsKM/AbqeGou/Yo4wcQWm5VhE6j5qlpjEbQ==
-X-Received: by 2002:a5d:53c8:: with SMTP id a8mr10213096wrw.152.1558363305299;
-        Mon, 20 May 2019 07:41:45 -0700 (PDT)
-Received: from localhost.localdomain (catv-212-96-48-140.catv.broadband.hu. [212.96.48.140])
-        by smtp.gmail.com with ESMTPSA id n1sm12945556wmc.19.2019.05.20.07.41.43
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 20 May 2019 07:41:44 -0700 (PDT)
-Date:   Mon, 20 May 2019 16:41:37 +0200
-From:   Miklos Szeredi <miklos@szeredi.hu>
-To:     Vivek Goyal <vgoyal@redhat.com>
-Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org, linux-nvdimm@lists.01.org,
-        stefanha@redhat.com, dgilbert@redhat.com, swhiteho@redhat.com
-Subject: Re: [PATCH v2 02/30] fuse: Clear setuid bit even in cache=never path
-Message-ID: <20190520144137.GA24093@localhost.localdomain>
-References: <20190515192715.18000-1-vgoyal@redhat.com>
- <20190515192715.18000-3-vgoyal@redhat.com>
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=30PJ+hCzDjQrVZsjGcZ/FXod6I84WDUG4kPyRzhauWE=;
+        b=b8zTaWRML8MFJyj0OvOsdDbR6DRXlfd0GmUIfriyqS2r73+A6TqJ2NVz+LcCaHITwh
+         2msg7q1q2y+jmF3yJT5MXpZ3MXxdWZd2mOhqEnjWCEwNBQC263QFstvK20A38lX13Z7H
+         RztqrNTDan5ras6CxACu5VOhJl7pYY+NqmC23VfDaw8x9YYGE8eBOmFLqt8cWFSVjJfw
+         ltyAWkf3DCpXaKxdTywAbSudLPV2BimFXJgsnks5PowsU1cQthOZfW4eBkMSN/40UNwh
+         Xn3J4OfBY/p2scnXrjXG8Bw1TmdZ6e6grXnNJXj5VbfACT1a/8cGywYUwtmwl5NV9su0
+         Bmhw==
+X-Gm-Message-State: APjAAAXahiKBmlMsdhQVMcFKXEynoNiwO5yeZfTkHsLB6f0iHcJh5Njb
+        AW0fH9aKX+nbr0v+PK3Hgp+foA==
+X-Google-Smtp-Source: APXvYqwy0QdFmLf4P0q3Gllfwk9oesu78IlGZ97TtHhp2ZY2oBw/SZe5fTVEuzIPvAu1zn35uG6lRA==
+X-Received: by 2002:adf:c60e:: with SMTP id n14mr14278140wrg.255.1558363281892;
+        Mon, 20 May 2019 07:41:21 -0700 (PDT)
+Received: from bender.baylibre.local (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
+        by smtp.gmail.com with ESMTPSA id w3sm6743679wrv.25.2019.05.20.07.41.21
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Mon, 20 May 2019 07:41:21 -0700 (PDT)
+From:   Neil Armstrong <narmstrong@baylibre.com>
+To:     linus.walleij@linaro.org
+Cc:     linux-gpio@vger.kernel.org, linux-amlogic@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Neil Armstrong <narmstrong@baylibre.com>
+Subject: [PATCH 2/5] dt-bindings: gpio: meson-gxbb-gpio: update with SPDX Licence identifier
+Date:   Mon, 20 May 2019 16:41:05 +0200
+Message-Id: <20190520144108.3787-3-narmstrong@baylibre.com>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190520144108.3787-1-narmstrong@baylibre.com>
+References: <20190520144108.3787-1-narmstrong@baylibre.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190515192715.18000-3-vgoyal@redhat.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 15, 2019 at 03:26:47PM -0400, Vivek Goyal wrote:
-> If fuse daemon is started with cache=never, fuse falls back to direct IO.
-> In that write path we don't call file_remove_privs() and that means setuid
-> bit is not cleared if unpriviliged user writes to a file with setuid bit set.
-> 
-> pjdfstest chmod test 12.t tests this and fails.
-
-I think better sulution is to tell the server if the suid bit needs to be
-removed, so it can do so in a race free way.
-
-Here's the kernel patch, and I'll reply with the libfuse patch.
-
+Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
 ---
- fs/fuse2/file.c           |    2 ++
- include/uapi/linux/fuse.h |    3 +++
- 2 files changed, 5 insertions(+)
+ include/dt-bindings/gpio/meson-gxbb-gpio.h | 8 +-------
+ 1 file changed, 1 insertion(+), 7 deletions(-)
 
---- a/fs/fuse2/file.c
-+++ b/fs/fuse2/file.c
-@@ -363,6 +363,8 @@ static ssize_t fuse_send_write(struct fu
- 		inarg->flags |= O_DSYNC;
- 	if (iocb->ki_flags & IOCB_SYNC)
- 		inarg->flags |= O_SYNC;
-+	if (!capable(CAP_FSETID))
-+		inarg->write_flags |= FUSE_WRITE_KILL_PRIV;
- 	req->inh.opcode = FUSE_WRITE;
- 	req->inh.nodeid = ff->nodeid;
- 	req->inh.len = req->inline_inlen + count;
---- a/include/uapi/linux/fuse.h
-+++ b/include/uapi/linux/fuse.h
-@@ -125,6 +125,7 @@
+diff --git a/include/dt-bindings/gpio/meson-gxbb-gpio.h b/include/dt-bindings/gpio/meson-gxbb-gpio.h
+index 43a68a1110f0..c93274d7e108 100644
+--- a/include/dt-bindings/gpio/meson-gxbb-gpio.h
++++ b/include/dt-bindings/gpio/meson-gxbb-gpio.h
+@@ -1,15 +1,9 @@
++/* SPDX-License-Identifier: GPL-2.0 */
+ /*
+  * GPIO definitions for Amlogic Meson GXBB SoCs
   *
-  *  7.29
-  *  - add FUSE_NO_OPENDIR_SUPPORT flag
-+ *  - add FUSE_WRITE_KILL_PRIV flag
+  * Copyright (C) 2016 Endless Mobile, Inc.
+  * Author: Carlo Caione <carlo@endlessm.com>
+- *
+- * This program is free software; you can redistribute it and/or
+- * modify it under the terms of the GNU General Public License
+- * version 2 as published by the Free Software Foundation.
+- *
+- * You should have received a copy of the GNU General Public License
+- * along with this program. If not, see <http://www.gnu.org/licenses/>.
   */
  
- #ifndef _LINUX_FUSE_H
-@@ -318,9 +319,11 @@ struct fuse_file_lock {
-  *
-  * FUSE_WRITE_CACHE: delayed write from page cache, file handle is guessed
-  * FUSE_WRITE_LOCKOWNER: lock_owner field is valid
-+ * FUSE_WRITE_KILL_PRIV: kill suid and sgid bits
-  */
- #define FUSE_WRITE_CACHE	(1 << 0)
- #define FUSE_WRITE_LOCKOWNER	(1 << 1)
-+#define FUSE_WRITE_KILL_PRIV	(1 << 2)
- 
- /**
-  * Read flags
-
+ #ifndef _DT_BINDINGS_MESON_GXBB_GPIO_H
+-- 
+2.21.0
 
