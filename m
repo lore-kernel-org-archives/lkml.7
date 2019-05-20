@@ -2,94 +2,123 @@ Return-Path: <SRS0=lq4r=TU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06509C04AAC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:54:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94069C04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:54:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CE89120645
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:54:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A4A520645
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:54:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1558356855;
+	bh=NELJ4Hu6YiJbJlmxwVlRRrxhcEXBUQ4E/XUnMCsrArw=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=lSYY4EzeRYpwccmz2Df00trNzMoMSTso1cb+ONPglGXAoKoLVHMeEy9RjbErgaqZQ
+	 sc4QPM3fJpC3OluddSyf8FkGuCNxLbt2eFtFap3F3mlxB9EYBasYDrTzIOiAJZnOiv
+	 gI6nuqyUhK3D0cltuQEGqs/WrQBwvhNJqwT0sXjY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388411AbfETMyH (ORCPT
+        id S1733213AbfETMQn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 08:54:07 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:57330 "EHLO mx1.redhat.com"
+        Mon, 20 May 2019 08:16:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57076 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731662AbfETMyF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 08:54:05 -0400
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        id S1732888AbfETMQV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 08:16:21 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 5D89D3091782;
-        Mon, 20 May 2019 12:54:00 +0000 (UTC)
-Received: from horse.redhat.com (unknown [10.18.25.29])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 6BBDB6085B;
-        Mon, 20 May 2019 12:53:56 +0000 (UTC)
-Received: by horse.redhat.com (Postfix, from userid 10451)
-        id 06ECD220386; Mon, 20 May 2019 08:53:56 -0400 (EDT)
-Date:   Mon, 20 May 2019 08:53:55 -0400
-From:   Vivek Goyal <vgoyal@redhat.com>
-To:     Eric Ren <ericdotren@gmail.com>
-Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org, linux-nvdimm@lists.01.org, miklos@szeredi.hu,
-        stefanha@redhat.com, dgilbert@redhat.com, swhiteho@redhat.com
-Subject: Re: [PATCH v2 26/30] fuse: Add logic to free up a memory range
-Message-ID: <20190520125355.GA28008@redhat.com>
-References: <20190515192715.18000-1-vgoyal@redhat.com>
- <20190515192715.18000-27-vgoyal@redhat.com>
- <CAN+Pk99SNKSf+GjSQUUWt_eu1fSjTy_ByUOEQUXHi8zNqXY1zA@mail.gmail.com>
+        by mail.kernel.org (Postfix) with ESMTPSA id 32A2520656;
+        Mon, 20 May 2019 12:16:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1558354580;
+        bh=NELJ4Hu6YiJbJlmxwVlRRrxhcEXBUQ4E/XUnMCsrArw=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=xl7Oh9x1nP3mRtao8wF5SjrgD/aq/RLSjVqCxxfAJbpjQqG9E4g/bzdmo9NTZRCPD
+         W8lxfeeiJ1O9QKqKD3YGg2c2YjYW2nFnVsfA9In4Im+uu7li5mh2ZVA/MzPC806cQv
+         B9151E+1FqaglKkAfWmSTBYbh5e+09yWnN2yzl14=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Tim Chen <tim.c.chen@linux.intel.com>,
+        Eric Biggers <ebiggers@google.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>
+Subject: [PATCH 4.9 14/44] crypto: crct10dif-generic - fix use via crypto_shash_digest()
+Date:   Mon, 20 May 2019 14:14:03 +0200
+Message-Id: <20190520115232.689336976@linuxfoundation.org>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190520115230.720347034@linuxfoundation.org>
+References: <20190520115230.720347034@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAN+Pk99SNKSf+GjSQUUWt_eu1fSjTy_ByUOEQUXHi8zNqXY1zA@mail.gmail.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.41]); Mon, 20 May 2019 12:54:05 +0000 (UTC)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, May 19, 2019 at 03:48:05PM +0800, Eric Ren wrote:
-> Hi,
-> 
-> @@ -1784,8 +1822,23 @@ static int fuse_iomap_begin(struct inode *inode,
-> > loff_t pos, loff_t length,
-> >                 if (pos >= i_size_read(inode))
-> >                         goto iomap_hole;
-> >
-> > -               alloc_dmap = alloc_dax_mapping(fc);
-> > -               if (!alloc_dmap)
-> > +               /* Can't do reclaim in fault path yet due to lock ordering.
-> > +                * Read path takes shared inode lock and that's not
-> > sufficient
-> > +                * for inline range reclaim. Caller needs to drop lock,
-> > wait
-> > +                * and retry.
-> > +                */
-> > +               if (flags & IOMAP_FAULT || !(flags & IOMAP_WRITE)) {
-> > +                       alloc_dmap = alloc_dax_mapping(fc);
-> > +                       if (!alloc_dmap)
-> > +                               return -ENOSPC;
-> > +               } else {
-> > +                       alloc_dmap = alloc_dax_mapping_reclaim(fc, inode);
-> >
-> 
-> alloc_dmap could be NULL as follows:
-> 
-> alloc_dax_mapping_reclaim
->    -->fuse_dax_reclaim_first_mapping
->              -->fuse_dax_reclaim_first_mapping_locked
->                   --> fuse_dax_interval_tree_iter_first  ==> return NULL
-> and
-> 
-> IS_ERR(NULL) is false, so we may miss that error case.
+From: Eric Biggers <ebiggers@google.com>
 
-Hi Eric,
+commit 307508d1072979f4435416f87936f87eaeb82054 upstream.
 
-Good catch. I will fix it next version. 
+The ->digest() method of crct10dif-generic reads the current CRC value
+from the shash_desc context.  But this value is uninitialized, causing
+crypto_shash_digest() to compute the wrong result.  Fix it.
 
-Thanks
-Vivek
+Probably this wasn't noticed before because lib/crc-t10dif.c only uses
+crypto_shash_update(), not crypto_shash_digest().  Likewise,
+crypto_shash_digest() is not yet tested by the crypto self-tests because
+those only test the ahash API which only uses shash init/update/final.
+
+This bug was detected by my patches that improve testmgr to fuzz
+algorithms against their generic implementation.
+
+Fixes: 2d31e518a428 ("crypto: crct10dif - Wrap crc_t10dif function all to use crypto transform framework")
+Cc: <stable@vger.kernel.org> # v3.11+
+Cc: Tim Chen <tim.c.chen@linux.intel.com>
+Signed-off-by: Eric Biggers <ebiggers@google.com>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+---
+ crypto/crct10dif_generic.c |   11 ++++-------
+ 1 file changed, 4 insertions(+), 7 deletions(-)
+
+--- a/crypto/crct10dif_generic.c
++++ b/crypto/crct10dif_generic.c
+@@ -65,10 +65,9 @@ static int chksum_final(struct shash_des
+ 	return 0;
+ }
+ 
+-static int __chksum_finup(__u16 *crcp, const u8 *data, unsigned int len,
+-			u8 *out)
++static int __chksum_finup(__u16 crc, const u8 *data, unsigned int len, u8 *out)
+ {
+-	*(__u16 *)out = crc_t10dif_generic(*crcp, data, len);
++	*(__u16 *)out = crc_t10dif_generic(crc, data, len);
+ 	return 0;
+ }
+ 
+@@ -77,15 +76,13 @@ static int chksum_finup(struct shash_des
+ {
+ 	struct chksum_desc_ctx *ctx = shash_desc_ctx(desc);
+ 
+-	return __chksum_finup(&ctx->crc, data, len, out);
++	return __chksum_finup(ctx->crc, data, len, out);
+ }
+ 
+ static int chksum_digest(struct shash_desc *desc, const u8 *data,
+ 			 unsigned int length, u8 *out)
+ {
+-	struct chksum_desc_ctx *ctx = shash_desc_ctx(desc);
+-
+-	return __chksum_finup(&ctx->crc, data, length, out);
++	return __chksum_finup(0, data, length, out);
+ }
+ 
+ static struct shash_alg alg = {
+
+
