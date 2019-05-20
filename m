@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E814C46470
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:41:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 267D1C04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:41:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6818F20815
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:41:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F09F320645
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:41:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558356114;
-	bh=K54YEflfXLM4VSAwoRJKIcxe1vnu5XR84RhZ3XiT9mE=;
+	s=default; t=1558356116;
+	bh=Y+8Y21qUCRMYjTUDfur/iQJvKkhuVBO32bLyVOUL494=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=W8QjQZVD+Zi6ku//7P0vMniBE6YpCCnfUh1tdgz3OVqmRFc62NfvOA715SWxJW2et
-	 /2mHmFofHVBkQun/yVriICFpGmnZsAiBj027zDIuBvM31KOmmTsRQL/QpDCFPLV8se
-	 0oy6gQCx4T0H9pikVMl0QFA0JgFyjNO4UZh6+NXc=
+	b=jpdH3jk0mRb2yOI9Omhhe2742AGekFwTQXSBKgWx8s4ZAmcr+ZB6VRr7GqJCuMv9a
+	 pbkMo/dSFoY3uXUky28EVXr82jr0WOgJDomVe4YL5XVkFsVS/t1tp7NeaKsWwxvA9g
+	 TEG4fu7cUxt2ni2c9ZpZ5WbeiA9TNHtPdOlPm0eY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390221AbfETMbC (ORCPT
+        id S2390211AbfETMbA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 08:31:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47316 "EHLO mail.kernel.org"
+        Mon, 20 May 2019 08:31:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47274 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390192AbfETMa4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 08:30:56 -0400
+        id S2390182AbfETMax (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 08:30:53 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2D54F20645;
-        Mon, 20 May 2019 12:30:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 90D2820645;
+        Mon, 20 May 2019 12:30:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558355455;
-        bh=K54YEflfXLM4VSAwoRJKIcxe1vnu5XR84RhZ3XiT9mE=;
+        s=default; t=1558355453;
+        bh=Y+8Y21qUCRMYjTUDfur/iQJvKkhuVBO32bLyVOUL494=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DiyGGqy8uvLVZUw2h9JFQ3gnDuKuJyAppeOxABVGP5raS5YMhsJbqRFQq33KfKmQ2
-         2mStOAs2jRPAUO76uH5ig5I8i20PiBK9+NeUOapFRw6Y/+CHEvOvkmd3gk1eoKKw0B
-         yVSBb0LVYnKEIdze3aj+gqnqeIvZw1AIqP5glMwc=
+        b=QrPjDI/oK2v7NRFVJJRMXMzJ8o203Xm0bPyEguDExk1DLiz/rOoGdoN9KCjyyo3Ds
+         XrYWQH3OlANvLiWot0sTkJ9KBnpsFCr5rMHf5mCvBGEezEg7batgp9Nr+sysZWvCq6
+         ATARAJPPqw781x7iVqpeK2qhN3pp8QazdpCaFSMw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jan Kara <jack@suse.cz>,
-        Theodore Tso <tytso@mit.edu>, stable@kernel.org
-Subject: [PATCH 5.0 105/123] ext4: avoid panic during forced reboot due to aborted journal
-Date:   Mon, 20 May 2019 14:14:45 +0200
-Message-Id: <20190520115252.032767836@linuxfoundation.org>
+        stable@vger.kernel.org, Sahitya Tummala <stummala@codeaurora.org>,
+        Theodore Tso <tytso@mit.edu>,
+        Andreas Dilger <adilger@dilger.ca>, stable@kernel.org
+Subject: [PATCH 5.0 104/123] ext4: fix use-after-free in dx_release()
+Date:   Mon, 20 May 2019 14:14:44 +0200
+Message-Id: <20190520115251.954691616@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190520115245.439864225@linuxfoundation.org>
 References: <20190520115245.439864225@linuxfoundation.org>
@@ -59,35 +60,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jan Kara <jack@suse.cz>
+From: Sahitya Tummala <stummala@codeaurora.org>
 
-commit 2c1d0e3631e5732dba98ef49ac0bec1388776793 upstream.
+commit 08fc98a4d6424af66eb3ac4e2cedd2fc927ed436 upstream.
 
-Handling of aborted journal is a special code path different from
-standard ext4_error() one and it can call panic() as well. Commit
-1dc1097ff60e ("ext4: avoid panic during forced reboot") forgot to update
-this path so fix that omission.
+The buffer_head (frames[0].bh) and it's corresping page can be
+potentially free'd once brelse() is done inside the for loop
+but before the for loop exits in dx_release(). It can be free'd
+in another context, when the page cache is flushed via
+drop_caches_sysctl_handler(). This results into below data abort
+when accessing info->indirect_levels in dx_release().
 
-Fixes: 1dc1097ff60e ("ext4: avoid panic during forced reboot")
-Signed-off-by: Jan Kara <jack@suse.cz>
+Unable to handle kernel paging request at virtual address ffffffc17ac3e01e
+Call trace:
+ dx_release+0x70/0x90
+ ext4_htree_fill_tree+0x2d4/0x300
+ ext4_readdir+0x244/0x6f8
+ iterate_dir+0xbc/0x160
+ SyS_getdents64+0x94/0x174
+
+Signed-off-by: Sahitya Tummala <stummala@codeaurora.org>
 Signed-off-by: Theodore Ts'o <tytso@mit.edu>
-Cc: stable@kernel.org # 5.1
+Reviewed-by: Andreas Dilger <adilger@dilger.ca>
+Cc: stable@kernel.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/ext4/super.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/ext4/namei.c |    5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
---- a/fs/ext4/super.c
-+++ b/fs/ext4/super.c
-@@ -698,7 +698,7 @@ void __ext4_abort(struct super_block *sb
- 			jbd2_journal_abort(EXT4_SB(sb)->s_journal, -EIO);
- 		save_error_info(sb, function, line);
- 	}
--	if (test_opt(sb, ERRORS_PANIC)) {
-+	if (test_opt(sb, ERRORS_PANIC) && !system_going_down()) {
- 		if (EXT4_SB(sb)->s_journal &&
- 		  !(EXT4_SB(sb)->s_journal->j_flags & JBD2_REC_ERR))
- 			return;
+--- a/fs/ext4/namei.c
++++ b/fs/ext4/namei.c
+@@ -871,12 +871,15 @@ static void dx_release(struct dx_frame *
+ {
+ 	struct dx_root_info *info;
+ 	int i;
++	unsigned int indirect_levels;
+ 
+ 	if (frames[0].bh == NULL)
+ 		return;
+ 
+ 	info = &((struct dx_root *)frames[0].bh->b_data)->info;
+-	for (i = 0; i <= info->indirect_levels; i++) {
++	/* save local copy, "info" may be freed after brelse() */
++	indirect_levels = info->indirect_levels;
++	for (i = 0; i <= indirect_levels; i++) {
+ 		if (frames[i].bh == NULL)
+ 			break;
+ 		brelse(frames[i].bh);
 
 
