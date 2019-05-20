@@ -2,132 +2,101 @@ Return-Path: <SRS0=lq4r=TU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C7E0C04AAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 08:55:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C6B1C04AAF
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 08:55:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 720FB20656
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 08:55:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="B8xJgG9M"
+	by mail.kernel.org (Postfix) with ESMTP id DF30C20656
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 08:55:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1558342544;
+	bh=Oee/c2MDV3HNg8hnxn5HjjMAZd7qfmNnxGQ5OCvwopI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=0KBsdFnnFKcFldbmkPIA1KMSNWKWz+xkvvikkcaU7e+P3YfGathfwaG6/PIKSZN7w
+	 J6X7cAZ5H7cALMtrvG/Uk/z629lMWIerQ2m0rJ6ZwsGfDMjWmSw52SxNFrFexr6m6N
+	 sC80VAh6RIqz8xiF/nP0y6JEgHFRiYTfd5sf1JvI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731659AbfETIzS (ORCPT
+        id S1731693AbfETIzn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 04:55:18 -0400
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:45066 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731611AbfETIzS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 04:55:18 -0400
-Received: by mail-ed1-f65.google.com with SMTP id g57so22626352edc.12
-        for <linux-kernel@vger.kernel.org>; Mon, 20 May 2019 01:55:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=vFTt0M6+AyIysvwKwIils2X+lM/meF2sxJjj46Wd1sg=;
-        b=B8xJgG9Mfe/9MxL0HtY4ca/tirLNmh0C9lj/ex3fDZnQ/Z3N+iZcFmu5S4eMsAkmPs
-         9RAJQWBHGH5GhRDnKoHem++eVfSdl+KDJPtcw1herR9fhhgxrP2D3m+xKdRfMPEMMJ84
-         JjtKJ6FHMv3vFq5XsnkSq3Esh6InwnFnUWBaI=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=vFTt0M6+AyIysvwKwIils2X+lM/meF2sxJjj46Wd1sg=;
-        b=POk+5Mb7FVP6JJbmzTI93etFlZ8cCbw52Pf+NIu6AyvlyM9OI5lwhqTif+rbB1xR1S
-         NXnZxDRBSuto2biiLfmtqBjvZWp199OKSkFYp+mX8+CErBW6+ZN5sk+wZOQ8pgICZp/v
-         JooLQe+HFpCkqH6cZPrmTQy4ABgVG6+NLsWtgRoJfUKFWcznMqfueUqWpMBh0kAWJLqG
-         eQ2fJ1yv8C4DJ9GsuRaRl6GGt5N6K/OfUHtrGxSeqpsAa15wmtQLZWynr7nuu/0d+Tn2
-         oPS9n3eMnCDx2AjJfW1N2dYkoxrlcoTybATcrEq57POBMGiEX4IkYYmvqEUTfrUI6T/Y
-         tykA==
-X-Gm-Message-State: APjAAAXp2wS2aZixXBH2SI27YAwlclKizRvqxswIGE1p8lxhXibY3q3M
-        Bb0Nw6MLdKTO7R7skTzBqv2wVQ==
-X-Google-Smtp-Source: APXvYqx4flRS6cM748otmtPJ0wEKEab4DlGo6iNP+Fai8ttXEGXbq+CZSmv1FMlVMKWOwJno0wfUnA==
-X-Received: by 2002:a50:aef6:: with SMTP id f51mr73838766edd.225.1558342516174;
-        Mon, 20 May 2019 01:55:16 -0700 (PDT)
-Received: from [10.176.68.125] ([192.19.248.250])
-        by smtp.gmail.com with ESMTPSA id g30sm5412048edg.57.2019.05.20.01.55.13
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 20 May 2019 01:55:15 -0700 (PDT)
-Subject: Re: [PATCH 0/3] brcmfmac: sdio: Deal better w/ transmission errors
- waking from sleep
-To:     Douglas Anderson <dianders@chromium.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Adrian Hunter <adrian.hunter@intel.com>
-Cc:     linux-rockchip@lists.infradead.org,
-        Double Lo <double.lo@cypress.com>, briannorris@chromium.org,
-        Madhan Mohan R <madhanmohan.r@cypress.com>, mka@chromium.org,
-        Wright Feng <wright.feng@cypress.com>,
-        Chi-Hsien Lin <chi-hsien.lin@cypress.com>,
-        linux-mmc@vger.kernel.org, Shawn Lin <shawn.lin@rock-chips.com>,
-        brcm80211-dev-list@cypress.com, YueHaibing <yuehaibing@huawei.com>,
-        Hante Meuleman <hante.meuleman@broadcom.com>,
-        Martin Hicks <mort@bork.org>,
-        Ritesh Harjani <riteshh@codeaurora.org>,
-        Michael Trimarchi <michael@amarulasolutions.com>,
-        Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        Franky Lin <franky.lin@broadcom.com>,
-        Jiong Wu <lohengrin1024@gmail.com>,
-        brcm80211-dev-list.pdl@broadcom.com,
-        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
-        linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Naveen Gupta <naveen.gupta@cypress.com>,
-        Avri Altman <avri.altman@wdc.com>
-References: <20190517225420.176893-1-dianders@chromium.org>
-From:   Arend Van Spriel <arend.vanspriel@broadcom.com>
-Message-ID: <8c3fa57a-3843-947c-ec6b-a6144ccde1e9@broadcom.com>
-Date:   Mon, 20 May 2019 10:55:12 +0200
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Mon, 20 May 2019 04:55:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57224 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730823AbfETIzm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 04:55:42 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 482B2204FD;
+        Mon, 20 May 2019 08:55:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1558342541;
+        bh=Oee/c2MDV3HNg8hnxn5HjjMAZd7qfmNnxGQ5OCvwopI=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=O5F6SFVQ3q7yTeuTaEgQdA4PTRRLzNIx/A0ruDGhMl2xgHlouZPiVEYr9s/bj2pBJ
+         K8LpDTVsB6Y8VQsty+TM43JBqHxZYQJIy5eyIXTY6uVmKUMhT/hjqM1sD0U1KPZFIQ
+         HVpTsw4KwlXfaRSlvs9gfk4l9jDIM7BxzKH0pRrg=
+Date:   Mon, 20 May 2019 10:55:39 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Hariprasad Kelam <hariprasad.kelam@gmail.com>
+Cc:     Emanuel Bennici <benniciemanuel78@gmail.com>,
+        Vatsala Narang <vatsalanarang@gmail.com>,
+        Nishka Dasgupta <nishka.dasgupta@yahoo.com>,
+        Young Xiao <YangX92@hotmail.com>,
+        Aymen Qader <qader.aymen@gmail.com>,
+        Henriette Hofmeier <passt@h-hofmeier.de>,
+        Hardik Singh Rathore <hardiksingh.k@gmail.com>,
+        Madhumitha Prabakaran <madhumithabiw@gmail.com>,
+        Michael Straube <straube.linux@gmail.com>,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] staging: rtl8723bs: core: rtw_mlme_ext: fix warning
+ Unneeded variable: "ret"
+Message-ID: <20190520085539.GD19183@kroah.com>
+References: <20190519171227.GA8089@hari-Inspiron-1545>
 MIME-Version: 1.0
-In-Reply-To: <20190517225420.176893-1-dianders@chromium.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190519171227.GA8089@hari-Inspiron-1545>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/18/2019 12:54 AM, Douglas Anderson wrote:
-> This series attempts to deal better with the expected transmission
-> errors that we get when waking up the SDIO-based WiFi on
-> rk3288-veyron-minnie, rk3288-veyron-speedy, and rk3288-veyron-mickey.
+On Sun, May 19, 2019 at 10:42:27PM +0530, Hariprasad Kelam wrote:
+> This patch fixes below warnings reported by coccicheck
 > 
-> Some details about those errors can be found in
-> <https://crbug.com/960222>, but to summarize it here: if we try to
-> send the wakeup command to the WiFi card at the same time it has
-> decided to wake up itself then it will behave badly on the SDIO bus.
-> This can cause timeouts or CRC errors.
+> drivers/staging/rtl8723bs/core/rtw_mlme_ext.c:1888:14-17: Unneeded
+> variable: "ret". Return "_FAIL" on line 1920
+> drivers/staging/rtl8723bs/core/rtw_mlme_ext.c:466:5-8: Unneeded
+> variable: "res". Return "_SUCCESS" on line 494
 > 
-> When I tested on 4.19 and 4.20 these CRC errors can be seen to cause
-> re-tuning.  Since I am currently developing on 4.19 this was the
-> original problem I attempted to solve.
+> Signed-off-by: Hariprasad Kelam <hariprasad.kelam@gmail.com>
+> ---
+>  drivers/staging/rtl8723bs/core/rtw_mlme_ext.c | 6 ++----
+>  1 file changed, 2 insertions(+), 4 deletions(-)
 > 
-> On mainline it turns out that you don't see the retuning errors but
-> you see tons of spam about timeouts trying to wakeup from sleep.  I
-> tracked down the commit that was causing that and have partially
-> reverted it here.  I have no real knowledge about Broadcom WiFi, but
-> the commit that was causing problems sounds (from the descriptioin) to
-> be a hack commit penalizing all Broadcom WiFi users because of a bug
-> in a Cypress SD controller.  I will let others comment if this is
-> truly the case and, if so, what the right solution should be.
+> diff --git a/drivers/staging/rtl8723bs/core/rtw_mlme_ext.c b/drivers/staging/rtl8723bs/core/rtw_mlme_ext.c
+> index d110d45..6a2eb66 100644
+> --- a/drivers/staging/rtl8723bs/core/rtw_mlme_ext.c
+> +++ b/drivers/staging/rtl8723bs/core/rtw_mlme_ext.c
+> @@ -463,7 +463,6 @@ static u8 init_channel_set(struct adapter *padapter, u8 ChannelPlan, RT_CHANNEL_
+>  
+>  int	init_mlme_ext_priv(struct adapter *padapter)
+>  {
+> -	int	res = _SUCCESS;
+>  	struct registry_priv *pregistrypriv = &padapter->registrypriv;
+>  	struct mlme_ext_priv *pmlmeext = &padapter->mlmeextpriv;
+>  	struct mlme_priv *pmlmepriv = &(padapter->mlmepriv);
+> @@ -491,7 +490,7 @@ int	init_mlme_ext_priv(struct adapter *padapter)
+>  	pmlmeext->fixed_chan = 0xFF;
+>  #endif
+>  
+> -	return res;
+> +	return _SUCCESS;
 
-Let me give a bit of background. The brcmfmac driver implements its own 
-runtime-pm like functionality, ie. if the driver is idle for some time 
-it will put the device in a low-power state. When it does that it powers 
-down several cores in the chip among which the SDIO core. However, the 
-SDIO bus used be very bad at handling devices that do that so instead it 
-has the Always-On-Station (AOS) block take over the SDIO core in 
-handling the bus. Default is will send a R1 response, but only for CMD52 
-(and CMD14 but no host is using that cruft). In noCmdDecode it does not 
-respond and simply wakes up the SDIO core, which takes over again. 
-Because it does not respond timeouts (-110) are kinda expected in this mode.
+If it can never fail, it should not be returning a value :(
 
-Regards,
-Arend
