@@ -2,96 +2,113 @@ Return-Path: <SRS0=lq4r=TU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09570C072AD
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 02:34:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE45CC04AB4
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 02:37:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CBB442082E
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 02:34:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558319653;
-	bh=ju+3KOQugsflVCr4eHF7IRJuhvpcf8WSl+CMXgavYLk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=O9ttmAFei1c9VsaYM5h1K+R9yOXstqwq2MlPZvwHDBh98p9xKirLpSVekWWddMThH
-	 Su5DjlB983XV+P8W5SVLuPcF1XrL4Wiha25j8PMlr79U3jJNzdEN4Biifym6hiyBBE
-	 n2xI3udHNZMx3W+KHML/GLuyF+f+xa1GBEOEoS9s=
+	by mail.kernel.org (Postfix) with ESMTP id 7725D20675
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 02:37:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PXkbfvwx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730077AbfETCeM (ORCPT
+        id S1730096AbfETChF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 19 May 2019 22:34:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37904 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726102AbfETCeM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 19 May 2019 22:34:12 -0400
-Received: from dragon (98.142.130.235.16clouds.com [98.142.130.235])
-        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EA50020675;
-        Mon, 20 May 2019 02:34:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558319651;
-        bh=ju+3KOQugsflVCr4eHF7IRJuhvpcf8WSl+CMXgavYLk=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=jrxS4/h37zf79nS70kW2xHZzvBgXySi9WZikYoXk80RNIoziudZdyfx/IjHE5rdh8
-         gPP8eToB0AJRjIWv8lMM11zSIudBpnl+JPymfn5JO0IPs4XYvm4T0bzuiHqnh/cupF
-         gzLEMHOGoRvwpzposYs8pRBMqAppE1wBNQy49+Aw=
-Date:   Mon, 20 May 2019 10:33:16 +0800
-From:   Shawn Guo <shawnguo@kernel.org>
-To:     Leo Yan <leo.yan@linaro.org>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Mike Leach <mike.leach@linaro.org>,
-        Wei Xu <xuwei5@hisilicon.com>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Andy Gross <agross@kernel.org>,
-        David Brown <david.brown@linaro.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Liviu Dudau <liviu.dudau@arm.com>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Orson Zhai <orsonzhai@gmail.com>,
-        Baolin Wang <baolin.wang@linaro.org>,
-        Chunyan Zhang <zhang.lyra@gmail.com>,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        Chris Healy <cphealy@gmail.com>, Andrew Lunn <andrew@lunn.ch>
-Subject: Re: [PATCH v2 02/11] ARM: dts: imx7s: Update coresight DT bindings
-Message-ID: <20190520023315.GI15856@dragon>
-References: <20190508021902.10358-1-leo.yan@linaro.org>
- <20190508021902.10358-3-leo.yan@linaro.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190508021902.10358-3-leo.yan@linaro.org>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+        Sun, 19 May 2019 22:37:05 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:40746 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726102AbfETChF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 19 May 2019 22:37:05 -0400
+Received: by mail-pf1-f196.google.com with SMTP id u17so6433666pfn.7;
+        Sun, 19 May 2019 19:37:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=nrSr6Am16kmGIEuLJled7IsP9Oyyyt3xELUMFjlkK5k=;
+        b=PXkbfvwxwRZk3FGE9Zjl1lpRl7t55m8qWNAob55aJ1zwu/+RFy0nDeDaBL+u4sMVVN
+         T1W2egxiu/dE2HFpowEIwfG8FBN7CaIkN/SFqBcFmYzKdLTzGEMzGhYDeWqR0AiwudKQ
+         RkQmnM3SAMDWqkWtMZmeRtfyzOt4yzSUNRRMcA3uk82Wt4miiyE97JKc+3zvCUUJRl3p
+         0PXoT1tywIsMU6g71rXXqC3tJCn3GDiYr+tgLZaU6lHKWTagj694p7iJ8GY1USuY3aI1
+         yVR3lsoYO/Kcc0rvBYLHldLuNYxFDPYVbKCe90U5i1fjOGxwobHJnBIfK3ldqRaAZhQa
+         am5Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=nrSr6Am16kmGIEuLJled7IsP9Oyyyt3xELUMFjlkK5k=;
+        b=TIVrlm1mWiLB6hWxcvT7kA1Rky1Q97JEXnkKZsj9YT/0rENbCF0tJ7kZZmbCfFrOeF
+         4kGRtl7KLtdC/3yxYjTKVdd+xQNjsQICsArIMGdDXowuX1AyfuSPLOdPRoGZ9QDR2fYo
+         gUf7hloWcXVw8zE/oXtUuzW2d01nYlxJe7kdYrYtfMmYZQjHrMKfW6tq1wnQHxsSFEBr
+         bdtM4x1A4p2YvUYDwR7rUnamicrGOL4ZuxLJ5bgxg+xXOSjZsavlMRy+w7hpXbhB5T2H
+         041fFJj9jMTG6Jl9uwuSN1FYpGAlS3GAbcfjM1jk9wQ+k++gZI1uveoQqebIWCAjiVMj
+         sn5w==
+X-Gm-Message-State: APjAAAWuL8MeF5R4uCGvyRk21VI2QyECv5jAUpQ256l1gh6GoOXlZEPK
+        3GgO8wLe+dmhYfPQSyhuo6A=
+X-Google-Smtp-Source: APXvYqynZLBrOuiY+rqmbAyelozM4NiqvXHpIPcx6yrj/C9yNReTmgHH9ADWIT97diX3emBOTZFoEQ==
+X-Received: by 2002:a63:6647:: with SMTP id a68mr56396851pgc.292.1558319824658;
+        Sun, 19 May 2019 19:37:04 -0700 (PDT)
+Received: from localhost ([43.224.245.181])
+        by smtp.gmail.com with ESMTPSA id s77sm30287127pfa.63.2019.05.19.19.37.03
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sun, 19 May 2019 19:37:03 -0700 (PDT)
+From:   Weitao Hou <houweitaoo@gmail.com>
+To:     mcgrof@kernel.org, keescook@chromium.org
+Cc:     linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        Weitao Hou <houweitaoo@gmail.com>
+Subject: [PATCH v2] kernel: fix typos and some coding style in comments
+Date:   Mon, 20 May 2019 10:37:00 +0800
+Message-Id: <20190520023700.8472-1-houweitaoo@gmail.com>
+X-Mailer: git-send-email 2.18.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 08, 2019 at 10:18:53AM +0800, Leo Yan wrote:
-> CoreSight DT bindings have been updated, thus the old compatible strings
-> are obsolete and the drivers will report warning if DTS uses these
-> obsolete strings.
-> 
-> This patch switches to the new bindings for CoreSight dynamic funnel and
-> static replicator, so can dismiss warning during initialisation.
-> 
-> Cc: Shawn Guo <shawnguo@kernel.org>
-> Cc: Chris Healy <cphealy@gmail.com>
-> Cc: Andrew Lunn <andrew@lunn.ch>
-> Cc: Fabio Estevam <festevam@gmail.com>
-> Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
-> Cc: Suzuki K Poulose <suzuki.poulose@arm.com>
-> Signed-off-by: Leo Yan <leo.yan@linaro.org>
+fix lenght to length
 
-Applied, thanks.
+Signed-off-by: Weitao Hou <houweitaoo@gmail.com>
+---
+Changes in v2:
+  - fix space before tab warnings
+---
+ kernel/sysctl.c | 18 +++++++++---------
+ 1 file changed, 9 insertions(+), 9 deletions(-)
+
+diff --git a/kernel/sysctl.c b/kernel/sysctl.c
+index 943c89178e3d..f78f725f225e 100644
+--- a/kernel/sysctl.c
++++ b/kernel/sysctl.c
+@@ -187,17 +187,17 @@ extern int no_unaligned_warning;
+  * enum sysctl_writes_mode - supported sysctl write modes
+  *
+  * @SYSCTL_WRITES_LEGACY: each write syscall must fully contain the sysctl value
+- * 	to be written, and multiple writes on the same sysctl file descriptor
+- * 	will rewrite the sysctl value, regardless of file position. No warning
+- * 	is issued when the initial position is not 0.
++ *	to be written, and multiple writes on the same sysctl file descriptor
++ *	will rewrite the sysctl value, regardless of file position. No warning
++ *	is issued when the initial position is not 0.
+  * @SYSCTL_WRITES_WARN: same as above but warn when the initial file position is
+- * 	not 0.
++ *	not 0.
+  * @SYSCTL_WRITES_STRICT: writes to numeric sysctl entries must always be at
+- * 	file position 0 and the value must be fully contained in the buffer
+- * 	sent to the write syscall. If dealing with strings respect the file
+- * 	position, but restrict this to the max length of the buffer, anything
+- * 	passed the max lenght will be ignored. Multiple writes will append
+- * 	to the buffer.
++ *	file position 0 and the value must be fully contained in the buffer
++ *	sent to the write syscall. If dealing with strings respect the file
++ *	position, but restrict this to the max length of the buffer, anything
++ *	passed the max length will be ignored. Multiple writes will append
++ *	to the buffer.
+  *
+  * These write modes control how current file position affects the behavior of
+  * updating sysctl values through the proc interface on each write.
+-- 
+2.18.0
+
