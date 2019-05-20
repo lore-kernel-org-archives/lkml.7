@@ -6,153 +6,101 @@ X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22679C46460
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 21:20:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB902C04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 21:20:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F189F216B7
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 21:20:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CC76F21743
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 21:20:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727002AbfETVUD (ORCPT
+        id S1727147AbfETVUd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 17:20:03 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:47172 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725989AbfETVUC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 17:20:02 -0400
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id EC9D585365;
-        Mon, 20 May 2019 21:20:01 +0000 (UTC)
-Received: from [10.18.17.208] (dhcp-17-208.bos.redhat.com [10.18.17.208])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id E980D60BF3;
-        Mon, 20 May 2019 21:19:59 +0000 (UTC)
-Subject: Re: Oops caused by race between livepatch and ftrace
-To:     Johannes Erdfelt <johannes@erdfelt.com>
-Cc:     Josh Poimboeuf <jpoimboe@redhat.com>, Jessica Yu <jeyu@kernel.org>,
-        Jiri Kosina <jikos@kernel.org>,
-        Miroslav Benes <mbenes@suse.cz>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ingo Molnar <mingo@redhat.com>, live-patching@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20190520194915.GB1646@sventech.com>
- <90f78070-95ec-ce49-1641-19d061abecf4@redhat.com>
- <20190520210905.GC1646@sventech.com>
-From:   Joe Lawrence <joe.lawrence@redhat.com>
-Message-ID: <1802c0d2-702f-08ec-6a85-c7f887eb6d14@redhat.com>
-Date:   Mon, 20 May 2019 17:19:59 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
-MIME-Version: 1.0
-In-Reply-To: <20190520210905.GC1646@sventech.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.25]); Mon, 20 May 2019 21:20:02 +0000 (UTC)
+        Mon, 20 May 2019 17:20:33 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:35882 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726833AbfETVUc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 17:20:32 -0400
+Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4KL35VJ152361
+        for <linux-kernel@vger.kernel.org>; Mon, 20 May 2019 17:20:31 -0400
+Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2sm0tvf0w0-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Mon, 20 May 2019 17:20:31 -0400
+Received: from localhost
+        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
+        Mon, 20 May 2019 22:20:29 +0100
+Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
+        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Mon, 20 May 2019 22:20:25 +0100
+Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
+        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x4KLKOJU41549938
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 20 May 2019 21:20:24 GMT
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 8DEE111C04C;
+        Mon, 20 May 2019 21:20:24 +0000 (GMT)
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 6389911C04A;
+        Mon, 20 May 2019 21:20:23 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.80.80.109])
+        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Mon, 20 May 2019 21:20:23 +0000 (GMT)
+Subject: Re: [PATCH 3/4] ima: don't ignore INTEGRITY_UNKNOWN EVM status
+From:   Mimi Zohar <zohar@linux.ibm.com>
+To:     Roberto Sassu <roberto.sassu@huawei.com>,
+        dmitry.kasatkin@huawei.com, mjg59@google.com
+Cc:     linux-integrity@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-security-module@vger.kernel.org,
+        linux-kernel@vger.kernel.org, silviu.vlasceanu@huawei.com,
+        stable@vger.kernel.org
+Date:   Mon, 20 May 2019 17:20:12 -0400
+In-Reply-To: <20190516161257.6640-3-roberto.sassu@huawei.com>
+References: <20190516161257.6640-1-roberto.sassu@huawei.com>
+         <20190516161257.6640-3-roberto.sassu@huawei.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 19052021-0008-0000-0000-000002E8B39A
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19052021-0009-0000-0000-000022556723
+Message-Id: <1558387212.4039.77.camel@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-20_08:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1905200132
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/20/19 5:09 PM, Johannes Erdfelt wrote:
-> On Mon, May 20, 2019, Joe Lawrence <joe.lawrence@redhat.com> wrote:
->> [ fixed jeyu's email address ]
-> 
-> Thank you, the bounce message made it seem like my mail server was
-> blocked and not that the address didn't exist.
-> 
-> I think MAINTAINERS needs an update since it still has the @redhat.com
-> address.
-> 
+On Thu, 2019-05-16 at 18:12 +0200, Roberto Sassu wrote:
+> diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+> index 52e6fbb042cc..80e1c233656b 100644
+> --- a/Documentation/admin-guide/kernel-parameters.txt
+> +++ b/Documentation/admin-guide/kernel-parameters.txt
+> @@ -1588,6 +1588,9 @@
+>  			Format: { "off" | "enforce" | "fix" | "log" }
+>  			default: "enforce"
+>  
+> +	ima_appraise_req_evm
+> +			[IMA] require EVM for appraisal with file digests.
 
-Here's how it looks on my end:
+As much as possible we want to limit the number of new boot command
+line options as possible.  Is there a reason for not extending
+"ima_appraise=" with "require-evm" or "enforce-evm"?
 
-% git describe HEAD
-v5.1-12317-ga6a4b66bd8f4
+Mimi
 
-% grep M:.*jeyu MAINTAINERS
-M:      Jessica Yu <jeyu@kernel.org>
+> +
+>  	ima_appraise_tcb [IMA] Deprecated.  Use ima_policy= instead.
+>  			The builtin appraise policy appraises all files
+>  			owned by uid=0.
 
->> On 5/20/19 3:49 PM, Johannes Erdfelt wrote:
->>> [ ... snip ... ]
->>>
->>> I have put together a test case that can reproduce the crash using
->>> KVM. The tarball includes a minimal kernel and initramfs, along with
->>> a script to run qemu and the .config used to build the kernel. By
->>> default it will attempt to reproduce by loading multiple livepatches
->>> at the same time. Passing 'test=ftrace' to the script will attempt to
->>> reproduce by racing with ftrace.
->>>
->>> My test setup reproduces the race and oops more reliably by loading
->>> multiple livepatches at the same time than with the ftrace method. It's
->>> not 100% reproducible, so the test case may need to be run multiple
->>> times.
->>>
->>> It can be found here (not attached because of its size):
->>> http://johannes.erdfelt.com/5.2.0-rc1-a188339ca5-livepatch-race.tar.gz
->>
->> Hi Johannes,
->>
->> This is cool way to distribute the repro kernel, modules, etc!
-> 
-> This oops was common in our production environment and was particularly
-> annoying since livepatches would load at boot and early enough to happen
-> before networking and SSH were started.
-> 
-> Unfortunately it was difficult to reproduce on other hardware (changing
-> the timing just enough) and our production environment is very
-> complicated.
-> 
-> I spent more time than I'd like to admit trying to reproduce this fairly
-> reliably. I knew that I needed to help make it as easy as possible to
-> reproduce to root cause it and for others to take a look at it as well.
-> 
-
-Thanks for building this test image -- it repro'd on the first try for me.
-
-Hmmm, I wonder then how reproducible it would be if we simply extracted 
-the .ko's and test scripts from out of your initramfs and ran it on 
-arbitrary machines.
-
-I think the rcutorture self-tests use qemu/kvm to fire up test VMs, but 
-I dunno if livepatch self-tests are ready for level of sophistication 
-yet :)  Will need to think on that a bit.
-
->> These two testing scenarios might be interesting to add to our selftests
->> suite.  Can you post or add the source(s) to livepatch-test<n>.ko to the
->> tarball?
-> 
-> I made the livepatches using kpatch-build and this simple patch:
-> 
-> diff --git a/fs/proc/version.c b/fs/proc/version.c
-> index 94901e8e700d..6b8a3449f455 100644
-> --- a/fs/proc/version.c
-> +++ b/fs/proc/version.c
-> @@ -12,6 +12,7 @@ static int version_proc_show(struct seq_file *m, void *v)
->   		utsname()->sysname,
->   		utsname()->release,
->   		utsname()->version);
-> +	seq_printf(m, "example livepatch\n");
->   	return 0;
->   }
-> 
-> I just created enough livepatches with the same source patch so that I
-> could reproduce the issue somewhat reliably.
-> 
-> I'll see if I can make something that uses klp directly.
-
-Ah ok great, I was hoping it was a relatively simply livepatch.  We 
-could probably reuse lib/livepatch/test_klp_livepatch.c to do this 
-(patching cmdline_proc_show instead).
-
-> The rest of the userspace in the initramfs is really straight forward
-> with the only interesting parts being a couple of shell scripts.
-
-Yup.  I'll be on PTO later this week, but I'll see about extracting the 
-scripts and building a pile of livepatch .ko's to see how easily it 
-reproduces without qemu.
-
-Thanks,
-
--- Joe
