@@ -4,56 +4,56 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA02BC04AAC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:23:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D5C5C04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:23:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A5E10214DA
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:23:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 37C9C20675
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:23:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558354993;
-	bh=QpaUKX3LPyScbe8xYTkn2ByVodrxAj4NIAZUgOtlupc=;
+	s=default; t=1558354999;
+	bh=3HFavAxzaHRyQLrKs26tbBek5N9yfGiVCtDxUG+IQts=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=i2gjZxKug2aYW22ZjcWzw6pgm4nZ6dRW8EAEHcrHVqPzsPo8pcesiOhfyHIWhLV9B
-	 VYB+pFxLztTh/G41/8g7rukS8SmG/xm5szA+5pdshVu9bd6i60TcAO9x2YWEsJ703n
-	 d/31hDSrA5ThpUfl7s8BLVWjzgHCrS1zsX334ebk=
+	b=p0pRfokZx7CrMssebVnlyeyu6MYWo21ni7XmEvyMy4KO7NDPm2d9Bm0PzEBw5tYMJ
+	 8+dUrJII+R4ZkgCsjeWmDive+RjEUcEmbQC8cHonBJMSS3JyMjwk6YAgeJ5VTqMtub
+	 LuYGjUkmn7YnLcR/Eemtvxuybyu43P/c/bQvNxa8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388541AbfETMXM (ORCPT
+        id S2388107AbfETMXS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 08:23:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37332 "EHLO mail.kernel.org"
+        Mon, 20 May 2019 08:23:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37534 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388523AbfETMXH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 08:23:07 -0400
+        id S2388545AbfETMXO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 08:23:14 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 39BFA21707;
-        Mon, 20 May 2019 12:23:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1B329205ED;
+        Mon, 20 May 2019 12:23:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558354985;
-        bh=QpaUKX3LPyScbe8xYTkn2ByVodrxAj4NIAZUgOtlupc=;
+        s=default; t=1558354993;
+        bh=3HFavAxzaHRyQLrKs26tbBek5N9yfGiVCtDxUG+IQts=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=o8woCYSpUb7DQG+QmwWMNWRabyrDLYG82RkGBScgf94LViU9YcD0pn1oEttguI41D
-         UNwy0PGMPhzubop2m5N+hFOHiG+SmWYzZpMzKkzx8m76RoSJ9+r6B+WpyWsc/Tq+gO
-         I89FA6NSHQGjanHwlx16iYenCCaXSg4wy1PzkaOI=
+        b=r3ysvF1thXm7TdoiTdfR3R4K1f2lOqPCot6k2n4nirasKhC+DtZ4uM43+Pp+yGrcZ
+         6MRY1q3d0VLEoFU+HeuraKBw0OAqhPdC6xMJCut6NqGlo9EEkYotYFiRzlVn2Tpz6t
+         b3DEblFHZh90wEzBj0wJluxHK7nrHLnSlBGUu6v4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dan Williams <dan.j.williams@intel.com>,
-        Piotr Balcer <piotr.balcer@intel.com>,
-        Yan Ma <yan.ma@intel.com>, Pankaj Gupta <pagupta@redhat.com>,
-        Matthew Wilcox <willy@infradead.org>, Jan Kara <jack@suse.cz>,
-        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
-        Chandan Rajendra <chandan@linux.ibm.com>,
-        Souptick Joarder <jrdr.linux@gmail.com>,
+        stable@vger.kernel.org, Shuning Zhang <sunny.s.zhang@oracle.com>,
+        Joseph Qi <jiangqi903@gmail.com>,
+        Mark Fasheh <mark@fasheh.com>,
+        Joel Becker <jlbec@evilplan.org>,
+        Junxiao Bi <junxiao.bi@oracle.com>,
+        Changwei Ge <gechangwei@live.cn>, piaojun <piaojun@huawei.com>,
+        "Gang He" <ghe@suse.com>,
         Andrew Morton <akpm@linux-foundation.org>,
         Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 4.19 054/105] mm/huge_memory: fix vmf_insert_pfn_{pmd, pud}() crash, handle unaligned addresses
-Date:   Mon, 20 May 2019 14:14:00 +0200
-Message-Id: <20190520115250.801117859@linuxfoundation.org>
+Subject: [PATCH 4.19 057/105] ocfs2: fix ocfs2 read inode data panic in ocfs2_iget
+Date:   Mon, 20 May 2019 14:14:03 +0200
+Message-Id: <20190520115251.043058181@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190520115247.060821231@linuxfoundation.org>
 References: <20190520115247.060821231@linuxfoundation.org>
@@ -66,171 +66,180 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dan Williams <dan.j.williams@intel.com>
+From: Shuning Zhang <sunny.s.zhang@oracle.com>
 
-commit fce86ff5802bac3a7b19db171aa1949ef9caac31 upstream.
+commit e091eab028f9253eac5c04f9141bbc9d170acab3 upstream.
 
-Starting with c6f3c5ee40c1 ("mm/huge_memory.c: fix modifying of page
-protection by insert_pfn_pmd()") vmf_insert_pfn_pmd() internally calls
-pmdp_set_access_flags().  That helper enforces a pmd aligned @address
-argument via VM_BUG_ON() assertion.
+In some cases, ocfs2_iget() reads the data of inode, which has been
+deleted for some reason.  That will make the system panic.  So We should
+judge whether this inode has been deleted, and tell the caller that the
+inode is a bad inode.
 
-Update the implementation to take a 'struct vm_fault' argument directly
-and apply the address alignment fixup internally to fix crash signatures
-like:
+For example, the ocfs2 is used as the backed of nfs, and the client is
+nfsv3.  This issue can be reproduced by the following steps.
 
-    kernel BUG at arch/x86/mm/pgtable.c:515!
-    invalid opcode: 0000 [#1] SMP NOPTI
-    CPU: 51 PID: 43713 Comm: java Tainted: G           OE     4.19.35 #1
-    [..]
-    RIP: 0010:pmdp_set_access_flags+0x48/0x50
-    [..]
-    Call Trace:
-     vmf_insert_pfn_pmd+0x198/0x350
-     dax_iomap_fault+0xe82/0x1190
-     ext4_dax_huge_fault+0x103/0x1f0
-     ? __switch_to_asm+0x40/0x70
-     __handle_mm_fault+0x3f6/0x1370
-     ? __switch_to_asm+0x34/0x70
-     ? __switch_to_asm+0x40/0x70
-     handle_mm_fault+0xda/0x200
-     __do_page_fault+0x249/0x4f0
-     do_page_fault+0x32/0x110
-     ? page_fault+0x8/0x30
-     page_fault+0x1e/0x30
+on the nfs server side,
+..../patha/pathb
 
-Link: http://lkml.kernel.org/r/155741946350.372037.11148198430068238140.stgit@dwillia2-desk3.amr.corp.intel.com
-Fixes: c6f3c5ee40c1 ("mm/huge_memory.c: fix modifying of page protection by insert_pfn_pmd()")
-Signed-off-by: Dan Williams <dan.j.williams@intel.com>
-Reported-by: Piotr Balcer <piotr.balcer@intel.com>
-Tested-by: Yan Ma <yan.ma@intel.com>
-Tested-by: Pankaj Gupta <pagupta@redhat.com>
-Reviewed-by: Matthew Wilcox <willy@infradead.org>
-Reviewed-by: Jan Kara <jack@suse.cz>
-Reviewed-by: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
-Cc: Chandan Rajendra <chandan@linux.ibm.com>
-Cc: Souptick Joarder <jrdr.linux@gmail.com>
+Step 1: The process A was scheduled before calling the function fh_verify.
+
+Step 2: The process B is removing the 'pathb', and just completed the call
+to function dput.  Then the dentry of 'pathb' has been deleted from the
+dcache, and all ancestors have been deleted also.  The relationship of
+dentry and inode was deleted through the function hlist_del_init.  The
+following is the call stack.
+dentry_iput->hlist_del_init(&dentry->d_u.d_alias)
+
+At this time, the inode is still in the dcache.
+
+Step 3: The process A call the function ocfs2_get_dentry, which get the
+inode from dcache.  Then the refcount of inode is 1.  The following is the
+call stack.
+nfsd3_proc_getacl->fh_verify->exportfs_decode_fh->fh_to_dentry(ocfs2_get_dentry)
+
+Step 4: Dirty pages are flushed by bdi threads.  So the inode of 'patha'
+is evicted, and this directory was deleted.  But the inode of 'pathb'
+can't be evicted, because the refcount of the inode was 1.
+
+Step 5: The process A keep running, and call the function
+reconnect_path(in exportfs_decode_fh), which call function
+ocfs2_get_parent of ocfs2.  Get the block number of parent
+directory(patha) by the name of ...  Then read the data from disk by the
+block number.  But this inode has been deleted, so the system panic.
+
+Process A                                             Process B
+1. in nfsd3_proc_getacl                   |
+2.                                        |        dput
+3. fh_to_dentry(ocfs2_get_dentry)         |
+4. bdi flush dirty cache                  |
+5. ocfs2_iget                             |
+
+[283465.542049] OCFS2: ERROR (device sdp): ocfs2_validate_inode_block:
+Invalid dinode #580640: OCFS2_VALID_FL not set
+
+[283465.545490] Kernel panic - not syncing: OCFS2: (device sdp): panic forced
+after error
+
+[283465.546889] CPU: 5 PID: 12416 Comm: nfsd Tainted: G        W
+4.1.12-124.18.6.el6uek.bug28762940v3.x86_64 #2
+[283465.548382] Hardware name: VMware, Inc. VMware Virtual Platform/440BX
+Desktop Reference Platform, BIOS 6.00 09/21/2015
+[283465.549657]  0000000000000000 ffff8800a56fb7b8 ffffffff816e839c
+ffffffffa0514758
+[283465.550392]  000000000008dc20 ffff8800a56fb838 ffffffff816e62d3
+0000000000000008
+[283465.551056]  ffff880000000010 ffff8800a56fb848 ffff8800a56fb7e8
+ffff88005df9f000
+[283465.551710] Call Trace:
+[283465.552516]  [<ffffffff816e839c>] dump_stack+0x63/0x81
+[283465.553291]  [<ffffffff816e62d3>] panic+0xcb/0x21b
+[283465.554037]  [<ffffffffa04e66b0>] ocfs2_handle_error+0xf0/0xf0 [ocfs2]
+[283465.554882]  [<ffffffffa04e7737>] __ocfs2_error+0x67/0x70 [ocfs2]
+[283465.555768]  [<ffffffffa049c0f9>] ocfs2_validate_inode_block+0x229/0x230
+[ocfs2]
+[283465.556683]  [<ffffffffa047bcbc>] ocfs2_read_blocks+0x46c/0x7b0 [ocfs2]
+[283465.557408]  [<ffffffffa049bed0>] ? ocfs2_inode_cache_io_unlock+0x20/0x20
+[ocfs2]
+[283465.557973]  [<ffffffffa049f0eb>] ocfs2_read_inode_block_full+0x3b/0x60
+[ocfs2]
+[283465.558525]  [<ffffffffa049f5ba>] ocfs2_iget+0x4aa/0x880 [ocfs2]
+[283465.559082]  [<ffffffffa049146e>] ocfs2_get_parent+0x9e/0x220 [ocfs2]
+[283465.559622]  [<ffffffff81297c05>] reconnect_path+0xb5/0x300
+[283465.560156]  [<ffffffff81297f46>] exportfs_decode_fh+0xf6/0x2b0
+[283465.560708]  [<ffffffffa062faf0>] ? nfsd_proc_getattr+0xa0/0xa0 [nfsd]
+[283465.561262]  [<ffffffff810a8196>] ? prepare_creds+0x26/0x110
+[283465.561932]  [<ffffffffa0630860>] fh_verify+0x350/0x660 [nfsd]
+[283465.562862]  [<ffffffffa0637804>] ? nfsd_cache_lookup+0x44/0x630 [nfsd]
+[283465.563697]  [<ffffffffa063a8b9>] nfsd3_proc_getattr+0x69/0xf0 [nfsd]
+[283465.564510]  [<ffffffffa062cf60>] nfsd_dispatch+0xe0/0x290 [nfsd]
+[283465.565358]  [<ffffffffa05eb892>] ? svc_tcp_adjust_wspace+0x12/0x30
+[sunrpc]
+[283465.566272]  [<ffffffffa05ea652>] svc_process_common+0x412/0x6a0 [sunrpc]
+[283465.567155]  [<ffffffffa05eaa03>] svc_process+0x123/0x210 [sunrpc]
+[283465.568020]  [<ffffffffa062c90f>] nfsd+0xff/0x170 [nfsd]
+[283465.568962]  [<ffffffffa062c810>] ? nfsd_destroy+0x80/0x80 [nfsd]
+[283465.570112]  [<ffffffff810a622b>] kthread+0xcb/0xf0
+[283465.571099]  [<ffffffff810a6160>] ? kthread_create_on_node+0x180/0x180
+[283465.572114]  [<ffffffff816f11b8>] ret_from_fork+0x58/0x90
+[283465.573156]  [<ffffffff810a6160>] ? kthread_create_on_node+0x180/0x180
+
+Link: http://lkml.kernel.org/r/1554185919-3010-1-git-send-email-sunny.s.zhang@oracle.com
+Signed-off-by: Shuning Zhang <sunny.s.zhang@oracle.com>
+Reviewed-by: Joseph Qi <jiangqi903@gmail.com>
+Cc: Mark Fasheh <mark@fasheh.com>
+Cc: Joel Becker <jlbec@evilplan.org>
+Cc: Junxiao Bi <junxiao.bi@oracle.com>
+Cc: Changwei Ge <gechangwei@live.cn>
+Cc: piaojun <piaojun@huawei.com>
+Cc: "Gang He" <ghe@suse.com>
 Cc: <stable@vger.kernel.org>
 Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
 Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/dax/device.c    |    6 ++----
- fs/dax.c                |    6 ++----
- include/linux/huge_mm.h |    6 ++----
- mm/huge_memory.c        |   16 ++++++++++------
- 4 files changed, 16 insertions(+), 18 deletions(-)
+ fs/ocfs2/export.c |   30 +++++++++++++++++++++++++++++-
+ 1 file changed, 29 insertions(+), 1 deletion(-)
 
---- a/drivers/dax/device.c
-+++ b/drivers/dax/device.c
-@@ -325,8 +325,7 @@ static vm_fault_t __dev_dax_pmd_fault(st
+--- a/fs/ocfs2/export.c
++++ b/fs/ocfs2/export.c
+@@ -148,16 +148,24 @@ static struct dentry *ocfs2_get_parent(s
+ 	u64 blkno;
+ 	struct dentry *parent;
+ 	struct inode *dir = d_inode(child);
++	int set;
  
- 	*pfn = phys_to_pfn_t(phys, dax_region->pfn_flags);
+ 	trace_ocfs2_get_parent(child, child->d_name.len, child->d_name.name,
+ 			       (unsigned long long)OCFS2_I(dir)->ip_blkno);
  
--	return vmf_insert_pfn_pmd(vmf->vma, vmf->address, vmf->pmd, *pfn,
--			vmf->flags & FAULT_FLAG_WRITE);
-+	return vmf_insert_pfn_pmd(vmf, *pfn, vmf->flags & FAULT_FLAG_WRITE);
- }
- 
- #ifdef CONFIG_HAVE_ARCH_TRANSPARENT_HUGEPAGE_PUD
-@@ -376,8 +375,7 @@ static vm_fault_t __dev_dax_pud_fault(st
- 
- 	*pfn = phys_to_pfn_t(phys, dax_region->pfn_flags);
- 
--	return vmf_insert_pfn_pud(vmf->vma, vmf->address, vmf->pud, *pfn,
--			vmf->flags & FAULT_FLAG_WRITE);
-+	return vmf_insert_pfn_pud(vmf, *pfn, vmf->flags & FAULT_FLAG_WRITE);
- }
- #else
- static vm_fault_t __dev_dax_pud_fault(struct dev_dax *dev_dax,
---- a/fs/dax.c
-+++ b/fs/dax.c
-@@ -1660,8 +1660,7 @@ static vm_fault_t dax_iomap_pmd_fault(st
- 		}
- 
- 		trace_dax_pmd_insert_mapping(inode, vmf, PMD_SIZE, pfn, entry);
--		result = vmf_insert_pfn_pmd(vma, vmf->address, vmf->pmd, pfn,
--					    write);
-+		result = vmf_insert_pfn_pmd(vmf, pfn, write);
- 		break;
- 	case IOMAP_UNWRITTEN:
- 	case IOMAP_HOLE:
-@@ -1775,8 +1774,7 @@ static vm_fault_t dax_insert_pfn_mkwrite
- 		break;
- #ifdef CONFIG_FS_DAX_PMD
- 	case PE_SIZE_PMD:
--		ret = vmf_insert_pfn_pmd(vmf->vma, vmf->address, vmf->pmd,
--			pfn, true);
-+		ret = vmf_insert_pfn_pmd(vmf, pfn, FAULT_FLAG_WRITE);
- 		break;
- #endif
- 	default:
---- a/include/linux/huge_mm.h
-+++ b/include/linux/huge_mm.h
-@@ -47,10 +47,8 @@ extern bool move_huge_pmd(struct vm_area
- extern int change_huge_pmd(struct vm_area_struct *vma, pmd_t *pmd,
- 			unsigned long addr, pgprot_t newprot,
- 			int prot_numa);
--vm_fault_t vmf_insert_pfn_pmd(struct vm_area_struct *vma, unsigned long addr,
--			pmd_t *pmd, pfn_t pfn, bool write);
--vm_fault_t vmf_insert_pfn_pud(struct vm_area_struct *vma, unsigned long addr,
--			pud_t *pud, pfn_t pfn, bool write);
-+vm_fault_t vmf_insert_pfn_pmd(struct vm_fault *vmf, pfn_t pfn, bool write);
-+vm_fault_t vmf_insert_pfn_pud(struct vm_fault *vmf, pfn_t pfn, bool write);
- enum transparent_hugepage_flag {
- 	TRANSPARENT_HUGEPAGE_FLAG,
- 	TRANSPARENT_HUGEPAGE_REQ_MADV_FLAG,
---- a/mm/huge_memory.c
-+++ b/mm/huge_memory.c
-@@ -772,11 +772,13 @@ out_unlock:
- 		pte_free(mm, pgtable);
- }
- 
--vm_fault_t vmf_insert_pfn_pmd(struct vm_area_struct *vma, unsigned long addr,
--			pmd_t *pmd, pfn_t pfn, bool write)
-+vm_fault_t vmf_insert_pfn_pmd(struct vm_fault *vmf, pfn_t pfn, bool write)
- {
-+	unsigned long addr = vmf->address & PMD_MASK;
-+	struct vm_area_struct *vma = vmf->vma;
- 	pgprot_t pgprot = vma->vm_page_prot;
- 	pgtable_t pgtable = NULL;
++	status = ocfs2_nfs_sync_lock(OCFS2_SB(dir->i_sb), 1);
++	if (status < 0) {
++		mlog(ML_ERROR, "getting nfs sync lock(EX) failed %d\n", status);
++		parent = ERR_PTR(status);
++		goto bail;
++	}
 +
- 	/*
- 	 * If we had pmd_special, we could avoid all these restrictions,
- 	 * but we need to be consistent with PTEs and architectures that
-@@ -799,7 +801,7 @@ vm_fault_t vmf_insert_pfn_pmd(struct vm_
+ 	status = ocfs2_inode_lock(dir, NULL, 0);
+ 	if (status < 0) {
+ 		if (status != -ENOENT)
+ 			mlog_errno(status);
+ 		parent = ERR_PTR(status);
+-		goto bail;
++		goto unlock_nfs_sync;
+ 	}
  
- 	track_pfn_insert(vma, &pgprot, pfn);
+ 	status = ocfs2_lookup_ino_from_name(dir, "..", 2, &blkno);
+@@ -166,11 +174,31 @@ static struct dentry *ocfs2_get_parent(s
+ 		goto bail_unlock;
+ 	}
  
--	insert_pfn_pmd(vma, addr, pmd, pfn, pgprot, write, pgtable);
-+	insert_pfn_pmd(vma, addr, vmf->pmd, pfn, pgprot, write, pgtable);
- 	return VM_FAULT_NOPAGE;
- }
- EXPORT_SYMBOL_GPL(vmf_insert_pfn_pmd);
-@@ -848,10 +850,12 @@ out_unlock:
- 	spin_unlock(ptl);
- }
- 
--vm_fault_t vmf_insert_pfn_pud(struct vm_area_struct *vma, unsigned long addr,
--			pud_t *pud, pfn_t pfn, bool write)
-+vm_fault_t vmf_insert_pfn_pud(struct vm_fault *vmf, pfn_t pfn, bool write)
- {
-+	unsigned long addr = vmf->address & PUD_MASK;
-+	struct vm_area_struct *vma = vmf->vma;
- 	pgprot_t pgprot = vma->vm_page_prot;
++	status = ocfs2_test_inode_bit(OCFS2_SB(dir->i_sb), blkno, &set);
++	if (status < 0) {
++		if (status == -EINVAL) {
++			status = -ESTALE;
++		} else
++			mlog(ML_ERROR, "test inode bit failed %d\n", status);
++		parent = ERR_PTR(status);
++		goto bail_unlock;
++	}
 +
- 	/*
- 	 * If we had pud_special, we could avoid all these restrictions,
- 	 * but we need to be consistent with PTEs and architectures that
-@@ -868,7 +872,7 @@ vm_fault_t vmf_insert_pfn_pud(struct vm_
++	trace_ocfs2_get_dentry_test_bit(status, set);
++	if (!set) {
++		status = -ESTALE;
++		parent = ERR_PTR(status);
++		goto bail_unlock;
++	}
++
+ 	parent = d_obtain_alias(ocfs2_iget(OCFS2_SB(dir->i_sb), blkno, 0, 0));
  
- 	track_pfn_insert(vma, &pgprot, pfn);
+ bail_unlock:
+ 	ocfs2_inode_unlock(dir, 0);
  
--	insert_pfn_pud(vma, addr, pud, pfn, pgprot, write);
-+	insert_pfn_pud(vma, addr, vmf->pud, pfn, pgprot, write);
- 	return VM_FAULT_NOPAGE;
- }
- EXPORT_SYMBOL_GPL(vmf_insert_pfn_pud);
++unlock_nfs_sync:
++	ocfs2_nfs_sync_unlock(OCFS2_SB(dir->i_sb), 1);
++
+ bail:
+ 	trace_ocfs2_get_parent_end(parent);
+ 
 
 
