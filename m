@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CB4DC04AAC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:17:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BEEA7C04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:17:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F232220815
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:17:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 93170208C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:17:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558354663;
-	bh=QzXMABAp5useRBARdCL6vnv7ldSqL36jJR/3j27x2Ok=;
+	s=default; t=1558354667;
+	bh=06HwVM8mU9mLIabTQ9BoZcRofJbXFiysdQVqdvYyGC0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DFm7x2pqGsuakeh68PHK09SVzH5pQcU6is9z8phunN/kq2r2wmdNv4C+WuqQZ3ve/
-	 LEdKLYRf7v91XgsarGBFoun+EIn1zel/PZK6QM16LKCBI8xzP95D7wVWyLcAiqpHn1
-	 XW+iDYgJWInKg3qVF+QB66ZiR/gtW6OFyNU2O9PQ=
+	b=SvS+HYIjQgPbRpJ7dXuYfJ01Ns8Dp7uQwzNBu1vGOg40I/lU86VPMB6yFNzphhwsi
+	 yRlnx7JaOni1EeGqTDfGv0k0DPrEFnTg3ZDk9Pio58oNHqC5XVOLrWmkH+BRJfj7GJ
+	 lOPgik9JeJR4A10mt19QAUnGP9y6MtoCLXNzLJLg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387618AbfETMRm (ORCPT
+        id S2387639AbfETMRq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 08:17:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58694 "EHLO mail.kernel.org"
+        Mon, 20 May 2019 08:17:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58816 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733157AbfETMRj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 08:17:39 -0400
+        id S1731033AbfETMRo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 08:17:44 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 01D3220656;
-        Mon, 20 May 2019 12:17:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 21F1A20863;
+        Mon, 20 May 2019 12:17:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558354658;
-        bh=QzXMABAp5useRBARdCL6vnv7ldSqL36jJR/3j27x2Ok=;
+        s=default; t=1558354663;
+        bh=06HwVM8mU9mLIabTQ9BoZcRofJbXFiysdQVqdvYyGC0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=C16rJGHBeDCzCIuoFSSxkMmV8Z4POrB7gt3pGgrCI5rqjhz5+1zGG2jhkBX47x4lH
-         ItzHlClDO4nfeE2AmvAAoE6GbaTTro5st3XbNQGfGd9ygUKFt2eFYsX5v+6Dc59Xo4
-         +QfnALuWnAigjv/c1HeJhCYExCP/dSrkWpsuDJxo=
+        b=LpupQ+BQcLsR/LXrgsOSBmDciQmFVlXr9uE4PFIw3iJWcV16czPpkRHzUjqPImgvG
+         UI691M/+Pn1z2kP1afbWyTiM8qMv2kuGcT/M2r2rqr6iEaeouAGCr4GRI42HxS8/4x
+         eIKtA5stMu7j8U7GIwUMfZSjI6Qa2urvFGcQTY8M=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jiufei Xue <jiufei.xue@linux.alibaba.com>,
-        Tejun Heo <tj@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 4.9 40/44] fs/writeback.c: use rcu_barrier() to wait for inflight wb switches going into workqueue when umount
-Date:   Mon, 20 May 2019 14:14:29 +0200
-Message-Id: <20190520115235.677932792@linuxfoundation.org>
+        stable@vger.kernel.org, Lukas Czerner <lczerner@redhat.com>,
+        Theodore Tso <tytso@mit.edu>, stable@kernel.org
+Subject: [PATCH 4.9 42/44] ext4: fix data corruption caused by overlapping unaligned and aligned IO
+Date:   Mon, 20 May 2019 14:14:31 +0200
+Message-Id: <20190520115235.856197660@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190520115230.720347034@linuxfoundation.org>
 References: <20190520115230.720347034@linuxfoundation.org>
@@ -61,75 +59,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jiufei Xue <jiufei.xue@linux.alibaba.com>
+From: Lukas Czerner <lczerner@redhat.com>
 
-commit ec084de929e419e51bcdafaafe567d9e7d0273b7 upstream.
+commit 57a0da28ced8707cb9f79f071a016b9d005caf5a upstream.
 
-synchronize_rcu() didn't wait for call_rcu() callbacks, so inode wb
-switch may not go to the workqueue after synchronize_rcu().  Thus
-previous scheduled switches was not finished even flushing the
-workqueue, which will cause a NULL pointer dereferenced followed below.
+Unaligned AIO must be serialized because the zeroing of partial blocks
+of unaligned AIO can result in data corruption in case it's overlapping
+another in flight IO.
 
-  VFS: Busy inodes after unmount of vdd. Self-destruct in 5 seconds.  Have a nice day...
-  BUG: unable to handle kernel NULL pointer dereference at 0000000000000278
-    evict+0xb3/0x180
-    iput+0x1b0/0x230
-    inode_switch_wbs_work_fn+0x3c0/0x6a0
-    worker_thread+0x4e/0x490
-    ? process_one_work+0x410/0x410
-    kthread+0xe6/0x100
-    ret_from_fork+0x39/0x50
+Currently we wait for all unwritten extents before we submit unaligned
+AIO which protects data in case of unaligned AIO is following overlapping
+IO. However if a unaligned AIO is followed by overlapping aligned AIO we
+can still end up corrupting data.
 
-Replace the synchronize_rcu() call with a rcu_barrier() to wait for all
-pending callbacks to finish.  And inc isw_nr_in_flight after call_rcu()
-in inode_switch_wbs() to make more sense.
+To fix this, we must make sure that the unaligned AIO is the only IO in
+flight by waiting for unwritten extents conversion not just before the
+IO submission, but right after it as well.
 
-Link: http://lkml.kernel.org/r/20190429024108.54150-1-jiufei.xue@linux.alibaba.com
-Signed-off-by: Jiufei Xue <jiufei.xue@linux.alibaba.com>
-Acked-by: Tejun Heo <tj@kernel.org>
-Suggested-by: Tejun Heo <tj@kernel.org>
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+This problem can be reproduced by xfstest generic/538
+
+Signed-off-by: Lukas Czerner <lczerner@redhat.com>
+Signed-off-by: Theodore Ts'o <tytso@mit.edu>
+Cc: stable@kernel.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/fs-writeback.c |   11 ++++++++---
- 1 file changed, 8 insertions(+), 3 deletions(-)
+ fs/ext4/file.c |    7 +++++++
+ 1 file changed, 7 insertions(+)
 
---- a/fs/fs-writeback.c
-+++ b/fs/fs-writeback.c
-@@ -530,8 +530,6 @@ static void inode_switch_wbs(struct inod
- 
- 	isw->inode = inode;
- 
--	atomic_inc(&isw_nr_in_flight);
--
- 	/*
- 	 * In addition to synchronizing among switchers, I_WB_SWITCH tells
- 	 * the RCU protected stat update paths to grab the mapping's
-@@ -539,6 +537,9 @@ static void inode_switch_wbs(struct inod
- 	 * Let's continue after I_WB_SWITCH is guaranteed to be visible.
- 	 */
- 	call_rcu(&isw->rcu_head, inode_switch_wbs_rcu_fn);
-+
-+	atomic_inc(&isw_nr_in_flight);
-+
- 	goto out_unlock;
- 
- out_free:
-@@ -908,7 +909,11 @@ restart:
- void cgroup_writeback_umount(void)
- {
- 	if (atomic_read(&isw_nr_in_flight)) {
--		synchronize_rcu();
-+		/*
-+		 * Use rcu_barrier() to wait for all pending callbacks to
-+		 * ensure that all in-flight wb switches are in the workqueue.
-+		 */
-+		rcu_barrier();
- 		flush_workqueue(isw_wq);
+--- a/fs/ext4/file.c
++++ b/fs/ext4/file.c
+@@ -163,6 +163,13 @@ ext4_file_write_iter(struct kiocb *iocb,
  	}
- }
+ 
+ 	ret = __generic_file_write_iter(iocb, from);
++	/*
++	 * Unaligned direct AIO must be the only IO in flight. Otherwise
++	 * overlapping aligned IO after unaligned might result in data
++	 * corruption.
++	 */
++	if (ret == -EIOCBQUEUED && unaligned_aio)
++		ext4_unwritten_wait(inode);
+ 	inode_unlock(inode);
+ 
+ 	if (ret > 0)
 
 
