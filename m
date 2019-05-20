@@ -8,64 +8,64 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C080EC04AAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 21:44:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80BA9C04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 21:44:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9787D2171F
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 21:44:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 583D62173C
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 21:44:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="H5c7ix3y"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XkXe6QhY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726975AbfETVoy (ORCPT
+        id S1727036AbfETVo6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 17:44:54 -0400
-Received: from mail-qk1-f193.google.com ([209.85.222.193]:34703 "EHLO
-        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726879AbfETVov (ORCPT
+        Mon, 20 May 2019 17:44:58 -0400
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:35111 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726557AbfETVoy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 17:44:51 -0400
-Received: by mail-qk1-f193.google.com with SMTP id j20so9812271qke.1;
-        Mon, 20 May 2019 14:44:51 -0700 (PDT)
+        Mon, 20 May 2019 17:44:54 -0400
+Received: by mail-qt1-f193.google.com with SMTP id a39so18166630qtk.2;
+        Mon, 20 May 2019 14:44:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=e3lFbQgJJ+lew9eDTSzlU3Aed2lriWUZ0JF203LqPIM=;
-        b=H5c7ix3y9PcxFwWBhnSVlYc2blrkVSxD6MPBNsGgsco+z1pPB10EW6nbvohUisdRzK
-         7A32ghihB3rS0dT7b10Whg4vkKNFIBlaVEvefbzYNBcRvInG8r5v6vaowX90douvt8Dq
-         NTJGZJArviUZsQm7dIg3st0j355yMuNYci0To0tTudxd8wNbhTLZWpUcfvxvtlv0hRbg
-         MPVPuf0045W936I4Q0PTinaQNcUCms65mtxF7VaGJrunsmdEKyK3fepdEDEet/0DY9sD
-         04b6Ph6fmIeQKduZxeagODC7M4wZX0/c7KavgjWcJrdaEVOEuMUA/4UFLeuzMK8rBFp3
-         GtTg==
+        bh=UG1n+V7lSXkpzMqb+/8NjtbCanwIJGBK36IxMqbY4ZA=;
+        b=XkXe6QhYdB4VBaHnd+Hw8wN/Y+0TnpYdFKrmo7hcj8rXBZprke7XLaK3o3kjb2kgII
+         j8UeywVY7urhYKlNbdkNrisExeeYR2xQJPSOpGgrqfTYBaAEWCnaCmdo8AiaPWv7iky8
+         TKrDBNg4VRgJxLzmStjdthSSQM4CzG6ZFNyDyUZ5VLPvxLHg+0yKOb3mqVyQ2HSnlUCz
+         krxFDiDb2gn4D5HYqQaMquOvI4KwJKJGYwFF1EKwFXWrZ0eRsXGjZNqclF326YWKIekA
+         u5Ps3Xb/NG2ylkcveyfWCxc3NYegXkTOed9HSQRaNegXv0ZVVOYhK0358avCV1oI1zWE
+         /SnQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=e3lFbQgJJ+lew9eDTSzlU3Aed2lriWUZ0JF203LqPIM=;
-        b=lCMFoVyPxslITsYPWKyvgBLHd/uhOVOM5wXTH/ZyBIKVxfay37owD4fz23HLjM4ri8
-         m5mIN3TynRGVggxCJYjN8D52Lu36Yc2VCLBVBtngpIY8D18j0PUv5wQZ1o8Qxc2b7Fcv
-         HPYBL1UGtFswGN8j24xuig4cU65paFmB1ZLiHIVQZWa1POW9hQ8noFy8vUXn5JJu7uy7
-         9cnJRL3w7lSHDmrid4O+8sFC44oWIZUMFTEgK8ndSzz4kk8BLUPNCIa64mWlbIOy/nrS
-         VfSXpm/r4LCXdGvhq17uqs1BIRwvzLsSosKHM2yZCQP5VmspHQSXSSSie8yxFHqvaazS
-         z3kg==
-X-Gm-Message-State: APjAAAVZUAcmUOIUbtdPZ8XsbKaBv9gieU7UpIVHF9Wb4Na77iB3Y0rQ
-        yJIbMgDPBntr/w609JujHE199uLo
-X-Google-Smtp-Source: APXvYqzoMAnwa0ujNwGVzOwjA8qqX77j5WHBwUD/YfGtoP0mQ4Vi7xOR6pA/zHmbVnleEGQINXAqzw==
-X-Received: by 2002:a37:9ec5:: with SMTP id h188mr59538779qke.90.1558388690274;
-        Mon, 20 May 2019 14:44:50 -0700 (PDT)
+        bh=UG1n+V7lSXkpzMqb+/8NjtbCanwIJGBK36IxMqbY4ZA=;
+        b=LO6pokbNOlGDaG9i3X/XcI3+z8mjkl6bUKf49Jm9FwVsX8K5ZjB0J6At0U5yeqRMmH
+         1OeSabDPR0+gS+g9pUYhsuN94I+kbQU99iXC9Wei5tBmS/2UsxcV69NMy9WDPjShgw3K
+         1R21IB2zDpHWKiZ5IUYirwzkJi1jLq9dp5yZnCUgcfBse/gShJqSHGvyhjuEMN76MsL7
+         MRMpO9hrDiNvb+rPAr0JdFQ3s057w3ncjczlk0/+i5YlasrZ143ZO1Z60hAHwX2EEcCa
+         8w+nwbTkK8inc0sd2Fk5eP7PkHri+7Fd3QjO3XDD78Fx6hvcfXr8g+736Djp3IV2U9w+
+         XjqQ==
+X-Gm-Message-State: APjAAAVCEpFmzm/g0TT4pkH90qSko+ycxJ2sS3aUb0WDFbIcItd/D1uZ
+        b/WPn45u9pUbQ+7VP1JH7KzINK0Y
+X-Google-Smtp-Source: APXvYqzt4IDFt1AZwTag4af5BRZAFJpMQsCgSRKuwLRjSHrIKwRouZR8/szIXmPOeVaOtguKBbtThA==
+X-Received: by 2002:a0c:b0e7:: with SMTP id p36mr24385686qvc.25.1558388692707;
+        Mon, 20 May 2019 14:44:52 -0700 (PDT)
 Received: from localhost.localdomain ([179.185.210.219])
-        by smtp.gmail.com with ESMTPSA id t30sm11427530qtc.80.2019.05.20.14.44.48
+        by smtp.gmail.com with ESMTPSA id t30sm11427530qtc.80.2019.05.20.14.44.50
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 20 May 2019 14:44:49 -0700 (PDT)
+        Mon, 20 May 2019 14:44:52 -0700 (PDT)
 From:   Marcos Paulo de Souza <marcos.souza.org@gmail.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     Marcos Paulo de Souza <marcos.souza.org@gmail.com>,
         Shaohua Li <shli@kernel.org>,
         linux-raid@vger.kernel.org (open list:SOFTWARE RAID (Multiple Disks)
         SUPPORT)
-Subject: [PATCH 3/4] md: raid0: Return md_integrity_register result directly
-Date:   Mon, 20 May 2019 18:44:26 -0300
-Message-Id: <20190520214427.18729-4-marcos.souza.org@gmail.com>
+Subject: [PATCH 4/4] md: raid0: Make ret local in raid0_run
+Date:   Mon, 20 May 2019 18:44:27 -0300
+Message-Id: <20190520214427.18729-5-marcos.souza.org@gmail.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190520214427.18729-1-marcos.souza.org@gmail.com>
 References: <20190520214427.18729-1-marcos.souza.org@gmail.com>
@@ -76,31 +76,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit 0c35bd4723e4a39ba2da4c13a22cb97986ee10c8
-("md: fix problems with freeing private data after ->run failure")
-removed the check for the result of md_integrity_register, so we don't
-need to store it anymore, so return it directly.
+ret variable is only used in a specific situation, so make it local
+instead of global.
 
 Signed-off-by: Marcos Paulo de Souza <marcos.souza.org@gmail.com>
 ---
- drivers/md/raid0.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+ drivers/md/raid0.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
 diff --git a/drivers/md/raid0.c b/drivers/md/raid0.c
-index 42b0287104bd..e72255464c09 100644
+index e72255464c09..b28dbb797f76 100644
 --- a/drivers/md/raid0.c
 +++ b/drivers/md/raid0.c
-@@ -431,9 +431,7 @@ static int raid0_run(struct mddev *mddev)
+@@ -364,7 +364,6 @@ static void raid0_free(struct mddev *mddev, void *priv);
+ static int raid0_run(struct mddev *mddev)
+ {
+ 	struct r0conf *conf;
+-	int ret;
  
- 	dump_zones(mddev);
+ 	if (mddev->chunk_sectors == 0) {
+ 		pr_warn("md/raid0:%s: chunk size must be set.\n", mdname(mddev));
+@@ -375,7 +374,7 @@ static int raid0_run(struct mddev *mddev)
  
--	ret = md_integrity_register(mddev);
--
--	return ret;
-+	return md_integrity_register(mddev);
- }
- 
- static void raid0_free(struct mddev *mddev, void *priv)
+ 	/* if private is not null, we are here after takeover */
+ 	if (mddev->private == NULL) {
+-		ret = create_strip_zones(mddev, &conf);
++		int ret = create_strip_zones(mddev, &conf);
+ 		if (ret < 0)
+ 			return ret;
+ 		mddev->private = conf;
 -- 
 2.21.0
 
