@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58F75C04AAC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:27:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58A87C04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:27:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3014921019
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:27:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2F07E20815
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:27:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558355269;
-	bh=Y5gLgaKUCRhk57m/UXAViF0p7JGbNm1P9I90M+EkMGM=;
+	s=default; t=1558355274;
+	bh=SLAe6/IoBPDUbYUdq+rzQEmI9w4plC6PgcfwdwJjL3Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fNv35JZq0lMIYjFbNpt/k5IM6tCNsWO9Kj7hrokwqOJVsjaszv0rHNKPflaAM4fqY
-	 +vp1DY0OlCRubjcvoI/y/PqdmhDBh21AuAA7FcUsynmhfxw7MJ4OqoAM6/J1MHWGrq
-	 UQJKrKeOO4KQIqZm4mzHARoDfDQ0GpqzbbP8kxLU=
+	b=o1SlxxOrj8dfgCbx+gzz+2t1JT+KalGkywjcQS+822bGxsrKE8swii91pGYEwXYdx
+	 d7V2slVr5tcXrNr3tf096zPKETw8036MEh2/JjLNKF6SsGhrclE4HRYfYzv1R0OdWN
+	 uh8gx5kBdUvJkZIXsdy06+g8UmhJUifUPE0w/7Ac=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389562AbfETM1s (ORCPT
+        id S2389571AbfETM1w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 08:27:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43314 "EHLO mail.kernel.org"
+        Mon, 20 May 2019 08:27:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43400 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389527AbfETM1n (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 08:27:43 -0400
+        id S2389527AbfETM1t (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 08:27:49 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D0CCB20675;
-        Mon, 20 May 2019 12:27:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2B2BB20645;
+        Mon, 20 May 2019 12:27:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558355263;
-        bh=Y5gLgaKUCRhk57m/UXAViF0p7JGbNm1P9I90M+EkMGM=;
+        s=default; t=1558355268;
+        bh=SLAe6/IoBPDUbYUdq+rzQEmI9w4plC6PgcfwdwJjL3Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=i5+P7mxew/+nKSX5IM/+YsKeMfPT+iX84ANL/33Fw/3gtA9K6RReyj18mHhD5wDgL
-         NuAuJnAicFvKf8JQ/xhha4TZrDg6U2ASn/sFQtS9VPhucsEFahyjTXjjfqQKXhdYDY
-         59kAZaE4upZukj7nuJGVok+YPKeNc+9FZ3Pd5q94=
+        b=GIHEuOVv2DIlE/lumVp+HegUClhm4puWTAsEs5BrcqWfm85L2YkZ5pmiFw0ehSCP3
+         F9l3jz9YqzslQ0dyxHe5IiMhE9fXlqipoTmNhxc8/sNvvL0hUUAdDkU+RHU5Oo0WAk
+         xy3Bw/uUOZtywAh7AZ36v/tHOJKfb0QyEAvLJ5U0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kailang Yang <kailang@realtek.com>,
-        Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 5.0 051/123] ALSA: hda/realtek - EAPD turn on later
-Date:   Mon, 20 May 2019 14:13:51 +0200
-Message-Id: <20190520115248.128333567@linuxfoundation.org>
+        stable@vger.kernel.org, Jon Hunter <jonathanh@nvidia.com>,
+        Mark Brown <broonie@kernel.org>
+Subject: [PATCH 5.0 053/123] ASoC: max98090: Fix restore of DAPM Muxes
+Date:   Mon, 20 May 2019 14:13:53 +0200
+Message-Id: <20190520115248.268952638@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190520115245.439864225@linuxfoundation.org>
 References: <20190520115245.439864225@linuxfoundation.org>
@@ -59,40 +59,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kailang Yang <kailang@realtek.com>
+From: Jon Hunter <jonathanh@nvidia.com>
 
-commit 607ca3bd220f4022e6f5356026b19dafc363863a upstream.
+commit ecb2795c08bc825ebd604997e5be440b060c5b18 upstream.
 
-Let EAPD turn on after set pin output.
+The max98090 driver defines 3 DAPM muxes; one for the right line output
+(LINMOD Mux), one for the left headphone mixer source (MIXHPLSEL Mux)
+and one for the right headphone mixer source (MIXHPRSEL Mux). The same
+bit is used for the mux as well as the DAPM enable, and although the mux
+can be correctly configured, after playback has completed, the mux will
+be reset during the disable phase. This is preventing the state of these
+muxes from being saved and restored correctly on system reboot. Fix this
+by marking these muxes as SND_SOC_NOPM.
 
-[ NOTE: This change is supposed to reduce the possible click noises at
-  (runtime) PM resume.  The functionality should be same (i.e. the
-  verbs are executed correctly) no matter which order is, so this
-  should be safe to apply for all codecs -- tiwai ]
+Note this has been verified this on the Tegra124 Nyan Big which features
+the MAX98090 codec.
 
-Signed-off-by: Kailang Yang <kailang@realtek.com>
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Signed-off-by: Jon Hunter <jonathanh@nvidia.com>
+Signed-off-by: Mark Brown <broonie@kernel.org>
+Cc: stable@vger.kernel.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/pci/hda/patch_realtek.c |    3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ sound/soc/codecs/max98090.c |   12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
---- a/sound/pci/hda/patch_realtek.c
-+++ b/sound/pci/hda/patch_realtek.c
-@@ -803,11 +803,10 @@ static int alc_init(struct hda_codec *co
- 	if (spec->init_hook)
- 		spec->init_hook(codec);
+--- a/sound/soc/codecs/max98090.c
++++ b/sound/soc/codecs/max98090.c
+@@ -1209,14 +1209,14 @@ static const struct snd_soc_dapm_widget
+ 		&max98090_right_rcv_mixer_controls[0],
+ 		ARRAY_SIZE(max98090_right_rcv_mixer_controls)),
  
-+	snd_hda_gen_init(codec);
- 	alc_fix_pll(codec);
- 	alc_auto_init_amp(codec, spec->init_amp);
+-	SND_SOC_DAPM_MUX("LINMOD Mux", M98090_REG_LOUTR_MIXER,
+-		M98090_LINMOD_SHIFT, 0, &max98090_linmod_mux),
++	SND_SOC_DAPM_MUX("LINMOD Mux", SND_SOC_NOPM, 0, 0,
++		&max98090_linmod_mux),
  
--	snd_hda_gen_init(codec);
--
- 	snd_hda_apply_fixup(codec, HDA_FIXUP_ACT_INIT);
+-	SND_SOC_DAPM_MUX("MIXHPLSEL Mux", M98090_REG_HP_CONTROL,
+-		M98090_MIXHPLSEL_SHIFT, 0, &max98090_mixhplsel_mux),
++	SND_SOC_DAPM_MUX("MIXHPLSEL Mux", SND_SOC_NOPM, 0, 0,
++		&max98090_mixhplsel_mux),
  
- 	return 0;
+-	SND_SOC_DAPM_MUX("MIXHPRSEL Mux", M98090_REG_HP_CONTROL,
+-		M98090_MIXHPRSEL_SHIFT, 0, &max98090_mixhprsel_mux),
++	SND_SOC_DAPM_MUX("MIXHPRSEL Mux", SND_SOC_NOPM, 0, 0,
++		&max98090_mixhprsel_mux),
+ 
+ 	SND_SOC_DAPM_PGA("HP Left Out", M98090_REG_OUTPUT_ENABLE,
+ 		M98090_HPLEN_SHIFT, 0, NULL, 0),
 
 
