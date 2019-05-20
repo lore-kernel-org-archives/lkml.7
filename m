@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DBF2C04AAC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:23:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6351C04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:23:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 032C220815
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:23:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8C8FD20675
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:23:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558355012;
-	bh=Vc76SIEwx46ODrXQqltdqyN2/mHnKSGbQiibyzx/1hQ=;
+	s=default; t=1558355014;
+	bh=Mitkq/mNc3PsR+GS8+sgxQ9ccjBADF3myYWbMFia4IM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WhRbMwIljdlKTF/TgT+QqGr4SPZmGTPYKXqd4dTADPaFcxakPTpsv1yjgfpFv2QRN
-	 qg30Fo1r2GIEZc45De2+okrhQaUrDVH7m8Rt5jt1t0j1D2+Cl/jnMHU8ne9V8nj6wg
-	 XsWJZfUO1qk6goYRw8XuDquDuq65J0tVi8H2XdDY=
+	b=hoMl3FLbsHd4P8UsfGWHq5QCppTcY0S6NKIBx8kxphKtmlc2KeXZ0bHqyG7Ncr7nV
+	 Pdjioh5J4dOTr3XxtsSVK/iCRUSWD0fHqxdyEdP5t6b1p71JpJ6xlMGdR4GXvlrcYm
+	 0v32QV/S3h4H1TshqzZc/uCYNEM+itjTNgCkunEw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388617AbfETMXb (ORCPT
+        id S2388628AbfETMXd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 08:23:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37960 "EHLO mail.kernel.org"
+        Mon, 20 May 2019 08:23:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37998 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388023AbfETMX3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 08:23:29 -0400
+        id S2388036AbfETMXc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 08:23:32 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9365B20675;
-        Mon, 20 May 2019 12:23:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2DDB920645;
+        Mon, 20 May 2019 12:23:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558355009;
-        bh=Vc76SIEwx46ODrXQqltdqyN2/mHnKSGbQiibyzx/1hQ=;
+        s=default; t=1558355011;
+        bh=Mitkq/mNc3PsR+GS8+sgxQ9ccjBADF3myYWbMFia4IM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=auzmw+dpH+8DZGb3Sh0ZSb5o1JdWQe9lIB8YznJUcGcMzJYgrBszwKCq0jvKXQxsZ
-         3BzY2SQrmY6oXkSIzOEZthXnw2pbcBoVP+bWofMbLfFqVGjFepCzAYYp2vU1bKsw4H
-         CSMRSlCe0M7TVvkMKd82rMgWDMa1aA3fqb5oxYZU=
+        b=V3HOHvc6Tv3bDbT8ycKagZ3wZU4cQN5xZ2cH+d4PP7KCQx2YESxK5PCh8MNKzN3eG
+         DsyH8nm3fjjhXcykQUBJ0wBRTSo6+1C9j5lH5IOBYNDa2PORH7XKP7cCt333lfYPqC
+         sfQxzzvsQltocJ1LUYXfulfEeM35INvteTOu/vuU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Gilad Ben-Yossef <gilad@benyossef.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>
-Subject: [PATCH 4.19 045/105] crypto: ccree - fix mem leak on error path
-Date:   Mon, 20 May 2019 14:13:51 +0200
-Message-Id: <20190520115250.133283526@linuxfoundation.org>
+        stable@vger.kernel.org, Nicolas Pitre <nicolas.pitre@linaro.org>,
+        Yifeng Li <tomli@tomli.me>
+Subject: [PATCH 4.19 063/105] tty: vt.c: Fix TIOCL_BLANKSCREEN console blanking if blankinterval == 0
+Date:   Mon, 20 May 2019 14:14:09 +0200
+Message-Id: <20190520115251.512795386@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190520115247.060821231@linuxfoundation.org>
 References: <20190520115247.060821231@linuxfoundation.org>
@@ -59,55 +59,69 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Gilad Ben-Yossef <gilad@benyossef.com>
+From: Yifeng Li <tomli@tomli.me>
 
-commit d574b707c873d6ef1a2a155f8cfcfecd821e9a2e upstream.
+commit 75ddbc1fb11efac87b611d48e9802f6fe2bb2163 upstream.
 
-Fix a memory leak on the error path of IV generation code.
+Previously, in the userspace, it was possible to use the "setterm" command
+from util-linux to blank the VT console by default, using the following
+command.
 
-Signed-off-by: Gilad Ben-Yossef <gilad@benyossef.com>
-Cc: stable@vger.kernel.org # v4.19+
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+According to the man page,
+
+> The force option keeps the screen blank even if a key is pressed.
+
+It was implemented by calling TIOCL_BLANKSCREEN.
+
+	case BLANKSCREEN:
+		ioctlarg = TIOCL_BLANKSCREEN;
+		if (ioctl(STDIN_FILENO, TIOCLINUX, &ioctlarg))
+			warn(_("cannot force blank"));
+		break;
+
+However, after Linux 4.12, this command ceased to work anymore, which is
+unexpected. By inspecting the kernel source, it shows that the issue was
+triggered by the side-effect from commit a4199f5eb809 ("tty: Disable
+default console blanking interval").
+
+The console blanking is implemented by function do_blank_screen() in vt.c:
+"blank_state" will be initialized to "blank_normal_wait" in con_init() if
+AND ONLY IF ("blankinterval" > 0). If "blankinterval" is 0, "blank_state"
+will be "blank_off" (== 0), and a call to do_blank_screen() will always
+abort, even if a forced blanking is required from the user by calling
+TIOCL_BLANKSCREEN, the console won't be blanked.
+
+This behavior is unexpected from a user's point-of-view, since it's not
+mentioned in any documentation. The setterm man page suggests it will
+always work, and the kernel comments in uapi/linux/tiocl.h says
+
+> /* keep screen blank even if a key is pressed */
+> #define TIOCL_BLANKSCREEN 14
+
+To fix it, we simply remove the "blank_state != blank_off" check, as
+pointed out by Nicolas Pitre, this check doesn't logically make sense
+and it's safe to remove.
+
+Suggested-by: Nicolas Pitre <nicolas.pitre@linaro.org>
+Fixes: a4199f5eb809 ("tty: Disable default console blanking interval")
+Signed-off-by: Yifeng Li <tomli@tomli.me>
+Cc: stable <stable@vger.kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/crypto/ccree/cc_ivgen.c |    9 +++------
- 1 file changed, 3 insertions(+), 6 deletions(-)
+ drivers/tty/vt/vt.c |    2 --
+ 1 file changed, 2 deletions(-)
 
---- a/drivers/crypto/ccree/cc_ivgen.c
-+++ b/drivers/crypto/ccree/cc_ivgen.c
-@@ -154,9 +154,6 @@ void cc_ivgen_fini(struct cc_drvdata *dr
+--- a/drivers/tty/vt/vt.c
++++ b/drivers/tty/vt/vt.c
+@@ -4155,8 +4155,6 @@ void do_blank_screen(int entering_gfx)
+ 		return;
  	}
  
- 	ivgen_ctx->pool = NULL_SRAM_ADDR;
--
--	/* release "this" context */
--	kfree(ivgen_ctx);
- }
+-	if (blank_state != blank_normal_wait)
+-		return;
+ 	blank_state = blank_off;
  
- /*!
-@@ -174,10 +171,12 @@ int cc_ivgen_init(struct cc_drvdata *drv
- 	int rc;
- 
- 	/* Allocate "this" context */
--	ivgen_ctx = kzalloc(sizeof(*ivgen_ctx), GFP_KERNEL);
-+	ivgen_ctx = devm_kzalloc(device, sizeof(*ivgen_ctx), GFP_KERNEL);
- 	if (!ivgen_ctx)
- 		return -ENOMEM;
- 
-+	drvdata->ivgen_handle = ivgen_ctx;
-+
- 	/* Allocate pool's header for initial enc. key/IV */
- 	ivgen_ctx->pool_meta = dma_alloc_coherent(device, CC_IVPOOL_META_SIZE,
- 						  &ivgen_ctx->pool_meta_dma,
-@@ -196,8 +195,6 @@ int cc_ivgen_init(struct cc_drvdata *drv
- 		goto out;
- 	}
- 
--	drvdata->ivgen_handle = ivgen_ctx;
--
- 	return cc_init_iv_sram(drvdata);
- 
- out:
+ 	/* don't blank graphics */
 
 
