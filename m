@@ -2,124 +2,223 @@ Return-Path: <SRS0=lq4r=TU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3975EC04AAC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:21:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5FF6C04AAF
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:21:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 09B3521479
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:21:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="ZIILwPW/"
+	by mail.kernel.org (Postfix) with ESMTP id 8B7A920815
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:21:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1558354883;
+	bh=jHnr8GD1aKn2Y3iOscmw3lW7VcwC0q2BQGI0AZcz3N8=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=sO38h+CJ2uMCk/rqU6Z6Xxsyw4HkAd3wwMszykShs4wzc/2Q96bHR0wgN5VdjiI1Y
+	 K0LSsMrDG3NKoN6UFE4OgQvYzLoQd4Iw5lrUKo6isKXjDb28muxPj0Ge3wgbSvKX2O
+	 vticXsXMpy0QzYJxWzw7HxAqvR0GQ2mJ1Op+MHWw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388132AbfETMVS (ORCPT
+        id S2388146AbfETMVW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 08:21:18 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:41188 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388116AbfETMVN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 08:21:13 -0400
-Received: by mail-pf1-f194.google.com with SMTP id q17so7139303pfq.8
-        for <linux-kernel@vger.kernel.org>; Mon, 20 May 2019 05:21:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google;
-        h=from:to:subject:date:message-id;
-        bh=UI2Ry4LzPxHOIisYc6asfzOtY8boyegN6334Ds6sCEI=;
-        b=ZIILwPW/GJbpNHIG2d6GJNUh+YC8INguJPg/D9EiCOET24LSnZ2HU2IclERXRMRbw/
-         uSaF3s4WN/heNoFQbThqG4Wg6gG86+2+/XewENDYMptRiJ6zDVQqMR4uxClQBdYiR4/e
-         RtClcu2Gmc+PTZ0Y8R2pFm/MVF5PMDGtBC72bosaGIQ1P+k+RSfUgWXERbsc8VeBXOm3
-         o5MOQemeQ8MmbuTjd9pC2XiLk5XiNfGJZM0J4K+2ZS7j2pkDa7tR2NdlpWvvcMAMB6dj
-         qnjyZO3S5tkGQ0sVSXw0LF8aKsW1vU0fTelaptg5kzu0UrtSLZn2l45hc5EVZHbJsjY8
-         ekEA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:subject:date:message-id;
-        bh=UI2Ry4LzPxHOIisYc6asfzOtY8boyegN6334Ds6sCEI=;
-        b=orSVY7bxJqN74pPJ0Oj8XfeuaHEIDtCtEC6h+bPfo67vXN5zEgvQO6EfKOK7tVrcVy
-         WQ0kM6F0lKbyM13hL6YHO7n6NNDO0+GWgfLU9jQFio3iQYGTvv65zA2euR6khOwoVTTA
-         MUlSsuPgjNQql0FNXYgut1NlQCJ5axuH1ZkoLz+h7+Z1/qnpVYJUR31wrBU7Bb+739y0
-         H1iOrtBfILgO+8BXa1LiWrivIz/WtqqVX8FSFfJYumoZGAXT79Rz6supkaGmXTs8clo2
-         n18C4dM29qrBg7UVbhDznRe68LMTwcoYuPDo/ojsxH5gdKOGeyiJI1/mRN67sK7a4Njb
-         SfjA==
-X-Gm-Message-State: APjAAAXKzbdge+e3OsGqGZcHJoYI62ZcYiT/TkbP6XoMO/QFRdCbt/fe
-        vzmrHPr72eoVFd/XDox0G+ZZww==
-X-Google-Smtp-Source: APXvYqylN7mBlUiyo1w+cBYmG/xrjqleVn9q2ejjZEJx8kMEyN8NtMLL9j6m9WUAjkDxTwcIBncIew==
-X-Received: by 2002:a62:604:: with SMTP id 4mr80517445pfg.38.1558354872449;
-        Mon, 20 May 2019 05:21:12 -0700 (PDT)
-Received: from buildserver-90.open-silicon.com ([114.143.65.226])
-        by smtp.googlemail.com with ESMTPSA id n27sm38137077pfb.129.2019.05.20.05.21.08
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Mon, 20 May 2019 05:21:11 -0700 (PDT)
-From:   Sagar Shrikant Kadam <sagar.kadam@sifive.com>
-To:     robh+dt@kernel.org, mark.rutland@arm.com, peter@korsgaard.com,
-        andrew@lunn.ch, palmer@sifive.com, paul.walmsley@sifive.com,
-        sagar.kadam@sifive.com, linux-i2c@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-riscv@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v4 0/3] Extend dt bindings to support I2C on sifive devices and a fix broken IRQ in polling mode.
-Date:   Mon, 20 May 2019 17:50:14 +0530
-Message-Id: <1558354817-12034-1-git-send-email-sagar.kadam@sifive.com>
-X-Mailer: git-send-email 1.9.1
+        Mon, 20 May 2019 08:21:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34852 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388127AbfETMVR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 08:21:17 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8BE8A214AE;
+        Mon, 20 May 2019 12:21:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1558354877;
+        bh=jHnr8GD1aKn2Y3iOscmw3lW7VcwC0q2BQGI0AZcz3N8=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=ug6Df0Mp2yG+iWnLHJ8u8tWZ/X4UuMO54vixjGvgS3b7LjDHkxHl+SG+28Uu28SHm
+         zkpq+PM0B6t3Ojl/hBeimYHQM8LVLRndjQZmZ/fvqZlCsbQeXB8rGiP4uuOYKwy/cj
+         qvtCgxfWwjSU9ny+mSJAzMkMAdeHD+f/oSoS2ZN0=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Marc Zyngier <marc.zyngier@arm.com>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Will Deacon <will.deacon@arm.com>
+Subject: [PATCH 4.19 013/105] arm64: arch_timer: Ensure counter register reads occur with seqlock held
+Date:   Mon, 20 May 2019 14:13:19 +0200
+Message-Id: <20190520115247.954016209@linuxfoundation.org>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190520115247.060821231@linuxfoundation.org>
+References: <20190520115247.060821231@linuxfoundation.org>
+User-Agent: quilt/0.66
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The patch is based on mainline v5.1 and extends DT-bindings for Opencore based I2C IP block reimplemented 
-in FU540 SoC, available on HiFive unleashed board (Rev A00), and also provides a workaround for broken IRQ
-which affects the already available I2C polling mode interface in mainline, for FU540-C000 chipsets. 
+From: Will Deacon <will.deacon@arm.com>
 
-The polling mode workaround patch fixes the CPU stall issue, when-ever i2c transfer are initiated.
+commit 75a19a0202db21638a1c2b424afb867e1f9a2376 upstream.
 
-This workaround checks if it's a FU540 chipset based on device tree information, and check's for open
-core's IF(interrupt flag) and TIP flags to break from the polling loop upon completion of transfer.
+When executing clock_gettime(), either in the vDSO or via a system call,
+we need to ensure that the read of the counter register occurs within
+the seqlock reader critical section. This ensures that updates to the
+clocksource parameters (e.g. the multiplier) are consistent with the
+counter value and therefore avoids the situation where time appears to
+go backwards across multiple reads.
 
-To test the patch, a PMOD-AD2 sensor is connected to HiFive Unleashed board over J1 connector, and 
-appropriate device node is added into board specific device tree as per the information provided in 
-dt-bindings in Documentation/devicetree/bindings/i2c/i2c-sifive.txt.
-Without this workaround, the CPU stall's infinitely.
+Extend the vDSO logic so that the seqlock critical section covers the
+read of the counter register as well as accesses to the data page. Since
+reads of the counter system registers are not ordered by memory barrier
+instructions, introduce dependency ordering from the counter read to a
+subsequent memory access so that the seqlock memory barriers apply to
+the counter access in both the vDSO and the system call paths.
 
-Busybox i2c utilities used to verify workaround : i2cdetect, i2cdump, i2cset, i2cget
+Cc: <stable@vger.kernel.org>
+Cc: Marc Zyngier <marc.zyngier@arm.com>
+Tested-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
+Link: https://lore.kernel.org/linux-arm-kernel/alpine.DEB.2.21.1902081950260.1662@nanos.tec.linutronix.de/
+Reported-by: Thomas Gleixner <tglx@linutronix.de>
+Signed-off-by: Will Deacon <will.deacon@arm.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
+---
+ arch/arm64/include/asm/arch_timer.h   |   33 +++++++++++++++++++++++++++++++--
+ arch/arm64/kernel/vdso/gettimeofday.S |   15 +++++++++++----
+ 2 files changed, 42 insertions(+), 6 deletions(-)
 
-Patch History:
+--- a/arch/arm64/include/asm/arch_timer.h
++++ b/arch/arm64/include/asm/arch_timer.h
+@@ -148,18 +148,47 @@ static inline void arch_timer_set_cntkct
+ 	isb();
+ }
+ 
++/*
++ * Ensure that reads of the counter are treated the same as memory reads
++ * for the purposes of ordering by subsequent memory barriers.
++ *
++ * This insanity brought to you by speculative system register reads,
++ * out-of-order memory accesses, sequence locks and Thomas Gleixner.
++ *
++ * http://lists.infradead.org/pipermail/linux-arm-kernel/2019-February/631195.html
++ */
++#define arch_counter_enforce_ordering(val) do {				\
++	u64 tmp, _val = (val);						\
++									\
++	asm volatile(							\
++	"	eor	%0, %1, %1\n"					\
++	"	add	%0, sp, %0\n"					\
++	"	ldr	xzr, [%0]"					\
++	: "=r" (tmp) : "r" (_val));					\
++} while (0)
++
+ static inline u64 arch_counter_get_cntpct(void)
+ {
++	u64 cnt;
++
+ 	isb();
+-	return arch_timer_reg_read_stable(cntpct_el0);
++	cnt = arch_timer_reg_read_stable(cntpct_el0);
++	arch_counter_enforce_ordering(cnt);
++	return cnt;
+ }
+ 
+ static inline u64 arch_counter_get_cntvct(void)
+ {
++	u64 cnt;
++
+ 	isb();
+-	return arch_timer_reg_read_stable(cntvct_el0);
++	cnt = arch_timer_reg_read_stable(cntvct_el0);
++	arch_counter_enforce_ordering(cnt);
++	return cnt;
+ }
+ 
++#undef arch_counter_enforce_ordering
++
+ static inline int arch_timer_arch_init(void)
+ {
+ 	return 0;
+--- a/arch/arm64/kernel/vdso/gettimeofday.S
++++ b/arch/arm64/kernel/vdso/gettimeofday.S
+@@ -73,6 +73,13 @@ x_tmp		.req	x8
+ 	movn	x_tmp, #0xff00, lsl #48
+ 	and	\res, x_tmp, \res
+ 	mul	\res, \res, \mult
++	/*
++	 * Fake address dependency from the value computed from the counter
++	 * register to subsequent data page accesses so that the sequence
++	 * locking also orders the read of the counter.
++	 */
++	and	x_tmp, \res, xzr
++	add	vdso_data, vdso_data, x_tmp
+ 	.endm
+ 
+ 	/*
+@@ -147,12 +154,12 @@ ENTRY(__kernel_gettimeofday)
+ 	/* w11 = cs_mono_mult, w12 = cs_shift */
+ 	ldp	w11, w12, [vdso_data, #VDSO_CS_MONO_MULT]
+ 	ldp	x13, x14, [vdso_data, #VDSO_XTIME_CLK_SEC]
+-	seqcnt_check fail=1b
+ 
+ 	get_nsec_per_sec res=x9
+ 	lsl	x9, x9, x12
+ 
+ 	get_clock_shifted_nsec res=x15, cycle_last=x10, mult=x11
++	seqcnt_check fail=1b
+ 	get_ts_realtime res_sec=x10, res_nsec=x11, \
+ 		clock_nsec=x15, xtime_sec=x13, xtime_nsec=x14, nsec_to_sec=x9
+ 
+@@ -211,13 +218,13 @@ realtime:
+ 	/* w11 = cs_mono_mult, w12 = cs_shift */
+ 	ldp	w11, w12, [vdso_data, #VDSO_CS_MONO_MULT]
+ 	ldp	x13, x14, [vdso_data, #VDSO_XTIME_CLK_SEC]
+-	seqcnt_check fail=realtime
+ 
+ 	/* All computations are done with left-shifted nsecs. */
+ 	get_nsec_per_sec res=x9
+ 	lsl	x9, x9, x12
+ 
+ 	get_clock_shifted_nsec res=x15, cycle_last=x10, mult=x11
++	seqcnt_check fail=realtime
+ 	get_ts_realtime res_sec=x10, res_nsec=x11, \
+ 		clock_nsec=x15, xtime_sec=x13, xtime_nsec=x14, nsec_to_sec=x9
+ 	clock_gettime_return, shift=1
+@@ -231,7 +238,6 @@ monotonic:
+ 	ldp	w11, w12, [vdso_data, #VDSO_CS_MONO_MULT]
+ 	ldp	x13, x14, [vdso_data, #VDSO_XTIME_CLK_SEC]
+ 	ldp	x3, x4, [vdso_data, #VDSO_WTM_CLK_SEC]
+-	seqcnt_check fail=monotonic
+ 
+ 	/* All computations are done with left-shifted nsecs. */
+ 	lsl	x4, x4, x12
+@@ -239,6 +245,7 @@ monotonic:
+ 	lsl	x9, x9, x12
+ 
+ 	get_clock_shifted_nsec res=x15, cycle_last=x10, mult=x11
++	seqcnt_check fail=monotonic
+ 	get_ts_realtime res_sec=x10, res_nsec=x11, \
+ 		clock_nsec=x15, xtime_sec=x13, xtime_nsec=x14, nsec_to_sec=x9
+ 
+@@ -253,13 +260,13 @@ monotonic_raw:
+ 	/* w11 = cs_raw_mult, w12 = cs_shift */
+ 	ldp	w12, w11, [vdso_data, #VDSO_CS_SHIFT]
+ 	ldp	x13, x14, [vdso_data, #VDSO_RAW_TIME_SEC]
+-	seqcnt_check fail=monotonic_raw
+ 
+ 	/* All computations are done with left-shifted nsecs. */
+ 	get_nsec_per_sec res=x9
+ 	lsl	x9, x9, x12
+ 
+ 	get_clock_shifted_nsec res=x15, cycle_last=x10, mult=x11
++	seqcnt_check fail=monotonic_raw
+ 	get_ts_clock_raw res_sec=x10, res_nsec=x11, \
+ 		clock_nsec=x15, nsec_to_sec=x9
+ 
 
-V3<->V4:
--Incorporated suggestions on v3 patch as follows:
--OCORES_FLAG_BROKEN_IRQ BIT position rectified.
--Updated BORKEN_IRQ flag checks such that if sifive device (Fu540-C000) is identified,then use polling mode as IRQ is broken.
-
-V2<->V3:
--Incorporated review comments on v2 patch as follows:
--Rectified compatibility string sequence with the most specific one at the first (dt bindings). 
--Moved interrupts and interrupt-parent under optional property list (dt-bindings).
--Updated reference to sifive-blocks-ip-versioning.txt and URL to IP repository used (dt-bindings).
--Removed example for i2c0 device node from binding doc (dt-bindings).
--Included sifive,i2c0 device under compatibility table in i2c-ocores driver (i2c-ocores).
--Updated polling mode hooks for SoC specific fix to handle broken IRQ (i2c-ocores).
-
-
-V1<->V2:
--Incorporate review comments from Andrew
--Extend dt bindings into i2c-ocores.txt instead of adding new file
--Rename SIFIVE_FLAG_POLL to OCORES_FLAG_BROKEN_IRQ
-
-V1:
--Update dt bindings for sifive i2c devices
--Fix broken IRQ affecting i2c polling mode interface.
-
-Sagar Shrikant Kadam (3):
-  dt-bindings: i2c: extend existing opencore bindings.
-  i2c-ocores: sifive: add support for i2c device on FU540-c000 SoC.
-  i2c-ocores: sifive: add polling mode workaround for FU540-C000 SoC
-
- .../devicetree/bindings/i2c/i2c-ocores.txt         |  7 +++-
- drivers/i2c/busses/i2c-ocores.c                    | 40 +++++++++++++++++++---
- 2 files changed, 41 insertions(+), 6 deletions(-)
-
--- 
-1.9.1
 
