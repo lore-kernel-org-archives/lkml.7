@@ -7,52 +7,52 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2A8EC04AAC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 22:01:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5EF5C04AAF
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 22:01:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 842AE216B7
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 22:01:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B7DCD216B7
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 22:01:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Z29uCy48"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ANP+z80r"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727095AbfETWBB (ORCPT
+        id S1727135AbfETWBD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 18:01:01 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:46815 "EHLO
+        Mon, 20 May 2019 18:01:03 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:36768 "EHLO
         mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726966AbfETWBA (ORCPT
+        with ESMTP id S1727057AbfETWBB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 18:01:00 -0400
-Received: by mail-pl1-f194.google.com with SMTP id r18so7324634pls.13
-        for <linux-kernel@vger.kernel.org>; Mon, 20 May 2019 15:01:00 -0700 (PDT)
+        Mon, 20 May 2019 18:01:01 -0400
+Received: by mail-pl1-f194.google.com with SMTP id d21so7353513plr.3
+        for <linux-kernel@vger.kernel.org>; Mon, 20 May 2019 15:01:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=AhecyL2qQDBC3MCxt/zq3Kbo+pVDpSa4FZM2PC318KM=;
-        b=Z29uCy48sLghmNEdhhMQV0TpJwla5O9kSHf07Kq1yjC7hxkrawcDlwcEoypi9ODm+q
-         n2wRZpZ1LIgMMfnJ6PFTBpPuoRTwNeP9123yeA2DpRntUT8mJfxDahavhiUY5qg6j34u
-         VtKZ+kG4sPm3iPzYFN/QPEO/zwnxl/apQ8iGI=
+        bh=f3Nfs/DRidR4E+JraOJ0QC9J7vTv8+QYMg2eI3k8SAk=;
+        b=ANP+z80ryOBxlhAoD1NQiuq5KGhSBLK6TIAyvMuecyDwGcEkfmwOXtJpj+Du/vSJ2j
+         AoChR4T/+6F80fFzk0rvnVB/EIndYuxLal4f8cCiaqLe05U0GduzYmbOk8ojE8Pj+Wg0
+         NIMYtysotE4SUuLRlDzMUmTxAtNV3uMR5Rlss=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=AhecyL2qQDBC3MCxt/zq3Kbo+pVDpSa4FZM2PC318KM=;
-        b=X51eJAbOtmed6mYzAJA8BygOWlNXpirt3Dn+S/U3KQCXGmHgkf80WMjHLOMWiMZRGJ
-         7EdhkXDic/CNub4h5PAcFveVQMZlTy7a3RWyZEfFVxy+//n1qyNyN7adFVMoCez6Smeo
-         Ld9M9guHSdyMrq6U67ALfdqqAl4KZt+o9XQVxrCtjPcMXqahb/dGKbPYNSamBoqcotlT
-         jT/aznlUppINLzi4eT7xOg9EyiEycmSxRD7m5JI7VEwkRRrEZDUGT3FMBJmfZHzBKGyd
-         qSpqWPtW2aI6sq8I+xA89m11Q44lOlMbnLWJVT3AvF6upODQzJWW8dI1H47l6Apx8MbN
-         NAKw==
-X-Gm-Message-State: APjAAAVuNZEDvRmDJOKRfeChLWkdY8b3Rvz1pQEXKApIM36ML8ixz4xN
-        ifUQBeaPwxxWOAVJHXO73/ooPA==
-X-Google-Smtp-Source: APXvYqw/+0hzgI+vOKWf7oG9dIM+CdVU0SsWOEYDBUI9M09FHn5cLFKmvyy5ff7yHB0Q6vF8xTU8XQ==
-X-Received: by 2002:a17:902:8ec4:: with SMTP id x4mr68111479plo.249.1558389659959;
-        Mon, 20 May 2019 15:00:59 -0700 (PDT)
+        bh=f3Nfs/DRidR4E+JraOJ0QC9J7vTv8+QYMg2eI3k8SAk=;
+        b=mkMhq/qQ96Gj+cqcFsw0sDQ26vNmWHKrncXM4uJXzK5mMyKVvULfHOTVifNH0Hu9Lx
+         HLXRi5UKDC/DSFzfEnbXe4U/RjJk/TcST1Dx/nW2X/xanq9YfkwqpWvznKAhmL3tX8U3
+         chQACGPaV/JbOe8LA/QhB/hvBsJW0yOVooHPuf72BYFeVE/mUTKtyJEUZJpcRQc3awAq
+         /QrJOINevaD/CBmEyoP4EZViXyqyW0bYikd+jFT7G+AN95OSy31uXVgSFaBONI/M2sOR
+         xIDOU5kg525GpRw8rYMGJc1I3w6QUHa8v44fM7vsSr2cgkKh9yYHijIDmIvYRpm00+zS
+         DWaQ==
+X-Gm-Message-State: APjAAAVn231353TVikY8kes8DBT2vu/5i5OYbLq/ARlwwvZvxnFHKDSA
+        IpSsD1PARTCHf/nj3vWdcXiD+g==
+X-Google-Smtp-Source: APXvYqw+HZyUvC1Bqlvj8gcVb1cFFjSgW7AgvPr0buTJwsw1fzt8o6bbctJfe0WWJvLhJCv64ngozw==
+X-Received: by 2002:a17:902:c85:: with SMTP id 5mr4274125plt.172.1558389661271;
+        Mon, 20 May 2019 15:01:01 -0700 (PDT)
 Received: from localhost ([2620:15c:202:1:75a:3f6e:21d:9374])
-        by smtp.gmail.com with ESMTPSA id u66sm21907479pfb.76.2019.05.20.15.00.59
+        by smtp.gmail.com with ESMTPSA id g17sm8484562pfb.56.2019.05.20.15.01.00
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 20 May 2019 15:00:59 -0700 (PDT)
+        Mon, 20 May 2019 15:01:00 -0700 (PDT)
 From:   Matthias Kaehlcke <mka@chromium.org>
 To:     Heiko Stuebner <heiko@sntech.de>, Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>
@@ -61,9 +61,9 @@ Cc:     linux-arm-kernel@lists.infradead.org,
         linux-kernel@vger.kernel.org,
         Douglas Anderson <dianders@chromium.org>,
         Matthias Kaehlcke <mka@chromium.org>
-Subject: [PATCH v2 2/3] ARM: dts: rockchip: Use the GPU to cool CPU thermal zone of veyron mickey
-Date:   Mon, 20 May 2019 15:00:50 -0700
-Message-Id: <20190520220051.54847-2-mka@chromium.org>
+Subject: [PATCH v2 3/3] ARM: dts: rockchip: Configure the GPU thermal zone for mickey
+Date:   Mon, 20 May 2019 15:00:51 -0700
+Message-Id: <20190520220051.54847-3-mka@chromium.org>
 X-Mailer: git-send-email 2.21.0.1020.gf2820cf01a-goog
 In-Reply-To: <20190520220051.54847-1-mka@chromium.org>
 References: <20190520220051.54847-1-mka@chromium.org>
@@ -75,66 +75,107 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On rk3288 the CPU and GPU temperatures are correlated. Limit the GPU
-frequency on veyron mickey to 400 MHz for CPU temperatures >= 65°C
-and to 300 MHz for CPU temperatures >= 85°C.
+mickey crams a lot of hardware into a tiny package, which requires
+more aggressive thermal throttling than for devices with a larger
+footprint. Configure the GPU thermal zone to throttle the GPU
+progressively at temperatures >= 60°C. Heat dissipated by the
+CPUs also affects the GPU temperature, hence we cap the CPU
+frequency to 1.4 GHz for temperatures above 65°C. Further throttling
+of the CPUs may be performed by the CPU thermal zone.
 
-This matches the configuration of the downstream Chrome OS 3.14 kernel,
-the 'official' kernel for mickey.
+The configuration matches that of the downstream Chrome OS 3.14
+kernel, the 'official' kernel for mickey.
 
 Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
 ---
 Changes in v2:
-- added 'cpu_warm_limit_gpu' to throttle GPU for T.cpu >= 65°C
-- removed comment saying that GPU isn't throttled beyond 400 MHz
-  based on CPU temperature
-- updated commit message
+- specify all CPUs as cooling devices
+- s/downstram/downstream/ in commit message
 
 Note: this patch depends on "ARM: dts: rockchip: Add #cooling-cells
 entry for rk3288 GPU" (https://lore.kernel.org/patchwork/patch/1075005/)
 ---
- arch/arm/boot/dts/rk3288-veyron-mickey.dts | 14 +++++++++++---
- 1 file changed, 11 insertions(+), 3 deletions(-)
+ arch/arm/boot/dts/rk3288-veyron-mickey.dts | 67 ++++++++++++++++++++++
+ 1 file changed, 67 insertions(+)
 
 diff --git a/arch/arm/boot/dts/rk3288-veyron-mickey.dts b/arch/arm/boot/dts/rk3288-veyron-mickey.dts
-index 52f6abc22291..34797abe3403 100644
+index 34797abe3403..945e80801292 100644
 --- a/arch/arm/boot/dts/rk3288-veyron-mickey.dts
 +++ b/arch/arm/boot/dts/rk3288-veyron-mickey.dts
-@@ -75,9 +75,7 @@
- 	cooling-maps {
- 		/*
- 		 * After 1st level, throttle the CPU down to as low as 1.4 GHz
--		 * and don't let the GPU go faster than 400 MHz.  Note that we
--		 * won't throttle the GPU lower than 400 MHz due to CPU
--		 * heat--we'll let the GPU do the rest itself.
-+		 * and don't let the GPU go faster than 400 MHz.
- 		 */
- 		cpu_warm_limit_cpu {
- 			trip = <&cpu_alert_warm>;
-@@ -86,6 +84,10 @@
- 					 <&cpu2 THERMAL_NO_LIMIT 4>,
- 					 <&cpu3 THERMAL_NO_LIMIT 4>;
- 		};
-+		cpu_warm_limit_gpu {
-+			trip = <&cpu_alert_warm>;
-+			cooling-device = <&gpu 1 1>;
-+		};
- 
- 		/*
- 		 * Add some discrete steps to help throttling system deal
-@@ -125,6 +127,12 @@
- 					 <&cpu2 8 THERMAL_NO_LIMIT>,
- 					 <&cpu3 8 THERMAL_NO_LIMIT>;
- 		};
-+
-+		/* At very hot, don't let GPU go over 300 MHz */
-+		cpu_very_hot_limit_gpu {
-+			trip = <&cpu_alert_very_hot>;
-+			cooling-device = <&gpu 2 2>;
-+		};
+@@ -136,6 +136,73 @@
  	};
  };
  
++&gpu_thermal {
++	/delete-node/ trips;
++	/delete-node/ cooling-maps;
++
++	trips {
++		gpu_alert_warmish: gpu_alert_warmish {
++			temperature = <60000>; /* millicelsius */
++			hysteresis = <2000>; /* millicelsius */
++			type = "passive";
++		};
++		gpu_alert_warm: gpu_alert_warm {
++			temperature = <65000>; /* millicelsius */
++			hysteresis = <2000>; /* millicelsius */
++			type = "passive";
++		};
++		gpu_alert_hotter: gpu_alert_hotter {
++			temperature = <84000>; /* millicelsius */
++			hysteresis = <2000>; /* millicelsius */
++			type = "passive";
++		};
++		gpu_alert_very_very_hot: gpu_alert_very_very_hot {
++			temperature = <86000>; /* millicelsius */
++			hysteresis = <2000>; /* millicelsius */
++			type = "passive";
++		};
++		gpu_crit: gpu_crit {
++			temperature = <90000>; /* millicelsius */
++			hysteresis = <2000>; /* millicelsius */
++			type = "critical";
++		};
++	};
++
++	cooling-maps {
++		/* After 1st level throttle the GPU down to as low as 400 MHz */
++		gpu_warmish_limit_gpu {
++			trip = <&gpu_alert_warmish>;
++			cooling-device = <&gpu THERMAL_NO_LIMIT 1>;
++		};
++
++		/*
++		 * Slightly after we throttle the GPU, we'll also make sure that
++		 * the CPU can't go faster than 1.4 GHz.  Note that we won't
++		 * throttle the CPU lower than 1.4 GHz due to GPU heat--we'll
++		 * let the CPU do the rest itself.
++		 */
++		gpu_warm_limit_cpu {
++			trip = <&gpu_alert_warm>;
++			cooling-device = <&cpu0 4 4>,
++					 <&cpu1 4 4>,
++					 <&cpu2 4 4>,
++					 <&cpu3 4 4>;
++		};
++
++		/* When hot, GPU goes down to 300 MHz */
++		gpu_hotter_limit_gpu {
++			trip = <&gpu_alert_hotter>;
++			cooling-device = <&gpu 2 2>;
++		};
++
++		/* When really hot, don't let GPU go _above_ 300 MHz */
++		gpu_very_very_hot_limit_gpu {
++			trip = <&gpu_alert_very_very_hot>;
++			cooling-device = <&gpu 2 THERMAL_NO_LIMIT>;
++		};
++	};
++};
++
+ &i2c2 {
+ 	status = "disabled";
+ };
 -- 
 2.21.0.1020.gf2820cf01a-goog
 
