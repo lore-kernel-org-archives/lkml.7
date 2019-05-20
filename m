@@ -2,32 +2,31 @@ Return-Path: <SRS0=lq4r=TU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D696DC04AAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 15:06:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3374DC072A4
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 15:06:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AB6FF20856
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 15:06:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0336420863
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 15:06:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="rQhfQbp2"
+	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="c739CFNQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388154AbfETPGq (ORCPT
+        id S2387976AbfETPGm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 11:06:46 -0400
-Received: from vps.xff.cz ([195.181.215.36]:54782 "EHLO vps.xff.cz"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733010AbfETPGm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 20 May 2019 11:06:42 -0400
+Received: from vps.xff.cz ([195.181.215.36]:54742 "EHLO vps.xff.cz"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727108AbfETPGl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 11:06:41 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=megous.com; s=mail;
-        t=1558364800; bh=rVjMF+TqkJ/FvHNWAdCJqFuT4fG2WrGc2hjCFSuXWa4=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rQhfQbp2x63PPAn7Ojxchslau4MFbCKFqSHsg+upPxRhrIHhl0cWE5xDLMytcKjah
-         eC+OGNdhGc5TpOp0WYcI/LFwf7bQ8+G90ZEyos72XJeLKZUZ4HpolRi6dhVJSOJrxQ
-         0c537OvoVhWw3b4n4YCIaW6tILJTT/rphDhUaayA=
+        t=1558364799; bh=MOIiLhQ+IjpqYl5yHzKvxPsRQBzGIbHz8ojgz49ajzM=;
+        h=From:To:Cc:Subject:Date:From;
+        b=c739CFNQlY0oMPgSRJ6Gd+ppWrHcU9ifdJ48imf5TZ4akgkyrfOflPcrue9VhteFO
+         ZqNzzuIzVhoyOMOguR3sQcwhxTpxHpUWAU9zheMWLMTve+3VME2HcaUJlM5wcyUB0i
+         NIGfuNVaPkXChDZBBhR7Hb/fH1VvUxQKeMrRAS/E=
 From:   megous@megous.com
 To:     Chen-Yu Tsai <wens@kernel.org>,
         Maxime Ripard <maxime.ripard@bootlin.com>,
@@ -37,16 +36,14 @@ To:     Chen-Yu Tsai <wens@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Yong Deng <yong.deng@magewell.com>,
         Mauro Carvalho Chehab <mchehab@kernel.org>
-Cc:     Chen-Yu Tsai <wens@csie.org>, devicetree@vger.kernel.org,
+Cc:     Ondrej Jirman <megous@megous.com>, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org,
         Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
-        linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-media@vger.kernel.org, Ondrej Jirman <megous@megous.com>
-Subject: [PATCH v2 3/3] ARM: dts: sun8i: a83t: Add device node for CSI (Camera Sensor Interface)
-Date:   Mon, 20 May 2019 17:06:37 +0200
-Message-Id: <20190520150637.23557-4-megous@megous.com>
-In-Reply-To: <20190520150637.23557-1-megous@megous.com>
-References: <20190520150637.23557-1-megous@megous.com>
+        Chen-Yu Tsai <wens@csie.org>, linux-clk@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
+Subject: [PATCH v2 0/3] ARM: sun8i: a83t: Support Camera Sensor Interface controller
+Date:   Mon, 20 May 2019 17:06:34 +0200
+Message-Id: <20190520150637.23557-1-megous@megous.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -54,71 +51,71 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chen-Yu Tsai <wens@csie.org>
+From: Ondrej Jirman <megous@megous.com>
 
-The A83T SoC has a camera sensor interface (known as CSI in Allwinner
-lingo), which is similar to the one found on the A64 and H3. The only
-difference seems to be that support of MIPI CSI through a connected
-MIPI CSI-2 bridge.
+This is a re-send of Chen-Yu's A83T CSI patch series with review tags
+applied and removed address/size cells from csi_in port. Already applied
+patches from v1  were dropped.
 
-Add a device node for it, and pinctrl nodes for the commonly used MCLK
-and 8-bit parallel interface. The property /omit-if-no-ref/ is added to
-the pinctrl nodes to keep the device tree blob size down if they are
-unused.
+The series is ready to be merged:
 
-Signed-off-by: Chen-Yu Tsai <wens@csie.org>
-Signed-off-by: Ondrej Jirman <megous@megous.com>
----
- arch/arm/boot/dts/sun8i-a83t.dtsi | 29 +++++++++++++++++++++++++++++
- 1 file changed, 29 insertions(+)
+  Patch 1 and 2 via sunxi tree
+  Patch 3 via media tree
 
-diff --git a/arch/arm/boot/dts/sun8i-a83t.dtsi b/arch/arm/boot/dts/sun8i-a83t.dtsi
-index 392b0cabbf0d..ada6d08bc540 100644
---- a/arch/arm/boot/dts/sun8i-a83t.dtsi
-+++ b/arch/arm/boot/dts/sun8i-a83t.dtsi
-@@ -679,6 +679,20 @@
- 			#interrupt-cells = <3>;
- 			#gpio-cells = <3>;
- 
-+			/omit-if-no-ref/
-+			csi_8bit_parallel_pins: csi-8bit-parallel-pins {
-+				pins = "PE0", "PE2", "PE3", "PE6", "PE7",
-+				       "PE8", "PE9", "PE10", "PE11",
-+				       "PE12", "PE13";
-+				function = "csi";
-+			};
-+
-+			/omit-if-no-ref/
-+			csi_mclk_pin: csi-mclk-pin {
-+				pins = "PE1";
-+				function = "csi";
-+			};
-+
- 			emac_rgmii_pins: emac-rgmii-pins {
- 				pins = "PD2", "PD3", "PD4", "PD5", "PD6", "PD7",
- 				       "PD11", "PD12", "PD13", "PD14", "PD18",
-@@ -997,6 +1011,21 @@
- 			interrupts = <GIC_PPI 9 (GIC_CPU_MASK_SIMPLE(8) | IRQ_TYPE_LEVEL_HIGH)>;
- 		};
- 
-+		csi: camera@1cb0000 {
-+			compatible = "allwinner,sun8i-a83t-csi";
-+			reg = <0x01cb0000 0x1000>;
-+			interrupts = <GIC_SPI 84 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&ccu CLK_BUS_CSI>,
-+				 <&ccu CLK_CSI_SCLK>,
-+				 <&ccu CLK_DRAM_CSI>;
-+			clock-names = "bus", "mod", "ram";
-+			resets = <&ccu RST_BUS_CSI>;
-+			status = "disabled";
-+
-+			csi_in: port {
-+			};
-+		};
-+
- 		hdmi: hdmi@1ee0000 {
- 			compatible = "allwinner,sun8i-a83t-dw-hdmi";
- 			reg = <0x01ee0000 0x10000>;
+v2:
+- dropped address/size cells from csi_in port
+- added review tags
+
+Please take a look and merge.
+
+Thank you,
+	Ondrej
+
+--------------------------
+Original description:
+
+Hi everyone,
+
+This series adds support for the camera sensor interface controller
+found on the Allwinner A83T SoC. The controller is similar to the one
+found on  the H3, with the addition of a MIPI CSI-2 interface. However,
+this series only supports parallel and BT.656 interfaces, based on the
+existing driver.
+
+Patch 1 adds an undocumented clock parent of the CSI MCLK. This was
+found after finding the default value to sometimes work and sometimes
+not, and then comparing against BSP code.
+
+Patch 2 adds a compatible string for the A83T variant.
+
+Patch 3 adds support for the A83T variant to the existing sun6i-csi
+driver.
+
+Patch 4 adds a device node for the controller, as well as commonly
+used pin muxing options.
+
+Patch 5 adds a pin muxing option for I2C1 on the PE pins, used in
+conjunction with the CSI pins.
+
+Patch 6 provides an example usage of the CSI controller: the Bananapi M3
+with its camera module attached.
+
+Please have a look.
+
+Regards
+ChenYu
+
+Chen-Yu Tsai (3):
+  dt-bindings: media: sun6i-csi: Add compatible string for A83T variant
+  media: sun6i: Support A83T variant
+  ARM: dts: sun8i: a83t: Add device node for CSI (Camera Sensor
+    Interface)
+
+ .../devicetree/bindings/media/sun6i-csi.txt   |  1 +
+ arch/arm/boot/dts/sun8i-a83t.dtsi             | 29 +++++++++++++++++++
+ .../platform/sunxi/sun6i-csi/sun6i_csi.c      |  1 +
+ 3 files changed, 31 insertions(+)
+
 -- 
 2.21.0
 
