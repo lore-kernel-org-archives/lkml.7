@@ -2,81 +2,113 @@ Return-Path: <SRS0=lq4r=TU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7DB3C04AAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 11:31:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 777ADC04AAF
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 11:32:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AE80120644
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 11:31:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4AF2220656
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 11:32:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="URK3N/1k"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732860AbfETLbv (ORCPT
+        id S1732890AbfETLcc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 07:31:51 -0400
-Received: from mail-vk1-f193.google.com ([209.85.221.193]:34579 "EHLO
-        mail-vk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730302AbfETLbv (ORCPT
+        Mon, 20 May 2019 07:32:32 -0400
+Received: from mail-pg1-f179.google.com ([209.85.215.179]:37827 "EHLO
+        mail-pg1-f179.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730274AbfETLcc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 07:31:51 -0400
-Received: by mail-vk1-f193.google.com with SMTP id d7so3768859vkf.1;
-        Mon, 20 May 2019 04:31:50 -0700 (PDT)
+        Mon, 20 May 2019 07:32:32 -0400
+Received: by mail-pg1-f179.google.com with SMTP id n27so4077427pgm.4
+        for <linux-kernel@vger.kernel.org>; Mon, 20 May 2019 04:32:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=2S9MAivwF7zxfimY+INJLOlqiV39ooQLNnYsMx0gRf8=;
+        b=URK3N/1kJyHHrmd+w0Bx3YnOfa9G/JKqnZjMFsmCW22W5lxDFJUrmiKylqdW5OiP7c
+         ZCxvYv4/7R2tcTo3I6DGZLRXFWNycsWZN/9J88ws7aMlzqo529IQ0Uu8QzwNVDDtmep4
+         rRZOvw5qMETo0vhB+ZRq09iNTfSjza+IF4DjBHK7K0myRamsPRFiu8vDdP5kNz5FJDtO
+         MDFlProPb/qyG34QmYYrKQcvc+OnM06MqNO0gB2M8ml0xVGeNrRe4UFBdiRB0XtK01Ng
+         gP1+SdSm2Xa2e/Ao7G1sHkL56Heorsn+ssZqRfsHmTauEq1vDwgsbUmISsw2EDfUgNs1
+         AfAA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=lABXrm/svo69ZtFS6Y2mnzVSLQSMWNtyd1WWYIE0BkA=;
-        b=AvzOmSlA1JvYO1RLYA4GCwDTccV6nc0dnu7gHrrgBN5J49kOn0soPtYVXO8naK6uwi
-         QzfKvDxUV/kF5JpCWGffAjmFTUDKXK4+Vf0raEGGpxS9fma/Ywq2vFrd+G31CcmSLGYW
-         DH+OFm2+R3S1SzhKp1CxsxTDjtHGMVRSs96HONENe/ZF0d/1p9zVtqcDaKfjYf2sYLFT
-         OQeFO+BIcD1NIJETiowAuqkI6bpqDMUCRXqRfiJQ3qY0t3m3IBkuax2gGJAOnwNIpCCZ
-         U2LsWXYYjbUZr+loadwvAcUTCa7uHtzo5mA4LnfOcl0olrJybCwCSkfsQ9nFXqTFIJg2
-         o/Sg==
-X-Gm-Message-State: APjAAAUkwdUy6T2DTq36KlULCaibrp+oW/v7ZxcyKx4i5nSuxKs5Ia4o
-        gA9G50sQtarK9IsODXvAmS0SyMF3eFJvzHyX6KE=
-X-Google-Smtp-Source: APXvYqwsNHtkxGyBmPVDINeMxQ1OYovTV/YHuXmqDktOe6kWI14vRPeIuwNupkAD7TNMWyJyyWT4H5UQAaGfE2EqfR4=
-X-Received: by 2002:a1f:2fd2:: with SMTP id v201mr6282374vkv.83.1558351910292;
- Mon, 20 May 2019 04:31:50 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190520093446.30895-1-wsa+renesas@sang-engineering.com> <20190520093446.30895-4-wsa+renesas@sang-engineering.com>
-In-Reply-To: <20190520093446.30895-4-wsa+renesas@sang-engineering.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Mon, 20 May 2019 13:31:38 +0200
-Message-ID: <CAMuHMdXJmYUq37fyPQscrYpnZcxEncCm0soi8qdGEqa+NYmHng@mail.gmail.com>
-Subject: Re: [PATCH RESEND 3/3] regulator: da9063: platform_data is gone,
- depend on OF
-To:     Wolfram Sang <wsa+renesas@sang-engineering.com>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Mark Brown <broonie@kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Steve Twiss <stwiss.opensource@diasemi.com>,
-        Simon Horman <horms+renesas@verge.net.au>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=2S9MAivwF7zxfimY+INJLOlqiV39ooQLNnYsMx0gRf8=;
+        b=d/se2nKgBIaQ0YJns3J5PZXs2+V4Xlf0afpWBoLHSmgjBCJ54ykJBKYU43guoPRAA0
+         oUnuuOwy+HB64qf3r0RzlKNSSYa4lnFkMJFrS6W/ZOmD1yfrd4hWFviYOn+VBX+91DS3
+         Y6k9lZLA0Tsg+Jk5nORW5+rQm+e4g/faULUWH82p87o/Dycmzu8eKPOAFxI4UfSHgu4o
+         bQWFXVPxjxRxOcjOJllFqfRumgOlqzfEbrOmWdauVv1JeJW48dxeFTQLqawLRPaNQKXx
+         F/JVRaC6KFU/zoHR2XnpdUt96+PnPaLVd8YDBVBMaHOEd5uEqdB65+S7gnWDukpc7NGj
+         ThKg==
+X-Gm-Message-State: APjAAAXJlGv6gMT4x/XXMZ7jWYWmCK13IZf8SlAyYlxDAAffysX2QO/Z
+        p53Nwke/EXmsqpw/TOqxc0UXZg==
+X-Google-Smtp-Source: APXvYqxnQKIpFWVcVI13NBnHjPEFJoPccFai4k2DvNkDwrNTAcUlVFnQw/aT/Mj6kEAvFmc3w3SFDA==
+X-Received: by 2002:a62:604:: with SMTP id 4mr80275260pfg.38.1558351951343;
+        Mon, 20 May 2019 04:32:31 -0700 (PDT)
+Received: from baolinwangubtpc.spreadtrum.com ([117.18.48.102])
+        by smtp.gmail.com with ESMTPSA id z124sm21310020pfz.116.2019.05.20.04.32.26
+        (version=TLS1 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Mon, 20 May 2019 04:32:30 -0700 (PDT)
+From:   Baolin Wang <baolin.wang@linaro.org>
+To:     dan.j.williams@intel.com, vkoul@kernel.org
+Cc:     thierry.reding@gmail.com, jonathanh@nvidia.com,
+        linux-tegra@vger.kernel.org, shawnguo@kernel.org,
+        s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
+        linux-imx@nxp.com, wsa+renesas@sang-engineering.com,
+        jroedel@suse.de, vincent.guittot@linaro.org,
+        baolin.wang@linaro.org, dmaengine@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: [PATCH v2 0/8] Add matching device node validation in DMA engine core
+Date:   Mon, 20 May 2019 19:32:13 +0800
+Message-Id: <cover.1558351667.git.baolin.wang@linaro.org>
+X-Mailer: git-send-email 1.7.9.5
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 20, 2019 at 12:46 PM Wolfram Sang
-<wsa+renesas@sang-engineering.com> wrote:
-> With OF being the only configuration possibility left, depend on it to
-> simplify some code.
->
-> Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
-> Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
-> Acked-by: Steve Twiss <stwiss.opensource@diasemi.com>
-> Tested-by: Steve Twiss <stwiss.opensource@diasemi.com>
+Hi,
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+This patch set adds a device node validation in DMA engine core, that will
+help some drivers to remove the duplicate device node validation in each
+driver.
 
-Gr{oetje,eeting}s,
+Any comments are welcome. Thanks.
 
-                        Geert
+Changes from v1:
+ - Add test-by tag from Peter.
+ - Use dma_request_channel instead of __dma_request_channel() for
+ the fuse-tegra20.c driver to keep bisectable.
+
+Baolin Wang (8):
+  dmaengine: Add matching device node validation in
+    __dma_request_channel()
+  soc: tegra: fuse: Use dma_request_channel instead of
+    __dma_request_channel()
+  dmaengine: imx-sdma: Let the core do the device node validation
+  dmaengine: dma-jz4780: Let the core do the device node validation
+  dmaengine: mmp_tdma: Let the core do the device node validation
+  dmaengine: mxs-dma: Let the core do the device node validation
+  dmaengine: sh: rcar-dmac: Let the core do the device node validation
+  dmaengine: sh: usb-dmac: Let the core do the device node validation
+
+ drivers/dma/dma-jz4780.c              |    7 ++-----
+ drivers/dma/dmaengine.c               |   10 ++++++++--
+ drivers/dma/imx-sdma.c                |    9 ++-------
+ drivers/dma/mmp_tdma.c                |   10 ++--------
+ drivers/dma/mxs-dma.c                 |    8 ++------
+ drivers/dma/of-dma.c                  |    4 ++--
+ drivers/dma/sh/rcar-dmac.c            |    6 +++---
+ drivers/dma/sh/usb-dmac.c             |    6 ++----
+ drivers/soc/tegra/fuse/fuse-tegra20.c |    2 +-
+ include/linux/dmaengine.h             |   12 ++++++++----
+ include/linux/platform_data/dma-imx.h |    1 -
+ 11 files changed, 32 insertions(+), 43 deletions(-)
 
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+1.7.9.5
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
