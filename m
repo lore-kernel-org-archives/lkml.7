@@ -2,233 +2,137 @@ Return-Path: <SRS0=lq4r=TU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 679E9C04AAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 05:55:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12A3AC04AAF
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 05:56:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3AF8920815
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 05:55:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E4F7420815
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 05:56:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730212AbfETFzn (ORCPT
+        id S1730348AbfETF4h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 01:55:43 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:42014 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725829AbfETFzm (ORCPT
+        Mon, 20 May 2019 01:56:37 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:49012 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725829AbfETF4g (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 01:55:42 -0400
-Received: by mail-pl1-f196.google.com with SMTP id x15so6168019pln.9
-        for <linux-kernel@vger.kernel.org>; Sun, 19 May 2019 22:55:42 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=rG3c0xkdVvjC04ApwJQuMwZR/e4oemfgtIYmPM9Dho0=;
-        b=kWHmSi2RIhH46sljfwqmszy+1DGoJjQpOvGOSsz+Thk5leljI1kuqmkVL1HrzqRh2P
-         wJF5WQKK5V+pNWnMNgoi14T+DVzFWax87OfhfzP5kHaflmazPtFBbTM/YnW7ZyJ18G2+
-         wo0k17zHTxvf/kmOvgscBccvmyZULamX7a2eRc9eTTZ08/6/b3cdM2hDDVGFu1LG7R3I
-         oqPZnJM2Umbq24uB9NBhfa1RdEl9DSg7AZeQEm7B//ybR+zmlAVSB685wTIQ/B0d/s1k
-         IktfDTZTCT9xT12/PJ9UeNhR3z55vK0f8vQjF2pODcngmC3P7iyBmmlv/tGJrIUx/RG3
-         7daQ==
-X-Gm-Message-State: APjAAAU8G/RgoWGW+OlRYlDruVN9//+3Y7GZnpDuhjTvUNd0sbD2LU4F
-        vdeAcsxe9kVhn+00Mp1nFJ7ETdBzj8E=
-X-Google-Smtp-Source: APXvYqxbKEJ45oGZXOPGTuLMSU/8vX87ERRH8Fci9NzJJBt7aHURs7Hh9UeScppNXZKGPbhpcnD+Cw==
-X-Received: by 2002:a17:902:7082:: with SMTP id z2mr50701635plk.176.1558331742116;
-        Sun, 19 May 2019 22:55:42 -0700 (PDT)
-Received: from localhost.localdomain ([122.177.184.216])
-        by smtp.gmail.com with ESMTPSA id d15sm49144449pfm.186.2019.05.19.22.55.38
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 19 May 2019 22:55:41 -0700 (PDT)
-Subject: Re: [RFC PATCH] vmcore: Add a kernel cmdline device_dump_limit
-To:     Kairui Song <kasong@redhat.com>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "kexec@lists.infradead.org" <kexec@lists.infradead.org>,
-        "David S . Miller" <davem@davemloft.net>,
-        Rahul Lakkireddy <rahul.lakkireddy@chelsio.com>,
-        Eric Biederman <ebiederm@xmission.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Dave Young <dyoung@redhat.com>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Ganesh Goudar <ganeshgr@chelsio.com>
-References: <20190510102051.25647-1-kasong@redhat.com>
- <4f453ec6-67a6-2c8f-2aab-acb54ae55645@redhat.com>
- <CACPcB9d-h75MEMrjREe7sMvjRqvxBhGxaeR3_k7An2-BDsDy4Q@mail.gmail.com>
-From:   Bhupesh Sharma <bhsharma@redhat.com>
-Message-ID: <1b170096-b47b-2178-b27a-c4ec351f564d@redhat.com>
-Date:   Mon, 20 May 2019 11:25:36 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.2.1
+        Mon, 20 May 2019 01:56:36 -0400
+Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4K5qD14128076
+        for <linux-kernel@vger.kernel.org>; Mon, 20 May 2019 01:56:35 -0400
+Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2skmwakcfr-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Mon, 20 May 2019 01:56:35 -0400
+Received: from localhost
+        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <bharata@linux.ibm.com>;
+        Mon, 20 May 2019 06:56:33 +0100
+Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
+        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Mon, 20 May 2019 06:56:30 +0100
+Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
+        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x4K5uTST24838354
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 20 May 2019 05:56:29 GMT
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id C65D4A404D;
+        Mon, 20 May 2019 05:56:29 +0000 (GMT)
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 5FDF4A4057;
+        Mon, 20 May 2019 05:56:28 +0000 (GMT)
+Received: from in.ibm.com (unknown [9.124.35.55])
+        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Mon, 20 May 2019 05:56:28 +0000 (GMT)
+Date:   Mon, 20 May 2019 11:26:22 +0530
+From:   Bharata B Rao <bharata@linux.ibm.com>
+To:     Nicholas Piggin <npiggin@gmail.com>
+Cc:     Michael Ellerman <mpe@ellerman.id.au>, aneesh.kumar@linux.ibm.com,
+        bharata@linux.vnet.ibm.com, linux-kernel@vger.kernel.org,
+        linux-next@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        srikanth <sraithal@linux.vnet.ibm.com>
+Subject: Re: PROBLEM: Power9: kernel oops on memory hotunplug from ppc64le
+ guest
+Reply-To: bharata@linux.ibm.com
+References: <16a7a635-c592-27e2-75b4-d02071833278@linux.vnet.ibm.com>
+ <20190518141434.GA22939@in.ibm.com>
+ <878sv1993k.fsf@concordia.ellerman.id.au>
+ <20190520042533.GB22939@in.ibm.com>
+ <1558327521.633yjtl8ki.astroid@bobo.none>
 MIME-Version: 1.0
-In-Reply-To: <CACPcB9d-h75MEMrjREe7sMvjRqvxBhGxaeR3_k7An2-BDsDy4Q@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1558327521.633yjtl8ki.astroid@bobo.none>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-TM-AS-GCONF: 00
+x-cbid: 19052005-0020-0000-0000-0000033E71BD
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19052005-0021-0000-0000-0000219145CD
+Message-Id: <20190520055622.GC22939@in.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-20_03:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=2 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1905200043
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 05/16/2019 01:49 PM, Kairui Song wrote:
-> On Fri, May 10, 2019 at 7:17 PM Bhupesh Sharma <bhsharma@redhat.com> wrote:
->>
->> Hi Kairui,
->>
->> Thanks for the patch. Please see my comments in-line:
->>
->> On 05/10/2019 03:50 PM, Kairui Song wrote:
->>> Device dump allow drivers to add device related dump data to vmcore as
->>> they want. This have a potential issue, the data is stored in memory,
->>> drivers may append too much data and use too much memory. The vmcore is
->>> typically used in a kdump kernel which runs in a pre-reserved small
->>> chunk of memory. So as a result it will make kdump unusable at all due
->>> to OOM issues.
->>>
->>> So introduce new device_dump_limit= kernel parameter, and set the
->>> default limit to 0, so device dump is not enabled unless user specify
->>> the accetable maxiam
->>
->>         ^^^^ acceptable maximum
+On Mon, May 20, 2019 at 02:48:35PM +1000, Nicholas Piggin wrote:
+> >> > git bisect points to
+> >> >
+> >> > commit 4231aba000f5a4583dd9f67057aadb68c3eca99d
+> >> > Author: Nicholas Piggin <npiggin@gmail.com>
+> >> > Date:   Fri Jul 27 21:48:17 2018 +1000
+> >> >
+> >> >     powerpc/64s: Fix page table fragment refcount race vs speculative references
+> >> >
+> >> >     The page table fragment allocator uses the main page refcount racily
+> >> >     with respect to speculative references. A customer observed a BUG due
+> >> >     to page table page refcount underflow in the fragment allocator. This
+> >> >     can be caused by the fragment allocator set_page_count stomping on a
+> >> >     speculative reference, and then the speculative failure handler
+> >> >     decrements the new reference, and the underflow eventually pops when
+> >> >     the page tables are freed.
+> >> >
+> >> >     Fix this by using a dedicated field in the struct page for the page
+> >> >     table fragment allocator.
+> >> >
+> >> >     Fixes: 5c1f6ee9a31c ("powerpc: Reduce PTE table memory wastage")
+> >> >     Cc: stable@vger.kernel.org # v3.10+
+> >> 
+> >> That's the commit that added the BUG_ON(), so prior to that you won't
+> >> see the crash.
+> > 
+> > Right, but the commit says it fixes page table page refcount underflow by
+> > introducing a new field &page->pt_frag_refcount. Now we are hitting the underflow
+> > for this pt_frag_refcount.
 > 
-> Will fix this typo.
+> The fixed underflow is caused by a bug (race on page count) that got 
+> fixed by that patch. You are hitting a different underflow here. It's
+> not certain my patch caused it, I'm just trying to reproduce now.
 
 Ok.
 
->>> memory usage for device dump data. In this way user
->>> will also have the chance to adjust the kdump reserved memory
->>> accordingly.
->>
->> Hmmm., this doesn't give much confidence with the
->> PROC_VMCORE_DEVICE_DUMP feature in its current shape. Rather shouldn't
->> we be enabling config PROC_VMCORE_DEVICE_DUMP only under EXPERT mode for
->> now, considering that this feature needs further thrashing and testing
->> with real setups including platforms where drivers append large amounts
->> of data to vmcore:
 > 
-> I think no need to move it to expert mode, just leave it disabled by
-> default should be better, that should be enough to make sure driver
-> won't append that much memory and cause OOM, while it could still be
-> enabled without changing the kernel, so this feature won't bring extra
-> risk, and could be enabled anytime easily.
-
-I have seen some arm64 users report issues on mailing lists with 
-PROC_VMCORE_DEVICE_DUMP enabled as this causes frequent OOM in the arm64 
-crash dump kernel.
-
-I think they are using this infrastructure to extend/enable device 
-driver debugging on some arm64 platforms and finding issues with the 
-crash dump kernel.
-
-I will do some analysis later-on (when I get some spare time) and post a 
-patch (if needed) to put the same under EXPERT mode for now.
-
->> diff --git a/fs/proc/Kconfig b/fs/proc/Kconfig
->> index 817c02b13b1d..c47a12cf7fc0 100644
->> --- a/fs/proc/Kconfig
->> +++ b/fs/proc/Kconfig
->> @@ -45,7 +45,7 @@ config PROC_VMCORE
->>            Exports the dump image of crashed kernel in ELF format.
->>
->>    config PROC_VMCORE_DEVICE_DUMP
->> -       bool "Device Hardware/Firmware Log Collection"
->> +       bool "Device Hardware/Firmware Log Collection" if EXPERT
->>           depends on PROC_VMCORE
->>           default n
->>           help
->> @@ -59,6 +59,12 @@ config PROC_VMCORE_DEVICE_DUMP
->>             If you say Y here, the collected device dumps will be added
->>             as ELF notes to /proc/vmcore.
->>
->> +         Considering that there can be device drivers which append
->> +         large amounts of data to vmcore, you should say N here unless
->> +         you are reserving a large chunk of memory for crashdump
->> +         kernel, because otherwise the crashdump kernel might become
->> +         unusable due to OOM issues.
->> +
->>
->> May be you can add a 'Fixes:' tag here.
+> > 
+> > BTW, if I go below this commit, I don't hit the pagecount
+> > 
+> > VM_BUG_ON_PAGE(page_ref_count(page) == 0, page);
+> > 
+> > which is in pte_fragment_free() path.
 > 
-> Problem is previous commit seems not broken, just bring extra memory
-> stress. Is "Fixes:" tag suitable for this commit?
+> Do you have CONFIG_DEBUG_VM=y?
 
-I think since the earlier patch causes an OOM, it would be better to 
-atleast mention it in the git log (for easier git bisect later on).
+Yes.
 
-If not the 'Fixes:' tag may be we can use a 'Since commit ..' like 
-wording in the commit log.
+Regards,
+Bharata.
 
->>> Signed-off-by: Kairui Song <kasong@redhat.com>
->>> ---
->>>    fs/proc/vmcore.c | 20 ++++++++++++++++++++
->>>    1 file changed, 20 insertions(+)
->>>
->>> diff --git a/fs/proc/vmcore.c b/fs/proc/vmcore.c
->>> index 3fe90443c1bb..e28695ef2439 100644
->>> --- a/fs/proc/vmcore.c
->>> +++ b/fs/proc/vmcore.c
->>> @@ -53,6 +53,9 @@ static struct proc_dir_entry *proc_vmcore;
->>>    /* Device Dump list and mutex to synchronize access to list */
->>>    static LIST_HEAD(vmcoredd_list);
->>>    static DEFINE_MUTEX(vmcoredd_mutex);
->>> +
->>> +/* Device Dump Limit */
->>> +static size_t vmcoredd_limit;
->>>    #endif /* CONFIG_PROC_VMCORE_DEVICE_DUMP */
->>>
->>>    /* Device Dump Size */
->>> @@ -1465,6 +1468,11 @@ int vmcore_add_device_dump(struct vmcoredd_data *data)
->>>        data_size = roundup(sizeof(struct vmcoredd_header) + data->size,
->>>                            PAGE_SIZE);
->>>
->>> +     if (vmcoredd_orig_sz + data_size >= vmcoredd_limit) {
->>> +             ret = -ENOMEM;
->>
->> Should we be adding a WARN() here to let the user know that the device
->> dump data will not be available in vmcore?
-> 
-> Yes, that could be very helpful. How about pr_err_once? WARN is too
-> noise, just give a hint to the user that device dump is disabled
-> should be enough, so user will know why device dump data is not
-> present and will just enable it.
-
-Sure, pr_err() should be OK as well.
-
->>> +             goto out_err;
->>> +     }
->>> +
->>>        /* Allocate buffer for driver's to write their dumps */
->>>        buf = vmcore_alloc_buf(data_size);
->>>        if (!buf) {
->>> @@ -1502,6 +1510,18 @@ int vmcore_add_device_dump(struct vmcoredd_data *data)
->>>        return ret;
->>>    }
->>>    EXPORT_SYMBOL(vmcore_add_device_dump);
->>> +
->>> +static int __init parse_vmcoredd_limit(char *arg)
->>> +{
->>> +     char *end;
->>> +
->>> +     if (!arg)
->>> +             return -EINVAL;
->>> +     vmcoredd_limit = memparse(arg, &end);
->>> +     return end > arg ? 0 : -EINVAL;
->>> +
->>> +}
->>> +__setup("device_dump_limit=", parse_vmcoredd_limit);
->>
->> We should be adding this boot argument and its description to
->> 'Documentation/admin-guide/kernel-parameters.txt'
-> 
-> Good suggestion, will update the document.
-> 
->>
->>>    #endif /* CONFIG_PROC_VMCORE_DEVICE_DUMP */
->>>
->>>    /* Free all dumps in vmcore device dump list */
->>>
-
-Thanks,
-Bhupesh
