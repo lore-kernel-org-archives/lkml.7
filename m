@@ -7,46 +7,52 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18420C04AAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:50:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E23A0C04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:50:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D6A222054F
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:50:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B8CF52054F
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:50:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558356604;
-	bh=tYzvmzxlgCAbu7295+HojwnrPPuXKNiISilXMntA4Lc=;
+	s=default; t=1558356607;
+	bh=hcCWdm8G1C81OZqG9T6IE40vqZ2g7WBEfGBUW8Mt+Bg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PWGlUVwwhq9S6ZNMRmJCbPJrDdSsbVOgLkZNHnTvFqQLAWok9KCx2uIVh1OEG7y7H
-	 TDgu6tcO/y46VMW9hULHYbzk2RnzO3+oxV8eUOYgQxscktlyFz2GebY+3m1tITQz90
-	 RiR3ZtzdZQrPYFW4ysPU6VmLX22X49/4nglqBiKE=
+	b=2IvjZ/1tmpbaqR/0z6GvBUKb9VSDI58tWWegdmlp3s4mpJBtn5JOdxo6o0GRb/5b1
+	 5VrC7kdWaukvCnOGJwGVMJEAALGPpjLL297HoGf5YhEQdDnil8yJM0cjd2HPbePChL
+	 VbPzVygT/N3gx1crOK1ZgiNF+2Q+kML2mu9y5DNE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390111AbfETMuD (ORCPT
+        id S2391310AbfETMuG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 08:50:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34776 "EHLO mail.kernel.org"
+        Mon, 20 May 2019 08:50:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34696 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387676AbfETMVO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 08:21:14 -0400
+        id S1730404AbfETMVM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 08:21:12 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DE05820815;
-        Mon, 20 May 2019 12:21:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B3A46213F2;
+        Mon, 20 May 2019 12:21:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558354874;
-        bh=tYzvmzxlgCAbu7295+HojwnrPPuXKNiISilXMntA4Lc=;
+        s=default; t=1558354871;
+        bh=hcCWdm8G1C81OZqG9T6IE40vqZ2g7WBEfGBUW8Mt+Bg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qoYvNdCp/mLZXw0t22yjpBPO+H4tBlAtKWsslYVOtbSuQjXKV/tY5mtKT1OGSEPqX
-         X2HCrkbP6fM7Lz2kofle1JDuPsrlvE/fWMLiA38MNEDFUwQtaSf5NnyCc+khVjdHvt
-         rgZcw3F4VYiccdFI810uftTG2U5/i6L7s/4pPF5U=
+        b=IZIhyJYneebqqkkR5EjA4s3UqF59ZcVwKRRqmRsqMMvDeYZ+QBlIwDfvZm9uCjxpL
+         N9YWS45fsqcKCCyqwKQBC1tEA3zHzRRgQExUSDyp5UJCjbiZfV6EUF3rnuYUnDRPUS
+         6lw+xd+DddGKmlA+IWXwS1rQXUrlRi8eaSNOehhs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Boyang Zhou <zhouby_cn@126.com>,
-        Will Deacon <will.deacon@arm.com>
-Subject: [PATCH 4.19 012/105] arm64: mmap: Ensure file offset is treated as unsigned
-Date:   Mon, 20 May 2019 14:13:18 +0200
-Message-Id: <20190520115247.892819926@linuxfoundation.org>
+        stable@vger.kernel.org, Andy Lutomirski <luto@kernel.org>,
+        Borislav Petkov <bp@suse.de>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Jon Masters <jcm@redhat.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>
+Subject: [PATCH 4.19 003/105] x86/speculation/mds: Improve CPU buffer clear documentation
+Date:   Mon, 20 May 2019 14:13:09 +0200
+Message-Id: <20190520115247.289761419@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190520115247.060821231@linuxfoundation.org>
 References: <20190520115247.060821231@linuxfoundation.org>
@@ -59,40 +65,80 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Boyang Zhou <zhouby_cn@126.com>
+From: Andy Lutomirski <luto@kernel.org>
 
-commit f08cae2f28db24d95be5204046b60618d8de4ddc upstream.
+commit 9d8d0294e78a164d407133dea05caf4b84247d6a upstream.
 
-The file offset argument to the arm64 sys_mmap() implementation is
-scaled from bytes to pages by shifting right by PAGE_SHIFT.
-Unfortunately, the offset is passed in as a signed 'off_t' type and
-therefore large offsets (i.e. with the top bit set) are incorrectly
-sign-extended by the shift. This has been observed to cause false mmap()
-failures when mapping GPU doorbells on an arm64 server part.
+On x86_64, all returns to usermode go through
+prepare_exit_to_usermode(), with the sole exception of do_nmi().
+This even includes machine checks -- this was added several years
+ago to support MCE recovery.  Update the documentation.
 
-Change the type of the file offset argument to sys_mmap() from 'off_t'
-to 'unsigned long' so that the shifting scales the value as expected.
-
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Boyang Zhou <zhouby_cn@126.com>
-[will: rewrote commit message]
-Signed-off-by: Will Deacon <will.deacon@arm.com>
+Signed-off-by: Andy Lutomirski <luto@kernel.org>
+Cc: Borislav Petkov <bp@suse.de>
+Cc: Frederic Weisbecker <frederic@kernel.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Jon Masters <jcm@redhat.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: stable@vger.kernel.org
+Fixes: 04dcbdb80578 ("x86/speculation/mds: Clear CPU buffers on exit to user")
+Link: http://lkml.kernel.org/r/999fa9e126ba6a48e9d214d2f18dbde5c62ac55c.1557865329.git.luto@kernel.org
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/arm64/kernel/sys.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ Documentation/x86/mds.rst |   39 +++++++--------------------------------
+ 1 file changed, 7 insertions(+), 32 deletions(-)
 
---- a/arch/arm64/kernel/sys.c
-+++ b/arch/arm64/kernel/sys.c
-@@ -31,7 +31,7 @@
+--- a/Documentation/x86/mds.rst
++++ b/Documentation/x86/mds.rst
+@@ -142,38 +142,13 @@ Mitigation points
+    mds_user_clear.
  
- SYSCALL_DEFINE6(mmap, unsigned long, addr, unsigned long, len,
- 		unsigned long, prot, unsigned long, flags,
--		unsigned long, fd, off_t, off)
-+		unsigned long, fd, unsigned long, off)
- {
- 	if (offset_in_page(off) != 0)
- 		return -EINVAL;
+    The mitigation is invoked in prepare_exit_to_usermode() which covers
+-   most of the kernel to user space transitions. There are a few exceptions
+-   which are not invoking prepare_exit_to_usermode() on return to user
+-   space. These exceptions use the paranoid exit code.
+-
+-   - Non Maskable Interrupt (NMI):
+-
+-     Access to sensible data like keys, credentials in the NMI context is
+-     mostly theoretical: The CPU can do prefetching or execute a
+-     misspeculated code path and thereby fetching data which might end up
+-     leaking through a buffer.
+-
+-     But for mounting other attacks the kernel stack address of the task is
+-     already valuable information. So in full mitigation mode, the NMI is
+-     mitigated on the return from do_nmi() to provide almost complete
+-     coverage.
+-
+-   - Machine Check Exception (#MC):
+-
+-     Another corner case is a #MC which hits between the CPU buffer clear
+-     invocation and the actual return to user. As this still is in kernel
+-     space it takes the paranoid exit path which does not clear the CPU
+-     buffers. So the #MC handler repopulates the buffers to some
+-     extent. Machine checks are not reliably controllable and the window is
+-     extremly small so mitigation would just tick a checkbox that this
+-     theoretical corner case is covered. To keep the amount of special
+-     cases small, ignore #MC.
+-
+-   - Debug Exception (#DB):
+-
+-     This takes the paranoid exit path only when the INT1 breakpoint is in
+-     kernel space. #DB on a user space address takes the regular exit path,
+-     so no extra mitigation required.
++   all but one of the kernel to user space transitions.  The exception
++   is when we return from a Non Maskable Interrupt (NMI), which is
++   handled directly in do_nmi().
++
++   (The reason that NMI is special is that prepare_exit_to_usermode() can
++    enable IRQs.  In NMI context, NMIs are blocked, and we don't want to
++    enable IRQs with NMIs blocked.)
+ 
+ 
+ 2. C-State transition
 
 
