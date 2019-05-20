@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8DE1C04AAC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:25:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 319CFC04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:25:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8EEBE21479
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:25:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 084C020675
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:25:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558355104;
-	bh=0pBuoUQ/MsGpZKKsbJ6wezWXwWTvffx32ikV0Olb63c=;
+	s=default; t=1558355108;
+	bh=ZkGxzEZLWwXrpJJkC8GbzMTCaMlIEBREVKnobzH24Dk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DZFe4fuTnuBNmYByy0VzjLZHZZusIOWXgbyIma8zdcWNj5Wqi32n1kZOh0FkLRtrv
-	 s7q7AVGJ7i1m5bRRU2k8JKN6yEEdvSVLp7xFCWmjFc4yW3AVJc2pjUcA8f47BSJReR
-	 J8uKiz/qD2VmsyEGO64oBTW4v/5wRqV2Mx/Z0yHk=
+	b=oDodsE6cRSCBrKImM7ay7PqEACZH8WIsp6FBrR+c9vXPt3n5sBw+7ytCgiZaR+ATo
+	 6gvmvSIjMVQ7hMyTSx1AE3+/pzu0L8gXf3igYyFE0BROc2G13+oj6nuB8KBRpotSzY
+	 iImm9mL+7ZHDTAGv/qL8tTm4FBzSJXVv7Q0GL+yA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388976AbfETMZD (ORCPT
+        id S2388990AbfETMZH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 08:25:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40030 "EHLO mail.kernel.org"
+        Mon, 20 May 2019 08:25:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40058 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388944AbfETMZC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 08:25:02 -0400
+        id S2388944AbfETMZE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 08:25:04 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4D58020815;
-        Mon, 20 May 2019 12:25:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B5C9E20675;
+        Mon, 20 May 2019 12:25:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558355101;
-        bh=0pBuoUQ/MsGpZKKsbJ6wezWXwWTvffx32ikV0Olb63c=;
+        s=default; t=1558355104;
+        bh=ZkGxzEZLWwXrpJJkC8GbzMTCaMlIEBREVKnobzH24Dk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xp2ucKI8RI8CseTIFuWRYTdwkeQgtEkud/Y50X7idZKFTPLV5T3FRJaerixvEBCuL
-         gmuAINJFkYiw0bXtquqYjGOOGHlNZGoKxkVK+tbhowWp4SGJRudtegZgD8q1N9UlQl
-         jfHxVcOaHHljcGPio+0+1x6eeaFn7Fn8BjD+w8QU=
+        b=GJb9uMNbIB046kV77s2WPWn9gUvLLkK6E1ED42G7Zb0v6TrZh/l7nKXK3rvMRCMKd
+         usvxv9HfW4RKkCuLq2/CeI9agI90if/Eoxm5xitsn+vUzXmhy2t9qsgHWc/f0xDPM4
+         WfYnqPAPxxvfFOwJL8M2HTxdo8xxwXghPPod878Q=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Matthew Wilcox <willy@infradead.org>
-Subject: [PATCH 4.19 098/105] iov_iter: optimize page_copy_sane()
-Date:   Mon, 20 May 2019 14:14:44 +0200
-Message-Id: <20190520115253.993660256@linuxfoundation.org>
+        stable@vger.kernel.org, Kees Cook <keescook@chromium.org>,
+        Guenter Roeck <groeck@chromium.org>
+Subject: [PATCH 4.19 099/105] pstore: Centralize init/exit routines
+Date:   Mon, 20 May 2019 14:14:45 +0200
+Message-Id: <20190520115254.063413847@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190520115247.060821231@linuxfoundation.org>
 References: <20190520115247.060821231@linuxfoundation.org>
@@ -60,56 +59,102 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Dumazet <edumazet@google.com>
+From: Kees Cook <keescook@chromium.org>
 
-commit 6daef95b8c914866a46247232a048447fff97279 upstream.
+commit cb095afd44768bf495894b9ad063bd078e4bb201 upstream.
 
-Avoid cache line miss dereferencing struct page if we can.
+In preparation for having additional actions during init/exit, this moves
+the init/exit into platform.c, centralizing the logic to make call outs
+to the fs init/exit.
 
-page_copy_sane() mostly deals with order-0 pages.
-
-Extra cache line miss is visible on TCP recvmsg() calls dealing
-with GRO packets (typically 45 page frags are attached to one skb).
-
-Bringing the 45 struct pages into cpu cache while copying the data
-is not free, since the freeing of the skb (and associated
-page frags put_page()) can happen after cache lines have been evicted.
-
-Signed-off-by: Eric Dumazet <edumazet@google.com>
-Cc: Al Viro <viro@zeniv.linux.org.uk>
-Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
-Cc: Matthew Wilcox <willy@infradead.org>
+Signed-off-by: Kees Cook <keescook@chromium.org>
+Tested-by: Guenter Roeck <groeck@chromium.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- lib/iov_iter.c |   17 +++++++++++++++--
- 1 file changed, 15 insertions(+), 2 deletions(-)
+ fs/pstore/inode.c    |   11 ++---------
+ fs/pstore/internal.h |    5 +++--
+ fs/pstore/platform.c |   23 +++++++++++++++++++++++
+ 3 files changed, 28 insertions(+), 11 deletions(-)
 
---- a/lib/iov_iter.c
-+++ b/lib/iov_iter.c
-@@ -817,8 +817,21 @@ EXPORT_SYMBOL(_copy_from_iter_full_nocac
+--- a/fs/pstore/inode.c
++++ b/fs/pstore/inode.c
+@@ -482,12 +482,10 @@ static struct file_system_type pstore_fs
+ 	.kill_sb	= pstore_kill_sb,
+ };
  
- static inline bool page_copy_sane(struct page *page, size_t offset, size_t n)
+-static int __init init_pstore_fs(void)
++int __init pstore_init_fs(void)
  {
--	struct page *head = compound_head(page);
--	size_t v = n + offset + page_address(page) - page_address(head);
-+	struct page *head;
-+	size_t v = n + offset;
-+
-+	/*
-+	 * The general case needs to access the page order in order
-+	 * to compute the page size.
-+	 * However, we mostly deal with order-0 pages and thus can
-+	 * avoid a possible cache line miss for requests that fit all
-+	 * page orders.
-+	 */
-+	if (n <= v && v <= PAGE_SIZE)
-+		return true;
-+
-+	head = compound_head(page);
-+	v += (page - head) << PAGE_SHIFT;
+ 	int err;
  
- 	if (likely(n <= v && v <= (PAGE_SIZE << compound_order(head))))
- 		return true;
+-	pstore_choose_compression();
+-
+ 	/* Create a convenient mount point for people to access pstore */
+ 	err = sysfs_create_mount_point(fs_kobj, "pstore");
+ 	if (err)
+@@ -500,14 +498,9 @@ static int __init init_pstore_fs(void)
+ out:
+ 	return err;
+ }
+-module_init(init_pstore_fs)
+ 
+-static void __exit exit_pstore_fs(void)
++void __exit pstore_exit_fs(void)
+ {
+ 	unregister_filesystem(&pstore_fs_type);
+ 	sysfs_remove_mount_point(fs_kobj, "pstore");
+ }
+-module_exit(exit_pstore_fs)
+-
+-MODULE_AUTHOR("Tony Luck <tony.luck@intel.com>");
+-MODULE_LICENSE("GPL");
+--- a/fs/pstore/internal.h
++++ b/fs/pstore/internal.h
+@@ -37,7 +37,8 @@ extern bool	pstore_is_mounted(void);
+ extern void	pstore_record_init(struct pstore_record *record,
+ 				   struct pstore_info *psi);
+ 
+-/* Called during module_init() */
+-extern void __init pstore_choose_compression(void);
++/* Called during pstore init/exit. */
++int __init	pstore_init_fs(void);
++void __exit	pstore_exit_fs(void);
+ 
+ #endif
+--- a/fs/pstore/platform.c
++++ b/fs/pstore/platform.c
+@@ -780,8 +780,31 @@ void __init pstore_choose_compression(vo
+ 	}
+ }
+ 
++static int __init pstore_init(void)
++{
++	int ret;
++
++	pstore_choose_compression();
++
++	ret = pstore_init_fs();
++	if (ret)
++		return ret;
++
++	return 0;
++}
++module_init(pstore_init)
++
++static void __exit pstore_exit(void)
++{
++	pstore_exit_fs();
++}
++module_exit(pstore_exit)
++
+ module_param(compress, charp, 0444);
+ MODULE_PARM_DESC(compress, "Pstore compression to use");
+ 
+ module_param(backend, charp, 0444);
+ MODULE_PARM_DESC(backend, "Pstore backend to use");
++
++MODULE_AUTHOR("Tony Luck <tony.luck@intel.com>");
++MODULE_LICENSE("GPL");
 
 
