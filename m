@@ -2,104 +2,98 @@ Return-Path: <SRS0=lq4r=TU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2214C04E87
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:53:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38B36C04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:53:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 761E5216B7
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:53:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=benyossef-com.20150623.gappssmtp.com header.i=@benyossef-com.20150623.gappssmtp.com header.b="Yx6LH/QB"
+	by mail.kernel.org (Postfix) with ESMTP id 16583216B7
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:53:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391547AbfETMxB (ORCPT
+        id S2391566AbfETMxF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 08:53:01 -0400
-Received: from mail-vk1-f196.google.com ([209.85.221.196]:43303 "EHLO
-        mail-vk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387687AbfETMSC (ORCPT
+        Mon, 20 May 2019 08:53:05 -0400
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:34225 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387973AbfETMxD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 08:18:02 -0400
-Received: by mail-vk1-f196.google.com with SMTP id h72so3775460vkh.10
-        for <linux-kernel@vger.kernel.org>; Mon, 20 May 2019 05:18:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=benyossef-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=5kXQ6vS4Br8b/GkN8FOpSIOl9zcEW2Y4KrZy5M2Bkl4=;
-        b=Yx6LH/QBl9AFZ1DfZ3Mwi+k36+t6Xj5HfRu5wUC6OlUof7wTBotOL3t1bRiVkZ1XTr
-         kBXZTpQ/OMpZ0PkZskacBuBO2xAWvS17siok2nvGgnQD5AxPW+ZcXuad/XakbtWYtZvo
-         T1belaPyupntkOEmLZRAwYRX7ttz5yM5rcFeASiVLucqVMNXDoWD60wcCK1JRV2Pt33l
-         zTQckKj8Ho2tFI8GH4rgB1WREuRPozYS2ZflbTJOLmVCHoaMvQ6tA5n6eZCAc0iirkSi
-         ObdBdoTbsVEk3SwqddZ7u53K3WRIyN+H/ew9oeBvwTVzKBwPOh4O2bJOTNJWfTDGWCms
-         QOKw==
+        Mon, 20 May 2019 08:53:03 -0400
+Received: by mail-qt1-f193.google.com with SMTP id h1so16148099qtp.1
+        for <linux-kernel@vger.kernel.org>; Mon, 20 May 2019 05:53:03 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=5kXQ6vS4Br8b/GkN8FOpSIOl9zcEW2Y4KrZy5M2Bkl4=;
-        b=clzVlKC/dROYCRnpM4NCkvsGZc3vuB1Zjyiz0qG4FTJevYBFfzghaEvQfzGfSwD77J
-         7nJgpqmWR5FPtANS5RX3t12q+mzueqJgga9IopE2rGpbSyEVEcHMMYu84ymUCeJ7eek9
-         sITTr+B0pZtx6KFlhM3549ZxsvF2Cqemk83/nfo1w+3HvISQsyu68w+8CP5g1/gFYXoU
-         bONUdMz8S+Mn1dlLGVDX4ImBwBMaBsP/Omp8GMbSQxggG5rojKEglas4UR5aIkP8iR29
-         xmdNnw/3j6f6w9LKtQFs4lu+8AEt1sORNHjOx8cwC4jIft1ww4IQgyvbYGcgvhXfBuwi
-         YpDw==
-X-Gm-Message-State: APjAAAUL/dkUJrPQ2EtEx1onKzlPJKrUaFZdTC6tNqWdADJq3t2WaZR/
-        OPcc5vwM95FPoANwx+ohqbTqYdI02MDN3pwpE+MPlg==
-X-Google-Smtp-Source: APXvYqz3r+hI9oibZ9dmSgzGJipU45wIDIXpfO13g+0ueygZn7O/8r1kzEQ38a+qqAQTN6Mb/8jTggg0KGPxm80/Rh8=
-X-Received: by 2002:a1f:2e8e:: with SMTP id u136mr6454712vku.1.1558354681339;
- Mon, 20 May 2019 05:18:01 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=FNAZcWqflA9IRxmObxU4/lbcnrS1uyVvwLBkqQKN8z8=;
+        b=HzSTEqiZQO3w1vdsAkT5r38H7hYuYbds0MWRQpO9CIi0JjAVigJWdQ2FcNiVx1slki
+         cx/ht35b5R6DltwMenH7RBNvnfzvb97xOj4ixfl+dUPGy2SRQRXJ0ZvDfVc5ZuspNmqP
+         QF8IeRQ6rNXVvMEqzqHRb6wQvgE5vZ2bu2DOBBARq/jbEDmBwJj84KV9BlPPRqDIsUdn
+         Dgvl9WR/mc1C9+eeoTAOsfanYo41sCDcpA4vGm665lxjidh1AAV+LD7ukNppOBw7Kzy8
+         XznFxeMyMaFlNFS5M4p6wYZylTXj/NQP7YlitFPna6S4Nk6BtLVlptL7SX+408HbOxUa
+         +Jig==
+X-Gm-Message-State: APjAAAXoe9I3Lhyrv6VWCN8FCSIFXChmtpl1RMf+POSxR2WSFauNDXNi
+        OTHKbkNPUTVRIB7OVNu5iU84MQ==
+X-Google-Smtp-Source: APXvYqxZc3EADFrIKvZtBidjDNyX7MfQHCtBgDMnAiOTyPCPBnueOwuGeJwhQyllR7iNwwTq6Wygtw==
+X-Received: by 2002:ac8:2ea1:: with SMTP id h30mr21686178qta.333.1558356782974;
+        Mon, 20 May 2019 05:53:02 -0700 (PDT)
+Received: from redhat.com (pool-173-76-105-71.bstnma.fios.verizon.net. [173.76.105.71])
+        by smtp.gmail.com with ESMTPSA id v3sm13052762qtc.97.2019.05.20.05.53.01
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Mon, 20 May 2019 05:53:01 -0700 (PDT)
+Date:   Mon, 20 May 2019 08:52:59 -0400
+From:   "Michael S. Tsirkin" <mst@redhat.com>
+To:     Jason Wang <jasowang@redhat.com>
+Cc:     virtualization@lists.linux-foundation.org, kvm@vger.kernel.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        pbonzini@redhat.com, stefanha@redhat.com
+Subject: Re: [PATCH V2 0/4] Prevent vhost kthread from hogging CPU
+Message-ID: <20190520085207-mutt-send-email-mst@kernel.org>
+References: <1558067392-11740-1-git-send-email-jasowang@redhat.com>
 MIME-Version: 1.0
-References: <20190520115025.16457-1-gilad@benyossef.com> <20190520115025.16457-2-gilad@benyossef.com>
- <20190520120903.GB13524@kroah.com>
-In-Reply-To: <20190520120903.GB13524@kroah.com>
-From:   Gilad Ben-Yossef <gilad@benyossef.com>
-Date:   Mon, 20 May 2019 15:17:48 +0300
-Message-ID: <CAOtvUMedfV_Zb4Y7YW7nmv2LUfQPfgGixmaOj7VFasHKmApwkg@mail.gmail.com>
-Subject: Re: [STABLE PATCH 1/2] crypto: ccree: zap entire sg on aead request unmap
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>, stable@vger.kernel.org,
-        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
-        Linux kernel mailing list <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1558067392-11740-1-git-send-email-jasowang@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 20, 2019 at 3:09 PM Greg KH <gregkh@linuxfoundation.org> wrote:
->
-> On Mon, May 20, 2019 at 02:50:23PM +0300, Gilad Ben-Yossef wrote:
-> > We were trying to be clever zapping out of the cache only the required
-> > length out of scatter list on AEAD request completion and getting it
-> > wrong.
-> >
-> > As Knuth said: "when in douby, use brute force". Zap the whole length o=
-f
-> > the scatter list.
-> >
-> > Signed-off-by: Gilad Ben-Yossef <gilad@benyossef.com>
-> > ---
-> >  drivers/crypto/ccree/cc_buffer_mgr.c | 18 ++----------------
-> >  1 file changed, 2 insertions(+), 16 deletions(-)
->
-> This does not apply on top of my latest 4.19 tree with the current
-> pending queue applied, nor does it apply to 5.1 or 5.0.
->
-> How about waiting a few days and resending after I do the next round of
-> stable updates, so you can rebase on top of them easier?
+On Fri, May 17, 2019 at 12:29:48AM -0400, Jason Wang wrote:
+> Hi:
+> 
+> This series try to prevent a guest triggerable CPU hogging through
+> vhost kthread. This is done by introducing and checking the weight
+> after each requrest. The patch has been tested with reproducer of
+> vsock and virtio-net. Only compile test is done for vhost-scsi.
+> 
+> Please review.
+> This addresses CVE-2019-3900.
 
-Yes, will do.
+OK I think we should clean this code some more but given
+it's a CVE fix maybe it's best to do as a patch on top.
 
-Thanks,
-Gilad
+Acked-by: Michael S. Tsirkin <mst@redhat.com>
 
---=20
-Gilad Ben-Yossef
-Chief Coffee Drinker
+Dave do you want to merge this or should I?
 
-values of =CE=B2 will give rise to dom!
+> 
+> Changs from V1:
+> - fix user-ater-free in vosck patch
+> 
+> Jason Wang (4):
+>   vhost: introduce vhost_exceeds_weight()
+>   vhost_net: fix possible infinite loop
+>   vhost: vsock: add weight support
+>   vhost: scsi: add weight support
+> 
+>  drivers/vhost/net.c   | 41 ++++++++++++++---------------------------
+>  drivers/vhost/scsi.c  | 21 ++++++++++++++-------
+>  drivers/vhost/vhost.c | 20 +++++++++++++++++++-
+>  drivers/vhost/vhost.h |  5 ++++-
+>  drivers/vhost/vsock.c | 28 +++++++++++++++++++++-------
+>  5 files changed, 72 insertions(+), 43 deletions(-)
+> 
+> -- 
+> 1.8.3.1
