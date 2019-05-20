@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 848F9C04AAC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:35:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CCB2C04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:35:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 58E7B217D7
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:35:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0CC89204FD
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:35:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558355723;
-	bh=gDXp1YTVd1ZDb9dpxjABJtOXO5WdHbIWePTo2Hqkyqk=;
+	s=default; t=1558355727;
+	bh=HC/idoCOQyV14h07TYHc6VAt31gFUcHJfANAqMDzakQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=H54nhdmSebrrg/keNns6+WfYPHlaNIrkAvAZbDVAIpIz1fzmxqEUSvl8XIDjmt/3T
-	 KT1w3XCLv/cGO9tR2mCjKIB2Rf0pXd/8sBOFdYU8ykf9QuB9VGOR8k+WFqYb1sDaT7
-	 RCXAQmsVrArnSLvHbBE2jW8LKbEojJ4MoSwy5Hvc=
+	b=nqfrZmvzSI2gPqizUEx1XEAz+oHb1MAL0BS4ffdbtHQe6vtQZRCtsXT8dMQBcCdJg
+	 BNCV+cVuZIaA5+ri4RDxVQJaVIfDaJCfoJL3FAHBl897tV2SmlTTTK0kWBl9me+9DG
+	 1eCZtwSdP1/W5IfG0n7YfwbFr7+oO4GIHTWWZmko=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391073AbfETMfW (ORCPT
+        id S2403828AbfETMfZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 08:35:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53434 "EHLO mail.kernel.org"
+        Mon, 20 May 2019 08:35:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53502 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391057AbfETMfS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 08:35:18 -0400
+        id S2390407AbfETMfV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 08:35:21 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 14ACB204FD;
-        Mon, 20 May 2019 12:35:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A4542204FD;
+        Mon, 20 May 2019 12:35:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558355717;
-        bh=gDXp1YTVd1ZDb9dpxjABJtOXO5WdHbIWePTo2Hqkyqk=;
+        s=default; t=1558355720;
+        bh=HC/idoCOQyV14h07TYHc6VAt31gFUcHJfANAqMDzakQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=q3iTn7PJ8lz2fTc7q+uYi9DHnGe2yVduKObXg+9kuqA/HbdD1G6ZjRc3WfsJ3jfFc
-         DHdaNFXBz8kvCcWsp1UBckscVtoBMnpOdWxn5CTLXOOKt5Olnytc4a91MLnBZydlK6
-         CfYPtbLnT2LwZlej418y8LKMDHHVBnhYltLHHwUM=
+        b=ZsPtb5jOkb93YTj6/ddGZ2QhNTxP/AqK2IOa/edPljdtk5DdSSLjsWdNV5aIzmaZx
+         YMl+V9YwThuSqX7HAgtGCNot+LiIWwh/ydzXl+n4/L81QFFmwFhD8ctUJu+JKGRUtJ
+         TVGidr9RG8R5U3qRAbnqQKXp7JFvl3ifliktsSYI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Coly Li <colyli@suse.de>,
-        Hannes Reinecke <hare@suse.com>, Jens Axboe <axboe@kernel.dk>
-Subject: [PATCH 5.1 100/128] bcache: never set KEY_PTRS of journal key to 0 in journal_reclaim()
-Date:   Mon, 20 May 2019 14:14:47 +0200
-Message-Id: <20190520115255.957450340@linuxfoundation.org>
+        stable@vger.kernel.org, Kamlakant Patel <kamlakantp@marvell.com>,
+        Corey Minyard <cminyard@mvista.com>
+Subject: [PATCH 5.1 101/128] ipmi: Add the i2c-addr property for SSIF interfaces
+Date:   Mon, 20 May 2019 14:14:48 +0200
+Message-Id: <20190520115256.000435552@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190520115249.449077487@linuxfoundation.org>
 References: <20190520115249.449077487@linuxfoundation.org>
@@ -59,96 +59,125 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Coly Li <colyli@suse.de>
+From: Corey Minyard <cminyard@mvista.com>
 
-commit 1bee2addc0c8470c8aaa65ef0599eeae96dd88bc upstream.
+commit d73236383eb1cd4b7b65c33a09f0ed45f6781f40 upstream.
 
-In journal_reclaim() ja->cur_idx of each cache will be update to
-reclaim available journal buckets. Variable 'int n' is used to count how
-many cache is successfully reclaimed, then n is set to c->journal.key
-by SET_KEY_PTRS(). Later in journal_write_unlocked(), a for_each_cache()
-loop will write the jset data onto each cache.
+This is required for SSIF to work.
 
-The problem is, if all jouranl buckets on each cache is full, the
-following code in journal_reclaim(),
+There was no way to know if the interface being added was SI
+or SSIF from the platform data, but that was required so the
+i2c-addr is only added for SSIF interfaces.  So add a field
+for that.
 
-529 for_each_cache(ca, c, iter) {
-530       struct journal_device *ja = &ca->journal;
-531       unsigned int next = (ja->cur_idx + 1) % ca->sb.njournal_buckets;
-532
-533       /* No space available on this device */
-534       if (next == ja->discard_idx)
-535               continue;
-536
-537       ja->cur_idx = next;
-538       k->ptr[n++] = MAKE_PTR(0,
-539                         bucket_to_sector(c, ca->sb.d[ja->cur_idx]),
-540                         ca->sb.nr_this_dev);
-541 }
-542
-543 bkey_init(k);
-544 SET_KEY_PTRS(k, n);
+Also rework the logic a bit so that ipmi-type is not set
+for SSIF interfaces, as it is not necessary for that.
 
-If there is no available bucket to reclaim, the if() condition at line
-534 will always true, and n remains 0. Then at line 544, SET_KEY_PTRS()
-will set KEY_PTRS field of c->journal.key to 0.
-
-Setting KEY_PTRS field of c->journal.key to 0 is wrong. Because in
-journal_write_unlocked() the journal data is written in following loop,
-
-649	for (i = 0; i < KEY_PTRS(k); i++) {
-650-671		submit journal data to cache device
-672	}
-
-If KEY_PTRS field is set to 0 in jouranl_reclaim(), the journal data
-won't be written to cache device here. If system crahed or rebooted
-before bkeys of the lost journal entries written into btree nodes, data
-corruption will be reported during bcache reload after rebooting the
-system.
-
-Indeed there is only one cache in a cache set, there is no need to set
-KEY_PTRS field in journal_reclaim() at all. But in order to keep the
-for_each_cache() logic consistent for now, this patch fixes the above
-problem by not setting 0 KEY_PTRS of journal key, if there is no bucket
-available to reclaim.
-
-Signed-off-by: Coly Li <colyli@suse.de>
-Reviewed-by: Hannes Reinecke <hare@suse.com>
-Cc: stable@vger.kernel.org
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Fixes: 3cd83bac481d ("ipmi: Consolidate the adding of platform devices")
+Reported-by: Kamlakant Patel <kamlakantp@marvell.com>
+Signed-off-by: Corey Minyard <cminyard@mvista.com>
+Cc: stable@vger.kernel.org # 5.1
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/md/bcache/journal.c |   11 +++++++----
- 1 file changed, 7 insertions(+), 4 deletions(-)
+ drivers/char/ipmi/ipmi_dmi.c         |    2 ++
+ drivers/char/ipmi/ipmi_plat_data.c   |   27 +++++++++++++++------------
+ drivers/char/ipmi/ipmi_plat_data.h   |    3 +++
+ drivers/char/ipmi/ipmi_si_hardcode.c |    1 +
+ drivers/char/ipmi/ipmi_si_hotmod.c   |    1 +
+ 5 files changed, 22 insertions(+), 12 deletions(-)
 
---- a/drivers/md/bcache/journal.c
-+++ b/drivers/md/bcache/journal.c
-@@ -540,11 +540,11 @@ static void journal_reclaim(struct cache
- 				  ca->sb.nr_this_dev);
- 	}
+--- a/drivers/char/ipmi/ipmi_dmi.c
++++ b/drivers/char/ipmi/ipmi_dmi.c
+@@ -47,9 +47,11 @@ static void __init dmi_add_platform_ipmi
+ 	memset(&p, 0, sizeof(p));
  
--	bkey_init(k);
--	SET_KEY_PTRS(k, n);
--
--	if (n)
-+	if (n) {
-+		bkey_init(k);
-+		SET_KEY_PTRS(k, n);
- 		c->journal.blocks_free = c->sb.bucket_size >> c->block_bits;
-+	}
- out:
- 	if (!journal_full(&c->journal))
- 		__closure_wake_up(&c->journal.wait);
-@@ -671,6 +671,9 @@ static void journal_write_unlocked(struc
- 		ca->journal.seq[ca->journal.cur_idx] = w->data->seq;
- 	}
+ 	name = "dmi-ipmi-si";
++	p.iftype = IPMI_PLAT_IF_SI;
+ 	switch (type) {
+ 	case IPMI_DMI_TYPE_SSIF:
+ 		name = "dmi-ipmi-ssif";
++		p.iftype = IPMI_PLAT_IF_SSIF;
+ 		p.type = SI_TYPE_INVALID;
+ 		break;
+ 	case IPMI_DMI_TYPE_BT:
+--- a/drivers/char/ipmi/ipmi_plat_data.c
++++ b/drivers/char/ipmi/ipmi_plat_data.c
+@@ -12,7 +12,7 @@ struct platform_device *ipmi_platform_ad
+ 					  struct ipmi_plat_data *p)
+ {
+ 	struct platform_device *pdev;
+-	unsigned int num_r = 1, size, pidx = 0;
++	unsigned int num_r = 1, size = 0, pidx = 0;
+ 	struct resource r[4];
+ 	struct property_entry pr[6];
+ 	u32 flags;
+@@ -21,19 +21,22 @@ struct platform_device *ipmi_platform_ad
+ 	memset(pr, 0, sizeof(pr));
+ 	memset(r, 0, sizeof(r));
  
-+	/* If KEY_PTRS(k) == 0, this jset gets lost in air */
-+	BUG_ON(i == 0);
+-	if (p->type == SI_BT)
+-		size = 3;
+-	else if (p->type == SI_TYPE_INVALID)
+-		size = 0;
+-	else
+-		size = 2;
++	if (p->iftype == IPMI_PLAT_IF_SI) {
++		if (p->type == SI_BT)
++			size = 3;
++		else if (p->type != SI_TYPE_INVALID)
++			size = 2;
+ 
+-	if (p->regsize == 0)
+-		p->regsize = DEFAULT_REGSIZE;
+-	if (p->regspacing == 0)
+-		p->regspacing = p->regsize;
++		if (p->regsize == 0)
++			p->regsize = DEFAULT_REGSIZE;
++		if (p->regspacing == 0)
++			p->regspacing = p->regsize;
 +
- 	atomic_dec_bug(&fifo_back(&c->journal.pin));
- 	bch_journal_next(&c->journal);
- 	journal_reclaim(c);
++		pr[pidx++] = PROPERTY_ENTRY_U8("ipmi-type", p->type);
++	} else if (p->iftype == IPMI_PLAT_IF_SSIF) {
++		pr[pidx++] = PROPERTY_ENTRY_U16("i2c-addr", p->addr);
++	}
+ 
+-	pr[pidx++] = PROPERTY_ENTRY_U8("ipmi-type", p->type);
+ 	if (p->slave_addr)
+ 		pr[pidx++] = PROPERTY_ENTRY_U8("slave-addr", p->slave_addr);
+ 	pr[pidx++] = PROPERTY_ENTRY_U8("addr-source", p->addr_source);
+--- a/drivers/char/ipmi/ipmi_plat_data.h
++++ b/drivers/char/ipmi/ipmi_plat_data.h
+@@ -6,7 +6,10 @@
+ 
+ #include <linux/ipmi.h>
+ 
++enum ipmi_plat_interface_type { IPMI_PLAT_IF_SI, IPMI_PLAT_IF_SSIF };
++
+ struct ipmi_plat_data {
++	enum ipmi_plat_interface_type iftype;
+ 	unsigned int type; /* si_type for si, SI_INVALID for others */
+ 	unsigned int space; /* addr_space for si, intf# for ssif. */
+ 	unsigned long addr;
+--- a/drivers/char/ipmi/ipmi_si_hardcode.c
++++ b/drivers/char/ipmi/ipmi_si_hardcode.c
+@@ -83,6 +83,7 @@ static void __init ipmi_hardcode_init_on
+ 
+ 	memset(&p, 0, sizeof(p));
+ 
++	p.iftype = IPMI_PLAT_IF_SI;
+ 	if (!si_type_str || !*si_type_str || strcmp(si_type_str, "kcs") == 0) {
+ 		p.type = SI_KCS;
+ 	} else if (strcmp(si_type_str, "smic") == 0) {
+--- a/drivers/char/ipmi/ipmi_si_hotmod.c
++++ b/drivers/char/ipmi/ipmi_si_hotmod.c
+@@ -108,6 +108,7 @@ static int parse_hotmod_str(const char *
+ 	int rv;
+ 	unsigned int ival;
+ 
++	h->iftype = IPMI_PLAT_IF_SI;
+ 	rv = parse_str(hotmod_ops, &ival, "operation", &curr);
+ 	if (rv)
+ 		return rv;
 
 
