@@ -2,83 +2,88 @@ Return-Path: <SRS0=lq4r=TU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04F50C04AAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 07:50:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A2CBC04AAF
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 07:52:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CEBEA20815
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 07:50:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D0D3320644
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 07:52:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730375AbfETHuR (ORCPT
+        id S1730334AbfETHwc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 03:50:17 -0400
-Received: from relay7-d.mail.gandi.net ([217.70.183.200]:57579 "EHLO
-        relay7-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728551AbfETHuQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 03:50:16 -0400
-X-Originating-IP: 90.88.22.185
-Received: from localhost (aaubervilliers-681-1-80-185.w90-88.abo.wanadoo.fr [90.88.22.185])
-        (Authenticated sender: maxime.ripard@bootlin.com)
-        by relay7-d.mail.gandi.net (Postfix) with ESMTPSA id CB6B320006;
-        Mon, 20 May 2019 07:50:06 +0000 (UTC)
-Date:   Mon, 20 May 2019 09:50:06 +0200
-From:   Maxime Ripard <maxime.ripard@bootlin.com>
-To:     Jernej Skrabec <jernej.skrabec@siol.net>
-Cc:     wens@csie.org, robh+dt@kernel.org, mark.rutland@arm.com,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] ARM: dts: sun8i-h3: Fix wifi in Beelink X2 DT
-Message-ID: <20190520075006.pwrsaytg57d44377@flea>
-References: <20190518154014.28998-1-jernej.skrabec@siol.net>
+        Mon, 20 May 2019 03:52:32 -0400
+Received: from mx2.suse.de ([195.135.220.15]:47656 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727733AbfETHwb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 03:52:31 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 4247CAF31;
+        Mon, 20 May 2019 07:52:30 +0000 (UTC)
+Received: by quack2.suse.cz (Postfix, from userid 1000)
+        id 5D54B1E3ED6; Mon, 20 May 2019 09:52:32 +0200 (CEST)
+Date:   Mon, 20 May 2019 09:52:32 +0200
+From:   Jan Kara <jack@suse.cz>
+To:     Dan Williams <dan.j.williams@intel.com>
+Cc:     Kees Cook <keescook@chromium.org>, Jan Kara <jack@suse.cz>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
+        stable <stable@vger.kernel.org>, Jeff Moyer <jmoyer@redhat.com>,
+        Ingo Molnar <mingo@redhat.com>, Christoph Hellwig <hch@lst.de>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Matthew Wilcox <willy@infradead.org>,
+        Jeff Smits <jeff.smits@intel.com>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] libnvdimm/pmem: Bypass CONFIG_HARDENED_USERCOPY overhead
+Message-ID: <20190520075232.GA30972@quack2.suse.cz>
+References: <155805321833.867447.3864104616303535270.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <20190517084739.GB20550@quack2.suse.cz>
+ <CAPcyv4iZZCgcC657ZOysBP9=1ejp3jfFj=VETVBPrgmfg7xUEw@mail.gmail.com>
+ <201905170855.8E2E1AC616@keescook>
+ <CAPcyv4g9HpMaifC+Qe2RVbgL_qq9vQvjwr-Jw813xhxcviehYQ@mail.gmail.com>
+ <201905171225.29F9564BA2@keescook>
+ <CAPcyv4iSeUPWFeSZW-dmYz9TnWhqVCx1Y1VjtUv+125_ZSQaYg@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="ccv2ztaysqwm5bmp"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190518154014.28998-1-jernej.skrabec@siol.net>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <CAPcyv4iSeUPWFeSZW-dmYz9TnWhqVCx1Y1VjtUv+125_ZSQaYg@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Sat 18-05-19 21:46:03, Dan Williams wrote:
+> On Fri, May 17, 2019 at 12:25 PM Kees Cook <keescook@chromium.org> wrote:
+> > On Fri, May 17, 2019 at 10:28:48AM -0700, Dan Williams wrote:
+> > > It seems dax_iomap_actor() is not a path where we'd be worried about
+> > > needing hardened user copy checks.
+> >
+> > I would agree: I think the proposed patch makes sense. :)
+> 
+> Sounds like an acked-by to me.
 
---ccv2ztaysqwm5bmp
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Yeah, if Kees agrees, I'm fine with skipping the checks as well. I just
+wanted that to be clarified. Also it helped me that you wrote:
 
-On Sat, May 18, 2019 at 05:40:14PM +0200, Jernej Skrabec wrote:
-> mmc1 node where wifi module is connected doesn't have properly defined
-> power supplies so wifi module is never powered up. Fix that by
-> specifying additional power supplies.
->
-> Additionally, this STB may have either Realtek or Broadcom based wifi
-> module. One based on Broadcom module also needs external clock to work
-> properly. Fix that by adding clock property to wifi_pwrseq node.
->
-> Fixes: e582b47a9252 ("ARM: dts: sun8i-h3: Add dts for the Beelink X2 STB")
-> Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
+That routine (dax_iomap_actor()) validates that the logical file offset is
+within bounds of the file, then it does a sector-to-pfn translation which
+validates that the physical mapping is within bounds of the block device.
 
-Applied, thanks!
-Maxime
+That is more specific than "dax_iomap_actor() takes care of necessary
+checks" which was in the changelog. And the above paragraph helped me
+clarify which checks in dax_iomap_actor() you think replace those usercopy
+checks. So I think it would be good to add that paragraph to those
+copy_from_pmem() functions as a comment just in case we are wondering in
+the future why we are skipping the checks... Also feel free to add:
 
---
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+Acked-by: Jan Kara <jack@suse.cz>
 
---ccv2ztaysqwm5bmp
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXOJcLgAKCRDj7w1vZxhR
-xektAP9SnxxVhsL3J9tjBeCsUfx6I7mOWHiMoulYMbgQCQtW1AD/VJuC+zZfSxgg
-QyXsTvQqjqBuraleNIOqwbIEAuz6ugI=
-=nQKm
------END PGP SIGNATURE-----
-
---ccv2ztaysqwm5bmp--
+								Honza
+-- 
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
