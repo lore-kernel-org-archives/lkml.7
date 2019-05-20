@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F35E7C04AAC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:37:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D26AFC04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:37:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BA1AF20815
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:37:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A4354216C4
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:37:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558355829;
-	bh=5zCdNk6o7TvfEzmsRexz2WXo2rRTLCTto/KnK33XGaM=;
+	s=default; t=1558355833;
+	bh=4ezE4YFsHI4mkI3Af6ni4X1jrp/rvkB9HrQmp0MjJxI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IgW271k44NpZcXze7FtTgG3nPi+Rol2IoDA/sCRCZuBQD3v5xSYUDtFXmqzbGwglH
-	 dqirlmqHT5/THDFRlD/NeSLguTLMivGf9rlQzAjmjseX5nqEeyRL7cGrOe0vbgtkyH
-	 D0k+v1VfNJCd09oosgltUVHUH3eYMqtU6LtczK04=
+	b=s1/nPyx19aWGDEZ33Bl1xwi4WUDV5yxd3XKewKEmJIH2vih+bFJTqlZIROYcKW/Wo
+	 /5DcDaU32BtnOzCk5O1nLgfxNZf79bboLA4eqxj2/J/uQDi9R509Wm9Kf/Fr0fUkHJ
+	 5Y3c06aXjVmhvCNITa0GuKOuRCWYcNMqliAPWYP0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391304AbfETMhI (ORCPT
+        id S2391396AbfETMhM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 08:37:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56018 "EHLO mail.kernel.org"
+        Mon, 20 May 2019 08:37:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55864 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391338AbfETMgx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 08:36:53 -0400
+        id S2403899AbfETMgp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 08:36:45 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7BB68204FD;
-        Mon, 20 May 2019 12:36:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8458B20645;
+        Mon, 20 May 2019 12:36:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558355813;
-        bh=5zCdNk6o7TvfEzmsRexz2WXo2rRTLCTto/KnK33XGaM=;
+        s=default; t=1558355805;
+        bh=4ezE4YFsHI4mkI3Af6ni4X1jrp/rvkB9HrQmp0MjJxI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vTxIcz9bL0Z3MIM3139zFxb0F3R9Nspo/Bjaci7FDAKtsagOYrEukTJHw1ZVcOkIS
-         sTt6ByYeoT2ozu6nIjTtdc14l+D/3dJwUTKTXYVOrKur0mHm48nxs2KqfewGQqZq1I
-         jZOY/REnpyk5ok4sQTBVqv9PMxSqqsKR8QVFePfo=
+        b=vc9Myvq8AEnelk4vQEWJvdNHzzBVmS/+PLHgREmY69LOf2RTbR6Q3jQrtK3IYxO7G
+         4K9X6OXoeUGlfH/Ga+kwBQPUyf7wARRsMQd7pYEkhukLyaViHYGcvAkCvaQ+TxXzMn
+         YQh9bQOsuztpNXMAdNMjDwryys1UYueoFoNucrzE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Arthur Marsh <arthur.marsh@internode.on.net>,
-        Theodore Tso <tytso@mit.edu>
-Subject: [PATCH 5.1 128/128] ext4: fix block validity checks for journal inodes using indirect blocks
-Date:   Mon, 20 May 2019 14:15:15 +0200
-Message-Id: <20190520115257.193032813@linuxfoundation.org>
+        stable@vger.kernel.org, Debabrata Banerjee <dbanerje@akamai.com>,
+        Theodore Tso <tytso@mit.edu>, Jan Kara <jack@suse.cz>,
+        stable@kernel.org
+Subject: [PATCH 5.1 091/128] ext4: fix ext4_show_options for file systems w/o journal
+Date:   Mon, 20 May 2019 14:14:38 +0200
+Message-Id: <20190520115255.508554293@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190520115249.449077487@linuxfoundation.org>
 References: <20190520115249.449077487@linuxfoundation.org>
@@ -60,42 +60,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Theodore Ts'o <tytso@mit.edu>
+From: Debabrata Banerjee <dbanerje@akamai.com>
 
-commit 170417c8c7bb2cbbdd949bf5c443c0c8f24a203b upstream.
+commit 50b29d8f033a7c88c5bc011abc2068b1691ab755 upstream.
 
-Commit 345c0dbf3a30 ("ext4: protect journal inode's blocks using
-block_validity") failed to add an exception for the journal inode in
-ext4_check_blockref(), which is the function used by ext4_get_branch()
-for indirect blocks.  This caused attempts to read from the ext3-style
-journals to fail with:
+Instead of removing EXT4_MOUNT_JOURNAL_CHECKSUM from s_def_mount_opt as
+I assume was intended, all other options were blown away leading to
+_ext4_show_options() output being incorrect.
 
-[  848.968550] EXT4-fs error (device sdb7): ext4_get_branch:171: inode #8: block 30343695: comm jbd2/sdb7-8: invalid block
-
-Fix this by adding the missing exception check.
-
-Fixes: 345c0dbf3a30 ("ext4: protect journal inode's blocks using block_validity")
-Reported-by: Arthur Marsh <arthur.marsh@internode.on.net>
+Fixes: 1e381f60dad9 ("ext4: do not allow journal_opts for fs w/o journal")
+Signed-off-by: Debabrata Banerjee <dbanerje@akamai.com>
 Signed-off-by: Theodore Ts'o <tytso@mit.edu>
+Reviewed-by: Jan Kara <jack@suse.cz>
+Cc: stable@kernel.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/ext4/block_validity.c |    5 +++++
- 1 file changed, 5 insertions(+)
+ fs/ext4/super.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/fs/ext4/block_validity.c
-+++ b/fs/ext4/block_validity.c
-@@ -276,6 +276,11 @@ int ext4_check_blockref(const char *func
- 	__le32 *bref = p;
- 	unsigned int blk;
- 
-+	if (ext4_has_feature_journal(inode->i_sb) &&
-+	    (inode->i_ino ==
-+	     le32_to_cpu(EXT4_SB(inode->i_sb)->s_es->s_journal_inum)))
-+		return 0;
-+
- 	while (bref < p+max) {
- 		blk = le32_to_cpu(*bref++);
- 		if (blk &&
+--- a/fs/ext4/super.c
++++ b/fs/ext4/super.c
+@@ -4269,7 +4269,7 @@ static int ext4_fill_super(struct super_
+ 				 "data=, fs mounted w/o journal");
+ 			goto failed_mount_wq;
+ 		}
+-		sbi->s_def_mount_opt &= EXT4_MOUNT_JOURNAL_CHECKSUM;
++		sbi->s_def_mount_opt &= ~EXT4_MOUNT_JOURNAL_CHECKSUM;
+ 		clear_opt(sb, JOURNAL_CHECKSUM);
+ 		clear_opt(sb, DATA_FLAGS);
+ 		sbi->s_journal = NULL;
 
 
