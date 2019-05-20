@@ -2,101 +2,114 @@ Return-Path: <SRS0=lq4r=TU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07CC7C04AAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:49:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DAB7FC04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:49:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C873620645
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:49:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558356573;
-	bh=iVm8FVhzSjc67LGrX5HDsQyAxRaS8C+6UytUP01HyhQ=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AO5HrbPbDEf0VmiIJIkq8hY+5pNkozult5+9LF8Ozw+wnJFUdxBBU4qUEc67R7qld
-	 sIefMvZli0FRtsoDSrReoEicUMvmAI0KLNIgePniy79+iUBnsA799rgckg4ql3Y9JG
-	 +Q4yzCKuu8sANIibEusx3p6/8vVCaS8OWcYWpECk=
+	by mail.kernel.org (Postfix) with ESMTP id AEA2320645
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:49:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="i/P9RCiD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389220AbfETMtd (ORCPT
+        id S2389095AbfETMto (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 08:49:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35364 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388196AbfETMVf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 08:21:35 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 96D0F214DA;
-        Mon, 20 May 2019 12:21:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558354895;
-        bh=iVm8FVhzSjc67LGrX5HDsQyAxRaS8C+6UytUP01HyhQ=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=k8qYiIw/58MBz93nmfP8luWj2fTw5civan1jv1KIZsGIm2SQzHhPrApNpUGN0j9UB
-         jKNBePlnO0ia1wVsTJ3GLs3RVI+3vI7riJ8lEtS8rIKTCSbwZ7U0uv7OIZVu5f2oA8
-         CfXtqNM8zRP5QLnM+bM/Mc0+BcdefBGW66udXmik=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Biggers <ebiggers@google.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>
-Subject: [PATCH 4.19 020/105] crypto: salsa20 - dont access already-freed walk.iv
-Date:   Mon, 20 May 2019 14:13:26 +0200
-Message-Id: <20190520115248.416824052@linuxfoundation.org>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190520115247.060821231@linuxfoundation.org>
-References: <20190520115247.060821231@linuxfoundation.org>
-User-Agent: quilt/0.66
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+        Mon, 20 May 2019 08:49:44 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:40609 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388151AbfETMVY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 08:21:24 -0400
+Received: by mail-pg1-f196.google.com with SMTP id d30so6728632pgm.7
+        for <linux-kernel@vger.kernel.org>; Mon, 20 May 2019 05:21:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sifive.com; s=google;
+        h=from:to:subject:date:message-id:in-reply-to:references;
+        bh=4KK0MRvh5MgzBUDrn06tdDHg6h6KtmoqvmbKK6rVaok=;
+        b=i/P9RCiDrUaIMpMf95McN8b9avW7QYLVIOKO2jlZMWKcLY/05ZW/xSzalEe2ZC2ium
+         J+wLdgoANMLVAvwplbq/pkBi7usMO3QjlXEvjQ1Gs64ly9KvlZ2Pu3yKn0WT9pQ1InKG
+         R1rSPrKmyTWs7h7zpnUHeqFD/UGsn7zMLBkG0+sA8QG5TWQx+b/Hhc7sYBOavOW+U/5g
+         HAV8eBw9nk//Dtx3Z7BXuyrBpbg/WceaNIs1kK0+QG6MJCaEtEVuGWGx9l8EESebrOmm
+         OahLLa8h7oaqtfm3NLAs/DeCR58Cf7obmOOgqP4+fbTPnkqwyR22Fqs4fG7q30WWpok+
+         pJtg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
+         :references;
+        bh=4KK0MRvh5MgzBUDrn06tdDHg6h6KtmoqvmbKK6rVaok=;
+        b=ojXeo3mYfvxKX3alTfla2VywCpnxb6kRlpDG30iLilfqw10KfCzqXHsqlZGVTYM9wM
+         0j96vKmYwcS8DPBPol/S9r1lGDiC+wtZGUhUf1D+EVx/jh4ZQwfwO7BsMCIsHO/OjrOa
+         6Efr0VTI5LKhe7iw0tjJKm7/gj2FFXcB62Iz+XvbA3H03zVbklpg7DpdGV45nHn+lkGc
+         VJM+f8it/fzB7SVWlGngTsedcxMURTUYmtd4w8C0PFg69xB8duGmu2uCnA9o4IKv0vLk
+         3lnnEKXqttSxYCTQV2F7lld++NdX+IFKE0rqdo0eJgzFjDNhLvYtKDjp66+wn6q5F2MX
+         Klhg==
+X-Gm-Message-State: APjAAAV8b6/u5TrY2OywiI236YeIFuNOJhuKK45/0eHG+nRLNj9Vgfql
+        aMiTXqVgHG7dlQyxihWJP9FlqA==
+X-Google-Smtp-Source: APXvYqx/aDaf41fZIhhNQijCLymVj8l2tADUtw/HunCGJBDhenLRfcPSr+pEa51noxzJs7l4d1SCNQ==
+X-Received: by 2002:a63:8741:: with SMTP id i62mr74826207pge.313.1558354883537;
+        Mon, 20 May 2019 05:21:23 -0700 (PDT)
+Received: from buildserver-90.open-silicon.com ([114.143.65.226])
+        by smtp.googlemail.com with ESMTPSA id n27sm38137077pfb.129.2019.05.20.05.21.20
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Mon, 20 May 2019 05:21:23 -0700 (PDT)
+From:   Sagar Shrikant Kadam <sagar.kadam@sifive.com>
+To:     robh+dt@kernel.org, mark.rutland@arm.com, peter@korsgaard.com,
+        andrew@lunn.ch, palmer@sifive.com, paul.walmsley@sifive.com,
+        sagar.kadam@sifive.com, linux-i2c@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-riscv@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v4 2/3] i2c-ocores: sifive: add support for i2c device on FU540-c000 SoC.
+Date:   Mon, 20 May 2019 17:50:16 +0530
+Message-Id: <1558354817-12034-3-git-send-email-sagar.kadam@sifive.com>
+X-Mailer: git-send-email 1.9.1
+In-Reply-To: <1558354817-12034-1-git-send-email-sagar.kadam@sifive.com>
+References: <1558354817-12034-1-git-send-email-sagar.kadam@sifive.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Biggers <ebiggers@google.com>
+Update device id table for Opencore's I2C master based re-implementation
+used in FU540-c000 chipset on HiFive Unleashed platform.
 
-commit edaf28e996af69222b2cb40455dbb5459c2b875a upstream.
+Device ID's include Sifive, soc-specific device for chip specific tweaks
+and sifive IP block specific device for generic programming model.
 
-If the user-provided IV needs to be aligned to the algorithm's
-alignmask, then skcipher_walk_virt() copies the IV into a new aligned
-buffer walk.iv.  But skcipher_walk_virt() can fail afterwards, and then
-if the caller unconditionally accesses walk.iv, it's a use-after-free.
-
-salsa20-generic doesn't set an alignmask, so currently it isn't affected
-by this despite unconditionally accessing walk.iv.  However this is more
-subtle than desired, and it was actually broken prior to the alignmask
-being removed by commit b62b3db76f73 ("crypto: salsa20-generic - cleanup
-and convert to skcipher API").
-
-Since salsa20-generic does not update the IV and does not need any IV
-alignment, update it to use req->iv instead of walk.iv.
-
-Fixes: 2407d60872dd ("[CRYPTO] salsa20: Salsa20 stream cipher")
-Cc: stable@vger.kernel.org
-Signed-off-by: Eric Biggers <ebiggers@google.com>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Sagar Shrikant Kadam <sagar.kadam@sifive.com>
 ---
- crypto/salsa20_generic.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/i2c/busses/i2c-ocores.c | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
---- a/crypto/salsa20_generic.c
-+++ b/crypto/salsa20_generic.c
-@@ -161,7 +161,7 @@ static int salsa20_crypt(struct skcipher
+diff --git a/drivers/i2c/busses/i2c-ocores.c b/drivers/i2c/busses/i2c-ocores.c
+index 4e1a077..aee1d86 100644
+--- a/drivers/i2c/busses/i2c-ocores.c
++++ b/drivers/i2c/busses/i2c-ocores.c
+@@ -85,6 +85,7 @@ struct ocores_i2c {
  
- 	err = skcipher_walk_virt(&walk, req, true);
+ #define TYPE_OCORES		0
+ #define TYPE_GRLIB		1
++#define TYPE_SIFIVE_REV0	2
  
--	salsa20_init(state, ctx, walk.iv);
-+	salsa20_init(state, ctx, req->iv);
- 
- 	while (walk.nbytes > 0) {
- 		unsigned int nbytes = walk.nbytes;
-
+ static void oc_setreg_8(struct ocores_i2c *i2c, int reg, u8 value)
+ {
+@@ -468,6 +469,14 @@ static u32 ocores_func(struct i2c_adapter *adap)
+ 		.compatible = "aeroflexgaisler,i2cmst",
+ 		.data = (void *)TYPE_GRLIB,
+ 	},
++	{
++		.compatible = "sifive,fu540-c000-i2c",
++		.data = (void *)TYPE_SIFIVE_REV0,
++	},
++	{
++		.compatible = "sifive,i2c0",
++		.data = (void *)TYPE_SIFIVE_REV0,
++	},
+ 	{},
+ };
+ MODULE_DEVICE_TABLE(of, ocores_i2c_match);
+-- 
+1.9.1
 
