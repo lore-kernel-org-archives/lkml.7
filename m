@@ -2,70 +2,208 @@ Return-Path: <SRS0=lq4r=TU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B565CC04AB4
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 03:14:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04901C072AD
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 03:17:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F3D72081C
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 03:14:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D831A2082E
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 03:17:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729858AbfETDOs (ORCPT
+        id S1730038AbfETDRo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 19 May 2019 23:14:48 -0400
-Received: from out30-56.freemail.mail.aliyun.com ([115.124.30.56]:58066 "EHLO
-        out30-56.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728435AbfETDOs (ORCPT
+        Sun, 19 May 2019 23:17:44 -0400
+Received: from out30-130.freemail.mail.aliyun.com ([115.124.30.130]:60232 "EHLO
+        out30-130.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727260AbfETDRn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 19 May 2019 23:14:48 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R211e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e07487;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=8;SR=0;TI=SMTPD_---0TSB-HBq_1558322084;
-Received: from Alexs-MacBook-Pro.local(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0TSB-HBq_1558322084)
+        Sun, 19 May 2019 23:17:43 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R121e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e07417;MF=yang.shi@linux.alibaba.com;NM=1;PH=DS;RN=13;SR=0;TI=SMTPD_---0TSAtqql_1558322252;
+Received: from e19h19392.et15sqa.tbsite.net(mailfrom:yang.shi@linux.alibaba.com fp:SMTPD_---0TSAtqql_1558322252)
           by smtp.aliyun-inc.com(127.0.0.1);
-          Mon, 20 May 2019 11:14:44 +0800
-Subject: Re: [PATCH 1/3] kselftest/cgroup: fix unexcepted testing failure on
- test_memcontrol
-To:     Roman Gushchin <guro@fb.com>
-Cc:     Shuah Khan <shuah@kernel.org>, Tejun Heo <tj@kernel.org>,
-        Mike Rapoport <rppt@linux.vnet.ibm.com>,
-        Jay Kamat <jgkamat@fb.com>,
-        "linux-kselftest@vger.kernel.org" <linux-kselftest@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        cgroups@vger.kernel.org
-References: <20190515090704.56929-1-alex.shi@linux.alibaba.com>
- <20190517172930.GA5525@tower.DHCP.thefacebook.com>
-From:   Alex Shi <alex.shi@linux.alibaba.com>
-Message-ID: <b2cb203e-e073-b077-94aa-6b6f432b8003@linux.alibaba.com>
-Date:   Mon, 20 May 2019 11:14:44 +0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
- Gecko/20100101 Thunderbird/60.6.1
-MIME-Version: 1.0
-In-Reply-To: <20190517172930.GA5525@tower.DHCP.thefacebook.com>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+          Mon, 20 May 2019 11:17:39 +0800
+From:   Yang Shi <yang.shi@linux.alibaba.com>
+To:     jstancek@redhat.com, peterz@infradead.org, will.deacon@arm.com,
+        npiggin@gmail.com, aneesh.kumar@linux.ibm.com, namit@vmware.com,
+        minchan@kernel.org, mgorman@suse.de, akpm@linux-foundation.org
+Cc:     yang.shi@linux.alibaba.com, stable@vger.kernel.org,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Subject: [v3 PATCH] mm: mmu_gather: remove __tlb_reset_range() for force flush
+Date:   Mon, 20 May 2019 11:17:32 +0800
+Message-Id: <1558322252-113575-1-git-send-email-yang.shi@linux.alibaba.com>
+X-Mailer: git-send-email 1.8.3.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+A few new fields were added to mmu_gather to make TLB flush smarter for
+huge page by telling what level of page table is changed.
 
-> Hi Alex!
-> 
-> Sorry for the late reply, somehow I missed your e-mails.
-> 
-> The patchset looks good to me, except a typo in subjects/commit logs:
-> you probably meant "unexpected failures".
-> 
-> Please, fix and feel free to use:
-> Reviewed-by: Roman Gushchin <guro@fb.com>
-> for the series.
-> 
+__tlb_reset_range() is used to reset all these page table state to
+unchanged, which is called by TLB flush for parallel mapping changes for
+the same range under non-exclusive lock (i.e. read mmap_sem).  Before
+commit dd2283f2605e ("mm: mmap: zap pages with read mmap_sem in
+munmap"), the syscalls (e.g. MADV_DONTNEED, MADV_FREE) which may update
+PTEs in parallel don't remove page tables.  But, the forementioned
+commit may do munmap() under read mmap_sem and free page tables.  This
+may result in program hang on aarch64 reported by Jan Stancek.  The
+problem could be reproduced by his test program with slightly modified
+below.
 
-Thanks Roman!
+---8<---
 
-BTW, do you know other test cases for cgroup2 function or performance?
+static int map_size = 4096;
+static int num_iter = 500;
+static long threads_total;
 
-Thanks
-Alex
+static void *distant_area;
+
+void *map_write_unmap(void *ptr)
+{
+	int *fd = ptr;
+	unsigned char *map_address;
+	int i, j = 0;
+
+	for (i = 0; i < num_iter; i++) {
+		map_address = mmap(distant_area, (size_t) map_size, PROT_WRITE | PROT_READ,
+			MAP_SHARED | MAP_ANONYMOUS, -1, 0);
+		if (map_address == MAP_FAILED) {
+			perror("mmap");
+			exit(1);
+		}
+
+		for (j = 0; j < map_size; j++)
+			map_address[j] = 'b';
+
+		if (munmap(map_address, map_size) == -1) {
+			perror("munmap");
+			exit(1);
+		}
+	}
+
+	return NULL;
+}
+
+void *dummy(void *ptr)
+{
+	return NULL;
+}
+
+int main(void)
+{
+	pthread_t thid[2];
+
+	/* hint for mmap in map_write_unmap() */
+	distant_area = mmap(0, DISTANT_MMAP_SIZE, PROT_WRITE | PROT_READ,
+			MAP_ANONYMOUS | MAP_PRIVATE, -1, 0);
+	munmap(distant_area, (size_t)DISTANT_MMAP_SIZE);
+	distant_area += DISTANT_MMAP_SIZE / 2;
+
+	while (1) {
+		pthread_create(&thid[0], NULL, map_write_unmap, NULL);
+		pthread_create(&thid[1], NULL, dummy, NULL);
+
+		pthread_join(thid[0], NULL);
+		pthread_join(thid[1], NULL);
+	}
+}
+---8<---
+
+The program may bring in parallel execution like below:
+
+        t1                                        t2
+munmap(map_address)
+  downgrade_write(&mm->mmap_sem);
+  unmap_region()
+  tlb_gather_mmu()
+    inc_tlb_flush_pending(tlb->mm);
+  free_pgtables()
+    tlb->freed_tables = 1
+    tlb->cleared_pmds = 1
+
+                                        pthread_exit()
+                                        madvise(thread_stack, 8M, MADV_DONTNEED)
+                                          zap_page_range()
+                                            tlb_gather_mmu()
+                                              inc_tlb_flush_pending(tlb->mm);
+
+  tlb_finish_mmu()
+    if (mm_tlb_flush_nested(tlb->mm))
+      __tlb_reset_range()
+
+__tlb_reset_range() would reset freed_tables and cleared_* bits, but
+this may cause inconsistency for munmap() which do free page tables.
+Then it may result in some architectures, e.g. aarch64, may not flush
+TLB completely as expected to have stale TLB entries remained.
+
+Use fullmm flush since it yields much better performance on aarch64 and
+non-fullmm doesn't yields significant difference on x86.
+
+The original proposed fix came from Jan Stancek who mainly debugged this
+issue, I just wrapped up everything together.
+
+Reported-by: Jan Stancek <jstancek@redhat.com>
+Tested-by: Jan Stancek <jstancek@redhat.com>
+Suggested-by: Will Deacon <will.deacon@arm.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Nick Piggin <npiggin@gmail.com>
+Cc: "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
+Cc: Nadav Amit <namit@vmware.com>
+Cc: Minchan Kim <minchan@kernel.org>
+Cc: Mel Gorman <mgorman@suse.de>
+Cc: stable@vger.kernel.org  4.20+
+Signed-off-by: Yang Shi <yang.shi@linux.alibaba.com>
+Signed-off-by: Jan Stancek <jstancek@redhat.com>
+---
+v3: Adopted fullmm flush suggestion from Will
+v2: Reworked the commit log per Peter and Will
+    Adopted the suggestion from Peter
+
+ mm/mmu_gather.c | 24 +++++++++++++++++++-----
+ 1 file changed, 19 insertions(+), 5 deletions(-)
+
+diff --git a/mm/mmu_gather.c b/mm/mmu_gather.c
+index 99740e1..289f8cf 100644
+--- a/mm/mmu_gather.c
++++ b/mm/mmu_gather.c
+@@ -245,14 +245,28 @@ void tlb_finish_mmu(struct mmu_gather *tlb,
+ {
+ 	/*
+ 	 * If there are parallel threads are doing PTE changes on same range
+-	 * under non-exclusive lock(e.g., mmap_sem read-side) but defer TLB
+-	 * flush by batching, a thread has stable TLB entry can fail to flush
+-	 * the TLB by observing pte_none|!pte_dirty, for example so flush TLB
+-	 * forcefully if we detect parallel PTE batching threads.
++	 * under non-exclusive lock (e.g., mmap_sem read-side) but defer TLB
++	 * flush by batching, one thread may end up seeing inconsistent PTEs
++	 * and result in having stale TLB entries.  So flush TLB forcefully
++	 * if we detect parallel PTE batching threads.
++	 *
++	 * However, some syscalls, e.g. munmap(), may free page tables, this
++	 * needs force flush everything in the given range. Otherwise this
++	 * may result in having stale TLB entries for some architectures,
++	 * e.g. aarch64, that could specify flush what level TLB.
+ 	 */
+ 	if (mm_tlb_flush_nested(tlb->mm)) {
++		/*
++		 * The aarch64 yields better performance with fullmm by
++		 * avoiding multiple CPUs spamming TLBI messages at the
++		 * same time.
++		 *
++		 * On x86 non-fullmm doesn't yield significant difference
++		 * against fullmm.
++		 */ 
++		tlb->fullmm = 1;
+ 		__tlb_reset_range(tlb);
+-		__tlb_adjust_range(tlb, start, end - start);
++		tlb->freed_tables = 1;
+ 	}
+ 
+ 	tlb_flush_mmu(tlb);
+-- 
+1.8.3.1
+
