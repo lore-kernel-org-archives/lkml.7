@@ -2,150 +2,110 @@ Return-Path: <SRS0=lq4r=TU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EBFBC46460
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A2EFC072A4
 	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 18:49:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 493602173C
+	by mail.kernel.org (Postfix) with ESMTP id 6B4BE204EC
 	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 18:49:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1558378154;
+	bh=WeLTTrHVKpCPVBwSMwE6UUicljkVbYcpB0VgU8AxSwk=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=ggasnjcjOuDdsWA7GXbTIDS0ide4jen3e2g+Sj+vHbMs1tNA1wp3kbbp7hyhrrpZa
+	 XIheeqgqjRmWdqjUzCVrw2hnOc1DIOsZyOxIn36Ehmfzet5CGT/enD0LZJ3BM9vpQQ
+	 /G7QUrCUAPVIuQ+zEd0MhCDYm/16zmSgTFANjANo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726202AbfETSsI (ORCPT
+        id S1726339AbfETStK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 14:48:08 -0400
-Received: from gateway24.websitewelcome.com ([192.185.51.228]:34615 "EHLO
-        gateway24.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725536AbfETSsH (ORCPT
+        Mon, 20 May 2019 14:49:10 -0400
+Received: from casper.infradead.org ([85.118.1.10]:45804 "EHLO
+        casper.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725536AbfETStJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 14:48:07 -0400
-Received: from cm16.websitewelcome.com (cm16.websitewelcome.com [100.42.49.19])
-        by gateway24.websitewelcome.com (Postfix) with ESMTP id E18D21BDB6
-        for <linux-kernel@vger.kernel.org>; Mon, 20 May 2019 13:48:05 -0500 (CDT)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id SnKPhy3SW4FKpSnKPhL06M; Mon, 20 May 2019 13:48:05 -0500
-X-Authority-Reason: nr=8
-Received: from [189.250.71.100] (port=36576 helo=[192.168.1.76])
-        by gator4166.hostgator.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
-        (Exim 4.91)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1hSnKP-002qhk-Hh; Mon, 20 May 2019 13:48:05 -0500
-Subject: Re: [PATCH net-next] macvlan: Mark expected switch fall-through
-To:     David Miller <davem@davemloft.net>
-Cc:     liuhangbin@gmail.com, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20190520144449.GA4843@embeddedor>
- <20190520.113812.944855298869290023.davem@davemloft.net>
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=gustavo@embeddedor.com; keydata=
- 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
- VtSixD1uOgytAP7RWS474w==
-Message-ID: <d623aa39-4c5c-addb-0cf7-d0c8aed63515@embeddedor.com>
-Date:   Mon, 20 May 2019 13:48:04 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Mon, 20 May 2019 14:49:09 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
+        MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:From:Date:Sender
+        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=Wb+fGsrgFIO4zy7sbGCFYlIGC0R6uH3Db0pCCn/9dt4=; b=Zojqde4tw+V4l+BBfsSUN3yweL
+        Chr1yFIu45bzFs5tkDp64cmzL0iufOPFd3do2BO9EZmOiYzMaicaNDhkTtqnACfcuTi1ooudTQl6c
+        96K2oy9qZIWzjxrYXJAFIfc0l8SkM9NaizpnZc6XhV/9SKynE1CJuN8kiFJ+E478nu8kWA3KE5fvM
+        Qt47HecgWugA6Dzgwd0EXLlq3GfOWE+jo+yiGwImf0EO+bZcgBaZyehdwez0fRAB4R6i3q48kHvLv
+        71X8GLruich8FP6hrNNSsKJRn0Ax440FEE1AVyUmRW2MUPL9LsbIDywEBwgjvlo2hNv7wFwT8Kq/6
+        duRMfX6w==;
+Received: from 179.176.119.151.dynamic.adsl.gvt.net.br ([179.176.119.151] helo=coco.lan)
+        by casper.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hSnLM-0006ki-3Q; Mon, 20 May 2019 18:49:04 +0000
+Date:   Mon, 20 May 2019 15:48:40 -0300
+From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+To:     Charles Keepax <ckeepax@opensource.cirrus.com>
+Cc:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        Mauro Carvalho Chehab <mchehab@infradead.org>,
+        <linux-kernel@vger.kernel.org>, Jonathan Corbet <corbet@lwn.net>,
+        Richard Fitzgerald <rf@opensource.cirrus.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        <alsa-devel@alsa-project.org>, <patches@opensource.cirrus.com>
+Subject: Re: [PATCH 07/10] mfd: madera: point to the right pinctrl binding
+ file
+Message-ID: <20190520154840.64f91ad2@coco.lan>
+In-Reply-To: <20190520154244.GA99937@ediswmail.ad.cirrus.com>
+References: <cover.1558362030.git.mchehab+samsung@kernel.org>
+        <fb47879d405e624374d7d4e099988296ed2af668.1558362030.git.mchehab+samsung@kernel.org>
+        <20190520154244.GA99937@ediswmail.ad.cirrus.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <20190520.113812.944855298869290023.davem@davemloft.net>
-Content-Type: text/plain; charset=iso-8859-7
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 189.250.71.100
-X-Source-L: No
-X-Exim-ID: 1hSnKP-002qhk-Hh
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: ([192.168.1.76]) [189.250.71.100]:36576
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 16
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Em Mon, 20 May 2019 16:42:45 +0100
+Charles Keepax <ckeepax@opensource.cirrus.com> escreveu:
 
-
-On 5/20/19 1:38 PM, David Miller wrote:
-> From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-> Date: Mon, 20 May 2019 09:44:49 -0500
+> On Mon, May 20, 2019 at 11:47:36AM -0300, Mauro Carvalho Chehab wrote:
+> > The reference to Documentation/pinctrl.txt doesn't exist, but
+> > there is an specific binding for the madera driver.
+> > 
+> > So, point to it.
+> > 
+> > Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+> > ---
+> >  include/linux/mfd/madera/pdata.h | 3 ++-
+> >  1 file changed, 2 insertions(+), 1 deletion(-)
+> > 
+> > diff --git a/include/linux/mfd/madera/pdata.h b/include/linux/mfd/madera/pdata.h
+> > index 8dc852402dbb..c7e0658eb74b 100644
+> > --- a/include/linux/mfd/madera/pdata.h
+> > +++ b/include/linux/mfd/madera/pdata.h
+> > @@ -34,7 +34,8 @@ struct madera_codec_pdata;
+> >   * @micvdd:	    Substruct of pdata for the MICVDD regulator
+> >   * @irq_flags:	    Mode for primary IRQ (defaults to active low)
+> >   * @gpio_base:	    Base GPIO number
+> > - * @gpio_configs:   Array of GPIO configurations (See Documentation/pinctrl.txt)
+> > + * @gpio_configs:   Array of GPIO configurations
+> > + *		    (See Documentation/devicetree/bindings/pinctrl/cirrus,madera-pinctrl.txt)  
 > 
->> In preparation to enabling -Wimplicit-fallthrough, mark switch
->> cases where we are expecting to fall through.
->>
->> This patch fixes the following warning:
->>
->> drivers/net/macvlan.c: In function ¡macvlan_do_ioctl¢:
->> drivers/net/macvlan.c:839:6: warning: this statement may fall through [-Wimplicit-fallthrough=]
->>    if (!net_eq(dev_net(dev), &init_net))
->>       ^
->> drivers/net/macvlan.c:841:2: note: here
->>   case SIOCGHWTSTAMP:
->>   ^~~~
->>
->> Warning level 3 was used: -Wimplicit-fallthrough=3
->>
->> This patch is part of the ongoing efforts to enable
->> -Wimplicit-fallthrough.
->>
->> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+> I believe this is trying to point at the generic pinctrl docs
+> which now live here:
 > 
-> I'll apply this to 'net' since it was introduced actually by arecent
-> change.
+> Documentation/driver-api/pinctl.rst
 > 
+> There is a patch to do this already:
+> https://lkml.org/lkml/2019/1/9/853
+> With the latest resend here:
+> https://www.mail-archive.com/linux-kernel@vger.kernel.org/msg2001752.html
 
-OK, great. :)
+Ah, makes sense to me. 
 
-Thank you.
---
-Gsutavo
+Please ignore this one.
+
+Thanks,
+Mauro
