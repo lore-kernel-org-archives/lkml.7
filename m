@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0766C04E87
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:40:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE992C04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:40:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B5CD9204FD
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:40:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BA239204FD
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:40:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558356044;
-	bh=9w1eD9LOYu+B0ZhLMva+4PilKq5GI79QCCu43FAARhA=;
+	s=default; t=1558356055;
+	bh=+4tpKAGlr3qUQuo9wWjdP1hriAMmMbgGyJNjFBmIVZw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HudBuvIVUZQuMG15M2FVxe+fvd7k2T7X1QLOpifnpyP9E9WZYctaqUMaPsN81FwNx
-	 tr9v59yFlnphmY60Z51cAQea6YTKNgG25ArkkuRajEtD7zh8mOv8nwRdL3Y+4UVZlt
-	 XEHNcv0zPqO6dt5BH5e+DSgt9BHJKfZPl6vZZGhA=
+	b=DBPmV8m50sMsTgE3s7p7H0Q2kOY6PizssbpNYAoKLFolcffQLIjiSzzJ33mRY5ILp
+	 KOYxL7gVzzQFHH8XXf9EPsExeq+2RheD6NM+XWAqpGqR+freTiRxon+G3NZeGRZg4T
+	 gqvyFvxJLeB7Fg7egPmg5JaJZbTTlY/qgR0uCO5A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390573AbfETMce (ORCPT
+        id S2391047AbfETMky (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 08:32:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49442 "EHLO mail.kernel.org"
+        Mon, 20 May 2019 08:40:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49164 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388240AbfETMca (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 08:32:30 -0400
+        id S2390505AbfETMcU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 08:32:20 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8FA39204FD;
-        Mon, 20 May 2019 12:32:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2DC4E21479;
+        Mon, 20 May 2019 12:32:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558355550;
-        bh=9w1eD9LOYu+B0ZhLMva+4PilKq5GI79QCCu43FAARhA=;
+        s=default; t=1558355539;
+        bh=+4tpKAGlr3qUQuo9wWjdP1hriAMmMbgGyJNjFBmIVZw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=C1TfCIaQw+pTftBdt65J88YUM6yNuPuwuabc+B7IHesrDBzcB9xNjlJPM4NaiZM3+
-         dYizlRTN1RbLY2Gnh4qaEvBxLWLwgbE3x8yUeFuKPkaw95t8YATMJTsSU964WGdDvn
-         ezIE+7WiC9g/GToh/FKI/zvznPMKem6kcnmA1wpY=
+        b=QWPdpfDSOsHB80jmsyjNOifyuJdzaq3eZ7L6IkrbRQ6sJ8YekhNlAnIFk4L5VjHFW
+         dgxanRWSgGquwdUnT3T/hSF74j3RmyEm0YmsYvWUzhho2n/uJSgopY/wvoeDpW1/oR
+         UnDbbD0mOJ/hNZsFpDPe+5JnOO/fBG++oMTplQu8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tim Chen <tim.c.chen@linux.intel.com>,
-        Eric Biggers <ebiggers@google.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>
-Subject: [PATCH 5.1 034/128] crypto: x86/crct10dif-pcl - fix use via crypto_shash_digest()
-Date:   Mon, 20 May 2019 14:13:41 +0200
-Message-Id: <20190520115251.962802118@linuxfoundation.org>
+        stable@vger.kernel.org, Tom Lendacky <thomas.lendacky@amd.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Gary Hook <gary.hook@amd.com>,
+        Brijesh Singh <brijesh.singh@amd.com>
+Subject: [PATCH 5.1 030/128] crypto: ccp - Do not free psp_master when PLATFORM_INIT fails
+Date:   Mon, 20 May 2019 14:13:37 +0200
+Message-Id: <20190520115251.672961439@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190520115249.449077487@linuxfoundation.org>
 References: <20190520115249.449077487@linuxfoundation.org>
@@ -60,68 +61,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Biggers <ebiggers@google.com>
+From: Singh, Brijesh <brijesh.singh@amd.com>
 
-commit dec3d0b1071a0f3194e66a83d26ecf4aa8c5910e upstream.
+commit f5a2aeb8b254c764772729a6e48d4e0c914bb56a upstream.
 
-The ->digest() method of crct10dif-pclmul reads the current CRC value
-from the shash_desc context.  But this value is uninitialized, causing
-crypto_shash_digest() to compute the wrong result.  Fix it.
+Currently, we free the psp_master if the PLATFORM_INIT fails during the
+SEV FW probe. If psp_master is freed then driver does not invoke the PSP
+FW. As per SEV FW spec, there are several commands (PLATFORM_RESET,
+PLATFORM_STATUS, GET_ID etc) which can be executed in the UNINIT state
+We should not free the psp_master when PLATFORM_INIT fails.
 
-Probably this wasn't noticed before because lib/crc-t10dif.c only uses
-crypto_shash_update(), not crypto_shash_digest().  Likewise,
-crypto_shash_digest() is not yet tested by the crypto self-tests because
-those only test the ahash API which only uses shash init/update/final.
-
-Fixes: 0b95a7f85718 ("crypto: crct10dif - Glue code to cast accelerated CRCT10DIF assembly as a crypto transform")
-Cc: <stable@vger.kernel.org> # v3.11+
-Cc: Tim Chen <tim.c.chen@linux.intel.com>
-Signed-off-by: Eric Biggers <ebiggers@google.com>
+Fixes: 200664d5237f ("crypto: ccp: Add SEV support")
+Cc: Tom Lendacky <thomas.lendacky@amd.com>
+Cc: Herbert Xu <herbert@gondor.apana.org.au>
+Cc: Gary Hook <gary.hook@amd.com>
+Cc: stable@vger.kernel.org # 4.19.y
+Signed-off-by: Brijesh Singh <brijesh.singh@amd.com>
 Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/crypto/crct10dif-pclmul_glue.c |   13 +++++--------
- 1 file changed, 5 insertions(+), 8 deletions(-)
+ drivers/crypto/ccp/psp-dev.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/arch/x86/crypto/crct10dif-pclmul_glue.c
-+++ b/arch/x86/crypto/crct10dif-pclmul_glue.c
-@@ -70,15 +70,14 @@ static int chksum_final(struct shash_des
- 	return 0;
- }
+--- a/drivers/crypto/ccp/psp-dev.c
++++ b/drivers/crypto/ccp/psp-dev.c
+@@ -997,7 +997,7 @@ void psp_pci_init(void)
+ 	rc = sev_platform_init(&error);
+ 	if (rc) {
+ 		dev_err(sp->dev, "SEV: failed to INIT error %#x\n", error);
+-		goto err;
++		return;
+ 	}
  
--static int __chksum_finup(__u16 *crcp, const u8 *data, unsigned int len,
--			u8 *out)
-+static int __chksum_finup(__u16 crc, const u8 *data, unsigned int len, u8 *out)
- {
- 	if (len >= 16 && irq_fpu_usable()) {
- 		kernel_fpu_begin();
--		*(__u16 *)out = crc_t10dif_pcl(*crcp, data, len);
-+		*(__u16 *)out = crc_t10dif_pcl(crc, data, len);
- 		kernel_fpu_end();
- 	} else
--		*(__u16 *)out = crc_t10dif_generic(*crcp, data, len);
-+		*(__u16 *)out = crc_t10dif_generic(crc, data, len);
- 	return 0;
- }
- 
-@@ -87,15 +86,13 @@ static int chksum_finup(struct shash_des
- {
- 	struct chksum_desc_ctx *ctx = shash_desc_ctx(desc);
- 
--	return __chksum_finup(&ctx->crc, data, len, out);
-+	return __chksum_finup(ctx->crc, data, len, out);
- }
- 
- static int chksum_digest(struct shash_desc *desc, const u8 *data,
- 			 unsigned int length, u8 *out)
- {
--	struct chksum_desc_ctx *ctx = shash_desc_ctx(desc);
--
--	return __chksum_finup(&ctx->crc, data, length, out);
-+	return __chksum_finup(0, data, length, out);
- }
- 
- static struct shash_alg alg = {
+ 	dev_info(sp->dev, "SEV API:%d.%d build:%d\n", psp_master->api_major,
 
 
