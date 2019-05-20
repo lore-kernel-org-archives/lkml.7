@@ -2,137 +2,87 @@ Return-Path: <SRS0=lq4r=TU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7118C04E87
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 11:51:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D296C04E87
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 11:55:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9A08020645
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 11:51:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=benyossef-com.20150623.gappssmtp.com header.i=@benyossef-com.20150623.gappssmtp.com header.b="XQI1oWu2"
+	by mail.kernel.org (Postfix) with ESMTP id CD1992081C
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 11:55:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732032AbfETLvm (ORCPT
+        id S1732174AbfETLzb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 07:51:42 -0400
-Received: from mail-ua1-f65.google.com ([209.85.222.65]:45077 "EHLO
-        mail-ua1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731950AbfETLvl (ORCPT
+        Mon, 20 May 2019 07:55:31 -0400
+Received: from kirsty.vergenet.net ([202.4.237.240]:36588 "EHLO
+        kirsty.vergenet.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730773AbfETLza (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 07:51:41 -0400
-Received: by mail-ua1-f65.google.com with SMTP id n7so5121492uap.12
-        for <linux-kernel@vger.kernel.org>; Mon, 20 May 2019 04:51:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=benyossef-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=2QA4ID8DT7P795dvV4IbuNJhbEACzngsrOuQUiIzl48=;
-        b=XQI1oWu2zpUYgsaQ/BKmDtFAtkL7QlwZSlhGP0jHfv4JXP9XPkOrG6AO1v7CRmmRS+
-         cMoek7w39gEHsJ56mGHwS0GxqwmdiEul7wra6aJBXbGmWbdD/TEAZI+TCV7ql0FrAzvM
-         qidzhvXutng3G1p3Jq5FkEc4ee6Y/GECMo9IbPSvAmVtWCiQhByyWxrjpN2qkaf54VoL
-         M6mlmjMMse4h9Ej4m9sZrr0xBHGBlyilwGysTVFF/xAO2cO5jT3OlVRv9hQuqL8YkzXN
-         WXiTUjzv3huNh2yChkH+AGdf9kjQWIG2fWWlLZ0QpYg2fQjS4GanOt79HNGumghs8AQT
-         dJGg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=2QA4ID8DT7P795dvV4IbuNJhbEACzngsrOuQUiIzl48=;
-        b=FhNVN5kVznLrORe7UMrV9WAoQInBtGur8weDhFZR1NRXNpMyD4SCqcWHAtTC4PLgHh
-         KJ9yDV2F/sbnoABq1CJlMYx8TUS4y3QPm35Hxl7LWAPxm6GAaQ8UTOEX5hs4uFO/LFjS
-         HZF3muI7VOTZ3k5dr2K75Ww7U5Cov+ZkGt+qyP1j7xoUj7TJI9ggE9zNTJ2zZESxERYH
-         1vMbhOkD6nosZ8orZr6G4VA8YJzqIXSfel9XBpeZ451az8mTRXC9E/9fYsJTHRItWJ2/
-         wHKUPvq/P/2D5FR8/Mg9WB2FGinu0bS6AhumgyKBlhw9HxrwDp6IL/Ddgihs3jkq1NX1
-         uH2Q==
-X-Gm-Message-State: APjAAAWEFYofrQTfHqa1m4pATFrUq2yPdpVQlq7VdZBVf+ewNjrEuglK
-        NGZhdc/6DsO4rvhAqHOLHp1E/4O9KSsaHP3x20jlU2T+
-X-Google-Smtp-Source: APXvYqzKP1TTYuT4qKUW6lm4ts3QEzmB7qd+laniptOPwVAj7agDu/YucD9OFu9MftZ0Ks59Ey4dpklY/KrtAdCSPLM=
-X-Received: by 2002:ab0:5930:: with SMTP id n45mr22358315uad.87.1558353100373;
- Mon, 20 May 2019 04:51:40 -0700 (PDT)
+        Mon, 20 May 2019 07:55:30 -0400
+Received: from reginn.horms.nl (watermunt.horms.nl [80.127.179.77])
+        by kirsty.vergenet.net (Postfix) with ESMTPA id BB41725AEBF;
+        Mon, 20 May 2019 21:55:28 +1000 (AEST)
+Received: by reginn.horms.nl (Postfix, from userid 7100)
+        id B6D159404D4; Mon, 20 May 2019 13:55:26 +0200 (CEST)
+Date:   Mon, 20 May 2019 13:55:26 +0200
+From:   Simon Horman <horms@verge.net.au>
+To:     Rob Herring <robh+dt@kernel.org>
+Cc:     Fabrizio Castro <fabrizio.castro@bp.renesas.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Thierry Reding <treding@nvidia.com>,
+        Andreas =?utf-8?Q?F=C3=A4rber?= <afaerber@suse.de>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Jagan Teki <jagan@amarulasolutions.com>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        "open list:MEDIA DRIVERS FOR RENESAS - FCP" 
+        <linux-renesas-soc@vger.kernel.org>, devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Chris Paterson <Chris.Paterson2@renesas.com>,
+        Biju Das <biju.das@bp.renesas.com>, xu_shunji@hoperun.com
+Subject: Re: [PATCH v3 1/2] dt-bindings: Add vendor prefix for HopeRun
+Message-ID: <20190520115526.zhhinfb52szptrtl@verge.net.au>
+References: <1558085189-22061-1-git-send-email-fabrizio.castro@bp.renesas.com>
+ <1558085189-22061-2-git-send-email-fabrizio.castro@bp.renesas.com>
+ <CAL_JsqJCJyRBX+08UriNeYZ01ow0yLv=VjK3sNbjVi1GB5=MQA@mail.gmail.com>
 MIME-Version: 1.0
-References: <20190418133913.9122-1-gilad@benyossef.com> <CAOtvUMd9WUZAFgTqVH0U2ZZp8bbHXNg9Ae_ZFvGKJTSKNct8JA@mail.gmail.com>
- <20190517145235.GB10613@kroah.com> <CAOtvUMc++UtTP3fvXofuJA4JpdT86s5gbSx6WRtDK=sWnuUZrg@mail.gmail.com>
- <CAOtvUMcfXHv0UxytEEdGJG5LM-SfyyVHbnbE0RNALMfBD1zuEQ@mail.gmail.com> <20190520093008.GA4476@kroah.com>
-In-Reply-To: <20190520093008.GA4476@kroah.com>
-From:   Gilad Ben-Yossef <gilad@benyossef.com>
-Date:   Mon, 20 May 2019 14:51:27 +0300
-Message-ID: <CAOtvUMeiO9-U=ESWHws+kwNHMR-zS9xdeF8-HOdYYX-hk0qzZQ@mail.gmail.com>
-Subject: Re: [PATCH 00/35] crypto: ccree: features and bug fixes for 5.2
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>, stable@vger.kernel.org,
-        Ofir Drang <ofir.drang@arm.com>,
-        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
-        Linux kernel mailing list <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAL_JsqJCJyRBX+08UriNeYZ01ow0yLv=VjK3sNbjVi1GB5=MQA@mail.gmail.com>
+Organisation: Horms Solutions BV
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-
-On Mon, May 20, 2019 at 12:30 PM Greg KH <gregkh@linuxfoundation.org> wrote=
-:
->
-> On Sun, May 19, 2019 at 11:28:05AM +0300, Gilad Ben-Yossef wrote:
-> > On Sat, May 18, 2019 at 10:36 AM Gilad Ben-Yossef <gilad@benyossef.com>=
- wrote:
-> > >
-> > > Hi
-> > >
-> > > On Fri, May 17, 2019 at 5:52 PM Greg KH <gregkh@linuxfoundation.org> =
-wrote:
-> > > >
-> > > > On Sun, Apr 21, 2019 at 11:52:55AM +0300, Gilad Ben-Yossef wrote:
-> > > > > On Thu, Apr 18, 2019 at 4:39 PM Gilad Ben-Yossef <gilad@benyossef=
-.com> wrote:
-> > > > > >
-> > > > > > A set of new features, mostly support for CryptoCell 713
-> > > > > > features including protected keys, security disable mode and
-> > > > > > new HW revision indetification interface alongside many bug fix=
-es.
-> > > > >
-> > > > > FYI,
-> > > > >
-> > > > > A port of those patches from this patch series which have been ma=
-rked
-> > > > > for stable is available at
-> > > > > https://github.com/gby/linux/tree/4.19-ccree
-> > > >
-> > > > Hm, all I seem to need are 2 patches that failed to apply.  Can you=
- just
-> > > > provide backports for them?
-> > >
-> > > Sure, I'll send them early next week.
+On Fri, May 17, 2019 at 08:38:14AM -0500, Rob Herring wrote:
+> On Fri, May 17, 2019 at 4:27 AM Fabrizio Castro
+> <fabrizio.castro@bp.renesas.com> wrote:
 > >
-> > hm...  I've just fetched the latest from
-> > git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable.git,
-> > rebased that branch against the linux-4.19.y branch and it all went
-> > smooth.
+> > Add "Jiangsu HopeRun Software Co., Ltd." to the list of devicetree
+> > vendor prefixes as "hoperun".
 > >
-> > What am I'm missing? is there some other tree I should be doing this on=
-?
->
-> I do not know, can you just send the 2 patches that I said failed for
-> me?  Those are the only ones that I need here.
->
-> I can't use random github trees, sorry, let's stick to email for patches
-> please.
->
+> > Website: http://www.hoperun.com/en
+> >
+> > Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+> > Reviewed-by: Chris Paterson <Chris.Paterson2@renesas.com>
+> >
+> > ---
+> > v2->v3:
+> > * Moved to vendor-prefixes.yaml
+> > * Dropped Reviewed-by Simon as this is a completely new patch and as
+> >   such it needs a brand new review
+> > v1->v2:
+> > * No change
+> > ---
+> >  Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 ++
+> >  1 file changed, 2 insertions(+)
+> 
+> Reviewed-by: Rob Herring <robh@kernel.org>
 
-Sure, no problem. I thought you tried the github tree and it failed.
-
-I sent the patches now.
-
-Gilad
-
-
---=20
-Gilad Ben-Yossef
-Chief Coffee Drinker
-
-values of =CE=B2 will give rise to dom!
+Thanks, applied for inclusion in v5.3 via the renesas tree.
