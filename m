@@ -2,94 +2,79 @@ Return-Path: <SRS0=lq4r=TU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB73FC04AAC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 17:20:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D940C04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 17:21:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B0D60208C3
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 17:20:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558372844;
-	bh=y0qgGqkaWE/kipSaEaPyyR8jq8PGYKXzIS0tbcLGqT8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=WToBCR1BzzpYKFs9O8zbVjhIbEUx7g9naOfkey0Roi6XHFrxicA+wFQEAoUrZLHIa
-	 jMWNRAfGooxwvaMo9Rd8ziDgsjWC1jE3oluz6UasP4so3C4fSHElc5yPcu8PQTble2
-	 WzKRba0XYZ1yKX0I/Z8w07sgZBV7r6iyEUiPanUs=
+	by mail.kernel.org (Postfix) with ESMTP id 1141B20675
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 17:21:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="BF/jOVKx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392818AbfETRUn (ORCPT
+        id S2392841AbfETRVy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 13:20:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37264 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733069AbfETRUn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 13:20:43 -0400
-Received: from localhost (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BA7F720675;
-        Mon, 20 May 2019 17:20:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558372843;
-        bh=y0qgGqkaWE/kipSaEaPyyR8jq8PGYKXzIS0tbcLGqT8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=T7LDFzx1/j26xdrmdGnd4Vxk/tKpX7CER1YFC7xEGVrpLONxw97rPMieYRiUi4u67
-         9+K/Y+woV2VZBB/bKo7nxunaBn+FEQtPoFiOQfiD7j/JzUZuBGKAbfcikO+wPJ+Eoq
-         2qXVXVKUCa9CCxJTkx1bTlVpUNre2LKuXkUMmmjo=
-Date:   Mon, 20 May 2019 13:20:41 -0400
-From:   Sasha Levin <sashal@kernel.org>
-To:     Julia Lawall <julia.lawall@lip6.fr>
-Cc:     Pavel Machek <pavel@ucw.cz>, wen.yang99@zte.com.cn,
-        Markus.Elfring@web.de, cocci@systeme.lip6.fr,
-        linux-kernel@vger.kernel.org,
-        Gilles Muller <Gilles.Muller@lip6.fr>,
-        yamada.masahiro@socionext.com, michal.lkml@markovi.net,
-        nicolas.palix@imag.fr
-Subject: Re: Coccinelle: semantic patch for missing of_node_put
-Message-ID: <20190520172041.GH11972@sasha-vm>
-References: <201905171432571474636@zte.com.cn>
- <alpine.DEB.2.20.1905170912590.4014@hadrien>
- <20190520093303.GA9320@atrey.karlin.mff.cuni.cz>
- <alpine.DEB.2.21.1905201152040.2543@hadrien>
+        Mon, 20 May 2019 13:21:54 -0400
+Received: from mail-it1-f182.google.com ([209.85.166.182]:52800 "EHLO
+        mail-it1-f182.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390855AbfETRVx (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 13:21:53 -0400
+Received: by mail-it1-f182.google.com with SMTP id t184so298183itf.2
+        for <linux-kernel@vger.kernel.org>; Mon, 20 May 2019 10:21:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sifive.com; s=google;
+        h=date:from:to:cc:subject:message-id:user-agent:mime-version;
+        bh=U1mBWkntXkHe1OCaEZa+jzt5Ip0fm+Wb1DlBjW6XVX0=;
+        b=BF/jOVKxDvMpDHjMQlvokcMXOadG/5ViD73TuHUBrB9dtvRdjbDQVHTNnHaLJLJUs9
+         WOwTsOZdjbTpyhpmzN6oT4uSumOGxigzKYt3SFVUC6R9qG8WVYh2ln5esDW1/l4nFnOv
+         aRLJWCRooneNAi5N7rznzcbzXww4/UcK2zs/bZji4izYgVB3QpA4L5oAT5XMtpTLvrUE
+         7WYw4NGYujkC90KXN/TWEW+eKrVe9N4MhhfaaDOwsKkC5hQ7HS9C5/Ysgc8Hcz0GvKAd
+         boKSsky9t/eTRN/jK3tFfywGkm0u9yAbsPK/vvhTcYKJJMjUkSlmZEIihH9YL/hKVPFS
+         qsRA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:user-agent
+         :mime-version;
+        bh=U1mBWkntXkHe1OCaEZa+jzt5Ip0fm+Wb1DlBjW6XVX0=;
+        b=i0jGj2TaU0bubxZWReNfOGJyrM3N2/nfNlSvXsjLzZLEzW2hHS9PY0SSM4oqbZa8M7
+         qSyVZjas+ywgMoSTzCwzvVSnjyvxlkUJWL2HTAlutnR01UI0z5o5WkwAG7NicZYU13fE
+         keuNNkrSfkuvlActNLRvc70YAtWGQAsdbwNSv2l9kowL2PcB+j8CFVHqBtXlkHnNdPc0
+         3V4ae7VlBgTa9y7lUDeYy079aBH55lYKdfUOJnRIsbnsjqBrhFUmyfj7RSFZlvd50OIO
+         xZzECuhvi931Bf6vE0KEI/Vq7EPxCgwaKH8F89SUOoAsX2eTmrxMndlBDYrzAnMh8uOi
+         53XA==
+X-Gm-Message-State: APjAAAWFrRd/inRyKbmIBWQsgZyWDFl0v4EcdQrXSwEUb7YJtAw2eBU7
+        RGQktObERH2z0kloUHGYD8wE8Q==
+X-Google-Smtp-Source: APXvYqzm9lzmDOXN1zutvigb7Iph9iyTT4n+F+YUyQlvjbxbo+bmPjFo5lSuHBq42ujfRuR40BSwvg==
+X-Received: by 2002:a24:56d1:: with SMTP id o200mr115019itb.93.1558372913090;
+        Mon, 20 May 2019 10:21:53 -0700 (PDT)
+Received: from localhost (c-73-95-159-87.hsd1.co.comcast.net. [73.95.159.87])
+        by smtp.gmail.com with ESMTPSA id v134sm56488ita.16.2019.05.20.10.21.52
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 20 May 2019 10:21:52 -0700 (PDT)
+Date:   Mon, 20 May 2019 10:21:51 -0700 (PDT)
+From:   Paul Walmsley <paul.walmsley@sifive.com>
+X-X-Sender: paulw@viisi.sifive.com
+To:     linux-riscv@lists.infradead.org
+cc:     linux-kernel@vger.kernel.org, palmer@sifive.com
+Subject: Patches for v5.2-rc and v5.3 merge window
+Message-ID: <alpine.DEB.2.21.9999.1905201019010.15580@viisi.sifive.com>
+User-Agent: Alpine 2.21.9999 (DEB 301 2018-08-15)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <alpine.DEB.2.21.1905201152040.2543@hadrien>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 20, 2019 at 11:52:37AM +0200, Julia Lawall wrote:
->
->
->On Mon, 20 May 2019, Pavel Machek wrote:
->
->> Hi!
->>
->> > A semantic patch has no access to comments.  The only thing I can see to
->> > do is to use python to interact with some external tools.  For example,
->> > you could write some code to collect the comments in a file and the lines
->> > on which they occur, and then get the comment that most closely precedes
->> > the start of the function.
->>
->> How dangerous is missing of_node_put? AFAICT it will only result into
->> very small, one-time memory leak, right?
->>
->> Could we make sure these patches are _not_ going to stable? Leaking
->> few bytes once per boot is not really a serious bug.
->
->Sasha,
->
->Probably patches that add only of_node_put should not be auto selected for
->stable.
 
-I can filter them out, but those are fixes, right? Why are we concerned
-about them making it into -stable?
+Folks,
 
---
-Thanks,
-Sasha
+Palmer has asked me to collect patches for the v5.2-rc releases and v5.3 
+merge window, so I'll be doing so.  This is just a heads-up so no one is 
+surprised to see 'patch queued' responses from me.
+
+
+- Paul 
