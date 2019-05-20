@@ -2,85 +2,85 @@ Return-Path: <SRS0=lq4r=TU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8027BC04AB4
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 03:02:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9D07C072AD
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 03:02:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5FD3520833
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 03:02:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7FCAF20644
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 03:02:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730181AbfETDCE (ORCPT
+        id S1730198AbfETDCW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 19 May 2019 23:02:04 -0400
-Received: from out30-131.freemail.mail.aliyun.com ([115.124.30.131]:38541 "EHLO
-        out30-131.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725959AbfETDCA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 19 May 2019 23:02:00 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R391e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e07486;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=9;SR=0;TI=SMTPD_---0TSB-E6b_1558321317;
-Received: from localhost(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0TSB-E6b_1558321317)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Mon, 20 May 2019 11:01:57 +0800
-From:   Alex Shi <alex.shi@linux.alibaba.com>
-To:     cgroups@vger.kernel.org
-Cc:     Alex Shi <alex.shi@linux.alibaba.com>,
-        Shuah Khan <shuah@kernel.org>, Tejun Heo <tj@kernel.org>,
-        Roman Gushchin <guro@fb.com>, Claudio Zumbo <claudioz@fb.com>,
-        Claudio <claudiozumbo@gmail.com>,
-        linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2 3/3] kselftest/cgroup: fix incorrect test_core skip
-Date:   Mon, 20 May 2019 11:01:40 +0800
-Message-Id: <20190520030140.203605-4-alex.shi@linux.alibaba.com>
-X-Mailer: git-send-email 2.19.1.856.g8858448bb
-In-Reply-To: <20190520030140.203605-1-alex.shi@linux.alibaba.com>
-References: <20190520030140.203605-1-alex.shi@linux.alibaba.com>
+        Sun, 19 May 2019 23:02:22 -0400
+Received: from mga04.intel.com ([192.55.52.120]:49140 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725959AbfETDCW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 19 May 2019 23:02:22 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 19 May 2019 20:02:21 -0700
+X-ExtLoop1: 1
+Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
+  by fmsmga005.fm.intel.com with ESMTP; 19 May 2019 20:02:19 -0700
+Received: from kbuild by lkp-server01 with local (Exim 4.89)
+        (envelope-from <lkp@intel.com>)
+        id 1hSYZ8-00023d-Qb; Mon, 20 May 2019 11:02:18 +0800
+Date:   Mon, 20 May 2019 11:02:15 +0800
+From:   kbuild test robot <lkp@intel.com>
+To:     Pierre Morel <pmorel@linux.ibm.com>
+Cc:     kbuild-all@01.org, sebott@linux.vnet.ibm.com,
+        gerald.schaefer@de.ibm.com, pasic@linux.vnet.ibm.com,
+        borntraeger@de.ibm.com, walling@linux.ibm.com,
+        linux-s390@vger.kernel.org, iommu@lists.linux-foundation.org,
+        joro@8bytes.org, linux-kernel@vger.kernel.org,
+        alex.williamson@redhat.com, kvm@vger.kernel.org,
+        schwidefsky@de.ibm.com, heiko.carstens@de.ibm.com,
+        robin.murphy@arm.com
+Subject: Re: [PATCH v2 4/4] vfio: vfio_iommu_type1: implement
+ VFIO_IOMMU_INFO_CAPABILITIES
+Message-ID: <201905201003.EM66D2dQ%lkp@intel.com>
+References: <1558109810-18683-5-git-send-email-pmorel@linux.ibm.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1558109810-18683-5-git-send-email-pmorel@linux.ibm.com>
+X-Patchwork-Hint: ignore
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The test_core will skip the
-test_cgcore_no_internal_process_constraint_on_threads test case if the
-'cpu' controller missing in root's subtree_control. In fact we need to
-set the 'cpu' in subtree_control, to make the testing meaningful.
+Hi Pierre,
 
-./test_core
-...
-ok 4 # skip test_cgcore_no_internal_process_constraint_on_threads
-...
+I love your patch! Perhaps something to improve:
 
-Signed-off-by: Alex Shi <alex.shi@linux.alibaba.com>
-Cc: Shuah Khan <shuah@kernel.org>
-Cc: Tejun Heo <tj@kernel.org>
-Cc: Roman Gushchin <guro@fb.com>
-Cc: Claudio Zumbo <claudioz@fb.com>
-Cc: Claudio <claudiozumbo@gmail.com>
-Cc: linux-kselftest@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-Reviewed-by: Roman Gushchin <guro@fb.com>
+[auto build test WARNING on s390/features]
+[also build test WARNING on v5.1 next-20190517]
+[if your patch is applied to the wrong git tree, please drop us a note to help improve the system]
+
+url:    https://github.com/0day-ci/linux/commits/Pierre-Morel/s390-pci-Exporting-access-to-CLP-PCI-function-and-PCI-group/20190520-025155
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/s390/linux.git features
+reproduce:
+        # apt-get install sparse
+        make ARCH=x86_64 allmodconfig
+        make C=1 CF='-fdiagnostic-prefix -D__CHECK_ENDIAN__'
+
+If you fix the issue, kindly add following tag
+Reported-by: kbuild test robot <lkp@intel.com>
+
+
+sparse warnings: (new ones prefixed by >>)
+
+>> drivers/vfio/vfio_iommu_type1.c:1707:5: sparse: sparse: symbol 'vfio_iommu_type1_caps' was not declared. Should it be static?
+
+Please review and possibly fold the followup patch.
+
 ---
- tools/testing/selftests/cgroup/test_core.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/tools/testing/selftests/cgroup/test_core.c b/tools/testing/selftests/cgroup/test_core.c
-index b1a570d7c557..2ffc3e07d98d 100644
---- a/tools/testing/selftests/cgroup/test_core.c
-+++ b/tools/testing/selftests/cgroup/test_core.c
-@@ -198,7 +198,7 @@ static int test_cgcore_no_internal_process_constraint_on_threads(const char *roo
- 	char *parent = NULL, *child = NULL;
- 
- 	if (cg_read_strstr(root, "cgroup.controllers", "cpu") ||
--	    cg_read_strstr(root, "cgroup.subtree_control", "cpu")) {
-+	    cg_write(root, "cgroup.subtree_control", "+cpu")) {
- 		ret = KSFT_SKIP;
- 		goto cleanup;
- 	}
--- 
-2.19.1.856.g8858448bb
-
+0-DAY kernel test infrastructure                Open Source Technology Center
+https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
