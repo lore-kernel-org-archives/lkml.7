@@ -2,165 +2,159 @@ Return-Path: <SRS0=lq4r=TU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65776C04AAC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 10:50:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2851C04AAF
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 10:51:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 42DC62081C
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 10:50:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 784BD2081C
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 10:51:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="nwKyM/IE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731161AbfETKuq (ORCPT
+        id S1731507AbfETKvF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 06:50:46 -0400
-Received: from lb3-smtp-cloud7.xs4all.net ([194.109.24.31]:52463 "EHLO
-        lb3-smtp-cloud7.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725601AbfETKuq (ORCPT
+        Mon, 20 May 2019 06:51:05 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:45759 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730626AbfETKvE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 06:50:46 -0400
-Received: from [192.168.2.10] ([46.9.252.75])
-        by smtp-cloud7.xs4all.net with ESMTPA
-        id SfsOhqxuR3qlsSfsRhiyoi; Mon, 20 May 2019 12:50:43 +0200
-Subject: Re: [PATCH v6 1/3] media: cec: expose HDMI connector to CEC dev
- mapping
-From:   Hans Verkuil <hverkuil@xs4all.nl>
-To:     Dariusz Marcinkiewicz <darekm@google.com>,
-        linux-media@vger.kernel.org, hans.verkuil@cisco.com
-Cc:     linux-kernel@vger.kernel.org
-References: <20190517154256.255696-1-darekm@google.com>
- <c0007b51-5e9f-4788-b860-d0623e21013b@xs4all.nl>
-Message-ID: <3300cffd-62e7-7e2d-3c73-dc5fc7455c88@xs4all.nl>
-Date:   Mon, 20 May 2019 12:50:40 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Mon, 20 May 2019 06:51:04 -0400
+Received: by mail-pl1-f193.google.com with SMTP id a5so6522290pls.12
+        for <linux-kernel@vger.kernel.org>; Mon, 20 May 2019 03:51:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=YW9HGM19uXsoCoTdRY5JIfYDHKn9S6uoZXsNTuG/dJI=;
+        b=nwKyM/IEfq5ctjmYY2jYx0QaToWYb1YEuO/QgxBA8FfWHLb8CsKObYDEvzR49aMFbv
+         +oCYec9BmqEYalYo6wUQNHs7NdIb1s+BWbibEgPSe9CFiJGZ4EnF9Ze+cz3e34PXLu0Z
+         Go6tkBaHkP6bJEkNUalms35nw8zGwJ2+hihxeooKztv5hmF4OIS+gPeX2oceCcAy+Q4u
+         G6iAB3C7xRw07Jb/+F1MEC0tjWHjS29c2NSQhCOIEQcvF9TjNmzN/J2P5WzstB/HuOJz
+         D6hwHrVl3td8rIgJIFKzxV/iAjMFTAiJo3fBbK2T9R78xEwU0jkt1bBYhv+P95sZ/cQ5
+         ueaA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=YW9HGM19uXsoCoTdRY5JIfYDHKn9S6uoZXsNTuG/dJI=;
+        b=d6vv3h3/imW4qZi8v4lu0moGUCg5Q4ics3q3+9Lk/zMYn9eluPMJiQb6juh3ER4X+s
+         gcNQiXImUfOgQmMF/jnmcZkWR692UX9aClwqCYeMAV/eotfV2UjVbgmz47d/hP23yJ5b
+         3p7pzZNjh7vCKdeh1/qo5KjiFExn5XPYbwiuowajD0yjL3cJudL5vqCkHj7vNhdbzOmP
+         yYvHEX9XoBXald797oGFUcGdLm227x6ztH/DTDAYQpLWBzKVwz+uGzyNupyxQKVKce28
+         j5vxZLx1zMrV5c+5vQ1K3k4sWTVmzRgllGOBKL1GmcDe5H8tVqmOjIQQ8q/fHKRWdOYV
+         PMfg==
+X-Gm-Message-State: APjAAAVLTPKtSVk6VSOdvHuarDm1H4HqPDvaaSGmJ3oc1xF1v5EiYsWs
+        w/T8QgoA1U9/ntyipChfrSgITQ==
+X-Google-Smtp-Source: APXvYqwLPnoz4Sab1bFclPQh5T547o374DXWd3I8Z4Z2RFohtUgkOKBd841X9Qsjl4Wl44THZDVQjQ==
+X-Received: by 2002:a17:902:b20f:: with SMTP id t15mr54482368plr.220.1558349463660;
+        Mon, 20 May 2019 03:51:03 -0700 (PDT)
+Received: from localhost ([122.172.118.99])
+        by smtp.gmail.com with ESMTPSA id 63sm24202008pfu.95.2019.05.20.03.51.02
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 20 May 2019 03:51:02 -0700 (PDT)
+Date:   Mon, 20 May 2019 16:21:00 +0530
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Cc:     stefan.wahren@i2se.com, "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        mbrugger@suse.de, sboyd@kernel.org, eric@anholt.net,
+        f.fainelli@gmail.com, bcm-kernel-feedback-list@broadcom.com,
+        ptesarik@suse.com, linux-rpi-kernel@lists.infradead.org,
+        ssuloev@orpaltech.com, linux-clk@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, mturquette@baylibre.com,
+        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [RFC v2 5/5] cpufreq: add driver for Raspbery Pi
+Message-ID: <20190520105100.hol6cmvnsf3exzes@vireshk-i7>
+References: <20190520104708.11980-1-nsaenzjulienne@suse.de>
+ <20190520104708.11980-6-nsaenzjulienne@suse.de>
 MIME-Version: 1.0
-In-Reply-To: <c0007b51-5e9f-4788-b860-d0623e21013b@xs4all.nl>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-CMAE-Envelope: MS4wfH2u1XC9W1AeULLKABa1KeV48WihI7kLEBY0VIqkJ9SmdFfczG8189/ZCLXPic4rjjJHlsxzVeghMjoc6kWSQN/Y/YqXAOcn/cVM9pzLx9O5KrYGt7I+
- ijZjL3fQ2ukMWNhWngSlFNaWvYoKiM/Wc0f/1K4mEhTpt+j84hsaWsz94kO5IBJgjSkOXV59+KT7DDiIfq2KoBBYKhl+fEX+w0iL913mguE4kmbGAv99EItk
- 7LLEJbgsH0P0vX/CsWk3pZED7qZ1SJMr0RpF2SV25Gk=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190520104708.11980-6-nsaenzjulienne@suse.de>
+User-Agent: NeoMutt/20180716-391-311a52
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/20/19 12:25 PM, Hans Verkuil wrote:
-> Hi Dariusz,
+On 20-05-19, 12:47, Nicolas Saenz Julienne wrote:
+> Raspberry Pi's firmware offers and interface though which update it's
+> performance requirements. It allows us to request for specific runtime
+> frequencies, which the firmware might or might not respect, depending on
+> the firmware configuration and thermals.
 > 
-> On 5/17/19 5:42 PM, Dariusz Marcinkiewicz wrote:
->> This patch proposes to expose explicit mapping between HDMI connectors
->> and /dev/cecX adapters to userland.
->>
->> New structure with connector info (card number and connector id in case
->> of DRM connectors) is added to cec_adapter. That connector info is expected
->> to be provided when an adapter is created.
->>
->> CEC notifier is extended so that it can be used to communicate the
->> connector's info to CEC adapters' creators.
->>
->> New ioctl, exposing connector info to userland, is added to /dev/cec.
->>
->> Changes since v5:
->>  - make the patch apply against the latest changes in the affected code
->> Changes since v4:
->>  - small tweaks + added documentation
->> Changes since v3:
->>  - cec_get_connter_conn takes connector_info as argument
->> Changes since v2:
->>  - cec_s_connector_info removed, the connector info is now passed to
->>    cec_allocate_adapter
->>  - updated commit message
->> Changes since v1:
->>  - removed the unnecessary event,
->>  - extended cec_connctor_info to allow for various types of connectors.
->>
->> Signed-off-by: Dariusz Marcinkiewicz <darekm@google.com>
->> ---
->>  Documentation/media/kapi/cec-core.rst         |   7 +-
->>  Documentation/media/uapi/cec/cec-funcs.rst    |   1 +
->>  .../uapi/cec/cec-ioc-adap-g-conn-info.rst     | 109 ++++++++++++++++++
->>  .../display/amdgpu_dm/amdgpu_dm_mst_types.c   |   2 +-
->>  drivers/gpu/drm/bridge/adv7511/adv7511_cec.c  |   3 +-
->>  drivers/gpu/drm/bridge/synopsys/dw-hdmi-cec.c |   2 +-
->>  drivers/gpu/drm/drm_dp_cec.c                  |  22 ++--
->>  drivers/gpu/drm/i2c/tda9950.c                 |   3 +-
->>  drivers/gpu/drm/i915/intel_dp.c               |   4 +-
->>  drivers/gpu/drm/i915/intel_hdmi.c             |   6 +-
->>  drivers/gpu/drm/nouveau/nouveau_connector.c   |   3 +-
->>  drivers/gpu/drm/vc4/vc4_hdmi.c                |   8 +-
->>  drivers/media/cec/cec-adap.c                  |  13 +++
->>  drivers/media/cec/cec-api.c                   |  12 ++
->>  drivers/media/cec/cec-core.c                  |   8 +-
->>  drivers/media/cec/cec-notifier.c              |  20 +++-
->>  drivers/media/cec/cec-pin.c                   |   2 +-
->>  drivers/media/i2c/tc358743.c                  |   3 +-
->>  .../media/platform/cros-ec-cec/cros-ec-cec.c  |   7 +-
->>  drivers/media/platform/meson/ao-cec.c         |   6 +-
->>  drivers/media/platform/s5p-cec/s5p_cec.c      |   6 +-
->>  drivers/media/platform/seco-cec/seco-cec.c    |   8 +-
->>  drivers/media/platform/sti/cec/stih-cec.c     |   6 +-
->>  drivers/media/platform/stm32/stm32-cec.c      |   2 +-
->>  drivers/media/platform/tegra-cec/tegra_cec.c  |   5 +-
->>  drivers/media/platform/vivid/vivid-cec.c      |   2 +-
->>  drivers/media/usb/pulse8-cec/pulse8-cec.c     |   3 +-
->>  .../media/usb/rainshadow-cec/rainshadow-cec.c |   3 +-
->>  include/drm/drm_dp_helper.h                   |  14 +--
->>  include/media/cec-notifier.h                  |  34 ++++--
->>  include/media/cec.h                           |  16 ++-
->>  include/uapi/linux/cec.h                      |  24 ++++
->>  32 files changed, 310 insertions(+), 54 deletions(-)
->>  create mode 100644 Documentation/media/uapi/cec/cec-ioc-adap-g-conn-info.rst
->>
+> As the maximum and minimum frequencies are configurable in the firmware
+> there is no way to know in advance their values. So the Raspberry Pi
+> cpufreq driver queries them, builds an opp frequency table to then
+> launch cpufreq-dt.
 > 
-> I've been doing some testing with my Khadas VIM2 board (amlogic SoC).
+> Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+> ---
+>  drivers/cpufreq/Kconfig.arm           |  8 +++
+>  drivers/cpufreq/Makefile              |  1 +
+>  drivers/cpufreq/raspberrypi-cpufreq.c | 83 +++++++++++++++++++++++++++
+>  3 files changed, 92 insertions(+)
+>  create mode 100644 drivers/cpufreq/raspberrypi-cpufreq.c
 > 
-> It's a bit unusual since it uses the Synopsys bridge, but not the Synopsys
-> CEC driver (it has its own meson cec driver).
-> 
-> The first thing I noticed is that I did not get any connector info.
-> I think that the root cause of that is that you forgot that there are
-> several drm drivers that call cec_notifier_get() instead of cec_notifier_get_conn().
-> 
-> I think all those calls to cec_notifier_get() in drm drivers should be replaced
-> by cec_notifier_get_conn() where the second argument is NULL, but the third argument
-> should contain valid connector info.
-> 
-> A quick grep gives me the following drivers that need work:
-> 
-> drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
-> drivers/gpu/drm/exynos/exynos_hdmi.c
-> drivers/gpu/drm/i2c/tda998x_drv.c
-> drivers/gpu/drm/sti/sti_hdmi.c
-> drivers/gpu/drm/tegra/output.c
+> diff --git a/drivers/cpufreq/Kconfig.arm b/drivers/cpufreq/Kconfig.arm
+> index 179a1d302f48..f6eba7ae50d0 100644
+> --- a/drivers/cpufreq/Kconfig.arm
+> +++ b/drivers/cpufreq/Kconfig.arm
+> @@ -308,3 +308,11 @@ config ARM_PXA2xx_CPUFREQ
+>  	  This add the CPUFreq driver support for Intel PXA2xx SOCs.
+>  
+>  	  If in doubt, say N.
+> +
+> +config ARM_RASPBERRYPI_CPUFREQ
+> +	tristate "Raspberry Pi cpufreq support"
+> +	depends on RASPBERRYPI_FIRMWARE || COMPILE_TEST
+> +	help
+> +	  This adds the CPUFreq driver for Raspberry Pi
+> +
+> +	  If in doubt, say N.
+> diff --git a/drivers/cpufreq/Makefile b/drivers/cpufreq/Makefile
+> index 689b26c6f949..02678e9b2ff5 100644
+> --- a/drivers/cpufreq/Makefile
+> +++ b/drivers/cpufreq/Makefile
+> @@ -84,6 +84,7 @@ obj-$(CONFIG_ARM_TEGRA124_CPUFREQ)	+= tegra124-cpufreq.o
+>  obj-$(CONFIG_ARM_TEGRA186_CPUFREQ)	+= tegra186-cpufreq.o
+>  obj-$(CONFIG_ARM_TI_CPUFREQ)		+= ti-cpufreq.o
+>  obj-$(CONFIG_ARM_VEXPRESS_SPC_CPUFREQ)	+= vexpress-spc-cpufreq.o
+> +obj-$(CONFIG_ARM_RASPBERRYPI_CPUFREQ) 	+= raspberrypi-cpufreq.o
 
-You also missed updating drivers/gpu/drm/omapdrm/dss/hdmi4_cec.c: the
-cec_allocate_adapter call should be extended with the connector info.
+My bad sorry, I noticed this earlier and forgot to comment. The above
+two files are maintained in alphabetical order, please add the entries
+at relevant places.
+  
+>  ##################################################################################
+> diff --git a/drivers/cpufreq/raspberrypi-cpufreq.c b/drivers/cpufreq/raspberrypi-cpufreq.c
+> new file mode 100644
+> index 000000000000..a85988867d56
+> --- /dev/null
+> +++ b/drivers/cpufreq/raspberrypi-cpufreq.c
+> @@ -0,0 +1,83 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Raspberry Pi cpufreq driver
+> + *
+> + * Copyright (C) 2019, Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+> + */
+> +
+> +#include <linux/of.h>
+> +#include <linux/clk.h>
+> +#include <linux/cpu.h>
+> +#include <linux/module.h>
+> +#include <linux/pm_opp.h>
+> +#include <linux/cpufreq.h>
+> +#include <linux/platform_device.h>
 
-You also missed these three v4l cec adapters:
+Would be better to keep above in alphabetical order as well.
 
-drivers/media/i2c/adv7511.c
-drivers/media/i2c/adv7604.c
-drivers/media/i2c/adv7842.c
+Please don't send another version now and wait for comments on the
+other patches.
 
-Use NULL for the connector info for these three drivers.
-
-Also note that in 5.2-rc1 a new meson cec driver was added, that should
-be updated as well, similar to the existing meson cec driver.
-
-Regards,
-
-	Hans
-
-> 
-> The second thing I noticed is that patch 2 gave me a new kernel warning, but
-> I'll do some more testing for that and reply to patch 2/3 once I know more.
-> 
-> Regards,
-> 
-> 	Hans
-> 
-
+-- 
+viresh
