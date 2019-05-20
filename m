@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CEE99C04AAC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:36:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D19CC04E87
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:36:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9E49021479
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:36:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 332AB20645
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:36:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558355762;
-	bh=9ju6xrxxbWPj8hEI7Lte3wmlQmVwMXLWNIzQZ40UEtM=;
+	s=default; t=1558355766;
+	bh=wbaBD7Oip04UaAK0STTWIKYnZmAitCvYALj8ZhSDriY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=B6swIOlnuYnd+Q8AzEr6tlDHwzkujqUyvJ0MbTVgfcSVr9Jt36eViW2Un7Nqvjxs5
-	 Bq0aAUg9jTby6fJym3fTgSC0w/lOFeNyXnUsf57yicmEKnHILF0OEwxLAYEqcRyT5+
-	 DQwoswlU2XvHpijTodz9EI3t29D6uXvo+sRciW70=
+	b=iPlK3EvrB2ZV0a8gi/8pctUACn/KshcrzPFHfEWBlazoWrCHnugApEiLfTwmuMl1I
+	 kFduBx+E4ietHsXXXE2KOzcIli3QQ1vho75mJQ9wWTBgN7Ug0VXrA0UY03f+2ex2cU
+	 TAS51HNwpsNrw8tlIf0MA96yOEcGazd0CcKqh6WU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391197AbfETMgB (ORCPT
+        id S2391209AbfETMgF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 08:36:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54858 "EHLO mail.kernel.org"
+        Mon, 20 May 2019 08:36:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54958 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391174AbfETMf5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 08:35:57 -0400
+        id S2391190AbfETMgA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 08:36:00 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A0A1F20815;
-        Mon, 20 May 2019 12:35:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 465CA20815;
+        Mon, 20 May 2019 12:35:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558355757;
-        bh=9ju6xrxxbWPj8hEI7Lte3wmlQmVwMXLWNIzQZ40UEtM=;
+        s=default; t=1558355759;
+        bh=wbaBD7Oip04UaAK0STTWIKYnZmAitCvYALj8ZhSDriY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2Lpy/qTi6IAJFE8q2JOCTvmVLbO6NojRMyot1kVFk1qffEXqJasxylmZ3M4sK6SNk
-         GWEMRA1Aq84W1UHIUo8aj+6dk6nOi+VmqRnINYt85ad1z0gMgcztEP0TXLKAFUmPhj
-         jiyQOwK54VSrvNJ7tssQXeAs3706jzsmVyR/Ulug=
+        b=LQ1N9jPRcHYwQ8QWQIV4eY5WZKVBi2EumJ6qLFwy69QZpq9zArrhWNOVrVowR8Kr5
+         j9tCo2v7Ea3QHPNUBm8iPjIELhdquqNz9l8dT7YI2IC6cyviAyZWz7EsGr6SrcLCF/
+         JGloRZ9aiGBvIqrh9+9o5QxoKArIhJ8kmc+A+Pr8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        =?UTF-8?q?Micha=C5=82=20Wadowski?= <wadosm@gmail.com>,
-        Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 5.1 113/128] ALSA: hda/realtek - Fix for Lenovo B50-70 inverted internal microphone bug
-Date:   Mon, 20 May 2019 14:15:00 +0200
-Message-Id: <20190520115256.519237616@linuxfoundation.org>
+        stable@vger.kernel.org, Chengguang Xu <cgxu519@gmail.com>,
+        Theodore Tso <tytso@mit.edu>, stable@kernel.org
+Subject: [PATCH 5.1 114/128] jbd2: fix potential double free
+Date:   Mon, 20 May 2019 14:15:01 +0200
+Message-Id: <20190520115256.562611416@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190520115249.449077487@linuxfoundation.org>
 References: <20190520115249.449077487@linuxfoundation.org>
@@ -60,38 +59,230 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Michał Wadowski <wadosm@gmail.com>
+From: Chengguang Xu <cgxu519@gmail.com>
 
-commit 56df90b631fc027fe28b70d41352d820797239bb upstream.
+commit 0d52154bb0a700abb459a2cbce0a30fc2549b67e upstream.
 
-Add patch for realtek codec in Lenovo B50-70 that fixes inverted
-internal microphone channel.
-Device IdeaPad Y410P has the same PCI SSID as Lenovo B50-70,
-but first one is about fix the noise and it didn't seem help in a
-later kernel version.
-So I replaced IdeaPad Y410P device description with B50-70 and apply
-inverted microphone fix.
+When failing from creating cache jbd2_inode_cache, we will destroy the
+previously created cache jbd2_handle_cache twice.  This patch fixes
+this by moving each cache initialization/destruction to its own
+separate, individual function.
 
-Bugzilla: https://bugs.launchpad.net/ubuntu/+source/alsa-driver/+bug/1524215
-Signed-off-by: Michał Wadowski <wadosm@gmail.com>
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Signed-off-by: Chengguang Xu <cgxu519@gmail.com>
+Signed-off-by: Theodore Ts'o <tytso@mit.edu>
+Cc: stable@kernel.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/pci/hda/patch_realtek.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/jbd2/journal.c     |   49 +++++++++++++++++++++++++++++++------------------
+ fs/jbd2/revoke.c      |   32 ++++++++++++++++++++------------
+ fs/jbd2/transaction.c |    8 +++++---
+ include/linux/jbd2.h  |    8 +++++---
+ 4 files changed, 61 insertions(+), 36 deletions(-)
 
---- a/sound/pci/hda/patch_realtek.c
-+++ b/sound/pci/hda/patch_realtek.c
-@@ -6990,7 +6990,7 @@ static const struct snd_pci_quirk alc269
- 	SND_PCI_QUIRK(0x17aa, 0x313c, "ThinkCentre Station", ALC294_FIXUP_LENOVO_MIC_LOCATION),
- 	SND_PCI_QUIRK(0x17aa, 0x3902, "Lenovo E50-80", ALC269_FIXUP_DMIC_THINKPAD_ACPI),
- 	SND_PCI_QUIRK(0x17aa, 0x3977, "IdeaPad S210", ALC283_FIXUP_INT_MIC),
--	SND_PCI_QUIRK(0x17aa, 0x3978, "IdeaPad Y410P", ALC269_FIXUP_NO_SHUTUP),
-+	SND_PCI_QUIRK(0x17aa, 0x3978, "Lenovo B50-70", ALC269_FIXUP_DMIC_THINKPAD_ACPI),
- 	SND_PCI_QUIRK(0x17aa, 0x5013, "Thinkpad", ALC269_FIXUP_LIMIT_INT_MIC_BOOST),
- 	SND_PCI_QUIRK(0x17aa, 0x501a, "Thinkpad", ALC283_FIXUP_INT_MIC),
- 	SND_PCI_QUIRK(0x17aa, 0x501e, "Thinkpad L440", ALC292_FIXUP_TPT440_DOCK),
+--- a/fs/jbd2/journal.c
++++ b/fs/jbd2/journal.c
+@@ -2375,22 +2375,19 @@ static struct kmem_cache *jbd2_journal_h
+ static atomic_t nr_journal_heads = ATOMIC_INIT(0);
+ #endif
+ 
+-static int jbd2_journal_init_journal_head_cache(void)
++static int __init jbd2_journal_init_journal_head_cache(void)
+ {
+-	int retval;
+-
+-	J_ASSERT(jbd2_journal_head_cache == NULL);
++	J_ASSERT(!jbd2_journal_head_cache);
+ 	jbd2_journal_head_cache = kmem_cache_create("jbd2_journal_head",
+ 				sizeof(struct journal_head),
+ 				0,		/* offset */
+ 				SLAB_TEMPORARY | SLAB_TYPESAFE_BY_RCU,
+ 				NULL);		/* ctor */
+-	retval = 0;
+ 	if (!jbd2_journal_head_cache) {
+-		retval = -ENOMEM;
+ 		printk(KERN_EMERG "JBD2: no memory for journal_head cache\n");
++		return -ENOMEM;
+ 	}
+-	return retval;
++	return 0;
+ }
+ 
+ static void jbd2_journal_destroy_journal_head_cache(void)
+@@ -2636,28 +2633,38 @@ static void __exit jbd2_remove_jbd_stats
+ 
+ struct kmem_cache *jbd2_handle_cache, *jbd2_inode_cache;
+ 
++static int __init jbd2_journal_init_inode_cache(void)
++{
++	J_ASSERT(!jbd2_inode_cache);
++	jbd2_inode_cache = KMEM_CACHE(jbd2_inode, 0);
++	if (!jbd2_inode_cache) {
++		pr_emerg("JBD2: failed to create inode cache\n");
++		return -ENOMEM;
++	}
++	return 0;
++}
++
+ static int __init jbd2_journal_init_handle_cache(void)
+ {
++	J_ASSERT(!jbd2_handle_cache);
+ 	jbd2_handle_cache = KMEM_CACHE(jbd2_journal_handle, SLAB_TEMPORARY);
+-	if (jbd2_handle_cache == NULL) {
++	if (!jbd2_handle_cache) {
+ 		printk(KERN_EMERG "JBD2: failed to create handle cache\n");
+ 		return -ENOMEM;
+ 	}
+-	jbd2_inode_cache = KMEM_CACHE(jbd2_inode, 0);
+-	if (jbd2_inode_cache == NULL) {
+-		printk(KERN_EMERG "JBD2: failed to create inode cache\n");
+-		kmem_cache_destroy(jbd2_handle_cache);
+-		return -ENOMEM;
+-	}
+ 	return 0;
+ }
+ 
++static void jbd2_journal_destroy_inode_cache(void)
++{
++	kmem_cache_destroy(jbd2_inode_cache);
++	jbd2_inode_cache = NULL;
++}
++
+ static void jbd2_journal_destroy_handle_cache(void)
+ {
+ 	kmem_cache_destroy(jbd2_handle_cache);
+ 	jbd2_handle_cache = NULL;
+-	kmem_cache_destroy(jbd2_inode_cache);
+-	jbd2_inode_cache = NULL;
+ }
+ 
+ /*
+@@ -2668,21 +2675,27 @@ static int __init journal_init_caches(vo
+ {
+ 	int ret;
+ 
+-	ret = jbd2_journal_init_revoke_caches();
++	ret = jbd2_journal_init_revoke_record_cache();
++	if (ret == 0)
++		ret = jbd2_journal_init_revoke_table_cache();
+ 	if (ret == 0)
+ 		ret = jbd2_journal_init_journal_head_cache();
+ 	if (ret == 0)
+ 		ret = jbd2_journal_init_handle_cache();
+ 	if (ret == 0)
++		ret = jbd2_journal_init_inode_cache();
++	if (ret == 0)
+ 		ret = jbd2_journal_init_transaction_cache();
+ 	return ret;
+ }
+ 
+ static void jbd2_journal_destroy_caches(void)
+ {
+-	jbd2_journal_destroy_revoke_caches();
++	jbd2_journal_destroy_revoke_record_cache();
++	jbd2_journal_destroy_revoke_table_cache();
+ 	jbd2_journal_destroy_journal_head_cache();
+ 	jbd2_journal_destroy_handle_cache();
++	jbd2_journal_destroy_inode_cache();
+ 	jbd2_journal_destroy_transaction_cache();
+ 	jbd2_journal_destroy_slabs();
+ }
+--- a/fs/jbd2/revoke.c
++++ b/fs/jbd2/revoke.c
+@@ -178,33 +178,41 @@ static struct jbd2_revoke_record_s *find
+ 	return NULL;
+ }
+ 
+-void jbd2_journal_destroy_revoke_caches(void)
++void jbd2_journal_destroy_revoke_record_cache(void)
+ {
+ 	kmem_cache_destroy(jbd2_revoke_record_cache);
+ 	jbd2_revoke_record_cache = NULL;
++}
++
++void jbd2_journal_destroy_revoke_table_cache(void)
++{
+ 	kmem_cache_destroy(jbd2_revoke_table_cache);
+ 	jbd2_revoke_table_cache = NULL;
+ }
+ 
+-int __init jbd2_journal_init_revoke_caches(void)
++int __init jbd2_journal_init_revoke_record_cache(void)
+ {
+ 	J_ASSERT(!jbd2_revoke_record_cache);
+-	J_ASSERT(!jbd2_revoke_table_cache);
+-
+ 	jbd2_revoke_record_cache = KMEM_CACHE(jbd2_revoke_record_s,
+ 					SLAB_HWCACHE_ALIGN|SLAB_TEMPORARY);
+-	if (!jbd2_revoke_record_cache)
+-		goto record_cache_failure;
+ 
++	if (!jbd2_revoke_record_cache) {
++		pr_emerg("JBD2: failed to create revoke_record cache\n");
++		return -ENOMEM;
++	}
++	return 0;
++}
++
++int __init jbd2_journal_init_revoke_table_cache(void)
++{
++	J_ASSERT(!jbd2_revoke_table_cache);
+ 	jbd2_revoke_table_cache = KMEM_CACHE(jbd2_revoke_table_s,
+ 					     SLAB_TEMPORARY);
+-	if (!jbd2_revoke_table_cache)
+-		goto table_cache_failure;
+-	return 0;
+-table_cache_failure:
+-	jbd2_journal_destroy_revoke_caches();
+-record_cache_failure:
++	if (!jbd2_revoke_table_cache) {
++		pr_emerg("JBD2: failed to create revoke_table cache\n");
+ 		return -ENOMEM;
++	}
++	return 0;
+ }
+ 
+ static struct jbd2_revoke_table_s *jbd2_journal_init_revoke_table(int hash_size)
+--- a/fs/jbd2/transaction.c
++++ b/fs/jbd2/transaction.c
+@@ -42,9 +42,11 @@ int __init jbd2_journal_init_transaction
+ 					0,
+ 					SLAB_HWCACHE_ALIGN|SLAB_TEMPORARY,
+ 					NULL);
+-	if (transaction_cache)
+-		return 0;
+-	return -ENOMEM;
++	if (!transaction_cache) {
++		pr_emerg("JBD2: failed to create transaction cache\n");
++		return -ENOMEM;
++	}
++	return 0;
+ }
+ 
+ void jbd2_journal_destroy_transaction_cache(void)
+--- a/include/linux/jbd2.h
++++ b/include/linux/jbd2.h
+@@ -1318,7 +1318,7 @@ extern void		__wait_on_journal (journal_
+ 
+ /* Transaction cache support */
+ extern void jbd2_journal_destroy_transaction_cache(void);
+-extern int  jbd2_journal_init_transaction_cache(void);
++extern int __init jbd2_journal_init_transaction_cache(void);
+ extern void jbd2_journal_free_transaction(transaction_t *);
+ 
+ /*
+@@ -1446,8 +1446,10 @@ static inline void jbd2_free_inode(struc
+ /* Primary revoke support */
+ #define JOURNAL_REVOKE_DEFAULT_HASH 256
+ extern int	   jbd2_journal_init_revoke(journal_t *, int);
+-extern void	   jbd2_journal_destroy_revoke_caches(void);
+-extern int	   jbd2_journal_init_revoke_caches(void);
++extern void	   jbd2_journal_destroy_revoke_record_cache(void);
++extern void	   jbd2_journal_destroy_revoke_table_cache(void);
++extern int __init jbd2_journal_init_revoke_record_cache(void);
++extern int __init jbd2_journal_init_revoke_table_cache(void);
+ 
+ extern void	   jbd2_journal_destroy_revoke(journal_t *);
+ extern int	   jbd2_journal_revoke (handle_t *, unsigned long long, struct buffer_head *);
 
 
