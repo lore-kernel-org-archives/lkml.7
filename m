@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 151E6C04AAC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:30:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D96EC04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:30:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D386220675
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:30:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4AAE620675
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:30:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558355450;
-	bh=Y8pn0klUBCj5HAGh+Ju8aJxxSJY616eLJ6p9gRpf8b4=;
+	s=default; t=1558355456;
+	bh=81+UjyrcSCKmXD9ZTUeHQt74KBPNk574mKGMq0/zJtM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Fu8bYafP4Ez9pHv2XBI273ykV3JJDrNOb1je55LSgut4mxcAVsZ6wBga+XTMEgRUM
-	 w1gTNfo3ddNC1Scdk3xTozRpyP4KXSWPRjfCTYh0uw3JFjS+PomC2+rc3se7o3jrQL
-	 ba8jQOrty3STfUAFaQz6Xxc+muGTP8nfv5kOFJJ8=
+	b=0edJoUwRLzqXJzERu/Moi3I3YBT1Mo5cfsVrmOzOVrfMPjkJ1BrNeV+ug22x1JvN4
+	 Jn82EoCfHowEkS/57QeyB6M46F8Y9XXY8rc6UPuBqMpadbMEeBMLRsLetScUr8v3pm
+	 NX8NSwQ45uHh5Fa4dmZqAB8gtjiJJNr83FTA2OVc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390170AbfETMau (ORCPT
+        id S2389065AbfETMaz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 08:30:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47050 "EHLO mail.kernel.org"
+        Mon, 20 May 2019 08:30:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47152 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390150AbfETMan (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 08:30:43 -0400
+        id S2389763AbfETMas (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 08:30:48 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F17E520675;
-        Mon, 20 May 2019 12:30:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3ECFE20645;
+        Mon, 20 May 2019 12:30:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558355442;
-        bh=Y8pn0klUBCj5HAGh+Ju8aJxxSJY616eLJ6p9gRpf8b4=;
+        s=default; t=1558355447;
+        bh=81+UjyrcSCKmXD9ZTUeHQt74KBPNk574mKGMq0/zJtM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bG6mCGeHfajWWUnXuL6VTG0wlznq8/WMEt4uLk3gaJIhlR0VuzdlWeTxNoYtnEcnt
-         bNPfHRLLvHJNqkwYIidG5QGJlxRRykYYbCj39yeEGNuPnF3KMVHfr+4c488+1NYf5d
-         q7IewBH8P8ZcsJI0d6laScxvnOMk+BMQDUJulX/o=
+        b=j69jicdzwcJclH6xUqesHR9YYZW2RVAt08raLqn8cQFMCd9Jfslf/8UQLG/nn7sva
+         uuKVg40YNKzIvAk0irgFlx/ra4ZITJ+e1cm4c/e3J3Yqz/ksHVFXR/+Rj48WV+9T2M
+         Rmg3ficAj7s35hMYQ1IPaG+OYS6H2ndM6TMat3YQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Lukas Czerner <lczerner@redhat.com>,
-        Theodore Tso <tytso@mit.edu>, stable@kernel.org
-Subject: [PATCH 5.0 103/123] ext4: fix data corruption caused by overlapping unaligned and aligned IO
-Date:   Mon, 20 May 2019 14:14:43 +0200
-Message-Id: <20190520115251.893061163@linuxfoundation.org>
+        stable@vger.kernel.org, "zhangyi (F)" <yi.zhang@huawei.com>,
+        Theodore Tso <tytso@mit.edu>, Jan Kara <jack@suse.cz>
+Subject: [PATCH 5.0 122/123] ext4: fix compile error when using BUFFER_TRACE
+Date:   Mon, 20 May 2019 14:15:02 +0200
+Message-Id: <20190520115253.281913711@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190520115245.439864225@linuxfoundation.org>
 References: <20190520115245.439864225@linuxfoundation.org>
@@ -59,49 +59,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lukas Czerner <lczerner@redhat.com>
+From: zhangyi (F) <yi.zhang@huawei.com>
 
-commit 57a0da28ced8707cb9f79f071a016b9d005caf5a upstream.
+commit ddccb6dbe780d68133191477571cb7c69e17bb8c upstream.
 
-Unaligned AIO must be serialized because the zeroing of partial blocks
-of unaligned AIO can result in data corruption in case it's overlapping
-another in flight IO.
+Fix compile error below when using BUFFER_TRACE.
 
-Currently we wait for all unwritten extents before we submit unaligned
-AIO which protects data in case of unaligned AIO is following overlapping
-IO. However if a unaligned AIO is followed by overlapping aligned AIO we
-can still end up corrupting data.
+fs/ext4/inode.c: In function ‘ext4_expand_extra_isize’:
+fs/ext4/inode.c:5979:19: error: request for member ‘bh’ in something not a structure or union
+  BUFFER_TRACE(iloc.bh, "get_write_access");
 
-To fix this, we must make sure that the unaligned AIO is the only IO in
-flight by waiting for unwritten extents conversion not just before the
-IO submission, but right after it as well.
-
-This problem can be reproduced by xfstest generic/538
-
-Signed-off-by: Lukas Czerner <lczerner@redhat.com>
+Fixes: c03b45b853f58 ("ext4, project: expand inode extra size if possible")
+Signed-off-by: zhangyi (F) <yi.zhang@huawei.com>
 Signed-off-by: Theodore Ts'o <tytso@mit.edu>
-Cc: stable@kernel.org
+Reviewed-by: Jan Kara <jack@suse.cz>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/ext4/file.c |    7 +++++++
- 1 file changed, 7 insertions(+)
+ fs/ext4/inode.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/fs/ext4/file.c
-+++ b/fs/ext4/file.c
-@@ -264,6 +264,13 @@ ext4_file_write_iter(struct kiocb *iocb,
- 	}
+--- a/fs/ext4/inode.c
++++ b/fs/ext4/inode.c
+@@ -6006,7 +6006,7 @@ int ext4_expand_extra_isize(struct inode
  
- 	ret = __generic_file_write_iter(iocb, from);
-+	/*
-+	 * Unaligned direct AIO must be the only IO in flight. Otherwise
-+	 * overlapping aligned IO after unaligned might result in data
-+	 * corruption.
-+	 */
-+	if (ret == -EIOCBQUEUED && unaligned_aio)
-+		ext4_unwritten_wait(inode);
- 	inode_unlock(inode);
+ 	ext4_write_lock_xattr(inode, &no_expand);
  
- 	if (ret > 0)
+-	BUFFER_TRACE(iloc.bh, "get_write_access");
++	BUFFER_TRACE(iloc->bh, "get_write_access");
+ 	error = ext4_journal_get_write_access(handle, iloc->bh);
+ 	if (error) {
+ 		brelse(iloc->bh);
 
 
