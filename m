@@ -2,65 +2,56 @@ Return-Path: <SRS0=lq4r=TU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28F69C04E87
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:41:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9397BC04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:41:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F066720645
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:41:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6010E20645
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:41:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558356093;
-	bh=GmTb07UMxQ8LwlQL7RhlNeNdc5N0RHqvgDWXvshl5g8=;
+	s=default; t=1558356100;
+	bh=rzy736CsgS0Y3zt/uwrEMZnuY8Zf2XnsR1lqWDYGqlg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sAstTFolmjJJHZ4Mt1QSjAX/WMOJKBTRknLKYIYpiAJU6sBJDZjKyM3xcuM7rK7PI
-	 JL7CbL6mxz1yQ9IcTiknIaShBN+ya1cuuLXuH9iz8+b0K2i0JMaRN5jceDC75p2I7S
-	 FtJ6yF4fs8FC77Kjf3QYH/mZAlfbFyMJyiZaDbc8=
+	b=xL1De0smw2zoLaLkFUPAJa2V4w8zDBx9CQlsw0TGJSjGKUIwF3yjcqWLJ6A4TzXpd
+	 yIra/Kc1Bti/dyGnEAcVAenKGoqiWltZbA9j8g4m5COahezPwOLLuyBuLn/drbGIEg
+	 DMWEjMXNqJCsjCeILM31/47m/UZRfL+y78V0MoWM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390313AbfETMbW (ORCPT
+        id S2391400AbfETMlj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 08:31:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47750 "EHLO mail.kernel.org"
+        Mon, 20 May 2019 08:41:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47684 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390284AbfETMbP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 08:31:15 -0400
+        id S2390277AbfETMbM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 08:31:12 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C842D20645;
-        Mon, 20 May 2019 12:31:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 290EA21721;
+        Mon, 20 May 2019 12:31:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558355474;
-        bh=GmTb07UMxQ8LwlQL7RhlNeNdc5N0RHqvgDWXvshl5g8=;
+        s=default; t=1558355471;
+        bh=rzy736CsgS0Y3zt/uwrEMZnuY8Zf2XnsR1lqWDYGqlg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bB5o+VZhcrESfxfHZTQ2Yf3/u4+PAjMpZwPu0sfPY/nybTZRKQdukQBbSSuWhdJw0
-         8UDQ9rfmIxREwxt1tp7XcjzJag+PJ9b6oY82+dzwZjGDMqPnAnq0TcsBjVAEGpP+ww
-         cWq5JQ8c2VMg9d9WwhsUYTLQt9wI+2kE0O+x8b3M=
+        b=l/VW0c5dvt9RSuvvaOe8dCOGZCcuVsH40e4vz8FqzIjWYH6+UJinioVT4VhkVfZ0r
+         yVqXd4BD6sbH98sq3WNvmxG08iIXM5NdzA2IyKG9im92py1Q8sE5+kUZOikshMMxGC
+         hKSVmfEDoOdcvYdYKU594Ze/TW6BmXW9lq9q8fas=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Waiman Long <longman@redhat.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Tim Chen <tim.c.chen@linux.intel.com>,
-        Will Deacon <will.deacon@arm.com>,
-        huang ying <huang.ying.caritas@gmail.com>,
-        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 001/128] locking/rwsem: Prevent decrement of reader count before increment
-Date:   Mon, 20 May 2019 14:13:08 +0200
-Message-Id: <20190520115249.551262196@linuxfoundation.org>
+        stable@vger.kernel.org, Anup Patel <anup.patel@wdc.com>,
+        Atish Patra <atish.patra@wdc.com>,
+        Palmer Dabbelt <palmer@sifive.com>
+Subject: [PATCH 5.0 101/123] tty: Dont force RISCV SBI console as preferred console
+Date:   Mon, 20 May 2019 14:14:41 +0200
+Message-Id: <20190520115251.749150249@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190520115249.449077487@linuxfoundation.org>
-References: <20190520115249.449077487@linuxfoundation.org>
+In-Reply-To: <20190520115245.439864225@linuxfoundation.org>
+References: <20190520115245.439864225@linuxfoundation.org>
 User-Agent: quilt/0.66
-X-stable: review
-X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -69,129 +60,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit a9e9bcb45b1525ba7aea26ed9441e8632aeeda58 ]
+From: Anup Patel <Anup.Patel@wdc.com>
 
-During my rwsem testing, it was found that after a down_read(), the
-reader count may occasionally become 0 or even negative. Consequently,
-a writer may steal the lock at that time and execute with the reader
-in parallel thus breaking the mutual exclusion guarantee of the write
-lock. In other words, both readers and writer can become rwsem owners
-simultaneously.
+commit f91253a3d005796404ae0e578b3394459b5f9b71 upstream.
 
-The current reader wakeup code does it in one pass to clear waiter->task
-and put them into wake_q before fully incrementing the reader count.
-Once waiter->task is cleared, the corresponding reader may see it,
-finish the critical section and do unlock to decrement the count before
-the count is incremented. This is not a problem if there is only one
-reader to wake up as the count has been pre-incremented by 1.  It is
-a problem if there are more than one readers to be woken up and writer
-can steal the lock.
+The Linux kernel will auto-disables all boot consoles whenever it
+gets a preferred real console.
 
-The wakeup was actually done in 2 passes before the following v4.9 commit:
+Currently on RISC-V systems, if we have a real console which is not
+RISCV SBI console then boot consoles (such as earlycon=sbi) are not
+auto-disabled when a real console (ttyS0 or ttySIF0) is available.
+This results in duplicate prints at boot-time after kernel starts
+using real console (i.e. ttyS0 or ttySIF0) if "earlycon=" kernel
+parameter was passed by bootloader.
 
-  70800c3c0cc5 ("locking/rwsem: Scan the wait_list for readers only once")
+The reason for above issue is that RISCV SBI console always adds
+itself as preferred console which is causing other real consoles
+to be not used as preferred console.
 
-To fix this problem, the wakeup is now done in two passes
-again. In the first pass, we collect the readers and count them.
-The reader count is then fully incremented. In the second pass, the
-waiter->task is then cleared and they are put into wake_q to be woken
-up later.
+Ideally "console=" kernel parameter passed by bootloaders should
+be the one selecting a preferred real console.
 
-Signed-off-by: Waiman Long <longman@redhat.com>
-Acked-by: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: Davidlohr Bueso <dave@stgolabs.net>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Tim Chen <tim.c.chen@linux.intel.com>
-Cc: Will Deacon <will.deacon@arm.com>
-Cc: huang ying <huang.ying.caritas@gmail.com>
-Fixes: 70800c3c0cc5 ("locking/rwsem: Scan the wait_list for readers only once")
-Link: http://lkml.kernel.org/r/20190428212557.13482-2-longman@redhat.com
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+This patch fixes above issue by not forcing RISCV SBI console as
+preferred console.
+
+Fixes: afa6b1ccfad5 ("tty: New RISC-V SBI console driver")
+Cc: stable@vger.kernel.org
+Signed-off-by: Anup Patel <anup.patel@wdc.com>
+Reviewed-by: Atish Patra <atish.patra@wdc.com>
+Signed-off-by: Palmer Dabbelt <palmer@sifive.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- kernel/locking/rwsem-xadd.c | 44 +++++++++++++++++++++++++------------
- 1 file changed, 30 insertions(+), 14 deletions(-)
+ drivers/tty/hvc/hvc_riscv_sbi.c |    1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/kernel/locking/rwsem-xadd.c b/kernel/locking/rwsem-xadd.c
-index fbe96341beeed..59b801de8dd5c 100644
---- a/kernel/locking/rwsem-xadd.c
-+++ b/kernel/locking/rwsem-xadd.c
-@@ -130,6 +130,7 @@ static void __rwsem_mark_wake(struct rw_semaphore *sem,
+--- a/drivers/tty/hvc/hvc_riscv_sbi.c
++++ b/drivers/tty/hvc/hvc_riscv_sbi.c
+@@ -53,7 +53,6 @@ device_initcall(hvc_sbi_init);
+ static int __init hvc_sbi_console_init(void)
  {
- 	struct rwsem_waiter *waiter, *tmp;
- 	long oldcount, woken = 0, adjustment = 0;
-+	struct list_head wlist;
+ 	hvc_instantiate(0, 0, &hvc_sbi_ops);
+-	add_preferred_console("hvc", 0, NULL);
  
- 	/*
- 	 * Take a peek at the queue head waiter such that we can determine
-@@ -188,18 +189,42 @@ static void __rwsem_mark_wake(struct rw_semaphore *sem,
- 	 * of the queue. We know that woken will be at least 1 as we accounted
- 	 * for above. Note we increment the 'active part' of the count by the
- 	 * number of readers before waking any processes up.
-+	 *
-+	 * We have to do wakeup in 2 passes to prevent the possibility that
-+	 * the reader count may be decremented before it is incremented. It
-+	 * is because the to-be-woken waiter may not have slept yet. So it
-+	 * may see waiter->task got cleared, finish its critical section and
-+	 * do an unlock before the reader count increment.
-+	 *
-+	 * 1) Collect the read-waiters in a separate list, count them and
-+	 *    fully increment the reader count in rwsem.
-+	 * 2) For each waiters in the new list, clear waiter->task and
-+	 *    put them into wake_q to be woken up later.
- 	 */
--	list_for_each_entry_safe(waiter, tmp, &sem->wait_list, list) {
--		struct task_struct *tsk;
--
-+	list_for_each_entry(waiter, &sem->wait_list, list) {
- 		if (waiter->type == RWSEM_WAITING_FOR_WRITE)
- 			break;
- 
- 		woken++;
--		tsk = waiter->task;
-+	}
-+	list_cut_before(&wlist, &sem->wait_list, &waiter->list);
-+
-+	adjustment = woken * RWSEM_ACTIVE_READ_BIAS - adjustment;
-+	if (list_empty(&sem->wait_list)) {
-+		/* hit end of list above */
-+		adjustment -= RWSEM_WAITING_BIAS;
-+	}
-+
-+	if (adjustment)
-+		atomic_long_add(adjustment, &sem->count);
-+
-+	/* 2nd pass */
-+	list_for_each_entry_safe(waiter, tmp, &wlist, list) {
-+		struct task_struct *tsk;
- 
-+		tsk = waiter->task;
- 		get_task_struct(tsk);
--		list_del(&waiter->list);
-+
- 		/*
- 		 * Ensure calling get_task_struct() before setting the reader
- 		 * waiter to nil such that rwsem_down_read_failed() cannot
-@@ -213,15 +238,6 @@ static void __rwsem_mark_wake(struct rw_semaphore *sem,
- 		 */
- 		wake_q_add_safe(wake_q, tsk);
- 	}
--
--	adjustment = woken * RWSEM_ACTIVE_READ_BIAS - adjustment;
--	if (list_empty(&sem->wait_list)) {
--		/* hit end of list above */
--		adjustment -= RWSEM_WAITING_BIAS;
--	}
--
--	if (adjustment)
--		atomic_long_add(adjustment, &sem->count);
+ 	return 0;
  }
- 
- /*
--- 
-2.20.1
-
 
 
