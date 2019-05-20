@@ -4,56 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AEA9AC04AAC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:18:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72F37C04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:18:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 88DEA20815
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:18:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 40DB8208C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:18:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558354702;
-	bh=0hTxHl1kJ3+akPh22gjCFxb1A6uokxdaj6uPddAfjao=;
+	s=default; t=1558354707;
+	bh=3zQ04bEawYHYY0E2jeNugRpJEMpBLaEKZZr/xCFaa1s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ozFC+9zFmpC2B9zFgLdL9CAXmqtHGrWuezNivdkl1OZsm+O+kmQfNkKPSRN8llOSP
-	 KHhar0gmqK/iysbdMC/erC6hZAkpN4uin+juey2V8EFhpvsPQCrTqgoEhNM1fDhqU2
-	 BgKnUqGG2e9Au17+q/Vtd7pKSYZsOwd80tUrI7lE=
+	b=y0f/OG872YCkMP5loWazOYoHUlkedQGbhT4B7w2w4RcUGqA6SfeIrncHx+XgdCcxO
+	 38z5MqKY56jikNhJgTOuT59tE+7Ff5RZs++BNIpf489NG0ezdKNGFwalAzxzoBnX5y
+	 kmVUhtopVuWyxbZDVparopEoVnlkjHoo3Z5T2Jg8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387708AbfETMSU (ORCPT
+        id S1733203AbfETMSZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 08:18:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59326 "EHLO mail.kernel.org"
+        Mon, 20 May 2019 08:18:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59424 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387699AbfETMSN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 08:18:13 -0400
+        id S1733208AbfETMSU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 08:18:20 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2BFB621479;
-        Mon, 20 May 2019 12:18:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1DCA920656;
+        Mon, 20 May 2019 12:18:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558354692;
-        bh=0hTxHl1kJ3+akPh22gjCFxb1A6uokxdaj6uPddAfjao=;
+        s=default; t=1558354700;
+        bh=3zQ04bEawYHYY0E2jeNugRpJEMpBLaEKZZr/xCFaa1s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zL+zCJOQjkFx8FTsASz1EvG2GwaJGJcQwWW7YEwf4szSG6O1piyvsGRIpJk1Isthp
-         zZsMcBWUYcmBzjAI4k1ch8AsmQVBIzIxkCZ7DHMEMU72SAaqhoMlpxvBoV8hp3FN/I
-         bOum6NzSacYSuC7k8d4TPH0ysgpsYvMt/Rmn90e8=
+        b=HZovlBnvu4AfCirL3JaDKqlPQbuPI4nfAliTXHe9lL7LNXQWoj456ocm6gvWicBoh
+         bSE+gsUYnSqlGqxdEkXzVjTchTo2xOxUO42Ls2iCZoKEGY/5TJZCZ2HYQrtufT7yfh
+         9kLNre4qjn9sN/3pBSiF4a4MG65SOr3OmvTL390c=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Edward Cree <ecree@solarflare.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 01/63] net: core: another layer of lists, around PF_MEMALLOC skb handling
-Date:   Mon, 20 May 2019 14:13:40 +0200
-Message-Id: <20190520115231.392707901@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Sylwester Nawrocki <s.nawrocki@samsung.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>
+Subject: [PATCH 4.14 10/63] ARM: dts: exynos: Fix audio (microphone) routing on Odroid XU3
+Date:   Mon, 20 May 2019 14:13:49 +0200
+Message-Id: <20190520115232.357472281@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190520115231.137981521@linuxfoundation.org>
 References: <20190520115231.137981521@linuxfoundation.org>
 User-Agent: quilt/0.66
-X-stable: review
-X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -62,59 +60,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 78ed8cc25986ac5c21762eeddc1e86e94d422e36 ]
+From: Sylwester Nawrocki <s.nawrocki@samsung.com>
 
-First example of a layer splitting the list (rather than merely taking
- individual packets off it).
-Involves new list.h function, list_cut_before(), like list_cut_position()
- but cuts on the other side of the given entry.
+commit 9b23e1a3e8fde76e8cc0e366ab1ed4ffb4440feb upstream.
 
-Signed-off-by: Edward Cree <ecree@solarflare.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-[sl: cut out non list.h bits, we only want list_cut_before]
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+The name of CODEC input widget to which microphone is connected through
+the "Headphone" jack is "IN12" not "IN1". This fixes microphone support
+on Odroid XU3.
+
+Cc: <stable@vger.kernel.org> # v4.14+
+Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- include/linux/list.h |   30 ++++++++++++++++++++++++++++++
- 1 file changed, 30 insertions(+)
+ arch/arm/boot/dts/exynos5422-odroidxu3-audio.dtsi |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/include/linux/list.h
-+++ b/include/linux/list.h
-@@ -285,6 +285,36 @@ static inline void list_cut_position(str
- 		__list_cut_position(list, head, entry);
- }
+--- a/arch/arm/boot/dts/exynos5422-odroidxu3-audio.dtsi
++++ b/arch/arm/boot/dts/exynos5422-odroidxu3-audio.dtsi
+@@ -23,7 +23,7 @@
+ 			"Headphone Jack", "HPL",
+ 			"Headphone Jack", "HPR",
+ 			"Headphone Jack", "MICBIAS",
+-			"IN1", "Headphone Jack",
++			"IN12", "Headphone Jack",
+ 			"Speakers", "SPKL",
+ 			"Speakers", "SPKR";
  
-+/**
-+ * list_cut_before - cut a list into two, before given entry
-+ * @list: a new list to add all removed entries
-+ * @head: a list with entries
-+ * @entry: an entry within head, could be the head itself
-+ *
-+ * This helper moves the initial part of @head, up to but
-+ * excluding @entry, from @head to @list.  You should pass
-+ * in @entry an element you know is on @head.  @list should
-+ * be an empty list or a list you do not care about losing
-+ * its data.
-+ * If @entry == @head, all entries on @head are moved to
-+ * @list.
-+ */
-+static inline void list_cut_before(struct list_head *list,
-+				   struct list_head *head,
-+				   struct list_head *entry)
-+{
-+	if (head->next == entry) {
-+		INIT_LIST_HEAD(list);
-+		return;
-+	}
-+	list->next = head->next;
-+	list->next->prev = list;
-+	list->prev = entry->prev;
-+	list->prev->next = list;
-+	head->next = entry;
-+	entry->prev = head;
-+}
-+
- static inline void __list_splice(const struct list_head *list,
- 				 struct list_head *prev,
- 				 struct list_head *next)
 
 
