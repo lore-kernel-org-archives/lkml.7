@@ -2,108 +2,100 @@ Return-Path: <SRS0=lq4r=TU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8081C04AAC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 17:09:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED6F7C04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 17:10:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B90E120645
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 17:09:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C325B20645
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 17:10:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="V/DLpIz2"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="QZgNI45D"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403940AbfETRJL (ORCPT
+        id S2392754AbfETRKY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 13:09:11 -0400
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:35568 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730770AbfETRJL (ORCPT
+        Mon, 20 May 2019 13:10:24 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:38115 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2392703AbfETRKX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 13:09:11 -0400
-Received: by mail-oi1-f195.google.com with SMTP id a132so10594215oib.2
-        for <linux-kernel@vger.kernel.org>; Mon, 20 May 2019 10:09:10 -0700 (PDT)
+        Mon, 20 May 2019 13:10:23 -0400
+Received: by mail-pg1-f193.google.com with SMTP id j26so7089363pgl.5
+        for <linux-kernel@vger.kernel.org>; Mon, 20 May 2019 10:10:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=yKxKhF1FvSDo9f8sIipTTZjoo77Dif+CkluYVXpcRgw=;
-        b=V/DLpIz2Cps7Vz9YsQHlqqdZTYdH0WHSn/FPCx9uvLu6vjEqKny+XWTmXKJJWtLCSx
-         qxNK1tixYTMzWbLi1LGbXZmIXn+vfxhi/AXVo82Y7ubuQefRIebHbUukIZV90wr62PoG
-         BXCoNyB11kyqHlXrUqFhjimKu+S0xXXtA0+rVhgdzTqeMKKO8t7L8yLNNYtnQYcJLlZd
-         bSvLceMtjPm6b6gA3c/1SdhYOlOPjCidwL/o5fRaZberQhryCP7bV729IcjXwCc8xDZF
-         g6jotOgS+H+MABwnFrtAE0Rg8L97s4KS8OS1x3HHi5a6qqa9CRACTCNHTe5jtOpYQ8YQ
-         e96g==
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:in-reply-to:references:date:message-id
+         :mime-version;
+        bh=I7O1t0HTMIayhEjL+JB+8Z7qxurHkXoWUdusDgjI/aw=;
+        b=QZgNI45DOAwYaDO1iHICnzp4zHKGESb3mm7wGS2JhmkSoAYChyrynGZrvsxv2RRwFV
+         O5jOc+IVUU3xphkbgMuIIJBamG/nurDaVgvwodpNwYOXcQomCmQDTu5SpbYpzcNXuD9Y
+         6P2mIgfpgnkVSVjWYL6H9vtosiFubgEEcgjE0fv5qHKs5AQ0Xf1efIiGcx62oznUyjIs
+         AcSLpXr98N7w+pcE0juLeZxwWhIXxSf1wCbg58+6vO2cWDwaQ0xK6eXP1kOCR7sen0Oc
+         WOCF1P4/bsM5Q6CIyzvQu2h1HQp/LP4ZLD0aBF+7YIVJmDzaLvHfXNQYCew9RFUjM+DO
+         +DoQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=yKxKhF1FvSDo9f8sIipTTZjoo77Dif+CkluYVXpcRgw=;
-        b=mYxhWhm7ym2QzBBzZzI+mbSw9kU09dOduDDlE3I+eurnQWzwSQF27MlfTIZHFgIASp
-         fD+59gsJMOPrCCv5OdRR1kuOs1Mv5OqSciGyULY0uw+pxSsWHZYj/Bp7K6H/g0FpgNQm
-         bTjvCQC0j8Kve/E0UNTi+7GWelLdGMVgyeNSA+QOwzylqtQ2Hq5BG2v/U+bUfcetgiV1
-         BIxgZnz02zcHSvyNNcmyMBjABKXJ+NE4oltRaZxLGgIntfx3YzDgm6KDotTvF/He0R/O
-         2pEG4OQRynK/2x5VHsh/ck6g+F14MHrPDKkp+Lc417oAmfYZxXrp0dysbh+DtdIp8uTA
-         ecYA==
-X-Gm-Message-State: APjAAAVeLuHijZYd8VMEeb3XuYEMbpAByinHDe64poor22wRWOs2pjJV
-        sYm/YSy0uj9mJFkJLiu8SdbKn4I76Pl+x1I29LbGNw==
-X-Google-Smtp-Source: APXvYqwBtWxgHgdvAiDLmO5TZSGZNCT4wiYmm0OQf+BmHaSAnpJX0G36CIkrI5eKeEcDT4auoPb9k0KbTK9uxTOuoQI=
-X-Received: by 2002:aca:b641:: with SMTP id g62mr110703oif.149.1558372150650;
- Mon, 20 May 2019 10:09:10 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=I7O1t0HTMIayhEjL+JB+8Z7qxurHkXoWUdusDgjI/aw=;
+        b=jI/m5a2hY1kWQYIZCg1ywH7+tdDY515PVgN9n1xnjhffM2nAwsqO4eBwn2OkplX8Er
+         bqe+fCaIhk9FJ5GX/JMAFFCdinuibupXoXYs042SWunKZRIbAkyioWaSHIdlKuicaXPm
+         PrlR5t3CQBtGLNMgioQvh+ybrYLuE+obluXg1GMVPbHIG4fwieuMn5YUyhI6iit2Fv6C
+         Dlj6d4+pcDpjGZUqD5uA2YfH8w6Smv1Y0ek/sEmVfn3MG9oDgcC/8onJWfUvwC6Mzy2l
+         n0AK081dL7CFlq0UjsxRZnjuqTu6cipPEclnHLOGtLiT1F+m9+ClC8lcs75Hx1EWszPA
+         JMQw==
+X-Gm-Message-State: APjAAAVHy4g07VcNRvYNa6Cy/0TLxH8ygIQNlwXeyHq2SEwkv0y6jF73
+        stt+tcYZnkfcrKfkH/7iV6LkHw==
+X-Google-Smtp-Source: APXvYqzaOlQqLS/+QC42OQ5Qr8ZY2ncGO7QbGmE1r8wBifQgCAbuNUputplZ7iTSIWjw5VjtKCNaTQ==
+X-Received: by 2002:aa7:92da:: with SMTP id k26mr36518157pfa.70.1558372222724;
+        Mon, 20 May 2019 10:10:22 -0700 (PDT)
+Received: from localhost ([2601:602:9200:a1a5:e483:1cc0:e2c2:140d])
+        by smtp.googlemail.com with ESMTPSA id e10sm37432545pfm.137.2019.05.20.10.10.22
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 20 May 2019 10:10:22 -0700 (PDT)
+From:   Kevin Hilman <khilman@baylibre.com>
+To:     Rob Herring <robh@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-amlogic@lists.infradead.org,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Carlo Caione <carlo@caione.org>, devicetree@vger.kernel.org
+Subject: Re: [PATCH v3 1/2] dt-bindings: arm: amlogic: Move 'amlogic,meson-gx-ao-secure' binding to its own file
+In-Reply-To: <draft-7hsgt9842a.fsf@baylibre.com>
+References: <draft-7hsgt9842a.fsf@baylibre.com>
+Date:   Mon, 20 May 2019 10:10:21 -0700
+Message-ID: <7hmujh832a.fsf@baylibre.com>
 MIME-Version: 1.0
-References: <20190516055422.16939-1-vaibhav@linux.ibm.com> <CAPcyv4j6Jhpqg9SqAAmz2A6PDry7UUtnniNVoc_qG=WXwuVOWA@mail.gmail.com>
- <87bm01mylr.fsf@vajain21.in.ibm.com>
-In-Reply-To: <87bm01mylr.fsf@vajain21.in.ibm.com>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Mon, 20 May 2019 10:08:59 -0700
-Message-ID: <CAPcyv4j-OQbN=rYY6MH3XFCF+dPpooCYekYF7PJL+N-tCJey3g@mail.gmail.com>
-Subject: Re: [PATCH] dax: Fix last_page check in __bdev_dax_supported()
-To:     Vaibhav Jain <vaibhav@linux.ibm.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Keith Busch <keith.busch@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Chandan Rajendra <chandan@linux.ibm.com>,
-        Mike Snitzer <snitzer@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 16, 2019 at 10:37 PM Vaibhav Jain <vaibhav@linux.ibm.com> wrote:
->
-> Dan Williams <dan.j.williams@intel.com> writes:
->
-> > On Wed, May 15, 2019 at 10:55 PM Vaibhav Jain <vaibhav@linux.ibm.com> wrote:
-> >>
-> >> Presently __bdev_dax_supported() checks if first sector of last
-> >> page ( last_page ) on the block device is aligned to page
-> >> boundary. However the code to compute 'last_page' assumes that there
-> >> are 8 sectors/page assuming a 4K page-size.
-> >>
-> >> This assumption breaks on architectures which use a different page
-> >> size specifically PPC64 where page-size == 64K. Hence a warning is
-> >> seen while trying to mount a xfs/ext4 file-system with dax enabled:
-> >>
-> >> $ sudo mount -o dax /dev/pmem0 /mnt/pmem
-> >> XFS (pmem0): DAX enabled. Warning: EXPERIMENTAL, use at your own risk
-> >> XFS (pmem0): DAX unsupported by block device. Turning off DAX.
-> >>
-> >> The patch fixes this issue by updating calculation of 'last_var' to
-> >> take into account number-of-sectors/page instead of assuming it to be
-> >> '8'.
-> >
-> > Yes, I noticed this too and fixed it up in a wider change that also
-> > allows device-mapper to validate each component device. Does this
-> > patch work for you?
-> >
-> > https://lore.kernel.org/lkml/155789172402.748145.11853718580748830476.stgit@dwillia2-desk3.amr.corp.intel.com/
->
-> Thanks Dan, I tested your patch and not seeing the issue anymore.
+Kevin Hilman <khilman@baylibre.com> writes:
 
-Thanks, I recorded a "Tested-by" for you.
+> Rob Herring <robh@kernel.org> writes:
+>
+>> It is best practice to have 1 binding per file, so board level bindings
+>> should be separate for various misc SoC bindings.
+>>
+>> Cc: Mark Rutland <mark.rutland@arm.com>
+>> Cc: Carlo Caione <carlo@caione.org>
+>> Cc: Kevin Hilman <khilman@baylibre.com>
+>> Cc: devicetree@vger.kernel.org
+>> Cc: linux-arm-kernel@lists.infradead.org
+>> Cc: linux-amlogic@lists.infradead.org
+>> Signed-off-by: Rob Herring <robh@kernel.org>
+>> ---
+>> It seems this one fell thru the cracks and didn't get applied.
+>
+> Feel free to apply directly.
+>
+> Acked-by: Kevin Hilman <khilman@baylibre.com>
+
+On second that, we're going to have dependencies on that for the v5.3
+cycle, so I'll queue these up.
+
+Kevin
