@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0055FC04AAC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:24:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9E3CC04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:24:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C9EEF21479
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:24:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B267C20815
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:24:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558355094;
-	bh=evbFVzhLxEg4SbCoKYUaCDJhdyPgsuUfMr8WxKWYoSI=;
+	s=default; t=1558355097;
+	bh=FcbSSqQ2ufZwGDRJKHsUtRTUpmwDO0WjzJeRwFwwDlk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2nN9hLoRBcw0+7r9QzZ2ou7H8q6C62aODtzCiL+mSzhbr3h+8kvW04yTUi5qC1tRE
-	 /kRXws5ocJbSUuoZsGjXBllm1Qbt80yZV0TPdhIZXj3/gr0jy2Y3YdOhNLBfzSinVD
-	 UlVyrrMc600UOVuURHD/tsuuBk+kS78G2syRVDdw=
+	b=v6yO4yykA60TXx2rzncYKdxkvtRzEjJshd35ZN2qNDSSQPYLzunc+wiswYQ51MU9/
+	 W2vmnFNhwW9n9ESxM1ZDGRyKRpfFb+ra3+OoOHGS+GYulRwF/uFgFkOT/suWqAb1Bo
+	 P9R0OtGo2NEFeQO79xWnDrAnkhigk0ZLHJFyBhW0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388937AbfETMYw (ORCPT
+        id S2388951AbfETMY4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 08:24:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39780 "EHLO mail.kernel.org"
+        Mon, 20 May 2019 08:24:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39854 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388923AbfETMYu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 08:24:50 -0400
+        id S2388938AbfETMYx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 08:24:53 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8013D21479;
-        Mon, 20 May 2019 12:24:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3ACAA216E3;
+        Mon, 20 May 2019 12:24:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558355090;
-        bh=evbFVzhLxEg4SbCoKYUaCDJhdyPgsuUfMr8WxKWYoSI=;
+        s=default; t=1558355092;
+        bh=FcbSSqQ2ufZwGDRJKHsUtRTUpmwDO0WjzJeRwFwwDlk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uqratxeL/FEKfOGSyHQUmgwR74/LuMarNB0TwFfK5VbzhXxucbS+xR6C1vD54CGYv
-         Vj5aCPKmfusRZPnKUmAIAUHZelcK2hcvFHv9c3r71n5oO59g2/KfASPpITBsfSVrqo
-         3Xzm68uiPsbix5gYo5UFQITSNGsW6gMtQRvn0Nzw=
+        b=A5neoX3tWxVd1V8nm9/bSlU7Q3wuvrprXcPzA4fOwfc3M+uPCWPL2biaM1SGrxKzE
+         9VVc9Zlz1ZcwYkuziJGS100XvhsavcTs7GNcLTs9Wzxu3wdB949yy+2yCrtMC1xlN5
+         pFxdwNlOz6Ty90YGrgWDf2EoGbrz7aexNZ+/Wt3s=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ofir Drang <ofir.drang@arm.com>,
-        Gilad Ben-Yossef <gilad@benyossef.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>
-Subject: [PATCH 4.19 052/105] crypto: ccree - handle tee fips error during power management resume
-Date:   Mon, 20 May 2019 14:13:58 +0200
-Message-Id: <20190520115250.648743917@linuxfoundation.org>
+        stable@vger.kernel.org, Will Deacon <will.deacon@arm.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Jean-Philippe Brucker <jean-philippe.brucker@arm.com>,
+        Alexei Starovoitov <ast@kernel.org>
+Subject: [PATCH 4.19 043/105] bpf, arm64: remove prefetch insn in xadd mapping
+Date:   Mon, 20 May 2019 14:13:49 +0200
+Message-Id: <20190520115249.999837329@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190520115247.060821231@linuxfoundation.org>
 References: <20190520115247.060821231@linuxfoundation.org>
@@ -60,48 +61,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ofir Drang <ofir.drang@arm.com>
+From: Daniel Borkmann <daniel@iogearbox.net>
 
-commit 7138377ce10455b7183c6dde4b2c51b33f464c45 upstream.
+commit 8968c67a82ab7501bc3b9439c3624a49b42fe54c upstream.
 
-in order to support cryptocell tee fips error that may occurs while
-cryptocell ree is suspended, an cc_tee_handle_fips_error  call added
-to the cc_pm_resume function.
+Prefetch-with-intent-to-write is currently part of the XADD mapping in
+the AArch64 JIT and follows the kernel's implementation of atomic_add.
+This may interfere with other threads executing the LDXR/STXR loop,
+leading to potential starvation and fairness issues. Drop the optional
+prefetch instruction.
 
-Signed-off-by: Ofir Drang <ofir.drang@arm.com>
-Signed-off-by: Gilad Ben-Yossef <gilad@benyossef.com>
-Cc: stable@vger.kernel.org # v4.19+
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Fixes: 85f68fe89832 ("bpf, arm64: implement jiting of BPF_XADD")
+Reported-by: Will Deacon <will.deacon@arm.com>
+Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
+Acked-by: Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
+Acked-by: Will Deacon <will.deacon@arm.com>
+Signed-off-by: Alexei Starovoitov <ast@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/crypto/ccree/cc_pm.c |    4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ arch/arm64/net/bpf_jit.h      |    6 ------
+ arch/arm64/net/bpf_jit_comp.c |    1 -
+ 2 files changed, 7 deletions(-)
 
---- a/drivers/crypto/ccree/cc_pm.c
-+++ b/drivers/crypto/ccree/cc_pm.c
-@@ -11,6 +11,7 @@
- #include "cc_ivgen.h"
- #include "cc_hash.h"
- #include "cc_pm.h"
-+#include "cc_fips.h"
+--- a/arch/arm64/net/bpf_jit.h
++++ b/arch/arm64/net/bpf_jit.h
+@@ -100,12 +100,6 @@
+ #define A64_STXR(sf, Rt, Rn, Rs) \
+ 	A64_LSX(sf, Rt, Rn, Rs, STORE_EX)
  
- #define POWER_DOWN_ENABLE 0x01
- #define POWER_DOWN_DISABLE 0x00
-@@ -50,12 +51,13 @@ int cc_pm_resume(struct device *dev)
- 	}
- 
- 	cc_iowrite(drvdata, CC_REG(HOST_POWER_DOWN_EN), POWER_DOWN_DISABLE);
+-/* Prefetch */
+-#define A64_PRFM(Rn, type, target, policy) \
+-	aarch64_insn_gen_prefetch(Rn, AARCH64_INSN_PRFM_TYPE_##type, \
+-				  AARCH64_INSN_PRFM_TARGET_##target, \
+-				  AARCH64_INSN_PRFM_POLICY_##policy)
 -
- 	rc = init_cc_regs(drvdata, false);
- 	if (rc) {
- 		dev_err(dev, "init_cc_regs (%x)\n", rc);
- 		return rc;
- 	}
-+	/* check if tee fips error occurred during power down */
-+	cc_tee_handle_fips_error(drvdata);
- 
- 	rc = cc_resume_req_queue(drvdata);
- 	if (rc) {
+ /* Add/subtract (immediate) */
+ #define A64_ADDSUB_IMM(sf, Rd, Rn, imm12, type) \
+ 	aarch64_insn_gen_add_sub_imm(Rd, Rn, imm12, \
+--- a/arch/arm64/net/bpf_jit_comp.c
++++ b/arch/arm64/net/bpf_jit_comp.c
+@@ -736,7 +736,6 @@ emit_cond_jmp:
+ 	case BPF_STX | BPF_XADD | BPF_DW:
+ 		emit_a64_mov_i(1, tmp, off, ctx);
+ 		emit(A64_ADD(1, tmp, tmp, dst), ctx);
+-		emit(A64_PRFM(tmp, PST, L1, STRM), ctx);
+ 		emit(A64_LDXR(isdw, tmp2, tmp), ctx);
+ 		emit(A64_ADD(isdw, tmp2, tmp2, src), ctx);
+ 		emit(A64_STXR(isdw, tmp2, tmp, tmp3), ctx);
 
 
