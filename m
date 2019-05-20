@@ -5,78 +5,72 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5202BC04E87
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 21:39:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE1CEC04AAF
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 21:40:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 20B7C2171F
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 21:39:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A5B072173C
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 21:40:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="VqCtD+FG"
+	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="lD66uZtM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726902AbfETVj5 (ORCPT
+        id S1727008AbfETVj7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 17:39:57 -0400
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:33645 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725763AbfETVj4 (ORCPT
+        Mon, 20 May 2019 17:39:59 -0400
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:44999 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726894AbfETVj6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 17:39:56 -0400
-Received: by mail-ed1-f68.google.com with SMTP id n17so26047421edb.0
-        for <linux-kernel@vger.kernel.org>; Mon, 20 May 2019 14:39:54 -0700 (PDT)
+        Mon, 20 May 2019 17:39:58 -0400
+Received: by mail-ed1-f66.google.com with SMTP id b8so25925908edm.11
+        for <linux-kernel@vger.kernel.org>; Mon, 20 May 2019 14:39:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=ffwll.ch; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=EmM3y8RoE66pNVDPE35FtUxyGgXbfiMJbpXVG8+7zqI=;
-        b=VqCtD+FGguTkslrrNgtc+3AsPTS7qL+QTDSCXi+eKgaqMA5bR+Vi1Zt3FimdTe93zi
-         UUo6SSEc1uaTQZeWPxCi3yVl+T3Tk/MOF0wa5AgCnvXZvlQKsF/yAclCS1OGr15EZvta
-         Zok9O7AuvN04KmdiIx3tL5Km97dnr+ZIZDhdM=
+        bh=pWxZTOU32QqeCUWxSxBPbL225yVTtI+hlaFCbsgM9zc=;
+        b=lD66uZtMoIMvvSsmt5W9Ap+FV3+sBqSE3BFc0cEJ684d/bm9E2HP1JXq7mSRH9YW4v
+         nkbstF3kFQkxqWWqyv6BlV3/MFaD+qTRyQzGtP0efOBVs1Kb0ZlKW4eRerQFHNS9iDrt
+         TmWczlsEj0ymWwKCv4nAMDK83tVqOnaVQm3Tg=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=EmM3y8RoE66pNVDPE35FtUxyGgXbfiMJbpXVG8+7zqI=;
-        b=TsJaaChv2XZLGP/pbnk9F9Vak8apYWv1w6YTTfaPNXuLhfzGobDVqb+UvfmPBh9nQW
-         6dCkzmgaByFbXQJjR6bGLe8U0+2QBQzfMxApYdgOh50bvTX9XH5020Kf16GicNDIw4O0
-         qTdKOmo+44JHUzy+dfRZYLn6843uNC+/YohdjA2uXH0r5gDoirsa8rsN98PvbgA1vvAm
-         XFtrJ2DFgL6oIT43CHzDgLuz2GDIE/llcQn3iwyEKpWnYFkayVz3xalyuHb/zpeDDT99
-         lQ+/MmrJvau6szI3MozSVYreGTp8useUKru1OKq3UaRX1ms0v5RyyT2QlPbmUDQ1NFew
-         UjRQ==
-X-Gm-Message-State: APjAAAX9F/jHHXMhAU2IWPw1mD304Wt3q2bKpnwPfz9X3R60+J4ci+Uo
-        GeftE119pfzKTnu8CalSns9Wbg==
-X-Google-Smtp-Source: APXvYqyKS9SIiB/xC4IsRJBze6IGM3GgILAOQy6WS8nllsilzSuF5yZIrT+jePyKYUY+nowSZNCWnw==
-X-Received: by 2002:a17:906:35ca:: with SMTP id p10mr44566136ejb.244.1558388393833;
-        Mon, 20 May 2019 14:39:53 -0700 (PDT)
+        bh=pWxZTOU32QqeCUWxSxBPbL225yVTtI+hlaFCbsgM9zc=;
+        b=V7CH3OEV4+OQ/fKHzoOOOXLurONjSDF/tqVV8Y0s8v/ilmi+NrC0LtpA4MrH9liBIm
+         yYThYHx+yl/z3OUvKP9uMSNYukyu1MqPuyJPtn1kkFwnLxLxaEl/d40JiOY4Mmi5dQWC
+         sSzM8uUz3PXWQMfKjIVluhSAdKAkl6wTos39yIQjButaM2VKSNTL+kRfUu8SRUb613NU
+         plypvUivB9CxccFFubAwIGnymAfSrT8YRCjxAhIhW3qzYWpGF4xdsk3/InStEDMtmSBv
+         3BxP4/x77dbpUdZ6QJdKC83PCTrqdrmw8w9YyVEeYQDuAzrgiASiitg6q2saqdQn1TdH
+         7RgQ==
+X-Gm-Message-State: APjAAAXwJrAuKfxD/9nIfGKktR6v5qvgar314Z4jMGjFsoektiM5Fck/
+        GeY+pPuXCIHq2UL3iIi5JjsJiA==
+X-Google-Smtp-Source: APXvYqx80jEeRT18HZXVIF2BoTYuZwcSTE9+LxH0PFGQif7m2Gu96O3Mba57kRuyzhiZzeoU6L992A==
+X-Received: by 2002:a17:906:5390:: with SMTP id g16mr53949638ejo.12.1558388396676;
+        Mon, 20 May 2019 14:39:56 -0700 (PDT)
 Received: from phenom.ffwll.local ([2a02:168:569e:0:3106:d637:d723:e855])
-        by smtp.gmail.com with ESMTPSA id v27sm3285772eja.68.2019.05.20.14.39.51
+        by smtp.gmail.com with ESMTPSA id v27sm3285772eja.68.2019.05.20.14.39.55
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 20 May 2019 14:39:52 -0700 (PDT)
+        Mon, 20 May 2019 14:39:56 -0700 (PDT)
 From:   Daniel Vetter <daniel.vetter@ffwll.ch>
 To:     DRI Development <dri-devel@lists.freedesktop.org>
 Cc:     Intel Graphics Development <intel-gfx@lists.freedesktop.org>,
         LKML <linux-kernel@vger.kernel.org>,
         Linux MM <linux-mm@kvack.org>,
         Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
+        Chris Wilson <chris@chris-wilson.co.uk>,
         Andrew Morton <akpm@linux-foundation.org>,
-        Michal Hocko <mhocko@suse.com>,
         David Rientjes <rientjes@google.com>,
-        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
         =?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Wei Wang <wvw@google.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jann Horn <jannh@google.com>, Feng Tang <feng.tang@intel.com>,
-        Kees Cook <keescook@chromium.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
+        Michal Hocko <mhocko@suse.com>,
+        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Mike Rapoport <rppt@linux.vnet.ibm.com>,
         Daniel Vetter <daniel.vetter@intel.com>
-Subject: [PATCH 2/4] kernel.h: Add non_block_start/end()
-Date:   Mon, 20 May 2019 23:39:43 +0200
-Message-Id: <20190520213945.17046-2-daniel.vetter@ffwll.ch>
+Subject: [PATCH 4/4] mm, notifier: Add a lockdep map for invalidate_range_start
+Date:   Mon, 20 May 2019 23:39:45 +0200
+Message-Id: <20190520213945.17046-4-daniel.vetter@ffwll.ch>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190520213945.17046-1-daniel.vetter@ffwll.ch>
 References: <20190520213945.17046-1-daniel.vetter@ffwll.ch>
@@ -88,164 +82,94 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In some special cases we must not block, but there's not a
-spinlock, preempt-off, irqs-off or similar critical section already
-that arms the might_sleep() debug checks. Add a non_block_start/end()
-pair to annotate these.
+This is a similar idea to the fs_reclaim fake lockdep lock. It's
+fairly easy to provoke a specific notifier to be run on a specific
+range: Just prep it, and then munmap() it.
 
-This will be used in the oom paths of mmu-notifiers, where blocking is
-not allowed to make sure there's forward progress. Quoting Michal:
+A bit harder, but still doable, is to provoke the mmu notifiers for
+all the various callchains that might lead to them. But both at the
+same time is really hard to reliable hit, especially when you want to
+exercise paths like direct reclaim or compaction, where it's not
+easy to control what exactly will be unmapped.
 
-"The notifier is called from quite a restricted context - oom_reaper -
-which shouldn't depend on any locks or sleepable conditionals. The code
-should be swift as well but we mostly do care about it to make a forward
-progress. Checking for sleepable context is the best thing we could come
-up with that would describe these demands at least partially."
+By introducing a lockdep map to tie them all together we allow lockdep
+to see a lot more dependencies, without having to actually hit them
+in a single challchain while testing.
 
-Peter also asked whether we want to catch spinlocks on top, but Michal
-said those are less of a problem because spinlocks can't have an
-indirect dependency upon the page allocator and hence close the loop
-with the oom reaper.
+Aside: Since I typed this to test i915 mmu notifiers I've only rolled
+this out for the invaliate_range_start callback. If there's
+interest, we should probably roll this out to all of them. But my
+undestanding of core mm is seriously lacking, and I'm not clear on
+whether we need a lockdep map for each callback, or whether some can
+be shared.
 
-Suggested by Michal Hocko.
+v2: Use lock_map_acquire/release() like fs_reclaim, to avoid confusion
+with this being a real mutex (Chris Wilson).
 
-v2:
-- Improve commit message (Michal)
-- Also check in schedule, not just might_sleep (Peter)
+v3: Rebase on top of Glisse's arg rework.
 
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Chris Wilson <chris@chris-wilson.co.uk>
 Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Michal Hocko <mhocko@suse.com>
 Cc: David Rientjes <rientjes@google.com>
-Cc: "Christian König" <christian.koenig@amd.com>
-Cc: Daniel Vetter <daniel.vetter@ffwll.ch>
 Cc: "Jérôme Glisse" <jglisse@redhat.com>
+Cc: Michal Hocko <mhocko@suse.com>
+Cc: "Christian König" <christian.koenig@amd.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Daniel Vetter <daniel.vetter@ffwll.ch>
+Cc: Mike Rapoport <rppt@linux.vnet.ibm.com>
 Cc: linux-mm@kvack.org
-Cc: Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc: Wei Wang <wvw@google.com>
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Jann Horn <jannh@google.com>
-Cc: Feng Tang <feng.tang@intel.com>
-Cc: Kees Cook <keescook@chromium.org>
-Cc: Randy Dunlap <rdunlap@infradead.org>
-Cc: linux-kernel@vger.kernel.org
-Acked-by: Christian König <christian.koenig@amd.com>
 Signed-off-by: Daniel Vetter <daniel.vetter@intel.com>
 ---
- include/linux/kernel.h | 10 +++++++++-
- include/linux/sched.h  |  4 ++++
- kernel/sched/core.c    | 19 ++++++++++++++-----
- 3 files changed, 27 insertions(+), 6 deletions(-)
+ include/linux/mmu_notifier.h | 6 ++++++
+ mm/mmu_notifier.c            | 7 +++++++
+ 2 files changed, 13 insertions(+)
 
-diff --git a/include/linux/kernel.h b/include/linux/kernel.h
-index 74b1ee9027f5..b5f2c2ff0eab 100644
---- a/include/linux/kernel.h
-+++ b/include/linux/kernel.h
-@@ -214,7 +214,9 @@ extern void __cant_sleep(const char *file, int line, int preempt_offset);
-  * might_sleep - annotation for functions that can sleep
-  *
-  * this macro will print a stack trace if it is executed in an atomic
-- * context (spinlock, irq-handler, ...).
-+ * context (spinlock, irq-handler, ...). Additional sections where blocking is
-+ * not allowed can be annotated with non_block_start() and non_block_end()
-+ * pairs.
-  *
-  * This is a useful debugging help to be able to catch problems early and not
-  * be bitten later when the calling function happens to sleep when it is not
-@@ -230,6 +232,10 @@ extern void __cant_sleep(const char *file, int line, int preempt_offset);
- # define cant_sleep() \
- 	do { __cant_sleep(__FILE__, __LINE__, 0); } while (0)
- # define sched_annotate_sleep()	(current->task_state_change = 0)
-+# define non_block_start() \
-+	do { current->non_block_count++; } while (0)
-+# define non_block_end() \
-+	do { WARN_ON(current->non_block_count-- == 0); } while (0)
- #else
-   static inline void ___might_sleep(const char *file, int line,
- 				   int preempt_offset) { }
-@@ -238,6 +244,8 @@ extern void __cant_sleep(const char *file, int line, int preempt_offset);
- # define might_sleep() do { might_resched(); } while (0)
- # define cant_sleep() do { } while (0)
- # define sched_annotate_sleep() do { } while (0)
-+# define non_block_start() do { } while (0)
-+# define non_block_end() do { } while (0)
- #endif
+diff --git a/include/linux/mmu_notifier.h b/include/linux/mmu_notifier.h
+index b6c004bd9f6a..9dd38c32fc53 100644
+--- a/include/linux/mmu_notifier.h
++++ b/include/linux/mmu_notifier.h
+@@ -42,6 +42,10 @@ enum mmu_notifier_event {
  
- #define might_sleep_if(cond) do { if (cond) might_sleep(); } while (0)
-diff --git a/include/linux/sched.h b/include/linux/sched.h
-index 11837410690f..7f5b293e72df 100644
---- a/include/linux/sched.h
-+++ b/include/linux/sched.h
-@@ -908,6 +908,10 @@ struct task_struct {
- 	struct mutex_waiter		*blocked_on;
- #endif
+ #ifdef CONFIG_MMU_NOTIFIER
  
-+#ifdef CONFIG_DEBUG_ATOMIC_SLEEP
-+	int				non_block_count;
++#ifdef CONFIG_LOCKDEP
++extern struct lockdep_map __mmu_notifier_invalidate_range_start_map;
 +#endif
 +
- #ifdef CONFIG_TRACE_IRQFLAGS
- 	unsigned int			irq_events;
- 	unsigned long			hardirq_enable_ip;
-diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-index 102dfcf0a29a..dd08d423947d 100644
---- a/kernel/sched/core.c
-+++ b/kernel/sched/core.c
-@@ -3264,13 +3264,22 @@ static noinline void __schedule_bug(struct task_struct *prev)
  /*
-  * Various schedule()-time debugging checks and statistics:
-  */
--static inline void schedule_debug(struct task_struct *prev)
-+static inline void schedule_debug(struct task_struct *prev, bool preempt)
+  * The mmu notifier_mm structure is allocated and installed in
+  * mm->mmu_notifier_mm inside the mm_take_all_locks() protected
+@@ -310,10 +314,12 @@ static inline void mmu_notifier_change_pte(struct mm_struct *mm,
+ static inline void
+ mmu_notifier_invalidate_range_start(struct mmu_notifier_range *range)
  {
- #ifdef CONFIG_SCHED_STACK_END_CHECK
- 	if (task_stack_end_corrupted(prev))
- 		panic("corrupted stack end detected inside scheduler\n");
- #endif
++	lock_map_acquire(&__mmu_notifier_invalidate_range_start_map);
+ 	if (mm_has_notifiers(range->mm)) {
+ 		range->flags |= MMU_NOTIFIER_RANGE_BLOCKABLE;
+ 		__mmu_notifier_invalidate_range_start(range);
+ 	}
++	lock_map_release(&__mmu_notifier_invalidate_range_start_map);
+ }
  
-+#ifdef CONFIG_DEBUG_ATOMIC_SLEEP
-+	if (!preempt && prev->state && prev->non_block_count) {
-+		printk(KERN_ERR "BUG: scheduling in a non-blocking section: %s/%d/%i\n",
-+			prev->comm, prev->pid, prev->non_blocking_count);
-+		dump_stack();
-+		add_taint(TAINT_WARN, LOCKDEP_STILL_OK);
-+	}
+ static inline int
+diff --git a/mm/mmu_notifier.c b/mm/mmu_notifier.c
+index a09e737711d5..33bdaddfb9b1 100644
+--- a/mm/mmu_notifier.c
++++ b/mm/mmu_notifier.c
+@@ -23,6 +23,13 @@
+ /* global SRCU for all MMs */
+ DEFINE_STATIC_SRCU(srcu);
+ 
++#ifdef CONFIG_LOCKDEP
++struct lockdep_map __mmu_notifier_invalidate_range_start_map = {
++	.name = "mmu_notifier_invalidate_range_start"
++};
++EXPORT_SYMBOL_GPL(__mmu_notifier_invalidate_range_start_map);
 +#endif
 +
- 	if (unlikely(in_atomic_preempt_off())) {
- 		__schedule_bug(prev);
- 		preempt_count_set(PREEMPT_DISABLED);
-@@ -3377,7 +3386,7 @@ static void __sched notrace __schedule(bool preempt)
- 	rq = cpu_rq(cpu);
- 	prev = rq->curr;
- 
--	schedule_debug(prev);
-+	schedule_debug(prev, preempt);
- 
- 	if (sched_feat(HRTICK))
- 		hrtick_clear(rq);
-@@ -6102,7 +6111,7 @@ void ___might_sleep(const char *file, int line, int preempt_offset)
- 	rcu_sleep_check();
- 
- 	if ((preempt_count_equals(preempt_offset) && !irqs_disabled() &&
--	     !is_idle_task(current)) ||
-+	     !is_idle_task(current) && !current->non_block_count) ||
- 	    system_state == SYSTEM_BOOTING || system_state > SYSTEM_RUNNING ||
- 	    oops_in_progress)
- 		return;
-@@ -6118,8 +6127,8 @@ void ___might_sleep(const char *file, int line, int preempt_offset)
- 		"BUG: sleeping function called from invalid context at %s:%d\n",
- 			file, line);
- 	printk(KERN_ERR
--		"in_atomic(): %d, irqs_disabled(): %d, pid: %d, name: %s\n",
--			in_atomic(), irqs_disabled(),
-+		"in_atomic(): %d, irqs_disabled(): %d, non_block: %d, pid: %d, name: %s\n",
-+			in_atomic(), irqs_disabled(), current->non_block_count,
- 			current->pid, current->comm);
- 
- 	if (task_stack_end_corrupted(current))
+ /*
+  * This function allows mmu_notifier::release callback to delay a call to
+  * a function that will free appropriate resources. The function must be
 -- 
 2.20.1
 
