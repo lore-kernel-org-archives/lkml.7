@@ -2,214 +2,118 @@ Return-Path: <SRS0=lq4r=TU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C847C04AAC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 18:21:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9762AC04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 18:22:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 05517208C3
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 18:21:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7340221479
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 18:22:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1558376524;
+	bh=qVJmGbj2Vdd/g0/cuWy10JFLGcZpf14oBOXbCGQmSao=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=tGz82Gg3XaQfUU+5JPh8Wr+4x9ktpsHUVwg52zUQkrvr6dUh0Eho4SRspvkgKdBb/
+	 8mjI4sTcQZ/FMjd8dQh9NL3Efok3FuGbv8KCU2UIqeLJ+zQ16N0jiEsyhTGmsNtIK7
+	 gKyEAnxdVWvaMFpYGM5XR9+o4A4w3c7Xwy3a2J2s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727506AbfETSVV (ORCPT
+        id S1726001AbfETSWD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 14:21:21 -0400
-Received: from gateway22.websitewelcome.com ([192.185.47.228]:27787 "EHLO
-        gateway22.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725902AbfETSVU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 14:21:20 -0400
-Received: from cm14.websitewelcome.com (cm14.websitewelcome.com [100.42.49.7])
-        by gateway22.websitewelcome.com (Postfix) with ESMTP id 609DE1A979
-        for <linux-kernel@vger.kernel.org>; Mon, 20 May 2019 13:21:19 -0500 (CDT)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id SmuVhHDKE2qH7SmuVhWgNB; Mon, 20 May 2019 13:21:19 -0500
-X-Authority-Reason: nr=8
-Received: from [189.250.71.100] (port=36326 helo=[192.168.1.76])
-        by gator4166.hostgator.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
-        (Exim 4.91)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1hSmuS-002cjf-EH; Mon, 20 May 2019 13:21:18 -0500
-To:     xiaolinkui <xiaolinkui@kylinos.cn>
-Cc:     "Deucher, Alexander" <alexander.deucher@amd.com>,
-        Christian Koenig <christian.koenig@amd.com>,
-        Chunming Zhou <David1.Zhou@amd.com>,
-        Dave Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        xinhui pan <xinhui.pan@amd.com>,
-        "Quan, Evan" <evan.quan@amd.com>,
-        Maling list - DRI developers 
-        <dri-devel@lists.freedesktop.org>,
-        amd-gfx list <amd-gfx@lists.freedesktop.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Alex Deucher <alexdeucher@gmail.com>
-References: <1558082760-4915-1-git-send-email-xiaolinkui@kylinos.cn>
- <CADnq5_PE-mvW2zwNeHn6prvTQvh-en9E9F7VE-hCS=a8jJWhAQ@mail.gmail.com>
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=gustavo@embeddedor.com; keydata=
- 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
- VtSixD1uOgytAP7RWS474w==
-Subject: Re: [PATCH] gpu: drm: use struct_size() in kmalloc()
-Message-ID: <f17d994b-c498-4002-dd72-2999574d84ec@embeddedor.com>
-Date:   Mon, 20 May 2019 13:21:14 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Mon, 20 May 2019 14:22:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33714 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725601AbfETSWC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 14:22:02 -0400
+Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7BF4521743;
+        Mon, 20 May 2019 18:22:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1558376521;
+        bh=qVJmGbj2Vdd/g0/cuWy10JFLGcZpf14oBOXbCGQmSao=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=RndWrmIyDdQwqshRWRJYdMlqIrTsTZXDBnaDHWsmXWw+8OAGxhLpviiyi7aaXmXPG
+         tgmLX73WuHT4WyfEFbi4TE7pkzFGoePNCGi1rG8IHt+Ckr8au5kbUa1jhiuIdx7nvo
+         GIxN1w0bGZvAUcorLk3AU25aEkwa1cRNkmK958LI=
+Received: by mail-ed1-f44.google.com with SMTP id b8so25193831edm.11;
+        Mon, 20 May 2019 11:22:01 -0700 (PDT)
+X-Gm-Message-State: APjAAAWM5p+PjKSc5nOtLUMvOEFPfN38zMhfA56rGgGTQVsey/uoYIUe
+        Fwdn7HIGsVxTzXfjJclY+K1FtBW+VFPUfsQIDtk=
+X-Google-Smtp-Source: APXvYqxBn56JZKTbqqS2rJEHEi0by3+14eci4UT/1x1JZqQKroM36bhraEHyozw5pF1jkWje0l3swnaHncZ6INr3GDY=
+X-Received: by 2002:a50:9858:: with SMTP id h24mr29972423edb.147.1558376520094;
+ Mon, 20 May 2019 11:22:00 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <CADnq5_PE-mvW2zwNeHn6prvTQvh-en9E9F7VE-hCS=a8jJWhAQ@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 189.250.71.100
-X-Source-L: No
-X-Exim-ID: 1hSmuS-002cjf-EH
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: ([192.168.1.76]) [189.250.71.100]:36326
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 11
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+References: <1556528151-17221-1-git-send-email-hao.wu@intel.com>
+ <1556528151-17221-6-git-send-email-hao.wu@intel.com> <CANk1AXQSL8k=FOLv4_rLfRHBqOi=CW=yP3O8ch4VEa25cj9+Cw@mail.gmail.com>
+ <CANk1AXQCp2ozUQDWz__MuiUeDLvGvrfqj3KUYmBa5Z34oxG8NQ@mail.gmail.com> <20190517041116.GC20569@hao-dev>
+In-Reply-To: <20190517041116.GC20569@hao-dev>
+From:   Alan Tull <atull@kernel.org>
+Date:   Mon, 20 May 2019 13:21:24 -0500
+X-Gmail-Original-Message-ID: <CANk1AXTh+U-C9TxO7ZZTF+7Nu-_5i=G_0wK0FZ2Go55gPYR0Ng@mail.gmail.com>
+Message-ID: <CANk1AXTh+U-C9TxO7ZZTF+7Nu-_5i=G_0wK0FZ2Go55gPYR0Ng@mail.gmail.com>
+Subject: Re: [PATCH v2 05/18] Documentation: fpga: dfl: add descriptions for
+ virtualization and new interfaces.
+To:     Wu Hao <hao.wu@intel.com>
+Cc:     Moritz Fischer <mdf@kernel.org>, linux-fpga@vger.kernel.org,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-api@vger.kernel.org, Xu Yilun <yilun.xu@intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, May 16, 2019 at 11:27 PM Wu Hao <hao.wu@intel.com> wrote:
+>
+> On Thu, May 16, 2019 at 12:53:00PM -0500, Alan Tull wrote:
+> > On Thu, May 16, 2019 at 12:36 PM Alan Tull <atull@kernel.org> wrote:
+> > >
+> > > On Mon, Apr 29, 2019 at 4:12 AM Wu Hao <hao.wu@intel.com> wrote:
+> >
+> > Hi Hao,
+> >
+> > Most of this patchset looks ready to go upstream or nearly so with
+> > pretty straightforward changes .  Patches 17 and 18 need minor changes
+> > and please change the scnprintf in the other patches.  The patches
+> > that had nontrivial changes are the power and thermal ones involving
+> > hwmon.  I'm hoping to send up the patchset minus the hwmon patches in
+> > the next version if there's no unforseen issues.  If the hwmon patches
+> > are ready then also, that's great, but otherwise those patches don't
+> > need to hold up all the rest of the patchset.  How's that sound?
+>
+> Hi Alan
+>
+> Thanks for your time for reviewing this patchset.
+>
+> This sounds good to me. Only thing here is, I need to split the patch which
+> updates documentation into 2 patches (to remove hwmon description in doc),
+> but for sure, it should be very easy. :)
+
+Yes that sounds good.
+
+Thanks,
+Alan
 
 
-On 5/20/19 12:41 PM, Alex Deucher wrote:
-> On Fri, May 17, 2019 at 8:43 AM xiaolinkui <xiaolinkui@kylinos.cn> wrote:
->>
->> Use struct_size() helper to keep code simple.
->>
-
-Again, this is not the reason why this helper was created.
-
->> Signed-off-by: xiaolinkui <xiaolinkui@kylinos.cn>
->> ---
->>  drivers/gpu/drm/amd/amdgpu/amdgpu_ras.c | 3 +--
->>  1 file changed, 1 insertion(+), 2 deletions(-)
-> 
-> This patch results in the following build error:
->   DESCEND  objtool
->   CALL    scripts/checksyscalls.sh
->   CHK     include/generated/compile.h
->   CC [M]  drivers/gpu/drm/amd/amdgpu/amdgpu_ras.o
-> In file included from ./include/linux/kernel.h:15,
->                  from ./include/linux/list.h:9,
->                  from ./include/linux/wait.h:7,
->                  from ./include/linux/wait_bit.h:8,
->                  from ./include/linux/fs.h:6,
->                  from ./include/linux/debugfs.h:15,
->                  from drivers/gpu/drm/amd/amdgpu/amdgpu_ras.c:24:
-> drivers/gpu/drm/amd/amdgpu/amdgpu_ras.c: In function ‘amdgpu_ras_init’:
-> ./include/linux/build_bug.h:16:45: error: negative width in bit-field
-> ‘<anonymous>’
->  #define BUILD_BUG_ON_ZERO(e) (sizeof(struct { int:(-!!(e)); }))
->                                              ^
-> ./include/linux/compiler.h:349:28: note: in expansion of macro
-> ‘BUILD_BUG_ON_ZERO’
->  #define __must_be_array(a) BUILD_BUG_ON_ZERO(__same_type((a), &(a)[0]))
->                             ^~~~~~~~~~~~~~~~~
-> ./include/linux/overflow.h:306:30: note: in expansion of macro ‘__must_be_array’
->        sizeof(*(p)->member) + __must_be_array((p)->member),\
->                               ^~~~~~~~~~~~~~~
-> drivers/gpu/drm/amd/amdgpu/amdgpu_ras.c:1556:16: note: in expansion of
-> macro ‘struct_size’
->   con = kmalloc(struct_size(con, objs, AMDGPU_RAS_BLOCK_COUNT),
->                 ^~~~~~~~~~~
-> make[4]: *** [scripts/Makefile.build:276:
-> drivers/gpu/drm/amd/amdgpu/amdgpu_ras.o] Error 1
-> make[4]: *** Waiting for unfinished jobs....
-> make[3]: *** [scripts/Makefile.build:492: drivers/gpu/drm/amd/amdgpu] Error 2
-> make[3]: *** Waiting for unfinished jobs....
-> make[2]: *** [scripts/Makefile.build:492: drivers/gpu/drm] Error 2
-> make[1]: *** [scripts/Makefile.build:492: drivers/gpu] Error 2
-> make: *** [Makefile:1042: drivers] Error 2
-> 
-> Alex
-> 
-
-You continue[1][2] sending these sorts of patches without really understanding what
-you are doing. And you don't even compile them. Why?
-
---
-Gustavo
-
-[1] https://lore.kernel.org/lkml/d83390a9-33be-3d76-3e23-b97f0a05b72f@kernel.dk/
-[2] https://lore.kernel.org/lkml/b4d33107-75d5-fa18-536e-6d21c96e4972@kernel.dk/
-
-> 
->>
->> diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_ras.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_ras.c
->> index 22bd21e..4717a64 100644
->> --- a/drivers/gpu/drm/amd/amdgpu/amdgpu_ras.c
->> +++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_ras.c
->> @@ -1375,8 +1375,7 @@ int amdgpu_ras_init(struct amdgpu_device *adev)
->>         if (con)
->>                 return 0;
->>
->> -       con = kmalloc(sizeof(struct amdgpu_ras) +
->> -                       sizeof(struct ras_manager) * AMDGPU_RAS_BLOCK_COUNT,
->> +       con = kmalloc(struct_size(con, objs, AMDGPU_RAS_BLOCK_COUNT),
->>                         GFP_KERNEL|__GFP_ZERO);
->>         if (!con)
->>                 return -ENOMEM;
->> --
->> 2.7.4
->>
->>
->>
->> _______________________________________________
->> amd-gfx mailing list
->> amd-gfx@lists.freedesktop.org
->> https://lists.freedesktop.org/mailman/listinfo/amd-gfx
+>
+> Thanks
+> Hao
+>
+> >
+> > Alan
+> >
+> > > >
+> > > > This patch adds virtualization support description for DFL based
+> > > > FPGA devices (based on PCIe SRIOV), and introductions to new
+> > > > interfaces added by new dfl private feature drivers.
+> > > >
+> > > > Signed-off-by: Xu Yilun <yilun.xu@intel.com>
+> > > > Signed-off-by: Wu Hao <hao.wu@intel.com>
+> > >
+> > > Acked-by: Alan Tull <atull@kernel.org>
+> > >
+> > > Thanks,
+> > > Alan
