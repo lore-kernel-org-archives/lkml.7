@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74D5EC04AAC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:43:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CBDDC04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:43:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 33CF3204FD
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:43:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C7ABC20645
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:43:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558356183;
-	bh=WupPEC+hMOVZof/t7zKnzKz3HLKKT+Ri07zHZ5ruEwI=;
+	s=default; t=1558356195;
+	bh=gjf+mOszHMrKvbqtvIw9132vFb8gT0KeTwcDppoOEo0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BdkpHugzlWX+lfONdsMDaTggj4eH7jSnJpmYe8DzjLZHDWxJ1NR6AlLbJaCYtgIHs
-	 taXwgtY2ICu5vUsBDt9n5Mo1te4uV1nq6c3PHQtlk+Hlw4rh3yD3H7wkUFWlYPxcxp
-	 s5ncCYt0TYaXJgc+/KXbf5FawTf9oHTAYkfjxQ7U=
+	b=LNhSWaTc48/TXarM2P45GrWzaDBLVBwBBV9R6jzD9jw3hxk8DBlppO+NvXMgIxdqF
+	 YMDeTw4wtvVnXnifFX/ErzHU2E9SmdCLxLiOVwO0zNXvjxW7np2onyR648fhzvXQzc
+	 tm7yRe+o4NGejxuc6GmkjiVOV1sX11vaRh/k1Thc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389878AbfETM3X (ORCPT
+        id S2389804AbfETM3F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 08:29:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45340 "EHLO mail.kernel.org"
+        Mon, 20 May 2019 08:29:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45004 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389274AbfETM3R (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 08:29:17 -0400
+        id S2389448AbfETM3B (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 08:29:01 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4189320675;
-        Mon, 20 May 2019 12:29:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 79DFB20675;
+        Mon, 20 May 2019 12:29:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558355356;
-        bh=WupPEC+hMOVZof/t7zKnzKz3HLKKT+Ri07zHZ5ruEwI=;
+        s=default; t=1558355341;
+        bh=gjf+mOszHMrKvbqtvIw9132vFb8gT0KeTwcDppoOEo0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zsawyAnsmMRtU4loequQAmOE2IHEl/rtOzObput+vnlkispsb1PS8Hvf0P8BnhdIe
-         FYRZYmj//hl6p1cwVk2u6ExJglBTkznwuEZ8Qq8N36hswzo0gkb3pYVQKm7ggsIath
-         7NOXS92USn9s2Py5zobN5wZUrSXe2bbIhfNXsfOE=
+        b=qEsjQLOAHCpyOJ1rWXKv6UIyvWJlm92YRr8vxn8h4m9Al+/Wf9f3t26ve9BBPgQ3j
+         8m3cAycaS4T7YTZoH9WBqSliMwcbL+bPNd/qCudi1xI/L7hNlFzMMp54tcx1x+WAtA
+         1Su5lWbvHR3eo2mPt3RWh3KOwOOD0JK59omjlOvs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kirill Tkhai <ktkhai@virtuozzo.com>,
-        Theodore Tso <tytso@mit.edu>, Jan Kara <jack@suse.cz>,
-        stable@kernel.org
-Subject: [PATCH 5.0 087/123] ext4: actually request zeroing of inode table after grow
-Date:   Mon, 20 May 2019 14:14:27 +0200
-Message-Id: <20190520115250.679695477@linuxfoundation.org>
+        stable@vger.kernel.org, Jan Kara <jack@suse.cz>,
+        Theodore Tso <tytso@mit.edu>, stable@kernel.org
+Subject: [PATCH 5.0 082/123] ext4: make sanity check in mballoc more strict
+Date:   Mon, 20 May 2019 14:14:22 +0200
+Message-Id: <20190520115250.300766252@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190520115245.439864225@linuxfoundation.org>
 References: <20190520115245.439864225@linuxfoundation.org>
@@ -60,37 +59,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kirill Tkhai <ktkhai@virtuozzo.com>
+From: Jan Kara <jack@suse.cz>
 
-commit 310a997fd74de778b9a4848a64be9cda9f18764a upstream.
+commit 31562b954b60f02acb91b7349dc6432d3f8c3c5f upstream.
 
-It is never possible, that number of block groups decreases,
-since only online grow is supported.
+The sanity check in mb_find_extent() only checked that returned extent
+does not extend past blocksize * 8, however it should not extend past
+EXT4_CLUSTERS_PER_GROUP(sb). This can happen when clusters_per_group <
+blocksize * 8 and the tail of the bitmap is not properly filled by 1s
+which happened e.g. when ancient kernels have grown the filesystem.
 
-But after a growing occured, we have to zero inode tables
-for just created new block groups.
-
-Fixes: 19c5246d2516 ("ext4: add new online resize interface")
-Signed-off-by: Kirill Tkhai <ktkhai@virtuozzo.com>
+Signed-off-by: Jan Kara <jack@suse.cz>
 Signed-off-by: Theodore Ts'o <tytso@mit.edu>
-Reviewed-by: Jan Kara <jack@suse.cz>
 Cc: stable@kernel.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/ext4/ioctl.c |    2 +-
+ fs/ext4/mballoc.c |    2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/fs/ext4/ioctl.c
-+++ b/fs/ext4/ioctl.c
-@@ -977,7 +977,7 @@ mext_out:
- 		if (err == 0)
- 			err = err2;
- 		mnt_drop_write_file(filp);
--		if (!err && (o_group > EXT4_SB(sb)->s_groups_count) &&
-+		if (!err && (o_group < EXT4_SB(sb)->s_groups_count) &&
- 		    ext4_has_group_desc_csum(sb) &&
- 		    test_opt(sb, INIT_INODE_TABLE))
- 			err = ext4_register_li_request(sb, o_group);
+--- a/fs/ext4/mballoc.c
++++ b/fs/ext4/mballoc.c
+@@ -1539,7 +1539,7 @@ static int mb_find_extent(struct ext4_bu
+ 		ex->fe_len += 1 << order;
+ 	}
+ 
+-	if (ex->fe_start + ex->fe_len > (1 << (e4b->bd_blkbits + 3))) {
++	if (ex->fe_start + ex->fe_len > EXT4_CLUSTERS_PER_GROUP(e4b->bd_sb)) {
+ 		/* Should never happen! (but apparently sometimes does?!?) */
+ 		WARN_ON(1);
+ 		ext4_error(e4b->bd_sb, "corruption or bug in mb_find_extent "
 
 
