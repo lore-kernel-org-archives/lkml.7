@@ -2,144 +2,126 @@ Return-Path: <SRS0=lq4r=TU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FAB3C04AAC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 16:28:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71E34C04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 16:29:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DE3F321479
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 16:28:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3A19C20815
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 16:29:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="N2nmW2ws"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fHGovjx4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389683AbfETQ2M (ORCPT
+        id S2392156AbfETQ3P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 12:28:12 -0400
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:42060 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731554AbfETQ2L (ORCPT
+        Mon, 20 May 2019 12:29:15 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:39727 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731671AbfETQ3P (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 12:28:11 -0400
-Received: by mail-ed1-f68.google.com with SMTP id l25so24709796eda.9
-        for <linux-kernel@vger.kernel.org>; Mon, 20 May 2019 09:28:10 -0700 (PDT)
+        Mon, 20 May 2019 12:29:15 -0400
+Received: by mail-pl1-f194.google.com with SMTP id g9so6950862plm.6
+        for <linux-kernel@vger.kernel.org>; Mon, 20 May 2019 09:29:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google;
-        h=sender:date:from:to:cc:subject:message-id:mail-followup-to
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=3TAoLRVcknBAN1CDMLOgd0qpJGH55GX0voZSdrhkTTo=;
-        b=N2nmW2ws30FUiHTgoIIFpXZlTTKRRsCySLymCkEYYEFTN9Th0GQvagYaHPe7XaHWC/
-         WysiWAiv4gRH+hAzjCKWKePUEOGGW5OsudN9iwQGugeG6GhPy/1OWu+gl3djhx6/PGy8
-         ILLBKOFZEJo2LzLZxDGbHnJeE1VFbkRNwfwOU=
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=byKYPTND9YCeJJHnLBgAwQB4XeP+2knzrQ48PDwWxpg=;
+        b=fHGovjx4PpiC1jOvqzA/Ecf1EzMl3NrIClO5m2ir+OpwlV6DW+ZDfHON7wTNel3tfm
+         Ue5BC+Zij3L1zQ6a3ZH9N4C/YCBBSs//PV5Fyu+JbV/RnsCh5PIKWT9C6ugPIsLluGSt
+         j02IcyMU6A+xKgrSrfN8TjytKlMLK1g+W+8+pYSgoK0/1RCW38cP/257Ikp1JNvsVpvM
+         Z9IOZuDzlOEc64sFHlFVqojo0yJhwmBRhJko+CCsW93nz3GklGebuvSJiKsXJHJmJkHT
+         jlJKvkINej8mN8Gu/86wRJDVuQ1qkMRMRTrra0E18so6glYg9gvvwEEfrgKj+DKLRuU1
+         Gsxg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :mail-followup-to:references:mime-version:content-disposition
-         :in-reply-to:user-agent;
-        bh=3TAoLRVcknBAN1CDMLOgd0qpJGH55GX0voZSdrhkTTo=;
-        b=umEcleoXBCHpYioso7G02QncabRIZc9ooeL0i4xMLbbZUZCikUlTVUAGtqHnvaKl7S
-         feH1uQfzXo+gdKYDxujAUoHhHHn6hTDfUlQfwd+0Rfx3yvDcHhoJZIahRAcW/SqQ09kF
-         TDBNyhblM73CzlVY32DFdXRUVxUg4wi8QECe8b9szgatGfdxeYQ4LYLXDke+Stcmt2kT
-         b/Q+yGaiBhpUm4XYfMbn41ld9yPNgPEFWvnDn1ST5rRrCBcGC82/RnNpyDLkAdrvvWAA
-         Cl8Jvgbt6X+JX5CFM/M8RKY6ymdkKtt8D3ND/O1SXdVJHSiXWXi1p/73FiLfYf2YKdcj
-         aNJA==
-X-Gm-Message-State: APjAAAXUm8xx3dM46v0YnHY59reFsFWigLZLK5vAWgFHHaPKHo8fv59Z
-        4NfYJQt1DFzKARM/NWzakl9EIw==
-X-Google-Smtp-Source: APXvYqwSZ6r6BI9og6hE6k63QBHcefsIwO3oA7gFXQ5dFWDya4tJWv1QMXuDvQ1VsBO2WLjw7BQJ5Q==
-X-Received: by 2002:a17:906:af57:: with SMTP id ly23mr28429403ejb.98.1558369690157;
-        Mon, 20 May 2019 09:28:10 -0700 (PDT)
-Received: from phenom.ffwll.local ([2a02:168:569e:0:3106:d637:d723:e855])
-        by smtp.gmail.com with ESMTPSA id u47sm5613329edm.86.2019.05.20.09.28.08
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 20 May 2019 09:28:09 -0700 (PDT)
-Date:   Mon, 20 May 2019 18:28:07 +0200
-From:   Daniel Vetter <daniel@ffwll.ch>
-To:     "Pan, Xinhui" <Xinhui.Pan@amd.com>
-Cc:     "Deucher, Alexander" <Alexander.Deucher@amd.com>,
-        "Koenig, Christian" <Christian.Koenig@amd.com>,
-        "Zhou, David(ChunMing)" <David1.Zhou@amd.com>,
-        "airlied@linux.ie" <airlied@linux.ie>,
-        "daniel@ffwll.ch" <daniel@ffwll.ch>,
-        "Quan, Evan" <Evan.Quan@amd.com>,
-        xiaolinkui <xiaolinkui@kylinos.cn>,
-        "amd-gfx@lists.freedesktop.org" <amd-gfx@lists.freedesktop.org>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] gpu: drm: use struct_size() in kmalloc()
-Message-ID: <20190520162807.GE21222@phenom.ffwll.local>
-Mail-Followup-To: "Pan, Xinhui" <Xinhui.Pan@amd.com>,
-        "Deucher, Alexander" <Alexander.Deucher@amd.com>,
-        "Koenig, Christian" <Christian.Koenig@amd.com>,
-        "Zhou, David(ChunMing)" <David1.Zhou@amd.com>,
-        "airlied@linux.ie" <airlied@linux.ie>,
-        "Quan, Evan" <Evan.Quan@amd.com>,
-        xiaolinkui <xiaolinkui@kylinos.cn>,
-        "amd-gfx@lists.freedesktop.org" <amd-gfx@lists.freedesktop.org>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <1558082760-4915-1-git-send-email-xiaolinkui@kylinos.cn>
- <SN6PR12MB2800A7AEC22121C8704CBB09870B0@SN6PR12MB2800.namprd12.prod.outlook.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=byKYPTND9YCeJJHnLBgAwQB4XeP+2knzrQ48PDwWxpg=;
+        b=Vt2dr4zTbnP8UZyXIIERbJGaW/aBIYIKVeDftozfRmrXLlhmKQRuM/SDWVJ8qMXCGB
+         T45M6Lx50Zmk5VyDqTqHngLP6iQJDwi9/Y2vgfVTunJxZ2EQZk8+rdtCp8JKE+znLQ5g
+         XhCwsZ5PgMhK+4yLD0FQyV662acyLEYAh6k30uzI+nDqxqJ8HEVH6N0CKTX5vctt7DjT
+         ALpPqBCqvrEY/9q7ofc74zEsYI5sjiJDuKc0rSYfXJHNCGnXYlSvh7/v4tUv69atHiY7
+         SufGL6NqYDgyjr/2Y//2yuCAx4x1hkSUXRsovzeuzTVwpsvmsP8YobhzLKuxFMNFpHSc
+         DqqQ==
+X-Gm-Message-State: APjAAAUJyC8vW0Qr/6AHveshtwAiE/JWk1CzosXF1b/n9ui5kCUwCYxX
+        zJR0ASqmOP2rAJc1awjbqDR8ZwQUHyp8xPYa5FM=
+X-Google-Smtp-Source: APXvYqyyaw5zpahyX3bKiYjur5LZoFYK15o3299Pf26i/dwF+cCH7jBL37QqVKzb7ETz0LCWzP3ry3IGEelO7Dy7wJI=
+X-Received: by 2002:a17:902:24c7:: with SMTP id l7mr27106129plg.192.1558369754339;
+ Mon, 20 May 2019 09:29:14 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <SN6PR12MB2800A7AEC22121C8704CBB09870B0@SN6PR12MB2800.namprd12.prod.outlook.com>
-X-Operating-System: Linux phenom 4.14.0-3-amd64 
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20190520044951.248096-1-drinkcat@chromium.org>
+In-Reply-To: <20190520044951.248096-1-drinkcat@chromium.org>
+From:   Akinobu Mita <akinobu.mita@gmail.com>
+Date:   Tue, 21 May 2019 01:29:03 +0900
+Message-ID: <CAC5umygGsW3Nju-mA-qE8kNBd9SSXeO=YXMkgFsFaceCytoAww@mail.gmail.com>
+Subject: Re: [PATCH] mm/failslab: By default, do not fail allocations with
+ direct reclaim only
+To:     Nicolas Boichat <drinkcat@chromium.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        David Rientjes <rientjes@google.com>,
+        Michal Hocko <mhocko@suse.com>, Joe Perches <joe@perches.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-mm@kvack.org, Pekka Enberg <penberg@kernel.org>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 17, 2019 at 04:44:30PM +0000, Pan, Xinhui wrote:
-> I am going to put more members which are also array after this struct,
-> not only obj[].  Looks like this struct_size did not help on multiple
-> array case. Thanks anyway.  ________________________________
+2019=E5=B9=B45=E6=9C=8820=E6=97=A5(=E6=9C=88) 13:49 Nicolas Boichat <drinkc=
+at@chromium.org>:
+>
+> When failslab was originally written, the intention of the
+> "ignore-gfp-wait" flag default value ("N") was to fail
+> GFP_ATOMIC allocations. Those were defined as (__GFP_HIGH),
+> and the code would test for __GFP_WAIT (0x10u).
+>
+> However, since then, __GFP_WAIT was replaced by __GFP_RECLAIM
+> (___GFP_DIRECT_RECLAIM|___GFP_KSWAPD_RECLAIM), and GFP_ATOMIC is
+> now defined as (__GFP_HIGH|__GFP_ATOMIC|__GFP_KSWAPD_RECLAIM).
+>
+> This means that when the flag is false, almost no allocation
+> ever fails (as even GFP_ATOMIC allocations contain
+> __GFP_KSWAPD_RECLAIM).
+>
+> Restore the original intent of the code, by ignoring calls
+> that directly reclaim only (___GFP_DIRECT_RECLAIM), and thus,
+> failing GFP_ATOMIC calls again by default.
+>
+> Fixes: 71baba4b92dc1fa1 ("mm, page_alloc: rename __GFP_WAIT to __GFP_RECL=
+AIM")
+> Signed-off-by: Nicolas Boichat <drinkcat@chromium.org>
 
-You can then add them up, e.g. kmalloc(struct_size()+struct_size(),
-GFP_KERNEL), so this patch here still looks like a good idea.
+Good catch.
 
-Reviewed-by: Daniel Vetter <daniel.vetter@ffwll.ch>
+Reviewed-by: Akinobu Mita <akinobu.mita@gmail.com>
 
-Cheers, Daniel
-
-> From: xiaolinkui <xiaolinkui@kylinos.cn>
-> Sent: Friday, May 17, 2019 4:46:00 PM
-> To: Deucher, Alexander; Koenig, Christian; Zhou, David(ChunMing); airlied@linux.ie; daniel@ffwll.ch; Pan, Xinhui; Quan, Evan
-> Cc: amd-gfx@lists.freedesktop.org; dri-devel@lists.freedesktop.org; linux-kernel@vger.kernel.org; xiaolinkui@kylinos.cn
-> Subject: [PATCH] gpu: drm: use struct_size() in kmalloc()
-> 
-> [CAUTION: External Email]
-> 
-> Use struct_size() helper to keep code simple.
-> 
-> Signed-off-by: xiaolinkui <xiaolinkui@kylinos.cn>
 > ---
->  drivers/gpu/drm/amd/amdgpu/amdgpu_ras.c | 3 +--
->  1 file changed, 1 insertion(+), 2 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_ras.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_ras.c
-> index 22bd21e..4717a64 100644
-> --- a/drivers/gpu/drm/amd/amdgpu/amdgpu_ras.c
-> +++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_ras.c
-> @@ -1375,8 +1375,7 @@ int amdgpu_ras_init(struct amdgpu_device *adev)
->         if (con)
->                 return 0;
-> 
-> -       con = kmalloc(sizeof(struct amdgpu_ras) +
-> -                       sizeof(struct ras_manager) * AMDGPU_RAS_BLOCK_COUNT,
-> +       con = kmalloc(struct_size(con, objs, AMDGPU_RAS_BLOCK_COUNT),
->                         GFP_KERNEL|__GFP_ZERO);
->         if (!con)
->                 return -ENOMEM;
-> --
-> 2.7.4
-> 
-> 
-> 
+>  mm/failslab.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+>
+> diff --git a/mm/failslab.c b/mm/failslab.c
+> index ec5aad211c5be97..33efcb60e633c0a 100644
+> --- a/mm/failslab.c
+> +++ b/mm/failslab.c
+> @@ -23,7 +23,8 @@ bool __should_failslab(struct kmem_cache *s, gfp_t gfpf=
+lags)
+>         if (gfpflags & __GFP_NOFAIL)
+>                 return false;
+>
+> -       if (failslab.ignore_gfp_reclaim && (gfpflags & __GFP_RECLAIM))
+> +       if (failslab.ignore_gfp_reclaim &&
+> +                       (gfpflags & ___GFP_DIRECT_RECLAIM))
+>                 return false;
 
--- 
-Daniel Vetter
-Software Engineer, Intel Corporation
-http://blog.ffwll.ch
+Should we use __GFP_DIRECT_RECLAIM instead of ___GFP_DIRECT_RECLAIM?
+Because I found the following comment in gfp.h
+
+/* Plain integer GFP bitmasks. Do not use this directly. */
