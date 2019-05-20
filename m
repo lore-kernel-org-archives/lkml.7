@@ -2,92 +2,104 @@ Return-Path: <SRS0=lq4r=TU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BB81C04AAC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 13:13:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D698AC04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 13:14:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 12B80213F2
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 13:13:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ACB4F213F2
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 13:14:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="DabpozCT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731917AbfETNNY (ORCPT
+        id S2387487AbfETNOL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 09:13:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48178 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730458AbfETNNX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 09:13:23 -0400
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F1E9020815;
-        Mon, 20 May 2019 13:13:21 +0000 (UTC)
-Date:   Mon, 20 May 2019 09:13:20 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>
-Cc:     Michael Ellerman <mpe@ellerman.id.au>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        <linuxppc-dev@lists.ozlabs.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [RFC PATCH 2/4] x86/ftrace: Fix use of flags in
- ftrace_replace_code()
-Message-ID: <20190520091320.01cdcfb7@gandalf.local.home>
-In-Reply-To: <e1429923d9eda92a3cf5ee9e33c7eacce539781d.1558115654.git.naveen.n.rao@linux.vnet.ibm.com>
-References: <cover.1558115654.git.naveen.n.rao@linux.vnet.ibm.com>
-        <e1429923d9eda92a3cf5ee9e33c7eacce539781d.1558115654.git.naveen.n.rao@linux.vnet.ibm.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Mon, 20 May 2019 09:14:11 -0400
+Received: from mail-wm1-f46.google.com ([209.85.128.46]:36711 "EHLO
+        mail-wm1-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732294AbfETNOK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 09:14:10 -0400
+Received: by mail-wm1-f46.google.com with SMTP id j187so13010660wmj.1
+        for <linux-kernel@vger.kernel.org>; Mon, 20 May 2019 06:14:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=vM5pv+BQoP8scy/zAPoM9eQQv0k4Qnfy+iC/Zx6yuYA=;
+        b=DabpozCTljhiuQK9QrebXpccXYRwzclUP4vK0OAUbMnMu8Qi58I1NDibj54SEIzo9R
+         SfnCaxEkMc1Uhdq6rWh/mtI+LMm7hE2XA2b/qc24IaNYdJxgiJ4inIINn/lNJFeQmbhT
+         U6u861AXckob5AeViOuw7bdQpgi1gr/i0VUVEY9rWOr7l3JvW1TcI73XuF41euXOMweY
+         oJiPBWWWrGDfUv2u/7sjvLfeb5dZv/gsC8joINdnsphCFGB1U95/yJ07bFAnyAhcsju+
+         ydyhcwyD3O69Rhjdo4/s82FLSxIAeAmGk8mi3zLZfDKdtei4lYhuWo/B9QH1jRCblrzy
+         R/dw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=vM5pv+BQoP8scy/zAPoM9eQQv0k4Qnfy+iC/Zx6yuYA=;
+        b=gbcac0t+1gZfldBI0j7Yi7EukkoqHmURHcJG+9A7HQjKJvgcxuPo+ziuu1e1LgUzQ7
+         fOHeQUnk8nUPgjJCFEHgs56HP/CZePBQwsb6fcrnVNyhuY/gjPPz7yqxZB2lJ49wSWWf
+         190hNjJw0h/uIRB49zeIOHbMdiiSASikspMrb+EBYFY0/X5CXwd8BY8FbrLA6qhNh05W
+         PWJqES6Lns7bEKWJrjdFaoBFhDYu8+/ketczPdn0e9Gp8h/A1Z6+cVA78vMvavW9NYJL
+         562Q9vdMzOIFZecLfDh5QfRo3h8IqiQ17IR8HjsBszqbRBNOkuA0YYwiP9jZegcbpyWf
+         N8JA==
+X-Gm-Message-State: APjAAAWU5rwVpfaUG8N1n2/MSkhdAOQeYJGeDXmbflw5N7Ubf44VeYSd
+        W0Plv9zdD9xN81YRKPPLpX3iU/cmnqA=
+X-Google-Smtp-Source: APXvYqw41vjWwxdNzZM0t2ysXvFl+JiMozP82cEPi/tn/xJK/zONQePg6F113T5Q7tayNsVVWoxfzw==
+X-Received: by 2002:a1c:7d8e:: with SMTP id y136mr17488503wmc.129.1558358048365;
+        Mon, 20 May 2019 06:14:08 -0700 (PDT)
+Received: from boomer.local (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
+        by smtp.googlemail.com with ESMTPSA id z8sm18054284wrh.48.2019.05.20.06.14.07
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 20 May 2019 06:14:07 -0700 (PDT)
+From:   Jerome Brunet <jbrunet@baylibre.com>
+To:     Kevin Hilman <khilman@baylibre.com>
+Cc:     Jerome Brunet <jbrunet@baylibre.com>, devicetree@vger.kernel.org,
+        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v2 0/5] arm64: dts: meson: g12a: add ethernet support
+Date:   Mon, 20 May 2019 15:13:56 +0200
+Message-Id: <20190520131401.11804-1-jbrunet@baylibre.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+X-Patchwork-Bot: notify
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 18 May 2019 00:32:46 +0530
-"Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com> wrote:
+Add network support to the g12a SoC family
 
-> In commit a0572f687fb3c ("ftrace: Allow ftrace_replace_code() to be
-> schedulable), the generic ftrace_replace_code() function was modified to
-> accept a flags argument in place of a single 'enable' flag. However, the
-> x86 version of this function was not updated. Fix the same.
-> 
-> Fixes: a0572f687fb3c ("ftrace: Allow ftrace_replace_code() to be schedulable")
-> Signed-off-by: Naveen N. Rao <naveen.n.rao@linux.vnet.ibm.com>
-> ---
-> I haven't yet tested this patch on x86, but this looked wrong so sending 
-> this as a RFC.
+This is series is based on 5.2-rc1 and the patches I already sent last
+week. If this is not convient for you, please let me know, I'll rebase.
 
-This code has been through a bit of updates, and I need to go through
-and clean it up. I'll have to take a look and convert "int" to "bool"
-so that "enable" is not confusing.
+Also, you will need to get the clk tag "clk-meson-5.3-1-fixes" (to get
+the update MPLL50M id) from clk-meson [0].
 
-Thanks, I think I'll try to do a clean up first, and then this patch
-shouldn't "look wrong" after that.
+Changes since v1: [1]
+ * rebased on v5.2-rc1
+ * s/eth_rmii_pins/eth_pins
+ * fix MPLL50M typo
 
--- Steve
+[0]: git://github.com/BayLibre/clk-meson.git
+[1]: https://lkml.kernel.org/r/20190510164940.13496-1-jbrunet@baylibre.com
 
-> 
-> - Naveen
-> 
-> 
->  arch/x86/kernel/ftrace.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
-> 
-> diff --git a/arch/x86/kernel/ftrace.c b/arch/x86/kernel/ftrace.c
-> index 0caf8122d680..0c01b344ba16 100644
-> --- a/arch/x86/kernel/ftrace.c
-> +++ b/arch/x86/kernel/ftrace.c
-> @@ -554,8 +554,9 @@ static void run_sync(void)
->  		local_irq_disable();
->  }
->  
-> -void ftrace_replace_code(int enable)
-> +void ftrace_replace_code(int mod_flags)
->  {
-> +	int enable = mod_flags & FTRACE_MODIFY_ENABLE_FL;
->  	struct ftrace_rec_iter *iter;
->  	struct dyn_ftrace *rec;
->  	const char *report = "adding breakpoints";
+Jerome Brunet (5):
+  arm64: dts: meson: g12a: add ethernet mac controller
+  arm64: dts: meson: g12a: add ethernet pinctrl definitions
+  arm64: dts: meson: g12a: add mdio multiplexer
+  arm64: dts: meson: u200: add internal network
+  arm64: dts: meson: sei510: add network support
+
+ .../boot/dts/amlogic/meson-g12a-sei510.dts    |  7 ++
+ .../boot/dts/amlogic/meson-g12a-u200.dts      |  7 ++
+ arch/arm64/boot/dts/amlogic/meson-g12a.dtsi   | 90 +++++++++++++++++++
+ 3 files changed, 104 insertions(+)
+
+-- 
+2.20.1
 
