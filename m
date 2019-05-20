@@ -7,27 +7,27 @@ X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26FFEC04AAC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 23:50:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2A9FC04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 23:50:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EC15321773
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 23:50:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 875A92173E
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 23:50:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="A2ZrXhO1"
+	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="pDlKtgV3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727439AbfETXu0 (ORCPT
+        id S1727470AbfETXud (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 19:50:26 -0400
-Received: from vps.xff.cz ([195.181.215.36]:58664 "EHLO vps.xff.cz"
+        Mon, 20 May 2019 19:50:33 -0400
+Received: from vps.xff.cz ([195.181.215.36]:58634 "EHLO vps.xff.cz"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727317AbfETXuP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1727099AbfETXuP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 20 May 2019 19:50:15 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=megous.com; s=mail;
-        t=1558396214; bh=P6oNZcE8gnEVr+Noa52McnHoAnRWnYpUxI4CnwnbrFY=;
+        t=1558396213; bh=YFp7iMAT2SUi48E3lCp5Rb+wby06G1ktJEOG3j6izbk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=A2ZrXhO14EsRQTEmqDqkZ68bMUpaB4Qp/CBOIxfoqK7fSt77oz3lqOcdMZM7gziyH
-         emjrHLUxxmvj/rK2ennlGXQUYEOEIjWXVto9FEK16SDhgj6G/ivEcO5AFkItmBr8Pz
-         8B3yMv6GJ/yDlpjE34Qqgjzw4qNaisIqN2gC+FNQ=
+        b=pDlKtgV3gowwb66fp7eLoyeuRKnsWrlXZequAZFW3Ab4/pDqG7UhNsbKMQEzRzxFf
+         3cyYV77hezdzWb0n5471o0qbWoSP5qpx/n5vH3L5mJkH6rdekZhoz6x4dxPUKcbOMi
+         pMRrd0iWvkbn8ODVX6x2FGfptjfm64Ls7gcAp68w=
 From:   megous@megous.com
 To:     linux-sunxi@googlegroups.com,
         Maxime Ripard <maxime.ripard@bootlin.com>,
@@ -43,9 +43,9 @@ Cc:     Ondrej Jirman <megous@megous.com>, David Airlie <airlied@linux.ie>,
         dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         netdev@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com
-Subject: [PATCH v5 6/6] arm64: dts: allwinner: orange-pi-3: Enable HDMI output
-Date:   Tue, 21 May 2019 01:50:09 +0200
-Message-Id: <20190520235009.16734-7-megous@megous.com>
+Subject: [PATCH v5 4/6] dt-bindings: display: hdmi-connector: Support DDC bus enable
+Date:   Tue, 21 May 2019 01:50:07 +0200
+Message-Id: <20190520235009.16734-5-megous@megous.com>
 In-Reply-To: <20190520235009.16734-1-megous@megous.com>
 References: <20190520235009.16734-1-megous@megous.com>
 MIME-Version: 1.0
@@ -57,66 +57,30 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Ondrej Jirman <megous@megous.com>
 
-Orange Pi 3 has a DDC_CEC_EN signal connected to PH2, that enables the DDC
-I2C bus voltage shifter. Before EDID can be read, we need to pull PH2 high.
-This is realized by the ddc-en-gpios property.
+Some Allwinner SoC using boards (Orange Pi 3 for example) need to enable
+on-board voltage shifting logic for the DDC bus using a gpio to be able
+to access DDC bus. Use ddc-en-gpios property on the hdmi-connector to
+model this.
+
+Add binding documentation for optional ddc-en-gpios property.
 
 Signed-off-by: Ondrej Jirman <megous@megous.com>
 ---
- .../dts/allwinner/sun50i-h6-orangepi-3.dts    | 26 +++++++++++++++++++
- 1 file changed, 26 insertions(+)
+ .../devicetree/bindings/display/connector/hdmi-connector.txt     | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts b/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts
-index 2c6807b74ff6..01bb1bafe284 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts
-@@ -22,6 +22,18 @@
- 		stdout-path = "serial0:115200n8";
- 	};
+diff --git a/Documentation/devicetree/bindings/display/connector/hdmi-connector.txt b/Documentation/devicetree/bindings/display/connector/hdmi-connector.txt
+index 508aee461e0d..aeb07c4bd703 100644
+--- a/Documentation/devicetree/bindings/display/connector/hdmi-connector.txt
++++ b/Documentation/devicetree/bindings/display/connector/hdmi-connector.txt
+@@ -9,6 +9,7 @@ Optional properties:
+ - label: a symbolic name for the connector
+ - hpd-gpios: HPD GPIO number
+ - ddc-i2c-bus: phandle link to the I2C controller used for DDC EDID probing
++- ddc-en-gpios: signal to enable DDC bus
  
-+	connector {
-+		compatible = "hdmi-connector";
-+		ddc-en-gpios = <&pio 7 2 GPIO_ACTIVE_HIGH>; /* PH2 */
-+		type = "a";
-+
-+		port {
-+			hdmi_con_in: endpoint {
-+				remote-endpoint = <&hdmi_out_con>;
-+			};
-+		};
-+	};
-+
- 	leds {
- 		compatible = "gpio-leds";
- 
-@@ -72,6 +84,10 @@
- 	cpu-supply = <&reg_dcdca>;
- };
- 
-+&de {
-+	status = "okay";
-+};
-+
- &ehci0 {
- 	status = "okay";
- };
-@@ -91,6 +107,16 @@
- 	status = "okay";
- };
- 
-+&hdmi {
-+	status = "okay";
-+};
-+
-+&hdmi_out {
-+	hdmi_out_con: endpoint {
-+		remote-endpoint = <&hdmi_con_in>;
-+	};
-+};
-+
- &mdio {
- 	ext_rgmii_phy: ethernet-phy@1 {
- 		compatible = "ethernet-phy-ieee802.3-c22";
+ Required nodes:
+ - Video port for HDMI input
 -- 
 2.21.0
 
