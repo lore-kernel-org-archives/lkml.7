@@ -2,70 +2,114 @@ Return-Path: <SRS0=lq4r=TU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11C17C04AAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:56:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65656C04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:57:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E40ED20645
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:56:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4212A20856
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:57:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388415AbfETM46 (ORCPT
+        id S1732814AbfETM5o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 08:56:58 -0400
-Received: from mx2.suse.de ([195.135.220.15]:58430 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728898AbfETM45 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 08:56:57 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 2C64AAE45;
-        Mon, 20 May 2019 12:56:56 +0000 (UTC)
-Message-ID: <1558356237.12672.3.camel@suse.com>
-Subject: Re: [RFC v2 3/5] clk: bcm2835: use firmware interface to update pllb
-From:   Oliver Neukum <oneukum@suse.com>
-To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        stefan.wahren@i2se.com, Florian Fainelli <f.fainelli@gmail.com>,
-        Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        bcm-kernel-feedback-list@broadcom.com,
-        Eric Anholt <eric@anholt.net>
-Cc:     mbrugger@suse.de, viresh.kumar@linaro.org, rjw@rjwysocki.net,
-        sboyd@kernel.org, ptesarik@suse.com,
-        linux-rpi-kernel@lists.infradead.org, ssuloev@orpaltech.com,
-        linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        mturquette@baylibre.com, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Date:   Mon, 20 May 2019 14:43:57 +0200
-In-Reply-To: <20190520104708.11980-4-nsaenzjulienne@suse.de>
-References: <20190520104708.11980-1-nsaenzjulienne@suse.de>
-         <20190520104708.11980-4-nsaenzjulienne@suse.de>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.26.6 
-Mime-Version: 1.0
+        Mon, 20 May 2019 08:57:44 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:50885 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730506AbfETM5o (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 08:57:44 -0400
+Received: by mail-wm1-f67.google.com with SMTP id f204so13221571wme.0
+        for <linux-kernel@vger.kernel.org>; Mon, 20 May 2019 05:57:42 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=/cC7btuFt2AEdDzbkbHKWXushngypUeTsNKBzMYMkpg=;
+        b=Xvbp7fcs+PgaBMvLdDEVGcigA4cIlDSQEHZSmLCbhawhtbAx4HleRFiskuPUJAgKUI
+         Y5O7XMJEroIQeyjYfX+kFT/NMP3dI+bev558itNyNE4n052w0Eky3M2aPNAC4YeenTkZ
+         ZPyqHESPnR5cQA1hhJGvVKIaAUVQbirfYkJZtusgLe8KFG1lat4T8UObPQcPw1g+v0q5
+         pydS+xUiAPs1nIoRN5LGn/5aynCKnE4blwttR6Sm6HaSBs3Poj4ge8xtV9tv0iWNmW6r
+         IdI1VieriS3SvqLpq3Apopil2NEgHgSKgO+G0eJWSxOUe4Zjj0EgXsRkgPGi6hWLg4B4
+         cRFQ==
+X-Gm-Message-State: APjAAAUqS5SBF2QGUUG/DHUi2zMP3YIbZbipSbVTlB0A3eoyVMu/NfCj
+        QQEWDdbJWjjdIvMG+51Da/kPVl4h7IiXcw==
+X-Google-Smtp-Source: APXvYqyrPTmAqzgSNfgXJz7ODDv23EPVzanPE7x9kSG55+1bhyRO3S17QQKIERsc+73jklRBFRpJFA==
+X-Received: by 2002:a1c:9904:: with SMTP id b4mr31141197wme.1.1558357061890;
+        Mon, 20 May 2019 05:57:41 -0700 (PDT)
+Received: from ?IPv6:2001:b07:6468:f312:ac04:eef9:b257:b844? ([2001:b07:6468:f312:ac04:eef9:b257:b844])
+        by smtp.gmail.com with ESMTPSA id h12sm12616240wrq.95.2019.05.20.05.57.41
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 20 May 2019 05:57:41 -0700 (PDT)
+Subject: Re: [PATCH v2] svm/avic: Allow avic_vcpu_load logic to support host
+ APIC ID 255
+To:     "Suthikulpanit, Suravee" <Suravee.Suthikulpanit@amd.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>
+Cc:     "rkrcmar@redhat.com" <rkrcmar@redhat.com>,
+        "joro@8bytes.org" <joro@8bytes.org>,
+        "graf@amazon.com" <graf@amazon.com>
+References: <1557848977-146396-1-git-send-email-suravee.suthikulpanit@amd.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Message-ID: <035d681a-4ec6-05fd-a93b-a1bac2bfc0fe@redhat.com>
+Date:   Mon, 20 May 2019 14:57:40 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
+MIME-Version: 1.0
+In-Reply-To: <1557848977-146396-1-git-send-email-suravee.suthikulpanit@amd.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mo, 2019-05-20 at 12:47 +0200, Nicolas Saenz Julienne wrote:
-> + * For more information on the firmware interface check:
-> + * https://github.com/raspberrypi/firmware/wiki/Mailbox-property-interface
-> + */
-> +struct bcm2835_firmware_prop {
-> +       u32 id;
-> +       u32 val;
-> +       u32 disable_turbo;
-> +} __packed;
+On 14/05/19 17:49, Suthikulpanit, Suravee wrote:
+> Current logic does not allow VCPU to be loaded onto CPU with
+> APIC ID 255. This should be allowed since the host physical APIC ID
+> field in the AVIC Physical APIC table entry is an 8-bit value,
+> and APIC ID 255 is valid in system with x2APIC enabled.
+> Instead, do not allow VCPU load if the host APIC ID cannot be
+> represented by an 8-bit value.
+> 
+> Also, use the more appropriate AVIC_PHYSICAL_ID_ENTRY_HOST_PHYSICAL_ID_MASK
+> instead of AVIC_MAX_PHYSICAL_ID_COUNT. 
+> 
+> Signed-off-by: Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>
 
-Hi,
+Queued, with Cc to stable and using "kvm: svm/avic: fix off-by-one in
+checking host APIC ID" as the subject.
 
-technically we are not in arch and those fields have a defined
-endianness.
+Paolo
 
-	Regards
-		Oliver
+> ---
+> 
+> Change in V2:
+>   * Use AVIC_PHYSICAL_ID_ENTRY_HOST_PHYSICAL_ID_MASK instead of
+>     AVIC_MAX_PHYSICAL_ID_COUNT. 
+> 
+>  arch/x86/kvm/svm.c | 6 +++++-
+>  1 file changed, 5 insertions(+), 1 deletion(-)
+> 
+> diff --git a/arch/x86/kvm/svm.c b/arch/x86/kvm/svm.c
+> index 687767f..345fe9e 100644
+> --- a/arch/x86/kvm/svm.c
+> +++ b/arch/x86/kvm/svm.c
+> @@ -2071,7 +2071,11 @@ static void avic_vcpu_load(struct kvm_vcpu *vcpu, int cpu)
+>  	if (!kvm_vcpu_apicv_active(vcpu))
+>  		return;
+>  
+> -	if (WARN_ON(h_physical_id >= AVIC_MAX_PHYSICAL_ID_COUNT))
+> +	/*
+> +	 * Since the host physical APIC id is 8 bits,
+> +	 * we can support host APIC ID upto 255.
+> +	 */
+> +	if (WARN_ON(h_physical_id > AVIC_PHYSICAL_ID_ENTRY_HOST_PHYSICAL_ID_MASK))
+>  		return;
+>  
+>  	entry = READ_ONCE(*(svm->avic_physical_id_cache));
+> 
 
