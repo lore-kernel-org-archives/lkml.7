@@ -6,32 +6,32 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1ED8C04AAC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 11:38:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90E00C04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 11:38:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C1F2C20863
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 11:38:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6DC46208C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 11:38:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733151AbfETLiE (ORCPT
+        id S1733140AbfETLiC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 07:38:04 -0400
+        Mon, 20 May 2019 07:38:02 -0400
 Received: from mga04.intel.com ([192.55.52.120]:48121 "EHLO mga04.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733131AbfETLiB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 07:38:01 -0400
+        id S1733105AbfETLh6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 07:37:58 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 May 2019 04:38:01 -0700
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 May 2019 04:37:58 -0700
 X-ExtLoop1: 1
 Received: from ahunter-desktop.fi.intel.com ([10.237.72.198])
-  by fmsmga004.fm.intel.com with ESMTP; 20 May 2019 04:37:59 -0700
+  by fmsmga004.fm.intel.com with ESMTP; 20 May 2019 04:37:56 -0700
 From:   Adrian Hunter <adrian.hunter@intel.com>
 To:     Arnaldo Carvalho de Melo <acme@kernel.org>
 Cc:     Jiri Olsa <jolsa@redhat.com>, linux-kernel@vger.kernel.org
-Subject: [PATCH 13/22] perf thread-stack: Accumulate IPC information
-Date:   Mon, 20 May 2019 14:37:19 +0300
-Message-Id: <20190520113728.14389-14-adrian.hunter@intel.com>
+Subject: [PATCH 11/22] perf intel-pt: Accumulate cycle count from TSC/TMA/MTC packets
+Date:   Mon, 20 May 2019 14:37:17 +0300
+Message-Id: <20190520113728.14389-12-adrian.hunter@intel.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190520113728.14389-1-adrian.hunter@intel.com>
 References: <20190520113728.14389-1-adrian.hunter@intel.com>
@@ -41,104 +41,129 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Cycle and instruction counts are added to the stack. The IPC of a function
-and all functions it calls, is also recorded.
+When CYC packets are not available, it is still possible to count cycles
+using TSC/TMA/MTC timestamps. As the timestamp increments in TSC ticks,
+convert to CPU cycles using the current core-to-bus ratio. Do not
+accumulate cycles when control flow packet generation is not enabled, nor
+when time has been "lost", typically due to mwait, which is indicated by a
+TSC/TMA packet that is not part of PSB+.
 
 Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
 ---
- tools/perf/util/thread-stack.c | 14 ++++++++++++++
- tools/perf/util/thread-stack.h |  4 ++++
- 2 files changed, 18 insertions(+)
+ .../util/intel-pt-decoder/intel-pt-decoder.c  | 51 +++++++++++++++++++
+ 1 file changed, 51 insertions(+)
 
-diff --git a/tools/perf/util/thread-stack.c b/tools/perf/util/thread-stack.c
-index 41942c2aaa18..8e390f78486f 100644
---- a/tools/perf/util/thread-stack.c
-+++ b/tools/perf/util/thread-stack.c
-@@ -49,6 +49,8 @@ enum retpoline_state_t {
-  * @timestamp: timestamp (if known)
-  * @ref: external reference (e.g. db_id of sample)
-  * @branch_count: the branch count when the entry was created
-+ * @insn_count: the instruction count when the entry was created
-+ * @cyc_count the cycle count when the entry was created
-  * @db_id: id used for db-export
-  * @cp: call path
-  * @no_call: a 'call' was not seen
-@@ -60,6 +62,8 @@ struct thread_stack_entry {
- 	u64 timestamp;
- 	u64 ref;
- 	u64 branch_count;
-+	u64 insn_count;
-+	u64 cyc_count;
- 	u64 db_id;
- 	struct call_path *cp;
- 	bool no_call;
-@@ -75,6 +79,8 @@ struct thread_stack_entry {
-  * @sz: current maximum stack size
-  * @trace_nr: current trace number
-  * @branch_count: running branch count
-+ * @insn_count: running  instruction count
-+ * @cyc_count running  cycle count
-  * @kernel_start: kernel start address
-  * @last_time: last timestamp
-  * @crp: call/return processor
-@@ -88,6 +94,8 @@ struct thread_stack {
- 	size_t sz;
- 	u64 trace_nr;
- 	u64 branch_count;
-+	u64 insn_count;
-+	u64 cyc_count;
- 	u64 kernel_start;
- 	u64 last_time;
- 	struct call_return_processor *crp;
-@@ -289,6 +297,8 @@ static int thread_stack__call_return(struct thread *thread,
- 	cr.call_time = tse->timestamp;
- 	cr.return_time = timestamp;
- 	cr.branch_count = ts->branch_count - tse->branch_count;
-+	cr.insn_count = ts->insn_count - tse->insn_count;
-+	cr.cyc_count = ts->cyc_count - tse->cyc_count;
- 	cr.db_id = tse->db_id;
- 	cr.call_ref = tse->ref;
- 	cr.return_ref = ref;
-@@ -544,6 +554,8 @@ static int thread_stack__push_cp(struct thread_stack *ts, u64 ret_addr,
- 	tse->timestamp = timestamp;
- 	tse->ref = ref;
- 	tse->branch_count = ts->branch_count;
-+	tse->insn_count = ts->insn_count;
-+	tse->cyc_count = ts->cyc_count;
- 	tse->cp = cp;
- 	tse->no_call = no_call;
- 	tse->trace_end = trace_end;
-@@ -874,6 +886,8 @@ int thread_stack__process(struct thread *thread, struct comm *comm,
- 	}
+diff --git a/tools/perf/util/intel-pt-decoder/intel-pt-decoder.c b/tools/perf/util/intel-pt-decoder/intel-pt-decoder.c
+index 99773445872d..9eb778f9c911 100644
+--- a/tools/perf/util/intel-pt-decoder/intel-pt-decoder.c
++++ b/tools/perf/util/intel-pt-decoder/intel-pt-decoder.c
+@@ -163,6 +163,9 @@ struct intel_pt_decoder {
+ 	uint64_t last_masked_timestamp;
+ 	uint64_t tot_cyc_cnt;
+ 	uint64_t sample_tot_cyc_cnt;
++	uint64_t base_cyc_cnt;
++	uint64_t cyc_cnt_timestamp;
++	double tsc_to_cyc;
+ 	bool continuous_period;
+ 	bool overflow;
+ 	bool set_fup_tx_flags;
+@@ -1423,6 +1426,42 @@ static int intel_pt_overflow(struct intel_pt_decoder *decoder)
+ 	return -EOVERFLOW;
+ }
  
- 	ts->branch_count += 1;
-+	ts->insn_count += sample->insn_cnt;
-+	ts->cyc_count += sample->cyc_cnt;
- 	ts->last_time = sample->time;
++static inline void intel_pt_mtc_cyc_cnt_pge(struct intel_pt_decoder *decoder)
++{
++	if (decoder->have_cyc)
++		return;
++
++	decoder->cyc_cnt_timestamp = decoder->timestamp;
++	decoder->base_cyc_cnt = decoder->tot_cyc_cnt;
++}
++
++static inline void intel_pt_mtc_cyc_cnt_cbr(struct intel_pt_decoder *decoder)
++{
++	decoder->tsc_to_cyc = decoder->cbr / decoder->max_non_turbo_ratio_fp;
++
++	if (decoder->pge)
++		intel_pt_mtc_cyc_cnt_pge(decoder);
++}
++
++static inline void intel_pt_mtc_cyc_cnt_upd(struct intel_pt_decoder *decoder)
++{
++	uint64_t tot_cyc_cnt, tsc_delta;
++
++	if (decoder->have_cyc)
++		return;
++
++	decoder->sample_cyc = true;
++
++	if (!decoder->pge || decoder->timestamp <= decoder->cyc_cnt_timestamp)
++		return;
++
++	tsc_delta = decoder->timestamp - decoder->cyc_cnt_timestamp;
++	tot_cyc_cnt = tsc_delta * decoder->tsc_to_cyc + decoder->base_cyc_cnt;
++
++	if (tot_cyc_cnt > decoder->tot_cyc_cnt)
++		decoder->tot_cyc_cnt = tot_cyc_cnt;
++}
++
+ static void intel_pt_calc_tma(struct intel_pt_decoder *decoder)
+ {
+ 	uint32_t ctc = decoder->packet.payload;
+@@ -1432,6 +1471,11 @@ static void intel_pt_calc_tma(struct intel_pt_decoder *decoder)
+ 	if (!decoder->tsc_ctc_ratio_d)
+ 		return;
  
- 	if (sample->flags & PERF_IP_FLAG_CALL) {
-diff --git a/tools/perf/util/thread-stack.h b/tools/perf/util/thread-stack.h
-index 9c45f947f5a9..bddb1daf6453 100644
---- a/tools/perf/util/thread-stack.h
-+++ b/tools/perf/util/thread-stack.h
-@@ -52,6 +52,8 @@ enum {
-  * @call_time: timestamp of call (if known)
-  * @return_time: timestamp of return (if known)
-  * @branch_count: number of branches seen between call and return
-+ * @insn_count: approx. number of instructions between call and return
-+ * @cyc_count: approx. number of cycles between call and return
-  * @call_ref: external reference to 'call' sample (e.g. db_id)
-  * @return_ref:  external reference to 'return' sample (e.g. db_id)
-  * @db_id: id used for db-export
-@@ -65,6 +67,8 @@ struct call_return {
- 	u64 call_time;
- 	u64 return_time;
- 	u64 branch_count;
-+	u64 insn_count;
-+	u64 cyc_count;
- 	u64 call_ref;
- 	u64 return_ref;
- 	u64 db_id;
++	if (decoder->pge && !decoder->in_psb)
++		intel_pt_mtc_cyc_cnt_pge(decoder);
++	else
++		intel_pt_mtc_cyc_cnt_upd(decoder);
++
+ 	decoder->last_mtc = (ctc >> decoder->mtc_shift) & 0xff;
+ 	decoder->ctc_timestamp = decoder->tsc_timestamp - fc;
+ 	if (decoder->tsc_ctc_mult) {
+@@ -1487,6 +1531,8 @@ static void intel_pt_calc_mtc_timestamp(struct intel_pt_decoder *decoder)
+ 	else
+ 		decoder->timestamp = timestamp;
+ 
++	intel_pt_mtc_cyc_cnt_upd(decoder);
++
+ 	decoder->timestamp_insn_cnt = 0;
+ 	decoder->last_mtc = mtc;
+ 
+@@ -1511,6 +1557,8 @@ static void intel_pt_calc_cbr(struct intel_pt_decoder *decoder)
+ 
+ 	decoder->cbr = cbr;
+ 	decoder->cbr_cyc_to_tsc = decoder->max_non_turbo_ratio_fp / cbr;
++
++	intel_pt_mtc_cyc_cnt_cbr(decoder);
+ }
+ 
+ static void intel_pt_calc_cyc_timestamp(struct intel_pt_decoder *decoder)
+@@ -1706,6 +1754,7 @@ static int intel_pt_walk_fup_tip(struct intel_pt_decoder *decoder)
+ 				decoder->state.to_ip = decoder->ip;
+ 			}
+ 			decoder->state.type |= INTEL_PT_TRACE_BEGIN;
++			intel_pt_mtc_cyc_cnt_pge(decoder);
+ 			return 0;
+ 
+ 		case INTEL_PT_TIP:
+@@ -1776,6 +1825,7 @@ static int intel_pt_walk_trace(struct intel_pt_decoder *decoder)
+ 
+ 		case INTEL_PT_TIP_PGE: {
+ 			decoder->pge = true;
++			intel_pt_mtc_cyc_cnt_pge(decoder);
+ 			if (decoder->packet.count == 0) {
+ 				intel_pt_log_at("Skipping zero TIP.PGE",
+ 						decoder->pos);
+@@ -2138,6 +2188,7 @@ static int intel_pt_walk_to_ip(struct intel_pt_decoder *decoder)
+ 
+ 		case INTEL_PT_TIP_PGE:
+ 			decoder->pge = true;
++			intel_pt_mtc_cyc_cnt_pge(decoder);
+ 			if (intel_pt_have_ip(decoder))
+ 				intel_pt_set_ip(decoder);
+ 			if (!decoder->ip)
 -- 
 2.17.1
 
