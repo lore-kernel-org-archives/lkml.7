@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51589C04AAC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:23:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15CD8C04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:23:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 281C320645
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:23:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D29C320675
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:23:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558355023;
-	bh=gjf+mOszHMrKvbqtvIw9132vFb8gT0KeTwcDppoOEo0=;
+	s=default; t=1558355028;
+	bh=expjlwB/73mP3qBvKb4YwklP5U0RXcL9LpJh47zrtYc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jzkNTI1MSDCPXuRSlGD16C/Z4TX8Fr0JzX1RYOaLrshKFNnGspq1NatldC7iOHAQK
-	 mE/2d/gcrhnsf7k/boQfm9L8IDZKTapZC0z03WWaR8kKpRyGkvsaZv5HeeVhPVYXpc
-	 IRU45wv8WS1tHWkQaEtVH5SxGbNdVCM9DNMa0uIo=
+	b=cvfFIhuTKoBSfJ0raw+Vnoul2yehP3XPxfdkPXwJv54A7wiP5ynJSN6W8wZ+gGA+U
+	 gvPo9IF3l6haruTs+N5yLA11EIX1MtaMhjVjhCImiQQrFmNpdkSvzPcXsbQO3ScJDN
+	 +8DbxFNpsfbp0VWiMzO4W1nZhwMZ/jKXnWzI2PnU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388662AbfETMXm (ORCPT
+        id S2388676AbfETMXr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 08:23:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38212 "EHLO mail.kernel.org"
+        Mon, 20 May 2019 08:23:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38348 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388637AbfETMXk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 08:23:40 -0400
+        id S2388221AbfETMXp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 08:23:45 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EF22020645;
-        Mon, 20 May 2019 12:23:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3708421019;
+        Mon, 20 May 2019 12:23:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558355019;
-        bh=gjf+mOszHMrKvbqtvIw9132vFb8gT0KeTwcDppoOEo0=;
+        s=default; t=1558355024;
+        bh=expjlwB/73mP3qBvKb4YwklP5U0RXcL9LpJh47zrtYc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rCH0ReiBA6o3rLmcr7TrhKcFr0S7MQcrSMCKu0s7SAszwhp/nRmHdLv08LvczxvJb
-         0EFDaamJgxpheu9PNtR5tyH3ZSzLI/DUWfvyE8c5FBIe6EtZdjCxxsgrz4AigJzgt0
-         jr09hBhQO7XqBGclWijEuGO92AkPTN3r/X8o1kyI=
+        b=qzJ5WxjKzHLpNyIn370ClX6O6EGJr0mCuoUo4wb8mo4kSflE3jjmxmqOxxZxGO6GD
+         VLmNg7TurdzoZjTDfFO1f27/jvfQhqtzvo9M8D964vSINWvKjwumS0zXPK1EOK5wA5
+         sFJGlGqu57t/hkJqUqhrRoFqhBethr0f15+n4ktg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jan Kara <jack@suse.cz>,
-        Theodore Tso <tytso@mit.edu>, stable@kernel.org
-Subject: [PATCH 4.19 066/105] ext4: make sanity check in mballoc more strict
-Date:   Mon, 20 May 2019 14:14:12 +0200
-Message-Id: <20190520115251.734458015@linuxfoundation.org>
+        stable@vger.kernel.org, Theodore Tso <tytso@mit.edu>,
+        stable@kernel.org
+Subject: [PATCH 4.19 068/105] ext4: ignore e_value_offs for xattrs with value-in-ea-inode
+Date:   Mon, 20 May 2019 14:14:14 +0200
+Message-Id: <20190520115251.872912200@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190520115247.060821231@linuxfoundation.org>
 References: <20190520115247.060821231@linuxfoundation.org>
@@ -59,35 +59,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jan Kara <jack@suse.cz>
+From: Theodore Ts'o <tytso@mit.edu>
 
-commit 31562b954b60f02acb91b7349dc6432d3f8c3c5f upstream.
+commit e5d01196c0428a206f307e9ee5f6842964098ff0 upstream.
 
-The sanity check in mb_find_extent() only checked that returned extent
-does not extend past blocksize * 8, however it should not extend past
-EXT4_CLUSTERS_PER_GROUP(sb). This can happen when clusters_per_group <
-blocksize * 8 and the tail of the bitmap is not properly filled by 1s
-which happened e.g. when ancient kernels have grown the filesystem.
+In other places in fs/ext4/xattr.c, if e_value_inum is non-zero, the
+code ignores the value in e_value_offs.  The e_value_offs *should* be
+zero, but we shouldn't depend upon it, since it might not be true in a
+corrupted/fuzzed file system.
 
-Signed-off-by: Jan Kara <jack@suse.cz>
+Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=202897
+Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=202877
 Signed-off-by: Theodore Ts'o <tytso@mit.edu>
 Cc: stable@kernel.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/ext4/mballoc.c |    2 +-
+ fs/ext4/xattr.c |    2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/fs/ext4/mballoc.c
-+++ b/fs/ext4/mballoc.c
-@@ -1539,7 +1539,7 @@ static int mb_find_extent(struct ext4_bu
- 		ex->fe_len += 1 << order;
- 	}
+--- a/fs/ext4/xattr.c
++++ b/fs/ext4/xattr.c
+@@ -1700,7 +1700,7 @@ static int ext4_xattr_set_entry(struct e
  
--	if (ex->fe_start + ex->fe_len > (1 << (e4b->bd_blkbits + 3))) {
-+	if (ex->fe_start + ex->fe_len > EXT4_CLUSTERS_PER_GROUP(e4b->bd_sb)) {
- 		/* Should never happen! (but apparently sometimes does?!?) */
- 		WARN_ON(1);
- 		ext4_error(e4b->bd_sb, "corruption or bug in mb_find_extent "
+ 	/* No failures allowed past this point. */
+ 
+-	if (!s->not_found && here->e_value_size && here->e_value_offs) {
++	if (!s->not_found && here->e_value_size && !here->e_value_inum) {
+ 		/* Remove the old value. */
+ 		void *first_val = s->base + min_offs;
+ 		size_t offs = le16_to_cpu(here->e_value_offs);
 
 
