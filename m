@@ -2,88 +2,135 @@ Return-Path: <SRS0=lq4r=TU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43072C04AAC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 10:42:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F37CFC04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 10:44:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 14D322081C
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 10:42:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B109F20856
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 10:44:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=armh.onmicrosoft.com header.i=@armh.onmicrosoft.com header.b="CQFaKgim"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731729AbfETKmQ (ORCPT
+        id S1731718AbfETKoi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 06:42:16 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:38696 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730320AbfETKmP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 06:42:15 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: andrzej.p)
-        with ESMTPSA id D4D9E27E23C
-Subject: Re: [REGRESSION] usb: gadget: f_fs: Allow scatter-gather buffers
-From:   Andrzej Pietrasiewicz <andrzej.p@collabora.com>
-To:     John Stultz <john.stultz@linaro.org>
-Cc:     Felipe Balbi <balbi@kernel.org>, "Yang, Fei" <fei.yang@intel.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Chen Yu <chenyu56@huawei.com>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Linux USB List <linux-usb@vger.kernel.org>,
-        Amit Pundir <amit.pundir@linaro.org>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        "kernel@collabora.com" <kernel@collabora.com>
-References: <CALAqxLUMRaNxwTUi9QS7-Cy-Ve4+vteBm8-jW4yzZg_QTJVChA@mail.gmail.com>
- <7caebeb2-ea96-2276-3078-1e53f09ce227@collabora.com>
- <CALAqxLUfJYUtmQDC_aDMxW7KcPUawGoRq-PNUfmzQuNKh97FmQ@mail.gmail.com>
- <CALAqxLVUFfrPVVjR74V3PhhtcCytfp=cUYjo=BcJ14D1fkVXTw@mail.gmail.com>
- <7ec57c29-d1ab-dc4c-755d-a6009b9132b5@collabora.com>
- <CALAqxLUgnTB7aZ4edXCaG8SJsJzfY1_yNEPc6Losssw5Xy9-XA@mail.gmail.com>
- <36620156-d119-b1b2-989e-0c13b783296e@collabora.com>
-Message-ID: <db5665cf-6274-c254-720c-798fec79d131@collabora.com>
-Date:   Mon, 20 May 2019 12:42:10 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
-MIME-Version: 1.0
-In-Reply-To: <36620156-d119-b1b2-989e-0c13b783296e@collabora.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+        Mon, 20 May 2019 06:44:38 -0400
+Received: from mail-eopbgr20063.outbound.protection.outlook.com ([40.107.2.63]:31491
+        "EHLO EUR02-VE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1731432AbfETKoi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 06:44:38 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
+ s=selector2-armh-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=8VvXcfuTQRrLIHnhLaFP4e3YQmqf87JBYLKxNXczcqA=;
+ b=CQFaKgimWW/htVmdh992QnI9DsJ7WlqNlnIsVoa9bErC5rccbdr2Q94+1mPDNE4B7mM5tR1QtY7f0UtMACpZ5Ihi23D99Jxjhgh4mHI+YUDvAUvbbn/gjt+MlcyUoy/f+owOPBndo3ePsF7yQGv9pS9+twqwW7uf257Q+qA8OSw=
+Received: from VE1PR08MB5006.eurprd08.prod.outlook.com (10.255.159.31) by
+ VE1PR08MB4767.eurprd08.prod.outlook.com (10.255.113.75) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1900.16; Mon, 20 May 2019 10:44:34 +0000
+Received: from VE1PR08MB5006.eurprd08.prod.outlook.com
+ ([fe80::206b:5cf6:97e:1358]) by VE1PR08MB5006.eurprd08.prod.outlook.com
+ ([fe80::206b:5cf6:97e:1358%7]) with mapi id 15.20.1900.020; Mon, 20 May 2019
+ 10:44:34 +0000
+From:   "james qian wang (Arm Technology China)" <james.qian.wang@arm.com>
+To:     Liviu Dudau <Liviu.Dudau@arm.com>,
+        "airlied@linux.ie" <airlied@linux.ie>,
+        Brian Starkey <Brian.Starkey@arm.com>,
+        "maarten.lankhorst@linux.intel.com" 
+        <maarten.lankhorst@linux.intel.com>,
+        "sean@poorly.run" <sean@poorly.run>
+CC:     "Jonathan Chai (Arm Technology China)" <Jonathan.Chai@arm.com>,
+        "Julien Yin (Arm Technology China)" <Julien.Yin@arm.com>,
+        "thomas Sun (Arm Technology China)" <thomas.Sun@arm.com>,
+        "Lowry Li (Arm Technology China)" <Lowry.Li@arm.com>,
+        Ayan Halder <Ayan.Halder@arm.com>,
+        "Tiannan Zhu (Arm Technology China)" <Tiannan.Zhu@arm.com>,
+        "Yiqi Kang (Arm Technology China)" <Yiqi.Kang@arm.com>,
+        nd <nd@arm.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        Ben Davis <Ben.Davis@arm.com>,
+        "Oscar Zhang (Arm Technology China)" <Oscar.Zhang@arm.com>,
+        "Channing Chen (Arm Technology China)" <Channing.Chen@arm.com>,
+        "james qian wang (Arm Technology China)" <james.qian.wang@arm.com>
+Subject: [PATCH 0/3] drm/komeda: Add layer split support
+Thread-Topic: [PATCH 0/3] drm/komeda: Add layer split support
+Thread-Index: AQHVDvkDtOK3o4B/4UaUGSTqkjSQfg==
+Date:   Mon, 20 May 2019 10:44:34 +0000
+Message-ID: <20190520104411.6092-1-james.qian.wang@arm.com>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [113.29.88.7]
+x-clientproxiedby: HK0PR03CA0057.apcprd03.prod.outlook.com
+ (2603:1096:203:52::21) To VE1PR08MB5006.eurprd08.prod.outlook.com
+ (2603:10a6:803:113::31)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=james.qian.wang@arm.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-mailer: git-send-email 2.17.1
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 9f663c2d-3d67-48f3-0238-08d6dd1025c0
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(7168020)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:VE1PR08MB4767;
+x-ms-traffictypediagnostic: VE1PR08MB4767:
+x-ms-exchange-purlcount: 2
+nodisclaimer: True
+x-microsoft-antispam-prvs: <VE1PR08MB476783FD36E2FDAE2CB53859B3060@VE1PR08MB4767.eurprd08.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:4502;
+x-forefront-prvs: 004395A01C
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(39860400002)(136003)(396003)(366004)(346002)(376002)(199004)(189003)(66476007)(81156014)(316002)(68736007)(476003)(81166006)(8936002)(53936002)(66066001)(256004)(8676002)(55236004)(4326008)(110136005)(52116002)(386003)(6506007)(14454004)(2906002)(73956011)(66556008)(64756008)(6116002)(3846002)(71190400001)(54906003)(50226002)(102836004)(71200400001)(66946007)(99286004)(486006)(6486002)(36756003)(186003)(25786009)(66446008)(5660300002)(7736002)(2616005)(6512007)(103116003)(1076003)(6436002)(305945005)(86362001)(2201001)(2501003)(478600001)(26005)(6306002)(966005);DIR:OUT;SFP:1101;SCL:1;SRVR:VE1PR08MB4767;H:VE1PR08MB5006.eurprd08.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: arm.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: /fD8r90wiCNa9av2x53sWMyD2VJd1k04M9C7dAHM8HUlrvpnTpH4/9+FBHs3cH5r/1MQ7p/piEKisRBez7NyyT9kC4cpBy2MR/YuctxMDS7yubGk8HGQddrjHWAl59uLMBrFZwKMpdcw4+9R4ZmQOn664RhpOrOPM9OcgUQh7jsYWU9Dvv3QqnvR7p6YlTJYTnWMDJ8CGum/Og9SXhVSZRs5hWMvqptc0VFfOdw+6ll6omc5mv9RHhNsSi8XLAfTsAi3C/yIaCsjzBRqcXOoTse4VWkYzDL+R6rJRPY94o/iFCM9tK12uhiIC1nOKNs99c6VSlgrjDnU4U54jIUM9tSUUDF8JqsrZoWNOcFlYOKjfxivUoGksAw7dj0pKsfqtzFFUgM/wuS/O1nVwCYpKb+IXL4Qe8e73TE9+EGFtoE=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: arm.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9f663c2d-3d67-48f3-0238-08d6dd1025c0
+X-MS-Exchange-CrossTenant-originalarrivaltime: 20 May 2019 10:44:34.7136
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: f34e5979-57d9-4aaa-ad4d-b122a662184d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VE1PR08MB4767
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi John,
-
-<snip>
-
->> Is there anything else I can try for you?
-> 
-> Have you tried compiling FunctionFS with debugging enabled?
-> You do so bu uncommenting:
-> 
-> /* #define DEBUG */
-> /* #define VERBOSE_DEBUG */
-> 
-> at the beginning of drivers/usb/gadget/function/f_fs.c
-> 
-> Is there anything suspicious in the kernel log when you run it then?
-> 
-
-
-<snip>
-
-> 
-> One question that comes to my mind is this: Does the USB transmission
-> stall (e.g. endpoint stall) or not? In other words, is adb connection
-> broken because USB stops transmitting anything, or because the
-> data is transmitted but its integrity is broken during transmission
-> and that causes adb/adbd confusion which results in stopping their
-> operation? Does anything keep happening on FunctionFS when adb
-> connection is broken?
-
-Any discoveries about the problem?
-
-Andrzej
+VGhpcyBwYXRjaCBzZXJpZXMgYWRkIGxheWUgc3BsaXQgc3VwcG9ydCBmb3Iga29tZWRhLg0KDQpG
+b3IgbGF5ZXIgc3BsaXQsIGEgcGxhbmUgc3RhdGUgd2lsbCBiZSBzcGxpdCB0byB0d28gZGF0YSBm
+bG93cyBhbmQgaGFuZGxlZA0KYnkgdHdvIHNlcGFyYXRlZCBrb21lZGEgbGF5ZXIgaW5wdXQgcGlw
+ZWxpbmVzLiBrb21lZGEgc3VwcG9ydHMgdHdvIHR5cGVzIG9mDQpsYXllciBzcGxpdDoNCi0gbm9u
+ZS1zY2FsaW5nIHNwbGl0Og0KICAgICAgICAgICAgIC8gbGF5ZXItbGVmdCAtPiBcDQogIHBsYW5l
+X3N0YXRlICAgICAgICAgICAgICAgICAgY29tcGl6LT4gLi4uDQogICAgICAgICAgICAgXCBsYXll
+ci1yaWdodC0+IC8NCg0KLSBzY2FsaW5nIHNwbGl0Og0KICAgICAgICAgICAgIC8gbGF5ZXItbGVm
+dCAtPiBzY2FsZXItPlwNCiBwbGFuZV9zdGF0ZSAgICAgICAgICAgICAgICAgICAgICAgICAgbWVy
+Z2VyIC0+IGNvbXBpei0+IC4uLg0KICAgICAgICAgICAgIFwgbGF5ZXItcmlnaHQtPiBzY2FsZXIt
+Pi8NCg0KU2luY2UgbWVyZ2VyIG9ubHkgc3VwcG9ydHMgc2NhbGVyIGFzIGlucHV0LCBzbyBmb3Ig
+bm9uZS1zY2FsaW5nIHNwbGl0LCB0d28NCmxheWVyIGRhdGEgZmxvd3Mgd2lsbCBiZSBvdXRwdXQg
+dG8gY29tcGl6IGRpcmVjdGx5LiBmb3Igc2NhbGluZ19zcGxpdCwgdHdvDQpkYXRhIGZsb3dzIHdp
+bGwgYmUgbWVyZ2VkIGJ5IG1lcmdlciBmaXJzdGx5LCB0aGVuIG1lcmdlciBvdXRwdXRzIG9uZSBt
+ZXJnZWQNCmRhdGEgZmxvdyB0byBjb21waXouDQoNClRoaXMgcGF0Y2ggc2VyaWVzIGRlcGVuZHMg
+b246DQotIGh0dHBzOi8vcGF0Y2h3b3JrLmZyZWVkZXNrdG9wLm9yZy9zZXJpZXMvNjA3NjcvDQot
+IGh0dHBzOi8vcGF0Y2h3b3JrLmZyZWVkZXNrdG9wLm9yZy9zZXJpZXMvNjA4MzgvDQoNCkphbWVz
+IFFpYW4gV2FuZyAoQXJtIFRlY2hub2xvZ3kgQ2hpbmEpICgzKToNCiAgZHJtL2tvbWVkYTogQWRk
+IGNvbXBvbmVudCBrb21lZGFfbWVyZ2VyDQogIGRybS9rb21lZGE6IEFkZCBzcGxpdCBzdXBwb3J0
+IGZvciBzY2FsZXINCiAgZHJtL2tvbWVkYTogQWRkIGxheWVyIHNwbGl0IHN1cHBvcnQNCg0KIC4u
+Li9hcm0vZGlzcGxheS9rb21lZGEvZDcxL2Q3MV9jb21wb25lbnQuYyAgICB8IDEyMSArKysrKyst
+DQogLi4uL2dwdS9kcm0vYXJtL2Rpc3BsYXkva29tZWRhL2tvbWVkYV9rbXMuYyAgIHwgICA4ICsN
+CiAuLi4vZ3B1L2RybS9hcm0vZGlzcGxheS9rb21lZGEva29tZWRhX2ttcy5oICAgfCAgMjIgKy0N
+CiAuLi4vZHJtL2FybS9kaXNwbGF5L2tvbWVkYS9rb21lZGFfcGlwZWxpbmUuYyAgfCAgMjYgKy0N
+CiAuLi4vZHJtL2FybS9kaXNwbGF5L2tvbWVkYS9rb21lZGFfcGlwZWxpbmUuaCAgfCAgNDkgKyst
+DQogLi4uL2Rpc3BsYXkva29tZWRhL2tvbWVkYV9waXBlbGluZV9zdGF0ZS5jICAgIHwgMzIxICsr
+KysrKysrKysrKysrKysrLQ0KIC4uLi9ncHUvZHJtL2FybS9kaXNwbGF5L2tvbWVkYS9rb21lZGFf
+cGxhbmUuYyB8ICAzMiArLQ0KIC4uLi9hcm0vZGlzcGxheS9rb21lZGEva29tZWRhX3ByaXZhdGVf
+b2JqLmMgICB8ICA0OSArKysNCiAuLi4vYXJtL2Rpc3BsYXkva29tZWRhL2tvbWVkYV93Yl9jb25u
+ZWN0b3IuYyAgfCAgIDIgKy0NCiA5IGZpbGVzIGNoYW5nZWQsIDYwMiBpbnNlcnRpb25zKCspLCAy
+OCBkZWxldGlvbnMoLSkNCg0KLS0gDQoyLjE3LjENCg0K
