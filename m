@@ -7,61 +7,66 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60561C04AAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 08:24:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D448C04AAF
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 08:24:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 35A9120815
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 08:24:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 63E0920815
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 08:24:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="dAezrIqr"
+	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="imk5KPXb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731619AbfETIYS (ORCPT
+        id S1731626AbfETIYY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 04:24:18 -0400
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:33535 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731281AbfETIW3 (ORCPT
+        Mon, 20 May 2019 04:24:24 -0400
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:41873 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728105AbfETIW2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 04:22:29 -0400
-Received: by mail-ed1-f65.google.com with SMTP id n17so22607515edb.0
-        for <linux-kernel@vger.kernel.org>; Mon, 20 May 2019 01:22:28 -0700 (PDT)
+        Mon, 20 May 2019 04:22:28 -0400
+Received: by mail-ed1-f68.google.com with SMTP id m4so22529926edd.8
+        for <linux-kernel@vger.kernel.org>; Mon, 20 May 2019 01:22:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=ffwll.ch; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=4UC6980ATt6g2nqFDn2Bpgan2GTqp4ZZAGnr3VO2LjI=;
-        b=dAezrIqrBzbowSUT4bmjJHvFuoRDUot4TIt1DhCg1IdwLfIZ3foHIhAdtsVYqWZwkH
-         LtfD6E9Lp7CdA0Ph5XoRHNGw3IYX/hRpt6SrjJ0o0ikqzT8aSMWH8VLcAZjH2VdaA0DA
-         +zsohuUeum3CLs9yqrlxm9Bd+Anxdag2Obl88=
+        bh=eGgrLKE2df25ULz21985aqzcbzro9NwOlgEwwTc5Zzc=;
+        b=imk5KPXbRHmyM+OGJsrvU50iu0pRYSH4CQqAEYUC50IR7Unb8WAmHx/5xDSKShl4Ms
+         md2CbhXU/wCTBL9n61NPg+DXyNyuLx//HhKu7qBKwmA6U/dMwqcXtR/aG1FezRv5EDZk
+         lLWq9pUMZUOD2LKJFQRnQCeul+IsxkHvQfMv8=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=4UC6980ATt6g2nqFDn2Bpgan2GTqp4ZZAGnr3VO2LjI=;
-        b=HXNBYkJD/uHUO2Z9K9N0MICSHoE0IzWlsQ8XG1egQjaqNVwX9LIkmrqym1fkf2XDbd
-         /IiyrGO6fb4o3yn9343Btc9t9zgXxPKgxVMv1vx+1oURSv43Bx7ktekABfLj6rIlOlhT
-         nnLOXBCm645XYderI71Sqz3ppk+1qimiPdoDXl4w3Hl3xAWhUK3Z4mqEkeq4o3iM8CEd
-         SKs0LC/wDYa5iO5hViabGrbijiFdUq33wRZgtoAfZoWYVs5Ld56gskGlaQSSFZCNjSzS
-         0vIyGswYmo3CfGlMIIJ5hGBI34inNhCEcj20ihoID3H4089LiDselHhVlkwnakvxHu/l
-         tW1A==
-X-Gm-Message-State: APjAAAUrj5UoVngQ8NibD47l11504CwzAheXwL/KUUoVBa9U9dZ1P3Rd
-        uiwSpiDFP3AOtJkFwC/06gedhA==
-X-Google-Smtp-Source: APXvYqzDLu9/GndEePgiMrQ6/ujxXJCreTf5PlH4FgvtQmGS1mXtvAIi9EhfVpK0KKXgJ8vPKQxX3Q==
-X-Received: by 2002:a17:906:b741:: with SMTP id fx1mr5110659ejb.45.1558340548318;
-        Mon, 20 May 2019 01:22:28 -0700 (PDT)
-Received: from phenom.ffwll.local ([2a02:168:569e:0:3106:d637:d723:e855])
-        by smtp.gmail.com with ESMTPSA id t25sm3021263ejx.8.2019.05.20.01.22.27
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        bh=eGgrLKE2df25ULz21985aqzcbzro9NwOlgEwwTc5Zzc=;
+        b=r6Mc6mbSaU+Ly1T5Dzrzk0hKvI+lHVGYGDVIeQyh8JRhCpBEqYhzZn2nu4oL3IWkp5
+         pQuzsH2Uz05Xr5tQ0banxteOACwmyC9bE7g1A4dyEsCA80kB/h6DK4RgSU4qJvSJatI5
+         LCvF5t1NaDYbsZTwKt/qkEpUJAMuhBvoHEC8e3tb7ZPcgkyAhbdV8gYYhlLJhhv676SS
+         tzqUttpeYj621SFayypYMK0FBXyJ8QpkiJClEgfQyTwRB2pJ2O/LskwIyGasaZ2TyUzr
+         MZBEgZRCjFR/dE4wRc2vF5X4sI24FqpKgZB1jw4nEHjf1wvnNTTyHzBoben356ahrCzY
+         FNaA==
+X-Gm-Message-State: APjAAAXi3X0Q2uQDX3bKWXynspQhZk6KFKVvcno2s86PkUgD8RNwvhjC
+        UunH2b7v23/+FRM974IBAvWHbQ==
+X-Google-Smtp-Source: APXvYqx7YzC0MJ93NDDxrKOPv8V2UlfbQHlJo8bGF+j+Ew1CJ09B+PCH5y8spsqLQYD7mw+uuSgrTw==
+X-Received: by 2002:a17:906:a950:: with SMTP id hh16mr20399701ejb.136.1558340547229;
         Mon, 20 May 2019 01:22:27 -0700 (PDT)
+Received: from phenom.ffwll.local ([2a02:168:569e:0:3106:d637:d723:e855])
+        by smtp.gmail.com with ESMTPSA id t25sm3021263ejx.8.2019.05.20.01.22.26
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 20 May 2019 01:22:26 -0700 (PDT)
 From:   Daniel Vetter <daniel.vetter@ffwll.ch>
 To:     DRI Development <dri-devel@lists.freedesktop.org>
 Cc:     Intel Graphics Development <intel-gfx@lists.freedesktop.org>,
         LKML <linux-kernel@vger.kernel.org>,
         Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Daniel Vetter <daniel.vetter@intel.com>
-Subject: [PATCH 05/33] fbdev/sa1100fb: Remove dead code
-Date:   Mon, 20 May 2019 10:21:48 +0200
-Message-Id: <20190520082216.26273-6-daniel.vetter@ffwll.ch>
+        Daniel Vetter <daniel.vetter@intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Nicolas Pitre <nicolas.pitre@linaro.org>,
+        Martin Hostettler <textshell@uchuujin.de>,
+        Adam Borowski <kilobyte@angband.pl>,
+        Mikulas Patocka <mpatocka@redhat.com>
+Subject: [PATCH 04/33] vt: More locking checks
+Date:   Mon, 20 May 2019 10:21:47 +0200
+Message-Id: <20190520082216.26273-5-daniel.vetter@ffwll.ch>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190520082216.26273-1-daniel.vetter@ffwll.ch>
 References: <20190520082216.26273-1-daniel.vetter@ffwll.ch>
@@ -72,56 +77,75 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Motivated because it contains a struct display, which is a fbcon
-internal data structure that I want to rename. It seems to have been
-formerly used in drivers, but that's very long time ago.
+I honestly have no idea what the subtle differences between
+con_is_visible, con_is_fg (internal to vt.c) and con_is_bound are. But
+it looks like both vc->vc_display_fg and con_driver_map are protected
+by the console_lock, so probably better if we hold that when checking
+this.
+
+To do that I had to deinline the con_is_visible function.
 
 Signed-off-by: Daniel Vetter <daniel.vetter@intel.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Nicolas Pitre <nicolas.pitre@linaro.org>
+Cc: Martin Hostettler <textshell@uchuujin.de>
+Cc: Adam Borowski <kilobyte@angband.pl>
 Cc: Daniel Vetter <daniel.vetter@ffwll.ch>
+Cc: Mikulas Patocka <mpatocka@redhat.com>
 ---
- drivers/video/fbdev/sa1100fb.c | 25 -------------------------
- 1 file changed, 25 deletions(-)
+ drivers/tty/vt/vt.c            | 16 ++++++++++++++++
+ include/linux/console_struct.h |  5 +----
+ 2 files changed, 17 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/video/fbdev/sa1100fb.c b/drivers/video/fbdev/sa1100fb.c
-index 15ae50063296..f7f8dee044b1 100644
---- a/drivers/video/fbdev/sa1100fb.c
-+++ b/drivers/video/fbdev/sa1100fb.c
-@@ -974,35 +974,10 @@ static void sa1100fb_task(struct work_struct *w)
-  */
- static unsigned int sa1100fb_min_dma_period(struct sa1100fb_info *fbi)
+diff --git a/drivers/tty/vt/vt.c b/drivers/tty/vt/vt.c
+index 8b4b3a49ec33..0ed234ac5a6b 100644
+--- a/drivers/tty/vt/vt.c
++++ b/drivers/tty/vt/vt.c
+@@ -3814,6 +3814,8 @@ int con_is_bound(const struct consw *csw)
  {
--#if 0
--	unsigned int min_period = (unsigned int)-1;
--	int i;
--
--	for (i = 0; i < MAX_NR_CONSOLES; i++) {
--		struct display *disp = &fb_display[i];
--		unsigned int period;
--
--		/*
--		 * Do we own this display?
--		 */
--		if (disp->fb_info != &fbi->fb)
--			continue;
--
--		/*
--		 * Ok, calculate its DMA period
--		 */
--		period = sa1100fb_display_dma_period(&disp->var);
--		if (period < min_period)
--			min_period = period;
--	}
--
--	return min_period;
--#else
- 	/*
- 	 * FIXME: we need to verify _all_ consoles.
- 	 */
- 	return sa1100fb_display_dma_period(&fbi->fb.var);
--#endif
- }
+ 	int i, bound = 0;
  
- /*
++	WARN_CONSOLE_UNLOCKED();
++
+ 	for (i = 0; i < MAX_NR_CONSOLES; i++) {
+ 		if (con_driver_map[i] == csw) {
+ 			bound = 1;
+@@ -3825,6 +3827,20 @@ int con_is_bound(const struct consw *csw)
+ }
+ EXPORT_SYMBOL(con_is_bound);
+ 
++/**
++ * con_is_visible - checks whether the current console is visible
++ * @vc: virtual console
++ *
++ * RETURNS: zero if not visible, nonzero if visible
++ */
++bool con_is_visible(const struct vc_data *vc)
++{
++	WARN_CONSOLE_UNLOCKED();
++
++	return *vc->vc_display_fg == vc;
++}
++EXPORT_SYMBOL(con_is_visible);
++
+ /**
+  * con_debug_enter - prepare the console for the kernel debugger
+  * @sw: console driver
+diff --git a/include/linux/console_struct.h b/include/linux/console_struct.h
+index ed798e114663..24d4c16e3ae0 100644
+--- a/include/linux/console_struct.h
++++ b/include/linux/console_struct.h
+@@ -168,9 +168,6 @@ extern void vc_SAK(struct work_struct *work);
+ 
+ #define CUR_DEFAULT CUR_UNDERLINE
+ 
+-static inline bool con_is_visible(const struct vc_data *vc)
+-{
+-	return *vc->vc_display_fg == vc;
+-}
++bool con_is_visible(const struct vc_data *vc);
+ 
+ #endif /* _LINUX_CONSOLE_STRUCT_H */
 -- 
 2.20.1
 
