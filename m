@@ -2,51 +2,52 @@ Return-Path: <SRS0=lq4r=TU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36D5FC04AAC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:30:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E0F5C04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:30:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0B2EB2173B
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:30:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6429321479
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:30:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558355426;
-	bh=0FbrDWa298P0Lw1YpNogfvug+ahYvm4drwjTmQXsT8I=;
+	s=default; t=1558355432;
+	bh=yputAOmvq4pakf8w26I0FF70V3hB7OHK244yXiugR5g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=C+GE9iWtNox5eb4EBrnWG2Yyi5BmOpozfneyNztwbw+OjTfuAazELmij74EGStuL7
-	 yj9GNTvmdNGpf/VydVEx+6rMbzTQfBX3a9PtDuEsJ9kU5S+0sBh6A32k/iUOd7aceY
-	 zEDikS3MKJ9Lg+voKgZVZ3kI6ye8Gevy4bSHvHwY=
+	b=ARs3XTizGEC65oflHUYWkVP8TSJOoy5eB4HmC2SLUlehPZ/lerlH61wmHwXG6RQUl
+	 hl6jHiHv4LVuDS+Bdb7vV0EZfBP4L8GWSt/BttUZv68WQS0rSxEdlntyH80SQC6ku/
+	 RWB3rGhzwLMY1g3foQaSzWp2We4WC0Dotp3a4Ako=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390096AbfETMaZ (ORCPT
+        id S2390117AbfETMab (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 08:30:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46624 "EHLO mail.kernel.org"
+        Mon, 20 May 2019 08:30:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46758 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390079AbfETMaV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 08:30:21 -0400
+        id S2390097AbfETMa1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 08:30:27 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 78A4120815;
-        Mon, 20 May 2019 12:30:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D185821734;
+        Mon, 20 May 2019 12:30:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558355421;
-        bh=0FbrDWa298P0Lw1YpNogfvug+ahYvm4drwjTmQXsT8I=;
+        s=default; t=1558355426;
+        bh=yputAOmvq4pakf8w26I0FF70V3hB7OHK244yXiugR5g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=eVZCEe5rA6irdMakEpLObOVFbmQAdf0h1myaKd5awtQ8m12ellGx5kkfhN7p2v49i
-         ZC4Yq/h/qGAN2XYpPVCuRibnGxcCZioqH1FgirVpXgJ6H4O3x91eVBRkLxk/G7JGHo
-         HBI33U1dA5vDlAt+ypRFK2tuOwIf3doP2U2OyAjM=
+        b=x/gS7LodqsAB/D69SWzdd5EWEwidoMD3nqLTSp7+lRe3F4QaxLV/+k4FiNWWZY7s8
+         0Bd3dTIWpH5H+9ciGGROGIXLNH1PfYHazFWnZ95uMA8gtn6pmCF/OzlTXK0To/GfOt
+         06c5ZWCidti5KpnSIdZWEudVUnIDB6TLdlw0to68=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Masahiro Yamada <yamada.masahiro@socionext.com>
-Subject: [PATCH 5.0 113/123] kbuild: turn auto.conf.cmd into a mandatory include file
-Date:   Mon, 20 May 2019 14:14:53 +0200
-Message-Id: <20190520115252.654159903@linuxfoundation.org>
+        stable@vger.kernel.org, PGNet Dev <pgnet.dev@gmail.com>,
+        =?UTF-8?q?Roger=20Pau=20Monn=C3=A9?= <roger.pau@citrix.com>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>
+Subject: [PATCH 5.0 115/123] xen/pvh: correctly setup the PV EFI interface for dom0
+Date:   Mon, 20 May 2019 14:14:55 +0200
+Message-Id: <20190520115252.785602230@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190520115245.439864225@linuxfoundation.org>
 References: <20190520115245.439864225@linuxfoundation.org>
@@ -59,92 +60,151 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Masahiro Yamada <yamada.masahiro@socionext.com>
+From: Roger Pau Monne <roger.pau@citrix.com>
 
-commit d2f8ae0e4c5c754f1b2a7b8388d19a1a977e698a upstream.
+commit 72813bfbf0276a97c82af038efb5f02dcdd9e310 upstream.
 
-syncconfig is responsible for keeping auto.conf up-to-date, so if it
-fails for any reason, the build must be terminated immediately.
+This involves initializing the boot params EFI related fields and the
+efi global variable.
 
-However, since commit 9390dff66a52 ("kbuild: invoke syncconfig if
-include/config/auto.conf.cmd is missing"), Kbuild continues running
-even after syncconfig fails.
+Without this fix a PVH dom0 doesn't detect when booted from EFI, and
+thus doesn't support accessing any of the EFI related data.
 
-You can confirm this by intentionally making syncconfig error out:
-
-#  diff --git a/scripts/kconfig/confdata.c b/scripts/kconfig/confdata.c
-#  index 08ba146..307b9de 100644
-#  --- a/scripts/kconfig/confdata.c
-#  +++ b/scripts/kconfig/confdata.c
-#  @@ -1023,6 +1023,9 @@ int conf_write_autoconf(int overwrite)
-#          FILE *out, *tristate, *out_h;
-#          int i;
-#
-#  +       if (overwrite)
-#  +               return 1;
-#  +
-#          if (!overwrite && is_present(autoconf_name))
-#                  return 0;
-
-Then, syncconfig fails, but Make would not stop:
-
-  $ make -s mrproper allyesconfig defconfig
-  $ make
-  scripts/kconfig/conf  --syncconfig Kconfig
-
-  *** Error during sync of the configuration.
-
-  make[2]: *** [scripts/kconfig/Makefile;69: syncconfig] Error 1
-  make[1]: *** [Makefile;557: syncconfig] Error 2
-  make: *** [include/config/auto.conf.cmd] Deleting file 'include/config/tristate.conf'
-  make: Failed to remake makefile 'include/config/auto.conf'.
-    SYSTBL  arch/x86/include/generated/asm/syscalls_32.h
-    SYSHDR  arch/x86/include/generated/asm/unistd_32_ia32.h
-    SYSHDR  arch/x86/include/generated/asm/unistd_64_x32.h
-    SYSTBL  arch/x86/include/generated/asm/syscalls_64.h
-  [ continue running ... ]
-
-The reason is in the behavior of a pattern rule with multi-targets.
-
-  %/auto.conf %/auto.conf.cmd %/tristate.conf: $(KCONFIG_CONFIG)
-          $(Q)$(MAKE) -f $(srctree)/Makefile syncconfig
-
-GNU Make knows this rule is responsible for making all the three files
-simultaneously. As far as examined, auto.conf.cmd is the target in
-question when this rule is invoked. It is probably because auto.conf.cmd
-is included below the inclusion of auto.conf.
-
-The inclusion of auto.conf is mandatory, while that of auto.conf.cmd
-is optional. GNU Make does not care about the failure in the process
-of updating optional include files.
-
-I filed this issue (https://savannah.gnu.org/bugs/?56301) in case this
-behavior could be improved somehow in future releases of GNU Make.
-Anyway, it is quite easy to fix our Makefile.
-
-Given that auto.conf is already a mandatory include file, there is no
-reason to stick auto.conf.cmd optional. Make it mandatory as well.
-
-Cc: linux-stable <stable@vger.kernel.org> # 5.0+
-Fixes: 9390dff66a52 ("kbuild: invoke syncconfig if include/config/auto.conf.cmd is missing")
-Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-[commented out diff above to keep patch happy - gregkh]
+Reported-by: PGNet Dev <pgnet.dev@gmail.com>
+Signed-off-by: Roger Pau Monné <roger.pau@citrix.com>
+Reviewed-by: Boris Ostrovsky <boris.ostrovsky@oracle.com>
+Signed-off-by: Boris Ostrovsky <boris.ostrovsky@oracle.com>
+Cc: stable@vger.kernel.org # 4.19+
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- Makefile |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/x86/platform/pvh/enlighten.c |    8 ++++----
+ arch/x86/xen/efi.c                |   12 ++++++------
+ arch/x86/xen/enlighten_pv.c       |    2 +-
+ arch/x86/xen/enlighten_pvh.c      |    6 +++++-
+ arch/x86/xen/xen-ops.h            |    4 ++--
+ 5 files changed, 18 insertions(+), 14 deletions(-)
 
---- a/Makefile
-+++ b/Makefile
-@@ -642,7 +642,7 @@ ifeq ($(may-sync-config),1)
- # Read in dependencies to all Kconfig* files, make sure to run syncconfig if
- # changes are detected. This should be included after arch/$(SRCARCH)/Makefile
- # because some architectures define CROSS_COMPILE there.
---include include/config/auto.conf.cmd
-+include include/config/auto.conf.cmd
+--- a/arch/x86/platform/pvh/enlighten.c
++++ b/arch/x86/platform/pvh/enlighten.c
+@@ -44,8 +44,6 @@ void __init __weak mem_map_via_hcall(str
  
- # To avoid any implicit rule to kick in, define an empty command
- $(KCONFIG_CONFIG): ;
+ static void __init init_pvh_bootparams(bool xen_guest)
+ {
+-	memset(&pvh_bootparams, 0, sizeof(pvh_bootparams));
+-
+ 	if ((pvh_start_info.version > 0) && (pvh_start_info.memmap_entries)) {
+ 		struct hvm_memmap_table_entry *ep;
+ 		int i;
+@@ -103,7 +101,7 @@ static void __init init_pvh_bootparams(b
+  * If we are trying to boot a Xen PVH guest, it is expected that the kernel
+  * will have been configured to provide the required override for this routine.
+  */
+-void __init __weak xen_pvh_init(void)
++void __init __weak xen_pvh_init(struct boot_params *boot_params)
+ {
+ 	xen_raw_printk("Error: Missing xen PVH initialization\n");
+ 	BUG();
+@@ -112,7 +110,7 @@ void __init __weak xen_pvh_init(void)
+ static void hypervisor_specific_init(bool xen_guest)
+ {
+ 	if (xen_guest)
+-		xen_pvh_init();
++		xen_pvh_init(&pvh_bootparams);
+ }
+ 
+ /*
+@@ -131,6 +129,8 @@ void __init xen_prepare_pvh(void)
+ 		BUG();
+ 	}
+ 
++	memset(&pvh_bootparams, 0, sizeof(pvh_bootparams));
++
+ 	hypervisor_specific_init(xen_guest);
+ 
+ 	init_pvh_bootparams(xen_guest);
+--- a/arch/x86/xen/efi.c
++++ b/arch/x86/xen/efi.c
+@@ -158,7 +158,7 @@ static enum efi_secureboot_mode xen_efi_
+ 	return efi_secureboot_mode_unknown;
+ }
+ 
+-void __init xen_efi_init(void)
++void __init xen_efi_init(struct boot_params *boot_params)
+ {
+ 	efi_system_table_t *efi_systab_xen;
+ 
+@@ -167,12 +167,12 @@ void __init xen_efi_init(void)
+ 	if (efi_systab_xen == NULL)
+ 		return;
+ 
+-	strncpy((char *)&boot_params.efi_info.efi_loader_signature, "Xen",
+-			sizeof(boot_params.efi_info.efi_loader_signature));
+-	boot_params.efi_info.efi_systab = (__u32)__pa(efi_systab_xen);
+-	boot_params.efi_info.efi_systab_hi = (__u32)(__pa(efi_systab_xen) >> 32);
++	strncpy((char *)&boot_params->efi_info.efi_loader_signature, "Xen",
++			sizeof(boot_params->efi_info.efi_loader_signature));
++	boot_params->efi_info.efi_systab = (__u32)__pa(efi_systab_xen);
++	boot_params->efi_info.efi_systab_hi = (__u32)(__pa(efi_systab_xen) >> 32);
+ 
+-	boot_params.secure_boot = xen_efi_get_secureboot();
++	boot_params->secure_boot = xen_efi_get_secureboot();
+ 
+ 	set_bit(EFI_BOOT, &efi.flags);
+ 	set_bit(EFI_PARAVIRT, &efi.flags);
+--- a/arch/x86/xen/enlighten_pv.c
++++ b/arch/x86/xen/enlighten_pv.c
+@@ -1403,7 +1403,7 @@ asmlinkage __visible void __init xen_sta
+ 	/* We need this for printk timestamps */
+ 	xen_setup_runstate_info(0);
+ 
+-	xen_efi_init();
++	xen_efi_init(&boot_params);
+ 
+ 	/* Start the world */
+ #ifdef CONFIG_X86_32
+--- a/arch/x86/xen/enlighten_pvh.c
++++ b/arch/x86/xen/enlighten_pvh.c
+@@ -13,6 +13,8 @@
+ 
+ #include <xen/interface/memory.h>
+ 
++#include "xen-ops.h"
++
+ /*
+  * PVH variables.
+  *
+@@ -21,7 +23,7 @@
+  */
+ bool xen_pvh __attribute__((section(".data"))) = 0;
+ 
+-void __init xen_pvh_init(void)
++void __init xen_pvh_init(struct boot_params *boot_params)
+ {
+ 	u32 msr;
+ 	u64 pfn;
+@@ -33,6 +35,8 @@ void __init xen_pvh_init(void)
+ 	msr = cpuid_ebx(xen_cpuid_base() + 2);
+ 	pfn = __pa(hypercall_page);
+ 	wrmsr_safe(msr, (u32)pfn, (u32)(pfn >> 32));
++
++	xen_efi_init(boot_params);
+ }
+ 
+ void __init mem_map_via_hcall(struct boot_params *boot_params_p)
+--- a/arch/x86/xen/xen-ops.h
++++ b/arch/x86/xen/xen-ops.h
+@@ -122,9 +122,9 @@ static inline void __init xen_init_vga(c
+ void __init xen_init_apic(void);
+ 
+ #ifdef CONFIG_XEN_EFI
+-extern void xen_efi_init(void);
++extern void xen_efi_init(struct boot_params *boot_params);
+ #else
+-static inline void __init xen_efi_init(void)
++static inline void __init xen_efi_init(struct boot_params *boot_params)
+ {
+ }
+ #endif
 
 
