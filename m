@@ -2,77 +2,95 @@ Return-Path: <SRS0=lq4r=TU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF302C04AAC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 14:18:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E37B7C04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 14:21:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 802E7214AE
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 14:18:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ACD52216FD
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 14:21:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1558362111;
+	bh=aa4t8FWIBI8LerwyEIQ1gJt/Otl3c5xKW6xKXA8unDU=;
+	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
+	b=z0nKkKrV44SD3wMMKTpHtddyD57uWA+e0hRrwOpMv1yYeDq65IPtanw8uv8wS/+q+
+	 vx9bvYHU9Rr/7eoGpMlGr89JeQ8szr6Bks1w2bbVOJQr8qR98IIsWSgGctB/4UYd+p
+	 K3ZwFFFbKo9td+MT04QVTPHd+4DANkS9WxCbGawg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388772AbfETOSo (ORCPT
+        id S2387776AbfETOVv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 10:18:44 -0400
-Received: from iolanthe.rowland.org ([192.131.102.54]:58780 "HELO
-        iolanthe.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with SMTP id S1733264AbfETOSn (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 10:18:43 -0400
-Received: (qmail 1770 invoked by uid 2102); 20 May 2019 10:18:42 -0400
-Received: from localhost (sendmail-bs@127.0.0.1)
-  by localhost with SMTP; 20 May 2019 10:18:42 -0400
-Date:   Mon, 20 May 2019 10:18:42 -0400 (EDT)
-From:   Alan Stern <stern@rowland.harvard.edu>
-X-X-Sender: stern@iolanthe.rowland.org
-To:     Marek Szyprowski <m.szyprowski@samsung.com>
-cc:     linux-usb@vger.kernel.org, <linux-samsung-soc@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Markus Reichl <m.reichl@fivetechno.de>,
-        =?UTF-8?q?M=C3=A5ns=20Rullg=C3=A5rd?= <mans@mansr.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Peter Chen <peter.chen@nxp.com>
-Subject: Re: [PATCH v5] usb: exynos: add workaround for the USB device bindings
- conflict
-In-Reply-To: <20190520090823.17189-1-m.szyprowski@samsung.com>
-Message-ID: <Pine.LNX.4.44L0.1905201017340.1498-100000@iolanthe.rowland.org>
+        Mon, 20 May 2019 10:21:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48434 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730819AbfETOVu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 10:21:50 -0400
+Received: from kernel.org (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D56DA214AE;
+        Mon, 20 May 2019 14:21:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1558362110;
+        bh=aa4t8FWIBI8LerwyEIQ1gJt/Otl3c5xKW6xKXA8unDU=;
+        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
+        b=CNpCwcHHQSE/1yTz1KVZBIAfIDw89RrtDsBeDiqtDOUYPRU/vWkx4gbky98w2yZxm
+         8uqkrxHivi6k56m7g/Ftk2J8z1DVJdWjFTUV8zzmx54nilMdNdLSPYYEolpovsom59
+         RWOjF5yFjXq1FhjGfY0VR0TD4bCX3NyTpup4PGDM=
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20190516085018.2207-1-masneyb@onstation.org>
+References: <20190516085018.2207-1-masneyb@onstation.org>
+Subject: Re: [PATCH RESEND] ARM: dts: qcom: msm8974-hammerhead: add device tree bindings for vibrator
+From:   Stephen Boyd <sboyd@kernel.org>
+Cc:     bjorn.andersson@linaro.org, robh+dt@kernel.org,
+        mark.rutland@arm.com, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To:     Brian Masney <masneyb@onstation.org>, agross@kernel.org,
+        david.brown@linaro.org
+User-Agent: alot/0.8.1
+Date:   Mon, 20 May 2019 07:21:49 -0700
+Message-Id: <20190520142149.D56DA214AE@mail.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 20 May 2019, Marek Szyprowski wrote:
+Quoting Brian Masney (2019-05-16 01:50:18)
+> @@ -306,6 +307,36 @@
+>                                 input-enable;
+>                         };
+>                 };
+> +
+> +               vibrator_pin: vibrator {
+> +                       pwm {
+> +                               pins =3D "gpio27";
+> +                               function =3D "gp1_clk";
+> +
+> +                               drive-strength =3D <6>;
+> +                               bias-disable;
+> +                       };
+> +
+> +                       enable {
+> +                               pins =3D "gpio60";
+> +                               function =3D "gpio";
+> +                       };
+> +               };
+> +       };
+> +
+> +       vibrator@fd8c3450 {
+> +               compatible =3D "qcom,msm8974-vibrator";
+> +               reg =3D <0xfd8c3450 0x400>;
 
-> Commit 69bec7259853 ("USB: core: let USB device know device node") added
-> support for attaching devicetree node for USB devices. Those nodes are
-> children of their USB host controller. However Exynos EHCI and OHCI
-> driver bindings already define child-nodes for each physical root hub
-> port and assigns respective PHY controller and parameters to them. Those
-> bindings predates support for USB device tree nodes.
-> 
-> To mitigate the side-effects of the conflict between those bindings,
-> lets reset Exynos host controller of_node pointer before registering it
-> to USB subsystem. This fixes the issue raised by the commit 01fdf179f4b0
-> ("usb: core: skip interfaces disabled in devicetree"), which incorrectly
-> disabled some devices on Exynos based boards.
-> 
-> Reported-by: Markus Reichl <m.reichl@fivetechno.de>
-> Suggested-by: Måns Rullgård <mans@mansr.com>
-> Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
-> ---
-> v5:
-> - fixed error path handling as pointed by Alan
+This is inside the multimedia clk controller. The resource reservation
+mechanism should be complaining loudly here. Is the driver writing
+directly into clk controller registers to adjust a duty cycle of the
+camera's general purpose clk?
 
-Acked-by: Alan Stern <stern@rowland.harvard.edu>
-
-This is assuming the whole approach makes sense in the first place --
-I'll defer to other people's judgement on that.
-
-Alan Stern
+Can you add support for duty cycle to the qcom clk driver's RCGs and
+then write a generic clk duty cycle vibrator driver that adjusts the
+duty cycle of the clk? That would be better than reaching into the clk
+controller registers to do this.
 
