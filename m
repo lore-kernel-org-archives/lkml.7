@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 681F8C04AAC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:49:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74996C04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:49:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 33A142054F
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:49:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4789C2054F
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:49:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558356541;
-	bh=+haWhBeLMgW5hj6mugJTA23hdoTpHOeeUglrpzTFYug=;
+	s=default; t=1558356551;
+	bh=NELJ4Hu6YiJbJlmxwVlRRrxhcEXBUQ4E/XUnMCsrArw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VLBxj3T+7cwopGOH3T63dda4MdSPISpNMrkJST2rhf5fLqTQKq64r/KWYCerxeuRW
-	 KQMdF5/OqPO/R+bnk6yLeEyQJ9Ci3UX5V8Vz2ApL8QKGDy3+1E7fa2S59f9NfhYcDZ
-	 yVzJ0kNbrE7Mp14BZQFD0i/kDzMlQhH5v7bxMkDo=
+	b=zQfAl6eU/vi0Qap+J6LpazKGa8LwGMGzgTmbErs0d1qcEO1NVunbVfaoNYeHZfa9R
+	 6M4AWeFG2SMRhRJp9fxVvYNr1mzfnZRmXiucZGJEdFWbr9GQHQmuZ4bvA9WF5FFiKs
+	 oE4KYV/aMVuDS5pTCuibjkicwmKkdAyecFA0tf00=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731653AbfETMtA (ORCPT
+        id S2387802AbfETMV4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 08:49:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36106 "EHLO mail.kernel.org"
+        Mon, 20 May 2019 08:21:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35700 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387576AbfETMWK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 08:22:10 -0400
+        id S2387779AbfETMVv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 08:21:51 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 797A4213F2;
-        Mon, 20 May 2019 12:22:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B42D4213F2;
+        Mon, 20 May 2019 12:21:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558354930;
-        bh=+haWhBeLMgW5hj6mugJTA23hdoTpHOeeUglrpzTFYug=;
+        s=default; t=1558354911;
+        bh=NELJ4Hu6YiJbJlmxwVlRRrxhcEXBUQ4E/XUnMCsrArw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=muz36mvP3VC7AHktTCBCLQf1lj2BGkwUedhxz9kbduy1ESYqqyiR7UE5aNMQB+qor
-         g2yZ5860keZFayKDpSnps8hrmTpIjaX6zDnkgloSat44RWW5b0bAmUU1IWbfEs7unN
-         wC69HRpJHZlEiQNm4S+41CYbAetb6PzDV4VjjO+c=
+        b=nCBfx5bdpa8UtMNl8tp/e4L/nbxtTkRKgMULqcV14qvTCi4sLzeETU4+sZSA8UiOl
+         KmiajdEAJpIZPE8SANfV23rlAmYAa2RInX+6rij4xjvegihjN2sYYfsR1r4x5Q8fqN
+         LmDiX/eaOsBxWMoUWzz7be4zKrisjqsiiu50o5ME=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Christoph Muellner <christoph.muellner@theobroma-systems.com>,
-        Philipp Tomsich <philipp.tomsich@theobroma-systems.com>,
-        Heiko Stuebner <heiko@sntech.de>
-Subject: [PATCH 4.19 005/105] arm64: dts: rockchip: Disable DCMDs on RK3399s eMMC controller.
-Date:   Mon, 20 May 2019 14:13:11 +0200
-Message-Id: <20190520115247.424974813@linuxfoundation.org>
+        stable@vger.kernel.org, Tim Chen <tim.c.chen@linux.intel.com>,
+        Eric Biggers <ebiggers@google.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>
+Subject: [PATCH 4.19 025/105] crypto: crct10dif-generic - fix use via crypto_shash_digest()
+Date:   Mon, 20 May 2019 14:13:31 +0200
+Message-Id: <20190520115248.764429973@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190520115247.060821231@linuxfoundation.org>
 References: <20190520115247.060821231@linuxfoundation.org>
@@ -61,83 +60,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christoph Muellner <christoph.muellner@theobroma-systems.com>
+From: Eric Biggers <ebiggers@google.com>
 
-commit a3eec13b8fd2b9791a21fa16e38dfea8111579bf upstream.
+commit 307508d1072979f4435416f87936f87eaeb82054 upstream.
 
-When using direct commands (DCMDs) on an RK3399, we get spurious
-CQE completion interrupts for the DCMD transaction slot (#31):
+The ->digest() method of crct10dif-generic reads the current CRC value
+from the shash_desc context.  But this value is uninitialized, causing
+crypto_shash_digest() to compute the wrong result.  Fix it.
 
-[  931.196520] ------------[ cut here ]------------
-[  931.201702] mmc1: cqhci: spurious TCN for tag 31
-[  931.206906] WARNING: CPU: 0 PID: 1433 at /usr/src/kernel/drivers/mmc/host/cqhci.c:725 cqhci_irq+0x2e4/0x490
-[  931.206909] Modules linked in:
-[  931.206918] CPU: 0 PID: 1433 Comm: irq/29-mmc1 Not tainted 4.19.8-rt6-funkadelic #1
-[  931.206920] Hardware name: Theobroma Systems RK3399-Q7 SoM (DT)
-[  931.206924] pstate: 40000005 (nZcv daif -PAN -UAO)
-[  931.206927] pc : cqhci_irq+0x2e4/0x490
-[  931.206931] lr : cqhci_irq+0x2e4/0x490
-[  931.206933] sp : ffff00000e54bc80
-[  931.206934] x29: ffff00000e54bc80 x28: 0000000000000000
-[  931.206939] x27: 0000000000000001 x26: ffff000008f217e8
-[  931.206944] x25: ffff8000f02ef030 x24: ffff0000091417b0
-[  931.206948] x23: ffff0000090aa000 x22: ffff8000f008b000
-[  931.206953] x21: 0000000000000002 x20: 000000000000001f
-[  931.206957] x19: ffff8000f02ef018 x18: ffffffffffffffff
-[  931.206961] x17: 0000000000000000 x16: 0000000000000000
-[  931.206966] x15: ffff0000090aa6c8 x14: 0720072007200720
-[  931.206970] x13: 0720072007200720 x12: 0720072007200720
-[  931.206975] x11: 0720072007200720 x10: 0720072007200720
-[  931.206980] x9 : 0720072007200720 x8 : 0720072007200720
-[  931.206984] x7 : 0720073107330720 x6 : 00000000000005a0
-[  931.206988] x5 : ffff00000860d4b0 x4 : 0000000000000000
-[  931.206993] x3 : 0000000000000001 x2 : 0000000000000001
-[  931.206997] x1 : 1bde3a91b0d4d900 x0 : 0000000000000000
-[  931.207001] Call trace:
-[  931.207005]  cqhci_irq+0x2e4/0x490
-[  931.207009]  sdhci_arasan_cqhci_irq+0x5c/0x90
-[  931.207013]  sdhci_irq+0x98/0x930
-[  931.207019]  irq_forced_thread_fn+0x2c/0xa0
-[  931.207023]  irq_thread+0x114/0x1c0
-[  931.207027]  kthread+0x128/0x130
-[  931.207032]  ret_from_fork+0x10/0x20
-[  931.207035] ---[ end trace 0000000000000002 ]---
+Probably this wasn't noticed before because lib/crc-t10dif.c only uses
+crypto_shash_update(), not crypto_shash_digest().  Likewise,
+crypto_shash_digest() is not yet tested by the crypto self-tests because
+those only test the ahash API which only uses shash init/update/final.
 
-The driver shows this message only for the first spurious interrupt
-by using WARN_ONCE(). Changing this to WARN() shows, that this is
-happening quite frequently (up to once a second).
+This bug was detected by my patches that improve testmgr to fuzz
+algorithms against their generic implementation.
 
-Since the eMMC 5.1 specification, where CQE and CQHCI are specified,
-does not mention that spurious TCN interrupts for DCMDs can be simply
-ignored, we must assume that using this feature is not working reliably.
-
-The current implementation uses DCMD for REQ_OP_FLUSH only, and
-I could not see any performance/power impact when disabling
-this optional feature for RK3399.
-
-Therefore this patch disables DCMDs for RK3399.
-
-Signed-off-by: Christoph Muellner <christoph.muellner@theobroma-systems.com>
-Signed-off-by: Philipp Tomsich <philipp.tomsich@theobroma-systems.com>
-Fixes: 84362d79f436 ("mmc: sdhci-of-arasan: Add CQHCI support for arasan,sdhci-5.1")
-Cc: stable@vger.kernel.org
-[the corresponding code changes are queued for 5.2 so doing that as well]
-Signed-off-by: Heiko Stuebner <heiko@sntech.de>
+Fixes: 2d31e518a428 ("crypto: crct10dif - Wrap crc_t10dif function all to use crypto transform framework")
+Cc: <stable@vger.kernel.org> # v3.11+
+Cc: Tim Chen <tim.c.chen@linux.intel.com>
+Signed-off-by: Eric Biggers <ebiggers@google.com>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/arm64/boot/dts/rockchip/rk3399.dtsi |    1 +
- 1 file changed, 1 insertion(+)
+ crypto/crct10dif_generic.c |   11 ++++-------
+ 1 file changed, 4 insertions(+), 7 deletions(-)
 
---- a/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-+++ b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-@@ -305,6 +305,7 @@
- 		phys = <&emmc_phy>;
- 		phy-names = "phy_arasan";
- 		power-domains = <&power RK3399_PD_EMMC>;
-+		disable-cqe-dcmd;
- 		status = "disabled";
- 	};
+--- a/crypto/crct10dif_generic.c
++++ b/crypto/crct10dif_generic.c
+@@ -65,10 +65,9 @@ static int chksum_final(struct shash_des
+ 	return 0;
+ }
  
+-static int __chksum_finup(__u16 *crcp, const u8 *data, unsigned int len,
+-			u8 *out)
++static int __chksum_finup(__u16 crc, const u8 *data, unsigned int len, u8 *out)
+ {
+-	*(__u16 *)out = crc_t10dif_generic(*crcp, data, len);
++	*(__u16 *)out = crc_t10dif_generic(crc, data, len);
+ 	return 0;
+ }
+ 
+@@ -77,15 +76,13 @@ static int chksum_finup(struct shash_des
+ {
+ 	struct chksum_desc_ctx *ctx = shash_desc_ctx(desc);
+ 
+-	return __chksum_finup(&ctx->crc, data, len, out);
++	return __chksum_finup(ctx->crc, data, len, out);
+ }
+ 
+ static int chksum_digest(struct shash_desc *desc, const u8 *data,
+ 			 unsigned int length, u8 *out)
+ {
+-	struct chksum_desc_ctx *ctx = shash_desc_ctx(desc);
+-
+-	return __chksum_finup(&ctx->crc, data, length, out);
++	return __chksum_finup(0, data, length, out);
+ }
+ 
+ static struct shash_alg alg = {
 
 
