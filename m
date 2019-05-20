@@ -2,73 +2,45 @@ Return-Path: <SRS0=lq4r=TU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D38A5C04AAC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 20:03:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FD54C04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 20:07:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AA9EE20863
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 20:03:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="IX7WNp2h"
+	by mail.kernel.org (Postfix) with ESMTP id 044A020815
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 20:07:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726706AbfETUDl (ORCPT
+        id S1726127AbfETUHu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 16:03:41 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:55576 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726452AbfETUDe (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 16:03:34 -0400
-Received: by mail-wm1-f65.google.com with SMTP id x64so583464wmb.5;
-        Mon, 20 May 2019 13:03:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=do0dKBdes1ma1vSqJcaos6AAvi/dpG1xqDF1uEcr96s=;
-        b=IX7WNp2h3OoeEP1kMReGf8ZvQsHhieYCtYrGNrzNgPAabFO9RFZj0G2yrehUXRbGdZ
-         5RhJq+Lzn4nvDTo+ZTStdwmg8dz7IhlszdHFkksOVKuOgGGhp0aHWq8gDpqhDBDwBhg3
-         vf+woIYXk2rmo9VDdDOqHnxVjsuoVnmsK0qYbRRLuFizo/C9BmZ2b7jxtLMqn68T/DnY
-         mwFyJ91QdG12cOTPAnglCXosmPh4d79vpsMKAf2rxzvXD0A0MkjsRPe6WlTIaysUyaa8
-         cLdU68JcNllPY5GUI5Pa1/eeuH5t/kkjuQOoyDLSrV98ynjAILH2y/MatgPRY+NdaInX
-         Apzw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=do0dKBdes1ma1vSqJcaos6AAvi/dpG1xqDF1uEcr96s=;
-        b=tA7/NLL53Rc7OcRCHdzUoUAOq6bRI+fgjGnuX3nHJ2kzGmk6LGV0QMIJn2Vnf5ljZj
-         mfEq5saT4x1eDfHWbcA46P/RBOXYLoILKtpcKdITYao3Tt1z74eSnoEC6CDaFlgE8tH6
-         nbaTNwXS+5b6JFmd6BxhCqry299+pMf7zpPfocfd0X1mPemqhCJHP+UIge2uJjqnRSf3
-         88CejMwQHqwCbhk9YFBC5K0u1UiGEVayCd+l0ljxhqGjX5lFokR4PvKJ3Ye7TUkCcYSw
-         8mMlPlJQKTOrCcHm75EfK+3xGNG3NwQziRdbtl1RKOQbega0DubUAfAHE3FRYMlUn9F+
-         W7EQ==
-X-Gm-Message-State: APjAAAURBFV9WaF7InAYQnjze/d6gTxp9OLHUkEoCy/b4Gcufl0oS6+Z
-        JNHlvS25s49oKOSGC7tHaBs=
-X-Google-Smtp-Source: APXvYqy9p/CmdbIKMiBY9W6jTMEHHTN6rUdiBTPoRPeTt56omD+TOTEfxBv7/Mwx3XTWgPEXlTjgiA==
-X-Received: by 2002:a1c:a846:: with SMTP id r67mr620804wme.24.1558382613169;
-        Mon, 20 May 2019 13:03:33 -0700 (PDT)
-Received: from blackbox.darklights.net (p200300F133EE71009C356FA1F0E19AF9.dip0.t-ipconnect.de. [2003:f1:33ee:7100:9c35:6fa1:f0e1:9af9])
-        by smtp.googlemail.com with ESMTPSA id t7sm23583379wrq.76.2019.05.20.13.03.31
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 20 May 2019 13:03:32 -0700 (PDT)
-From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-To:     narmstrong@baylibre.com, jbrunet@baylibre.com,
-        linux-amlogic@lists.infradead.org
-Cc:     linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Subject: [PATCH 4/4] clk: meson: meson8b: add the cts_i958 clock
-Date:   Mon, 20 May 2019 22:03:19 +0200
-Message-Id: <20190520200319.9265-5-martin.blumenstingl@googlemail.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190520200319.9265-1-martin.blumenstingl@googlemail.com>
-References: <20190520200319.9265-1-martin.blumenstingl@googlemail.com>
+        Mon, 20 May 2019 16:07:50 -0400
+Received: from mga11.intel.com ([192.55.52.93]:5053 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725372AbfETUHt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 16:07:49 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 May 2019 13:07:49 -0700
+X-ExtLoop1: 1
+Received: from cavannie-mobl1.amr.corp.intel.com (HELO localhost.intel.com) ([10.254.114.95])
+  by fmsmga007.fm.intel.com with ESMTP; 20 May 2019 13:07:48 -0700
+From:   Rick Edgecombe <rick.p.edgecombe@intel.com>
+To:     linux-kernel@vger.kernel.org, peterz@infradead.org,
+        sparclinux@vger.kernel.org, linux-mm@kvack.org,
+        netdev@vger.kernel.org
+Cc:     dave.hansen@intel.com, namit@vmware.com,
+        Rick Edgecombe <rick.p.edgecombe@intel.com>,
+        Meelis Roos <mroos@linux.ee>,
+        "David S. Miller" <davem@davemloft.net>,
+        Borislav Petkov <bp@alien8.de>,
+        Andy Lutomirski <luto@kernel.org>,
+        Ingo Molnar <mingo@redhat.com>
+Subject: [PATCH v2] vmalloc: Fix issues with flush flag
+Date:   Mon, 20 May 2019 13:07:03 -0700
+Message-Id: <20190520200703.15997-1-rick.p.edgecombe@intel.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -76,95 +48,117 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add the cts_i958 clock to control the clock source of the spdif output
-block. It is used to select whether the clock source of the spdif output
-is cts_amclk (when data are taken from i2s buffer) or the cts_mclk_i958
-(when data are taken from the spdif buffer). The setup for this clock is
-identical to GXBB, so this ports commit 7eaa44f6207fb6 ("clk: meson:
-gxbb: add cts_i958 clock") to the Meson8/Meson8b/Meson8m2 clock driver.
+Switch VM_FLUSH_RESET_PERMS to use a regular TLB flush intead of
+vm_unmap_aliases() and fix calculation of the direct map for the
+CONFIG_ARCH_HAS_SET_DIRECT_MAP case.
 
-Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Meelis Roos reported issues with the new VM_FLUSH_RESET_PERMS flag on a
+sparc machine. On investigation some issues were noticed:
+
+1. The calculation of the direct map address range to flush was wrong.
+This could cause problems on x86 if a RO direct map alias ever got loaded
+into the TLB. This shouldn't normally happen, but it could cause the
+permissions to remain RO on the direct map alias, and then the page
+would return from the page allocator to some other component as RO and
+cause a crash.
+
+2. Calling vm_unmap_alias() on vfree could potentially be a lot of work to
+do on a free operation. Simply flushing the TLB instead of the whole
+vm_unmap_alias() operation makes the frees faster and pushes the heavy
+work to happen on allocation where it would be more expected.
+In addition to the extra work, vm_unmap_alias() takes some locks including
+a long hold of vmap_purge_lock, which will make all other
+VM_FLUSH_RESET_PERMS vfrees wait while the purge operation happens.
+
+3. page_address() can have locking on some configurations, so skip calling
+this when possible to further speed this up.
+
+Fixes: 868b104d7379 ("mm/vmalloc: Add flag for freeing of special permsissions")
+Reported-by: Meelis Roos <mroos@linux.ee>
+Cc: Meelis Roos <mroos@linux.ee>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: "David S. Miller" <davem@davemloft.net>
+Cc: Dave Hansen <dave.hansen@intel.com>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: Andy Lutomirski <luto@kernel.org>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Nadav Amit <namit@vmware.com>
+Signed-off-by: Rick Edgecombe <rick.p.edgecombe@intel.com>
 ---
- drivers/clk/meson/meson8b.c | 24 ++++++++++++++++++++++++
- drivers/clk/meson/meson8b.h |  2 +-
- 2 files changed, 25 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/clk/meson/meson8b.c b/drivers/clk/meson/meson8b.c
-index 13ce1783eead..537219fa573e 100644
---- a/drivers/clk/meson/meson8b.c
-+++ b/drivers/clk/meson/meson8b.c
-@@ -2259,6 +2259,26 @@ static struct clk_regmap meson8b_cts_mclk_i958 = {
- 	},
- };
+Changes since v1:
+ - Update commit message with more detail
+ - Fix flush end range on !CONFIG_ARCH_HAS_SET_DIRECT_MAP case
+
+ mm/vmalloc.c | 23 +++++++++++++----------
+ 1 file changed, 13 insertions(+), 10 deletions(-)
+
+diff --git a/mm/vmalloc.c b/mm/vmalloc.c
+index c42872ed82ac..8d03427626dc 100644
+--- a/mm/vmalloc.c
++++ b/mm/vmalloc.c
+@@ -2122,9 +2122,10 @@ static inline void set_area_direct_map(const struct vm_struct *area,
+ /* Handle removing and resetting vm mappings related to the vm_struct. */
+ static void vm_remove_mappings(struct vm_struct *area, int deallocate_pages)
+ {
++	const bool has_set_direct = IS_ENABLED(CONFIG_ARCH_HAS_SET_DIRECT_MAP);
++	const bool flush_reset = area->flags & VM_FLUSH_RESET_PERMS;
+ 	unsigned long addr = (unsigned long)area->addr;
+-	unsigned long start = ULONG_MAX, end = 0;
+-	int flush_reset = area->flags & VM_FLUSH_RESET_PERMS;
++	unsigned long start = addr, end = addr + area->size;
+ 	int i;
  
-+static struct clk_regmap meson8b_cts_i958 = {
-+	.data = &(struct clk_regmap_mux_data){
-+		.offset = HHI_AUD_CLK_CNTL2,
-+		.mask = 0x1,
-+		.shift = 27,
-+		},
-+	.hw.init = &(struct clk_init_data){
-+		.name = "cts_i958",
-+		.ops = &clk_regmap_mux_ops,
-+		.parent_names = (const char *[]){ "cts_amclk",
-+						  "cts_mclk_i958" },
-+		.num_parents = 2,
-+		/*
-+		 * The parent is specific to origin of the audio data. Let the
-+		 * consumer choose the appropriate parent.
-+		 */
-+		.flags = CLK_SET_RATE_PARENT | CLK_SET_RATE_NO_REPARENT,
-+	},
-+};
-+
- /* Everything Else (EE) domain gates */
+ 	/*
+@@ -2133,7 +2134,7 @@ static void vm_remove_mappings(struct vm_struct *area, int deallocate_pages)
+ 	 * This is concerned with resetting the direct map any an vm alias with
+ 	 * execute permissions, without leaving a RW+X window.
+ 	 */
+-	if (flush_reset && !IS_ENABLED(CONFIG_ARCH_HAS_SET_DIRECT_MAP)) {
++	if (flush_reset && !has_set_direct) {
+ 		set_memory_nx(addr, area->nr_pages);
+ 		set_memory_rw(addr, area->nr_pages);
+ 	}
+@@ -2146,22 +2147,24 @@ static void vm_remove_mappings(struct vm_struct *area, int deallocate_pages)
  
- static MESON_GATE(meson8b_ddr, HHI_GCLK_MPEG0, 0);
-@@ -2544,6 +2564,7 @@ static struct clk_hw_onecell_data meson8_hw_onecell_data = {
- 		[CLKID_CTS_MCLK_I958_SEL]   = &meson8b_cts_mclk_i958_sel.hw,
- 		[CLKID_CTS_MCLK_I958_DIV]   = &meson8b_cts_mclk_i958_div.hw,
- 		[CLKID_CTS_MCLK_I958]	    = &meson8b_cts_mclk_i958.hw,
-+		[CLKID_CTS_I958]	    = &meson8b_cts_i958.hw,
- 		[CLK_NR_CLKS]		    = NULL,
- 	},
- 	.num = CLK_NR_CLKS,
-@@ -2759,6 +2780,7 @@ static struct clk_hw_onecell_data meson8b_hw_onecell_data = {
- 		[CLKID_CTS_MCLK_I958_SEL]   = &meson8b_cts_mclk_i958_sel.hw,
- 		[CLKID_CTS_MCLK_I958_DIV]   = &meson8b_cts_mclk_i958_div.hw,
- 		[CLKID_CTS_MCLK_I958]	    = &meson8b_cts_mclk_i958.hw,
-+		[CLKID_CTS_I958]	    = &meson8b_cts_i958.hw,
- 		[CLK_NR_CLKS]		    = NULL,
- 	},
- 	.num = CLK_NR_CLKS,
-@@ -2976,6 +2998,7 @@ static struct clk_hw_onecell_data meson8m2_hw_onecell_data = {
- 		[CLKID_CTS_MCLK_I958_SEL]   = &meson8b_cts_mclk_i958_sel.hw,
- 		[CLKID_CTS_MCLK_I958_DIV]   = &meson8b_cts_mclk_i958_div.hw,
- 		[CLKID_CTS_MCLK_I958]	    = &meson8b_cts_mclk_i958.hw,
-+		[CLKID_CTS_I958]	    = &meson8b_cts_i958.hw,
- 		[CLK_NR_CLKS]		    = NULL,
- 	},
- 	.num = CLK_NR_CLKS,
-@@ -3171,6 +3194,7 @@ static struct clk_regmap *const meson8b_clk_regmaps[] = {
- 	&meson8b_cts_mclk_i958_sel,
- 	&meson8b_cts_mclk_i958_div,
- 	&meson8b_cts_mclk_i958,
-+	&meson8b_cts_i958,
- };
+ 	/*
+ 	 * If not deallocating pages, just do the flush of the VM area and
+-	 * return.
++	 * return. If the arch doesn't have set_direct_map_(), also skip the
++	 * below work.
+ 	 */
+-	if (!deallocate_pages) {
+-		vm_unmap_aliases();
++	if (!deallocate_pages || !has_set_direct) {
++		flush_tlb_kernel_range(start, end);
+ 		return;
+ 	}
  
- static const struct meson8b_clk_reset_line {
-diff --git a/drivers/clk/meson/meson8b.h b/drivers/clk/meson/meson8b.h
-index c3787418088e..c889fbeec30f 100644
---- a/drivers/clk/meson/meson8b.h
-+++ b/drivers/clk/meson/meson8b.h
-@@ -178,7 +178,7 @@
- #define CLKID_CTS_MCLK_I958_SEL	210
- #define CLKID_CTS_MCLK_I958_DIV	211
+ 	/*
+ 	 * If execution gets here, flush the vm mapping and reset the direct
+ 	 * map. Find the start and end range of the direct mappings to make sure
+-	 * the vm_unmap_aliases() flush includes the direct map.
++	 * the flush_tlb_kernel_range() includes the direct map.
+ 	 */
+ 	for (i = 0; i < area->nr_pages; i++) {
+-		if (page_address(area->pages[i])) {
++		addr = (unsigned long)page_address(area->pages[i]);
++		if (addr) {
+ 			start = min(addr, start);
+-			end = max(addr, end);
++			end = max(addr + PAGE_SIZE, end);
+ 		}
+ 	}
  
--#define CLK_NR_CLKS		213
-+#define CLK_NR_CLKS		214
+@@ -2171,7 +2174,7 @@ static void vm_remove_mappings(struct vm_struct *area, int deallocate_pages)
+ 	 * reset the direct map permissions to the default.
+ 	 */
+ 	set_area_direct_map(area, set_direct_map_invalid_noflush);
+-	_vm_unmap_aliases(start, end, 1);
++	flush_tlb_kernel_range(start, end);
+ 	set_area_direct_map(area, set_direct_map_default_noflush);
+ }
  
- /*
-  * include the CLKID and RESETID that have
 -- 
-2.21.0
+2.20.1
 
