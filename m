@@ -2,347 +2,184 @@ Return-Path: <SRS0=lq4r=TU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C31B5C04AAC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 11:20:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0971AC04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 11:22:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8FFF320862
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 11:20:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C1C822081C
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 11:22:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kzFA2iZk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732678AbfETLUy convert rfc822-to-8bit (ORCPT
+        id S1732691AbfETLW4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 07:20:54 -0400
-Received: from relay5-d.mail.gandi.net ([217.70.183.197]:53557 "EHLO
-        relay5-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731487AbfETLUx (ORCPT
+        Mon, 20 May 2019 07:22:56 -0400
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:43684 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731487AbfETLW4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 07:20:53 -0400
-X-Originating-IP: 90.88.22.185
-Received: from aptenodytes (aaubervilliers-681-1-80-185.w90-88.abo.wanadoo.fr [90.88.22.185])
-        (Authenticated sender: paul.kocialkowski@bootlin.com)
-        by relay5-d.mail.gandi.net (Postfix) with ESMTPSA id DC2F41C000D;
-        Mon, 20 May 2019 11:20:45 +0000 (UTC)
-Date:   Mon, 20 May 2019 13:20:45 +0200
-From:   Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-To:     Maxime Ripard <maxime.ripard@bootlin.com>
-Cc:     Daniel Vetter <daniel.vetter@intel.com>,
-        David Airlie <airlied@linux.ie>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Sean Paul <seanpaul@chromium.org>,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org
-Subject: Re: [PATCH v3 7/7] drm: Remove users of drm_format_num_planes
-Message-ID: <20190520112045.GB6789@aptenodytes>
-References: <27b0041c7977402df4a087c78d2849ffe51c9f1c.1558002671.git-series.maxime.ripard@bootlin.com>
- <c0a78c87cd0410a1819edad2794ad06543c85bb5.1558002671.git-series.maxime.ripard@bootlin.com>
+        Mon, 20 May 2019 07:22:56 -0400
+Received: by mail-oi1-f195.google.com with SMTP id t187so9647689oie.10;
+        Mon, 20 May 2019 04:22:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=pqJsM3I7VCsCBoW08AaOqNI2KyFITesPxcJ79o2nhOY=;
+        b=kzFA2iZkmhj+hMC7x3NQTmHLxTdFCMkKG72QKILHzE5vC2f2S4rkZsgL983zr8+8BZ
+         wTiDF+EPQdFWOpqI/XujsRnREJMf+i2r30eP2gDEyN68vKiFzWUYAG+3b0U7n29EAxMF
+         Us2X9NgwH8z9Igvtc7iLkRAZLiZipZXqs96CFG9V+cdQWL6fvBiEEgH5Ye6UUWevD5FZ
+         iIAjHVG31ilVJd8yio/TXoRFakMTusuYv3+4MQTGzRD20WcsPgKjzw2CTvCUb1ruSI2p
+         8Z87vggS/oxAneCCbsdv/rf3tJNm4UGq2Dy/RyPyq4USZfca50KZcfJNBxPhTtHsOcCC
+         2KvA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=pqJsM3I7VCsCBoW08AaOqNI2KyFITesPxcJ79o2nhOY=;
+        b=P/3YM0tR/XtC0P5iB/FGKSbM/cOocBxYhtKInW65WAZq4+UXpvaOLjfQT3eM63cCzX
+         3VaDcS1P18EyRK/OmeuBNdY4i03ZledelYrFfgC/DAvqJB7fbD2hWaq+areklByoZnX5
+         SOscHUwhte6Lo7cBhgZGQk6T2sAx2xg2Ts6oHC8CCfc6TJZUSfmR5duHh9pBntX7dDsB
+         vfKsVUkU9XNZlA1953Nm7VvajmxAT8qAZKL8gxAxkOtabF2bAOnaGLXyCZMKSDntiltH
+         7EWEoZJxQBddg5rYEi7I0pattAwuUxfipPxb/2tfUbnRNPpGgMR6dPcrXOV2rBDdIHLs
+         YrRg==
+X-Gm-Message-State: APjAAAXN4f1VOcVrrufn4iTft50fETyBSKZcUNbCEJUTBioBMuHL9nV0
+        86aZMASwJ5LMwtNF1q9n+e4kDHk/LfWwEmHq5dsj0wws
+X-Google-Smtp-Source: APXvYqzzzLEbFr/YCGl6P2GF59jY07tpiE2qxD8404B1NsnaV6x3z47aRMdPOBTHq8Sh9jE3FuwsMT4L1bi8SMBqPmM=
+X-Received: by 2002:aca:c711:: with SMTP id x17mr48064oif.174.1558351375321;
+ Mon, 20 May 2019 04:22:55 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8BIT
-In-Reply-To: <c0a78c87cd0410a1819edad2794ad06543c85bb5.1558002671.git-series.maxime.ripard@bootlin.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+References: <1558340289-6857-1-git-send-email-wanpengli@tencent.com>
+ <1558340289-6857-5-git-send-email-wanpengli@tencent.com> <b80a0c3b-c5b1-bfd1-83d7-ace3436b230e@redhat.com>
+In-Reply-To: <b80a0c3b-c5b1-bfd1-83d7-ace3436b230e@redhat.com>
+From:   Wanpeng Li <kernellwp@gmail.com>
+Date:   Mon, 20 May 2019 19:22:46 +0800
+Message-ID: <CANRm+CyDpA-2j28soX9si5CX3vFadd4_BASFzt1f4FbNNNDzyw@mail.gmail.com>
+Subject: Re: [PATCH v4 4/5] KVM: LAPIC: Delay trace advance expire delta
+To:     Paolo Bonzini <pbonzini@redhat.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>, kvm <kvm@vger.kernel.org>,
+        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Liran Alon <liran.alon@oracle.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Mon, 20 May 2019 at 19:14, Paolo Bonzini <pbonzini@redhat.com> wrote:
+>
+> On 20/05/19 10:18, Wanpeng Li wrote:
+> > From: Wanpeng Li <wanpengli@tencent.com>
+> >
+> > wait_lapic_expire() call was moved above guest_enter_irqoff() because of
+> > its tracepoint, which violated the RCU extended quiescent state invoked
+> > by guest_enter_irqoff()[1][2]. This patch simply moves the tracepoint
+> > below guest_exit_irqoff() in vcpu_enter_guest(). Snapshot the delta before
+> > VM-Enter, but trace it after VM-Exit. This can help us to move
+> > wait_lapic_expire() just before vmentry in the later patch.
+> >
+> > [1] Commit 8b89fe1f6c43 ("kvm: x86: move tracepoints outside extended quiescent state")
+> > [2] https://patchwork.kernel.org/patch/7821111/
+>
+> This is a bit confusing, since the delta is printed after the
+> corresponding vmexit but the wait is done before the vmentry.  I think
+> we can drop the tracepoint:
+>
+> ------------- 8< ----------------
+> From ae148d98d49b96b5222e2c78ac1b1e13cc526d71 Mon Sep 17 00:00:00 2001
+> From: Paolo Bonzini <pbonzini@redhat.com>
+> Date: Mon, 20 May 2019 13:10:01 +0200
+> Subject: [PATCH] KVM: lapic: replace wait_lapic_expire tracepoint with
+>  restart_apic_timer
+>
+> wait_lapic_expire() call was moved above guest_enter_irqoff() because of
+> its tracepoint, which violated the RCU extended quiescent state invoked
+> by guest_enter_irqoff()[1][2].
+>
+> We would like to move wait_lapic_expire() just before vmentry, which would
+> place wait_lapic_expire() again inside the extended quiescent state.  Drop
+> the tracepoint, but add instead another one that can be useful and where
+> we can check the status of the adaptive tuning procedure.
 
-On Thu 16 May 19, 12:31, Maxime Ripard wrote:
-> drm_format_info_plane_cpp() basically just returns the cpp array content
-> found in the drm_format_info structure.
-> 
-> Since it's pretty trivial, let's remove the function and have the users use
-> the array directly
+https://lkml.org/lkml/2019/5/15/1435
 
-Reviewed-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+Maybe Sean's comment is reasonable, per-vCPU debugfs entry for
+adaptive tuning and wait_lapic_expire() tracepoint for hand tuning.
 
-Cheers,
+Regards,
+Wanpeng Li
 
-Paul
-
-> Suggested-by: Ville Syrjälä <ville.syrjala@linux.intel.com>
-> Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
-> 
+>
+> [1] Commit 8b89fe1f6c43 ("kvm: x86: move tracepoints outside extended quiescent state")
+> [2] https://patchwork.kernel.org/patch/7821111/
+>
+> Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+>
 > ---
-> 
-> Changes from v2:
->   - new patch
-> ---
->  drivers/gpu/drm/amd/amdgpu/amdgpu_fb.c     |  2 +-
->  drivers/gpu/drm/arm/malidp_hw.c            |  2 +-
->  drivers/gpu/drm/arm/malidp_planes.c        |  2 +-
->  drivers/gpu/drm/drm_client.c               |  2 +-
->  drivers/gpu/drm/drm_fb_helper.c            |  2 +-
->  drivers/gpu/drm/drm_format_helper.c        |  4 ++--
->  drivers/gpu/drm/i915/intel_sprite.c        |  2 +-
->  drivers/gpu/drm/mediatek/mtk_drm_fb.c      |  2 +-
->  drivers/gpu/drm/msm/disp/mdp5/mdp5_crtc.c  |  2 +-
->  drivers/gpu/drm/msm/disp/mdp5/mdp5_smp.c   |  2 +-
->  drivers/gpu/drm/msm/msm_fb.c               |  2 +-
->  drivers/gpu/drm/radeon/radeon_fb.c         |  2 +-
->  drivers/gpu/drm/rockchip/rockchip_drm_fb.c |  2 +-
->  drivers/gpu/drm/stm/ltdc.c                 |  2 +-
->  drivers/gpu/drm/tegra/fb.c                 |  2 +-
->  drivers/gpu/drm/zte/zx_plane.c             |  2 +-
->  include/drm/drm_fourcc.h                   | 17 -----------------
->  17 files changed, 17 insertions(+), 34 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_fb.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_fb.c
-> index 6edae6458be8..2e2869299a84 100644
-> --- a/drivers/gpu/drm/amd/amdgpu/amdgpu_fb.c
-> +++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_fb.c
-> @@ -133,7 +133,7 @@ static int amdgpufb_create_pinned_object(struct amdgpu_fbdev *rfbdev,
->  	u32 cpp;
->  
->  	info = drm_get_format_info(adev->ddev, mode_cmd);
-> -	cpp = drm_format_info_plane_cpp(info, 0);
-> +	cpp = info->cpp[0];
->  
->  	/* need to align pitch with crtc limits */
->  	mode_cmd->pitches[0] = amdgpu_align_pitch(adev, mode_cmd->width, cpp,
-> diff --git a/drivers/gpu/drm/arm/malidp_hw.c b/drivers/gpu/drm/arm/malidp_hw.c
-> index 1c9e869f4c52..53391c0f87eb 100644
-> --- a/drivers/gpu/drm/arm/malidp_hw.c
-> +++ b/drivers/gpu/drm/arm/malidp_hw.c
-> @@ -383,7 +383,7 @@ static void malidp500_modeset(struct malidp_hw_device *hwdev, struct videomode *
->  int malidp_format_get_bpp(u32 fmt)
+>  arch/x86/kvm/lapic.c |  4 +++-
+>  arch/x86/kvm/trace.h | 15 +++++++--------
+>  2 files changed, 10 insertions(+), 9 deletions(-)
+>
+> diff --git a/arch/x86/kvm/lapic.c b/arch/x86/kvm/lapic.c
+> index c12b090f4fad..8f05c1d0b486 100644
+> --- a/arch/x86/kvm/lapic.c
+> +++ b/arch/x86/kvm/lapic.c
+> @@ -1545,7 +1545,6 @@ void wait_lapic_expire(struct kvm_vcpu *vcpu)
+>         tsc_deadline = apic->lapic_timer.expired_tscdeadline;
+>         apic->lapic_timer.expired_tscdeadline = 0;
+>         guest_tsc = kvm_read_l1_tsc(vcpu, rdtsc());
+> -       trace_kvm_wait_lapic_expire(vcpu->vcpu_id, guest_tsc - tsc_deadline);
+>
+>         if (guest_tsc < tsc_deadline)
+>                 __wait_lapic_expire(vcpu, tsc_deadline - guest_tsc);
+> @@ -1763,6 +1762,9 @@ static void start_sw_timer(struct kvm_lapic *apic)
+>
+>  static void restart_apic_timer(struct kvm_lapic *apic)
 >  {
->  	const struct drm_format_info *info = drm_format_info(fmt);
-> -	int bpp = drm_format_info_plane_cpp(info, 0) * 8;
-> +	int bpp = info->cpp[0] * 8;
->  
->  	if (bpp == 0) {
->  		switch (fmt) {
-> diff --git a/drivers/gpu/drm/arm/malidp_planes.c b/drivers/gpu/drm/arm/malidp_planes.c
-> index 361c02988375..07ceb4ee14e3 100644
-> --- a/drivers/gpu/drm/arm/malidp_planes.c
-> +++ b/drivers/gpu/drm/arm/malidp_planes.c
-> @@ -227,7 +227,7 @@ bool malidp_format_mod_supported(struct drm_device *drm,
->  
->  	if (modifier & AFBC_SPLIT) {
->  		if (!info->is_yuv) {
-> -			if (drm_format_info_plane_cpp(info, 0) <= 2) {
-> +			if (info->cpp[0] <= 2) {
->  				DRM_DEBUG_KMS("RGB formats <= 16bpp are not supported with SPLIT\n");
->  				return false;
->  			}
-> diff --git a/drivers/gpu/drm/drm_client.c b/drivers/gpu/drm/drm_client.c
-> index 169d8eeaa662..5abcd83da6a6 100644
-> --- a/drivers/gpu/drm/drm_client.c
-> +++ b/drivers/gpu/drm/drm_client.c
-> @@ -259,7 +259,7 @@ drm_client_buffer_create(struct drm_client_dev *client, u32 width, u32 height, u
->  
->  	dumb_args.width = width;
->  	dumb_args.height = height;
-> -	dumb_args.bpp = drm_format_info_plane_cpp(info, 0) * 8;
-> +	dumb_args.bpp = info->cpp[0] * 8;
->  	ret = drm_mode_create_dumb(dev, &dumb_args, client->file);
->  	if (ret)
->  		goto err_delete;
-> diff --git a/drivers/gpu/drm/drm_fb_helper.c b/drivers/gpu/drm/drm_fb_helper.c
-> index 184f455c99ab..09605ed69f06 100644
-> --- a/drivers/gpu/drm/drm_fb_helper.c
-> +++ b/drivers/gpu/drm/drm_fb_helper.c
-> @@ -767,7 +767,7 @@ static void drm_fb_helper_dirty_blit_real(struct drm_fb_helper *fb_helper,
->  					  struct drm_clip_rect *clip)
->  {
->  	struct drm_framebuffer *fb = fb_helper->fb;
-> -	unsigned int cpp = drm_format_info_plane_cpp(fb->format, 0);
-> +	unsigned int cpp = fb->format->cpp[0];
->  	size_t offset = clip->y1 * fb->pitches[0] + clip->x1 * cpp;
->  	void *src = fb_helper->fbdev->screen_buffer + offset;
->  	void *dst = fb_helper->buffer->vaddr + offset;
-> diff --git a/drivers/gpu/drm/drm_format_helper.c b/drivers/gpu/drm/drm_format_helper.c
-> index 8ad66aa1362a..0897cb9aeaff 100644
-> --- a/drivers/gpu/drm/drm_format_helper.c
-> +++ b/drivers/gpu/drm/drm_format_helper.c
-> @@ -36,7 +36,7 @@ static unsigned int clip_offset(struct drm_rect *clip,
->  void drm_fb_memcpy(void *dst, void *vaddr, struct drm_framebuffer *fb,
->  		   struct drm_rect *clip)
->  {
-> -	unsigned int cpp = drm_format_info_plane_cpp(fb->format, 0);
-> +	unsigned int cpp = fb->format->cpp[0];
->  	size_t len = (clip->x2 - clip->x1) * cpp;
->  	unsigned int y, lines = clip->y2 - clip->y1;
->  
-> @@ -63,7 +63,7 @@ void drm_fb_memcpy_dstclip(void __iomem *dst, void *vaddr,
->  			   struct drm_framebuffer *fb,
->  			   struct drm_rect *clip)
->  {
-> -	unsigned int cpp = drm_format_info_plane_cpp(fb->format, 0);
-> +	unsigned int cpp = fb->format->cpp[0];
->  	unsigned int offset = clip_offset(clip, fb->pitches[0], cpp);
->  	size_t len = (clip->x2 - clip->x1) * cpp;
->  	unsigned int y, lines = clip->y2 - clip->y1;
-> diff --git a/drivers/gpu/drm/i915/intel_sprite.c b/drivers/gpu/drm/i915/intel_sprite.c
-> index e35601b1f878..c1647c0cc217 100644
-> --- a/drivers/gpu/drm/i915/intel_sprite.c
-> +++ b/drivers/gpu/drm/i915/intel_sprite.c
-> @@ -326,7 +326,7 @@ skl_plane_max_stride(struct intel_plane *plane,
->  		     unsigned int rotation)
->  {
->  	const struct drm_format_info *info = drm_format_info(pixel_format);
-> -	int cpp = drm_format_info_plane_cpp(info, 0);
-> +	int cpp = info->cpp[0];
->  
->  	/*
->  	 * "The stride in bytes must not exceed the
-> diff --git a/drivers/gpu/drm/mediatek/mtk_drm_fb.c b/drivers/gpu/drm/mediatek/mtk_drm_fb.c
-> index 0d5334a5a9a7..b5e2f230da00 100644
-> --- a/drivers/gpu/drm/mediatek/mtk_drm_fb.c
-> +++ b/drivers/gpu/drm/mediatek/mtk_drm_fb.c
-> @@ -104,7 +104,7 @@ struct drm_framebuffer *mtk_drm_mode_fb_create(struct drm_device *dev,
->  	if (!gem)
->  		return ERR_PTR(-ENOENT);
->  
-> -	bpp = drm_format_info_plane_cpp(info, 0);
-> +	bpp = info->cpp[0];
->  	size = (height - 1) * cmd->pitches[0] + width * bpp;
->  	size += cmd->offsets[0];
->  
-> diff --git a/drivers/gpu/drm/msm/disp/mdp5/mdp5_crtc.c b/drivers/gpu/drm/msm/disp/mdp5/mdp5_crtc.c
-> index a565dccaba3a..74dd036a2246 100644
-> --- a/drivers/gpu/drm/msm/disp/mdp5/mdp5_crtc.c
-> +++ b/drivers/gpu/drm/msm/disp/mdp5/mdp5_crtc.c
-> @@ -801,7 +801,7 @@ static void mdp5_crtc_restore_cursor(struct drm_crtc *crtc)
->  	width = mdp5_crtc->cursor.width;
->  	height = mdp5_crtc->cursor.height;
->  
-> -	stride = width * drm_format_info_plane_cpp(info, 0);
-> +	stride = width * info->cpp[0];
->  
->  	get_roi(crtc, &roi_w, &roi_h);
->  
-> diff --git a/drivers/gpu/drm/msm/disp/mdp5/mdp5_smp.c b/drivers/gpu/drm/msm/disp/mdp5/mdp5_smp.c
-> index 1ca294694597..2834837f4d3e 100644
-> --- a/drivers/gpu/drm/msm/disp/mdp5/mdp5_smp.c
-> +++ b/drivers/gpu/drm/msm/disp/mdp5/mdp5_smp.c
-> @@ -158,7 +158,7 @@ uint32_t mdp5_smp_calculate(struct mdp5_smp *smp,
->  	for (i = 0; i < nplanes; i++) {
->  		int n, fetch_stride, cpp;
->  
-> -		cpp = drm_format_info_plane_cpp(info, i);
-> +		cpp = info->cpp[i];
->  		fetch_stride = width * cpp / (i ? hsub : 1);
->  
->  		n = DIV_ROUND_UP(fetch_stride * nlines, smp->blk_size);
-> diff --git a/drivers/gpu/drm/msm/msm_fb.c b/drivers/gpu/drm/msm/msm_fb.c
-> index 29e45f2144b5..68fa2c8f61e6 100644
-> --- a/drivers/gpu/drm/msm/msm_fb.c
-> +++ b/drivers/gpu/drm/msm/msm_fb.c
-> @@ -181,7 +181,7 @@ static struct drm_framebuffer *msm_framebuffer_init(struct drm_device *dev,
->  		unsigned int min_size;
->  
->  		min_size = (height - 1) * mode_cmd->pitches[i]
-> -			 + width * drm_format_info_plane_cpp(info, i)
-> +			 + width * info->cpp[i]
->  			 + mode_cmd->offsets[i];
->  
->  		if (bos[i]->size < min_size) {
-> diff --git a/drivers/gpu/drm/radeon/radeon_fb.c b/drivers/gpu/drm/radeon/radeon_fb.c
-> index dbf596fc4339..287e3f92102a 100644
-> --- a/drivers/gpu/drm/radeon/radeon_fb.c
-> +++ b/drivers/gpu/drm/radeon/radeon_fb.c
-> @@ -137,7 +137,7 @@ static int radeonfb_create_pinned_object(struct radeon_fbdev *rfbdev,
->  	u32 cpp;
->  
->  	info = drm_get_format_info(rdev->ddev, mode_cmd);
-> -	cpp = drm_format_info_plane_cpp(info, 0);
-> +	cpp = info->cpp[0];
->  
->  	/* need to align pitch with crtc limits */
->  	mode_cmd->pitches[0] = radeon_align_pitch(rdev, mode_cmd->width, cpp,
-> diff --git a/drivers/gpu/drm/rockchip/rockchip_drm_fb.c b/drivers/gpu/drm/rockchip/rockchip_drm_fb.c
-> index 57873c99ae29..31030cf81bc9 100644
-> --- a/drivers/gpu/drm/rockchip/rockchip_drm_fb.c
-> +++ b/drivers/gpu/drm/rockchip/rockchip_drm_fb.c
-> @@ -98,7 +98,7 @@ rockchip_user_fb_create(struct drm_device *dev, struct drm_file *file_priv,
->  
->  		min_size = (height - 1) * mode_cmd->pitches[i] +
->  			mode_cmd->offsets[i] +
-> -			width * drm_format_info_plane_cpp(info, i);
-> +			width * info->cpp[i];
->  
->  		if (obj->size < min_size) {
->  			drm_gem_object_put_unlocked(obj);
-> diff --git a/drivers/gpu/drm/stm/ltdc.c b/drivers/gpu/drm/stm/ltdc.c
-> index 6bb3cd3a1a01..9ff39789ffb7 100644
-> --- a/drivers/gpu/drm/stm/ltdc.c
-> +++ b/drivers/gpu/drm/stm/ltdc.c
-> @@ -779,7 +779,7 @@ static void ltdc_plane_atomic_update(struct drm_plane *plane,
->  
->  	/* Configures the color frame buffer pitch in bytes & line length */
->  	pitch_in_bytes = fb->pitches[0];
-> -	line_length = drm_format_info_plane_cpp(fb->format, 0) *
-> +	line_length = fb->format->cpp[0] *
->  		      (x1 - x0 + 1) + (ldev->caps.bus_width >> 3) - 1;
->  	val = ((pitch_in_bytes << 16) | line_length);
->  	reg_update_bits(ldev->regs, LTDC_L1CFBLR + lofs,
-> diff --git a/drivers/gpu/drm/tegra/fb.c b/drivers/gpu/drm/tegra/fb.c
-> index d1042196a30f..57cc26e1da01 100644
-> --- a/drivers/gpu/drm/tegra/fb.c
-> +++ b/drivers/gpu/drm/tegra/fb.c
-> @@ -149,7 +149,7 @@ struct drm_framebuffer *tegra_fb_create(struct drm_device *drm,
->  			goto unreference;
->  		}
->  
-> -		bpp = drm_format_info_plane_cpp(info, i);
-> +		bpp = info->cpp[i];
->  
->  		size = (height - 1) * cmd->pitches[i] +
->  		       width * bpp + cmd->offsets[i];
-> diff --git a/drivers/gpu/drm/zte/zx_plane.c b/drivers/gpu/drm/zte/zx_plane.c
-> index d97a4dff515d..706452f9b276 100644
-> --- a/drivers/gpu/drm/zte/zx_plane.c
-> +++ b/drivers/gpu/drm/zte/zx_plane.c
-> @@ -222,7 +222,7 @@ static void zx_vl_plane_atomic_update(struct drm_plane *plane,
->  		cma_obj = drm_fb_cma_get_gem_obj(fb, i);
->  		paddr = cma_obj->paddr + fb->offsets[i];
->  		paddr += src_y * fb->pitches[i];
-> -		paddr += src_x * drm_format_info_plane_cpp(fb->format, i);
-> +		paddr += src_x * fb->format->cpp[i];
->  		zx_writel(paddr_reg, paddr);
->  		paddr_reg += 4;
->  	}
-> diff --git a/include/drm/drm_fourcc.h b/include/drm/drm_fourcc.h
-> index 4ef8ccb5d236..405466692bd2 100644
-> --- a/include/drm/drm_fourcc.h
-> +++ b/include/drm/drm_fourcc.h
-> @@ -261,23 +261,6 @@ drm_format_info_is_yuv_sampling_444(const struct drm_format_info *info)
->  }
->  
->  /**
-> - * drm_format_info_plane_cpp - determine the bytes per pixel value
-> - * @format: pixel format info
-> - * @plane: plane index
-> - *
-> - * Returns:
-> - * The bytes per pixel value for the specified plane.
-> - */
-> -static inline
-> -int drm_format_info_plane_cpp(const struct drm_format_info *info, int plane)
-> -{
-> -	if (!info || plane >= info->num_planes)
-> -		return 0;
-> -
-> -	return info->cpp[plane];
-> -}
-> -
-> -/**
->   * drm_format_info_plane_width - width of the plane given the first plane
->   * @format: pixel format info
->   * @width: width of the first plane
-> -- 
-> git-series 0.9.1
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/dri-devel
-
--- 
-Paul Kocialkowski, Bootlin
-Embedded Linux and kernel engineering
-https://bootlin.com
+> +       trace_kvm_restart_apic_timer(apic->vcpu->vcpu_id,
+> +                                    apic->lapic_timer.timer_advance_ns);
+> +
+>         preempt_disable();
+>
+>         if (!apic_lvtt_period(apic) && atomic_read(&apic->lapic_timer.pending))
+> diff --git a/arch/x86/kvm/trace.h b/arch/x86/kvm/trace.h
+> index 4d47a2631d1f..f6e000038f3f 100644
+> --- a/arch/x86/kvm/trace.h
+> +++ b/arch/x86/kvm/trace.h
+> @@ -953,24 +953,23 @@
+>                   __entry->flags)
+>  );
+>
+> -TRACE_EVENT(kvm_wait_lapic_expire,
+> -       TP_PROTO(unsigned int vcpu_id, s64 delta),
+> -       TP_ARGS(vcpu_id, delta),
+> +TRACE_EVENT(kvm_restart_apic_timer,
+> +       TP_PROTO(unsigned int vcpu_id, u32 advance),
+> +       TP_ARGS(vcpu_id, advance),
+>
+>         TP_STRUCT__entry(
+>                 __field(        unsigned int,   vcpu_id         )
+> -               __field(        s64,            delta           )
+> +               __field(        u32,            advance         )
+>         ),
+>
+>         TP_fast_assign(
+>                 __entry->vcpu_id           = vcpu_id;
+> -               __entry->delta             = delta;
+> +               __entry->advance           = advance;
+>         ),
+>
+> -       TP_printk("vcpu %u: delta %lld (%s)",
+> +       TP_printk("vcpu %u: advance %u",
+>                   __entry->vcpu_id,
+> -                 __entry->delta,
+> -                 __entry->delta < 0 ? "early" : "late")
+> +                 __entry->advance)
+>  );
+>
+>  TRACE_EVENT(kvm_enter_smm,
