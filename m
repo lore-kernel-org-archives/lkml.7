@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE672C04AAC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:27:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9B2EC04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:27:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BE95F21019
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:27:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B9204214DA
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:27:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558355239;
-	bh=jtIPTCrCDBggXmWVcRLXc+5STIRFw19bMK6i/GTSBXA=;
+	s=default; t=1558355244;
+	bh=qFmpTGVLbRz4mBAxDSw8NvsVt8gaTA3Jkk/yCGfbfOQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zm2RXbOg3w2/a1bK4UYVmGqo4ZhO4imstmOT+2fC38wyA1cuL7ubiPLYapcR3Vxqu
-	 fAs2OjX4zFbtrKSZDBPznwl2hPQwB5CfuH99E6GIPiDxPhQWvaq3uOZq8CIX607xSv
-	 Qp+rO8M8mE3w1pp7tbqSdJhZaPYlSkTfXkmwrvJc=
+	b=Sd0mrhqAOFc/iw3M8DNnxklMavzx0uDLDV86GUokDzy6zb/Lf+bHQEI8/qAVc7znC
+	 t+vb4QbySRM48MHLzuctKiFopHxM/2JQ0YY3EwJv/njiXUWnx+nasJeySDFdrXbGO6
+	 Gcv+7WdkpXxi0k56fzJksJ+M0j3pSVb+YLg9Noak=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389474AbfETM1T (ORCPT
+        id S2389487AbfETM1X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 08:27:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42800 "EHLO mail.kernel.org"
+        Mon, 20 May 2019 08:27:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42908 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389465AbfETM1P (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 08:27:15 -0400
+        id S2389465AbfETM1T (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 08:27:19 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 84FED21479;
-        Mon, 20 May 2019 12:27:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D638D21479;
+        Mon, 20 May 2019 12:27:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558355234;
-        bh=jtIPTCrCDBggXmWVcRLXc+5STIRFw19bMK6i/GTSBXA=;
+        s=default; t=1558355239;
+        bh=qFmpTGVLbRz4mBAxDSw8NvsVt8gaTA3Jkk/yCGfbfOQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gQIQhwM25Pglby1CpaN5mVzYDJ3eBsdp3PIx8lrrwSURNoiv8JZdwgtRJ/+lTt6Af
-         /j0xLA40Y4X5jlAe5iIKgpE4XK7skI9iAjxg4aObAClfsMJldNpGVNhQ38lswLEo8G
-         /FTIY0KtjHMetJOhINiBMmaPS+Soie5XVJx0BiqY=
+        b=iZRWiJGkljTCcd8ipU5ixH24zK85iIraCm/eqjyv/K0sjZ3qPUd//ZticJaHQrjPN
+         tH7vqd2frmdmwx8eAJm/VUnQnYoctZcb5l/2rqfzPraHh0EOx60c++3Ww8y46PsrjC
+         X2j16EY980GNkbjEUix8aTVQBuVJZbTSPvmOpGIE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        =?UTF-8?q?Horia=20Geant=C4=83?= <horia.geanta@nxp.com>,
+        stable@vger.kernel.org, Eric Biggers <ebiggers@google.com>,
         Herbert Xu <herbert@gondor.apana.org.au>
-Subject: [PATCH 5.0 041/123] crypto: caam/qi2 - generate hash keys in-place
-Date:   Mon, 20 May 2019 14:13:41 +0200
-Message-Id: <20190520115247.453960552@linuxfoundation.org>
+Subject: [PATCH 5.0 043/123] crypto: arm64/aes-neonbs - dont access already-freed walk.iv
+Date:   Mon, 20 May 2019 14:13:43 +0200
+Message-Id: <20190520115247.594313696@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190520115245.439864225@linuxfoundation.org>
 References: <20190520115245.439864225@linuxfoundation.org>
@@ -60,120 +59,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Horia Geantă <horia.geanta@nxp.com>
+From: Eric Biggers <ebiggers@google.com>
 
-commit 418cd20e4dcdca97e6f6d59e6336228dacf2e45d upstream.
+commit 4a8108b70508df0b6c4ffa4a3974dab93dcbe851 upstream.
 
-Commit 307244452d3d ("crypto: caam - generate hash keys in-place")
-fixed ahash implementation in caam/jr driver such that user-provided key
-buffer is not DMA mapped, since it's not guaranteed to be DMAable.
+If the user-provided IV needs to be aligned to the algorithm's
+alignmask, then skcipher_walk_virt() copies the IV into a new aligned
+buffer walk.iv.  But skcipher_walk_virt() can fail afterwards, and then
+if the caller unconditionally accesses walk.iv, it's a use-after-free.
 
-Apply a similar fix for caam/qi2 driver.
+xts-aes-neonbs doesn't set an alignmask, so currently it isn't affected
+by this despite unconditionally accessing walk.iv.  However this is more
+subtle than desired, and unconditionally accessing walk.iv has caused a
+real problem in other algorithms.  Thus, update xts-aes-neonbs to start
+checking the return value of skcipher_walk_virt().
 
-Cc: <stable@vger.kernel.org> # v4.20+
-Fixes: 3f16f6c9d632 ("crypto: caam/qi2 - add support for ahash algorithms")
-Signed-off-by: Horia Geantă <horia.geanta@nxp.com>
+Fixes: 1abee99eafab ("crypto: arm64/aes - reimplement bit-sliced ARM/NEON implementation for arm64")
+Cc: <stable@vger.kernel.org> # v4.11+
+Signed-off-by: Eric Biggers <ebiggers@google.com>
 Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/crypto/caam/caamalg_qi2.c |   41 +++++++++++++-------------------------
- 1 file changed, 15 insertions(+), 26 deletions(-)
+ arch/arm64/crypto/aes-neonbs-glue.c |    2 ++
+ 1 file changed, 2 insertions(+)
 
---- a/drivers/crypto/caam/caamalg_qi2.c
-+++ b/drivers/crypto/caam/caamalg_qi2.c
-@@ -3021,13 +3021,13 @@ static void split_key_sh_done(void *cbk_
- }
+--- a/arch/arm64/crypto/aes-neonbs-glue.c
++++ b/arch/arm64/crypto/aes-neonbs-glue.c
+@@ -304,6 +304,8 @@ static int __xts_crypt(struct skcipher_r
+ 	int err;
  
- /* Digest hash size if it is too large */
--static int hash_digest_key(struct caam_hash_ctx *ctx, const u8 *key_in,
--			   u32 *keylen, u8 *key_out, u32 digestsize)
-+static int hash_digest_key(struct caam_hash_ctx *ctx, u32 *keylen, u8 *key,
-+			   u32 digestsize)
- {
- 	struct caam_request *req_ctx;
- 	u32 *desc;
- 	struct split_key_sh_result result;
--	dma_addr_t src_dma, dst_dma;
-+	dma_addr_t key_dma;
- 	struct caam_flc *flc;
- 	dma_addr_t flc_dma;
- 	int ret = -ENOMEM;
-@@ -3044,17 +3044,10 @@ static int hash_digest_key(struct caam_h
- 	if (!flc)
- 		goto err_flc;
+ 	err = skcipher_walk_virt(&walk, req, false);
++	if (err)
++		return err;
  
--	src_dma = dma_map_single(ctx->dev, (void *)key_in, *keylen,
--				 DMA_TO_DEVICE);
--	if (dma_mapping_error(ctx->dev, src_dma)) {
--		dev_err(ctx->dev, "unable to map key input memory\n");
--		goto err_src_dma;
--	}
--	dst_dma = dma_map_single(ctx->dev, (void *)key_out, digestsize,
--				 DMA_FROM_DEVICE);
--	if (dma_mapping_error(ctx->dev, dst_dma)) {
--		dev_err(ctx->dev, "unable to map key output memory\n");
--		goto err_dst_dma;
-+	key_dma = dma_map_single(ctx->dev, key, *keylen, DMA_BIDIRECTIONAL);
-+	if (dma_mapping_error(ctx->dev, key_dma)) {
-+		dev_err(ctx->dev, "unable to map key memory\n");
-+		goto err_key_dma;
- 	}
- 
- 	desc = flc->sh_desc;
-@@ -3079,14 +3072,14 @@ static int hash_digest_key(struct caam_h
- 
- 	dpaa2_fl_set_final(in_fle, true);
- 	dpaa2_fl_set_format(in_fle, dpaa2_fl_single);
--	dpaa2_fl_set_addr(in_fle, src_dma);
-+	dpaa2_fl_set_addr(in_fle, key_dma);
- 	dpaa2_fl_set_len(in_fle, *keylen);
- 	dpaa2_fl_set_format(out_fle, dpaa2_fl_single);
--	dpaa2_fl_set_addr(out_fle, dst_dma);
-+	dpaa2_fl_set_addr(out_fle, key_dma);
- 	dpaa2_fl_set_len(out_fle, digestsize);
- 
- 	print_hex_dump_debug("key_in@" __stringify(__LINE__)": ",
--			     DUMP_PREFIX_ADDRESS, 16, 4, key_in, *keylen, 1);
-+			     DUMP_PREFIX_ADDRESS, 16, 4, key, *keylen, 1);
- 	print_hex_dump_debug("shdesc@" __stringify(__LINE__)": ",
- 			     DUMP_PREFIX_ADDRESS, 16, 4, desc, desc_bytes(desc),
- 			     1);
-@@ -3106,17 +3099,15 @@ static int hash_digest_key(struct caam_h
- 		wait_for_completion(&result.completion);
- 		ret = result.err;
- 		print_hex_dump_debug("digested key@" __stringify(__LINE__)": ",
--				     DUMP_PREFIX_ADDRESS, 16, 4, key_in,
-+				     DUMP_PREFIX_ADDRESS, 16, 4, key,
- 				     digestsize, 1);
- 	}
- 
- 	dma_unmap_single(ctx->dev, flc_dma, sizeof(flc->flc) + desc_bytes(desc),
- 			 DMA_TO_DEVICE);
- err_flc_dma:
--	dma_unmap_single(ctx->dev, dst_dma, digestsize, DMA_FROM_DEVICE);
--err_dst_dma:
--	dma_unmap_single(ctx->dev, src_dma, *keylen, DMA_TO_DEVICE);
--err_src_dma:
-+	dma_unmap_single(ctx->dev, key_dma, *keylen, DMA_BIDIRECTIONAL);
-+err_key_dma:
- 	kfree(flc);
- err_flc:
- 	kfree(req_ctx);
-@@ -3138,12 +3129,10 @@ static int ahash_setkey(struct crypto_ah
- 	dev_dbg(ctx->dev, "keylen %d blocksize %d\n", keylen, blocksize);
- 
- 	if (keylen > blocksize) {
--		hashed_key = kmalloc_array(digestsize, sizeof(*hashed_key),
--					   GFP_KERNEL | GFP_DMA);
-+		hashed_key = kmemdup(key, keylen, GFP_KERNEL | GFP_DMA);
- 		if (!hashed_key)
- 			return -ENOMEM;
--		ret = hash_digest_key(ctx, key, &keylen, hashed_key,
--				      digestsize);
-+		ret = hash_digest_key(ctx, &keylen, hashed_key, digestsize);
- 		if (ret)
- 			goto bad_free_key;
- 		key = hashed_key;
+ 	kernel_neon_begin();
+ 	neon_aes_ecb_encrypt(walk.iv, walk.iv, ctx->twkey, ctx->key.rounds, 1);
 
 
