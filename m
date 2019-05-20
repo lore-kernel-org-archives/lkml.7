@@ -4,55 +4,58 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09C11C04AAC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:31:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30361C04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:31:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D26EF21721
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:31:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 073DF21721
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:31:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558355510;
-	bh=NCDK5kKw/YwnzQiirH2mwfFcNMh1wB260dm/lpAejMo=;
+	s=default; t=1558355515;
+	bh=fkRdBE7+wJgGRTAv29egV76taB++1geA7te/ppBXoiM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AqpaJ/4RyEVmN8YqEHlPMUOyX/bLx0T1dcA8HDYtBddfVolxZLo/nu0FWoKOqn4Wc
-	 1E5VyDdKOW+M8N6lYQzU5NukJF/RtZYPy2YPx3VMF52SqrLFdtLxYS2hFwDKvWVTdY
-	 kkmBk36w+5w0b3Wz6Z9rbpO7VLW1nQgYxHE9tZ/Y=
+	b=G88vSEWssmmb/KEY8dsIQViaUk1Watmup3Fgg5MYNu3u5IeSFnSVe8Qe0p4xdXKN2
+	 po7HA8Og2DtLrZMyLo2lY80mZOFGEtrAwPy78USjV/zUbD0aK2kgJmP4y0hb3cri5M
+	 1iH29MLP1mUSlb8Pn9DKrY0TOfJIi1gqwVfAECGc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389986AbfETMbt (ORCPT
+        id S2390478AbfETMby (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 08:31:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48376 "EHLO mail.kernel.org"
+        Mon, 20 May 2019 08:31:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48486 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389946AbfETMbo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 08:31:44 -0400
+        id S2390461AbfETMbt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 08:31:49 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3D71E216C4;
-        Mon, 20 May 2019 12:31:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3EE8C20815;
+        Mon, 20 May 2019 12:31:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558355503;
-        bh=NCDK5kKw/YwnzQiirH2mwfFcNMh1wB260dm/lpAejMo=;
+        s=default; t=1558355508;
+        bh=fkRdBE7+wJgGRTAv29egV76taB++1geA7te/ppBXoiM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uoumWS6QZiv6GfXaVRpgTP4ya7uS+S4FSeI+ZtdSdN4xbdLzGO83VdkO1ksxtDmZa
-         Z2Stol2z3I9TBc/4MLeDCieCh4/cFuure/BcoT/ua+zw7OK6TeKMKzdvUYLpeHx8ta
-         jdUaTtnDjWLjGNA7Cv6Ew503MzrFpz9Hgh6WIWqk=
+        b=FHhAAF7Bff6Ck7wAPCTLVLo47hjHAt0nbk1cmw14FO6EdryXUR3LT1gAab3zeGwIT
+         YqEyfeAjh4AmOgKgHrnZZz25APJJyy8nKinW7dMU5LUwO4yu4WinW7h4uiTPZlm58m
+         SszIhSyksSrPbb3oUK1ousDXi9ii1c6rGHvbW25k=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Andy Lutomirski <luto@kernel.org>,
-        Borislav Petkov <bp@suse.de>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Jon Masters <jcm@redhat.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Peter Zijlstra <peterz@infradead.org>,
+        stable@vger.kernel.org, Yazen Ghannam <yazen.ghannam@amd.com>,
+        Borislav Petkov <bp@suse.de>, Arnd Bergmann <arnd@arndb.de>,
+        "clemej@gmail.com" <clemej@gmail.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
+        Pu Wen <puwen@hygon.cn>, Qiuxu Zhuo <qiuxu.zhuo@intel.com>,
+        "rafal@milecki.pl" <rafal@milecki.pl>,
+        Shirish S <Shirish.S@amd.com>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>
-Subject: [PATCH 5.1 002/128] x86/speculation/mds: Revert CPU buffer clear on double fault exit
-Date:   Mon, 20 May 2019 14:13:09 +0200
-Message-Id: <20190520115249.613887217@linuxfoundation.org>
+        Tony Luck <tony.luck@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        x86-ml <x86@kernel.org>
+Subject: [PATCH 5.1 021/128] x86/MCE: Add an MCE-record filtering function
+Date:   Mon, 20 May 2019 14:13:28 +0200
+Message-Id: <20190520115250.956333908@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190520115249.449077487@linuxfoundation.org>
 References: <20190520115249.449077487@linuxfoundation.org>
@@ -65,73 +68,82 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andy Lutomirski <luto@kernel.org>
+From: Yazen Ghannam <yazen.ghannam@amd.com>
 
-commit 88640e1dcd089879530a49a8d212d1814678dfe7 upstream.
+commit 45d4b7b9cb88526f6d5bd4c03efab88d75d10e4f upstream.
 
-The double fault ESPFIX path doesn't return to user mode at all --
-it returns back to the kernel by simulating a #GP fault.
-prepare_exit_to_usermode() will run on the way out of
-general_protection before running user code.
+Some systems may report spurious MCA errors. In general, spurious MCA
+errors may be disabled by clearing a particular bit in MCA_CTL. However,
+clearing a bit in MCA_CTL may not be recommended for some errors, so the
+only option is to ignore them.
 
-Signed-off-by: Andy Lutomirski <luto@kernel.org>
-Cc: Borislav Petkov <bp@suse.de>
-Cc: Frederic Weisbecker <frederic@kernel.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Jon Masters <jcm@redhat.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
+An MCA error is printed and handled after it has been added to the MCE
+event pool. So an MCA error can be ignored by not adding it to that pool
+in the first place.
+
+Add such a filtering function.
+
+ [ bp: Move function prototype to the internal header and massage. ]
+
+Signed-off-by: Yazen Ghannam <yazen.ghannam@amd.com>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: "clemej@gmail.com" <clemej@gmail.com>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Pu Wen <puwen@hygon.cn>
+Cc: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
+Cc: "rafal@milecki.pl" <rafal@milecki.pl>
+Cc: Shirish S <Shirish.S@amd.com>
+Cc: <stable@vger.kernel.org> # 5.0.x
 Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: stable@vger.kernel.org
-Fixes: 04dcbdb80578 ("x86/speculation/mds: Clear CPU buffers on exit to user")
-Link: http://lkml.kernel.org/r/ac97612445c0a44ee10374f6ea79c222fe22a5c4.1557865329.git.luto@kernel.org
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Cc: Tony Luck <tony.luck@intel.com>
+Cc: Vishal Verma <vishal.l.verma@intel.com>
+Cc: x86-ml <x86@kernel.org>
+Link: https://lkml.kernel.org/r/20190325163410.171021-1-Yazen.Ghannam@amd.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- Documentation/x86/mds.rst |    7 -------
- arch/x86/kernel/traps.c   |    8 --------
- 2 files changed, 15 deletions(-)
+ arch/x86/kernel/cpu/mce/core.c     |    5 +++++
+ arch/x86/kernel/cpu/mce/genpool.c  |    3 +++
+ arch/x86/kernel/cpu/mce/internal.h |    3 +++
+ 3 files changed, 11 insertions(+)
 
---- a/Documentation/x86/mds.rst
-+++ b/Documentation/x86/mds.rst
-@@ -158,13 +158,6 @@ Mitigation points
-      mitigated on the return from do_nmi() to provide almost complete
-      coverage.
+--- a/arch/x86/kernel/cpu/mce/core.c
++++ b/arch/x86/kernel/cpu/mce/core.c
+@@ -1771,6 +1771,11 @@ static void __mcheck_cpu_init_timer(void
+ 	mce_start_timer(t);
+ }
  
--   - Double fault (#DF):
--
--     A double fault is usually fatal, but the ESPFIX workaround, which can
--     be triggered from user space through modify_ldt(2) is a recoverable
--     double fault. #DF uses the paranoid exit path, so explicit mitigation
--     in the double fault handler is required.
--
-    - Machine Check Exception (#MC):
++bool filter_mce(struct mce *m)
++{
++	return false;
++}
++
+ /* Handle unconfigured int18 (should never happen) */
+ static void unexpected_machine_check(struct pt_regs *regs, long error_code)
+ {
+--- a/arch/x86/kernel/cpu/mce/genpool.c
++++ b/arch/x86/kernel/cpu/mce/genpool.c
+@@ -99,6 +99,9 @@ int mce_gen_pool_add(struct mce *mce)
+ {
+ 	struct mce_evt_llist *node;
  
-      Another corner case is a #MC which hits between the CPU buffer clear
---- a/arch/x86/kernel/traps.c
-+++ b/arch/x86/kernel/traps.c
-@@ -58,7 +58,6 @@
- #include <asm/alternative.h>
- #include <asm/fpu/xstate.h>
- #include <asm/trace/mpx.h>
--#include <asm/nospec-branch.h>
- #include <asm/mpx.h>
- #include <asm/vm86.h>
- #include <asm/umip.h>
-@@ -368,13 +367,6 @@ dotraplinkage void do_double_fault(struc
- 		regs->ip = (unsigned long)general_protection;
- 		regs->sp = (unsigned long)&gpregs->orig_ax;
++	if (filter_mce(mce))
++		return -EINVAL;
++
+ 	if (!mce_evt_pool)
+ 		return -EINVAL;
  
--		/*
--		 * This situation can be triggered by userspace via
--		 * modify_ldt(2) and the return does not take the regular
--		 * user space exit, so a CPU buffer clear is required when
--		 * MDS mitigation is enabled.
--		 */
--		mds_user_clear_cpu_buffers();
- 		return;
- 	}
- #endif
+--- a/arch/x86/kernel/cpu/mce/internal.h
++++ b/arch/x86/kernel/cpu/mce/internal.h
+@@ -173,4 +173,7 @@ struct mca_msr_regs {
+ 
+ extern struct mca_msr_regs msr_ops;
+ 
++/* Decide whether to add MCE record to MCE event pool or filter it out. */
++extern bool filter_mce(struct mce *m);
++
+ #endif /* __X86_MCE_INTERNAL_H__ */
 
 
