@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 309DBC04AAC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:33:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7387EC04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:33:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 06E44204FD
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:33:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A041204FD
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:33:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558355595;
-	bh=B9GtFRtEWiK9CJU4WrnSm69qgYni74dMOMcA3Fhh3K8=;
+	s=default; t=1558355598;
+	bh=r932CAIzrxKcyMXHbNYtwSh4ds4op5ZJLCuQeblnZYE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eFyoxU7dPkpc96VZV2t3LIQg9j2ETisNGm2w5fHUpjWFv4RcJ+eGaBMVwZXsimSs4
-	 rZ3hCQXvf9vy4PCUFWquMGSFrgAut1EVUYlk6a1TCXqZGTAbtF/3hdUmN6HB5uhRPS
-	 EWQ8/SXbk2eJzsM3qSnRrcgwTDHdN1V7F/lyhcdw=
+	b=A0sVlyvr+ttpIE4zPtMxZUu48nAeGRisRk/YvWqyfnz6uIm7NNzJarzVoyxEIFe1L
+	 6nn15sLWp0LNHLUj00nJET/uDDFriG0Yg+7KUMfI1HBGJQnD6z4ACs7vNUTYP27HZg
+	 CApzIEONGWovBJ3N9l42J8brjDIygVKcB4GqQMmQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390677AbfETMdO (ORCPT
+        id S2390687AbfETMdR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 08:33:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50212 "EHLO mail.kernel.org"
+        Mon, 20 May 2019 08:33:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50300 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733069AbfETMdJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 08:33:09 -0400
+        id S1733069AbfETMdP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 08:33:15 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C179C214DA;
-        Mon, 20 May 2019 12:33:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E91AE20645;
+        Mon, 20 May 2019 12:33:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558355589;
-        bh=B9GtFRtEWiK9CJU4WrnSm69qgYni74dMOMcA3Fhh3K8=;
+        s=default; t=1558355594;
+        bh=r932CAIzrxKcyMXHbNYtwSh4ds4op5ZJLCuQeblnZYE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FNrMsFpVgzd4i+zoU+IOCfSqGttFBAwNPVzWfatgyMqVR4EmC9Ax1AeSEB04UVERO
-         3D7qD3l0/LlBcdI7CX1tajGeHuyBAfysuWzlTRF/hqaAj3qOnWj+Uj60D/9Zrnfpr7
-         RVoR1x6MGGqyKtK8WWZeMgiePjJwWLs1ynlcqhaY=
+        b=qOgIpT2+UiRNIW2ghQ7SUkyQ3YIgOtB/eB1loVAd9FDd0U3p02QH2oTx07vjJM72S
+         gAxgqG84MVU8qQ4yZIdz7iy4NUTIA2NPi4iPsVDXJU0qA2RLMFp12eF6mDqmI0WFpv
+         h3xevIW9e7XZqzTUEETfU1bvsNz6EZW279KJG6zw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hui Wang <hui.wang@canonical.com>,
+        stable@vger.kernel.org, Jeremy Soller <jeremy@system76.com>,
         Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 5.1 051/128] ALSA: hda/hdmi - Consider eld_valid when reporting jack event
-Date:   Mon, 20 May 2019 14:13:58 +0200
-Message-Id: <20190520115253.224373942@linuxfoundation.org>
+Subject: [PATCH 5.1 053/128] ALSA: hdea/realtek - Headset fixup for System76 Gazelle (gaze14)
+Date:   Mon, 20 May 2019 14:14:00 +0200
+Message-Id: <20190520115253.375944530@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190520115249.449077487@linuxfoundation.org>
 References: <20190520115249.449077487@linuxfoundation.org>
@@ -59,58 +59,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hui Wang <hui.wang@canonical.com>
+From: Jeremy Soller <jeremy@system76.com>
 
-commit 7f641e26a6df9269cb25dd7a4b0a91d6586ed441 upstream.
+commit 80a5052db75131423b67f38b21958555d7d970e4 upstream.
 
-On the machines with AMD GPU or Nvidia GPU, we often meet this issue:
-after s3, there are 4 HDMI/DP audio devices in the gnome-sound-setting
-even there is no any monitors plugged.
+On the System76 Gazelle (gaze14), there is a headset microphone input
+attached to 0x1a that does not have a jack detect. In order to get it
+working, the pin configuration needs to be set correctly, and the
+ALC269_FIXUP_HEADSET_MODE_NO_HP_MIC fixup needs to be applied. This is
+identical to the patch already applied for the System76 Darter Pro
+(darp5).
 
-When this problem happens, we check the /proc/asound/cardX/eld#N.M, we
-will find the monitor_present=1, eld_valid=0.
-
-The root cause is BIOS or GPU driver makes the PRESENCE valid even no
-monitor plugged, and of course the driver will not get the valid
-eld_data subsequently.
-
-In this situation, we should not report the jack_plugged event, to do
-so, let us change the function hdmi_present_sense_via_verbs(). In this
-function, it reads the pin_sense via snd_hda_pin_sense(), after
-calling this function, the jack_dirty is 0, and before exiting
-via_verbs(), we change the shadow pin_sense according to both
-monitor_present and eld_valid, then in the snd_hda_jack_report_sync(),
-since the jack_dirty is still 0, it will report jack event according
-to this modified shadow pin_sense.
-
-After this change, the driver will not report Jack_is_plugged event
-through hdmi_present_sense_via_verbs() if monitor_present is 1 and
-eld_valid is 0.
-
-Signed-off-by: Hui Wang <hui.wang@canonical.com>
+Signed-off-by: Jeremy Soller <jeremy@system76.com>
 Cc: <stable@vger.kernel.org>
 Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/pci/hda/patch_hdmi.c |    6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ sound/pci/hda/patch_realtek.c |    2 ++
+ 1 file changed, 2 insertions(+)
 
---- a/sound/pci/hda/patch_hdmi.c
-+++ b/sound/pci/hda/patch_hdmi.c
-@@ -1551,9 +1551,11 @@ static bool hdmi_present_sense_via_verbs
- 	ret = !repoll || !eld->monitor_present || eld->eld_valid;
- 
- 	jack = snd_hda_jack_tbl_get(codec, pin_nid);
--	if (jack)
-+	if (jack) {
- 		jack->block_report = !ret;
--
-+		jack->pin_sense = (eld->monitor_present && eld->eld_valid) ?
-+			AC_PINSENSE_PRESENCE : 0;
-+	}
- 	mutex_unlock(&per_pin->lock);
- 	return ret;
- }
+--- a/sound/pci/hda/patch_realtek.c
++++ b/sound/pci/hda/patch_realtek.c
+@@ -6932,6 +6932,8 @@ static const struct snd_pci_quirk alc269
+ 	SND_PCI_QUIRK(0x1462, 0xb120, "MSI Cubi MS-B120", ALC283_FIXUP_HEADSET_MIC),
+ 	SND_PCI_QUIRK(0x1462, 0xb171, "Cubi N 8GL (MS-B171)", ALC283_FIXUP_HEADSET_MIC),
+ 	SND_PCI_QUIRK(0x1558, 0x1325, "System76 Darter Pro (darp5)", ALC293_FIXUP_SYSTEM76_MIC_NO_PRESENCE),
++	SND_PCI_QUIRK(0x1558, 0x8550, "System76 Gazelle (gaze14)", ALC293_FIXUP_SYSTEM76_MIC_NO_PRESENCE),
++	SND_PCI_QUIRK(0x1558, 0x8560, "System76 Gazelle (gaze14)", ALC293_FIXUP_SYSTEM76_MIC_NO_PRESENCE),
+ 	SND_PCI_QUIRK(0x17aa, 0x1036, "Lenovo P520", ALC233_FIXUP_LENOVO_MULTI_CODECS),
+ 	SND_PCI_QUIRK(0x17aa, 0x20f2, "Thinkpad SL410/510", ALC269_FIXUP_SKU_IGNORE),
+ 	SND_PCI_QUIRK(0x17aa, 0x215e, "Thinkpad L512", ALC269_FIXUP_SKU_IGNORE),
 
 
