@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2582C04AAC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:35:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AC46C04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:35:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A0271216C4
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:35:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E9C38216FD
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:35:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558355745;
-	bh=Y8pn0klUBCj5HAGh+Ju8aJxxSJY616eLJ6p9gRpf8b4=;
+	s=default; t=1558355752;
+	bh=bwsNFCLdM246IFnJyYFHxWrdQDWpTZNFJH2oAU2NS2A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xB+23drLmU2IKPKAPYZBUS8bj8VEpraUK4nTCYQoTVp3WJHi7jBgOCrQDYhEhQx2J
-	 iaFmwUqRIcmnNUa3xKevEOCog0414wfWl9N+V4/8U/Dw3LhkQcsZ0jWjjQFNwUb+6G
-	 8hMJgruh9O7DK20Px0mHPOwbVrBl/oborZ+l/m5M=
+	b=EbfeqHXrwjuLdRLeSOJapq4tWgZ8VAHr0qeLJhSgA60xhHbmGfdxKyrTaaSHjlCEu
+	 17VIaQmYJ2IygWx0dSRq+2GwwSHKTtzwWcV7y5+0K7DqRMI+YftWSv7enrseGEw8dR
+	 gn2A+ytZat9q6S6+dPcpAY3NqZxB9116s94yqUOM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403855AbfETMfp (ORCPT
+        id S2391160AbfETMfv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 08:35:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54324 "EHLO mail.kernel.org"
+        Mon, 20 May 2019 08:35:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54596 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391125AbfETMfl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 08:35:41 -0400
+        id S2391147AbfETMft (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 08:35:49 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8DD0A204FD;
-        Mon, 20 May 2019 12:35:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7AD3E216C4;
+        Mon, 20 May 2019 12:35:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558355741;
-        bh=Y8pn0klUBCj5HAGh+Ju8aJxxSJY616eLJ6p9gRpf8b4=;
+        s=default; t=1558355749;
+        bh=bwsNFCLdM246IFnJyYFHxWrdQDWpTZNFJH2oAU2NS2A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=geWC9VeleKZ/9o7h2sCzwMhceIv/Urrq6dXtZDCRRMZceyYw72Ns9+Hh1EE3kKN+a
-         tlaTSOOxeZcPIAiaUgbWRbt6frx/B5MTmQMlCsu39KC+FminCAfbRzW5ELMcLlzW61
-         Lf3oEEtg0rJB3d0FJf7QWVOkwBIfNhobVDeyTkMM=
+        b=Xgg/aQ0uF07cQ0TKWYFbYRmxTr7C7h0DwLHxkjfak2X+U2DkKVsbi2m2WgnA0l/jE
+         ST/k53cmm2m8ZAQFPql02+ASp08Aj5IjF7x3kgJuksEBWZh6ZbQLhcZdUQhyjt81VZ
+         CVKT8hX3xFiYyT0JuDqtjkTqRUt73bQH9v5tBkRQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Lukas Czerner <lczerner@redhat.com>,
-        Theodore Tso <tytso@mit.edu>, stable@kernel.org
-Subject: [PATCH 5.1 108/128] ext4: fix data corruption caused by overlapping unaligned and aligned IO
-Date:   Mon, 20 May 2019 14:14:55 +0200
-Message-Id: <20190520115256.315906109@linuxfoundation.org>
+        stable@vger.kernel.org, Jeremy Soller <jeremy@system76.com>,
+        Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 5.1 111/128] ALSA: hda/realtek - Corrected fixup for System76 Gazelle (gaze14)
+Date:   Mon, 20 May 2019 14:14:58 +0200
+Message-Id: <20190520115256.436876308@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190520115249.449077487@linuxfoundation.org>
 References: <20190520115249.449077487@linuxfoundation.org>
@@ -59,49 +59,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lukas Czerner <lczerner@redhat.com>
+From: Jeremy Soller <jeremy@system76.com>
 
-commit 57a0da28ced8707cb9f79f071a016b9d005caf5a upstream.
+commit 891afcf2462d2cc4ef7caf94215358ca61fa32cb upstream.
 
-Unaligned AIO must be serialized because the zeroing of partial blocks
-of unaligned AIO can result in data corruption in case it's overlapping
-another in flight IO.
+A mistake was made in the identification of the four variants of the
+System76 Gazelle (gaze14). This patch corrects the PCI ID of the
+17-inch, GTX 1660 Ti variant from 0x8560 to 0x8551. This patch also
+adds the correct fixups for the 15-inch and 17-inch GTX 1650 variants
+with PCI IDs 0x8560 and 0x8561.
 
-Currently we wait for all unwritten extents before we submit unaligned
-AIO which protects data in case of unaligned AIO is following overlapping
-IO. However if a unaligned AIO is followed by overlapping aligned AIO we
-can still end up corrupting data.
+Tests were done on all four variants ensuring full audio capability.
 
-To fix this, we must make sure that the unaligned AIO is the only IO in
-flight by waiting for unwritten extents conversion not just before the
-IO submission, but right after it as well.
-
-This problem can be reproduced by xfstest generic/538
-
-Signed-off-by: Lukas Czerner <lczerner@redhat.com>
-Signed-off-by: Theodore Ts'o <tytso@mit.edu>
-Cc: stable@kernel.org
+Fixes: 80a5052db751 ("ALSA: hdea/realtek - Headset fixup for System76 Gazelle (gaze14)")
+Signed-off-by: Jeremy Soller <jeremy@system76.com>
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/ext4/file.c |    7 +++++++
- 1 file changed, 7 insertions(+)
+ sound/pci/hda/patch_realtek.c |    4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
---- a/fs/ext4/file.c
-+++ b/fs/ext4/file.c
-@@ -264,6 +264,13 @@ ext4_file_write_iter(struct kiocb *iocb,
- 	}
- 
- 	ret = __generic_file_write_iter(iocb, from);
-+	/*
-+	 * Unaligned direct AIO must be the only IO in flight. Otherwise
-+	 * overlapping aligned IO after unaligned might result in data
-+	 * corruption.
-+	 */
-+	if (ret == -EIOCBQUEUED && unaligned_aio)
-+		ext4_unwritten_wait(inode);
- 	inode_unlock(inode);
- 
- 	if (ret > 0)
+--- a/sound/pci/hda/patch_realtek.c
++++ b/sound/pci/hda/patch_realtek.c
+@@ -6933,7 +6933,9 @@ static const struct snd_pci_quirk alc269
+ 	SND_PCI_QUIRK(0x1462, 0xb171, "Cubi N 8GL (MS-B171)", ALC283_FIXUP_HEADSET_MIC),
+ 	SND_PCI_QUIRK(0x1558, 0x1325, "System76 Darter Pro (darp5)", ALC293_FIXUP_SYSTEM76_MIC_NO_PRESENCE),
+ 	SND_PCI_QUIRK(0x1558, 0x8550, "System76 Gazelle (gaze14)", ALC293_FIXUP_SYSTEM76_MIC_NO_PRESENCE),
+-	SND_PCI_QUIRK(0x1558, 0x8560, "System76 Gazelle (gaze14)", ALC293_FIXUP_SYSTEM76_MIC_NO_PRESENCE),
++	SND_PCI_QUIRK(0x1558, 0x8551, "System76 Gazelle (gaze14)", ALC293_FIXUP_SYSTEM76_MIC_NO_PRESENCE),
++	SND_PCI_QUIRK(0x1558, 0x8560, "System76 Gazelle (gaze14)", ALC269_FIXUP_HEADSET_MIC),
++	SND_PCI_QUIRK(0x1558, 0x8561, "System76 Gazelle (gaze14)", ALC269_FIXUP_HEADSET_MIC),
+ 	SND_PCI_QUIRK(0x17aa, 0x1036, "Lenovo P520", ALC233_FIXUP_LENOVO_MULTI_CODECS),
+ 	SND_PCI_QUIRK(0x17aa, 0x20f2, "Thinkpad SL410/510", ALC269_FIXUP_SKU_IGNORE),
+ 	SND_PCI_QUIRK(0x17aa, 0x215e, "Thinkpad L512", ALC269_FIXUP_SKU_IGNORE),
 
 
