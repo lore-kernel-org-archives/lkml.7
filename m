@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD5CAC04E87
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:17:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04066C04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:17:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7E24721019
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:17:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CDDCE21019
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:17:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558354638;
-	bh=JNwXe8/PAw9GC/ZOpIp3XzXjSTJc3QTx+GwjOa+V2EQ=;
+	s=default; t=1558354641;
+	bh=nokEs38bjUraDYfSWIKhMLapxnq4jYlSU8FJAQUzuyM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LDBkSFZE/nZOFIgluSI+RPBaXOApkccN7OVQ+L5K/XWPTIPpQZZSK2E3pKyl8Ob9x
-	 NBaQcAVqYzeKepxVjTzKuN9UIG9QulDoAHsTyRliEXsF5LFPlAIJZSDby9VZ1Eheyc
-	 vHJaUFZeNq9fHRfe6VX3RgazwrTx1uIJ1vW4nn7U=
+	b=OmcySTzhp4OOG7Ss/QTTE0U72lZFmp7Uhvay5ngIk3vX7qKy9uO1Tgd6r69SH1dnz
+	 UJZcLbhLSvvbn+QXQfhEFvkY4ezzhposwgymqPsaXJTDGq84gJWgULTagRciuzbFIF
+	 WVxj1Z8f86Hp7I+MppFt9gAmsEc53nCtWcEf64+E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387512AbfETMRR (ORCPT
+        id S2387525AbfETMRU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 08:17:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58180 "EHLO mail.kernel.org"
+        Mon, 20 May 2019 08:17:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58240 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733009AbfETMRP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 08:17:15 -0400
+        id S2387513AbfETMRS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 08:17:18 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7AC2521726;
-        Mon, 20 May 2019 12:17:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 191BE216B7;
+        Mon, 20 May 2019 12:17:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558354635;
-        bh=JNwXe8/PAw9GC/ZOpIp3XzXjSTJc3QTx+GwjOa+V2EQ=;
+        s=default; t=1558354637;
+        bh=nokEs38bjUraDYfSWIKhMLapxnq4jYlSU8FJAQUzuyM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=S8sXo/VZKGe0/2tLEfVBPceFwbSMt4j0esjJX5Fcv07Dh+ghiFo7RJ8QoBaJYD/qp
-         d1W7s8yzTsvtuxfIQnD66D4wv+SdCcnaWSLk9Ne2WOHS4iJ/7yDlIzWt5CjbZJu7A7
-         BVvjx3yw39myXdIpx4rfnxfNSTJKQCmDZjL0IoAo=
+        b=VLrPidz7Efy+KqrOUFnLOyKVayo/0tmHKr9qA7tKlRDQptnTl6N5qEo+1tBHYD3vw
+         Ned2cl8K/GYhlLLJH85x1qEjuwGzTmFSSP8zlyXosn7gJ0wRbOqlgDRxkhZJpUVpm3
+         HlAjM/7HIpvJuGOqanVM0/K5qqboxaI2+MRlzdNI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Coly Li <colyli@suse.de>,
-        Hannes Reinecke <hare@suse.com>, Jens Axboe <axboe@kernel.dk>
-Subject: [PATCH 4.9 32/44] bcache: never set KEY_PTRS of journal key to 0 in journal_reclaim()
-Date:   Mon, 20 May 2019 14:14:21 +0200
-Message-Id: <20190520115235.004211923@linuxfoundation.org>
+        stable@vger.kernel.org, Kiran Kolukuluru <kirank@ami.com>,
+        Kamlakant Patel <kamlakantp@marvell.com>,
+        Corey Minyard <cminyard@mvista.com>
+Subject: [PATCH 4.9 33/44] ipmi:ssif: compare block number correctly for multi-part return messages
+Date:   Mon, 20 May 2019 14:14:22 +0200
+Message-Id: <20190520115235.096491510@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190520115230.720347034@linuxfoundation.org>
 References: <20190520115230.720347034@linuxfoundation.org>
@@ -59,96 +60,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Coly Li <colyli@suse.de>
+From: Kamlakant Patel <kamlakantp@marvell.com>
 
-commit 1bee2addc0c8470c8aaa65ef0599eeae96dd88bc upstream.
+commit 55be8658c7e2feb11a5b5b33ee031791dbd23a69 upstream.
 
-In journal_reclaim() ja->cur_idx of each cache will be update to
-reclaim available journal buckets. Variable 'int n' is used to count how
-many cache is successfully reclaimed, then n is set to c->journal.key
-by SET_KEY_PTRS(). Later in journal_write_unlocked(), a for_each_cache()
-loop will write the jset data onto each cache.
+According to ipmi spec, block number is a number that is incremented,
+starting with 0, for each new block of message data returned using the
+middle transaction.
 
-The problem is, if all jouranl buckets on each cache is full, the
-following code in journal_reclaim(),
+Here, the 'blocknum' is data[0] which always starts from zero(0) and
+'ssif_info->multi_pos' starts from 1.
+So, we need to add +1 to blocknum while comparing with multi_pos.
 
-529 for_each_cache(ca, c, iter) {
-530       struct journal_device *ja = &ca->journal;
-531       unsigned int next = (ja->cur_idx + 1) % ca->sb.njournal_buckets;
-532
-533       /* No space available on this device */
-534       if (next == ja->discard_idx)
-535               continue;
-536
-537       ja->cur_idx = next;
-538       k->ptr[n++] = MAKE_PTR(0,
-539                         bucket_to_sector(c, ca->sb.d[ja->cur_idx]),
-540                         ca->sb.nr_this_dev);
-541 }
-542
-543 bkey_init(k);
-544 SET_KEY_PTRS(k, n);
-
-If there is no available bucket to reclaim, the if() condition at line
-534 will always true, and n remains 0. Then at line 544, SET_KEY_PTRS()
-will set KEY_PTRS field of c->journal.key to 0.
-
-Setting KEY_PTRS field of c->journal.key to 0 is wrong. Because in
-journal_write_unlocked() the journal data is written in following loop,
-
-649	for (i = 0; i < KEY_PTRS(k); i++) {
-650-671		submit journal data to cache device
-672	}
-
-If KEY_PTRS field is set to 0 in jouranl_reclaim(), the journal data
-won't be written to cache device here. If system crahed or rebooted
-before bkeys of the lost journal entries written into btree nodes, data
-corruption will be reported during bcache reload after rebooting the
-system.
-
-Indeed there is only one cache in a cache set, there is no need to set
-KEY_PTRS field in journal_reclaim() at all. But in order to keep the
-for_each_cache() logic consistent for now, this patch fixes the above
-problem by not setting 0 KEY_PTRS of journal key, if there is no bucket
-available to reclaim.
-
-Signed-off-by: Coly Li <colyli@suse.de>
-Reviewed-by: Hannes Reinecke <hare@suse.com>
-Cc: stable@vger.kernel.org
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Fixes: 7d6380cd40f79 ("ipmi:ssif: Fix handling of multi-part return messages").
+Reported-by: Kiran Kolukuluru <kirank@ami.com>
+Signed-off-by: Kamlakant Patel <kamlakantp@marvell.com>
+Message-Id: <1556106615-18722-1-git-send-email-kamlakantp@marvell.com>
+[Also added a debug log if the block numbers don't match.]
+Signed-off-by: Corey Minyard <cminyard@mvista.com>
+Cc: stable@vger.kernel.org # 4.4
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/md/bcache/journal.c |   11 +++++++----
- 1 file changed, 7 insertions(+), 4 deletions(-)
+ drivers/char/ipmi/ipmi_ssif.c |    6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
---- a/drivers/md/bcache/journal.c
-+++ b/drivers/md/bcache/journal.c
-@@ -513,11 +513,11 @@ static void journal_reclaim(struct cache
- 				  ca->sb.nr_this_dev);
- 	}
- 
--	bkey_init(k);
--	SET_KEY_PTRS(k, n);
--
--	if (n)
-+	if (n) {
-+		bkey_init(k);
-+		SET_KEY_PTRS(k, n);
- 		c->journal.blocks_free = c->sb.bucket_size >> c->block_bits;
-+	}
- out:
- 	if (!journal_full(&c->journal))
- 		__closure_wake_up(&c->journal.wait);
-@@ -642,6 +642,9 @@ static void journal_write_unlocked(struc
- 		ca->journal.seq[ca->journal.cur_idx] = w->data->seq;
- 	}
- 
-+	/* If KEY_PTRS(k) == 0, this jset gets lost in air */
-+	BUG_ON(i == 0);
-+
- 	atomic_dec_bug(&fifo_back(&c->journal.pin));
- 	bch_journal_next(&c->journal);
- 	journal_reclaim(c);
+--- a/drivers/char/ipmi/ipmi_ssif.c
++++ b/drivers/char/ipmi/ipmi_ssif.c
+@@ -699,12 +699,16 @@ static void msg_done_handler(struct ssif
+ 			/* End of read */
+ 			len = ssif_info->multi_len;
+ 			data = ssif_info->data;
+-		} else if (blocknum != ssif_info->multi_pos) {
++		} else if (blocknum + 1 != ssif_info->multi_pos) {
+ 			/*
+ 			 * Out of sequence block, just abort.  Block
+ 			 * numbers start at zero for the second block,
+ 			 * but multi_pos starts at one, so the +1.
+ 			 */
++			if (ssif_info->ssif_debug & SSIF_DEBUG_MSG)
++				dev_dbg(&ssif_info->client->dev,
++					"Received message out of sequence, expected %u, got %u\n",
++					ssif_info->multi_pos - 1, blocknum);
+ 			result = -EIO;
+ 		} else {
+ 			ssif_inc_stat(ssif_info, received_message_parts);
 
 
