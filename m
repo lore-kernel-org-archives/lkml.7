@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A463FC04AAC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:44:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99439C04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:44:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 74155204FD
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:44:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6F0A0204FD
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:44:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558356274;
-	bh=ZcfGYjcTJYQ2Gn8coona0MK2VNNKyljTHwHSF+fKYWE=;
+	s=default; t=1558356277;
+	bh=6ZPD1QSHdzGTzkY0bnB7RTClmvWPiJlvDHS9dNTMtq0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kGlksxT3jJk955NlXZVFSmGAtJHnnzpT9lGJuHT0XmcgIdZ5gl105p+CuJQsE4QJE
-	 35nVr36l9MrPA+cHbdiqmhuMY4qwboJdcFh9L9RYwHwpN6hIyZ49NZkEgEMiaZpH+c
-	 1PuUDeaBZx71CzA2FygC8pGOo9+515qMhsLJ8CQw=
+	b=Kzdk8U3cjPCQ+dgcaPO+SQpwrKiZgb4tW8fgpbGcoR/85eWCsZVFAcOvmrTKixThy
+	 Gd1hLDC0LUQIWISxcShaO5oGacxTd8UjQFZHygWQ1UjPfiBVFtS7F8hV2ZAG0nk9cH
+	 l12ptZIqGTIlePmT1Rr+LzkokQK3zkV/d+L1E+XA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389551AbfETM1r (ORCPT
+        id S2389540AbfETM1q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 08:27:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43284 "EHLO mail.kernel.org"
+        Mon, 20 May 2019 08:27:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43232 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389171AbfETM1l (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 08:27:41 -0400
+        id S2389512AbfETM1i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 08:27:38 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4ED1920675;
-        Mon, 20 May 2019 12:27:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9DD2820675;
+        Mon, 20 May 2019 12:27:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558355260;
-        bh=ZcfGYjcTJYQ2Gn8coona0MK2VNNKyljTHwHSF+fKYWE=;
+        s=default; t=1558355258;
+        bh=6ZPD1QSHdzGTzkY0bnB7RTClmvWPiJlvDHS9dNTMtq0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KwHhH/ny9NVpUM22YVcFPSul0jR4rsS4lBgm3Ndluw3W0cBhtJlAc6pj+Zsm7Ay4w
-         kiP511iwWzlFSZs3UqJKytseA2dggWnqBJ/J+xsSOY09oAfTpd1WN48GPZSsl5i5b2
-         jc46F2PQUfWpArJO1Snta6HuMeVWwPRuk3xwETJM=
+        b=fRdU42HZsVivLc8/UnikLyE8kTHPEvOVsnr2MZqXEWtEVpN+Y9KLW4xVS8xtGhU5k
+         5mMDNECtxA8ZaWcbcCi+p1DYOOsSQL11FTXlekG96a56LX0Mjq7zWyoJSkQJGVu4wD
+         VQN2U9uMOXyrV9MErErjq1pZW6cQTCNQ4Vpf2+88=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Hui Wang <hui.wang@canonical.com>,
         Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 5.0 050/123] ALSA: hda/hdmi - Consider eld_valid when reporting jack event
-Date:   Mon, 20 May 2019 14:13:50 +0200
-Message-Id: <20190520115248.060176587@linuxfoundation.org>
+Subject: [PATCH 5.0 049/123] ALSA: hda/hdmi - Read the pin sense from register when repolling
+Date:   Mon, 20 May 2019 14:13:49 +0200
+Message-Id: <20190520115247.991762078@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190520115245.439864225@linuxfoundation.org>
 References: <20190520115245.439864225@linuxfoundation.org>
@@ -61,31 +61,20 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Hui Wang <hui.wang@canonical.com>
 
-commit 7f641e26a6df9269cb25dd7a4b0a91d6586ed441 upstream.
+commit 8c2e6728c2bf95765b724e07d0278ae97cd1ee0d upstream.
 
-On the machines with AMD GPU or Nvidia GPU, we often meet this issue:
-after s3, there are 4 HDMI/DP audio devices in the gnome-sound-setting
-even there is no any monitors plugged.
+The driver will check the monitor presence when resuming from suspend,
+starting poll or interrupt triggers. In these 3 situations, the
+jack_dirty will be set to 1 first, then the hda_jack.c reads the
+pin_sense from register, after reading the register, the jack_dirty
+will be set to 0. But hdmi_repoll_work() is enabled in these 3
+situations, It will read the pin_sense a couple of times subsequently,
+since the jack_dirty is 0 now, It does not read the register anymore,
+instead it uses the shadow pin_sense which is read at the first time.
 
-When this problem happens, we check the /proc/asound/cardX/eld#N.M, we
-will find the monitor_present=1, eld_valid=0.
-
-The root cause is BIOS or GPU driver makes the PRESENCE valid even no
-monitor plugged, and of course the driver will not get the valid
-eld_data subsequently.
-
-In this situation, we should not report the jack_plugged event, to do
-so, let us change the function hdmi_present_sense_via_verbs(). In this
-function, it reads the pin_sense via snd_hda_pin_sense(), after
-calling this function, the jack_dirty is 0, and before exiting
-via_verbs(), we change the shadow pin_sense according to both
-monitor_present and eld_valid, then in the snd_hda_jack_report_sync(),
-since the jack_dirty is still 0, it will report jack event according
-to this modified shadow pin_sense.
-
-After this change, the driver will not report Jack_is_plugged event
-through hdmi_present_sense_via_verbs() if monitor_present is 1 and
-eld_valid is 0.
+It is meaningless to check the shadow pin_sense a couple of times,
+we need to read the register to check the real plugging state, so
+we set the jack_dirty to 1 in the hdmi_repoll_work().
 
 Signed-off-by: Hui Wang <hui.wang@canonical.com>
 Cc: <stable@vger.kernel.org>
@@ -93,24 +82,22 @@ Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/pci/hda/patch_hdmi.c |    6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ sound/pci/hda/patch_hdmi.c |    5 +++++
+ 1 file changed, 5 insertions(+)
 
 --- a/sound/pci/hda/patch_hdmi.c
 +++ b/sound/pci/hda/patch_hdmi.c
-@@ -1548,9 +1548,11 @@ static bool hdmi_present_sense_via_verbs
- 	ret = !repoll || !eld->monitor_present || eld->eld_valid;
+@@ -1660,6 +1660,11 @@ static void hdmi_repoll_eld(struct work_
+ 	container_of(to_delayed_work(work), struct hdmi_spec_per_pin, work);
+ 	struct hda_codec *codec = per_pin->codec;
+ 	struct hdmi_spec *spec = codec->spec;
++	struct hda_jack_tbl *jack;
++
++	jack = snd_hda_jack_tbl_get(codec, per_pin->pin_nid);
++	if (jack)
++		jack->jack_dirty = 1;
  
- 	jack = snd_hda_jack_tbl_get(codec, pin_nid);
--	if (jack)
-+	if (jack) {
- 		jack->block_report = !ret;
--
-+		jack->pin_sense = (eld->monitor_present && eld->eld_valid) ?
-+			AC_PINSENSE_PRESENCE : 0;
-+	}
- 	mutex_unlock(&per_pin->lock);
- 	return ret;
- }
+ 	if (per_pin->repoll_count++ > 6)
+ 		per_pin->repoll_count = 0;
 
 
