@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED821C04AAC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:47:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49D28C04AAF
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:48:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C2E362054F
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:47:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 130482054F
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:48:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558356466;
-	bh=1JwKsE2PPxh7DmKGmEaNZC+p3l/r7snwtIEcRD+3ubM=;
+	s=default; t=1558356488;
+	bh=47h56TplLtOuTZk9bZBytonkt83xqba2oE7Wh9cojE4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=F5jEYPgUL5M4HHZcJFcpeo1LxedYsm2FZP5+5nK4KCfenA4c/DSciDUi+B1b7IdHq
-	 ihCDPCQ/kbxnJzamccDNUzmLlQ4vdZIJI/ngrYGXna9QgXrImtFgiu5mg4TExqXdgW
-	 LsyFzGNkX8KuMs2jucSmVnkVPdu9Bnzh7ciOYLnU=
+	b=2ZAhZLpaY3ku5jak2LAS3x94XG2alkK7Vb26t7f1/NPMoPVPB6g78rohKO6tkQ6wl
+	 k1ZZwTVGKeup5jf5qTSKFfkcgpxTUXQNME95Tu1frfsuoNYldB1E6EnERESSPm7Z9N
+	 FUgChNE74s0iTI5MC30QTwa/6AAjThnGw/Q7VUhg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390234AbfETMrp (ORCPT
+        id S2389953AbfETMsH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 08:47:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38500 "EHLO mail.kernel.org"
+        Mon, 20 May 2019 08:48:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37712 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388637AbfETMXu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 08:23:50 -0400
+        id S2387859AbfETMXV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 08:23:21 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 62095216FD;
-        Mon, 20 May 2019 12:23:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C327320675;
+        Mon, 20 May 2019 12:23:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558355029;
-        bh=1JwKsE2PPxh7DmKGmEaNZC+p3l/r7snwtIEcRD+3ubM=;
+        s=default; t=1558355001;
+        bh=47h56TplLtOuTZk9bZBytonkt83xqba2oE7Wh9cojE4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=d1JZS/QV1S0Z7BW+6qbAH37b1L1UjmN+PFgEDljLCrXlYrktMMi8h1DJJ4e3UTYCF
-         fYKOAhggFmjhE3FKSZeOi5WSQXTLjrsJrpPEOuGjhMtMRFaNBsKSPJqozyZzOoODPG
-         PtVqx6oPzXoaNFU9eOBl+XIs10l4RlMoZXq9X6Fc=
+        b=koTnrXlQTiXM1uUqQdszqjLB+F+txVnaq+uF0dOo3dqIgcQ3beOmjJelP2f2Ae21Y
+         lvkET2PQcynnIXQYMSvkIA1+Cvn79kU1UnsqYHcL+kNEC5VvmcHcD81Ah77lpQSdIN
+         xPt1cWRTcIkLlgJX/3rYhWFFRsjqmOlB3DVuwZHQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        syzbot+f584efa0ac7213c226b7@syzkaller.appspotmail.com,
-        Jan Kara <jack@suse.cz>, Barret Rhoden <brho@google.com>,
-        Theodore Tso <tytso@mit.edu>
-Subject: [PATCH 4.19 070/105] ext4: fix use-after-free race with debug_want_extra_isize
-Date:   Mon, 20 May 2019 14:14:16 +0200
-Message-Id: <20190520115252.018980500@linuxfoundation.org>
+        Steve Twiss <stwiss.opensource@diasemi.com>,
+        Lee Jones <lee.jones@linaro.org>
+Subject: [PATCH 4.19 060/105] mfd: da9063: Fix OTP control register names to match datasheets for DA9063/63L
+Date:   Mon, 20 May 2019 14:14:06 +0200
+Message-Id: <20190520115251.271410956@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190520115247.060821231@linuxfoundation.org>
 References: <20190520115247.060821231@linuxfoundation.org>
@@ -61,106 +60,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Barret Rhoden <brho@google.com>
+From: Steve Twiss <stwiss.opensource@diasemi.com>
 
-commit 7bc04c5c2cc467c5b40f2b03ba08da174a0d5fa7 upstream.
+commit 6b4814a9451add06d457e198be418bf6a3e6a990 upstream.
 
-When remounting with debug_want_extra_isize, we were not performing the
-same checks that we do during a normal mount.  That allowed us to set a
-value for s_want_extra_isize that reached outside the s_inode_size.
+Mismatch between what is found in the Datasheets for DA9063 and DA9063L
+provided by Dialog Semiconductor, and the register names provided in the
+MFD registers file. The changes are for the OTP (one-time-programming)
+control registers. The two naming errors are OPT instead of OTP, and
+COUNT instead of CONT (i.e. control).
 
-Fixes: e2b911c53584 ("ext4: clean up feature test macros with predicate functions")
-Reported-by: syzbot+f584efa0ac7213c226b7@syzkaller.appspotmail.com
-Reviewed-by: Jan Kara <jack@suse.cz>
-Signed-off-by: Barret Rhoden <brho@google.com>
-Signed-off-by: Theodore Ts'o <tytso@mit.edu>
-Cc: stable@vger.kernel.org
+Cc: Stable <stable@vger.kernel.org>
+Signed-off-by: Steve Twiss <stwiss.opensource@diasemi.com>
+Signed-off-by: Lee Jones <lee.jones@linaro.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/ext4/super.c |   58 ++++++++++++++++++++++++++++++++------------------------
- 1 file changed, 34 insertions(+), 24 deletions(-)
+ include/linux/mfd/da9063/registers.h |    6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
---- a/fs/ext4/super.c
-+++ b/fs/ext4/super.c
-@@ -3514,6 +3514,37 @@ int ext4_calculate_overhead(struct super
- 	return 0;
- }
+--- a/include/linux/mfd/da9063/registers.h
++++ b/include/linux/mfd/da9063/registers.h
+@@ -215,9 +215,9 @@
  
-+static void ext4_clamp_want_extra_isize(struct super_block *sb)
-+{
-+	struct ext4_sb_info *sbi = EXT4_SB(sb);
-+	struct ext4_super_block *es = sbi->s_es;
-+
-+	/* determine the minimum size of new large inodes, if present */
-+	if (sbi->s_inode_size > EXT4_GOOD_OLD_INODE_SIZE &&
-+	    sbi->s_want_extra_isize == 0) {
-+		sbi->s_want_extra_isize = sizeof(struct ext4_inode) -
-+						     EXT4_GOOD_OLD_INODE_SIZE;
-+		if (ext4_has_feature_extra_isize(sb)) {
-+			if (sbi->s_want_extra_isize <
-+			    le16_to_cpu(es->s_want_extra_isize))
-+				sbi->s_want_extra_isize =
-+					le16_to_cpu(es->s_want_extra_isize);
-+			if (sbi->s_want_extra_isize <
-+			    le16_to_cpu(es->s_min_extra_isize))
-+				sbi->s_want_extra_isize =
-+					le16_to_cpu(es->s_min_extra_isize);
-+		}
-+	}
-+	/* Check if enough inode space is available */
-+	if (EXT4_GOOD_OLD_INODE_SIZE + sbi->s_want_extra_isize >
-+							sbi->s_inode_size) {
-+		sbi->s_want_extra_isize = sizeof(struct ext4_inode) -
-+						       EXT4_GOOD_OLD_INODE_SIZE;
-+		ext4_msg(sb, KERN_INFO,
-+			 "required extra inode space not available");
-+	}
-+}
-+
- static void ext4_set_resv_clusters(struct super_block *sb)
- {
- 	ext4_fsblk_t resv_clusters;
-@@ -4388,30 +4419,7 @@ no_journal:
- 	} else if (ret)
- 		goto failed_mount4a;
+ /* DA9063 Configuration registers */
+ /* OTP */
+-#define	DA9063_REG_OPT_COUNT		0x101
+-#define	DA9063_REG_OPT_ADDR		0x102
+-#define	DA9063_REG_OPT_DATA		0x103
++#define	DA9063_REG_OTP_CONT		0x101
++#define	DA9063_REG_OTP_ADDR		0x102
++#define	DA9063_REG_OTP_DATA		0x103
  
--	/* determine the minimum size of new large inodes, if present */
--	if (sbi->s_inode_size > EXT4_GOOD_OLD_INODE_SIZE &&
--	    sbi->s_want_extra_isize == 0) {
--		sbi->s_want_extra_isize = sizeof(struct ext4_inode) -
--						     EXT4_GOOD_OLD_INODE_SIZE;
--		if (ext4_has_feature_extra_isize(sb)) {
--			if (sbi->s_want_extra_isize <
--			    le16_to_cpu(es->s_want_extra_isize))
--				sbi->s_want_extra_isize =
--					le16_to_cpu(es->s_want_extra_isize);
--			if (sbi->s_want_extra_isize <
--			    le16_to_cpu(es->s_min_extra_isize))
--				sbi->s_want_extra_isize =
--					le16_to_cpu(es->s_min_extra_isize);
--		}
--	}
--	/* Check if enough inode space is available */
--	if (EXT4_GOOD_OLD_INODE_SIZE + sbi->s_want_extra_isize >
--							sbi->s_inode_size) {
--		sbi->s_want_extra_isize = sizeof(struct ext4_inode) -
--						       EXT4_GOOD_OLD_INODE_SIZE;
--		ext4_msg(sb, KERN_INFO, "required extra inode space not"
--			 "available");
--	}
-+	ext4_clamp_want_extra_isize(sb);
- 
- 	ext4_set_resv_clusters(sb);
- 
-@@ -5197,6 +5205,8 @@ static int ext4_remount(struct super_blo
- 		goto restore_opts;
- 	}
- 
-+	ext4_clamp_want_extra_isize(sb);
-+
- 	if ((old_opts.s_mount_opt & EXT4_MOUNT_JOURNAL_CHECKSUM) ^
- 	    test_opt(sb, JOURNAL_CHECKSUM)) {
- 		ext4_msg(sb, KERN_ERR, "changing journal_checksum "
+ /* Customer Trim and Configuration */
+ #define	DA9063_REG_T_OFFSET		0x104
 
 
