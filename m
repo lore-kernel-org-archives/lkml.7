@@ -2,183 +2,105 @@ Return-Path: <SRS0=lq4r=TU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 731E2C04AAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 06:48:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CDC97C04AAF
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 06:51:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 50F2B20815
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 06:48:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9CFC020863
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 06:51:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="RhKZDuJC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730814AbfETGsp (ORCPT
+        id S1729823AbfETGvv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 02:48:45 -0400
-Received: from Mailgw01.mediatek.com ([1.203.163.78]:41107 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726052AbfETGsp (ORCPT
+        Mon, 20 May 2019 02:51:51 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:36415 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725601AbfETGvv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 02:48:45 -0400
-X-UUID: df6bf8f9060a436fbbf524ddfc74a8a6-20190520
-X-UUID: df6bf8f9060a436fbbf524ddfc74a8a6-20190520
-Received: from mtkcas34.mediatek.inc [(172.27.4.253)] by mailgw01.mediatek.com
-        (envelope-from <ck.hu@mediatek.com>)
-        (mailgw01.mediatek.com ESMTP with TLS)
-        with ESMTP id 1552444152; Mon, 20 May 2019 14:48:30 +0800
-Received: from mtkcas09.mediatek.inc (172.21.101.178) by
- MTKMBS33N1.mediatek.inc (172.27.4.75) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Mon, 20 May 2019 14:48:29 +0800
-Received: from [172.21.77.4] (172.21.77.4) by mtkcas09.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Mon, 20 May 2019 14:48:28 +0800
-Message-ID: <1558334909.7311.27.camel@mtksdaap41>
-Subject: Re: [v4 4/5] drm/mediatek: control dpi pins dpi or gpio mode in on
- or off
-From:   CK Hu <ck.hu@mediatek.com>
-To:     Jitao Shi <jitao.shi@mediatek.com>
-CC:     Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>,
-        "Mark Rutland" <mark.rutland@arm.com>,
-        Ian Campbell <ijc+devicetree@hellion.org.uk>,
-        Kumar Gala <galak@codeaurora.org>, <linux-pwm@vger.kernel.org>,
-        David Airlie <airlied@linux.ie>,
-        "Matthias Brugger" <matthias.bgg@gmail.com>,
-        Thierry Reding <treding@nvidia.com>,
-        "Ajay Kumar" <ajaykumar.rs@samsung.com>,
-        Inki Dae <inki.dae@samsung.com>,
-        "Rahul Sharma" <rahul.sharma@samsung.com>,
-        Sean Paul <seanpaul@chromium.org>,
-        Vincent Palatin <vpalatin@chromium.org>,
-        Andy Yan <andy.yan@rock-chips.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        "Russell King" <rmk+kernel@arm.linux.org.uk>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <dri-devel@lists.freedesktop.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>,
-        <srv_heupstream@mediatek.com>,
-        Sascha Hauer <kernel@pengutronix.de>,
-        <yingjoe.chen@mediatek.com>, <eddie.huang@mediatek.com>,
-        <cawa.cheng@mediatek.com>, <bibby.hsieh@mediatek.com>,
-        <stonea168@163.com>
-Date:   Mon, 20 May 2019 14:48:29 +0800
-In-Reply-To: <20190518095618.18454-5-jitao.shi@mediatek.com>
-References: <20190518095618.18454-1-jitao.shi@mediatek.com>
-         <20190518095618.18454-5-jitao.shi@mediatek.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
+        Mon, 20 May 2019 02:51:51 -0400
+Received: by mail-pf1-f196.google.com with SMTP id v80so6729725pfa.3
+        for <linux-kernel@vger.kernel.org>; Sun, 19 May 2019 23:51:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=96LsfiFrWMDve/VrbKW+rKdzJVThO32QPdm+2n7gs78=;
+        b=RhKZDuJCmDpIMcrrCRuhoMsURulbqflkugS+ljsC9RkqTHVGuuBv4b8r+t7zhH4/0i
+         7+oicObbU4MMMzlU0ShNf90XRV9cN0LNelxAcDxel6lwamqkvk1gc+9a71f6BIEslgFI
+         HJdPhLRhLuBwhbUrip5gzGoPMoW1YM0HU5xgU=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=96LsfiFrWMDve/VrbKW+rKdzJVThO32QPdm+2n7gs78=;
+        b=hjFfhqpjW+a/IwRwKJRAMd32oiX95nzYrnF1XBp2ZM06mvebrb9CrnUpZcewI61cBO
+         bSP6PqcxeyeZvXs8fQSPXJFdFIsSyhFGaC7GHLAJGa0SGHuj6y0gDKHtwpQOiIv+0e9Q
+         f8RAhqqD+cUhcQIGkzncCZ3oe/HgYRUgMWj1wu6OAQTwgSfi0wBwUVHO/WnhcU06XXId
+         XwUkn2p/rI2bWv5aahD1ZHo1yGOW4rbJZFeVot5PkJnWw5inopdExH2al+2Km/Xr+vKI
+         H33a5d/QJYP5lOkdg+RSEsdmFi15gA4OuYzMLAj3Oyt7Pwntk9lk92FDjnkTVQUsfGnc
+         8mLg==
+X-Gm-Message-State: APjAAAX+7LGqdOPqGyymFvuXGe3sZ/U7csPHLEZLgOigh5FuExfZ4xmK
+        qDtIyg9mRffOv3Qu8Y5MWkUE/4B5pcA=
+X-Google-Smtp-Source: APXvYqxl9tO0x+WMlFYuRzoESYG4KIQ6GYvdOenA2HMODeW4lJ0QDIqJLOqnOXoXuUqGb8+J0iYpDQ==
+X-Received: by 2002:a63:a449:: with SMTP id c9mr38209456pgp.149.1558335110646;
+        Sun, 19 May 2019 23:51:50 -0700 (PDT)
+Received: from pihsun-z840.tpe.corp.google.com ([2401:fa00:1:10:7889:7a43:f899:134c])
+        by smtp.googlemail.com with ESMTPSA id v1sm17881919pgb.85.2019.05.19.23.51.48
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sun, 19 May 2019 23:51:50 -0700 (PDT)
+From:   Pi-Hsun Shih <pihsun@chromium.org>
+Cc:     Pi-Hsun Shih <pihsun@chromium.org>,
+        Kees Cook <keescook@chromium.org>,
+        Anton Vorontsov <anton@enomsg.org>,
+        Colin Cross <ccross@android.com>,
+        Tony Luck <tony.luck@intel.com>,
+        linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH] pstore: Set tfm to NULL on free_buf_for_compression.
+Date:   Mon, 20 May 2019 14:51:19 +0800
+Message-Id: <20190520065120.245811-1-pihsun@chromium.org>
+X-Mailer: git-send-email 2.21.0.1020.gf2820cf01a-goog
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-MTK:  N
+Content-Transfer-Encoding: 8bit
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi, Jitao:
+Set tfm to NULL on free_buf_for_compression after crypto_free_comp.
 
-On Sat, 2019-05-18 at 17:56 +0800, Jitao Shi wrote:
-> Pull dpi pins low when dpi has nothing to display. Aovid leakage
-> current from some dpi pins (Hsync Vsync DE ... ).
-> 
-> Some chips have dpi pins, but there are some chip don't have pins.
-> So this function is controlled by chips driver data.
-> 
-> Signed-off-by: Jitao Shi <jitao.shi@mediatek.com>
-> ---
->  drivers/gpu/drm/mediatek/mtk_dpi.c | 35 +++++++++++++++++++++++++++++-
->  1 file changed, 34 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/gpu/drm/mediatek/mtk_dpi.c b/drivers/gpu/drm/mediatek/mtk_dpi.c
-> index 77e6e0f99188..0c4ba0a2be27 100644
-> --- a/drivers/gpu/drm/mediatek/mtk_dpi.c
-> +++ b/drivers/gpu/drm/mediatek/mtk_dpi.c
-> @@ -17,10 +17,12 @@
->  #include <drm/drm_of.h>
->  #include <linux/kernel.h>
->  #include <linux/component.h>
-> -#include <linux/platform_device.h>
->  #include <linux/of.h>
->  #include <linux/of_device.h>
-> +#include <linux/of_gpio.h>
->  #include <linux/of_graph.h>
-> +#include <linux/pinctrl/consumer.h>
-> +#include <linux/platform_device.h>
->  #include <linux/interrupt.h>
->  #include <linux/types.h>
->  #include <linux/clk.h>
-> @@ -79,6 +81,9 @@ struct mtk_dpi {
->  	enum mtk_dpi_out_yc_map yc_map;
->  	enum mtk_dpi_out_bit_num bit_num;
->  	enum mtk_dpi_out_channel_swap channel_swap;
-> +	struct pinctrl *pinctrl;
-> +	struct pinctrl_state *pins_default;
-> +	struct pinctrl_state *pins_dpi;
->  	int refcount;
->  };
->  
-> @@ -118,6 +123,7 @@ struct mtk_dpi_conf {
->  	u32 reg_h_fre_con;
->  	bool edge_sel_en;
->  	bool dual_edge;
-> +	bool dpi_pin_ctrl;
->  };
->  
->  static void mtk_dpi_mask(struct mtk_dpi *dpi, u32 offset, u32 val, u32 mask)
-> @@ -392,6 +398,9 @@ static void mtk_dpi_power_off(struct mtk_dpi *dpi)
->  	if (--dpi->refcount != 0)
->  		return;
->  
-> +	if (dpi->conf->dpi_pin_ctrl)
-> +		pinctrl_select_state(dpi->pinctrl, dpi->pins_default);
-> +
->  	mtk_dpi_disable(dpi);
->  	clk_disable_unprepare(dpi->pixel_clk);
->  	clk_disable_unprepare(dpi->engine_clk);
-> @@ -416,6 +425,9 @@ static int mtk_dpi_power_on(struct mtk_dpi *dpi)
->  		goto err_pixel;
->  	}
->  
-> +	if (dpi->conf->dpi_pin_ctrl)
-> +		pinctrl_select_state(dpi->pinctrl, dpi->pins_dpi);
-> +
->  	mtk_dpi_enable(dpi);
->  	return 0;
->  
-> @@ -724,6 +736,27 @@ static int mtk_dpi_probe(struct platform_device *pdev)
->  	dpi->dev = dev;
->  	dpi->conf = (struct mtk_dpi_conf *)of_device_get_match_data(dev);
->  
-> +	if (dpi->conf->dpi_pin_ctrl) {
-> +		dpi->pinctrl = devm_pinctrl_get(&pdev->dev);
+This avoid a use-after-free when allocate_buf_for_compression and
+free_buf_for_compression are called twice. Although
+free_buf_for_compression freed the tfm, allocate_buf_for_compression
+won't reinitialize the tfm since the tfm pointer is not NULL.
 
-Please describe this in binding document.
+Fixes: 95047b0519c1 ("pstore: Refactor compression initialization")
+Signed-off-by: Pi-Hsun Shih <pihsun@chromium.org>
+---
+ fs/pstore/platform.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-Regards,
-CK
-
-> +		if (IS_ERR(dpi->pinctrl)) {
-> +			dev_err(&pdev->dev, "Cannot find pinctrl!\n");
-> +			return PTR_ERR(dpi->pinctrl);
-> +		}
-> +
-> +		dpi->pins_default = pinctrl_lookup_state(dpi->pinctrl,
-> +							 "default");
-> +		if (IS_ERR(dpi->pins_default)) {
-> +			dev_err(&pdev->dev, "Cannot find pinctrl default!\n");
-> +			return PTR_ERR(dpi->pins_default);
-> +		}
-> +
-> +		dpi->pins_dpi = pinctrl_lookup_state(dpi->pinctrl, "dpimode");
-> +		if (IS_ERR(dpi->pins_dpi)) {
-> +			dev_err(&pdev->dev, "Cannot find pinctrl dpimode!\n");
-> +			return PTR_ERR(dpi->pins_dpi);
-> +		}
-> +	}
-> +
->  	mem = platform_get_resource(pdev, IORESOURCE_MEM, 0);
->  	dpi->regs = devm_ioremap_resource(dev, mem);
->  	if (IS_ERR(dpi->regs)) {
-
+diff --git a/fs/pstore/platform.c b/fs/pstore/platform.c
+index 75887a269b64..8355a46638d0 100644
+--- a/fs/pstore/platform.c
++++ b/fs/pstore/platform.c
+@@ -347,8 +347,10 @@ static void allocate_buf_for_compression(void)
+ 
+ static void free_buf_for_compression(void)
+ {
+-	if (IS_ENABLED(CONFIG_PSTORE_COMPRESS) && tfm)
++	if (IS_ENABLED(CONFIG_PSTORE_COMPRESS) && tfm) {
+ 		crypto_free_comp(tfm);
++		tfm = NULL;
++	}
+ 	kfree(big_oops_buf);
+ 	big_oops_buf = NULL;
+ 	big_oops_buf_sz = 0;
+-- 
+2.21.0.1020.gf2820cf01a-goog
 
