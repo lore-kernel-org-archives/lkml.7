@@ -2,132 +2,133 @@ Return-Path: <SRS0=lq4r=TU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E61BC04AAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 08:36:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8505C04AAF
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 08:37:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E1D4420815
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 08:36:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B1FAE20815
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 08:37:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731384AbfETIgJ (ORCPT
+        id S1730586AbfETIhE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 04:36:09 -0400
-Received: from mga03.intel.com ([134.134.136.65]:40593 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730537AbfETIgI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 04:36:08 -0400
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 May 2019 01:36:07 -0700
-X-ExtLoop1: 1
-Received: from kuha.fi.intel.com ([10.237.72.189])
-  by fmsmga001.fm.intel.com with SMTP; 20 May 2019 01:36:02 -0700
-Received: by kuha.fi.intel.com (sSMTP sendmail emulation); Mon, 20 May 2019 11:36:01 +0300
-Date:   Mon, 20 May 2019 11:36:01 +0300
-From:   Heikki Krogerus <heikki.krogerus@linux.intel.com>
-To:     Biju Das <biju.das@bp.renesas.com>
-Cc:     Chunfeng Yun <chunfeng.yun@mediatek.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Adam Thomson <Adam.Thomson.Opensource@diasemi.com>,
-        Li Jun <jun.li@nxp.com>,
-        Badhri Jagan Sridharan <badhri@google.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Min Guo <min.guo@mediatek.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-mediatek@lists.infradead.org" 
-        <linux-mediatek@lists.infradead.org>,
-        Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v5 4/6] usb: roles: add API to get usb_role_switch by node
-Message-ID: <20190520083601.GE1887@kuha.fi.intel.com>
-References: <1557823643-8616-1-git-send-email-chunfeng.yun@mediatek.com>
- <1557823643-8616-5-git-send-email-chunfeng.yun@mediatek.com>
- <20190517103736.GA1490@kuha.fi.intel.com>
- <20190517130511.GA1887@kuha.fi.intel.com>
- <1558319951.10179.352.camel@mhfsdcap03>
- <20190520080359.GC1887@kuha.fi.intel.com>
- <OSBPR01MB2103385D996762FA54F8E437B8060@OSBPR01MB2103.jpnprd01.prod.outlook.com>
+        Mon, 20 May 2019 04:37:04 -0400
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:43945 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728889AbfETIhE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 04:37:04 -0400
+Received: by mail-ed1-f66.google.com with SMTP id w33so22567658edb.10
+        for <linux-kernel@vger.kernel.org>; Mon, 20 May 2019 01:37:03 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=/OoImjvp6vhdhmP+jZDUwoMoIjk9haGYNqVuRUXiioc=;
+        b=ifmumCE76OruPmbduLZOGICM1L1qQGZA7TXzLr4ebs3cgcPb/FrtV3ouc/OjkJaM/4
+         tCsR4J/vOf+4RQQYCUkcqkmKKqKk4WSrY22QlE3B7pSa0u3O4MIdw7MNI19QOxrT76hs
+         4knPWUrvPx9fHOa3GL9mLSmqI6fptW5pf2pCUYsx6DYfQsljXJaUD/l34A9MjHQjWWFa
+         NboHF05QMcWo/nPB6wIWYWB45akVpw4ZxXu1yh0TDMSrKj+SgIfuiwJ28maJ2GPtAtuN
+         y272LL5S6eP6w96Y/htuYfstnHlmKQjQWHygF2ZS8aAH4S7e20hju16g4R8qamwl4hQw
+         dEjw==
+X-Gm-Message-State: APjAAAVx5GxOR4PV/PZysRrfIlzS5AK4hR8hdIVjIu8+XKQL0lGrfDo1
+        S6Qwq9z5UsKBSmzuOmDXpPjVDA==
+X-Google-Smtp-Source: APXvYqxNMw+Jv9mFvX95M23pZ/Oe1C9oluCJezDYi8hRi2/rjZIZJfmtUBoCYXTb0TXZadtsbJGrrA==
+X-Received: by 2002:a50:9738:: with SMTP id c53mr72716921edb.156.1558341422638;
+        Mon, 20 May 2019 01:37:02 -0700 (PDT)
+Received: from shalem.localdomain (84-106-84-65.cable.dynamic.v4.ziggo.nl. [84.106.84.65])
+        by smtp.gmail.com with ESMTPSA id 4sm5401052edz.24.2019.05.20.01.37.01
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Mon, 20 May 2019 01:37:02 -0700 (PDT)
+Subject: Re: [PATCH] ASoC: Intel: bytcr_5640.c:Refactored if statement and
+ removed buffer
+To:     nariman <narimantos@gmail.com>, broonie@kernel.org,
+        linux-kernel@vger.kernel.org, alsa-devel@alsa-project.org
+References: <20190519175706.3998-1-narimantos@gmail.com>
+From:   Hans de Goede <hdegoede@redhat.com>
+Message-ID: <783c330c-b706-9d19-467d-a19d2f414a05@redhat.com>
+Date:   Mon, 20 May 2019 10:37:01 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <OSBPR01MB2103385D996762FA54F8E437B8060@OSBPR01MB2103.jpnprd01.prod.outlook.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+In-Reply-To: <20190519175706.3998-1-narimantos@gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 20, 2019 at 08:06:41AM +0000, Biju Das wrote:
-> Hi Heikki,
+Hi all,
+
+On 19-05-19 19:57, nariman wrote:
+> From: Nariman Etemadi <narimantos@gmail.com>
 > 
-> > -----Original Message-----
-> > From: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-> > Sent: Monday, May 20, 2019 9:04 AM
-> > To: Chunfeng Yun <chunfeng.yun@mediatek.com>
-> > Cc: Rob Herring <robh+dt@kernel.org>; Greg Kroah-Hartman
-> > <gregkh@linuxfoundation.org>; Mark Rutland <mark.rutland@arm.com>;
-> > Matthias Brugger <matthias.bgg@gmail.com>; Adam Thomson
-> > <Adam.Thomson.Opensource@diasemi.com>; Li Jun <jun.li@nxp.com>;
-> > Badhri Jagan Sridharan <badhri@google.com>; Hans de Goede
-> > <hdegoede@redhat.com>; Andy Shevchenko
-> > <andy.shevchenko@gmail.com>; Min Guo <min.guo@mediatek.com>;
-> > devicetree@vger.kernel.org; linux-kernel@vger.kernel.org; linux-
-> > usb@vger.kernel.org; linux-arm-kernel@lists.infradead.org; linux-
-> > mediatek@lists.infradead.org; Biju Das <biju.das@bp.renesas.com>; Linus
-> > Walleij <linus.walleij@linaro.org>
-> > Subject: Re: [PATCH v5 4/6] usb: roles: add API to get usb_role_switch by
-> > node
-> > 
-> > On Mon, May 20, 2019 at 10:39:11AM +0800, Chunfeng Yun wrote:
-> > > Hi,
-> > > On Fri, 2019-05-17 at 16:05 +0300, Heikki Krogerus wrote:
-> > > > Hi,
-> > > >
-> > > > On Fri, May 17, 2019 at 01:37:36PM +0300, Heikki Krogerus wrote:
-> > > > > On Tue, May 14, 2019 at 04:47:21PM +0800, Chunfeng Yun wrote:
-> > > > > > Add fwnode_usb_role_switch_get() to make easier to get
-> > > > > > usb_role_switch by fwnode which register it.
-> > > > > > It's useful when there is not device_connection registered
-> > > > > > between two drivers and only knows the fwnode which register
-> > > > > > usb_role_switch.
-> > > > > >
-> > > > > > Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
-> > > > > > Tested-by: Biju Das <biju.das@bp.renesas.com>
-> > > > >
-> > > > > Acked-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-> > > >
-> > > > Hold on. I just noticed Rob's comment on patch 2/6, where he points
-> > > > out that you don't need to use device graph since the controller is
-> > > > the parent of the connector. Doesn't that mean you don't really need
-> > > > this API?
-> > > No, I still need it.
-> > > The change is about the way how to get fwnode; when use device graph,
-> > > get fwnode by of_graph_get_remote_node(); but now will get fwnode by
-> > > of_get_parent();
-> > 
-> > OK, I get that, but I'm still not convinced about if something like this function
-> > is needed at all. I also have concerns regarding how you are using the
-> > function. I'll explain in comment to the patch 5/6 in this series...
+> in function snd_byt_rt5640_mc_probe and removed buffer yt_rt5640_codec_aif_name & byt_rt5640_cpu_dai_name
 > 
-> FYI, Currently  I am also using this api in my patch series.
-> https://patchwork.kernel.org/patch/10944637/
+> Signed-off-by: Nariman Etemadi <narimantos@gmail.com>
 
-Yes, and I have the same question for you I jusb asked in comment I
-added to the patch 5/6 of this series. Why isn't usb_role_switch_get()
-enough?
+Series (all 4 patches) look good to me:
 
-thanks,
+Reviewed-by: Hans de Goede <hdegoede@redhat.com>
 
--- 
-heikki
+Regards,
+
+Hans
+
+
+> ---
+>   sound/soc/intel/boards/bytcr_rt5640.c | 26 ++++----------------------
+>   1 file changed, 4 insertions(+), 22 deletions(-)
+> 
+> diff --git a/sound/soc/intel/boards/bytcr_rt5640.c b/sound/soc/intel/boards/bytcr_rt5640.c
+> index 940eb27158da..0d91642ca287 100644
+> --- a/sound/soc/intel/boards/bytcr_rt5640.c
+> +++ b/sound/soc/intel/boards/bytcr_rt5640.c
+> @@ -1075,8 +1075,6 @@ static struct snd_soc_dai_link byt_rt5640_dais[] = {
+>   
+>   /* SoC card */
+>   static char byt_rt5640_codec_name[SND_ACPI_I2C_ID_LEN];
+> -static char byt_rt5640_codec_aif_name[12]; /*  = "rt5640-aif[1|2]" */
+> -static char byt_rt5640_cpu_dai_name[10]; /*  = "ssp[0|2]-port" */
+>   static char byt_rt5640_long_name[40]; /* = "bytcr-rt5640-*-spk-*-mic" */
+>   
+>   static int byt_rt5640_suspend(struct snd_soc_card *card)
+> @@ -1268,28 +1266,12 @@ static int snd_byt_rt5640_mc_probe(struct platform_device *pdev)
+>   	log_quirks(&pdev->dev);
+>   
+>   	if ((byt_rt5640_quirk & BYT_RT5640_SSP2_AIF2) ||
+> -	    (byt_rt5640_quirk & BYT_RT5640_SSP0_AIF2)) {
+> -
+> -		/* fixup codec aif name */
+> -		snprintf(byt_rt5640_codec_aif_name,
+> -			sizeof(byt_rt5640_codec_aif_name),
+> -			"%s", "rt5640-aif2");
+> -
+> -		byt_rt5640_dais[dai_index].codec_dai_name =
+> -			byt_rt5640_codec_aif_name;
+> -	}
+> +	    (byt_rt5640_quirk & BYT_RT5640_SSP0_AIF2))
+> +		byt_rt5640_dais[dai_index].codec_dai_name = "rt5640-aif2";
+>   
+>   	if ((byt_rt5640_quirk & BYT_RT5640_SSP0_AIF1) ||
+> -	    (byt_rt5640_quirk & BYT_RT5640_SSP0_AIF2)) {
+> -
+> -		/* fixup cpu dai name name */
+> -		snprintf(byt_rt5640_cpu_dai_name,
+> -			sizeof(byt_rt5640_cpu_dai_name),
+> -			"%s", "ssp0-port");
+> -
+> -		byt_rt5640_dais[dai_index].cpu_dai_name =
+> -			byt_rt5640_cpu_dai_name;
+> -	}
+> +	    (byt_rt5640_quirk & BYT_RT5640_SSP0_AIF2))
+> +		byt_rt5640_dais[dai_index].cpu_dai_name = "ssp0-port";
+>   
+>   	if (byt_rt5640_quirk & BYT_RT5640_MCLK_EN) {
+>   		priv->mclk = devm_clk_get(&pdev->dev, "pmc_plt_clk_3");
+> 
