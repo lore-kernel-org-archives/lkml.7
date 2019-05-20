@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B678AC04AAC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:20:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 505FEC04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:20:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7B227216E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:20:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D3A720656
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:20:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558354806;
-	bh=D+OVF9zVaavOZ4+qnrc3+XvfsjOEZgTq5woMEsD/t+I=;
+	s=default; t=1558354828;
+	bh=Cw6AfNVwd6J7h6gKJMpXsWrvyEHcG2I1ykekQ3qiNXA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NPO28jZyeWEw0CPJ/3ANLI3req32QImaS4XuCycdZoBCzHF0IqkY0KPQSFuEuiQ/b
-	 9d5Ply3QojZVemOkQ65Vh6zCkTRpDRuh8+XK4aDvcMa6P+7tsvWLfzOaJjjlPRt/IG
-	 ZKdVtvxzBmYn+VpAw7DWqsnUZHaK9DaTNFjxNtNU=
+	b=cO/VQ3SGYJHmT0f4a8Bu+IvllX/u0vERe6CIDcWxDr11n5ng6JGQ/0ZuLMsh09ER8
+	 zHZm2U5NpLq4/RgPeSWNyhi2TN/7yRE4dveYGy0az2cbFFGkciKn/W+5Rr4dbP3Jmg
+	 78Dcbc9PdUUR/a+1Ikm+ZqwbnyHMtNCSVGxKDALs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731769AbfETMUE (ORCPT
+        id S2387999AbfETMU1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 08:20:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33274 "EHLO mail.kernel.org"
+        Mon, 20 May 2019 08:20:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33770 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387908AbfETMT6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 08:19:58 -0400
+        id S1730475AbfETMUY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 08:20:24 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2292821726;
-        Mon, 20 May 2019 12:19:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5557220656;
+        Mon, 20 May 2019 12:20:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558354797;
-        bh=D+OVF9zVaavOZ4+qnrc3+XvfsjOEZgTq5woMEsD/t+I=;
+        s=default; t=1558354823;
+        bh=Cw6AfNVwd6J7h6gKJMpXsWrvyEHcG2I1ykekQ3qiNXA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0CqerLqjTGNK+KPmbma4lALLoAC1itz2yF3DXafIL2zbWiz98+wxtPU017tFNpaG+
-         vveNP76s3jD6elYd1sKjoVqeltD1WW8o14o3DAFxyk3SOeoQt3mD+CdYTsB3jmB6Xf
-         N2BNxil5UlqShziG0XuxP86mUIC9uWKMbBYlL4R4=
+        b=jWJdKouAqdypw5dItLGc6lRgVXIXiPyZXFCShEL66XkdwEVW1VMIO2/ZPQysMcmN2
+         RRQKDduzo19tXe4tkHIbe3ym4zwqy6X5pazoTlcpaL8igwLilzx3q7In/tPeYFWo7T
+         3mVsjCYYL2pkx5qmRZkRhQtIX6sG9ZxHe4+uIB/A=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Zygo Blaxell <ce3g8jdj@umail.furryterror.org>,
-        Filipe Manana <fdmanana@suse.com>,
-        David Sterba <dsterba@suse.com>
-Subject: [PATCH 4.14 45/63] Btrfs: do not start a transaction at iterate_extent_inodes()
-Date:   Mon, 20 May 2019 14:14:24 +0200
-Message-Id: <20190520115236.052028635@linuxfoundation.org>
+        stable@vger.kernel.org, Eric Biggers <ebiggers@google.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>
+Subject: [PATCH 4.14 54/63] crypto: ccm - fix incompatibility between "ccm" and "ccm_base"
+Date:   Mon, 20 May 2019 14:14:33 +0200
+Message-Id: <20190520115236.984256948@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190520115231.137981521@linuxfoundation.org>
 References: <20190520115231.137981521@linuxfoundation.org>
@@ -61,116 +59,148 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Filipe Manana <fdmanana@suse.com>
+From: Eric Biggers <ebiggers@google.com>
 
-commit bfc61c36260ca990937539cd648ede3cd749bc10 upstream.
+commit 6a1faa4a43f5fabf9cbeaa742d916e7b5e73120f upstream.
 
-When finding out which inodes have references on a particular extent, done
-by backref.c:iterate_extent_inodes(), from the BTRFS_IOC_LOGICAL_INO (both
-v1 and v2) ioctl and from scrub we use the transaction join API to grab a
-reference on the currently running transaction, since in order to give
-accurate results we need to inspect the delayed references of the currently
-running transaction.
+CCM instances can be created by either the "ccm" template, which only
+allows choosing the block cipher, e.g. "ccm(aes)"; or by "ccm_base",
+which allows choosing the ctr and cbcmac implementations, e.g.
+"ccm_base(ctr(aes-generic),cbcmac(aes-generic))".
 
-However, if there is currently no running transaction, the join operation
-will create a new transaction. This is inefficient as the transaction will
-eventually be committed, doing unnecessary IO and introducing a potential
-point of failure that will lead to a transaction abort due to -ENOSPC, as
-recently reported [1].
+However, a "ccm_base" instance prevents a "ccm" instance from being
+registered using the same implementations.  Nor will the instance be
+found by lookups of "ccm".  This can be used as a denial of service.
+Moreover, "ccm_base" instances are never tested by the crypto
+self-tests, even if there are compatible "ccm" tests.
 
-That's because the join, creates the transaction but does not reserve any
-space, so when attempting to update the root item of the root passed to
-btrfs_join_transaction(), during the transaction commit, we can end up
-failling with -ENOSPC. Users of a join operation are supposed to actually
-do some filesystem changes and reserve space by some means, which is not
-the case of iterate_extent_inodes(), it is a read-only operation for all
-contextes from which it is called.
+The root cause of these problems is that instances of the two templates
+use different cra_names.  Therefore, fix these problems by making
+"ccm_base" instances set the same cra_name as "ccm" instances, e.g.
+"ccm(aes)" instead of "ccm_base(ctr(aes-generic),cbcmac(aes-generic))".
 
-The reported [1] -ENOSPC failure stack trace is the following:
+This requires extracting the block cipher name from the name of the ctr
+and cbcmac algorithms.  It also requires starting to verify that the
+algorithms are really ctr and cbcmac using the same block cipher, not
+something else entirely.  But it would be bizarre if anyone were
+actually using non-ccm-compatible algorithms with ccm_base, so this
+shouldn't break anyone in practice.
 
- heisenberg kernel: ------------[ cut here ]------------
- heisenberg kernel: BTRFS: Transaction aborted (error -28)
- heisenberg kernel: WARNING: CPU: 0 PID: 7137 at fs/btrfs/root-tree.c:136 btrfs_update_root+0x22b/0x320 [btrfs]
-(...)
- heisenberg kernel: CPU: 0 PID: 7137 Comm: btrfs-transacti Not tainted 4.19.0-4-amd64 #1 Debian 4.19.28-2
- heisenberg kernel: Hardware name: FUJITSU LIFEBOOK U757/FJNB2A5, BIOS Version 1.21 03/19/2018
- heisenberg kernel: RIP: 0010:btrfs_update_root+0x22b/0x320 [btrfs]
-(...)
- heisenberg kernel: RSP: 0018:ffffb5448828bd40 EFLAGS: 00010286
- heisenberg kernel: RAX: 0000000000000000 RBX: ffff8ed56bccef50 RCX: 0000000000000006
- heisenberg kernel: RDX: 0000000000000007 RSI: 0000000000000092 RDI: ffff8ed6bda166a0
- heisenberg kernel: RBP: 00000000ffffffe4 R08: 00000000000003df R09: 0000000000000007
- heisenberg kernel: R10: 0000000000000000 R11: 0000000000000001 R12: ffff8ed63396a078
- heisenberg kernel: R13: ffff8ed092d7c800 R14: ffff8ed64f5db028 R15: ffff8ed6bd03d068
- heisenberg kernel: FS:  0000000000000000(0000) GS:ffff8ed6bda00000(0000) knlGS:0000000000000000
- heisenberg kernel: CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
- heisenberg kernel: CR2: 00007f46f75f8000 CR3: 0000000310a0a002 CR4: 00000000003606f0
- heisenberg kernel: DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
- heisenberg kernel: DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
- heisenberg kernel: Call Trace:
- heisenberg kernel:  commit_fs_roots+0x166/0x1d0 [btrfs]
- heisenberg kernel:  ? _cond_resched+0x15/0x30
- heisenberg kernel:  ? btrfs_run_delayed_refs+0xac/0x180 [btrfs]
- heisenberg kernel:  btrfs_commit_transaction+0x2bd/0x870 [btrfs]
- heisenberg kernel:  ? start_transaction+0x9d/0x3f0 [btrfs]
- heisenberg kernel:  transaction_kthread+0x147/0x180 [btrfs]
- heisenberg kernel:  ? btrfs_cleanup_transaction+0x530/0x530 [btrfs]
- heisenberg kernel:  kthread+0x112/0x130
- heisenberg kernel:  ? kthread_bind+0x30/0x30
- heisenberg kernel:  ret_from_fork+0x35/0x40
- heisenberg kernel: ---[ end trace 05de912e30e012d9 ]---
-
-So fix that by using the attach API, which does not create a transaction
-when there is currently no running transaction.
-
-[1] https://lore.kernel.org/linux-btrfs/b2a668d7124f1d3e410367f587926f622b3f03a4.camel@scientia.net/
-
-Reported-by: Zygo Blaxell <ce3g8jdj@umail.furryterror.org>
-CC: stable@vger.kernel.org # 4.4+
-Signed-off-by: Filipe Manana <fdmanana@suse.com>
-Reviewed-by: David Sterba <dsterba@suse.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
+Fixes: 4a49b499dfa0 ("[CRYPTO] ccm: Added CCM mode")
+Cc: stable@vger.kernel.org
+Signed-off-by: Eric Biggers <ebiggers@google.com>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
----
- fs/btrfs/backref.c |   18 ++++++++++++------
- 1 file changed, 12 insertions(+), 6 deletions(-)
 
---- a/fs/btrfs/backref.c
-+++ b/fs/btrfs/backref.c
-@@ -1907,13 +1907,19 @@ int iterate_extent_inodes(struct btrfs_f
- 			extent_item_objectid);
+---
+ crypto/ccm.c |   44 ++++++++++++++++++--------------------------
+ 1 file changed, 18 insertions(+), 26 deletions(-)
+
+--- a/crypto/ccm.c
++++ b/crypto/ccm.c
+@@ -455,7 +455,6 @@ static void crypto_ccm_free(struct aead_
  
- 	if (!search_commit_root) {
--		trans = btrfs_join_transaction(fs_info->extent_root);
--		if (IS_ERR(trans))
--			return PTR_ERR(trans);
-+		trans = btrfs_attach_transaction(fs_info->extent_root);
-+		if (IS_ERR(trans)) {
-+			if (PTR_ERR(trans) != -ENOENT &&
-+			    PTR_ERR(trans) != -EROFS)
-+				return PTR_ERR(trans);
-+			trans = NULL;
-+		}
-+	}
+ static int crypto_ccm_create_common(struct crypto_template *tmpl,
+ 				    struct rtattr **tb,
+-				    const char *full_name,
+ 				    const char *ctr_name,
+ 				    const char *mac_name)
+ {
+@@ -483,7 +482,8 @@ static int crypto_ccm_create_common(stru
+ 
+ 	mac = __crypto_hash_alg_common(mac_alg);
+ 	err = -EINVAL;
+-	if (mac->digestsize != 16)
++	if (strncmp(mac->base.cra_name, "cbcmac(", 7) != 0 ||
++	    mac->digestsize != 16)
+ 		goto out_put_mac;
+ 
+ 	inst = kzalloc(sizeof(*inst) + sizeof(*ictx), GFP_KERNEL);
+@@ -506,23 +506,27 @@ static int crypto_ccm_create_common(stru
+ 
+ 	ctr = crypto_spawn_skcipher_alg(&ictx->ctr);
+ 
+-	/* Not a stream cipher? */
++	/* The skcipher algorithm must be CTR mode, using 16-byte blocks. */
+ 	err = -EINVAL;
+-	if (ctr->base.cra_blocksize != 1)
++	if (strncmp(ctr->base.cra_name, "ctr(", 4) != 0 ||
++	    crypto_skcipher_alg_ivsize(ctr) != 16 ||
++	    ctr->base.cra_blocksize != 1)
+ 		goto err_drop_ctr;
+ 
+-	/* We want the real thing! */
+-	if (crypto_skcipher_alg_ivsize(ctr) != 16)
++	/* ctr and cbcmac must use the same underlying block cipher. */
++	if (strcmp(ctr->base.cra_name + 4, mac->base.cra_name + 7) != 0)
+ 		goto err_drop_ctr;
+ 
+ 	err = -ENAMETOOLONG;
++	if (snprintf(inst->alg.base.cra_name, CRYPTO_MAX_ALG_NAME,
++		     "ccm(%s", ctr->base.cra_name + 4) >= CRYPTO_MAX_ALG_NAME)
++		goto err_drop_ctr;
 +
-+	if (trans)
- 		btrfs_get_tree_mod_seq(fs_info, &tree_mod_seq_elem);
--	} else {
-+	else
- 		down_read(&fs_info->commit_root_sem);
--	}
+ 	if (snprintf(inst->alg.base.cra_driver_name, CRYPTO_MAX_ALG_NAME,
+ 		     "ccm_base(%s,%s)", ctr->base.cra_driver_name,
+ 		     mac->base.cra_driver_name) >= CRYPTO_MAX_ALG_NAME)
+ 		goto err_drop_ctr;
  
- 	ret = btrfs_find_all_leafs(trans, fs_info, extent_item_objectid,
- 				   tree_mod_seq_elem.seq, &refs,
-@@ -1945,7 +1951,7 @@ int iterate_extent_inodes(struct btrfs_f
+-	memcpy(inst->alg.base.cra_name, full_name, CRYPTO_MAX_ALG_NAME);
+-
+ 	inst->alg.base.cra_flags = ctr->base.cra_flags & CRYPTO_ALG_ASYNC;
+ 	inst->alg.base.cra_priority = (mac->base.cra_priority +
+ 				       ctr->base.cra_priority) / 2;
+@@ -564,7 +568,6 @@ static int crypto_ccm_create(struct cryp
+ 	const char *cipher_name;
+ 	char ctr_name[CRYPTO_MAX_ALG_NAME];
+ 	char mac_name[CRYPTO_MAX_ALG_NAME];
+-	char full_name[CRYPTO_MAX_ALG_NAME];
  
- 	free_leaf_list(refs);
- out:
--	if (!search_commit_root) {
-+	if (trans) {
- 		btrfs_put_tree_mod_seq(fs_info, &tree_mod_seq_elem);
- 		btrfs_end_transaction(trans);
- 	} else {
+ 	cipher_name = crypto_attr_alg_name(tb[1]);
+ 	if (IS_ERR(cipher_name))
+@@ -578,12 +581,7 @@ static int crypto_ccm_create(struct cryp
+ 		     cipher_name) >= CRYPTO_MAX_ALG_NAME)
+ 		return -ENAMETOOLONG;
+ 
+-	if (snprintf(full_name, CRYPTO_MAX_ALG_NAME, "ccm(%s)", cipher_name) >=
+-	    CRYPTO_MAX_ALG_NAME)
+-		return -ENAMETOOLONG;
+-
+-	return crypto_ccm_create_common(tmpl, tb, full_name, ctr_name,
+-					mac_name);
++	return crypto_ccm_create_common(tmpl, tb, ctr_name, mac_name);
+ }
+ 
+ static struct crypto_template crypto_ccm_tmpl = {
+@@ -596,23 +594,17 @@ static int crypto_ccm_base_create(struct
+ 				  struct rtattr **tb)
+ {
+ 	const char *ctr_name;
+-	const char *cipher_name;
+-	char full_name[CRYPTO_MAX_ALG_NAME];
++	const char *mac_name;
+ 
+ 	ctr_name = crypto_attr_alg_name(tb[1]);
+ 	if (IS_ERR(ctr_name))
+ 		return PTR_ERR(ctr_name);
+ 
+-	cipher_name = crypto_attr_alg_name(tb[2]);
+-	if (IS_ERR(cipher_name))
+-		return PTR_ERR(cipher_name);
+-
+-	if (snprintf(full_name, CRYPTO_MAX_ALG_NAME, "ccm_base(%s,%s)",
+-		     ctr_name, cipher_name) >= CRYPTO_MAX_ALG_NAME)
+-		return -ENAMETOOLONG;
++	mac_name = crypto_attr_alg_name(tb[2]);
++	if (IS_ERR(mac_name))
++		return PTR_ERR(mac_name);
+ 
+-	return crypto_ccm_create_common(tmpl, tb, full_name, ctr_name,
+-					cipher_name);
++	return crypto_ccm_create_common(tmpl, tb, ctr_name, mac_name);
+ }
+ 
+ static struct crypto_template crypto_ccm_base_tmpl = {
 
 
