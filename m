@@ -2,93 +2,141 @@ Return-Path: <SRS0=lq4r=TU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A05A6C04AAC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 16:48:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D97EC04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 16:50:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 750852173E
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 16:48:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 30DE1214DA
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 16:50:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="QPI/0EXL"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="L3fOvOhT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390010AbfETQsu (ORCPT
+        id S2390150AbfETQuK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 12:48:50 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:38345 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388933AbfETQsu (ORCPT
+        Mon, 20 May 2019 12:50:10 -0400
+Received: from mail-it1-f194.google.com ([209.85.166.194]:53458 "EHLO
+        mail-it1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388598AbfETQuJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 12:48:50 -0400
-Received: by mail-pl1-f194.google.com with SMTP id f97so6971852plb.5
-        for <linux-kernel@vger.kernel.org>; Mon, 20 May 2019 09:48:50 -0700 (PDT)
+        Mon, 20 May 2019 12:50:09 -0400
+Received: by mail-it1-f194.google.com with SMTP id m141so115484ita.3
+        for <linux-kernel@vger.kernel.org>; Mon, 20 May 2019 09:50:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:in-reply-to:references:date:message-id
-         :mime-version;
-        bh=Vpv1DN8EBhtKb87cGhyJ5jDNciiux86pE0rF8kV5anU=;
-        b=QPI/0EXLgUxAizQQp+dpGLgwI1Z9jwTSQYDwrECfSRd3uZls2oSgbhTYBR7s/zDFRq
-         wyMaNtE7ghGrsfUn3wl0iYUp6+pcXKHmQuWle9Pw9Ez6+dxZgxyTpbHn9NOirC7WRbjT
-         ECm5VTMyDT7OUfx/Ogt404q4ftwdgiEWY6Eo/HIAfZLcb3Hhg7hrzSWUjPoWfCNanAUO
-         jMHHo/O/aiR3vwTxC+nAKSvimPab6BfP6J8itkE6ADAUUNMiF7StTyeVJrjANhG8IDSB
-         zBXMxekpJl9tGqXo8do3NMWaL5SlbfSzBYD3qZi4vKHIgYoFjMWk16rwSA2rtLKTJ0gz
-         30oQ==
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=CIN3xDslN+TH7id+BCtq6Zq78dD5JN+LMcvwIfXWjL4=;
+        b=L3fOvOhTsO43dKwz0TIqNGbaGlmiIMVZC88HR45s5yDDy5j1aKnThdkZt8TkKCIPsK
+         3nJf0MnYtRxx7ZUi5ycvvVNh90bJ/GXckVM7RvjVFjd6klG49ZrMqDe9jG8YAKKDgQOz
+         gpGoYUHt5YMtyCplDIiEIUngA/gQ/t4+25l4NzzcxoFKOTEfduBkUIlz09s5oCPN7lqP
+         jvQYZONWPm5OsTftRy9QjwoRAa+qjr/gkuwRyok9Lj+qBH1NzHHZAj/TjNtQsNSG42cE
+         Qb1QZhfFLGbaZ3eM19FyaWFDQ+qsu3LmN3l6FwmsuMrnCHdiJIyQXhiNfMts1Y/6hiSN
+         uvDA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=Vpv1DN8EBhtKb87cGhyJ5jDNciiux86pE0rF8kV5anU=;
-        b=LI2eoinfDUb6gvof5e9iXHYdD9oJXU6b3G+Mr5cq8mmLduNCHR+y+1ttS7T0BWCTi9
-         0TaKDmbxa1G0/9AMmkmOstJ2mfpeVXRYC/wBr0yG3WF4x8hkxErpY0/OoiDdLvycaQRb
-         11mVgRy9e8t+snjZ++diNdMCcedD9gAsSRRDoRvdVJHxemhXMDaQ53SiOVuzSRRTNyRt
-         tdmSQObirgHrdx5DNgdCapkUz0UorCV6/n0gLfT+owevmDFo7eH4Nqz2a5u35lUHgF3C
-         OjIhU8ltDjT+SZtCQivLkYtesSTcM16HH2OGPVa//uEBemvnrwS3gvhY3fS8q0inhsCM
-         gZ3A==
-X-Gm-Message-State: APjAAAVOZFKPg2NTzXKnUzkAgGPG8OZCH/gFOoSgMpF90TigMS/SsUDK
-        LYoGG6e7s7CwNHL3ZXGK4k28jA==
-X-Google-Smtp-Source: APXvYqysMaZyPln+k/pU+4hULFRtD/HxMzhT4oDAxWzPHQZQ1SyWi45lHBtw8TfwNthofEo4JX3sdg==
-X-Received: by 2002:a17:902:758b:: with SMTP id j11mr19217707pll.191.1558370929609;
-        Mon, 20 May 2019 09:48:49 -0700 (PDT)
-Received: from localhost ([2601:602:9200:a1a5:e483:1cc0:e2c2:140d])
-        by smtp.googlemail.com with ESMTPSA id r1sm11689953pgo.9.2019.05.20.09.48.48
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 20 May 2019 09:48:48 -0700 (PDT)
-From:   Kevin Hilman <khilman@baylibre.com>
-To:     Rob Herring <robh@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-amlogic@lists.infradead.org,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Carlo Caione <carlo@caione.org>, devicetree@vger.kernel.org
-Subject: Re: [PATCH v3 1/2] dt-bindings: arm: amlogic: Move 'amlogic,meson-gx-ao-secure' binding to its own file
-In-Reply-To: <20190517152723.28518-1-robh@kernel.org>
-References: <20190517152723.28518-1-robh@kernel.org>
-Date:   Mon, 20 May 2019 09:48:48 -0700
-Message-ID: <7hr28t8427.fsf@baylibre.com>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=CIN3xDslN+TH7id+BCtq6Zq78dD5JN+LMcvwIfXWjL4=;
+        b=PjxSkdhABRvHQSg7aEOna4BDvrMtlqDZmADkx0fPbpwu23O7sL7eFQ7hRu9ppxdW6n
+         Pxaw6PsyPnt1x5Io6SJPwajz+x94UtkTpcny68W/gzXtS8KPHviEDo9fF/KpNXJQLlHU
+         MkTNI0uct7bBNFReY3cZF/8fOUivAEuTwXSam0dUXgtjivLBrnMar1nVgkzEB9jPtH5X
+         WnroYGesFWTv/bpyz5SjvHy9l4QEseCweDJP85q5htc0b2OUVxt6/QLDkZEbYEMXAl0a
+         +OCwOvwrND5fb28gAnYyusy07tdVYEPEeevUVZAhnF8QZBjMjoSBMnxCHEk3DWui/Hxo
+         st2g==
+X-Gm-Message-State: APjAAAVUbeBiHJAkCdtOMvUQLMFdBdKS6aHS9MjZHMkxUax+IZBa0O8w
+        pHetFiw6YHfPxjMby/8Ouar9sbcTMlE=
+X-Google-Smtp-Source: APXvYqwabxu9tAElG3MkV6DEr23OCHQPyKNHB3avN48hflvKACb+6aFsL0h5orned8rcpIa9WWo3yQ==
+X-Received: by 2002:a02:228f:: with SMTP id o137mr49098856jao.39.1558371008557;
+        Mon, 20 May 2019 09:50:08 -0700 (PDT)
+Received: from [172.22.22.26] (c-71-195-29-92.hsd1.mn.comcast.net. [71.195.29.92])
+        by smtp.googlemail.com with ESMTPSA id m189sm22566itm.21.2019.05.20.09.50.07
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 20 May 2019 09:50:07 -0700 (PDT)
+Subject: Re: [PATCH 09/18] soc: qcom: ipa: GSI transactions
+To:     Evan Green <evgreen@chromium.org>
+Cc:     Arnd Bergmann <arnd@arndb.de>, David Miller <davem@davemloft.net>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Ilias Apalodimas <ilias.apalodimas@linaro.org>,
+        syadagir@codeaurora.org, mjavid@codeaurora.org,
+        Ben Chan <benchan@google.com>,
+        Eric Caruso <ejcaruso@google.com>, abhishek.esse@gmail.com,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <20190512012508.10608-1-elder@linaro.org>
+ <20190512012508.10608-10-elder@linaro.org>
+ <CAK8P3a0eYWN6mMwft5OSu8wQQo=kWh5safGFFNkDCELZJyiMmQ@mail.gmail.com>
+ <14a040b6-8187-3fbc-754d-2e267d587858@linaro.org>
+ <CAK8P3a37bPRZTHZcrg8KrYRLAhCr9pk8v4yuo_wSyUONs2OysQ@mail.gmail.com>
+ <4a34d381-d31d-ea49-d6d3-3c4f632958e3@linaro.org>
+ <dcd648f2-5305-04dd-8997-be87a9961fd9@linaro.org>
+ <CAK8P3a0FfSvTF8kkQ8pyKFNX9-fSXvtEyMBYTjtM+VOPxMPkWg@mail.gmail.com>
+ <d3d4670f-eb8b-7dcf-f91a-1ec1d4d96f67@linaro.org>
+ <CAK8P3a12+3a-p2pNuQrJu01dOJJuCoQ4ttt=Y0g97wTtBmQO5w@mail.gmail.com>
+ <8040fa0e-8446-1ec0-cf75-ac1c17331da5@linaro.org>
+ <CAE=gft4ZkO+cGMNEt05+Xw=pEoR7gzJ4jBRB9wA0gQ7V=Pag6g@mail.gmail.com>
+From:   Alex Elder <elder@linaro.org>
+Message-ID: <fa83020a-248c-9686-5a90-81923fe843bb@linaro.org>
+Date:   Mon, 20 May 2019 11:50:06 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain
+In-Reply-To: <CAE=gft4ZkO+cGMNEt05+Xw=pEoR7gzJ4jBRB9wA0gQ7V=Pag6g@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Rob Herring <robh@kernel.org> writes:
+On 5/20/19 11:34 AM, Evan Green wrote:
+> On Mon, May 20, 2019 at 7:44 AM Alex Elder <elder@linaro.org> wrote:
+>>
+>> On 5/20/19 9:43 AM, Arnd Bergmann wrote:
+>>> I have no idea how two 8-bit assignments could do that,
+>>> it sounds like a serious gcc bug, unless you mean two
+>>> 8-byte assignments, which would be within the range
+>>> of expected behavior. If it's actually 8-bit stores, please
+>>> open a bug against gcc with a minimized test case.
+>>
+>> Sorry, it's 8 *byte* assignments, not 8 bit.    -Alex
+> 
+> Is it important to the hardware that you're writing all 128 bits of
 
-> It is best practice to have 1 binding per file, so board level bindings
-> should be separate for various misc SoC bindings.
->
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: Carlo Caione <carlo@caione.org>
-> Cc: Kevin Hilman <khilman@baylibre.com>
-> Cc: devicetree@vger.kernel.org
-> Cc: linux-arm-kernel@lists.infradead.org
-> Cc: linux-amlogic@lists.infradead.org
-> Signed-off-by: Rob Herring <robh@kernel.org>
-> ---
-> It seems this one fell thru the cracks and didn't get applied.
+No, it is not important in the ways you are describing.
 
-Feel free to apply directly.
+We're just geeking out over how to get optimal performance.
+A single 128-bit write is nicer than two 64-bit writes,
+or more smaller writes.
 
-Acked-by: Kevin Hilman <khilman@baylibre.com>
+The hardware won't touch the TRE until the doorbell gets
+rung telling it that it is permitted to do so.  The doorbell
+is an I/O write, which implies a memory barrier, so the entire
+TRE will be up-to-date in memory regardless of whether we
+write it 128 bits or 8 bits at a time.
+
+					-Alex
+
+> this in an atomic manner? My understanding is that while you may get
+> different behaviors using various combinations of
+> volatile/aligned/packed, this is way deep in the compiler's "free to
+> do whatever I want" territory. If the hardware's going to misbehave if
+> you don't get an atomic 128-bit write, then I don't think this has
+> been nailed down enough, since I think Clang or even a different
+> version of GCC is within its right to split the writes up differently.
+> 
+> Is filling out the TRE touching memory that the hardware is also
+> watching at the same time? Usually when the hardware cares about the
+> contents of a struct, there's a particular (smaller) field that can be
+> written out atomically. I remember USB having these structs that
+> needed to be filled out, but the hardware wouldn't actually slurp them
+> up until the smaller "token" part was non-zero. If the hardware is
+> scanning this struct, it might be safer to do it in two steps: 1)
+> flush out the filled out struct except for the field with the "go" bit
+> (which you'd have zeroed), then 2) set the field containing the "go"
+> bit.
+> 
+
