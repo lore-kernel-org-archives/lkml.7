@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EABFFC04AAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:50:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14EEEC04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:50:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B7E562054F
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:50:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DC40E20815
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:50:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558356613;
-	bh=aoak7GZr+DL/b67tuvNtNkms+8SOBqbrBSp9kWjJFA0=;
+	s=default; t=1558356615;
+	bh=YFU/QKlpZL71fZy6JIevh2vlJq1wS1U6jP3tgfScQ7A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=j1XelIFi6SCP3ZJBlEr5fbkVblhYqo/157CvvDw0V8xoMivhvTnbjxjwEJkaX7wUg
-	 BQZVQqRVq0xzK1shXAxedykMK63vlM8OhJzWjuFxCcbl4Cl0vpJTv9FlIfx3/zjrK+
-	 CZUYn9nNt6raax4LhUQDUjTivawkJ/4+0h7rOuhA=
+	b=tDg4AXp24nD4w8XSKEpJkJUSKtOClUArWx7lyWBsK2mg9TOFOVR6YhdK7GXnsAsJb
+	 ezgZfzLAdCNkW9vcNLhGFyyQwVzCUDCBlQL5etUAwabiBRP3YNoBnaj0rSbtHjOhqq
+	 fy9knSRqo4GFd6/3hgGJs4BweVwR/jNrevfnj2h4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387627AbfETMVE (ORCPT
+        id S2388086AbfETMVC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 08:21:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34526 "EHLO mail.kernel.org"
+        Mon, 20 May 2019 08:21:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34476 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388077AbfETMVB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 08:21:01 -0400
+        id S2388067AbfETMU6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 08:20:58 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 06D8F20656;
-        Mon, 20 May 2019 12:20:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3D23C214AE;
+        Mon, 20 May 2019 12:20:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558354860;
-        bh=aoak7GZr+DL/b67tuvNtNkms+8SOBqbrBSp9kWjJFA0=;
+        s=default; t=1558354857;
+        bh=YFU/QKlpZL71fZy6JIevh2vlJq1wS1U6jP3tgfScQ7A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=R1QCSEAEp+7MdSTBQDEOfgQE5FepZCISt1ydWul8vIPnvy4lAu06ookzuCBJgLjao
-         1HXkdkpzicqUMsoFdXHX86U01W4jR7C9T6zm3OLuelPKj/8XAgP7pHsVWQCwYtRmiv
-         YGGdiBmtwzoIAWE88eggv5Vy8OUKWjKYEioZu2kU=
+        b=yifoIw2t/17DAI73z7QpPitXX+FBCcNUw7P4LblF6jYtwLpseuPdU4hCx+b6wRO70
+         GFp4dFumMFXeikKZLiW+WKLIh/TPi+HNXRx6GfTmQCt4F2nIVyKCTIDTY8UtgHeT8c
+         iDqAmK8Dm4opSjtmj94IKln4LBx40ZVPhbrobJlk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, "zhangyi (F)" <yi.zhang@huawei.com>,
-        Theodore Tso <tytso@mit.edu>, Jan Kara <jack@suse.cz>
-Subject: [PATCH 4.14 63/63] ext4: fix compile error when using BUFFER_TRACE
-Date:   Mon, 20 May 2019 14:14:42 +0200
-Message-Id: <20190520115237.837048692@linuxfoundation.org>
+        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Matthew Wilcox <willy@infradead.org>
+Subject: [PATCH 4.14 62/63] iov_iter: optimize page_copy_sane()
+Date:   Mon, 20 May 2019 14:14:41 +0200
+Message-Id: <20190520115237.780771243@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190520115231.137981521@linuxfoundation.org>
 References: <20190520115231.137981521@linuxfoundation.org>
@@ -59,36 +60,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: zhangyi (F) <yi.zhang@huawei.com>
+From: Eric Dumazet <edumazet@google.com>
 
-commit ddccb6dbe780d68133191477571cb7c69e17bb8c upstream.
+commit 6daef95b8c914866a46247232a048447fff97279 upstream.
 
-Fix compile error below when using BUFFER_TRACE.
+Avoid cache line miss dereferencing struct page if we can.
 
-fs/ext4/inode.c: In function ‘ext4_expand_extra_isize’:
-fs/ext4/inode.c:5979:19: error: request for member ‘bh’ in something not a structure or union
-  BUFFER_TRACE(iloc.bh, "get_write_access");
+page_copy_sane() mostly deals with order-0 pages.
 
-Fixes: c03b45b853f58 ("ext4, project: expand inode extra size if possible")
-Signed-off-by: zhangyi (F) <yi.zhang@huawei.com>
-Signed-off-by: Theodore Ts'o <tytso@mit.edu>
-Reviewed-by: Jan Kara <jack@suse.cz>
+Extra cache line miss is visible on TCP recvmsg() calls dealing
+with GRO packets (typically 45 page frags are attached to one skb).
+
+Bringing the 45 struct pages into cpu cache while copying the data
+is not free, since the freeing of the skb (and associated
+page frags put_page()) can happen after cache lines have been evicted.
+
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Cc: Al Viro <viro@zeniv.linux.org.uk>
+Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
+Cc: Matthew Wilcox <willy@infradead.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/ext4/inode.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ lib/iov_iter.c |   17 +++++++++++++++--
+ 1 file changed, 15 insertions(+), 2 deletions(-)
 
---- a/fs/ext4/inode.c
-+++ b/fs/ext4/inode.c
-@@ -5818,7 +5818,7 @@ int ext4_expand_extra_isize(struct inode
+--- a/lib/iov_iter.c
++++ b/lib/iov_iter.c
+@@ -687,8 +687,21 @@ EXPORT_SYMBOL(_copy_from_iter_full_nocac
  
- 	ext4_write_lock_xattr(inode, &no_expand);
+ static inline bool page_copy_sane(struct page *page, size_t offset, size_t n)
+ {
+-	struct page *head = compound_head(page);
+-	size_t v = n + offset + page_address(page) - page_address(head);
++	struct page *head;
++	size_t v = n + offset;
++
++	/*
++	 * The general case needs to access the page order in order
++	 * to compute the page size.
++	 * However, we mostly deal with order-0 pages and thus can
++	 * avoid a possible cache line miss for requests that fit all
++	 * page orders.
++	 */
++	if (n <= v && v <= PAGE_SIZE)
++		return true;
++
++	head = compound_head(page);
++	v += (page - head) << PAGE_SHIFT;
  
--	BUFFER_TRACE(iloc.bh, "get_write_access");
-+	BUFFER_TRACE(iloc->bh, "get_write_access");
- 	error = ext4_journal_get_write_access(handle, iloc->bh);
- 	if (error) {
- 		brelse(iloc->bh);
+ 	if (likely(n <= v && v <= (PAGE_SIZE << compound_order(head))))
+ 		return true;
 
 
