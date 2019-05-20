@@ -2,74 +2,93 @@ Return-Path: <SRS0=lq4r=TU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA47FC04AAC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 10:12:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B60BC04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 10:12:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 967C020856
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 10:12:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D378C206B6
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 10:12:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ZU0ytO4Y"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="XC8PRwo8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732401AbfETKMN (ORCPT
+        id S1732415AbfETKMX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 06:12:13 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:37150 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730468AbfETKMM (ORCPT
+        Mon, 20 May 2019 06:12:23 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:36048 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732402AbfETKMX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 06:12:12 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=MqrvqRAJlxcONvOERepJ1ia9im/zVqpqGszIN9wgOpo=; b=ZU0ytO4YuOP96ibdGXamVHekr
-        uBSM7cCD4CWqHQfee0lTS97z/EH61ONs+mc6CZYtOT3GX7GdQmDV3ZCOxswvcWlCdcD5tUMAKf3lO
-        8cpp0xOP8zB04CG4MxT6SoS91K/bYf1pOv70rCpVbLb80GTGRylJADjqzF3cgmEgHUCkxQGxvFu3x
-        aOyZDtSq0VnBtTuwVqlvi3AyMOPs0BZtj5FOG+3gvaPGFhfapQUsk0j9OXJifHtQQuG53bi2iid/Q
-        FTK3ijbqOwmRyAmwSPJpu/fnRPXmJu6s/sGdB6ZSVuyzXo7qkti7ONQZV6wv8/86V2mFIRECvY9P/
-        aujbpJYRQ==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hSfH4-0003eI-EN; Mon, 20 May 2019 10:12:06 +0000
-Date:   Mon, 20 May 2019 03:12:06 -0700
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Oliver Neukum <oneukum@suse.com>
-Cc:     Christoph Hellwig <hch@infradead.org>,
-        Jaewon Kim <jaewon31.kim@gmail.com>, linux-mm@kvack.org,
-        gregkh@linuxfoundation.org, Jaewon Kim <jaewon31.kim@samsung.com>,
-        m.szyprowski@samsung.com, ytk.lee@samsung.com,
-        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org
-Subject: Re: [RFC PATCH] usb: host: xhci: allow __GFP_FS in dma allocation
-Message-ID: <20190520101206.GA9291@infradead.org>
-References: <CAJrd-UuMRdWHky4gkmiR0QYozfXW0O35Ohv6mJPFx2TLa8hRKg@mail.gmail.com>
- <20190520055657.GA31866@infradead.org>
- <1558343365.12672.2.camel@suse.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1558343365.12672.2.camel@suse.com>
-User-Agent: Mutt/1.9.2 (2017-12-15)
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+        Mon, 20 May 2019 06:12:23 -0400
+Received: by mail-pl1-f195.google.com with SMTP id d21so6514370plr.3
+        for <linux-kernel@vger.kernel.org>; Mon, 20 May 2019 03:12:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=nj86Nyw3KJK7Z3FsC5eQxrUvkQQ/Oi+NDG8wLjmFGQU=;
+        b=XC8PRwo84WSBd/TUs7O4kUryHVFjZ0XnohBkePvQGh3CobFgptIyYyK9QPrxq+moTw
+         qheK3uDYfkxqc+38JpOr+MuQx3M+slPhb4hsHvX/1FdLomKsDGaJBTXctgbRuPwhMo6I
+         +ItbFYvP1KMvoATv/mJdHRFf42AEBmhCLxJ14QY8cCi6i5VRzHv6VW72gfwzM8yUvUm7
+         H+nNdj2feSOkTDc1EC8y6kKnXffkzwVY6UGQ1UscoSQKq+jiqwPU+ZbHj6fmu/jr3bKY
+         ytyKTtebsLfAXv25ZfqOOLmPcisMLpAYSSglfz3JVyN8wMm6N+4iV+lpY3eGVvGcgFev
+         ee/g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=nj86Nyw3KJK7Z3FsC5eQxrUvkQQ/Oi+NDG8wLjmFGQU=;
+        b=W8DUpig9bU2g9spOqVMNVBZ/lzUzm//lH2AmNf4k/DcOD3xjNxgr2h5nUhXkdr054G
+         rQJTNQaVb0wfAHy30rvI1ukugmlOWz2FY+p3UJYc/4h66gpJmXUBZRPRqSZDLL3TSMMD
+         RN5N4SwqO4ofLEAbexaAXlVGUzk4sUbXz65iO+b0zxoVezWWkR9ZQDyDSMQJSrKyngj3
+         NlbakABKtchNfzovLexo/kczU7up1lj6RcU3JedpCqPiFIeSWXaPdh72NnqmDXfqWyCM
+         YF8+uRs+QQnBstvRJEeWfL/nITTW/cNBtdZR8DVdvKVOjrpTe0LAoY1PN6sLgxL/PbQB
+         MlwA==
+X-Gm-Message-State: APjAAAVq1mm+gq2uWoZDKVo1Yb2QxlqtkiJuUlRFwARxvGzupS3IjkxK
+        FIqZxoJ1D08eH4y3V63qa1Nwxw==
+X-Google-Smtp-Source: APXvYqxs+7628IuHBHqhbphPC8vlchUw/ugXo/fGIy1jfQpK4ADRQzLXXHQQSf8RfDbtwEP9NVZqPQ==
+X-Received: by 2002:a17:902:860c:: with SMTP id f12mr76409294plo.127.1558347142768;
+        Mon, 20 May 2019 03:12:22 -0700 (PDT)
+Received: from baolinwangubtpc.spreadtrum.com ([117.18.48.102])
+        by smtp.gmail.com with ESMTPSA id b3sm30098127pfr.146.2019.05.20.03.12.17
+        (version=TLS1 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Mon, 20 May 2019 03:12:22 -0700 (PDT)
+From:   Baolin Wang <baolin.wang@linaro.org>
+To:     adrian.hunter@intel.com, ulf.hansson@linaro.org,
+        zhang.lyra@gmail.com, orsonzhai@gmail.com, robh+dt@kernel.org,
+        mark.rutland@arm.com, arnd@arndb.de, olof@lixom.net
+Cc:     baolin.wang@linaro.org, vincent.guittot@linaro.org, arm@kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-mmc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Subject: [PATCH 0/9] Add SD host controller support for SC9860 platform
+Date:   Mon, 20 May 2019 18:11:53 +0800
+Message-Id: <cover.1558346019.git.baolin.wang@linaro.org>
+X-Mailer: git-send-email 1.7.9.5
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 20, 2019 at 11:09:25AM +0200, Oliver Neukum wrote:
-> we actually do. It is just higher up in the calling path:
+This patch set adds optional clock support, HS400 enhanced strobe mode support,
+PHY DLL configuration and other optimization to make the SD host controller
+can work well on the Spreadtrum SC9860 platform.
 
-Perfect!
+Baolin Wang (9):
+  mmc: sdhci-sprd: Check the enable clock's return value correctly
+  dt-bindings: mmc: sprd: Add another optional clock documentation
+  mmc: sdhci-sprd: Add optional gate clock support
+  mmc: sdhci-sprd: Implement the get_max_timeout_count() interface
+  mmc: sdhci-sprd: Add HS400 enhanced strobe mode
+  mmc: sdhci-sprd: Enable PHY DLL to make clock stable
+  dt-bindings: mmc: sprd: Add PHY DLL delay documentation
+  mmc: sdhci-sprd: Add PHY DLL delay configuration
+  arm64: dts: sprd: Add Spreadtrum SD host controller support
 
-> So, do we need to audit the mem_flags again?
-> What are we supposed to use? GFP_KERNEL?
+ .../devicetree/bindings/mmc/sdhci-sprd.txt         |   19 +++
+ arch/arm64/boot/dts/sprd/whale2.dtsi               |   35 ++++
+ drivers/mmc/host/sdhci-sprd.c                      |  171 +++++++++++++++++++-
+ 3 files changed, 217 insertions(+), 8 deletions(-)
 
-GFP_KERNEL if you can block, GFP_ATOMIC if you can't for a good reason,
-that is the allocation is from irq context or under a spinlock.  If you
-think you have a case where you think you don't want to block, but it
-is not because of the above reasons we need to have a chat about the
-details.
+-- 
+1.7.9.5
+
