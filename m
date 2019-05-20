@@ -2,156 +2,134 @@ Return-Path: <SRS0=lq4r=TU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,FROM_EXCESS_BASE64,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C48F4C04AAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 08:13:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE7BCC04AAF
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 08:14:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 99AEF20656
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 08:13:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8149620656
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 08:14:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="orGKLIRO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730981AbfETINN (ORCPT
+        id S1730884AbfETIOX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 04:13:13 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:55204 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1730445AbfETINM (ORCPT
+        Mon, 20 May 2019 04:14:23 -0400
+Received: from mail-yb1-f195.google.com ([209.85.219.195]:37881 "EHLO
+        mail-yb1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727108AbfETIOW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 04:13:12 -0400
-Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4K8BBlN131010
-        for <linux-kernel@vger.kernel.org>; Mon, 20 May 2019 04:13:10 -0400
-Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2skr28haqg-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Mon, 20 May 2019 04:13:10 -0400
-Received: from localhost
-        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <borntraeger@de.ibm.com>;
-        Mon, 20 May 2019 09:13:08 +0100
-Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
-        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Mon, 20 May 2019 09:13:05 +0100
-Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
-        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x4K8D42s51707908
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 20 May 2019 08:13:04 GMT
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id EC6B9AE057;
-        Mon, 20 May 2019 08:13:03 +0000 (GMT)
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 8742DAE065;
-        Mon, 20 May 2019 08:13:03 +0000 (GMT)
-Received: from oc7455500831.ibm.com (unknown [9.152.98.31])
-        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Mon, 20 May 2019 08:13:03 +0000 (GMT)
-Subject: Re: [RFC PATCH 1/4] KVM: selftests: Guard struct kvm_vcpu_events with
- __KVM_HAVE_VCPU_EVENTS
-To:     Thomas Huth <thuth@redhat.com>,
-        Janosch Frank <frankja@linux.ibm.com>, kvm@vger.kernel.org
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Shuah Khan <shuah@kernel.org>,
-        David Hildenbrand <david@redhat.com>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Andrew Jones <drjones@redhat.com>,
-        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        linux-s390@vger.kernel.org
-References: <20190516111253.4494-1-thuth@redhat.com>
- <20190516111253.4494-2-thuth@redhat.com>
- <e8a57340-6f8d-90b8-ad73-c39c19f5c9a4@de.ibm.com>
- <8fda58ac-0e0c-6576-f492-2a9f9d2a3194@redhat.com>
-From:   Christian Borntraeger <borntraeger@de.ibm.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=borntraeger@de.ibm.com; prefer-encrypt=mutual; keydata=
- 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
- syiRa+UVlsKmx1hsEg==
-Date:   Mon, 20 May 2019 10:13:03 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Mon, 20 May 2019 04:14:22 -0400
+Received: by mail-yb1-f195.google.com with SMTP id p134so5359387ybc.4;
+        Mon, 20 May 2019 01:14:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=b1Nie3BHb8c5BThPo1teBTJYFUp/LwJ6jQaWfDHPCns=;
+        b=orGKLIROZ7tGEQuodcexsNLM/J7Eloft4Fij9jIp16hMPAhZ/+C44L3zyBKn3OBND7
+         rFWx1HZgVkLm1nv2wVExi1d65uJd1Dj/1xW8fhhncmsLJNb/32cM/afhGqy80DCctZdi
+         vHoM569tfWfq+9yliuVCVdrgF8b7MtVPfFEv1HRZ4WQZBL2Mq4Rv+t6KTswgzh7zNT4B
+         z4IUQ7aFfppvp3suIYgI8jxrllUNpDaVEBp/wYa/HZqQBVeRcMSXPS4E9kE9sp23ICM1
+         BJz5oSRwzpmxzvC8HsX0sRq8jTJhK/UBkZS9E3bkgRDcJ/PNrN8coDtyP/RnAWL027p5
+         oHBA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=b1Nie3BHb8c5BThPo1teBTJYFUp/LwJ6jQaWfDHPCns=;
+        b=HhktVUhTE+BkcGYE1hNl5kkQNvk6HbxCogHbBZfo3hZM2CtEwmYUSRh4qkgF/PsYV3
+         XWAwAMitEMXLtsHAAOyPaPqzlf/BkalpeHf+yoTQeuFbxQfNqnKMX/TFJwYj/kFVoCn7
+         tGCuRhqxmayIv0gq4da0bGpyPwuyL6Hn51tV5LrsewJcOCNhuKsx87U9OvxssAyad7ED
+         Xx0Z6mc0/C40UXOzhFouy9uLolUjYrq9uR/YO8gcwjUUjGUroe8R9mLkmfmfa7wnXLvS
+         l4XWlSB4tcy8qxhej+tLWwtHjQ8/tg5j78a2q8K1I/q5M6r3RvW1PqRinfuofUd0O+PQ
+         qn9A==
+X-Gm-Message-State: APjAAAUykV6kWojHH/KWL7M+KTdcLj+P2M98KyAt4ee2NXvVdq/ARoVV
+        ohgTya18AIZ3vnr4lyIhOkJTr1LAL9ocAR5kENk=
+X-Google-Smtp-Source: APXvYqzdITGOm1uzRAMhHCqrI7yUvwqh/7HPIVaKHQ0kbZdNv8+oko8EF3XU1eHAr4qQmZTySGwd1ZSxf66Go5tE4Aw=
+X-Received: by 2002:a25:10c2:: with SMTP id 185mr32216064ybq.379.1558340061612;
+ Mon, 20 May 2019 01:14:21 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <8fda58ac-0e0c-6576-f492-2a9f9d2a3194@redhat.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-x-cbid: 19052008-0020-0000-0000-0000033E7E36
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19052008-0021-0000-0000-000021915346
-Message-Id: <6473259f-37de-bd0a-2733-c951f901b048@de.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-20_04:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1905200059
+References: <20190518152355.11134-1-peron.clem@gmail.com> <20190518152355.11134-2-peron.clem@gmail.com>
+ <20190520073529.nxptfbibexrqyzfi@flea>
+In-Reply-To: <20190520073529.nxptfbibexrqyzfi@flea>
+From:   =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
+Date:   Mon, 20 May 2019 10:14:10 +0200
+Message-ID: <CAJiuCcdrW7RcEKePCr1DaL-be8dA5oOjvHdxYkiu=h37z2e7tw@mail.gmail.com>
+Subject: Re: [PATCH v3 1/4] dt-bindings: watchdog: add Allwinner H6 watchdog
+To:     Maxime Ripard <maxime.ripard@bootlin.com>
+Cc:     Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Chen-Yu Tsai <wens@csie.org>, linux-watchdog@vger.kernel.org,
+        devicetree <devicetree@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Maxime,
+
+On Mon, 20 May 2019 at 09:35, Maxime Ripard <maxime.ripard@bootlin.com> wro=
+te:
+>
+> On Sat, May 18, 2019 at 05:23:52PM +0200, Cl=C3=A9ment P=C3=A9ron wrote:
+> > Allwinner H6 has a similar watchdog as the A64 which is already
+> > a compatible of the A31.
+> >
+> > This commit sort the lines and add the H6 compatible.
+> >
+> > Signed-off-by: Cl=C3=A9ment P=C3=A9ron <peron.clem@gmail.com>
+> > ---
+> >  .../devicetree/bindings/watchdog/sunxi-wdt.txt         | 10 ++++++----
+> >  1 file changed, 6 insertions(+), 4 deletions(-)
+> >
+> > diff --git a/Documentation/devicetree/bindings/watchdog/sunxi-wdt.txt b=
+/Documentation/devicetree/bindings/watchdog/sunxi-wdt.txt
+> > index 46055254e8dd..f4810f8ad1c5 100644
+> > --- a/Documentation/devicetree/bindings/watchdog/sunxi-wdt.txt
+> > +++ b/Documentation/devicetree/bindings/watchdog/sunxi-wdt.txt
+> > @@ -3,10 +3,12 @@ Allwinner SoCs Watchdog timer
+> >  Required properties:
+> >
+> >  - compatible : should be one of
+> > -     "allwinner,sun4i-a10-wdt"
+> > -     "allwinner,sun6i-a31-wdt"
+> > -     "allwinner,sun50i-a64-wdt","allwinner,sun6i-a31-wdt"
+> > -     "allwinner,suniv-f1c100s-wdt", "allwinner,sun4i-a10-wdt"
+>
+> That sorting was kind of intentional
+Arg indeed, I will remove it.
 
 
-On 20.05.19 10:08, Thomas Huth wrote:
-> On 20/05/2019 09.12, Christian Borntraeger wrote:
->>
->> On 16.05.19 13:12, Thomas Huth wrote:
->>> The struct kvm_vcpu_events code is only available on certain architectures
->>> (arm, arm64 and x86). To be able to compile kvm_util.c also for other
->>> architectures, we've got to fence the code with __KVM_HAVE_VCPU_EVENTS.
->>>
->>> Signed-off-by: Thomas Huth <thuth@redhat.com>
->> Acked-by: Christian Borntraeger <borntraeger@de.ibm.com>
->>
->> According to the MAINTAINERS patches, you want me to pick these patches. Correct?
-> 
-> That would be nice, yes. But if you don't want to be responsible for
-> s390x-related KVM selftest patches, please let me know, then I'll drop
-> these hunks from the patches again.
+>
+> > +     - "allwinner,sun4i-a10-wdt"
+> > +     - "allwinner,sun50i-a64-wdt","allwinner,sun6i-a31-wdt"
+> > +     - "allwinner,sun50i-h6-wdt","allwinner,sun50i-a64-wdt",
+> > +       "allwinner,sun6i-a31-wdt"
+>
+> Is there a reason to keep the A64 compatible?
+Yes, A64 and H6 has the exact same memory mapping looking at the datasheet.
+So if there is an errata or a new feature for the A64, it should be
+also compatible with the H6.
+Which is not the case with A31 (WDT_KEY_FIELD is not preset)
 
-I can take care of these (as part of the normal KVM maintainership).
+Thanks,
+Clement
 
+>
+> Thanks,
+> Maxime
+>
+> --
+> Maxime Ripard, Bootlin
+> Embedded Linux and Kernel engineering
+> https://bootlin.com
