@@ -2,116 +2,101 @@ Return-Path: <SRS0=lq4r=TU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9502C04AAC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 14:42:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 107B3C04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 14:43:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A98FC2054F
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 14:42:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E55CA21726
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 14:43:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391920AbfETOm5 convert rfc822-to-8bit (ORCPT
+        id S2391931AbfETOnG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 10:42:57 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:37420 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1732661AbfETOm5 (ORCPT
+        Mon, 20 May 2019 10:43:06 -0400
+Received: from relay8-d.mail.gandi.net ([217.70.183.201]:37797 "EHLO
+        relay8-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732661AbfETOnF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 10:42:57 -0400
-Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4KETTeO125592
-        for <linux-kernel@vger.kernel.org>; Mon, 20 May 2019 10:42:56 -0400
-Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2skujxfpr3-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Mon, 20 May 2019 10:42:56 -0400
-Received: from localhost
-        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <naveen.n.rao@linux.vnet.ibm.com>;
-        Mon, 20 May 2019 15:42:54 +0100
-Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
-        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Mon, 20 May 2019 15:42:51 +0100
-Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
-        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x4KEgoqj56688680
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 20 May 2019 14:42:50 GMT
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id A481211C052;
-        Mon, 20 May 2019 14:42:50 +0000 (GMT)
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 44A0F11C054;
-        Mon, 20 May 2019 14:42:50 +0000 (GMT)
-Received: from localhost (unknown [9.199.34.110])
-        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Mon, 20 May 2019 14:42:50 +0000 (GMT)
-Date:   Mon, 20 May 2019 20:12:48 +0530
-From:   "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>
-Subject: Re: [RFC PATCH 2/4] x86/ftrace: Fix use of flags in
- ftrace_replace_code()
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Nicholas Piggin <npiggin@gmail.com>
-References: <cover.1558115654.git.naveen.n.rao@linux.vnet.ibm.com>
-        <e1429923d9eda92a3cf5ee9e33c7eacce539781d.1558115654.git.naveen.n.rao@linux.vnet.ibm.com>
-        <20190520091320.01cdcfb7@gandalf.local.home>
-        <20190520094410.772443df@gandalf.local.home>
-In-Reply-To: <20190520094410.772443df@gandalf.local.home>
-User-Agent: astroid/0.14.0 (https://github.com/astroidmail/astroid)
+        Mon, 20 May 2019 10:43:05 -0400
+X-Originating-IP: 90.88.22.185
+Received: from localhost (aaubervilliers-681-1-80-185.w90-88.abo.wanadoo.fr [90.88.22.185])
+        (Authenticated sender: maxime.ripard@bootlin.com)
+        by relay8-d.mail.gandi.net (Postfix) with ESMTPSA id 67E061BF20E;
+        Mon, 20 May 2019 14:42:59 +0000 (UTC)
+Date:   Mon, 20 May 2019 16:42:58 +0200
+From:   Maxime Ripard <maxime.ripard@bootlin.com>
+To:     =?utf-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
+Cc:     Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Chen-Yu Tsai <wens@csie.org>, linux-watchdog@vger.kernel.org,
+        devicetree <devicetree@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v3 1/4] dt-bindings: watchdog: add Allwinner H6 watchdog
+Message-ID: <20190520144258.eauhvvwfxuhiczie@flea>
+References: <20190518152355.11134-1-peron.clem@gmail.com>
+ <20190518152355.11134-2-peron.clem@gmail.com>
+ <20190520073529.nxptfbibexrqyzfi@flea>
+ <CAJiuCcdrW7RcEKePCr1DaL-be8dA5oOjvHdxYkiu=h37z2e7tw@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8BIT
-X-TM-AS-GCONF: 00
-x-cbid: 19052014-4275-0000-0000-00000336BB24
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19052014-4276-0000-0000-000038464C33
-Message-Id: <1558363129.y2x8hf9shq.naveen@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-20_07:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=978 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1905200096
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="vpv227evtpkmkqyk"
+Content-Disposition: inline
+In-Reply-To: <CAJiuCcdrW7RcEKePCr1DaL-be8dA5oOjvHdxYkiu=h37z2e7tw@mail.gmail.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Steven,
 
-Steven Rostedt wrote:
-> On Mon, 20 May 2019 09:13:20 -0400
-> Steven Rostedt <rostedt@goodmis.org> wrote:
-> 
-> 
->> > I haven't yet tested this patch on x86, but this looked wrong so sending 
->> > this as a RFC.  
->> 
->> This code has been through a bit of updates, and I need to go through
->> and clean it up. I'll have to take a look and convert "int" to "bool"
->> so that "enable" is not confusing.
->> 
->> Thanks, I think I'll try to do a clean up first, and then this patch
->> shouldn't "look wrong" after that.
->> 
-> 
-> I'm going to apply the attached two patches. There may be some
-> conflicts between yours here and these, but nothing that Linus can't
-> figure out. Do you feel more comfortable with this code, if these
-> patches are applied?
+--vpv227evtpkmkqyk
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Thanks, that definitely helps make things clearer. A very small nit from 
-your first patch -- it would be good to also convert the calls to 
-ftrace_check_record() to use 'true' or 'false' for the 'update' field.
+On Mon, May 20, 2019 at 10:14:10AM +0200, Cl=E9ment P=E9ron wrote:
+> >
+> > > +     - "allwinner,sun4i-a10-wdt"
+> > > +     - "allwinner,sun50i-a64-wdt","allwinner,sun6i-a31-wdt"
+> > > +     - "allwinner,sun50i-h6-wdt","allwinner,sun50i-a64-wdt",
+> > > +       "allwinner,sun6i-a31-wdt"
+> >
+> > Is there a reason to keep the A64 compatible?
+>
+> Yes, A64 and H6 has the exact same memory mapping looking at the datashee=
+t.
+> So if there is an errata or a new feature for the A64, it should be
+> also compatible with the H6.
+> Which is not the case with A31 (WDT_KEY_FIELD is not preset)
 
-I will test my series in more detail and post a v1.
+The thing is, if you use those three compatibles, then you're saying
+that it's ok for the OS to use first the H6 driver, then the A64
+driver, and then the A31 driver.
 
+If the A31 isn't compatible, then it shouldn't be listed there. And if
+it is, then you can skip the A64 compatible.
 
-- Naveen
+Maxime
 
+--
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
 
+--vpv227evtpkmkqyk
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXOK88gAKCRDj7w1vZxhR
+xQlAAPsE6kzsQQMSHryqgwmd6OWp/s6AtN+TcU7ip7ukhfmmlgEA24/Tc3t6XRAH
+2cNOcp+yz6bb7jinJ2k9sXjsqBcyywo=
+=7TNO
+-----END PGP SIGNATURE-----
+
+--vpv227evtpkmkqyk--
