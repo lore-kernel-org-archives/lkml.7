@@ -4,49 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A86BC04AAC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:37:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D041AC04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:37:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4EE3720645
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:37:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A17A420645
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:37:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558355852;
-	bh=iT4yjMJcKkltvxB7A3R4I/OGGLjYhEBIkJulcqRNo5E=;
+	s=default; t=1558355858;
+	bh=OY5qDbJG3cRSO+yxmiSW4AJSiJga1+mxbJUEfBPaWNs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hE6RE8csZgHiJxR5V6U3OaWaW8vffmhXo6GdYxBXdzibLGlhvCc1uweE3nrW1bHaJ
-	 74iX8NR8BsNZQIXlqWg9AcNwvyb+pdhm5YhVoqj5g+jLbyo0YhUnsTmSx+HB/3t38t
-	 0R5Pa9+KpAvJ791bcDirqwOjaHb02ZK32UgsUKdY=
+	b=h/I2V6MS8Cz2XBlgosLl27yO7jFE9zTc1sUjfq8MhonBkpekglSguWSNd9GLT3REl
+	 T8HPVEfdp8AXj+8/z1lp3+n+BVaNC/X+lNQpmBzrP2V2b7RBHJUNKCcFRPN+iH1upA
+	 aCbONHZoFGACgZHjs73TtDwZuo4Lxk6PjVnafzEs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387638AbfETMhb (ORCPT
+        id S2391217AbfETMgI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 08:37:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55434 "EHLO mail.kernel.org"
+        Mon, 20 May 2019 08:36:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55002 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387547AbfETMgV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 08:36:21 -0400
+        id S2391200AbfETMgD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 08:36:03 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8911021726;
-        Mon, 20 May 2019 12:36:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id ECB2B20815;
+        Mon, 20 May 2019 12:36:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558355781;
-        bh=iT4yjMJcKkltvxB7A3R4I/OGGLjYhEBIkJulcqRNo5E=;
+        s=default; t=1558355762;
+        bh=OY5qDbJG3cRSO+yxmiSW4AJSiJga1+mxbJUEfBPaWNs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WhuzuUhc+vPPXXliZtA1T0tZN6Ec3Ur+OpMFGpfzh+Jz2xSD3lQjxUkRuOThXHb8b
-         0hCOlkumeOeM6Vkz58RrGo/7nG8IuTdXYJaUom3TUFvHkP1tXv7NDO/s1CnRLf2j4E
-         XROk8qvie+7/P8qsn81YbBN0t2d0m4MHci4CSpnQ=
+        b=hoOAgfDhtUyLU0MHUy3Q/CyeTOzAc6oA4PhPlEM3NroGeRJMPnKpq3UzsZbk6hs++
+         hsqFK02W34Ph0BzljOQfl4FT8hLCt9lyAxhRLwEwIT5bjBkwPp8Wm5aRfnhBSJu2Af
+         HKOon2wQ7TID0E5jJ1q5bATo4URotlLJOTnM5nHE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Theodore Tso <tytso@mit.edu>,
-        stable@kernel.org
-Subject: [PATCH 5.1 086/128] ext4: protect journal inodes blocks using block_validity
-Date:   Mon, 20 May 2019 14:14:33 +0200
-Message-Id: <20190520115255.309439461@linuxfoundation.org>
+        stable@vger.kernel.org, David Hill <hilld@binarystorm.net>,
+        Saar Amar <saaramar@microsoft.com>,
+        Mihai Carabas <mihai.carabas@oracle.com>,
+        Jim Mattson <jmattson@google.com>,
+        Liran Alon <liran.alon@oracle.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Subject: [PATCH 5.1 115/128] Revert "KVM: nVMX: Expose RDPMC-exiting only when guest supports PMU"
+Date:   Mon, 20 May 2019 14:15:02 +0200
+Message-Id: <20190520115256.600424113@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190520115249.449077487@linuxfoundation.org>
 References: <20190520115249.449077487@linuxfoundation.org>
@@ -59,101 +64,92 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Theodore Ts'o <tytso@mit.edu>
+From: Sean Christopherson <sean.j.christopherson@intel.com>
 
-commit 345c0dbf3a30872d9b204db96b5857cd00808cae upstream.
+commit f93f7ede087f2edcc18e4b02310df5749a6b5a61 upstream.
 
-Add the blocks which belong to the journal inode to block_validity's
-system zone so attempts to deallocate or overwrite the journal due a
-corrupted file system where the journal blocks are also claimed by
-another inode.
+The RDPMC-exiting control is dependent on the existence of the RDPMC
+instruction itself, i.e. is not tied to the "Architectural Performance
+Monitoring" feature.  For all intents and purposes, the control exists
+on all CPUs with VMX support since RDPMC also exists on all VCPUs with
+VMX supported.  Per Intel's SDM:
 
-Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=202879
-Signed-off-by: Theodore Ts'o <tytso@mit.edu>
-Cc: stable@kernel.org
+  The RDPMC instruction was introduced into the IA-32 Architecture in
+  the Pentium Pro processor and the Pentium processor with MMX technology.
+  The earlier Pentium processors have performance-monitoring counters, but
+  they must be read with the RDMSR instruction.
+
+Because RDPMC-exiting always exists, KVM requires the control and refuses
+to load if it's not available.  As a result, hiding the PMU from a guest
+breaks nested virtualization if the guest attemts to use KVM.
+
+While it's not explicitly stated in the RDPMC pseudocode, the VM-Exit
+check for RDPMC-exiting follows standard fault vs. VM-Exit prioritization
+for privileged instructions, e.g. occurs after the CPL/CR0.PE/CR4.PCE
+checks, but before the counter referenced in ECX is checked for validity.
+
+In other words, the original KVM behavior of injecting a #GP was correct,
+and the KVM unit test needs to be adjusted accordingly, e.g. eat the #GP
+when the unit test guest (L3 in this case) executes RDPMC without
+RDPMC-exiting set in the unit test host (L2).
+
+This reverts commit e51bfdb68725dc052d16241ace40ea3140f938aa.
+
+Fixes: e51bfdb68725 ("KVM: nVMX: Expose RDPMC-exiting only when guest supports PMU")
+Reported-by: David Hill <hilld@binarystorm.net>
+Cc: Saar Amar <saaramar@microsoft.com>
+Cc: Mihai Carabas <mihai.carabas@oracle.com>
+Cc: Jim Mattson <jmattson@google.com>
+Cc: Liran Alon <liran.alon@oracle.com>
+Cc: stable@vger.kernel.org
+Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/ext4/block_validity.c |   48 +++++++++++++++++++++++++++++++++++++++++++++++
- fs/ext4/inode.c          |    4 +++
- 2 files changed, 52 insertions(+)
+ arch/x86/kvm/vmx/vmx.c |   25 -------------------------
+ 1 file changed, 25 deletions(-)
 
---- a/fs/ext4/block_validity.c
-+++ b/fs/ext4/block_validity.c
-@@ -137,6 +137,48 @@ static void debug_print_tree(struct ext4
- 	printk(KERN_CONT "\n");
+--- a/arch/x86/kvm/vmx/vmx.c
++++ b/arch/x86/kvm/vmx/vmx.c
+@@ -6856,30 +6856,6 @@ static void nested_vmx_entry_exit_ctls_u
+ 	}
  }
  
-+static int ext4_protect_reserved_inode(struct super_block *sb, u32 ino)
-+{
-+	struct inode *inode;
-+	struct ext4_sb_info *sbi = EXT4_SB(sb);
-+	struct ext4_map_blocks map;
-+	u32 i = 0, err = 0, num, n;
-+
-+	if ((ino < EXT4_ROOT_INO) ||
-+	    (ino > le32_to_cpu(sbi->s_es->s_inodes_count)))
-+		return -EINVAL;
-+	inode = ext4_iget(sb, ino, EXT4_IGET_SPECIAL);
-+	if (IS_ERR(inode))
-+		return PTR_ERR(inode);
-+	num = (inode->i_size + sb->s_blocksize - 1) >> sb->s_blocksize_bits;
-+	while (i < num) {
-+		map.m_lblk = i;
-+		map.m_len = num - i;
-+		n = ext4_map_blocks(NULL, inode, &map, 0);
-+		if (n < 0) {
-+			err = n;
-+			break;
-+		}
-+		if (n == 0) {
-+			i++;
-+		} else {
-+			if (!ext4_data_block_valid(sbi, map.m_pblk, n)) {
-+				ext4_error(sb, "blocks %llu-%llu from inode %u "
-+					   "overlap system zone", map.m_pblk,
-+					   map.m_pblk + map.m_len - 1, ino);
-+				err = -EFSCORRUPTED;
-+				break;
-+			}
-+			err = add_system_zone(sbi, map.m_pblk, n);
-+			if (err < 0)
-+				break;
-+			i += n;
-+		}
-+	}
-+	iput(inode);
-+	return err;
-+}
-+
- int ext4_setup_system_zone(struct super_block *sb)
+-static bool guest_cpuid_has_pmu(struct kvm_vcpu *vcpu)
+-{
+-	struct kvm_cpuid_entry2 *entry;
+-	union cpuid10_eax eax;
+-
+-	entry = kvm_find_cpuid_entry(vcpu, 0xa, 0);
+-	if (!entry)
+-		return false;
+-
+-	eax.full = entry->eax;
+-	return (eax.split.version_id > 0);
+-}
+-
+-static void nested_vmx_procbased_ctls_update(struct kvm_vcpu *vcpu)
+-{
+-	struct vcpu_vmx *vmx = to_vmx(vcpu);
+-	bool pmu_enabled = guest_cpuid_has_pmu(vcpu);
+-
+-	if (pmu_enabled)
+-		vmx->nested.msrs.procbased_ctls_high |= CPU_BASED_RDPMC_EXITING;
+-	else
+-		vmx->nested.msrs.procbased_ctls_high &= ~CPU_BASED_RDPMC_EXITING;
+-}
+-
+ static void update_intel_pt_cfg(struct kvm_vcpu *vcpu)
  {
- 	ext4_group_t ngroups = ext4_get_groups_count(sb);
-@@ -171,6 +213,12 @@ int ext4_setup_system_zone(struct super_
- 		if (ret)
- 			return ret;
+ 	struct vcpu_vmx *vmx = to_vmx(vcpu);
+@@ -6968,7 +6944,6 @@ static void vmx_cpuid_update(struct kvm_
+ 	if (nested_vmx_allowed(vcpu)) {
+ 		nested_vmx_cr_fixed1_bits_update(vcpu);
+ 		nested_vmx_entry_exit_ctls_update(vcpu);
+-		nested_vmx_procbased_ctls_update(vcpu);
  	}
-+	if (ext4_has_feature_journal(sb) && sbi->s_es->s_journal_inum) {
-+		ret = ext4_protect_reserved_inode(sb,
-+				le32_to_cpu(sbi->s_es->s_journal_inum));
-+		if (ret)
-+			return ret;
-+	}
  
- 	if (test_opt(sb, DEBUG))
- 		debug_print_tree(sbi);
---- a/fs/ext4/inode.c
-+++ b/fs/ext4/inode.c
-@@ -399,6 +399,10 @@ static int __check_block_validity(struct
- 				unsigned int line,
- 				struct ext4_map_blocks *map)
- {
-+	if (ext4_has_feature_journal(inode->i_sb) &&
-+	    (inode->i_ino ==
-+	     le32_to_cpu(EXT4_SB(inode->i_sb)->s_es->s_journal_inum)))
-+		return 0;
- 	if (!ext4_data_block_valid(EXT4_SB(inode->i_sb), map->m_pblk,
- 				   map->m_len)) {
- 		ext4_error_inode(inode, func, line, map->m_pblk,
+ 	if (boot_cpu_has(X86_FEATURE_INTEL_PT) &&
 
 
