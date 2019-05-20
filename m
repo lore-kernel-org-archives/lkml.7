@@ -5,58 +5,58 @@ X-Spam-Level:
 X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FA7AC04AAC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 15:10:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E30C8C04AAF
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 15:11:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E0F79213F2
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 15:10:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B9B2520863
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 15:11:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="axp4PAGT"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="WDkH87CO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388545AbfETPKg (ORCPT
+        id S2388620AbfETPLl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 11:10:36 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:37792 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732189AbfETPKf (ORCPT
+        Mon, 20 May 2019 11:11:41 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:40592 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730967AbfETPLk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 11:10:35 -0400
-Received: by mail-pl1-f196.google.com with SMTP id p15so6865588pll.4
-        for <linux-kernel@vger.kernel.org>; Mon, 20 May 2019 08:10:35 -0700 (PDT)
+        Mon, 20 May 2019 11:11:40 -0400
+Received: by mail-pg1-f193.google.com with SMTP id d30so6937803pgm.7
+        for <linux-kernel@vger.kernel.org>; Mon, 20 May 2019 08:11:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=Zf/b75c5bSD4qvEIIv/t+c3t9VM2ZbZd5sbL+Pqt2/A=;
-        b=axp4PAGTZM3hbODFyEUuqLrn6uI5P/Kg9MvWlfIiXTe15qdoZWMSpo+ZzlLIPrXywu
-         e4tzGjPDk6ZF+TIK5y9iTEkdRVtMoaBaD8kT+5xiTSWZbs5RxOBDQeoYFcGAt6fALWQK
-         +deE2WHpizsTr9UUYtj+Sd0HWwmLTufGrI0++xAboUkMP2obDwrJHYDdAmnU7SCJiKjY
-         tBQxR9kQxVaKa/JWh+bhSFNExbFO09vT4dXNlllSxeSL4wE6tetSzUi4Yz3M33+/aLNp
-         pRsLLynl7xNONdQZHKqUb9Bn2u3gGwgtkD++CzB8ThT02XfzOe8eNw7oO6NjRym28QCc
-         wV3Q==
+        bh=kWQ/hyaLyaZYd4k9b0E1vEn2XlvquDuxKLnZf2eEVqo=;
+        b=WDkH87COf0IydRv14/WVFpnoeM4Pn9ASM3B+dHDy58+l8fZqCQnryXd6AHUPacBMdr
+         MgUUtpO6PN73eSDfAS1uW5beMeU7f6bLS22vRFDAWtrbf1fNTOGXki1YU3zS7oQa+pAG
+         c0fzM0ei7/kjhNNY5qzxNyEWRlWpwlgPL63pK6Ea0g2uZWyZsWeAbObW7XGaRfPBwlNr
+         zvDzQX0jNCz2WenEQsaReWUs7Z4JAxVShHSGlqwDlO7XV/xTqkNqHJvLlMfil3eCmHa0
+         /BsDD9tIVWa6E1gTl3+80W4ftHV3dpMWIjd9CHGMhd+yTGzvGlRYM1/zzaykMqEHPOp6
+         IriQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Zf/b75c5bSD4qvEIIv/t+c3t9VM2ZbZd5sbL+Pqt2/A=;
-        b=NyNmn2l6ju903J1PeR6I2YQmARLHFx3+g//PEVKJRRMwMPrLxsHn2STvsytmKU83cN
-         XeRr8tt5RaEy5pm8YIwzIaNbqwcHMtv1OkR/KOe4l3yHhD5IQjCIed8C2614eQhZjikB
-         Peeg+k9JbcSYrfhSfErJ9Q/t4v2xTBsX2Z2PvCKHCd+AI4BBfsZKMsnQvdUz7hBA8juP
-         6DUaDTHzi0DGBc6G2ATIpXB8KieQoGiNtVKTbbh6XbPPoLhk8TNRG/oJqdUMKuW70fFR
-         LBty1bGLQUZFu2T1XpZbR09yBFVwAVk5MLZrtCCUMnC14puJDI/pOVAsjVKn9rPVLSGM
-         Fjrg==
-X-Gm-Message-State: APjAAAUm+aBYuRhyq7C9XYFAOee3kSQSgatEMxiISOb16wPYJFtm+sWm
-        BUMd4zLnTw24xZLlx51PFRj7gA==
-X-Google-Smtp-Source: APXvYqyIbxhF72Gddpb/bXpKewAASsv+q88oJd8k2OIHZXaugro0tQWP23rMQUZmDPFL6LFBkt1pqg==
-X-Received: by 2002:a17:902:24c7:: with SMTP id l7mr26678451plg.192.1558365034795;
-        Mon, 20 May 2019 08:10:34 -0700 (PDT)
+        bh=kWQ/hyaLyaZYd4k9b0E1vEn2XlvquDuxKLnZf2eEVqo=;
+        b=nUcfr3P7i26U/8ESXGWRCMzALWzfN+2HT19iV5NfvZgqjVWMFktk6337eY1AL6k+36
+         HbI2B+0ghGvhdGFvu2bzRvTPxQ3D/N9HWXBiugCugft7E3/uqs1WJSHdR8/BoYAYWrdr
+         DTZxPHMdgwCJlZxdVsvcRDrdaJkoB0ZMB04pX+EtlUIpkkMyYKf+LKUbuohcMqL3lzWG
+         XriiNu+m4IacfIdylxJ7yZgr2j3KWsvc7KdJav2cfBnKlewDB4vZag7RxgYbWCH1ZESE
+         S0jb7ieIqAE6tAdUfEhnNR8BfoPkDfZ+eDOx3vo+gGpovnxp8eOhhEoGD6qhpcfYWd6a
+         N+4Q==
+X-Gm-Message-State: APjAAAUmUWt7WuQOTTbcbA8pTNusIA9e2Fia9eZKZ4MZw5Ejr5T/g3i9
+        ZRKPmUmxQaEL7dg5886SXYsYlQ==
+X-Google-Smtp-Source: APXvYqxQq5tfBkC/5mldWvHtvXtXtAKgkl+etNFisJ1TJ+MjWD6zgBWjcsUj0mxROzHo8cLADTYyjg==
+X-Received: by 2002:a63:d652:: with SMTP id d18mr59754107pgj.112.1558365099497;
+        Mon, 20 May 2019 08:11:39 -0700 (PDT)
 Received: from tuxbook-pro (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id o66sm21164864pfb.184.2019.05.20.08.10.33
+        by smtp.gmail.com with ESMTPSA id r14sm20466206pgm.0.2019.05.20.08.11.38
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 20 May 2019 08:10:34 -0700 (PDT)
-Date:   Mon, 20 May 2019 08:11:01 -0700
+        Mon, 20 May 2019 08:11:38 -0700 (PDT)
+Date:   Mon, 20 May 2019 08:12:06 -0700
 From:   Bjorn Andersson <bjorn.andersson@linaro.org>
 To:     Jorge Ramirez <jorge.ramirez-ortiz@linaro.org>
 Cc:     Stephen Boyd <sboyd@kernel.org>, agross@kernel.org,
@@ -67,90 +67,98 @@ Cc:     Stephen Boyd <sboyd@kernel.org>, agross@kernel.org,
         linux-kernel@vger.kernel.org, khasim.mohammed@linaro.org,
         agsumit@qti.qualcomm.com
 Subject: Re: [PATCH] tty: serial: msm_serial: Fix XON/XOFF
-Message-ID: <20190520151101.GN2085@tuxbook-pro>
+Message-ID: <20190520151206.GO2085@tuxbook-pro>
 References: <20190520103435.30850-1-jorge.ramirez-ortiz@linaro.org>
  <20190520145110.7BDAE21721@mail.kernel.org>
  <254704a2-ee20-30cd-8362-6e1bd23ec090@linaro.org>
  <f0c89b84-7c3d-596d-06e1-cb5172e62970@linaro.org>
+ <20190520151101.GN2085@tuxbook-pro>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <f0c89b84-7c3d-596d-06e1-cb5172e62970@linaro.org>
+In-Reply-To: <20190520151101.GN2085@tuxbook-pro>
 User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon 20 May 07:58 PDT 2019, Jorge Ramirez wrote:
+On Mon 20 May 08:11 PDT 2019, Bjorn Andersson wrote:
 
-> On 5/20/19 16:56, Jorge Ramirez wrote:
-> > On 5/20/19 16:51, Stephen Boyd wrote:
-> >> Quoting Jorge Ramirez-Ortiz (2019-05-20 03:34:35)
-> >>> When the tty layer requests the uart to throttle, the current code
-> >>> executing in msm_serial will trigger "Bad mode in Error Handler" and
-> >>> generate an invalid stack frame in pstore before rebooting (that is if
-> >>> pstore is indeed configured: otherwise the user shall just notice a
-> >>> reboot with no further information dumped to the console).
-> >>>
-> >>> This patch replaces the PIO byte accessor with the word accessor
-> >>> already used in PIO mode.
-> >>
-> >> Because the hardware only accepts word based accessors and fails
-> >> otherwise? I can believe that.
-> >>
-> >> I wonder if the earlier UART hardware this driver used to support (i.e.
-> >> pre-DM) would accept byte access to the registers. It's possible, but we
-> >> don't really care because those boards aren't supported.
-> > 
-> > ok.
-> > 
-> > also the PIO path uses iowrite32_rep to write a number of bytes (from 1
-> > to 4) so I think it is also appropriate to use it for XON/XOFF.
-> > 
-> >>
-> >>>
-> >>> Signed-off-by: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
-> >>> ---
-> >>
-> >> Reviewed-by: Stephen Boyd <swboyd@chromium.org>
-> >>
-> >>>  drivers/tty/serial/msm_serial.c | 5 ++++-
-> >>>  1 file changed, 4 insertions(+), 1 deletion(-)
-> >>>
-> >>> diff --git a/drivers/tty/serial/msm_serial.c b/drivers/tty/serial/msm_serial.c
-> >>> index 109096033bb1..23833ad952ba 100644
-> >>> --- a/drivers/tty/serial/msm_serial.c
-> >>> +++ b/drivers/tty/serial/msm_serial.c
-> >>> @@ -869,10 +870,12 @@ static void msm_handle_tx(struct uart_port *port)
-> >>>                 else
-> >>>                         tf = port->membase + UART_TF;
-> >>>  
-> >>> +               buf[0] = port->x_char;
-> >>> +
-> >>>                 if (msm_port->is_uartdm)
-> >>>                         msm_reset_dm_count(port, 1);
-> >>>  
-> >>> -               iowrite8_rep(tf, &port->x_char, 1);
-> >>> +               iowrite32_rep(tf, buf, 1);
-> >>
-> >> I suppose it's OK to write some extra zeroes here?
-> >>
-> >>
-> > 
-> > yeah, semantically confusing msm_reset_dm_count is what really matters:
-> > it tells the hardware to only take n bytes (in this case only one) so
-> > the others will be ignored
+> On Mon 20 May 07:58 PDT 2019, Jorge Ramirez wrote:
 > 
-> um after I said this, maybe iowrite32_rep should only be applied to
-> uartdm ... what do you think?
+> > On 5/20/19 16:56, Jorge Ramirez wrote:
+> > > On 5/20/19 16:51, Stephen Boyd wrote:
+> > >> Quoting Jorge Ramirez-Ortiz (2019-05-20 03:34:35)
+> > >>> When the tty layer requests the uart to throttle, the current code
+> > >>> executing in msm_serial will trigger "Bad mode in Error Handler" and
+> > >>> generate an invalid stack frame in pstore before rebooting (that is if
+> > >>> pstore is indeed configured: otherwise the user shall just notice a
+> > >>> reboot with no further information dumped to the console).
+> > >>>
+> > >>> This patch replaces the PIO byte accessor with the word accessor
+> > >>> already used in PIO mode.
+> > >>
+> > >> Because the hardware only accepts word based accessors and fails
+> > >> otherwise? I can believe that.
+> > >>
+> > >> I wonder if the earlier UART hardware this driver used to support (i.e.
+> > >> pre-DM) would accept byte access to the registers. It's possible, but we
+> > >> don't really care because those boards aren't supported.
+> > > 
+> > > ok.
+> > > 
+> > > also the PIO path uses iowrite32_rep to write a number of bytes (from 1
+> > > to 4) so I think it is also appropriate to use it for XON/XOFF.
+> > > 
+> > >>
+> > >>>
+> > >>> Signed-off-by: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
+> > >>> ---
+> > >>
+> > >> Reviewed-by: Stephen Boyd <swboyd@chromium.org>
+> > >>
+> > >>>  drivers/tty/serial/msm_serial.c | 5 ++++-
+> > >>>  1 file changed, 4 insertions(+), 1 deletion(-)
+> > >>>
+> > >>> diff --git a/drivers/tty/serial/msm_serial.c b/drivers/tty/serial/msm_serial.c
+> > >>> index 109096033bb1..23833ad952ba 100644
+> > >>> --- a/drivers/tty/serial/msm_serial.c
+> > >>> +++ b/drivers/tty/serial/msm_serial.c
+> > >>> @@ -869,10 +870,12 @@ static void msm_handle_tx(struct uart_port *port)
+> > >>>                 else
+> > >>>                         tf = port->membase + UART_TF;
+> > >>>  
+> > >>> +               buf[0] = port->x_char;
+> > >>> +
+> > >>>                 if (msm_port->is_uartdm)
+> > >>>                         msm_reset_dm_count(port, 1);
+> > >>>  
+> > >>> -               iowrite8_rep(tf, &port->x_char, 1);
+> > >>> +               iowrite32_rep(tf, buf, 1);
+> > >>
+> > >> I suppose it's OK to write some extra zeroes here?
+> > >>
+> > >>
+> > > 
+> > > yeah, semantically confusing msm_reset_dm_count is what really matters:
+> > > it tells the hardware to only take n bytes (in this case only one) so
+> > > the others will be ignored
+> > 
+> > um after I said this, maybe iowrite32_rep should only be applied to
+> > uartdm ... what do you think?
+> > 
+> 
+> If I read the history correctly this write was a writel() up until
+> 68252424a7c7 ("tty: serial: msm: Support big-endian CPUs").
+> 
+> So I think you should just change this back to a iowrite32_rep() and add
+> a Fixes tag.
 > 
 
-If I read the history correctly this write was a writel() up until
-68252424a7c7 ("tty: serial: msm: Support big-endian CPUs").
+I mean...
 
-So I think you should just change this back to a iowrite32_rep() and add
-a Fixes tag.
+Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 
 Regards,
 Bjorn
