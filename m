@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E1CAC04AAC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:26:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 780C4C04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:26:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2450420645
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:26:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E35E20675
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:26:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558355213;
-	bh=brbknLHE7yJVvOZb/Zphk7t5bwLxvePh41BHFAzt/wg=;
+	s=default; t=1558355217;
+	bh=Z2GfKcHpVHwXI4/sFoV0Z1BGczs685S2OFmpzrq1tw8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=W7/5ybfh0qJdbFKsI+cYv1VRkWDrGUcVQUBllgtyltspzPpMfmBazS/AgsozfHPdZ
-	 /hTgDBeAxF7GQDNfiosj8pYKOrGj317p2qN0B+dqXEXh634il+GaidsjrKr4te+TiQ
-	 oMelsJUmrCF5UGaXAr4jUIVT7KOMN2KMN5ca0y+s=
+	b=W6vpXhMN7DdBgvMhb+PvuprV+hqQ4/ZdCZpfXpQ6zcZAArOP245ZaBPvZ9ifPYs+W
+	 Vl9u9tBbi+mCvss/uDt0X90hRWJ3BiYcscgHmxHKJfl0DIcxiSmxIii8PtULKCEaSU
+	 8Y7yDimlxgk2AZM9ExHcOiWdQh24EVRzB0ouMp4I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389420AbfETM0w (ORCPT
+        id S2389431AbfETM0z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 08:26:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42300 "EHLO mail.kernel.org"
+        Mon, 20 May 2019 08:26:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42348 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388327AbfETM0u (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 08:26:50 -0400
+        id S2388327AbfETM0x (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 08:26:53 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 68DA720675;
-        Mon, 20 May 2019 12:26:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 414A520815;
+        Mon, 20 May 2019 12:26:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558355209;
-        bh=brbknLHE7yJVvOZb/Zphk7t5bwLxvePh41BHFAzt/wg=;
+        s=default; t=1558355212;
+        bh=Z2GfKcHpVHwXI4/sFoV0Z1BGczs685S2OFmpzrq1tw8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EmSEeyhNObya5M3opRsnWlvuk6rfCMfin7VKy1QYq/Rc+u+eIeQ/6wPDXiX5jVeJQ
-         ThL8oK2OgPgJ8jSfXOpPVdUrbHu3xm63Oni9u39+bYL1TrhmTRdsPo7KGyLC4RBBsf
-         +phVWG446rKQe5MimwqYL/wuUeWidf02du23Et9w=
+        b=ahCD3iuQC8oNhjBc1ibXtzaGRyUwsk4cc0kYZObGMXEsKmUsfKZVPxYmicJvKGWjl
+         C3eZ7+7rXjVhPwCyj73zE9z3F3UG3T7Cjr6a0b+8TrDq1TK3W0sY68nkgLlA26tN9K
+         fLk8eokAVX5F0VNPpyvMOG9OAV0I7YYaKDKoWY2Q=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Biggers <ebiggers@google.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>
-Subject: [PATCH 5.0 033/123] crypto: skcipher - dont WARN on unprocessed data after slow walk step
-Date:   Mon, 20 May 2019 14:13:33 +0200
-Message-Id: <20190520115246.953350788@linuxfoundation.org>
+        stable@vger.kernel.org, Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Jann Horn <jannh@google.com>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>
+Subject: [PATCH 5.0 016/123] arm64: compat: Reduce address limit
+Date:   Mon, 20 May 2019 14:13:16 +0200
+Message-Id: <20190520115246.082431052@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190520115245.439864225@linuxfoundation.org>
 References: <20190520115245.439864225@linuxfoundation.org>
@@ -59,56 +61,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Biggers <ebiggers@google.com>
+From: Vincenzo Frascino <vincenzo.frascino@arm.com>
 
-commit dcaca01a42cc2c425154a13412b4124293a6e11e upstream.
+commit d263119387de9975d2acba1dfd3392f7c5979c18 upstream.
 
-skcipher_walk_done() assumes it's a bug if, after the "slow" path is
-executed where the next chunk of data is processed via a bounce buffer,
-the algorithm says it didn't process all bytes.  Thus it WARNs on this.
+Currently, compat tasks running on arm64 can allocate memory up to
+TASK_SIZE_32 (UL(0x100000000)).
 
-However, this can happen legitimately when the message needs to be
-evenly divisible into "blocks" but isn't, and the algorithm has a
-'walksize' greater than the block size.  For example, ecb-aes-neonbs
-sets 'walksize' to 128 bytes and only supports messages evenly divisible
-into 16-byte blocks.  If, say, 17 message bytes remain but they straddle
-scatterlist elements, the skcipher_walk code will take the "slow" path
-and pass the algorithm all 17 bytes in the bounce buffer.  But the
-algorithm will only be able to process 16 bytes, triggering the WARN.
+This means that mmap() allocations, if we treat them as returning an
+array, are not compliant with the sections 6.5.8 of the C standard
+(C99) which states that: "If the expression P points to an element of
+an array object and the expression Q points to the last element of the
+same array object, the pointer expression Q+1 compares greater than P".
 
-Fix this by just removing the WARN_ON().  Returning -EINVAL, as the code
-already does, is the right behavior.
+Redefine TASK_SIZE_32 to address the issue.
 
-This bug was detected by my patches that improve testmgr to fuzz
-algorithms against their generic implementation.
-
-Fixes: b286d8b1a690 ("crypto: skcipher - Add skcipher walk interface")
-Cc: <stable@vger.kernel.org> # v4.10+
-Signed-off-by: Eric Biggers <ebiggers@google.com>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Cc: Catalin Marinas <catalin.marinas@arm.com>
+Cc: Will Deacon <will.deacon@arm.com>
+Cc: Jann Horn <jannh@google.com>
+Cc: <stable@vger.kernel.org>
+Reported-by: Jann Horn <jannh@google.com>
+Signed-off-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
+[will: fixed typo in comment]
+Signed-off-by: Will Deacon <will.deacon@arm.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- crypto/skcipher.c |    9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
+ arch/arm64/include/asm/processor.h |    8 ++++++++
+ 1 file changed, 8 insertions(+)
 
---- a/crypto/skcipher.c
-+++ b/crypto/skcipher.c
-@@ -131,8 +131,13 @@ unmap_src:
- 		memcpy(walk->dst.virt.addr, walk->page, n);
- 		skcipher_unmap_dst(walk);
- 	} else if (unlikely(walk->flags & SKCIPHER_WALK_SLOW)) {
--		if (WARN_ON(err)) {
--			/* unexpected case; didn't process all bytes */
-+		if (err) {
-+			/*
-+			 * Didn't process all bytes.  Either the algorithm is
-+			 * broken, or this was the last step and it turned out
-+			 * the message wasn't evenly divisible into blocks but
-+			 * the algorithm requires it.
-+			 */
- 			err = -EINVAL;
- 			goto finish;
- 		}
+--- a/arch/arm64/include/asm/processor.h
++++ b/arch/arm64/include/asm/processor.h
+@@ -57,7 +57,15 @@
+ #define TASK_SIZE_64		(UL(1) << vabits_user)
+ 
+ #ifdef CONFIG_COMPAT
++#ifdef CONFIG_ARM64_64K_PAGES
++/*
++ * With CONFIG_ARM64_64K_PAGES enabled, the last page is occupied
++ * by the compat vectors page.
++ */
+ #define TASK_SIZE_32		UL(0x100000000)
++#else
++#define TASK_SIZE_32		(UL(0x100000000) - PAGE_SIZE)
++#endif /* CONFIG_ARM64_64K_PAGES */
+ #define TASK_SIZE		(test_thread_flag(TIF_32BIT) ? \
+ 				TASK_SIZE_32 : TASK_SIZE_64)
+ #define TASK_SIZE_OF(tsk)	(test_tsk_thread_flag(tsk, TIF_32BIT) ? \
 
 
