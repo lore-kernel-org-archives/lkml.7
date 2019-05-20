@@ -2,156 +2,248 @@ Return-Path: <SRS0=lq4r=TU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CD58C04AAC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 15:40:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C11D2C04E87
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 15:40:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1295A20856
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 15:40:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8289F20856
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 15:40:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=dell.com header.i=@dell.com header.b="uS1XjUKA"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="szsaZEAW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392250AbfETPkj (ORCPT
+        id S2392269AbfETPkn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 11:40:39 -0400
-Received: from mx0a-00154904.pphosted.com ([148.163.133.20]:47112 "EHLO
-        mx0a-00154904.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2388841AbfETPki (ORCPT
+        Mon, 20 May 2019 11:40:43 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:34357 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2392253AbfETPkm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 11:40:38 -0400
-Received: from pps.filterd (m0170390.ppops.net [127.0.0.1])
-        by mx0a-00154904.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4KFeAtY025207;
-        Mon, 20 May 2019 11:40:37 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dell.com; h=from : to : cc :
- subject : date : message-id : references : in-reply-to : content-type :
- content-transfer-encoding : mime-version; s=smtpout1;
- bh=mOjOVxgcejFl/WDind0ZveLYCA7TQeGWu/4jmKsfGS8=;
- b=uS1XjUKAwSpF549rIymaDWLiUJyDk3noc2/xJ/raO/Qu7cQ9HJLFa2WwsouDLrHyZqzX
- LMjMbj3UJ3X0qxAUOBgzvsoA2oRPLo0ILtJ2ihxCxlrTDtVaS/EJCSwdTjvZXXmThzp/
- 5HGvTsJMG2Y/NMjNoEXyv152jCZQdufKhyGvoBMRH301J1BOEpH21bhRGf58UDOiKUaH
- OL1oXK+ot6YBCw89lvp8WA5MIQe9WZv1n3dmqeNAfaQX31kSeWCAIPkHQRkq2a1bJWIR
- jiDWCmxmY2HePN0GUFGnashgYZS2LCtC2oPPgTzRb/kao+Z/u1HnKq/keI8kTKvcxi4b zw== 
-Received: from mx0a-00154901.pphosted.com (mx0a-00154901.pphosted.com [67.231.149.39])
-        by mx0a-00154904.pphosted.com with ESMTP id 2sjd444nv8-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 20 May 2019 11:40:37 -0400
-Received: from pps.filterd (m0142693.ppops.net [127.0.0.1])
-        by mx0a-00154901.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4KFc8n1085318;
-        Mon, 20 May 2019 11:40:37 -0400
-Received: from ausxipps301.us.dell.com (ausxipps301.us.dell.com [143.166.148.223])
-        by mx0a-00154901.pphosted.com with ESMTP id 2skxgxrrkv-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 20 May 2019 11:40:37 -0400
-X-LoopCount0: from 10.166.132.134
-X-IronPort-AV: E=Sophos;i="5.60,349,1549951200"; 
-   d="scan'208";a="340212726"
-From:   <Mario.Limonciello@dell.com>
-To:     <mathewk@chromium.org>, <linux-kernel@vger.kernel.org>
-CC:     <acelan.kao@canonical.com>, <dvhart@infradead.org>,
-        <andy@infradead.org>, <platform-driver-x86@vger.kernel.org>
-Subject: RE: [PATCH] platform/x86: intel-vbtn: Report switch events when event
- wakes device
-Thread-Topic: [PATCH] platform/x86: intel-vbtn: Report switch events when
- event wakes device
-Thread-Index: AQHVDDI6B2xG1URud0uFVvgshAA3U6Z0LBvw
-Date:   Mon, 20 May 2019 15:40:34 +0000
-Message-ID: <d2dac2d720574c58bb0d273809f46cf9@AUSX13MPC105.AMER.DELL.COM>
-References: <20190516215615.261258-1-mathewk@chromium.org>
-In-Reply-To: <20190516215615.261258-1-mathewk@chromium.org>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.143.242.75]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Mon, 20 May 2019 11:40:42 -0400
+Received: by mail-pg1-f194.google.com with SMTP id c13so6983090pgt.1
+        for <linux-kernel@vger.kernel.org>; Mon, 20 May 2019 08:40:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=k/heyaUqeKgmsqNyqFuRQhrCnWAaJChzuChioekfYFU=;
+        b=szsaZEAWQZBAPa/oSIDZup6Sf3jSi3AJ76WcSsZC1BgEtPm2HRp1c+w0lJQChX3EX6
+         hX/GoTqMK+0+zx/9R5rDkf5m5aZmhpybbpZJQBdSeK5uTi3+UvGjBlOQcsZMpnKl4AzR
+         qlGDJn7Oq7xYDgi8LQsdENsNMpNdnWWnty6fDhrh/VjIO0o5tu81pgh8/DOF5kR34az6
+         KABjDG9DI7NtDSB5JsYly4sD4iTg3dk/qU8HG67UhbEngTVIYwRYPstU4hFei2dlyvNx
+         n7fhc7CgCLg7Z/rik+tGZirioJ5jwOUhd9dYcpPxgvLI1JGroSd3ozTGxA9XV5aVgnZs
+         VIJQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=k/heyaUqeKgmsqNyqFuRQhrCnWAaJChzuChioekfYFU=;
+        b=E4Cqb9+wR/WCTiUDodQ0w+0Z9AxaFnd9d46TpGX0d54cVWc90A9f6pHh0ITqFEvkUK
+         R3pWPd7c6oiZuBiNt/DT2VwRGZ8hiWWlbtKIL6z7FcV5Q6MVYHK6f7vxotq/ZoK/D5KL
+         k95RcIehTGzGgQGRP9GNlg29NDSDZaIo5V+bwrMzMLKvG+xb1JOGrb8bRgCvcS6ygcvo
+         7whXcf8z2IzCtqsLRRjOjkOzBuXEqfwQe7vxMXURiTTbFVxkpYGXNalIVJ6UP+Hsg/N4
+         4uvmtC0bqE2GFwt4uscDseQ6mpBqgekLlowrTn7C2rmDm+9u4S10LHiDo2Y9q84eWxo9
+         UsmQ==
+X-Gm-Message-State: APjAAAXDrLpNhVRcrlVa3udTrHbETqZDO/Que3tHN2+BB7/U5eytS/1c
+        UQy40LL2qVEhv8NbrKBrnoenV4bCBmU=
+X-Google-Smtp-Source: APXvYqzB4o9I2xZFF8x25ug5HF4C3D7MauyyGIjq+J9XrCQDbuj+gG89I5cVtID1X4Jo1vMXmLyuqA==
+X-Received: by 2002:aa7:9a8c:: with SMTP id w12mr80346129pfi.187.1558366841456;
+        Mon, 20 May 2019 08:40:41 -0700 (PDT)
+Received: from tuxbook-pro (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id a69sm47830937pfa.81.2019.05.20.08.40.39
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 20 May 2019 08:40:40 -0700 (PDT)
+Date:   Mon, 20 May 2019 08:41:08 -0700
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Alex Elder <elder@linaro.org>
+Cc:     arnd@arndb.de, subashab@codeaurora.org, david.brown@linaro.org,
+        agross@kernel.org, davem@davemloft.net,
+        ilias.apalodimas@linaro.org, cpratapa@codeaurora.org,
+        syadagir@codeaurora.org, evgreen@chromium.org, benchan@google.com,
+        ejcaruso@google.com, netdev@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/8] net: qualcomm: rmnet: kill RMNET_MAP_GET_*()
+ accessor macros
+Message-ID: <20190520154108.GQ2085@tuxbook-pro>
+References: <20190520135354.18628-1-elder@linaro.org>
+ <20190520135354.18628-3-elder@linaro.org>
 MIME-Version: 1.0
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-20_07:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1905200101
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1905200101
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190520135354.18628-3-elder@linaro.org>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon 20 May 06:53 PDT 2019, Alex Elder wrote:
 
+> The following macros, defined in "rmnet_map.h", assume a socket
+> buffer is provided as an argument without any real indication this
+> is the case.
+>     RMNET_MAP_GET_MUX_ID()
+>     RMNET_MAP_GET_CD_BIT()
+>     RMNET_MAP_GET_PAD()
+>     RMNET_MAP_GET_CMD_START()
+>     RMNET_MAP_GET_LENGTH()
+> What they hide is pretty trivial accessing of fields in a structure,
+> and it's much clearer to see this if we do these accesses directly.
+> 
+> So rather than using these accessor macros, assign a local
+> variable of the map header pointer type to the socket buffer data
+> pointer, and derereference that pointer variable.
+> 
+> Use the network byte order macros (e.g., ntohs()), not the Linux
+> byte order functions (e.g. be_to_cpu16()) to convert the big-endian
+> packet length field, to match the convention used elswhere in the
+> driver.
+> 
+> There's no need to byte swap 0; it's all zeros irrespective of
+> endianness.
+> 
 
-> -----Original Message-----
-> From: platform-driver-x86-owner@vger.kernel.org <platform-driver-x86-
-> owner@vger.kernel.org> On Behalf Of Mathew King
-> Sent: Thursday, May 16, 2019 4:56 PM
-> To: linux-kernel@vger.kernel.org
-> Cc: Mathew King; AceLan Kao; Darren Hart; Andy Shevchenko; platform-drive=
-r-
-> x86@vger.kernel.org
-> Subject: [PATCH] platform/x86: intel-vbtn: Report switch events when even=
-t wakes
-> device
->=20
->=20
-> [EXTERNAL EMAIL]
->=20
-> When a switch event, such as tablet mode/laptop mode or docked/undocked,
-> wakes a device make sure that the value of the swich is reported.
-> Without when a device is put in tablet mode from laptop mode when it is
-> suspended or vice versa the device will wake up but mode will be
-> incorrect.
->=20
-> Tested by suspending a device in laptop mode and putting it in tablet
-> mode, the device resumes and is in tablet mode. When suspending the
-> device in tablet mode and putting it in laptop mode the device resumes
-> and is in laptop mode.
->=20
-> Signed-off-by: Mathew King <mathewk@chromium.org>
+Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 
-Reviewed-by: Mario Limonciello <mario.limonciello@dell.com>
-
+> Signed-off-by: Alex Elder <elder@linaro.org>
 > ---
->  drivers/platform/x86/intel-vbtn.c | 7 +++++--
->  1 file changed, 5 insertions(+), 2 deletions(-)
->=20
-> diff --git a/drivers/platform/x86/intel-vbtn.c b/drivers/platform/x86/int=
-el-vbtn.c
-> index 06cd7e818ed5..990cc8c20872 100644
-> --- a/drivers/platform/x86/intel-vbtn.c
-> +++ b/drivers/platform/x86/intel-vbtn.c
-> @@ -76,12 +76,15 @@ static void notify_handler(acpi_handle handle, u32 ev=
-ent,
-> void *context)
->  	struct platform_device *device =3D context;
->  	struct intel_vbtn_priv *priv =3D dev_get_drvdata(&device->dev);
->  	unsigned int val =3D !(event & 1); /* Even=3Dpress, Odd=3Drelease */
-> -	const struct key_entry *ke_rel;
-> +	const struct key_entry *ke, *ke_rel;
->  	bool autorelease;
->=20
->  	if (priv->wakeup_mode) {
-> -		if (sparse_keymap_entry_from_scancode(priv->input_dev, event))
-> {
-> +		ke =3D sparse_keymap_entry_from_scancode(priv->input_dev,
-> event);
-> +		if (ke) {
->  			pm_wakeup_hard_event(&device->dev);
-> +			if (ke->type =3D=3D KE_SW)
-> +				sparse_keymap_report_event(priv->input_dev,
-> event, val, 0);
->  			return;
->  		}
->  		goto out_unknown;
-> --
-> 2.21.0.1020.gf2820cf01a-goog
-
+>  drivers/net/ethernet/qualcomm/rmnet/rmnet_handlers.c |  9 +++++----
+>  drivers/net/ethernet/qualcomm/rmnet/rmnet_map.h      | 12 ------------
+>  .../net/ethernet/qualcomm/rmnet/rmnet_map_command.c  | 11 ++++++++---
+>  drivers/net/ethernet/qualcomm/rmnet/rmnet_map_data.c |  4 ++--
+>  4 files changed, 15 insertions(+), 21 deletions(-)
+> 
+> diff --git a/drivers/net/ethernet/qualcomm/rmnet/rmnet_handlers.c b/drivers/net/ethernet/qualcomm/rmnet/rmnet_handlers.c
+> index 11167abe5934..4c1b62b72504 100644
+> --- a/drivers/net/ethernet/qualcomm/rmnet/rmnet_handlers.c
+> +++ b/drivers/net/ethernet/qualcomm/rmnet/rmnet_handlers.c
+> @@ -65,20 +65,21 @@ static void
+>  __rmnet_map_ingress_handler(struct sk_buff *skb,
+>  			    struct rmnet_port *port)
+>  {
+> +	struct rmnet_map_header *map_header = (void *)skb->data;
+>  	struct rmnet_endpoint *ep;
+>  	u16 len, pad;
+>  	u8 mux_id;
+>  
+> -	if (RMNET_MAP_GET_CD_BIT(skb)) {
+> +	if (map_header->cd_bit) {
+>  		if (port->data_format & RMNET_FLAGS_INGRESS_MAP_COMMANDS)
+>  			return rmnet_map_command(skb, port);
+>  
+>  		goto free_skb;
+>  	}
+>  
+> -	mux_id = RMNET_MAP_GET_MUX_ID(skb);
+> -	pad = RMNET_MAP_GET_PAD(skb);
+> -	len = RMNET_MAP_GET_LENGTH(skb) - pad;
+> +	mux_id = map_header->mux_id;
+> +	pad = map_header->pad_len;
+> +	len = ntohs(map_header->pkt_len) - pad;
+>  
+>  	if (mux_id >= RMNET_MAX_LOGICAL_EP)
+>  		goto free_skb;
+> diff --git a/drivers/net/ethernet/qualcomm/rmnet/rmnet_map.h b/drivers/net/ethernet/qualcomm/rmnet/rmnet_map.h
+> index b1ae9499c0b2..a30a7b405a11 100644
+> --- a/drivers/net/ethernet/qualcomm/rmnet/rmnet_map.h
+> +++ b/drivers/net/ethernet/qualcomm/rmnet/rmnet_map.h
+> @@ -63,18 +63,6 @@ struct rmnet_map_ul_csum_header {
+>  	u16 csum_enabled:1;
+>  } __aligned(1);
+>  
+> -#define RMNET_MAP_GET_MUX_ID(Y) (((struct rmnet_map_header *) \
+> -				 (Y)->data)->mux_id)
+> -#define RMNET_MAP_GET_CD_BIT(Y) (((struct rmnet_map_header *) \
+> -				(Y)->data)->cd_bit)
+> -#define RMNET_MAP_GET_PAD(Y) (((struct rmnet_map_header *) \
+> -				(Y)->data)->pad_len)
+> -#define RMNET_MAP_GET_CMD_START(Y) ((struct rmnet_map_control_command *) \
+> -				    ((Y)->data + \
+> -				      sizeof(struct rmnet_map_header)))
+> -#define RMNET_MAP_GET_LENGTH(Y) (ntohs(((struct rmnet_map_header *) \
+> -					(Y)->data)->pkt_len))
+> -
+>  #define RMNET_MAP_COMMAND_REQUEST     0
+>  #define RMNET_MAP_COMMAND_ACK         1
+>  #define RMNET_MAP_COMMAND_UNSUPPORTED 2
+> diff --git a/drivers/net/ethernet/qualcomm/rmnet/rmnet_map_command.c b/drivers/net/ethernet/qualcomm/rmnet/rmnet_map_command.c
+> index f6cf59aee212..f675f47c3495 100644
+> --- a/drivers/net/ethernet/qualcomm/rmnet/rmnet_map_command.c
+> +++ b/drivers/net/ethernet/qualcomm/rmnet/rmnet_map_command.c
+> @@ -20,12 +20,13 @@ static u8 rmnet_map_do_flow_control(struct sk_buff *skb,
+>  				    struct rmnet_port *port,
+>  				    int enable)
+>  {
+> +	struct rmnet_map_header *map_header = (void *)skb->data;
+>  	struct rmnet_endpoint *ep;
+>  	struct net_device *vnd;
+>  	u8 mux_id;
+>  	int r;
+>  
+> -	mux_id = RMNET_MAP_GET_MUX_ID(skb);
+> +	mux_id = map_header->mux_id;
+>  
+>  	if (mux_id >= RMNET_MAX_LOGICAL_EP) {
+>  		kfree_skb(skb);
+> @@ -57,6 +58,7 @@ static void rmnet_map_send_ack(struct sk_buff *skb,
+>  			       unsigned char type,
+>  			       struct rmnet_port *port)
+>  {
+> +	struct rmnet_map_header *map_header = (void *)skb->data;
+>  	struct rmnet_map_control_command *cmd;
+>  	struct net_device *dev = skb->dev;
+>  
+> @@ -66,7 +68,8 @@ static void rmnet_map_send_ack(struct sk_buff *skb,
+>  
+>  	skb->protocol = htons(ETH_P_MAP);
+>  
+> -	cmd = RMNET_MAP_GET_CMD_START(skb);
+> +	/* Command data immediately follows the header */
+> +	cmd = (struct rmnet_map_control_command *)(map_header + 1);
+>  	cmd->cmd_type = type & 0x03;
+>  
+>  	netif_tx_lock(dev);
+> @@ -79,11 +82,13 @@ static void rmnet_map_send_ack(struct sk_buff *skb,
+>   */
+>  void rmnet_map_command(struct sk_buff *skb, struct rmnet_port *port)
+>  {
+> +	struct rmnet_map_header *map_header = (void *)skb->data;
+>  	struct rmnet_map_control_command *cmd;
+>  	unsigned char command_name;
+>  	unsigned char rc = 0;
+>  
+> -	cmd = RMNET_MAP_GET_CMD_START(skb);
+> +	/* Command data immediately follows the header */
+> +	cmd = (struct rmnet_map_control_command *)(map_header + 1);
+>  	command_name = cmd->command_name;
+>  
+>  	switch (command_name) {
+> diff --git a/drivers/net/ethernet/qualcomm/rmnet/rmnet_map_data.c b/drivers/net/ethernet/qualcomm/rmnet/rmnet_map_data.c
+> index 57a9c314a665..498f20ba1826 100644
+> --- a/drivers/net/ethernet/qualcomm/rmnet/rmnet_map_data.c
+> +++ b/drivers/net/ethernet/qualcomm/rmnet/rmnet_map_data.c
+> @@ -323,7 +323,7 @@ struct sk_buff *rmnet_map_deaggregate(struct sk_buff *skb,
+>  		return NULL;
+>  
+>  	maph = (struct rmnet_map_header *)skb->data;
+> -	packet_len = ntohs(maph->pkt_len) + sizeof(struct rmnet_map_header);
+> +	packet_len = ntohs(maph->pkt_len) + sizeof(*maph);
+>  
+>  	if (port->data_format & RMNET_FLAGS_INGRESS_MAP_CKSUMV4)
+>  		packet_len += sizeof(struct rmnet_map_dl_csum_trailer);
+> @@ -332,7 +332,7 @@ struct sk_buff *rmnet_map_deaggregate(struct sk_buff *skb,
+>  		return NULL;
+>  
+>  	/* Some hardware can send us empty frames. Catch them */
+> -	if (ntohs(maph->pkt_len) == 0)
+> +	if (!maph->pkt_len)
+>  		return NULL;
+>  
+>  	skbn = alloc_skb(packet_len + RMNET_MAP_DEAGGR_SPACING, GFP_ATOMIC);
+> -- 
+> 2.20.1
+> 
