@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BA01C04AAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:32:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17865C04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:32:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 37FAC20645
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:32:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E1AFC20675
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:32:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558355530;
-	bh=8wo6OfwoxBhKFRN2XsFLYEb1OgS1BAfDkVDQKopJ80A=;
+	s=default; t=1558355534;
+	bh=XvtAsDLEUGLG/5JAIEZjsWSHoExQuKV9bR/WUi5O0OI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yGmKfGYAh5pPuYh3djsX7/JCkJvEaxlk9HjsXAyLlXsd8rvYrvV7K01F4zSMhj0tH
-	 OyYgaQYDBNjJ++5RUcSmjduSLFn6jQVfYz080dt7lvpvMlwRTYLB4MuPSb7wMjvxDQ
-	 QHVS3MbIDfmsVm4HmePzZRgRh/Ypv8eRud87p4nY=
+	b=0WFBkFOBOnQSaGfE8lCOpwJh30e4vBh0uQPDcGn5RHPZ4XNPzTPWMVLUjwlzceUvg
+	 t9/7TDkmuKRUSSpwnkPGO4rrTWxFjGNSaOCr36JAnNwi+ySEBi7QGeRkZ6rAQoRpkK
+	 8D1DO3/GpwrydTLfi0UaRRKsLFyfc0oXmUmVrbNk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390496AbfETMcJ (ORCPT
+        id S2389811AbfETMcN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 08:32:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48876 "EHLO mail.kernel.org"
+        Mon, 20 May 2019 08:32:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48922 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732867AbfETMcH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 08:32:07 -0400
+        id S1732867AbfETMcK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 08:32:10 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 55B0921721;
-        Mon, 20 May 2019 12:32:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EB33620675;
+        Mon, 20 May 2019 12:32:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558355526;
-        bh=8wo6OfwoxBhKFRN2XsFLYEb1OgS1BAfDkVDQKopJ80A=;
+        s=default; t=1558355529;
+        bh=XvtAsDLEUGLG/5JAIEZjsWSHoExQuKV9bR/WUi5O0OI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Y/kCxP0xHYg8bSJfLCxvnkuc/VBphki7TA+h0wWE0tPAxsnaFMXfIHnLPs7onG1/R
-         oUKiGUlJrc8l3ndbR1L0/lFUXdjvyo1WbOkvHaZmJKCjgjoJLr4hGnUe+uTWLqWDMh
-         wnX9hpjLFchRgFm8IRbSgvblDWGVB93hMAgvkhJ0=
+        b=xivpAq9og8u48w6NSGY/5M92UWjrrTyYpcg1fTzXOs1hVEhv9Kl+kI0XCPFkEOFLz
+         sVvkyM2+p/OcHxme2bzOGdrvROGc59Asa85MyoOFkOehLHXyFSbSELbiCFCitVqAHP
+         d+r8VdH1CunnfAGHBY/Snc8A3wJAhi3UXXvhrZWY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ondrej Mosnacek <omosnace@redhat.com>,
-        Eric Biggers <ebiggers@google.com>,
+        stable@vger.kernel.org, Eric Biggers <ebiggers@google.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
         Herbert Xu <herbert@gondor.apana.org.au>
-Subject: [PATCH 5.1 026/128] crypto: lrw - dont access already-freed walk.iv
-Date:   Mon, 20 May 2019 14:13:33 +0200
-Message-Id: <20190520115251.364236232@linuxfoundation.org>
+Subject: [PATCH 5.1 027/128] crypto: chacha-generic - fix use as arm64 no-NEON fallback
+Date:   Mon, 20 May 2019 14:13:34 +0200
+Message-Id: <20190520115251.446287556@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190520115249.449077487@linuxfoundation.org>
 References: <20190520115249.449077487@linuxfoundation.org>
@@ -62,45 +62,59 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Eric Biggers <ebiggers@google.com>
 
-commit aec286cd36eacfd797e3d5dab8d5d23c15d1bb5e upstream.
+commit 7aceaaef04eaaf6019ca159bc354d800559bba1d upstream.
 
-If the user-provided IV needs to be aligned to the algorithm's
-alignmask, then skcipher_walk_virt() copies the IV into a new aligned
-buffer walk.iv.  But skcipher_walk_virt() can fail afterwards, and then
-if the caller unconditionally accesses walk.iv, it's a use-after-free.
+The arm64 implementations of ChaCha and XChaCha are failing the extra
+crypto self-tests following my patches to test the !may_use_simd() code
+paths, which previously were untested.  The problem is as follows:
 
-Fix this in the LRW template by checking the return value of
-skcipher_walk_virt().
+When !may_use_simd(), the arm64 NEON implementations fall back to the
+generic implementation, which uses the skcipher_walk API to iterate
+through the src/dst scatterlists.  Due to how the skcipher_walk API
+works, walk.stride is set from the skcipher_alg actually being used,
+which in this case is the arm64 NEON algorithm.  Thus walk.stride is
+5*CHACHA_BLOCK_SIZE, not CHACHA_BLOCK_SIZE.
 
-This bug was detected by my patches that improve testmgr to fuzz
-algorithms against their generic implementation.  When the extra
-self-tests were run on a KASAN-enabled kernel, a KASAN use-after-free
-splat occured during lrw(aes) testing.
+This unnecessarily large stride shouldn't cause an actual problem.
+However, the generic implementation computes round_down(nbytes,
+walk.stride).  round_down() assumes the round amount is a power of 2,
+which 5*CHACHA_BLOCK_SIZE is not, so it gives the wrong result.
 
-Fixes: c778f96bf347 ("crypto: lrw - Optimize tweak computation")
-Cc: <stable@vger.kernel.org> # v4.20+
-Cc: Ondrej Mosnacek <omosnace@redhat.com>
+This causes the following case in skcipher_walk_done() to be hit,
+causing a WARN() and failing the encryption operation:
+
+	if (WARN_ON(err)) {
+		/* unexpected case; didn't process all bytes */
+		err = -EINVAL;
+		goto finish;
+	}
+
+Fix it by rounding down to CHACHA_BLOCK_SIZE instead of walk.stride.
+
+(Or we could replace round_down() with rounddown(), but that would add a
+slow division operation every time, which I think we should avoid.)
+
+Fixes: 2fe55987b262 ("crypto: arm64/chacha - use combined SIMD/ALU routine for more speed")
+Cc: <stable@vger.kernel.org> # v5.0+
 Signed-off-by: Eric Biggers <ebiggers@google.com>
+Reviewed-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
 Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- crypto/lrw.c |    4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ crypto/chacha_generic.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/crypto/lrw.c
-+++ b/crypto/lrw.c
-@@ -162,8 +162,10 @@ static int xor_tweak(struct skcipher_req
- 	}
+--- a/crypto/chacha_generic.c
++++ b/crypto/chacha_generic.c
+@@ -52,7 +52,7 @@ static int chacha_stream_xor(struct skci
+ 		unsigned int nbytes = walk.nbytes;
  
- 	err = skcipher_walk_virt(&w, req, false);
--	iv = (__be32 *)w.iv;
-+	if (err)
-+		return err;
+ 		if (nbytes < walk.total)
+-			nbytes = round_down(nbytes, walk.stride);
++			nbytes = round_down(nbytes, CHACHA_BLOCK_SIZE);
  
-+	iv = (__be32 *)w.iv;
- 	counter[0] = be32_to_cpu(iv[3]);
- 	counter[1] = be32_to_cpu(iv[2]);
- 	counter[2] = be32_to_cpu(iv[1]);
+ 		chacha_docrypt(state, walk.dst.virt.addr, walk.src.virt.addr,
+ 			       nbytes, ctx->nrounds);
 
 
