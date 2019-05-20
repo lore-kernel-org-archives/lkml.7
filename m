@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46349C04AAC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:36:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BF18C04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:36:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1D2B121726
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:36:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 51E13216C4
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:36:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558355771;
-	bh=eHlJ0naPd6O/ffkhTMYGG0Jy55Ey/sfpHFfDtbeGUEg=;
+	s=default; t=1558355775;
+	bh=awA+Wv5nCbFiijRTlWSxq+pxtJHd9RM2npntWANCrqI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2dDNQju3KdsUw6Xnz0rSSOvOJdkvECdD912cZak3ozuqmbrmAvFHghMVaU/qIgI97
-	 kN2HQuZtkoSrfOFzHP4ikg5YoS+BueuxkrfS3rbg6302fZRlyCpG/b5m3j+686k6Lb
-	 p+Qy+8ACxDXHlL2GuxhSO05/X36XGzZgknyhQqxQ=
+	b=nao0AoSNbVtJt7J8Yu1s4+G54E5GZ31lPNXGFpzlvcglYWhncPLnz7PtMTUAXZ2JQ
+	 qO3BLbAZHA1CobaZFVnYJY6DSsCNe7TAcYqixAAz0/pR4BUGWwo8hTJ6xYuyuJR0dz
+	 FBRXZhOQUsAUU+V1fx/UEat9OmXEYWP6Ly2UP1PY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391229AbfETMgK (ORCPT
+        id S2391240AbfETMgO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 08:36:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55060 "EHLO mail.kernel.org"
+        Mon, 20 May 2019 08:36:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55176 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391078AbfETMgF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 08:36:05 -0400
+        id S2391078AbfETMgK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 08:36:10 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8A3D921479;
-        Mon, 20 May 2019 12:36:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EC7DC21721;
+        Mon, 20 May 2019 12:36:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558355765;
-        bh=eHlJ0naPd6O/ffkhTMYGG0Jy55Ey/sfpHFfDtbeGUEg=;
+        s=default; t=1558355770;
+        bh=awA+Wv5nCbFiijRTlWSxq+pxtJHd9RM2npntWANCrqI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TPPYmBC6c4/Lq5DVdDoGjhZdobMWaLf4VPLd0Eopam6p9tlL51nDoHT2GPT7lOpOi
-         Pds86QePI92FOnZatwBUX4KGYAiM5CMlpYm0CrJwk+ZucLhjRqln0PthVAih6lsx0L
-         ABQk1kGrxS8siyzv2MnYtkyQk3T00gBhrD2lbGDQ=
+        b=EAdqDXEzjceu0Ld5dEOc/RHNHjQkXUPfcxjnr3Bk4sBDQeoTG7PqWL9RK4pw7Hg3f
+         /OVrXaOwr82HjsiwVqjqoKe5EpxCf5atkbaJrsH9nalUONGYy3kU3P8nROo5ipwNwR
+         iveoX+cUO53jF1KLKfLq2dXHm1yKjcCwbOvM2+Bc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Peter Xu <peterx@redhat.com>,
+        stable@vger.kernel.org, Wanpeng Li <wanpengli@tencent.com>,
+        Liran Alon <liran.alon@oracle.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
         Paolo Bonzini <pbonzini@redhat.com>
-Subject: [PATCH 5.1 116/128] KVM: Fix the bitmap range to copy during clear dirty
-Date:   Mon, 20 May 2019 14:15:03 +0200
-Message-Id: <20190520115256.639022939@linuxfoundation.org>
+Subject: [PATCH 5.1 118/128] KVM: lapic: Busy wait for timer to expire when using hv_timer
+Date:   Mon, 20 May 2019 14:15:05 +0200
+Message-Id: <20190520115256.717288883@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190520115249.449077487@linuxfoundation.org>
 References: <20190520115249.449077487@linuxfoundation.org>
@@ -59,35 +61,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Peter Xu <peterx@redhat.com>
+From: Sean Christopherson <sean.j.christopherson@intel.com>
 
-commit 4ddc9204572c33f2eb91fbdb1d99d8078388b67d upstream.
+commit ee66e453db13d4837a0dcf9d43efa7a88603161b upstream.
 
-kvm_dirty_bitmap_bytes() will return the size of the dirty bitmap of
-the memslot rather than the size of bitmap passed over from the ioctl.
-Here for KVM_CLEAR_DIRTY_LOG we should only copy exactly the size of
-bitmap that covers kvm_clear_dirty_log.num_pages.
+...now that VMX's preemption timer, i.e. the hv_timer, also adjusts its
+programmed time based on lapic_timer_advance_ns.  Without the delay, a
+guest can see a timer interrupt arrive before the requested time when
+KVM is using the hv_timer to emulate the guest's interrupt.
 
-Signed-off-by: Peter Xu <peterx@redhat.com>
-Cc: stable@vger.kernel.org
-Fixes: 2a31b9db153530df4aa02dac8c32837bf5f47019
+Fixes: c5ce8235cffa0 ("KVM: VMX: Optimize tscdeadline timer latency")
+Cc: <stable@vger.kernel.org>
+Cc: Wanpeng Li <wanpengli@tencent.com>
+Reviewed-by: Liran Alon <liran.alon@oracle.com>
+Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
 Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- virt/kvm/kvm_main.c |    2 +-
+ arch/x86/kvm/lapic.c |    2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/virt/kvm/kvm_main.c
-+++ b/virt/kvm/kvm_main.c
-@@ -1250,7 +1250,7 @@ int kvm_clear_dirty_log_protect(struct k
- 	if (!dirty_bitmap)
- 		return -ENOENT;
+--- a/arch/x86/kvm/lapic.c
++++ b/arch/x86/kvm/lapic.c
+@@ -1454,7 +1454,7 @@ static void apic_timer_expired(struct kv
+ 	if (swait_active(q))
+ 		swake_up_one(q);
  
--	n = kvm_dirty_bitmap_bytes(memslot);
-+	n = ALIGN(log->num_pages, BITS_PER_LONG) / 8;
+-	if (apic_lvtt_tscdeadline(apic))
++	if (apic_lvtt_tscdeadline(apic) || ktimer->hv_timer_in_use)
+ 		ktimer->expired_tscdeadline = ktimer->tscdeadline;
+ }
  
- 	if (log->first_page > memslot->npages ||
- 	    log->num_pages > memslot->npages - log->first_page ||
 
 
