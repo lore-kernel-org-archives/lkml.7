@@ -2,54 +2,51 @@ Return-Path: <SRS0=lq4r=TU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1A79C04AAC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:32:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4544DC04AAF
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:32:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A86D5216FD
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:32:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1B6DE204FD
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:32:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558355545;
-	bh=0msjDw4e8JU1SNWYIWYp0Zm3hjgfapzuhX6gELrNtSI=;
+	s=default; t=1558355548;
+	bh=brbknLHE7yJVvOZb/Zphk7t5bwLxvePh41BHFAzt/wg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Ug13hLKNvlOliDW3gO4AyS1ZvtVb8K8DO/uKgzAHAheTaVmqHJq7c10shgstXl/rU
-	 CnSKepsXXN+K3OhGoP9RADW9YZEqshpT4GI4ZUEfq3/o49tBYwka5aRo56D5iNmss4
-	 GASRSp78NnMZKyHRWIKWHIx6eVjyvsAYrsrba78s=
+	b=cIkizhhWw4ajYvCZrLly6L1URJ95tEWrBDuT1AV0pYvgFQ9HdBTITXIDaUBz5Xn9V
+	 WpN9g4f5/L/FOPl0IvjWCO57d9BSAc7c/AhhW5Cm3TQK2Z4rv91G2nTuiBnciILsvP
+	 YIPKsgerHw288D6xgkPztQtFM5HnlwUNznlPAZYk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390543AbfETMcY (ORCPT
+        id S2390555AbfETMc1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 08:32:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49250 "EHLO mail.kernel.org"
+        Mon, 20 May 2019 08:32:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49294 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390522AbfETMcW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 08:32:22 -0400
+        id S2389838AbfETMcZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 08:32:25 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BBC90204FD;
-        Mon, 20 May 2019 12:32:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 62DB321479;
+        Mon, 20 May 2019 12:32:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558355542;
-        bh=0msjDw4e8JU1SNWYIWYp0Zm3hjgfapzuhX6gELrNtSI=;
+        s=default; t=1558355544;
+        bh=brbknLHE7yJVvOZb/Zphk7t5bwLxvePh41BHFAzt/wg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HgZgzeGtFvrJdDgyRMwZp1eMtldtWoE5iNSuKTO93V/O6YiR8NL9wHI1y0ka4XhPS
-         ZLanpa8iO2wgPDOVjLkLe+aQt14hhM503DWGnRwVvvLQMYNPBNkCbZtpBam2HE/+sb
-         BLuCORTrTfbfcKHjlNf2ODfGXV4Y2RX0dMk+bcZE=
+        b=fgRQaEIEH0P6pAjskezn8P7yNhIQyG1qyB+az6/hHhAtbbjw1rFoqP30CEKpmn65c
+         1oVU+K1DlEdcjBzOXJKza6VPZRUWxILSwcyzNV17SU4/Gdg/AbTdJfs5bDy5Co9YP+
+         I3xrExmq71Ywj7CEznT2/fEICDDRlY+aNbwgST30=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        =?UTF-8?q?Ondrej=20Mosn=C3=A1=C4=8Dek?= <omosnacek@gmail.com>,
-        Daniel Axtens <dja@axtens.net>,
-        Michael Ellerman <mpe@ellerman.id.au>,
+        stable@vger.kernel.org, Eric Biggers <ebiggers@google.com>,
         Herbert Xu <herbert@gondor.apana.org.au>
-Subject: [PATCH 5.1 031/128] crypto: vmx - fix copy-paste error in CTR mode
-Date:   Mon, 20 May 2019 14:13:38 +0200
-Message-Id: <20190520115251.741979733@linuxfoundation.org>
+Subject: [PATCH 5.1 032/128] crypto: skcipher - dont WARN on unprocessed data after slow walk step
+Date:   Mon, 20 May 2019 14:13:39 +0200
+Message-Id: <20190520115251.812091299@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190520115249.449077487@linuxfoundation.org>
 References: <20190520115249.449077487@linuxfoundation.org>
@@ -62,53 +59,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Daniel Axtens <dja@axtens.net>
+From: Eric Biggers <ebiggers@google.com>
 
-commit dcf7b48212c0fab7df69e84fab22d6cb7c8c0fb9 upstream.
+commit dcaca01a42cc2c425154a13412b4124293a6e11e upstream.
 
-The original assembly imported from OpenSSL has two copy-paste
-errors in handling CTR mode. When dealing with a 2 or 3 block tail,
-the code branches to the CBC decryption exit path, rather than to
-the CTR exit path.
+skcipher_walk_done() assumes it's a bug if, after the "slow" path is
+executed where the next chunk of data is processed via a bounce buffer,
+the algorithm says it didn't process all bytes.  Thus it WARNs on this.
 
-This leads to corruption of the IV, which leads to subsequent blocks
-being corrupted.
+However, this can happen legitimately when the message needs to be
+evenly divisible into "blocks" but isn't, and the algorithm has a
+'walksize' greater than the block size.  For example, ecb-aes-neonbs
+sets 'walksize' to 128 bytes and only supports messages evenly divisible
+into 16-byte blocks.  If, say, 17 message bytes remain but they straddle
+scatterlist elements, the skcipher_walk code will take the "slow" path
+and pass the algorithm all 17 bytes in the bounce buffer.  But the
+algorithm will only be able to process 16 bytes, triggering the WARN.
 
-This can be detected with libkcapi test suite, which is available at
-https://github.com/smuellerDD/libkcapi
+Fix this by just removing the WARN_ON().  Returning -EINVAL, as the code
+already does, is the right behavior.
 
-Reported-by: Ondrej Mosnáček <omosnacek@gmail.com>
-Fixes: 5c380d623ed3 ("crypto: vmx - Add support for VMS instructions by ASM")
-Cc: stable@vger.kernel.org
-Signed-off-by: Daniel Axtens <dja@axtens.net>
-Tested-by: Michael Ellerman <mpe@ellerman.id.au>
-Tested-by: Ondrej Mosnacek <omosnacek@gmail.com>
+This bug was detected by my patches that improve testmgr to fuzz
+algorithms against their generic implementation.
+
+Fixes: b286d8b1a690 ("crypto: skcipher - Add skcipher walk interface")
+Cc: <stable@vger.kernel.org> # v4.10+
+Signed-off-by: Eric Biggers <ebiggers@google.com>
 Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/crypto/vmx/aesp8-ppc.pl |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ crypto/skcipher.c |    9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
 
---- a/drivers/crypto/vmx/aesp8-ppc.pl
-+++ b/drivers/crypto/vmx/aesp8-ppc.pl
-@@ -1854,7 +1854,7 @@ Lctr32_enc8x_three:
- 	stvx_u		$out1,$x10,$out
- 	stvx_u		$out2,$x20,$out
- 	addi		$out,$out,0x30
--	b		Lcbc_dec8x_done
-+	b		Lctr32_enc8x_done
- 
- .align	5
- Lctr32_enc8x_two:
-@@ -1866,7 +1866,7 @@ Lctr32_enc8x_two:
- 	stvx_u		$out0,$x00,$out
- 	stvx_u		$out1,$x10,$out
- 	addi		$out,$out,0x20
--	b		Lcbc_dec8x_done
-+	b		Lctr32_enc8x_done
- 
- .align	5
- Lctr32_enc8x_one:
+--- a/crypto/skcipher.c
++++ b/crypto/skcipher.c
+@@ -131,8 +131,13 @@ unmap_src:
+ 		memcpy(walk->dst.virt.addr, walk->page, n);
+ 		skcipher_unmap_dst(walk);
+ 	} else if (unlikely(walk->flags & SKCIPHER_WALK_SLOW)) {
+-		if (WARN_ON(err)) {
+-			/* unexpected case; didn't process all bytes */
++		if (err) {
++			/*
++			 * Didn't process all bytes.  Either the algorithm is
++			 * broken, or this was the last step and it turned out
++			 * the message wasn't evenly divisible into blocks but
++			 * the algorithm requires it.
++			 */
+ 			err = -EINVAL;
+ 			goto finish;
+ 		}
 
 
