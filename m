@@ -8,55 +8,55 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA1FDC04AAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 22:50:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB42BC04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 22:50:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7DF7921743
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 22:50:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6EAB42173E
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 22:50:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nxKmT32R"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WLgBLLmy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727265AbfETWuj (ORCPT
+        id S1727298AbfETWul (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 18:50:39 -0400
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:45934 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727196AbfETWug (ORCPT
+        Mon, 20 May 2019 18:50:41 -0400
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:38502 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726619AbfETWuj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 18:50:36 -0400
-Received: by mail-lf1-f66.google.com with SMTP id n22so11485163lfe.12;
-        Mon, 20 May 2019 15:50:34 -0700 (PDT)
+        Mon, 20 May 2019 18:50:39 -0400
+Received: by mail-lf1-f68.google.com with SMTP id y19so11538680lfy.5;
+        Mon, 20 May 2019 15:50:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=GUZxpMDqtDXRtd7DwTkXbKuXR33GC+jnjVnA6aq1s9o=;
-        b=nxKmT32RtCEAuuCt/tDjVV6SFEd84nudD/RH5wl/LxU/ygz6ew2N6mToZpXbfrcm2j
-         KdczGzi7A4Z+I62nbrImBLcDeNVl/cRdw45m3tq7OxwUJUAtK6yJMXLLbetlVGPsmXwK
-         O+gHBCuwXlWT+DbyJhWlALbIVrmAVTf1bJD6Wn6TBKhNtZ8k9nHq28Xq7qdv/i5rnDZd
-         xbVa+3n3qj/ZBaaS9/GUd22XjLYQAi7XXZBY4j34fXYYTwoPCXUr3ly4Ni3lQNPFBe9A
-         bnRozVMj02D5nniBuVkouRvXpKC/aeDbU08Rcze4TZkUvVZ3T141oUxJqhQvzBMyuiyt
-         Ua7w==
+        bh=RYk0UCgs+ZosBF8arGOOqtc7IYws3tQQshELX+XWdys=;
+        b=WLgBLLmy0fN//F+fKtASz4bdx/EAZ5EceIApTB4uAe25K4p93YmfHrI6cBQ9dLzAI5
+         PCxS6FfJPEjD/+XtRvHTP7o2se1FzmxvCrPme3nQkf1mfrJ82DLHSYCufTVBV9jWIRR8
+         7J/qS3Ar1V/+B3zQc3A12BFo71KFS48zpQEXbFZKvYJUorS86yi4eBN0/+eJfW/AaMEk
+         kgFNA3KCeEoYSZ88F9eHxLJjMUwk47AwwlDqDaOIylo0hJUrCElbu/enCNA2cwWkqWJi
+         9LlJOTgcZ3QQkcyH5rI3jzSRu54qLHZq1gtrISuk6S+vTLHA25wGU91IJSRQ3ItYgKzo
+         1Vsw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=GUZxpMDqtDXRtd7DwTkXbKuXR33GC+jnjVnA6aq1s9o=;
-        b=q3UCOh/YeB0CaaAkyVUEfN+u2lWbMN5W2ELcvMh2Dsz/lKwDYUuNuEZeNw94yLsM0o
-         Z5rNlb6XbMHiacZZOBa0ZQvviDnxUGCmg9GK4Hf0UV1EjmJT2UJ90HWmbD8yMwRCwzGv
-         9dE3tKR5x/DIfVfeWQKbIB3DO1YxAea9T0JaskKbHSGtC6M8I65EjkIOPUKzuhr81Edr
-         1hCy9Ta8utdv6vh6OwGL/adC7gNwh8W7inp5Gk+OhBgxIYWkbPxh0lkjSarz14xb1Ek1
-         H3qQx1eekaSsNiHuP083hSN0cxkbmQjCRhIwH6YK645cUsuR+6QFdumk6aDwKd782SUQ
-         f4nQ==
-X-Gm-Message-State: APjAAAVAdCBg+hG7jGHNj+eVEEeQjJaW49SyhC1KJovyNV/BeNViM99o
-        NjRmcFn43nV0xJ9FxyAUIB4=
-X-Google-Smtp-Source: APXvYqwU72a9Fj8I690R6OEe7yvwXBXYXvZoJsZEmBq1oUxROyRDx1vAkdHGJzbNjTPk2JuU26vIHg==
-X-Received: by 2002:ac2:5385:: with SMTP id g5mr5154504lfh.55.1558392633817;
-        Mon, 20 May 2019 15:50:33 -0700 (PDT)
+        bh=RYk0UCgs+ZosBF8arGOOqtc7IYws3tQQshELX+XWdys=;
+        b=hkBg6AyZfIYkV+8p1XzCp24aYy/MgHxoQL9yf1MK6dlkuFRTF2dDu9OSfL9c+Tjz15
+         SnUI8fCLswFFuyNrbaj9ixGOZXc007TCR8ISCxM1Ld1cDLMKQaOskGIOTKSEKs8NogOe
+         IeAdUkUsGyu3i21D2uOfkEX1mNfyVwZp6/M28wrKlIei0r1XAjkqpVrpi3U25HrK68Ej
+         GbsmHYGXrprIZaNk9fXHWevljYVvp0iZwM2M2Q5VXCAtB9dqgeD7Nr0nc/xPQVM2ujba
+         Fi7PHp6aCM2jf0HMOPtHFdoOsOaMUaI+QyyyJZZ1f7zKx3plCJT4T5SJKw48A4E0F5bV
+         smUw==
+X-Gm-Message-State: APjAAAXlY9Me+CK4EnsxH/6M2bpspS6b+SYVzWjntcM+Xaw9VPClpEl/
+        rNlZR+GpLVPoItRTFkEDdWw=
+X-Google-Smtp-Source: APXvYqzMNxdRx54BoJGNHRTK4217Jq6j30+FO2Q21HDQtUU/D+HykVofAwdpR42vjBSsmi3zVRM+tA==
+X-Received: by 2002:a19:9e47:: with SMTP id h68mr34930682lfe.91.1558392636196;
+        Mon, 20 May 2019 15:50:36 -0700 (PDT)
 Received: from z50.gdansk-morena.vectranet.pl (109241207190.gdansk.vectranet.pl. [109.241.207.190])
-        by smtp.gmail.com with ESMTPSA id t13sm2371646lji.47.2019.05.20.15.50.32
+        by smtp.gmail.com with ESMTPSA id t13sm2371646lji.47.2019.05.20.15.50.35
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 20 May 2019 15:50:33 -0700 (PDT)
+        Mon, 20 May 2019 15:50:35 -0700 (PDT)
 From:   Janusz Krzysztofik <jmkrzyszt@gmail.com>
 To:     Mauro Carvalho Chehab <mchehab@kernel.org>
 Cc:     Sakari Ailus <sakari.ailus@linux.intel.com>,
@@ -64,9 +64,9 @@ Cc:     Sakari Ailus <sakari.ailus@linux.intel.com>,
         linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
         Janusz Krzysztofik <jmkrzyszt@gmail.com>,
         stable@vger.kernel.org
-Subject: [PATCH v2 3/9] media: ov6650: Fix crop rectangle alignment not passed back
-Date:   Tue, 21 May 2019 00:50:01 +0200
-Message-Id: <20190520225007.2308-4-jmkrzyszt@gmail.com>
+Subject: [PATCH v2 5/9] media: ov6650: Fix some format attributes not under control
+Date:   Tue, 21 May 2019 00:50:03 +0200
+Message-Id: <20190520225007.2308-6-jmkrzyszt@gmail.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190520225007.2308-1-jmkrzyszt@gmail.com>
 References: <20190520225007.2308-1-jmkrzyszt@gmail.com>
@@ -77,85 +77,124 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit 4f996594ceaf ("[media] v4l2: make vidioc_s_crop const")
-introduced a writable copy of constified user requested crop rectangle
-in order to be able to perform hardware alignments on it.  Later
-on, commit 10d5509c8d50 ("[media] v4l2: remove g/s_crop from video
-ops") replaced s_crop() video operaion using that const argument with
-set_selection() pad operation which had a corresponding argument not
-constified, however the original behavior of the driver was not
-restored.  Since that time, any hardware alignment applied on a user
-requested crop rectangle is not passed back to the user calling
-.set_selection() as it should be.
+User arguments passed to .get/set_fmt() pad operation callbacks may
+contain unsupported values.  The driver takes control over frame size
+and pixel code as well as colorspace and field attributes but has never
+cared for remainig format attributes, i.e., ycbcr_enc, quantization
+and xfer_func, introduced by commit 11ff030c7365 ("[media]
+v4l2-mediabus: improve colorspace support").  Fix it.
 
-Fix the issue by dropping the copy and replacing all references to it
-with references to the crop rectangle embedded in the user argument.
+Set up a static v4l2_mbus_framefmt structure with attributes
+initialized to reasonable defaults and use it for updating content of
+user provided arguments.  In case of V4L2_SUBDEV_FORMAT_ACTIVE,
+postpone frame size update, now performed from inside ov6650_s_fmt()
+helper, util the user argument is first updated in ov6650_set_fmt() with
+default frame format content.  For V4L2_SUBDEV_FORMAT_TRY, don't copy
+all attributes to pad config, only those handled by the driver, then
+fill the response with the default frame format updated with updated
+pad config format code and frame size.
 
-Fixes: 10d5509c8d50 ("[media] v4l2: remove g/s_crop from video ops")
+Fixes: 11ff030c7365 ("[media] v4l2-mediabus: improve colorspace support")
 Signed-off-by: Janusz Krzysztofik <jmkrzyszt@gmail.com>
 Cc: stable@vger.kernel.org
 ---
- drivers/media/i2c/ov6650.c | 31 +++++++++++++++----------------
- 1 file changed, 15 insertions(+), 16 deletions(-)
+ drivers/media/i2c/ov6650.c | 51 +++++++++++++++++++++++++++++---------
+ 1 file changed, 39 insertions(+), 12 deletions(-)
 
 diff --git a/drivers/media/i2c/ov6650.c b/drivers/media/i2c/ov6650.c
-index 007f0ca24913..751b48483f27 100644
+index e7790e9b8887..731b03bef7a5 100644
 --- a/drivers/media/i2c/ov6650.c
 +++ b/drivers/media/i2c/ov6650.c
-@@ -468,38 +468,37 @@ static int ov6650_set_selection(struct v4l2_subdev *sd,
- {
- 	struct i2c_client *client = v4l2_get_subdevdata(sd);
- 	struct ov6650 *priv = to_ov6650(client);
--	struct v4l2_rect rect = sel->r;
- 	int ret;
+@@ -215,6 +215,17 @@ static u32 ov6650_codes[] = {
+ 	MEDIA_BUS_FMT_Y8_1X8,
+ };
  
- 	if (sel->which != V4L2_SUBDEV_FORMAT_ACTIVE ||
- 	    sel->target != V4L2_SEL_TGT_CROP)
++static const struct v4l2_mbus_framefmt ov6650_def_fmt = {
++	.width		= W_CIF,
++	.height		= H_CIF,
++	.code		= MEDIA_BUS_FMT_SBGGR8_1X8,
++	.colorspace	= V4L2_COLORSPACE_SRGB,
++	.field		= V4L2_FIELD_NONE,
++	.ycbcr_enc	= V4L2_YCBCR_ENC_DEFAULT,
++	.quantization	= V4L2_QUANTIZATION_DEFAULT,
++	.xfer_func	= V4L2_XFER_FUNC_DEFAULT,
++};
++
+ /* read a register */
+ static int ov6650_reg_read(struct i2c_client *client, u8 reg, u8 *val)
+ {
+@@ -513,11 +524,13 @@ static int ov6650_get_fmt(struct v4l2_subdev *sd,
+ 	if (format->pad)
  		return -EINVAL;
  
--	v4l_bound_align_image(&rect.width, 2, W_CIF, 1,
--			      &rect.height, 2, H_CIF, 1, 0);
--	v4l_bound_align_image(&rect.left, DEF_HSTRT << 1,
--			      (DEF_HSTRT << 1) + W_CIF - (__s32)rect.width, 1,
--			      &rect.top, DEF_VSTRT << 1,
--			      (DEF_VSTRT << 1) + H_CIF - (__s32)rect.height, 1,
--			      0);
-+	v4l_bound_align_image(&sel->r.width, 2, W_CIF, 1,
-+			      &sel->r.height, 2, H_CIF, 1, 0);
-+	v4l_bound_align_image(&sel->r.left, DEF_HSTRT << 1,
-+			      (DEF_HSTRT << 1) + W_CIF - (__s32)sel->r.width, 1,
-+			      &sel->r.top, DEF_VSTRT << 1,
-+			      (DEF_VSTRT << 1) + H_CIF - (__s32)sel->r.height,
-+			      1, 0);
++	/* initialize response with default media bus frame format */
++	*mf = ov6650_def_fmt;
++
++	/* update media bus format code and frame size */
+ 	mf->width	= priv->rect.width >> priv->half_scale;
+ 	mf->height	= priv->rect.height >> priv->half_scale;
+ 	mf->code	= priv->code;
+-	mf->colorspace	= V4L2_COLORSPACE_SRGB;
+-	mf->field	= V4L2_FIELD_NONE;
  
--	ret = ov6650_reg_write(client, REG_HSTRT, rect.left >> 1);
-+	ret = ov6650_reg_write(client, REG_HSTRT, sel->r.left >> 1);
- 	if (!ret) {
--		priv->rect.left = rect.left;
-+		priv->rect.left = sel->r.left;
- 		ret = ov6650_reg_write(client, REG_HSTOP,
--				(rect.left + rect.width) >> 1);
-+				       (sel->r.left + sel->r.width) >> 1);
- 	}
- 	if (!ret) {
--		priv->rect.width = rect.width;
--		ret = ov6650_reg_write(client, REG_VSTRT, rect.top >> 1);
-+		priv->rect.width = sel->r.width;
-+		ret = ov6650_reg_write(client, REG_VSTRT, sel->r.top >> 1);
- 	}
- 	if (!ret) {
--		priv->rect.top = rect.top;
-+		priv->rect.top = sel->r.top;
- 		ret = ov6650_reg_write(client, REG_VSTOP,
--				(rect.top + rect.height) >> 1);
-+				       (sel->r.top + sel->r.height) >> 1);
- 	}
+ 	return 0;
+ }
+@@ -653,10 +666,6 @@ static int ov6650_s_fmt(struct v4l2_subdev *sd, struct v4l2_mbus_framefmt *mf)
  	if (!ret)
--		priv->rect.height = rect.height;
-+		priv->rect.height = sel->r.height;
+ 		ret = ov6650_reg_rmw(client, REG_COML, coml_set, coml_mask);
  
+-	if (!ret) {
+-		mf->width = priv->rect.width >> half_scale;
+-		mf->height = priv->rect.height >> half_scale;
+-	}
  	return ret;
  }
+ 
+@@ -675,9 +684,6 @@ static int ov6650_set_fmt(struct v4l2_subdev *sd,
+ 		v4l_bound_align_image(&mf->width, 2, W_CIF, 1,
+ 				&mf->height, 2, H_CIF, 1, 0);
+ 
+-	mf->field = V4L2_FIELD_NONE;
+-	mf->colorspace = V4L2_COLORSPACE_SRGB;
+-
+ 	switch (mf->code) {
+ 	case MEDIA_BUS_FMT_Y10_1X10:
+ 		mf->code = MEDIA_BUS_FMT_Y8_1X8;
+@@ -695,10 +701,31 @@ static int ov6650_set_fmt(struct v4l2_subdev *sd,
+ 		break;
+ 	}
+ 
+-	if (format->which == V4L2_SUBDEV_FORMAT_ACTIVE)
+-		return ov6650_s_fmt(sd, mf);
+-	cfg->try_fmt = *mf;
++	if (format->which == V4L2_SUBDEV_FORMAT_TRY) {
++		/* store media bus format code and frame size in pad config */
++		cfg->try_fmt.width = mf->width;
++		cfg->try_fmt.height = mf->height;
++		cfg->try_fmt.code = mf->code;
+ 
++		/* return default mbus frame format updated with pad config */
++		*mf = ov6650_def_fmt;
++		mf->width = cfg->try_fmt.width;
++		mf->height = cfg->try_fmt.height;
++		mf->code = cfg->try_fmt.code;
++
++	} else {
++		/* apply new media bus format code and frame size */
++		int ret = ov6650_s_fmt(sd, mf);
++
++		if (ret)
++			return ret;
++
++		/* return default format updated with active size and code */
++		*mf = ov6650_def_fmt;
++		mf->width = priv->rect.width >> priv->half_scale;
++		mf->height = priv->rect.height >> priv->half_scale;
++		mf->code = priv->code;
++	}
+ 	return 0;
+ }
+ 
 -- 
 2.21.0
 
