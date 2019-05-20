@@ -2,118 +2,88 @@ Return-Path: <SRS0=lq4r=TU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F64BC04AAC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 17:37:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1EC7C04AAF
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 17:37:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 17A0C214AE
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 17:37:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 81D3A206B6
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 17:37:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="GcPGlfCi"
+	dkim=pass (2048-bit key) header.d=semihalf-com.20150623.gappssmtp.com header.i=@semihalf-com.20150623.gappssmtp.com header.b="CwchGZjI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393005AbfETRhK (ORCPT
+        id S2392885AbfETRhc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 13:37:10 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:44227 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2392771AbfETRhJ (ORCPT
+        Mon, 20 May 2019 13:37:32 -0400
+Received: from mail-ua1-f68.google.com ([209.85.222.68]:40302 "EHLO
+        mail-ua1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389405AbfETRhb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 13:37:09 -0400
-Received: by mail-lj1-f195.google.com with SMTP id e13so13232570ljl.11
-        for <linux-kernel@vger.kernel.org>; Mon, 20 May 2019 10:37:08 -0700 (PDT)
+        Mon, 20 May 2019 13:37:31 -0400
+Received: by mail-ua1-f68.google.com with SMTP id d4so5561137uaj.7
+        for <linux-kernel@vger.kernel.org>; Mon, 20 May 2019 10:37:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
+        d=semihalf-com.20150623.gappssmtp.com; s=20150623;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=LZ9wE683n0C5yjhKbdgsiksRQ/utvzytcQ5/oroGBgE=;
-        b=GcPGlfCiiLFvcvLs7/DCm9x1vt1/0qPmXgvBx7BD9BV9b9oigsJ1qQB+Gbw1WZfUp0
-         qKzGm2GiJju8+CTNepHC4vdaBxNIuf+jNEQBgONdxeHuZMqFAZ9cnVdeK7cpgsihc7bx
-         EqPKrLU4zdN2ITMKq/h+DoJvKHiL0LudPLqvQ=
+        bh=vDBzgk3+2zzaDlSxwytUrA3Kc0EghhVaruTPNWK1ttg=;
+        b=CwchGZjIFzmqStPHXdkdMvjtXevOL6aMDz0RbbxhvTvOywv3R7HbSxVIiPR86vVgVJ
+         28yp6/OUTu6GifEPNjnYBzsfPg5Y7BbwwV5Ty4ILdR7ZbBYLoKzOGlZ1hMwqgeyZohQS
+         a9Xty3qBzDrM1VhvrAeqYsd8bm4McRK6eMvwStNI7jp8RC5DjasBTN49ChbDaScmiIHc
+         LTl2jGq3y/n5qeMsGBeWktpO3+3aP8DzWvndvfXt1nfhBIsEP6nW4S6oWCWrYYgtNWmE
+         SMz99yiCt+Utdgd/gzX6yrRr7ihWyoWsQAjda+WeCB98a3ybcjj/r3oR4U9vY176w7BS
+         0c3w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=LZ9wE683n0C5yjhKbdgsiksRQ/utvzytcQ5/oroGBgE=;
-        b=EqY/NBuerlad99msst5pd83V13IhGbm/3eA22nPyH9qqPmEXBoz9bMO6DJijYcN1sp
-         Co4X9rwoMeJpz7UIv2DxYYQN9+ohm/klY0qjUhZKhDP+BI0ft5kwM++WZxnOs+K1spJn
-         lJVWRhs1WiUJqVGjaoHfTvi9rNySBOTN5Js3Y3+MylydW3BGzwmc7wlrh+iepY5bFZMB
-         dDq9WNz7uER0UYT03FgPGcsOm8EKjNNghfXcG65lk+Ez06xFJClYvij250uaOeODj7wt
-         dmDkaIJymgXi92DMXD/tU2pXUrNvTHeEbskznN7/8UT+Pqw7Tkqoo1gduZRsujAI7L2C
-         fH7w==
-X-Gm-Message-State: APjAAAXvh2yUqPsPb+NkWchnMVJuo/s2zjcaUe2vtxb8qzhHssCp6seC
-        0D6ihq7DVLmAALfXyKAaH/1FrqE6iZM=
-X-Google-Smtp-Source: APXvYqyfyx/8L4WNZEw8vxpcyz+ai03XdOeBAv7qoVX+9dkiDlpgxydHSHjJDb2tOodr+IFwLyQ/gA==
-X-Received: by 2002:a2e:b0da:: with SMTP id g26mr20510546ljl.161.1558373827805;
-        Mon, 20 May 2019 10:37:07 -0700 (PDT)
-Received: from mail-lj1-f171.google.com (mail-lj1-f171.google.com. [209.85.208.171])
-        by smtp.gmail.com with ESMTPSA id q124sm3872240ljq.75.2019.05.20.10.37.06
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Mon, 20 May 2019 10:37:06 -0700 (PDT)
-Received: by mail-lj1-f171.google.com with SMTP id 188so13238824ljf.9
-        for <linux-kernel@vger.kernel.org>; Mon, 20 May 2019 10:37:06 -0700 (PDT)
-X-Received: by 2002:a2e:8956:: with SMTP id b22mr32405874ljk.134.1558373826185;
- Mon, 20 May 2019 10:37:06 -0700 (PDT)
+        bh=vDBzgk3+2zzaDlSxwytUrA3Kc0EghhVaruTPNWK1ttg=;
+        b=Ir+xREt3Bg8yEJsCVRP8Xina3xefOTn4RP0LBPgmrytmnTwjd4M2kqO4wVqaA92iq5
+         1HP7Zx0egithXV2ERSY6/nf3+o7yt9xA2OpKiRWZXJeAyDYotz3IBCa9x+g0lpyuZcAK
+         Y3whnj+3NW/O0C+X/k8VzNgB59x891VUWaH1iRN+JrelMbbJl7upQfwyqVd7hFWxXkQ4
+         ZjWB50mmq4LywVlJDP6F2I/Wilu/pxPhYG+2IjjcjJTlg+wat2mmuZYI5Xz2BCb7XrPv
+         rDOYV5UaS4YhK5ngv5tnd1zS5HrW+Cn/BnEksREfsj/MrX4RFvH6TGhIJszJaSoqPFxS
+         8CSg==
+X-Gm-Message-State: APjAAAVqfrCF6ERw0QfJXG4llCKlV0yEz4M1crv/pCIlnjBhlAupbN1W
+        wNiPNNU1r27Xs7da5sOQEVoQJb9kK7MvC/PCHOkBlA==
+X-Google-Smtp-Source: APXvYqxP8zxzm4jZKGosdcwN4a0RkbFAaC28vOtz1R97u76s4VbaoqHPsL53swQmuIAJyZjvBa85qqDRttnmEtWmwhM=
+X-Received: by 2002:ab0:670c:: with SMTP id q12mr13594032uam.106.1558373850690;
+ Mon, 20 May 2019 10:37:30 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190512012508.10608-1-elder@linaro.org> <20190512012508.10608-10-elder@linaro.org>
- <CAK8P3a0eYWN6mMwft5OSu8wQQo=kWh5safGFFNkDCELZJyiMmQ@mail.gmail.com>
- <14a040b6-8187-3fbc-754d-2e267d587858@linaro.org> <CAK8P3a37bPRZTHZcrg8KrYRLAhCr9pk8v4yuo_wSyUONs2OysQ@mail.gmail.com>
- <4a34d381-d31d-ea49-d6d3-3c4f632958e3@linaro.org> <dcd648f2-5305-04dd-8997-be87a9961fd9@linaro.org>
- <CAK8P3a0FfSvTF8kkQ8pyKFNX9-fSXvtEyMBYTjtM+VOPxMPkWg@mail.gmail.com>
- <d3d4670f-eb8b-7dcf-f91a-1ec1d4d96f67@linaro.org> <CAK8P3a12+3a-p2pNuQrJu01dOJJuCoQ4ttt=Y0g97wTtBmQO5w@mail.gmail.com>
- <8040fa0e-8446-1ec0-cf75-ac1c17331da5@linaro.org> <CAE=gft4ZkO+cGMNEt05+Xw=pEoR7gzJ4jBRB9wA0gQ7V=Pag6g@mail.gmail.com>
- <fa83020a-248c-9686-5a90-81923fe843bb@linaro.org>
-In-Reply-To: <fa83020a-248c-9686-5a90-81923fe843bb@linaro.org>
-From:   Evan Green <evgreen@chromium.org>
-Date:   Mon, 20 May 2019 10:36:29 -0700
-X-Gmail-Original-Message-ID: <CAE=gft6mdbNZxCAUweP7ppEyfqVGBPwzBNukWJcdte53EoDbRQ@mail.gmail.com>
-Message-ID: <CAE=gft6mdbNZxCAUweP7ppEyfqVGBPwzBNukWJcdte53EoDbRQ@mail.gmail.com>
-Subject: Re: [PATCH 09/18] soc: qcom: ipa: GSI transactions
-To:     Alex Elder <elder@linaro.org>
-Cc:     Arnd Bergmann <arnd@arndb.de>, David Miller <davem@davemloft.net>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Ilias Apalodimas <ilias.apalodimas@linaro.org>,
-        syadagir@codeaurora.org, mjavid@codeaurora.org,
-        Ben Chan <benchan@google.com>,
-        Eric Caruso <ejcaruso@google.com>, abhishek.esse@gmail.com,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <20190517213918.26045-1-matthewgarrett@google.com>
+In-Reply-To: <20190517213918.26045-1-matthewgarrett@google.com>
+From:   Bartosz Szczepanek <bsz@semihalf.com>
+Date:   Mon, 20 May 2019 19:37:19 +0200
+Message-ID: <CABLO=+mSkR8fwm5dDB2757OK=BKZGM9jHR6OuCkzazgFcVy=dg@mail.gmail.com>
+Subject: Re: [PATCH V6 0/4] Add support for crypto agile TPM event logs
+To:     Matthew Garrett <matthewgarrett@google.com>
+Cc:     linux-integrity <linux-integrity@vger.kernel.org>,
+        Peter Huewe <peterhuewe@gmx.de>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Roberto Sassu <roberto.sassu@huawei.com>,
+        linux-efi <linux-efi@vger.kernel.org>,
+        LSM List <linux-security-module@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        =?UTF-8?Q?Thi=C3=A9baud_Weksteen?= <tweek@google.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 20, 2019 at 9:50 AM Alex Elder <elder@linaro.org> wrote:
->
-> On 5/20/19 11:34 AM, Evan Green wrote:
-> > On Mon, May 20, 2019 at 7:44 AM Alex Elder <elder@linaro.org> wrote:
-> >>
-> >> On 5/20/19 9:43 AM, Arnd Bergmann wrote:
-> >>> I have no idea how two 8-bit assignments could do that,
-> >>> it sounds like a serious gcc bug, unless you mean two
-> >>> 8-byte assignments, which would be within the range
-> >>> of expected behavior. If it's actually 8-bit stores, please
-> >>> open a bug against gcc with a minimized test case.
-> >>
-> >> Sorry, it's 8 *byte* assignments, not 8 bit.    -Alex
-> >
-> > Is it important to the hardware that you're writing all 128 bits of
->
-> No, it is not important in the ways you are describing.
->
-> We're just geeking out over how to get optimal performance.
-> A single 128-bit write is nicer than two 64-bit writes,
-> or more smaller writes.
->
-> The hardware won't touch the TRE until the doorbell gets
-> rung telling it that it is permitted to do so.  The doorbell
-> is an I/O write, which implies a memory barrier, so the entire
-> TRE will be up-to-date in memory regardless of whether we
-> write it 128 bits or 8 bits at a time.
->
+Hi Matthew,
 
-Ah, understood. Carry on!
+On Fri, May 17, 2019 at 11:39 PM Matthew Garrett
+<matthewgarrett@google.com> wrote:
+>
+> Updated with the fixes from Bartosz and the header fixes folded in.
+> Bartosz, my machine still doesn't generate any final event log entries -
+> are you able to give this a test and make sure it's good?
+
+Yes, I'll check that and let you know. May be later this week.
+
+Best regards,
+Bartosz
