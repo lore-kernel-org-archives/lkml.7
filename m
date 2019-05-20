@@ -2,114 +2,92 @@ Return-Path: <SRS0=lq4r=TU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D769CC04AAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 09:25:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99D30C04AAF
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 09:26:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AF3CE20862
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 09:25:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 765F720675
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 09:26:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732022AbfETJZD (ORCPT
+        id S1732055AbfETJ0C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 05:25:03 -0400
-Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:48494 "EHLO
-        atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729357AbfETJZC (ORCPT
+        Mon, 20 May 2019 05:26:02 -0400
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:33406 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729357AbfETJ0C (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 05:25:02 -0400
-Received: by atrey.karlin.mff.cuni.cz (Postfix, from userid 512)
-        id C27EA80450; Mon, 20 May 2019 11:24:49 +0200 (CEST)
-Date:   Mon, 20 May 2019 11:24:59 +0200
-From:   Pavel Machek <pavel@denx.de>
-To:     Ran Wang <ran.wang_1@nxp.com>
-Cc:     Pavel Machek <pavel@denx.de>, Leo Li <leoyang.li@nxp.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <len.brown@intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>
-Subject: Re: [PATCH V2 3/3] soc: fsl: add RCPM driver
-Message-ID: <20190520092459.GC9748@amd>
-References: <20190517033946.30763-1-ran.wang_1@nxp.com>
- <20190517033946.30763-3-ran.wang_1@nxp.com>
- <20190519213844.GH31403@amd>
- <AM5PR0402MB2865EC5E1EF12C6C1D3C5566F1060@AM5PR0402MB2865.eurprd04.prod.outlook.com>
- <20190520085647.GA9748@amd>
- <AM5PR0402MB2865F4574B19761848B001F9F1060@AM5PR0402MB2865.eurprd04.prod.outlook.com>
- <20190520090748.GB9748@amd>
- <AM5PR0402MB2865E28B2E2296CB878ACEA2F1060@AM5PR0402MB2865.eurprd04.prod.outlook.com>
+        Mon, 20 May 2019 05:26:02 -0400
+Received: by mail-qt1-f194.google.com with SMTP id m32so15500633qtf.0
+        for <linux-kernel@vger.kernel.org>; Mon, 20 May 2019 02:26:01 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=JctNbqwCh+WC0TVQRye/r7+oJO/aUarkrBr7ivkC6/o=;
+        b=VsHtOE34lK+CD3AvPJbCXC2icSOevCjgzq5TLXYAsakpociB+DrMJ5T3yViXyOCm8/
+         3u271aT3PrT8PK9SNgH52EbxWB9BXNmxmaZMiuNARAUSwbK97n5e5eIsBh6HGJKTf0e0
+         aaXA4nFEd+yTVCJ599Pu9FbOPpZehw+CufVc05VKDGJcS58n8H5Z73WziXN0Y1Wb0FHG
+         BHcycNfqlCvrUR9b6IXK70lqSP49i5DQlFqrADSwJIp6qu57JpJAJkYpEZ+pwrltSrLA
+         MdKlOGbiDoWXM62F9Pt24WGYu1LJv+ZIMi0eWIC+7iZukTkZYT8l2IU+kfxUpAKq4Nz/
+         NSTw==
+X-Gm-Message-State: APjAAAX6Ogc9ABIvpZstO54nSOlTf6N96vaROaXBPO23C9767ObNE6mC
+        Z72qOUtwYrFSy9jxI/tGF69Mfy0xSdxT3RsX+yw=
+X-Google-Smtp-Source: APXvYqwWFFg8iqO2pEVzmzHeh6gtzK9wwts/yfXyepEIpCbzxiWfMYaKQvMwkrVVdXXkTDdMOIVNSTGBZM3SRS/EUh0=
+X-Received: by 2002:ac8:6750:: with SMTP id n16mr39381624qtp.142.1558344361121;
+ Mon, 20 May 2019 02:26:01 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="0lnxQi9hkpPO77W3"
-Content-Disposition: inline
-In-Reply-To: <AM5PR0402MB2865E28B2E2296CB878ACEA2F1060@AM5PR0402MB2865.eurprd04.prod.outlook.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+References: <20190512012508.10608-1-elder@linaro.org> <20190512012508.10608-10-elder@linaro.org>
+ <CAK8P3a0eYWN6mMwft5OSu8wQQo=kWh5safGFFNkDCELZJyiMmQ@mail.gmail.com>
+ <14a040b6-8187-3fbc-754d-2e267d587858@linaro.org> <CAK8P3a37bPRZTHZcrg8KrYRLAhCr9pk8v4yuo_wSyUONs2OysQ@mail.gmail.com>
+ <4a34d381-d31d-ea49-d6d3-3c4f632958e3@linaro.org> <dcd648f2-5305-04dd-8997-be87a9961fd9@linaro.org>
+In-Reply-To: <dcd648f2-5305-04dd-8997-be87a9961fd9@linaro.org>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Mon, 20 May 2019 11:25:44 +0200
+Message-ID: <CAK8P3a0FfSvTF8kkQ8pyKFNX9-fSXvtEyMBYTjtM+VOPxMPkWg@mail.gmail.com>
+Subject: Re: [PATCH 09/18] soc: qcom: ipa: GSI transactions
+To:     Alex Elder <elder@linaro.org>
+Cc:     David Miller <davem@davemloft.net>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Ilias Apalodimas <ilias.apalodimas@linaro.org>,
+        syadagir@codeaurora.org, mjavid@codeaurora.org,
+        evgreen@chromium.org, Ben Chan <benchan@google.com>,
+        Eric Caruso <ejcaruso@google.com>, abhishek.esse@gmail.com,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Sun, May 19, 2019 at 7:11 PM Alex Elder <elder@linaro.org> wrote:
+> On 5/17/19 1:44 PM, Alex Elder wrote:
+> > On 5/17/19 1:33 PM, Arnd Bergmann wrote:
+> >> On Fri, May 17, 2019 at 8:08 PM Alex Elder <elder@linaro.org>
+>
+> So it seems that I must *not* apply a volatile qualifier,
+> because doing so restricts the compiler from making the
+> single instruction optimization.
 
---0lnxQi9hkpPO77W3
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Right, I guess that makes sense.
 
-Hi!
+> If I've missed something and you have another suggestion for
+> me to try let me know and I'll try it.
 
-> > > > You are right, but the current code is "interesting". What about
-> > > >
-> > > >     ws =3D NULL;
-> > > >     while (ws =3D wakeup_source_get_next(NULL)) ...
-> > > >
-> > > > then?
-> > >
-> > > Did you mean:
-> > >      ws =3D NULL;
-> > >      while (ws =3D wakeup_source_get_next(ws)) ...
-> > >
-> > >    Yes, that will be the same to my original logic, do you recommend
-> > > to change to this? :)
-> >=20
-> > Yes please. It will be less confusing to the reader.
->=20
-> OK, if no other comment, I will work out v4, fix this and extra ','
-> =20
-> > Thanks (and sorry for cross-talk),
->=20
-> That's OK, thanks for your time.
+A memcpy() might do the right thing as well. Another idea would
+be a cast to __int128 like
 
-You can add
+#ifdef CONFIG_ARCH_SUPPORTS_INT128
+typedef __int128 tre128_t;
+#else
+typedef struct { __u64 a; __u64 b; } tre128_t;
+#else
 
-Acked-by: Pavel Machek <pavel@ucw.cz>
+static inline void set_tre(struct gsi_tre *dest_tre, struct gs_tre *src_tre)
+{
+     *(volatile tre128_t *)dest_tre = *(tre128_t *)src_tre;
+}
 
-to that version.
-
-Best regards,
-								Pavel
---=20
-DENX Software Engineering GmbH,      Managing Director: Wolfgang Denk
-HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
-
---0lnxQi9hkpPO77W3
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAlzicmsACgkQMOfwapXb+vI/kACfXfr5zSF0QsKLaIDUnn6ldYdL
-9rUAn1IvhOf/+HglBb9Ro5uZKDJsTOI+
-=fAL6
------END PGP SIGNATURE-----
-
---0lnxQi9hkpPO77W3--
+      Arnd
