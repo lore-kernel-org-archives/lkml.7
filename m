@@ -2,88 +2,103 @@ Return-Path: <SRS0=lq4r=TU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A2CBC04AAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 07:52:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5AFFC04E87
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 07:52:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D0D3320644
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 07:52:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A6FB206B6
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 07:52:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="zyzJqh5v"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730334AbfETHwc (ORCPT
+        id S1730565AbfETHwd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Mon, 20 May 2019 03:52:33 -0400
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:54799 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727319AbfETHwc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 20 May 2019 03:52:32 -0400
-Received: from mx2.suse.de ([195.135.220.15]:47656 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727733AbfETHwb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 03:52:31 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 4247CAF31;
-        Mon, 20 May 2019 07:52:30 +0000 (UTC)
-Received: by quack2.suse.cz (Postfix, from userid 1000)
-        id 5D54B1E3ED6; Mon, 20 May 2019 09:52:32 +0200 (CEST)
-Date:   Mon, 20 May 2019 09:52:32 +0200
-From:   Jan Kara <jack@suse.cz>
-To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     Kees Cook <keescook@chromium.org>, Jan Kara <jack@suse.cz>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>,
-        stable <stable@vger.kernel.org>, Jeff Moyer <jmoyer@redhat.com>,
-        Ingo Molnar <mingo@redhat.com>, Christoph Hellwig <hch@lst.de>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Matthew Wilcox <willy@infradead.org>,
-        Jeff Smits <jeff.smits@intel.com>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] libnvdimm/pmem: Bypass CONFIG_HARDENED_USERCOPY overhead
-Message-ID: <20190520075232.GA30972@quack2.suse.cz>
-References: <155805321833.867447.3864104616303535270.stgit@dwillia2-desk3.amr.corp.intel.com>
- <20190517084739.GB20550@quack2.suse.cz>
- <CAPcyv4iZZCgcC657ZOysBP9=1ejp3jfFj=VETVBPrgmfg7xUEw@mail.gmail.com>
- <201905170855.8E2E1AC616@keescook>
- <CAPcyv4g9HpMaifC+Qe2RVbgL_qq9vQvjwr-Jw813xhxcviehYQ@mail.gmail.com>
- <201905171225.29F9564BA2@keescook>
- <CAPcyv4iSeUPWFeSZW-dmYz9TnWhqVCx1Y1VjtUv+125_ZSQaYg@mail.gmail.com>
+Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4K7owVV024214;
+        Mon, 20 May 2019 09:52:18 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-type; s=STMicroelectronics;
+ bh=AmLaTPn+4Y+PnO2cSAi1LC9tZLLiMimnsWha5pKlny8=;
+ b=zyzJqh5vP+aveI2mQhAv7Ag2QoFpavLrSaMApQZSN9cAxXZdhg6aeig49lB0g5BR8zOn
+ Rm6/+8XRMIhwB7oiEOgQeEqoW6mqADkW3HlYZVqyfaeMt4tnfH4p3FkTJhGJzGgKXRGQ
+ BXsjLEUtYHWxWiqnbrTNwB401MyI2ttSeqy+tXXbOyuHKagD6qf2gjEZIb8Dz64jpY43
+ 01QEPQ5yVxVANbsIOqBHkCUmTn9T4DUL7XvCBXwZufXbSG2sbnMOBw/CbSpXWvgWwrsb
+ I5MKAZ/vEsav5KYikZQlq1IAJvfDbvkw3j5wahF59uPByqIkQiGKTJ3/T8r2SFB52+TQ Ow== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 2sj7ttt4nb-1
+        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
+        Mon, 20 May 2019 09:52:18 +0200
+Received: from zeta.dmz-eu.st.com (zeta.dmz-eu.st.com [164.129.230.9])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 7A11E3A;
+        Mon, 20 May 2019 07:52:16 +0000 (GMT)
+Received: from Webmail-eu.st.com (Safex1hubcas23.st.com [10.75.90.46])
+        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 40E3C1557;
+        Mon, 20 May 2019 07:52:16 +0000 (GMT)
+Received: from SAFEX1HUBCAS22.st.com (10.75.90.93) by SAFEX1HUBCAS23.st.com
+ (10.75.90.46) with Microsoft SMTP Server (TLS) id 14.3.439.0; Mon, 20 May
+ 2019 09:52:16 +0200
+Received: from localhost (10.201.20.5) by Webmail-ga.st.com (10.75.90.48) with
+ Microsoft SMTP Server (TLS) id 14.3.439.0; Mon, 20 May 2019 09:52:15 +0200
+From:   Amelie Delaunay <amelie.delaunay@st.com>
+To:     Lee Jones <lee.jones@linaro.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>
+CC:     <linux-gpio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>, <kbuild-all@01.org>,
+        "Amelie Delaunay" <amelie.delaunay@st.com>
+Subject: [PATCH] pinctrl: stmfx: Fix compile issue when CONFIG_OF_GPIO is not defined
+Date:   Mon, 20 May 2019 09:52:15 +0200
+Message-ID: <1558338735-8444-1-git-send-email-amelie.delaunay@st.com>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAPcyv4iSeUPWFeSZW-dmYz9TnWhqVCx1Y1VjtUv+125_ZSQaYg@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain
+X-Originating-IP: [10.201.20.5]
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-20_04:,,
+ signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat 18-05-19 21:46:03, Dan Williams wrote:
-> On Fri, May 17, 2019 at 12:25 PM Kees Cook <keescook@chromium.org> wrote:
-> > On Fri, May 17, 2019 at 10:28:48AM -0700, Dan Williams wrote:
-> > > It seems dax_iomap_actor() is not a path where we'd be worried about
-> > > needing hardened user copy checks.
-> >
-> > I would agree: I think the proposed patch makes sense. :)
-> 
-> Sounds like an acked-by to me.
+When CONFIG_GPIO_OF is not defined, struct gpio_chip 'of_node' member does
+not exist:
+drivers/pinctrl/pinctrl-stmfx.c: In function 'stmfx_pinctrl_probe':
+drivers/pinctrl/pinctrl-stmfx.c:652:17: error: 'struct gpio_chip' has no member named 'of_node'
+     pctl->gpio_chip.of_node = np;
 
-Yeah, if Kees agrees, I'm fine with skipping the checks as well. I just
-wanted that to be clarified. Also it helped me that you wrote:
+Fixes: 1490d9f841b1 ("pinctrl: Add STMFX GPIO expander Pinctrl/GPIO driver")
+Reported-by: kbuild test robot <lkp@intel.com>
+Signed-off-by: Amelie Delaunay <amelie.delaunay@st.com>
+---
+ drivers/pinctrl/pinctrl-stmfx.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-That routine (dax_iomap_actor()) validates that the logical file offset is
-within bounds of the file, then it does a sector-to-pfn translation which
-validates that the physical mapping is within bounds of the block device.
-
-That is more specific than "dax_iomap_actor() takes care of necessary
-checks" which was in the changelog. And the above paragraph helped me
-clarify which checks in dax_iomap_actor() you think replace those usercopy
-checks. So I think it would be good to add that paragraph to those
-copy_from_pmem() functions as a comment just in case we are wondering in
-the future why we are skipping the checks... Also feel free to add:
-
-Acked-by: Jan Kara <jack@suse.cz>
-
-								Honza
+diff --git a/drivers/pinctrl/pinctrl-stmfx.c b/drivers/pinctrl/pinctrl-stmfx.c
+index eba872c..bb64aa0 100644
+--- a/drivers/pinctrl/pinctrl-stmfx.c
++++ b/drivers/pinctrl/pinctrl-stmfx.c
+@@ -648,7 +648,9 @@ static int stmfx_pinctrl_probe(struct platform_device *pdev)
+ 	pctl->gpio_chip.base = -1;
+ 	pctl->gpio_chip.ngpio = pctl->pctl_desc.npins;
+ 	pctl->gpio_chip.can_sleep = true;
++#ifdef CONFIG_OF_GPIO
+ 	pctl->gpio_chip.of_node = np;
++#endif
+ 	pctl->gpio_chip.need_valid_mask = true;
+ 
+ 	ret = devm_gpiochip_add_data(pctl->dev, &pctl->gpio_chip, pctl);
 -- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+2.7.4
+
