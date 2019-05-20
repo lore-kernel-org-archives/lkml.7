@@ -2,37 +2,36 @@ Return-Path: <SRS0=lq4r=TU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2C0DC04AAC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 11:39:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DFB24C04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 11:39:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8393F20862
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 11:39:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF06420645
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 11:39:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733070AbfETLhv (ORCPT
+        id S1733059AbfETLhv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Mon, 20 May 2019 07:37:51 -0400
 Received: from mga04.intel.com ([192.55.52.120]:48121 "EHLO mga04.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733038AbfETLhr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 07:37:47 -0400
+        id S1725601AbfETLht (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 07:37:49 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 May 2019 04:37:47 -0700
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 May 2019 04:37:48 -0700
 X-ExtLoop1: 1
 Received: from ahunter-desktop.fi.intel.com ([10.237.72.198])
-  by fmsmga004.fm.intel.com with ESMTP; 20 May 2019 04:37:46 -0700
+  by fmsmga004.fm.intel.com with ESMTP; 20 May 2019 04:37:47 -0700
 From:   Adrian Hunter <adrian.hunter@intel.com>
 To:     Arnaldo Carvalho de Melo <acme@kernel.org>
 Cc:     Jiri Olsa <jolsa@redhat.com>, linux-kernel@vger.kernel.org
-Subject: [PATCH 04/22] perf intel-pt: Factor out intel_pt_update_sample_time
-Date:   Mon, 20 May 2019 14:37:10 +0300
-Message-Id: <20190520113728.14389-5-adrian.hunter@intel.com>
+Subject: [PATCH 05/22] perf intel-pt: Accumulate cycle count from CYC packets
+Date:   Mon, 20 May 2019 14:37:11 +0300
+Message-Id: <20190520113728.14389-6-adrian.hunter@intel.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190520113728.14389-1-adrian.hunter@intel.com>
 References: <20190520113728.14389-1-adrian.hunter@intel.com>
@@ -42,64 +41,104 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-To eliminate some duplication and make the code more understandable, factor
-out intel_pt_update_sample_time.
+In preparation for providing instructions-per-cycle (IPC) information,
+accumulate cycle count from CYC packets.
+
+Although CYC packets are optional (requires config term 'cyc' to enable
+cycle-accurate mode when recording), the simplest way to count cycles is
+with CYC packets. The first complication is that cycles must be counted
+only when also counting instructions. That means when control flow packet
+generation is enabled i.e. between TIP.PGE and TIP.PGD packets. Also,
+sampling the cycle count follows the same rules as sampling the timestamp,
+that is, not before the instruction to which the decoder is walking is
+reached. In addition, the cycle count is not accurate for any but the first
+branch of a TNT packet.
 
 Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
 ---
- .../util/intel-pt-decoder/intel-pt-decoder.c   | 18 ++++++++++--------
- 1 file changed, 10 insertions(+), 8 deletions(-)
+ .../perf/util/intel-pt-decoder/intel-pt-decoder.c  | 14 +++++++++++++-
+ .../perf/util/intel-pt-decoder/intel-pt-decoder.h  |  1 +
+ 2 files changed, 14 insertions(+), 1 deletion(-)
 
 diff --git a/tools/perf/util/intel-pt-decoder/intel-pt-decoder.c b/tools/perf/util/intel-pt-decoder/intel-pt-decoder.c
-index f4c3c84b090f..1ab4070b5633 100644
+index 1ab4070b5633..ef3a1c1cd250 100644
 --- a/tools/perf/util/intel-pt-decoder/intel-pt-decoder.c
 +++ b/tools/perf/util/intel-pt-decoder/intel-pt-decoder.c
-@@ -479,6 +479,12 @@ static int intel_pt_bad_packet(struct intel_pt_decoder *decoder)
- 	return -EBADMSG;
- }
- 
-+static inline void intel_pt_update_sample_time(struct intel_pt_decoder *decoder)
-+{
-+	decoder->sample_timestamp = decoder->timestamp;
-+	decoder->sample_insn_cnt = decoder->timestamp_insn_cnt;
-+}
-+
- static int intel_pt_get_data(struct intel_pt_decoder *decoder)
- {
- 	struct intel_pt_buffer buffer = { .buf = 0, };
-@@ -1319,8 +1325,7 @@ static int intel_pt_walk_tnt(struct intel_pt_decoder *decoder)
+@@ -160,6 +160,8 @@ struct intel_pt_decoder {
+ 	uint64_t period_mask;
+ 	uint64_t period_ticks;
+ 	uint64_t last_masked_timestamp;
++	uint64_t tot_cyc_cnt;
++	uint64_t sample_tot_cyc_cnt;
+ 	bool continuous_period;
+ 	bool overflow;
+ 	bool set_fup_tx_flags;
+@@ -167,6 +169,7 @@ struct intel_pt_decoder {
+ 	bool set_fup_mwait;
+ 	bool set_fup_pwre;
+ 	bool set_fup_exstop;
++	bool sample_cyc;
+ 	unsigned int fup_tx_flags;
+ 	unsigned int tx_flags;
+ 	uint64_t fup_ptw_payload;
+@@ -1323,6 +1326,7 @@ static int intel_pt_walk_tnt(struct intel_pt_decoder *decoder)
+ 				decoder->ip += intel_pt_insn.length;
+ 				return 0;
  			}
++			decoder->sample_cyc = false;
  			decoder->ip += intel_pt_insn.length;
  			if (!decoder->tnt.count) {
--				decoder->sample_timestamp = decoder->timestamp;
--				decoder->sample_insn_cnt = decoder->timestamp_insn_cnt;
-+				intel_pt_update_sample_time(decoder);
- 				return -EAGAIN;
- 			}
- 			decoder->tnt.payload <<= 1;
-@@ -2413,8 +2418,7 @@ const struct intel_pt_state *intel_pt_decode(struct intel_pt_decoder *decoder)
- 	if (err) {
+ 				intel_pt_update_sample_time(decoder);
+@@ -1515,6 +1519,9 @@ static void intel_pt_calc_cyc_timestamp(struct intel_pt_decoder *decoder)
+ 	decoder->have_cyc = true;
+ 
+ 	decoder->cycle_cnt += decoder->packet.payload;
++	if (decoder->pge)
++		decoder->tot_cyc_cnt += decoder->packet.payload;
++	decoder->sample_cyc = true;
+ 
+ 	if (!decoder->cyc_ref_timestamp)
+ 		return;
+@@ -2419,6 +2426,7 @@ const struct intel_pt_state *intel_pt_decode(struct intel_pt_decoder *decoder)
  		decoder->state.err = intel_pt_ext_err(err);
  		decoder->state.from_ip = decoder->ip;
--		decoder->sample_timestamp = decoder->timestamp;
--		decoder->sample_insn_cnt = decoder->timestamp_insn_cnt;
-+		intel_pt_update_sample_time(decoder);
+ 		intel_pt_update_sample_time(decoder);
++		decoder->sample_tot_cyc_cnt = decoder->tot_cyc_cnt;
  	} else {
  		decoder->state.err = 0;
  		if (decoder->cbr != decoder->cbr_seen && decoder->state.type) {
-@@ -2422,10 +2426,8 @@ const struct intel_pt_state *intel_pt_decode(struct intel_pt_decoder *decoder)
+@@ -2426,14 +2434,18 @@ const struct intel_pt_state *intel_pt_decode(struct intel_pt_decoder *decoder)
  			decoder->state.type |= INTEL_PT_CBR_CHG;
  			decoder->state.cbr_payload = decoder->cbr_payload;
  		}
--		if (intel_pt_sample_time(decoder->pkt_state)) {
--			decoder->sample_timestamp = decoder->timestamp;
--			decoder->sample_insn_cnt = decoder->timestamp_insn_cnt;
--		}
-+		if (intel_pt_sample_time(decoder->pkt_state))
-+			intel_pt_update_sample_time(decoder);
+-		if (intel_pt_sample_time(decoder->pkt_state))
++		if (intel_pt_sample_time(decoder->pkt_state)) {
+ 			intel_pt_update_sample_time(decoder);
++			if (decoder->sample_cyc)
++				decoder->sample_tot_cyc_cnt = decoder->tot_cyc_cnt;
++		}
  	}
  
  	decoder->state.timestamp = decoder->sample_timestamp;
+ 	decoder->state.est_timestamp = intel_pt_est_timestamp(decoder);
+ 	decoder->state.cr3 = decoder->cr3;
+ 	decoder->state.tot_insn_cnt = decoder->tot_insn_cnt;
++	decoder->state.tot_cyc_cnt = decoder->sample_tot_cyc_cnt;
+ 
+ 	return &decoder->state;
+ }
+diff --git a/tools/perf/util/intel-pt-decoder/intel-pt-decoder.h b/tools/perf/util/intel-pt-decoder/intel-pt-decoder.h
+index ed088d4726ba..6a61773dc44b 100644
+--- a/tools/perf/util/intel-pt-decoder/intel-pt-decoder.h
++++ b/tools/perf/util/intel-pt-decoder/intel-pt-decoder.h
+@@ -77,6 +77,7 @@ struct intel_pt_state {
+ 	uint64_t to_ip;
+ 	uint64_t cr3;
+ 	uint64_t tot_insn_cnt;
++	uint64_t tot_cyc_cnt;
+ 	uint64_t timestamp;
+ 	uint64_t est_timestamp;
+ 	uint64_t trace_nr;
 -- 
 2.17.1
 
