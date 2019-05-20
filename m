@@ -6,24 +6,24 @@ X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9E30C04AAC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 14:01:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AE9CC04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 14:01:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8AE01216C4
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 14:01:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3B2B22171F
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 14:01:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391022AbfETOBG (ORCPT
+        id S2391101AbfETOBJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 10:01:06 -0400
-Received: from relay.sw.ru ([185.231.240.75]:39874 "EHLO relay.sw.ru"
+        Mon, 20 May 2019 10:01:09 -0400
+Received: from relay.sw.ru ([185.231.240.75]:39888 "EHLO relay.sw.ru"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732639AbfETOBG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 10:01:06 -0400
+        id S2390963AbfETOBI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 10:01:08 -0400
 Received: from [172.16.25.169] (helo=localhost.localdomain)
         by relay.sw.ru with esmtp (Exim 4.91)
         (envelope-from <ktkhai@virtuozzo.com>)
-        id 1hSiqA-00083v-6q; Mon, 20 May 2019 17:00:34 +0300
-Subject: [PATCH v2 6/7] mm: Introduce find_vma_filter_flags() helper
+        id 1hSipo-00082c-KS; Mon, 20 May 2019 17:00:12 +0300
+Subject: [PATCH v2 2/7] mm: Extend copy_vma()
 From:   Kirill Tkhai <ktkhai@virtuozzo.com>
 To:     akpm@linux-foundation.org, dan.j.williams@intel.com,
         ktkhai@virtuozzo.com, mhocko@suse.com, keith.busch@intel.com,
@@ -36,8 +36,8 @@ To:     akpm@linux-foundation.org, dan.j.williams@intel.com,
         mgorman@techsingularity.net, daniel.m.jordan@oracle.com,
         jannh@google.com, kilobyte@angband.pl, linux-api@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-mm@kvack.org
-Date:   Mon, 20 May 2019 17:00:34 +0300
-Message-ID: <155836083406.2441.7999607190635457587.stgit@localhost.localdomain>
+Date:   Mon, 20 May 2019 17:00:12 +0300
+Message-ID: <155836081252.2441.9024100415314519956.stgit@localhost.localdomain>
 In-Reply-To: <155836064844.2441.10911127801797083064.stgit@localhost.localdomain>
 References: <155836064844.2441.10911127801797083064.stgit@localhost.localdomain>
 User-Agent: StGit/0.18
@@ -49,99 +49,115 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch introduce a new helper, which returns
-vma of enough length at given address, but only
-if it does not contain passed flags.
-
-v2: New
+This prepares the function to copy a vma between
+two processes. Two new arguments are introduced.
 
 Signed-off-by: Kirill Tkhai <ktkhai@virtuozzo.com>
 ---
- include/linux/mm.h |    3 +++
- mm/mremap.c        |   39 ++++++++++++++++++++++++++-------------
- 2 files changed, 29 insertions(+), 13 deletions(-)
+ include/linux/mm.h |    4 ++--
+ mm/mmap.c          |   33 ++++++++++++++++++++++++---------
+ mm/mremap.c        |    4 ++--
+ 3 files changed, 28 insertions(+), 13 deletions(-)
 
 diff --git a/include/linux/mm.h b/include/linux/mm.h
-index 54328d08dbdd..65ceb56acd44 100644
+index 0e8834ac32b7..afe07e4a76f8 100644
 --- a/include/linux/mm.h
 +++ b/include/linux/mm.h
-@@ -1515,6 +1515,9 @@ void unmap_mapping_pages(struct address_space *mapping,
- 		pgoff_t start, pgoff_t nr, bool even_cows);
- void unmap_mapping_range(struct address_space *mapping,
- 		loff_t const holebegin, loff_t const holelen, int even_cows);
-+struct vm_area_struct *find_vma_without_flags(struct mm_struct *mm,
-+		unsigned long addr, unsigned long len,
-+		unsigned long prohibited_flags);
- #else
- static inline vm_fault_t handle_mm_fault(struct vm_area_struct *vma,
- 		unsigned long address, unsigned int flags)
-diff --git a/mm/mremap.c b/mm/mremap.c
-index 9a96cfc28675..dabae6a70287 100644
---- a/mm/mremap.c
-+++ b/mm/mremap.c
-@@ -430,14 +430,37 @@ static unsigned long move_vma(struct vm_area_struct *vma,
- 	return new_addr;
+@@ -2329,8 +2329,8 @@ extern void __vma_link_rb(struct mm_struct *, struct vm_area_struct *,
+ 	struct rb_node **, struct rb_node *);
+ extern void unlink_file_vma(struct vm_area_struct *);
+ extern struct vm_area_struct *copy_vma(struct vm_area_struct **,
+-	unsigned long addr, unsigned long len, pgoff_t pgoff,
+-	bool *need_rmap_locks);
++	struct mm_struct *, unsigned long addr, unsigned long len,
++	pgoff_t pgoff, bool *need_rmap_locks, bool clear_flags_ctx);
+ extern void exit_mmap(struct mm_struct *);
+ 
+ static inline int check_data_rlimit(unsigned long rlim,
+diff --git a/mm/mmap.c b/mm/mmap.c
+index 57803a0a3a5c..99778e724ad1 100644
+--- a/mm/mmap.c
++++ b/mm/mmap.c
+@@ -3195,19 +3195,21 @@ int insert_vm_struct(struct mm_struct *mm, struct vm_area_struct *vma)
  }
  
-+struct vm_area_struct *find_vma_without_flags(struct mm_struct *mm,
-+		unsigned long addr, unsigned long len,
-+		unsigned long prohibited_flags)
-+{
-+	struct vm_area_struct *vma = find_vma(mm, addr);
-+
-+	if (!vma || vma->vm_start > addr)
-+		return ERR_PTR(-EFAULT);
-+
-+	/* vm area boundaries crossing */
-+	if (len > vma->vm_end - addr)
-+		return ERR_PTR(-EFAULT);
-+
-+	if (vma->vm_flags & prohibited_flags)
-+		return ERR_PTR(-EFAULT);
-+
-+	return vma;
-+}
-+
- static struct vm_area_struct *vma_to_resize(unsigned long addr,
- 	unsigned long old_len, unsigned long new_len, unsigned long *p)
+ /*
+- * Copy the vma structure to a new location in the same mm,
+- * prior to moving page table entries, to effect an mremap move.
++ * Copy the vma structure to new location in the same vma
++ * prior to moving page table entries, to effect an mremap move;
+  */
+ struct vm_area_struct *copy_vma(struct vm_area_struct **vmap,
+-	unsigned long addr, unsigned long len, pgoff_t pgoff,
+-	bool *need_rmap_locks)
++				struct mm_struct *mm, unsigned long addr,
++				unsigned long len, pgoff_t pgoff,
++				bool *need_rmap_locks, bool clear_flags_ctx)
  {
- 	struct mm_struct *mm = current->mm;
--	struct vm_area_struct *vma = find_vma(mm, addr);
--	unsigned long pgoff;
-+	struct vm_area_struct *vma;
-+	unsigned long pgoff, prohibited_flags = VM_HUGETLB;
- 
--	if (!vma || vma->vm_start > addr)
-+	if (old_len != new_len)
-+		prohibited_flags |= VM_DONTEXPAND | VM_PFNMAP;
-+
-+	vma = find_vma_without_flags(mm, addr, old_len, prohibited_flags);
-+	if (IS_ERR(vma))
- 		return ERR_PTR(-EFAULT);
+ 	struct vm_area_struct *vma = *vmap;
+ 	unsigned long vma_start = vma->vm_start;
+-	struct mm_struct *mm = vma->vm_mm;
++	struct vm_userfaultfd_ctx uctx;
+ 	struct vm_area_struct *new_vma, *prev;
+ 	struct rb_node **rb_link, *rb_parent;
+ 	bool faulted_in_anon_vma = true;
++	unsigned long flags;
  
  	/*
-@@ -453,13 +476,6 @@ static struct vm_area_struct *vma_to_resize(unsigned long addr,
- 		return ERR_PTR(-EINVAL);
- 	}
+ 	 * If anonymous vma has not yet been faulted, update new pgoff
+@@ -3220,15 +3222,25 @@ struct vm_area_struct *copy_vma(struct vm_area_struct **vmap,
  
--	if (is_vm_hugetlb_page(vma))
--		return ERR_PTR(-EINVAL);
--
--	/* We can't remap across vm area boundaries */
--	if (old_len > vma->vm_end - addr)
--		return ERR_PTR(-EFAULT);
--
- 	if (new_len == old_len)
- 		return vma;
+ 	if (find_vma_links(mm, addr, addr + len, &prev, &rb_link, &rb_parent))
+ 		return NULL;	/* should never get here */
+-	new_vma = vma_merge(mm, prev, addr, addr + len, vma->vm_flags,
+-			    vma->anon_vma, vma->vm_file, pgoff, vma_policy(vma),
+-			    vma->vm_userfaultfd_ctx);
++
++	uctx = vma->vm_userfaultfd_ctx;
++	flags = vma->vm_flags;
++	if (clear_flags_ctx) {
++		uctx = NULL_VM_UFFD_CTX;
++		flags &= ~(VM_UFFD_MISSING | VM_UFFD_WP | VM_MERGEABLE |
++			   VM_LOCKED | VM_LOCKONFAULT | VM_WIPEONFORK |
++			   VM_DONTCOPY);
++	}
++
++	new_vma = vma_merge(mm, prev, addr, addr + len, flags, vma->anon_vma,
++			    vma->vm_file, pgoff, vma_policy(vma), uctx);
+ 	if (new_vma) {
+ 		/*
+ 		 * Source vma may have been merged into new_vma
+ 		 */
+ 		if (unlikely(vma_start >= new_vma->vm_start &&
+-			     vma_start < new_vma->vm_end)) {
++			     vma_start < new_vma->vm_end) &&
++			     vma->vm_mm == mm) {
+ 			/*
+ 			 * The only way we can get a vma_merge with
+ 			 * self during an mremap is if the vma hasn't
+@@ -3249,6 +3261,9 @@ struct vm_area_struct *copy_vma(struct vm_area_struct **vmap,
+ 		new_vma = vm_area_dup(vma);
+ 		if (!new_vma)
+ 			goto out;
++		new_vma->vm_mm = mm;
++		new_vma->vm_flags = flags;
++		new_vma->vm_userfaultfd_ctx = uctx;
+ 		new_vma->vm_start = addr;
+ 		new_vma->vm_end = addr + len;
+ 		new_vma->vm_pgoff = pgoff;
+diff --git a/mm/mremap.c b/mm/mremap.c
+index 37b5b2ad91be..9a96cfc28675 100644
+--- a/mm/mremap.c
++++ b/mm/mremap.c
+@@ -352,8 +352,8 @@ static unsigned long move_vma(struct vm_area_struct *vma,
+ 		return err;
  
-@@ -469,9 +485,6 @@ static struct vm_area_struct *vma_to_resize(unsigned long addr,
- 	if (pgoff + (new_len >> PAGE_SHIFT) < pgoff)
- 		return ERR_PTR(-EINVAL);
+ 	new_pgoff = vma->vm_pgoff + ((old_addr - vma->vm_start) >> PAGE_SHIFT);
+-	new_vma = copy_vma(&vma, new_addr, new_len, new_pgoff,
+-			   &need_rmap_locks);
++	new_vma = copy_vma(&vma, mm, new_addr, new_len, new_pgoff,
++			   &need_rmap_locks, false);
+ 	if (!new_vma)
+ 		return -ENOMEM;
  
--	if (vma->vm_flags & (VM_DONTEXPAND | VM_PFNMAP))
--		return ERR_PTR(-EFAULT);
--
- 	if (vma->vm_flags & VM_LOCKED) {
- 		unsigned long locked, lock_limit;
- 		locked = atomic64_read(&mm->locked_vm) << PAGE_SHIFT;
 
