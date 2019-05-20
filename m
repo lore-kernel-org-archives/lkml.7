@@ -2,129 +2,119 @@ Return-Path: <SRS0=lq4r=TU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24486C04AAC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 13:28:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30CDEC04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 13:30:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E62582054F
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 13:28:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F166A2054F
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 13:30:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="KB+CPJT2"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="FY+xDHdl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731945AbfETN2F (ORCPT
+        id S1732777AbfETNaN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 09:28:05 -0400
-Received: from mail-ua1-f67.google.com ([209.85.222.67]:38163 "EHLO
-        mail-ua1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730928AbfETN2F (ORCPT
+        Mon, 20 May 2019 09:30:13 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:37719 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732069AbfETNaM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 09:28:05 -0400
-Received: by mail-ua1-f67.google.com with SMTP id r19so4632347uap.5
-        for <linux-kernel@vger.kernel.org>; Mon, 20 May 2019 06:28:04 -0700 (PDT)
+        Mon, 20 May 2019 09:30:12 -0400
+Received: by mail-wm1-f65.google.com with SMTP id 7so13073037wmo.2
+        for <linux-kernel@vger.kernel.org>; Mon, 20 May 2019 06:30:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=22AYQZzoG7Oe1jq6WNzXvotDPxdHztrQDTFuuJjGD78=;
-        b=KB+CPJT2B2gTqpChkgYubBcoMAaSKKmohJm72ITD+9kxXbGDON4+fMeDfrWYISfepH
-         3cdJhye8mj133t2xqh0X9RMCvkPiAnrPoRJjuScuMAxc9WbC6k1Oh4Z+Cccbqz9zUZjf
-         d+vQYSR+sBkLz3ophnJIc1lEdzR5dJ4ZOcmMfy12tpgUEmf5E/aA/DV63qZeia8NLmxw
-         lJ4Z6/PL+AhCYV3slJcRe4PvUQmjlONdMFsOzqlWOAkyOn93lkGcsz2onkvWAbyNEfU/
-         RAgibC9WAm2cMFTFDj5XdoU/fxAwLyIYsH6IUUZjkok2lZX8X1InymPma68VtyeaUuIT
-         OVfQ==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=8jmGilw1nCQQmkBhHj38AiUSNpWBZe/sVuRM01rHJv0=;
+        b=FY+xDHdlrGHpESK8d3dY9mKd1ulBFHyvOVNM4E/E1imXiTfV0C2iFc0rfPluiYI9ti
+         MkuGQzvux2dG6tG1e+KiV4OUqVQT5Qm7Yy6WB3PkW8ZWeG7UB4NYbi7D93geMjs6ZkGo
+         Fx+yt0kZcrFZHxnA90yAfup2DJJZ8Dn6Y3K7hxCTFDbqFjRvkwbaSodfn5WtHGfthJDo
+         3PTdSyM8MM33ZMwBaxKztYfimViCP70xCgakknd24OaIpwTnAaIvV6iT+VaeivDs8E23
+         4PeY7+bjmcEHI+4pdtdPQ5ty1/iv+0HT0SoZnbwzxt+BwcB8hC4ZCUQeopMbZDFiDxOM
+         jy8A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=22AYQZzoG7Oe1jq6WNzXvotDPxdHztrQDTFuuJjGD78=;
-        b=sk4Ksuv1ibxO5RFKVJhodj1IKQQaBsaDgB9LFArneeil0s04mxnB+FN+3dj6BQcfBb
-         UUCYN2B59Vy9JtioJiiALSn8e+ofIc3Ua7bJLqkMxpa74118+f3efAGKLZS1iJrkTQS7
-         LuEAjMdtS6VaKASRHnh0Lveq8JUjiaQM6OjtvnFRY1/w2uxZbcaxsqNN/zGypYNYjPrK
-         6IXmqV0Uby+2JFrwVNo/rOarV06q/DgEbX5IlbSnub4CLTvyJhseoIOsICv3a8s2+2YI
-         Y+iAuUTE72/Cx35pW8q5q7jqKXf7a28iHKIDhTCE0rKoyfm3FkAPmoAmbICPj5Onjgb9
-         G+Vg==
-X-Gm-Message-State: APjAAAW3DxXpfpXXDZMVf7rbT9jgiEhNXYII7AsOczNj6Tdi25Eww1fn
-        dQyqBW1MAYrcLhS44vjhCkEpfgS2FmRVRaccPvi92LTJdqARcg==
-X-Google-Smtp-Source: APXvYqwapFA3zJOmbxCEv+ksueO2t69F5DHKCwH1G0GdQycduLQrNvaH4w0zK9X8JYEmpaBjLAgnC2yANMyJKTOmNRA=
-X-Received: by 2002:ab0:5ad0:: with SMTP id x16mr14383639uae.124.1558358884007;
- Mon, 20 May 2019 06:28:04 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=8jmGilw1nCQQmkBhHj38AiUSNpWBZe/sVuRM01rHJv0=;
+        b=F2l+BxZqc+0CUf9a0FkGqjnRR3wEjjCN7VwZ+KWVD1bZ7v8dZeSidHsqq2CMOX+Wzi
+         ZQuU3VsdKkkD6DwdGoTpbSAG4ufnlDGzNjINRsWtAAIvSCAFVlKkJeDj55hrrteA7TTb
+         XgXHnJBBfn+Mg/TTj9XYnkk4TrE+BvhbdmedHUYw3UE8SsWjo8uxqe7ke9HAgvk8edVE
+         nJrg7jndteHXDddiEBbbnCq84KC5hZ6oBqOk1RNyPapeYc+Y16e/Nl2lAng1qONAYGzJ
+         dXtj9UXDOsl1kDtrjMLvEoBfvmufnaTaHTT/9BcvF0X8rkLvZAspZQjfzMep3ZlAKFwi
+         CQrQ==
+X-Gm-Message-State: APjAAAXchUcLeSKDrO+iyWkFo5SELTsSw0uheqK21m8hWieUh++U1tHM
+        LOC6tSNlnMfIg2h+ohcGiW8WZw==
+X-Google-Smtp-Source: APXvYqx2txSUvSVKzjvZhfqtdeKg/VLHgRIYD6Rv9nUdsldKd1EgOPFxeK2Xh7cX5NLv9PmgcLKi1Q==
+X-Received: by 2002:a1c:7606:: with SMTP id r6mr11647224wmc.25.1558359009976;
+        Mon, 20 May 2019 06:30:09 -0700 (PDT)
+Received: from holly.lan (cpc141214-aztw34-2-0-cust773.18-1.cable.virginm.net. [86.9.19.6])
+        by smtp.gmail.com with ESMTPSA id y1sm15465215wma.14.2019.05.20.06.30.08
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 20 May 2019 06:30:09 -0700 (PDT)
+Date:   Mon, 20 May 2019 14:30:07 +0100
+From:   Daniel Thompson <daniel.thompson@linaro.org>
+To:     Rob Herring <robh+dt@kernel.org>
+Cc:     Brian Masney <masneyb@onstation.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Linux LED Subsystem <linux-leds@vger.kernel.org>,
+        devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Linux Fbdev development list <linux-fbdev@vger.kernel.org>,
+        Dan Murphy <dmurphy@ti.com>, Jonathan Marek <jonathan@marek.ca>
+Subject: Re: [PATCH] dt-bindings: backlight: lm3630a: correct schema
+ validation
+Message-ID: <20190520133007.gymbonmq635gp73b@holly.lan>
+References: <20190520085846.22320-1-masneyb@onstation.org>
+ <CAL_JsqLcycH5e=YT-4AQFo-8O0bosjU7oagCRS5CMTfQNBLrcg@mail.gmail.com>
 MIME-Version: 1.0
-References: <1558354817-12034-1-git-send-email-sagar.kadam@sifive.com>
- <1558354817-12034-4-git-send-email-sagar.kadam@sifive.com> <20190520124107.GA25785@lunn.ch>
-In-Reply-To: <20190520124107.GA25785@lunn.ch>
-From:   Sagar Kadam <sagar.kadam@sifive.com>
-Date:   Mon, 20 May 2019 18:57:52 +0530
-Message-ID: <CAARK3HnZgiUOE3S7BOk9uC-MfmB4wO5zWFbuGGRFqKauYaX8yg@mail.gmail.com>
-Subject: Re: [PATCH v4 3/3] i2c-ocores: sifive: add polling mode workaround
- for FU540-C000 SoC
-To:     Andrew Lunn <andrew@lunn.ch>
-Cc:     robh+dt@kernel.org, mark.rutland@arm.com, peter@korsgaard.com,
-        Palmer Dabbelt <palmer@sifive.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        linux-i2c@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAL_JsqLcycH5e=YT-4AQFo-8O0bosjU7oagCRS5CMTfQNBLrcg@mail.gmail.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Andrew,
-
-On Mon, May 20, 2019 at 6:11 PM Andrew Lunn <andrew@lunn.ch> wrote:
->
-> > @@ -406,7 +416,7 @@ static int ocores_xfer(struct i2c_adapter *adap,
-> >  {
-> >       struct ocores_i2c *i2c = i2c_get_adapdata(adap);
+On Mon, May 20, 2019 at 08:14:03AM -0500, Rob Herring wrote:
+> On Mon, May 20, 2019 at 3:59 AM Brian Masney <masneyb@onstation.org> wrote:
 > >
-> > -     if (i2c->flags & OCORES_FLAG_POLL)
-> > +     if ((i2c->flags & (OCORES_FLAG_POLL | OCORES_FLAG_BROKEN_IRQ)))
-> >               return ocores_xfer_polling(adap, msgs, num);
-> >       return ocores_xfer_core(i2c, msgs, num, false);
-> >  }
->
-> You are not listening to what i said. All you need to know here is
-> that you must poll. It does not matter if the IRQ is broken or not.
->
-
-Apologies for my miss-understanding. I will rectify this and submit a v5.
-
-> >       irq = platform_get_irq(pdev, 0);
-> >       if (irq == -ENXIO) {
-> > -             i2c->flags |= OCORES_FLAG_POLL;
->
-> If there is no interrupt, you need to poll. So keep this line.
-
-Will retain this.
-
-> > +             /*
-> > +              * Set a OCORES_FLAG_BROKEN_IRQ to enable workaround for
-> > +              * FU540-C000 SoC in polling mode interface of i2c-ocore driver.
-> > +              * Else enable default polling mode interface for SIFIVE/OCORE
-> > +              * device types.
-> > +              */
-> > +             match = of_match_node(ocores_i2c_match, pdev->dev.of_node);
-> > +             if (match && (long)match->data == TYPE_SIFIVE_REV0)
-> > +                     i2c->flags |= OCORES_FLAG_BROKEN_IRQ;
->
-> If it is a OCORE, IRQ is broken, so OR in OCORES_FLAG_BROKEN_IRQ.
-
-Got it, as device type SIFIVE is based on OCORE's re-implementation,
-will OR in the broken IRQ flag and submit a v5.
-
+> > The '#address-cells' and '#size-cells' properties were not defined in
+> > the lm3630a bindings and would cause the following error when
+> > attempting to validate the examples against the schema:
 > >
-> > -     if (!(i2c->flags & OCORES_FLAG_POLL)) {
-> > +     if (!(i2c->flags & (OCORES_FLAG_POLL | OCORES_FLAG_BROKEN_IRQ))) {
-> >               ret = devm_request_irq(&pdev->dev, irq, ocores_isr, 0,
-> >                                      pdev->name, i2c);
->
-> Here you just need to know if you are polling. Broken IRQ does not
-> matter.
->
->         Andrew
+> > Documentation/devicetree/bindings/leds/backlight/lm3630a-backlight.example.dt.yaml:
+> > '#address-cells', '#size-cells' do not match any of the regexes:
+> > '^led@[01]$', 'pinctrl-[0-9]+'
+> >
+> > Correct this by adding those two properties.
+> >
+> > While we're here, move the ti,linear-mapping-mode property to the
+> > led@[01] child nodes to correct the following validation error:
+> >
+> > Documentation/devicetree/bindings/leds/backlight/lm3630a-backlight.example.dt.yaml:
+> > led@0: 'ti,linear-mapping-mode' does not match any of the regexes:
+> > 'pinctrl-[0-9]+'
+> >
+> > Fixes: 32fcb75c66a0 ("dt-bindings: backlight: Add lm3630a bindings")
+> > Signed-off-by: Brian Masney <masneyb@onstation.org>
+> > Reported-by: Rob Herring <robh+dt@kernel.org>
+> > ---
+> >  .../leds/backlight/lm3630a-backlight.yaml     | 20 +++++++++++++------
+> >  1 file changed, 14 insertions(+), 6 deletions(-)
+> 
+> Reviewed-by: Rob Herring <robh@kernel.org>
 
-Thanks & Regards,
-Sagar
+Acked-by: Daniel Thompson <daniel.thompson@linaro.org>
+
