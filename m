@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3176C04AAC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:40:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F59DC04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:40:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7BB81204FD
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:40:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E71EC216B7
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:40:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558356003;
-	bh=Y5gLgaKUCRhk57m/UXAViF0p7JGbNm1P9I90M+EkMGM=;
+	s=default; t=1558356010;
+	bh=Zj0sigm9uLM+pqL/O9ZT4QLHWYsxYUJ+aO89sZtK7+Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AHszdBXb0t5FRcUY9FwSimIVCchHBhkh0F18lF+owKp988qzpwdV2Rj22Az8HC5eg
-	 08vZXVe8sC0tfH6egm9G7Rfl8mX5Y4tUbX71Tu+jTM8MpLg/deyevKM/M0rFwXDrE5
-	 //V20hARn3UzT1sAZaK3Odv3Mosp7OqYAuc2J1Eg=
+	b=Qs/S2YdiGf4RYDyk6zX+AwWs/g6BJmRTNz3z/aVX29Uklgi4xZ+ZNFZcKhcJnaOAD
+	 BC9Ct/8+4dz5cQdHJQivny8xJ/G3jz4jn5l2Y+wPxiobCw5fOGC4nlAquolBe6Lz8V
+	 KOAvCda1MO6gXpF+LjC5TPWsaMYAu0cAUNsQ/NeA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391166AbfETMkC (ORCPT
+        id S2391424AbfETMkI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 08:40:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50254 "EHLO mail.kernel.org"
+        Mon, 20 May 2019 08:40:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50160 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390668AbfETMdM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 08:33:12 -0400
+        id S2390653AbfETMdH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 08:33:07 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5ABF0204FD;
-        Mon, 20 May 2019 12:33:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 388FB204FD;
+        Mon, 20 May 2019 12:33:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558355591;
-        bh=Y5gLgaKUCRhk57m/UXAViF0p7JGbNm1P9I90M+EkMGM=;
+        s=default; t=1558355586;
+        bh=Zj0sigm9uLM+pqL/O9ZT4QLHWYsxYUJ+aO89sZtK7+Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Q388yqIigSHo/DiaNr6umyZ5vrE5UBae8xEF1xMof8CCtqRP3EcVCzpLpiZx/GVSY
-         6CV4n82n9cZKigFc43j91vrJlAWjdLFbNApAjw+CUEnMvZX1NtycTJn1ukt514KfGo
-         PPiUhbKSpoaTWHO74/VUxuM7q6nT7+PeXmxUpSF8=
+        b=psO/UzQeMrVwOumST7HZUojh3Pc4+av0OPdHkmHcCU99SnP8bzOVtY4YpI2aildau
+         su1zP2+uPBEDh/5VlQ6+5sVAgjxQEjLnX8UEElzq5R4g45+2CJ3PCFO+JlpR0intX8
+         sx21dnQAGXWe7wOXk8ob9WR37IadCT7TQC+IYY/g=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kailang Yang <kailang@realtek.com>,
+        stable@vger.kernel.org, Hui Wang <hui.wang@canonical.com>,
         Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 5.1 052/128] ALSA: hda/realtek - EAPD turn on later
-Date:   Mon, 20 May 2019 14:13:59 +0200
-Message-Id: <20190520115253.286236162@linuxfoundation.org>
+Subject: [PATCH 5.1 050/128] ALSA: hda/hdmi - Read the pin sense from register when repolling
+Date:   Mon, 20 May 2019 14:13:57 +0200
+Message-Id: <20190520115253.152190923@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190520115249.449077487@linuxfoundation.org>
 References: <20190520115249.449077487@linuxfoundation.org>
@@ -59,40 +59,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kailang Yang <kailang@realtek.com>
+From: Hui Wang <hui.wang@canonical.com>
 
-commit 607ca3bd220f4022e6f5356026b19dafc363863a upstream.
+commit 8c2e6728c2bf95765b724e07d0278ae97cd1ee0d upstream.
 
-Let EAPD turn on after set pin output.
+The driver will check the monitor presence when resuming from suspend,
+starting poll or interrupt triggers. In these 3 situations, the
+jack_dirty will be set to 1 first, then the hda_jack.c reads the
+pin_sense from register, after reading the register, the jack_dirty
+will be set to 0. But hdmi_repoll_work() is enabled in these 3
+situations, It will read the pin_sense a couple of times subsequently,
+since the jack_dirty is 0 now, It does not read the register anymore,
+instead it uses the shadow pin_sense which is read at the first time.
 
-[ NOTE: This change is supposed to reduce the possible click noises at
-  (runtime) PM resume.  The functionality should be same (i.e. the
-  verbs are executed correctly) no matter which order is, so this
-  should be safe to apply for all codecs -- tiwai ]
+It is meaningless to check the shadow pin_sense a couple of times,
+we need to read the register to check the real plugging state, so
+we set the jack_dirty to 1 in the hdmi_repoll_work().
 
-Signed-off-by: Kailang Yang <kailang@realtek.com>
+Signed-off-by: Hui Wang <hui.wang@canonical.com>
 Cc: <stable@vger.kernel.org>
 Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/pci/hda/patch_realtek.c |    3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ sound/pci/hda/patch_hdmi.c |    5 +++++
+ 1 file changed, 5 insertions(+)
 
---- a/sound/pci/hda/patch_realtek.c
-+++ b/sound/pci/hda/patch_realtek.c
-@@ -803,11 +803,10 @@ static int alc_init(struct hda_codec *co
- 	if (spec->init_hook)
- 		spec->init_hook(codec);
+--- a/sound/pci/hda/patch_hdmi.c
++++ b/sound/pci/hda/patch_hdmi.c
+@@ -1663,6 +1663,11 @@ static void hdmi_repoll_eld(struct work_
+ 	container_of(to_delayed_work(work), struct hdmi_spec_per_pin, work);
+ 	struct hda_codec *codec = per_pin->codec;
+ 	struct hdmi_spec *spec = codec->spec;
++	struct hda_jack_tbl *jack;
++
++	jack = snd_hda_jack_tbl_get(codec, per_pin->pin_nid);
++	if (jack)
++		jack->jack_dirty = 1;
  
-+	snd_hda_gen_init(codec);
- 	alc_fix_pll(codec);
- 	alc_auto_init_amp(codec, spec->init_amp);
- 
--	snd_hda_gen_init(codec);
--
- 	snd_hda_apply_fixup(codec, HDA_FIXUP_ACT_INIT);
- 
- 	return 0;
+ 	if (per_pin->repoll_count++ > 6)
+ 		per_pin->repoll_count = 0;
 
 
