@@ -2,197 +2,94 @@ Return-Path: <SRS0=lq4r=TU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FF29C04E87
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 10:38:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2A95C04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 10:39:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 723A32081C
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 10:38:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="QlmbpIsy"
+	by mail.kernel.org (Postfix) with ESMTP id A38FC2081C
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 10:39:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731137AbfETKik (ORCPT
+        id S1731667AbfETKjd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 06:38:40 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:39159 "EHLO
+        Mon, 20 May 2019 06:39:33 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:36270 "EHLO
         mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730494AbfETKik (ORCPT
+        with ESMTP id S1730476AbfETKjd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 06:38:40 -0400
-Received: by mail-wr1-f65.google.com with SMTP id w8so14006843wrl.6
-        for <linux-kernel@vger.kernel.org>; Mon, 20 May 2019 03:38:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:message-id:mime-version:subject:date:in-reply-to:cc:to
-         :references;
-        bh=71NaxZ0L8zu4vqMxuvSbFUDbkTV6DcnDsTH5MC4+H5c=;
-        b=QlmbpIsyI055sun3h2zHG6GAt6n3LbQOYblzUnEq6mMgKpUWKKadGGkW1Hbv2QF31e
-         eDixZCI+v69fA1OQgoL1I9kRgiqWfoCixJ3D1Vgl1mEtbvKVKJD4Y/2jI47Kl4cG/Vby
-         rkgYwnvAyf8QiTGNN9lEH6i+e0UbPG8vJRv08q4vztlEDsIJt0R8H9sdTEHAVBNveOsa
-         JOcxUAO/sjjPHFYn+dM7hgYXX2TNWp2alCpVf2ch/oes4C7R0sMGd0r/JgE9Gr+W0UOT
-         DrQJ1GK7TWs5t+4CQs+EBLqX6/E85ZijMslJ3sbch+0a1WNcwop3cpMXpt7H/2OJnclF
-         62XQ==
+        Mon, 20 May 2019 06:39:33 -0400
+Received: by mail-wr1-f65.google.com with SMTP id s17so14024565wru.3
+        for <linux-kernel@vger.kernel.org>; Mon, 20 May 2019 03:39:32 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:message-id:mime-version:subject:date
-         :in-reply-to:cc:to:references;
-        bh=71NaxZ0L8zu4vqMxuvSbFUDbkTV6DcnDsTH5MC4+H5c=;
-        b=sAbNheyw2J5qX/1+fK/3ORFI1hhqmKJ1P2sA7xLeP7TqJ8cSphAj0pO82B+Jsb2oL+
-         7YGgToqO6C7DXlf/Sv6pGULZ4ls7LfAT4090uA1BX042NwQWAHIpRmTaSvyUi70B2HDw
-         ovegPHUxgJt8+RaclY3bA33z6meF6oux4q8i3d7SSBahx/AmMxKWtkYQzXrEMbwuWfOx
-         KKzPI/UlvOHQOMUdx/r+xB1Ie2kJ5MgaMaM4gA+z+GBwmKaklE3kyX5FkqpdQJTHy5I/
-         BnqPGeQv/Z4EiTa62+KyOhGVSsNSv7t5gWW20RYxbfCmsIRCzNbwW4fI+Usni9G5fda/
-         QUFA==
-X-Gm-Message-State: APjAAAWVSATAuDayNNHYx7JoT1GQLwDXIe68GdjV8S7hlWziY1EYwI8V
-        yrs0fEF3WBo8QI+GQSfhXQssuA==
-X-Google-Smtp-Source: APXvYqzDEHxMPpX5O2D7sBPp8sQujtKWaAICqNNgO+x8Gg6Q1URrfJxWHW++z8p/UvzgpNlcQBDz3Q==
-X-Received: by 2002:adf:fb47:: with SMTP id c7mr30125512wrs.116.1558348718023;
-        Mon, 20 May 2019 03:38:38 -0700 (PDT)
-Received: from [192.168.0.100] ([88.147.73.106])
-        by smtp.gmail.com with ESMTPSA id v1sm16795059wrd.47.2019.05.20.03.38.35
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 20 May 2019 03:38:36 -0700 (PDT)
-From:   Paolo Valente <paolo.valente@linaro.org>
-Message-Id: <98612748-8454-43E8-9915-BAEBA19A6FD7@linaro.org>
-Content-Type: multipart/signed;
-        boundary="Apple-Mail=_07219B6F-DA69-437E-B510-B40644D71454";
-        protocol="application/pgp-signature";
-        micalg=pgp-sha256
-Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.8\))
-Subject: Re: CFQ idling kills I/O performance on ext4 with blkio cgroup
- controller
-Date:   Mon, 20 May 2019 12:38:32 +0200
-In-Reply-To: <20190518192847.GB14277@mit.edu>
-Cc:     "Srivatsa S. Bhat" <srivatsa@csail.mit.edu>,
-        linux-fsdevel@vger.kernel.org,
-        linux-block <linux-block@vger.kernel.org>,
-        linux-ext4@vger.kernel.org, cgroups@vger.kernel.org,
-        kernel list <linux-kernel@vger.kernel.org>,
-        Jens Axboe <axboe@kernel.dk>, Jan Kara <jack@suse.cz>,
-        jmoyer@redhat.com, amakhalov@vmware.com, anishs@vmware.com,
-        srivatsab@vmware.com, Andrea Righi <righi.andrea@gmail.com>
-To:     Theodore Ts'o <tytso@mit.edu>
-References: <8d72fcf7-bbb4-2965-1a06-e9fc177a8938@csail.mit.edu>
- <1812E450-14EF-4D5A-8F31-668499E13652@linaro.org>
- <20190518192847.GB14277@mit.edu>
-X-Mailer: Apple Mail (2.3445.104.8)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=LSXvvjLM2HBXWG9qhIrfISHU3rhydRFpcgUUVJCwNBc=;
+        b=VZraEzg68ZpC+WzQY6ikz0XG/B+q+Dn81e1b80dZfXXXzl1tAzMv40S++tVXJT+xB3
+         R/HbsHVDVIRXW07Fwk5osNzS11/+TfZevUhqvTRJWQe4dQc2Hm5rQtNidgadunKuug4H
+         CrTEHX+59cO1VEkGq1X89SWGfFT81SoXLVUulnk+TU38Zq4tbCczgG7EEnyLy2vC7s0V
+         bhJJVeGOQkd5nRo5nNrP1zUSMr/vSPb1XlDsTw04LlBpTER1e7qrEWiAxn/dWx0/KW9k
+         OR0l2mMJyrILejF3y3OJ4qnqh9ucR48OiQCcm14UMTk3YQgNUlhU+nZERBq7YwG13UZ0
+         2CVg==
+X-Gm-Message-State: APjAAAVL1KHiNhU9ySnK7Fo8S7U5r56qpUkDYv1cWMncXiFbcHPY4dJq
+        M0lBZAIIB0YtvmPy7kH8RWb+IS8aFQXBkA==
+X-Google-Smtp-Source: APXvYqxfM+AbzlMq4FVA03dUQrFO7n+VwiQjUOMIWGa8PFwNSVyl0na3x5bC/WWRAhmCS1nkMNk3pA==
+X-Received: by 2002:a5d:5743:: with SMTP id q3mr5645987wrw.92.1558348771961;
+        Mon, 20 May 2019 03:39:31 -0700 (PDT)
+Received: from ?IPv6:2001:b07:6468:f312:ac04:eef9:b257:b844? ([2001:b07:6468:f312:ac04:eef9:b257:b844])
+        by smtp.gmail.com with ESMTPSA id z202sm2751084wmc.18.2019.05.20.03.39.31
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Mon, 20 May 2019 03:39:31 -0700 (PDT)
+Subject: Re: [PATCH] kvm: vmx: Fix -Wmissing-prototypes warnings
+To:     Yi Wang <wang.yi59@zte.com.cn>
+Cc:     rkrcmar@redhat.com, tglx@linutronix.de, mingo@redhat.com,
+        bp@alien8.de, hpa@zytor.com, x86@kernel.org, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <1558326467-48530-1-git-send-email-wang.yi59@zte.com.cn>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Message-ID: <4babb584-27d6-a5be-c8a9-828079920130@redhat.com>
+Date:   Mon, 20 May 2019 12:39:30 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
+MIME-Version: 1.0
+In-Reply-To: <1558326467-48530-1-git-send-email-wang.yi59@zte.com.cn>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 20/05/19 06:27, Yi Wang wrote:
+> We get a warning when build kernel W=1:
+> arch/x86/kvm/vmx/vmx.c:6365:6: warning: no previous prototype for ‘vmx_update_host_rsp’ [-Wmissing-prototypes]
+>  void vmx_update_host_rsp(struct vcpu_vmx *vmx, unsigned long host_rsp)
+> 
+> Add the missing declaration to fix this.
+> 
+> Signed-off-by: Yi Wang <wang.yi59@zte.com.cn>
+> ---
+>  arch/x86/kvm/vmx/vmx.h | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/arch/x86/kvm/vmx/vmx.h b/arch/x86/kvm/vmx/vmx.h
+> index f879529..9cd72de 100644
+> --- a/arch/x86/kvm/vmx/vmx.h
+> +++ b/arch/x86/kvm/vmx/vmx.h
+> @@ -314,6 +314,7 @@ struct kvm_vmx {
+>  void vmx_set_virtual_apic_mode(struct kvm_vcpu *vcpu);
+>  struct shared_msr_entry *find_msr_entry(struct vcpu_vmx *vmx, u32 msr);
+>  void pt_update_intercept_for_msr(struct vcpu_vmx *vmx);
+> +void vmx_update_host_rsp(struct vcpu_vmx *vmx, unsigned long host_rsp);
+>  
+>  #define POSTED_INTR_ON  0
+>  #define POSTED_INTR_SN  1
+> 
 
---Apple-Mail=_07219B6F-DA69-437E-B510-B40644D71454
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain;
-	charset=us-ascii
+Queued, thanks.
 
-
-
-> Il giorno 18 mag 2019, alle ore 21:28, Theodore Ts'o <tytso@mit.edu> =
-ha scritto:
->=20
-> On Sat, May 18, 2019 at 08:39:54PM +0200, Paolo Valente wrote:
->> I've addressed these issues in my last batch of improvements for
->> BFQ, which landed in the upcoming 5.2. If you give it a try, and
->> still see the problem, then I'll be glad to reproduce it, and
->> hopefully fix it for you.
->=20
-> Hi Paolo, I'm curious if you could give a quick summary about what you
-> changed in BFQ?
->=20
-
-Here is the idea: while idling for a process, inject I/O from other
-processes, at such an extent that no harm is caused to the process for
-which we are idling.  Details in this LWN article:
-https://lwn.net/Articles/784267/
-in section "Improving extra-service injection".
-
-> I was considering adding support so that if userspace calls fsync(2)
-> or fdatasync(2), to attach the process's CSS to the transaction, and
-> then charge all of the journal metadata writes the process's CSS.  If
-> there are multiple fsync's batched into the transaction, the first
-> process which forced the early transaction commit would get charged
-> the entire journal write.  OTOH, journal writes are sequential I/O, so
-> the amount of disk time for writing the journal is going to be
-> relatively small, and especially, the fact that work from other
-> cgroups is going to be minimal, especially if hadn't issued an
-> fsync().
->=20
-
-Yeah, that's a longstanding and difficult instance of the general
-too-short-blanket problem.  Jan has already highlighted one of the
-main issues in his reply.  I'll add a design issue (from my point of
-view): I'd find a little odd that explicit sync transactions have an
-owner to charge, while generic buffered writes have not.
-
-I think Andrea Righi addressed related issues in his recent patch
-proposal [1], so I've CCed him too.
-
-[1] https://lkml.org/lkml/2019/3/9/220
-
-> In the case where you have three cgroups all issuing fsync(2) and they
-> all landed in the same jbd2 transaction thanks to commit batching, in
-> the ideal world we would split up the disk time usage equally across
-> those three cgroups.  But it's probably not worth doing that...
->=20
-> That being said, we probably do need some BFQ support, since in the
-> case where we have multiple processes doing buffered writes w/o fsync,
-> we do charnge the data=3Dordered writeback to each block cgroup.  =
-Worse,
-> the commit can't complete until the all of the data integrity
-> writebacks have completed.  And if there are N cgroups with dirty
-> inodes, and slice_idle set to 8ms, there is going to be 8*N ms worth
-> of idle time tacked onto the commit time.
->=20
-
-Jan already wrote part of what I wanted to reply here, so I'll
-continue from his reply.
-
-Thanks,
 Paolo
-
-> If we charge the journal I/O to the cgroup, and there's only one
-> process doing the
->=20
->   dd if=3D/dev/zero of=3D/root/test.img bs=3D512 count=3D10000 =
-oflags=3Ddsync
->=20
-> then we don't need to worry about this failure mode, since both the
-> journal I/O and the data writeback will be hitting the same cgroup.
-> But that's arguably an artificial use case, and much more commonly
-> there will be multiple cgroups all trying to at least some file system
-> I/O.
->=20
-> 						- Ted
-
-
---Apple-Mail=_07219B6F-DA69-437E-B510-B40644D71454
-Content-Transfer-Encoding: 7bit
-Content-Disposition: attachment;
-	filename=signature.asc
-Content-Type: application/pgp-signature;
-	name=signature.asc
-Content-Description: Message signed with OpenPGP
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEEpYoduex+OneZyvO8OAkCLQGo9oMFAlzig6gACgkQOAkCLQGo
-9oOCNA//TUcUosGLeUSBdmGsluf5dLY52jefwqIaLRp7mcuLR6tx65qplO6nyEfG
-cM/WAyi7KJOLStW3fv3bxl9x4eLmpli8uhrgUuCI+YGQnyVYO5yzzkGj8n9aeQuW
-+KXsX67MPKT9lBQIo61EeuYNA7uQqDFyae28TGQ5pnrJ7QTnkThRUTb7H+jL2ZZo
-ypdu5f5j9OLuM9ggWU7OEOK25sRMpOEPhzUmJnlJsKpgl0wuC//buY9wya19zbqg
-feQgJ4PTQQ/QCKu05o1BUwr/DWDxoz5c9iHJxcPn1MhzNHNmyvugakVDYBCw7IUZ
-wKlJ7phFCHTYAwdgwyXs5+d1snORWoEzPOVXvS0RH0vUn3yuT5XCZGji+wX3M3Iq
-msYg9C1lIEx6jGxBMqDhyQmYJOX0NrfrbGoNv/RNuyZAvsmGYgpZZR7m4sxFBws/
-EwwMOanJ0qlZpl/tzVDIu9/pbXUbVZsPiTphjOhflZi0BhcqRElCIyuERJFCDgEz
-bl9w4D4x50S7KxlzahdpkbNtmRQe4yxvk4kiqu0nCZIPCowZGte3HjnM0bzn2X2t
-4ROTkyYBSxP2JVf6LpNtXJFYA56bzi7uL4fzYiWM5eH99lqvfoMMfc2J4earL4xE
-E9OA6kkUyniJyVuzM8noACPSHwUv65cdyPhxhIuBu2e9hpZD+4w=
-=rXZb
------END PGP SIGNATURE-----
-
---Apple-Mail=_07219B6F-DA69-437E-B510-B40644D71454--
