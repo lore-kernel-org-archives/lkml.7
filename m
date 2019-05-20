@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49B75C04AAC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:36:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81DF8C04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:36:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1EB9920645
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:36:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 575E0204FD
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:36:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558355813;
-	bh=rvPQ0exSjMZinuNoMzqfiUw4kYVyake6LNhAnclANe8=;
+	s=default; t=1558355817;
+	bh=CaVc0Vmf0CTBvhnD/hDvXM9q76PEYULHxwWmImXaQsw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=n5rfDzWlpsOrEMOJs7HWE4IdOGRjrXyabX4Gc0PiB86ywCscOJiBfFYvlIcMvzV9W
-	 babuQ/CFEnuXg8EYYgW3GQpTPjAa7LGvNCdH/328lL513yUQcyrxWy7zp5K/XNCRKO
-	 JfS5vrsYTdJRkf+CnY4uPhTB4Zsm7718y5F1DJII=
+	b=KLD3q9RFtpcZjvJnhV0l3SoNWBFF/zCsrguWl8aW3cvFyLZ6J0zODkxilLrHxjkHd
+	 OoZ9yVftvnzOLIkfCM2T+GK0Hnb1JSDavs8fcuL4svlUqIcAZ8mCJmaYwCoUgyha6P
+	 U9mzkcm5IhLuGu8noYcnXKWZ1zTXmFXm+AnuuVDU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391380AbfETMgv (ORCPT
+        id S2391391AbfETMg4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 08:36:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55928 "EHLO mail.kernel.org"
+        Mon, 20 May 2019 08:36:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55960 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391338AbfETMgs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 08:36:48 -0400
+        id S2391374AbfETMgv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 08:36:51 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 40AB8204FD;
-        Mon, 20 May 2019 12:36:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E5A1520645;
+        Mon, 20 May 2019 12:36:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558355807;
-        bh=rvPQ0exSjMZinuNoMzqfiUw4kYVyake6LNhAnclANe8=;
+        s=default; t=1558355810;
+        bh=CaVc0Vmf0CTBvhnD/hDvXM9q76PEYULHxwWmImXaQsw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rzsunfMAgtZgMn5WNUxMYNbPt1FePyvbHbusHWUJBg5z/gz5MW3g6JKrcDOCVKY4K
-         pMGc7ncBl/5NHWcC8GhVhsC+eZ0yPsvffjigkbVUG720MrWxbZRIyYEUprYFbSF9hB
-         Ecg1uWvQJm2tefXrZeviH6YM3QtmqvzKk65YoqvE=
+        b=U+oT/Q1Q5HEjNkhaPKLhfL+r5yEjHRvOXMsDzySJ9omtMk73puec7y6GhnFaUO0Sf
+         Sr1yjN061MHGq6BjbiHm81enI84PwOWsuuY/0asVInbU14K1XELAQxJ0Hd33+Tt7da
+         uQsLf+OL+8bI6ABbL+6aqK2xiFKux0znn0Onk2NM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Nicolas Pitre <nicolas.pitre@linaro.org>,
-        Yifeng Li <tomli@tomli.me>
-Subject: [PATCH 5.1 082/128] tty: vt.c: Fix TIOCL_BLANKSCREEN console blanking if blankinterval == 0
-Date:   Mon, 20 May 2019 14:14:29 +0200
-Message-Id: <20190520115255.132445668@linuxfoundation.org>
+        stable@vger.kernel.org, Colin Ian King <colin.king@canonical.com>,
+        Theodore Tso <tytso@mit.edu>
+Subject: [PATCH 5.1 127/128] ext4: unsigned int compared against zero
+Date:   Mon, 20 May 2019 14:15:14 +0200
+Message-Id: <20190520115257.149588306@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190520115249.449077487@linuxfoundation.org>
 References: <20190520115249.449077487@linuxfoundation.org>
@@ -59,69 +59,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yifeng Li <tomli@tomli.me>
+From: Colin Ian King <colin.king@canonical.com>
 
-commit 75ddbc1fb11efac87b611d48e9802f6fe2bb2163 upstream.
+commit fbbbbd2f28aec991f3fbc248df211550fbdfd58c upstream.
 
-Previously, in the userspace, it was possible to use the "setterm" command
-from util-linux to blank the VT console by default, using the following
-command.
+There are two cases where u32 variables n and err are being checked
+for less than zero error values, the checks is always false because
+the variables are not signed. Fix this by making the variables ints.
 
-According to the man page,
-
-> The force option keeps the screen blank even if a key is pressed.
-
-It was implemented by calling TIOCL_BLANKSCREEN.
-
-	case BLANKSCREEN:
-		ioctlarg = TIOCL_BLANKSCREEN;
-		if (ioctl(STDIN_FILENO, TIOCLINUX, &ioctlarg))
-			warn(_("cannot force blank"));
-		break;
-
-However, after Linux 4.12, this command ceased to work anymore, which is
-unexpected. By inspecting the kernel source, it shows that the issue was
-triggered by the side-effect from commit a4199f5eb809 ("tty: Disable
-default console blanking interval").
-
-The console blanking is implemented by function do_blank_screen() in vt.c:
-"blank_state" will be initialized to "blank_normal_wait" in con_init() if
-AND ONLY IF ("blankinterval" > 0). If "blankinterval" is 0, "blank_state"
-will be "blank_off" (== 0), and a call to do_blank_screen() will always
-abort, even if a forced blanking is required from the user by calling
-TIOCL_BLANKSCREEN, the console won't be blanked.
-
-This behavior is unexpected from a user's point-of-view, since it's not
-mentioned in any documentation. The setterm man page suggests it will
-always work, and the kernel comments in uapi/linux/tiocl.h says
-
-> /* keep screen blank even if a key is pressed */
-> #define TIOCL_BLANKSCREEN 14
-
-To fix it, we simply remove the "blank_state != blank_off" check, as
-pointed out by Nicolas Pitre, this check doesn't logically make sense
-and it's safe to remove.
-
-Suggested-by: Nicolas Pitre <nicolas.pitre@linaro.org>
-Fixes: a4199f5eb809 ("tty: Disable default console blanking interval")
-Signed-off-by: Yifeng Li <tomli@tomli.me>
-Cc: stable <stable@vger.kernel.org>
+Addresses-Coverity: ("Unsigned compared against 0")
+Fixes: 345c0dbf3a30 ("ext4: protect journal inode's blocks using block_validity")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+Signed-off-by: Theodore Ts'o <tytso@mit.edu>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/tty/vt/vt.c |    2 --
- 1 file changed, 2 deletions(-)
+ fs/ext4/block_validity.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/drivers/tty/vt/vt.c
-+++ b/drivers/tty/vt/vt.c
-@@ -4179,8 +4179,6 @@ void do_blank_screen(int entering_gfx)
- 		return;
- 	}
+--- a/fs/ext4/block_validity.c
++++ b/fs/ext4/block_validity.c
+@@ -142,7 +142,8 @@ static int ext4_protect_reserved_inode(s
+ 	struct inode *inode;
+ 	struct ext4_sb_info *sbi = EXT4_SB(sb);
+ 	struct ext4_map_blocks map;
+-	u32 i = 0, err = 0, num, n;
++	u32 i = 0, num;
++	int err = 0, n;
  
--	if (blank_state != blank_normal_wait)
--		return;
- 	blank_state = blank_off;
- 
- 	/* don't blank graphics */
+ 	if ((ino < EXT4_ROOT_INO) ||
+ 	    (ino > le32_to_cpu(sbi->s_es->s_inodes_count)))
 
 
