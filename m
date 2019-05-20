@@ -2,179 +2,126 @@ Return-Path: <SRS0=lq4r=TU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1D8EC072A4
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 03:53:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3DF5C04AAF
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 04:00:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9E06420856
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 03:53:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558324418;
-	bh=Yz0Aeiw37vema5jJjkdVNLbZ9t3CHLf6Ybmrg9HRaa8=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JqydDBez2vipDhCUsQdPcmUYtwmBs84/dlVIRyueM1QfKjvP1bLZafbPNrrdw1r29
-	 5Y7wbv3mtA28oMpo2ufbxdCPbqhVt8CStzGCulH8Q6Gvix9N/3yO+AxwPbxrg+dfwG
-	 tHJwqwET5gJWqumBYxTYpatdH55ZmVcFKIamD2N8=
+	by mail.kernel.org (Postfix) with ESMTP id B1B8320449
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 04:00:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="F1hXfjs3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730342AbfETDxh (ORCPT
+        id S1725805AbfETEAo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 19 May 2019 23:53:37 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:38607 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727626AbfETDxg (ORCPT
+        Mon, 20 May 2019 00:00:44 -0400
+Received: from conssluserg-05.nifty.com ([210.131.2.90]:19914 "EHLO
+        conssluserg-05.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725372AbfETEAn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 19 May 2019 23:53:36 -0400
-Received: by mail-pl1-f194.google.com with SMTP id f97so6034824plb.5
-        for <linux-kernel@vger.kernel.org>; Sun, 19 May 2019 20:53:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=6eom6C+0aXRglfnsINAswRs1OeG+39R7hMy87CNGrDQ=;
-        b=XG5I+EPz86QA3OhsQLafnFpAan9eaChflXFWy43qaxMLemrkVaXoKjqy7PxZqkUxkP
-         O0Pi6kyy6arJRnGcyGSp5wdYWbuXmnvmMU9TLW9lQqedL13pwu5ot2YxbHHnH5JDECz2
-         5s7ZSy68dQ3tlt3cl5NMx33/pwti9RfeGoJWKiUEMCQZqpnPep50Djr8xxL6STY36Ujw
-         beVq6BNhkOiPzbrCyDh5fI53flkYcWi5NjAVWwKl/1j+lPu5r1E1UxZcQv/nYdEAVufF
-         I5AElncQaFNYUw4EOAGcoZbjZ6MvPKbdF3qRi76J+cqbdAOTOvWbZZqXTrDpaKJYoBkJ
-         Nunw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
-         :in-reply-to:references:mime-version:content-transfer-encoding;
-        bh=6eom6C+0aXRglfnsINAswRs1OeG+39R7hMy87CNGrDQ=;
-        b=f6yTiEemTxMgPMJqqiwSxFVsSgLPr6I/hnCgzH/+NMfASfJMVl+c7A9LMkiXf14FdZ
-         aotz3MLG2+EZrTwk6O8oKwVH6wWd1Gw2BZeICV7XF2RqdifMYwBOR5UDCI3dQ5LLNbia
-         v85fKVV6ujCI7XgReFK4Ykbe3svFwV6/v5JU8IlyhER/n0PZferORnotuNXbywX7aXNF
-         QmIG03hYnpKs3F2/33Y2focz0g/w5cfIZpSnKLWbnZJC2X1Tp+k1lS9fS5YV+hdQJCO6
-         brIbjhXueo5xNodgFrLiE9SP5pvmgdBR09IhLWNIAHkZ3y2XFr1HcY+tXpoTP3ytijwr
-         MSuw==
-X-Gm-Message-State: APjAAAU9p7MIlnj+AGXTCheliqSM5kcxo3BMGXN6ZS6/lTne6hIj4kmU
-        tDUAyZ7cjlH0zwHrenv74Ck=
-X-Google-Smtp-Source: APXvYqzawjhmQskMTjHPygEFAgYiL4Q/o65j0xjkMqI2OU3MhBsEo2mDN7heff7G2XFlEjOFBY9bKg==
-X-Received: by 2002:a17:902:bc42:: with SMTP id t2mr21860026plz.55.1558324415659;
-        Sun, 19 May 2019 20:53:35 -0700 (PDT)
-Received: from bbox-2.seo.corp.google.com ([2401:fa00:d:0:98f1:8b3d:1f37:3e8])
-        by smtp.gmail.com with ESMTPSA id x66sm3312779pfx.139.2019.05.19.20.53.31
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 19 May 2019 20:53:34 -0700 (PDT)
-From:   Minchan Kim <minchan@kernel.org>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>, linux-mm <linux-mm@kvack.org>,
-        Michal Hocko <mhocko@suse.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Tim Murray <timmurray@google.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Suren Baghdasaryan <surenb@google.com>,
-        Daniel Colascione <dancol@google.com>,
-        Shakeel Butt <shakeelb@google.com>,
-        Sonny Rao <sonnyrao@google.com>,
-        Brian Geffon <bgeffon@google.com>,
-        Minchan Kim <minchan@kernel.org>
-Subject: [RFC 7/7] mm: madvise support MADV_ANONYMOUS_FILTER and MADV_FILE_FILTER
-Date:   Mon, 20 May 2019 12:52:54 +0900
-Message-Id: <20190520035254.57579-8-minchan@kernel.org>
-X-Mailer: git-send-email 2.21.0.1020.gf2820cf01a-goog
-In-Reply-To: <20190520035254.57579-1-minchan@kernel.org>
-References: <20190520035254.57579-1-minchan@kernel.org>
+        Mon, 20 May 2019 00:00:43 -0400
+Received: from mail-vs1-f42.google.com (mail-vs1-f42.google.com [209.85.217.42]) (authenticated)
+        by conssluserg-05.nifty.com with ESMTP id x4K40QpC024101;
+        Mon, 20 May 2019 13:00:27 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-05.nifty.com x4K40QpC024101
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1558324827;
+        bh=MebtkXNeeJ8Jzz6Ezkyq0CerOolN429GAA1nYiyPVZ0=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=F1hXfjs33lXG36eIXyWaL61OGI4u6G2k7C60RtauYyMUIX2ITKOXq6itIhXDmgoO1
+         Sywm/JDduKgqyTH/bg38wvFS8mR+2hmilo61zOzZTx67zqGJEUvapD7CNLur/R7y8Z
+         Q5aazPzSspt1t1DVu0yncw8IGwdzj6/GE8iUNmV9w+7PR5jBDzc1vwNP2E/tleUqZ3
+         esRFQo/iJDYBQSCOA4FJ6oBf4iWODx7szE0zW44DRiGmSufwRejVhhtSlvoPKBXN+9
+         HYZNA+7NYca1OvdwIUK7oTJBDXLUab0fJZy7b8BIpoWsYZNYtZ+PFJxXiZAFiwXjjb
+         MGztl/bi9lUTg==
+X-Nifty-SrcIP: [209.85.217.42]
+Received: by mail-vs1-f42.google.com with SMTP id c24so8062240vsp.7;
+        Sun, 19 May 2019 21:00:27 -0700 (PDT)
+X-Gm-Message-State: APjAAAVRWvCVFURn2LYaI4ffFNaHUOVZ6d7QGmvcOX+jN6nqTGu0SGmH
+        GunEYASMu+vLnPG3l3eKvcKjgQoLaDMjdwqlorw=
+X-Google-Smtp-Source: APXvYqzwgLFd2jzknLeu3sewSQkB2MYjaaXKCCR+0kzoDAkGzqV18tSS1eu9D+4ots57VrcJJH8hwSeFvR3B/BpzzZ4=
+X-Received: by 2002:a67:d382:: with SMTP id b2mr18182087vsj.155.1558324826093;
+ Sun, 19 May 2019 21:00:26 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <1558109235-23042-1-git-send-email-yamada.masahiro@socionext.com> <20190520095147.2021c218@canb.auug.org.au>
+In-Reply-To: <20190520095147.2021c218@canb.auug.org.au>
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+Date:   Mon, 20 May 2019 12:59:49 +0900
+X-Gmail-Original-Message-ID: <CAK7LNARp5n+tL+m9HCysJXt==5fnpH21DDoS2ruuW_6r6BJUDQ@mail.gmail.com>
+Message-ID: <CAK7LNARp5n+tL+m9HCysJXt==5fnpH21DDoS2ruuW_6r6BJUDQ@mail.gmail.com>
+Subject: Re: [PATCH v3] kbuild: check uniqueness of module names
+To:     Stephen Rothwell <sfr@canb.auug.org.au>
+Cc:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Arnd Bergmann <arnd@arndb.de>, Jessica Yu <jeyu@kernel.org>,
+        Lucas De Marchi <lucas.demarchi@intel.com>,
+        Michael Schmitz <schmitzmic@gmail.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Rusty Russell <rusty@rustcorp.com.au>,
+        Kees Cook <keescook@chromium.org>,
+        Bernd Petrovitsch <bernd@petrovitsch.priv.at>,
+        Alexander Kapshuk <alexander.kapshuk@gmail.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-System could have much faster swap device like zRAM. In that case, swapping
-is extremely cheaper than file-IO on the low-end storage.
-In this configuration, userspace could handle different strategy for each
-kinds of vma. IOW, they want to reclaim anonymous pages by MADV_COLD
-while it keeps file-backed pages in inactive LRU by MADV_COOL because
-file IO is more expensive in this case so want to keep them in memory
-until memory pressure happens.
+On Mon, May 20, 2019 at 8:52 AM Stephen Rothwell <sfr@canb.auug.org.au> wrote:
+>
+> Hi Masahiro,
+>
+> On Sat, 18 May 2019 01:07:15 +0900 Masahiro Yamada <yamada.masahiro@socionext.com> wrote:
+> >
+> > It checks not only real modules, but also built-in modules (i.e.
+> > controlled by tristate CONFIG option, but currently compiled with =y).
+> > Non-unique names for built-in modules also cause problems because
+> > /sys/modules/ would fall over.
+> >
+> > I tested allmodconfig on the latest kernel, and it detected the
+> > following:
+>
+> A powerpc ppc64_defconfig produces:
+>
+> warning: same basename if the following are built as modules:
+>   arch/powerpc/platforms/powermac/nvram.ko
+>   drivers/char/nvram.ko
+>
+> Which is a false positive since
+> arch/powerpc/platforms/powermac/Makefile has
+>
+> # CONFIG_NVRAM is an arch. independent tristate symbol, for pmac32 we really
+> # need this to be a bool.  Cheat here and pretend CONFIG_NVRAM=m is really
+> # CONFIG_NVRAM=y
+> obj-$(CONFIG_NVRAM:m=y)         += nvram.o
+>
+> Which means that this nvram.o will never be built as a module.
+> --
+> Cheers,
+> Stephen Rothwell
 
-To support such strategy easier, this patch introduces
-MADV_ANONYMOUS_FILTER and MADV_FILE_FILTER options in madvise(2) like
-that /proc/<pid>/clear_refs already has supported same filters.
-They are filters could be Ored with other existing hints using top two bits
-of (int behavior).
 
-Once either of them is set, the hint could affect only the interested vma
-either anonymous or file-backed.
+BTW, arm64 defconfig also produces a false positive:
 
-With that, user could call a process_madvise syscall simply with a entire
-range(0x0 - 0xFFFFFFFFFFFFFFFF) but either of MADV_ANONYMOUS_FILTER and
-MADV_FILE_FILTER so there is no need to call the syscall range by range.
+warning: same basename if the following are built as modules:
+  arch/arm64/lib/crc32.ko
+  lib/crc32.ko
 
-* from v1r2
-  * use consistent check with clear_refs to identify anon/file vma - surenb
+CONFIG_CRC32 is a tristate option, but ARM64 selects CRC32.
+So, CRC32 is always =y.
 
-* from v1r1
-  * use naming "filter" for new madvise option - dancol
 
-Signed-off-by: Minchan Kim <minchan@kernel.org>
----
- include/uapi/asm-generic/mman-common.h |  5 +++++
- mm/madvise.c                           | 14 ++++++++++++++
- 2 files changed, 19 insertions(+)
+We must stop checking modules.builtin soon.
+Sorry about noises.
 
-diff --git a/include/uapi/asm-generic/mman-common.h b/include/uapi/asm-generic/mman-common.h
-index b8e230de84a6..be59a1b90284 100644
---- a/include/uapi/asm-generic/mman-common.h
-+++ b/include/uapi/asm-generic/mman-common.h
-@@ -66,6 +66,11 @@
- #define MADV_WIPEONFORK 18		/* Zero memory on fork, child only */
- #define MADV_KEEPONFORK 19		/* Undo MADV_WIPEONFORK */
- 
-+#define MADV_BEHAVIOR_MASK (~(MADV_ANONYMOUS_FILTER|MADV_FILE_FILTER))
-+
-+#define MADV_ANONYMOUS_FILTER	(1<<31)	/* works for only anonymous vma */
-+#define MADV_FILE_FILTER	(1<<30)	/* works for only file-backed vma */
-+
- /* compatibility flags */
- #define MAP_FILE	0
- 
-diff --git a/mm/madvise.c b/mm/madvise.c
-index f4f569dac2bd..116131243540 100644
---- a/mm/madvise.c
-+++ b/mm/madvise.c
-@@ -1002,7 +1002,15 @@ static int madvise_core(struct task_struct *tsk, unsigned long start,
- 	int write;
- 	size_t len;
- 	struct blk_plug plug;
-+	bool anon_only, file_only;
- 
-+	anon_only = behavior & MADV_ANONYMOUS_FILTER;
-+	file_only = behavior & MADV_FILE_FILTER;
-+
-+	if (anon_only && file_only)
-+		return error;
-+
-+	behavior = behavior & MADV_BEHAVIOR_MASK;
- 	if (!madvise_behavior_valid(behavior))
- 		return error;
- 
-@@ -1067,12 +1075,18 @@ static int madvise_core(struct task_struct *tsk, unsigned long start,
- 		if (end < tmp)
- 			tmp = end;
- 
-+		if (anon_only && vma->vm_file)
-+			goto next;
-+		if (file_only && !vma->vm_file)
-+			goto next;
-+
- 		/* Here vma->vm_start <= start < tmp <= (end|vma->vm_end). */
- 		error = madvise_vma(tsk, vma, &prev, start, tmp,
- 					behavior, &pages);
- 		if (error)
- 			goto out;
- 		*nr_pages += pages;
-+next:
- 		start = tmp;
- 		if (prev && start < prev->vm_end)
- 			start = prev->vm_end;
+
+
+
 -- 
-2.21.0.1020.gf2820cf01a-goog
-
+Best Regards
+Masahiro Yamada
