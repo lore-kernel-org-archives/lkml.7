@@ -2,66 +2,99 @@ Return-Path: <SRS0=lq4r=TU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 396D6C04AAC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 21:54:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 289CDC04AAF
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 21:54:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 17482216B7
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 21:54:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 002E4216B7
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 21:54:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727031AbfETVyZ (ORCPT
+        id S1727085AbfETVya (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 17:54:25 -0400
-Received: from ms.lwn.net ([45.79.88.28]:36360 "EHLO ms.lwn.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725810AbfETVyY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 17:54:24 -0400
-Received: from lwn.net (localhost [127.0.0.1])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ms.lwn.net (Postfix) with ESMTPSA id 23E726A2;
-        Mon, 20 May 2019 21:54:24 +0000 (UTC)
-Date:   Mon, 20 May 2019 15:54:23 -0600
-From:   Jonathan Corbet <corbet@lwn.net>
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Sven Eckelmann <sven@narfation.org>
-Subject: Re: linux-next: Fixes tag needs some work in the jc_docs tree
-Message-ID: <20190520155423.2ad5d16a@lwn.net>
-In-Reply-To: <20190521074435.7a277fd6@canb.auug.org.au>
-References: <20190521074435.7a277fd6@canb.auug.org.au>
-Organization: LWN.net
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 8bit
+        Mon, 20 May 2019 17:54:30 -0400
+Received: from linux.microsoft.com ([13.77.154.182]:35994 "EHLO
+        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725810AbfETVy3 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 17:54:29 -0400
+Received: from jaskaran-Intel-Server-Board-S1200V3RPS-UEFI-Development-Kit.corp.microsoft.com (unknown [131.107.160.238])
+        by linux.microsoft.com (Postfix) with ESMTPSA id 69C3C20B7192;
+        Mon, 20 May 2019 14:54:28 -0700 (PDT)
+From:   Jaskaran Khurana <jaskarankhurana@linux.microsoft.com>
+To:     linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     agk@redhat.com, snitzer@redhat.com, dm-devel@redhat.com,
+        jmorris@namei.org
+Subject: [RFC 0/1] Add dm verity root hash pkcs7 sig validation.
+Date:   Mon, 20 May 2019 14:54:21 -0700
+Message-Id: <20190520215422.23939-1-jaskarankhurana@linux.microsoft.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 21 May 2019 07:44:35 +1000
-Stephen Rothwell <sfr@canb.auug.org.au> wrote:
+This patch set adds in-kernel pkcs7 signature checking for the roothash of
+the dm-verity hash tree.
+The verification is to support cases where the roothash is not secured by
+Trusted Boot, UEFI Secureboot or similar technologies.
+One of the use cases for this is for dm-verity volumes mounted after boot,
+the root hash provided during the creation of the dm-verity volume has to
+be secure and thus in-kernel validation implemented here will be used
+before we trust the root hash and allow the block device to be created.
 
-> In commit
-> 
->   9eaa65e8aad5 ("scripts/spdxcheck.py: Add dual license subdirectory")
-> 
-> Fixes tag
-> 
->   Fixes: 99871f2f9a4d ("scripts/spdxcheck.py: Fix path to deprecated licenses")
-> 
-> has these problem(s):
-> 
->   - Target SHA1 does not exist
-> 
-> Did you mean
-> 
-> Fixes: e6d319f68d4d ("scripts/spdxcheck.py: Fix path to deprecated licenses")
+Why we are doing validation in the Kernel?
 
-Argh, sorry, I should have caught that.  Fixed, thanks.
+The reason is to still be secure in cases where the attacker is able to
+compromise the user mode application in which case the user mode validation
+could not have been trusted.
+The root hash signature validation in the kernel along with existing
+dm-verity implementation gives a higher level of confidence in the
+executable code or the protected data. Before allowing the creation of
+the device mapper block device the kernel code will check that the detached
+pkcs7 signature passed to it validates the roothash and the signature is
+trusted by builtin keys set at kernel creation. The kernel should be
+secured using Verified boot, UEFI Secure Boot or similar technologies so we
+can trust it.
 
-jon
+What about attacker mounting non dm-verity volumes to run executable
+code?
+
+This verification can be used to have a security architecture where a LSM
+can enforce this verification for all the volumes and by doing this it can
+ensure that all executable code runs from signed and trusted dm-verity
+volumes.
+
+Further patches will be posted that build on this and enforce this
+verification based on policy for all the volumes on the system.
+
+How are these changes tested?
+
+veritysetup part of cryptsetup library was modified to take a optional
+root-hash-sig parameter.
+
+Commandline used to test the changes:
+
+veritysetup open  <data_device> <name> <hash_device> <root_hash>
+ --root-hash-sig=<root_hash_pkcs7_detached_sig>
+
+The changes for veritysetup are in a topic branch for now at:
+https://github.com/jaskarankhurana/veritysetup/tree/veritysetup_add_sig
+
+Jaskaran Khurana (1):
+  Add dm verity root hash pkcs7 sig validation.
+
+ drivers/md/Kconfig                |  23 ++++++
+ drivers/md/Makefile               |   2 +-
+ drivers/md/dm-verity-target.c     |  44 ++++++++--
+ drivers/md/dm-verity-verify-sig.c | 129 ++++++++++++++++++++++++++++++
+ drivers/md/dm-verity-verify-sig.h |  32 ++++++++
+ 5 files changed, 222 insertions(+), 8 deletions(-)
+ create mode 100644 drivers/md/dm-verity-verify-sig.c
+ create mode 100644 drivers/md/dm-verity-verify-sig.h
+
+-- 
+2.17.1
+
