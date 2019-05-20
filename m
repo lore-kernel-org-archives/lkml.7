@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19E80C04AAC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:38:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54D4AC04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:38:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D9E0B20645
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:38:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F8DC20645
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:38:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558355914;
-	bh=Nri/ZYOTzRHBW5klsAUuPVKJiAAFPn2VPOyCjTgE5Zw=;
+	s=default; t=1558355921;
+	bh=IJt24hyJCvJF3H0FS0NaVCue6qeX16pkGyBl5737TZg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dSfSedEunEOjLHeUEZdf15JKpc/WG3Cajl9ymZfrodUvwJW/hgEb6dfLvChpTKdUL
-	 WUhl4vuj45Xz0bURoAlwg9v5dCBGr08LWu7rdoCNiFUr+Bd4dgBq9ioW6l+9DmiGpd
-	 MScooYpl+kX7+CuRNcHWGkvoJcPU/SYAS0WvmT0E=
+	b=TlB33NlHJTiWEPXUoodJAW+VtYshmiDGnxj3ZWdO2LAe7lNVIsbWtMbiIk4v8q2sn
+	 dpIlhSGtSNLusWpZE58UN5WM+vMzvPzYcP7jglaRC9NG7Qi7TIqz+HvZhkab85TXiv
+	 ca5iRbDz1sXFiUHGnECnxTjV+YL66MezXfLpdYpw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403774AbfETMew (ORCPT
+        id S2391413AbfETMik (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 08:34:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52450 "EHLO mail.kernel.org"
+        Mon, 20 May 2019 08:38:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52256 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391006AbfETMet (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 08:34:49 -0400
+        id S2390987AbfETMeo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 08:34:44 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 48BC920815;
-        Mon, 20 May 2019 12:34:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1B54B21479;
+        Mon, 20 May 2019 12:34:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558355688;
-        bh=Nri/ZYOTzRHBW5klsAUuPVKJiAAFPn2VPOyCjTgE5Zw=;
+        s=default; t=1558355683;
+        bh=IJt24hyJCvJF3H0FS0NaVCue6qeX16pkGyBl5737TZg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iraFnXePnP1/E62BYzglU+NjIampHJD3KgShRQ2owxJUn2FcxrscXgTTU2QgPEXxJ
-         TOOUqX5zzcyCU9iL/tZ7sIpzf42QSQj4fN18bX/JrgGvsLur2mp5ZwsQjiPob4cg+o
-         Fl04nUPNb1jgOwCnwM4vxcuPLb4BLRKrCtT1IyX4=
+        b=pejclhSDekRzD8kYg3H9E1EjutUzbxwraeiv9wFHVDGfOhiiZBs//vgEAnf6rk+dK
+         TFFZQEGx0vbGspiS14FZ2sZ+FVR9OemRTIHVA9qv7NYOiZHaRFTKiNWLa7lNHxVqzh
+         iik6rEUVCFWKiBxZA1oAlprMWZyw4i1tsYQ/nSLI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Raul E Rangel <rrangel@chromium.org>,
-        Jens Axboe <axboe@kernel.dk>,
-        Adrian Hunter <adrian.hunter@intel.com>,
+        stable@vger.kernel.org,
+        Christoph Muellner <christoph.muellner@theobroma-systems.com>,
+        Philipp Tomsich <philipp.tomsich@theobroma-systems.com>,
         Ulf Hansson <ulf.hansson@linaro.org>
-Subject: [PATCH 5.1 046/128] mmc: core: Fix tag set memory leak
-Date:   Mon, 20 May 2019 14:13:53 +0200
-Message-Id: <20190520115252.863643149@linuxfoundation.org>
+Subject: [PATCH 5.1 044/128] dt-bindings: mmc: Add disable-cqe-dcmd property.
+Date:   Mon, 20 May 2019 14:13:51 +0200
+Message-Id: <20190520115252.709304225@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190520115249.449077487@linuxfoundation.org>
 References: <20190520115249.449077487@linuxfoundation.org>
@@ -61,35 +61,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Raul E Rangel <rrangel@chromium.org>
+From: Christoph Muellner <christoph.muellner@theobroma-systems.com>
 
-commit 43d8dabb4074cf7f3b1404bfbaeba5aa6f3e5cfc upstream.
+commit 28f22fb755ecf9f933f045bc0afdb8140641b01c upstream.
 
-The tag set is allocated in mmc_init_queue but never freed. This results
-in a memory leak. This change makes sure we free the tag set when the
-queue is also freed.
+Add disable-cqe-dcmd as optional property for MMC hosts.
+This property allows to disable or not enable the direct command
+features of the command queue engine.
 
-Signed-off-by: Raul E Rangel <rrangel@chromium.org>
-Reviewed-by: Jens Axboe <axboe@kernel.dk>
-Acked-by: Adrian Hunter <adrian.hunter@intel.com>
-Fixes: 81196976ed94 ("mmc: block: Add blk-mq support")
+Signed-off-by: Christoph Muellner <christoph.muellner@theobroma-systems.com>
+Signed-off-by: Philipp Tomsich <philipp.tomsich@theobroma-systems.com>
+Fixes: 84362d79f436 ("mmc: sdhci-of-arasan: Add CQHCI support for arasan,sdhci-5.1")
 Cc: stable@vger.kernel.org
 Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/mmc/core/queue.c |    1 +
- 1 file changed, 1 insertion(+)
+ Documentation/devicetree/bindings/mmc/mmc.txt |    2 ++
+ 1 file changed, 2 insertions(+)
 
---- a/drivers/mmc/core/queue.c
-+++ b/drivers/mmc/core/queue.c
-@@ -472,6 +472,7 @@ void mmc_cleanup_queue(struct mmc_queue
- 		blk_mq_unquiesce_queue(q);
+--- a/Documentation/devicetree/bindings/mmc/mmc.txt
++++ b/Documentation/devicetree/bindings/mmc/mmc.txt
+@@ -64,6 +64,8 @@ Optional properties:
+   whether pwrseq-simple is used. Default to 10ms if no available.
+ - supports-cqe : The presence of this property indicates that the corresponding
+   MMC host controller supports HW command queue feature.
++- disable-cqe-dcmd: This property indicates that the MMC controller's command
++  queue engine (CQE) does not support direct commands (DCMDs).
  
- 	blk_cleanup_queue(q);
-+	blk_mq_free_tag_set(&mq->tag_set);
- 
- 	/*
- 	 * A request can be completed before the next request, potentially
+ *NOTE* on CD and WP polarity. To use common for all SD/MMC host controllers line
+ polarity properties, we have to fix the meaning of the "normal" and "inverted"
 
 
