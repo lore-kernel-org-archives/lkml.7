@@ -7,47 +7,45 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EB59C04AAC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:30:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B83BAC04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:30:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1896220645
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:30:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7FF3020645
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:30:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558355439;
-	bh=EV1/7IpflXgcuo3qsgApL2j+LJlceYK1/Hzf2uetAm0=;
+	s=default; t=1558355443;
+	bh=bhG4jBqpwwP7rkhnihORgIuKI5Yvn9djauuia0ivzOg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=h4Cw1Sxu0106zgpMW1Yspoec681UR1oJhflZYBf7Xb+jljfw89CDlwpe3Vv0lvV7J
-	 tvmigE8JWYjQFQQ3ovOQMVqU8nt4WQ3k/kcMKJYugGdWo9Oh8uVOgU93LKb34WRmEK
-	 8P/46AdQEfp2XjE2q77ezel8QIymkmN/PiVgLwmE=
+	b=kTTJh/FE7SthPKAqf7Td3ZM/gG/w/2WTWMLLqk2ohfcmgrHaaPTc4gNRHuPBPOg0t
+	 Ft+eNzfRMz8xHKFoV4SompU6R65aRxUuy3e6uShjG+5y6XSmxQYqtb3uSPvfPKyLdZ
+	 DANZ3q6X3PobTzO3ZLJLsHpZ3ilrUke43TDl1W9M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390138AbfETMah (ORCPT
+        id S2390151AbfETMam (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 08:30:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46854 "EHLO mail.kernel.org"
+        Mon, 20 May 2019 08:30:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46948 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390118AbfETMac (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 08:30:32 -0400
+        id S2390136AbfETMai (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 08:30:38 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4076220645;
-        Mon, 20 May 2019 12:30:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8FE2F20675;
+        Mon, 20 May 2019 12:30:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558355431;
-        bh=EV1/7IpflXgcuo3qsgApL2j+LJlceYK1/Hzf2uetAm0=;
+        s=default; t=1558355437;
+        bh=bhG4jBqpwwP7rkhnihORgIuKI5Yvn9djauuia0ivzOg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BNInjKtP5BinHs0nVsjwGanOy+Lyj9hfVhN7RCfj3hK+Vb1Yh4D0TdvBpTMkk7Mpb
-         F5n77YsG8YrnyNgYxcNirPlFwZqpFeV7qKazUQxHXJ4ix8yDnFeIT/FPk9xt/4//j9
-         0R1G5UhbYKi5Nohkvy5cvcNUOpoJw3fRrZtiLp6I=
+        b=syaXawe0DTvUFa2BFfoqwVySDI9UInuH57vhO8R8de5tK7X52ou7EDkpeLJtCwPZM
+         3hpLXCwRxUDu8ioSu+LldybZBMVyvC0S6w+XfgD0zVCwdzkD3Y/6c1bxsltsWcKx9w
+         XpEZPyLU9P6jqm5FLOiebvnXIQtd/v2PeHgqPsfk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Matthew Wilcox <willy@infradead.org>
-Subject: [PATCH 5.0 117/123] iov_iter: optimize page_copy_sane()
-Date:   Mon, 20 May 2019 14:14:57 +0200
-Message-Id: <20190520115252.935249966@linuxfoundation.org>
+        stable@vger.kernel.org, Martin Schwidefsky <schwidefsky@de.ibm.com>
+Subject: [PATCH 5.0 119/123] s390/mm: convert to the generic get_user_pages_fast code
+Date:   Mon, 20 May 2019 14:14:59 +0200
+Message-Id: <20190520115253.074303494@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190520115245.439864225@linuxfoundation.org>
 References: <20190520115245.439864225@linuxfoundation.org>
@@ -60,56 +58,359 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Dumazet <edumazet@google.com>
+From: Martin Schwidefsky <schwidefsky@de.ibm.com>
 
-commit 6daef95b8c914866a46247232a048447fff97279 upstream.
+commit 1a42010cdc26bb7e5912984f3c91b8c6d55f089a upstream.
 
-Avoid cache line miss dereferencing struct page if we can.
+Define the gup_fast_permitted to check against the asce_limit of the
+mm attached to the current task, then replace the s390 specific gup
+code with the generic implementation in mm/gup.c.
 
-page_copy_sane() mostly deals with order-0 pages.
-
-Extra cache line miss is visible on TCP recvmsg() calls dealing
-with GRO packets (typically 45 page frags are attached to one skb).
-
-Bringing the 45 struct pages into cpu cache while copying the data
-is not free, since the freeing of the skb (and associated
-page frags put_page()) can happen after cache lines have been evicted.
-
-Signed-off-by: Eric Dumazet <edumazet@google.com>
-Cc: Al Viro <viro@zeniv.linux.org.uk>
-Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
-Cc: Matthew Wilcox <willy@infradead.org>
+Signed-off-by: Martin Schwidefsky <schwidefsky@de.ibm.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- lib/iov_iter.c |   17 +++++++++++++++--
- 1 file changed, 15 insertions(+), 2 deletions(-)
+ arch/s390/Kconfig               |    1 
+ arch/s390/include/asm/pgtable.h |   12 +
+ arch/s390/mm/Makefile           |    2 
+ arch/s390/mm/gup.c              |  291 ----------------------------------------
+ 4 files changed, 14 insertions(+), 292 deletions(-)
 
---- a/lib/iov_iter.c
-+++ b/lib/iov_iter.c
-@@ -861,8 +861,21 @@ EXPORT_SYMBOL(_copy_from_iter_full_nocac
+--- a/arch/s390/Kconfig
++++ b/arch/s390/Kconfig
+@@ -148,6 +148,7 @@ config S390
+ 	select HAVE_FUNCTION_TRACER
+ 	select HAVE_FUTEX_CMPXCHG if FUTEX
+ 	select HAVE_GCC_PLUGINS
++	select HAVE_GENERIC_GUP
+ 	select HAVE_KERNEL_BZIP2
+ 	select HAVE_KERNEL_GZIP
+ 	select HAVE_KERNEL_LZ4
+--- a/arch/s390/include/asm/pgtable.h
++++ b/arch/s390/include/asm/pgtable.h
+@@ -1264,6 +1264,18 @@ static inline pte_t *pte_offset(pmd_t *p
+ #define pte_offset_map(pmd, address) pte_offset_kernel(pmd, address)
+ #define pte_unmap(pte) do { } while (0)
  
- static inline bool page_copy_sane(struct page *page, size_t offset, size_t n)
- {
--	struct page *head = compound_head(page);
--	size_t v = n + offset + page_address(page) - page_address(head);
-+	struct page *head;
-+	size_t v = n + offset;
++static inline bool gup_fast_permitted(unsigned long start, int nr_pages)
++{
++	unsigned long len, end;
 +
-+	/*
-+	 * The general case needs to access the page order in order
-+	 * to compute the page size.
-+	 * However, we mostly deal with order-0 pages and thus can
-+	 * avoid a possible cache line miss for requests that fit all
-+	 * page orders.
-+	 */
-+	if (n <= v && v <= PAGE_SIZE)
-+		return true;
++	len = (unsigned long) nr_pages << PAGE_SHIFT;
++	end = start + len;
++	if (end < start)
++		return false;
++	return end <= current->mm->context.asce_limit;
++}
++#define gup_fast_permitted gup_fast_permitted
 +
-+	head = compound_head(page);
-+	v += (page - head) << PAGE_SHIFT;
+ #define pfn_pte(pfn,pgprot) mk_pte_phys(__pa((pfn) << PAGE_SHIFT),(pgprot))
+ #define pte_pfn(x) (pte_val(x) >> PAGE_SHIFT)
+ #define pte_page(x) pfn_to_page(pte_pfn(x))
+--- a/arch/s390/mm/Makefile
++++ b/arch/s390/mm/Makefile
+@@ -4,7 +4,7 @@
+ #
  
- 	if (likely(n <= v && v <= (PAGE_SIZE << compound_order(head))))
- 		return true;
+ obj-y		:= init.o fault.o extmem.o mmap.o vmem.o maccess.o
+-obj-y		+= page-states.o gup.o pageattr.o pgtable.o pgalloc.o
++obj-y		+= page-states.o pageattr.o pgtable.o pgalloc.o
+ 
+ obj-$(CONFIG_CMM)		+= cmm.o
+ obj-$(CONFIG_HUGETLB_PAGE)	+= hugetlbpage.o
+--- a/arch/s390/mm/gup.c
++++ /dev/null
+@@ -1,291 +0,0 @@
+-// SPDX-License-Identifier: GPL-2.0
+-/*
+- *  Lockless get_user_pages_fast for s390
+- *
+- *  Copyright IBM Corp. 2010
+- *  Author(s): Martin Schwidefsky <schwidefsky@de.ibm.com>
+- */
+-#include <linux/sched.h>
+-#include <linux/mm.h>
+-#include <linux/hugetlb.h>
+-#include <linux/vmstat.h>
+-#include <linux/pagemap.h>
+-#include <linux/rwsem.h>
+-#include <asm/pgtable.h>
+-
+-/*
+- * The performance critical leaf functions are made noinline otherwise gcc
+- * inlines everything into a single function which results in too much
+- * register pressure.
+- */
+-static inline int gup_pte_range(pmd_t pmd, unsigned long addr,
+-		unsigned long end, int write, struct page **pages, int *nr)
+-{
+-	struct page *head, *page;
+-	unsigned long mask;
+-	pte_t *ptep, pte;
+-
+-	mask = (write ? _PAGE_PROTECT : 0) | _PAGE_INVALID | _PAGE_SPECIAL;
+-
+-	ptep = pte_offset_map(&pmd, addr);
+-	do {
+-		pte = *ptep;
+-		barrier();
+-		/* Similar to the PMD case, NUMA hinting must take slow path */
+-		if (pte_protnone(pte))
+-			return 0;
+-		if ((pte_val(pte) & mask) != 0)
+-			return 0;
+-		VM_BUG_ON(!pfn_valid(pte_pfn(pte)));
+-		page = pte_page(pte);
+-		head = compound_head(page);
+-		if (!page_cache_get_speculative(head))
+-			return 0;
+-		if (unlikely(pte_val(pte) != pte_val(*ptep))) {
+-			put_page(head);
+-			return 0;
+-		}
+-		VM_BUG_ON_PAGE(compound_head(page) != head, page);
+-		pages[*nr] = page;
+-		(*nr)++;
+-
+-	} while (ptep++, addr += PAGE_SIZE, addr != end);
+-
+-	return 1;
+-}
+-
+-static inline int gup_huge_pmd(pmd_t *pmdp, pmd_t pmd, unsigned long addr,
+-		unsigned long end, int write, struct page **pages, int *nr)
+-{
+-	struct page *head, *page;
+-	unsigned long mask;
+-	int refs;
+-
+-	mask = (write ? _SEGMENT_ENTRY_PROTECT : 0) | _SEGMENT_ENTRY_INVALID;
+-	if ((pmd_val(pmd) & mask) != 0)
+-		return 0;
+-	VM_BUG_ON(!pfn_valid(pmd_val(pmd) >> PAGE_SHIFT));
+-
+-	refs = 0;
+-	head = pmd_page(pmd);
+-	page = head + ((addr & ~PMD_MASK) >> PAGE_SHIFT);
+-	do {
+-		VM_BUG_ON(compound_head(page) != head);
+-		pages[*nr] = page;
+-		(*nr)++;
+-		page++;
+-		refs++;
+-	} while (addr += PAGE_SIZE, addr != end);
+-
+-	if (!page_cache_add_speculative(head, refs)) {
+-		*nr -= refs;
+-		return 0;
+-	}
+-
+-	if (unlikely(pmd_val(pmd) != pmd_val(*pmdp))) {
+-		*nr -= refs;
+-		while (refs--)
+-			put_page(head);
+-		return 0;
+-	}
+-
+-	return 1;
+-}
+-
+-
+-static inline int gup_pmd_range(pud_t pud, unsigned long addr,
+-		unsigned long end, int write, struct page **pages, int *nr)
+-{
+-	unsigned long next;
+-	pmd_t *pmdp, pmd;
+-
+-	pmdp = pmd_offset(&pud, addr);
+-	do {
+-		pmd = *pmdp;
+-		barrier();
+-		next = pmd_addr_end(addr, end);
+-		if (pmd_none(pmd))
+-			return 0;
+-		if (unlikely(pmd_large(pmd))) {
+-			/*
+-			 * NUMA hinting faults need to be handled in the GUP
+-			 * slowpath for accounting purposes and so that they
+-			 * can be serialised against THP migration.
+-			 */
+-			if (pmd_protnone(pmd))
+-				return 0;
+-			if (!gup_huge_pmd(pmdp, pmd, addr, next,
+-					  write, pages, nr))
+-				return 0;
+-		} else if (!gup_pte_range(pmd, addr, next,
+-					  write, pages, nr))
+-			return 0;
+-	} while (pmdp++, addr = next, addr != end);
+-
+-	return 1;
+-}
+-
+-static int gup_huge_pud(pud_t *pudp, pud_t pud, unsigned long addr,
+-		unsigned long end, int write, struct page **pages, int *nr)
+-{
+-	struct page *head, *page;
+-	unsigned long mask;
+-	int refs;
+-
+-	mask = (write ? _REGION_ENTRY_PROTECT : 0) | _REGION_ENTRY_INVALID;
+-	if ((pud_val(pud) & mask) != 0)
+-		return 0;
+-	VM_BUG_ON(!pfn_valid(pud_pfn(pud)));
+-
+-	refs = 0;
+-	head = pud_page(pud);
+-	page = head + ((addr & ~PUD_MASK) >> PAGE_SHIFT);
+-	do {
+-		VM_BUG_ON_PAGE(compound_head(page) != head, page);
+-		pages[*nr] = page;
+-		(*nr)++;
+-		page++;
+-		refs++;
+-	} while (addr += PAGE_SIZE, addr != end);
+-
+-	if (!page_cache_add_speculative(head, refs)) {
+-		*nr -= refs;
+-		return 0;
+-	}
+-
+-	if (unlikely(pud_val(pud) != pud_val(*pudp))) {
+-		*nr -= refs;
+-		while (refs--)
+-			put_page(head);
+-		return 0;
+-	}
+-
+-	return 1;
+-}
+-
+-static inline int gup_pud_range(p4d_t p4d, unsigned long addr,
+-		unsigned long end, int write, struct page **pages, int *nr)
+-{
+-	unsigned long next;
+-	pud_t *pudp, pud;
+-
+-	pudp = pud_offset(&p4d, addr);
+-	do {
+-		pud = *pudp;
+-		barrier();
+-		next = pud_addr_end(addr, end);
+-		if (pud_none(pud))
+-			return 0;
+-		if (unlikely(pud_large(pud))) {
+-			if (!gup_huge_pud(pudp, pud, addr, next, write, pages,
+-					  nr))
+-				return 0;
+-		} else if (!gup_pmd_range(pud, addr, next, write, pages,
+-					  nr))
+-			return 0;
+-	} while (pudp++, addr = next, addr != end);
+-
+-	return 1;
+-}
+-
+-static inline int gup_p4d_range(pgd_t pgd, unsigned long addr,
+-		unsigned long end, int write, struct page **pages, int *nr)
+-{
+-	unsigned long next;
+-	p4d_t *p4dp, p4d;
+-
+-	p4dp = p4d_offset(&pgd, addr);
+-	do {
+-		p4d = *p4dp;
+-		barrier();
+-		next = p4d_addr_end(addr, end);
+-		if (p4d_none(p4d))
+-			return 0;
+-		if (!gup_pud_range(p4d, addr, next, write, pages, nr))
+-			return 0;
+-	} while (p4dp++, addr = next, addr != end);
+-
+-	return 1;
+-}
+-
+-/*
+- * Like get_user_pages_fast() except its IRQ-safe in that it won't fall
+- * back to the regular GUP.
+- * Note a difference with get_user_pages_fast: this always returns the
+- * number of pages pinned, 0 if no pages were pinned.
+- */
+-int __get_user_pages_fast(unsigned long start, int nr_pages, int write,
+-			  struct page **pages)
+-{
+-	struct mm_struct *mm = current->mm;
+-	unsigned long addr, len, end;
+-	unsigned long next, flags;
+-	pgd_t *pgdp, pgd;
+-	int nr = 0;
+-
+-	start &= PAGE_MASK;
+-	addr = start;
+-	len = (unsigned long) nr_pages << PAGE_SHIFT;
+-	end = start + len;
+-	if ((end <= start) || (end > mm->context.asce_limit))
+-		return 0;
+-	/*
+-	 * local_irq_save() doesn't prevent pagetable teardown, but does
+-	 * prevent the pagetables from being freed on s390.
+-	 *
+-	 * So long as we atomically load page table pointers versus teardown,
+-	 * we can follow the address down to the the page and take a ref on it.
+-	 */
+-	local_irq_save(flags);
+-	pgdp = pgd_offset(mm, addr);
+-	do {
+-		pgd = *pgdp;
+-		barrier();
+-		next = pgd_addr_end(addr, end);
+-		if (pgd_none(pgd))
+-			break;
+-		if (!gup_p4d_range(pgd, addr, next, write, pages, &nr))
+-			break;
+-	} while (pgdp++, addr = next, addr != end);
+-	local_irq_restore(flags);
+-
+-	return nr;
+-}
+-
+-/**
+- * get_user_pages_fast() - pin user pages in memory
+- * @start:	starting user address
+- * @nr_pages:	number of pages from start to pin
+- * @write:	whether pages will be written to
+- * @pages:	array that receives pointers to the pages pinned.
+- *		Should be at least nr_pages long.
+- *
+- * Attempt to pin user pages in memory without taking mm->mmap_sem.
+- * If not successful, it will fall back to taking the lock and
+- * calling get_user_pages().
+- *
+- * Returns number of pages pinned. This may be fewer than the number
+- * requested. If nr_pages is 0 or negative, returns 0. If no pages
+- * were pinned, returns -errno.
+- */
+-int get_user_pages_fast(unsigned long start, int nr_pages, int write,
+-			struct page **pages)
+-{
+-	int nr, ret;
+-
+-	might_sleep();
+-	start &= PAGE_MASK;
+-	nr = __get_user_pages_fast(start, nr_pages, write, pages);
+-	if (nr == nr_pages)
+-		return nr;
+-
+-	/* Try to get the remaining pages with get_user_pages */
+-	start += nr << PAGE_SHIFT;
+-	pages += nr;
+-	ret = get_user_pages_unlocked(start, nr_pages - nr, pages,
+-				      write ? FOLL_WRITE : 0);
+-	/* Have to be a bit careful with return values */
+-	if (nr > 0)
+-		ret = (ret < 0) ? nr : ret + nr;
+-	return ret;
+-}
 
 
