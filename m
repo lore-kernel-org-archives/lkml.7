@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C53A8C04AAC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:29:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19A92C04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:29:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 995BB20815
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:29:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E170720815
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:29:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558355369;
-	bh=9F2urZGiUSCTtGpIbm8fQ79y0ev7GzYg8R+c8rTft8g=;
+	s=default; t=1558355374;
+	bh=55R11hn68ok3pmwLcWUc8/u/Khor9f6UQacwivXnHnI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UxaeFq8GvvFIL+S5ZrORf2+C1a9OWiZhFLIpLdXuqO5875PRwgzCjv9Opr3NCs1R/
-	 sjwTAbeypZj4aU4D+MIWrknRwfxpRzZCqCrRKruBnZS2GgJTJABjGWBmdjsAF8eQoT
-	 ay7cl+MBRA6v61emKk4hrV0NVk8+1X8kYM8kFaBE=
+	b=g1lGf6QMBIb7MP9DcVY/lnefEyMiUoaAhkzSRDUze8kbFd5hnXQNUnNBsSsE+cjUF
+	 vt5SnJ/F/JU6Po/oQXKq/teiy29OSfFBOp3U5fH4YpyWTv7c9Q+45KziCTYlJ5mbGD
+	 OZK6ToIfGIjXPDPMkAgCO5higqhMyWjpImllMDPg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389899AbfETM32 (ORCPT
+        id S2389917AbfETM3c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 08:29:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45526 "EHLO mail.kernel.org"
+        Mon, 20 May 2019 08:29:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45638 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389492AbfETM3Z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 08:29:25 -0400
+        id S2389300AbfETM3b (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 08:29:31 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2C4ED20815;
-        Mon, 20 May 2019 12:29:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7508820675;
+        Mon, 20 May 2019 12:29:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558355364;
-        bh=9F2urZGiUSCTtGpIbm8fQ79y0ev7GzYg8R+c8rTft8g=;
+        s=default; t=1558355369;
+        bh=55R11hn68ok3pmwLcWUc8/u/Khor9f6UQacwivXnHnI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Yo8RPD5FtN15DVfsqC48m8vqXlKT1Airxyp5L96X9+C/ZbTe0rB1lIvdNnnb78sIy
-         dmZylJBV++KfDgZqwkRgRP3K7f22YlqWCPUDUgNEGGhpxnyEgZ3V44oHFyQK9g/Zzb
-         27GsLERag+dtGdrm+n+X5nbbMvaB8W5bh4HeKSfA=
+        b=htAeMNOzelcUcqfUbE0pWi3oRT8z2/gi0SMxcp2LU17Owo6Dh6UZ0k+6bWIiW+uB6
+         p/yUACTpIqBBfCZcLgTjpJwrWl6KR7TYVNXiqTeCovzr05/uZPUKfNhEg5gaQSGViu
+         jV2LOPTkWb2ljKtADE37M/r583qC43yq0XvKgODA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jungyeon <jungyeon@gatech.edu>,
-        Nikolay Borisov <nborisov@suse.com>,
+        stable@vger.kernel.org, Filipe Manana <fdmanana@suse.com>,
         David Sterba <dsterba@suse.com>
-Subject: [PATCH 5.0 090/123] btrfs: Correctly free extent buffer in case btree_read_extent_buffer_pages fails
-Date:   Mon, 20 May 2019 14:14:30 +0200
-Message-Id: <20190520115250.895614551@linuxfoundation.org>
+Subject: [PATCH 5.0 092/123] Btrfs: send, flush dellaloc in order to avoid data loss
+Date:   Mon, 20 May 2019 14:14:32 +0200
+Message-Id: <20190520115251.064159966@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190520115245.439864225@linuxfoundation.org>
 References: <20190520115245.439864225@linuxfoundation.org>
@@ -60,88 +59,135 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nikolay Borisov <nborisov@suse.com>
+From: Filipe Manana <fdmanana@suse.com>
 
-commit 537f38f019fa0b762dbb4c0fc95d7fcce9db8e2d upstream.
+commit 9f89d5de8631c7930898a601b6612e271aa2261c upstream.
 
-If a an eb fails to be read for whatever reason - it's corrupted on disk
-and parent transid/key validations fail or IO for eb pages fail then
-this buffer must be removed from the buffer cache. Currently the code
-calls free_extent_buffer if an error occurs. Unfortunately this doesn't
-achieve the desired behavior since btrfs_find_create_tree_block returns
-with eb->refs == 2.
+When we set a subvolume to read-only mode we do not flush dellaloc for any
+of its inodes (except if the filesystem is mounted with -o flushoncommit),
+since it does not affect correctness for any subsequent operations - except
+for a future send operation. The send operation will not be able to see the
+delalloc data since the respective file extent items, inode item updates,
+backreferences, etc, have not hit yet the subvolume and extent trees.
 
-On the other hand free_extent_buffer will only decrement the refs once
-leaving it added to the buffer cache radix tree.  This enables later
-code to look up the buffer from the cache and utilize it potentially
-leading to a crash.
+Effectively this means data loss, since the send stream will not contain
+any data from existing delalloc. Another problem from this is that if the
+writeback starts and finishes while the send operation is in progress, we
+have the subvolume tree being being modified concurrently which can result
+in send failing unexpectedly with EIO or hitting runtime errors, assertion
+failures or hitting BUG_ONs, etc.
 
-The correct way to free the buffer is call free_extent_buffer_stale.
-This function will correctly call atomic_dec explicitly for the buffer
-and subsequently call release_extent_buffer which will decrement the
-final reference thus correctly remove the invalid buffer from buffer
-cache. This change affects only newly allocated buffers since they have
-eb->refs == 2.
+Simple reproducer:
 
-Link: https://bugzilla.kernel.org/show_bug.cgi?id=202755
-Reported-by: Jungyeon <jungyeon@gatech.edu>
-CC: stable@vger.kernel.org # 4.4+
-Signed-off-by: Nikolay Borisov <nborisov@suse.com>
-Reviewed-by: David Sterba <dsterba@suse.com>
+  $ mkfs.btrfs -f /dev/sdb
+  $ mount /dev/sdb /mnt
+
+  $ btrfs subvolume create /mnt/sv
+  $ xfs_io -f -c "pwrite -S 0xea 0 108K" /mnt/sv/foo
+
+  $ btrfs property set /mnt/sv ro true
+  $ btrfs send -f /tmp/send.stream /mnt/sv
+
+  $ od -t x1 -A d /mnt/sv/foo
+  0000000 ea ea ea ea ea ea ea ea ea ea ea ea ea ea ea ea
+  *
+  0110592
+
+  $ umount /mnt
+  $ mkfs.btrfs -f /dev/sdc
+  $ mount /dev/sdc /mnt
+
+  $ btrfs receive -f /tmp/send.stream /mnt
+  $ echo $?
+  0
+  $ od -t x1 -A d /mnt/sv/foo
+  0000000
+  # ---> empty file
+
+Since this a problem that affects send only, fix it in send by flushing
+dellaloc for all the roots used by the send operation before send starts
+to process the commit roots.
+
+This is a problem that affects send since it was introduced (commit
+31db9f7c23fbf7 ("Btrfs: introduce BTRFS_IOC_SEND for btrfs send/receive"))
+but backporting it to older kernels has some dependencies:
+
+- For kernels between 3.19 and 4.20, it depends on commit 3cd24c698004d2
+  ("btrfs: use tagged writepage to mitigate livelock of snapshot") because
+  the function btrfs_start_delalloc_snapshot() does not exist before that
+  commit. So one has to either pick that commit or replace the calls to
+  btrfs_start_delalloc_snapshot() in this patch with calls to
+  btrfs_start_delalloc_inodes().
+
+- For kernels older than 3.19 it also requires commit e5fa8f865b3324
+  ("Btrfs: ensure send always works on roots without orphans") because
+  it depends on the function ensure_commit_roots_uptodate() which that
+  commits introduced.
+
+- No dependencies for 5.0+ kernels.
+
+A test case for fstests follows soon.
+
+CC: stable@vger.kernel.org # 3.19+
+Signed-off-by: Filipe Manana <fdmanana@suse.com>
 Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/btrfs/disk-io.c |   17 +++++++++++------
- 1 file changed, 11 insertions(+), 6 deletions(-)
+ fs/btrfs/send.c |   36 ++++++++++++++++++++++++++++++++++++
+ 1 file changed, 36 insertions(+)
 
---- a/fs/btrfs/disk-io.c
-+++ b/fs/btrfs/disk-io.c
-@@ -1017,13 +1017,18 @@ void readahead_tree_block(struct btrfs_f
- {
- 	struct extent_buffer *buf = NULL;
- 	struct inode *btree_inode = fs_info->btree_inode;
-+	int ret;
- 
- 	buf = btrfs_find_create_tree_block(fs_info, bytenr);
- 	if (IS_ERR(buf))
- 		return;
--	read_extent_buffer_pages(&BTRFS_I(btree_inode)->io_tree,
--				 buf, WAIT_NONE, 0);
--	free_extent_buffer(buf);
-+
-+	ret = read_extent_buffer_pages(&BTRFS_I(btree_inode)->io_tree, buf,
-+			WAIT_NONE, 0);
-+	if (ret < 0)
-+		free_extent_buffer_stale(buf);
-+	else
-+		free_extent_buffer(buf);
+--- a/fs/btrfs/send.c
++++ b/fs/btrfs/send.c
+@@ -6579,6 +6579,38 @@ commit_trans:
+ 	return btrfs_commit_transaction(trans);
  }
  
- int reada_tree_block_flagged(struct btrfs_fs_info *fs_info, u64 bytenr,
-@@ -1043,12 +1048,12 @@ int reada_tree_block_flagged(struct btrf
- 	ret = read_extent_buffer_pages(io_tree, buf, WAIT_PAGE_LOCK,
- 				       mirror_num);
- 	if (ret) {
--		free_extent_buffer(buf);
-+		free_extent_buffer_stale(buf);
- 		return ret;
- 	}
++/*
++ * Make sure any existing dellaloc is flushed for any root used by a send
++ * operation so that we do not miss any data and we do not race with writeback
++ * finishing and changing a tree while send is using the tree. This could
++ * happen if a subvolume is in RW mode, has delalloc, is turned to RO mode and
++ * a send operation then uses the subvolume.
++ * After flushing delalloc ensure_commit_roots_uptodate() must be called.
++ */
++static int flush_delalloc_roots(struct send_ctx *sctx)
++{
++	struct btrfs_root *root = sctx->parent_root;
++	int ret;
++	int i;
++
++	if (root) {
++		ret = btrfs_start_delalloc_snapshot(root);
++		if (ret)
++			return ret;
++		btrfs_wait_ordered_extents(root, U64_MAX, 0, U64_MAX);
++	}
++
++	for (i = 0; i < sctx->clone_roots_cnt; i++) {
++		root = sctx->clone_roots[i].root;
++		ret = btrfs_start_delalloc_snapshot(root);
++		if (ret)
++			return ret;
++		btrfs_wait_ordered_extents(root, U64_MAX, 0, U64_MAX);
++	}
++
++	return 0;
++}
++
+ static void btrfs_root_dec_send_in_progress(struct btrfs_root* root)
+ {
+ 	spin_lock(&root->root_item_lock);
+@@ -6803,6 +6835,10 @@ long btrfs_ioctl_send(struct file *mnt_f
+ 			NULL);
+ 	sort_clone_roots = 1;
  
- 	if (test_bit(EXTENT_BUFFER_CORRUPT, &buf->bflags)) {
--		free_extent_buffer(buf);
-+		free_extent_buffer_stale(buf);
- 		return -EIO;
- 	} else if (extent_buffer_uptodate(buf)) {
- 		*eb = buf;
-@@ -1102,7 +1107,7 @@ struct extent_buffer *read_tree_block(st
- 	ret = btree_read_extent_buffer_pages(fs_info, buf, parent_transid,
- 					     level, first_key);
- 	if (ret) {
--		free_extent_buffer(buf);
-+		free_extent_buffer_stale(buf);
- 		return ERR_PTR(ret);
- 	}
- 	return buf;
++	ret = flush_delalloc_roots(sctx);
++	if (ret)
++		goto out;
++
+ 	ret = ensure_commit_roots_uptodate(sctx);
+ 	if (ret)
+ 		goto out;
 
 
