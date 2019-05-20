@@ -2,100 +2,115 @@ Return-Path: <SRS0=lq4r=TU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F5B5C04AAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 04:49:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38291C04AAF
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 04:50:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 142AF20851
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 04:49:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0A17D20851
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 04:50:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ouoKv7LN"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="mI5vScJ4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730288AbfETEtn (ORCPT
+        id S1730343AbfETEt7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 00:49:43 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:37076 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725372AbfETEtm (ORCPT
+        Mon, 20 May 2019 00:49:59 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:37891 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725372AbfETEt7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 00:49:42 -0400
-Received: by mail-pg1-f194.google.com with SMTP id n27so3544728pgm.4;
-        Sun, 19 May 2019 21:49:42 -0700 (PDT)
+        Mon, 20 May 2019 00:49:59 -0400
+Received: by mail-pf1-f194.google.com with SMTP id b76so6575747pfb.5
+        for <linux-kernel@vger.kernel.org>; Sun, 19 May 2019 21:49:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=WJihdVFCj9zt/y+fV9fLCitQBlg5VsGOFzdBpJHqCRo=;
-        b=ouoKv7LNcMyq2ltHkk3DL2nflGq0AqhsEGQumeCmva1L/yc53Yo3ck2s8UrfFrKXFj
-         V6M7XYEk8Id+GBzU1NikD1lunrs/5ezWKO3Mamll1PxF21OL79W7LQYW7xL1JaVBuk4l
-         zp+UzZsEUQiuU1f4+6Mg9Py276hVMIzbtLTM/CnpBAe+BcBwOPEmbMQTOiz5grhT5UIO
-         keLrlaHnnEs7SlvIf0Rxz40gjp+CDW+W0LjxbNAsvahh8gDzQ34RFx59ZYJhB4O3jfrA
-         NCs6OJR80bWfQaAWXJKC3/yDJuC7E13w+HyxflOEom6AVSIVEjYpSAPm+Lfrr3PQJ0sP
-         zBGg==
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=xkToWfPhUbXUlBSKuzZG3pFF8m3+cgJ3j1xebIaK/EI=;
+        b=mI5vScJ46CfONQKk0BXuJqgqaOpncnnzaBz3sQRykYdFNJRSapviixTBiuyNXhv3Lj
+         IKXhEYu8bwmxqqhsj4jf31vawxOk5hgaSWCzkrl3jSNirETmZA+np4paeXOlSZGefx++
+         v/lIzQqsOCjlows+Onq9agp+5xzN+dFq06s1M=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=WJihdVFCj9zt/y+fV9fLCitQBlg5VsGOFzdBpJHqCRo=;
-        b=HKwB+d0mzed8mcJL86Bg//4yezQcketqP7aC5Hy7jgUUEU2kwvy/9C4gzJbwnZZJ5F
-         eoFwMqQ2CakoZii8vhoU13Uf1eC+48CxvU/+MkqzbkAU/Si78j8JtpqVh36rBnRETiRe
-         IVGtY1Ud7CmF4iFZKl77RXW/narPLY9iaeUOl+mrSgCoiydG1ZVh1sPPWoEjjKVU8NTb
-         iw1XDkMLi8gYtI4OrJPO6BCQKWQ1zvT/J/ZKsfbLnQqnRjS27v6ZPvqfkesiKdIJbVRF
-         wueXbtgnO7jtVcQuxOTuAbMehZLN3wWpNH+Z+AlQPgOkXABJNkwI0eMJiplJp1k4ewba
-         xsNg==
-X-Gm-Message-State: APjAAAX1fYvwVRA6urApyINqQB8heGVkSycnK1X4RUUXubgqsltMqhgN
-        sfiNIySGPevD2uV6SDz9qHw=
-X-Google-Smtp-Source: APXvYqx4+UBOBzVSuBNUJtZCJhbOZtf34kjle0wDGrMECqiObWuiDM095Jc9S/P8S6POakDXJk2/qA==
-X-Received: by 2002:aa7:8b57:: with SMTP id i23mr57252329pfd.54.1558327782123;
-        Sun, 19 May 2019 21:49:42 -0700 (PDT)
-Received: from localhost ([43.224.245.181])
-        by smtp.gmail.com with ESMTPSA id y17sm17794720pfn.79.2019.05.19.21.49.41
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=xkToWfPhUbXUlBSKuzZG3pFF8m3+cgJ3j1xebIaK/EI=;
+        b=MH4xeuI4O/WqxVWN3ID0d++4JtFVS7qbYO3f/WYIWu2FnxR1ngoQ2/6ylo9+YSNojR
+         /8qWtgRVIE2171EzP0OSbNbubSpspiEjl4cTIq6FvUC/DaCZOZDCG9s1BGGUFmj/KQSu
+         BHIDsOEB21aIIfoQ1LuWV8d7wBuCxt9XD/cZdAUXhiajRT0EANFAikTBTIFDlIImTrO8
+         U8QIomLMYj+KVeKMv9LW89OtgsbTf/YPNpEWWH8fK+LQ6aO0cUcM5qmHRkWCU9CrG6iJ
+         KvBeYTxyoc/O2FZWn4RK9MA6iupmZcWkEM9az4EoOlsSm4C7YPohrCvjEC6uDAcCx2Ye
+         Pswg==
+X-Gm-Message-State: APjAAAVKw8Yzjht5majKxw+uawlQa0g9Qfr+SWmI643b/b7YNSn3UpeW
+        wh7/snoHHQ092VguOOJq96m05A==
+X-Google-Smtp-Source: APXvYqwN55gQbIsuZenQKAzA8VBSQYQ1vm8yCPL9giuGjnZvDoaeAZMfk2h4f+nYBl2QObZZzuXkCQ==
+X-Received: by 2002:a62:ee05:: with SMTP id e5mr76083541pfi.117.1558327798179;
+        Sun, 19 May 2019 21:49:58 -0700 (PDT)
+Received: from drinkcat2.tpe.corp.google.com ([2401:fa00:1:b:d8b7:33af:adcb:b648])
+        by smtp.gmail.com with ESMTPSA id 140sm26022608pfw.123.2019.05.19.21.49.55
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 19 May 2019 21:49:41 -0700 (PDT)
-From:   Weitao Hou <houweitaoo@gmail.com>
-To:     davem@davemloft.net, houweitaoo@gmail.com
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] fddi: fix typos in code comments
-Date:   Mon, 20 May 2019 12:49:38 +0800
-Message-Id: <20190520044938.23158-1-houweitaoo@gmail.com>
-X-Mailer: git-send-email 2.18.0
+        Sun, 19 May 2019 21:49:57 -0700 (PDT)
+From:   Nicolas Boichat <drinkcat@chromium.org>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     David Rientjes <rientjes@google.com>,
+        Nicolas Boichat <drinkcat@chromium.org>,
+        Michal Hocko <mhocko@suse.com>, Joe Perches <joe@perches.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-mm@kvack.org, Akinobu Mita <akinobu.mita@gmail.com>,
+        Pekka Enberg <penberg@kernel.org>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] mm/failslab: By default, do not fail allocations with direct reclaim only
+Date:   Mon, 20 May 2019 12:49:51 +0800
+Message-Id: <20190520044951.248096-1-drinkcat@chromium.org>
+X-Mailer: git-send-email 2.21.0.1020.gf2820cf01a-goog
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-fix abord to abort
+When failslab was originally written, the intention of the
+"ignore-gfp-wait" flag default value ("N") was to fail
+GFP_ATOMIC allocations. Those were defined as (__GFP_HIGH),
+and the code would test for __GFP_WAIT (0x10u).
 
-Signed-off-by: Weitao Hou <houweitaoo@gmail.com>
+However, since then, __GFP_WAIT was replaced by __GFP_RECLAIM
+(___GFP_DIRECT_RECLAIM|___GFP_KSWAPD_RECLAIM), and GFP_ATOMIC is
+now defined as (__GFP_HIGH|__GFP_ATOMIC|__GFP_KSWAPD_RECLAIM).
+
+This means that when the flag is false, almost no allocation
+ever fails (as even GFP_ATOMIC allocations contain
+__GFP_KSWAPD_RECLAIM).
+
+Restore the original intent of the code, by ignoring calls
+that directly reclaim only (___GFP_DIRECT_RECLAIM), and thus,
+failing GFP_ATOMIC calls again by default.
+
+Fixes: 71baba4b92dc1fa1 ("mm, page_alloc: rename __GFP_WAIT to __GFP_RECLAIM")
+Signed-off-by: Nicolas Boichat <drinkcat@chromium.org>
 ---
- drivers/net/fddi/skfp/hwmtm.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ mm/failslab.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/fddi/skfp/hwmtm.c b/drivers/net/fddi/skfp/hwmtm.c
-index abbe309051d9..3d0f417e8586 100644
---- a/drivers/net/fddi/skfp/hwmtm.c
-+++ b/drivers/net/fddi/skfp/hwmtm.c
-@@ -1206,7 +1206,7 @@ void process_receive(struct s_smc *smc)
- 		}
- 		/*
- 		 * SUPERNET 3 Bug: FORMAC delivers status words
--		 * of aborded frames to the BMU
-+		 * of aborted frames to the BMU
- 		 */
- 		if (len <= 4) {
- 			DB_RX(2, "Frame length = 0");
-@@ -1343,7 +1343,7 @@ void process_receive(struct s_smc *smc)
- 				break ;
- 			default :
- 				/*
--				 * unknown FC abord the frame
-+				 * unknown FC abort the frame
- 				 */
- 				DB_RX(2, "unknown FC error");
- 				smt_free_mbuf(smc,mb) ;
+diff --git a/mm/failslab.c b/mm/failslab.c
+index ec5aad211c5be97..33efcb60e633c0a 100644
+--- a/mm/failslab.c
++++ b/mm/failslab.c
+@@ -23,7 +23,8 @@ bool __should_failslab(struct kmem_cache *s, gfp_t gfpflags)
+ 	if (gfpflags & __GFP_NOFAIL)
+ 		return false;
+ 
+-	if (failslab.ignore_gfp_reclaim && (gfpflags & __GFP_RECLAIM))
++	if (failslab.ignore_gfp_reclaim &&
++			(gfpflags & ___GFP_DIRECT_RECLAIM))
+ 		return false;
+ 
+ 	if (failslab.cache_filter && !(s->flags & SLAB_FAILSLAB))
 -- 
-2.18.0
+2.21.0.1020.gf2820cf01a-goog
 
