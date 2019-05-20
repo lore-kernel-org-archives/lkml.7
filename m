@@ -2,101 +2,234 @@ Return-Path: <SRS0=lq4r=TU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_NEOMUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3508C04AAC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 14:04:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE019C04AAF
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 14:06:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 766BA21707
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 14:04:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="t73dgU0G"
+	by mail.kernel.org (Postfix) with ESMTP id B39F3216B7
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 14:06:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732925AbfETOE5 (ORCPT
+        id S1732951AbfETOGA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 10:04:57 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:54527 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729675AbfETOE5 (ORCPT
+        Mon, 20 May 2019 10:06:00 -0400
+Received: from relay5-d.mail.gandi.net ([217.70.183.197]:49829 "EHLO
+        relay5-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730669AbfETOF7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 10:04:57 -0400
-Received: by mail-wm1-f68.google.com with SMTP id i3so13463004wml.4
-        for <linux-kernel@vger.kernel.org>; Mon, 20 May 2019 07:04:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=txk5DrZL33dHOyu6S/hwbHrXibD4nPtpq1m/2A+Wxoo=;
-        b=t73dgU0Gc247WTF7B1Vk9vORzWG22PieCyt/1IhbX0ojd/0VrZw4VEQEr7Rfcjh6/l
-         ZD0G2DsREEckY4mBG0ythw/g61R1AK4iLUKci+a0R2JU8eaaEf4bGNyDtqYbtfmrRnop
-         pBbxVtrzMZeoIHuBPDOqAu4qp0dBncZztbNkwLQnxhu3S59r4/V7nehwMmMJJ/JNgd1K
-         8UfjICYJRWEr+I0zKj2VuNujr9ioMZSMSqudF5Of41Wp/Cd42cdFDib4qAoCc2xZbbSy
-         6psPlnUKIMz0Pimomwu/DK/tMqUHFvQUKy8xKGwl3sEaSl/bKoldGbQPJ4xAwM0RCW9j
-         KSwg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=txk5DrZL33dHOyu6S/hwbHrXibD4nPtpq1m/2A+Wxoo=;
-        b=c7kBTazJ8nuQEFmmPMDouRZVmpPCF5dbnAv20NxLtYzMAT15twa0PaRQx3gp95YaY6
-         AnkzKPK6P6GyT5L01zhT6LlN4bb1WMuQT1bsLaasjR5Y2k1lbccN/fDnFQ3Zd9pFPJLM
-         pQ0Mp142YcPFcQFok6Jbu3PBgSjBL94Qhv8GDbW8EaX2LWQWVV5wrLjOOxjatKqHdNs5
-         nJvRIBKKvwx81n9RXPjo1nafcm/ii8mW4azLic4AZL7BB5HKxrxNrnGGMcvjwturvyQM
-         N4/I8DODdfiLbIYOGVMun2qyPgKfXaAVQmkVd8eNg89rblkug/2PJ8vlxPPpWLui9hE+
-         6P8Q==
-X-Gm-Message-State: APjAAAVbeK5gdHw8wzti/nXV6OCqlNNmDOCwcLFU4MH8ao90mPS9vV3G
-        sjbfPIHtqpnEIuQLOOKcn99V3Q==
-X-Google-Smtp-Source: APXvYqwT6uVZjGxR/n5pqIYoJJgpdt5n9FK1oWxNGhWKEAx/4tWR4B+kGZw3mByDDBsWKa9cNp/B1g==
-X-Received: by 2002:a7b:c844:: with SMTP id c4mr12089515wml.108.1558361095088;
-        Mon, 20 May 2019 07:04:55 -0700 (PDT)
-Received: from bender.baylibre.local (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
-        by smtp.gmail.com with ESMTPSA id w18sm13731201wru.15.2019.05.20.07.04.54
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Mon, 20 May 2019 07:04:54 -0700 (PDT)
-From:   Neil Armstrong <narmstrong@baylibre.com>
-To:     broonie@kernel.org
-Cc:     linux-spi@vger.kernel.org, linux-amlogic@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Neil Armstrong <narmstrong@baylibre.com>
-Subject: [PATCH] spi: spi-meson-spifc: update with SPDX Licence identifier
-Date:   Mon, 20 May 2019 16:04:52 +0200
-Message-Id: <20190520140452.30167-1-narmstrong@baylibre.com>
-X-Mailer: git-send-email 2.21.0
+        Mon, 20 May 2019 10:05:59 -0400
+X-Originating-IP: 90.88.22.185
+Received: from localhost (aaubervilliers-681-1-80-185.w90-88.abo.wanadoo.fr [90.88.22.185])
+        (Authenticated sender: maxime.ripard@bootlin.com)
+        by relay5-d.mail.gandi.net (Postfix) with ESMTPSA id 338381C0006;
+        Mon, 20 May 2019 14:05:51 +0000 (UTC)
+Date:   Mon, 20 May 2019 16:05:50 +0200
+From:   Maxime Ripard <maxime.ripard@bootlin.com>
+To:     Chen-Yu Tsai <wens@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree <devicetree@vger.kernel.org>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
+        Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>,
+        Yong Deng <yong.deng@magewell.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        linux-clk <linux-clk@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Linux Media Mailing List <linux-media@vger.kernel.org>
+Subject: Re: [PATCH 4/6] ARM: dts: sun8i: a83t: Add device node for CSI
+ (Camera Sensor Interface)
+Message-ID: <20190520140550.hgywrzgmaswmguev@flea>
+References: <20190408165744.11672-1-wens@kernel.org>
+ <20190408165744.11672-5-wens@kernel.org>
+ <20190409075804.4zrwjil7ie2gjigu@flea>
+ <CAGb2v64CYV68Q0a7x5p-XabS74vaQWP3paPopodmqQPTOrq2gQ@mail.gmail.com>
+ <20190409082818.z33mq2qrxethldzf@flea>
+ <CAGb2v67pX+7ccihmGEWPKrXg8mMhht-vh37p2auWYgt=qGDA6A@mail.gmail.com>
+ <20190409145225.2ltluiyqa5xha4zd@flea>
+ <20190519135422.l2bnumyjr3dxehhx@core.my.home>
+ <20190520111048.cnh435fnmz7esyks@flea>
+ <20190520113854.ngyaw4mgki77gdbn@core.my.home>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="o6jx6uqtuurnu7e4"
+Content-Disposition: inline
+In-Reply-To: <20190520113854.ngyaw4mgki77gdbn@core.my.home>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
----
- drivers/spi/spi-meson-spifc.c | 8 +-------
- 1 file changed, 1 insertion(+), 7 deletions(-)
 
-diff --git a/drivers/spi/spi-meson-spifc.c b/drivers/spi/spi-meson-spifc.c
-index 616566e793c6..20413def4cfb 100644
---- a/drivers/spi/spi-meson-spifc.c
-+++ b/drivers/spi/spi-meson-spifc.c
-@@ -1,14 +1,8 @@
-+// SPDX-License-Identifier: GPL-2.0+
- /*
-  * Driver for Amlogic Meson SPI flash controller (SPIFC)
-  *
-  * Copyright (C) 2014 Beniamino Galvani <b.galvani@gmail.com>
-- *
-- * This program is free software; you can redistribute it and/or
-- * modify it under the terms of the GNU General Public License
-- * version 2 as published by the Free Software Foundation.
-- *
-- * You should have received a copy of the GNU General Public License
-- * along with this program. If not, see <http://www.gnu.org/licenses/>.
-  */
- 
- #include <linux/clk.h>
--- 
-2.21.0
+--o6jx6uqtuurnu7e4
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
+On Mon, May 20, 2019 at 01:38:54PM +0200, Ond=C5=99ej Jirman wrote:
+> Hi Maxime,
+>
+> On Mon, May 20, 2019 at 01:10:49PM +0200, Maxime Ripard wrote:
+> > Hi Ond=C5=99ej,
+> >
+> > On Sun, May 19, 2019 at 03:54:22PM +0200, Ond=C5=99ej Jirman wrote:
+> > > On Tue, Apr 09, 2019 at 04:52:25PM +0200, Maxime Ripard wrote:
+> > > > On Tue, Apr 09, 2019 at 04:40:40PM +0800, Chen-Yu Tsai wrote:
+> > > > > On Tue, Apr 9, 2019 at 4:28 PM Maxime Ripard <maxime.ripard@bootl=
+in.com> wrote:
+> > > > > >
+> > > > > > On Tue, Apr 09, 2019 at 04:07:34PM +0800, Chen-Yu Tsai wrote:
+> > > > > > > On Tue, Apr 9, 2019 at 3:58 PM Maxime Ripard <maxime.ripard@b=
+ootlin.com> wrote:
+> > > > > > > > On Tue, Apr 09, 2019 at 12:57:42AM +0800, Chen-Yu Tsai wrot=
+e:
+> > > > > > > > > From: Chen-Yu Tsai <wens@csie.org>
+> > > > > > > > >
+> > > > > > > > > The A83T SoC has a camera sensor interface (known as CSI =
+in Allwinner
+> > > > > > > > > lingo), which is similar to the one found on the A64 and =
+H3. The only
+> > > > > > > > > difference seems to be that support of MIPI CSI through a=
+ connected
+> > > > > > > > > MIPI CSI-2 bridge.
+> > > > > > > > >
+> > > > > > > > > Add a device node for it, and pinctrl nodes for the commo=
+nly used MCLK
+> > > > > > > > > and 8-bit parallel interface. The property /omit-if-no-re=
+f/ is added to
+> > > > > > > > > the pinctrl nodes to keep the device tree blob size down =
+if they are
+> > > > > > > > > unused.
+> > > > > > > > >
+> > > > > > > > > Signed-off-by: Chen-Yu Tsai <wens@csie.org>
+> > > > > > > > > ---
+> > > > > > > > >  arch/arm/boot/dts/sun8i-a83t.dtsi | 31 +++++++++++++++++=
+++++++++++++++
+> > > > > > > > >  1 file changed, 31 insertions(+)
+> > > > > > > > >
+> > > > > > > > > diff --git a/arch/arm/boot/dts/sun8i-a83t.dtsi b/arch/arm=
+/boot/dts/sun8i-a83t.dtsi
+> > > > > > > > > index f739b88efb53..0c52f945fd5f 100644
+> > > > > > > > > --- a/arch/arm/boot/dts/sun8i-a83t.dtsi
+> > > > > > > > > +++ b/arch/arm/boot/dts/sun8i-a83t.dtsi
+> > > > > > > > > @@ -682,6 +682,20 @@
+> > > > > > > > >                       #interrupt-cells =3D <3>;
+> > > > > > > > >                       #gpio-cells =3D <3>;
+> > > > > > > > >
+> > > > > > > > > +                     /omit-if-no-ref/
+> > > > > > > > > +                     csi_8bit_parallel_pins: csi-8bit-pa=
+rallel-pins {
+> > > > > > > > > +                             pins =3D "PE0", "PE2", "PE3=
+", "PE6", "PE7",
+> > > > > > > > > +                                    "PE8", "PE9", "PE10"=
+, "PE11",
+> > > > > > > > > +                                    "PE12", "PE13";
+> > > > > > > > > +                             function =3D "csi";
+> > > > > > > > > +                     };
+> > > > > > > > > +
+> > > > > > > > > +                     /omit-if-no-ref/
+> > > > > > > > > +                     csi_mclk_pin: csi-mclk-pin {
+> > > > > > > > > +                             pins =3D "PE1";
+> > > > > > > > > +                             function =3D "csi";
+> > > > > > > > > +                     };
+> > > > > > > > > +
+> > > > > > > > >                       emac_rgmii_pins: emac-rgmii-pins {
+> > > > > > > > >                               pins =3D "PD2", "PD3", "PD4=
+", "PD5", "PD6", "PD7",
+> > > > > > > > >                                      "PD11", "PD12", "PD1=
+3", "PD14", "PD18",
+> > > > > > > > > @@ -994,6 +1008,23 @@
+> > > > > > > > >                       interrupts =3D <GIC_PPI 9 (GIC_CPU_=
+MASK_SIMPLE(8) | IRQ_TYPE_LEVEL_HIGH)>;
+> > > > > > > > >               };
+> > > > > > > > >
+> > > > > > > > > +             csi: camera@1cb0000 {
+> > > > > > > > > +                     compatible =3D "allwinner,sun8i-a83=
+t-csi";
+> > > > > > > > > +                     reg =3D <0x01cb0000 0x1000>;
+> > > > > > > > > +                     interrupts =3D <GIC_SPI 84 IRQ_TYPE=
+_LEVEL_HIGH>;
+> > > > > > > > > +                     clocks =3D <&ccu CLK_BUS_CSI>,
+> > > > > > > > > +                              <&ccu CLK_CSI_SCLK>,
+> > > > > > > > > +                              <&ccu CLK_DRAM_CSI>;
+> > > > > > > > > +                     clock-names =3D "bus", "mod", "ram";
+> > > > > > > > > +                     resets =3D <&ccu RST_BUS_CSI>;
+> > > > > > > > > +                     status =3D "disabled";
+> > > > > > > > > +
+> > > > > > > > > +                     csi_in: port {
+> > > > > > > > > +                             #address-cells =3D <1>;
+> > > > > > > > > +                             #size-cells =3D <0>;
+> > > > > > > >
+> > > > > > > > If we expect a single enpoint, then we don't need the addre=
+ss-cells
+> > > > > > > > and size-cells properties.
+> > > > > > >
+> > > > > > > I wouldn't bet on anything. The way the Q8 tablets did front/=
+back cameras
+> > > > > > > is kind of genius if not very hacky. They have two "identical=
+" sensors
+> > > > > > > on the same I2C bus and CSI bus, with shared reset line but s=
+eparate
+> > > > > > > shutdown lines. Since they are identical, they also have the =
+same I2C
+> > > > > > > address. I haven't figured out how to model this in the devic=
+e tree.
+> > > > > > >
+> > > > > > > The point is, it's perfectly possible to have two or more sen=
+sors use
+> > > > > > > the same controller, provided only one be active at a time.
+> > > > > >
+> > > > > > Right, but I guess the common case would be to have a single se=
+nsor,
+> > > > > > where that wouldn't be needed.
+> > > > > >
+> > > > > > In odd cases, we can always specify it in the DTS, and if it be=
+comes
+> > > > > > common enough, we can move it to the DTSI.
+> > > > >
+> > > > > Makes sense. Do you want me to re-spin?
+> > > >
+> > > > If there's no other comment, we'll fix it when applying.
+> > >
+> > > This patch series seems to have been forgotten. It doesn't seem there=
+ are any
+> > > blockers.
+> >
+> > Sorry about that :/
+> >
+> > > Can you please apply it now? I have some further series (camera module
+> > > support for TBS-A711) that depend on this.
+> >
+> > Some parts of it will have to be merged through v4l2, and I can't
+> > apply those patches.
+> >
+> > Can you resend that series, and ping on a regular basis (like once a
+> > week) if you don't get any feedback?
+>
+> You mean this series for A83t CSI?
+
+Yes
+
+Maxime
+
+--
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+
+--o6jx6uqtuurnu7e4
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXOK0PgAKCRDj7w1vZxhR
+xcv4AP44YHUqXgqLNs20yLl0IGtRgEFHh+6F7uKMnEuTj0jvigEA+TnQs05mjZKN
+jFi6Dr7tQqPp7xCqfu0tamu/BAfYCwo=
+=BwxC
+-----END PGP SIGNATURE-----
+
+--o6jx6uqtuurnu7e4--
