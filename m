@@ -2,175 +2,82 @@ Return-Path: <SRS0=lq4r=TU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_NEOMUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C7D9C04AAC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 11:46:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CACCC04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 11:48:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DED7320645
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 11:46:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RoY4Rk0t"
+	by mail.kernel.org (Postfix) with ESMTP id 19ACE20645
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 11:48:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731494AbfETLqD (ORCPT
+        id S1731641AbfETLsm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 07:46:03 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:39887 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728719AbfETLqC (ORCPT
+        Mon, 20 May 2019 07:48:42 -0400
+Received: from kirsty.vergenet.net ([202.4.237.240]:35648 "EHLO
+        kirsty.vergenet.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730479AbfETLsm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 07:46:02 -0400
-Received: by mail-ot1-f65.google.com with SMTP id r7so12659458otn.6;
-        Mon, 20 May 2019 04:46:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=YK40W8FYXPsem3N0M5GP+38ah6mkX7Im5MvwKipFNsw=;
-        b=RoY4Rk0tf3pwB6ho+Y7WLAFKHG+h2TTjnpz9K/w1TMsCjFsOQ8uYov3Grmlp2nYp47
-         vJt0VoWo13wdxNwTnNn0xyVAWlLZzYArcIzgKJBXYsCDjTScjv+V9bNqaDV6xHIG8YKT
-         Sxzbeg+qUtwGFull//2leGoW4yzKdzTMnmkmN8dkiNEryvLSr3Z4qsSdKC/ZCJkYZl+H
-         z32RRiFVizIG+0HhWlg4jgwHd9fYYlMEK/FUARTkSsZ63SdIJw/pxi6zUj7j8IPBy6hY
-         enPvETd/fAA9ts/JglX8blm6o1iVQzon2FtUoFTZ8e9JsVOcQaHXP2hEtbq+ynt++bKt
-         9q6A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=YK40W8FYXPsem3N0M5GP+38ah6mkX7Im5MvwKipFNsw=;
-        b=DNBTyB7z+RG8uhACv66tUvFb3JSLRHZ82tYDBJDtuVuoYicxn4SS1c/PhN4dA7pizW
-         1dtGUz7xwYbqjejkOs4bFlqOZsPsPwpk9VEMObDVsqePna0rwHP67hqxDupufbttnoaZ
-         y17OFittYO0VwMlDzWNRoleL9uIPkHXkbtJVF+MNWXqF3g8zoqnG1WaH3OGPi/fAFirZ
-         d0RZeyMRARVPcUvsjEbshLkoGo7oM9Hpk7F9GwUuUfvfea7gw/LDizUZiSsaPUYdwMwS
-         9BBbBnUD5UIL0lpg00dizq2F3Ryykp4CKGlo8SMdKGog7tD7UFzUfzrV5XZ9RvrXUeXP
-         Dj6w==
-X-Gm-Message-State: APjAAAXocQF0XGLPdDikRxJcGHAKivhMzGmlgG1QyW+BTwQlDYRnhAnp
-        trGjiahyBhG347Y4zNuK78aa11rIWDT7buSTl1qfVQ==
-X-Google-Smtp-Source: APXvYqyLirWDkCv1jsHOwXXeOs+83ro/jbI0opgbhIzBti3BcptCNQgwATHJ6OMUc0oyBh10kyjZ7F49+xcusFtpogU=
-X-Received: by 2002:a9d:1405:: with SMTP id h5mr20033485oth.118.1558352761836;
- Mon, 20 May 2019 04:46:01 -0700 (PDT)
+        Mon, 20 May 2019 07:48:42 -0400
+Received: from reginn.horms.nl (watermunt.horms.nl [80.127.179.77])
+        by kirsty.vergenet.net (Postfix) with ESMTPA id A405325AD7A;
+        Mon, 20 May 2019 21:48:39 +1000 (AEST)
+Received: by reginn.horms.nl (Postfix, from userid 7100)
+        id A050B9404D4; Mon, 20 May 2019 13:48:37 +0200 (CEST)
+Date:   Mon, 20 May 2019 13:48:37 +0200
+From:   Simon Horman <horms@verge.net.au>
+To:     Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Thierry Reding <treding@nvidia.com>,
+        Andreas =?utf-8?Q?F=C3=A4rber?= <afaerber@suse.de>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Jagan Teki <jagan@amarulasolutions.com>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Chris Paterson <Chris.Paterson2@renesas.com>,
+        Biju Das <biju.das@bp.renesas.com>, xu_shunji@hoperun.com
+Subject: Re: [PATCH v3 2/2] dt-bindings: arm: renesas: Add HopeRun RZ/G2[M]
+ boards
+Message-ID: <20190520114837.47bslbglanvidthx@verge.net.au>
+References: <1558085189-22061-1-git-send-email-fabrizio.castro@bp.renesas.com>
+ <1558085189-22061-3-git-send-email-fabrizio.castro@bp.renesas.com>
 MIME-Version: 1.0
-References: <1558340289-6857-1-git-send-email-wanpengli@tencent.com>
- <1558340289-6857-5-git-send-email-wanpengli@tencent.com> <b80a0c3b-c5b1-bfd1-83d7-ace3436b230e@redhat.com>
- <CANRm+CyDpA-2j28soX9si5CX3vFadd4_BASFzt1f4FbNNNDzyw@mail.gmail.com>
- <bd60e5c2-e3c5-80fc-3a1d-c75809573945@redhat.com> <CANRm+CzFQy4UC9oGxFK8UVVhdtV_LGeF3JcNohpRcgspSqcxwg@mail.gmail.com>
- <024a0c93-f8a3-abe0-85de-fa41babf06a0@redhat.com>
-In-Reply-To: <024a0c93-f8a3-abe0-85de-fa41babf06a0@redhat.com>
-From:   Wanpeng Li <kernellwp@gmail.com>
-Date:   Mon, 20 May 2019 19:45:52 +0800
-Message-ID: <CANRm+Cy69VH+5w4en-Q+N85bRCBoCWNi6oEwpJGgp+MBaUUX8Q@mail.gmail.com>
-Subject: Re: [PATCH v4 4/5] KVM: LAPIC: Delay trace advance expire delta
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>, kvm <kvm@vger.kernel.org>,
-        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Liran Alon <liran.alon@oracle.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1558085189-22061-3-git-send-email-fabrizio.castro@bp.renesas.com>
+Organisation: Horms Solutions BV
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 20 May 2019 at 19:41, Paolo Bonzini <pbonzini@redhat.com> wrote:
->
-> On 20/05/19 13:36, Wanpeng Li wrote:
-> >> Hmm, yeah, that makes sense.  The location of the tracepoint is a bit
-> >> weird, but I guess we can add a comment in the code.
-> > Do you need me to post a new patchset? :)
->
-> No problem.  The final patch that I committed is this:
->
-> diff --git a/arch/x86/kvm/lapic.c b/arch/x86/kvm/lapic.c
-> index c12b090f4fad..f8615872ae64 100644
-> --- a/arch/x86/kvm/lapic.c
-> +++ b/arch/x86/kvm/lapic.c
-> @@ -1502,27 +1502,27 @@ static inline void __wait_lapic_expire(struct kvm_vcpu *vcpu, u64 guest_cycles)
->  }
->
->  static inline void adjust_lapic_timer_advance(struct kvm_vcpu *vcpu,
-> -                                             u64 guest_tsc, u64 tsc_deadline)
-> +                                             s64 advance_expire_delta)
->  {
->         struct kvm_lapic *apic = vcpu->arch.apic;
->         u32 timer_advance_ns = apic->lapic_timer.timer_advance_ns;
->         u64 ns;
->
->         /* too early */
-> -       if (guest_tsc < tsc_deadline) {
-> -               ns = (tsc_deadline - guest_tsc) * 1000000ULL;
-> +       if (advance_expire_delta < 0) {
-> +               ns = -advance_expire_delta * 1000000ULL;
->                 do_div(ns, vcpu->arch.virtual_tsc_khz);
->                 timer_advance_ns -= min((u32)ns,
->                         timer_advance_ns / LAPIC_TIMER_ADVANCE_ADJUST_STEP);
->         } else {
->         /* too late */
-> -               ns = (guest_tsc - tsc_deadline) * 1000000ULL;
-> +               ns = advance_expire_delta * 1000000ULL;
->                 do_div(ns, vcpu->arch.virtual_tsc_khz);
->                 timer_advance_ns += min((u32)ns,
->                         timer_advance_ns / LAPIC_TIMER_ADVANCE_ADJUST_STEP);
->         }
->
-> -       if (abs(guest_tsc - tsc_deadline) < LAPIC_TIMER_ADVANCE_ADJUST_DONE)
-> +       if (abs(advance_expire_delta) < LAPIC_TIMER_ADVANCE_ADJUST_DONE)
->                 apic->lapic_timer.timer_advance_adjust_done = true;
->         if (unlikely(timer_advance_ns > 5000)) {
->                 timer_advance_ns = 0;
-> @@ -1545,13 +1545,13 @@ void wait_lapic_expire(struct kvm_vcpu *vcpu)
->         tsc_deadline = apic->lapic_timer.expired_tscdeadline;
->         apic->lapic_timer.expired_tscdeadline = 0;
->         guest_tsc = kvm_read_l1_tsc(vcpu, rdtsc());
-> -       trace_kvm_wait_lapic_expire(vcpu->vcpu_id, guest_tsc - tsc_deadline);
-> +       apic->lapic_timer.advance_expire_delta = guest_tsc - tsc_deadline;
->
->         if (guest_tsc < tsc_deadline)
->                 __wait_lapic_expire(vcpu, tsc_deadline - guest_tsc);
->
->         if (unlikely(!apic->lapic_timer.timer_advance_adjust_done))
-> -               adjust_lapic_timer_advance(vcpu, guest_tsc, tsc_deadline);
-> +               adjust_lapic_timer_advance(vcpu, apic->lapic_timer.advance_expire_delta);
->  }
->
->  static void start_sw_tscdeadline(struct kvm_lapic *apic)
-> diff --git a/arch/x86/kvm/lapic.h b/arch/x86/kvm/lapic.h
-> index d6d049ba3045..3e72a255543d 100644
-> --- a/arch/x86/kvm/lapic.h
-> +++ b/arch/x86/kvm/lapic.h
-> @@ -32,6 +32,7 @@ struct kvm_timer {
->         u64 tscdeadline;
->         u64 expired_tscdeadline;
->         u32 timer_advance_ns;
-> +       s64 advance_expire_delta;
->         atomic_t pending;                       /* accumulated triggered timers */
->         bool hv_timer_in_use;
->         bool timer_advance_adjust_done;
-> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-> index e7e57de50a3c..35631505421c 100644
-> --- a/arch/x86/kvm/x86.c
-> +++ b/arch/x86/kvm/x86.c
-> @@ -8008,6 +8008,13 @@ static int vcpu_enter_guest(struct kvm_vcpu *vcpu)
->         ++vcpu->stat.exits;
->
->         guest_exit_irqoff();
-> +       if (lapic_in_kernel(vcpu)) {
-> +               s64 delta = vcpu->arch.apic->lapic_timer.advance_expire_delta;
-> +               if (delta != S64_MIN) {
-> +                       trace_kvm_wait_lapic_expire(vcpu->vcpu_id, delta);
-> +                       vcpu->arch.apic->lapic_timer.advance_expire_delta = S64_MIN;
-> +               }
-> +       }
->
->         local_irq_enable();
->         preempt_enable();
->
-> so that KVM tracks whether wait_lapic_expire was called, and do not
-> invoke the tracepoint if not.
+On Fri, May 17, 2019 at 10:26:29AM +0100, Fabrizio Castro wrote:
+> This patch adds board HiHope RZ/G2M (the main board, powered by
+> the R8A774A1) and board HiHope RZ/G2 EX (the expansion board
+> that sits on top of the HiHope RZ/G2M). Both boards are made
+> by Jiangsu HopeRun Software Co., Ltd. (a.k.a. HopeRun).
+> 
+> Useful links:
+> http://hihope.org/product/detail/rzg2
+> https://item.taobao.com/item.htm?spm=a2oq0.12575281.0.0.6bcf1debQpzkRS&ft=t&id=592177498472
+> http://www.hoperun.com/Cn/news/id/379
+> 
+> We already know that the HiHope RZ/G2 EX will also sit on the
+> HiHope RZ/G2N, even though the HiHope RZ/G2N doesn't exist just
+> yet.
+> 
+> Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+> Reviewed-by: Chris Paterson <Chris.Paterson2@renesas.com>
+> Reviewed-by: Rob Herring <robh@kernel.org>
 
-Looks good to me, thank you. :)
+Thanks Fabrizio,
 
-Regards,
-Wanpeng Li
+applied for inclusion in v5.3.
