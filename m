@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10B29C04AAC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:24:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63E12C04AAF
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:24:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D02E621019
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:24:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 39CA221019
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:24:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558355067;
-	bh=Cw6AfNVwd6J7h6gKJMpXsWrvyEHcG2I1ykekQ3qiNXA=;
+	s=default; t=1558355070;
+	bh=MX77u6kdfwvVUV47sbTkHYwPbZuLAvAi0T8q94a6MjY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PsRg+2vAgaG7VKauGLYZyxCfINsfT4+LUMjNSJeLJ7CfLp0mLaHiJitkuOjovh/eT
-	 78VT6uLKgRwG6IRBIBKqjNZOp37TYr1A7TM+MAtl9TtmnRmWK9IxQm6BE9wWam1dnR
-	 v56GLXf1Zla9DO9itH8EA/cbRMnNIqYgiX1JPlt4=
+	b=UJeuEl/FBZ118+VzeCmrSUtC94l1JzL/LYJ9VdzPUQuMZ12S7O2LO1cp9qUXm86dT
+	 2Mrz1MvvzjZG3XCmHPIyhoTBMsSM560Hkg5zShBsl6eWgG9OAd5FGLfeQmJRzY/nVE
+	 jPsVze1HB4o6nrYSYBep8Y5+bZaaKGlvoV0eiBOU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388838AbfETMY0 (ORCPT
+        id S2388850AbfETMY3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 08:24:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39206 "EHLO mail.kernel.org"
+        Mon, 20 May 2019 08:24:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39268 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388821AbfETMYY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 08:24:24 -0400
+        id S2388839AbfETMY0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 08:24:26 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1D51720675;
-        Mon, 20 May 2019 12:24:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id ADA6E20645;
+        Mon, 20 May 2019 12:24:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558355063;
-        bh=Cw6AfNVwd6J7h6gKJMpXsWrvyEHcG2I1ykekQ3qiNXA=;
+        s=default; t=1558355066;
+        bh=MX77u6kdfwvVUV47sbTkHYwPbZuLAvAi0T8q94a6MjY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Z1r79jQ3DJl+k3KxOyJaPd5e4zFZre0SyxtplqCudzo3+VnXEGRZcmU4l/U7aF7FC
-         7lp3wbN5a8mqKC7J1C3EdQD63yaM8FFcT/DGDhGkhyqjarc1xdIiRDZp0VDANqXUTj
-         d9jEKODGu3BQuMq+OD3ZTYutkagalAgi0phyiq7k=
+        b=TZfd1/SD1Jg0Rq+alTlaPGdNt/OFwhBkQBGju/SdfAeIDHt4knzDeAeM0a9uREhWg
+         ugkoEcJNQZlEjNwSZ8vvLAkyGvwr6kX/tXniA94uhtq0cKNges1wj1lEuNsZYzRTRa
+         cMH/J1T92Xml4XFnT7vxdBtpGFmwBHAOLpy0yOWc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Biggers <ebiggers@google.com>,
+        stable@vger.kernel.org, Gilad Ben-Yossef <gilad@benyossef.com>,
         Herbert Xu <herbert@gondor.apana.org.au>
-Subject: [PATCH 4.19 082/105] crypto: ccm - fix incompatibility between "ccm" and "ccm_base"
-Date:   Mon, 20 May 2019 14:14:28 +0200
-Message-Id: <20190520115252.923979601@linuxfoundation.org>
+Subject: [PATCH 4.19 047/105] crypto: ccree - use correct internal state sizes for export
+Date:   Mon, 20 May 2019 14:13:53 +0200
+Message-Id: <20190520115250.270977831@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190520115247.060821231@linuxfoundation.org>
 References: <20190520115247.060821231@linuxfoundation.org>
@@ -59,148 +59,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Biggers <ebiggers@google.com>
+From: Gilad Ben-Yossef <gilad@benyossef.com>
 
-commit 6a1faa4a43f5fabf9cbeaa742d916e7b5e73120f upstream.
+commit f3df82b468f00cca241d96ee3697c9a5e7fb6bd0 upstream.
 
-CCM instances can be created by either the "ccm" template, which only
-allows choosing the block cipher, e.g. "ccm(aes)"; or by "ccm_base",
-which allows choosing the ctr and cbcmac implementations, e.g.
-"ccm_base(ctr(aes-generic),cbcmac(aes-generic))".
+We were computing the size of the import buffer based on the digest size
+but the 318 and 224 byte variants use 512 and 256 bytes internal state
+sizes respectfully, thus causing the import buffer to overrun.
 
-However, a "ccm_base" instance prevents a "ccm" instance from being
-registered using the same implementations.  Nor will the instance be
-found by lookups of "ccm".  This can be used as a denial of service.
-Moreover, "ccm_base" instances are never tested by the crypto
-self-tests, even if there are compatible "ccm" tests.
+Fix it by using the right sizes.
 
-The root cause of these problems is that instances of the two templates
-use different cra_names.  Therefore, fix these problems by making
-"ccm_base" instances set the same cra_name as "ccm" instances, e.g.
-"ccm(aes)" instead of "ccm_base(ctr(aes-generic),cbcmac(aes-generic))".
-
-This requires extracting the block cipher name from the name of the ctr
-and cbcmac algorithms.  It also requires starting to verify that the
-algorithms are really ctr and cbcmac using the same block cipher, not
-something else entirely.  But it would be bizarre if anyone were
-actually using non-ccm-compatible algorithms with ccm_base, so this
-shouldn't break anyone in practice.
-
-Fixes: 4a49b499dfa0 ("[CRYPTO] ccm: Added CCM mode")
-Cc: stable@vger.kernel.org
-Signed-off-by: Eric Biggers <ebiggers@google.com>
+Signed-off-by: Gilad Ben-Yossef <gilad@benyossef.com>
+Cc: stable@vger.kernel.org # v4.19+
 Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-
 ---
- crypto/ccm.c |   44 ++++++++++++++++++--------------------------
- 1 file changed, 18 insertions(+), 26 deletions(-)
+ drivers/crypto/ccree/cc_hash.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/crypto/ccm.c
-+++ b/crypto/ccm.c
-@@ -455,7 +455,6 @@ static void crypto_ccm_free(struct aead_
- 
- static int crypto_ccm_create_common(struct crypto_template *tmpl,
- 				    struct rtattr **tb,
--				    const char *full_name,
- 				    const char *ctr_name,
- 				    const char *mac_name)
- {
-@@ -483,7 +482,8 @@ static int crypto_ccm_create_common(stru
- 
- 	mac = __crypto_hash_alg_common(mac_alg);
- 	err = -EINVAL;
--	if (mac->digestsize != 16)
-+	if (strncmp(mac->base.cra_name, "cbcmac(", 7) != 0 ||
-+	    mac->digestsize != 16)
- 		goto out_put_mac;
- 
- 	inst = kzalloc(sizeof(*inst) + sizeof(*ictx), GFP_KERNEL);
-@@ -506,23 +506,27 @@ static int crypto_ccm_create_common(stru
- 
- 	ctr = crypto_spawn_skcipher_alg(&ictx->ctr);
- 
--	/* Not a stream cipher? */
-+	/* The skcipher algorithm must be CTR mode, using 16-byte blocks. */
- 	err = -EINVAL;
--	if (ctr->base.cra_blocksize != 1)
-+	if (strncmp(ctr->base.cra_name, "ctr(", 4) != 0 ||
-+	    crypto_skcipher_alg_ivsize(ctr) != 16 ||
-+	    ctr->base.cra_blocksize != 1)
- 		goto err_drop_ctr;
- 
--	/* We want the real thing! */
--	if (crypto_skcipher_alg_ivsize(ctr) != 16)
-+	/* ctr and cbcmac must use the same underlying block cipher. */
-+	if (strcmp(ctr->base.cra_name + 4, mac->base.cra_name + 7) != 0)
- 		goto err_drop_ctr;
- 
- 	err = -ENAMETOOLONG;
-+	if (snprintf(inst->alg.base.cra_name, CRYPTO_MAX_ALG_NAME,
-+		     "ccm(%s", ctr->base.cra_name + 4) >= CRYPTO_MAX_ALG_NAME)
-+		goto err_drop_ctr;
-+
- 	if (snprintf(inst->alg.base.cra_driver_name, CRYPTO_MAX_ALG_NAME,
- 		     "ccm_base(%s,%s)", ctr->base.cra_driver_name,
- 		     mac->base.cra_driver_name) >= CRYPTO_MAX_ALG_NAME)
- 		goto err_drop_ctr;
- 
--	memcpy(inst->alg.base.cra_name, full_name, CRYPTO_MAX_ALG_NAME);
--
- 	inst->alg.base.cra_flags = ctr->base.cra_flags & CRYPTO_ALG_ASYNC;
- 	inst->alg.base.cra_priority = (mac->base.cra_priority +
- 				       ctr->base.cra_priority) / 2;
-@@ -564,7 +568,6 @@ static int crypto_ccm_create(struct cryp
- 	const char *cipher_name;
- 	char ctr_name[CRYPTO_MAX_ALG_NAME];
- 	char mac_name[CRYPTO_MAX_ALG_NAME];
--	char full_name[CRYPTO_MAX_ALG_NAME];
- 
- 	cipher_name = crypto_attr_alg_name(tb[1]);
- 	if (IS_ERR(cipher_name))
-@@ -578,12 +581,7 @@ static int crypto_ccm_create(struct cryp
- 		     cipher_name) >= CRYPTO_MAX_ALG_NAME)
- 		return -ENAMETOOLONG;
- 
--	if (snprintf(full_name, CRYPTO_MAX_ALG_NAME, "ccm(%s)", cipher_name) >=
--	    CRYPTO_MAX_ALG_NAME)
--		return -ENAMETOOLONG;
--
--	return crypto_ccm_create_common(tmpl, tb, full_name, ctr_name,
--					mac_name);
-+	return crypto_ccm_create_common(tmpl, tb, ctr_name, mac_name);
- }
- 
- static struct crypto_template crypto_ccm_tmpl = {
-@@ -596,23 +594,17 @@ static int crypto_ccm_base_create(struct
- 				  struct rtattr **tb)
- {
- 	const char *ctr_name;
--	const char *cipher_name;
--	char full_name[CRYPTO_MAX_ALG_NAME];
-+	const char *mac_name;
- 
- 	ctr_name = crypto_attr_alg_name(tb[1]);
- 	if (IS_ERR(ctr_name))
- 		return PTR_ERR(ctr_name);
- 
--	cipher_name = crypto_attr_alg_name(tb[2]);
--	if (IS_ERR(cipher_name))
--		return PTR_ERR(cipher_name);
--
--	if (snprintf(full_name, CRYPTO_MAX_ALG_NAME, "ccm_base(%s,%s)",
--		     ctr_name, cipher_name) >= CRYPTO_MAX_ALG_NAME)
--		return -ENAMETOOLONG;
-+	mac_name = crypto_attr_alg_name(tb[2]);
-+	if (IS_ERR(mac_name))
-+		return PTR_ERR(mac_name);
- 
--	return crypto_ccm_create_common(tmpl, tb, full_name, ctr_name,
--					cipher_name);
-+	return crypto_ccm_create_common(tmpl, tb, ctr_name, mac_name);
- }
- 
- static struct crypto_template crypto_ccm_base_tmpl = {
+--- a/drivers/crypto/ccree/cc_hash.c
++++ b/drivers/crypto/ccree/cc_hash.c
+@@ -1616,7 +1616,7 @@ static struct cc_hash_template driver_ha
+ 			.setkey = cc_hash_setkey,
+ 			.halg = {
+ 				.digestsize = SHA224_DIGEST_SIZE,
+-				.statesize = CC_STATE_SIZE(SHA224_DIGEST_SIZE),
++				.statesize = CC_STATE_SIZE(SHA256_DIGEST_SIZE),
+ 			},
+ 		},
+ 		.hash_mode = DRV_HASH_SHA224,
+@@ -1641,7 +1641,7 @@ static struct cc_hash_template driver_ha
+ 			.setkey = cc_hash_setkey,
+ 			.halg = {
+ 				.digestsize = SHA384_DIGEST_SIZE,
+-				.statesize = CC_STATE_SIZE(SHA384_DIGEST_SIZE),
++				.statesize = CC_STATE_SIZE(SHA512_DIGEST_SIZE),
+ 			},
+ 		},
+ 		.hash_mode = DRV_HASH_SHA384,
 
 
