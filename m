@@ -4,58 +4,58 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CFD2CC04E87
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 11:32:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D96EC04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 11:32:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A235820656
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 11:32:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 749CD2081C
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 11:32:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="u/TmKJQV"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Mc4UZBCT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732931AbfETLcs (ORCPT
+        id S1732944AbfETLcw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 07:32:48 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:43925 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732919AbfETLcr (ORCPT
+        Mon, 20 May 2019 07:32:52 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:42363 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732933AbfETLcw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 07:32:47 -0400
-Received: by mail-pl1-f196.google.com with SMTP id gn7so2434643plb.10
-        for <linux-kernel@vger.kernel.org>; Mon, 20 May 2019 04:32:47 -0700 (PDT)
+        Mon, 20 May 2019 07:32:52 -0400
+Received: by mail-pg1-f195.google.com with SMTP id 145so6664710pgg.9
+        for <linux-kernel@vger.kernel.org>; Mon, 20 May 2019 04:32:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :in-reply-to:references;
-        bh=Rhx5bIGIXYyTwXNSrFhH6sXCwPoowbOq8I8g6rhgfcM=;
-        b=u/TmKJQVbWXU1jY6nvSgyqY9QzIEzS6idFSTXXT7qz9wsgNBI/s4V17hUgh4Rv7R2Y
-         cwuuJfl56c+TBCEGqsc5RRIu34NSt4lHOx8UibOcyvnhXey8lHP7056ZxtHY0B4NseoG
-         6152HD/5j7w4ftbZ4++CLib5eBofL1XNbn5oS8Osd8NYxVsBI8Ft9hZDT1zAZ/NwACnM
-         BkDXCqfsjhvdPmSFeCmpfO3FxtOu2mbVJWnOjskv6Npuj/95BixXJKam34owM1QCU0dF
-         hZkQDeWU7Y0zRyI7nbkB4upO4egh0ZnC/sBYA0i4TH21JKW6sXLUUZFUxv9bWc9DnUq2
-         NdBA==
+        bh=Cnx84NxIhSp4uZgqi6VSWZYaVNVqt10XSPlG8JL56aM=;
+        b=Mc4UZBCTGeP16M5dC8d43FPiSMsrdIIRD0s1wJ3KIvGHw+JOobzUKZHB0Q73iG3BTg
+         V1l22QS5KJy5tXZPxHsQ9Mo7fVFBsMD7FRweoPvewbBbo62lTppD8pPJHBkor7ekGe3j
+         PPFqi5Wdl4B9MzR3QJGHoKzN9KO9A5aa2u6lsjS6tZ9ohu5PS1AQTwdCEgh1IVHPURc5
+         Py3c2rYZyRrff+CtksSQP1kLT7g3w0aSUXqFbK2960r8YJHBAG0F6FtkWv/SXPaG5Gq8
+         XKa7McsxohMfNawU7tUAhFpQfWCIpWFs89ePwMm5HMMISDMi9KE0isl13qia+OwjzVYJ
+         H+fg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:in-reply-to:references;
-        bh=Rhx5bIGIXYyTwXNSrFhH6sXCwPoowbOq8I8g6rhgfcM=;
-        b=V05DQUV23LXLTu2kSTAXWBsjqsZSn/GILIknqZ9lmewa/mgr9Q5AKiTfxvLMokMc+B
-         xhOm88Agl0p44VvJWxXf673Mq9EkYwmzP0M4SsKU5KNzwZ0q7223diUT14yfeAPKaNO8
-         mnpYWVWgDp/E+JuHU4PRjr0oJikB83J1f1k1EZHWQsu4ZvtzXcrNMohPiy6l9s2LZZv5
-         Y309elUrhdYYykFnUiu0+smqjUsJagjYDsWYj31YRIAX9WT3ors/f9HJW9fdpgJuCO5M
-         MNQuTEAAR3fNGnaXwkZWY55T76sSu36GwcgV2Ovu0mV4I+xE51KvDakLa2+JKnq35ARG
-         iteA==
-X-Gm-Message-State: APjAAAX7u7MsbfEgwRPdpYAS4MkpPZtkpZ1jbwMt83SysvWnCk0OA/wf
-        aWuU5Q7PvGYOdSdHKlQJfi4s36TgxD6Phw==
-X-Google-Smtp-Source: APXvYqwgHwuoUVL1ByBfPSEobTX9ErDzyRhrOOJ1I3tJoZIQ3cgXSjtVqIPbUPY7AzkB1zM9IH6mIA==
-X-Received: by 2002:a17:902:8ec4:: with SMTP id x4mr65112742plo.249.1558351966882;
-        Mon, 20 May 2019 04:32:46 -0700 (PDT)
+        bh=Cnx84NxIhSp4uZgqi6VSWZYaVNVqt10XSPlG8JL56aM=;
+        b=FEgPB0fsLZ1LLJ/yUMdfsFcOVBRRKoe/ltOLTQZJeu8bdxG/l7kVJsClVDeVFldf76
+         iIAu8FSKiTn9P7MDmIOivIt1LpbMjAxJap5rmrT5uX/V3uLDY0cOAkFHEU6IT7u5ohOL
+         Fu+s2a9fCJYqI6ic0ZL13njET9T3eE3BNebzsWmzNKVQeiSKbSfHIeWm8OSs1mHZNaLX
+         EIQ12AQn7g+V2h9CljDn3YizOMmebTA/skge8gzRDX00YAI2gTM7bJgjxoCxvENWUEoI
+         LEoLHiBZpaNougtLggJov5XNM8IxJkjZz64kA1jOCiCW86VLWWP+D8k7wVE2ljItahKT
+         akdw==
+X-Gm-Message-State: APjAAAUww3tFGqNlkI8+Q7/1ZaoAGGE+7x3MWOHW248pD1mO/fkmzGcl
+        aSfd1dd7/T4jVx3TbfGJY5UWJA==
+X-Google-Smtp-Source: APXvYqwEGtRYs32a6qVJ0IDeIICdhKvEjXa4z1alPx313+QuihcD0g4n814DyWumr6jWnBbSFvUJJg==
+X-Received: by 2002:a65:42cd:: with SMTP id l13mr21734824pgp.72.1558351971654;
+        Mon, 20 May 2019 04:32:51 -0700 (PDT)
 Received: from baolinwangubtpc.spreadtrum.com ([117.18.48.102])
-        by smtp.gmail.com with ESMTPSA id z124sm21310020pfz.116.2019.05.20.04.32.42
+        by smtp.gmail.com with ESMTPSA id z124sm21310020pfz.116.2019.05.20.04.32.47
         (version=TLS1 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Mon, 20 May 2019 04:32:46 -0700 (PDT)
+        Mon, 20 May 2019 04:32:51 -0700 (PDT)
 From:   Baolin Wang <baolin.wang@linaro.org>
 To:     dan.j.williams@intel.com, vkoul@kernel.org
 Cc:     thierry.reding@gmail.com, jonathanh@nvidia.com,
@@ -65,9 +65,9 @@ Cc:     thierry.reding@gmail.com, jonathanh@nvidia.com,
         jroedel@suse.de, vincent.guittot@linaro.org,
         baolin.wang@linaro.org, dmaengine@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: [PATCH v2 3/8] dmaengine: imx-sdma: Let the core do the device node validation
-Date:   Mon, 20 May 2019 19:32:16 +0800
-Message-Id: <77c1171088844b62a50977817103c2cf01fd75ae.1558351667.git.baolin.wang@linaro.org>
+Subject: [PATCH v2 4/8] dmaengine: dma-jz4780: Let the core do the device node validation
+Date:   Mon, 20 May 2019 19:32:17 +0800
+Message-Id: <231f063f65d0f4ca9a69edfb267fb82500954415.1558351667.git.baolin.wang@linaro.org>
 X-Mailer: git-send-email 1.7.9.5
 In-Reply-To: <cover.1558351667.git.baolin.wang@linaro.org>
 References: <cover.1558351667.git.baolin.wang@linaro.org>
@@ -82,55 +82,48 @@ Let the DMA engine core do the device node validation instead of drivers.
 
 Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
 ---
- drivers/dma/imx-sdma.c                |    9 ++-------
- include/linux/platform_data/dma-imx.h |    1 -
- 2 files changed, 2 insertions(+), 8 deletions(-)
+ drivers/dma/dma-jz4780.c |    7 ++-----
+ 1 file changed, 2 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/dma/imx-sdma.c b/drivers/dma/imx-sdma.c
-index 99d9f43..ca296f0 100644
---- a/drivers/dma/imx-sdma.c
-+++ b/drivers/dma/imx-sdma.c
-@@ -1934,16 +1934,11 @@ static int sdma_init(struct sdma_engine *sdma)
- static bool sdma_filter_fn(struct dma_chan *chan, void *fn_param)
- {
- 	struct sdma_channel *sdmac = to_sdma_chan(chan);
--	struct sdma_engine *sdma = sdmac->sdma;
- 	struct imx_dma_data *data = fn_param;
- 
- 	if (!imx_dma_is_general_purpose(chan))
- 		return false;
- 
--	/* return false if it's not the right device */
--	if (sdma->dev->of_node != data->of_node)
--		return false;
--
- 	sdmac->data = *data;
- 	chan->private = &sdmac->data;
- 
-@@ -1971,9 +1966,9 @@ static struct dma_chan *sdma_xlate(struct of_phandle_args *dma_spec,
- 	 * be set to sdmac->event_id1.
- 	 */
- 	data.dma_request2 = 0;
--	data.of_node = ofdma->of_node;
- 
--	return dma_request_channel(mask, sdma_filter_fn, &data);
-+	return __dma_request_channel(&mask, sdma_filter_fn, &data,
-+				     ofdma->of_node);
- }
- 
- static int sdma_probe(struct platform_device *pdev)
-diff --git a/include/linux/platform_data/dma-imx.h b/include/linux/platform_data/dma-imx.h
-index 9daea8d..7d964e7 100644
---- a/include/linux/platform_data/dma-imx.h
-+++ b/include/linux/platform_data/dma-imx.h
-@@ -55,7 +55,6 @@ struct imx_dma_data {
- 	int dma_request2; /* secondary DMA request line */
- 	enum sdma_peripheral_type peripheral_type;
- 	int priority;
--	struct device_node *of_node;
+diff --git a/drivers/dma/dma-jz4780.c b/drivers/dma/dma-jz4780.c
+index 9ce0a38..7e1d381 100644
+--- a/drivers/dma/dma-jz4780.c
++++ b/drivers/dma/dma-jz4780.c
+@@ -160,7 +160,6 @@ struct jz4780_dma_dev {
  };
  
- static inline int imx_dma_is_ipu(struct dma_chan *chan)
+ struct jz4780_dma_filter_data {
+-	struct device_node *of_node;
+ 	uint32_t transfer_type;
+ 	int channel;
+ };
+@@ -765,8 +764,6 @@ static bool jz4780_dma_filter_fn(struct dma_chan *chan, void *param)
+ 	struct jz4780_dma_dev *jzdma = jz4780_dma_chan_parent(jzchan);
+ 	struct jz4780_dma_filter_data *data = param;
+ 
+-	if (jzdma->dma_device.dev->of_node != data->of_node)
+-		return false;
+ 
+ 	if (data->channel > -1) {
+ 		if (data->channel != jzchan->id)
+@@ -790,7 +787,6 @@ static struct dma_chan *jz4780_of_dma_xlate(struct of_phandle_args *dma_spec,
+ 	if (dma_spec->args_count != 2)
+ 		return NULL;
+ 
+-	data.of_node = ofdma->of_node;
+ 	data.transfer_type = dma_spec->args[0];
+ 	data.channel = dma_spec->args[1];
+ 
+@@ -815,7 +811,8 @@ static struct dma_chan *jz4780_of_dma_xlate(struct of_phandle_args *dma_spec,
+ 		return dma_get_slave_channel(
+ 			&jzdma->chan[data.channel].vchan.chan);
+ 	} else {
+-		return dma_request_channel(mask, jz4780_dma_filter_fn, &data);
++		return __dma_request_channel(&mask, jz4780_dma_filter_fn, &data,
++					     ofdma->of_node);
+ 	}
+ }
+ 
 -- 
 1.7.9.5
 
