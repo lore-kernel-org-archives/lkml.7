@@ -4,124 +4,113 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1FFAC04AAC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 17:48:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 159E3C04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 17:49:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7D8A5206B6
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 17:48:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E12CB206B6
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 17:49:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernelci-org.20150623.gappssmtp.com header.i=@kernelci-org.20150623.gappssmtp.com header.b="eBhoX0pt"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="d/QiLwSw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726005AbfETRsR (ORCPT
+        id S1726102AbfETRta (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 13:48:17 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:37280 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725788AbfETRsR (ORCPT
+        Mon, 20 May 2019 13:49:30 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:45965 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725993AbfETRt3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 13:48:17 -0400
-Received: by mail-wm1-f67.google.com with SMTP id 7so222802wmo.2
-        for <linux-kernel@vger.kernel.org>; Mon, 20 May 2019 10:48:15 -0700 (PDT)
+        Mon, 20 May 2019 13:49:29 -0400
+Received: by mail-pg1-f193.google.com with SMTP id i21so7109530pgi.12
+        for <linux-kernel@vger.kernel.org>; Mon, 20 May 2019 10:49:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernelci-org.20150623.gappssmtp.com; s=20150623;
-        h=message-id:date:mime-version:content-transfer-encoding:in-reply-to
-         :references:subject:to:from:cc;
-        bh=ASi4P+vK/BY4xARlAX5okcCkAi7jUwOKEr1mT66lsfQ=;
-        b=eBhoX0ptMhFEvGDGd4CD7W4J15ef0bRB51zZwfEEyLbRH3a8MaLiUGeq7ElGJ7nTAB
-         zGjH2NhWOo1PEnqsPXkKCrCmTiQqIijjGexUgk1wl2QcMqH1hjhzp4q+TV3jhTpZKsDE
-         4cMBjwvC3X4twDv8atsVikKEX5U5lZG2Ylbvqqr+2OL1MpH2F/J1GJpIt6xTvYgnmos0
-         hTMjqK37n5yyFp1r06W1MLCXq2XxmbndM6igwCGS+190iPSQ1nfdCiKjeRyaKBsxRbCD
-         ROdFAoWkPHDDx+TwQIGw6Uyl/yFyJ0neIWTzvIjiTH1FMy70Pb45A/zOi+rMMLYWYrmO
-         uMrA==
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:in-reply-to:references:date:message-id
+         :mime-version;
+        bh=me1hOjgWTri45Cc6hO9sgRzbDQwaWnoPUzfvVUbP8Uw=;
+        b=d/QiLwSw40EjvxwHCoBy3JWseUPcQPvj4auj0c7ZAV6OKodF1NvnM2hOAOdrKopZjE
+         z1TqPkMCjHuXZYkHxVjL4TRbCv8RlImwtrVTHTaQggD5Cxo9AQHwpqNUyk9RusnPyO0F
+         3mU4YL7YU2vzL7rzy3003fROJc64CQMa7tAuUKK9CYwpGekMkMa20Lscc1Jz5OFTtdfj
+         29jjvyM7sJ7dzn129bnFYI0dKuAdoVmheVZc9iXFeOtqJLEN9CFeqtP6W66FfPgHb3O3
+         l5nF/Pt63UZNRclggayxHiMiul7NSEG7d1434MGHCWBdSMDu6YVqpR1CxE7E7wDl9R8k
+         0dyQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:date:mime-version
-         :content-transfer-encoding:in-reply-to:references:subject:to:from:cc;
-        bh=ASi4P+vK/BY4xARlAX5okcCkAi7jUwOKEr1mT66lsfQ=;
-        b=M3b9Ukh4QYnrg1cwn5xj8F6GD9t6C67Nxhoxb1NEGB8ZPgF9E3j4P3BECqI3tIiWu9
-         SzQ7LyAKNfEGb8b5S2c53Ihf95dUIZNU/QowkCrTQiEy9hqnebSSTnZTdflE+Pu0j9B3
-         dqcoXut6HaosyWLA7lkArWWvXlCa77b8ne/eFUnJcKlJJX1FdF4UjdUcVDQcs5w+JLBX
-         RzYNm8pyMbi0JOSi951nhK9J7Tm0SBO3tU8VFu+2SkvQPtEx2e4GBunoHXmd3yi89DJw
-         xDBjhDE5/giFbABrt2cSBG+B0Onz7EDqx0HgJXcp+StdC+YRWmBMdn773dGyHbltp6KF
-         ZWXA==
-X-Gm-Message-State: APjAAAUkvlxK1BZQ0989HAdsSZU1wVyM6asMsmz7dU6uD9lPWy39HLXh
-        milO6q6qJU2eVkrJ2kbyCn5slQ==
-X-Google-Smtp-Source: APXvYqxhBojFsH32AKHeR1/kcB+5hpefssYLMXmgAYWw+YhxdLjndpVzpLs5H+/mfdRcv66/Ozhw9w==
-X-Received: by 2002:a1c:9c8c:: with SMTP id f134mr214333wme.95.1558374495158;
-        Mon, 20 May 2019 10:48:15 -0700 (PDT)
-Received: from [148.251.42.114] ([2a01:4f8:201:9271::2])
-        by smtp.gmail.com with ESMTPSA id b18sm16167146wrx.75.2019.05.20.10.48.14
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 20 May 2019 10:48:14 -0700 (PDT)
-Message-ID: <5ce2e85e.1c69fb81.1cae4.71c9@mx.google.com>
-Date:   Mon, 20 May 2019 10:48:14 -0700 (PDT)
-Content-Type: text/plain; charset="utf-8"
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=me1hOjgWTri45Cc6hO9sgRzbDQwaWnoPUzfvVUbP8Uw=;
+        b=s6mB6r50nwWduOb8hQ31cd8gMjLGBH50OW6vBe0e8caub/3Y0amTp4sqcd3wO3uv+7
+         fDNPXmDCkiUP+wnM3uBtDBunxoj18UqrO/q2M0WJPVYVtAQkDQNi/FXSW9c+yCRFSftw
+         9tSMZpFebPX6qziziZtVRTQU63vIqBdYxSQvS3WyViq93UGi9zzC1otnlZieLnCgNH0f
+         CUd4HiHYRsoZKJ78FjpYtgeeZnjP83T/QOdAja9Q2/Jodcj0yJa2hu1ycii8hEy3OHXl
+         nYSkAovol5g5rMZM0rcyKX9iwpAm+jlqcYBGHlkREDrOI6jm1eVx02ZgRUd89fpzl/aW
+         Tu0A==
+X-Gm-Message-State: APjAAAU1doPM4MJ/CAXhgWufhk8TEpONEgOluhyrAN1hRRuW+urnBE0x
+        s4Y8M+91z7KXOITrUSMBH1pZ8w==
+X-Google-Smtp-Source: APXvYqyk9OeosmdVRNKnZ4nmNCQduMXDaoErB894LgjM/sAuCd4TBUUogmj2zXI/rVGiZTJf8fb28A==
+X-Received: by 2002:a62:e10f:: with SMTP id q15mr81286283pfh.56.1558374568375;
+        Mon, 20 May 2019 10:49:28 -0700 (PDT)
+Received: from localhost ([2601:602:9200:a1a5:e483:1cc0:e2c2:140d])
+        by smtp.googlemail.com with ESMTPSA id s12sm28713070pfd.152.2019.05.20.10.49.27
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 20 May 2019 10:49:27 -0700 (PDT)
+From:   Kevin Hilman <khilman@baylibre.com>
+To:     Jerome Brunet <jbrunet@baylibre.com>
+Cc:     Jerome Brunet <jbrunet@baylibre.com>, devicetree@vger.kernel.org,
+        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 0/5] arm64: dts: meson: g12a: add ethernet support
+In-Reply-To: <20190520131401.11804-1-jbrunet@baylibre.com>
+References: <20190520131401.11804-1-jbrunet@baylibre.com>
+Date:   Mon, 20 May 2019 10:49:26 -0700
+Message-ID: <7himu58195.fsf@baylibre.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Kernelci-Report-Type: boot
-X-Kernelci-Tree: stable-rc
-X-Kernelci-Branch: linux-4.19.y
-X-Kernelci-Kernel: v4.19.44-106-g6b27ffd29c43
-In-Reply-To: <20190520115247.060821231@linuxfoundation.org>
-References: <20190520115247.060821231@linuxfoundation.org>
-Subject: Re: [PATCH 4.19 000/105] 4.19.45-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org
-From:   "kernelci.org bot" <bot@kernelci.org>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        torvalds@linux-foundation.org, akpm@linux-foundation.org,
-        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-stable-rc/linux-4.19.y boot: 120 boots: 0 failed, 118 passed with 1 offline=
-, 1 conflict (v4.19.44-106-g6b27ffd29c43)
+Jerome Brunet <jbrunet@baylibre.com> writes:
 
-Full Boot Summary: https://kernelci.org/boot/all/job/stable-rc/branch/linux=
--4.19.y/kernel/v4.19.44-106-g6b27ffd29c43/
-Full Build Summary: https://kernelci.org/build/stable-rc/branch/linux-4.19.=
-y/kernel/v4.19.44-106-g6b27ffd29c43/
+> Add network support to the g12a SoC family
+>
+> This is series is based on 5.2-rc1 and the patches I already sent last
+> week. If this is not convient for you, please let me know, I'll rebase.
 
-Tree: stable-rc
-Branch: linux-4.19.y
-Git Describe: v4.19.44-106-g6b27ffd29c43
-Git Commit: 6b27ffd29c43f07e11cc906154745c4e9b3d71c3
-Git URL: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stabl=
-e-rc.git
-Tested: 66 unique boards, 24 SoC families, 14 builds out of 206
+Could you apply this on top of the "consistently order nodes" patches
+that are already in my v5.3/dt64 branch?
 
-Boot Regressions Detected:
+More specifically, if you rebase this onto this commit[1], I'll be able
+to easily replace the v1 of this series that's already in v5.3/dt64.
 
-arm:
+Kevin
 
-    omap2plus_defconfig:
-        gcc-8:
-          omap4-panda:
-              lab-baylibre: failing since 3 days (last pass: v4.19.43-114-g=
-b5001f5eab58 - first fail: v4.19.44)
+[1] 5b9533f6de2a arm64: dts: meson: u200: consistently order nodes
 
-Offline Platforms:
-
-arm:
-
-    multi_v7_defconfig:
-        gcc-8
-            stih410-b2120: 1 offline lab
-
-Conflicting Boot Failure Detected: (These likely are not failures as other =
-labs are reporting PASS. Needs review.)
-
-arm:
-    omap2plus_defconfig:
-        omap4-panda:
-            lab-baylibre: FAIL (gcc-8)
-            lab-baylibre-seattle: PASS (gcc-8)
-
----
-For more info write to <info@kernelci.org>
+> Also, you will need to get the clk tag "clk-meson-5.3-1-fixes" (to get
+> the update MPLL50M id) from clk-meson [0].
+>
+> Changes since v1: [1]
+>  * rebased on v5.2-rc1
+>  * s/eth_rmii_pins/eth_pins
+>  * fix MPLL50M typo
+>
+> [0]: git://github.com/BayLibre/clk-meson.git
+> [1]: https://lkml.kernel.org/r/20190510164940.13496-1-jbrunet@baylibre.com
+>
+> Jerome Brunet (5):
+>   arm64: dts: meson: g12a: add ethernet mac controller
+>   arm64: dts: meson: g12a: add ethernet pinctrl definitions
+>   arm64: dts: meson: g12a: add mdio multiplexer
+>   arm64: dts: meson: u200: add internal network
+>   arm64: dts: meson: sei510: add network support
+>
+>  .../boot/dts/amlogic/meson-g12a-sei510.dts    |  7 ++
+>  .../boot/dts/amlogic/meson-g12a-u200.dts      |  7 ++
+>  arch/arm64/boot/dts/amlogic/meson-g12a.dtsi   | 90 +++++++++++++++++++
+>  3 files changed, 104 insertions(+)
+>
+> -- 
+> 2.20.1
