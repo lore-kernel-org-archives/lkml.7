@@ -2,131 +2,200 @@ Return-Path: <SRS0=lq4r=TU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.7 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32BB8C04AAC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 22:57:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 710EFC04E87
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 22:59:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 00BD721773
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 22:57:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558393076;
-	bh=5f5+3koTds52bPW4n2ppSAg8BvUhI/oklac/Pnx3ojc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=GaOy5/GwmTftSs/gKfkyGO7m/2UbNulNo89/ozHyW8Dg7DyZVOax8KPoZFlgzrQ9w
-	 GYCi0xVDSDW35RCKaGjdXVkHbX0Q1SZsz8/YpAgkuM+cBENcXhCUcblIghJvf5fADW
-	 e5ZCs8iMnJIUga3P0u/O462u8C6CkVUR6Y/HRPIE=
+	by mail.kernel.org (Postfix) with ESMTP id 43FB22173C
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 22:59:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727110AbfETW5z (ORCPT
+        id S1727165AbfETW7H (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 18:57:55 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:39038 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725978AbfETW5z (ORCPT
+        Mon, 20 May 2019 18:59:07 -0400
+Received: from mail-it1-f198.google.com ([209.85.166.198]:41957 "EHLO
+        mail-it1-f198.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726164AbfETW7G (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 18:57:55 -0400
-Received: by mail-pg1-f196.google.com with SMTP id w22so7485497pgi.6
-        for <linux-kernel@vger.kernel.org>; Mon, 20 May 2019 15:57:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=rQtjqxgsh4qf6+R3w9WQYkuPaS8z+4gcRAW4fvUK8PA=;
-        b=m7aNIAIk79+/sPSFc8fsRue1WTcfLQ8h+JWoFZXgVHRSWPcaDmTrdh2j+iJlwHBNR1
-         kwey7G7A9RXpSCKWyHw8TA+JzwwkGnBZjJ0vbyimyDXjx5C1hKIVvd8Q8dX0cZ4lcJ9o
-         XML8DCo/iN2IH8D7C5fERQqQoZC/nm8IcTRdNgue67JmDMKAJB3sRPErJISlHY9Ybh0r
-         ZvUrzLAmJnogN16jrMiwuZQQeM0Ii6VWbaEet9CTcnlSo+16+HfcIqeSoUMaBdHr1Jxv
-         xiGCrW/ywdc1H/6KqtEL1x4uKxUdk7ujhb2S+x5m3BnNVky7FhAaJ4BLr8lEsF6XFN+y
-         bDsw==
+        Mon, 20 May 2019 18:59:06 -0400
+Received: by mail-it1-f198.google.com with SMTP id p19so910968itp.6
+        for <linux-kernel@vger.kernel.org>; Mon, 20 May 2019 15:59:06 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=rQtjqxgsh4qf6+R3w9WQYkuPaS8z+4gcRAW4fvUK8PA=;
-        b=ZRjVtPrOayv5Ut8dJ8ruPApjLK2wYdcZckd7dPg75PZgw0DqzkQZAjd6iBOQLYbTcu
-         iryp5OIN2td0mOgoaQnWUThvi9bbTJ3anckBVbMsCdkdCvk1Bl7a2mxs1la95f1xQYhu
-         FiELk5fw53jZ76R0EvL9xB2JH79w9tLrR+v+DzTiT6XB9qzn12cLtgyuwsisLOz/G2PG
-         rPF6xMOVpW7eBW2Px5TYIVkIvRXLhjvjlBK5lQGYD5+MyDLN7DjS29y6AWk+z3RRju8s
-         8GzPuEg0Ky9+tRjXKDQaLWXiGbYYhyCxswej4WrOndXlAnNuQyAybJA3H3P7HK5V2HlG
-         u3CQ==
-X-Gm-Message-State: APjAAAXHZglahnqhWTrcDHbvqEbwC4g0has2kDAqhKZ8aKp9sK64Jx3f
-        uH4xnKU7f7SI4w1H7+Uq0yAKS2Sb
-X-Google-Smtp-Source: APXvYqwIpXfTnN6FB15wCLD1NBqVQmTzR/Ojff3wL4gw0pzgL9CWZ1vxbSQt9fyp/BOgC/3Ksq6cRQ==
-X-Received: by 2002:a63:dc09:: with SMTP id s9mr37019321pgg.425.1558393074279;
-        Mon, 20 May 2019 15:57:54 -0700 (PDT)
-Received: from google.com ([2401:fa00:d:0:98f1:8b3d:1f37:3e8])
-        by smtp.gmail.com with ESMTPSA id s66sm20733434pfb.37.2019.05.20.15.57.49
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 20 May 2019 15:57:52 -0700 (PDT)
-Date:   Tue, 21 May 2019 07:57:47 +0900
-From:   Minchan Kim <minchan@kernel.org>
-To:     Johannes Weiner <hannes@cmpxchg.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-mm <linux-mm@kvack.org>, Michal Hocko <mhocko@suse.com>,
-        Tim Murray <timmurray@google.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Suren Baghdasaryan <surenb@google.com>,
-        Daniel Colascione <dancol@google.com>,
-        Shakeel Butt <shakeelb@google.com>,
-        Sonny Rao <sonnyrao@google.com>,
-        Brian Geffon <bgeffon@google.com>
-Subject: Re: [RFC 2/7] mm: change PAGEREF_RECLAIM_CLEAN with PAGE_REFRECLAIM
-Message-ID: <20190520225747.GC10039@google.com>
-References: <20190520035254.57579-1-minchan@kernel.org>
- <20190520035254.57579-3-minchan@kernel.org>
- <20190520165013.GB11665@cmpxchg.org>
+        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
+         :from:to;
+        bh=H2RF7PBYmKcYbcYFcfHkUeABVhZ/dzC324c2l3eFimU=;
+        b=XNkyRIWYjOgxyM3d9Bg7ZP0HEZ9zVclVsFhnVqefq6+oAMg7ekezDwju5zdcMfTcWz
+         PtT5PMf0toJap88R0/JjU6S6et9mzPgr/Io0i0dlTdZbNU4hEN0DWKrPNhtfYh6t2qy+
+         hSg5EYUiEdb/lKqD06H9iJNtXo66Bx/bRfq4bwGV7nc+PoCfjWKQBEG1KeXL7QAflSmX
+         EiLz/hQG1m6rv7vDqdC1S7OXaYoZxA7i9t3yhdell03VlIiSSyfzR8RlQ8Oaz2Ff93bD
+         nJDKYvGBfq4GCONMB9n+GSMubjPvZEZyvYMa2r533SF18b0JpZzAyWYw85K5uGC5ER/6
+         B/Uw==
+X-Gm-Message-State: APjAAAVOfCZbsEXfMMb3eI+FRanJjjrNI0hosMzPf8m8hKR7v4IeI8Ag
+        O5lDIQJaopmXjqbUNSeM/7ZZzyfFDa8AS9q9LZiLossWF1uB
+X-Google-Smtp-Source: APXvYqyVB/bD6zDOXeGkgauXLH5TIABstR5vcP4hyTL31JXomiX5dRpVY0hDZlga2LwM13Bo19SYWRobCXQmIy5CRYqf/px9XZon
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190520165013.GB11665@cmpxchg.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Received: by 2002:a6b:c812:: with SMTP id y18mr11882563iof.237.1558393145538;
+ Mon, 20 May 2019 15:59:05 -0700 (PDT)
+Date:   Mon, 20 May 2019 15:59:05 -0700
+In-Reply-To: <00000000000014e65905892486ab@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000dc4454058959ad47@google.com>
+Subject: Re: INFO: trying to register non-static key in rhashtable_walk_enter
+From:   syzbot <syzbot+1e8114b61079bfe9cbc5@syzkaller.appspotmail.com>
+To:     davem@davemloft.net, dvyukov@google.com, edumazet@google.com,
+        hujunwei4@huawei.com, jon.maloy@ericsson.com,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com,
+        tipc-discussion@lists.sourceforge.net,
+        willemdebruijn.kernel@gmail.com, ying.xue@windriver.com
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 20, 2019 at 12:50:13PM -0400, Johannes Weiner wrote:
-> On Mon, May 20, 2019 at 12:52:49PM +0900, Minchan Kim wrote:
-> > The local variable references in shrink_page_list is PAGEREF_RECLAIM_CLEAN
-> > as default. It is for preventing to reclaim dirty pages when CMA try to
-> > migrate pages. Strictly speaking, we don't need it because CMA didn't allow
-> > to write out by .may_writepage = 0 in reclaim_clean_pages_from_list.
-> >
-> > Moreover, it has a problem to prevent anonymous pages's swap out even
-> > though force_reclaim = true in shrink_page_list on upcoming patch.
-> > So this patch makes references's default value to PAGEREF_RECLAIM and
-> > rename force_reclaim with skip_reference_check to make it more clear.
-> > 
-> > This is a preparatory work for next patch.
-> > 
-> > Signed-off-by: Minchan Kim <minchan@kernel.org>
-> 
-> Looks good to me, just one nit below.
-> 
-> Acked-by: Johannes Weiner <hannes@cmpxchg.org>
+syzbot has found a reproducer for the following crash on:
 
-Thanks, Johannes.
+HEAD commit:    f49aa1de Merge tag 'for-5.2-rc1-tag' of git://git.kernel.o..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=1492b482a00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=fc045131472947d7
+dashboard link: https://syzkaller.appspot.com/bug?extid=1e8114b61079bfe9cbc5
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+userspace arch: i386
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=11baf8e4a00000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=13bf3d9ca00000
 
-> 
-> > ---
-> >  mm/vmscan.c | 6 +++---
-> >  1 file changed, 3 insertions(+), 3 deletions(-)
-> > 
-> > diff --git a/mm/vmscan.c b/mm/vmscan.c
-> > index d9c3e873eca6..a28e5d17b495 100644
-> > --- a/mm/vmscan.c
-> > +++ b/mm/vmscan.c
-> > @@ -1102,7 +1102,7 @@ static unsigned long shrink_page_list(struct list_head *page_list,
-> >  				      struct scan_control *sc,
-> >  				      enum ttu_flags ttu_flags,
-> >  				      struct reclaim_stat *stat,
-> > -				      bool force_reclaim)
-> > +				      bool skip_reference_check)
-> 
-> "ignore_references" would be better IMO
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+1e8114b61079bfe9cbc5@syzkaller.appspotmail.com
 
-Sure.
+INFO: trying to register non-static key.
+the code is fine but needs lockdep annotation.
+turning off the locking correctness validator.
+CPU: 1 PID: 8939 Comm: syz-executor164 Not tainted 5.2.0-rc1+ #1
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+Call Trace:
+  __dump_stack lib/dump_stack.c:77 [inline]
+  dump_stack+0x172/0x1f0 lib/dump_stack.c:113
+  assign_lock_key kernel/locking/lockdep.c:774 [inline]
+  register_lock_class+0x167e/0x1860 kernel/locking/lockdep.c:1083
+  __lock_acquire+0x116/0x5490 kernel/locking/lockdep.c:3673
+  lock_acquire+0x16f/0x3f0 kernel/locking/lockdep.c:4302
+  __raw_spin_lock include/linux/spinlock_api_smp.h:142 [inline]
+  _raw_spin_lock+0x2f/0x40 kernel/locking/spinlock.c:151
+  spin_lock include/linux/spinlock.h:338 [inline]
+  rhashtable_walk_enter+0xf9/0x390 lib/rhashtable.c:669
+  __tipc_dump_start+0x1fa/0x3c0 net/tipc/socket.c:3414
+  tipc_dump_start+0x70/0x90 net/tipc/socket.c:3396
+  __netlink_dump_start+0x4f8/0x7d0 net/netlink/af_netlink.c:2351
+  netlink_dump_start include/linux/netlink.h:226 [inline]
+  tipc_sock_diag_handler_dump+0x1d9/0x270 net/tipc/diag.c:91
+  __sock_diag_cmd net/core/sock_diag.c:232 [inline]
+  sock_diag_rcv_msg+0x319/0x410 net/core/sock_diag.c:263
+  netlink_rcv_skb+0x177/0x450 net/netlink/af_netlink.c:2486
+  sock_diag_rcv+0x2b/0x40 net/core/sock_diag.c:274
+  netlink_unicast_kernel net/netlink/af_netlink.c:1311 [inline]
+  netlink_unicast+0x531/0x710 net/netlink/af_netlink.c:1337
+  netlink_sendmsg+0x8ae/0xd70 net/netlink/af_netlink.c:1926
+  sock_sendmsg_nosec net/socket.c:652 [inline]
+  sock_sendmsg+0xd7/0x130 net/socket.c:671
+  ___sys_sendmsg+0x803/0x920 net/socket.c:2292
+  __sys_sendmsg+0x105/0x1d0 net/socket.c:2330
+  __compat_sys_sendmsg net/compat.c:640 [inline]
+  __do_compat_sys_sendmsg net/compat.c:647 [inline]
+  __se_compat_sys_sendmsg net/compat.c:644 [inline]
+  __ia32_compat_sys_sendmsg+0x7a/0xb0 net/compat.c:644
+  do_syscall_32_irqs_on arch/x86/entry/common.c:337 [inline]
+  do_fast_syscall_32+0x27b/0xd7d arch/x86/entry/common.c:408
+  entry_SYSENTER_compat+0x70/0x7f arch/x86/entry/entry_64_compat.S:139
+RIP: 0023:0xf7f2e849
+Code: 85 d2 74 02 89 0a 5b 5d c3 8b 04 24 c3 8b 14 24 c3 8b 3c 24 c3 90 90  
+90 90 90 90 90 90 90 90 90 90 51 52 55 89 e5 0f 34 cd 80 <5d> 5a 59 c3 90  
+90 90 90 eb 0d 90 90 90 90 90 90 90 90 90 90 90 90
+RSP: 002b:00000000ffdfb03c EFLAGS: 00000246 ORIG_RAX: 0000000000000172
+RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 0000000020000040
+RDX: 0000000000000000 RSI: 00000000080ea078 RDI: 00000000ffdfb090
+RBP: 0000000000000000 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000000
+R13: 0000000000000000 R14: 0000000000000000 R15: 0000000000000000
+kasan: CONFIG_KASAN_INLINE enabled
+kasan: GPF could be caused by NULL-ptr deref or user memory access
+general protection fault: 0000 [#1] PREEMPT SMP KASAN
+CPU: 1 PID: 8939 Comm: syz-executor164 Not tainted 5.2.0-rc1+ #1
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+RIP: 0010:list_add include/linux/list.h:79 [inline]
+RIP: 0010:rhashtable_walk_enter+0x18f/0x390 lib/rhashtable.c:672
+Code: c1 ea 03 80 3c 02 00 0f 85 ac 01 00 00 4d 8d 7e 10 4c 89 73 28 48 b8  
+00 00 00 00 00 fc ff df 48 8d 4b 18 4c 89 fa 48 c1 ea 03 <80> 3c 02 00 0f  
+85 70 01 00 00 49 8b 56 10 48 89 cf 4c 89 fe 48 89
+RSP: 0018:ffff888089a17620 EFLAGS: 00010202
+RAX: dffffc0000000000 RBX: ffff8880991f0f80 RCX: ffff8880991f0f98
+RDX: 0000000000000002 RSI: ffffffff833391e4 RDI: ffff8880991f0fa8
+RBP: ffff888089a17658 R08: ffff888096072480 R09: ffffed1011342eb2
+R10: ffffed1011342eb1 R11: 0000000000000003 R12: ffff88809b30dc28
+R13: ffff88809b30dd28 R14: 0000000000000000 R15: 0000000000000010
+FS:  0000000000000000(0000) GS:ffff8880ae900000(0063) knlGS:0000000057838840
+CS:  0010 DS: 002b ES: 002b CR0: 0000000080050033
+CR2: 0000000020000040 CR3: 000000009a614000 CR4: 00000000001406e0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+  __tipc_dump_start+0x1fa/0x3c0 net/tipc/socket.c:3414
+  tipc_dump_start+0x70/0x90 net/tipc/socket.c:3396
+  __netlink_dump_start+0x4f8/0x7d0 net/netlink/af_netlink.c:2351
+  netlink_dump_start include/linux/netlink.h:226 [inline]
+  tipc_sock_diag_handler_dump+0x1d9/0x270 net/tipc/diag.c:91
+  __sock_diag_cmd net/core/sock_diag.c:232 [inline]
+  sock_diag_rcv_msg+0x319/0x410 net/core/sock_diag.c:263
+  netlink_rcv_skb+0x177/0x450 net/netlink/af_netlink.c:2486
+  sock_diag_rcv+0x2b/0x40 net/core/sock_diag.c:274
+  netlink_unicast_kernel net/netlink/af_netlink.c:1311 [inline]
+  netlink_unicast+0x531/0x710 net/netlink/af_netlink.c:1337
+  netlink_sendmsg+0x8ae/0xd70 net/netlink/af_netlink.c:1926
+  sock_sendmsg_nosec net/socket.c:652 [inline]
+  sock_sendmsg+0xd7/0x130 net/socket.c:671
+  ___sys_sendmsg+0x803/0x920 net/socket.c:2292
+  __sys_sendmsg+0x105/0x1d0 net/socket.c:2330
+  __compat_sys_sendmsg net/compat.c:640 [inline]
+  __do_compat_sys_sendmsg net/compat.c:647 [inline]
+  __se_compat_sys_sendmsg net/compat.c:644 [inline]
+  __ia32_compat_sys_sendmsg+0x7a/0xb0 net/compat.c:644
+  do_syscall_32_irqs_on arch/x86/entry/common.c:337 [inline]
+  do_fast_syscall_32+0x27b/0xd7d arch/x86/entry/common.c:408
+  entry_SYSENTER_compat+0x70/0x7f arch/x86/entry/entry_64_compat.S:139
+RIP: 0023:0xf7f2e849
+Code: 85 d2 74 02 89 0a 5b 5d c3 8b 04 24 c3 8b 14 24 c3 8b 3c 24 c3 90 90  
+90 90 90 90 90 90 90 90 90 90 51 52 55 89 e5 0f 34 cd 80 <5d> 5a 59 c3 90  
+90 90 90 eb 0d 90 90 90 90 90 90 90 90 90 90 90 90
+RSP: 002b:00000000ffdfb03c EFLAGS: 00000246 ORIG_RAX: 0000000000000172
+RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 0000000020000040
+RDX: 0000000000000000 RSI: 00000000080ea078 RDI: 00000000ffdfb090
+RBP: 0000000000000000 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000000
+R13: 0000000000000000 R14: 0000000000000000 R15: 0000000000000000
+Modules linked in:
+---[ end trace df764217ca13e9ce ]---
+RIP: 0010:list_add include/linux/list.h:79 [inline]
+RIP: 0010:rhashtable_walk_enter+0x18f/0x390 lib/rhashtable.c:672
+Code: c1 ea 03 80 3c 02 00 0f 85 ac 01 00 00 4d 8d 7e 10 4c 89 73 28 48 b8  
+00 00 00 00 00 fc ff df 48 8d 4b 18 4c 89 fa 48 c1 ea 03 <80> 3c 02 00 0f  
+85 70 01 00 00 49 8b 56 10 48 89 cf 4c 89 fe 48 89
+RSP: 0018:ffff888089a17620 EFLAGS: 00010202
+RAX: dffffc0000000000 RBX: ffff8880991f0f80 RCX: ffff8880991f0f98
+RDX: 0000000000000002 RSI: ffffffff833391e4 RDI: ffff8880991f0fa8
+RBP: ffff888089a17658 R08: ffff888096072480 R09: ffffed1011342eb2
+R10: ffffed1011342eb1 R11: 0000000000000003 R12: ffff88809b30dc28
+R13: ffff88809b30dd28 R14: 0000000000000000 R15: 0000000000000010
+FS:  0000000000000000(0000) GS:ffff8880ae900000(0063) knlGS:0000000057838840
+CS:  0010 DS: 002b ES: 002b CR0: 0000000080050033
+CR2: 0000000020000040 CR3: 000000009a614000 CR4: 00000000001406e0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+
