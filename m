@@ -4,61 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38D83C04E87
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:48:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4B98C04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:48:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 09D4420645
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:48:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A863C20645
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:48:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558356500;
-	bh=FnOiAWCxbxKZVe4E+ZcIN19Am0EYnQ0noptC7Y+yIqM=;
+	s=default; t=1558356507;
+	bh=+GH+DCDK/EE36J4OWkKzbGvcyDu4QdcaLRrUrfIowyM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jQeuHbt7YA2n9GeOK0OZS6mL8biATlmdj8B03M5TJrbe03lB3ADQb3+6DAJu+G0u4
-	 Bt9RryO1N4O+4Cw1l5JOn6i2t3Jrlc7ImsQNSEHqvpOuEroGcpZruNUbWi2U1iM/h3
-	 hthkLwDEcExc16AtnxTaXfib1YiBe+mhUL830SiQ=
+	b=vTQ1k2Pi9qNAgrkjwur0rSZFOUDBg0LkKZr2j1TyEja79x+LeI5wP5NLVpifGNEVq
+	 9/ZMyOasmyvyntZcFzlzmjz1UGnapS8fMj3P+UlyxVJsb+P6XCYSdnSv2PVR2j1QfL
+	 zvPt7Y3f/fZy/o4u0sjQzDoidINqk67aw8pRNY60=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388533AbfETMXK (ORCPT
+        id S2389169AbfETMs1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 08:23:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37256 "EHLO mail.kernel.org"
+        Mon, 20 May 2019 08:48:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37162 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388519AbfETMXE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 08:23:04 -0400
+        id S2388262AbfETMW6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 08:22:58 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C2B3B21019;
-        Mon, 20 May 2019 12:23:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 845E521783;
+        Mon, 20 May 2019 12:22:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558354983;
-        bh=FnOiAWCxbxKZVe4E+ZcIN19Am0EYnQ0noptC7Y+yIqM=;
+        s=default; t=1558354978;
+        bh=+GH+DCDK/EE36J4OWkKzbGvcyDu4QdcaLRrUrfIowyM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RTKZRRg1YHRvm7rV96wwn8ua+v79ABSZwNwDNGswW5qYEpHLD1q+7ERv+4+QMTLnQ
-         MewUZbuSENBKo4MC9Ob9ehMzOOX33ohmCLgSnN85DG+SEmfFnd5kk3VUiMnJHHGQ2w
-         1AsOBNXXemOo5W/v/1reE4NWzt41nTE2zpzPSeOQ=
+        b=ynf6dIs9mPD3VHriFfqXPgkRLdqHOddecOCKkbfCeJ/uJUoXZyw3eJ3tiHLt8EupF
+         BiwRULXFLU6oBGxsF93vyssC6Q494V6jLLpSG86GODFkRx6Zs/iUVe65fdEkiUjghj
+         N09B+zFZWoyHONs2NfLzWOVeRUFkHk7tkaIxlhTA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jiri Kosina <jkosina@suse.cz>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Josh Snyder <joshs@netflix.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Dave Chinner <david@fromorbit.com>,
-        Kevin Easton <kevin@guarana.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        Cyril Hrubis <chrubis@suse.cz>, Tejun Heo <tj@kernel.org>,
-        "Kirill A. Shutemov" <kirill@shutemov.name>,
-        Daniel Gruss <daniel@gruss.cc>,
-        Andrew Morton <akpm@linux-foundation.org>,
+        stable@vger.kernel.org, Andy Lutomirski <luto@kernel.org>,
+        Borislav Petkov <bp@suse.de>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Jon Masters <jcm@redhat.com>,
         Linus Torvalds <torvalds@linux-foundation.org>,
-        Dominique Martinet <asmadeus@codewreck.org>
-Subject: [PATCH 4.19 053/105] mm/mincore.c: make mincore() more conservative
-Date:   Mon, 20 May 2019 14:13:59 +0200
-Message-Id: <20190520115250.721190520@linuxfoundation.org>
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>
+Subject: [PATCH 4.19 002/105] x86/speculation/mds: Revert CPU buffer clear on double fault exit
+Date:   Mon, 20 May 2019 14:13:08 +0200
+Message-Id: <20190520115247.226620319@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190520115247.060821231@linuxfoundation.org>
 References: <20190520115247.060821231@linuxfoundation.org>
@@ -71,95 +65,73 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jiri Kosina <jkosina@suse.cz>
+From: Andy Lutomirski <luto@kernel.org>
 
-commit 134fca9063ad4851de767d1768180e5dede9a881 upstream.
+commit 88640e1dcd089879530a49a8d212d1814678dfe7 upstream.
 
-The semantics of what mincore() considers to be resident is not
-completely clear, but Linux has always (since 2.3.52, which is when
-mincore() was initially done) treated it as "page is available in page
-cache".
+The double fault ESPFIX path doesn't return to user mode at all --
+it returns back to the kernel by simulating a #GP fault.
+prepare_exit_to_usermode() will run on the way out of
+general_protection before running user code.
 
-That's potentially a problem, as that [in]directly exposes
-meta-information about pagecache / memory mapping state even about
-memory not strictly belonging to the process executing the syscall,
-opening possibilities for sidechannel attacks.
-
-Change the semantics of mincore() so that it only reveals pagecache
-information for non-anonymous mappings that belog to files that the
-calling process could (if it tried to) successfully open for writing;
-otherwise we'd be including shared non-exclusive mappings, which
-
- - is the sidechannel
-
- - is not the usecase for mincore(), as that's primarily used for data,
-   not (shared) text
-
-[jkosina@suse.cz: v2]
-  Link: http://lkml.kernel.org/r/20190312141708.6652-2-vbabka@suse.cz
-[mhocko@suse.com: restructure can_do_mincore() conditions]
-Link: http://lkml.kernel.org/r/nycvar.YFH.7.76.1903062342020.19912@cbobk.fhfr.pm
-Signed-off-by: Jiri Kosina <jkosina@suse.cz>
-Signed-off-by: Vlastimil Babka <vbabka@suse.cz>
-Acked-by: Josh Snyder <joshs@netflix.com>
-Acked-by: Michal Hocko <mhocko@suse.com>
-Originally-by: Linus Torvalds <torvalds@linux-foundation.org>
-Originally-by: Dominique Martinet <asmadeus@codewreck.org>
-Cc: Andy Lutomirski <luto@amacapital.net>
-Cc: Dave Chinner <david@fromorbit.com>
-Cc: Kevin Easton <kevin@guarana.org>
-Cc: Matthew Wilcox <willy@infradead.org>
-Cc: Cyril Hrubis <chrubis@suse.cz>
-Cc: Tejun Heo <tj@kernel.org>
-Cc: Kirill A. Shutemov <kirill@shutemov.name>
-Cc: Daniel Gruss <daniel@gruss.cc>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Andy Lutomirski <luto@kernel.org>
+Cc: Borislav Petkov <bp@suse.de>
+Cc: Frederic Weisbecker <frederic@kernel.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Jon Masters <jcm@redhat.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: stable@vger.kernel.org
+Fixes: 04dcbdb80578 ("x86/speculation/mds: Clear CPU buffers on exit to user")
+Link: http://lkml.kernel.org/r/ac97612445c0a44ee10374f6ea79c222fe22a5c4.1557865329.git.luto@kernel.org
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- mm/mincore.c |   23 ++++++++++++++++++++++-
- 1 file changed, 22 insertions(+), 1 deletion(-)
+ Documentation/x86/mds.rst |    7 -------
+ arch/x86/kernel/traps.c   |    8 --------
+ 2 files changed, 15 deletions(-)
 
---- a/mm/mincore.c
-+++ b/mm/mincore.c
-@@ -169,6 +169,22 @@ out:
- 	return 0;
- }
+--- a/Documentation/x86/mds.rst
++++ b/Documentation/x86/mds.rst
+@@ -158,13 +158,6 @@ Mitigation points
+      mitigated on the return from do_nmi() to provide almost complete
+      coverage.
  
-+static inline bool can_do_mincore(struct vm_area_struct *vma)
-+{
-+	if (vma_is_anonymous(vma))
-+		return true;
-+	if (!vma->vm_file)
-+		return false;
-+	/*
-+	 * Reveal pagecache information only for non-anonymous mappings that
-+	 * correspond to the files the calling process could (if tried) open
-+	 * for writing; otherwise we'd be including shared non-exclusive
-+	 * mappings, which opens a side channel.
-+	 */
-+	return inode_owner_or_capable(file_inode(vma->vm_file)) ||
-+		inode_permission(file_inode(vma->vm_file), MAY_WRITE) == 0;
-+}
-+
- /*
-  * Do a chunk of "sys_mincore()". We've already checked
-  * all the arguments, we hold the mmap semaphore: we should
-@@ -189,8 +205,13 @@ static long do_mincore(unsigned long add
- 	vma = find_vma(current->mm, addr);
- 	if (!vma || addr < vma->vm_start)
- 		return -ENOMEM;
--	mincore_walk.mm = vma->vm_mm;
- 	end = min(vma->vm_end, addr + (pages << PAGE_SHIFT));
-+	if (!can_do_mincore(vma)) {
-+		unsigned long pages = DIV_ROUND_UP(end - addr, PAGE_SIZE);
-+		memset(vec, 1, pages);
-+		return pages;
-+	}
-+	mincore_walk.mm = vma->vm_mm;
- 	err = walk_page_range(addr, end, &mincore_walk);
- 	if (err < 0)
- 		return err;
+-   - Double fault (#DF):
+-
+-     A double fault is usually fatal, but the ESPFIX workaround, which can
+-     be triggered from user space through modify_ldt(2) is a recoverable
+-     double fault. #DF uses the paranoid exit path, so explicit mitigation
+-     in the double fault handler is required.
+-
+    - Machine Check Exception (#MC):
+ 
+      Another corner case is a #MC which hits between the CPU buffer clear
+--- a/arch/x86/kernel/traps.c
++++ b/arch/x86/kernel/traps.c
+@@ -58,7 +58,6 @@
+ #include <asm/alternative.h>
+ #include <asm/fpu/xstate.h>
+ #include <asm/trace/mpx.h>
+-#include <asm/nospec-branch.h>
+ #include <asm/mpx.h>
+ #include <asm/vm86.h>
+ #include <asm/umip.h>
+@@ -388,13 +387,6 @@ dotraplinkage void do_double_fault(struc
+ 		regs->ip = (unsigned long)general_protection;
+ 		regs->sp = (unsigned long)&gpregs->orig_ax;
+ 
+-		/*
+-		 * This situation can be triggered by userspace via
+-		 * modify_ldt(2) and the return does not take the regular
+-		 * user space exit, so a CPU buffer clear is required when
+-		 * MDS mitigation is enabled.
+-		 */
+-		mds_user_clear_cpu_buffers();
+ 		return;
+ 	}
+ #endif
 
 
