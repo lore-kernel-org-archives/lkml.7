@@ -2,68 +2,108 @@ Return-Path: <SRS0=lq4r=TU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58CD1C04AAC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 17:00:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01605C04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 17:01:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2C09A21726
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 17:00:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558371623;
-	bh=vWPY5Ul5yjk13DZ/U0D2PZdx4tU1xULCEwnZyr79O+c=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=iBZiBhsIVKlzXW3xhugF2g8higxEwR30soO3rYHWZ4keTGDhS4TLg9lBqFlhDGth7
-	 QH8xCIcRYdo8/805vGRS7XbxxnevTIbeaYnpC/zXY4TjejCPeDOBeRznCTDyeiNfLK
-	 Zlu93YBDoQdjQ6rgNMp06PgeI4VboZF8OGNm0H6g=
+	by mail.kernel.org (Postfix) with ESMTP id B43C6216B7
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 17:01:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="DgcBl8Sm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392570AbfETRAW (ORCPT
+        id S2392626AbfETRBk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 13:00:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57596 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389465AbfETRAV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 13:00:21 -0400
-Subject: Re: [GIT PULL] Btrfs fixes for 5.2-rc2
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558371621;
-        bh=vWPY5Ul5yjk13DZ/U0D2PZdx4tU1xULCEwnZyr79O+c=;
-        h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=G2zoIBVgxcNB+dEVqdBm6j1Gw8I9j+cKcW1PNIACLQlOqsc8ZGaM3IuEZglwxyDD1
-         maRVekriYBjGAdSHUy0YsBaz/Bf5ofbv5B4VMH9KzlMs2+5nETYnu1azDGrRS5aHru
-         c8esXE990CXj+A7hWB2nG9R1tZVqL+KtWOxqMh/Q=
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <cover.1558370339.git.dsterba@suse.com>
-References: <cover.1558370339.git.dsterba@suse.com>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <cover.1558370339.git.dsterba@suse.com>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/kdave/linux.git for-5.2-rc1-tag
-X-PR-Tracked-Commit-Id: 4e9845eff5a8027b5181d5bff56a02991fe46d48
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: f49aa1de98363b6c5fba4637678d6b0ba3d18065
-Message-Id: <155837162103.7151.17612750682185207342.pr-tracker-bot@kernel.org>
-Date:   Mon, 20 May 2019 17:00:21 +0000
-To:     David Sterba <dsterba@suse.com>
-Cc:     torvalds@linux-foundation.org, David Sterba <dsterba@suse.com>,
-        clm@fb.com, linux-btrfs@vger.kernel.org,
-        linux-kernel@vger.kernel.org
+        Mon, 20 May 2019 13:01:40 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:37452 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388204AbfETRBj (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 13:01:39 -0400
+Received: by mail-io1-f67.google.com with SMTP id u2so11621345ioc.4
+        for <linux-kernel@vger.kernel.org>; Mon, 20 May 2019 10:01:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=x6v5cZ4d3IbzzHyX9tB5SggAe9a0MLVJDqe4K+VrolY=;
+        b=DgcBl8Smh89XruihvIIqo2/jwlRNXKwzhoakXmLzoUDPce90oG/GyzQ8l/jtA2OL0i
+         SEXXSDe8NSrl1QM7MqUwkOtgDOh2Gr66AcXniCOv8ZqSJbDbxRvzXncS4+WdSFomASNH
+         WfY30ET7xT7NYiS1Z1z8P77Zabz6rKiUmME9A=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=x6v5cZ4d3IbzzHyX9tB5SggAe9a0MLVJDqe4K+VrolY=;
+        b=t7v3QB3NOvgufO8covXVxBNRhdNesRp34VwzUka5FEbo8ZLcPH0uqzd1rAUPKScbVF
+         dbCaJFPasjRAUbsDFQvNGiP1LEJ1tX+c3QBPi9sXu6KFjUGu5QVIJAFOrhoFHntkLioV
+         uwk65oCEMHh4mOacsnGPPSHA/ADj5GvPO1a8p00njWnCrDFRvnYlTQU+QK4NhOY/ibfU
+         KVtm+ZsrJ6LgWeJzT6ILifd2YdblGBK34/8j+6NBa8D1w2+U+xTuCsj2uB4glKsKC5/j
+         DtfCxFOk6Fe5jNCf9LtFXDd594Qmm3r7MyLgkrv+RSfUii99pENsNgxDxVSOrtb6ktJV
+         XnoQ==
+X-Gm-Message-State: APjAAAWGqm/J551rFtQtMDIVqsbjN4Ykk5g6G5GvmZ7zHbT8gYCbFl9I
+        jjS+5QtgQbSO29vaAVzKBKHd2Q==
+X-Google-Smtp-Source: APXvYqy0W2gpclxj4ZGsAs2T9LwfcoVY4dorBvuLBx7NxPHNi4Rs1l+AN5UkFsEt4Xy4HrBvwIlWAw==
+X-Received: by 2002:a6b:2c94:: with SMTP id s142mr25278871ios.302.1558371699238;
+        Mon, 20 May 2019 10:01:39 -0700 (PDT)
+Received: from localhost ([2620:15c:202:1:75a:3f6e:21d:9374])
+        by smtp.gmail.com with ESMTPSA id v202sm25015itb.38.2019.05.20.10.01.38
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 20 May 2019 10:01:38 -0700 (PDT)
+From:   Matthias Kaehlcke <mka@chromium.org>
+To:     Heiko Stuebner <heiko@sntech.de>, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
+Cc:     linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Douglas Anderson <dianders@chromium.org>,
+        Matthias Kaehlcke <mka@chromium.org>
+Subject: [PATCH 1/2] ARM: dts: rockchip: Limit GPU frequency on veyron mickey to 300 MHz when the CPU gets very hot
+Date:   Mon, 20 May 2019 10:01:31 -0700
+Message-Id: <20190520170132.91571-1-mka@chromium.org>
+X-Mailer: git-send-email 2.21.0.1020.gf2820cf01a-goog
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Mon, 20 May 2019 18:52:43 +0200:
+On rk3288 the CPU and GPU temperatures are correlated. Limit the GPU
+frequency on veyron mickey to 300 MHz for CPU temperatures >= 85°C.
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/kdave/linux.git for-5.2-rc1-tag
+This matches the configuration of the downstream Chrome OS 3.14 kernel,
+the 'official' kernel for mickey.
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/f49aa1de98363b6c5fba4637678d6b0ba3d18065
+Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
+---
+Note: this patch depends on "ARM: dts: rockchip: Add #cooling-cells
+entry for rk3288 GPU" (https://lore.kernel.org/patchwork/patch/1075005/)
+---
+ arch/arm/boot/dts/rk3288-veyron-mickey.dts | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-Thank you!
-
+diff --git a/arch/arm/boot/dts/rk3288-veyron-mickey.dts b/arch/arm/boot/dts/rk3288-veyron-mickey.dts
+index d889ab3c8235..f118d92a49d0 100644
+--- a/arch/arm/boot/dts/rk3288-veyron-mickey.dts
++++ b/arch/arm/boot/dts/rk3288-veyron-mickey.dts
+@@ -125,6 +125,12 @@
+ 					 <&cpu2 8 THERMAL_NO_LIMIT>,
+ 					 <&cpu3 8 THERMAL_NO_LIMIT>;
+ 		};
++
++		/* At very hot, don't let GPU go over 300 MHz */
++		cpu_very_hot_limit_gpu {
++			trip = <&cpu_alert_very_hot>;
++			cooling-device = <&gpu 2 2>;
++		};
+ 	};
+ };
+ 
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.wiki.kernel.org/userdoc/prtracker
+2.21.0.1020.gf2820cf01a-goog
+
