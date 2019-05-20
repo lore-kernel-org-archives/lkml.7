@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD577C04AAC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:50:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC753C04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:50:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 842E120645
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:50:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C0EE120815
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:50:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558356630;
-	bh=hJhvb1Dms8MsY1g+rT6DS/w0wdxn/uWL5NtjZwJQrT4=;
+	s=default; t=1558356633;
+	bh=QOAseeH2yv1IQXokjrSetFhF2bK4kHRU9OJPRZHBuFU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=L9v/MwEn92hgmwo2e6frWuO+K8tl80ojMR+Refuv/IzFFhSyR5LS/VtDcglyNfS9a
-	 oQuWvO5MUdFEB32AHlmsndmV8CaS1wB8tKpQADwjl7T8t0Ljh7Wez9Fx6TwibVmaho
-	 /Nq6t3yGsYB5VJDMyiQlNyk2aRak42vvVETtX0RA=
+	b=tCPwRaydgmuqjTs6TaQeQmanT4SeioK8UmOKc6fESiBB+2dWB1B4yfAtj9u8A9Jh7
+	 opTQGFNm/9SH6VX7iO72u6iezMPluvpYvKmQaTpo5/FFocwE0AvcC+1HOsTJ+IU0XZ
+	 MKp6ZGaS+C9uxniqlouSFvpFmzBhITKYbOUcm/Qc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732647AbfETMUw (ORCPT
+        id S2389415AbfETMuc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 08:20:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34198 "EHLO mail.kernel.org"
+        Mon, 20 May 2019 08:50:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34262 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388026AbfETMUp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 08:20:45 -0400
+        id S1732569AbfETMUr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 08:20:47 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1D411213F2;
-        Mon, 20 May 2019 12:20:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A2AE2214AE;
+        Mon, 20 May 2019 12:20:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558354844;
-        bh=hJhvb1Dms8MsY1g+rT6DS/w0wdxn/uWL5NtjZwJQrT4=;
+        s=default; t=1558354847;
+        bh=QOAseeH2yv1IQXokjrSetFhF2bK4kHRU9OJPRZHBuFU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vInVjC6mhFPlmBY7vBc5ltvWGl/OGWFZ3vpEHVyPoz5GR9guj4y51/N9T1Am5HlwF
-         S/EXhjWxU9I5TNgQwxPLB36Ipz766Lqypkq904J2veKwygy0r1ru0+KqXTiaNa3GWX
-         78eY8q/WmbexIBsAQ7jD1acPdgfeWVXiGMDyv6DU=
+        b=uF8kx5BdhNRLEy8v8Qo5bdy9B3td8z1MIlytRqz9buS2f0hGeQskf4Fr4fraH/Q0o
+         aH3WvwFpn3sfsgEmMyGa5K33KT4eEDL44AZsIGfIck0P/p1rE7ALKNI+3a9ZxuKSfh
+         1iZS9t0q7HOVle1Uni0g0ZeFMH/zo5ehscCPbikg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Sriram Rajagopalan <sriramr@arista.com>,
+        stable@vger.kernel.org, Lukas Czerner <lczerner@redhat.com>,
         Theodore Tso <tytso@mit.edu>, stable@kernel.org
-Subject: [PATCH 4.14 57/63] ext4: zero out the unused memory region in the extent tree block
-Date:   Mon, 20 May 2019 14:14:36 +0200
-Message-Id: <20190520115237.289623467@linuxfoundation.org>
+Subject: [PATCH 4.14 58/63] ext4: fix data corruption caused by overlapping unaligned and aligned IO
+Date:   Mon, 20 May 2019 14:14:37 +0200
+Message-Id: <20190520115237.335124529@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190520115231.137981521@linuxfoundation.org>
 References: <20190520115231.137981521@linuxfoundation.org>
@@ -59,82 +59,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sriram Rajagopalan <sriramr@arista.com>
+From: Lukas Czerner <lczerner@redhat.com>
 
-commit 592acbf16821288ecdc4192c47e3774a4c48bb64 upstream.
+commit 57a0da28ced8707cb9f79f071a016b9d005caf5a upstream.
 
-This commit zeroes out the unused memory region in the buffer_head
-corresponding to the extent metablock after writing the extent header
-and the corresponding extent node entries.
+Unaligned AIO must be serialized because the zeroing of partial blocks
+of unaligned AIO can result in data corruption in case it's overlapping
+another in flight IO.
 
-This is done to prevent random uninitialized data from getting into
-the filesystem when the extent block is synced.
+Currently we wait for all unwritten extents before we submit unaligned
+AIO which protects data in case of unaligned AIO is following overlapping
+IO. However if a unaligned AIO is followed by overlapping aligned AIO we
+can still end up corrupting data.
 
-This fixes CVE-2019-11833.
+To fix this, we must make sure that the unaligned AIO is the only IO in
+flight by waiting for unwritten extents conversion not just before the
+IO submission, but right after it as well.
 
-Signed-off-by: Sriram Rajagopalan <sriramr@arista.com>
+This problem can be reproduced by xfstest generic/538
+
+Signed-off-by: Lukas Czerner <lczerner@redhat.com>
 Signed-off-by: Theodore Ts'o <tytso@mit.edu>
 Cc: stable@kernel.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/ext4/extents.c |   17 +++++++++++++++--
- 1 file changed, 15 insertions(+), 2 deletions(-)
+ fs/ext4/file.c |    7 +++++++
+ 1 file changed, 7 insertions(+)
 
---- a/fs/ext4/extents.c
-+++ b/fs/ext4/extents.c
-@@ -1047,6 +1047,7 @@ static int ext4_ext_split(handle_t *hand
- 	__le32 border;
- 	ext4_fsblk_t *ablocks = NULL; /* array of allocated blocks */
- 	int err = 0;
-+	size_t ext_size = 0;
- 
- 	/* make decision: where to split? */
- 	/* FIXME: now decision is simplest: at current extent */
-@@ -1138,6 +1139,10 @@ static int ext4_ext_split(handle_t *hand
- 		le16_add_cpu(&neh->eh_entries, m);
+--- a/fs/ext4/file.c
++++ b/fs/ext4/file.c
+@@ -262,6 +262,13 @@ ext4_file_write_iter(struct kiocb *iocb,
  	}
  
-+	/* zero out unused area in the extent block */
-+	ext_size = sizeof(struct ext4_extent_header) +
-+		sizeof(struct ext4_extent) * le16_to_cpu(neh->eh_entries);
-+	memset(bh->b_data + ext_size, 0, inode->i_sb->s_blocksize - ext_size);
- 	ext4_extent_block_csum_set(inode, neh);
- 	set_buffer_uptodate(bh);
- 	unlock_buffer(bh);
-@@ -1217,6 +1222,11 @@ static int ext4_ext_split(handle_t *hand
- 				sizeof(struct ext4_extent_idx) * m);
- 			le16_add_cpu(&neh->eh_entries, m);
- 		}
-+		/* zero out unused area in the extent block */
-+		ext_size = sizeof(struct ext4_extent_header) +
-+		   (sizeof(struct ext4_extent) * le16_to_cpu(neh->eh_entries));
-+		memset(bh->b_data + ext_size, 0,
-+			inode->i_sb->s_blocksize - ext_size);
- 		ext4_extent_block_csum_set(inode, neh);
- 		set_buffer_uptodate(bh);
- 		unlock_buffer(bh);
-@@ -1282,6 +1292,7 @@ static int ext4_ext_grow_indepth(handle_
- 	ext4_fsblk_t newblock, goal = 0;
- 	struct ext4_super_block *es = EXT4_SB(inode->i_sb)->s_es;
- 	int err = 0;
-+	size_t ext_size = 0;
+ 	ret = __generic_file_write_iter(iocb, from);
++	/*
++	 * Unaligned direct AIO must be the only IO in flight. Otherwise
++	 * overlapping aligned IO after unaligned might result in data
++	 * corruption.
++	 */
++	if (ret == -EIOCBQUEUED && unaligned_aio)
++		ext4_unwritten_wait(inode);
+ 	inode_unlock(inode);
  
- 	/* Try to prepend new index to old one */
- 	if (ext_depth(inode))
-@@ -1307,9 +1318,11 @@ static int ext4_ext_grow_indepth(handle_
- 		goto out;
- 	}
- 
-+	ext_size = sizeof(EXT4_I(inode)->i_data);
- 	/* move top-level index/leaf into new block */
--	memmove(bh->b_data, EXT4_I(inode)->i_data,
--		sizeof(EXT4_I(inode)->i_data));
-+	memmove(bh->b_data, EXT4_I(inode)->i_data, ext_size);
-+	/* zero out unused area in the extent block */
-+	memset(bh->b_data + ext_size, 0, inode->i_sb->s_blocksize - ext_size);
- 
- 	/* set size of new block */
- 	neh = ext_block_hdr(bh);
+ 	if (ret > 0)
 
 
