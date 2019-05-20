@@ -4,55 +4,63 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5D86C04AAC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:21:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C888C04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:21:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7B27C214AE
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:21:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EC8DA2171F
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:21:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558354868;
-	bh=QzXMABAp5useRBARdCL6vnv7ldSqL36jJR/3j27x2Ok=;
+	s=default; t=1558354872;
+	bh=WqXVU298ghjn0eTgBxKUTiGOrwmB4Y3FBEDjgQl9Rhs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=g4560O1uQ/jD+LevcMGjH4oYMtlPVKD2QUmD5dd9JI5wU4vcXtQ3CdlyKlWlXEdy2
-	 iylyjvfLcxvDCw/zFoG+btdZ7guTpJkZ/S3QKYGyOtfcLHJlWCi2k9Jq70daN7Mh5X
-	 hggN+DehLTvrHnpGT7eKi9PnZYArScnbtkru7kDE=
+	b=CUFkCEeIKhlZkVLXdrWQaTFSx7ob1rYwK8zcLbtG9/Yn7dBeYyJJlDp9PPpAxA+4j
+	 qeRf3cOkTSi/GhZrL5bPyilY4PAeYN3/DtZJb68E08Hl3s8UCZDWnyTPq3RbruOIvi
+	 tBkvEI5kqAEAdgxZKMptO6eNukUQ3p6jLIRS4lFM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388108AbfETMVH (ORCPT
+        id S1732468AbfETMVK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 08:21:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34564 "EHLO mail.kernel.org"
+        Mon, 20 May 2019 08:21:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34594 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388092AbfETMVD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 08:21:03 -0400
+        id S2388102AbfETMVG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 08:21:06 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 978BF213F2;
-        Mon, 20 May 2019 12:21:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 34B1520656;
+        Mon, 20 May 2019 12:21:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558354863;
-        bh=QzXMABAp5useRBARdCL6vnv7ldSqL36jJR/3j27x2Ok=;
+        s=default; t=1558354865;
+        bh=WqXVU298ghjn0eTgBxKUTiGOrwmB4Y3FBEDjgQl9Rhs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Wjmz4oLSVKueXoT2linGF7/e9cihKmxczCLGowupARVjLh3/p+Wi2ICHxpdLZLC7j
-         6820g4CB/plMhyBRHJxqQHSbXJkL1wQfdUupn8lG6QPUiVH3Cbox0slKIdji4J07aJ
-         GCFkT+67TPUjud43NyFX+XXhOqPyYyi0refY1FM4=
+        b=pOA5qxqdSJ9Ua3bwO2WKctBo8TFA3Lq2na0/E2b2b/XKqzg3/RDdPjjGvT/srFuXV
+         1ZQl2l+jlN/Sa57NUVj/q5HOLjZvl7x6PMgTQFhBBSw9hKJYuktuNF2DxOMjfvXQKX
+         5O6dnn6HxEX7bkameA6oRW9V7h/e2gvPythSJ+8Y=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jiufei Xue <jiufei.xue@linux.alibaba.com>,
-        Tejun Heo <tj@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 4.14 56/63] fs/writeback.c: use rcu_barrier() to wait for inflight wb switches going into workqueue when umount
-Date:   Mon, 20 May 2019 14:14:35 +0200
-Message-Id: <20190520115237.198784160@linuxfoundation.org>
+        stable@vger.kernel.org, Waiman Long <longman@redhat.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Tim Chen <tim.c.chen@linux.intel.com>,
+        Will Deacon <will.deacon@arm.com>,
+        huang ying <huang.ying.caritas@gmail.com>,
+        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 001/105] locking/rwsem: Prevent decrement of reader count before increment
+Date:   Mon, 20 May 2019 14:13:07 +0200
+Message-Id: <20190520115247.158720523@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190520115231.137981521@linuxfoundation.org>
-References: <20190520115231.137981521@linuxfoundation.org>
+In-Reply-To: <20190520115247.060821231@linuxfoundation.org>
+References: <20190520115247.060821231@linuxfoundation.org>
 User-Agent: quilt/0.66
+X-stable: review
+X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -61,75 +69,124 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jiufei Xue <jiufei.xue@linux.alibaba.com>
+[ Upstream commit a9e9bcb45b1525ba7aea26ed9441e8632aeeda58 ]
 
-commit ec084de929e419e51bcdafaafe567d9e7d0273b7 upstream.
+During my rwsem testing, it was found that after a down_read(), the
+reader count may occasionally become 0 or even negative. Consequently,
+a writer may steal the lock at that time and execute with the reader
+in parallel thus breaking the mutual exclusion guarantee of the write
+lock. In other words, both readers and writer can become rwsem owners
+simultaneously.
 
-synchronize_rcu() didn't wait for call_rcu() callbacks, so inode wb
-switch may not go to the workqueue after synchronize_rcu().  Thus
-previous scheduled switches was not finished even flushing the
-workqueue, which will cause a NULL pointer dereferenced followed below.
+The current reader wakeup code does it in one pass to clear waiter->task
+and put them into wake_q before fully incrementing the reader count.
+Once waiter->task is cleared, the corresponding reader may see it,
+finish the critical section and do unlock to decrement the count before
+the count is incremented. This is not a problem if there is only one
+reader to wake up as the count has been pre-incremented by 1.  It is
+a problem if there are more than one readers to be woken up and writer
+can steal the lock.
 
-  VFS: Busy inodes after unmount of vdd. Self-destruct in 5 seconds.  Have a nice day...
-  BUG: unable to handle kernel NULL pointer dereference at 0000000000000278
-    evict+0xb3/0x180
-    iput+0x1b0/0x230
-    inode_switch_wbs_work_fn+0x3c0/0x6a0
-    worker_thread+0x4e/0x490
-    ? process_one_work+0x410/0x410
-    kthread+0xe6/0x100
-    ret_from_fork+0x39/0x50
+The wakeup was actually done in 2 passes before the following v4.9 commit:
 
-Replace the synchronize_rcu() call with a rcu_barrier() to wait for all
-pending callbacks to finish.  And inc isw_nr_in_flight after call_rcu()
-in inode_switch_wbs() to make more sense.
+  70800c3c0cc5 ("locking/rwsem: Scan the wait_list for readers only once")
 
-Link: http://lkml.kernel.org/r/20190429024108.54150-1-jiufei.xue@linux.alibaba.com
-Signed-off-by: Jiufei Xue <jiufei.xue@linux.alibaba.com>
-Acked-by: Tejun Heo <tj@kernel.org>
-Suggested-by: Tejun Heo <tj@kernel.org>
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To fix this problem, the wakeup is now done in two passes
+again. In the first pass, we collect the readers and count them.
+The reader count is then fully incremented. In the second pass, the
+waiter->task is then cleared and they are put into wake_q to be woken
+up later.
 
+Signed-off-by: Waiman Long <longman@redhat.com>
+Acked-by: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: Davidlohr Bueso <dave@stgolabs.net>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Tim Chen <tim.c.chen@linux.intel.com>
+Cc: Will Deacon <will.deacon@arm.com>
+Cc: huang ying <huang.ying.caritas@gmail.com>
+Fixes: 70800c3c0cc5 ("locking/rwsem: Scan the wait_list for readers only once")
+Link: http://lkml.kernel.org/r/20190428212557.13482-2-longman@redhat.com
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/fs-writeback.c |   11 ++++++++---
- 1 file changed, 8 insertions(+), 3 deletions(-)
+ kernel/locking/rwsem-xadd.c |   44 ++++++++++++++++++++++++++++++--------------
+ 1 file changed, 30 insertions(+), 14 deletions(-)
 
---- a/fs/fs-writeback.c
-+++ b/fs/fs-writeback.c
-@@ -530,8 +530,6 @@ static void inode_switch_wbs(struct inod
- 
- 	isw->inode = inode;
- 
--	atomic_inc(&isw_nr_in_flight);
--
- 	/*
- 	 * In addition to synchronizing among switchers, I_WB_SWITCH tells
- 	 * the RCU protected stat update paths to grab the mapping's
-@@ -539,6 +537,9 @@ static void inode_switch_wbs(struct inod
- 	 * Let's continue after I_WB_SWITCH is guaranteed to be visible.
- 	 */
- 	call_rcu(&isw->rcu_head, inode_switch_wbs_rcu_fn);
-+
-+	atomic_inc(&isw_nr_in_flight);
-+
- 	goto out_unlock;
- 
- out_free:
-@@ -908,7 +909,11 @@ restart:
- void cgroup_writeback_umount(void)
+--- a/kernel/locking/rwsem-xadd.c
++++ b/kernel/locking/rwsem-xadd.c
+@@ -130,6 +130,7 @@ static void __rwsem_mark_wake(struct rw_
  {
- 	if (atomic_read(&isw_nr_in_flight)) {
--		synchronize_rcu();
-+		/*
-+		 * Use rcu_barrier() to wait for all pending callbacks to
-+		 * ensure that all in-flight wb switches are in the workqueue.
-+		 */
-+		rcu_barrier();
- 		flush_workqueue(isw_wq);
+ 	struct rwsem_waiter *waiter, *tmp;
+ 	long oldcount, woken = 0, adjustment = 0;
++	struct list_head wlist;
+ 
+ 	/*
+ 	 * Take a peek at the queue head waiter such that we can determine
+@@ -188,18 +189,42 @@ static void __rwsem_mark_wake(struct rw_
+ 	 * of the queue. We know that woken will be at least 1 as we accounted
+ 	 * for above. Note we increment the 'active part' of the count by the
+ 	 * number of readers before waking any processes up.
++	 *
++	 * We have to do wakeup in 2 passes to prevent the possibility that
++	 * the reader count may be decremented before it is incremented. It
++	 * is because the to-be-woken waiter may not have slept yet. So it
++	 * may see waiter->task got cleared, finish its critical section and
++	 * do an unlock before the reader count increment.
++	 *
++	 * 1) Collect the read-waiters in a separate list, count them and
++	 *    fully increment the reader count in rwsem.
++	 * 2) For each waiters in the new list, clear waiter->task and
++	 *    put them into wake_q to be woken up later.
+ 	 */
+-	list_for_each_entry_safe(waiter, tmp, &sem->wait_list, list) {
+-		struct task_struct *tsk;
+-
++	list_for_each_entry(waiter, &sem->wait_list, list) {
+ 		if (waiter->type == RWSEM_WAITING_FOR_WRITE)
+ 			break;
+ 
+ 		woken++;
+-		tsk = waiter->task;
++	}
++	list_cut_before(&wlist, &sem->wait_list, &waiter->list);
++
++	adjustment = woken * RWSEM_ACTIVE_READ_BIAS - adjustment;
++	if (list_empty(&sem->wait_list)) {
++		/* hit end of list above */
++		adjustment -= RWSEM_WAITING_BIAS;
++	}
++
++	if (adjustment)
++		atomic_long_add(adjustment, &sem->count);
+ 
++	/* 2nd pass */
++	list_for_each_entry_safe(waiter, tmp, &wlist, list) {
++		struct task_struct *tsk;
++
++		tsk = waiter->task;
+ 		get_task_struct(tsk);
+-		list_del(&waiter->list);
++
+ 		/*
+ 		 * Ensure calling get_task_struct() before setting the reader
+ 		 * waiter to nil such that rwsem_down_read_failed() cannot
+@@ -215,15 +240,6 @@ static void __rwsem_mark_wake(struct rw_
+ 		/* wake_q_add() already take the task ref */
+ 		put_task_struct(tsk);
  	}
+-
+-	adjustment = woken * RWSEM_ACTIVE_READ_BIAS - adjustment;
+-	if (list_empty(&sem->wait_list)) {
+-		/* hit end of list above */
+-		adjustment -= RWSEM_WAITING_BIAS;
+-	}
+-
+-	if (adjustment)
+-		atomic_long_add(adjustment, &sem->count);
  }
+ 
+ /*
 
 
