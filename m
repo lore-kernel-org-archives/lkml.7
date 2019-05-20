@@ -2,113 +2,101 @@ Return-Path: <SRS0=lq4r=TU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 039A9C46460
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 15:07:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E3F4C04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 15:08:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CAC3421721
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 15:07:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="EzqGCTeH"
+	by mail.kernel.org (Postfix) with ESMTP id 32A9720863
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 15:08:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389815AbfETPH4 (ORCPT
+        id S2388377AbfETPIa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 11:07:56 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:38797 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1733123AbfETPH4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 11:07:56 -0400
-Received: by mail-wm1-f65.google.com with SMTP id t5so12066065wmh.3
-        for <linux-kernel@vger.kernel.org>; Mon, 20 May 2019 08:07:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=3FCkJMun06bDUVWTAvV42COQZNf02FQ8u62uqqJiOUg=;
-        b=EzqGCTeHr1mxFc/IIH/eDfjStg8gyhuoN7DpS3KC+9YyD2U5qUFrxigfAPSw4xCK0n
-         MbFMfVEOChtVmivqDSSSqSdBP3ZUHRXbQeZnffYrr5TFW05A/RTwj9wSOys1oOBiK7Kn
-         756EffHkeyW9iNA3rer9/kTbd0tCHUioS2XLz87ZX+N064+Xf6rkHhwy8KE+y7oEyesr
-         R97BQK76VTBbxwl9u0OZEWgkWPOIjjyLF6bYkoAnCkgPenv0vd90n2fkKE9bJX83L0y0
-         m+h207nWDlglAG/p4vFzjhXcwihCxdRteNjfqS7l6EO1UZGbWL8o8my6Nr28LXx0tks9
-         MGlA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=3FCkJMun06bDUVWTAvV42COQZNf02FQ8u62uqqJiOUg=;
-        b=DNwpd9JYwPSQq9AQIZfuAuou4VFZwuZR5vrHeCbrqHEnacDoaiSTCDiq/WMgT7hhEE
-         YgI0tpjU0k9m5yELTNLV/3wfkjfDGatEUXUaWJZQi72S4gKz1iPIRkkyxadckihnX1Pc
-         1wmsfVr2QTpqlqu/tN/ryUpHq6UA0XVaczaIaj0fVweox1XISmWR3kdGve9+wb4XKu3F
-         56X6opq/TWfR5I7cGJXSxlJFmEl9W5t6EnGwU+yjBo9BjAcIomtXoZqaGJV7gRWSg8gs
-         0cvGximzEWGLTnqAtlPkJyQ9dmXjZ66MpxdQY0+uc3H6ytg6NTlP2DEkqW+k2hElUx99
-         OsNA==
-X-Gm-Message-State: APjAAAWOlfxdKayGB1qm3jmwjvaY/LGwluAi6+flKE0WpJl/te9Q2u0f
-        IfKu5jnjB6GQk7ltTw3v4k6xXQ==
-X-Google-Smtp-Source: APXvYqzjhtWs2ECOpc6DH3Regf74W/w90rqJ9sdZ9gYa3j955AR0Pgj0HE8TQfallTTr07Ejd0Hg2Q==
-X-Received: by 2002:a1c:f10f:: with SMTP id p15mr9221577wmh.150.1558364873726;
-        Mon, 20 May 2019 08:07:53 -0700 (PDT)
-Received: from [192.168.1.7] (139.red-79-146-81.dynamicip.rima-tde.net. [79.146.81.139])
-        by smtp.gmail.com with ESMTPSA id l12sm16472733wmj.0.2019.05.20.08.07.52
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 20 May 2019 08:07:53 -0700 (PDT)
-Subject: Re: [PATCH] tty: serial: msm_serial: Fix XON/XOFF
-To:     Stephen Boyd <sboyd@kernel.org>, agross@kernel.org,
-        david.brown@linaro.org, gregkh@linuxfoundation.org
-Cc:     jslaby@suse.com, keescook@chromium.org, anton@enomsg.org,
-        ccross@android.com, tony.luck@intel.com,
-        linux-arm-msm@vger.kernel.org, linux-serial@vger.kernel.org,
-        linux-kernel@vger.kernel.org, khasim.mohammed@linaro.org,
-        agsumit@qti.qualcomm.com
-References: <20190520103435.30850-1-jorge.ramirez-ortiz@linaro.org>
- <20190520145110.7BDAE21721@mail.kernel.org>
- <254704a2-ee20-30cd-8362-6e1bd23ec090@linaro.org>
- <f0c89b84-7c3d-596d-06e1-cb5172e62970@linaro.org>
- <20190520150320.5DBC520856@mail.kernel.org>
-From:   Jorge Ramirez <jorge.ramirez-ortiz@linaro.org>
-Message-ID: <c728b454-1aa5-da93-8ed7-f6e4ad75fc4a@linaro.org>
-Date:   Mon, 20 May 2019 17:07:51 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.2.1
+        Mon, 20 May 2019 11:08:30 -0400
+Received: from mga17.intel.com ([192.55.52.151]:31104 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732596AbfETPI3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 11:08:29 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 May 2019 08:08:29 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,491,1549958400"; 
+   d="scan'208";a="173647902"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.36])
+  by fmsmga002.fm.intel.com with ESMTP; 20 May 2019 08:08:29 -0700
+Date:   Mon, 20 May 2019 08:08:29 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Wanpeng Li <kernellwp@gmail.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>, kvm <kvm@vger.kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Liran Alon <liran.alon@oracle.com>
+Subject: Re: [PATCH v3 5/5] KVM: LAPIC: Optimize timer latency further
+Message-ID: <20190520150829.GB28482@linux.intel.com>
+References: <1557975980-9875-1-git-send-email-wanpengli@tencent.com>
+ <1557975980-9875-6-git-send-email-wanpengli@tencent.com>
+ <20190517195049.GI15006@linux.intel.com>
+ <CANRm+CwfDbVS2tYG0XCD8Gvx6GtszGLphiTvFMBYmwdt13P=1Q@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20190520150320.5DBC520856@mail.kernel.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CANRm+CwfDbVS2tYG0XCD8Gvx6GtszGLphiTvFMBYmwdt13P=1Q@mail.gmail.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/20/19 17:03, Stephen Boyd wrote:
-> Quoting Jorge Ramirez (2019-05-20 07:58:54)
->> On 5/20/19 16:56, Jorge Ramirez wrote:
->>>
->>> yeah, semantically confusing msm_reset_dm_count is what really matters:
->>> it tells the hardware to only take n bytes (in this case only one) so
->>> the others will be ignored
->>
->> um after I said this, maybe iowrite32_rep should only be applied to
->> uartdm ... what do you think?
->>
+On Mon, May 20, 2019 at 04:19:47PM +0800, Wanpeng Li wrote:
+> On Sat, 18 May 2019 at 03:50, Sean Christopherson
+> <sean.j.christopherson@intel.com> wrote:
+> >
+> > On Thu, May 16, 2019 at 11:06:20AM +0800, Wanpeng Li wrote:
+> > > From: Wanpeng Li <wanpengli@tencent.com>
+> > > diff --git a/arch/x86/kvm/svm.c b/arch/x86/kvm/svm.c
+> > > index 6b92eaf..955cfcb 100644
+> > > --- a/arch/x86/kvm/svm.c
+> > > +++ b/arch/x86/kvm/svm.c
+> > > @@ -5638,6 +5638,10 @@ static void svm_vcpu_run(struct kvm_vcpu *vcpu)
+> > >       clgi();
+> > >       kvm_load_guest_xcr0(vcpu);
+> > >
+> > > +     if (lapic_in_kernel(vcpu) &&
+> > > +             vcpu->arch.apic->lapic_timer.timer_advance_ns)
+> >
+> > Nit: align the two lines of the if statement, doing so makes it easier to
+> >      differentiate between the condition and execution, e.g.:
+> >
+> >         if (lapic_in_kernel(vcpu) &&
+> >             vcpu->arch.apic->lapic_timer.timer_advance_ns)
+> >                 kvm_wait_lapic_expire(vcpu);
 > 
-> Probably. The uartdm hardware typically required words everywhere while
-> the pre-dm hardware didn't. It's an if condition so it should be OK.
+> This can result in checkpatch.pl complain:
 > 
-> It may be time to remove non-uartdm support from this driver
-> all-together. From what I recall the only devices that are upstream are
-> the uartdm ones, so it may be easier to just remove the legacy stuff
-> that nobody has tested in many years.
-> 
-> 
+> WARNING: suspect code indent for conditional statements (8, 24)
+> #94: FILE: arch/x86/kvm/vmx/vmx.c:6436:
+> +    if (lapic_in_kernel(vcpu) &&
+> [...]
+> +            kvm_wait_lapic_expire(vcpu);
 
-should this be merged before removing the non-uartdm support or after?
+That warning fires when the last line of the check and the code block of
+the if statement are aligned (and the indent isn't a full tab stop, which
+is why your original code isn't flagged).  Examples with explicit leading
+whitespace:
 
-I also have some other changes - in particular with respect to the usage
-of fifosize which according to the documentation is in words not in bytes.
+Good:
 
+\tif (lapic_in_kernel(vcpu) &&
+\t\s\s\s\svcpu->arch.apic->lapic_timer.timer_advance_ns)
+\t\tkvm_wait_lapic_expire(vcpu);
 
+Bad:
+
+\tif (lapic_in_kernel(vcpu) &&
+\t\s\s\s\svcpu->arch.apic->lapic_timer.timer_advance_ns)
+\t\s\s\s\skvm_wait_lapic_expire(vcpu);
