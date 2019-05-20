@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1D33C04AAC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:25:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B013C04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:26:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 97E2C214DA
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:25:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7168F214DA
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:26:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558355158;
-	bh=ZvBc6xseuzdpDAbWQrLLjEtwnUyRl3awfzeV6QFCcPc=;
+	s=default; t=1558355160;
+	bh=GGte2Vf7wiE+9+k9pkk8adb1T/XIjxDDA2GrzUEYLyo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VUguXfnVqbmS8f6Z3LPI38Dfw/c70e1qRn66kHwJCVAeqDIVGBXYUPWqM+/vMxE0L
-	 7sw+Xg9DJ2VfsMv+lMt/dv9Ir3aQdcKPhXq++foL1lEUq808QyGZWb0RmMJ9/ySmar
-	 L92+YB9KjadtPaEe45BIRgVGfRMPPSnrM+LZD/wE=
+	b=wdizmEsCWrfgXwM4/MBkw5HuydgKR0oSgEQ1VcAsh1u1QCNc6Izv/TfBjulLTWXq1
+	 fJNz7H5e58P8W9sgLuL5NJuXUirieM7EUgcDUfExDx/msSlI+DiRrJgUGQ6kDuXrnp
+	 30k7xobhv7zTtaJz/3jhBiu1RCa68lpeIFluBKuc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389212AbfETMZ5 (ORCPT
+        id S2389202AbfETMZ4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 08:25:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41206 "EHLO mail.kernel.org"
+        Mon, 20 May 2019 08:25:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41162 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389192AbfETMZy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 08:25:54 -0400
+        id S2389179AbfETMZw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 08:25:52 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9467C20675;
-        Mon, 20 May 2019 12:25:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DB358214AE;
+        Mon, 20 May 2019 12:25:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558355154;
-        bh=ZvBc6xseuzdpDAbWQrLLjEtwnUyRl3awfzeV6QFCcPc=;
+        s=default; t=1558355151;
+        bh=GGte2Vf7wiE+9+k9pkk8adb1T/XIjxDDA2GrzUEYLyo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WecAPAYQLNtII/01lmGjB/Z5CFoyCTSPAlPB/14PLa+5Mrm01k/G5rfokQVu+ZJqg
-         h4smUImLRojl9prYKIPHNlJIqSoCMdWtG65A/2AGNS9h09WLPTjfeN3W6LrDq7b61b
-         ixjTNNT8RSpkI0PG3BuAZGHmVO5mJ20Q9V7iLFn8=
+        b=Dq3dT3+EhXecu9vfsVG2XeAAu5NLLss8m74Zxr9llKz3jakPvwXR8J0KpxnxOGlR+
+         QAQj54WIZqFtEAF49VgTdbbs+3Yi1j6zXJbdnP912HDyLGCASg2+EVRaMykyDwoox8
+         peiV1FlESwCGQ0f8d39EwtR8TmNaw1KValqceDIc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Sebastian Reichel <sebastian.reichel@collabora.com>
-Subject: [PATCH 5.0 012/123] power: supply: axp288_charger: Fix unchecked return value
-Date:   Mon, 20 May 2019 14:13:12 +0200
-Message-Id: <20190520115245.935063340@linuxfoundation.org>
+        stable@vger.kernel.org, Wen Yang <wen.yang99@zte.com.cn>,
+        Krzysztof Kozlowski <krzk@kernel.org>
+Subject: [PATCH 5.0 011/123] ARM: exynos: Fix a leaked reference by adding missing of_node_put
+Date:   Mon, 20 May 2019 14:13:11 +0200
+Message-Id: <20190520115245.901703334@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190520115245.439864225@linuxfoundation.org>
 References: <20190520115245.439864225@linuxfoundation.org>
@@ -61,42 +59,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Gustavo A. R. Silva <gustavo@embeddedor.com>
+From: Wen Yang <wen.yang99@zte.com.cn>
 
-commit c3422ad5f84a66739ec6a37251ca27638c85b6be upstream.
+commit 629266bf7229cd6a550075f5961f95607b823b59 upstream.
 
-Currently there is no check on platform_get_irq() return value
-in case it fails, hence never actually reporting any errors and
-causing unexpected behavior when using such value as argument
-for function regmap_irq_get_virq().
+The call to of_get_next_child returns a node pointer with refcount
+incremented thus it must be explicitly decremented after the last
+usage.
 
-Fix this by adding a proper check, a message reporting any errors
-and returning *pirq*
+Detected by coccinelle with warnings like:
+    arch/arm/mach-exynos/firmware.c:201:2-8: ERROR: missing of_node_put;
+        acquired a node pointer with refcount incremented on line 193,
+        but without a corresponding object release within this function.
 
-Addresses-Coverity-ID: 1443940 ("Improper use of negative value")
-Fixes: 843735b788a4 ("power: axp288_charger: axp288 charger driver")
 Cc: stable@vger.kernel.org
-Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
-Reviewed-by: Hans de Goede <hdegoede@redhat.com>
-Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
+Signed-off-by: Wen Yang <wen.yang99@zte.com.cn>
+Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/power/supply/axp288_charger.c |    4 ++++
- 1 file changed, 4 insertions(+)
+ arch/arm/mach-exynos/firmware.c |    1 +
+ arch/arm/mach-exynos/suspend.c  |    2 ++
+ 2 files changed, 3 insertions(+)
 
---- a/drivers/power/supply/axp288_charger.c
-+++ b/drivers/power/supply/axp288_charger.c
-@@ -833,6 +833,10 @@ static int axp288_charger_probe(struct p
- 	/* Register charger interrupts */
- 	for (i = 0; i < CHRG_INTR_END; i++) {
- 		pirq = platform_get_irq(info->pdev, i);
-+		if (pirq < 0) {
-+			dev_err(&pdev->dev, "Failed to get IRQ: %d\n", pirq);
-+			return pirq;
-+		}
- 		info->irq[i] = regmap_irq_get_virq(info->regmap_irqc, pirq);
- 		if (info->irq[i] < 0) {
- 			dev_warn(&info->pdev->dev,
+--- a/arch/arm/mach-exynos/firmware.c
++++ b/arch/arm/mach-exynos/firmware.c
+@@ -196,6 +196,7 @@ bool __init exynos_secure_firmware_avail
+ 		return false;
+ 
+ 	addr = of_get_address(nd, 0, NULL, NULL);
++	of_node_put(nd);
+ 	if (!addr) {
+ 		pr_err("%s: No address specified.\n", __func__);
+ 		return false;
+--- a/arch/arm/mach-exynos/suspend.c
++++ b/arch/arm/mach-exynos/suspend.c
+@@ -639,8 +639,10 @@ void __init exynos_pm_init(void)
+ 
+ 	if (WARN_ON(!of_find_property(np, "interrupt-controller", NULL))) {
+ 		pr_warn("Outdated DT detected, suspend/resume will NOT work\n");
++		of_node_put(np);
+ 		return;
+ 	}
++	of_node_put(np);
+ 
+ 	pm_data = (const struct exynos_pm_data *) match->data;
+ 
 
 
