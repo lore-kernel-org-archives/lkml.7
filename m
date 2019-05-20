@@ -2,107 +2,119 @@ Return-Path: <SRS0=lq4r=TU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40E63C04AAC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:45:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E570C04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:45:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 07F3F20645
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:45:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="YJ92PSD/"
+	by mail.kernel.org (Postfix) with ESMTP id 5299F20645
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:45:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1558356339;
+	bh=XvtAsDLEUGLG/5JAIEZjsWSHoExQuKV9bR/WUi5O0OI=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=h4U/lpmPmu0UtAHFZZpBCOAOgXzaghh3MFt2YMHPv77IMGRWOxShOqrYf8DDphd6N
+	 gPK7tmAvx7ziM4F6dxuOMWrxtwPi6qMCTTdq5lqhusHQL8Vh1QkRNviWH7gNc/n4Qi
+	 pB2w42v0/BfE0mOguzZGWWvIg1McDpGQO5Msqtyc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391476AbfETMp3 (ORCPT
+        id S2391481AbfETMpi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 08:45:29 -0400
-Received: from mx0b-0016f401.pphosted.com ([67.231.156.173]:37758 "EHLO
-        mx0b-0016f401.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2389437AbfETMp1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 08:45:27 -0400
-Received: from pps.filterd (m0045851.ppops.net [127.0.0.1])
-        by mx0b-0016f401.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4KCefq1019411;
-        Mon, 20 May 2019 05:45:21 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=from : to : cc :
- subject : date : message-id : mime-version : content-type; s=pfpt0818;
- bh=DnYcpObWTuNxMqWTKSiW08f0YpZsIp8D6UxdO7lCUao=;
- b=YJ92PSD/5kpBHZWp3ghsL3eNwSn1tYN73MnEeOqDz20ELgdI/ZxtL2DMpyRCHzHlfaJy
- zniTefqahjbilBInh3HIx7hcTn9bkw7OZ5yWJfERIiMhMdE266YiU1YTFDp6UHASgmVr
- VDZ7vfwSrM3nEFaxbw38KU5aIqMgSBFQ7EfexiRq/nHY05KFcaMVe0pJyEdil2YRN0AS
- Idf+EcciOJs4GLoXOhIAJfbQMug84ejnulE5Eht67dbAT3QeA34ejsK3HwTn+DhK2gF6
- FJ8e/VthJx3TPoH8WmD8o4UyDJI0Moo1L3N7wYjihKH98LE1OkPusOAMnmVUy+yAjlWC Bg== 
-Received: from sc-exch04.marvell.com ([199.233.58.184])
-        by mx0b-0016f401.pphosted.com with ESMTP id 2sjhjjr4bj-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
-        Mon, 20 May 2019 05:45:20 -0700
-Received: from SC-EXCH03.marvell.com (10.93.176.83) by SC-EXCH04.marvell.com
- (10.93.176.84) with Microsoft SMTP Server (TLS) id 15.0.1367.3; Mon, 20 May
- 2019 05:45:19 -0700
-Received: from maili.marvell.com (10.93.176.43) by SC-EXCH03.marvell.com
- (10.93.176.83) with Microsoft SMTP Server id 15.0.1367.3 via Frontend
- Transport; Mon, 20 May 2019 05:45:19 -0700
-Received: from lb-tlvb-michal.il.qlogic.org (unknown [10.5.220.215])
-        by maili.marvell.com (Postfix) with ESMTP id EBB613F703F;
-        Mon, 20 May 2019 05:45:17 -0700 (PDT)
-From:   Michal Kalderon <michal.kalderon@marvell.com>
-To:     <michal.kalderon@marvell.com>, <leon@kernel.org>,
-        <apw@canonical.com>, <joe@perches.com>
-CC:     <linux-kernel@vger.kernel.org>
-Subject: [PATCH] checkpatch: add test for empty line after Fixes statement
-Date:   Mon, 20 May 2019 15:42:38 +0300
-Message-ID: <20190520124238.10298-1-michal.kalderon@marvell.com>
-X-Mailer: git-send-email 2.14.5
+        Mon, 20 May 2019 08:45:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42100 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388645AbfETM0j (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 08:26:39 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B29E9214AE;
+        Mon, 20 May 2019 12:26:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1558355199;
+        bh=XvtAsDLEUGLG/5JAIEZjsWSHoExQuKV9bR/WUi5O0OI=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=gwE5ZEfRuv9EuxJdoFSJMtYMJ1RDDogBRt1YdYGrIRbFoKtoS1yXANHjRjFdLjZdj
+         yGtGMmRq5gODDmWFU1JvCKoAtG3JaxuIV/TtGZlxEmZY4XGskcOCpyvyZChSkEi60A
+         w0xDM4Bfv7LKtAib5sOGJ93Yr7ADm5SW3t/vx+9w=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Eric Biggers <ebiggers@google.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Herbert Xu <herbert@gondor.apana.org.au>
+Subject: [PATCH 5.0 029/123] crypto: chacha-generic - fix use as arm64 no-NEON fallback
+Date:   Mon, 20 May 2019 14:13:29 +0200
+Message-Id: <20190520115246.715655463@linuxfoundation.org>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190520115245.439864225@linuxfoundation.org>
+References: <20190520115245.439864225@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-20_06:,,
- signatures=0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Check that there is no empty line after a fixes statement
+From: Eric Biggers <ebiggers@google.com>
 
-Reviewed-by: Leon Romanovsky <leonro@mellanox.com>
-Signed-off-by: Michal Kalderon <michal.kalderon@marvell.com>
+commit 7aceaaef04eaaf6019ca159bc354d800559bba1d upstream.
+
+The arm64 implementations of ChaCha and XChaCha are failing the extra
+crypto self-tests following my patches to test the !may_use_simd() code
+paths, which previously were untested.  The problem is as follows:
+
+When !may_use_simd(), the arm64 NEON implementations fall back to the
+generic implementation, which uses the skcipher_walk API to iterate
+through the src/dst scatterlists.  Due to how the skcipher_walk API
+works, walk.stride is set from the skcipher_alg actually being used,
+which in this case is the arm64 NEON algorithm.  Thus walk.stride is
+5*CHACHA_BLOCK_SIZE, not CHACHA_BLOCK_SIZE.
+
+This unnecessarily large stride shouldn't cause an actual problem.
+However, the generic implementation computes round_down(nbytes,
+walk.stride).  round_down() assumes the round amount is a power of 2,
+which 5*CHACHA_BLOCK_SIZE is not, so it gives the wrong result.
+
+This causes the following case in skcipher_walk_done() to be hit,
+causing a WARN() and failing the encryption operation:
+
+	if (WARN_ON(err)) {
+		/* unexpected case; didn't process all bytes */
+		err = -EINVAL;
+		goto finish;
+	}
+
+Fix it by rounding down to CHACHA_BLOCK_SIZE instead of walk.stride.
+
+(Or we could replace round_down() with rounddown(), but that would add a
+slow division operation every time, which I think we should avoid.)
+
+Fixes: 2fe55987b262 ("crypto: arm64/chacha - use combined SIMD/ALU routine for more speed")
+Cc: <stable@vger.kernel.org> # v5.0+
+Signed-off-by: Eric Biggers <ebiggers@google.com>
+Reviewed-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- scripts/checkpatch.pl | 13 +++++++++++++
- 1 file changed, 13 insertions(+)
+ crypto/chacha_generic.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
-index a09333fd7cef..6cbc07364d4f 100755
---- a/scripts/checkpatch.pl
-+++ b/scripts/checkpatch.pl
-@@ -62,6 +62,7 @@ my $conststructsfile = "$D/const_structs.checkpatch";
- my $typedefsfile = "";
- my $color = "auto";
- my $allow_c99_comments = 1; # Can be overridden by --ignore C99_COMMENT_TOLERANCE
-+my $fixes = 0;
+--- a/crypto/chacha_generic.c
++++ b/crypto/chacha_generic.c
+@@ -52,7 +52,7 @@ static int chacha_stream_xor(struct skci
+ 		unsigned int nbytes = walk.nbytes;
  
- sub help {
- 	my ($exitcode) = @_;
-@@ -2792,6 +2793,18 @@ sub process {
- 			}
- 		}
+ 		if (nbytes < walk.total)
+-			nbytes = round_down(nbytes, walk.stride);
++			nbytes = round_down(nbytes, CHACHA_BLOCK_SIZE);
  
-+# Check if Fixes statement to make sure next line is not blank
-+		if ($fixes) {
-+			if ($line =~ /^\s*$/) {
-+				WARN("EMPTY_LINE_AFTER_FIXES", "No Empty line after Fixes statement\n" . $here);
-+			}
-+			$fixes = 0;
-+		}
-+
-+		if ($in_commit_log && $line =~ /Fixes/) {
-+			$fixes = 1;
-+		}
-+
- # Check for added, moved or deleted files
- 		if (!$reported_maintainer_file && !$in_commit_log &&
- 		    ($line =~ /^(?:new|deleted) file mode\s*\d+\s*$/ ||
--- 
-2.14.5
+ 		chacha_docrypt(state, walk.dst.virt.addr, walk.src.virt.addr,
+ 			       nbytes, ctx->nrounds);
+
 
