@@ -2,75 +2,88 @@ Return-Path: <SRS0=lq4r=TU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD595C04E87
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 11:42:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 937CEC04AAF
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 11:42:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B4AE620645
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 11:42:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A4C820645
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 11:42:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731136AbfETLmg (ORCPT
+        id S1731377AbfETLmq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 07:42:36 -0400
-Received: from mout.kundenserver.de ([212.227.126.133]:37101 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730757AbfETLmf (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 07:42:35 -0400
-Received: from [192.168.178.167] ([109.104.33.162]) by
- mrelayeu.kundenserver.de (mreue012 [212.227.15.167]) with ESMTPSA (Nemesis)
- id 1MbC5g-1gvYmx0jaS-00bXPs; Mon, 20 May 2019 13:42:11 +0200
-Subject: Re: [RFC v2 1/5] clk: bcm2835: set CLK_GET_RATE_NOCACHE on CPU clocks
-To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        bcm-kernel-feedback-list@broadcom.com,
-        Eric Anholt <eric@anholt.net>
-Cc:     linux-arm-kernel@lists.infradead.org, ptesarik@suse.com,
-        sboyd@kernel.org, viresh.kumar@linaro.org, mturquette@baylibre.com,
-        linux-pm@vger.kernel.org, rjw@rjwysocki.net,
-        linux-kernel@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
-        linux-clk@vger.kernel.org, mbrugger@suse.de, ssuloev@orpaltech.com
-References: <20190520104708.11980-1-nsaenzjulienne@suse.de>
- <20190520104708.11980-2-nsaenzjulienne@suse.de>
-From:   Stefan Wahren <stefan.wahren@i2se.com>
-Message-ID: <7d9cfcb9-1585-bba5-62ab-bddc0b57615a@i2se.com>
-Date:   Mon, 20 May 2019 13:42:08 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Mon, 20 May 2019 07:42:46 -0400
+Received: from mga02.intel.com ([134.134.136.20]:30629 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725372AbfETLmq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 07:42:46 -0400
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 May 2019 04:42:45 -0700
+X-ExtLoop1: 1
+Received: from mhauser-mobl.ger.corp.intel.com (HELO localhost) ([10.252.47.244])
+  by orsmga006.jf.intel.com with ESMTP; 20 May 2019 04:42:29 -0700
+Date:   Mon, 20 May 2019 14:42:28 +0300
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     Andy Lutomirski <luto@kernel.org>,
+        James Morris <jmorris@namei.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        LSM List <linux-security-module@vger.kernel.org>,
+        Paul Moore <paul@paul-moore.com>,
+        Stephen Smalley <sds@tycho.nsa.gov>,
+        Eric Paris <eparis@parisplace.org>, selinux@vger.kernel.org,
+        Jethro Beekman <jethro@fortanix.com>,
+        "Xing, Cedric" <cedric.xing@intel.com>,
+        "Hansen, Dave" <dave.hansen@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "Dr. Greg" <greg@enjellic.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
+        "linux-sgx@vger.kernel.org" <linux-sgx@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "nhorman@redhat.com" <nhorman@redhat.com>,
+        "npmccallum@redhat.com" <npmccallum@redhat.com>,
+        "Ayoun, Serge" <serge.ayoun@intel.com>,
+        "Katz-zamir, Shay" <shay.katz-zamir@intel.com>,
+        "Huang, Haitao" <haitao.huang@intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        "Svahn, Kai" <kai.svahn@intel.com>, Borislav Petkov <bp@alien8.de>,
+        Josh Triplett <josh@joshtriplett.org>,
+        "Huang, Kai" <kai.huang@intel.com>,
+        David Rientjes <rientjes@google.com>
+Subject: Re: SGX vs LSM (Re: [PATCH v20 00/28] Intel SGX1 support)
+Message-ID: <20190520114228.GE27805@linux.intel.com>
+References: <20190513102926.GD8743@linux.intel.com>
+ <20190514104323.GA7591@linux.intel.com>
+ <CALCETrVbgTCnPo=PAq0-KoaRwt--urrPzn==quAJ8wodCpkBkw@mail.gmail.com>
+ <20190514204527.GC1977@linux.intel.com>
+ <CALCETrX6aL367mMJh5+Y1Seznfu-AvhPV6P7GkWF4Dhu0GV8cw@mail.gmail.com>
+ <20190515013031.GF1977@linux.intel.com>
+ <CALCETrXf8mSK45h7sTK5Wf+pXLVn=Bjsc_RLpgO-h-qdzBRo5Q@mail.gmail.com>
+ <20190517000331.GD11204@linux.intel.com>
+ <CALCETrWxw7xALE0kmiYBzomaSMAeXEVq-7rX7xeqPtDPeDQiCA@mail.gmail.com>
+ <20190517154128.GA15006@linux.intel.com>
 MIME-Version: 1.0
-In-Reply-To: <20190520104708.11980-2-nsaenzjulienne@suse.de>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Provags-ID: V03:K1:+Lmwa+SIqFPVVnun6thuV1j2JcxQcER6nNgcoUgpmmiScCLPyhN
- ysfqKERDrLC62ytnS5aHhg/wF1Q13gNwfpkxcDnpmzIQ8W+tpru5b6UfI6b/EIjyD/Zvper
- D/+7gkRjBiPgdown9eFrYDhkCbF1LbhSpWK07Gv2EJaPu2S4DGEpQ4LHOSjRCx4vvWR348U
- 3D50Wf8sFfkfbyjse6vTQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:fzLvTIN16dM=:UdndameqEvX/cJj80HKwWz
- AIUovWKMCuXKm1+/35kvJ+CepmfzWCxLy1wiHyj8YZN3Tz1X2OnesnnzeTdsl//yIvOPYOXsJ
- RzzfSk/Kg09g4gPo35E4/EUtZ89A3vY6n1U66hNvAk5PzCrqcSRuKk5prmJCST5kuEN+9qfKF
- sKtD0jNf3xTJxZNrIPtO4ZzDd/mAELnLhefuDU2XnLioDMCXIxVlDTPx0ObEajNlc1JuXzjgA
- 0cVpfpHev9ZIfFKJz3ZyQIBceHBJnkXCiVZqGIlXV1MBSUOCqjldoYfA1GzOAuGumL/DHNNI9
- Ktun9lFkP3KOyTATUygiKvcrQfy8ZXAdjc/yizweUiCGrQUUvtMLwLb+sB/pu7vn1llrWlOtw
- j7kK1Gqve0vyX/qc4PVdp6jY6rDZB61K4J86zEVheF7l73RM+h7nbW2udf4kicChuCjZvJAkI
- PRcls4jT80A6kSzdzYQwS/QooJqrui9valGIgMQ9BtzPSuJnkEuunihTNjgmZMpCTPsOlmkrH
- wpBcVYy7u3FqxHm4C9NWkUGU/JuJl+G+erIljdn4YT8J0NZnARAXZciVizP9mfLd9qToA02Eu
- K01zXei+CRAiIzwk0aVdQfPcay9EQpAt6FAra8Ukf3ZjfgvOpY0GXJKM/wYfQJqBc8YwY5nt1
- 99Fy9QlvYg3Q+wnmA1B12uS64KahnU5QC9nn6ce3vBSJevMXITT8ZZJGOAyBbsW3ilIoHqCYw
- Oi1hIa36Ksg9rQRjIYO9ZsDOLPQBZuFv5DdbOQLqx1iK3MmeFUtYqWUZ8Cw=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190517154128.GA15006@linux.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 20.05.19 12:47, Nicolas Saenz Julienne wrote:
-> Raspberry Pi's firmware is responsible for updating the cpu clocks and
-> pll. This makes sure we get the right rates anytime.
->
-> Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-Acked-by: Stefan Wahren <stefan.wahren@i2se.com>
+On Fri, May 17, 2019 at 08:41:28AM -0700, Sean Christopherson wrote:
+> It was a requirement prior to the API rework in v20, i.e. unless someone
+> was really quick on the draw after the v20 update all existing userspace
+> implementations mmap() the enclave before ECREATE.   Requiring a valid
+> enclave VMA for EADD shoudn't be too onerous.
+
+Still underlining: it is not required.
+
+/Jarkko
