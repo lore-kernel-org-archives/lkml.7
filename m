@@ -2,118 +2,196 @@ Return-Path: <SRS0=lq4r=TU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD859C04E87
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 04:47:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67CEAC04AAF
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 04:49:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9FFFD204FD
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 04:47:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 24203204FD
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 04:49:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="S6RC8/KF"
+	dkim=pass (2048-bit key) header.d=ozlabs-ru.20150623.gappssmtp.com header.i=@ozlabs-ru.20150623.gappssmtp.com header.b="KEAbAEMK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730142AbfETErI (ORCPT
+        id S1730174AbfETEtB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 00:47:08 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:44233 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728418AbfETErI (ORCPT
+        Mon, 20 May 2019 00:49:01 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:36261 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725372AbfETEtA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 00:47:08 -0400
-Received: by mail-pg1-f193.google.com with SMTP id z16so6124910pgv.11
-        for <linux-kernel@vger.kernel.org>; Sun, 19 May 2019 21:47:08 -0700 (PDT)
+        Mon, 20 May 2019 00:49:00 -0400
+Received: by mail-pf1-f196.google.com with SMTP id v80so6575293pfa.3
+        for <linux-kernel@vger.kernel.org>; Sun, 19 May 2019 21:49:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=znPD6qSCRqBSVISTFwv2IDS0tUXtYPowDMtFJwfIVG4=;
-        b=S6RC8/KF8MMJum/v07irupW0Jzz5U1cWZxnJgMBycQ7J895LZbEdp2S6H280gXSoa0
-         SJ5+zv7fSANzrQNVh5LnV0BQn9+ZCCh0UNQnRg6VIf68xhokxw9TRlKz8vZ3/u0h7zq9
-         oOhxl34eO8SRYCHxm57SuDWotd0GD9ObvR+77sI12lTOU4dHqSZjOWPMIMQYBpTQUS/f
-         t+vlbGUb6r/jcyjTS9A5/DVvxWSHfBLDeTq1EPzFNxc/gvD4wFXOtLXUGJVEsGOG6BoH
-         VcfIbzffj7ppyKXxEua+4ulXi/67rNtwR0vWGY1TmVrciBOjTa8cWJg5zsyHXsctJQ6W
-         eJdQ==
+        d=ozlabs-ru.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=v2QhUfzoZBiO/EQI4ooSugv7a5sMTVN0Eqfnv9FkHek=;
+        b=KEAbAEMK9UM8Amtb/tJowTo3q6nulx3hiviulno0Y4HTHa4fTKaebl7pSy0HKOyvLl
+         kPpxnNycVpkerHvWosOlot9K9+J8bKMWWcxkgEddSJdZdj818XZJuVwtTWJEbzwa+Wop
+         XFwfwZvXRVTBJNJlgZYNKViONwy/NhX5wd2fX2d1Led0ijyxzkD5BxVhoUoNypIoY4p7
+         8rlpQLxQDf2hsErsFk6tvbZrrBN1oQmxCl/+dcEOSuGOl3b/v5+sVvZR2vhCU+XLZsyd
+         BFuuOlTorvREjP8plyuPPp8clDFDKMrmGAJ0TNoWj7RF76QpxfhOv7xJmArE3eLMvfAu
+         ntKQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=znPD6qSCRqBSVISTFwv2IDS0tUXtYPowDMtFJwfIVG4=;
-        b=p2skBkLtOOjjBz3qtEEAp30YeAgpcik8OukrIxnSlJw6kwbETTJOdbyJV/O3Km1MUX
-         YRMQEG1tYIoqWMB/H/ElZz3bKUe2TyNbMQQC6S/1lP8YI7WISn6ioVNIIKXcWAM+gkQ9
-         maQou/dlwT0+e9+K8Cl6DDS9u3ShAZfkxWJOVmlQsnhmwJ+FAaOtHOuqdanclhxxUjZ6
-         HVS0ktNmuWPo+kEufl9EbnLZJnCt4nmziuxLWo7mu32vmt7LY/YKzxwrL+/U0qMowld9
-         c3fWblHP8+yHzOiwvNgPXSOxOQuuyEqBL4dXu88w3lL8Fc/nYmeIzoU+P/fmrYtw0Ppo
-         A5Yw==
-X-Gm-Message-State: APjAAAXtsMogDkTRHgXgTnJhHGXE5tf01hbleQgnoEtebzq3/yuZu2WV
-        jimITZpAJT+vjXuzlzVhuLp9Hw==
-X-Google-Smtp-Source: APXvYqw2fylBLzNgfG8L7skLbYmkylnXBeuW32Xv1x+By0k9dxCCF49gfY26D3/iHYdXTo1cfNHHCQ==
-X-Received: by 2002:a63:1c4:: with SMTP id 187mr46179260pgb.317.1558327627746;
-        Sun, 19 May 2019 21:47:07 -0700 (PDT)
-Received: from localhost ([122.172.118.99])
-        by smtp.gmail.com with ESMTPSA id s28sm22716058pgl.88.2019.05.19.21.47.06
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=v2QhUfzoZBiO/EQI4ooSugv7a5sMTVN0Eqfnv9FkHek=;
+        b=KTy0OjXyCCHfsWpHZAeuCiIA8X+sZmzKHkNlCEreFuGoWZKVay/+04frFAQNvQtVsf
+         02FeTNU+M2MVLZTULxBDBBWAveRK/vNa9wtZ8JV926jg1ZB1m89/W5WSB5kSVZYZCjpB
+         oNe1zWuLbxBksZeGgDLUtdKnUsutkWLPhXFphDrl0cWWet3/AOrf2lTVRQVr7nI1LiMh
+         1dnYxiDswf8dXhCUmk/rGC8AafpJTcSpAJcRUheD6ObP2UIYUpa8sRB778p475iwMmGJ
+         iIFtPbN4CLMgi3bxII7mXrHVeIQ6+E+uxz25GL5XQD+LhSWdgrhhogdKQ6HofWa1YtY5
+         vnVw==
+X-Gm-Message-State: APjAAAXWvT97pWW9sCzi2e1uPEygQ0bnR/Sfyjs060F4a+w4TvsHTJjp
+        7ECW485ZnxaGuVHikNGuqlm+kg==
+X-Google-Smtp-Source: APXvYqxisMdRXcpxN0fK7oTDRjPPy4gz+pTVX/wDHZ2vlS6r6sTd8F3dB90StU3IcXX1iCdh1H9spw==
+X-Received: by 2002:a62:4c5:: with SMTP id 188mr17806974pfe.19.1558327740012;
+        Sun, 19 May 2019 21:49:00 -0700 (PDT)
+Received: from [10.61.2.175] ([122.99.82.10])
+        by smtp.gmail.com with ESMTPSA id g19sm38444725pgj.75.2019.05.19.21.48.57
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 19 May 2019 21:47:06 -0700 (PDT)
-Date:   Mon, 20 May 2019 10:17:04 +0530
-From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     "Andrew-sh.Cheng" <andrew-sh.cheng@mediatek.com>
-Cc:     MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@kernel.org>,
-        linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
-        srv_heupstream@mediatek.com, fan.chen@mediatek.com,
-        Stephen Boyd <sboyd@codeaurora.org>,
-        Roger Lu <roger.lu@mediatek.com>
-Subject: Re: [PATCH 6/8] PM / OPP: Support adjusting OPP voltages at runtime
-Message-ID: <20190520044704.unftq6q5vy73z5bo@vireshk-i7>
-References: <1557997725-12178-1-git-send-email-andrew-sh.cheng@mediatek.com>
- <1557997725-12178-7-git-send-email-andrew-sh.cheng@mediatek.com>
+        Sun, 19 May 2019 21:48:59 -0700 (PDT)
+Subject: Re: [PATCH] vfio: vfio_pci_nvlink2: use a vma helper function
+To:     Alex Williamson <alex.williamson@redhat.com>,
+        "richard.peng@oppo.com" <richard.peng@oppo.com>
+Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>
+References: <2019051620382477288130@oppo.com>
+ <20190516084833.757140bc@x1.home>
+From:   Alexey Kardashevskiy <aik@ozlabs.ru>
+Openpgp: preference=signencrypt
+Autocrypt: addr=aik@ozlabs.ru; keydata=
+ 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
+Message-ID: <b0ccc2f8-4d6a-bfa4-509d-e5d919efb3cd@ozlabs.ru>
+Date:   Mon, 20 May 2019 14:48:56 +1000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1557997725-12178-7-git-send-email-andrew-sh.cheng@mediatek.com>
-User-Agent: NeoMutt/20180716-391-311a52
+In-Reply-To: <20190516084833.757140bc@x1.home>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 16-05-19, 17:08, Andrew-sh.Cheng wrote:
-> From: Stephen Boyd <sboyd@codeaurora.org>
-> 
-> On some SoCs the Adaptive Voltage Scaling (AVS) technique is
-> employed to optimize the operating voltage of a device. At a
-> given frequency, the hardware monitors dynamic factors and either
-> makes a suggestion for how much to adjust a voltage for the
-> current frequency, or it automatically adjusts the voltage
-> without software intervention. Add an API to the OPP library for
-> the former case, so that AVS type devices can update the voltages
-> for an OPP when the hardware determines the voltage should
-> change. The assumption is that drivers like CPUfreq or devfreq
-> will register for the OPP notifiers and adjust the voltage
-> according to suggestions that AVS makes.
-> 
-> This patch is devired from [1] submitted by Stephen.
-> [1] https://lore.kernel.org/patchwork/patch/599279/
-> 
-> Signed-off-by: Stephen Boyd <sboyd@codeaurora.org>
-> Signed-off-by: Roger Lu <roger.lu@mediatek.com>
-> ---
->  drivers/opp/core.c     | 78 ++++++++++++++++++++++++++++++++++++++++++++++++++
->  include/linux/pm_opp.h | 11 +++++++
->  2 files changed, 89 insertions(+)
 
-This is an rcu implementation which got removed long back from OPP core. Please
-align this with the latest changes.
+
+On 17/05/2019 00:48, Alex Williamson wrote:
+> [Cc Alexey + kvm]
+> 
+> On Thu, 16 May 2019 20:38:26 +0800
+> "richard.peng@oppo.com" <richard.peng@oppo.com> wrote:
+> 
+>> Use a vma helper function to simply code.
+>>
+>> Signed-off-by: Peng Hao <richard.peng@oppo.com>
+>> ---
+>>  drivers/vfio/pci/vfio_pci_nvlink2.c | 3 +--
+>>  1 file changed, 1 insertion(+), 2 deletions(-)
+>>
+>> diff --git a/drivers/vfio/pci/vfio_pci_nvlink2.c b/drivers/vfio/pci/vfio_pci_nvlink2.c
+>> index 32f695ffe128..dc42aa0e47f6 100644
+>> --- a/drivers/vfio/pci/vfio_pci_nvlink2.c
+>> +++ b/drivers/vfio/pci/vfio_pci_nvlink2.c
+>> @@ -161,8 +161,7 @@ static int vfio_pci_nvgpu_mmap(struct vfio_pci_device *vdev,
+>>  
+>>  	atomic_inc(&data->mm->mm_count);
+>>  	ret = (int) mm_iommu_newdev(data->mm, data->useraddr,
+>> -			(vma->vm_end - vma->vm_start) >> PAGE_SHIFT,
+>> -			data->gpu_hpa, &data->mem);
+>> +			vma_pages(vma), data->gpu_hpa, &data->mem);
+
+
+I did not realize we have been having this mighty helper since 2005 :)
+
+Reviewed-by: Alexey Kardashevskiy <aik@ozlabs.ru>
+
+
+
+>>  
+>>  	trace_vfio_pci_nvgpu_mmap(vdev->pdev, data->gpu_hpa, data->useraddr,
+>>  			vma->vm_end - vma->vm_start, ret);
+>> -- 
+>> 2.20.1
 
 -- 
-viresh
+Alexey
