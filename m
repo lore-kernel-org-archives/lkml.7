@@ -2,160 +2,94 @@ Return-Path: <SRS0=lq4r=TU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F65DC04E87
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:38:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65595C04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:38:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E3E8D20645
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:38:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B58620645
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:38:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1558355930;
+	bh=Oiizy4XV1wKvFexkefBV11yaUlynaoRXxjtvagQSq8U=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=rAQGYEJC9adNX1NssWc7REvhduX70De6kQBPLBAbvAjaMl5vQlgZv1AN5iiInggNz
+	 TDCsKEGWE4855Kc/+uRrMIWeZaLjmSabSZtMpxEaHxb6OZ9YOElcboPmhbf0w84PsK
+	 IVTDRKDiWxflXBKzdU37nSwpw5qdZZBkL17npGyU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391420AbfETMip convert rfc822-to-8bit (ORCPT
+        id S2390977AbfETMem (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 08:38:45 -0400
-Received: from relay9-d.mail.gandi.net ([217.70.183.199]:33753 "EHLO
-        relay9-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390971AbfETMen (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 08:34:43 -0400
-X-Originating-IP: 90.88.22.185
-Received: from xps13 (aaubervilliers-681-1-80-185.w90-88.abo.wanadoo.fr [90.88.22.185])
-        (Authenticated sender: miquel.raynal@bootlin.com)
-        by relay9-d.mail.gandi.net (Postfix) with ESMTPSA id 3C106FF811;
-        Mon, 20 May 2019 12:34:38 +0000 (UTC)
-Date:   Mon, 20 May 2019 14:34:38 +0200
-From:   Miquel Raynal <miquel.raynal@bootlin.com>
-To:     Mason Yang <masonccyang@mxic.com.tw>
-Cc:     bbrezillon@kernel.org, marek.vasut@gmail.com,
-        linux-kernel@vger.kernel.org, richard@nod.at, dwmw2@infradead.org,
-        computersforpeace@gmail.com, linux-mtd@lists.infradead.org,
-        vigneshr@ti.com, frieder.schrempf@kontron.de, juliensu@mxic.com.tw,
-        zhengxunli@mxic.com.tw
-Subject: Re: [PATCH v2] mtd: rawnand: Add Macronix NAND read retry support
-Message-ID: <20190520143438.46248bfc@xps13>
-In-Reply-To: <1558076001-29579-1-git-send-email-masonccyang@mxic.com.tw>
-References: <1558076001-29579-1-git-send-email-masonccyang@mxic.com.tw>
-Organization: Bootlin
-X-Mailer: Claws Mail 3.17.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Mon, 20 May 2019 08:34:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52006 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732749AbfETMeg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 08:34:36 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3729D21479;
+        Mon, 20 May 2019 12:34:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1558355675;
+        bh=Oiizy4XV1wKvFexkefBV11yaUlynaoRXxjtvagQSq8U=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=tkfTZGNkCI+MXFUBAV5cHMWf5AQM5QBiEjHFJr2JGF6jGmbmkmKklnifKCkYjfXRx
+         EZTWQ//4sL4c6c9pRzG2ntCP3m9O2GzQBT/Bg05zYaQ+XXlFtPUt+mePfVGytuIAN5
+         24KH8flRNG4YOJePzG+GbNYlwt5mkO6m6v9NJL5M=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        Chris Packham <chris.packham@alliedtelesis.co.nz>,
+        Hamish Martin <hamish.martin@alliedtelesis.co.nz>,
+        Richard Weinberger <richard@nod.at>
+Subject: [PATCH 5.1 081/128] mtd: maps: Allow MTD_PHYSMAP with MTD_RAM
+Date:   Mon, 20 May 2019 14:14:28 +0200
+Message-Id: <20190520115255.091840189@linuxfoundation.org>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190520115249.449077487@linuxfoundation.org>
+References: <20190520115249.449077487@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Mason,
+From: Chris Packham <chris.packham@alliedtelesis.co.nz>
 
-Mason Yang <masonccyang@mxic.com.tw> wrote on Fri, 17 May 2019 14:53:21
-+0800:
+commit d41970097f10d898cef0eb04bf53d786efd6bbbc upstream.
 
-> Add support for Macronix NAND read retry.
-> 
-> Macronix NANDs support specific read operation for data recovery,
-> which can be enabled/disabled with a SET/GET_FEATURE.
-> Driver checks byte 167 of Vendor Blocks in ONFI parameter page table
-> to see if this high-reliability function is supported.
-> 
-> Signed-off-by: Mason Yang <masonccyang@mxic.com.tw>
-> ---
->  drivers/mtd/nand/raw/nand_macronix.c | 57 ++++++++++++++++++++++++++++++++++++
->  1 file changed, 57 insertions(+)
-> 
-> diff --git a/drivers/mtd/nand/raw/nand_macronix.c b/drivers/mtd/nand/raw/nand_macronix.c
-> index e287e71..1a4dc92 100644
-> --- a/drivers/mtd/nand/raw/nand_macronix.c
-> +++ b/drivers/mtd/nand/raw/nand_macronix.c
-> @@ -17,6 +17,62 @@
->  
->  #include "internals.h"
->  
-> +#define MACRONIX_READ_RETRY_BIT BIT(0)
-> +#define MACRONIX_READ_RETRY_MODE 6
+When the physmap_of_core.c code was merged into physmap-core.c the
+ability to use MTD_PHYSMAP_OF with only MTD_RAM selected was lost.
+Restore this by adding MTD_RAM to the dependencies of MTD_PHYSMAP.
 
-Can you name this define MACRONIX_NUM_READ_RETRY_MODES?
+Fixes: commit 642b1e8dbed7 ("mtd: maps: Merge physmap_of.c into physmap-core.c")
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
+Reviewed-by: Hamish Martin <hamish.martin@alliedtelesis.co.nz>
+Signed-off-by: Richard Weinberger <richard@nod.at>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-> +
-> +struct nand_onfi_vendor_macronix {
-> +	u8 reserved[1];
+---
+ drivers/mtd/maps/Kconfig |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Do you need this "[1]" ?
-
-> +	u8 reliability_func;
-> +} __packed;
-> +
-> +/*
-> + * Macronix NANDs support using SET/GET_FEATURES to enter/exit read retry mode
-> + */
-> +static int macronix_nand_setup_read_retry(struct nand_chip *chip, int mode)
-> +{
-> +	u8 feature[ONFI_SUBFEATURE_PARAM_LEN];
-> +	int ret, feature_addr = ONFI_FEATURE_ADDR_READ_RETRY;
-> +
-> +	if (chip->parameters.supports_set_get_features &&
-> +	    test_bit(feature_addr, chip->parameters.set_feature_list) &&
-> +	    test_bit(feature_addr, chip->parameters.get_feature_list)) {
-> +		feature[0] = mode;
-> +		ret =  nand_set_features(chip, feature_addr, feature);
-> +		if (ret)
-> +			pr_err("Failed to set read retry moded:%d\n", mode);
-
-Do you have to call nand_get_features() on error?
-
-> +
-> +		ret =  nand_get_features(chip, feature_addr, feature);
-> +		if (ret || feature[0] != mode)
-> +			pr_err("Failed to verify read retry moded:%d(%d)\n",
-> +			       mode, feature[0]);
-
-if ret == 0 but feature[0] != mode, shouldn't you return an error?
-
-> +	}
-> +
-> +	return ret;
-
-This will produce a Warning at compile time (ret may be used
-uninitialized). Have you tested it?
-
-> +}
-> +
-> +static void macronix_nand_onfi_init(struct nand_chip *chip)
-> +{
-> +	struct nand_parameters *p = &chip->parameters;
-> +	struct nand_onfi_vendor_macronix *mxic;
-> +
-> +	if (!p->onfi)
-> +		return;
-> +
-> +	mxic = (struct nand_onfi_vendor_macronix *)p->onfi->vendor;
-> +	if ((mxic->reliability_func & MACRONIX_READ_RETRY_BIT) == 0)
-> +		return;
-> +
-> +	chip->read_retries = MACRONIX_READ_RETRY_MODE;
-> +	chip->setup_read_retry = macronix_nand_setup_read_retry;
-> +
-> +	if (p->supports_set_get_features) {
-> +		bitmap_set(p->set_feature_list,
-> +			   ONFI_FEATURE_ADDR_READ_RETRY, 1);
-> +		bitmap_set(p->get_feature_list,
-> +			   ONFI_FEATURE_ADDR_READ_RETRY, 1);
-> +	}
-> +}
-> +
->  /*
->   * Macronix AC series does not support using SET/GET_FEATURES to change
->   * the timings unlike what is declared in the parameter page. Unflag
-> @@ -65,6 +121,7 @@ static int macronix_nand_init(struct nand_chip *chip)
->  		chip->options |= NAND_BBM_FIRSTPAGE | NAND_BBM_SECONDPAGE;
->  
->  	macronix_nand_fix_broken_get_timings(chip);
-> +	macronix_nand_onfi_init(chip);
->  
->  	return 0;
->  }
+--- a/drivers/mtd/maps/Kconfig
++++ b/drivers/mtd/maps/Kconfig
+@@ -10,7 +10,7 @@ config MTD_COMPLEX_MAPPINGS
+ 
+ config MTD_PHYSMAP
+ 	tristate "Flash device in physical memory map"
+-	depends on MTD_CFI || MTD_JEDECPROBE || MTD_ROM || MTD_LPDDR
++	depends on MTD_CFI || MTD_JEDECPROBE || MTD_ROM || MTD_RAM || MTD_LPDDR
+ 	help
+ 	  This provides a 'mapping' driver which allows the NOR Flash and
+ 	  ROM driver code to communicate with chips which are mapped
 
 
-Thanks,
-Miquèl
