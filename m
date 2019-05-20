@@ -2,105 +2,128 @@ Return-Path: <SRS0=lq4r=TU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C2B6C04AAC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 22:38:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 139AAC04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 22:41:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D9F3D20862
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 22:38:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF81D20862
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 22:41:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="JV1eOCLk"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="i/YC3/Co"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727143AbfETWiE (ORCPT
+        id S1726979AbfETWlv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 18:38:04 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:47755 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726940AbfETWiC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 18:38:02 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 457DLb494Bz9sBV;
-        Tue, 21 May 2019 08:37:59 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1558391879;
-        bh=BeyfWqNI+oIVF5RDV0bxiwaxM9006vp6mwLADaT6HYE=;
-        h=Date:From:To:Cc:Subject:From;
-        b=JV1eOCLkUizHfbYOr+Vmo4e90WkhHwLRVLVo8po/G52ITjspj/0s8bK8l4zNVbe4d
-         EBV3FswyhPYIfpUvqJgMmLZKJsikhL5aIs+2cBzeYvAErnzXl8ChSNeDrmBaOi60hV
-         GVBVeHRZNpDCNXHjI+3OOR4akF7W8CXwvOEu+cGN67w4k4BZ6v8BJOwx8yeJ5evoGr
-         I46EtO7ZOnAFpF4mizN8gb+Cooc49HC/6gIhk2XqWETjzKpBIZX0/FNBxLwOUckjwq
-         qp8YcaDkl4hpBhdrHw56yo03G8xxDvvFCD36wHWqJyL2f7kgur2ascpmGqNomuJUF7
-         taB3X3l0PcA6Q==
-Date:   Tue, 21 May 2019 08:37:56 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Shawn Guo <shawnguo@kernel.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Anson Huang <anson.huang@nxp.com>,
-        Dong Aisheng <aisheng.dong@nxp.com>
-Subject: linux-next: build failure after merge of the imx-mxs tree
-Message-ID: <20190521083756.4c8aee8a@canb.auug.org.au>
+        Mon, 20 May 2019 18:41:51 -0400
+Received: from mail-it1-f193.google.com ([209.85.166.193]:50655 "EHLO
+        mail-it1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726116AbfETWlu (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 18:41:50 -0400
+Received: by mail-it1-f193.google.com with SMTP id i10so1777087ite.0
+        for <linux-kernel@vger.kernel.org>; Mon, 20 May 2019 15:41:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=OgNyxFvb9RrLEsgdaGamQ5DEgQMLWE8KdIG6aRKa58s=;
+        b=i/YC3/Co3VAF6FaJLBBFr7LBsJyYYf4pjBoVIP3+MO3sAM/660FZ5qCQYTqHwNGLyA
+         IXOF63sCfKLdqiznD/9Lm+y9ZCzqL9pdjWD9diNQOYuHwtl874AKBO8WaqU9Ii3PsPdk
+         EestsRtqDzLEivR7dGSMWRF+h1oli32x9Xu7k=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=OgNyxFvb9RrLEsgdaGamQ5DEgQMLWE8KdIG6aRKa58s=;
+        b=YGJ2j7P3j043KuXE+W68yq0nmJGY9mAfePg/Q88Bb1Kq14aAxV4xeaAsr3EVF8j0I2
+         XOH5z/Tgal26Eln7SeJMwVQ7ILdqrlChyDn760HicXRXazQIpTKS06fI8WcsqgAqqJvr
+         yRoKMzY6UVBi/f39r+Ag9dGCYU6MvPtB642asfHGV/hW0eVuKKaN7LIUq1KzqM5nzMBD
+         wQfEct5oqytv85mfeMeb91K0RvkdZyvKxyYzds63lI6snNQJ9B9EztVd8skWlx3EEAI3
+         Z7gJQUF7f/vQdARr8kQNGJbPlqZf37+Vh2Aq9tAM4uLJtibo/5yqKMD9T46+xm5ha+Ba
+         zTIQ==
+X-Gm-Message-State: APjAAAUAIjfFvcID7X5xQtZlBEvKDVS1hjWfQXpUcYv1Q+Y1P6/Gl3xM
+        cXoEKIn4cfVDYvTwfWcanPcYR/38/YW69Q==
+X-Google-Smtp-Source: APXvYqzQiHm/KtijsWrYrWTLrhAWxHc3Zcx9ti23WinzlAtlDyVMJNn8b9TDiTMQx0akc3FONYbanA==
+X-Received: by 2002:a02:c8da:: with SMTP id q26mr50625560jao.0.1558392109730;
+        Mon, 20 May 2019 15:41:49 -0700 (PDT)
+Received: from localhost ([2620:15c:183:200:2e1:1bad:9c62:dd74])
+        by smtp.gmail.com with ESMTPSA id c4sm516823itd.12.2019.05.20.15.41.48
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 20 May 2019 15:41:48 -0700 (PDT)
+From:   Mathew King <mathewk@chromium.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Mathew King <mathewk@chromium.org>,
+        AceLan Kao <acelan.kao@canonical.com>,
+        Andy Shevchenko <andy@infradead.org>,
+        Darren Hart <dvhart@infradead.org>,
+        platform-driver-x86@vger.kernel.org,
+        Jett Rink <jettrink@chromium.org>, Mario.Limonciello@dell.com
+Subject: [PATCH v2] platform/x86: intel-vbtn: Report switch events when event wakes device
+Date:   Mon, 20 May 2019 16:41:24 -0600
+Message-Id: <20190520224124.153005-1-mathewk@chromium.org>
+X-Mailer: git-send-email 2.21.0.1020.gf2820cf01a-goog
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/bQg1/fUf/cfnr+0L7IqKhpx"; protocol="application/pgp-signature"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/bQg1/fUf/cfnr+0L7IqKhpx
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+When a switch event, such as tablet mode/laptop mode or docked/undocked,
+wakes a device make sure that the value of the swich is reported.
+Without when a device is put in tablet mode from laptop mode when it is
+suspended or vice versa the device will wake up but mode will be
+incorrect.
 
-Hi Shawn,
+Tested by suspending a device in laptop mode and putting it in tablet
+mode, the device resumes and is in tablet mode. When suspending the
+device in tablet mode and putting it in laptop mode the device resumes
+and is in laptop mode.
 
-After merging the imx-mxs tree, today's linux-next build (arm
-multi_v7_defconfig) failed like this:
+Signed-off-by: Mathew King <mathewk@chromium.org>
 
-drivers/clk/imx/clk.c: In function 'imx_mmdc_mask_handshake':
-drivers/clk/imx/clk.c:20:8: error: implicit declaration of function 'readl_=
-relaxed'; did you mean 'xchg_relaxed'? [-Werror=3Dimplicit-function-declara=
-tion]
-  reg =3D readl_relaxed(ccm_base + CCM_CCDR);
-        ^~~~~~~~~~~~~
-        xchg_relaxed
-drivers/clk/imx/clk.c:22:2: error: implicit declaration of function 'writel=
-_relaxed'; did you mean 'xchg_relaxed'? [-Werror=3Dimplicit-function-declar=
-ation]
-  writel_relaxed(reg, ccm_base + CCM_CCDR);
-  ^~~~~~~~~~~~~~
-  xchg_relaxed
+---
+Changes in v2:
+  - Added comment explaining why switch events are reported
+  - Format so that checkpatch is happy
+---
+ drivers/platform/x86/intel-vbtn.c | 16 ++++++++++++++--
+ 1 file changed, 14 insertions(+), 2 deletions(-)
 
-Caused by commit
+diff --git a/drivers/platform/x86/intel-vbtn.c b/drivers/platform/x86/intel-vbtn.c
+index 06cd7e818ed5..a0d0cecff55f 100644
+--- a/drivers/platform/x86/intel-vbtn.c
++++ b/drivers/platform/x86/intel-vbtn.c
+@@ -76,12 +76,24 @@ static void notify_handler(acpi_handle handle, u32 event, void *context)
+ 	struct platform_device *device = context;
+ 	struct intel_vbtn_priv *priv = dev_get_drvdata(&device->dev);
+ 	unsigned int val = !(event & 1); /* Even=press, Odd=release */
+-	const struct key_entry *ke_rel;
++	const struct key_entry *ke, *ke_rel;
+ 	bool autorelease;
+ 
+ 	if (priv->wakeup_mode) {
+-		if (sparse_keymap_entry_from_scancode(priv->input_dev, event)) {
++		ke = sparse_keymap_entry_from_scancode(priv->input_dev, event);
++		if (ke) {
+ 			pm_wakeup_hard_event(&device->dev);
++
++			/*
++			 * Switch events like tablet mode will wake the device
++			 * and report the new switch position to the input
++			 * subsystem.
++			 */
++			if (ke->type == KE_SW)
++				sparse_keymap_report_event(priv->input_dev,
++							   event,
++							   val,
++							   0);
+ 			return;
+ 		}
+ 		goto out_unknown;
+-- 
+2.21.0.1020.gf2820cf01a-goog
 
-  0dc6b492b6e0 ("clk: imx: Add common API for masking MMDC handshake")
-
-I have used the imx-mxs tree from next-20190520 for today.
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/bQg1/fUf/cfnr+0L7IqKhpx
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAlzjLEQACgkQAVBC80lX
-0GxtwAf/RqY1cshi846/r9/RWEOqXu5OgNeBnNXcrCxwNyIMaVG6rwHZPpBzK+2q
-4NE9MlE+ZJJeou7FP3zVvQlheEGJ1/oMKIARO0us4wMroF6kiUP481uC6GcXplG6
-2OqccIQi+WDH7yghtPjd12XGrXAcM++aI0ANkub9W1xUBfFV08eoViYQJtH0fP9N
-rGbz5dhlS5bBPNj3lGUjzznTFEl8QQeoUKCpODh/SWluj12h7NVh7vklcpjUgT51
-vr44g85ZULK6PyVre3pnveWAz04qZbUyGjRFZFINSvb4BTi4NUleZTntGXts89/1
-hf641I8XVZTIhIqanvAFywSlYrUfag==
-=N24Q
------END PGP SIGNATURE-----
-
---Sig_/bQg1/fUf/cfnr+0L7IqKhpx--
