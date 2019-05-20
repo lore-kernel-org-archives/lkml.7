@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37ED6C46460
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:42:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74D5EC04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:43:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0D2CF20815
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:42:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 33CF3204FD
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:43:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558356178;
-	bh=DBGX2oj/oOpoUbOD+YZNLeqUupMQg52GiLvBkERzb3w=;
+	s=default; t=1558356183;
+	bh=WupPEC+hMOVZof/t7zKnzKz3HLKKT+Ri07zHZ5ruEwI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LiaPmUOS9N0N3kVThcLl0XT3alU9StIP7xhKcQLfI4opS7JqQczl92M9mHW7dbCsg
-	 0SPONJ02wTPWh+Hr3rxVnnhGyZHErkla+aAVlw3rmbzfQ/rk8YgpcoQbxXctlghN/s
-	 VyuOvj/3swajvJFhIC/iC/2qzvxXhG6l5TzyIr1g=
+	b=BdkpHugzlWX+lfONdsMDaTggj4eH7jSnJpmYe8DzjLZHDWxJ1NR6AlLbJaCYtgIHs
+	 taXwgtY2ICu5vUsBDt9n5Mo1te4uV1nq6c3PHQtlk+Hlw4rh3yD3H7wkUFWlYPxcxp
+	 s5ncCYt0TYaXJgc+/KXbf5FawTf9oHTAYkfjxQ7U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389521AbfETM3b (ORCPT
+        id S2389878AbfETM3X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 08:29:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45574 "EHLO mail.kernel.org"
+        Mon, 20 May 2019 08:29:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45340 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389896AbfETM32 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 08:29:28 -0400
+        id S2389274AbfETM3R (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 08:29:17 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E39D220675;
-        Mon, 20 May 2019 12:29:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4189320675;
+        Mon, 20 May 2019 12:29:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558355367;
-        bh=DBGX2oj/oOpoUbOD+YZNLeqUupMQg52GiLvBkERzb3w=;
+        s=default; t=1558355356;
+        bh=WupPEC+hMOVZof/t7zKnzKz3HLKKT+Ri07zHZ5ruEwI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rkwMDcsHprHvAAiQkCtcBIOqOMgJkzabhGvbDnoAaKbqzwQlBaMEUR+cUk/IlA9qU
-         RLBjI4b4nHwtkpD8EZPTkzWfA3MpwjOyB48JE4wSAZQmu8+HFI5yuzcOmqV1Wgn/Fv
-         42B5nWike/A6wI3O7sqqTK0Sp+oFc0+XfgryeRVs=
+        b=zsawyAnsmMRtU4loequQAmOE2IHEl/rtOzObput+vnlkispsb1PS8Hvf0P8BnhdIe
+         FYRZYmj//hl6p1cwVk2u6ExJglBTkznwuEZ8Qq8N36hswzo0gkb3pYVQKm7ggsIath
+         7NOXS92USn9s2Py5zobN5wZUrSXe2bbIhfNXsfOE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Nikolay Borisov <nborisov@suse.com>,
-        David Sterba <dsterba@suse.com>
-Subject: [PATCH 5.0 091/123] btrfs: Honour FITRIM range constraints during free space trim
-Date:   Mon, 20 May 2019 14:14:31 +0200
-Message-Id: <20190520115250.986341927@linuxfoundation.org>
+        stable@vger.kernel.org, Kirill Tkhai <ktkhai@virtuozzo.com>,
+        Theodore Tso <tytso@mit.edu>, Jan Kara <jack@suse.cz>,
+        stable@kernel.org
+Subject: [PATCH 5.0 087/123] ext4: actually request zeroing of inode table after grow
+Date:   Mon, 20 May 2019 14:14:27 +0200
+Message-Id: <20190520115250.679695477@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190520115245.439864225@linuxfoundation.org>
 References: <20190520115245.439864225@linuxfoundation.org>
@@ -59,90 +60,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nikolay Borisov <nborisov@suse.com>
+From: Kirill Tkhai <ktkhai@virtuozzo.com>
 
-commit c2d1b3aae33605a61cbab445d8ae1c708ccd2698 upstream.
+commit 310a997fd74de778b9a4848a64be9cda9f18764a upstream.
 
-Up until now trimming the freespace was done irrespective of what the
-arguments of the FITRIM ioctl were. For example fstrim's -o/-l arguments
-will be entirely ignored. Fix it by correctly handling those paramter.
-This requires breaking if the found freespace extent is after the end of
-the passed range as well as completing trim after trimming
-fstrim_range::len bytes.
+It is never possible, that number of block groups decreases,
+since only online grow is supported.
 
-Fixes: 499f377f49f0 ("btrfs: iterate over unused chunk space in FITRIM")
-CC: stable@vger.kernel.org # 4.4+
-Signed-off-by: Nikolay Borisov <nborisov@suse.com>
-Reviewed-by: David Sterba <dsterba@suse.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
+But after a growing occured, we have to zero inode tables
+for just created new block groups.
+
+Fixes: 19c5246d2516 ("ext4: add new online resize interface")
+Signed-off-by: Kirill Tkhai <ktkhai@virtuozzo.com>
+Signed-off-by: Theodore Ts'o <tytso@mit.edu>
+Reviewed-by: Jan Kara <jack@suse.cz>
+Cc: stable@kernel.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/btrfs/extent-tree.c |   25 +++++++++++++++++++------
- 1 file changed, 19 insertions(+), 6 deletions(-)
+ fs/ext4/ioctl.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/fs/btrfs/extent-tree.c
-+++ b/fs/btrfs/extent-tree.c
-@@ -11192,9 +11192,9 @@ int btrfs_error_unpin_extent_range(struc
-  * held back allocations.
-  */
- static int btrfs_trim_free_extents(struct btrfs_device *device,
--				   u64 minlen, u64 *trimmed)
-+				   struct fstrim_range *range, u64 *trimmed)
- {
--	u64 start = 0, len = 0;
-+	u64 start = range->start, len = 0;
- 	int ret;
- 
- 	*trimmed = 0;
-@@ -11237,8 +11237,8 @@ static int btrfs_trim_free_extents(struc
- 		if (!trans)
- 			up_read(&fs_info->commit_root_sem);
- 
--		ret = find_free_dev_extent_start(trans, device, minlen, start,
--						 &start, &len);
-+		ret = find_free_dev_extent_start(trans, device, range->minlen,
-+						 start, &start, &len);
- 		if (trans) {
- 			up_read(&fs_info->commit_root_sem);
- 			btrfs_put_transaction(trans);
-@@ -11251,6 +11251,16 @@ static int btrfs_trim_free_extents(struc
- 			break;
- 		}
- 
-+		/* If we are out of the passed range break */
-+		if (start > range->start + range->len - 1) {
-+			mutex_unlock(&fs_info->chunk_mutex);
-+			ret = 0;
-+			break;
-+		}
-+
-+		start = max(range->start, start);
-+		len = min(range->len, len);
-+
- 		ret = btrfs_issue_discard(device->bdev, start, len, &bytes);
- 		mutex_unlock(&fs_info->chunk_mutex);
- 
-@@ -11260,6 +11270,10 @@ static int btrfs_trim_free_extents(struc
- 		start += len;
- 		*trimmed += bytes;
- 
-+		/* We've trimmed enough */
-+		if (*trimmed >= range->len)
-+			break;
-+
- 		if (fatal_signal_pending(current)) {
- 			ret = -ERESTARTSYS;
- 			break;
-@@ -11343,8 +11357,7 @@ int btrfs_trim_fs(struct btrfs_fs_info *
- 	mutex_lock(&fs_info->fs_devices->device_list_mutex);
- 	devices = &fs_info->fs_devices->devices;
- 	list_for_each_entry(device, devices, dev_list) {
--		ret = btrfs_trim_free_extents(device, range->minlen,
--					      &group_trimmed);
-+		ret = btrfs_trim_free_extents(device, range, &group_trimmed);
- 		if (ret) {
- 			dev_failed++;
- 			dev_ret = ret;
+--- a/fs/ext4/ioctl.c
++++ b/fs/ext4/ioctl.c
+@@ -977,7 +977,7 @@ mext_out:
+ 		if (err == 0)
+ 			err = err2;
+ 		mnt_drop_write_file(filp);
+-		if (!err && (o_group > EXT4_SB(sb)->s_groups_count) &&
++		if (!err && (o_group < EXT4_SB(sb)->s_groups_count) &&
+ 		    ext4_has_group_desc_csum(sb) &&
+ 		    test_opt(sb, INIT_INODE_TABLE))
+ 			err = ext4_register_li_request(sb, o_group);
 
 
