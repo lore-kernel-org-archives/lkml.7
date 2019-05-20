@@ -2,93 +2,129 @@ Return-Path: <SRS0=lq4r=TU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93B7FC04AAC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 13:24:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24486C04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 13:28:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 64B7D2054F
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 13:24:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E62582054F
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 13:28:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="KB+CPJT2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731919AbfETNYW (ORCPT
+        id S1731945AbfETN2F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 09:24:22 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:35852 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731794AbfETNYW (ORCPT
+        Mon, 20 May 2019 09:28:05 -0400
+Received: from mail-ua1-f67.google.com ([209.85.222.67]:38163 "EHLO
+        mail-ua1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730928AbfETN2F (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 09:24:22 -0400
-Received: by mail-wm1-f65.google.com with SMTP id j187so13046482wmj.1
-        for <linux-kernel@vger.kernel.org>; Mon, 20 May 2019 06:24:20 -0700 (PDT)
+        Mon, 20 May 2019 09:28:05 -0400
+Received: by mail-ua1-f67.google.com with SMTP id r19so4632347uap.5
+        for <linux-kernel@vger.kernel.org>; Mon, 20 May 2019 06:28:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sifive.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=22AYQZzoG7Oe1jq6WNzXvotDPxdHztrQDTFuuJjGD78=;
+        b=KB+CPJT2B2gTqpChkgYubBcoMAaSKKmohJm72ITD+9kxXbGDON4+fMeDfrWYISfepH
+         3cdJhye8mj133t2xqh0X9RMCvkPiAnrPoRJjuScuMAxc9WbC6k1Oh4Z+Cccbqz9zUZjf
+         d+vQYSR+sBkLz3ophnJIc1lEdzR5dJ4ZOcmMfy12tpgUEmf5E/aA/DV63qZeia8NLmxw
+         lJ4Z6/PL+AhCYV3slJcRe4PvUQmjlONdMFsOzqlWOAkyOn93lkGcsz2onkvWAbyNEfU/
+         RAgibC9WAm2cMFTFDj5XdoU/fxAwLyIYsH6IUUZjkok2lZX8X1InymPma68VtyeaUuIT
+         OVfQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=LkbCQ7VLxxV84GOCLiupDk7D4ceZNFha/9g8ZxwaMpc=;
-        b=I+6LT1jPljL1/kHdgpVTtxdN/cVmRqnlHeCcuhm/2wPmXlDeZK9r8Alk5felot5vpn
-         yvNMMG6fab3mENr+PtDxhgEqkK0cy4Ko1HXuDRfwEYOSxAhUI4roMtLpDVhpR6j/PXrH
-         G39/gCaGFGAGjnGcFeE9OW7Nt6j6BxR9QKgOnGjdYgih75XxlTCZuoYFVVhgvolhL699
-         PCaZbHG0oKyvozMhp0/UBuZGappCER615w5/QZBiTEsReSx7Vj7ibdXQD8xaQ7Nt7lOQ
-         +UPSWD+JfnBK/aNd/u/xO5bWi72i8w1OUsksSw4g5hQxNh3LgOc1sFcRmuTxhmTNGg9k
-         gG8g==
-X-Gm-Message-State: APjAAAWjAVKytox2surw6cxhgqV+wJN/Cob1ON5tYG4S78J5Ld18OgLe
-        DvfDqhNDcuVkRMqKVtTLStlhEg==
-X-Google-Smtp-Source: APXvYqyN/mxq9VS6gCeRHYEQS4C+v0zVIO5ujX6L7WbQRPqKuWQjJqWCsc3PGUbWPz/r0G6ILo3xkw==
-X-Received: by 2002:a1c:2dd2:: with SMTP id t201mr30512846wmt.136.1558358660296;
-        Mon, 20 May 2019 06:24:20 -0700 (PDT)
-Received: from ?IPv6:2001:b07:6468:f312:ac04:eef9:b257:b844? ([2001:b07:6468:f312:ac04:eef9:b257:b844])
-        by smtp.gmail.com with ESMTPSA id x9sm18965416wmf.27.2019.05.20.06.24.19
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 20 May 2019 06:24:19 -0700 (PDT)
-Subject: Re: [PATCH] x86/kvm/pmu: Set AMD's virt PMU version to 1
-To:     Borislav Petkov <bp@alien8.de>,
-        "Lendacky, Thomas" <Thomas.Lendacky@amd.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
-        "Natarajan, Janakarajan" <Janakarajan.Natarajan@amd.com>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        Liran Alon <liran.alon@oracle.com>,
-        Mihai Carabas <mihai.carabas@oracle.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "x86@kernel.org" <x86@kernel.org>
-References: <20190508170248.15271-1-bp@alien8.de>
- <aba3fd5b-e1ba-df66-2414-3f1109b68bbb@amd.com>
- <20190508171450.GG19015@zn.tnic>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <fbb1b27f-6393-6228-5b32-01dcd618253e@redhat.com>
-Date:   Mon, 20 May 2019 15:24:18 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=22AYQZzoG7Oe1jq6WNzXvotDPxdHztrQDTFuuJjGD78=;
+        b=sk4Ksuv1ibxO5RFKVJhodj1IKQQaBsaDgB9LFArneeil0s04mxnB+FN+3dj6BQcfBb
+         UUCYN2B59Vy9JtioJiiALSn8e+ofIc3Ua7bJLqkMxpa74118+f3efAGKLZS1iJrkTQS7
+         LuEAjMdtS6VaKASRHnh0Lveq8JUjiaQM6OjtvnFRY1/w2uxZbcaxsqNN/zGypYNYjPrK
+         6IXmqV0Uby+2JFrwVNo/rOarV06q/DgEbX5IlbSnub4CLTvyJhseoIOsICv3a8s2+2YI
+         Y+iAuUTE72/Cx35pW8q5q7jqKXf7a28iHKIDhTCE0rKoyfm3FkAPmoAmbICPj5Onjgb9
+         G+Vg==
+X-Gm-Message-State: APjAAAW3DxXpfpXXDZMVf7rbT9jgiEhNXYII7AsOczNj6Tdi25Eww1fn
+        dQyqBW1MAYrcLhS44vjhCkEpfgS2FmRVRaccPvi92LTJdqARcg==
+X-Google-Smtp-Source: APXvYqwapFA3zJOmbxCEv+ksueO2t69F5DHKCwH1G0GdQycduLQrNvaH4w0zK9X8JYEmpaBjLAgnC2yANMyJKTOmNRA=
+X-Received: by 2002:ab0:5ad0:: with SMTP id x16mr14383639uae.124.1558358884007;
+ Mon, 20 May 2019 06:28:04 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190508171450.GG19015@zn.tnic>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <1558354817-12034-1-git-send-email-sagar.kadam@sifive.com>
+ <1558354817-12034-4-git-send-email-sagar.kadam@sifive.com> <20190520124107.GA25785@lunn.ch>
+In-Reply-To: <20190520124107.GA25785@lunn.ch>
+From:   Sagar Kadam <sagar.kadam@sifive.com>
+Date:   Mon, 20 May 2019 18:57:52 +0530
+Message-ID: <CAARK3HnZgiUOE3S7BOk9uC-MfmB4wO5zWFbuGGRFqKauYaX8yg@mail.gmail.com>
+Subject: Re: [PATCH v4 3/3] i2c-ocores: sifive: add polling mode workaround
+ for FU540-C000 SoC
+To:     Andrew Lunn <andrew@lunn.ch>
+Cc:     robh+dt@kernel.org, mark.rutland@arm.com, peter@korsgaard.com,
+        Palmer Dabbelt <palmer@sifive.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        linux-i2c@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 08/05/19 19:14, Borislav Petkov wrote:
-> On Wed, May 08, 2019 at 05:08:44PM +0000, Lendacky, Thomas wrote:
->> On 5/8/19 12:02 PM, Borislav Petkov wrote:
->>> From: Borislav Petkov <bp@suse.de>
->>>
->>> After commit:
->>>
->>>   672ff6cff80c ("KVM: x86: Raise #GP when guest vCPU do not support PMU")
->>
->> You should add this commit as a fixes tag. Since that commit went into 5.1
->> it would be worth this fix going into the 5.1 stable tree.
-> 
-> Paolo, Radim, can you do that pls, when applying?
+Hi Andrew,
 
-Yes, done (and queued the patch).
+On Mon, May 20, 2019 at 6:11 PM Andrew Lunn <andrew@lunn.ch> wrote:
+>
+> > @@ -406,7 +416,7 @@ static int ocores_xfer(struct i2c_adapter *adap,
+> >  {
+> >       struct ocores_i2c *i2c = i2c_get_adapdata(adap);
+> >
+> > -     if (i2c->flags & OCORES_FLAG_POLL)
+> > +     if ((i2c->flags & (OCORES_FLAG_POLL | OCORES_FLAG_BROKEN_IRQ)))
+> >               return ocores_xfer_polling(adap, msgs, num);
+> >       return ocores_xfer_core(i2c, msgs, num, false);
+> >  }
+>
+> You are not listening to what i said. All you need to know here is
+> that you must poll. It does not matter if the IRQ is broken or not.
+>
 
-Paolo
+Apologies for my miss-understanding. I will rectify this and submit a v5.
 
+> >       irq = platform_get_irq(pdev, 0);
+> >       if (irq == -ENXIO) {
+> > -             i2c->flags |= OCORES_FLAG_POLL;
+>
+> If there is no interrupt, you need to poll. So keep this line.
+
+Will retain this.
+
+> > +             /*
+> > +              * Set a OCORES_FLAG_BROKEN_IRQ to enable workaround for
+> > +              * FU540-C000 SoC in polling mode interface of i2c-ocore driver.
+> > +              * Else enable default polling mode interface for SIFIVE/OCORE
+> > +              * device types.
+> > +              */
+> > +             match = of_match_node(ocores_i2c_match, pdev->dev.of_node);
+> > +             if (match && (long)match->data == TYPE_SIFIVE_REV0)
+> > +                     i2c->flags |= OCORES_FLAG_BROKEN_IRQ;
+>
+> If it is a OCORE, IRQ is broken, so OR in OCORES_FLAG_BROKEN_IRQ.
+
+Got it, as device type SIFIVE is based on OCORE's re-implementation,
+will OR in the broken IRQ flag and submit a v5.
+
+> >
+> > -     if (!(i2c->flags & OCORES_FLAG_POLL)) {
+> > +     if (!(i2c->flags & (OCORES_FLAG_POLL | OCORES_FLAG_BROKEN_IRQ))) {
+> >               ret = devm_request_irq(&pdev->dev, irq, ocores_isr, 0,
+> >                                      pdev->name, i2c);
+>
+> Here you just need to know if you are polling. Broken IRQ does not
+> matter.
+>
+>         Andrew
+
+Thanks & Regards,
+Sagar
