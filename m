@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78B91C04AAC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:22:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 070E0C04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:23:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3F7E021707
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:22:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D106A216FD
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:23:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558354977;
-	bh=s1AmIjUuHttMtGumDw8a0cBTSEY0tPGQ3gjnVenLO6M=;
+	s=default; t=1558354980;
+	bh=kYit0N1s3XyiwEJ9BAPv+JHUmMpjAlox7xrrRbfxqOI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=furyfVwlLVlNlDh3XRB/qrDO1k6ZQpwCHynPvKbeNziHWn98MbvOwRhtT2tj/yNeP
-	 ZALfGRd3/8uNwCoEMMwF4/brxUTxfbA/WClPwjuKiP33GupPc7xWFiodF3kZR05eXC
-	 8rXdbogQbFupTidPcNkVMdgTPB2pfMLDRmgQRAcY=
+	b=giBuW/8Ywz6rdg+AOGbT41LlDpemY2IFMLi5+TpULdbAhAsGPNL8tsGl7KUjklHG9
+	 6v12FBxWrB1WO2vr+cJ2o7n55LhyfhWFlvcZUJsQrMPl2Bi5zz9FAVLKJZnhsn/+xT
+	 Zqvem28NGjwia5rpH5YHl0WyViFSJuJE1Uk5U110=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388261AbfETMWz (ORCPT
+        id S2388282AbfETMW7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 08:22:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37010 "EHLO mail.kernel.org"
+        Mon, 20 May 2019 08:22:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37104 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388504AbfETMWu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 08:22:50 -0400
+        id S2388259AbfETMW4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 08:22:56 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6F53220645;
-        Mon, 20 May 2019 12:22:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DB784216C4;
+        Mon, 20 May 2019 12:22:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558354969;
-        bh=s1AmIjUuHttMtGumDw8a0cBTSEY0tPGQ3gjnVenLO6M=;
+        s=default; t=1558354975;
+        bh=kYit0N1s3XyiwEJ9BAPv+JHUmMpjAlox7xrrRbfxqOI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HkaxxxM1GmBhAr4XiAh+pGKs7OIx6y71HuD6iuQMjGy+LPpV9xa9iBtcvtA0awXQP
-         XT2QbQdCG6j0fhbUXiQS3zv7n7Qt5mghwIu4219fT3aOQ+EVqkExgN+8vnHw1Jjk3e
-         idcPLRHzbzqfhIZ+v0WwcJCpJRm259i0YujWVmTI=
+        b=1glLL6OoHybrzoQYJsmNTngAa0aUWgfkOp0ATCrznFifzR6itv7gMmSgs5tHL79H+
+         u5C6hMRGqKuY/NHjgCMs+/WgwhKCj4TmEEfY1iIMWxXs3YaK0nawGzKikgJBaG5J6a
+         hh5ZqiUVMWiDyJBywN9XOxRRfLaK9SD9UnEheXmw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Wen Yang <wen.yang99@zte.com.cn>,
-        Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [PATCH 4.19 009/105] ARM: exynos: Fix a leaked reference by adding missing of_node_put
-Date:   Mon, 20 May 2019 14:13:15 +0200
-Message-Id: <20190520115247.693573799@linuxfoundation.org>
+        stable@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>,
+        Sebastian Reichel <sebastian.reichel@collabora.com>
+Subject: [PATCH 4.19 011/105] power: supply: axp288_fuel_gauge: Add ACEPC T8 and T11 mini PCs to the blacklist
+Date:   Mon, 20 May 2019 14:13:17 +0200
+Message-Id: <20190520115247.828904395@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190520115247.060821231@linuxfoundation.org>
 References: <20190520115247.060821231@linuxfoundation.org>
@@ -59,51 +59,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wen Yang <wen.yang99@zte.com.cn>
+From: Hans de Goede <hdegoede@redhat.com>
 
-commit 629266bf7229cd6a550075f5961f95607b823b59 upstream.
+commit 9274c78305e12c5f461bec15f49c38e0f32ca705 upstream.
 
-The call to of_get_next_child returns a node pointer with refcount
-incremented thus it must be explicitly decremented after the last
-usage.
+The ACEPC T8 and T11 Cherry Trail Z8350 mini PCs use an AXP288 and as PCs,
+rather then portables, they does not have a battery. Still for some
+reason the AXP288 not only thinks there is a battery, it actually
+thinks it is discharging while the PC is running, slowly going to
+0% full, causing userspace to shutdown the system due to the battery
+being critically low after a while.
 
-Detected by coccinelle with warnings like:
-    arch/arm/mach-exynos/firmware.c:201:2-8: ERROR: missing of_node_put;
-        acquired a node pointer with refcount incremented on line 193,
-        but without a corresponding object release within this function.
+This commit adds the ACEPC T8 and T11 to the axp288 fuel-gauge driver
+blacklist, so that we stop reporting bogus battery readings on this device.
 
+BugLink: https://bugzilla.redhat.com/show_bug.cgi?id=1690852
 Cc: stable@vger.kernel.org
-Signed-off-by: Wen Yang <wen.yang99@zte.com.cn>
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/arm/mach-exynos/firmware.c |    1 +
- arch/arm/mach-exynos/suspend.c  |    2 ++
- 2 files changed, 3 insertions(+)
+ drivers/power/supply/axp288_fuel_gauge.c |   20 ++++++++++++++++++++
+ 1 file changed, 20 insertions(+)
 
---- a/arch/arm/mach-exynos/firmware.c
-+++ b/arch/arm/mach-exynos/firmware.c
-@@ -196,6 +196,7 @@ void __init exynos_firmware_init(void)
- 		return;
- 
- 	addr = of_get_address(nd, 0, NULL, NULL);
-+	of_node_put(nd);
- 	if (!addr) {
- 		pr_err("%s: No address specified.\n", __func__);
- 		return;
---- a/arch/arm/mach-exynos/suspend.c
-+++ b/arch/arm/mach-exynos/suspend.c
-@@ -639,8 +639,10 @@ void __init exynos_pm_init(void)
- 
- 	if (WARN_ON(!of_find_property(np, "interrupt-controller", NULL))) {
- 		pr_warn("Outdated DT detected, suspend/resume will NOT work\n");
-+		of_node_put(np);
- 		return;
- 	}
-+	of_node_put(np);
- 
- 	pm_data = (const struct exynos_pm_data *) match->data;
- 
+--- a/drivers/power/supply/axp288_fuel_gauge.c
++++ b/drivers/power/supply/axp288_fuel_gauge.c
+@@ -696,6 +696,26 @@ intr_failed:
+  */
+ static const struct dmi_system_id axp288_fuel_gauge_blacklist[] = {
+ 	{
++		/* ACEPC T8 Cherry Trail Z8350 mini PC */
++		.matches = {
++			DMI_EXACT_MATCH(DMI_BOARD_VENDOR, "To be filled by O.E.M."),
++			DMI_EXACT_MATCH(DMI_BOARD_NAME, "Cherry Trail CR"),
++			DMI_EXACT_MATCH(DMI_PRODUCT_SKU, "T8"),
++			/* also match on somewhat unique bios-version */
++			DMI_EXACT_MATCH(DMI_BIOS_VERSION, "1.000"),
++		},
++	},
++	{
++		/* ACEPC T11 Cherry Trail Z8350 mini PC */
++		.matches = {
++			DMI_EXACT_MATCH(DMI_BOARD_VENDOR, "To be filled by O.E.M."),
++			DMI_EXACT_MATCH(DMI_BOARD_NAME, "Cherry Trail CR"),
++			DMI_EXACT_MATCH(DMI_PRODUCT_SKU, "T11"),
++			/* also match on somewhat unique bios-version */
++			DMI_EXACT_MATCH(DMI_BIOS_VERSION, "1.000"),
++		},
++	},
++	{
+ 		/* Intel Cherry Trail Compute Stick, Windows version */
+ 		.matches = {
+ 			DMI_MATCH(DMI_SYS_VENDOR, "Intel Corporation"),
 
 
