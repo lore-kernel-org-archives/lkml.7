@@ -2,115 +2,142 @@ Return-Path: <SRS0=lq4r=TU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B846EC04AAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 15:08:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B06BCC04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 15:09:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8DC78213F2
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 15:08:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3B752213F2
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 15:09:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="je0V+f8q"
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="18QrCSk8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388385AbfETPI6 (ORCPT
+        id S2390182AbfETPJF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 11:08:58 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:55224 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1733027AbfETPI6 (ORCPT
+        Mon, 20 May 2019 11:09:05 -0400
+Received: from conssluserg-04.nifty.com ([210.131.2.83]:49774 "EHLO
+        conssluserg-04.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1733027AbfETPJE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 11:08:58 -0400
-Received: by mail-wm1-f67.google.com with SMTP id i3so13703509wml.4
-        for <linux-kernel@vger.kernel.org>; Mon, 20 May 2019 08:08:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=P9y3c6/pdf3tbErI0Do1diigP58TG78CE1J0hIezm6I=;
-        b=je0V+f8q316pSmPHnXBh0zlNCIMMIf0OTbOsKzKgqpiT5HJoGx7mgp0OmmrbCA6ypD
-         T+8lsnJPKUBVQTt2YUj4Hjldoscaw/3gfqWtUsK/glWrq5k2hsbzgoAW58zf0vxCqogH
-         GOdrfDuW/v5LxD5eTjNRHz5sknGLMr+DWSpm8/Fy7P5AsMxnI53jQ8fTyN5GuUIlLR9Z
-         S0up4Y3meHZxSb07WX1pbkLBgwWdNf3po14WBinDKeARTl6purwLBpNsNE3KYHuS+6c8
-         zfd6w/dQFy7+34oXkA4FVEGxYMhLqFuhoC9SyGvSo65ZV86AJ746EGnz1oC6vjAbDD+i
-         QqmQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=P9y3c6/pdf3tbErI0Do1diigP58TG78CE1J0hIezm6I=;
-        b=EmtEJTii3e076Cbsp/m/tB2t7h1up2YKQVsIHNnVlZbkDqv7NrIz87b8LkZwawPQ6M
-         wBXEW+dgobEJ51fvzFyvMRiAAhxxAyawezM8hX6fC6fZdCMaxesvPFZx2ZDh0tG+2ivx
-         oMtAOKe6uG+RUGL7VRBNRjCDzAzz0KU0d06h2dQFO3QIm4To6nh4Cl3AOy33VIm91aYM
-         /8J1Hl19EaOY8NH5ozBho6IdjFNVnSLo4EWXKKKlSACyYcav3JSsCw0S2c5KKC5xNsCT
-         ZY7XzSPm+Li+qQJMYPbdaTnRxSitpQ3PlqKfy0DN6+kkdT+Em4HuKxCq65pA2GQxanha
-         vm4w==
-X-Gm-Message-State: APjAAAV+yQbC1/jXnxS/WgP+t0HO+MPD2JdeN5hhHr4euSwMyEFvGSFQ
-        aS9gbyZv7DF3IIuTtWBXIF5JciyyfdoAJLvKwkPMKT7bDP0=
-X-Google-Smtp-Source: APXvYqwTvkGu1GK/0tSXG4iFUHM6unRNHVZf1lF2nENMPjqEy8F0XxkWnj/B1GwuSNTjbSbtEZH2Wip0AFBPNQmrDik=
-X-Received: by 2002:a1c:dcc2:: with SMTP id t185mr11431100wmg.143.1558364935763;
+        Mon, 20 May 2019 11:09:04 -0400
+Received: from mail-vs1-f52.google.com (mail-vs1-f52.google.com [209.85.217.52]) (authenticated)
+        by conssluserg-04.nifty.com with ESMTP id x4KF8umi027391;
+        Tue, 21 May 2019 00:08:57 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-04.nifty.com x4KF8umi027391
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1558364937;
+        bh=95HwtbpMEdAllrN7F4zNPVZ+pNQZoCbwUigUV2ddKeY=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=18QrCSk8G+t+XAukQYfqtvqpNID+j398DC9uzCU6kAmT0bQ4JmxnX9Zw2aDtN8EUw
+         z/xBYfXyn+DZRmfB9j8Rzt9oNI0n4SBX1RJVrseq41aTfL/VzMGIKZTrwQkcuVweX3
+         f+aKAbitf/1HlUptdjYiCwbmJo0Ur/UNZ+BsLo2VL0vnQ+P7Tc56sWOLrVkBVHfAad
+         W43Utwl8zrUrFRr9/ouHnfrsh+mjWH7KWVgPWSzeMjgKncJeTsS2bmax9vx9ZfYi5h
+         Fos+RhgWy+AkC3tu7oAzk+y+ULC4lajYp6t/kXwvu2e2Cktlj7BFoiAvt6EPjbW236
+         4EyoKuP2aMROA==
+X-Nifty-SrcIP: [209.85.217.52]
+Received: by mail-vs1-f52.google.com with SMTP id x184so8089811vsb.5;
+        Mon, 20 May 2019 08:08:57 -0700 (PDT)
+X-Gm-Message-State: APjAAAWdN0sWKe6PwZXvsfUFwCAKfFVtgX1Uo/9mV3TMK/b9geOeUnC2
+        FcfnA8YVz+JoUoBY0MJkS1VX82PwAW+kHIv9zA8=
+X-Google-Smtp-Source: APXvYqzxDQvhelDYO1GqpUaZUlQvPgAMk4p/UNpmJQRQFDak7rLxLzf7T+QCeN0IC4L32Vrt8CzBRFBSIQ6QIJk+n+o=
+X-Received: by 2002:a67:d382:: with SMTP id b2mr19939121vsj.155.1558364935894;
  Mon, 20 May 2019 08:08:55 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190520035254.57579-1-minchan@kernel.org> <20190520035254.57579-2-minchan@kernel.org>
- <20190520081621.GV6836@dhcp22.suse.cz> <20190520081943.GW6836@dhcp22.suse.cz>
-In-Reply-To: <20190520081943.GW6836@dhcp22.suse.cz>
-From:   Suren Baghdasaryan <surenb@google.com>
-Date:   Mon, 20 May 2019 08:08:45 -0700
-Message-ID: <CAJuCfpE60ZOcpFfE6MpF0PBujK9sfeRjbkhUa243Bo9QmOoARg@mail.gmail.com>
-Subject: Re: [RFC 1/7] mm: introduce MADV_COOL
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     Minchan Kim <minchan@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-mm <linux-mm@kvack.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Tim Murray <timmurray@google.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Daniel Colascione <dancol@google.com>,
-        Shakeel Butt <shakeelb@google.com>,
-        Sonny Rao <sonnyrao@google.com>,
-        Brian Geffon <bgeffon@google.com>, linux-api@vger.kernel.org
+References: <20190423212741.12219-1-ndesaulniers@google.com>
+In-Reply-To: <20190423212741.12219-1-ndesaulniers@google.com>
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+Date:   Tue, 21 May 2019 00:08:19 +0900
+X-Gmail-Original-Message-ID: <CAK7LNARdZa16J56AxhM5bcr9oHdAw+zpa4EDjPpF8YO77==Etw@mail.gmail.com>
+Message-ID: <CAK7LNARdZa16J56AxhM5bcr9oHdAw+zpa4EDjPpF8YO77==Etw@mail.gmail.com>
+Subject: Re: [PATCH] kbuild: drop support for cc-ldoption
+To:     Nick Desaulniers <ndesaulniers@google.com>
+Cc:     Michal Marek <michal.lkml@markovi.net>,
+        Jonathan Corbet <corbet@lwn.net>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 20, 2019 at 1:19 AM Michal Hocko <mhocko@kernel.org> wrote:
+On Wed, Apr 24, 2019 at 6:27 AM Nick Desaulniers
+<ndesaulniers@google.com> wrote:
 >
-> On Mon 20-05-19 10:16:21, Michal Hocko wrote:
-> > [CC linux-api]
-> >
-> > On Mon 20-05-19 12:52:48, Minchan Kim wrote:
-> > > When a process expects no accesses to a certain memory range
-> > > it could hint kernel that the pages can be reclaimed
-> > > when memory pressure happens but data should be preserved
-> > > for future use.  This could reduce workingset eviction so it
-> > > ends up increasing performance.
-> > >
-> > > This patch introduces the new MADV_COOL hint to madvise(2)
-> > > syscall. MADV_COOL can be used by a process to mark a memory range
-> > > as not expected to be used in the near future. The hint can help
-> > > kernel in deciding which pages to evict early during memory
-> > > pressure.
-> >
-> > I do not want to start naming fight but MADV_COOL sounds a bit
-> > misleading. Everybody thinks his pages are cool ;). Probably MADV_COLD
-> > or MADV_DONTNEED_PRESERVE.
+> If you want to see if your linker supports a certain flag, then ask the
+> linker directly with ld-option (not the compiler with cc-ldoption).
+> Checking for linker flag support is an antipattern that complicates the
+> usage of various linkers other than bfd via -fuse-ld={bfd|gold|lld}.
 >
-> OK, I can see that you have used MADV_COLD for a different mode.
-> So this one is effectively a non destructive MADV_FREE alternative
-> so MADV_FREE_PRESERVE would sound like a good fit. Your MADV_COLD
-> in other patch would then be MADV_DONTNEED_PRESERVE. Right?
->
+> Cc: clang-built-linux@googlegroups.com
+> Suggested-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+> Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
+> ---
 
-I agree that naming them this way would be more in-line with the
-existing API. Another good option IMO could be MADV_RECLAIM_NOW /
-MADV_RECLAIM_LAZY which might explain a bit better what they do but
-Michal's proposal is more consistent with the current API.
+Applied to linux-kbuild. Thanks.
 
+
+
+
+> This should probably wait until all of the call sites have been cleaned
+> up. Masahiro sent them for arm and arm64, while I sent cleanups for all
+> the rest.
+>
+>
+>  Documentation/kbuild/makefiles.txt | 14 --------------
+>  scripts/Kbuild.include             |  5 -----
+>  2 files changed, 19 deletions(-)
+>
+> diff --git a/Documentation/kbuild/makefiles.txt b/Documentation/kbuild/makefiles.txt
+> index 03c065855eaf..d65ad5746f94 100644
+> --- a/Documentation/kbuild/makefiles.txt
+> +++ b/Documentation/kbuild/makefiles.txt
+> @@ -437,20 +437,6 @@ more details, with real examples.
+>         The second argument is optional, and if supplied will be used
+>         if first argument is not supported.
+>
+> -    cc-ldoption
+> -       cc-ldoption is used to check if $(CC) when used to link object files
+> -       supports the given option.  An optional second option may be
+> -       specified if first option are not supported.
+> -
+> -       Example:
+> -               #arch/x86/kernel/Makefile
+> -               vsyscall-flags += $(call cc-ldoption, -Wl$(comma)--hash-style=sysv)
+> -
+> -       In the above example, vsyscall-flags will be assigned the option
+> -       -Wl$(comma)--hash-style=sysv if it is supported by $(CC).
+> -       The second argument is optional, and if supplied will be used
+> -       if first argument is not supported.
+> -
+>      as-instr
+>         as-instr checks if the assembler reports a specific instruction
+>         and then outputs either option1 or option2
+> diff --git a/scripts/Kbuild.include b/scripts/Kbuild.include
+> index 7484b9d8272f..fbfb37d1bcc8 100644
+> --- a/scripts/Kbuild.include
+> +++ b/scripts/Kbuild.include
+> @@ -138,11 +138,6 @@ cc-disable-warning = $(call try-run,\
+>  # Usage:  EXTRA_CFLAGS += $(call cc-ifversion, -lt, 0402, -O1)
+>  cc-ifversion = $(shell [ $(CONFIG_GCC_VERSION)0 $(1) $(2)000 ] && echo $(3) || echo $(4))
+>
+> -# cc-ldoption
+> -# Usage: ldflags += $(call cc-ldoption, -Wl$(comma)--hash-style=both)
+> -cc-ldoption = $(call try-run,\
+> -       $(CC) $(1) $(KBUILD_CPPFLAGS) $(CC_OPTION_CFLAGS) -nostdlib -x c /dev/null -o "$$TMP",$(1),$(2))
+> -
+>  # ld-option
+>  # Usage: KBUILD_LDFLAGS += $(call ld-option, -X, -Y)
+>  ld-option = $(call try-run, $(LD) $(KBUILD_LDFLAGS) $(1) -v,$(1),$(2),$(3))
 > --
-> Michal Hocko
-> SUSE Labs
+> 2.21.0.593.g511ec345e18-goog
+>
+
+
+-- 
+Best Regards
+Masahiro Yamada
