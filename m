@@ -2,51 +2,54 @@ Return-Path: <SRS0=lq4r=TU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F818C04AAC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:16:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83A33C04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:16:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3AB4B20863
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:16:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5956D213F2
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:16:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558354606;
-	bh=mXFQCl1KWfQijm0LdSu8B4Yd1FU6X8u1X21JvBwpRsA=;
+	s=default; t=1558354610;
+	bh=nVMnlszG0Mg/hy+jgxq26XNabFL/BiaZI+yWNNiXoks=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rP5dBZZnaof31DCkIlfh9HtfszbVykMMMfLUKgWeUS33qBYzCb9OlzmNe82U4eAeA
-	 Z0rw5PNkxLlo8Eq6PYIL+2ukZW0OgoHI58uTNP0/gza7R1sUTXRSMYWcV2EMc5VgrH
-	 XwGohrJaZWC+3mS2YbgcNoFqBGpfpucxBzb0xnBM=
+	b=AhU4F0+73P7YYHbB+2JuFPsdNzC3AObfVTmfvJO7fjbpvUaI0ABxNS85UyxOB3SdI
+	 qSi79x3JlO7aVHS8YIs5pJDcM9Zc0csGzhHD7p9d5IkeDM9M24LvOS2PLsBp22i0Fc
+	 I6UiEnOjGfn+P5qHBsCe7R8MHbXhZa+SCILJIYtA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733278AbfETMQo (ORCPT
+        id S1733293AbfETMQt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 08:16:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57406 "EHLO mail.kernel.org"
+        Mon, 20 May 2019 08:16:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57520 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730647AbfETMQm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 08:16:42 -0400
+        id S1733298AbfETMQr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 08:16:47 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E95B020656;
-        Mon, 20 May 2019 12:16:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DF26E20656;
+        Mon, 20 May 2019 12:16:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558354601;
-        bh=mXFQCl1KWfQijm0LdSu8B4Yd1FU6X8u1X21JvBwpRsA=;
+        s=default; t=1558354606;
+        bh=nVMnlszG0Mg/hy+jgxq26XNabFL/BiaZI+yWNNiXoks=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LIzrvulkl45KsxQZ42Y6lY6c6quvxD+Fy7G1QTRQmMCZ+pfhLHcQDaAuYyimg/W5L
-         HBeZg6qK6ljmnCywdhFNM/dlIUuHwFcv3psSOc8dSh8uCRO+vvGpGyd6kEQ6kHOGr2
-         sz0Nk41XGqYaYygF1mj8QBapCM3dyHw5TGunTs0Q=
+        b=dTa3O5cGP+w155x08sTphv/lNB7tzNdc8PnBd6+66h0l1GTXrrHtlC+wVn3M7Ew/S
+         KtQtgPafwyccJei/kDsBf6wwE2OI3q7Fb0waonyQIxoMe/NaQONtmOhm4kWLX+W+mP
+         wePtZn+lAebMZZ/oFqAuq6ztoi3cbGyGn1juUSbI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kailang Yang <kailang@realtek.com>,
-        Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 4.9 19/44] ALSA: hda/realtek - EAPD turn on later
-Date:   Mon, 20 May 2019 14:14:08 +0200
-Message-Id: <20190520115233.183142471@linuxfoundation.org>
+        stable@vger.kernel.org, Dexuan Cui <decui@microsoft.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Stephen Hemminger <stephen@networkplumber.org>,
+        Michael Kelley <mikelley@microsoft.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 03/44] PCI: hv: Fix a memory leak in hv_eject_device_work()
+Date:   Mon, 20 May 2019 14:13:52 +0200
+Message-Id: <20190520115231.364483225@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190520115230.720347034@linuxfoundation.org>
 References: <20190520115230.720347034@linuxfoundation.org>
@@ -59,40 +62,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kailang Yang <kailang@realtek.com>
+[ Upstream commit 05f151a73ec2b23ffbff706e5203e729a995cdc2 ]
 
-commit 607ca3bd220f4022e6f5356026b19dafc363863a upstream.
+When a device is created in new_pcichild_device(), hpdev->refs is set
+to 2 (i.e. the initial value of 1 plus the get_pcichild()).
 
-Let EAPD turn on after set pin output.
+When we hot remove the device from the host, in a Linux VM we first call
+hv_pci_eject_device(), which increases hpdev->refs by get_pcichild() and
+then schedules a work of hv_eject_device_work(), so hpdev->refs becomes
+3 (let's ignore the paired get/put_pcichild() in other places). But in
+hv_eject_device_work(), currently we only call put_pcichild() twice,
+meaning the 'hpdev' struct can't be freed in put_pcichild().
 
-[ NOTE: This change is supposed to reduce the possible click noises at
-  (runtime) PM resume.  The functionality should be same (i.e. the
-  verbs are executed correctly) no matter which order is, so this
-  should be safe to apply for all codecs -- tiwai ]
+Add one put_pcichild() to fix the memory leak.
 
-Signed-off-by: Kailang Yang <kailang@realtek.com>
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+The device can also be removed when we run "rmmod pci-hyperv". On this
+path (hv_pci_remove() -> hv_pci_bus_exit() -> hv_pci_devices_present()),
+hpdev->refs is 2, and we do correctly call put_pcichild() twice in
+pci_devices_present_work().
 
+Fixes: 4daace0d8ce8 ("PCI: hv: Add paravirtual PCI front-end for Microsoft Hyper-V VMs")
+Signed-off-by: Dexuan Cui <decui@microsoft.com>
+[lorenzo.pieralisi@arm.com: commit log rework]
+Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Reviewed-by: Stephen Hemminger <stephen@networkplumber.org>
+Reviewed-by:  Michael Kelley <mikelley@microsoft.com>
+Cc: stable@vger.kernel.org
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/pci/hda/patch_realtek.c |    3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ drivers/pci/host/pci-hyperv.c | 1 +
+ 1 file changed, 1 insertion(+)
 
---- a/sound/pci/hda/patch_realtek.c
-+++ b/sound/pci/hda/patch_realtek.c
-@@ -773,11 +773,10 @@ static int alc_init(struct hda_codec *co
- 	if (spec->init_hook)
- 		spec->init_hook(codec);
+diff --git a/drivers/pci/host/pci-hyperv.c b/drivers/pci/host/pci-hyperv.c
+index b4d8ccfd9f7c2..200b415765264 100644
+--- a/drivers/pci/host/pci-hyperv.c
++++ b/drivers/pci/host/pci-hyperv.c
+@@ -1620,6 +1620,7 @@ static void hv_eject_device_work(struct work_struct *work)
+ 	spin_unlock_irqrestore(&hpdev->hbus->device_list_lock, flags);
  
-+	snd_hda_gen_init(codec);
- 	alc_fix_pll(codec);
- 	alc_auto_init_amp(codec, spec->init_amp);
- 
--	snd_hda_gen_init(codec);
--
- 	snd_hda_apply_fixup(codec, HDA_FIXUP_ACT_INIT);
- 
- 	return 0;
+ 	put_pcichild(hpdev, hv_pcidev_ref_childlist);
++	put_pcichild(hpdev, hv_pcidev_ref_initial);
+ 	put_pcichild(hpdev, hv_pcidev_ref_pnp);
+ 	put_hvpcibus(hpdev->hbus);
+ }
+-- 
+2.20.1
+
 
 
