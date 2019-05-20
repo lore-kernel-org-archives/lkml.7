@@ -2,120 +2,149 @@ Return-Path: <SRS0=lq4r=TU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77BFCC04AAC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 15:32:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC27FC04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 15:36:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4B1D12081C
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 15:32:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="aCs7wcUo"
+	by mail.kernel.org (Postfix) with ESMTP id B993F21479
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 15:36:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392189AbfETPcY (ORCPT
+        id S2392190AbfETPgu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 11:32:24 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:55240 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731262AbfETPcY (ORCPT
+        Mon, 20 May 2019 11:36:50 -0400
+Received: from outgoing-auth-1.mit.edu ([18.9.28.11]:38844 "EHLO
+        outgoing.mit.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1732280AbfETPgu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 11:32:24 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=jKdrdCTZgDXkXxUUja9CogRGjradAVpD3DVJ1Pki/4I=; b=aCs7wcUoxJB8THDFLmuZN/+csc
-        5NGo+6Hhw0XMmUbANSxQ7NJU2gfKmJHnzo44SwBSayzJeCPWccr8FscvvREcDy1WjOGho6C2htYE+
-        mIxTx79sMlV//glSG7G9LDo/4SFf6NpH9ECirOYqMWXAAgULqtthi9lseEemVvXaWNXSeTU63aDYR
-        2iRbTBZQVAplgi2JJdiEiDIdxlwgGj2kC+PZckcbpRI6eWrCKo6P30LxYKl2vuiqOhkmn06iObX01
-        AWPdB8eTatr1a4x0fGuHHLzgjlEt7r4TiCZqnpq9jbXFBZJOoOCCjHe9MnLEGfnuPPRrseTfLA+DU
-        veo0VVig==;
-Received: from static-50-53-52-16.bvtn.or.frontiernet.net ([50.53.52.16] helo=midway.dunlab)
-        by merlin.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hSkGy-0000J5-UT; Mon, 20 May 2019 15:32:21 +0000
-Subject: Re: linux-next: Tree for May 20 (amdgpu)
-To:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Oded Gabbay <oded.gabbay@gmail.com>
-References: <20190520115530.46cf100d@canb.auug.org.au>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <9e9c29f2-bb6e-572e-5486-7ddde2982ba0@infradead.org>
-Date:   Mon, 20 May 2019 08:32:18 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Mon, 20 May 2019 11:36:50 -0400
+Received: from callcc.thunk.org (guestnat-104-133-0-109.corp.google.com [104.133.0.109] (may be forged))
+        (authenticated bits=0)
+        (User authenticated as tytso@ATHENA.MIT.EDU)
+        by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id x4KFaePI015626
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 20 May 2019 11:36:41 -0400
+Received: by callcc.thunk.org (Postfix, from userid 15806)
+        id EF219420027; Mon, 20 May 2019 11:36:39 -0400 (EDT)
+Date:   Mon, 20 May 2019 11:36:39 -0400
+From:   "Theodore Ts'o" <tytso@mit.edu>
+To:     Lee Jones <lee.jones@linaro.org>
+Cc:     Philippe Mazenauer <philippe.mazenauer@outlook.de>,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        "linux-ext4@vger.kernel.org" <linux-ext4@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] ext4: Variable to signed to check return code
+Message-ID: <20190520153639.GB3933@mit.edu>
+Mail-Followup-To: Theodore Ts'o <tytso@mit.edu>,
+        Lee Jones <lee.jones@linaro.org>,
+        Philippe Mazenauer <philippe.mazenauer@outlook.de>,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        "linux-ext4@vger.kernel.org" <linux-ext4@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <AM0PR07MB4417C1C3A4E55EFE47027CA2FD0B0@AM0PR07MB4417.eurprd07.prod.outlook.com>
+ <20190517102506.GU4319@dell>
+ <20190517202810.GA21961@mit.edu>
+ <20190518063834.GX4319@dell>
+ <20190518195424.GC14277@mit.edu>
+ <20190520082402.GZ4319@dell>
 MIME-Version: 1.0
-In-Reply-To: <20190520115530.46cf100d@canb.auug.org.au>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190520082402.GZ4319@dell>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/19/19 6:55 PM, Stephen Rothwell wrote:
-> Hi all,
+On Mon, May 20, 2019 at 09:24:02AM +0100, Lee Jones wrote:
+> > "appropriate for inclusion into the kernel" means to me that you've
+> > done the same level of review as Reviewed-by.  So I have very
 > 
-> Changes since 20190517:
-> 
-> Non-merge commits (relative to Linus' tree): 553
->  519 files changed, 11723 insertions(+), 3396 deletions(-)
-> 
-> ----------------------------------------------------------------------------
-> 
-> I have created today's linux-next tree at
-> git://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git
-> (patches at http://www.kernel.org/pub/linux/kernel/next/ ).  If you
-> are tracking the linux-next tree using git, you should not use "git pull"
-> to do so as that will try to merge the new linux-next release with the
-> old one.  You should use "git fetch" and checkout or reset to the new
-> master.
-> 
-> You can see which trees have been included by looking in the Next/Trees
-> file in the source.  There are also quilt-import.log and merge.log
-> files in the Next directory.  Between each merge, the tree was built
-> with a ppc64_defconfig for powerpc, an allmodconfig for x86_64, a
-> multi_v7_defconfig for arm and a native build of tools/perf. After
-> the final fixups (if any), I do an x86_64 modules_install followed by
-> builds for x86_64 allnoconfig, powerpc allnoconfig (32 and 64 bit),
-> ppc44x_defconfig, allyesconfig and pseries_le_defconfig and i386, sparc
-> and sparc64 defconfig. And finally, a simple boot test of the powerpc
-> pseries_le_defconfig kernel in qemu (with and without kvm enabled).
-> 
-> Below is a summary of the state of the merge.
-> 
-> I am currently merging 298 trees (counting Linus' and 69 trees of bug
-> fix patches pending for the current merge release).
-> 
-> Stats about the size of the tree over time can be seen at
-> http://neuling.org/linux-next-size.html .
-> 
-> Status of my local build tests will be at
-> http://kisskb.ellerman.id.au/linux-next .  If maintainers want to give
-> advice about cross compilers/configs that work, we are always open to add
-> more builds.
-> 
-> Thanks to Randy Dunlap for doing many randconfig builds.  And to Paul
-> Gortmaker for triage and bug fixes.
-> 
+> Actually it doesn't, or else the documentation text for Acked-by would
+> be just as intense as it is for Reviewed-by.  Reviewed-by IMHO has a
+> much stronger standing than an Acked-by (caveat: when not provided by
+> a maintainer of the appropriate subsystem).
 
-on i386, when built as loadable module:
+Well quoting from submitting-patches: "It [Acked-by: ] is a record
+that the acker has AT LEAST REVIEWED THE PATCH" (emphasis mine).
 
-in amdgpu_ras_sysfs_badpages_read():
-ERROR: "__divdi3" [drivers/gpu/drm/amd/amdgpu/amdgpu.ko] undefined!
+The primary use of it is to "signify and record their approval of it".
+And...
 
-or when builtin:
-ld: drivers/gpu/drm/amd/amdgpu/amdgpu_ras.o: in function `amdgpu_ras_sysfs_badpages_read':
-amdgpu_ras.c:(.text+0x9ec): undefined reference to `__divdi3'
-ld: amdgpu_ras.c:(.text+0xa0a): undefined reference to `__divdi3'
+    Acked-by: does not necessarily indicate acknowledgement of the
+    entire patch.  For example, if a patch affects multiple subsystems
+    and has an Acked-by: from one subsystem maintainer then this
+    usually indicates acknowledgement of just the part which affects
+    that maintainer's code.  Judgement should be used here.  When in
+    doubt people should refer to the original discussion in the
+    mailing list archives.
 
+My question is what is the *point* of including a non-maintainer's
+Acked-by: to the git record?  And if it's not the maintainer (or a
+core developer for a subsystem), then it becomes unclear what portion
+of the patch the non-Maintainer has reviewed.  So at that point, how
+can a Maintainer rely on a non-Maintainer Acked-by at all in the first
+place?
 
+> > and so I'd be doing a full review myself
+> 
+> I'd think a great deal less of you if you didn't.
+> 
+> > and not rely on your review at all....
+> 
+> "at all" - wow!  What kind of message do you think this gives to first
+> time contributors (like Philippe here), or would-be reviewers?  That
+> there isn't any point in attempting to review patches, since
+> Maintainers are unlikely to take it into consideration "at all"?  I
+> know that when I come to review a patch, if *any* contributor has
+> taken the time to review a patch, it always plays an important role.
 
--- 
-~Randy
+So if I'm going to have to do a full review (which you approve), that
+by definition means I'm not relying on the review at all, right?
+
+The way I handle things is that while I'm not going to rely on a
+Reviewed-by from an unknown reviewer, I do remember who provides
+reviews, and this will bump up their reputation so that perhaps in the
+future, I will rely on their reviews.  Reviews that including some
+kind of substantive comments (if correct) will enhance the reviewer's
+reputation much more than a blind "Reviewd-by: ".
+
+BTW, empty reviews for a patch authored by alice@company-foo.com,
+coming from bob@company-foo.com (e.g., where the only content of the
+review is Reviewed-by: bob@company-foo.com) are things that I give
+much less weight, especially when bob@company-foo.com is not a known
+developer to me.
+
+(Yes, I know that sometimes patches get developed behind closed doors,
+and then squirt out fully formed with a four or five Reviewed-by:
+lines.  But if I haven't seen the process, it doesn't give much value
+to the maintainer trying to judge the suitability of the patch.  Red
+Hat's approach to do all patch discussions in the open is highly to be
+commended here.)
+
+> Again, not really sure of your intentions when you write this out, or
+> what it has to do with this patch submission or the review there
+> after, but IMHO this is sending the wrong message to new and would-be
+> contributors.  As a community we're supposed to be providing a
+> supportive, encouraging atmosphere.  This paragraph is likely to do
+> nothing more than scare off people who would otherwise be willing
+> to have a go [at submitting or reviewing a patch].
+
+One of the things that I worry about are people who game git
+statistics by submitting a lot of empty Reviewed-by or Acked-by lines.
+It's right up there with people who send huge numbers of whitespace
+fixes.  So my personal approach is to not include Reviewed-by or
+Acked-by if it didn't add any value to the project.  It may indeed
+still value to the reviewer's reputation, and if the reviewer has
+helped to improve the patch, I'll make sure they get credit.
+
+I do agree that we should provide a supportive atmosphere.  But we
+also need provide encouragement that contributors provide more
+substantive patches and more substantive reviewes.
+
+Cheers,
+
+					- Ted
