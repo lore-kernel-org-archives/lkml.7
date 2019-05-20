@@ -2,141 +2,146 @@ Return-Path: <SRS0=lq4r=TU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FB09C04AAC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 17:49:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EEFC6C04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 17:49:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6235E214AE
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 17:49:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BBDCF214DA
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 17:49:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="M4T/JeFe"
+	dkim=pass (1024-bit key) header.d=ericsson.com header.i=@ericsson.com header.b="eD/e7hIX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726194AbfETRto (ORCPT
+        id S1726274AbfETRty (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 13:49:44 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:37570 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725993AbfETRtl (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 13:49:41 -0400
-Received: by mail-pl1-f194.google.com with SMTP id p15so7054775pll.4
-        for <linux-kernel@vger.kernel.org>; Mon, 20 May 2019 10:49:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=85LlB19Vc5cB2RdwoS/XFiBS9Y2yPdZUMDTHransqEU=;
-        b=M4T/JeFeYhETklteIQoqkY1OMlNtx60WUK7i9jkUDx0NsFxRnEk2z818gYapQ115Dg
-         MlMB4xGBEj0Z2eb3rEv+4y60KPuTz35BkUjjh9AbkQaSzsAY0aegFqg9jLbJkhOipUER
-         /EAXGoNQJxMiZCYffPL1bh9Rt+F6JCx/p5wE3TTGrGDtjn497O1eYUyguSGTjoBhwtfD
-         bW++C0l/UPVtpgzBR8XCCfAOByEq6iZhBSbqasqyRlvY0c++qYMfAv7tTgHdugT6h/sN
-         R0rTcpMYqKYKXKtRth0V3HiwFfRl2ca5YqbdZYjSzkbfC/hOC76ANiQpXG9WYhi/ngHZ
-         OYAw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=85LlB19Vc5cB2RdwoS/XFiBS9Y2yPdZUMDTHransqEU=;
-        b=JJ9PVuEIIauXiJNKOkuDqcXtt7Eoic56+qWJUFqoN3PMf8ImBhcvAPBgiFkhu8FeYc
-         O5Gs1n6vfe3ctehzZjLEYvhXyMmng85fSQ7cHJRKKVyjrGhneFWzwMIQef7qVE5FaT2X
-         bT1m0ywUjsWR1hHr3j3aVueKV5jSd4pRQHgC14bRxpFbwcErpgg4TA+X+rzYKMpUOhdb
-         jAejymLRHHjSjK95hdyohhgZxKclDT/IpaUK/garMsJTxVUJBXZPA9y7FNq5UMkqUtJE
-         MqdNArweMKmDN2Jfadb7MSIGt4azefvf2FQvcsHb7DW59wAXgAhh/5I1msr1NeF5C3dz
-         wDcg==
-X-Gm-Message-State: APjAAAXgsMzSu8tg8PC2ooaYXZOY8qQDUEgdj0VwS/DjbqwYfdnOXFfS
-        dDU+QZrln0VmvZyNEcgn91k=
-X-Google-Smtp-Source: APXvYqw/Tc2BhexJJ/VaHspKMrSUOiagWwYFWZzcGth1XEGYdlqL5KAkr0H+8ZnNiosdBlddcxORvg==
-X-Received: by 2002:a17:902:5a47:: with SMTP id f7mr52105525plm.321.1558374580342;
-        Mon, 20 May 2019 10:49:40 -0700 (PDT)
-Received: from [10.67.49.52] ([192.19.223.252])
-        by smtp.googlemail.com with ESMTPSA id a69sm48414380pfa.81.2019.05.20.10.49.37
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 20 May 2019 10:49:39 -0700 (PDT)
-Subject: Re: [PATCH] MAINTAINERS: Update Stefan Wahren email address
-To:     Stefan Wahren <wahrenst@gmx.net>, linux-kernel@vger.kernel.org
-Cc:     linux-arm-kernel@lists.infradead.org
-References: <1556740055-4962-1-git-send-email-wahrenst@gmx.net>
-From:   Florian Fainelli <f.fainelli@gmail.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=f.fainelli@gmail.com; prefer-encrypt=mutual; keydata=
- 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
- M5kY0ACeNhCZJvZ5g4C2Lc9fcTHu8jxmEkI=
-Message-ID: <dbe83727-ccf3-57f0-a30c-a8226e0fc6bb@gmail.com>
-Date:   Mon, 20 May 2019 10:49:28 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
-MIME-Version: 1.0
-In-Reply-To: <1556740055-4962-1-git-send-email-wahrenst@gmx.net>
-Content-Type: text/plain; charset=utf-8
+        Mon, 20 May 2019 13:49:54 -0400
+Received: from mail-eopbgr710060.outbound.protection.outlook.com ([40.107.71.60]:53248
+        "EHLO NAM05-BY2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725993AbfETRtx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 13:49:53 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ericsson.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=s50KHlEh0YeR/8BegMe5D9kKALYNMnsHN0MNS9sKW1U=;
+ b=eD/e7hIXZOaH4ThK7GmLtC+JBSGvWEgD4jVVFfMQnER9yXCGP05GkKQgr/sT8OJJIbIiJX2/yl9tZwdZHGJX4kvKvLL/PzSiSHotLNYcINoSkHHwqRi7zYzWR0Y+EhNjWvtENBQBzFt7LA0+m8vtqWYSV8iTdGOkbBdKuXKuDP0=
+Received: from BL0PR1501MB2003.namprd15.prod.outlook.com (52.132.21.33) by
+ BL0PR1501MB2147.namprd15.prod.outlook.com (52.132.22.21) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1900.20; Mon, 20 May 2019 17:49:50 +0000
+Received: from BL0PR1501MB2003.namprd15.prod.outlook.com
+ ([fe80::ec20:2800:8222:be11]) by BL0PR1501MB2003.namprd15.prod.outlook.com
+ ([fe80::ec20:2800:8222:be11%7]) with mapi id 15.20.1900.010; Mon, 20 May 2019
+ 17:49:50 +0000
+From:   Jon Maloy <jon.maloy@ericsson.com>
+To:     David Miller <davem@davemloft.net>,
+        "hujunwei4@huawei.com" <hujunwei4@huawei.com>
+CC:     "ying.xue@windriver.com" <ying.xue@windriver.com>,
+        "willemdebruijn.kernel@gmail.com" <willemdebruijn.kernel@gmail.com>,
+        "sfr@canb.auug.org.au" <sfr@canb.auug.org.au>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "tipc-discussion@lists.sourceforge.net" 
+        <tipc-discussion@lists.sourceforge.net>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "mingfangsen@huawei.com" <mingfangsen@huawei.com>
+Subject: RE: [PATCH v4] tipc: fix modprobe tipc failed after switch order of
+ device registration
+Thread-Topic: [PATCH v4] tipc: fix modprobe tipc failed after switch order of
+ device registration
+Thread-Index: AQHVDtd4uLOxtiXJT0+923RTkrVFi6Z0Sg8AgAAAktA=
+Date:   Mon, 20 May 2019 17:49:50 +0000
+Message-ID: <BL0PR1501MB20037513418B10ECC341834E9A060@BL0PR1501MB2003.namprd15.prod.outlook.com>
+References: <624f5be3-12b4-cbd4-39e2-5419b976624b@huawei.com>
+ <20190520.104554.602275142720021716.davem@davemloft.net>
+In-Reply-To: <20190520.104554.602275142720021716.davem@davemloft.net>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=jon.maloy@ericsson.com; 
+x-originating-ip: [198.24.6.220]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 74c5a4ea-82a0-4fba-4f44-08d6dd4b8ec5
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(2017052603328)(7193020);SRVR:BL0PR1501MB2147;
+x-ms-traffictypediagnostic: BL0PR1501MB2147:
+x-microsoft-antispam-prvs: <BL0PR1501MB2147B9838A7A410E819052C39A060@BL0PR1501MB2147.namprd15.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:1227;
+x-forefront-prvs: 004395A01C
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(396003)(136003)(39860400002)(366004)(346002)(376002)(13464003)(199004)(189003)(8676002)(81156014)(81166006)(7736002)(68736007)(305945005)(33656002)(25786009)(6116002)(3846002)(4326008)(110136005)(8936002)(186003)(26005)(86362001)(256004)(2906002)(54906003)(229853002)(66066001)(14444005)(486006)(66556008)(66476007)(66946007)(76116006)(44832011)(73956011)(64756008)(66446008)(71190400001)(71200400001)(446003)(11346002)(74316002)(476003)(478600001)(52536014)(99286004)(2501003)(5660300002)(102836004)(7696005)(14454004)(316002)(6436002)(53936002)(76176011)(6506007)(53546011)(55016002)(9686003)(6246003);DIR:OUT;SFP:1101;SCL:1;SRVR:BL0PR1501MB2147;H:BL0PR1501MB2003.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: ericsson.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: z30Bmnkkhixbo2REoet4wYSI1httcYUNfDJ5vR2DafJsZUBa0fzFc5ZoObV4ANHO9snREEuqXVrJgjT0jvodG0sNFFTIaU+sMCvC7ZUfp8cY3dAk2dnaJ8NpglWj4DTYml8kTnXUmSySI92yS4JOZuSYYReuXVuMU5KOQODBagXae8Vbhc+ByaP+iqqYoiHx4pYNXaF0nzNwVNvM47bSncZ35FyxiH0bwxXVlt3NcOzHTbNG/V18qLi7oi16bhOJEqndxqTdFMXH7uX3e87gJPveHJ7ajJV+Mry9pyURgDlTmFWV7m6Feij45ctIvoUAaKmAGFJjCsrt2jA/ZlFLOYtPbQHzD5HmkxcI5R+WJZIcg1o/JwRhhwMKmssL6W6STSZUVniJzMbCd0+1do6W+Qk5X3gRrLovJcPPDu0MuTQ=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: ericsson.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 74c5a4ea-82a0-4fba-4f44-08d6dd4b8ec5
+X-MS-Exchange-CrossTenant-originalarrivaltime: 20 May 2019 17:49:50.4866
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 92e84ceb-fbfd-47ab-be52-080c6b87953f
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL0PR1501MB2147
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/1/19 12:47 PM, Stefan Wahren wrote:
-> I2SE has been acquired, so i decided to use my private address now.
-> 
-> Signed-off-by: Stefan Wahren <wahrenst@gmx.net>
+Reviewed and tested. I found no problems with this.
 
-Applied to maintainers-arm64/fixes, thanks!
--- 
-Florian
+Reviewed-by: Jon Maloy <jon.maloy@ericsson.com>
+
+
+> -----Original Message-----
+> From: netdev-owner@vger.kernel.org <netdev-owner@vger.kernel.org>
+> On Behalf Of David Miller
+> Sent: 20-May-19 13:46
+> To: hujunwei4@huawei.com
+> Cc: Jon Maloy <jon.maloy@ericsson.com>; ying.xue@windriver.com;
+> willemdebruijn.kernel@gmail.com; sfr@canb.auug.org.au;
+> netdev@vger.kernel.org; tipc-discussion@lists.sourceforge.net; linux-
+> kernel@vger.kernel.org; mingfangsen@huawei.com
+> Subject: Re: [PATCH v4] tipc: fix modprobe tipc failed after switch order=
+ of
+> device registration
+>=20
+> From: hujunwei <hujunwei4@huawei.com>
+> Date: Mon, 20 May 2019 14:43:59 +0800
+>=20
+> > From: Junwei Hu <hujunwei4@huawei.com>
+> >
+> > Error message printed:
+> > modprobe: ERROR: could not insert 'tipc': Address family not supported
+> > by protocol.
+> > when modprobe tipc after the following patch: switch order of device
+> > registration, commit 7e27e8d6130c
+> > ("tipc: switch order of device registration to fix a crash")
+> >
+> > Because sock_create_kern(net, AF_TIPC, ...) called by
+> > tipc_topsrv_create_listener() in the initialization process of
+> > tipc_init_net(), so tipc_socket_init() must be execute before that.
+> > Meanwhile, tipc_net_id need to be initialized when sock_create()
+> > called, and tipc_socket_init() is no need to be called for each namespa=
+ce.
+> >
+> > I add a variable tipc_topsrv_net_ops, and split the
+> > register_pernet_subsys() of tipc into two parts, and split
+> > tipc_socket_init() with initialization of pernet params.
+> >
+> > By the way, I fixed resources rollback error when tipc_bcast_init()
+> > failed in tipc_init_net().
+> >
+> > Fixes: 7e27e8d6130c ("tipc: switch order of device registration to fix
+> > a crash")
+> > Signed-off-by: Junwei Hu <hujunwei4@huawei.com>
+> > Reported-by: Wang Wang <wangwang2@huawei.com>
+> > Reported-by: syzbot+1e8114b61079bfe9cbc5@syzkaller.appspotmail.com
+> > Reviewed-by: Kang Zhou <zhoukang7@huawei.com>
+> > Reviewed-by: Suanming Mou <mousuanming@huawei.com>
+>=20
+> Applied.
