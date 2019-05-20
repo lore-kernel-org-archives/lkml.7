@@ -2,127 +2,68 @@ Return-Path: <SRS0=lq4r=TU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ECF48C04E87
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 14:54:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37ACEC04AAF
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 14:55:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C058A206BA
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 14:54:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZU1x/Bp2"
+	by mail.kernel.org (Postfix) with ESMTP id 0708A216B7
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 14:55:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392044AbfETOya (ORCPT
+        id S2391280AbfETOzm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 10:54:30 -0400
-Received: from mail-ua1-f66.google.com ([209.85.222.66]:37939 "EHLO
-        mail-ua1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732387AbfETOy3 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 10:54:29 -0400
-Received: by mail-ua1-f66.google.com with SMTP id r19so4745369uap.5;
-        Mon, 20 May 2019 07:54:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=8cXCSMG/utY4UucWb4ekygNexeTn9aJiisIiVvtivhA=;
-        b=ZU1x/Bp2X6efOLs6VCJ6w1Y0/Tx//zW4Ud90lRRbRSmCiz5AojOo473KCRA1bw98rL
-         Xr8VvLNK5CrMk2GXwtG407SUCkWPF3GcdHtkGzyYxq9CO0MN8PeXxCh2EVJV95XXloKQ
-         ts6dEhyIdh71+h7iYVn147d+/97Sj7jezcx+AncoJt0Js2Pki95HdfKfeuxQ4aK0LrEg
-         L8w8tHdtnJzu6vuHtsCmaj698Jci8ICsaiU5knDuPLCDSgalX75JuSBfVb/yntUmDFBz
-         guLP5Ak5FGNc8SFTBSYNfxGmPH3qKxIYZspdEBK9dNELQhFtZteuW8hrYaPt9WWJauX4
-         qMNw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=8cXCSMG/utY4UucWb4ekygNexeTn9aJiisIiVvtivhA=;
-        b=BecE2poLD9b7h0/Gw1+3K9L+dXx6sAzX8uUnGHCEdkWkJP+arJNdx6A1gPplJkK3u2
-         C0JQEfm6ha+Aeq+Y0sdK7VXVsj/1MehKWvf5XNWK0XApxbkOG6SUR+ecJKRXnryduTN4
-         dMOJCTQiqQkz9wukJMjDJYukyREf+QsTRnM2vYVVQfMyVflEsSSd7vxlGBPrBYOF11IM
-         xCcR7NNOAtTTNfpr3vNtWGQMlbA860dQWYKed5mbvV09gDWrR3xoWghow6XHiYQwC+yj
-         kx8Uof+GWBYFAwtR0fvDnLGLd/DfD2CeG94d+Bl0iyZaJ128edBuFu6+c/RENYAq6a13
-         eLyg==
-X-Gm-Message-State: APjAAAWJfLjYtmJl8iNZFkH13mFFw45kj54HYHBDpsozKAsttQAHRWCg
-        jzl/LraKRMU2Z6vD1uU4cVueq4mZ
-X-Google-Smtp-Source: APXvYqwlmD0ueYLqSZ4VSGxhwR1uaHyYJwtikMj8/LvKbmobY+swajNr6uJX9UnneAMOHiTbm0GAbw==
-X-Received: by 2002:ab0:42e4:: with SMTP id j91mr14823452uaj.28.1558364067745;
-        Mon, 20 May 2019 07:54:27 -0700 (PDT)
-Received: from llong.remote.csb (nat-pool-bos-t.redhat.com. [66.187.233.206])
-        by smtp.gmail.com with ESMTPSA id 125sm5502165vkt.11.2019.05.20.07.54.25
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 20 May 2019 07:54:26 -0700 (PDT)
-Subject: Re: [PATCH v4 5/7] mm: rework non-root kmem_cache lifecycle
- management
-To:     Roman Gushchin <guro@fb.com>
-Cc:     Shakeel Butt <shakeelb@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linux MM <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Kernel Team <kernel-team@fb.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Rik van Riel <riel@surriel.com>,
-        Christoph Lameter <cl@linux.com>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>,
-        Cgroups <cgroups@vger.kernel.org>
-References: <20190514213940.2405198-1-guro@fb.com>
- <20190514213940.2405198-6-guro@fb.com>
- <CALvZod6Zb_kYHyG02jXBY9gvvUn_gOug7kq_hVa8vuCbXdPdjQ@mail.gmail.com>
-From:   Waiman Long <longman9394@gmail.com>
-Message-ID: <5e3c4646-3e4f-414a-0eca-5249956d68a5@gmail.com>
-Date:   Mon, 20 May 2019 10:54:24 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Mon, 20 May 2019 10:55:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35302 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731455AbfETOzl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 10:55:41 -0400
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id DBB07206BA;
+        Mon, 20 May 2019 14:55:40 +0000 (UTC)
+Date:   Mon, 20 May 2019 10:55:38 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>
+Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Nicholas Piggin <npiggin@gmail.com>
+Subject: Re: [RFC PATCH 2/4] x86/ftrace: Fix use of flags in
+ ftrace_replace_code()
+Message-ID: <20190520105538.7f8515d3@gandalf.local.home>
+In-Reply-To: <1558363129.y2x8hf9shq.naveen@linux.ibm.com>
+References: <cover.1558115654.git.naveen.n.rao@linux.vnet.ibm.com>
+        <e1429923d9eda92a3cf5ee9e33c7eacce539781d.1558115654.git.naveen.n.rao@linux.vnet.ibm.com>
+        <20190520091320.01cdcfb7@gandalf.local.home>
+        <20190520094410.772443df@gandalf.local.home>
+        <1558363129.y2x8hf9shq.naveen@linux.ibm.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <CALvZod6Zb_kYHyG02jXBY9gvvUn_gOug7kq_hVa8vuCbXdPdjQ@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/14/19 8:06 PM, Shakeel Butt wrote:
-> diff --git a/mm/slab_common.c b/mm/slab_common.c
-> index 4e5b4292a763..1ee967b4805e 100644
-> --- a/mm/slab_common.c
-> +++ b/mm/slab_common.c
-> @@ -45,6 +45,8 @@ static void slab_caches_to_rcu_destroy_workfn(struct work_struct *work);
->  static DECLARE_WORK(slab_caches_to_rcu_destroy_work,
->                     slab_caches_to_rcu_destroy_workfn);
->
-> +static void kmemcg_queue_cache_shutdown(struct percpu_ref *percpu_ref);
-> +
+On Mon, 20 May 2019 20:12:48 +0530
+"Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com> wrote:
 
-kmemcg_queue_cache_shutdown is only defined if CONFIG_MEMCG_KMEM is
-defined. If it is not defined, a compilation warning can be produced.
-Maybe putting the declaration inside a CONFIG_MEMCG_KMEM block:
 
-diff --git a/mm/slab_common.c b/mm/slab_common.c
-index 61d7a96a917b..57ba6cf3dc39 100644
---- a/mm/slab_common.c
-+++ b/mm/slab_common.c
-@@ -45,7 +45,9 @@ static void slab_caches_to_rcu_destroy_workfn(struct
-work_stru
-ct *work);
- static DECLARE_WORK(slab_caches_to_rcu_destroy_work,
-             slab_caches_to_rcu_destroy_workfn);
- 
-+#ifdef CONFIG_MEMCG_KMEM
- static void kmemcg_queue_cache_shutdown(struct percpu_ref *percpu_ref);
-+#endif
- 
- /*
-  * Set of flags that will prevent slab merging
--- 
+> Thanks, that definitely helps make things clearer. A very small nit from 
+> your first patch -- it would be good to also convert the calls to 
+> ftrace_check_record() to use 'true' or 'false' for the 'update' field.
 
-Cheers,
-Longman
+Heh, I was so focused on the "enable" part, I did the "update" as a
+second thought, and forgot to update the callers. Thanks for pointing
+that out.
+
+> 
+> I will test my series in more detail and post a v1.
+
+Great.
+
+-- Steve
 
