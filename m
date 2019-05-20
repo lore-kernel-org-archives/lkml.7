@@ -7,48 +7,58 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0816FC04AAC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:19:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EC14C04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:19:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D5C47216FD
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:19:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D6A52216C4
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:19:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558354764;
-	bh=nkjVUnaYiahUX1ExbUzV/31xwNKk5fVHRqckHsd1opo=;
+	s=default; t=1558354766;
+	bh=FnOiAWCxbxKZVe4E+ZcIN19Am0EYnQ0noptC7Y+yIqM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=aSsnx9Q5gTfRs3TZE+FWSDVah9+nrfDF2ew4XrWxG96qIACC5jfoQMd6Q+O7QDgec
-	 BO/l5dxB28CWSIGYHvNJ/VvhslzEJgjAz1mj3/NbjVRl3uycAbO5+IFrdlJLGnW8Ap
-	 SSB4ODOp0kTbU1EUHCwezf1qo1i6tcpvvdyatEC0=
+	b=lYTy98jxzsbBYvywM+o8N8JXxtWYpEsse53D1njO3fiYUPKOYamUQKeBtLMdBKdu4
+	 xOVQ/LYTH/mKRF6Uq0p7cVhc9/Jh195bX+13cqRSULbjucJ88k+W3afOF8Hl/v4Syg
+	 1r/km1w55RJFzQgpb8AGL7wGED5tw4bZCXj5YZvI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387814AbfETMTW (ORCPT
+        id S2387819AbfETMTZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 08:19:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60568 "EHLO mail.kernel.org"
+        Mon, 20 May 2019 08:19:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60598 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387801AbfETMTR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 08:19:17 -0400
+        id S2387799AbfETMTU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 08:19:20 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1F59C20815;
-        Mon, 20 May 2019 12:19:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 95079208C3;
+        Mon, 20 May 2019 12:19:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558354756;
-        bh=nkjVUnaYiahUX1ExbUzV/31xwNKk5fVHRqckHsd1opo=;
+        s=default; t=1558354759;
+        bh=FnOiAWCxbxKZVe4E+ZcIN19Am0EYnQ0noptC7Y+yIqM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=J+DSeOxqOT//I61+S+O/i5OYJx5qZ40gPNM3/IPK2P5OztegDj8vgE3mgRlf9PA7+
-         qZlvdls4dfcLYmK+sHB9yzlbG+MIIxo9cFugABXLC/RFU1FdDRQ1q1CDK/4kuuZMHz
-         h6HFzLuw9L76W8a1UYK5FLpGJQHR+xl+p8Nc616g=
+        b=VPbZY09TVnSmrhc6aH244GWjaUKQ2Myib2Yn3zRIs+OphyhpgcWon43tpK5DzSnw9
+         yrCXeJ2O/dQCG0AqSdBu5TIpbYm+MY14NsLpSyswdHcEozv7GY1AMVHrSalJ3zYvHr
+         6zwp8YriDCeRI1hZB0i5dK0usxg2Ao+Ll3e4h6gY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Will Deacon <will.deacon@arm.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Jean-Philippe Brucker <jean-philippe.brucker@arm.com>,
-        Alexei Starovoitov <ast@kernel.org>
-Subject: [PATCH 4.14 31/63] bpf, arm64: remove prefetch insn in xadd mapping
-Date:   Mon, 20 May 2019 14:14:10 +0200
-Message-Id: <20190520115234.777269637@linuxfoundation.org>
+        stable@vger.kernel.org, Jiri Kosina <jkosina@suse.cz>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Josh Snyder <joshs@netflix.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Dave Chinner <david@fromorbit.com>,
+        Kevin Easton <kevin@guarana.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        Cyril Hrubis <chrubis@suse.cz>, Tejun Heo <tj@kernel.org>,
+        "Kirill A. Shutemov" <kirill@shutemov.name>,
+        Daniel Gruss <daniel@gruss.cc>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Dominique Martinet <asmadeus@codewreck.org>
+Subject: [PATCH 4.14 32/63] mm/mincore.c: make mincore() more conservative
+Date:   Mon, 20 May 2019 14:14:11 +0200
+Message-Id: <20190520115234.872323738@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190520115231.137981521@linuxfoundation.org>
 References: <20190520115231.137981521@linuxfoundation.org>
@@ -61,53 +71,95 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Daniel Borkmann <daniel@iogearbox.net>
+From: Jiri Kosina <jkosina@suse.cz>
 
-commit 8968c67a82ab7501bc3b9439c3624a49b42fe54c upstream.
+commit 134fca9063ad4851de767d1768180e5dede9a881 upstream.
 
-Prefetch-with-intent-to-write is currently part of the XADD mapping in
-the AArch64 JIT and follows the kernel's implementation of atomic_add.
-This may interfere with other threads executing the LDXR/STXR loop,
-leading to potential starvation and fairness issues. Drop the optional
-prefetch instruction.
+The semantics of what mincore() considers to be resident is not
+completely clear, but Linux has always (since 2.3.52, which is when
+mincore() was initially done) treated it as "page is available in page
+cache".
 
-Fixes: 85f68fe89832 ("bpf, arm64: implement jiting of BPF_XADD")
-Reported-by: Will Deacon <will.deacon@arm.com>
-Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
-Acked-by: Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
-Acked-by: Will Deacon <will.deacon@arm.com>
-Signed-off-by: Alexei Starovoitov <ast@kernel.org>
+That's potentially a problem, as that [in]directly exposes
+meta-information about pagecache / memory mapping state even about
+memory not strictly belonging to the process executing the syscall,
+opening possibilities for sidechannel attacks.
+
+Change the semantics of mincore() so that it only reveals pagecache
+information for non-anonymous mappings that belog to files that the
+calling process could (if it tried to) successfully open for writing;
+otherwise we'd be including shared non-exclusive mappings, which
+
+ - is the sidechannel
+
+ - is not the usecase for mincore(), as that's primarily used for data,
+   not (shared) text
+
+[jkosina@suse.cz: v2]
+  Link: http://lkml.kernel.org/r/20190312141708.6652-2-vbabka@suse.cz
+[mhocko@suse.com: restructure can_do_mincore() conditions]
+Link: http://lkml.kernel.org/r/nycvar.YFH.7.76.1903062342020.19912@cbobk.fhfr.pm
+Signed-off-by: Jiri Kosina <jkosina@suse.cz>
+Signed-off-by: Vlastimil Babka <vbabka@suse.cz>
+Acked-by: Josh Snyder <joshs@netflix.com>
+Acked-by: Michal Hocko <mhocko@suse.com>
+Originally-by: Linus Torvalds <torvalds@linux-foundation.org>
+Originally-by: Dominique Martinet <asmadeus@codewreck.org>
+Cc: Andy Lutomirski <luto@amacapital.net>
+Cc: Dave Chinner <david@fromorbit.com>
+Cc: Kevin Easton <kevin@guarana.org>
+Cc: Matthew Wilcox <willy@infradead.org>
+Cc: Cyril Hrubis <chrubis@suse.cz>
+Cc: Tejun Heo <tj@kernel.org>
+Cc: Kirill A. Shutemov <kirill@shutemov.name>
+Cc: Daniel Gruss <daniel@gruss.cc>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/arm64/net/bpf_jit.h      |    6 ------
- arch/arm64/net/bpf_jit_comp.c |    1 -
- 2 files changed, 7 deletions(-)
+ mm/mincore.c |   23 ++++++++++++++++++++++-
+ 1 file changed, 22 insertions(+), 1 deletion(-)
 
---- a/arch/arm64/net/bpf_jit.h
-+++ b/arch/arm64/net/bpf_jit.h
-@@ -100,12 +100,6 @@
- #define A64_STXR(sf, Rt, Rn, Rs) \
- 	A64_LSX(sf, Rt, Rn, Rs, STORE_EX)
+--- a/mm/mincore.c
++++ b/mm/mincore.c
+@@ -169,6 +169,22 @@ out:
+ 	return 0;
+ }
  
--/* Prefetch */
--#define A64_PRFM(Rn, type, target, policy) \
--	aarch64_insn_gen_prefetch(Rn, AARCH64_INSN_PRFM_TYPE_##type, \
--				  AARCH64_INSN_PRFM_TARGET_##target, \
--				  AARCH64_INSN_PRFM_POLICY_##policy)
--
- /* Add/subtract (immediate) */
- #define A64_ADDSUB_IMM(sf, Rd, Rn, imm12, type) \
- 	aarch64_insn_gen_add_sub_imm(Rd, Rn, imm12, \
---- a/arch/arm64/net/bpf_jit_comp.c
-+++ b/arch/arm64/net/bpf_jit_comp.c
-@@ -712,7 +712,6 @@ emit_cond_jmp:
- 	case BPF_STX | BPF_XADD | BPF_DW:
- 		emit_a64_mov_i(1, tmp, off, ctx);
- 		emit(A64_ADD(1, tmp, tmp, dst), ctx);
--		emit(A64_PRFM(tmp, PST, L1, STRM), ctx);
- 		emit(A64_LDXR(isdw, tmp2, tmp), ctx);
- 		emit(A64_ADD(isdw, tmp2, tmp2, src), ctx);
- 		emit(A64_STXR(isdw, tmp2, tmp, tmp3), ctx);
++static inline bool can_do_mincore(struct vm_area_struct *vma)
++{
++	if (vma_is_anonymous(vma))
++		return true;
++	if (!vma->vm_file)
++		return false;
++	/*
++	 * Reveal pagecache information only for non-anonymous mappings that
++	 * correspond to the files the calling process could (if tried) open
++	 * for writing; otherwise we'd be including shared non-exclusive
++	 * mappings, which opens a side channel.
++	 */
++	return inode_owner_or_capable(file_inode(vma->vm_file)) ||
++		inode_permission(file_inode(vma->vm_file), MAY_WRITE) == 0;
++}
++
+ /*
+  * Do a chunk of "sys_mincore()". We've already checked
+  * all the arguments, we hold the mmap semaphore: we should
+@@ -189,8 +205,13 @@ static long do_mincore(unsigned long add
+ 	vma = find_vma(current->mm, addr);
+ 	if (!vma || addr < vma->vm_start)
+ 		return -ENOMEM;
+-	mincore_walk.mm = vma->vm_mm;
+ 	end = min(vma->vm_end, addr + (pages << PAGE_SHIFT));
++	if (!can_do_mincore(vma)) {
++		unsigned long pages = DIV_ROUND_UP(end - addr, PAGE_SIZE);
++		memset(vec, 1, pages);
++		return pages;
++	}
++	mincore_walk.mm = vma->vm_mm;
+ 	err = walk_page_range(addr, end, &mincore_walk);
+ 	if (err < 0)
+ 		return err;
 
 
