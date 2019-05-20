@@ -2,130 +2,78 @@ Return-Path: <SRS0=lq4r=TU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74D5AC46460
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 17:52:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C37CC04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 17:52:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5B70A20675
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 17:52:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 05647206B6
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 17:52:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="Y0ZsEHVp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726587AbfETRwE (ORCPT
+        id S1726626AbfETRwi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 13:52:04 -0400
-Received: from shards.monkeyblade.net ([23.128.96.9]:55488 "EHLO
-        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726282AbfETRwC (ORCPT
+        Mon, 20 May 2019 13:52:38 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:39138 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726589AbfETRwh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 13:52:02 -0400
-Received: from localhost (unknown [IPv6:2601:601:9f80:35cd::3d8])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 90F1514EC46B1;
-        Mon, 20 May 2019 10:52:00 -0700 (PDT)
-Date:   Mon, 20 May 2019 10:51:59 -0700 (PDT)
-Message-Id: <20190520.105159.1094490201484427551.davem@davemloft.net>
-To:     o.rempel@pengutronix.de
-Cc:     paul.burton@mips.com, ralf@linux-mips.org, jhogan@kernel.org,
-        robh+dt@kernel.org, jcliburn@gmail.com, chris.snook@gmail.com,
-        mark.rutland@arm.com, kernel@pengutronix.de,
-        linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, john@phrozen.org, nbd@nbd.name,
-        netdev@vger.kernel.org, andrew@lunn.ch, gch981213@gmail.com,
-        info@freifunk-bad-gandersheim.net
-Subject: Re: [PATCH v5 3/3] net: ethernet: add ag71xx driver
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20190520070716.23668-4-o.rempel@pengutronix.de>
-References: <20190520070716.23668-1-o.rempel@pengutronix.de>
-        <20190520070716.23668-4-o.rempel@pengutronix.de>
-X-Mailer: Mew version 6.8 on Emacs 26.1
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Mon, 20 May 2019 10:52:01 -0700 (PDT)
+        Mon, 20 May 2019 13:52:37 -0400
+Received: by mail-ot1-f67.google.com with SMTP id r7so13810134otn.6
+        for <linux-kernel@vger.kernel.org>; Mon, 20 May 2019 10:52:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=googlemail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ZCYkZ5M+DBQgIFJKIayxK6zD6QbZvJ7bD4zbXBwyRpg=;
+        b=Y0ZsEHVpoxgSUFIfwTB7pzDHjHGpHMDMbyua0ENJz7KIRBOcTnPfVSz6MQym1RT50/
+         q/69sL2xw4KTqicatOgiKfefuy2ZJm1MrpGBnIzItm8RFVtj0kvioVcudPjdOLNKLCPL
+         8zCUimTU+hEALkirtzA3R3/6MvIUnrx5GXSBgmfJzMIWa2kcs0ZrUXIojX18lGHzQBhD
+         qlJEatnohUpRB+vUpQxCpNo/CeYotKqN3Y/NeKqK2fzu/cb4IRO9/7ZJkqPWAWHkHvJp
+         KIoHB0rqpm81BATx4rjRTn/n0RMoNSG6ujfYgcXJwMQrAX0+gkuXJ+k5L0MNhgUgYaDn
+         7N6w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ZCYkZ5M+DBQgIFJKIayxK6zD6QbZvJ7bD4zbXBwyRpg=;
+        b=SBZb4HLR6RfP9muURioiTbkxZeBhHF3SltlRAdwMxHllRw86+XcHVmd8tINdS7EC0u
+         M6cN41iDKo3A2DtobS5McH2xkURVrhiyE1X0SNtKSRh3Q392KJL0sUPpvjwKIlbKlLmn
+         woU4KYKu253WoOiGVB/utpfJoAFZqAs7kuRZH42sROSwmiOI6vsOOMHs+8DDNLXC+LyY
+         mKb04WixEQI77XG+rpH/LO5isJgvraooNiIVP/q+qGDHUpvMnrgXx2py6fJ2pbRzUD3D
+         ddtvUHkip9DE9grZ7cphJQSHMqR2fSY+2+XeC1urHrrQ+Qf1p2Ly367Gm1srUra+fgri
+         +3qw==
+X-Gm-Message-State: APjAAAXqlgh7lbldcgmltnSBfIWwYwibWdkg2tnJvt3yVfeBLO/+JbGQ
+        684vLuhH8xm2H3lLH5aO0v5P8lseHUTLmoer8Ws=
+X-Google-Smtp-Source: APXvYqyldFSFE6fn2yQPf1T1K5Er6qeZRNRO8KFH313crHAJiQ1EFivfC1Dboq6ILQFWTm5vdRbbR+xOAqmaN/myM5A=
+X-Received: by 2002:a9d:2f08:: with SMTP id h8mr45229266otb.42.1558374757110;
+ Mon, 20 May 2019 10:52:37 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190520134817.25435-1-narmstrong@baylibre.com> <20190520134817.25435-3-narmstrong@baylibre.com>
+In-Reply-To: <20190520134817.25435-3-narmstrong@baylibre.com>
+From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Date:   Mon, 20 May 2019 19:52:26 +0200
+Message-ID: <CAFBinCBmgTdZBDd5D_rCVQwO4UcJpXjX=Rc+0qgADF9sW-wFWQ@mail.gmail.com>
+Subject: Re: [PATCH 2/3] arm64: dts: meson: g12a: add drive strength for eth pins
+To:     Neil Armstrong <narmstrong@baylibre.com>
+Cc:     khilman@baylibre.com, linux-amlogic@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Oleksij Rempel <o.rempel@pengutronix.de>
-Date: Mon, 20 May 2019 09:07:16 +0200
-
-> +struct ag71xx_buf {
-> +	union {
-> +		struct sk_buff *skb;
-> +		void *rx_buf;
-> +	};
-> +	union {
-> +		dma_addr_t dma_addr;
-> +		unsigned int len;
-> +	};
-> +};
-
-I find this double union very confusing.
-
-When using unions you should make it strictly clear which members are used
-together, at what times, and in which situations.
-
-Therefore, please use something like anonymous structures to group the
-members that are used together at the same time, something like:
-
-struct ag71xx_buf {
-	union {
-		struct {
-			struct sk_buff *skb;
-			dma_addr_t dma_addr;
-		} tx;
-		struct {
-			void *rx_buf;
-			unsigned int len;
-		} rx;
-};
-
-Or at the very least add a very big comment that explains the use of
-the union members.
-
-> +static int ag71xx_mdio_mii_read(struct mii_bus *bus, int addr, int reg)
-> +{
-> +	struct ag71xx *ag = bus->priv;
-> +	struct net_device *ndev = ag->ndev;
-> +	int err, val;
-
-Reverse christmas tree here please.
-
-> +static int ag71xx_mdio_mii_write(struct mii_bus *bus, int addr, int reg,
-> +				 u16 val)
-> +{
-> +	struct ag71xx *ag = bus->priv;
-> +	struct net_device *ndev = ag->ndev;
-> +
-
-Likewise.
-
-> +static int ag71xx_mdio_probe(struct ag71xx *ag)
-> +{
-> +	static struct mii_bus *mii_bus;
-> +	struct device *dev = &ag->pdev->dev;
-> +	struct device_node *np = dev->of_node;
-> +	struct net_device *ndev = ag->ndev;
-> +	int err;
-
-Likewise.
-
-> +static int ag71xx_tx_packets(struct ag71xx *ag, bool flush)
-> +{
-> +	struct ag71xx_ring *ring = &ag->tx_ring;
-> +	struct net_device *ndev = ag->ndev;
-> +	bool dma_stuck = false;
-> +	int ring_mask = BIT(ring->order) - 1;
-> +	int ring_size = BIT(ring->order);
-> +	int sent = 0;
-> +	int bytes_compl = 0;
-> +	int n = 0;
-
-Likewise.
-
-And so on, and so forth, for the rest of this file.
+On Mon, May 20, 2019 at 3:48 PM Neil Armstrong <narmstrong@baylibre.com> wrote:
+>
+> With the X96 Max board using an external Gigabit Ethernet PHY,
+> add the same driver strength to the Ethernet pins as the vendor
+> tree.
+>
+> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+Amlogic's vendor kernel (from buildroot-openlinux-A113-201901) does the same so:
+Reviewed-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
