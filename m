@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48686C04AAC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:35:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6BD3C04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:35:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 14C5820645
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:35:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8003720815
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:35:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558355700;
-	bh=owXxDJuin8fiB3s3o/ZhdHhABjedOOL2ewp+5ALLo8I=;
+	s=default; t=1558355703;
+	bh=es8lMOwirZXOqgXARB7EySiRYY3aTh7cJ0AXeydOw6Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=N5HJvmjDWZd0tEzAUQPIaTH6/y0Xw5nammOmN8Vs5ktM0AECkCQTpmJXTt/aBfQew
-	 gEUAAZIP9SFubXKWhrwT/LesIrXI/LZ37TYpGC4uzJeh0Iju0tScBf9T043JlI0sES
-	 Z77wjEZ+B1GGsXjWVHPbi4lLTBftpHhbaCxJ/fzs=
+	b=yXuC7h3wPZFG6jNJidJbj+64uYnTAN4gUC/tW6eUYxIHMak1qRStYJdnplsIx/+7U
+	 W72cihZ33ersnIWk4ayQoV9+y76LM/joVuLEymDrLRz5nW9qfl0D2k2/V1LaHjUajj
+	 A6x6hChvnTew0E0TJrqiBkmJmQNwrkLpVDP8+YmM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391024AbfETMe6 (ORCPT
+        id S2387474AbfETMfB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 08:34:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52622 "EHLO mail.kernel.org"
+        Mon, 20 May 2019 08:35:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52700 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389942AbfETMey (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 08:34:54 -0400
+        id S2390429AbfETMe5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 08:34:57 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7AC3E20645;
-        Mon, 20 May 2019 12:34:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2989920645;
+        Mon, 20 May 2019 12:34:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558355694;
-        bh=owXxDJuin8fiB3s3o/ZhdHhABjedOOL2ewp+5ALLo8I=;
+        s=default; t=1558355696;
+        bh=es8lMOwirZXOqgXARB7EySiRYY3aTh7cJ0AXeydOw6Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JZdmw9wkwPcriSqx4eBQq03GVudCosYOVu1Cs7BIdqt7Gt9L2jmlSXFf+P3IJqft8
-         QbBpxWny0vNZb3vwJVBXuWtp9eDz9z5pL6xekiikadD7MEIO6MIgwezaEcanfYLwu4
-         LKDP4ZYFuSAs25/5m+FQrHhTr3ekJlNU+KmtA0IQ=
+        b=1LDsPZl40TPz9Q1c9Vbyy9WBipt6liSaNrmtVrI9sjJzvLsr+9WZXODXsj29W7I6K
+         YggAh2xMuwqli1E9v1sqnnnHfgS2ynPqmoAcFbHaGElnRX16UA/j/zVQ3eBi1BROT4
+         HzB43mvFr02/l05315MV67X1oBFjDgJ9xEVx71pU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jiri Slaby <jslaby@suse.com>,
-        Sergei Trofimovich <slyfox@gentoo.org>
-Subject: [PATCH 5.1 083/128] tty/vt: fix write/write race in ioctl(KDSKBSENT) handler
-Date:   Mon, 20 May 2019 14:14:30 +0200
-Message-Id: <20190520115255.179273690@linuxfoundation.org>
+        stable@vger.kernel.org, Yoon Jungyeon <jungyeon@gatech.edu>,
+        Qu Wenruo <wqu@suse.com>, David Sterba <dsterba@suse.com>
+Subject: [PATCH 5.1 092/128] btrfs: Check the first key and level for cached extent buffer
+Date:   Mon, 20 May 2019 14:14:39 +0200
+Message-Id: <20190520115255.555608426@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190520115249.449077487@linuxfoundation.org>
 References: <20190520115249.449077487@linuxfoundation.org>
@@ -59,183 +59,166 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sergei Trofimovich <slyfox@gentoo.org>
+From: Qu Wenruo <wqu@suse.com>
 
-commit 46ca3f735f345c9d87383dd3a09fa5d43870770e upstream.
+commit 448de471cd4cab0cedd15770082567a69a784a11 upstream.
 
-The bug manifests as an attempt to access deallocated memory:
+[BUG]
+When reading a file from a fuzzed image, kernel can panic like:
 
-    BUG: unable to handle kernel paging request at ffff9c8735448000
-    #PF error: [PROT] [WRITE]
-    PGD 288a05067 P4D 288a05067 PUD 288a07067 PMD 7f60c2063 PTE 80000007f5448161
-    Oops: 0003 [#1] PREEMPT SMP
-    CPU: 6 PID: 388 Comm: loadkeys Tainted: G         C        5.0.0-rc6-00153-g5ded5871030e #91
-    Hardware name: Gigabyte Technology Co., Ltd. To be filled by O.E.M./H77M-D3H, BIOS F12 11/14/2013
-    RIP: 0010:__memmove+0x81/0x1a0
-    Code: 4c 89 4f 10 4c 89 47 18 48 8d 7f 20 73 d4 48 83 c2 20 e9 a2 00 00 00 66 90 48 89 d1 4c 8b 5c 16 f8 4c 8d 54 17 f8 48 c1 e9 03 <f3> 48 a5 4d 89 1a e9 0c 01 00 00 0f 1f 40 00 48 89 d1 4c 8b 1e 49
-    RSP: 0018:ffffa1b9002d7d08 EFLAGS: 00010203
-    RAX: ffff9c873541af43 RBX: ffff9c873541af43 RCX: 00000c6f105cd6bf
-    RDX: 0000637882e986b6 RSI: ffff9c8735447ffb RDI: ffff9c8735447ffb
-    RBP: ffff9c8739cd3800 R08: ffff9c873b802f00 R09: 00000000fffff73b
-    R10: ffffffffb82b35f1 R11: 00505b1b004d5b1b R12: 0000000000000000
-    R13: ffff9c873541af3d R14: 000000000000000b R15: 000000000000000c
-    FS:  00007f450c390580(0000) GS:ffff9c873f180000(0000) knlGS:0000000000000000
-    CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-    CR2: ffff9c8735448000 CR3: 00000007e213c002 CR4: 00000000000606e0
-    Call Trace:
-     vt_do_kdgkb_ioctl+0x34d/0x440
-     vt_ioctl+0xba3/0x1190
-     ? __bpf_prog_run32+0x39/0x60
-     ? mem_cgroup_commit_charge+0x7b/0x4e0
-     tty_ioctl+0x23f/0x920
-     ? preempt_count_sub+0x98/0xe0
-     ? __seccomp_filter+0x67/0x600
-     do_vfs_ioctl+0xa2/0x6a0
-     ? syscall_trace_enter+0x192/0x2d0
-     ksys_ioctl+0x3a/0x70
-     __x64_sys_ioctl+0x16/0x20
-     do_syscall_64+0x54/0xe0
-     entry_SYSCALL_64_after_hwframe+0x49/0xbe
+  BTRFS warning (device loop0): csum failed root 5 ino 270 off 0 csum 0x98f94189 expected csum 0x00000000 mirror 1
+  assertion failed: !memcmp_extent_buffer(b, &disk_key, offsetof(struct btrfs_leaf, items[0].key), sizeof(disk_key)), file: fs/btrfs/ctree.c, line: 2544
+  ------------[ cut here ]------------
+  kernel BUG at fs/btrfs/ctree.h:3500!
+  invalid opcode: 0000 [#1] PREEMPT SMP NOPTI
+  RIP: 0010:btrfs_search_slot.cold.24+0x61/0x63 [btrfs]
+  Call Trace:
+   btrfs_lookup_csum+0x52/0x150 [btrfs]
+   __btrfs_lookup_bio_sums+0x209/0x640 [btrfs]
+   btrfs_submit_bio_hook+0x103/0x170 [btrfs]
+   submit_one_bio+0x59/0x80 [btrfs]
+   extent_read_full_page+0x58/0x80 [btrfs]
+   generic_file_read_iter+0x2f6/0x9d0
+   __vfs_read+0x14d/0x1a0
+   vfs_read+0x8d/0x140
+   ksys_read+0x52/0xc0
+   do_syscall_64+0x60/0x210
+   entry_SYSCALL_64_after_hwframe+0x49/0xbe
 
-The bug manifests on systemd systems with multiple vtcon devices:
-  # cat /sys/devices/virtual/vtconsole/vtcon0/name
-  (S) dummy device
-  # cat /sys/devices/virtual/vtconsole/vtcon1/name
-  (M) frame buffer device
+[CAUSE]
+The fuzzed image has a corrupted leaf whose first key doesn't match its
+parent:
 
-There systemd runs 'loadkeys' tool in tapallel for each vtcon
-instance. This causes two parallel ioctl(KDSKBSENT) calls to
-race into adding the same entry into 'func_table' array at:
+  checksum tree key (CSUM_TREE ROOT_ITEM 0)
+  node 29741056 level 1 items 14 free 107 generation 19 owner CSUM_TREE
+  fs uuid 3381d111-94a3-4ac7-8f39-611bbbdab7e6
+  chunk uuid 9af1c3c7-2af5-488b-8553-530bd515f14c
+  	...
+          key (EXTENT_CSUM EXTENT_CSUM 79691776) block 29761536 gen 19
 
-    drivers/tty/vt/keyboard.c:vt_do_kdgkb_ioctl()
+  leaf 29761536 items 1 free space 1726 generation 19 owner CSUM_TREE
+  leaf 29761536 flags 0x1(WRITTEN) backref revision 1
+  fs uuid 3381d111-94a3-4ac7-8f39-611bbbdab7e6
+  chunk uuid 9af1c3c7-2af5-488b-8553-530bd515f14c
+          item 0 key (EXTENT_CSUM EXTENT_CSUM 8798638964736) itemoff 1751 itemsize 2244
+                  range start 8798638964736 end 8798641262592 length 2297856
 
-The function has no locking around writes to 'func_table'.
+When reading the above tree block, we have extent_buffer->refs = 2 in
+the context:
 
-The simplest reproducer is to have initrams with the following
-init on a 8-CPU machine x86_64:
+- initial one from __alloc_extent_buffer()
+  alloc_extent_buffer()
+  |- __alloc_extent_buffer()
+     |- atomic_set(&eb->refs, 1)
 
-    #!/bin/sh
+- one being added to fs_info->buffer_radix
+  alloc_extent_buffer()
+  |- check_buffer_tree_ref()
+     |- atomic_inc(&eb->refs)
 
-    loadkeys -q windowkeys ru4 &
-    loadkeys -q windowkeys ru4 &
-    loadkeys -q windowkeys ru4 &
-    loadkeys -q windowkeys ru4 &
+So if even we call free_extent_buffer() in read_tree_block or other
+similar situation, we only decrease the refs by 1, it doesn't reach 0
+and won't be freed right now.
 
-    loadkeys -q windowkeys ru4 &
-    loadkeys -q windowkeys ru4 &
-    loadkeys -q windowkeys ru4 &
-    loadkeys -q windowkeys ru4 &
-    wait
+The staled eb and its corrupted content will still be kept cached.
 
-The change adds lock on write path only. Reads are still racy.
+Furthermore, we have several extra cases where we either don't do first
+key check or the check is not proper for all callers:
 
-CC: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-CC: Jiri Slaby <jslaby@suse.com>
-Link: https://lkml.org/lkml/2019/2/17/256
-Signed-off-by: Sergei Trofimovich <slyfox@gentoo.org>
-Cc: stable <stable@vger.kernel.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+- scrub
+  We just don't have first key in this context.
+
+- shared tree block
+  One tree block can be shared by several snapshot/subvolume trees.
+  In that case, the first key check for one subvolume doesn't apply to
+  another.
+
+So for the above reasons, a corrupted extent buffer can sneak into the
+buffer cache.
+
+[FIX]
+Call verify_level_key in read_block_for_search to do another
+verification. For that purpose the function is exported.
+
+Due to above reasons, although we can free corrupted extent buffer from
+cache, we still need the check in read_block_for_search(), for scrub and
+shared tree blocks.
+
+Link: https://bugzilla.kernel.org/show_bug.cgi?id=202755
+Link: https://bugzilla.kernel.org/show_bug.cgi?id=202757
+Link: https://bugzilla.kernel.org/show_bug.cgi?id=202759
+Link: https://bugzilla.kernel.org/show_bug.cgi?id=202761
+Link: https://bugzilla.kernel.org/show_bug.cgi?id=202767
+Link: https://bugzilla.kernel.org/show_bug.cgi?id=202769
+Reported-by: Yoon Jungyeon <jungyeon@gatech.edu>
+CC: stable@vger.kernel.org # 4.19+
+Signed-off-by: Qu Wenruo <wqu@suse.com>
+Reviewed-by: David Sterba <dsterba@suse.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/tty/vt/keyboard.c |   33 +++++++++++++++++++++++++++------
- 1 file changed, 27 insertions(+), 6 deletions(-)
+ fs/btrfs/ctree.c   |   10 ++++++++++
+ fs/btrfs/disk-io.c |   10 +++++-----
+ fs/btrfs/disk-io.h |    3 +++
+ 3 files changed, 18 insertions(+), 5 deletions(-)
 
---- a/drivers/tty/vt/keyboard.c
-+++ b/drivers/tty/vt/keyboard.c
-@@ -123,6 +123,7 @@ static const int NR_TYPES = ARRAY_SIZE(m
- static struct input_handler kbd_handler;
- static DEFINE_SPINLOCK(kbd_event_lock);
- static DEFINE_SPINLOCK(led_lock);
-+static DEFINE_SPINLOCK(func_buf_lock); /* guard 'func_buf'  and friends */
- static unsigned long key_down[BITS_TO_LONGS(KEY_CNT)];	/* keyboard key bitmap */
- static unsigned char shift_down[NR_SHIFT];		/* shift state counters.. */
- static bool dead_key_next;
-@@ -1990,11 +1991,12 @@ int vt_do_kdgkb_ioctl(int cmd, struct kb
- 	char *p;
- 	u_char *q;
- 	u_char __user *up;
--	int sz;
-+	int sz, fnw_sz;
- 	int delta;
- 	char *first_free, *fj, *fnw;
- 	int i, j, k;
- 	int ret;
-+	unsigned long flags;
- 
- 	if (!capable(CAP_SYS_TTY_CONFIG))
- 		perm = 0;
-@@ -2037,7 +2039,14 @@ int vt_do_kdgkb_ioctl(int cmd, struct kb
- 			goto reterr;
+--- a/fs/btrfs/ctree.c
++++ b/fs/btrfs/ctree.c
+@@ -2416,6 +2416,16 @@ read_block_for_search(struct btrfs_root
+ 	if (tmp) {
+ 		/* first we do an atomic uptodate check */
+ 		if (btrfs_buffer_uptodate(tmp, gen, 1) > 0) {
++			/*
++			 * Do extra check for first_key, eb can be stale due to
++			 * being cached, read from scrub, or have multiple
++			 * parents (shared tree blocks).
++			 */
++			if (btrfs_verify_level_key(fs_info, tmp,
++					parent_level - 1, &first_key, gen)) {
++				free_extent_buffer(tmp);
++				return -EUCLEAN;
++			}
+ 			*eb_ret = tmp;
+ 			return 0;
  		}
+--- a/fs/btrfs/disk-io.c
++++ b/fs/btrfs/disk-io.c
+@@ -414,9 +414,9 @@ static int btrfs_check_super_csum(struct
+ 	return ret;
+ }
  
-+		fnw = NULL;
-+		fnw_sz = 0;
-+		/* race aginst other writers */
-+		again:
-+		spin_lock_irqsave(&func_buf_lock, flags);
- 		q = func_table[i];
-+
-+		/* fj pointer to next entry after 'q' */
- 		first_free = funcbufptr + (funcbufsize - funcbufleft);
- 		for (j = i+1; j < MAX_NR_FUNC && !func_table[j]; j++)
- 			;
-@@ -2045,10 +2054,12 @@ int vt_do_kdgkb_ioctl(int cmd, struct kb
- 			fj = func_table[j];
- 		else
- 			fj = first_free;
--
-+		/* buffer usage increase by new entry */
- 		delta = (q ? -strlen(q) : 1) + strlen(kbs->kb_string);
-+
- 		if (delta <= funcbufleft) { 	/* it fits in current buf */
- 		    if (j < MAX_NR_FUNC) {
-+			/* make enough space for new entry at 'fj' */
- 			memmove(fj + delta, fj, first_free - fj);
- 			for (k = j; k < MAX_NR_FUNC; k++)
- 			    if (func_table[k])
-@@ -2061,20 +2072,28 @@ int vt_do_kdgkb_ioctl(int cmd, struct kb
- 		    sz = 256;
- 		    while (sz < funcbufsize - funcbufleft + delta)
- 		      sz <<= 1;
--		    fnw = kmalloc(sz, GFP_KERNEL);
--		    if(!fnw) {
--		      ret = -ENOMEM;
--		      goto reterr;
-+		    if (fnw_sz != sz) {
-+		      spin_unlock_irqrestore(&func_buf_lock, flags);
-+		      kfree(fnw);
-+		      fnw = kmalloc(sz, GFP_KERNEL);
-+		      fnw_sz = sz;
-+		      if (!fnw) {
-+			ret = -ENOMEM;
-+			goto reterr;
-+		      }
-+		      goto again;
- 		    }
+-static int verify_level_key(struct btrfs_fs_info *fs_info,
+-			    struct extent_buffer *eb, int level,
+-			    struct btrfs_key *first_key, u64 parent_transid)
++int btrfs_verify_level_key(struct btrfs_fs_info *fs_info,
++			   struct extent_buffer *eb, int level,
++			   struct btrfs_key *first_key, u64 parent_transid)
+ {
+ 	int found_level;
+ 	struct btrfs_key found_key;
+@@ -493,8 +493,8 @@ static int btree_read_extent_buffer_page
+ 			if (verify_parent_transid(io_tree, eb,
+ 						   parent_transid, 0))
+ 				ret = -EIO;
+-			else if (verify_level_key(fs_info, eb, level,
+-						  first_key, parent_transid))
++			else if (btrfs_verify_level_key(fs_info, eb, level,
++						first_key, parent_transid))
+ 				ret = -EUCLEAN;
+ 			else
+ 				break;
+--- a/fs/btrfs/disk-io.h
++++ b/fs/btrfs/disk-io.h
+@@ -39,6 +39,9 @@ static inline u64 btrfs_sb_offset(int mi
+ struct btrfs_device;
+ struct btrfs_fs_devices;
  
- 		    if (!q)
- 		      func_table[i] = fj;
-+		    /* copy data before insertion point to new location */
- 		    if (fj > funcbufptr)
- 			memmove(fnw, funcbufptr, fj - funcbufptr);
- 		    for (k = 0; k < j; k++)
- 		      if (func_table[k])
- 			func_table[k] = fnw + (func_table[k] - funcbufptr);
- 
-+		    /* copy data after insertion point to new location */
- 		    if (first_free > fj) {
- 			memmove(fnw + (fj - funcbufptr) + delta, fj, first_free - fj);
- 			for (k = j; k < MAX_NR_FUNC; k++)
-@@ -2087,7 +2106,9 @@ int vt_do_kdgkb_ioctl(int cmd, struct kb
- 		    funcbufleft = funcbufleft - delta + sz - funcbufsize;
- 		    funcbufsize = sz;
- 		}
-+		/* finally insert item itself */
- 		strcpy(func_table[i], kbs->kb_string);
-+		spin_unlock_irqrestore(&func_buf_lock, flags);
- 		break;
- 	}
- 	ret = 0;
++int btrfs_verify_level_key(struct btrfs_fs_info *fs_info,
++			   struct extent_buffer *eb, int level,
++			   struct btrfs_key *first_key, u64 parent_transid);
+ struct extent_buffer *read_tree_block(struct btrfs_fs_info *fs_info, u64 bytenr,
+ 				      u64 parent_transid, int level,
+ 				      struct btrfs_key *first_key);
 
 
