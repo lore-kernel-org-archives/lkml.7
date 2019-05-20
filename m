@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64F43C04AAC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:22:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FA20C04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:22:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 30B7021479
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:22:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5465E20675
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:22:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558354963;
-	bh=xxLEzmsGULtUDU3Io0agV8eEWFU+4vqzpgbIFY8kxKE=;
+	s=default; t=1558354966;
+	bh=aF7HKBpx3gAIndsX2zacYPEs1qyN60O2fhVkQ2N/6AQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mpRBKWSP4F2IuXbyXyc679dzMDdi9rkdOWiRsB42U0cRVNhkzAZYr5E0XFeQjVSoR
-	 6bfi6JLYF8jkOqsIlySodcdCXnsMX6RJTDns6oJEz36TpBhmvlOrlQQTcpa5kbsQpa
-	 Nld/5KQJxnA5tVCVJuLXnhxVL2fYO6MXhL7Z3lzQ=
+	b=dVJC2Fg9Prl5kZcyD4ciuYQSxXHf3dWp1QRgFcXjCdiQCbugxppnIrojXNlM9F30R
+	 ALAydUfbGFWSdgl0kR41hVA9OvMR8ULSH0j972B9xdvwOaRE0XwP/EHpiroeKKnu43
+	 gqUTxnYUp+PsPoOT4pI3dZ4JRQeuxL36yYp9OlDo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388478AbfETMWm (ORCPT
+        id S2388487AbfETMWp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 08:22:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36768 "EHLO mail.kernel.org"
+        Mon, 20 May 2019 08:22:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36824 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387993AbfETMWj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 08:22:39 -0400
+        id S2388474AbfETMWm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 08:22:42 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C780621773;
-        Mon, 20 May 2019 12:22:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7460220656;
+        Mon, 20 May 2019 12:22:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558354959;
-        bh=xxLEzmsGULtUDU3Io0agV8eEWFU+4vqzpgbIFY8kxKE=;
+        s=default; t=1558354961;
+        bh=aF7HKBpx3gAIndsX2zacYPEs1qyN60O2fhVkQ2N/6AQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zzZWyyvuc6MOl78EH2ZTStDI0VkO+rmhPxGUknxO0SPPlvyUYCK0xNMfu8V0vFxsW
-         roJXRIaYMoWO/I8A/WtKWZBcf1HU7Rs9TsNcsTwcDboA/z5/U7QYMHrYXrf2Gyguup
-         a7eIXuxrL9d+mdYJK2C+E78mRBIoRBeR2sj1/a9Q=
+        b=ZbXlO3klYGoB0qHuuzY4hjOXtXYDTw7CYAxtBVvNMMo340OafyL+wlZzXQgdrdTu+
+         mFSO1s3/8Wr5XXmk6HvK4PapJU84wVRAXbl+kAaZySI7K5c994ap8jIc27Bt7yhIqo
+         e3YcrIJsGN5DvNtBkJWZQkhHuFk6y0WGn97gBhTk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Stuart Menefy <stuart.menefy@mathembedded.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [PATCH 4.19 006/105] ARM: dts: exynos: Fix interrupt for shared EINTs on Exynos5260
-Date:   Mon, 20 May 2019 14:13:12 +0200
-Message-Id: <20190520115247.492967613@linuxfoundation.org>
+        stable@vger.kernel.org, Libin Yang <libin.yang@intel.com>,
+        Takashi Iwai <tiwai@suse.de>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Mark Brown <broonie@kernel.org>
+Subject: [PATCH 4.19 042/105] ASoC: codec: hdac_hdmi add device_link to card device
+Date:   Mon, 20 May 2019 14:13:48 +0200
+Message-Id: <20190520115249.934598402@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190520115247.060821231@linuxfoundation.org>
 References: <20190520115247.060821231@linuxfoundation.org>
@@ -60,33 +61,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stuart Menefy <stuart.menefy@mathembedded.com>
+From: Libin Yang <libin.yang@intel.com>
 
-commit b7ed69d67ff0788d8463e599dd5dd1b45c701a7e upstream.
+commit 01c8327667c249818d3712c3e25c7ad2aca7f389 upstream.
 
-Fix the interrupt information for the GPIO lines with a shared EINT
-interrupt.
+In resume from S3, HDAC HDMI codec driver dapm event callback may be
+operated before HDMI codec driver turns on the display audio power
+domain because of the contest between display driver and hdmi codec driver.
 
-Fixes: 16d7ff2642e7 ("ARM: dts: add dts files for exynos5260 SoC")
+This patch adds the device_link between soc card device (consumer) and
+hdmi codec device (supplier) to make sure the sequence is always correct.
+
+Signed-off-by: Libin Yang <libin.yang@intel.com>
+Reviewed-by: Takashi Iwai <tiwai@suse.de>
+Acked-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Cc: stable@vger.kernel.org
-Signed-off-by: Stuart Menefy <stuart.menefy@mathembedded.com>
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/arm/boot/dts/exynos5260.dtsi |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ sound/soc/codecs/hdac_hdmi.c |   11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
---- a/arch/arm/boot/dts/exynos5260.dtsi
-+++ b/arch/arm/boot/dts/exynos5260.dtsi
-@@ -223,7 +223,7 @@
- 			wakeup-interrupt-controller {
- 				compatible = "samsung,exynos4210-wakeup-eint";
- 				interrupt-parent = <&gic>;
--				interrupts = <GIC_SPI 32 IRQ_TYPE_LEVEL_HIGH>;
-+				interrupts = <GIC_SPI 48 IRQ_TYPE_LEVEL_HIGH>;
- 			};
- 		};
+--- a/sound/soc/codecs/hdac_hdmi.c
++++ b/sound/soc/codecs/hdac_hdmi.c
+@@ -1829,6 +1829,17 @@ static int hdmi_codec_probe(struct snd_s
+ 	hdmi->card = dapm->card->snd_card;
  
+ 	/*
++	 * Setup a device_link between card device and HDMI codec device.
++	 * The card device is the consumer and the HDMI codec device is
++	 * the supplier. With this setting, we can make sure that the audio
++	 * domain in display power will be always turned on before operating
++	 * on the HDMI audio codec registers.
++	 * Let's use the flag DL_FLAG_AUTOREMOVE_CONSUMER. This can make
++	 * sure the device link is freed when the machine driver is removed.
++	 */
++	device_link_add(component->card->dev, &hdev->dev, DL_FLAG_RPM_ACTIVE |
++			DL_FLAG_AUTOREMOVE_CONSUMER);
++	/*
+ 	 * hdac_device core already sets the state to active and calls
+ 	 * get_noresume. So enable runtime and set the device to suspend.
+ 	 */
 
 
