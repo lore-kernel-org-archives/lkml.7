@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0FF5C04AAC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:27:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7D24C04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:27:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 91B8120815
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:27:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B452720815
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:27:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558355260;
-	bh=4mJ0ODamTguxNDF0yhcDtRfQZ1QX4p0KtjNL4DmrW2I=;
+	s=default; t=1558355264;
+	bh=53VozYmXf1eG5m7OkSRjT5xXTRtlW1k3WYIKOmwy+oA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0hPpsUyJB44qpmbdSZe0mJwxGjv2eHFyL60NtnlZfrPEHjeWKzpEd+0MhY0TlGMnN
-	 qgNAcXkaRlwo/GEn6rzpjJjU0mU28Nf/wzsiUvmPh2H+Nh4nUejtO5V3B7fpde8a96
-	 v04nByWh+ZxLigxU8VQRqRqmafBKwA8I2rZdvASM=
+	b=B/qr0Z02JDKu7fLXEMriXlzk47ZNr8m0/Z5YZJnxrEgMZjz9QrZ92GGL0gbv/WvDa
+	 BOqUrq4+52PdH2kdn2tgS5+UT6XD22ScUWM8ndeeCZ6kK0UcQuhNzkArMNK8Bs8781
+	 pmmUlpNsMJy1GEIdHnvHHFa7JmjJoIPOq1CN/dKU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389519AbfETM1j (ORCPT
+        id S2389182AbfETM1o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 08:27:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43130 "EHLO mail.kernel.org"
+        Mon, 20 May 2019 08:27:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43156 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389502AbfETM1d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 08:27:33 -0400
+        id S2388873AbfETM1g (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 08:27:36 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1153720675;
-        Mon, 20 May 2019 12:27:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F124220675;
+        Mon, 20 May 2019 12:27:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558355252;
-        bh=4mJ0ODamTguxNDF0yhcDtRfQZ1QX4p0KtjNL4DmrW2I=;
+        s=default; t=1558355255;
+        bh=53VozYmXf1eG5m7OkSRjT5xXTRtlW1k3WYIKOmwy+oA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=p2q9fYjelGdCtu8cfer1nTJ8klVmFqwt/euKrIgN2aL0ejbPRZadJ0Q8tuj0k9MU8
-         96OQIdatCKzwaW/GPwgiHwmcIs+GIwSVly6TtX3ZfGP9aQ74WB2stkfaj53v3Zs80U
-         xJIQIULG39IkB/j7dAWhvqm87m4Yp6ctBoIfPyFY=
+        b=XMOZ8NobvjvPdedf81Gr7jJPxn3fq71yNih9lodtO8SbY5pzzUC4vg+/61mHu8bRd
+         FGuPig3qYgLzWsSoY2NaU32ItlzPdcwYKNOFrb3w7RroAygRGo/fOunoibIMASp5Cs
+         x5YnzzfgchT+fDrhOm9p4OPxqspSWpWxaUTnFyN0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+a07d0142e74fdd595cfb@syzkaller.appspotmail.com,
+        stable@vger.kernel.org, Wenwen Wang <wang6495@umn.edu>,
         Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 5.0 047/123] ALSA: line6: toneport: Fix broken usage of timer for delayed execution
-Date:   Mon, 20 May 2019 14:13:47 +0200
-Message-Id: <20190520115247.861946852@linuxfoundation.org>
+Subject: [PATCH 5.0 048/123] ALSA: usb-audio: Fix a memory leak bug
+Date:   Mon, 20 May 2019 14:13:48 +0200
+Message-Id: <20190520115247.925716421@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190520115245.439864225@linuxfoundation.org>
 References: <20190520115245.439864225@linuxfoundation.org>
@@ -60,77 +59,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Takashi Iwai <tiwai@suse.de>
+From: Wenwen Wang <wang6495@umn.edu>
 
-commit 7f84ff68be05ec7a5d2acf8fdc734fe5897af48f upstream.
+commit cb5173594d50c72b7bfa14113dfc5084b4d2f726 upstream.
 
-The line6 toneport driver has code for some delayed initialization,
-and this hits the kernel Oops because mutex and other sleepable
-functions are used in the timer callback.  Fix the abuse by a delayed
-work instead so that everything works gracefully.
+In parse_audio_selector_unit(), the string array 'namelist' is allocated
+through kmalloc_array(), and each string pointer in this array, i.e.,
+'namelist[]', is allocated through kmalloc() in the following for loop.
+Then, a control instance 'kctl' is created by invoking snd_ctl_new1(). If
+an error occurs during the creation process, the string array 'namelist',
+including all string pointers in the array 'namelist[]', should be freed,
+before the error code ENOMEM is returned. However, the current code does
+not free 'namelist[]', resulting in memory leaks.
 
-Reported-by: syzbot+a07d0142e74fdd595cfb@syzkaller.appspotmail.com
+To fix the above issue, free all string pointers 'namelist[]' in a loop.
+
+Signed-off-by: Wenwen Wang <wang6495@umn.edu>
 Cc: <stable@vger.kernel.org>
 Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/usb/line6/toneport.c |   16 +++++++++-------
- 1 file changed, 9 insertions(+), 7 deletions(-)
+ sound/usb/mixer.c |    2 ++
+ 1 file changed, 2 insertions(+)
 
---- a/sound/usb/line6/toneport.c
-+++ b/sound/usb/line6/toneport.c
-@@ -54,8 +54,8 @@ struct usb_line6_toneport {
- 	/* Firmware version (x 100) */
- 	u8 firmware_version;
- 
--	/* Timer for delayed PCM startup */
--	struct timer_list timer;
-+	/* Work for delayed PCM startup */
-+	struct delayed_work pcm_work;
- 
- 	/* Device type */
- 	enum line6_device_type type;
-@@ -241,9 +241,10 @@ static int snd_toneport_source_put(struc
- 	return 1;
- }
- 
--static void toneport_start_pcm(struct timer_list *t)
-+static void toneport_start_pcm(struct work_struct *work)
- {
--	struct usb_line6_toneport *toneport = from_timer(toneport, t, timer);
-+	struct usb_line6_toneport *toneport =
-+		container_of(work, struct usb_line6_toneport, pcm_work.work);
- 	struct usb_line6 *line6 = &toneport->line6;
- 
- 	line6_pcm_acquire(line6->line6pcm, LINE6_STREAM_MONITOR, true);
-@@ -393,7 +394,8 @@ static int toneport_setup(struct usb_lin
- 	if (toneport_has_led(toneport))
- 		toneport_update_led(toneport);
- 
--	mod_timer(&toneport->timer, jiffies + TONEPORT_PCM_DELAY * HZ);
-+	schedule_delayed_work(&toneport->pcm_work,
-+			      msecs_to_jiffies(TONEPORT_PCM_DELAY * 1000));
- 	return 0;
- }
- 
-@@ -405,7 +407,7 @@ static void line6_toneport_disconnect(st
- 	struct usb_line6_toneport *toneport =
- 		(struct usb_line6_toneport *)line6;
- 
--	del_timer_sync(&toneport->timer);
-+	cancel_delayed_work_sync(&toneport->pcm_work);
- 
- 	if (toneport_has_led(toneport))
- 		toneport_remove_leds(toneport);
-@@ -422,7 +424,7 @@ static int toneport_init(struct usb_line
- 	struct usb_line6_toneport *toneport =  (struct usb_line6_toneport *) line6;
- 
- 	toneport->type = id->driver_info;
--	timer_setup(&toneport->timer, toneport_start_pcm, 0);
-+	INIT_DELAYED_WORK(&toneport->pcm_work, toneport_start_pcm);
- 
- 	line6->disconnect = line6_toneport_disconnect;
- 
+--- a/sound/usb/mixer.c
++++ b/sound/usb/mixer.c
+@@ -2679,6 +2679,8 @@ static int parse_audio_selector_unit(str
+ 	kctl = snd_ctl_new1(&mixer_selectunit_ctl, cval);
+ 	if (! kctl) {
+ 		usb_audio_err(state->chip, "cannot malloc kcontrol\n");
++		for (i = 0; i < desc->bNrInPins; i++)
++			kfree(namelist[i]);
+ 		kfree(namelist);
+ 		kfree(cval);
+ 		return -ENOMEM;
 
 
