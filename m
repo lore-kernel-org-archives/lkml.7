@@ -2,256 +2,291 @@ Return-Path: <SRS0=lq4r=TU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 633BAC04AAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 14:14:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7EE0C04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 14:15:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2DD15214AE
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 14:14:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="dw/CaZmy"
+	by mail.kernel.org (Postfix) with ESMTP id 9C030214AE
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 14:15:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387495AbfETOOh (ORCPT
+        id S2389862AbfETOPJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 10:14:37 -0400
-Received: from mailout2.w1.samsung.com ([210.118.77.12]:39263 "EHLO
-        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732627AbfETOOg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 10:14:36 -0400
-Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
-        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20190520141435euoutp02582be08355e6b137a037d1421cefcd8d~gaa-lVNYK2201422014euoutp026
-        for <linux-kernel@vger.kernel.org>; Mon, 20 May 2019 14:14:35 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20190520141435euoutp02582be08355e6b137a037d1421cefcd8d~gaa-lVNYK2201422014euoutp026
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1558361675;
-        bh=a+67DmDkClFtpAgMeS+zXOJHhcsdo4J+1xpAUxugMTw=;
-        h=To:Cc:From:Subject:Date:References:From;
-        b=dw/CaZmy1Zvc9gtL80ybdfrBiiBUWc5CVbYr6onqBdgn0Vas/wlrHHomyNFtuH7oR
-         x97lWdFE1f/gHD4UWomthRYvQKruE/CHtHcAVpj1XTRVkYCoGsinkp66CFZ6Ts5cPC
-         j4vXs4zsmmMoX77F7ZpsnW4OwCLxyVNifKMFBeqc=
-Received: from eusmges2new.samsung.com (unknown [203.254.199.244]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
-        20190520141434eucas1p1cd9e0023f5f7eff509adf981de18239d~gaa-GJZTc1461814618eucas1p1n;
-        Mon, 20 May 2019 14:14:34 +0000 (GMT)
-Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
-        eusmges2new.samsung.com (EUCPMTA) with SMTP id 32.F3.04377.A46B2EC5; Mon, 20
-        May 2019 15:14:34 +0100 (BST)
-Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
-        20190520141434eucas1p266520a2ef8db42b3deee004e1cba3a1f~gaa_cKhPC1951819518eucas1p23;
-        Mon, 20 May 2019 14:14:34 +0000 (GMT)
-Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
-        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20190520141433eusmtrp1101749c9066f7835498fa085359cf24f~gaa_OIh581805218052eusmtrp1F;
-        Mon, 20 May 2019 14:14:33 +0000 (GMT)
-X-AuditID: cbfec7f4-5632c9c000001119-4a-5ce2b64a053c
-Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
-        eusmgms1.samsung.com (EUCPMTA) with SMTP id 70.24.04146.946B2EC5; Mon, 20
-        May 2019 15:14:33 +0100 (BST)
-Received: from [106.120.51.71] (unknown [106.120.51.71]) by
-        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20190520141433eusmtip1ec047f15af34170449c0afaf8ab29ecf~gaa96gClh0462604626eusmtip1b;
-        Mon, 20 May 2019 14:14:33 +0000 (GMT)
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Felipe Balbi <balbi@kernel.org>,
-        Minas Harutyunyan <hminas@synopsys.com>,
-        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org
-From:   Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Subject: [PATCH] usb: remove redundant 'default n' from Kconfig-s
-Message-ID: <79726177-d524-4f83-eeb2-18ae9b2e50cf@samsung.com>
-Date:   Mon, 20 May 2019 16:14:33 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
-        Thunderbird/60.6.1
-MIME-Version: 1.0
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA01Sa0hTYRju2zk757iaHKfhy4wuA6t10cyUpSWNAkdF9FN0WCtPajkvO97L
-        Ms17NzdLmlpLY+qwlCGahgjzMszSIq2IwEsrzBwYGlSk5fFM8t/Dc/ne54GPwiRGoZSKT0xl
-        dImaBBkhwtv6fw3vPto2qd7TNytV9Bc6SEV+XTOhuPq7i1S86awmFLXmAuyQUGW1lBCq7pom
-        UtXaPYdUc9aNJ/FI0YEYJiE+ndH5h50WxZX36gXJFnlmYVlwLhrYXIrcKKD3wfSzFkEpElES
-        ugHBq0+zAk6Q0PMIRuoyeGEOwf32crSSGJ1+7krUI7BYZ1wJJwJHYxSHvehAuPXSSHImjC5B
-        YKhvWjYRdAiUF1mWX/KklTBUMIpzWEyHwcRC75KHonDaFxYbYjh6PR0BY/0tQt7iAQP3HMt2
-        jPaGD44HAh5vgnZnNcbdArqIhJqZWZxvegSqjA8JHnvCtL2V5PEGGDRcx/nAEwQLxVOudDuC
-        esOiKxEKPfbXQq4RRsuhudOfp5VgnviOOBpod3jv9OBLuIO+rRLjaTEUF0p491ZoMbcQK2dL
-        OxoxHqvg5sgPdBttMa6aZlw1zbhqmvF/BxPCLcibSWO1sQy7N5HJ8GM1WjYtMdbvbJLWipZ+
-        zOCiff4p6vxzxoZoCsnWieMqJtUSoSadzdLaEFCYzEscuG1MLRHHaLKyGV3SKV1aAsPakA+F
-        y7zFF9eMR0noWE0qc4Fhkhndiiqg3KS5KDQ/m9wfdCmMuDLlXPs473BKSFmIHAJUlbV2ZUfK
-        uO2cdPhz8ExfdCAVE3b5WsXQ8ZqcptxMAxkU51mlD4/0sZgEPhHhyp1/86K/ws989TEmZ5fp
-        S9J2LLhWbzsxr7phfnHwziNMXvqusuv8vMlXYZtM/3h3IVcE33rsbzMIGc7GaQJ2YDpW8w+w
-        0vAgLQMAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprCIsWRmVeSWpSXmKPExsVy+t/xu7qe2x7FGCx4rm1xrO0Ju0Xz4vVs
-        Fo2/9rJbXN41h81i0bJWZgdWj02rOtk89s9dw+6xZf9nRo/Pm+QCWKL0bIryS0tSFTLyi0ts
-        laINLYz0DC0t9IxMLPUMjc1jrYxMlfTtbFJSczLLUov07RL0MiYemcRUsEqzoq3brIHxpEIX
-        IyeHhICJxNVXp5i6GLk4hASWMkqsX3CStYuRAyghI3F8fRlEjbDEn2tdbBA1rxkl/tw7ygiS
-        EBEwlug/O4sdJMEs0M4ocfYnSDMnB5uAlcTE9lVgRcICjhLnWq+ygNi8AnYSD/8eYQJZwCKg
-        KvFvRQpIWFQgQuLM+xVQJYISJ2c+AbOZBdQl/sy7xAxhi0vcejKfCcKWl9j+dg7zBEaBWUha
-        ZiFpmYWkZRaSlgWMLKsYRVJLi3PTc4sN9YoTc4tL89L1kvNzNzECY2TbsZ+bdzBe2hh8iFGA
-        g1GJhzdjyqMYIdbEsuLK3EOMEhzMSiK8xur3Y4R4UxIrq1KL8uOLSnNSiw8xmgL9M5FZSjQ5
-        Hxi/eSXxhqaG5haWhubG5sZmFkrivB0CB2OEBNITS1KzU1MLUotg+pg4OKUaGO2Ys/N/L1w5
-        ZeKkiKyzi34tMdef+j1m1g/jtPne/W7SexQXb5y13fRGyVmRCQVzZc8qH2Bdr3B1UWRp8bS1
-        WT815n3SuPLdfbYF1/5Ppr6NPOeEee0ct6SplKnfmvD4W4HS5H+HD4Yw+3fYtsh4uyjO/9ib
-        43Yq6ca2w9nCnGpHT0SZrg24V6vEUpyRaKjFXFScCACxKkxYpwIAAA==
-X-CMS-MailID: 20190520141434eucas1p266520a2ef8db42b3deee004e1cba3a1f
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20190520141434eucas1p266520a2ef8db42b3deee004e1cba3a1f
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20190520141434eucas1p266520a2ef8db42b3deee004e1cba3a1f
-References: <CGME20190520141434eucas1p266520a2ef8db42b3deee004e1cba3a1f@eucas1p2.samsung.com>
+        Mon, 20 May 2019 10:15:09 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:44804 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732112AbfETOPJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 10:15:09 -0400
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 9FECF309B153;
+        Mon, 20 May 2019 14:15:08 +0000 (UTC)
+Received: from llong.com (dhcp-17-85.bos.redhat.com [10.18.17.85])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id AB11A1001DD9;
+        Mon, 20 May 2019 14:15:06 +0000 (UTC)
+From:   Waiman Long <longman@redhat.com>
+To:     Thomas Gleixner <tglx@linutronix.de>,
+        Andrew Morton <akpm@linux-foundation.org>
+Cc:     linux-kernel@vger.kernel.org,
+        Yang Shi <yang.shi@linux.alibaba.com>,
+        "Joel Fernandes (Google)" <joel@joelfernandes.org>,
+        Qian Cai <cai@gmx.us>, Zhong Jiang <zhongjiang@huawei.com>,
+        Waiman Long <longman@redhat.com>
+Subject: [PATCH 1/5] debugobjects: Add percpu free pools
+Date:   Mon, 20 May 2019 10:14:46 -0400
+Message-Id: <20190520141450.7575-2-longman@redhat.com>
+In-Reply-To: <20190520141450.7575-1-longman@redhat.com>
+References: <20190520141450.7575-1-longman@redhat.com>
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.49]); Mon, 20 May 2019 14:15:08 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-'default n' is the default value for any bool or tristate Kconfig
-setting so there is no need to write it explicitly.
+When a multi-threaded workload does a lot of small memory object
+allocation and deallocation, it may cause the allocation and freeing of
+many debug objects. This will make the global pool_lock a bottleneck
+in the performance of the workload.  Since interrupt is disabled in
+acquiring the pool_lock, it may even cause hard lockup to happen.
 
-Also since commit f467c5640c29 ("kconfig: only write '# CONFIG_FOO
-is not set' for visible symbols") the Kconfig behavior is the same
-regardless of 'default n' being present or not:
+To reduce contention of the global pool_lock, this patch adds a percpu
+debug object free pool that can be used to buffer some of the debug
+object allocation and freeing requests without acquiring the pool_lock.
+Each CPU will now have a percpu free pool that can hold up to a maximum
+of 64 debug objects. Allocation and freeing requests will go to the
+percpu free pool first. If that fails, the pool_lock will be taken and
+the global free pool will be used.
 
-    ...
-    One side effect of (and the main motivation for) this change is making
-    the following two definitions behave exactly the same:
-    
-        config FOO
-                bool
-    
-        config FOO
-                bool
-                default n
-    
-    With this change, neither of these will generate a
-    '# CONFIG_FOO is not set' line (assuming FOO isn't selected/implied).
-    That might make it clearer to people that a bare 'default n' is
-    redundant.
-    ...
+The presence or absence of obj_cache is used as a marker to see if the
+percpu cache should be used.
 
-Signed-off-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Signed-off-by: Waiman Long <longman@redhat.com>
 ---
- drivers/usb/atm/Kconfig           |    1 -
- drivers/usb/core/Kconfig          |    1 -
- drivers/usb/dwc2/Kconfig          |    1 -
- drivers/usb/gadget/legacy/Kconfig |    2 --
- drivers/usb/host/Kconfig          |    5 -----
- drivers/usb/renesas_usbhs/Kconfig |    1 -
- 6 files changed, 11 deletions(-)
+ lib/debugobjects.c | 115 +++++++++++++++++++++++++++++++++++----------
+ 1 file changed, 91 insertions(+), 24 deletions(-)
 
-Index: b/drivers/usb/atm/Kconfig
-===================================================================
---- a/drivers/usb/atm/Kconfig
-+++ b/drivers/usb/atm/Kconfig
-@@ -7,7 +7,6 @@ menuconfig USB_ATM
- 	tristate "USB DSL modem support"
- 	depends on ATM
- 	select CRC32
--	default n
- 	help
- 	  Say Y here if you want to connect a USB Digital Subscriber Line (DSL)
- 	  modem to your computer's USB port.  You will then need to choose your
-Index: b/drivers/usb/core/Kconfig
-===================================================================
---- a/drivers/usb/core/Kconfig
-+++ b/drivers/usb/core/Kconfig
-@@ -45,7 +45,6 @@ config USB_DYNAMIC_MINORS
- config USB_OTG
- 	bool "OTG support"
- 	depends on PM
--	default n
- 	help
- 	  The most notable feature of USB OTG is support for a
- 	  "Dual-Role" device, which can act as either a device
-Index: b/drivers/usb/dwc2/Kconfig
-===================================================================
---- a/drivers/usb/dwc2/Kconfig
-+++ b/drivers/usb/dwc2/Kconfig
-@@ -58,7 +58,6 @@ config USB_DWC2_PCI
- 	tristate "DWC2 PCI"
- 	depends on USB_PCI
- 	depends on USB_GADGET || !USB_GADGET
--	default n
- 	select NOP_USB_XCEIV
- 	help
- 	  The Designware USB2.0 PCI interface module for controllers
-Index: b/drivers/usb/gadget/legacy/Kconfig
-===================================================================
---- a/drivers/usb/gadget/legacy/Kconfig
-+++ b/drivers/usb/gadget/legacy/Kconfig
-@@ -153,7 +153,6 @@ config USB_ETH_EEM
-        depends on USB_ETH
- 	select USB_LIBCOMPOSITE
- 	select USB_F_EEM
--       default n
-        help
-          CDC EEM is a newer USB standard that is somewhat simpler than CDC ECM
-          and therefore can be supported by more hardware.  Technically ECM and
-@@ -419,7 +418,6 @@ config USB_G_MULTI_RNDIS
- config USB_G_MULTI_CDC
- 	bool "CDC Ethernet + CDC Serial + Storage configuration"
- 	depends on USB_G_MULTI
--	default n
- 	select USB_F_ECM
- 	help
- 	  This option enables a configuration with CDC Ethernet (ECM), CDC
-Index: b/drivers/usb/host/Kconfig
-===================================================================
---- a/drivers/usb/host/Kconfig
-+++ b/drivers/usb/host/Kconfig
-@@ -161,7 +161,6 @@ config USB_EHCI_PCI
- config USB_EHCI_HCD_PMC_MSP
- 	tristate "EHCI support for on-chip PMC MSP71xx USB controller"
- 	depends on MSP_HAS_USB
--	default n
- 	select USB_EHCI_BIG_ENDIAN_DESC
- 	select USB_EHCI_BIG_ENDIAN_MMIO
- 	---help---
-@@ -308,7 +307,6 @@ config USB_CNS3XXX_EHCI
+diff --git a/lib/debugobjects.c b/lib/debugobjects.c
+index 55437fd5128b..8a235c9412dc 100644
+--- a/lib/debugobjects.c
++++ b/lib/debugobjects.c
+@@ -25,6 +25,7 @@
  
- config USB_EHCI_HCD_PLATFORM
- 	tristate "Generic EHCI driver for a platform device"
--	default n
- 	---help---
- 	  Adds an EHCI host driver for a generic platform device, which
- 	  provides a memory space and an irq.
-@@ -318,7 +316,6 @@ config USB_EHCI_HCD_PLATFORM
- config USB_OCTEON_EHCI
- 	bool "Octeon on-chip EHCI support (DEPRECATED)"
- 	depends on CAVIUM_OCTEON_SOC
--	default n
- 	select USB_EHCI_BIG_ENDIAN_MMIO if CPU_BIG_ENDIAN
- 	select USB_EHCI_HCD_PLATFORM
- 	help
-@@ -526,7 +523,6 @@ config USB_OHCI_HCD_SSB
- 	depends on (SSB = y || SSB = USB_OHCI_HCD)
- 	select USB_HCD_SSB
- 	select USB_OHCI_HCD_PLATFORM
--	default n
- 	---help---
- 	  This option is deprecated now and the driver was removed, use
- 	  USB_HCD_SSB and USB_OHCI_HCD_PLATFORM instead.
-@@ -569,7 +565,6 @@ config USB_CNS3XXX_OHCI
+ #define ODEBUG_POOL_SIZE	1024
+ #define ODEBUG_POOL_MIN_LEVEL	256
++#define ODEBUG_POOL_PERCPU_SIZE	64
  
- config USB_OHCI_HCD_PLATFORM
- 	tristate "Generic OHCI driver for a platform device"
--	default n
- 	---help---
- 	  Adds an OHCI host driver for a generic platform device, which
- 	  provides a memory space and an irq.
-Index: b/drivers/usb/renesas_usbhs/Kconfig
-===================================================================
---- a/drivers/usb/renesas_usbhs/Kconfig
-+++ b/drivers/usb/renesas_usbhs/Kconfig
-@@ -8,7 +8,6 @@ config USB_RENESAS_USBHS
- 	depends on USB_GADGET
- 	depends on ARCH_RENESAS || SUPERH || COMPILE_TEST
- 	depends on EXTCON || !EXTCON # if EXTCON=m, USBHS cannot be built-in
--	default n
- 	help
- 	  Renesas USBHS is a discrete USB host and peripheral controller chip
- 	  that supports both full and high speed USB 2.0 data transfers.
+ #define ODEBUG_CHUNK_SHIFT	PAGE_SHIFT
+ #define ODEBUG_CHUNK_SIZE	(1 << ODEBUG_CHUNK_SHIFT)
+@@ -35,6 +36,17 @@ struct debug_bucket {
+ 	raw_spinlock_t		lock;
+ };
+ 
++/*
++ * Debug object percpu free list
++ * Access is protected by disabling irq
++ */
++struct debug_percpu_free {
++	struct hlist_head	free_objs;
++	int			obj_free;
++};
++
++static DEFINE_PER_CPU(struct debug_percpu_free, percpu_obj_pool);
++
+ static struct debug_bucket	obj_hash[ODEBUG_HASH_SIZE];
+ 
+ static struct debug_obj		obj_static_pool[ODEBUG_POOL_SIZE] __initdata;
+@@ -44,13 +56,19 @@ static DEFINE_RAW_SPINLOCK(pool_lock);
+ static HLIST_HEAD(obj_pool);
+ static HLIST_HEAD(obj_to_free);
+ 
++/*
++ * Because of the presence of percpu free pools, obj_pool_free will
++ * under-count those in the percpu free pools. Similarly, obj_pool_used
++ * will over-count those in the percpu free pools. Adjustments will be
++ * made at debug_stats_show(). Both obj_pool_min_free and obj_pool_max_used
++ * can be off.
++ */
+ static int			obj_pool_min_free = ODEBUG_POOL_SIZE;
+ static int			obj_pool_free = ODEBUG_POOL_SIZE;
+ static int			obj_pool_used;
+ static int			obj_pool_max_used;
+ /* The number of objs on the global free list */
+ static int			obj_nr_tofree;
+-static struct kmem_cache	*obj_cache;
+ 
+ static int			debug_objects_maxchain __read_mostly;
+ static int __maybe_unused	debug_objects_maxchecked __read_mostly;
+@@ -63,6 +81,7 @@ static int			debug_objects_pool_size __read_mostly
+ static int			debug_objects_pool_min_level __read_mostly
+ 				= ODEBUG_POOL_MIN_LEVEL;
+ static struct debug_obj_descr	*descr_test  __read_mostly;
++static struct kmem_cache	*obj_cache __read_mostly;
+ 
+ /*
+  * Track numbers of kmem_cache_alloc()/free() calls done.
+@@ -162,6 +181,21 @@ static struct debug_obj *lookup_object(void *addr, struct debug_bucket *b)
+ 	return NULL;
+ }
+ 
++/*
++ * Allocate a new object from the hlist
++ */
++static struct debug_obj *__alloc_object(struct hlist_head *list)
++{
++	struct debug_obj *obj = NULL;
++
++	if (list->first) {
++		obj = hlist_entry(list->first, typeof(*obj), node);
++		hlist_del(&obj->node);
++	}
++
++	return obj;
++}
++
+ /*
+  * Allocate a new object. If the pool is empty, switch off the debugger.
+  * Must be called with interrupts disabled.
+@@ -169,20 +203,21 @@ static struct debug_obj *lookup_object(void *addr, struct debug_bucket *b)
+ static struct debug_obj *
+ alloc_object(void *addr, struct debug_bucket *b, struct debug_obj_descr *descr)
+ {
+-	struct debug_obj *obj = NULL;
+-
+-	raw_spin_lock(&pool_lock);
+-	if (obj_pool.first) {
+-		obj	    = hlist_entry(obj_pool.first, typeof(*obj), node);
+-
+-		obj->object = addr;
+-		obj->descr  = descr;
+-		obj->state  = ODEBUG_STATE_NONE;
+-		obj->astate = 0;
+-		hlist_del(&obj->node);
++	struct debug_percpu_free *percpu_pool;
++	struct debug_obj *obj;
+ 
+-		hlist_add_head(&obj->node, &b->list);
++	if (likely(obj_cache)) {
++		percpu_pool = this_cpu_ptr(&percpu_obj_pool);
++		obj = __alloc_object(&percpu_pool->free_objs);
++		if (obj) {
++			percpu_pool->obj_free--;
++			goto init_obj;
++		}
++	}
+ 
++	raw_spin_lock(&pool_lock);
++	obj = __alloc_object(&obj_pool);
++	if (obj) {
+ 		obj_pool_used++;
+ 		if (obj_pool_used > obj_pool_max_used)
+ 			obj_pool_max_used = obj_pool_used;
+@@ -193,6 +228,14 @@ alloc_object(void *addr, struct debug_bucket *b, struct debug_obj_descr *descr)
+ 	}
+ 	raw_spin_unlock(&pool_lock);
+ 
++init_obj:
++	if (obj) {
++		obj->object = addr;
++		obj->descr  = descr;
++		obj->state  = ODEBUG_STATE_NONE;
++		obj->astate = 0;
++		hlist_add_head(&obj->node, &b->list);
++	}
+ 	return obj;
+ }
+ 
+@@ -247,8 +290,21 @@ static bool __free_object(struct debug_obj *obj)
+ {
+ 	unsigned long flags;
+ 	bool work;
++	struct debug_percpu_free *percpu_pool;
+ 
+-	raw_spin_lock_irqsave(&pool_lock, flags);
++	local_irq_save(flags);
++	/*
++	 * Try to free it into the percpu pool first.
++	 */
++	percpu_pool = this_cpu_ptr(&percpu_obj_pool);
++	if (obj_cache && percpu_pool->obj_free < ODEBUG_POOL_PERCPU_SIZE) {
++		hlist_add_head(&obj->node, &percpu_pool->free_objs);
++		percpu_pool->obj_free++;
++		local_irq_restore(flags);
++		return false;
++	}
++
++	raw_spin_lock(&pool_lock);
+ 	work = (obj_pool_free > debug_objects_pool_size) && obj_cache;
+ 	obj_pool_used--;
+ 
+@@ -259,7 +315,8 @@ static bool __free_object(struct debug_obj *obj)
+ 		obj_pool_free++;
+ 		hlist_add_head(&obj->node, &obj_pool);
+ 	}
+-	raw_spin_unlock_irqrestore(&pool_lock, flags);
++	raw_spin_unlock(&pool_lock);
++	local_irq_restore(flags);
+ 	return work;
+ }
+ 
+@@ -822,13 +879,19 @@ void debug_check_no_obj_freed(const void *address, unsigned long size)
+ 
+ static int debug_stats_show(struct seq_file *m, void *v)
+ {
++	int cpu, obj_percpu_free = 0;
++
++	for_each_possible_cpu(cpu)
++		obj_percpu_free += per_cpu(percpu_obj_pool.obj_free, cpu);
++
+ 	seq_printf(m, "max_chain     :%d\n", debug_objects_maxchain);
+ 	seq_printf(m, "max_checked   :%d\n", debug_objects_maxchecked);
+ 	seq_printf(m, "warnings      :%d\n", debug_objects_warnings);
+ 	seq_printf(m, "fixups        :%d\n", debug_objects_fixups);
+-	seq_printf(m, "pool_free     :%d\n", obj_pool_free);
++	seq_printf(m, "pool_free     :%d\n", obj_pool_free + obj_percpu_free);
++	seq_printf(m, "pool_pcp_free :%d\n", obj_percpu_free);
+ 	seq_printf(m, "pool_min_free :%d\n", obj_pool_min_free);
+-	seq_printf(m, "pool_used     :%d\n", obj_pool_used);
++	seq_printf(m, "pool_used     :%d\n", obj_pool_used - obj_percpu_free);
+ 	seq_printf(m, "pool_max_used :%d\n", obj_pool_max_used);
+ 	seq_printf(m, "on_free_list  :%d\n", obj_nr_tofree);
+ 	seq_printf(m, "objs_allocated:%d\n", debug_objects_allocated);
+@@ -1175,9 +1238,20 @@ static int __init debug_objects_replace_static_objects(void)
+  */
+ void __init debug_objects_mem_init(void)
+ {
++	int cpu;
++
+ 	if (!debug_objects_enabled)
+ 		return;
+ 
++	/*
++	 * Initialize the percpu object pools
++	 *
++	 * Initialization is not strictly necessary, but was done for
++	 * completeness.
++	 */
++	for_each_possible_cpu(cpu)
++		INIT_HLIST_HEAD(&per_cpu(percpu_obj_pool.free_objs, cpu));
++
+ 	obj_cache = kmem_cache_create("debug_objects_cache",
+ 				      sizeof (struct debug_obj), 0,
+ 				      SLAB_DEBUG_OBJECTS | SLAB_NOLEAKTRACE,
+@@ -1189,11 +1263,4 @@ void __init debug_objects_mem_init(void)
+ 		pr_warn("out of memory.\n");
+ 	} else
+ 		debug_objects_selftest();
+-
+-	/*
+-	 * Increase the thresholds for allocating and freeing objects
+-	 * according to the number of possible CPUs available in the system.
+-	 */
+-	debug_objects_pool_size += num_possible_cpus() * 32;
+-	debug_objects_pool_min_level += num_possible_cpus() * 4;
+ }
+-- 
+2.18.1
+
