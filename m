@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9032C04E87
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:29:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B96BC04E87
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:29:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B609320675
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:29:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 45EA320675
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:29:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558355361;
-	bh=jlAxy7qu2d/sHWB+iguW6FoOguS3pnhmvYhNhR0sF84=;
+	s=default; t=1558355365;
+	bh=Z+ZqiIan0bsdBaWHyN8acVIobuUpsPknlHPaYHOWz/c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GFob6e2wYIHJZ7kvTMOL66mJRSa7EUnMehZuuLaqmShTU3P5TQQ5q/nlKdYHkaphQ
-	 GytHSlMBaR/8CAGlWlc9dVoHgkA5VZj5kNvVvri7JDUGK0dfHKn0/sp9AInw8G7u41
-	 FHp1FpqBvIFfIfPE4DugPQOvyPjYYFdkZwRJuiJ4=
+	b=GCIW9ELKNza8P5sEzsKcn0aQmkNISkFQoR1ES40tNGVgJDbY9SRW4pORsXOoAOpjP
+	 Tb3dQP4SG4Zd500XGR4CiQLEkrBfDMVA19x0VSjsiiAVuEFMKYCwT17OlU/8DLS8QQ
+	 HNhhl0xPoAo1rFDawCSvMNYrcCRi9wh6c/csDIGE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389868AbfETM3V (ORCPT
+        id S2389889AbfETM3Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 08:29:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45408 "EHLO mail.kernel.org"
+        Mon, 20 May 2019 08:29:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45480 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388060AbfETM3T (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 08:29:19 -0400
+        id S2389492AbfETM3W (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 08:29:22 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CD35720815;
-        Mon, 20 May 2019 12:29:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9489B20645;
+        Mon, 20 May 2019 12:29:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558355359;
-        bh=jlAxy7qu2d/sHWB+iguW6FoOguS3pnhmvYhNhR0sF84=;
+        s=default; t=1558355362;
+        bh=Z+ZqiIan0bsdBaWHyN8acVIobuUpsPknlHPaYHOWz/c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xNR8kJ1ZPKAeaSHjLMO7qxNTffbEthnz7pQqkM8tH9qN4pMgvZDzWp5YHv8zrrMKD
-         v4QlWp3NHaNjdBFgpXYhXqvzIkD0p/0wq46HOrsRcydg3AHPLI31717G3CqfFUUNXr
-         7YO/N6vo+HVchULJxp+dSMjGuEa/hq1iUJsPMRMg=
+        b=N8FABVnXvme+e9VtYVhrpHHSMAyXCMolGIKbb6KoWCeW9DysMoYYPZ5AXaDBwAlrc
+         BHH3/sy+vBFDC0FAgQrjFLiNLds1Nq4/R6zcyKPhENusfIQf6UrizK60PgWlpLLlxg
+         MruyfKVV2c9yltRESDwRLMTSWlWqdz/gl95jpiMg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Debabrata Banerjee <dbanerje@akamai.com>,
-        Theodore Tso <tytso@mit.edu>, Jan Kara <jack@suse.cz>,
-        stable@kernel.org
-Subject: [PATCH 5.0 088/123] ext4: fix ext4_show_options for file systems w/o journal
-Date:   Mon, 20 May 2019 14:14:28 +0200
-Message-Id: <20190520115250.746339386@linuxfoundation.org>
+        stable@vger.kernel.org, Yoon Jungyeon <jungyeon@gatech.edu>,
+        Qu Wenruo <wqu@suse.com>, David Sterba <dsterba@suse.com>
+Subject: [PATCH 5.0 089/123] btrfs: Check the first key and level for cached extent buffer
+Date:   Mon, 20 May 2019 14:14:29 +0200
+Message-Id: <20190520115250.810165497@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190520115245.439864225@linuxfoundation.org>
 References: <20190520115245.439864225@linuxfoundation.org>
@@ -60,35 +59,166 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Debabrata Banerjee <dbanerje@akamai.com>
+From: Qu Wenruo <wqu@suse.com>
 
-commit 50b29d8f033a7c88c5bc011abc2068b1691ab755 upstream.
+commit 448de471cd4cab0cedd15770082567a69a784a11 upstream.
 
-Instead of removing EXT4_MOUNT_JOURNAL_CHECKSUM from s_def_mount_opt as
-I assume was intended, all other options were blown away leading to
-_ext4_show_options() output being incorrect.
+[BUG]
+When reading a file from a fuzzed image, kernel can panic like:
 
-Fixes: 1e381f60dad9 ("ext4: do not allow journal_opts for fs w/o journal")
-Signed-off-by: Debabrata Banerjee <dbanerje@akamai.com>
-Signed-off-by: Theodore Ts'o <tytso@mit.edu>
-Reviewed-by: Jan Kara <jack@suse.cz>
-Cc: stable@kernel.org
+  BTRFS warning (device loop0): csum failed root 5 ino 270 off 0 csum 0x98f94189 expected csum 0x00000000 mirror 1
+  assertion failed: !memcmp_extent_buffer(b, &disk_key, offsetof(struct btrfs_leaf, items[0].key), sizeof(disk_key)), file: fs/btrfs/ctree.c, line: 2544
+  ------------[ cut here ]------------
+  kernel BUG at fs/btrfs/ctree.h:3500!
+  invalid opcode: 0000 [#1] PREEMPT SMP NOPTI
+  RIP: 0010:btrfs_search_slot.cold.24+0x61/0x63 [btrfs]
+  Call Trace:
+   btrfs_lookup_csum+0x52/0x150 [btrfs]
+   __btrfs_lookup_bio_sums+0x209/0x640 [btrfs]
+   btrfs_submit_bio_hook+0x103/0x170 [btrfs]
+   submit_one_bio+0x59/0x80 [btrfs]
+   extent_read_full_page+0x58/0x80 [btrfs]
+   generic_file_read_iter+0x2f6/0x9d0
+   __vfs_read+0x14d/0x1a0
+   vfs_read+0x8d/0x140
+   ksys_read+0x52/0xc0
+   do_syscall_64+0x60/0x210
+   entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+[CAUSE]
+The fuzzed image has a corrupted leaf whose first key doesn't match its
+parent:
+
+  checksum tree key (CSUM_TREE ROOT_ITEM 0)
+  node 29741056 level 1 items 14 free 107 generation 19 owner CSUM_TREE
+  fs uuid 3381d111-94a3-4ac7-8f39-611bbbdab7e6
+  chunk uuid 9af1c3c7-2af5-488b-8553-530bd515f14c
+  	...
+          key (EXTENT_CSUM EXTENT_CSUM 79691776) block 29761536 gen 19
+
+  leaf 29761536 items 1 free space 1726 generation 19 owner CSUM_TREE
+  leaf 29761536 flags 0x1(WRITTEN) backref revision 1
+  fs uuid 3381d111-94a3-4ac7-8f39-611bbbdab7e6
+  chunk uuid 9af1c3c7-2af5-488b-8553-530bd515f14c
+          item 0 key (EXTENT_CSUM EXTENT_CSUM 8798638964736) itemoff 1751 itemsize 2244
+                  range start 8798638964736 end 8798641262592 length 2297856
+
+When reading the above tree block, we have extent_buffer->refs = 2 in
+the context:
+
+- initial one from __alloc_extent_buffer()
+  alloc_extent_buffer()
+  |- __alloc_extent_buffer()
+     |- atomic_set(&eb->refs, 1)
+
+- one being added to fs_info->buffer_radix
+  alloc_extent_buffer()
+  |- check_buffer_tree_ref()
+     |- atomic_inc(&eb->refs)
+
+So if even we call free_extent_buffer() in read_tree_block or other
+similar situation, we only decrease the refs by 1, it doesn't reach 0
+and won't be freed right now.
+
+The staled eb and its corrupted content will still be kept cached.
+
+Furthermore, we have several extra cases where we either don't do first
+key check or the check is not proper for all callers:
+
+- scrub
+  We just don't have first key in this context.
+
+- shared tree block
+  One tree block can be shared by several snapshot/subvolume trees.
+  In that case, the first key check for one subvolume doesn't apply to
+  another.
+
+So for the above reasons, a corrupted extent buffer can sneak into the
+buffer cache.
+
+[FIX]
+Call verify_level_key in read_block_for_search to do another
+verification. For that purpose the function is exported.
+
+Due to above reasons, although we can free corrupted extent buffer from
+cache, we still need the check in read_block_for_search(), for scrub and
+shared tree blocks.
+
+Link: https://bugzilla.kernel.org/show_bug.cgi?id=202755
+Link: https://bugzilla.kernel.org/show_bug.cgi?id=202757
+Link: https://bugzilla.kernel.org/show_bug.cgi?id=202759
+Link: https://bugzilla.kernel.org/show_bug.cgi?id=202761
+Link: https://bugzilla.kernel.org/show_bug.cgi?id=202767
+Link: https://bugzilla.kernel.org/show_bug.cgi?id=202769
+Reported-by: Yoon Jungyeon <jungyeon@gatech.edu>
+CC: stable@vger.kernel.org # 4.19+
+Signed-off-by: Qu Wenruo <wqu@suse.com>
+Reviewed-by: David Sterba <dsterba@suse.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/ext4/super.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/btrfs/ctree.c   |   10 ++++++++++
+ fs/btrfs/disk-io.c |   10 +++++-----
+ fs/btrfs/disk-io.h |    3 +++
+ 3 files changed, 18 insertions(+), 5 deletions(-)
 
---- a/fs/ext4/super.c
-+++ b/fs/ext4/super.c
-@@ -4270,7 +4270,7 @@ static int ext4_fill_super(struct super_
- 				 "data=, fs mounted w/o journal");
- 			goto failed_mount_wq;
+--- a/fs/btrfs/ctree.c
++++ b/fs/btrfs/ctree.c
+@@ -2401,6 +2401,16 @@ read_block_for_search(struct btrfs_root
+ 	if (tmp) {
+ 		/* first we do an atomic uptodate check */
+ 		if (btrfs_buffer_uptodate(tmp, gen, 1) > 0) {
++			/*
++			 * Do extra check for first_key, eb can be stale due to
++			 * being cached, read from scrub, or have multiple
++			 * parents (shared tree blocks).
++			 */
++			if (btrfs_verify_level_key(fs_info, tmp,
++					parent_level - 1, &first_key, gen)) {
++				free_extent_buffer(tmp);
++				return -EUCLEAN;
++			}
+ 			*eb_ret = tmp;
+ 			return 0;
  		}
--		sbi->s_def_mount_opt &= EXT4_MOUNT_JOURNAL_CHECKSUM;
-+		sbi->s_def_mount_opt &= ~EXT4_MOUNT_JOURNAL_CHECKSUM;
- 		clear_opt(sb, JOURNAL_CHECKSUM);
- 		clear_opt(sb, DATA_FLAGS);
- 		sbi->s_journal = NULL;
+--- a/fs/btrfs/disk-io.c
++++ b/fs/btrfs/disk-io.c
+@@ -414,9 +414,9 @@ static int btrfs_check_super_csum(struct
+ 	return ret;
+ }
+ 
+-static int verify_level_key(struct btrfs_fs_info *fs_info,
+-			    struct extent_buffer *eb, int level,
+-			    struct btrfs_key *first_key, u64 parent_transid)
++int btrfs_verify_level_key(struct btrfs_fs_info *fs_info,
++			   struct extent_buffer *eb, int level,
++			   struct btrfs_key *first_key, u64 parent_transid)
+ {
+ 	int found_level;
+ 	struct btrfs_key found_key;
+@@ -493,8 +493,8 @@ static int btree_read_extent_buffer_page
+ 			if (verify_parent_transid(io_tree, eb,
+ 						   parent_transid, 0))
+ 				ret = -EIO;
+-			else if (verify_level_key(fs_info, eb, level,
+-						  first_key, parent_transid))
++			else if (btrfs_verify_level_key(fs_info, eb, level,
++						first_key, parent_transid))
+ 				ret = -EUCLEAN;
+ 			else
+ 				break;
+--- a/fs/btrfs/disk-io.h
++++ b/fs/btrfs/disk-io.h
+@@ -39,6 +39,9 @@ static inline u64 btrfs_sb_offset(int mi
+ struct btrfs_device;
+ struct btrfs_fs_devices;
+ 
++int btrfs_verify_level_key(struct btrfs_fs_info *fs_info,
++			   struct extent_buffer *eb, int level,
++			   struct btrfs_key *first_key, u64 parent_transid);
+ struct extent_buffer *read_tree_block(struct btrfs_fs_info *fs_info, u64 bytenr,
+ 				      u64 parent_transid, int level,
+ 				      struct btrfs_key *first_key);
 
 
