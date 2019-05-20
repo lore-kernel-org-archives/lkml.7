@@ -7,50 +7,48 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FE7FC04AAC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:16:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 034ABC04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:17:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0622120863
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:16:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE88920862
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:17:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558354619;
-	bh=sL+t5AjFEQojtzLpmh7ftp1Yt8bKym9IQMcQwFTwJEg=;
+	s=default; t=1558354622;
+	bh=/i0L0JKA+iBWngfkDkWpnXkwBJ6zp/hZP3orqZ9dooU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dQKeFeCZZTbj7PsxMasW0QqhIfKZap+prsB7q2JuNdoq9avfgTHWrlTlSGAvDCi0O
-	 W3MmQ+l3W8SlY8peYnO0FO9ZCtqVp/Pie/R+T6vvNOtRg2MhdhQxZuzhSdaOHR18e9
-	 R5UtrpdrH7zoQyBjuVnrV0d0SqF3nIVu6erk8cCw=
+	b=R4LOrJANi4q+c0/K+XWPpeL7WyYEmM7Swya8goszEXH7xlc+KJJqBpb0QGAX3B3pO
+	 +joM5VJrMpTOqi4vov4YYA8Blc8qT6adQ4VRl70Mlp8klR212Df3xiZCW/mQlipVDe
+	 57gh6V1btcVgRqqcHejp6pqrAoAP6+1DksPvAeJw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387432AbfETMQ6 (ORCPT
+        id S2387445AbfETMRC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 08:16:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57708 "EHLO mail.kernel.org"
+        Mon, 20 May 2019 08:17:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57834 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387413AbfETMQz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 08:16:55 -0400
+        id S2387413AbfETMRA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 08:17:00 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C41A820815;
-        Mon, 20 May 2019 12:16:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0A568213F2;
+        Mon, 20 May 2019 12:16:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558354614;
-        bh=sL+t5AjFEQojtzLpmh7ftp1Yt8bKym9IQMcQwFTwJEg=;
+        s=default; t=1558354619;
+        bh=/i0L0JKA+iBWngfkDkWpnXkwBJ6zp/hZP3orqZ9dooU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TieKIfezVH7EIVwGo5Ui5Csvv2ILE7PuwD78gAN0SoMomt4bHYJwDBWEoJyM20bzV
-         ah/7QglKDvbX+pO6Dl+8MAgYjNidPD1FEzv5t1lXeAvGCLWQDXb81N9y/TfsCmG3HP
-         HYutiat/OcexqGcosn7qOEKr1MvJDxsw3MlFlOaA=
+        b=Lu5JZbdQ4esP0CrJx7aHTGBR2CZEmebQpzrGKpxIdNWDdnMiyqsf77hXOhs5ZUX0C
+         2Ab4QEilnis7pwSOxf1T8HPe2ga4/EIJ1gilg9cuvNSfbAY415oIpozju4WRL3OGAI
+         957fvytGurAUbMW8i4OxTiR3c9MVFH47xs3U93n8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, kbuild test robot <lkp@intel.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>
-Subject: [PATCH 4.9 06/44] objtool: Fix function fallthrough detection
-Date:   Mon, 20 May 2019 14:13:55 +0200
-Message-Id: <20190520115231.784147525@linuxfoundation.org>
+        stable@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Sebastian Reichel <sebastian.reichel@collabora.com>
+Subject: [PATCH 4.9 08/44] power: supply: axp288_charger: Fix unchecked return value
+Date:   Mon, 20 May 2019 14:13:57 +0200
+Message-Id: <20190520115232.016025272@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190520115230.720347034@linuxfoundation.org>
 References: <20190520115230.720347034@linuxfoundation.org>
@@ -63,59 +61,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Josh Poimboeuf <jpoimboe@redhat.com>
+From: Gustavo A. R. Silva <gustavo@embeddedor.com>
 
-commit e6f393bc939d566ce3def71232d8013de9aaadde upstream.
+commit c3422ad5f84a66739ec6a37251ca27638c85b6be upstream.
 
-When a function falls through to the next function due to a compiler
-bug, objtool prints some obscure warnings.  For example:
+Currently there is no check on platform_get_irq() return value
+in case it fails, hence never actually reporting any errors and
+causing unexpected behavior when using such value as argument
+for function regmap_irq_get_virq().
 
-  drivers/regulator/core.o: warning: objtool: regulator_count_voltages()+0x95: return with modified stack frame
-  drivers/regulator/core.o: warning: objtool: regulator_count_voltages()+0x0: stack state mismatch: cfa1=7+32 cfa2=7+8
+Fix this by adding a proper check, a message reporting any errors
+and returning *pirq*
 
-Instead it should be printing:
-
-  drivers/regulator/core.o: warning: objtool: regulator_supply_is_couple() falls through to next function regulator_count_voltages()
-
-This used to work, but was broken by the following commit:
-
-  13810435b9a7 ("objtool: Support GCC 8's cold subfunctions")
-
-The padding nops at the end of a function aren't actually part of the
-function, as defined by the symbol table.  So the 'func' variable in
-validate_branch() is getting cleared to NULL when a padding nop is
-encountered, breaking the fallthrough detection.
-
-If the current instruction doesn't have a function associated with it,
-just consider it to be part of the previously detected function by not
-overwriting the previous value of 'func'.
-
-Reported-by: kbuild test robot <lkp@intel.com>
-Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: <stable@vger.kernel.org>
-Fixes: 13810435b9a7 ("objtool: Support GCC 8's cold subfunctions")
-Link: http://lkml.kernel.org/r/546d143820cd08a46624ae8440d093dd6c902cae.1557766718.git.jpoimboe@redhat.com
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Addresses-Coverity-ID: 1443940 ("Improper use of negative value")
+Fixes: 843735b788a4 ("power: axp288_charger: axp288 charger driver")
+Cc: stable@vger.kernel.org
+Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+Reviewed-by: Hans de Goede <hdegoede@redhat.com>
+Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- tools/objtool/check.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/power/supply/axp288_charger.c |    4 ++++
+ 1 file changed, 4 insertions(+)
 
---- a/tools/objtool/check.c
-+++ b/tools/objtool/check.c
-@@ -1779,7 +1779,8 @@ static int validate_branch(struct objtoo
- 			return 1;
- 		}
- 
--		func = insn->func ? insn->func->pfunc : NULL;
-+		if (insn->func)
-+			func = insn->func->pfunc;
- 
- 		if (func && insn->ignore) {
- 			WARN_FUNC("BUG: why am I validating an ignored function?",
+--- a/drivers/power/supply/axp288_charger.c
++++ b/drivers/power/supply/axp288_charger.c
+@@ -899,6 +899,10 @@ static int axp288_charger_probe(struct p
+ 	/* Register charger interrupts */
+ 	for (i = 0; i < CHRG_INTR_END; i++) {
+ 		pirq = platform_get_irq(info->pdev, i);
++		if (pirq < 0) {
++			dev_err(&pdev->dev, "Failed to get IRQ: %d\n", pirq);
++			return pirq;
++		}
+ 		info->irq[i] = regmap_irq_get_virq(info->regmap_irqc, pirq);
+ 		if (info->irq[i] < 0) {
+ 			dev_warn(&info->pdev->dev,
 
 
