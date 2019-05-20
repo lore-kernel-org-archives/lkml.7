@@ -2,162 +2,110 @@ Return-Path: <SRS0=lq4r=TU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AE9CC04AAC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 14:01:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75274C04E87
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 14:01:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3B2B22171F
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 14:01:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4ED2E2173C
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 14:01:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391101AbfETOBJ (ORCPT
+        id S2391159AbfETOBR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 10:01:09 -0400
-Received: from relay.sw.ru ([185.231.240.75]:39888 "EHLO relay.sw.ru"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390963AbfETOBI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 10:01:08 -0400
-Received: from [172.16.25.169] (helo=localhost.localdomain)
-        by relay.sw.ru with esmtp (Exim 4.91)
-        (envelope-from <ktkhai@virtuozzo.com>)
-        id 1hSipo-00082c-KS; Mon, 20 May 2019 17:00:12 +0300
-Subject: [PATCH v2 2/7] mm: Extend copy_vma()
-From:   Kirill Tkhai <ktkhai@virtuozzo.com>
-To:     akpm@linux-foundation.org, dan.j.williams@intel.com,
-        ktkhai@virtuozzo.com, mhocko@suse.com, keith.busch@intel.com,
-        kirill.shutemov@linux.intel.com, alexander.h.duyck@linux.intel.com,
-        ira.weiny@intel.com, andreyknvl@google.com, arunks@codeaurora.org,
-        vbabka@suse.cz, cl@linux.com, riel@surriel.com,
-        keescook@chromium.org, hannes@cmpxchg.org, npiggin@gmail.com,
-        mathieu.desnoyers@efficios.com, shakeelb@google.com, guro@fb.com,
-        aarcange@redhat.com, hughd@google.com, jglisse@redhat.com,
-        mgorman@techsingularity.net, daniel.m.jordan@oracle.com,
-        jannh@google.com, kilobyte@angband.pl, linux-api@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org
-Date:   Mon, 20 May 2019 17:00:12 +0300
-Message-ID: <155836081252.2441.9024100415314519956.stgit@localhost.localdomain>
-In-Reply-To: <155836064844.2441.10911127801797083064.stgit@localhost.localdomain>
-References: <155836064844.2441.10911127801797083064.stgit@localhost.localdomain>
-User-Agent: StGit/0.18
+        Mon, 20 May 2019 10:01:17 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:8225 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2391102AbfETOBP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 10:01:15 -0400
+Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id D28675BF3968B04EDCB7;
+        Mon, 20 May 2019 22:01:12 +0800 (CST)
+Received: from HGHY1l002753561.china.huawei.com (10.177.23.164) by
+ DGGEMS407-HUB.china.huawei.com (10.3.19.207) with Microsoft SMTP Server id
+ 14.3.439.0; Mon, 20 May 2019 22:01:04 +0800
+From:   Zhen Lei <thunder.leizhen@huawei.com>
+To:     Jean-Philippe Brucker <jean-philippe.brucker@arm.com>,
+        John Garry <john.garry@huawei.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        linux-doc <linux-doc@vger.kernel.org>,
+        Sebastian Ott <sebott@linux.ibm.com>,
+        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
+        "Martin Schwidefsky" <schwidefsky@de.ibm.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        "Michael Ellerman" <mpe@ellerman.id.au>,
+        Tony Luck <tony.luck@intel.com>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>,
+        David Woodhouse <dwmw2@infradead.org>,
+        iommu <iommu@lists.linux-foundation.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-s390 <linux-s390@vger.kernel.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        x86 <x86@kernel.org>, linux-ia64 <linux-ia64@vger.kernel.org>
+CC:     Zhen Lei <thunder.leizhen@huawei.com>,
+        Hanjun Guo <guohanjun@huawei.com>
+Subject: [PATCH v7 0/1] iommu: enhance IOMMU dma mode build options
+Date:   Mon, 20 May 2019 21:59:46 +0800
+Message-ID: <20190520135947.14960-1-thunder.leizhen@huawei.com>
+X-Mailer: git-send-email 2.19.2.windows.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.177.23.164]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This prepares the function to copy a vma between
-two processes. Two new arguments are introduced.
+v6 --> v7:
+1. Fix some text editing errors
 
-Signed-off-by: Kirill Tkhai <ktkhai@virtuozzo.com>
----
- include/linux/mm.h |    4 ++--
- mm/mmap.c          |   33 ++++++++++++++++++++++++---------
- mm/mremap.c        |    4 ++--
- 3 files changed, 28 insertions(+), 13 deletions(-)
+v5 --> v6:
+1. give up adding boot option iommu.dma_mode
 
-diff --git a/include/linux/mm.h b/include/linux/mm.h
-index 0e8834ac32b7..afe07e4a76f8 100644
---- a/include/linux/mm.h
-+++ b/include/linux/mm.h
-@@ -2329,8 +2329,8 @@ extern void __vma_link_rb(struct mm_struct *, struct vm_area_struct *,
- 	struct rb_node **, struct rb_node *);
- extern void unlink_file_vma(struct vm_area_struct *);
- extern struct vm_area_struct *copy_vma(struct vm_area_struct **,
--	unsigned long addr, unsigned long len, pgoff_t pgoff,
--	bool *need_rmap_locks);
-+	struct mm_struct *, unsigned long addr, unsigned long len,
-+	pgoff_t pgoff, bool *need_rmap_locks, bool clear_flags_ctx);
- extern void exit_mmap(struct mm_struct *);
- 
- static inline int check_data_rlimit(unsigned long rlim,
-diff --git a/mm/mmap.c b/mm/mmap.c
-index 57803a0a3a5c..99778e724ad1 100644
---- a/mm/mmap.c
-+++ b/mm/mmap.c
-@@ -3195,19 +3195,21 @@ int insert_vm_struct(struct mm_struct *mm, struct vm_area_struct *vma)
- }
- 
- /*
-- * Copy the vma structure to a new location in the same mm,
-- * prior to moving page table entries, to effect an mremap move.
-+ * Copy the vma structure to new location in the same vma
-+ * prior to moving page table entries, to effect an mremap move;
-  */
- struct vm_area_struct *copy_vma(struct vm_area_struct **vmap,
--	unsigned long addr, unsigned long len, pgoff_t pgoff,
--	bool *need_rmap_locks)
-+				struct mm_struct *mm, unsigned long addr,
-+				unsigned long len, pgoff_t pgoff,
-+				bool *need_rmap_locks, bool clear_flags_ctx)
- {
- 	struct vm_area_struct *vma = *vmap;
- 	unsigned long vma_start = vma->vm_start;
--	struct mm_struct *mm = vma->vm_mm;
-+	struct vm_userfaultfd_ctx uctx;
- 	struct vm_area_struct *new_vma, *prev;
- 	struct rb_node **rb_link, *rb_parent;
- 	bool faulted_in_anon_vma = true;
-+	unsigned long flags;
- 
- 	/*
- 	 * If anonymous vma has not yet been faulted, update new pgoff
-@@ -3220,15 +3222,25 @@ struct vm_area_struct *copy_vma(struct vm_area_struct **vmap,
- 
- 	if (find_vma_links(mm, addr, addr + len, &prev, &rb_link, &rb_parent))
- 		return NULL;	/* should never get here */
--	new_vma = vma_merge(mm, prev, addr, addr + len, vma->vm_flags,
--			    vma->anon_vma, vma->vm_file, pgoff, vma_policy(vma),
--			    vma->vm_userfaultfd_ctx);
-+
-+	uctx = vma->vm_userfaultfd_ctx;
-+	flags = vma->vm_flags;
-+	if (clear_flags_ctx) {
-+		uctx = NULL_VM_UFFD_CTX;
-+		flags &= ~(VM_UFFD_MISSING | VM_UFFD_WP | VM_MERGEABLE |
-+			   VM_LOCKED | VM_LOCKONFAULT | VM_WIPEONFORK |
-+			   VM_DONTCOPY);
-+	}
-+
-+	new_vma = vma_merge(mm, prev, addr, addr + len, flags, vma->anon_vma,
-+			    vma->vm_file, pgoff, vma_policy(vma), uctx);
- 	if (new_vma) {
- 		/*
- 		 * Source vma may have been merged into new_vma
- 		 */
- 		if (unlikely(vma_start >= new_vma->vm_start &&
--			     vma_start < new_vma->vm_end)) {
-+			     vma_start < new_vma->vm_end) &&
-+			     vma->vm_mm == mm) {
- 			/*
- 			 * The only way we can get a vma_merge with
- 			 * self during an mremap is if the vma hasn't
-@@ -3249,6 +3261,9 @@ struct vm_area_struct *copy_vma(struct vm_area_struct **vmap,
- 		new_vma = vm_area_dup(vma);
- 		if (!new_vma)
- 			goto out;
-+		new_vma->vm_mm = mm;
-+		new_vma->vm_flags = flags;
-+		new_vma->vm_userfaultfd_ctx = uctx;
- 		new_vma->vm_start = addr;
- 		new_vma->vm_end = addr + len;
- 		new_vma->vm_pgoff = pgoff;
-diff --git a/mm/mremap.c b/mm/mremap.c
-index 37b5b2ad91be..9a96cfc28675 100644
---- a/mm/mremap.c
-+++ b/mm/mremap.c
-@@ -352,8 +352,8 @@ static unsigned long move_vma(struct vm_area_struct *vma,
- 		return err;
- 
- 	new_pgoff = vma->vm_pgoff + ((old_addr - vma->vm_start) >> PAGE_SHIFT);
--	new_vma = copy_vma(&vma, new_addr, new_len, new_pgoff,
--			   &need_rmap_locks);
-+	new_vma = copy_vma(&vma, mm, new_addr, new_len, new_pgoff,
-+			   &need_rmap_locks, false);
- 	if (!new_vma)
- 		return -ENOMEM;
- 
+v4 --> v5:
+As Hanjun and Thomas Gleixner's suggestion:
+1. Keep the old ARCH specific boot options no change.
+2. Keep build option CONFIG_IOMMU_DEFAULT_PASSTHROUGH no change.
+
+v4:
+As Robin Murphy's suggestion:
+"It's also not necessarily obvious to the user how this interacts with
+IOMMU_DEFAULT_PASSTHROUGH, so if we really do go down this route, maybe it
+would be better to refactor the whole lot into a single selection of something
+like IOMMU_DEFAULT_MODE anyway."
+
+In this version, I tried to normalize the IOMMU dma mode boot options for all
+ARCHs. When IOMMU is enabled, there are 3 dma modes: paasthrough(bypass),
+lazy(mapping but defer the IOTLB invalidation), strict. But currently each
+ARCHs defined their private boot options, different with each other. For
+example, to enable/disable "passthrough", ARM64 use iommu.passthrough=1/0,
+X86 use iommu=pt/nopt, PPC/POWERNV use iommu=nobypass.
+
+Zhen Lei (1):
+  iommu: enhance IOMMU dma mode build options
+
+ arch/ia64/kernel/pci-dma.c                |  2 +-
+ arch/powerpc/platforms/powernv/pci-ioda.c |  3 ++-
+ arch/s390/pci/pci_dma.c                   |  2 +-
+ arch/x86/kernel/pci-dma.c                 |  7 ++---
+ drivers/iommu/Kconfig                     | 44 ++++++++++++++++++++++++++-----
+ drivers/iommu/amd_iommu_init.c            |  3 ++-
+ drivers/iommu/intel-iommu.c               |  2 +-
+ drivers/iommu/iommu.c                     |  3 ++-
+ 8 files changed, 48 insertions(+), 18 deletions(-)
+
+-- 
+1.8.3
+
 
