@@ -2,59 +2,62 @@ Return-Path: <SRS0=lq4r=TU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68B62C04AAC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 11:16:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84ACBC04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 11:16:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4441D20815
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 11:16:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 63DD720815
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 11:16:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732567AbfETLQN (ORCPT
+        id S1732584AbfETLQ2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 07:16:13 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:38042 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731202AbfETLQN (ORCPT
+        Mon, 20 May 2019 07:16:28 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:36527 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732569AbfETLQ1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 07:16:13 -0400
-Received: by mail-wm1-f65.google.com with SMTP id t5so11252654wmh.3
-        for <linux-kernel@vger.kernel.org>; Mon, 20 May 2019 04:16:11 -0700 (PDT)
+        Mon, 20 May 2019 07:16:27 -0400
+Received: by mail-wr1-f66.google.com with SMTP id s17so14154640wru.3
+        for <linux-kernel@vger.kernel.org>; Mon, 20 May 2019 04:16:26 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=joIiCM9Da390dnqSoP54tpS0tG+Bp+p+mXE87gw748E=;
-        b=T+Fkz0firzHSS+64c6o2/gEa+XcikMs0dgqC2noEyUSzPWXpHa+37sJhpZApf/mYbr
-         8gdbhm/ponSDWWratvBU/Hsn4M2pofnoBM1EhTT7jFlGFBSWtQnCpA69KJgZPClz0VLR
-         xiOtJEuGRSU5+Thwfr9YIcw8MQqA3Yky77q1AZNF1moeoTM/RqElKGeydXEo7v2mHUjV
-         bpDN6Ii5BSF+GbbfX0dwW+MhM35jnMKK4hdnyKkdK7jge0SEAGJ0VljX28xaa2pVYHlN
-         h2UM62LNipDVKlTBLD9TnZ1GuBFh2BGGcZ3SO+vz9eZlDwatxFlm/EDWRbfDDv3+MrNb
-         gPdQ==
-X-Gm-Message-State: APjAAAWb4BgVzINzGTFd6VjRRmwXIw1dGUjREW74pKMLnKCQxqfqtkxS
-        m/FbA5eG3pF3X1XjGyjDXer0rDSLslzq+w==
-X-Google-Smtp-Source: APXvYqyo1i1kPklnr6KsI6wSgJSXhrXqQ6p4hIqkFEkF+YY5nU2Do9SqZs7IX79zGuSbDXRK04IEWQ==
-X-Received: by 2002:a1c:48d7:: with SMTP id v206mr10674778wma.152.1558350971238;
-        Mon, 20 May 2019 04:16:11 -0700 (PDT)
+        bh=ZxAda8y+Lw5w6X737KJdEPUh+wkc1U8IjaEMWE3lVAU=;
+        b=eTNCxaS2fiukbRm1IuMBGwKEV6E5hABTE6gCZZURcfa4v7re/76LAu3LjmuF8IrD6s
+         ME/3WG0vK4QOx1l8u/3dBylKA0bf+18FOQce+GUL77daNX3i8Jmwip77Y/KsYyPuAFlT
+         r7xj9hJ8YnIfVmh2a9TgOkEtnOiYb48y/UwTQBeY54Ub1d5nTCA335sOl4bN72EyiReD
+         S22VAZvkobZZfStMFXnl5eaePCoCRH7mUB32gu4rHAdsX/Zx+f4RcIB2AXFb1Y8shB1c
+         cT666VT25HmKOBbgY+rM56GX/Iljfsg25yvUqgK42XQLZpJZzXwuGexv4Zi5mlIF32oJ
+         ZDNA==
+X-Gm-Message-State: APjAAAVrq5QM7ADh0S6tf+2WWHFz0AIAJpXbBKIAoU1w61fpmE3qeYyP
+        5lBQe9i57i/yrD8MD7kRNebNtwM5pKWKFQ==
+X-Google-Smtp-Source: APXvYqxKv0sQ2iquFAoDIXnp3sduGK6TezmZvrJwiMji2N1+QfUnBhmOkknC6pCZTEflbhnzO3ZTiQ==
+X-Received: by 2002:adf:dc04:: with SMTP id t4mr41535607wri.126.1558350985398;
+        Mon, 20 May 2019 04:16:25 -0700 (PDT)
 Received: from ?IPv6:2001:b07:6468:f312:ac04:eef9:b257:b844? ([2001:b07:6468:f312:ac04:eef9:b257:b844])
-        by smtp.gmail.com with ESMTPSA id y17sm14693790wrp.70.2019.05.20.04.16.10
+        by smtp.gmail.com with ESMTPSA id 91sm25337283wrs.43.2019.05.20.04.16.24
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 20 May 2019 04:16:10 -0700 (PDT)
-Subject: Re: [PATCH v4 0/5] KVM: LAPIC: Optimize timer latency further
-To:     Wanpeng Li <kernellwp@gmail.com>, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org
-Cc:     =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>
-References: <1558340289-6857-1-git-send-email-wanpengli@tencent.com>
+        Mon, 20 May 2019 04:16:24 -0700 (PDT)
+Subject: Re: [PATCH] KVM: selftests: Remove duplicated TEST_ASSERT in
+ hyperv_cpuid.c
+To:     Thomas Huth <thuth@redhat.com>,
+        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>
+Cc:     Shuah Khan <shuah@kernel.org>, linux-kselftest@vger.kernel.org,
+        kvm@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20190520105511.12471-1-thuth@redhat.com>
 From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <e6e28a3f-bda7-342c-dc28-5dc899b6fa02@redhat.com>
-Date:   Mon, 20 May 2019 13:16:09 +0200
+Message-ID: <8402b29a-6be4-b123-eb14-80b3fa8d8080@redhat.com>
+Date:   Mon, 20 May 2019 13:16:23 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <1558340289-6857-1-git-send-email-wanpengli@tencent.com>
+In-Reply-To: <20190520105511.12471-1-thuth@redhat.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -63,52 +66,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 20/05/19 10:18, Wanpeng Li wrote:
-> Advance lapic timer tries to hidden the hypervisor overhead between the 
-> host emulated timer fires and the guest awares the timer is fired. However, 
-> it just hidden the time between apic_timer_fn/handle_preemption_timer -> 
-> wait_lapic_expire, instead of the real position of vmentry which is 
-> mentioned in the orignial commit d0659d946be0 ("KVM: x86: add option to 
-> advance tscdeadline hrtimer expiration"). There is 700+ cpu cycles between 
-> the end of wait_lapic_expire and before world switch on my haswell desktop.
+On 20/05/19 12:55, Thomas Huth wrote:
+> The check for entry->index == 0 is done twice. One time should
+> be sufficient.
 > 
-> This patchset tries to narrow the last gap(wait_lapic_expire -> world switch), 
-> it takes the real overhead time between apic_timer_fn/handle_preemption_timer
-> and before world switch into consideration when adaptively tuning timer 
-> advancement. The patchset can reduce 40% latency (~1600+ cycles to ~1000+ 
-> cycles on a haswell desktop) for kvm-unit-tests/tscdeadline_latency when 
-> testing busy waits.
+> Suggested-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+> Signed-off-by: Thomas Huth <thuth@redhat.com>
+> ---
+>  Vitaly already noticed this in his review to the "Fix a condition
+>  in test_hv_cpuid()" patch a couple of days ago, but so far I haven't
+>  seen any patch yet on the list that fixes this ... if I missed it
+>  instead, please simply ignore this patch.
 > 
-> v3 -> v4:
->  * create timer_advance_ns debugfs entry iff lapic_in_kernel() 
->  * keep if (guest_tsc < tsc_deadline) before the call to __wait_lapic_expire()
+>  tools/testing/selftests/kvm/x86_64/hyperv_cpuid.c | 3 ---
+>  1 file changed, 3 deletions(-)
 > 
-> v2 -> v3:
->  * expose 'kvm_timer.timer_advance_ns' to userspace
->  * move the tracepoint below guest_exit_irqoff()
->  * move wait_lapic_expire() before flushing the L1
-> 
-> v1 -> v2:
->  * fix indent in patch 1/4
->  * remove the wait_lapic_expire() tracepoint and expose by debugfs
->  * move the call to wait_lapic_expire() into vmx.c and svm.c
-> 
-> Wanpeng Li (5):
->   KVM: LAPIC: Extract adaptive tune timer advancement logic
->   KVM: LAPIC: Fix lapic_timer_advance_ns parameter overflow
->   KVM: LAPIC: Expose per-vCPU timer_advance_ns to userspace
->   KVM: LAPIC: Delay trace advance expire delta
->   KVM: LAPIC: Optimize timer latency further
-> 
->  arch/x86/kvm/debugfs.c | 18 +++++++++++++++
->  arch/x86/kvm/lapic.c   | 60 +++++++++++++++++++++++++++++---------------------
->  arch/x86/kvm/lapic.h   |  3 ++-
->  arch/x86/kvm/svm.c     |  4 ++++
->  arch/x86/kvm/vmx/vmx.c |  4 ++++
->  arch/x86/kvm/x86.c     |  9 ++++----
->  6 files changed, 68 insertions(+), 30 deletions(-)
+> diff --git a/tools/testing/selftests/kvm/x86_64/hyperv_cpuid.c b/tools/testing/selftests/kvm/x86_64/hyperv_cpuid.c
+> index 9a21e912097c..8bdf1e7da6cc 100644
+> --- a/tools/testing/selftests/kvm/x86_64/hyperv_cpuid.c
+> +++ b/tools/testing/selftests/kvm/x86_64/hyperv_cpuid.c
+> @@ -52,9 +52,6 @@ static void test_hv_cpuid(struct kvm_cpuid2 *hv_cpuid_entries,
+>  		TEST_ASSERT(entry->index == 0,
+>  			    ".index field should be zero");
+>  
+> -		TEST_ASSERT(entry->index == 0,
+> -			    ".index field should be zero");
+> -
+>  		TEST_ASSERT(entry->flags == 0,
+>  			    ".flags field should be zero");
+>  
 > 
 
-Queued, thanks (2-3 for 5.2, the rest for 5.3).
+Queued, thanks.
 
 Paolo
