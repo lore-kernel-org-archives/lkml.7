@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5946C04AAC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:26:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E1CAC04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:26:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7AA1320675
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:26:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2450420645
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:26:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558355208;
-	bh=qi3DML8mlDtblN7UzD5EbLiMc/EJcxvDlyuGK638yVc=;
+	s=default; t=1558355213;
+	bh=brbknLHE7yJVvOZb/Zphk7t5bwLxvePh41BHFAzt/wg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=oNI0G60y4FnEPfAc3Ud+CrHPaT9qhISn2qugmYAG7Z42BJ1LxNf1Pbkdd9CGflSKJ
-	 ykWWwD8nYZKsC4XR9FX5OlcGkeg/ffodALlvHGJWRSa8y5oFKUJQtxyvMl78DSDyB9
-	 8sE5lOilBz//2y1vIemdaumHRkCfb4cVlYrHiIyk=
+	b=W7/5ybfh0qJdbFKsI+cYv1VRkWDrGUcVQUBllgtyltspzPpMfmBazS/AgsozfHPdZ
+	 /hTgDBeAxF7GQDNfiosj8pYKOrGj317p2qN0B+dqXEXh634il+GaidsjrKr4te+TiQ
+	 oMelsJUmrCF5UGaXAr4jUIVT7KOMN2KMN5ca0y+s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389358AbfETM0p (ORCPT
+        id S2389420AbfETM0w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 08:26:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42138 "EHLO mail.kernel.org"
+        Mon, 20 May 2019 08:26:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42300 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389344AbfETM0m (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 08:26:42 -0400
+        id S2388327AbfETM0u (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 08:26:50 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 85B0020815;
-        Mon, 20 May 2019 12:26:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 68DA720675;
+        Mon, 20 May 2019 12:26:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558355202;
-        bh=qi3DML8mlDtblN7UzD5EbLiMc/EJcxvDlyuGK638yVc=;
+        s=default; t=1558355209;
+        bh=brbknLHE7yJVvOZb/Zphk7t5bwLxvePh41BHFAzt/wg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0m1Olg0hJZpMdfjwJIuRrxuWbB9s08G5dfPYYuQbu/fU5UUbhMCAqD9vLAx0Ji5GL
-         CzbOpkFYmSK8ZF4D+ytRKbXUp1U7ogwIeP+zsPFVTGJeyqMOgl3/R611O+PlCr5fgz
-         jLXDwGVWHq2KIF7R/N5iZM7ruxj3dAZUbMWZATFM=
+        b=EmSEeyhNObya5M3opRsnWlvuk6rfCMfin7VKy1QYq/Rc+u+eIeQ/6wPDXiX5jVeJQ
+         ThL8oK2OgPgJ8jSfXOpPVdUrbHu3xm63Oni9u39+bYL1TrhmTRdsPo7KGyLC4RBBsf
+         +phVWG446rKQe5MimwqYL/wuUeWidf02du23Et9w=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Martin Willi <martin@strongswan.org>,
-        Eric Biggers <ebiggers@google.com>,
+        stable@vger.kernel.org, Eric Biggers <ebiggers@google.com>,
         Herbert Xu <herbert@gondor.apana.org.au>
-Subject: [PATCH 5.0 030/123] crypto: chacha20poly1305 - set cra_name correctly
-Date:   Mon, 20 May 2019 14:13:30 +0200
-Message-Id: <20190520115246.776602032@linuxfoundation.org>
+Subject: [PATCH 5.0 033/123] crypto: skcipher - dont WARN on unprocessed data after slow walk step
+Date:   Mon, 20 May 2019 14:13:33 +0200
+Message-Id: <20190520115246.953350788@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190520115245.439864225@linuxfoundation.org>
 References: <20190520115245.439864225@linuxfoundation.org>
@@ -62,44 +61,54 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Eric Biggers <ebiggers@google.com>
 
-commit 5e27f38f1f3f45a0c938299c3a34a2d2db77165a upstream.
+commit dcaca01a42cc2c425154a13412b4124293a6e11e upstream.
 
-If the rfc7539 template is instantiated with specific implementations,
-e.g. "rfc7539(chacha20-generic,poly1305-generic)" rather than
-"rfc7539(chacha20,poly1305)", then the implementation names end up
-included in the instance's cra_name.  This is incorrect because it then
-prevents all users from allocating "rfc7539(chacha20,poly1305)", if the
-highest priority implementations of chacha20 and poly1305 were selected.
-Also, the self-tests aren't run on an instance allocated in this way.
+skcipher_walk_done() assumes it's a bug if, after the "slow" path is
+executed where the next chunk of data is processed via a bounce buffer,
+the algorithm says it didn't process all bytes.  Thus it WARNs on this.
 
-Fix it by setting the instance's cra_name from the underlying
-algorithms' actual cra_names, rather than from the requested names.
-This matches what other templates do.
+However, this can happen legitimately when the message needs to be
+evenly divisible into "blocks" but isn't, and the algorithm has a
+'walksize' greater than the block size.  For example, ecb-aes-neonbs
+sets 'walksize' to 128 bytes and only supports messages evenly divisible
+into 16-byte blocks.  If, say, 17 message bytes remain but they straddle
+scatterlist elements, the skcipher_walk code will take the "slow" path
+and pass the algorithm all 17 bytes in the bounce buffer.  But the
+algorithm will only be able to process 16 bytes, triggering the WARN.
 
-Fixes: 71ebc4d1b27d ("crypto: chacha20poly1305 - Add a ChaCha20-Poly1305 AEAD construction, RFC7539")
-Cc: <stable@vger.kernel.org> # v4.2+
-Cc: Martin Willi <martin@strongswan.org>
+Fix this by just removing the WARN_ON().  Returning -EINVAL, as the code
+already does, is the right behavior.
+
+This bug was detected by my patches that improve testmgr to fuzz
+algorithms against their generic implementation.
+
+Fixes: b286d8b1a690 ("crypto: skcipher - Add skcipher walk interface")
+Cc: <stable@vger.kernel.org> # v4.10+
 Signed-off-by: Eric Biggers <ebiggers@google.com>
-Reviewed-by: Martin Willi <martin@strongswan.org>
 Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- crypto/chacha20poly1305.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ crypto/skcipher.c |    9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
 
---- a/crypto/chacha20poly1305.c
-+++ b/crypto/chacha20poly1305.c
-@@ -645,8 +645,8 @@ static int chachapoly_create(struct cryp
- 
- 	err = -ENAMETOOLONG;
- 	if (snprintf(inst->alg.base.cra_name, CRYPTO_MAX_ALG_NAME,
--		     "%s(%s,%s)", name, chacha_name,
--		     poly_name) >= CRYPTO_MAX_ALG_NAME)
-+		     "%s(%s,%s)", name, chacha->base.cra_name,
-+		     poly->cra_name) >= CRYPTO_MAX_ALG_NAME)
- 		goto out_drop_chacha;
- 	if (snprintf(inst->alg.base.cra_driver_name, CRYPTO_MAX_ALG_NAME,
- 		     "%s(%s,%s)", name, chacha->base.cra_driver_name,
+--- a/crypto/skcipher.c
++++ b/crypto/skcipher.c
+@@ -131,8 +131,13 @@ unmap_src:
+ 		memcpy(walk->dst.virt.addr, walk->page, n);
+ 		skcipher_unmap_dst(walk);
+ 	} else if (unlikely(walk->flags & SKCIPHER_WALK_SLOW)) {
+-		if (WARN_ON(err)) {
+-			/* unexpected case; didn't process all bytes */
++		if (err) {
++			/*
++			 * Didn't process all bytes.  Either the algorithm is
++			 * broken, or this was the last step and it turned out
++			 * the message wasn't evenly divisible into blocks but
++			 * the algorithm requires it.
++			 */
+ 			err = -EINVAL;
+ 			goto finish;
+ 		}
 
 
