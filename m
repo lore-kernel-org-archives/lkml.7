@@ -2,122 +2,136 @@ Return-Path: <SRS0=lq4r=TU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18C61C04AAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 06:01:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F7CCC04AAF
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 06:01:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E415320851
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 06:01:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="k9As9qmF"
+	by mail.kernel.org (Postfix) with ESMTP id E4D9020815
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 06:01:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730625AbfETGBd (ORCPT
+        id S1730609AbfETGB3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 02:01:33 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:47976 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730601AbfETGB2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 02:01:28 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
-        :Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From
-        :Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=7XG0CR8rXFGKLDoAnf1Xhj1EcOKcWYxeNKVpLjEGuFk=; b=k9As9qmFWGprOKwcOoeRUyICjh
-        VxG6v4+kZC3yNMXZ+iiB7uJI8f/kBGYSajtsD93hlgz6RGruFOahknKfoaTAuMMCI44FgVGVa4iw0
-        5KViSMdMwOoC3rP6+qUfBIzAFcEupXzXZlOOVXORZokRn6D8xehQO4c+G0WqxUFSQ1RLmfIQH2Xy3
-        cQh0VuOZi0wL2gC85uQZSpVF0Ly8kBE8bp166g0s+EltRpK9zhPTL/en3zR7x9hf5aygr0Ed87WLl
-        thZ1ea4O6uwxfmwN+K3bGJbZL8BX49Dg09dE9kOTISsxbDx6Dkre7Vw54gHG4RUcMh9TrXywCAUQn
-        vyGICxmA==;
-Received: from 089144206147.atnat0015.highway.bob.at ([89.144.206.147] helo=localhost)
-        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hSbMP-0001dD-FP; Mon, 20 May 2019 06:01:21 +0000
-From:   Christoph Hellwig <hch@lst.de>
-To:     Oleg Nesterov <oleg@redhat.com>, Arnd Bergmann <arnd@arndb.de>
-Cc:     x86@kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mips@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-sh@vger.kernel.org, linux-arch@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Ingo Molnar <mingo@kernel.org>
-Subject: [PATCH 4/5] x86: don't use asm-generic/ptrace.h
-Date:   Mon, 20 May 2019 08:00:17 +0200
-Message-Id: <20190520060018.25569-5-hch@lst.de>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190520060018.25569-1-hch@lst.de>
-References: <20190520060018.25569-1-hch@lst.de>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+        Mon, 20 May 2019 02:01:29 -0400
+Received: from inva021.nxp.com ([92.121.34.21]:59294 "EHLO inva021.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730578AbfETGBX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 02:01:23 -0400
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 6052120016C;
+        Mon, 20 May 2019 08:01:21 +0200 (CEST)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 91E6D200188;
+        Mon, 20 May 2019 08:01:15 +0200 (CEST)
+Received: from titan.ap.freescale.net (TITAN.ap.freescale.net [10.192.208.233])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 39802402DF;
+        Mon, 20 May 2019 14:01:08 +0800 (SGT)
+From:   Xiaowei Bao <xiaowei.bao@nxp.com>
+To:     robh+dt@kernel.org, mark.rutland@arm.com, benh@kernel.crashing.org,
+        paulus@samba.org, mpe@ellerman.id.au, devicetree@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        minghuan.lian@nxp.com, mingkai.hu@nxp.com, zhiqiang.hou@nxp.com,
+        leoyang.li@nxp.com
+Cc:     Xiaowei Bao <xiaowei.bao@nxp.com>
+Subject: [PATCH] powerpc: dts: Fix the bug that intx interrupt not work in P1010RDB-PB
+Date:   Mon, 20 May 2019 13:53:08 +0800
+Message-Id: <20190520055308.43907-1-xiaowei.bao@nxp.com>
+X-Mailer: git-send-email 2.14.1
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Doing the indirection through macros for the regs accessors just
-makes them harder to read, so implement the helpers directly.
+Due to the INTA is shared with the active-low PHY2 interrupt on P1010RDB-PA
+board, so configure P1010RDB-PA's INTA with polarity as active-low, the
+P1010RDB-PB board is used separately, so configure P1010RDB-PB's INTA with
+polarity as active-high.
+The INTX in P1010RDB-PB do not work because of the pcie@0 node fixup will be
+overwrited by p1010si-post.dtsi file, so we move the pcie@0 node fixup to
+p1010rdb-pb.dts and p1010rdb-pb_36b.dts.
 
-Note that only the helpers actually used are implemented now.
-
-Signed-off-by: Christoph Hellwig <hch@lst.de>
-Acked-by: Ingo Molnar <mingo@kernel.org>
+Signed-off-by: Xiaowei Bao <xiaowei.bao@nxp.com>
 ---
- arch/x86/include/asm/ptrace.h | 30 +++++++++++++++++++++++++-----
- 1 file changed, 25 insertions(+), 5 deletions(-)
+ arch/powerpc/boot/dts/fsl/p1010rdb-pb.dts     |   16 ++++++++++++++++
+ arch/powerpc/boot/dts/fsl/p1010rdb-pb_36b.dts |   16 ++++++++++++++++
+ arch/powerpc/boot/dts/fsl/p1010rdb.dtsi       |   16 ----------------
+ 3 files changed, 32 insertions(+), 16 deletions(-)
 
-diff --git a/arch/x86/include/asm/ptrace.h b/arch/x86/include/asm/ptrace.h
-index 8a7fc0cca2d1..e22816e865ca 100644
---- a/arch/x86/include/asm/ptrace.h
-+++ b/arch/x86/include/asm/ptrace.h
-@@ -98,7 +98,6 @@ struct cpuinfo_x86;
- struct task_struct;
+diff --git a/arch/powerpc/boot/dts/fsl/p1010rdb-pb.dts b/arch/powerpc/boot/dts/fsl/p1010rdb-pb.dts
+index 37681fd..6d75e5f 100644
+--- a/arch/powerpc/boot/dts/fsl/p1010rdb-pb.dts
++++ b/arch/powerpc/boot/dts/fsl/p1010rdb-pb.dts
+@@ -33,3 +33,19 @@
+ };
  
- extern unsigned long profile_pc(struct pt_regs *regs);
--#define profile_pc profile_pc
- 
- extern unsigned long
- convert_ip_to_linear(struct task_struct *child, struct pt_regs *regs);
-@@ -175,11 +174,32 @@ static inline unsigned long kernel_stack_pointer(struct pt_regs *regs)
- }
- #endif
- 
--#define GET_IP(regs) ((regs)->ip)
--#define GET_FP(regs) ((regs)->bp)
--#define GET_USP(regs) ((regs)->sp)
-+static inline unsigned long instruction_pointer(struct pt_regs *regs)
-+{
-+	return regs->ip;
-+}
+ /include/ "p1010si-post.dtsi"
 +
-+static inline void instruction_pointer_set(struct pt_regs *regs,
-+		unsigned long val)
-+{
-+	regs->ip = val;
-+}
-+
-+static inline unsigned long frame_pointer(struct pt_regs *regs)
-+{
-+	return regs->bp;
-+}
++&pci0 {
++	pcie@0 {
++		interrupt-map = <
++			/* IDSEL 0x0 */
++			/*
++			 *irq[4:5] are active-high
++			 *irq[6:7] are active-low
++			 */
++			0000 0x0 0x0 0x1 &mpic 0x4 0x2 0x0 0x0
++			0000 0x0 0x0 0x2 &mpic 0x5 0x2 0x0 0x0
++			0000 0x0 0x0 0x3 &mpic 0x6 0x1 0x0 0x0
++			0000 0x0 0x0 0x4 &mpic 0x7 0x1 0x0 0x0
++			>;
++	};
++};
+diff --git a/arch/powerpc/boot/dts/fsl/p1010rdb-pb_36b.dts b/arch/powerpc/boot/dts/fsl/p1010rdb-pb_36b.dts
+index 4cf255f..8359035 100644
+--- a/arch/powerpc/boot/dts/fsl/p1010rdb-pb_36b.dts
++++ b/arch/powerpc/boot/dts/fsl/p1010rdb-pb_36b.dts
+@@ -56,3 +56,19 @@
+ };
  
--#include <asm-generic/ptrace.h>
-+static inline unsigned long user_stack_pointer(struct pt_regs *regs)
-+{
-+	return regs->sp;
-+}
+ /include/ "p1010si-post.dtsi"
 +
-+static inline void user_stack_pointer_set(struct pt_regs *regs,
-+		unsigned long val)
-+{
-+	regs->sp = val;
-+}
- 
- /* Query offset/name of register from its name/offset */
- extern int regs_query_register_offset(const char *name);
++&pci0 {
++	pcie@0 {
++		interrupt-map = <
++			/* IDSEL 0x0 */
++			/*
++			 *irq[4:5] are active-high
++			 *irq[6:7] are active-low
++			 */
++			0000 0x0 0x0 0x1 &mpic 0x4 0x2 0x0 0x0
++			0000 0x0 0x0 0x2 &mpic 0x5 0x2 0x0 0x0
++			0000 0x0 0x0 0x3 &mpic 0x6 0x1 0x0 0x0
++			0000 0x0 0x0 0x4 &mpic 0x7 0x1 0x0 0x0
++			>;
++	};
++};
+diff --git a/arch/powerpc/boot/dts/fsl/p1010rdb.dtsi b/arch/powerpc/boot/dts/fsl/p1010rdb.dtsi
+index 2ca9cee..ef49a7d 100644
+--- a/arch/powerpc/boot/dts/fsl/p1010rdb.dtsi
++++ b/arch/powerpc/boot/dts/fsl/p1010rdb.dtsi
+@@ -215,19 +215,3 @@
+ 		phy-connection-type = "sgmii";
+ 	};
+ };
+-
+-&pci0 {
+-	pcie@0 {
+-		interrupt-map = <
+-			/* IDSEL 0x0 */
+-			/*
+-			 *irq[4:5] are active-high
+-			 *irq[6:7] are active-low
+-			 */
+-			0000 0x0 0x0 0x1 &mpic 0x4 0x2 0x0 0x0
+-			0000 0x0 0x0 0x2 &mpic 0x5 0x2 0x0 0x0
+-			0000 0x0 0x0 0x3 &mpic 0x6 0x1 0x0 0x0
+-			0000 0x0 0x0 0x4 &mpic 0x7 0x1 0x0 0x0
+-			>;
+-	};
+-};
 -- 
-2.20.1
+1.7.1
 
