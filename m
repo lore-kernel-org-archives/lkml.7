@@ -2,56 +2,87 @@ Return-Path: <SRS0=lq4r=TU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBEBEC04E87
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 08:08:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3518C072A4
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 08:09:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 910A62081C
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 08:08:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7995020856
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 08:09:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="I2Lnt/Wt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731211AbfETIIV (ORCPT
+        id S1730504AbfETIJo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 04:08:21 -0400
-Received: from ivanoab6.miniserver.com ([5.153.251.140]:58424 "EHLO
-        www.kot-begemot.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727720AbfETIIU (ORCPT
+        Mon, 20 May 2019 04:09:44 -0400
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:45822 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728000AbfETIJn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 04:08:20 -0400
-Received: from [192.168.17.6] (helo=jain.kot-begemot.co.uk)
-        by www.kot-begemot.co.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <anton.ivanov@cambridgegreys.com>)
-        id 1hSdL2-0002PP-9N; Mon, 20 May 2019 08:08:04 +0000
-Received: from jain.kot-begemot.co.uk ([192.168.3.3])
-        by jain.kot-begemot.co.uk with esmtp (Exim 4.89)
-        (envelope-from <anton.ivanov@cambridgegreys.com>)
-        id 1hSdKz-0007w1-OP; Mon, 20 May 2019 09:08:03 +0100
-Subject: Re: [PATCH] x86: Hide the int3_emulate_call/jmp functions from UML
-To:     Steven Rostedt <rostedt@goodmis.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Jiri Kosina <jkosina@suse.cz>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Jeff Dike <jdike@addtoit.com>,
-        Richard Weinberger <richard@nod.at>,
-        linux-um@lists.infradead.org
-References: <20190511083954.23a60052@gandalf.local.home>
-From:   Anton Ivanov <anton.ivanov@cambridgegreys.com>
-Message-ID: <41bc0b7b-9f51-6a10-6182-811163aa0890@cambridgegreys.com>
-Date:   Mon, 20 May 2019 09:08:01 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+        Mon, 20 May 2019 04:09:43 -0400
+Received: by mail-ed1-f66.google.com with SMTP id g57so22431273edc.12
+        for <linux-kernel@vger.kernel.org>; Mon, 20 May 2019 01:09:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=broadcom.com; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=hKt31xD+Dl8MzM54WFXgU95OQA9AwS6wGbeoPpSKfXE=;
+        b=I2Lnt/WtkJjDLrDgWSYRJHdM95JskcT/jxH9QckQMcj/7PmrJgwgQz6Q6ftoKRwTZ9
+         9vCkHGOEX5MxLnlEtV98FPcLqUiMFStugzKSpO0A48EXDefeXgWbIHhMTwzBSzmXikZ5
+         CPJXahNcXca0FGjVF22eGZbd6XPVxBMapmwYg=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=hKt31xD+Dl8MzM54WFXgU95OQA9AwS6wGbeoPpSKfXE=;
+        b=aunoPYy6sPNQL3Uf+5s2UBJztYMJ0fJXn1t9dk6p+jaEFcfk5DhiFWcbLGuUzpi8/j
+         AnqVqSGrjdj6s8M2tajCyg3mRQ2JZy8aAQjFfq6PUfysvdiYwA0ZI+EfuNnIAA3aobq9
+         T9M3644MxU1pwu4TjIm5jNpAnyUtRN4UHFrRm6lhJZwlQxq+g1+yMqs1ZTGYalJWU5tN
+         klOBN9AElGAMiFiMgrrKt/nSd5RL8DFTE5WWpA1msXYFdqFsxcH2D/4nNkE2KnwD6/II
+         amJNYEekElmt86UfVifK1AZ4eu2d7AJxfgEwTBgXSCnGsYpGY72H3E5OtGjwHA7rAHig
+         z6ig==
+X-Gm-Message-State: APjAAAVPfPQY/Wh4rCPEM051VEz+pHcCFr/9zvPOKH5W71SUIwF58kKM
+        rp5NMDjcHurkI48ODAR4LdJM9bKYHwccig==
+X-Google-Smtp-Source: APXvYqyzT9sszHOtK0V/iwAwNW8LGsXi2uW7QI5DTUVDOy96+wSa9nUb5iDqOpm++yl3P0LW/Icifw==
+X-Received: by 2002:aa7:c4d2:: with SMTP id p18mr73940804edr.232.1558339782382;
+        Mon, 20 May 2019 01:09:42 -0700 (PDT)
+Received: from [10.176.68.125] ([192.19.248.250])
+        by smtp.gmail.com with ESMTPSA id x22sm5441295edd.59.2019.05.20.01.09.40
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 20 May 2019 01:09:41 -0700 (PDT)
+Subject: Re: [PATCH 1/3] brcmfmac: re-enable command decode in sdio_aos for
+ BRCM 4354
+To:     Douglas Anderson <dianders@chromium.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Adrian Hunter <adrian.hunter@intel.com>
+Cc:     linux-rockchip@lists.infradead.org,
+        Double Lo <double.lo@cypress.com>, briannorris@chromium.org,
+        Madhan Mohan R <madhanmohan.r@cypress.com>, mka@chromium.org,
+        Wright Feng <wright.feng@cypress.com>,
+        Chi-Hsien Lin <chi-hsien.lin@cypress.com>,
+        brcm80211-dev-list.pdl@broadcom.com,
+        Franky Lin <franky.lin@broadcom.com>, netdev@vger.kernel.org,
+        linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Hante Meuleman <hante.meuleman@broadcom.com>,
+        Naveen Gupta <naveen.gupta@cypress.com>,
+        brcm80211-dev-list@cypress.com, YueHaibing <yuehaibing@huawei.com>,
+        "David S. Miller" <davem@davemloft.net>
+References: <20190517225420.176893-1-dianders@chromium.org>
+ <20190517225420.176893-2-dianders@chromium.org>
+From:   Arend Van Spriel <arend.vanspriel@broadcom.com>
+Message-ID: <e3f54bcb-8d10-1336-1458-2bd11cfc1010@broadcom.com>
+Date:   Mon, 20 May 2019 10:09:39 +0200
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
  Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <20190511083954.23a60052@gandalf.local.home>
+In-Reply-To: <20190517225420.176893-2-dianders@chromium.org>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Clacks-Overhead: GNU Terry Pratchett
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -59,49 +90,32 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 
 
-On 11/05/2019 13:39, Steven Rostedt wrote:
+On 5/18/2019 12:54 AM, Douglas Anderson wrote:
+> In commit 29f6589140a1 ("brcmfmac: disable command decode in
+> sdio_aos") we disabled something called "command decode in sdio_aos"
+> for a whole bunch of Broadcom SDIO WiFi parts.
 > 
-> From: "Steven Rostedt (VMware)" <rostedt@goodmis.org>
+> After that patch landed I find that my kernel log on
+> rk3288-veyron-minnie and rk3288-veyron-speedy is filled with:
+>    brcmfmac: brcmf_sdio_bus_sleep: error while changing bus sleep state -110
 > 
-> User Mode Linux does not have access to the ip or sp fields of the
-> pt_regs, and accessing them causes UML to fail to build. Hide the
-> int3_emulate_jmp() and int3_emulate_call() instructions from UML, as it
-> doesn't need them anyway.
-> 
-> Reported-by: kbuild test robot <lkp@intel.com>
-> Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
-> ---
-> 
-> [ I added this to my queue to test too ]
-> 
->   arch/x86/include/asm/text-patching.h | 4 +++-
->   1 file changed, 3 insertions(+), 1 deletion(-)
-> 
-> diff --git a/arch/x86/include/asm/text-patching.h
-> b/arch/x86/include/asm/text-patching.h index 05861cc08787..0bbb07eaed6b
-> 100644 --- a/arch/x86/include/asm/text-patching.h
-> +++ b/arch/x86/include/asm/text-patching.h
-> @@ -39,6 +39,7 @@ extern int poke_int3_handler(struct pt_regs *regs);
->   extern void *text_poke_bp(void *addr, const void *opcode, size_t len,
-> void *handler); extern int after_bootmem;
->   
-> +#ifndef CONFIG_UML_X86
->   static inline void int3_emulate_jmp(struct pt_regs *regs, unsigned
-> long ip) {
->   	regs->ip = ip;
-> @@ -65,6 +66,7 @@ static inline void int3_emulate_call(struct pt_regs
-> *regs, unsigned long func) int3_emulate_push(regs, regs->ip -
-> INT3_INSN_SIZE + CALL_INSN_SIZE); int3_emulate_jmp(regs, func);
->   }
-> -#endif
-> +#endif /* CONFIG_X86_64 */
-> +#endif /* !CONFIG_UML_X86 */
->   
->   #endif /* _ASM_X86_TEXT_PATCHING_H */
-> 
-The patch has been garbled by an auto-wrap. Can you resend it please.
+> This seems to happen every time the Broadcom WiFi transitions out of
+> sleep mode.  Reverting the part of the commit that affects the WiFi on
+> my boards fixes the problem for me, so that's what this patch does.
 
--- 
-Anton R. Ivanov
-Cambridgegreys Limited. Registered in England. Company Number 10273661
-https://www.cambridgegreys.com/
+This sounds very similar to the issue we had during integration of wifi 
+on rk3288 chromebooks years ago.
+
+> Note that, in general, the justification in the original commit seemed
+> a little weak.  It looked like someone was testing on a SD card
+> controller that would sometimes die if there were CRC errors on the
+> bus.  This used to happen back in early days of dw_mmc (the controller
+> on my boards), but we fixed it.  Disabling a feature on all boards
+> just because one SD card controller is broken seems bad.  ...so
+> instead of just this patch possibly the right thing to do is to fully
+> revert the original commit.
+
+I am leaning towards a full revert, but let's wait for more background info.
+
+Regards,
+Arend
