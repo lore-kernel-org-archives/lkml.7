@@ -2,93 +2,83 @@ Return-Path: <SRS0=lq4r=TU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE162C04AAC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 13:18:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7E9FC04E87
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 13:20:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CC53A20815
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 13:18:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8CE4F20815
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 13:20:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387929AbfETNSv (ORCPT
+        id S2387968AbfETNUJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 09:18:51 -0400
-Received: from relay5-d.mail.gandi.net ([217.70.183.197]:39103 "EHLO
-        relay5-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727319AbfETNSu (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 09:18:50 -0400
-X-Originating-IP: 90.88.22.185
-Received: from localhost (aaubervilliers-681-1-80-185.w90-88.abo.wanadoo.fr [90.88.22.185])
-        (Authenticated sender: maxime.ripard@bootlin.com)
-        by relay5-d.mail.gandi.net (Postfix) with ESMTPSA id F2F5F1C0013;
-        Mon, 20 May 2019 13:18:46 +0000 (UTC)
-Date:   Mon, 20 May 2019 15:18:46 +0200
-From:   Maxime Ripard <maxime.ripard@bootlin.com>
-To:     Rob Herring <robh@kernel.org>
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] dt-bindings: Convert vendor prefixes to json-schema
-Message-ID: <20190520131846.tqx7h7sjyw6sgka5@flea>
-References: <20190510194018.28206-1-robh@kernel.org>
+        Mon, 20 May 2019 09:20:09 -0400
+Received: from foss.arm.com ([217.140.101.70]:45734 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727319AbfETNUJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 09:20:09 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 00BC880D;
+        Mon, 20 May 2019 06:20:09 -0700 (PDT)
+Received: from [10.1.196.50] (e108454-lin.cambridge.arm.com [10.1.196.50])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id BF2183F5AF;
+        Mon, 20 May 2019 06:20:07 -0700 (PDT)
+Subject: Re: [PATCH 1/3] firmware: qcom_scm: Use proper types for dma mappings
+To:     Ian Jackson <ian.jackson@citrix.com>,
+        Stephen Boyd <swboyd@chromium.org>
+Cc:     Andy Gross <agross@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Avaneesh Kumar Dwivedi <akdwived@codeaurora.org>
+References: <23774.56553.445601.436491@mariner.uk.xensource.com>
+ <20190517210923.202131-2-swboyd@chromium.org>
+ <23778.30265.117488.781364@mariner.uk.xensource.com>
+From:   Julien Grall <julien.grall@arm.com>
+Message-ID: <c78c372a-4cf4-9721-38f2-d173eecee27e@arm.com>
+Date:   Mon, 20 May 2019 14:20:06 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="26jxfkzgkqsicu7x"
-Content-Disposition: inline
-In-Reply-To: <20190510194018.28206-1-robh@kernel.org>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <23778.30265.117488.781364@mariner.uk.xensource.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Ian,
 
---26jxfkzgkqsicu7x
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+On 20/05/2019 10:41, Ian Jackson wrote:
+> Stephen Boyd writes ("[PATCH 1/3] firmware: qcom_scm: Use proper types for dma mappings"):
+>> We need to use the proper types and convert between physical addresses
+>> and dma addresses here to avoid mismatch warnings. This is especially
+>> important on systems with a different size for dma addresses and
+>> physical addresses. Otherwise, we get the following warning:
+> 
+> Thanks.  Do you expect this to be a backport candidate and if so how
+> far back do you think it will go ?  To be honest, I am not really
+> convinced that backporting this would be a service to users.  The
+> situation I have, where I changed the compiler but kept the old kernel
+> code and old configuration, is going to be fairly rare.
 
-Hi Rob,
+I will leave the maintainers answering to that.
 
-On Fri, May 10, 2019 at 02:40:18PM -0500, Rob Herring wrote:
-> Convert the vendor prefix registry to a schema. This will enable checking
-> that new vendor prefixes are added (in addition to the less than perfect
-> checkpatch.pl check) and will also check against adding other prefixes
-> which are not vendors.
->
-> Converted vendor-prefixes.txt using the following sed script:
->
-> sed -e 's/\([a-zA-Z0-9\-]*\)[[:space:]]*\([a-zA-Z0-9].*\)/  "^\1,\.\*\":\n    description: \2/'
->
-> Signed-off-by: Rob Herring <robh@kernel.org>
-> ---
-> As vendor prefix updates come in via multiple trees, I plan to merge
-> this before -rc1 to avoid cross tree conflicts.
+> 
+> I think I should probably therefore disable this driver in the config
+> on stable branches of Linux, at least.
 
-I just tried this with the 5.2-rc1 release, and this very
-significantly slows down the validation.
+If we decide to disable the driver, then we would need to add in our .config, 
+then we would need to disable completely the support for Qualcomm (i.e 
+CONFIG_ARCH_QCOM=n) on Arm32.
 
-With a dtbs_check run on (arm's) sunxi_defconfig, on my core-i5 with 4
-threads, I go from 1.30 minutes to more than 12.
+This should not be an issue in osstest as we don't test any qualcomm board so far.
 
-Should we improve the dt-validate tool before merging this patch?
+Cheers,
 
-Maxime
-
---
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
-
---26jxfkzgkqsicu7x
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXOKpNgAKCRDj7w1vZxhR
-xaU/AP4sEcxQ75aEnI0xMbq88t3BZzAEW0xMBgZRESwC/0YwUwEA3Wu9L5Uir8PG
-cDc3z03Kswww+O1DXoE+XNDbc1gMHwc=
-=aMcg
------END PGP SIGNATURE-----
-
---26jxfkzgkqsicu7x--
+-- 
+Julien Grall
