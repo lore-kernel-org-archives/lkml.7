@@ -2,184 +2,88 @@ Return-Path: <SRS0=lq4r=TU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0971AC04AAC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 11:22:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 151CDC04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 11:25:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C1C822081C
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 11:22:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD50E2081C
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 11:25:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kzFA2iZk"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="KH9eQMCg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732691AbfETLW4 (ORCPT
+        id S1732707AbfETLZT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 07:22:56 -0400
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:43684 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731487AbfETLW4 (ORCPT
+        Mon, 20 May 2019 07:25:19 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:45420 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732695AbfETLZS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 07:22:56 -0400
-Received: by mail-oi1-f195.google.com with SMTP id t187so9647689oie.10;
-        Mon, 20 May 2019 04:22:55 -0700 (PDT)
+        Mon, 20 May 2019 07:25:18 -0400
+Received: by mail-wr1-f67.google.com with SMTP id b18so14109245wrq.12
+        for <linux-kernel@vger.kernel.org>; Mon, 20 May 2019 04:25:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=pqJsM3I7VCsCBoW08AaOqNI2KyFITesPxcJ79o2nhOY=;
-        b=kzFA2iZkmhj+hMC7x3NQTmHLxTdFCMkKG72QKILHzE5vC2f2S4rkZsgL983zr8+8BZ
-         wTiDF+EPQdFWOpqI/XujsRnREJMf+i2r30eP2gDEyN68vKiFzWUYAG+3b0U7n29EAxMF
-         Us2X9NgwH8z9Igvtc7iLkRAZLiZipZXqs96CFG9V+cdQWL6fvBiEEgH5Ye6UUWevD5FZ
-         iIAjHVG31ilVJd8yio/TXoRFakMTusuYv3+4MQTGzRD20WcsPgKjzw2CTvCUb1ruSI2p
-         8Z87vggS/oxAneCCbsdv/rf3tJNm4UGq2Dy/RyPyq4USZfca50KZcfJNBxPhTtHsOcCC
-         2KvA==
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=message-id:subject:from:to:cc:date:in-reply-to:references
+         :user-agent:mime-version:content-transfer-encoding;
+        bh=jjlgRqd7/3GdbXtzivENZGFK0W6UGcne26rpZyW4X3o=;
+        b=KH9eQMCgAcp+vePFV58EJikabmf6tk7CPaw16nowcMlcJ9rfsp+jqtVbW4ziTIqtJn
+         pWBQacIbPY+n191m2WqHswFszkMDXBbauB4/HyE6ZwSzMGnaDM8mc8BC2ItArt3r48p2
+         hDW8UVhT/aOcBwNkv3AV39O5SBWYxCLPywsppIcLpCzNlu/SO8Kh6XrvNVW+vDf3BVGO
+         dgf7CDa6gkuA6sajvyDCOePcqFxpVeLPk1UFIDhhneZxknvlnqxb4xVh9g1wgPR2ykgo
+         bBj2h5PQdq+NXx0DTW2epwkjiXbsm30gJiyeKCUH09+ynK2MOyTfMXH1G5PwwvMSpl9b
+         Ihnw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=pqJsM3I7VCsCBoW08AaOqNI2KyFITesPxcJ79o2nhOY=;
-        b=P/3YM0tR/XtC0P5iB/FGKSbM/cOocBxYhtKInW65WAZq4+UXpvaOLjfQT3eM63cCzX
-         3VaDcS1P18EyRK/OmeuBNdY4i03ZledelYrFfgC/DAvqJB7fbD2hWaq+areklByoZnX5
-         SOscHUwhte6Lo7cBhgZGQk6T2sAx2xg2Ts6oHC8CCfc6TJZUSfmR5duHh9pBntX7dDsB
-         vfKsVUkU9XNZlA1953Nm7VvajmxAT8qAZKL8gxAxkOtabF2bAOnaGLXyCZMKSDntiltH
-         7EWEoZJxQBddg5rYEi7I0pattAwuUxfipPxb/2tfUbnRNPpGgMR6dPcrXOV2rBDdIHLs
-         YrRg==
-X-Gm-Message-State: APjAAAXN4f1VOcVrrufn4iTft50fETyBSKZcUNbCEJUTBioBMuHL9nV0
-        86aZMASwJ5LMwtNF1q9n+e4kDHk/LfWwEmHq5dsj0wws
-X-Google-Smtp-Source: APXvYqzzzLEbFr/YCGl6P2GF59jY07tpiE2qxD8404B1NsnaV6x3z47aRMdPOBTHq8Sh9jE3FuwsMT4L1bi8SMBqPmM=
-X-Received: by 2002:aca:c711:: with SMTP id x17mr48064oif.174.1558351375321;
- Mon, 20 May 2019 04:22:55 -0700 (PDT)
-MIME-Version: 1.0
-References: <1558340289-6857-1-git-send-email-wanpengli@tencent.com>
- <1558340289-6857-5-git-send-email-wanpengli@tencent.com> <b80a0c3b-c5b1-bfd1-83d7-ace3436b230e@redhat.com>
-In-Reply-To: <b80a0c3b-c5b1-bfd1-83d7-ace3436b230e@redhat.com>
-From:   Wanpeng Li <kernellwp@gmail.com>
-Date:   Mon, 20 May 2019 19:22:46 +0800
-Message-ID: <CANRm+CyDpA-2j28soX9si5CX3vFadd4_BASFzt1f4FbNNNDzyw@mail.gmail.com>
-Subject: Re: [PATCH v4 4/5] KVM: LAPIC: Delay trace advance expire delta
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>, kvm <kvm@vger.kernel.org>,
-        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Liran Alon <liran.alon@oracle.com>
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:user-agent:mime-version:content-transfer-encoding;
+        bh=jjlgRqd7/3GdbXtzivENZGFK0W6UGcne26rpZyW4X3o=;
+        b=VYkyIRC5T5RYkoNfJf+7a5EyEpyBkHu9OiYdQSkhO2JRy3bgZZ0LLmHHFTH0rlST0w
+         WuTDk+lD9tMcZsAIdGaoQEkrnq+rdigfnux6J6Ld+V84N3wiEWgJ8y1yv6xo70M5tl+m
+         Pq+F0wBfCU6S45cjLE4qU47XF8tMeUZsCGpq/4mfrXHxdC9zoZ6zDm61kwG7Mu3CwfVb
+         2DioeK8ifDwW9cPYQebxramSe6iZhm/EZmzSpu8Pjm4N6mB5yu3bynNvRuBxMiFKMmG3
+         sKhN3xfQULBkpgHdbMVuH4twezQOwXlv2nDm6zkpwwCqOKroH48HqtPese6byPkTRqHr
+         fXWg==
+X-Gm-Message-State: APjAAAVZHQte1PbY0OB3rV4AhG8NCS1mHHTxg6dY6C19JzHRspje01Aq
+        Tt18CIXzeTumlFl+s9IoeNRA6w==
+X-Google-Smtp-Source: APXvYqwD19LntnajDRGhTBQ60xM1YyUoHyMgHC0GjSUru7HiinTiDHC+FsHKj7HQJg4LRDftmwD8dQ==
+X-Received: by 2002:a5d:624d:: with SMTP id m13mr45190092wrv.305.1558351516800;
+        Mon, 20 May 2019 04:25:16 -0700 (PDT)
+Received: from boomer.baylibre.com (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
+        by smtp.gmail.com with ESMTPSA id m13sm15690440wrs.87.2019.05.20.04.25.15
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Mon, 20 May 2019 04:25:16 -0700 (PDT)
+Message-ID: <fa275d9d4a451d6ef5332a6836e8316c5644d913.camel@baylibre.com>
+Subject: Re: [PATCH 1/1] clk: meson: meson8b: fix a typo in the VPU parent
+ names array variable
+From:   Jerome Brunet <jbrunet@baylibre.com>
+To:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        linux-amlogic@lists.infradead.org, narmstrong@baylibre.com
+Cc:     mturquette@baylibre.com, sboyd@kernel.org,
+        linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Date:   Mon, 20 May 2019 13:25:14 +0200
+In-Reply-To: <20190512194300.7445-2-martin.blumenstingl@googlemail.com>
+References: <20190512194300.7445-1-martin.blumenstingl@googlemail.com>
+         <20190512194300.7445-2-martin.blumenstingl@googlemail.com>
 Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 20 May 2019 at 19:14, Paolo Bonzini <pbonzini@redhat.com> wrote:
->
-> On 20/05/19 10:18, Wanpeng Li wrote:
-> > From: Wanpeng Li <wanpengli@tencent.com>
-> >
-> > wait_lapic_expire() call was moved above guest_enter_irqoff() because of
-> > its tracepoint, which violated the RCU extended quiescent state invoked
-> > by guest_enter_irqoff()[1][2]. This patch simply moves the tracepoint
-> > below guest_exit_irqoff() in vcpu_enter_guest(). Snapshot the delta before
-> > VM-Enter, but trace it after VM-Exit. This can help us to move
-> > wait_lapic_expire() just before vmentry in the later patch.
-> >
-> > [1] Commit 8b89fe1f6c43 ("kvm: x86: move tracepoints outside extended quiescent state")
-> > [2] https://patchwork.kernel.org/patch/7821111/
->
-> This is a bit confusing, since the delta is printed after the
-> corresponding vmexit but the wait is done before the vmentry.  I think
-> we can drop the tracepoint:
->
-> ------------- 8< ----------------
-> From ae148d98d49b96b5222e2c78ac1b1e13cc526d71 Mon Sep 17 00:00:00 2001
-> From: Paolo Bonzini <pbonzini@redhat.com>
-> Date: Mon, 20 May 2019 13:10:01 +0200
-> Subject: [PATCH] KVM: lapic: replace wait_lapic_expire tracepoint with
->  restart_apic_timer
->
-> wait_lapic_expire() call was moved above guest_enter_irqoff() because of
-> its tracepoint, which violated the RCU extended quiescent state invoked
-> by guest_enter_irqoff()[1][2].
->
-> We would like to move wait_lapic_expire() just before vmentry, which would
-> place wait_lapic_expire() again inside the extended quiescent state.  Drop
-> the tracepoint, but add instead another one that can be useful and where
-> we can check the status of the adaptive tuning procedure.
+On Sun, 2019-05-12 at 21:43 +0200, Martin Blumenstingl wrote:
+> The variable which holds the parent names for the VPU clocks has a typo
+> in it. Fix this typo to make the variable naming in the driver
+> consistent. No functional changes.
+> 
+> Fixes: 41785ce562491d ("clk: meson: meson8b: add the VPU clock trees")
+> Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 
-https://lkml.org/lkml/2019/5/15/1435
+applied to v5.3/fixes
 
-Maybe Sean's comment is reasonable, per-vCPU debugfs entry for
-adaptive tuning and wait_lapic_expire() tracepoint for hand tuning.
-
-Regards,
-Wanpeng Li
-
->
-> [1] Commit 8b89fe1f6c43 ("kvm: x86: move tracepoints outside extended quiescent state")
-> [2] https://patchwork.kernel.org/patch/7821111/
->
-> Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
->
-> ---
->  arch/x86/kvm/lapic.c |  4 +++-
->  arch/x86/kvm/trace.h | 15 +++++++--------
->  2 files changed, 10 insertions(+), 9 deletions(-)
->
-> diff --git a/arch/x86/kvm/lapic.c b/arch/x86/kvm/lapic.c
-> index c12b090f4fad..8f05c1d0b486 100644
-> --- a/arch/x86/kvm/lapic.c
-> +++ b/arch/x86/kvm/lapic.c
-> @@ -1545,7 +1545,6 @@ void wait_lapic_expire(struct kvm_vcpu *vcpu)
->         tsc_deadline = apic->lapic_timer.expired_tscdeadline;
->         apic->lapic_timer.expired_tscdeadline = 0;
->         guest_tsc = kvm_read_l1_tsc(vcpu, rdtsc());
-> -       trace_kvm_wait_lapic_expire(vcpu->vcpu_id, guest_tsc - tsc_deadline);
->
->         if (guest_tsc < tsc_deadline)
->                 __wait_lapic_expire(vcpu, tsc_deadline - guest_tsc);
-> @@ -1763,6 +1762,9 @@ static void start_sw_timer(struct kvm_lapic *apic)
->
->  static void restart_apic_timer(struct kvm_lapic *apic)
->  {
-> +       trace_kvm_restart_apic_timer(apic->vcpu->vcpu_id,
-> +                                    apic->lapic_timer.timer_advance_ns);
-> +
->         preempt_disable();
->
->         if (!apic_lvtt_period(apic) && atomic_read(&apic->lapic_timer.pending))
-> diff --git a/arch/x86/kvm/trace.h b/arch/x86/kvm/trace.h
-> index 4d47a2631d1f..f6e000038f3f 100644
-> --- a/arch/x86/kvm/trace.h
-> +++ b/arch/x86/kvm/trace.h
-> @@ -953,24 +953,23 @@
->                   __entry->flags)
->  );
->
-> -TRACE_EVENT(kvm_wait_lapic_expire,
-> -       TP_PROTO(unsigned int vcpu_id, s64 delta),
-> -       TP_ARGS(vcpu_id, delta),
-> +TRACE_EVENT(kvm_restart_apic_timer,
-> +       TP_PROTO(unsigned int vcpu_id, u32 advance),
-> +       TP_ARGS(vcpu_id, advance),
->
->         TP_STRUCT__entry(
->                 __field(        unsigned int,   vcpu_id         )
-> -               __field(        s64,            delta           )
-> +               __field(        u32,            advance         )
->         ),
->
->         TP_fast_assign(
->                 __entry->vcpu_id           = vcpu_id;
-> -               __entry->delta             = delta;
-> +               __entry->advance           = advance;
->         ),
->
-> -       TP_printk("vcpu %u: delta %lld (%s)",
-> +       TP_printk("vcpu %u: advance %u",
->                   __entry->vcpu_id,
-> -                 __entry->delta,
-> -                 __entry->delta < 0 ? "early" : "late")
-> +                 __entry->advance)
->  );
->
->  TRACE_EVENT(kvm_enter_smm,
