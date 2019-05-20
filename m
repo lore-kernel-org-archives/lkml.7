@@ -2,79 +2,127 @@ Return-Path: <SRS0=lq4r=TU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D2FCC04AAC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 14:52:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ECF48C04E87
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 14:54:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 22690216B7
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 14:52:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C058A206BA
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 14:54:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="rH4MGkXJ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZU1x/Bp2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392027AbfETOw2 (ORCPT
+        id S2392044AbfETOya (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 10:52:28 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:40524 "EHLO vps0.lunn.ch"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732283AbfETOw1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 10:52:27 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=OR15pTh8PFO24Zv20KODF6WGQGNAYqpGzpNwW8lu2Bo=; b=rH4MGkXJHTS2o50pH7iaU/CF3n
-        OO3sTW15OBk/JpauvSShmMxCoCseHm4wc8OxuD/+yA+uox2hXWGzxRU5iAFwgdjHyi/MEKqPCxzjp
-        +/8+/XKlMQ3OiFbXKT4o1BoTN4tHeU5+EEzKELb+FofkPr5CVj/Jk/BQIVIhEsH3NoTQ=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.89)
-        (envelope-from <andrew@lunn.ch>)
-        id 1hSjeC-0000Cv-Td; Mon, 20 May 2019 16:52:16 +0200
-Date:   Mon, 20 May 2019 16:52:16 +0200
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Sagar Shrikant Kadam <sagar.kadam@sifive.com>
-Cc:     robh+dt@kernel.org, mark.rutland@arm.com, peter@korsgaard.com,
-        palmer@sifive.com, paul.walmsley@sifive.com,
-        linux-i2c@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v5 3/3] i2c-ocores: sifive: add polling mode workaround
- for FU540-C000 SoC.
-Message-ID: <20190520145216.GD22024@lunn.ch>
-References: <1558361478-4381-1-git-send-email-sagar.kadam@sifive.com>
- <1558361478-4381-4-git-send-email-sagar.kadam@sifive.com>
+        Mon, 20 May 2019 10:54:30 -0400
+Received: from mail-ua1-f66.google.com ([209.85.222.66]:37939 "EHLO
+        mail-ua1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732387AbfETOy3 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 10:54:29 -0400
+Received: by mail-ua1-f66.google.com with SMTP id r19so4745369uap.5;
+        Mon, 20 May 2019 07:54:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding:content-language;
+        bh=8cXCSMG/utY4UucWb4ekygNexeTn9aJiisIiVvtivhA=;
+        b=ZU1x/Bp2X6efOLs6VCJ6w1Y0/Tx//zW4Ud90lRRbRSmCiz5AojOo473KCRA1bw98rL
+         Xr8VvLNK5CrMk2GXwtG407SUCkWPF3GcdHtkGzyYxq9CO0MN8PeXxCh2EVJV95XXloKQ
+         ts6dEhyIdh71+h7iYVn147d+/97Sj7jezcx+AncoJt0Js2Pki95HdfKfeuxQ4aK0LrEg
+         L8w8tHdtnJzu6vuHtsCmaj698Jci8ICsaiU5knDuPLCDSgalX75JuSBfVb/yntUmDFBz
+         guLP5Ak5FGNc8SFTBSYNfxGmPH3qKxIYZspdEBK9dNELQhFtZteuW8hrYaPt9WWJauX4
+         qMNw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=8cXCSMG/utY4UucWb4ekygNexeTn9aJiisIiVvtivhA=;
+        b=BecE2poLD9b7h0/Gw1+3K9L+dXx6sAzX8uUnGHCEdkWkJP+arJNdx6A1gPplJkK3u2
+         C0JQEfm6ha+Aeq+Y0sdK7VXVsj/1MehKWvf5XNWK0XApxbkOG6SUR+ecJKRXnryduTN4
+         dMOJCTQiqQkz9wukJMjDJYukyREf+QsTRnM2vYVVQfMyVflEsSSd7vxlGBPrBYOF11IM
+         xCcR7NNOAtTTNfpr3vNtWGQMlbA860dQWYKed5mbvV09gDWrR3xoWghow6XHiYQwC+yj
+         kx8Uof+GWBYFAwtR0fvDnLGLd/DfD2CeG94d+Bl0iyZaJ128edBuFu6+c/RENYAq6a13
+         eLyg==
+X-Gm-Message-State: APjAAAWJfLjYtmJl8iNZFkH13mFFw45kj54HYHBDpsozKAsttQAHRWCg
+        jzl/LraKRMU2Z6vD1uU4cVueq4mZ
+X-Google-Smtp-Source: APXvYqwlmD0ueYLqSZ4VSGxhwR1uaHyYJwtikMj8/LvKbmobY+swajNr6uJX9UnneAMOHiTbm0GAbw==
+X-Received: by 2002:ab0:42e4:: with SMTP id j91mr14823452uaj.28.1558364067745;
+        Mon, 20 May 2019 07:54:27 -0700 (PDT)
+Received: from llong.remote.csb (nat-pool-bos-t.redhat.com. [66.187.233.206])
+        by smtp.gmail.com with ESMTPSA id 125sm5502165vkt.11.2019.05.20.07.54.25
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 20 May 2019 07:54:26 -0700 (PDT)
+Subject: Re: [PATCH v4 5/7] mm: rework non-root kmem_cache lifecycle
+ management
+To:     Roman Gushchin <guro@fb.com>
+Cc:     Shakeel Butt <shakeelb@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linux MM <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Kernel Team <kernel-team@fb.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Rik van Riel <riel@surriel.com>,
+        Christoph Lameter <cl@linux.com>,
+        Vladimir Davydov <vdavydov.dev@gmail.com>,
+        Cgroups <cgroups@vger.kernel.org>
+References: <20190514213940.2405198-1-guro@fb.com>
+ <20190514213940.2405198-6-guro@fb.com>
+ <CALvZod6Zb_kYHyG02jXBY9gvvUn_gOug7kq_hVa8vuCbXdPdjQ@mail.gmail.com>
+From:   Waiman Long <longman9394@gmail.com>
+Message-ID: <5e3c4646-3e4f-414a-0eca-5249956d68a5@gmail.com>
+Date:   Mon, 20 May 2019 10:54:24 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1558361478-4381-4-git-send-email-sagar.kadam@sifive.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+In-Reply-To: <CALvZod6Zb_kYHyG02jXBY9gvvUn_gOug7kq_hVa8vuCbXdPdjQ@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 20, 2019 at 07:41:18PM +0530, Sagar Shrikant Kadam wrote:
-> The i2c-ocore driver already has a polling mode interface.But it needs
-> a workaround for FU540 Chipset on HiFive unleashed board (RevA00).
-> There is an erratum in FU540 chip that prevents interrupt driven i2c
-> transfers from working, and also the I2C controller's interrupt bit
-> cannot be cleared if set, due to this the existing i2c polling mode
-> interface added in mainline earlier doesn't work, and CPU stall's
-> infinitely, when-ever i2c transfer is initiated.
-> 
-> Ref:previous polling mode support in mainline
-> 
-> 	commit 69c8c0c0efa8 ("i2c: ocores: add polling interface")
-> 
-> The workaround / fix under OCORES_FLAG_BROKEN_IRQ is particularly for
-> FU540-COOO SoC.
-> 
-> Signed-off-by: Sagar Shrikant Kadam <sagar.kadam@sifive.com>
+On 5/14/19 8:06 PM, Shakeel Butt wrote:
+> diff --git a/mm/slab_common.c b/mm/slab_common.c
+> index 4e5b4292a763..1ee967b4805e 100644
+> --- a/mm/slab_common.c
+> +++ b/mm/slab_common.c
+> @@ -45,6 +45,8 @@ static void slab_caches_to_rcu_destroy_workfn(struct work_struct *work);
+>  static DECLARE_WORK(slab_caches_to_rcu_destroy_work,
+>                     slab_caches_to_rcu_destroy_workfn);
+>
+> +static void kmemcg_queue_cache_shutdown(struct percpu_ref *percpu_ref);
+> +
 
-Much better, thanks.
+kmemcg_queue_cache_shutdown is only defined if CONFIG_MEMCG_KMEM is
+defined. If it is not defined, a compilation warning can be produced.
+Maybe putting the declaration inside a CONFIG_MEMCG_KMEM block:
 
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+diff --git a/mm/slab_common.c b/mm/slab_common.c
+index 61d7a96a917b..57ba6cf3dc39 100644
+--- a/mm/slab_common.c
++++ b/mm/slab_common.c
+@@ -45,7 +45,9 @@ static void slab_caches_to_rcu_destroy_workfn(struct
+work_stru
+ct *work);
+ static DECLARE_WORK(slab_caches_to_rcu_destroy_work,
+             slab_caches_to_rcu_destroy_workfn);
+ 
++#ifdef CONFIG_MEMCG_KMEM
+ static void kmemcg_queue_cache_shutdown(struct percpu_ref *percpu_ref);
++#endif
+ 
+ /*
+  * Set of flags that will prevent slab merging
+-- 
 
-    Andrew
+Cheers,
+Longman
+
