@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA0B3C04AAC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:47:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93B2AC04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:47:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BFF0C2054F
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:47:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 643C22054F
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:47:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558356442;
-	bh=rbaUw09nTDaxvuLdWWQ0id19Ppq7bCyJwobak7LfE4U=;
+	s=default; t=1558356449;
+	bh=15RPKwpw4JLzs1WOUCE36293hirvTF5FismRFcT6P5g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qygg3dLdbPHNJktFBGWAtC8t31l15cCPD8XrX6kIC2lwp8AXfyYxZs8VavoUL0Uyk
-	 FD/qVDYEudtoETUZSgJNeG/2s5U/KJGYiANZ02TjjHd/QewuhO94js7TeUUBk/VO5d
-	 fJtx3XYXsTmjE/px0hrNFjBj259fpne2uCIgy9xM=
+	b=lcOxEy03kgn0HlYef66Z0Lcn1fc2/uDL1f2Fk8s6S2oIKd3pAZuvmvB8b/lEcD+5v
+	 O1qxlcBG7U8la0ONngo3+AtZJtbjcv2NqLxwuCLTtnSff1maFAK4pNBe/K6awiuDeb
+	 +uFJCv3f3xXRB0XbheNYIE1rhPOQJSoH2Uurlkvs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388794AbfETMYU (ORCPT
+        id S2389631AbfETMr2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 08:24:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38952 "EHLO mail.kernel.org"
+        Mon, 20 May 2019 08:47:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39052 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388764AbfETMYI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 08:24:08 -0400
+        id S2388238AbfETMYO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 08:24:14 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7D72520815;
-        Mon, 20 May 2019 12:24:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9121E21479;
+        Mon, 20 May 2019 12:24:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558355048;
-        bh=rbaUw09nTDaxvuLdWWQ0id19Ppq7bCyJwobak7LfE4U=;
+        s=default; t=1558355053;
+        bh=15RPKwpw4JLzs1WOUCE36293hirvTF5FismRFcT6P5g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KBiR8rsifdGbyiHoKwFacQdkZooBh9IL6kBV45i9pTQuTMeopW24fYu+R/onyBbGU
-         8KOgnk7gNZKQRiW+MapB0xvb0HQ+BAdCd1g5L4+0yhyUC6J6OTOzBnlkS9+CKavMJs
-         1NHtRZps7K42juwO+gfryF31MOEMS60CpxSC9l5g=
+        b=kzGzR4IpKFwBMby5cruhh6JcbnSfSWxj6iNq+W6ihwEvn5u+vk+0+M0EGptR1AEYb
+         ljkvVjmMN3fr44DjRdOjhpB5BhJ0jV62//bOrs+3eoJlA1M4+/AFibRnXd95auwUxJ
+         EIJvZdPxtNXabmLpcfYxkZQ2cyuhr7OS9NtpaSKA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Filipe Manana <fdmanana@suse.com>,
+        stable@vger.kernel.org,
+        Zygo Blaxell <ce3g8jdj@umail.furryterror.org>,
+        Filipe Manana <fdmanana@suse.com>,
         David Sterba <dsterba@suse.com>
-Subject: [PATCH 4.19 076/105] Btrfs: send, flush dellaloc in order to avoid data loss
-Date:   Mon, 20 May 2019 14:14:22 +0200
-Message-Id: <20190520115252.487467638@linuxfoundation.org>
+Subject: [PATCH 4.19 078/105] Btrfs: do not start a transaction at iterate_extent_inodes()
+Date:   Mon, 20 May 2019 14:14:24 +0200
+Message-Id: <20190520115252.656532570@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190520115247.060821231@linuxfoundation.org>
 References: <20190520115247.060821231@linuxfoundation.org>
@@ -61,133 +63,114 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Filipe Manana <fdmanana@suse.com>
 
-commit 9f89d5de8631c7930898a601b6612e271aa2261c upstream.
+commit bfc61c36260ca990937539cd648ede3cd749bc10 upstream.
 
-When we set a subvolume to read-only mode we do not flush dellaloc for any
-of its inodes (except if the filesystem is mounted with -o flushoncommit),
-since it does not affect correctness for any subsequent operations - except
-for a future send operation. The send operation will not be able to see the
-delalloc data since the respective file extent items, inode item updates,
-backreferences, etc, have not hit yet the subvolume and extent trees.
+When finding out which inodes have references on a particular extent, done
+by backref.c:iterate_extent_inodes(), from the BTRFS_IOC_LOGICAL_INO (both
+v1 and v2) ioctl and from scrub we use the transaction join API to grab a
+reference on the currently running transaction, since in order to give
+accurate results we need to inspect the delayed references of the currently
+running transaction.
 
-Effectively this means data loss, since the send stream will not contain
-any data from existing delalloc. Another problem from this is that if the
-writeback starts and finishes while the send operation is in progress, we
-have the subvolume tree being being modified concurrently which can result
-in send failing unexpectedly with EIO or hitting runtime errors, assertion
-failures or hitting BUG_ONs, etc.
+However, if there is currently no running transaction, the join operation
+will create a new transaction. This is inefficient as the transaction will
+eventually be committed, doing unnecessary IO and introducing a potential
+point of failure that will lead to a transaction abort due to -ENOSPC, as
+recently reported [1].
 
-Simple reproducer:
+That's because the join, creates the transaction but does not reserve any
+space, so when attempting to update the root item of the root passed to
+btrfs_join_transaction(), during the transaction commit, we can end up
+failling with -ENOSPC. Users of a join operation are supposed to actually
+do some filesystem changes and reserve space by some means, which is not
+the case of iterate_extent_inodes(), it is a read-only operation for all
+contextes from which it is called.
 
-  $ mkfs.btrfs -f /dev/sdb
-  $ mount /dev/sdb /mnt
+The reported [1] -ENOSPC failure stack trace is the following:
 
-  $ btrfs subvolume create /mnt/sv
-  $ xfs_io -f -c "pwrite -S 0xea 0 108K" /mnt/sv/foo
+ heisenberg kernel: ------------[ cut here ]------------
+ heisenberg kernel: BTRFS: Transaction aborted (error -28)
+ heisenberg kernel: WARNING: CPU: 0 PID: 7137 at fs/btrfs/root-tree.c:136 btrfs_update_root+0x22b/0x320 [btrfs]
+(...)
+ heisenberg kernel: CPU: 0 PID: 7137 Comm: btrfs-transacti Not tainted 4.19.0-4-amd64 #1 Debian 4.19.28-2
+ heisenberg kernel: Hardware name: FUJITSU LIFEBOOK U757/FJNB2A5, BIOS Version 1.21 03/19/2018
+ heisenberg kernel: RIP: 0010:btrfs_update_root+0x22b/0x320 [btrfs]
+(...)
+ heisenberg kernel: RSP: 0018:ffffb5448828bd40 EFLAGS: 00010286
+ heisenberg kernel: RAX: 0000000000000000 RBX: ffff8ed56bccef50 RCX: 0000000000000006
+ heisenberg kernel: RDX: 0000000000000007 RSI: 0000000000000092 RDI: ffff8ed6bda166a0
+ heisenberg kernel: RBP: 00000000ffffffe4 R08: 00000000000003df R09: 0000000000000007
+ heisenberg kernel: R10: 0000000000000000 R11: 0000000000000001 R12: ffff8ed63396a078
+ heisenberg kernel: R13: ffff8ed092d7c800 R14: ffff8ed64f5db028 R15: ffff8ed6bd03d068
+ heisenberg kernel: FS:  0000000000000000(0000) GS:ffff8ed6bda00000(0000) knlGS:0000000000000000
+ heisenberg kernel: CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+ heisenberg kernel: CR2: 00007f46f75f8000 CR3: 0000000310a0a002 CR4: 00000000003606f0
+ heisenberg kernel: DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+ heisenberg kernel: DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+ heisenberg kernel: Call Trace:
+ heisenberg kernel:  commit_fs_roots+0x166/0x1d0 [btrfs]
+ heisenberg kernel:  ? _cond_resched+0x15/0x30
+ heisenberg kernel:  ? btrfs_run_delayed_refs+0xac/0x180 [btrfs]
+ heisenberg kernel:  btrfs_commit_transaction+0x2bd/0x870 [btrfs]
+ heisenberg kernel:  ? start_transaction+0x9d/0x3f0 [btrfs]
+ heisenberg kernel:  transaction_kthread+0x147/0x180 [btrfs]
+ heisenberg kernel:  ? btrfs_cleanup_transaction+0x530/0x530 [btrfs]
+ heisenberg kernel:  kthread+0x112/0x130
+ heisenberg kernel:  ? kthread_bind+0x30/0x30
+ heisenberg kernel:  ret_from_fork+0x35/0x40
+ heisenberg kernel: ---[ end trace 05de912e30e012d9 ]---
 
-  $ btrfs property set /mnt/sv ro true
-  $ btrfs send -f /tmp/send.stream /mnt/sv
+So fix that by using the attach API, which does not create a transaction
+when there is currently no running transaction.
 
-  $ od -t x1 -A d /mnt/sv/foo
-  0000000 ea ea ea ea ea ea ea ea ea ea ea ea ea ea ea ea
-  *
-  0110592
+[1] https://lore.kernel.org/linux-btrfs/b2a668d7124f1d3e410367f587926f622b3f03a4.camel@scientia.net/
 
-  $ umount /mnt
-  $ mkfs.btrfs -f /dev/sdc
-  $ mount /dev/sdc /mnt
-
-  $ btrfs receive -f /tmp/send.stream /mnt
-  $ echo $?
-  0
-  $ od -t x1 -A d /mnt/sv/foo
-  0000000
-  # ---> empty file
-
-Since this a problem that affects send only, fix it in send by flushing
-dellaloc for all the roots used by the send operation before send starts
-to process the commit roots.
-
-This is a problem that affects send since it was introduced (commit
-31db9f7c23fbf7 ("Btrfs: introduce BTRFS_IOC_SEND for btrfs send/receive"))
-but backporting it to older kernels has some dependencies:
-
-- For kernels between 3.19 and 4.20, it depends on commit 3cd24c698004d2
-  ("btrfs: use tagged writepage to mitigate livelock of snapshot") because
-  the function btrfs_start_delalloc_snapshot() does not exist before that
-  commit. So one has to either pick that commit or replace the calls to
-  btrfs_start_delalloc_snapshot() in this patch with calls to
-  btrfs_start_delalloc_inodes().
-
-- For kernels older than 3.19 it also requires commit e5fa8f865b3324
-  ("Btrfs: ensure send always works on roots without orphans") because
-  it depends on the function ensure_commit_roots_uptodate() which that
-  commits introduced.
-
-- No dependencies for 5.0+ kernels.
-
-A test case for fstests follows soon.
-
-CC: stable@vger.kernel.org # 3.19+
+Reported-by: Zygo Blaxell <ce3g8jdj@umail.furryterror.org>
+CC: stable@vger.kernel.org # 4.4+
 Signed-off-by: Filipe Manana <fdmanana@suse.com>
+Reviewed-by: David Sterba <dsterba@suse.com>
 Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/btrfs/send.c |   36 ++++++++++++++++++++++++++++++++++++
- 1 file changed, 36 insertions(+)
+ fs/btrfs/backref.c |   18 ++++++++++++------
+ 1 file changed, 12 insertions(+), 6 deletions(-)
 
---- a/fs/btrfs/send.c
-+++ b/fs/btrfs/send.c
-@@ -6583,6 +6583,38 @@ commit_trans:
- 	return btrfs_commit_transaction(trans);
- }
+--- a/fs/btrfs/backref.c
++++ b/fs/btrfs/backref.c
+@@ -1908,13 +1908,19 @@ int iterate_extent_inodes(struct btrfs_f
+ 			extent_item_objectid);
  
-+/*
-+ * Make sure any existing dellaloc is flushed for any root used by a send
-+ * operation so that we do not miss any data and we do not race with writeback
-+ * finishing and changing a tree while send is using the tree. This could
-+ * happen if a subvolume is in RW mode, has delalloc, is turned to RO mode and
-+ * a send operation then uses the subvolume.
-+ * After flushing delalloc ensure_commit_roots_uptodate() must be called.
-+ */
-+static int flush_delalloc_roots(struct send_ctx *sctx)
-+{
-+	struct btrfs_root *root = sctx->parent_root;
-+	int ret;
-+	int i;
-+
-+	if (root) {
-+		ret = btrfs_start_delalloc_snapshot(root);
-+		if (ret)
-+			return ret;
-+		btrfs_wait_ordered_extents(root, U64_MAX, 0, U64_MAX);
+ 	if (!search_commit_root) {
+-		trans = btrfs_join_transaction(fs_info->extent_root);
+-		if (IS_ERR(trans))
+-			return PTR_ERR(trans);
++		trans = btrfs_attach_transaction(fs_info->extent_root);
++		if (IS_ERR(trans)) {
++			if (PTR_ERR(trans) != -ENOENT &&
++			    PTR_ERR(trans) != -EROFS)
++				return PTR_ERR(trans);
++			trans = NULL;
++		}
 +	}
 +
-+	for (i = 0; i < sctx->clone_roots_cnt; i++) {
-+		root = sctx->clone_roots[i].root;
-+		ret = btrfs_start_delalloc_snapshot(root);
-+		if (ret)
-+			return ret;
-+		btrfs_wait_ordered_extents(root, U64_MAX, 0, U64_MAX);
-+	}
-+
-+	return 0;
-+}
-+
- static void btrfs_root_dec_send_in_progress(struct btrfs_root* root)
- {
- 	spin_lock(&root->root_item_lock);
-@@ -6807,6 +6839,10 @@ long btrfs_ioctl_send(struct file *mnt_f
- 			NULL);
- 	sort_clone_roots = 1;
++	if (trans)
+ 		btrfs_get_tree_mod_seq(fs_info, &tree_mod_seq_elem);
+-	} else {
++	else
+ 		down_read(&fs_info->commit_root_sem);
+-	}
  
-+	ret = flush_delalloc_roots(sctx);
-+	if (ret)
-+		goto out;
-+
- 	ret = ensure_commit_roots_uptodate(sctx);
- 	if (ret)
- 		goto out;
+ 	ret = btrfs_find_all_leafs(trans, fs_info, extent_item_objectid,
+ 				   tree_mod_seq_elem.seq, &refs,
+@@ -1947,7 +1953,7 @@ int iterate_extent_inodes(struct btrfs_f
+ 
+ 	free_leaf_list(refs);
+ out:
+-	if (!search_commit_root) {
++	if (trans) {
+ 		btrfs_put_tree_mod_seq(fs_info, &tree_mod_seq_elem);
+ 		btrfs_end_transaction(trans);
+ 	} else {
 
 
