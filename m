@@ -4,65 +4,65 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E39BDC04AAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 07:10:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65A74C04E87
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 07:10:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B3FE32081C
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 07:10:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3C3982081C
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 07:10:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="mq1dItRf"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="q9vf8/DZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730360AbfETHKu (ORCPT
+        id S1730532AbfETHKw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 03:10:50 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:46489 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726741AbfETHKt (ORCPT
+        Mon, 20 May 2019 03:10:52 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:37677 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730196AbfETHKu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 03:10:49 -0400
-Received: by mail-wr1-f68.google.com with SMTP id r7so13187708wrr.13
-        for <linux-kernel@vger.kernel.org>; Mon, 20 May 2019 00:10:47 -0700 (PDT)
+        Mon, 20 May 2019 03:10:50 -0400
+Received: by mail-wm1-f68.google.com with SMTP id 7so11805919wmo.2
+        for <linux-kernel@vger.kernel.org>; Mon, 20 May 2019 00:10:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=LtAbtRKQaAYM2lLJPPz+ylaT8oZbFrjQXvIP/N75mbA=;
-        b=mq1dItRfP5tX302POwcltohfN16RnBZUALnunlXj+OtENaVdGXsMSTTw/SDUui8gcm
-         BesZXNoNas1tQHzpOvnnmAlZZIaMhvK3hIIvcomHDiiworgKYwPO1pw55KGK6ks+m79A
-         zsUL48U4og1jt46xbuJmI2PVYug8ZRH+aiM6Wx6nkHZiBly7ZBPAIz+c1xGG92dWcTXQ
-         OaQme5U7yEcGf29TPNg0lRpsDhMOubVS4x6RIVX/epmvcUZitIKurrYAlyiiQvsuPHCA
-         HWVspmXBbQNSZ+Ni1ZqeAsJ3gD7wU+qQhalgLobVX+oFD/rSObSXT1YFI3dDYMUwN4WT
-         A6zw==
+        bh=/y0BcjbxNLOCLb9hbRxzwv5nwlsZS0rceTzNYj/C23A=;
+        b=q9vf8/DZLLRxX2kNMP3SnHQ91uW4YvneY0c8FSNL0z8ut1+yrieV56iNJtgdruNQfL
+         uJoqsIojrINVtoeNKZ8ApA9q57W6mXvIQqypGepxQPVju2IItJl3UyaAgnYafzwDzOeA
+         JhgjP+e4lvE8a9LRACc84BwFEmIgF8KfJZ6aiQ011ObiQpvlj2qnFMxFG7DRXLmKve+8
+         HY56qEEO/4+lidEZ68pdyVbs1MvDfQH0CogqR2mGvN6vIJMkpAgI5G1a5mOKKduJAmm9
+         xBo+2CLkZyeOz8Oc2/Nq898GckZuB/0pcVZ0mKoi5ZTF7yCZw1KQuDX9scOLB1XZY4uN
+         LHxg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=LtAbtRKQaAYM2lLJPPz+ylaT8oZbFrjQXvIP/N75mbA=;
-        b=kC6vN/1n5Tmqhxquvfw+1esIakZwFE5JAHTGkfPVNTQ63qwOeOlbqpI9nHZ7vW/U7V
-         u+WdZd0jxrJdFjTMocMcRnIemEWQuoMHzeWlCMJ5P1bichz7Q7RYN9kfnoCMy5cDmeY7
-         YK5NTgwSeQbd//6AWNZ54xgpdadnsHoXqJDuH5YYLEgrlVnabwo7c96Xh0xqCAqUB2gx
-         /pDEwE8hv47p7l7xfkXa3cYADihAub7N3YhO4YyI3JSV8V0ZshcCqzwjeKPDjnK0VWvb
-         xNNHnv6s4OXg307ShiMij+3bixp4yrNzfR6CZ/VK4wxITfrY4Q+MjNB/eT8XKD6uTBEs
-         H/Jw==
-X-Gm-Message-State: APjAAAURDFOwnP9SgQ1PdDuXgruU5S9wGcF3JaTb0dl7SLngmQB5UZsy
-        dNXClf/3cNKz7eFoY7jYdw5b4g==
-X-Google-Smtp-Source: APXvYqylrretxPC+LTX+MRIUJwdFN04VrBb8O0sp0/q6nUkAH3avukgowRj4HpmzmP2iyZb3AYClmA==
-X-Received: by 2002:adf:9c0a:: with SMTP id f10mr3835117wrc.248.1558336247031;
+        bh=/y0BcjbxNLOCLb9hbRxzwv5nwlsZS0rceTzNYj/C23A=;
+        b=Nvq7CHj+tWMaz3nuC6bnN+XCSXqVCfjlbxuq5THGeenAnLrpdbpo/PSg9nzWvvi4BG
+         6XGkX8xUXpt6r3MZ232rOd6sv6yOC37YeyBV8paYgCeEcYn5Mg2porCPoQQ3W/yUtSf7
+         LGFy9c3zdJRDge4/FPpq3Zy2gOzpxfBFfo2TbqIYD0/BTPtLG0MNpQy4xSm+fQ7xG0fI
+         iuGgCQy/rVVjmcM3CUn7TnA3ORLmqjDbBtToKQPRL1KE27+cGu9X0YmhSsSbUKAsqdjL
+         3v72Ykm6ppkPVHPYXMXJkjY3UbHdNcrzKZbFWr4UpQDuYAC3BiR+M44cFPyQ6d0kxVl2
+         4gDg==
+X-Gm-Message-State: APjAAAVjj0biCPMUYyEjJbtW9XeVmcurTjFYU8CTTdmUQ68lROz99nWY
+        FM7kUQTquUfq7HmI+vftcg75fA==
+X-Google-Smtp-Source: APXvYqxS68lU2W0geS1uLVLh/mdOSoDJjsGDUOfVAKJwEko+8QdppkRdHZdblYo2asYpNxTLIyu0Ug==
+X-Received: by 2002:a1c:414:: with SMTP id 20mr38445228wme.84.1558336247924;
         Mon, 20 May 2019 00:10:47 -0700 (PDT)
 Received: from debian-brgl.home ([2a01:cb1d:af:5b00:6d6c:8493:1ab5:dad7])
-        by smtp.gmail.com with ESMTPSA id y132sm24017306wmd.35.2019.05.20.00.10.46
+        by smtp.gmail.com with ESMTPSA id y132sm24017306wmd.35.2019.05.20.00.10.47
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 20 May 2019 00:10:46 -0700 (PDT)
+        Mon, 20 May 2019 00:10:47 -0700 (PDT)
 From:   Bartosz Golaszewski <brgl@bgdev.pl>
 To:     linux-i2c@vger.kernel.org
 Cc:     Wolfram Sang <wsa@the-dreams.de>, linux-kernel@vger.kernel.org,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: [PATCH v2 1/2] eeprom: at24: use devm_i2c_new_dummy_device()
-Date:   Mon, 20 May 2019 09:10:41 +0200
-Message-Id: <20190520071042.21072-2-brgl@bgdev.pl>
+Subject: [PATCH v2 2/2] eeprom: at24: drop unnecessary label
+Date:   Mon, 20 May 2019 09:10:42 +0200
+Message-Id: <20190520071042.21072-3-brgl@bgdev.pl>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190520071042.21072-1-brgl@bgdev.pl>
 References: <20190520071042.21072-1-brgl@bgdev.pl>
@@ -75,109 +75,84 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
-Now that it's upstream, use the resource managed version
-of i2c_new_dummy_device().
+If we move the nvmem registration above the pm enable calls and the
+test read, we can drop the error label and make the code more readable
+as there's now only a single place where we must call
+pm_runtime_disable() in error path.
 
 Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 ---
- drivers/misc/eeprom/at24.c | 38 +++++++++-----------------------------
- 1 file changed, 9 insertions(+), 29 deletions(-)
+ drivers/misc/eeprom/at24.c | 43 ++++++++++++++++----------------------
+ 1 file changed, 18 insertions(+), 25 deletions(-)
 
 diff --git a/drivers/misc/eeprom/at24.c b/drivers/misc/eeprom/at24.c
-index 63aa541c9608..bdeec0777029 100644
+index bdeec0777029..ba8e73812644 100644
 --- a/drivers/misc/eeprom/at24.c
 +++ b/drivers/misc/eeprom/at24.c
-@@ -507,14 +507,6 @@ static const struct at24_chip_data *at24_get_chip_data(struct device *dev)
- 	return cdata;
- }
- 
--static void at24_remove_dummy_clients(struct at24_data *at24)
--{
--	int i;
--
--	for (i = 1; i < at24->num_addresses; i++)
--		i2c_unregister_device(at24->client[i].client);
--}
--
- static int at24_make_dummy_client(struct at24_data *at24, unsigned int index,
- 				  struct regmap_config *regmap_config)
- {
-@@ -527,18 +519,14 @@ static int at24_make_dummy_client(struct at24_data *at24, unsigned int index,
- 	dev = &base_client->dev;
- 	addr = base_client->addr + index;
- 
--	dummy_client = i2c_new_dummy(base_client->adapter,
--				     base_client->addr + index);
--	if (!dummy_client) {
--		dev_err(dev, "address 0x%02x unavailable\n", addr);
--		return -EADDRINUSE;
--	}
-+	dummy_client = devm_i2c_new_dummy_device(dev, base_client->adapter,
-+						 base_client->addr + index);
-+	if (IS_ERR(dummy_client))
-+		return PTR_ERR(dummy_client);
- 
- 	regmap = devm_regmap_init_i2c(dummy_client, regmap_config);
--	if (IS_ERR(regmap)) {
--		i2c_unregister_device(dummy_client);
-+	if (IS_ERR(regmap))
- 		return PTR_ERR(regmap);
--	}
- 
- 	at24->client[index].client = dummy_client;
- 	at24->client[index].regmap = regmap;
-@@ -693,10 +681,8 @@ static int at24_probe(struct i2c_client *client)
- 	/* use dummy devices for multiple-address chips */
- 	for (i = 1; i < num_addresses; i++) {
- 		err = at24_make_dummy_client(at24, i, &regmap_config);
--		if (err) {
--			at24_remove_dummy_clients(at24);
-+		if (err)
+@@ -685,23 +685,6 @@ static int at24_probe(struct i2c_client *client)
  			return err;
--		}
  	}
  
- 	i2c_set_clientdata(client, at24);
-@@ -713,7 +699,7 @@ static int at24_probe(struct i2c_client *client)
- 	pm_runtime_idle(dev);
- 	if (err) {
- 		err = -ENODEV;
--		goto err_clients;
-+		goto err_runtime_pm;
- 	}
- 
+-	i2c_set_clientdata(client, at24);
+-
+-	/* enable runtime pm */
+-	pm_runtime_set_active(dev);
+-	pm_runtime_enable(dev);
+-
+-	/*
+-	 * Perform a one-byte test read to verify that the
+-	 * chip is functional.
+-	 */
+-	err = at24_read(at24, 0, &test_byte, 1);
+-	pm_runtime_idle(dev);
+-	if (err) {
+-		err = -ENODEV;
+-		goto err_runtime_pm;
+-	}
+-
  	nvmem_config.name = dev_name(dev);
-@@ -733,7 +719,7 @@ static int at24_probe(struct i2c_client *client)
+ 	nvmem_config.dev = dev;
+ 	nvmem_config.read_only = !writable;
+@@ -717,9 +700,24 @@ static int at24_probe(struct i2c_client *client)
+ 	nvmem_config.size = byte_len;
+ 
  	at24->nvmem = devm_nvmem_register(dev, &nvmem_config);
- 	if (IS_ERR(at24->nvmem)) {
- 		err = PTR_ERR(at24->nvmem);
--		goto err_clients;
-+		goto err_runtime_pm;
+-	if (IS_ERR(at24->nvmem)) {
+-		err = PTR_ERR(at24->nvmem);
+-		goto err_runtime_pm;
++	if (IS_ERR(at24->nvmem))
++		return PTR_ERR(at24->nvmem);
++
++	i2c_set_clientdata(client, at24);
++
++	/* enable runtime pm */
++	pm_runtime_set_active(dev);
++	pm_runtime_enable(dev);
++
++	/*
++	 * Perform a one-byte test read to verify that the
++	 * chip is functional.
++	 */
++	err = at24_read(at24, 0, &test_byte, 1);
++	pm_runtime_idle(dev);
++	if (err) {
++		pm_runtime_disable(dev);
++		return -ENODEV;
  	}
  
  	dev_info(dev, "%u byte %s EEPROM, %s, %u bytes/write\n",
-@@ -742,8 +728,7 @@ static int at24_probe(struct i2c_client *client)
+@@ -727,11 +725,6 @@ static int at24_probe(struct i2c_client *client)
+ 		 writable ? "writable" : "read-only", at24->write_max);
  
  	return 0;
- 
--err_clients:
--	at24_remove_dummy_clients(at24);
-+err_runtime_pm:
- 	pm_runtime_disable(dev);
- 
- 	return err;
-@@ -751,11 +736,6 @@ static int at24_probe(struct i2c_client *client)
+-
+-err_runtime_pm:
+-	pm_runtime_disable(dev);
+-
+-	return err;
+ }
  
  static int at24_remove(struct i2c_client *client)
- {
--	struct at24_data *at24;
--
--	at24 = i2c_get_clientdata(client);
--
--	at24_remove_dummy_clients(at24);
- 	pm_runtime_disable(&client->dev);
- 	pm_runtime_set_suspended(&client->dev);
- 
 -- 
 2.21.0
 
