@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC642C04AAC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:32:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 269C7C04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:33:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BBBB4216E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:32:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F1C8E21479
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:33:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558355579;
-	bh=HUlE6eld3Vz365AqDvX9J8cq8xUzH8sCmhT7MGuFSh8=;
+	s=default; t=1558355584;
+	bh=oylC+PnrQAI7xZixoEnQt8HZ1NVPrVmRDNirD/k4gVs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SJnzsT4QkA3OMWvmBLgMrzTji4xCBzEAUgOaa2VQYl/bHUNsTcIb5aatcywdZWjqo
-	 fI366d9s19tDjHY6oWE4ZlSP1nbVEtARzt97K4AB6w5C1X3O9p0Y9BitMrEFxoBjG+
-	 TfKKah1ihC0hX87yzu4V7P4T3zRW98vhT/x5HosU=
+	b=fTq9+g06jRPqjAwXuTFAa3NX1GkGRnfIiet3WEKtBGxWXUHiF4KJNHWXA9dtk720G
+	 WpCCc3xUMT9DLaVtvcV/r9umsnl+B/bPk2fURKpycmFjFur/DqeDrzO2X9vF+WSm7y
+	 0eWU3YZVBUIMmzozXzDkcqWR2AlBfK7mKLRILKqg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390452AbfETMc7 (ORCPT
+        id S2390645AbfETMdC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 08:32:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49988 "EHLO mail.kernel.org"
+        Mon, 20 May 2019 08:33:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50016 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390429AbfETMc4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 08:32:56 -0400
+        id S2390453AbfETMdA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 08:33:00 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D417B214DA;
-        Mon, 20 May 2019 12:32:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7B7FE204FD;
+        Mon, 20 May 2019 12:32:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558355576;
-        bh=HUlE6eld3Vz365AqDvX9J8cq8xUzH8sCmhT7MGuFSh8=;
+        s=default; t=1558355579;
+        bh=oylC+PnrQAI7xZixoEnQt8HZ1NVPrVmRDNirD/k4gVs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ALwkqDKtLLhrrnnpeFaoOqk8cyjycD30Te0PsxIcAVUH4dbHg3i3fyGkfFRtf7Rfv
-         YigPMm830VcIHOGt2qbWPThkHRcYxPMSVRe85/6Vq1y0lsWeCIufL031XnXFKi+AXZ
-         aptMkvSA0VQ++pmFo7gJrM6a5u0clIguT/v4LIMU=
+        b=EK2brj8Xsv/bWpiefnOA0e/Zpwm3M/03JIX84IiBYI4oTeEu1nvsyvf83vgVvo/RG
+         xCQq65I7GCPBXFPjeMyhe7aVsBAaFwhg5uIgpH2bnqAUr2tFfxgwWv5nIBHaQ6VzRd
+         Z1WWDdSjgL932HKtPRCry53NgK09x2YL/JQrVcac=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        =?UTF-8?q?Horia=20Geant=C4=83?= <horia.geanta@nxp.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>
-Subject: [PATCH 5.1 038/128] crypto: caam/qi2 - fix zero-length buffer DMA mapping
-Date:   Mon, 20 May 2019 14:13:45 +0200
-Message-Id: <20190520115252.276812081@linuxfoundation.org>
+        stable@vger.kernel.org, Adrian Hunter <adrian.hunter@intel.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>
+Subject: [PATCH 5.1 047/128] mmc: sdhci-pci: Fix BYT OCP setting
+Date:   Mon, 20 May 2019 14:13:54 +0200
+Message-Id: <20190520115252.931010312@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190520115249.449077487@linuxfoundation.org>
 References: <20190520115249.449077487@linuxfoundation.org>
@@ -60,66 +59,185 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Horia Geantă <horia.geanta@nxp.com>
+From: Adrian Hunter <adrian.hunter@intel.com>
 
-commit 07586d3ddf284dd7a1a6579579d8efa7296fe60f upstream.
+commit 0a49a619e7e1aeb3f5f5511ca59314423c83dae2 upstream.
 
-Commit 04e6d25c5bb2 ("crypto: caam - fix zero-length buffer DMA mapping")
-fixed an issue in caam/jr driver where ahash implementation was
-DMA mapping a zero-length buffer.
+Some time ago, a fix was done for the sdhci-acpi driver, refer
+commit 6e1c7d6103fe ("mmc: sdhci-acpi: Reduce Baytrail eMMC/SD/SDIO
+hangs"). The same issue was not expected to affect the sdhci-pci driver,
+but there have been reports to the contrary, so make the same hardware
+setting change.
 
-Current commit applies a similar fix for caam/qi2 driver.
+This patch applies to v5.0+ but before that backports will be required.
 
-Cc: <stable@vger.kernel.org> # v4.20+
-Fixes: 3f16f6c9d632 ("crypto: caam/qi2 - add support for ahash algorithms")
-Signed-off-by: Horia Geantă <horia.geanta@nxp.com>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
+Cc: stable@vger.kernel.org
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/crypto/caam/caamalg_qi2.c |   25 ++++++++++++++++++-------
- 1 file changed, 18 insertions(+), 7 deletions(-)
+ drivers/mmc/host/Kconfig          |    1 
+ drivers/mmc/host/sdhci-pci-core.c |   96 ++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 97 insertions(+)
 
---- a/drivers/crypto/caam/caamalg_qi2.c
-+++ b/drivers/crypto/caam/caamalg_qi2.c
-@@ -3755,10 +3755,13 @@ static int ahash_final_no_ctx(struct aha
- 	if (!edesc)
- 		return ret;
+--- a/drivers/mmc/host/Kconfig
++++ b/drivers/mmc/host/Kconfig
+@@ -92,6 +92,7 @@ config MMC_SDHCI_PCI
+ 	tristate "SDHCI support on PCI bus"
+ 	depends on MMC_SDHCI && PCI
+ 	select MMC_CQHCI
++	select IOSF_MBI if X86
+ 	help
+ 	  This selects the PCI Secure Digital Host Controller Interface.
+ 	  Most controllers found today are PCI devices.
+--- a/drivers/mmc/host/sdhci-pci-core.c
++++ b/drivers/mmc/host/sdhci-pci-core.c
+@@ -31,6 +31,10 @@
+ #include <linux/mmc/sdhci-pci-data.h>
+ #include <linux/acpi.h>
  
--	state->buf_dma = dma_map_single(ctx->dev, buf, buflen, DMA_TO_DEVICE);
--	if (dma_mapping_error(ctx->dev, state->buf_dma)) {
--		dev_err(ctx->dev, "unable to map src\n");
--		goto unmap;
-+	if (buflen) {
-+		state->buf_dma = dma_map_single(ctx->dev, buf, buflen,
-+						DMA_TO_DEVICE);
-+		if (dma_mapping_error(ctx->dev, state->buf_dma)) {
-+			dev_err(ctx->dev, "unable to map src\n");
-+			goto unmap;
-+		}
- 	}
++#ifdef CONFIG_X86
++#include <asm/iosf_mbi.h>
++#endif
++
+ #include "cqhci.h"
  
- 	edesc->dst_dma = dma_map_single(ctx->dev, req->result, digestsize,
-@@ -3771,9 +3774,17 @@ static int ahash_final_no_ctx(struct aha
+ #include "sdhci.h"
+@@ -451,6 +455,50 @@ static const struct sdhci_pci_fixes sdhc
+ 	.probe_slot	= pch_hc_probe_slot,
+ };
  
- 	memset(&req_ctx->fd_flt, 0, sizeof(req_ctx->fd_flt));
- 	dpaa2_fl_set_final(in_fle, true);
--	dpaa2_fl_set_format(in_fle, dpaa2_fl_single);
--	dpaa2_fl_set_addr(in_fle, state->buf_dma);
--	dpaa2_fl_set_len(in_fle, buflen);
-+	/*
-+	 * crypto engine requires the input entry to be present when
-+	 * "frame list" FD is used.
-+	 * Since engine does not support FMT=2'b11 (unused entry type), leaving
-+	 * in_fle zeroized (except for "Final" flag) is the best option.
-+	 */
-+	if (buflen) {
-+		dpaa2_fl_set_format(in_fle, dpaa2_fl_single);
-+		dpaa2_fl_set_addr(in_fle, state->buf_dma);
-+		dpaa2_fl_set_len(in_fle, buflen);
++#ifdef CONFIG_X86
++
++#define BYT_IOSF_SCCEP			0x63
++#define BYT_IOSF_OCP_NETCTRL0		0x1078
++#define BYT_IOSF_OCP_TIMEOUT_BASE	GENMASK(10, 8)
++
++static void byt_ocp_setting(struct pci_dev *pdev)
++{
++	u32 val = 0;
++
++	if (pdev->device != PCI_DEVICE_ID_INTEL_BYT_EMMC &&
++	    pdev->device != PCI_DEVICE_ID_INTEL_BYT_SDIO &&
++	    pdev->device != PCI_DEVICE_ID_INTEL_BYT_SD &&
++	    pdev->device != PCI_DEVICE_ID_INTEL_BYT_EMMC2)
++		return;
++
++	if (iosf_mbi_read(BYT_IOSF_SCCEP, MBI_CR_READ, BYT_IOSF_OCP_NETCTRL0,
++			  &val)) {
++		dev_err(&pdev->dev, "%s read error\n", __func__);
++		return;
 +	}
- 	dpaa2_fl_set_format(out_fle, dpaa2_fl_single);
- 	dpaa2_fl_set_addr(out_fle, edesc->dst_dma);
- 	dpaa2_fl_set_len(out_fle, digestsize);
++
++	if (!(val & BYT_IOSF_OCP_TIMEOUT_BASE))
++		return;
++
++	val &= ~BYT_IOSF_OCP_TIMEOUT_BASE;
++
++	if (iosf_mbi_write(BYT_IOSF_SCCEP, MBI_CR_WRITE, BYT_IOSF_OCP_NETCTRL0,
++			   val)) {
++		dev_err(&pdev->dev, "%s write error\n", __func__);
++		return;
++	}
++
++	dev_dbg(&pdev->dev, "%s completed\n", __func__);
++}
++
++#else
++
++static inline void byt_ocp_setting(struct pci_dev *pdev)
++{
++}
++
++#endif
++
+ enum {
+ 	INTEL_DSM_FNS		=  0,
+ 	INTEL_DSM_V18_SWITCH	=  3,
+@@ -715,6 +763,8 @@ static void byt_probe_slot(struct sdhci_
+ 
+ 	byt_read_dsm(slot);
+ 
++	byt_ocp_setting(slot->chip->pdev);
++
+ 	ops->execute_tuning = intel_execute_tuning;
+ 	ops->start_signal_voltage_switch = intel_start_signal_voltage_switch;
+ 
+@@ -938,7 +988,35 @@ static int byt_sd_probe_slot(struct sdhc
+ 	return 0;
+ }
+ 
++#ifdef CONFIG_PM_SLEEP
++
++static int byt_resume(struct sdhci_pci_chip *chip)
++{
++	byt_ocp_setting(chip->pdev);
++
++	return sdhci_pci_resume_host(chip);
++}
++
++#endif
++
++#ifdef CONFIG_PM
++
++static int byt_runtime_resume(struct sdhci_pci_chip *chip)
++{
++	byt_ocp_setting(chip->pdev);
++
++	return sdhci_pci_runtime_resume_host(chip);
++}
++
++#endif
++
+ static const struct sdhci_pci_fixes sdhci_intel_byt_emmc = {
++#ifdef CONFIG_PM_SLEEP
++	.resume		= byt_resume,
++#endif
++#ifdef CONFIG_PM
++	.runtime_resume	= byt_runtime_resume,
++#endif
+ 	.allow_runtime_pm = true,
+ 	.probe_slot	= byt_emmc_probe_slot,
+ 	.quirks		= SDHCI_QUIRK_NO_ENDATTR_IN_NOPDESC |
+@@ -972,6 +1050,12 @@ static const struct sdhci_pci_fixes sdhc
+ };
+ 
+ static const struct sdhci_pci_fixes sdhci_ni_byt_sdio = {
++#ifdef CONFIG_PM_SLEEP
++	.resume		= byt_resume,
++#endif
++#ifdef CONFIG_PM
++	.runtime_resume	= byt_runtime_resume,
++#endif
+ 	.quirks		= SDHCI_QUIRK_NO_ENDATTR_IN_NOPDESC |
+ 			  SDHCI_QUIRK_NO_LED,
+ 	.quirks2	= SDHCI_QUIRK2_HOST_OFF_CARD_ON |
+@@ -983,6 +1067,12 @@ static const struct sdhci_pci_fixes sdhc
+ };
+ 
+ static const struct sdhci_pci_fixes sdhci_intel_byt_sdio = {
++#ifdef CONFIG_PM_SLEEP
++	.resume		= byt_resume,
++#endif
++#ifdef CONFIG_PM
++	.runtime_resume	= byt_runtime_resume,
++#endif
+ 	.quirks		= SDHCI_QUIRK_NO_ENDATTR_IN_NOPDESC |
+ 			  SDHCI_QUIRK_NO_LED,
+ 	.quirks2	= SDHCI_QUIRK2_HOST_OFF_CARD_ON |
+@@ -994,6 +1084,12 @@ static const struct sdhci_pci_fixes sdhc
+ };
+ 
+ static const struct sdhci_pci_fixes sdhci_intel_byt_sd = {
++#ifdef CONFIG_PM_SLEEP
++	.resume		= byt_resume,
++#endif
++#ifdef CONFIG_PM
++	.runtime_resume	= byt_runtime_resume,
++#endif
+ 	.quirks		= SDHCI_QUIRK_NO_ENDATTR_IN_NOPDESC |
+ 			  SDHCI_QUIRK_NO_LED,
+ 	.quirks2	= SDHCI_QUIRK2_CARD_ON_NEEDS_BUS_ON |
 
 
