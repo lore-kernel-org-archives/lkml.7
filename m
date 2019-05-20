@@ -4,55 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4B98C04AAC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:48:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 269EFC04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:48:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A863C20645
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:48:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E508F20645
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:48:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558356507;
-	bh=+GH+DCDK/EE36J4OWkKzbGvcyDu4QdcaLRrUrfIowyM=;
+	s=default; t=1558356517;
+	bh=AJzAOBfK+W+9PiPw6Q1YZyS50a4r863se8XmdD4S8UU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vTQ1k2Pi9qNAgrkjwur0rSZFOUDBg0LkKZr2j1TyEja79x+LeI5wP5NLVpifGNEVq
-	 9/ZMyOasmyvyntZcFzlzmjz1UGnapS8fMj3P+UlyxVJsb+P6XCYSdnSv2PVR2j1QfL
-	 zvPt7Y3f/fZy/o4u0sjQzDoidINqk67aw8pRNY60=
+	b=hwqM/QpXgK8kBhsSwD0epTTU0Hb7Fi4zVX5nKIMbx4y+3IjQQqGptXsuxkSNHVfaF
+	 hhKen3UG+ojdaNghzfd1sKttcs8UIhs3cI3Qzu88DTJlZXEjL3FFIz+K54xmG4mY3D
+	 d0geuaqe5TEFerDoBr8fhWHauhJT/qdKP3fPMlBk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389169AbfETMs1 (ORCPT
+        id S2388467AbfETMWl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 08:48:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37162 "EHLO mail.kernel.org"
+        Mon, 20 May 2019 08:22:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36700 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388262AbfETMW6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 08:22:58 -0400
+        id S2388450AbfETMWh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 08:22:37 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 845E521783;
-        Mon, 20 May 2019 12:22:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3192520675;
+        Mon, 20 May 2019 12:22:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558354978;
-        bh=+GH+DCDK/EE36J4OWkKzbGvcyDu4QdcaLRrUrfIowyM=;
+        s=default; t=1558354956;
+        bh=AJzAOBfK+W+9PiPw6Q1YZyS50a4r863se8XmdD4S8UU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ynf6dIs9mPD3VHriFfqXPgkRLdqHOddecOCKkbfCeJ/uJUoXZyw3eJ3tiHLt8EupF
-         BiwRULXFLU6oBGxsF93vyssC6Q494V6jLLpSG86GODFkRx6Zs/iUVe65fdEkiUjghj
-         N09B+zFZWoyHONs2NfLzWOVeRUFkHk7tkaIxlhTA=
+        b=hhHEWdVGj3cd4IyLgza+JmH5uqqPkzQbLVem2BfZt4i+EFhdu8oyzg/PnHLe27jbi
+         Lwih/8MTVDTXojDcch7xB43iL/bW9OpGJ2apWaeWooPj+CdGCV6Ke8CZ1bXnNbIm4q
+         v2SZDl9ITHFkru/cZTO+vy7vYwam/UD7QpcbfiZo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Andy Lutomirski <luto@kernel.org>,
-        Borislav Petkov <bp@suse.de>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Jon Masters <jcm@redhat.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>
-Subject: [PATCH 4.19 002/105] x86/speculation/mds: Revert CPU buffer clear on double fault exit
-Date:   Mon, 20 May 2019 14:13:08 +0200
-Message-Id: <20190520115247.226620319@linuxfoundation.org>
+        stable@vger.kernel.org, Shengjiu Wang <shengjiu.wang@nxp.com>,
+        Nicolin Chen <nicoleotsuka@gmail.com>,
+        Mark Brown <broonie@kernel.org>
+Subject: [PATCH 4.19 041/105] ASoC: fsl_esai: Fix missing break in switch statement
+Date:   Mon, 20 May 2019 14:13:47 +0200
+Message-Id: <20190520115249.867360413@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190520115247.060821231@linuxfoundation.org>
 References: <20190520115247.060821231@linuxfoundation.org>
@@ -65,73 +60,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andy Lutomirski <luto@kernel.org>
+From: S.j. Wang <shengjiu.wang@nxp.com>
 
-commit 88640e1dcd089879530a49a8d212d1814678dfe7 upstream.
+commit 903c220b1ece12f17c868e43f2243b8f81ff2d4c upstream.
 
-The double fault ESPFIX path doesn't return to user mode at all --
-it returns back to the kernel by simulating a #GP fault.
-prepare_exit_to_usermode() will run on the way out of
-general_protection before running user code.
+case ESAI_HCKT_EXTAL and case ESAI_HCKR_EXTAL should be
+independent of each other, so replace fall-through with break.
 
-Signed-off-by: Andy Lutomirski <luto@kernel.org>
-Cc: Borislav Petkov <bp@suse.de>
-Cc: Frederic Weisbecker <frederic@kernel.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Jon Masters <jcm@redhat.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: stable@vger.kernel.org
-Fixes: 04dcbdb80578 ("x86/speculation/mds: Clear CPU buffers on exit to user")
-Link: http://lkml.kernel.org/r/ac97612445c0a44ee10374f6ea79c222fe22a5c4.1557865329.git.luto@kernel.org
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Fixes: 43d24e76b698 ("ASoC: fsl_esai: Add ESAI CPU DAI driver")
+Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
+Acked-by: Nicolin Chen <nicoleotsuka@gmail.com>
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- Documentation/x86/mds.rst |    7 -------
- arch/x86/kernel/traps.c   |    8 --------
- 2 files changed, 15 deletions(-)
+ sound/soc/fsl/fsl_esai.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/Documentation/x86/mds.rst
-+++ b/Documentation/x86/mds.rst
-@@ -158,13 +158,6 @@ Mitigation points
-      mitigated on the return from do_nmi() to provide almost complete
-      coverage.
- 
--   - Double fault (#DF):
--
--     A double fault is usually fatal, but the ESPFIX workaround, which can
--     be triggered from user space through modify_ldt(2) is a recoverable
--     double fault. #DF uses the paranoid exit path, so explicit mitigation
--     in the double fault handler is required.
--
-    - Machine Check Exception (#MC):
- 
-      Another corner case is a #MC which hits between the CPU buffer clear
---- a/arch/x86/kernel/traps.c
-+++ b/arch/x86/kernel/traps.c
-@@ -58,7 +58,6 @@
- #include <asm/alternative.h>
- #include <asm/fpu/xstate.h>
- #include <asm/trace/mpx.h>
--#include <asm/nospec-branch.h>
- #include <asm/mpx.h>
- #include <asm/vm86.h>
- #include <asm/umip.h>
-@@ -388,13 +387,6 @@ dotraplinkage void do_double_fault(struc
- 		regs->ip = (unsigned long)general_protection;
- 		regs->sp = (unsigned long)&gpregs->orig_ax;
- 
--		/*
--		 * This situation can be triggered by userspace via
--		 * modify_ldt(2) and the return does not take the regular
--		 * user space exit, so a CPU buffer clear is required when
--		 * MDS mitigation is enabled.
--		 */
--		mds_user_clear_cpu_buffers();
- 		return;
- 	}
- #endif
+--- a/sound/soc/fsl/fsl_esai.c
++++ b/sound/soc/fsl/fsl_esai.c
+@@ -251,7 +251,7 @@ static int fsl_esai_set_dai_sysclk(struc
+ 		break;
+ 	case ESAI_HCKT_EXTAL:
+ 		ecr |= ESAI_ECR_ETI;
+-		/* fall through */
++		break;
+ 	case ESAI_HCKR_EXTAL:
+ 		ecr |= ESAI_ECR_ERI;
+ 		break;
 
 
