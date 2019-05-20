@@ -2,248 +2,109 @@ Return-Path: <SRS0=lq4r=TU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C11D2C04E87
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 15:40:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0C33C04E87
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 15:41:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8289F20856
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 15:40:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 937E521479
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 15:41:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="szsaZEAW"
+	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="yPev5JIA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392269AbfETPkn (ORCPT
+        id S2392285AbfETPlB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 11:40:43 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:34357 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2392253AbfETPkm (ORCPT
+        Mon, 20 May 2019 11:41:01 -0400
+Received: from mail-ot1-f49.google.com ([209.85.210.49]:44149 "EHLO
+        mail-ot1-f49.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388939AbfETPlA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 11:40:42 -0400
-Received: by mail-pg1-f194.google.com with SMTP id c13so6983090pgt.1
-        for <linux-kernel@vger.kernel.org>; Mon, 20 May 2019 08:40:41 -0700 (PDT)
+        Mon, 20 May 2019 11:41:00 -0400
+Received: by mail-ot1-f49.google.com with SMTP id g18so13369761otj.11
+        for <linux-kernel@vger.kernel.org>; Mon, 20 May 2019 08:40:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=k/heyaUqeKgmsqNyqFuRQhrCnWAaJChzuChioekfYFU=;
-        b=szsaZEAWQZBAPa/oSIDZup6Sf3jSi3AJ76WcSsZC1BgEtPm2HRp1c+w0lJQChX3EX6
-         hX/GoTqMK+0+zx/9R5rDkf5m5aZmhpybbpZJQBdSeK5uTi3+UvGjBlOQcsZMpnKl4AzR
-         qlGDJn7Oq7xYDgi8LQsdENsNMpNdnWWnty6fDhrh/VjIO0o5tu81pgh8/DOF5kR34az6
-         KABjDG9DI7NtDSB5JsYly4sD4iTg3dk/qU8HG67UhbEngTVIYwRYPstU4hFei2dlyvNx
-         n7fhc7CgCLg7Z/rik+tGZirioJ5jwOUhd9dYcpPxgvLI1JGroSd3ozTGxA9XV5aVgnZs
-         VIJQ==
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=5QSUm6/xL4WGvvJmVrGCi+MUsTk2A8AVb5uoylgpYm0=;
+        b=yPev5JIATuPBAUeewEekviqNSsYEYMPVj34Ea7J3VHdDWfkJJm/Lss37NJzZXuSbcC
+         YRWqEDzGwnKyGJ7cfmBUCwLnOU/8qZso7KUyoxCpR1o8jo9s6hM/D8+pnibzSAEiHUth
+         qmci2Y5QYlrrWb6PkGnzvPjqxjjWW/5HxgR5KoDHlQ/Byo2F5xDeeHmYv19+at8R+TMZ
+         tu+Vu2APi20B80NNxCZHFz3fpj9rYA8GEe82GaUHJ8I6t+MvUs+Ar9a+Vgx2EB76jf89
+         ErQzIHthFAPF1mpVWGOYtN71zpeES9K3vrWlKWx5qmwTMgZWKug91Di3ce4BOAyUnJfW
+         dKnw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=k/heyaUqeKgmsqNyqFuRQhrCnWAaJChzuChioekfYFU=;
-        b=E4Cqb9+wR/WCTiUDodQ0w+0Z9AxaFnd9d46TpGX0d54cVWc90A9f6pHh0ITqFEvkUK
-         R3pWPd7c6oiZuBiNt/DT2VwRGZ8hiWWlbtKIL6z7FcV5Q6MVYHK6f7vxotq/ZoK/D5KL
-         k95RcIehTGzGgQGRP9GNlg29NDSDZaIo5V+bwrMzMLKvG+xb1JOGrb8bRgCvcS6ygcvo
-         7whXcf8z2IzCtqsLRRjOjkOzBuXEqfwQe7vxMXURiTTbFVxkpYGXNalIVJ6UP+Hsg/N4
-         4uvmtC0bqE2GFwt4uscDseQ6mpBqgekLlowrTn7C2rmDm+9u4S10LHiDo2Y9q84eWxo9
-         UsmQ==
-X-Gm-Message-State: APjAAAXDrLpNhVRcrlVa3udTrHbETqZDO/Que3tHN2+BB7/U5eytS/1c
-        UQy40LL2qVEhv8NbrKBrnoenV4bCBmU=
-X-Google-Smtp-Source: APXvYqzB4o9I2xZFF8x25ug5HF4C3D7MauyyGIjq+J9XrCQDbuj+gG89I5cVtID1X4Jo1vMXmLyuqA==
-X-Received: by 2002:aa7:9a8c:: with SMTP id w12mr80346129pfi.187.1558366841456;
-        Mon, 20 May 2019 08:40:41 -0700 (PDT)
-Received: from tuxbook-pro (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id a69sm47830937pfa.81.2019.05.20.08.40.39
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 20 May 2019 08:40:40 -0700 (PDT)
-Date:   Mon, 20 May 2019 08:41:08 -0700
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Alex Elder <elder@linaro.org>
-Cc:     arnd@arndb.de, subashab@codeaurora.org, david.brown@linaro.org,
-        agross@kernel.org, davem@davemloft.net,
-        ilias.apalodimas@linaro.org, cpratapa@codeaurora.org,
-        syadagir@codeaurora.org, evgreen@chromium.org, benchan@google.com,
-        ejcaruso@google.com, netdev@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/8] net: qualcomm: rmnet: kill RMNET_MAP_GET_*()
- accessor macros
-Message-ID: <20190520154108.GQ2085@tuxbook-pro>
-References: <20190520135354.18628-1-elder@linaro.org>
- <20190520135354.18628-3-elder@linaro.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=5QSUm6/xL4WGvvJmVrGCi+MUsTk2A8AVb5uoylgpYm0=;
+        b=O6d/tlIuRQ1rkYvSYyIHkd20irjkX681zdrCq8LvrmUFUC8MuYK0THn/GBaGnwJv6d
+         PCBWUUwUddkMvtChvAD6Eq7c0AHNV2pBVWoqVxATq5Nu/nte+6PBaGSyzm3ohhe7MhKF
+         fY03eTCKuNapo/jaS/FX4et1J/2+RzFJl/gm5S0VUwEQXcur9If+iYCHtV68Xv3gp9t1
+         0LVvWTrm2xesG1s7uClHeAgJwDOZxataaFGkT7lI5qgblbVVfaCl7UG+uz7/y+j+QHdQ
+         uzEdL3iGoSpreTaSTqSB/2hkrwDxcWgVXs3/WGPnKYqijjfHcWtrtkkm97c9wR4LOOW8
+         EuuQ==
+X-Gm-Message-State: APjAAAXAZ2QlwstZPN0EMHfG27hs9RSRvE0Spao/FJaN6nRY3dJbqdHg
+        A02nLmREYhCTPzXloWa9tGdnsB0X1V7q2xtN/f4k4A==
+X-Google-Smtp-Source: APXvYqxs3KuEEqHCDOtKW83Hc+3/Eh7qrrFqOEiop9JaJSWQJfM8wgC/rkaym0C4K7iuUNGIYwsqH+mgvaYu198CCOk=
+X-Received: by 2002:a05:6830:1182:: with SMTP id u2mr34065267otq.71.1558366859535;
+ Mon, 20 May 2019 08:40:59 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190520135354.18628-3-elder@linaro.org>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+References: <155805321833.867447.3864104616303535270.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <20190517084739.GB20550@quack2.suse.cz> <CAPcyv4iZZCgcC657ZOysBP9=1ejp3jfFj=VETVBPrgmfg7xUEw@mail.gmail.com>
+ <201905170855.8E2E1AC616@keescook> <CAPcyv4g9HpMaifC+Qe2RVbgL_qq9vQvjwr-Jw813xhxcviehYQ@mail.gmail.com>
+ <201905171225.29F9564BA2@keescook> <CAPcyv4iSeUPWFeSZW-dmYz9TnWhqVCx1Y1VjtUv+125_ZSQaYg@mail.gmail.com>
+ <20190520075232.GA30972@quack2.suse.cz>
+In-Reply-To: <20190520075232.GA30972@quack2.suse.cz>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Mon, 20 May 2019 08:40:48 -0700
+Message-ID: <CAPcyv4hwiKGDtkT7-r8Ei3kOQBMA3LwDGBNM9H8N6HC5fxi6tw@mail.gmail.com>
+Subject: Re: [PATCH] libnvdimm/pmem: Bypass CONFIG_HARDENED_USERCOPY overhead
+To:     Jan Kara <jack@suse.cz>
+Cc:     Kees Cook <keescook@chromium.org>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
+        stable <stable@vger.kernel.org>, Jeff Moyer <jmoyer@redhat.com>,
+        Ingo Molnar <mingo@redhat.com>, Christoph Hellwig <hch@lst.de>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Matthew Wilcox <willy@infradead.org>,
+        Jeff Smits <jeff.smits@intel.com>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon 20 May 06:53 PDT 2019, Alex Elder wrote:
+On Mon, May 20, 2019 at 12:52 AM Jan Kara <jack@suse.cz> wrote:
+>
+> On Sat 18-05-19 21:46:03, Dan Williams wrote:
+> > On Fri, May 17, 2019 at 12:25 PM Kees Cook <keescook@chromium.org> wrote:
+> > > On Fri, May 17, 2019 at 10:28:48AM -0700, Dan Williams wrote:
+> > > > It seems dax_iomap_actor() is not a path where we'd be worried about
+> > > > needing hardened user copy checks.
+> > >
+> > > I would agree: I think the proposed patch makes sense. :)
+> >
+> > Sounds like an acked-by to me.
+>
+> Yeah, if Kees agrees, I'm fine with skipping the checks as well. I just
+> wanted that to be clarified. Also it helped me that you wrote:
+>
+> That routine (dax_iomap_actor()) validates that the logical file offset is
+> within bounds of the file, then it does a sector-to-pfn translation which
+> validates that the physical mapping is within bounds of the block device.
+>
+> That is more specific than "dax_iomap_actor() takes care of necessary
+> checks" which was in the changelog. And the above paragraph helped me
+> clarify which checks in dax_iomap_actor() you think replace those usercopy
+> checks. So I think it would be good to add that paragraph to those
+> copy_from_pmem() functions as a comment just in case we are wondering in
+> the future why we are skipping the checks... Also feel free to add:
+>
+> Acked-by: Jan Kara <jack@suse.cz>
 
-> The following macros, defined in "rmnet_map.h", assume a socket
-> buffer is provided as an argument without any real indication this
-> is the case.
->     RMNET_MAP_GET_MUX_ID()
->     RMNET_MAP_GET_CD_BIT()
->     RMNET_MAP_GET_PAD()
->     RMNET_MAP_GET_CMD_START()
->     RMNET_MAP_GET_LENGTH()
-> What they hide is pretty trivial accessing of fields in a structure,
-> and it's much clearer to see this if we do these accesses directly.
-> 
-> So rather than using these accessor macros, assign a local
-> variable of the map header pointer type to the socket buffer data
-> pointer, and derereference that pointer variable.
-> 
-> Use the network byte order macros (e.g., ntohs()), not the Linux
-> byte order functions (e.g. be_to_cpu16()) to convert the big-endian
-> packet length field, to match the convention used elswhere in the
-> driver.
-> 
-> There's no need to byte swap 0; it's all zeros irrespective of
-> endianness.
-> 
-
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-
-> Signed-off-by: Alex Elder <elder@linaro.org>
-> ---
->  drivers/net/ethernet/qualcomm/rmnet/rmnet_handlers.c |  9 +++++----
->  drivers/net/ethernet/qualcomm/rmnet/rmnet_map.h      | 12 ------------
->  .../net/ethernet/qualcomm/rmnet/rmnet_map_command.c  | 11 ++++++++---
->  drivers/net/ethernet/qualcomm/rmnet/rmnet_map_data.c |  4 ++--
->  4 files changed, 15 insertions(+), 21 deletions(-)
-> 
-> diff --git a/drivers/net/ethernet/qualcomm/rmnet/rmnet_handlers.c b/drivers/net/ethernet/qualcomm/rmnet/rmnet_handlers.c
-> index 11167abe5934..4c1b62b72504 100644
-> --- a/drivers/net/ethernet/qualcomm/rmnet/rmnet_handlers.c
-> +++ b/drivers/net/ethernet/qualcomm/rmnet/rmnet_handlers.c
-> @@ -65,20 +65,21 @@ static void
->  __rmnet_map_ingress_handler(struct sk_buff *skb,
->  			    struct rmnet_port *port)
->  {
-> +	struct rmnet_map_header *map_header = (void *)skb->data;
->  	struct rmnet_endpoint *ep;
->  	u16 len, pad;
->  	u8 mux_id;
->  
-> -	if (RMNET_MAP_GET_CD_BIT(skb)) {
-> +	if (map_header->cd_bit) {
->  		if (port->data_format & RMNET_FLAGS_INGRESS_MAP_COMMANDS)
->  			return rmnet_map_command(skb, port);
->  
->  		goto free_skb;
->  	}
->  
-> -	mux_id = RMNET_MAP_GET_MUX_ID(skb);
-> -	pad = RMNET_MAP_GET_PAD(skb);
-> -	len = RMNET_MAP_GET_LENGTH(skb) - pad;
-> +	mux_id = map_header->mux_id;
-> +	pad = map_header->pad_len;
-> +	len = ntohs(map_header->pkt_len) - pad;
->  
->  	if (mux_id >= RMNET_MAX_LOGICAL_EP)
->  		goto free_skb;
-> diff --git a/drivers/net/ethernet/qualcomm/rmnet/rmnet_map.h b/drivers/net/ethernet/qualcomm/rmnet/rmnet_map.h
-> index b1ae9499c0b2..a30a7b405a11 100644
-> --- a/drivers/net/ethernet/qualcomm/rmnet/rmnet_map.h
-> +++ b/drivers/net/ethernet/qualcomm/rmnet/rmnet_map.h
-> @@ -63,18 +63,6 @@ struct rmnet_map_ul_csum_header {
->  	u16 csum_enabled:1;
->  } __aligned(1);
->  
-> -#define RMNET_MAP_GET_MUX_ID(Y) (((struct rmnet_map_header *) \
-> -				 (Y)->data)->mux_id)
-> -#define RMNET_MAP_GET_CD_BIT(Y) (((struct rmnet_map_header *) \
-> -				(Y)->data)->cd_bit)
-> -#define RMNET_MAP_GET_PAD(Y) (((struct rmnet_map_header *) \
-> -				(Y)->data)->pad_len)
-> -#define RMNET_MAP_GET_CMD_START(Y) ((struct rmnet_map_control_command *) \
-> -				    ((Y)->data + \
-> -				      sizeof(struct rmnet_map_header)))
-> -#define RMNET_MAP_GET_LENGTH(Y) (ntohs(((struct rmnet_map_header *) \
-> -					(Y)->data)->pkt_len))
-> -
->  #define RMNET_MAP_COMMAND_REQUEST     0
->  #define RMNET_MAP_COMMAND_ACK         1
->  #define RMNET_MAP_COMMAND_UNSUPPORTED 2
-> diff --git a/drivers/net/ethernet/qualcomm/rmnet/rmnet_map_command.c b/drivers/net/ethernet/qualcomm/rmnet/rmnet_map_command.c
-> index f6cf59aee212..f675f47c3495 100644
-> --- a/drivers/net/ethernet/qualcomm/rmnet/rmnet_map_command.c
-> +++ b/drivers/net/ethernet/qualcomm/rmnet/rmnet_map_command.c
-> @@ -20,12 +20,13 @@ static u8 rmnet_map_do_flow_control(struct sk_buff *skb,
->  				    struct rmnet_port *port,
->  				    int enable)
->  {
-> +	struct rmnet_map_header *map_header = (void *)skb->data;
->  	struct rmnet_endpoint *ep;
->  	struct net_device *vnd;
->  	u8 mux_id;
->  	int r;
->  
-> -	mux_id = RMNET_MAP_GET_MUX_ID(skb);
-> +	mux_id = map_header->mux_id;
->  
->  	if (mux_id >= RMNET_MAX_LOGICAL_EP) {
->  		kfree_skb(skb);
-> @@ -57,6 +58,7 @@ static void rmnet_map_send_ack(struct sk_buff *skb,
->  			       unsigned char type,
->  			       struct rmnet_port *port)
->  {
-> +	struct rmnet_map_header *map_header = (void *)skb->data;
->  	struct rmnet_map_control_command *cmd;
->  	struct net_device *dev = skb->dev;
->  
-> @@ -66,7 +68,8 @@ static void rmnet_map_send_ack(struct sk_buff *skb,
->  
->  	skb->protocol = htons(ETH_P_MAP);
->  
-> -	cmd = RMNET_MAP_GET_CMD_START(skb);
-> +	/* Command data immediately follows the header */
-> +	cmd = (struct rmnet_map_control_command *)(map_header + 1);
->  	cmd->cmd_type = type & 0x03;
->  
->  	netif_tx_lock(dev);
-> @@ -79,11 +82,13 @@ static void rmnet_map_send_ack(struct sk_buff *skb,
->   */
->  void rmnet_map_command(struct sk_buff *skb, struct rmnet_port *port)
->  {
-> +	struct rmnet_map_header *map_header = (void *)skb->data;
->  	struct rmnet_map_control_command *cmd;
->  	unsigned char command_name;
->  	unsigned char rc = 0;
->  
-> -	cmd = RMNET_MAP_GET_CMD_START(skb);
-> +	/* Command data immediately follows the header */
-> +	cmd = (struct rmnet_map_control_command *)(map_header + 1);
->  	command_name = cmd->command_name;
->  
->  	switch (command_name) {
-> diff --git a/drivers/net/ethernet/qualcomm/rmnet/rmnet_map_data.c b/drivers/net/ethernet/qualcomm/rmnet/rmnet_map_data.c
-> index 57a9c314a665..498f20ba1826 100644
-> --- a/drivers/net/ethernet/qualcomm/rmnet/rmnet_map_data.c
-> +++ b/drivers/net/ethernet/qualcomm/rmnet/rmnet_map_data.c
-> @@ -323,7 +323,7 @@ struct sk_buff *rmnet_map_deaggregate(struct sk_buff *skb,
->  		return NULL;
->  
->  	maph = (struct rmnet_map_header *)skb->data;
-> -	packet_len = ntohs(maph->pkt_len) + sizeof(struct rmnet_map_header);
-> +	packet_len = ntohs(maph->pkt_len) + sizeof(*maph);
->  
->  	if (port->data_format & RMNET_FLAGS_INGRESS_MAP_CKSUMV4)
->  		packet_len += sizeof(struct rmnet_map_dl_csum_trailer);
-> @@ -332,7 +332,7 @@ struct sk_buff *rmnet_map_deaggregate(struct sk_buff *skb,
->  		return NULL;
->  
->  	/* Some hardware can send us empty frames. Catch them */
-> -	if (ntohs(maph->pkt_len) == 0)
-> +	if (!maph->pkt_len)
->  		return NULL;
->  
->  	skbn = alloc_skb(packet_len + RMNET_MAP_DEAGGR_SPACING, GFP_ATOMIC);
-> -- 
-> 2.20.1
-> 
+Will do, thanks Jan.
