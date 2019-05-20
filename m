@@ -2,258 +2,104 @@ Return-Path: <SRS0=lq4r=TU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07B82C04AAC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 13:38:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46A0EC04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 13:39:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D21C920856
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 13:38:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1B87D20856
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 13:39:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KcgzAGA5"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PX548Kp9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389207AbfETNiq (ORCPT
+        id S2389284AbfETNjD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 09:38:46 -0400
-Received: from mail-qk1-f195.google.com ([209.85.222.195]:39609 "EHLO
-        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727682AbfETNip (ORCPT
+        Mon, 20 May 2019 09:39:03 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:44451 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727682AbfETNjC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 09:38:45 -0400
-Received: by mail-qk1-f195.google.com with SMTP id z128so8814436qkb.6;
-        Mon, 20 May 2019 06:38:44 -0700 (PDT)
+        Mon, 20 May 2019 09:39:02 -0400
+Received: by mail-wr1-f68.google.com with SMTP id w13so3908475wru.11;
+        Mon, 20 May 2019 06:39:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=4sn2aNhSmWMF2bxaXlhtdrrD8MWB8zLabNnT30+rXN4=;
-        b=KcgzAGA5TEDzFFBWGDWAFNeiLd9NNMqf4uaECaqxcXYCa1qvlE+IkMRR/7dzHa2d9N
-         A6gd10ktaMwYZTW5XOaWR4f4NDEML2gpQPzXuLCmiEs3CXzm6KxshIZR0FPr0agP/w6e
-         bpT45YHpj90Ru/F01/fZAUFpD5IwCIlVNmYl9tCsjE+m1X1H/rcsl3ryz+/drMo3e30b
-         eveWPibVsL4VegNF/lyjAoAZo5MJjziMELluckprHhusFdkA6/z+Aq4bUijrIQXTSKWe
-         PW08mM5Ru6QmMgPaov+duN9ychrfxubsp4cPqtqy354VlPeP92fNZ3CRqLpbSGiB5lJa
-         DNQg==
+        h=sender:from:to:cc:subject:date:message-id;
+        bh=bLeZplg8ot5OhBeGr3FMD+700rd1zlYGYOO98ayuuNo=;
+        b=PX548Kp9GsiNqYIeFor5Wcu6Pgv+PD4Gs81KYmfCoXffToGmp4sAQQWTIaSNFDj7Nl
+         wvLZhu1VvaODdyWfglGsJ4uuy6TOQ9SsaVhqX6Cctt3ZwZFgZa4Amujq1+M5FFAPQMCN
+         H8zTBKCyRmTS3K5LsdsZnVUH5QBTBVlY6U37XIFs9z50xPVGyHJgZNr8/y8+NZqFhn+T
+         1dV3jM5NICApffmF/er+5fynKFLEfyAORcqM39/ihsJl8nwWFfoY3mKDlZQwxQOQosO1
+         /uuG9JRpoPguNh9Pt9wL3hDIhCM4bWG6X0q7ukx5h+jJR2VxY+JU0i7fgjDftpwQfIh0
+         Tngw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=4sn2aNhSmWMF2bxaXlhtdrrD8MWB8zLabNnT30+rXN4=;
-        b=ARA+clqKEtrhfuap76OCEzmy8WVh2jxEqL9NYgoR2w9qOMU1Y8sU0oUxdjVJi3xJDO
-         Dm+zLJRVH2H4SyzcoWoGgAe2Zkx199FkEEZfc6xgQhriXC97FnrqycT7gm7AkpQI+2mW
-         r66yRA2tJIP6qDWTSvO4cx2tBwVKwJtqW/eqaDJLPxbSYTikchpyXdHBhDplM5w+bmDJ
-         ndoV2wQY+ukzSkTXSCX5guxT6xWalfN792Lys5SUZf7UJ/AZCk4dvM6+mFvmY8ON57d4
-         LIzVGZLNOwfBClp9BddIeCTpS0BmdccT+dAfJ3OJf3YvXNX5PIH4rh6MI9ec5lf55me7
-         03sg==
-X-Gm-Message-State: APjAAAWBhVwQoT6oEt3Gw+GLNWTjotkk0lOLH/TWVNAAlO66UGFDI1iq
-        +8C5SmwNdJsv/iSCwP16r/h2gFc6Cek5KLz/a0s=
-X-Google-Smtp-Source: APXvYqzpOs2ngVfVmJz73hlGI8UpUk2sigfqSuJkh1z/AeIEMMH2pH3Z+sBZuAGRfCGBbKsLDsEAA0YPlpDKL1R27CU=
-X-Received: by 2002:a05:620a:1644:: with SMTP id c4mr58248705qko.32.1558359523914;
- Mon, 20 May 2019 06:38:43 -0700 (PDT)
-MIME-Version: 1.0
-References: <1556618986-18923-1-git-send-email-zhangqing@rock-chips.com>
- <1556618986-18923-2-git-send-email-zhangqing@rock-chips.com> <785392a0-282a-1e51-a4d6-a6d5ca478949@linaro.org>
-In-Reply-To: <785392a0-282a-1e51-a4d6-a6d5ca478949@linaro.org>
-From:   Enric Balletbo Serra <eballetbo@gmail.com>
-Date:   Mon, 20 May 2019 15:38:32 +0200
-Message-ID: <CAFqH_53nbiwzQKctNa7MBzgCcsRFn1p8g31Xgvo3E9k6eA8AKw@mail.gmail.com>
-Subject: Re: [PATCH v3 1/3] thermal: rockchip: fix up the tsadc pinctrl
- setting error
-To:     Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc:     Elaine Zhang <zhangqing@rock-chips.com>,
-        =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        huangtao@rock-chips.com, Linux PM list <linux-pm@vger.kernel.org>,
-        xxx@rock-chips.com, xf@rock-chips.com,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Eduardo Valentin <edubezval@gmail.com>,
-        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Doug Anderson <dianders@chromium.org>, vicencb@gmail.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id;
+        bh=bLeZplg8ot5OhBeGr3FMD+700rd1zlYGYOO98ayuuNo=;
+        b=tbfLHMr6nVjVtajxkE/jWBbHhkv4Rs7+i5cpJxeTMLbdmLctqn/pnqK8NfjDVJmsGd
+         1Yeu2mHvO7hC6HMYq6lV46+Uza3dB7v9znU//Imowzcp5wfGf9UOhjE0qYIh8E5/Ffpy
+         hpdmrCjHso/I6H7b69Z0VQ4QrkqdJBtxiINzmqaS5smM+82r9lY62lMiAExlYfaFiShT
+         slQb3oZMq505AkzhU+nIu3/Ahicm2VN5KWQ88/a4fcpziLzmdN4XRgXPi2saUV4QL3f0
+         EeKT6ruFMOvLee8LO73u/8HhQqs4POVBJ6dDOk1qH5vUYCVpW7KA7qUKDYqJ2bqTSFej
+         bKCQ==
+X-Gm-Message-State: APjAAAW8YhQ9Tm4oMouWbCuB6w4DH3ZbthRnyV4KBPbdTq3AV6AafcF0
+        UGfAo6XCox0aD3eu3WtNxzY4d77d
+X-Google-Smtp-Source: APXvYqyPQru8WZN1t8IdBQ5n6pFQOvI+1sT5Bmz9bJYnhIJ7RuVzyHMYa7ozc42hEbDObV1oy4F2UQ==
+X-Received: by 2002:a5d:688f:: with SMTP id h15mr7843019wru.44.1558359540711;
+        Mon, 20 May 2019 06:39:00 -0700 (PDT)
+Received: from 640k.lan ([93.56.166.5])
+        by smtp.gmail.com with ESMTPSA id z20sm20659472wmf.14.2019.05.20.06.38.59
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 20 May 2019 06:39:00 -0700 (PDT)
+From:   Paolo Bonzini <pbonzini@redhat.com>
+To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+Cc:     thuth@redhat.com
+Subject: [PATCH] kvm: selftests: avoid type punning
+Date:   Mon, 20 May 2019 15:38:58 +0200
+Message-Id: <1558359538-14910-1-git-send-email-pbonzini@redhat.com>
+X-Mailer: git-send-email 1.8.3.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi all,
+Avoid warnings from -Wstrict-aliasing by using memcpy.
 
-As pointed by [1] and [2] this commit, that now is upstream, breaks
-veyron (rk3288) and kevin (rk3399) boards. The problem is especially
-critical for veyron boards because they don't boot anymore.
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+---
+ tools/testing/selftests/kvm/lib/ucall.c                        | 2 +-
+ tools/testing/selftests/kvm/x86_64/vmx_set_nested_state_test.c | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-I didn't look deep at the problem but I have some concerns about this
-patch, see below.
+diff --git a/tools/testing/selftests/kvm/lib/ucall.c b/tools/testing/selftests/kvm/lib/ucall.c
+index a2ab38be2f47..b701a01cfcb6 100644
+--- a/tools/testing/selftests/kvm/lib/ucall.c
++++ b/tools/testing/selftests/kvm/lib/ucall.c
+@@ -142,7 +142,7 @@ uint64_t get_ucall(struct kvm_vm *vm, uint32_t vcpu_id, struct ucall *uc)
+ 		vm_vaddr_t gva;
+ 		TEST_ASSERT(run->mmio.is_write && run->mmio.len == 8,
+ 			    "Unexpected ucall exit mmio address access");
+-		gva = *(vm_vaddr_t *)run->mmio.data;
++		memcpy(&gva, run->mmio.data, sizeof(gva));
+ 		memcpy(uc, addr_gva2hva(vm, gva), sizeof(*uc));
+ 	}
+ 
+diff --git a/tools/testing/selftests/kvm/x86_64/vmx_set_nested_state_test.c b/tools/testing/selftests/kvm/x86_64/vmx_set_nested_state_test.c
+index 61a2163cf9f1..9d62e2c7e024 100644
+--- a/tools/testing/selftests/kvm/x86_64/vmx_set_nested_state_test.c
++++ b/tools/testing/selftests/kvm/x86_64/vmx_set_nested_state_test.c
+@@ -75,7 +75,7 @@ void set_revision_id_for_vmcs12(struct kvm_nested_state *state,
+ 				u32 vmcs12_revision)
+ {
+ 	/* Set revision_id in vmcs12 to vmcs12_revision. */
+-	*(u32 *)(state->data) = vmcs12_revision;
++	memcpy(state->data, &vmcs12_revision, sizeof(u32));
+ }
+ 
+ void set_default_state(struct kvm_nested_state *state)
+-- 
+1.8.3.1
 
-[1] https://www.spinics.net/lists/linux-rockchip/msg24657.html
-[2] https://www.spinics.net/lists/linux-rockchip/msg24735.html
-
-Missatge de Daniel Lezcano <daniel.lezcano@linaro.org> del dia dt., 30
-d=E2=80=99abr. 2019 a les 15:39:
->
-> On 30/04/2019 12:09, Elaine Zhang wrote:
-> > Explicitly use the pinctrl to set/unset the right mode
-> > instead of relying on the pinctrl init mode.
-> > And it requires setting the tshut polarity before select pinctrl.
-> >
-> > When the temperature sensor mode is set to 0, it will automatically
-> > reset the board via the Clock-Reset-Unit (CRU) if the over temperature
-> > threshold is reached. However, when the pinctrl initializes, it does a
-> > transition to "otp_out" which may lead the SoC restart all the time.
-> >
-> > "otp_out" IO may be connected to the RESET circuit on the hardware.
-> > If the IO is in the wrong state, it will trigger RESET.
-> > (similar to the effect of pressing the RESET button)
-> > which will cause the soc to restart all the time.
-> >
-> > Signed-off-by: Elaine Zhang <zhangqing@rock-chips.com>
->
-> Reviewed-by: Daniel Lezcano <daniel.lezcano@linaro.org>
->
->
->
-> > ---
-> >  drivers/thermal/rockchip_thermal.c | 36 ++++++++++++++++++++++++++++++=
-+++---
-> >  1 file changed, 33 insertions(+), 3 deletions(-)
-> >
-> > diff --git a/drivers/thermal/rockchip_thermal.c b/drivers/thermal/rockc=
-hip_thermal.c
-> > index 9c7643d62ed7..6dc7fc516abf 100644
-> > --- a/drivers/thermal/rockchip_thermal.c
-> > +++ b/drivers/thermal/rockchip_thermal.c
-> > @@ -172,6 +172,9 @@ struct rockchip_thermal_data {
-> >       int tshut_temp;
-> >       enum tshut_mode tshut_mode;
-> >       enum tshut_polarity tshut_polarity;
-> > +     struct pinctrl *pinctrl;
-> > +     struct pinctrl_state *gpio_state;
-> > +     struct pinctrl_state *otp_state;
-> >  };
-> >
-> >  /**
-> > @@ -1242,6 +1245,8 @@ static int rockchip_thermal_probe(struct platform=
-_device *pdev)
-> >               return error;
-> >       }
-> >
-> > +     thermal->chip->control(thermal->regs, false);
-> > +
-
-That's the line that causes the hang. Commenting this makes the veyron
-boot again. Probably this needs to go after chip->initialize?
-
-> >       error =3D clk_prepare_enable(thermal->clk);
-> >       if (error) {
-> >               dev_err(&pdev->dev, "failed to enable converter clock: %d=
-\n",
-> > @@ -1267,6 +1272,30 @@ static int rockchip_thermal_probe(struct platfor=
-m_device *pdev)
-> >       thermal->chip->initialize(thermal->grf, thermal->regs,
-> >                                 thermal->tshut_polarity);
-> >
-> > +     if (thermal->tshut_mode =3D=3D TSHUT_MODE_GPIO) {
-> > +             thermal->pinctrl =3D devm_pinctrl_get(&pdev->dev);
-> > +             if (IS_ERR(thermal->pinctrl)) {
-> > +                     dev_err(&pdev->dev, "failed to find thermal pinct=
-rl\n");
-> > +                     return PTR_ERR(thermal->pinctrl);
-> > +             }
-> > +
-> > +             thermal->gpio_state =3D pinctrl_lookup_state(thermal->pin=
-ctrl,
-> > +                                                        "gpio");
-
-Shouldn't this mode be documented properly in the binding first?
-
-The binding [3] talks about init, default and sleep states but *not*
-gpio and otpout. The patch series looks incomplete to me or not using
-the proper names.
-
-[3] https://elixir.bootlin.com/linux/v5.2-rc1/source/Documentation/devicetr=
-ee/bindings/thermal/rockchip-thermal.txt
-
-> > +             if (IS_ERR_OR_NULL(thermal->gpio_state)) {
-> > +                     dev_err(&pdev->dev, "failed to find thermal gpio =
-state\n");
-> > +                     return -EINVAL;
-> > +             }
-> > +
-> > +             thermal->otp_state =3D pinctrl_lookup_state(thermal->pinc=
-trl,
-> > +                                                       "otpout");
-> > +             if (IS_ERR_OR_NULL(thermal->otp_state)) {
-> > +                     dev_err(&pdev->dev, "failed to find thermal otpou=
-t state\n");
-> > +                     return -EINVAL;
-> > +             }
-> > +
-
-Same here otpout is not a documented.
-
-As this change is now in mainline and is causing veyron to hang I'd
-suggest reverting this change for now. Even fixing the root cause
-(maybe the one I pointed above) after this patch we will have the
-thermal driver to fail because "gpio" and "otpout" states are not
-defined nor documented (a change on this will need some reviews and
-acks and time I guess).
-
-Cheers,
- Enric
-
-> > +             pinctrl_select_state(thermal->pinctrl, thermal->otp_state=
-);
-> > +     }
-> > +
-> >       for (i =3D 0; i < thermal->chip->chn_num; i++) {
-> >               error =3D rockchip_thermal_register_sensor(pdev, thermal,
-> >                                               &thermal->sensors[i],
-> > @@ -1337,8 +1366,8 @@ static int __maybe_unused rockchip_thermal_suspen=
-d(struct device *dev)
-> >
-> >       clk_disable(thermal->pclk);
-> >       clk_disable(thermal->clk);
-> > -
-> > -     pinctrl_pm_select_sleep_state(dev);
-> > +     if (thermal->tshut_mode =3D=3D TSHUT_MODE_GPIO)
-> > +             pinctrl_select_state(thermal->pinctrl, thermal->gpio_stat=
-e);
-> >
-> >       return 0;
-> >  }
-> > @@ -1383,7 +1412,8 @@ static int __maybe_unused rockchip_thermal_resume=
-(struct device *dev)
-> >       for (i =3D 0; i < thermal->chip->chn_num; i++)
-> >               rockchip_thermal_toggle_sensor(&thermal->sensors[i], true=
-);
-> >
-> > -     pinctrl_pm_select_default_state(dev);
-> > +     if (thermal->tshut_mode =3D=3D TSHUT_MODE_GPIO)
-> > +             pinctrl_select_state(thermal->pinctrl, thermal->otp_state=
-);
-> >
-> >       return 0;
-> >  }
-> >
->
->
-> --
->  <http://www.linaro.org/> Linaro.org =E2=94=82 Open source software for A=
-RM SoCs
->
-> Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-> <http://twitter.com/#!/linaroorg> Twitter |
-> <http://www.linaro.org/linaro-blog/> Blog
->
->
-> _______________________________________________
-> Linux-rockchip mailing list
-> Linux-rockchip@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-rockchip
