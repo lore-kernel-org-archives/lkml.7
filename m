@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 780C4C04AAC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:26:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1410C04E87
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:26:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4E35E20675
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:26:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 882E220815
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:26:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558355217;
-	bh=Z2GfKcHpVHwXI4/sFoV0Z1BGczs685S2OFmpzrq1tw8=;
+	s=default; t=1558355219;
+	bh=NELJ4Hu6YiJbJlmxwVlRRrxhcEXBUQ4E/XUnMCsrArw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=W6vpXhMN7DdBgvMhb+PvuprV+hqQ4/ZdCZpfXpQ6zcZAArOP245ZaBPvZ9ifPYs+W
-	 Vl9u9tBbi+mCvss/uDt0X90hRWJ3BiYcscgHmxHKJfl0DIcxiSmxIii8PtULKCEaSU
-	 8Y7yDimlxgk2AZM9ExHcOiWdQh24EVRzB0ouMp4I=
+	b=Qb11nXGOYPB5TE1nmzEqNnXzYKGHUD3TG2k5cgZvdYQJdNx5d2EgjwF9DoZIAvdLq
+	 qmSqIo0tvJ7zs4X3Z+JV/v95sYWWoVPwUFf9wSrZR5BbE6Z5WPgR2TTegNuo18ZxJD
+	 EzvG7Cu5EsVk/niQQzEr6tbXi7UbbxAD1l1fsuiQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389431AbfETM0z (ORCPT
+        id S2389365AbfETM06 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 08:26:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42348 "EHLO mail.kernel.org"
+        Mon, 20 May 2019 08:26:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42402 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388327AbfETM0x (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 08:26:53 -0400
+        id S2389361AbfETM04 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 08:26:56 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 414A520815;
-        Mon, 20 May 2019 12:26:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E0AD520645;
+        Mon, 20 May 2019 12:26:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558355212;
-        bh=Z2GfKcHpVHwXI4/sFoV0Z1BGczs685S2OFmpzrq1tw8=;
+        s=default; t=1558355215;
+        bh=NELJ4Hu6YiJbJlmxwVlRRrxhcEXBUQ4E/XUnMCsrArw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ahCD3iuQC8oNhjBc1ibXtzaGRyUwsk4cc0kYZObGMXEsKmUsfKZVPxYmicJvKGWjl
-         C3eZ7+7rXjVhPwCyj73zE9z3F3UG3T7Cjr6a0b+8TrDq1TK3W0sY68nkgLlA26tN9K
-         fLk8eokAVX5F0VNPpyvMOG9OAV0I7YYaKDKoWY2Q=
+        b=QzQ/SYzMLVggi/V/87gY+LtrY9v1EdwD43Fwcvo8b+Ua0X3XD/uk7Khxh9BuEj0Kh
+         PYr3qFMHmYqVRV7V/FpNxX6XEA0WsumIDJVusy4xftSKs62wmw/QiBy6W3D9E42g4e
+         dYwgdoc8QQ7zN30WV5h7e0Rc6dYh5VNCWDHkS50g=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Jann Horn <jannh@google.com>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>
-Subject: [PATCH 5.0 016/123] arm64: compat: Reduce address limit
-Date:   Mon, 20 May 2019 14:13:16 +0200
-Message-Id: <20190520115246.082431052@linuxfoundation.org>
+        stable@vger.kernel.org, Tim Chen <tim.c.chen@linux.intel.com>,
+        Eric Biggers <ebiggers@google.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>
+Subject: [PATCH 5.0 034/123] crypto: crct10dif-generic - fix use via crypto_shash_digest()
+Date:   Mon, 20 May 2019 14:13:34 +0200
+Message-Id: <20190520115247.019016163@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190520115245.439864225@linuxfoundation.org>
 References: <20190520115245.439864225@linuxfoundation.org>
@@ -61,52 +60,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vincenzo Frascino <vincenzo.frascino@arm.com>
+From: Eric Biggers <ebiggers@google.com>
 
-commit d263119387de9975d2acba1dfd3392f7c5979c18 upstream.
+commit 307508d1072979f4435416f87936f87eaeb82054 upstream.
 
-Currently, compat tasks running on arm64 can allocate memory up to
-TASK_SIZE_32 (UL(0x100000000)).
+The ->digest() method of crct10dif-generic reads the current CRC value
+from the shash_desc context.  But this value is uninitialized, causing
+crypto_shash_digest() to compute the wrong result.  Fix it.
 
-This means that mmap() allocations, if we treat them as returning an
-array, are not compliant with the sections 6.5.8 of the C standard
-(C99) which states that: "If the expression P points to an element of
-an array object and the expression Q points to the last element of the
-same array object, the pointer expression Q+1 compares greater than P".
+Probably this wasn't noticed before because lib/crc-t10dif.c only uses
+crypto_shash_update(), not crypto_shash_digest().  Likewise,
+crypto_shash_digest() is not yet tested by the crypto self-tests because
+those only test the ahash API which only uses shash init/update/final.
 
-Redefine TASK_SIZE_32 to address the issue.
+This bug was detected by my patches that improve testmgr to fuzz
+algorithms against their generic implementation.
 
-Cc: Catalin Marinas <catalin.marinas@arm.com>
-Cc: Will Deacon <will.deacon@arm.com>
-Cc: Jann Horn <jannh@google.com>
-Cc: <stable@vger.kernel.org>
-Reported-by: Jann Horn <jannh@google.com>
-Signed-off-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
-[will: fixed typo in comment]
-Signed-off-by: Will Deacon <will.deacon@arm.com>
+Fixes: 2d31e518a428 ("crypto: crct10dif - Wrap crc_t10dif function all to use crypto transform framework")
+Cc: <stable@vger.kernel.org> # v3.11+
+Cc: Tim Chen <tim.c.chen@linux.intel.com>
+Signed-off-by: Eric Biggers <ebiggers@google.com>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/arm64/include/asm/processor.h |    8 ++++++++
- 1 file changed, 8 insertions(+)
+ crypto/crct10dif_generic.c |   11 ++++-------
+ 1 file changed, 4 insertions(+), 7 deletions(-)
 
---- a/arch/arm64/include/asm/processor.h
-+++ b/arch/arm64/include/asm/processor.h
-@@ -57,7 +57,15 @@
- #define TASK_SIZE_64		(UL(1) << vabits_user)
+--- a/crypto/crct10dif_generic.c
++++ b/crypto/crct10dif_generic.c
+@@ -65,10 +65,9 @@ static int chksum_final(struct shash_des
+ 	return 0;
+ }
  
- #ifdef CONFIG_COMPAT
-+#ifdef CONFIG_ARM64_64K_PAGES
-+/*
-+ * With CONFIG_ARM64_64K_PAGES enabled, the last page is occupied
-+ * by the compat vectors page.
-+ */
- #define TASK_SIZE_32		UL(0x100000000)
-+#else
-+#define TASK_SIZE_32		(UL(0x100000000) - PAGE_SIZE)
-+#endif /* CONFIG_ARM64_64K_PAGES */
- #define TASK_SIZE		(test_thread_flag(TIF_32BIT) ? \
- 				TASK_SIZE_32 : TASK_SIZE_64)
- #define TASK_SIZE_OF(tsk)	(test_tsk_thread_flag(tsk, TIF_32BIT) ? \
+-static int __chksum_finup(__u16 *crcp, const u8 *data, unsigned int len,
+-			u8 *out)
++static int __chksum_finup(__u16 crc, const u8 *data, unsigned int len, u8 *out)
+ {
+-	*(__u16 *)out = crc_t10dif_generic(*crcp, data, len);
++	*(__u16 *)out = crc_t10dif_generic(crc, data, len);
+ 	return 0;
+ }
+ 
+@@ -77,15 +76,13 @@ static int chksum_finup(struct shash_des
+ {
+ 	struct chksum_desc_ctx *ctx = shash_desc_ctx(desc);
+ 
+-	return __chksum_finup(&ctx->crc, data, len, out);
++	return __chksum_finup(ctx->crc, data, len, out);
+ }
+ 
+ static int chksum_digest(struct shash_desc *desc, const u8 *data,
+ 			 unsigned int length, u8 *out)
+ {
+-	struct chksum_desc_ctx *ctx = shash_desc_ctx(desc);
+-
+-	return __chksum_finup(&ctx->crc, data, length, out);
++	return __chksum_finup(0, data, length, out);
+ }
+ 
+ static struct shash_alg alg = {
 
 
