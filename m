@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1410C04E87
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:26:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A34EC04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:27:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 882E220815
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:26:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F3BFF214AE
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:27:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558355219;
-	bh=NELJ4Hu6YiJbJlmxwVlRRrxhcEXBUQ4E/XUnMCsrArw=;
+	s=default; t=1558355225;
+	bh=vcsAg9xRpXy+KlU7TP4BpvChs2PpjWCmcKckfnNXW2Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Qb11nXGOYPB5TE1nmzEqNnXzYKGHUD3TG2k5cgZvdYQJdNx5d2EgjwF9DoZIAvdLq
-	 qmSqIo0tvJ7zs4X3Z+JV/v95sYWWoVPwUFf9wSrZR5BbE6Z5WPgR2TTegNuo18ZxJD
-	 EzvG7Cu5EsVk/niQQzEr6tbXi7UbbxAD1l1fsuiQ=
+	b=sDbLeLrKzNDF11CwjZ672WcHbJ5Euj4Ck0+o7X8yq8Y/5Djd+jK8g28M1kNPncvXp
+	 ZbcgH1NfBlwXqEKgduVzB6Y449dMU6Kq5Ojk0saWTfn/8CACw4Z5UYrinKUI+egvCk
+	 qwhCCGnXBTYFVHvMG30c47BI/QDWD7Wt3Ty5lZh8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389365AbfETM06 (ORCPT
+        id S2389414AbfETM1E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 08:26:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42402 "EHLO mail.kernel.org"
+        Mon, 20 May 2019 08:27:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42518 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389361AbfETM04 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 08:26:56 -0400
+        id S2389391AbfETM1B (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 08:27:01 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E0AD520645;
-        Mon, 20 May 2019 12:26:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 39CCB21479;
+        Mon, 20 May 2019 12:27:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558355215;
-        bh=NELJ4Hu6YiJbJlmxwVlRRrxhcEXBUQ4E/XUnMCsrArw=;
+        s=default; t=1558355220;
+        bh=vcsAg9xRpXy+KlU7TP4BpvChs2PpjWCmcKckfnNXW2Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QzQ/SYzMLVggi/V/87gY+LtrY9v1EdwD43Fwcvo8b+Ua0X3XD/uk7Khxh9BuEj0Kh
-         PYr3qFMHmYqVRV7V/FpNxX6XEA0WsumIDJVusy4xftSKs62wmw/QiBy6W3D9E42g4e
-         dYwgdoc8QQ7zN30WV5h7e0Rc6dYh5VNCWDHkS50g=
+        b=NHt4pftRC2QIfvA4CHsy6H0uB9k2TSrxzCcMNG76g3aBxuKf9HrOgpYyvC+umepyN
+         QOLaHKATSZUn+CIoNuHjUCtWqOR3WRP+bqABdt7AkhjXrFLRY6O9klqdhuUPbJblvh
+         s3xXZTNj4W+Xkkf4tefUerM2Gi30bRyIgzmNt354=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tim Chen <tim.c.chen@linux.intel.com>,
-        Eric Biggers <ebiggers@google.com>,
+        stable@vger.kernel.org, Eric Biggers <ebiggers@google.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
         Herbert Xu <herbert@gondor.apana.org.au>
-Subject: [PATCH 5.0 034/123] crypto: crct10dif-generic - fix use via crypto_shash_digest()
-Date:   Mon, 20 May 2019 14:13:34 +0200
-Message-Id: <20190520115247.019016163@linuxfoundation.org>
+Subject: [PATCH 5.0 036/123] crypto: arm64/gcm-aes-ce - fix no-NEON fallback code
+Date:   Mon, 20 May 2019 14:13:36 +0200
+Message-Id: <20190520115247.139025144@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190520115245.439864225@linuxfoundation.org>
 References: <20190520115245.439864225@linuxfoundation.org>
@@ -62,63 +62,66 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Eric Biggers <ebiggers@google.com>
 
-commit 307508d1072979f4435416f87936f87eaeb82054 upstream.
+commit 580e295178402d14bbf598a5702f8e01fc59dbaa upstream.
 
-The ->digest() method of crct10dif-generic reads the current CRC value
-from the shash_desc context.  But this value is uninitialized, causing
-crypto_shash_digest() to compute the wrong result.  Fix it.
+The arm64 gcm-aes-ce algorithm is failing the extra crypto self-tests
+following my patches to test the !may_use_simd() code paths, which
+previously were untested.  The problem is that in the !may_use_simd()
+case, an odd number of AES blocks can be processed within each step of
+the skcipher_walk.  However, the skcipher_walk is being done with a
+"stride" of 2 blocks and is advanced by an even number of blocks after
+each step.  This causes the encryption to produce the wrong ciphertext
+and authentication tag, and causes the decryption to incorrectly fail.
 
-Probably this wasn't noticed before because lib/crc-t10dif.c only uses
-crypto_shash_update(), not crypto_shash_digest().  Likewise,
-crypto_shash_digest() is not yet tested by the crypto self-tests because
-those only test the ahash API which only uses shash init/update/final.
+Fix it by only processing an even number of blocks per step.
 
-This bug was detected by my patches that improve testmgr to fuzz
-algorithms against their generic implementation.
-
-Fixes: 2d31e518a428 ("crypto: crct10dif - Wrap crc_t10dif function all to use crypto transform framework")
-Cc: <stable@vger.kernel.org> # v3.11+
-Cc: Tim Chen <tim.c.chen@linux.intel.com>
+Fixes: c2b24c36e0a3 ("crypto: arm64/aes-gcm-ce - fix scatterwalk API violation")
+Fixes: 71e52c278c54 ("crypto: arm64/aes-ce-gcm - operate on two input blocks at a time")
+Cc: <stable@vger.kernel.org> # v4.19+
 Signed-off-by: Eric Biggers <ebiggers@google.com>
+Reviewed-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
 Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- crypto/crct10dif_generic.c |   11 ++++-------
- 1 file changed, 4 insertions(+), 7 deletions(-)
+ arch/arm64/crypto/ghash-ce-glue.c |   10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
 
---- a/crypto/crct10dif_generic.c
-+++ b/crypto/crct10dif_generic.c
-@@ -65,10 +65,9 @@ static int chksum_final(struct shash_des
- 	return 0;
- }
+--- a/arch/arm64/crypto/ghash-ce-glue.c
++++ b/arch/arm64/crypto/ghash-ce-glue.c
+@@ -418,9 +418,11 @@ static int gcm_encrypt(struct aead_reque
+ 		put_unaligned_be32(2, iv + GCM_IV_SIZE);
  
--static int __chksum_finup(__u16 *crcp, const u8 *data, unsigned int len,
--			u8 *out)
-+static int __chksum_finup(__u16 crc, const u8 *data, unsigned int len, u8 *out)
- {
--	*(__u16 *)out = crc_t10dif_generic(*crcp, data, len);
-+	*(__u16 *)out = crc_t10dif_generic(crc, data, len);
- 	return 0;
- }
+ 		while (walk.nbytes >= (2 * AES_BLOCK_SIZE)) {
+-			int blocks = walk.nbytes / AES_BLOCK_SIZE;
++			const int blocks =
++				walk.nbytes / (2 * AES_BLOCK_SIZE) * 2;
+ 			u8 *dst = walk.dst.virt.addr;
+ 			u8 *src = walk.src.virt.addr;
++			int remaining = blocks;
  
-@@ -77,15 +76,13 @@ static int chksum_finup(struct shash_des
- {
- 	struct chksum_desc_ctx *ctx = shash_desc_ctx(desc);
+ 			do {
+ 				__aes_arm64_encrypt(ctx->aes_key.key_enc,
+@@ -430,9 +432,9 @@ static int gcm_encrypt(struct aead_reque
  
--	return __chksum_finup(&ctx->crc, data, len, out);
-+	return __chksum_finup(ctx->crc, data, len, out);
- }
+ 				dst += AES_BLOCK_SIZE;
+ 				src += AES_BLOCK_SIZE;
+-			} while (--blocks > 0);
++			} while (--remaining > 0);
  
- static int chksum_digest(struct shash_desc *desc, const u8 *data,
- 			 unsigned int length, u8 *out)
- {
--	struct chksum_desc_ctx *ctx = shash_desc_ctx(desc);
--
--	return __chksum_finup(&ctx->crc, data, length, out);
-+	return __chksum_finup(0, data, length, out);
- }
+-			ghash_do_update(walk.nbytes / AES_BLOCK_SIZE, dg,
++			ghash_do_update(blocks, dg,
+ 					walk.dst.virt.addr, &ctx->ghash_key,
+ 					NULL);
  
- static struct shash_alg alg = {
+@@ -553,7 +555,7 @@ static int gcm_decrypt(struct aead_reque
+ 		put_unaligned_be32(2, iv + GCM_IV_SIZE);
+ 
+ 		while (walk.nbytes >= (2 * AES_BLOCK_SIZE)) {
+-			int blocks = walk.nbytes / AES_BLOCK_SIZE;
++			int blocks = walk.nbytes / (2 * AES_BLOCK_SIZE) * 2;
+ 			u8 *dst = walk.dst.virt.addr;
+ 			u8 *src = walk.src.virt.addr;
+ 
 
 
