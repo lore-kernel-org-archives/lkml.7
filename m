@@ -7,53 +7,67 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 068D8C04AAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 14:48:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68DC5C04AAF
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 14:48:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D13CB21721
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 14:48:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3EE8A2054F
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 14:48:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558363701;
-	bh=ieHWmSfzVGoogWT2ToTE8TVzg9uy2cKqdUIdWbPe6v4=;
+	s=default; t=1558363707;
+	bh=YTEjs04hZCWVpALwCo0ona+k3Z9Xs305DgRYTn+PT7U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=iBo2z/oCx6OEtaThqlUJymWCUmFp7HG+HDOoBWmEUdtDObimsbhtxwG5juEvYolqO
-	 Wo9khLkTiDb/glLOX4NFsewHIxX/LZe7g5jObOzPMsjfpNevmSIrWzlAzQvFeiQRgV
-	 g9eBThifqlUyxMzQncTipdQFpbXyVtnhMTYob0P4=
+	b=I44qYOE2+Oj/GXtpWkESHV00zuwk32aXgbavadedMPQ39tdxrpQuS6iTO1yOAU1c3
+	 n88PJa2FNdvcGVi2dD+HGkl8PZ1MRtC7VLYpQCpyvwCQbya2yPnlJnpduS+O7BRhJe
+	 Rw3mVIWnccXo5gaCp72tYbDKiwi6Xt5BZhMP0vFY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731668AbfETOsR (ORCPT
+        id S1731510AbfETOs0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 10:48:17 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:36560 "EHLO
+        Mon, 20 May 2019 10:48:26 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:36698 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388519AbfETOsP (ORCPT
+        with ESMTP id S1731397AbfETOsQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 10:48:15 -0400
+        Mon, 20 May 2019 10:48:16 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=Sender:Content-Transfer-Encoding:
         MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
         Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
         Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
         List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=M5AYSXE7Y2LngfbsJ/DojP/iVd7EdymmZUqfay+8Wow=; b=TdU1BN1Gcd022p3TFE2CDrG8c+
-        l0Y1gZm2e+rk85dleVznTM8XTUlj1Mobek1VkEvS3KnIIATx1mXLy4xsbZmqfvS3mxxdCzOswvXjm
-        U6URgJS+kyi9687r2RUq01vs3KVljynLfkUsMM2AuqyXKyZXxTuT5gs8Szx2znfbs1TrxqLjTPXba
-        1OOUeverfVJbZwmSM4bxj7oc95G7jZQbmF20DKqYwlsnb4etDZoLtU6O9IQNVADCAvvswALN/x4Wq
-        53j+1u5Qi745w9wGME/aEsraVx2L7V8vODwnicm53fdfUPDIdVi7F4Gk8hp9p/geYDiijwJoX9iBE
-        EgbyJ74g==;
-Received: from 179.176.119.151.dynamic.adsl.gvt.net.br ([179.176.119.151] helo=bombadil.infradead.org)
+        bh=ET29ju1+oMQpwZnUmWoRWQU4cUr3EcBdPbSqKU0nYKk=; b=OA8WyV8mZW126dJEwkOg5DObVB
+        pEQaizBVUyu9HII4fMkL9MR+SSj3h38hZgZ5jsy/VDyqG6Qc1VoS4MAJ5oJLZ5Xj7zODJYWxSL40k
+        A61w4wDxysl2y2IBIo1/YlgTSO5Fc5/vdp3rzVVx0DNwO2cMdvgaYGOxHbqZXD3hMPZouB4xDABRV
+        lqETq9KgST3a0uM59LMNWd/STeXpBDKqjItfrWGY6QNxTfX+K0cSEyfya/L5yU5RBG5RTXs+5AxeL
+        hc+kJ46ZigW7Hr3f7Nd8M+0/Uro62UtsZHKuH0714+CrXklbZu5LOJ4Xi2JDYEDJ6pfrDDIGJE1Rc
+        Z9VQP3Lw==;
+Received: from [179.176.119.151] (helo=bombadil.infradead.org)
         by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hSjaH-0000aP-Gv; Mon, 20 May 2019 14:48:13 +0000
+        id 1hSjaD-0000W1-I9; Mon, 20 May 2019 14:48:09 +0000
 Received: from mchehab by bombadil.infradead.org with local (Exim 4.92)
         (envelope-from <mchehab@bombadil.infradead.org>)
-        id 1hSjZo-00010e-V0; Mon, 20 May 2019 11:47:44 -0300
+        id 1hSjZy-00011I-71; Mon, 20 May 2019 11:47:54 -0300
 From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
 Cc:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Mauro Carvalho Chehab <mchehab@infradead.org>,
-        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>
-Subject: [PATCH 01/10] scripts/documentation-file-ref-check: better handle translations
-Date:   Mon, 20 May 2019 11:47:30 -0300
-Message-Id: <e2f07cda112179828d52a8aeb06eebcf6576360e.1558362030.git.mchehab+samsung@kernel.org>
+        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
+        Liang Yang <liang.yang@amlogic.com>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Brian Norris <computersforpeace@gmail.com>,
+        Marek Vasut <marek.vasut@gmail.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Richard Weinberger <richard@nod.at>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Marc Gonzalez <marc.w.gonzalez@free.fr>,
+        Mans Rullgard <mans@mansr.com>, linux-mtd@lists.infradead.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-amlogic@lists.infradead.org
+Subject: [PATCH 09/10] dt: fix broken references to nand.txt
+Date:   Mon, 20 May 2019 11:47:38 -0300
+Message-Id: <ce7602ba4d42e094a8b7fcf1dc2a01d25192a602.1558362030.git.mchehab+samsung@kernel.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <cover.1558362030.git.mchehab+samsung@kernel.org>
 References: <cover.1558362030.git.mchehab+samsung@kernel.org>
@@ -64,51 +78,72 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Only seek for translation renames inside the translation
-directory.
+The Documentation/devicetree/bindings/mtd/nand.txt were both renamed
+and converted to YAML on a single patch, without updating references
+to it. That caused several cross-references to break.
+
+Fixes: 212e49693592 ("dt-bindings: mtd: Add YAML schemas for the generic NAND options")
 
 Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 ---
- scripts/documentation-file-ref-check | 10 +++++++---
- 1 file changed, 7 insertions(+), 3 deletions(-)
+ Documentation/devicetree/bindings/mtd/amlogic,meson-nand.txt | 2 +-
+ Documentation/devicetree/bindings/mtd/gpmc-nand.txt          | 2 +-
+ Documentation/devicetree/bindings/mtd/marvell-nand.txt       | 2 +-
+ Documentation/devicetree/bindings/mtd/tango-nand.txt         | 2 +-
+ 4 files changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/scripts/documentation-file-ref-check b/scripts/documentation-file-ref-check
-index 63e9542656f1..6b622b88f4cf 100755
---- a/scripts/documentation-file-ref-check
-+++ b/scripts/documentation-file-ref-check
-@@ -141,6 +141,10 @@ print "Auto-fixing broken references. Please double-check the results\n";
- foreach my $ref (keys %broken_ref) {
- 	my $new =$ref;
+diff --git a/Documentation/devicetree/bindings/mtd/amlogic,meson-nand.txt b/Documentation/devicetree/bindings/mtd/amlogic,meson-nand.txt
+index 3983c11e062c..5794ab1147c1 100644
+--- a/Documentation/devicetree/bindings/mtd/amlogic,meson-nand.txt
++++ b/Documentation/devicetree/bindings/mtd/amlogic,meson-nand.txt
+@@ -24,7 +24,7 @@ Optional children nodes:
+ Children nodes represent the available nand chips.
  
-+	my $basedir = ".";
-+	# On translations, only seek inside the translations directory
-+	$basedir  = $1 if ($ref =~ m,(Documentation/translations/[^/]+),);
-+
- 	# get just the basename
- 	$new =~ s,.*/,,;
+ Other properties:
+-see Documentation/devicetree/bindings/mtd/nand.txt for generic bindings.
++see Documentation/devicetree/bindings/mtd/nand-controller.yaml for generic bindings.
  
-@@ -161,18 +165,18 @@ foreach my $ref (keys %broken_ref) {
- 	# usual reason for breakage: file renamed to .rst
- 	if (!$f) {
- 		$new =~ s/\.txt$/.rst/;
--		$f=qx(find . -iname $new) if ($new);
-+		$f=qx(find $basedir -iname $new) if ($new);
- 	}
+ Example demonstrate on AXG SoC:
  
- 	# usual reason for breakage: use dash or underline
- 	if (!$f) {
- 		$new =~ s/[-_]/[-_]/g;
--		$f=qx(find . -iname $new) if ($new);
-+		$f=qx(find $basedir -iname $new) if ($new);
- 	}
+diff --git a/Documentation/devicetree/bindings/mtd/gpmc-nand.txt b/Documentation/devicetree/bindings/mtd/gpmc-nand.txt
+index c059ab74ed88..44919d48d241 100644
+--- a/Documentation/devicetree/bindings/mtd/gpmc-nand.txt
++++ b/Documentation/devicetree/bindings/mtd/gpmc-nand.txt
+@@ -8,7 +8,7 @@ explained in a separate documents - please refer to
+ Documentation/devicetree/bindings/memory-controllers/omap-gpmc.txt
  
- 	# Wild guess: seek for the same name on another place
- 	if (!$f) {
--		$f = qx(find . -iname $new) if ($new);
-+		$f = qx(find $basedir -iname $new) if ($new);
- 	}
+ For NAND specific properties such as ECC modes or bus width, please refer to
+-Documentation/devicetree/bindings/mtd/nand.txt
++Documentation/devicetree/bindings/mtd/nand-controller.yaml
  
- 	my @find = split /\s+/, $f;
+ 
+ Required properties:
+diff --git a/Documentation/devicetree/bindings/mtd/marvell-nand.txt b/Documentation/devicetree/bindings/mtd/marvell-nand.txt
+index e0c790706b9b..7eeef1e1ed30 100644
+--- a/Documentation/devicetree/bindings/mtd/marvell-nand.txt
++++ b/Documentation/devicetree/bindings/mtd/marvell-nand.txt
+@@ -58,7 +58,7 @@ Optional properties:
+   Step sizes are not completely random for all and follow certain
+   patterns described in AN-379, "Marvell SoC NFC ECC".
+ 
+-See Documentation/devicetree/bindings/mtd/nand.txt for more details on
++See Documentation/devicetree/bindings/mtd/nand-controller.yaml for more details on
+ generic bindings.
+ 
+ 
+diff --git a/Documentation/devicetree/bindings/mtd/tango-nand.txt b/Documentation/devicetree/bindings/mtd/tango-nand.txt
+index cd1bf2ac9055..91c8420241af 100644
+--- a/Documentation/devicetree/bindings/mtd/tango-nand.txt
++++ b/Documentation/devicetree/bindings/mtd/tango-nand.txt
+@@ -11,7 +11,7 @@ Required properties:
+ - #size-cells: <0>
+ 
+ Children nodes represent the available NAND chips.
+-See Documentation/devicetree/bindings/mtd/nand.txt for generic bindings.
++See Documentation/devicetree/bindings/mtd/nand-controller.yaml for generic bindings.
+ 
+ Example:
+ 
 -- 
 2.21.0
 
