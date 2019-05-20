@@ -2,126 +2,79 @@ Return-Path: <SRS0=lq4r=TU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44D54C04AAC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 14:52:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D2FCC04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 14:52:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2461A206BA
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 14:52:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 22690216B7
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 14:52:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="rH4MGkXJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391351AbfETOwZ (ORCPT
+        id S2392027AbfETOw2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 10:52:25 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:34634 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1732002AbfETOwZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 10:52:25 -0400
-Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4KERGVr129762
-        for <linux-kernel@vger.kernel.org>; Mon, 20 May 2019 10:52:23 -0400
-Received: from e13.ny.us.ibm.com (e13.ny.us.ibm.com [129.33.205.203])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2skwduu5kx-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Mon, 20 May 2019 10:52:23 -0400
-Received: from localhost
-        by e13.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <jejb@linux.ibm.com>;
-        Mon, 20 May 2019 15:52:22 +0100
-Received: from b01cxnp22035.gho.pok.ibm.com (9.57.198.25)
-        by e13.ny.us.ibm.com (146.89.104.200) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Mon, 20 May 2019 15:52:20 +0100
-Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
-        by b01cxnp22035.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x4KEqJTo35913734
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 20 May 2019 14:52:19 GMT
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id D70D1B205F;
-        Mon, 20 May 2019 14:52:19 +0000 (GMT)
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 35855B2064;
-        Mon, 20 May 2019 14:52:19 +0000 (GMT)
-Received: from jarvis.ext.hansenpartnership.com (unknown [9.85.204.144])
-        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
-        Mon, 20 May 2019 14:52:19 +0000 (GMT)
-Subject: Re: [PATCH] scsi: ses: Fix out-of-bounds memory access in
- ses_enclosure_data_process()
-From:   James Bottomley <jejb@linux.ibm.com>
-To:     Waiman Long <longman@redhat.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>
-Cc:     linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org
-Date:   Mon, 20 May 2019 07:52:18 -0700
-In-Reply-To: <1fd39969-4413-2f11-86b2-729787680efa@redhat.com>
-References: <20190501180535.26718-1-longman@redhat.com>
-         <1fd39969-4413-2f11-86b2-729787680efa@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.26.6 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-x-cbid: 19052014-0064-0000-0000-000003E18EF8
-X-IBM-SpamModules-Scores: 
-X-IBM-SpamModules-Versions: BY=3.00011131; HX=3.00000242; KW=3.00000007;
- PH=3.00000004; SC=3.00000286; SDB=6.01206071; UDB=6.00633282; IPR=6.00987030;
- MB=3.00026971; MTD=3.00000008; XFM=3.00000015; UTC=2019-05-20 14:52:22
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19052014-0065-0000-0000-00003D89E864
-Message-Id: <1558363938.3742.1.camel@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-20_07:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1011 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=909 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1905200096
+        Mon, 20 May 2019 10:52:28 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:40524 "EHLO vps0.lunn.ch"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732283AbfETOw1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 10:52:27 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=OR15pTh8PFO24Zv20KODF6WGQGNAYqpGzpNwW8lu2Bo=; b=rH4MGkXJHTS2o50pH7iaU/CF3n
+        OO3sTW15OBk/JpauvSShmMxCoCseHm4wc8OxuD/+yA+uox2hXWGzxRU5iAFwgdjHyi/MEKqPCxzjp
+        +/8+/XKlMQ3OiFbXKT4o1BoTN4tHeU5+EEzKELb+FofkPr5CVj/Jk/BQIVIhEsH3NoTQ=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.89)
+        (envelope-from <andrew@lunn.ch>)
+        id 1hSjeC-0000Cv-Td; Mon, 20 May 2019 16:52:16 +0200
+Date:   Mon, 20 May 2019 16:52:16 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Sagar Shrikant Kadam <sagar.kadam@sifive.com>
+Cc:     robh+dt@kernel.org, mark.rutland@arm.com, peter@korsgaard.com,
+        palmer@sifive.com, paul.walmsley@sifive.com,
+        linux-i2c@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v5 3/3] i2c-ocores: sifive: add polling mode workaround
+ for FU540-C000 SoC.
+Message-ID: <20190520145216.GD22024@lunn.ch>
+References: <1558361478-4381-1-git-send-email-sagar.kadam@sifive.com>
+ <1558361478-4381-4-git-send-email-sagar.kadam@sifive.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1558361478-4381-4-git-send-email-sagar.kadam@sifive.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2019-05-20 at 10:41 -0400, Waiman Long wrote:
-[...]
-> > --- a/drivers/scsi/ses.c
-> > +++ b/drivers/scsi/ses.c
-> > @@ -605,9 +605,14 @@ static void ses_enclosure_data_process(struct
-> > enclosure_device *edev,
-> >  			     /* these elements are optional */
-> >  			     type_ptr[0] ==
-> > ENCLOSURE_COMPONENT_SCSI_TARGET_PORT ||
-> >  			     type_ptr[0] ==
-> > ENCLOSURE_COMPONENT_SCSI_INITIATOR_PORT ||
-> > -			     type_ptr[0] ==
-> > ENCLOSURE_COMPONENT_CONTROLLER_ELECTRONICS))
-> > +			     type_ptr[0] ==
-> > ENCLOSURE_COMPONENT_CONTROLLER_ELECTRONICS)) {
-> >  				addl_desc_ptr += addl_desc_ptr[1]
-> > + 2;
-> >  
-> > +				/* Ensure no out-of-bounds memory
-> > access */
-> > +				if (addl_desc_ptr >= ses_dev-
-> > >page10 +
-> > +						     ses_dev-
-> > >page10_len)
-> > +					addl_desc_ptr = NULL;
-> > +			}
-> >  		}
-> >  	}
-> >  	kfree(buf);
+On Mon, May 20, 2019 at 07:41:18PM +0530, Sagar Shrikant Kadam wrote:
+> The i2c-ocore driver already has a polling mode interface.But it needs
+> a workaround for FU540 Chipset on HiFive unleashed board (RevA00).
+> There is an erratum in FU540 chip that prevents interrupt driven i2c
+> transfers from working, and also the I2C controller's interrupt bit
+> cannot be cleared if set, due to this the existing i2c polling mode
+> interface added in mainline earlier doesn't work, and CPU stall's
+> infinitely, when-ever i2c transfer is initiated.
 > 
-> Ping! Any comment on this patch.
+> Ref:previous polling mode support in mainline
+> 
+> 	commit 69c8c0c0efa8 ("i2c: ocores: add polling interface")
+> 
+> The workaround / fix under OCORES_FLAG_BROKEN_IRQ is particularly for
+> FU540-COOO SoC.
+> 
+> Signed-off-by: Sagar Shrikant Kadam <sagar.kadam@sifive.com>
 
-The update looks fine to me:
+Much better, thanks.
 
-Reviewed-by: James E.J. Bottomley <jejb@linux.ibm.com>
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
 
-It might also be interesting to find out how the proliant is
-structuring this descriptor array to precipitate the out of bounds: Is
-it just an off by one or something more serious?
-
-James
-
+    Andrew
