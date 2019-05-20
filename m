@@ -2,68 +2,96 @@ Return-Path: <SRS0=lq4r=TU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95448C04AAC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 11:28:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC562C04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 11:29:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6B12520863
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 11:28:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558351721;
-	bh=oXq5PmrUR+iri82vJveI8uZ0P0yyBXZCj0puouX9vZI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=q4QAmQGwOKwtY3jsUiYhnSGsRgvFth5hqP2TTr+IxPwT/iPc1TvY9TSzW4srf2+46
-	 IyTuJfxxHNB8liUDJsV/Of6BaMUbZKeUFSTSqSCfTKvPQ6TPdgPN+D5F/XIhsVuRqG
-	 +lscBPMBNcSkJ96PaEsOMNS4/OESLwnwB8LQNrsw=
+	by mail.kernel.org (Postfix) with ESMTP id BDB3F20862
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 11:29:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XPSutS1f"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732772AbfETL2k (ORCPT
+        id S1732796AbfETL3L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 07:28:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37352 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731297AbfETL2j (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 07:28:39 -0400
-Received: from localhost (unknown [37.142.3.125])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B68B920644;
-        Mon, 20 May 2019 11:28:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558351719;
-        bh=oXq5PmrUR+iri82vJveI8uZ0P0yyBXZCj0puouX9vZI=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=1rOSQagg8SmW4bYkEQNIVOBHEltRE3PqS6FY2keMLz5NJ5q/ax4NwdZZPl4g75t8i
-         nD7ytc8d1o7pWYc3410uE4URPt2d7uR+MNo//sqInjI6Vp8zpzGXirDabNUapoeCvY
-         wPuj5ccLd3T+UNotAzio3FKWJWUIoHrtBQuKqAGA=
-Date:   Mon, 20 May 2019 14:28:35 +0300
-From:   Leon Romanovsky <leon@kernel.org>
-To:     Michal Kubecek <mkubecek@suse.cz>
-Cc:     Doug Ledford <dledford@redhat.com>, Jason Gunthorpe <jgg@ziepe.ca>,
-        Ariel Levkovich <lariel@mellanox.com>,
-        linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] mlx5: avoid 64-bit division
-Message-ID: <20190520112835.GF4573@mtr-leonro.mtl.com>
-References: <20190520111902.7104DE0184@unicorn.suse.cz>
+        Mon, 20 May 2019 07:29:11 -0400
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:37011 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732780AbfETL3K (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 07:29:10 -0400
+Received: by mail-oi1-f196.google.com with SMTP id f4so9697838oib.4;
+        Mon, 20 May 2019 04:29:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=onzwvJLUNwe0tWvgSEunaBZym2f6MEvnymYOXu8PZTc=;
+        b=XPSutS1fgOBzduwfcEdvoMGN7eiR5RjYzCc3yVB6O62+sh9qZtnHqPbKK7C7w2Qfsm
+         YHZN8gE9DvpmyRlGYqfyIrR/5vi2eWgYBYLnOCfOmnTX9k/DDu4ZikWREC+ooX7R4foK
+         rNPfpqatFV2CnZwzyYsPe6Ekhv0U+9jYsINQBP3tuCIuWcvK2kv9R9Bhg4nDzy39cEIA
+         ZMSw+SuOr5X1LCquO7l1HDanelknIXzGmCw2c6dLp7uhguE0SrTOUV544f8o1+JssRXT
+         KIV184MzsSyVUUAdrpqS4o7AbUTpyfD3B5aS73454ajKJQROcYHyMbkD1ogvAx5ACZcs
+         hLCQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=onzwvJLUNwe0tWvgSEunaBZym2f6MEvnymYOXu8PZTc=;
+        b=DhFsXWnyWKYGTaATPecwpRx+FJ2uix5srA4UrwbyXo63jtg0z3B6YciC95wp46lL9y
+         eh6201jVX5gO4OjUhC9vfBMMbMMuB6U4TDTsaS+qUqpo2TNlyQZ9FHIUQoSUM1Dcy5cc
+         aikaZwGm9gp0qWMx5HkgNgH1/zC6jkvg0Pm6qPRusPp58sGJezDJCqW3xT6SSCwRcYEf
+         RBkXQLCkIyDbbqbEYJO/gEXSsfD2NCN8AIC+NcNRcH3pd5p6eyX0IVgSOJjD93N5emYq
+         3ZAnF/HNqv5Sk0Li21YGwoRZmPOq1biBU1dlnuQGBWwp2vqaznHLft0vz55UlTyh48bh
+         ALAA==
+X-Gm-Message-State: APjAAAV/8W092Pp0YkUtT2odDKPHdsKIllpHONOGB5NBuXRUZ4N3oICl
+        6ophnbwU0dxuxeiiylrpOaNX4jVD+rP1q7tBUvs=
+X-Google-Smtp-Source: APXvYqzRcUfDaCOUplEFInlgfcgHnuVtZ0nlftSWZkfKmix84/CuuE3Z5iycSFo+aSpCZHC962yEJJ1dj0SQSMHVSU8=
+X-Received: by 2002:aca:bf83:: with SMTP id p125mr22591298oif.47.1558351750026;
+ Mon, 20 May 2019 04:29:10 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190520111902.7104DE0184@unicorn.suse.cz>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+References: <1558082990-7822-1-git-send-email-wanpengli@tencent.com> <7787e0cb-2c46-b5b5-94ea-72c061ea0235@redhat.com>
+In-Reply-To: <7787e0cb-2c46-b5b5-94ea-72c061ea0235@redhat.com>
+From:   Wanpeng Li <kernellwp@gmail.com>
+Date:   Mon, 20 May 2019 19:29:01 +0800
+Message-ID: <CANRm+CzD1Sc5bYk9B7yzfXnWkUZwB3cr_86a9x3h9W0ROEoksQ@mail.gmail.com>
+Subject: Re: [PATCH 1/4] KVM: x86: Disable intercept for CORE cstate read
+To:     Paolo Bonzini <pbonzini@redhat.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>, kvm <kvm@vger.kernel.org>,
+        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Liran Alon <liran.alon@oracle.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 20, 2019 at 01:19:02PM +0200, Michal Kubecek wrote:
-> Commit 25c13324d03d ("IB/mlx5: Add steering SW ICM device memory type")
-> breaks i386 build by introducing three 64-bit divisions. As the divisor
-> is MLX5_SW_ICM_BLOCK_SIZE() which is always a power of 2, we can replace
-> the division with bit operations.
+On Mon, 20 May 2019 at 18:30, Paolo Bonzini <pbonzini@redhat.com> wrote:
+>
+> On 17/05/19 10:49, Wanpeng Li wrote:
+> > From: Wanpeng Li <wanpengli@tencent.com>
+> >
+> > Allow guest reads CORE cstate when exposing host CPU power management capabilities
+> > to the guest. PKG cstate is restricted to avoid a guest to get the whole package
+> > information in multi-tenant scenario.
+>
+> Hmm, I am not sure about this.  I can see why it can be useful to run
+> turbostat in the guest, but is it a good idea to share it with the
 
-Interesting, we tried to solve it differently.
-I added it to our regression to be on the same side.
+Yeah.
 
-Thanks
+> guest, since it counts from machine reset rather than from VM reset?
+
+I also saw amazon expose these in their nitro c5 instance.
+
+>
+> Maybe it could use a separate bit for KVM_CAP_X86_DISABLE_EXITS?
+
+It could be.
+
+Regards,
+Wanpeng Li
