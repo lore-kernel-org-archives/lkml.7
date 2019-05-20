@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24781C04AAC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:37:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19171C04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:37:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EE03D21479
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:37:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D9916204FD
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:37:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558355862;
-	bh=pG9QVVwTCrWu1/a+2JBTJJv+pI6hR25fD62xnOp5PG4=;
+	s=default; t=1558355871;
+	bh=K54YEflfXLM4VSAwoRJKIcxe1vnu5XR84RhZ3XiT9mE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rrgtm3Hz1C6VW1l2y65vA1XKeZij7enPlCIXhcwkqJdJpnyo0T4oYGge2USjz0htu
-	 FQSY2bJtGWM1oY3fctp7UiiEsyHJYrO4TU5EULwi3mLhMkuypwRGdbcFyO0Q4JK+72
-	 3JKc0WvTaBIfJZ2rU3uePsbj1xBxAI/DtJjYOWIg=
+	b=RcVm8sbcDdtweHAb8nCWeN0Pxb83eD1xl55UEKYEHMtQvoAVLR/4HuZgXgQ54nUjU
+	 Tv9hmb7OdhriiPR+KSJ2nneJuuoyQFLKoBI1nNaVPTQ3Th7GuSmgiCEz2lxwG2inAn
+	 ma2Ko9BZzAbcNzRaOSIeBetPMyNzj40s7szg7Wb8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391417AbfETMhk (ORCPT
+        id S2391152AbfETMft (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 08:37:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55142 "EHLO mail.kernel.org"
+        Mon, 20 May 2019 08:35:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54520 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391215AbfETMgI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 08:36:08 -0400
+        id S2391134AbfETMfq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 08:35:46 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4A07C216C4;
-        Mon, 20 May 2019 12:36:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DCB07216C4;
+        Mon, 20 May 2019 12:35:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558355767;
-        bh=pG9QVVwTCrWu1/a+2JBTJJv+pI6hR25fD62xnOp5PG4=;
+        s=default; t=1558355746;
+        bh=K54YEflfXLM4VSAwoRJKIcxe1vnu5XR84RhZ3XiT9mE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=C+ALn3YWVxtqJq26l3srU4YPEgaWvCacOfnxXvbRkkdPHRtXMhBn8cPMt4hew1ZjQ
-         dcyyFn/FdGoOw2YX+ODB47hKSKH4h2d2MptM/O34dA3Ow648Phzy8TP/VII/MQjjk8
-         S/bA0AZTkbxEDNPkvJ2a1J9ocCe+PSm8EfDCJZbc=
+        b=Pd/ru7MOdaff/XZpHmvlYNr4zQ8NG5ySum6F9qkbC8R+zQYtm4//sfHYCQc5V4d00
+         tMlKYMacdxeeICW+uU3maOwDsyIeiu+cqTf8qCHQ1+M6dL8fnuNjCd+Cpb+qmvvcD7
+         JvTLriTdVEHjgF4KTNOY1b86Le2fi2NL6Q15O9q0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Subject: [PATCH 5.1 117/128] KVM: x86: Skip EFER vs. guest CPUID checks for host-initiated writes
-Date:   Mon, 20 May 2019 14:15:04 +0200
-Message-Id: <20190520115256.678746298@linuxfoundation.org>
+        stable@vger.kernel.org, Jan Kara <jack@suse.cz>,
+        Theodore Tso <tytso@mit.edu>, stable@kernel.org
+Subject: [PATCH 5.1 110/128] ext4: avoid panic during forced reboot due to aborted journal
+Date:   Mon, 20 May 2019 14:14:57 +0200
+Message-Id: <20190520115256.395873801@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190520115249.449077487@linuxfoundation.org>
 References: <20190520115249.449077487@linuxfoundation.org>
@@ -60,99 +59,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sean Christopherson <sean.j.christopherson@intel.com>
+From: Jan Kara <jack@suse.cz>
 
-commit 11988499e62b310f3bf6f6d0a807a06d3f9ccc96 upstream.
+commit 2c1d0e3631e5732dba98ef49ac0bec1388776793 upstream.
 
-KVM allows userspace to violate consistency checks related to the
-guest's CPUID model to some degree.  Generally speaking, userspace has
-carte blanche when it comes to guest state so long as jamming invalid
-state won't negatively affect the host.
+Handling of aborted journal is a special code path different from
+standard ext4_error() one and it can call panic() as well. Commit
+1dc1097ff60e ("ext4: avoid panic during forced reboot") forgot to update
+this path so fix that omission.
 
-Currently this is seems to be a non-issue as most of the interesting
-EFER checks are missing, e.g. NX and LME, but those will be added
-shortly.  Proactively exempt userspace from the CPUID checks so as not
-to break userspace.
-
-Note, the efer_reserved_bits check still applies to userspace writes as
-that mask reflects the host's capabilities, e.g. KVM shouldn't allow a
-guest to run with NX=1 if it has been disabled in the host.
-
-Fixes: d80174745ba39 ("KVM: SVM: Only allow setting of EFER_SVME when CPUID SVM is set")
-Cc: stable@vger.kernel.org
-Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+Fixes: 1dc1097ff60e ("ext4: avoid panic during forced reboot")
+Signed-off-by: Jan Kara <jack@suse.cz>
+Signed-off-by: Theodore Ts'o <tytso@mit.edu>
+Cc: stable@kernel.org # 5.1
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/kvm/x86.c |   37 ++++++++++++++++++++++++-------------
- 1 file changed, 24 insertions(+), 13 deletions(-)
+ fs/ext4/super.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -1262,31 +1262,42 @@ static int do_get_msr_feature(struct kvm
- 	return 0;
- }
- 
--bool kvm_valid_efer(struct kvm_vcpu *vcpu, u64 efer)
-+static bool __kvm_valid_efer(struct kvm_vcpu *vcpu, u64 efer)
- {
--	if (efer & efer_reserved_bits)
--		return false;
--
- 	if (efer & EFER_FFXSR && !guest_cpuid_has(vcpu, X86_FEATURE_FXSR_OPT))
--			return false;
-+		return false;
- 
- 	if (efer & EFER_SVME && !guest_cpuid_has(vcpu, X86_FEATURE_SVM))
--			return false;
-+		return false;
- 
- 	return true;
-+
-+}
-+bool kvm_valid_efer(struct kvm_vcpu *vcpu, u64 efer)
-+{
-+	if (efer & efer_reserved_bits)
-+		return false;
-+
-+	return __kvm_valid_efer(vcpu, efer);
- }
- EXPORT_SYMBOL_GPL(kvm_valid_efer);
- 
--static int set_efer(struct kvm_vcpu *vcpu, u64 efer)
-+static int set_efer(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
- {
- 	u64 old_efer = vcpu->arch.efer;
-+	u64 efer = msr_info->data;
- 
--	if (!kvm_valid_efer(vcpu, efer))
--		return 1;
-+	if (efer & efer_reserved_bits)
-+		return false;
- 
--	if (is_paging(vcpu)
--	    && (vcpu->arch.efer & EFER_LME) != (efer & EFER_LME))
--		return 1;
-+	if (!msr_info->host_initiated) {
-+		if (!__kvm_valid_efer(vcpu, efer))
-+			return 1;
-+
-+		if (is_paging(vcpu) &&
-+		    (vcpu->arch.efer & EFER_LME) != (efer & EFER_LME))
-+			return 1;
-+	}
- 
- 	efer &= ~EFER_LMA;
- 	efer |= vcpu->arch.efer & EFER_LMA;
-@@ -2456,7 +2467,7 @@ int kvm_set_msr_common(struct kvm_vcpu *
- 		vcpu->arch.arch_capabilities = data;
- 		break;
- 	case MSR_EFER:
--		return set_efer(vcpu, data);
-+		return set_efer(vcpu, msr_info);
- 	case MSR_K7_HWCR:
- 		data &= ~(u64)0x40;	/* ignore flush filter disable */
- 		data &= ~(u64)0x100;	/* ignore ignne emulation enable */
+--- a/fs/ext4/super.c
++++ b/fs/ext4/super.c
+@@ -698,7 +698,7 @@ void __ext4_abort(struct super_block *sb
+ 			jbd2_journal_abort(EXT4_SB(sb)->s_journal, -EIO);
+ 		save_error_info(sb, function, line);
+ 	}
+-	if (test_opt(sb, ERRORS_PANIC)) {
++	if (test_opt(sb, ERRORS_PANIC) && !system_going_down()) {
+ 		if (EXT4_SB(sb)->s_journal &&
+ 		  !(EXT4_SB(sb)->s_journal->j_flags & JBD2_REC_ERR))
+ 			return;
 
 
