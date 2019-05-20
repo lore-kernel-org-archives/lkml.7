@@ -2,117 +2,126 @@ Return-Path: <SRS0=lq4r=TU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_NEOMUTT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8832C04E87
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 22:17:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C93E7C04E87
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 22:23:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 87B7121479
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 22:17:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E7782171F
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 22:23:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Ay6eeb6e"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726893AbfETWRw (ORCPT
+        id S1726697AbfETWXq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 18:17:52 -0400
-Received: from mga09.intel.com ([134.134.136.24]:20368 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725989AbfETWRw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 18:17:52 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 May 2019 15:17:51 -0700
-X-ExtLoop1: 1
-Received: from orsmsx102.amr.corp.intel.com ([10.22.225.129])
-  by fmsmga006.fm.intel.com with ESMTP; 20 May 2019 15:17:50 -0700
-Received: from orsmsx154.amr.corp.intel.com (10.22.226.12) by
- ORSMSX102.amr.corp.intel.com (10.22.225.129) with Microsoft SMTP Server (TLS)
- id 14.3.408.0; Mon, 20 May 2019 15:17:49 -0700
-Received: from orsmsx112.amr.corp.intel.com ([169.254.3.79]) by
- ORSMSX154.amr.corp.intel.com ([169.254.11.101]) with mapi id 14.03.0415.000;
- Mon, 20 May 2019 15:17:49 -0700
-From:   "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>
-To:     "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "peterz@infradead.org" <peterz@infradead.org>,
-        "mroos@linux.ee" <mroos@linux.ee>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "sparclinux@vger.kernel.org" <sparclinux@vger.kernel.org>
-CC:     "bp@alien8.de" <bp@alien8.de>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "luto@kernel.org" <luto@kernel.org>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "namit@vmware.com" <namit@vmware.com>,
-        "Hansen, Dave" <dave.hansen@intel.com>
-Subject: Re: [PATCH v2] vmalloc: Fix issues with flush flag
-Thread-Topic: [PATCH v2] vmalloc: Fix issues with flush flag
-Thread-Index: AQHVD0ezpbXySuUS5EinefGl750kkaZ0/uwAgAALkwA=
-Date:   Mon, 20 May 2019 22:17:49 +0000
-Message-ID: <c6020a01e81d08342e1a2b3ae7e03d55858480ba.camel@intel.com>
-References: <20190520200703.15997-1-rick.p.edgecombe@intel.com>
-         <90f8a4e1-aa71-0c10-1a91-495ba0cb329b@linux.ee>
-In-Reply-To: <90f8a4e1-aa71-0c10-1a91-495ba0cb329b@linux.ee>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Evolution 3.30.1 (3.30.1-1.fc29) 
-x-originating-ip: [10.254.114.95]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <2752FAF46305AF449FC03AABF0EBFDE7@intel.com>
-Content-Transfer-Encoding: base64
+        Mon, 20 May 2019 18:23:46 -0400
+Received: from mail-it1-f193.google.com ([209.85.166.193]:39758 "EHLO
+        mail-it1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725941AbfETWXp (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 18:23:45 -0400
+Received: by mail-it1-f193.google.com with SMTP id 9so1587398itf.4
+        for <linux-kernel@vger.kernel.org>; Mon, 20 May 2019 15:23:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:mail-followup-to:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=1CaXJMTXc57iqkntwEjIR8nDiCsro9FbdDpUP4+PfJc=;
+        b=Ay6eeb6e5aKiQdi0pweGEDPMMxlx/Mn2AvwEsYkp3UpuDjZhiA40w0+FilAVPXIMnw
+         Alw2aI5RZtIReQYrEqmA++hBDywsBwMx1bOHkhAJeokOOyZXHQjGP1OyKnXw7ao89mpC
+         cZID47+1S6e/pVCm56lUdkxGM4n9ydbzFPSaZhAhltE5fIEyA0E5Au01Qkpy+1pZosUn
+         gAfoMMwWMzjOh1Mg+xuUq7Kfqj2y0FnHmSzlhsTYL8GAUU8Fg2hqHMn7zAXQJdym+kdw
+         7N6Ta16knmQQsOF+5hsv40DvHKn5oUBn2GMN86tN84GSyaNRrzq+mE2I+k57ZDbB9whh
+         t2CA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id
+         :mail-followup-to:references:mime-version:content-disposition
+         :in-reply-to:user-agent;
+        bh=1CaXJMTXc57iqkntwEjIR8nDiCsro9FbdDpUP4+PfJc=;
+        b=A66PCl1iMiyUDSeDzU1zLj+FId2LifMk9vM8bjetdNhTuvA7ZJunIQU5gwo+XCoVmX
+         /r3yYklVYnO4FRtTYnis8IfMvxOudiPVzzOujOweVL+SHXQ50y4o4CShlL78vEXvFb6E
+         QGGswNf4aR3RKMYu3ZwSlwG1cCfU+wpvsoTxbeU1Nk7rwEF/Kb3ClA9F84ayyYe66OH/
+         1vlVWV2HXCvx2ST/XaYFXzhcrHqJyCaZmDUiX18b1IGLXpfsJQWPc2PYqSUubzIQvbyb
+         N341DgEM9J98yPlrXzzAOZ8feFoeGZAIg4SlfVWRiWdKGoWfUgo2VH/37b1hhOSGYDdO
+         6TDw==
+X-Gm-Message-State: APjAAAV0XNV5p8KwidOzC5h+Ipy3ncqsVNzoHn2lYZUm9GnGr3/IFz8t
+        OqHQDkWXSB55XicTyhxbaRNBXw==
+X-Google-Smtp-Source: APXvYqwaTj+wVvNaJbKY/DhmG1joPIZeyJ/GlYIHhg0g6g9QL5lnynyySYJi6RXpoOpFMLcf9hokhQ==
+X-Received: by 2002:a24:2bd3:: with SMTP id h202mr1291405ita.115.1558391024396;
+        Mon, 20 May 2019 15:23:44 -0700 (PDT)
+Received: from localhost (c-75-72-120-115.hsd1.mn.comcast.net. [75.72.120.115])
+        by smtp.gmail.com with ESMTPSA id q72sm501224ita.26.2019.05.20.15.23.43
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 20 May 2019 15:23:43 -0700 (PDT)
+Date:   Mon, 20 May 2019 17:23:42 -0500
+From:   Dan Rue <dan.rue@linaro.org>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+        akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
+        patches@kernelci.org, ben.hutchings@codethink.co.uk,
+        lkft-triage@lists.linaro.org, stable@vger.kernel.org,
+        linux-ext4@vger.kernel.org,
+        Arthur Marsh <arthur.marsh@internode.on.net>,
+        Richard Weinberger <richard.weinberger@gmail.com>,
+        Theodore Ts'o <tytso@mit.edu>
+Subject: Re: [PATCH 4.19 000/105] 4.19.45-stable review
+Message-ID: <20190520222342.wtsjx227c6qbkuua@xps.therub.org>
+Mail-Followup-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+        akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
+        patches@kernelci.org, ben.hutchings@codethink.co.uk,
+        lkft-triage@lists.linaro.org, stable@vger.kernel.org,
+        linux-ext4@vger.kernel.org,
+        Arthur Marsh <arthur.marsh@internode.on.net>,
+        Richard Weinberger <richard.weinberger@gmail.com>,
+        Theodore Ts'o <tytso@mit.edu>
+References: <20190520115247.060821231@linuxfoundation.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190520115247.060821231@linuxfoundation.org>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gVHVlLCAyMDE5LTA1LTIxIGF0IDAwOjM2ICswMzAwLCBNZWVsaXMgUm9vcyB3cm90ZToNCj4g
-PiBTd2l0Y2ggVk1fRkxVU0hfUkVTRVRfUEVSTVMgdG8gdXNlIGEgcmVndWxhciBUTEIgZmx1c2gg
-aW50ZWFkIG9mDQo+ID4gdm1fdW5tYXBfYWxpYXNlcygpIGFuZCBmaXggY2FsY3VsYXRpb24gb2Yg
-dGhlIGRpcmVjdCBtYXAgZm9yIHRoZQ0KPiA+IENPTkZJR19BUkNIX0hBU19TRVRfRElSRUNUX01B
-UCBjYXNlLg0KPiA+IA0KPiA+IE1lZWxpcyBSb29zIHJlcG9ydGVkIGlzc3VlcyB3aXRoIHRoZSBu
-ZXcgVk1fRkxVU0hfUkVTRVRfUEVSTVMgZmxhZw0KPiA+IG9uIGENCj4gPiBzcGFyYyBtYWNoaW5l
-LiBPbiBpbnZlc3RpZ2F0aW9uIHNvbWUgaXNzdWVzIHdlcmUgbm90aWNlZDoNCj4gPiANCj4gPiAx
-LiBUaGUgY2FsY3VsYXRpb24gb2YgdGhlIGRpcmVjdCBtYXAgYWRkcmVzcyByYW5nZSB0byBmbHVz
-aCB3YXMNCj4gPiB3cm9uZy4NCj4gPiBUaGlzIGNvdWxkIGNhdXNlIHByb2JsZW1zIG9uIHg4NiBp
-ZiBhIFJPIGRpcmVjdCBtYXAgYWxpYXMgZXZlciBnb3QNCj4gPiBsb2FkZWQNCj4gPiBpbnRvIHRo
-ZSBUTEIuIFRoaXMgc2hvdWxkbid0IG5vcm1hbGx5IGhhcHBlbiwgYnV0IGl0IGNvdWxkIGNhdXNl
-DQo+ID4gdGhlDQo+ID4gcGVybWlzc2lvbnMgdG8gcmVtYWluIFJPIG9uIHRoZSBkaXJlY3QgbWFw
-IGFsaWFzLCBhbmQgdGhlbiB0aGUgcGFnZQ0KPiA+IHdvdWxkIHJldHVybiBmcm9tIHRoZSBwYWdl
-IGFsbG9jYXRvciB0byBzb21lIG90aGVyIGNvbXBvbmVudCBhcyBSTw0KPiA+IGFuZA0KPiA+IGNh
-dXNlIGEgY3Jhc2guDQo+ID4gDQo+ID4gMi4gQ2FsbGluZyB2bV91bm1hcF9hbGlhcygpIG9uIHZm
-cmVlIGNvdWxkIHBvdGVudGlhbGx5IGJlIGEgbG90IG9mDQo+ID4gd29yayB0bw0KPiA+IGRvIG9u
-IGEgZnJlZSBvcGVyYXRpb24uIFNpbXBseSBmbHVzaGluZyB0aGUgVExCIGluc3RlYWQgb2YgdGhl
-DQo+ID4gd2hvbGUNCj4gPiB2bV91bm1hcF9hbGlhcygpIG9wZXJhdGlvbiBtYWtlcyB0aGUgZnJl
-ZXMgZmFzdGVyIGFuZCBwdXNoZXMgdGhlDQo+ID4gaGVhdnkNCj4gPiB3b3JrIHRvIGhhcHBlbiBv
-biBhbGxvY2F0aW9uIHdoZXJlIGl0IHdvdWxkIGJlIG1vcmUgZXhwZWN0ZWQuDQo+ID4gSW4gYWRk
-aXRpb24gdG8gdGhlIGV4dHJhIHdvcmssIHZtX3VubWFwX2FsaWFzKCkgdGFrZXMgc29tZSBsb2Nr
-cw0KPiA+IGluY2x1ZGluZw0KPiA+IGEgbG9uZyBob2xkIG9mIHZtYXBfcHVyZ2VfbG9jaywgd2hp
-Y2ggd2lsbCBtYWtlIGFsbCBvdGhlcg0KPiA+IFZNX0ZMVVNIX1JFU0VUX1BFUk1TIHZmcmVlcyB3
-YWl0IHdoaWxlIHRoZSBwdXJnZSBvcGVyYXRpb24gaGFwcGVucy4NCj4gPiANCj4gPiAzLiBwYWdl
-X2FkZHJlc3MoKSBjYW4gaGF2ZSBsb2NraW5nIG9uIHNvbWUgY29uZmlndXJhdGlvbnMsIHNvIHNr
-aXANCj4gPiBjYWxsaW5nDQo+ID4gdGhpcyB3aGVuIHBvc3NpYmxlIHRvIGZ1cnRoZXIgc3BlZWQg
-dGhpcyB1cC4NCj4gPiANCj4gPiBGaXhlczogODY4YjEwNGQ3Mzc5ICgibW0vdm1hbGxvYzogQWRk
-IGZsYWcgZm9yIGZyZWVpbmcgb2Ygc3BlY2lhbA0KPiA+IHBlcm1zaXNzaW9ucyIpDQo+ID4gUmVw
-b3J0ZWQtYnk6IE1lZWxpcyBSb29zPG1yb29zQGxpbnV4LmVlPg0KPiA+IENjOiBNZWVsaXMgUm9v
-czxtcm9vc0BsaW51eC5lZT4NCj4gPiBDYzogUGV0ZXIgWmlqbHN0cmE8cGV0ZXJ6QGluZnJhZGVh
-ZC5vcmc+DQo+ID4gQ2M6ICJEYXZpZCBTLiBNaWxsZXIiPGRhdmVtQGRhdmVtbG9mdC5uZXQ+DQo+
-ID4gQ2M6IERhdmUgSGFuc2VuPGRhdmUuaGFuc2VuQGludGVsLmNvbT4NCj4gPiBDYzogQm9yaXNs
-YXYgUGV0a292PGJwQGFsaWVuOC5kZT4NCj4gPiBDYzogQW5keSBMdXRvbWlyc2tpPGx1dG9Aa2Vy
-bmVsLm9yZz4NCj4gPiBDYzogSW5nbyBNb2xuYXI8bWluZ29AcmVkaGF0LmNvbT4NCj4gPiBDYzog
-TmFkYXYgQW1pdDxuYW1pdEB2bXdhcmUuY29tPg0KPiA+IFNpZ25lZC1vZmYtYnk6IFJpY2sgRWRn
-ZWNvbWJlPHJpY2sucC5lZGdlY29tYmVAaW50ZWwuY29tPg0KPiA+IC0tLQ0KPiA+IA0KPiA+IENo
-YW5nZXMgc2luY2UgdjE6DQo+ID4gICAtIFVwZGF0ZSBjb21taXQgbWVzc2FnZSB3aXRoIG1vcmUg
-ZGV0YWlsDQo+ID4gICAtIEZpeCBmbHVzaCBlbmQgcmFuZ2Ugb24gIUNPTkZJR19BUkNIX0hBU19T
-RVRfRElSRUNUX01BUCBjYXNlDQo+IA0KPiBJdCBkb2VzIG5vdCB3b3JrIG9uIG15IFY0NDUgd2hl
-cmUgdGhlIGluaXRpYWwgcHJvYmxlbSBoYXBwZW5lZC4NCj4gDQpUaGFua3MgZm9yIHRlc3Rpbmcu
-IFNvIEkgZ3Vlc3MgdGhhdCBzdWdnZXN0cyBpdCdzIHRoZSBUTEIgZmx1c2ggY2F1c2luZw0KdGhl
-IHByb2JsZW0gb24gc3BhcmMgYW5kIG5vdCBhbnkgbGF6eSBwdXJnZSBkZWFkbG9jay4gSSBoYWQg
-c2VudCBNZWVsaXMNCmFub3RoZXIgdGVzdCBwYXRjaCB0aGF0IGp1c3QgZmx1c2hlZCB0aGUgZW50
-aXJlIDAgdG8gVUxPTkdfTUFYIHJhbmdlIHRvDQp0cnkgdG8gYWx3YXlzIHRoZSBnZXQgdGhlICJm
-bHVzaCBhbGwiIGxvZ2ljIGFuZCBhcHByZW50bHkgaXQgZGlkbid0DQpib290IG1vc3RseSBlaXRo
-ZXIuIEl0IGFsc28gc2hvd2VkIHRoYXQgaXQncyBub3QgZ2V0dGluZyBzdHVjayBhbnl3aGVyZQ0K
-aW4gdGhlIHZtX3JlbW92ZV9hbGlhcygpIGZ1bmN0aW9uLiBTb21ldGhpbmcganVzdCBoYW5ncyBs
-YXRlci4NCg0KDQo=
+On Mon, May 20, 2019 at 02:13:06PM +0200, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 4.19.45 release.
+> There are 105 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+> 
+> Responses should be made by Wed 22 May 2019 11:50:49 AM UTC.
+> Anything received after that time might be too late.
+
+We're seeing an ext4 issue previously reported at
+https://lore.kernel.org/lkml/20190514092054.GA6949@osiris.
+
+[ 1916.032087] EXT4-fs error (device sda): ext4_find_extent:909: inode #8: comm jbd2/sda-8: pblk 121667583 bad header/extent: invalid extent entries - magic f30a, entries 8, max 340(340), depth 0(0)
+[ 1916.073840] jbd2_journal_bmap: journal block not found at offset 4455 on sda-8
+[ 1916.081071] Aborting journal on device sda-8.
+[ 1916.348652] EXT4-fs error (device sda): ext4_journal_check_start:61: Detected aborted journal
+[ 1916.357222] EXT4-fs (sda): Remounting filesystem read-only
+
+This is seen on 4.19-rc, 5.0-rc, mainline, and next. We don't have data
+for 5.1-rc yet, which is presumably also affected in this RC round.
+
+We only see this on x86_64 and i386 devices - though our hardware setups
+vary so it could be coincidence.
+
+I have to run out now, but I'll come back and work on a reproducer and
+bisection later tonight and tomorrow.
+
+Here is an example test run; link goes to the spot in the ltp syscalls
+test where the disk goes into read-only mode.
+https://lkft.validation.linaro.org/scheduler/job/735468#L8081
+
+Dan
+
+-- 
+Linaro - Kernel Validation
