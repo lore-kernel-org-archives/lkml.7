@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12101C04AAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:25:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54B7BC04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:25:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DA4DD20675
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:25:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 29A1320815
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:25:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558355123;
-	bh=3HVJic2IsVhMwD2NLqQ17Pn8OtBdLg7jJNwliuijtwU=;
+	s=default; t=1558355126;
+	bh=jPac1uf8ILePb+86JbGZlaeKROdFkuYq50LyNHILdGo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=e2OFzx9ir5sZTLpCeIBc9Qr/7NQAHLspScUcYPQv5WSIm+IVlaDyIsYJfMtgj2js5
-	 ICxB0k0C3jgQcDhhIJahhxwR4uQhk3MPoMVpXE0mg9eK3AKh7tiVr+IzWy6PYcrSDL
-	 ZOymKTdVq1c7nCOZt9xtpIWs/SQmIaq6JEEZOXNA=
+	b=VhAje8BNUg5mVn4uzVz2PR2QaX1W5I1FU6YCJjXMSG6jFHW6J0Ww94FJpt4tlCT2w
+	 G2nF6E//bDVMAJ5TBFFvbXiy9jD5MCsHhPUSxR0cpkXBejKiLF4+XrrWkonPlZuf8+
+	 t8ckmJ6UFp/EGRjHWV/e2ryFC39BFNNpNYVVkACk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389061AbfETMZX (ORCPT
+        id S2389073AbfETMZZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 08:25:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40406 "EHLO mail.kernel.org"
+        Mon, 20 May 2019 08:25:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40482 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389035AbfETMZV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 08:25:21 -0400
+        id S2389059AbfETMZX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 08:25:23 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 84DB420815;
-        Mon, 20 May 2019 12:25:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3513F20645;
+        Mon, 20 May 2019 12:25:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558355120;
-        bh=3HVJic2IsVhMwD2NLqQ17Pn8OtBdLg7jJNwliuijtwU=;
+        s=default; t=1558355122;
+        bh=jPac1uf8ILePb+86JbGZlaeKROdFkuYq50LyNHILdGo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AR/MpG83qy0A1YYQQGoQxs8a/3g5rrTbVQZuPv4rEPzUrnA0EVCGVIAUFllqg8N6T
-         IZQeXrGyEe7GMXs8d4fYBuDAoQWi92L9au9dz9v8InjuyzCX26RfVRlzmWS4VW6tsd
-         NvgVPEu4JCAUjleIb237YKtSdFBHFJABEBf5uDio=
+        b=rg7O/Fg0rho0ox6Go3w5QyG0xMyXU1iFY5+8DN5cA7xVfKuXmsDDeH0BGkt2Hjlx8
+         N8vfghjz5ZqJRLh81wJoHZ/pliKtpc1+w9c23+Rzos4QClxQswjfBRvzyTH5z9rfel
+         1WpiGCNXOp+6zygNeFOC+x/DwCQ+FW2fpLVIofeU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Andreas Dilger <adilger@dilger.ca>,
-        Theodore Tso <tytso@mit.edu>
-Subject: [PATCH 4.19 105/105] ext4: dont update s_rev_level if not required
-Date:   Mon, 20 May 2019 14:14:51 +0200
-Message-Id: <20190520115254.476516117@linuxfoundation.org>
+        stable@vger.kernel.org, Jeremy Soller <jeremy@system76.com>,
+        Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 4.19 089/105] ALSA: hda/realtek - Corrected fixup for System76 Gazelle (gaze14)
+Date:   Mon, 20 May 2019 14:14:35 +0200
+Message-Id: <20190520115253.428519912@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190520115247.060821231@linuxfoundation.org>
 References: <20190520115247.060821231@linuxfoundation.org>
@@ -59,92 +59,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andreas Dilger <adilger@dilger.ca>
+From: Jeremy Soller <jeremy@system76.com>
 
-commit c9e716eb9b3455a83ed7c5f5a81256a3da779a95 upstream.
+commit 891afcf2462d2cc4ef7caf94215358ca61fa32cb upstream.
 
-Don't update the superblock s_rev_level during mount if it isn't
-actually necessary, only if superblock features are being set by
-the kernel.  This was originally added for ext3 since it always
-set the INCOMPAT_RECOVER and HAS_JOURNAL features during mount,
-but this is not needed since no journal mode was added to ext4.
+A mistake was made in the identification of the four variants of the
+System76 Gazelle (gaze14). This patch corrects the PCI ID of the
+17-inch, GTX 1660 Ti variant from 0x8560 to 0x8551. This patch also
+adds the correct fixups for the 15-inch and 17-inch GTX 1650 variants
+with PCI IDs 0x8560 and 0x8561.
 
-That will allow Geert to mount his 20-year-old ext2 rev 0.0 m68k
-filesystem, as a testament of the backward compatibility of ext4.
+Tests were done on all four variants ensuring full audio capability.
 
-Fixes: 0390131ba84f ("ext4: Allow ext4 to run without a journal")
-Signed-off-by: Andreas Dilger <adilger@dilger.ca>
-Signed-off-by: Theodore Ts'o <tytso@mit.edu>
+Fixes: 80a5052db751 ("ALSA: hdea/realtek - Headset fixup for System76 Gazelle (gaze14)")
+Signed-off-by: Jeremy Soller <jeremy@system76.com>
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/ext4/ext4.h  |    6 +++++-
- fs/ext4/inode.c |    1 -
- fs/ext4/super.c |    1 -
- 3 files changed, 5 insertions(+), 3 deletions(-)
+ sound/pci/hda/patch_realtek.c |    4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
---- a/fs/ext4/ext4.h
-+++ b/fs/ext4/ext4.h
-@@ -1670,6 +1670,8 @@ static inline void ext4_clear_state_flag
- #define EXT4_FEATURE_INCOMPAT_INLINE_DATA	0x8000 /* data in inode */
- #define EXT4_FEATURE_INCOMPAT_ENCRYPT		0x10000
- 
-+extern void ext4_update_dynamic_rev(struct super_block *sb);
-+
- #define EXT4_FEATURE_COMPAT_FUNCS(name, flagname) \
- static inline bool ext4_has_feature_##name(struct super_block *sb) \
- { \
-@@ -1678,6 +1680,7 @@ static inline bool ext4_has_feature_##na
- } \
- static inline void ext4_set_feature_##name(struct super_block *sb) \
- { \
-+	ext4_update_dynamic_rev(sb); \
- 	EXT4_SB(sb)->s_es->s_feature_compat |= \
- 		cpu_to_le32(EXT4_FEATURE_COMPAT_##flagname); \
- } \
-@@ -1695,6 +1698,7 @@ static inline bool ext4_has_feature_##na
- } \
- static inline void ext4_set_feature_##name(struct super_block *sb) \
- { \
-+	ext4_update_dynamic_rev(sb); \
- 	EXT4_SB(sb)->s_es->s_feature_ro_compat |= \
- 		cpu_to_le32(EXT4_FEATURE_RO_COMPAT_##flagname); \
- } \
-@@ -1712,6 +1716,7 @@ static inline bool ext4_has_feature_##na
- } \
- static inline void ext4_set_feature_##name(struct super_block *sb) \
- { \
-+	ext4_update_dynamic_rev(sb); \
- 	EXT4_SB(sb)->s_es->s_feature_incompat |= \
- 		cpu_to_le32(EXT4_FEATURE_INCOMPAT_##flagname); \
- } \
-@@ -2679,7 +2684,6 @@ do {									\
- 
- #endif
- 
--extern void ext4_update_dynamic_rev(struct super_block *sb);
- extern int ext4_update_compat_feature(handle_t *handle, struct super_block *sb,
- 					__u32 compat);
- extern int ext4_update_rocompat_feature(handle_t *handle,
---- a/fs/ext4/inode.c
-+++ b/fs/ext4/inode.c
-@@ -5324,7 +5324,6 @@ static int ext4_do_update_inode(handle_t
- 		err = ext4_journal_get_write_access(handle, EXT4_SB(sb)->s_sbh);
- 		if (err)
- 			goto out_brelse;
--		ext4_update_dynamic_rev(sb);
- 		ext4_set_feature_large_file(sb);
- 		ext4_handle_sync(handle);
- 		err = ext4_handle_dirty_super(handle, sb);
---- a/fs/ext4/super.c
-+++ b/fs/ext4/super.c
-@@ -2259,7 +2259,6 @@ static int ext4_setup_super(struct super
- 		es->s_max_mnt_count = cpu_to_le16(EXT4_DFL_MAX_MNT_COUNT);
- 	le16_add_cpu(&es->s_mnt_count, 1);
- 	ext4_update_tstamp(es, s_mtime);
--	ext4_update_dynamic_rev(sb);
- 	if (sbi->s_journal)
- 		ext4_set_feature_journal_needs_recovery(sb);
- 
+--- a/sound/pci/hda/patch_realtek.c
++++ b/sound/pci/hda/patch_realtek.c
+@@ -6841,7 +6841,9 @@ static const struct snd_pci_quirk alc269
+ 	SND_PCI_QUIRK(0x1462, 0xb171, "Cubi N 8GL (MS-B171)", ALC283_FIXUP_HEADSET_MIC),
+ 	SND_PCI_QUIRK(0x1558, 0x1325, "System76 Darter Pro (darp5)", ALC293_FIXUP_SYSTEM76_MIC_NO_PRESENCE),
+ 	SND_PCI_QUIRK(0x1558, 0x8550, "System76 Gazelle (gaze14)", ALC293_FIXUP_SYSTEM76_MIC_NO_PRESENCE),
+-	SND_PCI_QUIRK(0x1558, 0x8560, "System76 Gazelle (gaze14)", ALC293_FIXUP_SYSTEM76_MIC_NO_PRESENCE),
++	SND_PCI_QUIRK(0x1558, 0x8551, "System76 Gazelle (gaze14)", ALC293_FIXUP_SYSTEM76_MIC_NO_PRESENCE),
++	SND_PCI_QUIRK(0x1558, 0x8560, "System76 Gazelle (gaze14)", ALC269_FIXUP_HEADSET_MIC),
++	SND_PCI_QUIRK(0x1558, 0x8561, "System76 Gazelle (gaze14)", ALC269_FIXUP_HEADSET_MIC),
+ 	SND_PCI_QUIRK(0x17aa, 0x1036, "Lenovo P520", ALC233_FIXUP_LENOVO_MULTI_CODECS),
+ 	SND_PCI_QUIRK(0x17aa, 0x20f2, "Thinkpad SL410/510", ALC269_FIXUP_SKU_IGNORE),
+ 	SND_PCI_QUIRK(0x17aa, 0x215e, "Thinkpad L512", ALC269_FIXUP_SKU_IGNORE),
 
 
