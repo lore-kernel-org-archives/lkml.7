@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D891BC04AAC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:22:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29269C04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:22:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AD39020645
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:22:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E8EB821479
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:22:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558354936;
-	bh=BNMAL5BQel9VBIquhmcC/3N4kEa6RuB+goYw1Elgy9Y=;
+	s=default; t=1558354941;
+	bh=4mJ0ODamTguxNDF0yhcDtRfQZ1QX4p0KtjNL4DmrW2I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=f1L1rIwP0r17HDD7aeAQa9tuuHUBC138j73G3LTmqIv6tGvU6BsIC9YfarVNdwMg2
-	 1GyVreNO0ynEixzgMTeFRffTFr+Kh7y6u0borKAq8YpwDp+rZLT7oZAEUZ90dhTfhQ
-	 J3EBAvqOoM9Bp45XalGSPv6o5F47cTpTy6H0Kxq0=
+	b=lH92r+s7+6AM4scMvsEy3/XYYgx6V2KDtEswPAVVedarRzegkPMF5SUD2a+82Wb2L
+	 fiosC4kTvtr71LdO6S8NLFKjlu1kvzoEqBIKa5W6P6+PPh3UdvqQ1tR35RSP7g76r9
+	 F5AZk+aWXSE4OQSCFuQa3YImmDh036FllAP6+aAk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388367AbfETMWP (ORCPT
+        id S2388382AbfETMWT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 08:22:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36156 "EHLO mail.kernel.org"
+        Mon, 20 May 2019 08:22:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36230 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388355AbfETMWM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 08:22:12 -0400
+        id S2388368AbfETMWP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 08:22:15 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1584621019;
-        Mon, 20 May 2019 12:22:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EC38721019;
+        Mon, 20 May 2019 12:22:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558354932;
-        bh=BNMAL5BQel9VBIquhmcC/3N4kEa6RuB+goYw1Elgy9Y=;
+        s=default; t=1558354935;
+        bh=4mJ0ODamTguxNDF0yhcDtRfQZ1QX4p0KtjNL4DmrW2I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pMMRsp/GUFQ2GtV2cgMSKiUm424TeAOVfY8gc/x98r3u/NbTUTn8qf2aNlYnng4vT
-         466TtlRjQ3su2dPlJ30YPWsNFJsgACgceYzZ6ipRi9+EhmNQyAIcW5q20FNjy4lzb7
-         XzzOU40ioi4RBrKyp7wCAX/Fn3j2IfpPurTEYuvY=
+        b=nzu1RTuUBli5DEDvp7sun/jdL6pJ6kk6HhRu9hQORLaGulOEl9Jxij3L7bbi9FbDL
+         MM9d/wiCT01Rk3oqc2bZDbAdw4TCwPApSbL+K1/SNBCygM+ud+jjci4fxqhkZa0oZg
+         nR2zrpolMrMzKpcytczGXw+MmcUxWaR3Nzx/e2k0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Raul E Rangel <rrangel@chromium.org>,
-        Jens Axboe <axboe@kernel.dk>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>
-Subject: [PATCH 4.19 032/105] mmc: core: Fix tag set memory leak
-Date:   Mon, 20 May 2019 14:13:38 +0200
-Message-Id: <20190520115249.274436542@linuxfoundation.org>
+        stable@vger.kernel.org,
+        syzbot+a07d0142e74fdd595cfb@syzkaller.appspotmail.com,
+        Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 4.19 033/105] ALSA: line6: toneport: Fix broken usage of timer for delayed execution
+Date:   Mon, 20 May 2019 14:13:39 +0200
+Message-Id: <20190520115249.339690810@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190520115247.060821231@linuxfoundation.org>
 References: <20190520115247.060821231@linuxfoundation.org>
@@ -61,35 +60,77 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Raul E Rangel <rrangel@chromium.org>
+From: Takashi Iwai <tiwai@suse.de>
 
-commit 43d8dabb4074cf7f3b1404bfbaeba5aa6f3e5cfc upstream.
+commit 7f84ff68be05ec7a5d2acf8fdc734fe5897af48f upstream.
 
-The tag set is allocated in mmc_init_queue but never freed. This results
-in a memory leak. This change makes sure we free the tag set when the
-queue is also freed.
+The line6 toneport driver has code for some delayed initialization,
+and this hits the kernel Oops because mutex and other sleepable
+functions are used in the timer callback.  Fix the abuse by a delayed
+work instead so that everything works gracefully.
 
-Signed-off-by: Raul E Rangel <rrangel@chromium.org>
-Reviewed-by: Jens Axboe <axboe@kernel.dk>
-Acked-by: Adrian Hunter <adrian.hunter@intel.com>
-Fixes: 81196976ed94 ("mmc: block: Add blk-mq support")
-Cc: stable@vger.kernel.org
-Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+Reported-by: syzbot+a07d0142e74fdd595cfb@syzkaller.appspotmail.com
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/mmc/core/queue.c |    1 +
- 1 file changed, 1 insertion(+)
+ sound/usb/line6/toneport.c |   16 +++++++++-------
+ 1 file changed, 9 insertions(+), 7 deletions(-)
 
---- a/drivers/mmc/core/queue.c
-+++ b/drivers/mmc/core/queue.c
-@@ -494,6 +494,7 @@ void mmc_cleanup_queue(struct mmc_queue
- 		blk_mq_unquiesce_queue(q);
+--- a/sound/usb/line6/toneport.c
++++ b/sound/usb/line6/toneport.c
+@@ -54,8 +54,8 @@ struct usb_line6_toneport {
+ 	/* Firmware version (x 100) */
+ 	u8 firmware_version;
  
- 	blk_cleanup_queue(q);
-+	blk_mq_free_tag_set(&mq->tag_set);
+-	/* Timer for delayed PCM startup */
+-	struct timer_list timer;
++	/* Work for delayed PCM startup */
++	struct delayed_work pcm_work;
  
- 	/*
- 	 * A request can be completed before the next request, potentially
+ 	/* Device type */
+ 	enum line6_device_type type;
+@@ -241,9 +241,10 @@ static int snd_toneport_source_put(struc
+ 	return 1;
+ }
+ 
+-static void toneport_start_pcm(struct timer_list *t)
++static void toneport_start_pcm(struct work_struct *work)
+ {
+-	struct usb_line6_toneport *toneport = from_timer(toneport, t, timer);
++	struct usb_line6_toneport *toneport =
++		container_of(work, struct usb_line6_toneport, pcm_work.work);
+ 	struct usb_line6 *line6 = &toneport->line6;
+ 
+ 	line6_pcm_acquire(line6->line6pcm, LINE6_STREAM_MONITOR, true);
+@@ -393,7 +394,8 @@ static int toneport_setup(struct usb_lin
+ 	if (toneport_has_led(toneport))
+ 		toneport_update_led(toneport);
+ 
+-	mod_timer(&toneport->timer, jiffies + TONEPORT_PCM_DELAY * HZ);
++	schedule_delayed_work(&toneport->pcm_work,
++			      msecs_to_jiffies(TONEPORT_PCM_DELAY * 1000));
+ 	return 0;
+ }
+ 
+@@ -405,7 +407,7 @@ static void line6_toneport_disconnect(st
+ 	struct usb_line6_toneport *toneport =
+ 		(struct usb_line6_toneport *)line6;
+ 
+-	del_timer_sync(&toneport->timer);
++	cancel_delayed_work_sync(&toneport->pcm_work);
+ 
+ 	if (toneport_has_led(toneport))
+ 		toneport_remove_leds(toneport);
+@@ -422,7 +424,7 @@ static int toneport_init(struct usb_line
+ 	struct usb_line6_toneport *toneport =  (struct usb_line6_toneport *) line6;
+ 
+ 	toneport->type = id->driver_info;
+-	timer_setup(&toneport->timer, toneport_start_pcm, 0);
++	INIT_DELAYED_WORK(&toneport->pcm_work, toneport_start_pcm);
+ 
+ 	line6->disconnect = line6_toneport_disconnect;
+ 
 
 
