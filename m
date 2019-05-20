@@ -2,93 +2,123 @@ Return-Path: <SRS0=lq4r=TU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6DB1C04AAC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:44:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C75DC04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:44:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B330E20815
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:44:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558356279;
-	bh=zJB3qhGxPWCYH21AF6fd26PvFecnkLrlf4xqniCa3DA=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WWBYsaVRpNeee8xPS7/2+dMHLgOUo9u7wTUo3u2A1Fnfu6GF8pLvuoToJhkn1nLw+
-	 BcAX1TlJ/PQF0CP3iYsN5y13Y0Tzb5oTrSGybGrkvvlhOWH01ubpUAKNv9ELPCTayf
-	 RQwT8FW/rSlHyumppnQdMlWaXAwH1d/IIL7e70q4=
+	by mail.kernel.org (Postfix) with ESMTP id DEC83204FD
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:44:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391297AbfETMoj (ORCPT
+        id S2391329AbfETMon convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Mon, 20 May 2019 08:44:43 -0400
+Received: from relay11.mail.gandi.net ([217.70.178.231]:44733 "EHLO
+        relay11.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2391303AbfETMoj (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 20 May 2019 08:44:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43372 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389537AbfETM1q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 08:27:46 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 93FAF20815;
-        Mon, 20 May 2019 12:27:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558355266;
-        bh=zJB3qhGxPWCYH21AF6fd26PvFecnkLrlf4xqniCa3DA=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Ntf7D0EJCgGpwk4+dtcoNiTfirc+EKo+ndSUI9NbuCvkmAXAsfoNIxEywRPad3USC
-         jyzvJptdSZb1j9uTD6+UBHaWsGpKmi3xDEk4UAsO3QIbLCFjkzpUO6NBxwbmAkmrHk
-         1dYw+fPi7LMS5xiz2QFthuP+RwH9G8ZoRSRk48Xk=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jeremy Soller <jeremy@system76.com>,
-        Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 5.0 052/123] ALSA: hdea/realtek - Headset fixup for System76 Gazelle (gaze14)
-Date:   Mon, 20 May 2019 14:13:52 +0200
-Message-Id: <20190520115248.191475953@linuxfoundation.org>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190520115245.439864225@linuxfoundation.org>
-References: <20190520115245.439864225@linuxfoundation.org>
-User-Agent: quilt/0.66
+Received: from xps13 (aaubervilliers-681-1-80-185.w90-88.abo.wanadoo.fr [90.88.22.185])
+        (Authenticated sender: miquel.raynal@bootlin.com)
+        by relay11.mail.gandi.net (Postfix) with ESMTPSA id 30D24100010;
+        Mon, 20 May 2019 12:44:37 +0000 (UTC)
+Date:   Mon, 20 May 2019 14:44:36 +0200
+From:   Miquel Raynal <miquel.raynal@bootlin.com>
+To:     Kamal Dasu <kdasu.kdev@gmail.com>
+Cc:     linux-mtd@lists.infradead.org,
+        bcm-kernel-feedback-list@broadcom.com,
+        linux-kernel@vger.kernel.org,
+        Brian Norris <computersforpeace@gmail.com>,
+        Richard Weinberger <richard@nod.at>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Marek Vasut <marek.vasut@gmail.com>,
+        Vignesh Raghavendra <vigneshr@ti.com>
+Subject: Re: [PATCH 2/2] mtd: nand: raw: brcmnand: fallback to detected
+ ecc-strength, ecc-step-size
+Message-ID: <20190520144436.67e42f00@xps13>
+In-Reply-To: <1558117914-35807-2-git-send-email-kdasu.kdev@gmail.com>
+References: <1558117914-35807-1-git-send-email-kdasu.kdev@gmail.com>
+        <1558117914-35807-2-git-send-email-kdasu.kdev@gmail.com>
+Organization: Bootlin
+X-Mailer: Claws Mail 3.17.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jeremy Soller <jeremy@system76.com>
+Hi Kamal,
 
-commit 80a5052db75131423b67f38b21958555d7d970e4 upstream.
+Kamal Dasu <kdasu.kdev@gmail.com> wrote on Fri, 17 May 2019 14:29:55
+-0400:
 
-On the System76 Gazelle (gaze14), there is a headset microphone input
-attached to 0x1a that does not have a jack detect. In order to get it
-working, the pin configuration needs to be set correctly, and the
-ALC269_FIXUP_HEADSET_MODE_NO_HP_MIC fixup needs to be applied. This is
-identical to the patch already applied for the System76 Darter Pro
-(darp5).
+> This change supports nand-ecc-step-size and nand-ecc-strenght fields in
 
-Signed-off-by: Jeremy Soller <jeremy@system76.com>
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+                                                       strength
 
----
- sound/pci/hda/patch_realtek.c |    2 ++
- 1 file changed, 2 insertions(+)
+> brcmnand dt node to be  optional.
 
---- a/sound/pci/hda/patch_realtek.c
-+++ b/sound/pci/hda/patch_realtek.c
-@@ -6930,6 +6930,8 @@ static const struct snd_pci_quirk alc269
- 	SND_PCI_QUIRK(0x1462, 0xb120, "MSI Cubi MS-B120", ALC283_FIXUP_HEADSET_MIC),
- 	SND_PCI_QUIRK(0x1462, 0xb171, "Cubi N 8GL (MS-B171)", ALC283_FIXUP_HEADSET_MIC),
- 	SND_PCI_QUIRK(0x1558, 0x1325, "System76 Darter Pro (darp5)", ALC293_FIXUP_SYSTEM76_MIC_NO_PRESENCE),
-+	SND_PCI_QUIRK(0x1558, 0x8550, "System76 Gazelle (gaze14)", ALC293_FIXUP_SYSTEM76_MIC_NO_PRESENCE),
-+	SND_PCI_QUIRK(0x1558, 0x8560, "System76 Gazelle (gaze14)", ALC293_FIXUP_SYSTEM76_MIC_NO_PRESENCE),
- 	SND_PCI_QUIRK(0x17aa, 0x1036, "Lenovo P520", ALC233_FIXUP_LENOVO_MULTI_CODECS),
- 	SND_PCI_QUIRK(0x17aa, 0x20f2, "Thinkpad SL410/510", ALC269_FIXUP_SKU_IGNORE),
- 	SND_PCI_QUIRK(0x17aa, 0x215e, "Thinkpad L512", ALC269_FIXUP_SKU_IGNORE),
+           DT            ^ extra space
+
+> see: Documentation/devicetree/bindings/mtd/brcm,brcmnand.txt
+> 
+> If both nand-ecc-strength and nand-ecc-step-size are not specified in
+> device tree node for NAND, nand_base driver does detect onfi ext ecc
+
+s/nand_base driver/the raw NAND layer/
+s/onfi/ONFI/
+s/ecc/ECC/
+
+What is "ext"? Please use plain English here.
+
+> info from ONFI extended parameter page for parts using ONFI >= 2.1. In
+
+s/info/information/
+
+> case of non-onfi NAND there could be a nand_id table entry with the ecc
+
+s/ecc/ECC/
+
+> info. If there is a valid  device tree entry for nand-ecc-strength and
+> nand-ecc-step-size fields it still shall override the detected values.
+> 
+> Signed-off-by: Kamal Dasu <kdasu.kdev@gmail.com>
+> ---
+>  drivers/mtd/nand/raw/brcmnand/brcmnand.c | 10 ++++++++++
+>  1 file changed, 10 insertions(+)
+> 
+> diff --git a/drivers/mtd/nand/raw/brcmnand/brcmnand.c b/drivers/mtd/nand/raw/brcmnand/brcmnand.c
+> index ce0b8ff..e967b30 100644
+> --- a/drivers/mtd/nand/raw/brcmnand/brcmnand.c
+> +++ b/drivers/mtd/nand/raw/brcmnand/brcmnand.c
+> @@ -2144,6 +2144,16 @@ static int brcmnand_setup_dev(struct brcmnand_host *host)
+>  		return -EINVAL;
+>  	}
+>  
+> +	if (!(chip->ecc.size > 0 && chip->ecc.strength > 0) &&
+
+Is the case where only size OR strength is valid handled?
+
+> +	    (chip->base.eccreq.strength > 0 &&
+> +	     chip->base.eccreq.step_size > 0)) {
+> +		/* use detected ecc parameters */
+
+                   Use          ECC
+
+> +		chip->ecc.size = chip->base.eccreq.step_size;
+> +		chip->ecc.strength = chip->base.eccreq.strength;
+> +		pr_info("Using detected nand-ecc-step-size %d, nand-ecc-strength %d\n",
+> +			chip->ecc.size, chip->ecc.strength);
+> +	}
+> +
+>  	switch (chip->ecc.size) {
+>  	case 512:
+>  		if (chip->ecc.algo == NAND_ECC_HAMMING)
 
 
+Thanks,
+Miquèl
