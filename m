@@ -1,124 +1,147 @@
 Return-Path: <SRS0=lq4r=TU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
-X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Level: *
+X-Spam-Status: No, score=1.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_MUTT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EF20C04AAC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 22:51:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BAC4C04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 22:54:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E5AE520862
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 22:51:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cPKte+l2"
+	by mail.kernel.org (Postfix) with ESMTP id E52EC2173E
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 22:54:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1558392868;
+	bh=5+etmHaQcXzMcqXszXxDoHImoEk64DgPlM33T/VMPbc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=kvfHwlX0ryOxGewcxurPOBHmHSbxvOF7PeQzRRFG1nWGj1+vV3fA+3ckRZJYAqTkf
+	 cdp9gpUqpOPZ0lQ9efctPj6Z9jQGZzhcVBNV+VVyHYM1qLg/LTgepH88Clj5Lmiuh8
+	 pdXVMFsSWg06dyIoJnqLN1h9LlXwhflxocbmDjIc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727421AbfETWvN (ORCPT
+        id S1726982AbfETWy1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 18:51:13 -0400
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:36220 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726584AbfETWuf (ORCPT
+        Mon, 20 May 2019 18:54:27 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:34593 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725776AbfETWy1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 18:50:35 -0400
-Received: by mail-lf1-f65.google.com with SMTP id y10so11554002lfl.3;
-        Mon, 20 May 2019 15:50:33 -0700 (PDT)
+        Mon, 20 May 2019 18:54:27 -0400
+Received: by mail-pf1-f195.google.com with SMTP id n19so7967634pfa.1;
+        Mon, 20 May 2019 15:54:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=Vxf6jf0I3TNkNsrZiapyq8fbjujSIosIG2y16ynybBA=;
-        b=cPKte+l2qZ4j+ifr+H9BD/YTN4+qCpvm4PqiW4AsAGuOwDsFPhaAkyVA5Uqe69hgN6
-         WjG+vSt/obII1rjN06w4ZNtggFlIMXhjxmeOpnP3TAa2cL2EH4I4EC/3lqf+dJvtWvyE
-         DSY4KwzMUD06suAcdr/fY9/loNVjfDTRZqQpwZUgzEfcwfoMjZwc346NKwZQnRfzK+IS
-         IrtuMWYeFuSbkvz96K0fvOTkbKPFAz82Oiy2OqhieGfVJ0Gq60ttHtwoHjajpx8lVAie
-         zIHBD7ceytsULxLRheDaOo7/Eu3b8xIp1hApNVO4CcFysAqlMRxdu7ybyJYBuZC84Bcy
-         ye9Q==
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=j5ZEwZoUPrePvOB8P3uaFYHEBF9h6x1bF10qxviP/xE=;
+        b=aDa3BR5hrVujffR2CccTn2i03Z06u8RLaJv5oWvHxj5xbVNGiYsJk/vt7209S8uAol
+         cSUwKywUIzkbz99ygGpCwDVlyAhlP6Qqv16/LS7gCBDlBqt07w13Lm6/MhAubCUgw7do
+         9mS7NAcuScAF4itUbYLknC0Rx5EIrxuTy8Un0xtEN35JX6X4Ul9oGrEZvRiI6PizjfsO
+         8TUxwDnLaJ0suX9Y3ukM8LQoqob/YnSrmTYafRjigxMs8VqXRDeuhNsTaiq/zSWYqRe+
+         O3paGwlyrZnmuqoURl77Gg2gHg6KjGkOKu3t7IebRgpgTp9yfW65T+GgqdpR0uC3WLXF
+         UYfQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=Vxf6jf0I3TNkNsrZiapyq8fbjujSIosIG2y16ynybBA=;
-        b=frdtAuuFrLeLZvGlLlZ3Yfot5uMz9HJCLclpuBk+ODBTQNRkXq9vQKKOHX7Y4fY9rp
-         gWXW+a+V672g3NhwMRcUS/LBMpYFFGcNZPJmS+jmOelvL0Npz+ydMK/BSH3OvUL0dJK5
-         Q6MSXzytTgrFN1AI7JmpWDHA3kJUAlAmI0tSY0EDF+F3EmrAWU+cHBiosnNoa+6Tr7ru
-         AQ/upy9wspJKgLb95DeW0c7hrt4bkcacyG+2XQ98cBM9Wzr8bJZji/FvAS5RHGrZPrGg
-         jqkUDF64yw9skoVaYyvMgFsvOqSoHbSyhCERq411HQ18vg7+RXgemFVfDtRJUsBo4wyK
-         PiJQ==
-X-Gm-Message-State: APjAAAV7zkcrwHtipLPSEMxYLyYzqiORJVg7IY4rN3q6VZ+WOfrMgLjZ
-        U+J1sNBgcGI1hPA0j1L0lVM=
-X-Google-Smtp-Source: APXvYqxlM6gWuNzP4Te1EnZSGJxSQC5D3uHa5MNgaDvgeQmCARPSQA6Kt3myJWreUEXW1NxDCA963g==
-X-Received: by 2002:ac2:4c93:: with SMTP id d19mr19052117lfl.116.1558392632679;
-        Mon, 20 May 2019 15:50:32 -0700 (PDT)
-Received: from z50.gdansk-morena.vectranet.pl (109241207190.gdansk.vectranet.pl. [109.241.207.190])
-        by smtp.gmail.com with ESMTPSA id t13sm2371646lji.47.2019.05.20.15.50.31
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 20 May 2019 15:50:32 -0700 (PDT)
-From:   Janusz Krzysztofik <jmkrzyszt@gmail.com>
-To:     Mauro Carvalho Chehab <mchehab@kernel.org>
-Cc:     Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Janusz Krzysztofik <jmkrzyszt@gmail.com>,
-        stable@vger.kernel.org
-Subject: [PATCH v2 2/9] media: ov6650: Fix control handler not freed on init error
-Date:   Tue, 21 May 2019 00:50:00 +0200
-Message-Id: <20190520225007.2308-3-jmkrzyszt@gmail.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190520225007.2308-1-jmkrzyszt@gmail.com>
-References: <20190520225007.2308-1-jmkrzyszt@gmail.com>
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=j5ZEwZoUPrePvOB8P3uaFYHEBF9h6x1bF10qxviP/xE=;
+        b=A0krYqGZ1OG0FG2gU9WkI7IjYkgi/iFkLxDWcXNSWuh1nAXoEp2XjXneOnz08EOR8R
+         GpElIc7+Y41yXEQ1OH4XhiD29H46YrTR8OKen5aXSwsFRe7hLirQ9b1NLdWhGlcGVYgE
+         vPF/RKWtoGjTfsoYd1PJY0bbBOd63uVACdyci2TOzBbh7ZnDgvtqibsZYqQaVBzbP15T
+         wdzQWTpBLDpY63vIALLVy9VzY6mUuW0a/8daSTXSc9YuamyewYRiAF6pCAcqK4hsFTyI
+         5hSeCGSi1o1Kof9xL1g++P03fo2yc0CJYAIyV7kkStuMgWHVbdxVw4BNyjasyO3E8ssb
+         XIsA==
+X-Gm-Message-State: APjAAAXcZeRdJ8JUv1mUbIaBJGfgelUhXVfFgEnwf8Yf48wJcShn7NnS
+        IofUGBErSK08Kzuo6tsjT+0=
+X-Google-Smtp-Source: APXvYqzzK62nVCC5F6/m31S+JkD0c1anhEeHQjGso6nctGro5sKQZujkk4vsGaYEeFlhkah4BFhh2Q==
+X-Received: by 2002:a65:52c8:: with SMTP id z8mr9234274pgp.10.1558392866292;
+        Mon, 20 May 2019 15:54:26 -0700 (PDT)
+Received: from google.com ([2401:fa00:d:0:98f1:8b3d:1f37:3e8])
+        by smtp.gmail.com with ESMTPSA id f29sm47171591pfq.11.2019.05.20.15.54.21
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Mon, 20 May 2019 15:54:24 -0700 (PDT)
+Date:   Tue, 21 May 2019 07:54:19 +0900
+From:   Minchan Kim <minchan@kernel.org>
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-mm <linux-mm@kvack.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Tim Murray <timmurray@google.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Suren Baghdasaryan <surenb@google.com>,
+        Daniel Colascione <dancol@google.com>,
+        Shakeel Butt <shakeelb@google.com>,
+        Sonny Rao <sonnyrao@google.com>,
+        Brian Geffon <bgeffon@google.com>, linux-api@vger.kernel.org
+Subject: Re: [RFC 1/7] mm: introduce MADV_COOL
+Message-ID: <20190520225419.GA10039@google.com>
+References: <20190520035254.57579-1-minchan@kernel.org>
+ <20190520035254.57579-2-minchan@kernel.org>
+ <20190520081621.GV6836@dhcp22.suse.cz>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190520081621.GV6836@dhcp22.suse.cz>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since commit afd9690c72c3 ("[media] ov6650: convert to the control
-framework"), if an error occurs during initialization of a control
-handler, resources possibly allocated to the handler are not freed
-before device initialiaton is aborted.  Fix it.
+On Mon, May 20, 2019 at 10:16:21AM +0200, Michal Hocko wrote:
+> [CC linux-api]
 
-Fixes: afd9690c72c3 ("[media] ov6650: convert to the control framework")
-Signed-off-by: Janusz Krzysztofik <jmkrzyszt@gmail.com>
-Cc: stable@vger.kernel.org
----
- drivers/media/i2c/ov6650.c | 12 ++++++++----
- 1 file changed, 8 insertions(+), 4 deletions(-)
+Thanks, Michal. I forgot to add it.
 
-diff --git a/drivers/media/i2c/ov6650.c b/drivers/media/i2c/ov6650.c
-index a3d00afcb0c8..007f0ca24913 100644
---- a/drivers/media/i2c/ov6650.c
-+++ b/drivers/media/i2c/ov6650.c
-@@ -992,8 +992,10 @@ static int ov6650_probe(struct i2c_client *client,
- 			V4L2_CID_GAMMA, 0, 0xff, 1, 0x12);
- 
- 	priv->subdev.ctrl_handler = &priv->hdl;
--	if (priv->hdl.error)
--		return priv->hdl.error;
-+	if (priv->hdl.error) {
-+		ret = priv->hdl.error;
-+		goto ectlhdlfree;
-+	}
- 
- 	v4l2_ctrl_auto_cluster(2, &priv->autogain, 0, true);
- 	v4l2_ctrl_auto_cluster(3, &priv->autowb, 0, true);
-@@ -1012,8 +1014,10 @@ static int ov6650_probe(struct i2c_client *client,
- 	priv->subdev.flags |= V4L2_SUBDEV_FL_HAS_DEVNODE;
- 
- 	ret = v4l2_async_register_subdev(&priv->subdev);
--	if (ret)
--		v4l2_ctrl_handler_free(&priv->hdl);
-+	if (!ret)
-+		return 0;
-+ectlhdlfree:
-+	v4l2_ctrl_handler_free(&priv->hdl);
- 
- 	return ret;
- }
--- 
-2.21.0
+> 
+> On Mon 20-05-19 12:52:48, Minchan Kim wrote:
+> > When a process expects no accesses to a certain memory range
+> > it could hint kernel that the pages can be reclaimed
+> > when memory pressure happens but data should be preserved
+> > for future use.  This could reduce workingset eviction so it
+> > ends up increasing performance.
+> > 
+> > This patch introduces the new MADV_COOL hint to madvise(2)
+> > syscall. MADV_COOL can be used by a process to mark a memory range
+> > as not expected to be used in the near future. The hint can help
+> > kernel in deciding which pages to evict early during memory
+> > pressure.
+> 
+> I do not want to start naming fight but MADV_COOL sounds a bit
+> misleading. Everybody thinks his pages are cool ;). Probably MADV_COLD
+> or MADV_DONTNEED_PRESERVE.
 
+Thanks for the suggestion. Since I got several suggestions, Let's discuss
+them all at once in cover-letter.
+
+> 
+> > Internally, it works via deactivating memory from active list to
+> > inactive's head so when the memory pressure happens, they will be
+> > reclaimed earlier than other active pages unless there is no
+> > access until the time.
+> 
+> Could you elaborate about the decision to move to the head rather than
+> tail? What should happen to inactive pages? Should we move them to the
+> tail? Your implementation seems to ignore those completely. Why?
+
+Normally, inactive LRU could have used-once pages without any mapping
+to user's address space. Such pages would be better candicate to
+reclaim when the memory pressure happens. With deactivating only
+active LRU pages of the process to the head of inactive LRU, we will
+keep them in RAM longer than used-once pages and could have more chance
+to be activated once the process is resumed.
+
+> 
+> What should happen for shared pages? In other words do we want to allow
+> less privileged process to control evicting of shared pages with a more
+> privileged one? E.g. think of all sorts of side channel attacks. Maybe
+> we want to do the same thing as for mincore where write access is
+> required.
+
+It doesn't work with shared pages(ie, page_mapcount > 1). I will add it
+in the description.
+
+> -- 
+> Michal Hocko
+> SUSE Labs
