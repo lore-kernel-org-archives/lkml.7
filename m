@@ -2,243 +2,137 @@ Return-Path: <SRS0=lq4r=TU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19048C04AAC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 14:44:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A28BAC04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 14:45:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D45D32054F
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 14:44:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 717F52054F
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 14:45:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b="FcuGOrg5"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jLmh1foF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391999AbfETOoo (ORCPT
+        id S2392005AbfETOp0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 10:44:44 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:39925 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2391984AbfETOom (ORCPT
+        Mon, 20 May 2019 10:45:26 -0400
+Received: from mail-qk1-f195.google.com ([209.85.222.195]:34886 "EHLO
+        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729847AbfETOp0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 10:44:42 -0400
-Received: by mail-wr1-f66.google.com with SMTP id w8so14944139wrl.6
-        for <linux-kernel@vger.kernel.org>; Mon, 20 May 2019 07:44:41 -0700 (PDT)
+        Mon, 20 May 2019 10:45:26 -0400
+Received: by mail-qk1-f195.google.com with SMTP id c15so8987216qkl.2
+        for <linux-kernel@vger.kernel.org>; Mon, 20 May 2019 07:45:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=szeredi.hu; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=VceX0inl+xJT/Seg5xxtqBb9C3XXmdQzMS78vGAaEms=;
-        b=FcuGOrg5reg1S0l1itKbd/lBbVqFPDu+TpXhYmKxOt4riBJtk788L6qVrB2kNxtIjT
-         wChiwClJr+wp9uSjs+mxOmHyqFBahIdNrjOemwQVoibbcG1ucDEGvhyaULJH486swnpG
-         M7azSxVKQItYeJojw0rwBFxFvde4EN/0byzg0=
+        bh=ofhQyIB4A6nPtsb92V5jWkKdzSPrIJPk9vscD80guhs=;
+        b=jLmh1foF7cO2ohu56/whRWSjywwPOrhi2n+ahtk/pJoCtBSi/dQta0Mgte1/iI3qQC
+         3V7A4Bscy7mq+gZL9/QmWdjzaHyIzt1O+xfksDfD0sv31+5Lctln9WnnskAiLaTwLxvW
+         bCez9u/VpKL+JqoxiTffd2JOoK1NL6djm8zyz3t+FqpJgLhaz2QhEIx6pSmfSV5gWGfS
+         IIAqF62P12L8wEOJR5Ehg17Ihac8uTlOLGiRrXG13wvRFppLE43BPLV7rCue9E/O6crR
+         RmIxOR2BlEicT0Nswj0LsDCDzUg/4oj47QQxOIFTnTBMe/E9cV8F7/R++CUBRciwb+gk
+         DgaQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=VceX0inl+xJT/Seg5xxtqBb9C3XXmdQzMS78vGAaEms=;
-        b=IBUDo5QmGImeF+ZSDtXhfQVywzRkjnV4ioYE1eW6SzHmVL9HKpukyTVRrIIS886q1p
-         2ltjWDhkJhsBK1ws1XKsu9EcrCd1K+8+Z6I8dcshihzanPhUoWdyxJc1E+a5W2nmu4sf
-         WV7GTXx9RBQ3UfMGGY0uy/pV7AXIlrxMAxYfB7Ed7LFfz2cou9FzcAPXHz62PHKFbMUj
-         Ne0RaH1JZTjN2sbiOfr2mEOzTAFUnqch6RYPU+bkToS6/lWZ7iA3scaG2wwHvfxMWW+h
-         Y57Qy+onrdZSOUZ4yOdQAGkFX+gVZxjCX51YZgJMwTZJQwgiK3kiop0WkYfVHK0GnOis
-         aw0w==
-X-Gm-Message-State: APjAAAWYUCLJp+wL+/bMswIHCFenxy6eo2VKNcFz7IuxBy8F/8QHaXKm
-        DMGV1Lc5D6Dpcgpkrupuoh0a8Q==
-X-Google-Smtp-Source: APXvYqwUDHLwWvqd8kuS304lx0z2yG9BSoE7TWQycdCiYRe7kl6qYXKvUo5n5KhEpN6Ls7rcR5k6/A==
-X-Received: by 2002:adf:f487:: with SMTP id l7mr47404596wro.127.1558363480523;
-        Mon, 20 May 2019 07:44:40 -0700 (PDT)
-Received: from localhost.localdomain (catv-212-96-48-140.catv.broadband.hu. [212.96.48.140])
-        by smtp.gmail.com with ESMTPSA id y184sm18241241wmg.7.2019.05.20.07.44.38
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 20 May 2019 07:44:39 -0700 (PDT)
-Date:   Mon, 20 May 2019 16:44:37 +0200
-From:   Miklos Szeredi <miklos@szeredi.hu>
-To:     Vivek Goyal <vgoyal@redhat.com>
-Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org, linux-nvdimm@lists.01.org,
-        stefanha@redhat.com, dgilbert@redhat.com, swhiteho@redhat.com
-Subject: Re: [PATCH v2 02/30] fuse: Clear setuid bit even in cache=never path
-Message-ID: <20190520144437.GB24093@localhost.localdomain>
-References: <20190515192715.18000-1-vgoyal@redhat.com>
- <20190515192715.18000-3-vgoyal@redhat.com>
- <20190520144137.GA24093@localhost.localdomain>
+        bh=ofhQyIB4A6nPtsb92V5jWkKdzSPrIJPk9vscD80guhs=;
+        b=mrD0ruNQnPc6/iUASsjmpx8da1DkQVB82WCmJElHiJQ8ytDazHz2xkdUWx72MqvXgY
+         1knzbGbknvim3iVNEiGmj1jX/0Fq1y2FkdLYaFjdsxmZgqOabyG53e1ysZAtCPMam0JF
+         Xe8kAumkp/HQK6wFGfPtkoP9HbQG5LP5UxKEx83X7Xm7T7cMY1D3fz2+1emTuNAPOgkq
+         ObvShLkfJodtYU7sfIs1/ygMnBgrmlW901AmVmcUu+IWpmnmQ1iu39LgAYW3sZlPObK5
+         VEChKULOvDlpKeHng6bXJ/qTYmcksKQJCQEVfSQfglQy4D6g8NElMD2pwIq9pQBK2RHG
+         45qA==
+X-Gm-Message-State: APjAAAV1yxvyGmsHaMDsvrdHwAN8YyFisVYEwn76N6F6mOSRF638l0+o
+        AQNssBCFXU73suUevoeI9ZIrxGbX
+X-Google-Smtp-Source: APXvYqzs+wNYdFqbO/HIsthOJLfyyuyyLxqFsc/a8AICoeW0+i1IbJ04h+9KjQMvXQwAFLjdlc0wqg==
+X-Received: by 2002:ae9:ec10:: with SMTP id h16mr21624321qkg.215.1558363525335;
+        Mon, 20 May 2019 07:45:25 -0700 (PDT)
+Received: from quaco.ghostprotocols.net ([177.195.215.206])
+        by smtp.gmail.com with ESMTPSA id a139sm7215956qkb.48.2019.05.20.07.45.24
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Mon, 20 May 2019 07:45:24 -0700 (PDT)
+From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id CE758404A1; Mon, 20 May 2019 11:45:16 -0300 (-03)
+Date:   Mon, 20 May 2019 11:45:16 -0300
+To:     Adrian Hunter <adrian.hunter@intel.com>
+Cc:     Jiri Olsa <jolsa@redhat.com>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 01/22] perf intel-pt: Fix itrace defaults for perf script
+Message-ID: <20190520144516.GL8945@kernel.org>
+References: <20190520113728.14389-1-adrian.hunter@intel.com>
+ <20190520113728.14389-2-adrian.hunter@intel.com>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="KsGdsel6WgEHnImy"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190520144137.GA24093@localhost.localdomain>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+In-Reply-To: <20190520113728.14389-2-adrian.hunter@intel.com>
+X-Url:  http://acmel.wordpress.com
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
---KsGdsel6WgEHnImy
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-On Mon, May 20, 2019 at 04:41:37PM +0200, Miklos Szeredi wrote:
-> On Wed, May 15, 2019 at 03:26:47PM -0400, Vivek Goyal wrote:
-> > If fuse daemon is started with cache=never, fuse falls back to direct IO.
-> > In that write path we don't call file_remove_privs() and that means setuid
-> > bit is not cleared if unpriviliged user writes to a file with setuid bit set.
-> > 
-> > pjdfstest chmod test 12.t tests this and fails.
+Em Mon, May 20, 2019 at 02:37:07PM +0300, Adrian Hunter escreveu:
+> Commit 4eb068157121 ("perf script: Make itrace script default to all
+> calls") does not work because 'use_browser' is being used to determine
+> whether to default to periodic sampling (i.e. better for perf report).
+> The result is that nothing but CBR events display for perf script
+> when no --itrace option is specified.
 > 
-> I think better sulution is to tell the server if the suid bit needs to be
-> removed, so it can do so in a race free way.
+> Fix by using 'default_no_sample' and 'inject' instead.
+
+Applied 1-3 for now, concentrating on fixes, will process 4-22 later.
+
+- Arnaldo
+ 
+> Example:
 > 
-> Here's the kernel patch, and I'll reply with the libfuse patch.
+>  Before:
+> 
+>   $ perf record -e intel_pt/cyc/u ls
+>   $ perf script > cmp1.txt
+>   $ perf script --itrace=cepwx > cmp2.txt
+>   $ diff -sq cmp1.txt cmp2.txt
+>   Files cmp1.txt and cmp2.txt differ
+> 
+>  After:
+> 
+>   $ perf script > cmp1.txt
+>   $ perf script --itrace=cepwx > cmp2.txt
+>   $ diff -sq cmp1.txt cmp2.txt
+>   Files cmp1.txt and cmp2.txt are identical
+> 
+> Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
+> Fixes: 90e457f7be08 ("perf tools: Add Intel PT support")
+> Cc: stable@vger.kernel.org # v4.20+
+> ---
+>  tools/perf/util/intel-pt.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+> 
+> diff --git a/tools/perf/util/intel-pt.c b/tools/perf/util/intel-pt.c
+> index 551ae10d1c7b..7a70693c1b91 100644
+> --- a/tools/perf/util/intel-pt.c
+> +++ b/tools/perf/util/intel-pt.c
+> @@ -2626,7 +2626,8 @@ int intel_pt_process_auxtrace_info(union perf_event *event,
+>  	} else {
+>  		itrace_synth_opts__set_default(&pt->synth_opts,
+>  				session->itrace_synth_opts->default_no_sample);
+> -		if (use_browser != -1) {
+> +		if (!session->itrace_synth_opts->default_no_sample &&
+> +		    !session->itrace_synth_opts->inject) {
+>  			pt->synth_opts.branches = false;
+>  			pt->synth_opts.callchain = true;
+>  		}
+> -- 
+> 2.17.1
 
-Here are the patches for libfuse and passthrough_ll.
+-- 
 
---KsGdsel6WgEHnImy
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: attachment; filename="libfuse-add-fuse_write_kill_priv.patch"
-
----
- include/fuse_common.h |    5 ++++-
- include/fuse_kernel.h |    2 ++
- lib/fuse_lowlevel.c   |   12 ++++++++----
- 3 files changed, 14 insertions(+), 5 deletions(-)
-
---- a/include/fuse_common.h
-+++ b/include/fuse_common.h
-@@ -64,8 +64,11 @@ struct fuse_file_info {
- 	   May only be set in ->release(). */
- 	unsigned int flock_release : 1;
- 
-+	/* Kill suid and sgid bits on write */
-+	unsigned int write_kill_priv : 1;
-+
- 	/** Padding.  Do not use*/
--	unsigned int padding : 27;
-+	unsigned int padding : 26;
- 
- 	/** File handle.  May be filled in by filesystem in open().
- 	    Available in all other file operations */
---- a/include/fuse_kernel.h
-+++ b/include/fuse_kernel.h
-@@ -304,9 +304,11 @@ struct fuse_file_lock {
-  *
-  * FUSE_WRITE_CACHE: delayed write from page cache, file handle is guessed
-  * FUSE_WRITE_LOCKOWNER: lock_owner field is valid
-+ * FUSE_WRITE_KILL_PRIV: kill suid and sgid bits
-  */
- #define FUSE_WRITE_CACHE	(1 << 0)
- #define FUSE_WRITE_LOCKOWNER	(1 << 1)
-+#define FUSE_WRITE_KILL_PRIV	(1 << 2)
- 
- /**
-  * Read flags
---- a/lib/fuse_lowlevel.c
-+++ b/lib/fuse_lowlevel.c
-@@ -1315,12 +1315,14 @@ static void do_write(fuse_req_t req, fus
- 
- 	memset(&fi, 0, sizeof(fi));
- 	fi.fh = arg->fh;
--	fi.writepage = (arg->write_flags & 1) != 0;
-+	fi.writepage = (arg->write_flags & FUSE_WRITE_CACHE) != 0;
-+	fi.write_kill_priv = (arg->write_flags & FUSE_WRITE_KILL_PRIV) != 0;
- 
- 	if (req->se->conn.proto_minor < 9) {
- 		param = ((char *) arg) + FUSE_COMPAT_WRITE_IN_SIZE;
- 	} else {
--		fi.lock_owner = arg->lock_owner;
-+		if (arg->write_flags & FUSE_WRITE_LOCKOWNER)
-+			fi.lock_owner = arg->lock_owner;
- 		fi.flags = arg->flags;
- 		param = PARAM(arg);
- 	}
-@@ -1345,7 +1347,8 @@ static void do_write_buf(fuse_req_t req,
- 
- 	memset(&fi, 0, sizeof(fi));
- 	fi.fh = arg->fh;
--	fi.writepage = arg->write_flags & 1;
-+	fi.writepage = (arg->write_flags & FUSE_WRITE_CACHE) != 0;
-+	fi.write_kill_priv = (arg->write_flags & FUSE_WRITE_KILL_PRIV) != 0;
- 
- 	if (se->conn.proto_minor < 9) {
- 		bufv.buf[0].mem = ((char *) arg) + FUSE_COMPAT_WRITE_IN_SIZE;
-@@ -1353,7 +1356,8 @@ static void do_write_buf(fuse_req_t req,
- 			FUSE_COMPAT_WRITE_IN_SIZE;
- 		assert(!(bufv.buf[0].flags & FUSE_BUF_IS_FD));
- 	} else {
--		fi.lock_owner = arg->lock_owner;
-+		if (arg->write_flags & FUSE_WRITE_LOCKOWNER)
-+			fi.lock_owner = arg->lock_owner;
- 		fi.flags = arg->flags;
- 		if (!(bufv.buf[0].flags & FUSE_BUF_IS_FD))
- 			bufv.buf[0].mem = PARAM(arg);
-
---KsGdsel6WgEHnImy
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: attachment; filename="passthrough_ll-kill-suid.patch"
-
----
- example/passthrough_ll.c |   29 ++++++++++++++++++++++++++++-
- 1 file changed, 28 insertions(+), 1 deletion(-)
-
---- a/example/passthrough_ll.c
-+++ b/example/passthrough_ll.c
-@@ -56,6 +56,7 @@
- #include <sys/file.h>
- #include <sys/xattr.h>
- #include <sys/syscall.h>
-+#include <sys/capability.h>
- 
- /* We are re-using pointers to our `struct lo_inode` and `struct
-    lo_dirp` elements as inodes. This means that we must be able to
-@@ -965,6 +966,11 @@ static void lo_write_buf(fuse_req_t req,
- 	(void) ino;
- 	ssize_t res;
- 	struct fuse_bufvec out_buf = FUSE_BUFVEC_INIT(fuse_buf_size(in_buf));
-+	struct __user_cap_header_struct cap_hdr = {
-+		.version = _LINUX_CAPABILITY_VERSION_1,
-+	};
-+	struct __user_cap_data_struct cap_orig;
-+	struct __user_cap_data_struct cap_new;
- 
- 	out_buf.buf[0].flags = FUSE_BUF_IS_FD | FUSE_BUF_FD_SEEK;
- 	out_buf.buf[0].fd = fi->fh;
-@@ -974,7 +980,28 @@ static void lo_write_buf(fuse_req_t req,
- 		fprintf(stderr, "lo_write(ino=%" PRIu64 ", size=%zd, off=%lu)\n",
- 			ino, out_buf.buf[0].size, (unsigned long) off);
- 
-+	if (fi->write_kill_priv) {
-+		res = capget(&cap_hdr, &cap_orig);
-+		if (res == -1) {
-+			fuse_reply_err(req, errno);
-+			return;
-+		}
-+		cap_new = cap_orig;
-+		cap_new.effective &= ~(1 << CAP_FSETID);
-+		res = capset(&cap_hdr, &cap_new);
-+		if (res == -1) {
-+			fuse_reply_err(req, errno);
-+			return;
-+		}
-+	}
-+
- 	res = fuse_buf_copy(&out_buf, in_buf, 0);
-+
-+	if (fi->write_kill_priv) {
-+		if (capset(&cap_hdr, &cap_orig) != 0)
-+			abort();
-+	}
-+
- 	if(res < 0)
- 		fuse_reply_err(req, -res);
- 	else
-@@ -1215,7 +1242,7 @@ static void lo_copy_file_range(fuse_req_
- 	res = copy_file_range(fi_in->fh, &off_in, fi_out->fh, &off_out, len,
- 			      flags);
- 	if (res < 0)
--		fuse_reply_err(req, -errno);
-+		fuse_reply_err(req, errno);
- 	else
- 		fuse_reply_write(req, res);
- }
-
---KsGdsel6WgEHnImy--
+- Arnaldo
