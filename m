@@ -2,334 +2,412 @@ Return-Path: <SRS0=lq4r=TU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5BC2C04AAC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 19:55:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20AB8C04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 19:55:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7765C20863
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 19:55:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD88C20863
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 19:55:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="eptz8QMM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726546AbfETTzE (ORCPT
+        id S1726645AbfETTzH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Mon, 20 May 2019 15:55:07 -0400
+Received: from mail-eopbgr80045.outbound.protection.outlook.com ([40.107.8.45]:54276
+        "EHLO EUR04-VI1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725954AbfETTzE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 20 May 2019 15:55:04 -0400
-Received: from mga07.intel.com ([134.134.136.100]:46461 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725905AbfETTzE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 15:55:04 -0400
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 May 2019 12:55:02 -0700
-X-ExtLoop1: 1
-Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
-  by orsmga007.jf.intel.com with ESMTP; 20 May 2019 12:55:01 -0700
-Received: from kbuild by lkp-server01 with local (Exim 4.89)
-        (envelope-from <lkp@intel.com>)
-        id 1hSoNB-000Adt-23; Tue, 21 May 2019 03:55:01 +0800
-Date:   Tue, 21 May 2019 03:54:05 +0800
-From:   kbuild test robot <lkp@intel.com>
-To:     Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc:     kbuild-all@01.org, linux-kernel@vger.kernel.org
-Subject: arch/mips/include/asm/page.h:12:10: fatal error: spaces.h: No such
- file or directory
-Message-ID: <201905210359.r26dyOux%lkp@intel.com>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=iWOiq682iGAXLRj9G0ymbsh40L9Fuwjt+yCKKOL6Kuw=;
+ b=eptz8QMMtdQfILzmKNitZDHRzyskpPw1vGYsZVbO1zlYlxHXL/NkuUg23vFVQL4bK6+zTJs+vzrZm20NDPSN8uAsD93dkyRYHG0NcP9j6Jf/WYLOQQc9ABixFrRpGrt1UWI4MgzDxznxKfkVlfWJHwhxpeFjx+ZkE5PvAzvAfHI=
+Received: from VI1PR0501MB2271.eurprd05.prod.outlook.com (10.169.134.149) by
+ VI1PR0501MB2384.eurprd05.prod.outlook.com (10.168.135.18) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1900.16; Mon, 20 May 2019 19:54:59 +0000
+Received: from VI1PR0501MB2271.eurprd05.prod.outlook.com
+ ([fe80::a0a7:7e01:762e:58e0]) by VI1PR0501MB2271.eurprd05.prod.outlook.com
+ ([fe80::a0a7:7e01:762e:58e0%6]) with mapi id 15.20.1900.020; Mon, 20 May 2019
+ 19:54:59 +0000
+From:   Parav Pandit <parav@mellanox.com>
+To:     Parav Pandit <parav@mellanox.com>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "cohuck@redhat.com" <cohuck@redhat.com>,
+        "kwankhede@nvidia.com" <kwankhede@nvidia.com>,
+        "alex.williamson@redhat.com" <alex.williamson@redhat.com>
+CC:     "cjia@nvidia.com" <cjia@nvidia.com>
+Subject: RE: [PATCHv3 1/3] vfio/mdev: Improve the create/remove sequence
+Thread-Topic: [PATCHv3 1/3] vfio/mdev: Improve the create/remove sequence
+Thread-Index: AQHVDD9o/mxSVG1oh0uHfLZmDCQyjKZ0ckdQ
+Date:   Mon, 20 May 2019 19:54:59 +0000
+Message-ID: <VI1PR0501MB2271652CB38FC0C33656DC89D1060@VI1PR0501MB2271.eurprd05.prod.outlook.com>
+References: <20190516233034.16407-1-parav@mellanox.com>
+ <20190516233034.16407-2-parav@mellanox.com>
+In-Reply-To: <20190516233034.16407-2-parav@mellanox.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=parav@mellanox.com; 
+x-originating-ip: [208.176.44.194]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: a618e63b-1a28-4489-5707-08d6dd5d0a4a
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:VI1PR0501MB2384;
+x-ms-traffictypediagnostic: VI1PR0501MB2384:
+x-microsoft-antispam-prvs: <VI1PR0501MB23843185867417F279652C58D1060@VI1PR0501MB2384.eurprd05.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:10000;
+x-forefront-prvs: 004395A01C
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(136003)(346002)(39860400002)(366004)(396003)(376002)(199004)(189003)(13464003)(6436002)(6506007)(64756008)(4326008)(14444005)(76116006)(102836004)(476003)(256004)(53546011)(305945005)(11346002)(74316002)(66946007)(73956011)(7696005)(66446008)(14454004)(66476007)(486006)(66556008)(2906002)(68736007)(110136005)(26005)(33656002)(76176011)(3846002)(6116002)(66066001)(446003)(229853002)(7736002)(186003)(6246003)(86362001)(478600001)(2201001)(81166006)(81156014)(8676002)(25786009)(55016002)(9686003)(99286004)(71190400001)(71200400001)(8936002)(52536014)(2501003)(53936002)(5660300002)(316002)(30864003);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR0501MB2384;H:VI1PR0501MB2271.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: mellanox.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: c6VhegxgdnrCffgd6dGw4JuKBaYZ6IHgFXoYtpQgd0Ev84pH9LZmXTFbNIHlcTFiIsvTr5XbMlKgKlRpaVwe4BeY9m3UD+/wxQB2f2Dc7B9P87v1MG2k8o8Exidqy29ZDk0s3Qq7HiK0fCa+BSZfnPeQQUjRvFiprJv0YPpnxl5Cx9jPR2aeubY9ssLaIrNAQodIaM3Y5+Mby+VUbjsxy9hb2+RX2sO6OBpOkRgOd462FEUTokTisO6BCdp16pTRC7ID1LTIPofvlwjLacvtYf8kViJfdrCd56GvlGDwqMMXs4mrdAJgKKpICmSrF2rrk1tPVZszHn1nB6vlQzIUKzrrr+T8D5OU+QOIL2MJ24yIV66TAkIEhWsEWl7Ughok3SUNj83G4cWKuG8qoula4U8eEm03BXHFKP/Euu/+rrI=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="6TrnltStXW4iwmi0"
-Content-Disposition: inline
-X-Patchwork-Hint: ignore
-User-Agent: Mutt/1.5.23 (2014-03-12)
+X-OriginatorOrg: Mellanox.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: a618e63b-1a28-4489-5707-08d6dd5d0a4a
+X-MS-Exchange-CrossTenant-originalarrivaltime: 20 May 2019 19:54:59.2724
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0501MB2384
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Alex, Cornelia,
 
---6TrnltStXW4iwmi0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
 
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-head:   a188339ca5a396acc588e5851ed7e19f66b0ebd9
-commit: 9cc342f6c4a06ea613ddef1bcaa25409260aec63 treewide: prefix header search paths with $(srctree)/
-date:   3 days ago
-config: mips-pnx8335_stb225_defconfig (attached as .config)
-compiler: mipsel-linux-gcc (GCC) 7.2.0
-reproduce:
-        wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
-        chmod +x ~/bin/make.cross
-        git checkout 9cc342f6c4a06ea613ddef1bcaa25409260aec63
-        # save the attached .config to linux build tree
-        GCC_VERSION=7.2.0 make.cross ARCH=mips 
+> -----Original Message-----
+> From: linux-kernel-owner@vger.kernel.org <linux-kernel-
+> owner@vger.kernel.org> On Behalf Of Parav Pandit
+> Sent: Thursday, May 16, 2019 6:31 PM
+> To: kvm@vger.kernel.org; linux-kernel@vger.kernel.org; cohuck@redhat.com;
+> kwankhede@nvidia.com; alex.williamson@redhat.com
+> Cc: cjia@nvidia.com; Parav Pandit <parav@mellanox.com>
+> Subject: [PATCHv3 1/3] vfio/mdev: Improve the create/remove sequence
+>=20
+> This patch addresses below two issues and prepares the code to address 3r=
+d
+> issue listed below.
+>=20
+> 1. mdev device is placed on the mdev bus before it is created in the vend=
+or
+> driver. Once a device is placed on the mdev bus without creating its
+> supporting underlying vendor device, mdev driver's probe() gets triggered=
+.
+> However there isn't a stable mdev available to work on.
+>=20
+>    create_store()
+>      mdev_create_device()
+>        device_register()
+>           ...
+>          vfio_mdev_probe()
+>         [...]
+>         parent->ops->create()
+>           vfio_ap_mdev_create()
+>             mdev_set_drvdata(mdev, matrix_mdev);
+>             /* Valid pointer set above */
+>=20
+> Due to this way of initialization, mdev driver who wants to use the mdev,
+> doesn't have a valid mdev to work on.
+>=20
+> 2. Current creation sequence is,
+>    parent->ops_create()
+>    groups_register()
+>=20
+> Remove sequence is,
+>    parent->ops->remove()
+>    groups_unregister()
+>=20
+> However, remove sequence should be exact mirror of creation sequence.
+> Once this is achieved, all users of the mdev will be terminated first bef=
+ore
+> removing underlying vendor device.
+> (Follow standard linux driver model).
+> At that point vendor's remove() ops shouldn't fail because taking the dev=
+ice
+> off the bus should terminate any usage.
+>=20
+> 3. When remove operation fails, mdev sysfs removal attempts to add the fi=
+le
+> back on already removed device. Following call trace [1] is observed.
+>=20
+> [1] call trace:
+> kernel: WARNING: CPU: 2 PID: 9348 at fs/sysfs/file.c:327
+> sysfs_create_file_ns+0x7f/0x90
+> kernel: CPU: 2 PID: 9348 Comm: bash Kdump: loaded Not tainted 5.1.0-rc6-
+> vdevbus+ #6
+> kernel: Hardware name: Supermicro SYS-6028U-TR4+/X10DRU-i+, BIOS 2.0b
+> 08/09/2016
+> kernel: RIP: 0010:sysfs_create_file_ns+0x7f/0x90
+> kernel: Call Trace:
+> kernel: remove_store+0xdc/0x100 [mdev]
+> kernel: kernfs_fop_write+0x113/0x1a0
+> kernel: vfs_write+0xad/0x1b0
+> kernel: ksys_write+0x5a/0xe0
+> kernel: do_syscall_64+0x5a/0x210
+> kernel: entry_SYSCALL_64_after_hwframe+0x49/0xbe
+>=20
+> Therefore, mdev core is improved in following ways.
+>=20
+> 1. Split the device registration/deregistration sequence so that some thi=
+ngs
+> can be done between initialization of the device and hooking it up to the
+> bus respectively after deregistering it from the bus but before giving up=
+ our
+> final reference.
+> In particular, this means invoking the ->create and ->remove callbacks in
+> those new windows. This gives the vendor driver an initialized mdev devic=
+e
+> to work with during creation.
+> At the same time, a bus driver who wish to bind to mdev driver also gets
+> initialized mdev device.
+>=20
+> This follows standard Linux kernel bus and device model.
+>=20
+> 2. During remove flow, first remove the device from the bus. This ensures
+> that any bus specific devices are removed.
+> Once device is taken off the mdev bus, invoke remove() of mdev from the
+> vendor driver.
+>=20
+> 3. The driver core device model provides way to register and auto unregis=
+ter
+> the device sysfs attribute groups at dev->groups.
+> Make use of dev->groups to let core create the groups and eliminate code =
+to
+> avoid explicit groups creation and removal.
+>=20
+> To ensure, that new sequence is solid, a below stack dump of a process is
+> taken who attempts to remove the device while device is in use by vfio
+> driver and user application.
+> This stack dump validates that vfio driver guards against such device rem=
+oval
+> when device is in use.
+>=20
+>  cat /proc/21962/stack
+> [<0>] vfio_del_group_dev+0x216/0x3c0 [vfio] [<0>] mdev_remove+0x21/0x40
+> [mdev] [<0>] device_release_driver_internal+0xe8/0x1b0
+> [<0>] bus_remove_device+0xf9/0x170
+> [<0>] device_del+0x168/0x350
+> [<0>] mdev_device_remove_common+0x1d/0x50 [mdev] [<0>]
+> mdev_device_remove+0x8c/0xd0 [mdev] [<0>] remove_store+0x71/0x90
+> [mdev] [<0>] kernfs_fop_write+0x113/0x1a0 [<0>] vfs_write+0xad/0x1b0
+> [<0>] ksys_write+0x5a/0xe0 [<0>] do_syscall_64+0x5a/0x210 [<0>]
+> entry_SYSCALL_64_after_hwframe+0x49/0xbe
+> [<0>] 0xffffffffffffffff
+>=20
+> This prepares the code to eliminate calling device_create_file() in subsq=
+uent
+> patch.
+>=20
+> Signed-off-by: Parav Pandit <parav@mellanox.com>
+> ---
+>  drivers/vfio/mdev/mdev_core.c    | 94 +++++++++-----------------------
+>  drivers/vfio/mdev/mdev_private.h |  2 +-
+>  drivers/vfio/mdev/mdev_sysfs.c   |  2 +-
+>  3 files changed, 27 insertions(+), 71 deletions(-)
+>=20
+> diff --git a/drivers/vfio/mdev/mdev_core.c b/drivers/vfio/mdev/mdev_core.=
+c
+> index 3cc1a05fde1c..0bef0cae1d4b 100644
+> --- a/drivers/vfio/mdev/mdev_core.c
+> +++ b/drivers/vfio/mdev/mdev_core.c
+> @@ -102,55 +102,10 @@ static void mdev_put_parent(struct mdev_parent
+> *parent)
+>  		kref_put(&parent->ref, mdev_release_parent);  }
+>=20
+> -static int mdev_device_create_ops(struct kobject *kobj,
+> -				  struct mdev_device *mdev)
+> -{
+> -	struct mdev_parent *parent =3D mdev->parent;
+> -	int ret;
+> -
+> -	ret =3D parent->ops->create(kobj, mdev);
+> -	if (ret)
+> -		return ret;
+> -
+> -	ret =3D sysfs_create_groups(&mdev->dev.kobj,
+> -				  parent->ops->mdev_attr_groups);
+> -	if (ret)
+> -		parent->ops->remove(mdev);
+> -
+> -	return ret;
+> -}
+> -
+> -/*
+> - * mdev_device_remove_ops gets called from sysfs's 'remove' and when
+> parent
+> - * device is being unregistered from mdev device framework.
+> - * - 'force_remove' is set to 'false' when called from sysfs's 'remove' =
+which
+> - *   indicates that if the mdev device is active, used by VMM or userspa=
+ce
+> - *   application, vendor driver could return error then don't remove the
+> device.
+> - * - 'force_remove' is set to 'true' when called from
+> mdev_unregister_device()
+> - *   which indicate that parent device is being removed from mdev device
+> - *   framework so remove mdev device forcefully.
+> - */
+> -static int mdev_device_remove_ops(struct mdev_device *mdev, bool
+> force_remove) -{
+> -	struct mdev_parent *parent =3D mdev->parent;
+> -	int ret;
+> -
+> -	/*
+> -	 * Vendor driver can return error if VMM or userspace application is
+> -	 * using this mdev device.
+> -	 */
+> -	ret =3D parent->ops->remove(mdev);
+> -	if (ret && !force_remove)
+> -		return ret;
+> -
+> -	sysfs_remove_groups(&mdev->dev.kobj, parent->ops-
+> >mdev_attr_groups);
+> -	return 0;
+> -}
+> -
+>  static int mdev_device_remove_cb(struct device *dev, void *data)  {
+>  	if (dev_is_mdev(dev))
+> -		mdev_device_remove(dev, true);
+> +		mdev_device_remove(dev);
+>=20
+>  	return 0;
+>  }
+> @@ -310,41 +265,43 @@ int mdev_device_create(struct kobject *kobj,
+>=20
+>  	mdev->parent =3D parent;
+>=20
+> +	device_initialize(&mdev->dev);
+>  	mdev->dev.parent  =3D dev;
+>  	mdev->dev.bus     =3D &mdev_bus_type;
+>  	mdev->dev.release =3D mdev_device_release;
+>  	dev_set_name(&mdev->dev, "%pUl", uuid);
+> +	mdev->dev.groups =3D parent->ops->mdev_attr_groups;
+> +	mdev->type_kobj =3D kobj;
+>=20
+> -	ret =3D device_register(&mdev->dev);
+> -	if (ret) {
+> -		put_device(&mdev->dev);
+> -		goto mdev_fail;
+> -	}
+> +	ret =3D parent->ops->create(kobj, mdev);
+> +	if (ret)
+> +		goto ops_create_fail;
+>=20
+> -	ret =3D mdev_device_create_ops(kobj, mdev);
+> +	ret =3D device_add(&mdev->dev);
+>  	if (ret)
+> -		goto create_fail;
+> +		goto add_fail;
+>=20
+>  	ret =3D mdev_create_sysfs_files(&mdev->dev, type);
+> -	if (ret) {
+> -		mdev_device_remove_ops(mdev, true);
+> -		goto create_fail;
+> -	}
+> +	if (ret)
+> +		goto sysfs_fail;
+>=20
+> -	mdev->type_kobj =3D kobj;
+>  	mdev->active =3D true;
+>  	dev_dbg(&mdev->dev, "MDEV: created\n");
+>=20
+>  	return 0;
+>=20
+> -create_fail:
+> -	device_unregister(&mdev->dev);
+> +sysfs_fail:
+> +	device_del(&mdev->dev);
+> +add_fail:
+> +	parent->ops->remove(mdev);
+> +ops_create_fail:
+> +	put_device(&mdev->dev);
+>  mdev_fail:
+>  	mdev_put_parent(parent);
+>  	return ret;
+>  }
+>=20
+> -int mdev_device_remove(struct device *dev, bool force_remove)
+> +int mdev_device_remove(struct device *dev)
+>  {
+>  	struct mdev_device *mdev, *tmp;
+>  	struct mdev_parent *parent;
+> @@ -373,16 +330,15 @@ int mdev_device_remove(struct device *dev, bool
+> force_remove)
+>  	mutex_unlock(&mdev_list_lock);
+>=20
+>  	type =3D to_mdev_type(mdev->type_kobj);
+> +	mdev_remove_sysfs_files(dev, type);
+> +	device_del(&mdev->dev);
+>  	parent =3D mdev->parent;
+> +	ret =3D parent->ops->remove(mdev);
+> +	if (ret)
+> +		dev_err(&mdev->dev, "Remove failed: err=3D%d\n", ret);
+>=20
+> -	ret =3D mdev_device_remove_ops(mdev, force_remove);
+> -	if (ret) {
+> -		mdev->active =3D true;
+> -		return ret;
+> -	}
+> -
+> -	mdev_remove_sysfs_files(dev, type);
+> -	device_unregister(dev);
+> +	/* Balances with device_initialize() */
+> +	put_device(&mdev->dev);
+>  	mdev_put_parent(parent);
+>=20
+>  	return 0;
+> diff --git a/drivers/vfio/mdev/mdev_private.h
+> b/drivers/vfio/mdev/mdev_private.h
+> index 36cbbdb754de..924ed2274941 100644
+> --- a/drivers/vfio/mdev/mdev_private.h
+> +++ b/drivers/vfio/mdev/mdev_private.h
+> @@ -60,6 +60,6 @@ void mdev_remove_sysfs_files(struct device *dev, struct
+> mdev_type *type);
+>=20
+>  int  mdev_device_create(struct kobject *kobj,
+>  			struct device *dev, const guid_t *uuid); -int
+> mdev_device_remove(struct device *dev, bool force_remove);
+> +int  mdev_device_remove(struct device *dev);
+>=20
+>  #endif /* MDEV_PRIVATE_H */
+> diff --git a/drivers/vfio/mdev/mdev_sysfs.c b/drivers/vfio/mdev/mdev_sysf=
+s.c
+> index cbf94b8165ea..9f774b91d275 100644
+> --- a/drivers/vfio/mdev/mdev_sysfs.c
+> +++ b/drivers/vfio/mdev/mdev_sysfs.c
+> @@ -236,7 +236,7 @@ static ssize_t remove_store(struct device *dev, struc=
+t
+> device_attribute *attr,
+>  	if (val && device_remove_file_self(dev, attr)) {
+>  		int ret;
+>=20
+> -		ret =3D mdev_device_remove(dev, false);
+> +		ret =3D mdev_device_remove(dev);
+>  		if (ret) {
+>  			device_create_file(dev, attr);
+>  			return ret;
+> --
+> 2.19.2
 
-If you fix the issue, kindly add following tag
-Reported-by: kbuild test robot <lkp@intel.com>
-
-All errors (new ones prefixed by >>):
-
-   In file included from arch/mips/vdso/vdso.h:26:0,
-                    from arch/mips/vdso/gettimeofday.c:11:
->> arch/mips/include/asm/page.h:12:10: fatal error: spaces.h: No such file or directory
-    #include <spaces.h>
-             ^~~~~~~~~~
-   compilation terminated.
-
-vim +12 arch/mips/include/asm/page.h
-
-^1da177e include/asm-mips/page.h      Linus Torvalds  2005-04-16  11  
-^1da177e include/asm-mips/page.h      Linus Torvalds  2005-04-16 @12  #include <spaces.h>
-99502d94 arch/mips/include/asm/page.h Nelson Elhage   2009-07-31  13  #include <linux/const.h>
-75b5b5e0 arch/mips/include/asm/page.h Leonid Yegoshin 2013-11-14  14  #include <linux/kernel.h>
-75b5b5e0 arch/mips/include/asm/page.h Leonid Yegoshin 2013-11-14  15  #include <asm/mipsregs.h>
-^1da177e include/asm-mips/page.h      Linus Torvalds  2005-04-16  16  
-
-:::::: The code at line 12 was first introduced by commit
-:::::: 1da177e4c3f41524e886b7f1b8a0c1fc7321cac2 Linux-2.6.12-rc2
-
-:::::: TO: Linus Torvalds <torvalds@ppc970.osdl.org>
-:::::: CC: Linus Torvalds <torvalds@ppc970.osdl.org>
-
----
-0-DAY kernel test infrastructure                Open Source Technology Center
-https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
-
---6TrnltStXW4iwmi0
-Content-Type: application/gzip
-Content-Disposition: attachment; filename=".config.gz"
-Content-Transfer-Encoding: base64
-
-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
-
---6TrnltStXW4iwmi0--
+Seems 3rd patch will take few more days to settle down with new flag and it=
+s review.
+Given that fix of 3rd patch is fixing a different race condition, if patch =
+1 and 2 look ok, shall we move forward with those 2 fixes it in 5.2-rc?
+Fixes 1,2 prepare mdev to be usable for non vfio use case for the series we=
+ are working on.
