@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11634C04AAC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:24:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 420C6C04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:24:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DC221216E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:24:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 17ED521019
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:24:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558355084;
-	bh=YAkbjODZNkoC+Zlx6qjgS40R45ZfN0cmn3YqIIsg8Io=;
+	s=default; t=1558355088;
+	bh=N9QFeO4yQVMQCWzkv0CVm3igV/vAF6zg1t8BEEZGIbY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=whiOT2QBmHKco+F5jMhribRQle17nB8PnAJhlRYc/tVNe1Aw29BoJOvtdQDemdqZJ
-	 BuSVBk6VXn7BVzwWzqgPnx1GcBm8Pq/m0WBYSDzOfMBugg1BEeaMljyJKi1Rc6/Xuu
-	 ICp6se8RfZJIGT9mUlrbv3jZ+ZrsAPeRerQzAh5s=
+	b=J67OelsLt0hy9oK42RIediFFKi/gs2mYm/D1uf0WrpWVCBPa59b88J7nrwqmoMtUd
+	 4elG4hNDcdcmH+oLfqai1TGkDQu7t0Qoab2ie/+/RwZDtjQKcgc9S5mr95vzltmYmt
+	 neiF6KnOcP/D9jp/q80GzPzhVfBJ1Qwhl9wUup9M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388904AbfETMYn (ORCPT
+        id S2388914AbfETMYr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 08:24:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39568 "EHLO mail.kernel.org"
+        Mon, 20 May 2019 08:24:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39666 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388885AbfETMYk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 08:24:40 -0400
+        id S2388502AbfETMYp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 08:24:45 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CBA3F21019;
-        Mon, 20 May 2019 12:24:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3568421479;
+        Mon, 20 May 2019 12:24:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558355079;
-        bh=YAkbjODZNkoC+Zlx6qjgS40R45ZfN0cmn3YqIIsg8Io=;
+        s=default; t=1558355084;
+        bh=N9QFeO4yQVMQCWzkv0CVm3igV/vAF6zg1t8BEEZGIbY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gA89OXXPlgzyu5oe4xo/bI1XZQaRcIsOXpBUgxwj+UxwPCKdouhbUMkvzzLuqGudZ
-         DZsh1My30TxMWvU2AVYQjZE8OpuOY1KcO50hRqkhijiTR2Eu9cmP2UVVO3J1dKkuhF
-         7dmbd0TGPEID09aC844nHJhvx6fHx3x9bIg+bHqA=
+        b=ahne2PDQSWZq8HCKGvhI9xFDo26wLPwCLzV+WBr0bt4q1qC263BVV18NUbP2uqZjU
+         qYzafox2TF8bwAMoSxp0nrVpUabnPxRR+OS0uQjresGdHxLkQiS9+fcjjhcpzW3opX
+         PI9D0xuJoKMaaqf5mVh3QLs4Kc8SchpI79wc/vzE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Gilad Ben-Yossef <gilad@benyossef.com>,
+        stable@vger.kernel.org, Ofir Drang <ofir.drang@arm.com>,
+        Gilad Ben-Yossef <gilad@benyossef.com>,
         Herbert Xu <herbert@gondor.apana.org.au>
-Subject: [PATCH 4.19 048/105] crypto: ccree - dont map AEAD key and IV on stack
-Date:   Mon, 20 May 2019 14:13:54 +0200
-Message-Id: <20190520115250.343985241@linuxfoundation.org>
+Subject: [PATCH 4.19 050/105] crypto: ccree - HOST_POWER_DOWN_EN should be the last CC access during suspend
+Date:   Mon, 20 May 2019 14:13:56 +0200
+Message-Id: <20190520115250.492893602@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190520115247.060821231@linuxfoundation.org>
 References: <20190520115247.060821231@linuxfoundation.org>
@@ -59,120 +60,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Gilad Ben-Yossef <gilad@benyossef.com>
+From: Ofir Drang <ofir.drang@arm.com>
 
-commit e8662a6a5f8f7f2cadc0edb934aef622d96ac3ee upstream.
+commit 3499efbeed39d114873267683b9e776bcb34b058 upstream.
 
-The AEAD authenc key and IVs might be passed to us on stack. Copy it to
-a slab buffer before mapping to gurantee proper DMA mapping.
+During power management suspend the driver need to prepare the device
+for the power down operation and as a last indication write to the
+HOST_POWER_DOWN_EN register which signals to the hardware that
+The ccree is ready for power down.
 
+Signed-off-by: Ofir Drang <ofir.drang@arm.com>
 Signed-off-by: Gilad Ben-Yossef <gilad@benyossef.com>
 Cc: stable@vger.kernel.org # v4.19+
 Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/crypto/ccree/cc_aead.c       |   11 ++++++++++-
- drivers/crypto/ccree/cc_buffer_mgr.c |   15 ++++++++++++---
- drivers/crypto/ccree/cc_driver.h     |    1 +
- 3 files changed, 23 insertions(+), 4 deletions(-)
+ drivers/crypto/ccree/cc_pm.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/crypto/ccree/cc_aead.c
-+++ b/drivers/crypto/ccree/cc_aead.c
-@@ -415,7 +415,7 @@ static int validate_keys_sizes(struct cc
- /* This function prepers the user key so it can pass to the hmac processing
-  * (copy to intenral buffer or hash in case of key longer than block
-  */
--static int cc_get_plain_hmac_key(struct crypto_aead *tfm, const u8 *key,
-+static int cc_get_plain_hmac_key(struct crypto_aead *tfm, const u8 *authkey,
- 				 unsigned int keylen)
- {
- 	dma_addr_t key_dma_addr = 0;
-@@ -428,6 +428,7 @@ static int cc_get_plain_hmac_key(struct
- 	unsigned int hashmode;
- 	unsigned int idx = 0;
- 	int rc = 0;
-+	u8 *key = NULL;
- 	struct cc_hw_desc desc[MAX_AEAD_SETKEY_SEQ];
- 	dma_addr_t padded_authkey_dma_addr =
- 		ctx->auth_state.hmac.padded_authkey_dma_addr;
-@@ -446,11 +447,17 @@ static int cc_get_plain_hmac_key(struct
+--- a/drivers/crypto/ccree/cc_pm.c
++++ b/drivers/crypto/ccree/cc_pm.c
+@@ -25,13 +25,13 @@ int cc_pm_suspend(struct device *dev)
+ 	int rc;
+ 
+ 	dev_dbg(dev, "set HOST_POWER_DOWN_EN\n");
+-	cc_iowrite(drvdata, CC_REG(HOST_POWER_DOWN_EN), POWER_DOWN_ENABLE);
+ 	rc = cc_suspend_req_queue(drvdata);
+ 	if (rc) {
+ 		dev_err(dev, "cc_suspend_req_queue (%x)\n", rc);
+ 		return rc;
  	}
- 
- 	if (keylen != 0) {
-+
-+		key = kmemdup(authkey, keylen, GFP_KERNEL);
-+		if (!key)
-+			return -ENOMEM;
-+
- 		key_dma_addr = dma_map_single(dev, (void *)key, keylen,
- 					      DMA_TO_DEVICE);
- 		if (dma_mapping_error(dev, key_dma_addr)) {
- 			dev_err(dev, "Mapping key va=0x%p len=%u for DMA failed\n",
- 				key, keylen);
-+			kzfree(key);
- 			return -ENOMEM;
- 		}
- 		if (keylen > blocksize) {
-@@ -533,6 +540,8 @@ static int cc_get_plain_hmac_key(struct
- 	if (key_dma_addr)
- 		dma_unmap_single(dev, key_dma_addr, keylen, DMA_TO_DEVICE);
- 
-+	kzfree(key);
-+
- 	return rc;
+ 	fini_cc_regs(drvdata);
++	cc_iowrite(drvdata, CC_REG(HOST_POWER_DOWN_EN), POWER_DOWN_ENABLE);
+ 	cc_clk_off(drvdata);
+ 	return 0;
  }
- 
---- a/drivers/crypto/ccree/cc_buffer_mgr.c
-+++ b/drivers/crypto/ccree/cc_buffer_mgr.c
-@@ -560,6 +560,7 @@ void cc_unmap_aead_request(struct device
- 	if (areq_ctx->gen_ctx.iv_dma_addr) {
- 		dma_unmap_single(dev, areq_ctx->gen_ctx.iv_dma_addr,
- 				 hw_iv_size, DMA_BIDIRECTIONAL);
-+		kzfree(areq_ctx->gen_ctx.iv);
- 	}
- 
- 	/* Release pool */
-@@ -664,19 +665,27 @@ static int cc_aead_chain_iv(struct cc_dr
- 	struct aead_req_ctx *areq_ctx = aead_request_ctx(req);
- 	unsigned int hw_iv_size = areq_ctx->hw_iv_size;
- 	struct device *dev = drvdata_to_dev(drvdata);
-+	gfp_t flags = cc_gfp_flags(&req->base);
- 	int rc = 0;
- 
- 	if (!req->iv) {
- 		areq_ctx->gen_ctx.iv_dma_addr = 0;
-+		areq_ctx->gen_ctx.iv = NULL;
- 		goto chain_iv_exit;
- 	}
- 
--	areq_ctx->gen_ctx.iv_dma_addr = dma_map_single(dev, req->iv,
--						       hw_iv_size,
--						       DMA_BIDIRECTIONAL);
-+	areq_ctx->gen_ctx.iv = kmemdup(req->iv, hw_iv_size, flags);
-+	if (!areq_ctx->gen_ctx.iv)
-+		return -ENOMEM;
-+
-+	areq_ctx->gen_ctx.iv_dma_addr =
-+		dma_map_single(dev, areq_ctx->gen_ctx.iv, hw_iv_size,
-+			       DMA_BIDIRECTIONAL);
- 	if (dma_mapping_error(dev, areq_ctx->gen_ctx.iv_dma_addr)) {
- 		dev_err(dev, "Mapping iv %u B at va=%pK for DMA failed\n",
- 			hw_iv_size, req->iv);
-+		kzfree(areq_ctx->gen_ctx.iv);
-+		areq_ctx->gen_ctx.iv = NULL;
- 		rc = -ENOMEM;
- 		goto chain_iv_exit;
- 	}
---- a/drivers/crypto/ccree/cc_driver.h
-+++ b/drivers/crypto/ccree/cc_driver.h
-@@ -162,6 +162,7 @@ struct cc_alg_template {
- 
- struct async_gen_req_ctx {
- 	dma_addr_t iv_dma_addr;
-+	u8 *iv;
- 	enum drv_crypto_direction op_type;
- };
- 
 
 
