@@ -7,52 +7,52 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 900C6C04E87
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 09:07:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2086BC04E87
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 09:08:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6358120815
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 09:07:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EB99C20675
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 09:08:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="r7FvqZFw"
+	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="pkRCUHr3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731924AbfETJH5 (ORCPT
+        id S1731935AbfETJIC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 05:07:57 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:40383 "EHLO
+        Mon, 20 May 2019 05:08:02 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:36690 "EHLO
         mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726242AbfETJHz (ORCPT
+        with ESMTP id S1726242AbfETJIA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 05:07:55 -0400
-Received: by mail-pg1-f194.google.com with SMTP id d30so6485607pgm.7
-        for <linux-kernel@vger.kernel.org>; Mon, 20 May 2019 02:07:54 -0700 (PDT)
+        Mon, 20 May 2019 05:08:00 -0400
+Received: by mail-pg1-f194.google.com with SMTP id a3so6498977pgb.3
+        for <linux-kernel@vger.kernel.org>; Mon, 20 May 2019 02:07:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=amarulasolutions.com; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=RhhbywtZgL9mTL+/aS2gTie5gz+AOsOECX4GcmEvNm8=;
-        b=r7FvqZFw/gu/2n+1603wdn3ygdOPws+IPKmHzr+7ytlLH74FqNbxJXLgMSH0OHamIK
-         1GA+Ua3+oxWE9TzHS9ArZ45MeQ3PutdmMb9mtkP1VwHF58tBHnNJdJzASpUAarmrwcbt
-         hejMLtxkulq1eWgonL7tep/ehNu3uSZ2CB6PQ=
+        bh=xEFhsAjZ+Xzcbx2mHUcUiTH2Zxcv+pD6TtDJ+37nOCw=;
+        b=pkRCUHr3PbHTjPtc0qjpfo1lrEPZql2aeKEwix+ScaX1hHjAmL8U69LjgqUEDGAHHZ
+         vGACrzd6Kmoy1bkgevpRYfNdHQnemycdG4G1VtfGtCdNjhb2as9Ypzh0BOVLPtzBINyi
+         lyIN9ZuCYdiVQB/9yqx/RnaZks4NbxiNnbEPg=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=RhhbywtZgL9mTL+/aS2gTie5gz+AOsOECX4GcmEvNm8=;
-        b=FRbMjBoUYX/dDXPTUCK6cphbne65fnFeGyrUDotIewC5NUTZdhrgguw6dR1WRBcYRk
-         16nzphyQqGbXO+X0irtezjeIjziGdshXHsHbkwfAvGGgQ8TvyEnX9sN/SpzuZGC5C7k2
-         6qA7K9eeA0+I64oKCdsWwTbtEaniZ3HjjV32Bn16FQvyBSBsmnqtPRPgoljbYEhE5pDM
-         sJ1kHgxdFq4r40HCql0Ybu3wTWXJV+279CLFyPdm55ZGe6fl7iuKhxIStDuHD57La9Xx
-         IVG9/lDkwztwrqiABn12i3p6Oj+NFPqtay/2QjL11UdHsIfy6HK1KUrmVvP2MZNVFYSv
-         +Czg==
-X-Gm-Message-State: APjAAAWrh90dVC2M8Ob5Zldq9pJSmKFbxdyOkX5PIDuh5lPYVpoOMhtg
-        sx369v6WNslz0GKgMgWdu+g9oA==
-X-Google-Smtp-Source: APXvYqz34UXPxRhzfdNer7tUP6i29zQxwtYM7NMLCp3pv/rNH5nWYiFi2u+2vMjGcD+MakpaE3MtkA==
-X-Received: by 2002:a63:1150:: with SMTP id 16mr74722565pgr.40.1558343274409;
-        Mon, 20 May 2019 02:07:54 -0700 (PDT)
+        bh=xEFhsAjZ+Xzcbx2mHUcUiTH2Zxcv+pD6TtDJ+37nOCw=;
+        b=V+BRDgn3YTBfUM94UhFryEClyeiqwvLCnBXeKWnsTg8mLjT0ireKT6tHlrkQ7yDTd8
+         cTMAywCrmpWzAWDpprXB0gDW8uBqB8oBO2ZPUYwSZ0j10Yo2KC1ZtYoTPa1+06kW1gw7
+         pT8dwmFdMWEYzD2viIslK+B5UuTu+/7XKbuXK8X+Nrbmxr/JmRgB/+A9CSlWolFMg2AF
+         MeO25xFXCV3w/nnIOghqHkg3KEvYrUp7UaeJh6eDXUYlMllg12eLImex87t6YO6kFjpJ
+         zs142IuuymKXY5Skwj7d9yXJ5/IPZZl8vte53ImdhFwDbQfNxb9u5KHhnmGh3XZfqvfg
+         pR4w==
+X-Gm-Message-State: APjAAAVFG5gaqeyz6Gy/x8Jkj6bR6eOuhjiy5ZiPbSwhU0qz4A0+ZXeO
+        299gkFKImS2t3EJYOEQdQYlA9Q==
+X-Google-Smtp-Source: APXvYqwqd4qJH6N7Gr6VNXBwWrTXaJZVOL3zSzQQK/VIAilUj4DHIF2KXdm0VmOuIoTm6pT2UMghGQ==
+X-Received: by 2002:a63:3ece:: with SMTP id l197mr36282516pga.268.1558343279532;
+        Mon, 20 May 2019 02:07:59 -0700 (PDT)
 Received: from localhost.localdomain ([183.82.227.193])
-        by smtp.gmail.com with ESMTPSA id d15sm51671614pfm.186.2019.05.20.02.07.49
+        by smtp.gmail.com with ESMTPSA id d15sm51671614pfm.186.2019.05.20.02.07.54
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 20 May 2019 02:07:53 -0700 (PDT)
+        Mon, 20 May 2019 02:07:59 -0700 (PDT)
 From:   Jagan Teki <jagan@amarulasolutions.com>
 To:     Maxime Ripard <maxime.ripard@bootlin.com>,
         David Airlie <airlied@linux.ie>,
@@ -63,9 +63,9 @@ Cc:     bshah@mykolab.com, Vasily Khoruzhick <anarsoul@gmail.com>,
         powerpan@qq.com, michael@amarulasolutions.com,
         linux-amarula@amarulasolutions.com, linux-sunxi@googlegroups.com,
         Jagan Teki <jagan@amarulasolutions.com>
-Subject: [PATCH v10 08/11] dt-bindings: sun6i-dsi: Add VCC-DSI supply property
-Date:   Mon, 20 May 2019 14:33:15 +0530
-Message-Id: <20190520090318.27570-9-jagan@amarulasolutions.com>
+Subject: [PATCH v10 09/11] drm/sun4i: sun6i_mipi_dsi: Add VCC-DSI regulator support
+Date:   Mon, 20 May 2019 14:33:16 +0530
+Message-Id: <20190520090318.27570-10-jagan@amarulasolutions.com>
 X-Mailer: git-send-email 2.18.0.321.gffc6fa0e3
 In-Reply-To: <20190520090318.27570-1-jagan@amarulasolutions.com>
 References: <20190520090318.27570-1-jagan@amarulasolutions.com>
@@ -76,32 +76,79 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Allwinner MIPI DSI controllers are supplied with SoC DSI
-power rails via VCC-DSI pin.
+Allwinner MIPI DSI controllers are supplied with SoC
+DSI power rails via VCC-DSI pin.
 
-Some board still work without supplying this but give more
-faith on datasheet and hardware schematics and document this
-supply property in required property list.
+Add support for this supply pin by adding voltage
+regulator handling code to MIPI DSI driver.
 
-Reviewed-by: Rob Herring <robh@kernel.org>
 Tested-by: Merlijn Wajer <merlijn@wizzup.org>
 Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
 ---
- Documentation/devicetree/bindings/display/sunxi/sun6i-dsi.txt | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c | 14 ++++++++++++++
+ drivers/gpu/drm/sun4i/sun6i_mipi_dsi.h |  3 +++
+ 2 files changed, 17 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/display/sunxi/sun6i-dsi.txt b/Documentation/devicetree/bindings/display/sunxi/sun6i-dsi.txt
-index 6a6cf5de08b0..1cc40663b7a2 100644
---- a/Documentation/devicetree/bindings/display/sunxi/sun6i-dsi.txt
-+++ b/Documentation/devicetree/bindings/display/sunxi/sun6i-dsi.txt
-@@ -21,6 +21,7 @@ Required properties:
-   - phys: phandle to the D-PHY
-   - phy-names: must be "dphy"
-   - resets: phandle to the reset controller driving the encoder
-+  - vcc-dsi-supply: the VCC-DSI power supply of the DSI encoder
+diff --git a/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c b/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
+index 5584e9c2f8bd..a5d73a283ed7 100644
+--- a/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
++++ b/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
+@@ -1150,6 +1150,12 @@ static int sun6i_dsi_probe(struct platform_device *pdev)
+ 		return PTR_ERR(base);
+ 	}
  
-   - ports: A ports node with endpoint definitions as defined in
-     Documentation/devicetree/bindings/media/video-interfaces.txt. The
++	dsi->regulator = devm_regulator_get(dev, "vcc-dsi");
++	if (IS_ERR(dsi->regulator)) {
++		dev_err(dev, "Couldn't get VCC-DSI supply\n");
++		return PTR_ERR(dsi->regulator);
++	}
++
+ 	dsi->regs = devm_regmap_init_mmio_clk(dev, "bus", base,
+ 					      &sun6i_dsi_regmap_config);
+ 	if (IS_ERR(dsi->regs)) {
+@@ -1223,6 +1229,13 @@ static int sun6i_dsi_remove(struct platform_device *pdev)
+ static int __maybe_unused sun6i_dsi_runtime_resume(struct device *dev)
+ {
+ 	struct sun6i_dsi *dsi = dev_get_drvdata(dev);
++	int err;
++
++	err = regulator_enable(dsi->regulator);
++	if (err) {
++		dev_err(dsi->dev, "failed to enable VCC-DSI supply: %d\n", err);
++		return err;
++	}
+ 
+ 	reset_control_deassert(dsi->reset);
+ 	clk_prepare_enable(dsi->mod_clk);
+@@ -1255,6 +1268,7 @@ static int __maybe_unused sun6i_dsi_runtime_suspend(struct device *dev)
+ 
+ 	clk_disable_unprepare(dsi->mod_clk);
+ 	reset_control_assert(dsi->reset);
++	regulator_disable(dsi->regulator);
+ 
+ 	return 0;
+ }
+diff --git a/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.h b/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.h
+index 156523859d82..c76b71259d2e 100644
+--- a/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.h
++++ b/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.h
+@@ -13,6 +13,8 @@
+ #include <drm/drm_encoder.h>
+ #include <drm/drm_mipi_dsi.h>
+ 
++#include <linux/regulator/consumer.h>
++
+ struct sun6i_dsi {
+ 	struct drm_connector	connector;
+ 	struct drm_encoder	encoder;
+@@ -21,6 +23,7 @@ struct sun6i_dsi {
+ 	struct clk		*bus_clk;
+ 	struct clk		*mod_clk;
+ 	struct regmap		*regs;
++	struct regulator	*regulator;
+ 	struct reset_control	*reset;
+ 	struct phy		*dphy;
+ 
 -- 
 2.18.0.321.gffc6fa0e3
 
