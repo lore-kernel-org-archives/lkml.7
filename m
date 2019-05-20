@@ -2,141 +2,90 @@ Return-Path: <SRS0=lq4r=TU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11074C04AAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 09:03:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8C6FC072A4
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 09:04:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DB09220856
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 09:03:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="UDWHQ7jK"
+	by mail.kernel.org (Postfix) with ESMTP id A46C320656
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 09:04:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1558343073;
+	bh=1v1nuxcWvVkGGL35WWUJOcGwdr8fXibrkPbcNDFvVL0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=xpGCWm1mVm7gE3+kaTnWCtFyX8H6uPGPdoWSO3toJDXcdFia3GxCVvT3eEH9NWh/6
+	 UgGEyto/AwI1sodX294XSBC1aI9cG/0Ax0d7SIKv9YHO0Xjk9itNpekWvvGEBJFxiu
+	 NWczmKnPWcfORN/5KeDjSikenuz3WSETegUmp8f0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731741AbfETJDy (ORCPT
+        id S1731750AbfETJEc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 05:03:54 -0400
-Received: from mail-eopbgr10056.outbound.protection.outlook.com ([40.107.1.56]:11406
-        "EHLO EUR02-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727301AbfETJDx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 05:03:53 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ffq7QLSqt8lxuzqwE0DYmijQZyj5qCKC1WuCIEKbV2k=;
- b=UDWHQ7jK2dmByIy71dxq2ikbrefNntFq8djUIr+0icqTQxATtn1kvGlT6IuiX/yegsi5qkNDWWK/nYIeo68hlqP6P6i7IEhbpYb2bSh6KuTvSIWuqMyBex9mImpPL7upTzNuYsx1uRjRxHm/O0nwLgS8YuffSEcMY3UJCh+kVBo=
-Received: from AM5PR0402MB2865.eurprd04.prod.outlook.com (10.175.44.16) by
- AM5PR0402MB2930.eurprd04.prod.outlook.com (10.175.42.20) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1900.16; Mon, 20 May 2019 09:03:50 +0000
-Received: from AM5PR0402MB2865.eurprd04.prod.outlook.com
- ([fe80::d8ed:b418:4ee9:a51]) by AM5PR0402MB2865.eurprd04.prod.outlook.com
- ([fe80::d8ed:b418:4ee9:a51%9]) with mapi id 15.20.1900.020; Mon, 20 May 2019
- 09:03:50 +0000
-From:   Ran Wang <ran.wang_1@nxp.com>
-To:     Pavel Machek <pavel@denx.de>
-CC:     Leo Li <leoyang.li@nxp.com>, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <len.brown@intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>
-Subject: RE: [PATCH V2 3/3] soc: fsl: add RCPM driver
-Thread-Topic: [PATCH V2 3/3] soc: fsl: add RCPM driver
-Thread-Index: AQHVDGHzIQrvIPzRX0ytn5pxhdLuLqZy/bMAgACX+4CAACV3gIAAANBw
-Date:   Mon, 20 May 2019 09:03:50 +0000
-Message-ID: <AM5PR0402MB2865F4574B19761848B001F9F1060@AM5PR0402MB2865.eurprd04.prod.outlook.com>
-References: <20190517033946.30763-1-ran.wang_1@nxp.com>
- <20190517033946.30763-3-ran.wang_1@nxp.com> <20190519213844.GH31403@amd>
- <AM5PR0402MB2865EC5E1EF12C6C1D3C5566F1060@AM5PR0402MB2865.eurprd04.prod.outlook.com>
- <20190520085647.GA9748@amd>
-In-Reply-To: <20190520085647.GA9748@amd>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=ran.wang_1@nxp.com; 
-x-originating-ip: [92.121.36.198]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: edb87af5-1522-4d53-33f2-08d6dd02135e
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:AM5PR0402MB2930;
-x-ms-traffictypediagnostic: AM5PR0402MB2930:
-x-microsoft-antispam-prvs: <AM5PR0402MB2930F1B68172EE05A90881A1F1060@AM5PR0402MB2930.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:2150;
-x-forefront-prvs: 004395A01C
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(376002)(346002)(366004)(136003)(39860400002)(396003)(199004)(189003)(73956011)(74316002)(256004)(76176011)(8936002)(76116006)(99286004)(7416002)(86362001)(81166006)(81156014)(7696005)(52536014)(6916009)(14454004)(68736007)(7736002)(66946007)(305945005)(25786009)(8676002)(5660300002)(66066001)(4326008)(2906002)(54906003)(486006)(66476007)(476003)(6246003)(71200400001)(66556008)(316002)(102836004)(71190400001)(11346002)(446003)(6506007)(229853002)(3846002)(55016002)(66446008)(53546011)(64756008)(26005)(478600001)(186003)(6436002)(9686003)(6116002)(33656002)(53936002);DIR:OUT;SFP:1101;SCL:1;SRVR:AM5PR0402MB2930;H:AM5PR0402MB2865.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: pT+n75gNk2YCuYp3VQS4NBU/k5rwSjP6ksb/K2FlSi97J2NuCBvQ+MuHrPrYVzHlP3r90ZqLlrVBZ/ULTLEwvdSMYIFJKVbhm+4IiVrH0x3WLcWC1/okWb3C+/m3orau9bkLA/OOu5Nu5luzxid8dvgScWF6mX7PwydhWK1P7lFR5ScyHx3V/sj5v1/qbg9XvytuKeM1ni6WNpUexFdygQ+640HNDq8qT4bjhW3FIXmb94Pye4KCOOp6W8v5y4f3DVDhK5BwSZUjqggu9ioUXarDRjAm55w+/UaOnHzVsHolwWjOGqNN7I10jGEG6URZV0Sr50M3iH+7WLm+rjtLCjvVsZo6jztUgNsRGeor+AcTd4p9dDQs/0kMoGhzvgpK8OU2xR24xXirfgBEmga4SKLWygYOSnWW+Oe2cEnNtfY=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Mon, 20 May 2019 05:04:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33068 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727301AbfETJEc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 05:04:32 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2691320644;
+        Mon, 20 May 2019 09:04:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1558343071;
+        bh=1v1nuxcWvVkGGL35WWUJOcGwdr8fXibrkPbcNDFvVL0=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=NPOwRyQ8bLcCg+3pJW3uPJDmS6TfkstyMWu4M4AsILKZ5dCJOQpzgR72fm0961qvy
+         6Jy3L8eYoqKg6hXPwXh5j81CL1iGbTQzL32NPTzcdcCO04U6Qa+pBVeziWzm1OOf4j
+         LqSm+oD69YCYQBlyT7SJhf5gKeMcTJfHB/K6r4YI=
+Date:   Mon, 20 May 2019 11:04:29 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     David Ahern <dsahern@gmail.com>
+Cc:     Nathan Chancellor <natechancellor@gmail.com>,
+        linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Thomas Haller <thaller@redhat.com>,
+        Hangbin Liu <liuhangbin@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org
+Subject: Re: [PATCH 4.9 41/51] fib_rules: return 0 directly if an exactly
+ same rule exists when NLM_F_EXCL not supplied
+Message-ID: <20190520090429.GA25812@kroah.com>
+References: <20190515090616.669619870@linuxfoundation.org>
+ <20190515090628.066392616@linuxfoundation.org>
+ <20190519154348.GA113991@archlinux-epyc>
+ <a36e3204-b52d-0bf0-f956-654189a18156@gmail.com>
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: edb87af5-1522-4d53-33f2-08d6dd02135e
-X-MS-Exchange-CrossTenant-originalarrivaltime: 20 May 2019 09:03:50.3076
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM5PR0402MB2930
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <a36e3204-b52d-0bf0-f956-654189a18156@gmail.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Pavel,
+On Sun, May 19, 2019 at 06:29:19PM -0600, David Ahern wrote:
+> On 5/19/19 9:43 AM, Nathan Chancellor wrote:
+> > Hi all,
+> > 
+> > This commit is causing issues on Android devices when Wi-Fi and mobile
+> > data are both enabled. The device will do a soft reboot consistently.
+> > So far, I've had reports on the Pixel 3 XL, OnePlus 6, Pocophone, and
+> > Note 9 and I can reproduce on my OnePlus 6.
+> > 
+> > Sorry for taking so long to report this, I just figured out how to
+> > reproduce it today and I didn't want to report it without that.
+> > 
+> > Attached is a full dmesg and the relevant snippet from Android's logcat.
+> > 
+> > Let me know what I can do to help debug,
+> > Nathan
+> > 
+> 
+> It's a backport problem. err needs to be reset to 0 before the goto.
 
-On Monday, May 20, 2019 16:57, Pavel Machek wrote:
->=20
-> Hi!
->=20
-> > > > +static int rcpm_pm_prepare(struct device *dev) {
-> > > > +	struct device_node *np =3D dev->of_node;
-> > > > +	struct wakeup_source *ws;
-> > > > +	struct rcpm *rcpm;
-> > > > +	u32 value[RCPM_WAKEUP_CELL_MAX_SIZE + 1], tmp;
-> > > > +	int i, ret;
-> > > > +
-> > > > +	rcpm =3D dev_get_drvdata(dev);
-> > > > +	if (!rcpm)
-> > > > +		return -EINVAL;
-> > > > +
-> > > > +	/* Begin with first registered wakeup source */
-> > > > +	ws =3D wakeup_source_get_next(NULL);
-> > > > +	while (ws) {
-> > >
-> > > while (ws =3D wakeup_source_get_next(NULL)) ?
-> >
-> > Actually, we only pass NULL to wakeup_source_get_next() at very first
-> > call to get 1st wakeup source. Then in the while loop, we will fetch
-> > next source but not 1st, that's different. I am afraid your suggestion
-> > is not quite correct.
->=20
-> Sorry, I seen your next version before seeing this explanation.
->=20
-> You are right, but the current code is "interesting". What about
->=20
->     ws =3D NULL;
->     while (ws =3D wakeup_source_get_next(NULL)) ...
->=20
-> then?
+Ah, I see it, let me go queue up a fix for this.
 
-Did you mean:
-     ws =3D NULL;
-     while (ws =3D wakeup_source_get_next(ws)) ...
+thanks,
 
-   Yes, that will be the same to my original logic, do you recommend to cha=
-nge
-to this? :)
-
-Regards,
-Ran
+greg k-h
