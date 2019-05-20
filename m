@@ -2,126 +2,124 @@ Return-Path: <SRS0=lq4r=TU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_NEOMUTT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,FROM_EXCESS_BASE64,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C93E7C04E87
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 22:23:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 593DCC04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 22:27:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9E7782171F
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 22:23:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D69F2171F
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 22:27:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Ay6eeb6e"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="e7MVjWec"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726697AbfETWXq (ORCPT
+        id S1726830AbfETW1X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 18:23:46 -0400
-Received: from mail-it1-f193.google.com ([209.85.166.193]:39758 "EHLO
-        mail-it1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725941AbfETWXp (ORCPT
+        Mon, 20 May 2019 18:27:23 -0400
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:37375 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725763AbfETW1X (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 18:23:45 -0400
-Received: by mail-it1-f193.google.com with SMTP id 9so1587398itf.4
-        for <linux-kernel@vger.kernel.org>; Mon, 20 May 2019 15:23:44 -0700 (PDT)
+        Mon, 20 May 2019 18:27:23 -0400
+Received: by mail-ed1-f67.google.com with SMTP id w37so26136299edw.4;
+        Mon, 20 May 2019 15:27:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:mail-followup-to:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=1CaXJMTXc57iqkntwEjIR8nDiCsro9FbdDpUP4+PfJc=;
-        b=Ay6eeb6e5aKiQdi0pweGEDPMMxlx/Mn2AvwEsYkp3UpuDjZhiA40w0+FilAVPXIMnw
-         Alw2aI5RZtIReQYrEqmA++hBDywsBwMx1bOHkhAJeokOOyZXHQjGP1OyKnXw7ao89mpC
-         cZID47+1S6e/pVCm56lUdkxGM4n9ydbzFPSaZhAhltE5fIEyA0E5Au01Qkpy+1pZosUn
-         gAfoMMwWMzjOh1Mg+xuUq7Kfqj2y0FnHmSzlhsTYL8GAUU8Fg2hqHMn7zAXQJdym+kdw
-         7N6Ta16knmQQsOF+5hsv40DvHKn5oUBn2GMN86tN84GSyaNRrzq+mE2I+k57ZDbB9whh
-         t2CA==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:references:user-agent:in-reply-to:date
+         :message-id:mime-version;
+        bh=uXf03ubmTcfI0eT3gMSdVF3rfDP/ceSBVPh5QTAx1DQ=;
+        b=e7MVjWec7GQw3w2k9lvFzirVq2tq/HIjKWCqbw8Rni9lUQ9jGjussUrzeAsl7Ib2jG
+         0snkUptiGx3SZh14M9GSA8uY49tKqgVf02iYSWYpNDFBBi4gDEWzpi+5kUM/Xr7l54aw
+         sz6PoRqr+7fY/dwVvMps3nrlZUtupZDfh+9LEwxe4ZCLg6E3dWoa+yENoeK0QOzW/HS4
+         G2wyuX8DivG07NCWQmbfOtXkWKu5inMTT+i9RRVLoP9OF8lfs1lf0MXNhcttX7PVvUP+
+         aZu1G4DO+wRxM544gMI/HGawJJ41gJG6DVugX9f4nS9mtOyYh31XyIa3T5itOHVTWDZ2
+         yK9Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id
-         :mail-followup-to:references:mime-version:content-disposition
-         :in-reply-to:user-agent;
-        bh=1CaXJMTXc57iqkntwEjIR8nDiCsro9FbdDpUP4+PfJc=;
-        b=A66PCl1iMiyUDSeDzU1zLj+FId2LifMk9vM8bjetdNhTuvA7ZJunIQU5gwo+XCoVmX
-         /r3yYklVYnO4FRtTYnis8IfMvxOudiPVzzOujOweVL+SHXQ50y4o4CShlL78vEXvFb6E
-         QGGswNf4aR3RKMYu3ZwSlwG1cCfU+wpvsoTxbeU1Nk7rwEF/Kb3ClA9F84ayyYe66OH/
-         1vlVWV2HXCvx2ST/XaYFXzhcrHqJyCaZmDUiX18b1IGLXpfsJQWPc2PYqSUubzIQvbyb
-         N341DgEM9J98yPlrXzzAOZ8feFoeGZAIg4SlfVWRiWdKGoWfUgo2VH/37b1hhOSGYDdO
-         6TDw==
-X-Gm-Message-State: APjAAAV0XNV5p8KwidOzC5h+Ipy3ncqsVNzoHn2lYZUm9GnGr3/IFz8t
-        OqHQDkWXSB55XicTyhxbaRNBXw==
-X-Google-Smtp-Source: APXvYqwaTj+wVvNaJbKY/DhmG1joPIZeyJ/GlYIHhg0g6g9QL5lnynyySYJi6RXpoOpFMLcf9hokhQ==
-X-Received: by 2002:a24:2bd3:: with SMTP id h202mr1291405ita.115.1558391024396;
-        Mon, 20 May 2019 15:23:44 -0700 (PDT)
-Received: from localhost (c-75-72-120-115.hsd1.mn.comcast.net. [75.72.120.115])
-        by smtp.gmail.com with ESMTPSA id q72sm501224ita.26.2019.05.20.15.23.43
+        h=x-gm-message-state:from:to:cc:subject:references:user-agent
+         :in-reply-to:date:message-id:mime-version;
+        bh=uXf03ubmTcfI0eT3gMSdVF3rfDP/ceSBVPh5QTAx1DQ=;
+        b=hn/Rwa11WliLAJFOXLvTVhq7zM1ILAG5HZk0g4pi06mvCILrnhMyyxrxJ7U+Hgi2Nu
+         O29zt/SLYgDSS//m8U66iFjJTqaSpPjcRWlJtRg7wPJafXR3N6BSKuvLeUVqZtl1A+Th
+         muLrBdA/CuCB4RYSeYoI6cSBLpEDPTpkOhmKkVkJb6p0ctb/uRQkebn3gKPUyIpBdvO7
+         PD5Ev0YPIGygEXyz4H7/qYyE6bDLl/PaR9pm5djB3EbOxuMv2/PmeapdYTDYefd/SM/M
+         gEkXDqBLhqThY4t0FKVQybh3CdmyMGaBkRv6wpdZjQhtSCV1JbI6rwsnGhUDHOd2mcQb
+         QxGA==
+X-Gm-Message-State: APjAAAUWsKOaocUK+xXvgsQmzAdnnAjnvm3KSDa+xztd6vKKj82M6Arg
+        9DqTScZkfRCyyjqiOax/Ht8=
+X-Google-Smtp-Source: APXvYqxE5kQa5f85xphHorZ7AZrJ3JYn74K3s3Pd5eGU89k0m+jz+/6e1CTbfdrtRC9XKKO+BVfi6g==
+X-Received: by 2002:a50:a535:: with SMTP id y50mr78577263edb.249.1558391241195;
+        Mon, 20 May 2019 15:27:21 -0700 (PDT)
+Received: from evledraar (dhcp-077-251-215-224.chello.nl. [77.251.215.224])
+        by smtp.gmail.com with ESMTPSA id g11sm5835232eda.42.2019.05.20.15.27.19
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 20 May 2019 15:23:43 -0700 (PDT)
-Date:   Mon, 20 May 2019 17:23:42 -0500
-From:   Dan Rue <dan.rue@linaro.org>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-        akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
-        patches@kernelci.org, ben.hutchings@codethink.co.uk,
-        lkft-triage@lists.linaro.org, stable@vger.kernel.org,
-        linux-ext4@vger.kernel.org,
-        Arthur Marsh <arthur.marsh@internode.on.net>,
-        Richard Weinberger <richard.weinberger@gmail.com>,
-        Theodore Ts'o <tytso@mit.edu>
-Subject: Re: [PATCH 4.19 000/105] 4.19.45-stable review
-Message-ID: <20190520222342.wtsjx227c6qbkuua@xps.therub.org>
-Mail-Followup-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-        akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
-        patches@kernelci.org, ben.hutchings@codethink.co.uk,
-        lkft-triage@lists.linaro.org, stable@vger.kernel.org,
-        linux-ext4@vger.kernel.org,
-        Arthur Marsh <arthur.marsh@internode.on.net>,
-        Richard Weinberger <richard.weinberger@gmail.com>,
-        Theodore Ts'o <tytso@mit.edu>
-References: <20190520115247.060821231@linuxfoundation.org>
+        Mon, 20 May 2019 15:27:20 -0700 (PDT)
+From:   =?utf-8?B?w4Z2YXIgQXJuZmrDtnLDsA==?= Bjarmason <avarab@gmail.com>
+To:     Bryan Turner <bturner@atlassian.com>
+Cc:     Junio C Hamano <gitster@pobox.com>,
+        Git Users <git@vger.kernel.org>,
+        Linux Kernel <linux-kernel@vger.kernel.org>,
+        git-packagers@googlegroups.com,
+        =?utf-8?B?Tmd1eeG7hW4gVGjDoWkgTmfhu41j?= Duy <pclouds@gmail.com>
+Subject: Re: [ANNOUNCE] Git v2.22.0-rc1
+References: <xmqq36la24t1.fsf@gitster-ct.c.googlers.com> <CAGyf7-F-d-n39fJmjYc_2rjqQa4d7PFCx63LwW3m7PFetEgzEw@mail.gmail.com>
+User-agent: Debian GNU/Linux buster/sid; Emacs 26.1; mu4e 1.1.0
+In-reply-to: <CAGyf7-F-d-n39fJmjYc_2rjqQa4d7PFCx63LwW3m7PFetEgzEw@mail.gmail.com>
+Date:   Tue, 21 May 2019 00:27:19 +0200
+Message-ID: <87ef4svk1k.fsf@evledraar.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190520115247.060821231@linuxfoundation.org>
-User-Agent: NeoMutt/20180716
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 20, 2019 at 02:13:06PM +0200, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 4.19.45 release.
-> There are 105 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
-> 
-> Responses should be made by Wed 22 May 2019 11:50:49 AM UTC.
-> Anything received after that time might be too late.
 
-We're seeing an ext4 issue previously reported at
-https://lore.kernel.org/lkml/20190514092054.GA6949@osiris.
+On Mon, May 20 2019, Bryan Turner wrote:
 
-[ 1916.032087] EXT4-fs error (device sda): ext4_find_extent:909: inode #8: comm jbd2/sda-8: pblk 121667583 bad header/extent: invalid extent entries - magic f30a, entries 8, max 340(340), depth 0(0)
-[ 1916.073840] jbd2_journal_bmap: journal block not found at offset 4455 on sda-8
-[ 1916.081071] Aborting journal on device sda-8.
-[ 1916.348652] EXT4-fs error (device sda): ext4_journal_check_start:61: Detected aborted journal
-[ 1916.357222] EXT4-fs (sda): Remounting filesystem read-only
+> On Sun, May 19, 2019 at 10:00 AM Junio C Hamano <gitster@pobox.com> wrote:
+>>
+>>  * The diff machinery, one of the oldest parts of the system, which
+>>    long predates the parse-options API, uses fairly long and complex
+>>    handcrafted option parser.  This is being rewritten to use the
+>>    parse-options API.
+>
+> It looks like with these changes it's no longer possible to use "-U"
+> (or, I'd assume, "--unified") without adding an explicit number for
+> context lines.
+>
+> Was it not intended that a user could pass "-U" to explicitly say "I
+> want a unified diff with the default number of context lines"? Because
+> it's always worked that way, as far as I can tell (certainly since
+> early 1.7.x releases). Is it possible, with the new parse-options
+> code, to restore that behavior? Removing that is likely to be a pretty
+> big disruption for Bitbucket Server, which has always explicitly
+> passed "-U" to "git diff". If the community wants to move forward with
+> the change, I understand. I'm not trying to roadblock it; I'm just
+> listing an explicit example of something that will be significantly
+> affected by the change. Perhaps Git 2.22 could emit a warning about
+> the change in behavior and then a subsequent version could turn it
+> into an error, to give us (and anyone else relying on this behavior)
+> more time to make adjustments?
+>
+> I'm aware a unified diff is the default output, but many commands have
+> flags that essentially tell Git to do what it would do by default.
+> That can help counter changes in the default, as well as safeguarding
+> against new config options that allow specifying a different default
+> (as it were). For example, "git diff" has "--no-color", which could
+> override configuration and essentially applied the default
+> behavior--until the default configuration was changed in 1.8.4 from
+> "never" to "auto". By using "--no-color", even though we didn't "need"
+> to, we were protected against that change in the default.
 
-This is seen on 4.19-rc, 5.0-rc, mainline, and next. We don't have data
-for 5.1-rc yet, which is presumably also affected in this RC round.
+I don't know if argument-less -U was ever intended, but I think in light
+of what you're saying we should consider it a regression to fix before
+2.22.0 is out. CC-ing Duy who wrote d473e2e0e8 ("diff.c: convert
+-U|--unified", 2019-01-27).
 
-We only see this on x86_64 and i386 devices - though our hardware setups
-vary so it could be coincidence.
-
-I have to run out now, but I'll come back and work on a reproducer and
-bisection later tonight and tomorrow.
-
-Here is an example test run; link goes to the spot in the ltp syscalls
-test where the disk goes into read-only mode.
-https://lkft.validation.linaro.org/scheduler/job/735468#L8081
-
-Dan
-
--- 
-Linaro - Kernel Validation
+The bug there is that the old opt_arg() code would be torelant to empty
+values. I noticed a similar change the other day with the --abbrev
+option, but didn't think it was worth noting. Maybe it's a more general
+problem, in both cases we had a blindspot in our tests.
