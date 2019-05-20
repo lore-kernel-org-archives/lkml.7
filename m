@@ -2,189 +2,120 @@ Return-Path: <SRS0=lq4r=TU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56273C04AAC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 21:28:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F1B3C04E87
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 21:36:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 23CFA2173C
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 21:28:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BCIB8l5t"
+	by mail.kernel.org (Postfix) with ESMTP id 2D8CF21479
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 21:36:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727090AbfETV2Q (ORCPT
+        id S1726566AbfETVg5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 17:28:16 -0400
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:37927 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726823AbfETV2J (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 17:28:09 -0400
-Received: by mail-lf1-f66.google.com with SMTP id y19so11419589lfy.5;
-        Mon, 20 May 2019 14:28:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=tuUx5rxTswzkbuQluz78Oh+T0BlExwsVu21YfZxLK+k=;
-        b=BCIB8l5tlKxwBlH+stHp6M8xHhRVTClHeii8cg34r+HdYuXD2crzKqq9teCgsgPYXd
-         eSEvY507JeLb/9Mm5VQWjQQ5TAKOlo3Fn9nRmWQkZOV2mo6Gj73vlt5FKi3L78Oj3inQ
-         in1T8map64aItOACcjkJGlH8l9XnRdvEBtO/vTPLOKMR0LhbyrBnsY8W3v/qPd7YBBkw
-         KLyo6q3YlVlQJuSEdaFf88LL+ci0bdj+9uy4byuXrlfuIIoaJDtS1WTFBfDa2ZCwypp6
-         Faz739TisrkEgDJiBU3h7vIJGAxlyqNuiNsueR6kABgZOpDKNIpBM70GkGchBVVV+yXF
-         52Lw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=tuUx5rxTswzkbuQluz78Oh+T0BlExwsVu21YfZxLK+k=;
-        b=MB9dMZufy7Ua8aiM/3mSZUZ0LURjnc1atfzNlB2P6HwVzYhHTbIHvFeb1jfiO9+Str
-         YiqfR1n8JGeDVcN8XNRDM6wfwBUt26DTpkJASEH34A7+vygBGIREUYbMssKHGNxzu4//
-         RDcUvWG/97TohXbkJnBn97uznp8X7YYRFGne1xAX+FqA9r1BJUcqrUBIHasjjLxpK7do
-         gmpd/zHywbCv4hhJNW7oLV48/S6l7jP70b6SXYHOf/i2jJOZVBGpoTrqWWbuYBbumQIF
-         S4VE2S0XG3OJBWDkQAmGaAaO3vaX6+lcdC03GC5uAGmutCakLiyOw90DQ3aeoqag0Fl2
-         tv6A==
-X-Gm-Message-State: APjAAAVQR2tFJXMUYivIRtcSkmsCkSo0mzvT7IyCamkr8rfI4iJf9Oa+
-        NtIBgmMl423tfKlqEiTR3zs=
-X-Google-Smtp-Source: APXvYqxjjtC/xGNvoQJpZX3Z5AVmDxGzEG/kvhVf0BdqapbVEk8/EHH63ho0kzPow1rTrikfgOK7Vw==
-X-Received: by 2002:ac2:418c:: with SMTP id z12mr6671963lfh.0.1558387687984;
-        Mon, 20 May 2019 14:28:07 -0700 (PDT)
-Received: from z50.gdansk-morena.vectranet.pl (109241207190.gdansk.vectranet.pl. [109.241.207.190])
-        by smtp.gmail.com with ESMTPSA id q9sm4226813lfn.88.2019.05.20.14.28.06
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 20 May 2019 14:28:07 -0700 (PDT)
-From:   Janusz Krzysztofik <jmkrzyszt@gmail.com>
-To:     Mauro Carvalho Chehab <mchehab@kernel.org>
-Cc:     Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Janusz Krzysztofik <jmkrzyszt@gmail.com>
-Subject: [PATCH v7 3/3] media: v4l2-subdev: Verify v4l2_subdev_call() pad config argument
-Date:   Mon, 20 May 2019 23:27:47 +0200
-Message-Id: <20190520212747.368-4-jmkrzyszt@gmail.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190520212747.368-1-jmkrzyszt@gmail.com>
-References: <20190520212747.368-1-jmkrzyszt@gmail.com>
+        Mon, 20 May 2019 17:36:57 -0400
+Received: from mx2.cyber.ee ([193.40.6.72]:49338 "EHLO mx2.cyber.ee"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725776AbfETVg4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 17:36:56 -0400
+Subject: Re: [PATCH v2] vmalloc: Fix issues with flush flag
+To:     Rick Edgecombe <rick.p.edgecombe@intel.com>,
+        linux-kernel@vger.kernel.org, peterz@infradead.org,
+        sparclinux@vger.kernel.org, linux-mm@kvack.org,
+        netdev@vger.kernel.org
+Cc:     dave.hansen@intel.com, namit@vmware.com,
+        Meelis Roos <mroos@linux.ee>,
+        "David S. Miller" <davem@davemloft.net>,
+        Borislav Petkov <bp@alien8.de>,
+        Andy Lutomirski <luto@kernel.org>,
+        Ingo Molnar <mingo@redhat.com>
+References: <20190520200703.15997-1-rick.p.edgecombe@intel.com>
+From:   Meelis Roos <mroos@linux.ee>
+Message-ID: <90f8a4e1-aa71-0c10-1a91-495ba0cb329b@linux.ee>
+Date:   Tue, 21 May 2019 00:36:22 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190520200703.15997-1-rick.p.edgecombe@intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: et-EE
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Extend parameter checks performed by v4l2_subdev_call() with a check for
-a non-NULL pad config pointer if V4L2_SUBDEV_FORMAT_TRY format type is
-requested so drivers don't need to care.
+> Switch VM_FLUSH_RESET_PERMS to use a regular TLB flush intead of
+> vm_unmap_aliases() and fix calculation of the direct map for the
+> CONFIG_ARCH_HAS_SET_DIRECT_MAP case.
+> 
+> Meelis Roos reported issues with the new VM_FLUSH_RESET_PERMS flag on a
+> sparc machine. On investigation some issues were noticed:
+> 
+> 1. The calculation of the direct map address range to flush was wrong.
+> This could cause problems on x86 if a RO direct map alias ever got loaded
+> into the TLB. This shouldn't normally happen, but it could cause the
+> permissions to remain RO on the direct map alias, and then the page
+> would return from the page allocator to some other component as RO and
+> cause a crash.
+> 
+> 2. Calling vm_unmap_alias() on vfree could potentially be a lot of work to
+> do on a free operation. Simply flushing the TLB instead of the whole
+> vm_unmap_alias() operation makes the frees faster and pushes the heavy
+> work to happen on allocation where it would be more expected.
+> In addition to the extra work, vm_unmap_alias() takes some locks including
+> a long hold of vmap_purge_lock, which will make all other
+> VM_FLUSH_RESET_PERMS vfrees wait while the purge operation happens.
+> 
+> 3. page_address() can have locking on some configurations, so skip calling
+> this when possible to further speed this up.
+> 
+> Fixes: 868b104d7379 ("mm/vmalloc: Add flag for freeing of special permsissions")
+> Reported-by: Meelis Roos<mroos@linux.ee>
+> Cc: Meelis Roos<mroos@linux.ee>
+> Cc: Peter Zijlstra<peterz@infradead.org>
+> Cc: "David S. Miller"<davem@davemloft.net>
+> Cc: Dave Hansen<dave.hansen@intel.com>
+> Cc: Borislav Petkov<bp@alien8.de>
+> Cc: Andy Lutomirski<luto@kernel.org>
+> Cc: Ingo Molnar<mingo@redhat.com>
+> Cc: Nadav Amit<namit@vmware.com>
+> Signed-off-by: Rick Edgecombe<rick.p.edgecombe@intel.com>
+> ---
+> 
+> Changes since v1:
+>   - Update commit message with more detail
+>   - Fix flush end range on !CONFIG_ARCH_HAS_SET_DIRECT_MAP case
 
-Signed-off-by: Janusz Krzysztofik <jmkrzyszt@gmail.com>
----
- drivers/media/v4l2-core/v4l2-subdev.c | 27 +++++++++++++++++++++------
- 1 file changed, 21 insertions(+), 6 deletions(-)
+It does not work on my V445 where the initial problem happened.
 
-diff --git a/drivers/media/v4l2-core/v4l2-subdev.c b/drivers/media/v4l2-core/v4l2-subdev.c
-index 957c8e5cdfe1..34219e489be2 100644
---- a/drivers/media/v4l2-core/v4l2-subdev.c
-+++ b/drivers/media/v4l2-core/v4l2-subdev.c
-@@ -144,20 +144,30 @@ static inline int check_pad(struct v4l2_subdev *sd, __u32 pad)
- 	return 0;
- }
- 
-+static int check_cfg(__u32 which, struct v4l2_subdev_pad_config *cfg)
-+{
-+	if (which == V4L2_SUBDEV_FORMAT_TRY && !cfg)
-+		return -EINVAL;
-+
-+	return 0;
-+}
-+
- static inline int check_format(struct v4l2_subdev *sd,
-+			       struct v4l2_subdev_pad_config *cfg,
- 			       struct v4l2_subdev_format *format)
- {
- 	if (!format)
- 		return -EINVAL;
- 
--	return check_which(format->which) ? : check_pad(sd, format->pad);
-+	return check_which(format->which) ? : check_pad(sd, format->pad) ? :
-+	       check_cfg(format->which, cfg);
- }
- 
- static int call_get_fmt(struct v4l2_subdev *sd,
- 			struct v4l2_subdev_pad_config *cfg,
- 			struct v4l2_subdev_format *format)
- {
--	return check_format(sd, format) ? :
-+	return check_format(sd, cfg, format) ? :
- 	       sd->ops->pad->get_fmt(sd, cfg, format);
- }
- 
-@@ -165,7 +175,7 @@ static int call_set_fmt(struct v4l2_subdev *sd,
- 			struct v4l2_subdev_pad_config *cfg,
- 			struct v4l2_subdev_format *format)
- {
--	return check_format(sd, format) ? :
-+	return check_format(sd, cfg, format) ? :
- 	       sd->ops->pad->set_fmt(sd, cfg, format);
- }
- 
-@@ -177,6 +187,7 @@ static int call_enum_mbus_code(struct v4l2_subdev *sd,
- 		return -EINVAL;
- 
- 	return check_which(code->which) ? : check_pad(sd, code->pad) ? :
-+	       check_cfg(code->which, cfg) ? :
- 	       sd->ops->pad->enum_mbus_code(sd, cfg, code);
- }
- 
-@@ -188,6 +199,7 @@ static int call_enum_frame_size(struct v4l2_subdev *sd,
- 		return -EINVAL;
- 
- 	return check_which(fse->which) ? : check_pad(sd, fse->pad) ? :
-+	       check_cfg(fse->which, cfg) ? :
- 	       sd->ops->pad->enum_frame_size(sd, cfg, fse);
- }
- 
-@@ -222,23 +234,26 @@ static int call_enum_frame_interval(struct v4l2_subdev *sd,
- 		return -EINVAL;
- 
- 	return check_which(fie->which) ? : check_pad(sd, fie->pad) ? :
-+	       check_cfg(fie->which, cfg) ? :
- 	       sd->ops->pad->enum_frame_interval(sd, cfg, fie);
- }
- 
- static inline int check_selection(struct v4l2_subdev *sd,
-+				  struct v4l2_subdev_pad_config *cfg,
- 				  struct v4l2_subdev_selection *sel)
- {
- 	if (!sel)
- 		return -EINVAL;
- 
--	return check_which(sel->which) ? : check_pad(sd, sel->pad);
-+	return check_which(sel->which) ? : check_pad(sd, sel->pad) ? :
-+	       check_cfg(sel->which, cfg);
- }
- 
- static int call_get_selection(struct v4l2_subdev *sd,
- 			      struct v4l2_subdev_pad_config *cfg,
- 			      struct v4l2_subdev_selection *sel)
- {
--	return check_selection(sd, sel) ? :
-+	return check_selection(sd, cfg, sel) ? :
- 	       sd->ops->pad->get_selection(sd, cfg, sel);
- }
- 
-@@ -246,7 +261,7 @@ static int call_set_selection(struct v4l2_subdev *sd,
- 			      struct v4l2_subdev_pad_config *cfg,
- 			      struct v4l2_subdev_selection *sel)
- {
--	return check_selection(sd, sel) ? :
-+	return check_selection(sd, cfg, sel) ? :
- 	       sd->ops->pad->set_selection(sd, cfg, sel);
- }
- 
+[   46.582633] systemd[1]: Detected architecture sparc64.
+
+Welcome to Debian GNU/Linux 10 (buster)!
+
+[   46.759048] systemd[1]: Set hostname to <v445>.
+[   46.831383] systemd[1]: Failed to bump fs.file-max, ignoring: Invalid argument
+[   67.989695] rcu: INFO: rcu_sched detected stalls on CPUs/tasks:
+[   68.074706] rcu:     0-...!: (0 ticks this GP) idle=5c6/1/0x4000000000000000 softirq=33/33 fqs=0
+[   68.198443] rcu:     2-...!: (0 ticks this GP) idle=e7e/1/0x4000000000000000 softirq=67/67 fqs=0
+[   68.322198]  (detected by 1, t=5252 jiffies, g=-939, q=108)
+[   68.402204]   CPU[  0]: TSTATE[0000000080001603] TPC[000000000043f298] TNPC[000000000043f29c] TASK[systemd-debug-g:89]
+[   68.556001]              TPC[smp_synchronize_tick_client+0x18/0x1a0] O7[0xfff000010000691c] I7[xcall_sync_tick+0x1c/0x2c] RPC[alloc_set_pte+0xf4/0x300]
+[   68.750973]   CPU[  2]: TSTATE[0000000080001600] TPC[000000000043f298] TNPC[000000000043f29c] TASK[systemd-cryptse:88]
+[   68.904741]              TPC[smp_synchronize_tick_client+0x18/0x1a0] O7[filemap_map_pages+0x3cc/0x3e0] I7[xcall_sync_tick+0x1c/0x2c] RPC[handle_mm_fault+0xa0/0x180]
+[   69.115991] rcu: rcu_sched kthread starved for 5252 jiffies! g-939 f0x0 RCU_GP_WAIT_FQS(5) ->state=0x402 ->cpu=3
+[   69.262239] rcu: RCU grace-period kthread stack dump:
+[   69.334741] rcu_sched       I    0    10      2 0x06000000
+[   69.413495] Call Trace:
+[   69.448501]  [000000000093325c] schedule+0x1c/0xc0
+[   69.517253]  [0000000000936c74] schedule_timeout+0x154/0x260
+[   69.598514]  [00000000004b65a4] rcu_gp_kthread+0x4e4/0xac0
+[   69.677261]  [000000000047ecfc] kthread+0xfc/0x120
+[   69.746018]  [00000000004060a4] ret_from_fork+0x1c/0x2c
+[   69.821014]  [0000000000000000] 0x0
+
+and hangs here, software watchdog kicks in soon.
+
 -- 
-2.21.0
-
+Meelis Roos
