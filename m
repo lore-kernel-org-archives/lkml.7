@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AA5DC04AAC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:51:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A942BC04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:51:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0CE0620815
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:51:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 743B32054F
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:51:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558356672;
-	bh=FShAbIvuo5Dxjc1FjFgVxxINTXvXvWkM+qxwB8esTp4=;
+	s=default; t=1558356683;
+	bh=Y6EuyZEjvaLernhvKw4omgcW49gcVTdIABeEb1lxmfE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=P2Y5xdfXPz7SXNYZOFQziENQ29+OUEJvBcEQXNiHf0xthiBDON20kUxwr2ChNhnfm
-	 Hq6eLlun8UCGGkd3cHZnGsKmpcVOp1qaFpQ2tfATdpNy3TfD0iaxIlSOxgkbHD42No
-	 VPvAfuEjoe0v7QJsAHp/dsVGwb+tIg+7ZQMFoy0A=
+	b=q6gwmgUZ/qJj4pICL/Szf83odVvZmt6f4KL91irFcWhy3rSFmP741aObS0fCeTCCj
+	 WMPA2Y3Eq4KBVVa3GGjqM0/9gD3im2q/HiY7/HJmnfGqX8jzIgxkD2DzBAqzr/U7RN
+	 W73AseT1qCf/Au40AvPHFNetJ3wgR0LiHAWbsqrg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391517AbfETMvL (ORCPT
+        id S2387875AbfETMTt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 08:51:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33326 "EHLO mail.kernel.org"
+        Mon, 20 May 2019 08:19:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33042 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387909AbfETMUA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 08:20:00 -0400
+        id S1730795AbfETMTr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 08:19:47 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AC593216E3;
-        Mon, 20 May 2019 12:19:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EA96C20815;
+        Mon, 20 May 2019 12:19:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558354800;
-        bh=FShAbIvuo5Dxjc1FjFgVxxINTXvXvWkM+qxwB8esTp4=;
+        s=default; t=1558354787;
+        bh=Y6EuyZEjvaLernhvKw4omgcW49gcVTdIABeEb1lxmfE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dauN3iQgqUk+7N/BxZRcHyQyh+1wM8ZSA2uJ6qxfT65oPb6XV9GMtO4r4BSrfz6/q
-         mTe/kf5EB499NJzGjCpaP8wQSyTlI6/fCvZ9m9GWekC2yZdXmSHdwQYtPgiwK84I8E
-         MGuZhMFpYOQ/mDxhkor6304BD9jFpLMp94jrBnns=
+        b=nQLlp4650Wj78DZdHdLpmNiq1HIXvN8J6GrNVLVGJQQmW7LQdQm2ENTWWPl1tNYGc
+         iWkMDWrxbaJzhPT2I2YSxbJwRLgJQas259UgPyGx4LGN9dzDUdyqQVQLiP+w1JS4UD
+         HQs6YY3O0Yw5AVDjAWjrNdb1l4jbCpPUG4njihws=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Liang Chen <liangchen.linux@gmail.com>,
-        Coly Li <colyli@suse.de>, Jens Axboe <axboe@kernel.dk>
-Subject: [PATCH 4.14 46/63] bcache: fix a race between cache register and cacheset unregister
-Date:   Mon, 20 May 2019 14:14:25 +0200
-Message-Id: <20190520115236.148797379@linuxfoundation.org>
+        stable@vger.kernel.org, Theodore Tso <tytso@mit.edu>,
+        stable@kernel.org
+Subject: [PATCH 4.14 42/63] ext4: ignore e_value_offs for xattrs with value-in-ea-inode
+Date:   Mon, 20 May 2019 14:14:21 +0200
+Message-Id: <20190520115235.746611796@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190520115231.137981521@linuxfoundation.org>
 References: <20190520115231.137981521@linuxfoundation.org>
@@ -59,81 +59,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Liang Chen <liangchen.linux@gmail.com>
+From: Theodore Ts'o <tytso@mit.edu>
 
-commit a4b732a248d12cbdb46999daf0bf288c011335eb upstream.
+commit e5d01196c0428a206f307e9ee5f6842964098ff0 upstream.
 
-There is a race between cache device register and cache set unregister.
-For an already registered cache device, register_bcache will call
-bch_is_open to iterate through all cachesets and check every cache
-there. The race occurs if cache_set_free executes at the same time and
-clears the caches right before ca is dereferenced in bch_is_open_cache.
-To close the race, let's make sure the clean up work is protected by
-the bch_register_lock as well.
+In other places in fs/ext4/xattr.c, if e_value_inum is non-zero, the
+code ignores the value in e_value_offs.  The e_value_offs *should* be
+zero, but we shouldn't depend upon it, since it might not be true in a
+corrupted/fuzzed file system.
 
-This issue can be reproduced as follows,
-while true; do echo /dev/XXX> /sys/fs/bcache/register ; done&
-while true; do echo 1> /sys/block/XXX/bcache/set/unregister ; done &
-
-and results in the following oops,
-
-[  +0.000053] BUG: unable to handle kernel NULL pointer dereference at 0000000000000998
-[  +0.000457] #PF error: [normal kernel read fault]
-[  +0.000464] PGD 800000003ca9d067 P4D 800000003ca9d067 PUD 3ca9c067 PMD 0
-[  +0.000388] Oops: 0000 [#1] SMP PTI
-[  +0.000269] CPU: 1 PID: 3266 Comm: bash Not tainted 5.0.0+ #6
-[  +0.000346] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.11.0-2.fc28 04/01/2014
-[  +0.000472] RIP: 0010:register_bcache+0x1829/0x1990 [bcache]
-[  +0.000344] Code: b0 48 83 e8 50 48 81 fa e0 e1 10 c0 0f 84 a9 00 00 00 48 89 c6 48 89 ca 0f b7 ba 54 04 00 00 4c 8b 82 60 0c 00 00 85 ff 74 2f <49> 3b a8 98 09 00 00 74 4e 44 8d 47 ff 31 ff 49 c1 e0 03 eb 0d
-[  +0.000839] RSP: 0018:ffff92ee804cbd88 EFLAGS: 00010202
-[  +0.000328] RAX: ffffffffc010e190 RBX: ffff918b5c6b5000 RCX: ffff918b7d8e0000
-[  +0.000399] RDX: ffff918b7d8e0000 RSI: ffffffffc010e190 RDI: 0000000000000001
-[  +0.000398] RBP: ffff918b7d318340 R08: 0000000000000000 R09: ffffffffb9bd2d7a
-[  +0.000385] R10: ffff918b7eb253c0 R11: ffffb95980f51200 R12: ffffffffc010e1a0
-[  +0.000411] R13: fffffffffffffff2 R14: 000000000000000b R15: ffff918b7e232620
-[  +0.000384] FS:  00007f955bec2740(0000) GS:ffff918b7eb00000(0000) knlGS:0000000000000000
-[  +0.000420] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[  +0.000801] CR2: 0000000000000998 CR3: 000000003cad6000 CR4: 00000000001406e0
-[  +0.000837] Call Trace:
-[  +0.000682]  ? _cond_resched+0x10/0x20
-[  +0.000691]  ? __kmalloc+0x131/0x1b0
-[  +0.000710]  kernfs_fop_write+0xfa/0x170
-[  +0.000733]  __vfs_write+0x2e/0x190
-[  +0.000688]  ? inode_security+0x10/0x30
-[  +0.000698]  ? selinux_file_permission+0xd2/0x120
-[  +0.000752]  ? security_file_permission+0x2b/0x100
-[  +0.000753]  vfs_write+0xa8/0x1a0
-[  +0.000676]  ksys_write+0x4d/0xb0
-[  +0.000699]  do_syscall_64+0x3a/0xf0
-[  +0.000692]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-Signed-off-by: Liang Chen <liangchen.linux@gmail.com>
-Cc: stable@vger.kernel.org
-Signed-off-by: Coly Li <colyli@suse.de>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=202897
+Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=202877
+Signed-off-by: Theodore Ts'o <tytso@mit.edu>
+Cc: stable@kernel.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/md/bcache/super.c |    2 +-
+ fs/ext4/xattr.c |    2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/md/bcache/super.c
-+++ b/drivers/md/bcache/super.c
-@@ -1357,6 +1357,7 @@ static void cache_set_free(struct closur
- 	bch_btree_cache_free(c);
- 	bch_journal_free(c);
+--- a/fs/ext4/xattr.c
++++ b/fs/ext4/xattr.c
+@@ -1698,7 +1698,7 @@ static int ext4_xattr_set_entry(struct e
  
-+	mutex_lock(&bch_register_lock);
- 	for_each_cache(ca, c, i)
- 		if (ca) {
- 			ca->set = NULL;
-@@ -1379,7 +1380,6 @@ static void cache_set_free(struct closur
- 		mempool_destroy(c->search);
- 	kfree(c->devices);
+ 	/* No failures allowed past this point. */
  
--	mutex_lock(&bch_register_lock);
- 	list_del(&c->list);
- 	mutex_unlock(&bch_register_lock);
- 
+-	if (!s->not_found && here->e_value_size && here->e_value_offs) {
++	if (!s->not_found && here->e_value_size && !here->e_value_inum) {
+ 		/* Remove the old value. */
+ 		void *first_val = s->base + min_offs;
+ 		size_t offs = le16_to_cpu(here->e_value_offs);
 
 
