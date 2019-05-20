@@ -2,116 +2,191 @@ Return-Path: <SRS0=lq4r=TU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A17F5C04AAC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 21:19:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48E14C04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 21:19:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5AE2E216B7
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 21:19:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="o0zTjoaj"
+	by mail.kernel.org (Postfix) with ESMTP id 26A722173C
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 21:19:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727093AbfETVTb (ORCPT
+        id S1726752AbfETVTt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 17:19:31 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:38088 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726814AbfETVTb (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 17:19:31 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x4KLJGvR098218;
-        Mon, 20 May 2019 16:19:16 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1558387156;
-        bh=5KQWvFfE5qVNkLN90w84u0hBO49O6BvLTGp8FoqxAU4=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=o0zTjoajMbo0iwJ7IMQncJT1xAKBJk/WaHj2H8BIWoZqBLnkCEdylePdHod73z2Xw
-         S/3hi8s3r3Sgtq5hCM+o5ZsvpcBM1tAbfwixDOVAGKXIIaQs58lsoGSworBcs/EPZD
-         /w6PBqKG258UNQfrSLqJRF46yGdRJ4IRBFgBzvSU=
-Received: from DLEE113.ent.ti.com (dlee113.ent.ti.com [157.170.170.24])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x4KLJGvT045333
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 20 May 2019 16:19:16 -0500
-Received: from DLEE109.ent.ti.com (157.170.170.41) by DLEE113.ent.ti.com
- (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Mon, 20
- May 2019 16:19:16 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE109.ent.ti.com
- (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Mon, 20 May 2019 16:19:16 -0500
-Received: from [10.250.90.63] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x4KLJG9w105948;
-        Mon, 20 May 2019 16:19:16 -0500
-Subject: Re: [PATCH v4 6/6] leds: lm36274: Introduce the TI LM36274 LED driver
-To:     Jacek Anaszewski <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>
-CC:     <lee.jones@linaro.org>, <rdunlap@infradead.org>,
-        <linux-leds@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20190507201159.13940-1-dmurphy@ti.com>
- <20190507201159.13940-7-dmurphy@ti.com>
- <77f1ed5b-bfd2-510c-edd5-1b702f2d1d45@gmail.com>
-From:   Dan Murphy <dmurphy@ti.com>
-Message-ID: <8d126925-9e71-dba4-eb88-50fd6e6c06d8@ti.com>
-Date:   Mon, 20 May 2019 16:19:15 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Mon, 20 May 2019 17:19:49 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:58036 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725989AbfETVTt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 17:19:49 -0400
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 8FDE0301E3D2;
+        Mon, 20 May 2019 21:19:40 +0000 (UTC)
+Received: from treble (ovpn-125-173.rdu2.redhat.com [10.10.125.173])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 3C6935D704;
+        Mon, 20 May 2019 21:19:33 +0000 (UTC)
+Date:   Mon, 20 May 2019 16:19:31 -0500
+From:   Josh Poimboeuf <jpoimboe@redhat.com>
+To:     Johannes Erdfelt <johannes@erdfelt.com>
+Cc:     Joe Lawrence <joe.lawrence@redhat.com>,
+        Jessica Yu <jeyu@kernel.org>, Jiri Kosina <jikos@kernel.org>,
+        Miroslav Benes <mbenes@suse.cz>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ingo Molnar <mingo@redhat.com>, live-patching@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: Oops caused by race between livepatch and ftrace
+Message-ID: <20190520211931.vokbqxkx5kb6k2bz@treble>
+References: <20190520194915.GB1646@sventech.com>
+ <90f78070-95ec-ce49-1641-19d061abecf4@redhat.com>
+ <20190520210905.GC1646@sventech.com>
 MIME-Version: 1.0
-In-Reply-To: <77f1ed5b-bfd2-510c-edd5-1b702f2d1d45@gmail.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20190520210905.GC1646@sventech.com>
+User-Agent: NeoMutt/20180716
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.41]); Mon, 20 May 2019 21:19:48 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Jacek
-
-On 5/20/19 2:54 PM, Jacek Anaszewski wrote:
-> Hi Dan,
+On Mon, May 20, 2019 at 02:09:05PM -0700, Johannes Erdfelt wrote:
+> On Mon, May 20, 2019, Joe Lawrence <joe.lawrence@redhat.com> wrote:
+> > [ fixed jeyu's email address ]
 > 
-> On 5/7/19 10:11 PM, Dan Murphy wrote:
->> Introduce the LM36274 LED driver.  This driver uses the ti-lmu
->> MFD driver to probe this LED driver.  The driver configures only the
->> LED registers and enables the outputs according to the config file.
->>
->> The driver utilizes the TI LMU (Lighting Management Unit) LED common
->> framework to set the brightness bits.
->>
->> Signed-off-by: Dan Murphy <dmurphy@ti.com>
->> ---
->>   drivers/leds/Kconfig        |   7 ++
->>   drivers/leds/Makefile       |   1 +
->>   drivers/leds/leds-lm36274.c | 174 ++++++++++++++++++++++++++++++++++++
->>   3 files changed, 182 insertions(+)
->>   create mode 100644 drivers/leds/leds-lm36274.c
->>
->> diff --git a/drivers/leds/Kconfig b/drivers/leds/Kconfig
->> index 255fdd5e8491..db83a3feca01 100644
->> --- a/drivers/leds/Kconfig
->> +++ b/drivers/leds/Kconfig
->> @@ -791,6 +791,13 @@ config LEDS_LM3697
->>         Say Y to enable the LM3697 LED driver for TI LMU devices.
->>         This supports the LED device LM3697.
->>   +config LEDS_LM36274
->> +    tristate "LED driver for LM36274"
->> +    depends on LEDS_TI_LMU_COMMON
+> Thank you, the bounce message made it seem like my mail server was
+> blocked and not that the address didn't exist.
 > 
-> Shouldn't we have "depends on MFD_TI_LMU" as well here?
+> I think MAINTAINERS needs an update since it still has the @redhat.com
+> address.
+
+I think you must have been looking at an old version.
+
+[(v5.2-rc1)] ~/git/linux $ grep jeyu MAINTAINERS
+M:	Jessica Yu <jeyu@kernel.org>
+
+> > On 5/20/19 3:49 PM, Johannes Erdfelt wrote:
+> > > [ ... snip ... ]
+> > > 
+> > > I have put together a test case that can reproduce the crash using
+> > > KVM. The tarball includes a minimal kernel and initramfs, along with
+> > > a script to run qemu and the .config used to build the kernel. By
+> > > default it will attempt to reproduce by loading multiple livepatches
+> > > at the same time. Passing 'test=ftrace' to the script will attempt to
+> > > reproduce by racing with ftrace.
+> > > 
+> > > My test setup reproduces the race and oops more reliably by loading
+> > > multiple livepatches at the same time than with the ftrace method. It's
+> > > not 100% reproducible, so the test case may need to be run multiple
+> > > times.
+> > > 
+> > > It can be found here (not attached because of its size):
+> > > http://johannes.erdfelt.com/5.2.0-rc1-a188339ca5-livepatch-race.tar.gz
+> > 
+> > Hi Johannes,
+> > 
+> > This is cool way to distribute the repro kernel, modules, etc!
 > 
-
-Actually the LEDS_TI_LMU_COMMON flag should depend on MFD_TI_LMU.
-Then it would inherit that dependency.
-
-Dan
-
->> +    help
->> +      Say Y to enable the LM36274 LED driver for TI LMU devices.
->> +      This supports the LED device LM36274.
+> This oops was common in our production environment and was particularly
+> annoying since livepatches would load at boot and early enough to happen
+> before networking and SSH were started.
 > 
+> Unfortunately it was difficult to reproduce on other hardware (changing
+> the timing just enough) and our production environment is very
+> complicated.
+> 
+> I spent more time than I'd like to admit trying to reproduce this fairly
+> reliably. I knew that I needed to help make it as easy as possible to
+> reproduce to root cause it and for others to take a look at it as well.
+
+Can you try this patch (completely untested)?
+
+diff --git a/kernel/livepatch/core.c b/kernel/livepatch/core.c
+index 91cd519756d3..2d17e6e364b5 100644
+--- a/kernel/livepatch/core.c
++++ b/kernel/livepatch/core.c
+@@ -30,6 +30,7 @@
+ #include <linux/elf.h>
+ #include <linux/moduleloader.h>
+ #include <linux/completion.h>
++#include <linux/memory.h>
+ #include <asm/cacheflush.h>
+ #include "core.h"
+ #include "patch.h"
+@@ -730,16 +731,21 @@ static int klp_init_object_loaded(struct klp_patch *patch,
+ 	struct klp_func *func;
+ 	int ret;
+ 
++	mutex_lock(&text_mutex);
++
+ 	module_disable_ro(patch->mod);
+ 	ret = klp_write_object_relocations(patch->mod, obj);
+ 	if (ret) {
+ 		module_enable_ro(patch->mod, true);
++		mutex_unlock(&text_mutex);
+ 		return ret;
+ 	}
+ 
+ 	arch_klp_init_object_loaded(patch, obj);
+ 	module_enable_ro(patch->mod, true);
+ 
++	mutex_unlock(&text_mutex);
++
+ 	klp_for_each_func(obj, func) {
+ 		ret = klp_find_object_symbol(obj->name, func->old_name,
+ 					     func->old_sympos,
+diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
+index a12aff849c04..8259d4ba8b00 100644
+--- a/kernel/trace/ftrace.c
++++ b/kernel/trace/ftrace.c
+@@ -34,6 +34,7 @@
+ #include <linux/hash.h>
+ #include <linux/rcupdate.h>
+ #include <linux/kprobes.h>
++#include <linux/memory.h>
+ 
+ #include <trace/events/sched.h>
+ 
+@@ -2610,10 +2611,12 @@ static void ftrace_run_update_code(int command)
+ {
+ 	int ret;
+ 
++	mutex_lock(&text_mutex);
++
+ 	ret = ftrace_arch_code_modify_prepare();
+ 	FTRACE_WARN_ON(ret);
+ 	if (ret)
+-		return;
++		goto out_unlock;
+ 
+ 	/*
+ 	 * By default we use stop_machine() to modify the code.
+@@ -2625,6 +2628,9 @@ static void ftrace_run_update_code(int command)
+ 
+ 	ret = ftrace_arch_code_modify_post_process();
+ 	FTRACE_WARN_ON(ret);
++
++out_unlock:
++	mutex_unlock(&text_mutex);
+ }
+ 
+ static void ftrace_run_modify_code(struct ftrace_ops *ops, int command,
+@@ -5776,6 +5782,7 @@ void ftrace_module_enable(struct module *mod)
+ 	struct ftrace_page *pg;
+ 
+ 	mutex_lock(&ftrace_lock);
++	mutex_lock(&text_mutex);
+ 
+ 	if (ftrace_disabled)
+ 		goto out_unlock;
+@@ -5837,6 +5844,7 @@ void ftrace_module_enable(struct module *mod)
+ 		ftrace_arch_code_modify_post_process();
+ 
+  out_unlock:
++	mutex_unlock(&text_mutex);
+ 	mutex_unlock(&ftrace_lock);
+ 
+ 	process_cached_mods(mod->name);
