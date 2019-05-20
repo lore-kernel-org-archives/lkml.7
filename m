@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7D24C04AAC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:27:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58F75C04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:27:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B452720815
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:27:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3014921019
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:27:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558355264;
-	bh=53VozYmXf1eG5m7OkSRjT5xXTRtlW1k3WYIKOmwy+oA=;
+	s=default; t=1558355269;
+	bh=Y5gLgaKUCRhk57m/UXAViF0p7JGbNm1P9I90M+EkMGM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=B/qr0Z02JDKu7fLXEMriXlzk47ZNr8m0/Z5YZJnxrEgMZjz9QrZ92GGL0gbv/WvDa
-	 BOqUrq4+52PdH2kdn2tgS5+UT6XD22ScUWM8ndeeCZ6kK0UcQuhNzkArMNK8Bs8781
-	 pmmUlpNsMJy1GEIdHnvHHFa7JmjJoIPOq1CN/dKU=
+	b=fNv35JZq0lMIYjFbNpt/k5IM6tCNsWO9Kj7hrokwqOJVsjaszv0rHNKPflaAM4fqY
+	 +vp1DY0OlCRubjcvoI/y/PqdmhDBh21AuAA7FcUsynmhfxw7MJ4OqoAM6/J1MHWGrq
+	 UQJKrKeOO4KQIqZm4mzHARoDfDQ0GpqzbbP8kxLU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389182AbfETM1o (ORCPT
+        id S2389562AbfETM1s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 08:27:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43156 "EHLO mail.kernel.org"
+        Mon, 20 May 2019 08:27:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43314 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388873AbfETM1g (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 08:27:36 -0400
+        id S2389527AbfETM1n (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 08:27:43 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F124220675;
-        Mon, 20 May 2019 12:27:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D0CCB20675;
+        Mon, 20 May 2019 12:27:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558355255;
-        bh=53VozYmXf1eG5m7OkSRjT5xXTRtlW1k3WYIKOmwy+oA=;
+        s=default; t=1558355263;
+        bh=Y5gLgaKUCRhk57m/UXAViF0p7JGbNm1P9I90M+EkMGM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XMOZ8NobvjvPdedf81Gr7jJPxn3fq71yNih9lodtO8SbY5pzzUC4vg+/61mHu8bRd
-         FGuPig3qYgLzWsSoY2NaU32ItlzPdcwYKNOFrb3w7RroAygRGo/fOunoibIMASp5Cs
-         x5YnzzfgchT+fDrhOm9p4OPxqspSWpWxaUTnFyN0=
+        b=i5+P7mxew/+nKSX5IM/+YsKeMfPT+iX84ANL/33Fw/3gtA9K6RReyj18mHhD5wDgL
+         NuAuJnAicFvKf8JQ/xhha4TZrDg6U2ASn/sFQtS9VPhucsEFahyjTXjjfqQKXhdYDY
+         59kAZaE4upZukj7nuJGVok+YPKeNc+9FZ3Pd5q94=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Wenwen Wang <wang6495@umn.edu>,
+        stable@vger.kernel.org, Kailang Yang <kailang@realtek.com>,
         Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 5.0 048/123] ALSA: usb-audio: Fix a memory leak bug
-Date:   Mon, 20 May 2019 14:13:48 +0200
-Message-Id: <20190520115247.925716421@linuxfoundation.org>
+Subject: [PATCH 5.0 051/123] ALSA: hda/realtek - EAPD turn on later
+Date:   Mon, 20 May 2019 14:13:51 +0200
+Message-Id: <20190520115248.128333567@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190520115245.439864225@linuxfoundation.org>
 References: <20190520115245.439864225@linuxfoundation.org>
@@ -59,40 +59,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wenwen Wang <wang6495@umn.edu>
+From: Kailang Yang <kailang@realtek.com>
 
-commit cb5173594d50c72b7bfa14113dfc5084b4d2f726 upstream.
+commit 607ca3bd220f4022e6f5356026b19dafc363863a upstream.
 
-In parse_audio_selector_unit(), the string array 'namelist' is allocated
-through kmalloc_array(), and each string pointer in this array, i.e.,
-'namelist[]', is allocated through kmalloc() in the following for loop.
-Then, a control instance 'kctl' is created by invoking snd_ctl_new1(). If
-an error occurs during the creation process, the string array 'namelist',
-including all string pointers in the array 'namelist[]', should be freed,
-before the error code ENOMEM is returned. However, the current code does
-not free 'namelist[]', resulting in memory leaks.
+Let EAPD turn on after set pin output.
 
-To fix the above issue, free all string pointers 'namelist[]' in a loop.
+[ NOTE: This change is supposed to reduce the possible click noises at
+  (runtime) PM resume.  The functionality should be same (i.e. the
+  verbs are executed correctly) no matter which order is, so this
+  should be safe to apply for all codecs -- tiwai ]
 
-Signed-off-by: Wenwen Wang <wang6495@umn.edu>
+Signed-off-by: Kailang Yang <kailang@realtek.com>
 Cc: <stable@vger.kernel.org>
 Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/usb/mixer.c |    2 ++
- 1 file changed, 2 insertions(+)
+ sound/pci/hda/patch_realtek.c |    3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
---- a/sound/usb/mixer.c
-+++ b/sound/usb/mixer.c
-@@ -2679,6 +2679,8 @@ static int parse_audio_selector_unit(str
- 	kctl = snd_ctl_new1(&mixer_selectunit_ctl, cval);
- 	if (! kctl) {
- 		usb_audio_err(state->chip, "cannot malloc kcontrol\n");
-+		for (i = 0; i < desc->bNrInPins; i++)
-+			kfree(namelist[i]);
- 		kfree(namelist);
- 		kfree(cval);
- 		return -ENOMEM;
+--- a/sound/pci/hda/patch_realtek.c
++++ b/sound/pci/hda/patch_realtek.c
+@@ -803,11 +803,10 @@ static int alc_init(struct hda_codec *co
+ 	if (spec->init_hook)
+ 		spec->init_hook(codec);
+ 
++	snd_hda_gen_init(codec);
+ 	alc_fix_pll(codec);
+ 	alc_auto_init_amp(codec, spec->init_amp);
+ 
+-	snd_hda_gen_init(codec);
+-
+ 	snd_hda_apply_fixup(codec, HDA_FIXUP_ACT_INIT);
+ 
+ 	return 0;
 
 
