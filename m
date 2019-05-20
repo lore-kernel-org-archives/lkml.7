@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 483E0C04AAC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:25:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BBAC6C04E87
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:25:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1F49020675
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:25:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 875DE20675
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:25:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558355115;
-	bh=CaVc0Vmf0CTBvhnD/hDvXM9q76PEYULHxwWmImXaQsw=;
+	s=default; t=1558355118;
+	bh=5zCdNk6o7TvfEzmsRexz2WXo2rRTLCTto/KnK33XGaM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=N6MqyJDrAERb38XGjyOgZiyyQQiunNfp4J4YtcZBZ14f7G68p25UBFE/mfVB808Pn
-	 wtDIRRzd6GfduWO5dfcm5rypEg82VpUyfCOpuZsOaZGRkW3aR8AjzBFnxZbvPtsiZx
-	 HDM5jTD4CgUB2DBW7vgdeCNwlx7DnBGWhBVToTfI=
+	b=Mtmzl3nfwl9ckbqZzF9NPYNn+FGbtUYBFAqZEN/Stpj13SCRuBHUpeXuHFp3QIwX3
+	 g5YkOaVF6Kw0NEogjmA3yylgyESkUU5LYB5xqgC0cPAMv8ul28EPVwZGSHR4eZdGsk
+	 SvJHWhSCuf6HA8JpBaBbJmz5e00qad9nDBvDJt0o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389026AbfETMZO (ORCPT
+        id S2389037AbfETMZS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 08:25:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40238 "EHLO mail.kernel.org"
+        Mon, 20 May 2019 08:25:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40288 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389015AbfETMZM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 08:25:12 -0400
+        id S2389015AbfETMZP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 08:25:15 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8ACF420815;
-        Mon, 20 May 2019 12:25:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2167E20645;
+        Mon, 20 May 2019 12:25:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558355112;
-        bh=CaVc0Vmf0CTBvhnD/hDvXM9q76PEYULHxwWmImXaQsw=;
+        s=default; t=1558355114;
+        bh=5zCdNk6o7TvfEzmsRexz2WXo2rRTLCTto/KnK33XGaM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=w5SLnySF24iZH8gY8UuvFp8C2qqzIvhZoGWWoOMetDSEr6jOIrKx8BVbsNp9BLz08
-         J+N/3COhw0pNDNcOmdRNPyAS8dqPIAtVbDieqG9+DbFMxF+TWp6tDfoJoojN3B0rE1
-         ardcI4beoNd3tjEHxXikO8nPYdD0xAOaKaQ1BKR0=
+        b=OaY5FlHFNieQjDACbYlw53UkCR6g11OO3pQ1+nf4icSqUhsNnUJGrnXLUpuBMUvgo
+         b19bbRRSXiTQWt1DdAXW7ThxLqr+lx8OvLrE/cw+N3Pl09IScjpeJX0VFWRU7IMlkQ
+         euL/cs83Ee/52LoKx1ftDtti6Z5AVCvSm3Gj1R+Q=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Colin Ian King <colin.king@canonical.com>,
+        stable@vger.kernel.org,
+        Arthur Marsh <arthur.marsh@internode.on.net>,
         Theodore Tso <tytso@mit.edu>
-Subject: [PATCH 4.19 102/105] ext4: unsigned int compared against zero
-Date:   Mon, 20 May 2019 14:14:48 +0200
-Message-Id: <20190520115254.280651714@linuxfoundation.org>
+Subject: [PATCH 4.19 103/105] ext4: fix block validity checks for journal inodes using indirect blocks
+Date:   Mon, 20 May 2019 14:14:49 +0200
+Message-Id: <20190520115254.348194358@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190520115247.060821231@linuxfoundation.org>
 References: <20190520115247.060821231@linuxfoundation.org>
@@ -59,35 +60,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+From: Theodore Ts'o <tytso@mit.edu>
 
-commit fbbbbd2f28aec991f3fbc248df211550fbdfd58c upstream.
+commit 170417c8c7bb2cbbdd949bf5c443c0c8f24a203b upstream.
 
-There are two cases where u32 variables n and err are being checked
-for less than zero error values, the checks is always false because
-the variables are not signed. Fix this by making the variables ints.
+Commit 345c0dbf3a30 ("ext4: protect journal inode's blocks using
+block_validity") failed to add an exception for the journal inode in
+ext4_check_blockref(), which is the function used by ext4_get_branch()
+for indirect blocks.  This caused attempts to read from the ext3-style
+journals to fail with:
 
-Addresses-Coverity: ("Unsigned compared against 0")
+[  848.968550] EXT4-fs error (device sdb7): ext4_get_branch:171: inode #8: block 30343695: comm jbd2/sdb7-8: invalid block
+
+Fix this by adding the missing exception check.
+
 Fixes: 345c0dbf3a30 ("ext4: protect journal inode's blocks using block_validity")
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
+Reported-by: Arthur Marsh <arthur.marsh@internode.on.net>
 Signed-off-by: Theodore Ts'o <tytso@mit.edu>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/ext4/block_validity.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ fs/ext4/block_validity.c |    5 +++++
+ 1 file changed, 5 insertions(+)
 
 --- a/fs/ext4/block_validity.c
 +++ b/fs/ext4/block_validity.c
-@@ -142,7 +142,8 @@ static int ext4_protect_reserved_inode(s
- 	struct inode *inode;
- 	struct ext4_sb_info *sbi = EXT4_SB(sb);
- 	struct ext4_map_blocks map;
--	u32 i = 0, err = 0, num, n;
-+	u32 i = 0, num;
-+	int err = 0, n;
+@@ -276,6 +276,11 @@ int ext4_check_blockref(const char *func
+ 	__le32 *bref = p;
+ 	unsigned int blk;
  
- 	if ((ino < EXT4_ROOT_INO) ||
- 	    (ino > le32_to_cpu(sbi->s_es->s_inodes_count)))
++	if (ext4_has_feature_journal(inode->i_sb) &&
++	    (inode->i_ino ==
++	     le32_to_cpu(EXT4_SB(inode->i_sb)->s_es->s_journal_inum)))
++		return 0;
++
+ 	while (bref < p+max) {
+ 		blk = le32_to_cpu(*bref++);
+ 		if (blk &&
 
 
