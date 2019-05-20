@@ -7,55 +7,55 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F127C04AAC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 13:54:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B34B5C04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 13:54:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 43DB92171F
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 13:54:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 88982216C4
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 13:54:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="kUlwrKA6"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="yzkpmxk6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390393AbfETNyK (ORCPT
+        id S2390466AbfETNyM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 09:54:10 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:44800 "EHLO
+        Mon, 20 May 2019 09:54:12 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:33969 "EHLO
         mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390239AbfETNyH (ORCPT
+        with ESMTP id S2390358AbfETNyJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 09:54:07 -0400
-Received: by mail-io1-f65.google.com with SMTP id f22so11033133iol.11
-        for <linux-kernel@vger.kernel.org>; Mon, 20 May 2019 06:54:06 -0700 (PDT)
+        Mon, 20 May 2019 09:54:09 -0400
+Received: by mail-io1-f65.google.com with SMTP id g84so11097473ioa.1
+        for <linux-kernel@vger.kernel.org>; Mon, 20 May 2019 06:54:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=R+Jpk+XthHVG0qFI+gAyJW+786CYrgpLqGw1dG639sc=;
-        b=kUlwrKA6Jg9T6clWLPJgeGUuaE9PZk89mqOd9MnvQdrLTvEBvGPK+iniaIoOUfuyIn
-         QXoEpsQP3UrMYBN3jNm4JMiGQwiLHjLiNqoSubqfzcWS9J3nMo+Hq8ev5PXyG69DjXHV
-         fcIxJ3nHRXB+WfFuhNsCaJL9aSPf0Y5+wQgDHH6x1REzX40cC8jtntFcuHXQBst6HXIF
-         VDgfxkjCCr4/AKfVplJelzBYtiIe0RoYpR9mfu99YYKNYe5yJMuUIkEaZC6dft8Z3as9
-         urvLde/3DeJRDV2EZz67QkJ6chBk0YkJGVMrr0UIEB3gNKwPmIuzAloPUTyWXsOgD/2k
-         U3qg==
+        bh=KapGiunwwx5p5z/8cIELmJy7chJVMEDGUUi3pAZirR8=;
+        b=yzkpmxk6Ixt7Vl80qvoHTPb21ID7tx7gUl5mLADJHRIA+mwJh+3RgoLGGk3FLTk54T
+         YiScf7OxLAxGZZO9LC3+c8gtM0a7Ny2oW1diBfNo/KFgJgeeoC6QMtMvwqVezCPM64Mp
+         Vqa2IRutPqE8aDKy5pSCg0SoCU7x3XEmR9EhpHbWBcQfO0t7f0HIZTkPOFFny9fs2ft/
+         SubZ6bAz3fd+WTZssKs0U/8XN4Bvy28hyjoIYHIsrx1TFdoJk2enr7kbvfSS3KDsuUkm
+         SnglFiYSqw9p+9YZ7rokP3YXlNVR+BjVzrA4BlMeUzKXro+jzAtArTeK6j2I5+Cf7jRR
+         miAg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=R+Jpk+XthHVG0qFI+gAyJW+786CYrgpLqGw1dG639sc=;
-        b=UUnUqOg0vhUu/cnZmaRtacYnaZhPfSTTURJa7F5fw55JVLS25cMaAu45z5w7EIs02x
-         EPNBUoO4dp/HFU6aAvf0dJArMlep2Mta9cJI7lFu8Kweqef6ONbz2IHW2d61LU+p8wTH
-         xSyemC45jQPufqfVzdI4dbT4eJfRKbGjiVzTmBm016uCO00W32MrnFkkR32abkQZN8HO
-         o+qfEip5K1Z88/ArBFMLs9zf2alCaVYje3dhvRsFe2lbtwALIsmdiL4qtGQl2KXGosur
-         A12L1HV2Nn8K1dQlLBmlZPMTvgE9c7ecJbwP4PJ+7jk4WStrd+c50b8EzQ4mvSqLKkj+
-         W6OA==
-X-Gm-Message-State: APjAAAWDfbvOPFojqS2qcRcgCEh3Yu/BxCwv3rkGHOMukFtOayvhWJr4
-        MhaYfyNOf94KQUDw++f3Eqlxfg==
-X-Google-Smtp-Source: APXvYqwdkj2XNTZy7A/BcMrnQZOHJaq1jEZ10NGzfy1RdztnJ5TzENVJ8ePAl4JCjYVq+ttbEYBKKA==
-X-Received: by 2002:a5e:a71a:: with SMTP id b26mr12962200iod.95.1558360446575;
-        Mon, 20 May 2019 06:54:06 -0700 (PDT)
+        bh=KapGiunwwx5p5z/8cIELmJy7chJVMEDGUUi3pAZirR8=;
+        b=Bo46zEf1H1ypuJyjm8zTj5c497GVd1gAA96BeJYAjf42R/k1JfAhNnU6+0CQMFjZ2c
+         Ug3TTJ8YkW8HEezzBeAlap1XXTCUdO1oupIW99k4Knx+3UrItjwJ6cbb6Dx9SgJTD03a
+         0pbgoHvTWQCpKPULL9+nojz2Se/f4SOFDFaxv4NMRhCnerQKyo3mtq/a/WPQVKFPiU2p
+         1plosAoc7/LlVZuqlq2mve3DoYx+gUM/BJwBtWNKXzFQT/OxylH1lqHNlIbnXmby3AyO
+         yvzesilUeo2LlN+DB8eW70/TDVCofvf7VAJ3st2F5dKx1uG7fjY5B04SRoNoKdEXuwwK
+         fm8g==
+X-Gm-Message-State: APjAAAXnJ1bjr8hwXxbqt7qRstl8akmSgsuiQZyz33YSAfIuVxnjwM6t
+        C2W4qhbmqjs7Gk+UFt0zpYnYqw==
+X-Google-Smtp-Source: APXvYqwP2yeMVfgpj5IAJSVo21lcBFOvcGIwfuZQCYo5tTMis4c0FbPs3j4lcwnYFd0aeSJGTibCsQ==
+X-Received: by 2002:a6b:f404:: with SMTP id i4mr7597663iog.251.1558360449000;
+        Mon, 20 May 2019 06:54:09 -0700 (PDT)
 Received: from localhost.localdomain (c-71-195-29-92.hsd1.mn.comcast.net. [71.195.29.92])
-        by smtp.gmail.com with ESMTPSA id n17sm6581185ioa.0.2019.05.20.06.54.05
+        by smtp.gmail.com with ESMTPSA id n17sm6581185ioa.0.2019.05.20.06.54.07
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 20 May 2019 06:54:06 -0700 (PDT)
+        Mon, 20 May 2019 06:54:08 -0700 (PDT)
 From:   Alex Elder <elder@linaro.org>
 To:     arnd@arndb.de, subashab@codeaurora.org, david.brown@linaro.org,
         agross@kernel.org, davem@davemloft.net
@@ -64,9 +64,9 @@ Cc:     bjorn.andersson@linaro.org, ilias.apalodimas@linaro.org,
         evgreen@chromium.org, benchan@google.com, ejcaruso@google.com,
         netdev@vger.kernel.org, linux-arm-msm@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 5/8] net: qualcomm: rmnet: don't use C bit-fields in rmnet checksum trailer
-Date:   Mon, 20 May 2019 08:53:51 -0500
-Message-Id: <20190520135354.18628-6-elder@linaro.org>
+Subject: [PATCH 7/8] net: qualcomm: rmnet: mark endianness of struct rmnet_map_dl_csum_trailer fields
+Date:   Mon, 20 May 2019 08:53:53 -0500
+Message-Id: <20190520135354.18628-8-elder@linaro.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190520135354.18628-1-elder@linaro.org>
 References: <20190520135354.18628-1-elder@linaro.org>
@@ -77,51 +77,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Replace the use of C bit-fields in the rmnet_map_dl_csum_trailer
-structure with a single integral field, using field masks to
-encode or get at sub-field values.
+Two 16-bit fields (csum_start_offset and csum_length) in the
+rmnet_map_dl_csum_trailer structure are currently defined to have
+type u16.  But they are in fact big endian values, so should be
+properly represented as __be16 values.
+
+No existing code actually references these fields (they're ignored by
+rmnet_map_ipv4_dl_csum_trailer() and rmnet_map_ipv6_dl_csum_trailer()).
+Changing their type therefore causes no harm, so just fix them.
 
 Signed-off-by: Alex Elder <elder@linaro.org>
 ---
- drivers/net/ethernet/qualcomm/rmnet/rmnet_map.h      | 6 ++++--
- drivers/net/ethernet/qualcomm/rmnet/rmnet_map_data.c | 2 +-
- 2 files changed, 5 insertions(+), 3 deletions(-)
+ drivers/net/ethernet/qualcomm/rmnet/rmnet_map.h | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/net/ethernet/qualcomm/rmnet/rmnet_map.h b/drivers/net/ethernet/qualcomm/rmnet/rmnet_map.h
-index f3231c26badd..fb1cdb4ec41f 100644
+index fb1cdb4ec41f..775b98d34e94 100644
 --- a/drivers/net/ethernet/qualcomm/rmnet/rmnet_map.h
 +++ b/drivers/net/ethernet/qualcomm/rmnet/rmnet_map.h
-@@ -51,13 +51,15 @@ struct rmnet_map_header {
- 
+@@ -52,8 +52,8 @@ struct rmnet_map_header {
  struct rmnet_map_dl_csum_trailer {
  	u8  reserved1;
--	u8  valid:1;
--	u8  reserved2:7;
-+	u8  flags;		/* RMNET_MAP_DL_* */
- 	u16 csum_start_offset;
- 	u16 csum_length;
+ 	u8  flags;		/* RMNET_MAP_DL_* */
+-	u16 csum_start_offset;
+-	u16 csum_length;
++	__be16 csum_start_offset;
++	__be16 csum_length;
  	__be16 csum_value;
  } __aligned(1);
  
-+#define RMNET_MAP_DL_CSUM_VALID_FMASK	GENMASK(0, 0)
-+#define RMNET_MAP_DL_RESERVED_FMASK	GENMASK(7, 1)
-+
- struct rmnet_map_ul_csum_header {
- 	__be16 csum_start_offset;
- 	__be16 csum_info;	/* RMNET_MAP_UL_* */
-diff --git a/drivers/net/ethernet/qualcomm/rmnet/rmnet_map_data.c b/drivers/net/ethernet/qualcomm/rmnet/rmnet_map_data.c
-index 72b64114505a..a95111cdcd29 100644
---- a/drivers/net/ethernet/qualcomm/rmnet/rmnet_map_data.c
-+++ b/drivers/net/ethernet/qualcomm/rmnet/rmnet_map_data.c
-@@ -362,7 +362,7 @@ int rmnet_map_checksum_downlink_packet(struct sk_buff *skb, u16 len)
- 
- 	csum_trailer = (struct rmnet_map_dl_csum_trailer *)(skb->data + len);
- 
--	if (!csum_trailer->valid) {
-+	if (!u8_get_bits(csum_trailer->flags, RMNET_MAP_DL_CSUM_VALID_FMASK)) {
- 		priv->stats.csum_valid_unset++;
- 		return -EINVAL;
- 	}
 -- 
 2.20.1
 
