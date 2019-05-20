@@ -6,27 +6,27 @@ X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA61CC04AAC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 21:00:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B14A9C04AAF
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 21:00:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5ECAE2173C
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 21:00:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 70BF22173C
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 21:00:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726961AbfETVAC (ORCPT
+        id S1727025AbfETVAH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 17:00:02 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:47636 "EHLO mx1.redhat.com"
+        Mon, 20 May 2019 17:00:07 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:34462 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726827AbfETU75 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 16:59:57 -0400
+        id S1726996AbfETVAE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 17:00:04 -0400
 Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 5B4553082DCE;
-        Mon, 20 May 2019 20:59:56 +0000 (UTC)
+        by mx1.redhat.com (Postfix) with ESMTPS id E1E948666A;
+        Mon, 20 May 2019 21:00:03 +0000 (UTC)
 Received: from llong.com (dhcp-17-85.bos.redhat.com [10.18.17.85])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 80BA4643D6;
-        Mon, 20 May 2019 20:59:54 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 4EF75643D6;
+        Mon, 20 May 2019 21:00:01 +0000 (UTC)
 From:   Waiman Long <longman@redhat.com>
 To:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
@@ -40,574 +40,368 @@ Cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
         Tim Chen <tim.c.chen@linux.intel.com>,
         huang ying <huang.ying.caritas@gmail.com>,
         Waiman Long <longman@redhat.com>
-Subject: [PATCH v8 04/19] locking/rwsem: Merge rwsem.h and rwsem-xadd.c into rwsem.c
-Date:   Mon, 20 May 2019 16:59:03 -0400
-Message-Id: <20190520205918.22251-5-longman@redhat.com>
+Subject: [PATCH v8 07/19] locking/rwsem: Implement lock handoff to prevent lock starvation
+Date:   Mon, 20 May 2019 16:59:06 -0400
+Message-Id: <20190520205918.22251-8-longman@redhat.com>
 In-Reply-To: <20190520205918.22251-1-longman@redhat.com>
 References: <20190520205918.22251-1-longman@redhat.com>
 X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.46]); Mon, 20 May 2019 20:59:56 +0000 (UTC)
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.26]); Mon, 20 May 2019 21:00:04 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Now we only have one implementation of rwsem. Even though we still use
-xadd to handle reader locking, we use cmpxchg for writer instead. So
-the filename rwsem-xadd.c is not strictly correct. Also no one outside
-of the rwsem code need to know the internal implementation other than
-function prototypes for two internal functions that are called directly
-from percpu-rwsem.c.
+Because of writer lock stealing, it is possible that a constant
+stream of incoming writers will cause a waiting writer or reader to
+wait indefinitely leading to lock starvation.
 
-So the rwsem-xadd.c and rwsem.h files are now merged into rwsem.c in
-the following order:
+This patch implements a lock handoff mechanism to disable lock stealing
+and force lock handoff to the first waiter or waiters (for readers)
+in the queue after at least a 4ms waiting period unless it is a RT
+writer task which doesn't need to wait. The waiting period is used to
+avoid discouraging lock stealing too much to affect performance.
 
-  <upper part of rwsem.h>
-  <rwsem-xadd.c>
-  <lower part of rwsem.h>
-  <rwsem.c>
+The setting and clearing of the handoff bit is serialized by the
+wait_lock. So racing is not possible.
 
-The rwsem.h file now contains only 2 function declarations for
-__up_read() and __down_read().
+A rwsem microbenchmark was run for 5 seconds on a 2-socket 40-core
+80-thread Skylake system with a v5.1 based kernel and 240 write_lock
+threads with 5us sleep critical section.
 
-This is a code relocation patch with no code change at all except
-making __up_read() and __down_read() non-static functions so they
-can be used by percpu-rwsem.c.
+Before the patch, the min/mean/max numbers of locking operations for
+the locking threads were 1/7,792/173,696. After the patch, the figures
+became 5,842/6,542/7,458.  It can be seen that the rwsem became much
+more fair, though there was a drop of about 16% in the mean locking
+operations done which was a tradeoff of having better fairness.
 
-Suggested-by: Peter Zijlstra <peterz@infradead.org>
+Making the waiter set the handoff bit right after the first wakeup can
+impact performance especially with a mixed reader/writer workload. With
+the same microbenchmark with short critical section and equal number of
+reader and writer threads (40/40), the reader/writer locking operation
+counts with the current patch were:
+
+  40 readers, Iterations Min/Mean/Max = 1,793/1,794/1,796
+  40 writers, Iterations Min/Mean/Max = 1,793/34,956/86,081
+
+By making waiter set handoff bit immediately after wakeup:
+
+  40 readers, Iterations Min/Mean/Max = 43/44/46
+  40 writers, Iterations Min/Mean/Max = 43/1,263/3,191
+
 Signed-off-by: Waiman Long <longman@redhat.com>
 ---
- kernel/locking/Makefile     |   2 +-
- kernel/locking/rwsem-xadd.c | 624 -------------------------
- kernel/locking/rwsem.c      | 884 ++++++++++++++++++++++++++++++++++++
- kernel/locking/rwsem.h      | 281 +-----------
- 4 files changed, 891 insertions(+), 900 deletions(-)
- delete mode 100644 kernel/locking/rwsem-xadd.c
+ kernel/locking/lock_events_list.h |   2 +
+ kernel/locking/rwsem.c            | 225 +++++++++++++++++++++++-------
+ 2 files changed, 173 insertions(+), 54 deletions(-)
 
-diff --git a/kernel/locking/Makefile b/kernel/locking/Makefile
-index 6fe2f333aecb..45452facff3b 100644
---- a/kernel/locking/Makefile
-+++ b/kernel/locking/Makefile
-@@ -3,7 +3,7 @@
- # and is generally not a function of system call inputs.
- KCOV_INSTRUMENT		:= n
+diff --git a/kernel/locking/lock_events_list.h b/kernel/locking/lock_events_list.h
+index 11187a1d40b8..634b47fd8b5e 100644
+--- a/kernel/locking/lock_events_list.h
++++ b/kernel/locking/lock_events_list.h
+@@ -61,5 +61,7 @@ LOCK_EVENT(rwsem_opt_fail)	/* # of failed opt-spinnings		*/
+ LOCK_EVENT(rwsem_rlock)		/* # of read locks acquired		*/
+ LOCK_EVENT(rwsem_rlock_fast)	/* # of fast read locks acquired	*/
+ LOCK_EVENT(rwsem_rlock_fail)	/* # of failed read lock acquisitions	*/
++LOCK_EVENT(rwsem_rlock_handoff)	/* # of read lock handoffs		*/
+ LOCK_EVENT(rwsem_wlock)		/* # of write locks acquired		*/
+ LOCK_EVENT(rwsem_wlock_fail)	/* # of failed write lock acquisitions	*/
++LOCK_EVENT(rwsem_wlock_handoff)	/* # of write lock handoffs		*/
+diff --git a/kernel/locking/rwsem.c b/kernel/locking/rwsem.c
+index 8d0f2acfe13d..0c8aef065acb 100644
+--- a/kernel/locking/rwsem.c
++++ b/kernel/locking/rwsem.c
+@@ -10,8 +10,9 @@
+  * Optimistic spinning by Tim Chen <tim.c.chen@intel.com>
+  * and Davidlohr Bueso <davidlohr@hp.com>. Based on mutexes.
+  *
+- * Rwsem count bit fields re-definition and rwsem rearchitecture
+- * by Waiman Long <longman@redhat.com>.
++ * Rwsem count bit fields re-definition and rwsem rearchitecture by
++ * Waiman Long <longman@redhat.com> and
++ * Peter Zijlstra <peterz@infradead.org>.
+  */
  
--obj-y += mutex.o semaphore.o rwsem.o percpu-rwsem.o rwsem-xadd.o
-+obj-y += mutex.o semaphore.o rwsem.o percpu-rwsem.o
+ #include <linux/types.h>
+@@ -74,20 +75,33 @@
+  *
+  * Bit  0   - writer locked bit
+  * Bit  1   - waiters present bit
+- * Bits 2-7 - reserved
++ * Bit  2   - lock handoff bit
++ * Bits 3-7 - reserved
+  * Bits 8-X - 24-bit (32-bit) or 56-bit reader count
+  *
+  * atomic_long_fetch_add() is used to obtain reader lock, whereas
+  * atomic_long_cmpxchg() will be used to obtain writer lock.
++ *
++ * There are three places where the lock handoff bit may be set or cleared.
++ * 1) rwsem_mark_wake() for readers.
++ * 2) rwsem_try_write_lock() for writers.
++ * 3) Error path of rwsem_down_write_slowpath().
++ *
++ * For all the above cases, wait_lock will be held. A writer must also
++ * be the first one in the wait_list to be eligible for setting the handoff
++ * bit. So concurrent setting/clearing of handoff bit is not possible.
+  */
+ #define RWSEM_WRITER_LOCKED	(1UL << 0)
+ #define RWSEM_FLAG_WAITERS	(1UL << 1)
++#define RWSEM_FLAG_HANDOFF	(1UL << 2)
++
+ #define RWSEM_READER_SHIFT	8
+ #define RWSEM_READER_BIAS	(1UL << RWSEM_READER_SHIFT)
+ #define RWSEM_READER_MASK	(~(RWSEM_READER_BIAS - 1))
+ #define RWSEM_WRITER_MASK	RWSEM_WRITER_LOCKED
+ #define RWSEM_LOCK_MASK		(RWSEM_WRITER_MASK|RWSEM_READER_MASK)
+-#define RWSEM_READ_FAILED_MASK	(RWSEM_WRITER_MASK|RWSEM_FLAG_WAITERS)
++#define RWSEM_READ_FAILED_MASK	(RWSEM_WRITER_MASK|RWSEM_FLAG_WAITERS|\
++				 RWSEM_FLAG_HANDOFF)
  
- ifdef CONFIG_FUNCTION_TRACER
- CFLAGS_REMOVE_lockdep.o = $(CC_FLAGS_FTRACE)
-diff --git a/kernel/locking/rwsem-xadd.c b/kernel/locking/rwsem-xadd.c
-deleted file mode 100644
-index 7d537b50a849..000000000000
---- a/kernel/locking/rwsem-xadd.c
-+++ /dev/null
-@@ -1,624 +0,0 @@
--// SPDX-License-Identifier: GPL-2.0
--/* rwsem.c: R/W semaphores: contention handling functions
-- *
-- * Written by David Howells (dhowells@redhat.com).
-- * Derived from arch/i386/kernel/semaphore.c
-- *
-- * Writer lock-stealing by Alex Shi <alex.shi@intel.com>
-- * and Michel Lespinasse <walken@google.com>
-- *
-- * Optimistic spinning by Tim Chen <tim.c.chen@intel.com>
-- * and Davidlohr Bueso <davidlohr@hp.com>. Based on mutexes.
-- *
-- * Rwsem count bit fields re-definition by Waiman Long <longman@redhat.com>.
-- */
--#include <linux/rwsem.h>
--#include <linux/init.h>
--#include <linux/export.h>
--#include <linux/sched/signal.h>
--#include <linux/sched/rt.h>
--#include <linux/sched/wake_q.h>
--#include <linux/sched/debug.h>
--#include <linux/osq_lock.h>
--
--#include "rwsem.h"
--
--/*
-- * Guide to the rw_semaphore's count field.
-- *
-- * When the RWSEM_WRITER_LOCKED bit in count is set, the lock is owned
-- * by a writer.
-- *
-- * The lock is owned by readers when
-- * (1) the RWSEM_WRITER_LOCKED isn't set in count,
-- * (2) some of the reader bits are set in count, and
-- * (3) the owner field has RWSEM_READ_OWNED bit set.
-- *
-- * Having some reader bits set is not enough to guarantee a readers owned
-- * lock as the readers may be in the process of backing out from the count
-- * and a writer has just released the lock. So another writer may steal
-- * the lock immediately after that.
-- */
--
--/*
-- * Initialize an rwsem:
-- */
--void __init_rwsem(struct rw_semaphore *sem, const char *name,
--		  struct lock_class_key *key)
--{
--#ifdef CONFIG_DEBUG_LOCK_ALLOC
--	/*
--	 * Make sure we are not reinitializing a held semaphore:
--	 */
--	debug_check_no_locks_freed((void *)sem, sizeof(*sem));
--	lockdep_init_map(&sem->dep_map, name, key, 0);
--#endif
--	atomic_long_set(&sem->count, RWSEM_UNLOCKED_VALUE);
--	raw_spin_lock_init(&sem->wait_lock);
--	INIT_LIST_HEAD(&sem->wait_list);
--	sem->owner = NULL;
--#ifdef CONFIG_RWSEM_SPIN_ON_OWNER
--	osq_lock_init(&sem->osq);
--#endif
--}
--
--EXPORT_SYMBOL(__init_rwsem);
--
--enum rwsem_waiter_type {
--	RWSEM_WAITING_FOR_WRITE,
--	RWSEM_WAITING_FOR_READ
--};
--
--struct rwsem_waiter {
--	struct list_head list;
--	struct task_struct *task;
--	enum rwsem_waiter_type type;
--};
--
--enum rwsem_wake_type {
--	RWSEM_WAKE_ANY,		/* Wake whatever's at head of wait list */
--	RWSEM_WAKE_READERS,	/* Wake readers only */
--	RWSEM_WAKE_READ_OWNED	/* Waker thread holds the read lock */
--};
--
--/*
-- * handle the lock release when processes blocked on it that can now run
-- * - if we come here from up_xxxx(), then the RWSEM_FLAG_WAITERS bit must
-- *   have been set.
-- * - there must be someone on the queue
-- * - the wait_lock must be held by the caller
-- * - tasks are marked for wakeup, the caller must later invoke wake_up_q()
-- *   to actually wakeup the blocked task(s) and drop the reference count,
-- *   preferably when the wait_lock is released
-- * - woken process blocks are discarded from the list after having task zeroed
-- * - writers are only marked woken if downgrading is false
-- */
--static void __rwsem_mark_wake(struct rw_semaphore *sem,
--			      enum rwsem_wake_type wake_type,
--			      struct wake_q_head *wake_q)
--{
--	struct rwsem_waiter *waiter, *tmp;
--	long oldcount, woken = 0, adjustment = 0;
--	struct list_head wlist;
--
--	/*
--	 * Take a peek at the queue head waiter such that we can determine
--	 * the wakeup(s) to perform.
--	 */
+ /*
+  * All writes to owner are protected by WRITE_ONCE() to make sure that
+@@ -216,7 +230,10 @@ struct rwsem_waiter {
+ 	struct list_head list;
+ 	struct task_struct *task;
+ 	enum rwsem_waiter_type type;
++	unsigned long timeout;
+ };
++#define rwsem_first_waiter(sem) \
++	list_first_entry(&sem->wait_list, struct rwsem_waiter, list)
+ 
+ enum rwsem_wake_type {
+ 	RWSEM_WAKE_ANY,		/* Wake whatever's at head of wait list */
+@@ -224,6 +241,19 @@ enum rwsem_wake_type {
+ 	RWSEM_WAKE_READ_OWNED	/* Waker thread holds the read lock */
+ };
+ 
++enum writer_wait_state {
++	WRITER_NOT_FIRST,	/* Writer is not first in wait list */
++	WRITER_FIRST,		/* Writer is first in wait list     */
++	WRITER_HANDOFF		/* Writer is first & handoff needed */
++};
++
++/*
++ * The typical HZ value is either 250 or 1000. So set the minimum waiting
++ * time to at least 4ms or 1 jiffy (if it is higher than 4ms) in the wait
++ * queue before initiating the handoff protocol.
++ */
++#define RWSEM_WAIT_TIMEOUT	DIV_ROUND_UP(HZ, 250)
++
+ /*
+  * handle the lock release when processes blocked on it that can now run
+  * - if we come here from up_xxxx(), then the RWSEM_FLAG_WAITERS bit must
+@@ -244,11 +274,13 @@ static void rwsem_mark_wake(struct rw_semaphore *sem,
+ 	long oldcount, woken = 0, adjustment = 0;
+ 	struct list_head wlist;
+ 
++	lockdep_assert_held(&sem->wait_lock);
++
+ 	/*
+ 	 * Take a peek at the queue head waiter such that we can determine
+ 	 * the wakeup(s) to perform.
+ 	 */
 -	waiter = list_first_entry(&sem->wait_list, struct rwsem_waiter, list);
--
--	if (waiter->type == RWSEM_WAITING_FOR_WRITE) {
--		if (wake_type == RWSEM_WAKE_ANY) {
--			/*
--			 * Mark writer at the front of the queue for wakeup.
--			 * Until the task is actually later awoken later by
--			 * the caller, other writers are able to steal it.
--			 * Readers, on the other hand, will block as they
--			 * will notice the queued writer.
--			 */
--			wake_q_add(wake_q, waiter->task);
--			lockevent_inc(rwsem_wake_writer);
--		}
--
--		return;
--	}
--
--	/*
--	 * Writers might steal the lock before we grant it to the next reader.
--	 * We prefer to do the first reader grant before counting readers
--	 * so we can bail out early if a writer stole the lock.
--	 */
--	if (wake_type != RWSEM_WAKE_READ_OWNED) {
--		adjustment = RWSEM_READER_BIAS;
--		oldcount = atomic_long_fetch_add(adjustment, &sem->count);
--		if (unlikely(oldcount & RWSEM_WRITER_MASK)) {
++	waiter = rwsem_first_waiter(sem);
+ 
+ 	if (waiter->type == RWSEM_WAITING_FOR_WRITE) {
+ 		if (wake_type == RWSEM_WAKE_ANY) {
+@@ -275,7 +307,18 @@ static void rwsem_mark_wake(struct rw_semaphore *sem,
+ 		adjustment = RWSEM_READER_BIAS;
+ 		oldcount = atomic_long_fetch_add(adjustment, &sem->count);
+ 		if (unlikely(oldcount & RWSEM_WRITER_MASK)) {
 -			atomic_long_sub(adjustment, &sem->count);
--			return;
--		}
--		/*
--		 * Set it to reader-owned to give spinners an early
--		 * indication that readers now have the lock.
--		 */
--		__rwsem_set_reader_owned(sem, waiter->task);
--	}
--
--	/*
--	 * Grant an infinite number of read locks to the readers at the front
--	 * of the queue. We know that woken will be at least 1 as we accounted
--	 * for above. Note we increment the 'active part' of the count by the
--	 * number of readers before waking any processes up.
--	 *
--	 * We have to do wakeup in 2 passes to prevent the possibility that
--	 * the reader count may be decremented before it is incremented. It
--	 * is because the to-be-woken waiter may not have slept yet. So it
--	 * may see waiter->task got cleared, finish its critical section and
--	 * do an unlock before the reader count increment.
--	 *
--	 * 1) Collect the read-waiters in a separate list, count them and
--	 *    fully increment the reader count in rwsem.
--	 * 2) For each waiters in the new list, clear waiter->task and
--	 *    put them into wake_q to be woken up later.
--	 */
--	list_for_each_entry(waiter, &sem->wait_list, list) {
--		if (waiter->type == RWSEM_WAITING_FOR_WRITE)
--			break;
--
--		woken++;
--	}
--	list_cut_before(&wlist, &sem->wait_list, &waiter->list);
--
--	adjustment = woken * RWSEM_READER_BIAS - adjustment;
--	lockevent_cond_inc(rwsem_wake_reader, woken);
--	if (list_empty(&sem->wait_list)) {
--		/* hit end of list above */
--		adjustment -= RWSEM_FLAG_WAITERS;
--	}
--
--	if (adjustment)
--		atomic_long_add(adjustment, &sem->count);
--
--	/* 2nd pass */
--	list_for_each_entry_safe(waiter, tmp, &wlist, list) {
--		struct task_struct *tsk;
--
--		tsk = waiter->task;
--		get_task_struct(tsk);
--
--		/*
--		 * Ensure calling get_task_struct() before setting the reader
--		 * waiter to nil such that rwsem_down_read_failed() cannot
--		 * race with do_exit() by always holding a reference count
--		 * to the task to wakeup.
--		 */
--		smp_store_release(&waiter->task, NULL);
--		/*
--		 * Ensure issuing the wakeup (either by us or someone else)
--		 * after setting the reader waiter to nil.
--		 */
--		wake_q_add_safe(wake_q, tsk);
--	}
--}
--
--/*
-- * This function must be called with the sem->wait_lock held to prevent
-- * race conditions between checking the rwsem wait list and setting the
-- * sem->count accordingly.
-- */
++			/*
++			 * When we've been waiting "too" long (for writers
++			 * to give up the lock), request a * HANDOFF to
++			 * force the issue.
++			 */
++			if (!(oldcount & RWSEM_FLAG_HANDOFF) &&
++			    time_after(jiffies, waiter->timeout)) {
++				adjustment -= RWSEM_FLAG_HANDOFF;
++				lockevent_inc(rwsem_rlock_handoff);
++			}
++
++			atomic_long_add(-adjustment, &sem->count);
+ 			return;
+ 		}
+ 		/*
+@@ -317,6 +360,13 @@ static void rwsem_mark_wake(struct rw_semaphore *sem,
+ 		adjustment -= RWSEM_FLAG_WAITERS;
+ 	}
+ 
++	/*
++	 * When we've woken a reader, we no longer need to force writers
++	 * to give up the lock and we can clear HANDOFF.
++	 */
++	if (woken && (atomic_long_read(&sem->count) & RWSEM_FLAG_HANDOFF))
++		adjustment -= RWSEM_FLAG_HANDOFF;
++
+ 	if (adjustment)
+ 		atomic_long_add(adjustment, &sem->count);
+ 
+@@ -346,23 +396,48 @@ static void rwsem_mark_wake(struct rw_semaphore *sem,
+  * This function must be called with the sem->wait_lock held to prevent
+  * race conditions between checking the rwsem wait list and setting the
+  * sem->count accordingly.
++ *
++ * If wstate is WRITER_HANDOFF, it will make sure that either the handoff
++ * bit is set or the lock is acquired with handoff bit cleared.
+  */
 -static inline bool rwsem_try_write_lock(long count, struct rw_semaphore *sem)
--{
--	long new;
--
++static inline bool rwsem_try_write_lock(long count, struct rw_semaphore *sem,
++					enum writer_wait_state wstate)
+ {
+ 	long new;
+ 
 -	if (count & RWSEM_LOCK_MASK)
 -		return false;
--
++	lockdep_assert_held(&sem->wait_lock);
+ 
 -	new = count + RWSEM_WRITER_LOCKED -
 -	     (list_is_singular(&sem->wait_list) ? RWSEM_FLAG_WAITERS : 0);
--
++	do {
++		bool has_handoff = !!(count & RWSEM_FLAG_HANDOFF);
+ 
 -	if (atomic_long_try_cmpxchg_acquire(&sem->count, &count, new)) {
 -		rwsem_set_owner(sem);
 -		return true;
 -	}
--
++		if (has_handoff && wstate == WRITER_NOT_FIRST)
++			return false;
+ 
 -	return false;
--}
--
--#ifdef CONFIG_RWSEM_SPIN_ON_OWNER
--/*
-- * Try to acquire write lock before the writer has been put on wait queue.
-- */
--static inline bool rwsem_try_write_lock_unqueued(struct rw_semaphore *sem)
--{
--	long count = atomic_long_read(&sem->count);
--
++		new = count;
++
++		if (count & RWSEM_LOCK_MASK) {
++			if (has_handoff || (wstate != WRITER_HANDOFF))
++				return false;
++
++			new |= RWSEM_FLAG_HANDOFF;
++		} else {
++			new |= RWSEM_WRITER_LOCKED;
++			new &= ~RWSEM_FLAG_HANDOFF;
++
++			if (list_is_singular(&sem->wait_list))
++				new &= ~RWSEM_FLAG_WAITERS;
++		}
++	} while (!atomic_long_try_cmpxchg_acquire(&sem->count, &count, new));
++
++	/*
++	 * We have either acquired the lock with handoff bit cleared or
++	 * set the handoff bit.
++	 */
++	if (new & RWSEM_FLAG_HANDOFF)
++		return false;
++
++	rwsem_set_owner(sem);
++	return true;
+ }
+ 
+ #ifdef CONFIG_RWSEM_SPIN_ON_OWNER
+@@ -373,9 +448,9 @@ static inline bool rwsem_try_write_lock_unqueued(struct rw_semaphore *sem)
+ {
+ 	long count = atomic_long_read(&sem->count);
+ 
 -	while (!(count & RWSEM_LOCK_MASK)) {
--		if (atomic_long_try_cmpxchg_acquire(&sem->count, &count,
++	while (!(count & (RWSEM_LOCK_MASK|RWSEM_FLAG_HANDOFF))) {
+ 		if (atomic_long_try_cmpxchg_acquire(&sem->count, &count,
 -					count + RWSEM_WRITER_LOCKED)) {
--			rwsem_set_owner(sem);
--			lockevent_inc(rwsem_opt_wlock);
--			return true;
--		}
--	}
--	return false;
--}
--
--static inline bool owner_on_cpu(struct task_struct *owner)
--{
--	/*
--	 * As lock holder preemption issue, we both skip spinning if
--	 * task is not on cpu or its cpu is preempted
--	 */
--	return owner->on_cpu && !vcpu_is_preempted(task_cpu(owner));
--}
--
--static inline bool rwsem_can_spin_on_owner(struct rw_semaphore *sem)
--{
--	struct task_struct *owner;
--	bool ret = true;
--
--	BUILD_BUG_ON(!rwsem_has_anonymous_owner(RWSEM_OWNER_UNKNOWN));
--
--	if (need_resched())
--		return false;
--
--	rcu_read_lock();
--	owner = READ_ONCE(sem->owner);
--	if (owner) {
--		ret = is_rwsem_owner_spinnable(owner) &&
--		      owner_on_cpu(owner);
--	}
--	rcu_read_unlock();
--	return ret;
--}
--
--/*
-- * Return true only if we can still spin on the owner field of the rwsem.
-- */
--static noinline bool rwsem_spin_on_owner(struct rw_semaphore *sem)
--{
--	struct task_struct *owner = READ_ONCE(sem->owner);
--
--	if (!is_rwsem_owner_spinnable(owner))
--		return false;
--
--	rcu_read_lock();
--	while (owner && (READ_ONCE(sem->owner) == owner)) {
--		/*
--		 * Ensure we emit the owner->on_cpu, dereference _after_
--		 * checking sem->owner still matches owner, if that fails,
--		 * owner might point to free()d memory, if it still matches,
--		 * the rcu_read_lock() ensures the memory stays valid.
--		 */
--		barrier();
--
--		/*
--		 * abort spinning when need_resched or owner is not running or
--		 * owner's cpu is preempted.
--		 */
--		if (need_resched() || !owner_on_cpu(owner)) {
--			rcu_read_unlock();
--			return false;
--		}
--
--		cpu_relax();
--	}
--	rcu_read_unlock();
--
--	/*
--	 * If there is a new owner or the owner is not set, we continue
--	 * spinning.
--	 */
--	return is_rwsem_owner_spinnable(READ_ONCE(sem->owner));
--}
--
--static bool rwsem_optimistic_spin(struct rw_semaphore *sem)
--{
--	bool taken = false;
--
--	preempt_disable();
--
--	/* sem->wait_lock should not be held when doing optimistic spinning */
--	if (!rwsem_can_spin_on_owner(sem))
--		goto done;
--
--	if (!osq_lock(&sem->osq))
--		goto done;
--
--	/*
--	 * Optimistically spin on the owner field and attempt to acquire the
--	 * lock whenever the owner changes. Spinning will be stopped when:
--	 *  1) the owning writer isn't running; or
--	 *  2) readers own the lock as we can't determine if they are
--	 *     actively running or not.
--	 */
--	while (rwsem_spin_on_owner(sem)) {
--		/*
--		 * Try to acquire the lock
--		 */
--		if (rwsem_try_write_lock_unqueued(sem)) {
--			taken = true;
--			break;
--		}
--
--		/*
--		 * When there's no owner, we might have preempted between the
--		 * owner acquiring the lock and setting the owner field. If
--		 * we're an RT task that will live-lock because we won't let
--		 * the owner complete.
--		 */
--		if (!sem->owner && (need_resched() || rt_task(current)))
--			break;
--
--		/*
--		 * The cpu_relax() call is a compiler barrier which forces
--		 * everything in this loop to be re-loaded. We don't need
--		 * memory barriers as we'll eventually observe the right
--		 * values at the cost of a few extra spins.
--		 */
--		cpu_relax();
--	}
--	osq_unlock(&sem->osq);
--done:
--	preempt_enable();
--	lockevent_cond_inc(rwsem_opt_fail, !taken);
--	return taken;
--}
--#else
--static bool rwsem_optimistic_spin(struct rw_semaphore *sem)
--{
--	return false;
--}
--#endif
--
--/*
-- * Wait for the read lock to be granted
-- */
--static inline struct rw_semaphore __sched *
--__rwsem_down_read_failed_common(struct rw_semaphore *sem, int state)
--{
--	long count, adjustment = -RWSEM_READER_BIAS;
--	struct rwsem_waiter waiter;
--	DEFINE_WAKE_Q(wake_q);
--
--	waiter.task = current;
--	waiter.type = RWSEM_WAITING_FOR_READ;
--
--	raw_spin_lock_irq(&sem->wait_lock);
--	if (list_empty(&sem->wait_list)) {
--		/*
--		 * In case the wait queue is empty and the lock isn't owned
++					count | RWSEM_WRITER_LOCKED)) {
+ 			rwsem_set_owner(sem);
+ 			lockevent_inc(rwsem_opt_wlock);
+ 			return true;
+@@ -456,6 +531,11 @@ static noinline enum owner_state rwsem_spin_on_owner(struct rw_semaphore *sem)
+ 
+ 	rcu_read_lock();
+ 	for (;;) {
++		if (atomic_long_read(&sem->count) & RWSEM_FLAG_HANDOFF) {
++			state = OWNER_NONSPINNABLE;
++			break;
++		}
++
+ 		tmp = READ_ONCE(sem->owner);
+ 		if (tmp != owner) {
+ 			state = rwsem_owner_state((unsigned long)tmp);
+@@ -553,16 +633,18 @@ rwsem_down_read_slowpath(struct rw_semaphore *sem, int state)
+ 
+ 	waiter.task = current;
+ 	waiter.type = RWSEM_WAITING_FOR_READ;
++	waiter.timeout = jiffies + RWSEM_WAIT_TIMEOUT;
+ 
+ 	raw_spin_lock_irq(&sem->wait_lock);
+ 	if (list_empty(&sem->wait_list)) {
+ 		/*
+ 		 * In case the wait queue is empty and the lock isn't owned
 -		 * by a writer, this reader can exit the slowpath and return
 -		 * immediately as its RWSEM_READER_BIAS has already been
 -		 * set in the count.
--		 */
++		 * by a writer or has the handoff bit set, this reader can
++		 * exit the slowpath and return immediately as its
++		 * RWSEM_READER_BIAS has already been set in the count.
+ 		 */
 -		if (!(atomic_long_read(&sem->count) & RWSEM_WRITER_MASK)) {
--			raw_spin_unlock_irq(&sem->wait_lock);
--			rwsem_set_reader_owned(sem);
--			lockevent_inc(rwsem_rlock_fast);
--			return sem;
--		}
--		adjustment += RWSEM_FLAG_WAITERS;
--	}
--	list_add_tail(&waiter.list, &sem->wait_list);
--
--	/* we're now waiting on the lock, but no longer actively locking */
--	count = atomic_long_add_return(adjustment, &sem->count);
--
--	/*
--	 * If there are no active locks, wake the front queued process(es).
--	 *
--	 * If there are no writers and we are first in the queue,
--	 * wake our own waiter to join the existing active readers !
--	 */
--	if (!(count & RWSEM_LOCK_MASK) ||
--	   (!(count & RWSEM_WRITER_MASK) && (adjustment & RWSEM_FLAG_WAITERS)))
--		__rwsem_mark_wake(sem, RWSEM_WAKE_ANY, &wake_q);
--
--	raw_spin_unlock_irq(&sem->wait_lock);
--	wake_up_q(&wake_q);
--
--	/* wait to be given the lock */
--	while (true) {
--		set_current_state(state);
--		if (!waiter.task)
--			break;
--		if (signal_pending_state(state, current)) {
--			raw_spin_lock_irq(&sem->wait_lock);
--			if (waiter.task)
--				goto out_nolock;
--			raw_spin_unlock_irq(&sem->wait_lock);
--			break;
--		}
--		schedule();
--		lockevent_inc(rwsem_sleep_reader);
--	}
--
--	__set_current_state(TASK_RUNNING);
--	lockevent_inc(rwsem_rlock);
--	return sem;
--out_nolock:
--	list_del(&waiter.list);
++		if (!(atomic_long_read(&sem->count) &
++		     (RWSEM_WRITER_MASK | RWSEM_FLAG_HANDOFF))) {
+ 			raw_spin_unlock_irq(&sem->wait_lock);
+ 			rwsem_set_reader_owned(sem);
+ 			lockevent_inc(rwsem_rlock_fast);
+@@ -609,8 +691,10 @@ rwsem_down_read_slowpath(struct rw_semaphore *sem, int state)
+ 	return sem;
+ out_nolock:
+ 	list_del(&waiter.list);
 -	if (list_empty(&sem->wait_list))
 -		atomic_long_andnot(RWSEM_FLAG_WAITERS, &sem->count);
--	raw_spin_unlock_irq(&sem->wait_lock);
--	__set_current_state(TASK_RUNNING);
--	lockevent_inc(rwsem_rlock_fail);
--	return ERR_PTR(-EINTR);
--}
--
--__visible struct rw_semaphore * __sched
--rwsem_down_read_failed(struct rw_semaphore *sem)
--{
--	return __rwsem_down_read_failed_common(sem, TASK_UNINTERRUPTIBLE);
--}
--EXPORT_SYMBOL(rwsem_down_read_failed);
--
--__visible struct rw_semaphore * __sched
--rwsem_down_read_failed_killable(struct rw_semaphore *sem)
--{
--	return __rwsem_down_read_failed_common(sem, TASK_KILLABLE);
--}
--EXPORT_SYMBOL(rwsem_down_read_failed_killable);
--
--/*
-- * Wait until we successfully acquire the write lock
-- */
--static inline struct rw_semaphore *
--__rwsem_down_write_failed_common(struct rw_semaphore *sem, int state)
--{
--	long count;
++	if (list_empty(&sem->wait_list)) {
++		atomic_long_andnot(RWSEM_FLAG_WAITERS|RWSEM_FLAG_HANDOFF,
++				   &sem->count);
++	}
+ 	raw_spin_unlock_irq(&sem->wait_lock);
+ 	__set_current_state(TASK_RUNNING);
+ 	lockevent_inc(rwsem_rlock_fail);
+@@ -624,7 +708,7 @@ static struct rw_semaphore *
+ rwsem_down_write_slowpath(struct rw_semaphore *sem, int state)
+ {
+ 	long count;
 -	bool waiting = true; /* any queued threads before us */
--	struct rwsem_waiter waiter;
--	struct rw_semaphore *ret = sem;
--	DEFINE_WAKE_Q(wake_q);
--
--	/* do optimistic spinning and steal lock if possible */
--	if (rwsem_optimistic_spin(sem))
--		return sem;
--
--	/*
--	 * Optimistic spinning failed, proceed to the slowpath
--	 * and block until we can acquire the sem.
--	 */
--	waiter.task = current;
--	waiter.type = RWSEM_WAITING_FOR_WRITE;
--
--	raw_spin_lock_irq(&sem->wait_lock);
--
--	/* account for this before adding a new element to the list */
++	enum writer_wait_state wstate;
+ 	struct rwsem_waiter waiter;
+ 	struct rw_semaphore *ret = sem;
+ 	DEFINE_WAKE_Q(wake_q);
+@@ -639,66 +723,95 @@ rwsem_down_write_slowpath(struct rw_semaphore *sem, int state)
+ 	 */
+ 	waiter.task = current;
+ 	waiter.type = RWSEM_WAITING_FOR_WRITE;
++	waiter.timeout = jiffies + RWSEM_WAIT_TIMEOUT;
+ 
+ 	raw_spin_lock_irq(&sem->wait_lock);
+ 
+ 	/* account for this before adding a new element to the list */
 -	if (list_empty(&sem->wait_list))
 -		waiting = false;
--
--	list_add_tail(&waiter.list, &sem->wait_list);
--
--	/* we're now waiting on the lock */
++	wstate = list_empty(&sem->wait_list) ? WRITER_FIRST : WRITER_NOT_FIRST;
+ 
+ 	list_add_tail(&waiter.list, &sem->wait_list);
+ 
+ 	/* we're now waiting on the lock */
 -	if (waiting) {
--		count = atomic_long_read(&sem->count);
--
--		/*
++	if (wstate == WRITER_NOT_FIRST) {
+ 		count = atomic_long_read(&sem->count);
+ 
+ 		/*
 -		 * If there were already threads queued before us and there are
 -		 * no active writers and some readers, the lock must be read
 -		 * owned; so we try to  any read locks that were queued ahead
 -		 * of us.
--		 */
++		 * If there were already threads queued before us and:
++		 *  1) there are no no active locks, wake the front
++		 *     queued process(es) as the handoff bit might be set.
++		 *  2) there are no active writers and some readers, the lock
++		 *     must be read owned; so we try to wake any read lock
++		 *     waiters that were queued ahead of us.
+ 		 */
 -		if (!(count & RWSEM_WRITER_MASK) &&
 -		     (count & RWSEM_READER_MASK)) {
--			__rwsem_mark_wake(sem, RWSEM_WAKE_READERS, &wake_q);
+-			rwsem_mark_wake(sem, RWSEM_WAKE_READERS, &wake_q);
 -			/*
 -			 * The wakeup is normally called _after_ the wait_lock
 -			 * is released, but given that we are proactively waking
@@ -616,1313 +410,123 @@ index 7d537b50a849..000000000000
 -			 * for attempting rwsem_try_write_lock().
 -			 */
 -			wake_up_q(&wake_q);
--
++		if (count & RWSEM_WRITER_MASK)
++			goto wait;
+ 
 -			/*
 -			 * Reinitialize wake_q after use.
 -			 */
 -			wake_q_init(&wake_q);
 -		}
--
--	} else {
--		count = atomic_long_add_return(RWSEM_FLAG_WAITERS, &sem->count);
--	}
--
--	/* wait until we successfully acquire the lock */
--	set_current_state(state);
--	while (true) {
++		rwsem_mark_wake(sem, (count & RWSEM_READER_MASK)
++					? RWSEM_WAKE_READERS
++					: RWSEM_WAKE_ANY, &wake_q);
+ 
++		/*
++		 * The wakeup is normally called _after_ the wait_lock
++		 * is released, but given that we are proactively waking
++		 * readers we can deal with the wake_q overhead as it is
++		 * similar to releasing and taking the wait_lock again
++		 * for attempting rwsem_try_write_lock().
++		 */
++		wake_up_q(&wake_q);
++
++		/* We need wake_q again below, reinitialize */
++		wake_q_init(&wake_q);
+ 	} else {
+ 		count = atomic_long_add_return(RWSEM_FLAG_WAITERS, &sem->count);
+ 	}
+ 
++wait:
+ 	/* wait until we successfully acquire the lock */
+ 	set_current_state(state);
+ 	while (true) {
 -		if (rwsem_try_write_lock(count, sem))
--			break;
--		raw_spin_unlock_irq(&sem->wait_lock);
--
--		/* Block until there are no active lockers. */
++		if (rwsem_try_write_lock(count, sem, wstate))
+ 			break;
++
+ 		raw_spin_unlock_irq(&sem->wait_lock);
+ 
+ 		/* Block until there are no active lockers. */
 -		do {
--			if (signal_pending_state(state, current))
--				goto out_nolock;
--
--			schedule();
--			lockevent_inc(rwsem_sleep_writer);
--			set_current_state(state);
--			count = atomic_long_read(&sem->count);
++		for (;;) {
+ 			if (signal_pending_state(state, current))
+ 				goto out_nolock;
+ 
+ 			schedule();
+ 			lockevent_inc(rwsem_sleep_writer);
+ 			set_current_state(state);
++			/*
++			 * If HANDOFF bit is set, unconditionally do
++			 * a trylock.
++			 */
++			if (wstate == WRITER_HANDOFF)
++				break;
++
++			if ((wstate == WRITER_NOT_FIRST) &&
++			    (rwsem_first_waiter(sem) == &waiter))
++				wstate = WRITER_FIRST;
++
+ 			count = atomic_long_read(&sem->count);
 -		} while (count & RWSEM_LOCK_MASK);
--
--		raw_spin_lock_irq(&sem->wait_lock);
--	}
--	__set_current_state(TASK_RUNNING);
--	list_del(&waiter.list);
--	raw_spin_unlock_irq(&sem->wait_lock);
--	lockevent_inc(rwsem_wlock);
--
--	return ret;
--
--out_nolock:
--	__set_current_state(TASK_RUNNING);
--	raw_spin_lock_irq(&sem->wait_lock);
--	list_del(&waiter.list);
--	if (list_empty(&sem->wait_list))
--		atomic_long_andnot(RWSEM_FLAG_WAITERS, &sem->count);
--	else
--		__rwsem_mark_wake(sem, RWSEM_WAKE_ANY, &wake_q);
--	raw_spin_unlock_irq(&sem->wait_lock);
--	wake_up_q(&wake_q);
--	lockevent_inc(rwsem_wlock_fail);
--
--	return ERR_PTR(-EINTR);
--}
--
--__visible struct rw_semaphore * __sched
--rwsem_down_write_failed(struct rw_semaphore *sem)
--{
--	return __rwsem_down_write_failed_common(sem, TASK_UNINTERRUPTIBLE);
--}
--EXPORT_SYMBOL(rwsem_down_write_failed);
--
--__visible struct rw_semaphore * __sched
--rwsem_down_write_failed_killable(struct rw_semaphore *sem)
--{
--	return __rwsem_down_write_failed_common(sem, TASK_KILLABLE);
--}
--EXPORT_SYMBOL(rwsem_down_write_failed_killable);
--
--/*
-- * handle waking up a waiter on the semaphore
-- * - up_read/up_write has decremented the active part of count if we come here
-- */
--__visible
--struct rw_semaphore *rwsem_wake(struct rw_semaphore *sem)
--{
--	unsigned long flags;
--	DEFINE_WAKE_Q(wake_q);
--
--	raw_spin_lock_irqsave(&sem->wait_lock, flags);
--
--	if (!list_empty(&sem->wait_list))
--		__rwsem_mark_wake(sem, RWSEM_WAKE_ANY, &wake_q);
--
--	raw_spin_unlock_irqrestore(&sem->wait_lock, flags);
--	wake_up_q(&wake_q);
--
--	return sem;
--}
--EXPORT_SYMBOL(rwsem_wake);
--
--/*
-- * downgrade a write lock into a read lock
-- * - caller incremented waiting part of count and discovered it still negative
-- * - just wake up any readers at the front of the queue
-- */
--__visible
--struct rw_semaphore *rwsem_downgrade_wake(struct rw_semaphore *sem)
--{
--	unsigned long flags;
--	DEFINE_WAKE_Q(wake_q);
--
--	raw_spin_lock_irqsave(&sem->wait_lock, flags);
--
--	if (!list_empty(&sem->wait_list))
--		__rwsem_mark_wake(sem, RWSEM_WAKE_READ_OWNED, &wake_q);
--
--	raw_spin_unlock_irqrestore(&sem->wait_lock, flags);
--	wake_up_q(&wake_q);
--
--	return sem;
--}
--EXPORT_SYMBOL(rwsem_downgrade_wake);
-diff --git a/kernel/locking/rwsem.c b/kernel/locking/rwsem.c
-index ccbf18f560ff..8317bcdf063b 100644
---- a/kernel/locking/rwsem.c
-+++ b/kernel/locking/rwsem.c
-@@ -3,17 +3,901 @@
-  *
-  * Written by David Howells (dhowells@redhat.com).
-  * Derived from asm-i386/semaphore.h
-+ *
-+ * Writer lock-stealing by Alex Shi <alex.shi@intel.com>
-+ * and Michel Lespinasse <walken@google.com>
-+ *
-+ * Optimistic spinning by Tim Chen <tim.c.chen@intel.com>
-+ * and Davidlohr Bueso <davidlohr@hp.com>. Based on mutexes.
-+ *
-+ * Rwsem count bit fields re-definition and rwsem rearchitecture
-+ * by Waiman Long <longman@redhat.com>.
-  */
- 
- #include <linux/types.h>
- #include <linux/kernel.h>
- #include <linux/sched.h>
-+#include <linux/sched/rt.h>
-+#include <linux/sched/task.h>
- #include <linux/sched/debug.h>
-+#include <linux/sched/wake_q.h>
-+#include <linux/sched/signal.h>
- #include <linux/export.h>
- #include <linux/rwsem.h>
- #include <linux/atomic.h>
- 
- #include "rwsem.h"
-+#include "lock_events.h"
++			if (!(count & RWSEM_LOCK_MASK))
++				break;
 +
-+/*
-+ * The least significant 2 bits of the owner value has the following
-+ * meanings when set.
-+ *  - RWSEM_READER_OWNED (bit 0): The rwsem is owned by readers
-+ *  - RWSEM_ANONYMOUSLY_OWNED (bit 1): The rwsem is anonymously owned,
-+ *    i.e. the owner(s) cannot be readily determined. It can be reader
-+ *    owned or the owning writer is indeterminate.
-+ *
-+ * When a writer acquires a rwsem, it puts its task_struct pointer
-+ * into the owner field. It is cleared after an unlock.
-+ *
-+ * When a reader acquires a rwsem, it will also puts its task_struct
-+ * pointer into the owner field with both the RWSEM_READER_OWNED and
-+ * RWSEM_ANONYMOUSLY_OWNED bits set. On unlock, the owner field will
-+ * largely be left untouched. So for a free or reader-owned rwsem,
-+ * the owner value may contain information about the last reader that
-+ * acquires the rwsem. The anonymous bit is set because that particular
-+ * reader may or may not still own the lock.
-+ *
-+ * That information may be helpful in debugging cases where the system
-+ * seems to hang on a reader owned rwsem especially if only one reader
-+ * is involved. Ideally we would like to track all the readers that own
-+ * a rwsem, but the overhead is simply too big.
-+ */
-+#define RWSEM_READER_OWNED	(1UL << 0)
-+#define RWSEM_ANONYMOUSLY_OWNED	(1UL << 1)
-+
-+#ifdef CONFIG_DEBUG_RWSEMS
-+# define DEBUG_RWSEMS_WARN_ON(c, sem)	do {			\
-+	if (!debug_locks_silent &&				\
-+	    WARN_ONCE(c, "DEBUG_RWSEMS_WARN_ON(%s): count = 0x%lx, owner = 0x%lx, curr 0x%lx, list %sempty\n",\
-+		#c, atomic_long_read(&(sem)->count),		\
-+		(long)((sem)->owner), (long)current,		\
-+		list_empty(&(sem)->wait_list) ? "" : "not "))	\
-+			debug_locks_off();			\
-+	} while (0)
-+#else
-+# define DEBUG_RWSEMS_WARN_ON(c, sem)
-+#endif
-+
-+/*
-+ * The definition of the atomic counter in the semaphore:
-+ *
-+ * Bit  0   - writer locked bit
-+ * Bit  1   - waiters present bit
-+ * Bits 2-7 - reserved
-+ * Bits 8-X - 24-bit (32-bit) or 56-bit reader count
-+ *
-+ * atomic_long_fetch_add() is used to obtain reader lock, whereas
-+ * atomic_long_cmpxchg() will be used to obtain writer lock.
-+ */
-+#define RWSEM_WRITER_LOCKED	(1UL << 0)
-+#define RWSEM_FLAG_WAITERS	(1UL << 1)
-+#define RWSEM_READER_SHIFT	8
-+#define RWSEM_READER_BIAS	(1UL << RWSEM_READER_SHIFT)
-+#define RWSEM_READER_MASK	(~(RWSEM_READER_BIAS - 1))
-+#define RWSEM_WRITER_MASK	RWSEM_WRITER_LOCKED
-+#define RWSEM_LOCK_MASK		(RWSEM_WRITER_MASK|RWSEM_READER_MASK)
-+#define RWSEM_READ_FAILED_MASK	(RWSEM_WRITER_MASK|RWSEM_FLAG_WAITERS)
-+
-+/*
-+ * All writes to owner are protected by WRITE_ONCE() to make sure that
-+ * store tearing can't happen as optimistic spinners may read and use
-+ * the owner value concurrently without lock. Read from owner, however,
-+ * may not need READ_ONCE() as long as the pointer value is only used
-+ * for comparison and isn't being dereferenced.
-+ */
-+static inline void rwsem_set_owner(struct rw_semaphore *sem)
-+{
-+	WRITE_ONCE(sem->owner, current);
-+}
-+
-+static inline void rwsem_clear_owner(struct rw_semaphore *sem)
-+{
-+	WRITE_ONCE(sem->owner, NULL);
-+}
-+
-+/*
-+ * The task_struct pointer of the last owning reader will be left in
-+ * the owner field.
-+ *
-+ * Note that the owner value just indicates the task has owned the rwsem
-+ * previously, it may not be the real owner or one of the real owners
-+ * anymore when that field is examined, so take it with a grain of salt.
-+ */
-+static inline void __rwsem_set_reader_owned(struct rw_semaphore *sem,
-+					    struct task_struct *owner)
-+{
-+	unsigned long val = (unsigned long)owner | RWSEM_READER_OWNED
-+						 | RWSEM_ANONYMOUSLY_OWNED;
-+
-+	WRITE_ONCE(sem->owner, (struct task_struct *)val);
-+}
-+
-+static inline void rwsem_set_reader_owned(struct rw_semaphore *sem)
-+{
-+	__rwsem_set_reader_owned(sem, current);
-+}
-+
-+/*
-+ * Return true if the a rwsem waiter can spin on the rwsem's owner
-+ * and steal the lock, i.e. the lock is not anonymously owned.
-+ * N.B. !owner is considered spinnable.
-+ */
-+static inline bool is_rwsem_owner_spinnable(struct task_struct *owner)
-+{
-+	return !((unsigned long)owner & RWSEM_ANONYMOUSLY_OWNED);
-+}
-+
-+/*
-+ * Return true if rwsem is owned by an anonymous writer or readers.
-+ */
-+static inline bool rwsem_has_anonymous_owner(struct task_struct *owner)
-+{
-+	return (unsigned long)owner & RWSEM_ANONYMOUSLY_OWNED;
-+}
-+
-+#ifdef CONFIG_DEBUG_RWSEMS
-+/*
-+ * With CONFIG_DEBUG_RWSEMS configured, it will make sure that if there
-+ * is a task pointer in owner of a reader-owned rwsem, it will be the
-+ * real owner or one of the real owners. The only exception is when the
-+ * unlock is done by up_read_non_owner().
-+ */
-+static inline void rwsem_clear_reader_owned(struct rw_semaphore *sem)
-+{
-+	unsigned long val = (unsigned long)current | RWSEM_READER_OWNED
-+						   | RWSEM_ANONYMOUSLY_OWNED;
-+	if (READ_ONCE(sem->owner) == (struct task_struct *)val)
-+		cmpxchg_relaxed((unsigned long *)&sem->owner, val,
-+				RWSEM_READER_OWNED | RWSEM_ANONYMOUSLY_OWNED);
-+}
-+#else
-+static inline void rwsem_clear_reader_owned(struct rw_semaphore *sem)
-+{
-+}
-+#endif
-+
-+/*
-+ * Guide to the rw_semaphore's count field.
-+ *
-+ * When the RWSEM_WRITER_LOCKED bit in count is set, the lock is owned
-+ * by a writer.
-+ *
-+ * The lock is owned by readers when
-+ * (1) the RWSEM_WRITER_LOCKED isn't set in count,
-+ * (2) some of the reader bits are set in count, and
-+ * (3) the owner field has RWSEM_READ_OWNED bit set.
-+ *
-+ * Having some reader bits set is not enough to guarantee a readers owned
-+ * lock as the readers may be in the process of backing out from the count
-+ * and a writer has just released the lock. So another writer may steal
-+ * the lock immediately after that.
-+ */
-+
-+/*
-+ * Initialize an rwsem:
-+ */
-+void __init_rwsem(struct rw_semaphore *sem, const char *name,
-+		  struct lock_class_key *key)
-+{
-+#ifdef CONFIG_DEBUG_LOCK_ALLOC
-+	/*
-+	 * Make sure we are not reinitializing a held semaphore:
-+	 */
-+	debug_check_no_locks_freed((void *)sem, sizeof(*sem));
-+	lockdep_init_map(&sem->dep_map, name, key, 0);
-+#endif
-+	atomic_long_set(&sem->count, RWSEM_UNLOCKED_VALUE);
-+	raw_spin_lock_init(&sem->wait_lock);
-+	INIT_LIST_HEAD(&sem->wait_list);
-+	sem->owner = NULL;
-+#ifdef CONFIG_RWSEM_SPIN_ON_OWNER
-+	osq_lock_init(&sem->osq);
-+#endif
-+}
-+
-+EXPORT_SYMBOL(__init_rwsem);
-+
-+enum rwsem_waiter_type {
-+	RWSEM_WAITING_FOR_WRITE,
-+	RWSEM_WAITING_FOR_READ
-+};
-+
-+struct rwsem_waiter {
-+	struct list_head list;
-+	struct task_struct *task;
-+	enum rwsem_waiter_type type;
-+};
-+
-+enum rwsem_wake_type {
-+	RWSEM_WAKE_ANY,		/* Wake whatever's at head of wait list */
-+	RWSEM_WAKE_READERS,	/* Wake readers only */
-+	RWSEM_WAKE_READ_OWNED	/* Waker thread holds the read lock */
-+};
-+
-+/*
-+ * handle the lock release when processes blocked on it that can now run
-+ * - if we come here from up_xxxx(), then the RWSEM_FLAG_WAITERS bit must
-+ *   have been set.
-+ * - there must be someone on the queue
-+ * - the wait_lock must be held by the caller
-+ * - tasks are marked for wakeup, the caller must later invoke wake_up_q()
-+ *   to actually wakeup the blocked task(s) and drop the reference count,
-+ *   preferably when the wait_lock is released
-+ * - woken process blocks are discarded from the list after having task zeroed
-+ * - writers are only marked woken if downgrading is false
-+ */
-+static void __rwsem_mark_wake(struct rw_semaphore *sem,
-+			      enum rwsem_wake_type wake_type,
-+			      struct wake_q_head *wake_q)
-+{
-+	struct rwsem_waiter *waiter, *tmp;
-+	long oldcount, woken = 0, adjustment = 0;
-+	struct list_head wlist;
-+
-+	/*
-+	 * Take a peek at the queue head waiter such that we can determine
-+	 * the wakeup(s) to perform.
-+	 */
-+	waiter = list_first_entry(&sem->wait_list, struct rwsem_waiter, list);
-+
-+	if (waiter->type == RWSEM_WAITING_FOR_WRITE) {
-+		if (wake_type == RWSEM_WAKE_ANY) {
 +			/*
-+			 * Mark writer at the front of the queue for wakeup.
-+			 * Until the task is actually later awoken later by
-+			 * the caller, other writers are able to steal it.
-+			 * Readers, on the other hand, will block as they
-+			 * will notice the queued writer.
++			 * The setting of the handoff bit is deferred
++			 * until rwsem_try_write_lock() is called.
 +			 */
-+			wake_q_add(wake_q, waiter->task);
-+			lockevent_inc(rwsem_wake_writer);
++			if ((wstate == WRITER_FIRST) && (rt_task(current) ||
++			    time_after(jiffies, waiter.timeout))) {
++				wstate = WRITER_HANDOFF;
++				lockevent_inc(rwsem_wlock_handoff);
++				break;
++			}
 +		}
-+
-+		return;
-+	}
-+
-+	/*
-+	 * Writers might steal the lock before we grant it to the next reader.
-+	 * We prefer to do the first reader grant before counting readers
-+	 * so we can bail out early if a writer stole the lock.
-+	 */
-+	if (wake_type != RWSEM_WAKE_READ_OWNED) {
-+		adjustment = RWSEM_READER_BIAS;
-+		oldcount = atomic_long_fetch_add(adjustment, &sem->count);
-+		if (unlikely(oldcount & RWSEM_WRITER_MASK)) {
-+			atomic_long_sub(adjustment, &sem->count);
-+			return;
-+		}
-+		/*
-+		 * Set it to reader-owned to give spinners an early
-+		 * indication that readers now have the lock.
-+		 */
-+		__rwsem_set_reader_owned(sem, waiter->task);
-+	}
-+
-+	/*
-+	 * Grant an infinite number of read locks to the readers at the front
-+	 * of the queue. We know that woken will be at least 1 as we accounted
-+	 * for above. Note we increment the 'active part' of the count by the
-+	 * number of readers before waking any processes up.
-+	 *
-+	 * We have to do wakeup in 2 passes to prevent the possibility that
-+	 * the reader count may be decremented before it is incremented. It
-+	 * is because the to-be-woken waiter may not have slept yet. So it
-+	 * may see waiter->task got cleared, finish its critical section and
-+	 * do an unlock before the reader count increment.
-+	 *
-+	 * 1) Collect the read-waiters in a separate list, count them and
-+	 *    fully increment the reader count in rwsem.
-+	 * 2) For each waiters in the new list, clear waiter->task and
-+	 *    put them into wake_q to be woken up later.
-+	 */
-+	list_for_each_entry(waiter, &sem->wait_list, list) {
-+		if (waiter->type == RWSEM_WAITING_FOR_WRITE)
-+			break;
-+
-+		woken++;
-+	}
-+	list_cut_before(&wlist, &sem->wait_list, &waiter->list);
-+
-+	adjustment = woken * RWSEM_READER_BIAS - adjustment;
-+	lockevent_cond_inc(rwsem_wake_reader, woken);
-+	if (list_empty(&sem->wait_list)) {
-+		/* hit end of list above */
-+		adjustment -= RWSEM_FLAG_WAITERS;
-+	}
-+
-+	if (adjustment)
-+		atomic_long_add(adjustment, &sem->count);
-+
-+	/* 2nd pass */
-+	list_for_each_entry_safe(waiter, tmp, &wlist, list) {
-+		struct task_struct *tsk;
-+
-+		tsk = waiter->task;
-+		get_task_struct(tsk);
-+
-+		/*
-+		 * Ensure calling get_task_struct() before setting the reader
-+		 * waiter to nil such that rwsem_down_read_failed() cannot
-+		 * race with do_exit() by always holding a reference count
-+		 * to the task to wakeup.
-+		 */
-+		smp_store_release(&waiter->task, NULL);
-+		/*
-+		 * Ensure issuing the wakeup (either by us or someone else)
-+		 * after setting the reader waiter to nil.
-+		 */
-+		wake_q_add_safe(wake_q, tsk);
-+	}
-+}
-+
-+/*
-+ * This function must be called with the sem->wait_lock held to prevent
-+ * race conditions between checking the rwsem wait list and setting the
-+ * sem->count accordingly.
-+ */
-+static inline bool rwsem_try_write_lock(long count, struct rw_semaphore *sem)
-+{
-+	long new;
-+
-+	if (count & RWSEM_LOCK_MASK)
-+		return false;
-+
-+	new = count + RWSEM_WRITER_LOCKED -
-+	     (list_is_singular(&sem->wait_list) ? RWSEM_FLAG_WAITERS : 0);
-+
-+	if (atomic_long_try_cmpxchg_acquire(&sem->count, &count, new)) {
-+		rwsem_set_owner(sem);
-+		return true;
-+	}
-+
-+	return false;
-+}
-+
-+#ifdef CONFIG_RWSEM_SPIN_ON_OWNER
-+/*
-+ * Try to acquire write lock before the writer has been put on wait queue.
-+ */
-+static inline bool rwsem_try_write_lock_unqueued(struct rw_semaphore *sem)
-+{
-+	long count = atomic_long_read(&sem->count);
-+
-+	while (!(count & RWSEM_LOCK_MASK)) {
-+		if (atomic_long_try_cmpxchg_acquire(&sem->count, &count,
-+					count + RWSEM_WRITER_LOCKED)) {
-+			rwsem_set_owner(sem);
-+			lockevent_inc(rwsem_opt_wlock);
-+			return true;
-+		}
-+	}
-+	return false;
-+}
-+
-+static inline bool owner_on_cpu(struct task_struct *owner)
-+{
-+	/*
-+	 * As lock holder preemption issue, we both skip spinning if
-+	 * task is not on cpu or its cpu is preempted
-+	 */
-+	return owner->on_cpu && !vcpu_is_preempted(task_cpu(owner));
-+}
-+
-+static inline bool rwsem_can_spin_on_owner(struct rw_semaphore *sem)
-+{
-+	struct task_struct *owner;
-+	bool ret = true;
-+
-+	BUILD_BUG_ON(!rwsem_has_anonymous_owner(RWSEM_OWNER_UNKNOWN));
-+
-+	if (need_resched())
-+		return false;
-+
-+	rcu_read_lock();
-+	owner = READ_ONCE(sem->owner);
-+	if (owner) {
-+		ret = is_rwsem_owner_spinnable(owner) &&
-+		      owner_on_cpu(owner);
-+	}
-+	rcu_read_unlock();
-+	return ret;
-+}
-+
-+/*
-+ * Return true only if we can still spin on the owner field of the rwsem.
-+ */
-+static noinline bool rwsem_spin_on_owner(struct rw_semaphore *sem)
-+{
-+	struct task_struct *owner = READ_ONCE(sem->owner);
-+
-+	if (!is_rwsem_owner_spinnable(owner))
-+		return false;
-+
-+	rcu_read_lock();
-+	while (owner && (READ_ONCE(sem->owner) == owner)) {
-+		/*
-+		 * Ensure we emit the owner->on_cpu, dereference _after_
-+		 * checking sem->owner still matches owner, if that fails,
-+		 * owner might point to free()d memory, if it still matches,
-+		 * the rcu_read_lock() ensures the memory stays valid.
-+		 */
-+		barrier();
-+
-+		/*
-+		 * abort spinning when need_resched or owner is not running or
-+		 * owner's cpu is preempted.
-+		 */
-+		if (need_resched() || !owner_on_cpu(owner)) {
-+			rcu_read_unlock();
-+			return false;
-+		}
-+
-+		cpu_relax();
-+	}
-+	rcu_read_unlock();
-+
-+	/*
-+	 * If there is a new owner or the owner is not set, we continue
-+	 * spinning.
-+	 */
-+	return is_rwsem_owner_spinnable(READ_ONCE(sem->owner));
-+}
-+
-+static bool rwsem_optimistic_spin(struct rw_semaphore *sem)
-+{
-+	bool taken = false;
-+
-+	preempt_disable();
-+
-+	/* sem->wait_lock should not be held when doing optimistic spinning */
-+	if (!rwsem_can_spin_on_owner(sem))
-+		goto done;
-+
-+	if (!osq_lock(&sem->osq))
-+		goto done;
-+
-+	/*
-+	 * Optimistically spin on the owner field and attempt to acquire the
-+	 * lock whenever the owner changes. Spinning will be stopped when:
-+	 *  1) the owning writer isn't running; or
-+	 *  2) readers own the lock as we can't determine if they are
-+	 *     actively running or not.
-+	 */
-+	while (rwsem_spin_on_owner(sem)) {
-+		/*
-+		 * Try to acquire the lock
-+		 */
-+		if (rwsem_try_write_lock_unqueued(sem)) {
-+			taken = true;
-+			break;
-+		}
-+
-+		/*
-+		 * When there's no owner, we might have preempted between the
-+		 * owner acquiring the lock and setting the owner field. If
-+		 * we're an RT task that will live-lock because we won't let
-+		 * the owner complete.
-+		 */
-+		if (!sem->owner && (need_resched() || rt_task(current)))
-+			break;
-+
-+		/*
-+		 * The cpu_relax() call is a compiler barrier which forces
-+		 * everything in this loop to be re-loaded. We don't need
-+		 * memory barriers as we'll eventually observe the right
-+		 * values at the cost of a few extra spins.
-+		 */
-+		cpu_relax();
-+	}
-+	osq_unlock(&sem->osq);
-+done:
-+	preempt_enable();
-+	lockevent_cond_inc(rwsem_opt_fail, !taken);
-+	return taken;
-+}
-+#else
-+static bool rwsem_optimistic_spin(struct rw_semaphore *sem)
-+{
-+	return false;
-+}
-+#endif
-+
-+/*
-+ * Wait for the read lock to be granted
-+ */
-+static inline struct rw_semaphore __sched *
-+__rwsem_down_read_failed_common(struct rw_semaphore *sem, int state)
-+{
-+	long count, adjustment = -RWSEM_READER_BIAS;
-+	struct rwsem_waiter waiter;
-+	DEFINE_WAKE_Q(wake_q);
-+
-+	waiter.task = current;
-+	waiter.type = RWSEM_WAITING_FOR_READ;
-+
-+	raw_spin_lock_irq(&sem->wait_lock);
-+	if (list_empty(&sem->wait_list)) {
-+		/*
-+		 * In case the wait queue is empty and the lock isn't owned
-+		 * by a writer, this reader can exit the slowpath and return
-+		 * immediately as its RWSEM_READER_BIAS has already been
-+		 * set in the count.
-+		 */
-+		if (!(atomic_long_read(&sem->count) & RWSEM_WRITER_MASK)) {
-+			raw_spin_unlock_irq(&sem->wait_lock);
-+			rwsem_set_reader_owned(sem);
-+			lockevent_inc(rwsem_rlock_fast);
-+			return sem;
-+		}
-+		adjustment += RWSEM_FLAG_WAITERS;
-+	}
-+	list_add_tail(&waiter.list, &sem->wait_list);
-+
-+	/* we're now waiting on the lock, but no longer actively locking */
-+	count = atomic_long_add_return(adjustment, &sem->count);
-+
-+	/*
-+	 * If there are no active locks, wake the front queued process(es).
-+	 *
-+	 * If there are no writers and we are first in the queue,
-+	 * wake our own waiter to join the existing active readers !
-+	 */
-+	if (!(count & RWSEM_LOCK_MASK) ||
-+	   (!(count & RWSEM_WRITER_MASK) && (adjustment & RWSEM_FLAG_WAITERS)))
-+		__rwsem_mark_wake(sem, RWSEM_WAKE_ANY, &wake_q);
-+
-+	raw_spin_unlock_irq(&sem->wait_lock);
-+	wake_up_q(&wake_q);
-+
-+	/* wait to be given the lock */
-+	while (true) {
-+		set_current_state(state);
-+		if (!waiter.task)
-+			break;
-+		if (signal_pending_state(state, current)) {
-+			raw_spin_lock_irq(&sem->wait_lock);
-+			if (waiter.task)
-+				goto out_nolock;
-+			raw_spin_unlock_irq(&sem->wait_lock);
-+			break;
-+		}
-+		schedule();
-+		lockevent_inc(rwsem_sleep_reader);
-+	}
-+
-+	__set_current_state(TASK_RUNNING);
-+	lockevent_inc(rwsem_rlock);
-+	return sem;
-+out_nolock:
-+	list_del(&waiter.list);
-+	if (list_empty(&sem->wait_list))
-+		atomic_long_andnot(RWSEM_FLAG_WAITERS, &sem->count);
-+	raw_spin_unlock_irq(&sem->wait_lock);
-+	__set_current_state(TASK_RUNNING);
-+	lockevent_inc(rwsem_rlock_fail);
-+	return ERR_PTR(-EINTR);
-+}
-+
-+__visible struct rw_semaphore * __sched
-+rwsem_down_read_failed(struct rw_semaphore *sem)
-+{
-+	return __rwsem_down_read_failed_common(sem, TASK_UNINTERRUPTIBLE);
-+}
-+EXPORT_SYMBOL(rwsem_down_read_failed);
-+
-+__visible struct rw_semaphore * __sched
-+rwsem_down_read_failed_killable(struct rw_semaphore *sem)
-+{
-+	return __rwsem_down_read_failed_common(sem, TASK_KILLABLE);
-+}
-+EXPORT_SYMBOL(rwsem_down_read_failed_killable);
-+
-+/*
-+ * Wait until we successfully acquire the write lock
-+ */
-+static inline struct rw_semaphore *
-+__rwsem_down_write_failed_common(struct rw_semaphore *sem, int state)
-+{
-+	long count;
-+	bool waiting = true; /* any queued threads before us */
-+	struct rwsem_waiter waiter;
-+	struct rw_semaphore *ret = sem;
-+	DEFINE_WAKE_Q(wake_q);
-+
-+	/* do optimistic spinning and steal lock if possible */
-+	if (rwsem_optimistic_spin(sem))
-+		return sem;
-+
-+	/*
-+	 * Optimistic spinning failed, proceed to the slowpath
-+	 * and block until we can acquire the sem.
-+	 */
-+	waiter.task = current;
-+	waiter.type = RWSEM_WAITING_FOR_WRITE;
-+
-+	raw_spin_lock_irq(&sem->wait_lock);
-+
-+	/* account for this before adding a new element to the list */
-+	if (list_empty(&sem->wait_list))
-+		waiting = false;
-+
-+	list_add_tail(&waiter.list, &sem->wait_list);
-+
-+	/* we're now waiting on the lock */
-+	if (waiting) {
+ 
+ 		raw_spin_lock_irq(&sem->wait_lock);
 +		count = atomic_long_read(&sem->count);
+ 	}
+ 	__set_current_state(TASK_RUNNING);
+ 	list_del(&waiter.list);
+@@ -711,6 +824,10 @@ rwsem_down_write_slowpath(struct rw_semaphore *sem, int state)
+ 	__set_current_state(TASK_RUNNING);
+ 	raw_spin_lock_irq(&sem->wait_lock);
+ 	list_del(&waiter.list);
 +
-+		/*
-+		 * If there were already threads queued before us and there are
-+		 * no active writers and some readers, the lock must be read
-+		 * owned; so we try to  any read locks that were queued ahead
-+		 * of us.
-+		 */
-+		if (!(count & RWSEM_WRITER_MASK) &&
-+		     (count & RWSEM_READER_MASK)) {
-+			__rwsem_mark_wake(sem, RWSEM_WAKE_READERS, &wake_q);
-+			/*
-+			 * The wakeup is normally called _after_ the wait_lock
-+			 * is released, but given that we are proactively waking
-+			 * readers we can deal with the wake_q overhead as it is
-+			 * similar to releasing and taking the wait_lock again
-+			 * for attempting rwsem_try_write_lock().
-+			 */
-+			wake_up_q(&wake_q);
++	if (unlikely(wstate == WRITER_HANDOFF))
++		atomic_long_add(-RWSEM_FLAG_HANDOFF,  &sem->count);
 +
-+			/*
-+			 * Reinitialize wake_q after use.
-+			 */
-+			wake_q_init(&wake_q);
-+		}
-+
-+	} else {
-+		count = atomic_long_add_return(RWSEM_FLAG_WAITERS, &sem->count);
-+	}
-+
-+	/* wait until we successfully acquire the lock */
-+	set_current_state(state);
-+	while (true) {
-+		if (rwsem_try_write_lock(count, sem))
-+			break;
-+		raw_spin_unlock_irq(&sem->wait_lock);
-+
-+		/* Block until there are no active lockers. */
-+		do {
-+			if (signal_pending_state(state, current))
-+				goto out_nolock;
-+
-+			schedule();
-+			lockevent_inc(rwsem_sleep_writer);
-+			set_current_state(state);
-+			count = atomic_long_read(&sem->count);
-+		} while (count & RWSEM_LOCK_MASK);
-+
-+		raw_spin_lock_irq(&sem->wait_lock);
-+	}
-+	__set_current_state(TASK_RUNNING);
-+	list_del(&waiter.list);
-+	raw_spin_unlock_irq(&sem->wait_lock);
-+	lockevent_inc(rwsem_wlock);
-+
-+	return ret;
-+
-+out_nolock:
-+	__set_current_state(TASK_RUNNING);
-+	raw_spin_lock_irq(&sem->wait_lock);
-+	list_del(&waiter.list);
-+	if (list_empty(&sem->wait_list))
-+		atomic_long_andnot(RWSEM_FLAG_WAITERS, &sem->count);
-+	else
-+		__rwsem_mark_wake(sem, RWSEM_WAKE_ANY, &wake_q);
-+	raw_spin_unlock_irq(&sem->wait_lock);
-+	wake_up_q(&wake_q);
-+	lockevent_inc(rwsem_wlock_fail);
-+
-+	return ERR_PTR(-EINTR);
-+}
-+
-+__visible struct rw_semaphore * __sched
-+rwsem_down_write_failed(struct rw_semaphore *sem)
-+{
-+	return __rwsem_down_write_failed_common(sem, TASK_UNINTERRUPTIBLE);
-+}
-+EXPORT_SYMBOL(rwsem_down_write_failed);
-+
-+__visible struct rw_semaphore * __sched
-+rwsem_down_write_failed_killable(struct rw_semaphore *sem)
-+{
-+	return __rwsem_down_write_failed_common(sem, TASK_KILLABLE);
-+}
-+EXPORT_SYMBOL(rwsem_down_write_failed_killable);
-+
-+/*
-+ * handle waking up a waiter on the semaphore
-+ * - up_read/up_write has decremented the active part of count if we come here
-+ */
-+__visible
-+struct rw_semaphore *rwsem_wake(struct rw_semaphore *sem)
-+{
-+	unsigned long flags;
-+	DEFINE_WAKE_Q(wake_q);
-+
-+	raw_spin_lock_irqsave(&sem->wait_lock, flags);
-+
-+	if (!list_empty(&sem->wait_list))
-+		__rwsem_mark_wake(sem, RWSEM_WAKE_ANY, &wake_q);
-+
-+	raw_spin_unlock_irqrestore(&sem->wait_lock, flags);
-+	wake_up_q(&wake_q);
-+
-+	return sem;
-+}
-+EXPORT_SYMBOL(rwsem_wake);
-+
-+/*
-+ * downgrade a write lock into a read lock
-+ * - caller incremented waiting part of count and discovered it still negative
-+ * - just wake up any readers at the front of the queue
-+ */
-+__visible
-+struct rw_semaphore *rwsem_downgrade_wake(struct rw_semaphore *sem)
-+{
-+	unsigned long flags;
-+	DEFINE_WAKE_Q(wake_q);
-+
-+	raw_spin_lock_irqsave(&sem->wait_lock, flags);
-+
-+	if (!list_empty(&sem->wait_list))
-+		__rwsem_mark_wake(sem, RWSEM_WAKE_READ_OWNED, &wake_q);
-+
-+	raw_spin_unlock_irqrestore(&sem->wait_lock, flags);
-+	wake_up_q(&wake_q);
-+
-+	return sem;
-+}
-+EXPORT_SYMBOL(rwsem_downgrade_wake);
-+
-+/*
-+ * lock for reading
-+ */
-+inline void __down_read(struct rw_semaphore *sem)
-+{
-+	if (unlikely(atomic_long_fetch_add_acquire(RWSEM_READER_BIAS,
-+			&sem->count) & RWSEM_READ_FAILED_MASK)) {
-+		rwsem_down_read_failed(sem);
-+		DEBUG_RWSEMS_WARN_ON(!((unsigned long)sem->owner &
-+					RWSEM_READER_OWNED), sem);
-+	} else {
-+		rwsem_set_reader_owned(sem);
-+	}
-+}
-+
-+static inline int __down_read_killable(struct rw_semaphore *sem)
-+{
-+	if (unlikely(atomic_long_fetch_add_acquire(RWSEM_READER_BIAS,
-+			&sem->count) & RWSEM_READ_FAILED_MASK)) {
-+		if (IS_ERR(rwsem_down_read_failed_killable(sem)))
-+			return -EINTR;
-+		DEBUG_RWSEMS_WARN_ON(!((unsigned long)sem->owner &
-+					RWSEM_READER_OWNED), sem);
-+	} else {
-+		rwsem_set_reader_owned(sem);
-+	}
-+	return 0;
-+}
-+
-+static inline int __down_read_trylock(struct rw_semaphore *sem)
-+{
-+	/*
-+	 * Optimize for the case when the rwsem is not locked at all.
-+	 */
-+	long tmp = RWSEM_UNLOCKED_VALUE;
-+
-+	lockevent_inc(rwsem_rtrylock);
-+	do {
-+		if (atomic_long_try_cmpxchg_acquire(&sem->count, &tmp,
-+					tmp + RWSEM_READER_BIAS)) {
-+			rwsem_set_reader_owned(sem);
-+			return 1;
-+		}
-+	} while (!(tmp & RWSEM_READ_FAILED_MASK));
-+	return 0;
-+}
-+
-+/*
-+ * lock for writing
-+ */
-+static inline void __down_write(struct rw_semaphore *sem)
-+{
-+	if (unlikely(atomic_long_cmpxchg_acquire(&sem->count, 0,
-+						 RWSEM_WRITER_LOCKED)))
-+		rwsem_down_write_failed(sem);
-+	rwsem_set_owner(sem);
-+}
-+
-+static inline int __down_write_killable(struct rw_semaphore *sem)
-+{
-+	if (unlikely(atomic_long_cmpxchg_acquire(&sem->count, 0,
-+						 RWSEM_WRITER_LOCKED)))
-+		if (IS_ERR(rwsem_down_write_failed_killable(sem)))
-+			return -EINTR;
-+	rwsem_set_owner(sem);
-+	return 0;
-+}
-+
-+static inline int __down_write_trylock(struct rw_semaphore *sem)
-+{
-+	long tmp;
-+
-+	lockevent_inc(rwsem_wtrylock);
-+	tmp = atomic_long_cmpxchg_acquire(&sem->count, RWSEM_UNLOCKED_VALUE,
-+					  RWSEM_WRITER_LOCKED);
-+	if (tmp == RWSEM_UNLOCKED_VALUE) {
-+		rwsem_set_owner(sem);
-+		return true;
-+	}
-+	return false;
-+}
-+
-+/*
-+ * unlock after reading
-+ */
-+inline void __up_read(struct rw_semaphore *sem)
-+{
-+	long tmp;
-+
-+	DEBUG_RWSEMS_WARN_ON(!((unsigned long)sem->owner & RWSEM_READER_OWNED),
-+				sem);
-+	rwsem_clear_reader_owned(sem);
-+	tmp = atomic_long_add_return_release(-RWSEM_READER_BIAS, &sem->count);
-+	if (unlikely((tmp & (RWSEM_LOCK_MASK|RWSEM_FLAG_WAITERS))
-+			== RWSEM_FLAG_WAITERS))
-+		rwsem_wake(sem);
-+}
-+
-+/*
-+ * unlock after writing
-+ */
-+static inline void __up_write(struct rw_semaphore *sem)
-+{
-+	DEBUG_RWSEMS_WARN_ON(sem->owner != current, sem);
-+	rwsem_clear_owner(sem);
-+	if (unlikely(atomic_long_fetch_add_release(-RWSEM_WRITER_LOCKED,
-+			&sem->count) & RWSEM_FLAG_WAITERS))
-+		rwsem_wake(sem);
-+}
-+
-+/*
-+ * downgrade write lock to read lock
-+ */
-+static inline void __downgrade_write(struct rw_semaphore *sem)
-+{
-+	long tmp;
-+
-+	/*
-+	 * When downgrading from exclusive to shared ownership,
-+	 * anything inside the write-locked region cannot leak
-+	 * into the read side. In contrast, anything in the
-+	 * read-locked region is ok to be re-ordered into the
-+	 * write side. As such, rely on RELEASE semantics.
-+	 */
-+	DEBUG_RWSEMS_WARN_ON(sem->owner != current, sem);
-+	tmp = atomic_long_fetch_add_release(
-+		-RWSEM_WRITER_LOCKED+RWSEM_READER_BIAS, &sem->count);
-+	rwsem_set_reader_owned(sem);
-+	if (tmp & RWSEM_FLAG_WAITERS)
-+		rwsem_downgrade_wake(sem);
-+}
+ 	if (list_empty(&sem->wait_list))
+ 		atomic_long_andnot(RWSEM_FLAG_WAITERS, &sem->count);
+ 	else
+@@ -726,7 +843,7 @@ rwsem_down_write_slowpath(struct rw_semaphore *sem, int state)
+  * handle waking up a waiter on the semaphore
+  * - up_read/up_write has decremented the active part of count if we come here
+  */
+-static struct rw_semaphore *rwsem_wake(struct rw_semaphore *sem)
++static struct rw_semaphore *rwsem_wake(struct rw_semaphore *sem, long count)
+ {
+ 	unsigned long flags;
+ 	DEFINE_WAKE_Q(wake_q);
+@@ -859,7 +976,7 @@ inline void __up_read(struct rw_semaphore *sem)
+ 	tmp = atomic_long_add_return_release(-RWSEM_READER_BIAS, &sem->count);
+ 	if (unlikely((tmp & (RWSEM_LOCK_MASK|RWSEM_FLAG_WAITERS)) ==
+ 		      RWSEM_FLAG_WAITERS))
+-		rwsem_wake(sem);
++		rwsem_wake(sem, tmp);
+ }
  
  /*
-  * lock for reading
-diff --git a/kernel/locking/rwsem.h b/kernel/locking/rwsem.h
-index 499a9b2bda82..2534ce49f648 100644
---- a/kernel/locking/rwsem.h
-+++ b/kernel/locking/rwsem.h
-@@ -1,279 +1,10 @@
- /* SPDX-License-Identifier: GPL-2.0 */
--/*
-- * The least significant 2 bits of the owner value has the following
-- * meanings when set.
-- *  - RWSEM_READER_OWNED (bit 0): The rwsem is owned by readers
-- *  - RWSEM_ANONYMOUSLY_OWNED (bit 1): The rwsem is anonymously owned,
-- *    i.e. the owner(s) cannot be readily determined. It can be reader
-- *    owned or the owning writer is indeterminate.
-- *
-- * When a writer acquires a rwsem, it puts its task_struct pointer
-- * into the owner field. It is cleared after an unlock.
-- *
-- * When a reader acquires a rwsem, it will also puts its task_struct
-- * pointer into the owner field with both the RWSEM_READER_OWNED and
-- * RWSEM_ANONYMOUSLY_OWNED bits set. On unlock, the owner field will
-- * largely be left untouched. So for a free or reader-owned rwsem,
-- * the owner value may contain information about the last reader that
-- * acquires the rwsem. The anonymous bit is set because that particular
-- * reader may or may not still own the lock.
-- *
-- * That information may be helpful in debugging cases where the system
-- * seems to hang on a reader owned rwsem especially if only one reader
-- * is involved. Ideally we would like to track all the readers that own
-- * a rwsem, but the overhead is simply too big.
-- */
--#include "lock_events.h"
- 
--#define RWSEM_READER_OWNED	(1UL << 0)
--#define RWSEM_ANONYMOUSLY_OWNED	(1UL << 1)
-+#ifndef __INTERNAL_RWSEM_H
-+#define __INTERNAL_RWSEM_H
-+#include <linux/rwsem.h>
- 
--#ifdef CONFIG_DEBUG_RWSEMS
--# define DEBUG_RWSEMS_WARN_ON(c, sem)	do {			\
--	if (!debug_locks_silent &&				\
--	    WARN_ONCE(c, "DEBUG_RWSEMS_WARN_ON(%s): count = 0x%lx, owner = 0x%lx, curr 0x%lx, list %sempty\n",\
--		#c, atomic_long_read(&(sem)->count),		\
--		(long)((sem)->owner), (long)current,		\
--		list_empty(&(sem)->wait_list) ? "" : "not "))	\
--			debug_locks_off();			\
--	} while (0)
--#else
--# define DEBUG_RWSEMS_WARN_ON(c, sem)
--#endif
-+extern void __down_read(struct rw_semaphore *sem);
-+extern void __up_read(struct rw_semaphore *sem);
- 
--/*
-- * The definition of the atomic counter in the semaphore:
-- *
-- * Bit  0   - writer locked bit
-- * Bit  1   - waiters present bit
-- * Bits 2-7 - reserved
-- * Bits 8-X - 24-bit (32-bit) or 56-bit reader count
-- *
-- * atomic_long_fetch_add() is used to obtain reader lock, whereas
-- * atomic_long_cmpxchg() will be used to obtain writer lock.
-- */
--#define RWSEM_WRITER_LOCKED	(1UL << 0)
--#define RWSEM_FLAG_WAITERS	(1UL << 1)
--#define RWSEM_READER_SHIFT	8
--#define RWSEM_READER_BIAS	(1UL << RWSEM_READER_SHIFT)
--#define RWSEM_READER_MASK	(~(RWSEM_READER_BIAS - 1))
--#define RWSEM_WRITER_MASK	RWSEM_WRITER_LOCKED
--#define RWSEM_LOCK_MASK		(RWSEM_WRITER_MASK|RWSEM_READER_MASK)
--#define RWSEM_READ_FAILED_MASK	(RWSEM_WRITER_MASK|RWSEM_FLAG_WAITERS)
--
--/*
-- * All writes to owner are protected by WRITE_ONCE() to make sure that
-- * store tearing can't happen as optimistic spinners may read and use
-- * the owner value concurrently without lock. Read from owner, however,
-- * may not need READ_ONCE() as long as the pointer value is only used
-- * for comparison and isn't being dereferenced.
-- */
--static inline void rwsem_set_owner(struct rw_semaphore *sem)
--{
--	WRITE_ONCE(sem->owner, current);
--}
--
--static inline void rwsem_clear_owner(struct rw_semaphore *sem)
--{
--	WRITE_ONCE(sem->owner, NULL);
--}
--
--/*
-- * The task_struct pointer of the last owning reader will be left in
-- * the owner field.
-- *
-- * Note that the owner value just indicates the task has owned the rwsem
-- * previously, it may not be the real owner or one of the real owners
-- * anymore when that field is examined, so take it with a grain of salt.
-- */
--static inline void __rwsem_set_reader_owned(struct rw_semaphore *sem,
--					    struct task_struct *owner)
--{
--	unsigned long val = (unsigned long)owner | RWSEM_READER_OWNED
--						 | RWSEM_ANONYMOUSLY_OWNED;
--
--	WRITE_ONCE(sem->owner, (struct task_struct *)val);
--}
--
--static inline void rwsem_set_reader_owned(struct rw_semaphore *sem)
--{
--	__rwsem_set_reader_owned(sem, current);
--}
--
--/*
-- * Return true if the a rwsem waiter can spin on the rwsem's owner
-- * and steal the lock, i.e. the lock is not anonymously owned.
-- * N.B. !owner is considered spinnable.
-- */
--static inline bool is_rwsem_owner_spinnable(struct task_struct *owner)
--{
--	return !((unsigned long)owner & RWSEM_ANONYMOUSLY_OWNED);
--}
--
--/*
-- * Return true if rwsem is owned by an anonymous writer or readers.
-- */
--static inline bool rwsem_has_anonymous_owner(struct task_struct *owner)
--{
--	return (unsigned long)owner & RWSEM_ANONYMOUSLY_OWNED;
--}
--
--#ifdef CONFIG_DEBUG_RWSEMS
--/*
-- * With CONFIG_DEBUG_RWSEMS configured, it will make sure that if there
-- * is a task pointer in owner of a reader-owned rwsem, it will be the
-- * real owner or one of the real owners. The only exception is when the
-- * unlock is done by up_read_non_owner().
-- */
--static inline void rwsem_clear_reader_owned(struct rw_semaphore *sem)
--{
--	unsigned long val = (unsigned long)current | RWSEM_READER_OWNED
--						   | RWSEM_ANONYMOUSLY_OWNED;
--	if (READ_ONCE(sem->owner) == (struct task_struct *)val)
--		cmpxchg_relaxed((unsigned long *)&sem->owner, val,
--				RWSEM_READER_OWNED | RWSEM_ANONYMOUSLY_OWNED);
--}
--#else
--static inline void rwsem_clear_reader_owned(struct rw_semaphore *sem)
--{
--}
--#endif
--
--extern struct rw_semaphore *rwsem_down_read_failed(struct rw_semaphore *sem);
--extern struct rw_semaphore *rwsem_down_read_failed_killable(struct rw_semaphore *sem);
--extern struct rw_semaphore *rwsem_down_write_failed(struct rw_semaphore *sem);
--extern struct rw_semaphore *rwsem_down_write_failed_killable(struct rw_semaphore *sem);
--extern struct rw_semaphore *rwsem_wake(struct rw_semaphore *sem);
--extern struct rw_semaphore *rwsem_downgrade_wake(struct rw_semaphore *sem);
--
--/*
-- * lock for reading
-- */
--static inline void __down_read(struct rw_semaphore *sem)
--{
--	if (unlikely(atomic_long_fetch_add_acquire(RWSEM_READER_BIAS,
--			&sem->count) & RWSEM_READ_FAILED_MASK)) {
--		rwsem_down_read_failed(sem);
--		DEBUG_RWSEMS_WARN_ON(!((unsigned long)sem->owner &
--					RWSEM_READER_OWNED), sem);
--	} else {
--		rwsem_set_reader_owned(sem);
--	}
--}
--
--static inline int __down_read_killable(struct rw_semaphore *sem)
--{
--	if (unlikely(atomic_long_fetch_add_acquire(RWSEM_READER_BIAS,
--			&sem->count) & RWSEM_READ_FAILED_MASK)) {
--		if (IS_ERR(rwsem_down_read_failed_killable(sem)))
--			return -EINTR;
--		DEBUG_RWSEMS_WARN_ON(!((unsigned long)sem->owner &
--					RWSEM_READER_OWNED), sem);
--	} else {
--		rwsem_set_reader_owned(sem);
--	}
--	return 0;
--}
--
--static inline int __down_read_trylock(struct rw_semaphore *sem)
--{
--	/*
--	 * Optimize for the case when the rwsem is not locked at all.
--	 */
--	long tmp = RWSEM_UNLOCKED_VALUE;
--
--	lockevent_inc(rwsem_rtrylock);
--	do {
--		if (atomic_long_try_cmpxchg_acquire(&sem->count, &tmp,
--					tmp + RWSEM_READER_BIAS)) {
--			rwsem_set_reader_owned(sem);
--			return 1;
--		}
--	} while (!(tmp & RWSEM_READ_FAILED_MASK));
--	return 0;
--}
--
--/*
-- * lock for writing
-- */
--static inline void __down_write(struct rw_semaphore *sem)
--{
--	if (unlikely(atomic_long_cmpxchg_acquire(&sem->count, 0,
--						 RWSEM_WRITER_LOCKED)))
--		rwsem_down_write_failed(sem);
--	rwsem_set_owner(sem);
--}
--
--static inline int __down_write_killable(struct rw_semaphore *sem)
--{
--	if (unlikely(atomic_long_cmpxchg_acquire(&sem->count, 0,
--						 RWSEM_WRITER_LOCKED)))
--		if (IS_ERR(rwsem_down_write_failed_killable(sem)))
--			return -EINTR;
--	rwsem_set_owner(sem);
--	return 0;
--}
--
--static inline int __down_write_trylock(struct rw_semaphore *sem)
--{
--	long tmp;
--
--	lockevent_inc(rwsem_wtrylock);
--	tmp = atomic_long_cmpxchg_acquire(&sem->count, RWSEM_UNLOCKED_VALUE,
--					  RWSEM_WRITER_LOCKED);
--	if (tmp == RWSEM_UNLOCKED_VALUE) {
--		rwsem_set_owner(sem);
--		return true;
--	}
--	return false;
--}
--
--/*
-- * unlock after reading
-- */
--static inline void __up_read(struct rw_semaphore *sem)
--{
--	long tmp;
--
--	DEBUG_RWSEMS_WARN_ON(!((unsigned long)sem->owner & RWSEM_READER_OWNED),
--				sem);
--	rwsem_clear_reader_owned(sem);
--	tmp = atomic_long_add_return_release(-RWSEM_READER_BIAS, &sem->count);
--	if (unlikely((tmp & (RWSEM_LOCK_MASK|RWSEM_FLAG_WAITERS))
--			== RWSEM_FLAG_WAITERS))
+@@ -873,7 +990,7 @@ static inline void __up_write(struct rw_semaphore *sem)
+ 	rwsem_clear_owner(sem);
+ 	tmp = atomic_long_fetch_add_release(-RWSEM_WRITER_LOCKED, &sem->count);
+ 	if (unlikely(tmp & RWSEM_FLAG_WAITERS))
 -		rwsem_wake(sem);
--}
--
--/*
-- * unlock after writing
-- */
--static inline void __up_write(struct rw_semaphore *sem)
--{
--	DEBUG_RWSEMS_WARN_ON(sem->owner != current, sem);
--	rwsem_clear_owner(sem);
--	if (unlikely(atomic_long_fetch_add_release(-RWSEM_WRITER_LOCKED,
--			&sem->count) & RWSEM_FLAG_WAITERS))
--		rwsem_wake(sem);
--}
--
--/*
-- * downgrade write lock to read lock
-- */
--static inline void __downgrade_write(struct rw_semaphore *sem)
--{
--	long tmp;
--
--	/*
--	 * When downgrading from exclusive to shared ownership,
--	 * anything inside the write-locked region cannot leak
--	 * into the read side. In contrast, anything in the
--	 * read-locked region is ok to be re-ordered into the
--	 * write side. As such, rely on RELEASE semantics.
--	 */
--	DEBUG_RWSEMS_WARN_ON(sem->owner != current, sem);
--	tmp = atomic_long_fetch_add_release(
--		-RWSEM_WRITER_LOCKED+RWSEM_READER_BIAS, &sem->count);
--	rwsem_set_reader_owned(sem);
--	if (tmp & RWSEM_FLAG_WAITERS)
--		rwsem_downgrade_wake(sem);
--}
-+#endif /* __INTERNAL_RWSEM_H */
++		rwsem_wake(sem, tmp);
+ }
+ 
+ /*
 -- 
 2.18.1
 
