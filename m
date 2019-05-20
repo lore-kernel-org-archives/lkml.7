@@ -2,102 +2,166 @@ Return-Path: <SRS0=lq4r=TU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C050C04AAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 07:03:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0D1EC04AAF
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 07:05:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5F0512081C
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 07:03:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558335802;
-	bh=63r9BLz2SlEFadDywWVMhR7P4kqkRTUqGZSXkwDtMko=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=UlhGRdlZLFQrMoTUQXjWyZKR8Ehh4+XMgX3mXK8CZgh8O1M/shRTBWXXKecRPav7X
-	 jgZXd1amgQRwrqoXA0Cvx/N8e8S1mVaiEuu9uGOJ+YK+e7/tsAZe9phb1N/+nuDhts
-	 Hq/7dFaIIgE1yIpaNta5izsq+3QRemh+rdKtoghM=
+	by mail.kernel.org (Postfix) with ESMTP id CD69C20815
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 07:05:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730092AbfETHDV (ORCPT
+        id S1730324AbfETHFu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 03:03:21 -0400
-Received: from mx2.suse.de ([195.135.220.15]:39790 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725372AbfETHDU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 03:03:20 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 6293CAE48;
-        Mon, 20 May 2019 07:03:19 +0000 (UTC)
-Date:   Mon, 20 May 2019 09:03:17 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Pavel Tatashin <pasha.tatashin@soleen.com>
-Cc:     "Verma, Vishal L" <vishal.l.verma@intel.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "jmorris@namei.org" <jmorris@namei.org>,
-        "tiwai@suse.de" <tiwai@suse.de>,
-        "sashal@kernel.org" <sashal@kernel.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
-        "david@redhat.com" <david@redhat.com>, "bp@suse.de" <bp@suse.de>,
-        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-        "linux-nvdimm@lists.01.org" <linux-nvdimm@lists.01.org>,
-        "jglisse@redhat.com" <jglisse@redhat.com>,
-        "zwisler@kernel.org" <zwisler@kernel.org>,
-        "Jiang, Dave" <dave.jiang@intel.com>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "Busch, Keith" <keith.busch@intel.com>,
-        "thomas.lendacky@amd.com" <thomas.lendacky@amd.com>,
-        "Huang, Ying" <ying.huang@intel.com>,
-        "Wu, Fengguang" <fengguang.wu@intel.com>,
-        "baiyaowei@cmss.chinamobile.com" <baiyaowei@cmss.chinamobile.com>
-Subject: Re: NULL pointer dereference during memory hotremove
-Message-ID: <20190520070317.GU6836@dhcp22.suse.cz>
-References: <CA+CK2bBeOJPnnyWBgj0CJ7E1z9GVWVg_EJAmDs07BSJDp3PYfQ@mail.gmail.com>
- <20190517143816.GO6836@dhcp22.suse.cz>
- <CA+CK2bA+2+HaV4GWNUNP04fjjTPKbEGQHSPrSrmY7HLD57au1Q@mail.gmail.com>
- <CA+CK2bDq+2qu28afO__4kzO4=cnLH1P4DcHjc62rt0UtYwLm0A@mail.gmail.com>
- <CA+CK2bCgF7z5UHqrGCYu4JgG=5o6uXbjutTo9VSYAkqu3dqn5w@mail.gmail.com>
+        Mon, 20 May 2019 03:05:50 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:42349 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725372AbfETHFu (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 03:05:50 -0400
+Received: from soja.hi.pengutronix.de ([2001:67c:670:100:3ad5:47ff:feaf:13da])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.89)
+        (envelope-from <o.rempel@pengutronix.de>)
+        id 1hScMT-0008TC-Lo; Mon, 20 May 2019 09:05:29 +0200
+Subject: Re: [PATCH v4 3/3] net: ethernet: add ag71xx driver
+To:     Andrew Lunn <andrew@lunn.ch>
+Cc:     Paul Burton <paul.burton@mips.com>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        James Hogan <jhogan@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Jay Cliburn <jcliburn@gmail.com>,
+        Chris Snook <chris.snook@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, John Crispin <john@phrozen.org>,
+        Felix Fietkau <nbd@nbd.name>, netdev@vger.kernel.org,
+        Chuanhong Guo <gch981213@gmail.com>,
+        info@freifunk-bad-gandersheim.net
+References: <20190519080304.5811-1-o.rempel@pengutronix.de>
+ <20190519080304.5811-4-o.rempel@pengutronix.de>
+ <20190520003302.GA1695@lunn.ch>
+From:   Oleksij Rempel <o.rempel@pengutronix.de>
+Message-ID: <5e836144-44e5-d99c-716c-8af42486a6b0@pengutronix.de>
+Date:   Mon, 20 May 2019 09:05:26 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CA+CK2bCgF7z5UHqrGCYu4JgG=5o6uXbjutTo9VSYAkqu3dqn5w@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190520003302.GA1695@lunn.ch>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 2001:67c:670:100:3ad5:47ff:feaf:13da
+X-SA-Exim-Mail-From: o.rempel@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri 17-05-19 13:33:25, Pavel Tatashin wrote:
-> On Fri, May 17, 2019 at 1:24 PM Pavel Tatashin
-> <pasha.tatashin@soleen.com> wrote:
-> >
-> > On Fri, May 17, 2019 at 1:22 PM Pavel Tatashin
-> > <pasha.tatashin@soleen.com> wrote:
-> > >
-> > > On Fri, May 17, 2019 at 10:38 AM Michal Hocko <mhocko@kernel.org> wrote:
-> > > >
-> > > > On Fri 17-05-19 10:20:38, Pavel Tatashin wrote:
-> > > > > This panic is unrelated to circular lock issue that I reported in a
-> > > > > separate thread, that also happens during memory hotremove.
-> > > > >
-> > > > > xakep ~/x/linux$ git describe
-> > > > > v5.1-12317-ga6a4b66bd8f4
-> > > >
-> > > > Does this happen on 5.0 as well?
-> > >
-> > > Yes, just reproduced it on 5.0 as well. Unfortunately, I do not have a
-> > > script, and have to do it manually, also it does not happen every
-> > > time, it happened on 3rd time for me.
-> >
-> > Actually, sorry, I have not tested 5.0, I compiled 5.0, but my script
-> > still tested v5.1-12317-ga6a4b66bd8f4 build. I will report later if I
-> > am able to reproduce it on 5.0.
-> 
-> OK, confirmed on 5.0 as well, took 4 tries to reproduce:
 
-What is the last version that survives? Can you bisect?
+
+On 20.05.19 02:33, Andrew Lunn wrote:
+> Hi Oleksij
+> 
+>> +static int ag71xx_mdio_mii_read(struct mii_bus *bus, int addr, int reg)
+>> +{
+>> +	struct ag71xx *ag = bus->priv;
+>> +	struct net_device *ndev = ag->ndev;
+>> +	int err;
+>> +	int ret;
+>> +
+>> +	err = ag71xx_mdio_wait_busy(ag);
+>> +	if (err)
+>> +		return err;
+>> +
+>> +	ag71xx_wr(ag, AG71XX_REG_MII_CMD, MII_CMD_WRITE);
+> 
+> It looks like you have not removed this.
+
+done.
+
+> 
+>> +	ag71xx_wr(ag, AG71XX_REG_MII_ADDR,
+>> +			((addr & 0xff) << MII_ADDR_SHIFT) | (reg & 0xff));
+>> +	ag71xx_wr(ag, AG71XX_REG_MII_CMD, MII_CMD_READ);
+>> +
+>> +	err = ag71xx_mdio_wait_busy(ag);
+>> +	if (err)
+>> +		return err;
+>> +
+>> +	ret = ag71xx_rr(ag, AG71XX_REG_MII_STATUS);
+>> +	/*
+>> +	 * ar9331 doc: bits 31:16 are reserved and must be must be written
+>> +	 * with zero.
+>> +	 */
+>> +	ret &= 0xffff;
+>> +	ag71xx_wr(ag, AG71XX_REG_MII_CMD, MII_CMD_WRITE);
+> 
+> Or this.
+
+this one is needed. MII_CMD_WRITE is a wrong name, it is actually disabling MII_CMD_READ mode.
+
+> 
+>> +
+>> +	netif_dbg(ag, link, ndev, "mii_read: addr=%04x, reg=%04x, value=%04x\n",
+>> +		  addr, reg, ret);
+>> +
+>> +	return ret;
+>> +}
+>> +
+>> +static int ag71xx_mdio_mii_write(struct mii_bus *bus, int addr, int reg,
+>> +				 u16 val)
+>> +{
+>> +	struct ag71xx *ag = bus->priv;
+>> +	struct net_device *ndev = ag->ndev;
+>> +
+>> +	netif_dbg(ag, link, ndev, "mii_write: addr=%04x, reg=%04x, value=%04x\n",
+>> +		  addr, reg, val);
+>> +
+>> +	ag71xx_wr(ag, AG71XX_REG_MII_ADDR,
+>> +			((addr & 0xff) << MII_ADDR_SHIFT) | (reg & 0xff));
+> 
+> addr have the vale 0-31. So a mask of 0xff is a couple of bits too
+> big.
+
+done
+
+> 
+>> +	ag71xx_wr(ag, AG71XX_REG_MII_CTRL, val);
+>> +
+>> +	return ag71xx_mdio_wait_busy(ag);
+>> +}
+> 
+>> +static void ag71xx_link_adjust(struct ag71xx *ag, bool update)
+>> +{
+>> +	struct net_device *ndev = ag->ndev;
+>> +	struct phy_device *phydev = ndev->phydev;
+>> +	u32 cfg2;
+>> +	u32 ifctl;
+>> +	u32 fifo5;
+>> +
+>> +	if (!phydev->link && update) {
+>> +		ag71xx_hw_stop(ag);
+>> +		netif_carrier_off(ag->ndev);
+> 
+> phylib will take care of the carrier for you.
+
+done
+
+>         Andrew
+
+thx!
+
+Kind regards,
+Oleksij Rempel
+
 -- 
-Michal Hocko
-SUSE Labs
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
