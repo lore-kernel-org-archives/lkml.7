@@ -2,105 +2,98 @@ Return-Path: <SRS0=lq4r=TU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64EDFC04AAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 09:40:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00AC0C072A4
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 09:41:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 39C2120856
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 09:40:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558345225;
-	bh=KlsviQfKrQui86twPZxBf/IfvPh7qAn/XGim2VH7goY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=KOLWbHkN6aFK2Ek0H+rUg/ACfTG1EMfzGnLCtfGEaW6KkZx7enMsBGH4yhDKj2zxa
-	 aGGbCXOWJqb9BtMS8y+9kNJAnGm6ccSaBq87NE5WmhfXTetI43iw0Hg5fxiEHQTXHf
-	 8K0iTQxqEhdrFIEhSSSdE1mzn8LP9USca8mcl+Wk=
+	by mail.kernel.org (Postfix) with ESMTP id CF2B320675
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 09:41:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730880AbfETJkY (ORCPT
+        id S1731500AbfETJln (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 05:40:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46044 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726126AbfETJkX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 05:40:23 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5FA3920675;
-        Mon, 20 May 2019 09:40:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558345222;
-        bh=KlsviQfKrQui86twPZxBf/IfvPh7qAn/XGim2VH7goY=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=kRUu+TQsj8X8DYHPnUWAnW9UfPuTekrHZCS+FwPGmiXfiNR6UEgfjm6nJ7tM1/Wte
-         ogYjtWT1+MLAYyC4w6gZW+gKMVQinsQhzVwvbjg3FdQlFNxTPFaEMZW+UQHc6bAPCH
-         qM6nm1h++frHWcQYWEFSQPe7HpSMxEwAYA+wLzmo=
-Date:   Mon, 20 May 2019 11:40:20 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc:     linux-kbuild@vger.kernel.org, Sam Ravnborg <sam@ravnborg.org>,
-        Arnd Bergmann <arnd@arndb.de>, Jessica Yu <jeyu@kernel.org>,
-        Lucas De Marchi <lucas.de.marchi@gmail.com>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Michael Schmitz <schmitzmic@gmail.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Rusty Russell <rusty@rustcorp.com.au>,
-        Kees Cook <keescook@chromium.org>,
-        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Lucas De Marchi <lucas.demarchi@intel.com>
-Subject: Re: [PATCH] kbuild: do not check name uniqueness of builtin modules
-Message-ID: <20190520094020.GC15326@kroah.com>
-References: <20190520025437.13825-1-yamada.masahiro@socionext.com>
+        Mon, 20 May 2019 05:41:43 -0400
+Received: from esa3.hc3370-68.iphmx.com ([216.71.145.155]:45263 "EHLO
+        esa3.hc3370-68.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726126AbfETJlm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 05:41:42 -0400
+Authentication-Results: esa3.hc3370-68.iphmx.com; dkim=none (message not signed) header.i=none; spf=None smtp.pra=ian.jackson@citrix.com; spf=SoftFail smtp.mailfrom=Ian.Jackson@citrix.com; spf=None smtp.helo=postmaster@MIAPEX02MSOL01.citrite.net
+Received-SPF: None (esa3.hc3370-68.iphmx.com: no sender
+  authenticity information available from domain of
+  ian.jackson@citrix.com) identity=pra; client-ip=23.29.105.83;
+  receiver=esa3.hc3370-68.iphmx.com;
+  envelope-from="Ian.Jackson@citrix.com";
+  x-sender="ian.jackson@citrix.com";
+  x-conformance=sidf_compatible
+Received-SPF: SoftFail (esa3.hc3370-68.iphmx.com: domain of
+  Ian.Jackson@citrix.com is inclined to not designate
+  23.29.105.83 as permitted sender) identity=mailfrom;
+  client-ip=23.29.105.83; receiver=esa3.hc3370-68.iphmx.com;
+  envelope-from="Ian.Jackson@citrix.com";
+  x-sender="Ian.Jackson@citrix.com";
+  x-conformance=sidf_compatible; x-record-type="v=spf1";
+  x-record-text="v=spf1 include:spf.citrix.com
+  include:spf2.citrix.com include:ironport.citrix.com
+  exists:%{i}._spf.mta.salesforce.com ~all"
+Received-SPF: None (esa3.hc3370-68.iphmx.com: no sender
+  authenticity information available from domain of
+  postmaster@MIAPEX02MSOL01.citrite.net) identity=helo;
+  client-ip=23.29.105.83; receiver=esa3.hc3370-68.iphmx.com;
+  envelope-from="Ian.Jackson@citrix.com";
+  x-sender="postmaster@MIAPEX02MSOL01.citrite.net";
+  x-conformance=sidf_compatible
+IronPort-SDR: dnz1Zx+CAoiM3RfLC4Bmi/p8WvU7bajFuyeAs59B/Mn7RamN0mPE6Nb73DFK8O6GY+LUpRZdkC
+ WkZDgDWgMV3uWeUdEuiU8nXB5qusrEtfKVkmYfsYNWJ79+eL4AbTv/WRIpdyeR0jluInvolqnT
+ ZTqCo6geGsJjvUaizZw4CORi+J4Y3QWBJC246L21RuvgbZzhzOEUHeISQqBqgjWwiWuPmPvYI7
+ a4oarXwDsbrPJ9EC2kR+PSXsByW6JXB2oPf7Hc6Fh4PXtlnv2Gx1C4GgWgkbr84k+o4hQTS6b3
+ 6wY=
+X-SBRS: 2.7
+X-MesageID: 649610
+X-Ironport-Server: esa3.hc3370-68.iphmx.com
+X-Remote-IP: 23.29.105.83
+X-Policy: $RELAYED
+X-IronPort-AV: E=Sophos;i="5.60,491,1549947600"; 
+   d="scan'208";a="649610"
+From:   Ian Jackson <ian.jackson@citrix.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190520025437.13825-1-yamada.masahiro@socionext.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Message-ID: <23778.30265.117488.781364@mariner.uk.xensource.com>
+Date:   Mon, 20 May 2019 10:41:13 +0100
+To:     Stephen Boyd <swboyd@chromium.org>
+CC:     Andy Gross <agross@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>,
+        Julien Grall <julien.grall@arm.com>,
+        "Bjorn Andersson" <bjorn.andersson@linaro.org>,
+        Avaneesh Kumar Dwivedi <akdwived@codeaurora.org>
+Subject: [PATCH 1/3] firmware: qcom_scm: Use proper types for dma mappings
+In-Reply-To: <20190517210923.202131-2-swboyd@chromium.org>
+References: <23774.56553.445601.436491@mariner.uk.xensource.com>
+        <20190517210923.202131-2-swboyd@chromium.org>
+X-Mailer: VM 8.2.0b under 24.5.1 (i686-pc-linux-gnu)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 20, 2019 at 11:54:37AM +0900, Masahiro Yamada wrote:
-> I just thought it was a good idea to scan builtin.modules in the name
-> uniqueness checking, but Stephen reported a false positive.
-> 
-> ppc64_defconfig produces:
-> 
->   warning: same basename if the following are built as modules:
->     arch/powerpc/platforms/powermac/nvram.ko
->     drivers/char/nvram.ko
-> 
-> ..., which is a false positive because the former is never built as
-> a module as you see in arch/powerpc/platforms/powermac/Makefile:
-> 
->   # CONFIG_NVRAM is an arch. independent tristate symbol, for pmac32 we really
->   # need this to be a bool.  Cheat here and pretend CONFIG_NVRAM=m is really
->   # CONFIG_NVRAM=y
->   obj-$(CONFIG_NVRAM:m=y)         += nvram.o
-> 
-> Since we cannot predict how tricky Makefiles are written in wild,
-> builtin.modules may potentially contain false positives. I do not
-> think it is a big deal as far as kmod is concerned, but false positive
-> warnings in the kernel build makes people upset. It is better to not
-> do it.
-> 
-> Even without checking builtin.modules, we have enough (and more solid)
-> test coverage with allmodconfig.
-> 
-> While I touched this part, I replaced the sed code with neater one
-> provided by Stephen.
-> 
-> Link: https://lkml.org/lkml/2019/5/19/120
-> Link: https://lkml.org/lkml/2019/5/19/123
-> Fixes: 3a48a91901c5 ("kbuild: check uniqueness of module names")
-> Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
-> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-> ---
+Stephen Boyd writes ("[PATCH 1/3] firmware: qcom_scm: Use proper types for dma mappings"):
+> We need to use the proper types and convert between physical addresses
+> and dma addresses here to avoid mismatch warnings. This is especially
+> important on systems with a different size for dma addresses and
+> physical addresses. Otherwise, we get the following warning:
 
-Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Thanks.  Do you expect this to be a backport candidate and if so how
+far back do you think it will go ?  To be honest, I am not really
+convinced that backporting this would be a service to users.  The
+situation I have, where I changed the compiler but kept the old kernel
+code and old configuration, is going to be fairly rare.
+
+I think I should probably therefore disable this driver in the config
+on stable branches of Linux, at least.
+
+Thanks,
+Ian.
