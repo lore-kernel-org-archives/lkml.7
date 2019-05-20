@@ -2,126 +2,98 @@ Return-Path: <SRS0=lq4r=TU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EF96C04AAC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 14:01:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29AD5C04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 14:01:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4FA162171F
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 14:01:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F1B2B216B7
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 14:01:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="0WoDOm7e"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403854AbfETOB2 (ORCPT
+        id S2403883AbfETOBj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 10:01:28 -0400
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:46215 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2391227AbfETOB1 (ORCPT
+        Mon, 20 May 2019 10:01:39 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:32998 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731231AbfETOBi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 10:01:27 -0400
-Received: by mail-lf1-f65.google.com with SMTP id l26so10369838lfh.13;
-        Mon, 20 May 2019 07:01:23 -0700 (PDT)
+        Mon, 20 May 2019 10:01:38 -0400
+Received: by mail-wr1-f65.google.com with SMTP id d9so1793154wrx.0
+        for <linux-kernel@vger.kernel.org>; Mon, 20 May 2019 07:01:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Z4tnU+N/DU1N5SPy41/fi/miGaLy6d3wjz6icgaZVuI=;
+        b=0WoDOm7eSUPpLoIkMOSusIKkzLWDQndtkVtMrGv8KeIPGtwW9IqpBlwAf//CG+IO9b
+         q7aVWcfLGjukA/a5dBEMZ0iwfWK22jsX7ha+nyfdiYkjP4D2eMGlGeoIGa3bQ84wsKS8
+         TMAnpVntCcP2PVlcvED5ml1PjmoIkaRBsiXxHt05BNDwFma0SSCOafqRpg9eXjLBlEll
+         N1J0oUsHG58CHkYHl922OZ9xuT6FSEyUr/2/6pa8v6s2R7m4xoijYYVdnJ50lx1Jetwo
+         DRW724JkkmwuowaoF6lh8n70DvlR4bqUPhpAETLXkg6GfrTq9Gr7o61SKJT3nq1cM9iE
+         RjDQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=k5M5HG3kl0pUgSauCfNvkeVzL85t6u8JUUHdn9mhx04=;
-        b=gYRUQQ4I3isRR7yIrkfU1fErhS5LAmJO+q9UZ5/bRVsNPQluoj03UfNUL0I7XHQmPj
-         UZ2hsjhiaoVzaX4F48wqCM37pZKXTCzzV3HcPIwpo8gXTZjDNqlW/wuS0GgG0LegM+gI
-         cNMjXLFp96QzPp8AfhXpbUO7HQYwk8Z75SjoQ+JlGPOv46Ef1MiIn18V3x9efkcUJD9J
-         PlxDJQZTjBlAieJyET4XPM8TZMzNQg4ZBskiE8w+m40Vm+dNE8P+s6odhuKlquJNLaoK
-         ShIT0NSW/TwHCve/P6PCqI3YFqhqzzLZZAcghjQOTS/X+zmesDQtj3e3qaEIP8sPvIl4
-         /rmw==
-X-Gm-Message-State: APjAAAUUVMB2FLp0pKtTLw42V4U6rGCWPsCzdPM172VxiLue3r/jhsle
-        s3lzmQVUJRMsjcNOzJSJ3ajML15pXchIyw3GjHo=
-X-Google-Smtp-Source: APXvYqzBXH0Bn12gU+O/WKysSzgvfoDb4ZQdIiC8js/Lv4/NzbFVAIlWC//CHbjkYuLxxyAwqyeGdyzFagcgQl6QGI8=
-X-Received: by 2002:a19:a887:: with SMTP id r129mr1920861lfe.16.1558360883054;
- Mon, 20 May 2019 07:01:23 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Z4tnU+N/DU1N5SPy41/fi/miGaLy6d3wjz6icgaZVuI=;
+        b=eFeMRcv0Pt7PZHolAUuStdPBPjDMpIaa2C2VA1Y6HdM0u9fUUWttVFWs+DYzWWIwtR
+         oc5/To3hl60hQtfZe9K9sbFkm/NU1l4h0ifbbZGLld3/Hv1IebvizMhQ9rYIw3THD2Ky
+         NGCYWN9SuZOXrLc7slfNo3f/lKqNWGpt5HoPf4JCAfPiO+XvcZ53j+SbyjB2BNmejjJd
+         2yMFfyUAEuWEiukwL6UkXDowlPub1oCo6/8UusZNHeXVMN3hcPBor+5S38VijBIMGuq9
+         YjiHvFsJ1vQ/XGI1UbziOY7U0MypJhhDYbF8fViBHlAOOe4LQQlXmmoa/9ENFLZyFFfs
+         jrQQ==
+X-Gm-Message-State: APjAAAWn7RCPks9kLjTP+2RNcYIKSUpcUyeL5X6WJraM+BslJ2CY0v97
+        fXHbZpor+fF3Q5F4k0xGxdVPLg==
+X-Google-Smtp-Source: APXvYqwEEdJHWNWT9tmdPHAERp5H+E+95z5naZ9rAlFKjxLflOoHQqlwBCMhp9NAPjMi8a5idFRzog==
+X-Received: by 2002:a5d:448e:: with SMTP id j14mr26575282wrq.158.1558360897097;
+        Mon, 20 May 2019 07:01:37 -0700 (PDT)
+Received: from bender.baylibre.local (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
+        by smtp.gmail.com with ESMTPSA id f10sm24622307wrg.24.2019.05.20.07.01.36
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Mon, 20 May 2019 07:01:36 -0700 (PDT)
+From:   Neil Armstrong <narmstrong@baylibre.com>
+To:     linux-i2c@vger.kernel.org
+Cc:     linux-amlogic@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Neil Armstrong <narmstrong@baylibre.com>
+Subject: [PATCH] i2c: i2c-meson: update with SPDX Licence identifier
+Date:   Mon, 20 May 2019 16:01:33 +0200
+Message-Id: <20190520140133.29230-1-narmstrong@baylibre.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-References: <20190520134605.29116-1-christian@brauner.io>
-In-Reply-To: <20190520134605.29116-1-christian@brauner.io>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Mon, 20 May 2019 16:00:44 +0200
-Message-ID: <CAMuHMdVfy-fWVGzd8orLHbC=pOmUH-ocvhjj2DCZdEQRxctYQA@mail.gmail.com>
-Subject: Re: [PATCH v2 1/2] pid: add pidfd_open()
-To:     Christian Brauner <christian@brauner.io>
-Cc:     Jann Horn <jannh@google.com>, Oleg Nesterov <oleg@redhat.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        "torvalds@linux-foundation.org" <torvalds@linux-foundation.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        "linux-ia64@vger.kernel.org" <linux-ia64@vger.kernel.org>,
-        Linux-sh list <linux-sh@vger.kernel.org>,
-        linux-mips@vger.kernel.org, David Howells <dhowells@redhat.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        sparclinux <sparclinux@vger.kernel.org>,
-        elena.reshetova@intel.com, Linux-Arch <linux-arch@vger.kernel.org>,
-        linux-s390 <linux-s390@vger.kernel.org>,
-        Daniel Colascione <dancol@google.com>,
-        Android Kernel Team <kernel-team@android.com>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        linux-xtensa@linux-xtensa.org, Kees Cook <keescook@chromium.org>,
-        linux-m68k <linux-m68k@lists.linux-m68k.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>, surenb@google.com,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Parisc List <linux-parisc@vger.kernel.org>,
-        Linux API <linux-api@vger.kernel.org>, cyphar@cyphar.com,
-        Andy Lutomirski <luto@amacapital.net>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        alpha <linux-alpha@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 20, 2019 at 3:46 PM Christian Brauner <christian@brauner.io> wrote:
-> This adds the pidfd_open() syscall. It allows a caller to retrieve pollable
-> pidfds for a process which did not get created via CLONE_PIDFD, i.e. for a
-> process that is created via traditional fork()/clone() calls that is only
-> referenced by a PID:
->
-> int pidfd = pidfd_open(1234, 0);
-> ret = pidfd_send_signal(pidfd, SIGSTOP, NULL, 0);
->
-> With the introduction of pidfds through CLONE_PIDFD it is possible to
-> created pidfds at process creation time.
-> However, a lot of processes get created with traditional PID-based calls
-> such as fork() or clone() (without CLONE_PIDFD). For these processes a
-> caller can currently not create a pollable pidfd. This is a problem for
-> Android's low memory killer (LMK) and service managers such as systemd.
-> Both are examples of tools that want to make use of pidfds to get reliable
-> notification of process exit for non-parents (pidfd polling) and race-free
-> signal sending (pidfd_send_signal()). They intend to switch to this API for
-> process supervision/management as soon as possible. Having no way to get
-> pollable pidfds from PID-only processes is one of the biggest blockers for
-> them in adopting this api. With pidfd_open() making it possible to retrieve
-> pidfds for PID-based processes we enable them to adopt this api.
->
-> In line with Arnd's recent changes to consolidate syscall numbers across
-> architectures, I have added the pidfd_open() syscall to all architectures
-> at the same time.
->
-> Signed-off-by: Christian Brauner <christian@brauner.io>
-> Reviewed-by: Oleg Nesterov <oleg@redhat.com>
+Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+---
+ drivers/i2c/busses/i2c-meson.c | 5 +----
+ 1 file changed, 1 insertion(+), 4 deletions(-)
 
->  arch/m68k/kernel/syscalls/syscall.tbl       |  1 +
-
-Acked-by: Geert Uytterhoeven <geert@linux-m68k.org>
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
+diff --git a/drivers/i2c/busses/i2c-meson.c b/drivers/i2c/busses/i2c-meson.c
+index 90f5d0407d73..f530d9a0450b 100644
+--- a/drivers/i2c/busses/i2c-meson.c
++++ b/drivers/i2c/busses/i2c-meson.c
+@@ -1,11 +1,8 @@
++// SPDX-License-Identifier: GPL-2.0
+ /*
+  * I2C bus driver for Amlogic Meson SoCs
+  *
+  * Copyright (C) 2014 Beniamino Galvani <b.galvani@gmail.com>
+- *
+- * This program is free software; you can redistribute it and/or modify
+- * it under the terms of the GNU General Public License version 2 as
+- * published by the Free Software Foundation.
+  */
+ 
+ #include <linux/clk.h>
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+2.21.0
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
