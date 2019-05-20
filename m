@@ -2,94 +2,145 @@ Return-Path: <SRS0=lq4r=TU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D991C04AAC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 18:57:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D874C04E87
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 18:57:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E572A20645
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 18:57:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F1811205ED
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 18:57:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MmIoi8oq"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="lAFT0NkK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726065AbfETS5S (ORCPT
+        id S1726254AbfETS5n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 14:57:18 -0400
-Received: from mail-pl1-f170.google.com ([209.85.214.170]:40959 "EHLO
-        mail-pl1-f170.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725536AbfETS5R (ORCPT
+        Mon, 20 May 2019 14:57:43 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:33385 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726125AbfETS5m (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 14:57:17 -0400
-Received: by mail-pl1-f170.google.com with SMTP id g69so7127950plb.7
-        for <linux-kernel@vger.kernel.org>; Mon, 20 May 2019 11:57:17 -0700 (PDT)
+        Mon, 20 May 2019 14:57:42 -0400
+Received: by mail-wr1-f67.google.com with SMTP id d9so2831535wrx.0
+        for <linux-kernel@vger.kernel.org>; Mon, 20 May 2019 11:57:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=8Lt7rSnSkayzVvx67ZsDNX8yUH1XBDbeQw+L9abvZe8=;
-        b=MmIoi8oqygXCLZy6E+9vNzH0H+XcQpdYN8P2HUH/MXWiF0urxOgo5E08QftQCPg6bx
-         1YJ4p50CDP1Nph8zBNIQc7mL2PqtMChBUcWCTbJHNH43+tC3C1Hcm/mFCySjP+ImYnbV
-         qqKhTuMgWXz3s3Shx9KcZqWOf4mvchFNq3FD48g3ALRHMHPOOOnUM++tgvnQ62pEGzsm
-         h3USo901W3k+/b5bFvdhmwdDI9eZ3nfLz9t+1+L9qbtHHC6PUXRSkdgEu7bEGDiDbHjt
-         /BMp2HqmwC7azDnhJNtLO3dnHe9f4mzljiAuXqMIROzSpk+Td5PadV9Kb9DQSDTZzkeS
-         0msQ==
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=tJAyJXTsyL/aojYOLcoP+1kKW6LofZI8dfFMh+ysm/4=;
+        b=lAFT0NkKin5knk7wwDhCC6gyz6R2KCDj5LnsHxKFMhDnSmoMPQ6lNWKXnRe+AKW7IL
+         mA3z6jSYm51D3ZWuI50171pETabcVWupPE7Ssyon/s/oKbkiCcHdqppUsixA2Tjie4hg
+         0RapWRR0DT7PGYT+vc0mq/kJb7G+n+ogopJoBGJl17D7Y8nYapa+fMDESvu7Xtn9zIgO
+         QfL5d8u28wa6pmlMBUKdql3GeGSTOW6N9YmNsisoIqEGHy3n2aDaKZRspMM8j83Gylz7
+         bg2HLF00xxFw3aGGV265mu9KtkbDBo1RgAwv20CbyuHHwgFku87L3vs6x+Xnj2djfcWQ
+         PbfQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=8Lt7rSnSkayzVvx67ZsDNX8yUH1XBDbeQw+L9abvZe8=;
-        b=quLDpLC+Qu1xxwwDNb4wyufBklcYmmLa0y4fkBnwM3JnYU/w3k4M0WecCragNBm12C
-         QL4GWV0vsWAaz/1/avKyCAy9F2XQ55xIWyvCm2IJVMVvmRVrBnYrQwtUkys/PNujp/f4
-         I9HWGQAMdOUwhGa4cqf4m8UAFnpTZLs279XkzfPVTHPK0t+GCK07kEFV7NEYiB8dQIsa
-         SsSa1L8NvgXXk0AK9z+Ga/keCGOGUWWrZZwVVg1t11CMlj1L8dt6wM76usjZB5kJkAmH
-         J1AIQGf35Z85tDyS79yLXbj7RJ1uiW3kgMTb4LU1gMeH8eP+Jh/2zG8QiFtckSwHjoP2
-         zyeg==
-X-Gm-Message-State: APjAAAWkLZ6xlIoqFY1FfW8DwxZ5WuAL3boEIyoi26dkPDNrVDLUIZYq
-        owioU0+ETO+YQ+YHm3pFWGM=
-X-Google-Smtp-Source: APXvYqxVlxI+C53z9BfpApHBqX5Bh4zPMCrVSRk4CROsV3Nz+iH6IjFXfgCxjIhzf4CaBiwwWe3nUw==
-X-Received: by 2002:a17:902:d896:: with SMTP id b22mr64516718plz.40.1558378637077;
-        Mon, 20 May 2019 11:57:17 -0700 (PDT)
-Received: from jordon-HP-15-Notebook-PC.domain.name ([106.51.23.153])
-        by smtp.gmail.com with ESMTPSA id k30sm13607075pgl.89.2019.05.20.11.57.13
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Mon, 20 May 2019 11:57:15 -0700 (PDT)
-From:   Souptick Joarder <jrdr.linux@gmail.com>
-To:     bskeggs@redhat.com, airlied@linux.ie, daniel@ffwll.ch,
-        jglisse@redhat.com
-Cc:     dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org,
-        Souptick Joarder <jrdr.linux@gmail.com>
-Subject: [PATCH] drm/nouveau/svm: Convert to use hmm_range_fault()
-Date:   Tue, 21 May 2019 00:31:58 +0530
-Message-Id: <1558378918-25279-1-git-send-email-jrdr.linux@gmail.com>
-X-Mailer: git-send-email 1.9.1
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=tJAyJXTsyL/aojYOLcoP+1kKW6LofZI8dfFMh+ysm/4=;
+        b=TEwyyCE1T3aD7B2YUiDgBIEtBsUAfxDwb8fHo6qKKEzbPmxUYOMMpPoS/B1PPLTzm/
+         C9TSkNU610AYupROIzT0c4dO+K2nrEz46a6Jm1rrjA46DkrcuJOv6qhtFFG/JAiJbQwn
+         t5bbI/ZFVoWs0vLa+TA1yCMAlNyShRayHMUjEG0V9Zv75xX8BQo+0XyM/yx3m4+3nkUi
+         uHJFxg5eWNZOtsMqtV6ODFRL8+EA9dHHi5okeup4mZxiqIqFens/cd0YkFyG0nbc4BbN
+         wHTssAifPKHmpuY+QVOUIxj6yKJiQZI7hkUwIqMV/G3ROASEGqC8qKsB+HA5BKUO6Njo
+         PqGg==
+X-Gm-Message-State: APjAAAUiccjQg0Odz+rzGl2qACy+ji7mJXp02YH+lTcVCYm0WCcSb0ZB
+        bK8CZME5HBdJy+2J+NC3QF1SQo7QxkE=
+X-Google-Smtp-Source: APXvYqwlnt/oummO4IhOP0B74AP6KgvD3t/cquTLPY4eri59+UYWj/Ga3SPL3zo6AKlYtyKZ3db8Jw==
+X-Received: by 2002:a5d:4a92:: with SMTP id o18mr3932140wrq.80.1558378660998;
+        Mon, 20 May 2019 11:57:40 -0700 (PDT)
+Received: from [192.168.1.7] (139.red-79-146-81.dynamicip.rima-tde.net. [79.146.81.139])
+        by smtp.gmail.com with ESMTPSA id n14sm14797489wrt.79.2019.05.20.11.57.39
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 20 May 2019 11:57:40 -0700 (PDT)
+Subject: Re: [PATCH v2] tty: serial: msm_serial: Fix XON/XOFF
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     agross@kernel.org, david.brown@linaro.org,
+        gregkh@linuxfoundation.org, sboyd@kernel.org, jslaby@suse.com,
+        keescook@chromium.org, anton@enomsg.org, ccross@android.com,
+        tony.luck@intel.com, linux-arm-msm@vger.kernel.org,
+        linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20190520183848.27719-1-jorge.ramirez-ortiz@linaro.org>
+ <20190520185008.GX2085@tuxbook-pro>
+From:   Jorge Ramirez <jorge.ramirez-ortiz@linaro.org>
+Message-ID: <ef705e54-78bb-27e2-5060-31056234dad3@linaro.org>
+Date:   Mon, 20 May 2019 20:57:39 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.2.1
+MIME-Version: 1.0
+In-Reply-To: <20190520185008.GX2085@tuxbook-pro>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Convert to use hmm_range_fault().
+On 5/20/19 20:50, Bjorn Andersson wrote:
+> On Mon 20 May 11:38 PDT 2019, Jorge Ramirez-Ortiz wrote:
+> 
+>> When the tty layer requests the uart to throttle, the current code
+>> executing in msm_serial will trigger "Bad mode in Error Handler" and
+>> generate an invalid stack frame in pstore before rebooting (that is if
+>> pstore is indeed configured: otherwise the user shall just notice a
+>> reboot with no further information dumped to the console).
+>>
+>> This patch replaces the PIO byte accessor with the word accessor
+>> already used in PIO mode.
+>>
+>> Fixes: 68252424a7c7 ("tty: serial: msm: Support big-endian CPUs")
+>> Cc: stable@vger.kernel.org
+>> Signed-off-by: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
+>> Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> 
+> You missed Stephen's
+> 
+> Reviewed-by: Stephen Boyd <swboyd@chromium.org>
 
-Signed-off-by: Souptick Joarder <jrdr.linux@gmail.com>
----
- drivers/gpu/drm/nouveau/nouveau_svm.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+argh sorry Stephen. can the maintainer add it when it gets merged or
+shall I post V3?
 
-diff --git a/drivers/gpu/drm/nouveau/nouveau_svm.c b/drivers/gpu/drm/nouveau/nouveau_svm.c
-index 93ed43c..8d56bd6 100644
---- a/drivers/gpu/drm/nouveau/nouveau_svm.c
-+++ b/drivers/gpu/drm/nouveau/nouveau_svm.c
-@@ -649,7 +649,7 @@ struct nouveau_svmm {
- 		range.values = nouveau_svm_pfn_values;
- 		range.pfn_shift = NVIF_VMM_PFNMAP_V0_ADDR_SHIFT;
- again:
--		ret = hmm_vma_fault(&range, true);
-+		ret = hmm_range_fault(&range, true);
- 		if (ret == 0) {
- 			mutex_lock(&svmm->mutex);
- 			if (!hmm_vma_range_done(&range)) {
--- 
-1.9.1
+> 
+> Regards,
+> Bjorn
+> 
+>> ---
+>>  drivers/tty/serial/msm_serial.c | 5 ++++-
+>>  1 file changed, 4 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/tty/serial/msm_serial.c b/drivers/tty/serial/msm_serial.c
+>> index 109096033bb1..23833ad952ba 100644
+>> --- a/drivers/tty/serial/msm_serial.c
+>> +++ b/drivers/tty/serial/msm_serial.c
+>> @@ -860,6 +860,7 @@ static void msm_handle_tx(struct uart_port *port)
+>>  	struct circ_buf *xmit = &msm_port->uart.state->xmit;
+>>  	struct msm_dma *dma = &msm_port->tx_dma;
+>>  	unsigned int pio_count, dma_count, dma_min;
+>> +	char buf[4] = { 0 };
+>>  	void __iomem *tf;
+>>  	int err = 0;
+>>  
+>> @@ -869,10 +870,12 @@ static void msm_handle_tx(struct uart_port *port)
+>>  		else
+>>  			tf = port->membase + UART_TF;
+>>  
+>> +		buf[0] = port->x_char;
+>> +
+>>  		if (msm_port->is_uartdm)
+>>  			msm_reset_dm_count(port, 1);
+>>  
+>> -		iowrite8_rep(tf, &port->x_char, 1);
+>> +		iowrite32_rep(tf, buf, 1);
+>>  		port->icount.tx++;
+>>  		port->x_char = 0;
+>>  		return;
+>> -- 
+>> 2.21.0
+>>
+> 
 
