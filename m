@@ -2,103 +2,134 @@ Return-Path: <SRS0=lq4r=TU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0369DC04AAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 04:41:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A963C04AAF
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 04:43:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C2FE5204FD
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 04:41:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D3343204FD
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 04:43:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CHlsGg1p"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="unoGz+98"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730035AbfETElL (ORCPT
+        id S1730090AbfETEnV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 00:41:11 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:46182 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727539AbfETElL (ORCPT
+        Mon, 20 May 2019 00:43:21 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:45789 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729158AbfETEnU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 00:41:11 -0400
-Received: by mail-pl1-f195.google.com with SMTP id r18so6077083pls.13;
-        Sun, 19 May 2019 21:41:10 -0700 (PDT)
+        Mon, 20 May 2019 00:43:20 -0400
+Received: by mail-pl1-f196.google.com with SMTP id a5so6066822pls.12
+        for <linux-kernel@vger.kernel.org>; Sun, 19 May 2019 21:43:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=linaro.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=hQw5aECgY9hKK5rZ7g8MBM09I6jNL0ROWQsBCMlAOrQ=;
-        b=CHlsGg1p7a9hc3+KkJoUw8ok0htU3vc27YzRVP8CMdqBhgkmGeNP91gS+yuP3utt5G
-         oRlTos/xF2Rejcsd0BkEVMmQrs7XKf/dae6xidzWuR+xFI5AILwFC0Hlk5g0UvwEkbzW
-         1iZdLSnjXW9taDvh8QeuNJmhAT1sawmbt2Pf0k75DF7p1fs8uZA4cI+YDo/ekFDDS72w
-         onIWHPVbYxSv7jLjDoRrXA+L2q5UJH/WIyaj2D6PFQccc65Ma5Vf/ZVcs+1OxyWsjq1D
-         MpNfsnRt/2BBgrbsH9ZIil3AoE5FMa0lZKhAo1p4GsQTR9eWVhx2LNBmJ50+FQR2Mjst
-         SqaA==
+        bh=+XiwKGCePMesqEFsZbk88+d/XnSzWj4VH7Ml5qL5pt0=;
+        b=unoGz+98418sHeX4y3va9Fw7O/7rbEjL0hqVIq1my/Asr2dzM38M5H+2LqZvHB8AAU
+         CqAQ6kJMNTvZsHuKd08/xPftA/HCBVOpd9T/IVsfET13Jf59zZ2lgw7rBogYKdMYL5HO
+         D19WNFD3+CXw7ekYEu/sBvRFOLcPxesn9XRptLA4MN0cxd/h+H6ijVajWhreBcZlEb89
+         1zto6lDvOL6iTVNTtZLtBD5/usk/MiY8ToYMfmuWPSFpLXmjSRm7UfgLrVM9IDZz023L
+         +jA3+5k0WyY/BV+s9tNRRQvSDaqiY473/tMDg9LXbhdS9165ETFM0jaOZW2A2jQBuMSY
+         XRug==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=hQw5aECgY9hKK5rZ7g8MBM09I6jNL0ROWQsBCMlAOrQ=;
-        b=n1D80zL2FLEzoy/SEBJd/0SDkpxgckWHEQzRKeii1OQsiDdUOgPNS6bWNbGYgkM3ZH
-         gBSB1E0Xs2DZ+cWQpVkzM9OdgK8iAW9XdaweEyo/7coSZTCJWL8Gzh0mKevuLongYRr+
-         tt8iOQPepsRriVgLw+ZR5/S7UrSFXV4P664MQpNfBpLaTeuH8F7LYmISchdBAIiU/Zub
-         b5ezv3ICl+rvQK98Dwu/T6Kj26msOHO2ERgnZW34ll/kXLg0BJp0VG/+pD2mhwaU7zU1
-         1AEvEXIsNZ1/jCct1xans6nTG60aXNwHBGSVviBjzg5dbEhY0CVJft8gu22vsyKvJ7XP
-         tAAQ==
-X-Gm-Message-State: APjAAAW2hI3+RfWqDeETWfq8yEFpYa5Fz5ITzo/2hGW+LZ/eQq4dTdJA
-        oz91+5uQHJy29qcplugT9LU=
-X-Google-Smtp-Source: APXvYqygdq7byHUUQ6kGF5vwKhQcPMMTp8G+OKse6Q0yeghSrgx1i3NizEAosJMWB5h7sP2z/RCo7g==
-X-Received: by 2002:a17:902:6b03:: with SMTP id o3mr23433791plk.85.1558327270669;
-        Sun, 19 May 2019 21:41:10 -0700 (PDT)
-Received: from localhost (c-73-222-71-142.hsd1.ca.comcast.net. [73.222.71.142])
-        by smtp.gmail.com with ESMTPSA id m123sm21780054pfm.39.2019.05.19.21.41.09
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Sun, 19 May 2019 21:41:09 -0700 (PDT)
-Date:   Sun, 19 May 2019 21:41:07 -0700
-From:   Richard Cochran <richardcochran@gmail.com>
-To:     "Y.b. Lu" <yangbo.lu@nxp.com>
-Cc:     "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        David Miller <davem@davemloft.net>,
-        Claudiu Manoil <claudiu.manoil@nxp.com>,
-        Shawn Guo <shawnguo@kernel.org>,
+        bh=+XiwKGCePMesqEFsZbk88+d/XnSzWj4VH7Ml5qL5pt0=;
+        b=RiO0yL6DAfH4A25hbEUUv0B8yVmrqQ/LKGXWSzqKwBZb43wjzOSEQgT7EEC6wHWEr8
+         0TzVkev9LcuOGv1zYjIgzjp41CAFwp6xXpuWgFuVNg8ntmnwkK/Uy77DuXtzh81DLYDW
+         t15wqKEfqn9q0cCyPdYETcncLpItG277li5sDhqZxT0L0UTtckENRH5cMKN6tXCydD0X
+         LdRPzMm4iUrw93GfhdKeiMak6LBsN0+v4i29yXYR9ZddX14JE/V+XXCcQqWwKmcqsYPx
+         oRwa5mxv/HVWpd756c0KmjUGK3gCer+JQLZ/XNbYXfsXmbwTMd/zvXkPP4JL4tJyxQej
+         d3Vg==
+X-Gm-Message-State: APjAAAUQw67e4l6hjSgaQ8AZICKcjqPlu1oBWQgZYIINUPEHh/ZWUF6C
+        CWvQLa620RmliHZGaK1LcXTncw==
+X-Google-Smtp-Source: APXvYqxKxyg7Aak1yT0b9mdNSLwjCHjek+L8V1ZtJqzVLOZXXZuDfEEcEGssLjb+LtYO06CzCKIoow==
+X-Received: by 2002:a17:902:8e8a:: with SMTP id bg10mr19217573plb.247.1558327400037;
+        Sun, 19 May 2019 21:43:20 -0700 (PDT)
+Received: from localhost ([122.172.118.99])
+        by smtp.gmail.com with ESMTPSA id b16sm27365221pfd.12.2019.05.19.21.43.18
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sun, 19 May 2019 21:43:19 -0700 (PDT)
+Date:   Mon, 20 May 2019 10:13:17 +0530
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     "Andrew-sh.Cheng" <andrew-sh.cheng@mediatek.com>
+Cc:     MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
         Rob Herring <robh+dt@kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [EXT] Re: [PATCH 1/3] enetc: add hardware timestamping support
-Message-ID: <20190520044107.ugro6zb7vkveyjw5@localhost>
-References: <20190516100028.48256-1-yangbo.lu@nxp.com>
- <20190516100028.48256-2-yangbo.lu@nxp.com>
- <20190516143251.akbt3ns6ue2jrhl5@localhost>
- <VI1PR0401MB2237FB387B3F5ABC70EE4285F8060@VI1PR0401MB2237.eurprd04.prod.outlook.com>
+        Mark Rutland <mark.rutland@arm.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@kernel.org>,
+        linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
+        srv_heupstream@mediatek.com, fan.chen@mediatek.com
+Subject: Re: [PATCH 4/8] dt-bindings: devfreq: add compatible for mt8183 cci
+ devfreq
+Message-ID: <20190520044317.pwciu4bjuz5jh7f7@vireshk-i7>
+References: <1557997725-12178-1-git-send-email-andrew-sh.cheng@mediatek.com>
+ <1557997725-12178-5-git-send-email-andrew-sh.cheng@mediatek.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <VI1PR0401MB2237FB387B3F5ABC70EE4285F8060@VI1PR0401MB2237.eurprd04.prod.outlook.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
+In-Reply-To: <1557997725-12178-5-git-send-email-andrew-sh.cheng@mediatek.com>
+User-Agent: NeoMutt/20180716-391-311a52
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 20, 2019 at 03:20:23AM +0000, Y.b. Lu wrote:
-> > > +config FSL_ENETC_HW_TIMESTAMPING
-> > > +     bool "ENETC hardware timestamping support"
-> > > +     depends on FSL_ENETC || FSL_ENETC_VF
-> > > +     help
-> > > +       Enable hardware timestamping support on the Ethernet packets
-> > > +       using the SO_TIMESTAMPING API. Because the RX BD ring dynamic
-> > > +       allocation hasn't been supported and it's too expensive to use
-> > 
-> > s/it's/it is/
+On 16-05-19, 17:08, Andrew-sh.Cheng wrote:
+> From: "Andrew-sh.Cheng" <andrew-sh.cheng@mediatek.com>
 > 
-> [Y.b. Lu] Will modify it. BTW, may I know what's the purpose of dropping single quote character? For searching, script checking, or something else?
+> This adds dt-binding documentation of cci devfreq
+> for Mediatek MT8183 SoC platform.
+> 
+> Signed-off-by: Andrew-sh.Cheng <andrew-sh.cheng@mediatek.com>
+> ---
+>  .../bindings/devfreq/mt8183-cci-devfreq.txt          | 20 ++++++++++++++++++++
+>  1 file changed, 20 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/devfreq/mt8183-cci-devfreq.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/devfreq/mt8183-cci-devfreq.txt b/Documentation/devicetree/bindings/devfreq/mt8183-cci-devfreq.txt
+> new file mode 100644
+> index 000000000000..3189902902e0
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/devfreq/mt8183-cci-devfreq.txt
+> @@ -0,0 +1,20 @@
+> +* Mediatek Cache Coherent Interconnect(CCI) frequency device
+> +
+> +Required properties:
+> +- compatible: should contain "mediatek,mt8183-cci" for frequency scaling of CCI
 
-Simply because "it's" is informal speech, but the Kconfig help is
-formal technical documentation.  (Or at least it should be!)
+Example doesn't have this compatible .
 
-Thanks,
-Richard
+> +- clocks: for frequency scaling of CCI
+> +- clock-names: for frequency scaling of CCI driver to reference
+> +- regulator: for voltage scaling of CCI
+> +- operating-points-v2: for frequency scaling of CCI opp table
+> +
+> +Example:
+> +	cci: cci {
+> +		compatible = "mediatek,cci";
+> +		clocks = <&apmixedsys CLK_APMIXED_CCIPLL>;
+> +		clock-names = "cci_clock";
+> +		operating-points-v2 = <&cci_opp>;
+> +	};
+> +
+> +	&cci {
+> +		proc-supply = <&mt6358_vproc12_reg>;
+> +	};
+> \ No newline at end of file
+> -- 
+> 2.12.5
+
+-- 
+viresh
