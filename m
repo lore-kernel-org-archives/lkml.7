@@ -4,42 +4,42 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E426BC04AAC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 10:47:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DFF7EC04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 10:47:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B5D6820856
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 10:47:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B13E220856
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 10:47:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732220AbfETKrw (ORCPT
+        id S1731986AbfETKrh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 06:47:52 -0400
-Received: from mx2.suse.de ([195.135.220.15]:55408 "EHLO mx1.suse.de"
+        Mon, 20 May 2019 06:47:37 -0400
+Received: from mx2.suse.de ([195.135.220.15]:55316 "EHLO mx1.suse.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1732023AbfETKrk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 06:47:40 -0400
+        id S1730323AbfETKrh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 06:47:37 -0400
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 601ADAFD6;
-        Mon, 20 May 2019 10:47:39 +0000 (UTC)
+        by mx1.suse.de (Postfix) with ESMTP id 91BADAFD2;
+        Mon, 20 May 2019 10:47:35 +0000 (UTC)
 From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-To:     stefan.wahren@i2se.com, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
+To:     stefan.wahren@i2se.com, Florian Fainelli <f.fainelli@gmail.com>,
         Ray Jui <rjui@broadcom.com>,
         Scott Branden <sbranden@broadcom.com>,
-        bcm-kernel-feedback-list@broadcom.com
+        bcm-kernel-feedback-list@broadcom.com,
+        Eric Anholt <eric@anholt.net>
 Cc:     mbrugger@suse.de, viresh.kumar@linaro.org, rjw@rjwysocki.net,
-        sboyd@kernel.org, eric@anholt.net, ptesarik@suse.com,
+        sboyd@kernel.org, ptesarik@suse.com,
         linux-rpi-kernel@lists.infradead.org, ssuloev@orpaltech.com,
         linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         mturquette@baylibre.com, linux-pm@vger.kernel.org,
         Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [RFC v2 4/5] dts: bcm2837: add per-cpu clock devices
-Date:   Mon, 20 May 2019 12:47:06 +0200
-Message-Id: <20190520104708.11980-5-nsaenzjulienne@suse.de>
+        linux-kernel@vger.kernel.org
+Subject: [RFC v2 1/5] clk: bcm2835: set CLK_GET_RATE_NOCACHE on CPU clocks
+Date:   Mon, 20 May 2019 12:47:03 +0200
+Message-Id: <20190520104708.11980-2-nsaenzjulienne@suse.de>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190520104708.11980-1-nsaenzjulienne@suse.de>
 References: <20190520104708.11980-1-nsaenzjulienne@suse.de>
@@ -50,54 +50,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The four CPUs share a same clock source called pllb_arm. The clock can
-be scaled through the raspberrypi firmware interface.
+Raspberry Pi's firmware is responsible for updating the cpu clocks and
+pll. This makes sure we get the right rates anytime.
 
 Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
 ---
- arch/arm/boot/dts/bcm2837.dtsi | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ drivers/clk/bcm/clk-bcm2835.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm/boot/dts/bcm2837.dtsi b/arch/arm/boot/dts/bcm2837.dtsi
-index beb6c502dadc..a8fea6696b42 100644
---- a/arch/arm/boot/dts/bcm2837.dtsi
-+++ b/arch/arm/boot/dts/bcm2837.dtsi
-@@ -44,6 +44,8 @@
- 			reg = <0>;
- 			enable-method = "spin-table";
- 			cpu-release-addr = <0x0 0x000000d8>;
-+			clocks = <&clocks BCM2835_PLLB_ARM>;
-+			clock-names = "pllb_arm";
- 		};
+diff --git a/drivers/clk/bcm/clk-bcm2835.c b/drivers/clk/bcm/clk-bcm2835.c
+index 770bb01f523e..c2772dfb155a 100644
+--- a/drivers/clk/bcm/clk-bcm2835.c
++++ b/drivers/clk/bcm/clk-bcm2835.c
+@@ -411,6 +411,7 @@ struct bcm2835_pll_data {
+ 	u32 reference_enable_mask;
+ 	/* Bit in CM_LOCK to indicate when the PLL has locked. */
+ 	u32 lock_mask;
++	u32 flags;
  
- 		cpu1: cpu@1 {
-@@ -52,6 +54,8 @@
- 			reg = <1>;
- 			enable-method = "spin-table";
- 			cpu-release-addr = <0x0 0x000000e0>;
-+			clocks = <&clocks BCM2835_PLLB_ARM>;
-+			clock-names = "pllb_arm";
- 		};
+ 	const struct bcm2835_pll_ana_bits *ana;
  
- 		cpu2: cpu@2 {
-@@ -60,6 +64,8 @@
- 			reg = <2>;
- 			enable-method = "spin-table";
- 			cpu-release-addr = <0x0 0x000000e8>;
-+			clocks = <&clocks BCM2835_PLLB_ARM>;
-+			clock-names = "pllb_arm";
- 		};
+@@ -1299,7 +1300,7 @@ static struct clk_hw *bcm2835_register_pll(struct bcm2835_cprman *cprman,
+ 	init.num_parents = 1;
+ 	init.name = data->name;
+ 	init.ops = &bcm2835_pll_clk_ops;
+-	init.flags = CLK_IGNORE_UNUSED;
++	init.flags = data->flags | CLK_IGNORE_UNUSED;
  
- 		cpu3: cpu@3 {
-@@ -68,6 +74,8 @@
- 			reg = <3>;
- 			enable-method = "spin-table";
- 			cpu-release-addr = <0x0 0x000000f0>;
-+			clocks = <&clocks BCM2835_PLLB_ARM>;
-+			clock-names = "pllb_arm";
- 		};
- 	};
- };
+ 	pll = kzalloc(sizeof(*pll), GFP_KERNEL);
+ 	if (!pll)
+@@ -1660,6 +1661,7 @@ static const struct bcm2835_clk_desc clk_desc_array[] = {
+ 		.ana_reg_base = A2W_PLLB_ANA0,
+ 		.reference_enable_mask = A2W_XOSC_CTRL_PLLB_ENABLE,
+ 		.lock_mask = CM_LOCK_FLOCKB,
++		.flags = CLK_GET_RATE_NOCACHE,
+ 
+ 		.ana = &bcm2835_ana_default,
+ 
+@@ -1674,7 +1676,7 @@ static const struct bcm2835_clk_desc clk_desc_array[] = {
+ 		.load_mask = CM_PLLB_LOADARM,
+ 		.hold_mask = CM_PLLB_HOLDARM,
+ 		.fixed_divider = 1,
+-		.flags = CLK_SET_RATE_PARENT),
++		.flags = CLK_SET_RATE_PARENT | CLK_GET_RATE_NOCACHE),
+ 
+ 	/*
+ 	 * PLLC is the core PLL, used to drive the core VPU clock.
 -- 
 2.21.0
 
