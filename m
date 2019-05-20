@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A19DC04AAC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:32:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9DA1C04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:32:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2F096214DA
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:32:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B449320815
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:32:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558355558;
-	bh=nxNOUnAZtzm/cE0H+MLnQKOIQBtAbjpuXj6FT/WkQXw=;
+	s=default; t=1558355560;
+	bh=HSEcMdBbRhVoEvlUEFHINEss+Whux1fiVFniM0l20Lc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=P+CIl8sl42z5yL7NP6SQF7WYUkRjAp3CH4dHWV2bsl/zxqxGpf+pfPwfcTHfXT2Ng
-	 cEGNlsLYGEqYchfrIbbdfgY9FS+9RcbgQSbgvsnxQYiL+0Dv0norX8A3xvZLBye3XR
-	 KlGNCGwUxDV3ajvehEU0Pm0HfmWYeiReM/2G77iE=
+	b=nWXSg8x/BgwIJWAKb0eHtXI0mka2ePFeQHJNEdiMn8Y6wlDbQF+M0NpsJ20x1j4O8
+	 VSFivoc57zteq91yeSv7S3qNQdk7d9HJLGfxBW1n9/AOdsKG4irJ2MjA6vbojEOzK2
+	 g20ah11KFl8zzYMi74oz4Xp+UL/VI8Pog98IuxBY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390587AbfETMch (ORCPT
+        id S2390598AbfETMcj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 08:32:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49496 "EHLO mail.kernel.org"
+        Mon, 20 May 2019 08:32:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49542 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389210AbfETMcd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 08:32:33 -0400
+        id S2390577AbfETMcg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 08:32:36 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3630220645;
-        Mon, 20 May 2019 12:32:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C2858204FD;
+        Mon, 20 May 2019 12:32:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558355552;
-        bh=nxNOUnAZtzm/cE0H+MLnQKOIQBtAbjpuXj6FT/WkQXw=;
+        s=default; t=1558355555;
+        bh=HSEcMdBbRhVoEvlUEFHINEss+Whux1fiVFniM0l20Lc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Mgwiu+pDcq6pYi19InFKm+WjP4rQ+BcIl2TV5BzN22ZrlcqV+vmYjkhUleq2dmZQ8
-         WWWfaIptQ/XrQ6yr5OqpTj1UfjBzZVV1ecyrfiVluhL5mRI2ME8Gs+dHyd/5d5n77h
-         3VfBuMY3oDq7Pky44gcwgz7hg+JKPaWxL4N6NcQY=
+        b=c6o2UyWdaQ+fAcBrklvjGhRQx2LKhh30nQP8bhgOY4kRNFvk3dL39ceK8T6+Vv7ps
+         5oV3dalF4xTo25WVZchRHMJfLoaL5FNCravcJMqKQt8NgUSogP9W3WSW6oPIPPno/0
+         x+jMWDxozbX1eZswbrTZmalO2DZwMkwRw3c7ybkg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Eric Biggers <ebiggers@google.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
         Herbert Xu <herbert@gondor.apana.org.au>
-Subject: [PATCH 5.1 035/128] crypto: arm64/gcm-aes-ce - fix no-NEON fallback code
-Date:   Mon, 20 May 2019 14:13:42 +0200
-Message-Id: <20190520115252.038410139@linuxfoundation.org>
+Subject: [PATCH 5.1 036/128] crypto: gcm - fix incompatibility between "gcm" and "gcm_base"
+Date:   Mon, 20 May 2019 14:13:43 +0200
+Message-Id: <20190520115252.112924967@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190520115249.449077487@linuxfoundation.org>
 References: <20190520115249.449077487@linuxfoundation.org>
@@ -62,66 +61,135 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Eric Biggers <ebiggers@google.com>
 
-commit 580e295178402d14bbf598a5702f8e01fc59dbaa upstream.
+commit f699594d436960160f6d5ba84ed4a222f20d11cd upstream.
 
-The arm64 gcm-aes-ce algorithm is failing the extra crypto self-tests
-following my patches to test the !may_use_simd() code paths, which
-previously were untested.  The problem is that in the !may_use_simd()
-case, an odd number of AES blocks can be processed within each step of
-the skcipher_walk.  However, the skcipher_walk is being done with a
-"stride" of 2 blocks and is advanced by an even number of blocks after
-each step.  This causes the encryption to produce the wrong ciphertext
-and authentication tag, and causes the decryption to incorrectly fail.
+GCM instances can be created by either the "gcm" template, which only
+allows choosing the block cipher, e.g. "gcm(aes)"; or by "gcm_base",
+which allows choosing the ctr and ghash implementations, e.g.
+"gcm_base(ctr(aes-generic),ghash-generic)".
 
-Fix it by only processing an even number of blocks per step.
+However, a "gcm_base" instance prevents a "gcm" instance from being
+registered using the same implementations.  Nor will the instance be
+found by lookups of "gcm".  This can be used as a denial of service.
+Moreover, "gcm_base" instances are never tested by the crypto
+self-tests, even if there are compatible "gcm" tests.
 
-Fixes: c2b24c36e0a3 ("crypto: arm64/aes-gcm-ce - fix scatterwalk API violation")
-Fixes: 71e52c278c54 ("crypto: arm64/aes-ce-gcm - operate on two input blocks at a time")
-Cc: <stable@vger.kernel.org> # v4.19+
+The root cause of these problems is that instances of the two templates
+use different cra_names.  Therefore, fix these problems by making
+"gcm_base" instances set the same cra_name as "gcm" instances, e.g.
+"gcm(aes)" instead of "gcm_base(ctr(aes-generic),ghash-generic)".
+
+This requires extracting the block cipher name from the name of the ctr
+algorithm.  It also requires starting to verify that the algorithms are
+really ctr and ghash, not something else entirely.  But it would be
+bizarre if anyone were actually using non-gcm-compatible algorithms with
+gcm_base, so this shouldn't break anyone in practice.
+
+Fixes: d00aa19b507b ("[CRYPTO] gcm: Allow block cipher parameter")
+Cc: stable@vger.kernel.org
 Signed-off-by: Eric Biggers <ebiggers@google.com>
-Reviewed-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
 Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/arm64/crypto/ghash-ce-glue.c |   10 ++++++----
- 1 file changed, 6 insertions(+), 4 deletions(-)
+ crypto/gcm.c |   34 +++++++++++-----------------------
+ 1 file changed, 11 insertions(+), 23 deletions(-)
 
---- a/arch/arm64/crypto/ghash-ce-glue.c
-+++ b/arch/arm64/crypto/ghash-ce-glue.c
-@@ -473,9 +473,11 @@ static int gcm_encrypt(struct aead_reque
- 		put_unaligned_be32(2, iv + GCM_IV_SIZE);
+--- a/crypto/gcm.c
++++ b/crypto/gcm.c
+@@ -597,7 +597,6 @@ static void crypto_gcm_free(struct aead_
  
- 		while (walk.nbytes >= (2 * AES_BLOCK_SIZE)) {
--			int blocks = walk.nbytes / AES_BLOCK_SIZE;
-+			const int blocks =
-+				walk.nbytes / (2 * AES_BLOCK_SIZE) * 2;
- 			u8 *dst = walk.dst.virt.addr;
- 			u8 *src = walk.src.virt.addr;
-+			int remaining = blocks;
+ static int crypto_gcm_create_common(struct crypto_template *tmpl,
+ 				    struct rtattr **tb,
+-				    const char *full_name,
+ 				    const char *ctr_name,
+ 				    const char *ghash_name)
+ {
+@@ -638,7 +637,8 @@ static int crypto_gcm_create_common(stru
+ 		goto err_free_inst;
  
- 			do {
- 				__aes_arm64_encrypt(ctx->aes_key.key_enc,
-@@ -485,9 +487,9 @@ static int gcm_encrypt(struct aead_reque
+ 	err = -EINVAL;
+-	if (ghash->digestsize != 16)
++	if (strcmp(ghash->base.cra_name, "ghash") != 0 ||
++	    ghash->digestsize != 16)
+ 		goto err_drop_ghash;
  
- 				dst += AES_BLOCK_SIZE;
- 				src += AES_BLOCK_SIZE;
--			} while (--blocks > 0);
-+			} while (--remaining > 0);
+ 	crypto_set_skcipher_spawn(&ctx->ctr, aead_crypto_instance(inst));
+@@ -650,24 +650,24 @@ static int crypto_gcm_create_common(stru
  
--			ghash_do_update(walk.nbytes / AES_BLOCK_SIZE, dg,
-+			ghash_do_update(blocks, dg,
- 					walk.dst.virt.addr, &ctx->ghash_key,
- 					NULL, pmull_ghash_update_p64);
+ 	ctr = crypto_spawn_skcipher_alg(&ctx->ctr);
  
-@@ -609,7 +611,7 @@ static int gcm_decrypt(struct aead_reque
- 		put_unaligned_be32(2, iv + GCM_IV_SIZE);
+-	/* We only support 16-byte blocks. */
++	/* The skcipher algorithm must be CTR mode, using 16-byte blocks. */
+ 	err = -EINVAL;
+-	if (crypto_skcipher_alg_ivsize(ctr) != 16)
++	if (strncmp(ctr->base.cra_name, "ctr(", 4) != 0 ||
++	    crypto_skcipher_alg_ivsize(ctr) != 16 ||
++	    ctr->base.cra_blocksize != 1)
+ 		goto out_put_ctr;
  
- 		while (walk.nbytes >= (2 * AES_BLOCK_SIZE)) {
--			int blocks = walk.nbytes / AES_BLOCK_SIZE;
-+			int blocks = walk.nbytes / (2 * AES_BLOCK_SIZE) * 2;
- 			u8 *dst = walk.dst.virt.addr;
- 			u8 *src = walk.src.virt.addr;
+-	/* Not a stream cipher? */
+-	if (ctr->base.cra_blocksize != 1)
++	err = -ENAMETOOLONG;
++	if (snprintf(inst->alg.base.cra_name, CRYPTO_MAX_ALG_NAME,
++		     "gcm(%s", ctr->base.cra_name + 4) >= CRYPTO_MAX_ALG_NAME)
+ 		goto out_put_ctr;
  
+-	err = -ENAMETOOLONG;
+ 	if (snprintf(inst->alg.base.cra_driver_name, CRYPTO_MAX_ALG_NAME,
+ 		     "gcm_base(%s,%s)", ctr->base.cra_driver_name,
+ 		     ghash_alg->cra_driver_name) >=
+ 	    CRYPTO_MAX_ALG_NAME)
+ 		goto out_put_ctr;
+ 
+-	memcpy(inst->alg.base.cra_name, full_name, CRYPTO_MAX_ALG_NAME);
+-
+ 	inst->alg.base.cra_flags = (ghash->base.cra_flags |
+ 				    ctr->base.cra_flags) & CRYPTO_ALG_ASYNC;
+ 	inst->alg.base.cra_priority = (ghash->base.cra_priority +
+@@ -709,7 +709,6 @@ static int crypto_gcm_create(struct cryp
+ {
+ 	const char *cipher_name;
+ 	char ctr_name[CRYPTO_MAX_ALG_NAME];
+-	char full_name[CRYPTO_MAX_ALG_NAME];
+ 
+ 	cipher_name = crypto_attr_alg_name(tb[1]);
+ 	if (IS_ERR(cipher_name))
+@@ -719,12 +718,7 @@ static int crypto_gcm_create(struct cryp
+ 	    CRYPTO_MAX_ALG_NAME)
+ 		return -ENAMETOOLONG;
+ 
+-	if (snprintf(full_name, CRYPTO_MAX_ALG_NAME, "gcm(%s)", cipher_name) >=
+-	    CRYPTO_MAX_ALG_NAME)
+-		return -ENAMETOOLONG;
+-
+-	return crypto_gcm_create_common(tmpl, tb, full_name,
+-					ctr_name, "ghash");
++	return crypto_gcm_create_common(tmpl, tb, ctr_name, "ghash");
+ }
+ 
+ static int crypto_gcm_base_create(struct crypto_template *tmpl,
+@@ -732,7 +726,6 @@ static int crypto_gcm_base_create(struct
+ {
+ 	const char *ctr_name;
+ 	const char *ghash_name;
+-	char full_name[CRYPTO_MAX_ALG_NAME];
+ 
+ 	ctr_name = crypto_attr_alg_name(tb[1]);
+ 	if (IS_ERR(ctr_name))
+@@ -742,12 +735,7 @@ static int crypto_gcm_base_create(struct
+ 	if (IS_ERR(ghash_name))
+ 		return PTR_ERR(ghash_name);
+ 
+-	if (snprintf(full_name, CRYPTO_MAX_ALG_NAME, "gcm_base(%s,%s)",
+-		     ctr_name, ghash_name) >= CRYPTO_MAX_ALG_NAME)
+-		return -ENAMETOOLONG;
+-
+-	return crypto_gcm_create_common(tmpl, tb, full_name,
+-					ctr_name, ghash_name);
++	return crypto_gcm_create_common(tmpl, tb, ctr_name, ghash_name);
+ }
+ 
+ static int crypto_rfc4106_setkey(struct crypto_aead *parent, const u8 *key,
 
 
