@@ -2,42 +2,46 @@ Return-Path: <SRS0=lq4r=TU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C255C04AAC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 10:47:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9305C04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 10:47:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4D2A82081C
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 10:47:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AF46420856
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 10:47:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732013AbfETKri (ORCPT
+        id S1732050AbfETKrl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 06:47:38 -0400
-Received: from mx2.suse.de ([195.135.220.15]:55304 "EHLO mx1.suse.de"
+        Mon, 20 May 2019 06:47:41 -0400
+Received: from mx2.suse.de ([195.135.220.15]:55356 "EHLO mx1.suse.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728000AbfETKrh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 06:47:37 -0400
+        id S1730588AbfETKri (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 06:47:38 -0400
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 88D7AAFD1;
-        Mon, 20 May 2019 10:47:35 +0000 (UTC)
+        by mx1.suse.de (Postfix) with ESMTP id AD1E1AFD3;
+        Mon, 20 May 2019 10:47:36 +0000 (UTC)
 From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-To:     stefan.wahren@i2se.com, devicetree@vger.kernel.org,
-        linux-rpi-kernel@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org
+To:     stefan.wahren@i2se.com, Florian Fainelli <f.fainelli@gmail.com>,
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        bcm-kernel-feedback-list@broadcom.com,
+        Eric Anholt <eric@anholt.net>
 Cc:     mbrugger@suse.de, viresh.kumar@linaro.org, rjw@rjwysocki.net,
-        sboyd@kernel.org, eric@anholt.net, f.fainelli@gmail.com,
-        bcm-kernel-feedback-list@broadcom.com, ptesarik@suse.com,
-        ssuloev@orpaltech.com, linux-clk@vger.kernel.org,
-        mturquette@baylibre.com,
+        sboyd@kernel.org, ptesarik@suse.com,
+        linux-rpi-kernel@lists.infradead.org, ssuloev@orpaltech.com,
+        linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        mturquette@baylibre.com, linux-pm@vger.kernel.org,
         Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
         linux-kernel@vger.kernel.org
-Subject: [RFC v2 0/5] cpufreq support for the Raspberry Pi
-Date:   Mon, 20 May 2019 12:47:02 +0200
-Message-Id: <20190520104708.11980-1-nsaenzjulienne@suse.de>
+Subject: [RFC v2 2/5] clk: bcm2835: set pllb_arm divisor as readonly
+Date:   Mon, 20 May 2019 12:47:04 +0200
+Message-Id: <20190520104708.11980-3-nsaenzjulienne@suse.de>
 X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190520104708.11980-1-nsaenzjulienne@suse.de>
+References: <20190520104708.11980-1-nsaenzjulienne@suse.de>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -45,68 +49,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi all,
-as some of you may recall I've been spending some time looking into
-providing 'cpufreq' support for the Raspberry Pi platform[1]. I think
-I'm close to something workable, so I'd love for you to comment on it.
+This divisor is controlled by the firmware, we don't want the clock
+subsystem to update it inadvertently.
 
-There has been some design changes since the last version. Namely the
-fact that I now make sure *only* the CPU frequency is updated. The
-firmware API we use has two modes, with or without turbo. Enabling turbo
-implies not only scaling the CPU clock but also the VPU and other
-peripheral related clocks.  This is problematic as some of them are not
-prepared for this kind frequency changes. I spent some time adapting the
-peripheral drivers, but the result was disappointing as they poorly
-support live frequency changes (which most other chips accept, think for
-instance I2C and clock stretching) but also turned out hard to integrate
-into the kernel. As we were planning to use 'clk_notifiers' which turns
-out not to be such a good idea as it's prone to deadlocks and not
-recommended by the clock maintainers[2]. It's also worth mentioning that
-the foundation kernel doesn't support VPU frequency scaling either.
-
-With this in mind, and as suggested by clock maintainers[2], I've
-decided to integrate the firmware clock interface into the bcm2835 clock
-driver. This, in my opinion, provides the least friction with the
-firmware and lets us write very simple and portable higher level
-drivers. As I did with the 'cpufreq' driver which simply queries the max
-and min frequencies available, which are configurable in the firmware,
-to then trigger the generic 'cpufreq-dt'.
-
-In the future we could further integrate other firmware dependent clocks
-into the main driver. For instance to be able to scale the VPU clock,
-which should be operated through a 'devfreq' driver.
-
-This was tested on a RPi3b+ and if the series is well received I'll test
-it further on all platforms I own.
-
-That's all,
-kind regards,
-Nicolas
-
-[1] https://lists.infradead.org/pipermail/linux-rpi-kernel/2019-April/008634.html
-[2] https://www.spinics.net/lists/linux-clk/msg36937.html
-
+Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
 ---
+ drivers/clk/bcm/clk-bcm2835.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-Changes since v1:
-  - Addressed Viresh's comments in cpufreq driver
-  - Resend with (hopefully) proper CCs
-
-Nicolas Saenz Julienne (5):
-  clk: bcm2835: set CLK_GET_RATE_NOCACHE on CPU clocks
-  clk: bcm2835: set pllb_arm divisor as readonly
-  clk: bcm2835: use firmware interface to update pllb
-  dts: bcm2837: add per-cpu clock devices
-  cpufreq: add driver for Raspbery Pi
-
- arch/arm/boot/dts/bcm2837.dtsi        |   8 +
- drivers/clk/bcm/clk-bcm2835.c         | 284 ++++++++++++++++++++++++--
- drivers/cpufreq/Kconfig.arm           |   8 +
- drivers/cpufreq/Makefile              |   1 +
- drivers/cpufreq/raspberrypi-cpufreq.c |  83 ++++++++
- 5 files changed, 366 insertions(+), 18 deletions(-)
- create mode 100644 drivers/cpufreq/raspberrypi-cpufreq.c
-
+diff --git a/drivers/clk/bcm/clk-bcm2835.c b/drivers/clk/bcm/clk-bcm2835.c
+index c2772dfb155a..5aea110672f3 100644
+--- a/drivers/clk/bcm/clk-bcm2835.c
++++ b/drivers/clk/bcm/clk-bcm2835.c
+@@ -465,6 +465,7 @@ struct bcm2835_pll_divider_data {
+ 	u32 hold_mask;
+ 	u32 fixed_divider;
+ 	u32 flags;
++	u32 div_flags;
+ };
+ 
+ struct bcm2835_clock_data {
+@@ -1349,7 +1350,7 @@ bcm2835_register_pll_divider(struct bcm2835_cprman *cprman,
+ 	divider->div.reg = cprman->regs + data->a2w_reg;
+ 	divider->div.shift = A2W_PLL_DIV_SHIFT;
+ 	divider->div.width = A2W_PLL_DIV_BITS;
+-	divider->div.flags = CLK_DIVIDER_MAX_AT_ZERO;
++	divider->div.flags = data->div_flags | CLK_DIVIDER_MAX_AT_ZERO;
+ 	divider->div.lock = &cprman->regs_lock;
+ 	divider->div.hw.init = &init;
+ 	divider->div.table = NULL;
+@@ -1676,7 +1677,8 @@ static const struct bcm2835_clk_desc clk_desc_array[] = {
+ 		.load_mask = CM_PLLB_LOADARM,
+ 		.hold_mask = CM_PLLB_HOLDARM,
+ 		.fixed_divider = 1,
+-		.flags = CLK_SET_RATE_PARENT | CLK_GET_RATE_NOCACHE),
++		.flags = CLK_SET_RATE_PARENT | CLK_GET_RATE_NOCACHE,
++		.div_flags = CLK_DIVIDER_READ_ONLY),
+ 
+ 	/*
+ 	 * PLLC is the core PLL, used to drive the core VPU clock.
 -- 
 2.21.0
 
