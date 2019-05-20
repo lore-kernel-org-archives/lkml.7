@@ -2,163 +2,174 @@ Return-Path: <SRS0=lq4r=TU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E30C8C04AAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 15:11:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F216C04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 15:12:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B9B2520863
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 15:11:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="WDkH87CO"
+	by mail.kernel.org (Postfix) with ESMTP id 1436420863
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 15:12:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388620AbfETPLl (ORCPT
+        id S2389167AbfETPMN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 11:11:41 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:40592 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730967AbfETPLk (ORCPT
+        Mon, 20 May 2019 11:12:13 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:50684 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1733009AbfETPMM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 11:11:40 -0400
-Received: by mail-pg1-f193.google.com with SMTP id d30so6937803pgm.7
-        for <linux-kernel@vger.kernel.org>; Mon, 20 May 2019 08:11:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=kWQ/hyaLyaZYd4k9b0E1vEn2XlvquDuxKLnZf2eEVqo=;
-        b=WDkH87COf0IydRv14/WVFpnoeM4Pn9ASM3B+dHDy58+l8fZqCQnryXd6AHUPacBMdr
-         MgUUtpO6PN73eSDfAS1uW5beMeU7f6bLS22vRFDAWtrbf1fNTOGXki1YU3zS7oQa+pAG
-         c0fzM0ei7/kjhNNY5qzxNyEWRlWpwlgPL63pK6Ea0g2uZWyZsWeAbObW7XGaRfPBwlNr
-         zvDzQX0jNCz2WenEQsaReWUs7Z4JAxVShHSGlqwDlO7XV/xTqkNqHJvLlMfil3eCmHa0
-         /BsDD9tIVWa6E1gTl3+80W4ftHV3dpMWIjd9CHGMhd+yTGzvGlRYM1/zzaykMqEHPOp6
-         IriQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=kWQ/hyaLyaZYd4k9b0E1vEn2XlvquDuxKLnZf2eEVqo=;
-        b=nUcfr3P7i26U/8ESXGWRCMzALWzfN+2HT19iV5NfvZgqjVWMFktk6337eY1AL6k+36
-         HbI2B+0ghGvhdGFvu2bzRvTPxQ3D/N9HWXBiugCugft7E3/uqs1WJSHdR8/BoYAYWrdr
-         DTZxPHMdgwCJlZxdVsvcRDrdaJkoB0ZMB04pX+EtlUIpkkMyYKf+LKUbuohcMqL3lzWG
-         XriiNu+m4IacfIdylxJ7yZgr2j3KWsvc7KdJav2cfBnKlewDB4vZag7RxgYbWCH1ZESE
-         S0jb7ieIqAE6tAdUfEhnNR8BfoPkDfZ+eDOx3vo+gGpovnxp8eOhhEoGD6qhpcfYWd6a
-         N+4Q==
-X-Gm-Message-State: APjAAAUmUWt7WuQOTTbcbA8pTNusIA9e2Fia9eZKZ4MZw5Ejr5T/g3i9
-        ZRKPmUmxQaEL7dg5886SXYsYlQ==
-X-Google-Smtp-Source: APXvYqxQq5tfBkC/5mldWvHtvXtXtAKgkl+etNFisJ1TJ+MjWD6zgBWjcsUj0mxROzHo8cLADTYyjg==
-X-Received: by 2002:a63:d652:: with SMTP id d18mr59754107pgj.112.1558365099497;
-        Mon, 20 May 2019 08:11:39 -0700 (PDT)
-Received: from tuxbook-pro (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id r14sm20466206pgm.0.2019.05.20.08.11.38
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 20 May 2019 08:11:38 -0700 (PDT)
-Date:   Mon, 20 May 2019 08:12:06 -0700
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Jorge Ramirez <jorge.ramirez-ortiz@linaro.org>
-Cc:     Stephen Boyd <sboyd@kernel.org>, agross@kernel.org,
-        david.brown@linaro.org, gregkh@linuxfoundation.org,
-        jslaby@suse.com, keescook@chromium.org, anton@enomsg.org,
-        ccross@android.com, tony.luck@intel.com,
-        linux-arm-msm@vger.kernel.org, linux-serial@vger.kernel.org,
-        linux-kernel@vger.kernel.org, khasim.mohammed@linaro.org,
-        agsumit@qti.qualcomm.com
-Subject: Re: [PATCH] tty: serial: msm_serial: Fix XON/XOFF
-Message-ID: <20190520151206.GO2085@tuxbook-pro>
-References: <20190520103435.30850-1-jorge.ramirez-ortiz@linaro.org>
- <20190520145110.7BDAE21721@mail.kernel.org>
- <254704a2-ee20-30cd-8362-6e1bd23ec090@linaro.org>
- <f0c89b84-7c3d-596d-06e1-cb5172e62970@linaro.org>
- <20190520151101.GN2085@tuxbook-pro>
+        Mon, 20 May 2019 11:12:12 -0400
+Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4KF6I3r090368
+        for <linux-kernel@vger.kernel.org>; Mon, 20 May 2019 11:12:12 -0400
+Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2skwvv27se-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Mon, 20 May 2019 11:12:11 -0400
+Received: from localhost
+        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <bharata@linux.ibm.com>;
+        Mon, 20 May 2019 16:12:09 +0100
+Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
+        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Mon, 20 May 2019 16:12:07 +0100
+Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x4KFC63D61014040
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 20 May 2019 15:12:06 GMT
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 5801BA4055;
+        Mon, 20 May 2019 15:12:06 +0000 (GMT)
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id D2684A404D;
+        Mon, 20 May 2019 15:12:04 +0000 (GMT)
+Received: from in.ibm.com (unknown [9.199.42.100])
+        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Mon, 20 May 2019 15:12:04 +0000 (GMT)
+Date:   Mon, 20 May 2019 20:42:02 +0530
+From:   Bharata B Rao <bharata@linux.ibm.com>
+To:     Nicholas Piggin <npiggin@gmail.com>
+Cc:     aneesh.kumar@linux.ibm.com, bharata@linux.vnet.ibm.com,
+        linux-kernel@vger.kernel.org, linux-next@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        srikanth <sraithal@linux.vnet.ibm.com>
+Subject: Re: PROBLEM: Power9: kernel oops on memory hotunplug from ppc64le
+ guest
+Reply-To: bharata@linux.ibm.com
+References: <16a7a635-c592-27e2-75b4-d02071833278@linux.vnet.ibm.com>
+ <20190518141434.GA22939@in.ibm.com>
+ <878sv1993k.fsf@concordia.ellerman.id.au>
+ <20190520042533.GB22939@in.ibm.com>
+ <1558327521.633yjtl8ki.astroid@bobo.none>
+ <20190520055622.GC22939@in.ibm.com>
+ <1558335484.9inx69a7ea.astroid@bobo.none>
+ <20190520082035.GD22939@in.ibm.com>
+ <20190520142922.GE22939@in.ibm.com>
+ <1558363500.jsgl4a2lfa.astroid@bobo.none>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190520151101.GN2085@tuxbook-pro>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+In-Reply-To: <1558363500.jsgl4a2lfa.astroid@bobo.none>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-TM-AS-GCONF: 00
+x-cbid: 19052015-0028-0000-0000-0000036FA4D5
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19052015-0029-0000-0000-0000242F4AE2
+Message-Id: <20190520151202.GF22939@in.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-20_07:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1905200099
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon 20 May 08:11 PDT 2019, Bjorn Andersson wrote:
-
-> On Mon 20 May 07:58 PDT 2019, Jorge Ramirez wrote:
-> 
-> > On 5/20/19 16:56, Jorge Ramirez wrote:
-> > > On 5/20/19 16:51, Stephen Boyd wrote:
-> > >> Quoting Jorge Ramirez-Ortiz (2019-05-20 03:34:35)
-> > >>> When the tty layer requests the uart to throttle, the current code
-> > >>> executing in msm_serial will trigger "Bad mode in Error Handler" and
-> > >>> generate an invalid stack frame in pstore before rebooting (that is if
-> > >>> pstore is indeed configured: otherwise the user shall just notice a
-> > >>> reboot with no further information dumped to the console).
-> > >>>
-> > >>> This patch replaces the PIO byte accessor with the word accessor
-> > >>> already used in PIO mode.
-> > >>
-> > >> Because the hardware only accepts word based accessors and fails
-> > >> otherwise? I can believe that.
-> > >>
-> > >> I wonder if the earlier UART hardware this driver used to support (i.e.
-> > >> pre-DM) would accept byte access to the registers. It's possible, but we
-> > >> don't really care because those boards aren't supported.
-> > > 
-> > > ok.
-> > > 
-> > > also the PIO path uses iowrite32_rep to write a number of bytes (from 1
-> > > to 4) so I think it is also appropriate to use it for XON/XOFF.
-> > > 
-> > >>
-> > >>>
-> > >>> Signed-off-by: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
-> > >>> ---
-> > >>
-> > >> Reviewed-by: Stephen Boyd <swboyd@chromium.org>
-> > >>
-> > >>>  drivers/tty/serial/msm_serial.c | 5 ++++-
-> > >>>  1 file changed, 4 insertions(+), 1 deletion(-)
-> > >>>
-> > >>> diff --git a/drivers/tty/serial/msm_serial.c b/drivers/tty/serial/msm_serial.c
-> > >>> index 109096033bb1..23833ad952ba 100644
-> > >>> --- a/drivers/tty/serial/msm_serial.c
-> > >>> +++ b/drivers/tty/serial/msm_serial.c
-> > >>> @@ -869,10 +870,12 @@ static void msm_handle_tx(struct uart_port *port)
-> > >>>                 else
-> > >>>                         tf = port->membase + UART_TF;
-> > >>>  
-> > >>> +               buf[0] = port->x_char;
-> > >>> +
-> > >>>                 if (msm_port->is_uartdm)
-> > >>>                         msm_reset_dm_count(port, 1);
-> > >>>  
-> > >>> -               iowrite8_rep(tf, &port->x_char, 1);
-> > >>> +               iowrite32_rep(tf, buf, 1);
-> > >>
-> > >> I suppose it's OK to write some extra zeroes here?
-> > >>
-> > >>
-> > > 
-> > > yeah, semantically confusing msm_reset_dm_count is what really matters:
-> > > it tells the hardware to only take n bytes (in this case only one) so
-> > > the others will be ignored
+On Tue, May 21, 2019 at 12:55:49AM +1000, Nicholas Piggin wrote:
+> Bharata B Rao's on May 21, 2019 12:29 am:
+> > On Mon, May 20, 2019 at 01:50:35PM +0530, Bharata B Rao wrote:
+> >> On Mon, May 20, 2019 at 05:00:21PM +1000, Nicholas Piggin wrote:
+> >> > Bharata B Rao's on May 20, 2019 3:56 pm:
+> >> > > On Mon, May 20, 2019 at 02:48:35PM +1000, Nicholas Piggin wrote:
+> >> > >> >> > git bisect points to
+> >> > >> >> >
+> >> > >> >> > commit 4231aba000f5a4583dd9f67057aadb68c3eca99d
+> >> > >> >> > Author: Nicholas Piggin <npiggin@gmail.com>
+> >> > >> >> > Date:   Fri Jul 27 21:48:17 2018 +1000
+> >> > >> >> >
+> >> > >> >> >     powerpc/64s: Fix page table fragment refcount race vs speculative references
+> >> > >> >> >
+> >> > >> >> >     The page table fragment allocator uses the main page refcount racily
+> >> > >> >> >     with respect to speculative references. A customer observed a BUG due
+> >> > >> >> >     to page table page refcount underflow in the fragment allocator. This
+> >> > >> >> >     can be caused by the fragment allocator set_page_count stomping on a
+> >> > >> >> >     speculative reference, and then the speculative failure handler
+> >> > >> >> >     decrements the new reference, and the underflow eventually pops when
+> >> > >> >> >     the page tables are freed.
+> >> > >> >> >
+> >> > >> >> >     Fix this by using a dedicated field in the struct page for the page
+> >> > >> >> >     table fragment allocator.
+> >> > >> >> >
+> >> > >> >> >     Fixes: 5c1f6ee9a31c ("powerpc: Reduce PTE table memory wastage")
+> >> > >> >> >     Cc: stable@vger.kernel.org # v3.10+
+> >> > >> >> 
+> >> > >> >> That's the commit that added the BUG_ON(), so prior to that you won't
+> >> > >> >> see the crash.
+> >> > >> > 
+> >> > >> > Right, but the commit says it fixes page table page refcount underflow by
+> >> > >> > introducing a new field &page->pt_frag_refcount. Now we are hitting the underflow
+> >> > >> > for this pt_frag_refcount.
+> >> > >> 
+> >> > >> The fixed underflow is caused by a bug (race on page count) that got 
+> >> > >> fixed by that patch. You are hitting a different underflow here. It's
+> >> > >> not certain my patch caused it, I'm just trying to reproduce now.
+> >> > > 
+> >> > > Ok.
+> >> > 
+> >> > Can't reproduce I'm afraid, tried adding and removing 8GB memory from a
+> >> > 4GB guest (via host adding / removing memory device), and it just works.
+> >> 
+> >> Boot, add 8G, reboot, remove 8G is the sequence to reproduce.
+> >> 
+> >> > 
+> >> > It's likely to be an edge case like an off by one or rounding error
+> >> > that just happens to trigger in your config. Might be easiest if you
+> >> > could test with a debug patch.
+> >> 
+> >> Sure, I will continue debugging.
 > > 
-> > um after I said this, maybe iowrite32_rep should only be applied to
-> > uartdm ... what do you think?
-> > 
+> > When the guest is rebooted after hotplug, the entire memory (which includes
+> > the hotplugged memory) gets remapped again freshly. However at this time
+> > since no slab is available yet, pt_frag_refcount never gets initialized as we
+> > never do pte_fragment_alloc() for these mappings. So we right away hit the
+> > underflow during the first unplug itself, it looks like.
 > 
-> If I read the history correctly this write was a writel() up until
-> 68252424a7c7 ("tty: serial: msm: Support big-endian CPUs").
-> 
-> So I think you should just change this back to a iowrite32_rep() and add
-> a Fixes tag.
-> 
+> Nice catch, good debugging work.
 
-I mean...
+Thanks, with help from Aneesh.
 
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> 
+> > I will check how this can be fixed.
+> 
+> Tricky problem. What do you think? You might be able to make the early 
+> page table allocations in the same pattern as the frag allocations, and 
+> then fill in the struct page metadata when you have those.
+
+Will explore.
+
+> 
+> Other option may be create a new set of page tables after mm comes up
+> to replace the early page tables with. That's a bigger hammer though.
+
+Will also check if similar scenario exists on x86 and if so, how and when
+pte frag data is fixed there.
 
 Regards,
-Bjorn
+Bharata.
+
