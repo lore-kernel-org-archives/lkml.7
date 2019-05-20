@@ -2,260 +2,151 @@ Return-Path: <SRS0=lq4r=TU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C12FC04AAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 08:37:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D36D1C04AAF
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 08:43:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6046A206BA
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 08:37:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A631A206BA
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 08:43:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dxbouzY7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731400AbfETIh4 (ORCPT
+        id S1731300AbfETIn4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 04:37:56 -0400
-Received: from mx2.suse.de ([195.135.220.15]:58188 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728889AbfETIh4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 04:37:56 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 39A50AF8E;
-        Mon, 20 May 2019 08:37:54 +0000 (UTC)
-Subject: Re: [PATCH 10/33] fbcon: call fbcon_fb_(un)registered directly
-From:   Thomas Zimmermann <tzimmermann@suse.de>
-To:     Daniel Vetter <daniel.vetter@ffwll.ch>,
-        DRI Development <dri-devel@lists.freedesktop.org>
-Cc:     Intel Graphics Development <intel-gfx@lists.freedesktop.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Daniel Vetter <daniel.vetter@intel.com>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        =?UTF-8?Q?Noralf_Tr=c3=b8nnes?= <noralf@tronnes.org>,
-        Yisheng Xie <ysxie@foxmail.com>, Peter Rosin <peda@axentia.se>,
-        =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>,
-        Mikulas Patocka <mpatocka@redhat.com>,
-        linux-fbdev@vger.kernel.org
-References: <20190520082216.26273-1-daniel.vetter@ffwll.ch>
- <20190520082216.26273-11-daniel.vetter@ffwll.ch>
- <423eba4b-15e1-f10b-ae2d-855b8a585688@suse.de>
-Openpgp: preference=signencrypt
-Autocrypt: addr=tzimmermann@suse.de; keydata=
- xsBNBFs50uABCADEHPidWt974CaxBVbrIBwqcq/WURinJ3+2WlIrKWspiP83vfZKaXhFYsdg
- XH47fDVbPPj+d6tQrw5lPQCyqjwrCPYnq3WlIBnGPJ4/jreTL6V+qfKRDlGLWFjZcsrPJGE0
- BeB5BbqP5erN1qylK9i3gPoQjXGhpBpQYwRrEyQyjuvk+Ev0K1Jc5tVDeJAuau3TGNgah4Yc
- hdHm3bkPjz9EErV85RwvImQ1dptvx6s7xzwXTgGAsaYZsL8WCwDaTuqFa1d1jjlaxg6+tZsB
- 9GluwvIhSezPgnEmimZDkGnZRRSFiGP8yjqTjjWuf0bSj5rUnTGiyLyRZRNGcXmu6hjlABEB
- AAHNKFRob21hcyBaaW1tZXJtYW5uIDx0emltbWVybWFubkBzdXNlLmNvbT7CwJQEEwEIAD4W
- IQRyF/usjOnPY0ShaOVoDcEdUwt6IwUCWznTtgIbAwUJA8JnAAULCQgHAgYVCgkICwIEFgID
- AQIeAQIXgAAKCRBoDcEdUwt6I7D7CACBK42XW+7mCiK8ioXMEy1NzGbXC51RzGea8N83oEJS
- 1KVUtQxrkDxgrW/WLSl/TfqHFsJpdEFOv1XubWbleun3uKPy0e5vZCd5UjZPkeNjnqfCYTDy
- hVVsdOuFbtWDppJyJrThLqr9AgSFmoCNNUt1SVpYEEOLNE6C32BhlnSq21VLC+YXTgO/ZHTa
- YXkq54hHj63jwrcjkBSCkXLh37kHeqnl++GHpN+3R+o3w2OpwHAlvVjdKPT27v1tVkiydsFG
- 65Vd0n3m/ft+IOrGgxQM1C20uqKvsZGB4r3OGR50ekAybO7sjEJJ1Obl4ge/6RRqcvKz4LMb
- tGs85D6tPIeFzsBNBFs50uABCADGJj+DP1fk+UWOWrf4O61HTbC4Vr9QD2K4fUUHnzg2B6zU
- R1BPXqLGG0+lzK8kfYU/F5RjmEcClsIkAaFkg4kzKP14tvY1J5+AV3yNqcdg018HNtiyrSwI
- E0Yz/qm1Ot2NMZ0DdvVBg22IMsiudQ1tx9CH9mtyTbIXgACvl3PW2o9CxiHPE/bohFhwZwh/
- kXYYAE51lhinQ3oFEeQZA3w4OTvxSEspiQR8dg8qJJb+YOAc5IKk6sJmmM7JfFMWSr22satM
- 23oQ3WvJb4RV6HTRTAIEyyZS7g2DhiytgMG60t0qdABG5KXSQW+OKlZRpuWwKWaLh3if/p/u
- 69dvpanbABEBAAHCwHwEGAEIACYWIQRyF/usjOnPY0ShaOVoDcEdUwt6IwUCWznS4AIbDAUJ
- A8JnAAAKCRBoDcEdUwt6I6X3CACJ8D+TpXBCqJE5xwog08+Dp8uBpx0T9n1wE0GQisZruACW
- NofYn8PTX9k4wmegDLwt7YQDdKxQ4+eTfZeLNQqWg6OCftH5Kx7sjWnJ09tOgniVdROzWJ7c
- VJ/i0okazncsJ+nq48UYvRGE1Swh3A4QRIyphWX4OADOBmTFl9ZYNPnh23eaC9WrNvFr7yP7
- iGjMlfEW8l6Lda//EC5VpXVNza0xeae0zFNst2R9pn+bLkihwDLWxOIyifGRxTqNxoS4I1aw
- VhxPSVztPMSpIA/sOr/N/p6JrBLn+gui2K6mP7bGb8hF+szfArYqz3T1rv1VzUWAJf5Wre5U
- iNx9uqqx
-Message-ID: <8aecc0d8-83a3-8144-a266-441a5c1d5db5@suse.de>
-Date:   Mon, 20 May 2019 10:37:53 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Mon, 20 May 2019 04:43:56 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:46891 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729934AbfETIn4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 04:43:56 -0400
+Received: by mail-ot1-f68.google.com with SMTP id j49so12180494otc.13;
+        Mon, 20 May 2019 01:43:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=poGLomknypPnnvqegI1e/8auc3NxDkJy8/MZab3jklw=;
+        b=dxbouzY70Zidh7fwbXOY8MrXx/w++QKRfxIm7iIi6sTlMcp30X30MPAMiAgisdfUZQ
+         u+C33znAN9PjThcSi0SI6EegQBSDfZsIn527lGsGkoufrD2CmTCob5ONCxdXuksvHKG4
+         +Pf3Y5srRsG756NViTDiBb77l+C7wftiMBgK3pkOUMTfsnM3qVlP7Y11g36yjUkFJOqd
+         duFiUbhKblvBjN6niTyJXf7nWomcLeXqAADUbwL3OseZYhjrS+KZQMmxPY+G92D0Zavn
+         p9RR8XgozDeHAMywB8gW9WgPOtomb2OMZj3+vOkQGhZIDo6bjlHxoVJAyqs/svnWQRos
+         uFjg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=poGLomknypPnnvqegI1e/8auc3NxDkJy8/MZab3jklw=;
+        b=Rd83rhtwwRpKzBGm7rRBp5R13v1PMyNTqt+0UQYp27TIyG2mXhoMlN3c0aBCjcMAil
+         G8tgnj89ZId+hd9Im47XtV6J/WE+vWrFtCyNjF/DjNgut7xVBTx0HF0Oj5XYynSjcunk
+         QtDELZo9p/SXBUgU0FAxJqwwDpja1UrhhtS09swXpjlPlmkTh0FHYnrdHGoe/tF4P3Rj
+         JVRLf6cg0NnELG8MWRoYRlJ0I49sQDkic+V8e0tW7YKrJ/KxYFnD9R6LaHOZ726yWQ3r
+         2wcgZyPB22t+PyaEC0oirvNUe22eQTEEUJjUSRh8ePKiLWv9QgBu2S749oIgfwKpTwHI
+         yBOg==
+X-Gm-Message-State: APjAAAUv15H2QfdbJ51Zgm6o+vKhuAAzNv4VlX6fLL3xkfarm9Ng8m5U
+        MDcnNaUZ8fQehMaRDh6kGK4g4kzeVCOUwlQs+ac=
+X-Google-Smtp-Source: APXvYqztqQBZjxQh4DiQouR9Qgf5drkSFi++nsPdTOpATzN0wEeRuUMPtXCuPqzuvcjewHKAszFeyrgoG4N99SUyw4g=
+X-Received: by 2002:a9d:6312:: with SMTP id q18mr3208532otk.45.1558341835532;
+ Mon, 20 May 2019 01:43:55 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <423eba4b-15e1-f10b-ae2d-855b8a585688@suse.de>
-Content-Type: multipart/signed; micalg=pgp-sha256;
- protocol="application/pgp-signature";
- boundary="QdOG6VnP6yygaSD5tqNtZtllH9oo2Rfnp"
+References: <1557975980-9875-1-git-send-email-wanpengli@tencent.com>
+ <1557975980-9875-4-git-send-email-wanpengli@tencent.com> <20190517200509.GJ15006@linux.intel.com>
+In-Reply-To: <20190517200509.GJ15006@linux.intel.com>
+From:   Wanpeng Li <kernellwp@gmail.com>
+Date:   Mon, 20 May 2019 16:43:46 +0800
+Message-ID: <CANRm+CxT96pPsqzNXMvJWU-rk3SuZ8yXGBu9BVQdrtyuqAuLdQ@mail.gmail.com>
+Subject: Re: [PATCH v3 3/5] KVM: LAPIC: Expose per-vCPU timer_advance_ns to userspace
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>, kvm <kvm@vger.kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Liran Alon <liran.alon@oracle.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---QdOG6VnP6yygaSD5tqNtZtllH9oo2Rfnp
-Content-Type: multipart/mixed; boundary="wYKLRIK9QH5G6TuclSMFvx1Hwt9S3IzqB";
- protected-headers="v1"
-From: Thomas Zimmermann <tzimmermann@suse.de>
-To: Daniel Vetter <daniel.vetter@ffwll.ch>,
- DRI Development <dri-devel@lists.freedesktop.org>
-Cc: Intel Graphics Development <intel-gfx@lists.freedesktop.org>,
- LKML <linux-kernel@vger.kernel.org>, Daniel Vetter
- <daniel.vetter@intel.com>,
- Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
- Hans de Goede <hdegoede@redhat.com>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- =?UTF-8?Q?Noralf_Tr=c3=b8nnes?= <noralf@tronnes.org>,
- Yisheng Xie <ysxie@foxmail.com>, Peter Rosin <peda@axentia.se>,
- =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>,
- Mikulas Patocka <mpatocka@redhat.com>, linux-fbdev@vger.kernel.org
-Message-ID: <8aecc0d8-83a3-8144-a266-441a5c1d5db5@suse.de>
-Subject: Re: [PATCH 10/33] fbcon: call fbcon_fb_(un)registered directly
-References: <20190520082216.26273-1-daniel.vetter@ffwll.ch>
- <20190520082216.26273-11-daniel.vetter@ffwll.ch>
- <423eba4b-15e1-f10b-ae2d-855b8a585688@suse.de>
-In-Reply-To: <423eba4b-15e1-f10b-ae2d-855b8a585688@suse.de>
+On Sat, 18 May 2019 at 04:05, Sean Christopherson
+<sean.j.christopherson@intel.com> wrote:
+>
+> On Thu, May 16, 2019 at 11:06:18AM +0800, Wanpeng Li wrote:
+> > From: Wanpeng Li <wanpengli@tencent.com>
+> >
+> > Expose per-vCPU timer_advance_ns to userspace, so it is able to
+> > query the auto-adjusted value.
+> >
+> > Cc: Paolo Bonzini <pbonzini@redhat.com>
+> > Cc: Radim Kr=C4=8Dm=C3=A1=C5=99 <rkrcmar@redhat.com>
+> > Cc: Sean Christopherson <sean.j.christopherson@intel.com>
+> > Cc: Liran Alon <liran.alon@oracle.com>
+> > Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
+> > ---
+> >  arch/x86/kvm/debugfs.c | 16 ++++++++++++++++
+> >  1 file changed, 16 insertions(+)
+> >
+> > diff --git a/arch/x86/kvm/debugfs.c b/arch/x86/kvm/debugfs.c
+> > index c19c7ed..a6f1f93 100644
+> > --- a/arch/x86/kvm/debugfs.c
+> > +++ b/arch/x86/kvm/debugfs.c
+> > @@ -9,12 +9,22 @@
+> >   */
+> >  #include <linux/kvm_host.h>
+> >  #include <linux/debugfs.h>
+> > +#include "lapic.h"
+> >
+> >  bool kvm_arch_has_vcpu_debugfs(void)
+> >  {
+> >       return true;
+> >  }
+> >
+> > +static int vcpu_get_timer_advance_ns(void *data, u64 *val)
+> > +{
+> > +     struct kvm_vcpu *vcpu =3D (struct kvm_vcpu *) data;
+> > +     *val =3D vcpu->arch.apic->lapic_timer.timer_advance_ns;
+>
+> This needs to ensure to check lapic_in_kernel() to ensure apic isn't NULL=
+.
+> Actually, I think we can skip creation of the parameter entirely if
+> lapic_in_kernel() is false.  VMX and SVM both instantiate the lapic
+> during kvm_arch_vcpu_create(), which is (obviously) called before
+> kvm_arch_create_vcpu_debugfs().
 
---wYKLRIK9QH5G6TuclSMFvx1Hwt9S3IzqB
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
+Handle this in v4.
 
-Hi
-
-Am 20.05.19 um 10:33 schrieb Thomas Zimmermann:
-> Hi
->=20
-> Am 20.05.19 um 10:21 schrieb Daniel Vetter:
-> ...
->> diff --git a/drivers/video/fbdev/core/fbmem.c b/drivers/video/fbdev/co=
-re/fbmem.c
->> index fc3d34a8ea5b..ae2db31eeba7 100644
->> --- a/drivers/video/fbdev/core/fbmem.c
->> +++ b/drivers/video/fbdev/core/fbmem.c
->> @@ -1660,7 +1660,6 @@ MODULE_PARM_DESC(lockless_register_fb,
->>  static int do_register_framebuffer(struct fb_info *fb_info)
->>  {
->>  	int i, ret;
->> -	struct fb_event event;
->>  	struct fb_videomode mode;
->> =20
->>  	if (fb_check_foreignness(fb_info))
->> @@ -1723,7 +1722,6 @@ static int do_register_framebuffer(struct fb_inf=
-o *fb_info)
->>  	fb_add_videomode(&mode, &fb_info->modelist);
->>  	registered_fb[i] =3D fb_info;
->> =20
->> -	event.info =3D fb_info;
->>  	if (!lockless_register_fb)
->>  		console_lock();
->>  	else
->> @@ -1732,9 +1730,8 @@ static int do_register_framebuffer(struct fb_inf=
-o *fb_info)
->>  		ret =3D -ENODEV;
->>  		goto unlock_console;
->>  	}
->> -	ret =3D 0;
->> =20
->> -	fb_notifier_call_chain(FB_EVENT_FB_REGISTERED, &event);
->> +	ret =3D fbcon_fb_registered(fb_info);
->=20
-> What about backlight drivers? [1] Apparently these also use the
-> notifiers. [2] From my understanding, backlight drivers would stop
-> working with this change.
-
-I just saw that backlight drivers only care about blanking and
-unblanking. Never mind then.
-
-Best regards
-Thomas
-
->=20
-> Best regards
-> Thomas
->=20
-> [1]
-> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree=
-/drivers/video/backlight
-> [2]
-> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree=
-/drivers/video/backlight/backlight.c#n40
->=20
->>  	unlock_fb_info(fb_info);
->>  unlock_console:
->>  	if (!lockless_register_fb)
->> @@ -1771,7 +1768,6 @@ static int __unlink_framebuffer(struct fb_info *=
-fb_info);
->> =20
->>  static int do_unregister_framebuffer(struct fb_info *fb_info)
->>  {
->> -	struct fb_event event;
->>  	int ret;
->> =20
->>  	ret =3D unbind_console(fb_info);
->> @@ -1789,9 +1785,8 @@ static int do_unregister_framebuffer(struct fb_i=
-nfo *fb_info)
->>  	registered_fb[fb_info->node] =3D NULL;
->>  	num_registered_fb--;
->>  	fb_cleanup_device(fb_info);
->> -	event.info =3D fb_info;
->>  	console_lock();
->> -	fb_notifier_call_chain(FB_EVENT_FB_UNREGISTERED, &event);
->> +	fbcon_fb_unregistered(fb_info);
->>  	console_unlock();
->> =20
->>  	/* this may free fb info */
->> diff --git a/include/linux/fb.h b/include/linux/fb.h
->> index f52ef0ad6781..701abaf79c87 100644
->> --- a/include/linux/fb.h
->> +++ b/include/linux/fb.h
->> @@ -136,10 +136,6 @@ struct fb_cursor_user {
->>  #define FB_EVENT_RESUME			0x03
->>  /*      An entry from the modelist was removed */
->>  #define FB_EVENT_MODE_DELETE            0x04
->> -/*      A driver registered itself */
->> -#define FB_EVENT_FB_REGISTERED          0x05
->> -/*      A driver unregistered itself */
->> -#define FB_EVENT_FB_UNREGISTERED        0x06
->>  /*      CONSOLE-SPECIFIC: get console to framebuffer mapping */
->>  #define FB_EVENT_GET_CONSOLE_MAP        0x07
->>  /*      CONSOLE-SPECIFIC: set console to framebuffer mapping */
->> diff --git a/include/linux/fbcon.h b/include/linux/fbcon.h
->> index f68a7db14165..94a71e9e1257 100644
->> --- a/include/linux/fbcon.h
->> +++ b/include/linux/fbcon.h
->> @@ -4,9 +4,13 @@
->>  #ifdef CONFIG_FRAMEBUFFER_CONSOLE
->>  void __init fb_console_init(void);
->>  void __exit fb_console_exit(void);
->> +int fbcon_fb_registered(struct fb_info *info);
->> +void fbcon_fb_unregistered(struct fb_info *info);
->>  #else
->>  static inline void fb_console_init(void) {}
->>  static inline void fb_console_exit(void) {}
->> +static inline int fbcon_fb_registered(struct fb_info *info) { return =
-0; }
->> +static inline void fbcon_fb_unregistered(struct fb_info *info) {}
->>  #endif
->> =20
->>  #endif /* _LINUX_FBCON_H */
->>
->=20
-
---=20
-Thomas Zimmermann
-Graphics Driver Developer
-SUSE Linux GmbH, Maxfeldstrasse 5, 90409 Nuernberg, Germany
-GF: Felix Imend=C3=B6rffer, Mary Higgins, Sri Rasiah
-HRB 21284 (AG N=C3=BCrnberg)
-
-
---wYKLRIK9QH5G6TuclSMFvx1Hwt9S3IzqB--
-
---QdOG6VnP6yygaSD5tqNtZtllH9oo2Rfnp
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEEchf7rIzpz2NEoWjlaA3BHVMLeiMFAlziZ2EACgkQaA3BHVML
-eiM4rwf/fn2WYKjt/UOwz//xdRihpc2AoE9WseTOm0xdRHv9z7jlgEYpXxj0uS4D
-S/Vn5hua0IALZTgaGV9spWDinYCudNMNvTrpP1cPKbWknPKLyiOWy+nq6n4zMl6n
-jKKOpGNT9PAISpL4dyzrNE0sb+DKDE4O1V5BlPuiOygNjew4iCdqvwRtHwWIWaSf
-9nLCHEmqnXDS8G4fXaeb0LUtVvVH3K5ACOFv7thuLdTtqpbSE7KT57KBc+clqEXX
-PknuFWt/hEmyzJhiSQ9XVXD9SfwcyKOaDXGEkhvokf72Wb3ki7rXe3i8Vr6tD1s7
-+U3Q+WHNtvLRVoZI61S7CHV8NCDGZw==
-=WBMw
------END PGP SIGNATURE-----
-
---QdOG6VnP6yygaSD5tqNtZtllH9oo2Rfnp--
+>
+> > +     return 0;
+> > +}
+> > +
+> > +DEFINE_SIMPLE_ATTRIBUTE(vcpu_timer_advance_ns_fops, vcpu_get_timer_adv=
+ance_ns, NULL, "%llu\n");
+> > +
+> >  static int vcpu_get_tsc_offset(void *data, u64 *val)
+> >  {
+> >       struct kvm_vcpu *vcpu =3D (struct kvm_vcpu *) data;
+> > @@ -51,6 +61,12 @@ int kvm_arch_create_vcpu_debugfs(struct kvm_vcpu *vc=
+pu)
+> >       if (!ret)
+> >               return -ENOMEM;
+> >
+> > +     ret =3D debugfs_create_file("lapic_timer_advance_ns", 0444,
+> > +                                                     vcpu->debugfs_den=
+try,
+> > +                                                     vcpu, &vcpu_timer=
+_advance_ns_fops);
+> > +     if (!ret)
+> > +             return -ENOMEM;
+> > +
+> >       if (kvm_has_tsc_control) {
+> >               ret =3D debugfs_create_file("tsc-scaling-ratio", 0444,
+> >                                                       vcpu->debugfs_den=
+try,
+> > --
+> > 2.7.4
+> >
