@@ -2,52 +2,54 @@ Return-Path: <SRS0=lq4r=TU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CCAC3C04AAC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:16:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20089C04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:16:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 978E020863
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:16:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E9F3620863
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:16:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558354579;
-	bh=SouYgWQauP5ZFkhFFMqWevfg1i6+eLajnGKQ+6SjZq4=;
+	s=default; t=1558354583;
+	bh=GV2YVUH8HKMj4chMjjgTEuLD9Qveafzk1fUnzvnwZyQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BeA0OaoWx1RyYD1aKUNsmF5aQSs+x0LIJsb/ZQ4n69NlqU7bM/23GvS8ST+wFPezN
-	 YIDFSmI+2D1Ggz7xeeBSzLdVBIk4n/X3qNRarKHWxRTqFDRw3WzkkRa0wlU23/4Js1
-	 eZ3HS4D3mmdUFFLpMVP+wQvHgYy/kFpqB4JOmH3g=
+	b=V4sJ25sBrCzgT/61Tw9TZC/cqVCoW437aBEfrPMhR3bMC1K1vMsfhGToqn60PDdoA
+	 iieZjwIT5IUemU1206SOYL7t+e680FEeGyumDjiuUo3ddZvJKbc1NdZUz6nPuD7yGn
+	 KWD1+aV6xGVAnwef/A0UTgqDE3oid64EUEitSvX4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732873AbfETMQS (ORCPT
+        id S1732921AbfETMQW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 08:16:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56966 "EHLO mail.kernel.org"
+        Mon, 20 May 2019 08:16:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57026 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732823AbfETMQP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 08:16:15 -0400
+        id S1732845AbfETMQS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 08:16:18 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C96C520656;
-        Mon, 20 May 2019 12:16:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8981620815;
+        Mon, 20 May 2019 12:16:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558354575;
-        bh=SouYgWQauP5ZFkhFFMqWevfg1i6+eLajnGKQ+6SjZq4=;
+        s=default; t=1558354578;
+        bh=GV2YVUH8HKMj4chMjjgTEuLD9Qveafzk1fUnzvnwZyQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JkJ2NRw+9jogRVgWV4078mTQeKKFUHDhvL3eG4MCfe6BJMIJcj1vNyKMvkkI2Ml/Z
-         Aya3rV4JXigV26dKd8UvYtU8W0ZA42tp7CyAB5RA3INnU1wqp/WOD/0dKI2nPIYgtL
-         4rLB4+NKRGHflzxeGmiPymd75Hc/Eu93A3hPdoGI=
+        b=dFLa5QmnGEqZR71GddF+ue3LuX1YIsnyqi3rPb7/1twjcrtoHj9PCIfHPcEqMQnLs
+         WLwQXpObdYFPa7+LaEB1BGhmbqLc24q0OfGJMFqj5IzPdvXX3ql0BsJrt/pqEcq8Nj
+         9kl/YPkq4je/G/9fW73j0C6NYq8A+Ir5Es4ulWZU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Martin Willi <martin@strongswan.org>,
-        Eric Biggers <ebiggers@google.com>,
+        stable@vger.kernel.org,
+        =?UTF-8?q?Ondrej=20Mosn=C3=A1=C4=8Dek?= <omosnacek@gmail.com>,
+        Daniel Axtens <dja@axtens.net>,
+        Michael Ellerman <mpe@ellerman.id.au>,
         Herbert Xu <herbert@gondor.apana.org.au>
-Subject: [PATCH 4.9 12/44] crypto: chacha20poly1305 - set cra_name correctly
-Date:   Mon, 20 May 2019 14:14:01 +0200
-Message-Id: <20190520115232.445514916@linuxfoundation.org>
+Subject: [PATCH 4.9 13/44] crypto: vmx - fix copy-paste error in CTR mode
+Date:   Mon, 20 May 2019 14:14:02 +0200
+Message-Id: <20190520115232.605785186@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190520115230.720347034@linuxfoundation.org>
 References: <20190520115230.720347034@linuxfoundation.org>
@@ -60,46 +62,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Biggers <ebiggers@google.com>
+From: Daniel Axtens <dja@axtens.net>
 
-commit 5e27f38f1f3f45a0c938299c3a34a2d2db77165a upstream.
+commit dcf7b48212c0fab7df69e84fab22d6cb7c8c0fb9 upstream.
 
-If the rfc7539 template is instantiated with specific implementations,
-e.g. "rfc7539(chacha20-generic,poly1305-generic)" rather than
-"rfc7539(chacha20,poly1305)", then the implementation names end up
-included in the instance's cra_name.  This is incorrect because it then
-prevents all users from allocating "rfc7539(chacha20,poly1305)", if the
-highest priority implementations of chacha20 and poly1305 were selected.
-Also, the self-tests aren't run on an instance allocated in this way.
+The original assembly imported from OpenSSL has two copy-paste
+errors in handling CTR mode. When dealing with a 2 or 3 block tail,
+the code branches to the CBC decryption exit path, rather than to
+the CTR exit path.
 
-Fix it by setting the instance's cra_name from the underlying
-algorithms' actual cra_names, rather than from the requested names.
-This matches what other templates do.
+This leads to corruption of the IV, which leads to subsequent blocks
+being corrupted.
 
-Fixes: 71ebc4d1b27d ("crypto: chacha20poly1305 - Add a ChaCha20-Poly1305 AEAD construction, RFC7539")
-Cc: <stable@vger.kernel.org> # v4.2+
-Cc: Martin Willi <martin@strongswan.org>
-Signed-off-by: Eric Biggers <ebiggers@google.com>
-Reviewed-by: Martin Willi <martin@strongswan.org>
+This can be detected with libkcapi test suite, which is available at
+https://github.com/smuellerDD/libkcapi
+
+Reported-by: Ondrej Mosnáček <omosnacek@gmail.com>
+Fixes: 5c380d623ed3 ("crypto: vmx - Add support for VMS instructions by ASM")
+Cc: stable@vger.kernel.org
+Signed-off-by: Daniel Axtens <dja@axtens.net>
+Tested-by: Michael Ellerman <mpe@ellerman.id.au>
+Tested-by: Ondrej Mosnacek <omosnacek@gmail.com>
 Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- crypto/chacha20poly1305.c |    4 ++--
+ drivers/crypto/vmx/aesp8-ppc.pl |    4 ++--
  1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/crypto/chacha20poly1305.c
-+++ b/crypto/chacha20poly1305.c
-@@ -647,8 +647,8 @@ static int chachapoly_create(struct cryp
+--- a/drivers/crypto/vmx/aesp8-ppc.pl
++++ b/drivers/crypto/vmx/aesp8-ppc.pl
+@@ -1815,7 +1815,7 @@ Lctr32_enc8x_three:
+ 	stvx_u		$out1,$x10,$out
+ 	stvx_u		$out2,$x20,$out
+ 	addi		$out,$out,0x30
+-	b		Lcbc_dec8x_done
++	b		Lctr32_enc8x_done
  
- 	err = -ENAMETOOLONG;
- 	if (snprintf(inst->alg.base.cra_name, CRYPTO_MAX_ALG_NAME,
--		     "%s(%s,%s)", name, chacha_name,
--		     poly_name) >= CRYPTO_MAX_ALG_NAME)
-+		     "%s(%s,%s)", name, chacha->base.cra_name,
-+		     poly->cra_name) >= CRYPTO_MAX_ALG_NAME)
- 		goto out_drop_chacha;
- 	if (snprintf(inst->alg.base.cra_driver_name, CRYPTO_MAX_ALG_NAME,
- 		     "%s(%s,%s)", name, chacha->base.cra_driver_name,
+ .align	5
+ Lctr32_enc8x_two:
+@@ -1827,7 +1827,7 @@ Lctr32_enc8x_two:
+ 	stvx_u		$out0,$x00,$out
+ 	stvx_u		$out1,$x10,$out
+ 	addi		$out,$out,0x20
+-	b		Lcbc_dec8x_done
++	b		Lctr32_enc8x_done
+ 
+ .align	5
+ Lctr32_enc8x_one:
 
 
