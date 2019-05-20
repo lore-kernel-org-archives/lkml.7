@@ -2,133 +2,133 @@ Return-Path: <SRS0=lq4r=TU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 902B5C04E87
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 21:40:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FBCEC04AAF
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 21:40:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 689072173C
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 21:40:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4675821743
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 21:40:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="HE+2jI9y"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="hK2eyv+R"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726960AbfETVj6 (ORCPT
+        id S1726762AbfETVkt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 17:39:58 -0400
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:35065 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726316AbfETVj4 (ORCPT
+        Mon, 20 May 2019 17:40:49 -0400
+Received: from mail-qk1-f195.google.com ([209.85.222.195]:37839 "EHLO
+        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725810AbfETVks (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 17:39:56 -0400
-Received: by mail-ed1-f68.google.com with SMTP id p26so26016359edr.2
-        for <linux-kernel@vger.kernel.org>; Mon, 20 May 2019 14:39:56 -0700 (PDT)
+        Mon, 20 May 2019 17:40:48 -0400
+Received: by mail-qk1-f195.google.com with SMTP id d10so9813841qko.4
+        for <linux-kernel@vger.kernel.org>; Mon, 20 May 2019 14:40:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=eXUjiROiFGqrcZrxiXfMd6x0O70wFn+SjDBkygnZtOE=;
-        b=HE+2jI9yKoWCqEtPmGEmHm4ylYNZon4lbb4PF4NHS53IZxF8pOEgpY8SO8PWwjK/yd
-         Kr/K3az9UYI2fpQ8PMsRr6OEK8DOagVNchYQwPKerYeVImZ6A8MUoeqdUStHHSrf9OL7
-         JAAzKQQ0avwTjuYS01lKURpWOQUYPaK/I6Hmg=
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=IThQGlwZN4WtsbLkk3oukuwrzsnq23H8GMI8BgIL1f8=;
+        b=hK2eyv+RmjhJBhO9xW7nmAOoLOTUPMU93WRuMaB8KV1/Ipcsc6fF4RwDKaRanXgiiQ
+         1moFfP9ko3eAH7gEqqzVhMRmuadceiV7qXi2MurSlIpZ9Llv91z5GHWZ/1aX3y7jM18+
+         IGN5yM1LK6mMLNa40n1/AIP0iJDcB2m08JUvM=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=eXUjiROiFGqrcZrxiXfMd6x0O70wFn+SjDBkygnZtOE=;
-        b=J+MlbKiPt4nW/1wOg514gzorK17x9tLln92Zngyop5xX1gb2q++Oz0MMUJFqf0+SUM
-         Em0ZVfSfxi+ZzR/cZX6r0iUbuAZo8D3AWS6pH5sIxzh+J4XaNJmd0eCmC9yiq0tNzCp9
-         zz22mbjglHEPXmm2AraW0OD9IuuVdPlOtxS3dIicz8CXWWimWgOG4J5wF7xRwMyb0gR9
-         xpLtrVzg68CNMvtpDsDhTeBRw+/F0jpNeDv+xfjQNjWTcLgQ0s83DCIBM2EnkN+6U7of
-         qe0Wk2XB87/hPKSVydibb3abI9ZbkPaWZ6dgIlKa/fASXsBr3E+LVHbYz/jwv5hVUq3o
-         drNg==
-X-Gm-Message-State: APjAAAX/ZFPu5PQBe2ZEmxKQwqbWYojKH0nFxfZxTtbF4ddyAyolV2eS
-        JpF0fjrZP19T1gRB/VYeQva1VA==
-X-Google-Smtp-Source: APXvYqz2Kva8jHAMyBKyLi3aGikci686nvq4u0U8stYOPI/ZCt3pyHtCQHVoinWV1c/CI2ko59Od2g==
-X-Received: by 2002:a17:906:4d4f:: with SMTP id b15mr1630714ejv.116.1558388395426;
-        Mon, 20 May 2019 14:39:55 -0700 (PDT)
-Received: from phenom.ffwll.local ([2a02:168:569e:0:3106:d637:d723:e855])
-        by smtp.gmail.com with ESMTPSA id v27sm3285772eja.68.2019.05.20.14.39.53
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 20 May 2019 14:39:54 -0700 (PDT)
-From:   Daniel Vetter <daniel.vetter@ffwll.ch>
-To:     DRI Development <dri-devel@lists.freedesktop.org>
-Cc:     Intel Graphics Development <intel-gfx@lists.freedesktop.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux MM <linux-mm@kvack.org>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Michal Hocko <mhocko@suse.com>,
-        David Rientjes <rientjes@google.com>,
-        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
-        =?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>,
-        Daniel Vetter <daniel.vetter@intel.com>
-Subject: [PATCH 3/4] mm, notifier: Catch sleeping/blocking for !blockable
-Date:   Mon, 20 May 2019 23:39:44 +0200
-Message-Id: <20190520213945.17046-3-daniel.vetter@ffwll.ch>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190520213945.17046-1-daniel.vetter@ffwll.ch>
-References: <20190520213945.17046-1-daniel.vetter@ffwll.ch>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=IThQGlwZN4WtsbLkk3oukuwrzsnq23H8GMI8BgIL1f8=;
+        b=VVrrWS5qdcR9XWAmjkjHggiQE5zqC3/CuZY2zM+GI364cWIt6RexSBQFp5R4d6LX8+
+         tJc57QANuo1VO2YP1mxdq3VsI7flW9dCNPRMj/SaVhAqiUXIabxL9uSTFlm0++Vyjfir
+         nE1+JXvpjuANKPJGS2JI5lsX4k2LVrlGm7iphe+zLy183gDzvUMbRtckQ7P7QgH4itRc
+         I83pFJ7/KmqyLpjcZzJ9N6peiviVmEvdtlIySCFQO9syvbO5DeW7eahFpwTH0kqUdLCy
+         uc5LI74598CmPlepjklP/pNQwYELK9X0nqxfnlK6WbzQMMGtXPyDLpTV+czkVDF/ooUz
+         h8Og==
+X-Gm-Message-State: APjAAAVjAWIXTtuqVAfth0dqOlWQhctqiuATMhPe0JDvQ/PBhMZtRH1y
+        AubrXeRhrxNjf6zdYIf9kGbkT9qQ4WALjW3d2VeDWw==
+X-Google-Smtp-Source: APXvYqzfgYWlx9/QVid5RlxkAKFGC41IFGLXDgG2zUutdncRoErF8VDmxEvq4gwP/Ta+vr3S5rGzrv8w5nxXmGEg1dQ=
+X-Received: by 2002:a37:4c04:: with SMTP id z4mr43466352qka.195.1558388447854;
+ Mon, 20 May 2019 14:40:47 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20190520044951.248096-1-drinkcat@chromium.org> <CAC5umygGsW3Nju-mA-qE8kNBd9SSXeO=YXMkgFsFaceCytoAww@mail.gmail.com>
+In-Reply-To: <CAC5umygGsW3Nju-mA-qE8kNBd9SSXeO=YXMkgFsFaceCytoAww@mail.gmail.com>
+From:   Nicolas Boichat <drinkcat@chromium.org>
+Date:   Tue, 21 May 2019 05:40:36 +0800
+Message-ID: <CANMq1KBUKfOdZWAf95nb2UQqLdLCMsLnVTZAZSgN0QfgK3Dbxw@mail.gmail.com>
+Subject: Re: [PATCH] mm/failslab: By default, do not fail allocations with
+ direct reclaim only
+To:     Akinobu Mita <akinobu.mita@gmail.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        David Rientjes <rientjes@google.com>,
+        Michal Hocko <mhocko@suse.com>, Joe Perches <joe@perches.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-mm@kvack.org, Pekka Enberg <penberg@kernel.org>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We need to make sure implementations don't cheat and don't have a
-possible schedule/blocking point deeply burried where review can't
-catch it.
+On Tue, May 21, 2019 at 12:29 AM Akinobu Mita <akinobu.mita@gmail.com> wrot=
+e:
+>
+> 2019=E5=B9=B45=E6=9C=8820=E6=97=A5(=E6=9C=88) 13:49 Nicolas Boichat <drin=
+kcat@chromium.org>:
+> >
+> > When failslab was originally written, the intention of the
+> > "ignore-gfp-wait" flag default value ("N") was to fail
+> > GFP_ATOMIC allocations. Those were defined as (__GFP_HIGH),
+> > and the code would test for __GFP_WAIT (0x10u).
+> >
+> > However, since then, __GFP_WAIT was replaced by __GFP_RECLAIM
+> > (___GFP_DIRECT_RECLAIM|___GFP_KSWAPD_RECLAIM), and GFP_ATOMIC is
+> > now defined as (__GFP_HIGH|__GFP_ATOMIC|__GFP_KSWAPD_RECLAIM).
+> >
+> > This means that when the flag is false, almost no allocation
+> > ever fails (as even GFP_ATOMIC allocations contain
+> > __GFP_KSWAPD_RECLAIM).
+> >
+> > Restore the original intent of the code, by ignoring calls
+> > that directly reclaim only (___GFP_DIRECT_RECLAIM), and thus,
+> > failing GFP_ATOMIC calls again by default.
+> >
+> > Fixes: 71baba4b92dc1fa1 ("mm, page_alloc: rename __GFP_WAIT to __GFP_RE=
+CLAIM")
+> > Signed-off-by: Nicolas Boichat <drinkcat@chromium.org>
+>
+> Good catch.
+>
+> Reviewed-by: Akinobu Mita <akinobu.mita@gmail.com>
+>
+> > ---
+> >  mm/failslab.c | 3 ++-
+> >  1 file changed, 2 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/mm/failslab.c b/mm/failslab.c
+> > index ec5aad211c5be97..33efcb60e633c0a 100644
+> > --- a/mm/failslab.c
+> > +++ b/mm/failslab.c
+> > @@ -23,7 +23,8 @@ bool __should_failslab(struct kmem_cache *s, gfp_t gf=
+pflags)
+> >         if (gfpflags & __GFP_NOFAIL)
+> >                 return false;
+> >
+> > -       if (failslab.ignore_gfp_reclaim && (gfpflags & __GFP_RECLAIM))
+> > +       if (failslab.ignore_gfp_reclaim &&
+> > +                       (gfpflags & ___GFP_DIRECT_RECLAIM))
+> >                 return false;
+>
+> Should we use __GFP_DIRECT_RECLAIM instead of ___GFP_DIRECT_RECLAIM?
+> Because I found the following comment in gfp.h
+>
+> /* Plain integer GFP bitmasks. Do not use this directly. */
 
-I'm not sure whether this is the best way to make sure all the
-might_sleep() callsites trigger, and it's a bit ugly in the code flow.
-But it gets the job done.
+Oh, nice catch. I must say I had no idea I was using the 3-underscore
+version, hard to tell them apart depending on the font.
 
-Inspired by an i915 patch series which did exactly that, because the
-rules haven't been entirely clear to us.
+I'll send a v2 with both your tags right away.
 
-v2: Use the shiny new non_block_start/end annotations instead of
-abusing preempt_disable/enable.
-
-v3: Rebase on top of Glisse's arg rework.
-
-v4: Rebase on top of more Glisse rework.
-
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Michal Hocko <mhocko@suse.com>
-Cc: David Rientjes <rientjes@google.com>
-Cc: "Christian König" <christian.koenig@amd.com>
-Cc: Daniel Vetter <daniel.vetter@ffwll.ch>
-Cc: "Jérôme Glisse" <jglisse@redhat.com>
-Cc: linux-mm@kvack.org
-Reviewed-by: Christian König <christian.koenig@amd.com>
-Signed-off-by: Daniel Vetter <daniel.vetter@intel.com>
----
- mm/mmu_notifier.c | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
-
-diff --git a/mm/mmu_notifier.c b/mm/mmu_notifier.c
-index c05e406a7cd7..a09e737711d5 100644
---- a/mm/mmu_notifier.c
-+++ b/mm/mmu_notifier.c
-@@ -176,7 +176,13 @@ int __mmu_notifier_invalidate_range_start(struct mmu_notifier_range *range)
- 	id = srcu_read_lock(&srcu);
- 	hlist_for_each_entry_rcu(mn, &range->mm->mmu_notifier_mm->list, hlist) {
- 		if (mn->ops->invalidate_range_start) {
--			int _ret = mn->ops->invalidate_range_start(mn, range);
-+			int _ret;
-+
-+			if (!mmu_notifier_range_blockable(range))
-+				non_block_start();
-+			_ret = mn->ops->invalidate_range_start(mn, range);
-+			if (!mmu_notifier_range_blockable(range))
-+				non_block_end();
- 			if (_ret) {
- 				pr_info("%pS callback failed with %d in %sblockable context.\n",
- 					mn->ops->invalidate_range_start, _ret,
--- 
-2.20.1
-
+Thanks,
