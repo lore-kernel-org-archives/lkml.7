@@ -4,52 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B80FBC04AAC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:25:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7E88C04AAF
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:25:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BE2ED20645
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:25:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BD7F020645
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:25:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558355110;
-	bh=6RLYkUuvGgMflWixEZkW796FKXNDlG8rxgC9dmlFQsw=;
+	s=default; t=1558355112;
+	bh=g+LiIFWUKzTKBJwpmGwYkeqEN7TNVfGGtCtw2bIfbs0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NfUFPysvvTIuBkbC+1AzRkFeD8NRu1p15TSQbhlRseLh3gVq4e7SvJFp+saPYIMbj
-	 feTc5fH5FSF5sVPBeBVRreUuk/MeYWaq6Upj3c+kJ13bCOYSVs+HPDk8YmCAWBNKnR
-	 GW/4MVLOlMWeYpLgV5oLWrYKQwyMY/uCelXgA5Wo=
+	b=E8+7nCF4JoDABzvNEu268vLhwPC82sGsL9/wW5n41uCgKbEDpFx67MRkCHmnsNrtE
+	 tSDTk72egaFJekW7bj9SWUfwaRRRfWfYi9m7WB4HlmzcFRnG18sUVQyDEmjxjFrV+k
+	 L4JTDK10tjO8bQ6SPfYzbtVPzZU0adXhkseoQWds=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389002AbfETMZJ (ORCPT
+        id S2389014AbfETMZM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 08:25:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40112 "EHLO mail.kernel.org"
+        Mon, 20 May 2019 08:25:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40176 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388989AbfETMZH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 08:25:07 -0400
+        id S2389000AbfETMZK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 08:25:10 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4DA6A20675;
-        Mon, 20 May 2019 12:25:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E97E020645;
+        Mon, 20 May 2019 12:25:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558355106;
-        bh=6RLYkUuvGgMflWixEZkW796FKXNDlG8rxgC9dmlFQsw=;
+        s=default; t=1558355109;
+        bh=g+LiIFWUKzTKBJwpmGwYkeqEN7TNVfGGtCtw2bIfbs0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SP8nQ3uhsMx1rTD/zjNt5Yy5h8U6G4jRYmc886oas5QgiJkmsNmqSj0rjwsQBmAmr
-         WXhLr2PriIhc2lmElj9mSE44f66v7SaE/gAzciidTJmMdPWzhj/qSAoEU1IQNFN8YG
-         ooIeiBUcRKCkTOEKlmYETx/ccCbl8rkD7haa7mM4=
+        b=HEoqgwRshE/Sw0Gtmv78FevFi5TvUO9DCkX5S0El1H+DnJQVauZm4/owBfYofQmQ1
+         2nDDlgF8pt4FMpqe/lBJVfjeCKSFGN01ezBHkw8ma2PNoG6nwlHu8rzQA+3EUBDQUO
+         XXgwp2m7vVeBbNgUKuK51wlSdNumXFAcou1z5DXw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
-        "Joel Fernandes (Google)" <joel@joelfernandes.org>,
-        Kees Cook <keescook@chromium.org>,
+        stable@vger.kernel.org, Kees Cook <keescook@chromium.org>,
         Guenter Roeck <groeck@chromium.org>
-Subject: [PATCH 4.19 100/105] pstore: Allocate compression during late_initcall()
-Date:   Mon, 20 May 2019 14:14:46 +0200
-Message-Id: <20190520115254.135611751@linuxfoundation.org>
+Subject: [PATCH 4.19 101/105] pstore: Refactor compression initialization
+Date:   Mon, 20 May 2019 14:14:47 +0200
+Message-Id: <20190520115254.199143364@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190520115247.060821231@linuxfoundation.org>
 References: <20190520115247.060821231@linuxfoundation.org>
@@ -62,67 +59,111 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Joel Fernandes (Google) <joel@joelfernandes.org>
+From: Kees Cook <keescook@chromium.org>
 
-commit 416031653eb55f844e3547fb8f8576399a800da0 upstream.
+commit 95047b0519c17a28e09df5f38750f5354e3db4c4 upstream.
 
-ramoops's call of pstore_register() was recently moved to run during
-late_initcall() because the crypto backend may not have been ready during
-postcore_initcall(). This meant early-boot crash dumps were not getting
-caught by pstore any more.
+This refactors compression initialization slightly to better handle
+getting potentially called twice (via early pstore_register() calls
+and later pstore_init()) and improves the comments and reporting to be
+more verbose.
 
-Instead, lets allow calls to pstore_register() earlier, and once crypto
-is ready we can initialize the compression.
-
-Reported-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
-Tested-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-Fixes: cb3bee0369bc ("pstore: Use crypto compress API")
-[kees: trivial rebase]
 Signed-off-by: Kees Cook <keescook@chromium.org>
 Tested-by: Guenter Roeck <groeck@chromium.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/pstore/platform.c |   10 +++++++++-
- fs/pstore/ram.c      |    2 +-
- 2 files changed, 10 insertions(+), 2 deletions(-)
+ fs/pstore/platform.c |   48 +++++++++++++++++++++++++++++++++---------------
+ 1 file changed, 33 insertions(+), 15 deletions(-)
 
 --- a/fs/pstore/platform.c
 +++ b/fs/pstore/platform.c
-@@ -786,13 +786,21 @@ static int __init pstore_init(void)
+@@ -274,36 +274,56 @@ static int pstore_decompress(void *in, v
  
- 	pstore_choose_compression();
- 
-+	/*
-+	 * Check if any pstore backends registered earlier but did not
-+	 * initialize compression because crypto was not ready. If so,
-+	 * initialize compression now.
-+	 */
-+	if (psinfo && !tfm)
-+		allocate_buf_for_compression();
+ static void allocate_buf_for_compression(void)
+ {
++	struct crypto_comp *ctx;
++	int size;
++	char *buf;
 +
++	/* Skip if not built-in or compression backend not selected yet. */
+ 	if (!IS_ENABLED(CONFIG_PSTORE_COMPRESS) || !zbackend)
+ 		return;
+ 
++	/* Skip if no pstore backend yet or compression init already done. */
++	if (!psinfo || tfm)
++		return;
++
+ 	if (!crypto_has_comp(zbackend->name, 0, 0)) {
+-		pr_err("No %s compression\n", zbackend->name);
++		pr_err("Unknown compression: %s\n", zbackend->name);
+ 		return;
+ 	}
+ 
+-	big_oops_buf_sz = zbackend->zbufsize(psinfo->bufsize);
+-	if (big_oops_buf_sz <= 0)
++	size = zbackend->zbufsize(psinfo->bufsize);
++	if (size <= 0) {
++		pr_err("Invalid compression size for %s: %d\n",
++		       zbackend->name, size);
+ 		return;
++	}
+ 
+-	big_oops_buf = kmalloc(big_oops_buf_sz, GFP_KERNEL);
+-	if (!big_oops_buf) {
+-		pr_err("allocate compression buffer error!\n");
++	buf = kmalloc(size, GFP_KERNEL);
++	if (!buf) {
++		pr_err("Failed %d byte compression buffer allocation for: %s\n",
++		       size, zbackend->name);
+ 		return;
+ 	}
+ 
+-	tfm = crypto_alloc_comp(zbackend->name, 0, 0);
+-	if (IS_ERR_OR_NULL(tfm)) {
+-		kfree(big_oops_buf);
+-		big_oops_buf = NULL;
+-		pr_err("crypto_alloc_comp() failed!\n");
++	ctx = crypto_alloc_comp(zbackend->name, 0, 0);
++	if (IS_ERR_OR_NULL(ctx)) {
++		kfree(buf);
++		pr_err("crypto_alloc_comp('%s') failed: %ld\n", zbackend->name,
++		       PTR_ERR(ctx));
+ 		return;
+ 	}
++
++	/* A non-NULL big_oops_buf indicates compression is available. */
++	tfm = ctx;
++	big_oops_buf_sz = size;
++	big_oops_buf = buf;
++
++	pr_info("Using compression: %s\n", zbackend->name);
+ }
+ 
+ static void free_buf_for_compression(void)
+ {
+-	if (IS_ENABLED(CONFIG_PSTORE_COMPRESS) && !IS_ERR_OR_NULL(tfm))
++	if (IS_ENABLED(CONFIG_PSTORE_COMPRESS) && tfm)
+ 		crypto_free_comp(tfm);
+ 	kfree(big_oops_buf);
+ 	big_oops_buf = NULL;
+@@ -774,7 +794,6 @@ void __init pstore_choose_compression(vo
+ 	for (step = zbackends; step->name; step++) {
+ 		if (!strcmp(compress, step->name)) {
+ 			zbackend = step;
+-			pr_info("using %s compression\n", zbackend->name);
+ 			return;
+ 		}
+ 	}
+@@ -791,8 +810,7 @@ static int __init pstore_init(void)
+ 	 * initialize compression because crypto was not ready. If so,
+ 	 * initialize compression now.
+ 	 */
+-	if (psinfo && !tfm)
+-		allocate_buf_for_compression();
++	allocate_buf_for_compression();
+ 
  	ret = pstore_init_fs();
  	if (ret)
- 		return ret;
- 
- 	return 0;
- }
--module_init(pstore_init)
-+late_initcall(pstore_init);
- 
- static void __exit pstore_exit(void)
- {
---- a/fs/pstore/ram.c
-+++ b/fs/pstore/ram.c
-@@ -956,7 +956,7 @@ static int __init ramoops_init(void)
- 
- 	return ret;
- }
--late_initcall(ramoops_init);
-+postcore_initcall(ramoops_init);
- 
- static void __exit ramoops_exit(void)
- {
 
 
