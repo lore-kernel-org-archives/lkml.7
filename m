@@ -2,102 +2,142 @@ Return-Path: <SRS0=lq4r=TU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5FD8C04AB4
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 00:29:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FA56C04AB4
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 00:33:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AA862206B6
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 00:29:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DEF0220833
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 00:33:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="r2M4jtdb"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="rX5m0x0B"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729736AbfETA3Z (ORCPT
+        id S1729792AbfETAdT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 19 May 2019 20:29:25 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:41093 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727852AbfETA3Z (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 19 May 2019 20:29:25 -0400
-Received: by mail-pg1-f194.google.com with SMTP id z3so5887535pgp.8;
-        Sun, 19 May 2019 17:29:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=hBaYYOgHBn5Iq/to9VwGy7dRm9N+B3reJ/FtJOoZbpE=;
-        b=r2M4jtdbalke0beP4MXcM1cAhBkOWSLrP9AhggPcnbqfJEuQXFXXs1hVki0nIFrZkr
-         CtaKjKEjNs1O+lf5KZtPkKTUEs90AlqEUheG9+qhTpFSJLJf0F1dyIGH1BtJkWUwsFG0
-         6UhgtLNq63jsiqpDGLOzUstFBoOjYCtRDNBuIQvkVXsVLRn36IOzCae/fxIqZbiu1iCl
-         4b2sAgIlLDxxMUpNNxZvizLZmPTozXq5mUenSB7PfpSt4GmVY01Xv3o+ziPEUKRAN0f+
-         AsYXPt1X61mby+nLPEXKzKT/bMj7i/3ZpEGWFZhCVaJWc2qZXIjKg+wYkgX8sS/x2cKh
-         l2LQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=hBaYYOgHBn5Iq/to9VwGy7dRm9N+B3reJ/FtJOoZbpE=;
-        b=m/2DLbWYGy2TbwVTPedXyV9KOODGXPN9lLzHNNcM0fPw6JN/afC9GoX0YK4V4lPY8m
-         w/WaI1CROAP1eSUxfeSAfTR9BJMylonsmXBvo0fDTv4neJjvAiy2sWlENmEqt0HaBXYF
-         +ht5kRv0XOAmAYD2VU4g6hacw8q7pM74rgyVn/2j3O83zhzZacWremQuPY4iTQpQa6Ah
-         m4u796YFmjWWVeIGDFxem3LyugPbGNi1Q5kfFk9B2B5xnpMZSSpMq5923htbsEcyuzn7
-         bS0nprPPexM5P2lWt3KrZZ72EnDnJIFajnfTYAPiE/J3VChQRox99gKkdxkC8Y0qLW80
-         S/XQ==
-X-Gm-Message-State: APjAAAU3y7eofmlO+QresrdigSv2M+qeqOc7yCc0+0pb3MvuBrK33UyS
-        BpY8OYVceyf6Z6FYKAoEInR6enoR
-X-Google-Smtp-Source: APXvYqzXS8Kfg7+hoCIkTxpThWBlABRdcXxloJXFPPWjqikBFnMvV6LpBzSY+vOyezOanyJ+ow9F8g==
-X-Received: by 2002:a63:9d8d:: with SMTP id i135mr72466722pgd.245.1558312164132;
-        Sun, 19 May 2019 17:29:24 -0700 (PDT)
-Received: from ?IPv6:2601:282:800:fd80:319f:d85a:786b:cab7? ([2601:282:800:fd80:319f:d85a:786b:cab7])
-        by smtp.googlemail.com with ESMTPSA id l65sm25918110pfb.7.2019.05.19.17.29.21
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 19 May 2019 17:29:22 -0700 (PDT)
-Subject: Re: [PATCH 4.9 41/51] fib_rules: return 0 directly if an exactly same
- rule exists when NLM_F_EXCL not supplied
-To:     Nathan Chancellor <natechancellor@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Thomas Haller <thaller@redhat.com>,
-        Hangbin Liu <liuhangbin@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org
-References: <20190515090616.669619870@linuxfoundation.org>
- <20190515090628.066392616@linuxfoundation.org>
- <20190519154348.GA113991@archlinux-epyc>
-From:   David Ahern <dsahern@gmail.com>
-Message-ID: <a36e3204-b52d-0bf0-f956-654189a18156@gmail.com>
-Date:   Sun, 19 May 2019 18:29:19 -0600
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:52.0)
- Gecko/20100101 Thunderbird/52.9.1
+        Sun, 19 May 2019 20:33:19 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:39472 "EHLO vps0.lunn.ch"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729737AbfETAdS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 19 May 2019 20:33:18 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=MUOX718qoN0nr8jmwyI3xtQbOr7oQTYpKc2V8gTbMCE=; b=rX5m0x0B3yqk7j3YWZWw1w/LhH
+        SlGAFNt6/pKCaSkIN+ieVBcYPaWPQPcdgDvofTmUYcVaD0idFyMDLyYaMQj5W+wnc0E0WI4rf9ShT
+        77TRnTNU3OkWpPR5OxveuytkNo8WW20Z7iutJcigyBDlpRMjniJ3lu5aD9QXODpnRPqQ=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.89)
+        (envelope-from <andrew@lunn.ch>)
+        id 1hSWEg-00016b-BC; Mon, 20 May 2019 02:33:02 +0200
+Date:   Mon, 20 May 2019 02:33:02 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Oleksij Rempel <o.rempel@pengutronix.de>
+Cc:     Paul Burton <paul.burton@mips.com>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        James Hogan <jhogan@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Jay Cliburn <jcliburn@gmail.com>,
+        Chris Snook <chris.snook@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, John Crispin <john@phrozen.org>,
+        Felix Fietkau <nbd@nbd.name>, netdev@vger.kernel.org,
+        Chuanhong Guo <gch981213@gmail.com>,
+        info@freifunk-bad-gandersheim.net
+Subject: Re: [PATCH v4 3/3] net: ethernet: add ag71xx driver
+Message-ID: <20190520003302.GA1695@lunn.ch>
+References: <20190519080304.5811-1-o.rempel@pengutronix.de>
+ <20190519080304.5811-4-o.rempel@pengutronix.de>
 MIME-Version: 1.0
-In-Reply-To: <20190519154348.GA113991@archlinux-epyc>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190519080304.5811-4-o.rempel@pengutronix.de>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/19/19 9:43 AM, Nathan Chancellor wrote:
-> Hi all,
-> 
-> This commit is causing issues on Android devices when Wi-Fi and mobile
-> data are both enabled. The device will do a soft reboot consistently.
-> So far, I've had reports on the Pixel 3 XL, OnePlus 6, Pocophone, and
-> Note 9 and I can reproduce on my OnePlus 6.
-> 
-> Sorry for taking so long to report this, I just figured out how to
-> reproduce it today and I didn't want to report it without that.
-> 
-> Attached is a full dmesg and the relevant snippet from Android's logcat.
-> 
-> Let me know what I can do to help debug,
-> Nathan
-> 
+Hi Oleksij
 
-It's a backport problem. err needs to be reset to 0 before the goto.
+> +static int ag71xx_mdio_mii_read(struct mii_bus *bus, int addr, int reg)
+> +{
+> +	struct ag71xx *ag = bus->priv;
+> +	struct net_device *ndev = ag->ndev;
+> +	int err;
+> +	int ret;
+> +
+> +	err = ag71xx_mdio_wait_busy(ag);
+> +	if (err)
+> +		return err;
+> +
+> +	ag71xx_wr(ag, AG71XX_REG_MII_CMD, MII_CMD_WRITE);
+
+It looks like you have not removed this.
+
+> +	ag71xx_wr(ag, AG71XX_REG_MII_ADDR,
+> +			((addr & 0xff) << MII_ADDR_SHIFT) | (reg & 0xff));
+> +	ag71xx_wr(ag, AG71XX_REG_MII_CMD, MII_CMD_READ);
+> +
+> +	err = ag71xx_mdio_wait_busy(ag);
+> +	if (err)
+> +		return err;
+> +
+> +	ret = ag71xx_rr(ag, AG71XX_REG_MII_STATUS);
+> +	/*
+> +	 * ar9331 doc: bits 31:16 are reserved and must be must be written
+> +	 * with zero.
+> +	 */
+> +	ret &= 0xffff;
+> +	ag71xx_wr(ag, AG71XX_REG_MII_CMD, MII_CMD_WRITE);
+
+Or this.
+
+> +
+> +	netif_dbg(ag, link, ndev, "mii_read: addr=%04x, reg=%04x, value=%04x\n",
+> +		  addr, reg, ret);
+> +
+> +	return ret;
+> +}
+> +
+> +static int ag71xx_mdio_mii_write(struct mii_bus *bus, int addr, int reg,
+> +				 u16 val)
+> +{
+> +	struct ag71xx *ag = bus->priv;
+> +	struct net_device *ndev = ag->ndev;
+> +
+> +	netif_dbg(ag, link, ndev, "mii_write: addr=%04x, reg=%04x, value=%04x\n",
+> +		  addr, reg, val);
+> +
+> +	ag71xx_wr(ag, AG71XX_REG_MII_ADDR,
+> +			((addr & 0xff) << MII_ADDR_SHIFT) | (reg & 0xff));
+
+addr have the vale 0-31. So a mask of 0xff is a couple of bits too
+big.
+
+> +	ag71xx_wr(ag, AG71XX_REG_MII_CTRL, val);
+> +
+> +	return ag71xx_mdio_wait_busy(ag);
+> +}
+
+> +static void ag71xx_link_adjust(struct ag71xx *ag, bool update)
+> +{
+> +	struct net_device *ndev = ag->ndev;
+> +	struct phy_device *phydev = ndev->phydev;
+> +	u32 cfg2;
+> +	u32 ifctl;
+> +	u32 fifo5;
+> +
+> +	if (!phydev->link && update) {
+> +		ag71xx_hw_stop(ag);
+> +		netif_carrier_off(ag->ndev);
+
+phylib will take care of the carrier for you.
+
+       Andrew
