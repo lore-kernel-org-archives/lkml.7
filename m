@@ -2,308 +2,162 @@ Return-Path: <SRS0=lq4r=TU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB9CEC04E87
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D27C4C04AAF
 	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 17:20:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 80F80208C3
+	by mail.kernel.org (Postfix) with ESMTP id ADB79214AE
 	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 17:20:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="CAA7Ixg5";
-	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="eHj9FZl+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390694AbfETRUM (ORCPT
+        id S2392767AbfETRUP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 13:20:12 -0400
-Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:48458 "EHLO
-        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1733069AbfETRUL (ORCPT
+        Mon, 20 May 2019 13:20:15 -0400
+Received: from asavdk3.altibox.net ([109.247.116.14]:52065 "EHLO
+        asavdk3.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1733069AbfETRUO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 13:20:11 -0400
-Received: from pps.filterd (m0109333.ppops.net [127.0.0.1])
-        by mx0a-00082601.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4KH9NEb018704;
-        Mon, 20 May 2019 10:19:25 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
- : date : message-id : references : in-reply-to : content-type : content-id
- : content-transfer-encoding : mime-version; s=facebook;
- bh=81AfIakDmhkQKoU122SDnOftu+nkWvzOxvv35A+cUo8=;
- b=CAA7Ixg5rLdS8gs4YjIv3KxipsBxCgh06okHYPL5HjKjx9gzSdu0Rr+VFOjPVE/TD0RP
- PeSR0/Jq71UO9tTm1kdy3xrO4GrYY5SJctvZhUkPf71atQyfMA9pUTNT/3wS5VeqQIKU
- DGuGR2msKirjbe5YywVvlC2LZi2ICsMuktk= 
-Received: from mail.thefacebook.com (mailout.thefacebook.com [199.201.64.23])
-        by mx0a-00082601.pphosted.com with ESMTP id 2sm07hg2q3-6
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
-        Mon, 20 May 2019 10:19:25 -0700
-Received: from prn-hub01.TheFacebook.com (2620:10d:c081:35::125) by
- prn-hub01.TheFacebook.com (2620:10d:c081:35::125) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- 15.1.1713.5; Mon, 20 May 2019 10:19:24 -0700
-Received: from NAM04-BN3-obe.outbound.protection.outlook.com (192.168.54.28)
- by o365-in.thefacebook.com (192.168.16.25) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.1.1713.5
- via Frontend Transport; Mon, 20 May 2019 10:19:24 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
- s=selector1-fb-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=81AfIakDmhkQKoU122SDnOftu+nkWvzOxvv35A+cUo8=;
- b=eHj9FZl+O9Gei+6HDcDfPzhdK6AXxpyceTETFZSoeLao6yQinFpoBqItD0kR/xDJCIDPtPTY/ba61bwzfnYshjSytlzxJBUSmVjS+xfbdLLhgOPjFJ/dKTOtyoZvYrodAVOdDMKrmvSBOOZ8Vrex9sJmkAs8cxHNYfsBGvo+EdQ=
-Received: from MWHPR15MB1165.namprd15.prod.outlook.com (10.175.2.19) by
- MWHPR15MB1133.namprd15.prod.outlook.com (10.175.2.11) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1900.16; Mon, 20 May 2019 17:19:22 +0000
-Received: from MWHPR15MB1165.namprd15.prod.outlook.com
- ([fe80::85b5:614:bc49:8a15]) by MWHPR15MB1165.namprd15.prod.outlook.com
- ([fe80::85b5:614:bc49:8a15%11]) with mapi id 15.20.1900.020; Mon, 20 May 2019
- 17:19:22 +0000
-From:   Song Liu <songliubraving@fb.com>
-To:     Kairui Song <kasong@redhat.com>
-CC:     Peter Zijlstra <peterz@infradead.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Kernel Team <Kernel-team@fb.com>,
-        "Josh Poimboeuf" <jpoimboe@redhat.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        "Daniel Borkmann" <daniel@iogearbox.net>,
-        "bpf@vger.kernel.org" <bpf@vger.kernel.org>
-Subject: Re: Getting empty callchain from perf_callchain_kernel() 
-Thread-Topic: Getting empty callchain from perf_callchain_kernel() 
-Thread-Index: AQHVDEJXbyjc1nknl06FlgTGlvLrzKZu8J8AgAAG+ICAAAFQgIAAD2QAgAO6dwCAAYUMgA==
-Date:   Mon, 20 May 2019 17:19:22 +0000
-Message-ID: <BB5859B6-6686-474A-8CB2-FAC183C92829@fb.com>
-References: <3CD3EE63-0CD2-404A-A403-E11DCF2DF8D9@fb.com>
- <20190517074600.GJ2623@hirez.programming.kicks-ass.net>
- <20190517081057.GQ2650@hirez.programming.kicks-ass.net>
- <CACPcB9cB5n1HOmZcVpusJq8rAV5+KfmZ-Lxv3tgsSoy7vNrk7w@mail.gmail.com>
- <20190517091044.GM2606@hirez.programming.kicks-ass.net>
- <CACPcB9cpNp5CBqoRs+XMCwufzAFa8Pj-gbmj9fb+g5wVdue=ig@mail.gmail.com>
-In-Reply-To: <CACPcB9cpNp5CBqoRs+XMCwufzAFa8Pj-gbmj9fb+g5wVdue=ig@mail.gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-mailer: Apple Mail (2.3445.104.8)
-x-originating-ip: [2620:10d:c090:200::1:c888]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 7fa8d74e-9d25-470b-8d22-08d6dd474d0b
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(2017052603328)(7193020);SRVR:MWHPR15MB1133;
-x-ms-traffictypediagnostic: MWHPR15MB1133:
-x-microsoft-antispam-prvs: <MWHPR15MB113380E22A56BF1FC38E04F7B3060@MWHPR15MB1133.namprd15.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:3826;
-x-forefront-prvs: 004395A01C
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(376002)(346002)(136003)(366004)(396003)(39860400002)(189003)(199004)(86362001)(229853002)(6246003)(4743002)(102836004)(66476007)(66556008)(64756008)(66446008)(66946007)(76116006)(57306001)(6116002)(53546011)(6506007)(8936002)(4326008)(99286004)(73956011)(25786009)(76176011)(54906003)(50226002)(11346002)(53936002)(82746002)(8676002)(81156014)(81166006)(486006)(2616005)(476003)(36756003)(83716004)(71200400001)(71190400001)(446003)(33656002)(6486002)(6436002)(5660300002)(7736002)(256004)(186003)(316002)(6512007)(46003)(478600001)(6916009)(2906002)(68736007)(14454004)(305945005);DIR:OUT;SFP:1102;SCL:1;SRVR:MWHPR15MB1133;H:MWHPR15MB1165.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: fb.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: u8GgpFUoEVk+T6sRir4y67DOdzoz2p44B49npZTKRa9e+hfOqqosDg754OoQgJ5xD0D9K9ZwyOBDNWgCRpXZ0fYbx3hFXbr1qAtl7txmymD8MALJzugh+surYvgfdMYs24Ql/IMYF5VC0EnFv9n4IMc9IjUhwMGBgEHyUKUvMSq9exxo5SXoKecCN9sdw7Yb0y/N3f3lkTXrl7pmXzgQqSik/6nH2Ff24OnzDCkil/XA0gpmBwM6O93rHjFEgvrxgzyU0KLd0eWZo0u4OVbZuUTUfUdi3Ih0VXMc5N5jAUmQbjZPyiB1e00lSa60q0acAcH/oEixMCl3khWiIR4+3MyKO716N4qtvHsWnUqZMT+2TsxeVIbcA0/ifDlk+FIl9ZIpomQO3iFqxw5BR7+4asiKBg1pdqdGpIfJkh8tAI8=
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <2D73D2FFA67EDE42A6DEA59B93F87828@namprd15.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        Mon, 20 May 2019 13:20:14 -0400
+Received: from ravnborg.org (unknown [158.248.194.18])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by asavdk3.altibox.net (Postfix) with ESMTPS id 424FE2008D;
+        Mon, 20 May 2019 19:20:10 +0200 (CEST)
+Date:   Mon, 20 May 2019 19:20:08 +0200
+From:   Sam Ravnborg <sam@ravnborg.org>
+To:     Daniel Vetter <daniel.vetter@ffwll.ch>
+Cc:     DRI Development <dri-devel@lists.freedesktop.org>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Intel Graphics Development <intel-gfx@lists.freedesktop.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        =?utf-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>,
+        Yisheng Xie <ysxie@foxmail.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Mikulas Patocka <mpatocka@redhat.com>,
+        Daniel Vetter <daniel.vetter@intel.com>,
+        Peter Rosin <peda@axentia.se>
+Subject: Re: [PATCH 27/33] fbdev: remove FBINFO_MISC_USEREVENT around fb_blank
+Message-ID: <20190520172008.GB27230@ravnborg.org>
+References: <20190520082216.26273-1-daniel.vetter@ffwll.ch>
+ <20190520082216.26273-28-daniel.vetter@ffwll.ch>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7fa8d74e-9d25-470b-8d22-08d6dd474d0b
-X-MS-Exchange-CrossTenant-originalarrivaltime: 20 May 2019 17:19:22.2561
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR15MB1133
-X-OriginatorOrg: fb.com
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-20_07:,,
- signatures=0
-X-Proofpoint-Spam-Reason: safe
-X-FB-Internal: Safe
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190520082216.26273-28-daniel.vetter@ffwll.ch>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-CMAE-Score: 0
+X-CMAE-Analysis: v=2.3 cv=dqr19Wo4 c=1 sm=1 tr=0
+        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
+        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=IkcTkHD0fZMA:10 a=QyXUC8HyAAAA:8
+        a=hD80L64hAAAA:8 a=20KFwNOVAAAA:8 a=bDN84i_9AAAA:8 a=pGLkceISAAAA:8
+        a=e5mUnYsNAAAA:8 a=MCcOG3vBCl0DkZwRRUMA:9 a=QEXdDO2ut3YA:10
+        a=J2PsDwZO0S0EpbpLmD-j:22 a=Vxmtnl_E_bksehYqCbjh:22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Sorry for previous empty email.. Clicked send by accident.=20
+Hi Daniel.
 
-> On May 19, 2019, at 11:06 AM, Kairui Song <kasong@redhat.com> wrote:
->=20
-> On Fri, May 17, 2019 at 5:10 PM Peter Zijlstra <peterz@infradead.org> wro=
-te:
->>=20
->> On Fri, May 17, 2019 at 04:15:39PM +0800, Kairui Song wrote:
->>> Hi, I think the actual problem is that bpf_get_stackid_tp (and maybe
->>> some other bfp functions) is now broken, or, strating an unwind
->>> directly inside a bpf program will end up strangely. It have following
->>> kernel message:
->>=20
->> Urgh, what is that bpf_get_stackid_tp() doing to get the regs? I can't
->> follow.
->=20
-> bpf_get_stackid_tp will just use the regs passed to it from the trace
-> point. And then it will eventually call perf_get_callchain to get the
-> call chain.
-> With a tracepoint we have the fake regs, so unwinder will start from
-> where it is called, and use the fake regs as the indicator of the
-> target frame it want, and keep unwinding until reached the actually
-> callsite.
->=20
-> But if the stack trace is started withing a bpf func call then it's broke=
-n...
->=20
-> If the unwinder could trace back through the bpf func call then there
-> will be no such problem.
->=20
-> For frame pointer unwinder, set the indicator flag (X86_EFLAGS_FIXED)
-> before bpf call, and ensure bp is also dumped could fix it (so it will
-> start using the regs for bpf calls, like before the commit
-> d15d356887e7). But for ORC I don't see a clear way to fix the problem.
-> First though is maybe dump some callee's regs for ORC (IP, BP, SP, DI,
-> DX, R10, R13, else?) in the trace point handler, then use the flag to
-> indicate ORC to do one more unwind (because can't get caller's regs,
-> so get callee's regs instaed) before actually giving output?
->=20
-> I had a try, for framepointer unwinder, mark the indicator flag before
-> calling bpf functions, and dump bp as well in the trace point. Then
-> with frame pointer, it works, test passed:
->=20
-> diff --git a/arch/x86/include/asm/perf_event.h
-> b/arch/x86/include/asm/perf_event.h
-> index 1392d5e6e8d6..6f1192e9776b 100644
-> --- a/arch/x86/include/asm/perf_event.h
-> +++ b/arch/x86/include/asm/perf_event.h
-> @@ -302,12 +302,25 @@ extern unsigned long perf_misc_flags(struct
-> pt_regs *regs);
->=20
-> #include <asm/stacktrace.h>
->=20
-> +#ifdef CONFIG_FRAME_POINTER
-> +static inline unsigned long caller_frame_pointer(void)
-> +{
-> +       return (unsigned long)__builtin_frame_address(1);
-> +}
-> +#else
-> +static inline unsigned long caller_frame_pointer(void)
-> +{
-> +       return 0;
-> +}
-> +#endif
-> +
-> /*
->  * We abuse bit 3 from flags to pass exact information, see perf_misc_fla=
-gs
->  * and the comment with PERF_EFLAGS_EXACT.
->  */
-> #define perf_arch_fetch_caller_regs(regs, __ip)                {       \
->        (regs)->ip =3D (__ip);                                    \
-> +       (regs)->bp =3D caller_frame_pointer();                    \
->        (regs)->sp =3D (unsigned long)__builtin_frame_address(0); \
->        (regs)->cs =3D __KERNEL_CS;                               \
->        regs->flags =3D 0;                                        \
-> diff --git a/kernel/events/core.c b/kernel/events/core.c
-> index abbd4b3b96c2..ca7b95ee74f0 100644
-> --- a/kernel/events/core.c
-> +++ b/kernel/events/core.c
-> @@ -8549,6 +8549,7 @@ void perf_trace_run_bpf_submit(void *raw_data,
-> int size, int rctx,
->                               struct task_struct *task)
-> {
->        if (bpf_prog_array_valid(call)) {
-> +               regs->flags |=3D X86_EFLAGS_FIXED;
->                *(struct pt_regs **)raw_data =3D regs;
->                if (!trace_call_bpf(call, raw_data) || hlist_empty(head)) =
-{
->                        perf_swevent_put_recursion_context(rctx);
-> @@ -8822,6 +8823,8 @@ static void bpf_overflow_handler(struct perf_event =
-*event,
->        int ret =3D 0;
->=20
->        ctx.regs =3D perf_arch_bpf_user_pt_regs(regs);
-> +       ctx.regs->flags |=3D X86_EFLAGS_FIXED;
-> +
->        preempt_disable();
->        if (unlikely(__this_cpu_inc_return(bpf_prog_active) !=3D 1))
->                goto out;
-> diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
-> index f92d6ad5e080..e1fa656677dc 100644
-> --- a/kernel/trace/bpf_trace.c
-> +++ b/kernel/trace/bpf_trace.c
-> @@ -497,6 +497,8 @@ u64 bpf_event_output(struct bpf_map *map, u64
-> flags, void *meta, u64 meta_size,
->        };
->=20
->        perf_fetch_caller_regs(regs);
-> +       regs->flags |=3D X86_EFLAGS_FIXED;
-> +
->        perf_sample_data_init(sd, 0, 0);
->        sd->raw =3D &raw;
->=20
-> @@ -831,6 +833,8 @@ BPF_CALL_5(bpf_perf_event_output_raw_tp, struct
-> bpf_raw_tracepoint_args *, args,
->        struct pt_regs *regs =3D this_cpu_ptr(&bpf_raw_tp_regs);
->=20
->        perf_fetch_caller_regs(regs);
-> +       regs->flags |=3D X86_EFLAGS_FIXED;
-> +
->        return ____bpf_perf_event_output(regs, map, flags, data, size);
-> }
->=20
-> @@ -851,6 +855,8 @@ BPF_CALL_3(bpf_get_stackid_raw_tp, struct
-> bpf_raw_tracepoint_args *, args,
->        struct pt_regs *regs =3D this_cpu_ptr(&bpf_raw_tp_regs);
->=20
->        perf_fetch_caller_regs(regs);
-> +       regs->flags |=3D X86_EFLAGS_FIXED;
-> +
->        /* similar to bpf_perf_event_output_tp, but pt_regs fetched
-> differently */
->        return bpf_get_stackid((unsigned long) regs, (unsigned long) map,
->                               flags, 0, 0);
-> @@ -871,6 +877,8 @@ BPF_CALL_4(bpf_get_stack_raw_tp, struct
-> bpf_raw_tracepoint_args *, args,
->        struct pt_regs *regs =3D this_cpu_ptr(&bpf_raw_tp_regs);
->=20
->        perf_fetch_caller_regs(regs);
-> +       regs->flags |=3D X86_EFLAGS_FIXED;
-> +
->        return bpf_get_stack((unsigned long) regs, (unsigned long) buf,
->                             (unsigned long) size, flags, 0);
-> }
->=20
+> With the recursion broken in the previous patch we can drop the
+> FBINFO_MISC_USEREVENT flag around calls to fb_blank - recursion
+> prevention was it's only job.
+> 
+When grepping for FBINFO_MISC_USEREVENT I get a few hits not addressed
+in the patch below:
 
-I think we really cannot do something above, as it leaks x86 specific
-code into kernel/events and kernel/trace.=20
+drivers/video/fbdev/core/fbcon.c:                       if (!(info->flags & FBINFO_MISC_USEREVENT))
+drivers/video/fbdev/core/fbmem.c:                       if (!ret && (flags & FBINFO_MISC_USEREVENT)) {
+drivers/video/fbdev/core/fbmem.c:                               info->flags &= ~FBINFO_MISC_USEREVENT;
+drivers/video/fbdev/core/fbmem.c:               info->flags |= FBINFO_MISC_USEREVENT;
+drivers/video/fbdev/core/fbmem.c:               info->flags &= ~FBINFO_MISC_USEREVENT;
+drivers/video/fbdev/core/fbmem.c:               info->flags |= FBINFO_MISC_USEREVENT;
+drivers/video/fbdev/core/fbmem.c:               info->flags &= ~FBINFO_MISC_USEREVENT;
+drivers/video/fbdev/core/fbsysfs.c:     fb_info->flags |= FBINFO_MISC_USEREVENT;
+drivers/video/fbdev/core/fbsysfs.c:     fb_info->flags &= ~FBINFO_MISC_USEREVENT;
+drivers/video/fbdev/core/fbsysfs.c:     fb_info->flags |= FBINFO_MISC_USEREVENT;
+drivers/video/fbdev/core/fbsysfs.c:     fb_info->flags &= ~FBINFO_MISC_USEREVENT;
+drivers/video/fbdev/ps3fb.c:                            info->flags |= FBINFO_MISC_USEREVENT;
+drivers/video/fbdev/ps3fb.c:                            info->flags &= ~FBINFO_MISC_USEREVENT;
+drivers/video/fbdev/sh_mobile_lcdcfb.c:  * FBINFO_MISC_USEREVENT flag is set. Since we do not want to fake a
+include/linux/fb.h:#define FBINFO_MISC_USEREVENT          0x10000 /* event request
 
-> And *_raw_tp functions will fetch the regs by themselves so a bit
-> trouble some...
->=20
-> ----------
->=20
-> And another approach is to make unwinder direct unwinding works when
-> called by bpf (if possible and reasonable). I also had a nasty hacky
-> experiment (posted below) to just force frame pointer unwinder's
-> get_stack_info pass for bpf, then problem is fixed without any other
-> workaround:
->=20
-> diff --git a/arch/x86/kernel/dumpstack_64.c b/arch/x86/kernel/dumpstack_6=
-4.c
-> index 753b8cfe8b8a..c0cfdf25f5ed 100644
-> --- a/arch/x86/kernel/dumpstack_64.c
-> +++ b/arch/x86/kernel/dumpstack_64.c
-> @@ -166,7 +166,8 @@ int get_stack_info(unsigned long *stack, struct
-> task_struct *task,
->        if (in_entry_stack(stack, info))
->                goto recursion_check;
->=20
-> -       goto unknown;
-> +       goto recursion_check;
->=20
-> recursion_check:
->        /*
+The use in ps3fb looks like a candidate for removal and this file is not
+touch in this patch series, so I guess I did not miss it.
 
-I think this one doesn't work for ORC either?=20
+As I did not apply the full series maybe some of the other users was
+already taken care of.
 
-Thanks,
-Song
 
-> Don't know how to do it the right way, or is it even possible for all
-> unwinders yet...
->=20
-> --=20
-> Best Regards,
-> Kairui Song
+	Sam
 
+> Signed-off-by: Daniel Vetter <daniel.vetter@intel.com>
+> Cc: Daniel Vetter <daniel.vetter@ffwll.ch>
+> Cc: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+> Cc: Hans de Goede <hdegoede@redhat.com>
+> Cc: Yisheng Xie <ysxie@foxmail.com>
+> Cc: "Michał Mirosław" <mirq-linux@rere.qmqm.pl>
+> Cc: Peter Rosin <peda@axentia.se>
+> Cc: Mikulas Patocka <mpatocka@redhat.com>
+> Cc: Rob Clark <robdclark@gmail.com>
+> ---
+>  drivers/video/fbdev/core/fbcon.c   | 5 ++---
+>  drivers/video/fbdev/core/fbmem.c   | 3 ---
+>  drivers/video/fbdev/core/fbsysfs.c | 2 --
+>  3 files changed, 2 insertions(+), 8 deletions(-)
+> 
+> diff --git a/drivers/video/fbdev/core/fbcon.c b/drivers/video/fbdev/core/fbcon.c
+> index f85d794a3bee..c1a7476e980f 100644
+> --- a/drivers/video/fbdev/core/fbcon.c
+> +++ b/drivers/video/fbdev/core/fbcon.c
+> @@ -2382,9 +2382,8 @@ static int fbcon_blank(struct vc_data *vc, int blank, int mode_switch)
+>  			fbcon_cursor(vc, blank ? CM_ERASE : CM_DRAW);
+>  			ops->cursor_flash = (!blank);
+>  
+> -			if (!(info->flags & FBINFO_MISC_USEREVENT))
+> -				if (fb_blank(info, blank))
+> -					fbcon_generic_blank(vc, info, blank);
+> +			if (fb_blank(info, blank))
+> +				fbcon_generic_blank(vc, info, blank);
+>  		}
+>  
+>  		if (!blank)
+> diff --git a/drivers/video/fbdev/core/fbmem.c b/drivers/video/fbdev/core/fbmem.c
+> index 7f95c7e80155..65a075ccac4a 100644
+> --- a/drivers/video/fbdev/core/fbmem.c
+> +++ b/drivers/video/fbdev/core/fbmem.c
+> @@ -1194,10 +1194,7 @@ static long do_fb_ioctl(struct fb_info *info, unsigned int cmd,
+>  	case FBIOBLANK:
+>  		console_lock();
+>  		lock_fb_info(info);
+> -		info->flags |= FBINFO_MISC_USEREVENT;
+>  		ret = fb_blank(info, arg);
+> -		info->flags &= ~FBINFO_MISC_USEREVENT;
+> -
+>  		/* might again call into fb_blank */
+>  		fbcon_fb_blanked(info, arg);
+>  		unlock_fb_info(info);
+> diff --git a/drivers/video/fbdev/core/fbsysfs.c b/drivers/video/fbdev/core/fbsysfs.c
+> index 252d4f52d2a5..882b471d619e 100644
+> --- a/drivers/video/fbdev/core/fbsysfs.c
+> +++ b/drivers/video/fbdev/core/fbsysfs.c
+> @@ -310,9 +310,7 @@ static ssize_t store_blank(struct device *device,
+>  
+>  	arg = simple_strtoul(buf, &last, 0);
+>  	console_lock();
+> -	fb_info->flags |= FBINFO_MISC_USEREVENT;
+>  	err = fb_blank(fb_info, arg);
+> -	fb_info->flags &= ~FBINFO_MISC_USEREVENT;
+>  	/* might again call into fb_blank */
+>  	fbcon_fb_blanked(fb_info, arg);
+>  	console_unlock();
+> -- 
+> 2.20.1
+> 
+> _______________________________________________
+> dri-devel mailing list
+> dri-devel@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/dri-devel
