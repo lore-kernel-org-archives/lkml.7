@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67857C04AAC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:39:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5655C04E87
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:39:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3DDEC20645
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:39:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8AAE7204FD
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:39:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558355982;
-	bh=ThuQJlJWUbJBxZLkx4DtB+RwKwOeEAz2/qoq9LVWops=;
+	s=default; t=1558355985;
+	bh=LIPVOzobOFCqE51m4NNu5tsrh3LZ6vm87nQqkPrsDEQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CFM8ATLoCoAZZiKefFVCjfRY2L+49tFmbrKCVzmpDZNajYnxrJ/BzqFls/dMIe9Rv
-	 gFH3kHjKvwzdFmOeXghcI+IsB9wEI9s3q/HdK52ZMXTa0+58dYZ06ompLsTckcF75k
-	 AZZbSFnSCnUFdgynZVngu1dIAqpbvEKm2K7h6PA0=
+	b=BGa62W/IGxe9TijkxfDgWli/S3IkKJWjz+Imoh/ijd6MG8weXO7aoCX5l1eYaGpmp
+	 4oQwLIsDjg0Kxai6UvLZa+S8R//zPgquoS8AtJoO/fITsJP5wx8XxkFs1qeL2nKwo5
+	 VI1S60Af5+Vi8bUcjJOiTkQB5/5KbGwyv3LE99FY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391412AbfETMjl (ORCPT
+        id S2390782AbfETMdq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 08:39:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50946 "EHLO mail.kernel.org"
+        Mon, 20 May 2019 08:33:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50764 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390783AbfETMdr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 08:33:47 -0400
+        id S2390755AbfETMdg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 08:33:36 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D1DCA21479;
-        Mon, 20 May 2019 12:33:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3BFDB20815;
+        Mon, 20 May 2019 12:33:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558355626;
-        bh=ThuQJlJWUbJBxZLkx4DtB+RwKwOeEAz2/qoq9LVWops=;
+        s=default; t=1558355615;
+        bh=LIPVOzobOFCqE51m4NNu5tsrh3LZ6vm87nQqkPrsDEQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1YOeaN/ySDbdfbMbNsJicDMIq+flf5LiUOznorgb1ouXvoW12usOQnRJRh1k35eDQ
-         jZGn6MTd0L3M3G9WMsz5yUk4MZlUSQ7b9QasZ2u4laKhTkAT4kIM9h3EDSFu70NoB2
-         lZFh6qdjryV82u9dIVYWRoQb8pD9nBkfQHkl3gDw=
+        b=Vl9+RloC9GDGAtljBRID2zQYyMCvm/7Nnpp9OldluLFH/tzT+BT7q2HgPFwHmCQll
+         m8fLj+wQ75gHyeZ9ViBJizAl4MFxr0HuuKXTt+0Sukof68Pzkx9695ZMQazdqVWt2b
+         EKX5Mc/utAgjLqBh30AjVMHD8OGGO9nfYG4rnreA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Gilad Ben-Yossef <gilad@benyossef.com>,
         Herbert Xu <herbert@gondor.apana.org.au>
-Subject: [PATCH 5.1 064/128] crypto: ccree - dont map AEAD key and IV on stack
-Date:   Mon, 20 May 2019 14:14:11 +0200
-Message-Id: <20190520115254.120694661@linuxfoundation.org>
+Subject: [PATCH 5.1 060/128] crypto: ccree - remove special handling of chained sg
+Date:   Mon, 20 May 2019 14:14:07 +0200
+Message-Id: <20190520115253.837081510@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190520115249.449077487@linuxfoundation.org>
 References: <20190520115249.449077487@linuxfoundation.org>
@@ -61,10 +61,15 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Gilad Ben-Yossef <gilad@benyossef.com>
 
-commit e8662a6a5f8f7f2cadc0edb934aef622d96ac3ee upstream.
+commit c4b22bf51b815fb61a35a27fc847a88bc28ebb63 upstream.
 
-The AEAD authenc key and IVs might be passed to us on stack. Copy it to
-a slab buffer before mapping to gurantee proper DMA mapping.
+We were handling chained scattergather lists with specialized code
+needlessly as the regular sg APIs handle them just fine. The code
+handling this also had an (unused) code path with a use-before-init
+error, flagged by Coverity.
+
+Remove all special handling of chained sg and leave their handling
+to the regular sg APIs.
 
 Signed-off-by: Gilad Ben-Yossef <gilad@benyossef.com>
 Cc: stable@vger.kernel.org # v4.19+
@@ -72,107 +77,198 @@ Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/crypto/ccree/cc_aead.c       |   11 ++++++++++-
- drivers/crypto/ccree/cc_buffer_mgr.c |   15 ++++++++++++---
- drivers/crypto/ccree/cc_driver.h     |    1 +
- 3 files changed, 23 insertions(+), 4 deletions(-)
+ drivers/crypto/ccree/cc_buffer_mgr.c |   98 +++++++----------------------------
+ 1 file changed, 22 insertions(+), 76 deletions(-)
 
---- a/drivers/crypto/ccree/cc_aead.c
-+++ b/drivers/crypto/ccree/cc_aead.c
-@@ -424,7 +424,7 @@ static int validate_keys_sizes(struct cc
- /* This function prepers the user key so it can pass to the hmac processing
-  * (copy to intenral buffer or hash in case of key longer than block
-  */
--static int cc_get_plain_hmac_key(struct crypto_aead *tfm, const u8 *key,
-+static int cc_get_plain_hmac_key(struct crypto_aead *tfm, const u8 *authkey,
- 				 unsigned int keylen)
- {
- 	dma_addr_t key_dma_addr = 0;
-@@ -437,6 +437,7 @@ static int cc_get_plain_hmac_key(struct
- 	unsigned int hashmode;
- 	unsigned int idx = 0;
- 	int rc = 0;
-+	u8 *key = NULL;
- 	struct cc_hw_desc desc[MAX_AEAD_SETKEY_SEQ];
- 	dma_addr_t padded_authkey_dma_addr =
- 		ctx->auth_state.hmac.padded_authkey_dma_addr;
-@@ -455,11 +456,17 @@ static int cc_get_plain_hmac_key(struct
- 	}
- 
- 	if (keylen != 0) {
-+
-+		key = kmemdup(authkey, keylen, GFP_KERNEL);
-+		if (!key)
-+			return -ENOMEM;
-+
- 		key_dma_addr = dma_map_single(dev, (void *)key, keylen,
- 					      DMA_TO_DEVICE);
- 		if (dma_mapping_error(dev, key_dma_addr)) {
- 			dev_err(dev, "Mapping key va=0x%p len=%u for DMA failed\n",
- 				key, keylen);
-+			kzfree(key);
- 			return -ENOMEM;
- 		}
- 		if (keylen > blocksize) {
-@@ -542,6 +549,8 @@ static int cc_get_plain_hmac_key(struct
- 	if (key_dma_addr)
- 		dma_unmap_single(dev, key_dma_addr, keylen, DMA_TO_DEVICE);
- 
-+	kzfree(key);
-+
- 	return rc;
- }
- 
 --- a/drivers/crypto/ccree/cc_buffer_mgr.c
 +++ b/drivers/crypto/ccree/cc_buffer_mgr.c
-@@ -560,6 +560,7 @@ void cc_unmap_aead_request(struct device
- 	if (areq_ctx->gen_ctx.iv_dma_addr) {
- 		dma_unmap_single(dev, areq_ctx->gen_ctx.iv_dma_addr,
- 				 hw_iv_size, DMA_BIDIRECTIONAL);
-+		kzfree(areq_ctx->gen_ctx.iv);
+@@ -83,24 +83,17 @@ static void cc_copy_mac(struct device *d
+  */
+ static unsigned int cc_get_sgl_nents(struct device *dev,
+ 				     struct scatterlist *sg_list,
+-				     unsigned int nbytes, u32 *lbytes,
+-				     bool *is_chained)
++				     unsigned int nbytes, u32 *lbytes)
+ {
+ 	unsigned int nents = 0;
+ 
+ 	while (nbytes && sg_list) {
+-		if (sg_list->length) {
+-			nents++;
+-			/* get the number of bytes in the last entry */
+-			*lbytes = nbytes;
+-			nbytes -= (sg_list->length > nbytes) ?
+-					nbytes : sg_list->length;
+-			sg_list = sg_next(sg_list);
+-		} else {
+-			sg_list = (struct scatterlist *)sg_page(sg_list);
+-			if (is_chained)
+-				*is_chained = true;
+-		}
++		nents++;
++		/* get the number of bytes in the last entry */
++		*lbytes = nbytes;
++		nbytes -= (sg_list->length > nbytes) ?
++				nbytes : sg_list->length;
++		sg_list = sg_next(sg_list);
+ 	}
+ 	dev_dbg(dev, "nents %d last bytes %d\n", nents, *lbytes);
+ 	return nents;
+@@ -142,7 +135,7 @@ void cc_copy_sg_portion(struct device *d
+ {
+ 	u32 nents, lbytes;
+ 
+-	nents = cc_get_sgl_nents(dev, sg, end, &lbytes, NULL);
++	nents = cc_get_sgl_nents(dev, sg, end, &lbytes);
+ 	sg_copy_buffer(sg, nents, (void *)dest, (end - to_skip + 1), to_skip,
+ 		       (direct == CC_SG_TO_BUF));
+ }
+@@ -314,40 +307,10 @@ static void cc_add_sg_entry(struct devic
+ 	sgl_data->num_of_buffers++;
+ }
+ 
+-static int cc_dma_map_sg(struct device *dev, struct scatterlist *sg, u32 nents,
+-			 enum dma_data_direction direction)
+-{
+-	u32 i, j;
+-	struct scatterlist *l_sg = sg;
+-
+-	for (i = 0; i < nents; i++) {
+-		if (!l_sg)
+-			break;
+-		if (dma_map_sg(dev, l_sg, 1, direction) != 1) {
+-			dev_err(dev, "dma_map_page() sg buffer failed\n");
+-			goto err;
+-		}
+-		l_sg = sg_next(l_sg);
+-	}
+-	return nents;
+-
+-err:
+-	/* Restore mapped parts */
+-	for (j = 0; j < i; j++) {
+-		if (!sg)
+-			break;
+-		dma_unmap_sg(dev, sg, 1, direction);
+-		sg = sg_next(sg);
+-	}
+-	return 0;
+-}
+-
+ static int cc_map_sg(struct device *dev, struct scatterlist *sg,
+ 		     unsigned int nbytes, int direction, u32 *nents,
+ 		     u32 max_sg_nents, u32 *lbytes, u32 *mapped_nents)
+ {
+-	bool is_chained = false;
+-
+ 	if (sg_is_last(sg)) {
+ 		/* One entry only case -set to DLLI */
+ 		if (dma_map_sg(dev, sg, 1, direction) != 1) {
+@@ -361,35 +324,21 @@ static int cc_map_sg(struct device *dev,
+ 		*nents = 1;
+ 		*mapped_nents = 1;
+ 	} else {  /*sg_is_last*/
+-		*nents = cc_get_sgl_nents(dev, sg, nbytes, lbytes,
+-					  &is_chained);
++		*nents = cc_get_sgl_nents(dev, sg, nbytes, lbytes);
+ 		if (*nents > max_sg_nents) {
+ 			*nents = 0;
+ 			dev_err(dev, "Too many fragments. current %d max %d\n",
+ 				*nents, max_sg_nents);
+ 			return -ENOMEM;
+ 		}
+-		if (!is_chained) {
+-			/* In case of mmu the number of mapped nents might
+-			 * be changed from the original sgl nents
+-			 */
+-			*mapped_nents = dma_map_sg(dev, sg, *nents, direction);
+-			if (*mapped_nents == 0) {
+-				*nents = 0;
+-				dev_err(dev, "dma_map_sg() sg buffer failed\n");
+-				return -ENOMEM;
+-			}
+-		} else {
+-			/*In this case the driver maps entry by entry so it
+-			 * must have the same nents before and after map
+-			 */
+-			*mapped_nents = cc_dma_map_sg(dev, sg, *nents,
+-						      direction);
+-			if (*mapped_nents != *nents) {
+-				*nents = *mapped_nents;
+-				dev_err(dev, "dma_map_sg() sg buffer failed\n");
+-				return -ENOMEM;
+-			}
++		/* In case of mmu the number of mapped nents might
++		 * be changed from the original sgl nents
++		 */
++		*mapped_nents = dma_map_sg(dev, sg, *nents, direction);
++		if (*mapped_nents == 0) {
++			*nents = 0;
++			dev_err(dev, "dma_map_sg() sg buffer failed\n");
++			return -ENOMEM;
+ 		}
  	}
  
- 	/* Release pool */
-@@ -664,19 +665,27 @@ static int cc_aead_chain_iv(struct cc_dr
- 	struct aead_req_ctx *areq_ctx = aead_request_ctx(req);
- 	unsigned int hw_iv_size = areq_ctx->hw_iv_size;
- 	struct device *dev = drvdata_to_dev(drvdata);
-+	gfp_t flags = cc_gfp_flags(&req->base);
- 	int rc = 0;
+@@ -571,7 +520,6 @@ void cc_unmap_aead_request(struct device
+ 	struct crypto_aead *tfm = crypto_aead_reqtfm(req);
+ 	struct cc_drvdata *drvdata = dev_get_drvdata(dev);
+ 	u32 dummy;
+-	bool chained;
+ 	u32 size_to_unmap = 0;
  
- 	if (!req->iv) {
- 		areq_ctx->gen_ctx.iv_dma_addr = 0;
-+		areq_ctx->gen_ctx.iv = NULL;
- 		goto chain_iv_exit;
+ 	if (areq_ctx->mac_buf_dma_addr) {
+@@ -636,15 +584,14 @@ void cc_unmap_aead_request(struct device
+ 		size_to_unmap += crypto_aead_ivsize(tfm);
+ 
+ 	dma_unmap_sg(dev, req->src,
+-		     cc_get_sgl_nents(dev, req->src, size_to_unmap,
+-				      &dummy, &chained),
++		     cc_get_sgl_nents(dev, req->src, size_to_unmap, &dummy),
+ 		     DMA_BIDIRECTIONAL);
+ 	if (req->src != req->dst) {
+ 		dev_dbg(dev, "Unmapping dst sgl: req->dst=%pK\n",
+ 			sg_virt(req->dst));
+ 		dma_unmap_sg(dev, req->dst,
+ 			     cc_get_sgl_nents(dev, req->dst, size_to_unmap,
+-					      &dummy, &chained),
++					      &dummy),
+ 			     DMA_BIDIRECTIONAL);
+ 	}
+ 	if (drvdata->coherent &&
+@@ -1022,7 +969,6 @@ static int cc_aead_chain_data(struct cc_
+ 	unsigned int size_for_map = req->assoclen + req->cryptlen;
+ 	struct crypto_aead *tfm = crypto_aead_reqtfm(req);
+ 	u32 sg_index = 0;
+-	bool chained = false;
+ 	bool is_gcm4543 = areq_ctx->is_gcm4543;
+ 	u32 size_to_skip = req->assoclen;
+ 
+@@ -1043,7 +989,7 @@ static int cc_aead_chain_data(struct cc_
+ 	size_for_map += (direct == DRV_CRYPTO_DIRECTION_ENCRYPT) ?
+ 			authsize : 0;
+ 	src_mapped_nents = cc_get_sgl_nents(dev, req->src, size_for_map,
+-					    &src_last_bytes, &chained);
++					    &src_last_bytes);
+ 	sg_index = areq_ctx->src_sgl->length;
+ 	//check where the data starts
+ 	while (sg_index <= size_to_skip) {
+@@ -1083,7 +1029,7 @@ static int cc_aead_chain_data(struct cc_
  	}
  
--	areq_ctx->gen_ctx.iv_dma_addr = dma_map_single(dev, req->iv,
--						       hw_iv_size,
--						       DMA_BIDIRECTIONAL);
-+	areq_ctx->gen_ctx.iv = kmemdup(req->iv, hw_iv_size, flags);
-+	if (!areq_ctx->gen_ctx.iv)
-+		return -ENOMEM;
-+
-+	areq_ctx->gen_ctx.iv_dma_addr =
-+		dma_map_single(dev, areq_ctx->gen_ctx.iv, hw_iv_size,
-+			       DMA_BIDIRECTIONAL);
- 	if (dma_mapping_error(dev, areq_ctx->gen_ctx.iv_dma_addr)) {
- 		dev_err(dev, "Mapping iv %u B at va=%pK for DMA failed\n",
- 			hw_iv_size, req->iv);
-+		kzfree(areq_ctx->gen_ctx.iv);
-+		areq_ctx->gen_ctx.iv = NULL;
- 		rc = -ENOMEM;
- 		goto chain_iv_exit;
- 	}
---- a/drivers/crypto/ccree/cc_driver.h
-+++ b/drivers/crypto/ccree/cc_driver.h
-@@ -168,6 +168,7 @@ struct cc_alg_template {
+ 	dst_mapped_nents = cc_get_sgl_nents(dev, req->dst, size_for_map,
+-					    &dst_last_bytes, &chained);
++					    &dst_last_bytes);
+ 	sg_index = areq_ctx->dst_sgl->length;
+ 	offset = size_to_skip;
  
- struct async_gen_req_ctx {
- 	dma_addr_t iv_dma_addr;
-+	u8 *iv;
- 	enum drv_crypto_direction op_type;
- };
- 
+@@ -1484,7 +1430,7 @@ int cc_map_hash_request_update(struct cc
+ 		dev_dbg(dev, " less than one block: curr_buff=%pK *curr_buff_cnt=0x%X copy_to=%pK\n",
+ 			curr_buff, *curr_buff_cnt, &curr_buff[*curr_buff_cnt]);
+ 		areq_ctx->in_nents =
+-			cc_get_sgl_nents(dev, src, nbytes, &dummy, NULL);
++			cc_get_sgl_nents(dev, src, nbytes, &dummy);
+ 		sg_copy_to_buffer(src, areq_ctx->in_nents,
+ 				  &curr_buff[*curr_buff_cnt], nbytes);
+ 		*curr_buff_cnt += nbytes;
 
 
