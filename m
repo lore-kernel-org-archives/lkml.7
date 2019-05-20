@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DF0EC04AAC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:20:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84AE1C04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:20:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E6E0620815
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:20:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B6C4213F2
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:20:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558354839;
-	bh=NELJ4Hu6YiJbJlmxwVlRRrxhcEXBUQ4E/XUnMCsrArw=;
+	s=default; t=1558354841;
+	bh=uhh8Vg9x5wvRtl1mwTABIvrWtt1cWlVM/KKhsPkU4vE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VMfN5qp4jRCG3zEwBlae5hoy1iVIt+Kntr31wjK+cvD37Bu3Ug7pL0J4srzfbziL2
-	 lErkNbyc2uB/cYB0udeU+xcVOuhYVLepFKVBJZn3kKqVcQuatytb4ziaiAg4P37zz5
-	 uxboLIL3SMUXJc+KXvCDcUX3xAnrWWN9Qg5u6duI=
+	b=o90HoATLZ6Vl/aTilP6vGSKJyMIIDq3u10JeJMOXJWL3nA1+0NiQWppn915yUagtY
+	 LVlsdjBRK5QGQV6yRh/dF9zPSjaYel5MI1c8Shb2b0W9PkhH4mPyYP0Qx13JtfnlaR
+	 J3Rij2MJZV6AsNtLAv3OWUmQqcXmHLAdmGSxUHNc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388021AbfETMUi (ORCPT
+        id S2388032AbfETMUk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 08:20:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33968 "EHLO mail.kernel.org"
+        Mon, 20 May 2019 08:20:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34042 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388003AbfETMUe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 08:20:34 -0400
+        id S1732283AbfETMUh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 08:20:37 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B93DD213F2;
-        Mon, 20 May 2019 12:20:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5527620656;
+        Mon, 20 May 2019 12:20:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558354834;
-        bh=NELJ4Hu6YiJbJlmxwVlRRrxhcEXBUQ4E/XUnMCsrArw=;
+        s=default; t=1558354836;
+        bh=uhh8Vg9x5wvRtl1mwTABIvrWtt1cWlVM/KKhsPkU4vE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NNh9ox5z1AAOF2wxJJrVaSHDbvjbNMpAC/tTOkQnE40QHnF2rEMAL6YEuQkxqLYBH
-         P7cbfSv0lWOTZzik/cTzRZoECQqh40TKxmpwH+KqLo/jP9eav7z/wfbZOYZQI6hfSp
-         Ghgu+ABtQtPk071M4jZWSq6DU5LzBd4olF/Hc3aI=
+        b=0W1Ve45LY53AYHhjjeeQz+LsULqAL3cGa0kqNM96ViUxIBZoI9kn2yhpVTz4JRQlJ
+         bj5bE7BKebPlm03EYCzLOlHkfVjSLAPW5pEDYR9nUiU6Lz9yKiB45axgdyVi9YgcIw
+         64aRkvBbQvY3vkndt5VOG2FXYE0uI7xyDlvdaZSA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Tim Chen <tim.c.chen@linux.intel.com>,
         Eric Biggers <ebiggers@google.com>,
         Herbert Xu <herbert@gondor.apana.org.au>
-Subject: [PATCH 4.14 20/63] crypto: crct10dif-generic - fix use via crypto_shash_digest()
-Date:   Mon, 20 May 2019 14:13:59 +0200
-Message-Id: <20190520115233.234676472@linuxfoundation.org>
+Subject: [PATCH 4.14 21/63] crypto: x86/crct10dif-pcl - fix use via crypto_shash_digest()
+Date:   Mon, 20 May 2019 14:14:00 +0200
+Message-Id: <20190520115233.333013162@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190520115231.137981521@linuxfoundation.org>
 References: <20190520115231.137981521@linuxfoundation.org>
@@ -62,9 +62,9 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Eric Biggers <ebiggers@google.com>
 
-commit 307508d1072979f4435416f87936f87eaeb82054 upstream.
+commit dec3d0b1071a0f3194e66a83d26ecf4aa8c5910e upstream.
 
-The ->digest() method of crct10dif-generic reads the current CRC value
+The ->digest() method of crct10dif-pclmul reads the current CRC value
 from the shash_desc context.  But this value is uninitialized, causing
 crypto_shash_digest() to compute the wrong result.  Fix it.
 
@@ -73,10 +73,7 @@ crypto_shash_update(), not crypto_shash_digest().  Likewise,
 crypto_shash_digest() is not yet tested by the crypto self-tests because
 those only test the ahash API which only uses shash init/update/final.
 
-This bug was detected by my patches that improve testmgr to fuzz
-algorithms against their generic implementation.
-
-Fixes: 2d31e518a428 ("crypto: crct10dif - Wrap crc_t10dif function all to use crypto transform framework")
+Fixes: 0b95a7f85718 ("crypto: crct10dif - Glue code to cast accelerated CRCT10DIF assembly as a crypto transform")
 Cc: <stable@vger.kernel.org> # v3.11+
 Cc: Tim Chen <tim.c.chen@linux.intel.com>
 Signed-off-by: Eric Biggers <ebiggers@google.com>
@@ -84,12 +81,12 @@ Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- crypto/crct10dif_generic.c |   11 ++++-------
- 1 file changed, 4 insertions(+), 7 deletions(-)
+ arch/x86/crypto/crct10dif-pclmul_glue.c |   13 +++++--------
+ 1 file changed, 5 insertions(+), 8 deletions(-)
 
---- a/crypto/crct10dif_generic.c
-+++ b/crypto/crct10dif_generic.c
-@@ -65,10 +65,9 @@ static int chksum_final(struct shash_des
+--- a/arch/x86/crypto/crct10dif-pclmul_glue.c
++++ b/arch/x86/crypto/crct10dif-pclmul_glue.c
+@@ -76,15 +76,14 @@ static int chksum_final(struct shash_des
  	return 0;
  }
  
@@ -97,12 +94,18 @@ Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 -			u8 *out)
 +static int __chksum_finup(__u16 crc, const u8 *data, unsigned int len, u8 *out)
  {
--	*(__u16 *)out = crc_t10dif_generic(*crcp, data, len);
-+	*(__u16 *)out = crc_t10dif_generic(crc, data, len);
+ 	if (irq_fpu_usable()) {
+ 		kernel_fpu_begin();
+-		*(__u16 *)out = crc_t10dif_pcl(*crcp, data, len);
++		*(__u16 *)out = crc_t10dif_pcl(crc, data, len);
+ 		kernel_fpu_end();
+ 	} else
+-		*(__u16 *)out = crc_t10dif_generic(*crcp, data, len);
++		*(__u16 *)out = crc_t10dif_generic(crc, data, len);
  	return 0;
  }
  
-@@ -77,15 +76,13 @@ static int chksum_finup(struct shash_des
+@@ -93,15 +92,13 @@ static int chksum_finup(struct shash_des
  {
  	struct chksum_desc_ctx *ctx = shash_desc_ctx(desc);
  
