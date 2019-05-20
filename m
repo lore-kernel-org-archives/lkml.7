@@ -2,132 +2,133 @@ Return-Path: <SRS0=lq4r=TU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25CDBC04AAC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 20:25:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2975C04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 20:28:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DF0A420863
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 20:25:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=rath.org header.i=@rath.org header.b="nTVN23Go";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="piEfKWYZ"
+	by mail.kernel.org (Postfix) with ESMTP id 99CE320863
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 20:28:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726736AbfETUZ4 (ORCPT
+        id S1726238AbfETU2G convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 16:25:56 -0400
-Received: from out4-smtp.messagingengine.com ([66.111.4.28]:55227 "EHLO
-        out4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725763AbfETUZz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 16:25:55 -0400
-Received: from compute1.internal (compute1.nyi.internal [10.202.2.41])
-        by mailout.nyi.internal (Postfix) with ESMTP id 01A7524627;
-        Mon, 20 May 2019 16:25:52 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute1.internal (MEProxy); Mon, 20 May 2019 16:25:52 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=rath.org; h=from
-        :to:cc:subject:references:date:in-reply-to:message-id
-        :mime-version:content-type:content-transfer-encoding; s=fm2; bh=
-        2s8insJw7SXiaaoi7n/jvMQaGaOOEQGGn9MA9sTXCzY=; b=nTVN23Gom1plLxpc
-        7qd56RBh1d3zg39gxTuhjiar9f2o+0UBPe9IZOUFZwuGyCZiz0l6OEjzfyMegQRB
-        kpA61V1jEC4TJQ6w/csBHq88m8rH6mzeHd9p3ib/VOh/wcURQ8E4JWe1z+rxoDJS
-        riIbZmeDgi+SR5rL4zO6JYWtHsTKgQ1fgrGPdVUDNFDlAUnBW6lV7On+2rf54yIL
-        98ercTcOkQk43giawKpcbz/pB31VOiezM2LsBxthPivE5C81+raWg2rB5OuMjRhP
-        Bm55qTL1E09AlbLJFdhjjdOC5Zsqy2sf8CEohNnAKruGmn+Ryx6fjXLilfgFcdkx
-        FyBTrw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-transfer-encoding:content-type
-        :date:from:in-reply-to:message-id:mime-version:references
-        :subject:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
-        :x-sasl-enc; s=fm2; bh=2s8insJw7SXiaaoi7n/jvMQaGaOOEQGGn9MA9sTXC
-        zY=; b=piEfKWYZVjjloiN91Gr8WKPqaq5AB5JOvYVIJFVUyuzruj6zx1inX4Ag2
-        fHo2iGeXPT2KD4m5QyY9l3y/uzN6Fyc27m+oNff2mjLkQeRPRFkGgd1u2D2MKzyH
-        zYPCtPggTO9+u2y2vAfbrikr2neLOK1hRytDAYPuQ4igrL2vHjYpXMVa44QF/+P8
-        vi3bP/E0bYzo7EBvOpFJC+A0RMa1rxC91IOX9oU4w4fo/FPaHBzvgcB3CUZdoe0N
-        dz84LaB6Wto9snsa10XIiO4I7T5RPSg7eMU3Ybmd6ND8Gx1lK4Dcwbrk+6c6GO/q
-        FqfYzEaykUJxI1j2CQEHa+VHKwuIg==
-X-ME-Sender: <xms:Tg3jXPSPMV2Zifntr-gXS1Wod57QlBL87TAYu2mgEZ5BEHPu6ehCIQ>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduuddruddtkedgudehvdcutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
-    necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
-    enucfjughrpefhvffufhffjgfkfgggtgfgsehtqhdttddtreejnecuhfhrohhmpefpihhk
-    ohhlrghushcutfgrthhhuceopfhikhholhgruhhssehrrghthhdrohhrgheqnecuffhomh
-    grihhnpehgihhthhhusgdrtghomhenucfkphepudekhedrfedrleegrdduleegnecurfgr
-    rhgrmhepmhgrihhlfhhrohhmpefpihhkohhlrghushesrhgrthhhrdhorhhgnecuvehluh
-    hsthgvrhfuihiivgepud
-X-ME-Proxy: <xmx:Tw3jXHnofyaTWPXOM2EmL4-bZccirz8aglg4Gej6SaqXedM5iw-pJA>
-    <xmx:Tw3jXNxHbGqRnanASHfrQtGZr1_gLfZC5xRf-eHKyikxX1k4XJuDvg>
-    <xmx:Tw3jXB0MfLetAtMWCuMMAzXvfg_2Dtfd153_MlpY0_ka-S1Cd8Pu1g>
-    <xmx:Tw3jXMtNSUyYLa786PlpyrIhNLWWtCZBzCQrj1CGUaRQmT-zupvToQ>
-Received: from ebox.rath.org (ebox.rath.org [185.3.94.194])
-        by mail.messagingengine.com (Postfix) with ESMTPA id AA09B80061;
-        Mon, 20 May 2019 16:25:50 -0400 (EDT)
-Received: from vostro.rath.org (vostro [192.168.12.4])
-        by ebox.rath.org (Postfix) with ESMTPS id CB17360;
-        Mon, 20 May 2019 20:25:49 +0000 (UTC)
-Received: by vostro.rath.org (Postfix, from userid 1000)
-        id 9E565E00E1; Mon, 20 May 2019 21:25:49 +0100 (BST)
-From:   Nikolaus Rath <Nikolaus@rath.org>
-To:     Miklos Szeredi <miklos@szeredi.hu>
-Cc:     Vivek Goyal <vgoyal@redhat.com>, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        linux-nvdimm@lists.01.org, stefanha@redhat.com,
-        dgilbert@redhat.com, swhiteho@redhat.com
-Subject: Re: [PATCH v2 02/30] fuse: Clear setuid bit even in cache=never path
-References: <20190515192715.18000-1-vgoyal@redhat.com>
-        <20190515192715.18000-3-vgoyal@redhat.com>
-        <20190520144137.GA24093@localhost.localdomain>
-        <20190520144437.GB24093@localhost.localdomain>
-Mail-Copies-To: never
-Mail-Followup-To: Miklos Szeredi <miklos@szeredi.hu>, Vivek Goyal
-        <vgoyal@redhat.com>, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        linux-nvdimm@lists.01.org, stefanha@redhat.com, dgilbert@redhat.com,
-        swhiteho@redhat.com
-Date:   Mon, 20 May 2019 21:25:49 +0100
-In-Reply-To: <20190520144437.GB24093@localhost.localdomain> (Miklos Szeredi's
-        message of "Mon, 20 May 2019 16:44:37 +0200")
-Message-ID: <87k1ekub3m.fsf@vostro.rath.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/25.1 (gnu/linux)
+        Mon, 20 May 2019 16:28:06 -0400
+Received: from gloria.sntech.de ([185.11.138.130]:58048 "EHLO gloria.sntech.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725989AbfETU2G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 16:28:06 -0400
+Received: from ip5f5a6320.dynamic.kabel-deutschland.de ([95.90.99.32] helo=diego.localnet)
+        by gloria.sntech.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <heiko@sntech.de>)
+        id 1hSot6-0008TP-VJ; Mon, 20 May 2019 22:28:01 +0200
+From:   Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
+To:     Doug Anderson <dianders@chromium.org>
+Cc:     Matthias Kaehlcke <mka@chromium.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
+        devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 1/2] ARM: dts: rockchip: Limit GPU frequency on veyron mickey to 300 MHz when the CPU gets very hot
+Date:   Mon, 20 May 2019 22:28:00 +0200
+Message-ID: <1695268.0xytyHHoPs@diego>
+In-Reply-To: <CAD=FV=VGA_i=vM4_OrqXnv0WC__Fcdced3oOZjzcPO=i8Q+SdA@mail.gmail.com>
+References: <20190520170132.91571-1-mka@chromium.org> <CAD=FV=VGA_i=vM4_OrqXnv0WC__Fcdced3oOZjzcPO=i8Q+SdA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset="iso-8859-1"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On May 20 2019, Miklos Szeredi <miklos@szeredi.hu> wrote:
-> On Mon, May 20, 2019 at 04:41:37PM +0200, Miklos Szeredi wrote:
->> On Wed, May 15, 2019 at 03:26:47PM -0400, Vivek Goyal wrote:
->> > If fuse daemon is started with cache=3Dnever, fuse falls back to direc=
-t IO.
->> > In that write path we don't call file_remove_privs() and that means se=
-tuid
->> > bit is not cleared if unpriviliged user writes to a file with setuid b=
-it set.
->> >=20
->> > pjdfstest chmod test 12.t tests this and fails.
->>=20
->> I think better sulution is to tell the server if the suid bit needs to be
->> removed, so it can do so in a race free way.
->>=20
->> Here's the kernel patch, and I'll reply with the libfuse patch.
->
-> Here are the patches for libfuse and passthrough_ll.
+Am Montag, 20. Mai 2019, 22:16:46 CEST schrieb Doug Anderson:
+> Hi,
+> 
+> On Mon, May 20, 2019 at 10:01 AM Matthias Kaehlcke <mka@chromium.org> wrote:
+> >
+> > On rk3288 the CPU and GPU temperatures are correlated. Limit the GPU
+> > frequency on veyron mickey to 300 MHz for CPU temperatures >= 85°C.
+> >
+> > This matches the configuration of the downstream Chrome OS 3.14 kernel,
+> > the 'official' kernel for mickey.
+> >
+> > Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
+> > ---
+> > Note: this patch depends on "ARM: dts: rockchip: Add #cooling-cells
+> > entry for rk3288 GPU" (https://lore.kernel.org/patchwork/patch/1075005/)
+> > ---
+> >  arch/arm/boot/dts/rk3288-veyron-mickey.dts | 6 ++++++
+> >  1 file changed, 6 insertions(+)
+> >
+> > diff --git a/arch/arm/boot/dts/rk3288-veyron-mickey.dts b/arch/arm/boot/dts/rk3288-veyron-mickey.dts
+> > index d889ab3c8235..f118d92a49d0 100644
+> > --- a/arch/arm/boot/dts/rk3288-veyron-mickey.dts
+> > +++ b/arch/arm/boot/dts/rk3288-veyron-mickey.dts
+> > @@ -125,6 +125,12 @@
+> >                                          <&cpu2 8 THERMAL_NO_LIMIT>,
+> >                                          <&cpu3 8 THERMAL_NO_LIMIT>;
+> >                 };
+> > +
+> > +               /* At very hot, don't let GPU go over 300 MHz */
+> > +               cpu_very_hot_limit_gpu {
+> > +                       trip = <&cpu_alert_very_hot>;
+> > +                       cooling-device = <&gpu 2 2>;
+> > +               };
+> 
+> Two things:
+> 
+> A) If I'm reading things properly, you're actually limiting things to
+> 400 MHz.  This is because you don't have <https://crrev.com/c/1574579>
+> which deletes the 500 MHz GPU operating point.  So on upstream the
+> available points are:
+> 
+> 0: 600 MHz
+> 1: 500 MHz
+> 2: 400 MHz
+> 3: 300 MHz
+> 4: 200 MHz
+> 5: 100 MHz
+> 
+> ...and downstream:
+> 
+> 0: 600 MHz
+> 1: 400 MHz
+> 2: 300 MHz
+> 3: 200 MHz
+> 4: 100 MHz
+> 
+> Thinking about it more, I bet Heiko would actually be OK deleting the
+> 500 MHz GPU operating point for veyron.  Technically it's not needed
+> upstream because upstream doesn't have our hacks to allow re-purposing
+> NPLL for HDMI (so they _can_ make 500 MHz) but maybe we can make the
+> argument that these laptops have only ever been tested with the 500
+> MHz operating point removed and also that eventually someonje will
+> probably figure out a way to re-purpose NPLL for HDMI even upstream...
 
-Could you also submit them as pull requests at https://github.com/libfuse/l=
-ibfuse/pulls?
+Yeah. Dropping the opp sounds sensible ... for the npll-related thing
+and also if you're really running into thermal constraints it might be
+good to give the system a bit more breathing room?
 
-Best,
--Nikolaus
 
---=20
-GPG Fingerprint: ED31 791B 2C5C 1613 AF38 8B8A D113 FCAC 3C4E 599F
+Heiko
 
-             =C2=BBTime flies like an arrow, fruit flies like a Banana.=C2=
-=AB
+
+> B) It seems like in the same patch you'd want to introduce
+> "cpu_warm_limit_gpu", AKA:
+> 
+> cpu_warm_limit_gpu {
+>   trip = <&cpu_alert_warm>;
+>   cooling-device =
+>   <&gpu 1 1>;
+> };
+> 
+> 
+> -Doug
+
+
+
+
