@@ -2,222 +2,82 @@ Return-Path: <SRS0=lq4r=TU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C5D9C04AAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 05:30:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EFC08C04AAF
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 05:37:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1710F20859
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 05:30:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C78672081C
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 05:37:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730160AbfETFag (ORCPT
+        id S1728531AbfETFh1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 01:30:36 -0400
-Received: from mailgw02.mediatek.com ([1.203.163.81]:17657 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1729816AbfETFag (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 01:30:36 -0400
-X-UUID: 56a159adc43646f3889b476e3beae217-20190520
-X-UUID: 56a159adc43646f3889b476e3beae217-20190520
-Received: from mtkcas36.mediatek.inc [(172.27.4.253)] by mailgw02.mediatek.com
-        (envelope-from <ck.hu@mediatek.com>)
-        (mailgw01.mediatek.com ESMTP with TLS)
-        with ESMTP id 255121144; Mon, 20 May 2019 13:30:29 +0800
-Received: from mtkcas09.mediatek.inc (172.21.101.178) by
- MTKMBS33DR.mediatek.inc (172.27.6.106) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Mon, 20 May 2019 13:30:26 +0800
-Received: from [172.21.77.4] (172.21.77.4) by mtkcas09.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Mon, 20 May 2019 13:30:27 +0800
-Message-ID: <1558330227.7311.14.camel@mtksdaap41>
-Subject: Re: [v2 3/3] drm/mediatek: add mipi_tx driver for mt8183
-From:   CK Hu <ck.hu@mediatek.com>
-To:     Jitao Shi <jitao.shi@mediatek.com>
-CC:     Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>,
-        "Mark Rutland" <mark.rutland@arm.com>,
-        Ian Campbell <ijc+devicetree@hellion.org.uk>,
-        Kumar Gala <galak@codeaurora.org>, <linux-pwm@vger.kernel.org>,
-        David Airlie <airlied@linux.ie>,
-        "Matthias Brugger" <matthias.bgg@gmail.com>,
-        Thierry Reding <treding@nvidia.com>,
-        "Ajay Kumar" <ajaykumar.rs@samsung.com>,
-        Inki Dae <inki.dae@samsung.com>,
-        "Rahul Sharma" <rahul.sharma@samsung.com>,
-        Sean Paul <seanpaul@chromium.org>,
-        Vincent Palatin <vpalatin@chromium.org>,
-        Andy Yan <andy.yan@rock-chips.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        "Russell King" <rmk+kernel@arm.linux.org.uk>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <dri-devel@lists.freedesktop.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>,
-        <srv_heupstream@mediatek.com>,
-        Sascha Hauer <kernel@pengutronix.de>,
-        <yingjoe.chen@mediatek.com>, <eddie.huang@mediatek.com>,
-        <cawa.cheng@mediatek.com>, <bibby.hsieh@mediatek.com>,
-        <stonea168@163.com>
-Date:   Mon, 20 May 2019 13:30:27 +0800
-In-Reply-To: <1558165892.7681.8.camel@mszsdaap41>
-References: <20190416054217.75387-1-jitao.shi@mediatek.com>
-         <20190416054217.75387-4-jitao.shi@mediatek.com>
-         <1557134258.5345.5.camel@mtksdaap41> <1558165892.7681.8.camel@mszsdaap41>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
+        Mon, 20 May 2019 01:37:27 -0400
+Received: from foss.arm.com ([217.140.101.70]:37460 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727069AbfETFh1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 01:37:27 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9293180D;
+        Sun, 19 May 2019 22:37:26 -0700 (PDT)
+Received: from [10.162.41.132] (p8cg001049571a15.blr.arm.com [10.162.41.132])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id BA61F3F5AF;
+        Sun, 19 May 2019 22:37:24 -0700 (PDT)
+From:   Anshuman Khandual <anshuman.khandual@arm.com>
+Subject: Re: [PATCH] mm/dev_pfn: Exclude MEMORY_DEVICE_PRIVATE while computing
+ virtual address
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        dan.j.williams@intel.com, jglisse@redhat.com,
+        ldufour@linux.vnet.ibm.com
+References: <1558089514-25067-1-git-send-email-anshuman.khandual@arm.com>
+ <20190517145050.2b6b0afdaab5c3c69a4b153e@linux-foundation.org>
+Message-ID: <cb8cbd57-9220-aba9-7579-dbcf35f02672@arm.com>
+Date:   Mon, 20 May 2019 11:07:38 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
+In-Reply-To: <20190517145050.2b6b0afdaab5c3c69a4b153e@linux-foundation.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 2019-05-18 at 15:51 +0800, Jitao Shi wrote:
-> On Mon, 2019-05-06 at 17:17 +0800, CK Hu wrote:
-> > Hi, Jitao:
-> > 
-> > On Tue, 2019-04-16 at 13:42 +0800, Jitao Shi wrote:
-> > > This patch add mt8183 mipi_tx driver.
-> > > And also support other chips that use the same binding and driver.
-> > > 
-> > > Signed-off-by: Jitao Shi <jitao.shi@mediatek.com>
-> > > ---
-> > >  drivers/gpu/drm/mediatek/Makefile             |   1 +
-> > >  drivers/gpu/drm/mediatek/mtk_mipi_tx.c        |   2 +
-> > >  drivers/gpu/drm/mediatek/mtk_mipi_tx.h        |   1 +
-> > >  drivers/gpu/drm/mediatek/mtk_mt8183_mipi_tx.c | 154 ++++++++++++++++++
-> > >  4 files changed, 158 insertions(+)
-> > >  create mode 100644 drivers/gpu/drm/mediatek/mtk_mt8183_mipi_tx.c
-> > > 
-> > 
-> > [snip]
-> > 
-> > > +
-> > > +static int mtk_mipi_tx_pll_prepare(struct clk_hw *hw)
-> > > +{
-> > > +	struct mtk_mipi_tx *mipi_tx = mtk_mipi_tx_from_clk_hw(hw);
-> > > +	unsigned int txdiv, txdiv0;
-> > > +	u64 pcw;
-> > > +	int ret;
-> > > +
-> > > +	dev_dbg(mipi_tx->dev, "prepare: %u bps\n", mipi_tx->data_rate);
-> > > +
-> > > +	if (mipi_tx->data_rate >= 2000000000) {
-> > > +		txdiv = 1;
-> > > +		txdiv0 = 0;
-> > > +	} else if (mipi_tx->data_rate >= 1000000000) {
-> > > +		txdiv = 2;
-> > > +		txdiv0 = 1;
-> > > +	} else if (mipi_tx->data_rate >= 500000000) {
-> > > +		txdiv = 4;
-> > > +		txdiv0 = 2;
-> > > +	} else if (mipi_tx->data_rate > 250000000) {
-> > > +		txdiv = 8;
-> > > +		txdiv0 = 3;
-> > > +	} else if (mipi_tx->data_rate >= 125000000) {
-> > > +		txdiv = 16;
-> > > +		txdiv0 = 4;
-> > > +	} else {
-> > > +		return -EINVAL;
-> > > +	}
-> > > +
-> > > +	ret = clk_prepare_enable(mipi_tx->ref_clk);
-> > > +	if (ret < 0) {
-> > > +		dev_err(mipi_tx->dev,
-> > > +			"can't prepare and enable mipi_tx ref_clk %d\n", ret);
-> > > +		return ret;
-> > > +	}
-> > 
-> > You enable the parent clock when prepare this clock here, this behavior
-> > looks strange. I think the flow should be:
-> > 
-> > 1. Parent clock prepare
-> > 2. This clock prepare
-> > 3. Parent clock enable
-> > 4. This clock enable
-> > 
-> > Maybe you should implement 'enable callback' so that parent clock would
-> > be already enabled.
-> > 
-> > One question is, mipi_tx_pll is used by dsi driver, but I does not see
-> > dsi prepare_enable() mipi_tx_pll, how does this work?
-> > 
-> > Regards,
-> > CK
-> > 
+On 05/18/2019 03:20 AM, Andrew Morton wrote:
+> On Fri, 17 May 2019 16:08:34 +0530 Anshuman Khandual <anshuman.khandual@arm.com> wrote:
 > 
-> The mipi_tx can be accessed after clk_prepare_enable(mipi_tx->ref_clk);
+>> The presence of struct page does not guarantee linear mapping for the pfn
+>> physical range. Device private memory which is non-coherent is excluded
+>> from linear mapping during devm_memremap_pages() though they will still
+>> have struct page coverage. Just check for device private memory before
+>> giving out virtual address for a given pfn.
 > 
-> So place the clk_prepare_enable(mipi_tx->ref_clk) before accessing
-> mipitx.
+> I was going to give my standard "what are the user-visible runtime
+> effects of this change?", but...
 > 
-> mipi_tx_pll is enable by mtk_mipi_tx_power_on() in mtk_mip_tx.c.
-> clk_prepare_enable(mipi_tx->pll) will enable mipi_tx_pll.
+>> All these helper functions are all pfn_t related but could not figure out
+>> another way of determining a private pfn without looking into it's struct
+>> page. pfn_t_to_virt() is not getting used any where in mainline kernel.Is
+>> it used by out of tree drivers ? Should we then drop it completely ?
+> 
+> Yeah, let's kill it.
+> 
+> But first, let's fix it so that if someone brings it back, they bring
+> back a non-buggy version.
 
-OK, so it start from dsi driver. The callstack is:
-
-phy_power_on(dsi->phy);
--> mtk_mipi_tx_power_on()
---> clk_prepare_enable(mipi_tx->pll);
----> mtk_mipi_tx_pll_prepare();
-
-In clk_prepare_enable(), it separately call clk_prepare() and
-clk_enable(). When clk_prepare(), it prepare the parent clock then
-prepare this clock. When clk_enable(), it enable the parent clock then
-enable this clock. So this would result in the sequence:
-
-1. Prepare mipi_tx->ref_clk
-2. Prepare mipi_tx->pll
-3. Enable mipi_tx->ref_clk
-4. Enable mipi_tx->pll
-
-You say 'So place the clk_prepare_enable(mipi_tx->ref_clk) before
-accessing mipitx.', so the step 1 and step 3 is equal to
-clk_prepare_enable(mipi_tx->ref_clk), so I require you to access mipitx
-in step 4, not in step 2.
-
-Regards,
-CK
+Makes sense.
 
 > 
-> Beset Regards
-> Jitao
-> 
-> > > +
-> > > +	mtk_mipi_tx_clear_bits(mipi_tx, MIPITX_PLL_CON4, RG_DSI_PLL_IBIAS);
-> > > +
-> > > +	mtk_mipi_tx_set_bits(mipi_tx, MIPITX_PLL_PWR, AD_DSI_PLL_SDM_PWR_ON);
-> > > +	usleep_range(30, 100);
-> > > +	mtk_mipi_tx_clear_bits(mipi_tx, MIPITX_PLL_PWR, AD_DSI_PLL_SDM_ISO_EN);
-> > > +	pcw = div_u64(((u64)mipi_tx->data_rate * txdiv) << 24, 26000000);
-> > > +	writel(pcw, mipi_tx->regs + MIPITX_PLL_CON0);
-> > > +	mtk_mipi_tx_update_bits(mipi_tx, MIPITX_PLL_CON1, RG_DSI_PLL_POSDIV,
-> > > +				txdiv0 << 8);
-> > > +	usleep_range(1000, 2000);
-> > > +	mtk_mipi_tx_set_bits(mipi_tx, MIPITX_PLL_CON1, RG_DSI_PLL_EN);
-> > > +
-> > > +	return 0;
-> > > +}
-> > > +
-> > > +static void mtk_mipi_tx_pll_unprepare(struct clk_hw *hw)
-> > > +{
-> > > +	struct mtk_mipi_tx *mipi_tx = mtk_mipi_tx_from_clk_hw(hw);
-> > > +
-> > > +	dev_dbg(mipi_tx->dev, "unprepare\n");
-> > > +
-> > > +	mtk_mipi_tx_clear_bits(mipi_tx, MIPITX_PLL_CON1, RG_DSI_PLL_EN);
-> > > +
-> > > +	mtk_mipi_tx_set_bits(mipi_tx, MIPITX_PLL_PWR, AD_DSI_PLL_SDM_ISO_EN);
-> > > +	mtk_mipi_tx_clear_bits(mipi_tx, MIPITX_PLL_PWR, AD_DSI_PLL_SDM_PWR_ON);
-> > > +	clk_disable_unprepare(mipi_tx->ref_clk);
-> > > +}
-> > > +
-> > 
-> > 
-> 
-> 
+> So...  what (would be) the user-visible runtime effects of this change?
 
-
+I am not very well aware about the user interaction with the drivers which
+hotplug and manage ZONE_DEVICE memory in general. Hence will not be able to
+comment on it's user visible runtime impact. I just figured this out from
+code audit while testing ZONE_DEVICE on arm64 platform. But the fix makes
+the function bit more expensive as it now involve some additional memory
+references.
