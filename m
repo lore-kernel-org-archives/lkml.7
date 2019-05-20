@@ -2,65 +2,68 @@ Return-Path: <SRS0=lq4r=TU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,PLING_QUERY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_NEOMUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_NEOMUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1ADDC04AAC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 16:06:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B150C04AAF
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 16:08:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AFA9121721
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 16:06:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4B11921721
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 16:08:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392540AbfETQGk convert rfc822-to-8bit (ORCPT
+        id S2392011AbfETQIC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 12:06:40 -0400
-Received: from Galois.linutronix.de ([146.0.238.70]:58073 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387973AbfETQGk (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 12:06:40 -0400
-Received: from bigeasy by Galois.linutronix.de with local (Exim 4.80)
-        (envelope-from <bigeasy@linutronix.de>)
-        id 1hSko9-00056D-G8; Mon, 20 May 2019 18:06:37 +0200
-Date:   Mon, 20 May 2019 18:06:36 +0200
-From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-To:     Pavel Machek <pavel@ucw.cz>
-Cc:     kernel list <linux-kernel@vger.kernel.org>, tglx@linutronix.de,
-        mingo@redhat.com, bp@alien8.de, hpa@zytor.com, x86@kernel.org
-Subject: Re: 5.2-rc0.8: emacs segfaults?! x220, with 32-bit userland
-Message-ID: <20190520160636.z6fpjiidc2d5ko5g@linutronix.de>
-References: <20190519221700.GA7154@amd>
+        Mon, 20 May 2019 12:08:02 -0400
+Received: from helcar.hmeau.com ([216.24.177.18]:50786 "EHLO deadmen.hmeau.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2387973AbfETQIB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 12:08:01 -0400
+X-Greylist: delayed 2127 seconds by postgrey-1.27 at vger.kernel.org; Mon, 20 May 2019 12:08:01 EDT
+Received: from gondobar.mordor.me.apana.org.au ([192.168.128.4] helo=gondobar)
+        by deadmen.hmeau.com with esmtps (Exim 4.89 #2 (Debian))
+        id 1hSkH4-00086s-4a; Mon, 20 May 2019 23:32:26 +0800
+Received: from herbert by gondobar with local (Exim 4.89)
+        (envelope-from <herbert@gondor.apana.org.au>)
+        id 1hSkGx-00023C-KB; Mon, 20 May 2019 23:32:19 +0800
+Date:   Mon, 20 May 2019 23:32:19 +0800
+From:   Herbert Xu <herbert@gondor.apana.org.au>
+To:     Anirudh Gupta <anirudhrudr@gmail.com>
+Cc:     Steffen Klassert <steffen.klassert@secunet.com>,
+        Anirudh Gupta <anirudh.gupta@sophos.com>,
+        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net] xfrm: Fix xfrm sel prefix length validation
+Message-ID: <20190520153219.oq3se5wvkasgbtkp@gondor.apana.org.au>
+References: <20190520093157.59825-1-anirudh.gupta@sophos.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8BIT
-In-Reply-To: <20190519221700.GA7154@amd>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <20190520093157.59825-1-anirudh.gupta@sophos.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-05-20 00:17:01 [+0200], Pavel Machek wrote:
-> Hi!
-Hi,
+On Mon, May 20, 2019 at 03:01:56PM +0530, Anirudh Gupta wrote:
+>
+> diff --git a/net/xfrm/xfrm_user.c b/net/xfrm/xfrm_user.c
+> index eb8d14389601..fc2a8c08091b 100644
+> --- a/net/xfrm/xfrm_user.c
+> +++ b/net/xfrm/xfrm_user.c
+> @@ -149,7 +149,7 @@ static int verify_newsa_info(struct xfrm_usersa_info *p,
+>  	int err;
+>  
+>  	err = -EINVAL;
+> -	switch (p->family) {
+> +	switch (p->sel.family) {
+>  	case AF_INET:
+>  		if (p->sel.prefixlen_d > 32 || p->sel.prefixlen_s > 32)
+>  			goto out;
 
-> emacs segfaults... when I attempt to exit it. And that did not use to
-> be the case. Nothing suspect in the dmesg. Rest of the machine seems
-> to work ok.
-…
-> Ideas welcome...
-
-I assume that this happens with -rc1, too. Could you please check if
-emacs still segfaults with commit
-
-  d9c9ce34ed5c8 ("x86/fpu: Fault-in user stack if copy_fpstate_to_sigframe() fails")
-
-and commit
-
-  89833fab15d60 ("x86/fpu: Fix __user annotations")
-
-?
-
-Sebastian
+You just removed the only verification of p->family...
+-- 
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
