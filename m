@@ -2,105 +2,114 @@ Return-Path: <SRS0=lq4r=TU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1853EC04AAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 09:23:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D769CC04AAF
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 09:25:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ED39E20675
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 09:23:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AF3CE20862
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 09:25:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732049AbfETJXf (ORCPT
+        id S1732022AbfETJZD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 05:23:35 -0400
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:41650 "EHLO
-        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732038AbfETJXb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 05:23:31 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7EA8115AD;
-        Mon, 20 May 2019 02:23:31 -0700 (PDT)
-Received: from e112269-lin.arm.com (e112269-lin.cambridge.arm.com [10.1.196.69])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 89AF43F575;
-        Mon, 20 May 2019 02:23:28 -0700 (PDT)
-From:   Steven Price <steven.price@arm.com>
-To:     Daniel Vetter <daniel@ffwll.ch>, Rob Herring <robh@kernel.org>,
-        Tomeu Vizoso <tomeu.vizoso@collabora.com>
-Cc:     Steven Price <steven.price@arm.com>,
-        Alyssa Rosenzweig <alyssa@rosenzweig.io>,
-        Chris Wilson <chris@chris-wilson.co.uk>,
-        David Airlie <airlied@linux.ie>,
-        Inki Dae <inki.dae@samsung.com>,
-        Joonyoung Shim <jy0922.shim@samsung.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Kukjin Kim <kgene@kernel.org>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Sean Paul <sean@poorly.run>,
-        Seung-Woo Kim <sw0312.kim@samsung.com>,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v3 2/2] drm/panfrost: Use drm_gem_shmem_map_offset()
-Date:   Mon, 20 May 2019 10:23:06 +0100
-Message-Id: <20190520092306.27633-3-steven.price@arm.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190520092306.27633-1-steven.price@arm.com>
-References: <20190520092306.27633-1-steven.price@arm.com>
+        Mon, 20 May 2019 05:25:03 -0400
+Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:48494 "EHLO
+        atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729357AbfETJZC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 05:25:02 -0400
+Received: by atrey.karlin.mff.cuni.cz (Postfix, from userid 512)
+        id C27EA80450; Mon, 20 May 2019 11:24:49 +0200 (CEST)
+Date:   Mon, 20 May 2019 11:24:59 +0200
+From:   Pavel Machek <pavel@denx.de>
+To:     Ran Wang <ran.wang_1@nxp.com>
+Cc:     Pavel Machek <pavel@denx.de>, Leo Li <leoyang.li@nxp.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <len.brown@intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>
+Subject: Re: [PATCH V2 3/3] soc: fsl: add RCPM driver
+Message-ID: <20190520092459.GC9748@amd>
+References: <20190517033946.30763-1-ran.wang_1@nxp.com>
+ <20190517033946.30763-3-ran.wang_1@nxp.com>
+ <20190519213844.GH31403@amd>
+ <AM5PR0402MB2865EC5E1EF12C6C1D3C5566F1060@AM5PR0402MB2865.eurprd04.prod.outlook.com>
+ <20190520085647.GA9748@amd>
+ <AM5PR0402MB2865F4574B19761848B001F9F1060@AM5PR0402MB2865.eurprd04.prod.outlook.com>
+ <20190520090748.GB9748@amd>
+ <AM5PR0402MB2865E28B2E2296CB878ACEA2F1060@AM5PR0402MB2865.eurprd04.prod.outlook.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="0lnxQi9hkpPO77W3"
+Content-Disposition: inline
+In-Reply-To: <AM5PR0402MB2865E28B2E2296CB878ACEA2F1060@AM5PR0402MB2865.eurprd04.prod.outlook.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-panfrost_ioctl_mmap_bo() contains a reimplementation of
-drm_gem_map_offset() but with a bug - it allows mapping imported objects
-(without going through the exporter). Fix this by switching to use the
-newly renamed drm_gem_map_offset() function instead which has the bonus
-of simplifying the code.
 
-CC: Alyssa Rosenzweig <alyssa@rosenzweig.io>
-Signed-off-by: Steven Price <steven.price@arm.com>
-Reviewed-by: Alyssa Rosenzweig <alyssa@rosenzweig.io>
----
- drivers/gpu/drm/panfrost/panfrost_drv.c | 16 ++--------------
- 1 file changed, 2 insertions(+), 14 deletions(-)
+--0lnxQi9hkpPO77W3
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/drivers/gpu/drm/panfrost/panfrost_drv.c b/drivers/gpu/drm/panfrost/panfrost_drv.c
-index d11e2281dde6..8be0cd5d6c7a 100644
---- a/drivers/gpu/drm/panfrost/panfrost_drv.c
-+++ b/drivers/gpu/drm/panfrost/panfrost_drv.c
-@@ -255,26 +255,14 @@ static int panfrost_ioctl_mmap_bo(struct drm_device *dev, void *data,
- 		      struct drm_file *file_priv)
- {
- 	struct drm_panfrost_mmap_bo *args = data;
--	struct drm_gem_object *gem_obj;
--	int ret;
- 
- 	if (args->flags != 0) {
- 		DRM_INFO("unknown mmap_bo flags: %d\n", args->flags);
- 		return -EINVAL;
- 	}
- 
--	gem_obj = drm_gem_object_lookup(file_priv, args->handle);
--	if (!gem_obj) {
--		DRM_DEBUG("Failed to look up GEM BO %d\n", args->handle);
--		return -ENOENT;
--	}
--
--	ret = drm_gem_create_mmap_offset(gem_obj);
--	if (ret == 0)
--		args->offset = drm_vma_node_offset_addr(&gem_obj->vma_node);
--	drm_gem_object_put_unlocked(gem_obj);
--
--	return ret;
-+	return drm_gem_map_offset(file_priv, dev, args->handle,
-+				       &args->offset);
- }
- 
- static int panfrost_ioctl_get_bo_offset(struct drm_device *dev, void *data,
--- 
-2.20.1
+Hi!
 
+> > > > You are right, but the current code is "interesting". What about
+> > > >
+> > > >     ws =3D NULL;
+> > > >     while (ws =3D wakeup_source_get_next(NULL)) ...
+> > > >
+> > > > then?
+> > >
+> > > Did you mean:
+> > >      ws =3D NULL;
+> > >      while (ws =3D wakeup_source_get_next(ws)) ...
+> > >
+> > >    Yes, that will be the same to my original logic, do you recommend
+> > > to change to this? :)
+> >=20
+> > Yes please. It will be less confusing to the reader.
+>=20
+> OK, if no other comment, I will work out v4, fix this and extra ','
+> =20
+> > Thanks (and sorry for cross-talk),
+>=20
+> That's OK, thanks for your time.
+
+You can add
+
+Acked-by: Pavel Machek <pavel@ucw.cz>
+
+to that version.
+
+Best regards,
+								Pavel
+--=20
+DENX Software Engineering GmbH,      Managing Director: Wolfgang Denk
+HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
+
+--0lnxQi9hkpPO77W3
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAlzicmsACgkQMOfwapXb+vI/kACfXfr5zSF0QsKLaIDUnn6ldYdL
+9rUAn1IvhOf/+HglBb9Ro5uZKDJsTOI+
+=fAL6
+-----END PGP SIGNATURE-----
+
+--0lnxQi9hkpPO77W3--
