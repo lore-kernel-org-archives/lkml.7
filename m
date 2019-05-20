@@ -4,52 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B2F2C04AAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 08:07:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63978C04AAF
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 08:07:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 40C0520656
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 08:07:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 28B2120656
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 08:07:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558339637;
-	bh=/fSqDKQe72fpIBiodybVMXXJlEchuMCnvyjpyuyScHw=;
+	s=default; t=1558339639;
+	bh=UH9oqVCe7Dp6WGo3nZFvV6Debv4vruY9AL9X+Dbmoe4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1PcPVsADSCNvVT1RGxEg5bcHlLHn7omfcmo7xQXx+9+Qf9QqNjtbye31jGJToZ8N7
-	 PVMuuvFFAQ3oNyftQhv+SFfmOVfVbDVKoTgv8XRoxdouh9zq3v9fEZhYa/LcyJj0B0
-	 lTXnObNPjHvYmcXeOgFf01SGZ/PC18MYIEOlMsrc=
+	b=bito4uCyFK0spdSR1XfzNH4DGEwB9VerH52ITfVsqnft2Y5u3BGSl9LhQMSimMtwE
+	 PtFmiBsJb8P0jM4zUTduYX+nJ5mMZ/HXBWH42l+HlooiCRNi67RwiMTLArPjhL+N2H
+	 02rCWOoX8GbzbY9LxRHOWa5Cka2t7ibzdLVKDvOQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731208AbfETIHP (ORCPT
+        id S1730847AbfETIHN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 04:07:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36476 "EHLO mail.kernel.org"
+        Mon, 20 May 2019 04:07:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36438 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730854AbfETIFh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1730841AbfETIFh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 20 May 2019 04:05:37 -0400
 Received: from wens.tw (mirror2.csie.ntu.edu.tw [140.112.30.76])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F40CC2133F;
+        by mail.kernel.org (Postfix) with ESMTPSA id E5505208C3;
         Mon, 20 May 2019 08:05:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1558339537;
-        bh=/fSqDKQe72fpIBiodybVMXXJlEchuMCnvyjpyuyScHw=;
+        bh=UH9oqVCe7Dp6WGo3nZFvV6Debv4vruY9AL9X+Dbmoe4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vNxczmE1TEwFm3wP5ap/Eej77KuonYG7e3/DiBaxOngOKg9Yw8Ae2M6Sn5PU02wkL
-         Dt6x94eAgacREnUNh6b3/iSkMHPUcXpH1Fa+PouNlbcGfe+e+dHzvbWtfKr+AhYM7+
-         0+IFvtjYsmVRIZUgFJTdViFgbi3tiKFH2R9Dy5ag=
+        b=OYLhZUkr8atpajMwGAZcCQEPdVh0k+kQsEjUoV/eOoGzJr/OO8QftFMgHS+gnfJzL
+         GfmnFrTqhgUGQBOB5cQ4T6nmcWsMuIVCmPu7LBIrUE1I92qkSu6OWTvolI0Q0zB8P5
+         2ghINoVBHFxbisyQRWMpZq4yJN4qbt+xc3rzkDOs=
 Received: by wens.tw (Postfix, from userid 1000)
-        id 8E20E65813; Mon, 20 May 2019 16:05:32 +0800 (CST)
+        id 6151D5FF6A; Mon, 20 May 2019 16:05:32 +0800 (CST)
 From:   Chen-Yu Tsai <wens@kernel.org>
 To:     Maxime Ripard <maxime.ripard@bootlin.com>,
         Stephen Boyd <sboyd@kernel.org>,
         Michael Turquette <mturquette@baylibre.com>
 Cc:     Chen-Yu Tsai <wens@csie.org>, linux-arm-kernel@lists.infradead.org,
         linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 11/25] clk: sunxi-ng: sun5i: Use local parent references for CLK_FIXED_FACTOR
-Date:   Mon, 20 May 2019 16:04:07 +0800
-Message-Id: <20190520080421.12575-12-wens@kernel.org>
+Subject: [PATCH 05/25] clk: fixed-factor: Add CLK_FIXED_FACTOR_HW which takes clk_hw pointer as parent
+Date:   Mon, 20 May 2019 16:04:01 +0800
+Message-Id: <20190520080421.12575-6-wens@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190520080421.12575-1-wens@kernel.org>
 References: <20190520080421.12575-1-wens@kernel.org>
@@ -62,65 +62,39 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Chen-Yu Tsai <wens@csie.org>
 
-With the new clk parenting code and CLK_FIXED_FACTOR_{HW,FW_NAME}
-macros, we can reference parents locally via pointers to struct clk_hw
-or DT clock-names.
+With the new clk parenting code, clk_init_data was expanded to include
+.parent_hws, for clk drivers to directly reference parents by clk_hw.
 
-Convert existing CLK_FIXED_FACTOR definitions to either the _HW or
-_FW_NAME variant based on whether the parent clock is internal or
-external to the CCU.
+Add a new macro, CLK_FIXED_FACTOR_HW, that can take a struct clk_hw
+pointer, instead of a string, as its parent.
 
 Signed-off-by: Chen-Yu Tsai <wens@csie.org>
 ---
- drivers/clk/sunxi-ng/ccu-sun5i.c | 34 +++++++++++++++++++++-----------
- 1 file changed, 22 insertions(+), 12 deletions(-)
+ include/linux/clk-provider.h | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
-diff --git a/drivers/clk/sunxi-ng/ccu-sun5i.c b/drivers/clk/sunxi-ng/ccu-sun5i.c
-index 813e9bf73cbf..d27f3e4c0147 100644
---- a/drivers/clk/sunxi-ng/ccu-sun5i.c
-+++ b/drivers/clk/sunxi-ng/ccu-sun5i.c
-@@ -611,19 +611,29 @@ static struct ccu_common *sun5i_a10s_ccu_clks[] = {
- 	&iep_clk.common,
- };
+diff --git a/include/linux/clk-provider.h b/include/linux/clk-provider.h
+index d0d58c49f3ad..c7b10dd32c39 100644
+--- a/include/linux/clk-provider.h
++++ b/include/linux/clk-provider.h
+@@ -980,6 +980,17 @@ extern struct of_device_id __clk_of_table;
+ 					      _flags),			\
+ 	}
  
-+static const struct clk_hw *clk_parent_pll_audio[] = {
-+	&pll_audio_base_clk.common.hw
-+};
++#define CLK_FIXED_FACTOR_HW(_struct, _name, _parent,			\
++			    _div, _mult, _flags)			\
++	struct clk_fixed_factor _struct = {				\
++		.div		= _div,					\
++		.mult		= _mult,				\
++		.hw.init	= CLK_HW_INIT_HW(_name,			\
++						 _parent,		\
++						 &clk_fixed_factor_ops,	\
++						 _flags),		\
++	}
 +
- /* We hardcode the divider to 1 for now */
--static CLK_FIXED_FACTOR(pll_audio_clk, "pll-audio",
--			"pll-audio-base", 1, 1, CLK_SET_RATE_PARENT);
--static CLK_FIXED_FACTOR(pll_audio_2x_clk, "pll-audio-2x",
--			"pll-audio-base", 2, 1, CLK_SET_RATE_PARENT);
--static CLK_FIXED_FACTOR(pll_audio_4x_clk, "pll-audio-4x",
--			"pll-audio-base", 1, 1, CLK_SET_RATE_PARENT);
--static CLK_FIXED_FACTOR(pll_audio_8x_clk, "pll-audio-8x",
--			"pll-audio-base", 1, 2, CLK_SET_RATE_PARENT);
--static CLK_FIXED_FACTOR(pll_video0_2x_clk, "pll-video0-2x",
--			"pll-video0", 1, 2, CLK_SET_RATE_PARENT);
--static CLK_FIXED_FACTOR(pll_video1_2x_clk, "pll-video1-2x",
--			"pll-video1", 1, 2, CLK_SET_RATE_PARENT);
-+static CLK_FIXED_FACTOR_HWS(pll_audio_clk, "pll-audio",
-+			    clk_parent_pll_audio,
-+			    1, 1, CLK_SET_RATE_PARENT);
-+static CLK_FIXED_FACTOR_HWS(pll_audio_2x_clk, "pll-audio-2x",
-+			    clk_parent_pll_audio,
-+			    2, 1, CLK_SET_RATE_PARENT);
-+static CLK_FIXED_FACTOR_HWS(pll_audio_4x_clk, "pll-audio-4x",
-+			    clk_parent_pll_audio,
-+			    1, 1, CLK_SET_RATE_PARENT);
-+static CLK_FIXED_FACTOR_HWS(pll_audio_8x_clk, "pll-audio-8x",
-+			    clk_parent_pll_audio,
-+			    1, 2, CLK_SET_RATE_PARENT);
-+static CLK_FIXED_FACTOR_HW(pll_video0_2x_clk, "pll-video0-2x",
-+			   &pll_video0_clk.common.hw,
-+			   1, 2, CLK_SET_RATE_PARENT);
-+static CLK_FIXED_FACTOR_HW(pll_video1_2x_clk, "pll-video1-2x",
-+			   &pll_video1_clk.common.hw,
-+			   1, 2, CLK_SET_RATE_PARENT);
- 
- static struct clk_hw_onecell_data sun5i_a10s_hw_clks = {
- 	.hws	= {
+ #ifdef CONFIG_OF
+ int of_clk_add_provider(struct device_node *np,
+ 			struct clk *(*clk_src_get)(struct of_phandle_args *args,
 -- 
 2.20.1
 
