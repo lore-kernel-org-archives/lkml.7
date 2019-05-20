@@ -2,199 +2,128 @@ Return-Path: <SRS0=lq4r=TU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF626C04AAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 07:06:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A534BC04E87
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 07:07:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A32442081C
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 07:06:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 84FD42081C
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 07:07:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730676AbfETHGf (ORCPT
+        id S1730813AbfETHHZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 03:06:35 -0400
-Received: from Mailgw01.mediatek.com ([1.203.163.78]:2597 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1730488AbfETHGf (ORCPT
+        Mon, 20 May 2019 03:07:25 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:46887 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730687AbfETHHZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 03:06:35 -0400
-X-UUID: 545b483f887e4af1bf9374d578975ef1-20190520
-X-UUID: 545b483f887e4af1bf9374d578975ef1-20190520
-Received: from mtkcas32.mediatek.inc [(172.27.4.253)] by mailgw01.mediatek.com
-        (envelope-from <ck.hu@mediatek.com>)
-        (mailgw01.mediatek.com ESMTP with TLS)
-        with ESMTP id 804019200; Mon, 20 May 2019 15:06:30 +0800
-Received: from mtkcas09.mediatek.inc (172.21.101.178) by
- MTKMBS33DR.mediatek.inc (172.27.6.106) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Mon, 20 May 2019 15:06:28 +0800
-Received: from [172.21.77.4] (172.21.77.4) by mtkcas09.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Mon, 20 May 2019 15:06:28 +0800
-Message-ID: <1558335988.7311.34.camel@mtksdaap41>
-Subject: Re: [v2 1/5] drm/mediatek: move mipi_dsi_host_register to probe
-From:   CK Hu <ck.hu@mediatek.com>
-To:     Jitao Shi <jitao.shi@mediatek.com>
-CC:     Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>,
-        "Mark Rutland" <mark.rutland@arm.com>,
-        Ian Campbell <ijc+devicetree@hellion.org.uk>,
-        Kumar Gala <galak@codeaurora.org>, <linux-pwm@vger.kernel.org>,
-        David Airlie <airlied@linux.ie>,
-        "Matthias Brugger" <matthias.bgg@gmail.com>,
-        Thierry Reding <treding@nvidia.com>,
-        "Ajay Kumar" <ajaykumar.rs@samsung.com>,
-        Inki Dae <inki.dae@samsung.com>,
-        "Rahul Sharma" <rahul.sharma@samsung.com>,
-        Sean Paul <seanpaul@chromium.org>,
-        Vincent Palatin <vpalatin@chromium.org>,
-        Andy Yan <andy.yan@rock-chips.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        "Russell King" <rmk+kernel@arm.linux.org.uk>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <dri-devel@lists.freedesktop.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>,
-        <srv_heupstream@mediatek.com>,
-        Sascha Hauer <kernel@pengutronix.de>,
-        <yingjoe.chen@mediatek.com>, <eddie.huang@mediatek.com>,
-        <cawa.cheng@mediatek.com>, <bibby.hsieh@mediatek.com>,
-        <stonea168@163.com>
-Date:   Mon, 20 May 2019 15:06:28 +0800
-In-Reply-To: <1558258588.367.5.camel@mszsdaap41>
-References: <20190416060501.76276-1-jitao.shi@mediatek.com>
-         <20190416060501.76276-2-jitao.shi@mediatek.com>
-         <1557222735.3498.11.camel@mtksdaap41> <1558258588.367.5.camel@mszsdaap41>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
+        Mon, 20 May 2019 03:07:25 -0400
+Received: from dude.hi.pengutronix.de ([2001:67c:670:100:1d::7])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <ore@pengutronix.de>)
+        id 1hScOE-0000N2-JE; Mon, 20 May 2019 09:07:18 +0200
+Received: from ore by dude.hi.pengutronix.de with local (Exim 4.92)
+        (envelope-from <ore@pengutronix.de>)
+        id 1hScOD-0006Aa-HG; Mon, 20 May 2019 09:07:17 +0200
+From:   Oleksij Rempel <o.rempel@pengutronix.de>
+To:     Paul Burton <paul.burton@mips.com>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        James Hogan <jhogan@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Jay Cliburn <jcliburn@gmail.com>,
+        Chris Snook <chris.snook@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Mark Rutland <mark.rutland@arm.com>
+Cc:     Oleksij Rempel <o.rempel@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, John Crispin <john@phrozen.org>,
+        Felix Fietkau <nbd@nbd.name>, netdev@vger.kernel.org,
+        Andrew Lunn <andrew@lunn.ch>,
+        Chuanhong Guo <gch981213@gmail.com>,
+        info@freifunk-bad-gandersheim.net
+Subject: [PATCH v5 0/3] MIPS: ath79: add ag71xx support
+Date:   Mon, 20 May 2019 09:07:13 +0200
+Message-Id: <20190520070716.23668-1-o.rempel@pengutronix.de>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-MTK:  N
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::7
+X-SA-Exim-Mail-From: ore@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 2019-05-19 at 17:36 +0800, Jitao Shi wrote:
-> On Tue, 2019-05-07 at 17:52 +0800, CK Hu wrote:
-> > Hi, Jitao:
-> > 
-> > On Tue, 2019-04-16 at 14:04 +0800, Jitao Shi wrote:
-> > > DSI panel driver need attach function which is inculde in
-> > > mipi_dsi_host_ops.
-> > > 
-> > > If mipi_dsi_host_register is not in probe, dsi panel will
-> > > probe fail or more delay.
-> > 
-> > I think this patch just prevent delay, not to prevent dsi panel probe
-> > fail. In [1], you mention mipi_dsi_attach() is called in
-> > panel_simple_dsi_probe(), but panel_simple_dsi_probe() is trigger by
-> > mipi_dsi_host_register(), so the probe would success.
-> > 
-> > [1]
-> > https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/gpu/drm/panel/panel-simple.c?h=v5.0-rc6#n2987
-> > 
-> > 
-> 
-> Yes, this just prevent delay.
-> 
-> > > 
-> > > So move the mipi_dsi_host_register to probe from bind.
-> > > 
-> > > Signed-off-by: Jitao Shi <jitao.shi@mediatek.com>
-> > > ---
-> > >  drivers/gpu/drm/mediatek/mtk_dsi.c | 50 ++++++++++++++++++------------
-> > >  1 file changed, 30 insertions(+), 20 deletions(-)
-> > > 
-> > > diff --git a/drivers/gpu/drm/mediatek/mtk_dsi.c b/drivers/gpu/drm/mediatek/mtk_dsi.c
-> > > index b00eb2d2e086..6c4ac37f983d 100644
-> > > --- a/drivers/gpu/drm/mediatek/mtk_dsi.c
-> > > +++ b/drivers/gpu/drm/mediatek/mtk_dsi.c
-> > > @@ -1045,12 +1045,6 @@ static int mtk_dsi_bind(struct device *dev, struct device *master, void *data)
-> > >  		return ret;
-> > >  	}
-> > >  
-> > > -	ret = mipi_dsi_host_register(&dsi->host);
-> > > -	if (ret < 0) {
-> > > -		dev_err(dev, "failed to register DSI host: %d\n", ret);
-> > > -		goto err_ddp_comp_unregister;
-> > > -	}
-> > > -
-> > >  	ret = mtk_dsi_create_conn_enc(drm, dsi);
-> > >  	if (ret) {
-> > >  		DRM_ERROR("Encoder create failed with %d\n", ret);
-> > > @@ -1060,8 +1054,6 @@ static int mtk_dsi_bind(struct device *dev, struct device *master, void *data)
-> > >  	return 0;
-> > >  
-> > >  err_unregister:
-> > > -	mipi_dsi_host_unregister(&dsi->host);
-> > > -err_ddp_comp_unregister:
-> > >  	mtk_ddp_comp_unregister(drm, &dsi->ddp_comp);
-> > >  	return ret;
-> > >  }
-> > > @@ -1097,31 +1089,37 @@ static int mtk_dsi_probe(struct platform_device *pdev)
-> > >  
-> > >  	dsi->host.ops = &mtk_dsi_ops;
-> > >  	dsi->host.dev = dev;
-> > > +	dsi->dev = dev;
-> > 
-> > Why do this?
-> > 
-> > Regards,
-> > CK
-> > 
-> 
-> There are some error message require this poweron().
+2019.05.20 v5:
+- ag71xx: remove MII_CMD_WRITE, the name is confusing. It is
+  actually disables MII_CMD_READ.
+- ag71xx: rework ag71xx_mdio_mii_read/write
+- ag71xx: set proper mask for the addr in ag71xx_mdio_mii_read/write
+- Kconfig: remove MDIO_BITBANG
+- ag71xx: ./scripts/checkpatch.pl it.
 
-So this should not be in this patch. This patch is related to the timing
-of mipi_dsi_host_register().
+2019.05.19 v4:
+- DT: define eth and mdio clocks
+- ag71xx: remove module parameters
+- ag71xx: return proper error value on mdio_read/write
+- ag71xx: use proper mdio clock registration
+- ag71xx: add ag71xx_dma_wait_stop() for ag71xx_dma_reset()
+- ag71xx: remove ag71xx_speed_str()
+- ag71xx: use phydev->link/sped/duplex instead of ag-> variants
+- ag71xx: use WARN() instead of BUG()
+- ag71xx: drop big part of ag71xx_phy_link_adjust()
+- ag71xx: drop most of ag71xx_do_ioctl()
+- ag71xx: register eth clock
+- ag71xx: remove AG71XX_ETH0_NO_MDIO quirk.
 
-Regards,
-CK
+2019.04.22 v3:
+- ag71xx: use phy_modes() instead of ag71xx_get_phy_if_mode_name()
+- ag71xx: remove .ndo_poll_controller support
+- ag71xx: unregister_netdev before disconnecting phy.
 
-> 
-> > > +	ret = mipi_dsi_host_register(&dsi->host);
-> > > +	if (ret < 0) {
-> > > +		dev_err(dev, "failed to register DSI host: %d\n", ret);
-> > > +		return ret;
-> > > +	}
-> > >  
-> > >  	ret = drm_of_find_panel_or_bridge(dev->of_node, 0, 0,
-> > >  					  &dsi->panel, &dsi->bridge);
-> > >  	if (ret)
-> > > -		return ret;
-> > > +		goto err_unregister_host;
-> > >  
-> > >  	dsi->engine_clk = devm_clk_get(dev, "engine");
-> > >  	if (IS_ERR(dsi->engine_clk)) {
-> > >  		ret = PTR_ERR(dsi->engine_clk);
-> > >  		dev_err(dev, "Failed to get engine clock: %d\n", ret);
-> > > -		return ret;
-> > > +		goto err_unregister_host;
-> > >  	}
-> > >  
-> > >  	dsi->digital_clk = devm_clk_get(dev, "digital");
-> > >  	if (IS_ERR(dsi->digital_clk)) {
-> > >  		ret = PTR_ERR(dsi->digital_clk);
-> > >  		dev_err(dev, "Failed to get digital clock: %d\n", ret);
-> > > -		return ret;
-> > > +		goto err_unregister_host;
-> > >  	}
-> > >  
-> > >  	dsi->hs_clk = devm_clk_get(dev, "hs");
-> > >  	if (IS_ERR(dsi->hs_clk)) {
-> > >  		ret = PTR_ERR(dsi->hs_clk);
-> > >  		dev_err(dev, "Failed to get hs clock: %d\n", ret);
-> > > -		return ret;
-> > > +		goto err_unregister_host;
-> > >  	}
-> > >  
-> > >  	regs = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> > 
-> > 
-> > 
-> 
-> 
+2019.04.18 v2:
+- ag71xx: add list of openwrt authors
+- ag71xx: remove redundant PHY_POLL assignment
+- ag71xx: use phy_attached_info instead of netif_info
+- ag71xx: remove redundant netif_carrier_off() on .stop.
+- DT: use "ethernet" instead of "eth"
 
+This patch series provide ethernet support for many Atheros/QCA
+MIPS based SoCs.
+
+I reworked ag71xx driver which was previously maintained within OpenWRT
+repository. So far, following changes was made to make upstreaming
+easier:
+- everything what can be some how used in user space was removed. Most
+  of it was debug functionality.
+- most of deficetree bindings was removed. Not every thing made sense
+  and most of it is SoC specific, so it is possible to detect it by
+  compatible.
+- mac and mdio parts are merged in to one driver. It makes easier to
+  maintaine SoC specific quirks.
+
+
+Oleksij Rempel (3):
+  dt-bindings: net: add qca,ar71xx.txt documentation
+  MIPS: ath79: ar9331: add Ethernet nodes
+  net: ethernet: add ag71xx driver
+
+ .../devicetree/bindings/net/qca,ar71xx.txt    |   45 +
+ arch/mips/boot/dts/qca/ar9331.dtsi            |   26 +
+ arch/mips/boot/dts/qca/ar9331_dpt_module.dts  |    8 +
+ drivers/net/ethernet/atheros/Kconfig          |   10 +-
+ drivers/net/ethernet/atheros/Makefile         |    1 +
+ drivers/net/ethernet/atheros/ag71xx.c         | 1882 +++++++++++++++++
+ 6 files changed, 1971 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/devicetree/bindings/net/qca,ar71xx.txt
+ create mode 100644 drivers/net/ethernet/atheros/ag71xx.c
+
+-- 
+2.20.1
 
