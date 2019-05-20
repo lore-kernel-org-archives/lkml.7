@@ -2,123 +2,107 @@ Return-Path: <SRS0=lq4r=TU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94069C04AAC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:54:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8A2DC04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:56:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6A4A520645
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:54:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558356855;
-	bh=NELJ4Hu6YiJbJlmxwVlRRrxhcEXBUQ4E/XUnMCsrArw=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lSYY4EzeRYpwccmz2Df00trNzMoMSTso1cb+ONPglGXAoKoLVHMeEy9RjbErgaqZQ
-	 sc4QPM3fJpC3OluddSyf8FkGuCNxLbt2eFtFap3F3mlxB9EYBasYDrTzIOiAJZnOiv
-	 gI6nuqyUhK3D0cltuQEGqs/WrQBwvhNJqwT0sXjY=
+	by mail.kernel.org (Postfix) with ESMTP id BED1D20645
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:56:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733213AbfETMQn (ORCPT
+        id S1733197AbfETM4F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 08:16:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57076 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732888AbfETMQV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 08:16:21 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 32A2520656;
-        Mon, 20 May 2019 12:16:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558354580;
-        bh=NELJ4Hu6YiJbJlmxwVlRRrxhcEXBUQ4E/XUnMCsrArw=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xl7Oh9x1nP3mRtao8wF5SjrgD/aq/RLSjVqCxxfAJbpjQqG9E4g/bzdmo9NTZRCPD
-         W8lxfeeiJ1O9QKqKD3YGg2c2YjYW2nFnVsfA9In4Im+uu7li5mh2ZVA/MzPC806cQv
-         B9151E+1FqaglKkAfWmSTBYbh5e+09yWnN2yzl14=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tim Chen <tim.c.chen@linux.intel.com>,
-        Eric Biggers <ebiggers@google.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>
-Subject: [PATCH 4.9 14/44] crypto: crct10dif-generic - fix use via crypto_shash_digest()
-Date:   Mon, 20 May 2019 14:14:03 +0200
-Message-Id: <20190520115232.689336976@linuxfoundation.org>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190520115230.720347034@linuxfoundation.org>
-References: <20190520115230.720347034@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Mon, 20 May 2019 08:56:05 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:34836 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732625AbfETM4E (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 08:56:04 -0400
+Received: by mail-wm1-f66.google.com with SMTP id q15so12934447wmj.0
+        for <linux-kernel@vger.kernel.org>; Mon, 20 May 2019 05:56:03 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=POdzCkn+BD1xo1P2qkRXdnWiMHzE1h+gIx0vGRX+ho8=;
+        b=WjxLLvzhcm86lah3jHAQ5NfVUiRYqo2VNMR4YMXmcKYnCJjML3+nCqe2Nz2z3rFvsv
+         ONS4vjSHklbVBT0OhR6tWM2woZZEQqIhTk358V0/7MaxmLD1gbRLTz3vEHA2U71wVfj8
+         IJt3RDtN+6TjRMB7kNUpBwq5KSHKlpgvsWmH7m71B3TRqxmgmxaqq3yuEmeaInUcnTJM
+         1ogrcN3D5SUY60zXGGA+7W6mOViam4LEGTmnoFBcxuc1edYm7R88N0uPddTfKmf03HhZ
+         1yJ7zkVjdnwnvlWALxgpe6XYUihag7kYcwSeoXQs7lcfk0QByVydEHlVSedx+OsnPoyb
+         txGg==
+X-Gm-Message-State: APjAAAV/TOY1RTXlsdlYOHVmhx8yJRd7HELtWogNdP2VZJxS8MGU2Wej
+        FcmKIS4j+7MW4ZCyqXoUpmsqNA==
+X-Google-Smtp-Source: APXvYqx5pXXCwxwx4x3VvqGSmM62foFIjaxcXPie2D4bBE9OAyupnN+bbaEloCiMX9qJ4TNU8ne+BQ==
+X-Received: by 2002:a7b:c5cd:: with SMTP id n13mr7138843wmk.67.1558356962715;
+        Mon, 20 May 2019 05:56:02 -0700 (PDT)
+Received: from ?IPv6:2001:b07:6468:f312:ac04:eef9:b257:b844? ([2001:b07:6468:f312:ac04:eef9:b257:b844])
+        by smtp.gmail.com with ESMTPSA id a10sm20115664wrm.94.2019.05.20.05.56.01
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 20 May 2019 05:56:02 -0700 (PDT)
+Subject: Re: [PATCH] svm/avic: Do not send AVIC doorbell to self
+To:     "Suthikulpanit, Suravee" <Suravee.Suthikulpanit@amd.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>
+Cc:     "rkrcmar@redhat.com" <rkrcmar@redhat.com>,
+        "joro@8bytes.org" <joro@8bytes.org>
+References: <1556890721-9613-1-git-send-email-suravee.suthikulpanit@amd.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Message-ID: <4275b74a-a228-d2a3-cb7d-5abce0a86f59@redhat.com>
+Date:   Mon, 20 May 2019 14:56:01 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <1556890721-9613-1-git-send-email-suravee.suthikulpanit@amd.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Biggers <ebiggers@google.com>
+On 03/05/19 15:38, Suthikulpanit, Suravee wrote:
+> AVIC doorbell is used to notify a running vCPU that interrupts
+> has been injected into the vCPU AVIC backing page. Current logic
+> checks only if a VCPU is running before sending a doorbell.
+> However, the doorbell is not necessary if the destination
+> CPU is itself.
+> 
+> Add logic to check currently running CPU before sending doorbell.
+> 
+> Signed-off-by: Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>
+> ---
+>  arch/x86/kvm/svm.c | 11 +++++++----
+>  1 file changed, 7 insertions(+), 4 deletions(-)
+> 
+> diff --git a/arch/x86/kvm/svm.c b/arch/x86/kvm/svm.c
+> index 122788f..4bbf6fc 100644
+> --- a/arch/x86/kvm/svm.c
+> +++ b/arch/x86/kvm/svm.c
+> @@ -5283,10 +5283,13 @@ static void svm_deliver_avic_intr(struct kvm_vcpu *vcpu, int vec)
+>  	kvm_lapic_set_irr(vec, vcpu->arch.apic);
+>  	smp_mb__after_atomic();
+>  
+> -	if (avic_vcpu_is_running(vcpu))
+> -		wrmsrl(SVM_AVIC_DOORBELL,
+> -		       kvm_cpu_get_apicid(vcpu->cpu));
+> -	else
+> +	if (avic_vcpu_is_running(vcpu)) {
+> +		int cpuid = vcpu->cpu;
+> +
+> +		if (cpuid != get_cpu())
+> +			wrmsrl(SVM_AVIC_DOORBELL, kvm_cpu_get_apicid(cpuid));
+> +		put_cpu();
+> +	} else
+>  		kvm_vcpu_wake_up(vcpu);
+>  }
+>  
+> 
 
-commit 307508d1072979f4435416f87936f87eaeb82054 upstream.
+Queued, thanks.
 
-The ->digest() method of crct10dif-generic reads the current CRC value
-from the shash_desc context.  But this value is uninitialized, causing
-crypto_shash_digest() to compute the wrong result.  Fix it.
-
-Probably this wasn't noticed before because lib/crc-t10dif.c only uses
-crypto_shash_update(), not crypto_shash_digest().  Likewise,
-crypto_shash_digest() is not yet tested by the crypto self-tests because
-those only test the ahash API which only uses shash init/update/final.
-
-This bug was detected by my patches that improve testmgr to fuzz
-algorithms against their generic implementation.
-
-Fixes: 2d31e518a428 ("crypto: crct10dif - Wrap crc_t10dif function all to use crypto transform framework")
-Cc: <stable@vger.kernel.org> # v3.11+
-Cc: Tim Chen <tim.c.chen@linux.intel.com>
-Signed-off-by: Eric Biggers <ebiggers@google.com>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
----
- crypto/crct10dif_generic.c |   11 ++++-------
- 1 file changed, 4 insertions(+), 7 deletions(-)
-
---- a/crypto/crct10dif_generic.c
-+++ b/crypto/crct10dif_generic.c
-@@ -65,10 +65,9 @@ static int chksum_final(struct shash_des
- 	return 0;
- }
- 
--static int __chksum_finup(__u16 *crcp, const u8 *data, unsigned int len,
--			u8 *out)
-+static int __chksum_finup(__u16 crc, const u8 *data, unsigned int len, u8 *out)
- {
--	*(__u16 *)out = crc_t10dif_generic(*crcp, data, len);
-+	*(__u16 *)out = crc_t10dif_generic(crc, data, len);
- 	return 0;
- }
- 
-@@ -77,15 +76,13 @@ static int chksum_finup(struct shash_des
- {
- 	struct chksum_desc_ctx *ctx = shash_desc_ctx(desc);
- 
--	return __chksum_finup(&ctx->crc, data, len, out);
-+	return __chksum_finup(ctx->crc, data, len, out);
- }
- 
- static int chksum_digest(struct shash_desc *desc, const u8 *data,
- 			 unsigned int length, u8 *out)
- {
--	struct chksum_desc_ctx *ctx = shash_desc_ctx(desc);
--
--	return __chksum_finup(&ctx->crc, data, length, out);
-+	return __chksum_finup(0, data, length, out);
- }
- 
- static struct shash_alg alg = {
-
-
+Paolo
