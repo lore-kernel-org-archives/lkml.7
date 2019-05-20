@@ -7,46 +7,52 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CAEFC04AAC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:32:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5179FC04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:32:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 62808216E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:32:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2596F216E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:32:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558355539;
-	bh=vV9sTrOCaTdUOl0QS35EQWcamzFZWUZMgVjxVr+EvPY=;
+	s=default; t=1558355542;
+	bh=hcCWdm8G1C81OZqG9T6IE40vqZ2g7WBEfGBUW8Mt+Bg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=d3Pj90KTvQcFSGeV19FoNevfR8w6tcseoxvjsYUGyalvA+gb0TCSkpJFG2QfHNlEp
-	 lLAkv5WMa9rc39lfeTI8Ygng4SPKBvwTPC55u/93fKQDzcxPZWVbfmfswONon0qvWt
-	 u9JmbeA8lvR0f9ukj4febVDL2ZJdyhZN+UTNBWLI=
+	b=u8hhavXwOyQO/7qR0xAcMYukwpWA12Ij6SX69v5DI1NfYFzh8ZihiVeSxu4fW1FFB
+	 nzPKeMIg2LfzDifNM3y3BuEe91NIzGr5oRPYjTFWsTrkRg+ouECu/pKgvt6HQSf6Du
+	 JgSEqjeCF6AtZR7arPRdkwoCj0Y3xZDeLey6JkRg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390528AbfETMcR (ORCPT
+        id S2390534AbfETMcV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 08:32:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49048 "EHLO mail.kernel.org"
+        Mon, 20 May 2019 08:32:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49108 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390505AbfETMcP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 08:32:15 -0400
+        id S2390522AbfETMcR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 08:32:17 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1287521726;
-        Mon, 20 May 2019 12:32:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9D17420815;
+        Mon, 20 May 2019 12:32:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558355534;
-        bh=vV9sTrOCaTdUOl0QS35EQWcamzFZWUZMgVjxVr+EvPY=;
+        s=default; t=1558355537;
+        bh=hcCWdm8G1C81OZqG9T6IE40vqZ2g7WBEfGBUW8Mt+Bg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kIsBELX910ccYp6lQqBWewFnVQqOIeE5Dvl/lled6iqkkLHTdFZX8abFz/O+fX/KA
-         ZoiiBxd3N+/LyZM28lolDZZnQGKffNlpWNXNsaTx8/L1KaQqNzPZooW/ufXYqJfNK2
-         9bQVPgjhhvRWktRX7lzb2w7FMj4rll1ixUBWtgFk=
+        b=Ox2t/6K+o89mkoDdnY+cFCcUKModMrE8cZiXVZRJppCRq3pxtz8mp1xcO6GbI3JjD
+         C9rgqFtBNC4vDVl+04OOrCWJtrKsCZDq/3Cwh83edXyaCm+096ZCgSLVCEYv7OG2aY
+         p3Mz0nq2aHD/jWQB7TpyYpWBOVuwfOA/NOXDH9WA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Biggers <ebiggers@google.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>
-Subject: [PATCH 5.1 029/128] crypto: ccm - fix incompatibility between "ccm" and "ccm_base"
-Date:   Mon, 20 May 2019 14:13:36 +0200
-Message-Id: <20190520115251.595811679@linuxfoundation.org>
+        stable@vger.kernel.org, Andy Lutomirski <luto@kernel.org>,
+        Borislav Petkov <bp@suse.de>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Jon Masters <jcm@redhat.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>
+Subject: [PATCH 5.1 003/128] x86/speculation/mds: Improve CPU buffer clear documentation
+Date:   Mon, 20 May 2019 14:13:10 +0200
+Message-Id: <20190520115249.679565610@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190520115249.449077487@linuxfoundation.org>
 References: <20190520115249.449077487@linuxfoundation.org>
@@ -59,146 +65,80 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Biggers <ebiggers@google.com>
+From: Andy Lutomirski <luto@kernel.org>
 
-commit 6a1faa4a43f5fabf9cbeaa742d916e7b5e73120f upstream.
+commit 9d8d0294e78a164d407133dea05caf4b84247d6a upstream.
 
-CCM instances can be created by either the "ccm" template, which only
-allows choosing the block cipher, e.g. "ccm(aes)"; or by "ccm_base",
-which allows choosing the ctr and cbcmac implementations, e.g.
-"ccm_base(ctr(aes-generic),cbcmac(aes-generic))".
+On x86_64, all returns to usermode go through
+prepare_exit_to_usermode(), with the sole exception of do_nmi().
+This even includes machine checks -- this was added several years
+ago to support MCE recovery.  Update the documentation.
 
-However, a "ccm_base" instance prevents a "ccm" instance from being
-registered using the same implementations.  Nor will the instance be
-found by lookups of "ccm".  This can be used as a denial of service.
-Moreover, "ccm_base" instances are never tested by the crypto
-self-tests, even if there are compatible "ccm" tests.
-
-The root cause of these problems is that instances of the two templates
-use different cra_names.  Therefore, fix these problems by making
-"ccm_base" instances set the same cra_name as "ccm" instances, e.g.
-"ccm(aes)" instead of "ccm_base(ctr(aes-generic),cbcmac(aes-generic))".
-
-This requires extracting the block cipher name from the name of the ctr
-and cbcmac algorithms.  It also requires starting to verify that the
-algorithms are really ctr and cbcmac using the same block cipher, not
-something else entirely.  But it would be bizarre if anyone were
-actually using non-ccm-compatible algorithms with ccm_base, so this
-shouldn't break anyone in practice.
-
-Fixes: 4a49b499dfa0 ("[CRYPTO] ccm: Added CCM mode")
+Signed-off-by: Andy Lutomirski <luto@kernel.org>
+Cc: Borislav Petkov <bp@suse.de>
+Cc: Frederic Weisbecker <frederic@kernel.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Jon Masters <jcm@redhat.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
 Cc: stable@vger.kernel.org
-Signed-off-by: Eric Biggers <ebiggers@google.com>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Fixes: 04dcbdb80578 ("x86/speculation/mds: Clear CPU buffers on exit to user")
+Link: http://lkml.kernel.org/r/999fa9e126ba6a48e9d214d2f18dbde5c62ac55c.1557865329.git.luto@kernel.org
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- crypto/ccm.c |   44 ++++++++++++++++++--------------------------
- 1 file changed, 18 insertions(+), 26 deletions(-)
+ Documentation/x86/mds.rst |   39 +++++++--------------------------------
+ 1 file changed, 7 insertions(+), 32 deletions(-)
 
---- a/crypto/ccm.c
-+++ b/crypto/ccm.c
-@@ -458,7 +458,6 @@ static void crypto_ccm_free(struct aead_
+--- a/Documentation/x86/mds.rst
++++ b/Documentation/x86/mds.rst
+@@ -142,38 +142,13 @@ Mitigation points
+    mds_user_clear.
  
- static int crypto_ccm_create_common(struct crypto_template *tmpl,
- 				    struct rtattr **tb,
--				    const char *full_name,
- 				    const char *ctr_name,
- 				    const char *mac_name)
- {
-@@ -486,7 +485,8 @@ static int crypto_ccm_create_common(stru
- 
- 	mac = __crypto_hash_alg_common(mac_alg);
- 	err = -EINVAL;
--	if (mac->digestsize != 16)
-+	if (strncmp(mac->base.cra_name, "cbcmac(", 7) != 0 ||
-+	    mac->digestsize != 16)
- 		goto out_put_mac;
- 
- 	inst = kzalloc(sizeof(*inst) + sizeof(*ictx), GFP_KERNEL);
-@@ -509,23 +509,27 @@ static int crypto_ccm_create_common(stru
- 
- 	ctr = crypto_spawn_skcipher_alg(&ictx->ctr);
- 
--	/* Not a stream cipher? */
-+	/* The skcipher algorithm must be CTR mode, using 16-byte blocks. */
- 	err = -EINVAL;
--	if (ctr->base.cra_blocksize != 1)
-+	if (strncmp(ctr->base.cra_name, "ctr(", 4) != 0 ||
-+	    crypto_skcipher_alg_ivsize(ctr) != 16 ||
-+	    ctr->base.cra_blocksize != 1)
- 		goto err_drop_ctr;
- 
--	/* We want the real thing! */
--	if (crypto_skcipher_alg_ivsize(ctr) != 16)
-+	/* ctr and cbcmac must use the same underlying block cipher. */
-+	if (strcmp(ctr->base.cra_name + 4, mac->base.cra_name + 7) != 0)
- 		goto err_drop_ctr;
- 
- 	err = -ENAMETOOLONG;
-+	if (snprintf(inst->alg.base.cra_name, CRYPTO_MAX_ALG_NAME,
-+		     "ccm(%s", ctr->base.cra_name + 4) >= CRYPTO_MAX_ALG_NAME)
-+		goto err_drop_ctr;
+    The mitigation is invoked in prepare_exit_to_usermode() which covers
+-   most of the kernel to user space transitions. There are a few exceptions
+-   which are not invoking prepare_exit_to_usermode() on return to user
+-   space. These exceptions use the paranoid exit code.
+-
+-   - Non Maskable Interrupt (NMI):
+-
+-     Access to sensible data like keys, credentials in the NMI context is
+-     mostly theoretical: The CPU can do prefetching or execute a
+-     misspeculated code path and thereby fetching data which might end up
+-     leaking through a buffer.
+-
+-     But for mounting other attacks the kernel stack address of the task is
+-     already valuable information. So in full mitigation mode, the NMI is
+-     mitigated on the return from do_nmi() to provide almost complete
+-     coverage.
+-
+-   - Machine Check Exception (#MC):
+-
+-     Another corner case is a #MC which hits between the CPU buffer clear
+-     invocation and the actual return to user. As this still is in kernel
+-     space it takes the paranoid exit path which does not clear the CPU
+-     buffers. So the #MC handler repopulates the buffers to some
+-     extent. Machine checks are not reliably controllable and the window is
+-     extremly small so mitigation would just tick a checkbox that this
+-     theoretical corner case is covered. To keep the amount of special
+-     cases small, ignore #MC.
+-
+-   - Debug Exception (#DB):
+-
+-     This takes the paranoid exit path only when the INT1 breakpoint is in
+-     kernel space. #DB on a user space address takes the regular exit path,
+-     so no extra mitigation required.
++   all but one of the kernel to user space transitions.  The exception
++   is when we return from a Non Maskable Interrupt (NMI), which is
++   handled directly in do_nmi().
 +
- 	if (snprintf(inst->alg.base.cra_driver_name, CRYPTO_MAX_ALG_NAME,
- 		     "ccm_base(%s,%s)", ctr->base.cra_driver_name,
- 		     mac->base.cra_driver_name) >= CRYPTO_MAX_ALG_NAME)
- 		goto err_drop_ctr;
++   (The reason that NMI is special is that prepare_exit_to_usermode() can
++    enable IRQs.  In NMI context, NMIs are blocked, and we don't want to
++    enable IRQs with NMIs blocked.)
  
--	memcpy(inst->alg.base.cra_name, full_name, CRYPTO_MAX_ALG_NAME);
--
- 	inst->alg.base.cra_flags = ctr->base.cra_flags & CRYPTO_ALG_ASYNC;
- 	inst->alg.base.cra_priority = (mac->base.cra_priority +
- 				       ctr->base.cra_priority) / 2;
-@@ -567,7 +571,6 @@ static int crypto_ccm_create(struct cryp
- 	const char *cipher_name;
- 	char ctr_name[CRYPTO_MAX_ALG_NAME];
- 	char mac_name[CRYPTO_MAX_ALG_NAME];
--	char full_name[CRYPTO_MAX_ALG_NAME];
  
- 	cipher_name = crypto_attr_alg_name(tb[1]);
- 	if (IS_ERR(cipher_name))
-@@ -581,35 +584,24 @@ static int crypto_ccm_create(struct cryp
- 		     cipher_name) >= CRYPTO_MAX_ALG_NAME)
- 		return -ENAMETOOLONG;
- 
--	if (snprintf(full_name, CRYPTO_MAX_ALG_NAME, "ccm(%s)", cipher_name) >=
--	    CRYPTO_MAX_ALG_NAME)
--		return -ENAMETOOLONG;
--
--	return crypto_ccm_create_common(tmpl, tb, full_name, ctr_name,
--					mac_name);
-+	return crypto_ccm_create_common(tmpl, tb, ctr_name, mac_name);
- }
- 
- static int crypto_ccm_base_create(struct crypto_template *tmpl,
- 				  struct rtattr **tb)
- {
- 	const char *ctr_name;
--	const char *cipher_name;
--	char full_name[CRYPTO_MAX_ALG_NAME];
-+	const char *mac_name;
- 
- 	ctr_name = crypto_attr_alg_name(tb[1]);
- 	if (IS_ERR(ctr_name))
- 		return PTR_ERR(ctr_name);
- 
--	cipher_name = crypto_attr_alg_name(tb[2]);
--	if (IS_ERR(cipher_name))
--		return PTR_ERR(cipher_name);
--
--	if (snprintf(full_name, CRYPTO_MAX_ALG_NAME, "ccm_base(%s,%s)",
--		     ctr_name, cipher_name) >= CRYPTO_MAX_ALG_NAME)
--		return -ENAMETOOLONG;
-+	mac_name = crypto_attr_alg_name(tb[2]);
-+	if (IS_ERR(mac_name))
-+		return PTR_ERR(mac_name);
- 
--	return crypto_ccm_create_common(tmpl, tb, full_name, ctr_name,
--					cipher_name);
-+	return crypto_ccm_create_common(tmpl, tb, ctr_name, mac_name);
- }
- 
- static int crypto_rfc4309_setkey(struct crypto_aead *parent, const u8 *key,
+ 2. C-State transition
 
 
