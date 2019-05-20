@@ -2,107 +2,129 @@ Return-Path: <SRS0=lq4r=TU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,FROM_EXCESS_BASE64,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AD87C04AAC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 15:19:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8519CC04AAF
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 15:19:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D2C3220863
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 15:19:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5AE8020863
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 15:19:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="M2FGtec4"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="g39fxCpP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390130AbfETPTA (ORCPT
+        id S2390520AbfETPTa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 11:19:00 -0400
-Received: from mail-it1-f196.google.com ([209.85.166.196]:54170 "EHLO
-        mail-it1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388745AbfETPTA (ORCPT
+        Mon, 20 May 2019 11:19:30 -0400
+Received: from mail-yw1-f67.google.com ([209.85.161.67]:43541 "EHLO
+        mail-yw1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732749AbfETPTa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 11:19:00 -0400
-Received: by mail-it1-f196.google.com with SMTP id m141so23506744ita.3
-        for <linux-kernel@vger.kernel.org>; Mon, 20 May 2019 08:18:59 -0700 (PDT)
+        Mon, 20 May 2019 11:19:30 -0400
+Received: by mail-yw1-f67.google.com with SMTP id t5so5991526ywf.10;
+        Mon, 20 May 2019 08:19:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=8bDPOW4T9PERtlCKjJ2lAbrC2Btl/gUnBtJeF4+SdEo=;
-        b=M2FGtec4qwOQA9nWt3yNJamKQbZ6wWHEdQ7BldBsOi2SLF2pp3o3HgjfWthzjXcrkt
-         1Hs+/DfFdQxqw0ItBC68YwvtUHfxSDPNMNLezriKfz417YqyxPA0xE315PCzAR3zfJwq
-         sD4QG6ggCau9zHe06mjOfQ/XeYTExSpjEdqb9EfyT8q9xhCfiXdOI7D/5lD6jYqoWhyC
-         KCI0lBwpSXxLHBGlYkTxZ182lmZPVwPKZjKhBCHRAF5RLHL/2mIcGf0eGvTbEPMZTbFy
-         lRnLGTe/ufItgUvJSnsswcjufkJZChaO2cCIaWAhfiTpiBkCBx5/xWGe0JLXpAVpwW/L
-         XZBw==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=plhElv+BUriUXkpSQXoRKCyimftsR0KZ9zPI/uX0VTQ=;
+        b=g39fxCpP9jJ+hCzPERmfMVo1Ed4LieWjnbbF/wkeYiIRg/N0UscK7Q5MCGnojUCn6p
+         A1FP94Fr43XeRPFA6q/WlPlOSQITHWQ4cqfvlpZq65nT5DzPAejfPlgmMyJrYy/PvfjV
+         miI0HU5g0v4AwnjpQeLCHH9jDzcgLFn+VC+GbTe2j8/WvrOTZm9ipAm3Vn3V4w/h/Vot
+         8YkjSbBlbpv5aYTZ3F4Nokl8+Flm43x5+NZWUiHwD1c52YH9SbbEhVJCHj9Xv+nsQI1B
+         OCm05MS1tOSwpWfH+p2PxVuVVQAnrOsKvk8S5vkwJoVKdYx5y5FMLp244JrFtfTfX16x
+         oGGw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=8bDPOW4T9PERtlCKjJ2lAbrC2Btl/gUnBtJeF4+SdEo=;
-        b=T2SoqZALk7iVNH/eh34uoLdCulkXv2YtUfTz2hiVlyjLC74WCIxQCo5L5p/VTNan0W
-         Jv9Zh59cm2FJEHZ1xR/uRBoX7tdUwPGNslequQ+nEbZBUdREFr4LideZ37Fg3qbjfoBz
-         36bGzAgVEGtLMV7IE6nj+q6oB/coAQJD6A6wEYbWG/3J7sBRs8043z80bW/nsf7rmRRw
-         AP37WBAoKVF/5ig/om0DVWcgiqp9/3tjavRp3Ib+YScR+DZ8YLXp7FEyFcezEFz/7dR3
-         oQKbC8jjifwC6U3i2cyqB4n8h80ArsMDHrwT7DvntMFrV/lrSOJz/8TIaEd6UJR6GpGe
-         f5oA==
-X-Gm-Message-State: APjAAAXEaogU8HMlcgkrk1saXOdgOMAlN6wM6jnMCAjc60RMdHPJ+x/Y
-        qf73I92cwkkLlI8to4fXMxHuJA==
-X-Google-Smtp-Source: APXvYqxPeWPsR3qi08xbeYLoNXEOxhRXLPb6AbDnMWGKPpAWkaPEec6V+TrN28W/Fq0LTraaojid4w==
-X-Received: by 2002:a05:660c:107:: with SMTP id w7mr11276557itj.59.1558365539219;
-        Mon, 20 May 2019 08:18:59 -0700 (PDT)
-Received: from localhost (c-75-72-120-115.hsd1.mn.comcast.net. [75.72.120.115])
-        by smtp.gmail.com with ESMTPSA id s8sm5513436iot.55.2019.05.20.08.18.58
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 20 May 2019 08:18:58 -0700 (PDT)
-From:   Dan Rue <dan.rue@linaro.org>
-To:     dan.rue@linaro.org
-Cc:     linux-kselftest@vger.kernel.org,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Michal Marek <michal.lkml@markovi.net>,
-        linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] kbuild: teach kselftest-merge to find nested config files
-Date:   Mon, 20 May 2019 10:16:14 -0500
-Message-Id: <20190520151614.19188-1-dan.rue@linaro.org>
-X-Mailer: git-send-email 2.21.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=plhElv+BUriUXkpSQXoRKCyimftsR0KZ9zPI/uX0VTQ=;
+        b=RpOuox7rEhJWruHgREowbgvG/0fbVhfLKg/favXZ2HqduAHdFaqj8RzTGh6Muev4tK
+         IhGbdWn5deknA8vppvaqyJjC/H1cxgrLkedUr3PionKf61IzyjRERApbLK9wq3mkx3iI
+         BvbJa/haMbZnZntCsICiAMrTxnHRkSr8XlO/WdaaQGql27RMtxEfquXCpvmaxCXQLbri
+         cO1sUx36vQbHSGr4xn+XQszI0U9q/mvJqnkte22x3QkoqkB/Kw2sw/ItikoIdaNrX8ha
+         tODagRTIHeZQI0Jy8nqCQFBXmORY6g3HZCAhDJY2QRfDLEI40HlvYEFGlTfIAyb2Pto2
+         B7gw==
+X-Gm-Message-State: APjAAAVjxXnRohAAcm+TwM2LpCbBf//a0iaTzApdPvBO79Qk3KXoV9Wj
+        mlJUbU1hrRR3j7bxHDD5Vzr1Y9HbJ7Hhf5g/2Pc=
+X-Google-Smtp-Source: APXvYqwU/0+XEhwYF+YlLZjzvLcGA3xe1OksHMiGFtm34/k1x/2galfCzg4w8Pmv+zx4UnYDt1r8ZsHWOdXIM2EFcAw=
+X-Received: by 2002:a0d:ea4c:: with SMTP id t73mr35484753ywe.472.1558365569102;
+ Mon, 20 May 2019 08:19:29 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20190518152355.11134-1-peron.clem@gmail.com> <20190518152355.11134-4-peron.clem@gmail.com>
+In-Reply-To: <20190518152355.11134-4-peron.clem@gmail.com>
+From:   =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
+Date:   Mon, 20 May 2019 17:19:17 +0200
+Message-ID: <CAJiuCcdNmf3+xj+KE4yihZk67QV7Ds8UTjzQ6JsPp=2KLJgOZg@mail.gmail.com>
+Subject: Re: [PATCH v3 3/4] arm64: dts: allwinner: h6: add r_watchog node
+To:     Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Chen-Yu Tsai <wens@csie.org>
+Cc:     linux-watchdog@vger.kernel.org,
+        devicetree <devicetree@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Current implementation of kselftest-merge only finds config files that
-are one level deep using `$(srctree)/tools/testing/selftests/*/config`.
+Hi Maxime,
 
-Often, config files are added in nested directories, and do not get
-picked up by kselftest-merge.
+On Sat, 18 May 2019 at 17:24, Cl=C3=A9ment P=C3=A9ron <peron.clem@gmail.com=
+> wrote:
+>
+> Allwinner H6 has a r_watchdog similar to A64.
+>
+> Declare it in the device-tree.
+>
+> Signed-off-by: Cl=C3=A9ment P=C3=A9ron <peron.clem@gmail.com>
+> ---
+>  arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi | 8 ++++++++
+>  1 file changed, 8 insertions(+)
+>
+> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi b/arch/arm64/bo=
+ot/dts/allwinner/sun50i-h6.dtsi
+> index 60b47f23b2f5..27647e496269 100644
+> --- a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
+> +++ b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
+> @@ -632,6 +632,14 @@
+>                         #reset-cells =3D <1>;
+>                 };
+>
+> +               r_watchdog: watchdog@7020400 {
+> +                       compatible =3D "allwinner,sun50i-h6-wdt",
+> +                                    "allwinner,sun50i-a64-wdt",
+> +                                    "allwinner,sun6i-a31-wdt";
+> +                       reg =3D <0x07020400 0x20>;
+> +                       interrupts =3D <GIC_SPI 103 IRQ_TYPE_LEVEL_HIGH>;
 
-Use `find` to catch all config files under
-`$(srctree)/tools/testing/selftests` instead.
+Just want to point out that i have used the same bindings for WDT and R_WDT=
+.
+I think it would be better to also introduce a bindings like
+"allwinner,sun50i-h6-r-wdt", "allwinner,sun6i-a31-wdt";
 
-Signed-off-by: Dan Rue <dan.rue@linaro.org>
----
- Makefile | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+We don't have access to the datasheet of this IP but we can strongly
+suppose that wdt and r-wdt are the same.
 
-diff --git a/Makefile b/Makefile
-index a45f84a7e811..e99e7f9484af 100644
---- a/Makefile
-+++ b/Makefile
-@@ -1228,9 +1228,8 @@ kselftest-clean:
- PHONY += kselftest-merge
- kselftest-merge:
- 	$(if $(wildcard $(objtree)/.config),, $(error No .config exists, config your kernel first!))
--	$(Q)$(CONFIG_SHELL) $(srctree)/scripts/kconfig/merge_config.sh \
--		-m $(objtree)/.config \
--		$(srctree)/tools/testing/selftests/*/config
-+	$(Q)find $(srctree)/tools/testing/selftests -name config | \
-+		xargs $(srctree)/scripts/kconfig/merge_config.sh -m $(objtree)/.config
- 	+$(Q)$(MAKE) -f $(srctree)/Makefile olddefconfig
- 
- # ---------------------------------------------------------------------------
--- 
-2.21.0
+What do you think?
 
+Regards,
+Clement
+
+
+> +               };
+> +
+>                 r_intc: interrupt-controller@7021000 {
+>                         compatible =3D "allwinner,sun50i-h6-r-intc",
+>                                      "allwinner,sun6i-a31-r-intc";
+> --
+> 2.17.1
+>
