@@ -2,254 +2,111 @@ Return-Path: <SRS0=lq4r=TU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85946C04E87
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 10:46:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C255C04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 10:47:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5215620856
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 10:46:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XOfACpjn"
+	by mail.kernel.org (Postfix) with ESMTP id 4D2A82081C
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 10:47:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731942AbfETKqt (ORCPT
+        id S1732013AbfETKri (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 06:46:49 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:35863 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728000AbfETKqt (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 06:46:49 -0400
-Received: by mail-ot1-f68.google.com with SMTP id c3so12540896otr.3;
-        Mon, 20 May 2019 03:46:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=8N0PH3dZDygXmaG/OOoHIYOZvPVg+97Y5Hud9ub3XDs=;
-        b=XOfACpjnInC015ZclQO9HPkjk/rSY9yOcHeMHR4G32GvI7Q8qM8eT4EJ7a54FSUeF/
-         UGBogReReOS6mMgR2TIqjTgUCMrDnlwFYxxF/ZhOkJ/DepZnyodcMiXunZ+LUToAxZxZ
-         fOkC48G/Gj3DJ72Ezh9xsoSyOGPEsA+KwYBAI6NNDhMVnPMeQYWloMMk1GgaMOwXQjoM
-         qMrjvAs1onhQ7gQWsSB8fsqdEOaVaVT6Fvbez9THpIuFnr4NbP3PnXReNoeMr0cfeXSO
-         TGDNiJX+NXtn8TNkPH2oZn/+MYuyM0h776Nxb5UHJzTw29JvrvVJRBb8N46iFrKU4OSJ
-         LsFw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=8N0PH3dZDygXmaG/OOoHIYOZvPVg+97Y5Hud9ub3XDs=;
-        b=oSWrVKFWbuO7tBrrM4l5SHJEd2zPGiNVnNctzXhbRrNbl/j191RnHqZvOsRFoJ0EcG
-         WpCfq7LV1j9dft9zXqeA6CS3pJVMHbHuh10n2DY2mi4X6tuSX4/typM8ct6xbGM5M7GT
-         SM35g2VM/LaJ0QrqqYqARx6UsRoiBP/hlp7R2daz1fISZqFlD3X4M/QuBg7TKQxqnjQs
-         eycvitmoqe71bdW1j/Ed1wvccaru+jOZtTtNi16rnbbqkjm2f10cgkt3mgu9Xv3ZR6F/
-         fhG030y2Xl8G4+ngK01viM/JhjX5PiqoVEiBsfu0jUvRwo0r2hvS5/esgSbgmD6vKWbt
-         GchQ==
-X-Gm-Message-State: APjAAAVflmGmC1fqa0tt9ldsXmPFJZ1FHaDFkkyJG6vQstcMFNs3EYVf
-        JBKHL6C5yLnilPFkrIJQkGzcjeN3nUnutyJIUxk=
-X-Google-Smtp-Source: APXvYqyQaYijHFhzHSNuJJm/K7mUvoPkwsQvIyx9Xic0uKpsRDi9L17EUyNDAXBS6EPApkMCLoXdp355Op26T39b7LM=
-X-Received: by 2002:a9d:6e96:: with SMTP id a22mr10979550otr.207.1558349208470;
- Mon, 20 May 2019 03:46:48 -0700 (PDT)
+        Mon, 20 May 2019 06:47:38 -0400
+Received: from mx2.suse.de ([195.135.220.15]:55304 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728000AbfETKrh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 06:47:37 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 88D7AAFD1;
+        Mon, 20 May 2019 10:47:35 +0000 (UTC)
+From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+To:     stefan.wahren@i2se.com, devicetree@vger.kernel.org,
+        linux-rpi-kernel@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org
+Cc:     mbrugger@suse.de, viresh.kumar@linaro.org, rjw@rjwysocki.net,
+        sboyd@kernel.org, eric@anholt.net, f.fainelli@gmail.com,
+        bcm-kernel-feedback-list@broadcom.com, ptesarik@suse.com,
+        ssuloev@orpaltech.com, linux-clk@vger.kernel.org,
+        mturquette@baylibre.com,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        linux-kernel@vger.kernel.org
+Subject: [RFC v2 0/5] cpufreq support for the Raspberry Pi
+Date:   Mon, 20 May 2019 12:47:02 +0200
+Message-Id: <20190520104708.11980-1-nsaenzjulienne@suse.de>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-References: <20190518215542.25140-1-lucasseikioshiro@gmail.com> <20190519122418.7722641b@archlinux>
-In-Reply-To: <20190519122418.7722641b@archlinux>
-From:   Alexandru Ardelean <ardeleanalex@gmail.com>
-Date:   Mon, 20 May 2019 13:46:37 +0300
-Message-ID: <CA+U=DsrvRcAARa+jZB8GKQ+q+wWWqAh7dmnHymLd9cpFGC2QSw@mail.gmail.com>
-Subject: Re: [PATCH] dt-bindings: iio: accel: adxl372: switch to YAML bindings
-To:     Jonathan Cameron <jic23@kernel.org>
-Cc:     Lucas Oshiro <lucasseikioshiro@gmail.com>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Stefan Popa <stefan.popa@analog.com>,
-        linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>, kernel-usp@googlegroups.com,
-        Rodrigo Ribeiro <rodrigorsdc@gmail.com>,
-        Alexandru Ardelean <alexandru.ardelean@analog.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, May 19, 2019 at 8:27 PM Jonathan Cameron <jic23@kernel.org> wrote:
->
-> On Sat, 18 May 2019 18:55:42 -0300
-> Lucas Oshiro <lucasseikioshiro@gmail.com> wrote:
->
-> > Convert the old device tree documentation to yaml format.
-> >
-> > Signed-off-by: Lucas Oshiro <lucasseikioshiro@gmail.com>
-> > Signed-off-by: Rodrigo Ribeiro <rodrigorsdc@gmail.com>
-> > Co-developed-by: Rodrigo Ribeiro <rodrigorsdc@gmail.com>
-> > ---
-> >
-> > Hello,
-> > We've added Stefan Popa as maintainer of the yaml documentation of this driver
-> > because we found through git that he was the author of the older documentation.
->
-> Definitely going to need an Ack from Stefan for that ;)
+Hi all,
+as some of you may recall I've been spending some time looking into
+providing 'cpufreq' support for the Raspberry Pi platform[1]. I think
+I'm close to something workable, so I'd love for you to comment on it.
 
-CC-ing my work-email
-There are some issues with it and mailing lists; I'll hopefully sort
-them out in the next weeks.
+There has been some design changes since the last version. Namely the
+fact that I now make sure *only* the CPU frequency is updated. The
+firmware API we use has two modes, with or without turbo. Enabling turbo
+implies not only scaling the CPU clock but also the VPU and other
+peripheral related clocks.  This is problematic as some of them are not
+prepared for this kind frequency changes. I spent some time adapting the
+peripheral drivers, but the result was disappointing as they poorly
+support live frequency changes (which most other chips accept, think for
+instance I2C and clock stretching) but also turned out hard to integrate
+into the kernel. As we were planning to use 'clk_notifiers' which turns
+out not to be such a good idea as it's prone to deadlocks and not
+recommended by the clock maintainers[2]. It's also worth mentioning that
+the foundation kernel doesn't support VPU frequency scaling either.
 
-Stefan is out-of-office.
-He'll take a look when he comes back.
+With this in mind, and as suggested by clock maintainers[2], I've
+decided to integrate the firmware clock interface into the bcm2835 clock
+driver. This, in my opinion, provides the least friction with the
+firmware and lets us write very simple and portable higher level
+drivers. As I did with the 'cpufreq' driver which simply queries the max
+and min frequencies available, which are configurable in the firmware,
+to then trigger the generic 'cpufreq-dt'.
 
-I'll add a few notes until then.
+In the future we could further integrate other firmware dependent clocks
+into the main driver. For instance to be able to scale the VPU clock,
+which should be operated through a 'devfreq' driver.
 
-I'd still like Stefan's ack to be final.
+This was tested on a RPi3b+ and if the series is well received I'll test
+it further on all platforms I own.
 
->
-> I've not really gotten yaml formats into my head yet, but from a quick
-> look I think this is fine.  I will however be looking for review from others
-> on these.
->
-> Thanks,
->
-> Jonathan
->
-> >
-> >  .../bindings/iio/accel/adi,adxl372.yaml       | 66 +++++++++++++++++++
-> >  .../devicetree/bindings/iio/accel/adxl372.txt | 33 ----------
-> >  2 files changed, 66 insertions(+), 33 deletions(-)
-> >  create mode 100644 Documentation/devicetree/bindings/iio/accel/adi,adxl372.yaml
-> >  delete mode 100644 Documentation/devicetree/bindings/iio/accel/adxl372.txt
+That's all,
+kind regards,
+Nicolas
 
-Also update the MAINTAINERS file when changing this.
-For reference, many things can be borrowed from the ADXL345, which is
-similar (from a dt-binding doc perspective only).
+[1] https://lists.infradead.org/pipermail/linux-rpi-kernel/2019-April/008634.html
+[2] https://www.spinics.net/lists/linux-clk/msg36937.html
 
-> >
-> > diff --git a/Documentation/devicetree/bindings/iio/accel/adi,adxl372.yaml b/Documentation/devicetree/bindings/iio/accel/adi,adxl372.yaml
-> > new file mode 100644
-> > index 000000000000..a6e2893d2ab1
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/iio/accel/adi,adxl372.yaml
-> > @@ -0,0 +1,66 @@
-> > +# SPDX-License-Identifier: GPL-2.0
-> > +%YAML 1.2
-> > +---
-> > +$id: http://devicetree.org/schemas/iio/accelerometers/adi,adxl372.yaml#
-> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > +
-> > +title: Analog Devices ADXL372 3-Axis, +/-(200g) Digital Accelerometer
-> > +
-> > +maintainers:
-> > +  - Stefan Popa <stefan.popa@analog.com>
-> > +
-> > +description: |
-> > +  Analog Devices ADXL372 3-Axis, +/-(200g) Digital Accelerometer that supports
-> > +  both I2C & SPI interfaces
-> > +    https://www.analog.com/en/products/adxl372.html
-> > +
-> > +properties:
-> > +  compatible:
-> > +    enum:
-> > +      - adi,adxl372
-> > +
-> > +  reg:
-> > +    description: the I2C address or SPI chip select number for the device
+---
 
-no need to add a description for reg
-it's a standard property
+Changes since v1:
+  - Addressed Viresh's comments in cpufreq driver
+  - Resend with (hopefully) proper CCs
 
-> > +    maxItems: 1
-> > +
-> > +  interrupts:
-> > +    description:
-> > +      interrupt mapping for IRQ as documented in
-> > +      Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
+Nicolas Saenz Julienne (5):
+  clk: bcm2835: set CLK_GET_RATE_NOCACHE on CPU clocks
+  clk: bcm2835: set pllb_arm divisor as readonly
+  clk: bcm2835: use firmware interface to update pllb
+  dts: bcm2837: add per-cpu clock devices
+  cpufreq: add driver for Raspbery Pi
 
-no need to describe this either
+ arch/arm/boot/dts/bcm2837.dtsi        |   8 +
+ drivers/clk/bcm/clk-bcm2835.c         | 284 ++++++++++++++++++++++++--
+ drivers/cpufreq/Kconfig.arm           |   8 +
+ drivers/cpufreq/Makefile              |   1 +
+ drivers/cpufreq/raspberrypi-cpufreq.c |  83 ++++++++
+ 5 files changed, 366 insertions(+), 18 deletions(-)
+ create mode 100644 drivers/cpufreq/raspberrypi-cpufreq.c
 
-> > +    maxItems: 1
-> > +
-> > +required:
-> > +  - compatible
-> > +  - reg
+-- 
+2.21.0
 
-I think interrupts is also required.
-
-> > +
-> > +examples:
-> > +  - |
-> > +        #include <dt-bindings/gpio/gpio.h>
-> > +        #include <dt-bindings/interrupt-controller/irq.h>
-> > +        i2c0 {
-> > +                #address-cells = <1>;
-> > +                #size-cells = <0>;
-> > +
-> > +                /* Example for a I2C device node */
-> > +                accelerometer@53 {
-> > +                        compatible = "adi,adxl372";
-> > +                        reg = <0x53>;
-> > +                        interrupt-parent = <&gpio>;
-> > +                        interrupts = <25 IRQ_TYPE_EDGE_FALLING>;
-> > +                };
-> > +        };
-> > +  - |
-> > +        #include <dt-bindings/gpio/gpio.h>
-> > +        #include <dt-bindings/interrupt-controller/irq.h>
-> > +        spi0 {
-> > +                #address-cells = <1>;
-> > +                #size-cells = <0>;
-> > +
-> > +                accelerometer@0 {
-> > +                        compatible = "adi,adxl372";
-> > +                        reg = <0>;
-> > +                        spi-max-frequency = <1000000>;
-> > +                        interrupt-parent = <&gpio>;
-> > +                        interrupts = <25 IRQ_TYPE_EDGE_FALLING>;
-> > +                };
-> > +        };
-
-Rest looks good.
-
-> > diff --git a/Documentation/devicetree/bindings/iio/accel/adxl372.txt b/Documentation/devicetree/bindings/iio/accel/adxl372.txt
-> > deleted file mode 100644
-> > index a289964756a7..000000000000
-> > --- a/Documentation/devicetree/bindings/iio/accel/adxl372.txt
-> > +++ /dev/null
-> > @@ -1,33 +0,0 @@
-> > -Analog Devices ADXL372 3-Axis, +/-(200g) Digital Accelerometer
-> > -
-> > -http://www.analog.com/media/en/technical-documentation/data-sheets/adxl372.pdf
-> > -
-> > -Required properties:
-> > - - compatible : should be "adi,adxl372"
-> > - - reg: the I2C address or SPI chip select number for the device
-> > -
-> > -Required properties for SPI bus usage:
-> > - - spi-max-frequency: Max SPI frequency to use
-> > -
-> > -Optional properties:
-> > - - interrupts: interrupt mapping for IRQ as documented in
-> > -   Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
-> > -
-> > -Example for a I2C device node:
-> > -
-> > -     accelerometer@53 {
-> > -             compatible = "adi,adxl372";
-> > -             reg = <0x53>;
-> > -             interrupt-parent = <&gpio>;
-> > -             interrupts = <25 IRQ_TYPE_EDGE_FALLING>;
-> > -     };
-> > -
-> > -Example for a SPI device node:
-> > -
-> > -     accelerometer@0 {
-> > -             compatible = "adi,adxl372";
-> > -             reg = <0>;
-> > -             spi-max-frequency = <1000000>;
-> > -             interrupt-parent = <&gpio>;
-> > -             interrupts = <25 IRQ_TYPE_EDGE_FALLING>;
-> > -     };
->
