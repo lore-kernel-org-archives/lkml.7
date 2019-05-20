@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0855C04AAC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:28:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22F57C04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:28:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8AC7420675
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:28:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DED6920815
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:28:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558355280;
-	bh=AJzAOBfK+W+9PiPw6Q1YZyS50a4r863se8XmdD4S8UU=;
+	s=default; t=1558355284;
+	bh=IEOEw2Bx7S9kdk27RzkRVdpq0TTQ1zPAP8oIcWoTU5o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Hw5jTF0qyiRaqHlMF2TcNjLRdKOmRpZRCRJldXmZ4tbRl37w10JUe9gGzxhbIM13/
-	 uhBiF9G1ghhbr5Ra74F6YtrSzH3G2aGs5Q7PVl0oZaYIpbnwhF5bq5RPiuCsbohNAh
-	 I5JlMhAdo96L66hJvjMV8JMPNY3Q47OLrNS/2i34=
+	b=MkcNdQsBEZddmNiiazeUwnQoL59GB3APZNGNRusbDDhxiB01MpLpWdXC2J/3j0oTT
+	 5A7YeX/yayshZbFC1wZ3HE4ITFPwpHkoGl2VAi2Wll2T0HIH4qs1k+pK29EoWMj9di
+	 btqrqf45sJdjdZQc65v16wKS5p5rLtjJ8Gl7GIcw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389241AbfETM2A (ORCPT
+        id S2388646AbfETM2C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 08:28:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43550 "EHLO mail.kernel.org"
+        Mon, 20 May 2019 08:28:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43614 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388780AbfETM15 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 08:27:57 -0400
+        id S2389590AbfETM17 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 08:27:59 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3182C20675;
-        Mon, 20 May 2019 12:27:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C863420645;
+        Mon, 20 May 2019 12:27:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558355276;
-        bh=AJzAOBfK+W+9PiPw6Q1YZyS50a4r863se8XmdD4S8UU=;
+        s=default; t=1558355279;
+        bh=IEOEw2Bx7S9kdk27RzkRVdpq0TTQ1zPAP8oIcWoTU5o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0m/YW/fmWA9HoEZZGPCtaZWLAiXw2tlv0hSP+kG8Zoq3TG4irPnMr+DjQms4UNTAo
-         fGGnKVYaqdWPTqpPdmIuYmGolBf380+zNhuiAR8F/R1ea9V928JRqyibxIME2/Lapa
-         UgYsmo0rcsY/FUizJGpkykQMqckkyqn0zW8/jC+Y=
+        b=GqcfzE+88+mV4Bm34rKQ1MY6gVQ2vypXij+Ky7KVqwTMJuA35AJw+At77+ol3WbS8
+         lAqkagARdV/qvvzVnnvDearrkGqefePZIOWb4T6wyoFiIk20SazY650bS/jZ1tBTNT
+         Vbk8KPjWxEza/3EWOCQB6iXbCmOdglkG7QGQlvFs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Shengjiu Wang <shengjiu.wang@nxp.com>,
-        Nicolin Chen <nicoleotsuka@gmail.com>,
+        stable@vger.kernel.org, Libin Yang <libin.yang@intel.com>,
+        Takashi Iwai <tiwai@suse.de>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
         Mark Brown <broonie@kernel.org>
-Subject: [PATCH 5.0 055/123] ASoC: fsl_esai: Fix missing break in switch statement
-Date:   Mon, 20 May 2019 14:13:55 +0200
-Message-Id: <20190520115248.402572864@linuxfoundation.org>
+Subject: [PATCH 5.0 056/123] ASoC: codec: hdac_hdmi add device_link to card device
+Date:   Mon, 20 May 2019 14:13:56 +0200
+Message-Id: <20190520115248.483509056@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190520115245.439864225@linuxfoundation.org>
 References: <20190520115245.439864225@linuxfoundation.org>
@@ -60,34 +61,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: S.j. Wang <shengjiu.wang@nxp.com>
+From: Libin Yang <libin.yang@intel.com>
 
-commit 903c220b1ece12f17c868e43f2243b8f81ff2d4c upstream.
+commit 01c8327667c249818d3712c3e25c7ad2aca7f389 upstream.
 
-case ESAI_HCKT_EXTAL and case ESAI_HCKR_EXTAL should be
-independent of each other, so replace fall-through with break.
+In resume from S3, HDAC HDMI codec driver dapm event callback may be
+operated before HDMI codec driver turns on the display audio power
+domain because of the contest between display driver and hdmi codec driver.
 
-Fixes: 43d24e76b698 ("ASoC: fsl_esai: Add ESAI CPU DAI driver")
-Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
-Acked-by: Nicolin Chen <nicoleotsuka@gmail.com>
-Cc: <stable@vger.kernel.org>
+This patch adds the device_link between soc card device (consumer) and
+hdmi codec device (supplier) to make sure the sequence is always correct.
+
+Signed-off-by: Libin Yang <libin.yang@intel.com>
+Reviewed-by: Takashi Iwai <tiwai@suse.de>
+Acked-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
 Signed-off-by: Mark Brown <broonie@kernel.org>
+Cc: stable@vger.kernel.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/soc/fsl/fsl_esai.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ sound/soc/codecs/hdac_hdmi.c |   11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
---- a/sound/soc/fsl/fsl_esai.c
-+++ b/sound/soc/fsl/fsl_esai.c
-@@ -251,7 +251,7 @@ static int fsl_esai_set_dai_sysclk(struc
- 		break;
- 	case ESAI_HCKT_EXTAL:
- 		ecr |= ESAI_ECR_ETI;
--		/* fall through */
-+		break;
- 	case ESAI_HCKR_EXTAL:
- 		ecr |= ESAI_ECR_ERI;
- 		break;
+--- a/sound/soc/codecs/hdac_hdmi.c
++++ b/sound/soc/codecs/hdac_hdmi.c
+@@ -1872,6 +1872,17 @@ static int hdmi_codec_probe(struct snd_s
+ 	hdmi->card = dapm->card->snd_card;
+ 
+ 	/*
++	 * Setup a device_link between card device and HDMI codec device.
++	 * The card device is the consumer and the HDMI codec device is
++	 * the supplier. With this setting, we can make sure that the audio
++	 * domain in display power will be always turned on before operating
++	 * on the HDMI audio codec registers.
++	 * Let's use the flag DL_FLAG_AUTOREMOVE_CONSUMER. This can make
++	 * sure the device link is freed when the machine driver is removed.
++	 */
++	device_link_add(component->card->dev, &hdev->dev, DL_FLAG_RPM_ACTIVE |
++			DL_FLAG_AUTOREMOVE_CONSUMER);
++	/*
+ 	 * hdac_device core already sets the state to active and calls
+ 	 * get_noresume. So enable runtime and set the device to suspend.
+ 	 */
 
 
