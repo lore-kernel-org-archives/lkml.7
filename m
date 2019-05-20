@@ -2,91 +2,118 @@ Return-Path: <SRS0=lq4r=TU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DC73C04AAC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 19:53:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A3D1C04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 19:54:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 14F8321019
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 19:53:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 04B4520863
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 19:54:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="U35XLBS+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726146AbfETTxo (ORCPT
+        id S1726302AbfETTyp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 15:53:44 -0400
-Received: from mail3-relais-sop.national.inria.fr ([192.134.164.104]:20880
-        "EHLO mail3-relais-sop.national.inria.fr" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725372AbfETTxn (ORCPT
+        Mon, 20 May 2019 15:54:45 -0400
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:34370 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725971AbfETTyo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 15:53:43 -0400
-X-IronPort-AV: E=Sophos;i="5.60,492,1549926000"; 
-   d="scan'208";a="306653735"
-Received: from abo-218-110-68.mrs.modulonet.fr (HELO hadrien) ([85.68.110.218])
-  by mail3-relais-sop.national.inria.fr with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 May 2019 21:53:41 +0200
-Date:   Mon, 20 May 2019 21:53:40 +0200 (CEST)
-From:   Julia Lawall <julia.lawall@lip6.fr>
-X-X-Sender: jll@hadrien
-To:     Sasha Levin <sashal@kernel.org>
-cc:     Pavel Machek <pavel@ucw.cz>, wen.yang99@zte.com.cn,
-        Markus.Elfring@web.de, cocci@systeme.lip6.fr,
-        linux-kernel@vger.kernel.org,
-        Gilles Muller <Gilles.Muller@lip6.fr>,
-        yamada.masahiro@socionext.com, michal.lkml@markovi.net,
-        nicolas.palix@imag.fr
-Subject: Re: Coccinelle: semantic patch for missing of_node_put
-In-Reply-To: <20190520172041.GH11972@sasha-vm>
-Message-ID: <alpine.DEB.2.21.1905202151140.2561@hadrien>
-References: <201905171432571474636@zte.com.cn> <alpine.DEB.2.20.1905170912590.4014@hadrien> <20190520093303.GA9320@atrey.karlin.mff.cuni.cz> <alpine.DEB.2.21.1905201152040.2543@hadrien> <20190520172041.GH11972@sasha-vm>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Mon, 20 May 2019 15:54:44 -0400
+Received: by mail-lf1-f68.google.com with SMTP id v18so11265678lfi.1;
+        Mon, 20 May 2019 12:54:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=UESajbzwoIV7sMA5C+7AZ1ywo1ID3f49/T5tv1zMMAc=;
+        b=U35XLBS+00Wp11dB0WmdlhX5fC7qQvVBmRcS2pQJdolUFVu24/piOp7c5W+QifiaUJ
+         ljWpZeqTyfdbW6piVzuHJDRp6r0B/9KiHjzN8EEzKbgheriznbg0MqxYYrBXdbfbJUNa
+         vR5xEqwiz9XmOfFvcaVD7cbmS9/I0nucT2HReKRKs6i00rncUcm6m9VgoSkQzjpd6tX6
+         UoFjquGdgWqxF93uboybTBb5FVxXeNPPYGk/JdY+74HRGm/W3Wf7Xo0nQxMsSEKijmNo
+         HUbMN7Pj6OqMFxNoCE1fQl+T8L7Cg9qpXWdujqoGTOyfSwEyif5MJh9SeSL/yHzU3bwC
+         0FDw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=UESajbzwoIV7sMA5C+7AZ1ywo1ID3f49/T5tv1zMMAc=;
+        b=jX392KzhWwdofnEfae2SV/uvayE6R40kqWmsaJPIH5w6U1cXJUqvcVqpKq1ckNArn+
+         clPO3GiapLbh4Gw8Lasa/G0Qci8C6JLzxK/SAWLanfx7Rboe6oRHklYZco20sXV7Aji3
+         Gs7KKL1WVS2bhJZU6GoFUX2/U0bRArlTEnaRWTHFqxKCIVTiDOfAZpH7c8xV8gZInJac
+         1f9kCLOFnIoPjvKKFNJZnvcHXGURGscQzPX/fR1MC5ySctvK0gtce16CC4afFCUXEbI2
+         JxtlDI1Wt3DQGhDuhyib+KEDo6WzvOO87StTxFEr6DPU6aNqJaV7nTmvj7/uMCpqzasZ
+         pLlQ==
+X-Gm-Message-State: APjAAAXoTt2517KT8SGS+H9hqRaqYTeA/d4mQvo2GLDiXoA8OAXzrf39
+        ZeT5wA33pfNi6dPH4k91piMDDRty
+X-Google-Smtp-Source: APXvYqwq7Wq+zz3PIo2nZE5pLqXdDJVRF4BkRjASGcq2JMc05sk/lkEnhebCoil4YFLtTDCZYqCCIg==
+X-Received: by 2002:a19:6b04:: with SMTP id d4mr9128012lfa.57.1558382082112;
+        Mon, 20 May 2019 12:54:42 -0700 (PDT)
+Received: from [192.168.1.17] (blc206.neoplus.adsl.tpnet.pl. [83.28.196.206])
+        by smtp.gmail.com with ESMTPSA id n196sm2903868lfn.18.2019.05.20.12.54.40
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 20 May 2019 12:54:41 -0700 (PDT)
+Subject: Re: [PATCH v4 6/6] leds: lm36274: Introduce the TI LM36274 LED driver
+To:     Dan Murphy <dmurphy@ti.com>, pavel@ucw.cz
+Cc:     lee.jones@linaro.org, rdunlap@infradead.org,
+        linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20190507201159.13940-1-dmurphy@ti.com>
+ <20190507201159.13940-7-dmurphy@ti.com>
+From:   Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Message-ID: <77f1ed5b-bfd2-510c-edd5-1b702f2d1d45@gmail.com>
+Date:   Mon, 20 May 2019 21:54:39 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <20190507201159.13940-7-dmurphy@ti.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Dan,
 
+On 5/7/19 10:11 PM, Dan Murphy wrote:
+> Introduce the LM36274 LED driver.  This driver uses the ti-lmu
+> MFD driver to probe this LED driver.  The driver configures only the
+> LED registers and enables the outputs according to the config file.
+> 
+> The driver utilizes the TI LMU (Lighting Management Unit) LED common
+> framework to set the brightness bits.
+> 
+> Signed-off-by: Dan Murphy <dmurphy@ti.com>
+> ---
+>   drivers/leds/Kconfig        |   7 ++
+>   drivers/leds/Makefile       |   1 +
+>   drivers/leds/leds-lm36274.c | 174 ++++++++++++++++++++++++++++++++++++
+>   3 files changed, 182 insertions(+)
+>   create mode 100644 drivers/leds/leds-lm36274.c
+> 
+> diff --git a/drivers/leds/Kconfig b/drivers/leds/Kconfig
+> index 255fdd5e8491..db83a3feca01 100644
+> --- a/drivers/leds/Kconfig
+> +++ b/drivers/leds/Kconfig
+> @@ -791,6 +791,13 @@ config LEDS_LM3697
+>   	  Say Y to enable the LM3697 LED driver for TI LMU devices.
+>   	  This supports the LED device LM3697.
+>   
+> +config LEDS_LM36274
+> +	tristate "LED driver for LM36274"
+> +	depends on LEDS_TI_LMU_COMMON
 
-On Mon, 20 May 2019, Sasha Levin wrote:
+Shouldn't we have "depends on MFD_TI_LMU" as well here?
 
-> On Mon, May 20, 2019 at 11:52:37AM +0200, Julia Lawall wrote:
-> >
-> >
-> > On Mon, 20 May 2019, Pavel Machek wrote:
-> >
-> > > Hi!
-> > >
-> > > > A semantic patch has no access to comments.  The only thing I can see to
-> > > > do is to use python to interact with some external tools.  For example,
-> > > > you could write some code to collect the comments in a file and the
-> > > lines
-> > > > on which they occur, and then get the comment that most closely precedes
-> > > > the start of the function.
-> > >
-> > > How dangerous is missing of_node_put? AFAICT it will only result into
-> > > very small, one-time memory leak, right?
-> > >
-> > > Could we make sure these patches are _not_ going to stable? Leaking
-> > > few bytes once per boot is not really a serious bug.
-> >
-> > Sasha,
-> >
-> > Probably patches that add only of_node_put should not be auto selected for
-> > stable.
->
-> I can filter them out, but those are fixes, right? Why are we concerned
-> about them making it into -stable?
+> +	help
+> +	  Say Y to enable the LM36274 LED driver for TI LMU devices.
+> +	  This supports the LED device LM36274.
 
-One of them may have introduced a crash.  If there is a bad reference
-count manipulation elsewhere, then fixing one could cause a later
-incorrect one to make a double free.
-
-On the other hand, I don't know if the one that seemed to cause a crash
-really caused a crash.  It was detected by syzkaller, and it is also
-possible that git bisect ended up at the wrong place.
-
-In any case, forgetting an of_node_put will normally just waste a little
-memory, so probably stable kernels don't care.
-
-julia
+-- 
+Best regards,
+Jacek Anaszewski
