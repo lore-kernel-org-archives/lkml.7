@@ -4,58 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E23A0C04AAC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:50:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EABFFC04AAF
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:50:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B8CF52054F
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:50:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B7E562054F
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:50:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558356607;
-	bh=hcCWdm8G1C81OZqG9T6IE40vqZ2g7WBEfGBUW8Mt+Bg=;
+	s=default; t=1558356613;
+	bh=aoak7GZr+DL/b67tuvNtNkms+8SOBqbrBSp9kWjJFA0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2IvjZ/1tmpbaqR/0z6GvBUKb9VSDI58tWWegdmlp3s4mpJBtn5JOdxo6o0GRb/5b1
-	 5VrC7kdWaukvCnOGJwGVMJEAALGPpjLL297HoGf5YhEQdDnil8yJM0cjd2HPbePChL
-	 VbPzVygT/N3gx1crOK1ZgiNF+2Q+kML2mu9y5DNE=
+	b=j1XelIFi6SCP3ZJBlEr5fbkVblhYqo/157CvvDw0V8xoMivhvTnbjxjwEJkaX7wUg
+	 BQZVQqRVq0xzK1shXAxedykMK63vlM8OhJzWjuFxCcbl4Cl0vpJTv9FlIfx3/zjrK+
+	 CZUYn9nNt6raax4LhUQDUjTivawkJ/4+0h7rOuhA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391310AbfETMuG (ORCPT
+        id S2387627AbfETMVE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 08:50:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34696 "EHLO mail.kernel.org"
+        Mon, 20 May 2019 08:21:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34526 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730404AbfETMVM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 08:21:12 -0400
+        id S2388077AbfETMVB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 08:21:01 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B3A46213F2;
-        Mon, 20 May 2019 12:21:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 06D8F20656;
+        Mon, 20 May 2019 12:20:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558354871;
-        bh=hcCWdm8G1C81OZqG9T6IE40vqZ2g7WBEfGBUW8Mt+Bg=;
+        s=default; t=1558354860;
+        bh=aoak7GZr+DL/b67tuvNtNkms+8SOBqbrBSp9kWjJFA0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IZIhyJYneebqqkkR5EjA4s3UqF59ZcVwKRRqmRsqMMvDeYZ+QBlIwDfvZm9uCjxpL
-         N9YWS45fsqcKCCyqwKQBC1tEA3zHzRRgQExUSDyp5UJCjbiZfV6EUF3rnuYUnDRPUS
-         6lw+xd+DddGKmlA+IWXwS1rQXUrlRi8eaSNOehhs=
+        b=R1QCSEAEp+7MdSTBQDEOfgQE5FepZCISt1ydWul8vIPnvy4lAu06ookzuCBJgLjao
+         1HXkdkpzicqUMsoFdXHX86U01W4jR7C9T6zm3OLuelPKj/8XAgP7pHsVWQCwYtRmiv
+         YGGdiBmtwzoIAWE88eggv5Vy8OUKWjKYEioZu2kU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Andy Lutomirski <luto@kernel.org>,
-        Borislav Petkov <bp@suse.de>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Jon Masters <jcm@redhat.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>
-Subject: [PATCH 4.19 003/105] x86/speculation/mds: Improve CPU buffer clear documentation
-Date:   Mon, 20 May 2019 14:13:09 +0200
-Message-Id: <20190520115247.289761419@linuxfoundation.org>
+        stable@vger.kernel.org, "zhangyi (F)" <yi.zhang@huawei.com>,
+        Theodore Tso <tytso@mit.edu>, Jan Kara <jack@suse.cz>
+Subject: [PATCH 4.14 63/63] ext4: fix compile error when using BUFFER_TRACE
+Date:   Mon, 20 May 2019 14:14:42 +0200
+Message-Id: <20190520115237.837048692@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190520115247.060821231@linuxfoundation.org>
-References: <20190520115247.060821231@linuxfoundation.org>
+In-Reply-To: <20190520115231.137981521@linuxfoundation.org>
+References: <20190520115231.137981521@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -65,80 +59,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andy Lutomirski <luto@kernel.org>
+From: zhangyi (F) <yi.zhang@huawei.com>
 
-commit 9d8d0294e78a164d407133dea05caf4b84247d6a upstream.
+commit ddccb6dbe780d68133191477571cb7c69e17bb8c upstream.
 
-On x86_64, all returns to usermode go through
-prepare_exit_to_usermode(), with the sole exception of do_nmi().
-This even includes machine checks -- this was added several years
-ago to support MCE recovery.  Update the documentation.
+Fix compile error below when using BUFFER_TRACE.
 
-Signed-off-by: Andy Lutomirski <luto@kernel.org>
-Cc: Borislav Petkov <bp@suse.de>
-Cc: Frederic Weisbecker <frederic@kernel.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Jon Masters <jcm@redhat.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: stable@vger.kernel.org
-Fixes: 04dcbdb80578 ("x86/speculation/mds: Clear CPU buffers on exit to user")
-Link: http://lkml.kernel.org/r/999fa9e126ba6a48e9d214d2f18dbde5c62ac55c.1557865329.git.luto@kernel.org
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+fs/ext4/inode.c: In function ‘ext4_expand_extra_isize’:
+fs/ext4/inode.c:5979:19: error: request for member ‘bh’ in something not a structure or union
+  BUFFER_TRACE(iloc.bh, "get_write_access");
+
+Fixes: c03b45b853f58 ("ext4, project: expand inode extra size if possible")
+Signed-off-by: zhangyi (F) <yi.zhang@huawei.com>
+Signed-off-by: Theodore Ts'o <tytso@mit.edu>
+Reviewed-by: Jan Kara <jack@suse.cz>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- Documentation/x86/mds.rst |   39 +++++++--------------------------------
- 1 file changed, 7 insertions(+), 32 deletions(-)
+ fs/ext4/inode.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/Documentation/x86/mds.rst
-+++ b/Documentation/x86/mds.rst
-@@ -142,38 +142,13 @@ Mitigation points
-    mds_user_clear.
+--- a/fs/ext4/inode.c
++++ b/fs/ext4/inode.c
+@@ -5818,7 +5818,7 @@ int ext4_expand_extra_isize(struct inode
  
-    The mitigation is invoked in prepare_exit_to_usermode() which covers
--   most of the kernel to user space transitions. There are a few exceptions
--   which are not invoking prepare_exit_to_usermode() on return to user
--   space. These exceptions use the paranoid exit code.
--
--   - Non Maskable Interrupt (NMI):
--
--     Access to sensible data like keys, credentials in the NMI context is
--     mostly theoretical: The CPU can do prefetching or execute a
--     misspeculated code path and thereby fetching data which might end up
--     leaking through a buffer.
--
--     But for mounting other attacks the kernel stack address of the task is
--     already valuable information. So in full mitigation mode, the NMI is
--     mitigated on the return from do_nmi() to provide almost complete
--     coverage.
--
--   - Machine Check Exception (#MC):
--
--     Another corner case is a #MC which hits between the CPU buffer clear
--     invocation and the actual return to user. As this still is in kernel
--     space it takes the paranoid exit path which does not clear the CPU
--     buffers. So the #MC handler repopulates the buffers to some
--     extent. Machine checks are not reliably controllable and the window is
--     extremly small so mitigation would just tick a checkbox that this
--     theoretical corner case is covered. To keep the amount of special
--     cases small, ignore #MC.
--
--   - Debug Exception (#DB):
--
--     This takes the paranoid exit path only when the INT1 breakpoint is in
--     kernel space. #DB on a user space address takes the regular exit path,
--     so no extra mitigation required.
-+   all but one of the kernel to user space transitions.  The exception
-+   is when we return from a Non Maskable Interrupt (NMI), which is
-+   handled directly in do_nmi().
-+
-+   (The reason that NMI is special is that prepare_exit_to_usermode() can
-+    enable IRQs.  In NMI context, NMIs are blocked, and we don't want to
-+    enable IRQs with NMIs blocked.)
+ 	ext4_write_lock_xattr(inode, &no_expand);
  
- 
- 2. C-State transition
+-	BUFFER_TRACE(iloc.bh, "get_write_access");
++	BUFFER_TRACE(iloc->bh, "get_write_access");
+ 	error = ext4_journal_get_write_access(handle, iloc->bh);
+ 	if (error) {
+ 		brelse(iloc->bh);
 
 
