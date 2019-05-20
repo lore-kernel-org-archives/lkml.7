@@ -6,32 +6,32 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE9C8C04AAC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 11:38:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 674DCC04AAF
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 11:38:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B1B8A20863
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 11:38:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3DB2520863
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 11:38:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733215AbfETLiN (ORCPT
+        id S1733259AbfETLi0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 07:38:13 -0400
+        Mon, 20 May 2019 07:38:26 -0400
 Received: from mga04.intel.com ([192.55.52.120]:48121 "EHLO mga04.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733190AbfETLiJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 07:38:09 -0400
+        id S1733219AbfETLiN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 07:38:13 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 May 2019 04:38:09 -0700
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 May 2019 04:38:13 -0700
 X-ExtLoop1: 1
 Received: from ahunter-desktop.fi.intel.com ([10.237.72.198])
-  by fmsmga004.fm.intel.com with ESMTP; 20 May 2019 04:38:07 -0700
+  by fmsmga004.fm.intel.com with ESMTP; 20 May 2019 04:38:12 -0700
 From:   Adrian Hunter <adrian.hunter@intel.com>
 To:     Arnaldo Carvalho de Melo <acme@kernel.org>
 Cc:     Jiri Olsa <jolsa@redhat.com>, linux-kernel@vger.kernel.org
-Subject: [PATCH 18/22] perf scripts python: exported-sql-viewer.py: Add IPC information to the Branch reports
-Date:   Mon, 20 May 2019 14:37:24 +0300
-Message-Id: <20190520113728.14389-19-adrian.hunter@intel.com>
+Subject: [PATCH 21/22] perf scripts python: exported-sql-viewer.py: Add IPC information to Call Tree
+Date:   Mon, 20 May 2019 14:37:27 +0300
+Message-Id: <20190520113728.14389-22-adrian.hunter@intel.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190520113728.14389-1-adrian.hunter@intel.com>
 References: <20190520113728.14389-1-adrian.hunter@intel.com>
@@ -41,209 +41,155 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Enhance the "All branches" and "Selected branches" reports to display IPC
-information if it is available.
+Enhance the call tree to display IPC information if it is available.
 
 Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
 ---
- .../scripts/python/exported-sql-viewer.py     | 102 ++++++++++++++----
- 1 file changed, 83 insertions(+), 19 deletions(-)
+ .../scripts/python/exported-sql-viewer.py     | 69 +++++++++++++++----
+ 1 file changed, 56 insertions(+), 13 deletions(-)
 
 diff --git a/tools/perf/scripts/python/exported-sql-viewer.py b/tools/perf/scripts/python/exported-sql-viewer.py
-index 6fe553258ce5..a607235c8cd9 100755
+index f5b1b63995b0..94489cf2ce0e 100755
 --- a/tools/perf/scripts/python/exported-sql-viewer.py
 +++ b/tools/perf/scripts/python/exported-sql-viewer.py
-@@ -1369,11 +1369,11 @@ class FetchMoreRecordsBar():
+@@ -781,11 +781,13 @@ class CallGraphModel(CallGraphModelBase):
  
- class BranchLevelTwoItem():
+ class CallTreeLevelTwoPlusItemBase(CallGraphLevelItemBase):
  
--	def __init__(self, row, text, parent_item):
-+	def __init__(self, row, col, text, parent_item):
- 		self.row = row
- 		self.parent_item = parent_item
--		self.data = [""] * 8
--		self.data[7] = text
-+		self.data = [""] * (col + 1)
-+		self.data[col] = text
- 		self.level = 2
+-	def __init__(self, glb, params, row, comm_id, thread_id, calls_id, time, branch_count, parent_item):
++	def __init__(self, glb, params, row, comm_id, thread_id, calls_id, time, insn_cnt, cyc_cnt, branch_count, parent_item):
+ 		super(CallTreeLevelTwoPlusItemBase, self).__init__(glb, params, row, parent_item)
+ 		self.comm_id = comm_id
+ 		self.thread_id = thread_id
+ 		self.calls_id = calls_id
++		self.insn_cnt = insn_cnt
++		self.cyc_cnt = cyc_cnt
+ 		self.branch_count = branch_count
+ 		self.time = time
  
- 	def getParentItem(self):
-@@ -1405,6 +1405,7 @@ class BranchLevelOneItem():
- 		self.dbid = data[0]
- 		self.level = 1
- 		self.query_done = False
-+		self.br_col = len(self.data) - 1
- 
- 	def getChildItem(self, row):
- 		return self.child_items[row]
-@@ -1485,7 +1486,7 @@ class BranchLevelOneItem():
- 				while k < 15:
- 					byte_str += "   "
- 					k += 1
--				self.child_items.append(BranchLevelTwoItem(0, byte_str + " " + text, self))
-+				self.child_items.append(BranchLevelTwoItem(0, self.br_col, byte_str + " " + text, self))
- 				self.child_count += 1
- 			else:
- 				return
-@@ -1536,16 +1537,37 @@ class BranchRootItem():
- 	def getData(self, column):
- 		return ""
- 
-+# Calculate instructions per cycle
-+
-+def CalcIPC(cyc_cnt, insn_cnt):
-+	if cyc_cnt and insn_cnt:
-+		ipc = Decimal(float(insn_cnt) / cyc_cnt)
-+		ipc = str(ipc.quantize(Decimal(".01"), rounding=ROUND_HALF_UP))
-+	else:
-+		ipc = "0"
-+	return ipc
-+
- # Branch data preparation
- 
--def BranchDataPrep(query):
--	data = []
--	for i in xrange(0, 8):
--		data.append(query.value(i))
-+def BranchDataPrepBr(query, data):
- 	data.append(tohex(query.value(8)).rjust(16) + " " + query.value(9) + offstr(query.value(10)) +
- 			" (" + dsoname(query.value(11)) + ")" + " -> " +
- 			tohex(query.value(12)) + " " + query.value(13) + offstr(query.value(14)) +
- 			" (" + dsoname(query.value(15)) + ")")
-+
-+def BranchDataPrepIPC(query, data):
-+	insn_cnt = query.value(16)
-+	cyc_cnt = query.value(17)
-+	ipc = CalcIPC(cyc_cnt, insn_cnt)
-+	data.append(insn_cnt)
-+	data.append(cyc_cnt)
-+	data.append(ipc)
-+
-+def BranchDataPrep(query):
-+	data = []
-+	for i in xrange(0, 8):
-+		data.append(query.value(i))
-+	BranchDataPrepBr(query, data)
- 	return data
- 
- def BranchDataPrepWA(query):
-@@ -1555,10 +1577,26 @@ def BranchDataPrepWA(query):
- 	data.append("{:>19}".format(query.value(1)))
- 	for i in xrange(2, 8):
- 		data.append(query.value(i))
--	data.append(tohex(query.value(8)).rjust(16) + " " + query.value(9) + offstr(query.value(10)) +
--			" (" + dsoname(query.value(11)) + ")" + " -> " +
--			tohex(query.value(12)) + " " + query.value(13) + offstr(query.value(14)) +
--			" (" + dsoname(query.value(15)) + ")")
-+	BranchDataPrepBr(query, data)
-+	return data
-+
-+def BranchDataWithIPCPrep(query):
-+	data = []
-+	for i in xrange(0, 8):
-+		data.append(query.value(i))
-+	BranchDataPrepIPC(query, data)
-+	BranchDataPrepBr(query, data)
-+	return data
-+
-+def BranchDataWithIPCPrepWA(query):
-+	data = []
-+	data.append(query.value(0))
-+	# Workaround pyside failing to handle large integers (i.e. time) in python3 by converting to a string
-+	data.append("{:>19}".format(query.value(1)))
-+	for i in xrange(2, 8):
-+		data.append(query.value(i))
-+	BranchDataPrepIPC(query, data)
-+	BranchDataPrepBr(query, data)
- 	return data
- 
- # Branch data model
-@@ -1572,10 +1610,20 @@ class BranchModel(TreeModel):
- 		self.event_id = event_id
- 		self.more = True
- 		self.populated = 0
-+		self.have_ipc = IsSelectable(glb.db, "samples", columns = "insn_count, cyc_count")
-+		if self.have_ipc:
-+			select_ipc = ", insn_count, cyc_count"
-+			prep_fn = BranchDataWithIPCPrep
-+			prep_wa_fn = BranchDataWithIPCPrepWA
-+		else:
-+			select_ipc = ""
-+			prep_fn = BranchDataPrep
-+			prep_wa_fn = BranchDataPrepWA
- 		sql = ("SELECT samples.id, time, cpu, comm, pid, tid, branch_types.name,"
- 			" CASE WHEN in_tx = '0' THEN 'No' ELSE 'Yes' END,"
- 			" ip, symbols.name, sym_offset, dsos.short_name,"
- 			" to_ip, to_symbols.name, to_sym_offset, to_dsos.short_name"
-+			+ select_ipc +
- 			" FROM samples"
- 			" INNER JOIN comms ON comm_id = comms.id"
- 			" INNER JOIN threads ON thread_id = threads.id"
-@@ -1589,9 +1637,9 @@ class BranchModel(TreeModel):
- 			" ORDER BY samples.id"
- 			" LIMIT " + str(glb_chunk_sz))
- 		if pyside_version_1 and sys.version_info[0] == 3:
--			prep = BranchDataPrepWA
-+			prep = prep_fn
+@@ -795,8 +797,12 @@ class CallTreeLevelTwoPlusItemBase(CallGraphLevelItemBase):
+ 			comm_thread = " AND comm_id = " + str(self.comm_id) + " AND thread_id = " + str(self.thread_id)
  		else:
--			prep = BranchDataPrep
-+			prep = prep_wa_fn
- 		self.fetcher = SQLFetcher(glb, sql, prep, self.AddSample)
- 		self.fetcher.done.connect(self.Update)
- 		self.fetcher.Fetch(glb_chunk_sz)
-@@ -1600,13 +1648,23 @@ class BranchModel(TreeModel):
- 		return BranchRootItem()
+ 			comm_thread = ""
++		if self.params.have_ipc:
++			ipc_str = ", insn_count, cyc_count"
++		else:
++			ipc_str = ""
+ 		query = QSqlQuery(self.glb.db)
+-		QueryExec(query, "SELECT calls.id, name, short_name, call_time, return_time - call_time, branch_count"
++		QueryExec(query, "SELECT calls.id, name, short_name, call_time, return_time - call_time" + ipc_str + ", branch_count"
+ 					" FROM calls"
+ 					" INNER JOIN call_paths ON calls.call_path_id = call_paths.id"
+ 					" INNER JOIN symbols ON call_paths.symbol_id = symbols.id"
+@@ -804,7 +810,15 @@ class CallTreeLevelTwoPlusItemBase(CallGraphLevelItemBase):
+ 					" WHERE calls.parent_id = " + str(self.calls_id) + comm_thread +
+ 					" ORDER BY call_time, calls.id")
+ 		while query.next():
+-			child_item = CallTreeLevelThreeItem(self.glb, self.params, self.child_count, self.comm_id, self.thread_id, query.value(0), query.value(1), query.value(2), query.value(3), int(query.value(4)), int(query.value(5)), self)
++			if self.params.have_ipc:
++				insn_cnt = int(query.value(5))
++				cyc_cnt = int(query.value(6))
++				branch_count = int(query.value(7))
++			else:
++				insn_cnt = 0
++				cyc_cnt = 0
++				branch_count = int(query.value(5))
++			child_item = CallTreeLevelThreeItem(self.glb, self.params, self.child_count, self.comm_id, self.thread_id, query.value(0), query.value(1), query.value(2), query.value(3), int(query.value(4)), insn_cnt, cyc_cnt, branch_count, self)
+ 			self.child_items.append(child_item)
+ 			self.child_count += 1
+ 
+@@ -812,10 +826,17 @@ class CallTreeLevelTwoPlusItemBase(CallGraphLevelItemBase):
+ 
+ class CallTreeLevelThreeItem(CallTreeLevelTwoPlusItemBase):
+ 
+-	def __init__(self, glb, params, row, comm_id, thread_id, calls_id, name, dso, count, time, branch_count, parent_item):
+-		super(CallTreeLevelThreeItem, self).__init__(glb, params, row, comm_id, thread_id, calls_id, time, branch_count, parent_item)
++	def __init__(self, glb, params, row, comm_id, thread_id, calls_id, name, dso, count, time, insn_cnt, cyc_cnt, branch_count, parent_item):
++		super(CallTreeLevelThreeItem, self).__init__(glb, params, row, comm_id, thread_id, calls_id, time, insn_cnt, cyc_cnt, branch_count, parent_item)
+ 		dso = dsoname(dso)
+-		self.data = [ name, dso, str(count), str(time), PercentToOneDP(time, parent_item.time), str(branch_count), PercentToOneDP(branch_count, parent_item.branch_count) ]
++		if self.params.have_ipc:
++			insn_pcnt = PercentToOneDP(insn_cnt, parent_item.insn_cnt)
++			cyc_pcnt = PercentToOneDP(cyc_cnt, parent_item.cyc_cnt)
++			br_pcnt = PercentToOneDP(branch_count, parent_item.branch_count)
++			ipc = CalcIPC(cyc_cnt, insn_cnt)
++			self.data = [ name, dso, str(count), str(time), PercentToOneDP(time, parent_item.time), str(insn_cnt), insn_pcnt, str(cyc_cnt), cyc_pcnt, ipc, str(branch_count), br_pcnt ]
++		else:
++			self.data = [ name, dso, str(count), str(time), PercentToOneDP(time, parent_item.time), str(branch_count), PercentToOneDP(branch_count, parent_item.branch_count) ]
+ 		self.dbid = calls_id
+ 
+ # Call tree data model level two item
+@@ -823,18 +844,28 @@ class CallTreeLevelThreeItem(CallTreeLevelTwoPlusItemBase):
+ class CallTreeLevelTwoItem(CallTreeLevelTwoPlusItemBase):
+ 
+ 	def __init__(self, glb, params, row, comm_id, thread_id, pid, tid, parent_item):
+-		super(CallTreeLevelTwoItem, self).__init__(glb, params, row, comm_id, thread_id, 0, 0, 0, parent_item)
+-		self.data = [str(pid) + ":" + str(tid), "", "", "", "", "", ""]
++		super(CallTreeLevelTwoItem, self).__init__(glb, params, row, comm_id, thread_id, 0, 0, 0, 0, 0, parent_item)
++		if self.params.have_ipc:
++			self.data = [str(pid) + ":" + str(tid), "", "", "", "", "", "", "", "", "", "", ""]
++		else:
++			self.data = [str(pid) + ":" + str(tid), "", "", "", "", "", ""]
+ 		self.dbid = thread_id
+ 
+ 	def Select(self):
+ 		super(CallTreeLevelTwoItem, self).Select()
+ 		for child_item in self.child_items:
+ 			self.time += child_item.time
++			self.insn_cnt += child_item.insn_cnt
++			self.cyc_cnt += child_item.cyc_cnt
+ 			self.branch_count += child_item.branch_count
+ 		for child_item in self.child_items:
+ 			child_item.data[4] = PercentToOneDP(child_item.time, self.time)
+-			child_item.data[6] = PercentToOneDP(child_item.branch_count, self.branch_count)
++			if self.params.have_ipc:
++				child_item.data[6] = PercentToOneDP(child_item.insn_cnt, self.insn_cnt)
++				child_item.data[8] = PercentToOneDP(child_item.cyc_cnt, self.cyc_cnt)
++				child_item.data[11] = PercentToOneDP(child_item.branch_count, self.branch_count)
++			else:
++				child_item.data[6] = PercentToOneDP(child_item.branch_count, self.branch_count)
+ 
+ # Call tree data model level one item
+ 
+@@ -842,7 +873,10 @@ class CallTreeLevelOneItem(CallGraphLevelItemBase):
+ 
+ 	def __init__(self, glb, params, row, comm_id, comm, parent_item):
+ 		super(CallTreeLevelOneItem, self).__init__(glb, params, row, parent_item)
+-		self.data = [comm, "", "", "", "", "", ""]
++		if self.params.have_ipc:
++			self.data = [comm, "", "", "", "", "", "", "", "", "", "", ""]
++		else:
++			self.data = [comm, "", "", "", "", "", ""]
+ 		self.dbid = comm_id
+ 
+ 	def Select(self):
+@@ -885,14 +919,23 @@ class CallTreeModel(CallGraphModelBase):
+ 		return CallTreeRootItem(self.glb, self.params)
  
  	def columnCount(self, parent=None):
--		return 8
-+		if self.have_ipc:
-+			return 11
+-		return 7
++		if self.params.have_ipc:
++			return 12
 +		else:
-+			return 8
++			return 7
  
  	def columnHeader(self, column):
--		return ("Time", "CPU", "Command", "PID", "TID", "Branch Type", "In Tx", "Branch")[column]
-+		if self.have_ipc:
-+			return ("Time", "CPU", "Command", "PID", "TID", "Branch Type", "In Tx", "Insn Cnt", "Cyc Cnt", "IPC", "Branch")[column]
+-		headers = ["Call Path", "Object", "Call Time", "Time (ns) ", "Time (%) ", "Branch Count ", "Branch Count (%) "]
++		if self.params.have_ipc:
++			headers = ["Call Path", "Object", "Call Time", "Time (ns) ", "Time (%) ", "Insn Cnt", "Insn Cnt (%)", "Cyc Cnt", "Cyc Cnt (%)", "IPC", "Branch Count ", "Branch Count (%) "]
 +		else:
-+			return ("Time", "CPU", "Command", "PID", "TID", "Branch Type", "In Tx", "Branch")[column]
++			headers = ["Call Path", "Object", "Call Time", "Time (ns) ", "Time (%) ", "Branch Count ", "Branch Count (%) "]
+ 		return headers[column]
  
- 	def columnFont(self, column):
--		if column != 7:
-+		if self.have_ipc:
-+			br_col = 10
+ 	def columnAlignment(self, column):
+-		alignment = [ Qt.AlignLeft, Qt.AlignLeft, Qt.AlignRight, Qt.AlignRight, Qt.AlignRight, Qt.AlignRight, Qt.AlignRight ]
++		if self.params.have_ipc:
++			alignment = [ Qt.AlignLeft, Qt.AlignLeft, Qt.AlignRight, Qt.AlignRight, Qt.AlignRight, Qt.AlignRight, Qt.AlignRight, Qt.AlignRight, Qt.AlignRight, Qt.AlignRight, Qt.AlignRight, Qt.AlignRight ]
 +		else:
-+			br_col = 7
-+		if column != br_col:
- 			return None
- 		return QFont("Monospace")
++			alignment = [ Qt.AlignLeft, Qt.AlignLeft, Qt.AlignRight, Qt.AlignRight, Qt.AlignRight, Qt.AlignRight, Qt.AlignRight ]
+ 		return alignment[column]
  
-@@ -2114,10 +2172,10 @@ def GetEventList(db):
- 
- # Is a table selectable
- 
--def IsSelectable(db, table, sql = ""):
-+def IsSelectable(db, table, sql = "", columns = "*"):
- 	query = QSqlQuery(db)
- 	try:
--		QueryExec(query, "SELECT * FROM " + table + " " + sql + " LIMIT 1")
-+		QueryExec(query, "SELECT " + columns + " FROM " + table + " " + sql + " LIMIT 1")
- 	except:
- 		return False
- 	return True
-@@ -2854,6 +2912,12 @@ cd xed
- sudo ./mfile.py --prefix=/usr/local install
- sudo ldconfig
- </pre>
-+<h3>Instructions per Cycle (IPC)</h3>
-+If available, IPC information is displayed in columns 'insn_cnt', 'cyc_cnt' and 'IPC'.
-+<p><b>Intel PT note:</b> The information applies to the blocks of code ending with, and including, that branch.
-+Due to the granularity of timing information, the number of cycles for some code blocks will not be known.
-+In that case, 'insn_cnt', 'cyc_cnt' and 'IPC' are zero, but when 'IPC' is displayed it covers the period
-+since the previous displayed 'IPC'.
- <h3>Find</h3>
- Ctrl-F displays a Find bar which finds substrings by either an exact match or a regular expression match.
- Refer to Python documentation for the regular expression syntax.
+ 	def DoFindSelect(self, query, match):
 -- 
 2.17.1
 
