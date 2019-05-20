@@ -2,139 +2,129 @@ Return-Path: <SRS0=lq4r=TU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F7DAC04E87
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 21:07:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FFD7C04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 21:09:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 49F20216B7
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 21:07:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3602B216B7
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 21:09:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="nL//rSHE";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="ofhwcs4U"
+	dkim=pass (1024-bit key) header.d=erdfelt.com header.i=@erdfelt.com header.b="tB4t0kZC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726780AbfETVHj (ORCPT
+        id S1726818AbfETVJH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 17:07:39 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:41438 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726116AbfETVHj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 17:07:39 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 2A27160E5A; Mon, 20 May 2019 21:07:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1558386458;
-        bh=sWncJZuhv8jI+fIBFRSxi31uAvCtEl1i4p1lxELRFRA=;
+        Mon, 20 May 2019 17:09:07 -0400
+Received: from out.bound.email ([141.193.244.10]:40639 "EHLO out.bound.email"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726011AbfETVJG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 17:09:06 -0400
+Received: from mail.sventech.com (localhost [127.0.0.1])
+        by out.bound.email (Postfix) with ESMTP id 439CD8A0E7F;
+        Mon, 20 May 2019 14:09:05 -0700 (PDT)
+Received: by mail.sventech.com (Postfix, from userid 1000)
+        id 274081600410; Mon, 20 May 2019 14:09:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=erdfelt.com;
+        s=default; t=1558386545;
+        bh=xU6g15EXGCMbWAOPauiN9nJkNv/D1JF1EBTbDw6AtOI=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=nL//rSHE6KjOz11WOppOfdg1BN3yl8ghHHVhz73xGsT+Lg4VWyhE04fiURkXgMd4/
-         AoXnudMM8SOnS/5QSYsw6qba8/ryRIuWNYjCgtHAjxC0YDcRSgQQY3ZrN+QgEq94RX
-         z2VLyfl88VQK/YnQaQISymEp0VM5ucs888ManETM=
-Received: from jcrouse1-lnx.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: jcrouse@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 8A6EF6087F;
-        Mon, 20 May 2019 21:07:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1558386455;
-        bh=sWncJZuhv8jI+fIBFRSxi31uAvCtEl1i4p1lxELRFRA=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ofhwcs4UV5Eiw/8Yh2sbqC5v5RszTv9UDRERtPCyHv57GGfii7jR7FIpsvYfSI3ix
-         7jVVXO5LMVHUH3yFV1a9VAI0JM6M2qONikDtYrsbXg6mGqh2iLCBpBkFpu4r/iCpgb
-         /vwVtw1JbtNGZAEDezrF4QMBKcOmKSbWzsZDeUyY=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 8A6EF6087F
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=jcrouse@codeaurora.org
-Date:   Mon, 20 May 2019 15:07:32 -0600
-From:   Jordan Crouse <jcrouse@codeaurora.org>
-To:     Andrea Parri <andrea.parri@amarulasolutions.com>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>, linux-arm-msm@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org,
-        "Paul E. McKenney" <paulmck@linux.ibm.com>,
-        Peter Zijlstra <peterz@infradead.org>
-Subject: Re: [PATCH 1/4] drm/msm: Fix improper uses of
- smp_mb__{before,after}_atomic()
-Message-ID: <20190520210732.GF24137@jcrouse1-lnx.qualcomm.com>
-Mail-Followup-To: Andrea Parri <andrea.parri@amarulasolutions.com>,
-        linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
-        David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
-        linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        freedreno@lists.freedesktop.org,
-        "Paul E. McKenney" <paulmck@linux.ibm.com>,
-        Peter Zijlstra <peterz@infradead.org>
-References: <1558373038-5611-1-git-send-email-andrea.parri@amarulasolutions.com>
- <1558373038-5611-2-git-send-email-andrea.parri@amarulasolutions.com>
+        b=tB4t0kZC5E/HYsUSpHa9Hko6uEJYa3Dp5ba3SKIR3feB7Uw9YEkZ42j0CmEQrXl97
+         tQuESjH9q4FN90SMBDRC3UwcZAg5AZGoTbD9utYf7/Ju+i9YZtR8bD5/tPQBUwjn9v
+         nL3S0G5LBwRWQ5rnjl3BWUJnAGKAk481dQBlGAus=
+Date:   Mon, 20 May 2019 14:09:05 -0700
+From:   Johannes Erdfelt <johannes@erdfelt.com>
+To:     Joe Lawrence <joe.lawrence@redhat.com>
+Cc:     Josh Poimboeuf <jpoimboe@redhat.com>, Jessica Yu <jeyu@kernel.org>,
+        Jiri Kosina <jikos@kernel.org>,
+        Miroslav Benes <mbenes@suse.cz>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ingo Molnar <mingo@redhat.com>, live-patching@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: Oops caused by race between livepatch and ftrace
+Message-ID: <20190520210905.GC1646@sventech.com>
+References: <20190520194915.GB1646@sventech.com>
+ <90f78070-95ec-ce49-1641-19d061abecf4@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1558373038-5611-2-git-send-email-andrea.parri@amarulasolutions.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <90f78070-95ec-ce49-1641-19d061abecf4@redhat.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 20, 2019 at 07:23:55PM +0200, Andrea Parri wrote:
-> These barriers only apply to the read-modify-write operations; in
-> particular, they do not apply to the atomic_set() primitive.
-> 
-> Replace the barriers with smp_mb()s.
-> 
-> Fixes: b1fc2839d2f92 ("drm/msm: Implement preemption for A5XX targets")
-> Cc: stable@vger.kernel.org
-> Reported-by: "Paul E. McKenney" <paulmck@linux.ibm.com>
-> Reported-by: Peter Zijlstra <peterz@infradead.org>
-> Signed-off-by: Andrea Parri <andrea.parri@amarulasolutions.com>
-> Cc: Rob Clark <robdclark@gmail.com>
-> Cc: Sean Paul <sean@poorly.run>
-> Cc: David Airlie <airlied@linux.ie>
-> Cc: Daniel Vetter <daniel@ffwll.ch>
-> Cc: Jordan Crouse <jcrouse@codeaurora.org>
-> Cc: linux-arm-msm@vger.kernel.org
-> Cc: dri-devel@lists.freedesktop.org
-> Cc: freedreno@lists.freedesktop.org
-> Cc: "Paul E. McKenney" <paulmck@linux.ibm.com>
-> Cc: Peter Zijlstra <peterz@infradead.org>
+On Mon, May 20, 2019, Joe Lawrence <joe.lawrence@redhat.com> wrote:
+> [ fixed jeyu's email address ]
 
-I'll go ahead and ack this - I'm not super clued in on atomic barriers, but this
-seems to be in the spirit of what we are trying to do to protect the atomic
-value. Rob can disagree, of course.
+Thank you, the bounce message made it seem like my mail server was
+blocked and not that the address didn't exist.
 
-Acked-by: Jordan Crouse <jcrouse@codeaurora.org>
+I think MAINTAINERS needs an update since it still has the @redhat.com
+address.
 
-> ---
->  drivers/gpu/drm/msm/adreno/a5xx_preempt.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
+> On 5/20/19 3:49 PM, Johannes Erdfelt wrote:
+> > [ ... snip ... ]
+> > 
+> > I have put together a test case that can reproduce the crash using
+> > KVM. The tarball includes a minimal kernel and initramfs, along with
+> > a script to run qemu and the .config used to build the kernel. By
+> > default it will attempt to reproduce by loading multiple livepatches
+> > at the same time. Passing 'test=ftrace' to the script will attempt to
+> > reproduce by racing with ftrace.
+> > 
+> > My test setup reproduces the race and oops more reliably by loading
+> > multiple livepatches at the same time than with the ftrace method. It's
+> > not 100% reproducible, so the test case may need to be run multiple
+> > times.
+> > 
+> > It can be found here (not attached because of its size):
+> > http://johannes.erdfelt.com/5.2.0-rc1-a188339ca5-livepatch-race.tar.gz
 > 
-> diff --git a/drivers/gpu/drm/msm/adreno/a5xx_preempt.c b/drivers/gpu/drm/msm/adreno/a5xx_preempt.c
-> index 3d62310a535fb..ee0820ee0c664 100644
-> --- a/drivers/gpu/drm/msm/adreno/a5xx_preempt.c
-> +++ b/drivers/gpu/drm/msm/adreno/a5xx_preempt.c
-> @@ -39,10 +39,10 @@ static inline void set_preempt_state(struct a5xx_gpu *gpu,
->  	 * preemption or in the interrupt handler so barriers are needed
->  	 * before...
->  	 */
-> -	smp_mb__before_atomic();
-> +	smp_mb();
->  	atomic_set(&gpu->preempt_state, new);
->  	/* ... and after*/
-> -	smp_mb__after_atomic();
-> +	smp_mb();
->  }
->  
->  /* Write the most recent wptr for the given ring into the hardware */
-> -- 
-> 2.7.4
+> Hi Johannes,
 > 
+> This is cool way to distribute the repro kernel, modules, etc!
 
--- 
-The Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+This oops was common in our production environment and was particularly
+annoying since livepatches would load at boot and early enough to happen
+before networking and SSH were started.
+
+Unfortunately it was difficult to reproduce on other hardware (changing
+the timing just enough) and our production environment is very
+complicated.
+
+I spent more time than I'd like to admit trying to reproduce this fairly
+reliably. I knew that I needed to help make it as easy as possible to
+reproduce to root cause it and for others to take a look at it as well.
+
+> These two testing scenarios might be interesting to add to our selftests
+> suite.  Can you post or add the source(s) to livepatch-test<n>.ko to the
+> tarball?
+
+I made the livepatches using kpatch-build and this simple patch:
+
+diff --git a/fs/proc/version.c b/fs/proc/version.c
+index 94901e8e700d..6b8a3449f455 100644
+--- a/fs/proc/version.c
++++ b/fs/proc/version.c
+@@ -12,6 +12,7 @@ static int version_proc_show(struct seq_file *m, void *v)
+ 		utsname()->sysname,
+ 		utsname()->release,
+ 		utsname()->version);
++	seq_printf(m, "example livepatch\n");
+ 	return 0;
+ }
+
+I just created enough livepatches with the same source patch so that I
+could reproduce the issue somewhat reliably.
+
+I'll see if I can make something that uses klp directly.
+
+The rest of the userspace in the initramfs is really straight forward
+with the only interesting parts being a couple of shell scripts.
+
+JE
+ 
