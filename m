@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BCE40C04E87
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:24:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E0C6C04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:24:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 93712214AE
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:24:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E6F4721479
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:24:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558355040;
-	bh=jlAxy7qu2d/sHWB+iguW6FoOguS3pnhmvYhNhR0sF84=;
+	s=default; t=1558355045;
+	bh=IJ56Gfg/ZuObPvWDkhIhB0XNueE9tEbv3xnUjf7eU/c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=e+4rzUrQXy61QLiaeFlN3hfCwRbSUtMEBtNXt9xyr3QVekXBk7lDgc38avwEML3iZ
-	 3X4Y5jn2UknjheZ9oSUqDH2JoQQpG1btdaijzrJNO+QQD6Kc+uO8BjlZMYEQotsq6j
-	 Nm/D9XbTYRbLGj5rjvKbgHyOQJPjrPfyzoOUslcE=
+	b=z/0kWD77rJ2Tbo5L2aQY84SDKCP9sSwPPb3v9yKubKXPQTl4mm+UQRQc45P4yheZZ
+	 LyN4bKqStcBYGY2xn+QOnebvdWA5dYU4iLb1S+mqcK4VmqHhy/M6nk/HMT6wdUNPoj
+	 1uhovwtQqyd+3vODSPRll9ZjmgukM1yifs6Hs5Rg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388737AbfETMYA (ORCPT
+        id S2388749AbfETMYD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 08:24:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38630 "EHLO mail.kernel.org"
+        Mon, 20 May 2019 08:24:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38712 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388715AbfETMXz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 08:23:55 -0400
+        id S1731841AbfETMX6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 08:23:58 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 98E89214AE;
-        Mon, 20 May 2019 12:23:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2EBDC21019;
+        Mon, 20 May 2019 12:23:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558355035;
-        bh=jlAxy7qu2d/sHWB+iguW6FoOguS3pnhmvYhNhR0sF84=;
+        s=default; t=1558355037;
+        bh=IJ56Gfg/ZuObPvWDkhIhB0XNueE9tEbv3xnUjf7eU/c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QzZMDMhwdbCGn6y/+P+OT5Ut5ecQoX+4inE9LTMcDb55zZlYRjWvhODY8dsdJaeoe
-         bHetchECRq2sqjomBix9FXQ/DkOG6Zd1Kt+0oC2gPMhZ7JilA1D2w8237Up8cwTByd
-         JrYXVuX7UZHwW1jZgN+KRgFHWbfNDmRoG9jV1IjU=
+        b=2u/R27Cd9Eyjf/6jxGZpD3Q14kdYwoQ+CA1OoR2XPHczxAXcVsDeklaqwk3SWeUmX
+         yHW0mfcdsJFjxXyZ854vi3CP4zEWsZzu43Pb8Q+sVBMILLKkNWLbt1Jz0kGOgyAF7E
+         ebW//iIn0+yc1M+VWPDVTgm0hui3+/2J7NKK57Zo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Debabrata Banerjee <dbanerje@akamai.com>,
-        Theodore Tso <tytso@mit.edu>, Jan Kara <jack@suse.cz>,
-        stable@kernel.org
-Subject: [PATCH 4.19 072/105] ext4: fix ext4_show_options for file systems w/o journal
-Date:   Mon, 20 May 2019 14:14:18 +0200
-Message-Id: <20190520115252.164850715@linuxfoundation.org>
+        stable@vger.kernel.org, Gilad Ben-Yossef <gilad@benyossef.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>
+Subject: [PATCH 4.19 046/105] crypto: ccree - dont map MAC key on stack
+Date:   Mon, 20 May 2019 14:13:52 +0200
+Message-Id: <20190520115250.198221588@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190520115247.060821231@linuxfoundation.org>
 References: <20190520115247.060821231@linuxfoundation.org>
@@ -60,35 +59,91 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Debabrata Banerjee <dbanerje@akamai.com>
+From: Gilad Ben-Yossef <gilad@benyossef.com>
 
-commit 50b29d8f033a7c88c5bc011abc2068b1691ab755 upstream.
+commit 874e163759f27e0a9988c5d1f4605e3f25564fd2 upstream.
 
-Instead of removing EXT4_MOUNT_JOURNAL_CHECKSUM from s_def_mount_opt as
-I assume was intended, all other options were blown away leading to
-_ext4_show_options() output being incorrect.
+The MAC hash key might be passed to us on stack. Copy it to
+a slab buffer before mapping to gurantee proper DMA mapping.
 
-Fixes: 1e381f60dad9 ("ext4: do not allow journal_opts for fs w/o journal")
-Signed-off-by: Debabrata Banerjee <dbanerje@akamai.com>
-Signed-off-by: Theodore Ts'o <tytso@mit.edu>
-Reviewed-by: Jan Kara <jack@suse.cz>
-Cc: stable@kernel.org
+Signed-off-by: Gilad Ben-Yossef <gilad@benyossef.com>
+Cc: stable@vger.kernel.org # v4.19+
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/ext4/super.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/crypto/ccree/cc_hash.c |   24 +++++++++++++++++++++---
+ 1 file changed, 21 insertions(+), 3 deletions(-)
 
---- a/fs/ext4/super.c
-+++ b/fs/ext4/super.c
-@@ -4270,7 +4270,7 @@ static int ext4_fill_super(struct super_
- 				 "data=, fs mounted w/o journal");
- 			goto failed_mount_wq;
+--- a/drivers/crypto/ccree/cc_hash.c
++++ b/drivers/crypto/ccree/cc_hash.c
+@@ -64,6 +64,7 @@ struct cc_hash_alg {
+ struct hash_key_req_ctx {
+ 	u32 keylen;
+ 	dma_addr_t key_dma_addr;
++	u8 *key;
+ };
+ 
+ /* hash per-session context */
+@@ -724,13 +725,20 @@ static int cc_hash_setkey(struct crypto_
+ 	ctx->key_params.keylen = keylen;
+ 	ctx->key_params.key_dma_addr = 0;
+ 	ctx->is_hmac = true;
++	ctx->key_params.key = NULL;
+ 
+ 	if (keylen) {
++		ctx->key_params.key = kmemdup(key, keylen, GFP_KERNEL);
++		if (!ctx->key_params.key)
++			return -ENOMEM;
++
+ 		ctx->key_params.key_dma_addr =
+-			dma_map_single(dev, (void *)key, keylen, DMA_TO_DEVICE);
++			dma_map_single(dev, (void *)ctx->key_params.key, keylen,
++				       DMA_TO_DEVICE);
+ 		if (dma_mapping_error(dev, ctx->key_params.key_dma_addr)) {
+ 			dev_err(dev, "Mapping key va=0x%p len=%u for DMA failed\n",
+-				key, keylen);
++				ctx->key_params.key, keylen);
++			kzfree(ctx->key_params.key);
+ 			return -ENOMEM;
  		}
--		sbi->s_def_mount_opt &= EXT4_MOUNT_JOURNAL_CHECKSUM;
-+		sbi->s_def_mount_opt &= ~EXT4_MOUNT_JOURNAL_CHECKSUM;
- 		clear_opt(sb, JOURNAL_CHECKSUM);
- 		clear_opt(sb, DATA_FLAGS);
- 		sbi->s_journal = NULL;
+ 		dev_dbg(dev, "mapping key-buffer: key_dma_addr=%pad keylen=%u\n",
+@@ -881,6 +889,9 @@ out:
+ 		dev_dbg(dev, "Unmapped key-buffer: key_dma_addr=%pad keylen=%u\n",
+ 			&ctx->key_params.key_dma_addr, ctx->key_params.keylen);
+ 	}
++
++	kzfree(ctx->key_params.key);
++
+ 	return rc;
+ }
+ 
+@@ -907,11 +918,16 @@ static int cc_xcbc_setkey(struct crypto_
+ 
+ 	ctx->key_params.keylen = keylen;
+ 
++	ctx->key_params.key = kmemdup(key, keylen, GFP_KERNEL);
++	if (!ctx->key_params.key)
++		return -ENOMEM;
++
+ 	ctx->key_params.key_dma_addr =
+-		dma_map_single(dev, (void *)key, keylen, DMA_TO_DEVICE);
++		dma_map_single(dev, ctx->key_params.key, keylen, DMA_TO_DEVICE);
+ 	if (dma_mapping_error(dev, ctx->key_params.key_dma_addr)) {
+ 		dev_err(dev, "Mapping key va=0x%p len=%u for DMA failed\n",
+ 			key, keylen);
++		kzfree(ctx->key_params.key);
+ 		return -ENOMEM;
+ 	}
+ 	dev_dbg(dev, "mapping key-buffer: key_dma_addr=%pad keylen=%u\n",
+@@ -963,6 +979,8 @@ static int cc_xcbc_setkey(struct crypto_
+ 	dev_dbg(dev, "Unmapped key-buffer: key_dma_addr=%pad keylen=%u\n",
+ 		&ctx->key_params.key_dma_addr, ctx->key_params.keylen);
+ 
++	kzfree(ctx->key_params.key);
++
+ 	return rc;
+ }
+ 
 
 
