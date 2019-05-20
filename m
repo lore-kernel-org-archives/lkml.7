@@ -2,51 +2,52 @@ Return-Path: <SRS0=lq4r=TU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8508C04AAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:25:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D45CC04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:25:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AEA7D2173B
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:25:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 10CC221479
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:25:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558355142;
-	bh=09QVKkQqMoheB3aUsH33wCiXmOFBHYceqh6lQ2WyUM8=;
+	s=default; t=1558355145;
+	bh=yk4aF3+3CUmWowkLP/XwgQN2IGk4lmHrWxdYxoIbi+8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QPOeP8pC7w2RxB5VJv558VKD7yF4fXgE3BMWIp6/oPSvCsN5AxfJsdM+LoIzSlxkK
-	 qW1cIeaj7XGre7w+fAx5ln7jAT5ImtpxPJ1m7wwqw6uqcHglW2lQzyXttfEi6RKHFP
-	 VbcfdfFzBJeXMnwJ+o7smmbdgoEDmQZRXuSZtpM8=
+	b=BJb7HcRs77fIlEwC4qICoHmIC1vCYseibfB76yXagl2PSOx+cYJG9eO9o1clYYFey
+	 bQ7umGbl6PjVwO01SsJXF6v+DzTOmoA8AMBnC3Pzq0q0I07VMI6WXkNtYcUBpZBfAv
+	 /k488GJpTBMkVA5E/kkNfkUNH/GJs/V/ZmZrdL3M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389137AbfETMZl (ORCPT
+        id S2389150AbfETMZo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 08:25:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40830 "EHLO mail.kernel.org"
+        Mon, 20 May 2019 08:25:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40870 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389122AbfETMZj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 08:25:39 -0400
+        id S2389138AbfETMZl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 08:25:41 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 12372216FD;
-        Mon, 20 May 2019 12:25:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A5C8721721;
+        Mon, 20 May 2019 12:25:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558355138;
-        bh=09QVKkQqMoheB3aUsH33wCiXmOFBHYceqh6lQ2WyUM8=;
+        s=default; t=1558355141;
+        bh=yk4aF3+3CUmWowkLP/XwgQN2IGk4lmHrWxdYxoIbi+8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=B6qyOIyXwgqtXWestOv1a6pepEiLfTB/Xmh6LFtylDfQ+IrcZgsnz7C8Zvi8k8NZi
-         8SQKkS59uuEhBXyqZSpMZ466pbe8SNcpELmKSbDApn9ybeOtBNP+TNRWC+Z8KVKwrZ
-         kf0J+Nw7bYc7Y3j8wXxsHIC02O5QKg78TKSwlKa0=
+        b=2abbYaitgosUsZyVi+GMY5OrCNJQwKmRuNcyGTCnTsbqQr7w7/VsK/7YIkEv7FKHl
+         C/+f6gWhM3Spc6C1cea5qjQBMU9fYlYZQ48sA9F/w6hUU/9K4f3AsEPxjVFf9pySBt
+         8VCqjiWt1z4vjgD0fT74iXtmIb1+Zu7KLf+iDrHY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Masahiro Yamada <yamada.masahiro@socionext.com>
-Subject: [PATCH 4.19 095/105] kbuild: turn auto.conf.cmd into a mandatory include file
-Date:   Mon, 20 May 2019 14:14:41 +0200
-Message-Id: <20190520115253.800079090@linuxfoundation.org>
+        =?UTF-8?q?Roger=20Pau=20Monn=C3=A9?= <roger.pau@citrix.com>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>
+Subject: [PATCH 4.19 096/105] xen/pvh: set xen_domain_type to HVM in xen_pvh_init
+Date:   Mon, 20 May 2019 14:14:42 +0200
+Message-Id: <20190520115253.861262520@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190520115247.060821231@linuxfoundation.org>
 References: <20190520115247.060821231@linuxfoundation.org>
@@ -59,92 +60,31 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Masahiro Yamada <yamada.masahiro@socionext.com>
+From: Roger Pau Monne <roger.pau@citrix.com>
 
-commit d2f8ae0e4c5c754f1b2a7b8388d19a1a977e698a upstream.
+commit c9f804d64bb93c8dbf957df1d7e9de11380e522d upstream.
 
-syncconfig is responsible for keeping auto.conf up-to-date, so if it
-fails for any reason, the build must be terminated immediately.
+Or else xen_domain() returns false despite xen_pvh being set.
 
-However, since commit 9390dff66a52 ("kbuild: invoke syncconfig if
-include/config/auto.conf.cmd is missing"), Kbuild continues running
-even after syncconfig fails.
-
-You can confirm this by intentionally making syncconfig error out:
-
-#  diff --git a/scripts/kconfig/confdata.c b/scripts/kconfig/confdata.c
-#  index 08ba146..307b9de 100644
-#  --- a/scripts/kconfig/confdata.c
-#  +++ b/scripts/kconfig/confdata.c
-#  @@ -1023,6 +1023,9 @@ int conf_write_autoconf(int overwrite)
-#          FILE *out, *tristate, *out_h;
-#          int i;
-#
-#  +       if (overwrite)
-#  +               return 1;
-#  +
-#          if (!overwrite && is_present(autoconf_name))
-#                  return 0;
-
-Then, syncconfig fails, but Make would not stop:
-
-  $ make -s mrproper allyesconfig defconfig
-  $ make
-  scripts/kconfig/conf  --syncconfig Kconfig
-
-  *** Error during sync of the configuration.
-
-  make[2]: *** [scripts/kconfig/Makefile;69: syncconfig] Error 1
-  make[1]: *** [Makefile;557: syncconfig] Error 2
-  make: *** [include/config/auto.conf.cmd] Deleting file 'include/config/tristate.conf'
-  make: Failed to remake makefile 'include/config/auto.conf'.
-    SYSTBL  arch/x86/include/generated/asm/syscalls_32.h
-    SYSHDR  arch/x86/include/generated/asm/unistd_32_ia32.h
-    SYSHDR  arch/x86/include/generated/asm/unistd_64_x32.h
-    SYSTBL  arch/x86/include/generated/asm/syscalls_64.h
-  [ continue running ... ]
-
-The reason is in the behavior of a pattern rule with multi-targets.
-
-  %/auto.conf %/auto.conf.cmd %/tristate.conf: $(KCONFIG_CONFIG)
-          $(Q)$(MAKE) -f $(srctree)/Makefile syncconfig
-
-GNU Make knows this rule is responsible for making all the three files
-simultaneously. As far as examined, auto.conf.cmd is the target in
-question when this rule is invoked. It is probably because auto.conf.cmd
-is included below the inclusion of auto.conf.
-
-The inclusion of auto.conf is mandatory, while that of auto.conf.cmd
-is optional. GNU Make does not care about the failure in the process
-of updating optional include files.
-
-I filed this issue (https://savannah.gnu.org/bugs/?56301) in case this
-behavior could be improved somehow in future releases of GNU Make.
-Anyway, it is quite easy to fix our Makefile.
-
-Given that auto.conf is already a mandatory include file, there is no
-reason to stick auto.conf.cmd optional. Make it mandatory as well.
-
-Cc: linux-stable <stable@vger.kernel.org> # 5.0+
-Fixes: 9390dff66a52 ("kbuild: invoke syncconfig if include/config/auto.conf.cmd is missing")
-Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-[commented out diff above to keep patch happy - gregkh]
+Signed-off-by: Roger Pau Monné <roger.pau@citrix.com>
+Reviewed-by: Boris Ostrovsky <boris.ostrovsky@oracle.com>
+Signed-off-by: Boris Ostrovsky <boris.ostrovsky@oracle.com>
+Cc: stable@vger.kernel.org # 4.19+
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- Makefile |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/x86/xen/enlighten_pvh.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/Makefile
-+++ b/Makefile
-@@ -623,7 +623,7 @@ ifeq ($(may-sync-config),1)
- # Read in dependencies to all Kconfig* files, make sure to run syncconfig if
- # changes are detected. This should be included after arch/$(SRCARCH)/Makefile
- # because some architectures define CROSS_COMPILE there.
---include include/config/auto.conf.cmd
-+include include/config/auto.conf.cmd
+--- a/arch/x86/xen/enlighten_pvh.c
++++ b/arch/x86/xen/enlighten_pvh.c
+@@ -97,6 +97,7 @@ void __init xen_prepare_pvh(void)
+ 	}
  
- # To avoid any implicit rule to kick in, define an empty command
- $(KCONFIG_CONFIG): ;
+ 	xen_pvh = 1;
++	xen_domain_type = XEN_HVM_DOMAIN;
+ 	xen_start_flags = pvh_start_info.flags;
+ 
+ 	msr = cpuid_ebx(xen_cpuid_base() + 2);
 
 
