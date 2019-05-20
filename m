@@ -6,80 +6,59 @@ X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9D0DC04AAC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 11:56:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0D4FC04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 11:58:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7F37F20815
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 11:56:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F0E520815
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 11:58:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732249AbfETL4M (ORCPT
+        id S1732308AbfETL6e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 07:56:12 -0400
-Received: from outbound-smtp06.blacknight.com ([81.17.249.39]:35233 "EHLO
-        outbound-smtp06.blacknight.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730534AbfETL4M (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 07:56:12 -0400
-Received: from mail.blacknight.com (pemlinmail06.blacknight.ie [81.17.255.152])
-        by outbound-smtp06.blacknight.com (Postfix) with ESMTPS id B003198AF4
-        for <linux-kernel@vger.kernel.org>; Mon, 20 May 2019 11:56:10 +0000 (UTC)
-Received: (qmail 22741 invoked from network); 20 May 2019 11:56:10 -0000
-Received: from unknown (HELO techsingularity.net) (mgorman@techsingularity.net@[37.228.225.79])
-  by 81.17.254.9 with ESMTPSA (AES256-SHA encrypted, authenticated); 20 May 2019 11:56:10 -0000
-Date:   Mon, 20 May 2019 12:56:08 +0100
-From:   Mel Gorman <mgorman@techsingularity.net>
-To:     Justin Piszcz <jpiszcz@lucidpixels.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>
-Subject: Re: 5.1 and 5.1.1: BUG: unable to handle kernel paging request at
- ffffea0002030000
-Message-ID: <20190520115608.GK18914@techsingularity.net>
-References: <CAO9zADzXTQpv5cGp61BzsVPvWQz5xbSJv_N71jBa3zopr7CB=Q@mail.gmail.com>
+        Mon, 20 May 2019 07:58:34 -0400
+Received: from mga06.intel.com ([134.134.136.31]:28368 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730727AbfETL6d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 07:58:33 -0400
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 May 2019 04:58:33 -0700
+X-ExtLoop1: 1
+Received: from mhauser-mobl.ger.corp.intel.com (HELO localhost) ([10.252.47.244])
+  by fmsmga001.fm.intel.com with ESMTP; 20 May 2019 04:58:29 -0700
+Date:   Mon, 20 May 2019 14:58:27 +0300
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     Sasha Levin <sashal@kernel.org>
+Cc:     peterhuewe@gmx.de, jgg@ziepe.ca, corbet@lwn.net,
+        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-integrity@vger.kernel.org, linux-kernel@microsoft.com,
+        thiruan@microsoft.com, bryankel@microsoft.com
+Subject: Re: [PATCH v3 1/2] ftpm: firmware TPM running in TEE
+Message-ID: <20190520115827.GG27805@linux.intel.com>
+References: <20190415155636.32748-1-sashal@kernel.org>
+ <20190415155636.32748-2-sashal@kernel.org>
+ <20190515081250.GA7708@linux.intel.com>
+ <20190517132226.GB11972@sasha-vm>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-15
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAO9zADzXTQpv5cGp61BzsVPvWQz5xbSJv_N71jBa3zopr7CB=Q@mail.gmail.com>
+In-Reply-To: <20190517132226.GB11972@sasha-vm>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, May 12, 2019 at 04:27:45AM -0400, Justin Piszcz wrote:
-> Hello,
+On Fri, May 17, 2019 at 09:22:26AM -0400, Sasha Levin wrote:
+> The whole TEE subsystem is already well documented in our kernel tree
+> (https://www.kernel.org/doc/Documentation/tee.txt) and beyond. I can add
+> a reference to the doc here, but I'd rather not add a bunch of TEE
+> related comments as you suggest later in your review.
 > 
-> I've turned off zram/zswap and I am still seeing the following during
-> periods of heavy I/O, I am returning to 5.0.xx in the meantime.
-> 
-> Kernel: 5.1.1
-> Arch: x86_64
-> Dist: Debian x86_64
-> 
-> [29967.019411] BUG: unable to handle kernel paging request at ffffea0002030000
-> [29967.019414] #PF error: [normal kernel read fault]
-> [29967.019415] PGD 103ffee067 P4D 103ffee067 PUD 103ffed067 PMD 0
-> [29967.019417] Oops: 0000 [#1] SMP PTI
-> [29967.019419] CPU: 10 PID: 77 Comm: khugepaged Tainted: G
->    T 5.1.1 #4
-> [29967.019420] Hardware name: Supermicro X9SRL-F/X9SRL-F, BIOS 3.2 01/16/2015
-> [29967.019424] RIP: 0010:isolate_freepages_block+0xb9/0x310
-> [29967.019425] Code: 24 28 48 c1 e0 06 40 f6 c5 1f 48 89 44 24 20 49
-> 8d 45 79 48 89 44 24 18 44 89 f0 4d 89 ee 45 89 fd 41 89 c7 0f 84 ef
-> 00 00 00 <48> 8b 03 41 83 c4 01 a9 00 00 01 00 75 0c 48 8b 43 08 a8 01
-> 0f 84
+> The same way a PCI device driver doesn't describe what PCI is in it's
+> code, we shouldn't be doing the same for TEE here.
 
-If you have debugging symbols installed, can you translate the faulting
-address with the following?
+Thanks for pointing out the documentation! That is sufficient.
 
-ADDR=`nm /path/to/vmlinux-or-debuginfo-file | grep "t isolate_freepages_block\$" | awk '{print $1}'`
-addr2line -i -e vmlinux `printf "0x%lX" $((0x$ADDR+0xb9))`
-
-I haven't seen this particular error before so I want to see if the
-faulting address could have anything to do with the randomising of
-struct fields. Similarly a full dmesg log would be nice so I can see
-what your memory layout looks like.
-
-Thanks Justin.
-
--- 
-Mel Gorman
-SUSE Labs
+/Jarkko
