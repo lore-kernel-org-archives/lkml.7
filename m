@@ -2,78 +2,189 @@ Return-Path: <SRS0=lq4r=TU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2574DC04AAC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 14:27:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41483C04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 14:27:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E43E8213F2
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 14:27:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="IE9rXBhT"
+	by mail.kernel.org (Postfix) with ESMTP id 21314213F2
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 14:27:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391557AbfETO1W (ORCPT
+        id S2391570AbfETO1z convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 10:27:22 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:39610 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390076AbfETO1U (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 10:27:20 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=HpHK7d9UhVQk6/UDLmcKvRAr3yC+xCmCY5CGJZTfZXc=; b=IE9rXBhT2+Fpt4GF81TIhGa6B
-        0MoKbpt/Tjeg51MoV5X92xaKdt0bW0lt7c5X/6IPmOfPW5Dmvs6+cn0SaqWCFlEwFxydUxXiwGlmj
-        LKwnQho5efQK+HlMK3H2tG9B5ZFk6qWK4XUHvo2X9ItQdfpNC/JeibKdeUEc4exAMtd0s9GggiXg/
-        /n24bPO+ZxK+61XDPkHgUOs8GFk0d3SINW9VZL4aaAOUe5VRp2TorL6CkZucByg/Jgp7XgUAfO2cw
-        Sn5FpgonxEAzLbW/umHa+jfOrVedJikTx9SPKX1sHHeg7vsgYwlEq0N1d8SQFFBT0j/yivx9dpwiG
-        dwPcptiiQ==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hSjG3-0006Ti-Lt; Mon, 20 May 2019 14:27:19 +0000
-Date:   Mon, 20 May 2019 07:27:19 -0700
-From:   'Christoph Hellwig' <hch@infradead.org>
-To:     kanchan <joshi.k@samsung.com>
-Cc:     linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
-        linux-nvme@lists.infradead.org, linux-fsdevel@vger.kernel.org,
-        linux-ext4@vger.kernel.org, prakash.v@samsung.com,
-        anshul@samsung.com,
-        "Martin K. Petersen" <martin.petersen@oracle.com>
-Subject: Re: [PATCH v5 0/7] Extend write-hint framework, and add write-hint
- for Ext4 journal
-Message-ID: <20190520142719.GA15705@infradead.org>
-References: <CGME20190425112347epcas2p1f7be48b8f0d2203252b8c9dd510c1b61@epcas2p1.samsung.com>
- <1556191202-3245-1-git-send-email-joshi.k@samsung.com>
- <20190510170249.GA26907@infradead.org>
- <00fb01d50c71$dd358e50$97a0aaf0$@samsung.com>
+        Mon, 20 May 2019 10:27:55 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:59316 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730687AbfETO1z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 10:27:55 -0400
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 0D034308793B;
+        Mon, 20 May 2019 14:27:49 +0000 (UTC)
+Received: from gondolin (ovpn-204-110.brq.redhat.com [10.40.204.110])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 9DF5817A88;
+        Mon, 20 May 2019 14:27:40 +0000 (UTC)
+Date:   Mon, 20 May 2019 16:27:37 +0200
+From:   Cornelia Huck <cohuck@redhat.com>
+To:     Pierre Morel <pmorel@linux.ibm.com>
+Cc:     Alex Williamson <alex.williamson@redhat.com>,
+        sebott@linux.vnet.ibm.com, gerald.schaefer@de.ibm.com,
+        pasic@linux.vnet.ibm.com, borntraeger@de.ibm.com,
+        walling@linux.ibm.com, linux-s390@vger.kernel.org,
+        iommu@lists.linux-foundation.org, joro@8bytes.org,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        schwidefsky@de.ibm.com, heiko.carstens@de.ibm.com,
+        robin.murphy@arm.com
+Subject: Re: [PATCH v2 4/4] vfio: vfio_iommu_type1: implement
+ VFIO_IOMMU_INFO_CAPABILITIES
+Message-ID: <20190520162737.7560ad7c.cohuck@redhat.com>
+In-Reply-To: <ed193353-56f0-14b5-f1fb-1835d0a6c603@linux.ibm.com>
+References: <1558109810-18683-1-git-send-email-pmorel@linux.ibm.com>
+        <1558109810-18683-5-git-send-email-pmorel@linux.ibm.com>
+        <20190517104143.240082b5@x1.home>
+        <92b6ad4e-9a49-636b-9225-acca0bec4bb7@linux.ibm.com>
+        <ed193353-56f0-14b5-f1fb-1835d0a6c603@linux.ibm.com>
+Organization: Red Hat GmbH
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <00fb01d50c71$dd358e50$97a0aaf0$@samsung.com>
-User-Agent: Mutt/1.9.2 (2017-12-15)
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.45]); Mon, 20 May 2019 14:27:54 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 17, 2019 at 11:01:55AM +0530, kanchan wrote:
-> Sorry but can you please elaborate the issue? I do not get what is being
-> statically allocated which was globally available earlier.
-> If you are referring to nvme driver,  available streams at subsystem level
-> are being reflected for all namespaces. This is same as earlier. 
-> There is no attempt to explicitly allocate (using dir-receive) or reserve
-> streams for any namespace.  
-> Streams will continue to get allocated/released implicitly as and when
-> writes (with stream id) arrive.
+On Mon, 20 May 2019 13:19:23 +0200
+Pierre Morel <pmorel@linux.ibm.com> wrote:
 
-We have made a concious decision that we do not want to expose streams
-as an awkward not fish not flesh interface, but instead life time hints.
+> On 17/05/2019 20:04, Pierre Morel wrote:
+> > On 17/05/2019 18:41, Alex Williamson wrote:  
+> >> On Fri, 17 May 2019 18:16:50 +0200
+> >> Pierre Morel <pmorel@linux.ibm.com> wrote:
+> >>  
+> >>> We implement the capability interface for VFIO_IOMMU_GET_INFO.
+> >>>
+> >>> When calling the ioctl, the user must specify
+> >>> VFIO_IOMMU_INFO_CAPABILITIES to retrieve the capabilities and
+> >>> must check in the answer if capabilities are supported.
+> >>>
+> >>> The iommu get_attr callback will be used to retrieve the specific
+> >>> attributes and fill the capabilities.
+> >>>
+> >>> Currently two Z-PCI specific capabilities will be queried and
+> >>> filled by the underlying Z specific s390_iommu:
+> >>> VFIO_IOMMU_INFO_CAP_QFN for the PCI query function attributes
+> >>> and
+> >>> VFIO_IOMMU_INFO_CAP_QGRP for the PCI query function group.
+> >>>
+> >>> Other architectures may add new capabilities in the same way
+> >>> after enhancing the architecture specific IOMMU driver.
+> >>>
+> >>> Signed-off-by: Pierre Morel <pmorel@linux.ibm.com>
+> >>> ---
+> >>>   drivers/vfio/vfio_iommu_type1.c | 122 
+> >>> +++++++++++++++++++++++++++++++++++++++-
+> >>>   1 file changed, 121 insertions(+), 1 deletion(-)
+> >>>
+> >>> diff --git a/drivers/vfio/vfio_iommu_type1.c 
+> >>> b/drivers/vfio/vfio_iommu_type1.c
+> >>> index d0f731c..9435647 100644
+> >>> --- a/drivers/vfio/vfio_iommu_type1.c
+> >>> +++ b/drivers/vfio/vfio_iommu_type1.c
+> >>> @@ -1658,6 +1658,97 @@ static int 
+> >>> vfio_domains_have_iommu_cache(struct vfio_iommu *iommu)
+> >>>       return ret;
+> >>>   }
+> >>> +static int vfio_iommu_type1_zpci_fn(struct iommu_domain *domain,
+> >>> +                    struct vfio_info_cap *caps, size_t size)
+> >>> +{
+> >>> +    struct vfio_iommu_type1_info_pcifn *info_fn;
+> >>> +    int ret;
+> >>> +
+> >>> +    info_fn = kzalloc(size, GFP_KERNEL);
+> >>> +    if (!info_fn)
+> >>> +        return -ENOMEM;
+> >>> +
+> >>> +    ret = iommu_domain_get_attr(domain, DOMAIN_ATTR_ZPCI_FN,
+> >>> +                    &info_fn->response);  
+> >>
+> >> What ensures that the 'struct clp_rsp_query_pci' returned from this
+> >> get_attr remains consistent with a 'struct vfio_iommu_pci_function'?
+> >> Why does the latter contains so many reserved fields (beyond simply
+> >> alignment) for a user API?  What fields of these structures are
+> >> actually useful to userspace?  Should any fields not be exposed to the
+> >> user?  Aren't BAR sizes redundant to what's available through the vfio
+> >> PCI API?  I'm afraid that simply redefining an internal structure as
+> >> the API leaves a lot to be desired too.  Thanks,
+> >>
+> >> Alex
+> >>  
+> > Hi Alex,
+> > 
+> > I simply used the structure returned by the firmware to be sure to be 
+> > consistent with future evolutions and facilitate the copy from CLP and 
+> > to userland.
+> > 
+> > If you prefer, and I understand that this is the case, I can define a 
+> > specific VFIO_IOMMU structure with only the fields relevant to the user, 
+> > leaving future enhancement of the user's interface being implemented in 
+> > another kernel patch when the time has come.
+> > 
+> > In fact, the struct will have all defined fields I used but not the BAR 
+> > size and address (at least for now because there are special cases we do 
+> > not support yet with bars).
+> > All the reserved fields can go away.
+> > 
+> > Is it more conform to your idea?
+> > 
+> > Also I have 2 interfaces:
+> > 
+> > s390_iommu.get_attr <-I1-> VFIO_IOMMU <-I2-> userland
+> > 
+> > Do you prefer:
+> > - 2 different structures, no CLP raw structure
+> > - the CLP raw structure for I1 and a VFIO specific structure for I2  
 
-I see no reason to change from and burden the whole streams complexity
-on other in-kernel callers.
+<entering from the sideline>
+
+IIUC, get_attr extracts various data points via clp, and we then make
+it available to userspace. The clp interface needs to be abstracted
+away at some point... one question from me: Is there a chance that
+someone else may want to make use of the userspace interface (extra
+information about a function)? If yes, I'd expect the get_attr to
+obtain some kind of portable information already (basically your third
+option, below).
+
+> 
+> Hi Alex,
+> 
+> I am back again on this.
+> This solution here above seems to me the best one but in this way I must 
+> include S390 specific include inside the iommu_type1, which is AFAIU not 
+> a good thing.
+> It seems that the powerpc architecture use a solution with a dedicated 
+> VFIO_IOMMU, the vfio_iommu_spar_tce.
+> 
+> Wouldn't it be a solution for s390 too, to use the vfio_iommu_type1 as a 
+> basis to have a s390 dedicated solution.
+> Then it becomes easier to have on one side the s390_iommu interface, 
+> S390 specific, and on the other side a VFIO interface without a blind 
+> copy of the firmware values.
+
+If nobody else would want this exact interface, it might be a solution.
+It would still be better not to encode clp data explicitly in the
+userspace interface.
+
+> 
+> Do you think it is a viable solution?
+> 
+> Thanks,
+> Pierre
+> 
+> 
+> 
+> > - the same VFIO structure for both I1 and I2
