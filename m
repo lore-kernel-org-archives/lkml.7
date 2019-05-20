@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A851DC04AAC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:25:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12101C04AAF
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:25:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 80FD721721
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:25:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA4DD20675
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:25:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558355120;
-	bh=JcTSlTzNIy7BdVgAaXqyAePNCWF4zBgxROpHibd0uZ0=;
+	s=default; t=1558355123;
+	bh=3HVJic2IsVhMwD2NLqQ17Pn8OtBdLg7jJNwliuijtwU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jKJrimGI/GW/vKjGhD69k7sKLkiyrWmC+LbLqVmJMe8FAY4rUBzqNJY5oX/Z9pq4a
-	 VI3BEo+fc/5+um9A8HGY2CFSC5Y+GIGiIO9BQ/WOqfhJyhB3PnWxflPlvJVSkTZNQp
-	 q+Ad9oxcqVumHzTzG82GCs6pM6/bF7yDhbxxoy6g=
+	b=e2OFzx9ir5sZTLpCeIBc9Qr/7NQAHLspScUcYPQv5WSIm+IVlaDyIsYJfMtgj2js5
+	 ICxB0k0C3jgQcDhhIJahhxwR4uQhk3MPoMVpXE0mg9eK3AKh7tiVr+IzWy6PYcrSDL
+	 ZOymKTdVq1c7nCOZt9xtpIWs/SQmIaq6JEEZOXNA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389048AbfETMZT (ORCPT
+        id S2389061AbfETMZX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 08:25:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40344 "EHLO mail.kernel.org"
+        Mon, 20 May 2019 08:25:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40406 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389035AbfETMZR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 08:25:17 -0400
+        id S2389035AbfETMZV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 08:25:21 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DD37D20645;
-        Mon, 20 May 2019 12:25:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 84DB420815;
+        Mon, 20 May 2019 12:25:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558355117;
-        bh=JcTSlTzNIy7BdVgAaXqyAePNCWF4zBgxROpHibd0uZ0=;
+        s=default; t=1558355120;
+        bh=3HVJic2IsVhMwD2NLqQ17Pn8OtBdLg7jJNwliuijtwU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zf1pR0DJBGf4dTQVb+2G8jj6dMrFSIT4s1lIeN9+W4d1TD6AlTM8DUReVDMNfeELl
-         f1+Ju4mdQShORXIqnrERY/q7rBB7/7mbTbo6SrNdvdnWVX2E7zt3CYyzd2JF1dNg7V
-         8ofQQsBtUlpu0VdVTA+nI8Xbb02FPnna32x4capU=
+        b=AR/MpG83qy0A1YYQQGoQxs8a/3g5rrTbVQZuPv4rEPzUrnA0EVCGVIAUFllqg8N6T
+         IZQeXrGyEe7GMXs8d4fYBuDAoQWi92L9au9dz9v8InjuyzCX26RfVRlzmWS4VW6tsd
+         NvgVPEu4JCAUjleIb237YKtSdFBHFJABEBf5uDio=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, "zhangyi (F)" <yi.zhang@huawei.com>,
-        Theodore Tso <tytso@mit.edu>, Jan Kara <jack@suse.cz>
-Subject: [PATCH 4.19 104/105] ext4: fix compile error when using BUFFER_TRACE
-Date:   Mon, 20 May 2019 14:14:50 +0200
-Message-Id: <20190520115254.410000000@linuxfoundation.org>
+        stable@vger.kernel.org, Andreas Dilger <adilger@dilger.ca>,
+        Theodore Tso <tytso@mit.edu>
+Subject: [PATCH 4.19 105/105] ext4: dont update s_rev_level if not required
+Date:   Mon, 20 May 2019 14:14:51 +0200
+Message-Id: <20190520115254.476516117@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190520115247.060821231@linuxfoundation.org>
 References: <20190520115247.060821231@linuxfoundation.org>
@@ -59,36 +59,92 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: zhangyi (F) <yi.zhang@huawei.com>
+From: Andreas Dilger <adilger@dilger.ca>
 
-commit ddccb6dbe780d68133191477571cb7c69e17bb8c upstream.
+commit c9e716eb9b3455a83ed7c5f5a81256a3da779a95 upstream.
 
-Fix compile error below when using BUFFER_TRACE.
+Don't update the superblock s_rev_level during mount if it isn't
+actually necessary, only if superblock features are being set by
+the kernel.  This was originally added for ext3 since it always
+set the INCOMPAT_RECOVER and HAS_JOURNAL features during mount,
+but this is not needed since no journal mode was added to ext4.
 
-fs/ext4/inode.c: In function ‘ext4_expand_extra_isize’:
-fs/ext4/inode.c:5979:19: error: request for member ‘bh’ in something not a structure or union
-  BUFFER_TRACE(iloc.bh, "get_write_access");
+That will allow Geert to mount his 20-year-old ext2 rev 0.0 m68k
+filesystem, as a testament of the backward compatibility of ext4.
 
-Fixes: c03b45b853f58 ("ext4, project: expand inode extra size if possible")
-Signed-off-by: zhangyi (F) <yi.zhang@huawei.com>
+Fixes: 0390131ba84f ("ext4: Allow ext4 to run without a journal")
+Signed-off-by: Andreas Dilger <adilger@dilger.ca>
 Signed-off-by: Theodore Ts'o <tytso@mit.edu>
-Reviewed-by: Jan Kara <jack@suse.cz>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/ext4/inode.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/ext4/ext4.h  |    6 +++++-
+ fs/ext4/inode.c |    1 -
+ fs/ext4/super.c |    1 -
+ 3 files changed, 5 insertions(+), 3 deletions(-)
 
+--- a/fs/ext4/ext4.h
++++ b/fs/ext4/ext4.h
+@@ -1670,6 +1670,8 @@ static inline void ext4_clear_state_flag
+ #define EXT4_FEATURE_INCOMPAT_INLINE_DATA	0x8000 /* data in inode */
+ #define EXT4_FEATURE_INCOMPAT_ENCRYPT		0x10000
+ 
++extern void ext4_update_dynamic_rev(struct super_block *sb);
++
+ #define EXT4_FEATURE_COMPAT_FUNCS(name, flagname) \
+ static inline bool ext4_has_feature_##name(struct super_block *sb) \
+ { \
+@@ -1678,6 +1680,7 @@ static inline bool ext4_has_feature_##na
+ } \
+ static inline void ext4_set_feature_##name(struct super_block *sb) \
+ { \
++	ext4_update_dynamic_rev(sb); \
+ 	EXT4_SB(sb)->s_es->s_feature_compat |= \
+ 		cpu_to_le32(EXT4_FEATURE_COMPAT_##flagname); \
+ } \
+@@ -1695,6 +1698,7 @@ static inline bool ext4_has_feature_##na
+ } \
+ static inline void ext4_set_feature_##name(struct super_block *sb) \
+ { \
++	ext4_update_dynamic_rev(sb); \
+ 	EXT4_SB(sb)->s_es->s_feature_ro_compat |= \
+ 		cpu_to_le32(EXT4_FEATURE_RO_COMPAT_##flagname); \
+ } \
+@@ -1712,6 +1716,7 @@ static inline bool ext4_has_feature_##na
+ } \
+ static inline void ext4_set_feature_##name(struct super_block *sb) \
+ { \
++	ext4_update_dynamic_rev(sb); \
+ 	EXT4_SB(sb)->s_es->s_feature_incompat |= \
+ 		cpu_to_le32(EXT4_FEATURE_INCOMPAT_##flagname); \
+ } \
+@@ -2679,7 +2684,6 @@ do {									\
+ 
+ #endif
+ 
+-extern void ext4_update_dynamic_rev(struct super_block *sb);
+ extern int ext4_update_compat_feature(handle_t *handle, struct super_block *sb,
+ 					__u32 compat);
+ extern int ext4_update_rocompat_feature(handle_t *handle,
 --- a/fs/ext4/inode.c
 +++ b/fs/ext4/inode.c
-@@ -5975,7 +5975,7 @@ int ext4_expand_extra_isize(struct inode
+@@ -5324,7 +5324,6 @@ static int ext4_do_update_inode(handle_t
+ 		err = ext4_journal_get_write_access(handle, EXT4_SB(sb)->s_sbh);
+ 		if (err)
+ 			goto out_brelse;
+-		ext4_update_dynamic_rev(sb);
+ 		ext4_set_feature_large_file(sb);
+ 		ext4_handle_sync(handle);
+ 		err = ext4_handle_dirty_super(handle, sb);
+--- a/fs/ext4/super.c
++++ b/fs/ext4/super.c
+@@ -2259,7 +2259,6 @@ static int ext4_setup_super(struct super
+ 		es->s_max_mnt_count = cpu_to_le16(EXT4_DFL_MAX_MNT_COUNT);
+ 	le16_add_cpu(&es->s_mnt_count, 1);
+ 	ext4_update_tstamp(es, s_mtime);
+-	ext4_update_dynamic_rev(sb);
+ 	if (sbi->s_journal)
+ 		ext4_set_feature_journal_needs_recovery(sb);
  
- 	ext4_write_lock_xattr(inode, &no_expand);
- 
--	BUFFER_TRACE(iloc.bh, "get_write_access");
-+	BUFFER_TRACE(iloc->bh, "get_write_access");
- 	error = ext4_journal_get_write_access(handle, iloc->bh);
- 	if (error) {
- 		brelse(iloc->bh);
 
 
