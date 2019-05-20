@@ -4,56 +4,60 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6C8DC04AAC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:28:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 444F2C04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:28:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B30ED21721
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:28:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 17DFB216E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:28:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558355315;
-	bh=3HFavAxzaHRyQLrKs26tbBek5N9yfGiVCtDxUG+IQts=;
+	s=default; t=1558355319;
+	bh=4MqpRGZefz7Um9TTQzbpqPbOnyQLQcMfqVf5dEROAJ4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TYrUf3+lsLtCDh+0/TdNJ4K7gSwTpGC/lcVSoO1PM4momPD2lN1EpXyVPAYjsiCOM
-	 zTBPyeu4/bpMYsgTjnIrLH8OxOUsaDtrtVzDP0NwN+EPSJ2qa/ttO6n30qnv7glqQb
-	 rZljlyiSpK4jYRMpk6FICljb2YoFKAMFqXTS1MsQ=
+	b=wCjUDKuhHU79jK+ny1mUkWDKvI1EgIn9/cQow4lIM1bPXVLC23EM9GLGbe/V+ICBd
+	 fTCKdFQYBKfUHx/rIuejDsJL7Hc8goNQPRq0wa7+PzQQrL77gjZC5EA6Fgnnqcb5bn
+	 XaDWIom72sNRZMdWTQmI21R4p9qeeKpjJOCrKCUw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389704AbfETM2e (ORCPT
+        id S2389717AbfETM2i (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 08:28:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44302 "EHLO mail.kernel.org"
+        Mon, 20 May 2019 08:28:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44366 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389687AbfETM2b (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 08:28:31 -0400
+        id S2389693AbfETM2d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 08:28:33 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7C87021019;
-        Mon, 20 May 2019 12:28:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F0EA620645;
+        Mon, 20 May 2019 12:28:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558355310;
-        bh=3HFavAxzaHRyQLrKs26tbBek5N9yfGiVCtDxUG+IQts=;
+        s=default; t=1558355312;
+        bh=4MqpRGZefz7Um9TTQzbpqPbOnyQLQcMfqVf5dEROAJ4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=v9XouVQ76O+Tflt5xSXR/ETQ0iS5Qr+F/kelF30EwIDYERQXUbgfV6u9IoMbBM/3T
-         n3oK6qV+GgdOI+/NJq1jAzCB6iyc5rpi6y/U1rgVikiAFRK0ro2lFMsX0Jg5W3aRtj
-         UAB4lx0Kc59BrcBV3gz3U9Or2m5+7HlRvo9vGqWY=
+        b=hV+GHCdLW0fTy8JH9ylG3YoOM5xyn6EVs2j/wMP8cPGaCw/Li0ypnd5RZn46yAE9O
+         pnAWO8buj0JrxMG2XogOGzzhZ3wA1v7n7gVWG4k7CSIj+ZELTk+55HQu9nfg+bukxj
+         erEFIOr2vhjWtB62vlRI/vUh+1Xm7/7VFIsNpWfg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Shuning Zhang <sunny.s.zhang@oracle.com>,
-        Joseph Qi <jiangqi903@gmail.com>,
-        Mark Fasheh <mark@fasheh.com>,
-        Joel Becker <jlbec@evilplan.org>,
-        Junxiao Bi <junxiao.bi@oracle.com>,
-        Changwei Ge <gechangwei@live.cn>, piaojun <piaojun@huawei.com>,
-        "Gang He" <ghe@suse.com>,
+        stable@vger.kernel.org, Andrea Arcangeli <aarcange@redhat.com>,
+        zhong jiang <zhongjiang@huawei.com>,
+        syzbot+cbb52e396df3e565ab02@syzkaller.appspotmail.com,
+        Oleg Nesterov <oleg@redhat.com>, Jann Horn <jannh@google.com>,
+        Hugh Dickins <hughd@google.com>,
+        Mike Rapoport <rppt@linux.vnet.ibm.com>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Peter Xu <peterx@redhat.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
+        Michal Hocko <mhocko@suse.com>,
         Andrew Morton <akpm@linux-foundation.org>,
         Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 5.0 071/123] ocfs2: fix ocfs2 read inode data panic in ocfs2_iget
-Date:   Mon, 20 May 2019 14:14:11 +0200
-Message-Id: <20190520115249.564159563@linuxfoundation.org>
+Subject: [PATCH 5.0 072/123] userfaultfd: use RCU to free the task struct when fork fails
+Date:   Mon, 20 May 2019 14:14:12 +0200
+Message-Id: <20190520115249.634554502@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190520115245.439864225@linuxfoundation.org>
 References: <20190520115245.439864225@linuxfoundation.org>
@@ -66,180 +70,135 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Shuning Zhang <sunny.s.zhang@oracle.com>
+From: Andrea Arcangeli <aarcange@redhat.com>
 
-commit e091eab028f9253eac5c04f9141bbc9d170acab3 upstream.
+commit c3f3ce049f7d97cc7ec9c01cb51d9ec74e0f37c2 upstream.
 
-In some cases, ocfs2_iget() reads the data of inode, which has been
-deleted for some reason.  That will make the system panic.  So We should
-judge whether this inode has been deleted, and tell the caller that the
-inode is a bad inode.
+The task structure is freed while get_mem_cgroup_from_mm() holds
+rcu_read_lock() and dereferences mm->owner.
 
-For example, the ocfs2 is used as the backed of nfs, and the client is
-nfsv3.  This issue can be reproduced by the following steps.
+  get_mem_cgroup_from_mm()                failing fork()
+  ----                                    ---
+  task = mm->owner
+                                          mm->owner = NULL;
+                                          free(task)
+  if (task) *task; /* use after free */
 
-on the nfs server side,
-..../patha/pathb
+The fix consists in freeing the task with RCU also in the fork failure
+case, exactly like it always happens for the regular exit(2) path.  That
+is enough to make the rcu_read_lock hold in get_mem_cgroup_from_mm()
+(left side above) effective to avoid a use after free when dereferencing
+the task structure.
 
-Step 1: The process A was scheduled before calling the function fh_verify.
+An alternate possible fix would be to defer the delivery of the
+userfaultfd contexts to the monitor until after fork() is guaranteed to
+succeed.  Such a change would require more changes because it would
+create a strict ordering dependency where the uffd methods would need to
+be called beyond the last potentially failing branch in order to be
+safe.  This solution as opposed only adds the dependency to common code
+to set mm->owner to NULL and to free the task struct that was pointed by
+mm->owner with RCU, if fork ends up failing.  The userfaultfd methods
+can still be called anywhere during the fork runtime and the monitor
+will keep discarding orphaned "mm" coming from failed forks in userland.
 
-Step 2: The process B is removing the 'pathb', and just completed the call
-to function dput.  Then the dentry of 'pathb' has been deleted from the
-dcache, and all ancestors have been deleted also.  The relationship of
-dentry and inode was deleted through the function hlist_del_init.  The
-following is the call stack.
-dentry_iput->hlist_del_init(&dentry->d_u.d_alias)
+This race condition couldn't trigger if CONFIG_MEMCG was set =n at build
+time.
 
-At this time, the inode is still in the dcache.
-
-Step 3: The process A call the function ocfs2_get_dentry, which get the
-inode from dcache.  Then the refcount of inode is 1.  The following is the
-call stack.
-nfsd3_proc_getacl->fh_verify->exportfs_decode_fh->fh_to_dentry(ocfs2_get_dentry)
-
-Step 4: Dirty pages are flushed by bdi threads.  So the inode of 'patha'
-is evicted, and this directory was deleted.  But the inode of 'pathb'
-can't be evicted, because the refcount of the inode was 1.
-
-Step 5: The process A keep running, and call the function
-reconnect_path(in exportfs_decode_fh), which call function
-ocfs2_get_parent of ocfs2.  Get the block number of parent
-directory(patha) by the name of ...  Then read the data from disk by the
-block number.  But this inode has been deleted, so the system panic.
-
-Process A                                             Process B
-1. in nfsd3_proc_getacl                   |
-2.                                        |        dput
-3. fh_to_dentry(ocfs2_get_dentry)         |
-4. bdi flush dirty cache                  |
-5. ocfs2_iget                             |
-
-[283465.542049] OCFS2: ERROR (device sdp): ocfs2_validate_inode_block:
-Invalid dinode #580640: OCFS2_VALID_FL not set
-
-[283465.545490] Kernel panic - not syncing: OCFS2: (device sdp): panic forced
-after error
-
-[283465.546889] CPU: 5 PID: 12416 Comm: nfsd Tainted: G        W
-4.1.12-124.18.6.el6uek.bug28762940v3.x86_64 #2
-[283465.548382] Hardware name: VMware, Inc. VMware Virtual Platform/440BX
-Desktop Reference Platform, BIOS 6.00 09/21/2015
-[283465.549657]  0000000000000000 ffff8800a56fb7b8 ffffffff816e839c
-ffffffffa0514758
-[283465.550392]  000000000008dc20 ffff8800a56fb838 ffffffff816e62d3
-0000000000000008
-[283465.551056]  ffff880000000010 ffff8800a56fb848 ffff8800a56fb7e8
-ffff88005df9f000
-[283465.551710] Call Trace:
-[283465.552516]  [<ffffffff816e839c>] dump_stack+0x63/0x81
-[283465.553291]  [<ffffffff816e62d3>] panic+0xcb/0x21b
-[283465.554037]  [<ffffffffa04e66b0>] ocfs2_handle_error+0xf0/0xf0 [ocfs2]
-[283465.554882]  [<ffffffffa04e7737>] __ocfs2_error+0x67/0x70 [ocfs2]
-[283465.555768]  [<ffffffffa049c0f9>] ocfs2_validate_inode_block+0x229/0x230
-[ocfs2]
-[283465.556683]  [<ffffffffa047bcbc>] ocfs2_read_blocks+0x46c/0x7b0 [ocfs2]
-[283465.557408]  [<ffffffffa049bed0>] ? ocfs2_inode_cache_io_unlock+0x20/0x20
-[ocfs2]
-[283465.557973]  [<ffffffffa049f0eb>] ocfs2_read_inode_block_full+0x3b/0x60
-[ocfs2]
-[283465.558525]  [<ffffffffa049f5ba>] ocfs2_iget+0x4aa/0x880 [ocfs2]
-[283465.559082]  [<ffffffffa049146e>] ocfs2_get_parent+0x9e/0x220 [ocfs2]
-[283465.559622]  [<ffffffff81297c05>] reconnect_path+0xb5/0x300
-[283465.560156]  [<ffffffff81297f46>] exportfs_decode_fh+0xf6/0x2b0
-[283465.560708]  [<ffffffffa062faf0>] ? nfsd_proc_getattr+0xa0/0xa0 [nfsd]
-[283465.561262]  [<ffffffff810a8196>] ? prepare_creds+0x26/0x110
-[283465.561932]  [<ffffffffa0630860>] fh_verify+0x350/0x660 [nfsd]
-[283465.562862]  [<ffffffffa0637804>] ? nfsd_cache_lookup+0x44/0x630 [nfsd]
-[283465.563697]  [<ffffffffa063a8b9>] nfsd3_proc_getattr+0x69/0xf0 [nfsd]
-[283465.564510]  [<ffffffffa062cf60>] nfsd_dispatch+0xe0/0x290 [nfsd]
-[283465.565358]  [<ffffffffa05eb892>] ? svc_tcp_adjust_wspace+0x12/0x30
-[sunrpc]
-[283465.566272]  [<ffffffffa05ea652>] svc_process_common+0x412/0x6a0 [sunrpc]
-[283465.567155]  [<ffffffffa05eaa03>] svc_process+0x123/0x210 [sunrpc]
-[283465.568020]  [<ffffffffa062c90f>] nfsd+0xff/0x170 [nfsd]
-[283465.568962]  [<ffffffffa062c810>] ? nfsd_destroy+0x80/0x80 [nfsd]
-[283465.570112]  [<ffffffff810a622b>] kthread+0xcb/0xf0
-[283465.571099]  [<ffffffff810a6160>] ? kthread_create_on_node+0x180/0x180
-[283465.572114]  [<ffffffff816f11b8>] ret_from_fork+0x58/0x90
-[283465.573156]  [<ffffffff810a6160>] ? kthread_create_on_node+0x180/0x180
-
-Link: http://lkml.kernel.org/r/1554185919-3010-1-git-send-email-sunny.s.zhang@oracle.com
-Signed-off-by: Shuning Zhang <sunny.s.zhang@oracle.com>
-Reviewed-by: Joseph Qi <jiangqi903@gmail.com>
-Cc: Mark Fasheh <mark@fasheh.com>
-Cc: Joel Becker <jlbec@evilplan.org>
-Cc: Junxiao Bi <junxiao.bi@oracle.com>
-Cc: Changwei Ge <gechangwei@live.cn>
-Cc: piaojun <piaojun@huawei.com>
-Cc: "Gang He" <ghe@suse.com>
+[aarcange@redhat.com: improve changelog, reduce #ifdefs per Michal]
+  Link: http://lkml.kernel.org/r/20190429035752.4508-1-aarcange@redhat.com
+Link: http://lkml.kernel.org/r/20190325225636.11635-2-aarcange@redhat.com
+Fixes: 893e26e61d04 ("userfaultfd: non-cooperative: Add fork() event")
+Signed-off-by: Andrea Arcangeli <aarcange@redhat.com>
+Tested-by: zhong jiang <zhongjiang@huawei.com>
+Reported-by: syzbot+cbb52e396df3e565ab02@syzkaller.appspotmail.com
+Cc: Oleg Nesterov <oleg@redhat.com>
+Cc: Jann Horn <jannh@google.com>
+Cc: Hugh Dickins <hughd@google.com>
+Cc: Mike Rapoport <rppt@linux.vnet.ibm.com>
+Cc: Mike Kravetz <mike.kravetz@oracle.com>
+Cc: Peter Xu <peterx@redhat.com>
+Cc: Jason Gunthorpe <jgg@mellanox.com>
+Cc: "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>
+Cc: Michal Hocko <mhocko@suse.com>
+Cc: zhong jiang <zhongjiang@huawei.com>
+Cc: syzbot+cbb52e396df3e565ab02@syzkaller.appspotmail.com
 Cc: <stable@vger.kernel.org>
 Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
 Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/ocfs2/export.c |   30 +++++++++++++++++++++++++++++-
- 1 file changed, 29 insertions(+), 1 deletion(-)
+ kernel/fork.c |   31 +++++++++++++++++++++++++++++--
+ 1 file changed, 29 insertions(+), 2 deletions(-)
 
---- a/fs/ocfs2/export.c
-+++ b/fs/ocfs2/export.c
-@@ -148,16 +148,24 @@ static struct dentry *ocfs2_get_parent(s
- 	u64 blkno;
- 	struct dentry *parent;
- 	struct inode *dir = d_inode(child);
-+	int set;
+--- a/kernel/fork.c
++++ b/kernel/fork.c
+@@ -953,6 +953,15 @@ static void mm_init_aio(struct mm_struct
+ #endif
+ }
  
- 	trace_ocfs2_get_parent(child, child->d_name.len, child->d_name.name,
- 			       (unsigned long long)OCFS2_I(dir)->ip_blkno);
++static __always_inline void mm_clear_owner(struct mm_struct *mm,
++					   struct task_struct *p)
++{
++#ifdef CONFIG_MEMCG
++	if (mm->owner == p)
++		WRITE_ONCE(mm->owner, NULL);
++#endif
++}
++
+ static void mm_init_owner(struct mm_struct *mm, struct task_struct *p)
+ {
+ #ifdef CONFIG_MEMCG
+@@ -1332,6 +1341,7 @@ static struct mm_struct *dup_mm(struct t
+ free_pt:
+ 	/* don't put binfmt in mmput, we haven't got module yet */
+ 	mm->binfmt = NULL;
++	mm_init_owner(mm, NULL);
+ 	mmput(mm);
  
-+	status = ocfs2_nfs_sync_lock(OCFS2_SB(dir->i_sb), 1);
-+	if (status < 0) {
-+		mlog(ML_ERROR, "getting nfs sync lock(EX) failed %d\n", status);
-+		parent = ERR_PTR(status);
-+		goto bail;
+ fail_nomem:
+@@ -1663,6 +1673,21 @@ static inline void rcu_copy_process(stru
+ #endif /* #ifdef CONFIG_TASKS_RCU */
+ }
+ 
++static void __delayed_free_task(struct rcu_head *rhp)
++{
++	struct task_struct *tsk = container_of(rhp, struct task_struct, rcu);
++
++	free_task(tsk);
++}
++
++static __always_inline void delayed_free_task(struct task_struct *tsk)
++{
++	if (IS_ENABLED(CONFIG_MEMCG))
++		call_rcu(&tsk->rcu, __delayed_free_task);
++	else
++		free_task(tsk);
++}
++
+ /*
+  * This creates a new process as a copy of the old one,
+  * but does not actually start it yet.
+@@ -2124,8 +2149,10 @@ bad_fork_cleanup_io:
+ bad_fork_cleanup_namespaces:
+ 	exit_task_namespaces(p);
+ bad_fork_cleanup_mm:
+-	if (p->mm)
++	if (p->mm) {
++		mm_clear_owner(p->mm, p);
+ 		mmput(p->mm);
 +	}
-+
- 	status = ocfs2_inode_lock(dir, NULL, 0);
- 	if (status < 0) {
- 		if (status != -ENOENT)
- 			mlog_errno(status);
- 		parent = ERR_PTR(status);
--		goto bail;
-+		goto unlock_nfs_sync;
- 	}
- 
- 	status = ocfs2_lookup_ino_from_name(dir, "..", 2, &blkno);
-@@ -166,11 +174,31 @@ static struct dentry *ocfs2_get_parent(s
- 		goto bail_unlock;
- 	}
- 
-+	status = ocfs2_test_inode_bit(OCFS2_SB(dir->i_sb), blkno, &set);
-+	if (status < 0) {
-+		if (status == -EINVAL) {
-+			status = -ESTALE;
-+		} else
-+			mlog(ML_ERROR, "test inode bit failed %d\n", status);
-+		parent = ERR_PTR(status);
-+		goto bail_unlock;
-+	}
-+
-+	trace_ocfs2_get_dentry_test_bit(status, set);
-+	if (!set) {
-+		status = -ESTALE;
-+		parent = ERR_PTR(status);
-+		goto bail_unlock;
-+	}
-+
- 	parent = d_obtain_alias(ocfs2_iget(OCFS2_SB(dir->i_sb), blkno, 0, 0));
- 
- bail_unlock:
- 	ocfs2_inode_unlock(dir, 0);
- 
-+unlock_nfs_sync:
-+	ocfs2_nfs_sync_unlock(OCFS2_SB(dir->i_sb), 1);
-+
- bail:
- 	trace_ocfs2_get_parent_end(parent);
- 
+ bad_fork_cleanup_signal:
+ 	if (!(clone_flags & CLONE_THREAD))
+ 		free_signal_struct(p->signal);
+@@ -2156,7 +2183,7 @@ bad_fork_cleanup_count:
+ bad_fork_free:
+ 	p->state = TASK_DEAD;
+ 	put_task_stack(p);
+-	free_task(p);
++	delayed_free_task(p);
+ fork_out:
+ 	spin_lock_irq(&current->sighand->siglock);
+ 	hlist_del_init(&delayed.node);
 
 
