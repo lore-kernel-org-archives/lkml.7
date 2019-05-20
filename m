@@ -2,148 +2,123 @@ Return-Path: <SRS0=lq4r=TU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D11FC04AAC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 16:55:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80B31C04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 17:00:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 28BF6216B7
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 16:55:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 54098216B7
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 17:00:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="splOX657"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392440AbfETQzH (ORCPT
+        id S2391458AbfETRAF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 12:55:07 -0400
-Received: from gateway33.websitewelcome.com ([192.185.146.119]:31663 "EHLO
-        gateway33.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2388746AbfETQzH (ORCPT
+        Mon, 20 May 2019 13:00:05 -0400
+Received: from mail-it1-f180.google.com ([209.85.166.180]:36933 "EHLO
+        mail-it1-f180.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389465AbfETRAF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 12:55:07 -0400
-Received: from cm16.websitewelcome.com (cm16.websitewelcome.com [100.42.49.19])
-        by gateway33.websitewelcome.com (Postfix) with ESMTP id 5C2E463B1C
-        for <linux-kernel@vger.kernel.org>; Mon, 20 May 2019 11:55:05 -0500 (CDT)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id SlZ3hw6Kq4FKpSlZ3hJ3u9; Mon, 20 May 2019 11:55:05 -0500
-X-Authority-Reason: nr=8
-Received: from [189.250.71.100] (port=32782 helo=[192.168.1.76])
-        by gator4166.hostgator.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
-        (Exim 4.91)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1hSlZ2-001nri-VA; Mon, 20 May 2019 11:55:05 -0500
-Subject: Re: net: atm: Spectre v1 fix introduced bug in bcb964012d1b in
- -stable
-To:     Pavel Machek <pavel@denx.de>
-Cc:     stable@kernel.org, kernel list <linux-kernel@vger.kernel.org>,
-        davem@davemloft.net, gregkh@linuxfoundation.org
-References: <20190520124014.GA5205@amd>
- <02622e60-8ce9-8db3-8d16-fa1a32e063bf@embeddedor.com>
- <20190520161549.GB25789@amd>
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=gustavo@embeddedor.com; keydata=
- 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
- VtSixD1uOgytAP7RWS474w==
-Message-ID: <2afe2a95-6297-4448-3942-9ba10e306e96@embeddedor.com>
-Date:   Mon, 20 May 2019 11:54:59 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Mon, 20 May 2019 13:00:05 -0400
+Received: by mail-it1-f180.google.com with SMTP id m140so149694itg.2
+        for <linux-kernel@vger.kernel.org>; Mon, 20 May 2019 10:00:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=a9HxCz0foDNs5O3pbgandNCjjTka/BKF7J0X9z8Vxf4=;
+        b=splOX6579zCxu8w2x60dHrYaM+Xypz557w+QNlIAc5+jHrsya6YGpJe0FdAFDMLXLp
+         s+PuQebm04NIf42o+d8/JT/s3fnZodHBtyot2dQR/eVP7Hs5DzLXOxtnMZM+mdx5aZt0
+         U3/7AiokG+Pwo1P2b9icTB+0Xm0xOwSlPOdow59cuJUueC/13byLOut2FSxdKv1bSEAf
+         mQi/TNTuOlUe2OGWsmzYyoUUeYcd8CzRIClsW2nEje4eZnxNG6qGl6OPxvfI3R4s19sV
+         0eu9DUzq6niepxI7SSdVhMNyQeq2S1Ri2DtHk7VDpYokgeMQdPAiY2vb1TYVjQyzf4CX
+         ng/g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=a9HxCz0foDNs5O3pbgandNCjjTka/BKF7J0X9z8Vxf4=;
+        b=ASKkuAogv5JfhdvATp4Bf8rJmOTNie64+V994hWubbk8A5ChtvMDHXjKo8pyoNFsyf
+         qOFmCjOJLduvlos//eR/QCjEkYczMP+lxdqIzHeAJKu8RgsCbz4ANw9rWFPLJ1Alpdst
+         UA0MFlcl8kEHDD42CYvIMpUOGNLuEWNCqt6cuQQtYBxozJr6RDYDyrJBUsJNKBhsqUVs
+         BThPvbtHD1LDbMNZNFliYO4Kn11mz4RqBMCXoHpC/2p9VzZ0/PDI0dUbVbweuSjAQLnk
+         dJnrPGKBj+3LsKgO6SQH/HG+4j8qteo5q+IsUjor92ghS6+veXv/RyOFPKuUQ6heYCft
+         YxQQ==
+X-Gm-Message-State: APjAAAXS87K6Xdkm7WtNqvQwbYUdsgy3Gu30FIo3duK2JVBK4J2fecrz
+        qBorphBYqlOaDOlNITFtEm7IaZKWuQcHTtPppobr4A==
+X-Google-Smtp-Source: APXvYqxcTQzgFbWL33MuIA08BQG6r4172rHpmkGhiZLa8jGMztN1c0YHSZispXFJVvLlv+unuZuWPF77PfLiwhvwKs8=
+X-Received: by 2002:a24:c904:: with SMTP id h4mr53623itg.46.1558371604283;
+ Mon, 20 May 2019 10:00:04 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190520161549.GB25789@amd>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 189.250.71.100
-X-Source-L: No
-X-Exim-ID: 1hSlZ2-001nri-VA
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: ([192.168.1.76]) [189.250.71.100]:32782
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 3
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+References: <20190520035254.57579-1-minchan@kernel.org> <dbe801f0-4bbe-5f6e-9053-4b7deb38e235@arm.com>
+In-Reply-To: <dbe801f0-4bbe-5f6e-9053-4b7deb38e235@arm.com>
+From:   Tim Murray <timmurray@google.com>
+Date:   Mon, 20 May 2019 09:59:52 -0700
+Message-ID: <CAEe=Sxka3Q3vX+7aWUJGKicM+a9Px0rrusyL+5bB1w4ywF6N4Q@mail.gmail.com>
+Subject: Re: [RFC 0/7] introduce memory hinting API for external process
+To:     Anshuman Khandual <anshuman.khandual@arm.com>
+Cc:     Minchan Kim <minchan@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-mm <linux-mm@kvack.org>, Michal Hocko <mhocko@suse.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Suren Baghdasaryan <surenb@google.com>,
+        Daniel Colascione <dancol@google.com>,
+        Shakeel Butt <shakeelb@google.com>,
+        Sonny Rao <sonnyrao@google.com>,
+        Brian Geffon <bgeffon@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Sun, May 19, 2019 at 11:37 PM Anshuman Khandual
+<anshuman.khandual@arm.com> wrote:
+>
+> Or Is the objective here is reduce the number of processes which get killed by
+> lmkd by triggering swapping for the unused memory (user hinted) sooner so that
+> they dont get picked by lmkd. Under utilization for zram hardware is a concern
+> here as well ?
 
+The objective is to avoid some instances of memory pressure by
+proactively swapping pages that userspace knows to be cold before
+those pages reach the end of the LRUs, which in turn can prevent some
+apps from being killed by lmk/lmkd. As soon as Android userspace knows
+that an application is not being used and is only resident to improve
+performance if the user returns to that app, we can kick off
+process_madvise on that process's pages (or some portion of those
+pages) in a power-efficient way to reduce memory pressure long before
+the system hits the free page watermark. This allows the system more
+time to put pages into zram versus waiting for the watermark to
+trigger kswapd, which decreases the likelihood that later memory
+allocations will cause enough pressure to trigger a kill of one of
+these apps.
 
-On 5/20/19 11:15 AM, Pavel Machek wrote:
-> On Mon 2019-05-20 09:15:50, Gustavo A. R. Silva wrote:
->>
->>
->> On 5/20/19 7:40 AM, Pavel Machek wrote:
->>>
->>> In lecd_attach, if arg is < 0, it was treated as 0. Spectre v1 fix
->>> changed that. Bug does not exist in mainline AFAICT.
->>>
->>
->> NACK
->>
->> array_index_nospec() macro returns zero if *arg* is out of bounds.
-> 
-> No, it does not. Take a look:
-> 
-> #define array_index_nospec(index, size)
-> ...
->         (typeof(_i)) (_i & _mask);
-> })
-> 	
+> Swapping out memory into zram wont increase the latency for a hot start ? Or
+> is it because as it will prevent a fresh cold start which anyway will be slower
+> than a slow hot start. Just being curious.
 
-Tell me more about that _mask.
-
-Also, don't ignore the backward compatibility; otherwise you
-would be forking your own kernel.
-
---
-Gustavo
+First, not all swapped pages will be reloaded immediately once an app
+is resumed. We've found that an app's working set post-process_madvise
+is significantly smaller than what an app allocates when it first
+launches (see the delta between pswpin and pswpout in Minchan's
+results). Presumably because of this, faulting to fetch from zram does
+not seem to introduce a noticeable hot start penalty, not does it
+cause an increase in performance problems later in the app's
+lifecycle. I've measured with and without process_madvise, and the
+differences are within our noise bounds. Second, because we're not
+preemptively evicting file pages and only making them more likely to
+be evicted when there's already memory pressure, we avoid the case
+where we process_madvise an app then immediately return to the app and
+reload all file pages in the working set even though there was no
+intervening memory pressure. Our initial version of this work evicted
+file pages preemptively and did cause a noticeable slowdown (~15%) for
+that case; this patch set avoids that slowdown. Finally, the benefit
+from avoiding cold starts is huge. The performance improvement from
+having a hot start instead of a cold start ranges from 3x for very
+small apps to 50x+ for larger apps like high-fidelity games.
