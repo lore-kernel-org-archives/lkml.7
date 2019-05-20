@@ -2,133 +2,96 @@ Return-Path: <SRS0=lq4r=TU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2975C04AAC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 20:28:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8604BC04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 20:39:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 99CE320863
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 20:28:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 587C421019
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 20:39:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=netronome-com.20150623.gappssmtp.com header.i=@netronome-com.20150623.gappssmtp.com header.b="GIVK3fQZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726238AbfETU2G convert rfc822-to-8bit (ORCPT
+        id S1726650AbfETUjE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 16:28:06 -0400
-Received: from gloria.sntech.de ([185.11.138.130]:58048 "EHLO gloria.sntech.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725989AbfETU2G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 16:28:06 -0400
-Received: from ip5f5a6320.dynamic.kabel-deutschland.de ([95.90.99.32] helo=diego.localnet)
-        by gloria.sntech.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <heiko@sntech.de>)
-        id 1hSot6-0008TP-VJ; Mon, 20 May 2019 22:28:01 +0200
-From:   Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
-To:     Doug Anderson <dianders@chromium.org>
-Cc:     Matthias Kaehlcke <mka@chromium.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
-        devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 1/2] ARM: dts: rockchip: Limit GPU frequency on veyron mickey to 300 MHz when the CPU gets very hot
-Date:   Mon, 20 May 2019 22:28:00 +0200
-Message-ID: <1695268.0xytyHHoPs@diego>
-In-Reply-To: <CAD=FV=VGA_i=vM4_OrqXnv0WC__Fcdced3oOZjzcPO=i8Q+SdA@mail.gmail.com>
-References: <20190520170132.91571-1-mka@chromium.org> <CAD=FV=VGA_i=vM4_OrqXnv0WC__Fcdced3oOZjzcPO=i8Q+SdA@mail.gmail.com>
+        Mon, 20 May 2019 16:39:04 -0400
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:35756 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726151AbfETUjD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 16:39:03 -0400
+Received: by mail-qt1-f195.google.com with SMTP id a39so17950055qtk.2
+        for <linux-kernel@vger.kernel.org>; Mon, 20 May 2019 13:39:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=netronome-com.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:in-reply-to:references
+         :organization:mime-version:content-transfer-encoding;
+        bh=wPFeH7XPsIimjhzEp22O6Np8+nftZ/N1aLKEWF0ZxEg=;
+        b=GIVK3fQZJfd3IjewlySeI5LCq+RSRd96F67W24vHp0NBQ/9vtvqZQT6yC+c3I42Cdl
+         Hv7Bn02XqyTUZhdJp0xnV3qu6758vWZxmZXCkDo4VD9X9oC3cXrAqxO7J93Jd6jW8zHw
+         xPXB91xhSgoxPdA1MT3Yg40PiYX6z2toSQkhYYcpApIizZ69Q9XQ9Ba7yKt/AHg9XTOh
+         lrw5+HqK/fR0J8/ME9zFgkKk0qzvzCR7bMKbwTVEXIFlZEAjHMIk5C/F0d1mkKVNVSUH
+         mq7wJ2iwjrkk6dW6IRTBZj8SXdTMkwoETaOPtbxuUxFA0sfCny9yYvJFe3dc6ZW2/y2V
+         E5fg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
+         :references:organization:mime-version:content-transfer-encoding;
+        bh=wPFeH7XPsIimjhzEp22O6Np8+nftZ/N1aLKEWF0ZxEg=;
+        b=j6lGLhoNN93etgMISEeGBoDyG5XG0uKuRUwFPMJWNEtvkkWz1HunKO0Jm7xj+hXHPC
+         giHd5leyTT+O7Jqnn4N/t9g/3XvNtP4GwW6QYhW3+JsQP617JCFQzgUWmKfM8IhWRLIz
+         4xifdraxmPhGrMelLXHwZI+cCqNKRry7Ky7xXckias8QmgyiclStHStIsUf2/JCevLoz
+         TSIuIxbyRISzyTk/EqcDRp1LcTft5QmXPciPBG1ed4mAVT8mCoQGkgUWPcA0r/eek4ls
+         iswEGCiRpo0e7aQbDLsGY/iIJs4Y8N4V35cOdHfrpeC2hsnUaASqcENcrQefKmVJCwyA
+         FQNw==
+X-Gm-Message-State: APjAAAV+zLVf4SoTM8HjPZgsu2QjyVFqsMay2+OJ7gkBAbk354scEAre
+        giSWeY9X4OodyrURup2J16ihkg==
+X-Google-Smtp-Source: APXvYqyIYAMt4+0J67afSHPg+bDU0MZwDc+FTORmGsBmLZqEkZB4mPMqoUH9CCKiQEFatxakMDUKcA==
+X-Received: by 2002:a0c:9934:: with SMTP id h49mr35490041qvd.146.1558384743029;
+        Mon, 20 May 2019 13:39:03 -0700 (PDT)
+Received: from cakuba.netronome.com ([66.60.152.14])
+        by smtp.gmail.com with ESMTPSA id 29sm9653091qty.87.2019.05.20.13.39.01
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Mon, 20 May 2019 13:39:02 -0700 (PDT)
+Date:   Mon, 20 May 2019 13:38:30 -0700
+From:   Jakub Kicinski <jakub.kicinski@netronome.com>
+To:     Matteo Croce <mcroce@redhat.com>
+Cc:     xdp-newbies@vger.kernel.org, bpf@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        netdev <netdev@vger.kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>
+Subject: Re: [PATCH 1/5] samples/bpf: fix test_lru_dist build
+Message-ID: <20190520133830.1ac11fc8@cakuba.netronome.com>
+In-Reply-To: <CAGnkfhxt=nq-JV+D5Rrquvn8BVOjHswEJmuVVZE78p9HvAg9qQ@mail.gmail.com>
+References: <20190518004639.20648-1-mcroce@redhat.com>
+        <CAGnkfhxt=nq-JV+D5Rrquvn8BVOjHswEJmuVVZE78p9HvAg9qQ@mail.gmail.com>
+Organization: Netronome Systems, Ltd.
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8BIT
-Content-Type: text/plain; charset="iso-8859-1"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Am Montag, 20. Mai 2019, 22:16:46 CEST schrieb Doug Anderson:
-> Hi,
-> 
-> On Mon, May 20, 2019 at 10:01 AM Matthias Kaehlcke <mka@chromium.org> wrote:
+On Mon, 20 May 2019 19:46:27 +0200, Matteo Croce wrote:
+> On Sat, May 18, 2019 at 2:46 AM Matteo Croce <mcroce@redhat.com> wrote:
 > >
-> > On rk3288 the CPU and GPU temperatures are correlated. Limit the GPU
-> > frequency on veyron mickey to 300 MHz for CPU temperatures >= 85°C.
-> >
-> > This matches the configuration of the downstream Chrome OS 3.14 kernel,
-> > the 'official' kernel for mickey.
-> >
-> > Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
-> > ---
-> > Note: this patch depends on "ARM: dts: rockchip: Add #cooling-cells
-> > entry for rk3288 GPU" (https://lore.kernel.org/patchwork/patch/1075005/)
-> > ---
-> >  arch/arm/boot/dts/rk3288-veyron-mickey.dts | 6 ++++++
-> >  1 file changed, 6 insertions(+)
-> >
-> > diff --git a/arch/arm/boot/dts/rk3288-veyron-mickey.dts b/arch/arm/boot/dts/rk3288-veyron-mickey.dts
-> > index d889ab3c8235..f118d92a49d0 100644
-> > --- a/arch/arm/boot/dts/rk3288-veyron-mickey.dts
-> > +++ b/arch/arm/boot/dts/rk3288-veyron-mickey.dts
-> > @@ -125,6 +125,12 @@
-> >                                          <&cpu2 8 THERMAL_NO_LIMIT>,
-> >                                          <&cpu3 8 THERMAL_NO_LIMIT>;
-> >                 };
-> > +
-> > +               /* At very hot, don't let GPU go over 300 MHz */
-> > +               cpu_very_hot_limit_gpu {
-> > +                       trip = <&cpu_alert_very_hot>;
-> > +                       cooling-device = <&gpu 2 2>;
-> > +               };
+> > Fix the following error by removing a duplicate struct definition:
+> >  
 > 
-> Two things:
+> Hi all,
 > 
-> A) If I'm reading things properly, you're actually limiting things to
-> 400 MHz.  This is because you don't have <https://crrev.com/c/1574579>
-> which deletes the 500 MHz GPU operating point.  So on upstream the
-> available points are:
-> 
-> 0: 600 MHz
-> 1: 500 MHz
-> 2: 400 MHz
-> 3: 300 MHz
-> 4: 200 MHz
-> 5: 100 MHz
-> 
-> ...and downstream:
-> 
-> 0: 600 MHz
-> 1: 400 MHz
-> 2: 300 MHz
-> 3: 200 MHz
-> 4: 100 MHz
-> 
-> Thinking about it more, I bet Heiko would actually be OK deleting the
-> 500 MHz GPU operating point for veyron.  Technically it's not needed
-> upstream because upstream doesn't have our hacks to allow re-purposing
-> NPLL for HDMI (so they _can_ make 500 MHz) but maybe we can make the
-> argument that these laptops have only ever been tested with the 500
-> MHz operating point removed and also that eventually someonje will
-> probably figure out a way to re-purpose NPLL for HDMI even upstream...
+> I forget to send a cover letter for this series, but basically what I
+> wanted to say is that while patches 1-3 are very straightforward,
+> patches 4-5 are a bit rough and I accept suggstions to make a cleaner
+> work.
 
-Yeah. Dropping the opp sounds sensible ... for the npll-related thing
-and also if you're really running into thermal constraints it might be
-good to give the system a bit more breathing room?
+samples depend on headers being locally installed:
 
+make headers_install
 
-Heiko
-
-
-> B) It seems like in the same patch you'd want to introduce
-> "cpu_warm_limit_gpu", AKA:
-> 
-> cpu_warm_limit_gpu {
->   trip = <&cpu_alert_warm>;
->   cooling-device =
->   <&gpu 1 1>;
-> };
-> 
-> 
-> -Doug
-
-
-
-
+Are you intending to change that?
