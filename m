@@ -2,149 +2,279 @@ Return-Path: <SRS0=lq4r=TU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB06AC46460
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 09:18:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BFE8C04AAF
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 09:18:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F5ED206B6
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 09:18:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="AAZiQse/"
+	by mail.kernel.org (Postfix) with ESMTP id EC2972085A
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 09:18:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1558343915;
+	bh=i77XoBxtIjrQYK//WH1eiyH3aTUTMFgkK/ubAmw1SBc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=xqUPBZyoYGHR7mWSDo5KHGQH6YCckKLCYh2ulUCUCPnrypZYZZkZ5a+4ka9e3c/4r
+	 YmVXGX3K7nH+iRwnerFrhOToI2wDy4jdaHDLvp8uZI4F1hzu45pgte9tTbmXdfdrmc
+	 Ep2n2s9yGnoYX3NnIkG1UrJrl0Q0nGaz0wvVnO48=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731997AbfETJSD (ORCPT
+        id S1732006AbfETJSe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 05:18:03 -0400
-Received: from mail-eopbgr10071.outbound.protection.outlook.com ([40.107.1.71]:17579
-        "EHLO EUR02-HE1-obe.outbound.protection.outlook.com"
+        Mon, 20 May 2019 05:18:34 -0400
+Received: from mx2.suse.de ([195.135.220.15]:38096 "EHLO mx1.suse.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729598AbfETJSD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 05:18:03 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Wjq3w45GRiFI2//a7t647tCKQUdF8+Ggx6O/vEK4e64=;
- b=AAZiQse/9fx1IdhbxGlYWJ2xnUx3C4b3lKPUTLS3pHBeoZI3NREuShxXWZqsfW9T7kNct6zPqXAPHw3chSsVPGd/n7Ic4qEVWDaLYVtmrMhipHWsc+IbHiuXWzGErMbogezjWGwaRVvga1IBixjFjL/Bu1E9jznqexUHp6Mh+mY=
-Received: from AM5PR0402MB2865.eurprd04.prod.outlook.com (10.175.44.16) by
- AM5PR0402MB2833.eurprd04.prod.outlook.com (10.175.41.140) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1900.16; Mon, 20 May 2019 09:17:59 +0000
-Received: from AM5PR0402MB2865.eurprd04.prod.outlook.com
- ([fe80::d8ed:b418:4ee9:a51]) by AM5PR0402MB2865.eurprd04.prod.outlook.com
- ([fe80::d8ed:b418:4ee9:a51%9]) with mapi id 15.20.1900.020; Mon, 20 May 2019
- 09:17:59 +0000
-From:   Ran Wang <ran.wang_1@nxp.com>
-To:     Pavel Machek <pavel@denx.de>
-CC:     Leo Li <leoyang.li@nxp.com>, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <len.brown@intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>
-Subject: RE: [PATCH V2 3/3] soc: fsl: add RCPM driver
-Thread-Topic: [PATCH V2 3/3] soc: fsl: add RCPM driver
-Thread-Index: AQHVDGHzIQrvIPzRX0ytn5pxhdLuLqZy/bMAgACX+4CAACV3gIAAANBwgAACRYCAAAHg8A==
-Date:   Mon, 20 May 2019 09:17:59 +0000
-Message-ID: <AM5PR0402MB2865E28B2E2296CB878ACEA2F1060@AM5PR0402MB2865.eurprd04.prod.outlook.com>
-References: <20190517033946.30763-1-ran.wang_1@nxp.com>
- <20190517033946.30763-3-ran.wang_1@nxp.com> <20190519213844.GH31403@amd>
- <AM5PR0402MB2865EC5E1EF12C6C1D3C5566F1060@AM5PR0402MB2865.eurprd04.prod.outlook.com>
- <20190520085647.GA9748@amd>
- <AM5PR0402MB2865F4574B19761848B001F9F1060@AM5PR0402MB2865.eurprd04.prod.outlook.com>
- <20190520090748.GB9748@amd>
-In-Reply-To: <20190520090748.GB9748@amd>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=ran.wang_1@nxp.com; 
-x-originating-ip: [92.121.36.198]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: b0451e86-49ec-44c6-b934-08d6dd040d87
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:AM5PR0402MB2833;
-x-ms-traffictypediagnostic: AM5PR0402MB2833:
-x-microsoft-antispam-prvs: <AM5PR0402MB283301A6038AA2B3C9115EDFF1060@AM5PR0402MB2833.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8882;
-x-forefront-prvs: 004395A01C
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(39860400002)(366004)(346002)(376002)(136003)(396003)(189003)(199004)(7696005)(2906002)(99286004)(86362001)(6246003)(14454004)(74316002)(53546011)(229853002)(6506007)(11346002)(9686003)(68736007)(446003)(476003)(55016002)(6116002)(3846002)(305945005)(102836004)(76176011)(486006)(53936002)(6916009)(6436002)(7736002)(66476007)(66556008)(64756008)(66446008)(5660300002)(66066001)(33656002)(66946007)(73956011)(8936002)(7416002)(316002)(25786009)(186003)(76116006)(54906003)(71190400001)(26005)(478600001)(81166006)(4326008)(8676002)(71200400001)(256004)(81156014)(52536014);DIR:OUT;SFP:1101;SCL:1;SRVR:AM5PR0402MB2833;H:AM5PR0402MB2865.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: /ImH+jFa5VWy3XrIpi+JhjHUOysWf7NmzT8XE2im6LtT3xp4u6FcHv9ZtYjXfnKaIks2K4mNNmtdR4PTYOTOY/gvOjvn6fO9cTKxd9eWdyc+hBtomrxrahv6fwXIaJ81f2BM2YFY290fT/+UW77feNt8GNYfVXu/j14+1UpENd9LjquMTspSrlVF4usRimpKrEdAt/YMg4fU1vt1gTs7wE+bBfFzcKSJtX8W16JvE2cwe1SicBo3a7mIFqpT2u1VTx1UvYgToqpNrH1k+Fk/UWZpQGi2o6/+PJ8Rka58LM5Bkas3Mu03HH3sLT4t80K5JTA3L2PfoIewHsyUVuEcMU/pCFpxoCfrp+hWb/e6e0m4ZqXLZQlcbrWQMkchxCHM16+Y3/y79LZbGopZbMAa6qMRYqJX3HQQzg7jbj0dSg4=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        id S1729598AbfETJSd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 05:18:33 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 7089AAE4B;
+        Mon, 20 May 2019 09:18:30 +0000 (UTC)
+Date:   Mon, 20 May 2019 11:18:29 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Minchan Kim <minchan@kernel.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-mm <linux-mm@kvack.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Tim Murray <timmurray@google.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Suren Baghdasaryan <surenb@google.com>,
+        Daniel Colascione <dancol@google.com>,
+        Shakeel Butt <shakeelb@google.com>,
+        Sonny Rao <sonnyrao@google.com>,
+        Brian Geffon <bgeffon@google.com>, linux-api@vger.kernel.org
+Subject: Re: [RFC 5/7] mm: introduce external memory hinting API
+Message-ID: <20190520091829.GY6836@dhcp22.suse.cz>
+References: <20190520035254.57579-1-minchan@kernel.org>
+ <20190520035254.57579-6-minchan@kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: b0451e86-49ec-44c6-b934-08d6dd040d87
-X-MS-Exchange-CrossTenant-originalarrivaltime: 20 May 2019 09:17:59.4418
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM5PR0402MB2833
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190520035254.57579-6-minchan@kernel.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Pavel,
+[Cc linux-api]
 
-On Monday, May 20, 2019 17:08 Pavel Machek wrote:
-> > > Hi!
-> > >
-> > > > > > +static int rcpm_pm_prepare(struct device *dev) {
-> > > > > > +	struct device_node *np =3D dev->of_node;
-> > > > > > +	struct wakeup_source *ws;
-> > > > > > +	struct rcpm *rcpm;
-> > > > > > +	u32 value[RCPM_WAKEUP_CELL_MAX_SIZE + 1], tmp;
-> > > > > > +	int i, ret;
-> > > > > > +
-> > > > > > +	rcpm =3D dev_get_drvdata(dev);
-> > > > > > +	if (!rcpm)
-> > > > > > +		return -EINVAL;
-> > > > > > +
-> > > > > > +	/* Begin with first registered wakeup source */
-> > > > > > +	ws =3D wakeup_source_get_next(NULL);
-> > > > > > +	while (ws) {
-> > > > >
-> > > > > while (ws =3D wakeup_source_get_next(NULL)) ?
-> > > >
-> > > > Actually, we only pass NULL to wakeup_source_get_next() at very
-> > > > first call to get 1st wakeup source. Then in the while loop, we
-> > > > will fetch next source but not 1st, that's different. I am afraid
-> > > > your suggestion is not quite correct.
-> > >
-> > > Sorry, I seen your next version before seeing this explanation.
-> > >
-> > > You are right, but the current code is "interesting". What about
-> > >
-> > >     ws =3D NULL;
-> > >     while (ws =3D wakeup_source_get_next(NULL)) ...
-> > >
-> > > then?
-> >
-> > Did you mean:
-> >      ws =3D NULL;
-> >      while (ws =3D wakeup_source_get_next(ws)) ...
-> >
-> >    Yes, that will be the same to my original logic, do you recommend
-> > to change to this? :)
->=20
-> Yes please. It will be less confusing to the reader.
+On Mon 20-05-19 12:52:52, Minchan Kim wrote:
+> There is some usecase that centralized userspace daemon want to give
+> a memory hint like MADV_[COOL|COLD] to other process. Android's
+> ActivityManagerService is one of them.
+> 
+> It's similar in spirit to madvise(MADV_WONTNEED), but the information
+> required to make the reclaim decision is not known to the app. Instead,
+> it is known to the centralized userspace daemon(ActivityManagerService),
+> and that daemon must be able to initiate reclaim on its own without
+> any app involvement.
 
-OK, if no other comment, I will work out v4, fix this and extra ','
-=20
-> Thanks (and sorry for cross-talk),
+Could you expand some more about how this all works? How does the
+centralized daemon track respective ranges? How does it synchronize
+against parallel modification of the address space etc.
 
-That's OK, thanks for your time.
+> To solve the issue, this patch introduces new syscall process_madvise(2)
+> which works based on pidfd so it could give a hint to the exeternal
+> process.
+> 
+> int process_madvise(int pidfd, void *addr, size_t length, int advise);
 
-Regards,
-Ran
+OK, this makes some sense from the API point of view. When we have
+discussed that at LSFMM I was contemplating about something like that
+except the fd would be a VMA fd rather than the process. We could extend
+and reuse /proc/<pid>/map_files interface which doesn't support the
+anonymous memory right now. 
+
+I am not saying this would be a better interface but I wanted to mention
+it here for a further discussion. One slight advantage would be that
+you know the exact object that you are operating on because you have a
+fd for the VMA and we would have a more straightforward way to reject
+operation if the underlying object has changed (e.g. unmapped and reused
+for a different mapping).
+
+> All advises madvise provides can be supported in process_madvise, too.
+> Since it could affect other process's address range, only privileged
+> process(CAP_SYS_PTRACE) or something else(e.g., being the same UID)
+> gives it the right to ptrrace the process could use it successfully.
+
+proc_mem_open model we use for accessing address space via proc sounds
+like a good mode. You are doing something similar.
+
+> Please suggest better idea if you have other idea about the permission.
+> 
+> * from v1r1
+>   * use ptrace capability - surenb, dancol
+> 
+> Signed-off-by: Minchan Kim <minchan@kernel.org>
+> ---
+>  arch/x86/entry/syscalls/syscall_32.tbl |  1 +
+>  arch/x86/entry/syscalls/syscall_64.tbl |  1 +
+>  include/linux/proc_fs.h                |  1 +
+>  include/linux/syscalls.h               |  2 ++
+>  include/uapi/asm-generic/unistd.h      |  2 ++
+>  kernel/signal.c                        |  2 +-
+>  kernel/sys_ni.c                        |  1 +
+>  mm/madvise.c                           | 45 ++++++++++++++++++++++++++
+>  8 files changed, 54 insertions(+), 1 deletion(-)
+> 
+> diff --git a/arch/x86/entry/syscalls/syscall_32.tbl b/arch/x86/entry/syscalls/syscall_32.tbl
+> index 4cd5f982b1e5..5b9dd55d6b57 100644
+> --- a/arch/x86/entry/syscalls/syscall_32.tbl
+> +++ b/arch/x86/entry/syscalls/syscall_32.tbl
+> @@ -438,3 +438,4 @@
+>  425	i386	io_uring_setup		sys_io_uring_setup		__ia32_sys_io_uring_setup
+>  426	i386	io_uring_enter		sys_io_uring_enter		__ia32_sys_io_uring_enter
+>  427	i386	io_uring_register	sys_io_uring_register		__ia32_sys_io_uring_register
+> +428	i386	process_madvise		sys_process_madvise		__ia32_sys_process_madvise
+> diff --git a/arch/x86/entry/syscalls/syscall_64.tbl b/arch/x86/entry/syscalls/syscall_64.tbl
+> index 64ca0d06259a..0e5ee78161c9 100644
+> --- a/arch/x86/entry/syscalls/syscall_64.tbl
+> +++ b/arch/x86/entry/syscalls/syscall_64.tbl
+> @@ -355,6 +355,7 @@
+>  425	common	io_uring_setup		__x64_sys_io_uring_setup
+>  426	common	io_uring_enter		__x64_sys_io_uring_enter
+>  427	common	io_uring_register	__x64_sys_io_uring_register
+> +428	common	process_madvise		__x64_sys_process_madvise
+>  
+>  #
+>  # x32-specific system call numbers start at 512 to avoid cache impact
+> diff --git a/include/linux/proc_fs.h b/include/linux/proc_fs.h
+> index 52a283ba0465..f8545d7c5218 100644
+> --- a/include/linux/proc_fs.h
+> +++ b/include/linux/proc_fs.h
+> @@ -122,6 +122,7 @@ static inline struct pid *tgid_pidfd_to_pid(const struct file *file)
+>  
+>  #endif /* CONFIG_PROC_FS */
+>  
+> +extern struct pid *pidfd_to_pid(const struct file *file);
+>  struct net;
+>  
+>  static inline struct proc_dir_entry *proc_net_mkdir(
+> diff --git a/include/linux/syscalls.h b/include/linux/syscalls.h
+> index e2870fe1be5b..21c6c9a62006 100644
+> --- a/include/linux/syscalls.h
+> +++ b/include/linux/syscalls.h
+> @@ -872,6 +872,8 @@ asmlinkage long sys_munlockall(void);
+>  asmlinkage long sys_mincore(unsigned long start, size_t len,
+>  				unsigned char __user * vec);
+>  asmlinkage long sys_madvise(unsigned long start, size_t len, int behavior);
+> +asmlinkage long sys_process_madvise(int pid_fd, unsigned long start,
+> +				size_t len, int behavior);
+>  asmlinkage long sys_remap_file_pages(unsigned long start, unsigned long size,
+>  			unsigned long prot, unsigned long pgoff,
+>  			unsigned long flags);
+> diff --git a/include/uapi/asm-generic/unistd.h b/include/uapi/asm-generic/unistd.h
+> index dee7292e1df6..7ee82ce04620 100644
+> --- a/include/uapi/asm-generic/unistd.h
+> +++ b/include/uapi/asm-generic/unistd.h
+> @@ -832,6 +832,8 @@ __SYSCALL(__NR_io_uring_setup, sys_io_uring_setup)
+>  __SYSCALL(__NR_io_uring_enter, sys_io_uring_enter)
+>  #define __NR_io_uring_register 427
+>  __SYSCALL(__NR_io_uring_register, sys_io_uring_register)
+> +#define __NR_process_madvise 428
+> +__SYSCALL(__NR_process_madvise, sys_process_madvise)
+>  
+>  #undef __NR_syscalls
+>  #define __NR_syscalls 428
+> diff --git a/kernel/signal.c b/kernel/signal.c
+> index 1c86b78a7597..04e75daab1f8 100644
+> --- a/kernel/signal.c
+> +++ b/kernel/signal.c
+> @@ -3620,7 +3620,7 @@ static int copy_siginfo_from_user_any(kernel_siginfo_t *kinfo, siginfo_t *info)
+>  	return copy_siginfo_from_user(kinfo, info);
+>  }
+>  
+> -static struct pid *pidfd_to_pid(const struct file *file)
+> +struct pid *pidfd_to_pid(const struct file *file)
+>  {
+>  	if (file->f_op == &pidfd_fops)
+>  		return file->private_data;
+> diff --git a/kernel/sys_ni.c b/kernel/sys_ni.c
+> index 4d9ae5ea6caf..5277421795ab 100644
+> --- a/kernel/sys_ni.c
+> +++ b/kernel/sys_ni.c
+> @@ -278,6 +278,7 @@ COND_SYSCALL(mlockall);
+>  COND_SYSCALL(munlockall);
+>  COND_SYSCALL(mincore);
+>  COND_SYSCALL(madvise);
+> +COND_SYSCALL(process_madvise);
+>  COND_SYSCALL(remap_file_pages);
+>  COND_SYSCALL(mbind);
+>  COND_SYSCALL_COMPAT(mbind);
+> diff --git a/mm/madvise.c b/mm/madvise.c
+> index 119e82e1f065..af02aa17e5c1 100644
+> --- a/mm/madvise.c
+> +++ b/mm/madvise.c
+> @@ -9,6 +9,7 @@
+>  #include <linux/mman.h>
+>  #include <linux/pagemap.h>
+>  #include <linux/page_idle.h>
+> +#include <linux/proc_fs.h>
+>  #include <linux/syscalls.h>
+>  #include <linux/mempolicy.h>
+>  #include <linux/page-isolation.h>
+> @@ -16,6 +17,7 @@
+>  #include <linux/hugetlb.h>
+>  #include <linux/falloc.h>
+>  #include <linux/sched.h>
+> +#include <linux/sched/mm.h>
+>  #include <linux/ksm.h>
+>  #include <linux/fs.h>
+>  #include <linux/file.h>
+> @@ -1140,3 +1142,46 @@ SYSCALL_DEFINE3(madvise, unsigned long, start, size_t, len_in, int, behavior)
+>  {
+>  	return madvise_core(current, start, len_in, behavior);
+>  }
+> +
+> +SYSCALL_DEFINE4(process_madvise, int, pidfd, unsigned long, start,
+> +		size_t, len_in, int, behavior)
+> +{
+> +	int ret;
+> +	struct fd f;
+> +	struct pid *pid;
+> +	struct task_struct *tsk;
+> +	struct mm_struct *mm;
+> +
+> +	f = fdget(pidfd);
+> +	if (!f.file)
+> +		return -EBADF;
+> +
+> +	pid = pidfd_to_pid(f.file);
+> +	if (IS_ERR(pid)) {
+> +		ret = PTR_ERR(pid);
+> +		goto err;
+> +	}
+> +
+> +	ret = -EINVAL;
+> +	rcu_read_lock();
+> +	tsk = pid_task(pid, PIDTYPE_PID);
+> +	if (!tsk) {
+> +		rcu_read_unlock();
+> +		goto err;
+> +	}
+> +	get_task_struct(tsk);
+> +	rcu_read_unlock();
+> +	mm = mm_access(tsk, PTRACE_MODE_ATTACH_REALCREDS);
+> +	if (!mm || IS_ERR(mm)) {
+> +		ret = IS_ERR(mm) ? PTR_ERR(mm) : -ESRCH;
+> +		if (ret == -EACCES)
+> +			ret = -EPERM;
+> +		goto err;
+> +	}
+> +	ret = madvise_core(tsk, start, len_in, behavior);
+> +	mmput(mm);
+> +	put_task_struct(tsk);
+> +err:
+> +	fdput(f);
+> +	return ret;
+> +}
+> -- 
+> 2.21.0.1020.gf2820cf01a-goog
+> 
+
+-- 
+Michal Hocko
+SUSE Labs
