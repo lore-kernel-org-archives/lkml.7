@@ -2,114 +2,99 @@ Return-Path: <SRS0=lq4r=TU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3747CC04AAC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 15:30:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88A21C04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 15:30:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0D7212081C
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 15:30:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="DCRbZrTz"
+	by mail.kernel.org (Postfix) with ESMTP id 68B3E2081C
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 15:30:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388500AbfETPa0 (ORCPT
+        id S2388613AbfETPa3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 11:30:26 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:42024 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731262AbfETPaZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 11:30:25 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x4KFIvkS157728;
-        Mon, 20 May 2019 15:29:53 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to :
- references : cc : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2018-07-02;
- bh=0EvPgRUdCIUxRMJnLIUUNZuM8SwOIDsp1UXcz3PVWp8=;
- b=DCRbZrTzikqxea71r02YALc07W4tHXkFF63CP0Ug2ULSIKqWcnSOnp84cf2iaoGoeYFJ
- JfyL1pX+S6ThO6vX9WmFnrH8dy/nsA2bUVXjUAszMnjL+3HJCcVYFBHuee7JvgHmijSt
- nyyeaoQpBM7tdyRCip+6WMmS6+qgZyOPGLeAtuj7Dvcclqya/VaL/5PgVLLjNrvoiMlW
- OtqwLyJmOvoodi4harW84ohv/wk+KdixRbRHVZIi82hIrGSEx8tnFO19GTUJI+CLQrMe
- OfsCrAOp/uTwFaoeUrI4cmOvibvyLV5wnXiE3fPwOJMgUSOSEGJ5SQraLDdMY3dnufHu eA== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2120.oracle.com with ESMTP id 2sjapq7mep-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 20 May 2019 15:29:53 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x4KFS9v0161935;
-        Mon, 20 May 2019 15:29:53 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by userp3030.oracle.com with ESMTP id 2skudaurj4-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 20 May 2019 15:29:53 +0000
-Received: from abhmp0022.oracle.com (abhmp0022.oracle.com [141.146.116.28])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x4KFTpxY021854;
-        Mon, 20 May 2019 15:29:51 GMT
-Received: from [10.132.107.27] (/10.132.107.27)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 20 May 2019 15:29:51 +0000
-Subject: Re: [PATCH] tracing: Kernel access to Ftrace instances
-To:     Steven Rostedt <rostedt@goodmis.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>
-References: <1553106531-3281-1-git-send-email-divya.indi@oracle.com>
- <1553106531-3281-2-git-send-email-divya.indi@oracle.com>
- <20190516090942.75f3a957ceed20201edc91a6@kernel.org>
- <a96e884d-534f-65ef-8f82-85cd52953695@oracle.com>
- <20190516120529.4c1f6e6ddd516185df149625@kernel.org>
- <F331FDC8-9E63-4042-A933-BDC197C9A031@goodmis.org>
- <20190520112304.62db2c8c@gandalf.local.home>
-Cc:     linux-kernel@vger.kernel.org, Joe Jin <joe.jin@oracle.com>
-From:   divya.indi@oracle.com
-Organization: Oracle Corporation
-Message-ID: <fc8fd0b5-f239-462a-6c22-52b99e56a843@oracle.com>
-Date:   Mon, 20 May 2019 08:29:50 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:45.0) Gecko/20100101
- Thunderbird/45.4.0
+        Mon, 20 May 2019 11:30:29 -0400
+Received: from mga03.intel.com ([134.134.136.65]:62180 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731262AbfETPa2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 11:30:28 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 May 2019 08:30:27 -0700
+X-ExtLoop1: 1
+Received: from jacob-builder.jf.intel.com (HELO jacob-builder) ([10.7.199.155])
+  by orsmga004.jf.intel.com with ESMTP; 20 May 2019 08:30:27 -0700
+Date:   Mon, 20 May 2019 08:33:23 -0700
+From:   Jacob Pan <jacob.jun.pan@linux.intel.com>
+To:     LKML <linux-kernel@vger.kernel.org>,
+        iommu@lists.linux-foundation.org, Joerg Roedel <joro@8bytes.org>,
+        David Woodhouse <dwmw2@infradead.org>
+Cc:     Raj Ashok <ashok.raj@intel.com>,
+        "Lu Baolu" <baolu.lu@linux.intel.com>,
+        jacob.jun.pan@linux.intel.com
+Subject: Re: [PATCH] iommu/vt-d: Fix bind svm with multiple devices
+Message-ID: <20190520083323.1decb496@jacob-builder>
+In-Reply-To: <1557343366-18686-1-git-send-email-jacob.jun.pan@linux.intel.com>
+References: <1557343366-18686-1-git-send-email-jacob.jun.pan@linux.intel.com>
+Organization: OTC
+X-Mailer: Claws Mail 3.13.2 (GTK+ 2.24.30; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <20190520112304.62db2c8c@gandalf.local.home>
-Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9262 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1905200100
-X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9262 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1905200100
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Joerg & David,
 
+Any feedback on this one? Thanks.
 
-On 05/20/2019 08:23 AM, Steven Rostedt wrote:
-> On Wed, 15 May 2019 20:24:43 -0700
-> Steven Rostedt <rostedt@goodmis.org> wrote:
->>> It seems your's already in Steve's ftrace/core branch, so I think you
->>> can make
->>> additional patch to fix it. Steve, is that OK?
->>>   
->> Yes. In fact I already sent a pull request to Linus.  Please send a patch on top of my ftrace/core branch.
->>
-> And now it is in mainline (v5.2-rc1). Please send a patch with a sample
-> module (as Masami requested). Also, that function not only needs to be
-> changed to not being static, you need to add it to a header
-> (include/linux/trace_events.h?)
->
-> Thanks!
-Working on it. Will send it out soon.
+On Wed,  8 May 2019 12:22:46 -0700
+Jacob Pan <jacob.jun.pan@linux.intel.com> wrote:
 
-Thanks,
-Divya
->
-> -- Steve
+> If multiple devices try to bind to the same mm/PASID, we need to
+> set up first level PASID entries for all the devices. The current
+> code does not consider this case which results in failed DMA for
+> devices after the first bind.
+> 
+> Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
+> Reported-by: Mike Campin <mike.campin@intel.com>
+> ---
+>  drivers/iommu/intel-svm.c | 15 +++++++++++++++
+>  1 file changed, 15 insertions(+)
+> 
+> diff --git a/drivers/iommu/intel-svm.c b/drivers/iommu/intel-svm.c
+> index 3a4b09a..f3d59d1 100644
+> --- a/drivers/iommu/intel-svm.c
+> +++ b/drivers/iommu/intel-svm.c
+> @@ -357,6 +357,21 @@ int intel_svm_bind_mm(struct device *dev, int
+> *pasid, int flags, struct svm_dev_ }
+>  
+>  		list_add_tail(&svm->list, &global_svm_list);
+> +	} else {
+> +		/*
+> +		 * Binding a new device with existing PASID, need to
+> setup
+> +		 * the PASID entry.
+> +		 */
+> +		spin_lock(&iommu->lock);
+> +		ret = intel_pasid_setup_first_level(iommu, dev,
+> +						mm ? mm->pgd :
+> init_mm.pgd,
+> +						svm->pasid,
+> FLPT_DEFAULT_DID,
+> +						mm ? 0 :
+> PASID_FLAG_SUPERVISOR_MODE);
+> +		spin_unlock(&iommu->lock);
+> +		if (ret) {
+> +			kfree(sdev);
+> +			goto out;
+> +		}
+>  	}
+>  	list_add_rcu(&sdev->list, &svm->devs);
+>  
 
+[Jacob Pan]
