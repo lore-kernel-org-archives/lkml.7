@@ -2,97 +2,127 @@ Return-Path: <SRS0=lq4r=TU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06690C04AAC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 19:40:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB54CC04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 19:44:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CCFDD206BA
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 19:39:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A23CB20863
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 19:44:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HOcdZ37i"
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="U+BzZHbe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726105AbfETTj6 (ORCPT
+        id S1726076AbfETToF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 15:39:58 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:46370 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725776AbfETTj6 (ORCPT
+        Mon, 20 May 2019 15:44:05 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:40958 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725554AbfETToF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 15:39:58 -0400
-Received: by mail-ot1-f65.google.com with SMTP id j49so14053527otc.13
-        for <linux-kernel@vger.kernel.org>; Mon, 20 May 2019 12:39:57 -0700 (PDT)
+        Mon, 20 May 2019 15:44:05 -0400
+Received: by mail-wr1-f66.google.com with SMTP id f10so513570wre.7;
+        Mon, 20 May 2019 12:44:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=YUebiJ17NNcVQLQtzTcIV5nv9UHDA/a87tJuX5tMn/8=;
-        b=HOcdZ37iA3KIpicArUDLvp/H06khXD4BJ8w51c5cTnkSaYcohwuP6m4KIyPJUbg2Ln
-         frxbp3AmBj1k+v1fFV78QttRQqgKj2kiulb9Hz8+o5jM7o4ikoYb/DcsxCQ0rVqgCvp+
-         rYyfigZThMPu0bHxSCQGAhxBBeVCL9q8Irv/75St48hPEDy2Rr+1INJ0luV0UxDmDHQ5
-         4GRp7pIfgwNqxLyYMeW1XMGPe+Wa4O3d6hROV4IcY82Ig1IagwemYysS88KP4HQUgeQG
-         DnWRWi+drPXnemSrVDFMMgDcZaPpz7T5yRJ9WbyEfxD5Q2R80mZVQogRxBtmS1+FldgO
-         uQ1w==
+        d=googlemail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=hVta5xB/O0QdvUGc5eYkdvpzELli1ZpHwr59R5nENcw=;
+        b=U+BzZHbeO1KY+dPmw/oGi3XSWlv90ycsDjx9KXI1IOImK13sc2HFLTbDBRkR1LHxH6
+         +if9w9trTLebLbFzw3M2MkHFy67mF0vIIMh9//saXEcs78CYk6pfEuM2T+Yo/SbreWdx
+         AUUgrkT+kPv4wm0NkTZmHzygH6OHSaOC0iGu1JsRjSWS8IK6o8lKSygaqCQIPSB9wnCd
+         SQ5+pRE308Avd7zKs4DRKUUYXogC/Ay3rtZU00hDgCKcErpndPWlTi89LYl5r8fVPjvi
+         O6X8lAzlYYv2egbSv9M2ilcFmWDuOVKlX/BQGBGwc91NrmxKpNuizf6i/JBen7cCTP7l
+         BPmA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=YUebiJ17NNcVQLQtzTcIV5nv9UHDA/a87tJuX5tMn/8=;
-        b=fDVyhiXzgaJrB3gPswf9UH3HSxj4re/FjEUeZoLcbXmxHfCYoFZ+ajnM3OfvJzHqQL
-         M1oWjtnPs+EHeIY06aHz9FrE2D65noMDbu166gCB6AymLhr1497yLRouhdO9QwAWyc/J
-         BLtMAErKleYoJaPGvnFhCaongtieC5lBt0k8pcelvma/hZqx93yOE8Qjm7J1xbO561bu
-         yOQJjlOCrvkP25WO3iCsQLNwzQ4mrzKtnRUuVbU7CI+IRUOnHvoTBcFkRGnFaDHwOgt3
-         GKtL36ZdjDSVhSkRyiEgAnVjGcQ9aREnUV3qRbua8Ya/a9wrSjr5XLkwDeJ2dL8maVc3
-         3+XQ==
-X-Gm-Message-State: APjAAAWB8MJfpS3VAb4YwjMDL3JlpUr3qRsDQqyHR9HQxnpLhm0VzF0s
-        KiNXDsdNxGizI4766j0YLMxHacpJzDXaS6ztpZlVbZ9f
-X-Google-Smtp-Source: APXvYqyAzsyd0JjafVrjBkqHTQm6x3Gej0Of1TZSOGirgn94Wl2rSIKwhd/jZA3Dh5DHWiyM2soWCtM8a12Mu8PfuKc=
-X-Received: by 2002:a9d:6e0f:: with SMTP id e15mr35944128otr.0.1558381197425;
- Mon, 20 May 2019 12:39:57 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=hVta5xB/O0QdvUGc5eYkdvpzELli1ZpHwr59R5nENcw=;
+        b=rRDYQbpYhV6FXafwA6vasbSDPaFq3pw0F8UYJyzN/ktXSgiVJmnNNMu0BxLBFTtx7S
+         6b6/j0B3H4s/GA09637rsfjXDOud8KftOprsAxCBZUM8Spl9NqDvQ+ws6mgXrrx6BwIi
+         zsUtK8otxpBH3LhyDbM1ZU30Q3ohj/zqtPHUXzcb+XPT7ax8FsR2yWvOP25napx6SDCf
+         8jnqlhhtXYU4rghRs6MF+Te/vFWqJuzHw3etYkNmrie0cGX1IQ9n8bHSLIWoy59uc/Bk
+         qQuY7E/hYO3Jm5RNVGBlkHBPxTym2lYe7SUvee8Svu5VRpJNUAEhGozk7nWrGuAFQH6+
+         RnxA==
+X-Gm-Message-State: APjAAAU9ajs35dPEmyuJY1ptUvflYTSLGOycwzODIfBC1yI+MP0HUQzf
+        XX6OZWwqR56zYnB21NKB2qU=
+X-Google-Smtp-Source: APXvYqynMyqoH9GhYe+AN/gAgwqbO94OY9y/bT/SijzrVrRAbf9a6+TW6auDD4ShFC3FSuOOiz30pg==
+X-Received: by 2002:a5d:6b03:: with SMTP id v3mr2725642wrw.309.1558381443684;
+        Mon, 20 May 2019 12:44:03 -0700 (PDT)
+Received: from blackbox.darklights.net (p200300F133EE71009C356FA1F0E19AF9.dip0.t-ipconnect.de. [2003:f1:33ee:7100:9c35:6fa1:f0e1:9af9])
+        by smtp.googlemail.com with ESMTPSA id p8sm9135352wro.0.2019.05.20.12.44.02
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 20 May 2019 12:44:02 -0700 (PDT)
+From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+To:     linux-amlogic@lists.infradead.org, khilman@baylibre.com,
+        mjourdan@baylibre.com, robh+dt@kernel.org, mark.rutland@arm.com,
+        devicetree@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Subject: [PATCH v2 0/5] 32-bit Meson: add the canvas module
+Date:   Mon, 20 May 2019 21:43:48 +0200
+Message-Id: <20190520194353.24445-1-martin.blumenstingl@googlemail.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-References: <1558115396-3244-1-git-send-email-oscargomezf@gmail.com> <CAGngYiUZmfnuj5WUnwk18szijmsQjF27j=OxQfJtp5bNORppRQ@mail.gmail.com>
-In-Reply-To: <CAGngYiUZmfnuj5WUnwk18szijmsQjF27j=OxQfJtp5bNORppRQ@mail.gmail.com>
-From:   Sven Van Asbroeck <thesven73@gmail.com>
-Date:   Mon, 20 May 2019 15:39:46 -0400
-Message-ID: <CAGngYiUCedv6oqTPOS+eFwnQJajor3hwKjxeNRcKq031giZeXg@mail.gmail.com>
-Subject: Re: [PATCH] staging: fieldbus: solve warning incorrect type dev_core.c
-To:     Oscar Gomez Fuente <oscargomezf@gmail.com>
-Cc:     Greg KH <gregkh@linuxfoundation.org>, devel@driverdev.osuosl.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 20, 2019 at 2:35 PM Sven Van Asbroeck <thesven73@gmail.com> wrote:
->
-> Hi Oscar, thank you for your contribution! I have a question, see inline.
->
-> On Fri, May 17, 2019 at 1:50 PM Oscar Gomez Fuente
-> <oscargomezf@gmail.com> wrote:
-> >
-> > These changes solve a warning realated to an incorrect type inilizer in the function
-> > fieldbus_poll.
-> >
+This adds the canvas module on Meson8, Meson8b and Meson8m2. The canvas
+IP is used by the video decoder hardware as well as the VPU (video
+output) hardware.
 
-This warning was generated by sparse, right?
+Neither the VPU nor the video decoder driver support the 32-bit SoCs
+yet. However, we can still add the canvas module to have it available
+once these drivers gain support for the older SoCs.
 
-$ make C=2 drivers/staging/fieldbus/
-<snip>
-  CHECK   drivers/staging/fieldbus/dev_core.c
-drivers/staging/fieldbus/dev_core.c:232:27: warning: incorrect type in
-initializer (different base types)
-drivers/staging/fieldbus/dev_core.c:232:27:    expected restricted
-__poll_t ( *poll )( ... )
-drivers/staging/fieldbus/dev_core.c:232:27:    got unsigned int (
-*<noident> )( ... )
-<snip>
+I have tested this on my Meson8m2 board by hacking the VPU driver to
+not re-initialize the VPU (and to use the configuration set by u-boot).
+With that hack I could get some image out of the CVBS connector. No
+changes to the canvas driver were required.
 
-I will test your patch on actual h/w, probably tomorrow.
-I don't expect to see any problems.
+Due to lack of hardware I could not test Meson8, but I'm following (as
+always) what the Amlogic 3.10 vendor kernel uses.
+Meson8b is also not tested because u-boot of my EC-100 doesn't have
+video output enabled (so I couldn't use the same hack I used on my
+Meson8m2 board).
 
-Sven
+This series meant to be applied on top of "Meson8b: add support for the
+RTC on EC-100 and Odroid-C1" from [0]
+
+
+changes since v1 at [1]:
+- added new bindings for the 32-bit SoCs because they don't support the
+  "endianness" configuration (new patch #1, thanks to Maxime Jourdan
+  for pointing this out)
+- update the driver to reject the "endianness" configuration on the
+  32-bit SoCs (new patch #2)
+- patches #3 to #5 haven't changed compared to v1
+
+
+[0] https://patchwork.kernel.org/cover/10899509/
+[1] https://patchwork.kernel.org/cover/10899565/
+
+
+Martin Blumenstingl (5):
+  dt-bindings: soc: amlogic: canvas: document support for Meson8/8b/8m2
+  soc: amlogic: canvas: add support for Meson8, Meson8b and Meson8m2
+  ARM: dts: meson8: add the canvas module
+  ARM: dts: meson8m2: update the offset of the canvas module
+  ARM: dts: meson8b: add the canvas module
+
+ .../bindings/soc/amlogic/amlogic,canvas.txt   | 10 ++++++---
+ arch/arm/boot/dts/meson8.dtsi                 | 22 +++++++++++++++++++
+ arch/arm/boot/dts/meson8b.dtsi                | 22 +++++++++++++++++++
+ arch/arm/boot/dts/meson8m2.dtsi               | 10 +++++++++
+ drivers/soc/amlogic/meson-canvas.c            | 14 +++++++++++-
+ 5 files changed, 74 insertions(+), 4 deletions(-)
+
+-- 
+2.21.0
+
