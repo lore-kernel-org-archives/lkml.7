@@ -2,115 +2,90 @@ Return-Path: <SRS0=lq4r=TU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+X-Spam-Status: No, score=-3.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A79BAC04AAC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 13:48:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2C05C04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 13:48:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7EFEC21479
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 13:48:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9821921479
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 13:48:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="iUgrk3Qa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389256AbfETNsV (ORCPT
+        id S2389783AbfETNs0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 09:48:21 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:8224 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726169AbfETNsV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 09:48:21 -0400
-Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 9F584F835939B5E97F30;
-        Mon, 20 May 2019 21:48:17 +0800 (CST)
-Received: from huawei.com (10.175.124.28) by DGGEMS413-HUB.china.huawei.com
- (10.3.19.213) with Microsoft SMTP Server id 14.3.439.0; Mon, 20 May 2019
- 21:48:10 +0800
-From:   Jason Yan <yanaijie@huawei.com>
-To:     <martin.petersen@oracle.com>, <jejb@linux.vnet.ibm.com>
-CC:     <linux-scsi@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <hare@suse.com>, <dan.j.williams@intel.com>, <jthumshirn@suse.de>,
-        <hch@lst.de>, <huangdaode@hisilicon.com>,
-        <chenxiang66@hisilicon.com>, <miaoxie@huawei.com>,
-        <john.garry@huawei.com>, <zhaohongjiang@huawei.com>,
-        Jason Yan <yanaijie@huawei.com>
-Subject: [PATCH v2] scsi: libsas: no need to join wide port again in sas_ex_discover_dev()
-Date:   Mon, 20 May 2019 22:06:00 +0800
-Message-ID: <20190520140600.22861-1-yanaijie@huawei.com>
-X-Mailer: git-send-email 2.17.2
+        Mon, 20 May 2019 09:48:26 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:39405 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726169AbfETNs0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 09:48:26 -0400
+Received: by mail-wr1-f67.google.com with SMTP id w8so14711346wrl.6
+        for <linux-kernel@vger.kernel.org>; Mon, 20 May 2019 06:48:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=s5sKOK1wXsgSaMO1AzQH4iq23iqC6NhMcHG8RaO68BM=;
+        b=iUgrk3QarzpnVXXJjcHmm8EhxkcUwGaGt8kISnK9TukpoyYGA7+gj8AGKI592kpAbv
+         LyPCIgD2H5dlq+FoG9Ce5ipLy474xpJi/4kfx9XLzXhcxPSpOSwlmY8w0W0nMXz5S6kT
+         BZAFlZd95pWjB0kW0tYRuWvewdK3ifBRR9y4NLWTmm7oOCzriFSzDyfhV6y0lkYr2yU+
+         sYCyzVQ0jjL2GtVBj+Mweou+I/bWcxrsuI35/UlbSO4eaKe8VqjrWrLMfFM4aHnORKDB
+         B9Amk9hvhTvaITAt/iyJ50t7NrS1mkx+ajlxpCef2Fja9ukBQ6Yq/REKl5GGW25Rnxxr
+         OoaA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=s5sKOK1wXsgSaMO1AzQH4iq23iqC6NhMcHG8RaO68BM=;
+        b=e441D8SOQXkwEPiID5YHRRzfQVj5L2oC5QbJzdGMJGfS5s8IvatU86yGLFucLtvVR+
+         zrT+WQjB5eS0iqeUxNNKAh9lyJasRRG6xN1DbI8mdSWruf61R42hvMngxyvNInpmhto5
+         YjNs4VcgeiScb5XIpGCauO1wDuPMeU15U1cfJ/cJozvmlQFeMh3pfTwMNHVDoOxROh83
+         xZ9HuRXH8hyDwfKtisLypSh2xXqbUjg2WJ3M1wNADlBjY5lbX7jqnuBJ0NN276ZbCwn2
+         d1nBQMIamXpaYgFhbmofIGemiJCAOC65K35tDme7vVV5zAUvmxi3sMqfmeyyDaEKyoba
+         xKbg==
+X-Gm-Message-State: APjAAAXsznqANzGqEIMb32cv40Jh14IIhZAFS8ikR7xEVldiRLLH5ZCF
+        NL9v3fjHyrcqGmmdXAn/13bX9g==
+X-Google-Smtp-Source: APXvYqyUg6TkbDAAE6FFRfEtGNn0nmbTyFrH10vqBkNAGgn7Q6SzWFWsN+E2yrFIvFJj5Lg9hdGZTg==
+X-Received: by 2002:adf:ef83:: with SMTP id d3mr34485340wro.253.1558360104707;
+        Mon, 20 May 2019 06:48:24 -0700 (PDT)
+Received: from bender.baylibre.local (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
+        by smtp.gmail.com with ESMTPSA id h12sm12091358wre.14.2019.05.20.06.48.23
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Mon, 20 May 2019 06:48:24 -0700 (PDT)
+From:   Neil Armstrong <narmstrong@baylibre.com>
+To:     khilman@baylibre.com
+Cc:     Neil Armstrong <narmstrong@baylibre.com>,
+        linux-amlogic@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 0/3] arm64: dts: meson: g12a: add drive strength and hwrng
+Date:   Mon, 20 May 2019 15:48:14 +0200
+Message-Id: <20190520134817.25435-1-narmstrong@baylibre.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.175.124.28]
-X-CFilter-Loop: Reflected
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since we are processing events synchronously now, the second call of
-sas_ex_join_wide_port() in sas_ex_discover_dev() is not needed. There
-will be no races with other works in disco workqueue. So remove the
-second sas_ex_join_wide_port().
+This patchset adds :
+- drive strength for the HDMI DDC and Ethernet pads
+- HWRNG node
 
-I did not change the return value of 'res' to error when discover failed
-because we need to continue to discover other phys if one phy discover
-failed. So let's keep that logic as before and just add a debug log to
-detect the failure. And directly return if second fanout expander
-attatched to the parent expander because it has nothing to do after the
-phy is disabled.
+Dependencies: 
+- None
 
-Signed-off-by: Jason Yan <yanaijie@huawei.com>
----
+Neil Armstrong (3):
+  arm64: dts: meson: g12a: add drive-strength hdmi ddc pins
+  arm64: dts: meson: g12a: add drive strength for eth pins
+  arm64: dts: meson: g12a: Add hwrng node
 
-v2: Directly return in the "second fanout expander" case and change the
-	log level to notice.
+ arch/arm64/boot/dts/amlogic/meson-g12a.dtsi | 16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
 
- drivers/scsi/libsas/sas_expander.c | 26 ++++----------------------
- 1 file changed, 4 insertions(+), 22 deletions(-)
-
-diff --git a/drivers/scsi/libsas/sas_expander.c b/drivers/scsi/libsas/sas_expander.c
-index 83f2fd70ce76..a148be23ca09 100644
---- a/drivers/scsi/libsas/sas_expander.c
-+++ b/drivers/scsi/libsas/sas_expander.c
-@@ -1104,7 +1104,7 @@ static int sas_ex_discover_dev(struct domain_device *dev, int phy_id)
- 				 SAS_ADDR(dev->sas_addr),
- 				 phy_id);
- 			sas_ex_disable_phy(dev, phy_id);
--			break;
-+			return res;
- 		} else
- 			memcpy(dev->port->disc.fanout_sas_addr,
- 			       ex_phy->attached_sas_addr, SAS_ADDR_SIZE);
-@@ -1116,27 +1116,9 @@ static int sas_ex_discover_dev(struct domain_device *dev, int phy_id)
- 		break;
- 	}
- 
--	if (child) {
--		int i;
--
--		for (i = 0; i < ex->num_phys; i++) {
--			if (ex->ex_phy[i].phy_state == PHY_VACANT ||
--			    ex->ex_phy[i].phy_state == PHY_NOT_PRESENT)
--				continue;
--			/*
--			 * Due to races, the phy might not get added to the
--			 * wide port, so we add the phy to the wide port here.
--			 */
--			if (SAS_ADDR(ex->ex_phy[i].attached_sas_addr) ==
--			    SAS_ADDR(child->sas_addr)) {
--				ex->ex_phy[i].phy_state= PHY_DEVICE_DISCOVERED;
--				if (sas_ex_join_wide_port(dev, i))
--					pr_debug("Attaching ex phy%02d to wide port %016llx\n",
--						 i, SAS_ADDR(ex->ex_phy[i].attached_sas_addr));
--			}
--		}
--	}
--
-+	if (!child)
-+		pr_notice("ex %016llx phy%02d failed to discover\n",
-+			  SAS_ADDR(dev->sas_addr), phy_id);
- 	return res;
- }
- 
 -- 
-2.17.2
+2.21.0
 
