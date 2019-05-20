@@ -2,99 +2,113 @@ Return-Path: <SRS0=lq4r=TU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B3EDC04AAC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:43:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0845EC04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:43:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2A3D021479
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:43:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Dj6rxER+"
+	by mail.kernel.org (Postfix) with ESMTP id C75B721479
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:43:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1558356215;
+	bh=0msjDw4e8JU1SNWYIWYp0Zm3hjgfapzuhX6gELrNtSI=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=cbXH6y0ZOcp6lrorlBNmRg5L+BGLWqobnnu69K34twYUUSCdUOqLS/RSglKmsQyy7
+	 PxGbkZFB1Q+yRrWpEYZLPGpxUbNvYdz2X/HpfErCMS3PAbRWrZ2JHvF64D32Y9Isdl
+	 FGCU+FtuRKVnv0SW4TLBdnZWT+o8GRqC71ob+XJA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390509AbfETMn2 (ORCPT
+        id S2389381AbfETM2w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 08:43:28 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:43999 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389397AbfETM2z (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 08:28:55 -0400
-Received: by mail-pg1-f196.google.com with SMTP id f25so189909pgv.10;
-        Mon, 20 May 2019 05:28:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=hB3PHyrs53San/vhDwKRpRyPdI0a/I1a2f3pjFTkUE4=;
-        b=Dj6rxER+7wkxWxh9ncQ8235KU6jkkd6A60sumII2etXOJfRWzKRMI+PilghA5nj4EG
-         jRr+1A3Q7sDU1MIUwj5Ln1rQmAzYMjqW0wXbeHqt4fmdseaVwTVi4djbj/JdjOHxFNLR
-         pyamqSgmB1aFeaW4Z9n8kmVJrpWDvw1Gn/4nn8Lw1A7aA3SSsppCi4fWPgJqbclRf4Sl
-         7d6v4T7sX1kRHyCxbwC8lhdpDbY9e3DOsZZvvNdVzKJ+o/XDxhaPYlbxIeGMfuge4vUa
-         ArvAoihzT4Y3V9a1Sw7sbFd9GWzgmA1HCuzhhHJY+2JaYHiwq5IXOugEoKcGvJ+AtYlC
-         VJxg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=hB3PHyrs53San/vhDwKRpRyPdI0a/I1a2f3pjFTkUE4=;
-        b=I7sQpabtCwB/Lsz/eCdLSbectA4U2npASBlXeL4ttTNk97BxjFRZoSIdIOHyD75tA6
-         Ujvf3Pt6APhLV2OmgF6/TP6siQ3ZXnYMSFno1mb6xIcmXUE764pcHW09NXPz8FiqSdRm
-         iur64syb55wJDi+dY4dWgHiMfyNaJBibe/nndTpoj0Bm8qWhvgg7ES8QX6IE82tewG1x
-         AGbm5ewEbm72fPARGoezOIOuSlluAmbA+Zme7n/xkLpzsxQrI4Nx6Do+QDpY4F284kFn
-         r5wYIwH+WtETQhVScmBWWpV7OpnlOI4PcZm8IcBi/lhrPWD898YW1eURnuMtf4IAJDom
-         PohA==
-X-Gm-Message-State: APjAAAXmFFMhfddaPAyJYothzyp3XrkhfZgq3VzAISj0kQ5jA16wnhu/
-        PjkVqv9cL6maolktBMZDImI=
-X-Google-Smtp-Source: APXvYqwaLDrWw7c0Fs1bKjKOaDP5fyg9p7qm+2PKXEbMZux7rZ1ZmgUv7+LmqyKVykIc0nPFeA/87Q==
-X-Received: by 2002:a63:7909:: with SMTP id u9mr68890137pgc.223.1558355334363;
-        Mon, 20 May 2019 05:28:54 -0700 (PDT)
-Received: from localhost ([43.224.245.181])
-        by smtp.gmail.com with ESMTPSA id s2sm16226302pfe.105.2019.05.20.05.28.53
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 20 May 2019 05:28:53 -0700 (PDT)
-From:   Weitao Hou <houweitaoo@gmail.com>
-To:     arend.vanspriel@broadcom.com, franky.lin@broadcom.com,
-        hante.meuleman@broadcom.com, chi-hsien.lin@cypress.com,
-        wright.feng@cypress.com, kvalo@codeaurora.org, davem@davemloft.net,
-        houweitaoo@gmail.com, rafal@milecki.pl
-Cc:     linux-wireless@vger.kernel.org,
-        brcm80211-dev-list.pdl@broadcom.com,
-        brcm80211-dev-list@cypress.com, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v2] brcmfmac: fix typos in code comments
-Date:   Mon, 20 May 2019 20:28:25 +0800
-Message-Id: <20190520122825.981-1-houweitaoo@gmail.com>
-X-Mailer: git-send-email 2.18.0
+        Mon, 20 May 2019 08:28:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42226 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2389399AbfETM0r (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 08:26:47 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D626520645;
+        Mon, 20 May 2019 12:26:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1558355207;
+        bh=0msjDw4e8JU1SNWYIWYp0Zm3hjgfapzuhX6gELrNtSI=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=R/0JLT3YW4DIWouLEzO5J5eqyXTb3zciqjPjWaA30bU7v04ebSaqS3Ye6V5YTivB8
+         82v+tI08lh+6vOR6VOa7uJilIHCXZ2i13g3ymKEPOBeOrtSwMVvvqDysD9q9BE/wjP
+         Q/Ea4fu/VgQboqoxn+Isa/X8UcvMiyHxBR3hbx0s=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        =?UTF-8?q?Ondrej=20Mosn=C3=A1=C4=8Dek?= <omosnacek@gmail.com>,
+        Daniel Axtens <dja@axtens.net>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Herbert Xu <herbert@gondor.apana.org.au>
+Subject: [PATCH 5.0 032/123] crypto: vmx - fix copy-paste error in CTR mode
+Date:   Mon, 20 May 2019 14:13:32 +0200
+Message-Id: <20190520115246.894646115@linuxfoundation.org>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190520115245.439864225@linuxfoundation.org>
+References: <20190520115245.439864225@linuxfoundation.org>
+User-Agent: quilt/0.66
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-fix lengh to length
+From: Daniel Axtens <dja@axtens.net>
 
-Signed-off-by: Weitao Hou <houweitaoo@gmail.com>
----
-- fix prefix
----
- drivers/net/wireless/broadcom/brcm80211/brcmfmac/fwil.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+commit dcf7b48212c0fab7df69e84fab22d6cb7c8c0fb9 upstream.
 
-diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/fwil.c b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/fwil.c
-index 8ea27489734e..edd2f09613d8 100644
---- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/fwil.c
-+++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/fwil.c
-@@ -314,7 +314,7 @@ brcmf_create_bsscfg(s32 bsscfgidx, char *name, char *data, u32 datalen,
- 		return brcmf_create_iovar(name, data, datalen, buf, buflen);
+The original assembly imported from OpenSSL has two copy-paste
+errors in handling CTR mode. When dealing with a 2 or 3 block tail,
+the code branches to the CBC decryption exit path, rather than to
+the CTR exit path.
+
+This leads to corruption of the IV, which leads to subsequent blocks
+being corrupted.
+
+This can be detected with libkcapi test suite, which is available at
+https://github.com/smuellerDD/libkcapi
+
+Reported-by: Ondrej Mosnáček <omosnacek@gmail.com>
+Fixes: 5c380d623ed3 ("crypto: vmx - Add support for VMS instructions by ASM")
+Cc: stable@vger.kernel.org
+Signed-off-by: Daniel Axtens <dja@axtens.net>
+Tested-by: Michael Ellerman <mpe@ellerman.id.au>
+Tested-by: Ondrej Mosnacek <omosnacek@gmail.com>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+---
+ drivers/crypto/vmx/aesp8-ppc.pl |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+--- a/drivers/crypto/vmx/aesp8-ppc.pl
++++ b/drivers/crypto/vmx/aesp8-ppc.pl
+@@ -1854,7 +1854,7 @@ Lctr32_enc8x_three:
+ 	stvx_u		$out1,$x10,$out
+ 	stvx_u		$out2,$x20,$out
+ 	addi		$out,$out,0x30
+-	b		Lcbc_dec8x_done
++	b		Lctr32_enc8x_done
  
- 	prefixlen = strlen(prefix);
--	namelen = strlen(name) + 1; /* lengh of iovar  name + null */
-+	namelen = strlen(name) + 1; /* length of iovar  name + null */
- 	iolen = prefixlen + namelen + sizeof(bsscfgidx_le) + datalen;
+ .align	5
+ Lctr32_enc8x_two:
+@@ -1866,7 +1866,7 @@ Lctr32_enc8x_two:
+ 	stvx_u		$out0,$x00,$out
+ 	stvx_u		$out1,$x10,$out
+ 	addi		$out,$out,0x20
+-	b		Lcbc_dec8x_done
++	b		Lctr32_enc8x_done
  
- 	if (buflen < iolen) {
--- 
-2.18.0
+ .align	5
+ Lctr32_enc8x_one:
+
 
