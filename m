@@ -2,99 +2,88 @@ Return-Path: <SRS0=lq4r=TU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 671C6C04AAC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 23:24:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81551C04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 23:24:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3AB012173C
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 23:24:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Wl9L0AJO"
+	by mail.kernel.org (Postfix) with ESMTP id 5603921773
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 23:24:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1558394684;
+	bh=EAIisFPL9YiInF7rgY/58eLITFlmvPrtrY9ljPOJESM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=OmKL5i9l34urDjw6t84wZGuPbNa9J+dgM/phTs+H66za0GP/DlbDMEzzILqrLlCXl
+	 8Lr6JAwIdD98irq5KEEcjyZGxP1EVPttfHV+Y0cu9P51laSdBm+R9dJ1uvz6QMdGvU
+	 QwyL3oQpbjNNgoJaOWiw7H88hN5KMS6QgpM1MRKs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727163AbfETXYh (ORCPT
+        id S1727225AbfETXYn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 19:24:37 -0400
-Received: from mail-ua1-f68.google.com ([209.85.222.68]:33047 "EHLO
-        mail-ua1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725941AbfETXYg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 19:24:36 -0400
-Received: by mail-ua1-f68.google.com with SMTP id 49so5953623uas.0
-        for <linux-kernel@vger.kernel.org>; Mon, 20 May 2019 16:24:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ZR/L7Hf828I4020IYpCxcxcft8SiYhAJProPc5vXrzU=;
-        b=Wl9L0AJOEI10bssx6lat9jgrA3rPKbO8BogUuRNHLDN7Ve5zvOpZnNKVUMTpQBBSvA
-         p/ROLEzSFq3wxGQ6g2TbkeeBcO4ve3Y+PyFFmeHbkUyvbi63Vy39FzWnFqQ/iYDf8s83
-         1rVab5Txti5C4wfalrdFVBqPk8IPgB+yp/yHQ=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ZR/L7Hf828I4020IYpCxcxcft8SiYhAJProPc5vXrzU=;
-        b=Qs74d5ZpQUmA1qYRTBHdMfx7uV0Da/3laQ3gnQ1mDpLjQN/fHpxrClan55qqhNSFuI
-         ug0gC/ZL/8JsS/gv6xikEN2nPPFn+ylt4hNaN0uV2YPCfDk3WUpNpGXz4fNRODhGXvb0
-         N9OEnG6UTC9qif/FKaHCZGn+hIX7zOrFKlXkGDBOK9vqOnrTSr0LpEYYMQS/K+WEVTSz
-         wulsUkeYpTkBpa0iwulupqS1jC5IwFY/2Vuafj0YbkukeSuGwTNHhV0YgO3e98N6a7FF
-         XQ0gPLy4KQ2+1vZeNdC9qHArA6BbH4tG4Ufy9g1dOdVkHyzFvjhef9eHJIV4djgJYwlA
-         KPMw==
-X-Gm-Message-State: APjAAAXRvILVFY05+kqSaAKldb5091cW2vZNYbZDnNWWbOud/gtjBBdk
-        q9ubiJU7hdOvJCst0IiFcRRRw8fbK8U=
-X-Google-Smtp-Source: APXvYqyS/TGPLW4pAfNatCZ6/BKCoXPD8oL5GUDXmOM3JjIN1fEAUcout222wCDZyYE4x+U23YOxTw==
-X-Received: by 2002:ab0:3499:: with SMTP id c25mr8038668uar.56.1558394675670;
-        Mon, 20 May 2019 16:24:35 -0700 (PDT)
-Received: from mail-vs1-f48.google.com (mail-vs1-f48.google.com. [209.85.217.48])
-        by smtp.gmail.com with ESMTPSA id u83sm6766587vke.33.2019.05.20.16.24.34
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Mon, 20 May 2019 16:24:34 -0700 (PDT)
-Received: by mail-vs1-f48.google.com with SMTP id w124so2047674vsb.11
-        for <linux-kernel@vger.kernel.org>; Mon, 20 May 2019 16:24:34 -0700 (PDT)
-X-Received: by 2002:a67:f60b:: with SMTP id k11mr31398691vso.111.1558394674402;
- Mon, 20 May 2019 16:24:34 -0700 (PDT)
+        Mon, 20 May 2019 19:24:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47554 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726913AbfETXYn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 19:24:43 -0400
+Received: from localhost (unknown [104.132.1.68])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 82A3B20862;
+        Mon, 20 May 2019 23:24:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1558394682;
+        bh=EAIisFPL9YiInF7rgY/58eLITFlmvPrtrY9ljPOJESM=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Sw3G2hqCcL7bO82bvqv/r6Z10kCLkBqgQgMffjGSQhFIWJTqAWbEaKMQgjZD1mj/i
+         GuMymrpa9y9N7xKW+QaPFzS2D0t+N7RwRMEIb/GM6aDnEiYKKaoU8wjUtf5/fSuymL
+         mCnwcegCm2qtJ6blWxg1+xPD4Gq//tYPfpdkgTeo=
+Date:   Mon, 20 May 2019 16:24:41 -0700
+From:   Jaegeuk Kim <jaegeuk@kernel.org>
+To:     Chao Yu <yuchao0@huawei.com>
+Cc:     linux-kernel@vger.kernel.org,
+        linux-f2fs-devel@lists.sourceforge.net
+Subject: Re: [f2fs-dev] [PATCH] f2fs: don't clear CP_QUOTA_NEED_FSCK_FLAG
+Message-ID: <20190520232441.GA61195@jaegeuk-macbookpro.roam.corp.google.com>
+References: <20190212023343.52215-1-jaegeuk@kernel.org>
+ <5ee36ad7-9fe9-adcf-0974-5c17fa8d50ee@huawei.com>
 MIME-Version: 1.0
-References: <20190520220051.54847-1-mka@chromium.org>
-In-Reply-To: <20190520220051.54847-1-mka@chromium.org>
-From:   Doug Anderson <dianders@chromium.org>
-Date:   Mon, 20 May 2019 16:24:21 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=WxhL3FLYWvOoys3GOB68WVKinfgjTVK5byyzyTzVsyBw@mail.gmail.com>
-Message-ID: <CAD=FV=WxhL3FLYWvOoys3GOB68WVKinfgjTVK5byyzyTzVsyBw@mail.gmail.com>
-Subject: Re: [PATCH v2 1/3] ARM: dts: rockchip: disable GPU 500 MHz OPP for veyron
-To:     Matthias Kaehlcke <mka@chromium.org>
-Cc:     Heiko Stuebner <heiko@sntech.de>, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
-        devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <5ee36ad7-9fe9-adcf-0974-5c17fa8d50ee@huawei.com>
+User-Agent: Mutt/1.8.2 (2017-04-18)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On 05/10, Chao Yu wrote:
+> On 2019/2/12 10:33, Jaegeuk Kim wrote:
+> > If we met this once, let fsck.f2fs clear this only.
+> > Note that, this addresses all the subtle fault injection test.
+> > 
+> > Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
+> > ---
+> >  fs/f2fs/checkpoint.c | 2 --
+> >  1 file changed, 2 deletions(-)
+> > 
+> > diff --git a/fs/f2fs/checkpoint.c b/fs/f2fs/checkpoint.c
+> > index 03fea4efd64b..10a3ada28715 100644
+> > --- a/fs/f2fs/checkpoint.c
+> > +++ b/fs/f2fs/checkpoint.c
+> > @@ -1267,8 +1267,6 @@ static void update_ckpt_flags(struct f2fs_sb_info *sbi, struct cp_control *cpc)
+> >  
+> >  	if (is_sbi_flag_set(sbi, SBI_QUOTA_SKIP_FLUSH))
+> >  		__set_ckpt_flags(ckpt, CP_QUOTA_NEED_FSCK_FLAG);
+> > -	else
+> > -		__clear_ckpt_flags(ckpt, CP_QUOTA_NEED_FSCK_FLAG);
+> 
+> Jaegeuk,
+> 
+> Will below commit fix this issue? Not sure, but just want to check that.. :)
+> 
+> f2fs-tools: fix to check total valid block count before block allocation
 
-On Mon, May 20, 2019 at 3:01 PM Matthias Kaehlcke <mka@chromium.org> wrote:
->
-> The NPLL is the only safe way to generate 500 MHz for the GPU. The
-> downstream Chrome OS 3.14 kernel ('official' kernel for veyron
-> devices) re-purposes NPLL to HDMI and hence disables the OPP for
-> the GPU (see https://crrev.com/c/1574579). Disable it here as well
-> to keep in sync and avoid problems in case someone decides to
-> re-purpose NPLL.
->
-> Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
-> ---
-> Changes in v2:
-> - patch added to the series
-> ---
->  arch/arm/boot/dts/rk3288-veyron.dtsi | 8 ++++++++
->  1 file changed, 8 insertions(+)
-
-Reviewed-by: Douglas Anderson <dianders@chromium.org>
+I started test again whether we can revert this or not. :)
+Let's see.
