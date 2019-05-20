@@ -2,159 +2,118 @@ Return-Path: <SRS0=lq4r=TU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C43CEC04AAC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 20:17:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87761C04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 20:19:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 967D9216B7
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 20:17:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="KQMm8dHl"
+	by mail.kernel.org (Postfix) with ESMTP id 64187216B7
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 20:19:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726186AbfETURB (ORCPT
+        id S1726394AbfETUTm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 16:17:01 -0400
-Received: from mail-ua1-f66.google.com ([209.85.222.66]:44067 "EHLO
-        mail-ua1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725954AbfETURB (ORCPT
+        Mon, 20 May 2019 16:19:42 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:51964 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725971AbfETUTm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 16:17:01 -0400
-Received: by mail-ua1-f66.google.com with SMTP id p13so5753487uaa.11
-        for <linux-kernel@vger.kernel.org>; Mon, 20 May 2019 13:17:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=6B2h64c7BAIXdqgTD3mb8/lcaBqFTG1vyJC0fwpx6wE=;
-        b=KQMm8dHlW0EX+V6h+USfLko9QjquRn3QzW/5J7l+0b/pQy5Dvztidqe8NZWI0647aR
-         L+PuY1rYGscMwG+2Fo1tk6DfjcAF7p0K4i5eFnOfAg7Bpnw5pktbNUrmUsFEF+4M1AQW
-         bDUzBrJzXsa9FJ/B/992ypQfJjcTM2UtqhbRU=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=6B2h64c7BAIXdqgTD3mb8/lcaBqFTG1vyJC0fwpx6wE=;
-        b=Z8sCUS0zN6EuVI5PaGGVebmWa0NsJl1FQqNqAaGXKN6l55jZRFngU5zZcM5HO01fUY
-         sjhGISRS5voSXzZmXtsHdy9NPS682MCHJ0XGUL5gryeIjwk1uVIAQ70Fvk0SmWpaOEEw
-         /5fdSovVvfcOCyGbKghtsUvDYW6X7lqY2OXlcCSu8hgFF9igihcib4fL14nn9eNIClKz
-         lJc+ZsILof/XSHNeFqqw8DmSGSZpWFdM29FViyt7useG171YZ3CxBDFB422rV8BLjtlG
-         bMNvhbPyOJlKBI9MZciIXypf47PjnupVerE35HdlPcwnXWQ1CKPy4DMub9YhwzRU+MCH
-         MFUg==
-X-Gm-Message-State: APjAAAWz9U0EcAvO86ssu0ciLuwIKNY3rBVlEY+9L0M86XVY4m42KdAi
-        FxKAZ4zZkLFIgACpqfR9Ndx+DyKhP0w=
-X-Google-Smtp-Source: APXvYqwhlmkX0ZyTGDK311a6NsKbZNMTVbBd/FQqEhfxlRR790yYHzK+hGIBeymzWUC5tu/jOHtenw==
-X-Received: by 2002:ab0:670c:: with SMTP id q12mr14702277uam.106.1558383419199;
-        Mon, 20 May 2019 13:16:59 -0700 (PDT)
-Received: from mail-vs1-f42.google.com (mail-vs1-f42.google.com. [209.85.217.42])
-        by smtp.gmail.com with ESMTPSA id e62sm11078184vsc.24.2019.05.20.13.16.58
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Mon, 20 May 2019 13:16:58 -0700 (PDT)
-Received: by mail-vs1-f42.google.com with SMTP id g187so9735416vsc.8
-        for <linux-kernel@vger.kernel.org>; Mon, 20 May 2019 13:16:58 -0700 (PDT)
-X-Received: by 2002:a67:dd8e:: with SMTP id i14mr31757112vsk.149.1558383417594;
- Mon, 20 May 2019 13:16:57 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190520170132.91571-1-mka@chromium.org>
-In-Reply-To: <20190520170132.91571-1-mka@chromium.org>
-From:   Doug Anderson <dianders@chromium.org>
-Date:   Mon, 20 May 2019 13:16:46 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=VGA_i=vM4_OrqXnv0WC__Fcdced3oOZjzcPO=i8Q+SdA@mail.gmail.com>
-Message-ID: <CAD=FV=VGA_i=vM4_OrqXnv0WC__Fcdced3oOZjzcPO=i8Q+SdA@mail.gmail.com>
-Subject: Re: [PATCH 1/2] ARM: dts: rockchip: Limit GPU frequency on veyron
- mickey to 300 MHz when the CPU gets very hot
-To:     Matthias Kaehlcke <mka@chromium.org>
-Cc:     Heiko Stuebner <heiko@sntech.de>, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
-        devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        Mon, 20 May 2019 16:19:42 -0400
+Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4KK6h3Z016914
+        for <linux-kernel@vger.kernel.org>; Mon, 20 May 2019 16:19:40 -0400
+Received: from e17.ny.us.ibm.com (e17.ny.us.ibm.com [129.33.205.207])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2sm0tvd74c-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Mon, 20 May 2019 16:19:40 -0400
+Received: from localhost
+        by e17.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <eajames@linux.ibm.com>;
+        Mon, 20 May 2019 21:19:40 +0100
+Received: from b01cxnp22033.gho.pok.ibm.com (9.57.198.23)
+        by e17.ny.us.ibm.com (146.89.104.204) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Mon, 20 May 2019 21:19:36 +0100
+Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
+        by b01cxnp22033.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x4KKJZOX32047344
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 20 May 2019 20:19:35 GMT
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 2D63AB2064;
+        Mon, 20 May 2019 20:19:35 +0000 (GMT)
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 85AE9B2066;
+        Mon, 20 May 2019 20:19:34 +0000 (GMT)
+Received: from talon7.ibm.com (unknown [9.41.179.222])
+        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
+        Mon, 20 May 2019 20:19:34 +0000 (GMT)
+From:   Eddie James <eajames@linux.ibm.com>
+To:     linux-aspeed@lists.ozlabs.org
+Cc:     linux-kernel@vger.kernel.org, arnd@arndb.de, robh+dt@kernel.org,
+        mark.rutland@arm.com, devicetree@vger.kernel.org, joel@jms.id.au,
+        andrew@aj.id.au, Eddie James <eajames@linux.ibm.com>
+Subject: [PATCH v2 0/7] drivers/soc: Add Aspeed XDMA Engine Driver
+Date:   Mon, 20 May 2019 15:19:18 -0500
+X-Mailer: git-send-email 1.8.3.1
+X-TM-AS-GCONF: 00
+x-cbid: 19052020-0040-0000-0000-000004F20AFE
+X-IBM-SpamModules-Scores: 
+X-IBM-SpamModules-Versions: BY=3.00011132; HX=3.00000242; KW=3.00000007;
+ PH=3.00000004; SC=3.00000286; SDB=6.01206180; UDB=6.00633347; IPR=6.00987139;
+ MB=3.00026974; MTD=3.00000008; XFM=3.00000015; UTC=2019-05-20 20:19:38
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19052020-0041-0000-0000-000008FE1DFB
+Message-Id: <1558383565-11821-1-git-send-email-eajames@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-20_08:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=1 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=898 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1905200126
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+The XDMA engine embedded in the AST2500 SOC performs PCI DMA operations
+between the SOC (acting as a BMC) and a host processor in a server.
 
-On Mon, May 20, 2019 at 10:01 AM Matthias Kaehlcke <mka@chromium.org> wrote=
-:
->
-> On rk3288 the CPU and GPU temperatures are correlated. Limit the GPU
-> frequency on veyron mickey to 300 MHz for CPU temperatures >=3D 85=C2=B0C=
-.
->
-> This matches the configuration of the downstream Chrome OS 3.14 kernel,
-> the 'official' kernel for mickey.
->
-> Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
-> ---
-> Note: this patch depends on "ARM: dts: rockchip: Add #cooling-cells
-> entry for rk3288 GPU" (https://lore.kernel.org/patchwork/patch/1075005/)
-> ---
->  arch/arm/boot/dts/rk3288-veyron-mickey.dts | 6 ++++++
->  1 file changed, 6 insertions(+)
->
-> diff --git a/arch/arm/boot/dts/rk3288-veyron-mickey.dts b/arch/arm/boot/d=
-ts/rk3288-veyron-mickey.dts
-> index d889ab3c8235..f118d92a49d0 100644
-> --- a/arch/arm/boot/dts/rk3288-veyron-mickey.dts
-> +++ b/arch/arm/boot/dts/rk3288-veyron-mickey.dts
-> @@ -125,6 +125,12 @@
->                                          <&cpu2 8 THERMAL_NO_LIMIT>,
->                                          <&cpu3 8 THERMAL_NO_LIMIT>;
->                 };
-> +
-> +               /* At very hot, don't let GPU go over 300 MHz */
-> +               cpu_very_hot_limit_gpu {
-> +                       trip =3D <&cpu_alert_very_hot>;
-> +                       cooling-device =3D <&gpu 2 2>;
-> +               };
+This series adds a driver to control the XDMA engine in order to easily
+perform DMA operations to and from the host processor.
 
-Two things:
+I previously sent this series v1 to drivers/misc, but I'm now fairly certain
+it belongs in drivers/soc, especially since the other Aspeed drivers have been
+moved to soc.
 
-A) If I'm reading things properly, you're actually limiting things to
-400 MHz.  This is because you don't have <https://crrev.com/c/1574579>
-which deletes the 500 MHz GPU operating point.  So on upstream the
-available points are:
+Changes since v1:
+ - Correct the XDMA command pitch
+ - Don't use packed for the aspeed_xdma_op structure
+ - Correct the SCU PCI config change
 
-0: 600 MHz
-1: 500 MHz
-2: 400 MHz
-3: 300 MHz
-4: 200 MHz
-5: 100 MHz
+Eddie James (7):
+  dt-bindings: soc: Add Aspeed XDMA engine binding documentation
+  drivers/soc: Add Aspeed XDMA Engine Driver
+  drivers/soc: xdma: Add user interface
+  drivers/soc: xdma: Add PCI device configuration sysfs
+  drivers/soc: xdma: Add debugfs entries
+  ARM: dts: aspeed: Add XDMA Engine
+  ARM: dts: aspeed: witherspoon: Enable XDMA Engine
 
-...and downstream:
+ .../devicetree/bindings/soc/aspeed/xdma.txt        |  23 +
+ MAINTAINERS                                        |   9 +
+ arch/arm/boot/dts/aspeed-bmc-opp-witherspoon.dts   |   4 +
+ arch/arm/boot/dts/aspeed-g5.dtsi                   |   8 +
+ drivers/soc/aspeed/Kconfig                         |   8 +
+ drivers/soc/aspeed/Makefile                        |   1 +
+ drivers/soc/aspeed/aspeed-xdma.c                   | 944 +++++++++++++++++++++
+ include/uapi/linux/aspeed-xdma.h                   |  26 +
+ 8 files changed, 1023 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/soc/aspeed/xdma.txt
+ create mode 100644 drivers/soc/aspeed/aspeed-xdma.c
+ create mode 100644 include/uapi/linux/aspeed-xdma.h
 
-0: 600 MHz
-1: 400 MHz
-2: 300 MHz
-3: 200 MHz
-4: 100 MHz
+-- 
+1.8.3.1
 
-Thinking about it more, I bet Heiko would actually be OK deleting the
-500 MHz GPU operating point for veyron.  Technically it's not needed
-upstream because upstream doesn't have our hacks to allow re-purposing
-NPLL for HDMI (so they _can_ make 500 MHz) but maybe we can make the
-argument that these laptops have only ever been tested with the 500
-MHz operating point removed and also that eventually someonje will
-probably figure out a way to re-purpose NPLL for HDMI even upstream...
-
-
-B) It seems like in the same patch you'd want to introduce
-"cpu_warm_limit_gpu", AKA:
-
-cpu_warm_limit_gpu {
-  trip =3D <&cpu_alert_warm>;
-  cooling-device =3D
-  <&gpu 1 1>;
-};
-
-
--Doug
