@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE93DC04AAC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:42:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A62EC04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:42:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8DAF520645
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:42:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 593F8204FD
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:42:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558356152;
-	bh=W0oY8n1wZzk02zCfdndXOv6JwnP2410FS28E60iwQiE=;
+	s=default; t=1558356160;
+	bh=Uw0pF31YOHlAKBRVzNCneThPQgBmKK3R8VVsUrLP+AI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Y6IbydSirOrMOUnnsgMf32pMXWtvcyHOhA0+5xU7N8k/zJFDfQiiou1/cQayiNuh1
-	 k92/jhti/Qnd92zEXDVB7RHxIsYj05l3CGip9ifzIUwyLE6bywbShOufc1Z9DYu70w
-	 XeDSWuURdMUL1Rx0ojZ1FKnVq0KkUpYrUyeG44sM=
+	b=KnypP/tLfTDrw+HrPTSKumR2X5pPSh3/Eep3e7oz/HTxzmPsMWGKPloDkAQ7RDOLF
+	 ILL0YsFT6xO0gNQKdzYhKtz/TQHrpSBOlt5ienJcArrVVa3FmQAQvIZgT9xBN/tU6I
+	 Jrh7K1bIkYnqkZzDfxk7LdDc+uMPrukDwcaBjGLs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390747AbfETMmb (ORCPT
+        id S2390957AbfETMmj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 08:42:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46440 "EHLO mail.kernel.org"
+        Mon, 20 May 2019 08:42:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46178 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390041AbfETMaK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 08:30:10 -0400
+        id S2390010AbfETM37 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 08:29:59 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9E4A821479;
-        Mon, 20 May 2019 12:30:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F1D9220675;
+        Mon, 20 May 2019 12:29:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558355410;
-        bh=W0oY8n1wZzk02zCfdndXOv6JwnP2410FS28E60iwQiE=;
+        s=default; t=1558355399;
+        bh=Uw0pF31YOHlAKBRVzNCneThPQgBmKK3R8VVsUrLP+AI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kIbrwc4aNosJEDhQUwF9C6ECglQ0YrqTr2WWK4shOxODHSUUnlOqPYoTEv88v2Twv
-         QL7CtaVmvNQmOcyen/+3+HaGhAgaLyR1xIIFOpDKzFcKpPjO9J4aeiRaJDtKufOh29
-         1aCc2BgVKzNts6Vi19/v9xLBB5L9gYiqAFsOI/LM=
+        b=HSizXNwLMrzv5tjiYYDJltPfFOAkrCLVw1zWp/Oq77qZ5wFjbZxTG2cO+7MqiCBBG
+         5ffHJHv0FxNf11C/oNNlPCqK+Fp1zQi1kS22gYAYcsCm60eBuYK35UwGYtg85d8iiW
+         BM5ug6FOvLyeK3DAnEBtOcAUmKQjgm3+eEdz1SrU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Will Deacon <will.deacon@arm.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Jean-Philippe Brucker <jean-philippe.brucker@arm.com>,
-        Alexei Starovoitov <ast@kernel.org>
-Subject: [PATCH 5.0 057/123] bpf, arm64: remove prefetch insn in xadd mapping
-Date:   Mon, 20 May 2019 14:13:57 +0200
-Message-Id: <20190520115248.555156585@linuxfoundation.org>
+        stable@vger.kernel.org, Ofir Drang <ofir.drang@arm.com>,
+        Gilad Ben-Yossef <gilad@benyossef.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>
+Subject: [PATCH 5.0 063/123] crypto: ccree - pm resume first enable the source clk
+Date:   Mon, 20 May 2019 14:14:03 +0200
+Message-Id: <20190520115248.994423542@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190520115245.439864225@linuxfoundation.org>
 References: <20190520115245.439864225@linuxfoundation.org>
@@ -61,53 +60,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Daniel Borkmann <daniel@iogearbox.net>
+From: Ofir Drang <ofir.drang@arm.com>
 
-commit 8968c67a82ab7501bc3b9439c3624a49b42fe54c upstream.
+commit 7766dd774d80463cec7b81d90c8672af91de2da1 upstream.
 
-Prefetch-with-intent-to-write is currently part of the XADD mapping in
-the AArch64 JIT and follows the kernel's implementation of atomic_add.
-This may interfere with other threads executing the LDXR/STXR loop,
-leading to potential starvation and fairness issues. Drop the optional
-prefetch instruction.
+On power management resume function first enable the device clk source
+to allow access to the device registers.
 
-Fixes: 85f68fe89832 ("bpf, arm64: implement jiting of BPF_XADD")
-Reported-by: Will Deacon <will.deacon@arm.com>
-Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
-Acked-by: Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
-Acked-by: Will Deacon <will.deacon@arm.com>
-Signed-off-by: Alexei Starovoitov <ast@kernel.org>
+Signed-off-by: Ofir Drang <ofir.drang@arm.com>
+Signed-off-by: Gilad Ben-Yossef <gilad@benyossef.com>
+Cc: stable@vger.kernel.org # v4.19+
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/arm64/net/bpf_jit.h      |    6 ------
- arch/arm64/net/bpf_jit_comp.c |    1 -
- 2 files changed, 7 deletions(-)
+ drivers/crypto/ccree/cc_pm.c |    5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
---- a/arch/arm64/net/bpf_jit.h
-+++ b/arch/arm64/net/bpf_jit.h
-@@ -100,12 +100,6 @@
- #define A64_STXR(sf, Rt, Rn, Rs) \
- 	A64_LSX(sf, Rt, Rn, Rs, STORE_EX)
+--- a/drivers/crypto/ccree/cc_pm.c
++++ b/drivers/crypto/ccree/cc_pm.c
+@@ -42,14 +42,15 @@ int cc_pm_resume(struct device *dev)
+ 	struct cc_drvdata *drvdata = dev_get_drvdata(dev);
  
--/* Prefetch */
--#define A64_PRFM(Rn, type, target, policy) \
--	aarch64_insn_gen_prefetch(Rn, AARCH64_INSN_PRFM_TYPE_##type, \
--				  AARCH64_INSN_PRFM_TARGET_##target, \
--				  AARCH64_INSN_PRFM_POLICY_##policy)
+ 	dev_dbg(dev, "unset HOST_POWER_DOWN_EN\n");
+-	cc_iowrite(drvdata, CC_REG(HOST_POWER_DOWN_EN), POWER_DOWN_DISABLE);
 -
- /* Add/subtract (immediate) */
- #define A64_ADDSUB_IMM(sf, Rd, Rn, imm12, type) \
- 	aarch64_insn_gen_add_sub_imm(Rd, Rn, imm12, \
---- a/arch/arm64/net/bpf_jit_comp.c
-+++ b/arch/arm64/net/bpf_jit_comp.c
-@@ -739,7 +739,6 @@ emit_cond_jmp:
- 	case BPF_STX | BPF_XADD | BPF_DW:
- 		emit_a64_mov_i(1, tmp, off, ctx);
- 		emit(A64_ADD(1, tmp, tmp, dst), ctx);
--		emit(A64_PRFM(tmp, PST, L1, STRM), ctx);
- 		emit(A64_LDXR(isdw, tmp2, tmp), ctx);
- 		emit(A64_ADD(isdw, tmp2, tmp2, src), ctx);
- 		emit(A64_STXR(isdw, tmp2, tmp, tmp3), ctx);
++	/* Enables the device source clk */
+ 	rc = cc_clk_on(drvdata);
+ 	if (rc) {
+ 		dev_err(dev, "failed getting clock back on. We're toast.\n");
+ 		return rc;
+ 	}
+ 
++	cc_iowrite(drvdata, CC_REG(HOST_POWER_DOWN_EN), POWER_DOWN_DISABLE);
++
+ 	rc = init_cc_regs(drvdata, false);
+ 	if (rc) {
+ 		dev_err(dev, "init_cc_regs (%x)\n", rc);
 
 
