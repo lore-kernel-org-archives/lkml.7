@@ -2,110 +2,100 @@ Return-Path: <SRS0=lq4r=TU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-3.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DA07C46460
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 14:39:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B44E2C04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 14:41:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2FF6C216FD
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 14:39:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 856CD216B7
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 14:41:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sz3KjvUi"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="lXqccuzP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387713AbfETOjv (ORCPT
+        id S2387770AbfETOlW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 10:39:51 -0400
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:46654 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730904AbfETOjv (ORCPT
+        Mon, 20 May 2019 10:41:22 -0400
+Received: from mail-wr1-f47.google.com ([209.85.221.47]:43571 "EHLO
+        mail-wr1-f47.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730630AbfETOlV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 10:39:51 -0400
-Received: by mail-qt1-f195.google.com with SMTP id z19so16494988qtz.13
-        for <linux-kernel@vger.kernel.org>; Mon, 20 May 2019 07:39:50 -0700 (PDT)
+        Mon, 20 May 2019 10:41:21 -0400
+Received: by mail-wr1-f47.google.com with SMTP id r4so14884943wro.10
+        for <linux-kernel@vger.kernel.org>; Mon, 20 May 2019 07:41:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=nnKagkhm5U6N7QSx0MOcmsmOUR9BRTPQzriDtjeS1mU=;
-        b=sz3KjvUigPLdigL93ki3l+n1mRYgH9ptIORkJMoSYQqpCam1Ln7TNTvTwCVzefXHih
-         sp5h9AJIdHh/qWPaddNgCmPr3PiO/AIe6RYIJmU6vHcSi7TEsXk7XetBhqKpQxsLQVDZ
-         8bi1iTunjFT27cJ1CcoywQPojN82mZXaaRElGkaixToWwyQTRUXHt+PwOzICRo4omkDV
-         EkqMdf9On3+bAQAxjENWlJlFhE8V5G4Kuu6Z62VwPxqj73tJGLxsFwUsTXLVa1SQkK+x
-         StgtTEDriJj1UjMgYas9HxZKI6aKMQCdsITFDO6TVfgHpidODclpoU3UqqJcRhz5gxxQ
-         FDUw==
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=1IcjIbQ8PHaq6VYvuNKdHBqkf9lRmX2qSNld7AdUH8Y=;
+        b=lXqccuzPhOCSd0eAXFGQDmHVBo+Zq2t8h9b00w19EFmdsu1I3XhrW/tBLWjVyqiEqD
+         NYNMGgTHkhQ8gv0kYOE8VK+4fdR122C0zkAs0bptbu7m0KoK8FhXjvNtPvTHvCmmqpeE
+         HtsYRP6brrOcEjwOmTgixshcqRtzUQhYfvslxCUYWo+pzYXmu90z3KCAKhhNkGXAcJM3
+         RUkeh5fMkvUUrlbcwSpUbxN8cxSnu6yrfaSJ6aXbt8FpsgiHxIm8aSUd+lwwlSneFKQp
+         h5R5W0veH4EcdwjhYGFpkkJ/d7hj1LiWKpmRWUejw+G60jPTpe0LyyVS3VH5XRiAwdHl
+         uqxA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=nnKagkhm5U6N7QSx0MOcmsmOUR9BRTPQzriDtjeS1mU=;
-        b=pPNQ+7lSLSM7K5O2s4wL32T4hhk/T1kF2SYql0VzUYErytvyUCrYA12QRzzlSmkjS9
-         W4TLzRV3yefKmns4Eek/PRVTaqylKBiMBa73e87hOtahbA716wUnFaxRdyx8TU7v9fXw
-         ZRd7OZKg4D98z1gU/pTvGHi+yNPEVrdIl8Ft6dHaBofihhyf40oxAZH1t49cDKZHRW8q
-         go2Tf1D5ojhDytI2y7NPDst2OYVzE+Cu2QQr/l28LHrQ9CZebXmr0Gxq2dYliCusJlI4
-         O8DlmQN9OidLbK5xqRcJ8lsDvRBNZUkK/nDiZci5deUoQQhvngCML0JI5F9isMfu0xz7
-         Wfrg==
-X-Gm-Message-State: APjAAAW3iZYm7PuHdZaReeqbYxewAKYv31dRsQ6NaRiOslknHk2icnaS
-        Ti0lFYibqRsOwJqq9VUjubk=
-X-Google-Smtp-Source: APXvYqwueDUwMebFGPpRSMD8a45iBen83s2up0ylCN+i6/Qj4hNrmmXUT5IqpWNvMPltuMg3hQtMYg==
-X-Received: by 2002:a0c:b6d8:: with SMTP id h24mr59992753qve.178.1558363190254;
-        Mon, 20 May 2019 07:39:50 -0700 (PDT)
-Received: from quaco.ghostprotocols.net ([177.195.215.206])
-        by smtp.gmail.com with ESMTPSA id b11sm8268479qtt.6.2019.05.20.07.39.48
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 20 May 2019 07:39:49 -0700 (PDT)
-From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 37C8F404A1; Mon, 20 May 2019 11:39:43 -0300 (-03)
-Date:   Mon, 20 May 2019 11:39:43 -0300
-To:     Adrian Hunter <adrian.hunter@intel.com>
-Cc:     Jiri Olsa <jolsa@redhat.com>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/8] perf scripts python: Support pyside2 and misc Intel
- PT
-Message-ID: <20190520143943.GK8945@kernel.org>
-References: <20190412113830.4126-1-adrian.hunter@intel.com>
- <10798ccb-7da8-1f29-2a75-bf3aeeb29c96@intel.com>
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=1IcjIbQ8PHaq6VYvuNKdHBqkf9lRmX2qSNld7AdUH8Y=;
+        b=ea0fSyrq8E7N/bpEq1+yx8bGzwRVSlS0IFKxTgDVwgWooVV9CoHEHzpXthJA2UXILS
+         yQm6JDStfV703aIdZ33QAbXxK5o7wkSfhrLUm5TFnb78pWrozo48mYpNWskjSq9iSgiI
+         AQWhZY7C9B19WTLcjtfRB89kVHwU0mk1MFW+CwjhnJN2ANqAogphfPaVBneNnH4zYyZT
+         co65ep2FasL83vZq6S4vBr33bg6D3LiLSX/l2778/EuGpA+s5gchCmHUUaxTgmKJYEq6
+         irINEGDPcIiZwWhHlXPHuv5dwIiAERqjquhEaq2AMnxvyM+BMJuSWAA91V32WsgSWAQd
+         K0lA==
+X-Gm-Message-State: APjAAAX0pX7RgjGNC4Pg3EBhTgeq15gOX/aPLA6Pk4K+/Y4XXzAgg28Z
+        ytrEW1/JqoRL/52Kl3ypaI9BXQ==
+X-Google-Smtp-Source: APXvYqzJrbDLhKYgrYJFKpMvydjk+z5fNJ4UI9UtYfEjiy5zXI97tUynBoSZwSPBPAr8FOXTlstiXA==
+X-Received: by 2002:adf:f208:: with SMTP id p8mr26008555wro.160.1558363280342;
+        Mon, 20 May 2019 07:41:20 -0700 (PDT)
+Received: from bender.baylibre.local (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
+        by smtp.gmail.com with ESMTPSA id w3sm6743679wrv.25.2019.05.20.07.41.19
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Mon, 20 May 2019 07:41:19 -0700 (PDT)
+From:   Neil Armstrong <narmstrong@baylibre.com>
+To:     linus.walleij@linaro.org
+Cc:     linux-gpio@vger.kernel.org, linux-amlogic@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Neil Armstrong <narmstrong@baylibre.com>
+Subject: [PATCH 0/5] pinctrl: meson: gpio: update with SPDX Licence identifier
+Date:   Mon, 20 May 2019 16:41:03 +0200
+Message-Id: <20190520144108.3787-1-narmstrong@baylibre.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <10798ccb-7da8-1f29-2a75-bf3aeeb29c96@intel.com>
-X-Url:  http://acmel.wordpress.com
-User-Agent: Mutt/1.11.3 (2019-02-01)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Mon, Apr 29, 2019 at 10:28:20AM +0300, Adrian Hunter escreveu:
-> On 12/04/19 2:38 PM, Adrian Hunter wrote:
-> > Hi
-> > 
-> > Here are patches to add support for pyside2 to the db-export scripts,
-> > and a couple of Intel PT patches.
-> > 
-> > 
-> > Adrian Hunter (8):
-> >       perf scripts python: exported-sql-viewer.py: Change python2 to python
-> >       perf scripts python: exported-sql-viewer.py: Use argparse module for argument parsing
-> >       perf scripts python: exported-sql-viewer.py: Add support for pyside2
-> >       perf scripts python: export-to-sqlite.py: Add support for pyside2
-> >       perf scripts python: export-to-postgresql.py: Add support for pyside2
-> >       perf tools: perf-with-kcore.sh: Always allow fix_buildid_cache_permissions
-> >       perf intel-pt: Improve sync_switch
-> >       perf intel-pt: Rationalize intel_pt_sync_switch()'s use of next_tid
-> > 
-> >  tools/perf/perf-with-kcore.sh                     |  5 ---
-> >  tools/perf/scripts/python/export-to-postgresql.py | 43 +++++++++++++++----
-> >  tools/perf/scripts/python/export-to-sqlite.py     | 44 ++++++++++++++++---
-> >  tools/perf/scripts/python/exported-sql-viewer.py  | 51 ++++++++++++++++-------
-> >  tools/perf/util/intel-pt.c                        | 44 +++++++++++++++++--
-> >  5 files changed, 150 insertions(+), 37 deletions(-)
-> 
-> Are these ok?
+Update the SPDX Licence identifier for the Amlogic Pinctrl drivers and
+the corresponding GPIO dt-bindings headers.
 
-Thanks, applied.
+Neil Armstrong (5):
+  pinctrl: meson: update with SPDX Licence identifier
+  dt-bindings: gpio: meson-gxbb-gpio: update with SPDX Licence
+    identifier
+  dt-bindings: gpio: meson-gxl-gpio: update with SPDX Licence identifier
+  dt-bindings: gpio: meson8-gpio: update with SPDX Licence identifier
+  dt-bindings: gpio: meson8b-gpio: update with SPDX Licence identifier
 
-- Arnaldo
+ drivers/pinctrl/meson/pinctrl-meson-gxbb.c | 8 +-------
+ drivers/pinctrl/meson/pinctrl-meson-gxl.c  | 8 +-------
+ drivers/pinctrl/meson/pinctrl-meson.c      | 8 +-------
+ drivers/pinctrl/meson/pinctrl-meson.h      | 8 +-------
+ drivers/pinctrl/meson/pinctrl-meson8-pmx.c | 8 +-------
+ drivers/pinctrl/meson/pinctrl-meson8-pmx.h | 8 +-------
+ drivers/pinctrl/meson/pinctrl-meson8.c     | 8 +-------
+ drivers/pinctrl/meson/pinctrl-meson8b.c    | 8 +-------
+ include/dt-bindings/gpio/meson-gxbb-gpio.h | 8 +-------
+ include/dt-bindings/gpio/meson-gxl-gpio.h  | 8 +-------
+ include/dt-bindings/gpio/meson8-gpio.h     | 8 +-------
+ include/dt-bindings/gpio/meson8b-gpio.h    | 8 +-------
+ 12 files changed, 12 insertions(+), 84 deletions(-)
+
+-- 
+2.21.0
+
