@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0000CC04AAC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:30:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 151E6C04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:30:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C0EC120815
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:30:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D386220675
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:30:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558355447;
-	bh=CaVc0Vmf0CTBvhnD/hDvXM9q76PEYULHxwWmImXaQsw=;
+	s=default; t=1558355450;
+	bh=Y8pn0klUBCj5HAGh+Ju8aJxxSJY616eLJ6p9gRpf8b4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bFXiNpIDMfBnGFJrpZP7wTobcvMEl+8IbjWsGAg7Y9ZHm3nCMfQ+nF/2SYtsmR0ms
-	 529zo25gbJ8uFOEQuyk47raEZ4P25QF890AEcgJYEEcirqs3Fy0AfeOeVCLGSS4qW5
-	 QKXLD8SaYT7JSOrDXjxpB7uRKoJw8Gs4snOiiXd8=
+	b=Fu8bYafP4Ez9pHv2XBI273ykV3JJDrNOb1je55LSgut4mxcAVsZ6wBga+XTMEgRUM
+	 w1gTNfo3ddNC1Scdk3xTozRpyP4KXSWPRjfCTYh0uw3JFjS+PomC2+rc3se7o3jrQL
+	 ba8jQOrty3STfUAFaQz6Xxc+muGTP8nfv5kOFJJ8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389532AbfETMaq (ORCPT
+        id S2390170AbfETMau (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 08:30:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47000 "EHLO mail.kernel.org"
+        Mon, 20 May 2019 08:30:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47050 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390140AbfETMak (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 08:30:40 -0400
+        id S2390150AbfETMan (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 08:30:43 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 32A6020815;
-        Mon, 20 May 2019 12:30:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F17E520675;
+        Mon, 20 May 2019 12:30:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558355439;
-        bh=CaVc0Vmf0CTBvhnD/hDvXM9q76PEYULHxwWmImXaQsw=;
+        s=default; t=1558355442;
+        bh=Y8pn0klUBCj5HAGh+Ju8aJxxSJY616eLJ6p9gRpf8b4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XVS6I1405jMGro8ZMb1qPMC0lCi0B7grpkONVu5rBKgEoAbizlauJ4FnVGUvUXLiE
-         3auLwAGfqa0tkUsXVi8X2BsIngl+ubw+u9pGa/hqdiyNWMNJvWk5/ynfA3tfBdaNFI
-         eiOUcQc5SE2QSheC4MC3+OGpl9El0jlyZuLsMkTM=
+        b=bG6mCGeHfajWWUnXuL6VTG0wlznq8/WMEt4uLk3gaJIhlR0VuzdlWeTxNoYtnEcnt
+         bNPfHRLLvHJNqkwYIidG5QGJlxRRykYYbCj39yeEGNuPnF3KMVHfr+4c488+1NYf5d
+         q7IewBH8P8ZcsJI0d6laScxvnOMk+BMQDUJulX/o=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Colin Ian King <colin.king@canonical.com>,
-        Theodore Tso <tytso@mit.edu>
-Subject: [PATCH 5.0 120/123] ext4: unsigned int compared against zero
-Date:   Mon, 20 May 2019 14:15:00 +0200
-Message-Id: <20190520115253.149556849@linuxfoundation.org>
+        stable@vger.kernel.org, Lukas Czerner <lczerner@redhat.com>,
+        Theodore Tso <tytso@mit.edu>, stable@kernel.org
+Subject: [PATCH 5.0 103/123] ext4: fix data corruption caused by overlapping unaligned and aligned IO
+Date:   Mon, 20 May 2019 14:14:43 +0200
+Message-Id: <20190520115251.893061163@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190520115245.439864225@linuxfoundation.org>
 References: <20190520115245.439864225@linuxfoundation.org>
@@ -59,35 +59,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+From: Lukas Czerner <lczerner@redhat.com>
 
-commit fbbbbd2f28aec991f3fbc248df211550fbdfd58c upstream.
+commit 57a0da28ced8707cb9f79f071a016b9d005caf5a upstream.
 
-There are two cases where u32 variables n and err are being checked
-for less than zero error values, the checks is always false because
-the variables are not signed. Fix this by making the variables ints.
+Unaligned AIO must be serialized because the zeroing of partial blocks
+of unaligned AIO can result in data corruption in case it's overlapping
+another in flight IO.
 
-Addresses-Coverity: ("Unsigned compared against 0")
-Fixes: 345c0dbf3a30 ("ext4: protect journal inode's blocks using block_validity")
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
+Currently we wait for all unwritten extents before we submit unaligned
+AIO which protects data in case of unaligned AIO is following overlapping
+IO. However if a unaligned AIO is followed by overlapping aligned AIO we
+can still end up corrupting data.
+
+To fix this, we must make sure that the unaligned AIO is the only IO in
+flight by waiting for unwritten extents conversion not just before the
+IO submission, but right after it as well.
+
+This problem can be reproduced by xfstest generic/538
+
+Signed-off-by: Lukas Czerner <lczerner@redhat.com>
 Signed-off-by: Theodore Ts'o <tytso@mit.edu>
+Cc: stable@kernel.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/ext4/block_validity.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ fs/ext4/file.c |    7 +++++++
+ 1 file changed, 7 insertions(+)
 
---- a/fs/ext4/block_validity.c
-+++ b/fs/ext4/block_validity.c
-@@ -142,7 +142,8 @@ static int ext4_protect_reserved_inode(s
- 	struct inode *inode;
- 	struct ext4_sb_info *sbi = EXT4_SB(sb);
- 	struct ext4_map_blocks map;
--	u32 i = 0, err = 0, num, n;
-+	u32 i = 0, num;
-+	int err = 0, n;
+--- a/fs/ext4/file.c
++++ b/fs/ext4/file.c
+@@ -264,6 +264,13 @@ ext4_file_write_iter(struct kiocb *iocb,
+ 	}
  
- 	if ((ino < EXT4_ROOT_INO) ||
- 	    (ino > le32_to_cpu(sbi->s_es->s_inodes_count)))
+ 	ret = __generic_file_write_iter(iocb, from);
++	/*
++	 * Unaligned direct AIO must be the only IO in flight. Otherwise
++	 * overlapping aligned IO after unaligned might result in data
++	 * corruption.
++	 */
++	if (ret == -EIOCBQUEUED && unaligned_aio)
++		ext4_unwritten_wait(inode);
+ 	inode_unlock(inode);
+ 
+ 	if (ret > 0)
 
 
