@@ -1,148 +1,79 @@
 Return-Path: <SRS0=lq4r=TU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
-X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Level: **
+X-Spam-Status: No, score=2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	UNWANTED_LANGUAGE_BODY autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B46C9C04AAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 07:37:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA90FC04AAF
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 07:39:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 917A12085A
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 07:37:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 83E6B2081C
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 07:39:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=tastiess.eu header.i=@tastiess.eu header.b="E/1DgL22"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730368AbfETHh5 (ORCPT
+        id S1730186AbfETHjd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 03:37:57 -0400
-Received: from mail-vs1-f66.google.com ([209.85.217.66]:43088 "EHLO
-        mail-vs1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725983AbfETHh5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 03:37:57 -0400
-Received: by mail-vs1-f66.google.com with SMTP id d128so8304606vsc.10;
-        Mon, 20 May 2019 00:37:56 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ZzFqnIOsi8p6z+3XrmxUiH+3WXG0rfBF0N579QptVnw=;
-        b=XHlzanKfUZa49Qnj7RTchm/p+lSZvbWxzVhVGdoDtEEfmSlQnhMxXxtEMjbfIpOfQJ
-         cPK3Sf6EWE72eSHCTDJD6hWY/CC1gFkRNFwoWOhgUP69M3n6lJdCcyqc6QWN3h4fqxzg
-         IJnJM3S478GUZq1QwJn/TmjlJuAjz6tNiBm4VandNuz2qfnek2vSW4L2nvDLELzMFDrg
-         qMg4C5Bvpj9+QDDQq/GeZDCXxqyJB+HrTModIDBUeXKSBkWyhagZoBSQqPNsdJJYtTm/
-         K0ZV4Wi/EhAmQu9a6Ker0LLJUSr0cPbxo0wPo4yBm6Rc9tG0JUzYXF2WQFxDnhxarntK
-         qpnw==
-X-Gm-Message-State: APjAAAVFF04Nikw+/bnoHdVrVEO8xI2dnLQZXfuQYLo1/G7rilI4cDES
-        249i1nOnYzyG0CH4W4SCNyuI+U+QtHE/oICDB4o=
-X-Google-Smtp-Source: APXvYqyUussoat3RoiVGfWvPbqvmfPyaaXxlv6lPx8B2T1BSZy0HJO2KEIQH+Mu9ccoM18jhu0wEOGioz6Sr2M5lBWk=
-X-Received: by 2002:a67:fdd4:: with SMTP id l20mr28417242vsq.63.1558337876203;
- Mon, 20 May 2019 00:37:56 -0700 (PDT)
+        Mon, 20 May 2019 03:39:33 -0400
+Received: from mail.tastiess.eu ([194.182.86.235]:39323 "EHLO mail.tastiess.eu"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725983AbfETHjd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 03:39:33 -0400
+X-Greylist: delayed 466 seconds by postgrey-1.27 at vger.kernel.org; Mon, 20 May 2019 03:39:32 EDT
+Received: by mail.tastiess.eu (Postfix, from userid 1001)
+        id E106087947; Mon, 20 May 2019 09:31:17 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=tastiess.eu; s=mail;
+        t=1558337504; bh=1wXsRnVQKyR5953v1mK5+VSjATpkqCFjMxx9a9NW6X4=;
+        h=Date:From:To:Subject:From;
+        b=E/1DgL22A4P94p1oKqgJ0oTRpdVZ+bD8FjKtUkiSLOdGqvMEaAQ7aZeiHc/OnmtV3
+         ol/kMDeAxQk9N0sEqumCOcUHQHa9I5p6n5xCT932Pf400MSqbsUmOPzKlLkUBahlPp
+         R/5Iujmi6/updeg4mrnfpKgNiknJw3Cccwq26qQI=
+Received: by mail.tastiess.eu for <linux-kernel@vger.kernel.org>; Mon, 20 May 2019 07:31:16 GMT
+Message-ID: <20190520084500-0.1.c.h1z.0.pdld7qyf68@tastiess.eu>
+Date:   Mon, 20 May 2019 07:31:16 GMT
+From:   =?UTF-8?Q? "Kapolcs_M=C3=A1ty=C3=A1s" ?= 
+        <kapolcs.matyas@tastiess.eu>
+To:     <linux-kernel@vger.kernel.org>
+Subject: =?UTF-8?Q?Dolgoz=C3=B3i_juttat=C3=A1sok?=
+X-Mailer: mail.tastiess.eu
 MIME-Version: 1.0
-References: <20190504004258.23574-1-erosca@de.adit-jv.com> <20190504004258.23574-3-erosca@de.adit-jv.com>
- <CAMuHMdWnuvQvugqfMjE1R_QDvf-Pma8POb1x5YjRr97+M-=HHg@mail.gmail.com>
- <20190506194233.GA32430@vmlxhi-102.adit-jv.com> <OSBPR01MB3174C93C0A49701EC72F9D82D8060@OSBPR01MB3174.jpnprd01.prod.outlook.com>
-In-Reply-To: <OSBPR01MB3174C93C0A49701EC72F9D82D8060@OSBPR01MB3174.jpnprd01.prod.outlook.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Mon, 20 May 2019 09:37:43 +0200
-Message-ID: <CAMuHMdVR4idTqOiNWMi3GAS0D-V+SMsYSsukgEMYyz5zDcuPbw@mail.gmail.com>
-Subject: Re: [PATCH 2/6] Revert "arm64: dts: renesas: r8a7796: Enable DMA for SCIF2"
-To:     Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Cc:     "REE erosca@DE.ADIT-JV.COM" <erosca@de.adit-jv.com>,
-        Eugeniu Rosca <roscaeugeniu@gmail.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Simon Horman <horms+renesas@verge.net.au>,
-        Chris Brandt <Chris.Brandt@renesas.com>,
-        Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        Ulrich Hecht <ulrich.hecht+renesas@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "George G . Davis" <george_davis@mentor.com>,
-        Andy Lowe <andy_lowe@mentor.com>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Michael Rodin <mrodin@de.adit-jv.com>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Shimoda-san,
+=C3=9Cdv=C3=B6zl=C3=B6m!
+=20
+2019 janu=C3=A1rt=C3=B3l v=C3=A1ltozik a nem b=C3=A9r jelleg=C5=B1 juttat=
+=C3=A1sok rendje.
+=20
+Egy kiv=C3=A1l=C3=B3 lehet=C5=91s=C3=A9ggel =C3=A9lehet, amennyiben a mi =
+k=C3=A1rty=C3=A1nkat v=C3=A1lasztja!
+=20
+Ez a k=C3=A1rtya:
+=20
+Korl=C3=A1tlanul felhaszn=C3=A1lhat=C3=B3:
+=20
+k=C3=A9szp=C3=A9nzfelv=C3=A9tel
+=C3=A9lelmiszer v=C3=A1s=C3=A1rl=C3=A1s
+eg=C3=A9szs=C3=A9g=C3=BCgyi ell=C3=A1t=C3=A1s
+elektronikai term=C3=A9kek v=C3=A1s=C3=A1rl=C3=A1sa
+oktat=C3=A1s
+sz=C3=A1ll=C3=A1s
+=20
+K=C3=A1rty=C3=A1nk az egyetlen olyan val=C3=B3ban szabadfelhaszn=C3=A1l=C3=
+=A1s=C3=BA k=C3=A1rtya, melyet minden POS termin=C3=A1l elfogad!
+=20
+Amennyiben k=C3=A1rty=C3=A1nk felkeltette =C3=A9rdekl=C5=91d=C3=A9s=C3=A9=
+t, mint dolgoz=C3=B3i juttat=C3=A1s, k=C3=A9rem keressen fel a tov=C3=A1b=
+bi t=C3=A1j=C3=A9koztat=C3=A1s =C3=A9rdek=C3=A9ben!
+=20
+=C3=96r=C3=B6mmel =C3=A1llunk rendelkez=C3=A9s=C3=A9re mindenben!
 
-Thanks for your analysis!
 
-On Mon, May 20, 2019 at 4:18 AM Yoshihiro Shimoda
-<yoshihiro.shimoda.uh@renesas.com> wrote:
-> > From: Eugeniu Rosca, Sent: Tuesday, May 7, 2019 4:43 AM
-> <snip>
-> > > > [0] v5.0-rc6 commit 97f26702bc95b5 ("arm64: dts: renesas: r8a7796: Enable DMA for SCIF2")
-> > > > [1] v4.14.106 commit 703db5d1b1759f ("arm64: dts: renesas: r8a7796: Enable DMA for SCIF2")
-> > > > [2] scif (DEBUG) and rcar-dmac logs:
-> > > >     https://gist.github.com/erosca/132cce76a619724a9e4fa61d1db88c66
-> <snip>
-> > Enabling DEBUG in drivers/dma/sh/rcar-dmac.c, I can notice that one of
-> > the symptoms is a NULL dst_addr revealed by:
-> >
-> > rcar-dmac e7300000.dma-controller: chan0: queue chunk (____ptrval____): 0@0xffff800639eb8090 -> 0x0000000000000000
-> >
-> > In working scenarios, dst_addr is never zero. Does it give any hints?
->
-> Thank you for the report! It's very helpful to me.
-> I think we should fix the sh-sci driver at least.
->
-> According to the [2] log above,
->
-> [    4.379716] sh-sci e6e88000.serial: sci_dma_tx_work_fn: ffff800639b55000: 0...0, cookie 126
->
-> This "0...0" means the s->tx_dma_len on the sci_dma_tx_work_fn will be zero. And,
-
-How can this happen? schedule_work(&s->work_tx) is called only if
-!uart_circ_empty(), and while holding the port lock? So the circular
-buffer must be made empty in between the call to schedule_work() and the
-work function sci_dma_tx_work_fn() being called.
-
-I think this can happen if uart_flush_buffer() is called at the right
-moment?
-
-> > rcar-dmac e7300000.dma-controller: chan0: queue chunk (____ptrval____): 0@0xffff800639eb8090 -> 0x0000000000000000
->
-> This means the chunk->dst_addr is not set to the "dst_addr" for SCIF because the len on rcar_dmac_chan_prep_sg is zero.
-> So, I'm thinking:
->  - we have to fix the sh_sci driver to avoid "tx_dma_len = 0" transferring.
-
-That sounds like just a simple check for !s->tx_dma_len in
-sci_dma_tx_work_fn(), to return early, _and_ reset s->cookie_tx to
--EINVAL.
-
-However, uart_flush_buffer() may still be called in between the check
-and the calls to dmaengine_prep_slave_single() /
-dma_sync_single_for_device(), clearing s->tx_dma_len again.
-Unless something has changed recently, these two calls cannot be moved
-inside the spinlock-protected section?
-Using a cached value of s->tx_dma_len for the dmaengine calls might
-work, though.
-
-> and
->
->  - also we have to fix the rcar-dmac driver to avoid this issue because the DMA Engine API
->    guide doesn't prevent the len = 0.
-
-I guess returning an error makes most sense?
-Else we have to fix it deeper into the driver, where handling becomes
-more complex.
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Kapolcs M=C3=A1ty=C3=A1s
+Hungary Team Leader
