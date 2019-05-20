@@ -2,138 +2,98 @@ Return-Path: <SRS0=lq4r=TU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6FD1C04E87
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 22:45:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6759C04E87
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 22:48:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 85BBA2173C
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 22:45:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B7E782173C
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 22:48:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=yahoo.com header.i=@yahoo.com header.b="Z5wz8Yrs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727120AbfETWp4 (ORCPT
+        id S1727018AbfETWsI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 18:45:56 -0400
-Received: from outgoing-stata.csail.mit.edu ([128.30.2.210]:53113 "EHLO
-        outgoing-stata.csail.mit.edu" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726107AbfETWpz (ORCPT
+        Mon, 20 May 2019 18:48:08 -0400
+Received: from sonic305-9.consmr.mail.bf2.yahoo.com ([74.6.133.48]:37306 "EHLO
+        sonic305-9.consmr.mail.bf2.yahoo.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726478AbfETWsH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 18:45:55 -0400
-Received: from [4.30.142.84] (helo=srivatsab-a01.vmware.com)
-        by outgoing-stata.csail.mit.edu with esmtpsa (TLS1.2:RSA_AES_128_CBC_SHA1:128)
-        (Exim 4.82)
-        (envelope-from <srivatsa@csail.mit.edu>)
-        id 1hSr2T-000DNC-Gj; Mon, 20 May 2019 18:45:49 -0400
-Subject: Re: CFQ idling kills I/O performance on ext4 with blkio cgroup
- controller
-To:     Paolo Valente <paolo.valente@linaro.org>
-Cc:     linux-fsdevel@vger.kernel.org,
-        linux-block <linux-block@vger.kernel.org>,
-        linux-ext4@vger.kernel.org, cgroups@vger.kernel.org,
-        kernel list <linux-kernel@vger.kernel.org>,
-        Jens Axboe <axboe@kernel.dk>, Jan Kara <jack@suse.cz>,
-        jmoyer@redhat.com, tytso@mit.edu, amakhalov@vmware.com,
-        anishs@vmware.com, srivatsab@vmware.com
-References: <8d72fcf7-bbb4-2965-1a06-e9fc177a8938@csail.mit.edu>
- <1812E450-14EF-4D5A-8F31-668499E13652@linaro.org>
- <46c6a4be-f567-3621-2e16-0e341762b828@csail.mit.edu>
- <07D11833-8285-49C2-943D-E4C1D23E8859@linaro.org>
-From:   "Srivatsa S. Bhat" <srivatsa@csail.mit.edu>
-Message-ID: <238e14ff-68d1-3b21-a291-28de4f2d77af@csail.mit.edu>
-Date:   Mon, 20 May 2019 15:45:46 -0700
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.13; rv:60.0)
- Gecko/20100101 Thunderbird/60.6.1
+        Mon, 20 May 2019 18:48:07 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1558392485; bh=Zgj+p4WFZhNWb2yJwewxS8unIMB6qSZZhjmRqUgSubU=; h=From:Subject:To:Cc:Date:From:Subject; b=Z5wz8Yrs9vf1o6XI6afIGRfObCGtjgHZpd0mfzzJuu5VE4LzaRT+QFxTodxjNcW+QmXyOzlKmvJoemVNN9+8Uu7XqwBI8XI/W/B2fNy91+0lRWrHXPIIXcYSm0UAGJznM5uwAuPEsYjYW5J/eRzrTIIJLAZdFuOk6QGtjzmSpm+njy4kDrIDsPjjHHTyg+7P1LDYr8J08ywvVuyDNaS7JD6eVXJMObzdEbPbF7lKlTYQOK8aY9/1sje0+ST3HCG/sVoWMI2P0QBeyUiRjhEScELuhlldMg2bSVhZ444P1PZl9YN2gxKDAnLqpjERMthD1FETsKabCCMMbz0OssDPcA==
+X-YMail-OSG: dt2imT8VM1m_K2dbb7Y5Rs3GooQRAWeNuJgmxzy5BwCyZXhrKbUUCgYPXRf4rIS
+ S2aGOSi02Y2NblwV2FxtgE5gUxWH_OopPayV4ZAYrpxmOVGlA4oNgqeSXL6TSnrq.YtnFEllZwIF
+ lcYCGKI2oxyOB7mfX3LnrQaHX_agmvKkOBz8qncEagzKjfS.0f6byMZNhzCLM4iGMF6ffJDzevjZ
+ _vsvzNhuAhOgw7svlLnZns0_wU.JUXFvQXh_SGgWk1OtYQ8MxGDuUWylBkL4BMcdPDrGM1xHwKWf
+ d3qqXlYUgA3.6OGLPJw7jYV3mHyIzuh6lfJNfdaDPuo_iOaiNMKvfEFG8eK8EZr405oFKFkFW.gY
+ KBQQgXZZjQVdMs_6XT777E2ZgSLrgEBIKZNfUX3xKp7ab_ghXiU2VLUQUZJc75TNCcoC_L7OwkN1
+ SbjRFnaI2giLm3wVQKIAdtoSUY_JokH7xqsgLqtwnN41OJctUFIpgcfzSYHT8JP.PpvbhFUtC7wZ
+ Snjs6q3GTqp9TUOnNpEgS._3f1dbvJKxj4zm2lfl1m3.Vk_aLqyYE0yYq3laHRpLnVTjmg3RqA.H
+ rf7txytMEhbfsP8MftUyQ8_YWN3GgWXvYcfWCvCXGoYoWUcxF_NBbeAnEmPvsRhAohk1G4umVNsy
+ lJB17mQOWhw3WvQpkdwTvX6NNbMPnLafX8ukDl4gUlH8aX9fL0tQlL75go2ovJAk8Y10ItqOMFUw
+ TTRmnIb_Ezqapu4FHGr9RNMPgRlLUHfYMlvrB4L3GRDic4Z8OnG2zL_D_ZxdZtQztlnSLJecxzHj
+ 1REPX0fp04hF1ZHhMcK0NCTC5wfk7vTkcNjgBCZ82NnTUAZ8k9Jy0O9ktxtVoIXMFRCS5wQYpqEp
+ htVQAwYdHaLsWtLu1O.aqixOMcjYGucIcKrKA7_Oc868Rrd9Fo28XTedvNKBj.Cxi6jiN1jlisEg
+ MWFW1ItVDoqt7XBEbCNGbd4nIxP7WLAqb2XC3uG3kzMSoZ3w6K1lnvO9o5aAc_LzXhmG9sulnCSh
+ fpC3Tdjhy8ESfxR7bBomMeOd4qaCx73OCJJyupzBp0OkDtJoeX2ArytqR9362AeitUPzQFqkmQlx
+ f4RnqPl2Uv3PuRQVoaZoYi0sUAUNLcSBQP5D8qnT9YdOHzvz.25PAYRoeJJ8._UwDvFcAX98uieU
+ 4zJLQwEFLBNijG_GpzjsNbZPnEANNiwE8M.U0QXv2H6._vDHadI8O_jJatgC24E0N05B1K6FtW.2
+ Ut0c.cc_PcyvfySolg_0rYKocC0cSfBeL
+Received: from sonic.gate.mail.ne1.yahoo.com by sonic305.consmr.mail.bf2.yahoo.com with HTTP; Mon, 20 May 2019 22:48:05 +0000
+Received: from c-73-223-4-185.hsd1.ca.comcast.net (EHLO [192.168.0.103]) ([73.223.4.185])
+          by smtp422.mail.bf1.yahoo.com (Oath Hermes SMTP Server) with ESMTPA ID b1610b935ff02ed2fe28a0e6d5cc8620;
+          Mon, 20 May 2019 22:48:02 +0000 (UTC)
+From:   Casey Schaufler <casey@schaufler-ca.com>
+Subject: [PATCH] Smack: Restore the smackfsdef mount option
+To:     LKML <linux-kernel@vger.kernel.org>,
+        Al Viro <viro@zeniv.linux.org.uk>, dhowells@redhat.com
+Cc:     jose.bollo@iot.bzh, casey@schaufler-ca.com,
+        Linux Security Module list 
+        <linux-security-module@vger.kernel.org>
+Message-ID: <1ebab7e7-f7ee-b910-9cc8-5d826eee8e97@schaufler-ca.com>
+Date:   Mon, 20 May 2019 15:48:03 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <07D11833-8285-49C2-943D-E4C1D23E8859@linaro.org>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/20/19 3:19 AM, Paolo Valente wrote:
-> 
-> 
->> Il giorno 18 mag 2019, alle ore 22:50, Srivatsa S. Bhat <srivatsa@csail.mit.edu> ha scritto:
->>
->> On 5/18/19 11:39 AM, Paolo Valente wrote:
->>> I've addressed these issues in my last batch of improvements for BFQ,
->>> which landed in the upcoming 5.2. If you give it a try, and still see
->>> the problem, then I'll be glad to reproduce it, and hopefully fix it
->>> for you.
->>>
->>
->> Hi Paolo,
->>
->> Thank you for looking into this!
->>
->> I just tried current mainline at commit 72cf0b07, but unfortunately
->> didn't see any improvement:
->>
->> dd if=/dev/zero of=/root/test.img bs=512 count=10000 oflag=dsync
->>
->> With mq-deadline, I get:
->>
->> 5120000 bytes (5.1 MB, 4.9 MiB) copied, 3.90981 s, 1.3 MB/s
->>
->> With bfq, I get:
->> 5120000 bytes (5.1 MB, 4.9 MiB) copied, 84.8216 s, 60.4 kB/s
->>
-> 
-> Hi Srivatsa,
-> thanks for reproducing this on mainline.  I seem to have reproduced a
-> bonsai-tree version of this issue.  Before digging into the block
-> trace, I'd like to ask you for some feedback.
-> 
-> First, in my test, the total throughput of the disk happens to be
-> about 20 times as high as that enjoyed by dd, regardless of the I/O
-> scheduler.  I guess this massive overhead is normal with dsync, but
-> I'd like know whether it is about the same on your side.  This will
-> help me understand whether I'll actually be analyzing about the same
-> problem as yours.
-> 
+The 5.1 mount system rework changed the smackfsdef mount option
+to smackfsdefault. This fixes the regression by making smackfsdef
+treated the same way as smackfsdefault. The change was made in
+commit c3300aaf95fb4 from Al Viro.
 
-Do you mean to say the throughput obtained by dd'ing directly to the
-block device (bypassing the filesystem)? That does give me a 20x
-speedup with bs=512, but much more with a bigger block size (achieving
-a max throughput of about 110 MB/s).
+Reported-by: Jose Bollo <jose.bollo@iot.bzh>
+Signed-off-by: Casey Schaufler <casey@schaufler-ca.com>
+---
+  security/smack/smack_lsm.c | 2 ++
+  1 file changed, 2 insertions(+)
 
-dd if=/dev/zero of=/dev/sdc bs=512 count=10000 conv=fsync
-10000+0 records in
-10000+0 records out
-5120000 bytes (5.1 MB, 4.9 MiB) copied, 0.15257 s, 33.6 MB/s
+diff --git a/security/smack/smack_lsm.c b/security/smack/smack_lsm.c
+index b9abcdb36a73..915cf598e164 100644
+--- a/security/smack/smack_lsm.c
++++ b/security/smack/smack_lsm.c
+@@ -68,6 +68,7 @@ static struct {
+  	int len;
+  	int opt;
+  } smk_mount_opts[] = {
++	{"smackfsdef", sizeof("smackfsdef") - 1, Opt_fsdefault},
+  	A(fsdefault), A(fsfloor), A(fshat), A(fsroot), A(fstransmute)
+  };
+  #undef A
+@@ -682,6 +683,7 @@ static int smack_fs_context_dup(struct fs_context *fc,
+  }
+  
+  static const struct fs_parameter_spec smack_param_specs[] = {
++	fsparam_string("fsdef",		Opt_fsdefault),
+  	fsparam_string("fsdefault",	Opt_fsdefault),
+  	fsparam_string("fsfloor",	Opt_fsfloor),
+  	fsparam_string("fshat",		Opt_fshat),
 
-dd if=/dev/zero of=/dev/sdc bs=4k count=10000 conv=fsync
-10000+0 records in
-10000+0 records out
-40960000 bytes (41 MB, 39 MiB) copied, 0.395081 s, 104 MB/s
-
-I'm testing this on a Toshiba MG03ACA1 (1TB) hard disk.
-
-> Second, the commands I used follow.  Do they implement your test case
-> correctly?
-> 
-> [root@localhost tmp]# mkdir /sys/fs/cgroup/blkio/testgrp
-> [root@localhost tmp]# echo $BASHPID > /sys/fs/cgroup/blkio/testgrp/cgroup.procs
-> [root@localhost tmp]# cat /sys/block/sda/queue/scheduler
-> [mq-deadline] bfq none
-> [root@localhost tmp]# dd if=/dev/zero of=/root/test.img bs=512 count=10000 oflag=dsync
-> 10000+0 record dentro
-> 10000+0 record fuori
-> 5120000 bytes (5,1 MB, 4,9 MiB) copied, 14,6892 s, 349 kB/s
-> [root@localhost tmp]# echo bfq > /sys/block/sda/queue/scheduler
-> [root@localhost tmp]# dd if=/dev/zero of=/root/test.img bs=512 count=10000 oflag=dsync
-> 10000+0 record dentro
-> 10000+0 record fuori
-> 5120000 bytes (5,1 MB, 4,9 MiB) copied, 20,1953 s, 254 kB/s
-> 
-
-Yes, this is indeed the testcase, although I see a much bigger
-drop in performance with bfq, compared to the results from
-your setup.
-
-Regards,
-Srivatsa
