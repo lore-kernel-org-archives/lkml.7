@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB204C04AAC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:27:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0FF5C04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:27:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B51D620815
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:27:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 91B8120815
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:27:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558355255;
-	bh=oylC+PnrQAI7xZixoEnQt8HZ1NVPrVmRDNirD/k4gVs=;
+	s=default; t=1558355260;
+	bh=4mJ0ODamTguxNDF0yhcDtRfQZ1QX4p0KtjNL4DmrW2I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1ok1hRpkgYJQpwmMvNHPRFtTrHpQhbpaa5RQB6IC/P4Xnw+MaeF43sgNgZTrYSgVb
-	 TiD2aNPFAxD95N/+GD9AOcjW0XUVlSQrUqP0TxpvXpGH7gsyTuejWJBjB8SIwCvi5i
-	 bnHgAtfGpOAgaOwD/LrwWCvVF8Ylx9LyXgDiqvaY=
+	b=0hPpsUyJB44qpmbdSZe0mJwxGjv2eHFyL60NtnlZfrPEHjeWKzpEd+0MhY0TlGMnN
+	 qgNAcXkaRlwo/GEn6rzpjJjU0mU28Nf/wzsiUvmPh2H+Nh4nUejtO5V3B7fpde8a96
+	 v04nByWh+ZxLigxU8VQRqRqmafBKwA8I2rZdvASM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389506AbfETM1e (ORCPT
+        id S2389519AbfETM1j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 08:27:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43082 "EHLO mail.kernel.org"
+        Mon, 20 May 2019 08:27:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43130 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389496AbfETM1b (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 08:27:31 -0400
+        id S2389502AbfETM1d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 08:27:33 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7004220675;
-        Mon, 20 May 2019 12:27:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1153720675;
+        Mon, 20 May 2019 12:27:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558355249;
-        bh=oylC+PnrQAI7xZixoEnQt8HZ1NVPrVmRDNirD/k4gVs=;
+        s=default; t=1558355252;
+        bh=4mJ0ODamTguxNDF0yhcDtRfQZ1QX4p0KtjNL4DmrW2I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rCdU2jgttGkSt01YmouESo9yLT7tgCgCNdhAnM9r/5uwgtJVYu8ybDlsWeiHzvDef
-         syWQTDcoF+VhVv/yeN/FnRzhr/6y3x5jZQTqVwcwC8lhKNaLiWZOFSJcD9lx23m2BH
-         D83g0ohrmK4qJx4WFLvdqTsIqrOuD9OBlF4ajZ/U=
+        b=p2q9fYjelGdCtu8cfer1nTJ8klVmFqwt/euKrIgN2aL0ejbPRZadJ0Q8tuj0k9MU8
+         96OQIdatCKzwaW/GPwgiHwmcIs+GIwSVly6TtX3ZfGP9aQ74WB2stkfaj53v3Zs80U
+         xJIQIULG39IkB/j7dAWhvqm87m4Yp6ctBoIfPyFY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Adrian Hunter <adrian.hunter@intel.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>
-Subject: [PATCH 5.0 046/123] mmc: sdhci-pci: Fix BYT OCP setting
-Date:   Mon, 20 May 2019 14:13:46 +0200
-Message-Id: <20190520115247.798779686@linuxfoundation.org>
+        stable@vger.kernel.org,
+        syzbot+a07d0142e74fdd595cfb@syzkaller.appspotmail.com,
+        Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 5.0 047/123] ALSA: line6: toneport: Fix broken usage of timer for delayed execution
+Date:   Mon, 20 May 2019 14:13:47 +0200
+Message-Id: <20190520115247.861946852@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190520115245.439864225@linuxfoundation.org>
 References: <20190520115245.439864225@linuxfoundation.org>
@@ -59,185 +60,77 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Adrian Hunter <adrian.hunter@intel.com>
+From: Takashi Iwai <tiwai@suse.de>
 
-commit 0a49a619e7e1aeb3f5f5511ca59314423c83dae2 upstream.
+commit 7f84ff68be05ec7a5d2acf8fdc734fe5897af48f upstream.
 
-Some time ago, a fix was done for the sdhci-acpi driver, refer
-commit 6e1c7d6103fe ("mmc: sdhci-acpi: Reduce Baytrail eMMC/SD/SDIO
-hangs"). The same issue was not expected to affect the sdhci-pci driver,
-but there have been reports to the contrary, so make the same hardware
-setting change.
+The line6 toneport driver has code for some delayed initialization,
+and this hits the kernel Oops because mutex and other sleepable
+functions are used in the timer callback.  Fix the abuse by a delayed
+work instead so that everything works gracefully.
 
-This patch applies to v5.0+ but before that backports will be required.
-
-Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
-Cc: stable@vger.kernel.org
-Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+Reported-by: syzbot+a07d0142e74fdd595cfb@syzkaller.appspotmail.com
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/mmc/host/Kconfig          |    1 
- drivers/mmc/host/sdhci-pci-core.c |   96 ++++++++++++++++++++++++++++++++++++++
- 2 files changed, 97 insertions(+)
+ sound/usb/line6/toneport.c |   16 +++++++++-------
+ 1 file changed, 9 insertions(+), 7 deletions(-)
 
---- a/drivers/mmc/host/Kconfig
-+++ b/drivers/mmc/host/Kconfig
-@@ -92,6 +92,7 @@ config MMC_SDHCI_PCI
- 	tristate "SDHCI support on PCI bus"
- 	depends on MMC_SDHCI && PCI
- 	select MMC_CQHCI
-+	select IOSF_MBI if X86
- 	help
- 	  This selects the PCI Secure Digital Host Controller Interface.
- 	  Most controllers found today are PCI devices.
---- a/drivers/mmc/host/sdhci-pci-core.c
-+++ b/drivers/mmc/host/sdhci-pci-core.c
-@@ -31,6 +31,10 @@
- #include <linux/mmc/sdhci-pci-data.h>
- #include <linux/acpi.h>
+--- a/sound/usb/line6/toneport.c
++++ b/sound/usb/line6/toneport.c
+@@ -54,8 +54,8 @@ struct usb_line6_toneport {
+ 	/* Firmware version (x 100) */
+ 	u8 firmware_version;
  
-+#ifdef CONFIG_X86
-+#include <asm/iosf_mbi.h>
-+#endif
-+
- #include "cqhci.h"
+-	/* Timer for delayed PCM startup */
+-	struct timer_list timer;
++	/* Work for delayed PCM startup */
++	struct delayed_work pcm_work;
  
- #include "sdhci.h"
-@@ -451,6 +455,50 @@ static const struct sdhci_pci_fixes sdhc
- 	.probe_slot	= pch_hc_probe_slot,
- };
+ 	/* Device type */
+ 	enum line6_device_type type;
+@@ -241,9 +241,10 @@ static int snd_toneport_source_put(struc
+ 	return 1;
+ }
  
-+#ifdef CONFIG_X86
-+
-+#define BYT_IOSF_SCCEP			0x63
-+#define BYT_IOSF_OCP_NETCTRL0		0x1078
-+#define BYT_IOSF_OCP_TIMEOUT_BASE	GENMASK(10, 8)
-+
-+static void byt_ocp_setting(struct pci_dev *pdev)
-+{
-+	u32 val = 0;
-+
-+	if (pdev->device != PCI_DEVICE_ID_INTEL_BYT_EMMC &&
-+	    pdev->device != PCI_DEVICE_ID_INTEL_BYT_SDIO &&
-+	    pdev->device != PCI_DEVICE_ID_INTEL_BYT_SD &&
-+	    pdev->device != PCI_DEVICE_ID_INTEL_BYT_EMMC2)
-+		return;
-+
-+	if (iosf_mbi_read(BYT_IOSF_SCCEP, MBI_CR_READ, BYT_IOSF_OCP_NETCTRL0,
-+			  &val)) {
-+		dev_err(&pdev->dev, "%s read error\n", __func__);
-+		return;
-+	}
-+
-+	if (!(val & BYT_IOSF_OCP_TIMEOUT_BASE))
-+		return;
-+
-+	val &= ~BYT_IOSF_OCP_TIMEOUT_BASE;
-+
-+	if (iosf_mbi_write(BYT_IOSF_SCCEP, MBI_CR_WRITE, BYT_IOSF_OCP_NETCTRL0,
-+			   val)) {
-+		dev_err(&pdev->dev, "%s write error\n", __func__);
-+		return;
-+	}
-+
-+	dev_dbg(&pdev->dev, "%s completed\n", __func__);
-+}
-+
-+#else
-+
-+static inline void byt_ocp_setting(struct pci_dev *pdev)
-+{
-+}
-+
-+#endif
-+
- enum {
- 	INTEL_DSM_FNS		=  0,
- 	INTEL_DSM_V18_SWITCH	=  3,
-@@ -715,6 +763,8 @@ static void byt_probe_slot(struct sdhci_
+-static void toneport_start_pcm(struct timer_list *t)
++static void toneport_start_pcm(struct work_struct *work)
+ {
+-	struct usb_line6_toneport *toneport = from_timer(toneport, t, timer);
++	struct usb_line6_toneport *toneport =
++		container_of(work, struct usb_line6_toneport, pcm_work.work);
+ 	struct usb_line6 *line6 = &toneport->line6;
  
- 	byt_read_dsm(slot);
+ 	line6_pcm_acquire(line6->line6pcm, LINE6_STREAM_MONITOR, true);
+@@ -393,7 +394,8 @@ static int toneport_setup(struct usb_lin
+ 	if (toneport_has_led(toneport))
+ 		toneport_update_led(toneport);
  
-+	byt_ocp_setting(slot->chip->pdev);
-+
- 	ops->execute_tuning = intel_execute_tuning;
- 	ops->start_signal_voltage_switch = intel_start_signal_voltage_switch;
- 
-@@ -938,7 +988,35 @@ static int byt_sd_probe_slot(struct sdhc
+-	mod_timer(&toneport->timer, jiffies + TONEPORT_PCM_DELAY * HZ);
++	schedule_delayed_work(&toneport->pcm_work,
++			      msecs_to_jiffies(TONEPORT_PCM_DELAY * 1000));
  	return 0;
  }
  
-+#ifdef CONFIG_PM_SLEEP
-+
-+static int byt_resume(struct sdhci_pci_chip *chip)
-+{
-+	byt_ocp_setting(chip->pdev);
-+
-+	return sdhci_pci_resume_host(chip);
-+}
-+
-+#endif
-+
-+#ifdef CONFIG_PM
-+
-+static int byt_runtime_resume(struct sdhci_pci_chip *chip)
-+{
-+	byt_ocp_setting(chip->pdev);
-+
-+	return sdhci_pci_runtime_resume_host(chip);
-+}
-+
-+#endif
-+
- static const struct sdhci_pci_fixes sdhci_intel_byt_emmc = {
-+#ifdef CONFIG_PM_SLEEP
-+	.resume		= byt_resume,
-+#endif
-+#ifdef CONFIG_PM
-+	.runtime_resume	= byt_runtime_resume,
-+#endif
- 	.allow_runtime_pm = true,
- 	.probe_slot	= byt_emmc_probe_slot,
- 	.quirks		= SDHCI_QUIRK_NO_ENDATTR_IN_NOPDESC |
-@@ -972,6 +1050,12 @@ static const struct sdhci_pci_fixes sdhc
- };
+@@ -405,7 +407,7 @@ static void line6_toneport_disconnect(st
+ 	struct usb_line6_toneport *toneport =
+ 		(struct usb_line6_toneport *)line6;
  
- static const struct sdhci_pci_fixes sdhci_ni_byt_sdio = {
-+#ifdef CONFIG_PM_SLEEP
-+	.resume		= byt_resume,
-+#endif
-+#ifdef CONFIG_PM
-+	.runtime_resume	= byt_runtime_resume,
-+#endif
- 	.quirks		= SDHCI_QUIRK_NO_ENDATTR_IN_NOPDESC |
- 			  SDHCI_QUIRK_NO_LED,
- 	.quirks2	= SDHCI_QUIRK2_HOST_OFF_CARD_ON |
-@@ -983,6 +1067,12 @@ static const struct sdhci_pci_fixes sdhc
- };
+-	del_timer_sync(&toneport->timer);
++	cancel_delayed_work_sync(&toneport->pcm_work);
  
- static const struct sdhci_pci_fixes sdhci_intel_byt_sdio = {
-+#ifdef CONFIG_PM_SLEEP
-+	.resume		= byt_resume,
-+#endif
-+#ifdef CONFIG_PM
-+	.runtime_resume	= byt_runtime_resume,
-+#endif
- 	.quirks		= SDHCI_QUIRK_NO_ENDATTR_IN_NOPDESC |
- 			  SDHCI_QUIRK_NO_LED,
- 	.quirks2	= SDHCI_QUIRK2_HOST_OFF_CARD_ON |
-@@ -994,6 +1084,12 @@ static const struct sdhci_pci_fixes sdhc
- };
+ 	if (toneport_has_led(toneport))
+ 		toneport_remove_leds(toneport);
+@@ -422,7 +424,7 @@ static int toneport_init(struct usb_line
+ 	struct usb_line6_toneport *toneport =  (struct usb_line6_toneport *) line6;
  
- static const struct sdhci_pci_fixes sdhci_intel_byt_sd = {
-+#ifdef CONFIG_PM_SLEEP
-+	.resume		= byt_resume,
-+#endif
-+#ifdef CONFIG_PM
-+	.runtime_resume	= byt_runtime_resume,
-+#endif
- 	.quirks		= SDHCI_QUIRK_NO_ENDATTR_IN_NOPDESC |
- 			  SDHCI_QUIRK_NO_LED,
- 	.quirks2	= SDHCI_QUIRK2_CARD_ON_NEEDS_BUS_ON |
+ 	toneport->type = id->driver_info;
+-	timer_setup(&toneport->timer, toneport_start_pcm, 0);
++	INIT_DELAYED_WORK(&toneport->pcm_work, toneport_start_pcm);
+ 
+ 	line6->disconnect = line6_toneport_disconnect;
+ 
 
 
