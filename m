@@ -2,93 +2,144 @@ Return-Path: <SRS0=lq4r=TU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EAF84C04AAC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 16:23:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FAB3C04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 16:28:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C77DD21479
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 16:23:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE3F321479
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 16:28:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="N2nmW2ws"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391731AbfETQXa (ORCPT
+        id S2389683AbfETQ2M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 12:23:30 -0400
-Received: from mga12.intel.com ([192.55.52.136]:29400 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388110AbfETQXa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 12:23:30 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 May 2019 09:23:29 -0700
-X-ExtLoop1: 1
-Received: from orsmsx104.amr.corp.intel.com ([10.22.225.131])
-  by fmsmga007.fm.intel.com with ESMTP; 20 May 2019 09:23:29 -0700
-Received: from orsmsx115.amr.corp.intel.com (10.22.240.11) by
- ORSMSX104.amr.corp.intel.com (10.22.225.131) with Microsoft SMTP Server (TLS)
- id 14.3.408.0; Mon, 20 May 2019 09:23:29 -0700
-Received: from orsmsx103.amr.corp.intel.com ([169.254.5.182]) by
- ORSMSX115.amr.corp.intel.com ([169.254.4.95]) with mapi id 14.03.0415.000;
- Mon, 20 May 2019 09:23:29 -0700
-From:   "Yang, Fei" <fei.yang@intel.com>
-To:     Andrzej Pietrasiewicz <andrzej.p@collabora.com>,
-        John Stultz <john.stultz@linaro.org>
-CC:     Felipe Balbi <balbi@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Chen Yu <chenyu56@huawei.com>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Linux USB List <linux-usb@vger.kernel.org>,
-        Amit Pundir <amit.pundir@linaro.org>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        "kernel@collabora.com" <kernel@collabora.com>
-Subject: RE: [REGRESSION] usb: gadget: f_fs: Allow scatter-gather buffers
-Thread-Topic: [REGRESSION] usb: gadget: f_fs: Allow scatter-gather buffers
-Thread-Index: AQHVBUSfP50+H4oA+0GPWiTwRhChu6ZjSo+AgABJVwCAADHfAIAFz8aAgABDQICAAQ2pAIAJdbYA///lWmA=
-Date:   Mon, 20 May 2019 16:23:28 +0000
-Message-ID: <02E7334B1630744CBDC55DA8586225837F884D53@ORSMSX103.amr.corp.intel.com>
-References: <CALAqxLUMRaNxwTUi9QS7-Cy-Ve4+vteBm8-jW4yzZg_QTJVChA@mail.gmail.com>
- <7caebeb2-ea96-2276-3078-1e53f09ce227@collabora.com>
- <CALAqxLUfJYUtmQDC_aDMxW7KcPUawGoRq-PNUfmzQuNKh97FmQ@mail.gmail.com>
- <CALAqxLVUFfrPVVjR74V3PhhtcCytfp=cUYjo=BcJ14D1fkVXTw@mail.gmail.com>
- <7ec57c29-d1ab-dc4c-755d-a6009b9132b5@collabora.com>
- <CALAqxLUgnTB7aZ4edXCaG8SJsJzfY1_yNEPc6Losssw5Xy9-XA@mail.gmail.com>
- <36620156-d119-b1b2-989e-0c13b783296e@collabora.com>
- <db5665cf-6274-c254-720c-798fec79d131@collabora.com>
-In-Reply-To: <db5665cf-6274-c254-720c-798fec79d131@collabora.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ctpclassification: CTP_NT
-x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiYzE5YjIxYmQtYmE4Ni00ZTI5LTgwMDEtMTNiZWI0MWRiZmEwIiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoiQU92bjJmbGlySmI1NW0rWEVVTnNNZWlvZE1WTjVycEVMUENVdzl6SFFyQkZNQW1WTTQySU1rTnBsUHdidXo4cSJ9
-dlp-product: dlpe-windows
-dlp-version: 11.0.600.7
-dlp-reaction: no-action
-x-originating-ip: [10.22.254.138]
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Mon, 20 May 2019 12:28:12 -0400
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:42060 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731554AbfETQ2L (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 12:28:11 -0400
+Received: by mail-ed1-f68.google.com with SMTP id l25so24709796eda.9
+        for <linux-kernel@vger.kernel.org>; Mon, 20 May 2019 09:28:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ffwll.ch; s=google;
+        h=sender:date:from:to:cc:subject:message-id:mail-followup-to
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=3TAoLRVcknBAN1CDMLOgd0qpJGH55GX0voZSdrhkTTo=;
+        b=N2nmW2ws30FUiHTgoIIFpXZlTTKRRsCySLymCkEYYEFTN9Th0GQvagYaHPe7XaHWC/
+         WysiWAiv4gRH+hAzjCKWKePUEOGGW5OsudN9iwQGugeG6GhPy/1OWu+gl3djhx6/PGy8
+         ILLBKOFZEJo2LzLZxDGbHnJeE1VFbkRNwfwOU=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :mail-followup-to:references:mime-version:content-disposition
+         :in-reply-to:user-agent;
+        bh=3TAoLRVcknBAN1CDMLOgd0qpJGH55GX0voZSdrhkTTo=;
+        b=umEcleoXBCHpYioso7G02QncabRIZc9ooeL0i4xMLbbZUZCikUlTVUAGtqHnvaKl7S
+         feH1uQfzXo+gdKYDxujAUoHhHHn6hTDfUlQfwd+0Rfx3yvDcHhoJZIahRAcW/SqQ09kF
+         TDBNyhblM73CzlVY32DFdXRUVxUg4wi8QECe8b9szgatGfdxeYQ4LYLXDke+Stcmt2kT
+         b/Q+yGaiBhpUm4XYfMbn41ld9yPNgPEFWvnDn1ST5rRrCBcGC82/RnNpyDLkAdrvvWAA
+         Cl8Jvgbt6X+JX5CFM/M8RKY6ymdkKtt8D3ND/O1SXdVJHSiXWXi1p/73FiLfYf2YKdcj
+         aNJA==
+X-Gm-Message-State: APjAAAXUm8xx3dM46v0YnHY59reFsFWigLZLK5vAWgFHHaPKHo8fv59Z
+        4NfYJQt1DFzKARM/NWzakl9EIw==
+X-Google-Smtp-Source: APXvYqwSZ6r6BI9og6hE6k63QBHcefsIwO3oA7gFXQ5dFWDya4tJWv1QMXuDvQ1VsBO2WLjw7BQJ5Q==
+X-Received: by 2002:a17:906:af57:: with SMTP id ly23mr28429403ejb.98.1558369690157;
+        Mon, 20 May 2019 09:28:10 -0700 (PDT)
+Received: from phenom.ffwll.local ([2a02:168:569e:0:3106:d637:d723:e855])
+        by smtp.gmail.com with ESMTPSA id u47sm5613329edm.86.2019.05.20.09.28.08
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 20 May 2019 09:28:09 -0700 (PDT)
+Date:   Mon, 20 May 2019 18:28:07 +0200
+From:   Daniel Vetter <daniel@ffwll.ch>
+To:     "Pan, Xinhui" <Xinhui.Pan@amd.com>
+Cc:     "Deucher, Alexander" <Alexander.Deucher@amd.com>,
+        "Koenig, Christian" <Christian.Koenig@amd.com>,
+        "Zhou, David(ChunMing)" <David1.Zhou@amd.com>,
+        "airlied@linux.ie" <airlied@linux.ie>,
+        "daniel@ffwll.ch" <daniel@ffwll.ch>,
+        "Quan, Evan" <Evan.Quan@amd.com>,
+        xiaolinkui <xiaolinkui@kylinos.cn>,
+        "amd-gfx@lists.freedesktop.org" <amd-gfx@lists.freedesktop.org>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] gpu: drm: use struct_size() in kmalloc()
+Message-ID: <20190520162807.GE21222@phenom.ffwll.local>
+Mail-Followup-To: "Pan, Xinhui" <Xinhui.Pan@amd.com>,
+        "Deucher, Alexander" <Alexander.Deucher@amd.com>,
+        "Koenig, Christian" <Christian.Koenig@amd.com>,
+        "Zhou, David(ChunMing)" <David1.Zhou@amd.com>,
+        "airlied@linux.ie" <airlied@linux.ie>,
+        "Quan, Evan" <Evan.Quan@amd.com>,
+        xiaolinkui <xiaolinkui@kylinos.cn>,
+        "amd-gfx@lists.freedesktop.org" <amd-gfx@lists.freedesktop.org>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <1558082760-4915-1-git-send-email-xiaolinkui@kylinos.cn>
+ <SN6PR12MB2800A7AEC22121C8704CBB09870B0@SN6PR12MB2800.namprd12.prod.outlook.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <SN6PR12MB2800A7AEC22121C8704CBB09870B0@SN6PR12MB2800.namprd12.prod.outlook.com>
+X-Operating-System: Linux phenom 4.14.0-3-amd64 
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Pj4gT25lIHF1ZXN0aW9uIHRoYXQgY29tZXMgdG8gbXkgbWluZCBpcyB0aGlzOiBEb2VzIHRoZSBV
-U0IgdHJhbnNtaXNzaW9uIA0KPj4gc3RhbGwgKGUuZy4gZW5kcG9pbnQgc3RhbGwpIG9yIG5vdD8g
-SW4gb3RoZXIgd29yZHMsIGlzIGFkYiBjb25uZWN0aW9uIA0KPj4gYnJva2VuIGJlY2F1c2UgVVNC
-IHN0b3BzIHRyYW5zbWl0dGluZyBhbnl0aGluZywgb3IgYmVjYXVzZSB0aGUgZGF0YSBpcyANCj4+
-IHRyYW5zbWl0dGVkIGJ1dCBpdHMgaW50ZWdyaXR5IGlzIGJyb2tlbiBkdXJpbmcgdHJhbnNtaXNz
-aW9uIGFuZCB0aGF0IA0KPj4gY2F1c2VzIGFkYi9hZGJkIGNvbmZ1c2lvbiB3aGljaCByZXN1bHRz
-IGluIHN0b3BwaW5nIHRoZWlyIG9wZXJhdGlvbj8gDQo+PiBEb2VzIGFueXRoaW5nIGtlZXAgaGFw
-cGVuaW5nIG9uIEZ1bmN0aW9uRlMgd2hlbiBhZGIgY29ubmVjdGlvbiBpcyANCj4+IGJyb2tlbj8N
-Cj4NCj5BbnkgZGlzY292ZXJpZXMgYWJvdXQgdGhlIHByb2JsZW0/DQoNCkluIG15IGRlYnVnZ2lu
-ZywgSSdtIHNlZWluZyBhIGxvdCBvZiByZXF1ZXN0cyBxdWV1ZWQgdXAgdGhyb3VnaCBmZnNfZXBm
-aWxlX2lvIChyZXR1cm5pbmcgLUVJT0NCUVVFVUVEKSwgYnV0DQpvbmx5IGEgZmV3IG9mIHRoZW0g
-Y2FtZSBiYWNrIHRocm91Z2ggZmZzX2VwZmlsZV9hc3luY19pb19jb21wbGV0ZSAtPiBmZnNfdXNl
-cl9jb3B5X3dvcmtlci4NCkkgZG9u4oCZdCB0aGluayB0aGVyZSBpcyBhIFVTQiB0cmFuc21pc3Np
-b24gc3RhbGwgdGhvdWdoLCBiZWNhdXNlIGlmIEkgbWFudWFsbHkgZGlzYWJsZSBpb19kYXRhLT51
-c2Vfc2csIGV2ZXJ5dGhpbmcNCmdvZXMgYmFjayB0byBub3JtYWwuIFNvIGl0IGxvb2tzIG1vcmUg
-bGlrZWx5IHRvIGJlIGEgYnVmZmVyIGhhbmRsaW5nIHByb2JsZW0gaW4gdGhlIERXQzMgZHJpdmVy
-Lg0KDQotRmVpDQoNCj4NCj5BbmRyemVqDQo=
+On Fri, May 17, 2019 at 04:44:30PM +0000, Pan, Xinhui wrote:
+> I am going to put more members which are also array after this struct,
+> not only obj[].  Looks like this struct_size did not help on multiple
+> array case. Thanks anyway.  ________________________________
+
+You can then add them up, e.g. kmalloc(struct_size()+struct_size(),
+GFP_KERNEL), so this patch here still looks like a good idea.
+
+Reviewed-by: Daniel Vetter <daniel.vetter@ffwll.ch>
+
+Cheers, Daniel
+
+> From: xiaolinkui <xiaolinkui@kylinos.cn>
+> Sent: Friday, May 17, 2019 4:46:00 PM
+> To: Deucher, Alexander; Koenig, Christian; Zhou, David(ChunMing); airlied@linux.ie; daniel@ffwll.ch; Pan, Xinhui; Quan, Evan
+> Cc: amd-gfx@lists.freedesktop.org; dri-devel@lists.freedesktop.org; linux-kernel@vger.kernel.org; xiaolinkui@kylinos.cn
+> Subject: [PATCH] gpu: drm: use struct_size() in kmalloc()
+> 
+> [CAUTION: External Email]
+> 
+> Use struct_size() helper to keep code simple.
+> 
+> Signed-off-by: xiaolinkui <xiaolinkui@kylinos.cn>
+> ---
+>  drivers/gpu/drm/amd/amdgpu/amdgpu_ras.c | 3 +--
+>  1 file changed, 1 insertion(+), 2 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_ras.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_ras.c
+> index 22bd21e..4717a64 100644
+> --- a/drivers/gpu/drm/amd/amdgpu/amdgpu_ras.c
+> +++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_ras.c
+> @@ -1375,8 +1375,7 @@ int amdgpu_ras_init(struct amdgpu_device *adev)
+>         if (con)
+>                 return 0;
+> 
+> -       con = kmalloc(sizeof(struct amdgpu_ras) +
+> -                       sizeof(struct ras_manager) * AMDGPU_RAS_BLOCK_COUNT,
+> +       con = kmalloc(struct_size(con, objs, AMDGPU_RAS_BLOCK_COUNT),
+>                         GFP_KERNEL|__GFP_ZERO);
+>         if (!con)
+>                 return -ENOMEM;
+> --
+> 2.7.4
+> 
+> 
+> 
+
+-- 
+Daniel Vetter
+Software Engineer, Intel Corporation
+http://blog.ffwll.ch
