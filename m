@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C7C2C04AAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:19:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FC66C04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:19:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 12C6C21479
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:19:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D45DB20815
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:19:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558354780;
-	bh=47h56TplLtOuTZk9bZBytonkt83xqba2oE7Wh9cojE4=;
+	s=default; t=1558354782;
+	bh=3ZMQ0nLrVjSo833AKD5qQcw1NeLMf4w3zTiBPuBIfq8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EJByOCIBuICFMmmxCi78c0rKv4hOkNKJbFAE8yo5Rd7o75Rna/GcV8dwmzJaR2C2Q
-	 7kkRKL6XghcNIqR6QHLzrlSGuqtjqLfm+W420cNNqgHuiNaDehnbr60McUu1OAaEzJ
-	 seXQPsNo23cy5sQ3yZYb3qTbCO90azUI1u8J5DLk=
+	b=yTEVRf3hXelXkFhwLC1SPfBVr4JqQCJYg7uH0VhzhblnpaCuUZPwsURw/zSfbsKFV
+	 bKU4nV1GvvOik1UGG46QDKpN1bDvx9+GNbnPQPNUuO3Mjc1EIaMcpyreOP/FhQ8IsX
+	 9sAmVq+cNNq/cpnrcAEcSFkcwUb63HKtdY0bPHSQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387838AbfETMTj (ORCPT
+        id S1733254AbfETMTm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 08:19:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60860 "EHLO mail.kernel.org"
+        Mon, 20 May 2019 08:19:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:32816 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731671AbfETMT3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 08:19:29 -0400
+        id S1732391AbfETMTi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 08:19:38 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D6B1E20656;
-        Mon, 20 May 2019 12:19:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A7B0020815;
+        Mon, 20 May 2019 12:19:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558354769;
-        bh=47h56TplLtOuTZk9bZBytonkt83xqba2oE7Wh9cojE4=;
+        s=default; t=1558354777;
+        bh=3ZMQ0nLrVjSo833AKD5qQcw1NeLMf4w3zTiBPuBIfq8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jVaRXVROLHHEWh9VwhBlQFmASw+nRLABTIyKdEYTQSaGysX2v1wD1I3ijQk0Ur4JY
-         wTjmLkT3FJeklSK64cf7qCWZ3TYaAzYFvZ5Cm7a723VbFnGJ23KugS1inrFvGwv06W
-         I9KS0PIUI5R8A8QK9fH2ECYZybpQSMwoVk6uo1uM=
+        b=KfQkx1l8CaAX/Q1FIv48av9xa4iOQsgKj77JVidmoO86Rxxxl84Xcqgcypy8YJn66
+         kAC4wtJFj/U4LJ/4Sl2mS0stylmcWjK5i+zqASZ0+vsB4ySWMp6BPvaCLlYy4OWu+/
+         2S9+0t0q07cGg5vWUdX0+auDpH+ILqZZ9ys64zZ4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Steve Twiss <stwiss.opensource@diasemi.com>,
-        Lee Jones <lee.jones@linaro.org>
-Subject: [PATCH 4.14 35/63] mfd: da9063: Fix OTP control register names to match datasheets for DA9063/63L
-Date:   Mon, 20 May 2019 14:14:14 +0200
-Message-Id: <20190520115235.157532022@linuxfoundation.org>
+        stable@vger.kernel.org, Nicolas Pitre <nicolas.pitre@linaro.org>,
+        Yifeng Li <tomli@tomli.me>
+Subject: [PATCH 4.14 38/63] tty: vt.c: Fix TIOCL_BLANKSCREEN console blanking if blankinterval == 0
+Date:   Mon, 20 May 2019 14:14:17 +0200
+Message-Id: <20190520115235.356952418@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190520115231.137981521@linuxfoundation.org>
 References: <20190520115231.137981521@linuxfoundation.org>
@@ -60,39 +59,69 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Steve Twiss <stwiss.opensource@diasemi.com>
+From: Yifeng Li <tomli@tomli.me>
 
-commit 6b4814a9451add06d457e198be418bf6a3e6a990 upstream.
+commit 75ddbc1fb11efac87b611d48e9802f6fe2bb2163 upstream.
 
-Mismatch between what is found in the Datasheets for DA9063 and DA9063L
-provided by Dialog Semiconductor, and the register names provided in the
-MFD registers file. The changes are for the OTP (one-time-programming)
-control registers. The two naming errors are OPT instead of OTP, and
-COUNT instead of CONT (i.e. control).
+Previously, in the userspace, it was possible to use the "setterm" command
+from util-linux to blank the VT console by default, using the following
+command.
 
-Cc: Stable <stable@vger.kernel.org>
-Signed-off-by: Steve Twiss <stwiss.opensource@diasemi.com>
-Signed-off-by: Lee Jones <lee.jones@linaro.org>
+According to the man page,
+
+> The force option keeps the screen blank even if a key is pressed.
+
+It was implemented by calling TIOCL_BLANKSCREEN.
+
+	case BLANKSCREEN:
+		ioctlarg = TIOCL_BLANKSCREEN;
+		if (ioctl(STDIN_FILENO, TIOCLINUX, &ioctlarg))
+			warn(_("cannot force blank"));
+		break;
+
+However, after Linux 4.12, this command ceased to work anymore, which is
+unexpected. By inspecting the kernel source, it shows that the issue was
+triggered by the side-effect from commit a4199f5eb809 ("tty: Disable
+default console blanking interval").
+
+The console blanking is implemented by function do_blank_screen() in vt.c:
+"blank_state" will be initialized to "blank_normal_wait" in con_init() if
+AND ONLY IF ("blankinterval" > 0). If "blankinterval" is 0, "blank_state"
+will be "blank_off" (== 0), and a call to do_blank_screen() will always
+abort, even if a forced blanking is required from the user by calling
+TIOCL_BLANKSCREEN, the console won't be blanked.
+
+This behavior is unexpected from a user's point-of-view, since it's not
+mentioned in any documentation. The setterm man page suggests it will
+always work, and the kernel comments in uapi/linux/tiocl.h says
+
+> /* keep screen blank even if a key is pressed */
+> #define TIOCL_BLANKSCREEN 14
+
+To fix it, we simply remove the "blank_state != blank_off" check, as
+pointed out by Nicolas Pitre, this check doesn't logically make sense
+and it's safe to remove.
+
+Suggested-by: Nicolas Pitre <nicolas.pitre@linaro.org>
+Fixes: a4199f5eb809 ("tty: Disable default console blanking interval")
+Signed-off-by: Yifeng Li <tomli@tomli.me>
+Cc: stable <stable@vger.kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- include/linux/mfd/da9063/registers.h |    6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/tty/vt/vt.c |    2 --
+ 1 file changed, 2 deletions(-)
 
---- a/include/linux/mfd/da9063/registers.h
-+++ b/include/linux/mfd/da9063/registers.h
-@@ -215,9 +215,9 @@
+--- a/drivers/tty/vt/vt.c
++++ b/drivers/tty/vt/vt.c
+@@ -3840,8 +3840,6 @@ void do_blank_screen(int entering_gfx)
+ 		return;
+ 	}
  
- /* DA9063 Configuration registers */
- /* OTP */
--#define	DA9063_REG_OPT_COUNT		0x101
--#define	DA9063_REG_OPT_ADDR		0x102
--#define	DA9063_REG_OPT_DATA		0x103
-+#define	DA9063_REG_OTP_CONT		0x101
-+#define	DA9063_REG_OTP_ADDR		0x102
-+#define	DA9063_REG_OTP_DATA		0x103
+-	if (blank_state != blank_normal_wait)
+-		return;
+ 	blank_state = blank_off;
  
- /* Customer Trim and Configuration */
- #define	DA9063_REG_T_OFFSET		0x104
+ 	/* don't blank graphics */
 
 
