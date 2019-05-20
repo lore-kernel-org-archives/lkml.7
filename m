@@ -2,45 +2,69 @@ Return-Path: <SRS0=lq4r=TU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FD54C04AAC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 20:07:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6442FC04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 20:08:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 044A020815
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 20:07:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3345E20815
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 20:08:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="fOG5Im97"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726127AbfETUHu (ORCPT
+        id S1726441AbfETUIt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 16:07:50 -0400
-Received: from mga11.intel.com ([192.55.52.93]:5053 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725372AbfETUHt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 16:07:49 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 May 2019 13:07:49 -0700
-X-ExtLoop1: 1
-Received: from cavannie-mobl1.amr.corp.intel.com (HELO localhost.intel.com) ([10.254.114.95])
-  by fmsmga007.fm.intel.com with ESMTP; 20 May 2019 13:07:48 -0700
-From:   Rick Edgecombe <rick.p.edgecombe@intel.com>
-To:     linux-kernel@vger.kernel.org, peterz@infradead.org,
-        sparclinux@vger.kernel.org, linux-mm@kvack.org,
-        netdev@vger.kernel.org
-Cc:     dave.hansen@intel.com, namit@vmware.com,
-        Rick Edgecombe <rick.p.edgecombe@intel.com>,
-        Meelis Roos <mroos@linux.ee>,
-        "David S. Miller" <davem@davemloft.net>,
-        Borislav Petkov <bp@alien8.de>,
-        Andy Lutomirski <luto@kernel.org>,
-        Ingo Molnar <mingo@redhat.com>
-Subject: [PATCH v2] vmalloc: Fix issues with flush flag
-Date:   Mon, 20 May 2019 13:07:03 -0700
-Message-Id: <20190520200703.15997-1-rick.p.edgecombe@intel.com>
-X-Mailer: git-send-email 2.20.1
+        Mon, 20 May 2019 16:08:49 -0400
+Received: from mail-wm1-f45.google.com ([209.85.128.45]:34561 "EHLO
+        mail-wm1-f45.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725372AbfETUIt (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 16:08:49 -0400
+Received: by mail-wm1-f45.google.com with SMTP id j187so712770wma.1
+        for <linux-kernel@vger.kernel.org>; Mon, 20 May 2019 13:08:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=googlemail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=gE13JPen70lcMMYSkQ0HyqWDIMF6fiHhH8f8FN2aii4=;
+        b=fOG5Im971iCuPbnYpmVYbVF3G+VRwOao6B3Fo3ILm3lnQamKYXq7wZxB9dakHZdkMZ
+         87SqakQueLuzs6r6+yu4F6K6LxRn8UpWMUKAIDS89GJbTpRi8L/uO1tkm4d0nE/PrpFc
+         qwcKRtU8el51LdFqKBP2TGNE2/RJx4WRTYYZJOYeAfr3NFj41wcYxbhPbRCUEFlZna5k
+         qSIZ+hTIp1xe1Jo5rySeQyDdnKsSidXhC6cgEeF2nVSqPh5HLH035uxYNnnXWkrYbKyI
+         YrxMR8/7wQdh9119FeCOGgVsXnrJNWcBu+XvQvTnigGkZk4KH1WHtKVyR0Ynfl8CTNGU
+         BGBQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=gE13JPen70lcMMYSkQ0HyqWDIMF6fiHhH8f8FN2aii4=;
+        b=Zt4r0c8i0icqpN9aL/LPYsGFoLCYYgdRS1VvFENO8nK9BOeYLdOSjwB+C341Sl6Ztg
+         bBcFoqOaCdemHxLBIPXh732mCqrdxYd5bJZVqCn8cLZp91m+xZm11reU7RVGUCkHAEi8
+         d8C2EaYLFc0GssOCGX1BMQj2ZF5NaRA8LLKKArhyBel3GK+RXqGChWrbv/DJ3l9ucsKa
+         4F5LgOAbczE3/33P/uTfPC8NMvIU1Kfhg7H4bETG3caZOhWz6S/uMeztoLQTwdFP0Ta1
+         rDjbTXM1lGgyMofIHlaeRFCPqDrdBC689Benk/EupunCXaMY2JXBDTj0y0ErsgP2K9Wr
+         jCSA==
+X-Gm-Message-State: APjAAAXtAow2bcCTHWTNtWZS9+F0pWZOmJS2OX5twzQHzMc0O8slIudK
+        8Czc7ZpO8eH4zOiAfKez6dQ=
+X-Google-Smtp-Source: APXvYqytU8M2tjA/trPL2Vcu2FJ/xCYKepRIwq6re0I7MsPFKJSM8JsrESii0HlWggbEz5V9+fZ76w==
+X-Received: by 2002:a1c:2889:: with SMTP id o131mr588924wmo.101.1558382926819;
+        Mon, 20 May 2019 13:08:46 -0700 (PDT)
+Received: from blackbox.darklights.net (p200300F133EE71009C356FA1F0E19AF9.dip0.t-ipconnect.de. [2003:f1:33ee:7100:9c35:6fa1:f0e1:9af9])
+        by smtp.googlemail.com with ESMTPSA id i185sm918627wmg.32.2019.05.20.13.08.45
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 20 May 2019 13:08:45 -0700 (PDT)
+From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+To:     balbes-150@yandex.ru, linux-amlogic@lists.infradead.org,
+        khilman@baylibre.com
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Subject: [PATCH 0/2] ARM: dts: add the GPU voltage supply on MXIII-Plus
+Date:   Mon, 20 May 2019 22:08:37 +0200
+Message-Id: <20190520200839.22715-1-martin.blumenstingl@googlemail.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -48,117 +72,18 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Switch VM_FLUSH_RESET_PERMS to use a regular TLB flush intead of
-vm_unmap_aliases() and fix calculation of the direct map for the
-CONFIG_ARCH_HAS_SET_DIRECT_MAP case.
+The mainline lima driver doesn't support DVFS yet. However, once it does
+we want to be sure that the voltage supply is hooked up.
+The goal of this series is to do just that.
 
-Meelis Roos reported issues with the new VM_FLUSH_RESET_PERMS flag on a
-sparc machine. On investigation some issues were noticed:
 
-1. The calculation of the direct map address range to flush was wrong.
-This could cause problems on x86 if a RO direct map alias ever got loaded
-into the TLB. This shouldn't normally happen, but it could cause the
-permissions to remain RO on the direct map alias, and then the page
-would return from the page allocator to some other component as RO and
-cause a crash.
+Martin Blumenstingl (2):
+  ARM: dts: meson8m2: mxiii-plus: rename the DCDC2 regulator
+  ARM: dts: meson8m2: mxiii-plus: add the supply for the Mali GPU
 
-2. Calling vm_unmap_alias() on vfree could potentially be a lot of work to
-do on a free operation. Simply flushing the TLB instead of the whole
-vm_unmap_alias() operation makes the frees faster and pushes the heavy
-work to happen on allocation where it would be more expected.
-In addition to the extra work, vm_unmap_alias() takes some locks including
-a long hold of vmap_purge_lock, which will make all other
-VM_FLUSH_RESET_PERMS vfrees wait while the purge operation happens.
+ arch/arm/boot/dts/meson8m2-mxiii-plus.dts | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
 
-3. page_address() can have locking on some configurations, so skip calling
-this when possible to further speed this up.
-
-Fixes: 868b104d7379 ("mm/vmalloc: Add flag for freeing of special permsissions")
-Reported-by: Meelis Roos <mroos@linux.ee>
-Cc: Meelis Roos <mroos@linux.ee>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: "David S. Miller" <davem@davemloft.net>
-Cc: Dave Hansen <dave.hansen@intel.com>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: Andy Lutomirski <luto@kernel.org>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Nadav Amit <namit@vmware.com>
-Signed-off-by: Rick Edgecombe <rick.p.edgecombe@intel.com>
----
-
-Changes since v1:
- - Update commit message with more detail
- - Fix flush end range on !CONFIG_ARCH_HAS_SET_DIRECT_MAP case
-
- mm/vmalloc.c | 23 +++++++++++++----------
- 1 file changed, 13 insertions(+), 10 deletions(-)
-
-diff --git a/mm/vmalloc.c b/mm/vmalloc.c
-index c42872ed82ac..8d03427626dc 100644
---- a/mm/vmalloc.c
-+++ b/mm/vmalloc.c
-@@ -2122,9 +2122,10 @@ static inline void set_area_direct_map(const struct vm_struct *area,
- /* Handle removing and resetting vm mappings related to the vm_struct. */
- static void vm_remove_mappings(struct vm_struct *area, int deallocate_pages)
- {
-+	const bool has_set_direct = IS_ENABLED(CONFIG_ARCH_HAS_SET_DIRECT_MAP);
-+	const bool flush_reset = area->flags & VM_FLUSH_RESET_PERMS;
- 	unsigned long addr = (unsigned long)area->addr;
--	unsigned long start = ULONG_MAX, end = 0;
--	int flush_reset = area->flags & VM_FLUSH_RESET_PERMS;
-+	unsigned long start = addr, end = addr + area->size;
- 	int i;
- 
- 	/*
-@@ -2133,7 +2134,7 @@ static void vm_remove_mappings(struct vm_struct *area, int deallocate_pages)
- 	 * This is concerned with resetting the direct map any an vm alias with
- 	 * execute permissions, without leaving a RW+X window.
- 	 */
--	if (flush_reset && !IS_ENABLED(CONFIG_ARCH_HAS_SET_DIRECT_MAP)) {
-+	if (flush_reset && !has_set_direct) {
- 		set_memory_nx(addr, area->nr_pages);
- 		set_memory_rw(addr, area->nr_pages);
- 	}
-@@ -2146,22 +2147,24 @@ static void vm_remove_mappings(struct vm_struct *area, int deallocate_pages)
- 
- 	/*
- 	 * If not deallocating pages, just do the flush of the VM area and
--	 * return.
-+	 * return. If the arch doesn't have set_direct_map_(), also skip the
-+	 * below work.
- 	 */
--	if (!deallocate_pages) {
--		vm_unmap_aliases();
-+	if (!deallocate_pages || !has_set_direct) {
-+		flush_tlb_kernel_range(start, end);
- 		return;
- 	}
- 
- 	/*
- 	 * If execution gets here, flush the vm mapping and reset the direct
- 	 * map. Find the start and end range of the direct mappings to make sure
--	 * the vm_unmap_aliases() flush includes the direct map.
-+	 * the flush_tlb_kernel_range() includes the direct map.
- 	 */
- 	for (i = 0; i < area->nr_pages; i++) {
--		if (page_address(area->pages[i])) {
-+		addr = (unsigned long)page_address(area->pages[i]);
-+		if (addr) {
- 			start = min(addr, start);
--			end = max(addr, end);
-+			end = max(addr + PAGE_SIZE, end);
- 		}
- 	}
- 
-@@ -2171,7 +2174,7 @@ static void vm_remove_mappings(struct vm_struct *area, int deallocate_pages)
- 	 * reset the direct map permissions to the default.
- 	 */
- 	set_area_direct_map(area, set_direct_map_invalid_noflush);
--	_vm_unmap_aliases(start, end, 1);
-+	flush_tlb_kernel_range(start, end);
- 	set_area_direct_map(area, set_direct_map_default_noflush);
- }
- 
 -- 
-2.20.1
+2.21.0
 
