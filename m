@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9B2EC04AAC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:27:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30652C04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:27:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B9204214DA
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:27:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 00BBD21019
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:27:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558355244;
-	bh=qFmpTGVLbRz4mBAxDSw8NvsVt8gaTA3Jkk/yCGfbfOQ=;
+	s=default; t=1558355251;
+	bh=K/i1J2VARTHB1Re1+MeWCyySYY/NtjnZ0I5Cb6zZXEc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Sd0mrhqAOFc/iw3M8DNnxklMavzx0uDLDV86GUokDzy6zb/Lf+bHQEI8/qAVc7znC
-	 t+vb4QbySRM48MHLzuctKiFopHxM/2JQ0YY3EwJv/njiXUWnx+nasJeySDFdrXbGO6
-	 Gcv+7WdkpXxi0k56fzJksJ+M0j3pSVb+YLg9Noak=
+	b=mK1XmjLyvX9qh9qalWyyhxualMopa7b0LUFD7k1hEsbT+0ZdKd4GOnFnC+tBukPIy
+	 GOMYVOuoAbawNxgk7syALu9AAVljCSpVPTDzP76BAQo0pu+erfGiXT2GyhJ0wR2xK9
+	 9IOojG25h1yHEznBk/BoP83Auk7PiROhAGrJ2e2s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389487AbfETM1X (ORCPT
+        id S2389495AbfETM13 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 08:27:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42908 "EHLO mail.kernel.org"
+        Mon, 20 May 2019 08:27:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42994 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389465AbfETM1T (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 08:27:19 -0400
+        id S2389093AbfETM1Z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 08:27:25 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D638D21479;
-        Mon, 20 May 2019 12:27:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 30A2421479;
+        Mon, 20 May 2019 12:27:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558355239;
-        bh=qFmpTGVLbRz4mBAxDSw8NvsVt8gaTA3Jkk/yCGfbfOQ=;
+        s=default; t=1558355244;
+        bh=K/i1J2VARTHB1Re1+MeWCyySYY/NtjnZ0I5Cb6zZXEc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iZRWiJGkljTCcd8ipU5ixH24zK85iIraCm/eqjyv/K0sjZ3qPUd//ZticJaHQrjPN
-         tH7vqd2frmdmwx8eAJm/VUnQnYoctZcb5l/2rqfzPraHh0EOx60c++3Ww8y46PsrjC
-         X2j16EY980GNkbjEUix8aTVQBuVJZbTSPvmOpGIE=
+        b=vNZRwm1d0nLEtLiGJJJo4pP1O28Z0YqEdAfh7oLHkgcLXvpBkcLgb8P9imGCRI+9m
+         LEhO47fHx3grLGAwXzNiKHLKlQH8oPRLejlBdktcmppxcybBsjuMxevEngXugT8m0O
+         N6Z5MZEbLigXhEV6oHa5Rh8G5f9z5YgSrIA/Z/7g=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Biggers <ebiggers@google.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>
-Subject: [PATCH 5.0 043/123] crypto: arm64/aes-neonbs - dont access already-freed walk.iv
-Date:   Mon, 20 May 2019 14:13:43 +0200
-Message-Id: <20190520115247.594313696@linuxfoundation.org>
+        stable@vger.kernel.org, Jon Hunter <jonathanh@nvidia.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Sowjanya Komatineni <skomatineni@nvidia.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>
+Subject: [PATCH 5.0 044/123] mmc: tegra: fix ddr signaling for non-ddr modes
+Date:   Mon, 20 May 2019 14:13:44 +0200
+Message-Id: <20190520115247.665351725@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190520115245.439864225@linuxfoundation.org>
 References: <20190520115245.439864225@linuxfoundation.org>
@@ -59,41 +61,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Biggers <ebiggers@google.com>
+From: Sowjanya Komatineni <skomatineni@nvidia.com>
 
-commit 4a8108b70508df0b6c4ffa4a3974dab93dcbe851 upstream.
+commit 92cd1667d579af5c3ef383680598a112da3695df upstream.
 
-If the user-provided IV needs to be aligned to the algorithm's
-alignmask, then skcipher_walk_virt() copies the IV into a new aligned
-buffer walk.iv.  But skcipher_walk_virt() can fail afterwards, and then
-if the caller unconditionally accesses walk.iv, it's a use-after-free.
+ddr_signaling is set to true for DDR50 and DDR52 modes but is
+not set back to false for other modes. This programs incorrect
+host clock when mode change happens from DDR52/DDR50 to other
+SDR or HS modes like incase of mmc_retune where it switches
+from HS400 to HS DDR and then from HS DDR to HS mode and then
+to HS200.
 
-xts-aes-neonbs doesn't set an alignmask, so currently it isn't affected
-by this despite unconditionally accessing walk.iv.  However this is more
-subtle than desired, and unconditionally accessing walk.iv has caused a
-real problem in other algorithms.  Thus, update xts-aes-neonbs to start
-checking the return value of skcipher_walk_virt().
+This patch fixes the ddr_signaling to set properly for non DDR
+modes.
 
-Fixes: 1abee99eafab ("crypto: arm64/aes - reimplement bit-sliced ARM/NEON implementation for arm64")
-Cc: <stable@vger.kernel.org> # v4.11+
-Signed-off-by: Eric Biggers <ebiggers@google.com>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Tested-by: Jon Hunter <jonathanh@nvidia.com>
+Acked-by: Adrian Hunter <adrian.hunter@intel.com>
+Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+Cc: stable@vger.kernel.org # v4.20 +
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/arm64/crypto/aes-neonbs-glue.c |    2 ++
- 1 file changed, 2 insertions(+)
+ drivers/mmc/host/sdhci-tegra.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/arch/arm64/crypto/aes-neonbs-glue.c
-+++ b/arch/arm64/crypto/aes-neonbs-glue.c
-@@ -304,6 +304,8 @@ static int __xts_crypt(struct skcipher_r
- 	int err;
+--- a/drivers/mmc/host/sdhci-tegra.c
++++ b/drivers/mmc/host/sdhci-tegra.c
+@@ -675,6 +675,7 @@ static void tegra_sdhci_set_uhs_signalin
+ 	bool set_dqs_trim = false;
+ 	bool do_hs400_dll_cal = false;
  
- 	err = skcipher_walk_virt(&walk, req, false);
-+	if (err)
-+		return err;
- 
- 	kernel_neon_begin();
- 	neon_aes_ecb_encrypt(walk.iv, walk.iv, ctx->twkey, ctx->key.rounds, 1);
++	tegra_host->ddr_signaling = false;
+ 	switch (timing) {
+ 	case MMC_TIMING_UHS_SDR50:
+ 	case MMC_TIMING_UHS_SDR104:
 
 
