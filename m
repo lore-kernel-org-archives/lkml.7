@@ -2,254 +2,92 @@ Return-Path: <SRS0=lq4r=TU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB9D5C04AAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 08:47:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AD1CC04AAF
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 08:48:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C9A9E2081C
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 08:47:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E416A20856
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 08:48:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1558342135;
+	bh=NcGHUP5bfjC+KvBqbjpW3Rz+kDpoXWvwotRjq0NhZes=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=iEQQW2zbmz0aDWBzjhfpx6SVje5VF9HL7Q/gDTy5jD55P0i0r/wi8uwSIr+NUSFXG
+	 KTl8hslW+LPKK18cQCbJEgTE838X0hRQQsancmDxOjA3s3flGzBvawYpTJuvpJBZSL
+	 SvXKJsoHiGBbHXGgadYzep7nHC393xEV4Dq2PM/k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731213AbfETIrb (ORCPT
+        id S1731306AbfETIsy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 04:47:31 -0400
-Received: from lhrrgout.huawei.com ([185.176.76.210]:32955 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727499AbfETIrb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 04:47:31 -0400
-Received: from LHREML714-CAH.china.huawei.com (unknown [172.18.7.107])
-        by Forcepoint Email with ESMTP id 4BE9A91FD6E0516857B2;
-        Mon, 20 May 2019 09:47:29 +0100 (IST)
-Received: from [10.220.96.108] (10.220.96.108) by smtpsuk.huawei.com
- (10.201.108.37) with Microsoft SMTP Server (TLS) id 14.3.408.0; Mon, 20 May
- 2019 09:47:21 +0100
-Subject: Re: [PATCH v3 2/2] initramfs: introduce do_readxattrs()
-To:     <hpa@zytor.com>, <viro@zeniv.linux.org.uk>
-CC:     <linux-security-module@vger.kernel.org>,
-        <linux-integrity@vger.kernel.org>, <initramfs@vger.kernel.org>,
-        <linux-api@vger.kernel.org>, <linux-fsdevel@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <zohar@linux.vnet.ibm.com>,
-        <silviu.vlasceanu@huawei.com>, <dmitry.kasatkin@huawei.com>,
-        <takondra@cisco.com>, <kamensky@cisco.com>, <arnd@arndb.de>,
-        <rob@landley.net>, <james.w.mcmechan@gmail.com>,
-        <niveditas98@gmail.com>
-References: <20190517165519.11507-1-roberto.sassu@huawei.com>
- <20190517165519.11507-3-roberto.sassu@huawei.com>
- <CD9A4F89-7CA5-4329-A06A-F8DEB87905A5@zytor.com>
-From:   Roberto Sassu <roberto.sassu@huawei.com>
-Message-ID: <2fbe55dc-2f4a-e476-79d0-06931b4f1dee@huawei.com>
-Date:   Mon, 20 May 2019 10:47:27 +0200
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.3.0
+        Mon, 20 May 2019 04:48:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54882 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726053AbfETIsx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 04:48:53 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id BD81E206BA;
+        Mon, 20 May 2019 08:48:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1558342133;
+        bh=NcGHUP5bfjC+KvBqbjpW3Rz+kDpoXWvwotRjq0NhZes=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=bE9NkMdtE28blg0UokXhR1YvVgQAauR4AcLN+luyqhyUXtYu9J9qrZO/TytqsOQe8
+         WrV/rGyWHaB74clMMqKclgBcIRI2ALkWmg7/p9EOv9tD1JFpeEss3X+nnAxqHLtgAD
+         R7EPilrv+UyoNe/DOEIrOkU/bfSkaFas5p2ONIt4=
+Date:   Mon, 20 May 2019 10:48:50 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Moses Christopher <moseschristopherb@gmail.com>
+Cc:     linux-kernel@vger.kernel.org, Larry.Finger@lwfinger.net,
+        david.kershner@unisys.com, forest@alittletooquiet.net,
+        davem@davemloft.net, ruxandra.radulescu@nxp.com, yangbo.lu@nxp.com,
+        arnd@arndb.de, christian.gromm@microchip.com, insafonov@gmail.com,
+        hdegoede@redhat.com, devel@driverdev.osuosl.org,
+        sparmaintainer@unisys.com
+Subject: Re: [PATCH v1 5/6] staging: rtl8723bs: use help instead of
+ ---help--- in Kconfig
+Message-ID: <20190520084850.GA703@kroah.com>
+References: <20190518063341.11178-1-moseschristopherb@gmail.com>
+ <20190518063341.11178-6-moseschristopherb@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <CD9A4F89-7CA5-4329-A06A-F8DEB87905A5@zytor.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.220.96.108]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190518063341.11178-6-moseschristopherb@gmail.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/17/2019 10:18 PM, hpa@zytor.com wrote:
-> On May 17, 2019 9:55:19 AM PDT, Roberto Sassu <roberto.sassu@huawei.com> wrote:
->> This patch adds support for an alternative method to add xattrs to
->> files in
->> the rootfs filesystem. Instead of extracting them directly from the ram
->> disk image, they are extracted from a regular file called .xattr-list,
->> that
->> can be added by any ram disk generator available today. The file format
->> is:
->>
->> <file #N data len (ASCII, 10 chars)><file #N path>\0
->> <xattr #N data len (ASCII, 8 chars)><xattr #N name>\0<xattr #N value>
->>
->> .xattr-list can be generated by executing:
->>
->> $ getfattr --absolute-names -d -h -R -e hex -m - \
->>       <file list> | xattr.awk -b > ${initdir}/.xattr-list
->>
->> where the content of the xattr.awk script is:
->>
->> #! /usr/bin/awk -f
->> {
->>   if (!length($0)) {
->>     printf("%.10x%s\0", len, file);
->>     for (x in xattr) {
->>       printf("%.8x%s\0", xattr_len[x], x);
->>       for (i = 0; i < length(xattr[x]) / 2; i++) {
->>         printf("%c", strtonum("0x"substr(xattr[x], i * 2 + 1, 2)));
->>       }
->>     }
->>     i = 0;
->>     delete xattr;
->>     delete xattr_len;
->>     next;
->>   };
->>   if (i == 0) {
->>     file=$3;
->>     len=length(file) + 8 + 1;
->>   }
->>   if (i > 0) {
->>     split($0, a, "=");
->>     xattr[a[1]]=substr(a[2], 3);
->>     xattr_len[a[1]]=length(a[1]) + 1 + 8 + length(xattr[a[1]]) / 2;
->>     len+=xattr_len[a[1]];
->>   };
->>   i++;
->> }
->>
->> Signed-off-by: Roberto Sassu <roberto.sassu@huawei.com>
->> ---
->> init/initramfs.c | 99 ++++++++++++++++++++++++++++++++++++++++++++++++
->> 1 file changed, 99 insertions(+)
->>
->> diff --git a/init/initramfs.c b/init/initramfs.c
->> index 0c6dd1d5d3f6..6ec018c6279a 100644
->> --- a/init/initramfs.c
->> +++ b/init/initramfs.c
->> @@ -13,6 +13,8 @@
->> #include <linux/namei.h>
->> #include <linux/xattr.h>
->>
->> +#define XATTR_LIST_FILENAME ".xattr-list"
->> +
->> static ssize_t __init xwrite(int fd, const char *p, size_t count)
->> {
->> 	ssize_t out = 0;
->> @@ -382,6 +384,97 @@ static int __init __maybe_unused do_setxattrs(char
->> *pathname)
->> 	return 0;
->> }
->>
->> +struct path_hdr {
->> +	char p_size[10]; /* total size including p_size field */
->> +	char p_data[];   /* <path>\0<xattrs> */
->> +};
->> +
->> +static int __init do_readxattrs(void)
->> +{
->> +	struct path_hdr hdr;
->> +	char *path = NULL;
->> +	char str[sizeof(hdr.p_size) + 1];
->> +	unsigned long file_entry_size;
->> +	size_t size, path_size, total_size;
->> +	struct kstat st;
->> +	struct file *file;
->> +	loff_t pos;
->> +	int ret;
->> +
->> +	ret = vfs_lstat(XATTR_LIST_FILENAME, &st);
->> +	if (ret < 0)
->> +		return ret;
->> +
->> +	total_size = st.size;
->> +
->> +	file = filp_open(XATTR_LIST_FILENAME, O_RDONLY, 0);
->> +	if (IS_ERR(file))
->> +		return PTR_ERR(file);
->> +
->> +	pos = file->f_pos;
->> +
->> +	while (total_size) {
->> +		size = kernel_read(file, (char *)&hdr, sizeof(hdr), &pos);
->> +		if (size != sizeof(hdr)) {
->> +			ret = -EIO;
->> +			goto out;
->> +		}
->> +
->> +		total_size -= size;
->> +
->> +		str[sizeof(hdr.p_size)] = 0;
->> +		memcpy(str, hdr.p_size, sizeof(hdr.p_size));
->> +		ret = kstrtoul(str, 16, &file_entry_size);
->> +		if (ret < 0)
->> +			goto out;
->> +
->> +		file_entry_size -= sizeof(sizeof(hdr.p_size));
->> +		if (file_entry_size > total_size) {
->> +			ret = -EINVAL;
->> +			goto out;
->> +		}
->> +
->> +		path = vmalloc(file_entry_size);
->> +		if (!path) {
->> +			ret = -ENOMEM;
->> +			goto out;
->> +		}
->> +
->> +		size = kernel_read(file, path, file_entry_size, &pos);
->> +		if (size != file_entry_size) {
->> +			ret = -EIO;
->> +			goto out_free;
->> +		}
->> +
->> +		total_size -= size;
->> +
->> +		path_size = strnlen(path, file_entry_size);
->> +		if (path_size == file_entry_size) {
->> +			ret = -EINVAL;
->> +			goto out_free;
->> +		}
->> +
->> +		xattr_buf = path + path_size + 1;
->> +		xattr_len = file_entry_size - path_size - 1;
->> +
->> +		ret = do_setxattrs(path);
->> +		vfree(path);
->> +		path = NULL;
->> +
->> +		if (ret < 0)
->> +			break;
->> +	}
->> +out_free:
->> +	vfree(path);
->> +out:
->> +	fput(file);
->> +
->> +	if (ret < 0)
->> +		error("Unable to parse xattrs");
->> +
->> +	return ret;
->> +}
->> +
->> static __initdata int wfd;
->>
->> static int __init do_name(void)
->> @@ -391,6 +484,11 @@ static int __init do_name(void)
->> 	if (strcmp(collected, "TRAILER!!!") == 0) {
->> 		free_hash();
->> 		return 0;
->> +	} else if (strcmp(collected, XATTR_LIST_FILENAME) == 0) {
->> +		struct kstat st;
->> +
->> +		if (!vfs_lstat(collected, &st))
->> +			do_readxattrs();
->> 	}
->> 	clean_path(collected, mode);
->> 	if (S_ISREG(mode)) {
->> @@ -562,6 +660,7 @@ static char * __init unpack_to_rootfs(char *buf,
->> unsigned long len)
->> 		buf += my_inptr;
->> 		len -= my_inptr;
->> 	}
->> +	do_readxattrs();
->> 	dir_utime();
->> 	kfree(name_buf);
->> 	kfree(symlink_buf);
+On Sat, May 18, 2019 at 12:03:40PM +0530, Moses Christopher wrote:
+>   - Resolve the following warning from the Kconfig,
+>     "WARNING: prefer 'help' over '---help---' for new help texts"
 > 
-> Ok... I just realized this does not work for a modular initramfs, composed at load time from multiple files, which is a very real problem. Should be easy enough to deal with: instead of one large file, use one companion file per source file, perhaps something like filename..xattrs (suggesting double dots to make it less likely to conflict with a "real" file.) No leading dot, as it makes it more likely that archivers will sort them before the file proper.
+> Signed-off-by: Moses Christopher <moseschristopherb@gmail.com>
+> ---
+>  drivers/staging/rtl8723bs/Kconfig | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/staging/rtl8723bs/Kconfig b/drivers/staging/rtl8723bs/Kconfig
+> index 744091d46f4c..a88467334dac 100644
+> --- a/drivers/staging/rtl8723bs/Kconfig
+> +++ b/drivers/staging/rtl8723bs/Kconfig
+> @@ -5,7 +5,7 @@ config RTL8723BS
+>  	depends on m
+>  	select WIRELESS_EXT
+>  	select WEXT_PRIV
+> -	---help---
+> +	help
+>  	This option enables support for RTL8723BS SDIO drivers, such as
+>  	the wifi found on the 1st gen Intel Compute Stick, the CHIP
+>  	and many other Intel Atom and ARM based devices.
 
-Version 1 of the patch set worked exactly in this way. However, Rob
-pointed out that this would be a problem if file names plus the suffix
-exceed 255 characters.
+No indentation here?  Why not?
 
-Roberto
+thanks,
 
--- 
-HUAWEI TECHNOLOGIES Duesseldorf GmbH, HRB 56063
-Managing Director: Bo PENG, Jian LI, Yanli SHI
+greg k-h
