@@ -2,85 +2,175 @@ Return-Path: <SRS0=lq4r=TU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA025C04AAC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 11:43:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C7D9C04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 11:46:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A663A20656
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 11:43:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DED7320645
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 11:46:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="brO4dH1o"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RoY4Rk0t"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731673AbfETLn4 (ORCPT
+        id S1731494AbfETLqD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 07:43:56 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:49544 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729598AbfETLn4 (ORCPT
+        Mon, 20 May 2019 07:46:03 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:39887 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728719AbfETLqC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 07:43:56 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=IAsS+ge4xF9NsjigSlUWvtRwDOMNtAXXWGXbe9rZsXc=; b=brO4dH1ooQLImPEWeoy1PZsO4
-        kLUKz7vtSS/uhxkQkqAUkooG9gOhdBFTIQNobLOTyLSUOBpiFGG5+uTMBCpmclIVKwJg+4fMX8QtG
-        yRfWM7zqqsrstCEJra0tLrEjLSzMiV4PGvajeoXrS0nmAchtZKRP28OX2CZF5MPc2ysrM+B4vL7Zx
-        q4E/KMXmOQw1IWtVfuoADZ1kRhVxIiFpx/jjdtzUX8r65dgY4ILut+JYFmP2j0HD8xkFj0YfvOUeQ
-        J9hT4VLzlAKHTRcoRf5zSLwRrmzddoTwqFpmum5RxwANo2LTSFi6ZcdSZAHVTgKgdZYw2HsAp3uAs
-        4AvNtBx4g==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hSght-000776-05; Mon, 20 May 2019 11:43:53 +0000
-Date:   Mon, 20 May 2019 04:43:52 -0700
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Anup Patel <Anup.Patel@wdc.com>
-Cc:     Palmer Dabbelt <palmer@sifive.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Atish Patra <Atish.Patra@wdc.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>
-Subject: Re: [PATCH v4 2/2] RISC-V: Setup initial page tables in two stages
-Message-ID: <20190520114352.GA5372@infradead.org>
-References: <20190502050206.23373-1-anup.patel@wdc.com>
- <20190502050206.23373-3-anup.patel@wdc.com>
+        Mon, 20 May 2019 07:46:02 -0400
+Received: by mail-ot1-f65.google.com with SMTP id r7so12659458otn.6;
+        Mon, 20 May 2019 04:46:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=YK40W8FYXPsem3N0M5GP+38ah6mkX7Im5MvwKipFNsw=;
+        b=RoY4Rk0tf3pwB6ho+Y7WLAFKHG+h2TTjnpz9K/w1TMsCjFsOQ8uYov3Grmlp2nYp47
+         vJt0VoWo13wdxNwTnNn0xyVAWlLZzYArcIzgKJBXYsCDjTScjv+V9bNqaDV6xHIG8YKT
+         Sxzbeg+qUtwGFull//2leGoW4yzKdzTMnmkmN8dkiNEryvLSr3Z4qsSdKC/ZCJkYZl+H
+         z32RRiFVizIG+0HhWlg4jgwHd9fYYlMEK/FUARTkSsZ63SdIJw/pxi6zUj7j8IPBy6hY
+         enPvETd/fAA9ts/JglX8blm6o1iVQzon2FtUoFTZ8e9JsVOcQaHXP2hEtbq+ynt++bKt
+         9q6A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=YK40W8FYXPsem3N0M5GP+38ah6mkX7Im5MvwKipFNsw=;
+        b=DNBTyB7z+RG8uhACv66tUvFb3JSLRHZ82tYDBJDtuVuoYicxn4SS1c/PhN4dA7pizW
+         1dtGUz7xwYbqjejkOs4bFlqOZsPsPwpk9VEMObDVsqePna0rwHP67hqxDupufbttnoaZ
+         y17OFittYO0VwMlDzWNRoleL9uIPkHXkbtJVF+MNWXqF3g8zoqnG1WaH3OGPi/fAFirZ
+         d0RZeyMRARVPcUvsjEbshLkoGo7oM9Hpk7F9GwUuUfvfea7gw/LDizUZiSsaPUYdwMwS
+         9BBbBnUD5UIL0lpg00dizq2F3Ryykp4CKGlo8SMdKGog7tD7UFzUfzrV5XZ9RvrXUeXP
+         Dj6w==
+X-Gm-Message-State: APjAAAXocQF0XGLPdDikRxJcGHAKivhMzGmlgG1QyW+BTwQlDYRnhAnp
+        trGjiahyBhG347Y4zNuK78aa11rIWDT7buSTl1qfVQ==
+X-Google-Smtp-Source: APXvYqyLirWDkCv1jsHOwXXeOs+83ro/jbI0opgbhIzBti3BcptCNQgwATHJ6OMUc0oyBh10kyjZ7F49+xcusFtpogU=
+X-Received: by 2002:a9d:1405:: with SMTP id h5mr20033485oth.118.1558352761836;
+ Mon, 20 May 2019 04:46:01 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190502050206.23373-3-anup.patel@wdc.com>
-User-Agent: Mutt/1.9.2 (2017-12-15)
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+References: <1558340289-6857-1-git-send-email-wanpengli@tencent.com>
+ <1558340289-6857-5-git-send-email-wanpengli@tencent.com> <b80a0c3b-c5b1-bfd1-83d7-ace3436b230e@redhat.com>
+ <CANRm+CyDpA-2j28soX9si5CX3vFadd4_BASFzt1f4FbNNNDzyw@mail.gmail.com>
+ <bd60e5c2-e3c5-80fc-3a1d-c75809573945@redhat.com> <CANRm+CzFQy4UC9oGxFK8UVVhdtV_LGeF3JcNohpRcgspSqcxwg@mail.gmail.com>
+ <024a0c93-f8a3-abe0-85de-fa41babf06a0@redhat.com>
+In-Reply-To: <024a0c93-f8a3-abe0-85de-fa41babf06a0@redhat.com>
+From:   Wanpeng Li <kernellwp@gmail.com>
+Date:   Mon, 20 May 2019 19:45:52 +0800
+Message-ID: <CANRm+Cy69VH+5w4en-Q+N85bRCBoCWNi6oEwpJGgp+MBaUUX8Q@mail.gmail.com>
+Subject: Re: [PATCH v4 4/5] KVM: LAPIC: Delay trace advance expire delta
+To:     Paolo Bonzini <pbonzini@redhat.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>, kvm <kvm@vger.kernel.org>,
+        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Liran Alon <liran.alon@oracle.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
->  void __init parse_dtb(unsigned int hartid, void *dtb)
+On Mon, 20 May 2019 at 19:41, Paolo Bonzini <pbonzini@redhat.com> wrote:
+>
+> On 20/05/19 13:36, Wanpeng Li wrote:
+> >> Hmm, yeah, that makes sense.  The location of the tracepoint is a bit
+> >> weird, but I guess we can add a comment in the code.
+> > Do you need me to post a new patchset? :)
+>
+> No problem.  The final patch that I committed is this:
+>
+> diff --git a/arch/x86/kvm/lapic.c b/arch/x86/kvm/lapic.c
+> index c12b090f4fad..f8615872ae64 100644
+> --- a/arch/x86/kvm/lapic.c
+> +++ b/arch/x86/kvm/lapic.c
+> @@ -1502,27 +1502,27 @@ static inline void __wait_lapic_expire(struct kvm_vcpu *vcpu, u64 guest_cycles)
+>  }
+>
+>  static inline void adjust_lapic_timer_advance(struct kvm_vcpu *vcpu,
+> -                                             u64 guest_tsc, u64 tsc_deadline)
+> +                                             s64 advance_expire_delta)
 >  {
-> -	if (early_init_dt_scan(__va(dtb)))
-> +	dtb = (void *)fix_to_virt(FIX_FDT) + ((uintptr_t)dtb & ~PAGE_MASK);
-> +	if (early_init_dt_scan(dtb))
+>         struct kvm_lapic *apic = vcpu->arch.apic;
+>         u32 timer_advance_ns = apic->lapic_timer.timer_advance_ns;
+>         u64 ns;
+>
+>         /* too early */
+> -       if (guest_tsc < tsc_deadline) {
+> -               ns = (tsc_deadline - guest_tsc) * 1000000ULL;
+> +       if (advance_expire_delta < 0) {
+> +               ns = -advance_expire_delta * 1000000ULL;
+>                 do_div(ns, vcpu->arch.virtual_tsc_khz);
+>                 timer_advance_ns -= min((u32)ns,
+>                         timer_advance_ns / LAPIC_TIMER_ADVANCE_ADJUST_STEP);
+>         } else {
+>         /* too late */
+> -               ns = (guest_tsc - tsc_deadline) * 1000000ULL;
+> +               ns = advance_expire_delta * 1000000ULL;
+>                 do_div(ns, vcpu->arch.virtual_tsc_khz);
+>                 timer_advance_ns += min((u32)ns,
+>                         timer_advance_ns / LAPIC_TIMER_ADVANCE_ADJUST_STEP);
+>         }
+>
+> -       if (abs(guest_tsc - tsc_deadline) < LAPIC_TIMER_ADVANCE_ADJUST_DONE)
+> +       if (abs(advance_expire_delta) < LAPIC_TIMER_ADVANCE_ADJUST_DONE)
+>                 apic->lapic_timer.timer_advance_adjust_done = true;
+>         if (unlikely(timer_advance_ns > 5000)) {
+>                 timer_advance_ns = 0;
+> @@ -1545,13 +1545,13 @@ void wait_lapic_expire(struct kvm_vcpu *vcpu)
+>         tsc_deadline = apic->lapic_timer.expired_tscdeadline;
+>         apic->lapic_timer.expired_tscdeadline = 0;
+>         guest_tsc = kvm_read_l1_tsc(vcpu, rdtsc());
+> -       trace_kvm_wait_lapic_expire(vcpu->vcpu_id, guest_tsc - tsc_deadline);
+> +       apic->lapic_timer.advance_expire_delta = guest_tsc - tsc_deadline;
+>
+>         if (guest_tsc < tsc_deadline)
+>                 __wait_lapic_expire(vcpu, tsc_deadline - guest_tsc);
+>
+>         if (unlikely(!apic->lapic_timer.timer_advance_adjust_done))
+> -               adjust_lapic_timer_advance(vcpu, guest_tsc, tsc_deadline);
+> +               adjust_lapic_timer_advance(vcpu, apic->lapic_timer.advance_expire_delta);
+>  }
+>
+>  static void start_sw_tscdeadline(struct kvm_lapic *apic)
+> diff --git a/arch/x86/kvm/lapic.h b/arch/x86/kvm/lapic.h
+> index d6d049ba3045..3e72a255543d 100644
+> --- a/arch/x86/kvm/lapic.h
+> +++ b/arch/x86/kvm/lapic.h
+> @@ -32,6 +32,7 @@ struct kvm_timer {
+>         u64 tscdeadline;
+>         u64 expired_tscdeadline;
+>         u32 timer_advance_ns;
+> +       s64 advance_expire_delta;
+>         atomic_t pending;                       /* accumulated triggered timers */
+>         bool hv_timer_in_use;
+>         bool timer_advance_adjust_done;
+> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+> index e7e57de50a3c..35631505421c 100644
+> --- a/arch/x86/kvm/x86.c
+> +++ b/arch/x86/kvm/x86.c
+> @@ -8008,6 +8008,13 @@ static int vcpu_enter_guest(struct kvm_vcpu *vcpu)
+>         ++vcpu->stat.exits;
+>
+>         guest_exit_irqoff();
+> +       if (lapic_in_kernel(vcpu)) {
+> +               s64 delta = vcpu->arch.apic->lapic_timer.advance_expire_delta;
+> +               if (delta != S64_MIN) {
+> +                       trace_kvm_wait_lapic_expire(vcpu->vcpu_id, delta);
+> +                       vcpu->arch.apic->lapic_timer.advance_expire_delta = S64_MIN;
+> +               }
+> +       }
+>
+>         local_irq_enable();
+>         preempt_enable();
+>
+> so that KVM tracks whether wait_lapic_expire was called, and do not
+> invoke the tracepoint if not.
 
-FYI, parse_dtb in mainline now lost the hartid argument and takes a
-phys_addr_t for the dtb address.
+Looks good to me, thank you. :)
 
-That being said I find the above way to magic.  So we take the fixmap
-address and then only the offset from something passed as a pointer?
-This just looks very weird.  The way FIX_FDT is defined to add to my
-confusion, which might partially be due to not understanding fixmaps
-very well.  But it seems like at very least we should set up an
-actual kernel pointer for the dtb in setup_vm based on what that
-gets passed and stop passing any arguments to parse_dtb to keep
-that magic in one place.  And possibly add some comment.
-
-> +#if MAX_EARLY_MAPPING_SIZE < PGDIR_SIZE
-
-It seems MAX_EARLY_MAPPING_SIZE is defined to a fix constant,
-why do we need these conditionals?
+Regards,
+Wanpeng Li
