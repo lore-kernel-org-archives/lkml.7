@@ -4,55 +4,60 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 695C7C04AAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:23:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FC8EC072A4
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:23:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 32083216E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:23:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 25A5421479
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 12:23:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558355002;
-	bh=sy/G6DLt5axqfBNbPlbs4226pzPctiV3FxkYx5Sns2I=;
+	s=default; t=1558355004;
+	bh=2VA0O26o4dHCNp+2dfI3MdeQeRxsI67oDktz1/c5iYc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=iondAjVgkqb7ZOTCrd/7q5WIC22xxqm0QYqsmDZbpbBAcXB9oOVKJuj7B65sonhr7
-	 GUOseCNBHVERb3EAnnOmSwABCRipB16tEiagz8COGb1Rfi4op0dyNGHVq56hj1GPIo
-	 71dtq2PV4P875ZDE4IUYpbPHV/6EbV1fH8buRlL0=
+	b=UgY1qxYWG/tmhhzJ8aAZOws6YbtpjtY5ONzjrlVA4yX5ds2DIj1z8iJ4JJRNCBsjX
+	 QP5Tmf+OMGLDt/pS7RxD/xHHDWw76SkHABwfq6BF0oILTZwKwprrttKSI1x8mrqh8n
+	 5inhd9VJTTp9oEqLSsYLBWQcE4psZWkHlIU1CLvI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388564AbfETMXQ (ORCPT
+        id S2388583AbfETMXX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 08:23:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37466 "EHLO mail.kernel.org"
+        Mon, 20 May 2019 08:23:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37594 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388538AbfETMXM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 08:23:12 -0400
+        id S2388555AbfETMXQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 08:23:16 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 74E5821019;
-        Mon, 20 May 2019 12:23:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 969E420815;
+        Mon, 20 May 2019 12:23:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558354990;
-        bh=sy/G6DLt5axqfBNbPlbs4226pzPctiV3FxkYx5Sns2I=;
+        s=default; t=1558354996;
+        bh=2VA0O26o4dHCNp+2dfI3MdeQeRxsI67oDktz1/c5iYc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=d/smiAP34yb5ZWYF7XOlyUzVwm1SxXaSniMhLYjqi5UZwRxkEXoKu4dqSZ9sw2P2l
-         yKuLPkoWVWjsThj0E8Ur/UDJj5sFu8b77yQW81ANwdOgANBDPulEYE0pYt2yo31q2z
-         PW2P7kl67LcQRKlJODtagF8sCiSaPdWj2h9Zo1Fk=
+        b=HGWZUXTsAnYjTULViWaOWNqRDvnXRHeoePAbeOdPb6wq96Ouel1JRywU8WpDWtLZG
+         7WNksXqsKVy7RupJuYiBKzsIxifjv9aPMHvtaESHaO1jMaUA8iYu8haShSeXHPx5e6
+         F58MzkI+9LZE6fMxBdToYfmKzhZp35nllEr3seWE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Mike Kravetz <mike.kravetz@oracle.com>,
-        Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>,
-        Davidlohr Bueso <dbueso@suse.de>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        stable@vger.kernel.org, Andrea Arcangeli <aarcange@redhat.com>,
+        zhong jiang <zhongjiang@huawei.com>,
+        syzbot+cbb52e396df3e565ab02@syzkaller.appspotmail.com,
+        Oleg Nesterov <oleg@redhat.com>, Jann Horn <jannh@google.com>,
+        Hugh Dickins <hughd@google.com>,
+        Mike Rapoport <rppt@linux.vnet.ibm.com>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Peter Xu <peterx@redhat.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
         "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
-        Michal Hocko <mhocko@kernel.org>,
+        Michal Hocko <mhocko@suse.com>,
         Andrew Morton <akpm@linux-foundation.org>,
         Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 4.19 056/105] hugetlb: use same fault hash key for shared and private mappings
-Date:   Mon, 20 May 2019 14:14:02 +0200
-Message-Id: <20190520115250.959595306@linuxfoundation.org>
+Subject: [PATCH 4.19 058/105] userfaultfd: use RCU to free the task struct when fork fails
+Date:   Mon, 20 May 2019 14:14:04 +0200
+Message-Id: <20190520115251.126549391@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190520115247.060821231@linuxfoundation.org>
 References: <20190520115247.060821231@linuxfoundation.org>
@@ -65,177 +70,135 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mike Kravetz <mike.kravetz@oracle.com>
+From: Andrea Arcangeli <aarcange@redhat.com>
 
-commit 1b426bac66e6cc83c9f2d92b96e4e72acf43419a upstream.
+commit c3f3ce049f7d97cc7ec9c01cb51d9ec74e0f37c2 upstream.
 
-hugetlb uses a fault mutex hash table to prevent page faults of the
-same pages concurrently.  The key for shared and private mappings is
-different.  Shared keys off address_space and file index.  Private keys
-off mm and virtual address.  Consider a private mappings of a populated
-hugetlbfs file.  A fault will map the page from the file and if needed
-do a COW to map a writable page.
+The task structure is freed while get_mem_cgroup_from_mm() holds
+rcu_read_lock() and dereferences mm->owner.
 
-Hugetlbfs hole punch uses the fault mutex to prevent mappings of file
-pages.  It uses the address_space file index key.  However, private
-mappings will use a different key and could race with this code to map
-the file page.  This causes problems (BUG) for the page cache remove
-code as it expects the page to be unmapped.  A sample stack is:
+  get_mem_cgroup_from_mm()                failing fork()
+  ----                                    ---
+  task = mm->owner
+                                          mm->owner = NULL;
+                                          free(task)
+  if (task) *task; /* use after free */
 
-page dumped because: VM_BUG_ON_PAGE(page_mapped(page))
-kernel BUG at mm/filemap.c:169!
-...
-RIP: 0010:unaccount_page_cache_page+0x1b8/0x200
-...
-Call Trace:
-__delete_from_page_cache+0x39/0x220
-delete_from_page_cache+0x45/0x70
-remove_inode_hugepages+0x13c/0x380
-? __add_to_page_cache_locked+0x162/0x380
-hugetlbfs_fallocate+0x403/0x540
-? _cond_resched+0x15/0x30
-? __inode_security_revalidate+0x5d/0x70
-? selinux_file_permission+0x100/0x130
-vfs_fallocate+0x13f/0x270
-ksys_fallocate+0x3c/0x80
-__x64_sys_fallocate+0x1a/0x20
-do_syscall_64+0x5b/0x180
-entry_SYSCALL_64_after_hwframe+0x44/0xa9
+The fix consists in freeing the task with RCU also in the fork failure
+case, exactly like it always happens for the regular exit(2) path.  That
+is enough to make the rcu_read_lock hold in get_mem_cgroup_from_mm()
+(left side above) effective to avoid a use after free when dereferencing
+the task structure.
 
-There seems to be another potential COW issue/race with this approach
-of different private and shared keys as noted in commit 8382d914ebf7
-("mm, hugetlb: improve page-fault scalability").
+An alternate possible fix would be to defer the delivery of the
+userfaultfd contexts to the monitor until after fork() is guaranteed to
+succeed.  Such a change would require more changes because it would
+create a strict ordering dependency where the uffd methods would need to
+be called beyond the last potentially failing branch in order to be
+safe.  This solution as opposed only adds the dependency to common code
+to set mm->owner to NULL and to free the task struct that was pointed by
+mm->owner with RCU, if fork ends up failing.  The userfaultfd methods
+can still be called anywhere during the fork runtime and the monitor
+will keep discarding orphaned "mm" coming from failed forks in userland.
 
-Since every hugetlb mapping (even anon and private) is actually a file
-mapping, just use the address_space index key for all mappings.  This
-results in potentially more hash collisions.  However, this should not
-be the common case.
+This race condition couldn't trigger if CONFIG_MEMCG was set =n at build
+time.
 
-Link: http://lkml.kernel.org/r/20190328234704.27083-3-mike.kravetz@oracle.com
-Link: http://lkml.kernel.org/r/20190412165235.t4sscoujczfhuiyt@linux-r8p5
-Fixes: b5cec28d36f5 ("hugetlbfs: truncate_hugepages() takes a range of pages")
-Signed-off-by: Mike Kravetz <mike.kravetz@oracle.com>
-Reviewed-by: Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>
-Reviewed-by: Davidlohr Bueso <dbueso@suse.de>
-Cc: Joonsoo Kim <iamjoonsoo.kim@lge.com>
+[aarcange@redhat.com: improve changelog, reduce #ifdefs per Michal]
+  Link: http://lkml.kernel.org/r/20190429035752.4508-1-aarcange@redhat.com
+Link: http://lkml.kernel.org/r/20190325225636.11635-2-aarcange@redhat.com
+Fixes: 893e26e61d04 ("userfaultfd: non-cooperative: Add fork() event")
+Signed-off-by: Andrea Arcangeli <aarcange@redhat.com>
+Tested-by: zhong jiang <zhongjiang@huawei.com>
+Reported-by: syzbot+cbb52e396df3e565ab02@syzkaller.appspotmail.com
+Cc: Oleg Nesterov <oleg@redhat.com>
+Cc: Jann Horn <jannh@google.com>
+Cc: Hugh Dickins <hughd@google.com>
+Cc: Mike Rapoport <rppt@linux.vnet.ibm.com>
+Cc: Mike Kravetz <mike.kravetz@oracle.com>
+Cc: Peter Xu <peterx@redhat.com>
+Cc: Jason Gunthorpe <jgg@mellanox.com>
 Cc: "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>
-Cc: Michal Hocko <mhocko@kernel.org>
+Cc: Michal Hocko <mhocko@suse.com>
+Cc: zhong jiang <zhongjiang@huawei.com>
+Cc: syzbot+cbb52e396df3e565ab02@syzkaller.appspotmail.com
 Cc: <stable@vger.kernel.org>
 Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
 Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/hugetlbfs/inode.c    |    7 ++-----
- include/linux/hugetlb.h |    4 +---
- mm/hugetlb.c            |   22 ++++++----------------
- mm/userfaultfd.c        |    3 +--
- 4 files changed, 10 insertions(+), 26 deletions(-)
+ kernel/fork.c |   31 +++++++++++++++++++++++++++++--
+ 1 file changed, 29 insertions(+), 2 deletions(-)
 
---- a/fs/hugetlbfs/inode.c
-+++ b/fs/hugetlbfs/inode.c
-@@ -426,9 +426,7 @@ static void remove_inode_hugepages(struc
- 			u32 hash;
- 
- 			index = page->index;
--			hash = hugetlb_fault_mutex_hash(h, current->mm,
--							&pseudo_vma,
--							mapping, index, 0);
-+			hash = hugetlb_fault_mutex_hash(h, mapping, index, 0);
- 			mutex_lock(&hugetlb_fault_mutex_table[hash]);
- 
- 			/*
-@@ -625,8 +623,7 @@ static long hugetlbfs_fallocate(struct f
- 		addr = index * hpage_size;
- 
- 		/* mutex taken here, fault path and hole punch */
--		hash = hugetlb_fault_mutex_hash(h, mm, &pseudo_vma, mapping,
--						index, addr);
-+		hash = hugetlb_fault_mutex_hash(h, mapping, index, addr);
- 		mutex_lock(&hugetlb_fault_mutex_table[hash]);
- 
- 		/* See if already present in mapping to avoid alloc/free */
---- a/include/linux/hugetlb.h
-+++ b/include/linux/hugetlb.h
-@@ -123,9 +123,7 @@ void move_hugetlb_state(struct page *old
- void free_huge_page(struct page *page);
- void hugetlb_fix_reserve_counts(struct inode *inode);
- extern struct mutex *hugetlb_fault_mutex_table;
--u32 hugetlb_fault_mutex_hash(struct hstate *h, struct mm_struct *mm,
--				struct vm_area_struct *vma,
--				struct address_space *mapping,
-+u32 hugetlb_fault_mutex_hash(struct hstate *h, struct address_space *mapping,
- 				pgoff_t idx, unsigned long address);
- 
- pte_t *huge_pmd_share(struct mm_struct *mm, unsigned long addr, pud_t *pud);
---- a/mm/hugetlb.c
-+++ b/mm/hugetlb.c
-@@ -3778,8 +3778,7 @@ retry:
- 			 * handling userfault.  Reacquire after handling
- 			 * fault to make calling code simpler.
- 			 */
--			hash = hugetlb_fault_mutex_hash(h, mm, vma, mapping,
--							idx, haddr);
-+			hash = hugetlb_fault_mutex_hash(h, mapping, idx, haddr);
- 			mutex_unlock(&hugetlb_fault_mutex_table[hash]);
- 			ret = handle_userfault(&vmf, VM_UFFD_MISSING);
- 			mutex_lock(&hugetlb_fault_mutex_table[hash]);
-@@ -3887,21 +3886,14 @@ backout_unlocked:
+--- a/kernel/fork.c
++++ b/kernel/fork.c
+@@ -907,6 +907,15 @@ static void mm_init_aio(struct mm_struct
+ #endif
  }
  
- #ifdef CONFIG_SMP
--u32 hugetlb_fault_mutex_hash(struct hstate *h, struct mm_struct *mm,
--			    struct vm_area_struct *vma,
--			    struct address_space *mapping,
-+u32 hugetlb_fault_mutex_hash(struct hstate *h, struct address_space *mapping,
- 			    pgoff_t idx, unsigned long address)
++static __always_inline void mm_clear_owner(struct mm_struct *mm,
++					   struct task_struct *p)
++{
++#ifdef CONFIG_MEMCG
++	if (mm->owner == p)
++		WRITE_ONCE(mm->owner, NULL);
++#endif
++}
++
+ static void mm_init_owner(struct mm_struct *mm, struct task_struct *p)
  {
- 	unsigned long key[2];
- 	u32 hash;
+ #ifdef CONFIG_MEMCG
+@@ -1286,6 +1295,7 @@ static struct mm_struct *dup_mm(struct t
+ free_pt:
+ 	/* don't put binfmt in mmput, we haven't got module yet */
+ 	mm->binfmt = NULL;
++	mm_init_owner(mm, NULL);
+ 	mmput(mm);
  
--	if (vma->vm_flags & VM_SHARED) {
--		key[0] = (unsigned long) mapping;
--		key[1] = idx;
--	} else {
--		key[0] = (unsigned long) mm;
--		key[1] = address >> huge_page_shift(h);
--	}
-+	key[0] = (unsigned long) mapping;
-+	key[1] = idx;
+ fail_nomem:
+@@ -1617,6 +1627,21 @@ static inline void rcu_copy_process(stru
+ #endif /* #ifdef CONFIG_TASKS_RCU */
+ }
  
- 	hash = jhash2((u32 *)&key, sizeof(key)/sizeof(u32), 0);
- 
-@@ -3912,9 +3904,7 @@ u32 hugetlb_fault_mutex_hash(struct hsta
-  * For uniprocesor systems we always use a single mutex, so just
-  * return 0 and avoid the hashing overhead.
-  */
--u32 hugetlb_fault_mutex_hash(struct hstate *h, struct mm_struct *mm,
--			    struct vm_area_struct *vma,
--			    struct address_space *mapping,
-+u32 hugetlb_fault_mutex_hash(struct hstate *h, struct address_space *mapping,
- 			    pgoff_t idx, unsigned long address)
- {
- 	return 0;
-@@ -3959,7 +3949,7 @@ vm_fault_t hugetlb_fault(struct mm_struc
- 	 * get spurious allocation failures if two CPUs race to instantiate
- 	 * the same page in the page cache.
- 	 */
--	hash = hugetlb_fault_mutex_hash(h, mm, vma, mapping, idx, haddr);
-+	hash = hugetlb_fault_mutex_hash(h, mapping, idx, haddr);
- 	mutex_lock(&hugetlb_fault_mutex_table[hash]);
- 
- 	entry = huge_ptep_get(ptep);
---- a/mm/userfaultfd.c
-+++ b/mm/userfaultfd.c
-@@ -271,8 +271,7 @@ retry:
- 		 */
- 		idx = linear_page_index(dst_vma, dst_addr);
- 		mapping = dst_vma->vm_file->f_mapping;
--		hash = hugetlb_fault_mutex_hash(h, dst_mm, dst_vma, mapping,
--								idx, dst_addr);
-+		hash = hugetlb_fault_mutex_hash(h, mapping, idx, dst_addr);
- 		mutex_lock(&hugetlb_fault_mutex_table[hash]);
- 
- 		err = -ENOMEM;
++static void __delayed_free_task(struct rcu_head *rhp)
++{
++	struct task_struct *tsk = container_of(rhp, struct task_struct, rcu);
++
++	free_task(tsk);
++}
++
++static __always_inline void delayed_free_task(struct task_struct *tsk)
++{
++	if (IS_ENABLED(CONFIG_MEMCG))
++		call_rcu(&tsk->rcu, __delayed_free_task);
++	else
++		free_task(tsk);
++}
++
+ /*
+  * This creates a new process as a copy of the old one,
+  * but does not actually start it yet.
+@@ -2072,8 +2097,10 @@ bad_fork_cleanup_io:
+ bad_fork_cleanup_namespaces:
+ 	exit_task_namespaces(p);
+ bad_fork_cleanup_mm:
+-	if (p->mm)
++	if (p->mm) {
++		mm_clear_owner(p->mm, p);
+ 		mmput(p->mm);
++	}
+ bad_fork_cleanup_signal:
+ 	if (!(clone_flags & CLONE_THREAD))
+ 		free_signal_struct(p->signal);
+@@ -2104,7 +2131,7 @@ bad_fork_cleanup_count:
+ bad_fork_free:
+ 	p->state = TASK_DEAD;
+ 	put_task_stack(p);
+-	free_task(p);
++	delayed_free_task(p);
+ fork_out:
+ 	spin_lock_irq(&current->sighand->siglock);
+ 	hlist_del_init(&delayed.node);
 
 
