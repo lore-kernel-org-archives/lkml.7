@@ -2,90 +2,74 @@ Return-Path: <SRS0=lq4r=TU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8C6FC072A4
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 09:04:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F712C04AAF
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 09:04:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A46C320656
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 09:04:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558343073;
-	bh=1v1nuxcWvVkGGL35WWUJOcGwdr8fXibrkPbcNDFvVL0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=xpGCWm1mVm7gE3+kaTnWCtFyX8H6uPGPdoWSO3toJDXcdFia3GxCVvT3eEH9NWh/6
-	 UgGEyto/AwI1sodX294XSBC1aI9cG/0Ax0d7SIKv9YHO0Xjk9itNpekWvvGEBJFxiu
-	 NWczmKnPWcfORN/5KeDjSikenuz3WSETegUmp8f0=
+	by mail.kernel.org (Postfix) with ESMTP id 2529720856
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 09:04:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731750AbfETJEc (ORCPT
+        id S1731762AbfETJEi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 05:04:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33068 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727301AbfETJEc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 05:04:32 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2691320644;
-        Mon, 20 May 2019 09:04:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558343071;
-        bh=1v1nuxcWvVkGGL35WWUJOcGwdr8fXibrkPbcNDFvVL0=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=NPOwRyQ8bLcCg+3pJW3uPJDmS6TfkstyMWu4M4AsILKZ5dCJOQpzgR72fm0961qvy
-         6Jy3L8eYoqKg6hXPwXh5j81CL1iGbTQzL32NPTzcdcCO04U6Qa+pBVeziWzm1OOf4j
-         LqSm+oD69YCYQBlyT7SJhf5gKeMcTJfHB/K6r4YI=
-Date:   Mon, 20 May 2019 11:04:29 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     David Ahern <dsahern@gmail.com>
-Cc:     Nathan Chancellor <natechancellor@gmail.com>,
-        linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Thomas Haller <thaller@redhat.com>,
-        Hangbin Liu <liuhangbin@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org
-Subject: Re: [PATCH 4.9 41/51] fib_rules: return 0 directly if an exactly
- same rule exists when NLM_F_EXCL not supplied
-Message-ID: <20190520090429.GA25812@kroah.com>
-References: <20190515090616.669619870@linuxfoundation.org>
- <20190515090628.066392616@linuxfoundation.org>
- <20190519154348.GA113991@archlinux-epyc>
- <a36e3204-b52d-0bf0-f956-654189a18156@gmail.com>
+        Mon, 20 May 2019 05:04:38 -0400
+Received: from mail-vs1-f65.google.com ([209.85.217.65]:37238 "EHLO
+        mail-vs1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727301AbfETJEh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 05:04:37 -0400
+Received: by mail-vs1-f65.google.com with SMTP id o5so8459441vsq.4
+        for <linux-kernel@vger.kernel.org>; Mon, 20 May 2019 02:04:37 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=5PAbs8C7MfUj+AVLTb1TSwGH3gvMGuk7/i/KIBisyLk=;
+        b=V0wOlEnBDNo2xOAgcTWBMEUgy4nQp1mf1Fls+Th+p95AQhnd9zKh0xa5530IKRbe1g
+         T6eP9gsBcuTy8UpAeNTJaAmycFatpDKS/58zW+lLzTk4qwntpzsS6ykF0pNncZKfQiPH
+         WwmcnEx55Xgb4AA+CU7Yb4kD/DexAfFOZwmg//wsk2ZuUxVU0ORQEzrLxArp2L6LkdCR
+         c72a7pnZv9H9btzmfITnNhO62FxqngB+okuxEVxO0eZlT4UWh06oRVEx9c7iz68R+FrV
+         LkFSzn7pgs1a8XxFJM82UO2LDyq1AeQCI73gMB4tBaeAJ+BYT9ppO30yXvwgSK7NE4c+
+         f5dw==
+X-Gm-Message-State: APjAAAUCBF+sFFLsMwM4Wd6lO9VRYYeTLPpcBbN4Q5I7U8AsJNV6bBDV
+        ICemw+A8aMZ5bkqq8/13L+EV2U/arWKPsT/eFTc=
+X-Google-Smtp-Source: APXvYqwAa/pzv5JhQ33nlEbDmGsUYUBL2mLFKEWcG/eGbBs4BbpWZisM249gNJP8P2wpfwrzM7QCZz6idyRHk5VKUhs=
+X-Received: by 2002:a67:f589:: with SMTP id i9mr2975411vso.152.1558343076612;
+ Mon, 20 May 2019 02:04:36 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <a36e3204-b52d-0bf0-f956-654189a18156@gmail.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+References: <20190520082216.26273-1-daniel.vetter@ffwll.ch> <20190520082216.26273-12-daniel.vetter@ffwll.ch>
+In-Reply-To: <20190520082216.26273-12-daniel.vetter@ffwll.ch>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Mon, 20 May 2019 11:04:25 +0200
+Message-ID: <CAMuHMdV==Vd-W3BuLTykgcSyokSF=TKCP0yD1fD8aHG6styrJw@mail.gmail.com>
+Subject: Re: [PATCH 11/33] fbdev/sh_mobile: remove sh_mobile_lcdc_display_notify
+To:     Daniel Vetter <daniel.vetter@ffwll.ch>
+Cc:     DRI Development <dri-devel@lists.freedesktop.org>,
+        Intel Graphics Development <intel-gfx@lists.freedesktop.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, May 19, 2019 at 06:29:19PM -0600, David Ahern wrote:
-> On 5/19/19 9:43 AM, Nathan Chancellor wrote:
-> > Hi all,
-> > 
-> > This commit is causing issues on Android devices when Wi-Fi and mobile
-> > data are both enabled. The device will do a soft reboot consistently.
-> > So far, I've had reports on the Pixel 3 XL, OnePlus 6, Pocophone, and
-> > Note 9 and I can reproduce on my OnePlus 6.
-> > 
-> > Sorry for taking so long to report this, I just figured out how to
-> > reproduce it today and I didn't want to report it without that.
-> > 
-> > Attached is a full dmesg and the relevant snippet from Android's logcat.
-> > 
-> > Let me know what I can do to help debug,
-> > Nathan
-> > 
-> 
-> It's a backport problem. err needs to be reset to 0 before the goto.
+On Mon, May 20, 2019 at 10:25 AM Daniel Vetter <daniel.vetter@ffwll.ch> wrote:
+> It's dead code, and removing it avoids me having to understand
+> what it's doing with lock_fb_info.
+>
+> Signed-off-by: Daniel Vetter <daniel.vetter@ffwll.ch>
 
-Ah, I see it, let me go queue up a fix for this.
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-thanks,
+Gr{oetje,eeting}s,
 
-greg k-h
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
