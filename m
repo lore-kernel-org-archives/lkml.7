@@ -2,221 +2,135 @@ Return-Path: <SRS0=9PYC=TV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-16.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30BE1C04AAF
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 10:52:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B357C04AAF
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 10:52:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F12E321773
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 10:52:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5BB1C21773
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 10:52:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="pbHheiZk"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="NcJ+cu+a"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727897AbfEUKwa (ORCPT
+        id S1727938AbfEUKwn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 May 2019 06:52:30 -0400
-Received: from mail-ot1-f73.google.com ([209.85.210.73]:48571 "EHLO
-        mail-ot1-f73.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726750AbfEUKw0 (ORCPT
+        Tue, 21 May 2019 06:52:43 -0400
+Received: from mailout2.w1.samsung.com ([210.118.77.12]:48317 "EHLO
+        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727060AbfEUKwU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 May 2019 06:52:26 -0400
-Received: by mail-ot1-f73.google.com with SMTP id q12so9445261oth.15
-        for <linux-kernel@vger.kernel.org>; Tue, 21 May 2019 03:52:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
-         :cc;
-        bh=TH8finFZ9rq31I/M5cXpmkQoRMzgMDnUFgzNXfNCEyQ=;
-        b=pbHheiZk/Wj6MCP9e/g1QWZ47lf+ngoj44c79PES9BKx0g8mRAHLIp/nubTozILJOZ
-         vcbdrkXsn2rSiIyHPAJLzpj+tWemPmLvWs3quPzr7OxL6xuQ7GpZflaifXwlmkFidSXk
-         tuVCyjx31cletj/YIKsnQf6mYq/QBl/MmA66SBglv1etRoJKoPXH5rAEsAe1KZerH1Ku
-         9yuBI5Qc/o9Q1hh/cqxGGgrQS9zViY7HYpNiDETQSvdOBqD4PRgOhDcOawxhD4Gfdx1q
-         eeSrDluEHywVS4g7wE0bK1cQF8I0XDFoTmRrGNqF76umxhWcDTowb1VwKDYNEiaD5odp
-         DrZQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
-         :references:subject:from:to:cc;
-        bh=TH8finFZ9rq31I/M5cXpmkQoRMzgMDnUFgzNXfNCEyQ=;
-        b=nEC83pNPe7s7uHAwXT2er83KbhgbnkiJMKiGNyqbR0Ux4IyjU79e6dT3NW1Ou96mb3
-         BmFEUQRAucVJv5pMhayuEPNbJbkzQyoeGSWEX2c/5gjizQdJ/syx4JBgCBmbNhjjORAL
-         5a3uq3edcgN+7PQCMUa7z51ScJCh/PyqmxfF3dllrVOBdli9CcbgrXY5oIPKdVQF/fy3
-         KkIJ5tWzTboqE5uB6CHw9kmDHkoytLn89kkgtmF6tsoDN0w1g4t7b4yoNIpWXdSKNLfB
-         ePIXC6KrqocguPb88gUgGVBW3wnMPYNGMnbnR7SA32MFFuyWBkF6gH7xkyVNqoFoa7KW
-         Dvyw==
-X-Gm-Message-State: APjAAAXLCe+F/z5gnU+vYw3QfF3i8gMYysWz7Y6bTuAN/+dfhUyQTaNd
-        PYmNrcT1f9uyIAmfRX5/IuUFV/OFbjE=
-X-Google-Smtp-Source: APXvYqxZ/cIXUO+8kXwKJXLwVtgtXhSJz2NpI0V6tMnvUjZmrRQVr82maCEWdr5+SfjlS5IpAVh/bSDj3cI=
-X-Received: by 2002:a05:6830:1584:: with SMTP id i4mr22066172otr.109.1558435945621;
- Tue, 21 May 2019 03:52:25 -0700 (PDT)
-Date:   Tue, 21 May 2019 12:52:03 +0200
-In-Reply-To: <20190521105203.154043-1-darekm@google.com>
-Message-Id: <20190521105203.154043-3-darekm@google.com>
-Mime-Version: 1.0
-References: <20190521105203.154043-1-darekm@google.com>
-X-Mailer: git-send-email 2.21.0.1020.gf2820cf01a-goog
-Subject: [PATCH v7 3/3] drm/i2c: tda9950: pass HDMI connector info to CEC adapter
-From:   Dariusz Marcinkiewicz <darekm@google.com>
-To:     linux-media@vger.kernel.org, hans.verkuil@cisco.com,
-        hverkuil@xs4all.nl
-Cc:     linux-kernel@vger.kernel.org,
-        Dariusz Marcinkiewicz <darekm@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        Tue, 21 May 2019 06:52:20 -0400
+Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
+        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20190521105219euoutp02b05c9b08a1d03a60be3c740ac8c68c67~grTrdA_6I1480014800euoutp02N
+        for <linux-kernel@vger.kernel.org>; Tue, 21 May 2019 10:52:19 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20190521105219euoutp02b05c9b08a1d03a60be3c740ac8c68c67~grTrdA_6I1480014800euoutp02N
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1558435939;
+        bh=a4rhZ7HDvqEXTse02KOkCIPOpiX/GoXFahUQjVRjFLg=;
+        h=From:Subject:To:Cc:Date:References:From;
+        b=NcJ+cu+aKZ3+h5RKQrrpUzr0mvBakOdHXoTYYtfxF609Eqv5N1Hq3heFaFm0fh2ue
+         VqxXojXBwlTfohpZlVBgeciVnvatgkSCgS+Asv/O8xtuRLa0i84KjiP2nkR6XD0DFr
+         WYeMXfZGd+8uIbNGoTbsK8ze1nmOqMFXuYYbM17U=
+Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
+        20190521105218eucas1p223bcb596e0f5151933429035226d649c~grTqvaKul3024630246eucas1p2B;
+        Tue, 21 May 2019 10:52:18 +0000 (GMT)
+Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
+        eusmges1new.samsung.com (EUCPMTA) with SMTP id CE.05.04298.268D3EC5; Tue, 21
+        May 2019 11:52:18 +0100 (BST)
+Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
+        20190521105217eucas1p19796d2969c1a568fecb0750818226241~grTp_qUlh0212202122eucas1p1L;
+        Tue, 21 May 2019 10:52:17 +0000 (GMT)
+Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
+        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20190521105217eusmtrp10af3bb8c9b7bf448b194ab3dfa026eef~grTpvH-dp1584715847eusmtrp1S;
+        Tue, 21 May 2019 10:52:17 +0000 (GMT)
+X-AuditID: cbfec7f2-f13ff700000010ca-79-5ce3d86229b6
+Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
+        eusmgms2.samsung.com (EUCPMTA) with SMTP id DA.F4.04140.168D3EC5; Tue, 21
+        May 2019 11:52:17 +0100 (BST)
+Received: from [106.120.51.71] (unknown [106.120.51.71]) by
+        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20190521105217eusmtip13906abf5ab5422044daf75a93ee3213b~grTpZV8cU2619726197eusmtip1F;
+        Tue, 21 May 2019 10:52:17 +0000 (GMT)
+From:   Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Subject: [PATCH v2] video: fbdev: atmel_lcdfb: add COMPILE_TEST support
+To:     Nicolas Ferre <nicolas.ferre@microchip.com>
+Cc:     Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Ludovic Desroches <ludovic.desroches@microchip.com>,
+        linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Message-ID: <f9d56fc1-3e02-9716-b764-82e9600e5919@samsung.com>
+Date:   Tue, 21 May 2019 12:52:17 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+        Thunderbird/60.6.1
+MIME-Version: 1.0
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrBKsWRmVeSWpSXmKPExsWy7djP87pJNx7HGFz7LmLR/m4Zu8WVr+/Z
+        LDY9vsZqcaLvA6vF5V1z2CxerL3OarF980JmB3aPeWuqPe53H2fy2Lyk3uPOj6WMHp83yQWw
+        RnHZpKTmZJalFunbJXBlbL62kqVgNlvFmy8rmBsYZ7N2MXJySAiYSJy8d5Spi5GLQ0hgBaPE
+        8msTmCGcL4wSO9dNZAGpEhL4zCjRdtAPpmPh+ensEPHljBLHbopBNLxllDjw6TfYWDYBK4mJ
+        7asYQWxhAXeJOY33gFZwcIgI6Ev86VIEqWcW+MQo0T5rLVgNr4CdxNRzO9hAbBYBVYnJP6aB
+        zREViJC4f2wDK0SNoMTJmU/ADmIWEJe49WQ+E4QtL7H97RywqyUEprNLnF54ixniUheJL22v
+        2CFsYYlXx7dA2TISpyf3sEA0rGOU+NvxAqp7OzAAJv9jg6iyljh8/CIryNnMApoS63fpQ4Qd
+        JV48/MkIEpYQ4JO48VYQ4gg+iUnbpjNDhHklOtqEIKrVJDYs28AGs7Zr50qo0zwk3qz4xz6B
+        UXEWktdmIXltFpLXZiHcsICRZRWjeGppcW56arFhXmq5XnFibnFpXrpecn7uJkZg+jn97/in
+        HYxfLyUdYhTgYFTi4c2Y8ihGiDWxrLgy9xCjBAezkgjv6VNAId6UxMqq1KL8+KLSnNTiQ4zS
+        HCxK4rzVDA+ihQTSE0tSs1NTC1KLYLJMHJxSDYzsulFGexkWLFRn4yw+x3/z5KOqUqcapTi7
+        GPYDdezTA5ds7teOvLG2+NrbMP+lfz5omq6M8mubu+HUg4WbWvY8k34Yd/1vRLWNkd3TdL39
+        F/09vOTy3wRZhfpM3jUnnv91xffGx++2iXxuLepr/BbHk2rSdShL6rBVmNa88BkNsqfWPuxt
+        V1JiKc5INNRiLipOBAA6lT9SOwMAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrEIsWRmVeSWpSXmKPExsVy+t/xu7qJNx7HGLxskLdof7eM3eLK1/ds
+        FpseX2O1ONH3gdXi8q45bBYv1l5ntdi+eSGzA7vHvDXVHve7jzN5bF5S73Hnx1JGj8+b5AJY
+        o/RsivJLS1IVMvKLS2yVog0tjPQMLS30jEws9QyNzWOtjEyV9O1sUlJzMstSi/TtEvQyNl9b
+        yVIwm63izZcVzA2Ms1m7GDk5JARMJBaen87excjFISSwlFHi26ajjF2MHEAJGYnj68sgaoQl
+        /lzrYoOoec0osaN1AxNIgk3ASmJi+ypGEFtYwF1iTuM9JpBeEQF9iT9diiD1zAKfGCV+PW8H
+        q+EVsJOYem4HG4jNIqAqMfnHNLAjRAUiJM68X8ECUSMocXLmEzCbWUBd4s+8S8wQtrjErSfz
+        mSBseYntb+cwT2AUmIWkZRaSlllIWmYhaVnAyLKKUSS1tDg3PbfYSK84Mbe4NC9dLzk/dxMj
+        MH62Hfu5ZQdj17vgQ4wCHIxKPLwZUx7FCLEmlhVX5h5ilOBgVhLhPX0KKMSbklhZlVqUH19U
+        mpNafIjRFOihicxSosn5wNjOK4k3NDU0t7A0NDc2NzazUBLn7RA4GCMkkJ5YkpqdmlqQWgTT
+        x8TBKdXA2Ljyua/uNWaHaZsOxvNvPSk/e5V3/nYjS4dyhT0Cse97nmYk6N9JOO78O9ljWm4m
+        L8+a4/XcGtHrf0/ROz8pfOf9T04dS3+tVp+rtnv1br5FAvOYQhMkFkxdt44ht599/vbkoLnq
+        6SY1Ly0uXPO41/pxukmOxP0J1l9VrcoNZAOLc4032ZpqKbEUZyQaajEXFScCADhftqO1AgAA
+X-CMS-MailID: 20190521105217eucas1p19796d2969c1a568fecb0750818226241
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20190521105217eucas1p19796d2969c1a568fecb0750818226241
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20190521105217eucas1p19796d2969c1a568fecb0750818226241
+References: <CGME20190521105217eucas1p19796d2969c1a568fecb0750818226241@eucas1p1.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-With that change tda998x provides a connector info to the CEC
-adapter. In order to be able to that it delays creation of
-respective CEC device until the DRM connector is initialized.
+Add COMPILE_TEST support to atmel_lcdfb driver for better compile
+testing coverage.
 
-Requires testing.
-
-Signed-off-by: Dariusz Marcinkiewicz <darekm@google.com>
+Signed-off-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
 ---
- drivers/gpu/drm/i2c/tda9950.c     | 13 +++++---
- drivers/gpu/drm/i2c/tda998x_drv.c | 55 ++++++++++++++++---------------
- 2 files changed, 36 insertions(+), 32 deletions(-)
+v2: add missing HAVE_CLK && HAS IOMEM dependencies
 
-diff --git a/drivers/gpu/drm/i2c/tda9950.c b/drivers/gpu/drm/i2c/tda9950.c
-index b944dd9df85e1..61ec50a2ca275 100644
---- a/drivers/gpu/drm/i2c/tda9950.c
-+++ b/drivers/gpu/drm/i2c/tda9950.c
-@@ -382,6 +382,7 @@ static int tda9950_probe(struct i2c_client *client,
- 			 const struct i2c_device_id *id)
- {
- 	struct tda9950_glue *glue = client->dev.platform_data;
-+	const struct cec_connector_info *conn_info;
- 	struct device *dev = &client->dev;
- 	struct tda9950_priv *priv;
- 	unsigned long irqflags;
-@@ -422,10 +423,16 @@ static int tda9950_probe(struct i2c_client *client,
- 	if (glue && glue->parent)
- 		priv->hdmi = glue->parent;
- 
-+	priv->notify = cec_notifier_get(priv->hdmi);
-+	if (!priv->notify)
-+		return -ENOMEM;
-+
-+	conn_info = cec_notifier_get_conn_info(priv->notify);
-+
- 	priv->adap = cec_allocate_adapter(&tda9950_cec_ops, priv, "tda9950",
- 					  CEC_CAP_DEFAULTS,
- 					  CEC_MAX_LOG_ADDRS,
--					  NULL);
-+					  conn_info);
- 	if (IS_ERR(priv->adap))
- 		return PTR_ERR(priv->adap);
- 
-@@ -461,10 +468,6 @@ static int tda9950_probe(struct i2c_client *client,
- 	if (ret < 0)
- 		return ret;
- 
--	priv->notify = cec_notifier_get(priv->hdmi);
--	if (!priv->notify)
--		return -ENOMEM;
--
- 	ret = cec_register_adapter(priv->adap, priv->hdmi);
- 	if (ret < 0) {
- 		cec_notifier_put(priv->notify);
-diff --git a/drivers/gpu/drm/i2c/tda998x_drv.c b/drivers/gpu/drm/i2c/tda998x_drv.c
-index 7f34601bb5155..b1d76e6561e30 100644
---- a/drivers/gpu/drm/i2c/tda998x_drv.c
-+++ b/drivers/gpu/drm/i2c/tda998x_drv.c
-@@ -1253,6 +1253,8 @@ static int tda998x_connector_init(struct tda998x_priv *priv,
- 				  struct drm_device *drm)
- {
- 	struct drm_connector *connector = &priv->connector;
-+	struct cec_connector_info conn_info;
-+	struct i2c_board_info cec_info;
- 	int ret;
- 
- 	connector->interlace_allowed = 1;
-@@ -1269,6 +1271,32 @@ static int tda998x_connector_init(struct tda998x_priv *priv,
- 	if (ret)
- 		return ret;
- 
-+	/*
-+	 * Some TDA998x are actually two I2C devices merged onto one piece
-+	 * of silicon: TDA9989 and TDA19989 combine the HDMI transmitter
-+	 * with a slightly modified TDA9950 CEC device.  The CEC device
-+	 * is at the TDA9950 address, with the address pins strapped across
-+	 * to the TDA998x address pins.  Hence, it always has the same
-+	 * offset.
-+	 */
-+	memset(&cec_info, 0, sizeof(cec_info));
-+	strlcpy(cec_info.type, "tda9950", sizeof(cec_info.type));
-+	cec_info.addr = priv->cec_addr;
-+	cec_info.platform_data = &priv->cec_glue;
-+	cec_info.irq = priv->hdmi->irq;
-+
-+	priv->cec = i2c_new_device(priv->hdmi->adapter, &cec_info);
-+	if (!priv->cec)
-+		return -ENODEV;
-+
-+	cec_fill_connector_info(&conn_info, connector);
-+
-+	priv->cec_notify = cec_notifier_get_conn(priv->cec_glue.parent,
-+						 NULL, &conn_info);
-+	if (!priv->cec_notify)
-+		return -ENOMEM;
-+
-+
- 	drm_connector_attach_encoder(&priv->connector,
- 				     priv->bridge.encoder);
- 
-@@ -1658,7 +1686,6 @@ static int tda998x_create(struct device *dev)
- {
- 	struct i2c_client *client = to_i2c_client(dev);
- 	struct device_node *np = client->dev.of_node;
--	struct i2c_board_info cec_info;
- 	struct tda998x_priv *priv;
- 	u32 video;
- 	int rev_lo, rev_hi, ret;
-@@ -1776,12 +1803,6 @@ static int tda998x_create(struct device *dev)
- 		cec_write(priv, REG_CEC_RXSHPDINTENA, CEC_RXSHPDLEV_HPD);
- 	}
- 
--	priv->cec_notify = cec_notifier_get(dev);
--	if (!priv->cec_notify) {
--		ret = -ENOMEM;
--		goto fail;
--	}
--
- 	priv->cec_glue.parent = dev;
- 	priv->cec_glue.data = priv;
- 	priv->cec_glue.init = tda998x_cec_hook_init;
-@@ -1789,26 +1810,6 @@ static int tda998x_create(struct device *dev)
- 	priv->cec_glue.open = tda998x_cec_hook_open;
- 	priv->cec_glue.release = tda998x_cec_hook_release;
- 
--	/*
--	 * Some TDA998x are actually two I2C devices merged onto one piece
--	 * of silicon: TDA9989 and TDA19989 combine the HDMI transmitter
--	 * with a slightly modified TDA9950 CEC device.  The CEC device
--	 * is at the TDA9950 address, with the address pins strapped across
--	 * to the TDA998x address pins.  Hence, it always has the same
--	 * offset.
--	 */
--	memset(&cec_info, 0, sizeof(cec_info));
--	strlcpy(cec_info.type, "tda9950", sizeof(cec_info.type));
--	cec_info.addr = priv->cec_addr;
--	cec_info.platform_data = &priv->cec_glue;
--	cec_info.irq = client->irq;
--
--	priv->cec = i2c_new_device(client->adapter, &cec_info);
--	if (!priv->cec) {
--		ret = -ENODEV;
--		goto fail;
--	}
--
- 	/* enable EDID read irq: */
- 	reg_set(priv, REG_INT_FLAGS_2, INT_FLAGS_2_EDID_BLK_RD);
- 
--- 
-2.18.1
+ drivers/video/fbdev/Kconfig |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
+Index: b/drivers/video/fbdev/Kconfig
+===================================================================
+--- a/drivers/video/fbdev/Kconfig
++++ b/drivers/video/fbdev/Kconfig
+@@ -856,7 +856,8 @@ config FB_S1D13XXX
+ 
+ config FB_ATMEL
+ 	tristate "AT91 LCD Controller support"
+-	depends on FB && OF && HAVE_FB_ATMEL
++	depends on FB && OF && HAVE_CLK && HAS_IOMEM
++	depends on HAVE_FB_ATMEL || COMPILE_TEST
+ 	select FB_BACKLIGHT
+ 	select FB_CFB_FILLRECT
+ 	select FB_CFB_COPYAREA
