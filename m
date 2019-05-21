@@ -2,263 +2,99 @@ Return-Path: <SRS0=9PYC=TV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15CAAC072B5
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 20:47:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1A7BC072B5
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 20:48:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D52DC2182B
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 20:47:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BCF97217D7
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 20:48:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fjfi.cvut.cz header.i=@fjfi.cvut.cz header.b="rwI5Gug1"
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="hi11wg5d"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727943AbfEUUq4 (ORCPT
+        id S1727948AbfEUUs1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 May 2019 16:46:56 -0400
-Received: from mailgw1.fjfi.cvut.cz ([147.32.9.3]:56046 "EHLO
-        mailgw1.fjfi.cvut.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726907AbfEUUqz (ORCPT
+        Tue, 21 May 2019 16:48:27 -0400
+Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:34150 "EHLO
+        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727222AbfEUUs0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 May 2019 16:46:55 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by mailgw1.fjfi.cvut.cz (Postfix) with ESMTP id C0F0EA004A;
-        Tue, 21 May 2019 22:46:52 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fjfi.cvut.cz;
-        s=20151024; t=1558471612; i=@fjfi.cvut.cz;
-        bh=4RgUqqeUHWHgxEKWCBbvpisy8Y25KeBndYYjOulFN+s=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References;
-        b=rwI5Gug1eIjvlXMhpOqFSvqq5MNVdJoJUcOOQMS1nkp+RDdfoMy+J3IWVMP/kD47T
-         5EVH8sYa0G67a1M4g0Xcu6S/xl9KNuyvzVJ8hGWIBRuxWB85/q5PoeQ6X5c8rPgqjE
-         4nH2e+bjoxjh4gYZC4kasVX67Ub7VFOJiR8bzz+E=
-X-CTU-FNSPE-Virus-Scanned: amavisd-new at fjfi.cvut.cz
-Received: from mailgw1.fjfi.cvut.cz ([127.0.0.1])
-        by localhost (mailgw1.fjfi.cvut.cz [127.0.0.1]) (amavisd-new, port 10022)
-        with ESMTP id y1YnxB_RTcMs; Tue, 21 May 2019 22:46:47 +0200 (CEST)
-Received: from linux.fjfi.cvut.cz (linux.fjfi.cvut.cz [147.32.5.111])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mailgw1.fjfi.cvut.cz (Postfix) with ESMTPS id 6A051A018B;
-        Tue, 21 May 2019 22:46:47 +0200 (CEST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailgw1.fjfi.cvut.cz 6A051A018B
-Received: by linux.fjfi.cvut.cz (Postfix, from userid 1001)
-        id 4B28960050; Tue, 21 May 2019 22:46:47 +0200 (CEST)
-From:   David Kozub <zub@linux.fjfi.cvut.cz>
-To:     Jens Axboe <axboe@kernel.dk>,
-        Jonathan Derrick <jonathan.derrick@intel.com>,
-        Scott Bauer <sbauer@plzdonthack.me>,
-        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Jonas Rabenstein <jonas.rabenstein@studium.uni-erlangen.de>
-Subject: [PATCH v2 2/3] block: sed-opal: ioctl for writing to shadow mbr
-Date:   Tue, 21 May 2019 22:46:45 +0200
-Message-Id: <1558471606-25139-3-git-send-email-zub@linux.fjfi.cvut.cz>
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <1558471606-25139-1-git-send-email-zub@linux.fjfi.cvut.cz>
-References: <1558471606-25139-1-git-send-email-zub@linux.fjfi.cvut.cz>
+        Tue, 21 May 2019 16:48:26 -0400
+Received: from pps.filterd (m0044010.ppops.net [127.0.0.1])
+        by mx0a-00082601.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4LKjEG6010429
+        for <linux-kernel@vger.kernel.org>; Tue, 21 May 2019 13:48:25 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-type; s=facebook;
+ bh=gXtQ5o2xO00nWLwMn6/HQC5ELcxFd8dno/KGqwEyWn4=;
+ b=hi11wg5dkOis8h1p5ZcRZQDM4LnYRuRMbWj9yu/hc3Pp+DO2keB416WzwuKcAwB3oUmt
+ P0CDVW+h2iPceAUyITp9Vy8vRGvy5/Xol/Vg+w27VfDNvU9jf/e/lLQSfuwu9kmZHD9p
+ 2PhqNSepVrj0Hshx5eHDhZtKJh3RPacyEoc= 
+Received: from mail.thefacebook.com (mailout.thefacebook.com [199.201.64.23])
+        by mx0a-00082601.pphosted.com with ESMTP id 2smp0wrmb5-3
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Tue, 21 May 2019 13:48:25 -0700
+Received: from mx-out.facebook.com (2620:10d:c081:10::13) by
+ mail.thefacebook.com (2620:10d:c081:35::126) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA) id 15.1.1713.5;
+ Tue, 21 May 2019 13:48:18 -0700
+Received: by devbig006.ftw2.facebook.com (Postfix, from userid 4523)
+        id C8DF762E2BFE; Tue, 21 May 2019 13:48:16 -0700 (PDT)
+Smtp-Origin-Hostprefix: devbig
+From:   Song Liu <songliubraving@fb.com>
+Smtp-Origin-Hostname: devbig006.ftw2.facebook.com
+To:     <linux-kernel@vger.kernel.org>, <bpf@vger.kernel.org>
+CC:     <kernel-team@fb.com>, Song Liu <songliubraving@fb.com>,
+        Kairui Song <kasong@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>
+Smtp-Origin-Cluster: ftw2c04
+Subject: [PATCH] perf/x86: always include regs->ip in callchain
+Date:   Tue, 21 May 2019 13:48:13 -0700
+Message-ID: <20190521204813.1167784-1-songliubraving@fb.com>
+X-Mailer: git-send-email 2.17.1
+X-FB-Internal: Safe
+MIME-Version: 1.0
+Content-Type: text/plain
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-21_05:,,
+ signatures=0
+X-Proofpoint-Spam-Reason: safe
+X-FB-Internal: Safe
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jonas Rabenstein <jonas.rabenstein@studium.uni-erlangen.de>
+Commit d15d356887e7 removes regs->ip for !perf_hw_regs(regs) case. This
+breaks tests like test_stacktrace_map from selftests/bpf/tests_prog.
 
-Allow modification of the shadow mbr. If the shadow mbr is not marked as
-done, this data will be presented read only as the device content. Only
-after marking the shadow mbr as done and unlocking a locking range the
-actual content is accessible.
+This patch adds regs->ip back.
 
-Co-authored-by: David Kozub <zub@linux.fjfi.cvut.cz>
-Signed-off-by: Jonas Rabenstein <jonas.rabenstein@studium.uni-erlangen.de>
-Signed-off-by: David Kozub <zub@linux.fjfi.cvut.cz>
-Reviewed-by: Scott Bauer <sbauer@plzdonthack.me>
-Reviewed-by: Jon Derrick <jonathan.derrick@intel.com>
+Fixes: d15d356887e7 ("perf/x86: Make perf callchains work without CONFIG_FRAME_POINTER")
+Cc: Kairui Song <kasong@redhat.com>
+Cc: Peter Zijlstra (Intel) <peterz@infradead.org>
+Signed-off-by: Song Liu <songliubraving@fb.com>
 ---
- block/sed-opal.c              | 91 ++++++++++++++++++++++++++++++++++-
- include/linux/sed-opal.h      |  1 +
- include/uapi/linux/sed-opal.h |  8 +++
- 3 files changed, 98 insertions(+), 2 deletions(-)
+ arch/x86/events/core.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/block/sed-opal.c b/block/sed-opal.c
-index a330fc67f3a3..c13ac0ebd5e0 100644
---- a/block/sed-opal.c
-+++ b/block/sed-opal.c
-@@ -26,6 +26,9 @@
- #define IO_BUFFER_LENGTH 2048
- #define MAX_TOKS 64
- 
-+/* Number of bytes needed by cmd_finalize. */
-+#define CMD_FINALIZE_BYTES_NEEDED 7
-+
- struct opal_step {
- 	int (*fn)(struct opal_dev *dev, void *data);
- 	void *data;
-@@ -523,12 +526,17 @@ static int opal_discovery0_step(struct opal_dev *dev)
- 	return execute_step(dev, &discovery0_step, 0);
- }
- 
-+static size_t remaining_size(struct opal_dev *cmd)
-+{
-+	return IO_BUFFER_LENGTH - cmd->pos;
-+}
-+
- static bool can_add(int *err, struct opal_dev *cmd, size_t len)
- {
- 	if (*err)
- 		return false;
- 
--	if (len > IO_BUFFER_LENGTH || cmd->pos > IO_BUFFER_LENGTH - len) {
-+	if (remaining_size(cmd) < len) {
- 		pr_debug("Error adding %zu bytes: end of buffer.\n", len);
- 		*err = -ERANGE;
- 		return false;
-@@ -674,7 +682,11 @@ static int cmd_finalize(struct opal_dev *cmd, u32 hsn, u32 tsn)
- 	struct opal_header *hdr;
- 	int err = 0;
- 
--	/* close the parameter list opened from cmd_start */
-+	/*
-+	 * Close the parameter list opened from cmd_start.
-+	 * The number of bytes added must be equal to
-+	 * CMD_FINALIZE_BYTES_NEEDED.
-+	 */
- 	add_token_u8(&err, cmd, OPAL_ENDLIST);
- 
- 	add_token_u8(&err, cmd, OPAL_ENDOFDATA);
-@@ -1525,6 +1537,58 @@ static int set_mbr_enable_disable(struct opal_dev *dev, void *data)
- 	return finalize_and_send(dev, parse_and_check_status);
- }
- 
-+static int write_shadow_mbr(struct opal_dev *dev, void *data)
-+{
-+	struct opal_shadow_mbr *shadow = data;
-+	const u8 __user *src;
-+	u8 *dst;
-+	size_t off = 0;
-+	u64 len;
-+	int err = 0;
-+
-+	/* do the actual transmission(s) */
-+	src = (u8 __user *)(uintptr_t)shadow->data;
-+	while (off < shadow->size) {
-+		err = cmd_start(dev, opaluid[OPAL_MBR], opalmethod[OPAL_SET]);
-+		add_token_u8(&err, dev, OPAL_STARTNAME);
-+		add_token_u8(&err, dev, OPAL_WHERE);
-+		add_token_u64(&err, dev, shadow->offset + off);
-+		add_token_u8(&err, dev, OPAL_ENDNAME);
-+
-+		add_token_u8(&err, dev, OPAL_STARTNAME);
-+		add_token_u8(&err, dev, OPAL_VALUES);
-+
-+		/*
-+		 * The bytestring header is either 1 or 2 bytes, so assume 2.
-+		 * There also needs to be enough space to accommodate the
-+		 * trailing OPAL_ENDNAME (1 byte) and tokens added by
-+		 * cmd_finalize.
-+		 */
-+		len = min(remaining_size(dev) - (2+1+CMD_FINALIZE_BYTES_NEEDED),
-+			  (size_t)(shadow->size - off));
-+		pr_debug("MBR: write bytes %zu+%llu/%llu\n",
-+			 off, len, shadow->size);
-+
-+		dst = add_bytestring_header(&err, dev, len);
-+		if (!dst)
-+			break;
-+		if (copy_from_user(dst, src + off, len))
-+			err = -EFAULT;
-+		dev->pos += len;
-+
-+		add_token_u8(&err, dev, OPAL_ENDNAME);
-+		if (err)
-+			break;
-+
-+		err = finalize_and_send(dev, parse_and_check_status);
-+		if (err)
-+			break;
-+
-+		off += len;
-+	}
-+	return err;
-+}
-+
- static int generic_pw_cmd(u8 *key, size_t key_len, u8 *cpin_uid,
- 			  struct opal_dev *dev)
- {
-@@ -2002,6 +2066,26 @@ static int opal_set_mbr_done(struct opal_dev *dev,
- 	return ret;
- }
- 
-+static int opal_write_shadow_mbr(struct opal_dev *dev,
-+				 struct opal_shadow_mbr *info)
-+{
-+	const struct opal_step mbr_steps[] = {
-+		{ start_admin1LSP_opal_session, &info->key },
-+		{ write_shadow_mbr, info },
-+		{ end_opal_session, }
-+	};
-+	int ret;
-+
-+	if (info->size == 0)
-+		return 0;
-+
-+	mutex_lock(&dev->dev_lock);
-+	setup_opal_dev(dev);
-+	ret = execute_steps(dev, mbr_steps, ARRAY_SIZE(mbr_steps));
-+	mutex_unlock(&dev->dev_lock);
-+	return ret;
-+}
-+
- static int opal_save(struct opal_dev *dev, struct opal_lock_unlock *lk_unlk)
- {
- 	struct opal_suspend_data *suspend;
-@@ -2318,6 +2402,9 @@ int sed_ioctl(struct opal_dev *dev, unsigned int cmd, void __user *arg)
- 	case IOC_OPAL_MBR_DONE:
- 		ret = opal_set_mbr_done(dev, p);
- 		break;
-+	case IOC_OPAL_WRITE_SHADOW_MBR:
-+		ret = opal_write_shadow_mbr(dev, p);
-+		break;
- 	case IOC_OPAL_ERASE_LR:
- 		ret = opal_erase_locking_range(dev, p);
- 		break;
-diff --git a/include/linux/sed-opal.h b/include/linux/sed-opal.h
-index 111dd893d45a..d7993be280db 100644
---- a/include/linux/sed-opal.h
-+++ b/include/linux/sed-opal.h
-@@ -40,6 +40,7 @@ static inline bool is_sed_ioctl(unsigned int cmd)
- 	case IOC_OPAL_ERASE_LR:
- 	case IOC_OPAL_SECURE_ERASE_LR:
- 	case IOC_OPAL_MBR_DONE:
-+	case IOC_OPAL_WRITE_SHADOW_MBR:
- 		return true;
+diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
+index f315425d8468..7b8a9eb4d5fd 100644
+--- a/arch/x86/events/core.c
++++ b/arch/x86/events/core.c
+@@ -2402,9 +2402,9 @@ perf_callchain_kernel(struct perf_callchain_entry_ctx *entry, struct pt_regs *re
+ 		return;
  	}
- 	return false;
-diff --git a/include/uapi/linux/sed-opal.h b/include/uapi/linux/sed-opal.h
-index bd29fab60ef4..e204b1f8e8b8 100644
---- a/include/uapi/linux/sed-opal.h
-+++ b/include/uapi/linux/sed-opal.h
-@@ -106,6 +106,13 @@ struct opal_mbr_done {
- 	__u8 __align[7];
- };
  
-+struct opal_shadow_mbr {
-+	struct opal_key key;
-+	const __u64 data;
-+	__u64 offset;
-+	__u64 size;
-+};
-+
- #define IOC_OPAL_SAVE		    _IOW('p', 220, struct opal_lock_unlock)
- #define IOC_OPAL_LOCK_UNLOCK	    _IOW('p', 221, struct opal_lock_unlock)
- #define IOC_OPAL_TAKE_OWNERSHIP	    _IOW('p', 222, struct opal_key)
-@@ -119,5 +126,6 @@ struct opal_mbr_done {
- #define IOC_OPAL_ERASE_LR           _IOW('p', 230, struct opal_session_info)
- #define IOC_OPAL_SECURE_ERASE_LR    _IOW('p', 231, struct opal_session_info)
- #define IOC_OPAL_MBR_DONE           _IOW('p', 232, struct opal_mbr_done)
-+#define IOC_OPAL_WRITE_SHADOW_MBR   _IOW('p', 233, struct opal_shadow_mbr)
- 
- #endif /* _UAPI_SED_OPAL_H */
++	if (perf_callchain_store(entry, regs->ip))
++		return;
+ 	if (perf_hw_regs(regs)) {
+-		if (perf_callchain_store(entry, regs->ip))
+-			return;
+ 		unwind_start(&state, current, regs, NULL);
+ 	} else {
+ 		unwind_start(&state, current, NULL, (void *)regs->sp);
 -- 
-2.20.1
+2.17.1
 
