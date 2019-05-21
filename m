@@ -2,251 +2,329 @@ Return-Path: <SRS0=9PYC=TV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17A11C04E87
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 10:06:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 268AEC04AAF
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 10:08:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D8C7321773
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 10:06:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E2EE521743
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 10:08:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="J3/6y9kK"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="kzlzjoaR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727663AbfEUKGU (ORCPT
+        id S1727137AbfEUKIW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 May 2019 06:06:20 -0400
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:46211 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727341AbfEUKGT (ORCPT
+        Tue, 21 May 2019 06:08:22 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:55670 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726525AbfEUKIV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 May 2019 06:06:19 -0400
-Received: by mail-ed1-f65.google.com with SMTP id f37so28443454edb.13
-        for <linux-kernel@vger.kernel.org>; Tue, 21 May 2019 03:06:17 -0700 (PDT)
+        Tue, 21 May 2019 06:08:21 -0400
+Received: by mail-wm1-f65.google.com with SMTP id x64so2320356wmb.5
+        for <linux-kernel@vger.kernel.org>; Tue, 21 May 2019 03:08:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=ORiID9Ap1Ob1uAeKkaBEOgmrOkRFTz441mfPcwfeVdo=;
-        b=J3/6y9kKcNs5Up92q6Ht3qYQr/8Q1Nn0GsZarKsE0BHF/9qWsjrqRfr4cQlGltRm2I
-         wqsCyiUgW/KR4/TBpMTS5/CqMLQXMYJe1Ly5ewd7hgV3Ecwwtnn2EXCWyV3KLe59dHgz
-         fvsyfkTo+LoIR3qdO9GW6+6Xw4/zcvaprDksY=
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=VsuiNfhD6cTEPIrP5fuSU9SSelaUEWtyObkVv+KuuOQ=;
+        b=kzlzjoaRZmH6MdC2uye1GyI5WDTgK8jq5eMOg0hBYml2sR2U0z7xisKlBPmOV2B8rK
+         y1XzxQW/Td/UPmSxpkVYmNhp0Z1BPGdc1Bgod1NyvYA/QhtcFBvBx/EIqsetv+UG4exB
+         9bqiB2TD/dFSdYOJSaCD+1DZj0T45XTTUZUpEvds1mmkeNohcu2hzidjy2eqSaQNoNya
+         3jHyi8xStSGBj+yyMnuPcdcQ+/H+rKogicvaKNKKCuBOW0Nt5ykiD1NqWHStJ8a2koa7
+         lskybMsWl8X8ENLlwLMasjzkcoyPAFHCIQg/En7tSa/j3lZign6cRfhtcvx4Yso7HNEB
+         SRlg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=ORiID9Ap1Ob1uAeKkaBEOgmrOkRFTz441mfPcwfeVdo=;
-        b=CqXRqbDOYd8A9zASH/xI4eoIqp5AoOt9lZQanQR+wdd6H24nJLW9OwMGTcLjmbPXWV
-         f5ptODKrEH2HDe43szvVZgsZ12aYogMNKiuTidUNuh0QAnRtgh8RgeIVKWKzM2F6BkPM
-         4BLHjIoplLNnSScZlC3Avkki077wABjWLLXTJdVtph3q8YN3bSJInvyrMzHMG4gKy0sO
-         NVqywwi7CrVDtjJbTrjki626h/PHGSTbCoc+PZanCRQ6mXtk1dHXcEILlaFZW8Z30VaJ
-         t+ai1StB/H8TLHoHSmZLpqWTjpQEN8EDmo8cimL39PyqGvvqRT6kNbuNsKNR8X0IC2AW
-         BP8g==
-X-Gm-Message-State: APjAAAUrXQA1jtQ7Z18EQUjZ6WOEZ8tTiYlWiEGgiCG7vl8o3n0eqy9x
-        3ErlVcuMZJRnqfRmR7tHBKbt+A==
-X-Google-Smtp-Source: APXvYqzBBGRnYGtpodRAQ8DMg63QLyln2/B1qsctPkiipoWafwF4J3ZQDE0/G6e2kd4uFdMZzId0Gg==
-X-Received: by 2002:a17:906:7cc7:: with SMTP id h7mr12383525ejp.240.1558433177093;
-        Tue, 21 May 2019 03:06:17 -0700 (PDT)
-Received: from phenom.ffwll.local ([2a02:168:569e:0:3106:d637:d723:e855])
-        by smtp.gmail.com with ESMTPSA id 1sm3457177eju.9.2019.05.21.03.06.15
+        bh=VsuiNfhD6cTEPIrP5fuSU9SSelaUEWtyObkVv+KuuOQ=;
+        b=cggSIKGzcuwEVXBHtHwa+9j1u6YI29VueDA79amzHed3zT3VQZ8Jg+GgS859ljZ89p
+         NsJKd8GRiaMgW1VWWkXZPAqAYql1KYGEjmjoBk/7lOigWjWVbnopR8YnWMjpHClTb374
+         xEejSxC3QlqIKb4D//jDSXJPbGZ1rRCgyAfobS/PR9crT5UBrCgvHNfm5Whycujz3L6r
+         X98w695uKzzA5YvvukBQp7l1Tf6FEySeiAHRf5NTwyl33MSiG2nHY8sbbj42hAUvH53/
+         r5tw3TeFZYhdC5d8mVNSIzftz5nYw3sgL9XfOkNTOT0oJvcZmMZ8La/ofh0qxeGF1o7L
+         Recg==
+X-Gm-Message-State: APjAAAWKz3llLTEEW0GfJmR0l4FJd+MjvANmW1zYknUi85RNuHYOd3w2
+        QpHgMhjTNcRnL06GG6L4WZRtfA==
+X-Google-Smtp-Source: APXvYqynzHV4zuEV50W2KUKRJRd9K/JQXVkXN50YOkKy5y/5OsN7ywSLY/W0n1xRITmqd9ZxosESbg==
+X-Received: by 2002:a7b:cb85:: with SMTP id m5mr2812204wmi.85.1558433298172;
+        Tue, 21 May 2019 03:08:18 -0700 (PDT)
+Received: from [10.1.203.87] (nat-wifi.sssup.it. [193.205.81.22])
+        by smtp.googlemail.com with ESMTPSA id 67sm3826052wmd.38.2019.05.21.03.08.17
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 21 May 2019 03:06:16 -0700 (PDT)
-From:   Daniel Vetter <daniel.vetter@ffwll.ch>
-To:     DRI Development <dri-devel@lists.freedesktop.org>
-Cc:     Intel Graphics Development <intel-gfx@lists.freedesktop.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux MM <linux-mm@kvack.org>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Michal Hocko <mhocko@suse.com>,
-        David Rientjes <rientjes@google.com>,
-        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
-        =?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Wei Wang <wvw@google.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jann Horn <jannh@google.com>, Feng Tang <feng.tang@intel.com>,
-        Kees Cook <keescook@chromium.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Daniel Vetter <daniel.vetter@intel.com>
-Subject: [PATCH] kernel.h: Add non_block_start/end()
-Date:   Tue, 21 May 2019 12:06:11 +0200
-Message-Id: <20190521100611.10089-1-daniel.vetter@ffwll.ch>
-X-Mailer: git-send-email 2.20.1
+        Tue, 21 May 2019 03:08:17 -0700 (PDT)
+Subject: Re: [PATCH v4 2/2] driver: clocksource: Add nxp system counter timer
+ driver support
+To:     Jacky Bai <ping.bai@nxp.com>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        Aisheng Dong <aisheng.dong@nxp.com>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        dl-linux-imx <linux-imx@nxp.com>
+References: <20190521072355.12928-1-ping.bai@nxp.com>
+ <20190521072355.12928-2-ping.bai@nxp.com>
+From:   Daniel Lezcano <daniel.lezcano@linaro.org>
+Message-ID: <5823cd07-312b-600c-1b78-dc5bff2a12eb@linaro.org>
+Date:   Tue, 21 May 2019 12:08:16 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+In-Reply-To: <20190521072355.12928-2-ping.bai@nxp.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In some special cases we must not block, but there's not a
-spinlock, preempt-off, irqs-off or similar critical section already
-that arms the might_sleep() debug checks. Add a non_block_start/end()
-pair to annotate these.
+On 21/05/2019 09:18, Jacky Bai wrote:
+> From: Bai Ping <ping.bai@nxp.com>
+> 
+> The system counter (sys_ctr) is a programmable system counter
+> which provides a shared time base to the Cortex A15, A7, A53 etc cores.
+> It is intended for use in applications where the counter is always
+> powered on and supports multiple, unrelated clocks. The sys_ctr hardware
+> supports:
+>  - 56-bit counter width (roll-over time greater than 40 years)
 
-This will be used in the oom paths of mmu-notifiers, where blocking is
-not allowed to make sure there's forward progress. Quoting Michal:
+The benefit of using more than 32bits on a 32bits system is not proven.
 
-"The notifier is called from quite a restricted context - oom_reaper -
-which shouldn't depend on any locks or sleepable conditionals. The code
-should be swift as well but we mostly do care about it to make a forward
-progress. Checking for sleepable context is the best thing we could come
-up with that would describe these demands at least partially."
+The function to read and build the 56bits value can have a very
+significant impact on the performance of your platform.
 
-Peter also asked whether we want to catch spinlocks on top, but Michal
-said those are less of a problem because spinlocks can't have an
-indirect dependency upon the page allocator and hence close the loop
-with the oom reaper.
+Using a 32bits counter can be enough if it does not wrap too fast.
 
-Suggested by Michal Hocko.
+Can you consider a 32 bits counter ?
 
-v2:
-- Improve commit message (Michal)
-- Also check in schedule, not just might_sleep (Peter)
+>  - compare frame(64-bit compare value) contains programmable interrupt
+>    generation when compare value <= counter value.
+> 
+> Signed-off-by: Bai Ping <ping.bai@nxp.com>
+> ---
+> change v1->v2:
+>  - no change 
+> change v2->v3:
+>  - remove the clocksource, we only need to use this module for timer purpose,
+>    so register it as clockevent is enough.
+>  - use the timer_of_init to init the irq, clock, etc.
+>  - remove some unnecessary comments.
+> change v3->v4:
+>  - use cached value for CMPCR,
+>  - remove unnecessary timer enabe from set_state_oneshot function.
+> ---
+>  drivers/clocksource/Kconfig            |   7 ++
+>  drivers/clocksource/Makefile           |   1 +
+>  drivers/clocksource/timer-imx-sysctr.c | 146 +++++++++++++++++++++++++
+>  3 files changed, 154 insertions(+)
+>  create mode 100644 drivers/clocksource/timer-imx-sysctr.c
+> 
+> diff --git a/drivers/clocksource/Kconfig b/drivers/clocksource/Kconfig
+> index 6bcaa4e2e72c..ee48620a4561 100644
+> --- a/drivers/clocksource/Kconfig
+> +++ b/drivers/clocksource/Kconfig
+> @@ -616,6 +616,13 @@ config CLKSRC_IMX_TPM
+>  	  Enable this option to use IMX Timer/PWM Module (TPM) timer as
+>  	  clocksource.
+>  
+> +config TIMER_IMX_SYS_CTR
+> +	bool "i.MX system counter timer" if COMPILE_TEST
+> +	depends on ARCH_MXC
 
-v3: It works better when I actually squash in the fixup I had lying
-around :-/
+Do you really need this dep?
 
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Michal Hocko <mhocko@suse.com>
-Cc: David Rientjes <rientjes@google.com>
-Cc: "Christian König" <christian.koenig@amd.com>
-Cc: Daniel Vetter <daniel.vetter@ffwll.ch>
-Cc: "Jérôme Glisse" <jglisse@redhat.com>
-Cc: linux-mm@kvack.org
-Cc: Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc: Wei Wang <wvw@google.com>
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Jann Horn <jannh@google.com>
-Cc: Feng Tang <feng.tang@intel.com>
-Cc: Kees Cook <keescook@chromium.org>
-Cc: Randy Dunlap <rdunlap@infradead.org>
-Cc: linux-kernel@vger.kernel.org
-Acked-by: Christian König <christian.koenig@amd.com> (v1)
-Signed-off-by: Daniel Vetter <daniel.vetter@intel.com>
----
- include/linux/kernel.h | 10 +++++++++-
- include/linux/sched.h  |  4 ++++
- kernel/sched/core.c    | 19 ++++++++++++++-----
- 3 files changed, 27 insertions(+), 6 deletions(-)
+> +	select TIMER_OF
+> +	help
+> +	  Enable this option to use i.MX system counter timer for clockevent.
+> +
+>  config CLKSRC_ST_LPC
+>  	bool "Low power clocksource found in the LPC" if COMPILE_TEST
+>  	select TIMER_OF if OF
+> diff --git a/drivers/clocksource/Makefile b/drivers/clocksource/Makefile
+> index 236858fa7fbf..5fba39e81a40 100644
+> --- a/drivers/clocksource/Makefile
+> +++ b/drivers/clocksource/Makefile
+> @@ -74,6 +74,7 @@ obj-$(CONFIG_CLKSRC_MIPS_GIC)		+= mips-gic-timer.o
+>  obj-$(CONFIG_CLKSRC_TANGO_XTAL)		+= timer-tango-xtal.o
+>  obj-$(CONFIG_CLKSRC_IMX_GPT)		+= timer-imx-gpt.o
+>  obj-$(CONFIG_CLKSRC_IMX_TPM)		+= timer-imx-tpm.o
+> +obj-$(CONFIG_TIMER_IMX_SYS_CTR)		+= timer-imx-sysctr.o
+>  obj-$(CONFIG_ASM9260_TIMER)		+= asm9260_timer.o
+>  obj-$(CONFIG_H8300_TMR8)		+= h8300_timer8.o
+>  obj-$(CONFIG_H8300_TMR16)		+= h8300_timer16.o
+> diff --git a/drivers/clocksource/timer-imx-sysctr.c b/drivers/clocksource/timer-imx-sysctr.c
+> new file mode 100644
+> index 000000000000..d0428d3189f8
+> --- /dev/null
+> +++ b/drivers/clocksource/timer-imx-sysctr.c
+> @@ -0,0 +1,146 @@
+> +// SPDX-License-Identifier: GPL-2.0+
+> +//
+> +// Copyright 2017-2019 NXP
+> +
+> +#include <linux/interrupt.h>
+> +#include <linux/clockchips.h>
+> +#include <linux/of_address.h>
+> +#include <linux/of_irq.h>
+> +
+> +#include "timer-of.h"
+> +
+> +#define CMP_OFFSET	0x10000
+> +
+> +#define CNTCV_LO	0x8
+> +#define CNTCV_HI	0xc
+> +#define CMPCV_LO	(CMP_OFFSET + 0x20)
+> +#define CMPCV_HI	(CMP_OFFSET + 0x24)
+> +#define CMPCR		(CMP_OFFSET + 0x2c)
+> +
+> +#define SYS_CTR_EN		0x1
+> +#define SYS_CTR_IRQ_MASK	0x2
+> +
+> +static void __iomem *sys_ctr_base;
+> +static u32 cmpcr;
+> +
+> +static void sysctr_timer_enable(bool enable)
+> +{
+> +	cmpcr &= ~SYS_CTR_EN;
 
-diff --git a/include/linux/kernel.h b/include/linux/kernel.h
-index 74b1ee9027f5..b5f2c2ff0eab 100644
---- a/include/linux/kernel.h
-+++ b/include/linux/kernel.h
-@@ -214,7 +214,9 @@ extern void __cant_sleep(const char *file, int line, int preempt_offset);
-  * might_sleep - annotation for functions that can sleep
-  *
-  * this macro will print a stack trace if it is executed in an atomic
-- * context (spinlock, irq-handler, ...).
-+ * context (spinlock, irq-handler, ...). Additional sections where blocking is
-+ * not allowed can be annotated with non_block_start() and non_block_end()
-+ * pairs.
-  *
-  * This is a useful debugging help to be able to catch problems early and not
-  * be bitten later when the calling function happens to sleep when it is not
-@@ -230,6 +232,10 @@ extern void __cant_sleep(const char *file, int line, int preempt_offset);
- # define cant_sleep() \
- 	do { __cant_sleep(__FILE__, __LINE__, 0); } while (0)
- # define sched_annotate_sleep()	(current->task_state_change = 0)
-+# define non_block_start() \
-+	do { current->non_block_count++; } while (0)
-+# define non_block_end() \
-+	do { WARN_ON(current->non_block_count-- == 0); } while (0)
- #else
-   static inline void ___might_sleep(const char *file, int line,
- 				   int preempt_offset) { }
-@@ -238,6 +244,8 @@ extern void __cant_sleep(const char *file, int line, int preempt_offset);
- # define might_sleep() do { might_resched(); } while (0)
- # define cant_sleep() do { } while (0)
- # define sched_annotate_sleep() do { } while (0)
-+# define non_block_start() do { } while (0)
-+# define non_block_end() do { } while (0)
- #endif
- 
- #define might_sleep_if(cond) do { if (cond) might_sleep(); } while (0)
-diff --git a/include/linux/sched.h b/include/linux/sched.h
-index 11837410690f..7f5b293e72df 100644
---- a/include/linux/sched.h
-+++ b/include/linux/sched.h
-@@ -908,6 +908,10 @@ struct task_struct {
- 	struct mutex_waiter		*blocked_on;
- #endif
- 
-+#ifdef CONFIG_DEBUG_ATOMIC_SLEEP
-+	int				non_block_count;
-+#endif
-+
- #ifdef CONFIG_TRACE_IRQFLAGS
- 	unsigned int			irq_events;
- 	unsigned long			hardirq_enable_ip;
-diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-index 102dfcf0a29a..ed7755a28465 100644
---- a/kernel/sched/core.c
-+++ b/kernel/sched/core.c
-@@ -3264,13 +3264,22 @@ static noinline void __schedule_bug(struct task_struct *prev)
- /*
-  * Various schedule()-time debugging checks and statistics:
-  */
--static inline void schedule_debug(struct task_struct *prev)
-+static inline void schedule_debug(struct task_struct *prev, bool preempt)
- {
- #ifdef CONFIG_SCHED_STACK_END_CHECK
- 	if (task_stack_end_corrupted(prev))
- 		panic("corrupted stack end detected inside scheduler\n");
- #endif
- 
-+#ifdef CONFIG_DEBUG_ATOMIC_SLEEP
-+	if (!preempt && prev->state && prev->non_block_count) {
-+		printk(KERN_ERR "BUG: scheduling in a non-blocking section: %s/%d/%i\n",
-+			prev->comm, prev->pid, prev->non_block_count);
-+		dump_stack();
-+		add_taint(TAINT_WARN, LOCKDEP_STILL_OK);
-+	}
-+#endif
-+
- 	if (unlikely(in_atomic_preempt_off())) {
- 		__schedule_bug(prev);
- 		preempt_count_set(PREEMPT_DISABLED);
-@@ -3377,7 +3386,7 @@ static void __sched notrace __schedule(bool preempt)
- 	rq = cpu_rq(cpu);
- 	prev = rq->curr;
- 
--	schedule_debug(prev);
-+	schedule_debug(prev, preempt);
- 
- 	if (sched_feat(HRTICK))
- 		hrtick_clear(rq);
-@@ -6102,7 +6111,7 @@ void ___might_sleep(const char *file, int line, int preempt_offset)
- 	rcu_sleep_check();
- 
- 	if ((preempt_count_equals(preempt_offset) && !irqs_disabled() &&
--	     !is_idle_task(current)) ||
-+	     !is_idle_task(current) && !current->non_block_count) ||
- 	    system_state == SYSTEM_BOOTING || system_state > SYSTEM_RUNNING ||
- 	    oops_in_progress)
- 		return;
-@@ -6118,8 +6127,8 @@ void ___might_sleep(const char *file, int line, int preempt_offset)
- 		"BUG: sleeping function called from invalid context at %s:%d\n",
- 			file, line);
- 	printk(KERN_ERR
--		"in_atomic(): %d, irqs_disabled(): %d, pid: %d, name: %s\n",
--			in_atomic(), irqs_disabled(),
-+		"in_atomic(): %d, irqs_disabled(): %d, non_block: %d, pid: %d, name: %s\n",
-+			in_atomic(), irqs_disabled(), current->non_block_count,
- 			current->pid, current->comm);
- 
- 	if (task_stack_end_corrupted(current))
+Do the computation after reading the value in the init function...
+
+> +	if (enable)
+> +		cmpcr |= SYS_CTR_EN;
+
+... then
+
+writel(enable ? cmpcr | SYS_CTR_EN : cmpcr, sys_ctr_base);
+
+> +	writel(cmpcr, sys_ctr_base + CMPCR);
+> +}
+> +
+> +static void sysctr_irq_acknowledge(void)
+> +{
+> +	/*
+> +	 * clear the enable bit(EN =0) will clear
+> +	 * the status bit(ISTAT = 0), then the interrupt
+> +	 * signal will be negated(acknowledged).
+> +	 */
+> +	sysctr_timer_enable(false);
+> +}
+> +
+> +static inline u64 sysctr_read_counter(void)
+> +{
+> +	u32 cnt_hi, tmp_hi, cnt_lo;
+> +
+> +	do {
+> +		cnt_hi = readl_relaxed(sys_ctr_base + CNTCV_HI);
+> +		cnt_lo = readl_relaxed(sys_ctr_base + CNTCV_LO);
+> +		tmp_hi = readl_relaxed(sys_ctr_base + CNTCV_HI);
+> +	} while (tmp_hi != cnt_hi);
+> +
+> +	return  ((u64) cnt_hi << 32) | cnt_lo;
+> +}
+> +
+> +static int sysctr_set_next_event(unsigned long delta,
+> +				 struct clock_event_device *evt)
+> +{
+> +	u32 cmp_hi, cmp_lo;
+> +	u64 next;
+> +
+> +	sysctr_timer_enable(false);
+> +
+> +	next = sysctr_read_counter();
+> +
+> +	next += delta;
+> +
+> +	cmp_hi = (next >> 32) & 0x00fffff;
+> +	cmp_lo = next & 0xffffffff;
+> +
+> +	writel_relaxed(cmp_hi, sys_ctr_base + CMPCV_HI);
+> +	writel_relaxed(cmp_lo, sys_ctr_base + CMPCV_LO);
+> +
+> +	sysctr_timer_enable(true);
+> +
+> +	return 0;
+> +}
+> +
+> +static int sysctr_set_state_oneshot(struct clock_event_device *evt)
+> +{
+> +	return 0;
+> +}
+> +
+> +static int sysctr_set_state_shutdown(struct clock_event_device *evt)
+> +{
+> +	sysctr_timer_enable(false);
+> +
+> +	return 0;
+> +}
+> +
+> +static irqreturn_t sysctr_timer_interrupt(int irq, void *dev_id)
+> +{
+> +	struct clock_event_device *evt = dev_id;
+> +
+> +	sysctr_irq_acknowledge();
+> +
+> +	evt->event_handler(evt);
+> +
+> +	return IRQ_HANDLED;
+> +}
+> +
+> +static struct timer_of to_sysctr = {
+> +	.flags = TIMER_OF_IRQ | TIMER_OF_CLOCK | TIMER_OF_BASE,
+> +	.clkevt = {
+> +		.name			= "i.MX system counter timer",
+> +		.features		= CLOCK_EVT_FEAT_ONESHOT | CLOCK_EVT_FEAT_DYNIRQ,
+> +		.set_state_oneshot	= sysctr_set_state_oneshot,
+> +		.set_next_event		= sysctr_set_next_event,
+> +		.set_state_shutdown	= sysctr_set_state_shutdown,
+> +		.rating			= 200,
+> +	},
+> +	.of_irq = {
+> +		.handler		= sysctr_timer_interrupt,
+> +		.flags			= IRQF_TIMER | IRQF_IRQPOLL,
+> +	},
+> +	.of_clk = {
+> +		.name = "per",
+> +	},
+> +};
+> +
+> +static void __init sysctr_clockevent_init(void)
+> +{
+> +	to_sysctr.clkevt.cpumask = cpumask_of(0);
+> +
+> +	clockevents_config_and_register(&to_sysctr.clkevt, timer_of_rate(&to_sysctr),
+> +					0xff, 0x7fffffff);
+> +}
+> +
+> +static int __init sysctr_timer_init(struct device_node *np)
+> +{
+> +	int ret = 0;
+> +
+> +	ret = timer_of_init(np, &to_sysctr);
+> +	if (ret)
+> +		return ret;
+> +
+> +	sys_ctr_base = timer_of_base(&to_sysctr);
+> +	cmpcr = readl(sys_ctr_base + CMPCR);
+> +
+> +	sysctr_clockevent_init();
+> +
+> +	return 0;
+> +}
+> +TIMER_OF_DECLARE(sysctr_timer, "nxp,sysctr-timer", sysctr_timer_init);
+> 
+
+
 -- 
-2.20.1
+ <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
 
