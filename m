@@ -2,159 +2,94 @@ Return-Path: <SRS0=9PYC=TV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F8D8C04AAC
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 03:09:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3864C04AAC
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 03:13:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 62FD02173E
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 03:09:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 840C92173E
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 03:13:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uHJB40d9"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="ko1F5kNq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727290AbfEUDJS (ORCPT
+        id S1727192AbfEUDNw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 23:09:18 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:36435 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726335AbfEUDJS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 23:09:18 -0400
-Received: by mail-pf1-f196.google.com with SMTP id v80so8258315pfa.3
-        for <linux-kernel@vger.kernel.org>; Mon, 20 May 2019 20:09:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=vlVg84AY8ugXg02xlbmBAokwN2Lcn0W+vNZv6kTrf3s=;
-        b=uHJB40d9xNnfz1IHMsTSJwl8e7VrbujgRrcHjHx2mhAaKB7/PzuJZXEKkdJJE3iAUQ
-         E3PlAqq27yHOKULYb+1ZOhXLOipPgR9/InMzK6NnShpX5X76kc4t6yFhNbeKFI5B91QY
-         RcrnyHs+S83SgwzvFT+BLyztcpFxiTqxd2O40m0aUS4RZvsrO3smI2WyeMwlFfeuANBb
-         ii1BssR0dBTbAQzjbvbWsEuYrBGRAFKXcnJB1KNjVePboQVxVkqHybvSFOlZivOSye3O
-         t6TfhUENJqGV+FuEZ6jWJDpJ3QxN9lKDKk16gWYKUHc9sDAJndz2vzgIETxzg7nrAixJ
-         Drsg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=vlVg84AY8ugXg02xlbmBAokwN2Lcn0W+vNZv6kTrf3s=;
-        b=Y39yHqUDf0bd1MOtS0Ej2gtfCCi4QU55gh+HOwG0aORk4Uc5YKrkZOdo474CQqRZv3
-         Qtcc/3gjQDrjoF91rPtdPN30hs8Lc+3Kgac5jZBa4llKzo5ZTcyIAZaVXWMwgUcoP6OX
-         tQwm9k8tEV2E8LapGUhs3dbGO+irDAXVwRR0RxwygkWqbtDjvKvwz+jLgqISYUeTYqdl
-         GgMO2QeHraxLMtHMfWzpDkHZpLh8MQnJRW2pXPwiMemxT7Ysx0sz3ckJowLuCnMIP3LV
-         BGQBZo5hiOl9a2T+sXIJX50DgzkhvBbV0n8gNDEHO+5rzxOgztgah1WTQQgHxOn5bPLy
-         GIUg==
-X-Gm-Message-State: APjAAAUGqGXVBvPJ5+Aiq1k9wmTnyOSNZqhqTRkklDEu7L65dr4Onp06
-        bz8AZ3NnWpx8UX3CyKMFQodqsOVTm0Y=
-X-Google-Smtp-Source: APXvYqweNFk2PpQow3nKboR8yrMVsRTS6XktlyoEcIjCkyeHUL5h3BvEZoos27CgqtNhE5C2jhccWw==
-X-Received: by 2002:a62:ed09:: with SMTP id u9mr85836014pfh.23.1558408157749;
-        Mon, 20 May 2019 20:09:17 -0700 (PDT)
-Received: from zhanggen-UX430UQ ([66.42.35.75])
-        by smtp.gmail.com with ESMTPSA id r29sm16518643pga.62.2019.05.20.20.09.14
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 20 May 2019 20:09:17 -0700 (PDT)
-Date:   Tue, 21 May 2019 11:09:05 +0800
-From:   Gen Zhang <blackgod016574@gmail.com>
-To:     Nicolas Pitre <nico@fluxnic.net>
-Cc:     linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] vt: Fix a missing-check bug in drivers/tty/vt/vt.c
-Message-ID: <20190521030905.GB5263@zhanggen-UX430UQ>
-References: <20190521022940.GA4858@zhanggen-UX430UQ>
- <nycvar.YSQ.7.76.1905202242410.1558@knanqh.ubzr>
+        Mon, 20 May 2019 23:13:52 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:54679 "EHLO
+        mail.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726283AbfEUDNw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 23:13:52 -0400
+Received: from [IPv6:2601:646:8600:3281:5064:d7ea:6358:1f15] ([IPv6:2601:646:8600:3281:5064:d7ea:6358:1f15])
+        (authenticated bits=0)
+        by mail.zytor.com (8.15.2/8.15.2) with ESMTPSA id x4L3D2bH2993928
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NO);
+        Mon, 20 May 2019 20:13:05 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com x4L3D2bH2993928
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+        s=2019051801; t=1558408387;
+        bh=aiRlJguT2uUGYCs0b9eGTl9PzBot2H8W+Hal5KY2RqE=;
+        h=Date:In-Reply-To:References:Subject:To:CC:From:From;
+        b=ko1F5kNq5n1OHIo6F0Zc2qrfDqkUvuRQWq9C5/+EaUAE/m1EeM5WJu+m0+utA6TK3
+         Ft9kkLJbq1ckQkwevWJA3WrvpJpy4PyivMqzM9C3R3Vmo5GXsksuj6qEG2+db/apqQ
+         BBGSdtNO/SHn6wPEBb0sf6jOQJ6ofU+VmbsGgoTjJmSrkyHWgFP9EScizv1jYeiPHL
+         Ibb8Upegp3dk3mWDtAwsuMXDhgT2zSYt+yUyjN6nQLJIuoYdtSkoJsbb2Et8gPjfFF
+         4Zu/M78BlTbtuw1tCd8I5C+kqt/N55WKncdKA2pi53se74qg0kIvXwGk9JMqGqDylC
+         YMgUtr60m94iQ==
+Date:   Mon, 20 May 2019 20:12:55 -0700
+User-Agent: K-9 Mail for Android
+In-Reply-To: <20190520231948.49693-4-thgarnie@chromium.org>
+References: <20190520231948.49693-1-thgarnie@chromium.org> <20190520231948.49693-4-thgarnie@chromium.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <nycvar.YSQ.7.76.1905202242410.1558@knanqh.ubzr>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH v7 03/12] x86: Add macro to get symbol address for PIE support
+To:     Thomas Garnier <thgarnie@chromium.org>,
+        kernel-hardening@lists.openwall.com
+CC:     kristen@linux.intel.com, Thomas Garnier <thgarnie@google.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        x86@kernel.org, Peter Zijlstra <peterz@infradead.org>,
+        Nadav Amit <namit@vmware.com>, Jann Horn <jannh@google.com>,
+        linux-kernel@vger.kernel.org
+From:   hpa@zytor.com
+Message-ID: <FF111368-9173-4AC2-9A79-E79A52B104DD@zytor.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 20, 2019 at 10:55:40PM -0400, Nicolas Pitre wrote:
-> On Tue, 21 May 2019, Gen Zhang wrote:
-> 
-> > In function con_init(), the pointer variable vc_cons[currcons].d, vc and
-> > vc->vc_screenbuf is allocated a memory space via kzalloc(). And they are
-> > used in the following codes.
-> > However, when there is a memory allocation error, kzalloc() can fail.
-> > Thus null pointer (vc_cons[currcons].d, vc and vc->vc_screenbuf)
-> > dereference may happen. And it will cause the kernel to crash. Therefore,
-> > we should check return value and handle the error.
-> > Further,the loop condition MIN_NR_CONSOLES is defined as 1 in
-> > include/uapi/linux/vt.h. So there is no need to unwind the loop.
-> 
-> But what if someone changes that define? It won't be obvious that some 
-> code did rely on it to be defined to 1.
-I re-examine the source code. MIN_NR_CONSOLES is only defined once and
-no other changes to it.
+On May 20, 2019 4:19:28 PM PDT, Thomas Garnier <thgarnie@chromium=2Eorg> wr=
+ote:
+>From: Thomas Garnier <thgarnie@google=2Ecom>
+>
+>Add a new _ASM_MOVABS macro to fetch a symbol address=2E It will be used
+>to replace "_ASM_MOV $<symbol>, %dst" code construct that are not
+>compatible with PIE=2E
+>
+>Signed-off-by: Thomas Garnier <thgarnie@google=2Ecom>
+>---
+> arch/x86/include/asm/asm=2Eh | 1 +
+> 1 file changed, 1 insertion(+)
+>
+>diff --git a/arch/x86/include/asm/asm=2Eh b/arch/x86/include/asm/asm=2Eh
+>index 3ff577c0b102=2E=2E3a686057e882 100644
+>--- a/arch/x86/include/asm/asm=2Eh
+>+++ b/arch/x86/include/asm/asm=2Eh
+>@@ -30,6 +30,7 @@
+> #define _ASM_ALIGN	__ASM_SEL(=2Ebalign 4, =2Ebalign 8)
+>=20
+> #define _ASM_MOV	__ASM_SIZE(mov)
+>+#define _ASM_MOVABS	__ASM_SEL(movl, movabsq)
+> #define _ASM_INC	__ASM_SIZE(inc)
+> #define _ASM_DEC	__ASM_SIZE(dec)
+> #define _ASM_ADD	__ASM_SIZE(add)
 
-> 
-> > Signed-off-by: Gen Zhang <blackgod016574@gmail.com>
-> > 
-> > ---
-> > diff --git a/drivers/tty/vt/vt.c b/drivers/tty/vt/vt.c
-> > index fdd12f8..b756609 100644
-> > --- a/drivers/tty/vt/vt.c
-> > +++ b/drivers/tty/vt/vt.c
-> > @@ -3350,10 +3350,14 @@ static int __init con_init(void)
-> >  
-> >  	for (currcons = 0; currcons < MIN_NR_CONSOLES; currcons++) {
-> >  		vc_cons[currcons].d = vc = kzalloc(sizeof(struct vc_data), GFP_NOWAIT);
-> > +		if (!vc_cons[currcons].d || !vc)
-> 
-> Both vc_cons[currcons].d and vc are assigned the same value on the 
-> previous line. You don't have to test them both.
-Thanks for this comment!
-
-> 
-> > +			goto err_vc;
-> >  		INIT_WORK(&vc_cons[currcons].SAK_work, vc_SAK);
-> >  		tty_port_init(&vc->port);
-> >  		visual_init(vc, currcons, 1);
-> >  		vc->vc_screenbuf = kzalloc(vc->vc_screenbuf_size, GFP_NOWAIT);
-> > +		if (!vc->vc_screenbuf)
-> > +			goto err_vc_screenbuf;
-> >  		vc_init(vc, vc->vc_rows, vc->vc_cols,
-> >  			currcons || !vc->vc_sw->con_save_screen);
-> >  	}
-> > @@ -3375,6 +3379,14 @@ static int __init con_init(void)
-> >  	register_console(&vt_console_driver);
-> >  #endif
-> >  	return 0;
-> > +err_vc:
-> > +	console_unlock();
-> > +	return -ENOMEM;
-> > +err_vc_screenbuf:
-> > +	console_unlock();
-> > +	kfree(vc);
-> > +	vc_cons[currcons].d = NULL;
-> > +	return -ENOMEM;
-> 
-> As soon as you release the lock, another thread could come along and 
-> start using the memory pointed by vc_cons[currcons].d you're about to 
-> free here. This is unlikely for an initcall, but still.
-> 
-> You should consider this ordering instead:
-> 
-> err_vc_screenbuf:
-> 	kfree(vc);
-> 	vc_cons[currcons].d = NULL;
-> err_vc:
-> 	console_unlock();
-> 	return -ENOMEM;
-> 
-> 
-Thanks for your patient reply, Nicolas!
-I will work on this patch and resubmit it.
-Thanks
-Gen
-> >  }
-> >  console_initcall(con_init);
-> >  
-> >  ---
-> > 
+This is just about *always* wrong on x86-86=2E We should be using leaq sym=
+(%rip),%reg=2E If it isn't reachable by leaq, then it is a non-PIE symbol l=
+ike percpu=2E You do have to keep those distinct!
+--=20
+Sent from my Android device with K-9 Mail=2E Please excuse my brevity=2E
