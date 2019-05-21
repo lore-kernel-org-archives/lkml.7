@@ -2,103 +2,408 @@ Return-Path: <SRS0=9PYC=TV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E449C04AAF
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 10:17:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC78CC04AB4
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 10:20:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D51B0217D4
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 10:17:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558433833;
-	bh=omOok4OFtOW0GJ23HMKWDqUM1PZkhGph9ABMqIPnCkQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Hod9bnBjAk1QKN0kOW5dUsY/Q6nX9a5Q0plE/OQYd9b5lLdblkn+1a2IRtsFelE8m
-	 i5jEkHQpl5jKUOY2eWfNnFf91rBFq+HuCli1zgF2QbE9nfDEZKkLwi+0cnT6WSGisQ
-	 HIY9BYdpDinWhl9ishDRrO/GZxPkWXP7e5JtPe0I=
+	by mail.kernel.org (Postfix) with ESMTP id A3F7C217D7
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 10:20:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727169AbfEUKRN (ORCPT
+        id S1727452AbfEUKUM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 May 2019 06:17:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45002 "EHLO mail.kernel.org"
+        Tue, 21 May 2019 06:20:12 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:39650 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726138AbfEUKRM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 May 2019 06:17:12 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1726138AbfEUKUM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 May 2019 06:20:12 -0400
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 537E921773;
-        Tue, 21 May 2019 10:17:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558433831;
-        bh=omOok4OFtOW0GJ23HMKWDqUM1PZkhGph9ABMqIPnCkQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=LF22EzwwEy0UTKUxnbibe7PJbBYAXTZEDlL9f24YFxvNBit710rgIS/qikBBwKQkZ
-         GiIfMq8FClOSqnG4lZt2NBrCkwEwhGKwYvcI/9P166dJg/hQgd1nVdVma0sZ4vuvyx
-         AqUFfEs/m97vpoAgfv/86v07f0RXSn/aYa83BbIg=
-Date:   Tue, 21 May 2019 12:17:01 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Serge Semin <fancer.lancer@gmail.com>
-Cc:     Jiri Slaby <jslaby@suse.com>,
-        Serge Semin <Sergey.Semin@t-platforms.ru>,
-        linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/7] tty: max310x: Simplify the code and fix a few bugs
-Message-ID: <20190521101701.GA31141@kroah.com>
-References: <20190514101415.26754-1-fancer.lancer@gmail.com>
+        by mx1.redhat.com (Postfix) with ESMTPS id 916CB81DEE;
+        Tue, 21 May 2019 10:20:10 +0000 (UTC)
+Received: from [10.36.118.15] (unknown [10.36.118.15])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id BE74260143;
+        Tue, 21 May 2019 10:20:06 +0000 (UTC)
+Subject: Re: [PATCH V4 4/4] arm64/mm: Enable memory hot remove
+To:     Anshuman Khandual <anshuman.khandual@arm.com>,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        akpm@linux-foundation.org, catalin.marinas@arm.com,
+        will.deacon@arm.com
+Cc:     mark.rutland@arm.com, mhocko@suse.com, ira.weiny@intel.com,
+        cai@lca.pw, logang@deltatee.com, james.morse@arm.com,
+        cpandya@codeaurora.org, arunks@codeaurora.org,
+        dan.j.williams@intel.com, mgorman@techsingularity.net,
+        osalvador@suse.de, ard.biesheuvel@arm.com
+References: <1558329516-10445-1-git-send-email-anshuman.khandual@arm.com>
+ <1558329516-10445-5-git-send-email-anshuman.khandual@arm.com>
+From:   David Hildenbrand <david@redhat.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
+ 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
+ SE+xAvmumFBY
+Organization: Red Hat GmbH
+Message-ID: <a660313e-f96c-91ed-1e15-5f3ec6463596@redhat.com>
+Date:   Tue, 21 May 2019 12:20:05 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190514101415.26754-1-fancer.lancer@gmail.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+In-Reply-To: <1558329516-10445-5-git-send-email-anshuman.khandual@arm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.25]); Tue, 21 May 2019 10:20:11 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 14, 2019 at 01:14:08PM +0300, Serge Semin wrote:
-> I started using this driver two years ago in kernek 4.4 and then in kernel
-> 4.9. It didn't go well from the very beginning due to my platform
-> peculiarities: DW SPI core with hardware CS and relatively slow MIPS-based
-> SoC. This patchset is intended to fix some of the problems I found out
-> during the max310x driver utilization with max14830 device.
+On 20.05.19 07:18, Anshuman Khandual wrote:
+> The arch code for hot-remove must tear down portions of the linear map and
+> vmemmap corresponding to memory being removed. In both cases the page
+> tables mapping these regions must be freed, and when sparse vmemmap is in
+> use the memory backing the vmemmap must also be freed.
 > 
-> First of all it was discovered, that workqueue API isn't optimally used.
-> Work context isn't re-entrant by design, so the mutex used to guard the
-> TX-method is redundant. schedule_work() method is also created in a way
-> the work item is scheduled only if it isn't pending. Patch 1 concerns all
-> these fixes. Seeing the similar container_of(uart_port) is used three
-> times in the driver, the patch 2 introduces a macro to_max310x_port() to
-> get a pointer to corresponding struct max310x_one. This is the code
-> simplification and is going to be used in the following patches.
+> This patch adds a new remove_pagetable() helper which can be used to tear
+> down either region, and calls it from vmemmap_free() and
+> ___remove_pgd_mapping(). The sparse_vmap argument determines whether the
+> backing memory will be freed.
 > 
-> It was found out, that batch read and write methods used buffers allocated
-> on the kernel stack. Since they might be utilized by SPI controllers for
-> DMA it might be unsafe on some platforms. Patch 3 provides a dedicated
-> kmalloced buffers for this.
+> While freeing intermediate level page table pages bail out if any of it's
+> entries are still valid. This can happen for partially filled kernel page
+> table either from a previously attempted failed memory hot add or while
+> removing an address range which does not span the entire page table page
+> range.
 > 
-> The baud-rate calculator function didn't work correct for all the possible
-> baud-rates requested within a pre-defined input reference frequency.
-> Instead an algo fully compliant with datasheet divisor formulae is
-> implemented in patch 4.
+> The vmemmap region may share levels of table with the vmalloc region. Take
+> the kernel ptl so that we can safely free potentially-shared tables.
 > 
-> Patches 5 and 6 are created to fix some rs485 issues. Particularly the
-> rs485 mode is configured on the port startup if it's enabled. And seeing
-> the mode2 register provides a way to enable/disable the echo-suppression
-> in RS485 mode, it is used to implement the SER_RS485_RX_DURING_TX flag
-> support.
+> While here update arch_add_memory() to handle __add_pages() failures by
+> just unmapping recently added kernel linear mapping. Now enable memory hot
+> remove on arm64 platforms by default with ARCH_ENABLE_MEMORY_HOTREMOVE.
 > 
-> Finally it was discovered that in case if inbound hardware FIFO
-> experienced overflow, a lot of '\0' characters inserted into the
-> flip-buffer as a character of the RX-FIFO overrun. It isn't quite correct
-> since the overflow happened only after the last character had been
-> received. Patch 7 is dedicated to push only a single RX-FIFO overrun
-> character in this case.
+> This implementation is overall inspired from kernel page table tear down
+> procedure on X86 architecture.
 > 
-> Signed-off-by: Serge Semin <fancer.lancer@gmail.com>
+> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
+> ---
+>  arch/arm64/Kconfig  |   3 +
+>  arch/arm64/mm/mmu.c | 212 +++++++++++++++++++++++++++++++++++++++++++++++++++-
+>  2 files changed, 213 insertions(+), 2 deletions(-)
+> 
+> diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
+> index 4780eb7..ce24427 100644
+> --- a/arch/arm64/Kconfig
+> +++ b/arch/arm64/Kconfig
+> @@ -267,6 +267,9 @@ config HAVE_GENERIC_GUP
+>  config ARCH_ENABLE_MEMORY_HOTPLUG
+>  	def_bool y
+>  
+> +config ARCH_ENABLE_MEMORY_HOTREMOVE
+> +	def_bool y
+> +
+>  config SMP
+>  	def_bool y
+>  
+> diff --git a/arch/arm64/mm/mmu.c b/arch/arm64/mm/mmu.c
+> index a1bfc44..0cf0d41 100644
+> --- a/arch/arm64/mm/mmu.c
+> +++ b/arch/arm64/mm/mmu.c
+> @@ -733,6 +733,187 @@ int kern_addr_valid(unsigned long addr)
+>  
+>  	return pfn_valid(pte_pfn(pte));
+>  }
+> +
+> +#ifdef CONFIG_MEMORY_HOTPLUG
+> +static void free_hotplug_page_range(struct page *page, ssize_t size)
+> +{
+> +	WARN_ON(PageReserved(page));
+> +	free_pages((unsigned long)page_address(page), get_order(size));
+> +}
+> +
+> +static void free_hotplug_pgtable_page(struct page *page)
+> +{
+> +	free_hotplug_page_range(page, PAGE_SIZE);
+> +}
+> +
+> +static void free_pte_table(pte_t *ptep, pmd_t *pmdp, unsigned long addr)
+> +{
+> +	struct page *page;
+> +	int i;
+> +
+> +	for (i = 0; i < PTRS_PER_PTE; i++) {
+> +		if (!pte_none(ptep[i]))
+> +			return;
+> +	}
+> +
+> +	page = pmd_page(READ_ONCE(*pmdp));
+> +	pmd_clear(pmdp);
+> +	__flush_tlb_kernel_pgtable(addr);
+> +	free_hotplug_pgtable_page(page);
+> +}
+> +
+> +static void free_pmd_table(pmd_t *pmdp, pud_t *pudp, unsigned long addr)
+> +{
+> +	struct page *page;
+> +	int i;
+> +
+> +	if (CONFIG_PGTABLE_LEVELS <= 2)
+> +		return;
+> +
+> +	for (i = 0; i < PTRS_PER_PMD; i++) {
+> +		if (!pmd_none(pmdp[i]))
+> +			return;
+> +	}
+> +
+> +	page = pud_page(READ_ONCE(*pudp));
+> +	pud_clear(pudp);
+> +	__flush_tlb_kernel_pgtable(addr);
+> +	free_hotplug_pgtable_page(page);
+> +}
+> +
+> +static void free_pud_table(pud_t *pudp, pgd_t *pgdp, unsigned long addr)
+> +{
+> +	struct page *page;
+> +	int i;
+> +
+> +	if (CONFIG_PGTABLE_LEVELS <= 3)
+> +		return;
+> +
+> +	for (i = 0; i < PTRS_PER_PUD; i++) {
+> +		if (!pud_none(pudp[i]))
+> +			return;
+> +	}
+> +
+> +	page = pgd_page(READ_ONCE(*pgdp));
+> +	pgd_clear(pgdp);
+> +	__flush_tlb_kernel_pgtable(addr);
+> +	free_hotplug_pgtable_page(page);
+> +}
+> +
+> +static void
+> +remove_pte_table(pmd_t *pmdp, unsigned long addr,
+> +			unsigned long end, bool sparse_vmap)
+> +{
+> +	struct page *page;
+> +	pte_t *ptep, pte;
+> +	unsigned long start = addr;
+> +
+> +	for (; addr < end; addr += PAGE_SIZE) {
+> +		ptep = pte_offset_kernel(pmdp, addr);
+> +		pte = READ_ONCE(*ptep);
+> +
+> +		if (pte_none(pte))
+> +			continue;
+> +
+> +		WARN_ON(!pte_present(pte));
+> +		if (sparse_vmap) {
+> +			page = pte_page(pte);
+> +			free_hotplug_page_range(page, PAGE_SIZE);
+> +		}
+> +		pte_clear(&init_mm, addr, ptep);
+> +	}
+> +	flush_tlb_kernel_range(start, end);
+> +}
+> +
+> +static void
+> +remove_pmd_table(pud_t *pudp, unsigned long addr,
+> +			unsigned long end, bool sparse_vmap)
+> +{
+> +	unsigned long next;
+> +	struct page *page;
+> +	pte_t *ptep_base;
+> +	pmd_t *pmdp, pmd;
+> +
+> +	for (; addr < end; addr = next) {
+> +		next = pmd_addr_end(addr, end);
+> +		pmdp = pmd_offset(pudp, addr);
+> +		pmd = READ_ONCE(*pmdp);
+> +
+> +		if (pmd_none(pmd))
+> +			continue;
+> +
+> +		WARN_ON(!pmd_present(pmd));
+> +		if (pmd_sect(pmd)) {
+> +			if (sparse_vmap) {
+> +				page = pmd_page(pmd);
+> +				free_hotplug_page_range(page, PMD_SIZE);
+> +			}
+> +			pmd_clear(pmdp);
+> +			continue;
+> +		}
+> +		ptep_base = pte_offset_kernel(pmdp, 0UL);
+> +		remove_pte_table(pmdp, addr, next, sparse_vmap);
+> +		free_pte_table(ptep_base, pmdp, addr);
+> +	}
+> +}
+> +
+> +static void
+> +remove_pud_table(pgd_t *pgdp, unsigned long addr,
+> +			unsigned long end, bool sparse_vmap)
+> +{
+> +	unsigned long next;
+> +	struct page *page;
+> +	pmd_t *pmdp_base;
+> +	pud_t *pudp, pud;
+> +
+> +	for (; addr < end; addr = next) {
+> +		next = pud_addr_end(addr, end);
+> +		pudp = pud_offset(pgdp, addr);
+> +		pud = READ_ONCE(*pudp);
+> +
+> +		if (pud_none(pud))
+> +			continue;
+> +
+> +		WARN_ON(!pud_present(pud));
+> +		if (pud_sect(pud)) {
+> +			if (sparse_vmap) {
+> +				page = pud_page(pud);
+> +				free_hotplug_page_range(page, PUD_SIZE);
+> +			}
+> +			pud_clear(pudp);
+> +			continue;
+> +		}
+> +		pmdp_base = pmd_offset(pudp, 0UL);
+> +		remove_pmd_table(pudp, addr, next, sparse_vmap);
+> +		free_pmd_table(pmdp_base, pudp, addr);
+> +	}
+> +}
+> +
+> +static void
+> +remove_pagetable(unsigned long start, unsigned long end, bool sparse_vmap)
+> +{
+> +	unsigned long addr, next;
+> +	pud_t *pudp_base;
+> +	pgd_t *pgdp, pgd;
+> +
+> +	spin_lock(&init_mm.page_table_lock);
+> +	for (addr = start; addr < end; addr = next) {
+> +		next = pgd_addr_end(addr, end);
+> +		pgdp = pgd_offset_k(addr);
+> +		pgd = READ_ONCE(*pgdp);
+> +
+> +		if (pgd_none(pgd))
+> +			continue;
+> +
+> +		WARN_ON(!pgd_present(pgd));
+> +		pudp_base = pud_offset(pgdp, 0UL);
+> +		remove_pud_table(pgdp, addr, next, sparse_vmap);
+> +		free_pud_table(pudp_base, pgdp, addr);
+> +	}
+> +	spin_unlock(&init_mm.page_table_lock);
+> +}
+> +#endif
+> +
+>  #ifdef CONFIG_SPARSEMEM_VMEMMAP
+>  #if !ARM64_SWAPPER_USES_SECTION_MAPS
+>  int __meminit vmemmap_populate(unsigned long start, unsigned long end, int node,
+> @@ -780,6 +961,9 @@ int __meminit vmemmap_populate(unsigned long start, unsigned long end, int node,
+>  void vmemmap_free(unsigned long start, unsigned long end,
+>  		struct vmem_altmap *altmap)
+>  {
+> +#ifdef CONFIG_MEMORY_HOTPLUG
+> +	remove_pagetable(start, end, true);
+> +#endif
+>  }
+>  #endif	/* CONFIG_SPARSEMEM_VMEMMAP */
+>  
+> @@ -1070,10 +1254,16 @@ int p4d_free_pud_page(p4d_t *p4d, unsigned long addr)
+>  }
+>  
+>  #ifdef CONFIG_MEMORY_HOTPLUG
+> +static void __remove_pgd_mapping(pgd_t *pgdir, unsigned long start, u64 size)
+> +{
+> +	WARN_ON(pgdir != init_mm.pgd);
+> +	remove_pagetable(start, start + size, false);
+> +}
+> +
+>  int arch_add_memory(int nid, u64 start, u64 size,
+>  			struct mhp_restrictions *restrictions)
+>  {
+> -	int flags = 0;
+> +	int ret, flags = 0;
+>  
+>  	if (rodata_full || debug_pagealloc_enabled())
+>  		flags = NO_BLOCK_MAPPINGS | NO_CONT_MAPPINGS;
+> @@ -1081,7 +1271,25 @@ int arch_add_memory(int nid, u64 start, u64 size,
+>  	__create_pgd_mapping(swapper_pg_dir, start, __phys_to_virt(start),
+>  			     size, PAGE_KERNEL, __pgd_pgtable_alloc, flags);
+>  
+> -	return __add_pages(nid, start >> PAGE_SHIFT, size >> PAGE_SHIFT,
+> +	ret = __add_pages(nid, start >> PAGE_SHIFT, size >> PAGE_SHIFT,
+>  			   restrictions);
+> +	if (ret)
+> +		__remove_pgd_mapping(swapper_pg_dir,
+> +					__phys_to_virt(start), size);
 
-Nice cleanups, all now applied, thanks!
+Nit: Indentation of the parameters looks really weird.
 
-greg k-h
+> +	return ret;
+> +}
+> +
+> +#ifdef CONFIG_MEMORY_HOTREMOVE
+> +void arch_remove_memory(int nid, u64 start, u64 size,
+> +				struct vmem_altmap *altmap)
+> +{
+> +	unsigned long start_pfn = start >> PAGE_SHIFT;
+> +	unsigned long nr_pages = size >> PAGE_SHIFT;
+> +	struct zone *zone = page_zone(pfn_to_page(start_pfn));
+> +
+> +	__remove_pages(zone, start_pfn, nr_pages, altmap);
+> +	__remove_pgd_mapping(swapper_pg_dir,
+> +					__phys_to_virt(start), size);
+
+Dito, indentation of the parameters.
+
+For these two changes (arch_*_memory)
+
+Acked-by: David Hildenbrand <david@redhat.com>
+
+-- 
+
+Thanks,
+
+David / dhildenb
