@@ -2,99 +2,104 @@ Return-Path: <SRS0=9PYC=TV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 943A0C46470
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 10:05:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16F02C04AAF
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 10:05:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5AE97217D8
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 10:05:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D95BE21773
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 10:05:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558433127;
-	bh=39Uw1k78fN2n18+7jTSZ1Y1MADqaJQ8CkRrnQCmPB24=;
+	s=default; t=1558433140;
+	bh=Pfd+W8sOqDFfgR7t5gds1JX+6O+lPzHLaB5kAu9l7LU=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=eDeSl5YQesWbHdqiOxVPP7PE/bWi6lE7pEl0A7YayoAbaaTbjczgaSSat7mX/TojZ
-	 d5CuNK31JMlzT+M826MQ4/aqUUHgqaGpTVl8IzOcnov/RUUOPG19kX1cf9jBNwBo9b
-	 aEuoUYwnxG1j3KMR92nub/HnlT+/yh7RYFbxre3U=
+	b=fDzSfl7UzhwJorq2eO2s3PtpNqVi99jPpWhYuwSPxrEQsgqQdGPTlfKabvmDuJ79/
+	 GNEF2SrcyoLTIWsPg4jKTXha/wFMf5ihp8Bt0zXInd2gkzGVgfhlwrdXZlPTg3Qbe4
+	 G+i1a/s3QMsvJ9zgusYt/IXAUB9skqvWEg4eAGgo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727617AbfEUKF0 (ORCPT
+        id S1727649AbfEUKFk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 May 2019 06:05:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41936 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726750AbfEUKF0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 May 2019 06:05:26 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ABD892173E;
-        Tue, 21 May 2019 10:05:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558433125;
-        bh=39Uw1k78fN2n18+7jTSZ1Y1MADqaJQ8CkRrnQCmPB24=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=r/1pHWO/R8379whZ2GWPS6SZyIkfo7diF3SoUM9+fhhY600Yj1cakIqQIc2f6Qjxg
-         uxBp8AWW5ABMXwCIIG48d7Hzp1nZMhUiuJODv8ubJdERAOZoTu/msXGKC1WeGGzho/
-         J6gMn0qqL9U2R99y5YwIrfZaLImbNjRHMT1VB3dk=
-Date:   Tue, 21 May 2019 12:05:22 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Jon Hunter <jonathanh@nvidia.com>
-Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-        akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
-        patches@kernelci.org, ben.hutchings@codethink.co.uk,
-        lkft-triage@lists.linaro.org, stable@vger.kernel.org,
-        linux-tegra <linux-tegra@vger.kernel.org>
-Subject: Re: [PATCH 5.1 000/128] 5.1.4-stable review
-Message-ID: <20190521100522.GA20837@kroah.com>
-References: <20190520115249.449077487@linuxfoundation.org>
- <4d98c3e4-42f0-5d70-a071-4ee455e09d2b@nvidia.com>
+        Tue, 21 May 2019 06:05:40 -0400
+Received: from mx2.suse.de ([195.135.220.15]:58686 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726259AbfEUKFk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 May 2019 06:05:40 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 93DAAAC4F;
+        Tue, 21 May 2019 10:05:38 +0000 (UTC)
+Date:   Tue, 21 May 2019 12:05:37 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Minchan Kim <minchan@kernel.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-mm <linux-mm@kvack.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Tim Murray <timmurray@google.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Suren Baghdasaryan <surenb@google.com>,
+        Daniel Colascione <dancol@google.com>,
+        Shakeel Butt <shakeelb@google.com>,
+        Sonny Rao <sonnyrao@google.com>,
+        Brian Geffon <bgeffon@google.com>, linux-api@vger.kernel.org
+Subject: Re: [RFC 1/7] mm: introduce MADV_COOL
+Message-ID: <20190521100537.GJ32329@dhcp22.suse.cz>
+References: <20190520035254.57579-1-minchan@kernel.org>
+ <20190520035254.57579-2-minchan@kernel.org>
+ <20190520081621.GV6836@dhcp22.suse.cz>
+ <20190520225419.GA10039@google.com>
+ <20190521060443.GA32329@dhcp22.suse.cz>
+ <20190521091134.GA219653@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <4d98c3e4-42f0-5d70-a071-4ee455e09d2b@nvidia.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+In-Reply-To: <20190521091134.GA219653@google.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 21, 2019 at 09:52:09AM +0100, Jon Hunter wrote:
-> 
-> On 20/05/2019 13:13, Greg Kroah-Hartman wrote:
-> > This is the start of the stable review cycle for the 5.1.4 release.
-> > There are 128 patches in this series, all will be posted as a response
-> > to this one.  If anyone has any issues with these being applied, please
-> > let me know.
+On Tue 21-05-19 18:11:34, Minchan Kim wrote:
+> On Tue, May 21, 2019 at 08:04:43AM +0200, Michal Hocko wrote:
+> > On Tue 21-05-19 07:54:19, Minchan Kim wrote:
+> > > On Mon, May 20, 2019 at 10:16:21AM +0200, Michal Hocko wrote:
+> > [...]
+> > > > > Internally, it works via deactivating memory from active list to
+> > > > > inactive's head so when the memory pressure happens, they will be
+> > > > > reclaimed earlier than other active pages unless there is no
+> > > > > access until the time.
+> > > > 
+> > > > Could you elaborate about the decision to move to the head rather than
+> > > > tail? What should happen to inactive pages? Should we move them to the
+> > > > tail? Your implementation seems to ignore those completely. Why?
+> > > 
+> > > Normally, inactive LRU could have used-once pages without any mapping
+> > > to user's address space. Such pages would be better candicate to
+> > > reclaim when the memory pressure happens. With deactivating only
+> > > active LRU pages of the process to the head of inactive LRU, we will
+> > > keep them in RAM longer than used-once pages and could have more chance
+> > > to be activated once the process is resumed.
 > > 
-> > Responses should be made by Wed 22 May 2019 11:50:41 AM UTC.
-> > Anything received after that time might be too late.
-> > 
-> > The whole patch series can be found in one patch at:
-> > 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.1.4-rc1.gz
-> > or in the git tree and branch at:
-> > 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.1.y
-> > and the diffstat can be found below.
-> > 
-> > thanks,
-> > 
-> > greg k-h
+> > You are making some assumptions here. You have an explicit call what is
+> > cold now you are assuming something is even colder. Is this assumption a
+> > general enough to make people depend on it? Not that we wouldn't be able
+> > to change to logic later but that will always be risky - especially in
+> > the area when somebody want to make a user space driven memory
+> > management.
 > 
-> All tests are passing for Tegra ...
-> 
-> Test results for stable-v5.1:
->     12 builds:	12 pass, 0 fail
->     22 boots:	22 pass, 0 fail
->     32 tests:	32 pass, 0 fail
-> 
-> Linux version:	5.1.4-rc1-gcce3bc9
-> Boards tested:	tegra124-jetson-tk1, tegra186-p2771-0000,
->                 tegra194-p2972-0000, tegra20-ventana,
->                 tegra210-p2371-2180, tegra30-cardhu-a04
-> 
+> Think about MADV_FREE. It moves those pages into inactive file LRU's head.
+> See the get_scan_count which makes forceful scanning of inactive file LRU
+> if it has enough size based on the memory pressure.
+> The reason is it's likely to have used-once pages in inactive file LRU,
+> generally. Those pages has been top-priority candidate to be reclaimed
+> for a long time.
 
-Many thanks for testing all of these and letting me know.
+OK, fair enough. Being consistent with MADV_FREE is reasonable. I just
+forgot we do rotate like this there.
 
-greg k-h
+-- 
+Michal Hocko
+SUSE Labs
