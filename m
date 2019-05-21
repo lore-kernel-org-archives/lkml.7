@@ -4,211 +4,278 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+	UNPARSEABLE_RELAY autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CCF4EC04AAC
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 02:42:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24D9FC04AAC
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 02:48:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ACCC921743
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 02:42:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E20EE21783
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 02:48:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727685AbfEUCmJ (ORCPT
+        id S1727669AbfEUCsM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 22:42:09 -0400
-Received: from twhmllg4.macronix.com ([122.147.135.202]:10788 "EHLO
-        TWHMLLG4.macronix.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726039AbfEUCmJ (ORCPT
+        Mon, 20 May 2019 22:48:12 -0400
+Received: from mailgw01.mediatek.com ([210.61.82.183]:9478 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726511AbfEUCsL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 22:42:09 -0400
-Received: from twhfmnt1.mxic.com.tw (twhfm1p2.macronix.com [172.17.20.92])
-        by TWHMLLG4.macronix.com with ESMTP id x4L2g5BT004509;
-        Tue, 21 May 2019 10:42:05 +0800 (GMT-8)
-        (envelope-from masonccyang@mxic.com.tw)
-Received: from MXML06C.mxic.com.tw (mxml06c.macronix.com [172.17.14.55])
-        by Forcepoint Email with ESMTP id AC5567C4549EB1ADF305;
-        Tue, 21 May 2019 10:42:05 +0800 (CST)
-In-Reply-To: <20190520143438.46248bfc@xps13>
-References: <1558076001-29579-1-git-send-email-masonccyang@mxic.com.tw> <20190520143438.46248bfc@xps13>
-To:     "Miquel Raynal" <miquel.raynal@bootlin.com>
-Cc:     bbrezillon@kernel.org, computersforpeace@gmail.com,
-        dwmw2@infradead.org, frieder.schrempf@kontron.de,
-        juliensu@mxic.com.tw, linux-kernel@vger.kernel.org,
-        linux-mtd@lists.infradead.org, marek.vasut@gmail.com,
-        richard@nod.at, vigneshr@ti.com, zhengxunli@mxic.com.tw
-Subject: Re: [PATCH v2] mtd: rawnand: Add Macronix NAND read retry support
+        Mon, 20 May 2019 22:48:11 -0400
+X-UUID: e6d0df765aa1460b99c87b31c6b4cfdc-20190521
+X-UUID: e6d0df765aa1460b99c87b31c6b4cfdc-20190521
+Received: from mtkmrs01.mediatek.inc [(172.21.131.159)] by mailgw01.mediatek.com
+        (envelope-from <ck.hu@mediatek.com>)
+        (mhqrelay.mediatek.com ESMTP with TLS)
+        with ESMTP id 1610734910; Tue, 21 May 2019 10:48:07 +0800
+Received: from mtkcas09.mediatek.inc (172.21.101.178) by
+ mtkmbs03n1.mediatek.inc (172.21.101.181) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Tue, 21 May 2019 10:48:05 +0800
+Received: from [172.21.77.4] (172.21.77.4) by mtkcas09.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Tue, 21 May 2019 10:48:05 +0800
+Message-ID: <1558406885.25526.3.camel@mtksdaap41>
+Subject: Re: [PATCH v7 09/12] soc: mediatek: cmdq: define the instruction
+ struct
+From:   CK Hu <ck.hu@mediatek.com>
+To:     Bibby Hsieh <bibby.hsieh@mediatek.com>
+CC:     Jassi Brar <jassisinghbrar@gmail.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Daniel Kurtz <djkurtz@chromium.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <srv_heupstream@mediatek.com>,
+        Sascha Hauer <kernel@pengutronix.de>,
+        "Philipp Zabel" <p.zabel@pengutronix.de>,
+        Nicolas Boichat <drinkcat@chromium.org>,
+        "YT Shen" <yt.shen@mediatek.com>,
+        Daoyuan Huang <daoyuan.huang@mediatek.com>,
+        Jiaguang Zhang <jiaguang.zhang@mediatek.com>,
+        Dennis-YC Hsieh <dennis-yc.hsieh@mediatek.com>,
+        Houlong Wei <houlong.wei@mediatek.com>,
+        <ginny.chen@mediatek.com>
+Date:   Tue, 21 May 2019 10:48:05 +0800
+In-Reply-To: <20190521011108.40428-10-bibby.hsieh@mediatek.com>
+References: <20190521011108.40428-1-bibby.hsieh@mediatek.com>
+         <20190521011108.40428-10-bibby.hsieh@mediatek.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.10.4-0ubuntu2 
 MIME-Version: 1.0
-X-KeepSent: DCB9EA90:C6F8EA4C-48258401:000981AF;
- type=4; name=$KeepSent
-X-Mailer: Lotus Notes Release 8.5.3FP4 SHF90 June 10, 2013
-Message-ID: <OFDCB9EA90.C6F8EA4C-ON48258401.000981AF-48258401.000ED713@mxic.com.tw>
-From:   masonccyang@mxic.com.tw
-Date:   Tue, 21 May 2019 10:42:06 +0800
-X-MIMETrack: Serialize by Router on MXML06C/TAIWAN/MXIC(Release 9.0.1FP10 HF265|July 25, 2018) at
- 2019/05/21 AM 10:42:05,
-        Serialize complete at 2019/05/21 AM 10:42:05
-Content-Type: text/plain; charset="US-ASCII"
-X-MAIL: TWHMLLG4.macronix.com x4L2g5BT004509
+Content-Transfer-Encoding: 7bit
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi, Bibby:
 
-Hi Miquel,
- 
-> > Add support for Macronix NAND read retry.
-> > 
-> > Macronix NANDs support specific read operation for data recovery,
-> > which can be enabled/disabled with a SET/GET_FEATURE.
-> > Driver checks byte 167 of Vendor Blocks in ONFI parameter page table
-> > to see if this high-reliability function is supported.
-> > 
-> > Signed-off-by: Mason Yang <masonccyang@mxic.com.tw>
-> > ---
-> >  drivers/mtd/nand/raw/nand_macronix.c | 57 
-++++++++++++++++++++++++++++++++++++
-> >  1 file changed, 57 insertions(+)
-> > 
-> > diff --git a/drivers/mtd/nand/raw/nand_macronix.c 
-b/drivers/mtd/nand/raw/
-> nand_macronix.c
-> > index e287e71..1a4dc92 100644
-> > --- a/drivers/mtd/nand/raw/nand_macronix.c
-> > +++ b/drivers/mtd/nand/raw/nand_macronix.c
-> > @@ -17,6 +17,62 @@
-> > 
-> >  #include "internals.h"
-> > 
-> > +#define MACRONIX_READ_RETRY_BIT BIT(0)
-> > +#define MACRONIX_READ_RETRY_MODE 6
-> 
-> Can you name this define MACRONIX_NUM_READ_RETRY_MODES?
+On Tue, 2019-05-21 at 09:11 +0800, Bibby Hsieh wrote:
+> Define an instruction structure for gce driver to append command.
+> This structure can make the client's code more readability.
 
-okay, will fix.
+Reviewed-by: CK Hu <ck.hu@mediatek.com>
 
 > 
-> > +
-> > +struct nand_onfi_vendor_macronix {
-> > +   u8 reserved[1];
+> Signed-off-by: Bibby Hsieh <bibby.hsieh@mediatek.com>
+> ---
+>  drivers/soc/mediatek/mtk-cmdq-helper.c   | 103 +++++++++++++++--------
+>  include/linux/mailbox/mtk-cmdq-mailbox.h |   2 +
+>  2 files changed, 72 insertions(+), 33 deletions(-)
 > 
-> Do you need this "[1]" ?
+> diff --git a/drivers/soc/mediatek/mtk-cmdq-helper.c b/drivers/soc/mediatek/mtk-cmdq-helper.c
+> index 7aa0517ff2f3..0886c4967ca4 100644
+> --- a/drivers/soc/mediatek/mtk-cmdq-helper.c
+> +++ b/drivers/soc/mediatek/mtk-cmdq-helper.c
+> @@ -9,12 +9,24 @@
+>  #include <linux/mailbox_controller.h>
+>  #include <linux/soc/mediatek/mtk-cmdq.h>
+>  
+> -#define CMDQ_ARG_A_WRITE_MASK	0xffff
+>  #define CMDQ_WRITE_ENABLE_MASK	BIT(0)
+>  #define CMDQ_EOC_IRQ_EN		BIT(0)
+>  #define CMDQ_EOC_CMD		((u64)((CMDQ_CODE_EOC << CMDQ_OP_CODE_SHIFT)) \
+>  				<< 32 | CMDQ_EOC_IRQ_EN)
+>  
+> +struct cmdq_instruction {
+> +	union {
+> +		u32 value;
+> +		u32 mask;
+> +	};
+> +	union {
+> +		u16 offset;
+> +		u16 event;
+> +	};
+> +	u8 subsys;
+> +	u8 op;
+> +};
+> +
+>  static void cmdq_client_timeout(struct timer_list *t)
+>  {
+>  	struct cmdq_client *client = from_timer(client, t, timer);
+> @@ -110,10 +122,8 @@ void cmdq_pkt_destroy(struct cmdq_pkt *pkt)
+>  }
+>  EXPORT_SYMBOL(cmdq_pkt_destroy);
+>  
+> -static int cmdq_pkt_append_command(struct cmdq_pkt *pkt, enum cmdq_code code,
+> -				   u32 arg_a, u32 arg_b)
+> +static struct cmdq_instruction *cmdq_pkt_append_command(struct cmdq_pkt *pkt)
+>  {
+> -	u64 *cmd_ptr;
+>  
+>  	if (unlikely(pkt->cmd_buf_size + CMDQ_INST_SIZE > pkt->buf_size)) {
+>  		/*
+> @@ -127,81 +137,108 @@ static int cmdq_pkt_append_command(struct cmdq_pkt *pkt, enum cmdq_code code,
+>  		pkt->cmd_buf_size += CMDQ_INST_SIZE;
+>  		WARN_ONCE(1, "%s: buffer size %u is too small !\n",
+>  			__func__, (u32)pkt->buf_size);
+> -		return -ENOMEM;
+> +		return NULL;
+>  	}
+> -	cmd_ptr = pkt->va_base + pkt->cmd_buf_size;
+> -	(*cmd_ptr) = (u64)((code << CMDQ_OP_CODE_SHIFT) | arg_a) << 32 | arg_b;
+> +
+>  	pkt->cmd_buf_size += CMDQ_INST_SIZE;
+>  
+> -	return 0;
+> +	return pkt->va_base + pkt->cmd_buf_size - CMDQ_INST_SIZE;
+>  }
+>  
+>  int cmdq_pkt_write(struct cmdq_pkt *pkt, u8 subsys, u16 offset, u32 value)
+>  {
+> -	u32 arg_a = (offset & CMDQ_ARG_A_WRITE_MASK) |
+> -		    (subsys << CMDQ_SUBSYS_SHIFT);
+> +	struct cmdq_instruction *inst;
+> +
+> +	inst = cmdq_pkt_append_command(pkt);
+> +	if (!inst)
+> +		return -ENOMEM;
+> +
+> +	inst->op = CMDQ_CODE_WRITE;
+> +	inst->value = value;
+> +	inst->offset = offset;
+> +	inst->subsys = subsys;
+>  
+> -	return cmdq_pkt_append_command(pkt, CMDQ_CODE_WRITE, arg_a, value);
+> +	return 0;
+>  }
+>  EXPORT_SYMBOL(cmdq_pkt_write);
+>  
+>  int cmdq_pkt_write_mask(struct cmdq_pkt *pkt, u8 subsys,
+>  			u16 offset, u32 value, u32 mask)
+>  {
+> +	struct cmdq_instruction *inst;
+>  	u32 offset_mask = offset;
+> -	int err = 0;
+>  
+>  	if (mask != 0xffffffff) {
+> -		err = cmdq_pkt_append_command(pkt, CMDQ_CODE_MASK, 0, ~mask);
+> +		inst = cmdq_pkt_append_command(pkt);
+> +		if (!inst)
+> +			return -ENOMEM;
+> +
+> +		inst->op = CMDQ_CODE_MASK;
+> +		inst->mask = ~mask;
+>  		offset_mask |= CMDQ_WRITE_ENABLE_MASK;
+>  	}
+> -	err |= cmdq_pkt_write(pkt, value, subsys, offset_mask);
+>  
+> -	return err;
+> +	return cmdq_pkt_write(pkt, subsys, offset_mask, value);
+>  }
+>  EXPORT_SYMBOL(cmdq_pkt_write_mask);
+>  
+>  int cmdq_pkt_wfe(struct cmdq_pkt *pkt, u16 event)
+>  {
+> -	u32 arg_b;
+> +	struct cmdq_instruction *inst;
+>  
+>  	if (event >= CMDQ_MAX_EVENT)
+>  		return -EINVAL;
+>  
+> -	/*
+> -	 * WFE arg_b
+> -	 * bit 0-11: wait value
+> -	 * bit 15: 1 - wait, 0 - no wait
+> -	 * bit 16-27: update value
+> -	 * bit 31: 1 - update, 0 - no update
+> -	 */
+> -	arg_b = CMDQ_WFE_UPDATE | CMDQ_WFE_WAIT | CMDQ_WFE_WAIT_VALUE;
+> +	inst = cmdq_pkt_append_command(pkt);
+> +	if (!inst)
+> +		return -ENOMEM;
+> +
+> +	inst->op = CMDQ_CODE_WFE;
+> +	inst->value = CMDQ_WFE_OPTION;
+> +	inst->event = event;
+>  
+> -	return cmdq_pkt_append_command(pkt, CMDQ_CODE_WFE, event, arg_b);
+> +	return 0;
+>  }
+>  EXPORT_SYMBOL(cmdq_pkt_wfe);
+>  
+>  int cmdq_pkt_clear_event(struct cmdq_pkt *pkt, u16 event)
+>  {
+> +	struct cmdq_instruction *inst;
+> +
+>  	if (event >= CMDQ_MAX_EVENT)
+>  		return -EINVAL;
+>  
+> -	return cmdq_pkt_append_command(pkt, CMDQ_CODE_WFE, event,
+> -				       CMDQ_WFE_UPDATE);
+> +	inst = cmdq_pkt_append_command(pkt);
+> +	if (!inst)
+> +		return -ENOMEM;
+> +
+> +	inst->op = CMDQ_CODE_WFE;
+> +	inst->value = CMDQ_WFE_UPDATE;
+> +	inst->event = event;
+> +
+> +	return 0;
+>  }
+>  EXPORT_SYMBOL(cmdq_pkt_clear_event);
+>  
+>  static int cmdq_pkt_finalize(struct cmdq_pkt *pkt)
+>  {
+> -	int err;
+> +	struct cmdq_instruction *inst;
+> +
+> +	inst = cmdq_pkt_append_command(pkt);
+> +	if (!inst)
+> +		return -ENOMEM;
+>  
+> -	/* insert EOC and generate IRQ for each command iteration */
+> -	err = cmdq_pkt_append_command(pkt, CMDQ_CODE_EOC, 0, CMDQ_EOC_IRQ_EN);
+> +	inst->op = CMDQ_CODE_EOC;
+> +	inst->value = CMDQ_EOC_IRQ_EN;
+>  
+> -	/* JUMP to end */
+> -	err |= cmdq_pkt_append_command(pkt, CMDQ_CODE_JUMP, 0, CMDQ_JUMP_PASS);
+> +	inst = cmdq_pkt_append_command(pkt);
+> +	if (!inst)
+> +		return -ENOMEM;
+> +
+> +	inst->op = CMDQ_CODE_JUMP;
+> +	inst->value = CMDQ_JUMP_PASS;
+>  
+> -	return err;
+> +	return 0;
+>  }
+>  
+>  static void cmdq_pkt_flush_async_cb(struct cmdq_cb_data data)
+> diff --git a/include/linux/mailbox/mtk-cmdq-mailbox.h b/include/linux/mailbox/mtk-cmdq-mailbox.h
+> index 911475da7a53..c8adedefaf42 100644
+> --- a/include/linux/mailbox/mtk-cmdq-mailbox.h
+> +++ b/include/linux/mailbox/mtk-cmdq-mailbox.h
+> @@ -19,6 +19,8 @@
+>  #define CMDQ_WFE_UPDATE			BIT(31)
+>  #define CMDQ_WFE_WAIT			BIT(15)
+>  #define CMDQ_WFE_WAIT_VALUE		0x1
+> +#define CMDQ_WFE_OPTION			(CMDQ_WFE_UPDATE | CMDQ_WFE_WAIT | \
+> +					CMDQ_WFE_WAIT_VALUE)
+>  /** cmdq event maximum */
+>  #define CMDQ_MAX_EVENT			0x3ff
+>  
 
-okay, just u8 reserved;
-
-> 
-> > +   u8 reliability_func;
-> > +} __packed;
-> > +
-> > +/*
-> > + * Macronix NANDs support using SET/GET_FEATURES to enter/exit read 
-retry mode
-> > + */
-> > +static int macronix_nand_setup_read_retry(struct nand_chip *chip, int 
-mode)
-> > +{
-> > +   u8 feature[ONFI_SUBFEATURE_PARAM_LEN];
-> > +   int ret, feature_addr = ONFI_FEATURE_ADDR_READ_RETRY;
-> > +
-> > +   if (chip->parameters.supports_set_get_features &&
-> > +       test_bit(feature_addr, chip->parameters.set_feature_list) &&
-> > +       test_bit(feature_addr, chip->parameters.get_feature_list)) {
-> > +      feature[0] = mode;
-> > +      ret =  nand_set_features(chip, feature_addr, feature);
-> > +      if (ret)
-> > +         pr_err("Failed to set read retry moded:%d\n", mode);
-> 
-> Do you have to call nand_get_features() on error?
-
-okay
-
-> 
-> > +
-> > +      ret =  nand_get_features(chip, feature_addr, feature);
-> > +      if (ret || feature[0] != mode)
-> > +         pr_err("Failed to verify read retry moded:%d(%d)\n",
-> > +                mode, feature[0]);
-> 
-> if ret == 0 but feature[0] != mode, shouldn't you return an error?
-
-okay, will fix.
-
-> 
-> > +   }
-> > +
-> > +   return ret;
-> 
-> This will produce a Warning at compile time (ret may be used
-> uninitialized). Have you tested it?
-
-Tool chain I used is "gcc-arm-linux-gnueabi" and no Warning at compile 
-time.
-
-Patch it to:
------------------------------------------------------------------------------>
- static int macronix_nand_setup_read_retry(struct nand_chip *chip, int 
-mode)
- {
-         u8 feature[ONFI_SUBFEATURE_PARAM_LEN];
-         int ret, feature_addr = ONFI_FEATURE_ADDR_READ_RETRY;
-
-         if (chip->parameters.supports_set_get_features &&
-             test_bit(feature_addr, chip->parameters.set_feature_list) &&
-             test_bit(feature_addr, chip->parameters.get_feature_list)) {
-
-                 feature[0] = mode;
-                 ret =  nand_set_features(chip, feature_addr, feature);
-                 if (ret) {
-                         pr_err("Failed to set read retry moded:%d\n", 
-mode);
-                         goto err_out;
-                 }
-
-                 ret =  nand_get_features(chip, feature_addr, feature);
-                 if (ret) {
-                         pr_err("Failed to get read retry moded:%d\n", 
-mode);
-                         goto err_out;
-                 } else if (feature[0] != mode) {
-                         pr_err("Failed to verify read retry 
-moded:%d(%d)\n",
-                                 mode, feature[0]);
-                         return -EIO;
-                 }
-         }
-
- err_out:
-         return ret;
- }
------------------------------------------------------------------------------<
-
-thanks & best regards,
-Mason
-
-CONFIDENTIALITY NOTE:
-
-This e-mail and any attachments may contain confidential information 
-and/or personal data, which is protected by applicable laws. Please be 
-reminded that duplication, disclosure, distribution, or use of this e-mail 
-(and/or its attachments) or any part thereof is prohibited. If you receive 
-this e-mail in error, please notify us immediately and delete this mail as 
-well as its attachment(s) from your system. In addition, please be 
-informed that collection, processing, and/or use of personal data is 
-prohibited unless expressly permitted by personal data protection laws. 
-Thank you for your attention and cooperation.
-
-Macronix International Co., Ltd.
-
-=====================================================================
-
-
-
-============================================================================
-
-CONFIDENTIALITY NOTE:
-
-This e-mail and any attachments may contain confidential information and/or personal data, which is protected by applicable laws. Please be reminded that duplication, disclosure, distribution, or use of this e-mail (and/or its attachments) or any part thereof is prohibited. If you receive this e-mail in error, please notify us immediately and delete this mail as well as its attachment(s) from your system. In addition, please be informed that collection, processing, and/or use of personal data is prohibited unless expressly permitted by personal data protection laws. Thank you for your attention and cooperation.
-
-Macronix International Co., Ltd.
-
-=====================================================================
 
