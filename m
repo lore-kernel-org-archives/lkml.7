@@ -2,189 +2,119 @@ Return-Path: <SRS0=9PYC=TV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 663D4C04AAF
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 14:44:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 941E2C04E87
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 14:44:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 249ED217D7
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 14:44:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558449852;
-	bh=UXFXrEA/XzWJSiUo9Qp4UMS3ywgS7m/ucbmbFiKpKdg=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=PgbK4cYp0yhYRROYcG8zNYf83vPrlItUzjYnG+p5/U7FfvYnXw++r07bRAlOcG6kU
-	 TuwO4nD5hpsjjv5Zm+31Od9aLJnXtW3wnXSuiY1M85UpcE7BoupKlk4z+xwt9XnB5O
-	 AALC21ELYUIvbeXgdIRaiRehFQi3vTZFJYuD8fRY=
+	by mail.kernel.org (Postfix) with ESMTP id 6A1882173E
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 14:44:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="DdIcQxJz";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="nMAEaiSS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728614AbfEUOoL (ORCPT
+        id S1728636AbfEUOo3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 May 2019 10:44:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54852 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727534AbfEUOoK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 May 2019 10:44:10 -0400
-Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        Tue, 21 May 2019 10:44:29 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:42988 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727534AbfEUOo3 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 May 2019 10:44:29 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 0CCE260E41; Tue, 21 May 2019 14:44:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1558449868;
+        bh=9RJTartqJw5pP0Ur3CP53YgFDs7kDaCUu1bvIYsQLIs=;
+        h=From:To:Cc:Subject:Date:From;
+        b=DdIcQxJzBoz/6d2weEfmyZfZC3JFLx5MBBSU5GnNCZnRCqOKGts6UYoTyB1seX8s3
+         C9k6ZfntTzNiDeN3N5XUQxh5qECJh08lO7mYTouYXHrIKv8sDbNWL8VBMSFRql7JOQ
+         0+rmf3zpT5b8eAmJnAXWCGB/wtdef/qU+//7ZqvU=
+Received: from jhugo-perf-lnx.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7C2ED21851
-        for <linux-kernel@vger.kernel.org>; Tue, 21 May 2019 14:44:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558449849;
-        bh=UXFXrEA/XzWJSiUo9Qp4UMS3ywgS7m/ucbmbFiKpKdg=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=ggdw0BLYs+MUWCzaemnKs7kSn7TwV/Z1WyTZ21WH/Jz1MnoGDQXLI9sEuswTUvuTS
-         8pQ9c8rrHOkToDiNw4MOcaMc2FDInI4T5EHyUjCtb3CIFqXtP49Sw4Q953xH/Y7U+O
-         DkHtReRVA2CdJGsCfXC19OMfPrqWV+XYmG7ky4Kc=
-Received: by mail-wm1-f46.google.com with SMTP id j187so3187318wmj.1
-        for <linux-kernel@vger.kernel.org>; Tue, 21 May 2019 07:44:09 -0700 (PDT)
-X-Gm-Message-State: APjAAAWZxD47oqNVL+Mm1ks+6Jc1mFz63j/bUu/OzIfxHCatX5FJ8+PU
-        nOnqFFHNp+w+ir0MOA7ckTDBvjRc5SosfAgs8F2DRg==
-X-Google-Smtp-Source: APXvYqw05JswjNvqBUGl7gXKRzK+1KXPBZ3mlltGiRg3F6iRofmtTtwuivIZNqWiZcVx294tPDvD+1kLa6+lbLtQJT0=
-X-Received: by 2002:a1c:e906:: with SMTP id q6mr3923719wmc.47.1558449846202;
- Tue, 21 May 2019 07:44:06 -0700 (PDT)
-MIME-Version: 1.0
-References: <155836064844.2441.10911127801797083064.stgit@localhost.localdomain>
-In-Reply-To: <155836064844.2441.10911127801797083064.stgit@localhost.localdomain>
-From:   Andy Lutomirski <luto@kernel.org>
-Date:   Tue, 21 May 2019 07:43:54 -0700
-X-Gmail-Original-Message-ID: <CALCETrU221N6uPmdaj4bRDDsf+Oc5tEfPERuyV24wsYKHn+spA@mail.gmail.com>
-Message-ID: <CALCETrU221N6uPmdaj4bRDDsf+Oc5tEfPERuyV24wsYKHn+spA@mail.gmail.com>
-Subject: Re: [PATCH v2 0/7] mm: process_vm_mmap() -- syscall for duplication a
- process mapping
-To:     Kirill Tkhai <ktkhai@virtuozzo.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Keith Busch <keith.busch@intel.com>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        alexander.h.duyck@linux.intel.com, Weiny Ira <ira.weiny@intel.com>,
-        Andrey Konovalov <andreyknvl@google.com>,
-        arunks@codeaurora.org, Vlastimil Babka <vbabka@suse.cz>,
-        Christoph Lameter <cl@linux.com>,
-        Rik van Riel <riel@surriel.com>,
-        Kees Cook <keescook@chromium.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Shakeel Butt <shakeelb@google.com>,
-        Roman Gushchin <guro@fb.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Hugh Dickins <hughd@google.com>,
-        Jerome Glisse <jglisse@redhat.com>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        daniel.m.jordan@oracle.com, Jann Horn <jannh@google.com>,
-        Adam Borowski <kilobyte@angband.pl>,
-        Linux API <linux-api@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux-MM <linux-mm@kvack.org>
-Content-Type: text/plain; charset="UTF-8"
+        (Authenticated sender: jhugo@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 3F43C60746;
+        Tue, 21 May 2019 14:44:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1558449865;
+        bh=9RJTartqJw5pP0Ur3CP53YgFDs7kDaCUu1bvIYsQLIs=;
+        h=From:To:Cc:Subject:Date:From;
+        b=nMAEaiSSgI+4E4ak1QXYoDpkuUy/zxz2tQNmwTPsPhQA1L4s1OYkUogTdq/psvDbd
+         /R/3iEZVaLYoFTu51rrY1S38Sh15IcyytTODnC+zIKR2bKMw9AFPvzjeqpaC7ORY2q
+         EKJl8XRZdzrYVZrEnhXNBJBCniGKhCHVSpP9BnAc=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 3F43C60746
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=jhugo@codeaurora.org
+From:   Jeffrey Hugo <jhugo@codeaurora.org>
+To:     david.brown@linaro.org
+Cc:     agross@kernel.org, bjorn.andersson@linaro.org,
+        marc.w.gonzalez@free.fr, mturquette@baylibre.com, sboyd@kernel.org,
+        robh+dt@kernel.org, mark.rutland@arm.com,
+        linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        Jeffrey Hugo <jhugo@codeaurora.org>
+Subject: [PATCH v4 0/6] MSM8998 Multimedia Clock Controller
+Date:   Tue, 21 May 2019 08:44:03 -0600
+Message-Id: <1558449843-19971-1-git-send-email-jhugo@codeaurora.org>
+X-Mailer: git-send-email 1.9.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 20, 2019 at 7:01 AM Kirill Tkhai <ktkhai@virtuozzo.com> wrote:
->
+The multimedia clock controller (mmcc) is the main clock controller for
+the multimedia subsystem and is required to enable things like display and
+camera.
 
-> [Summary]
->
-> New syscall, which allows to clone a remote process VMA
-> into local process VM. The remote process's page table
-> entries related to the VMA are cloned into local process's
-> page table (in any desired address, which makes this different
-> from that happens during fork()). Huge pages are handled
-> appropriately.
->
-> This allows to improve performance in significant way like
-> it's shows in the example below.
->
-> [Description]
->
-> This patchset adds a new syscall, which makes possible
-> to clone a VMA from a process to current process.
-> The syscall supplements the functionality provided
-> by process_vm_writev() and process_vm_readv() syscalls,
-> and it may be useful in many situation.
->
-> For example, it allows to make a zero copy of data,
-> when process_vm_writev() was previously used:
->
->         struct iovec local_iov, remote_iov;
->         void *buf;
->
->         buf = mmap(NULL, n * PAGE_SIZE, PROT_READ|PROT_WRITE,
->                    MAP_PRIVATE|MAP_ANONYMOUS, ...);
->         recv(sock, buf, n * PAGE_SIZE, 0);
->
->         local_iov->iov_base = buf;
->         local_iov->iov_len = n * PAGE_SIZE;
->         remove_iov = ...;
->
->         process_vm_writev(pid, &local_iov, 1, &remote_iov, 1 0);
->         munmap(buf, n * PAGE_SIZE);
->
->         (Note, that above completely ignores error handling)
->
-> There are several problems with process_vm_writev() in this example:
->
-> 1)it causes pagefault on remote process memory, and it forces
->   allocation of a new page (if was not preallocated);
+v4:
+-fix makefile to use correct config item
+-pick up tags
+-fix ordering of clocks and clock-names in dt
+-drop MODULE_ALIAS
+-wait for xo in mmcc since that was found to be useful in some debug configs
 
-I don't see how your new syscall helps.  You're writing to remote
-memory.  If that memory wasn't allocated, it's going to get allocated
-regardless of whether you use a write-like interface or an mmap-like
-interface.  Keep in mind that, on x86, just the hardware part of a
-page fault is very slow -- populating the memory with a syscall
-instead of a fault may well be faster.
+v3:
+-Rebase onto linux-next to get the final version of the clk parent rewrite
+series
+-Moved the bindings header to the bindings patch per Rob
+-Made xo manditory for GCC to work around the lack of clk orphan probe defer
+to avoid the uart console glitch
 
->
-> 2)amount of memory for this example is doubled in a moment --
->   n pages in current and n pages in remote tasks are occupied
->   at the same time;
+v2:
+-Rebased on the "Rewrite clk parent handling" series and updated to the clk init
+mechanisms introduced there.
+-Marked XO clk as CLK_IGNORE_UNUSED to avoid the concern about the XO going away
+"incorrectly" during late init
+-Corrected the name of the XO clock to "xo"
+-Dropped the fake XO clock in GCC to prevent a namespace conflict
+-Fully enumerated the external clocks (DSI PLLs, etc) in the DT binding
+-Cleaned up the weird newlines in the added DT node
+-Added DT header file to msm8998 DT for future clients
 
-This seems disingenuous.  If you're writing p pages total in chunks of
-n pages, you will use a total of p pages if you use mmap and p+n if
-you use write.  That only doubles the amount of memory if you let n
-scale linearly with p, which seems unlikely.
+Jeffrey Hugo (6):
+  dt-bindings: clock: Document external clocks for MSM8998 gcc
+  arm64: dts: msm8998: Add xo clock to gcc node
+  clk: qcom: smd: Add XO clock for MSM8998
+  dt-bindings: clock: Add support for the MSM8998 mmcc
+  clk: qcom: Add MSM8998 Multimedia Clock Controller (MMCC) driver
+  arm64: dts: qcom: msm8998: Add mmcc node
 
->
-> 3)received data has no a chance to be properly swapped for
->   a long time.
+ .../devicetree/bindings/clock/qcom,gcc.txt    |   10 +
+ .../devicetree/bindings/clock/qcom,mmcc.txt   |   21 +
+ arch/arm64/boot/dts/qcom/msm8998.dtsi         |   16 +
+ drivers/clk/qcom/Kconfig                      |    9 +
+ drivers/clk/qcom/Makefile                     |    1 +
+ drivers/clk/qcom/clk-smd-rpm.c                |   24 +-
+ drivers/clk/qcom/gcc-msm8998.c                |   29 +-
+ drivers/clk/qcom/mmcc-msm8998.c               | 2915 +++++++++++++++++
+ include/dt-bindings/clock/qcom,mmcc-msm8998.h |  210 ++
+ 9 files changed, 3214 insertions(+), 21 deletions(-)
+ create mode 100644 drivers/clk/qcom/mmcc-msm8998.c
+ create mode 100644 include/dt-bindings/clock/qcom,mmcc-msm8998.h
 
-...
+-- 
+2.17.1
 
-> a)kernel moves @buf pages into swap right after recv();
-> b)process_vm_writev() reads the data back from swap to pages;
-
-If you're under that much memory pressure and thrashing that badly,
-your performance is going to be awful no matter what you're doing.  If
-you indeed observe this behavior under normal loads, then this seems
-like a VM issue that should be addressed in its own right.
-
->         buf = mmap(NULL, n * PAGE_SIZE, PROT_READ|PROT_WRITE,
->                    MAP_PRIVATE|MAP_ANONYMOUS, ...);
->         recv(sock, buf, n * PAGE_SIZE, 0);
->
-> [Task 2]
->         buf2 = process_vm_mmap(pid_of_task1, buf, n * PAGE_SIZE, NULL, 0);
->
-> This creates a copy of VMA related to buf from task1 in task2's VM.
-> Task1's page table entries are copied into corresponding page table
-> entries of VM of task2.
-
-You need to fully explain a whole bunch of details that you're
-ignored.  For example, if the remote VMA is MAP_ANONYMOUS, do you get
-a CoW copy of it?  I assume you don't since the whole point is to
-write to remote memory, but it's at the very least quite unusual in
-Linux to have two different anonymous VMAs such that writing one of
-them changes the other one.  But there are plenty of other questions.
-What happens if the remote VMA is a gate area or other special mapping
-(vDSO, vvar area, etc)?  What if the remote memory comes from a driver
-that wasn't expecting the mapping to get magically copied to a
-different process?
-
-This new API seems quite dangerous and complex to me, and I don't
-think the value has been adequately demonstrated.
