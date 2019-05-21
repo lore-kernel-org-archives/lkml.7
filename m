@@ -2,183 +2,402 @@ Return-Path: <SRS0=9PYC=TV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,FROM_EXCESS_BASE64,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DACA4C04AAF
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 09:46:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 440A3C04AB4
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 09:46:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B029C21479
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 09:46:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AEqa8eu4"
+	by mail.kernel.org (Postfix) with ESMTP id 150EC21479
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 09:46:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727478AbfEUJq2 (ORCPT
+        id S1727527AbfEUJqw convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 May 2019 05:46:28 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:52407 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726391AbfEUJq1 (ORCPT
+        Tue, 21 May 2019 05:46:52 -0400
+Received: from relay7-d.mail.gandi.net ([217.70.183.200]:35805 "EHLO
+        relay7-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726391AbfEUJqv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 May 2019 05:46:27 -0400
-Received: by mail-wm1-f68.google.com with SMTP id y3so2250428wmm.2;
-        Tue, 21 May 2019 02:46:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=LGbYDZXM+TVpMUOXUAmsay+usEVwkEDYwUxh6Mz8Qn4=;
-        b=AEqa8eu4K5znqUpNZBOFLxaBxFoxcytTTN1fsVKzfKlmQZoFEod6NmwAxxEZzYHlkA
-         IXWxsmG2TX7mvSwTBy1ZlRibHqfXk9n8xcFtAg0e1243uLY2LPwhmbeuF57Ac5E5HFZr
-         3Jknh1HeNgj0njxACwMsGOLAZadOFnXDV3a4ORCu4lXXaPSuVIAuFuJsGfHo5/9JDa60
-         BMCk36uZViurM4yDmsmFW6uac04vQZPs7ceSvkK9ZHbFa5L9DYLUBYUNC31KKAX7aPXE
-         H6NfZluThY/vO2E70F6t1SOGrgP8s21w36inlpp5nufu9Amw/9pQKROPVln8CuEHT2Xs
-         G4+w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=LGbYDZXM+TVpMUOXUAmsay+usEVwkEDYwUxh6Mz8Qn4=;
-        b=nY/p3mMJdr24p+Rg4+hGuSbcR1ZfCfA+c4KCzS1guFGccPHzmwA/VyUh3CpNhbonqM
-         q7XRCh7XbyBEuXameYlz07zpMOOlc+QVXyJfeE4Yv8PApPDvzNvsPMCsOeDYNVYnnvWg
-         QWJohEDgvlLrJK1GbY2NOBFBtmii8XqeAnfsUeOGyxoo5/3xFx/csxHCQ95Hwws6Sl8p
-         0nP6gShypnB0F3HNOFWk0AZB3qoS3i3mjQf5pftyqghM+auEqclhQuEewj5Iu9n4gRg/
-         qx5ZpCPS8NMVCtbgsAYtdftl/saG7jE4lvH5K/HxshXPmsFaTl89crOEHoOVdBHrSKuV
-         jXEQ==
-X-Gm-Message-State: APjAAAW6+sHUPSQsawEefkf8tETy+usYyThxpUfLiwpKW7hWnzdYKR8S
-        alQgnzE1oO0y4IFt3ACogKvpB0RJndE=
-X-Google-Smtp-Source: APXvYqxwV56bby12S0q7yrWg2xPcQFdrDRDU7ey5rNFNVyA/Lv+lMIBYILFOh36I/IyB0d7kYtoymg==
-X-Received: by 2002:a1c:3cc2:: with SMTP id j185mr2617966wma.26.1558431984423;
-        Tue, 21 May 2019 02:46:24 -0700 (PDT)
-Received: from pali ([2a02:2b88:2:1::5cc6:2f])
-        by smtp.gmail.com with ESMTPSA id o6sm43665243wrh.55.2019.05.21.02.46.22
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 21 May 2019 02:46:23 -0700 (PDT)
-Date:   Tue, 21 May 2019 11:46:22 +0200
-From:   Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
-To:     Hui Wang <hui.wang@canonical.com>
-Cc:     Xiaoxiao Liu <xiaoxiao.liu-1@cn.alps.com>,
-        XiaoXiao Liu <sliuuxiaonxiao@gmail.com>,
-        "dmitry.torokhov@gmail.com" <dmitry.torokhov@gmail.com>,
-        "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Xiaojian Cao <xiaojian.cao@cn.alps.com>,
-        "zhangfp1@lenovo.com" <zhangfp1@lenovo.com>
-Subject: Re: =?utf-8?B?562U5aSNOiBbUEFUQ0hdIGlucHV0?= =?utf-8?Q?=3A?=
- alps-fix the issue the special alps trackpoint do not work.
-Message-ID: <20190521094622.syeub6tcqhbyc7sg@pali>
-References: <20190520110149.27107-1-sliuuxiaonxiao@gmail.com>
- <OSBPR01MB485510A2A32CD9D2CE5EF7A1DA070@OSBPR01MB4855.jpnprd01.prod.outlook.com>
- <345b62e1-407e-7a03-9b03-486bbf5a0a8e@canonical.com>
+        Tue, 21 May 2019 05:46:51 -0400
+X-Originating-IP: 90.88.22.185
+Received: from xps13 (aaubervilliers-681-1-80-185.w90-88.abo.wanadoo.fr [90.88.22.185])
+        (Authenticated sender: miquel.raynal@bootlin.com)
+        by relay7-d.mail.gandi.net (Postfix) with ESMTPSA id B16F920005;
+        Tue, 21 May 2019 09:46:44 +0000 (UTC)
+Date:   Tue, 21 May 2019 11:46:44 +0200
+From:   Miquel Raynal <miquel.raynal@bootlin.com>
+To:     Stephen Boyd <sboyd@kernel.org>
+Cc:     Michael Turquette <mturquette@baylibre.com>,
+        Russell King <linux@armlinux.org.uk>,
+        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Antoine Tenart <antoine.tenart@bootlin.com>,
+        Maxime Chevallier <maxime.chevallier@bootlin.com>,
+        Gregory Clement <gregory.clement@bootlin.com>,
+        Nadav Haklai <nadavh@marvell.com>
+Subject: Re: [PATCH v4 0/4] Add device links to clocks
+Message-ID: <20190521114644.7000a751@xps13>
+In-Reply-To: <155502565678.20095.10517989462650657961@swboyd.mtv.corp.google.com>
+References: <20190108161940.4814-1-miquel.raynal@bootlin.com>
+        <155502565678.20095.10517989462650657961@swboyd.mtv.corp.google.com>
+Organization: Bootlin
+X-Mailer: Claws Mail 3.17.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <345b62e1-407e-7a03-9b03-486bbf5a0a8e@canonical.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello!
+Hi Stephen,
 
-On Tuesday 21 May 2019 10:26:47 Hui Wang wrote:
-> Tested-by: Hui Wang <hui.wang@canonical.com>
+Stephen Boyd <sboyd@kernel.org> wrote on Thu, 11 Apr 2019 16:34:16
+-0700:
+
+> Quoting Miquel Raynal (2019-01-08 08:19:36)
+> > Hello,
+> > 
+> > While working on suspend to RAM feature, I ran into troubles multiple
+> > times when clocks where not suspending/resuming at the desired time. I
+> > had a look at the core and I think the same logic as in the
+> > regulator's core may be applied here to (very easily) fix this issue:
+> > using device links.
+> > 
+> > The only additional change I had to do was to always (when available)
+> > populate the device entry of the core clock structure so that it could
+> > be used later. This is the purpose of patch 1. Patch 2 actually adds
+> > support for device links.
+> > 
+> > Here is a step-by-step explanation of how links are managed, following
+> > Maxime Ripard's suggestion.
+> > 
+> > 
+> > The order of probe has no importance because the framework already
+> > handles orphaned clocks so let's be simple and say there are two root
+> > clocks, not depending on anything, that are probed first: xtal0 and
+> > xtal1. None of these clocks have a parent, there is no device link in
+> > the game, yet.
+> > 
+> >    +----------------+            +----------------+
+> >    |                |            |                |
+> >    |                |            |                |
+> >    |   xtal0 core   |            |   xtal1 core   |
+> >    |                |            |                |
+> >    |                |            |                |
+> >    +-------^^-------+            +-------^^-------+
+> >            ||                            ||
+> >            ||                            ||
+> >    +----------------+            +----------------+
+> >    |                |            |                |
+> >    |   xtal0 clk    |            |   xtal1 clk    |
+> >    |                |            |                |
+> >    +----------------+            +----------------+
+> > 
+> > Then, a peripheral clock periph0 is probed. His parent is xtal1. The
+> > clock_register_*() call will run __clk_init_parent() and a link between
+> > periph0's core and xtal1's core will be created and stored in
+> > periph0's core->parent_clk_link entry.
+> > 
+> >    +----------------+            +----------------+
+> >    |                |            |                |
+> >    |                |            |                |
+> >    |   xtal0 core   |            |   xtal1 core   |
+> >    |                |            |                |
+> >    |                |            |                |
+> >    +-------^^-------+            +-------^^-------+
+> >            ||                            ||
+> >            ||                            ||
+> >    +----------------+            +----------------+
+> >    |                |            |                |
+> >    |   xtal0 clk    |            |   xtal1 clk    |
+> >    |                |            |                |
+> >    +----------------+            +-------^--------+
+> >                                          |
+> >                                          |
+> >                           +--------------+
+> >                           |   ->parent_clk_link
+> >                           |
+> >                   +----------------+
+> >                   |                |
+> >                   |                |
+> >                   |  periph0 core  |
+> >                   |                |
+> >                   |                |
+> >                   +-------^^-------+
+> >                           ||
+> >                           ||
+> >                   +----------------+
+> >                   |                |
+> >                   |  periph0 clk 0 |
+> >                   |                |
+> >                   +----------------+
+> > 
+> > Then, device0 is probed and "get" the periph0 clock. clk_get() will be
+> > called and a struct clk will be instantiated for device0 (called in
+> > the figure clk 1). A link between device0 and the new clk 1 instance of
+> > periph0 will be created and stored in the clk->consumer_link entry.
+> > 
+> >    +----------------+            +----------------+
+> >    |                |            |                |
+> >    |                |            |                |
+> >    |   xtal0 core   |            |   xtal1 core   |
+> >    |                |            |                |
+> >    |                |            |                |
+> >    +-------^^-------+            +-------^^-------+
+> >            ||                            ||
+> >            ||                            ||
+> >    +----------------+            +----------------+
+> >    |                |            |                |
+> >    |   xtal0 clk    |            |   xtal1 clk    |
+> >    |                |            |                |
+> >    +----------------+            +-------^--------+
+> >                                          |
+> >                                          |
+> >                           +--------------+
+> >                           |   ->parent_clk_link
+> >                           |
+> >                   +----------------+
+> >                   |                |
+> >                   |                |
+> >                   |  periph0 core  |
+> >                   |                <-------------+
+> >                   |                <-------------|
+> >                   +-------^^-------+            ||
+> >                           ||                    ||
+> >                           ||                    ||
+> >                   +----------------+    +----------------+
+> >                   |                |    |                |
+> >                   |  periph0 clk 0 |    |  periph0 clk 1 |
+> >                   |                |    |                |
+> >                   +----------------+    +----------------+
+> >                                                 |
+> >                                                 | ->consumer_link
+> >                                                 |
+> >                                                 |
+> >                                                 |
+> >                                         +-------v--------+
+> >                                         |    device0     |
+> >                                         +----------------+
+> > 
+> > Right now, device0 is linked to periph0, itself linked to xtal1 so
+> > everything is fine.
+> > 
+> > Now let's get some fun: the new parent of periph0 is xtal1. The process
+> > will call clk_reparent(), periph0's core->parent_clk_link will be
+> > destroyed and a new link to xtal1 will be setup and stored. The
+> > situation is now that device0 is linked to periph0 and periph0 is
+> > linked to xtal1, so the dependency between device0 and xtal1 is still
+> > clear.
+> > 
+> >    +----------------+            +----------------+
+> >    |                |            |                |
+> >    |                |            |                |
+> >    |   xtal0 core   |            |   xtal1 core   |
+> >    |                |            |                |
+> >    |                |            |                |
+> >    +-------^^-------+            +-------^^-------+
+> >            ||                            ||
+> >            ||                            ||
+> >    +----------------+            +----------------+
+> >    |                |            |                |
+> >    |   xtal0 clk    |            |   xtal1 clk    |
+> >    |                |            |                |
+> >    +-------^--------+            +----------------+
+> >            |
+> >            |                           \ /
+> >            +----------------------------x  
+> >       ->parent_clk_link   |            / \  
+> >                           |
+> >                   +----------------+
+> >                   |                |
+> >                   |                |
+> >                   |  periph0 core  |
+> >                   |                <-------------+
+> >                   |                <-------------|
+> >                   +-------^^-------+            ||
+> >                           ||                    ||
+> >                           ||                    ||
+> >                   +----------------+    +----------------+
+> >                   |                |    |                |
+> >                   |  periph0 clk 0 |    |  periph0 clk 1 |
+> >                   |                |    |                |
+> >                   +----------------+    +----------------+
+> >                                                 |
+> >                                                 | ->consumer_link
+> >                                                 |
+> >                                                 |
+> >                                                 |
+> >                                         +-------v--------+
+> >                                         |    device0     |
+> >                                         +----------------+
+> > 
+> > I assume periph0 cannot be removed while there are devices using it,
+> > same for xtal0.
+> > 
+> > What can happen is that device0 'put' the clock periph0. The relevant
+> > link is deleted and the clk instance dropped.
+> > 
+> >    +----------------+            +----------------+
+> >    |                |            |                |
+> >    |                |            |                |
+> >    |   xtal0 core   |            |   xtal1 core   |
+> >    |                |            |                |
+> >    |                |            |                |
+> >    +-------^^-------+            +-------^^-------+
+> >            ||                            ||
+> >            ||                            ||
+> >    +----------------+            +----------------+
+> >    |                |            |                |
+> >    |   xtal0 clk    |            |   xtal1 clk    |
+> >    |                |            |                |
+> >    +-------^--------+            +----------------+
+> >            |
+> >            |                           \ /
+> >            +----------------------------x  
+> >       ->parent_clk_link   |            / \  
+> >                           |
+> >                   +----------------+
+> >                   |                |
+> >                   |                |
+> >                   |  periph0 core  |
+> >                   |                |
+> >                   |                |
+> >                   +-------^^-------+
+> >                           ||
+> >                           ||
+> >                   +----------------+
+> >                   |                |
+> >                   |  periph0 clk 0 |
+> >                   |                |
+> >                   +----------------+
+> > 
+> > Now we can unregister periph0: link with the parent will be destroyed
+> > and the clock may be safely removed.
+> > 
+> >    +----------------+            +----------------+
+> >    |                |            |                |
+> >    |                |            |                |
+> >    |   xtal0 core   |            |   xtal1 core   |
+> >    |                |            |                |
+> >    |                |            |                |
+> >    +-------^^-------+            +-------^^-------+
+> >            ||                            ||
+> >            ||                            ||
+> >    +----------------+            +----------------+
+> >    |                |            |                |
+> >    |   xtal0 clk    |            |   xtal1 clk    |
+> >    |                |            |                |
+> >    +----------------+            +----------------+
+> > 
+> > 
+> > This is my understanding of the common clock framework and how links
+> > can be added to it.
+> > 
+> > As a result, here are the links created during the boot of an
+> > ESPRESSObin:
+> >   
 > 
-> On 2019/5/21 上午9:07, Xiaoxiao Liu wrote:
-> > Add Pali Rohár.
-> > 
-> > -----邮件原件-----
-> > 发件人: XiaoXiao Liu <sliuuxiaonxiao@gmail.com>
-> > 发送时间: Monday, May 20, 2019 7:02 PM
-> > 收件人: dmitry.torokhov@gmail.com
-> > 抄送: linux-input@vger.kernel.org; linux-kernel@vger.kernel.org; hui.wang@canonical.com; 曹 曉建 Xiaojian Cao <xiaojian.cao@cn.alps.com>; zhangfp1@lenovo.com; 劉 曉曉 Xiaoxiao Liu <xiaoxiao.liu-1@cn.alps.com>; XiaoXiao Liu <sliuuxiaonxiao@gmail.com>
-> > 主题: [PATCH] input: alps-fix the issue the special alps trackpoint do not work.
-> > 
-> > when the alps trackpoint is detected and using the alps_v8_protocol_data procotol,
-> > the alps driver will not report the input data.
+> Sorry this patch series is taking way too long to get merged. It's
+> already mid-April!
+> 
+> So I still have some of the original questions I had from before, mostly
+> around circular parent chains between clk providers. For example, there
+> are clk providers that both provide clks to other providers and consume
+> clks from those providers. Does device links work gracefully here?
+> 
+> Just speaking from my own qcom experience, I can point to the PCIe PHY
+> that's a provider of a clk to GCC and a consumer of a clk in GCC. In
+> block diagram form this is:
+> 
+> 
+>       PCIE PHY                        GCC
+>    +--------------+          +-------------------------+
+>    |              |          |                         |
+>    |     PHY clk ->----------+---- gcc_pipe_clk ---+   |
+>    |              |          |                     |   |
+>    |              |          |                     |   |
+>    | pci_pipe_clk <----------|---------------------+   |
+>    |              |          |                         |
+>    +--------------+          +-------------------------+
+> 
+> The end result is that the PCIe PHY is a clk controller that provides
+> the PHY clk to GCC's gcc_pipe_clk and then it gets the same clk signal
+> back from GCC and uses it on the PCIe PHY's pci_pipe_clk input.
+> 
+> So is this is a problem?
+> 
 
-Why it does not report input data?
+It's now my turn to get back on this topic.
 
-> > solution: use standard mouse driver instead of alps driver when the specail trackpoint was detected.
+I just put my noise back into this and for what I understand of the
+clk subsystem, I think the situation you describe could be pictured
+like this:
 
-This looks like an (undocumented) hack or workaround. Not a solution.
 
-> > Signed-off-by: XiaoXiao Liu <sliuuxiaonxiao@gmail.com>
-> > ---
-> >   drivers/input/mouse/alps.c | 23 ++++++++++++++++++++++-
-> >   1 file changed, 22 insertions(+), 1 deletion(-)
-> > 
-> > diff --git a/drivers/input/mouse/alps.c b/drivers/input/mouse/alps.c index 0a6f7ca883e7..516ae1d0eb17 100644
-> > --- a/drivers/input/mouse/alps.c
-> > +++ b/drivers/input/mouse/alps.c
-> > @@ -24,7 +24,7 @@
-> >   #include "psmouse.h"
-> >   #include "alps.h"
-> > -
-> > +#include "trackpoint.h"
-> >   /*
-> >    * Definitions for ALPS version 3 and 4 command mode protocol
-> >    */
-> > @@ -2864,6 +2864,22 @@ static const struct alps_protocol_info *alps_match_table(unsigned char *e7,
-> >   	return NULL;
-> >   }
-> > +int alps_check_is_trackpoint(struct psmouse *psmouse) {
-> > +	u8 param[2] = { 0 };
-> > +	int error;
-> > +
-> > +	error = ps2_command(&psmouse->ps2dev,
-> > +			    param, MAKE_PS2_CMD(0, 2, TP_READ_ID));
-> > +	if (error)
-> > +		return error;
-> > +
-> > +	if (param[0] == TP_VARIANT_ALPS)
-> > +		return 0;
-> > +	psmouse_warn(psmouse, "It is not alps trackpoint.\n");
-> > +	return -ENODEV;
-> > +}
+         +---------------+
+         |               |
+         |               |
+         | PCIe PHY      |
+         |               |
+         |               |
+         +-----^^--------+
+               ||
+               ||
+         +---------------+
+         |               |
+         | pcie_pipe_clk |
+         |               |
+         +------^--------+
+                |
+                | ->parent_clk_link
+                |
+                |
+         +---------------+
+         |               |
+         |               |
+         | GCC           |
+         |               |
+         |               |
+         +------^^-------+
+                ||
+                ||
+         +---------------+
+         |               |
+         | gcc_pipe_clk  |
+         |               |
+         +------^--------+
+                |
+                | ->parent_clk_link
+                |
+                |
+         +---------------+
+         |               |
+         |               |
+         | PCIe PHY      |
+         |               |
+         |               |
+         +------^^-------+
+                ||
+                ||
+         +---------------+
+         |               |
+         | phy_clk       |
+         |               |
+         +---------------+
 
-So, this function returns 0 when detected ALPS trackpoint and -ENODEV
-when not.
 
-> > +
-> >   static int alps_identify(struct psmouse *psmouse, struct alps_data *priv)  {
-> >   	const struct alps_protocol_info *protocol; @@ -2912,6 +2928,11 @@ static int alps_identify(struct psmouse *psmouse, struct alps_data *priv)
-> >   			protocol = &alps_v3_protocol_data;
-> >   		} else if (e7[0] == 0x73 && e7[1] == 0x03 &&
-> >   			   (e7[2] == 0x14 || e7[2] == 0x28)) {
-> > +				if (alps_check_is_trackpoint(psmouse) == 0) {
-> > +					psmouse_warn(psmouse,
-> > +					"It is alps trackpoint, use the standard mouse driver.\n");
-> > +					return -EINVAL;
+IMHO the fact that the first and third blocks are the same does not
+interfere with device links.
 
-And here I'm lost. If we have *not* detected ALPS trackpoint then if
-block is not called which means that ALPS driver is used.
+Honestly, I cannot be 100% sure it won't break on qcom designs, maybe
+the best would be to have someone to test. I don't have the relevant
+hardware. Do you? It would be really helpful!
 
-So why is for non-ALPS trackpoints used ALPS driver? This does not seem
-like a correct...
+There is an entire PCIe series blocked, waiting for these device links
+to be merged so it would help a lot if someone could test.
 
-And when we have detected ALPS trackpoint (return value 0) then standard
-mouse driver is used and returned -EINVAL. This seems strange too.
-
-So either this code is wrong or there are missing more details for
-explaining this strange logic. But still this looks like a hack not a
-proper fix/solution.
-
-> > +				}
-> >   			protocol = &alps_v8_protocol_data;
-> >   		} else if (e7[0] == 0x73 && e7[1] == 0x03 && e7[2] == 0xc8) {
-> >   			protocol = &alps_v9_protocol_data;
-> > --
-> > 2.20.1
-> > 
-
--- 
-Pali Rohár
-pali.rohar@gmail.com
+Thank you very much,
+Miquèl
