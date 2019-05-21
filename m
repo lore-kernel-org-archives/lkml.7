@@ -2,200 +2,113 @@ Return-Path: <SRS0=9PYC=TV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7057C072AF
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 09:27:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E95FEC04AAF
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 09:27:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6FDC121743
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 09:27:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE41C21743
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 09:27:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="oSrZMjgc"
+	dkim=pass (2048-bit key) header.d=cogentembedded-com.20150623.gappssmtp.com header.i=@cogentembedded-com.20150623.gappssmtp.com header.b="gi0FnqEm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727487AbfEUJ1H (ORCPT
+        id S1727496AbfEUJ1f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 May 2019 05:27:07 -0400
-Received: from mail-it1-f193.google.com ([209.85.166.193]:40896 "EHLO
-        mail-it1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726242AbfEUJ1H (ORCPT
+        Tue, 21 May 2019 05:27:35 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:42189 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726389AbfEUJ1e (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 May 2019 05:27:07 -0400
-Received: by mail-it1-f193.google.com with SMTP id h11so3583630itf.5
-        for <linux-kernel@vger.kernel.org>; Tue, 21 May 2019 02:27:06 -0700 (PDT)
+        Tue, 21 May 2019 05:27:34 -0400
+Received: by mail-lj1-f194.google.com with SMTP id 188so1006869ljf.9
+        for <linux-kernel@vger.kernel.org>; Tue, 21 May 2019 02:27:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ePk/LAdsqK2QuSF3FET//AcaRKkYpEyvxNQW6KJ/bws=;
-        b=oSrZMjgc40gkhwPG8kTuosCy4j5ESU04gGMKEkf0GdmeFvHK4617JT9UO0kpDMR5gR
-         uOOnaRMEo13PaYAcntSMUfDsO1tftEMx2SVH5dtzwRZ6vgOQwW0dr9gzzaB+ujwg7opd
-         EPsT8G/RATkTcL1c7CiIhGloBHzUHmXsJDqGH3EQpqcRSaCVptPNybSR1iHnJ/mx8mc0
-         8cTMvG0bjaeLH4g0Q70Mkv8lduNWi0dpP5bZde1ZDfkWa387tqtnscASrXXL6f3EJLYp
-         m0CkwcY5hKt2oJ3XDt9Y+DI5948LulMyWhWGXZiF3SEzx3gpL2tmcsTVHMETUZL+D9FD
-         A+aQ==
+        d=cogentembedded-com.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=5Xy6KpBMf4VElfSxI8JZgNkIn+5swVz4A7VXhYDp2D4=;
+        b=gi0FnqEmcboPROS3aUYX2FmzKmldrXp2Xd53Cs+z0s80NF/1tJ+89FLSOmuykkWh0a
+         Bseps+m7BHSnZFk5NVsRLKcGhVs10u9VBXuk7ZFWImQxcj/UfGSJbg6gJGqG3M6Eryu0
+         +6VMdvaQODEdkEjm10eVWCg6HQioXvq/vhckhU8CXA37bZxImLyV9zUqEhECALNCOSWj
+         Io7qmy3Kwb5wIloKJURrXpWb2PPdq2gW5p7a9/ShaO6loZBFBAo1n7iTGu7RKvdGnRAu
+         5KIh2bLGig4OqmPNCI6RFNpRPS27XWQk6PKwqmubBBllN7izvBcvS8lnUx17EQ9e1BYP
+         sbbQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ePk/LAdsqK2QuSF3FET//AcaRKkYpEyvxNQW6KJ/bws=;
-        b=HFcZ9ydcVa7l9NpdfDTV1zzA0K+RAN4KidSkIkDLYf8VpndAgUfJGWb61CZysS4PgS
-         nbQlw/9LGa2LllUXnYZf6+fRKhHkhIv4oPm8+vP4KVUu4qmLvh83Jhmn9M5VGCfLQ11G
-         LbOWPHsoR5oo88ImbXu26eRuWfnQKaP5R863r39XlXpovPEjpiO0nG6bCxMDduF1QiCz
-         qWbgtA4Q3otUIut/5uD34weNx6wqUnN0gLpeX+7Eg3+Lxp6H9kpFSlku6z4fQsIMLhRY
-         gk9/kZKMS9HKb76F1tqazZt6bK8h/Buz/JOgw/urhiS8IZggrsLu6wFXhziutoRmokPg
-         ZDRw==
-X-Gm-Message-State: APjAAAXprm6OMw1di5rBQxFMQ4osa46FVL9bxxYn1o/cYip7arky/8Te
-        OuXVZqDgtvv4XQGRoZsTcv7l362LEPyzHUTnRQkHfg==
-X-Google-Smtp-Source: APXvYqym/rMUjcND+RN86l3Cp2nFHg4D9twsmW0gO/li4PAykqhcdAZnjz9F3PvZW+/H3Q4HNsIBGYqgQRX9KjbyFoo=
-X-Received: by 2002:a02:b047:: with SMTP id q7mr8721430jah.2.1558430826102;
- Tue, 21 May 2019 02:27:06 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=5Xy6KpBMf4VElfSxI8JZgNkIn+5swVz4A7VXhYDp2D4=;
+        b=A6IehnoFsUozHVLIQei4HtngyO2iVVb/FE+umSnqzVGs1nGa7U8cOp1MEK+zfXrmKA
+         kYc1hOqfh7whf/wbJHhgukYHNh7/KDkFiNJ9ofUVw0cAirjrQyh1YDUe8oHS2YK7vAJx
+         wVyTr/24x24o0EY7IM6O2RNGt4hsDTNrG2MblUqAzhN69JeRSOWR5yNsR+Pe3CQ9BIOS
+         K5vOLldKcxfS+d1g4UyZiYf9hzWOPFS7Ujz/a2ABKLYuLroxnIMZ0CbTRqOsQ5RCsZs2
+         sArDRCHDm7oQfgOnGiX9VQFw1NP4rKiHyzcJHlB9AX0CPRwAS9stK7EbJmSdyZd7z/Sb
+         3CXQ==
+X-Gm-Message-State: APjAAAU2wMi0QVQTFr28hByj/R+Aaflxahb5fNp9LSJeD55soGJlerQB
+        VqoWpCK20xWKL/l4qhufxTQRzQ==
+X-Google-Smtp-Source: APXvYqz2W9cUR77wBpFQtxU/OEIMqFs1dqOYZh2m5bXIMOiU7pDh+NaARFsIcqKmxsWQZ0msZguFsQ==
+X-Received: by 2002:a2e:60a:: with SMTP id 10mr3542802ljg.126.1558430852654;
+        Tue, 21 May 2019 02:27:32 -0700 (PDT)
+Received: from [192.168.0.199] ([31.173.81.21])
+        by smtp.gmail.com with ESMTPSA id u128sm1039382lja.23.2019.05.21.02.27.30
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 21 May 2019 02:27:31 -0700 (PDT)
+Subject: Re: [PATCH v5 2/6] net: stmmac: sun8i: force select external PHY when
+ no internal one
+To:     megous@megous.com, linux-sunxi@googlegroups.com,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>
+Cc:     Icenowy Zheng <icenowy@aosc.io>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Jose Abreu <joabreu@synopsys.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com
+References: <20190520235009.16734-1-megous@megous.com>
+ <20190520235009.16734-3-megous@megous.com>
+From:   Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Message-ID: <4e031eeb-2819-a97f-73bf-af84b04aa7b2@cogentembedded.com>
+Date:   Tue, 21 May 2019 12:27:24 +0300
+User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-References: <20190520205501.177637-1-matthewgarrett@google.com> <20190520205501.177637-5-matthewgarrett@google.com>
-In-Reply-To: <20190520205501.177637-5-matthewgarrett@google.com>
-From:   Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Date:   Tue, 21 May 2019 10:26:54 +0100
-Message-ID: <CAKv+Gu8R==HfdkN_DMZs85QGfJPrNoxvkiSOEq7GbJ3tRSNVHw@mail.gmail.com>
-Subject: Re: [PATCH V7 4/4] efi: Attempt to get the TCG2 event log in the boot stub
-To:     Matthew Garrett <matthewgarrett@google.com>
-Cc:     linux-integrity <linux-integrity@vger.kernel.org>,
-        =?UTF-8?Q?Peter_H=C3=BCwe?= <peterhuewe@gmx.de>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Roberto Sassu <roberto.sassu@huawei.com>,
-        linux-efi <linux-efi@vger.kernel.org>,
-        linux-security-module <linux-security-module@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Thiebaud Weksteen <tweek@google.com>,
-        Bartosz Szczepanek <bsz@semihalf.com>,
-        Matthew Garrett <mjg59@google.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190520235009.16734-3-megous@megous.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 20 May 2019 at 21:55, Matthew Garrett <matthewgarrett@google.com> wrote:
->
-> From: Matthew Garrett <mjg59@google.com>
->
-> Right now we only attempt to obtain the SHA1-only event log. The
-> protocol also supports a crypto agile log format, which contains digests
-> for all algorithms in use. Attempt to obtain this first, and fall back
-> to obtaining the older format if the system doesn't support it. This is
-> lightly complicated by the event sizes being variable (as we don't know
-> in advance which algorithms are in use), and the interface giving us
-> back a pointer to the start of the final entry rather than a pointer to
-> the end of the log - as a result, we need to parse the final entry to
-> figure out its length in order to know how much data to copy up to the
-> OS.
->
-> Signed-off-by: Matthew Garrett <mjg59@google.com>
+Hello!
 
-Provided that this gets a tested-by from Bartosz,
+On 21.05.2019 2:50, megous@megous.com wrote:
 
-Acked-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+> From: Icenowy Zheng <icenowy@aosc.io>
+> 
+> The PHY selection bit also exists on SoCs without an internal PHY; if it's
+> set to 1 (internal PHY, default value) then the MAC will not make use of
+> any PHY such SoCs.
+          ^ "on" or "with" missing?
 
-> ---
->  drivers/firmware/efi/libstub/tpm.c | 50 ++++++++++++++++++++----------
->  1 file changed, 33 insertions(+), 17 deletions(-)
->
-> diff --git a/drivers/firmware/efi/libstub/tpm.c b/drivers/firmware/efi/libstub/tpm.c
-> index 5bd04f75d8d6..6b3b507a54eb 100644
-> --- a/drivers/firmware/efi/libstub/tpm.c
-> +++ b/drivers/firmware/efi/libstub/tpm.c
-> @@ -57,7 +57,7 @@ void efi_enable_reset_attack_mitigation(efi_system_table_t *sys_table_arg)
->
->  #endif
->
-> -static void efi_retrieve_tpm2_eventlog_1_2(efi_system_table_t *sys_table_arg)
-> +void efi_retrieve_tpm2_eventlog(efi_system_table_t *sys_table_arg)
->  {
->         efi_guid_t tcg2_guid = EFI_TCG2_PROTOCOL_GUID;
->         efi_guid_t linux_eventlog_guid = LINUX_EFI_TPM_EVENT_LOG_GUID;
-> @@ -67,6 +67,7 @@ static void efi_retrieve_tpm2_eventlog_1_2(efi_system_table_t *sys_table_arg)
->         unsigned long first_entry_addr, last_entry_addr;
->         size_t log_size, last_entry_size;
->         efi_bool_t truncated;
-> +       int version = EFI_TCG2_EVENT_LOG_FORMAT_TCG_2;
->         void *tcg2_protocol = NULL;
->
->         status = efi_call_early(locate_protocol, &tcg2_guid, NULL,
-> @@ -74,14 +75,20 @@ static void efi_retrieve_tpm2_eventlog_1_2(efi_system_table_t *sys_table_arg)
->         if (status != EFI_SUCCESS)
->                 return;
->
-> -       status = efi_call_proto(efi_tcg2_protocol, get_event_log, tcg2_protocol,
-> -                               EFI_TCG2_EVENT_LOG_FORMAT_TCG_1_2,
-> -                               &log_location, &log_last_entry, &truncated);
-> -       if (status != EFI_SUCCESS)
-> -               return;
-> +       status = efi_call_proto(efi_tcg2_protocol, get_event_log,
-> +                               tcg2_protocol, version, &log_location,
-> +                               &log_last_entry, &truncated);
-> +
-> +       if (status != EFI_SUCCESS || !log_location) {
-> +               version = EFI_TCG2_EVENT_LOG_FORMAT_TCG_1_2;
-> +               status = efi_call_proto(efi_tcg2_protocol, get_event_log,
-> +                                       tcg2_protocol, version, &log_location,
-> +                                       &log_last_entry, &truncated);
-> +               if (status != EFI_SUCCESS || !log_location)
-> +                       return;
-> +
-> +       }
->
-> -       if (!log_location)
-> -               return;
->         first_entry_addr = (unsigned long) log_location;
->
->         /*
-> @@ -96,8 +103,23 @@ static void efi_retrieve_tpm2_eventlog_1_2(efi_system_table_t *sys_table_arg)
->                  * We need to calculate its size to deduce the full size of
->                  * the logs.
->                  */
-> -               last_entry_size = sizeof(struct tcpa_event) +
-> -                       ((struct tcpa_event *) last_entry_addr)->event_size;
-> +               if (version == EFI_TCG2_EVENT_LOG_FORMAT_TCG_2) {
-> +                       /*
-> +                        * The TCG2 log format has variable length entries,
-> +                        * and the information to decode the hash algorithms
-> +                        * back into a size is contained in the first entry -
-> +                        * pass a pointer to the final entry (to calculate its
-> +                        * size) and the first entry (so we know how long each
-> +                        * digest is)
-> +                        */
-> +                       last_entry_size =
-> +                               __calc_tpm2_event_size((void *)last_entry_addr,
-> +                                                   (void *)(long)log_location,
-> +                                                   false);
-> +               } else {
-> +                       last_entry_size = sizeof(struct tcpa_event) +
-> +                          ((struct tcpa_event *) last_entry_addr)->event_size;
-> +               }
->                 log_size = log_last_entry - log_location + last_entry_size;
->         }
->
-> @@ -114,7 +136,7 @@ static void efi_retrieve_tpm2_eventlog_1_2(efi_system_table_t *sys_table_arg)
->
->         memset(log_tbl, 0, sizeof(*log_tbl) + log_size);
->         log_tbl->size = log_size;
-> -       log_tbl->version = EFI_TCG2_EVENT_LOG_FORMAT_TCG_1_2;
-> +       log_tbl->version = version;
->         memcpy(log_tbl->log, (void *) first_entry_addr, log_size);
->
->         status = efi_call_early(install_configuration_table,
-> @@ -126,9 +148,3 @@ static void efi_retrieve_tpm2_eventlog_1_2(efi_system_table_t *sys_table_arg)
->  err_free:
->         efi_call_early(free_pool, log_tbl);
->  }
-> -
-> -void efi_retrieve_tpm2_eventlog(efi_system_table_t *sys_table_arg)
-> -{
-> -       /* Only try to retrieve the logs in 1.2 format. */
-> -       efi_retrieve_tpm2_eventlog_1_2(sys_table_arg);
-> -}
-> --
-> 2.21.0.1020.gf2820cf01a-goog
->
+> This problem appears when adapting for H6, which has no real internal PHY
+> (the "internal PHY" on H6 is not on-die, but on a co-packaged AC200 chip,
+> connected via RMII interface at GPIO bank A).
+> 
+> Force the PHY selection bit to 0 when the SOC doesn't have an internal PHY,
+> to address the problem of a wrong default value.
+> 
+> Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
+> Signed-off-by: Ondrej Jirman <megous@megous.com>
+[...]
+
+MBR, Sergei
