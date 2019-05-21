@@ -2,86 +2,77 @@ Return-Path: <SRS0=9PYC=TV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10725C04E87
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 13:01:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF4F5C04AAF
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 13:02:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D1A5821773
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 13:01:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="PLUVW7rs"
+	by mail.kernel.org (Postfix) with ESMTP id 94A5321773
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 13:02:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728265AbfEUNBG (ORCPT
+        id S1728266AbfEUNCO convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 May 2019 09:01:06 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:41853 "EHLO vps0.lunn.ch"
+        Tue, 21 May 2019 09:02:14 -0400
+Received: from mga01.intel.com ([192.55.52.88]:10098 "EHLO mga01.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727534AbfEUNBE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 May 2019 09:01:04 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=kiheRmbJwdSSS6MbG97WbRFjTMnk82PDnA5kIng1yE4=; b=PLUVW7rskILZEnwXWJPNl3ACrk
-        ZGLf5epz4ySN73QrNYT644tZiNkYMnFdOt8/EEtu46x95PE5p5nN7KB6hDdOWWtg8NidyDILbDcvE
-        sy4+8sm3C52pde16SliFP1yWRD9NSMWG9Vm3/ekhEeNhWqYXl0zHS5iu7gvzqDAvBuoI=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.89)
-        (envelope-from <andrew@lunn.ch>)
-        id 1hT4O5-0002LQ-8r; Tue, 21 May 2019 15:01:01 +0200
-Date:   Tue, 21 May 2019 15:01:01 +0200
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     =?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>
-Cc:     Network Development <netdev@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-block@vger.kernel.org, John Crispin <john@phrozen.org>,
-        Jonas Gorski <jonas.gorski@gmail.com>,
-        Jo-Philipp Wich <jo@mein.io>, Felix Fietkau <nbd@nbd.name>
-Subject: Re: ARM router NAT performance affected by random/unrelated commits
-Message-ID: <20190521130101.GC6577@lunn.ch>
-References: <9a9ba4c9-3cb7-eb64-4aac-d43b59224442@gmail.com>
+        id S1727812AbfEUNCN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 May 2019 09:02:13 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 21 May 2019 06:02:13 -0700
+X-ExtLoop1: 1
+Received: from jlahtine-desk.ger.corp.intel.com (HELO localhost) ([10.252.2.137])
+  by fmsmga008.fm.intel.com with ESMTP; 21 May 2019 06:02:10 -0700
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <9a9ba4c9-3cb7-eb64-4aac-d43b59224442@gmail.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+Content-Transfer-Encoding: 8BIT
+To:     DRI <dri-devel@lists.freedesktop.org>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Intel Graphics <intel-gfx@lists.freedesktop.org>,
+        Jani Nikula <jani.nikula@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        Stephen Rothwell <sfr@canb.auug.org.au>
+From:   Joonas Lahtinen <joonas.lahtinen@linux.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <20190520221526.0e103916@canb.auug.org.au>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Chris Wilson <chris@chris-wilson.co.uk>
+References: <20190520221526.0e103916@canb.auug.org.au>
+Message-ID: <155844372974.15761.3182313807995451625@jlahtine-desk.ger.corp.intel.com>
+User-Agent: alot/0.7
+Subject: Re: linux-next: Fixes tag needs some work in the drm-intel tree
+Date:   Tue, 21 May 2019 16:02:09 +0300
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> I also tried running cachestat but didn't get anything interesting:
-> Counting cache functions... Output every 1 seconds.
-> TIME         HITS   MISSES  DIRTIES    RATIO   BUFFERS_MB   CACHE_MB
-> 10:06:59     1020        5        0    99.5%            0          2
-> 10:07:00     1029        0        0   100.0%            0          2
-> 10:07:01     1013        0        0   100.0%            0          2
-> 10:07:02     1029        0        0   100.0%            0          2
-> 10:07:03     1029        0        0   100.0%            0          2
-> 10:07:04      997        0        0   100.0%            0          2
-> 10:07:05     1013        0        0   100.0%            0          2
-> (I started iperf at 10:07:00).
+Quoting Stephen Rothwell (2019-05-20 15:15:38)
+> Hi all,
+> 
+> In commit
+> 
+>   0d90ccb70211 ("drm/i915: Delay semaphore submission until the start of the signaler")
+> 
+> Fixes tag
+> 
+>   Fixes: e88619646971 ("drm/i915: Use HW semaphores for inter-engine synchroni
+> 
+> has these problem(s):
+> 
+>   - Subject has leading but no trailing parentheses
+>   - Subject has leading but no trailing quotes
+> 
+> Please don't split Fixes tags across more than one line.
 
-Try looking at the L1 cache performance. For this class of device, the
-L1 code cache is probably too small to contain the active parts of the
-network stack. The less cache thrashing you have, the faster the stack
-will go.
+Thanks for the report.
 
-Maybe try compiling with -Os so it optimises for size.
+This was a copy'n paste mishap, detected by our tooling (and fixed by
+me) at the time of creating a PR. Unfortunately the check was not being
+enforced by tooling at commit time. We'll fix that.
 
-Build a custom kernel with everything you don't need turned off.
-
-Look at the work being done to batch process packets. Rather than
-passing one packet at a time through the network stack, it passes a
-linked list of packets to each stage in the stack. That should result
-in less cache misses per packet. But not all layers in the stack
-support this batching. See if you can find out where it is being
-unbatched, and why. Can you influence this, disable build options, or
-work on the code to pass batches further along the stack.
-
-     Andrew
+Regards, Joonas
