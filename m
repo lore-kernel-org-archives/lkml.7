@@ -2,78 +2,87 @@ Return-Path: <SRS0=9PYC=TV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F4E1C072B5
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 21:36:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59194C18E7C
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 21:39:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2541F2183F
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 21:36:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D0822183F
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 21:39:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1558474746;
+	bh=/E2M/zM6R7+VpJ4MhZxa0lwH2AQ/HgsCo6xHt+0dCGs=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=sxLHKgmIlD1mSdp+eOQTeIH3mGEg0TIs+8qjks0jRXWIYafikpSGjFtIiLMA2p+Ka
+	 OQFjW8OueC54Ya+XmnHtWu5CRTl5Yp9Rh+W9aOFRDtPsn+IRJiM18sGseoD8mBFjbw
+	 uKEuvXosCKhtK28M7aP8So/3y4d/uL3rB0OrTXNY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727912AbfEUVgW (ORCPT
+        id S1727721AbfEUVjF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 May 2019 17:36:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56740 "EHLO mail.kernel.org"
+        Tue, 21 May 2019 17:39:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57652 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727222AbfEUVgV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 May 2019 17:36:21 -0400
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1727222AbfEUVjF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 May 2019 17:39:05 -0400
+Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EAFF82173E;
-        Tue, 21 May 2019 21:36:19 +0000 (UTC)
-Date:   Tue, 21 May 2019 17:36:18 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Cc:     Kris Van Hees <kris.van.hees@oracle.com>, netdev@vger.kernel.org,
-        bpf@vger.kernel.org, dtrace-devel@oss.oracle.com,
-        linux-kernel@vger.kernel.org, mhiramat@kernel.org, acme@kernel.org,
-        ast@kernel.org, daniel@iogearbox.net, peterz@infradead.org
-Subject: Re: [RFC PATCH 00/11] bpf, trace, dtrace: DTrace BPF program type
- implementation and sample use
-Message-ID: <20190521173618.2ebe8c1f@gandalf.local.home>
-In-Reply-To: <20190521205533.evfszcjvdouby7vp@ast-mbp.dhcp.thefacebook.com>
-References: <201905202347.x4KNl0cs030532@aserv0121.oracle.com>
-        <20190521175617.ipry6ue7o24a2e6n@ast-mbp.dhcp.thefacebook.com>
-        <20190521184137.GH2422@oracle.com>
-        <20190521205533.evfszcjvdouby7vp@ast-mbp.dhcp.thefacebook.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        by mail.kernel.org (Postfix) with ESMTPSA id E5E62217F9;
+        Tue, 21 May 2019 21:39:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1558474744;
+        bh=/E2M/zM6R7+VpJ4MhZxa0lwH2AQ/HgsCo6xHt+0dCGs=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=PwHD0pwIPkIfaju6hnIxU56GLE7PcZmdt4s02dI9PAvFKibbhdGoQ3f3jeHxVlRDJ
+         +HmKW6z44JaF+gRY16MTniwsdHSsCOW25q0fwn3IY07meW0G0yw6iTBZFsXLFOoLix
+         VCWif9SJwKG/URJ7DzXCeSEJP2uZAG2KAGmWxJ3Q=
+Subject: Re: [PATCH 4.9 00/44] 4.9.178-stable review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org
+Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        linux@roeck-us.net, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org, shuah <shuah@kernel.org>
+References: <20190520115230.720347034@linuxfoundation.org>
+From:   shuah <shuah@kernel.org>
+Message-ID: <d517b2e2-7234-47f1-4403-499de8fefdd4@kernel.org>
+Date:   Tue, 21 May 2019 15:39:03 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <20190520115230.720347034@linuxfoundation.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 21 May 2019 13:55:34 -0700
-Alexei Starovoitov <alexei.starovoitov@gmail.com> wrote:
-
-> > The reasons for these patches is because I cannot do the same with the existing
-> > implementation.  Yes, I can do some of it or use some workarounds to accomplish
-> > kind of the same thing, but at the expense of not being able to do what I need
-> > to do but rather do some kind of best effort alternative.  That is not the goal
-> > here.  
+On 5/20/19 6:13 AM, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 4.9.178 release.
+> There are 44 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
 > 
-> what you call 'workaround' other people call 'feature'.
-> The kernel community doesn't accept extra code into the kernel
-> when user space can do the same.
+> Responses should be made by Wed 22 May 2019 11:50:58 AM UTC.
+> Anything received after that time might be too late.
+> 
+> The whole patch series can be found in one patch at:
+> 	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.9.178-rc1.gz
+> or in the git tree and branch at:
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.9.y
+> and the diffstat can be found below.
+> 
+> thanks,
+> 
+> greg k-h
+> 
 
-If that was really true, all file systems would be implemented on
-FUSE ;-)
+Compiled and booted on my test system. No dmesg regressions.
 
-I was just at a technical conference that was not Linux focused, and I
-talked to a lot of admins that said they would love to have Dtrace
-scripts working on Linux unmodified.
+thanks,
+-- Shuah
 
-I need to start getting more familiar with the workings of eBPF and
-then look at what Dtrace has to see where something like this can be
-achieved, but right now just NACKing patches outright isn't being
-helpful. If you are not happy with this direction, I would love to see
-conversations where Kris shows you exactly what is required (from a
-feature perspective, not an implementation one) and we come up with a
-solution.
-
--- Steve
