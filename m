@@ -2,74 +2,136 @@ Return-Path: <SRS0=9PYC=TV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E99E6C04AAF
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 14:52:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F09E9C04AAF
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 14:52:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BF2F621743
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 14:52:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF18E2173E
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 14:52:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rMcvSaT2"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="gi979lmu";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="I8ukjk4V"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728962AbfEUOw3 (ORCPT
+        id S1728963AbfEUOwg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 May 2019 10:52:29 -0400
-Received: from mail-io1-f45.google.com ([209.85.166.45]:37466 "EHLO
-        mail-io1-f45.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728841AbfEUOwT (ORCPT
+        Tue, 21 May 2019 10:52:36 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:48020 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728316AbfEUOwe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 May 2019 10:52:19 -0400
-Received: by mail-io1-f45.google.com with SMTP id u2so14163487ioc.4
-        for <linux-kernel@vger.kernel.org>; Tue, 21 May 2019 07:52:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=VEBQT5hPNY+WmxZoXIy8e/pcweb5kfeZeD0sBTptdRA=;
-        b=rMcvSaT2NO+jmP8g6QeQrSTTPSv/OllfHnw4LphrinwMsbbuwCDWJdphYEBhZvg2X5
-         7rRoVkFnX9ZhbtxvhW+DiPHkO7Dv1a5hLPI5KOK2msqNVGlJL3ZQ2m6hcgvu/nc2ksK0
-         +mv3obz7DDPx+LQxEqQB9uIQTu4iLnp26+osEXmGI8Pos2TdAxbLGdiGCf6RsbAiJbZ8
-         /yQRrcifSQ0F0WRNxOwb0rYDY1RJNtPAaIgh1YsskS6ZjoYG62pQjWBDgs01Qwkx9Z12
-         qcqa6RO8hDt1BUrfcRyqXImJ8U+RpPJapFxQqszg/GCqAhEwe7ZawBaQ9LvVd4w7RaLG
-         pRXg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=VEBQT5hPNY+WmxZoXIy8e/pcweb5kfeZeD0sBTptdRA=;
-        b=AM+4K/kIA5AoHE4vG2kP62kkMKgdFiou7NrTYF92Uh08JymXI85lzScK824zUnhLBu
-         8jeC7ot9BCm+u+bW7YpH/sJdIXXy83YHUtU+CuPkWirA6SA40wOx5/cb73eVdvb1Ae6j
-         hwVyCKKsXMKrZXirItPjg2tN6eMWxzNJreh1EfmzgxGJXCOhx+NckshzZptYSEAuNvHC
-         sMx7rOjWo38Spc3UlVE/4guOvafJrysFB+Jd9rKwUt/x73oY9/oztQoEdkyYIG3BkcUn
-         D75zxqTdUloSZpKORW7MrCaR+9bMu11otL73+DrjZTI9WD9HRsl3y8RnvB5VGaOqqEJr
-         f0cw==
-X-Gm-Message-State: APjAAAWaDD3/t+8l2y8ei8nV1Wp2+/MKGwDdRRkkEgR8wba53BGko3k+
-        FU+FfHPKSw1Vv3DnFcdZ/RuYwbvQSukucGOj118=
-X-Google-Smtp-Source: APXvYqw1FQrNhSL/UOS0iNSoSsah/qfUsbU8ohoRfTN+LWooDGMyeqRDC7CCfWjpG2/i4o6DwpRDUFhZGUzRDYT3P3A=
-X-Received: by 2002:a6b:790a:: with SMTP id i10mr4425841iop.2.1558450338532;
- Tue, 21 May 2019 07:52:18 -0700 (PDT)
+        Tue, 21 May 2019 10:52:34 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 7DA1D60E5A; Tue, 21 May 2019 14:52:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1558450352;
+        bh=SrPfq8MUViUv+XabaPgjbbiYPwSPr5D7GfKJjGwPG+I=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=gi979lmu16tGOEOTilt7ENiKg7rFcuOTfFLuR+c4mUCM/Erh3fSjEoeQnjmPvTwlH
+         dJV0V8+OWwXaZsrnn64uinhEM20+yhbMBCFwI3fegy/pObPwt0G7/y4A38x63Rxop4
+         /pUn38KW6NJodHSvOO0+TFpZmOteK5IPy8aMExiM=
+Received: from [10.226.58.28] (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: jhugo@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id ED10D6021C;
+        Tue, 21 May 2019 14:52:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1558450351;
+        bh=SrPfq8MUViUv+XabaPgjbbiYPwSPr5D7GfKJjGwPG+I=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=I8ukjk4VvZ1URFh1a1CnLlOUQgcflGA2KQX4W7UDU0PS4dhXqM/Fw0r195XSmtXEc
+         OFC9lEihjflZtu/u2C+5Zl3hMUNX6d/m9Y8yGmDJvKAyvNU6M+VBgPne5tcXM82ixH
+         hV8zbiK6KoKwcZX2VEUvx8q8vXpEUlDNeLO1fqU4=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org ED10D6021C
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=jhugo@codeaurora.org
+Subject: Re: [PATCH v4 0/6] MSM8998 Multimedia Clock Controller
+To:     sboyd@kernel.org
+Cc:     david.brown@linaro.org, agross@kernel.org,
+        bjorn.andersson@linaro.org, marc.w.gonzalez@free.fr,
+        mturquette@baylibre.com, robh+dt@kernel.org, mark.rutland@arm.com,
+        linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+References: <1558449843-19971-1-git-send-email-jhugo@codeaurora.org>
+From:   Jeffrey Hugo <jhugo@codeaurora.org>
+Message-ID: <933023a0-10fd-fedf-6715-381dae174ad9@codeaurora.org>
+Date:   Tue, 21 May 2019 08:52:28 -0600
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-References: <1558115396-3244-1-git-send-email-oscargomezf@gmail.com>
- <CAGngYiVNQrr2nKfGCdi8FzS5UnmGaDj_Gu_F0ZeOTMKX6_1Zuw@mail.gmail.com>
- <20190521141715.GA25603@kroah.com> <CAGngYiUxd15xVkcbFm4cC+0a+UU+VODTKC0z4p=NoW+pTXoYzA@mail.gmail.com>
-In-Reply-To: <CAGngYiUxd15xVkcbFm4cC+0a+UU+VODTKC0z4p=NoW+pTXoYzA@mail.gmail.com>
-From:   Oscar Gomez Fuente <oscargomezf@gmail.com>
-Date:   Tue, 21 May 2019 16:51:43 +0200
-Message-ID: <CALtfCQaiT0p_cWgKS66ExS0_Uqe2Ltv7v-dV7sLarBgZNUGzHQ@mail.gmail.com>
-Subject: Re: [PATCH] staging: fieldbus: solve warning incorrect type dev_core.c
-To:     Sven Van Asbroeck <thesven73@gmail.com>
-Cc:     Greg KH <gregkh@linuxfoundation.org>, devel@driverdev.osuosl.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <1558449843-19971-1-git-send-email-jhugo@codeaurora.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Ok, perfect!
+On 5/21/2019 8:44 AM, Jeffrey Hugo wrote:
+> The multimedia clock controller (mmcc) is the main clock controller for
+> the multimedia subsystem and is required to enable things like display and
+> camera.
 
-Oscar Gomez Fuente
+Stephen, I think this series is good to go, and I have display/gpu stuff 
+I'm polishing that will depend on this.  Would you kindly pickup patches 
+1, 3, 4, and 5 for 5.3?  I can work with Bjorn to pick up patches 2 and 6.
+
+> 
+> v4:
+> -fix makefile to use correct config item
+> -pick up tags
+> -fix ordering of clocks and clock-names in dt
+> -drop MODULE_ALIAS
+> -wait for xo in mmcc since that was found to be useful in some debug configs
+> 
+> v3:
+> -Rebase onto linux-next to get the final version of the clk parent rewrite
+> series
+> -Moved the bindings header to the bindings patch per Rob
+> -Made xo manditory for GCC to work around the lack of clk orphan probe defer
+> to avoid the uart console glitch
+> 
+> v2:
+> -Rebased on the "Rewrite clk parent handling" series and updated to the clk init
+> mechanisms introduced there.
+> -Marked XO clk as CLK_IGNORE_UNUSED to avoid the concern about the XO going away
+> "incorrectly" during late init
+> -Corrected the name of the XO clock to "xo"
+> -Dropped the fake XO clock in GCC to prevent a namespace conflict
+> -Fully enumerated the external clocks (DSI PLLs, etc) in the DT binding
+> -Cleaned up the weird newlines in the added DT node
+> -Added DT header file to msm8998 DT for future clients
+> 
+> Jeffrey Hugo (6):
+>    dt-bindings: clock: Document external clocks for MSM8998 gcc
+>    arm64: dts: msm8998: Add xo clock to gcc node
+>    clk: qcom: smd: Add XO clock for MSM8998
+>    dt-bindings: clock: Add support for the MSM8998 mmcc
+>    clk: qcom: Add MSM8998 Multimedia Clock Controller (MMCC) driver
+>    arm64: dts: qcom: msm8998: Add mmcc node
+> 
+>   .../devicetree/bindings/clock/qcom,gcc.txt    |   10 +
+>   .../devicetree/bindings/clock/qcom,mmcc.txt   |   21 +
+>   arch/arm64/boot/dts/qcom/msm8998.dtsi         |   16 +
+>   drivers/clk/qcom/Kconfig                      |    9 +
+>   drivers/clk/qcom/Makefile                     |    1 +
+>   drivers/clk/qcom/clk-smd-rpm.c                |   24 +-
+>   drivers/clk/qcom/gcc-msm8998.c                |   29 +-
+>   drivers/clk/qcom/mmcc-msm8998.c               | 2915 +++++++++++++++++
+>   include/dt-bindings/clock/qcom,mmcc-msm8998.h |  210 ++
+>   9 files changed, 3214 insertions(+), 21 deletions(-)
+>   create mode 100644 drivers/clk/qcom/mmcc-msm8998.c
+>   create mode 100644 include/dt-bindings/clock/qcom,mmcc-msm8998.h
+> 
+
+
+-- 
+Jeffrey Hugo
+Qualcomm Datacenter Technologies as an affiliate of Qualcomm 
+Technologies, Inc.
+Qualcomm Technologies, Inc. is a member of the
+Code Aurora Forum, a Linux Foundation Collaborative Project.
