@@ -2,362 +2,201 @@ Return-Path: <SRS0=9PYC=TV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56DCFC04AAF
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 15:16:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06C2DC04AAF
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 15:18:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 20F5721773
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 15:16:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="CXGnUo0N"
+	by mail.kernel.org (Postfix) with ESMTP id D83192173E
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 15:18:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728661AbfEUPQv (ORCPT
+        id S1728709AbfEUPSM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 May 2019 11:16:51 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:35107 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727969AbfEUPQv (ORCPT
+        Tue, 21 May 2019 11:18:12 -0400
+Received: from kirsty.vergenet.net ([202.4.237.240]:45758 "EHLO
+        kirsty.vergenet.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727969AbfEUPSL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 May 2019 11:16:51 -0400
-Received: by mail-pl1-f195.google.com with SMTP id p1so3219306plo.2
-        for <linux-kernel@vger.kernel.org>; Tue, 21 May 2019 08:16:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=Vrg5abMyMrA/Oyy7NYVIaBdRIazxG5RLmR80PbEB3d4=;
-        b=CXGnUo0NOi4At02ITCCmdyHJ0AwOqIlU0nQykBnSRQSU+lhNfqbW2hqm+PBjYDrNgH
-         lhaKBx8BCeTXCIi2XympJ0T1+J+/hCxdfmPujbrmmgZI8FasBx++X988gr0VU8W6+u6a
-         T5nReELXdCpJqbrco5rCliUK508JgLBGELt4od7nGkimwgDXuxeo70gH0ibDkHCD0x1Y
-         30Ynm4iYfj8JY3KISIHJUd/1hyesf4eBRhb49P+37XwsIths3GottOjy3eiKnE7v8Rgt
-         Y3/XVZfFmyE+4Vc5oQFKP+n7Hi0ubyjBv5Bf5jZoLZgXHXpSSIred2rXbzJv1aeuSW4x
-         z3nw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Vrg5abMyMrA/Oyy7NYVIaBdRIazxG5RLmR80PbEB3d4=;
-        b=M2ZdO8qm2Pzd99FXGFTKeJ4Jq4Cds3uF79oCFzr1tT/4NjwTXpFCh+HgBToal1sL49
-         giHe/7dLJ6AOdAnmXvTy4Hu86aGPRGIA4FSd/Pv4iQZiEjao/0Sbew8LfvCj403byPvO
-         KUziTrJqct5g1uTZig3XGSoriwu86Xd1XEB+4gPKHeaGRKJLC46+0ohZQvWVK96P5AVl
-         gTvxXBkCo4MriHjkV/6GbQmwBa8X+Q+Uc5ams8D0Hi5ixz5yqjA/AbdXf3/hfrcuFXmm
-         IC1SGv9RSo8NTw2OgJkg5DwZBbbUpYM3uSPkzP5+tBXZDUZzIKkXpXMwOoEkYiee72a1
-         puEA==
-X-Gm-Message-State: APjAAAURL31pIcBKRMYZ5XOD75Arb5Co0/6bObeHrexsIrNZ+0xEFQsb
-        NWibishXmLfweWA78oe9Uhr9og==
-X-Google-Smtp-Source: APXvYqzbATTqdyKAC0CB4fuXle7r+DgZw4voGOd0swqaxdX3fNcD3yEd+FSrsFjoN+9qNUPodak3wQ==
-X-Received: by 2002:a17:902:a70f:: with SMTP id w15mr13184209plq.222.1558451810064;
-        Tue, 21 May 2019 08:16:50 -0700 (PDT)
-Received: from localhost ([2620:10d:c091:500::2:5a76])
-        by smtp.gmail.com with ESMTPSA id m6sm31800996pgr.18.2019.05.21.08.16.48
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 21 May 2019 08:16:49 -0700 (PDT)
-Date:   Tue, 21 May 2019 11:16:47 -0400
-From:   Johannes Weiner <hannes@cmpxchg.org>
-To:     Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     kernel test robot <rong.a.chen@intel.com>, lkp@01.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Shakeel Butt <shakeelb@google.com>,
-        Roman Gushchin <guro@fb.com>, linux-mm@kvack.org,
-        cgroups@vger.kernel.org
-Subject: [PATCH] mm: memcontrol: don't batch updates of local VM stats and
- events
-Message-ID: <20190521151647.GB2870@cmpxchg.org>
-References: <20190520063534.GB19312@shao2-debian>
- <20190520215328.GA1186@cmpxchg.org>
- <20190521134646.GE19312@shao2-debian>
+        Tue, 21 May 2019 11:18:11 -0400
+Received: from reginn.horms.nl (watermunt.horms.nl [80.127.179.77])
+        by kirsty.vergenet.net (Postfix) with ESMTPA id 34F5625AD7A;
+        Wed, 22 May 2019 01:18:08 +1000 (AEST)
+Received: by reginn.horms.nl (Postfix, from userid 7100)
+        id 38869940553; Tue, 21 May 2019 17:18:06 +0200 (CEST)
+Date:   Tue, 21 May 2019 17:18:06 +0200
+From:   Simon Horman <horms@verge.net.au>
+To:     Julian Anastasov <ja@ssi.bg>
+Cc:     YueHaibing <yuehaibing@huawei.com>, davem@davemloft.net,
+        wensong@linux-vs.org, pablo@netfilter.org,
+        kadlec@blackhole.kfki.hu, fw@strlen.de,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        lvs-devel@vger.kernel.org, netfilter-devel@vger.kernel.org,
+        coreteam@netfilter.org
+Subject: Re: [PATCH v2] ipvs: Fix use-after-free in ip_vs_in
+Message-ID: <20190521151805.xidqtvohi4sfgaja@verge.net.au>
+References: <alpine.LFD.2.21.1905171015040.2233@ja.home.ssi.bg>
+ <20190517143149.17016-1-yuehaibing@huawei.com>
+ <alpine.LFD.2.21.1905191258160.2448@ja.home.ssi.bg>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190521134646.GE19312@shao2-debian>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+In-Reply-To: <alpine.LFD.2.21.1905191258160.2448@ja.home.ssi.bg>
+Organisation: Horms Solutions BV
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The kernel test robot noticed a 26% will-it-scale pagefault regression
-from commit 42a300353577 ("mm: memcontrol: fix recursive statistics
-correctness & scalabilty"). This appears to be caused by bouncing the
-additional cachelines from the new hierarchical statistics counters.
+On Sun, May 19, 2019 at 01:09:24PM +0300, Julian Anastasov wrote:
+> 
+> 	Hello,
+> 
+> On Fri, 17 May 2019, YueHaibing wrote:
+> 
+> > BUG: KASAN: use-after-free in ip_vs_in.part.29+0xe8/0xd20 [ip_vs]
+> > Read of size 4 at addr ffff8881e9b26e2c by task sshd/5603
+> > 
+> > CPU: 0 PID: 5603 Comm: sshd Not tainted 4.19.39+ #30
+> > Hardware name: Red Hat KVM, BIOS 0.5.1 01/01/2011
+> > Call Trace:
+> >  dump_stack+0x71/0xab
+> >  print_address_description+0x6a/0x270
+> >  kasan_report+0x179/0x2c0
+> >  ip_vs_in.part.29+0xe8/0xd20 [ip_vs]
+> >  ip_vs_in+0xd8/0x170 [ip_vs]
+> >  nf_hook_slow+0x5f/0xe0
+> >  __ip_local_out+0x1d5/0x250
+> >  ip_local_out+0x19/0x60
+> >  __tcp_transmit_skb+0xba1/0x14f0
+> >  tcp_write_xmit+0x41f/0x1ed0
+> >  ? _copy_from_iter_full+0xca/0x340
+> >  __tcp_push_pending_frames+0x52/0x140
+> >  tcp_sendmsg_locked+0x787/0x1600
+> >  ? tcp_sendpage+0x60/0x60
+> >  ? inet_sk_set_state+0xb0/0xb0
+> >  tcp_sendmsg+0x27/0x40
+> >  sock_sendmsg+0x6d/0x80
+> >  sock_write_iter+0x121/0x1c0
+> >  ? sock_sendmsg+0x80/0x80
+> >  __vfs_write+0x23e/0x370
+> >  vfs_write+0xe7/0x230
+> >  ksys_write+0xa1/0x120
+> >  ? __ia32_sys_read+0x50/0x50
+> >  ? __audit_syscall_exit+0x3ce/0x450
+> >  do_syscall_64+0x73/0x200
+> >  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+> > RIP: 0033:0x7ff6f6147c60
+> > Code: 73 01 c3 48 8b 0d 28 12 2d 00 f7 d8 64 89 01 48 83 c8 ff c3 66 0f 1f 44 00 00 83 3d 5d 73 2d 00 00 75 10 b8 01 00 00 00 0f 05 <48> 3d 01 f0 ff ff 73 31 c3 48 83
+> > RSP: 002b:00007ffd772ead18 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
+> > RAX: ffffffffffffffda RBX: 0000000000000034 RCX: 00007ff6f6147c60
+> > RDX: 0000000000000034 RSI: 000055df30a31270 RDI: 0000000000000003
+> > RBP: 000055df30a31270 R08: 0000000000000000 R09: 0000000000000000
+> > R10: 00007ffd772ead70 R11: 0000000000000246 R12: 00007ffd772ead74
+> > R13: 00007ffd772eae20 R14: 00007ffd772eae24 R15: 000055df2f12ddc0
+> > 
+> > Allocated by task 6052:
+> >  kasan_kmalloc+0xa0/0xd0
+> >  __kmalloc+0x10a/0x220
+> >  ops_init+0x97/0x190
+> >  register_pernet_operations+0x1ac/0x360
+> >  register_pernet_subsys+0x24/0x40
+> >  0xffffffffc0ea016d
+> >  do_one_initcall+0x8b/0x253
+> >  do_init_module+0xe3/0x335
+> >  load_module+0x2fc0/0x3890
+> >  __do_sys_finit_module+0x192/0x1c0
+> >  do_syscall_64+0x73/0x200
+> >  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+> > 
+> > Freed by task 6067:
+> >  __kasan_slab_free+0x130/0x180
+> >  kfree+0x90/0x1a0
+> >  ops_free_list.part.7+0xa6/0xc0
+> >  unregister_pernet_operations+0x18b/0x1f0
+> >  unregister_pernet_subsys+0x1d/0x30
+> >  ip_vs_cleanup+0x1d/0xd2f [ip_vs]
+> >  __x64_sys_delete_module+0x20c/0x300
+> >  do_syscall_64+0x73/0x200
+> >  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+> > 
+> > The buggy address belongs to the object at ffff8881e9b26600 which belongs to the cache kmalloc-4096 of size 4096
+> > The buggy address is located 2092 bytes inside of 4096-byte region [ffff8881e9b26600, ffff8881e9b27600)
+> > The buggy address belongs to the page:
+> > page:ffffea0007a6c800 count:1 mapcount:0 mapping:ffff888107c0e600 index:0x0 compound_mapcount: 0
+> > flags: 0x17ffffc0008100(slab|head)
+> > raw: 0017ffffc0008100 dead000000000100 dead000000000200 ffff888107c0e600
+> > raw: 0000000000000000 0000000080070007 00000001ffffffff 0000000000000000
+> > page dumped because: kasan: bad access detected
+> > 
+> > while unregistering ipvs module, ops_free_list calls
+> > __ip_vs_cleanup, then nf_unregister_net_hooks be called to
+> > do remove nf hook entries. It need a RCU period to finish,
+> > however net->ipvs is set to NULL immediately, which will
+> > trigger NULL pointer dereference when a packet is hooked
+> > and handled by ip_vs_in where net->ipvs is dereferenced.
+> > 
+> > Another scene is ops_free_list call ops_free to free the
+> > net_generic directly while __ip_vs_cleanup finished, then
+> > calling ip_vs_in will triggers use-after-free.
+> > 
+> > This patch moves nf_unregister_net_hooks from __ip_vs_cleanup()
+> > to __ip_vs_dev_cleanup(),  where rcu_barrier() is called by
+> > unregister_pernet_device -> unregister_pernet_operations,
+> > that will do the needed grace period.
+> > 
+> > Reported-by: Hulk Robot <hulkci@huawei.com>
+> > Fixes: efe41606184e ("ipvs: convert to use pernet nf_hook api")
+> > Suggested-by: Julian Anastasov <ja@ssi.bg>
+> > Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+> 
+> 	Looks good to me, thanks!
+> 
+> Acked-by: Julian Anastasov <ja@ssi.bg>
+> 
+> 	It should restore the order of unregistrations before
+> the mentioned commit and to ensure grace period before stopping
+> the traffic and unregistering ipvs_core_ops where traffic is not
+> expected.
 
-We can fix this by getting rid of the batched local counters instead.
+Signed-off-by: Simon Horman <horms@verge.net.au>
 
-Originally, there were *only* group-local counters, and they were
-fully maintained per cpu. A reader of a stats file high up in the
-cgroup tree would have to walk the entire subtree and collect each
-level's per-cpu counters to get the recursive view. This was
-prohibitively expensive, and so we switched to per-cpu batched updates
-of the local counters during a983b5ebee57 ("mm: memcontrol: fix
-excessive complexity in memory.stat reporting"), reducing the
-complexity from nr_subgroups * nr_cpus to nr_subgroups.
+Pablo, could you consider applying this to nf?
 
-With growing machines and cgroup trees, the tree walk itself became
-too expensive for monitoring top-level groups, and this is when the
-culprit patch added hierarchy counters on each cgroup level. When the
-per-cpu batch size would be reached, both the local and the hierarchy
-counters would get batch-updated from the per-cpu delta simultaneously.
-
-This makes local and hierarchical counter reads blazingly fast, but it
-unfortunately makes the write-side too cache line intense.
-
-Since local counter reads were never a problem - we only centralized
-them to accelerate the hierarchy walk - and use of the local counters
-are becoming rarer due to replacement with hierarchical views (ongoing
-rework in the page reclaim and workingset code), we can make those
-local counters unbatched per-cpu counters again.
-
-The scheme will then be as such:
-
-   when a memcg statistic changes, the writer will:
-   - update the local counter (per-cpu)
-   - update the batch counter (per-cpu). If the batch is full:
-   - spill the batch into the group's atomic_t
-   - spill the batch into all ancestors' atomic_ts
-   - empty out the batch counter (per-cpu)
-
-   when a local memcg counter is read, the reader will:
-   - collect the local counter from all cpus
-
-   when a hiearchy memcg counter is read, the reader will:
-   - read the atomic_t
-
-We might be able to simplify this further and make the recursive
-counters unbatched per-cpu counters as well (batch upward propagation,
-but leave per-cpu collection to the readers), but that will require a
-more in-depth analysis and testing of all the callsites. Deal with the
-immediate regression for now.
-
-Fixes: 42a300353577 ("mm: memcontrol: fix recursive statistics correctness & scalabilty")
-Reported-by: kernel test robot <rong.a.chen@intel.com>
-Tested-by: kernel test robot <rong.a.chen@intel.com>
-Signed-off-by: Johannes Weiner <hannes@cmpxchg.org>
----
- include/linux/memcontrol.h | 26 ++++++++++++++++--------
- mm/memcontrol.c            | 41 ++++++++++++++++++++++++++------------
- 2 files changed, 46 insertions(+), 21 deletions(-)
-
-diff --git a/include/linux/memcontrol.h b/include/linux/memcontrol.h
-index bc74d6a4407c..2d23ae7bd36d 100644
---- a/include/linux/memcontrol.h
-+++ b/include/linux/memcontrol.h
-@@ -126,9 +126,12 @@ struct memcg_shrinker_map {
- struct mem_cgroup_per_node {
- 	struct lruvec		lruvec;
- 
-+	/* Legacy local VM stats */
-+	struct lruvec_stat __percpu *lruvec_stat_local;
-+
-+	/* Subtree VM stats (batched updates) */
- 	struct lruvec_stat __percpu *lruvec_stat_cpu;
- 	atomic_long_t		lruvec_stat[NR_VM_NODE_STAT_ITEMS];
--	atomic_long_t		lruvec_stat_local[NR_VM_NODE_STAT_ITEMS];
- 
- 	unsigned long		lru_zone_size[MAX_NR_ZONES][NR_LRU_LISTS];
- 
-@@ -274,17 +277,18 @@ struct mem_cgroup {
- 	atomic_t		moving_account;
- 	struct task_struct	*move_lock_task;
- 
--	/* memory.stat */
-+	/* Legacy local VM stats and events */
-+	struct memcg_vmstats_percpu __percpu *vmstats_local;
-+
-+	/* Subtree VM stats and events (batched updates) */
- 	struct memcg_vmstats_percpu __percpu *vmstats_percpu;
- 
- 	MEMCG_PADDING(_pad2_);
- 
- 	atomic_long_t		vmstats[MEMCG_NR_STAT];
--	atomic_long_t		vmstats_local[MEMCG_NR_STAT];
--
- 	atomic_long_t		vmevents[NR_VM_EVENT_ITEMS];
--	atomic_long_t		vmevents_local[NR_VM_EVENT_ITEMS];
- 
-+	/* memory.events */
- 	atomic_long_t		memory_events[MEMCG_NR_MEMORY_EVENTS];
- 
- 	unsigned long		socket_pressure;
-@@ -576,7 +580,11 @@ static inline unsigned long memcg_page_state(struct mem_cgroup *memcg, int idx)
- static inline unsigned long memcg_page_state_local(struct mem_cgroup *memcg,
- 						   int idx)
- {
--	long x = atomic_long_read(&memcg->vmstats_local[idx]);
-+	long x = 0;
-+	int cpu;
-+
-+	for_each_possible_cpu(cpu)
-+		x += per_cpu(memcg->vmstats_local->stat[idx], cpu);
- #ifdef CONFIG_SMP
- 	if (x < 0)
- 		x = 0;
-@@ -650,13 +658,15 @@ static inline unsigned long lruvec_page_state_local(struct lruvec *lruvec,
- 						    enum node_stat_item idx)
- {
- 	struct mem_cgroup_per_node *pn;
--	long x;
-+	long x = 0;
-+	int cpu;
- 
- 	if (mem_cgroup_disabled())
- 		return node_page_state(lruvec_pgdat(lruvec), idx);
- 
- 	pn = container_of(lruvec, struct mem_cgroup_per_node, lruvec);
--	x = atomic_long_read(&pn->lruvec_stat_local[idx]);
-+	for_each_possible_cpu(cpu)
-+		x += per_cpu(pn->lruvec_stat_local->count[idx], cpu);
- #ifdef CONFIG_SMP
- 	if (x < 0)
- 		x = 0;
-diff --git a/mm/memcontrol.c b/mm/memcontrol.c
-index e50a2db5b4ff..8d42e5c7bf37 100644
---- a/mm/memcontrol.c
-+++ b/mm/memcontrol.c
-@@ -700,11 +700,12 @@ void __mod_memcg_state(struct mem_cgroup *memcg, int idx, int val)
- 	if (mem_cgroup_disabled())
- 		return;
- 
-+	__this_cpu_add(memcg->vmstats_local->stat[idx], val);
-+
- 	x = val + __this_cpu_read(memcg->vmstats_percpu->stat[idx]);
- 	if (unlikely(abs(x) > MEMCG_CHARGE_BATCH)) {
- 		struct mem_cgroup *mi;
- 
--		atomic_long_add(x, &memcg->vmstats_local[idx]);
- 		for (mi = memcg; mi; mi = parent_mem_cgroup(mi))
- 			atomic_long_add(x, &mi->vmstats[idx]);
- 		x = 0;
-@@ -754,11 +755,12 @@ void __mod_lruvec_state(struct lruvec *lruvec, enum node_stat_item idx,
- 	__mod_memcg_state(memcg, idx, val);
- 
- 	/* Update lruvec */
-+	__this_cpu_add(pn->lruvec_stat_local->count[idx], val);
-+
- 	x = val + __this_cpu_read(pn->lruvec_stat_cpu->count[idx]);
- 	if (unlikely(abs(x) > MEMCG_CHARGE_BATCH)) {
- 		struct mem_cgroup_per_node *pi;
- 
--		atomic_long_add(x, &pn->lruvec_stat_local[idx]);
- 		for (pi = pn; pi; pi = parent_nodeinfo(pi, pgdat->node_id))
- 			atomic_long_add(x, &pi->lruvec_stat[idx]);
- 		x = 0;
-@@ -780,11 +782,12 @@ void __count_memcg_events(struct mem_cgroup *memcg, enum vm_event_item idx,
- 	if (mem_cgroup_disabled())
- 		return;
- 
-+	__this_cpu_add(memcg->vmstats_local->events[idx], count);
-+
- 	x = count + __this_cpu_read(memcg->vmstats_percpu->events[idx]);
- 	if (unlikely(x > MEMCG_CHARGE_BATCH)) {
- 		struct mem_cgroup *mi;
- 
--		atomic_long_add(x, &memcg->vmevents_local[idx]);
- 		for (mi = memcg; mi; mi = parent_mem_cgroup(mi))
- 			atomic_long_add(x, &mi->vmevents[idx]);
- 		x = 0;
-@@ -799,7 +802,12 @@ static unsigned long memcg_events(struct mem_cgroup *memcg, int event)
- 
- static unsigned long memcg_events_local(struct mem_cgroup *memcg, int event)
- {
--	return atomic_long_read(&memcg->vmevents_local[event]);
-+	long x = 0;
-+	int cpu;
-+
-+	for_each_possible_cpu(cpu)
-+		x += per_cpu(memcg->vmstats_local->events[event], cpu);
-+	return x;
- }
- 
- static void mem_cgroup_charge_statistics(struct mem_cgroup *memcg,
-@@ -2200,11 +2208,9 @@ static int memcg_hotplug_cpu_dead(unsigned int cpu)
- 			long x;
- 
- 			x = this_cpu_xchg(memcg->vmstats_percpu->stat[i], 0);
--			if (x) {
--				atomic_long_add(x, &memcg->vmstats_local[i]);
-+			if (x)
- 				for (mi = memcg; mi; mi = parent_mem_cgroup(mi))
- 					atomic_long_add(x, &memcg->vmstats[i]);
--			}
- 
- 			if (i >= NR_VM_NODE_STAT_ITEMS)
- 				continue;
-@@ -2214,12 +2220,10 @@ static int memcg_hotplug_cpu_dead(unsigned int cpu)
- 
- 				pn = mem_cgroup_nodeinfo(memcg, nid);
- 				x = this_cpu_xchg(pn->lruvec_stat_cpu->count[i], 0);
--				if (x) {
--					atomic_long_add(x, &pn->lruvec_stat_local[i]);
-+				if (x)
- 					do {
- 						atomic_long_add(x, &pn->lruvec_stat[i]);
- 					} while ((pn = parent_nodeinfo(pn, nid)));
--				}
- 			}
- 		}
- 
-@@ -2227,11 +2231,9 @@ static int memcg_hotplug_cpu_dead(unsigned int cpu)
- 			long x;
- 
- 			x = this_cpu_xchg(memcg->vmstats_percpu->events[i], 0);
--			if (x) {
--				atomic_long_add(x, &memcg->vmevents_local[i]);
-+			if (x)
- 				for (mi = memcg; mi; mi = parent_mem_cgroup(mi))
- 					atomic_long_add(x, &memcg->vmevents[i]);
--			}
- 		}
- 	}
- 
-@@ -4492,8 +4494,15 @@ static int alloc_mem_cgroup_per_node_info(struct mem_cgroup *memcg, int node)
- 	if (!pn)
- 		return 1;
- 
-+	pn->lruvec_stat_local = alloc_percpu(struct lruvec_stat);
-+	if (!pn->lruvec_stat_local) {
-+		kfree(pn);
-+		return 1;
-+	}
-+
- 	pn->lruvec_stat_cpu = alloc_percpu(struct lruvec_stat);
- 	if (!pn->lruvec_stat_cpu) {
-+		free_percpu(pn->lruvec_stat_local);
- 		kfree(pn);
- 		return 1;
- 	}
-@@ -4515,6 +4524,7 @@ static void free_mem_cgroup_per_node_info(struct mem_cgroup *memcg, int node)
- 		return;
- 
- 	free_percpu(pn->lruvec_stat_cpu);
-+	free_percpu(pn->lruvec_stat_local);
- 	kfree(pn);
- }
- 
-@@ -4525,6 +4535,7 @@ static void __mem_cgroup_free(struct mem_cgroup *memcg)
- 	for_each_node(node)
- 		free_mem_cgroup_per_node_info(memcg, node);
- 	free_percpu(memcg->vmstats_percpu);
-+	free_percpu(memcg->vmstats_local);
- 	kfree(memcg);
- }
- 
-@@ -4553,6 +4564,10 @@ static struct mem_cgroup *mem_cgroup_alloc(void)
- 	if (memcg->id.id < 0)
- 		goto fail;
- 
-+	memcg->vmstats_local = alloc_percpu(struct memcg_vmstats_percpu);
-+	if (!memcg->vmstats_local)
-+		goto fail;
-+
- 	memcg->vmstats_percpu = alloc_percpu(struct memcg_vmstats_percpu);
- 	if (!memcg->vmstats_percpu)
- 		goto fail;
--- 
-2.21.0
-
+> 
+> > ---
+> > v2: fix by moving nf_unregister_net_hooks from __ip_vs_cleanup() to __ip_vs_dev_cleanup()
+> > ---
+> >  net/netfilter/ipvs/ip_vs_core.c | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > 
+> > diff --git a/net/netfilter/ipvs/ip_vs_core.c b/net/netfilter/ipvs/ip_vs_core.c
+> > index 14457551bcb4..8ebf21149ec3 100644
+> > --- a/net/netfilter/ipvs/ip_vs_core.c
+> > +++ b/net/netfilter/ipvs/ip_vs_core.c
+> > @@ -2312,7 +2312,6 @@ static void __net_exit __ip_vs_cleanup(struct net *net)
+> >  {
+> >  	struct netns_ipvs *ipvs = net_ipvs(net);
+> >  
+> > -	nf_unregister_net_hooks(net, ip_vs_ops, ARRAY_SIZE(ip_vs_ops));
+> >  	ip_vs_service_net_cleanup(ipvs);	/* ip_vs_flush() with locks */
+> >  	ip_vs_conn_net_cleanup(ipvs);
+> >  	ip_vs_app_net_cleanup(ipvs);
+> > @@ -2327,6 +2326,7 @@ static void __net_exit __ip_vs_dev_cleanup(struct net *net)
+> >  {
+> >  	struct netns_ipvs *ipvs = net_ipvs(net);
+> >  	EnterFunction(2);
+> > +	nf_unregister_net_hooks(net, ip_vs_ops, ARRAY_SIZE(ip_vs_ops));
+> >  	ipvs->enable = 0;	/* Disable packet reception */
+> >  	smp_wmb();
+> >  	ip_vs_sync_net_cleanup(ipvs);
+> > -- 
+> > 2.20.1
+> 
+> Regards
+> 
+> --
+> Julian Anastasov <ja@ssi.bg>
+> 
