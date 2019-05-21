@@ -2,105 +2,242 @@ Return-Path: <SRS0=9PYC=TV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EEB0C04AB4
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 12:43:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BD88C04E87
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 12:46:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E330A2173E
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 12:43:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1173E2173E
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 12:46:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728151AbfEUMnO (ORCPT
+        id S1728020AbfEUMqS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 May 2019 08:43:14 -0400
-Received: from outbound-smtp15.blacknight.com ([46.22.139.232]:50523 "EHLO
-        outbound-smtp15.blacknight.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726344AbfEUMnN (ORCPT
+        Tue, 21 May 2019 08:46:18 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:46714 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726740AbfEUMqQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 May 2019 08:43:13 -0400
-Received: from mail.blacknight.com (unknown [81.17.254.16])
-        by outbound-smtp15.blacknight.com (Postfix) with ESMTPS id B674F1C1C4C
-        for <linux-kernel@vger.kernel.org>; Tue, 21 May 2019 13:43:11 +0100 (IST)
-Received: (qmail 31860 invoked from network); 21 May 2019 12:43:11 -0000
-Received: from unknown (HELO techsingularity.net) (mgorman@techsingularity.net@[37.228.225.79])
-  by 81.17.254.9 with ESMTPSA (AES256-SHA encrypted, authenticated); 21 May 2019 12:43:11 -0000
-Date:   Tue, 21 May 2019 13:43:10 +0100
-From:   Mel Gorman <mgorman@techsingularity.net>
-To:     Justin Piszcz <jpiszcz@lucidpixels.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>
-Subject: Re: 5.1 and 5.1.1: BUG: unable to handle kernel paging request at
- ffffea0002030000
-Message-ID: <20190521124310.GM18914@techsingularity.net>
-References: <CAO9zADzXTQpv5cGp61BzsVPvWQz5xbSJv_N71jBa3zopr7CB=Q@mail.gmail.com>
- <20190520115608.GK18914@techsingularity.net>
- <CAO9zADzz9QJ9Rp_Acy5GRggfYZzDwYYNWhCvPc9XHd+G=gS5zw@mail.gmail.com>
+        Tue, 21 May 2019 08:46:16 -0400
+Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4LCh40t014925
+        for <linux-kernel@vger.kernel.org>; Tue, 21 May 2019 08:46:15 -0400
+Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2smfjvw9wc-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Tue, 21 May 2019 08:46:14 -0400
+Received: from localhost
+        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <pmorel@linux.ibm.com>;
+        Tue, 21 May 2019 13:46:13 +0100
+Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
+        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Tue, 21 May 2019 13:46:08 +0100
+Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
+        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x4LCk70438469882
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 21 May 2019 12:46:07 GMT
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id F052AA4055;
+        Tue, 21 May 2019 12:46:06 +0000 (GMT)
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 66FBEA405B;
+        Tue, 21 May 2019 12:46:06 +0000 (GMT)
+Received: from [9.152.222.56] (unknown [9.152.222.56])
+        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Tue, 21 May 2019 12:46:06 +0000 (GMT)
+Reply-To: pmorel@linux.ibm.com
+Subject: Re: [PATCH v2 4/4] vfio: vfio_iommu_type1: implement
+ VFIO_IOMMU_INFO_CAPABILITIES
+To:     Cornelia Huck <cohuck@redhat.com>
+Cc:     Alex Williamson <alex.williamson@redhat.com>,
+        sebott@linux.vnet.ibm.com, gerald.schaefer@de.ibm.com,
+        pasic@linux.vnet.ibm.com, borntraeger@de.ibm.com,
+        walling@linux.ibm.com, linux-s390@vger.kernel.org,
+        iommu@lists.linux-foundation.org, joro@8bytes.org,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        schwidefsky@de.ibm.com, heiko.carstens@de.ibm.com,
+        robin.murphy@arm.com
+References: <1558109810-18683-1-git-send-email-pmorel@linux.ibm.com>
+ <1558109810-18683-5-git-send-email-pmorel@linux.ibm.com>
+ <20190517104143.240082b5@x1.home>
+ <92b6ad4e-9a49-636b-9225-acca0bec4bb7@linux.ibm.com>
+ <ed193353-56f0-14b5-f1fb-1835d0a6c603@linux.ibm.com>
+ <20190520162737.7560ad7c.cohuck@redhat.com>
+ <23f6a739-be4f-7eda-2227-2994fdc2325a@linux.ibm.com>
+ <20190520122352.73082e52@x1.home>
+ <9dc0a8de-b850-df21-e3b7-21b7c2a373a3@linux.ibm.com>
+ <20190521131120.0b2afb37.cohuck@redhat.com>
+From:   Pierre Morel <pmorel@linux.ibm.com>
+Date:   Tue, 21 May 2019 14:46:06 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-15
-Content-Disposition: inline
-In-Reply-To: <CAO9zADzz9QJ9Rp_Acy5GRggfYZzDwYYNWhCvPc9XHd+G=gS5zw@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190521131120.0b2afb37.cohuck@redhat.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 19052112-0016-0000-0000-0000027DF974
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19052112-0017-0000-0000-000032DAE368
+Message-Id: <6216c287-c741-0600-d5b7-cbdaf2214661@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-21_03:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=915 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1905210080
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 21, 2019 at 05:01:06AM -0400, Justin Piszcz wrote:
-> On Mon, May 20, 2019 at 7:56 AM Mel Gorman <mgorman@techsingularity.net> wrote:
-> >
-> > On Sun, May 12, 2019 at 04:27:45AM -0400, Justin Piszcz wrote:
-> > > Hello,
-> > >
-> > > I've turned off zram/zswap and I am still seeing the following during
-> > > periods of heavy I/O, I am returning to 5.0.xx in the meantime.
-> > >
-> > > Kernel: 5.1.1
-> > > Arch: x86_64
-> > > Dist: Debian x86_64
-> > >
-> > > [29967.019411] BUG: unable to handle kernel paging request at ffffea0002030000
-> > > [29967.019414] #PF error: [normal kernel read fault]
-> > > [29967.019415] PGD 103ffee067 P4D 103ffee067 PUD 103ffed067 PMD 0
-> > > [29967.019417] Oops: 0000 [#1] SMP PTI
-> > > [29967.019419] CPU: 10 PID: 77 Comm: khugepaged Tainted: G
-> > >    T 5.1.1 #4
-> > > [29967.019420] Hardware name: Supermicro X9SRL-F/X9SRL-F, BIOS 3.2 01/16/2015
-> > > [29967.019424] RIP: 0010:isolate_freepages_block+0xb9/0x310
-> > > [29967.019425] Code: 24 28 48 c1 e0 06 40 f6 c5 1f 48 89 44 24 20 49
-> > > 8d 45 79 48 89 44 24 18 44 89 f0 4d 89 ee 45 89 fd 41 89 c7 0f 84 ef
-> > > 00 00 00 <48> 8b 03 41 83 c4 01 a9 00 00 01 00 75 0c 48 8b 43 08 a8 01
-> > > 0f 84
-> >
-> > If you have debugging symbols installed, can you translate the faulting
-> > address with the following?
-> >
-> > ADDR=`nm /path/to/vmlinux-or-debuginfo-file | grep "t isolate_freepages_block\$" | awk '{print $1}'`
-> > addr2line -i -e vmlinux `printf "0x%lX" $((0x$ADDR+0xb9))`
+On 21/05/2019 13:11, Cornelia Huck wrote:
+> On Tue, 21 May 2019 11:14:38 +0200
+> Pierre Morel <pmorel@linux.ibm.com> wrote:
 > 
-> Another event this morning, this occurred when copying a single ~25GB
-> backup file from one block device device (3ware HW RAID) to a SW
-> RAID-1 (mdadm):
+>> 1) A short description, of zPCI functions and groups
+>>
+>> IN Z, PCI cards, leave behind an adapter between subchannels and PCI.
+>> We access PCI cards through 2 ways:
+>> - dedicated PCI instructions (pci_load/pci_store/pci/store_block)
+>> - DMA
 > 
-> With this event, it was a fault and khugepaged is not stuck at 100%
-> but this may be related as the stack trace is similar where
-> compaction_alloc is utilizing most of the CPU:
-> https://lkml.org/lkml/2019/5/9/225
+> Quick question: What about the new pci instructions? Anything that
+> needs to be considered there?
+
+No and yes.
+
+No because they should be used when pci_{load,stor,store_block} are 
+interpreted AFAIU.
+And currently we only use interception.
+
+Yes, because, the CLP part, use to setup the translations IIUC, (do not 
+ask me for details now), will need to be re-issued by the kernel after 
+some modifications and this will also need a way from QEMU S390 PCI down 
+to the ZPCI driver.
+Way that I try to setup with this patch.
+
+So answer is not now but we should keep in mind that we will 
+definitively need a way down to the zpci low level in the host.
+
 > 
-> # ADDR=`nm /usr/src/linux/vmlinux | grep "t isolate_freepages_block\$"
-> | awk '{print $1}'`
-> # echo $ADDR
-> ffffffff812274f0
-> # addr2line -i -e /usr/src/linux/vmlinux `printf "0x%lX" $((0x$ADDR+0x83d))`
-> compaction.c:?
-> # addr2line -i -e /usr/src/linux/vmlinux `printf "0x%lX" $((0x$ADDR+0x8d0))`
-> compaction.c:?
+>> We receive events through
+>> - Adapter interrupts
+> 
+> Note for the non-s390 folks: These are (I/O) interrupts that are not
+> tied to a specific device. MSI-X is mapped to this.
+> 
+>> - CHSC events
+> 
+> Another note for the non-s390 folks: This is a notification mechanism
+> that is using machine check interrupts; more information is retrieved
+> via a special instruction (chsc).
 > 
 
-Please use the offset 0xb9
+thanks, it is yes better to explain better :)
 
-addr2line -i -e /usr/src/linux/vmlinux `printf "0x%lX" $((0x$ADDR+0xb9))
+>>
+>> The adapter propose an IOMMU to protect the DMA
+>> and the interrupt handling goes through a MSIX like interface handled by
+>> the adapter.
+>>
+>> The architecture specific PCI do the interface between the standard PCI
+>> level and the zPCI function (PCI + DMA/IOMMU/Interrupt)
+>>
+>> To handle the communication through the "zPCI way" the CLP interface
+>> provides instructions to retrieve informations from the adapters.
+>>
+>> There are different group of functions having same functionalities.
+>>
+>> clp_list give us a list from zPCI functions
+>> clp_query_pci_function returns informations specific to a function
+>> clp_query_group returns information on a function group
+>>
+>>
+>> 2) Why do we need it in the guest
+>>
+>> We need to provide the guest with information on the adapters and zPCI
+>> functions returned by the clp_query instruction so that the guest's
+>> driver gets the right information on how the way to the zPCI function
+>> has been built in the host.
+>>
+>>
+>> When a guest issues the CLP instructions we intercept the clp command in
+>> QEMU and we need to feed the response with the right values for the guest.
+>> The "right" values are not the raw CLP response values:
+>>
+>> - some identifier must be virtualized, like UID and FID,
+>>
+>> - some values must match what the host received from the CLP response,
+>> like the size of the transmited blocks, the DMA Address Space Mask,
+>> number of interrupt, MSIA
+>>
+>> - some other must match what the host handled with the adapter and
+>> function, the start and end of DMA,
+>>
+>> - some what the host IOMMU driver supports (frame size),
+>>
+>>
+>>
+>> 3) We have three different way to get This information:
+>>
+>> The PCI Linux interface is a standard PCI interface and some Z specific
+>> information is available in sysfs.
+>> Not all the information needed to be returned inside the CLP response is
+>> available.
+>> So we can not use the sysfs interface to get all the information.
+>>
+>> There is a CLP ioctl interface but this interface is not secure in that
+>> it returns the information for all adapters in the system.
+>>
+>> The VFIO interface offers the advantage to point to a single PCI
+>> function, so more secure than the clp ioctl interface.
+>> Coupled with the s390_iommu we get access to the zPCI CLP instruction
+>> and to the values handled by the zPCI driver.
+>>
+>>
+>> 4) Until now we used to fill the CLP response to the guest inside QEMU
+>> with fixed values corresponding to the only PCI card we supported.
+>> To support new cards we need to get the right values from the kernel out.
+> 
+> IIRC, the current code fills in values that make sense for one specific
+> type of card only, right?
+
+yes, right
+
+> We also use the same values for emulated
+> cards (virtio); I assume that they are not completely weird for that
+> case...
+> 
+
+No they are not.
+
+For emulated cards, all is done inside QEMU, we do not need kernel 
+access, the emulated cards get a specific emulation function and group 
+assigned with pre-defined values.
+
+I sent a QEMU patch related to this.
+Even the kernel interface will change with the changes in the kernel 
+patch, the emulation should continue in this way.
+
+Regards,
+Pierre
+
+
+
+
+
+
+
+
+
 
 -- 
-Mel Gorman
-SUSE Labs
+Pierre Morel
+Linux/KVM/QEMU in Böblingen - Germany
+
