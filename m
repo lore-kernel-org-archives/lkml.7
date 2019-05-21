@@ -2,201 +2,92 @@ Return-Path: <SRS0=9PYC=TV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B766C04AAF
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 08:35:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6E7AC04AAF
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 08:35:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DBBF3216B7
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 08:35:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8A92D217D7
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 08:35:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="RZXGuIuz"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="g8+Nl3k3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726851AbfEUIfF (ORCPT
+        id S1726971AbfEUIfO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 May 2019 04:35:05 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:33352 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726006AbfEUIfE (ORCPT
+        Tue, 21 May 2019 04:35:14 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:44305 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726513AbfEUIfO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 May 2019 04:35:04 -0400
-Received: by mail-wm1-f67.google.com with SMTP id c66so1761869wme.0
-        for <linux-kernel@vger.kernel.org>; Tue, 21 May 2019 01:35:02 -0700 (PDT)
+        Tue, 21 May 2019 04:35:14 -0400
+Received: by mail-ot1-f65.google.com with SMTP id g18so15550080otj.11
+        for <linux-kernel@vger.kernel.org>; Tue, 21 May 2019 01:35:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:openpgp:autocrypt:organization
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=KbeeGujfdpWAaKWmtvzwlipu4OGzzpibM4zbaDGQkD0=;
-        b=RZXGuIuzHtBZURrj15qgLEcXH9BqCtgbLv3ixLuD3lF4lpUXBqSIRdyegUBLGO1+uS
-         vfbZOjEYcWM4TfvDB0OwPX/dfiwl2kC4U5SbRO/n8N5bXHqMAGlifJZTnOuTap2qmZhS
-         aGo+umuDPdlDR7KwWEOV/pV+7xkesxl5YAQkzIQRrPlxcGPzU8K6Sw1Q9VqLRoX7L3rR
-         TNDG4gGV5i4MlzG4girN4uaTCMCeRG/rbM8ia1S3bkwZvNcgHr8UI+88pJRsyzX4kLmu
-         bMwL59UyDBYWigWQu1ZtM4nIWPgipJ8P6sO/VxllMr3eiz+8pOFJ+HiZD+Eq0xnrPWKb
-         ExyQ==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Zhesb/W9XipgqrrNPLPqdvD2/za82zT6LyixgGoAM9s=;
+        b=g8+Nl3k3OmDRuhKnSDZ37atwAn9xDqShtEIgKkznYcwmj+Zel0rTQe6B+bM7VVqTg6
+         HftrbAok5EBMpmqmEzsERSjy5C2VBa4UqvgS0MANQiWbirTmoYJHLvaDE6Jp7AdU7/9S
+         PBOV0OKabhqHvwZyjvdsKEJPtubnCVxFQjp9/cmsDxFOyq03txxbSuDPZ1UfnnABV29f
+         oW6MJug9tmEdAuvq5xAjLP/7k5WUxUi45x5BafEHdBjLryz/mwl8ny+KBbUHB7DxgocO
+         uOtcFo/PY9TTGrIo5ykqyZDnTBQ3BC9Rq3JqT3MpcO6iP7VzQd3v9DiytY2FSSwGnm7H
+         +38w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
-         :organization:message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=KbeeGujfdpWAaKWmtvzwlipu4OGzzpibM4zbaDGQkD0=;
-        b=WuG2X9ez9twVX4wSDbEzM+Bkx3v7bjC9wa2jDaN00JdkWof5mGVuDmFl7VM0N+cKRs
-         UnzRMadBpotfjrc1v+kIYGHsCPOByuEfQjAO4dZzM7rosfogylQ5g0VmbA8f5PgD/UKE
-         16MKR+LCnUHrxxvyH5rVAkH8ZTavfXn1rN+9hHvnyfFw5c1A14Eno36mnFPtAox9mmzu
-         iyheWvPv5G1A8lbNywzxy103WQRgW+r92mqaK24LFlgi0eYyDnRlHDwsJtAi+oScAQ3h
-         NpkHPu/jyCCspHb6XUA5obHYqSxQjY6BD/XC4uZt8b+SPfAK24P/4b6QfPIoIwQxq9pS
-         yQdA==
-X-Gm-Message-State: APjAAAVJgbyGnyzb3bFOL7gou8xpRDZY9Vas0ERKdr8FAfCgPL7eAw3x
-        DFkpofNvABqgfn6Hr7Jx7iKpAw==
-X-Google-Smtp-Source: APXvYqy7r61mAXvIsDO2txsWXAh13YuMmTLlhQAjAZibEi/GE5CEIrbKOtqEvjr4375SGGAVbiQUOQ==
-X-Received: by 2002:a1c:7c0d:: with SMTP id x13mr2267880wmc.89.1558427702015;
-        Tue, 21 May 2019 01:35:02 -0700 (PDT)
-Received: from [10.1.2.12] (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
-        by smtp.gmail.com with ESMTPSA id h11sm26096432wrr.44.2019.05.21.01.35.01
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 21 May 2019 01:35:01 -0700 (PDT)
-Subject: Re: [PATCH] arm64: dts: meson-g12a-x96-max: Add Gigabit Ethernet
- Support
-To:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Cc:     khilman@baylibre.com, linux-amlogic@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-References: <20190520134336.24737-1-narmstrong@baylibre.com>
- <CAFBinCCvERE1V9aBhwNadwPRAi3Fy3EPQ_MGTGX23CQaHi0_kA@mail.gmail.com>
-From:   Neil Armstrong <narmstrong@baylibre.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=narmstrong@baylibre.com; prefer-encrypt=mutual; keydata=
- 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
- ZaTUOEkgIor5losDrePdPgE=
-Organization: Baylibre
-Message-ID: <90bad489-4186-08c9-8073-b3eafce273e4@baylibre.com>
-Date:   Tue, 21 May 2019 10:35:00 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Zhesb/W9XipgqrrNPLPqdvD2/za82zT6LyixgGoAM9s=;
+        b=HRLi1K8kaB9jhrWwQ9ODzBakxNXo3BWawy+qExC5uF2U9+g1xVHTIYjpJ39ALvcMqe
+         90pZ+Smml5wjOTB1Es6yW1DIjRA78we9BbDv70YfAnrcnUtkTVU5hGfyVE62YMPPBb1g
+         jXUwr7Ok1qI6QTcZDFLgIplpRrWymsQyIyU5bjJRzjtTFt4jVPXHRGN02Ho4DDb4/Ipy
+         ZHOZ6HxpByro4qYWump+U8F8+2JdY6FfdM3S71FLlys/yPmdctElNhbvYGNAhVx9oVHG
+         T3B7ebmaF4sEK1Ntj0oI47V11HIuDM9iDR4fXFnZM6FDo12Db9vgUgAb+IOMzdy1W7RE
+         Lizg==
+X-Gm-Message-State: APjAAAW9s32LHjDR2gkVNHEMG9qwwIBCLsCx6tuw+AMy3IC9nIYVArTm
+        fAvtyWqOZhnlcaj3uy/tsiBlgU8ZaPVORB1eWt4=
+X-Google-Smtp-Source: APXvYqz3hpBMsWdirjkxZ8tRVzOfXjig/h3dw4rm3JyHPeypK3C2UNCfDy6OzMjDYsO+eF9M1hj183BMkseb63C8G8o=
+X-Received: by 2002:a9d:10d:: with SMTP id 13mr19056614otu.14.1558427713459;
+ Tue, 21 May 2019 01:35:13 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <CAFBinCCvERE1V9aBhwNadwPRAi3Fy3EPQ_MGTGX23CQaHi0_kA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <cover.1558146549.git.gneukum1@gmail.com> <20190520083026.GA13877@kroah.com>
+ <CA+T6rvENoDXbUWEi4C5kXxsdamkZKVP19MwzEuxs0qC=ckMyeQ@mail.gmail.com>
+In-Reply-To: <CA+T6rvENoDXbUWEi4C5kXxsdamkZKVP19MwzEuxs0qC=ckMyeQ@mail.gmail.com>
+From:   Geordan Neukum <gneukum1@gmail.com>
+Date:   Tue, 21 May 2019 08:34:52 +0000
+Message-ID: <CA+T6rvHrhTQLL_WCAPbj9nXngH2NCoW+kMXgGpGWB7+rLfYEOw@mail.gmail.com>
+Subject: Re: [PATCH 0/5] Updates to staging driver: kpc_i2c
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+> On Mon, May 20, 2019 at 10:30:26AM +0200, Greg Kroah-Hartman wrote:
+>
+> All now queued up.  I'll rebase my patches that move this file on top of
+> yours, as kbuild found some problems with mine, and I'll resend them to
+> the list.
+>
+> Thanks.
 
-On 20/05/2019 19:49, Martin Blumenstingl wrote:
-> Hi Neil,
-> 
-> On Mon, May 20, 2019 at 3:43 PM Neil Armstrong <narmstrong@baylibre.com> wrote:
->>
->> Enable the network interface of the X96 Mac using an external
->> Realtek RTL8211F gigabit PHY, needing the same broken-eee properties
->> as the previous Amlogic SoC generations.
->>
->> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
->> ---
->>  .../boot/dts/amlogic/meson-g12a-x96-max.dts   | 22 +++++++++++++++++++
->>  1 file changed, 22 insertions(+)
->>
->> diff --git a/arch/arm64/boot/dts/amlogic/meson-g12a-x96-max.dts b/arch/arm64/boot/dts/amlogic/meson-g12a-x96-max.dts
->> index 5cdc263b03e6..5ca79109c250 100644
->> --- a/arch/arm64/boot/dts/amlogic/meson-g12a-x96-max.dts
->> +++ b/arch/arm64/boot/dts/amlogic/meson-g12a-x96-max.dts
->> @@ -15,6 +15,7 @@
->>
->>         aliases {
->>                 serial0 = &uart_AO;
->> +               ethernet0 = &ethmac;
->>         };
->>         chosen {
->>                 stdout-path = "serial0:115200n8";
->> @@ -150,6 +151,27 @@
->>         pinctrl-names = "default";
->>  };
->>
->> +&ext_mdio {
->> +       external_phy: ethernet-phy@0 {
->> +               /* Realtek RTL8211F (0x001cc916) */
->> +               reg = <0>;
->> +               max-speed = <1000>;
->> +               eee-broken-1000t;
-> do we still need eee-broken-1000t? there are only 2 boards left which
-> set it and I'm not sure whether those still need it after Carlo's
-> fixes
+** Same content as last reply, just realized that I had configured my
+** email client to do something wrong. Resend for readability's sake.
 
-In our tests, this boards really needs it... otherwise the network stalls
-pretty quickly. I'd prefer to avoid it but seems it's necessary.
+Additionally, I plan on trying to clean up that driver a bit more. Should I
+base my future patches off of the staging tree so that I'll have the
+"latest" driver as my basepoint? I don't want to cause any headaches
+for anyone in the future.
 
-> 
->> +       };
->> +};
->> +
->> +&ethmac {
->> +       pinctrl-0 = <&eth_rmii_pins>, <&eth_rgmii_pins>;
-> Jerome renamed "eth_rmii_pins" to "eth_pins" in v2 of his Ethernet
-> pinctrl patch: [0]
-> you missed his update only by a few minutes
+Apologies, if I missed something obvious on the newbies wiki.
+Assuming that I did not, I will certainly go ahead and try to document
+this case either on or as a link from the "sending your first patch"
+page.
 
-
-Damn...
-Thx.
-
-Neil
-
-> 
-> 
-> Martin
-> 
-> 
-> [0] https://patchwork.kernel.org/patch/10951103/
-> 
-
+Cheers,
+Geordan
