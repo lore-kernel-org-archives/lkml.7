@@ -2,147 +2,116 @@ Return-Path: <SRS0=9PYC=TV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BFC4AC04AAF
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 13:04:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79F5EC04E87
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 13:07:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 978C3217F4
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 13:04:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="0mA1oRUy"
+	by mail.kernel.org (Postfix) with ESMTP id 540772173C
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 13:07:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728301AbfEUNEt (ORCPT
+        id S1728117AbfEUNHV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 May 2019 09:04:49 -0400
-Received: from pandora.armlinux.org.uk ([78.32.30.218]:36260 "EHLO
-        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727969AbfEUNEs (ORCPT
+        Tue, 21 May 2019 09:07:21 -0400
+Received: from mail-ua1-f68.google.com ([209.85.222.68]:42330 "EHLO
+        mail-ua1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727044AbfEUNHV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 May 2019 09:04:48 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=L/Xu0P7F2m2k6/NXaV/K5aAUVa/t1N/MPvRs3G2PoR8=; b=0mA1oRUyi1YJlkuM/HBI+9ud0
-        ynBkK4QrRQxvnUfk1iOcI3dGO62FxGuKafy8qEsvG5qqc6dQ9i0HkmayDi97nw+sTWOpBnpOP7MIm
-        FvxXuM/tKvGHqs3I448C94JO1rA4CYGy3JZgsedHTXleMGEaT4vmdg4pyNUOh54PqW4frotbW/1Vg
-        9tzdiI09hlgdLhJqON6ds8kJQsBMgaB5KjmRL6Zkg/MbZ0qSbWAS1Pqv5s2nnsMMnBF2P4iJ2hYf0
-        1TZeB2V60IXiXr7jMX3XBfzHh4DMiyG9xxFLdAlcnOAi/eOXurUjVqBxMnMIaEjyM5OSfHIQLbhnX
-        BRxI0Xrdw==;
-Received: from shell.armlinux.org.uk ([2001:4d48:ad52:3201:5054:ff:fe00:4ec]:55920)
-        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.90_1)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1hT4Ra-0001Kc-5y; Tue, 21 May 2019 14:04:38 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.89)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1hT4RZ-0005qi-50; Tue, 21 May 2019 14:04:37 +0100
-Date:   Tue, 21 May 2019 14:04:37 +0100
-From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     iommu@lists.linux-foundation.org,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/2] dma-mapping: truncate dma masks to what dma_addr_t
- can hold
-Message-ID: <20190521130436.bgt53bf7nshz62ip@shell.armlinux.org.uk>
-References: <20190521124729.23559-1-hch@lst.de>
- <20190521124729.23559-2-hch@lst.de>
+        Tue, 21 May 2019 09:07:21 -0400
+Received: by mail-ua1-f68.google.com with SMTP id e9so6587467uar.9;
+        Tue, 21 May 2019 06:07:20 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=9zdMKMq6YtEJcAmlQV2agBqhGjgcY71RbSkdU/Um18Y=;
+        b=qC1pmOKJLrPxvbs5uWxUquS1d16CTi0asKi9/eQNiTV5z/S1Ip1ltRprrHUWL2XKNr
+         a3FfEM4avx5+RmkBwIA9L98W0IyKPeiwySXW7A2ZNJeFJ3NJzOpVLTTcNNRlhItyccGb
+         BvaFnGp7VnCXVrJcWIvWPmT75HZo4M2aRMG+2CTBDjZ/4CLlI5vvbsZwIeyVcwhYTvr1
+         l7PiKKoGT9OyirczJzWkdKCBcaD7yqupSnzI878mTYz2V3cj481HzeudwWW8AVx1sOPS
+         g8kOrav3Hu12nt44/AiLWlkr5ox0kqMNWIX7M9HkdSE8RbVF38EL+PqKPmWC0uRsYWTr
+         6VHw==
+X-Gm-Message-State: APjAAAWZNtEyCtNYos6/9FJxcQzCoeuJvpam88FdbQy5ymvA2hmrKYzX
+        2G51mxinvw/NHoFucEZ6WA1vzWiOE7MlXqchm7I=
+X-Google-Smtp-Source: APXvYqwk86c0hOBvUvXgwVC5HhHHgKfiCpYrw7PY71h9R+NjlgSuR31+RKZOh67So1NHcZxoXJw+Sjkim3xtMudQ18M=
+X-Received: by 2002:ab0:2bc6:: with SMTP id s6mr4471903uar.86.1558444040004;
+ Tue, 21 May 2019 06:07:20 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190521124729.23559-2-hch@lst.de>
-User-Agent: NeoMutt/20170113 (1.7.2)
+References: <git-mailbomb-linux-master-23bfaa594002f4bba085e0a1ae3c9847b988d816@kernel.org>
+In-Reply-To: <git-mailbomb-linux-master-23bfaa594002f4bba085e0a1ae3c9847b988d816@kernel.org>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Tue, 21 May 2019 15:07:08 +0200
+Message-ID: <CAMuHMdXH4A96CUuSkmnL8RVubRyd9eswz9VPqBsDqXGbNCWncw@mail.gmail.com>
+Subject: Re: net: phy: improve pause mode reporting in phy_print_status
+To:     Heiner Kallweit <hkallweit1@gmail.com>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>,
+        Simon Horman <horms+renesas@verge.net.au>,
+        netdev <netdev@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 21, 2019 at 02:47:28PM +0200, Christoph Hellwig wrote:
-> The dma masks in struct device are always 64-bits wide.  But for builds
-> using a 32-bit dma_addr_t we need to ensure we don't store an
-> unsupportable value.  Before Linux 5.0 this was handled at least by
-> the ARM dma mapping code by never allowing to set a larger dma_mask,
-> but these days we allow the driver to just set the largest supported
-> value and never fall back to a smaller one.  Ensure this always works
-> by truncating the value.
+Hi Heiner,
 
-So how does the driver negotiation for >32bit addresses work if we don't
-fail for large masks?
+On Wed, May 8, 2019 at 8:02 AM Linux Kernel Mailing List
+<linux-kernel@vger.kernel.org> wrote:
+> Commit:     23bfaa594002f4bba085e0a1ae3c9847b988d816
+> Parent:     5db9c74042e3c2168b1f1104d691063f5b662a8b
+> Refname:    refs/heads/master
+> Web:        https://git.kernel.org/torvalds/c/23bfaa594002f4bba085e0a1ae3c9847b988d816
+> Author:     Heiner Kallweit <hkallweit1@gmail.com>
+> AuthorDate: Sun May 5 19:03:51 2019 +0200
+> Committer:  David S. Miller <davem@davemloft.net>
+> CommitDate: Tue May 7 12:40:39 2019 -0700
+>
+>     net: phy: improve pause mode reporting in phy_print_status
+>
+>     So far we report symmetric pause only, and we don't consider the local
+>     pause capabilities. Let's properly consider local and remote
+>     capabilities, and report also asymmetric pause.
+>
+>     Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
+>     Signed-off-by: David S. Miller <davem@davemloft.net>
 
-I'm thinking about all those PCI drivers that need DAC cycles for >32bit
-addresses, such as e1000, which negotiate via (eg):
+Due to this commit, I see the folllowing change on Renesas development
+boards using either the sh_eth or ravb Ethernet driver:
 
-        /* there is a workaround being applied below that limits
-         * 64-bit DMA addresses to 64-bit hardware.  There are some
-         * 32-bit adapters that Tx hang when given 64-bit DMA addresses
-         */
-        pci_using_dac = 0;
-        if ((hw->bus_type == e1000_bus_type_pcix) &&
-            !dma_set_mask_and_coherent(&pdev->dev, DMA_BIT_MASK(64))) {
-                pci_using_dac = 1;
-        } else {
-                err = dma_set_mask_and_coherent(&pdev->dev, DMA_BIT_MASK(32));
-                if (err) {
-                        pr_err("No usable DMA config, aborting\n");
-                        goto err_dma;
-                }
-        }
+    -sh-eth ee700000.ethernet eth0: Link is Up - 100Mbps/Full - flow
+control rx/tx
+    +sh-eth ee700000.ethernet eth0: Link is Up - 100Mbps/Full - flow control off
 
-and similar.  If we blindly trunate the 64-bit to 32-bit, aren't we
-going to end up with PCI cards using DAC cycles to a host bridge that
-do not support DAC cycles?
+and
 
-> 
-> Fixes: 9eb9e96e97b3 ("Documentation/DMA-API-HOWTO: update dma_mask sections")
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
-> ---
->  kernel/dma/mapping.c | 12 ++++++++++++
->  1 file changed, 12 insertions(+)
-> 
-> diff --git a/kernel/dma/mapping.c b/kernel/dma/mapping.c
-> index f7afdadb6770..1f628e7ac709 100644
-> --- a/kernel/dma/mapping.c
-> +++ b/kernel/dma/mapping.c
-> @@ -317,6 +317,12 @@ void arch_dma_set_mask(struct device *dev, u64 mask);
->  
->  int dma_set_mask(struct device *dev, u64 mask)
->  {
-> +	/*
-> +	 * Truncate the mask to the actually supported dma_addr_t width to
-> +	 * avoid generating unsupportable addresses.
-> +	 */
-> +	mask = (dma_addr_t)mask;
-> +
->  	if (!dev->dma_mask || !dma_supported(dev, mask))
->  		return -EIO;
->  
-> @@ -330,6 +336,12 @@ EXPORT_SYMBOL(dma_set_mask);
->  #ifndef CONFIG_ARCH_HAS_DMA_SET_COHERENT_MASK
->  int dma_set_coherent_mask(struct device *dev, u64 mask)
->  {
-> +	/*
-> +	 * Truncate the mask to the actually supported dma_addr_t width to
-> +	 * avoid generating unsupportable addresses.
-> +	 */
-> +	mask = (dma_addr_t)mask;
-> +
->  	if (!dma_supported(dev, mask))
->  		return -EIO;
->  
-> -- 
-> 2.20.1
-> 
-> 
+    -ravb e6800000.ethernet eth0: Link is Up - 1Gbps/Full - flow control rx/tx
+    +ravb e6800000.ethernet eth0: Link is Up - 1Gbps/Full - flow control off
+
+Adding debug prints reveals that:
+
+    phydev->autoneg = 1
+    phydev->pause = 1
+    phydev->asym_pause = 0 or 1 (depending on the board)
+    local_pause = 0
+    local_asym_pause = 0
+
+Is this expected behavior?
+
+Thanks!
+
+Gr{oetje,eeting}s,
+
+                        Geert
 
 -- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
-According to speedtest.net: 11.9Mbps down 500kbps up
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
