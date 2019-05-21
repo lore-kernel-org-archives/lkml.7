@@ -2,104 +2,183 @@ Return-Path: <SRS0=9PYC=TV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01BD6C18E7C
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 23:33:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC135C072B5
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 23:33:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D3A3421773
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 23:33:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9695B21773
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 23:33:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728096AbfEUXdU (ORCPT
+        id S1728204AbfEUXdh convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 May 2019 19:33:20 -0400
-Received: from dcvr.yhbt.net ([64.71.152.64]:59806 "EHLO dcvr.yhbt.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726017AbfEUXdU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 May 2019 19:33:20 -0400
-Received: from localhost (dcvr.yhbt.net [127.0.0.1])
-        by dcvr.yhbt.net (Postfix) with ESMTP id 7D2A61F462;
-        Tue, 21 May 2019 23:33:19 +0000 (UTC)
-Date:   Tue, 21 May 2019 23:33:19 +0000
-From:   Eric Wong <e@80x24.org>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     Deepa Dinamani <deepa.kernel@gmail.com>,
-        linux-kernel@vger.kernel.org, viro@zeniv.linux.org.uk,
-        arnd@arndb.de, dbueso@suse.de, axboe@kernel.dk, dave@stgolabs.net,
-        jbaron@akamai.com, linux-fsdevel@vger.kernel.org,
-        linux-aio@kvack.org, omar.kilani@gmail.com, tglx@linutronix.de,
-        stable@vger.kernel.org, Oleg Nesterov <oleg@redhat.com>
-Subject: Re: [PATCH 1/1] signal: Adjust error codes according to
- restore_user_sigmask()
-Message-ID: <20190521233319.GA17957@dcvr>
-References: <20190507043954.9020-1-deepa.kernel@gmail.com>
- <20190521092551.fwtb6recko3tahwj@dcvr>
- <20190521152748.6b4cd70cf83a1183caa6aae7@linux-foundation.org>
+        Tue, 21 May 2019 19:33:37 -0400
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:36699 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727453AbfEUXdg (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 May 2019 19:33:36 -0400
+Received: by mail-lf1-f67.google.com with SMTP id y10so235629lfl.3
+        for <linux-kernel@vger.kernel.org>; Tue, 21 May 2019 16:33:34 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=EWNs7FuLz+EBZGJHO+hMowOuxfAj3IDqhoBMiSjNTxE=;
+        b=TrsL/8bmAQxXEQIFKRjdnxzYbsGgMDahop6IsQ9gHNdvXSSxAIbR1LDE6uFjlhNPt2
+         FofgUGDRdchaC7EY+/6LF9BkQNnCCFmVyyqiJEkYivlZMvWxdVq9ghwA2vLuLBNlkIIe
+         M3tAXwMC/jOm/zkAl7sYmHPzJOwluHUqUDd0k37quK7aXVpP6NjNsc5vyRKOEuNQAplk
+         KHUQsVEU4rfVWHFp04ucGk7xxWfMfZd4MFj8NtW5bAeuA4g+ianLiY5rhm2CW4iUSJpR
+         +9fyb2sSaZlhx1yq4r0KvKcatxOAbu2S/yItFf3QjZ3fxC8w7/XAH+iVRhUwfRmX5Rtx
+         5I2A==
+X-Gm-Message-State: APjAAAXAAs1ItMfsICDWShyS0/I2Ln0akugX4tkZ6RVeWxT8vHEW+4a4
+        NdzunkvQa0WS6ljDJWM+F20iuQns26bA8tqIJR7AWQ==
+X-Google-Smtp-Source: APXvYqxFOiQvAinejUQ5bQ+2ojPr4fXIqRhnzNKwRhVX51VwyZMoF/JudQtgNeOShJ06lSXqL67pZtMOqVe6jVwhGe0=
+X-Received: by 2002:a19:a50b:: with SMTP id o11mr28367269lfe.2.1558481613710;
+ Tue, 21 May 2019 16:33:33 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190521152748.6b4cd70cf83a1183caa6aae7@linux-foundation.org>
+References: <20190518004639.20648-1-mcroce@redhat.com> <CAGnkfhxt=nq-JV+D5Rrquvn8BVOjHswEJmuVVZE78p9HvAg9qQ@mail.gmail.com>
+ <20190520133830.1ac11fc8@cakuba.netronome.com> <dfb6cf40-81f4-237e-9a43-646077e020f7@iogearbox.net>
+ <CAGnkfhxZPXUvBemRxAFfoq+y-UmtdQH=dvnyeLBJQo43U2=sTg@mail.gmail.com> <20190521100648.1ce9b5be@cakuba.netronome.com>
+In-Reply-To: <20190521100648.1ce9b5be@cakuba.netronome.com>
+From:   Matteo Croce <mcroce@redhat.com>
+Date:   Wed, 22 May 2019 01:32:57 +0200
+Message-ID: <CAGnkfhzkRXF6WDYj9W2sffuLSYys_zbv9QekfuZWvc4VBCMKUA@mail.gmail.com>
+Subject: Re: [PATCH 1/5] samples/bpf: fix test_lru_dist build
+To:     Jakub Kicinski <jakub.kicinski@netronome.com>
+Cc:     Daniel Borkmann <daniel@iogearbox.net>,
+        xdp-newbies@vger.kernel.org, bpf@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        netdev <netdev@vger.kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Andrew Morton <akpm@linux-foundation.org> wrote:
-> On Tue, 21 May 2019 09:25:51 +0000 Eric Wong <e@80x24.org> wrote:
-> 
-> > Deepa Dinamani <deepa.kernel@gmail.com> wrote:
-> > > For all the syscalls that receive a sigmask from the userland,
-> > > the user sigmask is to be in effect through the syscall execution.
-> > > At the end of syscall, sigmask of the current process is restored
-> > > to what it was before the switch over to user sigmask.
-> > > But, for this to be true in practice, the sigmask should be restored
-> > > only at the the point we change the saved_sigmask. Anything before
-> > > that loses signals. And, anything after is just pointless as the
-> > > signal is already lost by restoring the sigmask.
-> > > 
-> > > The inherent issue was detected because of a regression caused by
-> > > 854a6ed56839a.
-> > > The patch moved the signal_pending() check closer to restoring of the
-> > > user sigmask. But, it failed to update the error code accordingly.
-> > > 
-> > > Detailed issue discussion permalink:
-> > > https://lore.kernel.org/linux-fsdevel/20190427093319.sgicqik2oqkez3wk@dcvr/
-> > > 
-> > > Note that the patch returns interrupted errors (EINTR, ERESTARTNOHAND,
-> > > etc) only when there is no other error. If there is a signal and an error
-> > > like EINVAL, the syscalls return -EINVAL rather than the interrupted
-> > > error codes.
-> > > 
-> > > The sys_io_uring_enter() seems to be returning success when there is
-> > > a signal and the queue is not empty. This seems to be a bug. I will
-> > > follow up with a separate patch for that.
-> > > 
-> > > Reported-by: Eric Wong <e@80x24.org>
-> > > Fixes: 854a6ed56839a40f6b5d02a2962f48841482eec4 ("signal: Add restore_user_sigmask()")
-> > > Signed-off-by: Deepa Dinamani <deepa.kernel@gmail.com>
-> > > Reviewed-by: Davidlohr Bueso <dbueso@suse.de>
-> 
-> (top-posting fixed).
-> 
-> > It's been 2 weeks and this fix hasn't appeared in mmots / mmotm.
-> > I also noticed it's missing Cc: for stable@ (below)
-> 
-> Why is a -stable backport needed?  I see some talk above about lost
-> signals but it is unclear whether these are being observed after fixing
-> the regression caused by 854a6ed56839a.
+On Tue, May 21, 2019 at 7:07 PM Jakub Kicinski
+<jakub.kicinski@netronome.com> wrote:
+>
+> On Tue, 21 May 2019 17:36:17 +0200, Matteo Croce wrote:
+> > On Tue, May 21, 2019 at 5:21 PM Daniel Borkmann <daniel@iogearbox.net> wrote:
+> > >
+> > > On 05/20/2019 10:38 PM, Jakub Kicinski wrote:
+> > > > On Mon, 20 May 2019 19:46:27 +0200, Matteo Croce wrote:
+> > > >> On Sat, May 18, 2019 at 2:46 AM Matteo Croce <mcroce@redhat.com> wrote:
+> > > >>>
+> > > >>> Fix the following error by removing a duplicate struct definition:
+> > > >>
+> > > >> Hi all,
+> > > >>
+> > > >> I forget to send a cover letter for this series, but basically what I
+> > > >> wanted to say is that while patches 1-3 are very straightforward,
+> > > >> patches 4-5 are a bit rough and I accept suggstions to make a cleaner
+> > > >> work.
+> > > >
+> > > > samples depend on headers being locally installed:
+> > > >
+> > > > make headers_install
+> > > >
+> > > > Are you intending to change that?
+> > >
+> > > +1, Matteo, could you elaborate?
+> > >
+> > > On latest bpf tree, everything compiles just fine:
+> > >
+> > > [root@linux bpf]# make headers_install
+> > > [root@linux bpf]# make -C samples/bpf/
+> > > make: Entering directory '/home/darkstar/trees/bpf/samples/bpf'
+> > > make -C ../../ /home/darkstar/trees/bpf/samples/bpf/ BPF_SAMPLES_PATH=/home/darkstar/trees/bpf/samples/bpf
+> > > make[1]: Entering directory '/home/darkstar/trees/bpf'
+> > >   CALL    scripts/checksyscalls.sh
+> > >   CALL    scripts/atomic/check-atomics.sh
+> > >   DESCEND  objtool
+> > > make -C /home/darkstar/trees/bpf/samples/bpf/../../tools/lib/bpf/ RM='rm -rf' LDFLAGS= srctree=/home/darkstar/trees/bpf/samples/bpf/../../ O=
+> > >   HOSTCC  /home/darkstar/trees/bpf/samples/bpf/test_lru_dist
+> > >   HOSTCC  /home/darkstar/trees/bpf/samples/bpf/sock_example
+> > >
+> >
+> > Hi all,
+> >
+> > I have kernel-headers installed from master, but yet the samples fail to build:
+> >
+> > matteo@turbo:~/src/linux/samples/bpf$ rpm -q kernel-headers
+> > kernel-headers-5.2.0_rc1-38.x86_64
+> >
+> > matteo@turbo:~/src/linux/samples/bpf$ git describe HEAD
+> > v5.2-rc1-97-g5bdd9ad875b6
+> >
+> > matteo@turbo:~/src/linux/samples/bpf$ make
+> > make -C ../../ /home/matteo/src/linux/samples/bpf/
+> > BPF_SAMPLES_PATH=/home/matteo/src/linux/samples/bpf
+> > make[1]: Entering directory '/home/matteo/src/linux'
+> >   CALL    scripts/checksyscalls.sh
+> >   CALL    scripts/atomic/check-atomics.sh
+> >   DESCEND  objtool
+> > make -C /home/matteo/src/linux/samples/bpf/../../tools/lib/bpf/ RM='rm
+> > -rf' LDFLAGS= srctree=/home/matteo/src/linux/samples/bpf/../../ O=
+> >   HOSTCC  /home/matteo/src/linux/samples/bpf/test_lru_dist
+> > /home/matteo/src/linux/samples/bpf/test_lru_dist.c:39:8: error:
+> > redefinition of ‘struct list_head’
+> >    39 | struct list_head {
+> >       |        ^~~~~~~~~
+> > In file included from /home/matteo/src/linux/samples/bpf/test_lru_dist.c:9:
+> > ./tools/include/linux/types.h:69:8: note: originally defined here
+> >    69 | struct list_head {
+> >       |        ^~~~~~~~~
+> > make[2]: *** [scripts/Makefile.host:90:
+> > /home/matteo/src/linux/samples/bpf/test_lru_dist] Error 1
+> > make[1]: *** [Makefile:1762: /home/matteo/src/linux/samples/bpf/] Error 2
+> > make[1]: Leaving directory '/home/matteo/src/linux'
+> > make: *** [Makefile:231: all] Error 2
+> >
+> > Am I missing something obvious?
+>
+> Yes ;)  Samples use a local installation of headers in $objtree/usr (I
+> think, maybe $srctree/usr).  So you need to do make headers_install in
+> your kernel source tree, otherwise the include path from tools/ takes
+> priority over your global /usr/include and causes these issues.  I had
+> this path in my tree for some time, but I don't like enough to post it:
+>
+> commit 35fb614049e93d46af708c0eaae6601df54017b3
+> Author: Jakub Kicinski <jakub.kicinski@netronome.com>
+> Date:   Mon Dec 3 15:00:24 2018 -0800
+>
+>     bpf: maybe warn ppl about hrds_install
+>
+>     Signed-off-by: Jakub Kicinski <jakub.kicinski@netronome.com>
+>
+> diff --git a/samples/bpf/Makefile b/samples/bpf/Makefile
+> index 4f0a1cdbfe7c..f79a4ed2f9f7 100644
+> --- a/samples/bpf/Makefile
+> +++ b/samples/bpf/Makefile
+> @@ -208,6 +208,15 @@ HOSTCC = $(CROSS_COMPILE)gcc
+>  CLANG_ARCH_ARGS = -target $(ARCH)
+>  endif
+>
+> +HDR_PROBE := $(shell echo "\#include <linux/types.h>\n struct list_head { int a; }; int main() { return 0; }" | \
+> +       gcc $(KBUILD_HOSTCFLAGS) -x c - -o /dev/null 2>/dev/null && \
+> +       echo okay)
+> +
+> +ifeq ($(HDR_PROBE),)
+> +$(warning Detected possible issues with include path.)
+> +$(warning Please install kernel headers locally (make headers_install))
+> +endif
+> +
+>  BTF_LLC_PROBE := $(shell $(LLC) -march=bpf -mattr=help 2>&1 | grep dwarfris)
+>  BTF_PAHOLE_PROBE := $(shell $(BTF_PAHOLE) --help 2>&1 | grep BTF)
+>  BTF_OBJCOPY_PROBE := $(shell $(LLVM_OBJCOPY) --help 2>&1 | grep -i 'usage.*llvm')
 
-I guess Deepa's commit messages wasn't clear...
-I suggest prepending this as the first paragraph to Deepa's
-original message:
+Hi Jakub,
 
-  This fixes a bug introduced with 854a6ed56839a which caused
-  EINTR to not be reported to userspace on epoll_pwait.  Failure
-  to report EINTR to userspace caused problems with user code
-  which relies on EINTR to run signal handlers.
+I see now, It worked, thanks. This is a bit error prone IMHO, if you
+ever think about sending this patch, consider it ACKed by me.
 
-> IOW, can we please have a changelog which has a clear and complete
-> description of the user-visible effects of the change.
-> 
-> And please Cc Oleg.
+Thanks,
+-- 
+Matteo Croce
+per aspera ad upstream
