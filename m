@@ -4,119 +4,148 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+	UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3AAFC04AAC
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 02:27:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E546EC04AAC
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 02:28:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 994C22171F
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 02:27:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C0F2F2173E
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 02:28:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727592AbfEUC1F (ORCPT
+        id S1727621AbfEUC2n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 22:27:05 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:57827 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726548AbfEUC1F (ORCPT
+        Mon, 20 May 2019 22:28:43 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:1639 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726548AbfEUC2m (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 22:27:05 -0400
-Received: from [125.35.49.90] (helo=[10.0.0.21])
-        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_128_CBC_SHA1:16)
-        (Exim 4.76)
-        (envelope-from <hui.wang@canonical.com>)
-        id 1hSuUV-0003UZ-4L; Tue, 21 May 2019 02:26:59 +0000
-Subject: =?UTF-8?B?UmU6IOetlOWkjTogW1BBVENIXSBpbnB1dDogYWxwcy1maXggdGhlIGlz?=
- =?UTF-8?Q?sue_the_special_alps_trackpoint_do_not_work=2e?=
-To:     Xiaoxiao Liu <xiaoxiao.liu-1@cn.alps.com>,
-        XiaoXiao Liu <sliuuxiaonxiao@gmail.com>,
-        "dmitry.torokhov@gmail.com" <dmitry.torokhov@gmail.com>
-Cc:     "pali.rohar@gmail.com" <pali.rohar@gmail.com>,
-        "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Xiaojian Cao <xiaojian.cao@cn.alps.com>,
-        "zhangfp1@lenovo.com" <zhangfp1@lenovo.com>
-References: <20190520110149.27107-1-sliuuxiaonxiao@gmail.com>
- <OSBPR01MB485510A2A32CD9D2CE5EF7A1DA070@OSBPR01MB4855.jpnprd01.prod.outlook.com>
-From:   Hui Wang <hui.wang@canonical.com>
-Message-ID: <345b62e1-407e-7a03-9b03-486bbf5a0a8e@canonical.com>
-Date:   Tue, 21 May 2019 10:26:47 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Mon, 20 May 2019 22:28:42 -0400
+X-UUID: 68376b50b3bf48ceaaa06f0e1ae8df25-20190521
+X-UUID: 68376b50b3bf48ceaaa06f0e1ae8df25-20190521
+Received: from mtkmrs01.mediatek.inc [(172.21.131.159)] by mailgw02.mediatek.com
+        (envelope-from <ck.hu@mediatek.com>)
+        (mhqrelay.mediatek.com ESMTP with TLS)
+        with ESMTP id 729639825; Tue, 21 May 2019 10:28:39 +0800
+Received: from mtkcas07.mediatek.inc (172.21.101.84) by
+ mtkmbs08n2.mediatek.inc (172.21.101.56) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Tue, 21 May 2019 10:28:37 +0800
+Received: from [172.21.77.4] (172.21.77.4) by mtkcas07.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Tue, 21 May 2019 10:28:37 +0800
+Message-ID: <1558405717.25526.1.camel@mtksdaap41>
+Subject: Re: [PATCH v7 07/12] soc: mediatek: cmdq: reorder the parameter
+From:   CK Hu <ck.hu@mediatek.com>
+To:     Bibby Hsieh <bibby.hsieh@mediatek.com>
+CC:     Jassi Brar <jassisinghbrar@gmail.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Daniel Kurtz <djkurtz@chromium.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <srv_heupstream@mediatek.com>,
+        Sascha Hauer <kernel@pengutronix.de>,
+        "Philipp Zabel" <p.zabel@pengutronix.de>,
+        Nicolas Boichat <drinkcat@chromium.org>,
+        "YT Shen" <yt.shen@mediatek.com>,
+        Daoyuan Huang <daoyuan.huang@mediatek.com>,
+        Jiaguang Zhang <jiaguang.zhang@mediatek.com>,
+        Dennis-YC Hsieh <dennis-yc.hsieh@mediatek.com>,
+        Houlong Wei <houlong.wei@mediatek.com>,
+        <ginny.chen@mediatek.com>
+Date:   Tue, 21 May 2019 10:28:37 +0800
+In-Reply-To: <20190521011108.40428-8-bibby.hsieh@mediatek.com>
+References: <20190521011108.40428-1-bibby.hsieh@mediatek.com>
+         <20190521011108.40428-8-bibby.hsieh@mediatek.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.10.4-0ubuntu2 
 MIME-Version: 1.0
-In-Reply-To: <OSBPR01MB485510A2A32CD9D2CE5EF7A1DA070@OSBPR01MB4855.jpnprd01.prod.outlook.com>
-Content-Type: text/plain; charset=gbk; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-TM-SNTS-SMTP: CB6BA5088D12BC8A5407696EA9FC8AAD7872A46B82C40CA30EDB3956441E95332000:8
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Tested-by: Hui Wang <hui.wang@canonical.com>
+Hi, Bibby:
 
-On 2019/5/21 上午9:07, Xiaoxiao Liu wrote:
-> Add Pali Rohár.
->
-> -----邮件原件-----
-> 发件人: XiaoXiao Liu <sliuuxiaonxiao@gmail.com>
-> 发送时间: Monday, May 20, 2019 7:02 PM
-> 收件人: dmitry.torokhov@gmail.com
-> 抄送: linux-input@vger.kernel.org; linux-kernel@vger.kernel.org; hui.wang@canonical.com; 曹 曉建 Xiaojian Cao <xiaojian.cao@cn.alps.com>; zhangfp1@lenovo.com; 劉 曉曉 Xiaoxiao Liu <xiaoxiao.liu-1@cn.alps.com>; XiaoXiao Liu <sliuuxiaonxiao@gmail.com>
-> 主题: [PATCH] input: alps-fix the issue the special alps trackpoint do not work.
->
-> when the alps trackpoint is detected and using the alps_v8_protocol_data procotol, the alps driver will not report the input data.
->
-> solution: use standard mouse driver instead of alps driver when the specail trackpoint was detected.
->
-> Signed-off-by: XiaoXiao Liu <sliuuxiaonxiao@gmail.com>
+On Tue, 2019-05-21 at 09:11 +0800, Bibby Hsieh wrote:
+> The order of instructions gce knowed is [subsys offset value]
+> so reorder the parameter of cmdq_pkt_write_mask
+> and cmdq_pkt_write function.
+> 
+
+Except the word 'knowed',
+
+Reviewed-by: CK Hu <ck.hu@mediatek.com>
+
+> Signed-off-by: Bibby Hsieh <bibby.hsieh@mediatek.com>
 > ---
->   drivers/input/mouse/alps.c | 23 ++++++++++++++++++++++-
->   1 file changed, 22 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/input/mouse/alps.c b/drivers/input/mouse/alps.c index 0a6f7ca883e7..516ae1d0eb17 100644
-> --- a/drivers/input/mouse/alps.c
-> +++ b/drivers/input/mouse/alps.c
-> @@ -24,7 +24,7 @@
->   
->   #include "psmouse.h"
->   #include "alps.h"
-> -
-> +#include "trackpoint.h"
->   /*
->    * Definitions for ALPS version 3 and 4 command mode protocol
->    */
-> @@ -2864,6 +2864,22 @@ static const struct alps_protocol_info *alps_match_table(unsigned char *e7,
->   	return NULL;
->   }
->   
-> +int alps_check_is_trackpoint(struct psmouse *psmouse) {
-> +	u8 param[2] = { 0 };
-> +	int error;
-> +
-> +	error = ps2_command(&psmouse->ps2dev,
-> +			    param, MAKE_PS2_CMD(0, 2, TP_READ_ID));
-> +	if (error)
-> +		return error;
-> +
-> +	if (param[0] == TP_VARIANT_ALPS)
-> +		return 0;
-> +	psmouse_warn(psmouse, "It is not alps trackpoint.\n");
-> +	return -ENODEV;
-> +}
-> +
->   static int alps_identify(struct psmouse *psmouse, struct alps_data *priv)  {
->   	const struct alps_protocol_info *protocol; @@ -2912,6 +2928,11 @@ static int alps_identify(struct psmouse *psmouse, struct alps_data *priv)
->   			protocol = &alps_v3_protocol_data;
->   		} else if (e7[0] == 0x73 && e7[1] == 0x03 &&
->   			   (e7[2] == 0x14 || e7[2] == 0x28)) {
-> +				if (alps_check_is_trackpoint(psmouse) == 0) {
-> +					psmouse_warn(psmouse,
-> +					"It is alps trackpoint, use the standard mouse driver.\n");
-> +					return -EINVAL;
-> +				}
->   			protocol = &alps_v8_protocol_data;
->   		} else if (e7[0] == 0x73 && e7[1] == 0x03 && e7[2] == 0xc8) {
->   			protocol = &alps_v9_protocol_data;
-> --
-> 2.20.1
->
+>  drivers/soc/mediatek/mtk-cmdq-helper.c |  6 +++---
+>  include/linux/soc/mediatek/mtk-cmdq.h  | 10 +++++-----
+>  2 files changed, 8 insertions(+), 8 deletions(-)
+> 
+> diff --git a/drivers/soc/mediatek/mtk-cmdq-helper.c b/drivers/soc/mediatek/mtk-cmdq-helper.c
+> index ff9fef5a032b..082b8978651e 100644
+> --- a/drivers/soc/mediatek/mtk-cmdq-helper.c
+> +++ b/drivers/soc/mediatek/mtk-cmdq-helper.c
+> @@ -136,7 +136,7 @@ static int cmdq_pkt_append_command(struct cmdq_pkt *pkt, enum cmdq_code code,
+>  	return 0;
+>  }
+>  
+> -int cmdq_pkt_write(struct cmdq_pkt *pkt, u32 value, u32 subsys, u32 offset)
+> +int cmdq_pkt_write(struct cmdq_pkt *pkt, u32 subsys, u32 offset, u32 value)
+>  {
+>  	u32 arg_a = (offset & CMDQ_ARG_A_WRITE_MASK) |
+>  		    (subsys << CMDQ_SUBSYS_SHIFT);
+> @@ -145,8 +145,8 @@ int cmdq_pkt_write(struct cmdq_pkt *pkt, u32 value, u32 subsys, u32 offset)
+>  }
+>  EXPORT_SYMBOL(cmdq_pkt_write);
+>  
+> -int cmdq_pkt_write_mask(struct cmdq_pkt *pkt, u32 value,
+> -			u32 subsys, u32 offset, u32 mask)
+> +int cmdq_pkt_write_mask(struct cmdq_pkt *pkt, u32 subsys,
+> +			u32 offset, u32 value, u32 mask)
+>  {
+>  	u32 offset_mask = offset;
+>  	int err = 0;
+> diff --git a/include/linux/soc/mediatek/mtk-cmdq.h b/include/linux/soc/mediatek/mtk-cmdq.h
+> index 4e8899972db4..39d813dde4b4 100644
+> --- a/include/linux/soc/mediatek/mtk-cmdq.h
+> +++ b/include/linux/soc/mediatek/mtk-cmdq.h
+> @@ -60,26 +60,26 @@ void cmdq_pkt_destroy(struct cmdq_pkt *pkt);
+>  /**
+>   * cmdq_pkt_write() - append write command to the CMDQ packet
+>   * @pkt:	the CMDQ packet
+> - * @value:	the specified target register value
+>   * @subsys:	the CMDQ sub system code
+>   * @offset:	register offset from CMDQ sub system
+> + * @value:	the specified target register value
+>   *
+>   * Return: 0 for success; else the error code is returned
+>   */
+> -int cmdq_pkt_write(struct cmdq_pkt *pkt, u32 value, u32 subsys, u32 offset);
+> +int cmdq_pkt_write(struct cmdq_pkt *pkt, u32 subsys, u32 offset, u32 value);
+>  
+>  /**
+>   * cmdq_pkt_write_mask() - append write command with mask to the CMDQ packet
+>   * @pkt:	the CMDQ packet
+> - * @value:	the specified target register value
+>   * @subsys:	the CMDQ sub system code
+>   * @offset:	register offset from CMDQ sub system
+> + * @value:	the specified target register value
+>   * @mask:	the specified target register mask
+>   *
+>   * Return: 0 for success; else the error code is returned
+>   */
+> -int cmdq_pkt_write_mask(struct cmdq_pkt *pkt, u32 value,
+> -			u32 subsys, u32 offset, u32 mask);
+> +int cmdq_pkt_write_mask(struct cmdq_pkt *pkt, u32 subsys,
+> +			u32 offset, u32 value, u32 mask);
+>  
+>  /**
+>   * cmdq_pkt_wfe() - append wait for event command to the CMDQ packet
+
+
