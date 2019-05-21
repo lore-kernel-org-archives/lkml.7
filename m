@@ -2,210 +2,150 @@ Return-Path: <SRS0=9PYC=TV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 520A6C04AAF
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 08:38:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FB40C04AAF
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 08:39:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1A6AA2173C
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 08:38:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 472A12173C
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 08:39:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="tj92RRfy"
+	dkim=pass (1024-bit key) header.d=analog.onmicrosoft.com header.i=@analog.onmicrosoft.com header.b="T3hSkmI+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726605AbfEUIi4 (ORCPT
+        id S1726719AbfEUIj5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 May 2019 04:38:56 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:39086 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726006AbfEUIiz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 May 2019 04:38:55 -0400
-Received: by mail-wm1-f67.google.com with SMTP id n25so106124wmk.4
-        for <linux-kernel@vger.kernel.org>; Tue, 21 May 2019 01:38:54 -0700 (PDT)
+        Tue, 21 May 2019 04:39:57 -0400
+Received: from mail-eopbgr770040.outbound.protection.outlook.com ([40.107.77.40]:56533
+        "EHLO NAM02-SN1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725790AbfEUIj5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 May 2019 04:39:57 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:openpgp:autocrypt:organization
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=sU8ZvVyOkwzWB64qjmD8yMis5IArCRr5jkybcZOcNyQ=;
-        b=tj92RRfyqAVHu8xAj0p1uGTqIBYJT1dxLYHotISTrV0cODxptm82cF9djoqwCmK5zb
-         Mo37mQPkAhfkLHYi340nUvpgFyOcYLsUMhYC2e4q7NxotZCVzgWAJnoDgM3qEt1pU8vg
-         ORrXbfnVLhFv87i5z85rqnVz1vVXVIC84/oN0rQ/0x0vpO1cGc5AtsX10xvwaStUl/8A
-         VskcJyEjjLq0Cx3bj7LVQBB0TnJRvTbWEiOJ8ZJfWAcqUTU1Ik1Rx0q4/y0rcLom1G3W
-         6kG0elFABxAUa9IkInSW9EK+xZAenEFo1PX2FyS3DkFMFjYHcMZIQolmUKkVs75vFZTJ
-         s1JQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
-         :organization:message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=sU8ZvVyOkwzWB64qjmD8yMis5IArCRr5jkybcZOcNyQ=;
-        b=AV7EIIkHWu4kE2qk1PbK45Gr/o4k1RTqtre4Uuow7gdWmsUG6GMHDHSu78Y90RhHFf
-         GEDmYOcUFvud+yEDkAeLwYqbvPCEOJnDJeu1RHFKqxPdsp/nG+JKy8IVksHcj5+LIPFb
-         pWDML2fPL7wXbdvouRRaLzJX7psccp89Ail7IXHqv1TPzb9x33ZE1JulBL4b0eTw7+Xp
-         rnMp3wY9BFMW5bP3euaIjkAG5YYgHYEVllEE+7dhnC0Q3IL5KogkmRJ9UMnQJMAdFAp5
-         WAqUMOMm8+R+d+kFnbJG7MngZ7pSbIzaKsbQo+ThU//yMiBb23iG8IKBwP5LZr7gtSwx
-         EZTw==
-X-Gm-Message-State: APjAAAXaN/dYR5+ie7noxIszcwcSfRebBY6usFkRGMuNNqMdfJm8tWNT
-        l9PKBGCoibj7yUsgY5TwvslLUPLhELEc0g==
-X-Google-Smtp-Source: APXvYqwtUYJw7kwH6qgGypBkZAimWcISe6QiMUvyHjqYBaXsLB88g2mbRv2AfecGqKxjxqB9Y3P/AA==
-X-Received: by 2002:a7b:ce03:: with SMTP id m3mr2277652wmc.99.1558427933334;
-        Tue, 21 May 2019 01:38:53 -0700 (PDT)
-Received: from [10.1.2.12] (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
-        by smtp.gmail.com with ESMTPSA id 197sm3217316wma.36.2019.05.21.01.38.52
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 21 May 2019 01:38:52 -0700 (PDT)
-Subject: Re: [PATCH 1/1] ARM: dts: meson8b: odroidc1: add the GPIO line names
-To:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        linux-amlogic@lists.infradead.org, khilman@baylibre.com
-Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-References: <20190328204721.25970-1-martin.blumenstingl@googlemail.com>
- <20190328204721.25970-2-martin.blumenstingl@googlemail.com>
-From:   Neil Armstrong <narmstrong@baylibre.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=narmstrong@baylibre.com; prefer-encrypt=mutual; keydata=
- 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
- ZaTUOEkgIor5losDrePdPgE=
-Organization: Baylibre
-Message-ID: <b9e45b82-5ba9-ad0a-35ba-6bccdd0bc8ce@baylibre.com>
-Date:   Tue, 21 May 2019 10:38:51 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+ d=analog.onmicrosoft.com; s=selector1-analog-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=giQx8NMjVMgEy7h9MWpHT9I1KNINNjmRNltR9xDVccU=;
+ b=T3hSkmI+fF+QMtMOboJoz7A6A0QGFlE1SvGONgR2kuz3XmpQKH9o0w07XLL1fyS0iJ1O7Q3XpZCxWSEj8q4b7wIpBUf7PayH/1xt3Zw+E4+vBTthPPURGW6wrzHJQo3ds7i09X5Z1OpUcZPkmUiOkWNNqZDbQ4mgK5aKngKMxqk=
+Received: from BN8PR03CA0029.namprd03.prod.outlook.com (2603:10b6:408:94::42)
+ by BLUPR03MB550.namprd03.prod.outlook.com (2a01:111:e400:880::28) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.1900.19; Tue, 21 May
+ 2019 08:39:54 +0000
+Received: from BL2NAM02FT003.eop-nam02.prod.protection.outlook.com
+ (2a01:111:f400:7e46::201) by BN8PR03CA0029.outlook.office365.com
+ (2603:10b6:408:94::42) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.20.1900.16 via Frontend
+ Transport; Tue, 21 May 2019 08:39:54 +0000
+Authentication-Results: spf=pass (sender IP is 137.71.25.55)
+ smtp.mailfrom=analog.com; gmail.com; dkim=none (message not signed)
+ header.d=none;gmail.com; dmarc=bestguesspass action=none
+ header.from=analog.com;
+Received-SPF: Pass (protection.outlook.com: domain of analog.com designates
+ 137.71.25.55 as permitted sender) receiver=protection.outlook.com;
+ client-ip=137.71.25.55; helo=nwd2mta1.analog.com;
+Received: from nwd2mta1.analog.com (137.71.25.55) by
+ BL2NAM02FT003.mail.protection.outlook.com (10.152.76.204) with Microsoft SMTP
+ Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.1900.16
+ via Frontend Transport; Tue, 21 May 2019 08:39:54 +0000
+Received: from NWD2HUBCAS7.ad.analog.com (nwd2hubcas7.ad.analog.com [10.64.69.107])
+        by nwd2mta1.analog.com (8.13.8/8.13.8) with ESMTP id x4L8ds3D027406
+        (version=TLSv1/SSLv3 cipher=AES256-SHA bits=256 verify=OK);
+        Tue, 21 May 2019 01:39:54 -0700
+Received: from btogorean-pc.analog.com (10.50.1.212) by
+ NWD2HUBCAS7.ad.analog.com (10.64.69.107) with Microsoft SMTP Server id
+ 14.3.408.0; Tue, 21 May 2019 04:39:52 -0400
+From:   Bogdan Togorean <bogdan.togorean@analog.com>
+To:     <linux-input@vger.kernel.org>
+CC:     <dmitry.torokhov@gmail.com>, <gustavo@embeddedor.com>,
+        <linux-kernel@vger.kernel.org>, <Michael.Hennerich@analog.com>,
+        Bogdan Togorean <bogdan.togorean@analog.com>
+Subject: [PATCH RESEND] input: adp5589: Add gpio_set_multiple interface
+Date:   Tue, 21 May 2019 11:38:22 +0300
+Message-ID: <20190521083821.26540-1-bogdan.togorean@analog.com>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190415122525.2576-1-bogdan.togorean@analog.com>
+References: <20190415122525.2576-1-bogdan.togorean@analog.com>
 MIME-Version: 1.0
-In-Reply-To: <20190328204721.25970-2-martin.blumenstingl@googlemail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ADIRoutedOnPrem: True
+X-EOPAttributedMessage: 0
+X-MS-Office365-Filtering-HT: Tenant
+X-Forefront-Antispam-Report: CIP:137.71.25.55;IPV:NLI;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(136003)(376002)(396003)(346002)(39860400002)(2980300002)(199004)(189003)(2870700001)(1076003)(316002)(50226002)(54906003)(2906002)(5660300002)(70206006)(70586007)(6666004)(356004)(14444005)(2616005)(11346002)(476003)(72206003)(305945005)(47776003)(446003)(126002)(426003)(86362001)(336012)(7636002)(7696005)(486006)(51416003)(478600001)(4326008)(44832011)(76176011)(6916009)(53416004)(36756003)(106002)(186003)(77096007)(50466002)(26005)(2351001)(48376002)(246002)(8936002)(107886003)(8676002)(16060500001);DIR:OUT;SFP:1101;SCL:1;SRVR:BLUPR03MB550;H:nwd2mta1.analog.com;FPR:;SPF:Pass;LANG:en;PTR:nwd2mail10.analog.com;A:1;MX:1;
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: d1d69496-4c58-4920-3565-08d6ddc7e5f4
+X-Microsoft-Antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4709054)(2017052603328);SRVR:BLUPR03MB550;
+X-MS-TrafficTypeDiagnostic: BLUPR03MB550:
+X-Microsoft-Antispam-PRVS: <BLUPR03MB550AAEE6611E0B08FC844869B070@BLUPR03MB550.namprd03.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:3513;
+X-Forefront-PRVS: 0044C17179
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam-Message-Info: 1Lji/C1D4qDkgqscbzjrTgpo60N6ORgEC4KJSNjT/XuWDpAq8i0yWYYl7Bck2fU3AlFGRqfFZNkXefEeLrTnI77RQK2O8Yjqc4jFSp7Z+HID3msTPZmKiHeOzZlhj7hIvTg7YNUpBoNh/7MJcHI4hwD+yMOVPEs7T2HP1qdgvMVSH91NS5UH0kI/8RXps7Z4Zx8hiHEVw1iSrrBLYbY3cNZsZa+/U0t1bnsmd2R508rIi8IZmFXpUXLVGTlJjGgExk7igrM41/Ji2wRrUoUlg73lkI53AkOluG6dYDb0ymLtKuexuNQKtoMp8l6mjjNOn60XSlHSXSW8y+cxlHtmVjwIpJDgg7OXEp/kQf1mZp1urigGPt6iqxTnlJmfQSo+iolLVLVIgLw+67t6MhBnMlEhL8J5UtIlrzmxLtfF/74=
+X-OriginatorOrg: analog.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 May 2019 08:39:54.4790
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: d1d69496-4c58-4920-3565-08d6ddc7e5f4
+X-MS-Exchange-CrossTenant-Id: eaa689b4-8f87-40e0-9c6f-7228de4d754a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=eaa689b4-8f87-40e0-9c6f-7228de4d754a;Ip=[137.71.25.55];Helo=[nwd2mta1.analog.com]
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BLUPR03MB550
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 28/03/2019 21:47, Martin Blumenstingl wrote:
-> This adds the GPIO line names from the schematics to get them displayed
-> in the debugfs output of each GPIO controller.
-> 
-> The schematics from Odroid-C1+ PCB revision 0.4 20150615 are used as
-> referenced.
-> 
-> Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-> ---
->  arch/arm/boot/dts/meson8b-odroidc1.dts | 52 ++++++++++++++++++++++++++
->  1 file changed, 52 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/meson8b-odroidc1.dts b/arch/arm/boot/dts/meson8b-odroidc1.dts
-> index 3b0e0f8fbc23..0157646e3a89 100644
-> --- a/arch/arm/boot/dts/meson8b-odroidc1.dts
-> +++ b/arch/arm/boot/dts/meson8b-odroidc1.dts
-> @@ -234,7 +234,59 @@
->  	};
->  };
->  
-> +&gpio {
-> +	gpio-line-names = /* Bank GPIOX */
-> +			  "J2 Header Pin 35", "J2 Header Pin 36",
-> +			  "J2 Header Pin 32", "J2 Header Pin 31",
-> +			  "J2 Header Pin 29", "J2 Header Pin 18",
-> +			  "J2 Header Pin 22", "J2 Header Pin 16",
-> +			  "J2 Header Pin 23", "J2 Header Pin 21",
-> +			  "J2 Header Pin 19", "J2 Header Pin 33",
-> +			  "J2 Header Pin 8", "J2 Header Pin 10",
-> +			  "J2 Header Pin 15", "J2 Header Pin 13",
-> +			  "J2 Header Pin 24", "J2 Header Pin 26",
-> +			  /* Bank GPIOY */
-> +			  "Revision (upper)", "Revision (lower)",
-> +			  "J2 Header Pin 7", "", "J2 Header Pin 12",
-> +			  "J2 Header Pin 11", "", "", "",
-> +			  "TFLASH_VDD_EN", "", "",
-> +			  /* Bank GPIODV */
-> +			  "VCCK_PWM (PWM_C)", "I2CA_SDA", "I2CA_SCL",
-> +			  "I2CB_SDA", "I2CB_SCL", "VDDEE_PWM (PWM_D)",
-> +			  "",
-> +			  /* Bank GPIOH */
-> +			  "HDMI_HPD", "HDMI_I2C_SDA", "HDMI_I2C_SCL",
-> +			  "ETH_PHY_INTR", "ETH_PHY_NRST", "ETH_TXD1",
-> +			  "ETH_TXD0", "ETH_TXD3", "ETH_TXD2",
-> +			  "ETH_RGMII_TX_CLK",
-> +			  /* Bank CARD */
-> +			  "SD_DATA1 (SDB_D1)", "SD_DATA0 (SDB_D0)",
-> +			  "SD_CLK",  "SD_CMD", "SD_DATA3 (SDB_D3)",
-> +			  "SD_DATA2 (SDB_D2)", "SD_CDN (SD_DET_N)",
-> +			  /* Bank BOOT */
-> +			  "SDC_D0 (EMMC)", "SDC_D1 (EMMC)",
-> +			  "SDC_D2 (EMMC)", "SDC_D3 (EMMC)",
-> +			  "SDC_D4 (EMMC)", "SDC_D5 (EMMC)",
-> +			  "SDC_D6 (EMMC)", "SDC_D7 (EMMC)",
-> +			  "SDC_CLK (EMMC)", "SDC_RSTn (EMMC)",
-> +			  "SDC_CMD (EMMC)", "BOOT_SEL", "", "", "",
-> +			  "", "", "", "",
-> +			  /* Bank DIF */
-> +			  "ETH_RXD1", "ETH_RXD0", "ETH_RX_DV",
-> +			  "RGMII_RX_CLK", "ETH_RXD3", "ETH_RXD2",
-> +			  "ETH_TXEN", "ETH_PHY_REF_CLK_25MOUT",
-> +			  "ETH_MDC", "ETH_MDIO";
-> +};
-> +
->  &gpio_ao {
-> +	gpio-line-names = "UART TX", "UART RX", "",
-> +			  "TF_3V3N_1V8_EN", "USB_HUB_RST_N",
-> +			  "USB_OTG_PWREN", "J7 Header Pin 2",
-> +			  "IR_IN", "J7 Header Pin 4",
-> +			  "J7 Header Pin 6", "J7 Header Pin 5",
-> +			  "J7 Header Pin 7", "HDMI_CEC",
-> +			  "SYS_LED", "", "";
-> +
->  	/*
->  	 * WARNING: The USB Hub on the Odroid-C1/C1+ needs a reset signal
->  	 * to be turned high in order to be detected by the USB Controller.
-> 
+This patch implements the gpio_set_multiple interface for ADP558x chip.
 
-Reviewed-by: Neil Armstrong <narmstrong@baylibre.com>
+Signed-off-by: Bogdan Togorean <bogdan.togorean@analog.com>
+---
+ drivers/input/keyboard/adp5589-keys.c | 25 +++++++++++++++++++++++++
+ 1 file changed, 25 insertions(+)
+
+diff --git a/drivers/input/keyboard/adp5589-keys.c b/drivers/input/keyboard/adp5589-keys.c
+index 2835fba71c33..143871bd60ef 100644
+--- a/drivers/input/keyboard/adp5589-keys.c
++++ b/drivers/input/keyboard/adp5589-keys.c
+@@ -416,6 +416,30 @@ static void adp5589_gpio_set_value(struct gpio_chip *chip,
+ 	mutex_unlock(&kpad->gpio_lock);
+ }
+ 
++static void adp5589_gpio_set_multiple(struct gpio_chip *chip,
++				      unsigned long *mask, unsigned long *bits)
++{
++	struct adp5589_kpad *kpad = container_of(chip, struct adp5589_kpad, gc);
++	u8 bank, reg_mask, reg_bits;
++
++	mutex_lock(&kpad->gpio_lock);
++
++	for (bank = 0; bank <= kpad->var->bank(kpad->var->maxgpio); bank++) {
++		if (bank > kpad->var->bank(get_bitmask_order(*mask) - 1))
++			break;
++		reg_mask = mask[bank / sizeof(*mask)] >>
++			   ((bank % sizeof(*mask)) * BITS_PER_BYTE);
++		reg_bits = bits[bank / sizeof(*bits)] >>
++			   ((bank % sizeof(*bits)) * BITS_PER_BYTE);
++		kpad->dat_out[bank] &= ~reg_mask;
++		kpad->dat_out[bank] |= reg_bits & reg_mask;
++		adp5589_write(kpad->client, kpad->var->reg(ADP5589_GPO_DATA_OUT_A) + bank,
++			      kpad->dat_out[bank]);
++	}
++
++	mutex_unlock(&kpad->gpio_lock);
++}
++
+ static int adp5589_gpio_direction_input(struct gpio_chip *chip, unsigned off)
+ {
+ 	struct adp5589_kpad *kpad = gpiochip_get_data(chip);
+@@ -517,6 +541,7 @@ static int adp5589_gpio_add(struct adp5589_kpad *kpad)
+ 	kpad->gc.direction_output = adp5589_gpio_direction_output;
+ 	kpad->gc.get = adp5589_gpio_get_value;
+ 	kpad->gc.set = adp5589_gpio_set_value;
++	kpad->gc.set_multiple = adp5589_gpio_set_multiple;
+ 	kpad->gc.can_sleep = 1;
+ 
+ 	kpad->gc.base = gpio_data->gpio_start;
+-- 
+2.21.0
+
