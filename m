@@ -2,113 +2,160 @@ Return-Path: <SRS0=9PYC=TV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E006C072B5
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 20:36:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2947C18E7C
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 20:40:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DDD362182B
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 20:36:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7113A217D7
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 20:40:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="gz+qpT90"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aXTYNU09"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727564AbfEUUgY (ORCPT
+        id S1727605AbfEUUkV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 May 2019 16:36:24 -0400
-Received: from mail-pf1-f181.google.com ([209.85.210.181]:32778 "EHLO
-        mail-pf1-f181.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727046AbfEUUgX (ORCPT
+        Tue, 21 May 2019 16:40:21 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:43844 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727341AbfEUUkU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 May 2019 16:36:23 -0400
-Received: by mail-pf1-f181.google.com with SMTP id z28so62348pfk.0
-        for <linux-kernel@vger.kernel.org>; Tue, 21 May 2019 13:36:22 -0700 (PDT)
+        Tue, 21 May 2019 16:40:20 -0400
+Received: by mail-lj1-f193.google.com with SMTP id z5so9900lji.10;
+        Tue, 21 May 2019 13:40:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=3pdMnlQMpicFeAISSl6SetG7UCP7qGuD4qS0DzjL6Ug=;
-        b=gz+qpT90Axv83cbkiouFZO1oIr+TkgmvDpdd25B+7DFd4tz5+TpHPwWQSpH5dIyb48
-         6a5ygg2J2pfSVZ0gkGrs3KDAZdD6B53AZkOtT2VS3oXt4a0PZzQCNNrgn46n1vqVDz6n
-         7izNaMXDzVIN+Zk6mjfNav/BljVWZg5/fR038=
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=85X1q9FFhREECXDD2QJfVWU7IM8u4t7MWuEU1Zy1brk=;
+        b=aXTYNU09ZejTperCr9pkAs0tgeih9kMpaGws7kJIAMBgmsZHqvDFKMzL1pDhMB/jF2
+         RjiQ0ReEEMTIcoe1e22x8RU6cxDwZbaUvR/ptyWYx2/OU8sLjv3ODXf1Xdqq8z1bFI/t
+         sDJ55XePWL6nJdTG+TWGSsGcy/6bWiwaexkYsEqblA2fJNx85gIHCuOhnONnnIi2pKWs
+         vCMtM9EB7eibQe2K470fcLlJzTbywHiW/G6MaSpVCrnm0ujgIz4vEOUL2VoxTSeKE4DR
+         oJCh8eP899sGmyou4P6aUxZvj+uPOz+FS1LBkjfhe7XNHIu8j2N8z9NZO7fM5so73Peu
+         Nd0A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=3pdMnlQMpicFeAISSl6SetG7UCP7qGuD4qS0DzjL6Ug=;
-        b=f11TCS1RzF/bTW3z1Unmda2uj6m2QsCsBWFrQLYZo5gpFi14JJl3PBzHoF8t5KcvNE
-         DcQhflATao7L04J0qVVOWQJIrIC/E2w/Sp4kZY7NTp3Jo97aWVkjKCFrc9BWa0U2uVdc
-         vmNJ4lQB/Yi1J1jPDPfyLWfMIO+xc3m60STllZkbbVkR2XKNr9hn7P+ISSgKatfmihRT
-         xzVO1OwRU7MjMrCXl5I0k8ZdzQMGth4dzCCVf4h+oyyXb+M4a2UnzpEDlJ1GcEmZh2y6
-         iZE5PRc7l+lrEtIJY/p85iEfs8+EveO/a54M0J6tAP6AZgtEt6qPyIA0tyDYbTvxA1LJ
-         C43w==
-X-Gm-Message-State: APjAAAXTQGacWhL/qkJeW28haL6vlUdSW9faHentC0gQ08Ug9TtXy3UG
-        YwxSmphFP7cyIaU5LrXbWejQbQ==
-X-Google-Smtp-Source: APXvYqxg4xHpBGsoG+5Yv4eVbvoY3I3a0Q5ah6TcNSDyscIN30dOKmqFEvR6rVFugfZjW0rqWiWnlg==
-X-Received: by 2002:a63:1d02:: with SMTP id d2mr85270351pgd.26.1558470982599;
-        Tue, 21 May 2019 13:36:22 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id c14sm22949968pgl.43.2019.05.21.13.36.21
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 21 May 2019 13:36:22 -0700 (PDT)
-Date:   Tue, 21 May 2019 13:36:21 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     "H. Nikolaus Schaller" <hns@goldelico.com>
-Cc:     Chris Packham <Chris.Packham@alliedtelesis.co.nz>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Discussions about the Letux Kernel 
-        <letux-kernel@openphoenux.org>
-Subject: Re: [BUG v5.2-rc1] ARM build broken
-Message-ID: <201905211331.E0D1EDC0@keescook>
-References: <4DB08A04-D03A-4441-85DE-64A13E6D709C@goldelico.com>
- <201905200855.391A921AB@keescook>
- <D8F987B2-8F41-46DE-B298-89541D7A9774@goldelico.com>
- <201905201142.CF71598A@keescook>
- <3610cb7ca542479d8eb124e9c9dd6796@svr-chch-ex1.atlnz.lc>
- <A22646AB-300F-4E0A-95DE-06633C2A2986@goldelico.com>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=85X1q9FFhREECXDD2QJfVWU7IM8u4t7MWuEU1Zy1brk=;
+        b=onv27KC+nvNp9ogcVEj9zPoVAS1kV+VK3goz6LE1Ak8p1huc9ID1GmMchB/g7WQJG+
+         1QR3lAsS5+EAzwCdIzLShNesh8tS6V5dZISBlPVamcju/7Jqo5RthB8Mb7Bo1yXggIoG
+         ghbmS0K7tnB7FZ2zkWEMu56mBLat4Z4jrbXFOJGfBf6RXNMazPPis6u2JpNDxiIIAytv
+         0qVHsUTypU8gkNv8sx0S4/CQjqLJAdHgbDZKu7Ik/vzSHHIqAixnOA0dx/zAlqp7NeVj
+         rktMXflbi0zDSwCp3wMYnSQPVDpEQrN2qwmfPqPcH9Pi2KaHiurYRqziranpbOR9HH73
+         QqdQ==
+X-Gm-Message-State: APjAAAUKpuzslZ9Fark02tE6jws/4sgjB6PUvFE3+mQizLrr3w5kpqC4
+        ml4zRTedbDK/nAnts/WQ31o/+LHxKZg=
+X-Google-Smtp-Source: APXvYqxC+WMoiiwCEUF4a/IDbNP9n3kqAc+VLG6h/a6t1nki/IkRRcEJAohziIJrV8q512hpDC/mkg==
+X-Received: by 2002:a2e:4701:: with SMTP id u1mr37163319lja.38.1558471218147;
+        Tue, 21 May 2019 13:40:18 -0700 (PDT)
+Received: from [192.168.1.17] (dkv215.neoplus.adsl.tpnet.pl. [83.24.25.215])
+        by smtp.gmail.com with ESMTPSA id u2sm4605326ljd.97.2019.05.21.13.40.16
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 21 May 2019 13:40:17 -0700 (PDT)
+Subject: Re: [PATCH v4 6/6] leds: lm36274: Introduce the TI LM36274 LED driver
+To:     Dan Murphy <dmurphy@ti.com>, pavel@ucw.cz
+Cc:     lee.jones@linaro.org, rdunlap@infradead.org,
+        linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20190507201159.13940-1-dmurphy@ti.com>
+ <20190507201159.13940-7-dmurphy@ti.com>
+ <77f1ed5b-bfd2-510c-edd5-1b702f2d1d45@gmail.com>
+ <8d126925-9e71-dba4-eb88-50fd6e6c06d8@ti.com>
+ <a7cb6628-e501-b580-f714-0e5de78ea39c@gmail.com>
+ <d0c49197-984d-5cd8-032a-27d9c5ca6d29@ti.com>
+ <97ff2f48-9ec0-06f1-b667-56fcdef8bf03@gmail.com>
+ <65c656cd-1b16-0960-fbeb-8172087b88f2@ti.com>
+From:   Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Message-ID: <f16b7eb7-411a-cac4-f8ec-b34a7731166c@gmail.com>
+Date:   Tue, 21 May 2019 22:40:15 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <A22646AB-300F-4E0A-95DE-06633C2A2986@goldelico.com>
+In-Reply-To: <65c656cd-1b16-0960-fbeb-8172087b88f2@ti.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 21, 2019 at 01:23:36PM +0200, H. Nikolaus Schaller wrote:
-> >>>  HOSTLLD -shared scripts/gcc-plugins/arm_ssp_per_task_plugin.so - due to target missing
-> >>> Undefined symbols for architecture x86_64:
-> >>>  "gen_reg_rtx(machine_mode)", referenced from:
-> >>>      (anonymous namespace)::arm_pertask_ssp_rtl_pass::execute() in arm_ssp_per_task_plugin.o
-
-Are you seeing this error still, even after the fix I sent? Perhaps I
-misunderstood that it solves all of the build issues?
-
-> That seems to be a significant assumption about the build infrastructure
-> which now became permanently enabled by the "default y" for GCC_PLUGINS.
+On 5/21/19 9:41 PM, Dan Murphy wrote:
+> Jacek
 > 
-> I am not sure what the right way forward is. Probably for me it is to find
-> out if I can fix my cross-toolchain. Or if the kernel should better check
-> if gcc-plugins can really be built, if they are automatically enabled.
-> Or keep all gcc-plugins disabled until explicitly configured for?
-
-Right, that seems to be the case: it seems that the gcc plugin build
-sanity detection script is not working in your environment. You can
-check it directly.
-
-Here's the bits from the Kconfig (though I added --show-error for you,
-in case that's useful):
-
-preferred-plugin-hostcc := $(if-success,[ $(gcc-version) -ge 40800 ],$(HOSTCXX),$(HOSTCC))
-
-scripts/gcc-plugin.sh --show-error "$(preferred-plugin-hostcc)" "$(HOSTCXX)" "$(CC)"
-
-I'm not sure what your kernel build picks for gcc-version, HOSTCXX
-HOSTCC and CC...
+> On 5/21/19 1:46 PM, Jacek Anaszewski wrote:
+>> Dan,
+>>
+>> On 5/21/19 8:25 PM, Dan Murphy wrote:
+>>> Jacek
+>>>
+>>> On 5/21/19 12:40 PM, Jacek Anaszewski wrote:
+>>>> On 5/20/19 11:19 PM, Dan Murphy wrote:
+>>>>> Jacek
+>>>>>
+>>>>> On 5/20/19 2:54 PM, Jacek Anaszewski wrote:
+>>>>>> Hi Dan,
+>>>>>>
+>>>>>> On 5/7/19 10:11 PM, Dan Murphy wrote:
+>>>>>>> Introduce the LM36274 LED driver.  This driver uses the ti-lmu
+>>>>>>> MFD driver to probe this LED driver.  The driver configures only the
+>>>>>>> LED registers and enables the outputs according to the config file.
+>>>>>>>
+>>>>>>> The driver utilizes the TI LMU (Lighting Management Unit) LED common
+>>>>>>> framework to set the brightness bits.
+>>>>>>>
+>>>>>>> Signed-off-by: Dan Murphy <dmurphy@ti.com>
+>>>>>>> ---
+>>>>>>>      drivers/leds/Kconfig        |   7 ++
+>>>>>>>      drivers/leds/Makefile       |   1 +
+>>>>>>>      drivers/leds/leds-lm36274.c | 174 ++++++++++++++++++++++++++++++++++++
+>>>>>>>      3 files changed, 182 insertions(+)
+>>>>>>>      create mode 100644 drivers/leds/leds-lm36274.c
+>>>>>>>
+>>>>>>> diff --git a/drivers/leds/Kconfig b/drivers/leds/Kconfig
+>>>>>>> index 255fdd5e8491..db83a3feca01 100644
+>>>>>>> --- a/drivers/leds/Kconfig
+>>>>>>> +++ b/drivers/leds/Kconfig
+>>>>>>> @@ -791,6 +791,13 @@ config LEDS_LM3697
+>>>>>>>            Say Y to enable the LM3697 LED driver for TI LMU devices.
+>>>>>>>            This supports the LED device LM3697.
+>>>>>>>      +config LEDS_LM36274
+>>>>>>> +    tristate "LED driver for LM36274"
+>>>>>>> +    depends on LEDS_TI_LMU_COMMON
+>>>>>>
+>>>>>> Shouldn't we have "depends on MFD_TI_LMU" as well here?
+>>>>>>
+>>>>>
+>>>>> Actually the LEDS_TI_LMU_COMMON flag should depend on MFD_TI_LMU.
+>>>>> Then it would inherit that dependency.
+>>>>
+>>>> LEDS_TI_LMU_COMMON does not seem too have any dependency on MFD_TI_LMU,
+>>>> and it would be incorrect to require enabling MFD_TI_LMU for all drivers
+>>>> depending on TI_LMU_COMMON, that can be probed on their own, like
+>>>> leds-lm3697.c .
+>>>>
+>>>
+>>> Correct.
+>>>
+>>> I can update the Kconfigs unless you want to ammend the commits.
+>>
+>> I added "depends on MFD_TI_LMU" to "config LEDS_LM36274".
+>> Please verify your patch sets pushed to [0].
+>>
+> 
+> Pulled
+> Built
+> tested
+> verified
+> 
+> Good to go
+Thanks! Merged.
 
 -- 
-Kees Cook
+Best regards,
+Jacek Anaszewski
