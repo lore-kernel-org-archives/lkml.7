@@ -2,148 +2,355 @@ Return-Path: <SRS0=9PYC=TV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD3A6C04AAF
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 08:19:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48740C04AB4
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 08:22:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 88FAE21783
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 08:19:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HhNep12X"
+	by mail.kernel.org (Postfix) with ESMTP id 1BA2F20863
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 08:22:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726878AbfEUITP (ORCPT
+        id S1726676AbfEUIWG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 May 2019 04:19:15 -0400
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:45170 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725790AbfEUITP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 May 2019 04:19:15 -0400
-Received: by mail-lf1-f66.google.com with SMTP id n22so12310156lfe.12
-        for <linux-kernel@vger.kernel.org>; Tue, 21 May 2019 01:19:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=uypbq/FcCnVlqwXjTWT1VO52O+LoVFoRKGGQXigRvgc=;
-        b=HhNep12XcKjILVSX84LR4GhavmMnam7QaFAEowwiZ4PCTmMWbBTNW5qEKQMZniB93+
-         yiitMPmyQRp1ygqGQfB/I9ki0zpREPrOfbvi/Rj9yc3lJnwAdtYTsbAqHIrnelpnVAdo
-         uDlsoj3BHzFnw8vQy6NlcB8dkY4QXns/SAUKoBu++/F903EYr/A12GSVv4MbraTEdjHd
-         I6KE++i/zb8DaLJRyFkwNKrHKCDoqE3yxx+EZYku+NvAHtyWL3DJqtU32WwUijzplclK
-         MNbehcD51NFgLdjJjvh21Kw+76qtxvT6BEuag1s4jsXqiJIT52FDk5uDhBEOAVeHRSa6
-         424A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=uypbq/FcCnVlqwXjTWT1VO52O+LoVFoRKGGQXigRvgc=;
-        b=LxR1VVMPrDE2wAO+t3NcXmsjZgApa+1gUxeXs1PY4Wf3VrJDitAJBtV+81RW50U0Py
-         a8RMtGg8HNcC9OQRVzbmzTWSl3wCNRAMAzsdEy6ykV5ZZPdG2FH5hvG6JyWKQ+QAQ/tD
-         4pZRmOLlRx9ZM/+MlPe4QPkKrQAFIDJ3uwBJrSL9Rh5ZxQZYAVKJY6XLgw8TIafq5063
-         hnYiarlWVm35NjyzWxyPhBlQCeleLQFot3AzaULq2yDwAiaid0AQXdN3u5GuC4sHgmyq
-         K2L6w4B4tlB4z93gv2t/gFvPB/kivxA5XkIE8cdCPxN4otfCrD6wRlYWYO0s3omHXPAX
-         SLyA==
-X-Gm-Message-State: APjAAAWXJBnN9jl4XfiZaYZXhJh9FMyd2SH4pv8YOUwXEyEtBqiPBlvB
-        7tTHWp4F+85vixuPDjLC6XPvp+8AcDrlmP6THHA=
-X-Google-Smtp-Source: APXvYqztUjiXu0XeqmQ4PEZzjNFSVC6Q4eUVjLhOpYx5zvyCEdUFNkzlK+XTUHz/h4CbCp/g96ZtQBbvteNLAP+74VA=
-X-Received: by 2002:a19:c194:: with SMTP id r142mr40248788lff.41.1558426753044;
- Tue, 21 May 2019 01:19:13 -0700 (PDT)
+        Tue, 21 May 2019 04:22:06 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:60060 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726006AbfEUIWF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 May 2019 04:22:05 -0400
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 6CD7BC004BA8;
+        Tue, 21 May 2019 08:22:05 +0000 (UTC)
+Received: from [10.36.116.113] (ovpn-116-113.ams2.redhat.com [10.36.116.113])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 73D271001DE7;
+        Tue, 21 May 2019 08:21:58 +0000 (UTC)
+Subject: Re: [PATCH v3 03/16] iommu: Add I/O ASID allocator
+To:     Jacob Pan <jacob.jun.pan@linux.intel.com>,
+        iommu@lists.linux-foundation.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        Joerg Roedel <joro@8bytes.org>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
+Cc:     Yi Liu <yi.l.liu@intel.com>, "Tian, Kevin" <kevin.tian@intel.com>,
+        Raj Ashok <ashok.raj@intel.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Andriy Shevchenko <andriy.shevchenko@linux.intel.com>
+References: <1556922737-76313-1-git-send-email-jacob.jun.pan@linux.intel.com>
+ <1556922737-76313-4-git-send-email-jacob.jun.pan@linux.intel.com>
+From:   Auger Eric <eric.auger@redhat.com>
+Message-ID: <bb31fbcb-2708-93e6-f11e-3018556fbc21@redhat.com>
+Date:   Tue, 21 May 2019 10:21:55 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.4.0
 MIME-Version: 1.0
-References: <cover.1556025155.git.vpillai@digitalocean.com>
- <edd4c014e69b68b90160766c6049f2ed922793c7.1556025155.git.vpillai@digitalocean.com>
- <CAERHkrtZo0BQg_u9ZPNY_Rk2JY4YT8d5NDRKFQMWeYyAviVShA@mail.gmail.com>
- <20190520130454.GA677@pauld.bos.csb> <CANaguZA1Ujahr78wt4pxnLzR_in47_EXvxMQLWrP4NS3mpP91g@mail.gmail.com>
-In-Reply-To: <CANaguZA1Ujahr78wt4pxnLzR_in47_EXvxMQLWrP4NS3mpP91g@mail.gmail.com>
-From:   Aubrey Li <aubrey.intel@gmail.com>
-Date:   Tue, 21 May 2019 16:19:00 +0800
-Message-ID: <CAERHkrtaEEO69ZsDfy8mcU=H_gTFRuTeoKTC0Bc1pUeD7Z3fqw@mail.gmail.com>
-Subject: Re: [RFC PATCH v2 13/17] sched: Add core wide task selection and scheduling.
-To:     Vineeth Pillai <vpillai@digitalocean.com>
-Cc:     Phil Auld <pauld@redhat.com>,
-        Nishanth Aravamudan <naravamudan@digitalocean.com>,
-        Julien Desfossez <jdesfossez@digitalocean.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Tim Chen <tim.c.chen@linux.intel.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Paul Turner <pjt@google.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        Subhra Mazumdar <subhra.mazumdar@oracle.com>,
-        =?UTF-8?B?RnLDqWTDqXJpYyBXZWlzYmVja2Vy?= <fweisbec@gmail.com>,
-        Kees Cook <keescook@chromium.org>,
-        Greg Kerr <kerrnel@google.com>, Aaron Lu <aaron.lwe@gmail.com>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <1556922737-76313-4-git-send-email-jacob.jun.pan@linux.intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.32]); Tue, 21 May 2019 08:22:05 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 20, 2019 at 10:04 PM Vineeth Pillai
-<vpillai@digitalocean.com> wrote:
->
-> > > The following patch improved my test cases.
-> > > Welcome any comments.
-> > >
-> >
-> > This is certainly better than violating the point of the core scheduler :)
-> >
-> > If I'm understanding this right what will happen in this case is instead
-> > of using the idle process selected by the sibling we do the core scheduling
-> > again. This may start with a newidle_balance which might bring over something
-> > to run that matches what we want to put on the sibling. If that works then I
-> > can see this helping.
-> >
-> > But I'd be a little concerned that we could end up thrashing. Once we do core
-> > scheduling again here we'd force the sibling to resched and if we got a different
-> > result which "helped" him pick idle we'd go around again.
+Hi,
 
-Thrashing means more IPIs right? That's not what I observed, because idle task
-has less chance onto CPU, rescheduling is reduced accordingly.
+On 5/4/19 12:32 AM, Jacob Pan wrote:
+> From: Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
+> 
+> Some devices might support multiple DMA address spaces, in particular
+> those that have the PCI PASID feature. PASID (Process Address Space ID)
+> allows to share process address spaces with devices (SVA), partition a
+> device into VM-assignable entities (VFIO mdev) or simply provide
+> multiple DMA address space to kernel drivers. Add a global PASID
+> allocator usable by different drivers at the same time. Name it I/O ASID
+> to avoid confusion with ASIDs allocated by arch code, which are usually
+> a separate ID space.
+> 
+> The IOASID space is global. Each device can have its own PASID space,
+> but by convention the IOMMU ended up having a global PASID space, so
+> that with SVA, each mm_struct is associated to a single PASID.
+> 
+> The allocator is primarily used by IOMMU subsystem but in rare occasions
+> drivers would like to allocate PASIDs for devices that aren't managed by
+> an IOMMU, using the same ID space as IOMMU.
+> 
+> Signed-off-by: Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
+> Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
+> Link: https://lkml.org/lkml/2019/4/26/462
+> ---
+>  drivers/iommu/Kconfig  |   6 +++
+>  drivers/iommu/Makefile |   1 +
+>  drivers/iommu/ioasid.c | 140 +++++++++++++++++++++++++++++++++++++++++++++++++
+>  include/linux/ioasid.h |  67 +++++++++++++++++++++++
+>  4 files changed, 214 insertions(+)
+>  create mode 100644 drivers/iommu/ioasid.c
+>  create mode 100644 include/linux/ioasid.h
+> 
+> diff --git a/drivers/iommu/Kconfig b/drivers/iommu/Kconfig
+> index 6f07f3b..75e7f97 100644
+> --- a/drivers/iommu/Kconfig
+> +++ b/drivers/iommu/Kconfig
+> @@ -2,6 +2,12 @@
+>  config IOMMU_IOVA
+>  	tristate
+>  
+> +config IOASID
+> +	bool
+don't we want a tristate here too?
 
-> > I think inherent in the concept of core scheduling (barring a perfectly aligned set
-> > of jobs) is some extra idle time on siblings.
+Also refering to the past discussions we could add "# The IOASID library
+may also be used by non-IOMMU_API users"
+> +	help
+> +	  Enable the I/O Address Space ID allocator. A single ID space shared
+> +	  between different users.
+> +
+>  # IOMMU_API always gets selected by whoever wants it.
+>  config IOMMU_API
+>  	bool
+> diff --git a/drivers/iommu/Makefile b/drivers/iommu/Makefile
+> index 8c71a15..0efac6f 100644
+> --- a/drivers/iommu/Makefile
+> +++ b/drivers/iommu/Makefile
+> @@ -7,6 +7,7 @@ obj-$(CONFIG_IOMMU_DMA) += dma-iommu.o
+>  obj-$(CONFIG_IOMMU_IO_PGTABLE) += io-pgtable.o
+>  obj-$(CONFIG_IOMMU_IO_PGTABLE_ARMV7S) += io-pgtable-arm-v7s.o
+>  obj-$(CONFIG_IOMMU_IO_PGTABLE_LPAE) += io-pgtable-arm.o
+> +obj-$(CONFIG_IOASID) += ioasid.o
+>  obj-$(CONFIG_IOMMU_IOVA) += iova.o
+>  obj-$(CONFIG_OF_IOMMU)	+= of_iommu.o
+>  obj-$(CONFIG_MSM_IOMMU) += msm_iommu.o
+> diff --git a/drivers/iommu/ioasid.c b/drivers/iommu/ioasid.c
+> new file mode 100644
+> index 0000000..99f5e0a
+> --- /dev/null
+> +++ b/drivers/iommu/ioasid.c
+> @@ -0,0 +1,140 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * I/O Address Space ID allocator. There is one global IOASID space, split into
+> + * subsets. Users create a subset with DECLARE_IOASID_SET, then allocate and
+> + * free IOASIDs with ioasid_alloc and ioasid_free.
+> + */
+> +#include <linux/xarray.h>
+> +#include <linux/ioasid.h>
+> +#include <linux/slab.h>
+> +#include <linux/spinlock.h>
+> +
+> +struct ioasid_data {
+> +	ioasid_t id;
+> +	struct ioasid_set *set;
+> +	void *private;
+> +	struct rcu_head rcu;
+> +};
+> +
+> +static DEFINE_XARRAY_ALLOC(ioasid_xa);
+> +
+> +/**
+> + * ioasid_set_data - Set private data for an allocated ioasid
+> + * @ioasid: the ID to set data
+> + * @data:   the private data
+> + *
+> + * For IOASID that is already allocated, private data can be set
+> + * via this API. Future lookup can be done via ioasid_find.
+> + */
+> +int ioasid_set_data(ioasid_t ioasid, void *data)
+> +{
+> +	struct ioasid_data *ioasid_data;
+> +	int ret = 0;
+> +
+> +	ioasid_data = xa_load(&ioasid_xa, ioasid);
+> +	if (ioasid_data)
+> +		ioasid_data->private = data;
+> +	else
+> +		ret = -ENOENT;
+> +
+> +	/* getter may use the private data */
+> +	synchronize_rcu();
+> +
+> +	return ret;
+> +}
+> +EXPORT_SYMBOL_GPL(ioasid_set_data);
+> +
+> +/**
+> + * ioasid_alloc - Allocate an IOASID
+> + * @set: the IOASID set
+> + * @min: the minimum ID (inclusive)
+> + * @max: the maximum ID (inclusive)
+> + * @private: data private to the caller
+> + *
+> + * Allocate an ID between @min and @max (or %0 and %INT_MAX).
+I think we agreed to drop (or %0 and %INT_MAX)
+ Return the
+> + * allocated ID on success, or INVALID_IOASID on failure. The @private pointer
+> + * is stored internally and can be retrieved with ioasid_find().
+> + */
+> +ioasid_t ioasid_alloc(struct ioasid_set *set, ioasid_t min, ioasid_t max,
+> +		      void *private)
+> +{
+> +	int id = INVALID_IOASID;
+isn't it an unsigned?
+> +	struct ioasid_data *data;
+> +
+> +	data = kzalloc(sizeof(*data), GFP_KERNEL);
+> +	if (!data)
+> +		return INVALID_IOASID;
+> +
+> +	data->set = set;
+> +	data->private = private;
+> +
+> +	if (xa_alloc(&ioasid_xa, &id, data, XA_LIMIT(min, max), GFP_KERNEL)) {
+> +		pr_err("Failed to alloc ioasid from %d to %d\n", min, max);
+> +		goto exit_free;
+> +	}
+> +	data->id = id;
+> +
+> +exit_free:
+> +	if (id < 0 || id == INVALID_IOASID) {
+< 0?
+> +		kfree(data);
+> +		return INVALID_IOASID;
+> +	}
+> +	return id;
+> +}
+> +EXPORT_SYMBOL_GPL(ioasid_alloc);
+> +
+> +/**
+> + * ioasid_free - Free an IOASID
+> + * @ioasid: the ID to remove
+> + */
+> +void ioasid_free(ioasid_t ioasid)
+> +{
+> +	struct ioasid_data *ioasid_data;
+> +
+> +	ioasid_data = xa_erase(&ioasid_xa, ioasid);
+> +
+> +	kfree_rcu(ioasid_data, rcu);
+> +}
+> +EXPORT_SYMBOL_GPL(ioasid_free);
+> +
+> +/**
+> + * ioasid_find - Find IOASID data
+> + * @set: the IOASID set
+> + * @ioasid: the IOASID to find
+> + * @getter: function to call on the found object
+> + *
+> + * The optional getter function allows to take a reference to the found object
+> + * under the rcu lock. The function can also check if the object is still valid:
+> + * if @getter returns false, then the object is invalid and NULL is returned.
+> + *
+> + * If the IOASID has been allocated for this set, return the private pointer
+> + * passed to ioasid_alloc. Private data can be NULL if not set. Return an error
+> + * if the IOASID is not found or not belong to the set.
+do not belong
+> + */
+> +void *ioasid_find(struct ioasid_set *set, ioasid_t ioasid,
+> +		  bool (*getter)(void *))
+> +{
+> +	void *priv = NULL;
+> +	struct ioasid_data *ioasid_data;
+> +
+> +	rcu_read_lock();
+> +	ioasid_data = xa_load(&ioasid_xa, ioasid);
+> +	if (!ioasid_data) {
+> +		priv = ERR_PTR(-ENOENT);
+> +		goto unlock;
+> +	}
+> +	if (set && ioasid_data->set != set) {
+> +		/* data found but does not belong to the set */
+> +		priv = ERR_PTR(-EACCES);
+> +		goto unlock;
+> +	}
+> +	/* Now IOASID and its set is verified, we can return the private data */
+> +	priv = ioasid_data->private;
+> +	if (getter && !getter(priv))
+> +		priv = NULL;
+> +unlock:
+> +	rcu_read_unlock();
+> +
+> +	return priv;
+> +}
+> +EXPORT_SYMBOL_GPL(ioasid_find);
+> diff --git a/include/linux/ioasid.h b/include/linux/ioasid.h
+> new file mode 100644
+> index 0000000..41de5e4
+> --- /dev/null
+> +++ b/include/linux/ioasid.h
+> @@ -0,0 +1,67 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +#ifndef __LINUX_IOASID_H
+> +#define __LINUX_IOASID_H
+> +
+> +#define INVALID_IOASID ((ioasid_t)-1)
+> +typedef unsigned int ioasid_t;
+> +typedef int (*ioasid_iter_t)(ioasid_t ioasid, void *private, void *data);
+> +typedef ioasid_t (*ioasid_alloc_fn_t)(ioasid_t min, ioasid_t max, void *data);
+> +typedef void (*ioasid_free_fn_t)(ioasid_t ioasid, void *data);
+> +
+> +struct ioasid_set {
+> +	int dummy;
+> +};
+> +
+> +struct ioasid_allocator {
+> +	ioasid_alloc_fn_t alloc;
+> +	ioasid_free_fn_t free;
+> +	void *pdata;
+> +	struct list_head list;
+> +};
+> +
+> +#define DECLARE_IOASID_SET(name) struct ioasid_set name = { 0 }
+> +
+> +#ifdef CONFIG_IOASID
+> +ioasid_t ioasid_alloc(struct ioasid_set *set, ioasid_t min, ioasid_t max,
+> +		      void *private);
+> +void ioasid_free(ioasid_t ioasid);
+> +
+> +void *ioasid_find(struct ioasid_set *set, ioasid_t ioasid,
+> +		  bool (*getter)(void *));
+> +int ioasid_register_allocator(struct ioasid_allocator *allocator);
+> +void ioasid_unregister_allocator(struct ioasid_allocator *allocator);
+> +
+> +int ioasid_set_data(ioasid_t ioasid, void *data);
+> +
+> +#else /* !CONFIG_IOASID */
+> +static inline ioasid_t ioasid_alloc(struct ioasid_set *set, ioasid_t min,
+> +				    ioasid_t max, void *private)
+> +{
+> +	return INVALID_IOASID;
+> +}
+> +
+> +static inline void ioasid_free(ioasid_t ioasid)
+> +{
+> +}
+> +
+> +static inline void *ioasid_find(struct ioasid_set *set, ioasid_t ioasid,
+> +				bool (*getter)(void *))
+> +{
+> +	return NULL;
+> +}
+> +static inline int ioasid_register_allocator(struct ioasid_allocator *allocator)
+> +{
+> +	return -ENODEV;
+> +}
+> +
+> +static inline void ioasid_unregister_allocator(struct ioasid_allocator *allocator)
+> +{
+> +}
+> +
+> +static inline int ioasid_set_data(ioasid_t ioasid, void *data)
+> +{
+> +	return -ENODEV;
+> +}
+> +
+> +#endif /* CONFIG_IOASID */
+> +#endif /* __LINUX_IOASID_H */
+> 
+Thanks
 
-Yeah, I understand and agree with this, but 10-15% idle time on an overloaded
-system makes me to try to figure out how this could happen and if we
-can improve it.
-
-> >
-> >
-> I was also thinking along the same lines. This change basically always
-> tries to avoid idle and there by constantly interrupting the sibling.
-> While this change might benefit a very small subset of workloads, it
-> might introduce thrashing more often.
-
-Thrashing is not observed under an overloaded case but may happen under a
-light load or a mid load case, I need more investigation.
-
->
-> One other reason you might be seeing performance improvement is
-> because of the bugs that caused both siblings to go idle even though
-> there are runnable and compatible threads in the queue. Most of the
-> issues are fixed based on all the feedback received in v2. We have a
-> github repo with the pre v3 changes here:
-> https://github.com/digitalocean/linux-coresched/tree/coresched
-
-Okay, thanks, it looks like the core functions pick_next_task() and pick_task()
-have a lot of changes against v2. Need more brain power..
-
->
-> Please try this and see how it compares with the vanilla v2. I think its
-> time for a v3 now and we shall be posting it soon after some more
-> testing and benchmarking.
-
-Is there any potential change between pre v3 and v3? I prefer working
-based on v3 so that everyone are on the same page.
-
-Thanks,
--Aubrey
+Eric
