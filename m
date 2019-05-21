@@ -2,107 +2,158 @@ Return-Path: <SRS0=9PYC=TV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C76DC04AAC
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 00:02:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A27AC04E87
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 00:06:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 47FB02173C
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 00:02:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3BCD920863
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 00:06:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="D5N1Ez5U"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eA8VpAZG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727180AbfEUACl (ORCPT
+        id S1727195AbfEUAGu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 20:02:41 -0400
-Received: from conssluserg-06.nifty.com ([210.131.2.91]:48083 "EHLO
-        conssluserg-06.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726370AbfEUACl (ORCPT
+        Mon, 20 May 2019 20:06:50 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:38562 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726370AbfEUAGt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 20:02:41 -0400
-Received: from mail-vs1-f48.google.com (mail-vs1-f48.google.com [209.85.217.48]) (authenticated)
-        by conssluserg-06.nifty.com with ESMTP id x4L02TYi011262;
-        Tue, 21 May 2019 09:02:29 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-06.nifty.com x4L02TYi011262
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1558396949;
-        bh=mX1sA9/aVGAIuXsfflg8yrb/ZOucTCKOj7jxvpzOq30=;
-        h=From:Date:Subject:To:Cc:From;
-        b=D5N1Ez5U+exIjKwS02aKwBpQX33FCk8AIYT5okAf2QyBS0lDLN07jTb2nyZFzNmCa
-         RHHdRe+rp/G2+WruP562MvdhBMwPGS3hi6lDMRYDdUI5eHy8N6lDo4C1Qm3gWcEGdP
-         fIDPP1lQvdehp6WqHpnIm4/hop49y5WrLU/D4Q9xtb2dkGxSC8qnANAFPm3IwV+GXg
-         ImwN/ZfRhs4u1h5cAztA5uUkieJjNTSxGsUHTkbdVCqC6yuu/6rckbA8dYma9/9i0M
-         P+MvfsWU+WK4ivVcMGrIyM7ws4vF61rOaSQZso63qt269daHwo//fJlqRP+M00SM1P
-         6jwklen4Ro22w==
-X-Nifty-SrcIP: [209.85.217.48]
-Received: by mail-vs1-f48.google.com with SMTP id x8so6140773vsx.13;
-        Mon, 20 May 2019 17:02:29 -0700 (PDT)
-X-Gm-Message-State: APjAAAU6+S70l+/kDRkSqKPtY6lNxyHcS9pffCeO0xkTWrkGiZtxahoC
-        T8rgq4Pehy02d//rKVnGYIZyz557dmXpR9Y+fGQ=
-X-Google-Smtp-Source: APXvYqy31Jmucr3BuoeG2CYnFptVQ9yoFkAhL9wdIee+qc4UsKZ6HAYcVbxcJyMmZo+FxYtNFyKy1fviKdrt7d79o4c=
-X-Received: by 2002:a67:1783:: with SMTP id 125mr17862865vsx.54.1558396948619;
- Mon, 20 May 2019 17:02:28 -0700 (PDT)
-MIME-Version: 1.0
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Tue, 21 May 2019 09:01:51 +0900
-X-Gmail-Original-Message-ID: <CAK7LNAT2wVBP_yV3P=Eg_0_UUo8xCRZdJK5x1kOufKiYFv=A+Q@mail.gmail.com>
-Message-ID: <CAK7LNAT2wVBP_yV3P=Eg_0_UUo8xCRZdJK5x1kOufKiYFv=A+Q@mail.gmail.com>
-Subject: [GIT PULL] Kbuild fixes for v5.2-rc2
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        masahiroy@kernel.org
-Content-Type: text/plain; charset="UTF-8"
+        Mon, 20 May 2019 20:06:49 -0400
+Received: by mail-pl1-f193.google.com with SMTP id f97so7466513plb.5;
+        Mon, 20 May 2019 17:06:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=LZa++BrYOfKaDAjYx2CGBvGNn51YJo85WGkTuEuNxpQ=;
+        b=eA8VpAZGxR9ZgtFPqco0xH037UTt9tECb93K+cuckwJpP9b5GxzU6LGblkEtz/moKu
+         gMWye9uPKj8vmQNWgiSRlQOil59G7Lu59TJ42Gfwr+X/geGrTEpmrGWycx+WH+8jhUC1
+         slA+KaeC6PrPa4pcSjj9u0pt8YGjLdfYM0i6U+wYNh/KdavsHfAgN/uOzcXXoll0vmaO
+         HOQXdc6vMZKBYniarXKeIIQLKoie7le0ealVOeOXt7vMPpW2ac4a5JPnlmzlaVU0yF5f
+         3KqW2pKCLV+qUWwGTg+/luApbEqt8Bdn4VHKFijfmLgn8i09vwzVl1m2gXLI3aI47qnA
+         sSpQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=LZa++BrYOfKaDAjYx2CGBvGNn51YJo85WGkTuEuNxpQ=;
+        b=hWdTCxZ4//1qSR/0w0/sCXmRV5Q3SA526igPAQPctV+XKrzPPhF6Tzfucy3ocYa8r5
+         xmo0wWmXdhwsH1NuFbvK85iKUPwOWe7+9pUJGXtz0oaAKWkDcA/Cyz9mRhKEf9GJEj+T
+         NE6nlx9YR2IrQIeWipDQ7Lo11gP07VTeJKOB5CY3oGctsLGGu0TFePdHYd1s1Ub181m6
+         GWvOU4jzkIdKfuQBqqeFyeRy2fiS3qvx2qs4s6QZAokiO2C3y8fJOtVqlaNklimIYux6
+         oKN2yNOkuJsnW409X1SeelOc+YC+lSy8nTnOe18JGUZkbK50zxSA2RjqPJAvvnwQmfhj
+         YuzA==
+X-Gm-Message-State: APjAAAW/A9qHXpPbzE3odc2XQnh4fJbIFPp4TH1Yzuf+x2kVGKBWsnZA
+        OWNZdmgunlM0hh0oAAcd+hnSO4065FECSw==
+X-Google-Smtp-Source: APXvYqznvpaJKk3LUwFJojm3izNi1A7mm57rC7UA90cj+HcReiN2d5/4j27Nw7pKrAIm6rvhGJDYUA==
+X-Received: by 2002:a17:902:b949:: with SMTP id h9mr35567145pls.50.1558397208812;
+        Mon, 20 May 2019 17:06:48 -0700 (PDT)
+Received: from prsriva-Precision-Tower-5810.corp.microsoft.com ([2001:4898:80e8:1:e5e3:4312:180a:c25e])
+        by smtp.gmail.com with ESMTPSA id i16sm5939149pfd.100.2019.05.20.17.06.47
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 20 May 2019 17:06:48 -0700 (PDT)
+From:   Prakhar Srivastava <prsriva02@gmail.com>
+To:     linux-integrity@vger.kernel.org,
+        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     mjg59@google.com, zohar@linux.ibm.com, roberto.sassu@huawei.com,
+        vgoyal@redhat.com, Prakhar Srivastava <prsriva02@gmail.com>
+Subject: [PATCH v6 0/3] add new ima hook ima_kexec_cmdline to measure kexec boot cmdline args
+Date:   Mon, 20 May 2019 17:06:42 -0700
+Message-Id: <20190521000645.16227-1-prsriva02@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+The motive behind the patch series is to measure the boot cmdline args
+used for soft reboot/kexec case.
 
-Please pull Kbuild fixes.
+For secure boot attestation, it is necessary to measure the kernel
+command line and the kernel version. For cold boot, the boot loader
+can be enhanced to measure these parameters.
+(https://mjg59.dreamwidth.org/48897.html)
+However, for attestation across soft reboot boundary, these values 
+also need to be measured during kexec_file_load.
 
-Thanks.
+Currently for Kexec(kexec_file_load)/soft reboot scenario the boot cmdline
+args for the next kernel are not measured. For 
+normal case of boot/hardreboot the cmdline args are measured into the TPM.
 
+The hash of boot command line is calculated and added to the current 
+running kernel's measurement list.  On a soft reboot like kexec, the PCRs
+are not reset to zero.  Refer to commit 94c3aac567a9 ("ima: on soft 
+reboot, restore the measurement list") patch description.
 
+To achive the above the patch series does the following
+  -adds a new ima hook: ima_kexec_cmdline which measures the cmdline args
+   into the ima log, behind a new ima policy entry KEXEC_CMDLINE.
+  -since the cmldine args cannot be appraised, a new template field(buf) is
+   added. The template field contains the buffer passed(cmldine args), which
+   can be used to appraise/attest at a later stage.
+  -call the ima_kexec_cmdline(...) hook from kexec_file_load call.
 
-The following changes since commit cb6f8739fbf98203d0fb0bc2c2dbbec0ddfe978a:
+The ima logs need to carried over to the next kernel, which will be followed
+up by other patchsets for x86_64 and arm64.
 
-  Merge branch 'akpm' (patches from Andrew) (2019-05-19 12:15:32 -0700)
+Changelog:
+V6:
+  -add a new ima hook and policy to measure the cmdline
+    args(ima_kexec_cmdline)
+  -add a new template field buf to contain the buffer measured.
+  [suggested by Mimi Zohar]
+   add new fields to ima_event_data to store/read buffer data.
+  [suggested by Roberto]
+  -call ima_kexec_cmdline from kexec_file_load path
 
-are available in the git repository at:
+v5:
+  -add a new ima hook and policy to measure the cmdline
+    args(ima_kexec_cmdline)
+  -add a new template field buf to contain the buffer measured.
+    [suggested by Mimi Zohar]
+  -call ima_kexec_cmdline from kexec_file_load path
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/masahiroy/linux-kbuild.git
-tags/kbuild-fixes-v5.2
+v4:
+  - per feedback from LSM community, removed the LSM hook and renamed the
+    IMA policy to KEXEC_CMDLINE
 
-for you to fetch changes up to 4a33d4f17a19ece50ccf5ccbb8bc4ee539fb492e:
+v3: (rebase changes to next-general)
+  - Add policy checks for buffer[suggested by Mimi Zohar]
+  - use the IMA_XATTR to add buffer
+  - Add kexec_cmdline used for kexec file load
+  - Add an LSM hook to allow usage by other LSM.[suggestd by Mimi Zohar]
 
-  kbuild: do not check name uniqueness of builtin modules (2019-05-21
-08:54:05 +0900)
+v2:
+  - Add policy checks for buffer[suggested by Mimi Zohar]
+  - Add an LSM hook to allow usage by other LSM.[suggestd by Mimi Zohar]
+  - use the IMA_XATTR to add buffer instead of sig template
 
-----------------------------------------------------------------
-Kbuild fixes for v5.2
+v1:
+  -Add kconfigs to control the ima_buffer_check
+  -measure the cmdline args suffixed with the kernel file name
+  -add the buffer to the template sig field.
 
- - remove unused cc-ldoption
+Prakhar Srivastava (3):
+  Add a new ima hook ima_kexec_cmdline to measure cmdline args
+  add a new ima template field buf
+  call ima_kexec_cmdline to measure the cmdline args
 
- - do not check the name uniquness of builtin modules to avoid
-   false positives
-
-----------------------------------------------------------------
-Masahiro Yamada (1):
-      kbuild: do not check name uniqueness of builtin modules
-
-Nick Desaulniers (1):
-      kbuild: drop support for cc-ldoption
-
- Documentation/kbuild/makefiles.txt | 14 --------------
- scripts/Kbuild.include             |  5 -----
- scripts/modules-check.sh           |  6 +++---
-
+ Documentation/ABI/testing/ima_policy      |  1 +
+ Documentation/security/IMA-templates.rst  |  2 +-
+ include/linux/ima.h                       |  2 +
+ kernel/kexec_file.c                       |  8 ++-
+ security/integrity/ima/ima.h              |  3 +
+ security/integrity/ima/ima_api.c          |  5 +-
+ security/integrity/ima/ima_init.c         |  2 +-
+ security/integrity/ima/ima_main.c         | 80 +++++++++++++++++++++++
+ security/integrity/ima/ima_policy.c       |  9 +++
+ security/integrity/ima/ima_template.c     |  2 +
+ security/integrity/ima/ima_template_lib.c | 20 ++++++
+ security/integrity/ima/ima_template_lib.h |  4 ++
+ 12 files changed, 131 insertions(+), 7 deletions(-)
 
 -- 
-Best Regards
-Masahiro Yamada
+2.17.1
+
