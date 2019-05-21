@@ -2,131 +2,168 @@ Return-Path: <SRS0=9PYC=TV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50E6BC04E87
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 16:07:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 328CDC04E87
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 16:07:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 306DF217F5
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 16:07:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F211D2173C
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 16:07:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="SslTEkbd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728317AbfEUQHp (ORCPT
+        id S1728778AbfEUQHv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 May 2019 12:07:45 -0400
-Received: from foss.arm.com ([217.140.101.70]:37874 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727044AbfEUQHp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 May 2019 12:07:45 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id CAF7F15A2;
-        Tue, 21 May 2019 09:07:44 -0700 (PDT)
-Received: from [10.1.196.129] (ostrya.cambridge.arm.com [10.1.196.129])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 4A22B3F718;
-        Tue, 21 May 2019 09:07:42 -0700 (PDT)
-From:   Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
-Subject: Re: [RFC/PATCH 0/4] Initial support for modular IOMMU drivers
-To:     "Isaac J. Manjarres" <isaacm@codeaurora.org>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-pci@vger.kernel.org, iommu@lists.linux-foundation.org,
-        linux-arm-kernel@lists.infradead.org
-Cc:     kernel-team@android.com, robin.murphy@arm.com, joro@8bytes.org,
-        will.deacon@arm.com, lmark@codeaurora.org, robh+dt@kernel.org,
-        bhelgaas@google.com, frowand.list@gmail.com, pratikp@codeaurora.org
-References: <1558118857-16912-1-git-send-email-isaacm@codeaurora.org>
-Message-ID: <2379c1cf-be1b-503f-7dbc-51110650e91f@arm.com>
-Date:   Tue, 21 May 2019 17:07:18 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Tue, 21 May 2019 12:07:51 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:34249 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727044AbfEUQHu (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 May 2019 12:07:50 -0400
+Received: by mail-ot1-f68.google.com with SMTP id l17so16862938otq.1
+        for <linux-kernel@vger.kernel.org>; Tue, 21 May 2019 09:07:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Z6DwY5PU6T6VLE2Cxc9SEtMv6vL/0lIxHi6A4Ph2gaM=;
+        b=SslTEkbdrlh+dYn1Z2W0PtxBFm87izCTK1dQ7tOb865Ax7UFvqpS5sEEsMfHN/jPt4
+         ArS1sJ3XSNP/EeAIKaLyVqYC8EiXiubErXlPjLcp+TyxJAnybFh16zALk/7gtxozJ41P
+         KzASIrypc+6NtC9XdsGoAw1uMIjWfxQX6Z1RlBG3zDpvdLdxwWGRXiaAU9lXevplUU4q
+         zUYpyyWHjMnF+TUT+mvvj0aHcn3/ZAaR/T7k6F8wm+ezWT12bHRSp0ZcoZBjjCUJtmlu
+         hE6THKH/921P6gA0xBGqAXuBDU6uh+7eqvIz6hNvFTs+RsExIrG1H79MaOo4k4dkL4kY
+         l5+g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Z6DwY5PU6T6VLE2Cxc9SEtMv6vL/0lIxHi6A4Ph2gaM=;
+        b=Y2BM+g0gHwj1VH+VC3WAod9BM6Hgrr0P9O2T4B/ttmOXQw70Rl8WYlwndkdVJpiMHF
+         KXOTNkgtNZA6splHBDvlhl6UuOM/wPQ6Wgl/b05hAyuQSl0VYqEWSqDO+Ks2RxFiqDA2
+         9Rgh0jubWWytq2yVzfI2XPWoFOx3dU1ZO0liuiZLNwuqtvNbHXi6bJJcIF0c3WBZen42
+         vdGCsUtaJEr9rz5dp4+YHpf9rwsBemSPEfOIQ3agDXq1U51mGb/MdCU9JEl9LBZN+04r
+         nHPlbeaMZs+YXoxhJsxHqMEtMEQaQXWvLuwOx74gqVneAmG8y9UjH2k4BQuLDLBx0Bl5
+         fK5g==
+X-Gm-Message-State: APjAAAVN8JKqBKUcZtOnaoE+HXQvhEMnDFcc27bBUtp113UqKj1SePec
+        6SMyKxUzY9Dv3l/OwO31Q2GcbkznAS1qFMllSnuS0Q==
+X-Google-Smtp-Source: APXvYqyf0tOjVEyL+KKurLWTQXmmLJuTqu1V19ngBUj4PHyEdLuQ8Dtp7m/dOY8siMci3gIMl1odSi90OcaYYfOkpLw=
+X-Received: by 2002:a9d:362:: with SMTP id 89mr6331724otv.17.1558454869448;
+ Tue, 21 May 2019 09:07:49 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <1558118857-16912-1-git-send-email-isaacm@codeaurora.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20190520154751.84763-1-elver@google.com> <ebec4325-f91b-b392-55ed-95dbd36bbb8e@virtuozzo.com>
+ <CAG_fn=W+_Ft=g06wtOBgKnpD4UswE_XMXd61jw5ekOH_zeUVOQ@mail.gmail.com>
+In-Reply-To: <CAG_fn=W+_Ft=g06wtOBgKnpD4UswE_XMXd61jw5ekOH_zeUVOQ@mail.gmail.com>
+From:   Marco Elver <elver@google.com>
+Date:   Tue, 21 May 2019 18:07:37 +0200
+Message-ID: <CANpmjNN177XBadNfoSmizQF7uZV61PNPQSftT7hPdc3HmdzSjA@mail.gmail.com>
+Subject: Re: [PATCH v2] mm/kasan: Print frame description for stack bugs
+To:     Alexander Potapenko <glider@google.com>
+Cc:     Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Dmitriy Vyukov <dvyukov@google.com>,
+        Andrey Konovalov <andreyknvl@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux Memory Management List <linux-mm@kvack.org>,
+        kasan-dev <kasan-dev@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Isaac,
+On Tue, 21 May 2019 at 17:53, Alexander Potapenko <glider@google.com> wrote:
+>
+> On Tue, May 21, 2019 at 5:43 PM Andrey Ryabinin <aryabinin@virtuozzo.com> wrote:
+> >
+> > On 5/20/19 6:47 PM, Marco Elver wrote:
+> >
+> > > +static void print_decoded_frame_descr(const char *frame_descr)
+> > > +{
+> > > +     /*
+> > > +      * We need to parse the following string:
+> > > +      *    "n alloc_1 alloc_2 ... alloc_n"
+> > > +      * where alloc_i looks like
+> > > +      *    "offset size len name"
+> > > +      * or "offset size len name:line".
+> > > +      */
+> > > +
+> > > +     char token[64];
+> > > +     unsigned long num_objects;
+> > > +
+> > > +     if (!tokenize_frame_descr(&frame_descr, token, sizeof(token),
+> > > +                               &num_objects))
+> > > +             return;
+> > > +
+> > > +     pr_err("\n");
+> > > +     pr_err("this frame has %lu %s:\n", num_objects,
+> > > +            num_objects == 1 ? "object" : "objects");
+> > > +
+> > > +     while (num_objects--) {
+> > > +             unsigned long offset;
+> > > +             unsigned long size;
+> > > +
+> > > +             /* access offset */
+> > > +             if (!tokenize_frame_descr(&frame_descr, token, sizeof(token),
+> > > +                                       &offset))
+> > > +                     return;
+> > > +             /* access size */
+> > > +             if (!tokenize_frame_descr(&frame_descr, token, sizeof(token),
+> > > +                                       &size))
+> > > +                     return;
+> > > +             /* name length (unused) */
+> > > +             if (!tokenize_frame_descr(&frame_descr, NULL, 0, NULL))
+> > > +                     return;
+> > > +             /* object name */
+> > > +             if (!tokenize_frame_descr(&frame_descr, token, sizeof(token),
+> > > +                                       NULL))
+> > > +                     return;
+> > > +
+> > > +             /* Strip line number, if it exists. */
+> >
+> >    Why?
 
-On 17/05/2019 19:47, Isaac J. Manjarres wrote:
-> This series adds initial support for being able to use the ARM
-> SMMU driver as a loadable kernel module. The series also adds
-> to the IOMMU framework, so that it can defer probing for devices
-> that depend on an IOMMU driver that may be a loadable module.
-> 
-> The primary reason behind these changes is that having the ARM
-> SMMU driver as a module allows for the same kernel image to be
-> used across different platforms. For example, if one platform
-> contains an IOMMU that implements one version of the ARM SMMU
-> specification, and another platform simply does not have an
-> IOMMU, the only way that these platforms can share the same
-> kernel image is if the ARM SMMU driver is compiled into the
-> kernel image.
-> 
-> This solution is not scalable, as it will lead to bloating the
-> kernel image with support for several future versions of the
-> SMMU specification to maintain a common kernel image that works
-> across all platforms. Having the ARM SMMU driver as a module allows
-> for a common kernel image to be supported across all platforms,
-> while yielding a smaller kernel image size, since the correct
-> SMMU driver can be loaded at runtime, if necessary.
+The filename is not included, and I don't think it adds much in terms
+of ability to debug; nor is the line number included with all
+descriptions. I think, the added complexity of separating the line
+number and parsing is not worthwhile here. Alternatively, I could not
+pay attention to the line number at all, and leave it as is -- in that
+case, some variable names will display as "foo:123".
 
-It can also be useful if IOMMU drivers want to rely on components that
-distros usually build as modules. I have that problem with virtio-iommu,
-where the whole virtio transport is usually modular.
+> >
+> > > +             strreplace(token, ':', '\0');
+> > > +
+> >
+> > ...
+> >
+> > > +
+> > > +     aligned_addr = round_down((unsigned long)addr, sizeof(long));
+> > > +     mem_ptr = round_down(aligned_addr, KASAN_SHADOW_SCALE_SIZE);
+> > > +     shadow_ptr = kasan_mem_to_shadow((void *)aligned_addr);
+> > > +     shadow_bottom = kasan_mem_to_shadow(end_of_stack(current));
+> > > +
+> > > +     while (shadow_ptr >= shadow_bottom && *shadow_ptr != KASAN_STACK_LEFT) {
+> > > +             shadow_ptr--;
+> > > +             mem_ptr -= KASAN_SHADOW_SCALE_SIZE;
+> > > +     }
+> > > +
+> > > +     while (shadow_ptr >= shadow_bottom && *shadow_ptr == KASAN_STACK_LEFT) {
+> > > +             shadow_ptr--;
+> > > +             mem_ptr -= KASAN_SHADOW_SCALE_SIZE;
+> > > +     }
+> > > +
+> >
+> > I suppose this won't work if stack grows up, which is fine because it grows up only on parisc arch.
+> > But "BUILD_BUG_ON(IS_ENABLED(CONFIG_STACK_GROUWSUP))" somewhere wouldn't hurt.
+> Note that KASAN was broken on parisc from day 1 because of other
+> assumptions on the stack growth direction hardcoded into KASAN
+> (e.g. __kasan_unpoison_stack() and __asan_allocas_unpoison()).
+> So maybe this BUILD_BUG_ON can be added in a separate patch as it's
+> not specific to what Marco is doing here?
 
-> Patchset Summary:
-> 
-> 1. Since the ARM SMMU driver depends on symbols being exported from
-> several subsystems, the first three patches are dedicated to exporting
-> the necessary symbols.
-> 
-> 2. Similar to how the pinctrl framework handles deferring probes,
-> the subsequent patch makes it so that the IOMMU framework will defer
-> probes indefinitely if there is a chance that the IOMMU driver that a
-> device is waiting for is a module. Otherwise, it upholds the current
-> behavior of stopping probe deferrals once all of the builtin drivers
-> have finished probing.
-> 
-> The ARM SMMU driver currently has support for the deprecated
-> "mmu-masters" binding, which relies on the notion of initcall
-> ordering for setting the bus ops to ensure that all SMMU devices
-> have been bound to the driver. This poses a problem with
-> making the driver a module, as there is no such notion with
-> loadable modules. Will support for this be completely deprecated?
-> If not, might it be useful to leverage the device tree ordering,
-> and assign a property to the last SMMU device, and set the bus ops
-> at that point? Or perhaps have some deferred timer based approach
-> to know when to set the bus ops? 
-
-Another problem is module unloading: if the user calls rmmod on an IOMMU
-module, we have to ensure that endpoints aren't performing DMA anymore.
-It could be solved by declaring consumers of an IOMMU with
-device_link_add(), so that device drivers are unbound before the IOMMU
-module is unloaded.
+Happy to send a follow-up patch, or add here. Let me know what you prefer.
 
 Thanks,
-Jean
-
-> 
-> Thanks,
-> Isaac
-> 
-> Isaac J. Manjarres (4):
->   of: Export of_phandle_iterator_args() to modules
->   PCI: Export PCI ACS and DMA searching functions to modules
->   iommu: Export core IOMMU functions to kernel modules
->   iommu: Add probe deferral support for IOMMU kernel modules
-> 
->  drivers/iommu/iommu-sysfs.c | 3 +++
->  drivers/iommu/iommu.c       | 6 ++++++
->  drivers/iommu/of_iommu.c    | 8 ++++++--
->  drivers/of/base.c           | 1 +
->  drivers/pci/pci.c           | 1 +
->  drivers/pci/search.c        | 1 +
->  6 files changed, 18 insertions(+), 2 deletions(-)
-> 
-
+-- Marco
