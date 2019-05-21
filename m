@@ -7,45 +7,45 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77916C16A69
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 23:31:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56F9DC072B5
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 23:31:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 43E8621850
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 23:31:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 27F752183F
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 23:31:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="maCKIs6j"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="GEwewYHN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728278AbfEUXbs (ORCPT
+        id S1728306AbfEUXb5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 May 2019 19:31:48 -0400
-Received: from hqemgate16.nvidia.com ([216.228.121.65]:8292 "EHLO
-        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727493AbfEUXbU (ORCPT
+        Tue, 21 May 2019 19:31:57 -0400
+Received: from hqemgate15.nvidia.com ([216.228.121.64]:8577 "EHLO
+        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725797AbfEUXbT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 May 2019 19:31:20 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5ce48a460001>; Tue, 21 May 2019 16:31:18 -0700
+        Tue, 21 May 2019 19:31:19 -0400
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5ce48a430001>; Tue, 21 May 2019 16:31:15 -0700
 Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
+  by hqpgpgate102.nvidia.com (PGP Universal service);
   Tue, 21 May 2019 16:31:18 -0700
 X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Tue, 21 May 2019 16:31:18 -0700
-Received: from HQMAIL103.nvidia.com (172.20.187.11) by HQMAIL104.nvidia.com
- (172.18.146.11) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 21 May
- 2019 23:31:18 +0000
-Received: from hqnvemgw01.nvidia.com (172.20.150.20) by HQMAIL103.nvidia.com
- (172.20.187.11) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+        by hqpgpgate102.nvidia.com on Tue, 21 May 2019 16:31:18 -0700
+Received: from HQMAIL104.nvidia.com (172.18.146.11) by HQMAIL108.nvidia.com
+ (172.18.146.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 21 May
+ 2019 23:31:17 +0000
+Received: from hqnvemgw01.nvidia.com (172.20.150.20) by HQMAIL104.nvidia.com
+ (172.18.146.11) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
  Transport; Tue, 21 May 2019 23:31:17 +0000
 Received: from skomatineni-linux.nvidia.com (Not Verified[10.110.102.174]) by hqnvemgw01.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5ce48a460004>; Tue, 21 May 2019 16:31:18 -0700
+        id <B5ce48a450008>; Tue, 21 May 2019 16:31:17 -0700
 From:   Sowjanya Komatineni <skomatineni@nvidia.com>
 To:     <thierry.reding@gmail.com>, <jonathanh@nvidia.com>
 CC:     <jckuo@nvidia.com>, <talho@nvidia.com>, <josephl@nvidia.com>,
         <skomatineni@nvidia.com>, <linux-tegra@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>
-Subject: [PATCH V1 11/12] soc/tegra: pmc: configure tegra deep sleep control settings
-Date:   Tue, 21 May 2019 16:31:22 -0700
-Message-ID: <1558481483-22254-12-git-send-email-skomatineni@nvidia.com>
+Subject: [PATCH V1 04/12] clk: tegra: add support for peripheral clock suspend and resume
+Date:   Tue, 21 May 2019 16:31:15 -0700
+Message-ID: <1558481483-22254-5-git-send-email-skomatineni@nvidia.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1558481483-22254-1-git-send-email-skomatineni@nvidia.com>
 References: <1558481483-22254-1-git-send-email-skomatineni@nvidia.com>
@@ -53,122 +53,147 @@ X-NVConfidentiality: public
 MIME-Version: 1.0
 Content-Type: text/plain
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1558481478; bh=/J/3Ez25wTlkLCMS6Rzj4KYTeU+OuYLp1sYDTC4EZwg=;
+        t=1558481475; bh=+iPvMyLn/JYqmAaI1BVhkgnEnd4W1rNJMHzLydYPn4c=;
         h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
          In-Reply-To:References:X-NVConfidentiality:MIME-Version:
          Content-Type;
-        b=maCKIs6jHHyFnDLGCcYHesQHi3BHGJ3Y7FkR62Rki7Wiqhw/w0gU0mcDSfl/F8jrn
-         K9bTVMXXjNUH1cXWmD0wxk2aNlHm0/5+eCtqbDNMOtva4/cwkB6+U/Q5uzdu8V5UWb
-         WqbR/QP62r41Qu1KtKUCBxkc9Bfv2xuAV7tRTPr9pE4w2TQj0yiBYtBv++otBl3Ayo
-         qJ+Sz+EpbjQpHYq0/Fj04sBtmGk5lV+2mik0IVM222dM+Rceutci9e9DCS33szaHZU
-         VTbyPx23F58eoLoRH8fGdyXEQ6Xy8wn/BnQ1fhqb3YKGKPtNZTabWCsWicxMjo0Rmm
-         S7964imysn+4g==
+        b=GEwewYHNIdvrJrqHvbYOXjy1ihjPohFnIH6iml3myO2uJDb/7N3/Zl+lo9BWekL0L
+         a2ilKrB3kVxL4+8foPgV1Tp8iPsOj4vLvN7lwEBmUI0QKlGV3p5WbM6JBjQdCN45lj
+         fN8UKqHGhdkRk+KtSRMRYf5nNcB1JDVqRn1RfutmDB//14NDdq6ZjnJNwLhaHpbfYz
+         F1aIYb2enhev8VdZm5XnMy48zS7HF2jnXC0HGzAKQ8jjSHZJkNswIO312KWPaBCZU/
+         1YRKGQ3X0zTztrXrXRhDKAkJ04Gpckz8q8KDCsJRsNC4+c6fVdImuMpeIGGFZF7nN6
+         0cqB3op+y1Ntg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Tegra210 and prior Tegra chips have power request signal polarity,
-deep sleep entry and wake related timings which are platform specific
-that should be configured before entering into deep sleep.
-
-Below are the timings specific configurations for deep sleep and wake.
-- Core rail power-on stabilization timer
-- OSC clock stabilization timer after SOC rail power is stabilized.
-- Core power off time is the minimum wake delay to keep the system
-in deep sleep state irrespective of any quick wake event.
-
-These values depends on the discharge time of regulators and turn OFF
-time of the PMIC to allow the complete system to finish entering into
-deep sleep state.
-
-These values vary based on the platform design and are specified
-through the device tree.
-
-This patch has implementation to configure these configurations which
-are must to have for deep sleep state.
+This patch implements peripheral clock context save and restore
+to support system suspend and resume operation.
 
 Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
 ---
- arch/arm64/boot/dts/nvidia/tegra210-p2180.dtsi |  7 +++++++
- drivers/soc/tegra/pmc.c                        | 18 ++++++++++++++++++
- 2 files changed, 25 insertions(+)
+ drivers/clk/tegra/clk.c | 74 ++++++++++++++++++++++++++++++++++++++++++++++++-
+ drivers/clk/tegra/clk.h |  3 ++
+ 2 files changed, 76 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm64/boot/dts/nvidia/tegra210-p2180.dtsi b/arch/arm64/boot/dts/nvidia/tegra210-p2180.dtsi
-index 4dcd0d36189a..7ac5e55a30aa 100644
---- a/arch/arm64/boot/dts/nvidia/tegra210-p2180.dtsi
-+++ b/arch/arm64/boot/dts/nvidia/tegra210-p2180.dtsi
-@@ -266,6 +266,13 @@
+diff --git a/drivers/clk/tegra/clk.c b/drivers/clk/tegra/clk.c
+index 6f2862eddad7..08b788766564 100644
+--- a/drivers/clk/tegra/clk.c
++++ b/drivers/clk/tegra/clk.c
+@@ -81,6 +81,10 @@ static struct clk **clks;
+ static int clk_num;
+ static struct clk_onecell_data clk_data;
  
- 	pmc@7000e400 {
- 		nvidia,invert-interrupt;
-+		nvidia,suspend-mode = <0>;
-+		nvidia,cpu-pwr-good-time = <0>;
-+		nvidia,cpu-pwr-off-time = <0>;
-+		nvidia,core-pwr-good-time = <4587 3876>;
-+		nvidia,core-pwr-off-time = <39065>;
-+		nvidia,core-power-req-active-high;
-+		nvidia,sys-clock-req-active-high;
- 	};
- 
- 	/* eMMC */
-diff --git a/drivers/soc/tegra/pmc.c b/drivers/soc/tegra/pmc.c
-index 5e68e1de1780..8d225962d136 100644
---- a/drivers/soc/tegra/pmc.c
-+++ b/drivers/soc/tegra/pmc.c
-@@ -66,6 +66,7 @@
- #define  PMC_CNTRL_SIDE_EFFECT_LP0	BIT(14) /* LP0 when CPU pwr gated */
- #define  PMC_CNTRL_SYSCLK_OE		BIT(11) /* system clock enable */
- #define  PMC_CNTRL_SYSCLK_POLARITY	BIT(10) /* sys clk polarity */
-+#define  PMC_CNTRL_PWRREQ_POLARITY	BIT(8)
- #define  PMC_CNTRL_MAIN_RST		BIT(4)
- #define  PMC_CNTRL_LATCH_WAKEUPS	BIT(5)
- 
-@@ -98,6 +99,8 @@
- 
- #define PMC_CPUPWRGOOD_TIMER		0xc8
- #define PMC_CPUPWROFF_TIMER		0xcc
-+#define PMC_COREPWRGOOD_TIMER		0x3c
-+#define PMC_COREPWROFF_TIMER		0xe0
- 
- #define PMC_PWR_DET_VALUE		0xe4
- 
-@@ -2293,6 +2296,7 @@ static const struct tegra_pmc_regs tegra20_pmc_regs = {
- static void tegra20_pmc_init(struct tegra_pmc *pmc)
- {
- 	u32 value;
-+	unsigned long osc, pmu, off;
- 
- 	/* Always enable CPU power request */
- 	value = tegra_pmc_readl(pmc, PMC_CNTRL);
-@@ -2306,6 +2310,11 @@ static void tegra20_pmc_init(struct tegra_pmc *pmc)
- 	else
- 		value |= PMC_CNTRL_SYSCLK_POLARITY;
- 
-+	if (pmc->corereq_high)
-+		value &= ~PMC_CNTRL_PWRREQ_POLARITY;
-+	else
-+		value |= PMC_CNTRL_PWRREQ_POLARITY;
++#ifdef CONFIG_PM_SLEEP
++static u32 *periph_ctx;
++#endif
 +
- 	/* configure the output polarity while the request is tristated */
- 	tegra_pmc_writel(pmc, value, PMC_CNTRL);
- 
-@@ -2313,6 +2322,15 @@ static void tegra20_pmc_init(struct tegra_pmc *pmc)
- 	value = tegra_pmc_readl(pmc, PMC_CNTRL);
- 	value |= PMC_CNTRL_SYSCLK_OE;
- 	tegra_pmc_writel(pmc, value, PMC_CNTRL);
-+
-+	osc = DIV_ROUND_UP_ULL(pmc->core_osc_time * 8192, 1000000);
-+	pmu = DIV_ROUND_UP_ULL(pmc->core_pmu_time * 32768, 1000000);
-+	off = DIV_ROUND_UP_ULL(pmc->core_off_time * 32768, 1000000);
-+	if (osc && pmu)
-+		tegra_pmc_writel(pmc, ((osc << 8) & 0xff00) | (pmu & 0xff),
-+				 PMC_COREPWRGOOD_TIMER);
-+	if (off)
-+		tegra_pmc_writel(pmc, off, PMC_COREPWROFF_TIMER);
+ /* Handlers for SoC-specific reset lines */
+ static int (*special_reset_assert)(unsigned long);
+ static int (*special_reset_deassert)(unsigned long);
+@@ -210,6 +214,65 @@ const struct tegra_clk_periph_regs *get_reg_bank(int clkid)
+ 	}
  }
  
- static void tegra20_pmc_setup_irq_polarity(struct tegra_pmc *pmc,
++#ifdef CONFIG_PM_SLEEP
++void tegra_clk_periph_suspend(void __iomem *clk_base)
++{
++	int i, idx;
++
++	idx = 0;
++	for (i = 0; i < periph_banks; i++, idx++)
++		periph_ctx[idx] =
++			readl_relaxed(clk_base + periph_regs[i].rst_reg);
++
++	for (i = 0; i < periph_banks; i++, idx++)
++		periph_ctx[idx] =
++			readl_relaxed(clk_base + periph_regs[i].enb_reg);
++}
++
++void tegra_clk_periph_force_on(u32 *clks_on, int count, void __iomem *clk_base)
++{
++	int i;
++
++	WARN_ON(count != periph_banks);
++
++	for (i = 0; i < count; i++)
++		writel_relaxed(clks_on[i], clk_base + periph_regs[i].enb_reg);
++}
++
++void tegra_clk_periph_resume(void __iomem *clk_base)
++{
++	int i, idx;
++
++	idx = 0;
++	for (i = 0; i < periph_banks; i++, idx++)
++		writel_relaxed(periph_ctx[idx],
++			       clk_base + periph_regs[i].rst_reg);
++
++	/* ensure all resets have propagated */
++	fence_udelay(2, clk_base);
++	tegra_read_chipid();
++
++	for (i = 0; i < periph_banks; i++, idx++)
++		writel_relaxed(periph_ctx[idx],
++			       clk_base + periph_regs[i].enb_reg);
++
++	/* ensure all enables have propagated */
++	fence_udelay(2, clk_base);
++	tegra_read_chipid();
++}
++
++static int tegra_clk_suspend_ctx_init(int banks)
++{
++	int err = 0;
++
++	periph_ctx = kzalloc(2 * banks * sizeof(*periph_ctx), GFP_KERNEL);
++	if (!periph_ctx)
++		err = -ENOMEM;
++
++	return err;
++}
++#endif
++
+ struct clk ** __init tegra_clk_init(void __iomem *regs, int num, int banks)
+ {
+ 	clk_base = regs;
+@@ -226,11 +289,20 @@ struct clk ** __init tegra_clk_init(void __iomem *regs, int num, int banks)
+ 	periph_banks = banks;
+ 
+ 	clks = kcalloc(num, sizeof(struct clk *), GFP_KERNEL);
+-	if (!clks)
++	if (!clks) {
+ 		kfree(periph_clk_enb_refcnt);
++		return NULL;
++	}
+ 
+ 	clk_num = num;
+ 
++#ifdef CONFIG_PM_SLEEP
++	if (tegra_clk_suspend_ctx_init(banks)) {
++		kfree(periph_clk_enb_refcnt);
++		kfree(clks);
++		return NULL;
++	}
++#endif
+ 	return clks;
+ }
+ 
+diff --git a/drivers/clk/tegra/clk.h b/drivers/clk/tegra/clk.h
+index c82633686820..ef444648fcb1 100644
+--- a/drivers/clk/tegra/clk.h
++++ b/drivers/clk/tegra/clk.h
+@@ -853,6 +853,9 @@ void tegra_clk_pll_out_resume(struct clk *clk, unsigned long rate);
+ void tegra_clk_plle_tegra210_resume(struct clk *c);
+ void tegra_clk_sync_state_pll(struct clk *c);
+ void tegra_clk_sync_state_pll_out(struct clk *clk);
++void tegra_clk_periph_suspend(void __iomem *clk_base);
++void tegra_clk_periph_resume(void __iomem *clk_base);
++void tegra_clk_periph_force_on(u32 *clks_on, int count, void __iomem *clk_base);
+ #endif
+ 
+ 
 -- 
 2.7.4
 
