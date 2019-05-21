@@ -2,118 +2,140 @@ Return-Path: <SRS0=9PYC=TV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_NEOMUTT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E062AC18E7C
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 21:43:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3408EC072B5
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 21:44:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AB263217F9
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 21:43:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RTh7zDv9"
+	by mail.kernel.org (Postfix) with ESMTP id 1147A217F9
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 21:44:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728285AbfEUVna (ORCPT
+        id S1728205AbfEUVoM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 May 2019 17:43:30 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:33793 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727525AbfEUVn3 (ORCPT
+        Tue, 21 May 2019 17:44:12 -0400
+Received: from mout.kundenserver.de ([212.227.17.10]:52773 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727825AbfEUVoM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 May 2019 17:43:29 -0400
-Received: by mail-pg1-f195.google.com with SMTP id c13so176977pgt.1;
-        Tue, 21 May 2019 14:43:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=e7IKvyivpndLhr4yI3VpbyOaZKIBT4zTT+7VEzq4/yg=;
-        b=RTh7zDv9ySF4qF7LWS+cwTOhCwHO5zR779oCHDbwI9D1YTzO8vo0ZLAvIhSGrouFqA
-         8+Uog6NRFZPdzwFuJzg07cQc582DJe67ocOk7Zi0h17KTC48SgIFpoDBf/NhdaAO81nr
-         qOp9sZnXRMU+LVk6MmLojAfzW/9d4Bwdujg1ziINY+H5Dfn9QPgdAguR0WK6ozcmwD36
-         NeTD9LNwz51pW0wEKunht8NuVihGEpO+nFtviNbK7Lnx8UlLzcjXk16CAGQlCo94E7d4
-         InnByzySabp62mQsB3iRyUYNBnGWPtGZXt3RzNER/fB7CeHlBl1hbnY81nEUGQ2CWbMP
-         218g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=e7IKvyivpndLhr4yI3VpbyOaZKIBT4zTT+7VEzq4/yg=;
-        b=hP8tV0R8zl4oSluGSNQP0ppwRezBL61dsRvrJgc/XSvix2d4t6x+UZMebNB6lNzdoP
-         iJkc5XYDdFmrk+MvCxm/1dqAEnRRwWOaig3FtVXbzF7zgYC1nHbHpO0BOJFGnaBW0mlU
-         RU+eJ5HQMbDdSsxP0hOzyN3NSkD/A6RnDOFn9IQfQXzx+ye6MG+BdMfsDUp7SESqSTDa
-         VwNE0xy/0NoIk7FrA8g4Ma7rS342tNsPIcdbWauqsLyOee71QMhv6OhGcby3p8nYotwm
-         VVEc+PMz53dtRsiEFmyeK58y9kYw1+8W1sZdJXPijTfOn13/br6IdV+Kaf8dflmH1SFN
-         1KGA==
-X-Gm-Message-State: APjAAAXU8qhGZYntftH77IfYR/0nLru7tCHKqkiOK6OudZBoeWsX/KlL
-        U6wV1AFPV4ivx4OabdApX/A=
-X-Google-Smtp-Source: APXvYqyXCHh8uXQFP3KQv0j0ixsVq6rBqUAMPDz8rLx8VFeIluYAifcXl8GKq0dYSta6Z3il8XawEg==
-X-Received: by 2002:a62:62c1:: with SMTP id w184mr89353146pfb.95.1558475008888;
-        Tue, 21 May 2019 14:43:28 -0700 (PDT)
-Received: from ast-mbp.dhcp.thefacebook.com ([2620:10d:c090:200::1:1eff])
-        by smtp.gmail.com with ESMTPSA id q125sm36497281pfq.62.2019.05.21.14.43.27
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 21 May 2019 14:43:28 -0700 (PDT)
-Date:   Tue, 21 May 2019 14:43:26 -0700
-From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     Kris Van Hees <kris.van.hees@oracle.com>, netdev@vger.kernel.org,
-        bpf@vger.kernel.org, dtrace-devel@oss.oracle.com,
-        linux-kernel@vger.kernel.org, mhiramat@kernel.org, acme@kernel.org,
-        ast@kernel.org, daniel@iogearbox.net, peterz@infradead.org
-Subject: Re: [RFC PATCH 00/11] bpf, trace, dtrace: DTrace BPF program type
- implementation and sample use
-Message-ID: <20190521214325.rr7emn5z3b7wqiiy@ast-mbp.dhcp.thefacebook.com>
-References: <201905202347.x4KNl0cs030532@aserv0121.oracle.com>
- <20190521175617.ipry6ue7o24a2e6n@ast-mbp.dhcp.thefacebook.com>
- <20190521184137.GH2422@oracle.com>
- <20190521205533.evfszcjvdouby7vp@ast-mbp.dhcp.thefacebook.com>
- <20190521173618.2ebe8c1f@gandalf.local.home>
+        Tue, 21 May 2019 17:44:12 -0400
+Received: from oxbaltgw36.schlund.de ([172.19.246.44]) by
+ mrelayeu.kundenserver.de (mreue109 [213.165.67.113]) with ESMTPSA (Nemesis)
+ id 1M3UhQ-1hTkmN1yTK-000dQZ; Tue, 21 May 2019 23:43:49 +0200
+Date:   Tue, 21 May 2019 23:43:46 +0200 (CEST)
+From:   Stefan Wahren <stefan.wahren@i2se.com>
+To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        bcm-kernel-feedback-list@broadcom.com,
+        Eric Anholt <eric@anholt.net>
+Cc:     linux-pm@vger.kernel.org, sboyd@kernel.org,
+        viresh.kumar@linaro.org, mturquette@baylibre.com,
+        ptesarik@suse.com, rjw@rjwysocki.net, linux-kernel@vger.kernel.org,
+        mbrugger@suse.de, linux-rpi-kernel@lists.infradead.org,
+        linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        ssuloev@orpaltech.com
+Message-ID: <1599901940.259900.1558475026379@email.ionos.de>
+In-Reply-To: <a142b72b828a798610d885d81189dd21b1870d78.camel@suse.de>
+References: <20190520104708.11980-1-nsaenzjulienne@suse.de>
+ <20190520104708.11980-4-nsaenzjulienne@suse.de>
+ <ebc78880-418f-f507-021c-41295113e041@i2se.com>
+ <6383b357-3f7e-f031-f59f-61c598e44763@i2se.com>
+ <a142b72b828a798610d885d81189dd21b1870d78.camel@suse.de>
+Subject: Re: [RFC v2 3/5] clk: bcm2835: use firmware interface to update
+ pllb
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190521173618.2ebe8c1f@gandalf.local.home>
-User-Agent: NeoMutt/20180223
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Priority: 3
+Importance: Medium
+X-Mailer: Open-Xchange Mailer v7.8.4-Rev55
+X-Originating-Client: open-xchange-appsuite
+X-Provags-ID: V03:K1:Isy5OlYsYGu9nrdhnWYleYJBAsXAYF+kjVDhfkkBJjpqzq5ZCJ8
+ wBrxVrIo4++MiWGXASEOqxb4cpbPuhfyfcpg6XJSh/BMfGi9o7z1fQ0Khes7Q8QfhAon+iu
+ Ph83K39Jzsa5+H1HvaMbZwfikr4aq0l8KiaHIfpCPI89Hw0fan5EAleIIX9/KTIpjv3F0xR
+ FCPtxd9TpiKaJ0UONo/RA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:nY8tA70RVBM=:mOsfgkfjoAIx80KhU342a4
+ yiIrkI7pWZ99A/mCEoZVH+0C1zJXeM6uoYYhGJL/sfzZ7y4GMmdrn4Ziqsp9VnDV9PqPnBK9e
+ NCeT5AAIqT/jjszs8m5KyTcEaCw5gsYVlG1g/ghx60arMlkVkvQXFvSk1KW5PIw2OB5ckhfsv
+ KMDOIy9RwM5XruZnfBjbWQxqfkRRo1xcsG6+V2rAu1plD+yIXDZnS+eE7qBI7eedU1FR605eZ
+ 4Zh72Z21kH7qhvv1TDKzV2wdka9dwqZ0OE5ApKjURmgSmLmbpPxBCqSYokQaaW8hZumhdaFro
+ jljEXtF9nm/yaRjMTzkBFXceEfpL5hLRD6y+fd8kXRqazon7pQJYtqc/uU/T6z8dV3w8dMk9L
+ u577Sz4xJaLpsHKGXktJJluopiUfX7DZAN41+2AvA+381FNI7KBqbU++3cGOnh58rCfiOem4p
+ rPwXFPDjxuhRpfVUFt/dWUjfx7Xe4KGXYH8TA8c6HFckaal0uXfX+Let7872KVAyugzccDPcw
+ BS/pwCCxGBTsJUVGUoxS55Pp1znnfuNaI6OLCxjThm3sPnt/dgWDRiaLSmKmYBK/66Sc91ecm
+ iYdCy+iz+yCETge8pBVxUWrwwC3DJuCegXJSS2Q6tHFLadvSZj9WSxDeOu2vR2Na7yPXO72hI
+ QpJL3EsCKUTKtU/FyqNjV5SUtgMw+Imt5JxEDmvRjB3vq4QfiTLnFUjOqFwaa3I+7pm7/p0Sn
+ Rvro3OibNuNCeeNH8n65x7Ag+QRfPDGpGbSX/C1+U9r7gDL/IrLNTF+tbj8=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 21, 2019 at 05:36:18PM -0400, Steven Rostedt wrote:
-> On Tue, 21 May 2019 13:55:34 -0700
-> Alexei Starovoitov <alexei.starovoitov@gmail.com> wrote:
+
+> Nicolas Saenz Julienne <nsaenzjulienne@suse.de> hat am 21. Mai 2019 um 17:47 geschrieben:
 > 
-> > > The reasons for these patches is because I cannot do the same with the existing
-> > > implementation.  Yes, I can do some of it or use some workarounds to accomplish
-> > > kind of the same thing, but at the expense of not being able to do what I need
-> > > to do but rather do some kind of best effort alternative.  That is not the goal
-> > > here.  
+> 
+> Hi Stefan, thanks for your comments!
+> 
+> On Tue, 2019-05-21 at 14:40 +0200, Stefan Wahren wrote:
+> > Hi Nicolas,
 > > 
-> > what you call 'workaround' other people call 'feature'.
-> > The kernel community doesn't accept extra code into the kernel
-> > when user space can do the same.
+> > On 20.05.19 14:11, Stefan Wahren wrote:
+> > > Hi Nicolas,
+> > > 
+> > > the following comments applies only in case Eric is fine with the whole
+> > > approach.
+> > > 
+> > > On 20.05.19 12:47, Nicolas Saenz Julienne wrote:
+> > > > Raspberry Pi's firmware, which runs in a dedicated processor, keeps
+> > > maybe we should clarify that the firmware is running in the VPU
+> > > > track of the board's temperature and voltage. It's resposible for
+> > > > scaling the CPU frequency whenever it deems the device reached an unsafe
+> > > > state. On top of that the firmware provides an interface which allows
+> > > > Linux to to query the clock's state or change it's frequency.
+> > > I think this requires a separate update of the devicetree binding.
+> > > > Being the sole user of the bcm2835 clock driver, this integrates the
+> > > > firmware interface into the clock driver and adds a first user: the CPU
+> > > > pll, also known as 'pllb'.
+> > > Please verify that the kernel still works (and this clock driver probe)
+> > > under the following conditions:
+> > > 
+> > > - CONFIG_RASPBERRYPI_FIRMWARE=n
+> > > - CONFIG_RASPBERRYPI_FIRMWARE=m
+> > > - older DTBs without patch #1
+> > i thought about this and the case this driver would return
+> > -EPROBE_DEFER. The clock driver is too essential for doing such a thing.
+> > So i think the best solution would be to move these changes into a
+> > separate driver which should be register by the clock driver (similiar
+> > to vchiq). This also avoid the need of a new device tree binding.
 > 
-> If that was really true, all file systems would be implemented on
-> FUSE ;-)
+> I understand your concerns.
 > 
-> I was just at a technical conference that was not Linux focused, and I
-> talked to a lot of admins that said they would love to have Dtrace
-> scripts working on Linux unmodified.
-> 
-> I need to start getting more familiar with the workings of eBPF and
-> then look at what Dtrace has to see where something like this can be
-> achieved, but right now just NACKing patches outright isn't being
-> helpful. If you are not happy with this direction, I would love to see
-> conversations where Kris shows you exactly what is required (from a
-> feature perspective, not an implementation one) and we come up with a
-> solution.
+> Wouldn't you prefer registering the device trough the device tree? I'd go with
+> the same approach as the firmware touchscreen driver, which is registered after
+> the firmware's probe trough dt's 'simple-bus'. That said, it's not a strongly
+> held opinion, I'm happy with whatever solution as long as it works.
 
-Steve,
-sounds like you've missed all prior threads.
-The feedback was given to Kris it was very clear:
-implement dtrace the same way as bpftrace is working with bpf.
-No changes are necessary to dtrace scripts
-and no kernel changes are necessary.
+A devicetree binding always introduce some kind of inflexibility. In case someone finds a better solution later things can get really messy. A recent example is the clock handling for i2c-bcm2835.
 
+> 
+> I get from your comments that you'd like the register based version of 'pllb'
+> and 'pllb_arm' to be loaded if for some reason the firmware isn't available. Is
+> that right? 
+
+This wasn't my intention. I would prefer a simple approch here (no handover). 
+
+> The main problem I see with this is the duplication of 'pllb' and
+> 'pllb_arm'. Both drivers will create the same clock device through different
+> interfaces. Any suggestions on how to deal with that? If not I can simply
+> remove 'pllb' and 'pllb_arm' from clk-bcm2835.c.
+
+Yes. So even if this driver is disabled, there shouldn't be a regression. Or did i miss something?
+
+> 
+> Regards,
+> Nicolas
+>
