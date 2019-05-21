@@ -2,131 +2,167 @@ Return-Path: <SRS0=9PYC=TV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0707C04AAF
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 06:46:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FD36C04AAF
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 06:47:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 80BC621743
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 06:46:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB43021743
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 06:47:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="KeH2Aa8U"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726801AbfEUGqL (ORCPT
+        id S1726980AbfEUGrQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 May 2019 02:46:11 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:37579 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726318AbfEUGqK (ORCPT
+        Tue, 21 May 2019 02:47:16 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:33718 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726252AbfEUGrQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 May 2019 02:46:10 -0400
-Received: by mail-wm1-f66.google.com with SMTP id 7so1585385wmo.2
-        for <linux-kernel@vger.kernel.org>; Mon, 20 May 2019 23:46:09 -0700 (PDT)
+        Tue, 21 May 2019 02:47:16 -0400
+Received: by mail-wm1-f68.google.com with SMTP id c66so1550144wme.0
+        for <linux-kernel@vger.kernel.org>; Mon, 20 May 2019 23:47:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=amarulasolutions.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Dtcdsu0fUtok0q96jnMGpWM0fc0NoVZ6NVYcC/TU3EI=;
+        b=KeH2Aa8UGeY3ald/vMtEvRNEPoOZgF6ZxP+nhAsZupukHiOm8t0PXqEZS/WBoeHG/0
+         7vTSdr7BTbtHz2o2Jqvx7wMH1SmkqwzYd5Gdg/w0hH3eL/OlPpzUlozsZ4rN6E/h7sMd
+         bMdDLCwW+K7eQEPgfsVVK5lh7g25N8mZ7wUgg=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=hgpTLFoEBK0qAp/AMPVLKVpFtjZQiXWSFLACx+mQKDU=;
-        b=Qv8TMK38a13yFG8UTm8Zd/Obcwp9Pn6/wD/hZrsvNkuQb5GTQXT/wuVYIsMp2vKRft
-         I50LWTxPHs6mT9OCJF6z0Vko1VhE91VazOv0/feJfqdzdXuwYEW+aaB7+IltKnHXU/nz
-         gGGSS6V1Fal3UZ//hJWlOnfp/4pkSAsw8Qp6Ctp/VqCeC1odN6bKiN0i2FTWbsx5WoFC
-         otcbrtIF1ZFPsbYZ+OFtTYSQBFA2lCqXc2T/uCF3nEyQyotuaUcOrQdLCuTxgU2oSFj1
-         lb05mj/nyVs8HwvMUIAzOvaUW6fGKgp9PjaUHEwMj99LKoNS76Q62aS6ZTM5Tjll9ArX
-         wlxw==
-X-Gm-Message-State: APjAAAVjxKNSst8edBBavPhjLPFoTEuT/lkFZWROAkwE8KZ0MORjfLlj
-        FHHvkqx44Jw/8gUGYPoDcEjJzA==
-X-Google-Smtp-Source: APXvYqxY+cEQlz45ZYF7GY+ar/2+uLIZBN5r24uASg5vSq84sNBHbnksjKLFWM20WiBHrp61AxNHRA==
-X-Received: by 2002:a1c:20d7:: with SMTP id g206mr1996089wmg.136.1558421169069;
-        Mon, 20 May 2019 23:46:09 -0700 (PDT)
-Received: from localhost (nat-pool-brq-t.redhat.com. [213.175.37.10])
-        by smtp.gmail.com with ESMTPSA id a11sm20586018wrx.31.2019.05.20.23.46.08
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 20 May 2019 23:46:08 -0700 (PDT)
-Date:   Tue, 21 May 2019 08:46:07 +0200
-From:   Oleksandr Natalenko <oleksandr@redhat.com>
-To:     Gen Zhang <blackgod016574@gmail.com>
-Cc:     Nicolas Pitre <nico@fluxnic.net>, linux-kernel@vger.kernel.org,
-        Grzegorz Halat <ghalat@redhat.com>
-Subject: Re: [PATCH v3] vt: Fix a missing-check bug in drivers/tty/vt/vt.c
-Message-ID: <20190521064605.ho7tdwaagt4wow4v@butterfly.localdomain>
-References: <20190521022940.GA4858@zhanggen-UX430UQ>
- <nycvar.YSQ.7.76.1905202242410.1558@knanqh.ubzr>
- <20190521032118.GC5263@zhanggen-UX430UQ>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Dtcdsu0fUtok0q96jnMGpWM0fc0NoVZ6NVYcC/TU3EI=;
+        b=Mq6oWR2OM2LmGjyBfIa7bimtUgCJlhu56Pn6CBCuNkVFamH5ROn1DGJLnVYNZZXIcD
+         i2s3KwxhuX4FoTtjG9Q2NbOvgevD7HOXJ+5N5iIREVdklqKfzC195nufBrzpvXbB4Alq
+         0WMSfzfWW08T7AlGl++K8BCSlzLoZh8HynMuzN3Jo9d5/lrzBuyA8i8yn6JzglBnCXmF
+         UyMPz4Zd2M7niHTt04xdPl1BFRLi0YBWyLcbD7lo85Ll0B0JvJ6jwRVUJhC4piKmS1XS
+         Tv6RysbHTPErzWuNK6emN3vg1ZSl1tnsKCQ8eSnwo4Xax/b7B7RYkFKpPfaRaXSvDdwm
+         O5zg==
+X-Gm-Message-State: APjAAAWdGYR5izijrpBp47D+OldmlgMxxu8EzQBZAGStXGhMTZ/suHKG
+        VqrctyjE0KuGRdF6cCtXXt8CjaUAGAc8sg1nrVWCrQ==
+X-Google-Smtp-Source: APXvYqzfKKX+FWJFZbOOtvY+5rX4F4OJzEUSEX+qaWWcrbh0PkdH/kOZOIQuqFdUHG1hJoLc5d9aCY/fi8EkfoSZ+9Y=
+X-Received: by 2002:a1c:7310:: with SMTP id d16mr1907943wmb.65.1558421233660;
+ Mon, 20 May 2019 23:47:13 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190521032118.GC5263@zhanggen-UX430UQ>
-User-Agent: NeoMutt/20180716
+References: <20190418141658.10868-1-jagan@amarulasolutions.com> <20190418145641.q23tupopz2czjzc5@flea>
+In-Reply-To: <20190418145641.q23tupopz2czjzc5@flea>
+From:   Michael Nazzareno Trimarchi <michael@amarulasolutions.com>
+Date:   Tue, 21 May 2019 08:47:02 +0200
+Message-ID: <CAOf5uwn8CtRs8cx0KC-bxNoRP4TiDrHi8F83QfjsZhueLDYFJg@mail.gmail.com>
+Subject: Re: [PATCH] arm64: dts: allwinner: a64-oceanic-5205-5inmfd: Enable CAN
+To:     Maxime Ripard <maxime.ripard@bootlin.com>
+Cc:     Jagan Teki <jagan@amarulasolutions.com>,
+        Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree <devicetree@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-amarula <linux-amarula@amarulasolutions.com>,
+        linux-sunxi <linux-sunxi@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Cc'ing Grzegorz.
+Hi Maxime
 
-On Tue, May 21, 2019 at 11:21:18AM +0800, Gen Zhang wrote:
-> On Mon, May 20, 2019 at 10:55:40PM -0400, Nicolas Pitre wrote:
-> > As soon as you release the lock, another thread could come along and 
-> > start using the memory pointed by vc_cons[currcons].d you're about to 
-> > free here. This is unlikely for an initcall, but still.
-> > 
-> > You should consider this ordering instead:
-> > 
-> > err_vc_screenbuf:
-> > 	kfree(vc);
-> > 	vc_cons[currcons].d = NULL;
-> > err_vc:
-> > 	console_unlock();
-> > 	return -ENOMEM;
-> In function con_init(), the pointer variable vc_cons[currcons].d, vc and
-> vc->vc_screenbuf is allocated a memory space via kzalloc(). And they are
-> used in the following codes.
-> However, when there is a memory allocation error, kzalloc() can fail.
-> Thus null pointer (vc_cons[currcons].d, vc and vc->vc_screenbuf)
-> dereference may happen. And it will cause the kernel to crash. Therefore,
-> we should check return value and handle the error.
-> Further,the loop condition MIN_NR_CONSOLES is defined as 1 in
-> include/uapi/linux/vt.h and it is not changed. So there is no need to
-> unwind the loop.
-> 
-> Signed-off-by: Gen Zhang <blackgod016574@gmail.com>
-> 
-> ---
-> diff --git a/drivers/tty/vt/vt.c b/drivers/tty/vt/vt.c
-> index fdd12f8..ea47eb3 100644
-> --- a/drivers/tty/vt/vt.c
-> +++ b/drivers/tty/vt/vt.c
-> @@ -3350,10 +3350,14 @@ static int __init con_init(void)
->  
->  	for (currcons = 0; currcons < MIN_NR_CONSOLES; currcons++) {
->  		vc_cons[currcons].d = vc = kzalloc(sizeof(struct vc_data), GFP_NOWAIT);
-> +		if (!vc)
-> +			goto err_vc;
->  		INIT_WORK(&vc_cons[currcons].SAK_work, vc_SAK);
->  		tty_port_init(&vc->port);
->  		visual_init(vc, currcons, 1);
->  		vc->vc_screenbuf = kzalloc(vc->vc_screenbuf_size, GFP_NOWAIT);
-> +		if (!vc->vc_screenbuf)
-> +			goto err_vc_screenbuf;
->  		vc_init(vc, vc->vc_rows, vc->vc_cols,
->  			currcons || !vc->vc_sw->con_save_screen);
->  	}
-> @@ -3375,6 +3379,13 @@ static int __init con_init(void)
->  	register_console(&vt_console_driver);
->  #endif
->  	return 0;
-> +err_vc_screenbuf:
-> +	kfree(vc);
-> +	vc_cons[currcons].d = NULL;
-> +err_vc:
-> +	console_unlock();
-> +	return -ENOMEM;
-> +
->  }
->  console_initcall(con_init);
-> ---
+On Thu, Apr 18, 2019 at 4:56 PM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
+>
+> On Thu, Apr 18, 2019 at 07:46:58PM +0530, Jagan Teki wrote:
+> > Oceanic 5205 5inMFD has MCP2515 CAN device connected via SPI1.
+> >
+> > - via SPI1 bus
+> > - vdd supplied by 5V supply along with PL2 enable pin
+> > - xceiver supply same as vdd
+> > - can oscillator connected at 20MHz
+> > - PB2 gpio as interrupt pin
+> > - PD6 gpio as RX_BUF1_CAN0
+> > - PD7 gpio as RX_BUF0_CAN0
+> >
+> > Tested-by: Tamas Papp <tamas@osukl.com>
+> > Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
+> > ---
+> >  .../sun50i-a64-oceanic-5205-5inmfd.dts        | 43 +++++++++++++++++++
+> >  1 file changed, 43 insertions(+)
+> >
+> > diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-oceanic-5205-5inmfd.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-oceanic-5205-5inmfd.dts
+> > index f0cd6587f619..22535a297f51 100644
+> > --- a/arch/arm64/boot/dts/allwinner/sun50i-a64-oceanic-5205-5inmfd.dts
+> > +++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-oceanic-5205-5inmfd.dts
+> > @@ -21,6 +21,24 @@
+> >       chosen {
+> >               stdout-path = "serial0:115200n8";
+> >       };
+> > +
+> > +     can_osc: can-osc {
+> > +             compatible = "fixed-clock";
+> > +             #clock-cells = <0>;
+> > +             clock-frequency = <20000000>;
+> > +     };
+> > +
+> > +     reg_can_v5v: reg-can-v5v {
+> > +             compatible = "regulator-fixed";
+> > +             regulator-name = "reg-can-v5v";
+> > +             regulator-min-microvolt = <5000000>;
+> > +             regulator-max-microvolt = <5000000>;
+> > +             regulator-boot-on;
+> > +             enable-active-high;
+> > +             gpio = <&r_pio 0 2 GPIO_ACTIVE_HIGH>; /* CAN_3V3_EN: PL2 */
+> > +             status = "okay";
+>
+> You don't need the status property here.
+>
 
--- 
-  Best regards,
-    Oleksandr Natalenko (post-factum)
-    Senior Software Maintenance Engineer
+Correct, need to be dropped
+
+> > +     };
+> > +
+> >  };
+> >
+> >  &ehci0 {
+> > @@ -77,6 +95,31 @@
+> >       status = "okay";
+> >  };
+> >
+> > +&pio {
+> > +     can_pins: can-pins {
+> > +             pins = "PD6",                   /* RX_BUF1_CAN0 */
+> > +                    "PD7";                   /* RX_BUF0_CAN0 */
+> > +             function = "gpio_in";
+> > +     };
+> > +};
+>
+> That isn't needed. What are they used for, you're not tying them to
+> anything?
+
+Mux of their function is correct. They are connected in the schematics
+but not used right now.
+I can garantee that kernel wlll always configurred in the right way
+and if I want I can export in userspace
+for debug purpose
+
+Michael
+
+
+>
+> Maxime
+>
+> --
+> Maxime Ripard, Bootlin
+> Embedded Linux and Kernel engineering
+> https://bootlin.com
+
+
+
+--
+| Michael Nazzareno Trimarchi                     Amarula Solutions BV |
+| COO  -  Founder                                      Cruquiuskade 47 |
+| +31(0)851119172                                 Amsterdam 1018 AM NL |
+|                  [`as] http://www.amarulasolutions.com               |
