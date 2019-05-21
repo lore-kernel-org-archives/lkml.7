@@ -2,500 +2,157 @@ Return-Path: <SRS0=9PYC=TV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.7 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25F74C04AB4
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 13:40:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E67BAC04AAF
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 13:40:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F0EC9208C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 13:40:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C6666208C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 13:40:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728549AbfEUNkC (ORCPT
+        id S1728595AbfEUNkI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 May 2019 09:40:02 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:40910 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728144AbfEUNkB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 May 2019 09:40:01 -0400
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 7292230001DA;
-        Tue, 21 May 2019 13:39:47 +0000 (UTC)
-Received: from dhcp201-121.englab.pnq.redhat.com (ovpn-116-97.sin2.redhat.com [10.67.116.97])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id CAEDB1017E36;
-        Tue, 21 May 2019 13:39:02 +0000 (UTC)
-From:   Pankaj Gupta <pagupta@redhat.com>
-To:     linux-nvdimm@lists.01.org, linux-kernel@vger.kernel.org,
-        virtualization@lists.linux-foundation.org, kvm@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-acpi@vger.kernel.org,
-        qemu-devel@nongnu.org, linux-ext4@vger.kernel.org,
-        linux-xfs@vger.kernel.org, dm-devel@redhat.com
-Cc:     dan.j.williams@intel.com, zwisler@kernel.org,
-        vishal.l.verma@intel.com, dave.jiang@intel.com, mst@redhat.com,
-        jasowang@redhat.com, willy@infradead.org, rjw@rjwysocki.net,
-        hch@infradead.org, lenb@kernel.org, jack@suse.cz, tytso@mit.edu,
-        adilger.kernel@dilger.ca, darrick.wong@oracle.com,
-        lcapitulino@redhat.com, kwolf@redhat.com, imammedo@redhat.com,
-        jmoyer@redhat.com, nilal@redhat.com, riel@surriel.com,
-        stefanha@redhat.com, aarcange@redhat.com, david@redhat.com,
-        david@fromorbit.com, cohuck@redhat.com,
-        xiaoguangrong.eric@gmail.com, pagupta@redhat.com,
-        pbonzini@redhat.com, yuval.shaia@oracle.com, kilobyte@angband.pl,
-        jstaron@google.com, rdunlap@infradead.org, snitzer@redhat.com
-Subject: [PATCH v10 2/7] virtio-pmem: Add virtio pmem driver
-Date:   Tue, 21 May 2019 19:07:08 +0530
-Message-Id: <20190521133713.31653-3-pagupta@redhat.com>
-In-Reply-To: <20190521133713.31653-1-pagupta@redhat.com>
-References: <20190521133713.31653-1-pagupta@redhat.com>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.46]); Tue, 21 May 2019 13:40:00 +0000 (UTC)
+        Tue, 21 May 2019 09:40:08 -0400
+Received: from mail-it1-f197.google.com ([209.85.166.197]:52946 "EHLO
+        mail-it1-f197.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728420AbfEUNkG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 May 2019 09:40:06 -0400
+Received: by mail-it1-f197.google.com with SMTP id z128so745970itb.2
+        for <linux-kernel@vger.kernel.org>; Tue, 21 May 2019 06:40:06 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=K4ds8cMxo1iXc8WzeVkbAabvNASPap6txWxba5dr+7A=;
+        b=C+ccJ2E56elu+c+145f5uZhBhXyF+GV2yLGy+MUbqJAVRZN5toWAMBHujd1/pbZTYn
+         Y4P6zO9w4hW8n3R0gMwzvvWMBGGW2NEFz567/qmKXPAqWWPgZW5h9bMWloONKCGe+JZQ
+         e7a3N9JaPU8RwvXwTO4yO6TRBgkiKygmaDyAPB21So23VpAeQ4Qpl1mSyp5bJrR9127f
+         Y7uq42YRU7B1MIPWPujuEiDtB/iiaeh4Veuj/h+fWDHM3+6jYlrKbjMpaNPMceE3PSDq
+         XaiFmdtIwspN6hFuMz55Hlk9d+zQA1Fwsl0XR35ipUARXTrqEncyUrCq/VX3S4z7e6Ii
+         T9Tg==
+X-Gm-Message-State: APjAAAVuNnIi7ExMOMKsgq1o1Vq2KOCG5QaxOCSKJuHXDF4650zBgnCi
+        hs4JK5eNpTvZdEQdlk+szAgvotLCRIPG8ReEE2tAWOnKI7y0
+X-Google-Smtp-Source: APXvYqzspuOvi+vHsplGaSP0d+7NSlzKcyTf0DIR7haZL8LBBYvCtkq00YtKlZWtSNX6rVfsX7qkJ0CBxbpY3JHqwNrOhhQ2pJdL
+MIME-Version: 1.0
+X-Received: by 2002:a6b:b2c7:: with SMTP id b190mr10910519iof.14.1558446005778;
+ Tue, 21 May 2019 06:40:05 -0700 (PDT)
+Date:   Tue, 21 May 2019 06:40:05 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000009382e7058965fc65@google.com>
+Subject: memory leak in llc_ui_sendmsg
+From:   syzbot <syzbot+31c16aa4202dace3812e@syzkaller.appspotmail.com>
+To:     davem@davemloft.net, edumazet@google.com,
+        gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, penguin-kernel@I-love.SAKURA.ne.jp,
+        syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch adds virtio-pmem driver for KVM guest.
+Hello,
 
-Guest reads the persistent memory range information from
-Qemu over VIRTIO and registers it on nvdimm_bus. It also
-creates a nd_region object with the persistent memory
-range information so that existing 'nvdimm/pmem' driver
-can reserve this into system memory map. This way
-'virtio-pmem' driver uses existing functionality of pmem
-driver to register persistent memory compatible for DAX
-capable filesystems.
+syzbot found the following crash on:
 
-This also provides function to perform guest flush over
-VIRTIO from 'pmem' driver when userspace performs flush
-on DAX memory range.
+HEAD commit:    f49aa1de Merge tag 'for-5.2-rc1-tag' of git://git.kernel.o..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=117ba18aa00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=61dd9e15a761691d
+dashboard link: https://syzkaller.appspot.com/bug?extid=31c16aa4202dace3812e
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=137f3d9ca00000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=156389f8a00000
 
-Signed-off-by: Pankaj Gupta <pagupta@redhat.com>
-Reviewed-by: Yuval Shaia <yuval.shaia@oracle.com>
-Acked-by: Michael S. Tsirkin <mst@redhat.com>
-Acked-by: Jakub Staron <jstaron@google.com>
-Tested-by: Jakub Staron <jstaron@google.com>
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+31c16aa4202dace3812e@syzkaller.appspotmail.com
+
+udit(1558395599.193:36): avc:  denied  { map } for  pid=7045  
+comm="syz-executor641" path="/root/syz-executor641959542" dev="sda1"  
+ino=1426 scontext=unconfined_u:system_r:insmod_t:s0-s0:c0.c1023  
+tcontext=unconfined_u:object_r:user_home_t:s0 tclass=file permissive=1
+executing program
+executing program
+executing program
+BUG: memory leak
+unreferenced object 0xffff888116270800 (size 224):
+   comm "syz-executor641", pid 7047, jiffies 4294947360 (age 13.860s)
+   hex dump (first 32 bytes):
+     00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+     00 20 e1 2a 81 88 ff ff 00 40 3d 2a 81 88 ff ff  . .*.....@=*....
+   backtrace:
+     [<000000004d41b4cc>] kmemleak_alloc_recursive  
+include/linux/kmemleak.h:55 [inline]
+     [<000000004d41b4cc>] slab_post_alloc_hook mm/slab.h:439 [inline]
+     [<000000004d41b4cc>] slab_alloc_node mm/slab.c:3269 [inline]
+     [<000000004d41b4cc>] kmem_cache_alloc_node+0x153/0x2a0 mm/slab.c:3579
+     [<00000000506a5965>] __alloc_skb+0x6e/0x210 net/core/skbuff.c:198
+     [<000000001ba5a161>] alloc_skb include/linux/skbuff.h:1058 [inline]
+     [<000000001ba5a161>] alloc_skb_with_frags+0x5f/0x250  
+net/core/skbuff.c:5327
+     [<0000000047d9c78b>] sock_alloc_send_pskb+0x269/0x2a0  
+net/core/sock.c:2225
+     [<000000003828fe54>] sock_alloc_send_skb+0x32/0x40 net/core/sock.c:2242
+     [<00000000e34d94f9>] llc_ui_sendmsg+0x10a/0x540 net/llc/af_llc.c:933
+     [<00000000de2de3fb>] sock_sendmsg_nosec net/socket.c:652 [inline]
+     [<00000000de2de3fb>] sock_sendmsg+0x54/0x70 net/socket.c:671
+     [<000000008fe16e7a>] __sys_sendto+0x148/0x1f0 net/socket.c:1964
+     [<000000005b17a3ac>] __do_sys_sendto net/socket.c:1976 [inline]
+     [<000000005b17a3ac>] __se_sys_sendto net/socket.c:1972 [inline]
+     [<000000005b17a3ac>] __x64_sys_sendto+0x2a/0x30 net/socket.c:1972
+     [<0000000094b2fa53>] do_syscall_64+0x76/0x1a0  
+arch/x86/entry/common.c:301
+     [<00000000ea5a7233>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
+
+BUG: memory leak
+unreferenced object 0xffff88812274ac00 (size 512):
+   comm "syz-executor641", pid 7047, jiffies 4294947360 (age 13.860s)
+   hex dump (first 32 bytes):
+     08 c2 03 00 00 00 00 00 69 63 65 73 2f 76 69 72  ........ices/vir
+     74 75 61 6c 2f 74 74 79 2f 74 74 79 71 37 00 41  tual/tty/ttyq7.A
+   backtrace:
+     [<000000009abfb07f>] kmemleak_alloc_recursive  
+include/linux/kmemleak.h:55 [inline]
+     [<000000009abfb07f>] slab_post_alloc_hook mm/slab.h:439 [inline]
+     [<000000009abfb07f>] slab_alloc_node mm/slab.c:3269 [inline]
+     [<000000009abfb07f>] kmem_cache_alloc_node_trace+0x15b/0x2a0  
+mm/slab.c:3597
+     [<000000001e6bdec9>] __do_kmalloc_node mm/slab.c:3619 [inline]
+     [<000000001e6bdec9>] __kmalloc_node_track_caller+0x38/0x50  
+mm/slab.c:3634
+     [<00000000dcf4f208>] __kmalloc_reserve.isra.0+0x40/0xb0  
+net/core/skbuff.c:142
+     [<0000000081158459>] __alloc_skb+0xa0/0x210 net/core/skbuff.c:210
+     [<000000001ba5a161>] alloc_skb include/linux/skbuff.h:1058 [inline]
+     [<000000001ba5a161>] alloc_skb_with_frags+0x5f/0x250  
+net/core/skbuff.c:5327
+     [<0000000047d9c78b>] sock_alloc_send_pskb+0x269/0x2a0  
+net/core/sock.c:2225
+     [<000000003828fe54>] sock_alloc_send_skb+0x32/0x40 net/core/sock.c:2242
+     [<00000000e34d94f9>] llc_ui_sendmsg+0x10a/0x540 net/llc/af_llc.c:933
+     [<00000000de2de3fb>] sock_sendmsg_nosec net/socket.c:652 [inline]
+     [<00000000de2de3fb>] sock_sendmsg+0x54/0x70 net/socket.c:671
+     [<000000008fe16e7a>] __sys_sendto+0x148/0x1f0 net/socket.c:1964
+     [<000000005b17a3ac>] __do_sys_sendto net/socket.c:1976 [inline]
+     [<000000005b17a3ac>] __se_sys_sendto net/socket.c:1972 [inline]
+     [<000000005b17a3ac>] __x64_sys_sendto+0x2a/0x30 net/socket.c:1972
+     [<0000000094b2fa53>] do_syscall_64+0x76/0x1a0  
+arch/x86/entry/common.c:301
+     [<00000000ea5a7233>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
+
+executing program
+executing program
+
+
 ---
- drivers/nvdimm/Makefile          |   1 +
- drivers/nvdimm/nd_virtio.c       | 124 +++++++++++++++++++++++++++++++
- drivers/nvdimm/virtio_pmem.c     | 122 ++++++++++++++++++++++++++++++
- drivers/nvdimm/virtio_pmem.h     |  55 ++++++++++++++
- drivers/virtio/Kconfig           |  11 +++
- include/uapi/linux/virtio_ids.h  |   1 +
- include/uapi/linux/virtio_pmem.h |  35 +++++++++
- 7 files changed, 349 insertions(+)
- create mode 100644 drivers/nvdimm/nd_virtio.c
- create mode 100644 drivers/nvdimm/virtio_pmem.c
- create mode 100644 drivers/nvdimm/virtio_pmem.h
- create mode 100644 include/uapi/linux/virtio_pmem.h
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-diff --git a/drivers/nvdimm/Makefile b/drivers/nvdimm/Makefile
-index 6f2a088afad6..cefe233e0b52 100644
---- a/drivers/nvdimm/Makefile
-+++ b/drivers/nvdimm/Makefile
-@@ -5,6 +5,7 @@ obj-$(CONFIG_ND_BTT) += nd_btt.o
- obj-$(CONFIG_ND_BLK) += nd_blk.o
- obj-$(CONFIG_X86_PMEM_LEGACY) += nd_e820.o
- obj-$(CONFIG_OF_PMEM) += of_pmem.o
-+obj-$(CONFIG_VIRTIO_PMEM) += virtio_pmem.o nd_virtio.o
- 
- nd_pmem-y := pmem.o
- 
-diff --git a/drivers/nvdimm/nd_virtio.c b/drivers/nvdimm/nd_virtio.c
-new file mode 100644
-index 000000000000..efc535723517
---- /dev/null
-+++ b/drivers/nvdimm/nd_virtio.c
-@@ -0,0 +1,124 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * virtio_pmem.c: Virtio pmem Driver
-+ *
-+ * Discovers persistent memory range information
-+ * from host and provides a virtio based flushing
-+ * interface.
-+ */
-+#include "virtio_pmem.h"
-+#include "nd.h"
-+
-+ /* The interrupt handler */
-+void host_ack(struct virtqueue *vq)
-+{
-+	struct virtio_pmem *vpmem = vq->vdev->priv;
-+	struct virtio_pmem_request *req_data, *req_buf;
-+	unsigned long flags;
-+	unsigned int len;
-+
-+	spin_lock_irqsave(&vpmem->pmem_lock, flags);
-+	while ((req_data = virtqueue_get_buf(vq, &len)) != NULL) {
-+		req_data->done = true;
-+		wake_up(&req_data->host_acked);
-+
-+		if (!list_empty(&vpmem->req_list)) {
-+			req_buf = list_first_entry(&vpmem->req_list,
-+					struct virtio_pmem_request, list);
-+			req_buf->wq_buf_avail = true;
-+			wake_up(&req_buf->wq_buf);
-+			list_del(&req_buf->list);
-+		}
-+	}
-+	spin_unlock_irqrestore(&vpmem->pmem_lock, flags);
-+}
-+EXPORT_SYMBOL_GPL(host_ack);
-+
-+ /* The request submission function */
-+int virtio_pmem_flush(struct nd_region *nd_region)
-+{
-+	struct virtio_device *vdev = nd_region->provider_data;
-+	struct virtio_pmem *vpmem  = vdev->priv;
-+	struct virtio_pmem_request *req_data;
-+	struct scatterlist *sgs[2], sg, ret;
-+	unsigned long flags;
-+	int err, err1;
-+
-+	might_sleep();
-+	req_data = kmalloc(sizeof(*req_data), GFP_KERNEL);
-+	if (!req_data)
-+		return -ENOMEM;
-+
-+	req_data->done = false;
-+	init_waitqueue_head(&req_data->host_acked);
-+	init_waitqueue_head(&req_data->wq_buf);
-+	INIT_LIST_HEAD(&req_data->list);
-+	req_data->req.type = cpu_to_virtio32(vdev, VIRTIO_PMEM_REQ_TYPE_FLUSH);
-+	sg_init_one(&sg, &req_data->req, sizeof(req_data->req));
-+	sgs[0] = &sg;
-+	sg_init_one(&ret, &req_data->resp.ret, sizeof(req_data->resp));
-+	sgs[1] = &ret;
-+
-+	spin_lock_irqsave(&vpmem->pmem_lock, flags);
-+	 /*
-+	  * If virtqueue_add_sgs returns -ENOSPC then req_vq virtual
-+	  * queue does not have free descriptor. We add the request
-+	  * to req_list and wait for host_ack to wake us up when free
-+	  * slots are available.
-+	  */
-+	while ((err = virtqueue_add_sgs(vpmem->req_vq, sgs, 1, 1, req_data,
-+					GFP_ATOMIC)) == -ENOSPC) {
-+
-+		dev_err(&vdev->dev, "failed to send command to virtio pmem device, no free slots in the virtqueue\n");
-+		req_data->wq_buf_avail = false;
-+		list_add_tail(&req_data->list, &vpmem->req_list);
-+		spin_unlock_irqrestore(&vpmem->pmem_lock, flags);
-+
-+		/* A host response results in "host_ack" getting called */
-+		wait_event(req_data->wq_buf, req_data->wq_buf_avail);
-+		spin_lock_irqsave(&vpmem->pmem_lock, flags);
-+	}
-+	err1 = virtqueue_kick(vpmem->req_vq);
-+	spin_unlock_irqrestore(&vpmem->pmem_lock, flags);
-+	/*
-+	 * virtqueue_add_sgs failed with error different than -ENOSPC, we can't
-+	 * do anything about that.
-+	 */
-+	if (err || !err1) {
-+		dev_info(&vdev->dev, "failed to send command to virtio pmem device\n");
-+		err = -EIO;
-+	} else {
-+		/* A host repsonse results in "host_ack" getting called */
-+		wait_event(req_data->host_acked, req_data->done);
-+		err = virtio32_to_cpu(vdev, req_data->resp.ret);
-+	}
-+
-+	kfree(req_data);
-+	return err;
-+};
-+
-+/* The asynchronous flush callback function */
-+int async_pmem_flush(struct nd_region *nd_region, struct bio *bio)
-+{
-+	/* Create child bio for asynchronous flush and chain with
-+	 * parent bio. Otherwise directly call nd_region flush.
-+	 */
-+	if (bio && bio->bi_iter.bi_sector != -1) {
-+		struct bio *child = bio_alloc(GFP_ATOMIC, 0);
-+
-+		if (!child)
-+			return -ENOMEM;
-+		bio_copy_dev(child, bio);
-+		child->bi_opf = REQ_PREFLUSH;
-+		child->bi_iter.bi_sector = -1;
-+		bio_chain(child, bio);
-+		submit_bio(child);
-+		return 0;
-+	}
-+	if (virtio_pmem_flush(nd_region))
-+		return -EIO;
-+
-+	return 0;
-+};
-+EXPORT_SYMBOL_GPL(async_pmem_flush);
-+MODULE_LICENSE("GPL");
-diff --git a/drivers/nvdimm/virtio_pmem.c b/drivers/nvdimm/virtio_pmem.c
-new file mode 100644
-index 000000000000..b60ebd8cd2fd
---- /dev/null
-+++ b/drivers/nvdimm/virtio_pmem.c
-@@ -0,0 +1,122 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * virtio_pmem.c: Virtio pmem Driver
-+ *
-+ * Discovers persistent memory range information
-+ * from host and registers the virtual pmem device
-+ * with libnvdimm core.
-+ */
-+#include "virtio_pmem.h"
-+#include "nd.h"
-+
-+static struct virtio_device_id id_table[] = {
-+	{ VIRTIO_ID_PMEM, VIRTIO_DEV_ANY_ID },
-+	{ 0 },
-+};
-+
-+ /* Initialize virt queue */
-+static int init_vq(struct virtio_pmem *vpmem)
-+{
-+	/* single vq */
-+	vpmem->req_vq = virtio_find_single_vq(vpmem->vdev,
-+						host_ack, "flush_queue");
-+	if (IS_ERR(vpmem->req_vq))
-+		return PTR_ERR(vpmem->req_vq);
-+
-+	spin_lock_init(&vpmem->pmem_lock);
-+	INIT_LIST_HEAD(&vpmem->req_list);
-+
-+	return 0;
-+};
-+
-+static int virtio_pmem_probe(struct virtio_device *vdev)
-+{
-+	struct nd_region_desc ndr_desc = {};
-+	int nid = dev_to_node(&vdev->dev);
-+	struct nd_region *nd_region;
-+	struct virtio_pmem *vpmem;
-+	struct resource res;
-+	int err = 0;
-+
-+	if (!vdev->config->get) {
-+		dev_err(&vdev->dev, "%s failure: config access disabled\n",
-+			__func__);
-+		return -EINVAL;
-+	}
-+
-+	vpmem = devm_kzalloc(&vdev->dev, sizeof(*vpmem), GFP_KERNEL);
-+	if (!vpmem) {
-+		err = -ENOMEM;
-+		goto out_err;
-+	}
-+
-+	vpmem->vdev = vdev;
-+	vdev->priv = vpmem;
-+	err = init_vq(vpmem);
-+	if (err) {
-+		dev_err(&vdev->dev, "failed to initialize virtio pmem vq's\n");
-+		goto out_err;
-+	}
-+
-+	virtio_cread(vpmem->vdev, struct virtio_pmem_config,
-+			start, &vpmem->start);
-+	virtio_cread(vpmem->vdev, struct virtio_pmem_config,
-+			size, &vpmem->size);
-+
-+	res.start = vpmem->start;
-+	res.end   = vpmem->start + vpmem->size - 1;
-+	vpmem->nd_desc.provider_name = "virtio-pmem";
-+	vpmem->nd_desc.module = THIS_MODULE;
-+
-+	vpmem->nvdimm_bus = nvdimm_bus_register(&vdev->dev,
-+						&vpmem->nd_desc);
-+	if (!vpmem->nvdimm_bus) {
-+		dev_err(&vdev->dev, "failed to register device with nvdimm_bus\n");
-+		err = -ENXIO;
-+		goto out_vq;
-+	}
-+
-+	dev_set_drvdata(&vdev->dev, vpmem->nvdimm_bus);
-+
-+	ndr_desc.res = &res;
-+	ndr_desc.numa_node = nid;
-+	ndr_desc.flush = async_pmem_flush;
-+	set_bit(ND_REGION_PAGEMAP, &ndr_desc.flags);
-+	set_bit(ND_REGION_ASYNC, &ndr_desc.flags);
-+	nd_region = nvdimm_pmem_region_create(vpmem->nvdimm_bus, &ndr_desc);
-+	if (!nd_region) {
-+		dev_err(&vdev->dev, "failed to create nvdimm region\n");
-+		err = -ENXIO;
-+		goto out_nd;
-+	}
-+	nd_region->provider_data = dev_to_virtio(nd_region->dev.parent->parent);
-+	return 0;
-+out_nd:
-+	nvdimm_bus_unregister(vpmem->nvdimm_bus);
-+out_vq:
-+	vdev->config->del_vqs(vdev);
-+out_err:
-+	return err;
-+}
-+
-+static void virtio_pmem_remove(struct virtio_device *vdev)
-+{
-+	struct nvdimm_bus *nvdimm_bus = dev_get_drvdata(&vdev->dev);
-+
-+	nvdimm_bus_unregister(nvdimm_bus);
-+	vdev->config->del_vqs(vdev);
-+	vdev->config->reset(vdev);
-+}
-+
-+static struct virtio_driver virtio_pmem_driver = {
-+	.driver.name		= KBUILD_MODNAME,
-+	.driver.owner		= THIS_MODULE,
-+	.id_table		= id_table,
-+	.probe			= virtio_pmem_probe,
-+	.remove			= virtio_pmem_remove,
-+};
-+
-+module_virtio_driver(virtio_pmem_driver);
-+MODULE_DEVICE_TABLE(virtio, id_table);
-+MODULE_DESCRIPTION("Virtio pmem driver");
-+MODULE_LICENSE("GPL");
-diff --git a/drivers/nvdimm/virtio_pmem.h b/drivers/nvdimm/virtio_pmem.h
-new file mode 100644
-index 000000000000..6e47521be158
---- /dev/null
-+++ b/drivers/nvdimm/virtio_pmem.h
-@@ -0,0 +1,55 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-+ * virtio_pmem.h: virtio pmem Driver
-+ *
-+ * Discovers persistent memory range information
-+ * from host and provides a virtio based flushing
-+ * interface.
-+ **/
-+
-+#ifndef _LINUX_VIRTIO_PMEM_H
-+#define _LINUX_VIRTIO_PMEM_H
-+
-+#include <linux/module.h>
-+#include <uapi/linux/virtio_pmem.h>
-+#include <linux/libnvdimm.h>
-+#include <linux/spinlock.h>
-+
-+struct virtio_pmem_request {
-+	struct virtio_pmem_req req;
-+	struct virtio_pmem_resp resp;
-+
-+	/* Wait queue to process deferred work after ack from host */
-+	wait_queue_head_t host_acked;
-+	bool done;
-+
-+	/* Wait queue to process deferred work after virt queue buffer avail */
-+	wait_queue_head_t wq_buf;
-+	bool wq_buf_avail;
-+	struct list_head list;
-+};
-+
-+struct virtio_pmem {
-+	struct virtio_device *vdev;
-+
-+	/* Virtio pmem request queue */
-+	struct virtqueue *req_vq;
-+
-+	/* nvdimm bus registers virtio pmem device */
-+	struct nvdimm_bus *nvdimm_bus;
-+	struct nvdimm_bus_descriptor nd_desc;
-+
-+	/* List to store deferred work if virtqueue is full */
-+	struct list_head req_list;
-+
-+	/* Synchronize virtqueue data */
-+	spinlock_t pmem_lock;
-+
-+	/* Memory region information */
-+	uint64_t start;
-+	uint64_t size;
-+};
-+
-+void host_ack(struct virtqueue *vq);
-+int async_pmem_flush(struct nd_region *nd_region, struct bio *bio);
-+#endif
-diff --git a/drivers/virtio/Kconfig b/drivers/virtio/Kconfig
-index 35897649c24f..009278b23241 100644
---- a/drivers/virtio/Kconfig
-+++ b/drivers/virtio/Kconfig
-@@ -42,6 +42,17 @@ config VIRTIO_PCI_LEGACY
- 
- 	  If unsure, say Y.
- 
-+config VIRTIO_PMEM
-+	tristate "Support for virtio pmem driver"
-+	depends on VIRTIO
-+	depends on LIBNVDIMM
-+	help
-+	  This driver provides access to virtio-pmem devices, storage devices
-+	  that are mapped into the physical address space - similar to NVDIMMs
-+	   - with a virtio-based flushing interface.
-+
-+	  If unsure, say Y.
-+
- config VIRTIO_BALLOON
- 	tristate "Virtio balloon driver"
- 	depends on VIRTIO
-diff --git a/include/uapi/linux/virtio_ids.h b/include/uapi/linux/virtio_ids.h
-index 6d5c3b2d4f4d..32b2f94d1f58 100644
---- a/include/uapi/linux/virtio_ids.h
-+++ b/include/uapi/linux/virtio_ids.h
-@@ -43,5 +43,6 @@
- #define VIRTIO_ID_INPUT        18 /* virtio input */
- #define VIRTIO_ID_VSOCK        19 /* virtio vsock transport */
- #define VIRTIO_ID_CRYPTO       20 /* virtio crypto */
-+#define VIRTIO_ID_PMEM         27 /* virtio pmem */
- 
- #endif /* _LINUX_VIRTIO_IDS_H */
-diff --git a/include/uapi/linux/virtio_pmem.h b/include/uapi/linux/virtio_pmem.h
-new file mode 100644
-index 000000000000..7a3e2fe52415
---- /dev/null
-+++ b/include/uapi/linux/virtio_pmem.h
-@@ -0,0 +1,35 @@
-+/* SPDX-License-Identifier: GPL-2.0 OR BSD-3-Clause */
-+/*
-+ * Definitions for virtio-pmem devices.
-+ *
-+ * Copyright (C) 2019 Red Hat, Inc.
-+ *
-+ * Author(s): Pankaj Gupta <pagupta@redhat.com>
-+ */
-+
-+#ifndef _UAPI_LINUX_VIRTIO_PMEM_H
-+#define _UAPI_LINUX_VIRTIO_PMEM_H
-+
-+#include <linux/types.h>
-+#include <linux/virtio_types.h>
-+#include <linux/virtio_ids.h>
-+#include <linux/virtio_config.h>
-+
-+struct virtio_pmem_config {
-+	__le64 start;
-+	__le64 size;
-+};
-+
-+#define VIRTIO_PMEM_REQ_TYPE_FLUSH      0
-+
-+struct virtio_pmem_resp {
-+	/* Host return status corresponding to flush request */
-+	__virtio32 ret;
-+};
-+
-+struct virtio_pmem_req {
-+	/* command type */
-+	__virtio32 type;
-+};
-+
-+#endif
--- 
-2.20.1
-
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+syzbot can test patches for this bug, for details see:
+https://goo.gl/tpsmEJ#testing-patches
