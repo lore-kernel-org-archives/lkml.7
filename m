@@ -2,94 +2,129 @@ Return-Path: <SRS0=9PYC=TV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39CF8C04E87
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 16:46:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE908C04AAF
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 16:47:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0122E217D7
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 16:46:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558457175;
-	bh=I/hZac6f/z2/Fyqy2qd623hagnktGp7xURyaL2uNcmw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=XWy6KjOI4xb3iZGyFSlK6nRl7fh4kwws8EjuvuKasqQZJo/aHu4EPIrwP+bytxPrr
-	 dphuCJ8dR6EmxRJsD99qcntGsT+TX+b2XvnbHHPIcOLdTBMlfCQmmo2CV/h1dZy81z
-	 R+jSOwxAeA31/ra4NBsu8i+Hwf0azL3PUj5UKv+U=
+	by mail.kernel.org (Postfix) with ESMTP id C0F3B2173E
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 16:47:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="EeQpa9fi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728911AbfEUQqO (ORCPT
+        id S1729078AbfEUQrg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 May 2019 12:46:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35022 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727965AbfEUQqO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 May 2019 12:46:14 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 16EF42173E;
-        Tue, 21 May 2019 16:46:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558457173;
-        bh=I/hZac6f/z2/Fyqy2qd623hagnktGp7xURyaL2uNcmw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Hw1puu1RZHRekEVpsSndTUuiGiVE7jFBczM4KMssjdhSKqPfr94yjnky4eN7Gj5gM
-         DgmigpBLAzm24yUVYz1SsJu69v/+sSOfZbHDNPnFtYoaFTOof53+MTA+f9pu8FNDbr
-         nK92UMfdOYYS8CCxovn9I9kPTyDHKxhZCS+9R0wk=
-Date:   Tue, 21 May 2019 18:46:11 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Naresh Kamboju <naresh.kamboju@linaro.org>
-Cc:     open list <linux-kernel@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>,
-        lkft-triage@lists.linaro.org,
-        linux- stable <stable@vger.kernel.org>
-Subject: Re: [PATCH 4.9 00/44] 4.9.178-stable review
-Message-ID: <20190521164611.GA8787@kroah.com>
-References: <20190520115230.720347034@linuxfoundation.org>
- <CA+G9fYs+Ft2v_Xr0KJ3AOdbTTJJ8YB6vgLc-ps6TiVM4nyftLw@mail.gmail.com>
+        Tue, 21 May 2019 12:47:36 -0400
+Received: from hqemgate16.nvidia.com ([216.228.121.65]:1173 "EHLO
+        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727965AbfEUQrg (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 May 2019 12:47:36 -0400
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5ce42ba70000>; Tue, 21 May 2019 09:47:35 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Tue, 21 May 2019 09:47:34 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Tue, 21 May 2019 09:47:34 -0700
+Received: from [10.25.72.115] (172.20.13.39) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 21 May
+ 2019 16:47:29 +0000
+Subject: Re: [PATCH V7 02/15] PCI: Disable MSI for Tegra194 root port
+To:     Thierry Reding <thierry.reding@gmail.com>
+CC:     <lorenzo.pieralisi@arm.com>, <bhelgaas@google.com>,
+        <robh+dt@kernel.org>, <mark.rutland@arm.com>,
+        <jonathanh@nvidia.com>, <kishon@ti.com>, <catalin.marinas@arm.com>,
+        <will.deacon@arm.com>, <jingoohan1@gmail.com>,
+        <gustavo.pimentel@synopsys.com>, <mperttunen@nvidia.com>,
+        <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <kthota@nvidia.com>,
+        <mmaddireddy@nvidia.com>, <sagar.tv@gmail.com>
+References: <20190517123846.3708-1-vidyas@nvidia.com>
+ <20190517123846.3708-3-vidyas@nvidia.com> <20190521102729.GB29166@ulmo>
+X-Nvconfidentiality: public
+From:   Vidya Sagar <vidyas@nvidia.com>
+Message-ID: <f63051b0-a220-125b-219e-25156d65ea6d@nvidia.com>
+Date:   Tue, 21 May 2019 22:17:26 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CA+G9fYs+Ft2v_Xr0KJ3AOdbTTJJ8YB6vgLc-ps6TiVM4nyftLw@mail.gmail.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+In-Reply-To: <20190521102729.GB29166@ulmo>
+X-Originating-IP: [172.20.13.39]
+X-ClientProxiedBy: HQMAIL103.nvidia.com (172.20.187.11) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1558457255; bh=BlKoVyxfa3/PhGnDYxQwviA1iVDUS1wMLF49XD5WLTo=;
+        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=EeQpa9fitk/OpoQb5fgRexaj/4U0V03Hh0lFLdmYSKWSxWr0BxeUY1pOsh3perPWB
+         SVrQaG2Es6cVEJE9EcAkpzaUoe60SPjdpXy08bnbbNt9SXoNgvTk4Zh9/BoEqEtNSW
+         NPLtiibkt0oh3/H2R3pz2t8h0xyFRQ0W9hxD4848k7pI4sY8vWFWGltTlk8aT8G5wQ
+         NdeLJpPeJqt0Z9aq2LNe77mtwWiM3EwVsYl7NZCFrZfxwU0pFW6XX/hp7Cet/gZsnm
+         yjcGWIB56i2lBnp8u4z42Li1AYeei5ZBUCmPodnipCn0mPZNdyRypL1GmUo5PaUvx8
+         /rRw7QYrXZMww==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 21, 2019 at 04:04:35PM +0530, Naresh Kamboju wrote:
-> On Mon, 20 May 2019 at 17:47, Greg Kroah-Hartman
-> <gregkh@linuxfoundation.org> wrote:
-> >
-> > This is the start of the stable review cycle for the 4.9.178 release.
-> > There are 44 patches in this series, all will be posted as a response
-> > to this one.  If anyone has any issues with these being applied, please
-> > let me know.
-> >
-> > Responses should be made by Wed 22 May 2019 11:50:58 AM UTC.
-> > Anything received after that time might be too late.
-> >
-> > The whole patch series can be found in one patch at:
-> >         https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.9.178-rc1.gz
-> > or in the git tree and branch at:
-> >         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.9.y
-> > and the diffstat can be found below.
-> >
-> > thanks,
-> >
-> > greg k-h
+On 5/21/2019 3:57 PM, Thierry Reding wrote:
+> On Fri, May 17, 2019 at 06:08:33PM +0530, Vidya Sagar wrote:
+>> Tegra194 rootports don't generate MSI interrupts for PME events and hence
+>> MSI needs to be disabled for them to avoid root ports service drivers
+>> registering their respective ISRs with MSI interrupt.
+>>
+>> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
+>> ---
+>> Changes since [v6]:
+>> * This is a new patch
+>>
+>>   drivers/pci/quirks.c | 14 ++++++++++++++
+>>   1 file changed, 14 insertions(+)
+>>
+>> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+>> index 0f16acc323c6..28f9a0380df5 100644
+>> --- a/drivers/pci/quirks.c
+>> +++ b/drivers/pci/quirks.c
+>> @@ -2592,6 +2592,20 @@ DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_NVIDIA,
+>>   			PCI_DEVICE_ID_NVIDIA_NVENET_15,
+>>   			nvenet_msi_disable);
+>>   
+>> +/*
+>> + * Tegra194's PCIe root ports don't generate MSI interrupts for PME events
+>> + * instead legacy interrupts are generated. Hence, to avoid service drivers
+>> + * registering their respective ISRs for MSIs, need to disable MSI interrupts
+>> + * for root ports.
+>> + */
+>> +static void disable_tegra194_rp_msi(struct pci_dev *dev)
+>> +{
+>> +	dev->no_msi = 1;
+>> +}
+>> +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_NVIDIA, 0x1ad0, disable_tegra194_rp_msi);
+>> +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_NVIDIA, 0x1ad1, disable_tegra194_rp_msi);
+>> +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_NVIDIA, 0x1ad2, disable_tegra194_rp_msi);
+>> +
 > 
-> Results from Linaro’s test farm.
-> No regressions on arm64, arm, x86_64, and i386.
+> Later functions in this file seem to use a more consistent naming
+> pattern, according to which the name for this would become:
+> 
+> 	pci_quirk_nvidia_tegra194_disable_rp_msi
+> 
+> Might be worth considering making this consistent.
+> 
+> This could also be moved to the DWC driver to restrict this to where it
+> is needed. In either case, this seems like a good solution, so:
+> 
+> Reviewed-by: Thierry Reding <treding@nvidia.com>
+> 
+Ok. I'll move it to DWC driver along with name change for the quirk API.
 
-Thanks for testing this one, and all of the others.
-
-greg k-h
