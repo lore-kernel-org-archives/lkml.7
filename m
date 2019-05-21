@@ -2,125 +2,98 @@ Return-Path: <SRS0=9PYC=TV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10F29C04AAF
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 05:12:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C86B4C04AB4
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 05:12:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D770221743
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 05:12:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="X8hqHhpV"
+	by mail.kernel.org (Postfix) with ESMTP id 9581D2173E
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 05:12:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1558415575;
+	bh=yRdHJ2XmIK1WbEUMMgmxiCl4z/bvxpUafqfuQkwnoXY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=umeWh+QllySH2DNs6+jaaUwHkABUdPN3gFUoigtlwSMxV91pzj+L1SDvLUr6eKzd9
+	 zC0JK45rEbpj+UtB+Lm380zz9mms9Ya+8AyDkrV0pQqznK3GBWaR7cBhHpKwznQg0j
+	 7dqKiSmHRD62lX0CPffA8gK7cWDqN03JNdECw60c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727774AbfEUFMO (ORCPT
+        id S1727788AbfEUFMz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 May 2019 01:12:14 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:46151 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725793AbfEUFMO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 May 2019 01:12:14 -0400
-Received: by mail-pf1-f193.google.com with SMTP id y11so8388262pfm.13;
-        Mon, 20 May 2019 22:12:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=gx1SGYrwI5mUah9I2zR6Xi9lfYNImzIgSdYOU50e3g0=;
-        b=X8hqHhpVX91ECKMpYxn9UyAxoKe6DubrkYuZHBUt7IDGEMweYJdYDuVB8iXkSYNi6o
-         S2qAuCC2UhKAX62G+6IjbpFhchp82cVvNyiWhHswcjnM06t2c5TfU3LWP7mvZACw/NuD
-         MhVH2nImlw2wdu4RlmBfX16PXvQCaI561tJpnRSIqrwDjocXsXo6BqBnPnn+EEaDLbCh
-         5WU9A1fDIG9yGcXgy1Wm2ooGX8aoTZQIJcUaZ0CiYzriyzC90Nd0qUXps6X8e3elp1Yo
-         UAxJuDKI8e1AXd3sfbLwYyi9SNPBR0Z+7VYqXQ3lGcjn/GOQpOpjsRWUDoJU5SzHTRwu
-         SViw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=gx1SGYrwI5mUah9I2zR6Xi9lfYNImzIgSdYOU50e3g0=;
-        b=n8tRbNouSnHU/+ll0dhvAW/wHLOx74bjg8C+8pMQi5exyH7LvaaElf3aFKvFLBSD8H
-         RrEC9qGa3X/FDuLcnfYis0FSupzLxZOaKTTq9lKEKxpTYW4RdmWipAt6fnJKZKrfdy5I
-         S3w39CnasTguE7/3vSvMMWpAcb3o8+8c8Y9a8k3kV67QC2SMf+5SRYDBUTYW32Jp3JlM
-         CNW6vQWrl4xLZa5FBegdHaAB78xZTPyR2rH0hR+ut8FQ/VHs2cV3Mn9U5k6/uWyKzqEe
-         7XdLdTYpzR0XF8VHIIiasZjnsc8/epQjwy17ZKE+gRpEiw4Dvj6mRgqhQJRHt6vH8ZJ0
-         xKHQ==
-X-Gm-Message-State: APjAAAXJAKHo/rv4tZk5tVylsl0CBAXVNqhOH74ujH7dOAKLWmnSRfGa
-        CkAvAN+u/0mNov9pFqu0ZOw=
-X-Google-Smtp-Source: APXvYqy8qZ7QGjsCRN/daY3QWR7dhQEfZRv/GlKgGzo/A+tGnJz0D77W13N04M7ertbBlK0xOUeMSg==
-X-Received: by 2002:aa7:80d9:: with SMTP id a25mr25762332pfn.50.1558415533314;
-        Mon, 20 May 2019 22:12:13 -0700 (PDT)
-Received: from dtor-ws ([2620:15c:202:201:3adc:b08c:7acc:b325])
-        by smtp.gmail.com with ESMTPSA id s66sm22056701pfb.37.2019.05.20.22.12.12
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 20 May 2019 22:12:12 -0700 (PDT)
-Date:   Mon, 20 May 2019 22:12:10 -0700
-From:   "dmitry.torokhov@gmail.com" <dmitry.torokhov@gmail.com>
-To:     Anson Huang <anson.huang@nxp.com>
-Cc:     "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        Tue, 21 May 2019 01:12:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58566 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725798AbfEUFMy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 May 2019 01:12:54 -0400
+Received: from localhost (unknown [106.201.107.13])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D867D21743;
+        Tue, 21 May 2019 05:12:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1558415573;
+        bh=yRdHJ2XmIK1WbEUMMgmxiCl4z/bvxpUafqfuQkwnoXY=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=LVwjL/13xrfaEJ6AUBwZQFm+fa/btvzfRm/Y8CBLxx/5AoMRHbrbnsRRTHdWq8A+B
+         6T40TTcYmIo6qFDmhzoTdegDWImPKepEQAkT+lfqy2H7mC97xyNji7IBtdE04bEq1u
+         quivMZvg2u2AG9QBormnpyQNetqMXa1KkJD1lM3A=
+Date:   Tue, 21 May 2019 10:42:50 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Robin Gong <yibin.gong@nxp.com>
+Cc:     "robh@kernel.org" <robh@kernel.org>,
+        "broonie@kernel.org" <broonie@kernel.org>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
         "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
         "festevam@gmail.com" <festevam@gmail.com>,
-        "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "u.kleine-koenig@pengutronix.de" <u.kleine-koenig@pengutronix.de>,
+        "plyatov@gmail.com" <plyatov@gmail.com>,
+        "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
+        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
+        "will.deacon@arm.com" <will.deacon@arm.com>,
+        "l.stach@pengutronix.de" <l.stach@pengutronix.de>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>,
         "linux-arm-kernel@lists.infradead.org" 
         <linux-arm-kernel@lists.infradead.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>
-Subject: Re: [PATCH] input: keyboard: imx: use
- devm_platform_ioremap_resource() to simplify code
-Message-ID: <20190521051210.GE183429@dtor-ws>
-References: <1554096209-17870-1-git-send-email-Anson.Huang@nxp.com>
+        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>
+Subject: Re: Re: [PATCH v3 11/14] dmaengine: imx-sdma: fix ecspi1 rx dma not
+ work on i.mx8mm
+Message-ID: <20190521051250.GY15118@vkoul-mobl>
+References: <VI1PR04MB45436C98D70C16635CF3CFDE89070@VI1PR04MB4543.eurprd04.prod.outlook.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <1554096209-17870-1-git-send-email-Anson.Huang@nxp.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <VI1PR04MB45436C98D70C16635CF3CFDE89070@VI1PR04MB4543.eurprd04.prod.outlook.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 01, 2019 at 05:28:12AM +0000, Anson Huang wrote:
-> Use the new helper devm_platform_ioremap_resource() which wraps the
-> platform_get_resource() and devm_ioremap_resource() together, to
-> simplify the code.
-> 
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+On 21-05-19, 04:58, Robin Gong wrote:
+> > -----Original Message-----
+> > From: Vinod Koul <vkoul@kernel.org>
+> > Sent: 2019年5月21日 12:18
+> > 
+> > On 07-05-19, 09:16, Robin Gong wrote:
+> > > Because the number of ecspi1 rx event on i.mx8mm is 0, the condition
+> > > check ignore such special case without dma channel enabled, which
+> > > caused
+> > > ecspi1 rx works failed. Actually, no need to check event_id0, checking
+> > > event_id1 is enough for DEV_2_DEV case because it's so lucky that
+> > > event_id1 never be 0.
+> > 
+> > Well is that by chance or design that event_id1 will be never 0?
+> > 
+> That's by chance. DEV_2_DEV is just for Audio case and non-zero for event_id1 on current i.MX family.
 
-Applied, thank you.
-
-> ---
->  drivers/input/keyboard/imx_keypad.c | 4 +---
->  1 file changed, 1 insertion(+), 3 deletions(-)
-> 
-> diff --git a/drivers/input/keyboard/imx_keypad.c b/drivers/input/keyboard/imx_keypad.c
-> index 539cb67..cf08f4a 100644
-> --- a/drivers/input/keyboard/imx_keypad.c
-> +++ b/drivers/input/keyboard/imx_keypad.c
-> @@ -422,7 +422,6 @@ static int imx_keypad_probe(struct platform_device *pdev)
->  			dev_get_platdata(&pdev->dev);
->  	struct imx_keypad *keypad;
->  	struct input_dev *input_dev;
-> -	struct resource *res;
->  	int irq, error, i, row, col;
->  
->  	if (!keymap_data && !pdev->dev.of_node) {
-> @@ -455,8 +454,7 @@ static int imx_keypad_probe(struct platform_device *pdev)
->  	timer_setup(&keypad->check_matrix_timer,
->  		    imx_keypad_check_for_events, 0);
->  
-> -	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> -	keypad->mmio_base = devm_ioremap_resource(&pdev->dev, res);
-> +	keypad->mmio_base = devm_platform_ioremap_resource(pdev, 0);
->  	if (IS_ERR(keypad->mmio_base))
->  		return PTR_ERR(keypad->mmio_base);
->  
-> -- 
-> 2.7.4
-> 
+Then it wont be fgood to rely on chance :)
 
 -- 
-Dmitry
+~Vinod
