@@ -2,122 +2,68 @@ Return-Path: <SRS0=9PYC=TV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91975C04AAF
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 15:30:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37C2AC04AAF
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 15:31:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 666002173C
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 15:30:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="c4qL9fxK"
+	by mail.kernel.org (Postfix) with ESMTP id 178B52173C
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 15:31:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728627AbfEUPay (ORCPT
+        id S1728706AbfEUPbJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 May 2019 11:30:54 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:40148 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728298AbfEUPay (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 May 2019 11:30:54 -0400
-Received: by mail-pf1-f193.google.com with SMTP id u17so9255766pfn.7;
-        Tue, 21 May 2019 08:30:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=KWOHZODUUyunDgNs5B1B0Qzkf/SDTn0BMnr1ZqAsBvs=;
-        b=c4qL9fxKUhzVGcf7gk/+Tr6l41IYLs4L+0yu4O0LYsMXgzld3/DyDvBEdZfFdHFY+k
-         OfINvcBKVUzsHFL2i0oBVfHX7cwjY5QrbttT9gmZKW20FoTQwCmIOnQ+4JJHfohuKGgT
-         ypWtvcIxZN+5gZrjtbpAxwF31iGqB8fF3mXxgst1m/J6Q1CrPGYYtvYkdYJ3fBP8HneD
-         EsvC75dHreCPr3S/8tLO63oHYp9LHPk50eDwmDAwNNzmHpMZylIRfdIvPk5ahH3FUaYJ
-         obDfXL97SpBtUsP/WUPmkHeeKKAtzmydI3HLF8RJOpoOTmErO4nSbrwYAwVk5ONuxFDk
-         u+NQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=KWOHZODUUyunDgNs5B1B0Qzkf/SDTn0BMnr1ZqAsBvs=;
-        b=f3npvPhpyPCYdKlKxvFPTd8ND2ff+M+KkA5u8DzakSjHHk0zikO/9DxYjPmqcIUxw8
-         MWXlJPftZeAxYZCb7AqZBk4OBi8M94iPI7nz6D7lyDveONou1b6UvKNfRU8Xahuez0aW
-         vIaftV7SArhsRf/vv10nxxPKh6XjnG8SgX/AV4cNT9gQZ+y+tej33tah4CA+rOSx48g6
-         qJL8AdCE92anntKC/4AifEf7hu10oYMSkNg9J5MIx/Uv1al1+6AMrEWSjMrXhTnO1V2x
-         XQxaSK5wgFHXZTSs1fI+vntDdGvGCA65I2T9pgxU7G1sEmnocPFxO017BvvciElwwSWc
-         5afQ==
-X-Gm-Message-State: APjAAAWjIDFf4Mbt4/YUmdSBOBhzNpGbJ6Ni3v765CykG9esoQRlsKbA
-        CsKcEvpHpWViUAlq0glfZKiAqXrkodQ=
-X-Google-Smtp-Source: APXvYqzz9y1jHan1nYFnx1sfA1DdFuL6DaMEy/Fwxaf1XY/fwEzvvd+hazrVeDyJfsAlLvm7mGlPXg==
-X-Received: by 2002:a63:d150:: with SMTP id c16mr82709090pgj.439.1558452653182;
-        Tue, 21 May 2019 08:30:53 -0700 (PDT)
-Received: from localhost.localdomain ([27.61.167.91])
-        by smtp.googlemail.com with ESMTPSA id e62sm25543035pfa.50.2019.05.21.08.30.49
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 21 May 2019 08:30:52 -0700 (PDT)
-From:   Anirudh Gupta <anirudhrudr@gmail.com>
-X-Google-Original-From: Anirudh Gupta <anirudh.gupta@sophos.com>
-To:     Steffen Klassert <steffen.klassert@secunet.com>
-Cc:     Anirudh Gupta <anirudh.gupta@sophos.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH net] xfrm: Fix xfrm sel prefix length validation
-Date:   Tue, 21 May 2019 20:59:47 +0530
-Message-Id: <20190521152947.75014-1-anirudh.gupta@sophos.com>
-X-Mailer: git-send-email 2.19.0
+        Tue, 21 May 2019 11:31:09 -0400
+Received: from ms.lwn.net ([45.79.88.28]:41548 "EHLO ms.lwn.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728628AbfEUPbJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 May 2019 11:31:09 -0400
+Received: from lwn.net (localhost [127.0.0.1])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ms.lwn.net (Postfix) with ESMTPSA id A6DC06A2;
+        Tue, 21 May 2019 15:31:08 +0000 (UTC)
+Date:   Tue, 21 May 2019 09:31:07 -0600
+From:   Jonathan Corbet <corbet@lwn.net>
+To:     Sven Eckelmann <sven@narfation.org>
+Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: linux-next: Fixes tag needs some work in the jc_docs tree
+Message-ID: <20190521093107.79790d12@lwn.net>
+In-Reply-To: <2143236.hFqxAeOdFG@bentobox>
+References: <20190521074435.7a277fd6@canb.auug.org.au>
+        <20190520155423.2ad5d16a@lwn.net>
+        <2143236.hFqxAeOdFG@bentobox>
+Organization: LWN.net
 MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Family of src/dst can be different from family of selector src/dst.
-Use xfrm selector family to validate address prefix length,
-while verifying new sa from userspace.
+On Tue, 21 May 2019 09:18:21 +0200
+Sven Eckelmann <sven@narfation.org> wrote:
 
-Validated patch with this command:
-ip xfrm state add src 1.1.6.1 dst 1.1.6.2 proto esp spi 4260196 \
-reqid 20004 mode tunnel aead "rfc4106(gcm(aes))" \
-0x1111016400000000000000000000000044440001 128 \
-sel src 1011:1:4::2/128 sel dst 1021:1:4::2/128 dev Port5
+> On Monday, 20 May 2019 23:54:23 CEST Jonathan Corbet wrote:
+> [...]
+> > Argh, sorry, I should have caught that.  Fixed, thanks.  
+> 
+> Thanks for trying. Unfortunately it was changed to the wrong value. The actual 
+> commit I wanted to reference in both places of the commit message was:
+> 
+>     8ea8814fcdcb ("LICENSES: Clearly mark dual license only licenses")
+> 
+> It seems I've copied the wrong commit id for some reason when I send it though 
+> the git-fixes alias and it didn't occur to me that I just referenced my own 
+> patch. Sorry about the confusion.
 
-Fixes: 07bf7908950a ("xfrm: Validate address prefix lengths in the xfrm selector.")
-Signed-off-by: Anirudh Gupta <anirudh.gupta@sophos.com>
----
- net/xfrm/xfrm_user.c | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
+<sigh>
 
-diff --git a/net/xfrm/xfrm_user.c b/net/xfrm/xfrm_user.c
-index eb8d14389601..74a3d1e0ff63 100644
---- a/net/xfrm/xfrm_user.c
-+++ b/net/xfrm/xfrm_user.c
-@@ -150,6 +150,22 @@ static int verify_newsa_info(struct xfrm_usersa_info *p,
- 
- 	err = -EINVAL;
- 	switch (p->family) {
-+	case AF_INET:
-+		break;
-+
-+	case AF_INET6:
-+#if IS_ENABLED(CONFIG_IPV6)
-+		break;
-+#else
-+		err = -EAFNOSUPPORT;
-+		goto out;
-+#endif
-+
-+	default:
-+		goto out;
-+	}
-+
-+	switch (p->sel.family) {
- 	case AF_INET:
- 		if (p->sel.prefixlen_d > 32 || p->sel.prefixlen_s > 32)
- 			goto out;
--- 
-2.19.0
+We want those tags to be right.  I'm going to fix this and force-push,
+hopefully nobody will get too made at me...
 
+jon
