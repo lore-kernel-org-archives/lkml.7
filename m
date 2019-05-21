@@ -2,176 +2,94 @@ Return-Path: <SRS0=9PYC=TV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.7 required=3.0 tests=DKIM_ADSP_ALL,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DFBF9C04AAF
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 15:40:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BA76C04AAF
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 15:41:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B5CB9208C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 15:40:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=amazon.de header.i=@amazon.de header.b="ub+Iqxp1"
+	by mail.kernel.org (Postfix) with ESMTP id 1D896208C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 15:41:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728902AbfEUPkT (ORCPT
+        id S1728904AbfEUPlL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 May 2019 11:40:19 -0400
-Received: from smtp-fw-4101.amazon.com ([72.21.198.25]:15059 "EHLO
-        smtp-fw-4101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728067AbfEUPkS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 May 2019 11:40:18 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.de; i=@amazon.de; q=dns/txt; s=amazon201209;
-  t=1558453217; x=1589989217;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version;
-  bh=5B9enZJwF3veiFRzLvmeNGG7DvSS35w6K7vV8jk0rNY=;
-  b=ub+Iqxp1E3xolTbZyTAHaPxBNMwh8fDeL8Hxny8LIMKp56Yzq7ejYZhL
-   xMyrSMILX+bq664eR8CckK7kYxbXFBzXWGZA2ipi4f0bt1bWofCiv50Oz
-   Qied2bI6CiU3AgEdEAsaugQsIpUNqYdoezrstW2mKs8IcgcsCjj9yHb+A
-   s=;
-X-IronPort-AV: E=Sophos;i="5.60,495,1549929600"; 
-   d="scan'208";a="767022279"
-Received: from iad6-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-2b-baacba05.us-west-2.amazon.com) ([10.124.125.6])
-  by smtp-border-fw-out-4101.iad4.amazon.com with ESMTP/TLS/DHE-RSA-AES256-SHA; 21 May 2019 15:40:14 +0000
-Received: from EX13MTAUEA001.ant.amazon.com (pdx1-ws-svc-p6-lb9-vlan3.pdx.amazon.com [10.236.137.198])
-        by email-inbound-relay-2b-baacba05.us-west-2.amazon.com (8.14.7/8.14.7) with ESMTP id x4LFeBCx117178
-        (version=TLSv1/SSLv3 cipher=AES256-SHA bits=256 verify=FAIL);
-        Tue, 21 May 2019 15:40:12 GMT
-Received: from EX13D08UEE003.ant.amazon.com (10.43.62.118) by
- EX13MTAUEA001.ant.amazon.com (10.43.61.243) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Tue, 21 May 2019 15:39:59 +0000
-Received: from EX13MTAUWA001.ant.amazon.com (10.43.160.58) by
- EX13D08UEE003.ant.amazon.com (10.43.62.118) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Tue, 21 May 2019 15:39:59 +0000
-Received: from uc2253769c0055c.ant.amazon.com (10.28.85.98) by
- mail-relay.amazon.com (10.43.160.118) with Microsoft SMTP Server id
- 15.0.1367.3 via Frontend Transport; Tue, 21 May 2019 15:39:54 +0000
-From:   Sam Caccavale <samcacc@amazon.de>
-CC:     <samcacc@amazon.de>, <samcaccavale@gmail.com>,
-        <nmanthey@amazon.de>, <wipawel@amazon.de>, <dwmw@amazon.co.uk>,
-        <mpohlack@amazon.de>, <graf@amazon.de>, <karahmed@amazon.de>,
-        <andrew.cooper3@citrix.com>, <JBeulich@suse.com>,
-        <pbonzini@redhat.com>, <rkrcmar@redhat.com>, <tglx@linutronix.de>,
-        <mingo@redhat.com>, <bp@alien8.de>, <hpa@zytor.com>,
-        <paullangton4@gmail.com>, <anirudhkaushik@google.com>,
-        <x86@kernel.org>, <kvm@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: [PATCH 3/3] Demonstrating unit testing via simple-harness
-Date:   Tue, 21 May 2019 17:39:24 +0200
-Message-ID: <20190521153924.15110-4-samcacc@amazon.de>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190521153924.15110-1-samcacc@amazon.de>
-References: <20190521153924.15110-1-samcacc@amazon.de>
+        Tue, 21 May 2019 11:41:11 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:51982 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728289AbfEUPlL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 May 2019 11:41:11 -0400
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 7524F30BB532;
+        Tue, 21 May 2019 15:41:05 +0000 (UTC)
+Received: from redhat.com (unknown [10.20.6.178])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id EE28453786;
+        Tue, 21 May 2019 15:41:00 +0000 (UTC)
+Date:   Tue, 21 May 2019 11:40:59 -0400
+From:   Jerome Glisse <jglisse@redhat.com>
+To:     Daniel Vetter <daniel.vetter@ffwll.ch>
+Cc:     DRI Development <dri-devel@lists.freedesktop.org>,
+        Intel Graphics Development <intel-gfx@lists.freedesktop.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux MM <linux-mm@kvack.org>,
+        Chris Wilson <chris@chris-wilson.co.uk>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        David Rientjes <rientjes@google.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Mike Rapoport <rppt@linux.vnet.ibm.com>,
+        Daniel Vetter <daniel.vetter@intel.com>
+Subject: Re: [PATCH 4/4] mm, notifier: Add a lockdep map for
+ invalidate_range_start
+Message-ID: <20190521154059.GC3836@redhat.com>
+References: <20190520213945.17046-1-daniel.vetter@ffwll.ch>
+ <20190520213945.17046-4-daniel.vetter@ffwll.ch>
 MIME-Version: 1.0
-Content-Type: text/plain
-To:     unlisted-recipients:; (no To-header on input)
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190520213945.17046-4-daniel.vetter@ffwll.ch>
+User-Agent: Mutt/1.11.3 (2019-02-01)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.49]); Tue, 21 May 2019 15:41:10 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Simple-harness.c uses inline asm support to generate asm and then has the
-emulator emulate this code.  This may be useful as a form of testing for
-the emulator.
+On Mon, May 20, 2019 at 11:39:45PM +0200, Daniel Vetter wrote:
+> This is a similar idea to the fs_reclaim fake lockdep lock. It's
+> fairly easy to provoke a specific notifier to be run on a specific
+> range: Just prep it, and then munmap() it.
+> 
+> A bit harder, but still doable, is to provoke the mmu notifiers for
+> all the various callchains that might lead to them. But both at the
+> same time is really hard to reliable hit, especially when you want to
+> exercise paths like direct reclaim or compaction, where it's not
+> easy to control what exactly will be unmapped.
+> 
+> By introducing a lockdep map to tie them all together we allow lockdep
+> to see a lot more dependencies, without having to actually hit them
+> in a single challchain while testing.
+> 
+> Aside: Since I typed this to test i915 mmu notifiers I've only rolled
+> this out for the invaliate_range_start callback. If there's
+> interest, we should probably roll this out to all of them. But my
+> undestanding of core mm is seriously lacking, and I'm not clear on
+> whether we need a lockdep map for each callback, or whether some can
+> be shared.
 
----
- tools/fuzz/x86_instruction_emulation/Makefile |  7 ++-
- .../simple-harness.c                          | 49 +++++++++++++++++++
- 2 files changed, 54 insertions(+), 2 deletions(-)
- create mode 100644 tools/fuzz/x86_instruction_emulation/simple-harness.c
+I need to read more on lockdep but it is legal to have mmu notifier
+invalidation within each other. For instance when you munmap you
+might split a huge pmd and it will trigger a second invalidate range
+while the munmap one is not done yet. Would that trigger the lockdep
+here ?
 
-diff --git a/tools/fuzz/x86_instruction_emulation/Makefile b/tools/fuzz/x86_instruction_emulation/Makefile
-index d2854a332605..bb29149ae0f7 100644
---- a/tools/fuzz/x86_instruction_emulation/Makefile
-+++ b/tools/fuzz/x86_instruction_emulation/Makefile
-@@ -43,7 +43,10 @@ LOCAL_OBJS := emulator_ops.o stubs.o
- afl-harness: afl-harness.o $(LOCAL_OBJS) $(KERNEL_OBJS)
- 	@$(CC) -v $(KBUILD_CFLAGS) $(LOCAL_OBJS) $(KERNEL_OBJS) $< $(INCLUDES) -Istubs.h -o $@ -no-pie
- 
--all: afl-harness
-+simple-harness: simple-harness.o $(LOCAL_OBJS) $(KERNEL_OBJS)
-+	@$(CC) -v $(KBUILD_CFLAGS) $(LOCAL_OBJS) $(KERNEL_OBJS) $< $(INCLUDES) -Istubs.h -o $@ -no-pie
-+
-+all: afl-harness simple-harness
- 
- .PHONY: fuzz_deps
- fuzz_deps:
-@@ -54,4 +57,4 @@ fuzz_deps:
- 
- .PHONY: clean
- clean:
--	$(RM) -r *.o afl-harness
-+	$(RM) -r *.o afl-harness simple-harness
-diff --git a/tools/fuzz/x86_instruction_emulation/simple-harness.c b/tools/fuzz/x86_instruction_emulation/simple-harness.c
-new file mode 100644
-index 000000000000..9601aafb9423
---- /dev/null
-+++ b/tools/fuzz/x86_instruction_emulation/simple-harness.c
-@@ -0,0 +1,49 @@
-+// SPDX-License-Identifier: GPL-2.0
-+
-+#include <assert.h>
-+#include <stdint.h>
-+#include <stdio.h>
-+#include <string.h>
-+#include "emulator_ops.h"
-+#include <asm/kvm_emulate.h>
-+
-+extern void foo(void)
-+{
-+	asm volatile("__start:mov $0xdeadbeef, %rax;"
-+		     "xor %rax, %rax;"
-+		     "__end:");
-+}
-+
-+int main(int argc, char **argv)
-+{
-+	extern unsigned char __start;
-+	extern unsigned char __end;
-+	struct state *state = create_emulator();
-+	int rc;
-+
-+	/* Ensures the emulator is in a valid state. */
-+	initialize_emulator(state);
-+
-+	/* Provide the emulator with instructions to emulate. */
-+	state->data = &__start;
-+	state->data_available = &__end - &__start;
-+
-+	/* Execute mov $0xdeadbeef, %rax */
-+	rc = step_emulator(state);
-+	/* Check that the emulator succeeded. */
-+	assert(rc == X86EMUL_CONTINUE);
-+	/* Check that 0xdeadbeef was moved to rax. */
-+	assert(state->ctxt._regs[REGS_RAX] == 0xdeadbeef);
-+
-+	/* Execute xor %rax, %rax */
-+	rc = step_emulator(state);
-+	/* Check that the emulator succeeded. */
-+	assert(rc == X86EMUL_CONTINUE);
-+	/* Check that xoring rax with itself cleared rax. */
-+	assert(state->ctxt._regs[REGS_RAX] == 0);
-+
-+	/* Free the emulator. */
-+	free_emulator(state);
-+
-+	return 0;
-+}
--- 
-2.17.1
+Worst case i can think of is 2 invalidate_range_start chain one after
+the other. I don't think you can triggers a 3 levels nesting but maybe.
 
-
-
-
-Amazon Development Center Germany GmbH
-Krausenstr. 38
-10117 Berlin
-Geschaeftsfuehrer: Christian Schlaeger, Ralf Herbrich
-Ust-ID: DE 289 237 879
-Eingetragen am Amtsgericht Charlottenburg HRB 149173 B
-
-
+Cheers,
+Jérôme
