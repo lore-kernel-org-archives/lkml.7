@@ -2,168 +2,200 @@ Return-Path: <SRS0=9PYC=TV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6B90C04AAF
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 18:04:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32FC1C04AAF
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 18:06:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8772A20851
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 18:04:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bfHg9KXI"
+	by mail.kernel.org (Postfix) with ESMTP id 0142E217D9
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 18:06:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1558461970;
+	bh=BKXNVmG7LaWblCT8odUyB9ygq+NZqBzRkvgS8khETJ4=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=R3Veo8nACapoKywvya1Y45kLJuR0v6j6tn3VhlojBBKNL/rJcZH15rp3wzxuNmTHj
+	 h34PVe1bDVFuv2SuOcwN3HhyWYZBeO8iykMGEyt3ocix8DygcaMnGmE1DaeLcg4BbW
+	 yovQiJNO1NFmE8+9yQ+SANVzqOfQQzVpO3JipmOU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729139AbfEUSD7 (ORCPT
+        id S1729098AbfEUSGJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 May 2019 14:03:59 -0400
-Received: from mail-qk1-f193.google.com ([209.85.222.193]:35301 "EHLO
-        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727969AbfEUSD7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 May 2019 14:03:59 -0400
-Received: by mail-qk1-f193.google.com with SMTP id c15so11655621qkl.2
-        for <linux-kernel@vger.kernel.org>; Tue, 21 May 2019 11:03:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=kDWkGHshH7SIjjv0a0jvn7btoTP1C/ycawb8P/q+eYU=;
-        b=bfHg9KXIbv6ZUzxyhXdQ7PvTDbMs0AHBj/gxSvUXIwpn5NjI4Hq9+NY3+YWN6tXI86
-         e7qGTi4MlIUXCqyjvk3NF3W202oToF+h45pDqxEvUTvVFJzoRQVI3K97/75gbtxQvYJd
-         feb4FXIdbbK6tNRj3v9jEqtOvuED9o+U/Wz3R1w2+uw/yY9IUzNG35RV3C2U4qm2fQz8
-         f872RAveE0GDXGuCLtJOiTxc2e/c9gOr2QFdrCeUKGpT/Z1DwLlPp03hoQPUNRt98iLG
-         b8e1PezCAMGCcmAadOaxQco/8V/ZmIXzVXw6yjFV3RlIcIlK0rFlLWIEE3a7zP+edhGI
-         N8FA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=kDWkGHshH7SIjjv0a0jvn7btoTP1C/ycawb8P/q+eYU=;
-        b=ItOl15E//5nfPQqVYobR+8NJdTZutmqe8zV+Y1N7dyP2JBA+u8t/wLchAcU4ewaX0g
-         dlRQCRXF4jRNBSKBoQl/lOy6xSZL23RWjHorF50C+XG2INYM7znd1kECATQpXD0ATI3f
-         vrs2RIGFeRg4bqzOO0pObeRpTxaXZ2JhRek4WqnEnBUWaiSQiBnt9Ylfb54Sx3cyaZ1e
-         KTgMUAPMCRkgGk92BH8T/FOvjsGJvw8eWh9cZdfMegkdspyeXZF4xRQgoFDRsQ1T98/D
-         cr4a8ahuHcpWYdgQRnv9UmtCMLYrYZbJPQFeevFTIj8IwEMTPFjLmP5Q3N7iU15gW+As
-         6Ywg==
-X-Gm-Message-State: APjAAAVJL7u+RlhAVG2UnxuQ9iBgxhYwBxN/l3ezrEvHgvvHHSJH15DO
-        /lC9qPbwAvvU+BUSqxgOIAo=
-X-Google-Smtp-Source: APXvYqxcfesTR4lo3NfKr8pSJmnDHhCHwCuwiC9f4WvDin9LYPgrbF1lgfy4hkj9uvrRn0+RqVkiiA==
-X-Received: by 2002:a37:4fca:: with SMTP id d193mr64466123qkb.298.1558461837811;
-        Tue, 21 May 2019 11:03:57 -0700 (PDT)
-Received: from quaco.ghostprotocols.net ([179.97.35.11])
-        by smtp.gmail.com with ESMTPSA id w48sm2286736qtb.91.2019.05.21.11.03.56
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 21 May 2019 11:03:56 -0700 (PDT)
-From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 63509404A1; Tue, 21 May 2019 15:03:54 -0300 (-03)
-Date:   Tue, 21 May 2019 15:03:54 -0300
-To:     Vitaly Chikunov <vt@altlinux.org>
-Cc:     Michael Petlan <mpetlan@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Hendrik Brueckner <brueckner@linux.ibm.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Kim Phillips <kim.phillips@arm.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Ravi Bangoria <ravi.bangoria@linux.vnet.ibm.com>
-Subject: Re: [PATCH] perf arm64: Fix mksyscalltbl when system kernel headers
- are ahead of the kernel
-Message-ID: <20190521180354.GE26253@kernel.org>
-References: <20190521030203.1447-1-vt@altlinux.org>
- <20190521132838.GB26253@kernel.org>
- <alpine.LRH.2.20.1905211632300.4243@Diego>
- <20190521151918.GD26253@kernel.org>
+        Tue, 21 May 2019 14:06:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55482 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727898AbfEUSGJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 May 2019 14:06:09 -0400
+Received: from localhost (unknown [104.132.1.68])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B95EB20851;
+        Tue, 21 May 2019 18:06:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1558461967;
+        bh=BKXNVmG7LaWblCT8odUyB9ygq+NZqBzRkvgS8khETJ4=;
+        h=From:To:Cc:Subject:Date:From;
+        b=cgycRbbPZi5hETqNUE/MqIeSGOR09EB6E7on3YVuYohspqFp5sODa5gvkWaYhsaHx
+         w49bCH6dr/XZtlCVgIDCVL+RiEsqQOD09+NwUaQPyDA1vBlNNtQC3OvPMmu5QAf+45
+         f6fIftYhEsHi3RslWAVhql5xyV8CLrVbrZ1gUZCY=
+From:   Jaegeuk Kim <jaegeuk@kernel.org>
+To:     linux-kernel@vger.kernel.org,
+        linux-f2fs-devel@lists.sourceforge.net
+Cc:     Jaegeuk Kim <jaegeuk@kernel.org>
+Subject: [PATCH] f2fs: add missing sysfs entries in documentation
+Date:   Tue, 21 May 2019 11:06:06 -0700
+Message-Id: <20190521180606.10461-1-jaegeuk@kernel.org>
+X-Mailer: git-send-email 2.19.0.605.g01d371f741-goog
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190521151918.GD26253@kernel.org>
-X-Url:  http://acmel.wordpress.com
-User-Agent: Mutt/1.11.3 (2019-02-01)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Tue, May 21, 2019 at 12:19:18PM -0300, Arnaldo Carvalho de Melo escreveu:
-> Em Tue, May 21, 2019 at 04:34:47PM +0200, Michael Petlan escreveu:
-> > On Tue, 21 May 2019, Arnaldo Carvalho de Melo wrote:
-> > > Em Tue, May 21, 2019 at 06:02:03AM +0300, Vitaly Chikunov escreveu:
-> > > > When a host system has kernel headers that are newer than a compiling
-> > > > kernel, mksyscalltbl fails with errors such as:
+This patch cleans up documentation to cover missing sysfs entries.
 
-> > > >   <stdin>: In function 'main':
-> > > >   <stdin>:271:44: error: '__NR_kexec_file_load' undeclared (first use in this function)
-> > > >   <stdin>:271:44: note: each undeclared identifier is reported only once for each function it appears in
-> > > >   <stdin>:272:46: error: '__NR_pidfd_send_signal' undeclared (first use in this function)
-> > > >   <stdin>:273:43: error: '__NR_io_uring_setup' undeclared (first use in this function)
-> > > >   <stdin>:274:43: error: '__NR_io_uring_enter' undeclared (first use in this function)
-> > > >   <stdin>:275:46: error: '__NR_io_uring_register' undeclared (first use in this function)
-> > > >   tools/perf/arch/arm64/entry/syscalls//mksyscalltbl: line 48: /tmp/create-table-xvUQdD: Permission denied
+Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
+---
+ Documentation/filesystems/f2fs.txt | 88 +++++++++++++++++++++++++++---
+ 1 file changed, 79 insertions(+), 9 deletions(-)
 
-> > > > mksyscalltbl is compiled with default host includes, but run with
+diff --git a/Documentation/filesystems/f2fs.txt b/Documentation/filesystems/f2fs.txt
+index f7b5e4ff0de3..0a0820d10d61 100644
+--- a/Documentation/filesystems/f2fs.txt
++++ b/Documentation/filesystems/f2fs.txt
+@@ -246,11 +246,14 @@ Files in /sys/fs/f2fs/<devname>
+ ..............................................................................
+  File                         Content
+ 
+- gc_max_sleep_time            This tuning parameter controls the maximum sleep
++ gc_urgent_sleep_time         This parameter controls sleep time for gc_urgent.
++                              500 ms is set by default. See above gc_urgent.
++
++ gc_min_sleep_time            This tuning parameter controls the minimum sleep
+                               time for the garbage collection thread. Time is
+                               in milliseconds.
+ 
+- gc_min_sleep_time            This tuning parameter controls the minimum sleep
++ gc_max_sleep_time            This tuning parameter controls the maximum sleep
+                               time for the garbage collection thread. Time is
+                               in milliseconds.
+ 
+@@ -270,9 +273,6 @@ Files in /sys/fs/f2fs/<devname>
+                               to 1, background thread starts to do GC by given
+                               gc_urgent_sleep_time interval.
+ 
+- gc_urgent_sleep_time         This parameter controls sleep time for gc_urgent.
+-                              500 ms is set by default. See above gc_urgent.
+-
+  reclaim_segments             This parameter controls the number of prefree
+                               segments to be reclaimed. If the number of prefree
+ 			      segments is larger than the number of segments
+@@ -287,7 +287,15 @@ Files in /sys/fs/f2fs/<devname>
+ 			      checkpoint is triggered, and issued during the
+ 			      checkpoint. By default, it is disabled with 0.
+ 
+- trim_sections                This parameter controls the number of sections
++ discard_granularity	      This parameter controls the granularity of discard
++			      command size. It will issue discard commands iif
++			      the size is larger than given granularity.
++			      By default, 16KB.
++
++ reserved_blocks	      This parameter indicates the number of blocks that
++			      f2fs reserves internally for root.
++
++ batched_trim_sections	      This parameter controls the number of sections
+                               to be trimmed out in batch mode when FITRIM
+                               conducts. 32 sections is set by default.
+ 
+@@ -309,11 +317,35 @@ Files in /sys/fs/f2fs/<devname>
+ 			      the number is less than this value, it triggers
+ 			      in-place-updates.
+ 
++ min_seq_blocks		      This parameter controls the threshold to serialize
++			      write IOs issued by multiple threads in parallel.
++
++ min_hot_blocks		      This parameter controls the threshold to allocate
++			      a hot data log for pending data blocks to write.
++
++ min_ssr_section	      This parameter adds the threshold when deciding
++			      SSR block allocation. If this is large, SSR mode
++			      will be enabled early.
++
++ ram_thresh                   This parameter controls the memory footprint used
++			      by free nids and cached nat entries. By default,
++			      10 is set, which indicates 10 MB / 1 GB RAM.
++
++ ra_nid_pges		      When building free nids, F2FS reads NAT blocks
++			      ahead for speed up. Default is 0.
++
++ dirty_nats_ratio	      Given dirty ratio of cached nat entries, F2FS
++			      determines flushing them in background.
++
+  max_victim_search	      This parameter controls the number of trials to
+ 			      find a victim segment when conducting SSR and
+ 			      cleaning operations. The default value is 4096
+ 			      which covers 8GB block address range.
+ 
++ migration_granularity	      For large-sized sections, F2FS can stop GC given
++			      this granularity instead of reclaiming entire
++			      section.
++
+  dir_level                    This parameter controls the directory level to
+ 			      support large directory. If a directory has a
+ 			      number of files, it can reduce the file lookup
+@@ -321,9 +353,47 @@ Files in /sys/fs/f2fs/<devname>
+ 			      Otherwise, it needs to decrease this value to
+ 			      reduce the space overhead. The default value is 0.
+ 
+- ram_thresh                   This parameter controls the memory footprint used
+-			      by free nids and cached nat entries. By default,
+-			      10 is set, which indicates 10 MB / 1 GB RAM.
++ cp_interval		      F2FS tries to do checkpoint periodically, 60 secs
++			      by default.
++
++ idle_interval		      F2FS detects system is idle, if there's no F2FS
++			      operations during given interval, 5 secs by
++			      default.
++
++ discard_idle_interval	      F2FS detects the discard thread is idle, given
++			      time interval. Default is 5 secs.
++
++ gc_idle_interval	      F2FS detects the GC thread is idle, given time
++			      interval. Default is 5 secs.
++
++ umount_discard_timeout       When unmounting the disk, F2FS waits for finishing
++			      queued discard commands which can take huge time.
++			      This gives time out for it, 5 secs by default.
++
++ iostat_enable		      This controls to enable/disable iostat in F2FS.
++
++ readdir_ra		      This enables/disabled readahead in readdir, and
++			      default is enabled.
++
++ gc_pin_file_thresh	      This indicates how many GC can be failed for the
++			      pinned file. If it exceeds this, F2FS doesn't
++			      guarantee its pinning state. 2048 trials is set
++			      by default.
++
++ extension_list		      This enables to change extension_list for hot/cold
++			      files in runtime.
++
++ inject_rate		      This controls injection rate of arbitrary faults.
++
++ inject_type		      This controls injection type of arbitrary faults.
++
++ dirty_segments 	      This shows # of dirty segments.
++
++ lifetime_write_kbytes	      This shows # of data written to the disk.
++
++ features		      This shows current features enabled on F2FS.
++
++ current_reserved_blocks      This shows # of blocks currently reserved.
+ 
+ ================================================================================
+ USAGE
+-- 
+2.19.0.605.g01d371f741-goog
 
-> > > It shouldn't :-\ So with this you're making it use the ones shipped in
-> > > tools/include? Good, I'll test it, thanks!
-
-> > I've hit the issue too, this patch fixes it for me.
-> > Tested.
-
-> Thanks, I'll add your Tested-by, appreciated.
-
-Was this in a cross-build environment? Native? I'm asking because I test
-this on several cross build environments, like on ubuntu 19.04 cross
-building to aarch64:
-
-perfbuilder@15e0b7c211c2:/git/perf$ grep PRETTY_NAME /etc/os-release 
-PRETTY_NAME="Ubuntu 19.04"
-perfbuilder@15e0b7c211c2:/git/perf$ aarch64-linux-gnu-gcc -v
-Using built-in specs.
-COLLECT_GCC=aarch64-linux-gnu-gcc
-COLLECT_LTO_WRAPPER=/usr/lib/gcc-cross/aarch64-linux-gnu/8/lto-wrapper
-Target: aarch64-linux-gnu
-Configured with: ../src/configure -v --with-pkgversion='Ubuntu/Linaro 8.3.0-6ubuntu1' --with-bugurl=file:///usr/share/doc/gcc-8/README.Bugs --enable-languages=c,ada,c++,go,d,fortran,objc,obj-c++ --prefix=/usr --with-gcc-major-version-only --program-suffix=-8 --enable-shared --enable-linker-build-id --libexecdir=/usr/lib --without-included-gettext --enable-threads=posix --libdir=/usr/lib --enable-nls --with-sysroot=/ --enable-clocale=gnu --enable-libstdcxx-debug --enable-libstdcxx-time=yes --with-default-libstdcxx-abi=new --enable-gnu-unique-object --disable-libquadmath --disable-libquadmath-support --enable-plugin --enable-default-pie --with-system-zlib --disable-libphobos --enable-multiarch --enable-fix-cortex-a53-843419 --disable-werror --enable-checking=release --build=x86_64-linux-gnu --host=x86_64-linux-gnu --target=aarch64-linux-gnu --program-prefix=aarch64-linux-gnu- --includedir=/usr/aarch64-linux-gnu/include
-Thread model: posix
-gcc version 8.3.0 (Ubuntu/Linaro 8.3.0-6ubuntu1) 
-perfbuilder@15e0b7c211c2:/git/perf$
-
-I'm building it as:
-
-$ make CORESIGHT=1 ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- EXTRA_CFLAGS= -C /git/perf/tools/perf O=/tmp/build/perf
-
-The end result is:
-
-$ file /tmp/build/perf/perf
-/tmp/build/perf/perf: ELF 64-bit LSB shared object, ARM aarch64, version 1 (SYSV), dynamically linked, interpreter /lib/ld-linux-aarch64.so.1, BuildID[sha1]=5b4fd9f0f92cc331e43e6e4da9791c473524383d, for GNU/Linux 3.7.0, with debug_info, not stripped
-
-I.e. it didn't fail the build, but in the end these new syscalls are not
-there, while with your patch, they are:
-
-perfbuilder@6e20056ed532:/git/perf$ tail /tmp/build/perf/arch/arm64/include/generated/asm/syscalls.c
-	[292] = "io_pgetevents",
-	[293] = "rseq",
-	[294] = "kexec_file_load",
-	[424] = "pidfd_send_signal",
-	[425] = "io_uring_setup",
-	[426] = "io_uring_enter",
-	[427] = "io_uring_register",
-	[428] = "syscalls",
-#define SYSCALLTBL_ARM64_MAX_ID 428
-};
-perfbuilder@6e20056ed532:/git/perf$
-
-perfbuilder@6e20056ed532:/git/perf$ strings /tmp/build/perf/perf | egrep '^(io_uring_|pidfd_|kexec_file)'
-kexec_file_load
-pidfd_send_signal
-io_uring_setup
-io_uring_enter
-io_uring_register
-perfbuilder@6e20056ed532:/git/perf$
-
-Thanks, applied.
-
-- Arnaldo
