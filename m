@@ -4,95 +4,119 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 013E2C04E87
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 02:18:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3AAFC04AAC
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 02:27:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C3875217D7
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 02:18:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 994C22171F
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 02:27:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727706AbfEUCSQ (ORCPT
+        id S1727592AbfEUC1F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 22:18:16 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:41042 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726335AbfEUCSP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 22:18:15 -0400
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 7DBBA4E908;
-        Tue, 21 May 2019 02:18:15 +0000 (UTC)
-Received: from [10.72.12.71] (ovpn-12-71.pek2.redhat.com [10.72.12.71])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 6D2E360C62;
-        Tue, 21 May 2019 02:18:09 +0000 (UTC)
-Subject: Re: [PATCH 4/4] ceph: fix improper use of smp_mb__before_atomic()
-To:     Andrea Parri <andrea.parri@amarulasolutions.com>,
-        linux-kernel@vger.kernel.org
-Cc:     stable@vger.kernel.org, Sage Weil <sage@redhat.com>,
-        Ilya Dryomov <idryomov@gmail.com>, ceph-devel@vger.kernel.org,
-        "Paul E. McKenney" <paulmck@linux.ibm.com>,
-        Peter Zijlstra <peterz@infradead.org>
-References: <1558373038-5611-1-git-send-email-andrea.parri@amarulasolutions.com>
- <1558373038-5611-5-git-send-email-andrea.parri@amarulasolutions.com>
-From:   "Yan, Zheng" <zyan@redhat.com>
-Message-ID: <a1dcab3f-6018-9d4d-ee6d-505b4086f097@redhat.com>
-Date:   Tue, 21 May 2019 10:18:07 +0800
+        Mon, 20 May 2019 22:27:05 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:57827 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726548AbfEUC1F (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 22:27:05 -0400
+Received: from [125.35.49.90] (helo=[10.0.0.21])
+        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_128_CBC_SHA1:16)
+        (Exim 4.76)
+        (envelope-from <hui.wang@canonical.com>)
+        id 1hSuUV-0003UZ-4L; Tue, 21 May 2019 02:26:59 +0000
+Subject: =?UTF-8?B?UmU6IOetlOWkjTogW1BBVENIXSBpbnB1dDogYWxwcy1maXggdGhlIGlz?=
+ =?UTF-8?Q?sue_the_special_alps_trackpoint_do_not_work=2e?=
+To:     Xiaoxiao Liu <xiaoxiao.liu-1@cn.alps.com>,
+        XiaoXiao Liu <sliuuxiaonxiao@gmail.com>,
+        "dmitry.torokhov@gmail.com" <dmitry.torokhov@gmail.com>
+Cc:     "pali.rohar@gmail.com" <pali.rohar@gmail.com>,
+        "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Xiaojian Cao <xiaojian.cao@cn.alps.com>,
+        "zhangfp1@lenovo.com" <zhangfp1@lenovo.com>
+References: <20190520110149.27107-1-sliuuxiaonxiao@gmail.com>
+ <OSBPR01MB485510A2A32CD9D2CE5EF7A1DA070@OSBPR01MB4855.jpnprd01.prod.outlook.com>
+From:   Hui Wang <hui.wang@canonical.com>
+Message-ID: <345b62e1-407e-7a03-9b03-486bbf5a0a8e@canonical.com>
+Date:   Tue, 21 May 2019 10:26:47 +0800
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <1558373038-5611-5-git-send-email-andrea.parri@amarulasolutions.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <OSBPR01MB485510A2A32CD9D2CE5EF7A1DA070@OSBPR01MB4855.jpnprd01.prod.outlook.com>
+Content-Type: text/plain; charset=gbk; format=flowed
+Content-Transfer-Encoding: 8bit
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.38]); Tue, 21 May 2019 02:18:15 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/21/19 1:23 AM, Andrea Parri wrote:
-> This barrier only applies to the read-modify-write operations; in
-> particular, it does not apply to the atomic64_set() primitive.
-> 
-> Replace the barrier with an smp_mb().
-> 
-> Fixes: fdd4e15838e59 ("ceph: rework dcache readdir")
-> Cc: stable@vger.kernel.org
-> Reported-by: "Paul E. McKenney" <paulmck@linux.ibm.com>
-> Reported-by: Peter Zijlstra <peterz@infradead.org>
-> Signed-off-by: Andrea Parri <andrea.parri@amarulasolutions.com>
-> Cc: "Yan, Zheng" <zyan@redhat.com>
-> Cc: Sage Weil <sage@redhat.com>
-> Cc: Ilya Dryomov <idryomov@gmail.com>
-> Cc: ceph-devel@vger.kernel.org
-> Cc: "Paul E. McKenney" <paulmck@linux.ibm.com>
-> Cc: Peter Zijlstra <peterz@infradead.org>
+Tested-by: Hui Wang <hui.wang@canonical.com>
+
+On 2019/5/21 上午9:07, Xiaoxiao Liu wrote:
+> Add Pali Rohár.
+>
+> -----邮件原件-----
+> 发件人: XiaoXiao Liu <sliuuxiaonxiao@gmail.com>
+> 发送时间: Monday, May 20, 2019 7:02 PM
+> 收件人: dmitry.torokhov@gmail.com
+> 抄送: linux-input@vger.kernel.org; linux-kernel@vger.kernel.org; hui.wang@canonical.com; 曹 曉建 Xiaojian Cao <xiaojian.cao@cn.alps.com>; zhangfp1@lenovo.com; 劉 曉曉 Xiaoxiao Liu <xiaoxiao.liu-1@cn.alps.com>; XiaoXiao Liu <sliuuxiaonxiao@gmail.com>
+> 主题: [PATCH] input: alps-fix the issue the special alps trackpoint do not work.
+>
+> when the alps trackpoint is detected and using the alps_v8_protocol_data procotol, the alps driver will not report the input data.
+>
+> solution: use standard mouse driver instead of alps driver when the specail trackpoint was detected.
+>
+> Signed-off-by: XiaoXiao Liu <sliuuxiaonxiao@gmail.com>
 > ---
->   fs/ceph/super.h | 7 ++++++-
->   1 file changed, 6 insertions(+), 1 deletion(-)
-> 
-> diff --git a/fs/ceph/super.h b/fs/ceph/super.h
-> index 6edab9a750f8a..e02f4ff0be3f1 100644
-> --- a/fs/ceph/super.h
-> +++ b/fs/ceph/super.h
-> @@ -541,7 +541,12 @@ static inline void __ceph_dir_set_complete(struct ceph_inode_info *ci,
->   					   long long release_count,
->   					   long long ordered_count)
->   {
-> -	smp_mb__before_atomic();
-> +	/*
-> +	 * Makes sure operations that setup readdir cache (update page
-> +	 * cache and i_size) are strongly ordered w.r.t. the following
-> +	 * atomic64_set() operations.
-> +	 */
-> +	smp_mb();
->   	atomic64_set(&ci->i_complete_seq[0], release_count);
->   	atomic64_set(&ci->i_complete_seq[1], ordered_count);
+>   drivers/input/mouse/alps.c | 23 ++++++++++++++++++++++-
+>   1 file changed, 22 insertions(+), 1 deletion(-)
+>
+> diff --git a/drivers/input/mouse/alps.c b/drivers/input/mouse/alps.c index 0a6f7ca883e7..516ae1d0eb17 100644
+> --- a/drivers/input/mouse/alps.c
+> +++ b/drivers/input/mouse/alps.c
+> @@ -24,7 +24,7 @@
+>   
+>   #include "psmouse.h"
+>   #include "alps.h"
+> -
+> +#include "trackpoint.h"
+>   /*
+>    * Definitions for ALPS version 3 and 4 command mode protocol
+>    */
+> @@ -2864,6 +2864,22 @@ static const struct alps_protocol_info *alps_match_table(unsigned char *e7,
+>   	return NULL;
 >   }
-> 
-
-Applied, thanks
-
+>   
+> +int alps_check_is_trackpoint(struct psmouse *psmouse) {
+> +	u8 param[2] = { 0 };
+> +	int error;
+> +
+> +	error = ps2_command(&psmouse->ps2dev,
+> +			    param, MAKE_PS2_CMD(0, 2, TP_READ_ID));
+> +	if (error)
+> +		return error;
+> +
+> +	if (param[0] == TP_VARIANT_ALPS)
+> +		return 0;
+> +	psmouse_warn(psmouse, "It is not alps trackpoint.\n");
+> +	return -ENODEV;
+> +}
+> +
+>   static int alps_identify(struct psmouse *psmouse, struct alps_data *priv)  {
+>   	const struct alps_protocol_info *protocol; @@ -2912,6 +2928,11 @@ static int alps_identify(struct psmouse *psmouse, struct alps_data *priv)
+>   			protocol = &alps_v3_protocol_data;
+>   		} else if (e7[0] == 0x73 && e7[1] == 0x03 &&
+>   			   (e7[2] == 0x14 || e7[2] == 0x28)) {
+> +				if (alps_check_is_trackpoint(psmouse) == 0) {
+> +					psmouse_warn(psmouse,
+> +					"It is alps trackpoint, use the standard mouse driver.\n");
+> +					return -EINVAL;
+> +				}
+>   			protocol = &alps_v8_protocol_data;
+>   		} else if (e7[0] == 0x73 && e7[1] == 0x03 && e7[2] == 0xc8) {
+>   			protocol = &alps_v9_protocol_data;
+> --
+> 2.20.1
+>
