@@ -2,94 +2,85 @@ Return-Path: <SRS0=9PYC=TV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BA76C04AAF
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 15:41:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5E69C04AAF
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 15:42:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1D896208C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 15:41:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B2C3521743
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 15:42:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1558453366;
+	bh=YVqGX7wPjOLgTlzR5jmtZLS+DKkLdxVEO+PlCNfxMZU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Wjgd+wEphq8z+gkLocTxU+BBJOmCjo9PYswCQKv1LHlCvJ3c5n5qU4nUa3pFwtJjs
+	 MtPThaEeSftV522+POaEL0/63EMZr5p+huvLK/jvSFZfqhznrqmERSWgFaQGSP1MLi
+	 ALx7yx4cpfO8gCuXj+1+TYES/4QcNFnruzn1kwBI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728904AbfEUPlL (ORCPT
+        id S1728771AbfEUPmp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 May 2019 11:41:11 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:51982 "EHLO mx1.redhat.com"
+        Tue, 21 May 2019 11:42:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44834 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728289AbfEUPlL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 May 2019 11:41:11 -0400
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        id S1728533AbfEUPmo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 May 2019 11:42:44 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 7524F30BB532;
-        Tue, 21 May 2019 15:41:05 +0000 (UTC)
-Received: from redhat.com (unknown [10.20.6.178])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id EE28453786;
-        Tue, 21 May 2019 15:41:00 +0000 (UTC)
-Date:   Tue, 21 May 2019 11:40:59 -0400
-From:   Jerome Glisse <jglisse@redhat.com>
-To:     Daniel Vetter <daniel.vetter@ffwll.ch>
-Cc:     DRI Development <dri-devel@lists.freedesktop.org>,
-        Intel Graphics Development <intel-gfx@lists.freedesktop.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux MM <linux-mm@kvack.org>,
-        Chris Wilson <chris@chris-wilson.co.uk>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        David Rientjes <rientjes@google.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Mike Rapoport <rppt@linux.vnet.ibm.com>,
-        Daniel Vetter <daniel.vetter@intel.com>
-Subject: Re: [PATCH 4/4] mm, notifier: Add a lockdep map for
- invalidate_range_start
-Message-ID: <20190521154059.GC3836@redhat.com>
-References: <20190520213945.17046-1-daniel.vetter@ffwll.ch>
- <20190520213945.17046-4-daniel.vetter@ffwll.ch>
+        by mail.kernel.org (Postfix) with ESMTPSA id B8A46208C3;
+        Tue, 21 May 2019 15:42:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1558453364;
+        bh=YVqGX7wPjOLgTlzR5jmtZLS+DKkLdxVEO+PlCNfxMZU=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=bRIh4826Y5QBpUzIJG1tI+RLUmDl0Z2OvLJ4ibal5FrYGZyjhcM4HfiBtkm+GktY2
+         wuk4rJkBVFh36nGG1W+7gdxjEFiL9bf+fm0DmtwHfTHBynvQmG4fim8XRUridN7lDv
+         35aCs0LXQmFBgX55Plpdkdss/VJ2qI8I1RgExZws=
+Date:   Tue, 21 May 2019 17:42:41 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Sven Van Asbroeck <thesven73@gmail.com>
+Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
+        devel@driverdev.osuosl.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] staging: fieldbus: anybuss: force address space
+ conversion
+Message-ID: <20190521154241.GB15818@kroah.com>
+References: <20190521145116.24378-1-TheSven73@gmail.com>
+ <20190521151059.GM31203@kadam>
+ <CAGngYiXLN-oT_b9d1kRyBrrFMALhKO-KnuwXB0MjVq0NFc01Xw@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190520213945.17046-4-daniel.vetter@ffwll.ch>
-User-Agent: Mutt/1.11.3 (2019-02-01)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.49]); Tue, 21 May 2019 15:41:10 +0000 (UTC)
+In-Reply-To: <CAGngYiXLN-oT_b9d1kRyBrrFMALhKO-KnuwXB0MjVq0NFc01Xw@mail.gmail.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 20, 2019 at 11:39:45PM +0200, Daniel Vetter wrote:
-> This is a similar idea to the fs_reclaim fake lockdep lock. It's
-> fairly easy to provoke a specific notifier to be run on a specific
-> range: Just prep it, and then munmap() it.
+On Tue, May 21, 2019 at 11:19:59AM -0400, Sven Van Asbroeck wrote:
+> On Tue, May 21, 2019 at 11:13 AM Dan Carpenter <dan.carpenter@oracle.com> wrote:
+> >
+> > There is no need to use __force.  Just:
+> >
+> >         void __iomem *base = (void __iomem *)context;
+> >
+> > For the rest as well.
 > 
-> A bit harder, but still doable, is to provoke the mmu notifiers for
-> all the various callchains that might lead to them. But both at the
-> same time is really hard to reliable hit, especially when you want to
-> exercise paths like direct reclaim or compaction, where it's not
-> easy to control what exactly will be unmapped.
+> Yes, that appears to work for 'void *' -> __iomem, but not the other way around:
 > 
-> By introducing a lockdep map to tie them all together we allow lockdep
-> to see a lot more dependencies, without having to actually hit them
-> in a single challchain while testing.
+> +       return devm_regmap_init(dev, NULL, (void *)base, &regmap_cfg);
 > 
-> Aside: Since I typed this to test i915 mmu notifiers I've only rolled
-> this out for the invaliate_range_start callback. If there's
-> interest, we should probably roll this out to all of them. But my
-> undestanding of core mm is seriously lacking, and I'm not clear on
-> whether we need a lockdep map for each callback, or whether some can
-> be shared.
+> sparse generates:
+> drivers/staging/fieldbus/anybuss/arcx-anybus.c:156:16: warning: cast
+> removes address space of expression
+> 
+> Would it be a ok solution to use __force in this instance only?
 
-I need to read more on lockdep but it is legal to have mmu notifier
-invalidation within each other. For instance when you munmap you
-might split a huge pmd and it will trigger a second invalidate range
-while the munmap one is not done yet. Would that trigger the lockdep
-here ?
+Ick, if you are using __force, almost always something is wrong.
 
-Worst case i can think of is 2 invalidate_range_start chain one after
-the other. I don't think you can triggers a 3 levels nesting but maybe.
+thanks
 
-Cheers,
-Jérôme
+greg k-h
