@@ -2,165 +2,184 @@ Return-Path: <SRS0=9PYC=TV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96211C04AB4
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 16:14:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 856FCC04AB4
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 16:14:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6C8A2217D8
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 16:14:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B32E217D7
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 16:14:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="ik6eh05W";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="PSPgUd79"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="kSfTpCGV";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="SVnDGffr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728792AbfEUQOX (ORCPT
+        id S1729125AbfEUQOy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 May 2019 12:14:23 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:57796 "EHLO
+        Tue, 21 May 2019 12:14:54 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:60466 "EHLO
         smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727817AbfEUQOU (ORCPT
+        with ESMTP id S1728957AbfEUQOx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 May 2019 12:14:20 -0400
+        Tue, 21 May 2019 12:14:53 -0400
 Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 7BAF261214; Tue, 21 May 2019 16:14:13 +0000 (UTC)
+        id 10B7A61AC3; Tue, 21 May 2019 16:14:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1558455259;
-        bh=XEaXjrXY1Q6Wd+gJ+WxNDOVUYRY8dVm52md5PI1E1n4=;
-        h=From:To:Cc:Subject:Date:From;
-        b=ik6eh05W5KR8dIOkZwS5x/+44oL5c7JEG1U158zWbPiS0Mw+pSU0P5PwWNLuWpdfA
-         aI4tESub6TiMTESlfksmXGdNe9aOO+1dpl5F6rHUlzjfd5efOg43Xtzsq1KKGp8T9j
-         wSQme0BKwEOf/zp2YhuvAYH4I/kSqTk0+ErIniCg=
+        s=default; t=1558455292;
+        bh=9aXhSj9Phw8JHRWY+YFRT00OkAJ1xzvQFBspXjSWjck=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=kSfTpCGV5/Wp1zq8aqxwfVSUQhQNycw78oAXl3Nanp8VBWkzHJOv9u9Eqdfu0ahqm
+         HGYTUNNWxtv0G2zXp9tXjJ/Gq7QI7gEXiKVu/UxCdMJAnEq6Y9UsA04W8ziTZ1tYWz
+         YlW92s8rbufrMB/tZhK6faEzczUe7iTct3dGEyCc=
 Received: from jcrouse1-lnx.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
         (No client certificate requested)
         (Authenticated sender: jcrouse@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 5E3EA6087F;
-        Tue, 21 May 2019 16:14:08 +0000 (UTC)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 2E48561A5C;
+        Tue, 21 May 2019 16:14:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1558455250;
-        bh=XEaXjrXY1Q6Wd+gJ+WxNDOVUYRY8dVm52md5PI1E1n4=;
-        h=From:To:Cc:Subject:Date:From;
-        b=PSPgUd79z8v7c0MBhbxiaVungiKnYR6C62UdL/lcaxsCYzg1sTL8UQQvzS2QpH7Y+
-         i4ep3OTg7o2XVCF85yUuw4mca3UjOup1LdccPZf9s6IwXvycn1zgXApCCMN+m5fxdr
-         6hXcxWeBPpVqXI0L+6UU2qQ54AOiDhZZzZGaM2Go=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 5E3EA6087F
+        s=default; t=1558455265;
+        bh=9aXhSj9Phw8JHRWY+YFRT00OkAJ1xzvQFBspXjSWjck=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=SVnDGffrzPDaouD/31loIWc92bGnmmbA4g62WezNnVT6esjiwklpM6/VbBxRNAKl6
+         tPqzNybOhQem/ehtZUUG2Uv+o8bhn1mV+Jx/rFBeULrOuilrm1a0EwOsC1qYOmdobY
+         gws1wRzfdfkVrxlfx3lemXB0NGJ/V/B53TTsen7k=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 2E48561A5C
 Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
 Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=jcrouse@codeaurora.org
 From:   Jordan Crouse <jcrouse@codeaurora.org>
 To:     freedreno@lists.freedesktop.org
 Cc:     jean-philippe.brucker@arm.com, linux-arm-msm@vger.kernel.org,
         hoegsberg@google.com, dianders@chromium.org,
-        Sean Paul <sean@poorly.run>,
-        Jonathan Marek <jonathan@marek.ca>,
-        Kees Cook <keescook@chromium.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        Wen Yang <wen.yang99@zte.com.cn>, linux-kernel@vger.kernel.org,
-        iommu@lists.linux-foundation.org,
-        Sharat Masetty <smasetty@codeaurora.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Rob Clark <robdclark@gmail.com>,
-        dri-devel@lists.freedesktop.org, Daniel Vetter <daniel@ffwll.ch>,
-        Will Deacon <will.deacon@arm.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Mamta Shukla <mamtashukla555@gmail.com>,
-        linux-arm-kernel@lists.infradead.org,
-        David Airlie <airlied@linux.ie>
-Subject: [PATCH v2 00/15] drm/msm: Per-instance pagetable support
-Date:   Tue, 21 May 2019 10:13:48 -0600
-Message-Id: <1558455243-32746-1-git-send-email-jcrouse@codeaurora.org>
+        Sean Paul <sean@poorly.run>, linux-kernel@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, Rob Clark <robdclark@gmail.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>
+Subject: [PATCH v2 10/15] drm/msm: Add a helper function for a per-instance address space
+Date:   Tue, 21 May 2019 10:13:58 -0600
+Message-Id: <1558455243-32746-11-git-send-email-jcrouse@codeaurora.org>
 X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1558455243-32746-1-git-send-email-jcrouse@codeaurora.org>
+References: <1558455243-32746-1-git-send-email-jcrouse@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is a refresh of the per-instance pagetable support for arm-smmu-v2 and the
-MSM GPU driver. I think this is pretty mature at this point, so I've dropped the
-RFC designation and ask for consideration for 5.3.
+Add a helper function to create a GEM address space attached to
+an iommu auxiliary domain for a per-instance pagetable.
 
-Per-instance pagetables allow the target GPU driver to create and manage
-an individual pagetable for each file descriptor instance and switch
-between them asynchronously using the GPU to reprogram the pagetable
-registers on the fly.
+Signed-off-by: Jordan Crouse <jcrouse@codeaurora.org>
+---
 
-Most of the heavy lifting for this is done in the arm-smmu-v2 driver by
-taking advantage of the newly added multiple domain API. The first patch in the
-series allows opted-in clients to create a default identity domain when the
-IOMMU group for the SMMU device is created. This bypasses the DMA domain
-creation in the IOMMU core which serves several purposes for the GPU by skipping
-the otherwise  unused DMA domain and also keeping context bank 0 unused on the
-hardware (for better or worse, the GPU is hardcoded to only use context bank 0
-for switching).
+ drivers/gpu/drm/msm/msm_drv.h     |  4 +++
+ drivers/gpu/drm/msm/msm_gem_vma.c | 53 +++++++++++++++++++++++----------------
+ 2 files changed, 36 insertions(+), 21 deletions(-)
 
-The next two patches enable split pagetable support. This is used to map
-global buffers for the GPU so we can safely switch the TTBR0 pagetable for the
-instance.
-
-The last two arm-smmu-v2 patches enable auxillary domain support. Again the
-SMMU client can opt-in to allow auxiliary domains, and if enabled will create
-a pagetable but not otherwise touch the hardware. The client can get the address
-of the pagetable through an attribute to perform its own switching.
-
-After the arm-smmu-v2 patches are more than several msm/gpu patches to allow
-for target specific address spaces, enable 64 bit virtual addressing and
-implement the mechanics of pagetable switching.
-
-For the purposes of merging all the patches between
-
-drm/msm/adreno: Enable 64 bit mode by default on a5xx and a6xx targets
-
-and
-
-drm/msm: Add support to create target specific address spaces
-
-can be merged to the msm-next tree without dependencies on the IOMMU changes.
-Only the last three patches will require coordination between the two areas.
-
-Jordan Crouse (15):
-  iommu/arm-smmu: Allow IOMMU enabled devices to skip DMA domains
-  iommu: Add DOMAIN_ATTR_SPLIT_TABLES
-  iommu/arm-smmu: Add split pagetable support for arm-smmu-v2
-  iommu: Add DOMAIN_ATTR_PTBASE
-  iommu/arm-smmu: Add auxiliary domain support for arm-smmuv2
-  drm/msm/adreno: Enable 64 bit mode by default on a5xx and a6xx targets
-  drm/msm: Print all 64 bits of the faulting IOMMU address
-  drm/msm: Pass the MMU domain index in struct msm_file_private
-  drm/msm/gpu: Move address space setup to the GPU targets
-  drm/msm: Add a helper function for a per-instance address space
-  drm/msm/gpu: Add ttbr0 to the memptrs
-  drm/msm: Add support to create target specific address spaces
-  drm/msm: Add support for IOMMU auxiliary domains
-  drm/msm/a6xx: Support per-instance pagetables
-  drm/msm/a5xx: Support per-instance pagetables
-
- drivers/gpu/drm/msm/adreno/a2xx_gpu.c     |  37 +++-
- drivers/gpu/drm/msm/adreno/a3xx_gpu.c     |  50 +++--
- drivers/gpu/drm/msm/adreno/a4xx_gpu.c     |  51 +++--
- drivers/gpu/drm/msm/adreno/a5xx_gpu.c     | 163 +++++++++++++-
- drivers/gpu/drm/msm/adreno/a5xx_gpu.h     |  19 ++
- drivers/gpu/drm/msm/adreno/a5xx_preempt.c |  70 ++++--
- drivers/gpu/drm/msm/adreno/a6xx_gpu.c     | 166 +++++++++++++-
- drivers/gpu/drm/msm/adreno/a6xx_gpu.h     |   1 +
- drivers/gpu/drm/msm/adreno/adreno_gpu.c   |   7 -
- drivers/gpu/drm/msm/msm_drv.c             |  25 ++-
- drivers/gpu/drm/msm/msm_drv.h             |   5 +
- drivers/gpu/drm/msm/msm_gem.h             |   2 +
- drivers/gpu/drm/msm/msm_gem_submit.c      |  13 +-
- drivers/gpu/drm/msm/msm_gem_vma.c         |  53 +++--
- drivers/gpu/drm/msm/msm_gpu.c             |  59 +----
- drivers/gpu/drm/msm/msm_gpu.h             |   3 +
- drivers/gpu/drm/msm/msm_iommu.c           |  99 ++++++++-
- drivers/gpu/drm/msm/msm_mmu.h             |   4 +
- drivers/gpu/drm/msm/msm_ringbuffer.h      |   1 +
- drivers/iommu/arm-smmu-regs.h             |  19 ++
- drivers/iommu/arm-smmu.c                  | 352 +++++++++++++++++++++++++++---
- drivers/iommu/io-pgtable-arm.c            |   3 +-
- drivers/iommu/iommu.c                     |  29 ++-
- include/linux/iommu.h                     |   5 +
- 24 files changed, 1052 insertions(+), 184 deletions(-)
-
+diff --git a/drivers/gpu/drm/msm/msm_drv.h b/drivers/gpu/drm/msm/msm_drv.h
+index d9aa7ba..1d4b45a 100644
+--- a/drivers/gpu/drm/msm/msm_drv.h
++++ b/drivers/gpu/drm/msm/msm_drv.h
+@@ -262,6 +262,10 @@ struct msm_gem_address_space *
+ msm_gem_address_space_create_a2xx(struct device *dev, struct msm_gpu *gpu,
+ 		const char *name, uint64_t va_start, uint64_t va_end);
+ 
++struct msm_gem_address_space *
++msm_gem_address_space_create_instance(struct device *dev, const char *name,
++		u64 va_start, u64 va_end);
++
+ int msm_register_mmu(struct drm_device *dev, struct msm_mmu *mmu);
+ void msm_unregister_mmu(struct drm_device *dev, struct msm_mmu *mmu);
+ 
+diff --git a/drivers/gpu/drm/msm/msm_gem_vma.c b/drivers/gpu/drm/msm/msm_gem_vma.c
+index fcf7a83..0ee11b4 100644
+--- a/drivers/gpu/drm/msm/msm_gem_vma.c
++++ b/drivers/gpu/drm/msm/msm_gem_vma.c
+@@ -136,14 +136,12 @@ int msm_gem_init_vma(struct msm_gem_address_space *aspace,
+ 	return 0;
+ }
+ 
+-
+-struct msm_gem_address_space *
+-msm_gem_address_space_create(struct device *dev, struct iommu_domain *domain,
+-		const char *name)
++static struct msm_gem_address_space *
++msm_gem_address_space_new(struct msm_mmu *mmu, const char *name,
++		u64 va_start, u64 va_end)
+ {
+ 	struct msm_gem_address_space *aspace;
+-	u64 size = domain->geometry.aperture_end -
+-		domain->geometry.aperture_start;
++	u64 size = va_end - va_start;
+ 
+ 	aspace = kzalloc(sizeof(*aspace), GFP_KERNEL);
+ 	if (!aspace)
+@@ -151,10 +149,9 @@ msm_gem_address_space_create(struct device *dev, struct iommu_domain *domain,
+ 
+ 	spin_lock_init(&aspace->lock);
+ 	aspace->name = name;
+-	aspace->mmu = msm_iommu_new(dev, domain);
++	aspace->mmu = mmu;
+ 
+-	drm_mm_init(&aspace->mm, (domain->geometry.aperture_start >> PAGE_SHIFT),
+-		size >> PAGE_SHIFT);
++	drm_mm_init(&aspace->mm, (va_start >> PAGE_SHIFT), size >> PAGE_SHIFT);
+ 
+ 	kref_init(&aspace->kref);
+ 
+@@ -162,24 +159,38 @@ msm_gem_address_space_create(struct device *dev, struct iommu_domain *domain,
+ }
+ 
+ struct msm_gem_address_space *
++msm_gem_address_space_create(struct device *dev, struct iommu_domain *domain,
++		const char *name)
++{
++	struct msm_mmu *mmu = msm_iommu_new(dev, domain);
++
++	if (IS_ERR(mmu))
++		return ERR_CAST(mmu);
++
++	return msm_gem_address_space_new(mmu, name,
++		domain->geometry.aperture_start, domain->geometry.aperture_end);
++}
++
++struct msm_gem_address_space *
+ msm_gem_address_space_create_a2xx(struct device *dev, struct msm_gpu *gpu,
+ 		const char *name, uint64_t va_start, uint64_t va_end)
+ {
+-	struct msm_gem_address_space *aspace;
+-	u64 size = va_end - va_start;
++	struct msm_mmu *mmu = msm_gpummu_new(dev, gpu);
+ 
+-	aspace = kzalloc(sizeof(*aspace), GFP_KERNEL);
+-	if (!aspace)
+-		return ERR_PTR(-ENOMEM);
++	if (IS_ERR(mmu))
++		return ERR_CAST(mmu);
+ 
+-	spin_lock_init(&aspace->lock);
+-	aspace->name = name;
+-	aspace->mmu = msm_gpummu_new(dev, gpu);
++	return msm_gem_address_space_new(mmu, name, va_start, va_end);
++}
+ 
+-	drm_mm_init(&aspace->mm, (va_start >> PAGE_SHIFT),
+-		size >> PAGE_SHIFT);
++struct msm_gem_address_space *
++msm_gem_address_space_create_instance(struct device *dev, const char *name,
++		u64 va_start, u64 va_end)
++{
++	struct msm_mmu *mmu = msm_iommu_new_instance(dev);
+ 
+-	kref_init(&aspace->kref);
++	if (IS_ERR(mmu))
++		return ERR_CAST(mmu);
+ 
+-	return aspace;
++	return msm_gem_address_space_new(mmu, name, va_start, va_end);
+ }
 -- 
 2.7.4
 
