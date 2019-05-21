@@ -4,58 +4,58 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65A2CC04E87
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 12:02:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8207FC04AB4
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 12:03:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 39E482173E
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 12:02:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4441E2173E
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 12:03:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="G9NVtCSb"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="dOB7MgmL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728166AbfEUMCx (ORCPT
+        id S1728170AbfEUMDg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 May 2019 08:02:53 -0400
-Received: from mailout1.w1.samsung.com ([210.118.77.11]:57728 "EHLO
-        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728150AbfEUMCx (ORCPT
+        Tue, 21 May 2019 08:03:36 -0400
+Received: from mailout2.w1.samsung.com ([210.118.77.12]:47361 "EHLO
+        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726750AbfEUMDe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 May 2019 08:02:53 -0400
-Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
-        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20190521120251euoutp0153a36125c6390e0c19936dec801be425~gsRQ3PevO3228532285euoutp01p
-        for <linux-kernel@vger.kernel.org>; Tue, 21 May 2019 12:02:51 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20190521120251euoutp0153a36125c6390e0c19936dec801be425~gsRQ3PevO3228532285euoutp01p
+        Tue, 21 May 2019 08:03:34 -0400
+Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
+        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20190521120331euoutp02e7a318470726c807ea3186a5ae4f2025~gsR2U-V3G2223422234euoutp02i
+        for <linux-kernel@vger.kernel.org>; Tue, 21 May 2019 12:03:31 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20190521120331euoutp02e7a318470726c807ea3186a5ae4f2025~gsR2U-V3G2223422234euoutp02i
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1558440171;
-        bh=LICT6p63z28m+QBvow/NtYuLWxdakRY3i+TlswUz6bc=;
+        s=mail20170921; t=1558440211;
+        bh=7tDTcPVWFmS86CkqkusrjjX7zb8niTkVNSvXSIqdS6U=;
         h=From:To:Cc:Subject:Date:In-reply-to:References:From;
-        b=G9NVtCSbhZzYqEVop3794RGRuL0A3NkxorqZULqyTH86ltmFYpFuZExyHNPb5sb65
-         NqsOgr2/ZAtLOKih99P3GkmQsoGq3GKmpt0QiEMl81cA3nm2NV+hraDDB9PzHbRSjo
-         KeYYJgDrDLt99+ZjdRIGGiFQWbOYIZWdYj4UeJ/Q=
-Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
-        20190521120250eucas1p1e0980b40c4b574111e72b1da9e5960cd~gsRQA9xsh0539705397eucas1p1w;
-        Tue, 21 May 2019 12:02:50 +0000 (GMT)
+        b=dOB7MgmLMIvXZS9TdLFIVeMvaHRkX733QhXm1n0C3gKUPZ2RO/ojjCDS+DDkPhgf4
+         4vUgWPojUttyWJi6BHycHB9fXAEhTP05ahucRMkAm16OvgwdUExNHmSy5upHogMVCe
+         Hzi9qejK5A9q7NcD/A2Ty7H3FoWc3plAhJLoEZX8=
+Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
+        20190521120330eucas1p2da95802eb79b05ada8097a202256a5f8~gsR1k3Myt2818228182eucas1p2X;
+        Tue, 21 May 2019 12:03:30 +0000 (GMT)
 Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
-        eusmges1new.samsung.com (EUCPMTA) with SMTP id B1.EF.04298.AE8E3EC5; Tue, 21
-        May 2019 13:02:50 +0100 (BST)
+        eusmges3new.samsung.com (EUCPMTA) with SMTP id 0F.E0.04325.219E3EC5; Tue, 21
+        May 2019 13:03:30 +0100 (BST)
 Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
         eucas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20190521120249eucas1p2e4a8fec922fa78783d7d3fed785f3e3b~gsRPRCFfS0974209742eucas1p2m;
-        Tue, 21 May 2019 12:02:49 +0000 (GMT)
-X-AuditID: cbfec7f2-3615e9c0000010ca-b0-5ce3e8ea7c4c
+        20190521120330eucas1p21d9704bfd16f286ae764d20e456ef6b3~gsR066utZ2818228182eucas1p2U;
+        Tue, 21 May 2019 12:03:30 +0000 (GMT)
+X-AuditID: cbfec7f5-b8fff700000010e5-d5-5ce3e91216af
 Received: from eusync4.samsung.com ( [203.254.199.214]) by
-        eusmgms1.samsung.com (EUCPMTA) with SMTP id 54.62.04146.9E8E3EC5; Tue, 21
-        May 2019 13:02:49 +0100 (BST)
+        eusmgms1.samsung.com (EUCPMTA) with SMTP id 2C.72.04146.219E3EC5; Tue, 21
+        May 2019 13:03:30 +0100 (BST)
 MIME-version: 1.0
 Content-transfer-encoding: 8BIT
 Content-type: text/plain; charset="UTF-8"
 Received: from AMDC2765.DIGITAL.local ([106.120.51.73]) by
         eusync4.samsung.com (Oracle Communications Messaging Server 7.0.5.31.0 64bit
         (built May  5 2014)) with ESMTPA id <0PRU006F4RY90T20@eusync4.samsung.com>;
-        Tue, 21 May 2019 13:02:49 +0100 (BST)
+        Tue, 21 May 2019 13:03:30 +0100 (BST)
 From:   Marek Szyprowski <m.szyprowski@samsung.com>
 To:     linux-usb@vger.kernel.org, linux-samsung-soc@vger.kernel.org
 Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
@@ -68,118 +68,259 @@ Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
         Peter Chen <peter.chen@nxp.com>,
         Alan Stern <stern@rowland.harvard.edu>,
         Rob Herring <robh+dt@kernel.org>
-Subject: [PATCH 3/5] usb: exynos: add support for getting PHYs from the
- standard dt array
-Date:   Tue, 21 May 2019 13:58:47 +0200
-Message-id: <20190521115849.9882-4-m.szyprowski@samsung.com>
+Subject: [PATCH 4/5] ARM: dts: exynos: Remove obsolete port sub-nodes from
+ EHCI/OHCI devices
+Date:   Tue, 21 May 2019 13:58:48 +0200
+Message-id: <20190521115849.9882-5-m.szyprowski@samsung.com>
 X-Mailer: git-send-email 2.17.1
 In-reply-to: <20190521115849.9882-1-m.szyprowski@samsung.com>
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprIKsWRmVeSWpSXmKPExsWy7djP87qvXjyOMXi1gcdi44z1rBbzj5xj
-        tWhevJ7N4vz5DewWl3fNYbOYcX4fk8WiZa3MFi+P/GC0WHvkLrvFj4fTmSz+3LvDatG69wi7
-        xYTfF9gceD1u3an32LSqk81j/9w17B5vTp9i99j4bgeTx+y7Pxg9+rasYvT4vEkugCOKyyYl
-        NSezLLVI3y6BK2PHiTVMBY0iFRNO32RtYDwk0MXIySEhYCJxdu1yxi5GLg4hgRWMEh83dTNB
-        OJ8ZJS5PW88MU3Wo9wYzRGIZo8S3U13sIAleAUGJH5PvsXQxcnAwC8hLHLmUDRJmFtCU2Lp7
-        PViJkMB/RomnUyJAbDYBQ4mut11sILaIgIPEkqV32EBmMgucY5ZY/LODCSQhLBAtsefeZbBm
-        FgFViS0tLxghdtlIrF98B+ogeYnVGw6A2ZwCthLzm56DHSch8JtNon/2MTaIIheJ0wu/s0PY
-        MhKdHQeZIIqaGSUenlvLDuH0AP3ZNIMRospa4vDxi6wQP/BJTNo2nRnkNQkBXomONiGIEg+J
-        xomPWCBBMYFR4tbijUwTGKVnIYXGLERozEIKjQWMzKsYxVNLi3PTU4sN81LL9YoTc4tL89L1
-        kvNzNzECE8rpf8c/7WD8einpEKMAB6MSD6/Fw8cxQqyJZcWVuYcYJTiYlUR4T596FCPEm5JY
-        WZValB9fVJqTWnyIUZqDRUmct5rhQbSQQHpiSWp2ampBahFMlomDU6qBkS1jR7XURwfP13+n
-        XLp7evMKuTsX676IGnyUlxK30PeMy6gQ9zD6cTSwc6b3zDNvjv7SvWpVPvGLpoOk5b8piW8v
-        S1hMfloZqMC+XufUc48jX+2X+x/Uyw+53uBfIBbSv1HT5em0pTYdillGB59J/jpg7n9H8vnl
-        w52dJaX9O7Q5TypJPld0VWIpzkg01GIuKk4EAFki0cUkAwAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrFLMWRmVeSWpSXmKPExsVy+t/xa7ovXzyOMfi/T8pi44z1rBbzj5xj
-        tWhevJ7N4vz5DewWl3fNYbOYcX4fk8WiZa3MFi+P/GC0WHvkLrvFj4fTmSz+3LvDatG69wi7
-        xYTfF9gceD1u3an32LSqk81j/9w17B5vTp9i99j4bgeTx+y7Pxg9+rasYvT4vEkugCOKyyYl
-        NSezLLVI3y6BK2PHiTVMBY0iFRNO32RtYDwk0MXIySEhYCJxqPcGcxcjF4eQwBJGiQk/XrGC
-        JHgFBCV+TL7H0sXIwcEsIC9x5FI2SJhZQF1i0rxFUPWNTBKzWhYygyTYBAwlut52sYHYIgIO
-        EkuW3mEDKWIWuMAs0bnjDztIQlggWmLPvctgNouAqsSWlheMEMtsJNYvvsMMcZG8xOoNB8Bs
-        TgFbiflNz8FsIaCaVzM6mCcw8s9Cct8shPtmIblvASPzKkaR1NLi3PTcYkO94sTc4tK8dL3k
-        /NxNjMAY2Xbs5+YdjJc2Bh9iFOBgVOLhfXDvcYwQa2JZcWXuIUYJDmYlEd7Tpx7FCPGmJFZW
-        pRblxxeV5qQWH2KU5mBREuftEDgYIySQnliSmp2aWpBaBJNl4uCUamA0LliY8Nwz6Hq0KFfx
-        zbizc1lM1r7x5uUVcT9fEm+072tYrEW797Jn+1SmeU1Sr73jZSfhy1yqzcn6vNdZ9+O8Izpt
-        qQlCQt69+msOyq4SmfFs8yv5oJcWi5/zhCfdfeRrevOPgcvLk9W/LMTig7NjVDZH/6z7ksHM
-        GKDTFfOVo4LTxJWbVYmlOCPRUIu5qDgRABVdqLqNAgAA
-X-CMS-MailID: 20190521120249eucas1p2e4a8fec922fa78783d7d3fed785f3e3b
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprIKsWRmVeSWpSXmKPExsWy7djP87pCLx/HGMx7rmSxccZ6Vov5R86x
+        WjQvXs9mcf78BnaLy7vmsFnMOL+PyWLRslZmi5dHfjBarD1yl93ix8PpTBZ/7t1htWjde4Td
+        YsLvC2wOvB637tR7bFrVyeaxf+4ado83p0+xe2x8t4PJY/bdH4wefVtWMXp83iQXwBHFZZOS
+        mpNZllqkb5fAlfGpfSlbwUSdihuXXzE3MB5S6mLk4JAQMJFoeJbRxcjFISSwglFi1q2XTBDO
+        Z0aJ5l3L2LsYOcGKvnT3s0IkljFK/Jh/jhkkwSsgKPFj8j0WkEnMAvISRy5lg4SZBTQltu5e
+        zw5R/59R4sb0VWCD2AQMJbredrGB2CICDhJLlt5hAyliFjjHLLH4ZwcTSEJYIE5i+d1JYAtY
+        BFQlDk55xASxzEbi/fMTUBfJS6zecACshlPAVmJ+03NmkEESAv/ZJLpn9LJBFLlInNnSCGXL
+        SHR2HGSCKGpmlHh4bi07hNPDKHG5aQYjRJW1xOHjF1khnuCTmLRtOjMklHglOtqEIEo8JBZe
+        +MwM8dsERokPc1azTGCUnoUUHLMQwTELKTgWMDKvYhRPLS3OTU8tNs5LLdcrTswtLs1L10vO
+        z93ECEwop/8d/7qDcd+fpEOMAhyMSjy8Fg8fxwixJpYVV+YeYpTgYFYS4T196lGMEG9KYmVV
+        alF+fFFpTmrxIUZpDhYlcd5qhgfRQgLpiSWp2ampBalFMFkmDk6pBkbn4NW1n1SL1KW5xKNP
+        Hvl5cKuDwkUxWy3zqzJtkUmbN7NsdVs4bconv0I+doEPnw8leVUUuvwWWXbjCnfMr7PcFXIs
+        OvMSnUpbjDMWXE/oCp17mV//tfa6mkL5xLmsEiall62LNjxfOC3091vzSoPuaV7PVJ2aWHfr
+        no6bv/OJ8/N7YRa175VYijMSDbWYi4oTASylQmUkAwAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrJLMWRmVeSWpSXmKPExsVy+t/xa7pCLx/HGCy5yG6xccZ6Vov5R86x
+        WjQvXs9mcf78BnaLy7vmsFnMOL+PyWLRslZmi5dHfjBarD1yl93ix8PpTBZ/7t1htWjde4Td
+        YsLvC2wOvB637tR7bFrVyeaxf+4ado83p0+xe2x8t4PJY/bdH4wefVtWMXp83iQXwBHFZZOS
+        mpNZllqkb5fAlfGpfSlbwUSdihuXXzE3MB5S6mLk5JAQMJH40t3P2sXIxSEksIRR4uLO3ewg
+        CV4BQYkfk++xdDFycDALyEscuZQNEmYWUJeYNG8RM4gtJNDIJDHlvDSIzSZgKNH1tosNxBYR
+        cJBYsvQOG8hMZoELzBKdO/6AzRQWiJNYfncSWDOLgKrEwSmPmCB22Ui8f36CHeIgeYnVGw6A
+        1XAK2ErMb3oOtcxG4tWMDuYJjPyzkJw3C+G8WUjOW8DIvIpRJLW0ODc9t9hQrzgxt7g0L10v
+        OT93EyMwQrYd+7l5B+OljcGHGAU4GJV4eB/cexwjxJpYVlyZe4hRgoNZSYT39KlHMUK8KYmV
+        ValF+fFFpTmpxYcYpTlYlMR5OwQOxggJpCeWpGanphakFsFkmTg4pRoYJ9+S2+7zTzJ96nTt
+        RRmtgdMChZZOevprBfc6seMnT+V2TJiX9YSNuXbOl+7s3JXGaqUysU5xKZMCGbu8IxutHm69
+        v3R7qKpEOqfqVTmdDIH8Q/PsfD9O6psUvOCm0wefgAMXzWfsFWWSnBcxJXHPs8VSbv5vT4Uc
+        /6K+J2zjRAtxjfmskWHXlFiKMxINtZiLihMBfxp30IwCAAA=
+X-CMS-MailID: 20190521120330eucas1p21d9704bfd16f286ae764d20e456ef6b3
 CMS-TYPE: 201P
-X-CMS-RootMailID: 20190521120249eucas1p2e4a8fec922fa78783d7d3fed785f3e3b
+X-CMS-RootMailID: 20190521120330eucas1p21d9704bfd16f286ae764d20e456ef6b3
 References: <20190521115849.9882-1-m.szyprowski@samsung.com>
-        <CGME20190521120249eucas1p2e4a8fec922fa78783d7d3fed785f3e3b@eucas1p2.samsung.com>
+        <CGME20190521120330eucas1p21d9704bfd16f286ae764d20e456ef6b3@eucas1p2.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add the code for getting generic PHYs from standard device tree array
-from the main controller device node. This is a first step in resolving
-the conflict between Exynos EHCI/OHCI sub-nodes and generic USB device
-bindings. Later the sub-nodes currently used for assigning PHYs to root
-ports of the controller will be removed making a place for the generic
-USB device bindings nodes.
+Remove custom port sub-nodes from EHCI/OHCI devices. This way boards can
+define sub-nodes for the USB devices using generic USB device bindings.
 
 Suggested-by: Måns Rullgård <mans@mansr.com>
 Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
 ---
- drivers/usb/host/ehci-exynos.c | 14 +++++++++++++-
- drivers/usb/host/ohci-exynos.c | 14 +++++++++++++-
- 2 files changed, 26 insertions(+), 2 deletions(-)
+ arch/arm/boot/dts/exynos4.dtsi                | 24 -------------------
+ .../boot/dts/exynos4210-universal_c210.dts    |  6 -----
+ arch/arm/boot/dts/exynos4412-itop-elite.dts   |  7 ------
+ arch/arm/boot/dts/exynos4412-odroidu3.dts     |  6 -----
+ arch/arm/boot/dts/exynos4412-odroidx.dts      |  3 ---
+ arch/arm/boot/dts/exynos4412-origen.dts       |  7 ------
+ arch/arm/boot/dts/exynos5250.dtsi             | 12 ----------
+ arch/arm/boot/dts/exynos54xx.dtsi             | 14 -----------
+ 8 files changed, 79 deletions(-)
 
-diff --git a/drivers/usb/host/ehci-exynos.c b/drivers/usb/host/ehci-exynos.c
-index 3a29a1a8519c..2a551a807ec0 100644
---- a/drivers/usb/host/ehci-exynos.c
-+++ b/drivers/usb/host/ehci-exynos.c
-@@ -50,10 +50,22 @@ static int exynos_ehci_get_phy(struct device *dev,
- {
- 	struct device_node *child;
- 	struct phy *phy;
--	int phy_number;
-+	int phy_number, num_phys;
- 	int ret;
+diff --git a/arch/arm/boot/dts/exynos4.dtsi b/arch/arm/boot/dts/exynos4.dtsi
+index 7b94fbd9ed6c..09cae6a0ca77 100644
+--- a/arch/arm/boot/dts/exynos4.dtsi
++++ b/arch/arm/boot/dts/exynos4.dtsi
+@@ -382,23 +382,6 @@
+ 			status = "disabled";
+ 			phys = <&exynos_usbphy 1>, <&exynos_usbphy 2>, <&exynos_usbphy 3>;
+ 			phy-names = "host", "hsic0", "hsic1";
+-			#address-cells = <1>;
+-			#size-cells = <0>;
+-			port@0 {
+-				reg = <0>;
+-				phys = <&exynos_usbphy 1>;
+-				status = "disabled";
+-			};
+-			port@1 {
+-				reg = <1>;
+-				phys = <&exynos_usbphy 2>;
+-				status = "disabled";
+-			};
+-			port@2 {
+-				reg = <2>;
+-				phys = <&exynos_usbphy 3>;
+-				status = "disabled";
+-			};
+ 		};
  
- 	/* Get PHYs for the controller */
-+	num_phys = of_count_phandle_with_args(dev->of_node, "phys",
-+					      "#phy-cells");
-+	for (phy_number = 0; phy_number < num_phys; phy_number++) {
-+		phy = devm_of_phy_get_by_index(dev, dev->of_node, phy_number);
-+		if (IS_ERR(phy))
-+			return PTR_ERR(phy);
-+		exynos_ehci->phy[phy_number] = phy;
-+	}
-+	if (num_phys)
-+		return 0;
-+
-+	/* Get PHYs using legacy bindings */
- 	for_each_available_child_of_node(dev->of_node, child) {
- 		ret = of_property_read_u32(child, "reg", &phy_number);
- 		if (ret) {
-diff --git a/drivers/usb/host/ohci-exynos.c b/drivers/usb/host/ohci-exynos.c
-index 905c6317e0c3..195ea5fa021e 100644
---- a/drivers/usb/host/ohci-exynos.c
-+++ b/drivers/usb/host/ohci-exynos.c
-@@ -39,10 +39,22 @@ static int exynos_ohci_get_phy(struct device *dev,
- {
- 	struct device_node *child;
- 	struct phy *phy;
--	int phy_number;
-+	int phy_number, num_phys;
- 	int ret;
+ 		ohci: ohci@12590000 {
+@@ -410,13 +393,6 @@
+ 			status = "disabled";
+ 			phys = <&exynos_usbphy 1>;
+ 			phy-names = "host";
+-			#address-cells = <1>;
+-			#size-cells = <0>;
+-			port@0 {
+-				reg = <0>;
+-				phys = <&exynos_usbphy 1>;
+-				status = "disabled";
+-			};
+ 		};
  
- 	/* Get PHYs for the controller */
-+	num_phys = of_count_phandle_with_args(dev->of_node, "phys",
-+					      "#phy-cells");
-+	for (phy_number = 0; phy_number < num_phys; phy_number++) {
-+		phy = devm_of_phy_get_by_index(dev, dev->of_node, phy_number);
-+		if (IS_ERR(phy))
-+			return PTR_ERR(phy);
-+		exynos_ohci->phy[phy_number] = phy;
-+	}
-+	if (num_phys)
-+		return 0;
-+
-+	/* Get PHYs using legacy bindings */
- 	for_each_available_child_of_node(dev->of_node, child) {
- 		ret = of_property_read_u32(child, "reg", &phy_number);
- 		if (ret) {
+ 		i2s1: i2s@13960000 {
+diff --git a/arch/arm/boot/dts/exynos4210-universal_c210.dts b/arch/arm/boot/dts/exynos4210-universal_c210.dts
+index dbd6b43dbe52..c1c2fd537333 100644
+--- a/arch/arm/boot/dts/exynos4210-universal_c210.dts
++++ b/arch/arm/boot/dts/exynos4210-universal_c210.dts
+@@ -206,9 +206,6 @@
+ 	status = "okay";
+ 	phys = <&exynos_usbphy 1>;
+ 	phy-names = "host";
+-	port@0 {
+-		status = "okay";
+-	};
+ };
+ 
+ &exynos_usbphy {
+@@ -517,9 +514,6 @@
+ 
+ &ohci {
+ 	status = "okay";
+-	port@0 {
+-		status = "okay";
+-	};
+ };
+ 
+ &pinctrl_1 {
+diff --git a/arch/arm/boot/dts/exynos4412-itop-elite.dts b/arch/arm/boot/dts/exynos4412-itop-elite.dts
+index 1763b42c01cb..f6d0a5f5d339 100644
+--- a/arch/arm/boot/dts/exynos4412-itop-elite.dts
++++ b/arch/arm/boot/dts/exynos4412-itop-elite.dts
+@@ -148,13 +148,6 @@
+ 
+ 	phys = <&exynos_usbphy 1>, <&exynos_usbphy 3>;
+ 	phy-names = "host", "hsic1";
+-	port@0 {
+-		status = "okay";
+-	};
+-
+-	port@2 {
+-		status = "okay";
+-	};
+ };
+ 
+ &exynos_usbphy {
+diff --git a/arch/arm/boot/dts/exynos4412-odroidu3.dts b/arch/arm/boot/dts/exynos4412-odroidu3.dts
+index 5bbaccffc9be..8ff243ba4542 100644
+--- a/arch/arm/boot/dts/exynos4412-odroidu3.dts
++++ b/arch/arm/boot/dts/exynos4412-odroidu3.dts
+@@ -107,12 +107,6 @@
+ &ehci {
+ 	phys = <&exynos_usbphy 2>, <&exynos_usbphy 3>;
+ 	phy-names = "hsic0", "hsic1";
+-	port@1 {
+-		status = "okay";
+-	};
+-	port@2 {
+-		status = "okay";
+-	};
+ };
+ 
+ &sound {
+diff --git a/arch/arm/boot/dts/exynos4412-odroidx.dts b/arch/arm/boot/dts/exynos4412-odroidx.dts
+index 306dd9365a91..3ea2a0101e80 100644
+--- a/arch/arm/boot/dts/exynos4412-odroidx.dts
++++ b/arch/arm/boot/dts/exynos4412-odroidx.dts
+@@ -74,9 +74,6 @@
+ &ehci {
+ 	phys = <&exynos_usbphy 2>;
+ 	phy-names = "hsic0";
+-	port@1 {
+-		status = "okay";
+-	};
+ };
+ 
+ &mshc_0 {
+diff --git a/arch/arm/boot/dts/exynos4412-origen.dts b/arch/arm/boot/dts/exynos4412-origen.dts
+index e609e2af22d1..ecd14b283a6b 100644
+--- a/arch/arm/boot/dts/exynos4412-origen.dts
++++ b/arch/arm/boot/dts/exynos4412-origen.dts
+@@ -90,13 +90,6 @@
+ 	status = "okay";
+ 	phys = <&exynos_usbphy 2>, <&exynos_usbphy 3>;
+ 	phy-names = "hsic0", "hsic1";
+-
+-	port@1 {
+-		status = "okay";
+-	};
+-	port@2 {
+-		status = "okay";
+-	};
+ };
+ 
+ &fimd {
+diff --git a/arch/arm/boot/dts/exynos5250.dtsi b/arch/arm/boot/dts/exynos5250.dtsi
+index 2d23e99985e1..c5584f40ebfb 100644
+--- a/arch/arm/boot/dts/exynos5250.dtsi
++++ b/arch/arm/boot/dts/exynos5250.dtsi
+@@ -619,12 +619,6 @@
+ 			clock-names = "usbhost";
+ 			phys = <&usb2_phy_gen 1>;
+ 			phy-names = "host";
+-			#address-cells = <1>;
+-			#size-cells = <0>;
+-			port@0 {
+-				reg = <0>;
+-				phys = <&usb2_phy_gen 1>;
+-			};
+ 		};
+ 
+ 		ohci: usb@12120000 {
+@@ -636,12 +630,6 @@
+ 			clock-names = "usbhost";
+ 			phys = <&usb2_phy_gen 1>;
+ 			phy-names = "host";
+-			#address-cells = <1>;
+-			#size-cells = <0>;
+-			port@0 {
+-				reg = <0>;
+-				phys = <&usb2_phy_gen 1>;
+-			};
+ 		};
+ 
+ 		usb2_phy_gen: phy@12130000 {
+diff --git a/arch/arm/boot/dts/exynos54xx.dtsi b/arch/arm/boot/dts/exynos54xx.dtsi
+index ab1642cf0428..97746a68791a 100644
+--- a/arch/arm/boot/dts/exynos54xx.dtsi
++++ b/arch/arm/boot/dts/exynos54xx.dtsi
+@@ -182,13 +182,6 @@
+ 			interrupts = <GIC_SPI 71 IRQ_TYPE_LEVEL_HIGH>;
+ 			phys = <&usb2_phy 1>;
+ 			phy-names = "host";
+-
+-			#address-cells = <1>;
+-			#size-cells = <0>;
+-			port@0 {
+-				reg = <0>;
+-				phys = <&usb2_phy 1>;
+-			};
+ 		};
+ 
+ 		usbhost1: usb@12120000 {
+@@ -197,13 +190,6 @@
+ 			interrupts = <GIC_SPI 71 IRQ_TYPE_LEVEL_HIGH>;
+ 			phys = <&usb2_phy 1>;
+ 			phy-names = "host";
+-
+-			#address-cells = <1>;
+-			#size-cells = <0>;
+-			port@0 {
+-				reg = <0>;
+-				phys = <&usb2_phy 1>;
+-			};
+ 		};
+ 
+ 		usb2_phy: phy@12130000 {
 -- 
 2.17.1
 
