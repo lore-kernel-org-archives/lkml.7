@@ -2,104 +2,231 @@ Return-Path: <SRS0=9PYC=TV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FC65C04AAF
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 17:27:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 035E3C04AAF
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 17:29:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1C4F521019
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 17:27:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BEF6D217D9
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 17:29:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="P3iQ35Eu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729197AbfEUR1z (ORCPT
+        id S1729117AbfEUR30 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 May 2019 13:27:55 -0400
-Received: from foss.arm.com ([217.140.101.70]:39342 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726900AbfEUR1y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 May 2019 13:27:54 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 59CE0374;
-        Tue, 21 May 2019 10:27:54 -0700 (PDT)
-Received: from [10.1.196.75] (e110467-lin.cambridge.arm.com [10.1.196.75])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id EC5113F718;
-        Tue, 21 May 2019 10:27:51 -0700 (PDT)
-Subject: Re: Device obligation to write into a DMA_FROM_DEVICE streaming DMA
- mapping
-To:     Horia Geanta <horia.geanta@nxp.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
-Cc:     "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <VI1PR0402MB348537CB86926B3E6D1DBE0A98070@VI1PR0402MB3485.eurprd04.prod.outlook.com>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <584b54f6-bd12-d036-35e6-23eb2dabe811@arm.com>
-Date:   Tue, 21 May 2019 18:27:49 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Tue, 21 May 2019 13:29:26 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:40441 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726900AbfEUR30 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 May 2019 13:29:26 -0400
+Received: by mail-ot1-f67.google.com with SMTP id u11so17075022otq.7
+        for <linux-kernel@vger.kernel.org>; Tue, 21 May 2019 10:29:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=JZkH899cMft3NriqnFbluuuxiqVxw6v9M9zlhn9yN3w=;
+        b=P3iQ35EuyfDtHooEdbjohs5k55fLCV1rJaFQ0fc7MAJfML3SX7cJXNSLVdsrupNHmi
+         5lkq6BI8Sj/iWUxf9g/aWs/nQzQgkaNQMQ/PBQYsKA1XliMhZLc3GrT/WC07GFE3ZS9Z
+         pzccjY3pwoby1nWpgp8ivqkTQK4mgmgBxQ5b+kUK1yp5QzU3M8DvL1bbfv248dQe28bO
+         Unzn05XcJFkPBeHrKLhwr2XPtTaK1/KJKVbq9XAQCx9Y8+Fb6xha75yYehZDNMtqurCV
+         l+ZHqGAynT8bRC6xUTFbte94zIE3m0YB2BfTulFVg3gHCLsDoMW/bsmMTSwRo9qo7mEx
+         Bm1g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=JZkH899cMft3NriqnFbluuuxiqVxw6v9M9zlhn9yN3w=;
+        b=W2lr+/8IOBfRjOfoy1Xh/mkURnoNSad0ZZ3u5xDuMAEXpLm+QN+CmQRVwUbUVY2Lls
+         y8qTpCo+coSPpy8xm1jHW+vREZkGPC60z1I1OYOq4sQElTPm9wXrSEMedcs3BRz9m0ro
+         HFXMztRq7CPCfxkdEJB7380HAa6jFbQKp0ApJ866s2Gax8uwPNcFcdp+7kt0danGLSJ1
+         AM1M2yTb6OS79QMgts8ntGkPehv9oIcvR7wVsqGb944S2Hr5YXozvU9gb228BmX/WpEN
+         JbH6HxVc1C0g9eNww/hCdjiEp7+GfpN7/8YPpMAqIALMfry/KQz85jakCq2Iyf2JkF5s
+         x6VQ==
+X-Gm-Message-State: APjAAAX289jFjyas4ywnXSeCogt+obBGi9xSmGbookKDGji1KTJrnd/c
+        Xxw1lcm3WMXsh81372+2Fpqwo0V76Q9LsLBsDOSCHw==
+X-Google-Smtp-Source: APXvYqw7HXUy4K0HaHYv0BxFhx7C+RZx2NQiSRIQ8doSLJTez4tAj8hTmHNjpf4YTBuotTX+eneqN5EINh71j4hhp6M=
+X-Received: by 2002:a9d:7347:: with SMTP id l7mr19465404otk.183.1558459764806;
+ Tue, 21 May 2019 10:29:24 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <VI1PR0402MB348537CB86926B3E6D1DBE0A98070@VI1PR0402MB3485.eurprd04.prod.outlook.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+References: <155836064844.2441.10911127801797083064.stgit@localhost.localdomain>
+ <CALCETrU221N6uPmdaj4bRDDsf+Oc5tEfPERuyV24wsYKHn+spA@mail.gmail.com>
+ <9638a51c-4295-924f-1852-1783c7f3e82d@virtuozzo.com> <CAG48ez2BcVCwYGmAo4MwZ2crZ9f7=qKrORcN=fYz=K5xP2xfgQ@mail.gmail.com>
+ <069c90d6-924b-fa97-90d7-7d74f8785d9b@virtuozzo.com>
+In-Reply-To: <069c90d6-924b-fa97-90d7-7d74f8785d9b@virtuozzo.com>
+From:   Jann Horn <jannh@google.com>
+Date:   Tue, 21 May 2019 19:28:58 +0200
+Message-ID: <CAG48ez31Kxukg7y4PU-+3RjsYZxEHfjvs2q0EFqxDM2KDcLUoA@mail.gmail.com>
+Subject: Re: [PATCH v2 0/7] mm: process_vm_mmap() -- syscall for duplication a
+ process mapping
+To:     Kirill Tkhai <ktkhai@virtuozzo.com>
+Cc:     Andy Lutomirski <luto@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Keith Busch <keith.busch@intel.com>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
+        Weiny Ira <ira.weiny@intel.com>,
+        Andrey Konovalov <andreyknvl@google.com>,
+        arunks@codeaurora.org, Vlastimil Babka <vbabka@suse.cz>,
+        Christoph Lameter <cl@linux.com>,
+        Rik van Riel <riel@surriel.com>,
+        Kees Cook <keescook@chromium.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Shakeel Butt <shakeelb@google.com>,
+        Roman Gushchin <guro@fb.com>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Hugh Dickins <hughd@google.com>,
+        Jerome Glisse <jglisse@redhat.com>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        daniel.m.jordan@oracle.com, Adam Borowski <kilobyte@angband.pl>,
+        Linux API <linux-api@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux-MM <linux-mm@kvack.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 21/05/2019 18:14, Horia Geanta wrote:
-> Hi,
-> 
-> Is it mandatory for a device to write data in an area DMA mapped DMA_FROM_DEVICE?
-> Can't the device just "ignore" that mapping - i.e. not write anything - and
-> driver should expect original data to be found in that location (since it was
-> not touched / written to by the device)?
-> [Let's leave cache coherency aside, and consider "original data" to be in RAM.]
-> 
-> I am asking this since I am seeing what seems to be an inconsistent behavior /
-> semantics between cases when swiotlb bouncing is used and when it's not.
-> 
-> Specifically, the context is:
-> 1. driver prepares a scatterlist with several entries and performs a
-> dma_map_sg() with direction FROM_DEVICE
-> 2. device decides there's no need to write into the buffer pointed by first
-> scatterlist entry and skips it (writing into subsequent buffers)
-> 3. driver is notified the device finished processing and dma unmaps the scatterlist
-> 
-> When swiotlb bounce is used, the buffer pointed to by first scatterlist entry is
-> corrupted. That's because swiotlb implementation expects the device to write
-> something into that buffer, however the device logic is "whatever was previously
-> in that buffer should be used" (2. above).
-> 
-> For FROM_DEVICE direction:
-> -swiotlb_tbl_map_single() does not copy data from original location to swiotlb
-> 	if (!(attrs & DMA_ATTR_SKIP_CPU_SYNC) &&
-> 	    (dir == DMA_TO_DEVICE || dir == DMA_BIDIRECTIONAL))
-> 		swiotlb_bounce(orig_addr, tlb_addr, size, DMA_TO_DEVICE);
-> -swiotlb_tbl_unmap_single() copies data from swiotlb to original location
-> 	if (orig_addr != INVALID_PHYS_ADDR &&
-> 	    !(attrs & DMA_ATTR_SKIP_CPU_SYNC) &&
-> 	    ((dir == DMA_FROM_DEVICE) || (dir == DMA_BIDIRECTIONAL)))
-> 		swiotlb_bounce(orig_addr, tlb_addr, size, DMA_FROM_DEVICE);
-> and when device did not write anything (as in current situation), it overwrites
-> original data with zeros
-> 
-> In case swiotlb bounce is not used and device does not write into the
-> FROM_DEVICE streaming DMA maping, the original data is available.
-> 
-> Could you please clarify whether:
-> -I am missing something obvious OR
-> -the DMA API documentation should be updated - to mandate for device writes into
-> FROM_DEVICE mappings) OR
-> -the swiotlb implementation should be updated - to copy data from original
-> location irrespective of DMA mapping direction?
+On Tue, May 21, 2019 at 7:04 PM Kirill Tkhai <ktkhai@virtuozzo.com> wrote:
+> On 21.05.2019 19:20, Jann Horn wrote:
+> > On Tue, May 21, 2019 at 5:52 PM Kirill Tkhai <ktkhai@virtuozzo.com> wrote:
+> >> On 21.05.2019 17:43, Andy Lutomirski wrote:
+> >>> On Mon, May 20, 2019 at 7:01 AM Kirill Tkhai <ktkhai@virtuozzo.com> wrote:
+> >>>> New syscall, which allows to clone a remote process VMA
+> >>>> into local process VM. The remote process's page table
+> >>>> entries related to the VMA are cloned into local process's
+> >>>> page table (in any desired address, which makes this different
+> >>>> from that happens during fork()). Huge pages are handled
+> >>>> appropriately.
+> > [...]
+> >>>> There are several problems with process_vm_writev() in this example:
+> >>>>
+> >>>> 1)it causes pagefault on remote process memory, and it forces
+> >>>>   allocation of a new page (if was not preallocated);
+> >>>
+> >>> I don't see how your new syscall helps.  You're writing to remote
+> >>> memory.  If that memory wasn't allocated, it's going to get allocated
+> >>> regardless of whether you use a write-like interface or an mmap-like
+> >>> interface.
+> >>
+> >> No, the talk is not about just another interface for copying memory.
+> >> The talk is about borrowing of remote task's VMA and corresponding
+> >> page table's content. Syscall allows to copy part of page table
+> >> with preallocated pages from remote to local process. See here:
+> >>
+> >> [task1]                                                        [task2]
+> >>
+> >> buf = mmap(NULL, n * PAGE_SIZE, PROT_READ|PROT_WRITE,
+> >>            MAP_PRIVATE|MAP_ANONYMOUS, ...);
+> >>
+> >> <task1 populates buf>
+> >>
+> >>                                                                buf = process_vm_mmap(pid_of_task1, addr, n * PAGE_SIZE, ...);
+> >> munmap(buf);
+> >>
+> >>
+> >> process_vm_mmap() copies PTEs related to memory of buf in task1 to task2
+> >> just like in the way we do during fork syscall.
+> >>
+> >> There is no copying of buf memory content, unless COW happens. This is
+> >> the principal difference to process_vm_writev(), which just allocates
+> >> pages in remote VM.
+> >>
+> >>> Keep in mind that, on x86, just the hardware part of a
+> >>> page fault is very slow -- populating the memory with a syscall
+> >>> instead of a fault may well be faster.
+> >>
+> >> It is not as slow, as disk IO has. Just compare, what happens in case of anonymous
+> >> pages related to buf of task1 are swapped:
+> >>
+> >> 1)process_vm_writev() reads them back into memory;
+> >>
+> >> 2)process_vm_mmap() just copies swap PTEs from task1 page table
+> >>   to task2 page table.
+> >>
+> >> Also, for faster page faults one may use huge pages for the mappings.
+> >> But really, it's funny to think about page faults, when there are
+> >> disk IO problems I shown.
+> > [...]
+> >>> That only doubles the amount of memory if you let n
+> >>> scale linearly with p, which seems unlikely.
+> >>>
+> >>>>
+> >>>> 3)received data has no a chance to be properly swapped for
+> >>>>   a long time.
+> >>>
+> >>> ...
+> >>>
+> >>>> a)kernel moves @buf pages into swap right after recv();
+> >>>> b)process_vm_writev() reads the data back from swap to pages;
+> >>>
+> >>> If you're under that much memory pressure and thrashing that badly,
+> >>> your performance is going to be awful no matter what you're doing.  If
+> >>> you indeed observe this behavior under normal loads, then this seems
+> >>> like a VM issue that should be addressed in its own right.
+> >>
+> >> I don't think so. Imagine: a container migrates from one node to another.
+> >> The nodes are the same, say, every of them has 4GB of RAM.
+> >>
+> >> Before the migration, the container's tasks used 4GB of RAM and 8GB of swap.
+> >> After the page server on the second node received the pages, we want these
+> >> pages become swapped as soon as possible, and we don't want to read them from
+> >> swap to pass a read consumer.
+> >
+> > But you don't have to copy that memory into the container's tasks all
+> > at once, right? Can't you, every time you've received a few dozen
+> > kilobytes of data or whatever, shove them into the target task? That
+> > way you don't have problems with swap because the time before the data
+> > has arrived in its final VMA is tiny.
+>
+> We try to maintain online migration with as small downtime as possible,
+> and the container on source node is completely stopped at the very end.
+> Memory of container tasks is copied in background without container
+> completely stop, and _PAGE_SOFT_DIRTY is used to track dirty pages.
+>
+> Container may create any new processes during the migration, and these
+> processes may contain any memory mappings.
+>
+> Imagine the situation. We migrate a big web server with a lot of processes,
+> and some of children processes have the same COW mapping as parent has.
+> In case of all memory dump is available at the moment of the grand parent
+> web server process creation, we populate the mapping in parent, and all
+> the children may inherit the mapping in case of they want after fork.
+> COW works here. But in case of some processes are created before all memory
+> is available on destination node, we can't do such the COW inheritance.
+> This will be the reason, the memory consumed by container grows many
+> times after the migration. So, the only solution is to create process
+> tree after memory is available and all mappings are known.
 
-Hmm, that certainly feels like a bug in SWIOTLB - it seems reasonable in 
-principle for a device to only partially update a mapped buffer before a 
-sync/unmap, so I'd say it probably should be filling the bounce buffer 
-with the original data at the start, regardless of direction.
+But if one of the processes modifies the memory after you've started
+migrating it to the new machine, that memory can't be CoW anymore
+anyway, right? So it should work if you first do a first pass of
+copying the memory and creating the process hierarchy, and then copy
+more recent changes into the individual processes, breaking the CoW
+for those pages, right?
 
-Robin.
+> It's on of the examples. But believe me, there are a lot of another reasons,
+> why process tree should be created only after all process tree is freezed,
+> and no new tasks on source are possible. PGID and SSID inheritance, for
+> example. All of this requires special order of tasks creation. In case of
+> you try to restore process tree with correct namespaces and especial in
+> case of many user namespaces in a container, you will just see like a hell
+> will open before your eyes, and we never can think about this.
+
+Could you elaborate on why that is so hellish?
+
+
+> So, no, we can't create any task before the whole process tree is knows.
+> Believe me, the reason is heavy and serious.
+>
+> Kirill
+>
