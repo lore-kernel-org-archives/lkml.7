@@ -2,266 +2,195 @@ Return-Path: <SRS0=9PYC=TV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C7BEC04AAF
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 15:15:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0DB6C04AAF
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 15:15:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 05C212173E
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 15:15:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="VTlcfnaK"
+	by mail.kernel.org (Postfix) with ESMTP id 854B12173E
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 15:15:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728605AbfEUPP0 (ORCPT
+        id S1728689AbfEUPPl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 May 2019 11:15:26 -0400
-Received: from mail-it1-f193.google.com ([209.85.166.193]:37829 "EHLO
-        mail-it1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727969AbfEUPPZ (ORCPT
+        Tue, 21 May 2019 11:15:41 -0400
+Received: from caffeine.csclub.uwaterloo.ca ([129.97.134.17]:36455 "EHLO
+        caffeine.csclub.uwaterloo.ca" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727969AbfEUPPl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 May 2019 11:15:25 -0400
-Received: by mail-it1-f193.google.com with SMTP id m140so5261973itg.2
-        for <linux-kernel@vger.kernel.org>; Tue, 21 May 2019 08:15:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=L32FrJBxFxvtOKGImjEKesOZkV1TeoxEIa7SyWQbKVo=;
-        b=VTlcfnaKWeUBhCfF+Bq7ZCb8//nE5wr6n2I3F0CyYQRFITjBvvdXv70jvNQhXcVXVU
-         8pPzttTNmKoPX9TdRL4hn3LHpu+KkT8xBvl2nRucpzuPyHcpVWACAqkDSJ82OR4a12S7
-         xYQZkcFFeasnV2km0e05bfLog80oD4UKPUE1M=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=L32FrJBxFxvtOKGImjEKesOZkV1TeoxEIa7SyWQbKVo=;
-        b=r3DH/sFqYgE0sH7Xk/IJpgu6b57m6/HylXJBA69TAaLN9ke3WBv/3pdDDKzLVPMvGd
-         X2guqoINJ7A32+pK+IQmW5RpvVcekwC5uVnMYwEzYnvKezFO/lis5Ke7h9eZCx0n3iPG
-         gHVSFgQTpYKwk4zqEw6sY11zF+FbYGynUEB7OHQUXaiUsbH1MK6ioLLh7Oez42NinPTk
-         G/OmLkWs7TzNawe4pVJZHKBrjuJVV98Nz0XJ+RnTE2aL1JUmA/4+80Rh/brYYPEn4vqE
-         gEwTPVoKasiFwqW0pduYZfFVfflkeOJN99jnA8pbvmDQ2QjmB/cWpgcrYE/Zb+wTPs+t
-         w1hQ==
-X-Gm-Message-State: APjAAAW9QuXPw/JE12yz2+46bIg8qxj/2QAtn53zeG0PnPVqaS14oBcE
-        2SfWIOjcoTIlPSmt6JnC8Vi+rg==
-X-Google-Smtp-Source: APXvYqyu3pyTyw2vgeQymaZ8ABNHR2Dh2p0gOSVKduDgYqKZUAl0DI2tN0g72pFoz1Ad65nGKt2RMQ==
-X-Received: by 2002:a24:bd4:: with SMTP id 203mr4164033itd.119.1558451724985;
-        Tue, 21 May 2019 08:15:24 -0700 (PDT)
-Received: from localhost ([2620:15c:183:0:20b8:dee7:5447:d05])
-        by smtp.gmail.com with ESMTPSA id p23sm6832295ios.65.2019.05.21.08.15.23
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 21 May 2019 08:15:24 -0700 (PDT)
-From:   Raul E Rangel <rrangel@chromium.org>
-To:     enric.balletbo@collabora.com, ncrews@chromium.org
-Cc:     Raul E Rangel <rrangel@chromium.org>,
-        Simon Glass <sjg@chromium.org>,
-        Guenter Roeck <groeck@chromium.org>,
-        linux-kernel@vger.kernel.org, Benson Leung <bleung@chromium.org>,
-        Daniel Kurtz <djkurtz@chromium.org>,
-        Olof Johansson <olof@lixom.net>,
-        Sean Paul <seanpaul@chromium.org>
-Subject: [PATCH] platform/chrome: wilco_ec: Add version sysfs entries
-Date:   Tue, 21 May 2019 09:15:19 -0600
-Message-Id: <20190521151519.158273-1-rrangel@chromium.org>
-X-Mailer: git-send-email 2.21.0.1020.gf2820cf01a-goog
+        Tue, 21 May 2019 11:15:41 -0400
+Received: by caffeine.csclub.uwaterloo.ca (Postfix, from userid 20367)
+        id C7A46460279; Tue, 21 May 2019 11:15:37 -0400 (EDT)
+Date:   Tue, 21 May 2019 11:15:37 -0400
+To:     Alexander Duyck <alexander.duyck@gmail.com>
+Cc:     Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Netdev <netdev@vger.kernel.org>,
+        intel-wired-lan <intel-wired-lan@lists.osuosl.org>
+Subject: Re: [Intel-wired-lan] i40e X722 RSS problem with NAT-Traversal IPsec
+ packets
+Message-ID: <20190521151537.xga4aiq3gjtiif4j@csclub.uwaterloo.ca>
+References: <20190513165547.alkkgcsdelaznw6v@csclub.uwaterloo.ca>
+ <CAKgT0Uf_nqZtCnHmC=-oDFz-3PuSM6=30BvJSDiAgzK062OY6w@mail.gmail.com>
+ <20190514163443.glfjva3ofqcy7lbg@csclub.uwaterloo.ca>
+ <CAKgT0UdPDyCBsShQVwwE5C8fBKkMcfS6_S5m3T7JP-So9fzVgA@mail.gmail.com>
+ <20190516183407.qswotwyjwtjqfdqm@csclub.uwaterloo.ca>
+ <20190516183705.e4zflbli7oujlbek@csclub.uwaterloo.ca>
+ <CAKgT0UfSa-dM2+7xntK9tB7Zw5N8nDd3U1n4OSK0gbWbkNSKJQ@mail.gmail.com>
+ <CAKgT0Ucd0s_0F5_nwqXknRngwROyuecUt+4bYzWvp1-2cNSg7g@mail.gmail.com>
+ <20190517172317.amopafirjfizlgej@csclub.uwaterloo.ca>
+ <CAKgT0UdM28pSTCsaT=TWqmQwCO44NswS0PqFLAzgs9pmn41VeQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAKgT0UdM28pSTCsaT=TWqmQwCO44NswS0PqFLAzgs9pmn41VeQ@mail.gmail.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
+From:   lsorense@csclub.uwaterloo.ca (Lennart Sorensen)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add the ability to extract version information from the EC.
+On Fri, May 17, 2019 at 03:20:02PM -0700, Alexander Duyck wrote:
+> I was hoping it would work too. It seemed like it should have been the
+> answer since it definitely didn't seem right. Now it has me wondering
+> about some of the other code in the driver.
+> 
+> By any chance have you run anything like DPDK on any of the X722
+> interfaces on this system recently? I ask because it occurs to me that
+> if you had and it loaded something like a custom parsing profile it
+> could cause issues similar to this.
 
-Signed-off-by: Raul E Rangel <rrangel@chromium.org>
----
+I have never used DPDK on anything.  I was hoping never to do so. :)
 
-This patch is rebased on platform/chrome: wilco_ec: Add Boot on AC support.
-https://lkml.org/lkml/2019/4/16/1374
+This system has so far booted Debian (with a 4.19 kernel) and our own OS
+(which has a 4.9 kernel).
 
-That patch wasn't in the for-next branch, so I'm not 100% sure if it
-applies cleanly to for-next.
+> A debugging step you might try would be to revert back to my earlier
+> patch that only displayed the input mask instead of changing it. Once
+> you have done that you could look at doing a full power cycle on the
+> system by either physically disconnecting the power, or using the
+> power switch on the power supply itself if one is available. It is
+> necessary to disconnect the motherboard/NIC from power in order to
+> fully clear the global state stored in the device as it is retained
+> when the system is in standby.
+> 
+> What I want to verify is if the input mask that we have ran into is
+> the natural power-on input mask of if that is something that was
+> overridden by something else. The mask change I made should be reset
+> if the system loses power, and then it will either default back to the
+> value with the 6's if that is it's natural state, or it will match
+> what I had if it was not.
+> 
+> Other than that I really can't think up too much else. I suppose there
+> is the possibility of the NVM either setting up a DCB setting or
+> HREGION register causing an override that is limiting the queues to 1.
+> However, the likelihood of that should be really low.
 
-Example Output:
-/sys/bus/platform/devices/GOOG000C:00/version # tail *
-==> build_date <==
-04/25/19
+Here is the register dump after a full power off:
 
-==> build_revision <==
-d2592cae0
+40e: Intel(R) Ethernet Connection XL710 Network Driver - version 2.1.7-k
+i40e: Copyright (c) 2013 - 2014 Intel Corporation.
+i40e 0000:3d:00.0: fw 3.10.52896 api 1.6 nvm 4.00 0x80001577 1.1767.0
+i40e 0000:3d:00.0: The driver for the device detected a newer version of the NVM image than expected. Please install the most recent version of the network driver.
+i40e 0000:3d:00.0: MAC address: a4:bf:01:4e:0c:87
+i40e 0000:3d:00.0: flow_type: 63 input_mask:0x0000000000004000
+i40e 0000:3d:00.0: flow_type: 46 input_mask:0x0007fff800000000
+i40e 0000:3d:00.0: flow_type: 45 input_mask:0x0007fff800000000
+i40e 0000:3d:00.0: flow_type: 44 input_mask:0x0007ffff80000000
+i40e 0000:3d:00.0: flow_type: 43 input_mask:0x0007fffe00000000
+i40e 0000:3d:00.0: flow_type: 42 input_mask:0x0007fffe00000000
+i40e 0000:3d:00.0: flow_type: 41 input_mask:0x0007fffe00000000
+i40e 0000:3d:00.0: flow_type: 40 input_mask:0x0007fffe00000000
+i40e 0000:3d:00.0: flow_type: 39 input_mask:0x0007fffe00000000
+i40e 0000:3d:00.0: flow_type: 36 input_mask:0x0006060000000000
+i40e 0000:3d:00.0: flow_type: 35 input_mask:0x0006060000000000
+i40e 0000:3d:00.0: flow_type: 34 input_mask:0x0006060780000000
+i40e 0000:3d:00.0: flow_type: 33 input_mask:0x0006060600000000
+i40e 0000:3d:00.0: flow_type: 32 input_mask:0x0006060600000000
+i40e 0000:3d:00.0: flow_type: 31 input_mask:0x0006060600000000
+i40e 0000:3d:00.0: flow_type: 30 input_mask:0x0006060600000000
+i40e 0000:3d:00.0: flow_type: 29 input_mask:0x0006060600000000
+i40e 0000:3d:00.0: Features: PF-id[0] VSIs: 34 QP: 12 TXQ: 13 RSS VxLAN Geneve VEPA
+i40e 0000:3d:00.1: fw 3.10.52896 api 1.6 nvm 4.00 0x80001577 1.1767.0
+i40e 0000:3d:00.1: The driver for the device detected a newer version of the NVM image than expected. Please install the most recent version of the network driver.
+i40e 0000:3d:00.1: MAC address: a4:bf:01:4e:0c:88
+i40e 0000:3d:00.1: flow_type: 63 input_mask:0x0000000000004000
+i40e 0000:3d:00.1: flow_type: 46 input_mask:0x0007fff800000000
+i40e 0000:3d:00.1: flow_type: 45 input_mask:0x0007fff800000000
+i40e 0000:3d:00.1: flow_type: 44 input_mask:0x0007ffff80000000
+i40e 0000:3d:00.1: flow_type: 43 input_mask:0x0007fffe00000000
+i40e 0000:3d:00.1: flow_type: 42 input_mask:0x0007fffe00000000
+i40e 0000:3d:00.1: flow_type: 41 input_mask:0x0007fffe00000000
+i40e 0000:3d:00.1: flow_type: 40 input_mask:0x0007fffe00000000
+i40e 0000:3d:00.1: flow_type: 39 input_mask:0x0007fffe00000000
+i40e 0000:3d:00.1: flow_type: 36 input_mask:0x0006060000000000
+i40e 0000:3d:00.1: flow_type: 35 input_mask:0x0006060000000000
+i40e 0000:3d:00.1: flow_type: 34 input_mask:0x0006060780000000
+i40e 0000:3d:00.1: flow_type: 33 input_mask:0x0006060600000000
+i40e 0000:3d:00.1: flow_type: 32 input_mask:0x0006060600000000
+i40e 0000:3d:00.1: flow_type: 31 input_mask:0x0006060600000000
+i40e 0000:3d:00.1: flow_type: 30 input_mask:0x0006060600000000
+i40e 0000:3d:00.1: flow_type: 29 input_mask:0x0006060600000000
+i40e 0000:3d:00.1: Features: PF-id[1] VSIs: 34 QP: 12 TXQ: 13 RSS VxLAN Geneve VEPA
+i40e 0000:3d:00.1 eth2: NIC Link is Up, 1000 Mbps Full Duplex, Flow Control: None
 
-==> label <==
-00.00.14
+Pretty sure that is identical to before.
 
-==> model_number <==
-08B6
+If I dump the registers after doing the update I see this (just did a
+reboot this time, not a power cycle):
 
- .../ABI/testing/sysfs-platform-wilco-ec       | 33 +++++++
- drivers/platform/chrome/wilco_ec/sysfs.c      | 97 ++++++++++++++++++-
- 2 files changed, 128 insertions(+), 2 deletions(-)
+i40e: Intel(R) Ethernet Connection XL710 Network Driver - version 2.1.7-k
+i40e: Copyright (c) 2013 - 2014 Intel Corporation.
+i40e 0000:3d:00.0: fw 3.10.52896 api 1.6 nvm 4.00 0x80001577 1.1767.0
+i40e 0000:3d:00.0: The driver for the device detected a newer version of the NVM image than expected. Please install the most recent version of the network driver.
+i40e 0000:3d:00.0: MAC address: a4:bf:01:4e:0c:87
+i40e 0000:3d:00.0: flow_type: 63 input_mask:0x0000000000004000
+i40e 0000:3d:00.0: flow_type: 46 input_mask:0x0007fff800000000
+i40e 0000:3d:00.0: flow_type: 45 input_mask:0x0007fff800000000
+i40e 0000:3d:00.0: flow_type: 44 input_mask:0x0007ffff80000000
+i40e 0000:3d:00.0: flow_type: 43 input_mask:0x0007fffe00000000
+i40e 0000:3d:00.0: flow_type: 42 input_mask:0x0007fffe00000000
+i40e 0000:3d:00.0: flow_type: 41 input_mask:0x0007fffe00000000
+i40e 0000:3d:00.0: flow_type: 40 input_mask:0x0007fffe00000000
+i40e 0000:3d:00.0: flow_type: 39 input_mask:0x0007fffe00000000
+i40e 0000:3d:00.0: flow_type: 36 input_mask:0x0006060000000000
+i40e 0000:3d:00.0: flow_type: 35 input_mask:0x0006060000000000
+i40e 0000:3d:00.0: flow_type: 34 input_mask:0x0006060780000000
+i40e 0000:3d:00.0: flow_type: 33 input_mask:0x0006060600000000
+i40e 0000:3d:00.0: flow_type: 32 input_mask:0x0006060600000000
+i40e 0000:3d:00.0: flow_type: 31 input_mask:0x0006060600000000
+i40e 0000:3d:00.0: flow_type: 30 input_mask:0x0006060600000000
+i40e 0000:3d:00.0: flow_type: 29 input_mask:0x0006060600000000
+i40e 0000:3d:00.0: flow type: 36 update input mask from:0x0006060000000000, to:0x0001801800000000
+i40e 0000:3d:00.0: flow type: 35 update input mask from:0x0006060000000000, to:0x0001801800000000
+i40e 0000:3d:00.0: flow type: 34 update input mask from:0x0006060780000000, to:0x0001801f80000000
+i40e 0000:3d:00.0: flow type: 33 update input mask from:0x0006060600000000, to:0x0001801e00000000
+i40e 0000:3d:00.0: flow type: 32 update input mask from:0x0006060600000000, to:0x0001801e00000000
+i40e 0000:3d:00.0: flow type: 31 update input mask from:0x0006060600000000, to:0x0001801e00000000
+i40e 0000:3d:00.0: flow type: 30 update input mask from:0x0006060600000000, to:0x0001801e00000000
+i40e 0000:3d:00.0: flow type: 29 update input mask from:0x0006060600000000, to:0x0001801e00000000
+i40e 0000:3d:00.0: flow_type after update: 63 input_mask:0x0000000000004000
+i40e 0000:3d:00.0: flow_type after update: 46 input_mask:0x0007fff800000000
+i40e 0000:3d:00.0: flow_type after update: 45 input_mask:0x0007fff800000000
+i40e 0000:3d:00.0: flow_type after update: 44 input_mask:0x0007ffff80000000
+i40e 0000:3d:00.0: flow_type after update: 43 input_mask:0x0007fffe00000000
+i40e 0000:3d:00.0: flow_type after update: 42 input_mask:0x0007fffe00000000
+i40e 0000:3d:00.0: flow_type after update: 41 input_mask:0x0007fffe00000000
+i40e 0000:3d:00.0: flow_type after update: 40 input_mask:0x0007fffe00000000
+i40e 0000:3d:00.0: flow_type after update: 39 input_mask:0x0007fffe00000000
+i40e 0000:3d:00.0: flow_type after update: 36 input_mask:0x0001801800000000
+i40e 0000:3d:00.0: flow_type after update: 35 input_mask:0x0001801800000000
+i40e 0000:3d:00.0: flow_type after update: 34 input_mask:0x0001801f80000000
+i40e 0000:3d:00.0: flow_type after update: 33 input_mask:0x0001801e00000000
+i40e 0000:3d:00.0: flow_type after update: 32 input_mask:0x0001801e00000000
+i40e 0000:3d:00.0: flow_type after update: 31 input_mask:0x0001801e00000000
+i40e 0000:3d:00.0: flow_type after update: 30 input_mask:0x0001801e00000000
+i40e 0000:3d:00.0: flow_type after update: 29 input_mask:0x0001801e00000000
+i40e 0000:3d:00.0: Features: PF-id[0] VSIs: 34 QP: 12 TXQ: 13 RSS VxLAN Geneve VEPA
 
-diff --git a/Documentation/ABI/testing/sysfs-platform-wilco-ec b/Documentation/ABI/testing/sysfs-platform-wilco-ec
-index 6694df8d4172f..00bc8e7c3b9c2 100644
---- a/Documentation/ABI/testing/sysfs-platform-wilco-ec
-+++ b/Documentation/ABI/testing/sysfs-platform-wilco-ec
-@@ -102,3 +102,36 @@ KernelVersion: 5.3
- Description:
- 		Read or write the battery percentage threshold for which the
- 		peak shift policy is used. The valid range is [15, 100].
-+
-+What:          /sys/bus/platform/devices/GOOG000C\:00/version/label
-+Date:          May 2019
-+KernelVersion: 5.3
-+Description:
-+               Display Wilco Embedded Controller firmware version label.
-+               Output will a version string be similar to the example below:
-+               95.00.06
-+
-+What:          /sys/bus/platform/devices/GOOG000C\:00/version/build_revision
-+
-+Date:          May 2019
-+KernelVersion: 5.3
-+Description:
-+               Display Wilco Embedded Controller build revision.
-+               Output will a version string be similar to the example below:
-+               d2592cae0
-+
-+What:          /sys/bus/platform/devices/GOOG000C\:00/version/model_number
-+
-+Date:          May 2019
-+KernelVersion: 5.3
-+Description:
-+               Display Wilco Embedded Controller model number.
-+               Output will a version string be similar to the example below:
-+               08B6
-+
-+What:          /sys/bus/platform/devices/GOOG000C\:00/version/build_date
-+Date:          May 2019
-+KernelVersion: 5.3
-+Description:
-+               Display Wilco Embedded Controller firmware build date.
-+               Output will a MM/DD/YY string.
-diff --git a/drivers/platform/chrome/wilco_ec/sysfs.c b/drivers/platform/chrome/wilco_ec/sysfs.c
-index 6573a6cf9cb31..9bfb9dfde73d1 100644
---- a/drivers/platform/chrome/wilco_ec/sysfs.c
-+++ b/drivers/platform/chrome/wilco_ec/sysfs.c
-@@ -43,6 +43,25 @@ struct usb_power_share_response {
- 	u8 val;		/* When getting, set by EC to either 0 or 1 */
- } __packed;
- 
-+#define CMD_EC_INFO			0x38
-+enum get_ec_info_op {
-+	CMD_GET_EC_LABEL	= 0,
-+	CMD_GET_EC_REV		= 1,
-+	CMD_GET_EC_MODEL	= 2,
-+	CMD_GET_EC_BUILD_DATE	= 3,
-+};
-+
-+struct get_ec_info_req {
-+	u8 cmd;			/* Always CMD_EC_INFO */
-+	u8 reserved;
-+	u8 op;			/* One of enum get_ec_info_op */
-+} __packed;
-+
-+struct get_ec_info_resp {
-+	u8 reserved[2];
-+	char value[9]; /* __nonstring: might not be null terminated */
-+} __packed;
-+
- static ssize_t boot_on_ac_store(struct device *dev,
- 				struct device_attribute *attr,
- 				const char *buf, size_t count)
-@@ -158,12 +177,86 @@ static struct attribute_group wilco_dev_attr_group = {
- 	.attrs = wilco_dev_attrs,
- };
- 
-+static ssize_t get_info(struct device *dev, char *buf, enum get_ec_info_op op)
-+{
-+	struct wilco_ec_device *ec = dev_get_drvdata(dev);
-+	struct get_ec_info_req req = { .cmd = CMD_EC_INFO, .op = op };
-+	struct get_ec_info_resp resp;
-+	int ret;
-+
-+	struct wilco_ec_message msg = {
-+		.type = WILCO_EC_MSG_LEGACY,
-+		.request_data = &req,
-+		.request_size = sizeof(req),
-+		.response_data = &resp,
-+		.response_size = sizeof(resp),
-+	};
-+
-+	ret = wilco_ec_mailbox(ec, &msg);
-+	if (ret < 0)
-+		return ret;
-+
-+	return scnprintf(buf, PAGE_SIZE, "%.*s\n", (int)sizeof(resp.value),
-+			 (char *)&resp.value);
-+}
-+
-+static ssize_t label_show(struct device *dev, struct device_attribute *attr,
-+			  char *buf)
-+{
-+	return get_info(dev, buf, CMD_GET_EC_LABEL);
-+}
-+
-+static DEVICE_ATTR_RO(label);
-+
-+static ssize_t build_revision_show(struct device *dev,
-+				   struct device_attribute *attr, char *buf)
-+{
-+	return get_info(dev, buf, CMD_GET_EC_REV);
-+}
-+
-+static DEVICE_ATTR_RO(build_revision);
-+
-+static ssize_t build_date_show(struct device *dev,
-+			       struct device_attribute *attr, char *buf)
-+{
-+	return get_info(dev, buf, CMD_GET_EC_BUILD_DATE);
-+}
-+
-+static DEVICE_ATTR_RO(build_date);
-+
-+static ssize_t model_number_show(struct device *dev,
-+				 struct device_attribute *attr, char *buf)
-+{
-+	return get_info(dev, buf, CMD_GET_EC_MODEL);
-+}
-+
-+static DEVICE_ATTR_RO(model_number);
-+
-+static struct attribute *wilco_version_attrs[] = {
-+	&dev_attr_label.attr,
-+	&dev_attr_build_revision.attr,
-+	&dev_attr_build_date.attr,
-+	&dev_attr_model_number.attr,
-+	NULL,
-+};
-+
-+static struct attribute_group wilco_version_group = {
-+	.name = "version",
-+	.attrs = wilco_version_attrs,
-+};
-+
-+static const struct attribute_group *wilco_dev_attr_groups[] = {
-+	&wilco_dev_attr_group,
-+	&wilco_version_group,
-+	NULL
-+};
-+
- int wilco_ec_add_sysfs(struct wilco_ec_device *ec)
- {
--	return sysfs_create_group(&ec->dev->kobj, &wilco_dev_attr_group);
-+	return sysfs_create_groups(&ec->dev->kobj, wilco_dev_attr_groups);
- }
- 
- void wilco_ec_remove_sysfs(struct wilco_ec_device *ec)
- {
--	sysfs_remove_group(&ec->dev->kobj, &wilco_dev_attr_group);
-+	sysfs_remove_groups(&ec->dev->kobj, wilco_dev_attr_groups);
- }
+So at least it appears the update did apply.
+
 -- 
-2.21.0.1020.gf2820cf01a-goog
-
+Len Sorensen
