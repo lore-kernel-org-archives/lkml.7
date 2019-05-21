@@ -2,145 +2,102 @@ Return-Path: <SRS0=9PYC=TV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05E1FC18E7C
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 21:32:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D679C072B5
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 21:34:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CE2D12173E
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 21:32:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B3C82173E
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 21:34:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="zSTgqhYY"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Y0wLmu+P"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728018AbfEUVcE (ORCPT
+        id S1727627AbfEUVe1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 May 2019 17:32:04 -0400
-Received: from gate2.alliedtelesis.co.nz ([202.36.163.20]:36246 "EHLO
-        gate2.alliedtelesis.co.nz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727885AbfEUVcD (ORCPT
+        Tue, 21 May 2019 17:34:27 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:37210 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727222AbfEUVe1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 May 2019 17:32:03 -0400
-Received: from mmarshal3.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id 73CAD886BF;
-        Wed, 22 May 2019 09:32:00 +1200 (NZST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
-        s=mail181024; t=1558474320;
-        bh=KN+7+Y6HuTQUXjJHPxv21KSUpl/58gx83ZuyPRW6tQc=;
-        h=From:To:CC:Subject:Date:References;
-        b=zSTgqhYY419fkqtmofKeCuVgVVHe+SE+eUbLILv5B/q+2lHVNnt2WlSnSGH6FRgW7
-         DIMvZMtLiDJiH3OxjEBD26Xp2r+3k6XSa1Pg3kOMCMc4RZRh4OnNAgGXFKGK7gcwu9
-         0Q+Za0H17501RrknBI9quHJXy6JrpT3HHgdDJQlZc90ePcTCbV0XPpdFHAHewjG87X
-         Bz1vpKYAIqwLZ50bz6f8PIvP2DWG+Xu6lyhZ01zETNtl11GWWnwULz1xDLe2pMa9aJ
-         a60UCLlegL4j3nj970sz7WSwbj0MQOGwpgwPAZkJjAJhivwZgxPS1VSvqE2REpXI5T
-         L7LibLI8p2CqQ==
-Received: from svr-chch-ex1.atlnz.lc (Not Verified[10.32.16.77]) by mmarshal3.atlnz.lc with Trustwave SEG (v7,5,8,10121)
-        id <B5ce46e4c0002>; Wed, 22 May 2019 09:31:56 +1200
-Received: from svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8:409d:36f5:8899:92e8)
- by svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8:409d:36f5:8899:92e8) with
- Microsoft SMTP Server (TLS) id 15.0.1156.6; Wed, 22 May 2019 09:32:00 +1200
-Received: from svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8]) by
- svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8%12]) with mapi id
- 15.00.1156.000; Wed, 22 May 2019 09:32:00 +1200
-From:   Chris Packham <Chris.Packham@alliedtelesis.co.nz>
-To:     Philippe Mazenauer <philippe.mazenauer@outlook.de>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Gregory CLEMENT <gregory.clement@bootlin.com>
-CC:     Yangtao Li <tiny.windzz@gmail.com>,
-        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>
-Subject: Re: [PATCH] clk: armada-xp: Remove unused variables
-Thread-Topic: [PATCH] clk: armada-xp: Remove unused variables
-Thread-Index: AQHVEByfB3zMNKUPxE+M+EKg8bXzJw==
-Date:   Tue, 21 May 2019 21:31:59 +0000
-Message-ID: <b60737773b9049bb80f6b325ac543e67@svr-chch-ex1.atlnz.lc>
-References: <VI1PR07MB4432F4F275BC445289FF3D9CFD070@VI1PR07MB4432.eurprd07.prod.outlook.com>
-Accept-Language: en-NZ, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [2001:df5:b000:22:3a2c:4aff:fe70:2b02]
-Content-Type: text/plain; charset="Windows-1252"
-Content-Transfer-Encoding: quoted-printable
+        Tue, 21 May 2019 17:34:27 -0400
+Received: by mail-pl1-f194.google.com with SMTP id p15so9046663pll.4
+        for <linux-kernel@vger.kernel.org>; Tue, 21 May 2019 14:34:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=n9ODtUCTlf7QzMg+EFi0fhULa1Hv1bN8saGVoynBnt8=;
+        b=Y0wLmu+PpiLo7vUy+T1dLKysSylXSg7NwAOmGwX9MPYG07Y+1uOVcznI5UzVOu0hCF
+         p2wF+V53lMgvx/uZ2rLt/OkiKtI0zDZRIR8kqkWYxre5gGeEgxBkUU0sFg0V0dkCJFmA
+         Lu3AzdAwwDLllUxNxExJGK/YFL3iCRzH90A5I=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=n9ODtUCTlf7QzMg+EFi0fhULa1Hv1bN8saGVoynBnt8=;
+        b=RIrfRQLv1ZR1/GMItLDULWwoNKwYjUaq4fvn0XEm3qGkUkV+d+l8ADGrIF63TZOBLI
+         W8wf3owdg8ziMiYxJ/HAbkfHJ8KW/TUQjdj8w1+7tbgIXUrj5mwOSps8jfo+zxGG0no6
+         gw2QmuRPoX7F6WptplNx8J7Ul/n5rixTKenLJsm8ZrOhuc0b0PyuZjKPsjRtM+aMwqG2
+         DA2CvbunCzAPjP8JsKqjFTOxxaGD5ATjBx+pmrikO1x+QzmNJkbnI8HU5nLdD0UgiJkH
+         iu+WRfs49PonGS7ayNAhoEV1x/ABZBBM2rzgxgtVoG9mMe+IdxPJNpMNe5fcHBg4T8ae
+         3aJQ==
+X-Gm-Message-State: APjAAAWK0WgPmPdeOePjuBXMWuOQdm7IFi5Uh+whwH0Rhi4/jzJU4FzF
+        S9VKyxfa4xDp7gXowZ/mL0bMBg==
+X-Google-Smtp-Source: APXvYqzihHia+iUnsOd86KRdycld+FsIGTxqXQCnCFsb55jp0SddgA52ec+bov96FU2MF9EkB9uLWQ==
+X-Received: by 2002:a17:902:21:: with SMTP id 30mr69540871pla.302.1558474466758;
+        Tue, 21 May 2019 14:34:26 -0700 (PDT)
+Received: from localhost ([2620:15c:202:1:75a:3f6e:21d:9374])
+        by smtp.gmail.com with ESMTPSA id 1sm24868945pfn.165.2019.05.21.14.34.26
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 21 May 2019 14:34:26 -0700 (PDT)
+Date:   Tue, 21 May 2019 14:34:25 -0700
+From:   Matthias Kaehlcke <mka@chromium.org>
+To:     Douglas Anderson <dianders@chromium.org>
+Cc:     Heiko Stuebner <heiko@sntech.de>, briannorris@chromium.org,
+        ryandcase@chromium.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH 1/2] ARM: dts: rockchip: Add pin names for
+ rk3288-veyron-minnie
+Message-ID: <20190521213425.GJ40515@google.com>
+References: <20190521203215.234898-1-dianders@chromium.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20190521203215.234898-1-dianders@chromium.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Philippe,=0A=
-=0A=
-On 21/05/19 8:58 PM, Philippe Mazenauer wrote:=0A=
-> Variables 'mv98dx3236_gating_desc' and 'mv98dx3236_coreclks' are=0A=
-> declared static and initialized, but are not used in the file.=0A=
-> =0A=
-> ../drivers/clk/mvebu/armada-xp.c:213:41: warning: =91mv98dx3236_gating_de=
-sc=92 defined but not used [-Wunused-const-variable=3D]=0A=
->   static const struct clk_gating_soc_desc mv98dx3236_gating_desc[] __init=
-const =3D {=0A=
->                                           ^~~~~~~~~~~~~~~~~~~~~~=0A=
-> ../drivers/clk/mvebu/armada-xp.c:171:38: warning: =91mv98dx3236_coreclks=
-=92 defined but not used [-Wunused-const-variable=3D]=0A=
->   static const struct coreclk_soc_desc mv98dx3236_coreclks =3D {=0A=
->                                        ^~~~~~~~~~~~~~~~~~~=0A=
-> =0A=
-> Signed-off-by: Philippe Mazenauer <philippe.mazenauer@outlook.de>=0A=
-=0A=
-The usage of these was moved to a separate file in a later commit and =0A=
-the original code wasn't fully cleaned up.=0A=
-=0A=
-Fixes: 337072604224 ("clk: mvebu: Expand mv98dx3236-core-clock support")=0A=
-Cc: stable@vger.kernel.org=0A=
-Reviewed-by: Chris Packham <chris.packham@alliedtelesis.co.nz>=0A=
-=0A=
-Thanks=0A=
-=0A=
-> ---=0A=
->   drivers/clk/mvebu/armada-xp.c | 14 --------------=0A=
->   1 file changed, 14 deletions(-)=0A=
-> =0A=
-> diff --git a/drivers/clk/mvebu/armada-xp.c b/drivers/clk/mvebu/armada-xp.=
-c=0A=
-> index fa1568279c23..2ae24a5debd0 100644=0A=
-> --- a/drivers/clk/mvebu/armada-xp.c=0A=
-> +++ b/drivers/clk/mvebu/armada-xp.c=0A=
-> @@ -168,11 +168,6 @@ static const struct coreclk_soc_desc axp_coreclks =
-=3D {=0A=
->   	.num_ratios =3D ARRAY_SIZE(axp_coreclk_ratios),=0A=
->   };=0A=
->   =0A=
-> -static const struct coreclk_soc_desc mv98dx3236_coreclks =3D {=0A=
-> -	.get_tclk_freq =3D mv98dx3236_get_tclk_freq,=0A=
-> -	.get_cpu_freq =3D mv98dx3236_get_cpu_freq,=0A=
-> -};=0A=
-> -=0A=
->   /*=0A=
->    * Clock Gating Control=0A=
->    */=0A=
-> @@ -210,15 +205,6 @@ static const struct clk_gating_soc_desc axp_gating_d=
-esc[] __initconst =3D {=0A=
->   	{ }=0A=
->   };=0A=
->   =0A=
-> -static const struct clk_gating_soc_desc mv98dx3236_gating_desc[] __initc=
-onst =3D {=0A=
-> -	{ "ge1", NULL, 3, 0 },=0A=
-> -	{ "ge0", NULL, 4, 0 },=0A=
-> -	{ "pex00", NULL, 5, 0 },=0A=
-> -	{ "sdio", NULL, 17, 0 },=0A=
-> -	{ "xor0", NULL, 22, 0 },=0A=
-> -	{ }=0A=
-> -};=0A=
-> -=0A=
->   static void __init axp_clk_init(struct device_node *np)=0A=
->   {=0A=
->   	struct device_node *cgnp =3D=0A=
-> =0A=
-=0A=
+On Tue, May 21, 2019 at 01:32:14PM -0700, Douglas Anderson wrote:
+> We can now use the "gpio-line-names" property to provide the names for
+> all the pins on a board.  Let's use this to provide the names for all
+> the pins on rk3288-veyron-minnie.
+> 
+> In general the names here come straight from the schematic.  That
+> means even if the schematic name is weird / doesn't have consistent
+> naming conventions / has typos I still haven't made any changes.
+> 
+> The exception here is for two pins: the recovery switch and the write
+> protect detection pin.  These two pins need to have standardized names
+> since crossystem (a Chrome OS tool) uses these names to query the
+> pins.  In downstream kernels crossystem used an out-of-tree driver to
+> do this but it has now been moved to the gpiod API and needs the
+> standardized names.
+> 
+> It's expected that other rk3288-veyron boards will get similar patches
+> shortly.
+> 
+> NOTE: I have sorted the "gpio" section to be next to the "pinctrl"
+> section since it seems to logically make the most sense there.
+> 
+> Signed-off-by: Douglas Anderson <dianders@chromium.org>
+
+Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
