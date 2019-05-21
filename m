@@ -2,132 +2,73 @@ Return-Path: <SRS0=9PYC=TV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A995EC04AAF
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 04:56:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B2C5C04AB4
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 04:57:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8911521019
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 04:56:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 310AC21743
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 04:57:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1558414638;
+	bh=+F1RaQPyLQoUKj2KiELauROnCFp3WSac4XTprzkEDKM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=pVq8A3Y9a0bCaKsYVjUrfFxamcbwNsMKu/Uc68CLaFRGC+2gB2eFY4ZiO1/XMDSC4
+	 9Xzf7AgeDaHQJr3nvdoaLwZ/jT7MGRwkoS664obdDumohvR034F5gvjtCv2T59gMTM
+	 PU6DmFc1ZNV2sxl01EyxRDvCNXTvEcoqaFG7czOM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727767AbfEUE4F (ORCPT
+        id S1727652AbfEUE5R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 May 2019 00:56:05 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:33376 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725924AbfEUE4F (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 May 2019 00:56:05 -0400
-Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4L4qQdg051815;
-        Tue, 21 May 2019 00:53:32 -0400
-Received: from ppma01dal.us.ibm.com (83.d6.3fa9.ip4.static.sl-reverse.com [169.63.214.131])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2sm6pwy90a-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 21 May 2019 00:53:31 -0400
-Received: from pps.filterd (ppma01dal.us.ibm.com [127.0.0.1])
-        by ppma01dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x4L3MnFb001561;
-        Tue, 21 May 2019 03:22:51 GMT
-Received: from b03cxnp08028.gho.boulder.ibm.com (b03cxnp08028.gho.boulder.ibm.com [9.17.130.20])
-        by ppma01dal.us.ibm.com with ESMTP id 2sj9p3kyah-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 21 May 2019 03:22:51 +0000
-Received: from b03ledav006.gho.boulder.ibm.com (b03ledav006.gho.boulder.ibm.com [9.17.130.237])
-        by b03cxnp08028.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x4L4rTta31261078
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 21 May 2019 04:53:29 GMT
-Received: from b03ledav006.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 02930C6055;
-        Tue, 21 May 2019 04:53:29 +0000 (GMT)
-Received: from b03ledav006.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 471DEC6057;
-        Tue, 21 May 2019 04:53:10 +0000 (GMT)
-Received: from morokweng.localdomain.com (unknown [9.80.203.157])
-        by b03ledav006.gho.boulder.ibm.com (Postfix) with ESMTP;
-        Tue, 21 May 2019 04:53:09 +0000 (GMT)
-From:   Thiago Jung Bauermann <bauerman@linux.ibm.com>
-To:     linuxppc-dev@lists.ozlabs.org
-Cc:     linux-kernel@vger.kernel.org, Alexey Kardashevskiy <aik@ozlabs.ru>,
-        Anshuman Khandual <anshuman.linux@gmail.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Christoph Hellwig <hch@lst.de>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Mike Anderson <andmike@linux.ibm.com>,
-        Paul Mackerras <paulus@samba.org>,
-        Ram Pai <linuxram@us.ibm.com>,
-        Claudio Carvalho <cclaudio@linux.ibm.com>,
-        Sukadev Bhattiprolu <sukadev@linux.ibm.com>,
-        Thiago Jung Bauermann <bauerman@linux.ibm.com>
-Subject: [PATCH 09/12] powerpc/pseries/svm: Disable doorbells in SVM guests
-Date:   Tue, 21 May 2019 01:49:09 -0300
-Message-Id: <20190521044912.1375-10-bauerman@linux.ibm.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190521044912.1375-1-bauerman@linux.ibm.com>
-References: <20190521044912.1375-1-bauerman@linux.ibm.com>
+        Tue, 21 May 2019 00:57:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53560 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725885AbfEUE5R (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 May 2019 00:57:17 -0400
+Received: from localhost (unknown [106.201.107.13])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E80F121019;
+        Tue, 21 May 2019 04:57:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1558414636;
+        bh=+F1RaQPyLQoUKj2KiELauROnCFp3WSac4XTprzkEDKM=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=w0sWPD3A4HbS3o9rzEZ52B2DhgOpyXO/fkezQpQR6gma7jdIUTHPhD2lbCxpejL41
+         jM+O6iECEs/Pnz15U90r3cF9FMnwha8fWXxZ75oi4swiU80TrkONAimFpxAEwKI2ku
+         mtBsuuSAmut9qtBX4oU4xGuWRRve+8JOUPVJ4Zaw=
+Date:   Tue, 21 May 2019 10:27:13 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Colin King <colin.king@canonical.com>
+Cc:     Dan Williams <dan.j.williams@intel.com>,
+        Huang Shijie <sjhuang@iluvatar.ai>, dmaengine@vger.kernel.org,
+        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] dma: dw-axi-dmac: fix null dereference when pointer
+ first is null
+Message-ID: <20190521045713.GQ15118@vkoul-mobl>
+References: <20190508223329.26796-1-colin.king@canonical.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-20_09:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=1 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1905210031
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190508223329.26796-1-colin.king@canonical.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sukadev Bhattiprolu <sukadev@linux.ibm.com>
+On 08-05-19, 23:33, Colin King wrote:
+> From: Colin Ian King <colin.king@canonical.com>
+> 
+> In the unlikely event that axi_desc_get returns a null desc in the
+> very first iteration of the while-loop the error exit path ends
+> up calling axi_desc_put on a null pointer 'first' and this causes
+> a null pointer dereference.  Fix this by adding a null check on
+> pointer 'first' before calling axi_desc_put.
 
-Normally, the HV emulates some instructions like MSGSNDP, MSGCLRP
-from a KVM guest. To emulate the instructions, it must first read
-the instruction from the guest's memory and decode its parameters.
+Applied, thanks
 
-However for a secure guest (aka SVM), the page containing the
-instruction is in secure memory and the HV cannot access directly.
-It would need the Ultravisor (UV) to facilitate accessing the
-instruction and parameters but the UV currently does not have
-the support for such accesses.
-
-Until the UV has such support, disable doorbells in SVMs. This might
-incur a performance hit but that is yet to be quantified.
-
-With this patch applied (needed only in SVMs not needed for HV) we
-are able to launch SVM guests with multi-core support. Eg:
-
-	qemu -smp sockets=2,cores=2,threads=2.
-
-Fix suggested by Benjamin Herrenschmidt. Thanks to input from
-Paul Mackerras, Ram Pai and Michael Anderson.
-
-Signed-off-by: Sukadev Bhattiprolu <sukadev@linux.ibm.com>
-Signed-off-by: Thiago Jung Bauermann <bauerman@linux.ibm.com>
----
- arch/powerpc/platforms/pseries/smp.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
-
-diff --git a/arch/powerpc/platforms/pseries/smp.c b/arch/powerpc/platforms/pseries/smp.c
-index 3df46123cce3..95a5c24a1544 100644
---- a/arch/powerpc/platforms/pseries/smp.c
-+++ b/arch/powerpc/platforms/pseries/smp.c
-@@ -45,6 +45,7 @@
- #include <asm/dbell.h>
- #include <asm/plpar_wrappers.h>
- #include <asm/code-patching.h>
-+#include <asm/svm.h>
- 
- #include "pseries.h"
- #include "offline_states.h"
-@@ -225,7 +226,7 @@ static __init void pSeries_smp_probe_xics(void)
- {
- 	xics_smp_probe();
- 
--	if (cpu_has_feature(CPU_FTR_DBELL))
-+	if (cpu_has_feature(CPU_FTR_DBELL) && !is_secure_guest())
- 		smp_ops->cause_ipi = smp_pseries_cause_ipi;
- 	else
- 		smp_ops->cause_ipi = icp_ops->cause_ipi;
+-- 
+~Vinod
