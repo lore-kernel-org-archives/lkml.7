@@ -2,120 +2,117 @@ Return-Path: <SRS0=9PYC=TV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA8B2C04AAF
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 15:09:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE959C04AAF
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 15:13:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C700D21743
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 15:09:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BAC702075E
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 15:13:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="vbLZCEXG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728877AbfEUPJu (ORCPT
+        id S1728462AbfEUPNM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 May 2019 11:09:50 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:60498 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728357AbfEUPJu (ORCPT
+        Tue, 21 May 2019 11:13:12 -0400
+Received: from aserp2130.oracle.com ([141.146.126.79]:35980 "EHLO
+        aserp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727986AbfEUPNM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 May 2019 11:09:50 -0400
-Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4LF3aEp022456
-        for <linux-kernel@vger.kernel.org>; Tue, 21 May 2019 11:09:49 -0400
-Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2smkn1r90k-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Tue, 21 May 2019 11:09:48 -0400
-Received: from localhost
-        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <linuxram@us.ibm.com>;
-        Tue, 21 May 2019 16:09:47 +0100
-Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
-        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Tue, 21 May 2019 16:09:42 +0100
-Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
-        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x4LF9fb857606362
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 21 May 2019 15:09:41 GMT
-Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id A194A52051;
-        Tue, 21 May 2019 15:09:40 +0000 (GMT)
-Received: from ram.ibm.com (unknown [9.85.154.252])
-        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTPS id 9D4715204F;
-        Tue, 21 May 2019 15:09:37 +0000 (GMT)
-Date:   Tue, 21 May 2019 08:09:35 -0700
-From:   Ram Pai <linuxram@us.ibm.com>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Thiago Jung Bauermann <bauerman@linux.ibm.com>,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        Alexey Kardashevskiy <aik@ozlabs.ru>,
-        Anshuman Khandual <anshuman.linux@gmail.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Mike Anderson <andmike@linux.ibm.com>,
-        Paul Mackerras <paulus@samba.org>,
-        Claudio Carvalho <cclaudio@linux.ibm.com>
-Reply-To: Ram Pai <linuxram@us.ibm.com>
-References: <20190521044912.1375-1-bauerman@linux.ibm.com>
- <20190521044912.1375-3-bauerman@linux.ibm.com>
- <20190521051326.GC29120@lst.de>
+        Tue, 21 May 2019 11:13:12 -0400
+Received: from pps.filterd (aserp2130.oracle.com [127.0.0.1])
+        by aserp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x4LF1pIG100322;
+        Tue, 21 May 2019 15:13:07 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2018-07-02;
+ bh=iO87e8oapsoYBD3zmv3BtHcDp0cXYi516sKUqZMvPys=;
+ b=vbLZCEXGMm5UNDj4qRSgu28oVsptVtrdFpa5OHgJ5PLPFjEtl5CrsoUu5+w2g1hH1S63
+ dyi10F/801xUQ514nWbHn7MwsVhyytAV72cqXevdoLnyJZrgWICVuxVhLg2oRx5VwEfQ
+ sM5hpShJRVSiJbVlPb9d+TeeENsRHbVAmwXSZxPb6tH6++cufZg0a/7fYy7DV/DHqMlM
+ 9s+xU9bH97oCbwpGkm+Th8b3UXR5rHD89QXLdS8juFFQjbUSb4FUSYOYJ0m5aPAlW6AV
+ HavjjsV4uRE/yArWHiYC6QqROJmit91lsAnvsPKZPHPEHlZ1+yk/QoyWsfmwYZpNtqzl BA== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by aserp2130.oracle.com with ESMTP id 2sj7jdpadn-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 21 May 2019 15:13:07 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x4LFA3ft126309;
+        Tue, 21 May 2019 15:11:07 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by aserp3020.oracle.com with ESMTP id 2sm0471jqh-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 21 May 2019 15:11:06 +0000
+Received: from abhmp0016.oracle.com (abhmp0016.oracle.com [141.146.116.22])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x4LFB6HG032315;
+        Tue, 21 May 2019 15:11:06 GMT
+Received: from kadam (/41.57.98.10)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 21 May 2019 15:11:06 +0000
+Date:   Tue, 21 May 2019 18:10:59 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Sven Van Asbroeck <thesven73@gmail.com>
+Cc:     Greg KH <gregkh@linuxfoundation.org>, devel@driverdev.osuosl.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] staging: fieldbus: anybuss: force address space
+ conversion
+Message-ID: <20190521151059.GM31203@kadam>
+References: <20190521145116.24378-1-TheSven73@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190521051326.GC29120@lst.de>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-TM-AS-GCONF: 00
-x-cbid: 19052115-0016-0000-0000-0000027E06E9
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19052115-0017-0000-0000-000032DAF3D4
-Message-Id: <20190521150935.GB8402@ram.ibm.com>
-Subject: Re:  Re: [RFC PATCH 02/12] powerpc: Add support for adding an ESM blob to
- the zImage wrapper
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-21_03:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1011 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1905210094
+In-Reply-To: <20190521145116.24378-1-TheSven73@gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9264 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1810050000 definitions=main-1905210094
+X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9264 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1905210094
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 21, 2019 at 07:13:26AM +0200, Christoph Hellwig wrote:
-> On Tue, May 21, 2019 at 01:49:02AM -0300, Thiago Jung Bauermann wrote:
-> > From: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-> > 
-> > For secure VMs, the signing tool will create a ticket called the "ESM blob"
-> > for the Enter Secure Mode ultravisor call with the signatures of the kernel
-> > and initrd among other things.
-> > 
-> > This adds support to the wrapper script for adding that blob via the "-e"
-> > option to the zImage.pseries.
-> > 
-> > It also adds code to the zImage wrapper itself to retrieve and if necessary
-> > relocate the blob, and pass its address to Linux via the device-tree, to be
-> > later consumed by prom_init.
+On Tue, May 21, 2019 at 10:51:16AM -0400, Sven Van Asbroeck wrote:
+> The regmap's context (stored as 'void *') consists of a pointer to
+> __iomem. Mixing __iomem and non-__iomem addresses generates
+> sparse warnings.
 > 
-> Where does the "BLOB" come from?  How is it licensed and how can we
-> satisfy the GPL with it?
+> Fix by using __force when converting to/from 'void __iomem *' and
+> the regmap's context.
+> 
+> Signed-off-by: Sven Van Asbroeck <TheSven73@gmail.com>
+> ---
+>  drivers/staging/fieldbus/anybuss/arcx-anybus.c | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/staging/fieldbus/anybuss/arcx-anybus.c b/drivers/staging/fieldbus/anybuss/arcx-anybus.c
+> index a167fb68e355..8126e5535ada 100644
+> --- a/drivers/staging/fieldbus/anybuss/arcx-anybus.c
+> +++ b/drivers/staging/fieldbus/anybuss/arcx-anybus.c
+> @@ -114,7 +114,7 @@ static void export_reset_1(struct device *dev, bool assert)
+>  static int read_reg_bus(void *context, unsigned int reg,
+>  			unsigned int *val)
+>  {
+> -	void __iomem *base = context;
+> +	void __iomem *base = (__force void __iomem *)context;
 
-The "BLOB" is not a piece of code. Its just a piece of data that gets
-generated by our build tools. This data contains the
-signed hash of the kernel, initrd, and kernel command line parameters.
-Also it contains any information that the creator the the BLOB wants to
-be made available to anyone needing it, inside the
-secure-virtual-machine. All of this is integrity-protected and encrypted
-to safegaurd it when at rest and at runtime.
- 
-Bottomline -- Blob is data, and hence no licensing implication. And due
-to some reason, even data needs to have licensing statement, we can
-make it available to have no conflicts with GPL.
 
+There is no need to use __force.  Just:
 
--- 
-Ram Pai
+	void __iomem *base = (void __iomem *)context;
+
+For the rest as well.
+
+regards,
+dan carpenter
 
