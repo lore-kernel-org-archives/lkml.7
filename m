@@ -2,112 +2,120 @@ Return-Path: <SRS0=9PYC=TV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3F89C04E87
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 12:09:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1475BC04AB4
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 12:15:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BD106217D4
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 12:09:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E75742182B
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 12:15:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728058AbfEUMJv convert rfc822-to-8bit (ORCPT
+        id S1728030AbfEUMPO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 May 2019 08:09:51 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:53008 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726344AbfEUMJt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 May 2019 08:09:49 -0400
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id CAE443179162;
-        Tue, 21 May 2019 12:09:38 +0000 (UTC)
-Received: from oldenburg2.str.redhat.com (dhcp-192-219.str.redhat.com [10.33.192.219])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 8854750A63;
-        Tue, 21 May 2019 12:09:30 +0000 (UTC)
-From:   Florian Weimer <fweimer@redhat.com>
-To:     Christian Brauner <christian@brauner.io>
-Cc:     viro@zeniv.linux.org.uk, linux-kernel@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-api@vger.kernel.org,
-        jannh@google.com, oleg@redhat.com, tglx@linutronix.de,
-        torvalds@linux-foundation.org, arnd@arndb.de, shuah@kernel.org,
-        dhowells@redhat.com, tkjos@android.com, ldv@altlinux.org,
-        miklos@szeredi.hu, linux-alpha@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org,
-        linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
-        linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
-        sparclinux@vger.kernel.org, linux-xtensa@linux-xtensa.org,
-        linux-arch@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        x86@kernel.org
-Subject: Re: [PATCH 1/2] open: add close_range()
-References: <20190521113448.20654-1-christian@brauner.io>
-Date:   Tue, 21 May 2019 14:09:29 +0200
-In-Reply-To: <20190521113448.20654-1-christian@brauner.io> (Christian
-        Brauner's message of "Tue, 21 May 2019 13:34:47 +0200")
-Message-ID: <87tvdoau12.fsf@oldenburg2.str.redhat.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+        Tue, 21 May 2019 08:15:14 -0400
+Received: from smtp2.provo.novell.com ([137.65.250.81]:57554 "EHLO
+        smtp2.provo.novell.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726900AbfEUMPN (ORCPT
+        <rfc822;groupwise-linux-kernel@vger.kernel.org:0:0>);
+        Tue, 21 May 2019 08:15:13 -0400
+Received: from ezekiel.suse.cz (prva10-snat226-2.provo.novell.com [137.65.226.36])
+        by smtp2.provo.novell.com with ESMTP (TLS encrypted); Tue, 21 May 2019 06:15:04 -0600
+Date:   Tue, 21 May 2019 14:14:56 +0200
+From:   Petr Tesarik <ptesarik@suse.com>
+To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Cc:     Oliver Neukum <oneukum@suse.com>, stefan.wahren@i2se.com,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        bcm-kernel-feedback-list@broadcom.com,
+        Eric Anholt <eric@anholt.net>, mbrugger@suse.de,
+        viresh.kumar@linaro.org, rjw@rjwysocki.net, sboyd@kernel.org,
+        linux-rpi-kernel@lists.infradead.org, ssuloev@orpaltech.com,
+        linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        mturquette@baylibre.com, linux-pm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [RFC v2 3/5] clk: bcm2835: use firmware interface to update
+ pllb
+Message-ID: <20190521141456.46f6d4a7@ezekiel.suse.cz>
+In-Reply-To: <46004f242c2618a185445630580116c772455613.camel@suse.de>
+References: <20190520104708.11980-1-nsaenzjulienne@suse.de>
+        <20190520104708.11980-4-nsaenzjulienne@suse.de>
+        <1558356237.12672.3.camel@suse.com>
+        <46004f242c2618a185445630580116c772455613.camel@suse.de>
+Organization: SUSE Linux
+X-Mailer: Claws Mail 3.16.0 (GTK+ 2.24.32; x86_64-suse-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8BIT
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.41]); Tue, 21 May 2019 12:09:49 +0000 (UTC)
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/v4zFxgx_udbNpFsK480f9ms"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* Christian Brauner:
+--Sig_/v4zFxgx_udbNpFsK480f9ms
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-> +/**
-> + * __close_range() - Close all file descriptors in a given range.
-> + *
-> + * @fd:     starting file descriptor to close
-> + * @max_fd: last file descriptor to close
-> + *
-> + * This closes a range of file descriptors. All file descriptors
-> + * from @fd up to and including @max_fd are closed.
-> + */
-> +int __close_range(struct files_struct *files, unsigned fd, unsigned max_fd)
-> +{
-> +	unsigned int cur_max;
-> +
-> +	if (fd > max_fd)
-> +		return -EINVAL;
-> +
-> +	rcu_read_lock();
-> +	cur_max = files_fdtable(files)->max_fds;
-> +	rcu_read_unlock();
-> +
-> +	/* cap to last valid index into fdtable */
-> +	if (max_fd >= cur_max)
-> +		max_fd = cur_max - 1;
-> +
-> +	while (fd <= max_fd)
-> +		__close_fd(files, fd++);
-> +
-> +	return 0;
-> +}
+On Tue, 21 May 2019 13:39:31 +0200
+Nicolas Saenz Julienne <nsaenzjulienne@suse.de> wrote:
 
-This seems rather drastic.  How long does this block in kernel mode?
-Maybe it's okay as long as the maximum possible value for cur_max stays
-around 4 million or so.
+> Hi Oliver, thanks for the review.
+>=20
+> On Mon, 2019-05-20 at 14:43 +0200, Oliver Neukum wrote:
+> > On Mo, 2019-05-20 at 12:47 +0200, Nicolas Saenz Julienne wrote: =20
+> > > + * For more information on the firmware interface check:
+> > > + * https://github.com/raspberrypi/firmware/wiki/Mailbox-property-int=
+erface
+> > > + */
+> > > +struct bcm2835_firmware_prop {
+> > > +       u32 id;
+> > > +       u32 val;
+> > > +       u32 disable_turbo;
+> > > +} __packed; =20
+> >=20
+> > Hi,
+> >=20
+> > technically we are not in arch and those fields have a defined
+> > endianness.
+> >  =20
+>=20
+> Well I set it as packed since it's 'sent' through a memory mapped firmware
+> interface. Hence the need for the structure format to be fixed. So I gues=
+sed
+> we're safer with it, as I'm not 100% sure what the different compilers are
+> going to do with it (although it's very likely it'll stay the same). BTW =
+this
+> will be built both for arm & arm64.
 
-Solaris has an fdwalk function:
+I believe that's not the point Oliver was trying to make. You should
+use __le32 instead of u32.
 
-  <https://docs.oracle.com/cd/E88353_01/html/E37843/closefrom-3c.html>
+That's because u32 means "host byte order" and this code is not located
+under arch/, so host endianness is unknown, but the mailbox interface
+requires little-endian.
 
-So a different way to implement this would expose a nextfd system call
-to userspace, so that we can use that to implement both fdwalk and
-closefrom.  But maybe fdwalk is just too obscure, given the existence of
-/proc.
+It's nit-picking, and that's why Oliver writes 'technically'; there is
+probably no way this firmware interface could be used on a big-endian
+CPU...
 
-I'll happily implement closefrom on top of close_range in glibc (plus
-fallback for older kernels based on /proc—with an abort in case that
-doesn't work because the RLIMIT_NOFILE hack is unreliable
-unfortunately).
+Petr T
 
-Thanks,
-Florian
+--Sig_/v4zFxgx_udbNpFsK480f9ms
+Content-Type: application/pgp-signature
+Content-Description: Digitální podpis OpenPGP
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEEHl2YIZkIo5VO2MxYqlA7ya4PR6cFAlzj68AACgkQqlA7ya4P
+R6f62AgAz0n5U8DxFLjG8+/3CYeQR5ZyeBY4k4i59x0CtEHzdc/KpzHUMeMk4UY4
+CX0BTMxH8rszNyr01dpGqYDlRUJTZg+WCs+V9N8ZWDafcI9+ZFoZPTOAZumw4o5g
+q7Y4Gpip+ygMHVSrds+uFQkJtinN7eiyr16GR8TLsb55TjYwiaodn4iNRiR3o+Od
+qhUwScebGj4vjjru+U0XyYUGUaL22vuKXx8j15aSEO+FB7qYCxs6QbhF33wLvP9T
+V7BUmamRLwoNqL1YPgj9RSC73PHPQpWKSCvwi2HcK4eUdwC3GNtfLwId+0ocxqwg
+pFEsVHZTqhV18UWpMD/Pnb5Z39zFRQ==
+=z3QT
+-----END PGP SIGNATURE-----
+
+--Sig_/v4zFxgx_udbNpFsK480f9ms--
