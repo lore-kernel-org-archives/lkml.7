@@ -2,104 +2,143 @@ Return-Path: <SRS0=9PYC=TV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BFE5C04AAF
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 17:55:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32F86C04AAF
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 17:55:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 435CF217D7
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 17:55:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 048EC217D7
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 17:55:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="eloylbcn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729176AbfEURy7 (ORCPT
+        id S1729210AbfEURzJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 May 2019 13:54:59 -0400
-Received: from caffeine.csclub.uwaterloo.ca ([129.97.134.17]:38971 "EHLO
-        caffeine.csclub.uwaterloo.ca" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729098AbfEURy6 (ORCPT
+        Tue, 21 May 2019 13:55:09 -0400
+Received: from dc8-smtprelay2.synopsys.com ([198.182.47.102]:52602 "EHLO
+        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729179AbfEURzI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 May 2019 13:54:58 -0400
-Received: by caffeine.csclub.uwaterloo.ca (Postfix, from userid 20367)
-        id DDF5F460279; Tue, 21 May 2019 13:54:56 -0400 (EDT)
-Date:   Tue, 21 May 2019 13:54:56 -0400
-To:     Alexander Duyck <alexander.duyck@gmail.com>
-Cc:     Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Netdev <netdev@vger.kernel.org>,
-        intel-wired-lan <intel-wired-lan@lists.osuosl.org>
-Subject: Re: [Intel-wired-lan] i40e X722 RSS problem with NAT-Traversal IPsec
- packets
-Message-ID: <20190521175456.zlkiiov5hry2l4q2@csclub.uwaterloo.ca>
-References: <20190514163443.glfjva3ofqcy7lbg@csclub.uwaterloo.ca>
- <CAKgT0UdPDyCBsShQVwwE5C8fBKkMcfS6_S5m3T7JP-So9fzVgA@mail.gmail.com>
- <20190516183407.qswotwyjwtjqfdqm@csclub.uwaterloo.ca>
- <20190516183705.e4zflbli7oujlbek@csclub.uwaterloo.ca>
- <CAKgT0UfSa-dM2+7xntK9tB7Zw5N8nDd3U1n4OSK0gbWbkNSKJQ@mail.gmail.com>
- <CAKgT0Ucd0s_0F5_nwqXknRngwROyuecUt+4bYzWvp1-2cNSg7g@mail.gmail.com>
- <20190517172317.amopafirjfizlgej@csclub.uwaterloo.ca>
- <CAKgT0UdM28pSTCsaT=TWqmQwCO44NswS0PqFLAzgs9pmn41VeQ@mail.gmail.com>
- <20190521151537.xga4aiq3gjtiif4j@csclub.uwaterloo.ca>
- <CAKgT0UfpZ-ve3Hx26gDkb+YTDHvN3=MJ7NZd2NE7ewF5g=kHHw@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAKgT0UfpZ-ve3Hx26gDkb+YTDHvN3=MJ7NZd2NE7ewF5g=kHHw@mail.gmail.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
-From:   lsorense@csclub.uwaterloo.ca (Lennart Sorensen)
+        Tue, 21 May 2019 13:55:08 -0400
+Received: from mailhost.synopsys.com (dc8-mailhost2.synopsys.com [10.13.135.210])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (No client certificate requested)
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 8089CC01AB;
+        Tue, 21 May 2019 17:55:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
+        t=1558461314; bh=j4xujey4oHXPlAqqw8enUk4zgpaPtQQZ7GJiAvqvb5U=;
+        h=From:To:Cc:Subject:Date:From;
+        b=eloylbcnJ5MpMfQi3KVwoX5gi5BDGCqQPL8z4WMUQcXQHnMQOVApwjnTEeFez0qmB
+         d6NJqsP0wb5smfnJ6XhiXvzisPlCWIokP2AMecXdPzgRaR6QHo++0d3Bs51SiGYiIu
+         j8ZP/V2gni2nGmExJZoWo+wD9oCoajeM9sVFCDS39xXEjX+4MfhmVFe2e60wuDqSA0
+         11/9hUwL1yvzUafjjGSken9CgX8TXK5P+reyKlRZvLPnuZyY3IFcyOTdthXuSBQvOi
+         8hFyqFec8nE4WhXEBYeIVzn0F14im7y4r6ZbTlWAbp9NT0Nz51JjHe2lTJvcdB6i5f
+         24PZOehyvdr2w==
+Received: from paltsev-e7480.internal.synopsys.com (paltsev-e7480.internal.synopsys.com [10.121.8.106])
+        by mailhost.synopsys.com (Postfix) with ESMTP id 240D6A0067;
+        Tue, 21 May 2019 17:55:03 +0000 (UTC)
+From:   Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
+To:     linux-snps-arc@lists.infradead.org,
+        Vineet Gupta <Vineet.Gupta1@synopsys.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Alexey Brodkin <Alexey.Brodkin@synopsys.com>,
+        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
+        Lucas Stach <l.stach@pengutronix.de>,
+        Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
+Subject: [PATCH v3] ARC: [plat-hsdk]: Add support of Vivante GPU
+Date:   Tue, 21 May 2019 20:54:39 +0300
+Message-Id: <20190521175439.15723-1-Eugeniy.Paltsev@synopsys.com>
+X-Mailer: git-send-email 2.14.5
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 21, 2019 at 09:51:33AM -0700, Alexander Duyck wrote:
-> I think we need to narrow this down a bit more. Let's try forcing the
-> lookup table all to one value and see if traffic is still going to
-> queue 0.
-> 
-> Specifically what we need to is run the following command to try and
-> force all RSS traffic to queue 8, you can verify the result with
-> "ethtool -x":
-> ethtool -X <iface> weight 0 0 0 0 0 0 0 0 1
-> 
-> If that works and the IPSec traffic goes to queue 8 then we are likely
-> looking at some sort of input issue, either in the parsing or the
-> population of things like the input mask that we can then debug
-> further.
-> 
-> If traffic still goes to queue 0 then that tells us the output of the
-> RSS hash and lookup table are being ignored, this would imply either
-> some other filter is rerouting the traffic or is directing us to limit
-> the queue index to 0 bits.
+HSDK board has built-in Vivante GPU IP which works perfectly fine
+with Etnaviv driver, so let's use it.
 
-# ethtool -x eth2
-RX flow hash indirection table for eth2 with 12 RX ring(s):
-    0:      7     7     7     7     7     7     7     7
-    8:      7     7     7     7     7     7     7     7
-   16:      7     7     7     7     7     7     7     7
-   24:      7     7     7     7     7     7     7     7
-   32:      7     7     7     7     7     7     7     7
-...
-  472:      7     7     7     7     7     7     7     7
-  480:      7     7     7     7     7     7     7     7
-  488:      7     7     7     7     7     7     7     7
-  496:      7     7     7     7     7     7     7     7
-  504:      7     7     7     7     7     7     7     7
-RSS hash key:
-0b:1f:ae:ed:60:04:7d:e5:8a:2b:43:3f:1d:ee:6c:99:89:29:94:b0:25:db:c7:4b:fa:da:4d:3f:e8:cc:bc:00:ad:32:01:d6:1c:30:3f:f8:79:3e:f4:48:04:1f:51:d2:5a:39:f0:90
-root@ECA:~# ethtool --show-priv-flags eth2
-Private flags for eth2:
-MFP              : off
-LinkPolling      : off
-flow-director-atr: off
-veb-stats        : off
-hw-atr-eviction  : on
-legacy-rx        : off
+Signed-off-by: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
+---
+Changes v2->v3:
+ * Rebase onto latest kernel. No functional change intended.
 
-All ipsec packets are still hitting queue 0.
+Changes v1->v2:
+ * Add clock inputs to etnaviv device tree node (reported by Lucas Stach)
 
-Seems it is completely ignoring RSS for these packets.  That is
-impressively weird.
+ arch/arc/boot/dts/hsdk.dts      | 29 +++++++++++++++++++++++++++++
+ arch/arc/configs/hsdk_defconfig |  2 +-
+ 2 files changed, 30 insertions(+), 1 deletion(-)
 
+diff --git a/arch/arc/boot/dts/hsdk.dts b/arch/arc/boot/dts/hsdk.dts
+index 7425bb0f2d1b..32b3974ae4e2 100644
+--- a/arch/arc/boot/dts/hsdk.dts
++++ b/arch/arc/boot/dts/hsdk.dts
+@@ -167,6 +167,24 @@
+ 			#clock-cells = <0>;
+ 		};
+ 
++		gpu_core_clk: gpu-core-clk {
++			compatible = "fixed-clock";
++			clock-frequency = <400000000>;
++			#clock-cells = <0>;
++		};
++
++		gpu_dma_clk: gpu-dma-clk {
++			compatible = "fixed-clock";
++			clock-frequency = <400000000>;
++			#clock-cells = <0>;
++		};
++
++		gpu_cfg_clk: gpu-cfg-clk {
++			compatible = "fixed-clock";
++			clock-frequency = <200000000>;
++			#clock-cells = <0>;
++		};
++
+ 		dmac_core_clk: dmac-core-clk {
+ 			compatible = "fixed-clock";
+ 			clock-frequency = <400000000>;
+@@ -252,6 +270,17 @@
+ 			};
+ 		};
+ 
++		gpu_3d: gpu@90000 {
++			compatible = "vivante,gc";
++			reg = <0x90000 0x4000>;
++			clocks = <&gpu_dma_clk>,
++				 <&gpu_cfg_clk>,
++				 <&gpu_core_clk>,
++				 <&gpu_core_clk>;
++			clock-names = "bus", "reg", "core", "shader";
++			interrupts = <28>;
++		};
++
+ 		dmac: dmac@80000 {
+ 			compatible = "snps,axi-dma-1.01a";
+ 			reg = <0x80000 0x400>;
+diff --git a/arch/arc/configs/hsdk_defconfig b/arch/arc/configs/hsdk_defconfig
+index 0e5fd29ed238..643b58be022d 100644
+--- a/arch/arc/configs/hsdk_defconfig
++++ b/arch/arc/configs/hsdk_defconfig
+@@ -53,6 +53,7 @@ CONFIG_GPIO_DWAPB=y
+ CONFIG_DRM=y
+ # CONFIG_DRM_FBDEV_EMULATION is not set
+ CONFIG_DRM_UDL=y
++CONFIG_DRM_ETNAVIV=y
+ CONFIG_FB=y
+ CONFIG_FRAMEBUFFER_CONSOLE=y
+ CONFIG_USB_EHCI_HCD=y
+@@ -64,7 +65,6 @@ CONFIG_MMC=y
+ CONFIG_MMC_SDHCI=y
+ CONFIG_MMC_SDHCI_PLTFM=y
+ CONFIG_MMC_DW=y
+-# CONFIG_IOMMU_SUPPORT is not set
+ CONFIG_EXT3_FS=y
+ CONFIG_VFAT_FS=y
+ CONFIG_TMPFS=y
 -- 
-Len Sorensen
+2.14.5
+
