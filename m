@@ -2,193 +2,149 @@ Return-Path: <SRS0=9PYC=TV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 532A1C04E87
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 17:14:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7EB4C04AAF
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 17:14:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 249F6217D7
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 17:14:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 863DF21019
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 17:14:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="At4Xdpw0"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="m0FweG2/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728917AbfEUROP (ORCPT
+        id S1729056AbfEUROS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 May 2019 13:14:15 -0400
-Received: from hqemgate16.nvidia.com ([216.228.121.65]:3463 "EHLO
-        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726900AbfEUROO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 May 2019 13:14:14 -0400
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5ce431e40002>; Tue, 21 May 2019 10:14:12 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Tue, 21 May 2019 10:14:12 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Tue, 21 May 2019 10:14:12 -0700
-Received: from [10.25.72.115] (172.20.13.39) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 21 May
- 2019 17:14:06 +0000
-Subject: Re: [PATCH V7 05/15] PCI: dwc: Add ext config space capability search
- API
-To:     Thierry Reding <thierry.reding@gmail.com>
-CC:     <lorenzo.pieralisi@arm.com>, <bhelgaas@google.com>,
-        <robh+dt@kernel.org>, <mark.rutland@arm.com>,
-        <jonathanh@nvidia.com>, <kishon@ti.com>, <catalin.marinas@arm.com>,
-        <will.deacon@arm.com>, <jingoohan1@gmail.com>,
-        <gustavo.pimentel@synopsys.com>, <mperttunen@nvidia.com>,
-        <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <kthota@nvidia.com>,
-        <mmaddireddy@nvidia.com>, <sagar.tv@gmail.com>
-References: <20190517123846.3708-1-vidyas@nvidia.com>
- <20190517123846.3708-6-vidyas@nvidia.com> <20190521103629.GE29166@ulmo>
-X-Nvconfidentiality: public
-From:   Vidya Sagar <vidyas@nvidia.com>
-Message-ID: <d70ac7e8-d04e-5195-3808-fca520ad23f6@nvidia.com>
-Date:   Tue, 21 May 2019 22:44:04 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
-MIME-Version: 1.0
-In-Reply-To: <20190521103629.GE29166@ulmo>
-X-Originating-IP: [172.20.13.39]
-X-ClientProxiedBy: HQMAIL103.nvidia.com (172.20.187.11) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="windows-1252"; format=flowed
+        Tue, 21 May 2019 13:14:18 -0400
+Received: from mail-eopbgr80078.outbound.protection.outlook.com ([40.107.8.78]:5305
+        "EHLO EUR04-VI1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726900AbfEUROR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 May 2019 13:14:17 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Ml2apWTWPBi5XppK8Yua76O7UxUx4kNPg3sh8ctsvz4=;
+ b=m0FweG2/OCK9SA+6aBBi8CVxP82vYA0aCN8YblKlOH77PyIZWXPe/9X9ljy1pINp/k8PSCT4ixQx8xnQXLmcV7nIRicoHWf4a3LBGcQ3x1W1QoND4OQejdW8A/PXsZUOo7XcPsPGCo7JFDWjzpWxWkeEgpQzlKP+ARoEGdIDCXU=
+Received: from VI1PR0402MB3485.eurprd04.prod.outlook.com (52.134.3.153) by
+ VI1PR0402MB3551.eurprd04.prod.outlook.com (52.134.4.32) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1900.17; Tue, 21 May 2019 17:14:12 +0000
+Received: from VI1PR0402MB3485.eurprd04.prod.outlook.com
+ ([fe80::a450:3c13:d7af:7451]) by VI1PR0402MB3485.eurprd04.prod.outlook.com
+ ([fe80::a450:3c13:d7af:7451%3]) with mapi id 15.20.1900.020; Tue, 21 May 2019
+ 17:14:12 +0000
+From:   Horia Geanta <horia.geanta@nxp.com>
+To:     Christoph Hellwig <hch@lst.de>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
+CC:     "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Device obligation to write into a DMA_FROM_DEVICE streaming DMA
+ mapping
+Thread-Topic: Device obligation to write into a DMA_FROM_DEVICE streaming DMA
+ mapping
+Thread-Index: AQHVD/ibza+0VQqKf0WUTNByTE5q8A==
+Date:   Tue, 21 May 2019 17:14:12 +0000
+Message-ID: <VI1PR0402MB348537CB86926B3E6D1DBE0A98070@VI1PR0402MB3485.eurprd04.prod.outlook.com>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1558458852; bh=BcyBWuXsiZPLocS6gKpgICDF6NfMYJFTJoNUnlHyJbA=;
-        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=At4Xdpw0Zrn5NsJ2CRKYABUSOeeEfKMEt9N1cZC7IFh4aB1Xzp5/eiDTcuV0z5mjP
-         +Rbrzd8Fajyae9wCzljeqfSzm5JLySCJAff9YBdPaLgv2ZH/aThQlJ/9cnr+rFQnbi
-         zNiOaCci50OPFXQ1eukzFALbhyGokGYgBpkANGMkwOuYTK3SpNSszTSDZWWI4ri6oX
-         +iCI/vHaoU+/DiFzRcflgqoK+oD4Fnik1RKZzbqptYuA+Keb4XnZ22V/s9bkkTGs8k
-         4TyGgUsgh/YnX95Pd9LfGJKmgUAfAZnW0LaisxnZ5WbcGLvIN0Tf0wMI53UXAIPeSK
-         McpPwR6MFnj9Q==
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=horia.geanta@nxp.com; 
+x-originating-ip: [94.69.234.123]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: d9379d1f-bfa2-4148-7e8d-08d6de0fbeab
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:VI1PR0402MB3551;
+x-ms-traffictypediagnostic: VI1PR0402MB3551:
+x-microsoft-antispam-prvs: <VI1PR0402MB35514D6ACEC00786D1016C5998070@VI1PR0402MB3551.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:10000;
+x-forefront-prvs: 0044C17179
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(376002)(396003)(366004)(346002)(39860400002)(136003)(199004)(189003)(66476007)(316002)(2906002)(66066001)(7696005)(6506007)(99286004)(25786009)(54906003)(110136005)(5660300002)(9686003)(6436002)(66556008)(71190400001)(68736007)(74316002)(478600001)(71200400001)(14454004)(55016002)(33656002)(86362001)(476003)(44832011)(486006)(53936002)(3846002)(305945005)(7736002)(6116002)(186003)(26005)(76116006)(52536014)(4326008)(8676002)(66946007)(64756008)(66446008)(73956011)(8936002)(102836004)(256004)(81156014)(81166006);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR0402MB3551;H:VI1PR0402MB3485.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: ygCfBJQYw+2HqpNA2oBTBsoA2uArrSn4Ed/Pow0u6q/EtXvUR0SfQ4mMgU8aJQATkyqMo4+nu10uS9MqTsU+1Leo+3GU8dssY5ad5IPBFPPt1QoA9uD2YvU/YQurADhvEHXZZdxCi7AUl92oBlNQ9iwsaDLvu2CdZVI6ytkR1LWwSXYdKkHuqf3IRFDHR7pe2oOMMQI4W2cO9Iy3Llh4PzU4InOaOe0G9H9JXceiE8/PpZTTSxVgP9UsUGyZLy3HapQrpoi6VCPoy3l4XwPEuCIEaNqEbyHQRsGMVnoEGgr69/E7JcotZQEX+Srv6GFh5cIys6dUdeIbwyorQ9vSO1PDTdAhnPZd997VC01pn5kuK/mwwxRRJjSpdqy/eO+NfOXI5kikJZ+o/4NEso4r6oPdurt5k4KZlQX1TRPVPo8=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: d9379d1f-bfa2-4148-7e8d-08d6de0fbeab
+X-MS-Exchange-CrossTenant-originalarrivaltime: 21 May 2019 17:14:12.3190
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0402MB3551
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/21/2019 4:06 PM, Thierry Reding wrote:
-> On Fri, May 17, 2019 at 06:08:36PM +0530, Vidya Sagar wrote:
->> Add extended configuration space capability search API using struct dw_pcie *
->> pointer
->>
->> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
->> Acked-by: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
->> ---
->> Changes since [v6]:
->> * None
->>
->> Changes since [v5]:
->> * None
->>
->> Changes since [v4]:
->> * None
->>
->> Changes since [v3]:
->> * None
->>
->> Changes since [v2]:
->> * None
->>
->> Changes since [v1]:
->> * This is a new patch in v2 series
->>
->>   drivers/pci/controller/dwc/pcie-designware.c | 41 ++++++++++++++++++++
->>   drivers/pci/controller/dwc/pcie-designware.h |  1 +
->>   2 files changed, 42 insertions(+)
->>
->> diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/controller/dwc/pcie-designware.c
->> index 8f53ce63d17e..3b7d50888caa 100644
->> --- a/drivers/pci/controller/dwc/pcie-designware.c
->> +++ b/drivers/pci/controller/dwc/pcie-designware.c
->> @@ -54,6 +54,47 @@ u8 dw_pcie_find_capability(struct dw_pcie *pci, u8 cap)
->>   }
->>   EXPORT_SYMBOL_GPL(dw_pcie_find_capability);
->>   
->> +static int dw_pcie_find_next_ext_capability(struct dw_pcie *pci, int start,
->> +					    int cap)
-> 
-> Perhaps make this more consistent with the existing regular
-> configuration space capability search API? Something like this perhaps:
-> 
-> 	static u16 dw_pcie_find_next_ext_capability(struct dw_pcie *pci,
-> 						    u16 start, u8 cap)
-> 
-> ? I guess your variant above is consistent with the existing generic
-> capability search API, so another alternative might be to make the old
-> dw_pcie_find_capability() API consistent with everything else. It's
-> confusing if we keep having to jump between the two variants.
-Ok. I'll change it to the format being followed in this file i.e. using u16 and u8
-
-> 
-> Thierry
-> 
->> +{
->> +	u32 header;
->> +	int ttl;
->> +	int pos = PCI_CFG_SPACE_SIZE;
->> +
->> +	/* minimum 8 bytes per capability */
->> +	ttl = (PCI_CFG_SPACE_EXP_SIZE - PCI_CFG_SPACE_SIZE) / 8;
->> +
->> +	if (start)
->> +		pos = start;
->> +
->> +	header = dw_pcie_readl_dbi(pci, pos);
->> +	/*
->> +	 * If we have no capabilities, this is indicated by cap ID,
->> +	 * cap version and next pointer all being 0.
->> +	 */
->> +	if (header == 0)
->> +		return 0;
->> +
->> +	while (ttl-- > 0) {
->> +		if (PCI_EXT_CAP_ID(header) == cap && pos != start)
->> +			return pos;
->> +
->> +		pos = PCI_EXT_CAP_NEXT(header);
->> +		if (pos < PCI_CFG_SPACE_SIZE)
->> +			break;
->> +
->> +		header = dw_pcie_readl_dbi(pci, pos);
->> +	}
->> +
->> +	return 0;
->> +}
->> +
->> +int dw_pcie_find_ext_capability(struct dw_pcie *pci, int cap)
->> +{
->> +	return dw_pcie_find_next_ext_capability(pci, 0, cap);
->> +}
->> +EXPORT_SYMBOL_GPL(dw_pcie_find_ext_capability);
->> +
->>   int dw_pcie_read(void __iomem *addr, int size, u32 *val)
->>   {
->>   	if (!IS_ALIGNED((uintptr_t)addr, size)) {
->> diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
->> index 6cb978132469..fff284098117 100644
->> --- a/drivers/pci/controller/dwc/pcie-designware.h
->> +++ b/drivers/pci/controller/dwc/pcie-designware.h
->> @@ -252,6 +252,7 @@ struct dw_pcie {
->>   		container_of((endpoint), struct dw_pcie, ep)
->>   
->>   u8 dw_pcie_find_capability(struct dw_pcie *pci, u8 cap);
->> +int dw_pcie_find_ext_capability(struct dw_pcie *pci, int cap);
->>   
->>   int dw_pcie_read(void __iomem *addr, int size, u32 *val);
->>   int dw_pcie_write(void __iomem *addr, int size, u32 val);
->> -- 
->> 2.17.1
->>
-
+Hi,=0A=
+=0A=
+Is it mandatory for a device to write data in an area DMA mapped DMA_FROM_D=
+EVICE?=0A=
+Can't the device just "ignore" that mapping - i.e. not write anything - and=
+=0A=
+driver should expect original data to be found in that location (since it w=
+as=0A=
+not touched / written to by the device)?=0A=
+[Let's leave cache coherency aside, and consider "original data" to be in R=
+AM.]=0A=
+=0A=
+I am asking this since I am seeing what seems to be an inconsistent behavio=
+r /=0A=
+semantics between cases when swiotlb bouncing is used and when it's not.=0A=
+=0A=
+Specifically, the context is:=0A=
+1. driver prepares a scatterlist with several entries and performs a=0A=
+dma_map_sg() with direction FROM_DEVICE=0A=
+2. device decides there's no need to write into the buffer pointed by first=
+=0A=
+scatterlist entry and skips it (writing into subsequent buffers)=0A=
+3. driver is notified the device finished processing and dma unmaps the sca=
+tterlist=0A=
+=0A=
+When swiotlb bounce is used, the buffer pointed to by first scatterlist ent=
+ry is=0A=
+corrupted. That's because swiotlb implementation expects the device to writ=
+e=0A=
+something into that buffer, however the device logic is "whatever was previ=
+ously=0A=
+in that buffer should be used" (2. above).=0A=
+=0A=
+For FROM_DEVICE direction:=0A=
+-swiotlb_tbl_map_single() does not copy data from original location to swio=
+tlb=0A=
+	if (!(attrs & DMA_ATTR_SKIP_CPU_SYNC) &&=0A=
+	    (dir =3D=3D DMA_TO_DEVICE || dir =3D=3D DMA_BIDIRECTIONAL))=0A=
+		swiotlb_bounce(orig_addr, tlb_addr, size, DMA_TO_DEVICE);=0A=
+-swiotlb_tbl_unmap_single() copies data from swiotlb to original location=
+=0A=
+	if (orig_addr !=3D INVALID_PHYS_ADDR &&=0A=
+	    !(attrs & DMA_ATTR_SKIP_CPU_SYNC) &&=0A=
+	    ((dir =3D=3D DMA_FROM_DEVICE) || (dir =3D=3D DMA_BIDIRECTIONAL)))=0A=
+		swiotlb_bounce(orig_addr, tlb_addr, size, DMA_FROM_DEVICE);=0A=
+and when device did not write anything (as in current situation), it overwr=
+ites=0A=
+original data with zeros=0A=
+=0A=
+In case swiotlb bounce is not used and device does not write into the=0A=
+FROM_DEVICE streaming DMA maping, the original data is available.=0A=
+=0A=
+Could you please clarify whether:=0A=
+-I am missing something obvious OR=0A=
+-the DMA API documentation should be updated - to mandate for device writes=
+ into=0A=
+FROM_DEVICE mappings) OR=0A=
+-the swiotlb implementation should be updated - to copy data from original=
+=0A=
+location irrespective of DMA mapping direction?=0A=
+=0A=
+Thanks,=0A=
+Horia=0A=
