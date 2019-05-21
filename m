@@ -6,27 +6,27 @@ X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F28DBC04AAF
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 13:27:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2ACCC04AAF
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 13:27:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C8C272173C
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 13:27:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F0272173C
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 13:27:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728304AbfEUN1h (ORCPT
+        id S1728329AbfEUN1q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 May 2019 09:27:37 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:47700 "EHLO mx1.redhat.com"
+        Tue, 21 May 2019 09:27:46 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:35280 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726750AbfEUN1f (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 May 2019 09:27:35 -0400
+        id S1726995AbfEUN1n (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 May 2019 09:27:43 -0400
 Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id DA8573086229;
-        Tue, 21 May 2019 13:27:31 +0000 (UTC)
+        by mx1.redhat.com (Postfix) with ESMTPS id 969AB30044CC;
+        Tue, 21 May 2019 13:27:38 +0000 (UTC)
 Received: from plouf.redhat.com (ovpn-116-49.ams2.redhat.com [10.36.116.49])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 4AD5E784AF;
-        Tue, 21 May 2019 13:27:25 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 8D5CE60F8D;
+        Tue, 21 May 2019 13:27:35 +0000 (UTC)
 From:   Benjamin Tissoires <benjamin.tissoires@redhat.com>
 To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
         KT Liao <kt.liao@emc.com.tw>, Rob Herring <robh+dt@kernel.org>,
@@ -35,245 +35,92 @@ To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
 Cc:     linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
         devicetree@vger.kernel.org,
         Benjamin Tissoires <benjamin.tissoires@redhat.com>
-Subject: [PATCH v2 01/10] Input: elantech - query the min/max information beforehand too
-Date:   Tue, 21 May 2019 15:27:03 +0200
-Message-Id: <20190521132712.2818-2-benjamin.tissoires@redhat.com>
+Subject: [PATCH v2 03/10] Input: elantech - detect middle button based on firmware version
+Date:   Tue, 21 May 2019 15:27:05 +0200
+Message-Id: <20190521132712.2818-4-benjamin.tissoires@redhat.com>
 In-Reply-To: <20190521132712.2818-1-benjamin.tissoires@redhat.com>
 References: <20190521132712.2818-1-benjamin.tissoires@redhat.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.42]); Tue, 21 May 2019 13:27:35 +0000 (UTC)
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.46]); Tue, 21 May 2019 13:27:43 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-For the latest generation of Elantech touchpads, we need to forward
-the min/max information from PS/2 to SMBus. Prepare this work
-by fetching the information before creating the SMBus companion
-device.
+Looks like the new generation of Lenovo machine also need to
+be added to the PnPID whitelist. This is definitively not going
+to scale, as there is nothing that tells us currently if a
+touchpad supports a true physical middle button.
+
+Consider that all new touchpads that are not clickpads
+(so matching ETP_NEW_IC_SMBUS_HOST_NOTIFY) are handling 3 physical
+buttons.
 
 Signed-off-by: Benjamin Tissoires <benjamin.tissoires@redhat.com>
 
 --
 
-no changes in v2
+new in v2
 ---
- drivers/input/mouse/elantech.c | 160 +++++++++++++++------------------
- drivers/input/mouse/elantech.h |   5 ++
- 2 files changed, 79 insertions(+), 86 deletions(-)
+ drivers/input/mouse/elantech.c | 16 ++++++----------
+ drivers/input/mouse/elantech.h |  1 +
+ 2 files changed, 7 insertions(+), 10 deletions(-)
 
 diff --git a/drivers/input/mouse/elantech.c b/drivers/input/mouse/elantech.c
-index a7f8b1614559..5953c21774d7 100644
+index 34b96b96fc96..057a3cf01eec 100644
 --- a/drivers/input/mouse/elantech.c
 +++ b/drivers/input/mouse/elantech.c
-@@ -994,88 +994,6 @@ static int elantech_set_absolute_mode(struct psmouse *psmouse)
- 	return rc;
- }
+@@ -1107,14 +1107,6 @@ static const struct dmi_system_id elantech_dmi_has_middle_button[] = {
+ 	{ }
+ };
  
--static int elantech_set_range(struct psmouse *psmouse,
--			      unsigned int *x_min, unsigned int *y_min,
--			      unsigned int *x_max, unsigned int *y_max,
--			      unsigned int *width)
--{
--	struct elantech_data *etd = psmouse->private;
--	struct elantech_device_info *info = &etd->info;
--	unsigned char param[3];
--	unsigned char traces;
--
--	switch (info->hw_version) {
--	case 1:
--		*x_min = ETP_XMIN_V1;
--		*y_min = ETP_YMIN_V1;
--		*x_max = ETP_XMAX_V1;
--		*y_max = ETP_YMAX_V1;
--		break;
--
--	case 2:
--		if (info->fw_version == 0x020800 ||
--		    info->fw_version == 0x020b00 ||
--		    info->fw_version == 0x020030) {
--			*x_min = ETP_XMIN_V2;
--			*y_min = ETP_YMIN_V2;
--			*x_max = ETP_XMAX_V2;
--			*y_max = ETP_YMAX_V2;
--		} else {
--			int i;
--			int fixed_dpi;
--
--			i = (info->fw_version > 0x020800 &&
--			     info->fw_version < 0x020900) ? 1 : 2;
--
--			if (info->send_cmd(psmouse, ETP_FW_ID_QUERY, param))
--				return -1;
--
--			fixed_dpi = param[1] & 0x10;
--
--			if (((info->fw_version >> 16) == 0x14) && fixed_dpi) {
--				if (info->send_cmd(psmouse, ETP_SAMPLE_QUERY, param))
--					return -1;
--
--				*x_max = (info->capabilities[1] - i) * param[1] / 2;
--				*y_max = (info->capabilities[2] - i) * param[2] / 2;
--			} else if (info->fw_version == 0x040216) {
--				*x_max = 819;
--				*y_max = 405;
--			} else if (info->fw_version == 0x040219 || info->fw_version == 0x040215) {
--				*x_max = 900;
--				*y_max = 500;
--			} else {
--				*x_max = (info->capabilities[1] - i) * 64;
--				*y_max = (info->capabilities[2] - i) * 64;
--			}
--		}
--		break;
--
--	case 3:
--		if (info->send_cmd(psmouse, ETP_FW_ID_QUERY, param))
--			return -1;
--
--		*x_max = (0x0f & param[0]) << 8 | param[1];
--		*y_max = (0xf0 & param[0]) << 4 | param[2];
--		break;
--
--	case 4:
--		if (info->send_cmd(psmouse, ETP_FW_ID_QUERY, param))
--			return -1;
--
--		*x_max = (0x0f & param[0]) << 8 | param[1];
--		*y_max = (0xf0 & param[0]) << 4 | param[2];
--		traces = info->capabilities[1];
--		if ((traces < 2) || (traces > *x_max))
--			return -1;
--
--		*width = *x_max / (traces - 1);
--		break;
--	}
--
--	return 0;
--}
+-static const char * const middle_button_pnp_ids[] = {
+-	"LEN2131", /* ThinkPad P52 w/ NFC */
+-	"LEN2132", /* ThinkPad P52 */
+-	"LEN2133", /* ThinkPad P72 w/ NFC */
+-	"LEN2134", /* ThinkPad P72 */
+-	NULL
+-};
 -
  /*
-  * (value from firmware) * 10 + 790 = dpi
-  * we also have to convert dpi to dots/mm (*10/254 to avoid floating point)
-@@ -1200,10 +1118,9 @@ static int elantech_set_input_params(struct psmouse *psmouse)
- 	struct input_dev *dev = psmouse->dev;
- 	struct elantech_data *etd = psmouse->private;
- 	struct elantech_device_info *info = &etd->info;
--	unsigned int x_min = 0, y_min = 0, x_max = 0, y_max = 0, width = 0;
--
--	if (elantech_set_range(psmouse, &x_min, &y_min, &x_max, &y_max, &width))
--		return -1;
-+	unsigned int x_min = info->x_min, y_min = info->y_min,
-+		     x_max = info->x_max, y_max = info->y_max,
-+		     width = info->width;
+  * Set the appropriate event bits for the input subsystem
+  */
+@@ -1133,8 +1125,7 @@ static int elantech_set_input_params(struct psmouse *psmouse)
+ 	__clear_bit(EV_REL, dev->evbit);
  
- 	__set_bit(INPUT_PROP_POINTER, dev->propbit);
- 	__set_bit(EV_KEY, dev->evbit);
-@@ -1687,6 +1604,7 @@ static int elantech_query_info(struct psmouse *psmouse,
- 			       struct elantech_device_info *info)
- {
- 	unsigned char param[3];
-+	unsigned char traces;
+ 	__set_bit(BTN_LEFT, dev->keybit);
+-	if (dmi_check_system(elantech_dmi_has_middle_button) ||
+-			psmouse_matches_pnp_id(psmouse, middle_button_pnp_ids))
++	if (info->has_middle_button)
+ 		__set_bit(BTN_MIDDLE, dev->keybit);
+ 	__set_bit(BTN_RIGHT, dev->keybit);
  
- 	memset(info, 0, sizeof(*info));
- 
-@@ -1755,6 +1673,76 @@ static int elantech_query_info(struct psmouse *psmouse,
- 		}
+@@ -1748,6 +1739,11 @@ static int elantech_query_info(struct psmouse *psmouse,
+ 		break;
  	}
  
-+	/* query range information */
-+	switch (info->hw_version) {
-+	case 1:
-+		info->x_min = ETP_XMIN_V1;
-+		info->y_min = ETP_YMIN_V1;
-+		info->x_max = ETP_XMAX_V1;
-+		info->y_max = ETP_YMAX_V1;
-+		break;
-+
-+	case 2:
-+		if (info->fw_version == 0x020800 ||
-+		    info->fw_version == 0x020b00 ||
-+		    info->fw_version == 0x020030) {
-+			info->x_min = ETP_XMIN_V2;
-+			info->y_min = ETP_YMIN_V2;
-+			info->x_max = ETP_XMAX_V2;
-+			info->y_max = ETP_YMAX_V2;
-+		} else {
-+			int i;
-+			int fixed_dpi;
-+
-+			i = (info->fw_version > 0x020800 &&
-+			     info->fw_version < 0x020900) ? 1 : 2;
-+
-+			if (info->send_cmd(psmouse, ETP_FW_ID_QUERY, param))
-+				return -EINVAL;
-+
-+			fixed_dpi = param[1] & 0x10;
-+
-+			if (((info->fw_version >> 16) == 0x14) && fixed_dpi) {
-+				if (info->send_cmd(psmouse, ETP_SAMPLE_QUERY, param))
-+					return -EINVAL;
-+
-+				info->x_max = (info->capabilities[1] - i) * param[1] / 2;
-+				info->y_max = (info->capabilities[2] - i) * param[2] / 2;
-+			} else if (info->fw_version == 0x040216) {
-+				info->x_max = 819;
-+				info->y_max = 405;
-+			} else if (info->fw_version == 0x040219 || info->fw_version == 0x040215) {
-+				info->x_max = 900;
-+				info->y_max = 500;
-+			} else {
-+				info->x_max = (info->capabilities[1] - i) * 64;
-+				info->y_max = (info->capabilities[2] - i) * 64;
-+			}
-+		}
-+		break;
-+
-+	case 3:
-+		if (info->send_cmd(psmouse, ETP_FW_ID_QUERY, param))
-+			return -EINVAL;
-+
-+		info->x_max = (0x0f & param[0]) << 8 | param[1];
-+		info->y_max = (0xf0 & param[0]) << 4 | param[2];
-+		break;
-+
-+	case 4:
-+		if (info->send_cmd(psmouse, ETP_FW_ID_QUERY, param))
-+			return -EINVAL;
-+
-+		info->x_max = (0x0f & param[0]) << 8 | param[1];
-+		info->y_max = (0xf0 & param[0]) << 4 | param[2];
-+		traces = info->capabilities[1];
-+		if ((traces < 2) || (traces > info->x_max))
-+			return -EINVAL;
-+
-+		info->width = info->x_max / (traces - 1);
-+		break;
-+	}
++	/* check for the middle button: DMI matching or new v4 firmwares */
++	info->has_middle_button = dmi_check_system(elantech_dmi_has_middle_button) ||
++				  (ETP_NEW_IC_SMBUS_HOST_NOTIFY(info->fw_version) &&
++				   !elantech_is_buttonpad(info));
 +
  	return 0;
  }
  
 diff --git a/drivers/input/mouse/elantech.h b/drivers/input/mouse/elantech.h
-index 119727085a60..194503ed59c5 100644
+index 194503ed59c5..16174b54ffc3 100644
 --- a/drivers/input/mouse/elantech.h
 +++ b/drivers/input/mouse/elantech.h
-@@ -144,8 +144,13 @@ struct elantech_device_info {
- 	unsigned char debug;
- 	unsigned char hw_version;
- 	unsigned int fw_version;
-+	unsigned int x_min;
-+	unsigned int y_min;
-+	unsigned int x_max;
-+	unsigned int y_max;
- 	unsigned int x_res;
- 	unsigned int y_res;
-+	unsigned int width;
- 	unsigned int bus;
- 	bool paritycheck;
- 	bool jumpy_cursor;
+@@ -158,6 +158,7 @@ struct elantech_device_info {
+ 	bool crc_enabled;
+ 	bool set_hw_resolution;
+ 	bool has_trackpoint;
++	bool has_middle_button;
+ 	int (*send_cmd)(struct psmouse *psmouse, unsigned char c,
+ 			unsigned char *param);
+ };
 -- 
 2.21.0
 
