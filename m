@@ -2,81 +2,99 @@ Return-Path: <SRS0=9PYC=TV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.7 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED8ABC072B5
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 21:08:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68CE5C072B5
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 21:08:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C8F402173E
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 21:08:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 39FD42173E
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 21:08:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1558472928;
+	bh=12uReeewHL7MncXBZs+WJpGMmKhnomSC6GnU4rigTAU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=kX1P7Ysaa74Ho1aYsJcgyB4xby7/bU0L50o74eKiQZ3DG2cmx+kMTRcw3gcUYXHtU
+	 jj2a/xSuwN3CZzsYh/ViALjIrEeVt3WySxmASvI3oWPH8U+IaifBjQdJGoA8hShIyK
+	 kKK35iooH+2n3fm97ipwXoDYAN83pgWcjDiQo+H0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727603AbfEUVIB (ORCPT
+        id S1727833AbfEUVIr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 May 2019 17:08:01 -0400
-Received: from mail-it1-f197.google.com ([209.85.166.197]:34945 "EHLO
-        mail-it1-f197.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727136AbfEUVIB (ORCPT
+        Tue, 21 May 2019 17:08:47 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:42096 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727641AbfEUVIq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 May 2019 17:08:01 -0400
-Received: by mail-it1-f197.google.com with SMTP id m188so146589ita.0
-        for <linux-kernel@vger.kernel.org>; Tue, 21 May 2019 14:08:01 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
-         :from:to;
-        bh=UzmPeUGaB8JKZJ9CS0AWltu9MikJ5xxP1GF6GVzJW6I=;
-        b=I86J0ocY/mjclgGyscYp2BVQrrakOQVlQOYDIGEaB2oDHHZICAuUI0BsZ4ex5UAXfH
-         BHptGQY4hD3TcHKvPgg3nFKxOP4Q5Y9rv8FkYve3vpTRdocJDFHRwv0mBZ7V5IIPO4cw
-         4STyz36Srj13w6M0SKdSCzzTy8Pd/oqYnaeHDjZzAkqqFlDwueIdtyThFRnkbopKaXwY
-         Lgrd8R0RIo/boKUOvd4lSBiCMjj0R/Chlw41+7Hj1viKdLUuV9/bXFOpwQ8n8ZtKkFP0
-         69FC/7X9iLpOPZR4XzUo1lDz66MZk3gK/Sw6kOVYVB2H7u/ocqJMMVlWelosZe635/Si
-         2lzg==
-X-Gm-Message-State: APjAAAXyl02mfUfVA2GQ3NIQSTk268WQJ6ke3oidx+NNgnnA2gvBh9Vs
-        gPbul2zwB1uZkYWBB4WJG5mbu/QXFPA7VLM+BDkmapj/L4RP
-X-Google-Smtp-Source: APXvYqwtcVeO8IOlYtpHb+pYSw2wdqPB0c8EwcnSxnMt61P6oQuZ5TprV3iiiFbK3fSCqQiDaNir0ZBnxV+7ib/d+4hx9iNpXOLP
+        Tue, 21 May 2019 17:08:46 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=y7ibEasnNlMrg0Cg0u1uA8kjMpvwkTqXDxhIGJ97fKY=; b=fHihLTsTBRj8VjaQKfcECHqjH
+        7QaAYGF0BGdUc3CQdB5hmMpvxPaU8ozn9e1eWwM9GVrWUlF8NH5Sr26Hwo0fxYOQ+nebRdpf2VUrZ
+        x8CMS1QorssZj9YtUqQHVVsNebaHWlNgE0Eh8o87e4P89Jw5JOfi3mPbtF1Doevl4hAPQ=;
+Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=debutante.sirena.org.uk)
+        by heliosphere.sirena.org.uk with esmtpa (Exim 4.89)
+        (envelope-from <broonie@sirena.org.uk>)
+        id 1hTC03-0002FI-Um; Tue, 21 May 2019 21:08:43 +0000
+Received: by debutante.sirena.org.uk (Postfix, from userid 1000)
+        id 643A11126D13; Tue, 21 May 2019 22:08:43 +0100 (BST)
+Date:   Tue, 21 May 2019 22:08:43 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Olof Johansson <olof@lixom.net>
+Cc:     linux-spi@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, Rajan Vaja <rajan.vaja@xilinx.com>,
+        Jolly Shah <jollys@xilinx.com>,
+        Michal Simek <michal.simek@xilinx.com>
+Subject: Re: [PATCH] spi: zynqmp: Fix build break
+Message-ID: <20190521210843.GC1580@sirena.org.uk>
+References: <2bb66114-c976-9c44-6db3-33a5dd12edde@monstr.eu>
+ <20190429162246.6061-1-olof@lixom.net>
 MIME-Version: 1.0
-X-Received: by 2002:a24:7309:: with SMTP id y9mr5819441itb.162.1558472880669;
- Tue, 21 May 2019 14:08:00 -0700 (PDT)
-Date:   Tue, 21 May 2019 14:08:00 -0700
-In-Reply-To: <000000000000ac9447058924709c@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <00000000000071c8a105896c3ef2@google.com>
-Subject: Re: WARNING: locking bug in rhashtable_walk_enter
-From:   syzbot <syzbot+6440134c13554d3abfb0@syzkaller.appspotmail.com>
-To:     davem@davemloft.net, hujunwei4@huawei.com, jon.maloy@ericsson.com,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com,
-        tipc-discussion@lists.sourceforge.net, wangxiaogang3@huawei.com,
-        ying.xue@windriver.com
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="4jXrM3lyYWu4nBt5"
+Content-Disposition: inline
+In-Reply-To: <20190429162246.6061-1-olof@lixom.net>
+X-Cookie: Klatu barada nikto.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-syzbot has bisected this bug to:
 
-commit 7e27e8d6130c5e88fac9ddec4249f7f2337fe7f8
-Author: Junwei Hu <hujunwei4@huawei.com>
-Date:   Thu May 16 02:51:15 2019 +0000
+--4jXrM3lyYWu4nBt5
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-     tipc: switch order of device registration to fix a crash
+On Mon, Apr 29, 2019 at 09:22:46AM -0700, Olof Johansson wrote:
+> Missing include:
+> drivers/spi/spi-zynqmp-gqspi.c:1025:13: error: implicit declaration of
+>   function 'zynqmp_pm_get_eemi_ops'; did you mean
+>   'zynqmp_process_dma_irq'? [-Werror=3Dimplicit-function-declaration]
+>=20
+> Fixes: 3d0313786470a ('drivers: Defer probe if firmware is not ready')
 
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=1285d39ca00000
-start commit:   f49aa1de Merge tag 'for-5.2-rc1-tag' of git://git.kernel.o..
-git tree:       upstream
-final crash:    https://syzkaller.appspot.com/x/report.txt?x=1185d39ca00000
-console output: https://syzkaller.appspot.com/x/log.txt?x=1685d39ca00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=fc045131472947d7
-dashboard link: https://syzkaller.appspot.com/bug?extid=6440134c13554d3abfb0
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=10c586bca00000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=14759fb2a00000
+Please copy maintainers on patches so they aren't surprised when they
+get mails saying they accepted patches they never heard of before!
 
-Reported-by: syzbot+6440134c13554d3abfb0@syzkaller.appspotmail.com
-Fixes: 7e27e8d6130c ("tipc: switch order of device registration to fix a  
-crash")
+--4jXrM3lyYWu4nBt5
+Content-Type: application/pgp-signature; name="signature.asc"
 
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlzkaNoACgkQJNaLcl1U
+h9CBfwgAgbLrAnQDkYTUpP7MdSDSiv8ppwZ4R/EN9OCgQb6Cjms4xG6hrxkbloPA
++oUebvqpcjb2wzduZU8tdCKx2CSU/uGlqTxG55BLy+pyrGHmFDY3MBpWr0aAj8hi
+XZGbyLoZWQYWTWorcXeC50RTLzX+fRTPx0A5KJzjXU8pjUmjnA+hjDeruCcW2JNN
+Suy2LE8ivUVCFUAOHVhM0bVXIbteUPRu08p3XGd3aTsfzJRn35GWepyfhnzAKX1g
+OwIBgEZFHVzQ0AZh4jm4c4YdkrF/vpawZdC+48BCVtfsdreTlVzBZ8OvKfC9j4jX
+q0QdP42x5IWG+4mrek1zsa3JoYmsJA==
+=tUfm
+-----END PGP SIGNATURE-----
+
+--4jXrM3lyYWu4nBt5--
