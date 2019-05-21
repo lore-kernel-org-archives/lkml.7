@@ -2,116 +2,453 @@ Return-Path: <SRS0=9PYC=TV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A8D7C04AAC
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 02:16:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 478D9C04AAC
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 02:17:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2F153217D4
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 02:16:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="US/umAmA"
+	by mail.kernel.org (Postfix) with ESMTP id 1E3CB2173C
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 02:17:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727518AbfEUCQw (ORCPT
+        id S1727644AbfEUCRH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 22:16:52 -0400
-Received: from mail-eopbgr60055.outbound.protection.outlook.com ([40.107.6.55]:34563
-        "EHLO EUR04-DB3-obe.outbound.protection.outlook.com"
+        Mon, 20 May 2019 22:17:07 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:8227 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726325AbfEUCQw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 22:16:52 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=luVXe9ppYOUAjgWv4+viPwG8DNqcuVUU9kONVNRzOVQ=;
- b=US/umAmAh2ZfAH7SX9GexjXN5LQT1XRpZsoiwrkTWx8sFU4LI975ItxiDAkfB9lJQKZb3e72/5DBXj78HvfNHrIarjGq4m9OeuECMkJ5NlcKK55WHtN28UkX0kDZUfSCIKPGPi6wKtDK0GP/sN0rLB2OUUtOgAa/mW5teY8pRkc=
-Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com (52.134.72.18) by
- DB3PR0402MB3658.eurprd04.prod.outlook.com (52.134.65.28) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1900.16; Tue, 21 May 2019 02:16:47 +0000
-Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com
- ([fe80::5835:e874:bd94:fec]) by DB3PR0402MB3916.eurprd04.prod.outlook.com
- ([fe80::5835:e874:bd94:fec%5]) with mapi id 15.20.1900.020; Tue, 21 May 2019
- 02:16:47 +0000
-From:   Anson Huang <anson.huang@nxp.com>
-To:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Shawn Guo <shawnguo@kernel.org>
-CC:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Aisheng Dong <aisheng.dong@nxp.com>
-Subject: RE: linux-next: build failure after merge of the imx-mxs tree
-Thread-Topic: linux-next: build failure after merge of the imx-mxs tree
-Thread-Index: AQHVD1yx789OZHQ730mdKrHPx497h6Z01vKw
-Date:   Tue, 21 May 2019 02:16:47 +0000
-Message-ID: <DB3PR0402MB39165C5944880EA0B0A37F91F5070@DB3PR0402MB3916.eurprd04.prod.outlook.com>
-References: <20190521083756.4c8aee8a@canb.auug.org.au>
-In-Reply-To: <20190521083756.4c8aee8a@canb.auug.org.au>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=anson.huang@nxp.com; 
-x-originating-ip: [119.31.174.66]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 80bd84e5-623d-4529-fd15-08d6dd9260d6
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:DB3PR0402MB3658;
-x-ms-traffictypediagnostic: DB3PR0402MB3658:
-x-ms-exchange-purlcount: 1
-x-microsoft-antispam-prvs: <DB3PR0402MB36583E37703D162B2414FB4DF5070@DB3PR0402MB3658.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:2887;
-x-forefront-prvs: 0044C17179
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(366004)(346002)(136003)(376002)(396003)(39850400004)(199004)(189003)(13464003)(26005)(186003)(305945005)(2906002)(9686003)(6306002)(55016002)(6116002)(99286004)(3846002)(7736002)(25786009)(5660300002)(76176011)(486006)(4326008)(33656002)(110136005)(6436002)(53546011)(6506007)(316002)(7696005)(446003)(11346002)(476003)(52536014)(68736007)(74316002)(229853002)(44832011)(256004)(14444005)(102836004)(53936002)(8936002)(73956011)(86362001)(76116006)(66446008)(66946007)(66476007)(66556008)(64756008)(71200400001)(71190400001)(66066001)(478600001)(8676002)(966005)(14454004)(81156014)(54906003)(81166006)(6246003);DIR:OUT;SFP:1101;SCL:1;SRVR:DB3PR0402MB3658;H:DB3PR0402MB3916.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: BoS3+mwhTtXXA0awdtRsEOhmYJLt+J/vSSMKopi4Lxhn7dD3Xpvghw0WZXopIbYgIJO9N/kftYlQlKejoRhq7njFxPzpo6byYh0ZxGldDQPOHIXjaT7Ap0bpkkG4LKxcCu/D/VmTlOOT4me0nEq0Wze6vz9fEflee1SetOLNc9ociruMXAS0u/HHB8GQjcpAbXXWO2OBuxPyxOLmz+S2KasoB2lUA9hTTtgzg8gWBOJu2je2CcBzs9LGNM+mFGlnRDX/6uFqxakQU9ae6VglFyPK8iIsoOGdZzSqqkv5wLbW6Z/75cjAjNA0gb83FVkUyu4LWEBD/br1lfqQQPgKCt/SmHDXlY8n2drtWa9+KDAadGtxyLQT4RZM+Z4vmRkLN8A6US91s1LECS52PLK35vQW1D1rUfgUmj2rovM/m6I=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        id S1726325AbfEUCRH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 22:17:07 -0400
+Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id CCB5A22C494E6D162932;
+        Tue, 21 May 2019 10:17:03 +0800 (CST)
+Received: from huawei.com (10.175.124.28) by DGGEMS411-HUB.china.huawei.com
+ (10.3.19.211) with Microsoft SMTP Server id 14.3.439.0; Tue, 21 May 2019
+ 10:16:56 +0800
+From:   sunqiuyang <sunqiuyang@huawei.com>
+To:     <linux-kernel@vger.kernel.org>, <linux-fsdevel@vger.kernel.org>,
+        <linux-f2fs-devel@lists.sourceforge.net>
+CC:     <yuchao0@huawei.com>, <sunqiuyang@huawei.com>
+Subject: [PATCH v3 1/1] f2fs: ioctl for removing a range from F2FS
+Date:   Tue, 21 May 2019 10:34:24 +0800
+Message-ID: <20190521023424.19772-1-sunqiuyang@huawei.com>
+X-Mailer: git-send-email 2.17.2
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 80bd84e5-623d-4529-fd15-08d6dd9260d6
-X-MS-Exchange-CrossTenant-originalarrivaltime: 21 May 2019 02:16:47.7410
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB3PR0402MB3658
+Content-Type: text/plain
+X-Originating-IP: [10.175.124.28]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGksIFN0ZXBoZW4vU2hhd24NCglJIHJlYWxpemVkIHRoaXMgaXNzdWUgbGFzdCB3ZWVrIHdoZW4g
-SSB1cGRhdGVkIG15IExpbnV4LW5leHQgdHJlZSAoTk9UIHN1cmUgd2h5IEkgZGlkIE5PVCBtZWV0
-IHN1Y2ggaXNzdWUgd2hlbiBJIGRpZCB0aGUgcGF0Y2gpLCBzbyBJIHJlc2VudCB0aGUgcGF0Y2gg
-c2VyaWVzIG9mIGFkZGluZyBoZWFkIGZpbGUgImlvLmgiIHRvIGZpeCB0aGlzIGlzc3VlLCBwbGVh
-c2UgYXBwbHkgYmVsb3cgVjIgcGF0Y2ggc2VyaWVzIGluc3RlYWQsIHNvcnJ5IGZvciB0aGUgaW5j
-b252ZW5pZW5jZS4NCg0KaHR0cHM6Ly9wYXRjaHdvcmsua2VybmVsLm9yZy9wYXRjaC8xMDk0NDY4
-MS8NCg0KdGhhbmtzLA0KQW5zb24uDQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4g
-RnJvbTogU3RlcGhlbiBSb3Rod2VsbCBbbWFpbHRvOnNmckBjYW5iLmF1dWcub3JnLmF1XQ0KPiBT
-ZW50OiBUdWVzZGF5LCBNYXkgMjEsIDIwMTkgNjozOCBBTQ0KPiBUbzogU2hhd24gR3VvIDxzaGF3
-bmd1b0BrZXJuZWwub3JnPg0KPiBDYzogTGludXggTmV4dCBNYWlsaW5nIExpc3QgPGxpbnV4LW5l
-eHRAdmdlci5rZXJuZWwub3JnPjsgTGludXggS2VybmVsIE1haWxpbmcNCj4gTGlzdCA8bGludXgt
-a2VybmVsQHZnZXIua2VybmVsLm9yZz47IEFuc29uIEh1YW5nIDxhbnNvbi5odWFuZ0BueHAuY29t
-PjsNCj4gQWlzaGVuZyBEb25nIDxhaXNoZW5nLmRvbmdAbnhwLmNvbT4NCj4gU3ViamVjdDogbGlu
-dXgtbmV4dDogYnVpbGQgZmFpbHVyZSBhZnRlciBtZXJnZSBvZiB0aGUgaW14LW14cyB0cmVlDQo+
-IA0KPiBIaSBTaGF3biwNCj4gDQo+IEFmdGVyIG1lcmdpbmcgdGhlIGlteC1teHMgdHJlZSwgdG9k
-YXkncyBsaW51eC1uZXh0IGJ1aWxkIChhcm0NCj4gbXVsdGlfdjdfZGVmY29uZmlnKSBmYWlsZWQg
-bGlrZSB0aGlzOg0KPiANCj4gZHJpdmVycy9jbGsvaW14L2Nsay5jOiBJbiBmdW5jdGlvbiAnaW14
-X21tZGNfbWFza19oYW5kc2hha2UnOg0KPiBkcml2ZXJzL2Nsay9pbXgvY2xrLmM6MjA6ODogZXJy
-b3I6IGltcGxpY2l0IGRlY2xhcmF0aW9uIG9mIGZ1bmN0aW9uDQo+ICdyZWFkbF9yZWxheGVkJzsg
-ZGlkIHlvdSBtZWFuICd4Y2hnX3JlbGF4ZWQnPyBbLVdlcnJvcj1pbXBsaWNpdC1mdW5jdGlvbi0N
-Cj4gZGVjbGFyYXRpb25dDQo+ICAgcmVnID0gcmVhZGxfcmVsYXhlZChjY21fYmFzZSArIENDTV9D
-Q0RSKTsNCj4gICAgICAgICBefn5+fn5+fn5+fn5+DQo+ICAgICAgICAgeGNoZ19yZWxheGVkDQo+
-IGRyaXZlcnMvY2xrL2lteC9jbGsuYzoyMjoyOiBlcnJvcjogaW1wbGljaXQgZGVjbGFyYXRpb24g
-b2YgZnVuY3Rpb24NCj4gJ3dyaXRlbF9yZWxheGVkJzsgZGlkIHlvdSBtZWFuICd4Y2hnX3JlbGF4
-ZWQnPyBbLVdlcnJvcj1pbXBsaWNpdC1mdW5jdGlvbi0NCj4gZGVjbGFyYXRpb25dDQo+ICAgd3Jp
-dGVsX3JlbGF4ZWQocmVnLCBjY21fYmFzZSArIENDTV9DQ0RSKTsNCj4gICBefn5+fn5+fn5+fn5+
-fg0KPiAgIHhjaGdfcmVsYXhlZA0KPiANCj4gQ2F1c2VkIGJ5IGNvbW1pdA0KPiANCj4gICAwZGM2
-YjQ5MmI2ZTAgKCJjbGs6IGlteDogQWRkIGNvbW1vbiBBUEkgZm9yIG1hc2tpbmcgTU1EQyBoYW5k
-c2hha2UiKQ0KPiANCj4gSSBoYXZlIHVzZWQgdGhlIGlteC1teHMgdHJlZSBmcm9tIG5leHQtMjAx
-OTA1MjAgZm9yIHRvZGF5Lg0KPiANCj4gLS0NCj4gQ2hlZXJzLA0KPiBTdGVwaGVuIFJvdGh3ZWxs
-DQo=
+From: Qiuyang Sun <sunqiuyang@huawei.com>
+
+This ioctl shrinks a given length (aligned to sections) from end of the
+main area. Any cursegs and valid blocks will be moved out before
+invalidating the range.
+
+This feature can be used for adjusting partition sizes online.
+
+Changlog v1 ==> v2:
+
+Sahitya Tummala:
+ - Add this ioctl for f2fs_compat_ioctl() as well.
+ - Fix debugfs status to reflect the online resize changes.
+ - Fix potential race between online resize path and allocate new data
+   block path or gc path.
+
+Others:
+ - Rename some identifiers.
+ - Add some error handling branches.
+ - Clear sbi->next_victim_seg[BG_GC/FG_GC] in shrinking range.
+
+Changelog v2 ==> v3:
+Implement this interface as ext4's, and change the parameter from shrunk
+bytes to new block count of F2FS.
+
+Signed-off-by: Qiuyang Sun <sunqiuyang@huawei.com>
+Signed-off-by: Sahitya Tummala <stummala@codeaurora.org>
+---
+ fs/f2fs/debug.c   |   7 ++++
+ fs/f2fs/f2fs.h    |   4 ++
+ fs/f2fs/file.c    |  28 ++++++++++++++
+ fs/f2fs/gc.c      | 113 +++++++++++++++++++++++++++++++++++++++++++++++++++++-
+ fs/f2fs/segment.c |  49 +++++++++++++++++------
+ fs/f2fs/segment.h |   1 +
+ fs/f2fs/super.c   |   1 +
+ 7 files changed, 190 insertions(+), 13 deletions(-)
+
+diff --git a/fs/f2fs/debug.c b/fs/f2fs/debug.c
+index 99e9a5c..7706049 100644
+--- a/fs/f2fs/debug.c
++++ b/fs/f2fs/debug.c
+@@ -27,8 +27,15 @@
+ static void update_general_status(struct f2fs_sb_info *sbi)
+ {
+ 	struct f2fs_stat_info *si = F2FS_STAT(sbi);
++	struct f2fs_super_block *raw_super = F2FS_RAW_SUPER(sbi);
+ 	int i;
+ 
++	/* these will be changed if online resize is done */
++	si->main_area_segs = le32_to_cpu(raw_super->segment_count_main);
++	si->main_area_sections = le32_to_cpu(raw_super->section_count);
++	si->main_area_zones = si->main_area_sections /
++				le32_to_cpu(raw_super->secs_per_zone);
++
+ 	/* validation check of the segment numbers */
+ 	si->hit_largest = atomic64_read(&sbi->read_hit_largest);
+ 	si->hit_cached = atomic64_read(&sbi->read_hit_cached);
+diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
+index a205d4d..065f917 100644
+--- a/fs/f2fs/f2fs.h
++++ b/fs/f2fs/f2fs.h
+@@ -423,6 +423,7 @@ static inline bool __has_cursum_space(struct f2fs_journal *journal,
+ #define F2FS_IOC_SET_PIN_FILE		_IOW(F2FS_IOCTL_MAGIC, 13, __u32)
+ #define F2FS_IOC_GET_PIN_FILE		_IOR(F2FS_IOCTL_MAGIC, 14, __u32)
+ #define F2FS_IOC_PRECACHE_EXTENTS	_IO(F2FS_IOCTL_MAGIC, 15)
++#define F2FS_IOC_RESIZE_FS		_IOW(F2FS_IOCTL_MAGIC, 16, __u64)
+ 
+ #define F2FS_IOC_SET_ENCRYPTION_POLICY	FS_IOC_SET_ENCRYPTION_POLICY
+ #define F2FS_IOC_GET_ENCRYPTION_POLICY	FS_IOC_GET_ENCRYPTION_POLICY
+@@ -1309,6 +1310,7 @@ struct f2fs_sb_info {
+ 	unsigned int segs_per_sec;		/* segments per section */
+ 	unsigned int secs_per_zone;		/* sections per zone */
+ 	unsigned int total_sections;		/* total section count */
++	unsigned int current_total_sections;	/* for shrink resize */
+ 	unsigned int total_node_count;		/* total node block count */
+ 	unsigned int total_valid_node_count;	/* valid node block count */
+ 	loff_t max_file_blocks;			/* max block index of file */
+@@ -3175,6 +3177,7 @@ void f2fs_clear_prefree_segments(struct f2fs_sb_info *sbi,
+ int f2fs_disable_cp_again(struct f2fs_sb_info *sbi, block_t unusable);
+ void f2fs_release_discard_addrs(struct f2fs_sb_info *sbi);
+ int f2fs_npages_for_summary_flush(struct f2fs_sb_info *sbi, bool for_ra);
++void allocate_segment_for_resize(struct f2fs_sb_info *sbi, int type);
+ void f2fs_allocate_new_segments(struct f2fs_sb_info *sbi);
+ int f2fs_trim_fs(struct f2fs_sb_info *sbi, struct fstrim_range *range);
+ bool f2fs_exist_trim_candidates(struct f2fs_sb_info *sbi,
+@@ -3318,6 +3321,7 @@ int f2fs_migrate_page(struct address_space *mapping, struct page *newpage,
+ int f2fs_gc(struct f2fs_sb_info *sbi, bool sync, bool background,
+ 			unsigned int segno);
+ void f2fs_build_gc_manager(struct f2fs_sb_info *sbi);
++int f2fs_resize_fs(struct f2fs_sb_info *sbi, __u64 block_count);
+ 
+ /*
+  * recovery.c
+diff --git a/fs/f2fs/file.c b/fs/f2fs/file.c
+index d05ac21..a37a0d4 100644
+--- a/fs/f2fs/file.c
++++ b/fs/f2fs/file.c
+@@ -3013,6 +3013,31 @@ static int f2fs_ioc_precache_extents(struct file *filp, unsigned long arg)
+ 	return f2fs_precache_extents(file_inode(filp));
+ }
+ 
++static int f2fs_ioc_resize_fs(struct file *filp, unsigned long arg)
++{
++	struct f2fs_sb_info *sbi = F2FS_I_SB(file_inode(filp));
++	__u64 block_count;
++	int ret;
++
++	if (!capable(CAP_SYS_ADMIN))
++		return -EPERM;
++
++	if (f2fs_readonly(sbi->sb))
++		return -EROFS;
++
++	if (copy_from_user(&block_count, (__u64 __user *)arg, sizeof(__u64)))
++		return -EFAULT;
++
++	ret = mnt_want_write_file(filp);
++	if (ret)
++		return ret;
++
++	ret = f2fs_resize_fs(sbi, block_count);
++	mnt_drop_write_file(filp);
++
++	return ret;
++}
++
+ long f2fs_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
+ {
+ 	if (unlikely(f2fs_cp_error(F2FS_I_SB(file_inode(filp)))))
+@@ -3069,6 +3094,8 @@ long f2fs_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
+ 		return f2fs_ioc_set_pin_file(filp, arg);
+ 	case F2FS_IOC_PRECACHE_EXTENTS:
+ 		return f2fs_ioc_precache_extents(filp, arg);
++	case F2FS_IOC_RESIZE_FS:
++		return f2fs_ioc_resize_fs(filp, arg);
+ 	default:
+ 		return -ENOTTY;
+ 	}
+@@ -3182,6 +3209,7 @@ long f2fs_compat_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
+ 	case F2FS_IOC_GET_PIN_FILE:
+ 	case F2FS_IOC_SET_PIN_FILE:
+ 	case F2FS_IOC_PRECACHE_EXTENTS:
++	case F2FS_IOC_RESIZE_FS:
+ 		break;
+ 	default:
+ 		return -ENOIOCTLCMD;
+diff --git a/fs/f2fs/gc.c b/fs/f2fs/gc.c
+index 963fb45..2dc7ce2 100644
+--- a/fs/f2fs/gc.c
++++ b/fs/f2fs/gc.c
+@@ -311,10 +311,11 @@ static int get_victim_by_default(struct f2fs_sb_info *sbi,
+ 	struct sit_info *sm = SIT_I(sbi);
+ 	struct victim_sel_policy p;
+ 	unsigned int secno, last_victim;
+-	unsigned int last_segment = MAIN_SEGS(sbi);
++	unsigned int last_segment;
+ 	unsigned int nsearched = 0;
+ 
+ 	mutex_lock(&dirty_i->seglist_lock);
++	last_segment = CUR_MAIN_SECS(sbi) * sbi->segs_per_sec;
+ 
+ 	p.alloc_mode = alloc_mode;
+ 	select_policy(sbi, gc_type, type, &p);
+@@ -404,7 +405,8 @@ static int get_victim_by_default(struct f2fs_sb_info *sbi,
+ 				sm->last_victim[p.gc_mode] = last_victim + 1;
+ 			else
+ 				sm->last_victim[p.gc_mode] = segno + 1;
+-			sm->last_victim[p.gc_mode] %= MAIN_SEGS(sbi);
++			sm->last_victim[p.gc_mode] %=
++				(CUR_MAIN_SECS(sbi) * sbi->segs_per_sec);
+ 			break;
+ 		}
+ 	}
+@@ -1360,3 +1362,110 @@ void f2fs_build_gc_manager(struct f2fs_sb_info *sbi)
+ 		SIT_I(sbi)->last_victim[ALLOC_NEXT] =
+ 				GET_SEGNO(sbi, FDEV(0).end_blk) + 1;
+ }
++
++static int free_segment_range(struct f2fs_sb_info *sbi, unsigned int start,
++							unsigned int end)
++{
++	int type;
++	unsigned int segno, next_inuse;
++	struct gc_inode_list gc_list = {
++		.ilist = LIST_HEAD_INIT(gc_list.ilist),
++		.iroot = RADIX_TREE_INIT(gc_list.iroot, GFP_NOFS),
++	};
++	int err = 0;
++
++	/* Move out cursegs from the target range */
++	for (type = CURSEG_HOT_DATA; type < NR_CURSEG_TYPE; type++) {
++		segno = CURSEG_I(sbi, type)->segno;
++		if (segno >= start && segno <= end)
++			allocate_segment_for_resize(sbi, type);
++	}
++
++	/* do GC to move out valid blocks in the range */
++	mutex_lock(&sbi->gc_mutex);
++	for (segno = start; segno <= end; segno += sbi->segs_per_sec) {
++		do_garbage_collect(sbi, segno, &gc_list, FG_GC);
++		if (get_valid_blocks(sbi, segno, true)) {
++			err = -EAGAIN;
++			break;
++		}
++	}
++
++	mutex_unlock(&sbi->gc_mutex);
++	put_gc_inode(&gc_list);
++
++	if (err)
++		return err;
++
++	err = f2fs_sync_fs(sbi->sb, 1);
++	if (err)
++		return err;
++
++	next_inuse = find_next_inuse(FREE_I(sbi), end + 1, start);
++	if (next_inuse <= end) {
++		f2fs_msg(sbi->sb, KERN_ERR,
++			"segno %u should be free but still inuse!", next_inuse);
++		f2fs_bug_on(sbi, 1);
++	}
++	return err;
++}
++
++int f2fs_resize_fs(struct f2fs_sb_info *sbi, __u64 block_count)
++{
++	__u64 old_block_count = F2FS_RAW_SUPER(sbi)->block_count;
++	unsigned int secs;
++	int gc_mode, gc_type;
++	int err = 0;
++
++	if (block_count > old_block_count)
++		return -EINVAL;
++
++	if (block_count == old_block_count)
++		return 0;
++
++	secs = (old_block_count - block_count + BLKS_PER_SEC(sbi) - 1) /
++					BLKS_PER_SEC(sbi);
++	if (secs * BLKS_PER_SEC(sbi) + valid_user_blocks(sbi) +
++		sbi->current_reserved_blocks + sbi->unusable_block_count +
++		F2FS_OPTION(sbi).root_reserved_blocks > sbi->user_block_count)
++		return -ENOSPC;
++
++	mutex_lock(&DIRTY_I(sbi)->seglist_lock);
++	CUR_MAIN_SECS(sbi) = MAIN_SECS(sbi) - secs;
++	for (gc_mode = 0; gc_mode < MAX_GC_POLICY; gc_mode++)
++		if (SIT_I(sbi)->last_victim[gc_mode] >=
++					CUR_MAIN_SECS(sbi) * sbi->segs_per_sec)
++			SIT_I(sbi)->last_victim[gc_mode] = 0;
++	for (gc_type = BG_GC; gc_type <= FG_GC; gc_type++)
++		if (sbi->next_victim_seg[gc_type] >=
++					CUR_MAIN_SECS(sbi) * sbi->segs_per_sec)
++			sbi->next_victim_seg[gc_type] = NULL_SEGNO;
++	mutex_unlock(&DIRTY_I(sbi)->seglist_lock);
++
++	err = free_segment_range(sbi, CUR_MAIN_SECS(sbi) * sbi->segs_per_sec,
++			MAIN_SEGS(sbi) - 1);
++	if (err) {
++		CUR_MAIN_SECS(sbi) = MAIN_SECS(sbi);
++		return err;
++	}
++
++	/* Update FS metadata */
++	SM_I(sbi)->segment_count -= secs * sbi->segs_per_sec;
++	MAIN_SECS(sbi) = CUR_MAIN_SECS(sbi);
++	MAIN_SEGS(sbi) = MAIN_SECS(sbi) * sbi->segs_per_sec;
++	sbi->user_block_count -= secs * BLKS_PER_SEC(sbi);
++	sbi->ckpt->user_block_count = cpu_to_le64(sbi->user_block_count);
++	FREE_I(sbi)->free_sections -= secs;
++	FREE_I(sbi)->free_segments -= secs * sbi->segs_per_sec;
++
++	/* Update superblock */
++	F2FS_RAW_SUPER(sbi)->section_count = cpu_to_le32(MAIN_SECS(sbi));
++	F2FS_RAW_SUPER(sbi)->segment_count = cpu_to_le32(le32_to_cpu(
++		F2FS_RAW_SUPER(sbi)->segment_count) - secs * sbi->segs_per_sec);
++	F2FS_RAW_SUPER(sbi)->segment_count_main = cpu_to_le32(MAIN_SEGS(sbi));
++	F2FS_RAW_SUPER(sbi)->block_count = cpu_to_le32(le32_to_cpu(
++		F2FS_RAW_SUPER(sbi)->block_count) - secs * BLKS_PER_SEC(sbi));
++	err = f2fs_commit_super(sbi, false);
++
++	return err;
++}
+diff --git a/fs/f2fs/segment.c b/fs/f2fs/segment.c
+index 07e9235..5a68fc0 100644
+--- a/fs/f2fs/segment.c
++++ b/fs/f2fs/segment.c
+@@ -2360,7 +2360,7 @@ static void get_new_segment(struct f2fs_sb_info *sbi,
+ {
+ 	struct free_segmap_info *free_i = FREE_I(sbi);
+ 	unsigned int segno, secno, zoneno;
+-	unsigned int total_zones = MAIN_SECS(sbi) / sbi->secs_per_zone;
++	unsigned int total_zones = CUR_MAIN_SECS(sbi) / sbi->secs_per_zone;
+ 	unsigned int hint = GET_SEC_FROM_SEG(sbi, *newseg);
+ 	unsigned int old_zoneno = GET_ZONE_FROM_SEG(sbi, *newseg);
+ 	unsigned int left_start = hint;
+@@ -2377,12 +2377,13 @@ static void get_new_segment(struct f2fs_sb_info *sbi,
+ 			goto got_it;
+ 	}
+ find_other_zone:
+-	secno = find_next_zero_bit(free_i->free_secmap, MAIN_SECS(sbi), hint);
+-	if (secno >= MAIN_SECS(sbi)) {
++	secno = find_next_zero_bit(free_i->free_secmap, CUR_MAIN_SECS(sbi),
++									hint);
++	if (secno >= CUR_MAIN_SECS(sbi)) {
+ 		if (dir == ALLOC_RIGHT) {
+ 			secno = find_next_zero_bit(free_i->free_secmap,
+-							MAIN_SECS(sbi), 0);
+-			f2fs_bug_on(sbi, secno >= MAIN_SECS(sbi));
++							CUR_MAIN_SECS(sbi), 0);
++			f2fs_bug_on(sbi, secno >= CUR_MAIN_SECS(sbi));
+ 		} else {
+ 			go_left = 1;
+ 			left_start = hint - 1;
+@@ -2397,8 +2398,8 @@ static void get_new_segment(struct f2fs_sb_info *sbi,
+ 			continue;
+ 		}
+ 		left_start = find_next_zero_bit(free_i->free_secmap,
+-							MAIN_SECS(sbi), 0);
+-		f2fs_bug_on(sbi, left_start >= MAIN_SECS(sbi));
++							CUR_MAIN_SECS(sbi), 0);
++		f2fs_bug_on(sbi, left_start >= CUR_MAIN_SECS(sbi));
+ 		break;
+ 	}
+ 	secno = left_start;
+@@ -2651,6 +2652,27 @@ static void allocate_segment_by_default(struct f2fs_sb_info *sbi,
+ 	stat_inc_seg_type(sbi, curseg);
+ }
+ 
++void allocate_segment_for_resize(struct f2fs_sb_info *sbi, int type)
++{
++	struct curseg_info *curseg = CURSEG_I(sbi, type);
++	unsigned int old_segno = curseg->segno;
++
++	mutex_lock(&curseg->curseg_mutex);
++	if (f2fs_need_SSR(sbi) && get_ssr_segment(sbi, type))
++		change_curseg(sbi, type);
++	else
++		new_curseg(sbi, type, true);
++
++	stat_inc_seg_type(sbi, curseg);
++	mutex_unlock(&curseg->curseg_mutex);
++
++	if (get_valid_blocks(sbi, old_segno, false) == 0)
++		__set_test_and_free(sbi, old_segno);
++	f2fs_msg(sbi->sb, KERN_NOTICE,
++		"For resize: curseg of type %d: %u ==> %u",
++		type, old_segno, curseg->segno);
++}
++
+ void f2fs_allocate_new_segments(struct f2fs_sb_info *sbi)
+ {
+ 	struct curseg_info *curseg;
+@@ -3753,6 +3775,12 @@ static void remove_sits_in_journal(struct f2fs_sb_info *sbi)
+ 		bool dirtied;
+ 
+ 		segno = le32_to_cpu(segno_in_journal(journal, i));
++		if (segno >= MAIN_SEGS(sbi)) {
++			f2fs_msg(sbi->sb, KERN_NOTICE,
++				"Skip segno %u / %u in jnl!\n",
++				segno, MAIN_SEGS(sbi));
++			continue;
++		}
+ 		dirtied = __mark_sit_entry_dirty(sbi, segno);
+ 
+ 		if (!dirtied)
+@@ -4108,12 +4136,11 @@ static int build_sit_entries(struct f2fs_sb_info *sbi)
+ 
+ 		start = le32_to_cpu(segno_in_journal(journal, i));
+ 		if (start >= MAIN_SEGS(sbi)) {
+-			f2fs_msg(sbi->sb, KERN_ERR,
++			/* This may happen if the FS was once resized. */
++			f2fs_msg(sbi->sb, KERN_NOTICE,
+ 					"Wrong journal entry on segno %u",
+ 					start);
+-			set_sbi_flag(sbi, SBI_NEED_FSCK);
+-			err = -EINVAL;
+-			break;
++			continue;
+ 		}
+ 
+ 		se = &sit_i->sentries[start];
+diff --git a/fs/f2fs/segment.h b/fs/f2fs/segment.h
+index 429007b..eaa9782 100644
+--- a/fs/f2fs/segment.h
++++ b/fs/f2fs/segment.h
+@@ -59,6 +59,7 @@
+ 
+ #define MAIN_SEGS(sbi)	(SM_I(sbi)->main_segments)
+ #define MAIN_SECS(sbi)	((sbi)->total_sections)
++#define CUR_MAIN_SECS(sbi)	((sbi)->current_total_sections)
+ 
+ #define TOTAL_SEGS(sbi)							\
+ 	(SM_I(sbi) ? SM_I(sbi)->segment_count : 				\
+diff --git a/fs/f2fs/super.c b/fs/f2fs/super.c
+index 1f581f0..6c0e9cc 100644
+--- a/fs/f2fs/super.c
++++ b/fs/f2fs/super.c
+@@ -2843,6 +2843,7 @@ static void init_sb_info(struct f2fs_sb_info *sbi)
+ 	sbi->segs_per_sec = le32_to_cpu(raw_super->segs_per_sec);
+ 	sbi->secs_per_zone = le32_to_cpu(raw_super->secs_per_zone);
+ 	sbi->total_sections = le32_to_cpu(raw_super->section_count);
++	sbi->current_total_sections = sbi->total_sections;
+ 	sbi->total_node_count =
+ 		(le32_to_cpu(raw_super->segment_count_nat) / 2)
+ 			* sbi->blocks_per_seg * NAT_ENTRY_PER_BLOCK;
+-- 
+1.8.3.1
+
