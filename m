@@ -2,119 +2,101 @@ Return-Path: <SRS0=9PYC=TV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BCDC7C04AAF
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 04:00:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A13ECC04E87
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 04:04:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8A2A221479
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 04:00:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6CD1021479
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 04:04:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FlWtgtsi"
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="yLwaFzBs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725816AbfEUEAe (ORCPT
+        id S1726022AbfEUEEQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 May 2019 00:00:34 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:46728 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725283AbfEUEAe (ORCPT
+        Tue, 21 May 2019 00:04:16 -0400
+Received: from conuserg-08.nifty.com ([210.131.2.75]:43888 "EHLO
+        conuserg-08.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725283AbfEUEEQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 May 2019 00:00:34 -0400
-Received: by mail-pf1-f194.google.com with SMTP id y11so8295120pfm.13
-        for <linux-kernel@vger.kernel.org>; Mon, 20 May 2019 21:00:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=3eNkdh4mO8pIZ3fXGLoczke3nP1H3XUCZBixj8gSPtM=;
-        b=FlWtgtsiqkqsJMsMh+w5KMie8AV1p53bkphNoR7ejMBqU9PX6KQSkxDFSUVE4Eeefg
-         eve/6pSpoBZ5kxn6rCxyu/a9Kan/+MY/qzmiQC1UgIr0u4NYjJcGtbuXy09CuzcizweI
-         y8ZKlBV1/FTvQQkRrGBIt3rZmdb6kJLQvKKSnmafOb3za0Re0gggz34TPAvZ65yVUSlh
-         m7H8zRYYTsl1LaAa+c0ziNOTqAiRP9E9UUloXg48JFCz8ewCuqgTsQFeJqAJNsHhmBCP
-         Qc5nB2P2UzhA7CFD4OSLJWOXnARNvQ0c6/9REKrv9tq7hDYuahXUF8CSw5GCDk9cDHxl
-         JcKQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=3eNkdh4mO8pIZ3fXGLoczke3nP1H3XUCZBixj8gSPtM=;
-        b=eYlhsUDOZlEUVjLELnUDrowguY0NUo9pMqiiW2oGRg9vQPK/TvA7W8DP78ddEbC2ii
-         B7NVpoj5ulK6TmRPBodsJIGGOmnZeZPZrbnUq/qfNhf9PHHbm2qcqSJ0AeB04kd6UcG3
-         2BMPAINV1kudAI9FCyi/d155gcss8ZWVptTi/8Vz7ZW5BS4qZg0fv8r//CfUZPyXkzXo
-         9iCCfGVmYfJer9TWboU3oFULFk4StDRWgJtJKZiaTuVivPRllVG5XI+YI/eZUvsl8M6H
-         GAKRV+xQrtA4BQBkXg68GYIgVSsP4dDXcsYjh7Hi2bj3u83MA0GxWHyIqRg59DImVzGH
-         2VWA==
-X-Gm-Message-State: APjAAAXzwBxstbZBDLmXufRKn6jVE4dd10vhvwQQSryqM6A8spY6dd13
-        OkN/J04u3YCpdWXydkA2HP4=
-X-Google-Smtp-Source: APXvYqzYgoAuV3ojH5BDC4Uu8PdjYmIR1/yGSXn5GH+wLxwTbPaXJ3VUKmm99aKA4skGDHg/Wvb9jw==
-X-Received: by 2002:a65:500d:: with SMTP id f13mr5514374pgo.151.1558411233744;
-        Mon, 20 May 2019 21:00:33 -0700 (PDT)
-Received: from zhanggen-UX430UQ ([66.42.35.75])
-        by smtp.gmail.com with ESMTPSA id t142sm13547983pgb.32.2019.05.20.21.00.30
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 20 May 2019 21:00:33 -0700 (PDT)
-Date:   Tue, 21 May 2019 12:00:19 +0800
-From:   Gen Zhang <blackgod016574@gmail.com>
-To:     Nicolas Pitre <nico@fluxnic.net>
-Cc:     linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] vt: Fix a missing-check bug in drivers/tty/vt/vt.c
-Message-ID: <20190521040019.GD5263@zhanggen-UX430UQ>
-References: <20190521022940.GA4858@zhanggen-UX430UQ>
- <nycvar.YSQ.7.76.1905202242410.1558@knanqh.ubzr>
- <20190521030905.GB5263@zhanggen-UX430UQ>
- <nycvar.YSQ.7.76.1905202323290.1558@knanqh.ubzr>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <nycvar.YSQ.7.76.1905202323290.1558@knanqh.ubzr>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+        Tue, 21 May 2019 00:04:16 -0400
+Received: from localhost.localdomain (p14092-ipngnfx01kyoto.kyoto.ocn.ne.jp [153.142.97.92]) (authenticated)
+        by conuserg-08.nifty.com with ESMTP id x4L43VVg010681;
+        Tue, 21 May 2019 13:03:32 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-08.nifty.com x4L43VVg010681
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1558411413;
+        bh=ih2ZgqObaUdBXIDdXtMeo+bCR3hhcOxpcDhp2NN3U6o=;
+        h=From:To:Cc:Subject:Date:From;
+        b=yLwaFzBsZMFY3pUDNfsPLXeEG1WjIBeu6gW7czqLdlKBc2OL/weJLUrEwe740+eCh
+         U71t8T5NMJLw+aVWa238Y1vQnbt2+eZSESUNdLizoO49WjGeibChXqnZW+eMR/BMR5
+         xnQuj36WWvepgundBru/xONXsknEloGGu1T3E3QmddgjyUC00u3nlPfvAcsDP4cXmX
+         hqxZOOC+Ie5BZvEuROyHw7jJ3MzprY78OWoD9SDyBsVHeVvlw23/4BaWQGLyYnBoW6
+         mvk8+4SaQeonazNpeO8wBE+Q2CDo4fsmiyGMsi3GU4d/09hvEMXh2WAXg4i/HLo1nK
+         T603/ikgWFlvA==
+X-Nifty-SrcIP: [153.142.97.92]
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+To:     Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paul.burton@mips.com>,
+        James Hogan <jhogan@kernel.org>, linux-mips@vger.kernel.org
+Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] MIPS: remove a space after -I to cope with header search paths for VDSO
+Date:   Tue, 21 May 2019 13:03:27 +0900
+Message-Id: <20190521040327.432-1-yamada.masahiro@socionext.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 20, 2019 at 11:26:20PM -0400, Nicolas Pitre wrote:
-> On Tue, 21 May 2019, Gen Zhang wrote:
-> 
-> > On Mon, May 20, 2019 at 10:55:40PM -0400, Nicolas Pitre wrote:
-> > > On Tue, 21 May 2019, Gen Zhang wrote:
-> > > 
-> > > > In function con_init(), the pointer variable vc_cons[currcons].d, vc and
-> > > > vc->vc_screenbuf is allocated a memory space via kzalloc(). And they are
-> > > > used in the following codes.
-> > > > However, when there is a memory allocation error, kzalloc() can fail.
-> > > > Thus null pointer (vc_cons[currcons].d, vc and vc->vc_screenbuf)
-> > > > dereference may happen. And it will cause the kernel to crash. Therefore,
-> > > > we should check return value and handle the error.
-> > > > Further,the loop condition MIN_NR_CONSOLES is defined as 1 in
-> > > > include/uapi/linux/vt.h. So there is no need to unwind the loop.
-> > > 
-> > > But what if someone changes that define? It won't be obvious that some 
-> > > code did rely on it to be defined to 1.
-> > I re-examine the source code. MIN_NR_CONSOLES is only defined once and
-> > no other changes to it.
-> 
-> Yes, that is true today.  But if someone changes that in the future, how 
-> will that person know that you relied on it to be 1 for not needing to 
-> unwind the loop?
-> 
-> 
-> Nicolas
-Hi Nicolas,
-Thanks for your explaination! And I got your point. And is this way 
-proper?
+Commit 9cc342f6c4a0 ("treewide: prefix header search paths with
+$(srctree)/") caused a build error for MIPS VDSO.
 
-err_vc_screenbuf:
-        kfree(vc);
-	for (currcons = 0; currcons < MIN_NR_CONSOLES; currcons++)
-		vc_cons[currcons].d = NULL;
-	return -ENOMEM;
-err_vc:
-	console_unlock();
-	return -ENOMEM;
+  CC      arch/mips/vdso/gettimeofday.o
+In file included from ../arch/mips/vdso/vdso.h:26,
+                 from ../arch/mips/vdso/gettimeofday.c:11:
+../arch/mips/include/asm/page.h:12:10: fatal error: spaces.h: No such file or directory
+ #include <spaces.h>
+          ^~~~~~~~~~
 
-Thanks
-Gen
+The cause of the error is a missing space after the compiler flag -I .
+
+Kbuild used to have a global restriction "no space after -I", but
+commit 48f6e3cf5bc6 ("kbuild: do not drop -I without parameter") got
+rid of it. Having a space after -I is no longer a big deal as far as
+Kbuild is concerned.
+
+It is still a big deal for MIPS because arch/mips/vdso/Makefile
+filters the header search paths, like this:
+
+  ccflags-vdso := \
+          $(filter -I%,$(KBUILD_CFLAGS)) \
+
+..., which relies on the assumption that there is no space after -I .
+
+Fixes: 9cc342f6c4a0 ("treewide: prefix header search paths with $(srctree)/")
+Reported-by: kbuild test robot <lkp@intel.com>
+Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+---
+
+ arch/mips/pnx833x/Platform | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/arch/mips/pnx833x/Platform b/arch/mips/pnx833x/Platform
+index 6b1a847d593f..287260669551 100644
+--- a/arch/mips/pnx833x/Platform
++++ b/arch/mips/pnx833x/Platform
+@@ -1,5 +1,5 @@
+ # NXP STB225
+ platform-$(CONFIG_SOC_PNX833X)	+= pnx833x/
+-cflags-$(CONFIG_SOC_PNX833X)	+= -I $(srctree)/arch/mips/include/asm/mach-pnx833x
++cflags-$(CONFIG_SOC_PNX833X)	+= -I$(srctree)/arch/mips/include/asm/mach-pnx833x
+ load-$(CONFIG_NXP_STB220)	+= 0xffffffff80001000
+ load-$(CONFIG_NXP_STB225)	+= 0xffffffff80001000
+-- 
+2.17.1
+
