@@ -2,141 +2,131 @@ Return-Path: <SRS0=9PYC=TV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F9FEC04AAF
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 13:37:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8561CC04AB4
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 13:37:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 543A7208C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 13:37:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="oYE7JAF3"
+	by mail.kernel.org (Postfix) with ESMTP id 6441A208C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 13:37:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728252AbfEUNh1 (ORCPT
+        id S1728307AbfEUNhq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 May 2019 09:37:27 -0400
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:37055 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727534AbfEUNh0 (ORCPT
+        Tue, 21 May 2019 09:37:46 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:41098 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727969AbfEUNhq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 May 2019 09:37:26 -0400
-Received: by mail-oi1-f193.google.com with SMTP id f4so12804634oib.4
-        for <linux-kernel@vger.kernel.org>; Tue, 21 May 2019 06:37:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=H+BSjdKHMeiIAULb/QyaUOTkRt09BUDaEnpHHqHJQHo=;
-        b=oYE7JAF3d5Xd55jYiP+FFNL6Ut3yy6uqIgip8mEGC8oTz1+IvRYcsGTOaUU5j8VFyi
-         qlIZN4YmYuLrs5eY9gkBjWkzNagvcbXivOL+g55DksVqlPngfPyWIjsECXhDpaTdLVRa
-         LltBxjxk+TjU9uoUpHMSUpwVOz7Qcw67t+Fhk=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=H+BSjdKHMeiIAULb/QyaUOTkRt09BUDaEnpHHqHJQHo=;
-        b=igB6E7f9bJoPCTOyE8Mc6hDuzzxLomgCA/uVsvYxRg+ER0y13LRdiY/0imH3TUuxE1
-         sgDICq2t3Vcq9akPGiaqsz89rDRaJJ+Zd+uxh9QtBzgRXrvL9CAdlVx1j1YlcU1lBgIg
-         8TG0qwn+lviBmuUpzDTePHmnuSRQLBi0fz55+D5c5R7xNk4qWUPPPNWZRNjeRSXx5nc/
-         22nQBgofEZGrueJWox9rLOJVyeuAvlu8DODfa7z43/0DnPFxC6xVXSRCn/+q28IwNano
-         hfoulTYPNprkdi85veWNbCMo4SV0on1ttVk3qURgo/eszI7yI+2MGBnz7CQylJGJH36u
-         3DJA==
-X-Gm-Message-State: APjAAAV3AbuMsBEsK19kb83ogFENq6NOwUto+V+L/IX+L0uA9lpGHPh4
-        pW7mI8dd6pXJ3TIR9rbmaBy6+FpVt2A=
-X-Google-Smtp-Source: APXvYqzB6fHrcTq3SMQEx5DdNBNDnC3OyvicOdBPVuItA6SdsZf6uKzxVY/iKXBiLy/UESFc7WCSZg==
-X-Received: by 2002:aca:7511:: with SMTP id q17mr3479862oic.138.1558445845574;
-        Tue, 21 May 2019 06:37:25 -0700 (PDT)
-Received: from mail-ot1-f51.google.com (mail-ot1-f51.google.com. [209.85.210.51])
-        by smtp.gmail.com with ESMTPSA id 23sm7617100otc.77.2019.05.21.06.37.24
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Tue, 21 May 2019 06:37:24 -0700 (PDT)
-Received: by mail-ot1-f51.google.com with SMTP id 66so16379396otq.0
-        for <linux-kernel@vger.kernel.org>; Tue, 21 May 2019 06:37:24 -0700 (PDT)
-X-Received: by 2002:a9d:58c5:: with SMTP id s5mr19522642oth.153.1558445844462;
- Tue, 21 May 2019 06:37:24 -0700 (PDT)
+        Tue, 21 May 2019 09:37:46 -0400
+Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4LDbe0M047783
+        for <linux-kernel@vger.kernel.org>; Tue, 21 May 2019 09:37:45 -0400
+Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2smhua9mrq-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Tue, 21 May 2019 09:37:44 -0400
+Received: from localhost
+        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <brueckner@linux.ibm.com>;
+        Tue, 21 May 2019 14:36:43 +0100
+Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
+        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Tue, 21 May 2019 14:36:39 +0100
+Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x4LDacpc63176788
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 21 May 2019 13:36:38 GMT
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 6E54FA405B;
+        Tue, 21 May 2019 13:36:38 +0000 (GMT)
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 5C9D7A4057;
+        Tue, 21 May 2019 13:36:38 +0000 (GMT)
+Received: from lynx.boeblingen.de.ibm.com (unknown [9.152.224.87])
+        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Tue, 21 May 2019 13:36:38 +0000 (GMT)
+Received: from brueckh by lynx.boeblingen.de.ibm.com with local (Exim 4.90_1)
+        (envelope-from <brueckner@linux.ibm.com>)
+        id 1hT4wY-0007j1-2b; Tue, 21 May 2019 15:36:38 +0200
+Date:   Tue, 21 May 2019 15:36:38 +0200
+From:   Hendrik Brueckner <brueckner@linux.ibm.com>
+To:     Thomas Richter <tmricht@linux.ibm.com>
+Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        acme@kernel.org, brueckner@linux.vnet.ibm.com,
+        schwidefsky@de.ibm.com, heiko.carstens@de.ibm.com
+Subject: Re: [PATCH] pert/report: Support s390 diag event display on x86
+References: <20190520144242.53207-1-tmricht@linux.ibm.com>
 MIME-Version: 1.0
-References: <20190520224124.153005-1-mathewk@chromium.org>
-In-Reply-To: <20190520224124.153005-1-mathewk@chromium.org>
-From:   Jett Rink <jettrink@chromium.org>
-Date:   Tue, 21 May 2019 07:37:13 -0600
-X-Gmail-Original-Message-ID: <CAK+PMK47_OE-BgOYD_TD0kwxD4RG+nS9Wstg4ydUy7yV9nVmHQ@mail.gmail.com>
-Message-ID: <CAK+PMK47_OE-BgOYD_TD0kwxD4RG+nS9Wstg4ydUy7yV9nVmHQ@mail.gmail.com>
-Subject: Re: [PATCH v2] platform/x86: intel-vbtn: Report switch events when
- event wakes device
-To:     Mathew King <mathewk@chromium.org>
-Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
-        AceLan Kao <acelan.kao@canonical.com>,
-        Andy Shevchenko <andy@infradead.org>,
-        Darren Hart <dvhart@infradead.org>,
-        platform-driver-x86@vger.kernel.org, Mario.Limonciello@dell.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190520144242.53207-1-tmricht@linux.ibm.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-TM-AS-GCONF: 00
+x-cbid: 19052113-4275-0000-0000-0000033714DA
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19052113-4276-0000-0000-00003846A9BC
+Message-Id: <20190521133638.GB10877@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-21_03:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1905210087
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 20, 2019 at 4:41 PM Mathew King <mathewk@chromium.org> wrote:
->
-> When a switch event, such as tablet mode/laptop mode or docked/undocked,
-> wakes a device make sure that the value of the swich is reported.
-> Without when a device is put in tablet mode from laptop mode when it is
-> suspended or vice versa the device will wake up but mode will be
-> incorrect.
->
-> Tested by suspending a device in laptop mode and putting it in tablet
-> mode, the device resumes and is in tablet mode. When suspending the
-> device in tablet mode and putting it in laptop mode the device resumes
-> and is in laptop mode.
->
-> Signed-off-by: Mathew King <mathewk@chromium.org>
->
+On Mon, May 20, 2019 at 04:42:42PM +0200, Thomas Richter wrote:
+> Perf report fails to display s390 specific event numbered bd000
+> on an x86 platform. For example on s390 this works without error:
+> 
+> [root@m35lp76 perf]# uname -m
+> s390x
+> [root@m35lp76 perf]# ./perf record -e rbd000 -- find / >/dev/null
+> [ perf record: Woken up 3 times to write data ]
+> [ perf record: Captured and wrote 0.549 MB perf.data ]
+> [root@m35lp76 perf]# ./perf report -D --stdio  > /dev/null
+> [root@m35lp76 perf]#
+> 
+> Transfering this perf.data file to an x86 platform and executing
+> the same report command produces:
+> 
+> [root@f29 perf]# uname -m
+> x86_64
+> [root@f29 perf]# ./perf report -i ~/perf.data.m35lp76 --stdio
+> interpreting bpf_prog_info from systems with endianity is not yet supported
+> interpreting btf from systems with endianity is not yet supported
+> 0x8c890 [0x8]: failed to process type: 68
+> Error:
+> failed to process sample
+> 
+> Event bd000 generates auxiliary data which is stored in big endian
+> format in the perf data file.
+> This error is caused by missing endianess handling on the x86 platform
+> when the data is displayed. Fix this by handling s390 auxiliary event
+> data depending on the local platform endianness.
+> 
+> Output after on x86:
+> 
+> [root@f29 perf]# ./perf report -D -i ~/perf.data.m35lp76 --stdio > /dev/null
+> interpreting bpf_prog_info from systems with endianity is not yet supported
+> interpreting btf from systems with endianity is not yet supported
+> [root@f29 perf]#
+> 
+> Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
 > ---
-> Changes in v2:
->   - Added comment explaining why switch events are reported
->   - Format so that checkpatch is happy
-> ---
->  drivers/platform/x86/intel-vbtn.c | 16 ++++++++++++++--
->  1 file changed, 14 insertions(+), 2 deletions(-)
->
-> diff --git a/drivers/platform/x86/intel-vbtn.c b/drivers/platform/x86/intel-vbtn.c
-> index 06cd7e818ed5..a0d0cecff55f 100644
-> --- a/drivers/platform/x86/intel-vbtn.c
-> +++ b/drivers/platform/x86/intel-vbtn.c
-> @@ -76,12 +76,24 @@ static void notify_handler(acpi_handle handle, u32 event, void *context)
->         struct platform_device *device = context;
->         struct intel_vbtn_priv *priv = dev_get_drvdata(&device->dev);
->         unsigned int val = !(event & 1); /* Even=press, Odd=release */
-> -       const struct key_entry *ke_rel;
-> +       const struct key_entry *ke, *ke_rel;
->         bool autorelease;
->
->         if (priv->wakeup_mode) {
-> -               if (sparse_keymap_entry_from_scancode(priv->input_dev, event)) {
-> +               ke = sparse_keymap_entry_from_scancode(priv->input_dev, event);
-> +               if (ke) {
->                         pm_wakeup_hard_event(&device->dev);
-> +
-> +                       /*
-> +                        * Switch events like tablet mode will wake the device
-> +                        * and report the new switch position to the input
-> +                        * subsystem.
-> +                        */
-Thanks for adding the comment; This looks good to me.
+>  tools/perf/util/s390-cpumsf.c | 95 ++++++++++++++++++++++++++++-------
+>  1 file changed, 77 insertions(+), 18 deletions(-)
+> 
 
-> +                       if (ke->type == KE_SW)
-> +                               sparse_keymap_report_event(priv->input_dev,
-> +                                                          event,
-> +                                                          val,
-> +                                                          0);
->                         return;
->                 }
->                 goto out_unknown;
-> --
-> 2.21.0.1020.gf2820cf01a-goog
->
+Looks sane to me.
 
-Reviewed-by: Jett Rink <jettrink@chromium.org>
+Thanks, Thomas.
+
+Reviewed-by: Hendrik Brueckner <brueckner@linux.ibm.com>
+
