@@ -2,144 +2,83 @@ Return-Path: <SRS0=9PYC=TV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7357C04AAF
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 11:11:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99304C04AAF
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 11:11:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8D81C217D4
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 11:11:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558437067;
-	bh=ATO0mafowpmS9lD2uJVlmt4JcavGsNrwrYgrfOLt7bg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=F8uhT1HtMRyepELjIlXSJrD15XF3DffRXAZDBabKyAoNlfed9MResbCA/glgFwekz
-	 GTDpMc04K3+Cthm4d0dCQhTTNOWqZkmHiyNX6xeX0ej7c8rVplztf+4nYUatHOplJD
-	 0moAXoJ7ZiUvwhLaJwpRg/2g1bd330Ddme+yXl7A=
+	by mail.kernel.org (Postfix) with ESMTP id 636E62081C
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 11:11:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=haabendal.dk header.i=@haabendal.dk header.b="y8KDhysU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727635AbfEULLG (ORCPT
+        id S1727844AbfEULLM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 May 2019 07:11:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54054 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726042AbfEULLG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 May 2019 07:11:06 -0400
-Received: from localhost (unknown [223.186.130.65])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 19BDF2081C;
-        Tue, 21 May 2019 11:11:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558437065;
-        bh=ATO0mafowpmS9lD2uJVlmt4JcavGsNrwrYgrfOLt7bg=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=bD29SWe1toCHHRKmxc1/VKp/HxszwXcFJ8pAR41Jds9NGDnY/ixUY65YKHffhKlMc
-         64B4hRD0lZL9Z+vtUaZ0fb5DZ7JcubCdye8vRDxnEBpaxDK6w2/cte69FA6+LYG1pQ
-         Z/vnK0IFGJWk4aFuA0GP98Ofr4NSJ5W9vuXS7ENg=
-Date:   Tue, 21 May 2019 16:40:58 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     Andy Gross <agross@kernel.org>,
-        David Brown <david.brown@linaro.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        Tue, 21 May 2019 07:11:12 -0400
+Received: from mailrelay3-1.pub.mailoutpod1-cph3.one.com ([46.30.210.184]:17804
+        "EHLO mailrelay3-1.pub.mailoutpod1-cph3.one.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726705AbfEULLL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 May 2019 07:11:11 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=haabendal.dk; s=20140924;
+        h=content-type:mime-version:message-id:in-reply-to:date:references:subject:cc:
+         to:from:from;
+        bh=JIHGunsgaCgZeL/o7QkqGP7k7OB8Pmo0Z9kFuz+i2e0=;
+        b=y8KDhysUj7jzWbtyVXzGyruait8OD0e0tLApY/HniiTs/VBe0JGvqIy+zsEb6wu5cKbssAnYafUpI
+         nIpysd9lkI3sxy5OLvTHYbJ3h6RBYK9DuZ8d/clRqoiUHharD1sJ+RBkEWiNJx0/WHbIzAXC4DC5oV
+         Bnx1AnbsklgSsjiI=
+X-HalOne-Cookie: e9c62d4db971f1bf8e2808d0f1cb863824030696
+X-HalOne-ID: 2213bfb0-7bb9-11e9-a0e1-d0431ea8bb03
+Received: from localhost (unknown [193.163.1.7])
+        by mailrelay3.pub.mailoutpod1-cph3.one.com (Halon) with ESMTPSA
+        id 2213bfb0-7bb9-11e9-a0e1-d0431ea8bb03;
+        Tue, 21 May 2019 11:11:08 +0000 (UTC)
+From:   Esben Haabendal <esben@haabendal.dk>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Lee Jones <lee.jones@linaro.org>, linux-serial@vger.kernel.org,
+        Jiri Slaby <jslaby@suse.com>, Nishanth Menon <nm@ti.com>,
+        Vignesh R <vigneshr@ti.com>, Tony Lindgren <tony@atomide.com>,
+        Lokesh Vutla <lokeshvutla@ti.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v7 2/4] soc: qcom: Add AOSS QMP driver
-Message-ID: <20190521111058.GG15118@vkoul-mobl>
-References: <20190501043734.26706-1-bjorn.andersson@linaro.org>
- <20190501043734.26706-3-bjorn.andersson@linaro.org>
+Subject: Re: [PATCH 2/2] serial: 8250: Add support for 8250/16550 as MFD function
+References: <20190426084038.6377-1-esben@geanix.com>
+        <20190426084038.6377-3-esben@geanix.com> <20190507114905.GB29524@dell>
+        <87o94ejwrx.fsf@haabendal.dk> <20190507133844.GA6194@dell>
+        <87bm05mpmx.fsf@haabendal.dk> <20190514104741.GO4319@dell>
+        <20190514122618.GA18859@kroah.com> <87imudky2o.fsf@haabendal.dk>
+        <20190521100904.GA13612@kroah.com>
+Date:   Tue, 21 May 2019 13:11:08 +0200
+In-Reply-To: <20190521100904.GA13612@kroah.com> (Greg Kroah-Hartman's message
+        of "Tue, 21 May 2019 12:09:04 +0200")
+Message-ID: <87pnocm59v.fsf@haabendal.dk>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.2 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190501043734.26706-3-bjorn.andersson@linaro.org>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 30-04-19, 21:37, Bjorn Andersson wrote:
+Greg Kroah-Hartman <gregkh@linuxfoundation.org> writes:
 
-> +#include <linux/clk-provider.h>
-> +#include <linux/interrupt.h>
-> +#include <linux/io.h>
-> +#include <linux/mailbox_client.h>
-> +#include <linux/pm_domain.h>
-> +#include <linux/module.h>
-> +#include <linux/platform_device.h>
-> +#include <dt-bindings/power/qcom-aoss-qmp.h>
+>> I will try ad hold back with this thread until you get back to it.
+>
+> Ok, I have no idea what is going on here, sorry.  This is a really long
+> and meandering thread, and I can't even find the original patches in my
+> queue.
+>
+> So can you resend things and we can start over?  :)
 
-I would have preferred this as first one, but this is fine too :)
+Will do.
 
-> +/* Linux-side offsets */
-> +#define QMP_DESC_MCORE_LINK_STATE	0x24
-> +#define QMP_DESC_MCORE_LINK_STATE_ACK	0x28
-> +#define QMP_DESC_MCORE_CH_STATE		0x2c
-> +#define QMP_DESC_MCORE_CH_STATE_ACK	0x30
-> +#define QMP_DESC_MCORE_MBOX_SIZE	0x34
-> +#define QMP_DESC_MCORE_MBOX_OFFSET	0x38
-> +
-> +#define QMP_STATE_UP	0x0000ffff
+> But note, using a mfd for a uart seems VERY odd to me...
 
-I prefer using GENMASK(15, 0)
+Ok.  In my case, I have a pcie card with an fpga which includes 5 uart
+ports, 3 ethernet interfaces and a number of custom IP blocks.
+I believe that an mfd driver for that pcie card in that case.
 
-> +#define QMP_STATE_DOWN	0xffff0000
-
-GENMASK(31, 16)?
-
-> +/**
-> + * struct qmp - driver state for QMP implementation
-> + * @msgram: iomem referencing the message RAM used for communication
-> + * @dev: reference to QMP device
-> + * @mbox_client: mailbox client used to ring the doorbell on transmit
-> + * @mbox_chan: mailbox channel used to ring the doorbell on transmit
-> + * @offset: offset within @msgram where messages should be written
-> + * @size: maximum size of the messages to be transmitted
-> + * @event: wait_queue for synchronization with the IRQ
-> + * @tx_lock: provides syncrhonization between multiple callers of qmp_send()
-
-/s/syncrhonization/synchronization
-
-> +int qmp_send(struct qmp *qmp, const void *data, size_t len)
-> +{
-> +	int ret;
-> +
-> +	if (WARN_ON(len + sizeof(u32) > qmp->size))
-> +		return -EINVAL;
-> +
-> +	if (WARN_ON(len % sizeof(u32)))
-> +		return -EINVAL;
-> +
-> +	mutex_lock(&qmp->tx_lock);
-> +
-> +	/* The message RAM only implements 32-bit accesses */
-> +	__iowrite32_copy(qmp->msgram + qmp->offset + sizeof(u32),
-> +			 data, len / sizeof(u32));
-> +	writel(len, qmp->msgram + qmp->offset);
-> +	qmp_kick(qmp);
-> +
-> +	ret = wait_event_interruptible_timeout(qmp->event,
-> +					       qmp_message_empty(qmp), HZ);
-> +	if (!ret) {
-> +		dev_err(qmp->dev, "ucore did not ack channel\n");
-> +		ret = -ETIMEDOUT;
-> +
-> +		/* Clear message from buffer */
-> +		writel(0, qmp->msgram + qmp->offset);
-> +	} else {
-> +		ret = 0;
-
-Isn't this redundant?
-
-> +	}
-> +
-> +	mutex_unlock(&qmp->tx_lock);
-> +
-> +	return ret;
-> +}
--- 
-~Vinod
+/Esben
