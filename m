@@ -2,94 +2,82 @@ Return-Path: <SRS0=9PYC=TV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D1EDC04AAF
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 14:00:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2198C04AB4
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 14:00:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3441E21479
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 14:00:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8C4F421743
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 14:00:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1558447252;
+	bh=B2pMNgUdKmU1cAmS6aYmbKhfcBaE02tqFqEBfSUGy3Q=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=tJQmjB1YcYGrwhDfvtLxP6Vuzklb4ao8PKJoFA/PU4r3cxBZEOHDk7t34jLSjM9S2
+	 O07hKhss77fhThWRuQNyy2o7A86P6Bumti+HnpbtvlEReyi3uFKzLrITjYHowLEKoN
+	 WzfKa+0bBVzX+NpX3RWVTdyTLn4UNaGPnr+OQjac=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728387AbfEUOAL (ORCPT
+        id S1728446AbfEUOAw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 May 2019 10:00:11 -0400
-Received: from iolanthe.rowland.org ([192.131.102.54]:32988 "HELO
-        iolanthe.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with SMTP id S1728242AbfEUOAL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 May 2019 10:00:11 -0400
-Received: (qmail 1871 invoked by uid 2102); 21 May 2019 10:00:10 -0400
-Received: from localhost (sendmail-bs@127.0.0.1)
-  by localhost with SMTP; 21 May 2019 10:00:10 -0400
-Date:   Tue, 21 May 2019 10:00:10 -0400 (EDT)
-From:   Alan Stern <stern@rowland.harvard.edu>
-X-X-Sender: stern@iolanthe.rowland.org
-To:     Oliver Neukum <oneukum@suse.com>
-cc:     Christoph Hellwig <hch@infradead.org>,
-        Jaewon Kim <jaewon31.kim@gmail.com>, <linux-mm@kvack.org>,
-        <gregkh@linuxfoundation.org>,
-        Jaewon Kim <jaewon31.kim@samsung.com>,
-        <m.szyprowski@samsung.com>, <ytk.lee@samsung.com>,
-        <linux-kernel@vger.kernel.org>, <linux-usb@vger.kernel.org>
-Subject: Re: [RFC PATCH] usb: host: xhci: allow __GFP_FS in dma allocation
-In-Reply-To: <1558444291.12672.23.camel@suse.com>
-Message-ID: <Pine.LNX.4.44L0.1905210950170.1634-100000@iolanthe.rowland.org>
+        Tue, 21 May 2019 10:00:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38628 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727812AbfEUOAv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 May 2019 10:00:51 -0400
+Received: from localhost (unknown [106.51.105.51])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0791921479;
+        Tue, 21 May 2019 14:00:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1558447251;
+        bh=B2pMNgUdKmU1cAmS6aYmbKhfcBaE02tqFqEBfSUGy3Q=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=HAUzjmDTqsg1XPKB4jRXTJPq8vu9dHTzhkPag3QFY60QQq1ZTM1a2O2q54Gv4VHiA
+         kI7E3I3rrv3A1XP+CL4/VU1R1kKiHR2vt0XwnE//KEgiCXkpmZn5NvYp1WIapOd0+i
+         ARPZ9RgQKveXyCZ4x4m05+nSs/iWf+CT1TOG4Ops=
+Date:   Tue, 21 May 2019 19:30:45 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Long Cheng <long.cheng@mediatek.com>
+Cc:     Randy Dunlap <rdunlap@infradead.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Ryder Lee <ryder.lee@mediatek.com>,
+        Sean Wang <sean.wang@kernel.org>,
+        Nicolas Boichat <drinkcat@chromium.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>,
+        Sean Wang <sean.wang@mediatek.com>, dmaengine@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-serial@vger.kernel.org, srv_heupstream@mediatek.com,
+        Yingjoe Chen <yingjoe.chen@mediatek.com>,
+        YT Shen <yt.shen@mediatek.com>,
+        Zhenbao Liu <zhenbao.liu@mediatek.com>
+Subject: Re: [PATCH 1/4] dmaengine: mediatek: Add MediaTek UART APDMA support
+Message-ID: <20190521140045.GO15118@vkoul-mobl>
+References: <1556336193-15198-1-git-send-email-long.cheng@mediatek.com>
+ <1556336193-15198-2-git-send-email-long.cheng@mediatek.com>
 MIME-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1556336193-15198-2-git-send-email-long.cheng@mediatek.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 21 May 2019, Oliver Neukum wrote:
+On 27-04-19, 11:36, Long Cheng wrote:
+> Add 8250 UART APDMA to support MediaTek UART. If MediaTek UART is
+> enabled by SERIAL_8250_MT6577, and we can enable this driver to offload
+> the UART device moving bytes.
 
-> On Mo, 2019-05-20 at 10:16 -0400, Alan Stern wrote:
-> > On Mon, 20 May 2019, Christoph Hellwig wrote:
-> > 
-> > > GFP_KERNEL if you can block, GFP_ATOMIC if you can't for a good reason,
-> > > that is the allocation is from irq context or under a spinlock.  If you
-> > > think you have a case where you think you don't want to block, but it
-> > > is not because of the above reasons we need to have a chat about the
-> > > details.
-> > 
-> > What if the allocation requires the kernel to swap some old pages out 
-> > to the backing store, but the backing store is on the device that the 
-> > driver is managing?  The swap can't take place until the current I/O 
-> > operation is complete (assuming the driver can handle only one I/O 
-> > operation at a time), and the current operation can't complete until 
-> > the old pages are swapped out.  Result: deadlock.
-> > 
-> > Isn't that the whole reason for using GFP_NOIO in the first place?
-> 
-> Hi,
-> 
-> lookig at this it seems to me that we are in danger of a deadlock
-> 
-> - during reset - devices cannot do IO while being reset
-> 	covered by the USB layer in usb_reset_device
-> - resume & restore - devices cannot do IO while suspended
-> 	covered by driver core in rpm_callback
-> - disconnect - a disconnected device cannot do IO
-> 	is this a theoretical case or should I do something to
-> 	the driver core?
-> 
-> How about changing configurations on USB?
+Applied, thanks
 
-Changing configurations amounts to much the same as disconnecting,
-because both operations destroy all the existing interfaces.
-
-Disconnect can arise in two different ways.
-
-	Physical hot-unplug: All I/O operations will fail.
-
-	Rmmod or unbind: I/O operations will succeed.
-
-The second case is probably okay.  The first we can do nothing about.  
-However, in either case we do need to make sure that memory allocations
-do not require any writebacks.  This suggests that we need to call
-memalloc_noio_save() from within usb_unbind_interface().
-
-Alan Stern
-
+-- 
+~Vinod
