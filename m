@@ -2,234 +2,226 @@ Return-Path: <SRS0=9PYC=TV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_NEOMUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A061C18E7C
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 23:23:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF904C16A69
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 23:26:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D18DE20862
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 23:23:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 988F021773
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 23:26:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZZy5LGOJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727881AbfEUXXN (ORCPT
+        id S1727622AbfEUX0W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 May 2019 19:23:13 -0400
-Received: from mga06.intel.com ([134.134.136.31]:10907 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725797AbfEUXXN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 May 2019 19:23:13 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 21 May 2019 16:23:12 -0700
-X-ExtLoop1: 1
-Received: from linux.intel.com ([10.54.29.200])
-  by fmsmga008.fm.intel.com with ESMTP; 21 May 2019 16:23:11 -0700
-Received: from [10.54.74.33] (skuppusw-desk.jf.intel.com [10.54.74.33])
-        by linux.intel.com (Postfix) with ESMTP id CC8CA5803A5;
-        Tue, 21 May 2019 16:23:11 -0700 (PDT)
-Reply-To: sathyanarayanan.kuppuswamy@linux.intel.com
-Subject: Re: [PATCH v2 2/5] PCI/ATS: Add PASID support for PCIe VF devices
-To:     bhelgaas@google.com
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        ashok.raj@intel.com, keith.busch@intel.com
-References: <cover.1557162861.git.sathyanarayanan.kuppuswamy@linux.intel.com>
- <078b169334b4996d03d8608f205942c061590681.1557162861.git.sathyanarayanan.kuppuswamy@linux.intel.com>
-From:   sathyanarayanan kuppuswamy 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>
-Organization: Intel
-Message-ID: <b5f23aef-095a-3284-64a8-bb169cca4853@linux.intel.com>
-Date:   Tue, 21 May 2019 16:21:28 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Tue, 21 May 2019 19:26:22 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:45032 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725797AbfEUX0W (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 May 2019 19:26:22 -0400
+Received: by mail-pg1-f193.google.com with SMTP id n2so266014pgp.11;
+        Tue, 21 May 2019 16:26:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=+jEH5+d8gh3EEWabNlTjkYWVuxTiUAw1dI2jCebfQRs=;
+        b=ZZy5LGOJO0qA79KHXB4jWuD1P7o+ZhAacfEr11XA01KLjq54wUwLsbmKKg+2RqZkT7
+         yOhWS7TghCvchiprGM3Ra/COUcDk15qgz+2D40ISX9qPHbw/A/DPsdxzYnMO3/Uc6LoQ
+         cNOh81jOnTfTrAId8e+msfPaXmRQ7gKcme6/6DiEyHHMYhHbBYLy+xoovfVG9f/O0e58
+         Rf43z6riEZmt/ua10cb7QagEwiXGCD+EzUBuAm3EwLl2ZPteYUwfh6lBJ2re+ycHQXXS
+         VbHbP4DLTfc/1CENcxDeQe1/7S87UeTG76RwzRTmgHdQvjbv0vXnAVCKEzeMVJaNTctR
+         W7DQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=+jEH5+d8gh3EEWabNlTjkYWVuxTiUAw1dI2jCebfQRs=;
+        b=XqP9ccqe51fdPNujw7hbKDimCNEn1J1NC/deKKQPpn7qUmi6a86vAo4YCMIATY7QD1
+         gdbvjXvO2JYPFUzf87u4vwqyIUbaxvNM/N0YP0j8h4n/WT2Km9j1A8HT3CVOzIWYzP2G
+         0IOuUMum3n9sRB1Fa7yqlJt5sgjlrcd+7uJDfiodLiWMUE7yN9XhtgQCzSjAl5VoHHNZ
+         hs3kHZYcj/EdPSa19/aOPM5XoPBc7SuZUHQkQRe0Pd6uTrN1VuusQl52dLjMA9wNZ+10
+         FPhrVZTiP5vS9EpkLnBTPhsm9yhQDcEYilKlh3hPq/5yhXCz9ltvTeauxEKCsLStAjUE
+         3doA==
+X-Gm-Message-State: APjAAAVLL+34eRbFWDoQD6G0Wgsu7LV0P0+J2SzLXb0q0X0mwrDzDDEg
+        BsPXiFsYG5bTritiLANznBc=
+X-Google-Smtp-Source: APXvYqwp8VO044xtiY0pXHfIf2NHknLMPpSRrKrFBqL+RJj3GYlSxkQdYFnoQ6Q+nWjg0btM+aWChg==
+X-Received: by 2002:aa7:8652:: with SMTP id a18mr89511170pfo.167.1558481181149;
+        Tue, 21 May 2019 16:26:21 -0700 (PDT)
+Received: from ast-mbp.dhcp.thefacebook.com ([2620:10d:c090:200::1:1eff])
+        by smtp.gmail.com with ESMTPSA id a18sm34874391pfr.22.2019.05.21.16.26.20
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 21 May 2019 16:26:20 -0700 (PDT)
+Date:   Tue, 21 May 2019 16:26:19 -0700
+From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
+To:     Kris Van Hees <kris.van.hees@oracle.com>
+Cc:     netdev@vger.kernel.org, bpf@vger.kernel.org,
+        dtrace-devel@oss.oracle.com, linux-kernel@vger.kernel.org,
+        rostedt@goodmis.org, mhiramat@kernel.org, acme@kernel.org,
+        ast@kernel.org, daniel@iogearbox.net, peterz@infradead.org
+Subject: Re: [RFC PATCH 00/11] bpf, trace, dtrace: DTrace BPF program type
+ implementation and sample use
+Message-ID: <20190521232618.xyo6w3e6nkwu3h5v@ast-mbp.dhcp.thefacebook.com>
+References: <201905202347.x4KNl0cs030532@aserv0121.oracle.com>
+ <20190521175617.ipry6ue7o24a2e6n@ast-mbp.dhcp.thefacebook.com>
+ <20190521184137.GH2422@oracle.com>
+ <20190521205533.evfszcjvdouby7vp@ast-mbp.dhcp.thefacebook.com>
+ <20190521213648.GK2422@oracle.com>
 MIME-Version: 1.0
-In-Reply-To: <078b169334b4996d03d8608f205942c061590681.1557162861.git.sathyanarayanan.kuppuswamy@linux.intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190521213648.GK2422@oracle.com>
+User-Agent: NeoMutt/20180223
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi All,
+On Tue, May 21, 2019 at 05:36:49PM -0400, Kris Van Hees wrote:
+> On Tue, May 21, 2019 at 01:55:34PM -0700, Alexei Starovoitov wrote:
+> > On Tue, May 21, 2019 at 02:41:37PM -0400, Kris Van Hees wrote:
+> > > On Tue, May 21, 2019 at 10:56:18AM -0700, Alexei Starovoitov wrote:
+> > > > On Mon, May 20, 2019 at 11:47:00PM +0000, Kris Van Hees wrote:
+> > > > > 
+> > > > >     2. bpf: add BPF_PROG_TYPE_DTRACE
+> > > > > 
+> > > > > 	This patch adds BPF_PROG_TYPE_DTRACE as a new BPF program type, without
+> > > > > 	actually providing an implementation.  The actual implementation is
+> > > > > 	added in patch 4 (see below).  We do it this way because the
+> > > > > 	implementation is being added to the tracing subsystem as a component
+> > > > > 	that I would be happy to maintain (if merged) whereas the declaration
+> > > > > 	of the program type must be in the bpf subsystem.  Since the two
+> > > > > 	subsystems are maintained by different people, we split the
+> > > > > 	implementing patches across maintainer boundaries while ensuring that
+> > > > > 	the kernel remains buildable between patches.
+> > > > 
+> > > > None of these kernel patches are necessary for what you want to achieve.
+> > > 
+> > > I disagree.  The current support for BPF programs for probes associates a
+> > > specific BPF program type with a specific set of probes, which means that I
+> > > cannot write BPF programs based on a more general concept of a 'DTrace probe'
+> > > and provide functionality based on that.  It also means that if I have a D
+> > > clause (DTrace probe action code associated with probes) that is to be executed
+> > > for a list of probes of different types, I need to duplicate the program
+> > > because I cannot cross program type boundaries.
+> > 
+> > tracepoint vs kprobe vs raw_tracepoint vs perf event work on different input.
+> > There is no common denominator to them that can serve as single 'generic' context.
+> > We're working on the concept of bpf libraries where different bpf program
+> > with different types can call single bpf function with arbitrary arguments.
+> > This concept already works in bpf2bpf calls. We're working on extending it
+> > to different program types.
+> > You're more then welcome to help in that direction,
+> > but type casting of tracepoint into kprobe is no go.
+> 
+> I am happy to hear about the direction you are going in adding functionality.
+> Please note though that I am not type casting tracepoint into kprobe or
+> anything like that.  I am making it possible to transfer execution from
+> tracepoint, kprobe, raw-tracepoint, perf event, etc into a BPF program of
+> a different type (BPF_PROG_TYPE_DTRACE) which operates as a general probe
+> action execution program type.  It provides functionality that is used to
+> implement actions to be executed when a probe fires, independent of the
+> actual probe type that fired.
+> 
+> What you describe seems to me to be rather equivalent to what I already
+> implement in my patch.
 
-On 5/6/19 10:20 AM, sathyanarayanan.kuppuswamy@linux.intel.com wrote:
-> From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
->
-> When IOMMU tries to enable PASID for VF device in
-> iommu_enable_dev_iotlb(), it always fails because PASID support for PCIe
-> VF device is currently broken in PCIE driver. Current implementation
-> expects the given PCIe device (PF & VF) to implement PASID capability
-> before enabling the PASID support. But this assumption is incorrect. As
-> per PCIe spec r4.0, sec 9.3.7.14, all VFs associated with PF can only
-> use the PASID of the PF and not implement it.
->
-> Since PASID is shared between PF/VF devices, following rules should
-> apply.
->
-> 1. Enable PASID in VF only if its already enabled in PF.
+except they're not.
+you're converting to one new prog type only that no one else can use.
+Whereas bpf infra is aiming to be as generic as possible and
+fit networking, tracing, security use case all at once.
 
-I need more eyes on how to interpret the spec for PF/VF PASID enable. As 
-per PCIe spec r4.0. sec 9.3.7.14, PASID VF/PF dependency details are,
+> > > The reasons for these patches is because I cannot do the same with the existing
+> > > implementation.  Yes, I can do some of it or use some workarounds to accomplish
+> > > kind of the same thing, but at the expense of not being able to do what I need
+> > > to do but rather do some kind of best effort alternative.  That is not the goal
+> > > here.
+> > 
+> > what you call 'workaround' other people call 'feature'.
+> > The kernel community doesn't accept extra code into the kernel
+> > when user space can do the same.
+> 
+> Sure, but userspace cannot do the same because in the case of DTrace much
+> of this needs to execute at the kernel level within the context of the probe
+> firing, because once you get back to userspace, the system has moved on.  We
+> need to capture information and perform processing of that information at the
+> time of probe firing.  I am spending quite a lot of my time in the design of
+> DTrace based on BPF and other kernel features to avoid adding more to the
+> kernel than is really needed, to certainly also to avoid duplicating code.
+> 
+> But I am not designing and implementing a new tracer - I am making an
+> existing one available based on existing features (as much as possible).  So,
+> something that comes close but doesn't quite do what we need is not a
+> solution.
 
-An Endpoint device is permitted to support PASID. The PASID 
-configuration of the single function (Function or PF) representing the 
-device is also used by all VFs in the device. A PF is permitted to 
-implement the PASID capability, but VFs must not implement it. An 
-Endpoint device is permitted to support PASID. The PASID configuration 
-of the single function (Function or PF) representing the device is also 
-used by all VFs in the device. A PF is permitted to implement the PASID 
-capability, but VFs must not implement it.
+Your patches disagree with your words.
+This dtrace buffer is a redundant feature.
+per-cpu array plus perf_event_output achieve _exactly_ the same.
 
-Since it says that the VF uses PF configuration, I have interpreted it 
-as "VF follows what ever we configure for PF and don't enable PASID in 
-VF if its not enabled in PF" (otherwise it would require us modifying PF 
-registers for VF use case). But I am not sure whether the my assumption 
-is correct. In one of our testing, during IOMMU bind of VF device, PASID 
-enable fails because associated PF device did not enable PASID. But I am 
-sure whether we should expect PF PASID to be binded before VF.
+> 
+> > > > Feel free to add tools/dtrace/ directory and maintain it though.
+> > > 
+> > > Thank you.
+> > > 
+> > > > The new dtrace_buffer doesn't need to replicate existing bpf+kernel functionality
+> > > > and no changes are necessary in kernel/events/ring_buffer.c either.
+> > > > tools/dtrace/ user space component can use either per-cpu array map
+> > > > or hash map as a buffer to store arbitrary data into and use
+> > > > existing bpf_perf_event_output() to send it to user space via perf ring buffer.
+> > > > 
+> > > > See, for example, how bpftrace does that.
+> > > 
+> > > When using bpf_perf_event_output() you need to construct the sample first,
+> > > and then send it off to user space using the perf ring-buffer.  That is extra
+> > > work that is unnecessary.  Also, storing arbitrary data from userspace in maps
+> > > is not relevant here because this is about data that is generated at the level
+> > > of the kernel and sent to userspace as part of the probe action that is
+> > > executed when the probe fires.
+> > > 
+> > > Bpftrace indeed uses maps and ways to construct the sample and then uses the
+> > > perf ring-buffer to pass data to userspace.  And that is not the way DTrace
+> > > works and that is not the mechanism that we need here,  So, while this may be
+> > > satisfactory for bpftrace, it is not for DTrace.  We need more fine-grained
+> > > control over how we write data to the buffer (doing direct stores from BPF
+> > > code) and without the overhead of constructing a complete sample that can just
+> > > be handed over to bpf_perf_event_output().
+> > 
+> > I think we're not on the same page vs how bpftrace and bpf_perf_event_output work.
+> > What you're proposing in these patches is _slower_ than existing mechanism.
+> 
+> How can it be slower?  Is a sequence of BPF store instructions, writing
+> directly to memory in the ring-buffer slower than using BPF store instructions
+> to write data into a temporary location from which data is then copied into
+> the ring-buffer by bpf_perf_event_output()?
+> 
+> Other than this, my implementation uses exactly the same functions at the
+> perf ring-buffer level as bpf_perf_event_output() does.  In my case, the
+> buffer reserve work is done with one helper, and the final commit is done
+> with another helper.  So yes, I use two helper calls vs one helper call if
+> you use bpf_perf_event_output() but as I mention above, I avoid the creation
+> and copying of the sample data.
 
-So please let me know your comments.
+What stops you from using per-cpu array and perf_event_output?
+No 'reserve' call necessary. lookup from per-cpu array gives a pointer
+to large buffer that can be feed into perf_event_output.
+It's also faster for small buffers and has no issues with multi-page.
+No hacks on perf side necessary.
 
-> 2. Enable PASID in VF only if the requested features matches with PF
-> config, otherwise return error.
-> 3. When enabling/disabling PASID for VF, instead of configuring the PF
-> registers just increase/decrease the usage count (pasid_ref_cnt).
-> 4. Disable PASID in PF (configuring the registers) only if pasid_ref_cnt
-> is zero.
-> 5. When reading PASID features/settings for VF, use registers of
-> corresponding PF.
->
-> Cc: Ashok Raj <ashok.raj@intel.com>
-> Cc: Keith Busch <keith.busch@intel.com>
-> Suggested-by: Ashok Raj <ashok.raj@intel.com>
-> Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-> ---
->   drivers/pci/ats.c   | 55 ++++++++++++++++++++++++++++++++++++++++++++-
->   include/linux/pci.h |  1 +
->   2 files changed, 55 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/pci/ats.c b/drivers/pci/ats.c
-> index 5582e5d83a3f..e7a904e347c3 100644
-> --- a/drivers/pci/ats.c
-> +++ b/drivers/pci/ats.c
-> @@ -345,6 +345,7 @@ int pci_enable_pasid(struct pci_dev *pdev, int features)
->   {
->   	u16 control, supported;
->   	int pos;
-> +	struct pci_dev *pf;
->   
->   	if (WARN_ON(pdev->pasid_enabled))
->   		return -EBUSY;
-> @@ -353,7 +354,33 @@ int pci_enable_pasid(struct pci_dev *pdev, int features)
->   		return -EINVAL;
->   
->   	pos = pci_find_ext_capability(pdev, PCI_EXT_CAP_ID_PASID);
-> -	if (!pos)
-> +
-> +	if (pdev->is_virtfn) {
-> +		/*
-> +		 * Per PCIe r4.0, sec 9.3.7.14, VF must not implement
-> +		 * Process Address Space ID (PASID) Capability.
-> +		*/
-> +		if (pos) {
-> +			dev_err(&pdev->dev, "VF must not implement PASID\n");
-> +			return -EINVAL
-> +		}
-> +		/* Since VF shares PASID with PF, use PF config */
-> +		pf = pci_physfn(pdev);
-> +
-> +		/* If VF config does not match with PF, return error */
-> +		if (!pf->pasid_enabled || pf->pasid_features != features)
-> +			return -EINVAL;
-> +
-> +		pdev->pasid_features = features;
-> +		pdev->pasid_enabled = 1;
-> +
-> +		/* Increment PF PASID refcount */
-> +		atomic_inc(&pf->pasid_ref_cnt);
-> +
-> +		return 0;
-> +	}
-> +
-> +	if (pdev->is_physfn && !pos)
->   		return -EINVAL;
->   
->   	pci_read_config_word(pdev, pos + PCI_PASID_CAP, &supported);
-> @@ -382,10 +409,27 @@ void pci_disable_pasid(struct pci_dev *pdev)
->   {
->   	u16 control = 0;
->   	int pos;
-> +	struct pci_dev *pf;
->   
->   	if (WARN_ON(!pdev->pasid_enabled))
->   		return;
->   
-> +	/* All VFs PASID should be disabled before disabling PF PASID*/
-> +	if (atomic_read(&pdev->pasid_ref_cnt))
-> +		return;
-> +
-> +	if (pdev->is_virtfn) {
-> +		/* Since VF shares PASID with PF, use PF config. */
-> +		pf = pci_physfn(pdev);
-> +
-> +		/* Decrement PF PASID refcount */
-> +		atomic_dec(&pf->pasid_ref_cnt);
-> +
-> +		pdev->pasid_enabled = 0;
-> +
-> +		return;
-> +	}
-> +
->   	pos = pci_find_ext_capability(pdev, PCI_EXT_CAP_ID_PASID);
->   	if (!pos)
->   		return;
-> @@ -408,6 +452,9 @@ void pci_restore_pasid_state(struct pci_dev *pdev)
->   	if (!pdev->pasid_enabled)
->   		return;
->   
-> +	if (pdev->is_virtfn)
-> +		return;
-> +
->   	pos = pci_find_ext_capability(pdev, PCI_EXT_CAP_ID_PASID);
->   	if (!pos)
->   		return;
-> @@ -432,6 +479,9 @@ int pci_pasid_features(struct pci_dev *pdev)
->   	u16 supported;
->   	int pos;
->   
-> +	if (pdev->is_virtfn)
-> +		pdev = pci_physfn(pdev);
-> +
->   	pos = pci_find_ext_capability(pdev, PCI_EXT_CAP_ID_PASID);
->   	if (!pos)
->   		return -EINVAL;
-> @@ -488,6 +538,9 @@ int pci_max_pasids(struct pci_dev *pdev)
->   	u16 supported;
->   	int pos;
->   
-> +	if (pdev->is_virtfn)
-> +		pdev = pci_physfn(pdev);
-> +
->   	pos = pci_find_ext_capability(pdev, PCI_EXT_CAP_ID_PASID);
->   	if (!pos)
->   		return -EINVAL;
-> diff --git a/include/linux/pci.h b/include/linux/pci.h
-> index 699c79c99a39..2a761ea63f8d 100644
-> --- a/include/linux/pci.h
-> +++ b/include/linux/pci.h
-> @@ -454,6 +454,7 @@ struct pci_dev {
->   #endif
->   #ifdef CONFIG_PCI_PASID
->   	u16		pasid_features;
-> +	atomic_t	pasid_ref_cnt;	/* Number of VFs with PASID enabled */
->   #endif
->   #ifdef CONFIG_PCI_P2PDMA
->   	struct pci_p2pdma *p2pdma;
+> 
+> > > Also, please note that I am not duplicating any kernel functionality when it
+> > > comes to buffer handling, and in fact, I found it very easy to be able to
+> > > tap into the perf event ring-buffer implementation and add a feature that I
+> > > need for DTrace.  That was a very pleasant experience for sure!
+> > 
+> > Let's agree to disagree. All I see is a code duplication and lack of understanding
+> > of existing bpf features.
+> 
+> Could you point out to me where you believe I am duplicating code?  I'd really
+> like to address that.
 
--- 
-Sathyanarayanan Kuppuswamy
-Linux kernel developer
+see above.
 
