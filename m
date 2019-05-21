@@ -2,153 +2,87 @@ Return-Path: <SRS0=9PYC=TV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE85FC04E87
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 09:38:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F353C04AAF
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 09:41:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B59A121773
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 09:38:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558431533;
-	bh=DdIv1DA6LGbOnPVWvG4pWPp2UIabk717qQ4GREpPO/g=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=wxdVz+W5jeGu/wIXUAolmHvgDlcv/oLiKyEguizTwPQwv6VsC8gDYOv+ryxLM8DrR
-	 sXolxFtPf/4bxG3XqwzXPnGAJXdWSFtIRP8enzHc7GbQ6jPE4tTXyoa7rXW2slMM35
-	 Z8KvzKnFCKScsE86beX+/x79pR2sLDpUUOZPswEo=
+	by mail.kernel.org (Postfix) with ESMTP id 5135C21479
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 09:41:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727140AbfEUJix (ORCPT
+        id S1727074AbfEUJk7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 May 2019 05:38:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:32840 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726259AbfEUJiw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 May 2019 05:38:52 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2ACE821479;
-        Tue, 21 May 2019 09:38:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558431531;
-        bh=DdIv1DA6LGbOnPVWvG4pWPp2UIabk717qQ4GREpPO/g=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=G1Nqh8qCMqLn9yatKZMlXJDnUMNo+WOmLTpVYwILhkAac/0I7uFlZoP4NOcplcDrA
-         6gu5XYwa2lLedMfBtgO2MjX638Z5nxlLBEB9yPJqw37CKaLM+iO7SSJ+HBykALE1lI
-         1vYYJURYmXMGfIEE4nPcYSOyOmiCIf9qfzGdjXIE=
-Date:   Tue, 21 May 2019 11:38:49 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Theodore Ts'o <tytso@mit.edu>,
-        Naresh Kamboju <naresh.kamboju@linaro.org>
-Cc:     open list <linux-kernel@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>,
-        lkft-triage@lists.linaro.org,
-        linux- stable <stable@vger.kernel.org>,
-        linux-ext4@vger.kernel.org,
-        Arthur Marsh <arthur.marsh@internode.on.net>,
-        Richard Weinberger <richard.weinberger@gmail.com>,
-        Theodore Ts'o <tytso@mit.edu>
-Subject: ext4 regression (was Re: [PATCH 4.19 000/105] 4.19.45-stable review)
-Message-ID: <20190521093849.GA9806@kroah.com>
-References: <20190520115247.060821231@linuxfoundation.org>
- <20190520222342.wtsjx227c6qbkuua@xps.therub.org>
- <20190521085956.GC31445@kroah.com>
- <CA+G9fYvHmUimtwszwo=9fDQLn+MNh8Vq3UGPaPUdhH=dEKzqxg@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CA+G9fYvHmUimtwszwo=9fDQLn+MNh8Vq3UGPaPUdhH=dEKzqxg@mail.gmail.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+        Tue, 21 May 2019 05:40:59 -0400
+Received: from out30-43.freemail.mail.aliyun.com ([115.124.30.43]:51684 "EHLO
+        out30-43.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726289AbfEUJk7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 May 2019 05:40:59 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R131e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e07486;MF=yang.shi@linux.alibaba.com;NM=1;PH=DS;RN=12;SR=0;TI=SMTPD_---0TSIe59t_1558431642;
+Received: from e19h19392.et15sqa.tbsite.net(mailfrom:yang.shi@linux.alibaba.com fp:SMTPD_---0TSIe59t_1558431642)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Tue, 21 May 2019 17:40:55 +0800
+From:   Yang Shi <yang.shi@linux.alibaba.com>
+To:     ying.huang@intel.com, hannes@cmpxchg.org, mhocko@suse.com,
+        mgorman@techsingularity.net, kirill.shutemov@linux.intel.com,
+        josef@toxicpanda.com, hughd@google.com, shakeelb@google.com,
+        akpm@linux-foundation.org
+Cc:     yang.shi@linux.alibaba.com, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Subject: [v3 PATCH 1/2] mm: vmscan: remove double slab pressure by inc'ing sc->nr_scanned
+Date:   Tue, 21 May 2019 17:40:41 +0800
+Message-Id: <1558431642-52120-1-git-send-email-yang.shi@linux.alibaba.com>
+X-Mailer: git-send-email 1.8.3.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 21, 2019 at 02:58:58PM +0530, Naresh Kamboju wrote:
-> On Tue, 21 May 2019 at 14:30, Greg Kroah-Hartman
-> <gregkh@linuxfoundation.org> wrote:
-> >
-> > On Mon, May 20, 2019 at 05:23:42PM -0500, Dan Rue wrote:
-> > > On Mon, May 20, 2019 at 02:13:06PM +0200, Greg Kroah-Hartman wrote:
-> > > > This is the start of the stable review cycle for the 4.19.45 release.
-> > > > There are 105 patches in this series, all will be posted as a response
-> > > > to this one.  If anyone has any issues with these being applied, please
-> > > > let me know.
-> > > >
-> > > > Responses should be made by Wed 22 May 2019 11:50:49 AM UTC.
-> > > > Anything received after that time might be too late.
-> > >
-> > > We're seeing an ext4 issue previously reported at
-> > > https://lore.kernel.org/lkml/20190514092054.GA6949@osiris.
-> > >
-> > > [ 1916.032087] EXT4-fs error (device sda): ext4_find_extent:909: inode #8: comm jbd2/sda-8: pblk 121667583 bad header/extent: invalid extent entries - magic f30a, entries 8, max 340(340), depth 0(0)
-> > > [ 1916.073840] jbd2_journal_bmap: journal block not found at offset 4455 on sda-8
-> > > [ 1916.081071] Aborting journal on device sda-8.
-> > > [ 1916.348652] EXT4-fs error (device sda): ext4_journal_check_start:61: Detected aborted journal
-> > > [ 1916.357222] EXT4-fs (sda): Remounting filesystem read-only
-> > >
-> > > This is seen on 4.19-rc, 5.0-rc, mainline, and next. We don't have data
-> > > for 5.1-rc yet, which is presumably also affected in this RC round.
-> > >
-> > > We only see this on x86_64 and i386 devices - though our hardware setups
-> > > vary so it could be coincidence.
-> > >
-> > > I have to run out now, but I'll come back and work on a reproducer and
-> > > bisection later tonight and tomorrow.
-> > >
-> > > Here is an example test run; link goes to the spot in the ltp syscalls
-> > > test where the disk goes into read-only mode.
-> > > https://lkft.validation.linaro.org/scheduler/job/735468#L8081
-> >
-> > Odd, I keep hearing rumors of ext4 issues right now, but nothing
-> > actually solid that I can point to.  Any help you can provide here would
-> > be great.
-> >
-> 
-> git bisect helped me to land on this commit,
-> 
-> # git bisect bad
-> e8fd3c9a5415f9199e3fc5279e0f1dfcc0a80ab2 is the first bad commit
-> commit e8fd3c9a5415f9199e3fc5279e0f1dfcc0a80ab2
-> Author: Theodore Ts'o <tytso@mit.edu>
-> Date:   Tue Apr 9 23:37:08 2019 -0400
-> 
->     ext4: protect journal inode's blocks using block_validity
-> 
->     commit 345c0dbf3a30872d9b204db96b5857cd00808cae upstream.
-> 
->     Add the blocks which belong to the journal inode to block_validity's
->     system zone so attempts to deallocate or overwrite the journal due a
->     corrupted file system where the journal blocks are also claimed by
->     another inode.
-> 
->     Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=202879
->     Signed-off-by: Theodore Ts'o <tytso@mit.edu>
->     Cc: stable@kernel.org
->     Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> 
-> :040000 040000 b8b6ce2577d60c65021e5cc1c3a38b32e0cbb2ff
-> 747c67b159b33e4e1da414b1d33567a5da9ae125 M fs
+The commit 9092c71bb724 ("mm: use sc->priority for slab shrink targets")
+has broken up the relationship between sc->nr_scanned and slab pressure.
+The sc->nr_scanned can't double slab pressure anymore.  So, it sounds no
+sense to still keep sc->nr_scanned inc'ed.  Actually, it would prevent
+from adding pressure on slab shrink since excessive sc->nr_scanned would
+prevent from scan->priority raise.
 
-Ah, many thanks for this bisection.
+The bonnie test doesn't show this would change the behavior of
+slab shrinkers.
 
-Ted, any ideas here?  Should I drop this from the stable trees, and you
-revert it from Linus's?  Or something else?
+				w/		w/o
+			  /sec    %CP      /sec      %CP
+Sequential delete: 	3960.6    94.6    3997.6     96.2
+Random delete: 		2518      63.8    2561.6     64.6
 
-Note, I do also have 170417c8c7bb ("ext4: fix block validity checks for
-journal inodes using indirect blocks") in the trees, which was supposed
-to fix the problem with this patch, am I missing another one as well?
+The slight increase of "/sec" without the patch would be caused by the
+slight increase of CPU usage.
 
-(side note, it was mean not to mark 170417c8c7bb for stable, when the
-patch it was fixing was marked for stable, I'm lucky I caught it...)
+Cc: Josef Bacik <josef@toxicpanda.com>
+Cc: Michal Hocko <mhocko@kernel.org>
+Cc: Johannes Weiner <hannes@cmpxchg.org>
+Signed-off-by: Yang Shi <yang.shi@linux.alibaba.com>
+---
+ mm/vmscan.c | 5 -----
+ 1 file changed, 5 deletions(-)
 
-thanks,
+diff --git a/mm/vmscan.c b/mm/vmscan.c
+index 7acd0af..b65bc50 100644
+--- a/mm/vmscan.c
++++ b/mm/vmscan.c
+@@ -1137,11 +1137,6 @@ static unsigned long shrink_page_list(struct list_head *page_list,
+ 		if (!sc->may_unmap && page_mapped(page))
+ 			goto keep_locked;
+ 
+-		/* Double the slab pressure for mapped and swapcache pages */
+-		if ((page_mapped(page) || PageSwapCache(page)) &&
+-		    !(PageAnon(page) && !PageSwapBacked(page)))
+-			sc->nr_scanned++;
+-
+ 		may_enter_fs = (sc->gfp_mask & __GFP_FS) ||
+ 			(PageSwapCache(page) && (sc->gfp_mask & __GFP_IO));
+ 
+-- 
+1.8.3.1
 
-greg k-h
