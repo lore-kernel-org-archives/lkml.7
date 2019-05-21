@@ -4,42 +4,43 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CAAABC04AAF
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 15:34:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 774E8C04AAF
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 15:34:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A1A9C21773
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 15:34:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E34A21773
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 15:34:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="ds6mrmfG"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="AopMwRBb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728848AbfEUPeg (ORCPT
+        id S1728886AbfEUPel (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 May 2019 11:34:36 -0400
-Received: from outils.crapouillou.net ([89.234.176.41]:53114 "EHLO
+        Tue, 21 May 2019 11:34:41 -0400
+Received: from outils.crapouillou.net ([89.234.176.41]:53134 "EHLO
         crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728784AbfEUPee (ORCPT
+        with ESMTP id S1728807AbfEUPef (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 May 2019 11:34:34 -0400
+        Tue, 21 May 2019 11:34:35 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1558452872; h=from:from:sender:reply-to:subject:subject:date:date:
+        s=mail; t=1558452873; h=from:from:sender:reply-to:subject:subject:date:date:
          message-id:message-id:to:to:cc:cc:mime-version:mime-version:
          content-type:content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=wFZyLEs/qmTn735r3wlcWHDBNnaaVDYzj29ACWMk9mA=;
-        b=ds6mrmfGnstp+rSASyj5LgqD7EV+hIqlgFID0sPUtcQREAhhnd5TA/MB2qlM5u5jQTcPHC
-        vnNvOUYpEOLiJly8AtrHDxGEUU+Qz14bnpnE60Ww4QktOg9nwHCkyZ09jhD+IDHH0SRj0y
-        QC6J7cXJ1fHh3Xd29WZ2IQfXf9YRDA0=
+        bh=q5rnmkqgorZ2qStNtcY9XklpDpBcCKsevMPL8o+5KJY=;
+        b=AopMwRBbY87m2Baoacms8/oX02k+v8wmXORfIljqwE10Kn9/BvhLsP+cChp0n3ABlnAUx6
+        9XTU3YQhYL0K23qK94ypQINW2hdSH439on+nN0SJvRKlV9rYk/rcQC7jsL7Ug+msISwtKb
+        U1fUdZmtflS65yMVPitoWxBfyK/lirY=
 From:   Paul Cercueil <paul@crapouillou.net>
 To:     Thierry Reding <thierry.reding@gmail.com>,
         Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>
 Cc:     od@zcrc.me, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>
-Subject: [PATCH 4/5] pwm: jz4740: Drop dependency on MACH_INGENIC
-Date:   Tue, 21 May 2019 17:34:14 +0200
-Message-Id: <20190521153415.14703-4-paul@crapouillou.net>
+Subject: [PATCH 5/5] pwm: jz4740: Switch to SPDX license identifier
+Date:   Tue, 21 May 2019 17:34:15 +0200
+Message-Id: <20190521153415.14703-5-paul@crapouillou.net>
 In-Reply-To: <20190521153415.14703-1-paul@crapouillou.net>
 References: <20190521153415.14703-1-paul@crapouillou.net>
 MIME-Version: 1.0
@@ -49,28 +50,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Depending on MACH_INGENIC prevent us from creating a generic kernel that
-works on more than one MIPS board. Instead, we just depend on MIPS being
-set.
+Use a SPDX license identifier instead of a wall of text.
 
 Signed-off-by: Paul Cercueil <paul@crapouillou.net>
 ---
- drivers/pwm/Kconfig | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/pwm/pwm-jz4740.c | 11 +----------
+ 1 file changed, 1 insertion(+), 10 deletions(-)
 
-diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
-index 1311b54089be..1dfdf2cd533a 100644
---- a/drivers/pwm/Kconfig
-+++ b/drivers/pwm/Kconfig
-@@ -223,7 +223,7 @@ config PWM_IMX_TPM
+diff --git a/drivers/pwm/pwm-jz4740.c b/drivers/pwm/pwm-jz4740.c
+index e73ee72df09d..138b4f596525 100644
+--- a/drivers/pwm/pwm-jz4740.c
++++ b/drivers/pwm/pwm-jz4740.c
+@@ -1,16 +1,7 @@
++// SPDX-License-Identifier: GPL-2.0+
+ /*
+  *  Copyright (C) 2010, Lars-Peter Clausen <lars@metafoo.de>
+  *  JZ4740 platform PWM support
+- *
+- *  This program is free software; you can redistribute it and/or modify it
+- *  under  the terms of the GNU General  Public License as published by the
+- *  Free Software Foundation;  either version 2 of the License, or (at your
+- *  option) any later version.
+- *
+- *  You should have received a copy of the GNU General Public License along
+- *  with this program; if not, write to the Free Software Foundation, Inc.,
+- *  675 Mass Ave, Cambridge, MA 02139, USA.
+- *
+  */
  
- config PWM_JZ4740
- 	tristate "Ingenic JZ47xx PWM support"
--	depends on MACH_INGENIC
-+	depends on MIPS
- 	help
- 	  Generic PWM framework driver for Ingenic JZ47xx based
- 	  machines.
+ #include <linux/clk.h>
 -- 
 2.21.0.593.g511ec345e18
 
