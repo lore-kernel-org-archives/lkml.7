@@ -2,141 +2,100 @@ Return-Path: <SRS0=9PYC=TV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9E6FC04AAF
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 12:02:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CE5DC04AAF
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 12:02:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CA8492173E
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 12:02:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 01DA72173E
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 12:02:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728136AbfEUMCY (ORCPT
+        id S1728147AbfEUMCk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 May 2019 08:02:24 -0400
-Received: from mx2.suse.de ([195.135.220.15]:42886 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727765AbfEUMCY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 May 2019 08:02:24 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 207ACAE31;
-        Tue, 21 May 2019 12:02:22 +0000 (UTC)
-Message-ID: <a54bd83c219b328153352f0d2c96badbac042353.camel@suse.de>
-Subject: Re: [RFC v2 0/5] cpufreq support for the Raspberry Pi
-From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-To:     Viresh Kumar <viresh.kumar@linaro.org>
-Cc:     stefan.wahren@i2se.com, devicetree@vger.kernel.org,
-        linux-rpi-kernel@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org,
-        mbrugger@suse.de, rjw@rjwysocki.net, sboyd@kernel.org,
-        eric@anholt.net, f.fainelli@gmail.com,
-        bcm-kernel-feedback-list@broadcom.com, ptesarik@suse.com,
-        ssuloev@orpaltech.com, linux-clk@vger.kernel.org,
-        mturquette@baylibre.com, linux-kernel@vger.kernel.org
-Date:   Tue, 21 May 2019 14:02:20 +0200
-In-Reply-To: <20190520105153.ftlnjx7ocr2qkxhd@vireshk-i7>
-References: <20190520104708.11980-1-nsaenzjulienne@suse.de>
-         <20190520105153.ftlnjx7ocr2qkxhd@vireshk-i7>
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-+jPebD3prxDeK5SyijTN"
-User-Agent: Evolution 3.32.2 
+        Tue, 21 May 2019 08:02:40 -0400
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:40264 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727251AbfEUMCj (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 May 2019 08:02:39 -0400
+Received: by mail-qk1-f193.google.com with SMTP id q197so10834436qke.7;
+        Tue, 21 May 2019 05:02:39 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=FFHpERDGAM7rYKa/XXAMVPCU2p7ieNvbmiVwbMmHz6o=;
+        b=J7csQ2EyXN5MA9+ERyPqulTgBOzYTO3OU25CWnCnnnR249XtZCaYgiQtWYUcnFhyd0
+         NsylALsY1NZ6yOwJJQAykAOTNE16ecjiLSMKVq4sqH1WPLD2MG6pz0jQYKZ7N5oVKEYG
+         ieCXNLD7tjey47F589gYEMjBBuucwfZs4uKcQkYt7pS92sEbfU7UQ63NsNLyzw5f+WjJ
+         n0SlKgptlDL2m93jtg/KxB0aesQ75EB44wbUeqLfS8VrDAjQue5KZXxMUjvsh0qgEz7d
+         lwaLW4B+hpQiV4ZlWe166NJgQ1OHDcgaK7qBIYsI0M9UiOEeWmOCImdQQDCediybjsgb
+         kZCQ==
+X-Gm-Message-State: APjAAAVVn7U3BK7wAlRJBedJ99LlZjEDpu8mgbJ6BZqQ2TzCYB0LxOVW
+        DuqBiMT/iV7jz6N1zVj09RWla0VhraHe3Y8QdKE=
+X-Google-Smtp-Source: APXvYqz+JNxFrC1K8efOBIeJxisvtNkhhdYJVswIOoiVcFFJwa08OrBzOczrjY+m5IfqdGqcpIBYRLgf3CiTps9SNfc=
+X-Received: by 2002:a05:620a:1085:: with SMTP id g5mr46695715qkk.182.1558440159035;
+ Tue, 21 May 2019 05:02:39 -0700 (PDT)
 MIME-Version: 1.0
+References: <1558383565-11821-1-git-send-email-eajames@linux.ibm.com> <1558383565-11821-3-git-send-email-eajames@linux.ibm.com>
+In-Reply-To: <1558383565-11821-3-git-send-email-eajames@linux.ibm.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Tue, 21 May 2019 14:02:22 +0200
+Message-ID: <CAK8P3a2HSOsw33VhAk4Z8ARiYn4jG68Ec7fynKbrFWUNDo37Wg@mail.gmail.com>
+Subject: Re: [PATCH v2 2/7] drivers/soc: Add Aspeed XDMA Engine Driver
+To:     Eddie James <eajames@linux.ibm.com>
+Cc:     linux-aspeed@lists.ozlabs.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        DTML <devicetree@vger.kernel.org>, Joel Stanley <joel@jms.id.au>,
+        Andrew Jeffery <andrew@aj.id.au>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, May 20, 2019 at 10:19 PM Eddie James <eajames@linux.ibm.com> wrote:
+> diff --git a/include/uapi/linux/aspeed-xdma.h b/include/uapi/linux/aspeed-xdma.h
+> new file mode 100644
+> index 0000000..2a4bd13
+> --- /dev/null
+> +++ b/include/uapi/linux/aspeed-xdma.h
+> @@ -0,0 +1,26 @@
+> +/* SPDX-License-Identifier: GPL-2.0+ */
+> +/* Copyright IBM Corp 2019 */
+> +
+> +#ifndef _UAPI_LINUX_ASPEED_XDMA_H_
+> +#define _UAPI_LINUX_ASPEED_XDMA_H_
+> +
+> +#include <linux/types.h>
+> +
+> +/*
+> + * aspeed_xdma_op
+> + *
+> + * upstream: boolean indicating the direction of the DMA operation; upstream
+> + *           means a transfer from the BMC to the host
+> + *
+> + * host_addr: the DMA address on the host side, typically configured by PCI
+> + *            subsystem
+> + *
+> + * len: the size of the transfer in bytes; it should be a multiple of 16 bytes
+> + */
+> +struct aspeed_xdma_op {
+> +       __u32 upstream;
+> +       __u64 host_addr;
+> +       __u32 len;
+> +};
+> +
+> +#endif /* _UAPI_LINUX_ASPEED_XDMA_H_ */
 
---=-+jPebD3prxDeK5SyijTN
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+If this is a user space interface, please remove the holes in the
+data structure.
 
-Hi Viresh, thanks for the comments.
+I don't see how this is actually used in this patch, maybe you meant
+the definition to be part of another patch?
 
-On Mon, 2019-05-20 at 16:21 +0530, Viresh Kumar wrote:
-> On 20-05-19, 12:47, Nicolas Saenz Julienne wrote:
-> > Hi all,
-> > as some of you may recall I've been spending some time looking into
-> > providing 'cpufreq' support for the Raspberry Pi platform[1]. I think
-> > I'm close to something workable, so I'd love for you to comment on it.
-> >=20
-> > There has been some design changes since the last version. Namely the
-> > fact that I now make sure *only* the CPU frequency is updated. The
-> > firmware API we use has two modes, with or without turbo. Enabling turb=
-o
-> > implies not only scaling the CPU clock but also the VPU and other
-> > peripheral related clocks.  This is problematic as some of them are not
-> > prepared for this kind frequency changes. I spent some time adapting th=
-e
-> > peripheral drivers, but the result was disappointing as they poorly
-> > support live frequency changes (which most other chips accept, think fo=
-r
-> > instance I2C and clock stretching) but also turned out hard to integrat=
-e
-> > into the kernel. As we were planning to use 'clk_notifiers' which turns
-> > out not to be such a good idea as it's prone to deadlocks and not
-> > recommended by the clock maintainers[2]. It's also worth mentioning tha=
-t
-> > the foundation kernel doesn't support VPU frequency scaling either.
-> >=20
-> > With this in mind, and as suggested by clock maintainers[2], I've
-> > decided to integrate the firmware clock interface into the bcm2835 cloc=
-k
-> > driver. This, in my opinion, provides the least friction with the
-> > firmware and lets us write very simple and portable higher level
-> > drivers. As I did with the 'cpufreq' driver which simply queries the ma=
-x
-> > and min frequencies available, which are configurable in the firmware,
-> > to then trigger the generic 'cpufreq-dt'.
-> >=20
-> > In the future we could further integrate other firmware dependent clock=
-s
-> > into the main driver. For instance to be able to scale the VPU clock,
-> > which should be operated through a 'devfreq' driver.
-> >=20
-> > This was tested on a RPi3b+ and if the series is well received I'll tes=
-t
-> > it further on all platforms I own.
->=20
-> Please always supply version history on what has changed from V1.
-
-Will do
-
-> And why do you keep sending it as RFC ?
-
-Well it's because of patch #3 which integrates the firmware interface into =
-the
-clock driver. I want some approval from the maintainers before cleaning it =
-up
-testing it on all RPi versions.
-
-> Just keep the default PATCH thing,the patches are in good shape I would s=
-ay.
-
-Thanks :)
-
-Regards,
-Nicolas
-
-
---=-+jPebD3prxDeK5SyijTN
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAlzj6MwACgkQlfZmHno8
-x/71TwgAn7hhXU5xBPx2AtDtmx95N4yx8PRK0rNIgfZVHYNj+CYHgmn1xTbGTNUQ
-ZEAwEtz4nCxuCKORfYFpQUobPrcHyHFGv2UPpy+EmqsKVqPhkOBJGsjashoIk4lK
-m9Hd1Nb+JQQIahBR10CpKteuw/Sfk5UhyA07zzDQs6H6Qihc4xGZm20r6vsKLO7t
-Vm8El7HkxVyxGIMqU9mysSclpbZzVGeEkKY/BlWj31rDhf5RzWYiEq6IaMY2PaTX
-Vb0LLw+3SHDGQ7GoKZf8wbKNB24zdwCgjZFkacCfBzN63HpaMWrbLQhzLRnAQ0bV
-OBkmX/49IOaRTIbQHc93kQZLdfS1sQ==
-=Ae8T
------END PGP SIGNATURE-----
-
---=-+jPebD3prxDeK5SyijTN--
-
+    Arnd
