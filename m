@@ -4,60 +4,62 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70736C072B5
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 21:20:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80330C16A69
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 21:20:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2CCE32184B
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 21:20:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4AE312182B
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 21:20:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558473635;
-	bh=msj+sxvxS90EzQdzn/KH/bnFtu25PCsKF5LRkwP1ED4=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=HbFbyy5Yhg5jhIhK9vvYNHPByyTMUdu812oj0oxSQQXLy625FdQXbzAXt4e63YZ44
-	 U9lEtTFyDsmh8onPcoGOjP+jOc77jHsPYO5tgqU3xHE05xZdjA8J5IDFbLdRLzt2OG
-	 xRRxSOpfeTRDDlFiba/qooE0WmzNpkc/UwJyIhmY=
+	s=default; t=1558473637;
+	bh=VSv+LMF57kTYmD/2jaLoht/0vcYyyN+yEf1/Z76LJA0=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=QHZGPUaSJusnk9Ahh0RyIXu+YPopMCEUm1TvdJUp/TRnVn2HJzVU87eh2AK4kyQ8x
+	 yU52o9gL9aoOVf9S6J0ylUkHa89MLqb6NJw/m1X3XF/55RVmoWc843GyCMASR3fyfD
+	 jqfG77i3EBybeNwuJv9NpZzE794deeRnwLEq9XVM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727787AbfEUVUe (ORCPT
+        id S1727963AbfEUVUg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 May 2019 17:20:34 -0400
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:41300 "EHLO
+        Tue, 21 May 2019 17:20:36 -0400
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:42205 "EHLO
         mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727156AbfEUVUe (ORCPT
+        with ESMTP id S1727156AbfEUVUf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 May 2019 17:20:34 -0400
-Received: by mail-oi1-f194.google.com with SMTP id y10so13955922oia.8;
-        Tue, 21 May 2019 14:20:33 -0700 (PDT)
+        Tue, 21 May 2019 17:20:35 -0400
+Received: by mail-oi1-f194.google.com with SMTP id w9so12156196oic.9;
+        Tue, 21 May 2019 14:20:35 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=fxtV4j3Q3Ky7PduprSpIqVhzl5TQa+DoL0eC6ro0dg4=;
-        b=E6CF+AM3oUtW6AcomyqlKdu/8wHVO6syMU7XEx769fS7y2s19LS3NbYJfKt4S93PF4
-         hOyFVCRujtQzhgz/paTtu1U7YgIbKrO4rjCAoJrvCia2vhzTuwP0x8Ncdjg00NtyrRoR
-         NECmR1npzQZscLP1wa5zQdQQUfBev1xYjmjXffcHSPOaBnGL4bsqPdaPXu2wgEAGw115
-         tBRDYyMTUr1i+Toyagc9sUYX26iJuxDibumedqUstU6k0SxXIxsf0bkKF1BbQehj8/E7
-         tdk0GS+hm/BD5hSqiDesNV9It5voJnLH5AQDmpQWr0S2UfpqcY0lHlBy6MWTapmgELPy
-         tMNg==
-X-Gm-Message-State: APjAAAWWXo8tMMTBDS8D+zgb6DkFDwJJCUSMlJpQUhNyu4ew1sZwRSc6
-        reQvLNk1yj11oXsBJ8C6qQ==
-X-Google-Smtp-Source: APXvYqwGwhSWmGQBV3MG3m3Oq4R5KNDZW35iz0Y1UF+c10ZuTVr+f+t0QWBao8Dui7aq23ThwmPrLA==
-X-Received: by 2002:aca:c450:: with SMTP id u77mr4702738oif.119.1558473633149;
-        Tue, 21 May 2019 14:20:33 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=ohQFTgMMLwtzJyoURDl0Jg9MM3ofsM/G0HILwpPhwVs=;
+        b=mDYIP3YxPmnQy1/uDtUNvIZOXpld8tF05bFqegwgJU6gduQhVyQva1QXOMuvkr511L
+         kwMp3CB0gtlX37bX13NM5O5g2bFTsPhOEW0T+b4QqI915ggwNDZlZG8u2If+V4879RjW
+         +3faNrpQv5mUO005ureOUv/r8LgsOs8/Y7Ms2t2fUc09hLsjjMvLRF2fbUyTUja+vitQ
+         gxLk+KeuaIIlhHMk6h/MhbviFyfCRBL+yPgy/a/kyL2UARu1Z6PKryrynLvhziXTq1M8
+         Psrf8Zb9qnySI/X72JkO/+1GuKk/48UA6fEGWrcGoWtwrxyuBfFp26ti0WPVQpdm0zpT
+         ib7Q==
+X-Gm-Message-State: APjAAAWHMxQRpZewXW+vZE8C3R/y3ESzfHHrsBe1AQ6y41Ytl1dIOzkp
+        dszdYaBuQtDCZAvcqcsjngZks+g=
+X-Google-Smtp-Source: APXvYqykJ+/80zeE9FPye0CIaSUoGAB3CaTSqv0cqUZp+A5u3C1Z48rEg8uq4fdgU6epwsuVtwkMxw==
+X-Received: by 2002:aca:d6d0:: with SMTP id n199mr4713837oig.51.1558473634575;
+        Tue, 21 May 2019 14:20:34 -0700 (PDT)
 Received: from xps15.herring.priv (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.googlemail.com with ESMTPSA id y3sm7510534oto.58.2019.05.21.14.20.31
+        by smtp.googlemail.com with ESMTPSA id y3sm7510534oto.58.2019.05.21.14.20.33
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 21 May 2019 14:20:32 -0700 (PDT)
+        Tue, 21 May 2019 14:20:33 -0700 (PDT)
 From:   Rob Herring <robh@kernel.org>
 To:     Mark Brown <broonie@kernel.org>
 Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         Liam Girdwood <lgirdwood@gmail.com>
-Subject: [PATCH 1/3] dt-bindings: regulator: Convert regulator binding to json-schema
-Date:   Tue, 21 May 2019 16:20:29 -0500
-Message-Id: <20190521212031.12982-1-robh@kernel.org>
+Subject: [PATCH 2/3] dt-bindings: regulator: Convert gpio-regulator to json-schema
+Date:   Tue, 21 May 2019 16:20:30 -0500
+Message-Id: <20190521212031.12982-2-robh@kernel.org>
 X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190521212031.12982-1-robh@kernel.org>
+References: <20190521212031.12982-1-robh@kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -65,394 +67,205 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Convert the common regulator binding to DT schema format. Note that all
-the properties with standard unit suffixes have type checks already, so
-only a description is necessary.
-
-As fixed-regulator has already been converted, update the references in
-it. Otherwise, keep regulator.txt with a reference to the schema to
-avoid a bunch of treewide updates. regulator.txt can be removed when all
-the regulator bindings are converted.
+Convert the gpio-regulator binding to DT schema format using
+json-schema.
 
 Cc: Liam Girdwood <lgirdwood@gmail.com>
 Cc: Mark Brown <broonie@kernel.org>
 Signed-off-by: Rob Herring <robh@kernel.org>
 ---
- .../bindings/regulator/fixed-regulator.yaml   |   5 +-
- .../bindings/regulator/regulator.txt          | 140 +-----------
- .../bindings/regulator/regulator.yaml         | 200 ++++++++++++++++++
- 3 files changed, 205 insertions(+), 140 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/regulator/regulator.yaml
+ .../bindings/regulator/gpio-regulator.txt     |  57 ---------
+ .../bindings/regulator/gpio-regulator.yaml    | 118 ++++++++++++++++++
+ 2 files changed, 118 insertions(+), 57 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/regulator/gpio-regulator.txt
+ create mode 100644 Documentation/devicetree/bindings/regulator/gpio-regulator.yaml
 
-diff --git a/Documentation/devicetree/bindings/regulator/fixed-regulator.yaml b/Documentation/devicetree/bindings/regulator/fixed-regulator.yaml
-index d289c2f7455a..a650b457085d 100644
---- a/Documentation/devicetree/bindings/regulator/fixed-regulator.yaml
-+++ b/Documentation/devicetree/bindings/regulator/fixed-regulator.yaml
-@@ -12,10 +12,13 @@ maintainers:
- 
- description:
-   Any property defined as part of the core regulator binding, defined in
--  regulator.txt, can also be used. However a fixed voltage regulator is
-+  regulator.yaml, can also be used. However a fixed voltage regulator is
-   expected to have the regulator-min-microvolt and regulator-max-microvolt
-   to be the same.
- 
-+allOf:
-+  - $ref: "regulator.yaml#"
-+
- properties:
-   compatible:
-     const: regulator-fixed
-diff --git a/Documentation/devicetree/bindings/regulator/regulator.txt b/Documentation/devicetree/bindings/regulator/regulator.txt
-index 0a3f087d5844..487ccd8370b3 100644
---- a/Documentation/devicetree/bindings/regulator/regulator.txt
-+++ b/Documentation/devicetree/bindings/regulator/regulator.txt
-@@ -1,139 +1 @@
--Voltage/Current Regulators
+diff --git a/Documentation/devicetree/bindings/regulator/gpio-regulator.txt b/Documentation/devicetree/bindings/regulator/gpio-regulator.txt
+deleted file mode 100644
+index dd25e73b5d79..000000000000
+--- a/Documentation/devicetree/bindings/regulator/gpio-regulator.txt
++++ /dev/null
+@@ -1,57 +0,0 @@
+-GPIO controlled regulators
+-
+-Required properties:
+-- compatible		: Must be "regulator-gpio".
+-- regulator-name	: Defined in regulator.txt as optional, but required
+-			  here.
+-- gpios			: Array of one or more GPIO pins used to select the
+-			  regulator voltage/current listed in "states".
+-- states		: Selection of available voltages/currents provided by
+-			  this regulator and matching GPIO configurations to
+-			  achieve them. If there are no states in the "states"
+-			  array, use a fixed regulator instead.
 -
 -Optional properties:
--- regulator-name: A string used as a descriptive name for regulator outputs
--- regulator-min-microvolt: smallest voltage consumers may set
--- regulator-max-microvolt: largest voltage consumers may set
--- regulator-microvolt-offset: Offset applied to voltages to compensate for voltage drops
--- regulator-min-microamp: smallest current consumers may set
--- regulator-max-microamp: largest current consumers may set
--- regulator-input-current-limit-microamp: maximum input current regulator allows
--- regulator-always-on: boolean, regulator should never be disabled
--- regulator-boot-on: bootloader/firmware enabled regulator
--- regulator-allow-bypass: allow the regulator to go into bypass mode
--- regulator-allow-set-load: allow the regulator performance level to be configured
--- <name>-supply: phandle to the parent supply/regulator node
--- regulator-ramp-delay: ramp delay for regulator(in uV/us)
--  For hardware which supports disabling ramp rate, it should be explicitly
--  initialised to zero (regulator-ramp-delay = <0>) for disabling ramp delay.
--- regulator-enable-ramp-delay: The time taken, in microseconds, for the supply
--  rail to reach the target voltage, plus/minus whatever tolerance the board
--  design requires. This property describes the total system ramp time
--  required due to the combination of internal ramping of the regulator itself,
--  and board design issues such as trace capacitance and load on the supply.
--- regulator-settling-time-us: Settling time, in microseconds, for voltage
--  change if regulator have the constant time for any level voltage change.
--  This is useful when regulator have exponential voltage change.
--- regulator-settling-time-up-us: Settling time, in microseconds, for voltage
--  increase if the regulator needs a constant time to settle after voltage
--  increases of any level. This is useful for regulators with exponential
--  voltage changes.
--- regulator-settling-time-down-us: Settling time, in microseconds, for voltage
--  decrease if the regulator needs a constant time to settle after voltage
--  decreases of any level. This is useful for regulators with exponential
--  voltage changes.
--- regulator-soft-start: Enable soft start so that voltage ramps slowly
--- regulator-state-standby sub-root node for Standby mode
--  : equivalent with standby Linux sleep state, which provides energy savings
--  with a relatively quick transition back time.
--- regulator-state-mem sub-root node for Suspend-to-RAM mode
--  : suspend to memory, the device goes to sleep, but all data stored in memory,
--  only some external interrupt can wake the device.
--- regulator-state-disk sub-root node for Suspend-to-DISK mode
--  : suspend to disk, this state operates similarly to Suspend-to-RAM,
--  but includes a final step of writing memory contents to disk.
--- regulator-state-[mem/disk/standby] node has following common properties:
--	- regulator-on-in-suspend: regulator should be on in suspend state.
--	- regulator-off-in-suspend: regulator should be off in suspend state.
--	- regulator-suspend-min-microvolt: minimum voltage may be set in
--	  suspend state.
--	- regulator-suspend-max-microvolt: maximum voltage may be set in
--	  suspend state.
--	- regulator-suspend-microvolt: the default voltage which regulator
--	  would be set in suspend. This property is now deprecated, instead
--	  setting voltage for suspend mode via the API which regulator
--	  driver provides is recommended.
--	- regulator-changeable-in-suspend: whether the default voltage and
--	  the regulator on/off in suspend can be changed in runtime.
--	- regulator-mode: operating mode in the given suspend state.
--	  The set of possible operating modes depends on the capabilities of
--	  every hardware so the valid modes are documented on each regulator
--	  device tree binding document.
--- regulator-initial-mode: initial operating mode. The set of possible operating
--  modes depends on the capabilities of every hardware so each device binding
--  documentation explains which values the regulator supports.
--- regulator-allowed-modes: list of operating modes that software is allowed to
--  configure for the regulator at run-time.  Elements may be specified in any
--  order.  The set of possible operating modes depends on the capabilities of
--  every hardware so each device binding document explains which values the
--  regulator supports.
--- regulator-system-load: Load in uA present on regulator that is not captured by
--  any consumer request.
--- regulator-pull-down: Enable pull down resistor when the regulator is disabled.
--- regulator-over-current-protection: Enable over current protection.
--- regulator-active-discharge: tristate, enable/disable active discharge of
--  regulators. The values are:
--	0: Disable active discharge.
--	1: Enable active discharge.
--	Absence of this property will leave configuration to default.
--- regulator-coupled-with: Regulators with which the regulator
--  is coupled. The linkage is 2-way - all coupled regulators should be linked
--  with each other. A regulator should not be coupled with its supplier.
--- regulator-coupled-max-spread: Array of maximum spread between voltages of
--  coupled regulators in microvolts, each value in the array relates to the
--  corresponding couple specified by the regulator-coupled-with property.
--- regulator-max-step-microvolt: Maximum difference between current and target
--  voltages that can be changed safely in a single step.
+-- enable-gpios		: GPIO used to enable/disable the regulator.
+-			  Warning, the GPIO phandle flags are ignored and the
+-			  GPIO polarity is controlled solely by the presence
+-			  of "enable-active-high" DT property. This is due to
+-			  compatibility with old DTs.
+-- enable-active-high	: Polarity of "enable-gpio" GPIO is active HIGH.
+-			  Default is active LOW.
+-- gpios-states		: On operating systems, that don't support reading back
+-			  gpio values in output mode (most notably linux), this
+-			  array provides the state of GPIO pins set when
+-			  requesting them from the gpio controller. Systems,
+-			  that are capable of preserving state when requesting
+-			  the lines, are free to ignore this property.
+-			  0: LOW, 1: HIGH. Default is LOW if nothing else
+-			  is specified.
+-- startup-delay-us	: Startup time in microseconds.
+-- regulator-type	: Specifies what is being regulated, must be either
+-			  "voltage" or "current", defaults to voltage.
 -
--Deprecated properties:
--- regulator-compatible: If a regulator chip contains multiple
--  regulators, and if the chip's binding contains a child node that
--  describes each regulator, then this property indicates which regulator
--  this child node is intended to configure. If this property is missing,
--  the node's name will be used instead.
+-Any property defined as part of the core regulator binding defined in
+-regulator.txt can also be used.
 -
 -Example:
 -
--	xyzreg: regulator@0 {
--		regulator-min-microvolt = <1000000>;
--		regulator-max-microvolt = <2500000>;
--		regulator-always-on;
--		vin-supply = <&vin>;
+-	mmciv: gpio-regulator {
+-		compatible = "regulator-gpio";
 -
--		regulator-state-mem {
--			regulator-on-in-suspend;
--		};
+-		regulator-name = "mmci-gpio-supply";
+-		regulator-min-microvolt = <1800000>;
+-		regulator-max-microvolt = <2600000>;
+-		regulator-boot-on;
+-
+-		enable-gpios = <&gpio0 23 0x4>;
+-		gpios = <&gpio0 24 0x4
+-			 &gpio0 25 0x4>;
+-		states = <1800000 0x3
+-			  2200000 0x2
+-			  2600000 0x1
+-			  2900000 0x0>;
+-
+-		startup-delay-us = <100000>;
+-		enable-active-high;
 -	};
--
--Regulator Consumers:
--Consumer nodes can reference one or more of its supplies/
--regulators using the below bindings.
--
--- <name>-supply: phandle to the regulator node
--
--These are the same bindings that a regulator in the above
--example used to reference its own supply, in which case
--its just seen as a special case of a regulator being a
--consumer itself.
--
--Example of a consumer device node (mmc) referencing two
--regulators (twl_reg1 and twl_reg2),
--
--	twl_reg1: regulator@0 {
--		...
--		...
--		...
--	};
--
--	twl_reg2: regulator@1 {
--		...
--		...
--		...
--	};
--
--	mmc: mmc@0 {
--		...
--		...
--		vmmc-supply = <&twl_reg1>;
--		vmmcaux-supply = <&twl_reg2>;
--	};
-+This file has moved to regulator.yaml.
-diff --git a/Documentation/devicetree/bindings/regulator/regulator.yaml b/Documentation/devicetree/bindings/regulator/regulator.yaml
+diff --git a/Documentation/devicetree/bindings/regulator/gpio-regulator.yaml b/Documentation/devicetree/bindings/regulator/gpio-regulator.yaml
 new file mode 100644
-index 000000000000..02c3043ce419
+index 000000000000..9d3b28417fb6
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/regulator/regulator.yaml
-@@ -0,0 +1,200 @@
++++ b/Documentation/devicetree/bindings/regulator/gpio-regulator.yaml
+@@ -0,0 +1,118 @@
 +# SPDX-License-Identifier: GPL-2.0
 +%YAML 1.2
 +---
-+$id: http://devicetree.org/schemas/regulator/regulator.yaml#
++$id: http://devicetree.org/schemas/regulator/gpio-regulator.yaml#
 +$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+title: Voltage/Current Regulators
++title: GPIO controlled regulators
 +
 +maintainers:
 +  - Liam Girdwood <lgirdwood@gmail.com>
 +  - Mark Brown <broonie@kernel.org>
 +
++description:
++  Any property defined as part of the core regulator binding, defined in
++  regulator.txt, can also be used.
++
++allOf:
++  - $ref: "regulator.yaml#"
++
 +properties:
-+  regulator-name:
-+    description: A string used as a descriptive name for regulator outputs
-+    $ref: "/schemas/types.yaml#/definitions/string"
++  compatible:
++    const: regulator-gpio
 +
-+  regulator-min-microvolt:
-+    description: smallest voltage consumers may set
++  regulator-name: true
 +
-+  regulator-max-microvolt:
-+    description: largest voltage consumers may set
++  enable-gpios:
++    description: GPIO to use to enable/disable the regulator.
++      Warning, the GPIO phandle flags are ignored and the GPIO polarity is
++      controlled solely by the presence of "enable-active-high" DT property.
++      This is due to compatibility with old DTs.
++    maxItems: 1
 +
-+  regulator-microvolt-offset:
-+    description: Offset applied to voltages to compensate for voltage drops
++  gpios:
++    description: Array of one or more GPIO pins used to select the regulator
++      voltage/current listed in "states".
++    minItems: 1
++    maxItems: 8  # Should be enough...
 +
-+  regulator-min-microamp:
-+    description: smallest current consumers may set
-+
-+  regulator-max-microamp:
-+    description: largest current consumers may set
-+
-+  regulator-input-current-limit-microamp:
-+    description: maximum input current regulator allows
-+
-+  regulator-always-on:
-+    description: boolean, regulator should never be disabled
-+    type: boolean
-+
-+  regulator-boot-on:
-+    description: bootloader/firmware enabled regulator
-+    type: boolean
-+
-+  regulator-allow-bypass:
-+    description: allow the regulator to go into bypass mode
-+    type: boolean
-+
-+  regulator-allow-set-load:
-+    description: allow the regulator performance level to be configured
-+    type: boolean
-+
-+  regulator-ramp-delay:
-+    description: ramp delay for regulator(in uV/us) For hardware which supports
-+      disabling ramp rate, it should be explicitly initialised to zero (regulator-ramp-delay
-+      = <0>) for disabling ramp delay.
-+    $ref: "/schemas/types.yaml#/definitions/uint32"
-+
-+  regulator-enable-ramp-delay:
-+    description: The time taken, in microseconds, for the supply rail to
-+      reach the target voltage, plus/minus whatever tolerance the board
-+      design requires. This property describes the total system ramp time
-+      required due to the combination of internal ramping of the regulator
-+      itself, and board design issues such as trace capacitance and load
-+      on the supply.
-+    $ref: "/schemas/types.yaml#/definitions/uint32"
-+
-+  regulator-settling-time-us:
-+    description: Settling time, in microseconds, for voltage change if regulator
-+      have the constant time for any level voltage change. This is useful
-+      when regulator have exponential voltage change.
-+
-+  regulator-settling-time-up-us:
-+    description: Settling time, in microseconds, for voltage increase if
-+      the regulator needs a constant time to settle after voltage increases
-+      of any level. This is useful for regulators with exponential voltage
-+      changes.
-+
-+  regulator-settling-time-down-us:
-+    description: Settling time, in microseconds, for voltage decrease if
-+      the regulator needs a constant time to settle after voltage decreases
-+      of any level. This is useful for regulators with exponential voltage
-+      changes.
-+
-+  regulator-soft-start:
-+    description: Enable soft start so that voltage ramps slowly
-+    type: boolean
-+
-+  regulator-initial-mode:
-+    description: initial operating mode. The set of possible operating modes
-+      depends on the capabilities of every hardware so each device binding
-+      documentation explains which values the regulator supports.
-+    $ref: "/schemas/types.yaml#/definitions/uint32"
-+
-+  regulator-allowed-modes:
-+    description: list of operating modes that software is allowed to configure
-+      for the regulator at run-time.  Elements may be specified in any order.
-+      The set of possible operating modes depends on the capabilities of
-+      every hardware so each device binding document explains which values
-+      the regulator supports.
-+    $ref: "/schemas/types.yaml#/definitions/uint32-array"
-+
-+  regulator-system-load:
-+    description: Load in uA present on regulator that is not captured by
-+      any consumer request.
-+    $ref: "/schemas/types.yaml#/definitions/uint32"
-+
-+  regulator-pull-down:
-+    description: Enable pull down resistor when the regulator is disabled.
-+    type: boolean
-+
-+  regulator-over-current-protection:
-+    description: Enable over current protection.
-+    type: boolean
-+
-+  regulator-active-discharge:
++  gpios-states:
 +    description: |
-+      tristate, enable/disable active discharge of regulators. The values are:
-+      0: Disable active discharge.
-+      1: Enable active discharge.
-+      Absence of this property will leave configuration to default.
++      On operating systems, that don't support reading back gpio values in
++      output mode (most notably linux), this array provides the state of GPIO
++      pins set when requesting them from the gpio controller. Systems, that are
++      capable of preserving state when requesting the lines, are free to ignore
++      this property.
++        0: LOW
++        1: HIGH
++      Default is LOW if nothing else is specified.
 +    allOf:
-+      - $ref: "/schemas/types.yaml#/definitions/uint32"
-+      - enum: [ 0, 1 ]
++      - $ref: /schemas/types.yaml#/definitions/uint32-array
++      - maxItems: 8
++        items:
++          enum: [ 0, 1 ]
++          default: 0
 +
-+  regulator-coupled-with:
-+    description: Regulators with which the regulator is coupled. The linkage
-+      is 2-way - all coupled regulators should be linked with each other.
-+      A regulator should not be coupled with its supplier.
-+    $ref: "/schemas/types.yaml#/definitions/phandle-array"
++  states:
++    description: Selection of available voltages/currents provided by this
++      regulator and matching GPIO configurations to achieve them. If there are
++      no states in the "states" array, use a fixed regulator instead.
++    allOf:
++      - $ref: /schemas/types.yaml#/definitions/uint32-matrix
++      - maxItems: 8
++        items:
++          items:
++            - description: Voltage in microvolts
++            - description: GPIO group state value
 +
-+  regulator-coupled-max-spread:
-+    description: Array of maximum spread between voltages of coupled regulators
-+      in microvolts, each value in the array relates to the corresponding
-+      couple specified by the regulator-coupled-with property.
-+    $ref: "/schemas/types.yaml#/definitions/uint32"
++  startup-delay-us:
++    description: startup time in microseconds
 +
-+  regulator-max-step-microvolt:
-+    description: Maximum difference between current and target voltages
-+      that can be changed safely in a single step.
++  enable-active-high:
++    description: Polarity of "enable-gpio" GPIO is active HIGH. Default is
++      active LOW.
++    type: boolean
 +
-+patternProperties:
-+  ".*-supply$":
-+    description: Input supply phandle(s) for this node
-+
-+  regulator-state-(standby|mem|disk):
-+    type: object
++  gpio-open-drain:
 +    description:
-+      sub-nodes for regulator state in Standby, Suspend-to-RAM, and
-+      Suspend-to-DISK modes. Equivalent with standby, mem, and disk Linux
-+      sleep states.
++      GPIO is open drain type. If this property is missing then default
++      assumption is false.
++    type: boolean
 +
-+    properties:
-+      regulator-on-in-suspend:
-+        description: regulator should be on in suspend state.
-+        type: boolean
++  regulator-type:
++    description: Specifies what is being regulated.
++    allOf:
++      - $ref: /schemas/types.yaml#/definitions/string
++      - enum:
++          - voltage
++          - current
++        default: voltage
 +
-+      regulator-off-in-suspend:
-+        description: regulator should be off in suspend state.
-+        type: boolean
-+
-+      regulator-suspend-min-microvolt:
-+        description: minimum voltage may be set in suspend state.
-+
-+      regulator-suspend-max-microvolt:
-+        description: maximum voltage may be set in suspend state.
-+
-+      regulator-suspend-microvolt:
-+        description: the default voltage which regulator would be set in
-+          suspend. This property is now deprecated, instead setting voltage
-+          for suspend mode via the API which regulator driver provides is
-+          recommended.
-+
-+      regulator-changeable-in-suspend:
-+        description: whether the default voltage and the regulator on/off
-+          in suspend can be changed in runtime.
-+        type: boolean
-+
-+      regulator-mode:
-+        description: operating mode in the given suspend state. The set
-+          of possible operating modes depends on the capabilities of every
-+          hardware so the valid modes are documented on each regulator device
-+          tree binding document.
-+        $ref: "/schemas/types.yaml#/definitions/uint32"
-+
-+    additionalProperties: false
++required:
++  - compatible
++  - regulator-name
++  - gpios
++  - states
 +
 +examples:
 +  - |
-+    xyzreg: regulator@0 {
-+      regulator-min-microvolt = <1000000>;
-+      regulator-max-microvolt = <2500000>;
-+      regulator-always-on;
-+      vin-supply = <&vin>;
++    gpio-regulator {
++      compatible = "regulator-gpio";
 +
-+      regulator-state-mem {
-+        regulator-on-in-suspend;
-+      };
++      regulator-name = "mmci-gpio-supply";
++      regulator-min-microvolt = <1800000>;
++      regulator-max-microvolt = <2600000>;
++      regulator-boot-on;
++
++      enable-gpios = <&gpio0 23 0x4>;
++      gpios = <&gpio0 24 0x4
++        &gpio0 25 0x4>;
++      states = <1800000 0x3>,
++        <2200000 0x2>,
++        <2600000 0x1>,
++        <2900000 0x0>;
++
++      startup-delay-us = <100000>;
++      enable-active-high;
 +    };
-+
 +...
 -- 
 2.20.1
