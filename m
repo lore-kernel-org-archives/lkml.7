@@ -2,171 +2,265 @@ Return-Path: <SRS0=9PYC=TV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4006EC04AAC
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 01:26:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 021C9C46460
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 01:27:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0FA9E21479
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 01:26:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558402018;
-	bh=GH/arutFese2EuO3zHb/kOEPV3fBcPf6OEiV3o0mpIA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Aem4qcPIi14E2aJAnm3Z8Y3Po5lPTgs8ofH6r02MujAeznROpFIfvCAZd8J9etp3w
-	 Q3QhTPH9tilSRkrVh05MK3QLuOIG6IiPhYDRRLXcmFYIpps2yimqQch433bD7rM222
-	 6PCYimplCFY+qOmLV/pBy7WoOXat3bm0Bv9S+rpA=
+	by mail.kernel.org (Postfix) with ESMTP id C02C32173E
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 01:27:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="cV0lLUlr";
+	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="ilzm6/in"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727508AbfEUB05 (ORCPT
+        id S1727555AbfEUB1P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 21:26:57 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:39247 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727043AbfEUB04 (ORCPT
+        Mon, 20 May 2019 21:27:15 -0400
+Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:34468 "EHLO
+        mx0b-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727509AbfEUB1O (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 21:26:56 -0400
-Received: by mail-pl1-f193.google.com with SMTP id g9so7556645plm.6
-        for <linux-kernel@vger.kernel.org>; Mon, 20 May 2019 18:26:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=q5tudNQ9cSMh3fCrTxG8NdksCakwJg8DbWSQrWyIrTI=;
-        b=DLIH2eCPL/TbrcrBJeS072RZfACT/OHayR/cqOaUp7jstN6cQtTJ2IEb2WSwA905Yu
-         CbztJl76ysh8fRQywqbHQMTK4Rtqu2TV+LgMStlkUkwDn4fgj109EcDjDtosETfHillX
-         pAjdbYgfJtj0PofpNUmu9de9BVwPaZ6FWCF4NrS6UB4R2FgmYMg6DFxcPpyMVltTUWf6
-         1QvvaVsF5RCkX2nLqQFkXPI/4Ia/PTK4vdvU6FjwFgyo5LvCfhUcqE6RfsJ//mYo5vgp
-         zn0yh4FxQMYMqrVG7Uz48HqxvkW8oi1wqdHSvAJdr88NARk0dpExcyT1I9jxgVTaC5O/
-         m0Cw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=q5tudNQ9cSMh3fCrTxG8NdksCakwJg8DbWSQrWyIrTI=;
-        b=G/r0knRdE8ew60KYEZOwW/+qq5+CzExaSNCQx6hGLiJLCSYkcuxun9uG89Ag/bwAuY
-         RoARuwLnl1HBoADmkoa/MxB1PlUFGWA8ybxMrOl7U2Wi99YVaY3hwuv/qVvJlbCB09Fq
-         aiAb9GBbA+RRrrgwl37AzuHSXcFT8IUPT1Yh0QoQDXIx4gAs2A76qo8yzcQGo3rl3LWd
-         KM5CQ1esc8HEObXo2oyqzEw6wn5LZRWeO5LjMtxw7F2JiG8a/PuHYv+BGlKQOf7WGqVn
-         nBfJQk32lcgiWyup8WfQHX4LAA60uwE/K7/pgfy/hohffk/2ikozRT/LvUR8dyGJSyTP
-         lRzQ==
-X-Gm-Message-State: APjAAAXLWdNfgalubcVGpv/o7KoBICW5JW3d0UFaCu1HKLPqmyASek8i
-        Ewge51hfWa/46wMUH6d7/s8=
-X-Google-Smtp-Source: APXvYqwrSyAyALFyw9JHfY/nrm7OEjpxF4Wqstkj8FkkR4Th/leZJbMdZSinz1oSvJWv54bKmZF/tA==
-X-Received: by 2002:a17:902:ba8d:: with SMTP id k13mr65556652pls.52.1558402016072;
-        Mon, 20 May 2019 18:26:56 -0700 (PDT)
-Received: from google.com ([2401:fa00:d:0:98f1:8b3d:1f37:3e8])
-        by smtp.gmail.com with ESMTPSA id a8sm9209871pfk.14.2019.05.20.18.26.51
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 20 May 2019 18:26:54 -0700 (PDT)
-Date:   Tue, 21 May 2019 10:26:49 +0900
-From:   Minchan Kim <minchan@kernel.org>
-To:     Oleksandr Natalenko <oleksandr@redhat.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-mm <linux-mm@kvack.org>, Michal Hocko <mhocko@suse.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Tim Murray <timmurray@google.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Suren Baghdasaryan <surenb@google.com>,
-        Daniel Colascione <dancol@google.com>,
-        Shakeel Butt <shakeelb@google.com>,
-        Sonny Rao <sonnyrao@google.com>,
-        Brian Geffon <bgeffon@google.com>
-Subject: Re: [RFC 4/7] mm: factor out madvise's core functionality
-Message-ID: <20190521012649.GE10039@google.com>
-References: <20190520035254.57579-1-minchan@kernel.org>
- <20190520035254.57579-5-minchan@kernel.org>
- <20190520142633.x5d27gk454qruc4o@butterfly.localdomain>
+        Mon, 20 May 2019 21:27:14 -0400
+Received: from pps.filterd (m0109331.ppops.net [127.0.0.1])
+        by mx0a-00082601.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4L1N7hx008944;
+        Mon, 20 May 2019 18:25:41 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
+ : date : message-id : references : in-reply-to : content-type : content-id
+ : content-transfer-encoding : mime-version; s=facebook;
+ bh=qQY7M2pX7FKl+KTn1kvOE0nFTcOn6+9hWnKGcflZUGc=;
+ b=cV0lLUlrchR0bRh2GkHvxebknzu+eYv3DZ/XbqI43AyTVwffMBqOIQsVQ/sOniJJOJer
+ aP+qM6GJezdrbqcoRnUzYBBRmK+LDQzE0wWFgC9YYypnKlxBWt05XcYDWWCUVbC0wLV5
+ ZZ875w3oWXIum8ZcALzVnIgbjEhlm+cYLo0= 
+Received: from mail.thefacebook.com (mailout.thefacebook.com [199.201.64.23])
+        by mx0a-00082601.pphosted.com with ESMTP id 2skusdtjmy-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
+        Mon, 20 May 2019 18:25:41 -0700
+Received: from prn-mbx04.TheFacebook.com (2620:10d:c081:6::18) by
+ prn-hub05.TheFacebook.com (2620:10d:c081:35::129) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ 15.1.1713.5; Mon, 20 May 2019 18:25:40 -0700
+Received: from prn-hub03.TheFacebook.com (2620:10d:c081:35::127) by
+ prn-mbx04.TheFacebook.com (2620:10d:c081:6::18) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ 15.1.1713.5; Mon, 20 May 2019 18:25:39 -0700
+Received: from NAM01-BY2-obe.outbound.protection.outlook.com (192.168.54.28)
+ by o365-in.thefacebook.com (192.168.16.27) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.1.1713.5
+ via Frontend Transport; Mon, 20 May 2019 18:25:39 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
+ s=selector1-fb-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=qQY7M2pX7FKl+KTn1kvOE0nFTcOn6+9hWnKGcflZUGc=;
+ b=ilzm6/inm9Y37LcSGvdcUd5NmQV5M9J4tITUmYEsGnFmT+j/Y0xaxlFzzVZzVHC/lRuyzy3UUHLpmIi3aMJKHaj0bM9gz77kEC298F7eDoK9sNTBVynl0SgDqzz9DT+OWSGgOr7crmw3XNN/NxYia9hg/lAnMADVHkrlrMrEA1g=
+Received: from BYAPR15MB2631.namprd15.prod.outlook.com (20.179.156.24) by
+ BYAPR15MB2197.namprd15.prod.outlook.com (52.135.196.143) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1900.18; Tue, 21 May 2019 01:25:35 +0000
+Received: from BYAPR15MB2631.namprd15.prod.outlook.com
+ ([fe80::d4f6:b485:69ee:fd9a]) by BYAPR15MB2631.namprd15.prod.outlook.com
+ ([fe80::d4f6:b485:69ee:fd9a%7]) with mapi id 15.20.1900.020; Tue, 21 May 2019
+ 01:25:35 +0000
+From:   Roman Gushchin <guro@fb.com>
+To:     "Tobin C. Harding" <me@tobin.cc>
+CC:     "Tobin C. Harding" <tobin@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        "Alexander Viro" <viro@ftp.linux.org.uk>,
+        Christoph Hellwig <hch@infradead.org>,
+        "Pekka Enberg" <penberg@cs.helsinki.fi>,
+        David Rientjes <rientjes@google.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        Christopher Lameter <cl@linux.com>,
+        Miklos Szeredi <mszeredi@redhat.com>,
+        Andreas Dilger <adilger@dilger.ca>,
+        Waiman Long <longman@redhat.com>,
+        Tycho Andersen <tycho@tycho.ws>,
+        "Theodore Ts'o" <tytso@mit.edu>, Andi Kleen <ak@linux.intel.com>,
+        David Chinner <david@fromorbit.com>,
+        Nick Piggin <npiggin@gmail.com>,
+        Rik van Riel <riel@redhat.com>,
+        Hugh Dickins <hughd@google.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [RFC PATCH v5 04/16] slub: Slab defrag core
+Thread-Topic: [RFC PATCH v5 04/16] slub: Slab defrag core
+Thread-Index: AQHVDs69QJvEmg+Y3UK7wQ/kts2ho6Z0S8sAgAB77YCAAALPAA==
+Date:   Tue, 21 May 2019 01:25:34 +0000
+Message-ID: <20190521012525.GA15348@tower.DHCP.thefacebook.com>
+References: <20190520054017.32299-1-tobin@kernel.org>
+ <20190520054017.32299-5-tobin@kernel.org>
+ <20190521005152.GC21811@tower.DHCP.thefacebook.com>
+ <20190521011525.GA25898@eros.localdomain>
+In-Reply-To: <20190521011525.GA25898@eros.localdomain>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: MWHPR15CA0030.namprd15.prod.outlook.com
+ (2603:10b6:300:ad::16) To BYAPR15MB2631.namprd15.prod.outlook.com
+ (2603:10b6:a03:152::24)
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [2620:10d:c090:200::2:8d5a]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 14c67e2a-7744-41f5-760f-08d6dd8b38db
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(2017052603328)(7193020);SRVR:BYAPR15MB2197;
+x-ms-traffictypediagnostic: BYAPR15MB2197:
+x-microsoft-antispam-prvs: <BYAPR15MB2197FE24F58D81F4BA87117EBE070@BYAPR15MB2197.namprd15.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8273;
+x-forefront-prvs: 0044C17179
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(376002)(366004)(396003)(346002)(136003)(39860400002)(51914003)(189003)(199004)(186003)(81166006)(8676002)(8936002)(71200400001)(6246003)(9686003)(6512007)(71190400001)(4326008)(25786009)(33656002)(486006)(476003)(46003)(446003)(11346002)(81156014)(68736007)(316002)(256004)(6116002)(53936002)(14444005)(305945005)(7416002)(7736002)(14454004)(478600001)(6436002)(229853002)(6486002)(6916009)(1076003)(99286004)(86362001)(66476007)(66556008)(64756008)(66446008)(66946007)(102836004)(2906002)(73956011)(386003)(6506007)(5660300002)(54906003)(52116002)(76176011);DIR:OUT;SFP:1102;SCL:1;SRVR:BYAPR15MB2197;H:BYAPR15MB2631.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: fb.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: m/w6VCHc8N1Ii0WYWFm+RWBOQTFYmzXNHG0b4esQJooXmiY42dG6MzG/Ad1JQ90gZFkIoTHVaDrv+w1zwWYFCtHLV02I+yOyBdg0rOO9lKVjNDaXXxC49JvvBrSIpgwV2jyHS4aj5eNQPGwk6mH99ByITNVx8p3DKmnRQiAwt0L+1D0bZ7MbXx2rLkjqj9oGbq4U2pa3oIQsA6WJnuWVG10BSkDcjx4B1SEjryS4L6D6/SGjX9mLUNHCiwKpY7gjbooqtuKCYROM60AkeKhXuvFwXeZkGqADAnbFKyjcXKwD6UCDjaqxTODuXK0Afy884difxN6JaqM6BgdIb8MrsCQ9p0gKET9NEzN6redKxziVdUvMWUwUKKes5apm//1fLUJwwiwan2jrI9VTltZtDIRoXxRPRkvtlvwL5Bn+h6c=
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <CEB87061787EEA4E84FBF6A45F2D93B9@namprd15.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190520142633.x5d27gk454qruc4o@butterfly.localdomain>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 14c67e2a-7744-41f5-760f-08d6dd8b38db
+X-MS-Exchange-CrossTenant-originalarrivaltime: 21 May 2019 01:25:34.7820
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR15MB2197
+X-OriginatorOrg: fb.com
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-20_09:,,
+ signatures=0
+X-Proofpoint-Spam-Reason: safe
+X-FB-Internal: Safe
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Oleksandr,
+On Tue, May 21, 2019 at 11:15:25AM +1000, Tobin C. Harding wrote:
+> On Tue, May 21, 2019 at 12:51:57AM +0000, Roman Gushchin wrote:
+> > On Mon, May 20, 2019 at 03:40:05PM +1000, Tobin C. Harding wrote:
+> > > Internal fragmentation can occur within pages used by the slub
+> > > allocator.  Under some workloads large numbers of pages can be used b=
+y
+> > > partial slab pages.  This under-utilisation is bad simply because it
+> > > wastes memory but also because if the system is under memory pressure
+> > > higher order allocations may become difficult to satisfy.  If we can
+> > > defrag slab caches we can alleviate these problems.
+> > >=20
+> > > Implement Slab Movable Objects in order to defragment slab caches.
+> > >=20
+> > > Slab defragmentation may occur:
+> > >=20
+> > > 1. Unconditionally when __kmem_cache_shrink() is called on a slab cac=
+he
+> > >    by the kernel calling kmem_cache_shrink().
+> > >=20
+> > > 2. Unconditionally through the use of the slabinfo command.
+> > >=20
+> > > 	slabinfo <cache> -s
+> > >=20
+> > > 3. Conditionally via the use of kmem_cache_defrag()
+> > >=20
+> > > - Use Slab Movable Objects when shrinking cache.
+> > >=20
+> > > Currently when the kernel calls kmem_cache_shrink() we curate the
+> > > partial slabs list.  If object migration is not enabled for the cache=
+ we
+> > > still do this, if however, SMO is enabled we attempt to move objects =
+in
+> > > partially full slabs in order to defragment the cache.  Shrink attemp=
+ts
+> > > to move all objects in order to reduce the cache to a single partial
+> > > slab for each node.
+> > >=20
+> > > - Add conditional per node defrag via new function:
+> > >=20
+> > > 	kmem_defrag_slabs(int node).
+> > >=20
+> > > kmem_defrag_slabs() attempts to defragment all slab caches for
+> > > node. Defragmentation is done conditionally dependent on MAX_PARTIAL
+> > > _and_ defrag_used_ratio.
+> > >=20
+> > >    Caches are only considered for defragmentation if the number of
+> > >    partial slabs exceeds MAX_PARTIAL (per node).
+> > >=20
+> > >    Also, defragmentation only occurs if the usage ratio of the slab i=
+s
+> > >    lower than the configured percentage (sysfs field added in this
+> > >    patch).  Fragmentation ratios are measured by calculating the
+> > >    percentage of objects in use compared to the total number of objec=
+ts
+> > >    that the slab page can accommodate.
+> > >=20
+> > >    The scanning of slab caches is optimized because the defragmentabl=
+e
+> > >    slabs come first on the list. Thus we can terminate scans on the
+> > >    first slab encountered that does not support defragmentation.
+> > >=20
+> > >    kmem_defrag_slabs() takes a node parameter. This can either be -1 =
+if
+> > >    defragmentation should be performed on all nodes, or a node number=
+.
+> > >=20
+> > >    Defragmentation may be disabled by setting defrag ratio to 0
+> > >=20
+> > > 	echo 0 > /sys/kernel/slab/<cache>/defrag_used_ratio
+> > >=20
+> > > - Add a defrag ratio sysfs field and set it to 30% by default. A limi=
+t
+> > > of 30% specifies that more than 3 out of 10 available slots for objec=
+ts
+> > > need to be in use otherwise slab defragmentation will be attempted on
+> > > the remaining objects.
+> > >=20
+> > > In order for a cache to be defragmentable the cache must support obje=
+ct
+> > > migration (SMO).  Enabling SMO for a cache is done via a call to the
+> > > recently added function:
+> > >=20
+> > > 	void kmem_cache_setup_mobility(struct kmem_cache *,
+> > > 				       kmem_cache_isolate_func,
+> > > 			               kmem_cache_migrate_func);
+> > >=20
+> > > Co-developed-by: Christoph Lameter <cl@linux.com>
+> > > Signed-off-by: Tobin C. Harding <tobin@kernel.org>
+> > > ---
+> > >  Documentation/ABI/testing/sysfs-kernel-slab |  14 +
+> > >  include/linux/slab.h                        |   1 +
+> > >  include/linux/slub_def.h                    |   7 +
+> > >  mm/slub.c                                   | 385 ++++++++++++++++--=
+--
+> > >  4 files changed, 334 insertions(+), 73 deletions(-)
+> >=20
+> > Hi Tobin!
+> >=20
+> > Overall looks very good to me! I'll take another look when you'll post
+> > a non-RFC version, but so far I can't find any issues.
+>=20
+> Thanks for the reviews.
+>=20
+> > A generic question: as I understand, you do support only root kmemcache=
+s now.
+> > Is kmemcg support in plans?
+>=20
+> I know very little about cgroups, I have no plans for this work.
+> However, I'm not the architect behind this - Christoph is guiding the
+> direction on this one.  Perhaps he will comment.
+>=20
+> > Without it the patchset isn't as attractive to anyone using cgroups,
+> > as it could be. Also, I hope it can solve (or mitigate) the memcg-speci=
+fic
+> > problem of scattering vfs cache workingset over multiple generations of=
+ the
+> > same cgroup (their kmem_caches).
+>=20
+> I'm keen to work on anything that makes this more useful so I'll do some
+> research.  Thanks for the idea.
 
-On Mon, May 20, 2019 at 04:26:33PM +0200, Oleksandr Natalenko wrote:
-> Hi.
-> 
-> On Mon, May 20, 2019 at 12:52:51PM +0900, Minchan Kim wrote:
-> > This patch factor out madvise's core functionality so that upcoming
-> > patch can reuse it without duplication.
-> > 
-> > It shouldn't change any behavior.
-> > 
-> > Signed-off-by: Minchan Kim <minchan@kernel.org>
-> > ---
-> >  mm/madvise.c | 168 +++++++++++++++++++++++++++------------------------
-> >  1 file changed, 89 insertions(+), 79 deletions(-)
-> > 
-> > diff --git a/mm/madvise.c b/mm/madvise.c
-> > index 9a6698b56845..119e82e1f065 100644
-> > --- a/mm/madvise.c
-> > +++ b/mm/madvise.c
-> > @@ -742,7 +742,8 @@ static long madvise_dontneed_single_vma(struct vm_area_struct *vma,
-> >  	return 0;
-> >  }
-> >  
-> > -static long madvise_dontneed_free(struct vm_area_struct *vma,
-> > +static long madvise_dontneed_free(struct task_struct *tsk,
-> > +				  struct vm_area_struct *vma,
-> >  				  struct vm_area_struct **prev,
-> >  				  unsigned long start, unsigned long end,
-> >  				  int behavior)
-> > @@ -754,8 +755,8 @@ static long madvise_dontneed_free(struct vm_area_struct *vma,
-> >  	if (!userfaultfd_remove(vma, start, end)) {
-> >  		*prev = NULL; /* mmap_sem has been dropped, prev is stale */
-> >  
-> > -		down_read(&current->mm->mmap_sem);
-> > -		vma = find_vma(current->mm, start);
-> > +		down_read(&tsk->mm->mmap_sem);
-> > +		vma = find_vma(tsk->mm, start);
-> >  		if (!vma)
-> >  			return -ENOMEM;
-> >  		if (start < vma->vm_start) {
-> > @@ -802,7 +803,8 @@ static long madvise_dontneed_free(struct vm_area_struct *vma,
-> >   * Application wants to free up the pages and associated backing store.
-> >   * This is effectively punching a hole into the middle of a file.
-> >   */
-> > -static long madvise_remove(struct vm_area_struct *vma,
-> > +static long madvise_remove(struct task_struct *tsk,
-> > +				struct vm_area_struct *vma,
-> >  				struct vm_area_struct **prev,
-> >  				unsigned long start, unsigned long end)
-> >  {
-> > @@ -836,13 +838,13 @@ static long madvise_remove(struct vm_area_struct *vma,
-> >  	get_file(f);
-> >  	if (userfaultfd_remove(vma, start, end)) {
-> >  		/* mmap_sem was not released by userfaultfd_remove() */
-> > -		up_read(&current->mm->mmap_sem);
-> > +		up_read(&tsk->mm->mmap_sem);
-> >  	}
-> >  	error = vfs_fallocate(f,
-> >  				FALLOC_FL_PUNCH_HOLE | FALLOC_FL_KEEP_SIZE,
-> >  				offset, end - start);
-> >  	fput(f);
-> > -	down_read(&current->mm->mmap_sem);
-> > +	down_read(&tsk->mm->mmap_sem);
-> >  	return error;
-> >  }
-> >  
-> > @@ -916,12 +918,13 @@ static int madvise_inject_error(int behavior,
-> >  #endif
-> 
-> What about madvise_inject_error() and get_user_pages_fast() in it
-> please?
+You're welcome! I'm happy to help or even to do it by myself, once
+your patches will be merged.
 
-Good point. Maybe, there more places where assume context is "current" so
-I'm thinking to limit hints we could allow from external process.
-It would be better for maintainance point of view in that we could know
-the workload/usecases when someone ask new advises from external process
-without making every hints works both contexts.
-
-Thanks.
+Thanks!
