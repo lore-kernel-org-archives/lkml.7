@@ -2,201 +2,96 @@ Return-Path: <SRS0=9PYC=TV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23C6BC04AAF
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 08:47:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19467C04AAF
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 08:48:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E84B9217D4
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 08:47:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE5632173E
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 08:48:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Tz3yE44r"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727019AbfEUIrY convert rfc822-to-8bit (ORCPT
+        id S1727033AbfEUIsO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 May 2019 04:47:24 -0400
-Received: from relay9-d.mail.gandi.net ([217.70.183.199]:37605 "EHLO
-        relay9-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726448AbfEUIrX (ORCPT
+        Tue, 21 May 2019 04:48:14 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:39230 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726247AbfEUIsO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 May 2019 04:47:23 -0400
-X-Originating-IP: 90.88.22.185
-Received: from xps13 (aaubervilliers-681-1-80-185.w90-88.abo.wanadoo.fr [90.88.22.185])
-        (Authenticated sender: miquel.raynal@bootlin.com)
-        by relay9-d.mail.gandi.net (Postfix) with ESMTPSA id 9DB0EFF816;
-        Tue, 21 May 2019 08:47:14 +0000 (UTC)
-Date:   Tue, 21 May 2019 10:47:13 +0200
-From:   Miquel Raynal <miquel.raynal@bootlin.com>
-To:     masonccyang@mxic.com.tw
-Cc:     bbrezillon@kernel.org, computersforpeace@gmail.com,
-        dwmw2@infradead.org, frieder.schrempf@kontron.de,
-        juliensu@mxic.com.tw, linux-kernel@vger.kernel.org,
-        linux-mtd@lists.infradead.org, marek.vasut@gmail.com,
-        richard@nod.at, vigneshr@ti.com, zhengxunli@mxic.com.tw
-Subject: Re: [PATCH v2] mtd: rawnand: Add Macronix NAND read retry support
-Message-ID: <20190521104713.4b3a7769@xps13>
-In-Reply-To: <OFDCB9EA90.C6F8EA4C-ON48258401.000981AF-48258401.000ED713@mxic.com.tw>
-References: <1558076001-29579-1-git-send-email-masonccyang@mxic.com.tw>
-        <20190520143438.46248bfc@xps13>
-        <OFDCB9EA90.C6F8EA4C-ON48258401.000981AF-48258401.000ED713@mxic.com.tw>
-Organization: Bootlin
-X-Mailer: Claws Mail 3.17.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Tue, 21 May 2019 04:48:14 -0400
+Received: by mail-pg1-f193.google.com with SMTP id w22so8235720pgi.6
+        for <linux-kernel@vger.kernel.org>; Tue, 21 May 2019 01:48:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=/3n9FVywoExtKHdkxZu9NrddyvBpvJrl+Pr5EEoKl20=;
+        b=Tz3yE44rwjDdVDy054fLpw6lLbkCNm8v+4v4WRdi7HoRGROYvZAAVe6VGaU+TDnaBn
+         e4EswAaUkjmHxX2ej2XpsN3Nx2VKMx2Fk6CxEb2VS3I5LDzKwLjyv1mlmUk5hOamC4Fk
+         dH2PEPRPu74RELke9sASWQ3y49bNheyKPzt+Lhqc2kOEEkqnADEOcIJ2xfqYymZt1m+9
+         xoT7sRFQC2cE02g+X2lrSNU6PBrbQNjsLpPq1x2OCIDhCUuIfkvly12AwzI2XE+3hjUm
+         WBewInPSccdKBi1syGNTK/mCIu/g4qQBNuSakf6xJihvYpAIybdBPLl1Xo/oU1TxeSk0
+         7w0w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=/3n9FVywoExtKHdkxZu9NrddyvBpvJrl+Pr5EEoKl20=;
+        b=JgF1R2HPSIZvKwM+DCzDGSBgD5TA18miN1RFmVvP0v4znjSK9sWNcAogE1Ui+/wG/W
+         SHbm3t81bi8RoHpkKmsm2xyyKn5EjV4fBzfL68ywlAqy7n0TzhW5tPItYQHNyBhpOmiM
+         Qub+kAkIeXKLDOh7KdXBpAMQxrlv6ti2uuO554kbcY/ABGZHgPHBJPN7WkoO6XTZxDZ+
+         H11eA2KqMtQaxn1HhI0cLHzncjWermxjLkTGLKomglKKkWfAg4xldxxmSR0Mo8riNiYo
+         hHS3slBrz2z7zIEbTfxprTZlKWqGhYEPaJhujUR/1yyNA/IZ9ojcf/l86vC2teKfIgsl
+         ffvA==
+X-Gm-Message-State: APjAAAXwHMyDS1fIPaeopKkGQhEJ4etrWa1W5vhAbGPV+FmBOoPUpqAl
+        fk+4vM3yKMzvYrHPZJpUDRPR1+6/rKA=
+X-Google-Smtp-Source: APXvYqyjQ/zFb286SQMk7mHPm5ApcGuPtLqnqttn6hA1FZBHMIXLYORDvcAq+llpPE1yIXoUddkitA==
+X-Received: by 2002:a63:3190:: with SMTP id x138mr78794929pgx.402.1558428494022;
+        Tue, 21 May 2019 01:48:14 -0700 (PDT)
+Received: from zhanggen-UX430UQ ([66.42.35.75])
+        by smtp.gmail.com with ESMTPSA id e5sm46062940pgh.35.2019.05.21.01.48.10
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 21 May 2019 01:48:13 -0700 (PDT)
+Date:   Tue, 21 May 2019 16:47:59 +0800
+From:   Gen Zhang <blackgod016574@gmail.com>
+To:     kuznet@ms2.inr.ac.ru
+Cc:     linux-kernel@vger.kernel.org
+Subject: [PATCH] ip_sockglue: Fix a missing-check bug in
+ net/ipv4/ip_sockglue.c
+Message-ID: <20190521084759.GJ5263@zhanggen-UX430UQ>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi masonccyang@mxic.com.tw,
+In function ip_ra_control(), the pointer new_ra is allocated a memory 
+space via kmalloc(). And it is used in the following codes. However, 
+when  there is a memory allocation error, kmalloc() fails. Thus null 
+pointer dereference may happen. And it will cause the kernel to crash. 
+Therefore, we should check the return value and handle the error.
 
-masonccyang@mxic.com.tw wrote on Tue, 21 May 2019 10:42:06 +0800:
+Signed-off-by: Gen Zhang <blackgod016574@gmail.com>
 
-> Hi Miquel,
->  
-> > > Add support for Macronix NAND read retry.
-> > > 
-> > > Macronix NANDs support specific read operation for data recovery,
-> > > which can be enabled/disabled with a SET/GET_FEATURE.
-> > > Driver checks byte 167 of Vendor Blocks in ONFI parameter page table
-> > > to see if this high-reliability function is supported.
-> > > 
-> > > Signed-off-by: Mason Yang <masonccyang@mxic.com.tw>
-> > > ---
-> > >  drivers/mtd/nand/raw/nand_macronix.c | 57   
-> ++++++++++++++++++++++++++++++++++++
-> > >  1 file changed, 57 insertions(+)
-> > > 
-> > > diff --git a/drivers/mtd/nand/raw/nand_macronix.c   
-> b/drivers/mtd/nand/raw/
-> > nand_macronix.c  
-> > > index e287e71..1a4dc92 100644
-> > > --- a/drivers/mtd/nand/raw/nand_macronix.c
-> > > +++ b/drivers/mtd/nand/raw/nand_macronix.c
-> > > @@ -17,6 +17,62 @@
-> > > 
-> > >  #include "internals.h"
-> > > 
-> > > +#define MACRONIX_READ_RETRY_BIT BIT(0)
-> > > +#define MACRONIX_READ_RETRY_MODE 6  
-> > 
-> > Can you name this define MACRONIX_NUM_READ_RETRY_MODES?  
-> 
-> okay, will fix.
-> 
-> >   
-> > > +
-> > > +struct nand_onfi_vendor_macronix {
-> > > +   u8 reserved[1];  
-> > 
-> > Do you need this "[1]" ?  
-> 
-> okay, just u8 reserved;
-> 
-> >   
-> > > +   u8 reliability_func;
-> > > +} __packed;
-> > > +
-> > > +/*
-> > > + * Macronix NANDs support using SET/GET_FEATURES to enter/exit read   
-> retry mode
-> > > + */
-> > > +static int macronix_nand_setup_read_retry(struct nand_chip *chip, int   
-> mode)
-> > > +{
-> > > +   u8 feature[ONFI_SUBFEATURE_PARAM_LEN];
-> > > +   int ret, feature_addr = ONFI_FEATURE_ADDR_READ_RETRY;
-> > > +
-> > > +   if (chip->parameters.supports_set_get_features &&
-> > > +       test_bit(feature_addr, chip->parameters.set_feature_list) &&
-> > > +       test_bit(feature_addr, chip->parameters.get_feature_list)) {
-> > > +      feature[0] = mode;
-> > > +      ret =  nand_set_features(chip, feature_addr, feature);
-> > > +      if (ret)
-> > > +         pr_err("Failed to set read retry moded:%d\n", mode);  
-> > 
-> > Do you have to call nand_get_features() on error?  
-> 
-> okay
-> 
-> >   
-> > > +
-> > > +      ret =  nand_get_features(chip, feature_addr, feature);
-> > > +      if (ret || feature[0] != mode)
-> > > +         pr_err("Failed to verify read retry moded:%d(%d)\n",
-> > > +                mode, feature[0]);  
-> > 
-> > if ret == 0 but feature[0] != mode, shouldn't you return an error?  
-> 
-> okay, will fix.
-> 
-> >   
-> > > +   }
-> > > +
-> > > +   return ret;  
-> > 
-> > This will produce a Warning at compile time (ret may be used
-> > uninitialized). Have you tested it?  
-> 
-> Tool chain I used is "gcc-arm-linux-gnueabi" and no Warning at compile 
-> time.
-
-What's the output of:
-gcc-arm-linux-gnueabi -v
-?
-
-> 
-> Patch it to:
-> ----------------------------------------------------------------------------->  
->  static int macronix_nand_setup_read_retry(struct nand_chip *chip, int 
-> mode)
->  {
->          u8 feature[ONFI_SUBFEATURE_PARAM_LEN];
->          int ret, feature_addr = ONFI_FEATURE_ADDR_READ_RETRY;
-> 
->          if (chip->parameters.supports_set_get_features &&
->              test_bit(feature_addr, chip->parameters.set_feature_list) &&
->              test_bit(feature_addr, chip->parameters.get_feature_list)) {
-> 
->                  feature[0] = mode;
->                  ret =  nand_set_features(chip, feature_addr, feature);
-
-                         ^ extra space, please be careful with the
-                         typos, and run checkpatch.pl --strict before
-                         sending patches.
-
->                  if (ret) {
->                          pr_err("Failed to set read retry moded:%d\n", 
-> mode);
->                          goto err_out;
->                  }
-> 
->                  ret =  nand_get_features(chip, feature_addr, feature);
->                  if (ret) {
->                          pr_err("Failed to get read retry moded:%d\n", 
-> mode);
->                          goto err_out;
->                  } else if (feature[0] != mode) {
->                          pr_err("Failed to verify read retry 
-> moded:%d(%d)\n",
->                                  mode, feature[0]);
->                          return -EIO;
-
-That's not what I meant. You can keep the former condition but if !ret
-then ret = -EIO for instance.
-
->                  }
->          }
-> 
->  err_out:
->          return ret;
-
-Again, do not jump to a single return call, directly do the return from
-the point where you want to quit the function.
-
-The problem should be that ret may be used uninitialized, the compiler
-should tell you that.
-
-Thanks,
-Miquèl
+---
+diff --git a/net/ipv4/ip_sockglue.c b/net/ipv4/ip_sockglue.c
+index 82f341e..aa3fd61 100644
+--- a/net/ipv4/ip_sockglue.c
++++ b/net/ipv4/ip_sockglue.c
+@@ -343,6 +343,8 @@ int ip_ra_control(struct sock *sk, unsigned char on,
+ 		return -EINVAL;
+ 
+ 	new_ra = on ? kmalloc(sizeof(*new_ra), GFP_KERNEL) : NULL;
++	if (on && !new_ra)
++		return -ENOMEM;
+ 
+ 	mutex_lock(&net->ipv4.ra_mutex);
+ 	for (rap = &net->ipv4.ra_chain;
