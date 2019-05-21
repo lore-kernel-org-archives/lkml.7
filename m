@@ -2,210 +2,129 @@ Return-Path: <SRS0=9PYC=TV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC91EC04AAF
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 17:40:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FDE4C04AAF
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 17:41:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 999AC21019
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 17:40:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558460447;
-	bh=Zx6XB08tM3Ic0k16ifAqbuvsbU2alaGVmtFXbPeb/uo=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=TMmU7rdOj0vB+1qh4Jgk0et4bwUbG6xn54aTtVK/jKs+76FREt92GrgJDgP/u4nJp
-	 3ntlEHw4C9SaM8XSTgNpudmB6pdVpMhfFP2NjRcJcTGOuMi1j2pXZf+fugOGi8k802
-	 Ea8ZXIb+rC8Z9fZPBrLnAasMyxACJkbGK6OXbXWs=
+	by mail.kernel.org (Postfix) with ESMTP id 747B621019
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 17:41:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IZhY1TDY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729073AbfEURkr (ORCPT
+        id S1729154AbfEURlC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 May 2019 13:40:47 -0400
-Received: from casper.infradead.org ([85.118.1.10]:56642 "EHLO
-        casper.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728055AbfEURkq (ORCPT
+        Tue, 21 May 2019 13:41:02 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:42930 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728067AbfEURlC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 May 2019 13:40:46 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
-        MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:From:Date:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=PATrPOCzUrRyca27s4+V52qUY6FMWM43J+dPi/TPcgU=; b=AUfMmq4Ebtz9TIs/nzRr1IndZM
-        tt9e5ucVfMGLPoo6TmBDOjcwvpoQrKr1zXqv347aPcohgn0nCCAgh/Z9HLbBZ/oXpX1i4Ju1BzUXZ
-        yS+poUPSySX+6QKIsbi7h/Io/EbwqTDVf+yA8AksIuRjncfDMVcJrVvbZlVUnDPSioE55JrHwxxtv
-        nRC5e0FmSAhdN5k+GgUpRhizTF094MLMQlou6bVwpWBsdm6UHhCuvrZhh27TonYwDteSK3QvtlukZ
-        aBzirHeJzI2YhR+wGL4rLsxBvDryq1BnT95+gGNcf+Zc6qNlUry/fc4GuUTaF1PznCdfzb1FKG5KD
-        rYM0rxRQ==;
-Received: from 189.27.21.94.dynamic.adsl.gvt.net.br ([189.27.21.94] helo=coco.lan)
-        by casper.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hT8kj-0005Jt-PQ; Tue, 21 May 2019 17:40:42 +0000
-Date:   Tue, 21 May 2019 14:40:34 -0300
-From:   Mauro Carvalho Chehab <mchehab@kernel.org>
-To:     Luca Ceresoli <luca@lucaceresoli.net>
-Cc:     linux-media@vger.kernel.org,
-        Kieran Bingham <kieran.bingham@ideasonboard.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        jacopo mondi <jacopo@jmondi.org>,
-        Vladimir Zapolskiy <vz@mleia.com>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        Peter Rosin <peda@axentia.se>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-i2c@vger.kernel.org, "Hans Verkuil" <hverkuil@xs4all.nl>
-Subject: Re: [RFC 0/4] TI camera serdes - I2C address translation draft
-Message-ID: <20190521144034.100f9f8b@coco.lan>
-In-Reply-To: <20190108223953.9969-1-luca@lucaceresoli.net>
-References: <20190108223953.9969-1-luca@lucaceresoli.net>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        Tue, 21 May 2019 13:41:02 -0400
+Received: by mail-lj1-f194.google.com with SMTP id 188so2445592ljf.9;
+        Tue, 21 May 2019 10:41:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=ZgkZB+n3Os2bKwEG5WFfzJWStFnM4Ge193yXD9xuuZE=;
+        b=IZhY1TDYadhVaGMthYkGdu9+qrml8/V1mZWl8USyVVRFF0/Z1sBkw+Ybat3YmTYlGU
+         1qzM1g81ZJ1NtLEdexEAkYAQASASucSrB9XoLTjMOi1YODutGVhBZK0QeMrPYWqR+Ykz
+         jID1a2sXpWMKnc3K6MIRL6ExGb2zTYArb/yive9XzgHd8t+MtlaKt5t+O9R5p1nk2ZQ0
+         VFR5TV/w4oKfIRK/so8kz1quxMgpX8OKMifnLmw0qtEDvlycTEB4vsyoNpSbljcmCXb1
+         0WwpcjnttEbasarHdkMwPyzs9b8Q55FS3G++DhxbeJ3Iq/HSHbaYVT23LRHtsW1dN+78
+         UrVQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=ZgkZB+n3Os2bKwEG5WFfzJWStFnM4Ge193yXD9xuuZE=;
+        b=D/RB96Csf/S6d5QtbHdUVYcNsp9dbBBQYaIWmPTQkDXho0lPxekQ1HhOxE5o1HaeC5
+         az8iLUrZN+PHSBVM+VpTmg+DOMjx5/b4TYUck793i3zBF9DAEbELSRmhn/9st/M9ubHt
+         5OzBe/8JAeNlF7v7Pq5DOP40eTSCPyvCqTqi9ykwWQaXfj2YaaB8kwWQAQtgzHzzu0L5
+         1jSPcR76g9bqAVsBwGHw+dBL/n61KhKEYW4wj9bPO8r4Jvsp0EUF0lWkRme/J0PpN3IE
+         KFAJHgUNAIVzpQaniUCgaWu/mkdPAOLLhjqMRSOfJIV8OJ0Iq275RLW1VV8KpF+xTuQM
+         J/Lw==
+X-Gm-Message-State: APjAAAWxQZdemWe4oOY/lVRiQF1yeCyevMOj27oH2OPnwfdcvQn6ndsc
+        I+gSF+OWvQ3rArLekHhnRBgvUOef
+X-Google-Smtp-Source: APXvYqxcMm98WfiRTjFIrax6EdRbgquYrmSuBqKdNkMEQ5My/5b/1PP39T2Lma1EQkJrt7zcJpLFEg==
+X-Received: by 2002:a2e:7001:: with SMTP id l1mr15569126ljc.11.1558460459568;
+        Tue, 21 May 2019 10:40:59 -0700 (PDT)
+Received: from [192.168.1.17] (dkv215.neoplus.adsl.tpnet.pl. [83.24.25.215])
+        by smtp.gmail.com with ESMTPSA id x2sm4655145ljx.13.2019.05.21.10.40.57
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 21 May 2019 10:40:58 -0700 (PDT)
+Subject: Re: [PATCH v4 6/6] leds: lm36274: Introduce the TI LM36274 LED driver
+To:     Dan Murphy <dmurphy@ti.com>, pavel@ucw.cz
+Cc:     lee.jones@linaro.org, rdunlap@infradead.org,
+        linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20190507201159.13940-1-dmurphy@ti.com>
+ <20190507201159.13940-7-dmurphy@ti.com>
+ <77f1ed5b-bfd2-510c-edd5-1b702f2d1d45@gmail.com>
+ <8d126925-9e71-dba4-eb88-50fd6e6c06d8@ti.com>
+From:   Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Message-ID: <a7cb6628-e501-b580-f714-0e5de78ea39c@gmail.com>
+Date:   Tue, 21 May 2019 19:40:55 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <8d126925-9e71-dba4-eb88-50fd6e6c06d8@ti.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Tue,  8 Jan 2019 23:39:49 +0100
-Luca Ceresoli <luca@lucaceresoli.net> escreveu:
+On 5/20/19 11:19 PM, Dan Murphy wrote:
+> Jacek
+> 
+> On 5/20/19 2:54 PM, Jacek Anaszewski wrote:
+>> Hi Dan,
+>>
+>> On 5/7/19 10:11 PM, Dan Murphy wrote:
+>>> Introduce the LM36274 LED driver.  This driver uses the ti-lmu
+>>> MFD driver to probe this LED driver.  The driver configures only the
+>>> LED registers and enables the outputs according to the config file.
+>>>
+>>> The driver utilizes the TI LMU (Lighting Management Unit) LED common
+>>> framework to set the brightness bits.
+>>>
+>>> Signed-off-by: Dan Murphy <dmurphy@ti.com>
+>>> ---
+>>>    drivers/leds/Kconfig        |   7 ++
+>>>    drivers/leds/Makefile       |   1 +
+>>>    drivers/leds/leds-lm36274.c | 174 ++++++++++++++++++++++++++++++++++++
+>>>    3 files changed, 182 insertions(+)
+>>>    create mode 100644 drivers/leds/leds-lm36274.c
+>>>
+>>> diff --git a/drivers/leds/Kconfig b/drivers/leds/Kconfig
+>>> index 255fdd5e8491..db83a3feca01 100644
+>>> --- a/drivers/leds/Kconfig
+>>> +++ b/drivers/leds/Kconfig
+>>> @@ -791,6 +791,13 @@ config LEDS_LM3697
+>>>          Say Y to enable the LM3697 LED driver for TI LMU devices.
+>>>          This supports the LED device LM3697.
+>>>    +config LEDS_LM36274
+>>> +    tristate "LED driver for LM36274"
+>>> +    depends on LEDS_TI_LMU_COMMON
+>>
+>> Shouldn't we have "depends on MFD_TI_LMU" as well here?
+>>
+> 
+> Actually the LEDS_TI_LMU_COMMON flag should depend on MFD_TI_LMU.
+> Then it would inherit that dependency.
 
-> Hi,
-> 
-> there has been some discussion on linux-media about video
-> serializer/deserializer chipsets with remote I2C capabilities from TI
-> [0] and Maxim [1]. I took part discussing how the remote I2C feature
-> of such chips could be best implemented in Linux while I was
-> implementing a driver for the Texas Instruments DS90UB954-Q1 video
-> deserializer. My approach is different from both the one used by
-> Vladimir Zapolskiy on other TI chips, which look similar to the
-> DS90UB954 in their I2C management, and the one used by Kieran Bingham
-> with Maxim chips, which have a different and simpler I2C management.
-> 
-> After that I had to stop that work, so it is unfinished and I have no
-> plan to continue it. Upon suggestion by some linux-media developers
-> I'm sending my patches as RFC in the hope that they bring additional
-> material for the discussion.
-> 
-> I2C management is quite complete in my patches, and it shows how I
-> envisioned I2C management. For the rest the code is in large part
-> incomplete. Don't consider the V4L2, GPIO and other sections as ready
-> for any review.
-> 
-> The whole idea is structured around a central node, called the ATR
-> (Address Translator). It is similar to an I2C mux except it changes
-> the I2C addresses of transactions with an "alias" address for each
-> remote chip. Patch 2 has a detailed description of this process.
-> 
-> 
-> A typical setup looks like:
-> 
->                           Slave X @ 0x10
->                   .-----.   |
->       .-----.     |     |---+---- B
->       | CPU |--A--| ATR |
->       `-----'     |     |---+---- C
->                   `-----'   |
->                           Slave Y @ 0x10
-> 
->   A = "local" bus
->   B = "remote" bus 0
->   C = "remote" bus 1
-> 
-> In patch 2 I enriched the i2c-mux to also act as an ATR. However the
-> implementation grew larger than I desired, so now I think it would
-> make sense to leave i2c-mux as is, and add a new i2c-atr.c which has
-> ATR features without much of the MUX code. However the implementation
-> would not change too much, so you can look at i2c-mux to see how I
-> implemented the ATR.
-> 
-> In the ATR (i2c-mux.c) I implemented the logic needed to remap slave
-> addresses according to a table. Choosing appropriate aliases and
-> filling that table is driver-specific, so in this case it is done by
-> ds90ub954.c. The ATR driver needs to know when a new client appears on
-> the remote bus to setup translation and when it gets disconnected to
-> undo it. So I added a callback pair, attach_client and detach_client,
-> from i2c-core to i2c-mux and from there to the ATR driver. When
-> getting the callback the ATR driver chooses an alias to be used on the
-> local bus for the new chip, configures the ATR (perhaps setting some
-> registers) returns the alias back to the ATR which sill add the new
-> chip-alias pair to its table. The ATR (i2c-mux) then will do the
-> translation for each message, so that the alias will be used on the
-> local bus and the physical chip address on the remote bus.
-> 
-> The alias address for a new client is chosen from an alias pool that
-> must be defined in device tree. It is the responsibility of the DT
-> writer to fill the pool with addresses that are otherwise unused on
-> the local bus. The pool could not be filled automatically because
-> there might be conflicting chips on the local bus that are unknown to
-> the software, or that are just connected later.
-> 
-> The alias pool and the mapping done at runtime allow to model
-> different camera modules [or display or other modules] similarly to
-> beaglebone capes or rpi hats, up to a model where:
-> 
->  1. there can be different camera modules being designed over time
->  2. there can be different base boards being designed over time
->  3. there is a standard interconnection between them (mechanical,
->     electrical, communication bus)
->  4. camera modules and base boards are designed and sold independently
->     (thanks to point 3)
-> 
-> The implementation is split in the following patches:
->  * Patch 1 adds the attach_client() and detach_client() callbacks to
->    i2c-core
->  * Patch 2 adds similar callbacks for the use of device drivers and,
->    most importantly, implements the ATR engine
->  * Patch 3 adds a farily complete DT bindings document, including the
->    alias map
->  * Patch 4 adds the DS90UB954-Q1 dual deserializer driver
-> 
-> There is no serializer driver here. The one I have is just a skeleton
-> setting a few registers, just enough to work on the deserializer
-> driver.
+LEDS_TI_LMU_COMMON does not seem too have any dependency on MFD_TI_LMU,
+and it would be incorrect to require enabling MFD_TI_LMU for all drivers
+depending on TI_LMU_COMMON, that can be probed on their own, like
+leds-lm3697.c .
 
-Not sure what to do here... I guess I'll just mark the patches as
-RFC at media patchwork, as someone has to need support for it and need
-to finish its implementation.
-
-> 
-> Each patch has an comprehensive list of open issues.
-> 
-> [0] https://www.spinics.net/lists/linux-gpio/msg33291.html
-> [1] https://www.spinics.net/lists/linux-media/msg142367.html
-> 
-> Regards,
-> --
-> Luca
-> 
-> 
-> Luca Ceresoli (4):
->   i2c: core: let adapters be notified of client attach/detach
->   i2c: mux: notify client attach/detach, add ATR
->   media: dt-bindings: add DS90UB954-Q1 video deserializer
->   media: ds90ub954: new driver for TI DS90UB954-Q1 video deserializer
-> 
->  .../bindings/media/ti,ds90ub954-q1.txt        |  151 ++
->  drivers/i2c/i2c-core-base.c                   |   16 +
->  drivers/i2c/i2c-mux.c                         |  218 ++-
->  drivers/i2c/muxes/i2c-mux-pca954x.c           |    2 +-
->  drivers/media/Kconfig                         |    1 +
->  drivers/media/Makefile                        |    2 +-
->  drivers/media/serdes/Kconfig                  |   13 +
->  drivers/media/serdes/Makefile                 |    1 +
->  drivers/media/serdes/ds90ub954.c              | 1335 +++++++++++++++++
->  include/linux/i2c-mux.h                       |   20 +-
->  include/linux/i2c.h                           |    9 +
->  11 files changed, 1760 insertions(+), 8 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/media/ti,ds90ub954-q1.txt
->  create mode 100644 drivers/media/serdes/Kconfig
->  create mode 100644 drivers/media/serdes/Makefile
->  create mode 100644 drivers/media/serdes/ds90ub954.c
-> 
-
-
-
-Thanks,
-Mauro
+-- 
+Best regards,
+Jacek Anaszewski
