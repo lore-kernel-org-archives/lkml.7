@@ -2,118 +2,155 @@ Return-Path: <SRS0=9PYC=TV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75759C04AAF
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 05:08:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53FBCC04AAF
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 05:09:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4948B21743
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 05:08:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 263A72173E
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 05:09:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NiJ12r3g"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Lze49Glk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727660AbfEUFIy (ORCPT
+        id S1727756AbfEUFJq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 May 2019 01:08:54 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:46848 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725798AbfEUFIx (ORCPT
+        Tue, 21 May 2019 01:09:46 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:42508 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725798AbfEUFJq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 May 2019 01:08:53 -0400
-Received: by mail-pg1-f193.google.com with SMTP id t187so7910353pgb.13;
-        Mon, 20 May 2019 22:08:53 -0700 (PDT)
+        Tue, 21 May 2019 01:09:46 -0400
+Received: by mail-pf1-f194.google.com with SMTP id 13so8398723pfw.9;
+        Mon, 20 May 2019 22:09:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=VwtARzhW3+sPdMjQOjr/C1t0rhZF0SWvbxbWPmuVoyg=;
-        b=NiJ12r3goSlAJ5AU3US3+PLlOvf87cKeGJI0W5OTXtLx1+1EVhWn7qkmF1nKCjJXFu
-         z9qzDzRjTW+5z9sv2adaLcO+WancpcEj9h15n2Atm9lO0lteEcKRgvgU9p3ICqgPeLcv
-         lXqyV4YCCatklDZYvQ4pI1eZu2oIOrs0vyiaTOl+Y4pwYcXTcDzV9ufN+Mx6mqxqcxrT
-         VQRXUgHnJJITVHPMFmySI7TLz4HLUDx5PYlVoUTHzW8LR+aFu8exAndsjBju8Pb46f5R
-         GEm441/wb4FCpe7S/cl3t7Dzth0S5V6FLg6gqfnZirICecfnGo8+kZzkDO/W8Fe5aAqn
-         1SEA==
+        h=from:to:cc:subject:date:message-id;
+        bh=iH4Hc02N2HPKJftxMQstfzc1qp7qmQky02xsvvHODHg=;
+        b=Lze49Glktl6JLr3SbrFTi2/1ILDiooabrHGNIg/0rtAEefxsCm+nJlw8NzHcKqW7uO
+         2Xp3siOi9c0zs+eNCzH3/+Kk6J11XwowGUX5Ot6iIoa2p4aX8RiBgbEKPPYW7a7/FM/h
+         iZzWb3xwpyEjcb9FWQN4bWZkgyOqv6GV/2L+S9GCoyEb12XtM4qLNXHhOgirYXcbYW9a
+         Hg6Wmi1OxLguiDnquGYcQoMg4Db8ADzAM1kM8c76TtawbgjmBYkgqdz/hJ/plC/4kpvI
+         lCDRXgGH88Im9wqce2/Ycq8OoXEHjTxGXBKcyEjvEwUhbGsEIx+kfLttcSYHkmr5edO2
+         bE0Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=VwtARzhW3+sPdMjQOjr/C1t0rhZF0SWvbxbWPmuVoyg=;
-        b=mFqKkIh1quJ9jqJqN3A/OYHwSVH0Mcyg2PnSQhXfYEwVFnMbzIuUk2Z6kQpjvXePyQ
-         mKKr315srPtRx9mlpqFoEqBbtdWgVjvGpY9p5DVfq1SZU9i9DWuOfH2zVaQnhRV1jar8
-         Ytvgn/Ad2C8J9r2l8U16U0O478GX4pmZ+0Lipw9w8FOeQeueloQeegRxt4VdFmCjprPl
-         CZkddlnnC07aiE6TqQhbY3wVejWGx30S6q7vZ3+fuNlvzqldm8QjfL/EVMOATLvFp1Br
-         eqMoZDBQd4A+O3zBfTCND9kefrvR1TD3ABobaY2mJBT1ykTxbnJhk1ICOp652x2WIUfd
-         AhdA==
-X-Gm-Message-State: APjAAAUS5je0KIpZfuSwWzTnuDPv1Oef4Ckonli3iUttNud0Kn+D0gjb
-        /pxjNSB1V4coT0WhDz+MMOw=
-X-Google-Smtp-Source: APXvYqz8gQSiTliAkp9vaI2NahFrwbqkJagUaapPaIxuAEI95RogQrRP4MS5iDrUZBQLpSr1K194lw==
-X-Received: by 2002:a63:7d18:: with SMTP id y24mr66189590pgc.101.1558415332831;
-        Mon, 20 May 2019 22:08:52 -0700 (PDT)
-Received: from dtor-ws ([2620:15c:202:201:3adc:b08c:7acc:b325])
-        by smtp.gmail.com with ESMTPSA id y10sm29529103pff.4.2019.05.20.22.08.51
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 20 May 2019 22:08:52 -0700 (PDT)
-Date:   Mon, 20 May 2019 22:08:50 -0700
-From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To:     Aaron Ma <aaron.ma@canonical.com>
-Cc:     linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
-        benjamin.tissoires@redhat.com,
-        Christopher Heiny <Cheiny@synaptics.com>,
-        Andrew Duggan <aduggan@synaptics.com>,
-        Hans de Goede <hdegoede@redhat.com>
-Subject: Re: [PATCH 2/2] Input: synaptics - remove X240 from the topbuttonpad
- list
-Message-ID: <20190521050850.GC183429@dtor-ws>
-References: <20190519072711.2592-1-aaron.ma@canonical.com>
- <20190519072711.2592-2-aaron.ma@canonical.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190519072711.2592-2-aaron.ma@canonical.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=iH4Hc02N2HPKJftxMQstfzc1qp7qmQky02xsvvHODHg=;
+        b=unSv/oiEsPY0MkkIbJgIWY1QpKavaRNmbsIH3lKG8ew3HQmKNP77Lmn1PNxsGKWRlY
+         WJXT7Oaf4mXhNacsfHl5rIW3RpibpUck8v2hUVM8cKgos13XqaxHu6QYnFAcRszT7jXv
+         JTmVIr6mXsJjiXe0k1Jx4teQyfj6ZOyZHxRX9lrVQNte5EWjk0asX+I/4f7lY4S+LdlN
+         tZnaDED7qXDWaNRl+36iP77wCkGulkmeWCU0dgZxZUP/Ypm89aeSwLaWa8L/Jc1WKeqW
+         8caCPu7pT921Z2PhgRfjHtZUNtnA3FIuh6EMVPP8cZLTGjSgME0XERRHGSUwiBr01k39
+         NrZg==
+X-Gm-Message-State: APjAAAW1yUYo9zBc/w3UjW7poQd2sHhg5rUGXzMOxmQ+5bFTWxzXZrTV
+        W+YMX78/1SME35qUk7WhTJk=
+X-Google-Smtp-Source: APXvYqwfB9R7DykIPPepOiis2elRrcwkJO/eaod12JpyqcUJ08biDGJIlxfpgBCUzQJW5T7C/BnMUg==
+X-Received: by 2002:a63:c64c:: with SMTP id x12mr79098885pgg.379.1558415385446;
+        Mon, 20 May 2019 22:09:45 -0700 (PDT)
+Received: from localhost ([43.224.245.181])
+        by smtp.gmail.com with ESMTPSA id f29sm48456740pfq.11.2019.05.20.22.09.44
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 20 May 2019 22:09:44 -0700 (PDT)
+From:   Weitao Hou <houweitaoo@gmail.com>
+To:     mcgrof@kernel.org, keescook@chromium.org
+Cc:     linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        Weitao Hou <houweitaoo@gmail.com>
+Subject: [PATCH v3] kernel: fix typos and some coding style in comments
+Date:   Tue, 21 May 2019 13:09:37 +0800
+Message-Id: <20190521050937.4370-1-houweitaoo@gmail.com>
+X-Mailer: git-send-email 2.18.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Aaron,
+fix lenght to length
 
-On Sun, May 19, 2019 at 03:27:11PM +0800, Aaron Ma wrote:
-> Lenovo ThinkPad X240 does not have the top software button.
-> When this wrong ID in top button list, smbus mode will fail to probe,
-> so keep it working at PS2 mode.
-> 
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Aaron Ma <aaron.ma@canonical.com>
-> ---
->  drivers/input/mouse/synaptics.c | 1 -
->  1 file changed, 1 deletion(-)
-> 
-> diff --git a/drivers/input/mouse/synaptics.c b/drivers/input/mouse/synaptics.c
-> index b6da0c1267e3..6ae7bc92476b 100644
-> --- a/drivers/input/mouse/synaptics.c
-> +++ b/drivers/input/mouse/synaptics.c
-> @@ -140,7 +140,6 @@ static const char * const topbuttonpad_pnp_ids[] = {
->  	"LEN002E",
->  	"LEN0033", /* Helix */
->  	"LEN0034", /* T431s, L440, L540, T540, W540, X1 Carbon 2nd */
-> -	"LEN0035", /* X240 */
+Signed-off-by: Weitao Hou <houweitaoo@gmail.com>
+---
+Changes in v3:
+- fix all other same typos with git grep
+---
+ .../devicetree/bindings/usb/s3c2410-usb.txt    |  2 +-
+ .../wireless/mediatek/mt76/mt76x02_usb_core.c  |  2 +-
+ kernel/sysctl.c                                | 18 +++++++++---------
+ sound/soc/qcom/qdsp6/q6asm.c                   |  2 +-
+ 4 files changed, 12 insertions(+), 12 deletions(-)
 
-According to the history this came from Synaptics through Hans, so I'd
-like to make sure there are no several X240 versions floating around...
-
->  	"LEN0036", /* T440 */
->  	"LEN0037", /* X1 Carbon 2nd */
->  	"LEN0038",
-> -- 
-> 2.17.1
-> 
-
-Thanks.
-
+diff --git a/Documentation/devicetree/bindings/usb/s3c2410-usb.txt b/Documentation/devicetree/bindings/usb/s3c2410-usb.txt
+index e45b38ce2986..26c85afd0b53 100644
+--- a/Documentation/devicetree/bindings/usb/s3c2410-usb.txt
++++ b/Documentation/devicetree/bindings/usb/s3c2410-usb.txt
+@@ -4,7 +4,7 @@ OHCI
+ 
+ Required properties:
+  - compatible: should be "samsung,s3c2410-ohci" for USB host controller
+- - reg: address and lenght of the controller memory mapped region
++ - reg: address and length of the controller memory mapped region
+  - interrupts: interrupt number for the USB OHCI controller
+  - clocks: Should reference the bus and host clocks
+  - clock-names: Should contain two strings
+diff --git a/drivers/net/wireless/mediatek/mt76/mt76x02_usb_core.c b/drivers/net/wireless/mediatek/mt76/mt76x02_usb_core.c
+index 6b89f7eab26c..e0f5e6202a27 100644
+--- a/drivers/net/wireless/mediatek/mt76/mt76x02_usb_core.c
++++ b/drivers/net/wireless/mediatek/mt76/mt76x02_usb_core.c
+@@ -53,7 +53,7 @@ int mt76x02u_skb_dma_info(struct sk_buff *skb, int port, u32 flags)
+ 	pad = round_up(skb->len, 4) + 4 - skb->len;
+ 
+ 	/* First packet of a A-MSDU burst keeps track of the whole burst
+-	 * length, need to update lenght of it and the last packet.
++	 * length, need to update length of it and the last packet.
+ 	 */
+ 	skb_walk_frags(skb, iter) {
+ 		last = iter;
+diff --git a/kernel/sysctl.c b/kernel/sysctl.c
+index 943c89178e3d..f78f725f225e 100644
+--- a/kernel/sysctl.c
++++ b/kernel/sysctl.c
+@@ -187,17 +187,17 @@ extern int no_unaligned_warning;
+  * enum sysctl_writes_mode - supported sysctl write modes
+  *
+  * @SYSCTL_WRITES_LEGACY: each write syscall must fully contain the sysctl value
+- * 	to be written, and multiple writes on the same sysctl file descriptor
+- * 	will rewrite the sysctl value, regardless of file position. No warning
+- * 	is issued when the initial position is not 0.
++ *	to be written, and multiple writes on the same sysctl file descriptor
++ *	will rewrite the sysctl value, regardless of file position. No warning
++ *	is issued when the initial position is not 0.
+  * @SYSCTL_WRITES_WARN: same as above but warn when the initial file position is
+- * 	not 0.
++ *	not 0.
+  * @SYSCTL_WRITES_STRICT: writes to numeric sysctl entries must always be at
+- * 	file position 0 and the value must be fully contained in the buffer
+- * 	sent to the write syscall. If dealing with strings respect the file
+- * 	position, but restrict this to the max length of the buffer, anything
+- * 	passed the max lenght will be ignored. Multiple writes will append
+- * 	to the buffer.
++ *	file position 0 and the value must be fully contained in the buffer
++ *	sent to the write syscall. If dealing with strings respect the file
++ *	position, but restrict this to the max length of the buffer, anything
++ *	passed the max length will be ignored. Multiple writes will append
++ *	to the buffer.
+  *
+  * These write modes control how current file position affects the behavior of
+  * updating sysctl values through the proc interface on each write.
+diff --git a/sound/soc/qcom/qdsp6/q6asm.c b/sound/soc/qcom/qdsp6/q6asm.c
+index 4f85cb19a309..e8141a33a55e 100644
+--- a/sound/soc/qcom/qdsp6/q6asm.c
++++ b/sound/soc/qcom/qdsp6/q6asm.c
+@@ -1194,7 +1194,7 @@ EXPORT_SYMBOL_GPL(q6asm_open_read);
+  * q6asm_write_async() - non blocking write
+  *
+  * @ac: audio client pointer
+- * @len: lenght in bytes
++ * @len: length in bytes
+  * @msw_ts: timestamp msw
+  * @lsw_ts: timestamp lsw
+  * @wflags: flags associated with write
 -- 
-Dmitry
+2.18.0
+
