@@ -4,73 +4,118 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7B08C04AAF
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 15:06:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F235C04E87
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 15:07:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B9842208C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 15:06:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3F21C217F9
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 15:07:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728715AbfEUPG6 (ORCPT
+        id S1728801AbfEUPHS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 May 2019 11:06:58 -0400
-Received: from sender2-pp-o92.zoho.com.cn ([163.53.93.251]:25909 "EHLO
-        sender1.zoho.com.cn" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728137AbfEUPG5 (ORCPT
+        Tue, 21 May 2019 11:07:18 -0400
+Received: from mx0b-001ae601.pphosted.com ([67.231.152.168]:34890 "EHLO
+        mx0b-001ae601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728316AbfEUPHS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 May 2019 11:06:57 -0400
-X-Greylist: delayed 906 seconds by postgrey-1.27 at vger.kernel.org; Tue, 21 May 2019 11:06:56 EDT
-ARC-Seal: i=1; a=rsa-sha256; t=1558450267; cv=none; 
-        d=zoho.com.cn; s=zohoarc; 
-        b=O7d9Goh6Y9LEtfymcrLS8ajfUA6VuEjoRMXBsU2olounmbYXYjus34onw2nbVxj48+AHYOPwL3J85GaOB2FrOPdBgTbqHDJQc3x5Epdoecsha0jb0LYfco9DrdAQhRv90SjIcRZSEoPreorUyZ9Xu1DdpfFSM0eioiW0vSRZpxk=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zoho.com.cn; s=zohoarc; 
-        t=1558450267; h=Cc:Date:From:Message-ID:Subject:To:ARC-Authentication-Results; 
-        bh=FnT1Xjc63AzR8n87E9oTWWxjhdggTkl7tAy4ISAQisE=; 
-        b=Qntt2/4eyQjUKnUuiIxdRQcBw4DNL1HzKvZHftPfFwo2fX1CYmJaFOAv2+GSYkKWnBPGi270CMrehw8/woSDplrJaqmOW2m2iL/HqZGO7QWd3zm/PHpblCQHnhDmNbFUivKNxV+zxOXj0zUjzEuEGWWJTcBZeco9YLFT5V11AGY=
-ARC-Authentication-Results: i=1; mx.zoho.com.cn;
-        dkim=pass  header.i=zoho.com.cn;
-        spf=pass  smtp.mailfrom=cgxu519@zoho.com.cn;
-        dmarc=pass header.from=<cgxu519@zoho.com.cn> header.from=<cgxu519@zoho.com.cn>
-Received: from localhost.localdomain (113.116.50.65 [113.116.50.65]) by mx.zoho.com.cn
-        with SMTPS id 155845026352175.05708036921328; Tue, 21 May 2019 22:51:03 +0800 (CST)
-From:   Chengguang Xu <cgxu519@zoho.com.cn>
-To:     viro@zeniv.linux.org.uk
-Cc:     linux-kernel@vger.kernel.org, Chengguang Xu <cgxu519@zoho.com.cn>
-Subject: [PATCH] qnx6: convert mount option checking code to test_opt()
-Date:   Tue, 21 May 2019 22:50:55 +0800
-Message-Id: <20190521145055.26800-1-cgxu519@zoho.com.cn>
-X-Mailer: git-send-email 2.17.2
-X-ZohoCNMailClient: External
+        Tue, 21 May 2019 11:07:18 -0400
+Received: from pps.filterd (m0077474.ppops.net [127.0.0.1])
+        by mx0b-001ae601.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4LExnXP029737;
+        Tue, 21 May 2019 10:05:04 -0500
+Authentication-Results: ppops.net;
+        spf=none smtp.mailfrom=ckeepax@opensource.cirrus.com
+Received: from mail1.cirrus.com (mail1.cirrus.com [141.131.3.20])
+        by mx0b-001ae601.pphosted.com with ESMTP id 2sjefmv1d9-1;
+        Tue, 21 May 2019 10:05:04 -0500
+Received: from EDIEX02.ad.cirrus.com (unknown [198.61.84.81])
+        by mail1.cirrus.com (Postfix) with ESMTP id D1C7A611C8D4;
+        Tue, 21 May 2019 10:05:03 -0500 (CDT)
+Received: from EDIEX01.ad.cirrus.com (198.61.84.80) by EDIEX02.ad.cirrus.com
+ (198.61.84.81) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1591.10; Tue, 21 May
+ 2019 16:05:02 +0100
+Received: from ediswmail.ad.cirrus.com (198.61.86.93) by EDIEX01.ad.cirrus.com
+ (198.61.84.80) with Microsoft SMTP Server id 15.1.1591.10 via Frontend
+ Transport; Tue, 21 May 2019 16:05:02 +0100
+Received: from algalon.ad.cirrus.com (algalon.ad.cirrus.com [198.90.251.122])
+        by ediswmail.ad.cirrus.com (Postfix) with ESMTP id B6A2845;
+        Tue, 21 May 2019 16:05:02 +0100 (BST)
+From:   Charles Keepax <ckeepax@opensource.cirrus.com>
+To:     <wsa@the-dreams.de>, <mika.westerberg@linux.intel.com>
+CC:     <jarkko.nikula@linux.intel.com>,
+        <andriy.shevchenko@linux.intel.com>, <linux-i2c@vger.kernel.org>,
+        <linux-acpi@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <benjamin.tissoires@redhat.com>, <jbroadus@gmail.com>,
+        <patches@opensource.cirrus.com>
+Subject: [PATCH 4/5] i2c: core: Move ACPI gpio IRQ handling into i2c_acpi_get_irq
+Date:   Tue, 21 May 2019 16:05:01 +0100
+Message-ID: <20190521150502.27305-5-ckeepax@opensource.cirrus.com>
+X-Mailer: git-send-email 2.11.0
+In-Reply-To: <20190521150502.27305-1-ckeepax@opensource.cirrus.com>
+References: <20190521150502.27305-1-ckeepax@opensource.cirrus.com>
+MIME-Version: 1.0
+Content-Type: text/plain
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=2 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=872 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1905210094
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Convert mount option checking code to test_opt() in
-qnx6_show_options().
+It makes sense to contain all the ACPI IRQ handling in a single helper
+function.
 
-Signed-off-by: Chengguang Xu <cgxu519@zoho.com.cn>
+Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
 ---
- fs/qnx6/inode.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/fs/qnx6/inode.c b/fs/qnx6/inode.c
-index 59cf45f6be49..c3a80700e7a6 100644
---- a/fs/qnx6/inode.c
-+++ b/fs/qnx6/inode.c
-@@ -46,9 +46,8 @@ static const struct super_operations qnx6_sops = {
- static int qnx6_show_options(struct seq_file *seq, struct dentry *root)
- {
- 	struct super_block *sb = root->d_sb;
--	struct qnx6_sb_info *sbi = QNX6_SB(sb);
+Note that this one is somewhat interesting, it seems the search
+through the resource list is done against the companion device
+of the adapter but the GPIO search is done against the companion
+device of the client. It feels to me like these really should
+be done on the same device, and certainly this is what SPI
+does (both against the equivalent of the adapter). Perhaps
+someone with more ACPI knowledge than myself could comment?
+
+Thanks,
+Charles
+
+ drivers/i2c/i2c-core-acpi.c | 3 +++
+ drivers/i2c/i2c-core-base.c | 4 ----
+ 2 files changed, 3 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/i2c/i2c-core-acpi.c b/drivers/i2c/i2c-core-acpi.c
+index e332760bf9ebc..0c882d956e9a4 100644
+--- a/drivers/i2c/i2c-core-acpi.c
++++ b/drivers/i2c/i2c-core-acpi.c
+@@ -164,6 +164,9 @@ int i2c_acpi_get_irq(struct i2c_client *client, int *irq)
  
--	if (sbi->s_mount_opt & QNX6_MOUNT_MMI_FS)
-+	if (test_opt(sb, MMI_FS))
- 		seq_puts(seq, ",mmi_fs");
+ 	acpi_dev_free_resource_list(&resource_list);
+ 
++	if (*irq < 0)
++		*irq = acpi_dev_gpio_irq_get(ACPI_COMPANION(&client->dev), 0);
++
  	return 0;
  }
+ 
+diff --git a/drivers/i2c/i2c-core-base.c b/drivers/i2c/i2c-core-base.c
+index c1afa17a76bfc..f958b50c78c04 100644
+--- a/drivers/i2c/i2c-core-base.c
++++ b/drivers/i2c/i2c-core-base.c
+@@ -336,10 +336,6 @@ static int i2c_device_probe(struct device *dev)
+ 				irq = of_irq_get(dev->of_node, 0);
+ 		} else if (ACPI_COMPANION(dev)) {
+ 			i2c_acpi_get_irq(client, &irq);
+-
+-			if (irq == -ENOENT)
+-				irq = acpi_dev_gpio_irq_get(ACPI_COMPANION(dev),
+-							    0);
+ 		}
+ 		if (irq == -EPROBE_DEFER)
+ 			return irq;
 -- 
-2.17.2
-
+2.11.0
 
