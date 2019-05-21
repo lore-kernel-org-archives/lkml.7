@@ -2,110 +2,113 @@ Return-Path: <SRS0=9PYC=TV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+X-Spam-Status: No, score=-8.7 required=3.0 tests=AC_FROM_MANY_DOTS,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50C16C04E87
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 16:30:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50749C04E87
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 16:31:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2FD6A208C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 16:30:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2FAF4208C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 16:31:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729048AbfEUQa6 convert rfc822-to-8bit (ORCPT
+        id S1729065AbfEUQbN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 May 2019 12:30:58 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:61737 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728945AbfEUQa6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 May 2019 12:30:58 -0400
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 36C037FDEE;
-        Tue, 21 May 2019 16:30:39 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-120-170.rdu2.redhat.com [10.10.120.170])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 7B1B95E7AF;
-        Tue, 21 May 2019 16:30:28 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-From:   David Howells <dhowells@redhat.com>
-In-Reply-To: <20190521150006.GJ17978@ZenIV.linux.org.uk>
-References: <20190521150006.GJ17978@ZenIV.linux.org.uk> <20190521113448.20654-1-christian@brauner.io>
-To:     Al Viro <viro@zeniv.linux.org.uk>
-Cc:     dhowells@redhat.com, Christian Brauner <christian@brauner.io>,
-        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-api@vger.kernel.org, jannh@google.com, fweimer@redhat.com,
-        oleg@redhat.com, tglx@linutronix.de, torvalds@linux-foundation.org,
-        arnd@arndb.de, shuah@kernel.org, tkjos@android.com,
-        ldv@altlinux.org, miklos@szeredi.hu, linux-alpha@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org,
-        linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
-        linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
-        sparclinux@vger.kernel.org, linux-xtensa@linux-xtensa.org,
-        linux-arch@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        x86@kernel.org
-Subject: Re: [PATCH 1/2] open: add close_range()
-MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <28113.1558456227.1@warthog.procyon.org.uk>
-Content-Transfer-Encoding: 8BIT
-Date:   Tue, 21 May 2019 17:30:27 +0100
-Message-ID: <28114.1558456227@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.27]); Tue, 21 May 2019 16:30:57 +0000 (UTC)
+        Tue, 21 May 2019 12:31:13 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:47383 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728005AbfEUQbM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 May 2019 12:31:12 -0400
+Received: from 61-220-137-37.hinet-ip.hinet.net ([61.220.137.37] helo=localhost)
+        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_256_CBC_SHA1:32)
+        (Exim 4.76)
+        (envelope-from <kai.heng.feng@canonical.com>)
+        id 1hT7fR-00027I-1U; Tue, 21 May 2019 16:31:09 +0000
+From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
+To:     bhelgaas@google.com, rafael.j.wysocki@intel.com
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>
+Subject: [PATCH] PCI / PM: Don't runtime suspend when device only supports wakeup from D0
+Date:   Wed, 22 May 2019 00:31:04 +0800
+Message-Id: <20190521163104.15759-1-kai.heng.feng@canonical.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Al Viro <viro@zeniv.linux.org.uk> wrote:
+There's an xHC device that doesn't wake when a USB device gets plugged
+to its USB port. The driver's own runtime suspend callback was called,
+PME signaling was enabled, but it stays at PCI D0.
 
-> Umm...  That's going to be very painful if you dup2() something to MAX_INT and
-> then run that; roughly 2G iterations of bouncing ->file_lock up and down,
-> without anything that would yield CPU in process.
-> 
-> If anything, I would suggest something like
-> 
-> 	fd = *start_fd;
-> 	grab the lock
->         fdt = files_fdtable(files);
-> more:
-> 	look for the next eviction candidate in ->open_fds, starting at fd
-> 	if there's none up to max_fd
-> 		drop the lock
-> 		return NULL
-> 	*start_fd = fd + 1;
-> 	if the fscker is really opened and not just reserved
-> 		rcu_assign_pointer(fdt->fd[fd], NULL);
-> 		__put_unused_fd(files, fd);
-> 		drop the lock
-> 		return the file we'd got
-> 	if (unlikely(need_resched()))
-> 		drop lock
-> 		cond_resched();
-> 		grab lock
-> 		fdt = files_fdtable(files);
-> 	goto more;
-> 
-> with the main loop being basically
-> 	while ((file = pick_next(files, &start_fd, max_fd)) != NULL)
-> 		filp_close(file, files);
+A PCI device can be runtime suspended to D0 when it supports D0 PME and
+its _S0W reports D0. Theoratically this should work, but as [1]
+specifies, D0 doesn't have wakeup capability.
 
-If we can live with close_from(int first) rather than close_range(), then this
-can perhaps be done a lot more efficiently by:
+To avoid this problematic situation, we should avoid runtime suspend if
+D0 is the only state that can wake up the device.
 
-	new = alloc_fdtable(first);
-	spin_lock(&files->file_lock);
-	old = files_fdtable(files);
-	copy_fds(new, old, 0, first - 1);
-	rcu_assign_pointer(files->fdt, new);
-	spin_unlock(&files->file_lock);
-	clear_fds(old, 0, first - 1);
-	close_fdt_from(old, first);
-	kfree_rcu(old);
+[1] https://docs.microsoft.com/en-us/windows-hardware/drivers/kernel/device-working-state-d0
 
-David
+Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+---
+ drivers/pci/pci-driver.c | 5 +++++
+ drivers/pci/pci.c        | 2 +-
+ include/linux/pci.h      | 3 +++
+ 3 files changed, 9 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/pci/pci-driver.c b/drivers/pci/pci-driver.c
+index cae630fe6387..15a6310c5d7b 100644
+--- a/drivers/pci/pci-driver.c
++++ b/drivers/pci/pci-driver.c
+@@ -1251,6 +1251,11 @@ static int pci_pm_runtime_suspend(struct device *dev)
+ 		return 0;
+ 	}
+ 
++	if (pci_target_state(pci_dev, device_can_wakeup(dev)) == PCI_D0) {
++		dev_dbg(dev, "D0 doesn't have wakeup capability\n");
++		return -EBUSY;
++	}
++
+ 	pci_dev->state_saved = false;
+ 	if (pm && pm->runtime_suspend) {
+ 		error = pm->runtime_suspend(dev);
+diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+index 8abc843b1615..ceee6efbbcfe 100644
+--- a/drivers/pci/pci.c
++++ b/drivers/pci/pci.c
+@@ -2294,7 +2294,7 @@ EXPORT_SYMBOL(pci_wake_from_d3);
+  * If the platform can't manage @dev, return the deepest state from which it
+  * can generate wake events, based on any available PME info.
+  */
+-static pci_power_t pci_target_state(struct pci_dev *dev, bool wakeup)
++pci_power_t pci_target_state(struct pci_dev *dev, bool wakeup)
+ {
+ 	pci_power_t target_state = PCI_D3hot;
+ 
+diff --git a/include/linux/pci.h b/include/linux/pci.h
+index 4a5a84d7bdd4..91e8dc4d04aa 100644
+--- a/include/linux/pci.h
++++ b/include/linux/pci.h
+@@ -1188,6 +1188,7 @@ bool pci_pme_capable(struct pci_dev *dev, pci_power_t state);
+ void pci_pme_active(struct pci_dev *dev, bool enable);
+ int pci_enable_wake(struct pci_dev *dev, pci_power_t state, bool enable);
+ int pci_wake_from_d3(struct pci_dev *dev, bool enable);
++pci_power_t pci_target_state(struct pci_dev *dev, bool wakeup);
+ int pci_prepare_to_sleep(struct pci_dev *dev);
+ int pci_back_from_sleep(struct pci_dev *dev);
+ bool pci_dev_run_wake(struct pci_dev *dev);
+@@ -1672,6 +1673,8 @@ static inline int pci_set_power_state(struct pci_dev *dev, pci_power_t state)
+ { return 0; }
+ static inline int pci_wake_from_d3(struct pci_dev *dev, bool enable)
+ { return 0; }
++pci_power_t pci_target_state(struct pci_dev *dev, bool wakeup)
++{ return PCI_D0; }
+ static inline pci_power_t pci_choose_state(struct pci_dev *dev,
+ 					   pm_message_t state)
+ { return PCI_D0; }
+-- 
+2.17.1
+
