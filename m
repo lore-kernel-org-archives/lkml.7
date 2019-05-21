@@ -2,402 +2,249 @@ Return-Path: <SRS0=9PYC=TV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 440A3C04AB4
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 09:46:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D044EC04AAF
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 09:56:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 150EC21479
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 09:46:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F99D2173E
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 09:56:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727527AbfEUJqw convert rfc822-to-8bit (ORCPT
+        id S1726829AbfEUJ4V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 May 2019 05:46:52 -0400
-Received: from relay7-d.mail.gandi.net ([217.70.183.200]:35805 "EHLO
-        relay7-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726391AbfEUJqv (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 May 2019 05:46:51 -0400
-X-Originating-IP: 90.88.22.185
-Received: from xps13 (aaubervilliers-681-1-80-185.w90-88.abo.wanadoo.fr [90.88.22.185])
-        (Authenticated sender: miquel.raynal@bootlin.com)
-        by relay7-d.mail.gandi.net (Postfix) with ESMTPSA id B16F920005;
-        Tue, 21 May 2019 09:46:44 +0000 (UTC)
-Date:   Tue, 21 May 2019 11:46:44 +0200
-From:   Miquel Raynal <miquel.raynal@bootlin.com>
-To:     Stephen Boyd <sboyd@kernel.org>
-Cc:     Michael Turquette <mturquette@baylibre.com>,
-        Russell King <linux@armlinux.org.uk>,
-        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Antoine Tenart <antoine.tenart@bootlin.com>,
-        Maxime Chevallier <maxime.chevallier@bootlin.com>,
-        Gregory Clement <gregory.clement@bootlin.com>,
-        Nadav Haklai <nadavh@marvell.com>
-Subject: Re: [PATCH v4 0/4] Add device links to clocks
-Message-ID: <20190521114644.7000a751@xps13>
-In-Reply-To: <155502565678.20095.10517989462650657961@swboyd.mtv.corp.google.com>
-References: <20190108161940.4814-1-miquel.raynal@bootlin.com>
-        <155502565678.20095.10517989462650657961@swboyd.mtv.corp.google.com>
-Organization: Bootlin
-X-Mailer: Claws Mail 3.17.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Tue, 21 May 2019 05:56:21 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:52748 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726242AbfEUJ4V (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 May 2019 05:56:21 -0400
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 3FF1CF74CE;
+        Tue, 21 May 2019 09:56:07 +0000 (UTC)
+Received: from [10.36.116.113] (ovpn-116-113.ams2.redhat.com [10.36.116.113])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 5ADE96085B;
+        Tue, 21 May 2019 09:55:57 +0000 (UTC)
+Subject: Re: [PATCH v3 04/16] ioasid: Add custom IOASID allocator
+To:     Jacob Pan <jacob.jun.pan@linux.intel.com>,
+        iommu@lists.linux-foundation.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        Joerg Roedel <joro@8bytes.org>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
+Cc:     Yi Liu <yi.l.liu@intel.com>, "Tian, Kevin" <kevin.tian@intel.com>,
+        Raj Ashok <ashok.raj@intel.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Andriy Shevchenko <andriy.shevchenko@linux.intel.com>
+References: <1556922737-76313-1-git-send-email-jacob.jun.pan@linux.intel.com>
+ <1556922737-76313-5-git-send-email-jacob.jun.pan@linux.intel.com>
+From:   Auger Eric <eric.auger@redhat.com>
+Message-ID: <c991ff0c-87bf-574a-bf31-9b37f0421385@redhat.com>
+Date:   Tue, 21 May 2019 11:55:55 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.4.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+In-Reply-To: <1556922737-76313-5-git-send-email-jacob.jun.pan@linux.intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.38]); Tue, 21 May 2019 09:56:15 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Stephen,
+Hi Jacob,
 
-Stephen Boyd <sboyd@kernel.org> wrote on Thu, 11 Apr 2019 16:34:16
--0700:
+On 5/4/19 12:32 AM, Jacob Pan wrote:
+> Sometimes, IOASID allocation must be handled by platform specific
+> code. The use cases are guest vIOMMU and pvIOMMU where IOASIDs need
+> to be allocated by the host via enlightened or paravirt interfaces.
+> 
+> This patch adds an extension to the IOASID allocator APIs such that
+> platform drivers can register a custom allocator, possibly at boot
+> time, to take over the allocation. Xarray is still used for tracking
+> and searching purposes internal to the IOASID code. Private data of
+> an IOASID can also be set after the allocation.
+> 
+> There can be multiple custom allocators registered but only one is
+> used at a time. In case of hot removal of devices that provides the
+> allocator, all IOASIDs must be freed prior to unregistering the
+> allocator. Default XArray based allocator cannot be mixed with
+> custom allocators, i.e. custom allocators will not be used if there
+> are outstanding IOASIDs allocated by the default XA allocator.
+> 
+> Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
+> ---
+>  drivers/iommu/ioasid.c | 125 +++++++++++++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 125 insertions(+)
+> 
+> diff --git a/drivers/iommu/ioasid.c b/drivers/iommu/ioasid.c
+> index 99f5e0a..ed2915a 100644
+> --- a/drivers/iommu/ioasid.c
+> +++ b/drivers/iommu/ioasid.c
+> @@ -17,6 +17,100 @@ struct ioasid_data {
+>  };
+>  
+>  static DEFINE_XARRAY_ALLOC(ioasid_xa);
+> +static DEFINE_MUTEX(ioasid_allocator_lock);
+> +static struct ioasid_allocator *active_custom_allocator;
+> +
+> +static LIST_HEAD(custom_allocators);
+> +/*
+> + * A flag to track if ioasid default allocator is in use, this will
+> + * prevent custom allocator from being used. The reason is that custom allocator
+> + * must have unadulterated space to track private data with xarray, there cannot
+> + * be a mix been default and custom allocated IOASIDs.
+> + */
+> +static int default_allocator_active;
+> +
+> +/**
+> + * ioasid_register_allocator - register a custom allocator
+> + * @allocator: the custom allocator to be registered
+> + *
+> + * Custom allocators take precedence over the default xarray based allocator.
+> + * Private data associated with the ASID are managed by ASID common code
+> + * similar to data stored in xa.
+> + *
+> + * There can be multiple allocators registered but only one is active. In case
+> + * of runtime removal of a custom allocator, the next one is activated based
+> + * on the registration ordering.
+> + */
+> +int ioasid_register_allocator(struct ioasid_allocator *allocator)
+> +{
+> +	struct ioasid_allocator *pallocator;
+> +	int ret = 0;
+> +
+> +	if (!allocator)
+> +		return -EINVAL;
+is it really necessary? Sin't it the caller responsibility?
+> +
+> +	mutex_lock(&ioasid_allocator_lock);
+> +	/*
+> +	 * No particular preference since all custom allocators end up calling
+> +	 * the host to allocate IOASIDs. We activate the first one and keep
+> +	 * the later registered allocators in a list in case the first one gets
+> +	 * removed due to hotplug.
+> +	 */
+> +	if (list_empty(&custom_allocators))
+> +		active_custom_allocator = allocator;> +	else {
+> +		/* Check if the allocator is already registered */
+> +		list_for_each_entry(pallocator, &custom_allocators, list) {
+> +			if (pallocator == allocator) {
+> +				pr_err("IOASID allocator already registered\n");
+> +				ret = -EEXIST;
+> +				goto out_unlock;
+> +			}
+> +		}
+> +	}
+> +	list_add_tail(&allocator->list, &custom_allocators);
+> +
+> +out_unlock:
+> +	mutex_unlock(&ioasid_allocator_lock);
+> +	return ret;
+> +}
+> +EXPORT_SYMBOL_GPL(ioasid_register_allocator);
+> +
+> +/**
+> + * ioasid_unregister_allocator - Remove a custom IOASID allocator
+> + * @allocator: the custom allocator to be removed
+> + *
+> + * Remove an allocator from the list, activate the next allocator in
+> + * the order it was registered.
+> + */
+> +void ioasid_unregister_allocator(struct ioasid_allocator *allocator)
+> +{
+> +	if (!allocator)
+> +		return;
+is it really necessary?
+> +
+> +	if (list_empty(&custom_allocators)) {
+> +		pr_warn("No custom IOASID allocators active!\n");
+> +		return;
+> +	}
+> +
+> +	mutex_lock(&ioasid_allocator_lock);
+> +	list_del(&allocator->list);
+> +	if (list_empty(&custom_allocators)) {
+> +		pr_info("No custom IOASID allocators\n")> +		/*
+> +		 * All IOASIDs should have been freed before the last custom
+> +		 * allocator is unregistered. Unless default allocator is in
+> +		 * use.
+> +		 */
+> +		BUG_ON(!xa_empty(&ioasid_xa) && !default_allocator_active);
+> +		active_custom_allocator = NULL;
+> +	} else if (allocator == active_custom_allocator) {
+In case you are removing the active custom allocator don't you also need
+to check that all ioasids were freed. Otherwise you are likely to switch
+to a different allocator whereas the asid space is partially populated.
+> +		active_custom_allocator = list_entry(&custom_allocators, struct ioasid_allocator, list);
+> +		pr_info("IOASID allocator changed");
+> +	}
+> +	mutex_unlock(&ioasid_allocator_lock);
+> +}
+> +EXPORT_SYMBOL_GPL(ioasid_unregister_allocator);
+>  
+>  /**
+>   * ioasid_set_data - Set private data for an allocated ioasid
+> @@ -68,6 +162,29 @@ ioasid_t ioasid_alloc(struct ioasid_set *set, ioasid_t min, ioasid_t max,
+>  	data->set = set;
+>  	data->private = private;
+>  
+> +	mutex_lock(&ioasid_allocator_lock);
+> +	/*
+> +	 * Use custom allocator if available, otherwise use default.
+> +	 * However, if there are active IOASIDs already been allocated by default
+> +	 * allocator, custom allocator cannot be used.
+> +	 */
+> +	if (!default_allocator_active && active_custom_allocator) {
+> +		id = active_custom_allocator->alloc(min, max, active_custom_allocator->pdata);
+> +		if (id == INVALID_IOASID) {
+> +			pr_err("Failed ASID allocation by custom allocator\n");
+> +			mutex_unlock(&ioasid_allocator_lock);
+> +			goto exit_free;
+> +		}
+> +		/*
+> +		 * Use XA to manage private data also sanitiy check custom
+> +		 * allocator for duplicates.
+> +		 */
+> +		min = id;
+> +		max = id + 1;
+> +	} else
+> +		default_allocator_active = 1;
+nit: true?
+> +	mutex_unlock(&ioasid_allocator_lock);
+> +
+>  	if (xa_alloc(&ioasid_xa, &id, data, XA_LIMIT(min, max), GFP_KERNEL)) {
+>  		pr_err("Failed to alloc ioasid from %d to %d\n", min, max);
+>  		goto exit_free;> @@ -91,9 +208,17 @@ void ioasid_free(ioasid_t ioasid)
+>  {
+>  	struct ioasid_data *ioasid_data;
+>  
+> +	mutex_lock(&ioasid_allocator_lock);
+> +	if (active_custom_allocator)
+> +		active_custom_allocator->free(ioasid, active_custom_allocator->pdata);
+> +	mutex_unlock(&ioasid_allocator_lock);
+> +
+>  	ioasid_data = xa_erase(&ioasid_xa, ioasid);
+>  
+>  	kfree_rcu(ioasid_data, rcu);
+> +
+> +	if (xa_empty(&ioasid_xa))
+> +		default_allocator_active = 0;
+Isn't it racy? what if an xa_alloc occurs inbetween?
 
-> Quoting Miquel Raynal (2019-01-08 08:19:36)
-> > Hello,
-> > 
-> > While working on suspend to RAM feature, I ran into troubles multiple
-> > times when clocks where not suspending/resuming at the desired time. I
-> > had a look at the core and I think the same logic as in the
-> > regulator's core may be applied here to (very easily) fix this issue:
-> > using device links.
-> > 
-> > The only additional change I had to do was to always (when available)
-> > populate the device entry of the core clock structure so that it could
-> > be used later. This is the purpose of patch 1. Patch 2 actually adds
-> > support for device links.
-> > 
-> > Here is a step-by-step explanation of how links are managed, following
-> > Maxime Ripard's suggestion.
-> > 
-> > 
-> > The order of probe has no importance because the framework already
-> > handles orphaned clocks so let's be simple and say there are two root
-> > clocks, not depending on anything, that are probed first: xtal0 and
-> > xtal1. None of these clocks have a parent, there is no device link in
-> > the game, yet.
-> > 
-> >    +----------------+            +----------------+
-> >    |                |            |                |
-> >    |                |            |                |
-> >    |   xtal0 core   |            |   xtal1 core   |
-> >    |                |            |                |
-> >    |                |            |                |
-> >    +-------^^-------+            +-------^^-------+
-> >            ||                            ||
-> >            ||                            ||
-> >    +----------------+            +----------------+
-> >    |                |            |                |
-> >    |   xtal0 clk    |            |   xtal1 clk    |
-> >    |                |            |                |
-> >    +----------------+            +----------------+
-> > 
-> > Then, a peripheral clock periph0 is probed. His parent is xtal1. The
-> > clock_register_*() call will run __clk_init_parent() and a link between
-> > periph0's core and xtal1's core will be created and stored in
-> > periph0's core->parent_clk_link entry.
-> > 
-> >    +----------------+            +----------------+
-> >    |                |            |                |
-> >    |                |            |                |
-> >    |   xtal0 core   |            |   xtal1 core   |
-> >    |                |            |                |
-> >    |                |            |                |
-> >    +-------^^-------+            +-------^^-------+
-> >            ||                            ||
-> >            ||                            ||
-> >    +----------------+            +----------------+
-> >    |                |            |                |
-> >    |   xtal0 clk    |            |   xtal1 clk    |
-> >    |                |            |                |
-> >    +----------------+            +-------^--------+
-> >                                          |
-> >                                          |
-> >                           +--------------+
-> >                           |   ->parent_clk_link
-> >                           |
-> >                   +----------------+
-> >                   |                |
-> >                   |                |
-> >                   |  periph0 core  |
-> >                   |                |
-> >                   |                |
-> >                   +-------^^-------+
-> >                           ||
-> >                           ||
-> >                   +----------------+
-> >                   |                |
-> >                   |  periph0 clk 0 |
-> >                   |                |
-> >                   +----------------+
-> > 
-> > Then, device0 is probed and "get" the periph0 clock. clk_get() will be
-> > called and a struct clk will be instantiated for device0 (called in
-> > the figure clk 1). A link between device0 and the new clk 1 instance of
-> > periph0 will be created and stored in the clk->consumer_link entry.
-> > 
-> >    +----------------+            +----------------+
-> >    |                |            |                |
-> >    |                |            |                |
-> >    |   xtal0 core   |            |   xtal1 core   |
-> >    |                |            |                |
-> >    |                |            |                |
-> >    +-------^^-------+            +-------^^-------+
-> >            ||                            ||
-> >            ||                            ||
-> >    +----------------+            +----------------+
-> >    |                |            |                |
-> >    |   xtal0 clk    |            |   xtal1 clk    |
-> >    |                |            |                |
-> >    +----------------+            +-------^--------+
-> >                                          |
-> >                                          |
-> >                           +--------------+
-> >                           |   ->parent_clk_link
-> >                           |
-> >                   +----------------+
-> >                   |                |
-> >                   |                |
-> >                   |  periph0 core  |
-> >                   |                <-------------+
-> >                   |                <-------------|
-> >                   +-------^^-------+            ||
-> >                           ||                    ||
-> >                           ||                    ||
-> >                   +----------------+    +----------------+
-> >                   |                |    |                |
-> >                   |  periph0 clk 0 |    |  periph0 clk 1 |
-> >                   |                |    |                |
-> >                   +----------------+    +----------------+
-> >                                                 |
-> >                                                 | ->consumer_link
-> >                                                 |
-> >                                                 |
-> >                                                 |
-> >                                         +-------v--------+
-> >                                         |    device0     |
-> >                                         +----------------+
-> > 
-> > Right now, device0 is linked to periph0, itself linked to xtal1 so
-> > everything is fine.
-> > 
-> > Now let's get some fun: the new parent of periph0 is xtal1. The process
-> > will call clk_reparent(), periph0's core->parent_clk_link will be
-> > destroyed and a new link to xtal1 will be setup and stored. The
-> > situation is now that device0 is linked to periph0 and periph0 is
-> > linked to xtal1, so the dependency between device0 and xtal1 is still
-> > clear.
-> > 
-> >    +----------------+            +----------------+
-> >    |                |            |                |
-> >    |                |            |                |
-> >    |   xtal0 core   |            |   xtal1 core   |
-> >    |                |            |                |
-> >    |                |            |                |
-> >    +-------^^-------+            +-------^^-------+
-> >            ||                            ||
-> >            ||                            ||
-> >    +----------------+            +----------------+
-> >    |                |            |                |
-> >    |   xtal0 clk    |            |   xtal1 clk    |
-> >    |                |            |                |
-> >    +-------^--------+            +----------------+
-> >            |
-> >            |                           \ /
-> >            +----------------------------x  
-> >       ->parent_clk_link   |            / \  
-> >                           |
-> >                   +----------------+
-> >                   |                |
-> >                   |                |
-> >                   |  periph0 core  |
-> >                   |                <-------------+
-> >                   |                <-------------|
-> >                   +-------^^-------+            ||
-> >                           ||                    ||
-> >                           ||                    ||
-> >                   +----------------+    +----------------+
-> >                   |                |    |                |
-> >                   |  periph0 clk 0 |    |  periph0 clk 1 |
-> >                   |                |    |                |
-> >                   +----------------+    +----------------+
-> >                                                 |
-> >                                                 | ->consumer_link
-> >                                                 |
-> >                                                 |
-> >                                                 |
-> >                                         +-------v--------+
-> >                                         |    device0     |
-> >                                         +----------------+
-> > 
-> > I assume periph0 cannot be removed while there are devices using it,
-> > same for xtal0.
-> > 
-> > What can happen is that device0 'put' the clock periph0. The relevant
-> > link is deleted and the clk instance dropped.
-> > 
-> >    +----------------+            +----------------+
-> >    |                |            |                |
-> >    |                |            |                |
-> >    |   xtal0 core   |            |   xtal1 core   |
-> >    |                |            |                |
-> >    |                |            |                |
-> >    +-------^^-------+            +-------^^-------+
-> >            ||                            ||
-> >            ||                            ||
-> >    +----------------+            +----------------+
-> >    |                |            |                |
-> >    |   xtal0 clk    |            |   xtal1 clk    |
-> >    |                |            |                |
-> >    +-------^--------+            +----------------+
-> >            |
-> >            |                           \ /
-> >            +----------------------------x  
-> >       ->parent_clk_link   |            / \  
-> >                           |
-> >                   +----------------+
-> >                   |                |
-> >                   |                |
-> >                   |  periph0 core  |
-> >                   |                |
-> >                   |                |
-> >                   +-------^^-------+
-> >                           ||
-> >                           ||
-> >                   +----------------+
-> >                   |                |
-> >                   |  periph0 clk 0 |
-> >                   |                |
-> >                   +----------------+
-> > 
-> > Now we can unregister periph0: link with the parent will be destroyed
-> > and the clock may be safely removed.
-> > 
-> >    +----------------+            +----------------+
-> >    |                |            |                |
-> >    |                |            |                |
-> >    |   xtal0 core   |            |   xtal1 core   |
-> >    |                |            |                |
-> >    |                |            |                |
-> >    +-------^^-------+            +-------^^-------+
-> >            ||                            ||
-> >            ||                            ||
-> >    +----------------+            +----------------+
-> >    |                |            |                |
-> >    |   xtal0 clk    |            |   xtal1 clk    |
-> >    |                |            |                |
-> >    +----------------+            +----------------+
-> > 
-> > 
-> > This is my understanding of the common clock framework and how links
-> > can be added to it.
-> > 
-> > As a result, here are the links created during the boot of an
-> > ESPRESSObin:
-> >   
-> 
-> Sorry this patch series is taking way too long to get merged. It's
-> already mid-April!
-> 
-> So I still have some of the original questions I had from before, mostly
-> around circular parent chains between clk providers. For example, there
-> are clk providers that both provide clks to other providers and consume
-> clks from those providers. Does device links work gracefully here?
-> 
-> Just speaking from my own qcom experience, I can point to the PCIe PHY
-> that's a provider of a clk to GCC and a consumer of a clk in GCC. In
-> block diagram form this is:
-> 
-> 
->       PCIE PHY                        GCC
->    +--------------+          +-------------------------+
->    |              |          |                         |
->    |     PHY clk ->----------+---- gcc_pipe_clk ---+   |
->    |              |          |                     |   |
->    |              |          |                     |   |
->    | pci_pipe_clk <----------|---------------------+   |
->    |              |          |                         |
->    +--------------+          +-------------------------+
-> 
-> The end result is that the PCIe PHY is a clk controller that provides
-> the PHY clk to GCC's gcc_pipe_clk and then it gets the same clk signal
-> back from GCC and uses it on the PCIe PHY's pci_pipe_clk input.
-> 
-> So is this is a problem?
+
+>  }
+>  EXPORT_SYMBOL_GPL(ioasid_free);
+>  
 > 
 
-It's now my turn to get back on this topic.
+Thanks
 
-I just put my noise back into this and for what I understand of the
-clk subsystem, I think the situation you describe could be pictured
-like this:
-
-
-         +---------------+
-         |               |
-         |               |
-         | PCIe PHY      |
-         |               |
-         |               |
-         +-----^^--------+
-               ||
-               ||
-         +---------------+
-         |               |
-         | pcie_pipe_clk |
-         |               |
-         +------^--------+
-                |
-                | ->parent_clk_link
-                |
-                |
-         +---------------+
-         |               |
-         |               |
-         | GCC           |
-         |               |
-         |               |
-         +------^^-------+
-                ||
-                ||
-         +---------------+
-         |               |
-         | gcc_pipe_clk  |
-         |               |
-         +------^--------+
-                |
-                | ->parent_clk_link
-                |
-                |
-         +---------------+
-         |               |
-         |               |
-         | PCIe PHY      |
-         |               |
-         |               |
-         +------^^-------+
-                ||
-                ||
-         +---------------+
-         |               |
-         | phy_clk       |
-         |               |
-         +---------------+
-
-
-IMHO the fact that the first and third blocks are the same does not
-interfere with device links.
-
-Honestly, I cannot be 100% sure it won't break on qcom designs, maybe
-the best would be to have someone to test. I don't have the relevant
-hardware. Do you? It would be really helpful!
-
-There is an entire PCIe series blocked, waiting for these device links
-to be merged so it would help a lot if someone could test.
-
-Thank you very much,
-Miquèl
+Eric
