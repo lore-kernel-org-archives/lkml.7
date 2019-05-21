@@ -2,109 +2,88 @@ Return-Path: <SRS0=9PYC=TV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 762E5C04AAF
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 16:22:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CBBFBC04AAF
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 16:24:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 53BE42075E
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 16:22:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB8FA208C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 16:24:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728850AbfEUQW0 (ORCPT
+        id S1728844AbfEUQX7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 May 2019 12:22:26 -0400
-Received: from outgoing-auth-1.mit.edu ([18.9.28.11]:38435 "EHLO
-        outgoing.mit.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727965AbfEUQW0 (ORCPT
+        Tue, 21 May 2019 12:23:59 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:35340 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727999AbfEUQX7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 May 2019 12:22:26 -0400
-Received: from callcc.thunk.org (guestnat-104-133-0-109.corp.google.com [104.133.0.109] (may be forged))
-        (authenticated bits=0)
-        (User authenticated as tytso@ATHENA.MIT.EDU)
-        by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id x4LGLhkx018523
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 21 May 2019 12:21:44 -0400
-Received: by callcc.thunk.org (Postfix, from userid 15806)
-        id DDB01420481; Tue, 21 May 2019 12:21:42 -0400 (EDT)
-Date:   Tue, 21 May 2019 12:21:42 -0400
-From:   "Theodore Ts'o" <tytso@mit.edu>
-To:     Naresh Kamboju <naresh.kamboju@linaro.org>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>,
-        lkft-triage@lists.linaro.org,
-        linux- stable <stable@vger.kernel.org>,
-        linux-ext4@vger.kernel.org,
-        Arthur Marsh <arthur.marsh@internode.on.net>,
-        Richard Weinberger <richard.weinberger@gmail.com>
-Subject: Re: ext4 regression (was Re: [PATCH 4.19 000/105] 4.19.45-stable
- review)
-Message-ID: <20190521162142.GA2591@mit.edu>
-Mail-Followup-To: Theodore Ts'o <tytso@mit.edu>,
-        Naresh Kamboju <naresh.kamboju@linaro.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Guenter Roeck <linux@roeck-us.net>, Shuah Khan <shuah@kernel.org>,
-        patches@kernelci.org, Ben Hutchings <ben.hutchings@codethink.co.uk>,
-        lkft-triage@lists.linaro.org,
-        linux- stable <stable@vger.kernel.org>, linux-ext4@vger.kernel.org,
-        Arthur Marsh <arthur.marsh@internode.on.net>,
-        Richard Weinberger <richard.weinberger@gmail.com>
-References: <20190520115247.060821231@linuxfoundation.org>
- <20190520222342.wtsjx227c6qbkuua@xps.therub.org>
- <20190521085956.GC31445@kroah.com>
- <CA+G9fYvHmUimtwszwo=9fDQLn+MNh8Vq3UGPaPUdhH=dEKzqxg@mail.gmail.com>
- <20190521093849.GA9806@kroah.com>
- <CA+G9fYveeg_FMsL31aunJ2A9XLYk908Y1nSFw4kwkFk3h3uEiA@mail.gmail.com>
+        Tue, 21 May 2019 12:23:59 -0400
+Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4LGHMoY122105
+        for <linux-kernel@vger.kernel.org>; Tue, 21 May 2019 12:23:58 -0400
+Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2smkn1uhqq-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Tue, 21 May 2019 12:23:57 -0400
+Received: from localhost
+        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <heiko.carstens@de.ibm.com>;
+        Tue, 21 May 2019 17:23:56 +0100
+Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
+        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Tue, 21 May 2019 17:23:53 +0100
+Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x4LGNqUl47579340
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 21 May 2019 16:23:52 GMT
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 6AA7B4C04A;
+        Tue, 21 May 2019 16:23:52 +0000 (GMT)
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 333714C046;
+        Tue, 21 May 2019 16:23:52 +0000 (GMT)
+Received: from osiris (unknown [9.152.212.21])
+        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Tue, 21 May 2019 16:23:52 +0000 (GMT)
+Date:   Tue, 21 May 2019 18:23:50 +0200
+From:   Heiko Carstens <heiko.carstens@de.ibm.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-s390@vger.kernel.org
+Subject: Sad News - Martin Schwidefsky
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CA+G9fYveeg_FMsL31aunJ2A9XLYk908Y1nSFw4kwkFk3h3uEiA@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-TM-AS-GCONF: 00
+x-cbid: 19052116-0012-0000-0000-0000031E0599
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19052116-0013-0000-0000-00002156B761
+Message-Id: <20190521162350.GA17107@osiris>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-21_03:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=1 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=715 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1905210101
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 21, 2019 at 03:58:15PM +0530, Naresh Kamboju wrote:
-> > Ted, any ideas here?  Should I drop this from the stable trees, and you
-> > revert it from Linus's?  Or something else?
+We are devastated by the tragic death of Martin Schwidefsky who died
+in an accident last Saturday.
 
-It's safe to drop this from the stable trees while we investigate.  It
-was always borderline for stable anyway.  (See below).
+Martin was the most significant contributor to the initial s390 port
+of the Linux Kernel and later the maintainer of the s390 architecture
+backend. His technical expertise as well as his mentoring skills were
+outstanding. Martin was well known for his positive mindset and his
+willingness to help.
 
-> >
-> > Note, I do also have 170417c8c7bb ("ext4: fix block validity checks for
-> > journal inodes using indirect blocks") in the trees, which was supposed
-> > to fix the problem with this patch, am I missing another one as well?
-> 
-> FYI,
-> I have applied fix patch 170417c8c7bb ("ext4: fix block validity checks for
->  journal inodes using indirect blocks") but did not fix this problem.
+He will be greatly missed.
 
-Hmm... are you _sure_?  This bug was reported to me versus the
-mainline, and the person who reported it confirmed that it did fix the
-problem, he was seeing, and the symptoms are identical to yours.  Can
-you double check, please?  I can't reproduce it either with that patch applied.
+Heiko
 
-> > (side note, it was mean not to mark 170417c8c7bb for stable, when the
-> > patch it was fixing was marked for stable, I'm lucky I caught it...)
-
-Sorry, I had forgotten that I had marked 345c0dbf3a30 for stable;
-that's why I didn't mark 170417c8c7bb for stable.  345c0dbf3a30 fixes
-a crash triggered by a specially crafted (corrupted) file system, and
-I had thought I had decided it wasn't important enough for stable; I
-think what happened is I shrugged and said, "oh well, Sasha's
-automated ML system is going to pick it for stable anyway, so I might
-just mark it for stable anyway" --- and I forgot I had landed that
-way.
-
-						- Ted
