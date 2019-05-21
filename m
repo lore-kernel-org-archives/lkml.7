@@ -2,103 +2,139 @@ Return-Path: <SRS0=9PYC=TV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_NEOMUTT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A34C6C04E87
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 17:56:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 791B1C04AAF
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 17:57:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 78226217D7
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 17:56:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A17F217D7
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 17:57:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="A9l63JLo"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="uH9I6b0J"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729262AbfEUR4V (ORCPT
+        id S1729222AbfEUR5f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 May 2019 13:56:21 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:45885 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726900AbfEUR4V (ORCPT
+        Tue, 21 May 2019 13:57:35 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:43171 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728055AbfEUR5f (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 May 2019 13:56:21 -0400
-Received: by mail-pg1-f194.google.com with SMTP id i21so8935983pgi.12;
-        Tue, 21 May 2019 10:56:20 -0700 (PDT)
+        Tue, 21 May 2019 13:57:35 -0400
+Received: by mail-lj1-f195.google.com with SMTP id z5so16665682lji.10
+        for <linux-kernel@vger.kernel.org>; Tue, 21 May 2019 10:57:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=FbUU/EROxa+2gIry4MHohDpJnUD0iabB83okgZNIc04=;
-        b=A9l63JLobrODFKSiZjPIwZQwRFFUX/GwQzTZ02aEzGt3720G+1fRDJpZmxQH9KWP/t
-         oXuT/hzpOTcCJAgBGHN63EmpNPuI3lcNWXJ7gO+i72zueZSPTi+X+AoyX6WPAurrOExa
-         IHxk+dneIbgnWAYF7bZr2xjb0TGwtqmTk26VMK68efrkSIrm67ziYaz8XCey733yfORK
-         3blPoWofHrXEgHwt2x0pBRBgbgPJmi6IhnvZBukzfSs/zNffyTtnyz9vLu3/pq24S/i4
-         lMW2j3pyeLVb1jhTamJC51XNc6dhDaFkQulDMtqkbgdy3RSSXWuIDubblJoHDhz89Hl8
-         DqIA==
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=13iR66s35EeUhXp2Ectoi0OYdgpCcLBjgrRmPgISBoM=;
+        b=uH9I6b0JCQbUYvD1LQ/glpe/cwjIy5fEvVhCo7mSI3nnWN8qaC32ctzL3bx4y9FHx1
+         8b6JffttjvceV7oO33hEAchiQ141RYZOda/yElKfLKngnwq7bfAIT8x1KuEn9d8sZAYm
+         ArSJM9+nF6Zm+FJdKPJtCR4kBp/zvoi/e2Rqc+DZAlxoQLLHBSA18HY6yUjTMAWRUX38
+         WyPhja20hFXrXImDxpdjqmJTjoSwPIR54QrpmJE3SYs488Csl26LxlYhI5g8PNBDAVuw
+         RSQ6ZxhJJqT0VbQ1ZfvEeaXUdXasb0L1jbiXU11exgVIx0Lv+whO/t376N1UiGC9ID/i
+         S4DQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=FbUU/EROxa+2gIry4MHohDpJnUD0iabB83okgZNIc04=;
-        b=ZaAzbNBhzBfT2aexHpqDFAWLx135LPtFbXIgmCEMXrb1nxWslkBnLMmLUTH95E57Sj
-         CCmDduoNsIle7oiiLRmkVkgRPpfpJCKnDDqbjL3zYyXI/ufXYSlzpu3AEkMCgH7Dp08m
-         j7NFa30RdxpJUHvk/OrmAjYv63CmxB5fAmHuLmeH48XhzCS7oLzJwAmYfIz6deNZ9OsY
-         D9LLq4YzdvOwdcwXDZwXtgmbDABrtrNxLbEB1rmZ9VKYJne+99giL71A/7qOE/e0V5Pn
-         TFIkiW5Q0vwLePXVZCIVQVY5Bl861+Vhavh/9kT2XH+YmDOTSf8AlK62lglaDmkASKj6
-         R5lA==
-X-Gm-Message-State: APjAAAWnAYjpaDzM6NPEVLy6pVPHzZ/B4IB7L8sm+1cSUmmJEShTWBBk
-        j8Q/I9ey5FCcgLIHKSkyt2VLbW5S
-X-Google-Smtp-Source: APXvYqwr6le7YzXOZE6He2lQYhAYaDm+QCOjOj/OX5MLAxhb48XQUgkTIPzNV6vdjmNTb4OXp4eUlg==
-X-Received: by 2002:a62:1b85:: with SMTP id b127mr61348467pfb.165.1558461380471;
-        Tue, 21 May 2019 10:56:20 -0700 (PDT)
-Received: from ast-mbp.dhcp.thefacebook.com ([2620:10d:c090:200::1:1eff])
-        by smtp.gmail.com with ESMTPSA id i12sm26796352pfd.33.2019.05.21.10.56.19
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 21 May 2019 10:56:19 -0700 (PDT)
-Date:   Tue, 21 May 2019 10:56:18 -0700
-From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
-To:     Kris Van Hees <kris.van.hees@oracle.com>
-Cc:     netdev@vger.kernel.org, bpf@vger.kernel.org,
-        dtrace-devel@oss.oracle.com, linux-kernel@vger.kernel.org,
-        rostedt@goodmis.org, mhiramat@kernel.org, acme@kernel.org,
-        ast@kernel.org, daniel@iogearbox.net, peterz@infradead.org
-Subject: Re: [RFC PATCH 00/11] bpf, trace, dtrace: DTrace BPF program type
- implementation and sample use
-Message-ID: <20190521175617.ipry6ue7o24a2e6n@ast-mbp.dhcp.thefacebook.com>
-References: <201905202347.x4KNl0cs030532@aserv0121.oracle.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=13iR66s35EeUhXp2Ectoi0OYdgpCcLBjgrRmPgISBoM=;
+        b=RtER0HOuE+bu16o/5Eu5mg2sz5XKmFPuZwwFRZeni7ehhj2dFhoptSH7zj9LQapJqW
+         mr+oNj3NIgr/UZASed3rxxnV7cRSvpPmPVmJtAuMaTmf3u7SnfbbbpYwujAKVa0RgyD2
+         dcRFTru/zNfWopXgnCnM35BNqGp0VgYBDdekZYiltaag+UuBTPWxDEx1b9Oe98313Ecy
+         5T03tY9jaNuFuzBaRHGDupPH4rBUT5wDrNl5P2qmYdu8qt79NycOn94U5UUC8OtkfysV
+         L04MShI/S5Pbk4HXh0xBrWaStfPqhG+TyJuD+l0wgdyiJhqD4hdDQaRWkmCFYuSQmXUP
+         +0nw==
+X-Gm-Message-State: APjAAAUxG8bklbu04lmlZnfzOKkbqCXftCKfELpQiIBKRyYPAQsN/crc
+        A3vv9ZU521Z0lixuJujsEzCLqbkiaEAh6VNDhOmOIhYe+Yg=
+X-Google-Smtp-Source: APXvYqxoVhtW6+H2OrjfsFNbhD7UYzdFtNxwmWLYrzO83Xt+JIlW+jv9qAzgJgpe0LduUYpYcryZKFWuLW7FD/A8aw8=
+X-Received: by 2002:a2e:7411:: with SMTP id p17mr26016219ljc.24.1558461453024;
+ Tue, 21 May 2019 10:57:33 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <201905202347.x4KNl0cs030532@aserv0121.oracle.com>
-User-Agent: NeoMutt/20180223
+References: <20190520115247.060821231@linuxfoundation.org> <20190520222342.wtsjx227c6qbkuua@xps.therub.org>
+ <20190521085956.GC31445@kroah.com> <CA+G9fYvHmUimtwszwo=9fDQLn+MNh8Vq3UGPaPUdhH=dEKzqxg@mail.gmail.com>
+ <20190521093849.GA9806@kroah.com> <CA+G9fYveeg_FMsL31aunJ2A9XLYk908Y1nSFw4kwkFk3h3uEiA@mail.gmail.com>
+ <20190521162142.GA2591@mit.edu>
+In-Reply-To: <20190521162142.GA2591@mit.edu>
+From:   Naresh Kamboju <naresh.kamboju@linaro.org>
+Date:   Tue, 21 May 2019 23:27:21 +0530
+Message-ID: <CA+G9fYunxonkqmkhz+zmZYuMTfyRMVBxn6PkTFfjd8tTT+bzHQ@mail.gmail.com>
+Subject: Re: ext4 regression (was Re: [PATCH 4.19 000/105] 4.19.45-stable review)
+To:     "Theodore Ts'o" <tytso@mit.edu>,
+        Naresh Kamboju <naresh.kamboju@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
+        Ben Hutchings <ben.hutchings@codethink.co.uk>,
+        lkft-triage@lists.linaro.org,
+        linux- stable <stable@vger.kernel.org>,
+        linux-ext4@vger.kernel.org,
+        Arthur Marsh <arthur.marsh@internode.on.net>,
+        Richard Weinberger <richard.weinberger@gmail.com>
+Cc:     ltp@lists.linux.it, Jan Stancek <jstancek@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 20, 2019 at 11:47:00PM +0000, Kris Van Hees wrote:
-> 
->     2. bpf: add BPF_PROG_TYPE_DTRACE
-> 
-> 	This patch adds BPF_PROG_TYPE_DTRACE as a new BPF program type, without
-> 	actually providing an implementation.  The actual implementation is
-> 	added in patch 4 (see below).  We do it this way because the
-> 	implementation is being added to the tracing subsystem as a component
-> 	that I would be happy to maintain (if merged) whereas the declaration
-> 	of the program type must be in the bpf subsystem.  Since the two
-> 	subsystems are maintained by different people, we split the
-> 	implementing patches across maintainer boundaries while ensuring that
-> 	the kernel remains buildable between patches.
+On Tue, 21 May 2019 at 21:52, Theodore Ts'o <tytso@mit.edu> wrote:
+>
+> On Tue, May 21, 2019 at 03:58:15PM +0530, Naresh Kamboju wrote:
+> > > Ted, any ideas here?  Should I drop this from the stable trees, and you
+> > > revert it from Linus's?  Or something else?
+>
+> It's safe to drop this from the stable trees while we investigate.  It
+> was always borderline for stable anyway.  (See below).
+>
+> > >
+> > > Note, I do also have 170417c8c7bb ("ext4: fix block validity checks for
+> > > journal inodes using indirect blocks") in the trees, which was supposed
+> > > to fix the problem with this patch, am I missing another one as well?
+> >
+> > FYI,
+> > I have applied fix patch 170417c8c7bb ("ext4: fix block validity checks for
+> >  journal inodes using indirect blocks") but did not fix this problem.
+>
+> Hmm... are you _sure_?  This bug was reported to me versus the
+> mainline, and the person who reported it confirmed that it did fix the
+> problem, he was seeing, and the symptoms are identical to yours.  Can
+> you double check, please?  I can't reproduce it either with that patch applied.
 
-None of these kernel patches are necessary for what you want to achieve.
-Feel free to add tools/dtrace/ directory and maintain it though.
+This bug is specific to x86_64 and i386.
 
-The new dtrace_buffer doesn't need to replicate existing bpf+kernel functionality
-and no changes are necessary in kernel/events/ring_buffer.c either.
-tools/dtrace/ user space component can use either per-cpu array map
-or hash map as a buffer to store arbitrary data into and use
-existing bpf_perf_event_output() to send it to user space via perf ring buffer.
+Steps to reproduce is,
+running LTP three test cases in sequence on x86 device.
+# cd ltp/runtest
+# cat syscalls ( only three test case)
+open12 open12
+madvise06 madvise06
+poll02 poll02
+#
 
-See, for example, how bpftrace does that.
+as Dan referring to,
 
+LTP is run using '/opt/ltp/runltp -d /scratch -f syscalls', where the
+syscalls file has been replaced with three test case names, and
+/scratch is an ext4 SATA drive. /scratch is created using 'mkfs -t ext4
+/dev/disk/by-id/ata-TOSHIBA_MG03ACA100_37O9KGKWF' and mounted to
+/scratch.
+
+Please find full test log,
+https://lkft.validation.linaro.org/scheduler/job/738661#L1356
+
+And you notice dmesg log,
+[   53.897001] EXT4-fs error (device sda): ext4_find_extent:909: inode
+#8: comm jbd2/sda-8: pblk 121667583 bad header/extent: invalid extent
+entries - magic f30a, entries 8, max 340(340), depth 0(0)
+[   53.931430] jbd2_journal_bmap: journal block not found at offset 49 on sda-8
+[   53.938480] Aborting journal on device sda-8.
+[   55.431382] EXT4-fs error (device sda):
+ext4_journal_check_start:61: Detected aborted journal
+[   55.439947] EXT4-fs (sda): Remounting filesystem read-only
+
+- Naresh
