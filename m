@@ -2,234 +2,141 @@ Return-Path: <SRS0=9PYC=TV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8442C04AAF
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 13:35:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F9FEC04AAF
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 13:37:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A581D217D9
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 13:35:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 543A7208C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 13:37:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="X8JFkZaR"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="oYE7JAF3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728604AbfEUNfb (ORCPT
+        id S1728252AbfEUNh1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 May 2019 09:35:31 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:15825 "EHLO pegase1.c-s.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728053AbfEUNfa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 May 2019 09:35:30 -0400
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 457cG727tyz9v1nk;
-        Tue, 21 May 2019 15:35:27 +0200 (CEST)
-Authentication-Results: localhost; dkim=pass
-        reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=X8JFkZaR; dkim-adsp=pass;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id iOHAg-09oyuN; Tue, 21 May 2019 15:35:27 +0200 (CEST)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 457cG70sqtz9v1nh;
-        Tue, 21 May 2019 15:35:27 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1558445727; bh=XoYcNDgG9thqPcHt2Ww/YmYYOWyHSVGlf0rWpnQtXlk=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=X8JFkZaRfoTRqwcGstExSi/f4XIJsRo1gjLSMDLaKlpnYhLctLd7eC1E8iaJ9Ef1h
-         VLpXMypqCGU0HnsrKqsyPsZ0+XqIKa4/6VWSMHBtjayXJAq994TZNDggdaw9yhjTAb
-         2e1M1c7I4L8KFWQL3k/CqhbwpfcZuljv2ZbwWSnQ=
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 42C398B80C;
-        Tue, 21 May 2019 15:35:28 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id LYbLXYWi8WHJ; Tue, 21 May 2019 15:35:28 +0200 (CEST)
-Received: from PO15451 (unknown [192.168.4.90])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 4D61B8B803;
-        Tue, 21 May 2019 15:35:27 +0200 (CEST)
-Subject: Re: [PATCH v2] powerpc/mm: mark more tlb functions as __always_inline
-To:     Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        linuxppc-dev@lists.ozlabs.org
-Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        "Aneesh Kumar K.V" <aneesh.kumar@linux.vnet.ibm.com>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        David Gibson <david@gibson.dropbear.id.au>,
-        Suraj Jitindar Singh <sjitindarsingh@gmail.com>,
-        linux-kernel@vger.kernel.org
-References: <1558444404-12254-1-git-send-email-yamada.masahiro@socionext.com>
-From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Message-ID: <f49c9bce-c77d-709d-8920-e16c64963ad1@c-s.fr>
-Date:   Tue, 21 May 2019 15:35:26 +0200
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Tue, 21 May 2019 09:37:27 -0400
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:37055 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727534AbfEUNh0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 May 2019 09:37:26 -0400
+Received: by mail-oi1-f193.google.com with SMTP id f4so12804634oib.4
+        for <linux-kernel@vger.kernel.org>; Tue, 21 May 2019 06:37:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=H+BSjdKHMeiIAULb/QyaUOTkRt09BUDaEnpHHqHJQHo=;
+        b=oYE7JAF3d5Xd55jYiP+FFNL6Ut3yy6uqIgip8mEGC8oTz1+IvRYcsGTOaUU5j8VFyi
+         qlIZN4YmYuLrs5eY9gkBjWkzNagvcbXivOL+g55DksVqlPngfPyWIjsECXhDpaTdLVRa
+         LltBxjxk+TjU9uoUpHMSUpwVOz7Qcw67t+Fhk=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=H+BSjdKHMeiIAULb/QyaUOTkRt09BUDaEnpHHqHJQHo=;
+        b=igB6E7f9bJoPCTOyE8Mc6hDuzzxLomgCA/uVsvYxRg+ER0y13LRdiY/0imH3TUuxE1
+         sgDICq2t3Vcq9akPGiaqsz89rDRaJJ+Zd+uxh9QtBzgRXrvL9CAdlVx1j1YlcU1lBgIg
+         8TG0qwn+lviBmuUpzDTePHmnuSRQLBi0fz55+D5c5R7xNk4qWUPPPNWZRNjeRSXx5nc/
+         22nQBgofEZGrueJWox9rLOJVyeuAvlu8DODfa7z43/0DnPFxC6xVXSRCn/+q28IwNano
+         hfoulTYPNprkdi85veWNbCMo4SV0on1ttVk3qURgo/eszI7yI+2MGBnz7CQylJGJH36u
+         3DJA==
+X-Gm-Message-State: APjAAAV3AbuMsBEsK19kb83ogFENq6NOwUto+V+L/IX+L0uA9lpGHPh4
+        pW7mI8dd6pXJ3TIR9rbmaBy6+FpVt2A=
+X-Google-Smtp-Source: APXvYqzB6fHrcTq3SMQEx5DdNBNDnC3OyvicOdBPVuItA6SdsZf6uKzxVY/iKXBiLy/UESFc7WCSZg==
+X-Received: by 2002:aca:7511:: with SMTP id q17mr3479862oic.138.1558445845574;
+        Tue, 21 May 2019 06:37:25 -0700 (PDT)
+Received: from mail-ot1-f51.google.com (mail-ot1-f51.google.com. [209.85.210.51])
+        by smtp.gmail.com with ESMTPSA id 23sm7617100otc.77.2019.05.21.06.37.24
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Tue, 21 May 2019 06:37:24 -0700 (PDT)
+Received: by mail-ot1-f51.google.com with SMTP id 66so16379396otq.0
+        for <linux-kernel@vger.kernel.org>; Tue, 21 May 2019 06:37:24 -0700 (PDT)
+X-Received: by 2002:a9d:58c5:: with SMTP id s5mr19522642oth.153.1558445844462;
+ Tue, 21 May 2019 06:37:24 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <1558444404-12254-1-git-send-email-yamada.masahiro@socionext.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: fr
-Content-Transfer-Encoding: 8bit
+References: <20190520224124.153005-1-mathewk@chromium.org>
+In-Reply-To: <20190520224124.153005-1-mathewk@chromium.org>
+From:   Jett Rink <jettrink@chromium.org>
+Date:   Tue, 21 May 2019 07:37:13 -0600
+X-Gmail-Original-Message-ID: <CAK+PMK47_OE-BgOYD_TD0kwxD4RG+nS9Wstg4ydUy7yV9nVmHQ@mail.gmail.com>
+Message-ID: <CAK+PMK47_OE-BgOYD_TD0kwxD4RG+nS9Wstg4ydUy7yV9nVmHQ@mail.gmail.com>
+Subject: Re: [PATCH v2] platform/x86: intel-vbtn: Report switch events when
+ event wakes device
+To:     Mathew King <mathewk@chromium.org>
+Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
+        AceLan Kao <acelan.kao@canonical.com>,
+        Andy Shevchenko <andy@infradead.org>,
+        Darren Hart <dvhart@infradead.org>,
+        platform-driver-x86@vger.kernel.org, Mario.Limonciello@dell.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-Le 21/05/2019 à 15:13, Masahiro Yamada a écrit :
-> With CONFIG_OPTIMIZE_INLINING enabled, Laura Abbott reported error
-> with gcc 9.1.1:
-> 
->    arch/powerpc/mm/book3s64/radix_tlb.c: In function '_tlbiel_pid':
->    arch/powerpc/mm/book3s64/radix_tlb.c:104:2: warning: asm operand 3 probably doesn't match constraints
->      104 |  asm volatile(PPC_TLBIEL(%0, %4, %3, %2, %1)
->          |  ^~~
->    arch/powerpc/mm/book3s64/radix_tlb.c:104:2: error: impossible constraint in 'asm'
-> 
-> Fixing _tlbiel_pid() is enough to address the warning above, but I
-> inlined more functions to fix all potential issues.
-> 
-> To meet the "i" (immediate) constraint for the asm operands, functions
-> propagating "ric" must be always inlined.
-> 
-> Fixes: 9012d011660e ("compiler: allow all arches to enable CONFIG_OPTIMIZE_INLINING")
-> Reported-by: Laura Abbott <labbott@redhat.com>
-> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-
-Reviewed-by: Christophe Leroy <christophe.leroy@c-s.fr>
-
+On Mon, May 20, 2019 at 4:41 PM Mathew King <mathewk@chromium.org> wrote:
+>
+> When a switch event, such as tablet mode/laptop mode or docked/undocked,
+> wakes a device make sure that the value of the swich is reported.
+> Without when a device is put in tablet mode from laptop mode when it is
+> suspended or vice versa the device will wake up but mode will be
+> incorrect.
+>
+> Tested by suspending a device in laptop mode and putting it in tablet
+> mode, the device resumes and is in tablet mode. When suspending the
+> device in tablet mode and putting it in laptop mode the device resumes
+> and is in laptop mode.
+>
+> Signed-off-by: Mathew King <mathewk@chromium.org>
+>
 > ---
-> 
 > Changes in v2:
->    - Do not split lines
-> 
->   arch/powerpc/mm/book3s64/hash_native.c |  2 +-
->   arch/powerpc/mm/book3s64/radix_tlb.c   | 32 ++++++++++++++++----------------
->   2 files changed, 17 insertions(+), 17 deletions(-)
-> 
-> diff --git a/arch/powerpc/mm/book3s64/hash_native.c b/arch/powerpc/mm/book3s64/hash_native.c
-> index aaa28fd..c854151 100644
-> --- a/arch/powerpc/mm/book3s64/hash_native.c
-> +++ b/arch/powerpc/mm/book3s64/hash_native.c
-> @@ -60,7 +60,7 @@ static inline void tlbiel_hash_set_isa206(unsigned int set, unsigned int is)
->    * tlbiel instruction for hash, set invalidation
->    * i.e., r=1 and is=01 or is=10 or is=11
->    */
-> -static inline void tlbiel_hash_set_isa300(unsigned int set, unsigned int is,
-> +static __always_inline void tlbiel_hash_set_isa300(unsigned int set, unsigned int is,
->   					unsigned int pid,
->   					unsigned int ric, unsigned int prs)
->   {
-> diff --git a/arch/powerpc/mm/book3s64/radix_tlb.c b/arch/powerpc/mm/book3s64/radix_tlb.c
-> index 4d84136..4d3dc10 100644
-> --- a/arch/powerpc/mm/book3s64/radix_tlb.c
-> +++ b/arch/powerpc/mm/book3s64/radix_tlb.c
-> @@ -29,7 +29,7 @@
->    * tlbiel instruction for radix, set invalidation
->    * i.e., r=1 and is=01 or is=10 or is=11
->    */
-> -static inline void tlbiel_radix_set_isa300(unsigned int set, unsigned int is,
-> +static __always_inline void tlbiel_radix_set_isa300(unsigned int set, unsigned int is,
->   					unsigned int pid,
->   					unsigned int ric, unsigned int prs)
->   {
-> @@ -150,8 +150,8 @@ static __always_inline void __tlbie_lpid(unsigned long lpid, unsigned long ric)
->   	trace_tlbie(lpid, 0, rb, rs, ric, prs, r);
->   }
->   
-> -static inline void __tlbiel_lpid_guest(unsigned long lpid, int set,
-> -				unsigned long ric)
-> +static __always_inline void __tlbiel_lpid_guest(unsigned long lpid, int set,
-> +						unsigned long ric)
->   {
->   	unsigned long rb,rs,prs,r;
->   
-> @@ -167,8 +167,8 @@ static inline void __tlbiel_lpid_guest(unsigned long lpid, int set,
->   }
->   
->   
-> -static inline void __tlbiel_va(unsigned long va, unsigned long pid,
-> -			       unsigned long ap, unsigned long ric)
-> +static __always_inline void __tlbiel_va(unsigned long va, unsigned long pid,
-> +					unsigned long ap, unsigned long ric)
->   {
->   	unsigned long rb,rs,prs,r;
->   
-> @@ -183,8 +183,8 @@ static inline void __tlbiel_va(unsigned long va, unsigned long pid,
->   	trace_tlbie(0, 1, rb, rs, ric, prs, r);
->   }
->   
-> -static inline void __tlbie_va(unsigned long va, unsigned long pid,
-> -			      unsigned long ap, unsigned long ric)
-> +static __always_inline void __tlbie_va(unsigned long va, unsigned long pid,
-> +				       unsigned long ap, unsigned long ric)
->   {
->   	unsigned long rb,rs,prs,r;
->   
-> @@ -199,8 +199,8 @@ static inline void __tlbie_va(unsigned long va, unsigned long pid,
->   	trace_tlbie(0, 0, rb, rs, ric, prs, r);
->   }
->   
-> -static inline void __tlbie_lpid_va(unsigned long va, unsigned long lpid,
-> -			      unsigned long ap, unsigned long ric)
-> +static __always_inline void __tlbie_lpid_va(unsigned long va, unsigned long lpid,
-> +					    unsigned long ap, unsigned long ric)
->   {
->   	unsigned long rb,rs,prs,r;
->   
-> @@ -239,7 +239,7 @@ static inline void fixup_tlbie_lpid(unsigned long lpid)
->   /*
->    * We use 128 set in radix mode and 256 set in hpt mode.
->    */
-> -static inline void _tlbiel_pid(unsigned long pid, unsigned long ric)
-> +static __always_inline void _tlbiel_pid(unsigned long pid, unsigned long ric)
->   {
->   	int set;
->   
-> @@ -341,7 +341,7 @@ static inline void _tlbie_lpid(unsigned long lpid, unsigned long ric)
->   	asm volatile("eieio; tlbsync; ptesync": : :"memory");
->   }
->   
-> -static inline void _tlbiel_lpid_guest(unsigned long lpid, unsigned long ric)
-> +static __always_inline void _tlbiel_lpid_guest(unsigned long lpid, unsigned long ric)
->   {
->   	int set;
->   
-> @@ -381,8 +381,8 @@ static inline void __tlbiel_va_range(unsigned long start, unsigned long end,
->   		__tlbiel_va(addr, pid, ap, RIC_FLUSH_TLB);
->   }
->   
-> -static inline void _tlbiel_va(unsigned long va, unsigned long pid,
-> -			      unsigned long psize, unsigned long ric)
-> +static __always_inline void _tlbiel_va(unsigned long va, unsigned long pid,
-> +				       unsigned long psize, unsigned long ric)
->   {
->   	unsigned long ap = mmu_get_ap(psize);
->   
-> @@ -413,8 +413,8 @@ static inline void __tlbie_va_range(unsigned long start, unsigned long end,
->   		__tlbie_va(addr, pid, ap, RIC_FLUSH_TLB);
->   }
->   
-> -static inline void _tlbie_va(unsigned long va, unsigned long pid,
-> -			      unsigned long psize, unsigned long ric)
-> +static __always_inline void _tlbie_va(unsigned long va, unsigned long pid,
-> +				      unsigned long psize, unsigned long ric)
->   {
->   	unsigned long ap = mmu_get_ap(psize);
->   
-> @@ -424,7 +424,7 @@ static inline void _tlbie_va(unsigned long va, unsigned long pid,
->   	asm volatile("eieio; tlbsync; ptesync": : :"memory");
->   }
->   
-> -static inline void _tlbie_lpid_va(unsigned long va, unsigned long lpid,
-> +static __always_inline void _tlbie_lpid_va(unsigned long va, unsigned long lpid,
->   			      unsigned long psize, unsigned long ric)
->   {
->   	unsigned long ap = mmu_get_ap(psize);
-> 
+>   - Added comment explaining why switch events are reported
+>   - Format so that checkpatch is happy
+> ---
+>  drivers/platform/x86/intel-vbtn.c | 16 ++++++++++++++--
+>  1 file changed, 14 insertions(+), 2 deletions(-)
+>
+> diff --git a/drivers/platform/x86/intel-vbtn.c b/drivers/platform/x86/intel-vbtn.c
+> index 06cd7e818ed5..a0d0cecff55f 100644
+> --- a/drivers/platform/x86/intel-vbtn.c
+> +++ b/drivers/platform/x86/intel-vbtn.c
+> @@ -76,12 +76,24 @@ static void notify_handler(acpi_handle handle, u32 event, void *context)
+>         struct platform_device *device = context;
+>         struct intel_vbtn_priv *priv = dev_get_drvdata(&device->dev);
+>         unsigned int val = !(event & 1); /* Even=press, Odd=release */
+> -       const struct key_entry *ke_rel;
+> +       const struct key_entry *ke, *ke_rel;
+>         bool autorelease;
+>
+>         if (priv->wakeup_mode) {
+> -               if (sparse_keymap_entry_from_scancode(priv->input_dev, event)) {
+> +               ke = sparse_keymap_entry_from_scancode(priv->input_dev, event);
+> +               if (ke) {
+>                         pm_wakeup_hard_event(&device->dev);
+> +
+> +                       /*
+> +                        * Switch events like tablet mode will wake the device
+> +                        * and report the new switch position to the input
+> +                        * subsystem.
+> +                        */
+Thanks for adding the comment; This looks good to me.
+
+> +                       if (ke->type == KE_SW)
+> +                               sparse_keymap_report_event(priv->input_dev,
+> +                                                          event,
+> +                                                          val,
+> +                                                          0);
+>                         return;
+>                 }
+>                 goto out_unknown;
+> --
+> 2.21.0.1020.gf2820cf01a-goog
+>
+
+Reviewed-by: Jett Rink <jettrink@chromium.org>
