@@ -2,148 +2,103 @@ Return-Path: <SRS0=9PYC=TV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8973C04AAF
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 15:34:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98BA2C04AAF
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 15:34:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9A5AA21773
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 15:34:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="lwrQ8ZED"
+	by mail.kernel.org (Postfix) with ESMTP id 7217C21773
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 15:34:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728948AbfEUPer (ORCPT
+        id S1728970AbfEUPet (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 May 2019 11:34:47 -0400
-Received: from outils.crapouillou.net ([89.234.176.41]:53094 "EHLO
-        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728666AbfEUPee (ORCPT
+        Tue, 21 May 2019 11:34:49 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:55506 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728929AbfEUPer (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 May 2019 11:34:34 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1558452871; h=from:from:sender:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=rxP1Q5uhIjz9OFASvlTDRBpE3FRAk+xErCHlHOiWEEw=;
-        b=lwrQ8ZED5J0nPprO/SHNCgqkKclI9dF/VrFx52cvg9qaRh6YH5iEJ0H3L3LsKEwLvSyA/8
-        9NopMomwokXUr9DppmFBONkD3I+LL3Hxl42REnLYB+DiahcMiNf/fOEjz+P23rs35gGJYu
-        MQB8KeGMdzZZx8/z6ZRX0TNPNcAciK8=
-From:   Paul Cercueil <paul@crapouillou.net>
-To:     Thierry Reding <thierry.reding@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-Cc:     od@zcrc.me, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>
-Subject: [PATCH 3/5] pwm: jz4740: Apply configuration atomically
-Date:   Tue, 21 May 2019 17:34:13 +0200
-Message-Id: <20190521153415.14703-3-paul@crapouillou.net>
-In-Reply-To: <20190521153415.14703-1-paul@crapouillou.net>
-References: <20190521153415.14703-1-paul@crapouillou.net>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Tue, 21 May 2019 11:34:47 -0400
+Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4LFSFkL037161
+        for <linux-kernel@vger.kernel.org>; Tue, 21 May 2019 11:34:46 -0400
+Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2smkbwtaq6-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Tue, 21 May 2019 11:34:46 -0400
+Received: from localhost
+        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <pmorel@linux.ibm.com>;
+        Tue, 21 May 2019 16:34:44 +0100
+Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
+        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Tue, 21 May 2019 16:34:42 +0100
+Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
+        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x4LFYeMX43515916
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 21 May 2019 15:34:41 GMT
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id DE392AE053;
+        Tue, 21 May 2019 15:34:40 +0000 (GMT)
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 4FFFFAE056;
+        Tue, 21 May 2019 15:34:40 +0000 (GMT)
+Received: from morel-ThinkPad-W530.boeblingen.de.ibm.com (unknown [9.152.222.56])
+        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Tue, 21 May 2019 15:34:40 +0000 (GMT)
+From:   Pierre Morel <pmorel@linux.ibm.com>
+To:     borntraeger@de.ibm.com
+Cc:     alex.williamson@redhat.com, cohuck@redhat.com,
+        linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
+        kvm@vger.kernel.org, frankja@linux.ibm.com, akrowiak@linux.ibm.com,
+        pasic@linux.ibm.com, david@redhat.com, schwidefsky@de.ibm.com,
+        heiko.carstens@de.ibm.com, freude@linux.ibm.com, mimu@linux.ibm.com
+Subject: [PATCH v9 4/4] s390: ap: kvm: Enable PQAP/AQIC facility for the guest
+Date:   Tue, 21 May 2019 17:34:37 +0200
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1558452877-27822-1-git-send-email-pmorel@linux.ibm.com>
+References: <1558452877-27822-1-git-send-email-pmorel@linux.ibm.com>
+X-TM-AS-GCONF: 00
+x-cbid: 19052115-0012-0000-0000-0000031E0270
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19052115-0013-0000-0000-00002156B413
+Message-Id: <1558452877-27822-5-git-send-email-pmorel@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-21_03:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=1 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=809 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1905210096
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is cleaner, more future-proof, and incidentally it also fixes the
-PWM resetting its config when stopped/started several times.
+AP Queue Interruption Control (AQIC) facility gives
+the guest the possibility to control interruption for
+the Cryptographic Adjunct Processor queues.
 
-Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+Signed-off-by: Pierre Morel <pmorel@linux.ibm.com>
+Reviewed-by: Tony Krowiak <akrowiak@linux.ibm.com>
 ---
- drivers/pwm/pwm-jz4740.c | 37 ++++++++++++-------------------------
- 1 file changed, 12 insertions(+), 25 deletions(-)
+ arch/s390/tools/gen_facilities.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/pwm/pwm-jz4740.c b/drivers/pwm/pwm-jz4740.c
-index c274136613c8..e73ee72df09d 100644
---- a/drivers/pwm/pwm-jz4740.c
-+++ b/drivers/pwm/pwm-jz4740.c
-@@ -83,17 +83,16 @@ static void jz4740_pwm_disable(struct pwm_chip *chip, struct pwm_device *pwm)
- 	jz4740_timer_disable(pwm->hwpwm);
- }
- 
--static int jz4740_pwm_config(struct pwm_chip *chip, struct pwm_device *pwm,
--			     int duty_ns, int period_ns)
-+static int jz4740_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
-+			    struct pwm_state *state)
- {
- 	struct jz4740_pwm_chip *jz4740 = to_jz4740(pwm->chip);
- 	unsigned long long tmp;
- 	unsigned long period, duty;
- 	unsigned int prescaler = 0;
- 	uint16_t ctrl;
--	bool is_enabled;
- 
--	tmp = (unsigned long long)clk_get_rate(jz4740->clk) * period_ns;
-+	tmp = (unsigned long long)clk_get_rate(jz4740->clk) * state->period;
- 	do_div(tmp, 1000000000);
- 	period = tmp;
- 
-@@ -105,16 +104,14 @@ static int jz4740_pwm_config(struct pwm_chip *chip, struct pwm_device *pwm,
- 	if (prescaler == 6)
- 		return -EINVAL;
- 
--	tmp = (unsigned long long)period * duty_ns;
--	do_div(tmp, period_ns);
-+	tmp = (unsigned long long)period * state->duty_cycle;
-+	do_div(tmp, state->period);
- 	duty = period - tmp;
- 
- 	if (duty >= period)
- 		duty = period - 1;
- 
--	is_enabled = jz4740_timer_is_enabled(pwm->hwpwm);
--	if (is_enabled)
--		jz4740_pwm_disable(chip, pwm);
-+	jz4740_pwm_disable(chip, pwm);
- 
- 	jz4740_timer_set_count(pwm->hwpwm, 0);
- 	jz4740_timer_set_duty(pwm->hwpwm, duty);
-@@ -125,18 +122,7 @@ static int jz4740_pwm_config(struct pwm_chip *chip, struct pwm_device *pwm,
- 
- 	jz4740_timer_set_ctrl(pwm->hwpwm, ctrl);
- 
--	if (is_enabled)
--		jz4740_pwm_enable(chip, pwm);
--
--	return 0;
--}
--
--static int jz4740_pwm_set_polarity(struct pwm_chip *chip,
--		struct pwm_device *pwm, enum pwm_polarity polarity)
--{
--	uint32_t ctrl = jz4740_timer_get_ctrl(pwm->pwm);
--
--	switch (polarity) {
-+	switch (state->polarity) {
- 	case PWM_POLARITY_NORMAL:
- 		ctrl &= ~JZ_TIMER_CTRL_PWM_ACTIVE_LOW;
- 		break;
-@@ -146,16 +132,17 @@ static int jz4740_pwm_set_polarity(struct pwm_chip *chip,
- 	}
- 
- 	jz4740_timer_set_ctrl(pwm->hwpwm, ctrl);
-+
-+	if (state->enabled)
-+		jz4740_pwm_enable(chip, pwm);
-+
- 	return 0;
- }
- 
- static const struct pwm_ops jz4740_pwm_ops = {
- 	.request = jz4740_pwm_request,
- 	.free = jz4740_pwm_free,
--	.config = jz4740_pwm_config,
--	.set_polarity = jz4740_pwm_set_polarity,
--	.enable = jz4740_pwm_enable,
--	.disable = jz4740_pwm_disable,
-+	.apply = jz4740_pwm_apply,
- 	.owner = THIS_MODULE,
- };
- 
+diff --git a/arch/s390/tools/gen_facilities.c b/arch/s390/tools/gen_facilities.c
+index 61ce5b5..aed14fc 100644
+--- a/arch/s390/tools/gen_facilities.c
++++ b/arch/s390/tools/gen_facilities.c
+@@ -114,6 +114,7 @@ static struct facility_def facility_defs[] = {
+ 		.bits = (int[]){
+ 			12, /* AP Query Configuration Information */
+ 			15, /* AP Facilities Test */
++			65, /* AP Queue Interruption Control */
+ 			156, /* etoken facility */
+ 			-1  /* END */
+ 		}
 -- 
-2.21.0.593.g511ec345e18
+2.7.4
 
