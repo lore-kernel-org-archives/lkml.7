@@ -2,202 +2,60 @@ Return-Path: <SRS0=9PYC=TV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D61BC04AAF
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 17:33:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC314C04E87
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 17:37:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 58CF22183F
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 17:33:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C21FB21019
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 17:37:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="dIy/gWb9"
+	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="FgSTNGfr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728933AbfEURdc (ORCPT
+        id S1729020AbfEURhG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 May 2019 13:33:32 -0400
-Received: from vps.xff.cz ([195.181.215.36]:45898 "EHLO vps.xff.cz"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726900AbfEURdc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 May 2019 13:33:32 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=megous.com; s=mail;
-        t=1558460009; bh=8XpWGxJiEQwnYFL7fQjANvL039ojO3exLChRMSO028s=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=dIy/gWb9Qz7kwegZvq4raKYo3HNXNjX27y7C9IzTA5mcebmVIWVMdCkUupCWGaQ81
-         OsUGgwvtEx5tMhX2kmvM0cNrc11Pw9UHzcX9MB1GXziih22AgLwnp68mqh2WvI5JsJ
-         LgGTnKlBmlSUwO5izjC1MK0JURrtSDg9FUT8p8+A=
-Date:   Tue, 21 May 2019 19:33:28 +0200
-From:   =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>
-To:     Maxime Ripard <maxime.ripard@bootlin.com>
-Cc:     Frank Lee <tiny.windzz@gmail.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        catalin.marinas@arm.com, will.deacon@arm.com,
-        bjorn.andersson@linaro.org,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        paulmck@linux.ibm.com, stefan.wahren@i2se.com,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Jagan Teki <jagan@amarulasolutions.com>,
-        Andy Gross <andy.gross@linaro.org>, rui.zhang@intel.com,
-        devicetree@vger.kernel.org, marc.w.gonzalez@free.fr,
-        Eduardo Valentin <edubezval@gmail.com>,
-        enric.balletbo@collabora.com, robh+dt@kernel.org,
-        Jonathan.Cameron@huawei.com,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        olof@lixom.net, David Miller <davem@davemloft.net>
-Subject: Re: [PATCH 2/3] thermal: sun50i: add thermal driver for h6
-Message-ID: <20190521173328.bzwbyuy6mobzyvb5@core.my.home>
-Mail-Followup-To: Maxime Ripard <maxime.ripard@bootlin.com>,
-        Frank Lee <tiny.windzz@gmail.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>, catalin.marinas@arm.com,
-        will.deacon@arm.com, bjorn.andersson@linaro.org,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        paulmck@linux.ibm.com, stefan.wahren@i2se.com,
-        Linux PM <linux-pm@vger.kernel.org>, Chen-Yu Tsai <wens@csie.org>,
-        Jagan Teki <jagan@amarulasolutions.com>,
-        Andy Gross <andy.gross@linaro.org>, rui.zhang@intel.com,
-        devicetree@vger.kernel.org, marc.w.gonzalez@free.fr,
-        Eduardo Valentin <edubezval@gmail.com>,
-        enric.balletbo@collabora.com, robh+dt@kernel.org,
-        Jonathan.Cameron@huawei.com,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        olof@lixom.net, David Miller <davem@davemloft.net>
-References: <20190512082614.9045-1-tiny.windzz@gmail.com>
- <20190512082614.9045-3-tiny.windzz@gmail.com>
- <20190512133930.t5txssl7mou2gljt@flea>
- <CAEExFWvcMbiCJ4HD0UAtv1P6AuBJ=oUdmhu886BNZhrRz483Ug@mail.gmail.com>
- <20190517073634.izdmba3yqvxviyg3@flea>
- <CAEExFWtNhTqLR+v3o6vn0Y4L65i_XsrEeiex6DNLEPEkhseCjA@mail.gmail.com>
- <20190521080515.qlni2lnmcwh7itl7@flea>
- <20190521102721.5hgks6guzlhubj6d@core.my.home>
- <20190521142734.fvhdomqhuntpop52@flea>
+        Tue, 21 May 2019 13:37:06 -0400
+Received: from a9-114.smtp-out.amazonses.com ([54.240.9.114]:37776 "EHLO
+        a9-114.smtp-out.amazonses.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726900AbfEURhG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 May 2019 13:37:06 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
+        s=6gbrjpgwjskckoa6a5zn6fwqkn67xbtw; d=amazonses.com; t=1558460225;
+        h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:MIME-Version:Content-Type:Feedback-ID;
+        bh=hc0/BUKgUjDfp5UyEzfAVwM6axcjh6mZxMvpraGYMr8=;
+        b=FgSTNGfrqsrblnIl/lCTiPv3wlbz+X9x9z5hJXCDH1UaOVOWqa/dMcb4vkX0BxhK
+        YeaQMGsZAZj1BeHhkHC79v+BSEfUb4EUB4DKL2alF9QDP1fFZ52gCHnuezf6LkqkjY7
+        9sk+ILbNN+wpagdH+/bXQS7gYYj3wbqMpKGdz+Wk=
+Date:   Tue, 21 May 2019 17:37:05 +0000
+From:   Christopher Lameter <cl@linux.com>
+X-X-Sender: cl@nuc-kabylake
+To:     Qian Cai <cai@lca.pw>
+cc:     akpm@linux-foundation.org, torvalds@linux-foundation.org,
+        me@tobin.cc, vbabka@suse.cz, penberg@kernel.org,
+        rientjes@google.com, iamjoonsoo.kim@lge.com,
+        viro@zeniv.linux.org.uk, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] slab: remove /proc/slab_allocators
+In-Reply-To: <1558036661-17577-1-git-send-email-cai@lca.pw>
+Message-ID: <0100016adb77d817-18d39284-976c-4cac-ad92-b46316534dbe-000000@email.amazonses.com>
+References: <1558036661-17577-1-git-send-email-cai@lca.pw>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190521142734.fvhdomqhuntpop52@flea>
+Content-Type: text/plain; charset=US-ASCII
+X-SES-Outgoing: 2019.05.21-54.240.9.114
+Feedback-ID: 1.us-east-1.fQZZZ0Xtj2+TD7V5apTT/NrT6QKuPgzCT/IC7XYgDKI=:AmazonSES
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 21, 2019 at 04:27:34PM +0200, Maxime Ripard wrote:
-> On Tue, May 21, 2019 at 12:27:21PM +0200, Ondřej Jirman wrote:
-> > On Tue, May 21, 2019 at 10:05:15AM +0200, Maxime Ripard wrote:
-> > > On Sat, May 18, 2019 at 01:27:39AM +0800, Frank Lee wrote:
-> > > > On Fri, May 17, 2019 at 3:36 PM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
-> > > > >
-> > > > > On Fri, May 17, 2019 at 01:51:56AM +0800, Frank Lee wrote:
-> > > > > > > > +struct sun50i_thermal_chip {
-> > > > > > > > +     int     sensor_num;
-> > > > > > > > +     int     offset;
-> > > > > > > > +     int     scale;
-> > > > > > > > +     int     ft_deviation;
-> > > > > > > > +     int     temp_calib_base;
-> > > > > > > > +     int     temp_data_base;
-> > > > > > > > +     int     (*enable)(struct tsens_device *tmdev);
-> > > > > > > > +     int     (*disable)(struct tsens_device *tmdev);
-> > > > > > > > +};
-> > > > > > >
-> > > > > > > I'm not super fond of having a lot of quirks that are not needed. If
-> > > > > > > we ever need those quirks when adding support for a new SoC, then
-> > > > > > > yeah, we should totally have some, but only when and if it's needed.
-> > > > > > >
-> > > > > > > Otherwise, the driver is more complicated for no particular reason.
-> > > > > >
-> > > > > > This is unavoidable because of the difference in soc.
-> > > > >
-> > > > > I know, but this isn't my point.
-> > > > >
-> > > > > My point is that at this time of the driver development, we don't know
-> > > > > what is going to be needed to support all of those SoCs.
-> > > > >
-> > > > > Some of the parameters you added might not be needed, some parameters
-> > > > > might be missing, we don't know. So let's keep it simple for now.
-> > > > >
-> > > > > > > > +static int tsens_probe(struct platform_device *pdev)
-> > > > > > > > +{
-> > > > > > > > +     struct tsens_device *tmdev;
-> > > > > > > > +     struct device *dev = &pdev->dev;
-> > > > > > > > +     int ret;
-> > > > > > > > +
-> > > > > > > > +     tmdev = devm_kzalloc(dev, sizeof(*tmdev), GFP_KERNEL);
-> > > > > > > > +     if (!tmdev)
-> > > > > > > > +             return -ENOMEM;
-> > > > > > > > +
-> > > > > > > > +     tmdev->dev = dev;
-> > > > > > > > +     tmdev->chip = of_device_get_match_data(&pdev->dev);
-> > > > > > > > +     if (!tmdev->chip)
-> > > > > > > > +             return -EINVAL;
-> > > > > > > > +
-> > > > > > > > +     ret = tsens_init(tmdev);
-> > > > > > > > +     if (ret)
-> > > > > > > > +             return ret;
-> > > > > > > > +
-> > > > > > > > +     ret = tsens_register(tmdev);
-> > > > > > > > +     if (ret)
-> > > > > > > > +             return ret;
-> > > > > > > > +
-> > > > > > > > +     ret = tmdev->chip->enable(tmdev);
-> > > > > > > > +     if (ret)
-> > > > > > > > +             return ret;
-> > > > > > > >
-> > > > > > > > +     platform_set_drvdata(pdev, tmdev);
-> > > > > > >
-> > > > > > > Your registration should be the very last thing you do. Otherwise, you
-> > > > > > > have a small window where the get_temp callback can be called, but the
-> > > > > > > driver will not be functional yet.
-> > > > > >
-> > > > > > No. Anyway, ths data qcquisition is ms level.
-> > > > >
-> > > > > That's kind of irrelevant. There's nothing preventing get_temp to be
-> > > > > called right away.
-> > > >
-> > > > As Ondřej said,
-> > > >
-> > > > Registration after enabling will lead to call tz update on non-registered tz
-> > > > from an interrupt handler.
-> > >
-> > > I'm probably missing something but you're not using the interrupts, so
-> > > how could an interrupt handler call it?
-> > >
-> > > Also, other drivers seem to be doing that just fine (mtk_thermal for
-> > > example), so surely there's a way?
-> >
-> > Last version is using the interrupts.
-> >
-> > Drivers do it in various ways. For example imx_thermal (and others like
-> > hisi_thermal) does it the suggested way. It enables interrupts after thermal
-> > zone registration, so that IRQ handler doesn't get invoked before the tzd is
-> > registered.
-> 
-> Enabling the interrupts after the registration makes sense, yes, but
-> filling the device private pointer with the private structure,
-> enabling the clocks, setting up the controller and so on can be done
-> before.
+On Thu, 16 May 2019, Qian Cai wrote:
 
-I agree. 
+> It turned out that DEBUG_SLAB_LEAK is still broken even after recent
+> recue efforts that when there is a large number of objects like
+> kmemleak_object which is normal on a debug kernel,
 
-	o.
-
-> Maxime
-> 
-> --
-> Maxime Ripard, Bootlin
-> Embedded Linux and Kernel engineering
-> https://bootlin.com
-
-
-
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-
+Acked-by: Christoph Lameter <cl@linux.com>
