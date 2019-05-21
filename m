@@ -2,173 +2,101 @@ Return-Path: <SRS0=9PYC=TV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6430C04AAF
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 20:15:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E12FCC04AAF
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 20:17:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D7DF217F9
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 20:15:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ABBFF217F9
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 20:17:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="lOHlEvCE"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="HqgKPjcE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727646AbfEUUPB (ORCPT
+        id S1727651AbfEUURH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 May 2019 16:15:01 -0400
-Received: from mail-eopbgr140059.outbound.protection.outlook.com ([40.107.14.59]:57189
-        "EHLO EUR01-VE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727046AbfEUUPA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 May 2019 16:15:00 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=igtS1UARn+GG/zHkLD/vh5/T59TX0yavbU/VEOUS60I=;
- b=lOHlEvCEduUseJpjuhHzv2TFf6ZYW7Y3iQCis2CRKqML+vQMfJ658VEFWwdW//jUDe/E1WuWvOaxZA4EtqAr096PYEJB7mL/mp7rI2pnEU0LN87sPYMS8ddFrNxNPgPIpKN26SXlGuTJ8o3spnlvbt1XfNbncHa3IZrKIh6SWho=
-Received: from AM6PR04MB5863.eurprd04.prod.outlook.com (20.179.1.11) by
- AM6PR04MB5079.eurprd04.prod.outlook.com (20.177.34.143) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1900.18; Tue, 21 May 2019 20:14:53 +0000
-Received: from AM6PR04MB5863.eurprd04.prod.outlook.com
- ([fe80::29f1:bb22:4881:3cbd]) by AM6PR04MB5863.eurprd04.prod.outlook.com
- ([fe80::29f1:bb22:4881:3cbd%4]) with mapi id 15.20.1900.020; Tue, 21 May 2019
- 20:14:53 +0000
-From:   Leo Li <leoyang.li@nxp.com>
-To:     Chuanhua Han <chuanhua.han@nxp.com>,
-        Shawn Guo <shawnguo@kernel.org>
-CC:     "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Ying Zhang <ying.zhang22455@nxp.com>
-Subject: RE: [EXT] Re: [PATCH] arm64: dts: ls1028a: fix watchdog device node
-Thread-Topic: [EXT] Re: [PATCH] arm64: dts: ls1028a: fix watchdog device node
-Thread-Index: AQHVBjWLXx4zf+tY20C9RmzfaaLbEqZupocAgAA7pYCAAQj3MIAFssaAgAB4RGA=
-Date:   Tue, 21 May 2019 20:14:53 +0000
-Message-ID: <AM6PR04MB58631458E6D851E4D83A77ED8F070@AM6PR04MB5863.eurprd04.prod.outlook.com>
-References: <20190509070657.18281-1-chuanhua.han@nxp.com>
- <20190517023728.GA15856@dragon>
- <AM6PR04MB4357C78FCEBA1B00AA42ED2E970B0@AM6PR04MB4357.eurprd04.prod.outlook.com>
- <AM6PR04MB586341334E62A663EE5E8BD18F0B0@AM6PR04MB5863.eurprd04.prod.outlook.com>
- <AM6PR04MB435758E1498B6A2BE0C0ACE397070@AM6PR04MB4357.eurprd04.prod.outlook.com>
-In-Reply-To: <AM6PR04MB435758E1498B6A2BE0C0ACE397070@AM6PR04MB4357.eurprd04.prod.outlook.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=leoyang.li@nxp.com; 
-x-originating-ip: [64.157.242.222]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 72ead77c-158e-4233-19c6-08d6de28fca1
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:AM6PR04MB5079;
-x-ms-traffictypediagnostic: AM6PR04MB5079:
-x-microsoft-antispam-prvs: <AM6PR04MB507979268FE077D860B1ADAD8F070@AM6PR04MB5079.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:1332;
-x-forefront-prvs: 0044C17179
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(366004)(39860400002)(396003)(346002)(376002)(136003)(13464003)(189003)(199004)(54906003)(25786009)(74316002)(110136005)(53936002)(4326008)(86362001)(6506007)(102836004)(7696005)(6116002)(3846002)(53546011)(6436002)(52536014)(76176011)(476003)(81156014)(81166006)(305945005)(8676002)(486006)(7736002)(6246003)(256004)(14444005)(8936002)(66066001)(11346002)(446003)(66476007)(76116006)(73956011)(66446008)(64756008)(66556008)(66946007)(186003)(316002)(5660300002)(68736007)(33656002)(26005)(14454004)(71190400001)(71200400001)(55016002)(9686003)(478600001)(99286004)(2906002)(229853002);DIR:OUT;SFP:1101;SCL:1;SRVR:AM6PR04MB5079;H:AM6PR04MB5863.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: fJcSXDC9cb2CiSDs7nUj3t/mXRmC07LwUDpSU6MkQaJhvby2GR5tsDPYxlM6Fq0tUeXzsa91FII1Sz28mlSpm9gr/RF6jiLJ6tVd5x9gM+RtyQiE9VBgQv7l/OS+gmKD4+IgKszv3TCTvWNA83p25NHi6FAWonZ5HHX/0v6HHL1QDJmceTS8waMbGpffvbVhd96fTIpaX6NqAIDM4OA/C4Uv5NFIZw+fBmSD+mYvkgC9xM7+T+jSpCM5nY13Y3OCHK+RUpWsZx4yq91zwQuE3tew5sowNDCc2nupXFs/SYKOO88LOQC9a6H0EfoefZuJ0KCkVo9lAisLxncgz5IVnsU6QZa3VImKuhDbNgYW4X9qyFBylNWfHyNisI16SwqQHDyYGOuz23bArztWxLVMun9w5abthpaYsLqO794wn34=
-Content-Type: text/plain; charset="gb2312"
-Content-Transfer-Encoding: base64
+        Tue, 21 May 2019 16:17:07 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:45054 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727046AbfEUURH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 May 2019 16:17:07 -0400
+Received: by mail-pg1-f195.google.com with SMTP id n2so47847pgp.11
+        for <linux-kernel@vger.kernel.org>; Tue, 21 May 2019 13:17:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:in-reply-to:references:date:message-id
+         :mime-version;
+        bh=+U7EhkgNCx5N+/sbOp9r4l15ZHheGrRGlRzMptIRhaA=;
+        b=HqgKPjcEMLYIhTFv4+lXOB6xsRwOq5dQVBJ7DwfcuN5QXB15HgJCGvWuPCM9HX/Njp
+         6olL31mUpSBOQVIQv3KZ3dIlBQ0T0GyJCrx7wdg18OL7sdvNmQxRfnjZQUi6di9OfESr
+         YKkrcHQMKBwZHPfqya4JADQu0hYZawl74107Qik8twu+G0YdVTzctrRxHJTt9odcNQiO
+         y0wZjx94ShhngdQgPCjJ2ML17wMQ7KQ8BRqJwIG4aPbU+Y0UsjsvTXHbu1TO9GRA5txn
+         iYCMr967kSpiYV9CbA7XO1M/68G7Lr1wQX1B7c5KqhgnDeDCOms6G9MIQrwrKpuYqdmA
+         5cdw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=+U7EhkgNCx5N+/sbOp9r4l15ZHheGrRGlRzMptIRhaA=;
+        b=DnPQyWNTCMIP/ZWMS9Gp3QVsyOPzaDkX1VhTsOXSJJoqhcF+iFrNbq3zmzmYL2FCfS
+         NsNGJmt4f8Cdbi87TbVQSVgKI19jslRaVWRyFRR+EMacEO5PT4ooBR+k/LFSTx9ZruNI
+         jypANM1JY4xCMrzLyek+f5CC1iirp52xIfQVlpBbN1bVrlnwTg3Qa4VZ4cZERHXBf/K+
+         orSsmbWq+8aaypfVqnJpmnVqvOo4E+4V8JTd765KPYPt5gi5IaSHIOhLh+TnqrSE95CC
+         h4MBT8wDKn4WutikBzXua/LtYo09mb/9Na0XQGIK1ptaHxq0D80yK9L1klWbkQHRnnZE
+         WmiA==
+X-Gm-Message-State: APjAAAUcmlES7sSPn4MwOr4i16LqDn/98oBBqiHEgSYBWgpZEmyAPPW5
+        WerXg05OweUdTOt7U+u4otldaA==
+X-Google-Smtp-Source: APXvYqyDm+21VAV1EKWAQN6SGykpfXphy7AS6UIfBbG7F2FB/TGrBZdTBYbfhc9xQUazNzi85VAuhA==
+X-Received: by 2002:a63:d949:: with SMTP id e9mr84615322pgj.437.1558469826585;
+        Tue, 21 May 2019 13:17:06 -0700 (PDT)
+Received: from localhost ([2601:602:9200:a1a5:b1ca:3800:3284:d770])
+        by smtp.googlemail.com with ESMTPSA id j22sm29870986pfn.121.2019.05.21.13.17.05
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 21 May 2019 13:17:05 -0700 (PDT)
+From:   Kevin Hilman <khilman@baylibre.com>
+To:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Carlo Caione <ccaione@baylibre.com>
+Cc:     linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH 08/10] ARM: dts: meson8b: update with SPDX Licence identifier
+In-Reply-To: <CAFBinCB3Q9ZZP6UwiivWB_eb47vh6j2N9Og1qZWAi6hm4+17Tg@mail.gmail.com>
+References: <20190520143812.2801-1-narmstrong@baylibre.com> <20190520143812.2801-9-narmstrong@baylibre.com> <CAFBinCB3Q9ZZP6UwiivWB_eb47vh6j2N9Og1qZWAi6hm4+17Tg@mail.gmail.com>
+Date:   Tue, 21 May 2019 13:17:04 -0700
+Message-ID: <7hsgt75zr3.fsf@baylibre.com>
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 72ead77c-158e-4233-19c6-08d6de28fca1
-X-MS-Exchange-CrossTenant-originalarrivaltime: 21 May 2019 20:14:53.6489
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR04MB5079
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogQ2h1YW5odWEgSGFuDQo+
-IFNlbnQ6IFR1ZXNkYXksIE1heSAyMSwgMjAxOSA4OjAwIEFNDQo+IFRvOiBMZW8gTGkgPGxlb3lh
-bmcubGlAbnhwLmNvbT47IFNoYXduIEd1byA8c2hhd25ndW9Aa2VybmVsLm9yZz4NCj4gQ2M6IG1h
-cmsucnV0bGFuZEBhcm0uY29tOyBsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmc7
-DQo+IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnOyBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwu
-b3JnOyBZaW5nIFpoYW5nDQo+IDx5aW5nLnpoYW5nMjI0NTVAbnhwLmNvbT4NCj4gU3ViamVjdDog
-UkU6IFtFWFRdIFJlOiBbUEFUQ0hdIGFybTY0OiBkdHM6IGxzMTAyOGE6IGZpeCB3YXRjaGRvZyBk
-ZXZpY2Ugbm9kZQ0KPiANCj4gDQo+IA0KPiA+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+
-ID4gRnJvbTogTGVvIExpDQo+ID4gU2VudDogMjAxOcTqNdTCMTjI1SA2OjAxDQo+ID4gVG86IENo
-dWFuaHVhIEhhbiA8Y2h1YW5odWEuaGFuQG54cC5jb20+OyBTaGF3biBHdW8NCj4gPiA8c2hhd25n
-dW9Aa2VybmVsLm9yZz4NCj4gPiBDYzogbWFyay5ydXRsYW5kQGFybS5jb207IGxpbnV4LWFybS1r
-ZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZzsNCj4gPiBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9y
-ZzsgbGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZzsgWWluZyBaaGFuZw0KPiA+IDx5aW5nLnpo
-YW5nMjI0NTVAbnhwLmNvbT4NCj4gPiBTdWJqZWN0OiBSRTogW0VYVF0gUmU6IFtQQVRDSF0gYXJt
-NjQ6IGR0czogbHMxMDI4YTogZml4IHdhdGNoZG9nDQo+ID4gZGV2aWNlIG5vZGUNCj4gPg0KPiA+
-DQo+ID4NCj4gPiA+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+ID4gPiBGcm9tOiBDaHVh
-bmh1YSBIYW4NCj4gPiA+IFNlbnQ6IEZyaWRheSwgTWF5IDE3LCAyMDE5IDE6MTEgQU0NCj4gPiA+
-IFRvOiBTaGF3biBHdW8gPHNoYXduZ3VvQGtlcm5lbC5vcmc+DQo+ID4gPiBDYzogTGVvIExpIDxs
-ZW95YW5nLmxpQG54cC5jb20+OyBtYXJrLnJ1dGxhbmRAYXJtLmNvbTsgbGludXgtYXJtLQ0KPiA+
-ID4ga2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmc7IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3Jn
-OyBsaW51eC0NCj4gPiA+IGtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7IFlpbmcgWmhhbmcgPHlpbmcu
-emhhbmcyMjQ1NUBueHAuY29tPg0KPiA+ID4gU3ViamVjdDogUkU6IFtFWFRdIFJlOiBbUEFUQ0hd
-IGFybTY0OiBkdHM6IGxzMTAyOGE6IGZpeCB3YXRjaGRvZw0KPiA+ID4gZGV2aWNlIG5vZGUNCj4g
-PiA+DQo+ID4gPg0KPiA+ID4NCj4gPiA+ID4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4g
-PiA+ID4gRnJvbTogU2hhd24gR3VvIDxzaGF3bmd1b0BrZXJuZWwub3JnPg0KPiA+ID4gPiBTZW50
-OiAyMDE5xOo11MIxN8jVIDEwOjM4DQo+ID4gPiA+IFRvOiBDaHVhbmh1YSBIYW4gPGNodWFuaHVh
-LmhhbkBueHAuY29tPg0KPiA+ID4gPiBDYzogTGVvIExpIDxsZW95YW5nLmxpQG54cC5jb20+OyBt
-YXJrLnJ1dGxhbmRAYXJtLmNvbTsNCj4gPiA+ID4gbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZy
-YWRlYWQub3JnOyBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZzsNCj4gPiA+ID4gbGludXgta2Vy
-bmVsQHZnZXIua2VybmVsLm9yZzsgWWluZyBaaGFuZyA8eWluZy56aGFuZzIyNDU1QG54cC5jb20+
-DQo+ID4gPiA+IFN1YmplY3Q6IFtFWFRdIFJlOiBbUEFUQ0hdIGFybTY0OiBkdHM6IGxzMTAyOGE6
-IGZpeCB3YXRjaGRvZw0KPiA+ID4gPiBkZXZpY2Ugbm9kZQ0KPiA+ID4gPg0KPiA+ID4gPiBDYXV0
-aW9uOiBFWFQgRW1haWwNCj4gPiA+ID4NCj4gPiA+ID4gT24gVGh1LCBNYXkgMDksIDIwMTkgYXQg
-MDM6MDY6NTdQTSArMDgwMCwgQ2h1YW5odWEgSGFuIHdyb3RlOg0KPiA+ID4gPiA+IGxzMTAyOGEg
-cGxhdGZvcm0gdXNlcyBzcDgwNSB3YXRjaGRvZywgYW5kIHVzZSAxLzE2IHBsYXRmb3JtDQo+ID4g
-PiA+ID4gY2xvY2sgYXMgdGltZXIgY2xvY2ssIHRoaXMgcGF0Y2ggZml4IGRldmljZSB0cmVlIG5v
-ZGUuDQo+ID4gPiA+ID4NCj4gPiA+ID4gPiBTaWduZWQtb2ZmLWJ5OiBaaGFuZyBZaW5nLTIyNDU1
-IDx5aW5nLnpoYW5nMjI0NTVAbnhwLmNvbT4NCj4gPiA+ID4gPiBTaWduZWQtb2ZmLWJ5OiBDaHVh
-bmh1YSBIYW4gPGNodWFuaHVhLmhhbkBueHAuY29tPg0KPiA+ID4gPiA+IC0tLQ0KPiA+ID4gPiA+
-ICAuLi4vYXJtNjQvYm9vdC9kdHMvZnJlZXNjYWxlL2ZzbC1sczEwMjhhLmR0c2kgfCAxOQ0KPiA+
-ID4gPiA+ICsrKysrKysrKysrKy0tLS0tLS0NCj4gPiA+ID4gPiAgMSBmaWxlIGNoYW5nZWQsIDEy
-IGluc2VydGlvbnMoKyksIDcgZGVsZXRpb25zKC0pDQo+ID4gPiA+ID4NCj4gPiA+ID4gPiBkaWZm
-IC0tZ2l0IGEvYXJjaC9hcm02NC9ib290L2R0cy9mcmVlc2NhbGUvZnNsLWxzMTAyOGEuZHRzaQ0K
-PiA+ID4gPiA+IGIvYXJjaC9hcm02NC9ib290L2R0cy9mcmVlc2NhbGUvZnNsLWxzMTAyOGEuZHRz
-aQ0KPiA+ID4gPiA+IGluZGV4IGIwNDU4MTI0OWYwYi4uMTUxMGIxODU4MjQ2IDEwMDY0NA0KPiA+
-ID4gPiA+IC0tLSBhL2FyY2gvYXJtNjQvYm9vdC9kdHMvZnJlZXNjYWxlL2ZzbC1sczEwMjhhLmR0
-c2kNCj4gPiA+ID4gPiArKysgYi9hcmNoL2FybTY0L2Jvb3QvZHRzL2ZyZWVzY2FsZS9mc2wtbHMx
-MDI4YS5kdHNpDQo+ID4gPiA+ID4gQEAgLTI4NSwxMyArMjg1LDE4IEBADQo+ID4gPiA+ID4gICAg
-ICAgICAgICAgICAgICAgICAgICNpbnRlcnJ1cHQtY2VsbHMgPSA8Mj47DQo+ID4gPiA+ID4gICAg
-ICAgICAgICAgICB9Ow0KPiA+ID4gPiA+DQo+ID4gPiA+ID4gLSAgICAgICAgICAgICB3ZG9nMDog
-d2F0Y2hkb2dAMjNjMDAwMCB7DQo+ID4gPiA+ID4gLSAgICAgICAgICAgICAgICAgICAgIGNvbXBh
-dGlibGUgPSAiZnNsLGxzMTAyOGEtd2R0IiwgImZzbCxpbXgyMS13ZHQiOw0KPiA+ID4gPiA+IC0g
-ICAgICAgICAgICAgICAgICAgICByZWcgPSA8MHgwIDB4MjNjMDAwMCAweDAgMHgxMDAwMD47DQo+
-ID4gPiA+ID4gLSAgICAgICAgICAgICAgICAgICAgIGludGVycnVwdHMgPSA8R0lDX1NQSSA1OQ0K
-PiA+IElSUV9UWVBFX0xFVkVMX0hJR0g+Ow0KPiA+ID4gPiA+IC0gICAgICAgICAgICAgICAgICAg
-ICBjbG9ja3MgPSA8JmNsb2NrZ2VuIDQgMT47DQo+ID4gPiA+ID4gLSAgICAgICAgICAgICAgICAg
-ICAgIGJpZy1lbmRpYW47DQo+ID4gPiA+ID4gLSAgICAgICAgICAgICAgICAgICAgIHN0YXR1cyA9
-ICJkaXNhYmxlZCI7DQo+ID4gPiA+ID4gKyAgICAgICAgICAgICBjbHVzdGVyMV9jb3JlMF93YXRj
-aGRvZzogd2R0QGMwMDAwMDAgew0KPiA+ID4gPg0KPiA+ID4gPiBLZWVwICd3YXRjaGRvZycgYXMg
-dGhlIG5vZGUgbmFtZSwNCj4gPiA+IFRoYW5rcyBmb3IgeW91ciByZXBsYXkNCj4gPiA+IERvIHlv
-dSBtZWFuIHJlcGxhY2UgdGhlIKGud2R0oa8gd2l0aCChrndhdGNoZG9noa8/DQo+ID4gPiBhbmQg
-a2VlcCBub2RlcyBzb3J0IGluIHVuaXQtYWRkcmVzcy4NCj4gPiA+IFdoYXQgZG9lcyB0aGlzIG1l
-YW4/DQo+ID4NCj4gPiBUaGF0IG1lYW5zIG9yZGVyIHRoZSBub2RlcyBieSB0aGUgYWRkcmVzc2Vz
-IChlLmcuIGMwMDAwMDAsIGMwMTAwMDApDQo+IFRoZSBjdXJyZW50IG9yZGVyIGlzIGNvcnJlY3Sj
-qFRoZSBmaXJzdCBpcyBjMDAwMDAwLCB0aGVuIGMwMDAwMDCjqS4NCg0KQnV0IHRoZXkgYXJlIGFk
-ZGVkIGFmdGVyIGdwaW9AMjMyMDAwMCBhbmQgYmVmb3JlIHNhdGFAMzIwMDAwMC4NCg0KPiA+DQo+
-ID4gPiA+DQo+ID4gPiA+IFNoYXduDQo+ID4gPiA+DQo+ID4gPiA+ID4gKyAgICAgICAgICAgICAg
-ICAgICAgIGNvbXBhdGlibGUgPSAiYXJtLHNwODA1IiwgImFybSxwcmltZWNlbGwiOw0KPiA+ID4g
-PiA+ICsgICAgICAgICAgICAgICAgICAgICByZWcgPSA8MHgwIDB4YzAwMDAwMCAweDAgMHgxMDAw
-PjsNCj4gPiA+ID4gPiArICAgICAgICAgICAgICAgICAgICAgY2xvY2tzID0gPCZjbG9ja2dlbiA0
-IDE1PiwgPCZjbG9ja2dlbiA0IDE1PjsNCj4gPiA+ID4gPiArICAgICAgICAgICAgICAgICAgICAg
-Y2xvY2stbmFtZXMgPSAiYXBiX3BjbGsiLCAid2RvZ19jbGsiOw0KPiA+ID4gPiA+ICsgICAgICAg
-ICAgICAgfTsNCj4gPiA+ID4gPiArDQo+ID4gPiA+ID4gKyAgICAgICAgICAgICBjbHVzdGVyMV9j
-b3JlMV93YXRjaGRvZzogd2R0QGMwMTAwMDAgew0KPiA+ID4gPiA+ICsgICAgICAgICAgICAgICAg
-ICAgICBjb21wYXRpYmxlID0gImFybSxzcDgwNSIsICJhcm0scHJpbWVjZWxsIjsNCj4gPiA+ID4g
-PiArICAgICAgICAgICAgICAgICAgICAgcmVnID0gPDB4MCAweGMwMTAwMDAgMHgwIDB4MTAwMD47
-DQo+ID4gPiA+ID4gKyAgICAgICAgICAgICAgICAgICAgIGNsb2NrcyA9IDwmY2xvY2tnZW4gNCAx
-NT4sIDwmY2xvY2tnZW4gNCAxNT47DQo+ID4gPiA+ID4gKyAgICAgICAgICAgICAgICAgICAgIGNs
-b2NrLW5hbWVzID0gImFwYl9wY2xrIiwgIndkb2dfY2xrIjsNCj4gPiA+ID4gPiAgICAgICAgICAg
-ICAgIH07DQo+ID4gPiA+ID4NCj4gPiA+ID4gPiAgICAgICAgICAgICAgIHNhdGE6IHNhdGFAMzIw
-MDAwMCB7DQo+ID4gPiA+ID4gLS0NCj4gPiA+ID4gPiAyLjE3LjENCj4gPiA+ID4gPg0K
+Martin Blumenstingl <martin.blumenstingl@googlemail.com> writes:
+
+> Hi Neil,
+>
+> On Mon, May 20, 2019 at 4:39 PM Neil Armstrong <narmstrong@baylibre.com> wrote:
+>>
+>> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+>> ---
+>>  arch/arm/boot/dts/meson8b.dtsi | 42 +---------------------------------
+>>  1 file changed, 1 insertion(+), 41 deletions(-)
+>>
+>> diff --git a/arch/arm/boot/dts/meson8b.dtsi b/arch/arm/boot/dts/meson8b.dtsi
+>> index 800cd65fc50a..c38b0828b7ec 100644
+>> --- a/arch/arm/boot/dts/meson8b.dtsi
+>> +++ b/arch/arm/boot/dts/meson8b.dtsi
+>> @@ -1,47 +1,7 @@
+>> +// SPDX-License-Identifier: GPL-2.0 OR X11
+>
+> the GPL text below states "either version 2 of the License, or (at
+> your option) any later version" so I believe this should be GPL-2.0+
+
+The "at your option" here is key.  IMO, we should stick to the more
+common kernel practice of GPL-2.0 unless the original author (Carlo
+now Cc'd) wants to make it GPL-2.0+
+
+Kevin
