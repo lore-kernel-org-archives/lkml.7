@@ -2,100 +2,87 @@ Return-Path: <SRS0=9PYC=TV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00B31C04AAF
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 10:22:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72432C04AAF
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 10:25:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C933021479
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 10:22:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 010D0216B7
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 10:25:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="rfNoC2Oq"
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="DJxLD49s"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726744AbfEUKWS (ORCPT
+        id S1727495AbfEUKZG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 May 2019 06:22:18 -0400
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:36139 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726006AbfEUKWR (ORCPT
+        Tue, 21 May 2019 06:25:06 -0400
+Received: from conssluserg-03.nifty.com ([210.131.2.82]:37659 "EHLO
+        conssluserg-03.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726344AbfEUKZF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 May 2019 06:22:17 -0400
-Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4LAC0jl012556;
-        Tue, 21 May 2019 12:22:06 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : references
- : from : message-id : date : mime-version : in-reply-to : content-type :
- content-transfer-encoding; s=STMicroelectronics;
- bh=uBeTxmf+H4C1rTAhfKgga+Zi5F1l6OoU1pJr8tM6Vkw=;
- b=rfNoC2Oq1Jrf+4wUp+9/dXRC+gN5yQWchGC1N7jqWp5ZLRTH2Uo3GAV3B9liim8ihTaI
- WNmwmu7hIW+SlHUBzC3ROixRqzRjJ/id/M44gp6wnXUmhnvFIEKcrZff/N8y0FhXY4Cq
- Tns0q54stxItIPQprzVsO/ftovA+HHZbHoR4ETl053LF9UbdAkAqZb6kzRNb9lhySzS3
- CpuOsSr0UTDPYJY5QWSsvXECNJ+pGtUHP8b0ZKDvAUj3hTVR0KnyC4NlAxzJ8LTV9TaL
- 64LhytZtpsuddaooSGJAvmFWy9iXpU7e10n9D91LpwT3iqxFn4mHNtROPeMkqFR5XItE Ww== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2sj7tu0qsj-1
-        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
-        Tue, 21 May 2019 12:22:06 +0200
-Received: from zeta.dmz-eu.st.com (zeta.dmz-eu.st.com [164.129.230.9])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 2713334;
-        Tue, 21 May 2019 10:22:06 +0000 (GMT)
-Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
-        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 05B862649;
-        Tue, 21 May 2019 10:22:06 +0000 (GMT)
-Received: from [10.48.0.204] (10.75.127.50) by SFHDAG3NODE2.st.com
- (10.75.127.8) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Tue, 21 May
- 2019 12:22:05 +0200
-Subject: Re: [PATCH v1 0/2] enable display on stm32mp157c-dk1 board
-To:     =?UTF-8?Q?Yannick_Fertr=c3=a9?= <yannick.fertre@st.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Benjamin Gaignard <benjamin.gaignard@st.com>,
-        Philippe Cornu <philippe.cornu@st.com>,
-        Fabrice Gasnier <fabrice.gasnier@st.com>
-References: <1553863438-6720-1-git-send-email-yannick.fertre@st.com>
-From:   Alexandre Torgue <alexandre.torgue@st.com>
-Message-ID: <5864f09f-4cd3-cadc-2210-4946142e582d@st.com>
-Date:   Tue, 21 May 2019 12:22:04 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Tue, 21 May 2019 06:25:05 -0400
+Received: from mail-vs1-f48.google.com (mail-vs1-f48.google.com [209.85.217.48]) (authenticated)
+        by conssluserg-03.nifty.com with ESMTP id x4LAOwZ1025211;
+        Tue, 21 May 2019 19:24:58 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-03.nifty.com x4LAOwZ1025211
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1558434298;
+        bh=g1eTgJOllZAMscUYC3eHoMSUDCzCFgfluUEbaSmpZII=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=DJxLD49sLiFHtIDhxYyfA4/ZDjjF3p6f3/vezpgTil/hC7qTF61AcTrzBgVpQD9/R
+         NCIbvIluoVMfHVT4HEv0NAPdOPqNDtcue41GSJqA0rbvC5ObjxEH5+A2yT5IaTDTSH
+         f+8fDh0d4fDJ6ecR1v4v4CAMSDAOLFxdSsX6kZRV61IrbrOuPwxuPjJEqNNVplmU+l
+         RVSf0kePEixdGTHoz/MToKWMGKu00lBsNwfFfvSlnjIfjEcGtSijsrlQV1mRMxfPAZ
+         XJoc0jFYLG/arAA4AIWoVDzqAXVWmvcCx64kPMGkeGjq21Si7ZaxRjdShnsLabK2an
+         nmZ0GZ+nUEwlg==
+X-Nifty-SrcIP: [209.85.217.48]
+Received: by mail-vs1-f48.google.com with SMTP id m1so10790360vsr.6;
+        Tue, 21 May 2019 03:24:58 -0700 (PDT)
+X-Gm-Message-State: APjAAAVr/HVL4u4eMAU0kdKrWsKf+kfPvJtwSRffsqixSbEQeJcwqHWn
+        7lp5wXfE0ZJF1y/15didGrCXP9ysw1OOaFd3X0c=
+X-Google-Smtp-Source: APXvYqwb9CDXB51Tkt/ijB8qbrhDOCbaM3Dk/o4G75bkdTd/OXX0x1q59GwzRWpTxaSJj7RsjuCtDAo5ZYgv6kZwXTk=
+X-Received: by 2002:a05:6102:3d9:: with SMTP id n25mr13609687vsq.181.1558434297247;
+ Tue, 21 May 2019 03:24:57 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <1553863438-6720-1-git-send-email-yannick.fertre@st.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.75.127.50]
-X-ClientProxiedBy: SFHDAG8NODE3.st.com (10.75.127.24) To SFHDAG3NODE2.st.com
- (10.75.127.8)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-21_01:,,
- signatures=0
+References: <20190520092856.26307-1-yamada.masahiro@socionext.com> <CAKgpwJXEHjww0aV4x033qugw75NUtkMg3vvgtCDNgWaWbps29A@mail.gmail.com>
+In-Reply-To: <CAKgpwJXEHjww0aV4x033qugw75NUtkMg3vvgtCDNgWaWbps29A@mail.gmail.com>
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+Date:   Tue, 21 May 2019 19:24:21 +0900
+X-Gmail-Original-Message-ID: <CAK7LNARn+wok5YXrnX-Vatv2-d=+awXtnBCPJmAR2nb8Fi=trw@mail.gmail.com>
+Message-ID: <CAK7LNARn+wok5YXrnX-Vatv2-d=+awXtnBCPJmAR2nb8Fi=trw@mail.gmail.com>
+Subject: Re: [PATCH] usb: dwc3: move core validatation after clock enable and
+ reset deassert
+To:     Jun Li <lijun.kernel@gmail.com>
+Cc:     Felipe Balbi <felipe.balbi@linux.intel.com>,
+        linux-usb <linux-usb@vger.kernel.org>,
+        Thinh Nguyen <Thinh.Nguyen@synopsys.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Felipe Balbi <balbi@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Yannick
+On Tue, May 21, 2019 at 6:14 PM Jun Li <lijun.kernel@gmail.com> wrote:
+>
+> There is already one identical patch for this:
+> https://patchwork.kernel.org/patch/10934937/
+> either one is okay.
 
-On 3/29/19 1:43 PM, Yannick Fertré wrote:
-> Enable display on stm32mp157c-dk1 board. I2c node must be created first.
-> 
-> Yannick Fertré (2):
->    ARM: dts: stm32: Add I2C 1 and 4 config for stm32mp157a-dk1
->    ARM: dts: stm32: enable display on stm32mp157c-dk1 board
-> 
->   arch/arm/boot/dts/stm32mp157a-dk1.dts | 78 +++++++++++++++++++++++++++++++++++
->   1 file changed, 78 insertions(+)
-> 
-> --
-> 2.7.4
-> 
+I did not notice this.
 
-Series applied on stm32-next.
+Please go ahead with yours
+since your are the first submitter.
 
-Regards
-Alex
+Thanks.
+
+
+
+
+
+-- 
+Best Regards
+Masahiro Yamada
