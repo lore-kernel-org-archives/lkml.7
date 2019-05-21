@@ -2,96 +2,270 @@ Return-Path: <SRS0=9PYC=TV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C51B5C04AAF
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 04:45:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EC18C04AAF
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 04:51:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 90E64216B7
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 04:45:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="nN24I3Kc"
+	by mail.kernel.org (Postfix) with ESMTP id 3A169216B7
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 04:51:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727012AbfEUEp6 (ORCPT
+        id S1726335AbfEUEvR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 May 2019 00:45:58 -0400
-Received: from conuserg-09.nifty.com ([210.131.2.76]:41790 "EHLO
-        conuserg-09.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725379AbfEUEp6 (ORCPT
+        Tue, 21 May 2019 00:51:17 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:35078 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725793AbfEUEvR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 May 2019 00:45:58 -0400
-Received: from localhost.localdomain (p14092-ipngnfx01kyoto.kyoto.ocn.ne.jp [153.142.97.92]) (authenticated)
-        by conuserg-09.nifty.com with ESMTP id x4L4iwCe021907;
-        Tue, 21 May 2019 13:44:58 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-09.nifty.com x4L4iwCe021907
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1558413899;
-        bh=N88lxtbnzchnuln3kdpCsIRtX8wQQcLnnyr12+pyEA4=;
-        h=From:To:Cc:Subject:Date:From;
-        b=nN24I3KcaWzO4XVgA/xvocOFaAthUzPFxiSIjfSsLehlAsUZU4jGu2yxWLX/ALLBF
-         IxNjldFTcUBGajHM5nDe/+4dK/Ps6TiO1PpvEgDqDoEE3hfLM6meVgv66oBExTF0lc
-         GAnMgw55aiGyb+IH+jGTTHGkYPUWM9U5hjh+O23e0JkHLXVPH2lZRO1sq8bkz/vMiq
-         /UkGXBJZ3IrWxUccP06WAu8ZpY33s0/l8NX00PMooZFxX3CP9aL0Kk/U/AkMgjBb4b
-         usYZ0gmIZZSxqgRu7sK8eGUB5P6eGh8Y2HuN9xMk09ZeeICFUBlGF5gsnzyZTTRWA4
-         gWVxoPFmzsozQ==
-X-Nifty-SrcIP: [153.142.97.92]
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-To:     Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>, linux-hwmon@vger.kernel.org
-Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] hwmon: (smsc47m1) fix outside array bounds warnings
-Date:   Tue, 21 May 2019 13:44:56 +0900
-Message-Id: <20190521044456.26431-1-yamada.masahiro@socionext.com>
-X-Mailer: git-send-email 2.17.1
+        Tue, 21 May 2019 00:51:17 -0400
+Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4L4lEZl115565
+        for <linux-kernel@vger.kernel.org>; Tue, 21 May 2019 00:51:15 -0400
+Received: from e34.co.us.ibm.com (e34.co.us.ibm.com [32.97.110.152])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2sm8ygb96v-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Tue, 21 May 2019 00:51:14 -0400
+Received: from localhost
+        by e34.co.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <bauerman@linux.ibm.com>;
+        Tue, 21 May 2019 05:51:14 +0100
+Received: from b03cxnp08025.gho.boulder.ibm.com (9.17.130.17)
+        by e34.co.us.ibm.com (192.168.1.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Tue, 21 May 2019 05:51:09 +0100
+Received: from b03ledav006.gho.boulder.ibm.com (b03ledav006.gho.boulder.ibm.com [9.17.130.237])
+        by b03cxnp08025.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x4L4p8LQ20447626
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 21 May 2019 04:51:08 GMT
+Received: from b03ledav006.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id ED9B6C605A;
+        Tue, 21 May 2019 04:51:07 +0000 (GMT)
+Received: from b03ledav006.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 63230C6057;
+        Tue, 21 May 2019 04:50:49 +0000 (GMT)
+Received: from morokweng.localdomain.com (unknown [9.80.203.157])
+        by b03ledav006.gho.boulder.ibm.com (Postfix) with ESMTP;
+        Tue, 21 May 2019 04:50:48 +0000 (GMT)
+From:   Thiago Jung Bauermann <bauerman@linux.ibm.com>
+To:     linuxppc-dev@lists.ozlabs.org
+Cc:     linux-kernel@vger.kernel.org, Alexey Kardashevskiy <aik@ozlabs.ru>,
+        Anshuman Khandual <anshuman.linux@gmail.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Christoph Hellwig <hch@lst.de>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Mike Anderson <andmike@linux.ibm.com>,
+        Paul Mackerras <paulus@samba.org>,
+        Ram Pai <linuxram@us.ibm.com>,
+        Claudio Carvalho <cclaudio@linux.ibm.com>,
+        Thiago Jung Bauermann <bauerman@linux.ibm.com>
+Subject: [PATCH 00/12] Secure Virtual Machine Enablement
+Date:   Tue, 21 May 2019 01:49:00 -0300
+X-Mailer: git-send-email 2.21.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 19052104-0016-0000-0000-000009B709F9
+X-IBM-SpamModules-Scores: 
+X-IBM-SpamModules-Versions: BY=3.00011134; HX=3.00000242; KW=3.00000007;
+ PH=3.00000004; SC=3.00000286; SDB=6.01206342; UDB=6.00633450; IPR=6.00987310;
+ MB=3.00026980; MTD=3.00000008; XFM=3.00000015; UTC=2019-05-21 04:51:12
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19052104-0017-0000-0000-0000434D4AF1
+Message-Id: <20190521044912.1375-1-bauerman@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-20_09:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1905210030
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Kbuild test robot reports outside array bounds warnings:
+This series enables Secure Virtual Machines (SVMs) on powerpc. SVMs use the
+Protected Execution Facility (PEF) and request to be migrated to secure
+memory during prom_init() so by default all of their memory is inaccessible
+to the hypervisor. There is an Ultravisor call that the VM can use to
+request certain pages to be made accessible to (or shared with) the
+hypervisor.
 
-  CC [M]  drivers/hwmon/smsc47m1.o
-drivers/hwmon/smsc47m1.c: In function 'fan_div_store':
-drivers/hwmon/smsc47m1.c:370:49: warning: array subscript [0, 2] is outside array bounds of 'u8[3]' {aka 'unsigned char[3]'} [-Warray-bounds]
-  tmp = 192 - (old_div * (192 - data->fan_preload[nr])
-                                ~~~~~~~~~~~~~~~~~^~~~
-drivers/hwmon/smsc47m1.c:372:19: warning: array subscript [0, 2] is outside array bounds of 'u8[3]' {aka 'unsigned char[3]'} [-Warray-bounds]
-  data->fan_preload[nr] = clamp_val(tmp, 0, 191);
-  ~~~~~~~~~~~~~~~~~^~~~
-drivers/hwmon/smsc47m1.c:373:53: warning: array subscript [0, 2] is outside array bounds of 'const u8[3]' {aka 'const unsigned char[3]'} [-Warray-bounds]
-  smsc47m1_write_value(data, SMSC47M1_REG_FAN_PRELOAD[nr],
-                             ~~~~~~~~~~~~~~~~~~~~~~~~^~~~
+The objective of these patches is to have the guest perform this request
+for buffers that need to be accessed by the hypervisor such as the LPPACAs,
+the SWIOTLB memory and the Debug Trace Log.
 
-The index field in the SENSOR_DEVICE_ATTR_R* defines is 0, 1, or 2.
-However, the compiler never knows the fact that the default in the
-switch statement is unreachable.
+The patch set applies on top of Claudio Carvalho's "kvmppc: Paravirtualize KVM
+to support ultravisor" series:
 
-Reported-by: kbuild test robot <lkp@intel.com>
-Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
----
+https://lore.kernel.org/linuxppc-dev/20190518142524.28528-1-cclaudio@linux.ibm.com/
 
- drivers/hwmon/smsc47m1.c | 4 ++++
- 1 file changed, 4 insertions(+)
+I only need the following two patches from his series:
 
-diff --git a/drivers/hwmon/smsc47m1.c b/drivers/hwmon/smsc47m1.c
-index 5f92eab24c62..e00102e05666 100644
---- a/drivers/hwmon/smsc47m1.c
-+++ b/drivers/hwmon/smsc47m1.c
-@@ -364,6 +364,10 @@ static ssize_t fan_div_store(struct device *dev,
- 		tmp |= data->fan_div[2] << 4;
- 		smsc47m1_write_value(data, SMSC47M2_REG_FANDIV3, tmp);
- 		break;
-+	default:
-+		WARN_ON(1);
-+		mutex_unlock(&data->update_lock);
-+		return -EINVAL;
- 	}
- 
- 	/* Preserve fan min */
--- 
-2.17.1
+[RFC PATCH v2 02/10] KVM: PPC: Ultravisor: Introduce the MSR_S bit
+[RFC PATCH v2 04/10] KVM: PPC: Ultravisor: Add generic ultravisor call handler
+
+Patches 2 and 3 are posted as RFC because we are still finalizing the
+details on how the ESM blob will be passed to the kernel. All other patches
+are (hopefully) in upstreamable shape.
+
+Unfortunately this series still doesn't enable the use of virtio devices in
+the secure guest. This support depends on a discussion that is currently
+ongoing with the virtio community:
+
+https://lore.kernel.org/linuxppc-dev/87womn8inf.fsf@morokweng.localdomain/
+
+This was the last time I posted this patch set:
+
+https://lore.kernel.org/linuxppc-dev/20180824162535.22798-1-bauerman@linux.ibm.com/
+
+At that time, it wasn't possible to launch a real secure guest because the
+Ultravisor was still in very early development. Now there is a relatively
+mature Ultravisor and I was able to test it using Claudio's patches in the
+host kernel, booting normally using an initramfs for the root filesystem.
+
+This is the command used to start up the guest with QEMU 4.0:
+
+qemu-system-ppc64				\
+	-nodefaults				\
+	-cpu host				\
+	-machine pseries,accel=kvm,kvm-type=HV,cap-htm=off,cap-cfpc=broken,cap-sbbc=broken,cap-ibs=broken \
+	-display none				\
+	-serial mon:stdio			\
+	-smp 1					\
+	-m 4G					\
+	-kernel /home/bauermann/vmlinux		\
+	-initrd /home/bauermann/fs_small.cpio	\
+	-append 'debug'
+
+Changelog since the RFC from August:
+
+- Patch "powerpc/pseries: Introduce option to build secure virtual machines"
+  - New patch.
+
+- Patch "powerpc: Add support for adding an ESM blob to the zImage wrapper"
+  - Patch from Benjamin Herrenschmidt, first posted here:
+    https://lore.kernel.org/linuxppc-dev/20180531043417.25073-1-benh@kernel.crashing.org/
+  - Made minor adjustments to some comments. Code is unchanged.
+
+- Patch "powerpc/prom_init: Add the ESM call to prom_init"
+  - New patch from Ram Pai and Michael Anderson.
+
+- Patch "powerpc/pseries/svm: Add helpers for UV_SHARE_PAGE and UV_UNSHARE_PAGE"
+  - New patch from Ram Pai.
+
+- Patch "powerpc/pseries: Add and use LPPACA_SIZE constant"
+  - Moved LPPACA_SIZE macro inside the CONFIG_PPC_PSERIES #ifdef.
+  - Put sizeof() operand left of comparison operator in BUILD_BUG_ON()
+    macro to appease a checkpatch warning.
+
+- Patch "powerpc/pseries/svm: Use shared memory for LPPACA structures"
+  - Moved definition of is_secure_guest() helper to this patch.
+  - Changed shared_lppaca and shared_lppaca_size from globals to static
+    variables inside alloc_shared_lppaca().
+  - Changed shared_lppaca to hold virtual address instead of physical
+    address.
+
+- Patch "powerpc/pseries/svm: Use shared memory for Debug Trace Log (DTL)"
+  - Add get_dtl_cache_ctor() macro. Suggested by Ram Pai.
+
+- Patch "powerpc/pseries/svm: Export guest SVM status to user space via sysfs"
+  - New patch from Ryan Grimm.
+
+- Patch "powerpc/pseries/svm: Disable doorbells in SVM guests"
+  - New patch from Sukadev Bhattiprolu.
+
+- Patch "powerpc/pseries/iommu: Don't use dma_iommu_ops on secure guests"
+  - New patch.
+
+- Patch "powerpc/pseries/svm: Force SWIOTLB for secure guests"
+  - New patch with code that was previously in other patches.
+
+- Patch "powerpc/configs: Enable secure guest support in pseries and ppc64 defconfigs"
+  - New patch from Ryan Grimm.
+
+- Patch "powerpc/pseries/svm: Detect Secure Virtual Machine (SVM) platform"
+  - Dropped this patch by moving its code to other patches.
+
+- Patch "powerpc/svm: Select CONFIG_DMA_DIRECT_OPS and CONFIG_SWIOTLB"
+  - No need to select CONFIG_DMA_DIRECT_OPS anymore. The CONFIG_SWIOTLB
+    change was moved to another patch and this patch was dropped.
+
+- Patch "powerpc/pseries/svm: Add memory conversion (shared/secure) helper functions"
+  - Dropped patch since the helper functions were unnecessary wrappers
+    around uv_share_page() and uv_unshare_page().
+
+- Patch "powerpc/svm: Convert SWIOTLB buffers to shared memory"
+  - Squashed into patch "powerpc/pseries/svm: Force SWIOTLB for secure
+    guests"
+
+- Patch "powerpc/svm: Don't release SWIOTLB buffers on secure guests"
+  - Squashed into patch "powerpc/pseries/svm: Force SWIOTLB for secure
+    guests"
+
+- Patch "powerpc/svm: Use SWIOTLB DMA API for all virtio devices"
+  - Dropped patch. Enablement of virtio will use a difference approach.
+
+- Patch "powerpc/svm: Force the use of bounce buffers"
+  - Squashed into patch "powerpc/pseries/svm: Force SWIOTLB for secure
+    guests"
+  - Added comment explaining why it's necessary.to force use of SWIOTLB.
+    Suggested by Christoph Hellwig.
+
+- Patch "powerpc/svm: Increase SWIOTLB buffer size"
+  - Dropped patch.
+
+
+Anshuman Khandual (3):
+  powerpc/pseries/svm: Use shared memory for LPPACA structures
+  powerpc/pseries/svm: Use shared memory for Debug Trace Log (DTL)
+  powerpc/pseries/svm: Force SWIOTLB for secure guests
+
+Benjamin Herrenschmidt (1):
+  powerpc: Add support for adding an ESM blob to the zImage wrapper
+
+Ram Pai (2):
+  powerpc/prom_init: Add the ESM call to prom_init
+  powerpc/pseries/svm: Add helpers for UV_SHARE_PAGE and UV_UNSHARE_PAGE
+
+Ryan Grimm (2):
+  powerpc/pseries/svm: Export guest SVM status to user space via sysfs
+  powerpc/configs: Enable secure guest support in pseries and ppc64
+    defconfigs
+
+Sukadev Bhattiprolu (1):
+  powerpc/pseries/svm: Disable doorbells in SVM guests
+
+Thiago Jung Bauermann (3):
+  powerpc/pseries: Introduce option to build secure virtual machines
+  powerpc/pseries: Add and use LPPACA_SIZE constant
+  powerpc/pseries/iommu: Don't use dma_iommu_ops on secure guests
+
+ .../admin-guide/kernel-parameters.txt         |   5 +
+ arch/powerpc/boot/main.c                      |  41 ++++++
+ arch/powerpc/boot/ops.h                       |   2 +
+ arch/powerpc/boot/wrapper                     |  24 +++-
+ arch/powerpc/boot/zImage.lds.S                |   8 ++
+ arch/powerpc/configs/ppc64_defconfig          |   1 +
+ arch/powerpc/configs/pseries_defconfig        |   1 +
+ arch/powerpc/include/asm/mem_encrypt.h        |  19 +++
+ arch/powerpc/include/asm/svm.h                |  31 +++++
+ arch/powerpc/include/asm/ultravisor-api.h     |   3 +
+ arch/powerpc/include/asm/ultravisor.h         |  16 ++-
+ arch/powerpc/kernel/Makefile                  |   4 +-
+ arch/powerpc/kernel/paca.c                    |  52 +++++++-
+ arch/powerpc/kernel/prom_init.c               | 124 ++++++++++++++++++
+ arch/powerpc/kernel/sysfs.c                   |  29 ++++
+ arch/powerpc/platforms/pseries/Kconfig        |  17 +++
+ arch/powerpc/platforms/pseries/Makefile       |   1 +
+ arch/powerpc/platforms/pseries/iommu.c        |   6 +-
+ arch/powerpc/platforms/pseries/setup.c        |   5 +-
+ arch/powerpc/platforms/pseries/smp.c          |   3 +-
+ arch/powerpc/platforms/pseries/svm.c          |  85 ++++++++++++
+ 21 files changed, 464 insertions(+), 13 deletions(-)
+ create mode 100644 arch/powerpc/include/asm/mem_encrypt.h
+ create mode 100644 arch/powerpc/include/asm/svm.h
+ create mode 100644 arch/powerpc/platforms/pseries/svm.c
 
