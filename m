@@ -2,109 +2,239 @@ Return-Path: <SRS0=9PYC=TV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34524C04AAF
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 13:49:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39111C04AAF
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 13:50:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1455721019
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 13:49:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF20021019
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 13:50:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="BvauOK+G"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728308AbfEUNt3 (ORCPT
+        id S1728441AbfEUNuB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 May 2019 09:49:29 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:43100 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728051AbfEUNt2 (ORCPT
+        Tue, 21 May 2019 09:50:01 -0400
+Received: from conssluserg-02.nifty.com ([210.131.2.81]:58503 "EHLO
+        conssluserg-02.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728142AbfEUNuA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 May 2019 09:49:28 -0400
-Received: from 1.general.cking.uk.vpn ([10.172.193.212])
-        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_128_CBC_SHA1:16)
-        (Exim 4.76)
-        (envelope-from <colin.king@canonical.com>)
-        id 1hT58w-0007lF-8M; Tue, 21 May 2019 13:49:26 +0000
-From:   Colin Ian King <colin.king@canonical.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=colin.king@canonical.com; prefer-encrypt=mutual; keydata=
- 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
-To:     Hans de Goede <hdegoede@redhat.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        devel@driverdev.osuosl.org
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: staging: Add rtl8723bs sdio wifi driver
-Message-ID: <9c766350-db9b-7a88-5655-54d03c8d2703@canonical.com>
-Date:   Tue, 21 May 2019 14:49:25 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Tue, 21 May 2019 09:50:00 -0400
+Received: from mail-vs1-f54.google.com (mail-vs1-f54.google.com [209.85.217.54]) (authenticated)
+        by conssluserg-02.nifty.com with ESMTP id x4LDnYw6027273;
+        Tue, 21 May 2019 22:49:35 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-02.nifty.com x4LDnYw6027273
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1558446575;
+        bh=wki7JwvrZ9RUz00+Did3BCvqytR4NxGLs+2dqfiy3MM=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=BvauOK+GHa1bl3WAMTDGrf7ni6j8z++/+NkQJOt845euJszQ/Sp+a9udFYjFe7KMM
+         bkrkjmwK99j1jnZuq2JNNyodpy/ts4ayIF9cQo8mnx6gBfzmXONS04r+rSFaHTQZkm
+         tkPn1csNMK5bdlUt7kUl9REGEKhigSKiJeN6wWFWYxV3iIbAD+bS2LcFeMaIRwvw8X
+         7H4g6lO5nBxNd1fx/O+FPdZTFlHpZgssF598bHBc9LP8HR3kisfeGcktMuTULcPF0B
+         2vZaaMpeFLANDC2Eh4J6OEy7UZ4SlH+gsCECPDTSkYRGCIWn+9agLNVwKv7uwvBdDN
+         e1RlT3lwtupag==
+X-Nifty-SrcIP: [209.85.217.54]
+Received: by mail-vs1-f54.google.com with SMTP id c24so11169656vsp.7;
+        Tue, 21 May 2019 06:49:35 -0700 (PDT)
+X-Gm-Message-State: APjAAAVDqDGsFTxDXJfmsdYQdmbBJTbsWEI/E49SIDe/Y4ICww8OIdMC
+        Vqfs9z7tFu+TJ0b1+2uOX5yqb6FkHPPwnv1sakc=
+X-Google-Smtp-Source: APXvYqxcDjZDHiMUpn9cnaLGkfZA35KnjvEwSlFRKKz1fP5fktkPYJE8WDRbS6BEAwZ7dss7nXcKto+7mKSV9eENPpM=
+X-Received: by 2002:a67:ad0f:: with SMTP id t15mr21995936vsl.179.1558446573967;
+ Tue, 21 May 2019 06:49:33 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <20190509143859.9050-1-joe.lawrence@redhat.com> <20190509143859.9050-3-joe.lawrence@redhat.com>
+In-Reply-To: <20190509143859.9050-3-joe.lawrence@redhat.com>
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+Date:   Tue, 21 May 2019 22:48:57 +0900
+X-Gmail-Original-Message-ID: <CAK7LNAT_2Tgt+3C1RVYGn47uhQ0L94uY4CFRjjooJz2m0nZnXw@mail.gmail.com>
+Message-ID: <CAK7LNAT_2Tgt+3C1RVYGn47uhQ0L94uY4CFRjjooJz2m0nZnXw@mail.gmail.com>
+Subject: Re: [PATCH v4 02/10] kbuild: Support for Symbols.list creation
+To:     Joe Lawrence <joe.lawrence@redhat.com>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        live-patching@vger.kernel.org,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Thu, May 9, 2019 at 11:40 PM Joe Lawrence <joe.lawrence@redhat.com> wrote:
+>
+> From: Joao Moreira <jmoreira@suse.de>
+>
+> For automatic resolution of livepatch relocations, a file called
+> Symbols.list is used. This file maps symbols within every compiled
+> kernel object allowing the identification of symbols whose name is
+> unique, thus relocation can be automatically inferred, or providing
+> information that helps developers when code annotation is required for
+> solving the matter.
+>
+> Add support for creating Symbols.list in the main Makefile. First,
+> ensure that built-in is compiled when CONFIG_LIVEPATCH is enabled (as
+> required to achieve a complete Symbols.list file). Define the command to
+> build Symbols.list (cmd_klp_map) and hook it in the modules rule.
+>
+> As it is undesirable to have symbols from livepatch objects inside
+> Symbols.list, make livepatches discernible by modifying
+> scripts/Makefile.build to create a .livepatch file for each livepatch
+> in $(MODVERDIR). This file then used by cmd_klp_map to identify and
+> bypass livepatches.
+>
+> For identifying livepatches during the build process, a flag variable
+> LIVEPATCH_$(basetarget).o is considered in scripts/Makefile.build. This
+> way, set this flag for the livepatch sample Makefile in
+> samples/livepatch/Makefile.
+>
+> Finally, Add a clean rule to ensure that Symbols.list is removed during
+> clean.
+>
+> Notes:
+>
+> To achieve a correct Symbols.list file, all kernel objects must be
+> considered, thus, its construction require these objects to be priorly
+> built. On the other hand, invoking scripts/Makefile.modpost without
+> having a complete Symbols.list in place would occasionally lead to
+> in-tree livepatches being post-processed incorrectly. To prevent this
+> from becoming a circular dependency, the construction of Symbols.list
+> uses non-post-processed kernel objects and such does not cause harm as
+> the symbols normally referenced from within livepatches are visible at
+> this stage. Also due to these requirements, the spot in-between modules
+> compilation and the invocation of scripts/Makefile.modpost was picked
+> for hooking cmd_klp_map.
+>
+> The approach based on .livepatch files was proposed as an alternative
+> to using MODULE_INFO statements. This approach was originally
+> proposed by Miroslav Benes as a workaround for identifying livepathes
+> without depending on modinfo during the modpost stage. It was moved to
+> this patch as the approach also shown to be useful while building
+> Symbols.list.
+>
+> Signed-off-by: Joao Moreira <jmoreira@suse.de>
+> Signed-off-by: Joe Lawrence <joe.lawrence@redhat.com>
+> ---
+>  .gitignore                 |  1 +
+>  Makefile                   | 30 ++++++++++++++++++++++++++----
+>  lib/livepatch/Makefile     |  5 +++++
+>  samples/livepatch/Makefile |  4 ++++
+>  scripts/Makefile.build     |  7 +++++++
+>  5 files changed, 43 insertions(+), 4 deletions(-)
+>
+> diff --git a/.gitignore b/.gitignore
+> index a20ac26aa2f5..5cd5758f5ffe 100644
+> --- a/.gitignore
+> +++ b/.gitignore
+> @@ -45,6 +45,7 @@
+>  *.xz
+>  Module.symvers
+>  modules.builtin
+> +Symbols.list
 
-static analysis with Coverity has detected an issues in the rtl8723bs
-wifi driver:
 
-File: drivers/staging/rtl8723bs/os_dep/ioctl_linux.c in function
-rtw_dbg_port():
+Symbols.list is created only in the top directory.
 
-CID 18480: Operands don't affect result (CONSTANT_EXPRESSION_RESULT)
-dead_error_condition: The condition (extra_arg & 7U) > 7U cannot be true.
+Please move this to
 
-        if ((extra_arg & 0x07) > 0x07)
-                padapter->driver_ampdu_spacing = 0xFF;
-        else
-                padapter->driver_ampdu_spacing = extra_arg;
+# Top-level generic files
+
+section with a leading slash.
 
 
-I'm not sure if the mask is (in)correct or the value it is being
-compared to 0x07 is (in)correct (or both!)
 
-Colin
+Also, you need to add it to
+Documentation/dontdiff
+
+
+
+
+>  #
+>  # Top-level generic files
+> diff --git a/Makefile b/Makefile
+> index abe13538a8c0..98089f9d44fe 100644
+> --- a/Makefile
+> +++ b/Makefile
+> @@ -574,10 +574,13 @@ KBUILD_BUILTIN := 1
+>  # If we have only "make modules", don't compile built-in objects.
+>  # When we're building modules with modversions, we need to consider
+>  # the built-in objects during the descend as well, in order to
+> -# make sure the checksums are up to date before we record them.
+> +# make sure the checksums are up to date before we record them. The
+> +# same applies for building livepatches, as built-in objects may hold
+> +# symbols which are referenced from livepatches and are required by
+> +# klp-convert post-processing tool for resolving these cases.
+>
+>  ifeq ($(MAKECMDGOALS),modules)
+> -  KBUILD_BUILTIN := $(if $(CONFIG_MODVERSIONS),1)
+> +  KBUILD_BUILTIN := $(if $(or $(CONFIG_MODVERSIONS), $(CONFIG_LIVEPATCH)),1)
+>  endif
+>
+>  # If we have "make <whatever> modules", compile modules
+> @@ -1261,9 +1264,25 @@ all: modules
+>  # duplicate lines in modules.order files.  Those are removed
+>  # using awk while concatenating to the final file.
+>
+> +quiet_cmd_klp_map = KLP     Symbols.list
+> +SLIST = $(objtree)/Symbols.list
+
+
+Please do not define SLIST.
+
+Use Symbols.list directly.
+
+
+
+
+> +
+> +define cmd_klp_map
+> +       $(shell echo "klp-convert-symbol-data.0.1" > $(SLIST))                          \
+> +       $(shell echo "*vmlinux" >> $(SLIST))                                            \
+> +       $(shell nm -f posix $(objtree)/vmlinux | cut -d\  -f1 >> $(SLIST))              \
+> +       $(foreach m, $(wildcard $(MODVERDIR)/*.mod),                                    \
+> +               $(eval mod = $(patsubst %.ko,%.o,$(shell head -n1 $(m))))               \
+> +               $(if $(wildcard $(MODVERDIR)/$(shell basename -s .o $(mod)).livepatch),,\
+> +                       $(eval fmod = $(subst $(quote),_,$(subst -,_,$(mod))))          \
+> +                       $(shell echo "*$(shell basename -s .o $(fmod))" >> $(SLIST))    \
+> +                       $(shell nm -f posix $(mod) | cut -d\  -f1 >> $(SLIST))))
+> +endef
+> +
+>  PHONY += modules
+>  modules: $(vmlinux-dirs) $(if $(KBUILD_BUILTIN),vmlinux) modules.builtin
+>         $(Q)$(AWK) '!x[$$0]++' $(vmlinux-dirs:%=$(objtree)/%/modules.order) > $(objtree)/modules.order
+> +       $(if $(CONFIG_LIVEPATCH), $(call cmd,klp_map))
+>         @$(kecho) '  Building modules, stage 2.';
+>         $(Q)$(MAKE) -f $(srctree)/scripts/Makefile.modpost
+>
+> @@ -1350,7 +1369,7 @@ clean: rm-dirs  := $(CLEAN_DIRS)
+>  clean: rm-files := $(CLEAN_FILES)
+>  clean-dirs      := $(addprefix _clean_, . $(vmlinux-alldirs) Documentation samples)
+>
+> -PHONY += $(clean-dirs) clean archclean vmlinuxclean
+> +PHONY += $(clean-dirs) clean archclean vmlinuxclean klpclean
+>  $(clean-dirs):
+>         $(Q)$(MAKE) $(clean)=$(patsubst _clean_%,%,$@)
+>
+> @@ -1358,7 +1377,10 @@ vmlinuxclean:
+>         $(Q)$(CONFIG_SHELL) $(srctree)/scripts/link-vmlinux.sh clean
+>         $(Q)$(if $(ARCH_POSTLINK), $(MAKE) -f $(ARCH_POSTLINK) clean)
+>
+> -clean: archclean vmlinuxclean
+> +klpclean:
+> +       $(Q) rm -f $(SLIST)
+
+
+klpclean is unneeded.
+
+Add it to CLEAN_FILES
+
+CLEAN_FILES += modules.builtin.modinfo Systems.list
+
+
+
+
+-- 
+Best Regards
+Masahiro Yamada
