@@ -2,115 +2,133 @@ Return-Path: <SRS0=9PYC=TV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ADAAEC04AAF
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 08:26:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01FE0C04AAF
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 08:27:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 833BE216B7
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 08:26:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558427177;
-	bh=KRPa00nR4Ldl0DxMuPSToYLVDE816ZV21OEy3V8ULIs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=hvtDMgoiyezmacDQO2bn0zl4m+qk9dTBMwFvAaFIde8Ql4wiYIkERDlDzl9LZHsho
-	 RKCU2olXyqc0PPY1g3CYpuM0EiFtIsPaWBkAFN3ZJv/T8tlwUt4TwmFLl0X8Px3v2Z
-	 9ObkFz+UMfNJQr3X+t5izBgpQ9S41ryqByQjIKQM=
+	by mail.kernel.org (Postfix) with ESMTP id C970E2173E
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 08:26:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="PO/+Dkkq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727035AbfEUI0Q (ORCPT
+        id S1726917AbfEUI06 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 May 2019 04:26:16 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:33246 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726389AbfEUI0Q (ORCPT
+        Tue, 21 May 2019 04:26:58 -0400
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:35719 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726344AbfEUI06 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 May 2019 04:26:16 -0400
-Received: by mail-wr1-f66.google.com with SMTP id d9so4530563wrx.0
-        for <linux-kernel@vger.kernel.org>; Tue, 21 May 2019 01:26:15 -0700 (PDT)
+        Tue, 21 May 2019 04:26:58 -0400
+Received: by mail-ed1-f67.google.com with SMTP id p26so28136133edr.2
+        for <linux-kernel@vger.kernel.org>; Tue, 21 May 2019 01:26:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=viWdTQ9tUhJopSAfRBIkklI9VecRmEX6du25WNkr2qI=;
-        b=WMH8l2uIrdCX0ML2d36ILtIsa+Y739OvpGMoOcqFiyKZI+NbNLqKHV//aVGCi/Wab0
-         whMV8dhZt72pE91lU4vvu4jOwTc4TEoaMXpKi+a6nXNV4CwuWBMov9x2R7kRAj2+JC0d
-         i+yre5+BaUJgZh5wjsCokJprjWWTE7Hf7k/fAvqZkv82rC+8XKmMuY6sm96JUSqNoJk9
-         JJ0QFSXA6SfOUvPIr6bgcPBN5P5teXuwxc77ABGCPkDuCPuAACfrq402gCYKBHFmNawC
-         KQaJwpcIxmlEN59ddnM4zZQqg/S8ahZvoMeeqOEeq29H/ZoufEj2hkl7/LwLZovf+qhE
-         0fGg==
+        d=ffwll.ch; s=google;
+        h=sender:date:from:to:cc:subject:message-id:mail-followup-to
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=sflGufuJmBGrWVV7kp0a21Ak4l+RlvLDFK6F90TjUIk=;
+        b=PO/+DkkqU2QMkKp1T2YLYKA9bqN7zoE0orBMP1ZgOfRn1ykb8Rhc2OAb4f/CU2LToz
+         f+jqxUBiuPwEGvvw2rEqeXFB3bIkuNt7ATmh9dscN4EhugZWbZGLxTJjP0r+j2I6kP5S
+         qU9Gy87QX7JdjaLotxtlAsPUGE7EsUdqsMwwU=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=viWdTQ9tUhJopSAfRBIkklI9VecRmEX6du25WNkr2qI=;
-        b=Sq+0XHjv0SC1+AQJEm2K2t2yyGahDDQ5uy/6xB6hmFqOOkVmnIitqF3zpirgYU8rcB
-         NmnP/s3yCeR+TpWm6wqyLJndMBegfVFWv0+0PsBGqGQm64jCt8rFvqEcfYbWS90ZVVKG
-         yeX7JPTnU017DHt3UpxIvMAfk0sr0G+vK1KiY6OOus9H3Qg3J9EKL3cQrHRjPfKHvA5z
-         A4GwAAYwasMXJHHNXWalRGkCr/9AO0M+T6kycqG8NQvZ/FCKsVcw0F1hsbcZspv1gMnD
-         q7LVLAFVEr7efwEyzAyewEzBdTfvKBrLXoya7kd2KadYEkuFgJL/ZB1rwBW8s5Y16Zmj
-         USHg==
-X-Gm-Message-State: APjAAAVi+3FtD+thQHgFP6enBq3+Kr2vBaOUj7n09ZFnr+DZCmw4b27n
-        j/UVCdFhXA/YRj1cNicYnkA=
-X-Google-Smtp-Source: APXvYqw8gIPx4SIjsM20PuAs/2CSML+C3F9B185MKVvhky4GBvtn4BZ6jcDQSvIJxlX8Eq0hSs7Hzw==
-X-Received: by 2002:adf:cf03:: with SMTP id o3mr4743916wrj.5.1558427174435;
-        Tue, 21 May 2019 01:26:14 -0700 (PDT)
-Received: from gmail.com (2E8B0CD5.catv.pool.telekom.hu. [46.139.12.213])
-        by smtp.gmail.com with ESMTPSA id l14sm18337076wrt.57.2019.05.21.01.26.13
+         :mail-followup-to:references:mime-version:content-disposition
+         :in-reply-to:user-agent;
+        bh=sflGufuJmBGrWVV7kp0a21Ak4l+RlvLDFK6F90TjUIk=;
+        b=cwoc6YubZ+9CQXZRNgUSVOCWP+zPlepzF/0X0YW6+uSExeV1GyfZP5NV1r73nJQ62j
+         0WiYNJITOzRt3Igj4H8u2WuhhslwMISceMveYfobf4ZVVIqyWeaqXhtGMedFRFYeKU+V
+         h3Kbx4Y3hwTBih4ajVC1IrSdjvByaergPFQFkfWNL7Tsb2P2SyuJ98VmQtJM/xslupWf
+         qi6XfKUH+IcI/88KvXUlKj07itvjDabeudRh7MQBnEaXwpOVj91QQXq8+ErXnvQuZrvL
+         V869j8J49q0W303ea2iAbeoGu4vsOcnld3++1KDFIrvEKvGNmQneFAyNQNRoV9460o9L
+         o2xQ==
+X-Gm-Message-State: APjAAAWv5S8rHU03IIjCdDFMNiYsAqMiAMpkQT5qe4LuebgJe+m4NFtj
+        Jqk4nP0XvrED+oqYuj/BxIhwZg==
+X-Google-Smtp-Source: APXvYqwA6mKKB38IoocAh7xCa1f9JR4yiOByi2IoSmFpDSnNdZHvj/wmfZQp19/9E2v9ZWOHBhQsHA==
+X-Received: by 2002:a50:addc:: with SMTP id b28mr82524241edd.7.1558427216045;
+        Tue, 21 May 2019 01:26:56 -0700 (PDT)
+Received: from phenom.ffwll.local ([2a02:168:569e:0:3106:d637:d723:e855])
+        by smtp.gmail.com with ESMTPSA id d24sm6190111edb.5.2019.05.21.01.26.55
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 21 May 2019 01:26:13 -0700 (PDT)
-Date:   Tue, 21 May 2019 10:26:11 +0200
-From:   Ingo Molnar <mingo@kernel.org>
-To:     Stephane Eranian <eranian@google.com>
-Cc:     linux-kernel@vger.kernel.org, peterz@infradead.org,
-        ak@linux.intel.com, kan.liang@intel.com, jolsa@redhat.com,
-        vincent.weaver@maine.edu
-Subject: Re: [PATCH v2] perf/x86/intel/ds: fix EVENT vs. UEVENT PEBS
- constraints
-Message-ID: <20190521082611.GA34626@gmail.com>
-References: <20190521005246.423-1-eranian@google.com>
+        Tue, 21 May 2019 01:26:55 -0700 (PDT)
+Date:   Tue, 21 May 2019 10:26:53 +0200
+From:   Daniel Vetter <daniel@ffwll.ch>
+To:     Pekka Paalanen <ppaalanen@gmail.com>
+Cc:     Daniel Vetter <daniel@ffwll.ch>, Eric Anholt <eric@anholt.net>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org
+Subject: Re: [PATCH 2/2] drm/doc: Document expectation that userspace review
+ looks at kernel uAPI.
+Message-ID: <20190521082653.GJ21222@phenom.ffwll.local>
+Mail-Followup-To: Pekka Paalanen <ppaalanen@gmail.com>,
+        Eric Anholt <eric@anholt.net>, linux-kernel@vger.kernel.org,
+        dri-devel@lists.freedesktop.org
+References: <20190424185617.16865-1-eric@anholt.net>
+ <20190424185617.16865-2-eric@anholt.net>
+ <20190424193636.GU9857@phenom.ffwll.local>
+ <20190521104734.2d8853ac@eldfell.localdomain>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190521005246.423-1-eranian@google.com>
+In-Reply-To: <20190521104734.2d8853ac@eldfell.localdomain>
+X-Operating-System: Linux phenom 4.14.0-3-amd64 
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, May 21, 2019 at 10:47:34AM +0300, Pekka Paalanen wrote:
+> On Wed, 24 Apr 2019 21:36:36 +0200
+> Daniel Vetter <daniel@ffwll.ch> wrote:
+> 
+> > On Wed, Apr 24, 2019 at 11:56:17AM -0700, Eric Anholt wrote:
+> > > The point of this review process is that userspace using the new uAPI
+> > > can actually live with the uAPI being provided, and it's hard to know
+> > > that without having actually looked into a kernel patch yourself.
+> > > 
+> > > Signed-off-by: Eric Anholt <eric@anholt.net>
+> > > Suggested-by: Daniel Vetter <daniel.vetter@ffwll.ch>
+> > > ---
+> > >  Documentation/gpu/drm-uapi.rst | 4 +++-
+> > >  1 file changed, 3 insertions(+), 1 deletion(-)
+> > > 
+> > > diff --git a/Documentation/gpu/drm-uapi.rst b/Documentation/gpu/drm-uapi.rst
+> > > index 8e5545dfbf82..298424b98d99 100644
+> > > --- a/Documentation/gpu/drm-uapi.rst
+> > > +++ b/Documentation/gpu/drm-uapi.rst
+> > > @@ -85,7 +85,9 @@ leads to a few additional requirements:
+> > >  - The userspace side must be fully reviewed and tested to the standards of that
+> > >    userspace project. For e.g. mesa this means piglit testcases and review on the
+> > >    mailing list. This is again to ensure that the new interface actually gets the
+> > > -  job done.
+> > > +  job done.  The userspace-side reviewer should also provide at least an
+> > > +  Acked-by on the kernel uAPI patch indicating that they've looked at how the
+> > > +  kernel side is implementing the new feature being used.  
+> > 
+> > Answers a question that just recently came up on merging new kms
+> > properties.
+> > 
+> > Reviewed-by: Daniel Vetter <daniel.vetter@ffwll.ch>
+> 
+> Hi,
+> 
+> for the record, I personally will not be able to provide such Acked-by
+> tag according to kernel review rules, because I am completely unfamiliar
+> with kernel DRM internals and cannot review kernel code at all. This
+> might make people expecting Weston to prove their uAPI disappointed,
+> since there are very few Weston reviewers available.
+> 
+> If you meant something else, please word it to that you actually meant.
 
-* Stephane Eranian <eranian@google.com> wrote:
-
-> This patch fixes an issue revealed by the following commit:
-> Commit 6b89d4c1ae85 ("perf/x86/intel: Fix INTEL_FLAGS_EVENT_CONSTRAINT* masking")
-> 
-> That patch modified INTEL_FLAGS_EVENT_CONSTRAINT() to only look at the event code
-> when matching a constraint. If code+umask were needed, then the
-> INTEL_FLAGS_UEVENT_CONSTRAINT() macro was needed instead.
-> This broke with some of the constraints for PEBS events.
-> Several of them, including the one used for cycles:p, cycles:pp, cycles:ppp
-> fell in that category and caused the event to be rejected in PEBS mode.
-> In other words, on some platforms a cmdline such as:
-> 
->   $ perf top -e cycles:pp
-> 
->   would fail with EINVAL.
-> 
-> This patch fixes this issue by properly using INTEL_FLAGS_UEVENT_CONSTRAINT()
-> when needed in the PEBS constraint tables.
-> 
-> In v2:
->   - add fixes for Core2, Nehalem, Silvermont, and Atom
-> 
-> Reported-by: Ingo Molnar <mingo@kernel.org>
-> Signed-off-by: Stephane Eranian <eranian@google.com>
-> ---
->  arch/x86/events/intel/ds.c | 28 ++++++++++++++--------------
->  1 file changed, 14 insertions(+), 14 deletions(-)
-
-Thanks Stephane for the quick fixes!
-
-	Ingo
+Hm right, that wording is putting a bit too high a bar. We want the
+userspace view point here, not force userspace people to review kernel
+code. I'll try to clarify this a bit better.
+-Daniel
+-- 
+Daniel Vetter
+Software Engineer, Intel Corporation
+http://blog.ffwll.ch
