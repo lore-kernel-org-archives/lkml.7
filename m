@@ -2,181 +2,94 @@ Return-Path: <SRS0=9PYC=TV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E66CCC04AAF
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 16:44:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39CF8C04E87
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 16:46:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BFFCA2173E
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 16:44:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0122E217D7
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 16:46:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1558457175;
+	bh=I/hZac6f/z2/Fyqy2qd623hagnktGp7xURyaL2uNcmw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=XWy6KjOI4xb3iZGyFSlK6nRl7fh4kwws8EjuvuKasqQZJo/aHu4EPIrwP+bytxPrr
+	 dphuCJ8dR6EmxRJsD99qcntGsT+TX+b2XvnbHHPIcOLdTBMlfCQmmo2CV/h1dZy81z
+	 R+jSOwxAeA31/ra4NBsu8i+Hwf0azL3PUj5UKv+U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729066AbfEUQot (ORCPT
+        id S1728911AbfEUQqO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 May 2019 12:44:49 -0400
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:38660 "EHLO
-        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727925AbfEUQos (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 May 2019 12:44:48 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 60B49374;
-        Tue, 21 May 2019 09:44:48 -0700 (PDT)
-Received: from localhost (unknown [10.37.6.20])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id EAC5F3F718;
-        Tue, 21 May 2019 09:44:47 -0700 (PDT)
-Date:   Tue, 21 May 2019 17:44:46 +0100
-From:   Andrew Murray <andrew.murray@arm.com>
-To:     Xiang Zheng <zhengxiang9@huawei.com>
-Cc:     linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu,
-        linux-kernel@vger.kernel.org, marc.zyngier@arm.com
-Subject: Re: [PATCH] KVM: ARM64: Update perf event when setting PMU count
- value
-Message-ID: <20190521164445.GW8268@e119886-lin.cambridge.arm.com>
-References: <20190519100559.7188-1-zhengxiang9@huawei.com>
+        Tue, 21 May 2019 12:46:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35022 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727965AbfEUQqO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 May 2019 12:46:14 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 16EF42173E;
+        Tue, 21 May 2019 16:46:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1558457173;
+        bh=I/hZac6f/z2/Fyqy2qd623hagnktGp7xURyaL2uNcmw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Hw1puu1RZHRekEVpsSndTUuiGiVE7jFBczM4KMssjdhSKqPfr94yjnky4eN7Gj5gM
+         DgmigpBLAzm24yUVYz1SsJu69v/+sSOfZbHDNPnFtYoaFTOof53+MTA+f9pu8FNDbr
+         nK92UMfdOYYS8CCxovn9I9kPTyDHKxhZCS+9R0wk=
+Date:   Tue, 21 May 2019 18:46:11 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Naresh Kamboju <naresh.kamboju@linaro.org>
+Cc:     open list <linux-kernel@vger.kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
+        Ben Hutchings <ben.hutchings@codethink.co.uk>,
+        lkft-triage@lists.linaro.org,
+        linux- stable <stable@vger.kernel.org>
+Subject: Re: [PATCH 4.9 00/44] 4.9.178-stable review
+Message-ID: <20190521164611.GA8787@kroah.com>
+References: <20190520115230.720347034@linuxfoundation.org>
+ <CA+G9fYs+Ft2v_Xr0KJ3AOdbTTJJ8YB6vgLc-ps6TiVM4nyftLw@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20190519100559.7188-1-zhengxiang9@huawei.com>
-User-Agent: Mutt/1.10.1+81 (426a6c1) (2018-08-26)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CA+G9fYs+Ft2v_Xr0KJ3AOdbTTJJ8YB6vgLc-ps6TiVM4nyftLw@mail.gmail.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, May 19, 2019 at 06:05:59PM +0800, Xiang Zheng wrote:
-> Guest will adjust the sample period and set PMU counter value when
-> it takes a long time to handle the PMU interrupts.
+On Tue, May 21, 2019 at 04:04:35PM +0530, Naresh Kamboju wrote:
+> On Mon, 20 May 2019 at 17:47, Greg Kroah-Hartman
+> <gregkh@linuxfoundation.org> wrote:
+> >
+> > This is the start of the stable review cycle for the 4.9.178 release.
+> > There are 44 patches in this series, all will be posted as a response
+> > to this one.  If anyone has any issues with these being applied, please
+> > let me know.
+> >
+> > Responses should be made by Wed 22 May 2019 11:50:58 AM UTC.
+> > Anything received after that time might be too late.
+> >
+> > The whole patch series can be found in one patch at:
+> >         https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.9.178-rc1.gz
+> > or in the git tree and branch at:
+> >         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.9.y
+> > and the diffstat can be found below.
+> >
+> > thanks,
+> >
+> > greg k-h
 > 
-> However, we don't have a corresponding change on the virtual PMU
-> which is emulated via a perf event. It could cause a large number
-> of PMU interrupts injected to guest. Then guest will get hang for
-> handling these interrupts.
+> Results from Linaro’s test farm.
+> No regressions on arm64, arm, x86_64, and i386.
 
-Yes this is indeed an issue. I believe I've addressed this in my 'chained
-pmu' series - the relevant patch is here...
+Thanks for testing this one, and all of the others.
 
-https://lists.cs.columbia.edu/pipermail/kvmarm/2019-May/035933.html
-
-Some other comments below.
-
-> 
-> So update the sample_period of perf event if the counter value is
-> changed to avoid this case.
-> 
-> Signed-off-by: Xiang Zheng <zhengxiang9@huawei.com>
-> ---
->  virt/kvm/arm/pmu.c | 54 +++++++++++++++++++++++++++++++++++++++++++++---------
->  1 file changed, 45 insertions(+), 9 deletions(-)
-> 
-> diff --git a/virt/kvm/arm/pmu.c b/virt/kvm/arm/pmu.c
-> index 1c5b76c..cbad3ec 100644
-> --- a/virt/kvm/arm/pmu.c
-> +++ b/virt/kvm/arm/pmu.c
-> @@ -24,6 +24,11 @@
->  #include <kvm/arm_pmu.h>
->  #include <kvm/arm_vgic.h>
->  
-> +static void kvm_pmu_stop_counter(struct kvm_vcpu *vcpu, struct kvm_pmc *pmc);
-> +static struct perf_event *kvm_pmu_create_perf_event(struct kvm_vcpu *vcpu,
-> +						    struct kvm_pmc *pmc,
-> +						    struct perf_event_attr *attr);
-> +
->  /**
->   * kvm_pmu_get_counter_value - get PMU counter value
->   * @vcpu: The vcpu pointer
-> @@ -57,11 +62,29 @@ u64 kvm_pmu_get_counter_value(struct kvm_vcpu *vcpu, u64 select_idx)
->   */
->  void kvm_pmu_set_counter_value(struct kvm_vcpu *vcpu, u64 select_idx, u64 val)
->  {
-> -	u64 reg;
-> +	u64 reg, counter, old_sample_period;
-> +	struct kvm_pmu *pmu = &vcpu->arch.pmu;
-> +	struct kvm_pmc *pmc = &pmu->pmc[select_idx];
-> +	struct perf_event *event;
-> +	struct perf_event_attr attr;
->  
->  	reg = (select_idx == ARMV8_PMU_CYCLE_IDX)
->  	      ? PMCCNTR_EL0 : PMEVCNTR0_EL0 + select_idx;
->  	__vcpu_sys_reg(vcpu, reg) += (s64)val - kvm_pmu_get_counter_value(vcpu, select_idx);
-> +
-> +	if (pmc->perf_event) {
-> +		attr = pmc->perf_event->attr;
-> +		old_sample_period = attr.sample_period;
-> +		counter = kvm_pmu_get_counter_value(vcpu, select_idx);
-> +		attr.sample_period = (-counter) & pmc->bitmask;
-> +		if (attr.sample_period == old_sample_period)
-> +			return;
-
-I'd be interested to know how often this would evaluate to true.
-
-> +
-> +		kvm_pmu_stop_counter(vcpu, pmc);
-> +		event = kvm_pmu_create_perf_event(vcpu, pmc, &attr);
-
-I'm not sure it's necessary to change the prototype of kvm_pmu_create_perf_event
-as this function will recalculate the sample period based on the updated counter
-value anyway.
-
-Thanks,
-
-Andrew Murray
-
-> +		if (event)
-> +			pmc->perf_event = event;
-> +	}
->  }
->  
->  /**
-> @@ -303,6 +326,24 @@ static void kvm_pmu_perf_overflow(struct perf_event *perf_event,
->  	}
->  }
->  
-> +static struct perf_event *kvm_pmu_create_perf_event(struct kvm_vcpu *vcpu,
-> +						    struct kvm_pmc *pmc,
-> +						    struct perf_event_attr *attr)
-> +{
-> +	struct perf_event *event;
-> +
-> +	event = perf_event_create_kernel_counter(attr, -1, current,
-> +						 kvm_pmu_perf_overflow, pmc);
-> +
-> +	if (IS_ERR(event)) {
-> +		pr_err_once("kvm: pmu event creation failed %ld\n",
-> +			    PTR_ERR(event));
-> +		return NULL;
-> +	}
-> +
-> +	return event;
-> +}
-> +
->  /**
->   * kvm_pmu_software_increment - do software increment
->   * @vcpu: The vcpu pointer
-> @@ -416,15 +457,10 @@ void kvm_pmu_set_counter_event_type(struct kvm_vcpu *vcpu, u64 data,
->  	/* The initial sample period (overflow count) of an event. */
->  	attr.sample_period = (-counter) & pmc->bitmask;
->  
-> -	event = perf_event_create_kernel_counter(&attr, -1, current,
-> -						 kvm_pmu_perf_overflow, pmc);
-> -	if (IS_ERR(event)) {
-> -		pr_err_once("kvm: pmu event creation failed %ld\n",
-> -			    PTR_ERR(event));
-> -		return;
-> -	}
-> +	event = kvm_pmu_create_perf_event(vcpu, pmc, &attr);
->  
-> -	pmc->perf_event = event;
-> +	if (event)
-> +		pmc->perf_event = event;
->  }
->  
->  bool kvm_arm_support_pmu_v3(void)
-> -- 
-> 1.8.3.1
-> 
-> 
-> _______________________________________________
-> kvmarm mailing list
-> kvmarm@lists.cs.columbia.edu
-> https://lists.cs.columbia.edu/mailman/listinfo/kvmarm
+greg k-h
