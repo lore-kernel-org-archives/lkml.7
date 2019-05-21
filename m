@@ -2,109 +2,116 @@ Return-Path: <SRS0=9PYC=TV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76760C04AAF
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 14:50:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0453C04AAF
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 14:51:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 54FAF2173E
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 14:50:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 712172173E
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 14:51:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WLJvXkfS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728704AbfEUOuu (ORCPT
+        id S1728713AbfEUOvW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 May 2019 10:50:50 -0400
-Received: from relay3-d.mail.gandi.net ([217.70.183.195]:58885 "EHLO
-        relay3-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727969AbfEUOuu (ORCPT
+        Tue, 21 May 2019 10:51:22 -0400
+Received: from mail-it1-f194.google.com ([209.85.166.194]:51741 "EHLO
+        mail-it1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727969AbfEUOvW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 May 2019 10:50:50 -0400
-X-Originating-IP: 90.88.22.185
-Received: from localhost (aaubervilliers-681-1-80-185.w90-88.abo.wanadoo.fr [90.88.22.185])
-        (Authenticated sender: maxime.ripard@bootlin.com)
-        by relay3-d.mail.gandi.net (Postfix) with ESMTPSA id 033AB60006;
-        Tue, 21 May 2019 14:50:47 +0000 (UTC)
-Date:   Tue, 21 May 2019 16:50:47 +0200
-From:   Maxime Ripard <maxime.ripard@bootlin.com>
-To:     Rob Herring <robh@kernel.org>
-Cc:     devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] dt-bindings: Convert vendor prefixes to json-schema
-Message-ID: <20190521145047.dyfvrzxviqchmxp2@flea>
-References: <20190510194018.28206-1-robh@kernel.org>
- <20190520131846.tqx7h7sjyw6sgka5@flea>
- <CAL_JsqLbuuO9YHYwTXV5ZEGOjzZHgVsWD=TCYk4cYpm0v1zHkQ@mail.gmail.com>
- <CAL_JsqKAP85+KnQtq-xaOdX-BetB0pA7+LT8vd6w=Yz4VWnQJg@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="chpalzxqydzs6tku"
-Content-Disposition: inline
-In-Reply-To: <CAL_JsqKAP85+KnQtq-xaOdX-BetB0pA7+LT8vd6w=Yz4VWnQJg@mail.gmail.com>
-User-Agent: NeoMutt/20180716
+        Tue, 21 May 2019 10:51:22 -0400
+Received: by mail-it1-f194.google.com with SMTP id m3so5477054itl.1
+        for <linux-kernel@vger.kernel.org>; Tue, 21 May 2019 07:51:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=jgJdmE1Zbg3qhV5EulwxdNH0JzQK7bdAiz1rSW14UKM=;
+        b=WLJvXkfSurKA/hBm3R5otskQBCeCLH/GjbB6e/+cMCGYo/+WSP8B3eESzP/FhbL6/X
+         Tg30c0WtnWkYjdW0ZuYhirOU66gcStN0rqX9J5j49YQ3DgCqKyXGVgsuJP4pN4kG/uJy
+         1Rqqp0whbHK7nb5tmW5Bp9KL+ZqcjZ1dvlv3ySoBNz1GJimIqb7/ACcGi+bat+x+OmNn
+         FoWuJTCo0qPiRk3yq2CAGyyA+N232lW3CgpAOfiPX2Iej37gH0LGYMx5bBREdaZcvEzV
+         RZjqBRDqMaqSLiplo4t6EfPQm+gAnNZyelO00Ep+eKb2YT/NzGzyCEORB0VpkGrMpwVY
+         Woyw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=jgJdmE1Zbg3qhV5EulwxdNH0JzQK7bdAiz1rSW14UKM=;
+        b=SlRUD/yKQ4H1oBjzUfLriOpRUWe6XeoOIvcfRA5Im8lcYCW/vRY4V+LU+2YR98iY5V
+         riKH/3HMdf7/5llp3mAkDH1J/ovoakRIrYnxEtYNBaER6PL+U1tpjnr38LVdugBgvpXo
+         Vvz5HDeCXxPOfcCyhg1i5E2QsDitV+eGWpwplppmNCv3Y3NsB83xGT5SJgBuwCXN2piO
+         AnsuMkYCBxZf6NImV7guSxwDTwTDC/vLiSsQb1bcm+ZZimTUF2pWU49Q9ZyAI5VCGqXP
+         7UtzAq6ZMQoxh7zyQgkBokFPjtVgX3PIV3hEjylPXIhikUnJ9gJjCxtfiSxDLuWixMSf
+         DTDA==
+X-Gm-Message-State: APjAAAWuE8V0J58Zm0qSxWEOEqbpPYZCx4F0AqC5rKs69VrUwJThgmyX
+        FfxEsB95Rbw/uaCSkqEds7LYR36c
+X-Google-Smtp-Source: APXvYqy+tWqthA1EUdSvG0qJ/9jqC5fB3CtGEZkCu/3tOdCJ4/YM6d1DWzdmTLf2kCnR5aizdavl4A==
+X-Received: by 2002:a24:7610:: with SMTP id z16mr4114515itb.3.1558450281188;
+        Tue, 21 May 2019 07:51:21 -0700 (PDT)
+Received: from svens-asus.arcx.com ([184.94.50.30])
+        by smtp.gmail.com with ESMTPSA id m67sm1666083itc.22.2019.05.21.07.51.20
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 21 May 2019 07:51:20 -0700 (PDT)
+From:   Sven Van Asbroeck <thesven73@gmail.com>
+X-Google-Original-From: Sven Van Asbroeck <TheSven73@gmail.com>
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     devel@driverdev.osuosl.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: [PATCH] staging: fieldbus: anybuss: force address space conversion
+Date:   Tue, 21 May 2019 10:51:16 -0400
+Message-Id: <20190521145116.24378-1-TheSven73@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+The regmap's context (stored as 'void *') consists of a pointer to
+__iomem. Mixing __iomem and non-__iomem addresses generates
+sparse warnings.
 
---chpalzxqydzs6tku
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Fix by using __force when converting to/from 'void __iomem *' and
+the regmap's context.
 
-On Mon, May 20, 2019 at 04:23:20PM -0500, Rob Herring wrote:
-> On Mon, May 20, 2019 at 11:35 AM Rob Herring <robh@kernel.org> wrote:
-> >
-> > On Mon, May 20, 2019 at 8:18 AM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
-> > >
-> > > Hi Rob,
-> > >
-> > > On Fri, May 10, 2019 at 02:40:18PM -0500, Rob Herring wrote:
-> > > > Convert the vendor prefix registry to a schema. This will enable checking
-> > > > that new vendor prefixes are added (in addition to the less than perfect
-> > > > checkpatch.pl check) and will also check against adding other prefixes
-> > > > which are not vendors.
-> > > >
-> > > > Converted vendor-prefixes.txt using the following sed script:
-> > > >
-> > > > sed -e 's/\([a-zA-Z0-9\-]*\)[[:space:]]*\([a-zA-Z0-9].*\)/  "^\1,\.\*\":\n    description: \2/'
-> > > >
-> > > > Signed-off-by: Rob Herring <robh@kernel.org>
-> > > > ---
-> > > > As vendor prefix updates come in via multiple trees, I plan to merge
-> > > > this before -rc1 to avoid cross tree conflicts.
-> > >
-> > > I just tried this with the 5.2-rc1 release, and this very
-> > > significantly slows down the validation.
-> > >
-> > > With a dtbs_check run on (arm's) sunxi_defconfig, on my core-i5 with 4
-> > > threads, I go from 1.30 minutes to more than 12.
-> >
-> > Indeed. 6 min to 45 min for allmodconfig. However, it's only 5 min to
-> > run checks with only this file. I'd expect a more linear hit. Maybe
-> > we're exceeding some cache size and thrashing.
->
-> Looks like the problem is a cache. The python regex cache. Changing
-> re._MAXCACHE from 512 to 4096 fixes the problem. I can set this in the
-> dtschema lib.
+Signed-off-by: Sven Van Asbroeck <TheSven73@gmail.com>
+---
+ drivers/staging/fieldbus/anybuss/arcx-anybus.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-Awesome, thanks!
-Maxime
+diff --git a/drivers/staging/fieldbus/anybuss/arcx-anybus.c b/drivers/staging/fieldbus/anybuss/arcx-anybus.c
+index a167fb68e355..8126e5535ada 100644
+--- a/drivers/staging/fieldbus/anybuss/arcx-anybus.c
++++ b/drivers/staging/fieldbus/anybuss/arcx-anybus.c
+@@ -114,7 +114,7 @@ static void export_reset_1(struct device *dev, bool assert)
+ static int read_reg_bus(void *context, unsigned int reg,
+ 			unsigned int *val)
+ {
+-	void __iomem *base = context;
++	void __iomem *base = (__force void __iomem *)context;
+ 
+ 	*val = readb(base + reg);
+ 	return 0;
+@@ -123,7 +123,7 @@ static int read_reg_bus(void *context, unsigned int reg,
+ static int write_reg_bus(void *context, unsigned int reg,
+ 			 unsigned int val)
+ {
+-	void __iomem *base = context;
++	void __iomem *base = (__force void __iomem *)context;
+ 
+ 	writeb(val, base + reg);
+ 	return 0;
+@@ -153,7 +153,7 @@ static struct regmap *create_parallel_regmap(struct platform_device *pdev,
+ 	base = devm_ioremap_resource(dev, res);
+ 	if (IS_ERR(base))
+ 		return ERR_CAST(base);
+-	return devm_regmap_init(dev, NULL, base, &regmap_cfg);
++	return devm_regmap_init(dev, NULL, (__force void *)base, &regmap_cfg);
+ }
+ 
+ static struct anybuss_host *
+-- 
+2.17.1
 
---
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
-
---chpalzxqydzs6tku
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXOQQRwAKCRDj7w1vZxhR
-xdQuAP439mUERuocEuZCT95DT2OAX3WDau0S9oAgoQyBNYQh4gEAlvtU2tFlk5CI
-wEVaeMJC4qe2gEhqPEta9eBgwK33NQM=
-=JAGU
------END PGP SIGNATURE-----
-
---chpalzxqydzs6tku--
