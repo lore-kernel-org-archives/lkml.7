@@ -2,173 +2,105 @@ Return-Path: <SRS0=9PYC=TV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DA40C04AAC
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 03:30:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5727FC04AAC
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 03:35:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1CE482075E
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 03:30:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 217A02081C
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 03:35:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727539AbfEUDaf (ORCPT
+        id S1727418AbfEUDf0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 23:30:35 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:42512 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726511AbfEUDaf (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 23:30:35 -0400
-X-UUID: 7d869cde9c4749b087a8b3304ded80b8-20190521
-X-UUID: 7d869cde9c4749b087a8b3304ded80b8-20190521
-Received: from mtkexhb01.mediatek.inc [(172.21.101.102)] by mailgw01.mediatek.com
-        (envelope-from <ck.hu@mediatek.com>)
-        (mhqrelay.mediatek.com ESMTP with TLS)
-        with ESMTP id 77106509; Tue, 21 May 2019 11:30:29 +0800
-Received: from mtkcas07.mediatek.inc (172.21.101.84) by
- mtkmbs08n2.mediatek.inc (172.21.101.56) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Tue, 21 May 2019 11:30:25 +0800
-Received: from [172.21.77.4] (172.21.77.4) by mtkcas07.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Tue, 21 May 2019 11:30:25 +0800
-Message-ID: <1558409425.25526.13.camel@mtksdaap41>
-Subject: Re: [PATCH v7 11/12] soc: mediatek: cmdq: add
- cmdq_dev_get_client_reg function
-From:   CK Hu <ck.hu@mediatek.com>
-To:     Bibby Hsieh <bibby.hsieh@mediatek.com>
-CC:     Jassi Brar <jassisinghbrar@gmail.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Daniel Kurtz <djkurtz@chromium.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>,
-        <srv_heupstream@mediatek.com>,
-        Sascha Hauer <kernel@pengutronix.de>,
-        "Philipp Zabel" <p.zabel@pengutronix.de>,
-        Nicolas Boichat <drinkcat@chromium.org>,
-        "YT Shen" <yt.shen@mediatek.com>,
-        Daoyuan Huang <daoyuan.huang@mediatek.com>,
-        Jiaguang Zhang <jiaguang.zhang@mediatek.com>,
-        Dennis-YC Hsieh <dennis-yc.hsieh@mediatek.com>,
-        Houlong Wei <houlong.wei@mediatek.com>,
-        <ginny.chen@mediatek.com>
-Date:   Tue, 21 May 2019 11:30:25 +0800
-In-Reply-To: <20190521011108.40428-12-bibby.hsieh@mediatek.com>
-References: <20190521011108.40428-1-bibby.hsieh@mediatek.com>
-         <20190521011108.40428-12-bibby.hsieh@mediatek.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-TM-SNTS-SMTP: 798B638221290F7BC5D8959C66269264E402B2FA60D529F582211C428B8D881B2000:8
-X-MTK:  N
+        Mon, 20 May 2019 23:35:26 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:56468 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726338AbfEUDf0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 23:35:26 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5A671341;
+        Mon, 20 May 2019 20:35:25 -0700 (PDT)
+Received: from p8cg001049571a15.blr.arm.com (p8cg001049571a15.blr.arm.com [10.162.42.136])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 10D603F718;
+        Mon, 20 May 2019 20:35:22 -0700 (PDT)
+From:   Anshuman Khandual <anshuman.khandual@arm.com>
+To:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc:     Anshuman Khandual <anshuman.khandual@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Steve Capper <steve.capper@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>
+Subject: [PATCH] arm64/hugetlb: Use macros for contiguous huge page sizes
+Date:   Tue, 21 May 2019 09:05:03 +0530
+Message-Id: <1558409703-31894-1-git-send-email-anshuman.khandual@arm.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2019-05-21 at 09:11 +0800, Bibby Hsieh wrote:
-> GCE cannot know the register base address, this function
-> can help cmdq client to get the cmdq_client_reg structure.
-> 
-> Signed-off-by: Bibby Hsieh <bibby.hsieh@mediatek.com>
-> ---
->  drivers/soc/mediatek/mtk-cmdq-helper.c | 25 +++++++++++++++++++++++++
->  include/linux/soc/mediatek/mtk-cmdq.h  | 18 ++++++++++++++++++
->  2 files changed, 43 insertions(+)
-> 
-> diff --git a/drivers/soc/mediatek/mtk-cmdq-helper.c b/drivers/soc/mediatek/mtk-cmdq-helper.c
-> index 70ad4d806fac..815845bb5982 100644
-> --- a/drivers/soc/mediatek/mtk-cmdq-helper.c
-> +++ b/drivers/soc/mediatek/mtk-cmdq-helper.c
-> @@ -27,6 +27,31 @@ struct cmdq_instruction {
->  	u8 op;
->  };
->  
-> +struct cmdq_client_reg  *cmdq_dev_get_client_reg(struct device *dev, int idx)
-> +{
-> +	struct cmdq_client_reg *client_reg;
-> +	struct of_phandle_args spec;
-> +
-> +	client_reg  = devm_kzalloc(dev, sizeof(*client_reg), GFP_KERNEL);
-> +	if (!client_reg)
-> +		return NULL;
-> +
-> +	if (of_parse_phandle_with_args(dev->of_node, "mediatek,gce-client-reg",
-> +				       "#subsys-cells", idx, &spec)) {
-> +		dev_err(dev, "can't parse gce-client-reg property (%d)", idx);
+Replace all open encoded contiguous huge page size computations with
+available macro encodings CONT_PTE_SIZE and CONT_PMD_SIZE. There are other
+instances where these macros are used in the file and this change makes it
+consistently use the same mnemonic.
 
-I think you should call devm_kfree(client_reg) here because this
-function may not be called in client driver's probe function. But in
-another view point, I would like you to move the memory allocation out
-of this function. When client call cmdq_dev_get_client_reg() to get a
-pointer, it's easy that client does not free it because you does not
-provide free API, Some client may embed struct cmdq_client_reg with its
-client structure together,
+Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
+Cc: Catalin Marinas <catalin.marinas@arm.com>
+Cc: Will Deacon <will.deacon@arm.com>
+Cc: Steve Capper <steve.capper@arm.com>
+Cc: Mark Rutland <mark.rutland@arm.com>
+---
+ arch/arm64/mm/hugetlbpage.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
-struct client {
-	struct cmdq_client_reg client_reg;
-};
-
-Because each client may have different memory allocation strategy, so I
-would like you to move memory allocation out of this function to let
-client driver have the flexibility.
-
-Regards,
-CK
-
-> +
-> +		return NULL;
-> +	}
-> +
-> +	client_reg->subsys = spec.args[0];
-> +	client_reg->offset = spec.args[1];
-> +	client_reg->size = spec.args[2];
-> +	of_node_put(spec.np);
-> +
-> +	return client_reg;
-> +}
-> +EXPORT_SYMBOL(cmdq_dev_get_client_reg);
-> +
->  static void cmdq_client_timeout(struct timer_list *t)
->  {
->  	struct cmdq_client *client = from_timer(client, t, timer);
-> diff --git a/include/linux/soc/mediatek/mtk-cmdq.h b/include/linux/soc/mediatek/mtk-cmdq.h
-> index a345870a6d10..d0dea3780f7a 100644
-> --- a/include/linux/soc/mediatek/mtk-cmdq.h
-> +++ b/include/linux/soc/mediatek/mtk-cmdq.h
-> @@ -15,6 +15,12 @@
->  
->  struct cmdq_pkt;
->  
-> +struct cmdq_client_reg {
-> +	u8 subsys;
-> +	u16 offset;
-> +	u16 size;
-> +};
-> +
->  struct cmdq_client {
->  	spinlock_t lock;
->  	u32 pkt_cnt;
-> @@ -142,4 +148,16 @@ int cmdq_pkt_flush_async(struct cmdq_pkt *pkt, cmdq_async_flush_cb cb,
->   */
->  int cmdq_pkt_flush(struct cmdq_pkt *pkt);
->  
-> +/**
-> + * cmdq_dev_get_client_reg() - parse cmdq client reg from the device node of CMDQ client
-> + * @dev:	device of CMDQ mailbox client
-> + * @idx:	the index of desired reg
-> + *
-> + * Return: CMDQ client reg pointer
-> + *
-> + * Help CMDQ client pasing the cmdq client reg
-> + * from the device node of CMDQ client.
-> + */
-> +struct cmdq_client_reg  *cmdq_dev_get_client_reg(struct device *dev, int idx);
-> +
->  #endif	/* __MTK_CMDQ_H__ */
-
+diff --git a/arch/arm64/mm/hugetlbpage.c b/arch/arm64/mm/hugetlbpage.c
+index 6b4a47b..05b5dda 100644
+--- a/arch/arm64/mm/hugetlbpage.c
++++ b/arch/arm64/mm/hugetlbpage.c
+@@ -236,7 +236,7 @@ pte_t *huge_pte_alloc(struct mm_struct *mm,
+ 
+ 	if (sz == PUD_SIZE) {
+ 		ptep = (pte_t *)pudp;
+-	} else if (sz == (PAGE_SIZE * CONT_PTES)) {
++	} else if (sz == (CONT_PTE_SIZE)) {
+ 		pmdp = pmd_alloc(mm, pudp, addr);
+ 
+ 		WARN_ON(addr & (sz - 1));
+@@ -254,7 +254,7 @@ pte_t *huge_pte_alloc(struct mm_struct *mm,
+ 			ptep = huge_pmd_share(mm, addr, pudp);
+ 		else
+ 			ptep = (pte_t *)pmd_alloc(mm, pudp, addr);
+-	} else if (sz == (PMD_SIZE * CONT_PMDS)) {
++	} else if (sz == (CONT_PMD_SIZE)) {
+ 		pmdp = pmd_alloc(mm, pudp, addr);
+ 		WARN_ON(addr & (sz - 1));
+ 		return (pte_t *)pmdp;
+@@ -462,9 +462,9 @@ static int __init hugetlbpage_init(void)
+ #ifdef CONFIG_ARM64_4K_PAGES
+ 	add_huge_page_size(PUD_SIZE);
+ #endif
+-	add_huge_page_size(PMD_SIZE * CONT_PMDS);
++	add_huge_page_size(CONT_PMD_SIZE);
+ 	add_huge_page_size(PMD_SIZE);
+-	add_huge_page_size(PAGE_SIZE * CONT_PTES);
++	add_huge_page_size(CONT_PTE_SIZE);
+ 
+ 	return 0;
+ }
+@@ -478,9 +478,9 @@ static __init int setup_hugepagesz(char *opt)
+ #ifdef CONFIG_ARM64_4K_PAGES
+ 	case PUD_SIZE:
+ #endif
+-	case PMD_SIZE * CONT_PMDS:
++	case CONT_PMD_SIZE:
+ 	case PMD_SIZE:
+-	case PAGE_SIZE * CONT_PTES:
++	case CONT_PTE_SIZE:
+ 		add_huge_page_size(ps);
+ 		return 1;
+ 	}
+-- 
+2.7.4
 
