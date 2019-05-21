@@ -2,110 +2,59 @@ Return-Path: <SRS0=9PYC=TV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86AE1C46470
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 06:12:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81CCCC04AAF
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 06:14:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 57AF221773
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 06:12:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558419162;
-	bh=4VC9bKP9QU7iVDFMtdo9WoMzmY1tJYqXCWxT9T/NUpY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=pfrIyovQO0m9sOPGznbXOimTvZcsjdcyAd7Uj1rwPJcpgsclk1ySofUph2Yf5X6Ef
-	 A4K7lm3XBbKtxZ717FKqsxC/iptLLLq+ey1Dd94V0DBD7a+6Vxwd5CP+UW06fZYtBf
-	 MoXx2ap/EUd9fW1/6Ikd46Fh6B5UoeGEnSlSL3aI=
+	by mail.kernel.org (Postfix) with ESMTP id E85CF20863
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 06:14:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=protonmail.com header.i=@protonmail.com header.b="WIM0/pWA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727865AbfEUGMl (ORCPT
+        id S1727870AbfEUGOn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 May 2019 02:12:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49188 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725798AbfEUGMl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 May 2019 02:12:41 -0400
-Received: from localhost (unknown [106.201.107.13])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DDFC920863;
-        Tue, 21 May 2019 06:12:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558419160;
-        bh=4VC9bKP9QU7iVDFMtdo9WoMzmY1tJYqXCWxT9T/NUpY=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=lJzLTxcVnQlcC8g5MlkXWsEtukxQJremgG+7zcGYuVRwfHSSl/CjVbwp62oapFxjZ
-         RB3v+k7IXX6G0ix1zRMQJ2OvmqFFR1LCVcZnUWQFvAHionw5nVJu6KU8/EW2X/ujcW
-         XyM9/dqc3r3hrt7uRZc5BRuGjG8gjJF0yevCkmSg=
-Date:   Tue, 21 May 2019 11:42:36 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Robin Gong <yibin.gong@nxp.com>
-Cc:     "robh@kernel.org" <robh@kernel.org>,
-        "broonie@kernel.org" <broonie@kernel.org>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "u.kleine-koenig@pengutronix.de" <u.kleine-koenig@pengutronix.de>,
-        "plyatov@gmail.com" <plyatov@gmail.com>,
-        "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
-        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
-        "will.deacon@arm.com" <will.deacon@arm.com>,
-        "l.stach@pengutronix.de" <l.stach@pengutronix.de>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>
-Subject: Re: Re: Re: [PATCH v3 11/14] dmaengine: imx-sdma: fix ecspi1 rx dma
- not work on i.mx8mm
-Message-ID: <20190521061236.GA15118@vkoul-mobl>
-References: <VI1PR04MB4543DEEC702531ED69616B8C89070@VI1PR04MB4543.eurprd04.prod.outlook.com>
+        Tue, 21 May 2019 02:14:43 -0400
+Received: from mail-40135.protonmail.ch ([185.70.40.135]:15476 "EHLO
+        mail-40135.protonmail.ch" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725885AbfEUGOm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 May 2019 02:14:42 -0400
+Date:   Tue, 21 May 2019 06:14:34 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=protonmail.com;
+        s=default; t=1558419280;
+        bh=mtG9H69zr1exY51a0zHHd7k+CZp/ts+/WXQCtXCcmsU=;
+        h=Date:To:From:Reply-To:Subject:In-Reply-To:References:Feedback-ID:
+         From;
+        b=WIM0/pWABShvZ96ZdS6B4MptqGXFn8VUIiLh13xUMvDkJWSgb5Dmk+h+siIEfKcsL
+         NR5a8FlB93CMhASvn2ZlWCW6SbJMUPe662VxJYCKLi2bih7xidqABXc+PeALhVeQC/
+         eX1HTfV93R3Z9jGtCI5wLPMixISZsmJjobRpmr9U=
+To:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+From:   =?UTF-8?Q?Ywe_C=C3=A6rlyn?= <ywecrn@protonmail.com>
+Reply-To: =?UTF-8?Q?Ywe_C=C3=A6rlyn?= <ywecrn@protonmail.com>
+Subject: =?UTF-8?B?R07Dmg==?=
+Message-ID: <LXNw4HsWw8KcbKJsXhIx7dCYh5KVGbY9c0vK0h1PglmbvY3lYsHHGH65tDPtTHn1KXNP7xUdGBY0uUnbz4IhuEeDK9q1vQ2Swl8BTOiidE0=@protonmail.com>
+In-Reply-To: <yj3cJbq2_hCaVXihBLK639mb2Xd_Pu8SxU6-c7vl8IQdoAWyDQb0rRq45ic5C044VB_DLPavdchsizC3CyEyPRRws3hSowyGbFgz5-BbFwk=@protonmail.com>
+References: <yj3cJbq2_hCaVXihBLK639mb2Xd_Pu8SxU6-c7vl8IQdoAWyDQb0rRq45ic5C044VB_DLPavdchsizC3CyEyPRRws3hSowyGbFgz5-BbFwk=@protonmail.com>
+Feedback-ID: jE8CP55NmWCGfbi9g5qzrOGkxuwuSXpchSI6fmYzjd5UEveHXeJrmiWc0_sgJdqIHM8YAKf9EEyPwffaRmhZ0A==:Ext:ProtonMail
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <VI1PR04MB4543DEEC702531ED69616B8C89070@VI1PR04MB4543.eurprd04.prod.outlook.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 21-05-19, 05:41, Robin Gong wrote:
-> > -----Original Message-----
-> > From: Vinod Koul <vkoul@kernel.org>
-> > Sent: 2019年5月21日 13:13
-> > 
-> > On 21-05-19, 04:58, Robin Gong wrote:
-> > > > -----Original Message-----
-> > > > From: Vinod Koul <vkoul@kernel.org>
-> > > > Sent: 2019年5月21日 12:18
-> > > >
-> > > > On 07-05-19, 09:16, Robin Gong wrote:
-> > > > > Because the number of ecspi1 rx event on i.mx8mm is 0, the
-> > > > > condition check ignore such special case without dma channel
-> > > > > enabled, which caused
-> > > > > ecspi1 rx works failed. Actually, no need to check event_id0,
-> > > > > checking
-> > > > > event_id1 is enough for DEV_2_DEV case because it's so lucky that
-> > > > > event_id1 never be 0.
-> > > >
-> > > > Well is that by chance or design that event_id1 will be never 0?
-> > > >
-> > > That's by chance. DEV_2_DEV is just for Audio case and non-zero for
-> > event_id1 on current i.MX family.
-> > 
-> > Then it wont be fgood to rely on chance :)
-> Yes, I knew that. May I create another independent patch for event_id1 since that's potential issue is not related with this ecspi patch set?
+Microsoft seems to be more and more interested in GNU.
 
-Sure a patch should change one thing but I think it should come before
-this one. The log for this should be fixed up as well
+Do you not want to be part of that money?
 
--- 
-~Vinod
+Indeed, may I suggest a slight stylistic change of GNU, to GN=C3=9A.
+
+Peace,
+YC.
+
+
