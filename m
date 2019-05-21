@@ -2,94 +2,84 @@ Return-Path: <SRS0=9PYC=TV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_NEOMUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 849D0C04AAF
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 14:16:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45940C04AAF
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 14:17:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 544402173C
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 14:16:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1A6162173C
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 14:17:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1558448239;
+	bh=aFgS3FRwlivx+ZhHeFRUtTp70UBdo7+6IUb/uvATLIw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=jliAUQV3wyiEASmLsc1+OZ0I3Y/2AC9BKsSXPaFsD1UXq68YGrpEWxGIqUKDEior9
+	 9Iru59kOSzxYnmTZgr5ayRU4IAt+MacYfbHQiCavsN7FtpJSds8nEPxt0lEo4NioKN
+	 Jqin81Ec9pLyiAphHWFQLs7Hee/MNuEJiv9f8118=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728226AbfEUOQm (ORCPT
+        id S1728292AbfEUORS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 May 2019 10:16:42 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:36014 "EHLO mx1.redhat.com"
+        Tue, 21 May 2019 10:17:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43910 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726750AbfEUOQm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 May 2019 10:16:42 -0400
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        id S1726750AbfEUORS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 May 2019 10:17:18 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 12CA47FDEC;
-        Tue, 21 May 2019 14:16:37 +0000 (UTC)
-Received: from treble (ovpn-125-173.rdu2.redhat.com [10.10.125.173])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 5774F17A73;
-        Tue, 21 May 2019 14:16:31 +0000 (UTC)
-Date:   Tue, 21 May 2019 09:16:29 -0500
-From:   Josh Poimboeuf <jpoimboe@redhat.com>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     Johannes Erdfelt <johannes@erdfelt.com>,
-        Joe Lawrence <joe.lawrence@redhat.com>,
-        Jessica Yu <jeyu@kernel.org>, Jiri Kosina <jikos@kernel.org>,
-        Miroslav Benes <mbenes@suse.cz>,
-        Ingo Molnar <mingo@redhat.com>, live-patching@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: Oops caused by race between livepatch and ftrace
-Message-ID: <20190521141629.bmk5onsaab26qoaw@treble>
-References: <20190520194915.GB1646@sventech.com>
- <90f78070-95ec-ce49-1641-19d061abecf4@redhat.com>
- <20190520210905.GC1646@sventech.com>
- <20190520211931.vokbqxkx5kb6k2bz@treble>
- <20190520173910.6da9ddaf@gandalf.local.home>
+        by mail.kernel.org (Postfix) with ESMTPSA id DB0172173C;
+        Tue, 21 May 2019 14:17:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1558448237;
+        bh=aFgS3FRwlivx+ZhHeFRUtTp70UBdo7+6IUb/uvATLIw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=U3/HE/2R/J0b4V2AG/ljjYYWi/HKEpZkLJ4WBTYBxoUWacExzlxNcC2yUcUC7/Man
+         UKU+v89T6Ph6D5jFRQWju3rQLW5DxBMT1fgdWebTKbarcRnYBpFay3m03Ai43uIuJo
+         2H+DF+7CU21t4P9UutVhsnToP/zce7H3obW5gCrg=
+Date:   Tue, 21 May 2019 16:17:15 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Sven Van Asbroeck <thesven73@gmail.com>
+Cc:     Oscar Gomez Fuente <oscargomezf@gmail.com>,
+        devel@driverdev.osuosl.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] staging: fieldbus: solve warning incorrect type
+ dev_core.c
+Message-ID: <20190521141715.GA25603@kroah.com>
+References: <1558115396-3244-1-git-send-email-oscargomezf@gmail.com>
+ <CAGngYiVNQrr2nKfGCdi8FzS5UnmGaDj_Gu_F0ZeOTMKX6_1Zuw@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190520173910.6da9ddaf@gandalf.local.home>
-User-Agent: NeoMutt/20180716
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.27]); Tue, 21 May 2019 14:16:42 +0000 (UTC)
+In-Reply-To: <CAGngYiVNQrr2nKfGCdi8FzS5UnmGaDj_Gu_F0ZeOTMKX6_1Zuw@mail.gmail.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 20, 2019 at 05:39:10PM -0400, Steven Rostedt wrote:
-> On Mon, 20 May 2019 16:19:31 -0500
-> Josh Poimboeuf <jpoimboe@redhat.com> wrote:
+On Tue, May 21, 2019 at 10:13:58AM -0400, Sven Van Asbroeck wrote:
+> On Fri, May 17, 2019 at 1:50 PM Oscar Gomez Fuente
+> <oscargomezf@gmail.com> wrote:
+> >
+> > These changes solve a warning realated to an incorrect type inilizer in the function
+> > fieldbus_poll.
+> >
+> > Signed-off-by: Oscar Gomez Fuente <oscargomezf@gmail.com>
+> > ---
 > 
-> > diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
-> > index a12aff849c04..8259d4ba8b00 100644
-> > --- a/kernel/trace/ftrace.c
-> > +++ b/kernel/trace/ftrace.c
-> > @@ -34,6 +34,7 @@
-> >  #include <linux/hash.h>
-> >  #include <linux/rcupdate.h>
-> >  #include <linux/kprobes.h>
-> > +#include <linux/memory.h>
-> >  
-> >  #include <trace/events/sched.h>
-> >  
-> > @@ -2610,10 +2611,12 @@ static void ftrace_run_update_code(int command)
-> >  {
-> >  	int ret;
-> >  
-> > +	mutex_lock(&text_mutex);
-> > +
+> I've reviewed your patch and tested it on a live system. Everything looks good.
+> However, I believe that your commit message could be improved.
 > 
-> Hmm, this may blow up with lockdep, as I believe we already have a
-> locking dependency of:
-> 
->  text_mutex -> ftrace_lock
-> 
-> And this will reverses it. (kprobes appears to take the locks in this
-> order).
-> 
-> Perhaps have live kernel patching grab ftrace_lock?
+> I am going to re-post this patch as v3 (keeping you as the author) but with
+> a (hopefully) improved commit message. If you provide positive feedback,
+> and nobody else has any comments, I will tag it with my Reviewed-by,
+> which will hopefully be Greg's cue to take the patch.
 
-Where does kprobes call into ftrace with the text_mutex?  I couldn't
-find it.
+Greg already took this patch a while ago :)
 
--- 
-Josh
+thanks,
+
+greg k-h
