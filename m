@@ -2,82 +2,145 @@ Return-Path: <SRS0=9PYC=TV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74E8EC04AAF
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 13:11:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A92EBC04AAF
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 13:15:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3EFA02173C
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 13:11:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558444295;
-	bh=PswCI7qaEh7te+WzS2oP8fteQs8KoBFwCF8/BdVQ8Cw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=wbcoCi8+EuzTI7bEfpb0uCrV8mbof9LirqE5f2xcZabaYlIHMLPzQcvgDyEACKWqv
-	 j0UEo9x2c+B6UfidOxvmZAtWqr4EQTBbbed3gvg8Ld8xJbGIASiEs2brwHPYBGZw54
-	 uwl+muLDuuKkeXHCPYg6rceNIBYAzFh+VBBvWUJI=
+	by mail.kernel.org (Postfix) with ESMTP id 8307220856
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 13:15:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728267AbfEUNLe (ORCPT
+        id S1728132AbfEUNP2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 May 2019 09:11:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51456 "EHLO mail.kernel.org"
+        Tue, 21 May 2019 09:15:28 -0400
+Received: from verein.lst.de ([213.95.11.211]:60305 "EHLO newverein.lst.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726900AbfEUNLd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 May 2019 09:11:33 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DA77620856;
-        Tue, 21 May 2019 13:11:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558444293;
-        bh=PswCI7qaEh7te+WzS2oP8fteQs8KoBFwCF8/BdVQ8Cw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=NzLJV1RaZC8MshHxDBTshU7//9I8vU3RdIHJuIP9aN8FzCHsfhNnYC26m/PHnsimt
-         jRXq4FBdoFgvF+3kA+jnUCFEpGpAEe2wQSUoSZSAJWStyO9Fi1xMPdWt8GGBF4OmAH
-         b7s+/Y2Lw6fQRDI+D7lsYUdTghpWTrC2pQRnrdiU=
-Date:   Tue, 21 May 2019 15:11:31 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Esben Haabendal <esben@geanix.com>
-Cc:     linux-serial@vger.kernel.org, Lee Jones <lee.jones@linaro.org>,
-        Enrico Weigelt <lkml@metux.net>, Jiri Slaby <jslaby@suse.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Darwin Dingel <darwin.dingel@alliedtelesis.co.nz>,
-        Jisheng Zhang <Jisheng.Zhang@synaptics.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        He Zhe <zhe.he@windriver.com>, Marek Vasut <marex@denx.de>,
-        Douglas Anderson <dianders@chromium.org>,
-        Paul Burton <paul.burton@mips.com>,
+        id S1726740AbfEUNP2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 May 2019 09:15:28 -0400
+Received: by newverein.lst.de (Postfix, from userid 2407)
+        id 4C85168AFE; Tue, 21 May 2019 15:15:04 +0200 (CEST)
+Date:   Tue, 21 May 2019 15:15:03 +0200
+From:   Christoph Hellwig <hch@lst.de>
+To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
+Cc:     Christoph Hellwig <hch@lst.de>, iommu@lists.linux-foundation.org,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Robin Murphy <robin.murphy@arm.com>,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH resend] serial: 8250: Add support for using
- platform_device resources
-Message-ID: <20190521131131.GA19685@kroah.com>
-References: <20190430140416.4707-1-esben@geanix.com>
- <20190521113426.16790-1-esben@geanix.com>
+Subject: Re: [PATCH 1/2] dma-mapping: truncate dma masks to what dma_addr_t
+ can hold
+Message-ID: <20190521131503.GA5258@lst.de>
+References: <20190521124729.23559-1-hch@lst.de> <20190521124729.23559-2-hch@lst.de> <20190521130436.bgt53bf7nshz62ip@shell.armlinux.org.uk>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190521113426.16790-1-esben@geanix.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+In-Reply-To: <20190521130436.bgt53bf7nshz62ip@shell.armlinux.org.uk>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 21, 2019 at 01:34:26PM +0200, Esben Haabendal wrote:
-> Allow getting memory resource (mapbase or iobase) as well as irq from
-> platform_device resources.
+On Tue, May 21, 2019 at 02:04:37PM +0100, Russell King - ARM Linux admin wrote:
+> So how does the driver negotiation for >32bit addresses work if we don't
+> fail for large masks?
 > 
-> The UPF_DEV_RESOURCES flag must be set for devices where platform_device
-> resources are to be used.  When not set, driver behaves as before.
+> I'm thinking about all those PCI drivers that need DAC cycles for >32bit
+> addresses, such as e1000, which negotiate via (eg):
+> 
+>         /* there is a workaround being applied below that limits
+>          * 64-bit DMA addresses to 64-bit hardware.  There are some
+>          * 32-bit adapters that Tx hang when given 64-bit DMA addresses
+>          */
+>         pci_using_dac = 0;
+>         if ((hw->bus_type == e1000_bus_type_pcix) &&
+>             !dma_set_mask_and_coherent(&pdev->dev, DMA_BIT_MASK(64))) {
+>                 pci_using_dac = 1;
+>         } else {
+>                 err = dma_set_mask_and_coherent(&pdev->dev, DMA_BIT_MASK(32));
+>                 if (err) {
+>                         pr_err("No usable DMA config, aborting\n");
+>                         goto err_dma;
+>                 }
+>         }
+> 
+> and similar.  If we blindly trunate the 64-bit to 32-bit, aren't we
+> going to end up with PCI cards using DAC cycles to a host bridge that
+> do not support DAC cycles?
 
-Nothing actually sets this flag in this patch, so I can't take this as
-you are adding new features that no one uses :(
+In general PCI devices just use DAC cycles when they need it.  I only
+know of about a handful of devices that need to negotiate their
+addressing mode, and those already use the proper API for that, which
+is dma_get_required_mask.
 
-Where is the driver that sets this?
+The e1000 example is a good case of how the old API confused people.
+First it only sets the 64-bit mask for devices which can support it,
+which is good, but then it sets the NETIF_F_HIGHDMA flag only if we
+set a 64-bit mask, which is completely unrelated to the DMA mask,
+it just means the driver can handle sk_buff fragments that do not
+have a kernel mapping, which really is a driver and not a hardware
+issue.
 
-thanks,
+So what this driver really should do is something like:
 
-greg k-h
+
+diff --git a/drivers/net/ethernet/intel/e1000/e1000_main.c b/drivers/net/ethernet/intel/e1000/e1000_main.c
+index 551de8c2fef2..d9236083da94 100644
+--- a/drivers/net/ethernet/intel/e1000/e1000_main.c
++++ b/drivers/net/ethernet/intel/e1000/e1000_main.c
+@@ -925,7 +925,7 @@ static int e1000_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
+ 
+ 	static int cards_found;
+ 	static int global_quad_port_a; /* global ksp3 port a indication */
+-	int i, err, pci_using_dac;
++	int i, err;
+ 	u16 eeprom_data = 0;
+ 	u16 tmp = 0;
+ 	u16 eeprom_apme_mask = E1000_EEPROM_APME;
+@@ -996,16 +996,11 @@ static int e1000_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
+ 	 * 64-bit DMA addresses to 64-bit hardware.  There are some
+ 	 * 32-bit adapters that Tx hang when given 64-bit DMA addresses
+ 	 */
+-	pci_using_dac = 0;
+-	if ((hw->bus_type == e1000_bus_type_pcix) &&
+-	    !dma_set_mask_and_coherent(&pdev->dev, DMA_BIT_MASK(64))) {
+-		pci_using_dac = 1;
+-	} else {
+-		err = dma_set_mask_and_coherent(&pdev->dev, DMA_BIT_MASK(32));
+-		if (err) {
+-			pr_err("No usable DMA config, aborting\n");
+-			goto err_dma;
+-		}
++	err = dma_set_mask_and_coherent(&pdev->dev,
++		DMA_BIT_MASK(hw->bus_type == e1000_bus_type_pcix ? 64 : 32));
++	if (err) {
++		pr_err("No usable DMA config, aborting\n");
++		goto err_dma;
+ 	}
+ 
+ 	netdev->netdev_ops = &e1000_netdev_ops;
+@@ -1047,19 +1042,15 @@ static int e1000_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
+ 
+ 	netdev->priv_flags |= IFF_SUPP_NOFCS;
+ 
+-	netdev->features |= netdev->hw_features;
++	netdev->features |= netdev->hw_features | NETIF_F_HIGHDMA;
+ 	netdev->hw_features |= (NETIF_F_RXCSUM |
+ 				NETIF_F_RXALL |
+ 				NETIF_F_RXFCS);
+ 
+-	if (pci_using_dac) {
+-		netdev->features |= NETIF_F_HIGHDMA;
+-		netdev->vlan_features |= NETIF_F_HIGHDMA;
+-	}
+-
+ 	netdev->vlan_features |= (NETIF_F_TSO |
+ 				  NETIF_F_HW_CSUM |
+-				  NETIF_F_SG);
++				  NETIF_F_SG |
++				  NETIF_F_HIGHDMA);
+ 
+ 	/* Do not set IFF_UNICAST_FLT for VMWare's 82545EM */
+ 	if (hw->device_id != E1000_DEV_ID_82545EM_COPPER ||
+
