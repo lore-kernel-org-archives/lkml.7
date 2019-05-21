@@ -2,190 +2,120 @@ Return-Path: <SRS0=9PYC=TV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8B7EC46470
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 05:38:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DECF9C04E87
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 05:41:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 87C4221783
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 05:38:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AE6DC21019
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 05:41:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="pACzS81C"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="Q7SviENj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727851AbfEUFiW (ORCPT
+        id S1727811AbfEUFlw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 May 2019 01:38:22 -0400
-Received: from mail-qk1-f193.google.com ([209.85.222.193]:33246 "EHLO
-        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726495AbfEUFiW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 May 2019 01:38:22 -0400
-Received: by mail-qk1-f193.google.com with SMTP id p18so9755731qkk.0
-        for <linux-kernel@vger.kernel.org>; Mon, 20 May 2019 22:38:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ylhlFxOQtj3eEV5EznbPBmp2z9RTytA2Ra4QbX683aw=;
-        b=pACzS81CvGQTJCH9GhT/KUwRkEs1crnUg5F/m5oHZdu+OBy/9veH3hy2qondpMgaRM
-         A8OAdTYheYg9WhJJwfvIruNfnheKSd+itzj3fHkh6/7roccoq6+C25TAmXwuAWL8eAl0
-         ZGp9vk0FTqJT/JJbUG41jOtCBveAN9j0KNZZwiCgKiBlc2gRXKz/ZY0sPe88TC8yZt+v
-         FWyzjDJuh6ulHzXzoWW3B1POzRB6emNPfMhy9BMveRQppKHPxluyIq84k/lCdLmyRggm
-         RCkJNg3KtMX3weSI+tMNEDxiv+w3gK2nxSMlT03vGtNJX3sQMHPcika4qR4BHQ1n44Cu
-         Fk1A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ylhlFxOQtj3eEV5EznbPBmp2z9RTytA2Ra4QbX683aw=;
-        b=uEWOrzm/F5oszaqOqQb52w+X5IwpDN6aZqpo/pGE4kBrHfrxO6PFUHO1Y84ZDcMcz/
-         aGEiBU8dMgweKv90/ypEQ2cdrIMtHgnOF2iOl3ihqzvI2G5W1mMowSL2Fo/QqkZGq7st
-         uYYKJDYLQYo7XQQc1gPKqEa/OtMtPmzWZUE/lRG1ybIhRII/j3bXVe8XLPDu1dA2LkAd
-         5qj1MAPomn/7TABpu45fCNtEVD9ypfpfI8jI1gEKV/aF9DSoXKYeroHOwSHvcXVDxv6u
-         UF6SUaZJtE2oZxVSQZ+EFT1coWAQm0LXEVfOTQ0syvE6k8eODLdn1Aad1wC74ymnMyoZ
-         yrSg==
-X-Gm-Message-State: APjAAAXeYU6o2yoY2RjrzzcbaM3p3ianl5/BtfYOmh1dSV/M6L639VwE
-        yATy54ycG7zw0efYxouVOWZavDnFBIx7dZZ2DpTaXwG5nw8=
-X-Google-Smtp-Source: APXvYqwhLJkCq5Uyj5G0PBRyyWoG2hNCCMuCxvP8Exzk4c7voHBZjs/UCFuIQ1U7I+Ph2naAnq98GeHD2EZF/qEf93w=
-X-Received: by 2002:a37:8703:: with SMTP id j3mr2373239qkd.188.1558417100902;
- Mon, 20 May 2019 22:38:20 -0700 (PDT)
+        Tue, 21 May 2019 01:41:52 -0400
+Received: from mail-eopbgr80042.outbound.protection.outlook.com ([40.107.8.42]:4613
+        "EHLO EUR04-VI1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726247AbfEUFlw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 May 2019 01:41:52 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=JjW6d4NH7HfreHyJrWhVSe7vszRzXmyQLn7JhAqtYIw=;
+ b=Q7SviENjL0M2SOpEKQTLOEvsEzbkpF6y9GD/NO/lvRwgW7JaaVzxzTZENtMUSzjeuMTySVFsJJbNZkLbaudHoT/DuP0If8KEskeqhACn3cfPnT1otj8jKy2zQchlSaKnqTc6zO4flJdSYj7m6DZE7dLROk4MLGKBcHCwY8ImH2U=
+Received: from VI1PR04MB4543.eurprd04.prod.outlook.com (20.177.55.90) by
+ VI1PR04MB3214.eurprd04.prod.outlook.com (10.170.227.23) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1900.18; Tue, 21 May 2019 05:41:46 +0000
+Received: from VI1PR04MB4543.eurprd04.prod.outlook.com
+ ([fe80::5062:df97:a70b:93f8]) by VI1PR04MB4543.eurprd04.prod.outlook.com
+ ([fe80::5062:df97:a70b:93f8%7]) with mapi id 15.20.1900.020; Tue, 21 May 2019
+ 05:41:46 +0000
+From:   Robin Gong <yibin.gong@nxp.com>
+To:     Vinod Koul <vkoul@kernel.org>
+CC:     "robh@kernel.org" <robh@kernel.org>,
+        "broonie@kernel.org" <broonie@kernel.org>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "u.kleine-koenig@pengutronix.de" <u.kleine-koenig@pengutronix.de>,
+        "plyatov@gmail.com" <plyatov@gmail.com>,
+        "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
+        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
+        "will.deacon@arm.com" <will.deacon@arm.com>,
+        "l.stach@pengutronix.de" <l.stach@pengutronix.de>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>
+Subject: RE: Re: Re: [PATCH v3 11/14] dmaengine: imx-sdma: fix ecspi1 rx dma
+ not work on i.mx8mm
+Thread-Topic: Re: Re: [PATCH v3 11/14] dmaengine: imx-sdma: fix ecspi1 rx dma
+ not work on i.mx8mm
+Thread-Index: AdUPltdtzINQOtdfTGCZR5rwJ5SHbw==
+Date:   Tue, 21 May 2019 05:41:46 +0000
+Message-ID: <VI1PR04MB4543DEEC702531ED69616B8C89070@VI1PR04MB4543.eurprd04.prod.outlook.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=yibin.gong@nxp.com; 
+x-originating-ip: [119.31.174.66]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: abce53c9-6e82-4f12-b498-08d6ddaf0344
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:VI1PR04MB3214;
+x-ms-traffictypediagnostic: VI1PR04MB3214:
+x-microsoft-antispam-prvs: <VI1PR04MB3214673A46A46795F386F20B89070@VI1PR04MB3214.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:4125;
+x-forefront-prvs: 0044C17179
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(136003)(376002)(39860400002)(396003)(346002)(366004)(199004)(189003)(13464003)(66066001)(86362001)(25786009)(6916009)(305945005)(7696005)(54906003)(7736002)(8676002)(66946007)(26005)(66446008)(4326008)(6436002)(186003)(73956011)(33656002)(66476007)(64756008)(66556008)(76116006)(55016002)(229853002)(478600001)(476003)(9686003)(8936002)(68736007)(71190400001)(71200400001)(7416002)(256004)(5660300002)(6246003)(99286004)(316002)(14454004)(52536014)(2906002)(3846002)(74316002)(53936002)(81166006)(6506007)(53546011)(81156014)(486006)(102836004)(6116002);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR04MB3214;H:VI1PR04MB4543.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: qC3GzvuOMWdyy5mTcZ3r4qLZOuXq5jLr/RHd/eTAOKQSoA8R/TW5yTvjHRMYrVcUgGom5oXq/PSAYnh0/w0CYS89ZgSjtWYosQQu35nprDlg1aLBlJouIUbNNWvI2cLbMQ/lQFWUPPX6L+OCADWv4odm+suHE61qAVN5AhmrpdZZiwQ7UqodfappmnpKCUu/4VRvYNIWA9WD6wlxPVT/9awhA9ROsq0uBJyXvbW+yepLge1R7L0NNWDvNVwywSuxH07J678wtmTmA6O/gJxoOUMza2q55dLg0UZj/pVVDx6qSwjYhz3Uj4bXVIkYXCDiX29tyqANs81gEWvOHk4bUOP7WjWZpYsd21CZ6VwfEyDFislUnPDKAeEhFYcbL3r0gT0YFVkxrYC/jI3dsXfy4q7MeTgLOVJ77YHr0oT7ITQ=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-References: <cover.1557486950.git.amit.kucheria@linaro.org>
- <2a0626da4d8d5a1018c351b24b63e5e0d7a45a10.1557486950.git.amit.kucheria@linaro.org>
- <20190514161220.GC1824@centauri.ideon.se> <CAP245DWgfQakjXSTU2AfhkLOjAue83A-X6Qb40DC1QQj01GogQ@mail.gmail.com>
- <20190515130256.GA27174@centauri>
-In-Reply-To: <20190515130256.GA27174@centauri>
-From:   Amit Kucheria <amit.kucheria@linaro.org>
-Date:   Tue, 21 May 2019 11:08:09 +0530
-Message-ID: <CAP245DX+w3mPAQ5uJnkMkir9TSEH39qm7-gtS4N_O0SpOEZVkQ@mail.gmail.com>
-Subject: Re: [PATCHv1 4/8] arm64: dts: qcom: msm8916: Use more generic idle
- state names
-To:     Niklas Cassel <niklas.cassel@linaro.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Andy Gross <andy.gross@linaro.org>,
-        David Brown <david.brown@linaro.org>,
-        Li Yang <leoyang.li@nxp.com>, Shawn Guo <shawnguo@kernel.org>,
-        DTML <devicetree@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: abce53c9-6e82-4f12-b498-08d6ddaf0344
+X-MS-Exchange-CrossTenant-originalarrivaltime: 21 May 2019 05:41:46.1894
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB3214
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 15, 2019 at 6:33 PM Niklas Cassel <niklas.cassel@linaro.org> wrote:
->
-> On Wed, May 15, 2019 at 03:43:19PM +0530, Amit Kucheria wrote:
-> > On Tue, May 14, 2019 at 9:42 PM Niklas Cassel <niklas.cassel@linaro.org> wrote:
-> > >
-> > > On Fri, May 10, 2019 at 04:59:42PM +0530, Amit Kucheria wrote:
-> > > > Instead of using Qualcomm-specific terminology, use generic node names
-> > > > for the idle states that are easier to understand. Move the description
-> > > > into the "idle-state-name" property.
-> > > >
-> > > > Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
-> > > > ---
-> > > >  arch/arm64/boot/dts/qcom/msm8916.dtsi | 11 ++++++-----
-> > > >  1 file changed, 6 insertions(+), 5 deletions(-)
-> > > >
-> > > > diff --git a/arch/arm64/boot/dts/qcom/msm8916.dtsi b/arch/arm64/boot/dts/qcom/msm8916.dtsi
-> > > > index ded1052e5693..400b609bb3fd 100644
-> > > > --- a/arch/arm64/boot/dts/qcom/msm8916.dtsi
-> > > > +++ b/arch/arm64/boot/dts/qcom/msm8916.dtsi
-> > > > @@ -110,7 +110,7 @@
-> > > >                       reg = <0x0>;
-> > > >                       next-level-cache = <&L2_0>;
-> > > >                       enable-method = "psci";
-> > > > -                     cpu-idle-states = <&CPU_SPC>;
-> > > > +                     cpu-idle-states = <&CPU_SLEEP_0>;
-> > > >                       clocks = <&apcs>;
-> > > >                       operating-points-v2 = <&cpu_opp_table>;
-> > > >                       #cooling-cells = <2>;
-> > > > @@ -122,7 +122,7 @@
-> > > >                       reg = <0x1>;
-> > > >                       next-level-cache = <&L2_0>;
-> > > >                       enable-method = "psci";
-> > > > -                     cpu-idle-states = <&CPU_SPC>;
-> > > > +                     cpu-idle-states = <&CPU_SLEEP_0>;
-> > > >                       clocks = <&apcs>;
-> > > >                       operating-points-v2 = <&cpu_opp_table>;
-> > > >                       #cooling-cells = <2>;
-> > > > @@ -134,7 +134,7 @@
-> > > >                       reg = <0x2>;
-> > > >                       next-level-cache = <&L2_0>;
-> > > >                       enable-method = "psci";
-> > > > -                     cpu-idle-states = <&CPU_SPC>;
-> > > > +                     cpu-idle-states = <&CPU_SLEEP_0>;
-> > > >                       clocks = <&apcs>;
-> > > >                       operating-points-v2 = <&cpu_opp_table>;
-> > > >                       #cooling-cells = <2>;
-> > > > @@ -146,7 +146,7 @@
-> > > >                       reg = <0x3>;
-> > > >                       next-level-cache = <&L2_0>;
-> > > >                       enable-method = "psci";
-> > > > -                     cpu-idle-states = <&CPU_SPC>;
-> > > > +                     cpu-idle-states = <&CPU_SLEEP_0>;
-> > > >                       clocks = <&apcs>;
-> > > >                       operating-points-v2 = <&cpu_opp_table>;
-> > > >                       #cooling-cells = <2>;
-> > > > @@ -160,8 +160,9 @@
-> > > >               idle-states {
-> > > >                       entry-method="psci";
-> > >
-> > > Please add a space before and after "=".
-> > >
-> > > >
-> > > > -                     CPU_SPC: spc {
-> > > > +                     CPU_SLEEP_0: cpu-sleep-0 {
-> > >
-> > > While I like your idea of using power state names from
-> > > Server Base System Architecture document (SBSA) where applicable,
-> > > does each qcom power state have a matching state in SBSA?
-> > >
-> > > These are the qcom power states:
-> > > https://source.codeaurora.org/quic/la/kernel/msm-4.4/tree/Documentation/devicetree/bindings/arm/msm/lpm-levels.txt?h=msm-4.4#n53
-> > >
-> > > Note that qcom defines:
-> > > "wfi", "retention", "gdhs", "pc", "fpc"
-> > > while SBSA simply defines "idle_standby" (aka wfi), "idle_retention", "sleep".
-> > >
-> > > Unless you know the equivalent name for each qcom power state
-> > > (perhaps several qcom power states are really the same SBSA state?),
-> > > I think that you should omit the renaming from this patch series.
-> >
-> > That is what SLEEP_0, SLEEP_1, SLEEP_2 could be used for.
->
-> Ok, sounds good to me.
->
-> >
-> > IOW, all these qcom definitions are nicely represented in the
-> > state-name and we could simply stick to SLEEP_0, SLEEP_1 for the node
-> > names. There is wide variability in the the names of the qcom idle
-> > states across SoC families downstream, so I'd argue against using
-> > those for the node names.
-> >
-> > Just for cpu states (non-wfi) I see the use of the following names
-> > downstream across families. The C<num> seems to come from x86
-> > world[1]:
-> >
-> >  - C4,   standalone power collapse (spc)
-> >  - C4,   power collapse (fpc)
-> >  - C2D, retention
-> >  - C3,   power collapse (pc)
-> >  - C4,   rail power collapse (rail-pc)
-> >
-> > [1] https://www.hardwaresecrets.com/everything-you-need-to-know-about-the-cpu-c-states-power-saving-modes/
->
-> Indeed, there seems to be mixed names used, I've also seen "fpc-def".
->
-> So, you have convinced me.
->
->
-> Kind regards,
-> Niklas
-
-Can I take that as a Reviewed-by?
+PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBWaW5vZCBLb3VsIDx2a291bEBr
+ZXJuZWwub3JnPg0KPiBTZW50OiAyMDE55bm0NeaciDIx5pelIDEzOjEzDQo+IA0KPiBPbiAyMS0w
+NS0xOSwgMDQ6NTgsIFJvYmluIEdvbmcgd3JvdGU6DQo+ID4gPiAtLS0tLU9yaWdpbmFsIE1lc3Nh
+Z2UtLS0tLQ0KPiA+ID4gRnJvbTogVmlub2QgS291bCA8dmtvdWxAa2VybmVsLm9yZz4NCj4gPiA+
+IFNlbnQ6IDIwMTnlubQ15pyIMjHml6UgMTI6MTgNCj4gPiA+DQo+ID4gPiBPbiAwNy0wNS0xOSwg
+MDk6MTYsIFJvYmluIEdvbmcgd3JvdGU6DQo+ID4gPiA+IEJlY2F1c2UgdGhlIG51bWJlciBvZiBl
+Y3NwaTEgcnggZXZlbnQgb24gaS5teDhtbSBpcyAwLCB0aGUNCj4gPiA+ID4gY29uZGl0aW9uIGNo
+ZWNrIGlnbm9yZSBzdWNoIHNwZWNpYWwgY2FzZSB3aXRob3V0IGRtYSBjaGFubmVsDQo+ID4gPiA+
+IGVuYWJsZWQsIHdoaWNoIGNhdXNlZA0KPiA+ID4gPiBlY3NwaTEgcnggd29ya3MgZmFpbGVkLiBB
+Y3R1YWxseSwgbm8gbmVlZCB0byBjaGVjayBldmVudF9pZDAsDQo+ID4gPiA+IGNoZWNraW5nDQo+
+ID4gPiA+IGV2ZW50X2lkMSBpcyBlbm91Z2ggZm9yIERFVl8yX0RFViBjYXNlIGJlY2F1c2UgaXQn
+cyBzbyBsdWNreSB0aGF0DQo+ID4gPiA+IGV2ZW50X2lkMSBuZXZlciBiZSAwLg0KPiA+ID4NCj4g
+PiA+IFdlbGwgaXMgdGhhdCBieSBjaGFuY2Ugb3IgZGVzaWduIHRoYXQgZXZlbnRfaWQxIHdpbGwg
+YmUgbmV2ZXIgMD8NCj4gPiA+DQo+ID4gVGhhdCdzIGJ5IGNoYW5jZS4gREVWXzJfREVWIGlzIGp1
+c3QgZm9yIEF1ZGlvIGNhc2UgYW5kIG5vbi16ZXJvIGZvcg0KPiBldmVudF9pZDEgb24gY3VycmVu
+dCBpLk1YIGZhbWlseS4NCj4gDQo+IFRoZW4gaXQgd29udCBiZSBmZ29vZCB0byByZWx5IG9uIGNo
+YW5jZSA6KQ0KWWVzLCBJIGtuZXcgdGhhdC4gTWF5IEkgY3JlYXRlIGFub3RoZXIgaW5kZXBlbmRl
+bnQgcGF0Y2ggZm9yIGV2ZW50X2lkMSBzaW5jZSB0aGF0J3MgcG90ZW50aWFsIGlzc3VlIGlzIG5v
+dCByZWxhdGVkIHdpdGggdGhpcyBlY3NwaSBwYXRjaCBzZXQ/DQo+IA0KPiAtLQ0KPiB+Vmlub2QN
+Cg==
