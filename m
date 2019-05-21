@@ -2,288 +2,179 @@ Return-Path: <SRS0=9PYC=TV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DC1AC04AAF
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 09:01:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B29FC04AAF
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 09:01:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 199322173E
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 09:01:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 34C5D2173E
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 09:01:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=brauner.io header.i=@brauner.io header.b="ap4moqJQ"
+	dkim=pass (1024-bit key) header.d=lucidpixels.com header.i=@lucidpixels.com header.b="h5AjC6Mu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727247AbfEUJBN (ORCPT
+        id S1727417AbfEUJBT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 May 2019 05:01:13 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:46034 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726006AbfEUJBM (ORCPT
+        Tue, 21 May 2019 05:01:19 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:44392 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726740AbfEUJBS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 May 2019 05:01:12 -0400
-Received: by mail-pg1-f195.google.com with SMTP id i21so8235908pgi.12
-        for <linux-kernel@vger.kernel.org>; Tue, 21 May 2019 02:01:12 -0700 (PDT)
+        Tue, 21 May 2019 05:01:18 -0400
+Received: by mail-ot1-f68.google.com with SMTP id g18so15609485otj.11
+        for <linux-kernel@vger.kernel.org>; Tue, 21 May 2019 02:01:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=brauner.io; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=VXa8qKXM8vx5w5jhb1hWXGT+1/HaN8aUWabF6nAwG1s=;
-        b=ap4moqJQoZSVJnMxAJFA2Gd3/lgQpTrOdJPzRObXTro1kOAgVtt4jWtT8AIudv19/H
-         lxz3hqeX/rhdO+/P8gIqTFBmbdvDqc9UPfxW3qM91M2NJPKmmdWNMJs0faLyWBIfteGN
-         +/2JfEl57rlNZgyLn+VowUFpUEOnFsaPanJVATse+mTSHOVCOxNJdiLdeJ5ZpVqEpEnn
-         tXLh/cGNaLhGR0mNlBaRiVEP3qySDLYSMY6GXnVMnPVUKDKM/5xN+wCF35NVFryIv0eL
-         Rb4YO1KPcNruH1PoHC13d7F/4xmF1JTKNdjfTMAtW9J+OffwY4gLCo9f7Eiq3hW6OysP
-         KcMw==
+        d=lucidpixels.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ge56bwxr1RPinKCaA6qo1Uck5R0XoR6kdkJ4YNKckMc=;
+        b=h5AjC6Mury7j/vs+iLkOmEAaE9pSmrreKStll7qg6WbttKGcMWzj+PeLls12HlaL9U
+         ko5T47luNIErtzfDhPvzo4nM0HqL/FLA0fbbf7dPJNclRjaWDek+B/bzUyrK/licwrfq
+         lL4wP+snRHohgq3xznEngLs1jWftI3MbI07fM=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=VXa8qKXM8vx5w5jhb1hWXGT+1/HaN8aUWabF6nAwG1s=;
-        b=V3Qlfu8KE9opgsQlb9rLxTxVSeMAPmzFKx0QI2VmZHvUZQnwalCKTYIPVXRrfMjR//
-         uvz7vOy2oCnehdVN0mfLSI4wZxOiler69AQ0ihezDLsEaF9ft04UBzy2C6ggtpU2fDcO
-         Bd8wmtlq+ZaC14IzhLfo8GrCGVk7wDgIFTVYT5arAKJUu7/IHAnvPGGrF7ZAG2S9oHaR
-         EUdKH5oRaWufPUWj6orQxX7Zeb2bBoEZx7YrS2c/H4PhnXtdOL8tBa49PebGzmCB/nMQ
-         5l5JkMb5OoLjE33skAtrbIBD60IAddplnQyInIG24yYFdofY7J0irDZFJsvkOpMUV0xI
-         GcIg==
-X-Gm-Message-State: APjAAAXjpkULhSlTC8qi68dkd/u2aGjO51mfasTKKlfIpjZazjKLPSeK
-        EZU9i0c6o+BNhpMuojgIZUvD4Q==
-X-Google-Smtp-Source: APXvYqwiPEuTQW24lNgrLxshbki5jYwjBJyGemSdADvmx+PDINAmtZ98NXEPyAhz0SpDdxyA9y4qmQ==
-X-Received: by 2002:a62:e10f:: with SMTP id q15mr85381949pfh.56.1558429271893;
-        Tue, 21 May 2019 02:01:11 -0700 (PDT)
-Received: from brauner.io ([208.54.39.182])
-        by smtp.gmail.com with ESMTPSA id f36sm21146595pgb.76.2019.05.21.02.01.04
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 21 May 2019 02:01:10 -0700 (PDT)
-Date:   Tue, 21 May 2019 11:01:01 +0200
-From:   Christian Brauner <christian@brauner.io>
-To:     Minchan Kim <minchan@kernel.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-mm <linux-mm@kvack.org>, Michal Hocko <mhocko@suse.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Tim Murray <timmurray@google.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Suren Baghdasaryan <surenb@google.com>,
-        Daniel Colascione <dancol@google.com>,
-        Shakeel Butt <shakeelb@google.com>,
-        Sonny Rao <sonnyrao@google.com>,
-        Brian Geffon <bgeffon@google.com>, jannh@google.com,
-        oleg@redhat.com
-Subject: Re: [RFC 5/7] mm: introduce external memory hinting API
-Message-ID: <20190521090058.mdx4qecmdbum45t2@brauner.io>
-References: <20190520035254.57579-1-minchan@kernel.org>
- <20190520035254.57579-6-minchan@kernel.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ge56bwxr1RPinKCaA6qo1Uck5R0XoR6kdkJ4YNKckMc=;
+        b=HyvZv3TzZ6C/gXKMK34OutjF6oVGIEBJ7NJLPEd/E9jSf1pxV6MOvZN2SxqFprYqth
+         SFjjbHtrxYcY82ifNA8qcXPv5l2ANPNCzL8CV4KtgolXQVjf89OegDMZKXFRsJgJFQXn
+         k/qBLxUDNIxEOYCPz9pgzdsQpIgtYrdRKVOKsDdrnHlFcSPlC0zDEMPmAqRPvdATK1dC
+         NuiF9fVH1lOxkMfkb9AjxyBh8c7SKmcRN/41q/X3jrYwzz9TnwsQaafd/PUj+4wsmE8U
+         2gSkTzKA7AZat5N82TlMctvOg7djXk7LsaRwmYp1gIdjkcLPtUo7aSyEBQcr9cg/VeQ4
+         mAbg==
+X-Gm-Message-State: APjAAAXzGQJDSfLAX8XEojXlqd1XwKeAqhCfAltN/8qtDkyWoZt59Te5
+        TKQsr2be1KggreY+xr1P/S8o6yLITjVBCqptkuL8aQeQL3pzbw==
+X-Google-Smtp-Source: APXvYqz81wmT2WjBOs3p+AbBFqdEzhYVoOVSKq1+SvoU8I15bm/o7O5s+9s0p39Smjg1DKlxuffZsAIZS0JlCq/hzOM=
+X-Received: by 2002:a05:6830:1584:: with SMTP id i4mr21772823otr.109.1558429277453;
+ Tue, 21 May 2019 02:01:17 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20190520035254.57579-6-minchan@kernel.org>
-User-Agent: NeoMutt/20180716
+References: <CAO9zADzXTQpv5cGp61BzsVPvWQz5xbSJv_N71jBa3zopr7CB=Q@mail.gmail.com>
+ <20190520115608.GK18914@techsingularity.net>
+In-Reply-To: <20190520115608.GK18914@techsingularity.net>
+From:   Justin Piszcz <jpiszcz@lucidpixels.com>
+Date:   Tue, 21 May 2019 05:01:06 -0400
+Message-ID: <CAO9zADzz9QJ9Rp_Acy5GRggfYZzDwYYNWhCvPc9XHd+G=gS5zw@mail.gmail.com>
+Subject: Re: 5.1 and 5.1.1: BUG: unable to handle kernel paging request at ffffea0002030000
+To:     Mel Gorman <mgorman@techsingularity.net>
+Cc:     LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Cc: Jann and Oleg too
+On Mon, May 20, 2019 at 7:56 AM Mel Gorman <mgorman@techsingularity.net> wrote:
+>
+> On Sun, May 12, 2019 at 04:27:45AM -0400, Justin Piszcz wrote:
+> > Hello,
+> >
+> > I've turned off zram/zswap and I am still seeing the following during
+> > periods of heavy I/O, I am returning to 5.0.xx in the meantime.
+> >
+> > Kernel: 5.1.1
+> > Arch: x86_64
+> > Dist: Debian x86_64
+> >
+> > [29967.019411] BUG: unable to handle kernel paging request at ffffea0002030000
+> > [29967.019414] #PF error: [normal kernel read fault]
+> > [29967.019415] PGD 103ffee067 P4D 103ffee067 PUD 103ffed067 PMD 0
+> > [29967.019417] Oops: 0000 [#1] SMP PTI
+> > [29967.019419] CPU: 10 PID: 77 Comm: khugepaged Tainted: G
+> >    T 5.1.1 #4
+> > [29967.019420] Hardware name: Supermicro X9SRL-F/X9SRL-F, BIOS 3.2 01/16/2015
+> > [29967.019424] RIP: 0010:isolate_freepages_block+0xb9/0x310
+> > [29967.019425] Code: 24 28 48 c1 e0 06 40 f6 c5 1f 48 89 44 24 20 49
+> > 8d 45 79 48 89 44 24 18 44 89 f0 4d 89 ee 45 89 fd 41 89 c7 0f 84 ef
+> > 00 00 00 <48> 8b 03 41 83 c4 01 a9 00 00 01 00 75 0c 48 8b 43 08 a8 01
+> > 0f 84
+>
+> If you have debugging symbols installed, can you translate the faulting
+> address with the following?
+>
+> ADDR=`nm /path/to/vmlinux-or-debuginfo-file | grep "t isolate_freepages_block\$" | awk '{print $1}'`
+> addr2line -i -e vmlinux `printf "0x%lX" $((0x$ADDR+0xb9))`
 
-On Mon, May 20, 2019 at 12:52:52PM +0900, Minchan Kim wrote:
-> There is some usecase that centralized userspace daemon want to give
-> a memory hint like MADV_[COOL|COLD] to other process. Android's
-> ActivityManagerService is one of them.
-> 
-> It's similar in spirit to madvise(MADV_WONTNEED), but the information
-> required to make the reclaim decision is not known to the app. Instead,
-> it is known to the centralized userspace daemon(ActivityManagerService),
-> and that daemon must be able to initiate reclaim on its own without
-> any app involvement.
-> 
-> To solve the issue, this patch introduces new syscall process_madvise(2)
-> which works based on pidfd so it could give a hint to the exeternal
-> process.
-> 
-> int process_madvise(int pidfd, void *addr, size_t length, int advise);
-> 
-> All advises madvise provides can be supported in process_madvise, too.
-> Since it could affect other process's address range, only privileged
-> process(CAP_SYS_PTRACE) or something else(e.g., being the same UID)
-> gives it the right to ptrrace the process could use it successfully.
-> 
-> Please suggest better idea if you have other idea about the permission.
-> 
-> * from v1r1
->   * use ptrace capability - surenb, dancol
-> 
-> Signed-off-by: Minchan Kim <minchan@kernel.org>
-> ---
->  arch/x86/entry/syscalls/syscall_32.tbl |  1 +
->  arch/x86/entry/syscalls/syscall_64.tbl |  1 +
->  include/linux/proc_fs.h                |  1 +
->  include/linux/syscalls.h               |  2 ++
->  include/uapi/asm-generic/unistd.h      |  2 ++
->  kernel/signal.c                        |  2 +-
->  kernel/sys_ni.c                        |  1 +
->  mm/madvise.c                           | 45 ++++++++++++++++++++++++++
->  8 files changed, 54 insertions(+), 1 deletion(-)
-> 
-> diff --git a/arch/x86/entry/syscalls/syscall_32.tbl b/arch/x86/entry/syscalls/syscall_32.tbl
-> index 4cd5f982b1e5..5b9dd55d6b57 100644
-> --- a/arch/x86/entry/syscalls/syscall_32.tbl
-> +++ b/arch/x86/entry/syscalls/syscall_32.tbl
-> @@ -438,3 +438,4 @@
->  425	i386	io_uring_setup		sys_io_uring_setup		__ia32_sys_io_uring_setup
->  426	i386	io_uring_enter		sys_io_uring_enter		__ia32_sys_io_uring_enter
->  427	i386	io_uring_register	sys_io_uring_register		__ia32_sys_io_uring_register
-> +428	i386	process_madvise		sys_process_madvise		__ia32_sys_process_madvise
-> diff --git a/arch/x86/entry/syscalls/syscall_64.tbl b/arch/x86/entry/syscalls/syscall_64.tbl
-> index 64ca0d06259a..0e5ee78161c9 100644
-> --- a/arch/x86/entry/syscalls/syscall_64.tbl
-> +++ b/arch/x86/entry/syscalls/syscall_64.tbl
-> @@ -355,6 +355,7 @@
->  425	common	io_uring_setup		__x64_sys_io_uring_setup
->  426	common	io_uring_enter		__x64_sys_io_uring_enter
->  427	common	io_uring_register	__x64_sys_io_uring_register
-> +428	common	process_madvise		__x64_sys_process_madvise
->  
->  #
->  # x32-specific system call numbers start at 512 to avoid cache impact
-> diff --git a/include/linux/proc_fs.h b/include/linux/proc_fs.h
-> index 52a283ba0465..f8545d7c5218 100644
-> --- a/include/linux/proc_fs.h
-> +++ b/include/linux/proc_fs.h
-> @@ -122,6 +122,7 @@ static inline struct pid *tgid_pidfd_to_pid(const struct file *file)
->  
->  #endif /* CONFIG_PROC_FS */
->  
-> +extern struct pid *pidfd_to_pid(const struct file *file);
->  struct net;
->  
->  static inline struct proc_dir_entry *proc_net_mkdir(
-> diff --git a/include/linux/syscalls.h b/include/linux/syscalls.h
-> index e2870fe1be5b..21c6c9a62006 100644
-> --- a/include/linux/syscalls.h
-> +++ b/include/linux/syscalls.h
-> @@ -872,6 +872,8 @@ asmlinkage long sys_munlockall(void);
->  asmlinkage long sys_mincore(unsigned long start, size_t len,
->  				unsigned char __user * vec);
->  asmlinkage long sys_madvise(unsigned long start, size_t len, int behavior);
-> +asmlinkage long sys_process_madvise(int pid_fd, unsigned long start,
-> +				size_t len, int behavior);
->  asmlinkage long sys_remap_file_pages(unsigned long start, unsigned long size,
->  			unsigned long prot, unsigned long pgoff,
->  			unsigned long flags);
-> diff --git a/include/uapi/asm-generic/unistd.h b/include/uapi/asm-generic/unistd.h
-> index dee7292e1df6..7ee82ce04620 100644
-> --- a/include/uapi/asm-generic/unistd.h
-> +++ b/include/uapi/asm-generic/unistd.h
-> @@ -832,6 +832,8 @@ __SYSCALL(__NR_io_uring_setup, sys_io_uring_setup)
->  __SYSCALL(__NR_io_uring_enter, sys_io_uring_enter)
->  #define __NR_io_uring_register 427
->  __SYSCALL(__NR_io_uring_register, sys_io_uring_register)
-> +#define __NR_process_madvise 428
-> +__SYSCALL(__NR_process_madvise, sys_process_madvise)
->  
->  #undef __NR_syscalls
->  #define __NR_syscalls 428
-> diff --git a/kernel/signal.c b/kernel/signal.c
-> index 1c86b78a7597..04e75daab1f8 100644
-> --- a/kernel/signal.c
-> +++ b/kernel/signal.c
-> @@ -3620,7 +3620,7 @@ static int copy_siginfo_from_user_any(kernel_siginfo_t *kinfo, siginfo_t *info)
->  	return copy_siginfo_from_user(kinfo, info);
->  }
->  
-> -static struct pid *pidfd_to_pid(const struct file *file)
-> +struct pid *pidfd_to_pid(const struct file *file)
->  {
->  	if (file->f_op == &pidfd_fops)
->  		return file->private_data;
-> diff --git a/kernel/sys_ni.c b/kernel/sys_ni.c
-> index 4d9ae5ea6caf..5277421795ab 100644
-> --- a/kernel/sys_ni.c
-> +++ b/kernel/sys_ni.c
-> @@ -278,6 +278,7 @@ COND_SYSCALL(mlockall);
->  COND_SYSCALL(munlockall);
->  COND_SYSCALL(mincore);
->  COND_SYSCALL(madvise);
-> +COND_SYSCALL(process_madvise);
->  COND_SYSCALL(remap_file_pages);
->  COND_SYSCALL(mbind);
->  COND_SYSCALL_COMPAT(mbind);
-> diff --git a/mm/madvise.c b/mm/madvise.c
-> index 119e82e1f065..af02aa17e5c1 100644
-> --- a/mm/madvise.c
-> +++ b/mm/madvise.c
-> @@ -9,6 +9,7 @@
->  #include <linux/mman.h>
->  #include <linux/pagemap.h>
->  #include <linux/page_idle.h>
-> +#include <linux/proc_fs.h>
->  #include <linux/syscalls.h>
->  #include <linux/mempolicy.h>
->  #include <linux/page-isolation.h>
-> @@ -16,6 +17,7 @@
->  #include <linux/hugetlb.h>
->  #include <linux/falloc.h>
->  #include <linux/sched.h>
-> +#include <linux/sched/mm.h>
->  #include <linux/ksm.h>
->  #include <linux/fs.h>
->  #include <linux/file.h>
-> @@ -1140,3 +1142,46 @@ SYSCALL_DEFINE3(madvise, unsigned long, start, size_t, len_in, int, behavior)
->  {
->  	return madvise_core(current, start, len_in, behavior);
->  }
-> +
-> +SYSCALL_DEFINE4(process_madvise, int, pidfd, unsigned long, start,
-> +		size_t, len_in, int, behavior)
-> +{
-> +	int ret;
-> +	struct fd f;
-> +	struct pid *pid;
-> +	struct task_struct *tsk;
-> +	struct mm_struct *mm;
-> +
-> +	f = fdget(pidfd);
-> +	if (!f.file)
-> +		return -EBADF;
-> +
-> +	pid = pidfd_to_pid(f.file);
+Another event this morning, this occurred when copying a single ~25GB
+backup file from one block device device (3ware HW RAID) to a SW
+RAID-1 (mdadm):
 
-pidfd_to_pid() should not be directly exported since this allows
-/proc/<pid> fds to be used too. That's something we won't be going
-forward with. All new syscalls should only allow to operate on pidfds
-created through CLONE_PIDFD or pidfd_open() (cf. [1]).
+With this event, it was a fault and khugepaged is not stuck at 100%
+but this may be related as the stack trace is similar where
+compaction_alloc is utilizing most of the CPU:
+https://lkml.org/lkml/2019/5/9/225
 
-So e.g. please export a simple helper like
+# ADDR=`nm /usr/src/linux/vmlinux | grep "t isolate_freepages_block\$"
+| awk '{print $1}'`
+# echo $ADDR
+ffffffff812274f0
+# addr2line -i -e /usr/src/linux/vmlinux `printf "0x%lX" $((0x$ADDR+0x83d))`
+compaction.c:?
+# addr2line -i -e /usr/src/linux/vmlinux `printf "0x%lX" $((0x$ADDR+0x8d0))`
+compaction.c:?
 
-struct pid *pidfd_to_pid(const struct file *file)
-{
-        if (file->f_op == &pidfd_fops)
-                return file->private_data;
+# grep DEBUG_INFO /usr/src/linux/.config-5.1.3-2
+CONFIG_DEBUG_INFO=y
 
-        return NULL;
-}
+I can help test again in a 2-3 weeks if needed but for now I need to
+return back to disabling transparent huge pages.
 
-turning the old pidfd_to_pid() into something like:
-
-static struct pid *__fd_to_pid(const struct file *file)
-{
-        struct pid *pid;
-
-        pid = pidfd_to_pid(file);
-        if (pid)
-                return pid;
-
-        return tgid_pidfd_to_pid(file);
-}
-
-All new syscalls should only be using anon inode pidfds since they can
-actually have a clean security model built around them in the future.
-Note, pidfd_open() will be sent out together with making pidfds pollable
-for the 5.3 merge window.
-
-[1]: https://lore.kernel.org/lkml/20190520155630.21684-1-christian@brauner.io/
-
-Thanks!
-Christian
+[43775.068702] BUG: unable to handle kernel paging request at ffffea0002250000
+[43775.068706] #PF error: [normal kernel read fault]
+[43775.068707] PGD 103ffee067 P4D 103ffee067 PUD 103ffed067 PMD 0
+[43775.068709] Oops: 0000 [#1] SMP PTI
+[43775.068711] CPU: 1 PID: 77 Comm: khugepaged Tainted: G
+  T 5.1.3 #2
+[43775.068712] Hardware name: Supermicro X9SRL-F/X9SRL-F, BIOS 3.2 01/16/2015
+[43775.068717] RIP: 0010:isolate_freepages_block+0xb9/0x310
+[43775.068718] Code: 24 28 48 c1 e0 06 40 f6 c5 1f 48 89 44 24 20 49
+8d 45 79 48 89 44 24 18 44 89 f0 4d 89 ee 45 89 fd 41 89 c7 0f 84 ef
+00 00 00 <48> 8b 03 41 83 c4 01 a9 00 00 01 00 75 0c 48 8b 43 08 a8 01
+0f 84
+[43775.068719] RSP: 0018:ffffc900003a7860 EFLAGS: 00010246
+[43775.068720] RAX: 0000000000000000 RBX: ffffea0002250000 RCX: ffffc900003a7b69
+[43775.068721] RDX: 0000000000000000 RSI: 0000000000000000 RDI: ffffffff828c4d90
+[43775.068721] RBP: 0000000000089400 R08: 0000000000000001 R09: 0000000000000000
+[43775.068722] R10: 0000000000000202 R11: ffffffff828c49d0 R12: 0000000000000000
+[43775.068723] R13: 0000000000000000 R14: ffffc900003a7af0 R15: 0000000000000000
+[43775.068724] FS:  0000000000000000(0000) GS:ffff88903f840000(0000)
+knlGS:0000000000000000
+[43775.068725] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[43775.068725] CR2: ffffea0002250000 CR3: 000000000280e002 CR4: 00000000001606e0
+[43775.068726] Call Trace:
+[43775.068730]  compaction_alloc+0x83d/0x8d0
+[43775.068732]  migrate_pages+0x30d/0x750
+[43775.068734]  ? isolate_migratepages_block+0xa10/0xa10
+[43775.068735]  ? __reset_isolation_suitable+0x110/0x110
+[43775.068736]  compact_zone+0x684/0xa70
+[43775.068738]  compact_zone_order+0x109/0x150
+[43775.068741]  ? schedule_timeout+0x1ba/0x290
+[43775.068743]  ? record_times+0x13/0xa0
+[43775.068744]  try_to_compact_pages+0x10d/0x220
+[43775.068747]  __alloc_pages_direct_compact+0x93/0x180
+[43775.068748]  __alloc_pages_nodemask+0x6c7/0xe20
+[43775.068751]  ? __wake_up_common_lock+0xb0/0xb0
+[43775.068752]  khugepaged+0x31f/0x19c0
+[43775.068754]  ? __wake_up_common_lock+0xb0/0xb0
+[43775.068755]  ? __wake_up_common_lock+0xb0/0xb0
+[43775.068756]  ? collapse_shmem.isra.4+0xc20/0xc20
+[43775.068759]  kthread+0x10a/0x120
+[43775.068761]  ? __kthread_create_on_node+0x1b0/0x1b0
+[43775.068762]  ret_from_fork+0x35/0x40
+[43775.068763] CR2: ffffea0002250000
+[43775.068764] ---[ end trace 1f63fc0e799750fe ]---
+[43775.068766] RIP: 0010:isolate_freepages_block+0xb9/0x310
+[43775.068767] Code: 24 28 48 c1 e0 06 40 f6 c5 1f 48 89 44 24 20 49
+8d 45 79 48 89 44 24 18 44 89 f0 4d 89 ee 45 89 fd 41 89 c7 0f 84 ef
+00 00 00 <48> 8b 03 41 83 c4 01 a9 00 00 01 00 75 0c 48 8b 43 08 a8 01
+0f 84
+[43775.068767] RSP: 0018:ffffc900003a7860 EFLAGS: 00010246
+[43775.068768] RAX: 0000000000000000 RBX: ffffea0002250000 RCX: ffffc900003a7b69
+[43775.068769] RDX: 0000000000000000 RSI: 0000000000000000 RDI: ffffffff828c4d90
+[43775.068770] RBP: 0000000000089400 R08: 0000000000000001 R09: 0000000000000000
+[43775.068770] R10: 0000000000000202 R11: ffffffff828c49d0 R12: 0000000000000000
+[43775.068771] R13: 0000000000000000 R14: ffffc900003a7af0 R15: 0000000000000000
+[43775.068772] FS:  0000000000000000(0000) GS:ffff88903f840000(0000)
+knlGS:0000000000000000
+[43775.068773] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[43775.068773] CR2: ffffea0002250000 CR3: 000000000280e002 CR4: 00000000001606e0
