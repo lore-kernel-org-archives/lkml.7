@@ -2,173 +2,123 @@ Return-Path: <SRS0=9PYC=TV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51AD8C04AB4
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 10:34:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13373C04AAF
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 10:36:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 28505217D8
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 10:34:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="zP89vje+"
+	by mail.kernel.org (Postfix) with ESMTP id E11DC217D4
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 10:36:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727758AbfEUKeu (ORCPT
+        id S1727531AbfEUKga (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 May 2019 06:34:50 -0400
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:46257 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727671AbfEUKeu (ORCPT
+        Tue, 21 May 2019 06:36:30 -0400
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:37120 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726138AbfEUKga (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 May 2019 06:34:50 -0400
-Received: by mail-lf1-f67.google.com with SMTP id l26so12626027lfh.13
-        for <linux-kernel@vger.kernel.org>; Tue, 21 May 2019 03:34:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=fCy/VGpOq743DayHQQsEozNjpRnyCKmSgWu0EqLS7qg=;
-        b=zP89vje+56kWqEkujYv48d0KS4alfTieGHI7YzDNtsS4JuwFk1Dh8MNxXHZoJPbAxQ
-         CH3lOVrIsd6nqpUPTVZulS1/3Z+tnWTCxbnoLBkwiBZw+zOPGMUncf2qftUjFiql35Lk
-         CdPFd1b7QYx+1e/JzV/e485h65Z1WwH5rdGpe6KrVTAKDG3TOsSMvRfpR9bNtzjaJDh7
-         EwUC03mrqTHncJzjWFsziAhLwIJ5pSDPgI02aDo6COvLOEYrIBe+ClTUuVLXmE58NrqW
-         sJSwMImQdNKURKsZVdP/6VfWR/gfbYg2GXdAyMQ/SzZNCKDKyLzIG6NxyCxBFsvuENeO
-         2nxQ==
+        Tue, 21 May 2019 06:36:30 -0400
+Received: by mail-ed1-f67.google.com with SMTP id w37so28653904edw.4
+        for <linux-kernel@vger.kernel.org>; Tue, 21 May 2019 03:36:29 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=fCy/VGpOq743DayHQQsEozNjpRnyCKmSgWu0EqLS7qg=;
-        b=jveBW+XgSuqug0y55dj1G4nNnMOTu+MPinYTnZjo4AAl0ZxUHrEL+75lav/vKIxaiR
-         xt86p1UOuQEsR0wleJGHIPtJ69sqi25ucQ6jb7nk4p5Cs4q+utKRydAidu/LGwc0LKr7
-         hrUqhzoe+XYKhzAoiK6uxIEMNT3OrcUoeoHlMn2m0ZTbe20R8IgP5LdeHrV79oA3Gwuj
-         61miM6DqQERohudLCPtd3wmwOl16Y9u4PMIwJEmVCWvC8PdqW3zv+oGaehTYpXzRG7Bs
-         26JB7bJ8qI1vPPOIAw7pZnvGT+DvzEyLOb/3Mnd93vEtZ4h4TL4qLZ2zSpUc17F8XGJx
-         m3gg==
-X-Gm-Message-State: APjAAAUGu9+ryJwWL2G63fPUuqfX8zCjvcoTRCwxTsaeNvhirDew2amn
-        LBdJqlPrcgsC3AHYqde3JZYdy1KQ8uksDIHASzHAtQ==
-X-Google-Smtp-Source: APXvYqyQFz1GGstt7zS1hAVbudRpaHbP9enaU8FISyREPvFreiVL7X+mhabTLNetdmWxR+2SPWWHYx8+tn/RG6YHtcE=
-X-Received: by 2002:a19:6703:: with SMTP id b3mr5248194lfc.153.1558434887837;
- Tue, 21 May 2019 03:34:47 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version;
+        bh=uAylt3ofKrXJiUmVt/aJiMVs6WCW7IL4o+lOVbQ9k+k=;
+        b=sfKCnXxnFTv4bvJWhLb37R6cjFqHwITjaBTbvnqnyPpJNL9pfzp8X6UGIy1LSxmcjT
+         CNYxG3ZcUJJt3YwLCJ6ysnooEZz6moAD+oVv0/s8w1Gi2U4unQAjeuGm+CK+/W8nTK92
+         H588oxGlVHSoB1nFdALJOpgZ261WP1GX4dvRHxSeAmrjo3kL6SvpsiH3E1kS84OKBPMX
+         91+RDknoTPk+b3KZlRa8nG9DiyrTRss+8xuqMqH2VFW+42+jA08IyHeGmD8rJwRcImoA
+         o1HFuvT+AEK40eaa2ZY/fR2vVtV3uH6Sa1LK1jARwRXyUIbRThTFMPKtUlUhv0ZXEiH5
+         EE3w==
+X-Gm-Message-State: APjAAAW4Rd1hx1NJoQ4SI3rY3S7HVTqrRCDKTurW6IdRq3USUVxamHgv
+        CiwpXrubNRlmjw5FuiklNO+MHYN7VXLr5kr6T0RduxzYjzXigHGsXHaEsxAUX0QP1mobP+Xgx4Z
+        iZrL7jrdMVihnr0k6
+X-Google-Smtp-Source: APXvYqxwKTRDeQeHnXoeo2S5PjdpTBXMJbW529IdtNa7k6B9JmqbZcfYZOYpZVGnzIrOSfgpYYl4WA==
+X-Received: by 2002:a17:906:5593:: with SMTP id y19mr35149813ejp.264.1558434989114;
+        Tue, 21 May 2019 03:36:29 -0700 (PDT)
+Received: from localhost ([194.105.145.90])
+        by smtp.gmail.com with ESMTPSA id a40sm6205178edd.1.2019.05.21.03.36.28
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 21 May 2019 03:36:28 -0700 (PDT)
+From:   Oleksandr Suvorov <oleksandr.suvorov@toradex.com>
+To:     Fabio Estevam <festevam@gmail.com>
+Cc:     linux-kernel@vger.kernel.org, alsa-devel@alsa-project.org,
+        Marcel Ziswiler <marcel.ziswiler@toradex.com>,
+        Igor Opaniuk <igor.opaniuk@toradex.com>,
+        Oleksandr Suvorov <oleksandr.suvorov@toradex.com>,
+        Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>
+Subject: [PATCH v1 0/6] VAG power control improvement for sgtl5000 codec
+Date:   Tue, 21 May 2019 13:36:13 +0300
+Message-Id: <20190521103619.4707-1-oleksandr.suvorov@toradex.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-References: <20190520115230.720347034@linuxfoundation.org>
-In-Reply-To: <20190520115230.720347034@linuxfoundation.org>
-From:   Naresh Kamboju <naresh.kamboju@linaro.org>
-Date:   Tue, 21 May 2019 16:04:35 +0530
-Message-ID: <CA+G9fYs+Ft2v_Xr0KJ3AOdbTTJJ8YB6vgLc-ps6TiVM4nyftLw@mail.gmail.com>
-Subject: Re: [PATCH 4.9 00/44] 4.9.178-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     open list <linux-kernel@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>,
-        lkft-triage@lists.linaro.org,
-        linux- stable <stable@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="US-ASCII"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 20 May 2019 at 17:47, Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> This is the start of the stable review cycle for the 4.9.178 release.
-> There are 44 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
->
-> Responses should be made by Wed 22 May 2019 11:50:58 AM UTC.
-> Anything received after that time might be too late.
->
-> The whole patch series can be found in one patch at:
->         https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-=
-4.9.178-rc1.gz
-> or in the git tree and branch at:
->         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
--rc.git linux-4.9.y
-> and the diffstat can be found below.
->
-> thanks,
->
-> greg k-h
 
-Results from Linaro=E2=80=99s test farm.
-No regressions on arm64, arm, x86_64, and i386.
+VAG power control is improved to fit the manual. This fixes as
+minimum one bug: if customer muxes Headphone to Line-In right after boot
+w/o playing any sound, the VAG power remains off that leads to poor
+sound quality from line-in.
 
-Summary
-------------------------------------------------------------------------
+I.e. after boot:
+- Connect sound source to Line-In jack;
+- Connect headphone to HP jack;
+- Run following commands:
+$ amixer set 'Headphone' 80%
+$ amixer set 'Headphone Mux' LINE_IN
 
-kernel: 4.9.178-rc1
-git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
-le-rc.git
-git branch: linux-4.9.y
-git commit: 1a569b62b013b75248598605647b0c077a399c5c
-git describe: v4.9.177-45-g1a569b62b013
-Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-4.9-oe/bui=
-ld/v4.9.177-45-g1a569b62b013
+Also this series includes fixes of non-important bugs in sgtl5000 codec
+driver.
 
-No regressions (compared to build v4.9.177)
 
-No fixes (compared to build v4.9.177)
+Oleksandr Suvorov (6):
+  ASoC: sgtl5000: Fix definition of VAG Ramp Control
+  ASoC: sgtl5000: add ADC mute control
+  ASoC: sgtl5000: Fix of unmute outputs on probe
+  ASoC: sgtl5000: Fix charge pump source assignment
+  ASoC: Define a set of DAPM pre/post-up events
+  ASoC: sgtl5000: Improve VAG power and mute control
 
-Ran 23360 total tests in the following environments and test suites.
+ include/sound/soc-dapm.h    |   2 +
+ sound/soc/codecs/sgtl5000.c | 250 ++++++++++++++++++++++++++++++------
+ sound/soc/codecs/sgtl5000.h |   2 +-
+ 3 files changed, 212 insertions(+), 42 deletions(-)
 
-Environments
---------------
-- dragonboard-410c - arm64
-- i386
-- juno-r2 - arm64
-- qemu_arm
-- qemu_i386
-- qemu_x86_64
-- x15 - arm
-- x86_64
+-- 
+2.20.1
 
-Test Suites
------------
-* build
-* install-android-platform-tools-r2600
-* kselftest
-* libhugetlbfs
-* ltp-cap_bounds-tests
-* ltp-commands-tests
-* ltp-containers-tests
-* ltp-cpuhotplug-tests
-* ltp-cve-tests
-* ltp-dio-tests
-* ltp-fcntl-locktests-tests
-* ltp-filecaps-tests
-* ltp-fs-tests
-* ltp-fs_bind-tests
-* ltp-fs_perms_simple-tests
-* ltp-fsx-tests
-* ltp-hugetlb-tests
-* ltp-io-tests
-* ltp-ipc-tests
-* ltp-math-tests
-* ltp-mm-tests
-* ltp-nptl-tests
-* ltp-pty-tests
-* ltp-sched-tests
-* ltp-securebits-tests
-* ltp-syscalls-tests
-* ltp-timers-tests
-* perf
-* spectre-meltdown-checker-test
-* v4l2-compliance
-* ltp-open-posix-tests
-* prep-tmp-disk
-* kvm-unit-tests
-* kselftest-vsyscall-mode-native
-* kselftest-vsyscall-mode-none
-* ssuite
 
---=20
-Linaro LKFT
-https://lkft.linaro.org
+-- 
+
+Ciklum refers to one or more of Ciklum Group Holdings LTD. and its 
+subsidiaries and affiliates each of which is a legally separate entity. 
+Ciklum LLC is a limited liability company registered in Ukraine under 
+EDRPOU code 31902643, with its registered address at 12 Amosova St., 03680, 
+Kyiv, Ukraine.
+
+
+
+The contents of this e-mail (including any attachments) 
+are confidential and may be legally privileged. If you are not the intended 
+recipient of this e-mail, please notify the sender immediately and then 
+delete it (including any attachments) from all your systems. Any 
+unauthorised use, reproduction, distribution, disclosure and/or 
+modification of this message and/or its contents are strictly prohibited. 
+We cannot guarantee that this e-mail is secure or error-free. Ciklum cannot 
+be held liable for any loss or damage caused by software viruses or 
+resulting from any use of or reliance on this email by anyone, other than 
+the intended addressee to the extent agreed in a contract for the matter to 
+which this email relates (if any). Messages sent to and from Ciklum may be 
+monitored; by replying to this e-mail you give your consent to such 
+monitoring.  Notice: we do not accept service by e-mail of court 
+proceedings, other processes or formal notices of any kind without specific 
+prior written agreement. This email does not constitute a binding offer or 
+acceptance for Ciklum unless so set forth in a separate document.
+
+
