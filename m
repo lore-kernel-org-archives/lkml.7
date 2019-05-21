@@ -2,103 +2,72 @@ Return-Path: <SRS0=9PYC=TV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,FROM_EXCESS_BASE64,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82792C46470
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 11:16:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FA10C04E87
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 11:17:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 58E042081C
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 11:16:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cDYa5bjj"
+	by mail.kernel.org (Postfix) with ESMTP id 447912081C
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 11:17:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727922AbfEULQZ (ORCPT
+        id S1727971AbfEULRP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 May 2019 07:16:25 -0400
-Received: from mail-yb1-f176.google.com ([209.85.219.176]:34936 "EHLO
-        mail-yb1-f176.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726138AbfEULQZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 May 2019 07:16:25 -0400
-Received: by mail-yb1-f176.google.com with SMTP id k202so6962533ybk.2;
-        Tue, 21 May 2019 04:16:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=qHKESFWu3uVEowXVX/MvPCRT+aTkRC4ea2S7JZT1F1I=;
-        b=cDYa5bjjEi5TiX7BKmIemQ4LmfzVf2nUsVGq64Kc/mu8g7xa6JqtsS6oDAJ+ZU+HER
-         yDCjQZae2XQqGv/Pw5bvHHmGM3g8e5dTKPNPQiWYpAYaOWVM+SItOzvYjBSsffBDY8sN
-         brOJ/RbEA+HJa/SANyea38MIANy2ZYu2mmPTzpLynR/MbziBvxAme8PkYlKM3bxMA0nm
-         nJxsc5/ak7Uv1x+IRKS3KgH2COieezeVCSCZ1kL3wGXM/2P1gY9nx7BsEErP7DIbBrCE
-         2raAMhom4F4qpS9UFBf3rsfjDiXCPu2wO3l+4sqfmAVjBKOv3zPHybzfqSKgjPKsn1fN
-         xPHA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=qHKESFWu3uVEowXVX/MvPCRT+aTkRC4ea2S7JZT1F1I=;
-        b=oxAn1z8Spizo/mEhqkv4b5q4sQyOdvRpNhir3QndMlKiDlqz+vy1OP82hcXVI7yYdw
-         B4ImL+cqL+9RcgQfNb3IpPVov+9KaYhI2rHRdOKlO6yP8mTpsrN1JsefVCGarJJ2b45s
-         30BWHSRUslMh2pwW/UXD2bYFoVuiGgOAkiu8x2uLe8FIH4YHQ4EEQUdsjpxCMO34agmf
-         NKUMHy1bcJOr5yld/fn2HPjNCK/OsLdpEG04xzMYzeCu+i2BmjqtGm1NRezV/8jfVG9q
-         hOGkNbDMzmHDKXfBi00q5yAaPRc9tpD6SaR4PdbnD8WqEPIfJpYY3kwKbjwoIWZ3fN/0
-         mMrg==
-X-Gm-Message-State: APjAAAUW+R1/D3Exeq2b3y3+1+Sl38a0wTMZYZYa8rqALeHtBgibtblz
-        1g/yOs3YPprrfMYdSjo8I1coAFePj4quov10eMM=
-X-Google-Smtp-Source: APXvYqzx693vHzn03Sj+D9wBGIXnVqz/1AaF0r6ryn52oijxf7HsQVy+WYRTWMopirlPQg2lq8f8gGRY2he9l206H/Y=
-X-Received: by 2002:a25:c6c9:: with SMTP id k192mr3210217ybf.2.1558437383800;
- Tue, 21 May 2019 04:16:23 -0700 (PDT)
+        Tue, 21 May 2019 07:17:15 -0400
+Received: from mga03.intel.com ([134.134.136.65]:58530 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726138AbfEULRP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 May 2019 07:17:15 -0400
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 21 May 2019 04:17:14 -0700
+X-ExtLoop1: 1
+Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.157])
+  by fmsmga001.fm.intel.com with SMTP; 21 May 2019 04:17:11 -0700
+Received: by lahna (sSMTP sendmail emulation); Tue, 21 May 2019 14:17:10 +0300
+Date:   Tue, 21 May 2019 14:17:10 +0300
+From:   Mika Westerberg <mika.westerberg@linux.intel.com>
+To:     Charles Keepax <ckeepax@opensource.cirrus.com>
+Cc:     wsa@the-dreams.de, linux-i2c@vger.kernel.org,
+        linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        benjamin.tissoires@redhat.com, jbroadus@gmail.com,
+        patches@opensource.cirrus.com
+Subject: Re: [PATCH 1/5] i2c: acpi: Factor out getting the IRQ from ACPI
+Message-ID: <20190521111710.GW2781@lahna.fi.intel.com>
+References: <20190520084936.10590-1-ckeepax@opensource.cirrus.com>
+ <20190520084936.10590-2-ckeepax@opensource.cirrus.com>
 MIME-Version: 1.0
-References: <9a9ba4c9-3cb7-eb64-4aac-d43b59224442@gmail.com> <20190521104512.2r67fydrgniwqaja@shell.armlinux.org.uk>
-In-Reply-To: <20190521104512.2r67fydrgniwqaja@shell.armlinux.org.uk>
-From:   =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>
-Date:   Tue, 21 May 2019 13:16:12 +0200
-Message-ID: <CACna6ryVxFr8ho3ekY4Q_J=TamVLv9ZMDaHJFUGcEGSRrSVaHA@mail.gmail.com>
-Subject: Re: ARM router NAT performance affected by random/unrelated commits
-To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
-Cc:     Network Development <netdev@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-block@vger.kernel.org, John Crispin <john@phrozen.org>,
-        Jonas Gorski <jonas.gorski@gmail.com>,
-        Jo-Philipp Wich <jo@mein.io>, Felix Fietkau <nbd@nbd.name>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190520084936.10590-2-ckeepax@opensource.cirrus.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 21 May 2019 at 12:45, Russell King - ARM Linux admin
-<linux@armlinux.org.uk> wrote:
-> On Tue, May 21, 2019 at 12:28:48PM +0200, Rafa=C5=82 Mi=C5=82ecki wrote:
-> > I work on home routers based on Broadcom's Northstar SoCs. Those device=
-s
-> > have ARM Cortex-A9 and most of them are dual-core.
-> >
-> > As for home routers, my main concern is network performance. That CPU
-> > isn't powerful enough to handle gigabit traffic so all kind of
-> > optimizations do matter. I noticed some unexpected changes in NAT
-> > performance when switching between kernels.
-> >
-> > My hardware is BCM47094 SoC (dual core ARM) with integrated network
-> > controller and external BCM53012 switch.
->
-> Guessing, I'd say it's to do with the placement of code wrt cachelines.
+On Mon, May 20, 2019 at 09:49:32AM +0100, Charles Keepax wrote:
+> In preparation for future refactoring factor out the fetch of the IRQ
+> into its own helper function.
+> 
+> Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
+> ---
+>  drivers/i2c/i2c-core-acpi.c | 40 +++++++++++++++++++++++++---------------
+>  1 file changed, 25 insertions(+), 15 deletions(-)
+> 
+> diff --git a/drivers/i2c/i2c-core-acpi.c b/drivers/i2c/i2c-core-acpi.c
+> index 2728006920888..c3ac3ea184317 100644
+> --- a/drivers/i2c/i2c-core-acpi.c
+> +++ b/drivers/i2c/i2c-core-acpi.c
+> @@ -137,13 +137,35 @@ static int i2c_acpi_do_lookup(struct acpi_device *adev,
+>  	return 0;
+>  }
+>  
+> +static int i2c_acpi_get_irq(struct acpi_device *adev, int *irq)
 
-That was my guess as well, that's why I tried "cachestat" tool.
-
-
-> You could try aligning some of the cache flushing code to a cache line
-> and see what effect that has.
-
-Can you give me some extra hint on how to do that, please? I tried
-searching for it a bit but I didn't find any clear article on that
-matter.
-
---=20
-Rafa=C5=82
+I think here the function should return irq instead, and negative errno
+in case of failure.
