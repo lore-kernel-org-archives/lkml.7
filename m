@@ -1,151 +1,103 @@
 Return-Path: <SRS0=9PYC=TV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
-X-Spam-Level: *
-X-Spam-Status: No, score=1.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_MUTT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Level: 
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2230BC04AAF
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 09:11:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71AD3C04AAF
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 09:12:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E129A216B7
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 09:11:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558429904;
-	bh=yx7cV8f32un9LEMO+jl8EoRCPsZ6Ci32BCw0MBrlhDU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=zwCrBtRHfPZuAWHJeoVBtlmPPrG276s2EYFJQnACWKjibVS3dkvymquOZU6V6ssNy
-	 UaAmqHIXW7hrLoGQM12u/qHOPiWFvr28scz43tRmocmKfMV3qfCd/m7o3dACydkhe8
-	 fXA6LKrGoVLGPvGoDddL1AhPbwzMz5JuBByk5G0Q=
+	by mail.kernel.org (Postfix) with ESMTP id 454332173E
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 09:12:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="W644JxlB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727451AbfEUJLn (ORCPT
+        id S1727382AbfEUJMc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 May 2019 05:11:43 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:35338 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726296AbfEUJLm (ORCPT
+        Tue, 21 May 2019 05:12:32 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:33066 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726296AbfEUJMb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 May 2019 05:11:42 -0400
-Received: by mail-pf1-f196.google.com with SMTP id t87so8746750pfa.2;
-        Tue, 21 May 2019 02:11:42 -0700 (PDT)
+        Tue, 21 May 2019 05:12:31 -0400
+Received: by mail-pf1-f195.google.com with SMTP id z28so8768842pfk.0;
+        Tue, 21 May 2019 02:12:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=aOt4vo5keUTXDvxZZjRtcBm1aK7jMfHXMFBxDuIODzA=;
-        b=P5we8Zz6H+6S4VTlk2sRyHDyYEYpXZzybP9tIIBSzd43r9y5MSZBdRXPlBJ3lryTA+
-         FWOEAmz8w+mqOLE+LcNWuJ/ve9kPQPP8/phO01R+hpObYwiJzOU+mo9bnHu8oNM243hL
-         clYHRejJlOIAMzdHvAOiJEhHVDOa2d3OqbZ7SHHr7QP9bdRstiaxodxpUI3z/JqLn0l4
-         CuVATlGmo/EyAaq4qPMaqhxYBgbZoh/4BquhmIPGWKdQjcfQP+ng4zk+hWfL7XFYdTlr
-         x1rygty1O865cqXgXvCFhBnp7eKJuEOmFIKJmbeFTSlJ6axhVPY/QRu6T1S+43OepZ+a
-         qeZw==
+        h=from:to:cc:subject:date:message-id;
+        bh=WFNnK9H0K3Ber2neUCNJ4Uwp9UCDDXpkHqDNEykoK1U=;
+        b=W644JxlBVI3+KbYZ/4msgiMKep2yUr1vVE8T9T59526jPWWcWIAodg0uZrPmJmvQ2P
+         JGI1l5zrMJpy+g1HaUtg9Do8pAKqYRUHUUxrDP9n1RUWZzrHJQeIZJ2yN/g9YIoMY8LN
+         gKr1o3vOv4ployX/pkhR4dwSEh8YzODeZp57kseFQ5jr8achYT3s5L6tY2Q17D476kFM
+         R3f750EXEkhfDIEDlJFpmoaV3GtUmgxmWr/BMGE79REiPKy8RmnsNhZtQayV5S0OmPuw
+         /eZKGY2dbp3HZtONbwJ/iycJXh2ifSCI07nfof9iRV9xEpnr3XIkqu4hJ30xthX1gj5u
+         oPfw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=aOt4vo5keUTXDvxZZjRtcBm1aK7jMfHXMFBxDuIODzA=;
-        b=IWiM2Mq9+pg5bAF5xG1HRGTS+i2Er+q7WP8zuqyb3/e7h8K/8NnaPU8Wn490o22OPs
-         gW64O1ZWTOzxtig9Q+TheHEks2vykxAjqXukr7hZKgkYmI+4GFhFLAU8boZSKfWIEFsd
-         tZnA/UmdWOgrrU79c2myfXzNTUTyEIP+c5gVYYqkDKfxLRbScDEUh3OkzTzUiE4NiGt9
-         dqobrjTOEEEPOFmOeDYyos/eTFbxg9EcBpq5EiBybkNGRMhgRQbCHt2UW3eWfT2YyoI+
-         CjTBt5ccno5D+RdADqgR1GEdCdfyS8wcBPJznwwCIIPXjZmngpDhsMC2VWp8cLVQrQo7
-         HYJQ==
-X-Gm-Message-State: APjAAAU2FJtWHrDFVh9IZsdlikKwOW/FWU5z1iW+XYtH8USe0kPGfyQk
-        LttTk225t0xHDJsXa6J1AcE=
-X-Google-Smtp-Source: APXvYqzQ29qPyHCPNtNMZdW9Eoc/R5M5CuB8zMitb7IkSgZN/cNPBHHU2P0y4NCtkKDQjLnHnvvwbA==
-X-Received: by 2002:aa7:980e:: with SMTP id e14mr86228912pfl.142.1558429901695;
-        Tue, 21 May 2019 02:11:41 -0700 (PDT)
-Received: from google.com ([2401:fa00:d:0:98f1:8b3d:1f37:3e8])
-        by smtp.gmail.com with ESMTPSA id s19sm20707713pfh.176.2019.05.21.02.11.36
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 21 May 2019 02:11:40 -0700 (PDT)
-Date:   Tue, 21 May 2019 18:11:34 +0900
-From:   Minchan Kim <minchan@kernel.org>
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-mm <linux-mm@kvack.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Tim Murray <timmurray@google.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Suren Baghdasaryan <surenb@google.com>,
-        Daniel Colascione <dancol@google.com>,
-        Shakeel Butt <shakeelb@google.com>,
-        Sonny Rao <sonnyrao@google.com>,
-        Brian Geffon <bgeffon@google.com>, linux-api@vger.kernel.org
-Subject: Re: [RFC 1/7] mm: introduce MADV_COOL
-Message-ID: <20190521091134.GA219653@google.com>
-References: <20190520035254.57579-1-minchan@kernel.org>
- <20190520035254.57579-2-minchan@kernel.org>
- <20190520081621.GV6836@dhcp22.suse.cz>
- <20190520225419.GA10039@google.com>
- <20190521060443.GA32329@dhcp22.suse.cz>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190521060443.GA32329@dhcp22.suse.cz>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=WFNnK9H0K3Ber2neUCNJ4Uwp9UCDDXpkHqDNEykoK1U=;
+        b=BBgeVD+maijPnOoo5YMOdPzzh7hQfqWB4qL8FG92785zmZS4B0w4I8ZFIlS9GfG7am
+         NLllu2fbcuieiD890dZnOYgVEbLHa1KU7EAzGgZNmFM7FQE688Tq+orCBP/L4Wq407Tw
+         Srnx+aQAX1dJv/znkGrEkB1pmIX7KZIegmlH3eTtcobwGsf0EZBJyH4rcWPpGjNdLGUU
+         f7z5J5sN/M+7nVa3ewWakAm+LfH3qUcN8UPyjb+mlEIfC/m5Ebo0b6bunSDqPuaLOn+U
+         /tLKy8kNrV3xmLgmzi+X82UceWBn0glD/Ks1YDDq2UFQBwv1ZoA98xrR1fgkW2LymfFA
+         OmLQ==
+X-Gm-Message-State: APjAAAWU2b39BcABs0mlGdHqs7i2BQw83loIDoEWoHVyq6qANLiL2NMM
+        tLVsjzgwxHIJF6l/0NoTZ/0=
+X-Google-Smtp-Source: APXvYqzOAOrYS9rJhvcv1i/2h2CrHY8ltTh6nYiFU1m7HP097CbBxTgHa0DVHHQxMdoRZvpYb2g74Q==
+X-Received: by 2002:a65:42ca:: with SMTP id l10mr27448771pgp.181.1558429951093;
+        Tue, 21 May 2019 02:12:31 -0700 (PDT)
+Received: from localhost ([115.82.227.102])
+        by smtp.gmail.com with ESMTPSA id 129sm23870702pff.140.2019.05.21.02.12.30
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 21 May 2019 02:12:30 -0700 (PDT)
+From:   neojou@gmail.com
+To:     arend.vanspriel@broadcom.com, franky.lin@broadcom.com,
+        hante.meuleman@broadcom.com, chi-hsien.lin@cypress.com,
+        wright.feng@cypress.com, kvalo@codeaurora.org, davem@davemloft.net,
+        rafal@milecki.pl, hdegoedg@redhat.com,
+        p.figiel@camlintechnologies.com
+Cc:     linux-wireless@vger.kernel.org,
+        brcm80211-dev-list.pdl@braodcom.com,
+        brcm80211-dev-list@cypress.com, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Neo Jou <neojou@gmail.com>
+Subject: [PATCH] brcmfmac: use strlcpy() instead of strcpy()
+Date:   Tue, 21 May 2019 17:12:20 +0800
+Message-Id: <1558429940-8709-1-git-send-email-neojou@gmail.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 21, 2019 at 08:04:43AM +0200, Michal Hocko wrote:
-> On Tue 21-05-19 07:54:19, Minchan Kim wrote:
-> > On Mon, May 20, 2019 at 10:16:21AM +0200, Michal Hocko wrote:
-> [...]
-> > > > Internally, it works via deactivating memory from active list to
-> > > > inactive's head so when the memory pressure happens, they will be
-> > > > reclaimed earlier than other active pages unless there is no
-> > > > access until the time.
-> > > 
-> > > Could you elaborate about the decision to move to the head rather than
-> > > tail? What should happen to inactive pages? Should we move them to the
-> > > tail? Your implementation seems to ignore those completely. Why?
-> > 
-> > Normally, inactive LRU could have used-once pages without any mapping
-> > to user's address space. Such pages would be better candicate to
-> > reclaim when the memory pressure happens. With deactivating only
-> > active LRU pages of the process to the head of inactive LRU, we will
-> > keep them in RAM longer than used-once pages and could have more chance
-> > to be activated once the process is resumed.
-> 
-> You are making some assumptions here. You have an explicit call what is
-> cold now you are assuming something is even colder. Is this assumption a
-> general enough to make people depend on it? Not that we wouldn't be able
-> to change to logic later but that will always be risky - especially in
-> the area when somebody want to make a user space driven memory
-> management.
+From: Neo Jou <neojou@gmail.com>
 
-Think about MADV_FREE. It moves those pages into inactive file LRU's head.
-See the get_scan_count which makes forceful scanning of inactive file LRU
-if it has enough size based on the memory pressure.
-The reason is it's likely to have used-once pages in inactive file LRU,
-generally. Those pages has been top-priority candidate to be reclaimed
-for a long time.
+The function strcpy() is inherently not safe. Though the function
+works without problems here, it would be better to use other safer
+function, e.g. strlcpy(), to replace strcpy() still.
 
-Only parts I am aware of moving pages into tail of inactive LRU are places
-writeback is done for pages VM already decide to reclaim by LRU aging or
-destructive operation like invalidating but couldn't completed. It's
-really strong hints with no doubt.
+Signed-off-by: Neo Jou <neojou@gmail.com>
+---
+ drivers/net/wireless/broadcom/brcm80211/brcmfmac/common.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
->  
-> > > What should happen for shared pages? In other words do we want to allow
-> > > less privileged process to control evicting of shared pages with a more
-> > > privileged one? E.g. think of all sorts of side channel attacks. Maybe
-> > > we want to do the same thing as for mincore where write access is
-> > > required.
-> > 
-> > It doesn't work with shared pages(ie, page_mapcount > 1). I will add it
-> > in the description.
-> 
-> OK, this is good for the starter. It makes the implementation simpler
-> and we can add shared mappings coverage later.
-> 
-> Although I would argue that touching only writeable mappings should be
-> reasonably safe.
-> 
-> -- 
-> Michal Hocko
-> SUSE Labs
+diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/common.c b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/common.c
+index 96b8d5b..9e0bd2b 100644
+--- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/common.c
++++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/common.c
+@@ -269,7 +269,7 @@ int brcmf_c_preinit_dcmds(struct brcmf_if *ifp)
+ 
+ 	/* query for 'ver' to get version info from firmware */
+ 	memset(buf, 0, sizeof(buf));
+-	strcpy(buf, "ver");
++	strlcpy(buf, "ver", sizeof(buf));
+ 	err = brcmf_fil_iovar_data_get(ifp, "ver", buf, sizeof(buf));
+ 	if (err < 0) {
+ 		bphy_err(drvr, "Retrieving version information failed, %d\n",
+-- 
+2.7.4
+
