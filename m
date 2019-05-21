@@ -2,87 +2,202 @@ Return-Path: <SRS0=9PYC=TV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC538C04AAF
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 17:06:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89DEFC04AAF
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 17:07:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 90EBE21773
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 17:06:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5386C208C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 17:07:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TcSWYAwI"
+	dkim=pass (2048-bit key) header.d=netronome-com.20150623.gappssmtp.com header.i=@netronome-com.20150623.gappssmtp.com header.b="iDZLE7yN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728961AbfEURGv (ORCPT
+        id S1729090AbfEURH0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 May 2019 13:06:51 -0400
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:46712 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728271AbfEURGv (ORCPT
+        Tue, 21 May 2019 13:07:26 -0400
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:36583 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728980AbfEURH0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 May 2019 13:06:51 -0400
-Received: by mail-oi1-f194.google.com with SMTP id 203so13341730oid.13
-        for <linux-kernel@vger.kernel.org>; Tue, 21 May 2019 10:06:51 -0700 (PDT)
+        Tue, 21 May 2019 13:07:26 -0400
+Received: by mail-qt1-f196.google.com with SMTP id a17so21417444qth.3
+        for <linux-kernel@vger.kernel.org>; Tue, 21 May 2019 10:07:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=DepsFwsb9lkjjmxtM22xms6DJ95kq6d7Pbuq4OqECAc=;
-        b=TcSWYAwICafV+txluRy/7vKaRAad1DAY1lz4mpihseezFMb5NRnxsZD+8iDVu3FZB6
-         pi5Hw9qEADP/3/GqCwLtF0grO5aJw9lps5WmJNEyCOqLMZ8B+j+9PO3XlO+FUXNRcrSD
-         9hZ+Mk5f5Di1ZhVWW86yzuiGlVVa4qKbvBuLdIeAYI1CByBBJes3EdcNqQSevN+e0b5Y
-         An+BrCC1DwZl8Uh2vLBt0XKtvl1b5B8gQQ8fhhRvTjtmDCf9+RiAYTjBJhWdRrhVusx9
-         ZGWcMMc3Vuq44PfJXwPYNeNFmnk179KaDz6ysOPshDmfndG2FpPgcr8AyPvyoxPFCUv+
-         XDeg==
+        d=netronome-com.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:in-reply-to:references
+         :organization:mime-version:content-transfer-encoding;
+        bh=9uPTbP2BF+UpteaL2KhM3aAj7QjRcnMmKHeI6Yh9EPI=;
+        b=iDZLE7yNQ4lDtD0XYGkkl4K2STILfN2iFJ4sfOJWHZcNwYcoj01MXQAuZDOz8ypaRK
+         gQ2al+DExF3ndweDKlzGJ6S8sh3a4I1jE9yZebCzr/OaHgirNisBjWSFzzZ0aN37o2PE
+         bQq5ubtJDozzrq4fm4E7hHtO8mLFyoaA8Qex24dH+DQ36QAkCCXKVyOKiuGyL+WEUoit
+         I0O7bjcNirgWpLwqrE3kiuzk0lVusS/1S4J8ZocRTyM1V2+Hm8DaSmHQcZFgHDmya+Bv
+         hRISJqciG/x9jHFQJfYLXz+UjXrCfL/2L4BytVMEOGs4abeYw5KrgDt4gbfB+1SGo49B
+         /xHA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=DepsFwsb9lkjjmxtM22xms6DJ95kq6d7Pbuq4OqECAc=;
-        b=BFosk2ykGhyvxMH2hBKYiEZUszQGivvlMPNhb15K/y2UUqpW9cmHDt4EuzrCYo2zxl
-         URqBvwTtMEvdRedq09NefAbNgRCSDo5MXnPfEKnhnR1hyReVk0Wq117n8pCaIEqYY0dY
-         zW/ux4FD7/fq+SfGYLDXu3JtuazGfGIvCv1d7tvtEc1pQGu+61F/wjbS6O+AWApi7krX
-         Gs7AsrPG9OpH9ek8bD0N4zv3m0RUxikYWQJa//0+JUtPlBLjFOHTtzBP9rHIr5vDTv/N
-         RvcoXM2+3LKyC9EfOo7A00METXydhQAGnrEfJA1Zn5r0I4fjwG0WRNY26uNffu+quhDY
-         oxHg==
-X-Gm-Message-State: APjAAAWRwbyhq7txicVQAki7CliGGnlQmYoOAxvd0vO7jtf45AK81ofR
-        sRwpr9bh08IeeguQ2gw59Hh7MJFAyNpN7ebwDtg=
-X-Google-Smtp-Source: APXvYqyhQAU5DIWDIgucQiRsTp1XPcJJXtZurXWE5faQ1ZKAc6K7EtB1j84FC/R0B3u6rDgmNnou1SxGphHWrYAKouY=
-X-Received: by 2002:aca:580b:: with SMTP id m11mr1637263oib.169.1558458410830;
- Tue, 21 May 2019 10:06:50 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
+         :references:organization:mime-version:content-transfer-encoding;
+        bh=9uPTbP2BF+UpteaL2KhM3aAj7QjRcnMmKHeI6Yh9EPI=;
+        b=jnUfe7D/Ihzg66W6OJWrQPgX89zeQ2exVuigKyTMIzjR8K7rpGaSUuV61QWix9fYYi
+         jk2NiGtkYHnKlsTDfRlCfknre+JR0e7c/Sz260vKG43TvUWR/gaanJ4WkfGRc43IXNmi
+         KLZkzeif4BKYXNXNI473jscH6G6x/P0npRd8yAz1ePp9TQ+gGFovmSPNEqUSJzfi9BX1
+         ap4Nyxxe3bRfWyCOIav9v4/6zP3MGFavoMZjqq8iofSkZ56PTYRKdVlO4x67COr7xp7h
+         7FOjl6MyhVkEsnxt0GEwhN9b1FS4VFgzO2KQgB9fXZ6YOFFMb0Bs7SerXR9h1Ku0F07w
+         ghvQ==
+X-Gm-Message-State: APjAAAXkc+z5peT7l6zmTqksuTFUxgsBa0EFY5MC7D/XvtBSejS8VmCP
+        kYylNqIEtgRoo47JQU822R9n4Q==
+X-Google-Smtp-Source: APXvYqxcQMuxnmJbIw2a9Sa0BNYiUuGeK0GKVudpfcvZwyO/XpF8PgnhrbotuKRw055g6yJA5t4Tkw==
+X-Received: by 2002:ac8:1671:: with SMTP id x46mr47261518qtk.240.1558458444792;
+        Tue, 21 May 2019 10:07:24 -0700 (PDT)
+Received: from cakuba.netronome.com ([66.60.152.14])
+        by smtp.gmail.com with ESMTPSA id l127sm9247563qkc.81.2019.05.21.10.07.23
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 21 May 2019 10:07:24 -0700 (PDT)
+Date:   Tue, 21 May 2019 10:06:48 -0700
+From:   Jakub Kicinski <jakub.kicinski@netronome.com>
+To:     Matteo Croce <mcroce@redhat.com>
+Cc:     Daniel Borkmann <daniel@iogearbox.net>,
+        xdp-newbies@vger.kernel.org, bpf@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        netdev <netdev@vger.kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>
+Subject: Re: [PATCH 1/5] samples/bpf: fix test_lru_dist build
+Message-ID: <20190521100648.1ce9b5be@cakuba.netronome.com>
+In-Reply-To: <CAGnkfhxZPXUvBemRxAFfoq+y-UmtdQH=dvnyeLBJQo43U2=sTg@mail.gmail.com>
+References: <20190518004639.20648-1-mcroce@redhat.com>
+        <CAGnkfhxt=nq-JV+D5Rrquvn8BVOjHswEJmuVVZE78p9HvAg9qQ@mail.gmail.com>
+        <20190520133830.1ac11fc8@cakuba.netronome.com>
+        <dfb6cf40-81f4-237e-9a43-646077e020f7@iogearbox.net>
+        <CAGnkfhxZPXUvBemRxAFfoq+y-UmtdQH=dvnyeLBJQo43U2=sTg@mail.gmail.com>
+Organization: Netronome Systems, Ltd.
 MIME-Version: 1.0
-References: <20190521145116.24378-1-TheSven73@gmail.com> <20190521151059.GM31203@kadam>
- <CAGngYiXLN-oT_b9d1kRyBrrFMALhKO-KnuwXB0MjVq0NFc01Xw@mail.gmail.com>
- <20190521154241.GB15818@kroah.com> <CAGngYiU_iK5=swD_DA5PcOeYFT0zTrdQ+30Db0YrahuEukEP_A@mail.gmail.com>
- <20190521162451.GA19139@kroah.com> <CAGngYiUSgtAXL+utPHz79OEbvrL6_TD9Wfkc6396E9vwQHCFKw@mail.gmail.com>
-In-Reply-To: <CAGngYiUSgtAXL+utPHz79OEbvrL6_TD9Wfkc6396E9vwQHCFKw@mail.gmail.com>
-From:   Sven Van Asbroeck <thesven73@gmail.com>
-Date:   Tue, 21 May 2019 13:06:40 -0400
-Message-ID: <CAGngYiVZguWhbU_zvczVK3Xgb96nCFsTD-Zkvg8-S1rUVjTypA@mail.gmail.com>
-Subject: Re: [PATCH] staging: fieldbus: anybuss: force address space conversion
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     devel@driverdev.osuosl.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Dan Carpenter <dan.carpenter@oracle.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 21, 2019 at 12:53 PM Sven Van Asbroeck <thesven73@gmail.com> wrote:
->
-> On Tue, May 21, 2019 at 12:24 PM Greg KH <gregkh@linuxfoundation.org> wrote:
+On Tue, 21 May 2019 17:36:17 +0200, Matteo Croce wrote:
+> On Tue, May 21, 2019 at 5:21 PM Daniel Borkmann <daniel@iogearbox.net> wr=
+ote:
 > >
-> > what is so odd about this code that makes you have to jump through
-> > strange hoops that no other driver has to?
+> > On 05/20/2019 10:38 PM, Jakub Kicinski wrote: =20
+> > > On Mon, 20 May 2019 19:46:27 +0200, Matteo Croce wrote: =20
+> > >> On Sat, May 18, 2019 at 2:46 AM Matteo Croce <mcroce@redhat.com> wro=
+te: =20
+> > >>>
+> > >>> Fix the following error by removing a duplicate struct definition: =
+=20
+> > >>
+> > >> Hi all,
+> > >>
+> > >> I forget to send a cover letter for this series, but basically what I
+> > >> wanted to say is that while patches 1-3 are very straightforward,
+> > >> patches 4-5 are a bit rough and I accept suggstions to make a cleaner
+> > >> work. =20
+> > >
+> > > samples depend on headers being locally installed:
+> > >
+> > > make headers_install
+> > >
+> > > Are you intending to change that? =20
 > >
->
-> Basically because it creates a regmap which accesses __iomem memory,
-> instead of i2c/spi.
->
+> > +1, Matteo, could you elaborate?
+> >
+> > On latest bpf tree, everything compiles just fine:
+> >
+> > [root@linux bpf]# make headers_install
+> > [root@linux bpf]# make -C samples/bpf/
+> > make: Entering directory '/home/darkstar/trees/bpf/samples/bpf'
+> > make -C ../../ /home/darkstar/trees/bpf/samples/bpf/ BPF_SAMPLES_PATH=
+=3D/home/darkstar/trees/bpf/samples/bpf
+> > make[1]: Entering directory '/home/darkstar/trees/bpf'
+> >   CALL    scripts/checksyscalls.sh
+> >   CALL    scripts/atomic/check-atomics.sh
+> >   DESCEND  objtool
+> > make -C /home/darkstar/trees/bpf/samples/bpf/../../tools/lib/bpf/ RM=3D=
+'rm -rf' LDFLAGS=3D srctree=3D/home/darkstar/trees/bpf/samples/bpf/../../ O=
+=3D
+> >   HOSTCC  /home/darkstar/trees/bpf/samples/bpf/test_lru_dist
+> >   HOSTCC  /home/darkstar/trees/bpf/samples/bpf/sock_example
+> > =20
+>=20
+> Hi all,
+>=20
+> I have kernel-headers installed from master, but yet the samples fail to =
+build:
+>=20
+> matteo@turbo:~/src/linux/samples/bpf$ rpm -q kernel-headers
+> kernel-headers-5.2.0_rc1-38.x86_64
+>=20
+> matteo@turbo:~/src/linux/samples/bpf$ git describe HEAD
+> v5.2-rc1-97-g5bdd9ad875b6
+>=20
+> matteo@turbo:~/src/linux/samples/bpf$ make
+> make -C ../../ /home/matteo/src/linux/samples/bpf/
+> BPF_SAMPLES_PATH=3D/home/matteo/src/linux/samples/bpf
+> make[1]: Entering directory '/home/matteo/src/linux'
+>   CALL    scripts/checksyscalls.sh
+>   CALL    scripts/atomic/check-atomics.sh
+>   DESCEND  objtool
+> make -C /home/matteo/src/linux/samples/bpf/../../tools/lib/bpf/ RM=3D'rm
+> -rf' LDFLAGS=3D srctree=3D/home/matteo/src/linux/samples/bpf/../../ O=3D
+>   HOSTCC  /home/matteo/src/linux/samples/bpf/test_lru_dist
+> /home/matteo/src/linux/samples/bpf/test_lru_dist.c:39:8: error:
+> redefinition of =E2=80=98struct list_head=E2=80=99
+>    39 | struct list_head {
+>       |        ^~~~~~~~~
+> In file included from /home/matteo/src/linux/samples/bpf/test_lru_dist.c:=
+9:
+> ./tools/include/linux/types.h:69:8: note: originally defined here
+>    69 | struct list_head {
+>       |        ^~~~~~~~~
+> make[2]: *** [scripts/Makefile.host:90:
+> /home/matteo/src/linux/samples/bpf/test_lru_dist] Error 1
+> make[1]: *** [Makefile:1762: /home/matteo/src/linux/samples/bpf/] Error 2
+> make[1]: Leaving directory '/home/matteo/src/linux'
+> make: *** [Makefile:231: all] Error 2
+>=20
+> Am I missing something obvious?
 
-Wait a second... doesn't devm_regmap_init_mmio() do exactly that ?!
-How could I overlook this :( :(
+Yes ;)  Samples use a local installation of headers in $objtree/usr (I
+think, maybe $srctree/usr).  So you need to do make headers_install in
+your kernel source tree, otherwise the include path from tools/ takes
+priority over your global /usr/include and causes these issues.  I had
+this path in my tree for some time, but I don't like enough to post it:
+
+commit 35fb614049e93d46af708c0eaae6601df54017b3
+Author: Jakub Kicinski <jakub.kicinski@netronome.com>
+Date:   Mon Dec 3 15:00:24 2018 -0800
+
+    bpf: maybe warn ppl about hrds_install
+   =20
+    Signed-off-by: Jakub Kicinski <jakub.kicinski@netronome.com>
+
+diff --git a/samples/bpf/Makefile b/samples/bpf/Makefile
+index 4f0a1cdbfe7c..f79a4ed2f9f7 100644
+--- a/samples/bpf/Makefile
++++ b/samples/bpf/Makefile
+@@ -208,6 +208,15 @@ HOSTCC =3D $(CROSS_COMPILE)gcc
+ CLANG_ARCH_ARGS =3D -target $(ARCH)
+ endif
+=20
++HDR_PROBE :=3D $(shell echo "\#include <linux/types.h>\n struct list_head =
+{ int a; }; int main() { return 0; }" | \
++       gcc $(KBUILD_HOSTCFLAGS) -x c - -o /dev/null 2>/dev/null && \
++       echo okay)
++
++ifeq ($(HDR_PROBE),)
++$(warning Detected possible issues with include path.)
++$(warning Please install kernel headers locally (make headers_install))
++endif
++
+ BTF_LLC_PROBE :=3D $(shell $(LLC) -march=3Dbpf -mattr=3Dhelp 2>&1 | grep d=
+warfris)
+ BTF_PAHOLE_PROBE :=3D $(shell $(BTF_PAHOLE) --help 2>&1 | grep BTF)
+ BTF_OBJCOPY_PROBE :=3D $(shell $(LLVM_OBJCOPY) --help 2>&1 | grep -i 'usag=
+e.*llvm')
