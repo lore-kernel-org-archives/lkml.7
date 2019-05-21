@@ -2,177 +2,147 @@ Return-Path: <SRS0=9PYC=TV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_NEOMUTT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ECAEEC04AAF
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 13:04:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BFC4AC04AAF
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 13:04:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C2079217D4
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 13:04:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 978C3217F4
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 13:04:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=brauner.io header.i=@brauner.io header.b="XJSG1EyP"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="0mA1oRUy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728290AbfEUNEp (ORCPT
+        id S1728301AbfEUNEt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 May 2019 09:04:45 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:32981 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728271AbfEUNEo (ORCPT
+        Tue, 21 May 2019 09:04:49 -0400
+Received: from pandora.armlinux.org.uk ([78.32.30.218]:36260 "EHLO
+        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727969AbfEUNEs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 May 2019 09:04:44 -0400
-Received: by mail-wr1-f67.google.com with SMTP id d9so5571692wrx.0
-        for <linux-kernel@vger.kernel.org>; Tue, 21 May 2019 06:04:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=brauner.io; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=UoeHu3yoNUcPPl9PKQVlxSlKB7SL3/RQXELHWxMzhXU=;
-        b=XJSG1EyPYqVFv06qjxl82rQK6DnXz+zzZ5SuDKstpUJiXRNS8tQ5JU13/0R23pzYo8
-         CBflOikG7l96+4gPyOlywhufFiPRmoYNDl41896XQ/0MJatuwnRejMHB6TDC98rsUSsk
-         2AmSYFgAwYwyiIa3Uw0OG4PN7UgonE+wdbkLG/dhBH8kdQoOGpBbAw+wyKcjrVvNwBmM
-         VMKMZI30ibz9pqFsG/Cn36t1s2Pm2QH0dtNNkeKYHL7aO5r+71RV9j9Ohu/+y3mncQUm
-         NMgjzNYEt1ik5sf8wphXNVOj5VnbG86Jclu6wpcMm3hVcqUXQ13o2yCTql/kibMeVk3R
-         6GZQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=UoeHu3yoNUcPPl9PKQVlxSlKB7SL3/RQXELHWxMzhXU=;
-        b=IAg6FzfHqGrHmEoutBv9Q8cfOgQK1LMsyliQfkkrztVyHmcOEIMUiqMOts40PDtmee
-         jAtM7GFXNOtGLGvS5Gl1sTr3iVywQWcjCoRi11oQyLy5Aax5UFagpr8A/sRWw64cJmE5
-         GwSfvt1EatQ5cFF0jp0yeoJCRz/2PuRJdSbSCk/8qdUljivDSt/6N9NgOJjdWMYjZqQp
-         b4xEVFgT/lYleM8TfLsUMufK5pZklZA81I8HWtK8D96sMmhu3sMi6g48R/TJ5DZRBCJO
-         qJ/HA2rCDsdO+bBAGdXavmtOxUwJswrNe7/UIO4LZPzljJWD1y+6/Ly9roHUB/17FFXb
-         P1oA==
-X-Gm-Message-State: APjAAAXjzk+1XfaDcpiTvtvrggKp+8mHjEYRdthaiCmhkePe94K5BysY
-        4GcA7TbKdjGDg8uPn8vNGC08ug==
-X-Google-Smtp-Source: APXvYqxG2D4TpRJtgA1by9C5SwilBq6kPP4Jw28l+Fw52p05f/l2TsKOiCci80kJtWr6XsY8G818bQ==
-X-Received: by 2002:a5d:6b12:: with SMTP id v18mr34420146wrw.306.1558443882738;
-        Tue, 21 May 2019 06:04:42 -0700 (PDT)
-Received: from brauner.io (p548C9938.dip0.t-ipconnect.de. [84.140.153.56])
-        by smtp.gmail.com with ESMTPSA id x64sm5789182wmg.17.2019.05.21.06.04.41
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 21 May 2019 06:04:42 -0700 (PDT)
-Date:   Tue, 21 May 2019 15:04:39 +0200
-From:   Christian Brauner <christian@brauner.io>
-To:     Florian Weimer <fweimer@redhat.com>
-Cc:     viro@zeniv.linux.org.uk, linux-kernel@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-api@vger.kernel.org,
-        jannh@google.com, oleg@redhat.com, tglx@linutronix.de,
-        torvalds@linux-foundation.org, arnd@arndb.de, shuah@kernel.org,
-        dhowells@redhat.com, tkjos@android.com, ldv@altlinux.org,
-        miklos@szeredi.hu, linux-alpha@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org,
-        linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
-        linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
-        sparclinux@vger.kernel.org, linux-xtensa@linux-xtensa.org,
-        linux-arch@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        x86@kernel.org
-Subject: Re: [PATCH 1/2] open: add close_range()
-Message-ID: <20190521130438.q3u4wvve7p6md6cm@brauner.io>
-References: <20190521113448.20654-1-christian@brauner.io>
- <87tvdoau12.fsf@oldenburg2.str.redhat.com>
+        Tue, 21 May 2019 09:04:48 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=L/Xu0P7F2m2k6/NXaV/K5aAUVa/t1N/MPvRs3G2PoR8=; b=0mA1oRUyi1YJlkuM/HBI+9ud0
+        ynBkK4QrRQxvnUfk1iOcI3dGO62FxGuKafy8qEsvG5qqc6dQ9i0HkmayDi97nw+sTWOpBnpOP7MIm
+        FvxXuM/tKvGHqs3I448C94JO1rA4CYGy3JZgsedHTXleMGEaT4vmdg4pyNUOh54PqW4frotbW/1Vg
+        9tzdiI09hlgdLhJqON6ds8kJQsBMgaB5KjmRL6Zkg/MbZ0qSbWAS1Pqv5s2nnsMMnBF2P4iJ2hYf0
+        1TZeB2V60IXiXr7jMX3XBfzHh4DMiyG9xxFLdAlcnOAi/eOXurUjVqBxMnMIaEjyM5OSfHIQLbhnX
+        BRxI0Xrdw==;
+Received: from shell.armlinux.org.uk ([2001:4d48:ad52:3201:5054:ff:fe00:4ec]:55920)
+        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.90_1)
+        (envelope-from <linux@armlinux.org.uk>)
+        id 1hT4Ra-0001Kc-5y; Tue, 21 May 2019 14:04:38 +0100
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.89)
+        (envelope-from <linux@shell.armlinux.org.uk>)
+        id 1hT4RZ-0005qi-50; Tue, 21 May 2019 14:04:37 +0100
+Date:   Tue, 21 May 2019 14:04:37 +0100
+From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     iommu@lists.linux-foundation.org,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] dma-mapping: truncate dma masks to what dma_addr_t
+ can hold
+Message-ID: <20190521130436.bgt53bf7nshz62ip@shell.armlinux.org.uk>
+References: <20190521124729.23559-1-hch@lst.de>
+ <20190521124729.23559-2-hch@lst.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <87tvdoau12.fsf@oldenburg2.str.redhat.com>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <20190521124729.23559-2-hch@lst.de>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 21, 2019 at 02:09:29PM +0200, Florian Weimer wrote:
-> * Christian Brauner:
-> 
-> > +/**
-> > + * __close_range() - Close all file descriptors in a given range.
-> > + *
-> > + * @fd:     starting file descriptor to close
-> > + * @max_fd: last file descriptor to close
-> > + *
-> > + * This closes a range of file descriptors. All file descriptors
-> > + * from @fd up to and including @max_fd are closed.
-> > + */
-> > +int __close_range(struct files_struct *files, unsigned fd, unsigned max_fd)
-> > +{
-> > +	unsigned int cur_max;
-> > +
-> > +	if (fd > max_fd)
-> > +		return -EINVAL;
-> > +
-> > +	rcu_read_lock();
-> > +	cur_max = files_fdtable(files)->max_fds;
-> > +	rcu_read_unlock();
-> > +
-> > +	/* cap to last valid index into fdtable */
-> > +	if (max_fd >= cur_max)
-> > +		max_fd = cur_max - 1;
-> > +
-> > +	while (fd <= max_fd)
-> > +		__close_fd(files, fd++);
-> > +
-> > +	return 0;
-> > +}
-> 
-> This seems rather drastic.  How long does this block in kernel mode?
-> Maybe it's okay as long as the maximum possible value for cur_max stays
-> around 4 million or so.
+On Tue, May 21, 2019 at 02:47:28PM +0200, Christoph Hellwig wrote:
+> The dma masks in struct device are always 64-bits wide.  But for builds
+> using a 32-bit dma_addr_t we need to ensure we don't store an
+> unsupportable value.  Before Linux 5.0 this was handled at least by
+> the ARM dma mapping code by never allowing to set a larger dma_mask,
+> but these days we allow the driver to just set the largest supported
+> value and never fall back to a smaller one.  Ensure this always works
+> by truncating the value.
 
-That's probably valid concern when you reach very high numbers though I
-wonder how relevant this is in practice.
-Also, you would only be blocking yourself I imagine, i.e. you can't DOS
-another task with this unless your multi-threaded.
+So how does the driver negotiation for >32bit addresses work if we don't
+fail for large masks?
+
+I'm thinking about all those PCI drivers that need DAC cycles for >32bit
+addresses, such as e1000, which negotiate via (eg):
+
+        /* there is a workaround being applied below that limits
+         * 64-bit DMA addresses to 64-bit hardware.  There are some
+         * 32-bit adapters that Tx hang when given 64-bit DMA addresses
+         */
+        pci_using_dac = 0;
+        if ((hw->bus_type == e1000_bus_type_pcix) &&
+            !dma_set_mask_and_coherent(&pdev->dev, DMA_BIT_MASK(64))) {
+                pci_using_dac = 1;
+        } else {
+                err = dma_set_mask_and_coherent(&pdev->dev, DMA_BIT_MASK(32));
+                if (err) {
+                        pr_err("No usable DMA config, aborting\n");
+                        goto err_dma;
+                }
+        }
+
+and similar.  If we blindly trunate the 64-bit to 32-bit, aren't we
+going to end up with PCI cards using DAC cycles to a host bridge that
+do not support DAC cycles?
 
 > 
-> Solaris has an fdwalk function:
+> Fixes: 9eb9e96e97b3 ("Documentation/DMA-API-HOWTO: update dma_mask sections")
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
+> ---
+>  kernel/dma/mapping.c | 12 ++++++++++++
+>  1 file changed, 12 insertions(+)
 > 
->   <https://docs.oracle.com/cd/E88353_01/html/E37843/closefrom-3c.html>
+> diff --git a/kernel/dma/mapping.c b/kernel/dma/mapping.c
+> index f7afdadb6770..1f628e7ac709 100644
+> --- a/kernel/dma/mapping.c
+> +++ b/kernel/dma/mapping.c
+> @@ -317,6 +317,12 @@ void arch_dma_set_mask(struct device *dev, u64 mask);
+>  
+>  int dma_set_mask(struct device *dev, u64 mask)
+>  {
+> +	/*
+> +	 * Truncate the mask to the actually supported dma_addr_t width to
+> +	 * avoid generating unsupportable addresses.
+> +	 */
+> +	mask = (dma_addr_t)mask;
+> +
+>  	if (!dev->dma_mask || !dma_supported(dev, mask))
+>  		return -EIO;
+>  
+> @@ -330,6 +336,12 @@ EXPORT_SYMBOL(dma_set_mask);
+>  #ifndef CONFIG_ARCH_HAS_DMA_SET_COHERENT_MASK
+>  int dma_set_coherent_mask(struct device *dev, u64 mask)
+>  {
+> +	/*
+> +	 * Truncate the mask to the actually supported dma_addr_t width to
+> +	 * avoid generating unsupportable addresses.
+> +	 */
+> +	mask = (dma_addr_t)mask;
+> +
+>  	if (!dma_supported(dev, mask))
+>  		return -EIO;
+>  
+> -- 
+> 2.20.1
 > 
-> So a different way to implement this would expose a nextfd system call
-
-Meh. If nextfd() then I would like it to be able to:
-- get the nextfd(fd) >= fd
-- get highest open fd e.g. nextfd(-1)
-
-But then I wonder if nextfd() needs to be a syscall and isn't just
-either:
-fcntl(fd, F_GET_NEXT)?
-or
-prctl(PR_GET_NEXT)?
-
-Technically, one could also do:
-
-fd_range(unsigned fd, unsigend end_fd, unsigned flags);
-
-fd_range(3, 50, FD_RANGE_CLOSE);
-
-/* return highest fd within the range [3, 50] */
-fd_range(3, 50, FD_RANGE_NEXT);
-
-/* return highest fd */
-fd_range(3, UINT_MAX, FD_RANGE_NEXT);
-
-This syscall could also reasonably be extended.
-
-> to userspace, so that we can use that to implement both fdwalk and
-> closefrom.  But maybe fdwalk is just too obscure, given the existence of
-> /proc.
-
-Yeah we probably don't need fdwalk.
-
 > 
-> I'll happily implement closefrom on top of close_range in glibc (plus
-> fallback for older kernels based on /proc—with an abort in case that
-> doesn't work because the RLIMIT_NOFILE hack is unreliable
-> unfortunately).
-> 
-> Thanks,
-> Florian
+
+-- 
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
+According to speedtest.net: 11.9Mbps down 500kbps up
