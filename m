@@ -2,114 +2,127 @@ Return-Path: <SRS0=9PYC=TV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ADE9AC04E87
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 14:49:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72859C04AAF
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 14:50:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 853FE2173E
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 14:49:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="aDX69x7u";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="HY1q1k/u"
+	by mail.kernel.org (Postfix) with ESMTP id 5104B2173E
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 14:50:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728697AbfEUOtn (ORCPT
+        id S1728663AbfEUOu3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 May 2019 10:49:43 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:46736 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727999AbfEUOtm (ORCPT
+        Tue, 21 May 2019 10:50:29 -0400
+Received: from relay7-d.mail.gandi.net ([217.70.183.200]:45735 "EHLO
+        relay7-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728256AbfEUOu3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 May 2019 10:49:42 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 6DBE260A00; Tue, 21 May 2019 14:49:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1558450182;
-        bh=YPGcPjW1YGrs1F3/ICCgcunTHbniPxqUU3hRT7sKowA=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=aDX69x7uQxqQNY8qqxe29lKQAhnTez8EGtb6viWRrPhmBEjA1K//H5B6lO4o0q6E7
-         3kRCnT48SZxlVVYo/o6t/pFZ6oK38JfRkAVlwV2z+Ctz6rLPJWEFChUfHmPm495YVg
-         /ceAZdXDUdUdcfTpDRCu3y5kcjbSWGe7S+5AeLZU=
-Received: from jhugo-perf-lnx.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: jhugo@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 10058605FC;
-        Tue, 21 May 2019 14:49:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1558450177;
-        bh=YPGcPjW1YGrs1F3/ICCgcunTHbniPxqUU3hRT7sKowA=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HY1q1k/uhy+17uhmkcdViky44+TWAbeMVnmuI9P+RbdSZmn+GXLv2z2YkUaq2dlZf
-         QQyT68Oo8SOd2FK9XKOqzSmnzjQkb4HVWI8SDtfaukwkBF1cUG01mf2DcbTwpYpB2G
-         rDDH1tOgulv2bMeGeCZ12GhkvHDQTX9vq/Qm/kKE=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 10058605FC
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=jhugo@codeaurora.org
-From:   Jeffrey Hugo <jhugo@codeaurora.org>
-To:     agross@kernel.org, bjorn.andersson@linaro.org,
-        david.brown@linaro.org
-Cc:     marc.w.gonzalez@free.fr, mturquette@baylibre.com, sboyd@kernel.org,
-        robh+dt@kernel.org, mark.rutland@arm.com,
-        linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        Jeffrey Hugo <jhugo@codeaurora.org>
-Subject: [PATCH v4 6/6] arm64: dts: qcom: msm8998: Add mmcc node
-Date:   Tue, 21 May 2019 08:49:27 -0600
-Message-Id: <1558450167-21094-1-git-send-email-jhugo@codeaurora.org>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <1558449843-19971-1-git-send-email-jhugo@codeaurora.org>
-References: <1558449843-19971-1-git-send-email-jhugo@codeaurora.org>
+        Tue, 21 May 2019 10:50:29 -0400
+X-Originating-IP: 90.88.22.185
+Received: from localhost (aaubervilliers-681-1-80-185.w90-88.abo.wanadoo.fr [90.88.22.185])
+        (Authenticated sender: maxime.ripard@bootlin.com)
+        by relay7-d.mail.gandi.net (Postfix) with ESMTPSA id 921BA20008;
+        Tue, 21 May 2019 14:50:24 +0000 (UTC)
+Date:   Tue, 21 May 2019 16:50:24 +0200
+From:   Maxime Ripard <maxime.ripard@bootlin.com>
+To:     Rob Herring <robh@kernel.org>
+Cc:     devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] dt-bindings: Convert vendor prefixes to json-schema
+Message-ID: <20190521145024.q5u4kjhfyothy2ni@flea>
+References: <20190510194018.28206-1-robh@kernel.org>
+ <20190520131846.tqx7h7sjyw6sgka5@flea>
+ <CAL_JsqLbuuO9YHYwTXV5ZEGOjzZHgVsWD=TCYk4cYpm0v1zHkQ@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="d3bior43nd5urpkd"
+Content-Disposition: inline
+In-Reply-To: <CAL_JsqLbuuO9YHYwTXV5ZEGOjzZHgVsWD=TCYk4cYpm0v1zHkQ@mail.gmail.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add MSM8998 Multimedia Clock Controller DT node.
 
-Signed-off-by: Jeffrey Hugo <jhugo@codeaurora.org>
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
----
- arch/arm64/boot/dts/qcom/msm8998.dtsi | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
+--d3bior43nd5urpkd
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-diff --git a/arch/arm64/boot/dts/qcom/msm8998.dtsi b/arch/arm64/boot/dts/qcom/msm8998.dtsi
-index 141488e..5a32dfe 100644
---- a/arch/arm64/boot/dts/qcom/msm8998.dtsi
-+++ b/arch/arm64/boot/dts/qcom/msm8998.dtsi
-@@ -3,6 +3,7 @@
- 
- #include <dt-bindings/interrupt-controller/arm-gic.h>
- #include <dt-bindings/clock/qcom,gcc-msm8998.h>
-+#include <dt-bindings/clock/qcom,mmcc-msm8998.h>
- #include <dt-bindings/clock/qcom,rpmcc.h>
- #include <dt-bindings/gpio/gpio.h>
- 
-@@ -1066,6 +1067,19 @@
- 			status = "disabled";
- 		};
- 
-+		mmcc: clock-controller@c8c0000 {
-+			compatible = "qcom,mmcc-msm8998";
-+			#clock-cells = <1>;
-+			#reset-cells = <1>;
-+			#power-domain-cells = <1>;
-+			reg = <0x0c8c0000 0x40000>;
-+
-+			clocks = <&rpmcc RPM_SMD_XO_CLK_SRC>,
-+				 <&gcc GPLL0_OUT_MAIN>;
-+			clock-names = "xo",
-+				      "gpll0";
-+		};
-+
- 		timer@17920000 {
- 			#address-cells = <1>;
- 			#size-cells = <1>;
--- 
-Qualcomm Datacenter Technologies as an affiliate of Qualcomm Technologies, Inc.
-Qualcomm Technologies, Inc. is a member of the
-Code Aurora Forum, a Linux Foundation Collaborative Project.
+On Mon, May 20, 2019 at 11:35:01AM -0500, Rob Herring wrote:
+> On Mon, May 20, 2019 at 8:18 AM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
+> >
+> > Hi Rob,
+> >
+> > On Fri, May 10, 2019 at 02:40:18PM -0500, Rob Herring wrote:
+> > > Convert the vendor prefix registry to a schema. This will enable checking
+> > > that new vendor prefixes are added (in addition to the less than perfect
+> > > checkpatch.pl check) and will also check against adding other prefixes
+> > > which are not vendors.
+> > >
+> > > Converted vendor-prefixes.txt using the following sed script:
+> > >
+> > > sed -e 's/\([a-zA-Z0-9\-]*\)[[:space:]]*\([a-zA-Z0-9].*\)/  "^\1,\.\*\":\n    description: \2/'
+> > >
+> > > Signed-off-by: Rob Herring <robh@kernel.org>
+> > > ---
+> > > As vendor prefix updates come in via multiple trees, I plan to merge
+> > > this before -rc1 to avoid cross tree conflicts.
+> >
+> > I just tried this with the 5.2-rc1 release, and this very
+> > significantly slows down the validation.
+> >
+> > With a dtbs_check run on (arm's) sunxi_defconfig, on my core-i5 with 4
+> > threads, I go from 1.30 minutes to more than 12.
+>
+> Indeed. 6 min to 45 min for allmodconfig. However, it's only 5 min to
+> run checks with only this file. I'd expect a more linear hit. Maybe
+> we're exceeding some cache size and thrashing.
+>
+> > Should we improve the dt-validate tool before merging this patch?
+>
+> How? I've looked at optimizing things some and implemented areas I
+> found (primarily, saving the fixed-up schema and not printing line
+> numbers (of the yaml encoded DT)).
 
+I guess we can always try to profile the dt-validate tool to see where
+the bottleneck is.
+
+Another area of improvement might be to use a faster language. Rust's
+regex engine is known to be blazing fast for example. However, it's a
+pretty exotic language, and it would probably hurt the
+maintainability. Maybe go would be a good in-between?
+
+> I've been wanting to have some way to categorize checks, so we can
+> split rules from pedantic guidance. Maybe we can add a level keyword
+> in select or something.
+
+That would be a good mitigation indeed.
+
+> Short term, I'm fine with just disabling this one by default with
+> 'select: false'.
+
+Ok. Do you want to send it or should I do it?
+
+Thanks!
+Maxime
+
+--
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+
+--d3bior43nd5urpkd
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXOQQMAAKCRDj7w1vZxhR
+xZRzAP9i1Yld7af7MdiLNeb0VkB4LP8mtDZ75Dqlri26cErJrQEAvVASGcCozvEU
+EXBPbt+OsLf8nWGZNAo2Ubi1OzAblw0=
+=ZMOc
+-----END PGP SIGNATURE-----
+
+--d3bior43nd5urpkd--
