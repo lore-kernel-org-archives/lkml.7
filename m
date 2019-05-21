@@ -2,187 +2,218 @@ Return-Path: <SRS0=9PYC=TV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1050BC04E87
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 15:53:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F30E7C04AB4
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 15:53:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CF62B21019
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 15:53:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="SCWW9XLd"
+	by mail.kernel.org (Postfix) with ESMTP id C9A4F2173E
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 15:53:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728651AbfEUPxJ (ORCPT
+        id S1728742AbfEUPxY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 May 2019 11:53:09 -0400
-Received: from mail-vs1-f66.google.com ([209.85.217.66]:32849 "EHLO
-        mail-vs1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727941AbfEUPxI (ORCPT
+        Tue, 21 May 2019 11:53:24 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:42206 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728114AbfEUPxX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 May 2019 11:53:08 -0400
-Received: by mail-vs1-f66.google.com with SMTP id y6so11471502vsb.0
-        for <linux-kernel@vger.kernel.org>; Tue, 21 May 2019 08:53:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=M+Fy+Dv7IAvIp9wM9LD81KQdUDxns6+Ve3Y3gCcA6+w=;
-        b=SCWW9XLdsPw9Dbsh5KL6xVyDY0rX4O5d9enGOPhpycV9Y6K9rosydI/Wlk6NyU8Kte
-         BDjViIeiW8pDzy0+pXpuKIfOK6q7lCzsR5o+tsDOcS4oVA/Plo1Z/Gl7Xaw4/S3dfjlP
-         +TYxG53nLwL/Hdxn/s7e8xypiQ2nTrPoW61MZCVDiWXaRdvGPcbHk5weJMjYioOICzdR
-         HDJC8Ks4/5DvyQMaqKCbH20Idmf9eRPgf4NxzUvXhYL1aiewFYDHnFJO8yWGFdC4Sto5
-         DpzS2u0AHAD5Fl5qXsTv9dmc55eSJa/zwDTnnViImT0urRRTpNpJ3KPIQsiYspU1cWtG
-         Qnjw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=M+Fy+Dv7IAvIp9wM9LD81KQdUDxns6+Ve3Y3gCcA6+w=;
-        b=ZNXcHC4GVnzomAYYiqF3OYRdqzW4sysIXwnTv602mGQ18EvFFj2sY272stgz/je06t
-         i7FYV+GzFJJ4QP7kPnn/nrqK9kd4LOUHExKap8T1P13kXZko37aOOemSCCjGfi5ug1so
-         LS0EED22GyHMwYsaIvwO7Z2AZoMSjhl4PqPhHb0BdWkcV2h8nvBj6gIJEP29fZOVlmig
-         bFUEK/V9vPprh1lF4acf5N/TqxpObfLz7tQMQy3n38CaBh1U8PYvQYp2MAOTX5E6TTV7
-         BxmdjxnlqAQYxtATAJy0EWc6WusdXi9TQiuRhJ1Z9qMDNCznWGvTMdmDwX0S4AXEWBO5
-         kmdw==
-X-Gm-Message-State: APjAAAUWduNl3o/fXGOEzeg7WTXCaJ+MNFYM5F4+lqzim1xUGiz4UllF
-        X+0d8kPAE/lCWzVdJP0IQjHlAZ3ovLfORtfAIpMsnQ==
-X-Google-Smtp-Source: APXvYqy6IGMQPbJZO+kIouZqRoFw9qUZHLRLgIs6Dh6Xv5coJSMBcpEofSB2jHGaaeH09CNzCZFcAI0DOxFM1m/T2nA=
-X-Received: by 2002:a67:d615:: with SMTP id n21mr26515680vsj.39.1558453987203;
- Tue, 21 May 2019 08:53:07 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190520154751.84763-1-elver@google.com> <ebec4325-f91b-b392-55ed-95dbd36bbb8e@virtuozzo.com>
-In-Reply-To: <ebec4325-f91b-b392-55ed-95dbd36bbb8e@virtuozzo.com>
-From:   Alexander Potapenko <glider@google.com>
-Date:   Tue, 21 May 2019 17:52:55 +0200
-Message-ID: <CAG_fn=W+_Ft=g06wtOBgKnpD4UswE_XMXd61jw5ekOH_zeUVOQ@mail.gmail.com>
-Subject: Re: [PATCH v2] mm/kasan: Print frame description for stack bugs
-To:     Andrey Ryabinin <aryabinin@virtuozzo.com>
-Cc:     Marco Elver <elver@google.com>,
-        Dmitriy Vyukov <dvyukov@google.com>,
-        Andrey Konovalov <andreyknvl@google.com>,
+        Tue, 21 May 2019 11:53:23 -0400
+Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4LFqVqB022181
+        for <linux-kernel@vger.kernel.org>; Tue, 21 May 2019 11:53:22 -0400
+Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2smjn3d4rm-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Tue, 21 May 2019 11:53:22 -0400
+Received: from localhost
+        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <rppt@linux.ibm.com>;
+        Tue, 21 May 2019 16:53:19 +0100
+Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
+        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Tue, 21 May 2019 16:53:14 +0100
+Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
+        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x4LFrDfK42074180
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 21 May 2019 15:53:14 GMT
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id D560811C058;
+        Tue, 21 May 2019 15:53:13 +0000 (GMT)
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 3132311C05B;
+        Tue, 21 May 2019 15:53:12 +0000 (GMT)
+Received: from rapoport-lnx (unknown [9.148.204.239])
+        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Tue, 21 May 2019 15:53:12 +0000 (GMT)
+Date:   Tue, 21 May 2019 18:53:10 +0300
+From:   Mike Rapoport <rppt@linux.ibm.com>
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Serge Semin <fancer.lancer@gmail.com>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paul.burton@mips.com>,
+        James Hogan <jhogan@kernel.org>,
+        Matt Redfearn <matt.redfearn@mips.com>,
         Andrew Morton <akpm@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux Memory Management List <linux-mm@kvack.org>,
-        kasan-dev <kasan-dev@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        Michal Hocko <mhocko@suse.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thomas Bogendoerfer <tbogendoerfer@suse.de>,
+        Huacai Chen <chenhc@lemote.com>,
+        Stefan Agner <stefan@agner.ch>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Juergen Gross <jgross@suse.com>, linux-mips@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Atsushi Nemoto <anemo@mba.ocn.ne.jp>
+Subject: Re: [PATCH 04/12] mips: Reserve memory for the kernel image resources
+References: <20190423224748.3765-1-fancer.lancer@gmail.com>
+ <20190423224748.3765-5-fancer.lancer@gmail.com>
+ <CAMuHMdWPmL5Z86cgJ4N-U-3XKr4ys8Y7U85okDcXYEu7z4ybaw@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAMuHMdWPmL5Z86cgJ4N-U-3XKr4ys8Y7U85okDcXYEu7z4ybaw@mail.gmail.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-TM-AS-GCONF: 00
+x-cbid: 19052115-0020-0000-0000-0000033F04C8
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19052115-0021-0000-0000-00002191E561
+Message-Id: <20190521155309.GB24470@rapoport-lnx>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-21_03:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=2 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1905210099
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 21, 2019 at 5:43 PM Andrey Ryabinin <aryabinin@virtuozzo.com> w=
-rote:
->
->
->
-> On 5/20/19 6:47 PM, Marco Elver wrote:
->
-> > +static void print_decoded_frame_descr(const char *frame_descr)
-> > +{
-> > +     /*
-> > +      * We need to parse the following string:
-> > +      *    "n alloc_1 alloc_2 ... alloc_n"
-> > +      * where alloc_i looks like
-> > +      *    "offset size len name"
-> > +      * or "offset size len name:line".
-> > +      */
-> > +
-> > +     char token[64];
-> > +     unsigned long num_objects;
-> > +
-> > +     if (!tokenize_frame_descr(&frame_descr, token, sizeof(token),
-> > +                               &num_objects))
-> > +             return;
-> > +
-> > +     pr_err("\n");
-> > +     pr_err("this frame has %lu %s:\n", num_objects,
-> > +            num_objects =3D=3D 1 ? "object" : "objects");
-> > +
-> > +     while (num_objects--) {
-> > +             unsigned long offset;
-> > +             unsigned long size;
-> > +
-> > +             /* access offset */
-> > +             if (!tokenize_frame_descr(&frame_descr, token, sizeof(tok=
-en),
-> > +                                       &offset))
-> > +                     return;
-> > +             /* access size */
-> > +             if (!tokenize_frame_descr(&frame_descr, token, sizeof(tok=
-en),
-> > +                                       &size))
-> > +                     return;
-> > +             /* name length (unused) */
-> > +             if (!tokenize_frame_descr(&frame_descr, NULL, 0, NULL))
-> > +                     return;
-> > +             /* object name */
-> > +             if (!tokenize_frame_descr(&frame_descr, token, sizeof(tok=
-en),
-> > +                                       NULL))
-> > +                     return;
-> > +
-> > +             /* Strip line number, if it exists. */
->
->    Why?
->
-> > +             strreplace(token, ':', '\0');
-> > +
->
-> ...
->
-> > +
-> > +     aligned_addr =3D round_down((unsigned long)addr, sizeof(long));
-> > +     mem_ptr =3D round_down(aligned_addr, KASAN_SHADOW_SCALE_SIZE);
-> > +     shadow_ptr =3D kasan_mem_to_shadow((void *)aligned_addr);
-> > +     shadow_bottom =3D kasan_mem_to_shadow(end_of_stack(current));
-> > +
-> > +     while (shadow_ptr >=3D shadow_bottom && *shadow_ptr !=3D KASAN_ST=
-ACK_LEFT) {
-> > +             shadow_ptr--;
-> > +             mem_ptr -=3D KASAN_SHADOW_SCALE_SIZE;
-> > +     }
-> > +
-> > +     while (shadow_ptr >=3D shadow_bottom && *shadow_ptr =3D=3D KASAN_=
-STACK_LEFT) {
-> > +             shadow_ptr--;
-> > +             mem_ptr -=3D KASAN_SHADOW_SCALE_SIZE;
-> > +     }
-> > +
->
-> I suppose this won't work if stack grows up, which is fine because it gro=
-ws up only on parisc arch.
-> But "BUILD_BUG_ON(IS_ENABLED(CONFIG_STACK_GROUWSUP))" somewhere wouldn't =
-hurt.
-Note that KASAN was broken on parisc from day 1 because of other
-assumptions on the stack growth direction hardcoded into KASAN
-(e.g. __kasan_unpoison_stack() and __asan_allocas_unpoison()).
-So maybe this BUILD_BUG_ON can be added in a separate patch as it's
-not specific to what Marco is doing here?
->
-> --
-> You received this message because you are subscribed to the Google Groups=
- "kasan-dev" group.
-> To unsubscribe from this group and stop receiving emails from it, send an=
- email to kasan-dev+unsubscribe@googlegroups.com.
-> To post to this group, send email to kasan-dev@googlegroups.com.
-> To view this discussion on the web visit https://groups.google.com/d/msgi=
-d/kasan-dev/ebec4325-f91b-b392-55ed-95dbd36bbb8e%40virtuozzo.com.
-> For more options, visit https://groups.google.com/d/optout.
+Hi Geert,
 
+On Tue, May 21, 2019 at 04:56:39PM +0200, Geert Uytterhoeven wrote:
+> Hi Serge,
+> 
+> On Wed, Apr 24, 2019 at 12:50 AM Serge Semin <fancer.lancer@gmail.com> wrote:
+> > The reserved_end variable had been used by the bootmem_init() code
+> > to find a lowest limit of memory available for memmap blob. The original
+> > code just tried to find a free memory space higher than kernel was placed.
+> > This limitation seems justified for the memmap ragion search process, but
+> > I can't see any obvious reason to reserve the unused space below kernel
+> > seeing some platforms place it much higher than standard 1MB. Moreover
+> > the RELOCATION config enables it to be loaded at any memory address.
+> > So lets reserve the memory occupied by the kernel only, leaving the region
+> > below being free for allocations. After doing this we can now discard the
+> > code freeing a space between kernel _text and VMLINUX_LOAD_ADDRESS symbols
+> > since it's going to be free anyway (unless marked as reserved by
+> > platforms).
+> >
+> > Signed-off-by: Serge Semin <fancer.lancer@gmail.com>
+> 
+> This is now commit b93ddc4f9156205e ("mips: Reserve memory for the kernel
+> image resources") in v5.2-rc1, which causes rbtx4927 to crash during boot:
+> 
+>     VFS: Mounted root (nfs filesystem) on device 0:13.
+>     devtmpfs: mounted
+>     BUG: Bad page state in process swapper  pfn:00001
+>     page:804b7820 refcount:0 mapcount:-128 mapping:00000000 index:0x1
+>     flags: 0x0()
+>     raw: 00000000 00000100 00000200 00000000 00000001 00000000 ffffff7f 00000000
+>     page dumped because: nonzero mapcount
+>     Modules linked in:
+>     CPU: 0 PID: 1 Comm: swapper Not tainted
+> 5.2.0-rc1-rbtx4927-00468-g3c05ea3d4077b756-dirty #137
+>     Stack : 00000000 10008400 8040dd2c 87c1b974 8044af63 8040dd2c
+> 00000001 804a3490
+>             00000001 81000000 0030f231 80148558 00000003 10008400
+> 87c1dd80 7599ee13
+>             00000000 00000000 804b0000 00000000 00000007 00000000
+> 00000085 00000000
+>             62722d31 00000084 804b0000 39347874 00000000 804b7820
+> 8040cef8 81000010
+>             00000001 00000007 00000001 81000000 00000008 8021de24
+> 00000000 804a0000
+>             ...
+>     Call Trace:
+>     [<8010adec>] show_stack+0x74/0x104
+>     [<801a5e44>] bad_page+0x130/0x138
+>     [<801a654c>] free_pcppages_bulk+0x17c/0x3b0
+>     [<801a789c>] free_unref_page+0x40/0x68
+>     [<801120f4>] free_init_pages+0xec/0x104
+>     [<803bdde8>] free_initmem+0x10/0x58
+>     [<803bdb8c>] kernel_init+0x20/0x100
+>     [<801057c8>] ret_from_kernel_thread+0x14/0x1c
+>     Disabling lock debugging due to kernel taint
+>     BUG: Bad page state in process swapper  pfn:00002
+>     [...]
+> 
+> CONFIG_RELOCATABLE is not set, so the only relevant part is the
+> change quoted below.
+> 
+> > --- a/arch/mips/kernel/setup.c
+> > +++ b/arch/mips/kernel/setup.c
+> > @@ -371,7 +371,6 @@ static void __init bootmem_init(void)
+> >
+> >  static void __init bootmem_init(void)
+> >  {
+> > -       unsigned long reserved_end;
+> >         phys_addr_t ramstart = PHYS_ADDR_MAX;
+> >         int i;
+> >
+> > @@ -382,10 +381,10 @@ static void __init bootmem_init(void)
+> >          * will reserve the area used for the initrd.
+> >          */
+> >         init_initrd();
+> > -       reserved_end = (unsigned long) PFN_UP(__pa_symbol(&_end));
+> >
+> > -       memblock_reserve(PHYS_OFFSET,
+> > -                        (reserved_end << PAGE_SHIFT) - PHYS_OFFSET);
+> > +       /* Reserve memory occupied by kernel. */
+> > +       memblock_reserve(__pa_symbol(&_text),
+> > +                       __pa_symbol(&_end) - __pa_symbol(&_text));
+> >
+> >         /*
+> >          * max_low_pfn is not a number of pages. The number of pages
+> 
+> With some debug code added:
+> 
+>     Determined physical RAM map:
+>      memory: 08000000 @ 00000000 (usable)
+>     bootmem_init:390: PHYS_OFFSET = 0x0
+>     bootmem_init:391: __pa_symbol(&_text) = 0x100000
+>     bootmem_init:392: __pa_symbol(&_end) = 0x4b77c8
+>     bootmem_init:393: PFN_UP(__pa_symbol(&_end)) = 0x4b8
 
+Have you tried adding memblock=debug to the command line?
+Not sure it'll help, but still :)
+ 
+> Hence the old code reserved 1 MiB extra at the beginning.
+> 
+> Note that the new code also dropped the rounding up of the memory block
+> size to a multiple of PAGE_SIZE. I'm not sure the latter actually
+> matters or not.
 
---=20
-Alexander Potapenko
-Software Engineer
+I'd say that bad page state for pfn 1 is caused by "freeing" the first 1M.
 
-Google Germany GmbH
-Erika-Mann-Stra=C3=9Fe, 33
-80636 M=C3=BCnchen
+> Do you have a clue? Thanks!
+> 
+> Gr{oetje,eeting}s,
+> 
+>                         Geert
+> 
+> -- 
+> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+> 
+> In personal conversations with technical people, I call myself a hacker. But
+> when I'm talking to journalists I just say "programmer" or something like that.
+>                                 -- Linus Torvalds
+> 
 
-Gesch=C3=A4ftsf=C3=BChrer: Paul Manicle, Halimah DeLaine Prado
-Registergericht und -nummer: Hamburg, HRB 86891
-Sitz der Gesellschaft: Hamburg
+-- 
+Sincerely yours,
+Mike.
+
