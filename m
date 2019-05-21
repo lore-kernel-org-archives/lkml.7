@@ -2,71 +2,177 @@ Return-Path: <SRS0=9PYC=TV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_NEOMUTT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33C9DC04E87
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 13:04:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ECAEEC04AAF
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 13:04:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 128D621773
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 13:04:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C2079217D4
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 13:04:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=brauner.io header.i=@brauner.io header.b="XJSG1EyP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728268AbfEUNEb (ORCPT
+        id S1728290AbfEUNEp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 May 2019 09:04:31 -0400
-Received: from verein.lst.de ([213.95.11.211]:60203 "EHLO newverein.lst.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728179AbfEUNE3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 May 2019 09:04:29 -0400
-Received: by newverein.lst.de (Postfix, from userid 2407)
-        id AF38268B20; Tue, 21 May 2019 15:04:03 +0200 (CEST)
-Date:   Tue, 21 May 2019 15:04:02 +0200
-From:   Christoph Hellwig <hch@lst.de>
-To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
-Cc:     Christoph Hellwig <hch@lst.de>, iommu@lists.linux-foundation.org,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/2] ARM: dma-mapping: allow larger DMA mask than
- supported
-Message-ID: <20190521130402.GA5130@lst.de>
-References: <20190521124729.23559-1-hch@lst.de> <20190521124729.23559-3-hch@lst.de> <20190521130047.3bvvttpaa3pfqkdq@shell.armlinux.org.uk>
+        Tue, 21 May 2019 09:04:45 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:32981 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728271AbfEUNEo (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 May 2019 09:04:44 -0400
+Received: by mail-wr1-f67.google.com with SMTP id d9so5571692wrx.0
+        for <linux-kernel@vger.kernel.org>; Tue, 21 May 2019 06:04:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=brauner.io; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=UoeHu3yoNUcPPl9PKQVlxSlKB7SL3/RQXELHWxMzhXU=;
+        b=XJSG1EyPYqVFv06qjxl82rQK6DnXz+zzZ5SuDKstpUJiXRNS8tQ5JU13/0R23pzYo8
+         CBflOikG7l96+4gPyOlywhufFiPRmoYNDl41896XQ/0MJatuwnRejMHB6TDC98rsUSsk
+         2AmSYFgAwYwyiIa3Uw0OG4PN7UgonE+wdbkLG/dhBH8kdQoOGpBbAw+wyKcjrVvNwBmM
+         VMKMZI30ibz9pqFsG/Cn36t1s2Pm2QH0dtNNkeKYHL7aO5r+71RV9j9Ohu/+y3mncQUm
+         NMgjzNYEt1ik5sf8wphXNVOj5VnbG86Jclu6wpcMm3hVcqUXQ13o2yCTql/kibMeVk3R
+         6GZQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=UoeHu3yoNUcPPl9PKQVlxSlKB7SL3/RQXELHWxMzhXU=;
+        b=IAg6FzfHqGrHmEoutBv9Q8cfOgQK1LMsyliQfkkrztVyHmcOEIMUiqMOts40PDtmee
+         jAtM7GFXNOtGLGvS5Gl1sTr3iVywQWcjCoRi11oQyLy5Aax5UFagpr8A/sRWw64cJmE5
+         GwSfvt1EatQ5cFF0jp0yeoJCRz/2PuRJdSbSCk/8qdUljivDSt/6N9NgOJjdWMYjZqQp
+         b4xEVFgT/lYleM8TfLsUMufK5pZklZA81I8HWtK8D96sMmhu3sMi6g48R/TJ5DZRBCJO
+         qJ/HA2rCDsdO+bBAGdXavmtOxUwJswrNe7/UIO4LZPzljJWD1y+6/Ly9roHUB/17FFXb
+         P1oA==
+X-Gm-Message-State: APjAAAXjzk+1XfaDcpiTvtvrggKp+8mHjEYRdthaiCmhkePe94K5BysY
+        4GcA7TbKdjGDg8uPn8vNGC08ug==
+X-Google-Smtp-Source: APXvYqxG2D4TpRJtgA1by9C5SwilBq6kPP4Jw28l+Fw52p05f/l2TsKOiCci80kJtWr6XsY8G818bQ==
+X-Received: by 2002:a5d:6b12:: with SMTP id v18mr34420146wrw.306.1558443882738;
+        Tue, 21 May 2019 06:04:42 -0700 (PDT)
+Received: from brauner.io (p548C9938.dip0.t-ipconnect.de. [84.140.153.56])
+        by smtp.gmail.com with ESMTPSA id x64sm5789182wmg.17.2019.05.21.06.04.41
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 21 May 2019 06:04:42 -0700 (PDT)
+Date:   Tue, 21 May 2019 15:04:39 +0200
+From:   Christian Brauner <christian@brauner.io>
+To:     Florian Weimer <fweimer@redhat.com>
+Cc:     viro@zeniv.linux.org.uk, linux-kernel@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-api@vger.kernel.org,
+        jannh@google.com, oleg@redhat.com, tglx@linutronix.de,
+        torvalds@linux-foundation.org, arnd@arndb.de, shuah@kernel.org,
+        dhowells@redhat.com, tkjos@android.com, ldv@altlinux.org,
+        miklos@szeredi.hu, linux-alpha@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org,
+        linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
+        linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
+        sparclinux@vger.kernel.org, linux-xtensa@linux-xtensa.org,
+        linux-arch@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        x86@kernel.org
+Subject: Re: [PATCH 1/2] open: add close_range()
+Message-ID: <20190521130438.q3u4wvve7p6md6cm@brauner.io>
+References: <20190521113448.20654-1-christian@brauner.io>
+ <87tvdoau12.fsf@oldenburg2.str.redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20190521130047.3bvvttpaa3pfqkdq@shell.armlinux.org.uk>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <87tvdoau12.fsf@oldenburg2.str.redhat.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 21, 2019 at 02:00:47PM +0100, Russell King - ARM Linux admin wrote:
-> On Tue, May 21, 2019 at 02:47:29PM +0200, Christoph Hellwig wrote:
-> > Since Linux 5.1 we allow drivers to just set the largest DMA mask they
-> > support instead of falling back to smaller ones.
+On Tue, May 21, 2019 at 02:09:29PM +0200, Florian Weimer wrote:
+> * Christian Brauner:
 > 
-> This doesn't make sense.  "they" is confusing - why would a driver set
-> a DMA mask larger than the driver supports?  Or is "they" not
-> referring to the drivers (in which case, what is it referring to?)
+> > +/**
+> > + * __close_range() - Close all file descriptors in a given range.
+> > + *
+> > + * @fd:     starting file descriptor to close
+> > + * @max_fd: last file descriptor to close
+> > + *
+> > + * This closes a range of file descriptors. All file descriptors
+> > + * from @fd up to and including @max_fd are closed.
+> > + */
+> > +int __close_range(struct files_struct *files, unsigned fd, unsigned max_fd)
+> > +{
+> > +	unsigned int cur_max;
+> > +
+> > +	if (fd > max_fd)
+> > +		return -EINVAL;
+> > +
+> > +	rcu_read_lock();
+> > +	cur_max = files_fdtable(files)->max_fds;
+> > +	rcu_read_unlock();
+> > +
+> > +	/* cap to last valid index into fdtable */
+> > +	if (max_fd >= cur_max)
+> > +		max_fd = cur_max - 1;
+> > +
+> > +	while (fd <= max_fd)
+> > +		__close_fd(files, fd++);
+> > +
+> > +	return 0;
+> > +}
+> 
+> This seems rather drastic.  How long does this block in kernel mode?
+> Maybe it's okay as long as the maximum possible value for cur_max stays
+> around 4 million or so.
 
-The current plan is:
+That's probably valid concern when you reach very high numbers though I
+wonder how relevant this is in practice.
+Also, you would only be blocking yourself I imagine, i.e. you can't DOS
+another task with this unless your multi-threaded.
 
- - the driver sets whatever the device supports, and unless that mask
-   is too small to be supportable it will always succeed
+> 
+> Solaris has an fdwalk function:
+> 
+>   <https://docs.oracle.com/cd/E88353_01/html/E37843/closefrom-3c.html>
+> 
+> So a different way to implement this would expose a nextfd system call
 
-Which replaces the previous scheme of:
+Meh. If nextfd() then I would like it to be able to:
+- get the nextfd(fd) >= fd
+- get highest open fd e.g. nextfd(-1)
 
- - the driver tries to set whatever the device supports.  If there are
-   addressing limitation outside the device (e.g. the PCIe root port,
-   or the AXI interconnect) that will fail, and the device will set
-   a 32-bit mask instead which it assumes will generally work.
+But then I wonder if nextfd() needs to be a syscall and isn't just
+either:
+fcntl(fd, F_GET_NEXT)?
+or
+prctl(PR_GET_NEXT)?
 
-> The point of this check is to trap the case where we have, for example,
-> 8GB of memory, but dma_addr_t is 32-bit.  We can allocate in the high
-> 4GB, but we can't represent the address in a dma_addr_t.
+Technically, one could also do:
 
-Yep, and that is what patch 1/2 should handle by truncating the
-dma mask to something that can work.  I don't actually have hardware
-I could test this scenario on, though.
+fd_range(unsigned fd, unsigend end_fd, unsigned flags);
+
+fd_range(3, 50, FD_RANGE_CLOSE);
+
+/* return highest fd within the range [3, 50] */
+fd_range(3, 50, FD_RANGE_NEXT);
+
+/* return highest fd */
+fd_range(3, UINT_MAX, FD_RANGE_NEXT);
+
+This syscall could also reasonably be extended.
+
+> to userspace, so that we can use that to implement both fdwalk and
+> closefrom.  But maybe fdwalk is just too obscure, given the existence of
+> /proc.
+
+Yeah we probably don't need fdwalk.
+
+> 
+> I'll happily implement closefrom on top of close_range in glibc (plus
+> fallback for older kernels based on /proc—with an abort in case that
+> doesn't work because the RLIMIT_NOFILE hack is unreliable
+> unfortunately).
+> 
+> Thanks,
+> Florian
