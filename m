@@ -2,96 +2,146 @@ Return-Path: <SRS0=9PYC=TV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24849C04E87
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 10:37:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E123C04E87
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 10:37:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EB3042184B
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 10:37:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558435050;
-	bh=V+fDl9/QwjneUHZbOSez8ISwIolvlwPU41KCQr75m7s=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=CCzrJ8FhKrCnplAtFxxxY2GtS6EAQL6U53EPq62qwLq9oObdX90wtx1L/wg1vH7RT
-	 n01Em8B+nH9oJzaV0zSCVD2T0wEv8UAljTTnxwNBx3xxnnrY/jUPbqRLw3x/EiIySc
-	 smc4ZW/wHcHM6zCRiUtY7+WCFM6EmCA+hIv0ol8E=
+	by mail.kernel.org (Postfix) with ESMTP id 33E302173E
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 10:37:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qLQd9mwV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727914AbfEUKh3 (ORCPT
+        id S1727935AbfEUKhe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 May 2019 06:37:29 -0400
-Received: from mx2.suse.de ([195.135.220.15]:37526 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726138AbfEUKh2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 May 2019 06:37:28 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 452F8AF1C;
-        Tue, 21 May 2019 10:37:27 +0000 (UTC)
-Date:   Tue, 21 May 2019 12:37:26 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Minchan Kim <minchan@kernel.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-mm <linux-mm@kvack.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Tim Murray <timmurray@google.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Suren Baghdasaryan <surenb@google.com>,
-        Daniel Colascione <dancol@google.com>,
-        Shakeel Butt <shakeelb@google.com>,
-        Sonny Rao <sonnyrao@google.com>,
-        Brian Geffon <bgeffon@google.com>, linux-api@vger.kernel.org
-Subject: Re: [RFC 6/7] mm: extend process_madvise syscall to support vector
- arrary
-Message-ID: <20190521103726.GM32329@dhcp22.suse.cz>
-References: <20190520035254.57579-1-minchan@kernel.org>
- <20190520035254.57579-7-minchan@kernel.org>
- <20190520092258.GZ6836@dhcp22.suse.cz>
- <20190521024820.GG10039@google.com>
- <20190521062421.GD32329@dhcp22.suse.cz>
- <20190521102613.GC219653@google.com>
+        Tue, 21 May 2019 06:37:34 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:37608 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726138AbfEUKhd (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 May 2019 06:37:33 -0400
+Received: by mail-wm1-f65.google.com with SMTP id 7so2348268wmo.2;
+        Tue, 21 May 2019 03:37:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=Pk9/EDdjZxONgrYI8kAOhGJWxmtEFhA7kOzCkkQmWqI=;
+        b=qLQd9mwVZtT+4gIOwW5cnFjudOkGkzk/EjRdPXDv1cdLKRlfES7p5y5G/QZUc8PEsO
+         e2837BkCoWNpD15ZBU2Vh/cePuiz7sOKHLQWaYvwK9/23RdR8NtwbzZLS2p8lMUgQ+I6
+         VsM7QpxAG4kzLDIuHNaZTuSwf6euSTICBc2vYq8+avBAP9R6xt9fK66oEjOoxVksTx8C
+         4m8MJFUXuzWHONm+XZYLpQ70gHpzOXK5Bmv3+MOjQPbnpm+WqCDHLlVbfSMDxb21RLlg
+         BFJm3ZWiFJm1aZ14Y8drr82W7UgNWxI5ikF6apGHUuWBaJ52kYB/cOUpqWxKUZ5o/d7k
+         p/dg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Pk9/EDdjZxONgrYI8kAOhGJWxmtEFhA7kOzCkkQmWqI=;
+        b=PiX+04un2vG5NRKdCU/xyqaAnqiEk8pTVfwF0FbtkshSz2D9pe0YcCfPO3H4g9YQJY
+         /5kajPfLEUfe03BIM5Y7WrSC9+xfAir72TkvE4+MDhdj6vBLTGAx8h4FOnmmCyM/b3ZZ
+         7otB/GQmN6GWEL5YzAh+PS7ozivH4PuWPwmlDFn7VBj9W9RmkICdJ8r7jehggLzt/5sp
+         EJJHYuC/JVUhobxKpiWY718J4Zr/pNAnZOuOHk4gSzqxuV5sGxW6ThTq4wr7m8ugEZFk
+         KdtIKiRwdseIxKOmR++gUBazSthfwRW8L/RaSBO+qraMbel0QxGopHJ7Y8VX+f91WUWT
+         DT3w==
+X-Gm-Message-State: APjAAAVyGaLusWDLAMxFmI1dYy7Kl3eSlf+kSe3sGJ5/DqeIKYSqqnZJ
+        xUUI1IcXSMpx5RSCEUqKP1Q=
+X-Google-Smtp-Source: APXvYqyUlgdCPheRHL9v7ZLgwsBoKSkVYrYEIyqFLP0XC4W1deVNp6iynS+CfGy17wTGpq5IPR4DAg==
+X-Received: by 2002:a1c:1d46:: with SMTP id d67mr2734396wmd.98.1558435050841;
+        Tue, 21 May 2019 03:37:30 -0700 (PDT)
+Received: from localhost (p2E5BEF36.dip0.t-ipconnect.de. [46.91.239.54])
+        by smtp.gmail.com with ESMTPSA id n63sm2934211wmn.38.2019.05.21.03.37.29
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 21 May 2019 03:37:30 -0700 (PDT)
+Date:   Tue, 21 May 2019 12:37:29 +0200
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Vidya Sagar <vidyas@nvidia.com>
+Cc:     lorenzo.pieralisi@arm.com, bhelgaas@google.com, robh+dt@kernel.org,
+        mark.rutland@arm.com, jonathanh@nvidia.com, kishon@ti.com,
+        catalin.marinas@arm.com, will.deacon@arm.com, jingoohan1@gmail.com,
+        gustavo.pimentel@synopsys.com, mperttunen@nvidia.com,
+        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, kthota@nvidia.com,
+        mmaddireddy@nvidia.com, sagar.tv@gmail.com
+Subject: Re: [PATCH V7 06/15] dt-bindings: PCI: designware: Add binding for
+ CDM register check
+Message-ID: <20190521103729.GF29166@ulmo>
+References: <20190517123846.3708-1-vidyas@nvidia.com>
+ <20190517123846.3708-7-vidyas@nvidia.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="rMWmSaSbD7nr+du9"
 Content-Disposition: inline
-In-Reply-To: <20190521102613.GC219653@google.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190517123846.3708-7-vidyas@nvidia.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue 21-05-19 19:26:13, Minchan Kim wrote:
-> On Tue, May 21, 2019 at 08:24:21AM +0200, Michal Hocko wrote:
-> > On Tue 21-05-19 11:48:20, Minchan Kim wrote:
-> > > On Mon, May 20, 2019 at 11:22:58AM +0200, Michal Hocko wrote:
-> > > > [Cc linux-api]
-> > > > 
-> > > > On Mon 20-05-19 12:52:53, Minchan Kim wrote:
-> > > > > Currently, process_madvise syscall works for only one address range
-> > > > > so user should call the syscall several times to give hints to
-> > > > > multiple address range.
-> > > > 
-> > > > Is that a problem? How big of a problem? Any numbers?
-> > > 
-> > > We easily have 2000+ vma so it's not trivial overhead. I will come up
-> > > with number in the description at respin.
-> > 
-> > Does this really have to be a fast operation? I would expect the monitor
-> > is by no means a fast path. The system call overhead is not what it used
-> > to be, sigh, but still for something that is not a hot path it should be
-> > tolerable, especially when the whole operation is quite expensive on its
-> > own (wrt. the syscall entry/exit).
-> 
-> What's different with process_vm_[readv|writev] and vmsplice?
-> If the range needed to be covered is a lot, vector operation makes senese
-> to me.
 
-I am not saying that the vector API is wrong. All I am trying to say is
-that the benefit is not really clear so far. If you want to push it
-through then you should better get some supporting data.
--- 
-Michal Hocko
-SUSE Labs
+--rMWmSaSbD7nr+du9
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Fri, May 17, 2019 at 06:08:37PM +0530, Vidya Sagar wrote:
+> Add support to enable CDM (Configuration Dependent Module) registers check
+> for any data corruption. CDM registers include standard PCIe configuration
+> space registers, Port Logic registers and iATU and DMA registers.
+> Refer Section S.4 of Synopsys DesignWare Cores PCI Express Controller Dat=
+abook
+> Version 4.90a
+>=20
+> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
+> ---
+> Changes since [v6]:
+> * Changed "enable-cdm-check" to "snps,enable-cdm-check"
+>=20
+> Changes since [v5]:
+> * None
+>=20
+> Changes since [v4]:
+> * None
+>=20
+> Changes since [v3]:
+> * None
+>=20
+> Changes since [v2]:
+> * Changed flag name from 'cdm-check' to 'enable-cdm-check'
+> * Added info about Port Logic and DMA registers being part of CDM
+>=20
+> Changes since [v1]:
+> * This is a new patch in v2 series
+>=20
+>  Documentation/devicetree/bindings/pci/designware-pcie.txt | 5 +++++
+>  1 file changed, 5 insertions(+)
+
+Reviewed-by: Thierry Reding <treding@nvidia.com>
+
+--rMWmSaSbD7nr+du9
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAlzj1OkACgkQ3SOs138+
+s6G8OA//Za/2suTnOQbvbpSyc5opGe1KwSkFsUP0RGg8aT54pvHnF+SvsLGd8Omu
+Pqo0DCbxzEvfYkmdfEseSR3I60FCNYlMU7L/6OYFkAvpI5fYk8TGwyCssXEXHjwz
+1BG7cy4oobxCkoNVwqCSm99hxFmTDj33HOYIDyQPt3mNKT/9pWD+V3AMaMPZ0dgx
+wRWX4kvxKl355XimcWwspONm9Sk3PV3LEV4Evvr7otXgaD3nNWpLHdBjqBRQtgoe
+ZZh1S7mHtc/kLBaHTXy1RBjHFf2Wkw9z3wm7iV/x8xkqroTkQoNnZV4HPOzHEyq4
+xYFprccqToWaaXSVz41pzCRI0SoKELJawKakQFDEZ2wZkWAzeY53ORaJNT+EPYtK
+uYo8B6ZBu/ikvmzPx9aMQMCzT3WOSWUkgt9jb02BQpcwI78rRHAhYqb1dqMO1mQJ
+TD3UI+GZju6Fftt5Wmp02NKlJwJTgRTZZpJpU/+zcbPyYqJrLb4jYfM491wxR3lV
+CGSUHMM9rYKBkgHJ81FFOECLV5CF1lwCQfeFGKpyiqHEUerm7qLeOC4Dq099InQd
+rwhv6UwVuEU4Al8w+xK7fAqwkigZwgv13hGOsXDEIGurWptMPyfN4MIR4ya+kH52
+8LBpB5J+9mNo/vaCXektWciSu/iOusTkXvnzF5K0rRVtcUnNsBc=
+=HI8b
+-----END PGP SIGNATURE-----
+
+--rMWmSaSbD7nr+du9--
