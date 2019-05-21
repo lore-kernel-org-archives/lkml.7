@@ -1,88 +1,132 @@
 Return-Path: <SRS0=9PYC=TV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
-X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Level: *
+X-Spam-Status: No, score=1.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_MUTT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72432C04AAF
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 10:25:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E181EC04AAF
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 10:26:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 010D0216B7
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 10:25:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="DJxLD49s"
+	by mail.kernel.org (Postfix) with ESMTP id B5DA3216B7
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 10:26:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1558434381;
+	bh=jg5BWKn+MOMeE5nzOp0z5yaP0fWuAf3026u7V3j18qo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=SwkFAbxKCbrZA0ENVpa7k10aM9noUHbV0m+kvbTLpOxF72qI0WWqT1mDEgs6vsjkJ
+	 hfPW4yLW/WtOvLsdzAgsV8IZE+wONFPkXZ86h1uGQ+QAIbgkWSBcMqRJ0cLFgP3eXz
+	 IQuY4K81KIxv6Rmxe9NeGbpXSCjxee8YEUPCeHLo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727495AbfEUKZG (ORCPT
+        id S1727572AbfEUK0V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 May 2019 06:25:06 -0400
-Received: from conssluserg-03.nifty.com ([210.131.2.82]:37659 "EHLO
-        conssluserg-03.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726344AbfEUKZF (ORCPT
+        Tue, 21 May 2019 06:26:21 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:38488 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726900AbfEUK0U (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 May 2019 06:25:05 -0400
-Received: from mail-vs1-f48.google.com (mail-vs1-f48.google.com [209.85.217.48]) (authenticated)
-        by conssluserg-03.nifty.com with ESMTP id x4LAOwZ1025211;
-        Tue, 21 May 2019 19:24:58 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-03.nifty.com x4LAOwZ1025211
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1558434298;
-        bh=g1eTgJOllZAMscUYC3eHoMSUDCzCFgfluUEbaSmpZII=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=DJxLD49sLiFHtIDhxYyfA4/ZDjjF3p6f3/vezpgTil/hC7qTF61AcTrzBgVpQD9/R
-         NCIbvIluoVMfHVT4HEv0NAPdOPqNDtcue41GSJqA0rbvC5ObjxEH5+A2yT5IaTDTSH
-         f+8fDh0d4fDJ6ecR1v4v4CAMSDAOLFxdSsX6kZRV61IrbrOuPwxuPjJEqNNVplmU+l
-         RVSf0kePEixdGTHoz/MToKWMGKu00lBsNwfFfvSlnjIfjEcGtSijsrlQV1mRMxfPAZ
-         XJoc0jFYLG/arAA4AIWoVDzqAXVWmvcCx64kPMGkeGjq21Si7ZaxRjdShnsLabK2an
-         nmZ0GZ+nUEwlg==
-X-Nifty-SrcIP: [209.85.217.48]
-Received: by mail-vs1-f48.google.com with SMTP id m1so10790360vsr.6;
-        Tue, 21 May 2019 03:24:58 -0700 (PDT)
-X-Gm-Message-State: APjAAAVr/HVL4u4eMAU0kdKrWsKf+kfPvJtwSRffsqixSbEQeJcwqHWn
-        7lp5wXfE0ZJF1y/15didGrCXP9ysw1OOaFd3X0c=
-X-Google-Smtp-Source: APXvYqwb9CDXB51Tkt/ijB8qbrhDOCbaM3Dk/o4G75bkdTd/OXX0x1q59GwzRWpTxaSJj7RsjuCtDAo5ZYgv6kZwXTk=
-X-Received: by 2002:a05:6102:3d9:: with SMTP id n25mr13609687vsq.181.1558434297247;
- Tue, 21 May 2019 03:24:57 -0700 (PDT)
+        Tue, 21 May 2019 06:26:20 -0400
+Received: by mail-pf1-f194.google.com with SMTP id b76so8850195pfb.5;
+        Tue, 21 May 2019 03:26:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=v7oTWqJm+U+8EwWIlN8PXARmqW1yabluA4GVB5Q/Ymc=;
+        b=d/JcV1xuIxQEiJwk7yG4v/8OtBPTzjRoH8pRp+ELNSATolCfDK10qD/aK35UikxFIH
+         XeQP6Deb0NOJGW9tREokTHWw5iFX8kZxVfgFeb/CCvMv2F9O3egSSZNvvB7f2WZlGxbI
+         u80t7LgdQY+wj3uWSQsxNk9jKK9aZiyNeusSuazL9BtuzJEfWCE2KkS4J0qf++Sxcpyy
+         m1IVjgGh1hp9/6t4cp2N7Lpabf829ZtUVbTkGefGfgmPgYsZ8w6H0HNRrKvWjWordBwS
+         lwFekyCyWpBkKcRcnAHRnL9rPS9xJITzC59oT29L99JwuLJ/c2TsdbdElO5uRbjpqpiI
+         R+4A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=v7oTWqJm+U+8EwWIlN8PXARmqW1yabluA4GVB5Q/Ymc=;
+        b=hdXbS5JMwn9tfTdNTlZfgRYE4C/oDPQAAi/mJsFnsqnE+iaR3T7cNgnIPphiHFhXhk
+         3D3r+T+I/+3MkHh4dwSCpjWhpj9Uluh6ML4isjS4xhjcOjHydv4nBhcJwZPV7AOHXUDb
+         qPPdq1NXCuwLQCCJ8967g5s/aLXuB6R3N/CKbfpMlAuN1ohucbsy73T7GqOimbGORc9s
+         REL7kMe4LZAGNsFRmuN29N23NVu5JL6pcjbxe2QWfVpt/LbS+hUT5a+QoX/e9tEU8Sr3
+         jGVvzskBueXS5RU5fneT2Xzy5zVyE9zgtHWhMXPARhabD+G+x6y+7qTK+MnFoTBJlV8f
+         akZg==
+X-Gm-Message-State: APjAAAXr4+CYTnrsij9HgqVwkftwPM4DQrV2mbYjEomzJdFa16xcyeV1
+        8SAxw4LrnCVW9TpmuZvtqa0=
+X-Google-Smtp-Source: APXvYqzZdjlSTwRjqi+DHWVHAtfu7VOytFN2Av0aQnixHQc7zc41tJwI2PuEyhis7/e/9mFRwgfs2w==
+X-Received: by 2002:a63:754b:: with SMTP id f11mr81175818pgn.32.1558434379902;
+        Tue, 21 May 2019 03:26:19 -0700 (PDT)
+Received: from google.com ([2401:fa00:d:0:98f1:8b3d:1f37:3e8])
+        by smtp.gmail.com with ESMTPSA id z7sm26834601pfr.23.2019.05.21.03.26.15
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 21 May 2019 03:26:18 -0700 (PDT)
+Date:   Tue, 21 May 2019 19:26:13 +0900
+From:   Minchan Kim <minchan@kernel.org>
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-mm <linux-mm@kvack.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Tim Murray <timmurray@google.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Suren Baghdasaryan <surenb@google.com>,
+        Daniel Colascione <dancol@google.com>,
+        Shakeel Butt <shakeelb@google.com>,
+        Sonny Rao <sonnyrao@google.com>,
+        Brian Geffon <bgeffon@google.com>, linux-api@vger.kernel.org
+Subject: Re: [RFC 6/7] mm: extend process_madvise syscall to support vector
+ arrary
+Message-ID: <20190521102613.GC219653@google.com>
+References: <20190520035254.57579-1-minchan@kernel.org>
+ <20190520035254.57579-7-minchan@kernel.org>
+ <20190520092258.GZ6836@dhcp22.suse.cz>
+ <20190521024820.GG10039@google.com>
+ <20190521062421.GD32329@dhcp22.suse.cz>
 MIME-Version: 1.0
-References: <20190520092856.26307-1-yamada.masahiro@socionext.com> <CAKgpwJXEHjww0aV4x033qugw75NUtkMg3vvgtCDNgWaWbps29A@mail.gmail.com>
-In-Reply-To: <CAKgpwJXEHjww0aV4x033qugw75NUtkMg3vvgtCDNgWaWbps29A@mail.gmail.com>
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Tue, 21 May 2019 19:24:21 +0900
-X-Gmail-Original-Message-ID: <CAK7LNARn+wok5YXrnX-Vatv2-d=+awXtnBCPJmAR2nb8Fi=trw@mail.gmail.com>
-Message-ID: <CAK7LNARn+wok5YXrnX-Vatv2-d=+awXtnBCPJmAR2nb8Fi=trw@mail.gmail.com>
-Subject: Re: [PATCH] usb: dwc3: move core validatation after clock enable and
- reset deassert
-To:     Jun Li <lijun.kernel@gmail.com>
-Cc:     Felipe Balbi <felipe.balbi@linux.intel.com>,
-        linux-usb <linux-usb@vger.kernel.org>,
-        Thinh Nguyen <Thinh.Nguyen@synopsys.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Felipe Balbi <balbi@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190521062421.GD32329@dhcp22.suse.cz>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 21, 2019 at 6:14 PM Jun Li <lijun.kernel@gmail.com> wrote:
->
-> There is already one identical patch for this:
-> https://patchwork.kernel.org/patch/10934937/
-> either one is okay.
+On Tue, May 21, 2019 at 08:24:21AM +0200, Michal Hocko wrote:
+> On Tue 21-05-19 11:48:20, Minchan Kim wrote:
+> > On Mon, May 20, 2019 at 11:22:58AM +0200, Michal Hocko wrote:
+> > > [Cc linux-api]
+> > > 
+> > > On Mon 20-05-19 12:52:53, Minchan Kim wrote:
+> > > > Currently, process_madvise syscall works for only one address range
+> > > > so user should call the syscall several times to give hints to
+> > > > multiple address range.
+> > > 
+> > > Is that a problem? How big of a problem? Any numbers?
+> > 
+> > We easily have 2000+ vma so it's not trivial overhead. I will come up
+> > with number in the description at respin.
+> 
+> Does this really have to be a fast operation? I would expect the monitor
+> is by no means a fast path. The system call overhead is not what it used
+> to be, sigh, but still for something that is not a hot path it should be
+> tolerable, especially when the whole operation is quite expensive on its
+> own (wrt. the syscall entry/exit).
 
-I did not notice this.
+What's different with process_vm_[readv|writev] and vmsplice?
+If the range needed to be covered is a lot, vector operation makes senese
+to me.
 
-Please go ahead with yours
-since your are the first submitter.
+> 
+> I am not saying we do not need a multiplexing API, I am just not sure
+> we need it right away. Btw. there was some demand for other MM syscalls
+> to provide a multiplexing API (e.g. mprotect), maybe it would be better
+> to handle those in one go?
 
-Thanks.
+That's the exactly what Daniel Colascione suggested from internal
+review. That would be a interesting approach if we could aggregate
+all of system call in one go.
 
-
-
-
-
--- 
-Best Regards
-Masahiro Yamada
+> -- 
+> Michal Hocko
+> SUSE Labs
