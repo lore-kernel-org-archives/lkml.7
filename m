@@ -2,150 +2,111 @@ Return-Path: <SRS0=9PYC=TV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8095C16A69
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 22:23:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4433CC18E7C
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 22:25:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7740A217D7
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 22:23:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558477386;
-	bh=0BbaZAoRiNBkSCBgG5D5D9mPLpmU4+kTs7jtHZ1Eh+4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=13A0uUtFCa0bPTA2Mc1wqY+KyQX1StWAnOoAqWXcv8er4aqElpyu+W4prP8tISwLh
-	 posssz++DjzlUStzYsVB5aUdUTmgg7LK6MYVRMw3fUUisIUaQ7y5yNCMDy4iuz49UY
-	 wHp2G4ICs+LHT7fTGF2uDnmvfrSQDOgx43S/EpRs=
+	by mail.kernel.org (Postfix) with ESMTP id 16F39217F9
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 22:25:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=yahoo.com header.i=@yahoo.com header.b="XaPfBi/i"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726856AbfEUWXE (ORCPT
+        id S1727347AbfEUWZg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 May 2019 18:23:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48266 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725797AbfEUWXE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 May 2019 18:23:04 -0400
-Received: from localhost (unknown [69.71.4.100])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D0A01217D7;
-        Tue, 21 May 2019 22:23:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558477383;
-        bh=0BbaZAoRiNBkSCBgG5D5D9mPLpmU4+kTs7jtHZ1Eh+4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=PDlRgWmMgA5Ms9sqPND1mhPez3t6HOhJaCVVygWmtiD7I0NIIr4pFUjbJDdEGjXgT
-         e9kKeidECeMYpjNz67UFHXuqwu9O8a+DL+P9aVbJrVaoD+UC7EhPt1/gdv1H6K+Zko
-         GA2SY7XRoz5Ktx7Z/z9d4AmiGmkZbS6CoiNU8WzY=
-Date:   Tue, 21 May 2019 17:23:00 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Kai-Heng Feng <kai.heng.feng@canonical.com>
-Cc:     rafael.j.wysocki@intel.com, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Mathias Nyman <mathias.nyman@intel.com>,
-        linux-usb@vger.kernel.org
-Subject: Re: [PATCH] PCI / PM: Don't runtime suspend when device only
- supports wakeup from D0
-Message-ID: <20190521222300.GG57618@google.com>
-References: <20190521163104.15759-1-kai.heng.feng@canonical.com>
+        Tue, 21 May 2019 18:25:36 -0400
+Received: from sonic310-31.consmr.mail.ne1.yahoo.com ([66.163.186.212]:35241
+        "EHLO sonic310-31.consmr.mail.ne1.yahoo.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725797AbfEUWZg (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 May 2019 18:25:36 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1558477534; bh=mMUfg/kztpyKEMpyvsC7QSWJXiAhVrZGUJ/ifJj4pRw=; h=Subject:To:Cc:References:From:Date:In-Reply-To:From:Subject; b=XaPfBi/iEgQ96ARzZorqmhVR509wy8GGiBiBQesClsylXNCog8HQB+a0nblENeVtXoW27sgeGJbiTaSHMufJNYZ9un1yt86kIsVx0efY3TApxBz4sEa1F2Pzeb4wgzev7DxawUzGPiXuD9QxgWjjoPfGdiEiGC8gLfXT3JhS6cwc7wPs2ys4C7F1WMLEjyrmfSoFkSXuna9DeEWCdSAN0OXEytWALcAL+Gpv7CoCz64VYivT5SrtIwgM7E44uPjnRzMVl2T2oQ3qP+2S5DeqHrWP96tQj9+OpZeyzjRVuTFS7EYp2YG/HFZOGFKjr1QDaeUkNlxV/drK5qAR1TZAjg==
+X-YMail-OSG: EjuVhvQVM1neN8fIKh2BNfejS4DYtDvzfkGqMnrpZVzT._nQhCTDzTf9uXL4ScO
+ rlwQ_zUPt_.smWrqs3EqcerKZ_WAvWuRveu6e01tz7dlQLf6FsmR0Prn0DZcuKSOQHhV7RWCCA89
+ 0IBXW91zfD63uCEMXJSfyrCKx7q_aoIp4gFyAYz8WSv4C0svnn.2eIgpKu4VPPO1Xi_WApiiO854
+ NRw6P9rdYSLF6zBfnVFQWjPvvcwjAi8iUMHOpgX5.0c.q4VL0vtqZrUFk3jhJXzuT7BbuzXoIL9N
+ Cz0T.xKzymgALElponuZK4pRIq3sNrHnPWStVWFNvGaw1l.Ha5EuKUxPD9VtpLdtbTTnX9aouwQ1
+ WaMFekspf5mSNTwvmUIjLVHZNjhuOUH8fxihPEUzY65WWvbLXVsySmYhstLvUQ77m.dH28ZWq4Tp
+ I8T_mssD5FiF74P7UquXyeRJb87vP3ftevemVXFoc70a8fch567aVWO80u86T8csBNCCi2MHnmsD
+ ZFNuX90aFXdwdQCMHTOnOtVSheGQSLABD_abrgDcTa84Mh0a189B5qy38cMBNdUQmn4q4dyJdC1a
+ Xy3la5xhROlJuChHbJPuUCYo5S5FVcOFXyWy8gtEHg7YvK2SE6et6W9p1ABKj_5pwgi8v.dGztqs
+ jkO6J2woajUT6WbhIYypOHVVJ5p_aq6FyZ_4EUEWc29IfieFPV7TH.j5hTnyN.a0STpIcNA7OgWb
+ teUlkDhQ2W941OJJnp35Dqur.gKFetr8XQfdq1qaYG7w7gnMPjKghodiBA3emTL9aOkWTsVjA16e
+ cIxwHHwJLbnSlvaP_kUJpsRvCCLToZUsUqAEr52g09kbNvStRV1gY1X3HshUwpy6hHwYcpBfrUdY
+ FAeFqv8HGEp0hYpAI3pLQhhvsVTdMxw7YwOBzgg6gkQ0Ughkr.GqRG1drtr9e40GR.PThttDMBhI
+ RVcetpsA1M9wyUgmg4VgQzyLox1fQW.2KfXb.lznxdP421kO.UXK1HBeG8yvoN62F2t43n.PI7oD
+ M_OzNUkhsibcLorXbtK8hLVC6z5MgaanmhYMNAKPxgwYYY7RMwsv_ARQpnn6ChWBAYKTuknFfelb
+ Kow9tMtEk3Mufc55_ZkRP6Q31cZu1QONyLfq2nQ2THpC5kZPs.gaQuyTjy3DT.ztNEEQxgkaUh3J
+ 0NkiJpHIliL6xlB5MLpWuPhSpsVrckpLoeb_0gmX6TRXSvcwlMox7.uKaEU_x8.0.CdnpVOpIn8l
+ VNJnbWzdri1zsHSXATAE5HbskDONZ
+Received: from sonic.gate.mail.ne1.yahoo.com by sonic310.consmr.mail.ne1.yahoo.com with HTTP; Tue, 21 May 2019 22:25:34 +0000
+Received: from c-73-223-4-185.hsd1.ca.comcast.net (EHLO [192.168.0.103]) ([73.223.4.185])
+          by smtp405.mail.ne1.yahoo.com (Oath Hermes SMTP Server) with ESMTPA ID 555db4704c750d4da09ee360a204ae6c;
+          Tue, 21 May 2019 22:25:31 +0000 (UTC)
+Subject: Re: [PATCH] Smack: Restore the smackfsdef mount option
+To:     LKML <linux-kernel@vger.kernel.org>,
+        Al Viro <viro@zeniv.linux.org.uk>, dhowells@redhat.com
+Cc:     jose.bollo@iot.bzh,
+        Linux Security Module list 
+        <linux-security-module@vger.kernel.org>
+References: <1ebab7e7-f7ee-b910-9cc8-5d826eee8e97@schaufler-ca.com>
+From:   Casey Schaufler <casey@schaufler-ca.com>
+Message-ID: <4ff60417-ea57-7c6f-e4e1-cab74fd36ebb@schaufler-ca.com>
+Date:   Tue, 21 May 2019 15:25:30 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190521163104.15759-1-kai.heng.feng@canonical.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <1ebab7e7-f7ee-b910-9cc8-5d826eee8e97@schaufler-ca.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[+cc Mathias, linux-usb]
+On 5/20/2019 3:48 PM, Casey Schaufler wrote:
+> The 5.1 mount system rework changed the smackfsdef mount option
+> to smackfsdefault. This fixes the regression by making smackfsdef
+> treated the same way as smackfsdefault. The change was made in
+> commit c3300aaf95fb4 from Al Viro.
+>
+> Reported-by: Jose Bollo <jose.bollo@iot.bzh>
+> Signed-off-by: Casey Schaufler <casey@schaufler-ca.com>
 
-On Wed, May 22, 2019 at 12:31:04AM +0800, Kai-Heng Feng wrote:
-> There's an xHC device that doesn't wake when a USB device gets plugged
-> to its USB port. The driver's own runtime suspend callback was called,
-> PME signaling was enabled, but it stays at PCI D0.
+Al, Dave, is this patch in keeping with the intent
+of the mount rework? Is there a different way I should
+do it? Do you want to take it as a fix for the mount
+work, or should I push it?
 
-s/xHC/xHCI/ ?
+Thank you.
 
-This looks like it's fixing a bug?  If so, please include a link to
-the bug report, and make sure the bug report has "lspci -vv" output
-attached to it.
-
-> A PCI device can be runtime suspended to D0 when it supports D0 PME and
-> its _S0W reports D0. Theoratically this should work, but as [1]
-> specifies, D0 doesn't have wakeup capability.
-
-s/Theoratically/Theoretically/
-
-What does "runtime suspended to D0" mean?  Is that different from the
-regular "device is fully operational" sort of D0?  If so, what
-distinguishes "runtime suspended D0" from "normal fully operational
-D0"?
-
-> To avoid this problematic situation, we should avoid runtime suspend if
-> D0 is the only state that can wake up the device.
-> 
-> [1] https://docs.microsoft.com/en-us/windows-hardware/drivers/kernel/device-working-state-d0
-> 
-> Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
 > ---
->  drivers/pci/pci-driver.c | 5 +++++
->  drivers/pci/pci.c        | 2 +-
->  include/linux/pci.h      | 3 +++
->  3 files changed, 9 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/pci/pci-driver.c b/drivers/pci/pci-driver.c
-> index cae630fe6387..15a6310c5d7b 100644
-> --- a/drivers/pci/pci-driver.c
-> +++ b/drivers/pci/pci-driver.c
-> @@ -1251,6 +1251,11 @@ static int pci_pm_runtime_suspend(struct device *dev)
->  		return 0;
->  	}
->  
-> +	if (pci_target_state(pci_dev, device_can_wakeup(dev)) == PCI_D0) {
-> +		dev_dbg(dev, "D0 doesn't have wakeup capability\n");
-> +		return -EBUSY;
-> +	}
-> +
->  	pci_dev->state_saved = false;
->  	if (pm && pm->runtime_suspend) {
->  		error = pm->runtime_suspend(dev);
-> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-> index 8abc843b1615..ceee6efbbcfe 100644
-> --- a/drivers/pci/pci.c
-> +++ b/drivers/pci/pci.c
-> @@ -2294,7 +2294,7 @@ EXPORT_SYMBOL(pci_wake_from_d3);
->   * If the platform can't manage @dev, return the deepest state from which it
->   * can generate wake events, based on any available PME info.
->   */
-> -static pci_power_t pci_target_state(struct pci_dev *dev, bool wakeup)
-> +pci_power_t pci_target_state(struct pci_dev *dev, bool wakeup)
->  {
->  	pci_power_t target_state = PCI_D3hot;
->  
-> diff --git a/include/linux/pci.h b/include/linux/pci.h
-> index 4a5a84d7bdd4..91e8dc4d04aa 100644
-> --- a/include/linux/pci.h
-> +++ b/include/linux/pci.h
-> @@ -1188,6 +1188,7 @@ bool pci_pme_capable(struct pci_dev *dev, pci_power_t state);
->  void pci_pme_active(struct pci_dev *dev, bool enable);
->  int pci_enable_wake(struct pci_dev *dev, pci_power_t state, bool enable);
->  int pci_wake_from_d3(struct pci_dev *dev, bool enable);
-> +pci_power_t pci_target_state(struct pci_dev *dev, bool wakeup);
->  int pci_prepare_to_sleep(struct pci_dev *dev);
->  int pci_back_from_sleep(struct pci_dev *dev);
->  bool pci_dev_run_wake(struct pci_dev *dev);
-> @@ -1672,6 +1673,8 @@ static inline int pci_set_power_state(struct pci_dev *dev, pci_power_t state)
->  { return 0; }
->  static inline int pci_wake_from_d3(struct pci_dev *dev, bool enable)
->  { return 0; }
-> +pci_power_t pci_target_state(struct pci_dev *dev, bool wakeup)
-> +{ return PCI_D0; }
->  static inline pci_power_t pci_choose_state(struct pci_dev *dev,
->  					   pm_message_t state)
->  { return PCI_D0; }
-> -- 
-> 2.17.1
-> 
+> ??security/smack/smack_lsm.c | 2 ++
+> ??1 file changed, 2 insertions(+)
+>
+> diff --git a/security/smack/smack_lsm.c b/security/smack/smack_lsm.c
+> index b9abcdb36a73..915cf598e164 100644
+> --- a/security/smack/smack_lsm.c
+> +++ b/security/smack/smack_lsm.c
+> @@ -68,6 +68,7 @@ static struct {
+> ???????? int len;
+> ???????? int opt;
+> ??} smk_mount_opts[] = {
+> +?????? {"smackfsdef", sizeof("smackfsdef") - 1, Opt_fsdefault},
+> ???????? A(fsdefault), A(fsfloor), A(fshat), A(fsroot), A(fstransmute)
+> ??};
+> ??#undef A
+> @@ -682,6 +683,7 @@ static int smack_fs_context_dup(struct fs_context 
+> *fc,
+> ??}
+>
+> ??static const struct fs_parameter_spec smack_param_specs[] = {
+> +?????? fsparam_string("fsdef",?????????????? Opt_fsdefault),
+> ???????? fsparam_string("fsdefault",?????? Opt_fsdefault),
+> ???????? fsparam_string("fsfloor",?????? Opt_fsfloor),
+> ???????? fsparam_string("fshat",?????????????? Opt_fshat),
+>
