@@ -2,118 +2,79 @@ Return-Path: <SRS0=9PYC=TV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D842DC04AAF
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 06:49:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 105BCC04AAF
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 06:50:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B48C321743
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 06:49:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D48F521773
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 06:50:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1558421403;
+	bh=EukdVb7ua8yXTr4sHy+0d/eK8g+RFTAGvo7SKqQ24qI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=FmTihcaumvfY8EigQql0r+1Gy4Q/Vb7xesmtSH+1/RNSuz5fsvltFALHyhd2RtKJe
+	 R6/M0/jP62GlvV1vnqmm2sfD2/mp++dfNrRNvw3xGwcJIWXk4hNrUMzzDdLugIYqq0
+	 rpRm3F6va92nq1EXLbkNXbE/0GGzgp9BikVZ1CbM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726569AbfEUGtU (ORCPT
+        id S1726799AbfEUGuC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 May 2019 02:49:20 -0400
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:38016 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726193AbfEUGtU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 May 2019 02:49:20 -0400
-Received: by mail-qt1-f195.google.com with SMTP id l3so8475166qtj.5
-        for <linux-kernel@vger.kernel.org>; Mon, 20 May 2019 23:49:20 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=EX+RbZ2QuclOpIncZJaA9lb0b+yqy0TQx8yZ2oQxaGo=;
-        b=pKhnnwBbtqAcjqr+fcNhFu04tOUo1mgrX2WhegDG3jYXfeTBvxVrVpqryNYzEAL7eu
-         UclUT55JLAP6O5PogEhYgXacbIIZbea6rS0i0MYtsM/tQaZ/vBE4RNUnhyP+9T8LIhht
-         10KlKJ7aJ4Paav0Bt3kYhslIPiL0sX64K0x7zQguZ2b0wUexM8oTcjOzKH32Ig0GQVFT
-         L+zmqCwckAkVAP2G9wcavwZHzvPeDh5fUeGmcuTEIilLo8P4j/rclLs96rwpUCq5HmtG
-         vWz+K2nrzyi4lw/xu5vPunuk1dHqQfAq4UgkTC/v6FPg/DYekYTYjbsp9hKZNKDie4RM
-         t2mQ==
-X-Gm-Message-State: APjAAAUqL6INFbNRleHqOOvZlFpP16eCG6O9rFp81DiVSBj97/nfe2WZ
-        WXghMX97WGsxoirN1qdj1wZD5eY3hhRajonDu8fO0qUEAU8=
-X-Google-Smtp-Source: APXvYqyD1l2cT5B/5llVtcVwpmWYQWV+ifAU8LYZS74s9QsQIt96L5e8QfeClbxaEnEp5eYzrP3zcOzgimj1lhpL+9o=
-X-Received: by 2002:ac8:1a59:: with SMTP id q25mr67748115qtk.154.1558421359749;
- Mon, 20 May 2019 23:49:19 -0700 (PDT)
+        Tue, 21 May 2019 02:50:02 -0400
+Received: from mx2.suse.de ([195.135.220.15]:56762 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726193AbfEUGuC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 May 2019 02:50:02 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 5C37FAF70;
+        Tue, 21 May 2019 06:50:01 +0000 (UTC)
+Date:   Tue, 21 May 2019 08:50:00 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Oleksandr Natalenko <oleksandr@redhat.com>
+Cc:     Minchan Kim <minchan@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-mm <linux-mm@kvack.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Tim Murray <timmurray@google.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Suren Baghdasaryan <surenb@google.com>,
+        Daniel Colascione <dancol@google.com>,
+        Shakeel Butt <shakeelb@google.com>,
+        Sonny Rao <sonnyrao@google.com>,
+        Brian Geffon <bgeffon@google.com>
+Subject: Re: [RFC 4/7] mm: factor out madvise's core functionality
+Message-ID: <20190521065000.GH32329@dhcp22.suse.cz>
+References: <20190520035254.57579-1-minchan@kernel.org>
+ <20190520035254.57579-5-minchan@kernel.org>
+ <20190520142633.x5d27gk454qruc4o@butterfly.localdomain>
+ <20190521012649.GE10039@google.com>
+ <20190521063628.x2npirvs75jxjilx@butterfly.localdomain>
 MIME-Version: 1.0
-References: <20190519072711.2592-1-aaron.ma@canonical.com> <20190519072711.2592-2-aaron.ma@canonical.com>
- <20190521050850.GC183429@dtor-ws>
-In-Reply-To: <20190521050850.GC183429@dtor-ws>
-From:   Benjamin Tissoires <benjamin.tissoires@redhat.com>
-Date:   Tue, 21 May 2019 08:49:08 +0200
-Message-ID: <CAO-hwJLXB8Qec9Yhz0y6WgvEpE6KHk_53g4VtPGj9mfvMzk4dg@mail.gmail.com>
-Subject: Re: [PATCH 2/2] Input: synaptics - remove X240 from the topbuttonpad list
-To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc:     Aaron Ma <aaron.ma@canonical.com>,
-        "open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Christopher Heiny <Cheiny@synaptics.com>,
-        Andrew Duggan <aduggan@synaptics.com>,
-        Hans de Goede <hdegoede@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190521063628.x2npirvs75jxjilx@butterfly.localdomain>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 21, 2019 at 7:09 AM Dmitry Torokhov
-<dmitry.torokhov@gmail.com> wrote:
->
-> Hi Aaron,
->
-> On Sun, May 19, 2019 at 03:27:11PM +0800, Aaron Ma wrote:
-> > Lenovo ThinkPad X240 does not have the top software button.
-> > When this wrong ID in top button list, smbus mode will fail to probe,
-> > so keep it working at PS2 mode.
-> >
-> > Cc: stable@vger.kernel.org
-> > Signed-off-by: Aaron Ma <aaron.ma@canonical.com>
-> > ---
-> >  drivers/input/mouse/synaptics.c | 1 -
-> >  1 file changed, 1 deletion(-)
-> >
-> > diff --git a/drivers/input/mouse/synaptics.c b/drivers/input/mouse/synaptics.c
-> > index b6da0c1267e3..6ae7bc92476b 100644
-> > --- a/drivers/input/mouse/synaptics.c
-> > +++ b/drivers/input/mouse/synaptics.c
-> > @@ -140,7 +140,6 @@ static const char * const topbuttonpad_pnp_ids[] = {
-> >       "LEN002E",
-> >       "LEN0033", /* Helix */
-> >       "LEN0034", /* T431s, L440, L540, T540, W540, X1 Carbon 2nd */
-> > -     "LEN0035", /* X240 */
->
-> According to the history this came from Synaptics through Hans, so I'd
-> like to make sure there are no several X240 versions floating around...
+On Tue 21-05-19 08:36:28, Oleksandr Natalenko wrote:
+[...]
+> Regarding restricting the hints, I'm definitely interested in having
+> remote MADV_MERGEABLE/MADV_UNMERGEABLE. But, OTOH, doing it via remote
+> madvise() introduces another issue with traversing remote VMAs reliably.
+> IIUC, one can do this via userspace by parsing [s]maps file only, which
+> is not very consistent, and once some range is parsed, and then it is
+> immediately gone, a wrong hint will be sent.
+> 
+> Isn't this a problem we should worry about?
 
-A quick google image search showed that the X240 had 2 versions: one
-with the top software buttons, one without.
+See http://lkml.kernel.org/r/20190520091829.GY6836@dhcp22.suse.cz
 
-And this definitively rings a bell. I am sure we asked Lenovo and
-Synaptics to change the PnPID when they would do such a change, but
-they "forgot" during the *40 series refresh.
-We have code in place to fix the reported ranges of the coordinates,
-and we had to check against the board id (see min_max_pnpid_table[] in
-synaptics.c).
-Unfortunately, X240 (LEN0035) is not part of this table, so I don't
-know which refresh of the board ID has implemented the non top
-software buttons.
-
-Cheers,
-Benjamin
-
-
->
-> >       "LEN0036", /* T440 */
-> >       "LEN0037", /* X1 Carbon 2nd */
-> >       "LEN0038",
-> > --
-> > 2.17.1
-> >
->
-> Thanks.
->
-> --
-> Dmitry
+-- 
+Michal Hocko
+SUSE Labs
