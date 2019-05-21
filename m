@@ -2,219 +2,349 @@ Return-Path: <SRS0=9PYC=TV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 403C0C04AAF
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 11:51:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F25AC04AAF
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 11:51:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D300921773
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 11:51:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DF94021773
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 11:51:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="P9dDqqOl"
+	dkim=pass (2048-bit key) header.d=brauner.io header.i=@brauner.io header.b="I2SlfVLI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728063AbfEULvS (ORCPT
+        id S1728078AbfEULvs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 May 2019 07:51:18 -0400
-Received: from mailout1.w1.samsung.com ([210.118.77.11]:53242 "EHLO
-        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727044AbfEULvS (ORCPT
+        Tue, 21 May 2019 07:51:48 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:34580 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727060AbfEULvr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 May 2019 07:51:18 -0400
-Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
-        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20190521115116euoutp018befcc59e367eecf2157b018dd5b0fdb~gsHJ8tCLo2546225462euoutp01y
-        for <linux-kernel@vger.kernel.org>; Tue, 21 May 2019 11:51:16 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20190521115116euoutp018befcc59e367eecf2157b018dd5b0fdb~gsHJ8tCLo2546225462euoutp01y
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1558439476;
-        bh=McR1GDMAHsgfj9BNJCIvg1qAy7nbsGqAV/WHwwNePas=;
-        h=From:Subject:To:Date:References:From;
-        b=P9dDqqOlhLaJcQ0kANjPMQrQImBc++mOISs/gPK9mDoVAAroIX2cvdgO1Lz+tRM79
-         S/3nRZ8SQg/KSXyLNqCxqAZ3IQ2UOYiNoyY0WARk5DxjfgYWvvuuzaSd6swgpAeWvn
-         iUfE6mMq6Ldoi4Fnv4sPCQi975XPKMCgRpHGhXqk=
-Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20190521115116eucas1p29c97d95ab45a06d53aeadba6413ff9e7~gsHJl2xNL2796627966eucas1p2l;
-        Tue, 21 May 2019 11:51:16 +0000 (GMT)
-Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
-        eusmges1new.samsung.com (EUCPMTA) with SMTP id 05.ED.04298.336E3EC5; Tue, 21
-        May 2019 12:51:15 +0100 (BST)
-Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
-        20190521115115eucas1p28c5743b756e359791a3efcce1e2e16b8~gsHIq_AP_1774117741eucas1p2R;
-        Tue, 21 May 2019 11:51:15 +0000 (GMT)
-Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
-        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20190521115115eusmtrp1679bc4f202d72af8ce50b39a31da952d~gsHIbUbSc1853818538eusmtrp1F;
-        Tue, 21 May 2019 11:51:15 +0000 (GMT)
-X-AuditID: cbfec7f2-f2dff700000010ca-9c-5ce3e6331af9
-Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
-        eusmgms2.samsung.com (EUCPMTA) with SMTP id 9B.DC.04140.336E3EC5; Tue, 21
-        May 2019 12:51:15 +0100 (BST)
-Received: from [106.120.51.71] (unknown [106.120.51.71]) by
-        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20190521115114eusmtip2f83fce1eb1ac9575da3d732ba70f435b~gsHINyeLz2402824028eusmtip2N;
-        Tue, 21 May 2019 11:51:14 +0000 (GMT)
-From:   Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Subject: [PATCH v2] video: fbdev: gbefb: add COMPILE_TEST support
-To:     linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org
-Message-ID: <8bcfd5b8-347b-89e4-5faf-8569a3d00115@samsung.com>
-Date:   Tue, 21 May 2019 13:51:15 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
-        Thunderbird/60.6.1
+        Tue, 21 May 2019 07:51:47 -0400
+Received: by mail-pf1-f196.google.com with SMTP id n19so8970319pfa.1
+        for <linux-kernel@vger.kernel.org>; Tue, 21 May 2019 04:51:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=brauner.io; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=UtDqUNgJnZynvBlOnHH9iSsJaf+tEnVzROAfsvS8DBE=;
+        b=I2SlfVLIPpeoN83/RVrIDZ2txEnNA5/ACU8WMfVJGvRRYeZHhJySKHjwhWV/Bn5LJm
+         +AmEBzMgvcsaSN80G2haPXgR93//O72qJf3u00s1Lc49RDald+0XCvtiLunT8uN4SzfK
+         3nzT6LPSjwfmpTlI4jYN/Zrt/8fBget25T1htvMTEqJMoQGulRy7aRQKGfemlBvsamMV
+         o3cxKBFERwOrGDOEYVv8JGqp+46X/kmpcRFsNuN2BuuTY2vQRfosbUAKnxe86l+4fDI0
+         fn9C+x+qSs1SOPXkwCmesLYZU4PPDRMHNq2meRvHYQGuFwUhCvt0/uF2R5N2PXaI/H8Z
+         UHRg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=UtDqUNgJnZynvBlOnHH9iSsJaf+tEnVzROAfsvS8DBE=;
+        b=WwHL5PHvO/gnqsubTPgt9UL3B6Q3hlIJryGRhg50AEKFPsNav1gJnwJqk1N4O5VD3U
+         vMd+dpTFq8CedhQfPJohRd4z74Pqm09/LLjWJnIvMITRLVP7BSDrZbAWSn47QUynwRnq
+         6QqLXC3ykbDVPQ1sc72fGomLnt6oQt/5xMJfserGALwHPjSA29gWIaasrpON/iL6P2jd
+         tL9Rx7l7ypt1LsnWSy0/UfqUZEbdMLGG0WqaqvOfX7hujoSuYeAdopX+lyn/QdD+FCm4
+         RbIJGDETDQaYrw9b1+RlBLB6mXCFwUKCYJD4d10BADQUlLoASHvZlDfKVCh72UCCXs28
+         OKzQ==
+X-Gm-Message-State: APjAAAWoxVjXXhs1eLd862AJ+VscaH4OxFHm374vQWFL/UIRfv2C83Km
+        cRKLO1r3vApMuyn/lr9ykAa7/g==
+X-Google-Smtp-Source: APXvYqzVAPpLqpOw3CzPXblES0fZoluJzsflh2rJavwNsVzz1QjsTvWNUJgpYR5jM9xP6oesamRJVA==
+X-Received: by 2002:a65:5588:: with SMTP id j8mr81657084pgs.306.1558439506334;
+        Tue, 21 May 2019 04:51:46 -0700 (PDT)
+Received: from brauner.io ([208.54.39.182])
+        by smtp.gmail.com with ESMTPSA id t25sm34940175pfq.91.2019.05.21.04.51.39
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 21 May 2019 04:51:45 -0700 (PDT)
+Date:   Tue, 21 May 2019 13:51:36 +0200
+From:   Christian Brauner <christian@brauner.io>
+To:     Minchan Kim <minchan@kernel.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-mm <linux-mm@kvack.org>, Michal Hocko <mhocko@suse.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Tim Murray <timmurray@google.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Suren Baghdasaryan <surenb@google.com>,
+        Daniel Colascione <dancol@google.com>,
+        Shakeel Butt <shakeelb@google.com>,
+        Sonny Rao <sonnyrao@google.com>,
+        Brian Geffon <bgeffon@google.com>, jannh@google.com,
+        oleg@redhat.com
+Subject: Re: [RFC 5/7] mm: introduce external memory hinting API
+Message-ID: <20190521115134.rzknm4q2r5cpr6az@brauner.io>
+References: <20190520035254.57579-1-minchan@kernel.org>
+ <20190520035254.57579-6-minchan@kernel.org>
+ <20190521090058.mdx4qecmdbum45t2@brauner.io>
+ <20190521113510.GI219653@google.com>
 MIME-Version: 1.0
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFmpjleLIzCtJLcpLzFFi42LZduznOV3jZ49jDC5ctrK48vU9m8WJvg+s
-        Fpd3zWFzYPa4332cyePzJrkApigum5TUnMyy1CJ9uwSujB9t65kKzkpXXH8wjb2Bcb5YFyMH
-        h4SAicTfGXxdjJwcQgIrGCXOfUrtYuQCsr8wSsy9/5gdwvnMKNE9cQMzTMPNJi2I+HJGic0v
-        HzJCOG8ZJWYuu8EOMopNwEpiYvsqRhBbWMBR4urN+ywgtohAgsSK6TPA4rwCdhJbL20Ai7MI
-        qEp8WPiZFcQWFYiQuH9sAytEjaDEyZlPwGqYBcQlbj2ZzwRhy0tsfzuHGWSxhMBtNolvu5vB
-        hkoIuEhMn/CPFcIWlnh1fAs7hC0jcXpyDwtEwzpGib8dL6C6tzNKLJ/8jw2iylri8PGLrCB/
-        MgtoSqzfpQ8RdpQ49m41O8T7fBI33gpCHMEnMWnbdGio8Ep0tAlBVKtJbFi2gQ1mbdfOlcwQ
-        tofEi/PbGCFBHSsx+VcP6wRGhVlI3pyF5M1ZSN6chXDPAkaWVYziqaXFuempxYZ5qeV6xYm5
-        xaV56XrJ+bmbGIGp4/S/4592MH69lHSIUYCDUYmH1+Lh4xgh1sSy4srcQ4wSHMxKIrynTz2K
-        EeJNSaysSi3Kjy8qzUktPsQozcGiJM5bzfAgWkggPbEkNTs1tSC1CCbLxMEp1cDIZiQkmPax
-        a1tNnUn3nXkCjzarThNMjY2ZHd144OWkC0pl0QEvitd6a6+Yd+DunGaeu2ldolc3u/Xqzgu/
-        ceqR9aEmbv4y11VHPlTELrHPuLjLojg90msT/6opRidU1fs9zSfL/J/z6LeisXbSzGnTutYs
-        8Txy3O6/6d8M1oozLwSP5pdcLYlTYinOSDTUYi4qTgQAULBMDxkDAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrCLMWRmVeSWpSXmKPExsVy+t/xe7rGzx7HGEy7yGlx5et7NosTfR9Y
-        LS7vmsPmwOxxv/s4k8fnTXIBTFF6NkX5pSWpChn5xSW2StGGFkZ6hpYWekYmlnqGxuaxVkam
-        Svp2NimpOZllqUX6dgl6GT/a1jMVnJWuuP5gGnsD43yxLkYODgkBE4mbTVpdjFwcQgJLGSU+
-        X9nEDBGXkTi+vqyLkRPIFJb4c62LDaLmNaPEwu0LmEASbAJWEhPbVzGC2MICjhJXb95nAbFF
-        BBIknr6ezwZi8wrYSWy9tAEsziKgKvFh4WdWEFtUIELizPsVLBA1ghInZz4Bs5kF1CX+zLvE
-        DGGLS9x6Mp8JwpaX2P52DvMERv5ZSFpmIWmZhaRlFpKWBYwsqxhFUkuLc9Nzi430ihNzi0vz
-        0vWS83M3MQJDfNuxn1t2MHa9Cz7EKMDBqMTD++De4xgh1sSy4srcQ4wSHMxKIrynTz2KEeJN
-        SaysSi3Kjy8qzUktPsRoCvTQRGYp0eR8YPzllcQbmhqaW1gamhubG5tZKInzdggcjBESSE8s
-        Sc1OTS1ILYLpY+LglGpg3GXc9HLnMp7ONZOflm/U27fxhWwdx+HT7/fYyqddC37aKzr9Ulhn
-        jQqDOHfypa2+X7a97rv91312mUK0kl8a61Gfq6GvCk0vvZRqNneyZ3i96LKrUuPDxSEMW5f9
-        18iS1EpmY33cd2B1Z+CXC1Wr7nctNwzdZ7Cd2et72P5rguW2PebbhZ+oKrEUZyQaajEXFScC
-        AMvD2j6HAgAA
-X-CMS-MailID: 20190521115115eucas1p28c5743b756e359791a3efcce1e2e16b8
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20190521115115eucas1p28c5743b756e359791a3efcce1e2e16b8
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20190521115115eucas1p28c5743b756e359791a3efcce1e2e16b8
-References: <CGME20190521115115eucas1p28c5743b756e359791a3efcce1e2e16b8@eucas1p2.samsung.com>
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20190521113510.GI219653@google.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add COMPILE_TEST support to gbefb driver for better compile
-testing coverage.
+On Tue, May 21, 2019 at 08:35:10PM +0900, Minchan Kim wrote:
+> On Tue, May 21, 2019 at 11:01:01AM +0200, Christian Brauner wrote:
+> > Cc: Jann and Oleg too
+> > 
+> > On Mon, May 20, 2019 at 12:52:52PM +0900, Minchan Kim wrote:
+> > > There is some usecase that centralized userspace daemon want to give
+> > > a memory hint like MADV_[COOL|COLD] to other process. Android's
+> > > ActivityManagerService is one of them.
+> > > 
+> > > It's similar in spirit to madvise(MADV_WONTNEED), but the information
+> > > required to make the reclaim decision is not known to the app. Instead,
+> > > it is known to the centralized userspace daemon(ActivityManagerService),
+> > > and that daemon must be able to initiate reclaim on its own without
+> > > any app involvement.
+> > > 
+> > > To solve the issue, this patch introduces new syscall process_madvise(2)
+> > > which works based on pidfd so it could give a hint to the exeternal
+> > > process.
+> > > 
+> > > int process_madvise(int pidfd, void *addr, size_t length, int advise);
+> > > 
+> > > All advises madvise provides can be supported in process_madvise, too.
+> > > Since it could affect other process's address range, only privileged
+> > > process(CAP_SYS_PTRACE) or something else(e.g., being the same UID)
+> > > gives it the right to ptrrace the process could use it successfully.
+> > > 
+> > > Please suggest better idea if you have other idea about the permission.
+> > > 
+> > > * from v1r1
+> > >   * use ptrace capability - surenb, dancol
+> > > 
+> > > Signed-off-by: Minchan Kim <minchan@kernel.org>
+> > > ---
+> > >  arch/x86/entry/syscalls/syscall_32.tbl |  1 +
+> > >  arch/x86/entry/syscalls/syscall_64.tbl |  1 +
+> > >  include/linux/proc_fs.h                |  1 +
+> > >  include/linux/syscalls.h               |  2 ++
+> > >  include/uapi/asm-generic/unistd.h      |  2 ++
+> > >  kernel/signal.c                        |  2 +-
+> > >  kernel/sys_ni.c                        |  1 +
+> > >  mm/madvise.c                           | 45 ++++++++++++++++++++++++++
+> > >  8 files changed, 54 insertions(+), 1 deletion(-)
+> > > 
+> > > diff --git a/arch/x86/entry/syscalls/syscall_32.tbl b/arch/x86/entry/syscalls/syscall_32.tbl
+> > > index 4cd5f982b1e5..5b9dd55d6b57 100644
+> > > --- a/arch/x86/entry/syscalls/syscall_32.tbl
+> > > +++ b/arch/x86/entry/syscalls/syscall_32.tbl
+> > > @@ -438,3 +438,4 @@
+> > >  425	i386	io_uring_setup		sys_io_uring_setup		__ia32_sys_io_uring_setup
+> > >  426	i386	io_uring_enter		sys_io_uring_enter		__ia32_sys_io_uring_enter
+> > >  427	i386	io_uring_register	sys_io_uring_register		__ia32_sys_io_uring_register
+> > > +428	i386	process_madvise		sys_process_madvise		__ia32_sys_process_madvise
+> > > diff --git a/arch/x86/entry/syscalls/syscall_64.tbl b/arch/x86/entry/syscalls/syscall_64.tbl
+> > > index 64ca0d06259a..0e5ee78161c9 100644
+> > > --- a/arch/x86/entry/syscalls/syscall_64.tbl
+> > > +++ b/arch/x86/entry/syscalls/syscall_64.tbl
+> > > @@ -355,6 +355,7 @@
+> > >  425	common	io_uring_setup		__x64_sys_io_uring_setup
+> > >  426	common	io_uring_enter		__x64_sys_io_uring_enter
+> > >  427	common	io_uring_register	__x64_sys_io_uring_register
+> > > +428	common	process_madvise		__x64_sys_process_madvise
+> > >  
+> > >  #
+> > >  # x32-specific system call numbers start at 512 to avoid cache impact
+> > > diff --git a/include/linux/proc_fs.h b/include/linux/proc_fs.h
+> > > index 52a283ba0465..f8545d7c5218 100644
+> > > --- a/include/linux/proc_fs.h
+> > > +++ b/include/linux/proc_fs.h
+> > > @@ -122,6 +122,7 @@ static inline struct pid *tgid_pidfd_to_pid(const struct file *file)
+> > >  
+> > >  #endif /* CONFIG_PROC_FS */
+> > >  
+> > > +extern struct pid *pidfd_to_pid(const struct file *file);
+> > >  struct net;
+> > >  
+> > >  static inline struct proc_dir_entry *proc_net_mkdir(
+> > > diff --git a/include/linux/syscalls.h b/include/linux/syscalls.h
+> > > index e2870fe1be5b..21c6c9a62006 100644
+> > > --- a/include/linux/syscalls.h
+> > > +++ b/include/linux/syscalls.h
+> > > @@ -872,6 +872,8 @@ asmlinkage long sys_munlockall(void);
+> > >  asmlinkage long sys_mincore(unsigned long start, size_t len,
+> > >  				unsigned char __user * vec);
+> > >  asmlinkage long sys_madvise(unsigned long start, size_t len, int behavior);
+> > > +asmlinkage long sys_process_madvise(int pid_fd, unsigned long start,
+> > > +				size_t len, int behavior);
+> > >  asmlinkage long sys_remap_file_pages(unsigned long start, unsigned long size,
+> > >  			unsigned long prot, unsigned long pgoff,
+> > >  			unsigned long flags);
+> > > diff --git a/include/uapi/asm-generic/unistd.h b/include/uapi/asm-generic/unistd.h
+> > > index dee7292e1df6..7ee82ce04620 100644
+> > > --- a/include/uapi/asm-generic/unistd.h
+> > > +++ b/include/uapi/asm-generic/unistd.h
+> > > @@ -832,6 +832,8 @@ __SYSCALL(__NR_io_uring_setup, sys_io_uring_setup)
+> > >  __SYSCALL(__NR_io_uring_enter, sys_io_uring_enter)
+> > >  #define __NR_io_uring_register 427
+> > >  __SYSCALL(__NR_io_uring_register, sys_io_uring_register)
+> > > +#define __NR_process_madvise 428
+> > > +__SYSCALL(__NR_process_madvise, sys_process_madvise)
+> > >  
+> > >  #undef __NR_syscalls
+> > >  #define __NR_syscalls 428
+> > > diff --git a/kernel/signal.c b/kernel/signal.c
+> > > index 1c86b78a7597..04e75daab1f8 100644
+> > > --- a/kernel/signal.c
+> > > +++ b/kernel/signal.c
+> > > @@ -3620,7 +3620,7 @@ static int copy_siginfo_from_user_any(kernel_siginfo_t *kinfo, siginfo_t *info)
+> > >  	return copy_siginfo_from_user(kinfo, info);
+> > >  }
+> > >  
+> > > -static struct pid *pidfd_to_pid(const struct file *file)
+> > > +struct pid *pidfd_to_pid(const struct file *file)
+> > >  {
+> > >  	if (file->f_op == &pidfd_fops)
+> > >  		return file->private_data;
+> > > diff --git a/kernel/sys_ni.c b/kernel/sys_ni.c
+> > > index 4d9ae5ea6caf..5277421795ab 100644
+> > > --- a/kernel/sys_ni.c
+> > > +++ b/kernel/sys_ni.c
+> > > @@ -278,6 +278,7 @@ COND_SYSCALL(mlockall);
+> > >  COND_SYSCALL(munlockall);
+> > >  COND_SYSCALL(mincore);
+> > >  COND_SYSCALL(madvise);
+> > > +COND_SYSCALL(process_madvise);
+> > >  COND_SYSCALL(remap_file_pages);
+> > >  COND_SYSCALL(mbind);
+> > >  COND_SYSCALL_COMPAT(mbind);
+> > > diff --git a/mm/madvise.c b/mm/madvise.c
+> > > index 119e82e1f065..af02aa17e5c1 100644
+> > > --- a/mm/madvise.c
+> > > +++ b/mm/madvise.c
+> > > @@ -9,6 +9,7 @@
+> > >  #include <linux/mman.h>
+> > >  #include <linux/pagemap.h>
+> > >  #include <linux/page_idle.h>
+> > > +#include <linux/proc_fs.h>
+> > >  #include <linux/syscalls.h>
+> > >  #include <linux/mempolicy.h>
+> > >  #include <linux/page-isolation.h>
+> > > @@ -16,6 +17,7 @@
+> > >  #include <linux/hugetlb.h>
+> > >  #include <linux/falloc.h>
+> > >  #include <linux/sched.h>
+> > > +#include <linux/sched/mm.h>
+> > >  #include <linux/ksm.h>
+> > >  #include <linux/fs.h>
+> > >  #include <linux/file.h>
+> > > @@ -1140,3 +1142,46 @@ SYSCALL_DEFINE3(madvise, unsigned long, start, size_t, len_in, int, behavior)
+> > >  {
+> > >  	return madvise_core(current, start, len_in, behavior);
+> > >  }
+> > > +
+> > > +SYSCALL_DEFINE4(process_madvise, int, pidfd, unsigned long, start,
+> > > +		size_t, len_in, int, behavior)
+> > > +{
+> > > +	int ret;
+> > > +	struct fd f;
+> > > +	struct pid *pid;
+> > > +	struct task_struct *tsk;
+> > > +	struct mm_struct *mm;
+> > > +
+> > > +	f = fdget(pidfd);
+> > > +	if (!f.file)
+> > > +		return -EBADF;
+> > > +
+> > > +	pid = pidfd_to_pid(f.file);
+> > 
+> > pidfd_to_pid() should not be directly exported since this allows
+> > /proc/<pid> fds to be used too. That's something we won't be going
+> > forward with. All new syscalls should only allow to operate on pidfds
+> > created through CLONE_PIDFD or pidfd_open() (cf. [1]).
+> 
+> Thanks for the information.
+> 
+> > 
+> > So e.g. please export a simple helper like
+> > 
+> > struct pid *pidfd_to_pid(const struct file *file)
+> > {
+> >         if (file->f_op == &pidfd_fops)
+> >                 return file->private_data;
+> > 
+> >         return NULL;
+> > }
+> > 
+> > turning the old pidfd_to_pid() into something like:
+> > 
+> > static struct pid *__fd_to_pid(const struct file *file)
+> > {
+> >         struct pid *pid;
+> > 
+> >         pid = pidfd_to_pid(file);
+> >         if (pid)
+> >                 return pid;
+> > 
+> >         return tgid_pidfd_to_pid(file);
+> > }
+> 
+> So, I want to clarify what you suggest here.
+> 
+> 1. modify pidfd_to_pid as what you described above(ie, return NULL
+> instead of returning tgid_pidfd_to_pid(file);
+> 2. never export pidfd_to_pid
+> 3. create wrapper __fd_to_pid which calls pidfd_to_pid internally
+> 4. export __fd_to_pid and use it
 
-While at it convert bogus udelay() calls to mdelay() (needed to
-build driver on ARM) and remove dead x86 specific code.
+Sorry, seems I was not clear enough. :)
+What I meant was something along the lines of (not compile tested):
 
-Signed-off-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
----
-v2:
-- add missing HAS_IOMEM dependency
-- fix build on ARM by converting bogus udelay() calls to mdelay()
-
- drivers/video/fbdev/Kconfig |    3 ++-
- drivers/video/fbdev/gbefb.c |   19 +++++++------------
- 2 files changed, 9 insertions(+), 13 deletions(-)
-
-Index: b/drivers/video/fbdev/Kconfig
-===================================================================
---- a/drivers/video/fbdev/Kconfig
-+++ b/drivers/video/fbdev/Kconfig
-@@ -670,7 +670,8 @@ config FB_HGA
+diff --git a/include/linux/pid.h b/include/linux/pid.h
+index 3c8ef5a199ca..3ccc07010603 100644
+--- a/include/linux/pid.h
++++ b/include/linux/pid.h
+@@ -68,6 +68,10 @@ extern struct pid init_struct_pid;
  
- config FB_GBE
- 	bool "SGI Graphics Backend frame buffer support"
--	depends on (FB = y) && SGI_IP32
-+	depends on (FB = y) && HAS_IOMEM
-+	depends on SGI_IP32 || COMPILE_TEST
- 	select FB_CFB_FILLRECT
- 	select FB_CFB_COPYAREA
- 	select FB_CFB_IMAGEBLIT
-Index: b/drivers/video/fbdev/gbefb.c
-===================================================================
---- a/drivers/video/fbdev/gbefb.c
-+++ b/drivers/video/fbdev/gbefb.c
-@@ -39,9 +39,7 @@ struct gbefb_par {
- 	int valid;
+ extern const struct file_operations pidfd_fops;
+ 
++struct file;
++
++extern struct pid *pidfd_pid(const struct file *file);
++
+ static inline struct pid *get_pid(struct pid *pid)
+ {
+ 	if (pid)
+diff --git a/kernel/fork.c b/kernel/fork.c
+index b4cba953040a..0fcfffaf5fdc 100644
+--- a/kernel/fork.c
++++ b/kernel/fork.c
+@@ -1711,6 +1711,14 @@ const struct file_operations pidfd_fops = {
+ #endif
  };
  
--#ifdef CONFIG_SGI_IP32
- #define GBE_BASE	0x16000000 /* SGI O2 */
--#endif
++struct pid *pidfd_pid(const struct file *file)
++{
++	if (file->f_op == &pidfd_fops)
++		return file->private_data;
++
++	return ERR_PTR(-EBADF);
++}
++
+ /**
+  * pidfd_create() - Create a new pid file descriptor.
+  *
+diff --git a/kernel/signal.c b/kernel/signal.c
+index a1eb44dc9ff5..7fca9d7e1633 100644
+--- a/kernel/signal.c
++++ b/kernel/signal.c
+@@ -3611,8 +3611,11 @@ static int copy_siginfo_from_user_any(kernel_siginfo_t *kinfo, siginfo_t *info)
  
- /* macro for fastest write-though access to the framebuffer */
- #ifdef CONFIG_MIPS
-@@ -51,10 +49,6 @@ struct gbefb_par {
- #define pgprot_fb(_prot) (((_prot) & (~_CACHE_MASK)) | _CACHE_CACHABLE_NO_WA)
- #endif
- #endif
--#ifdef CONFIG_X86
--#define pgprot_fb(_prot) (((_prot) & ~_PAGE_CACHE_MASK) |	\
--			  cachemode2protval(_PAGE_CACHE_MODE_UC_MINUS))
--#endif
+ static struct pid *pidfd_to_pid(const struct file *file)
+ {
+-	if (file->f_op == &pidfd_fops)
+-		return file->private_data;
++	struct pid *pid;
++
++	pid = pidfd_pid(file);
++	if (pid)
++		return pid;
  
- /*
-  *  RAM we reserve for the frame buffer. This defines the maximum screen
-@@ -279,7 +273,7 @@ static void gbe_turn_off(void)
- 	val = 0;
- 	SET_GBE_FIELD(VT_XY, FREEZE, val, 1);
- 	gbe->vt_xy = val;
--	udelay(10000);
-+	mdelay(10);
- 	for (i = 0; i < 10000; i++) {
- 		val = gbe->vt_xy;
- 		if (GET_GBE_FIELD(VT_XY, FREEZE, val) != 1)
-@@ -294,7 +288,7 @@ static void gbe_turn_off(void)
- 	val = gbe->dotclock;
- 	SET_GBE_FIELD(DOTCLK, RUN, val, 0);
- 	gbe->dotclock = val;
--	udelay(10000);
-+	mdelay(10);
- 	for (i = 0; i < 10000; i++) {
- 		val = gbe->dotclock;
- 		if (GET_GBE_FIELD(DOTCLK, RUN, val))
-@@ -331,7 +325,7 @@ static void gbe_turn_on(void)
- 	val = gbe->dotclock;
- 	SET_GBE_FIELD(DOTCLK, RUN, val, 1);
- 	gbe->dotclock = val;
--	udelay(10000);
-+	mdelay(10);
- 	for (i = 0; i < 10000; i++) {
- 		val = gbe->dotclock;
- 		if (GET_GBE_FIELD(DOTCLK, RUN, val) != 1)
-@@ -346,7 +340,7 @@ static void gbe_turn_on(void)
- 	val = 0;
- 	SET_GBE_FIELD(VT_XY, FREEZE, val, 0);
- 	gbe->vt_xy = val;
--	udelay(10000);
-+	mdelay(10);
- 	for (i = 0; i < 10000; i++) {
- 		val = gbe->vt_xy;
- 		if (GET_GBE_FIELD(VT_XY, FREEZE, val))
-@@ -547,7 +541,7 @@ static void gbe_set_timing_info(struct g
- 	SET_GBE_FIELD(DOTCLK, P, val, timing->pll_p);
- 	SET_GBE_FIELD(DOTCLK, RUN, val, 0);	/* do not start yet */
- 	gbe->dotclock = val;
--	udelay(10000);
-+	mdelay(10);
- 
- 	/* setup pixel counter */
- 	val = 0;
-@@ -1018,9 +1012,10 @@ static int gbefb_mmap(struct fb_info *in
- 
- 	/* remap using the fastest write-through mode on architecture */
- 	/* try not polluting the cache when possible */
-+#ifdef CONFIG_MIPS
- 	pgprot_val(vma->vm_page_prot) =
- 		pgprot_fb(pgprot_val(vma->vm_page_prot));
--
-+#endif
- 	/* VM_IO | VM_DONTEXPAND | VM_DONTDUMP are set by remap_pfn_range() */
- 
- 	/* look for the starting tile */
+ 	return tgid_pidfd_to_pid(file);
+ }
