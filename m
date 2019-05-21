@@ -2,70 +2,110 @@ Return-Path: <SRS0=9PYC=TV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D65FC04AAF
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 16:30:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50C16C04E87
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 16:30:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3182F2173C
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 16:30:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2FD6A208C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 16:30:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728937AbfEUQah (ORCPT
+        id S1729048AbfEUQa6 convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 May 2019 12:30:37 -0400
-Received: from mail.us.es ([193.147.175.20]:39054 "EHLO mail.us.es"
+        Tue, 21 May 2019 12:30:58 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:61737 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728753AbfEUQah (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 May 2019 12:30:37 -0400
-Received: from antivirus1-rhel7.int (unknown [192.168.2.11])
-        by mail.us.es (Postfix) with ESMTP id 38B3615C10F
-        for <linux-kernel@vger.kernel.org>; Tue, 21 May 2019 18:30:34 +0200 (CEST)
-Received: from antivirus1-rhel7.int (localhost [127.0.0.1])
-        by antivirus1-rhel7.int (Postfix) with ESMTP id 29CF5DA70F
-        for <linux-kernel@vger.kernel.org>; Tue, 21 May 2019 18:30:34 +0200 (CEST)
-Received: by antivirus1-rhel7.int (Postfix, from userid 99)
-        id 0DD43DA717; Tue, 21 May 2019 18:30:34 +0200 (CEST)
-Received: from antivirus1-rhel7.int (localhost [127.0.0.1])
-        by antivirus1-rhel7.int (Postfix) with ESMTP id F037FDA705;
-        Tue, 21 May 2019 18:30:31 +0200 (CEST)
-Received: from 192.168.1.97 (192.168.1.97)
- by antivirus1-rhel7.int (F-Secure/fsigk_smtp/550/antivirus1-rhel7.int);
- Tue, 21 May 2019 18:30:31 +0200 (CEST)
-X-Virus-Status: clean(F-Secure/fsigk_smtp/550/antivirus1-rhel7.int)
-Received: from us.es (unknown [31.4.195.4])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1728945AbfEUQa6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 May 2019 12:30:58 -0400
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        (Authenticated sender: 1984lsi)
-        by entrada.int (Postfix) with ESMTPSA id B0BDC4265A32;
-        Tue, 21 May 2019 18:30:31 +0200 (CEST)
-Date:   Tue, 21 May 2019 18:30:30 +0200
-X-SMTPAUTHUS: auth mail.us.es
-From:   Pablo Neira Ayuso <pablo@netfilter.org>
-To:     YueHaibing <yuehaibing@huawei.com>
-Cc:     davem@davemloft.net, wensong@linux-vs.org, horms@verge.net.au,
-        ja@ssi.bg, kadlec@blackhole.kfki.hu, fw@strlen.de,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        lvs-devel@vger.kernel.org, netfilter-devel@vger.kernel.org,
-        coreteam@netfilter.org
-Subject: Re: [PATCH v2] ipvs: Fix use-after-free in ip_vs_in
-Message-ID: <20190521163030.ly3mnllygtmfnx5d@salvia>
-References: <alpine.LFD.2.21.1905171015040.2233@ja.home.ssi.bg>
- <20190517143149.17016-1-yuehaibing@huawei.com>
+        by mx1.redhat.com (Postfix) with ESMTPS id 36C037FDEE;
+        Tue, 21 May 2019 16:30:39 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-120-170.rdu2.redhat.com [10.10.120.170])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 7B1B95E7AF;
+        Tue, 21 May 2019 16:30:28 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+From:   David Howells <dhowells@redhat.com>
+In-Reply-To: <20190521150006.GJ17978@ZenIV.linux.org.uk>
+References: <20190521150006.GJ17978@ZenIV.linux.org.uk> <20190521113448.20654-1-christian@brauner.io>
+To:     Al Viro <viro@zeniv.linux.org.uk>
+Cc:     dhowells@redhat.com, Christian Brauner <christian@brauner.io>,
+        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-api@vger.kernel.org, jannh@google.com, fweimer@redhat.com,
+        oleg@redhat.com, tglx@linutronix.de, torvalds@linux-foundation.org,
+        arnd@arndb.de, shuah@kernel.org, tkjos@android.com,
+        ldv@altlinux.org, miklos@szeredi.hu, linux-alpha@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org,
+        linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
+        linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
+        sparclinux@vger.kernel.org, linux-xtensa@linux-xtensa.org,
+        linux-arch@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        x86@kernel.org
+Subject: Re: [PATCH 1/2] open: add close_range()
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190517143149.17016-1-yuehaibing@huawei.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-Virus-Scanned: ClamAV using ClamSMTP
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <28113.1558456227.1@warthog.procyon.org.uk>
+Content-Transfer-Encoding: 8BIT
+Date:   Tue, 21 May 2019 17:30:27 +0100
+Message-ID: <28114.1558456227@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.27]); Tue, 21 May 2019 16:30:57 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 17, 2019 at 10:31:49PM +0800, YueHaibing wrote:
-> BUG: KASAN: use-after-free in ip_vs_in.part.29+0xe8/0xd20 [ip_vs]
-> Read of size 4 at addr ffff8881e9b26e2c by task sshd/5603
+Al Viro <viro@zeniv.linux.org.uk> wrote:
 
-Applied, thanks.
+> Umm...  That's going to be very painful if you dup2() something to MAX_INT and
+> then run that; roughly 2G iterations of bouncing ->file_lock up and down,
+> without anything that would yield CPU in process.
+> 
+> If anything, I would suggest something like
+> 
+> 	fd = *start_fd;
+> 	grab the lock
+>         fdt = files_fdtable(files);
+> more:
+> 	look for the next eviction candidate in ->open_fds, starting at fd
+> 	if there's none up to max_fd
+> 		drop the lock
+> 		return NULL
+> 	*start_fd = fd + 1;
+> 	if the fscker is really opened and not just reserved
+> 		rcu_assign_pointer(fdt->fd[fd], NULL);
+> 		__put_unused_fd(files, fd);
+> 		drop the lock
+> 		return the file we'd got
+> 	if (unlikely(need_resched()))
+> 		drop lock
+> 		cond_resched();
+> 		grab lock
+> 		fdt = files_fdtable(files);
+> 	goto more;
+> 
+> with the main loop being basically
+> 	while ((file = pick_next(files, &start_fd, max_fd)) != NULL)
+> 		filp_close(file, files);
+
+If we can live with close_from(int first) rather than close_range(), then this
+can perhaps be done a lot more efficiently by:
+
+	new = alloc_fdtable(first);
+	spin_lock(&files->file_lock);
+	old = files_fdtable(files);
+	copy_fds(new, old, 0, first - 1);
+	rcu_assign_pointer(files->fdt, new);
+	spin_unlock(&files->file_lock);
+	clear_fds(old, 0, first - 1);
+	close_fdt_from(old, first);
+	kfree_rcu(old);
+
+David
