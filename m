@@ -4,38 +4,39 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BCF25C04AAF
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 14:07:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C7F2C072AD
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 14:08:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9B1C6217D9
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 14:07:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0A3D02173C
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 14:08:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728334AbfEUOH6 (ORCPT
+        id S1728417AbfEUOIA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 May 2019 10:07:58 -0400
-Received: from inva020.nxp.com ([92.121.34.13]:47238 "EHLO inva020.nxp.com"
+        Tue, 21 May 2019 10:08:00 -0400
+Received: from inva021.nxp.com ([92.121.34.21]:48216 "EHLO inva021.nxp.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727044AbfEUOH5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 May 2019 10:07:57 -0400
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id C737B1A0062;
-        Tue, 21 May 2019 16:07:54 +0200 (CEST)
+        id S1728202AbfEUOH7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 May 2019 10:07:59 -0400
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 049B72001BB;
+        Tue, 21 May 2019 16:07:56 +0200 (CEST)
 Received: from inva024.eu-rdc02.nxp.com (inva024.eu-rdc02.nxp.com [134.27.226.22])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id BA9AA1A003B;
-        Tue, 21 May 2019 16:07:54 +0200 (CEST)
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id E95EB200020;
+        Tue, 21 May 2019 16:07:55 +0200 (CEST)
 Received: from fsr-ub1864-101.ea.freescale.net (fsr-ub1864-101.ea.freescale.net [10.171.82.13])
-        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id 4091A20612;
-        Tue, 21 May 2019 16:07:54 +0200 (CEST)
+        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id 671A520612;
+        Tue, 21 May 2019 16:07:55 +0200 (CEST)
 From:   laurentiu.tudor@nxp.com
 To:     hch@lst.de, stern@rowland.harvard.edu, gregkh@linuxfoundation.org,
         linux-usb@vger.kernel.org, marex@denx.de
 Cc:     leoyang.li@nxp.com, linux-kernel@vger.kernel.org,
-        robin.murphy@arm.com, noring@nocrew.org, JuergenUrban@gmx.de
-Subject: [PATCH v5 1/5] lib/genalloc.c: Add gen_pool_dma_zalloc() for zeroed DMA allocations
-Date:   Tue, 21 May 2019 17:07:44 +0300
-Message-Id: <20190521140748.20012-2-laurentiu.tudor@nxp.com>
+        robin.murphy@arm.com, noring@nocrew.org, JuergenUrban@gmx.de,
+        Laurentiu Tudor <laurentiu.tudor@nxp.com>
+Subject: [PATCH v5 3/5] usb: host: ohci-sm501: init genalloc for local memory
+Date:   Tue, 21 May 2019 17:07:46 +0300
+Message-Id: <20190521140748.20012-4-laurentiu.tudor@nxp.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190521140748.20012-1-laurentiu.tudor@nxp.com>
 References: <20190521140748.20012-1-laurentiu.tudor@nxp.com>
@@ -45,81 +46,109 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Fredrik Noring <noring@nocrew.org>
+From: Laurentiu Tudor <laurentiu.tudor@nxp.com>
 
-gen_pool_dma_zalloc() is a zeroed memory variant of gen_pool_dma_alloc().
-Document return values of both, and indicate NULL as a "%NULL" constant.
+In preparation for dropping the existing "coherent" dma mem declaration
+APIs, replace the current dma_declare_coherent_memory() based mechanism
+with the creation of a genalloc pool that will be used in the OHCI
+subsystem as replacement for the DMA APIs.
 
-Signed-off-by: Fredrik Noring <noring@nocrew.org>
+For context, see thread here: https://lkml.org/lkml/2019/4/22/357
+
+Signed-off-by: Laurentiu Tudor <laurentiu.tudor@nxp.com>
 ---
- include/linux/genalloc.h |  1 +
- lib/genalloc.c           | 29 ++++++++++++++++++++++++++++-
- 2 files changed, 29 insertions(+), 1 deletion(-)
+ drivers/usb/host/ohci-sm501.c | 47 +++++++++++++++--------------------
+ 1 file changed, 20 insertions(+), 27 deletions(-)
 
-diff --git a/include/linux/genalloc.h b/include/linux/genalloc.h
-index dd0a452373e7..6c62eeca754f 100644
---- a/include/linux/genalloc.h
-+++ b/include/linux/genalloc.h
-@@ -121,6 +121,7 @@ extern unsigned long gen_pool_alloc_algo(struct gen_pool *, size_t,
- 		genpool_algo_t algo, void *data);
- extern void *gen_pool_dma_alloc(struct gen_pool *pool, size_t size,
- 		dma_addr_t *dma);
-+void *gen_pool_dma_zalloc(struct gen_pool *pool, size_t size, dma_addr_t *dma);
- extern void gen_pool_free(struct gen_pool *, unsigned long, size_t);
- extern void gen_pool_for_each_chunk(struct gen_pool *,
- 	void (*)(struct gen_pool *, struct gen_pool_chunk *, void *), void *);
-diff --git a/lib/genalloc.c b/lib/genalloc.c
-index 7e85d1e37a6e..5db43476a19b 100644
---- a/lib/genalloc.c
-+++ b/lib/genalloc.c
-@@ -337,12 +337,14 @@ EXPORT_SYMBOL(gen_pool_alloc_algo);
-  * gen_pool_dma_alloc - allocate special memory from the pool for DMA usage
-  * @pool: pool to allocate from
-  * @size: number of bytes to allocate from the pool
-- * @dma: dma-view physical address return value.  Use NULL if unneeded.
-+ * @dma: dma-view physical address return value.  Use %NULL if unneeded.
-  *
-  * Allocate the requested number of bytes from the specified pool.
-  * Uses the pool allocation function (with first-fit algorithm by default).
-  * Can not be used in NMI handler on architectures without
-  * NMI-safe cmpxchg implementation.
-+ *
-+ * Return: virtual address of the allocated memory, or %NULL on failure
-  */
- void *gen_pool_dma_alloc(struct gen_pool *pool, size_t size, dma_addr_t *dma)
- {
-@@ -362,6 +364,31 @@ void *gen_pool_dma_alloc(struct gen_pool *pool, size_t size, dma_addr_t *dma)
- }
- EXPORT_SYMBOL(gen_pool_dma_alloc);
+diff --git a/drivers/usb/host/ohci-sm501.c b/drivers/usb/host/ohci-sm501.c
+index c26228c25f99..b710e100aec9 100644
+--- a/drivers/usb/host/ohci-sm501.c
++++ b/drivers/usb/host/ohci-sm501.c
+@@ -110,40 +110,18 @@ static int ohci_hcd_sm501_drv_probe(struct platform_device *pdev)
+ 		goto err0;
+ 	}
  
-+/**
-+ * gen_pool_dma_zalloc - allocate special zeroed memory from the pool for
-+ * DMA usage
-+ * @pool: pool to allocate from
-+ * @size: number of bytes to allocate from the pool
-+ * @dma: dma-view physical address return value.  Use %NULL if unneeded.
-+ *
-+ * Allocate the requested number of zeroed bytes from the specified pool.
-+ * Uses the pool allocation function (with first-fit algorithm by default).
-+ * Can not be used in NMI handler on architectures without
-+ * NMI-safe cmpxchg implementation.
-+ *
-+ * Return: virtual address of the allocated zeroed memory, or %NULL on failure
-+ */
-+void *gen_pool_dma_zalloc(struct gen_pool *pool, size_t size, dma_addr_t *dma)
-+{
-+	void *vaddr = gen_pool_dma_alloc(pool, size, dma);
+-	/* The sm501 chip is equipped with local memory that may be used
+-	 * by on-chip devices such as the video controller and the usb host.
+-	 * This driver uses dma_declare_coherent_memory() to make sure
+-	 * usb allocations with dma_alloc_coherent() allocate from
+-	 * this local memory. The dma_handle returned by dma_alloc_coherent()
+-	 * will be an offset starting from 0 for the first local memory byte.
+-	 *
+-	 * So as long as data is allocated using dma_alloc_coherent() all is
+-	 * fine. This is however not always the case - buffers may be allocated
+-	 * using kmalloc() - so the usb core needs to be told that it must copy
+-	 * data into our local memory if the buffers happen to be placed in
+-	 * regular memory. The HCD_LOCAL_MEM flag does just that.
+-	 */
+-
+-	retval = dma_declare_coherent_memory(dev, mem->start,
+-					 mem->start - mem->parent->start,
+-					 resource_size(mem));
+-	if (retval) {
+-		dev_err(dev, "cannot declare coherent memory\n");
+-		goto err1;
+-	}
+-
+ 	/* allocate, reserve and remap resources for registers */
+ 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+ 	if (res == NULL) {
+ 		dev_err(dev, "no resource definition for registers\n");
+ 		retval = -ENOENT;
+-		goto err2;
++		goto err1;
+ 	}
+ 
+ 	hcd = usb_create_hcd(driver, &pdev->dev, dev_name(&pdev->dev));
+ 	if (!hcd) {
+ 		retval = -ENOMEM;
+-		goto err2;
++		goto err1;
+ 	}
+ 
+ 	hcd->rsrc_start = res->start;
+@@ -164,6 +142,24 @@ static int ohci_hcd_sm501_drv_probe(struct platform_device *pdev)
+ 
+ 	ohci_hcd_init(hcd_to_ohci(hcd));
+ 
++	/* The sm501 chip is equipped with local memory that may be used
++	 * by on-chip devices such as the video controller and the usb host.
++	 * This driver uses genalloc so that usb allocations with
++	 * gen_pool_dma_alloc() allocate from this local memory. The dma_handle
++	 * returned by gen_pool_dma_alloc() will be an offset starting from 0
++	 * for the first local memory byte.
++	 *
++	 * So as long as data is allocated using gen_pool_dma_alloc() all is
++	 * fine. This is however not always the case - buffers may be allocated
++	 * using kmalloc() - so the usb core needs to be told that it must copy
++	 * data into our local memory if the buffers happen to be placed in
++	 * regular memory. The HCD_LOCAL_MEM flag does just that.
++	 */
 +
-+	if (vaddr)
-+		memset(vaddr, 0, size);
-+
-+	return vaddr;
-+}
-+EXPORT_SYMBOL(gen_pool_dma_zalloc);
-+
- /**
-  * gen_pool_free - free allocated special memory back to the pool
-  * @pool: pool to free to
++	if (usb_hcd_setup_local_mem(hcd, mem->start,
++				    mem->start - mem->parent->start,
++				    resource_size(mem)) < 0)
++		goto err5;
+ 	retval = usb_add_hcd(hcd, irq, IRQF_SHARED);
+ 	if (retval)
+ 		goto err5;
+@@ -181,8 +177,6 @@ static int ohci_hcd_sm501_drv_probe(struct platform_device *pdev)
+ 	release_mem_region(hcd->rsrc_start, hcd->rsrc_len);
+ err3:
+ 	usb_put_hcd(hcd);
+-err2:
+-	dma_release_declared_memory(dev);
+ err1:
+ 	release_mem_region(mem->start, resource_size(mem));
+ err0:
+@@ -197,7 +191,6 @@ static int ohci_hcd_sm501_drv_remove(struct platform_device *pdev)
+ 	usb_remove_hcd(hcd);
+ 	release_mem_region(hcd->rsrc_start, hcd->rsrc_len);
+ 	usb_put_hcd(hcd);
+-	dma_release_declared_memory(&pdev->dev);
+ 	mem = platform_get_resource(pdev, IORESOURCE_MEM, 1);
+ 	if (mem)
+ 		release_mem_region(mem->start, resource_size(mem));
 -- 
 2.17.1
 
