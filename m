@@ -2,601 +2,256 @@ Return-Path: <SRS0=9PYC=TV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D74A0C04E87
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 01:21:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A782C04AAC
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 01:23:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AA0082173E
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 01:21:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0594321479
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 01:23:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727553AbfEUBVk (ORCPT
+        id S1727543AbfEUBX3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 21:21:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54254 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726677AbfEUBVj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 21:21:39 -0400
-Received: from oasis.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 68DE22173C;
-        Tue, 21 May 2019 01:21:36 +0000 (UTC)
-Date:   Mon, 20 May 2019 21:21:34 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Kris Van Hees <kris.van.hees@oracle.com>
-Cc:     netdev@vger.kernel.org, bpf@vger.kernel.org,
-        dtrace-devel@oss.oracle.com, linux-kernel@vger.kernel.org,
-        mhiramat@kernel.org, acme@kernel.org, ast@kernel.org,
-        daniel@iogearbox.net, Peter Zijlstra <peterz@infradead.org>
-Subject: Re: [RFC PATCH 07/11] bpf: implement writable buffers in contexts
-Message-ID: <20190520212134.7a4ee15f@oasis.local.home>
-In-Reply-To: <201905202352.x4KNqOjS025227@userv0121.oracle.com>
-References: <201905202352.x4KNqOjS025227@userv0121.oracle.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Mon, 20 May 2019 21:23:29 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:4238 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727022AbfEUBX2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 21:23:28 -0400
+X-UUID: 1c8d6806af134c0285e8ff60eea06faf-20190521
+X-UUID: 1c8d6806af134c0285e8ff60eea06faf-20190521
+Received: from mtkexhb01.mediatek.inc [(172.21.101.102)] by mailgw02.mediatek.com
+        (envelope-from <bibby.hsieh@mediatek.com>)
+        (mhqrelay.mediatek.com ESMTP with TLS)
+        with ESMTP id 2084700008; Tue, 21 May 2019 09:23:25 +0800
+Received: from mtkcas08.mediatek.inc (172.21.101.126) by
+ mtkmbs05n2.mediatek.inc (172.21.101.140) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Tue, 21 May 2019 09:23:23 +0800
+Received: from mtkslt302.mediatek.inc (10.21.14.115) by mtkcas08.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Tue, 21 May 2019 09:23:23 +0800
+From:   Bibby Hsieh <bibby.hsieh@mediatek.com>
+To:     <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>, <srv_heupstream@mediatek.com>
+CC:     Bibby Hsieh <bibby.hsieh@mediatek.com>
+Subject: [PATCH v7 09/12] soc: mediatek: cmdq: define the instruction struct
+Date:   Tue, 21 May 2019 09:23:22 +0800
+Message-ID: <20190521012322.45723-1-bibby.hsieh@mediatek.com>
+X-Mailer: git-send-email 2.18.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Define an instruction structure for gce driver to append command.
+This structure can make the client's code more readability.
 
-Hi Kris,
+Signed-off-by: Bibby Hsieh <bibby.hsieh@mediatek.com>
+---
+ drivers/soc/mediatek/mtk-cmdq-helper.c   | 103 +++++++++++++++--------
+ include/linux/mailbox/mtk-cmdq-mailbox.h |   2 +
+ 2 files changed, 72 insertions(+), 33 deletions(-)
 
-Note, it's best to thread patches. Otherwise they get spread out in
-mail boxes and hard to manage. That is, every patch should be a reply
-to the 00/11 header patch.
-
-Also, Peter Ziljstra (Cc'd) is the maintainer of perf on the kernel
-side. Please include him on Ccing perf changes that are done inside the
-kernel.
-
--- Steve
-
-
-On Mon, 20 May 2019 23:52:24 +0000 (UTC)
-Kris Van Hees <kris.van.hees@oracle.com> wrote:
-
-> Currently, BPF supports writes to packet data in very specific cases.
-> The implementation can be of more general use and can be extended to any
-> number of writable buffers in a context.  The implementation adds two new
-> register types: PTR_TO_BUFFER and PTR_TO_BUFFER_END, similar to the types
-> PTR_TO_PACKET and PTR_TO_PACKET_END.  In addition, a field 'buf_id' is
-> added to the reg_state structure as a way to distinguish between different
-> buffers in a single context.
-> 
-> Buffers are specified in the context by a pair of members:
-> - a pointer to the start of the buffer (type PTR_TO_BUFFER)
-> - a pointer to the first byte beyond the buffer (type PTR_TO_BUFFER_END)
-> 
-> A context can contain multiple buffers.  Each buffer/buffer_end pair is
-> identified by a unique id (buf_id).  The start-of-buffer member offset is
-> usually a good unique identifier.
-> 
-> The semantics for using a writable buffer are the same as for packet data.
-> The BPF program must contain a range test (buf + num > buf_end) to ensure
-> that the verifier can verify that offsets are within the allowed range.
-> 
-> Whenever a helper is called that might update the content of the context
-> all range information for registers that hold pointers to a buffer is
-> cleared, just as it is done for packet pointers.
-> 
-> Signed-off-by: Kris Van Hees <kris.van.hees@oracle.com>
-> Reviewed-by: Nick Alcock <nick.alcock@oracle.com>
-> ---
->  include/linux/bpf.h          |   3 +
->  include/linux/bpf_verifier.h |   4 +-
->  kernel/bpf/verifier.c        | 198 ++++++++++++++++++++++++-----------
->  3 files changed, 145 insertions(+), 60 deletions(-)
-> 
-> diff --git a/include/linux/bpf.h b/include/linux/bpf.h
-> index e4bcb79656c4..fc3eda0192fb 100644
-> --- a/include/linux/bpf.h
-> +++ b/include/linux/bpf.h
-> @@ -275,6 +275,8 @@ enum bpf_reg_type {
->  	PTR_TO_TCP_SOCK,	 /* reg points to struct tcp_sock */
->  	PTR_TO_TCP_SOCK_OR_NULL, /* reg points to struct tcp_sock or NULL */
->  	PTR_TO_TP_BUFFER,	 /* reg points to a writable raw tp's buffer */
-> +	PTR_TO_BUFFER,		 /* reg points to ctx buffer */
-> +	PTR_TO_BUFFER_END,	 /* reg points to ctx buffer end */
->  };
->  
->  /* The information passed from prog-specific *_is_valid_access
-> @@ -283,6 +285,7 @@ enum bpf_reg_type {
->  struct bpf_insn_access_aux {
->  	enum bpf_reg_type reg_type;
->  	int ctx_field_size;
-> +	u32 buf_id;
->  };
->  
->  static inline void
-> diff --git a/include/linux/bpf_verifier.h b/include/linux/bpf_verifier.h
-> index 1305ccbd8fe6..3538382184f3 100644
-> --- a/include/linux/bpf_verifier.h
-> +++ b/include/linux/bpf_verifier.h
-> @@ -45,7 +45,7 @@ struct bpf_reg_state {
->  	/* Ordering of fields matters.  See states_equal() */
->  	enum bpf_reg_type type;
->  	union {
-> -		/* valid when type == PTR_TO_PACKET */
-> +		/* valid when type == PTR_TO_PACKET | PTR_TO_BUFFER */
->  		u16 range;
->  
->  		/* valid when type == CONST_PTR_TO_MAP | PTR_TO_MAP_VALUE |
-> @@ -132,6 +132,8 @@ struct bpf_reg_state {
->  	 */
->  	u32 frameno;
->  	enum bpf_reg_liveness live;
-> +	/* For PTR_TO_BUFFER, to identify distinct buffers in a context. */
-> +	u32 buf_id;
->  };
->  
->  enum bpf_stack_slot_type {
-> diff --git a/kernel/bpf/verifier.c b/kernel/bpf/verifier.c
-> index f9e5536fd1af..5fba4e6f5424 100644
-> --- a/kernel/bpf/verifier.c
-> +++ b/kernel/bpf/verifier.c
-> @@ -406,6 +406,8 @@ static const char * const reg_type_str[] = {
->  	[PTR_TO_TCP_SOCK]	= "tcp_sock",
->  	[PTR_TO_TCP_SOCK_OR_NULL] = "tcp_sock_or_null",
->  	[PTR_TO_TP_BUFFER]	= "tp_buffer",
-> +	[PTR_TO_BUFFER]		= "buf",
-> +	[PTR_TO_BUFFER_END]	= "buf_end",
->  };
->  
->  static char slot_type_char[] = {
-> @@ -467,6 +469,9 @@ static void print_verifier_state(struct bpf_verifier_env *env,
->  				verbose(env, ",off=%d", reg->off);
->  			if (type_is_pkt_pointer(t))
->  				verbose(env, ",r=%d", reg->range);
-> +			else if (t == PTR_TO_BUFFER)
-> +				verbose(env, ",r=%d,bid=%d", reg->range,
-> +					reg->buf_id);
->  			else if (t == CONST_PTR_TO_MAP ||
->  				 t == PTR_TO_MAP_VALUE ||
->  				 t == PTR_TO_MAP_VALUE_OR_NULL)
-> @@ -855,6 +860,12 @@ static bool reg_is_pkt_pointer_any(const struct bpf_reg_state *reg)
->  	       reg->type == PTR_TO_PACKET_END;
->  }
->  
-> +static bool reg_is_buf_pointer_any(const struct bpf_reg_state *reg)
-> +{
-> +	return reg_is_pkt_pointer_any(reg) ||
-> +	       reg->type == PTR_TO_BUFFER || reg->type == PTR_TO_BUFFER_END;
-> +}
-> +
->  /* Unmodified PTR_TO_PACKET[_META,_END] register from ctx access. */
->  static bool reg_is_init_pkt_pointer(const struct bpf_reg_state *reg,
->  				    enum bpf_reg_type which)
-> @@ -1550,7 +1561,7 @@ static int check_map_access(struct bpf_verifier_env *env, u32 regno,
->  	return err;
->  }
->  
-> -#define MAX_PACKET_OFF 0xffff
-> +#define MAX_BUFFER_OFF 0xffff
->  
->  static bool may_access_direct_pkt_data(struct bpf_verifier_env *env,
->  				       const struct bpf_call_arg_meta *meta,
-> @@ -1585,7 +1596,7 @@ static bool may_access_direct_pkt_data(struct bpf_verifier_env *env,
->  	}
->  }
->  
-> -static int __check_packet_access(struct bpf_verifier_env *env, u32 regno,
-> +static int __check_buffer_access(struct bpf_verifier_env *env, u32 regno,
->  				 int off, int size, bool zero_size_allowed)
->  {
->  	struct bpf_reg_state *regs = cur_regs(env);
-> @@ -1593,14 +1604,15 @@ static int __check_packet_access(struct bpf_verifier_env *env, u32 regno,
->  
->  	if (off < 0 || size < 0 || (size == 0 && !zero_size_allowed) ||
->  	    (u64)off + size > reg->range) {
-> -		verbose(env, "invalid access to packet, off=%d size=%d, R%d(id=%d,off=%d,r=%d)\n",
-> -			off, size, regno, reg->id, reg->off, reg->range);
-> +		verbose(env, "invalid access to %s, off=%d size=%d, R%d(id=%d,off=%d,r=%d)\n",
-> +			reg_is_pkt_pointer(reg) ? "packet" : "buffer", off,
-> +			size, regno, reg->id, reg->off, reg->range);
->  		return -EACCES;
->  	}
->  	return 0;
->  }
->  
-> -static int check_packet_access(struct bpf_verifier_env *env, u32 regno, int off,
-> +static int check_buffer_access(struct bpf_verifier_env *env, u32 regno, int off,
->  			       int size, bool zero_size_allowed)
->  {
->  	struct bpf_reg_state *regs = cur_regs(env);
-> @@ -1620,35 +1632,37 @@ static int check_packet_access(struct bpf_verifier_env *env, u32 regno, int off,
->  			regno);
->  		return -EACCES;
->  	}
-> -	err = __check_packet_access(env, regno, off, size, zero_size_allowed);
-> +	err = __check_buffer_access(env, regno, off, size, zero_size_allowed);
->  	if (err) {
-> -		verbose(env, "R%d offset is outside of the packet\n", regno);
-> +		verbose(env, "R%d offset is outside of the %s\n",
-> +			regno, reg_is_pkt_pointer(reg) ? "packet" : "buffer");
->  		return err;
->  	}
->  
-> -	/* __check_packet_access has made sure "off + size - 1" is within u16.
-> -	 * reg->umax_value can't be bigger than MAX_PACKET_OFF which is 0xffff,
-> -	 * otherwise find_good_pkt_pointers would have refused to set range info
-> -	 * that __check_packet_access would have rejected this pkt access.
-> -	 * Therefore, "off + reg->umax_value + size - 1" won't overflow u32.
-> -	 */
-> -	env->prog->aux->max_pkt_offset =
-> -		max_t(u32, env->prog->aux->max_pkt_offset,
-> -		      off + reg->umax_value + size - 1);
-> +	if (reg_is_pkt_pointer(reg)) {
-> +		/* __check_buffer_access ensures "off + size - 1" is within u16
-> +		 * reg->umax_value can't be bigger than * MAX_BUFFER_OFF which
-> +		 * is 0xffff, otherwise find_good_buf_pointers would have
-> +		 * refused to set range info and __check_buffer_access would
-> +		 * have rejected this pkt access.
-> +		 * Therefore, "off + reg->umax_value + size - 1" won't overflow
-> +		 * u32.
-> +		 */
-> +		env->prog->aux->max_pkt_offset =
-> +			max_t(u32, env->prog->aux->max_pkt_offset,
-> +			      off + reg->umax_value + size - 1);
-> +	}
->  
->  	return err;
->  }
->  
->  /* check access to 'struct bpf_context' fields.  Supports fixed offsets only */
-> -static int check_ctx_access(struct bpf_verifier_env *env, int insn_idx, int off, int size,
-> -			    enum bpf_access_type t, enum bpf_reg_type *reg_type)
-> +static int check_ctx_access(struct bpf_verifier_env *env, int insn_idx,
-> +			    int off, int size, enum bpf_access_type t,
-> +			    struct bpf_insn_access_aux *info)
->  {
-> -	struct bpf_insn_access_aux info = {
-> -		.reg_type = *reg_type,
-> -	};
-> -
->  	if (env->ops->is_valid_access &&
-> -	    env->ops->is_valid_access(off, size, t, env->prog, &info)) {
-> +	    env->ops->is_valid_access(off, size, t, env->prog, info)) {
->  		/* A non zero info.ctx_field_size indicates that this field is a
->  		 * candidate for later verifier transformation to load the whole
->  		 * field and then apply a mask when accessed with a narrower
-> @@ -1656,9 +1670,7 @@ static int check_ctx_access(struct bpf_verifier_env *env, int insn_idx, int off,
->  		 * will only allow for whole field access and rejects any other
->  		 * type of narrower access.
->  		 */
-> -		*reg_type = info.reg_type;
-> -
-> -		env->insn_aux_data[insn_idx].ctx_field_size = info.ctx_field_size;
-> +		env->insn_aux_data[insn_idx].ctx_field_size = info->ctx_field_size;
->  		/* remember the offset of last byte accessed in ctx */
->  		if (env->prog->aux->max_ctx_offset < off + size)
->  			env->prog->aux->max_ctx_offset = off + size;
-> @@ -1870,6 +1882,10 @@ static int check_ptr_alignment(struct bpf_verifier_env *env,
->  	case PTR_TO_TCP_SOCK:
->  		pointer_desc = "tcp_sock ";
->  		break;
-> +	case PTR_TO_BUFFER:
-> +		pointer_desc = "buffer ";
-> +		strict = true;
-> +		break;
->  	default:
->  		break;
->  	}
-> @@ -2084,7 +2100,11 @@ static int check_mem_access(struct bpf_verifier_env *env, int insn_idx, u32 regn
->  			mark_reg_unknown(env, regs, value_regno);
->  
->  	} else if (reg->type == PTR_TO_CTX) {
-> -		enum bpf_reg_type reg_type = SCALAR_VALUE;
-> +		struct bpf_insn_access_aux info = {
-> +			.reg_type = SCALAR_VALUE,
-> +			.buf_id = 0,
-> +		};
-> +
->  
->  		if (t == BPF_WRITE && value_regno >= 0 &&
->  		    is_pointer_value(env, value_regno)) {
-> @@ -2096,21 +2116,22 @@ static int check_mem_access(struct bpf_verifier_env *env, int insn_idx, u32 regn
->  		if (err < 0)
->  			return err;
->  
-> -		err = check_ctx_access(env, insn_idx, off, size, t, &reg_type);
-> +		err = check_ctx_access(env, insn_idx, off, size, t, &info);
->  		if (!err && t == BPF_READ && value_regno >= 0) {
->  			/* ctx access returns either a scalar, or a
->  			 * PTR_TO_PACKET[_META,_END]. In the latter
->  			 * case, we know the offset is zero.
->  			 */
-> -			if (reg_type == SCALAR_VALUE) {
-> +			if (info.reg_type == SCALAR_VALUE) {
->  				mark_reg_unknown(env, regs, value_regno);
->  			} else {
->  				mark_reg_known_zero(env, regs,
->  						    value_regno);
-> -				if (reg_type_may_be_null(reg_type))
-> +				if (reg_type_may_be_null(info.reg_type))
->  					regs[value_regno].id = ++env->id_gen;
->  			}
-> -			regs[value_regno].type = reg_type;
-> +			regs[value_regno].type = info.reg_type;
-> +			regs[value_regno].buf_id = info.buf_id;
->  		}
->  
->  	} else if (reg->type == PTR_TO_STACK) {
-> @@ -2141,7 +2162,17 @@ static int check_mem_access(struct bpf_verifier_env *env, int insn_idx, u32 regn
->  				value_regno);
->  			return -EACCES;
->  		}
-> -		err = check_packet_access(env, regno, off, size, false);
-> +		err = check_buffer_access(env, regno, off, size, false);
-> +		if (!err && t == BPF_READ && value_regno >= 0)
-> +			mark_reg_unknown(env, regs, value_regno);
-> +	} else if (reg->type == PTR_TO_BUFFER) {
-> +		if (t == BPF_WRITE && value_regno >= 0 &&
-> +		    is_pointer_value(env, value_regno)) {
-> +			verbose(env, "R%d leaks addr into buffer\n",
-> +				value_regno);
-> +			return -EACCES;
-> +		}
-> +		err = check_buffer_access(env, regno, off, size, false);
->  		if (!err && t == BPF_READ && value_regno >= 0)
->  			mark_reg_unknown(env, regs, value_regno);
->  	} else if (reg->type == PTR_TO_FLOW_KEYS) {
-> @@ -2382,7 +2413,7 @@ static int check_helper_mem_access(struct bpf_verifier_env *env, int regno,
->  	switch (reg->type) {
->  	case PTR_TO_PACKET:
->  	case PTR_TO_PACKET_META:
-> -		return check_packet_access(env, regno, reg->off, access_size,
-> +		return check_buffer_access(env, regno, reg->off, access_size,
->  					   zero_size_allowed);
->  	case PTR_TO_MAP_VALUE:
->  		if (check_map_access_type(env, regno, reg->off, access_size,
-> @@ -2962,34 +2993,35 @@ static int check_func_proto(const struct bpf_func_proto *fn, int func_id)
->  	       check_refcount_ok(fn, func_id) ? 0 : -EINVAL;
->  }
->  
-> -/* Packet data might have moved, any old PTR_TO_PACKET[_META,_END]
-> - * are now invalid, so turn them into unknown SCALAR_VALUE.
-> +/* Packet or buffer data might have moved, any old PTR_TO_PACKET[_META,_END]
-> + * and/or PTR_TO_BUFFER[_END] are now invalid, so turn them into unknown
-> + * SCALAR_VALUE.
->   */
-> -static void __clear_all_pkt_pointers(struct bpf_verifier_env *env,
-> +static void __clear_all_buf_pointers(struct bpf_verifier_env *env,
->  				     struct bpf_func_state *state)
->  {
->  	struct bpf_reg_state *regs = state->regs, *reg;
->  	int i;
->  
->  	for (i = 0; i < MAX_BPF_REG; i++)
-> -		if (reg_is_pkt_pointer_any(&regs[i]))
-> +		if (reg_is_buf_pointer_any(&regs[i]))
->  			mark_reg_unknown(env, regs, i);
->  
->  	bpf_for_each_spilled_reg(i, state, reg) {
->  		if (!reg)
->  			continue;
-> -		if (reg_is_pkt_pointer_any(reg))
-> +		if (reg_is_buf_pointer_any(reg))
->  			__mark_reg_unknown(reg);
->  	}
->  }
->  
-> -static void clear_all_pkt_pointers(struct bpf_verifier_env *env)
-> +static void clear_all_buf_pointers(struct bpf_verifier_env *env)
->  {
->  	struct bpf_verifier_state *vstate = env->cur_state;
->  	int i;
->  
->  	for (i = 0; i <= vstate->curframe; i++)
-> -		__clear_all_pkt_pointers(env, vstate->frame[i]);
-> +		__clear_all_buf_pointers(env, vstate->frame[i]);
->  }
->  
->  static void release_reg_references(struct bpf_verifier_env *env,
-> @@ -3417,7 +3449,7 @@ static int check_helper_call(struct bpf_verifier_env *env, int func_id, int insn
->  	}
->  
->  	if (changes_data)
-> -		clear_all_pkt_pointers(env);
-> +		clear_all_buf_pointers(env);
->  	return 0;
->  }
->  
-> @@ -4349,7 +4381,7 @@ static int check_alu_op(struct bpf_verifier_env *env, struct bpf_insn *insn)
->  	return 0;
->  }
->  
-> -static void __find_good_pkt_pointers(struct bpf_func_state *state,
-> +static void __find_good_buf_pointers(struct bpf_func_state *state,
->  				     struct bpf_reg_state *dst_reg,
->  				     enum bpf_reg_type type, u16 new_range)
->  {
-> @@ -4358,7 +4390,11 @@ static void __find_good_pkt_pointers(struct bpf_func_state *state,
->  
->  	for (i = 0; i < MAX_BPF_REG; i++) {
->  		reg = &state->regs[i];
-> -		if (reg->type == type && reg->id == dst_reg->id)
-> +		if (reg->type != type)
-> +			continue;
-> +		if (type == PTR_TO_BUFFER && reg->buf_id != dst_reg->buf_id)
-> +			continue;
-> +		if (reg->id == dst_reg->id)
->  			/* keep the maximum range already checked */
->  			reg->range = max(reg->range, new_range);
->  	}
-> @@ -4366,12 +4402,16 @@ static void __find_good_pkt_pointers(struct bpf_func_state *state,
->  	bpf_for_each_spilled_reg(i, state, reg) {
->  		if (!reg)
->  			continue;
-> -		if (reg->type == type && reg->id == dst_reg->id)
-> +		if (reg->type != type)
-> +			continue;
-> +		if (type == PTR_TO_BUFFER && reg->buf_id != dst_reg->buf_id)
-> +			continue;
-> +		if (reg->id == dst_reg->id)
->  			reg->range = max(reg->range, new_range);
->  	}
->  }
->  
-> -static void find_good_pkt_pointers(struct bpf_verifier_state *vstate,
-> +static void find_good_buf_pointers(struct bpf_verifier_state *vstate,
->  				   struct bpf_reg_state *dst_reg,
->  				   enum bpf_reg_type type,
->  				   bool range_right_open)
-> @@ -4384,8 +4424,8 @@ static void find_good_pkt_pointers(struct bpf_verifier_state *vstate,
->  		/* This doesn't give us any range */
->  		return;
->  
-> -	if (dst_reg->umax_value > MAX_PACKET_OFF ||
-> -	    dst_reg->umax_value + dst_reg->off > MAX_PACKET_OFF)
-> +	if (dst_reg->umax_value > MAX_BUFFER_OFF ||
-> +	    dst_reg->umax_value + dst_reg->off > MAX_BUFFER_OFF)
->  		/* Risk of overflow.  For instance, ptr + (1<<63) may be less
->  		 * than pkt_end, but that's because it's also less than pkt.
->  		 */
-> @@ -4440,10 +4480,10 @@ static void find_good_pkt_pointers(struct bpf_verifier_state *vstate,
->  	/* If our ids match, then we must have the same max_value.  And we
->  	 * don't care about the other reg's fixed offset, since if it's too big
->  	 * the range won't allow anything.
-> -	 * dst_reg->off is known < MAX_PACKET_OFF, therefore it fits in a u16.
-> +	 * dst_reg->off is known < MAX_BUFFER_OFF, therefore it fits in a u16.
->  	 */
->  	for (i = 0; i <= vstate->curframe; i++)
-> -		__find_good_pkt_pointers(vstate->frame[i], dst_reg, type,
-> +		__find_good_buf_pointers(vstate->frame[i], dst_reg, type,
->  					 new_range);
->  }
->  
-> @@ -4934,7 +4974,7 @@ static void __mark_ptr_or_null_regs(struct bpf_func_state *state, u32 id,
->  	}
->  }
->  
-> -/* The logic is similar to find_good_pkt_pointers(), both could eventually
-> +/* The logic is similar to find_good_buf_pointers(), both could eventually
->   * be folded together at some point.
->   */
->  static void mark_ptr_or_null_regs(struct bpf_verifier_state *vstate, u32 regno,
-> @@ -4977,14 +5017,24 @@ static bool try_match_pkt_pointers(const struct bpf_insn *insn,
->  		    (dst_reg->type == PTR_TO_PACKET_META &&
->  		     reg_is_init_pkt_pointer(src_reg, PTR_TO_PACKET))) {
->  			/* pkt_data' > pkt_end, pkt_meta' > pkt_data */
-> -			find_good_pkt_pointers(this_branch, dst_reg,
-> +			find_good_buf_pointers(this_branch, dst_reg,
->  					       dst_reg->type, false);
->  		} else if ((dst_reg->type == PTR_TO_PACKET_END &&
->  			    src_reg->type == PTR_TO_PACKET) ||
->  			   (reg_is_init_pkt_pointer(dst_reg, PTR_TO_PACKET) &&
->  			    src_reg->type == PTR_TO_PACKET_META)) {
->  			/* pkt_end > pkt_data', pkt_data > pkt_meta' */
-> -			find_good_pkt_pointers(other_branch, src_reg,
-> +			find_good_buf_pointers(other_branch, src_reg,
-> +					       src_reg->type, true);
-> +		} else if (dst_reg->type == PTR_TO_BUFFER &&
-> +			   src_reg->type == PTR_TO_BUFFER_END) {
-> +			/* buf' > buf_end */
-> +			find_good_buf_pointers(this_branch, dst_reg,
-> +					       dst_reg->type, false);
-> +		} else if (dst_reg->type == PTR_TO_BUFFER_END &&
-> +			   src_reg->type == PTR_TO_BUFFER) {
-> +			/* buf_end > buf' */
-> +			find_good_buf_pointers(other_branch, src_reg,
->  					       src_reg->type, true);
->  		} else {
->  			return false;
-> @@ -4996,14 +5046,24 @@ static bool try_match_pkt_pointers(const struct bpf_insn *insn,
->  		    (dst_reg->type == PTR_TO_PACKET_META &&
->  		     reg_is_init_pkt_pointer(src_reg, PTR_TO_PACKET))) {
->  			/* pkt_data' < pkt_end, pkt_meta' < pkt_data */
-> -			find_good_pkt_pointers(other_branch, dst_reg,
-> +			find_good_buf_pointers(other_branch, dst_reg,
->  					       dst_reg->type, true);
->  		} else if ((dst_reg->type == PTR_TO_PACKET_END &&
->  			    src_reg->type == PTR_TO_PACKET) ||
->  			   (reg_is_init_pkt_pointer(dst_reg, PTR_TO_PACKET) &&
->  			    src_reg->type == PTR_TO_PACKET_META)) {
->  			/* pkt_end < pkt_data', pkt_data > pkt_meta' */
-> -			find_good_pkt_pointers(this_branch, src_reg,
-> +			find_good_buf_pointers(this_branch, src_reg,
-> +					       src_reg->type, false);
-> +		} else if (dst_reg->type == PTR_TO_BUFFER &&
-> +			   src_reg->type == PTR_TO_BUFFER_END) {
-> +			/* buf' < buf_end */
-> +			find_good_buf_pointers(other_branch, dst_reg,
-> +					       dst_reg->type, true);
-> +		} else if (dst_reg->type == PTR_TO_BUFFER_END &&
-> +			   src_reg->type == PTR_TO_BUFFER) {
-> +			/* buf_end < buf' */
-> +			find_good_buf_pointers(this_branch, src_reg,
->  					       src_reg->type, false);
->  		} else {
->  			return false;
-> @@ -5015,14 +5075,24 @@ static bool try_match_pkt_pointers(const struct bpf_insn *insn,
->  		    (dst_reg->type == PTR_TO_PACKET_META &&
->  		     reg_is_init_pkt_pointer(src_reg, PTR_TO_PACKET))) {
->  			/* pkt_data' >= pkt_end, pkt_meta' >= pkt_data */
-> -			find_good_pkt_pointers(this_branch, dst_reg,
-> +			find_good_buf_pointers(this_branch, dst_reg,
->  					       dst_reg->type, true);
->  		} else if ((dst_reg->type == PTR_TO_PACKET_END &&
->  			    src_reg->type == PTR_TO_PACKET) ||
->  			   (reg_is_init_pkt_pointer(dst_reg, PTR_TO_PACKET) &&
->  			    src_reg->type == PTR_TO_PACKET_META)) {
->  			/* pkt_end >= pkt_data', pkt_data >= pkt_meta' */
-> -			find_good_pkt_pointers(other_branch, src_reg,
-> +			find_good_buf_pointers(other_branch, src_reg,
-> +					       src_reg->type, false);
-> +		} else if (dst_reg->type == PTR_TO_BUFFER &&
-> +			   src_reg->type == PTR_TO_BUFFER_END) {
-> +			/* buf' >= buf_end */
-> +			find_good_buf_pointers(this_branch, dst_reg,
-> +					       dst_reg->type, true);
-> +		} else if (dst_reg->type == PTR_TO_BUFFER_END &&
-> +			   src_reg->type == PTR_TO_BUFFER) {
-> +			/* buf_end >= buf' */
-> +			find_good_buf_pointers(other_branch, src_reg,
->  					       src_reg->type, false);
->  		} else {
->  			return false;
-> @@ -5034,15 +5104,25 @@ static bool try_match_pkt_pointers(const struct bpf_insn *insn,
->  		    (dst_reg->type == PTR_TO_PACKET_META &&
->  		     reg_is_init_pkt_pointer(src_reg, PTR_TO_PACKET))) {
->  			/* pkt_data' <= pkt_end, pkt_meta' <= pkt_data */
-> -			find_good_pkt_pointers(other_branch, dst_reg,
-> +			find_good_buf_pointers(other_branch, dst_reg,
->  					       dst_reg->type, false);
->  		} else if ((dst_reg->type == PTR_TO_PACKET_END &&
->  			    src_reg->type == PTR_TO_PACKET) ||
->  			   (reg_is_init_pkt_pointer(dst_reg, PTR_TO_PACKET) &&
->  			    src_reg->type == PTR_TO_PACKET_META)) {
->  			/* pkt_end <= pkt_data', pkt_data <= pkt_meta' */
-> -			find_good_pkt_pointers(this_branch, src_reg,
-> +			find_good_buf_pointers(this_branch, src_reg,
->  					       src_reg->type, true);
-> +		} else if (dst_reg->type == PTR_TO_BUFFER &&
-> +			   src_reg->type == PTR_TO_BUFFER_END) {
-> +			/* buf' <= buf_end */
-> +			find_good_buf_pointers(other_branch, dst_reg,
-> +					       dst_reg->type, true);
-> +		} else if (dst_reg->type == PTR_TO_BUFFER_END &&
-> +			   src_reg->type == PTR_TO_BUFFER) {
-> +			/* buf_end <= buf' */
-> +			find_good_buf_pointers(this_branch, src_reg,
-> +					       src_reg->type, false);
->  		} else {
->  			return false;
->  		}
-> @@ -7972,7 +8052,7 @@ static int fixup_bpf_calls(struct bpf_verifier_env *env)
->  			 */
->  			prog->cb_access = 1;
->  			env->prog->aux->stack_depth = MAX_BPF_STACK;
-> -			env->prog->aux->max_pkt_offset = MAX_PACKET_OFF;
-> +			env->prog->aux->max_pkt_offset = MAX_BUFFER_OFF;
->  
->  			/* mark bpf_tail_call as different opcode to avoid
->  			 * conditional branch in the interpeter for every normal
+diff --git a/drivers/soc/mediatek/mtk-cmdq-helper.c b/drivers/soc/mediatek/mtk-cmdq-helper.c
+index 7aa0517ff2f3..0886c4967ca4 100644
+--- a/drivers/soc/mediatek/mtk-cmdq-helper.c
++++ b/drivers/soc/mediatek/mtk-cmdq-helper.c
+@@ -9,12 +9,24 @@
+ #include <linux/mailbox_controller.h>
+ #include <linux/soc/mediatek/mtk-cmdq.h>
+ 
+-#define CMDQ_ARG_A_WRITE_MASK	0xffff
+ #define CMDQ_WRITE_ENABLE_MASK	BIT(0)
+ #define CMDQ_EOC_IRQ_EN		BIT(0)
+ #define CMDQ_EOC_CMD		((u64)((CMDQ_CODE_EOC << CMDQ_OP_CODE_SHIFT)) \
+ 				<< 32 | CMDQ_EOC_IRQ_EN)
+ 
++struct cmdq_instruction {
++	union {
++		u32 value;
++		u32 mask;
++	};
++	union {
++		u16 offset;
++		u16 event;
++	};
++	u8 subsys;
++	u8 op;
++};
++
+ static void cmdq_client_timeout(struct timer_list *t)
+ {
+ 	struct cmdq_client *client = from_timer(client, t, timer);
+@@ -110,10 +122,8 @@ void cmdq_pkt_destroy(struct cmdq_pkt *pkt)
+ }
+ EXPORT_SYMBOL(cmdq_pkt_destroy);
+ 
+-static int cmdq_pkt_append_command(struct cmdq_pkt *pkt, enum cmdq_code code,
+-				   u32 arg_a, u32 arg_b)
++static struct cmdq_instruction *cmdq_pkt_append_command(struct cmdq_pkt *pkt)
+ {
+-	u64 *cmd_ptr;
+ 
+ 	if (unlikely(pkt->cmd_buf_size + CMDQ_INST_SIZE > pkt->buf_size)) {
+ 		/*
+@@ -127,81 +137,108 @@ static int cmdq_pkt_append_command(struct cmdq_pkt *pkt, enum cmdq_code code,
+ 		pkt->cmd_buf_size += CMDQ_INST_SIZE;
+ 		WARN_ONCE(1, "%s: buffer size %u is too small !\n",
+ 			__func__, (u32)pkt->buf_size);
+-		return -ENOMEM;
++		return NULL;
+ 	}
+-	cmd_ptr = pkt->va_base + pkt->cmd_buf_size;
+-	(*cmd_ptr) = (u64)((code << CMDQ_OP_CODE_SHIFT) | arg_a) << 32 | arg_b;
++
+ 	pkt->cmd_buf_size += CMDQ_INST_SIZE;
+ 
+-	return 0;
++	return pkt->va_base + pkt->cmd_buf_size - CMDQ_INST_SIZE;
+ }
+ 
+ int cmdq_pkt_write(struct cmdq_pkt *pkt, u8 subsys, u16 offset, u32 value)
+ {
+-	u32 arg_a = (offset & CMDQ_ARG_A_WRITE_MASK) |
+-		    (subsys << CMDQ_SUBSYS_SHIFT);
++	struct cmdq_instruction *inst;
++
++	inst = cmdq_pkt_append_command(pkt);
++	if (!inst)
++		return -ENOMEM;
++
++	inst->op = CMDQ_CODE_WRITE;
++	inst->value = value;
++	inst->offset = offset;
++	inst->subsys = subsys;
+ 
+-	return cmdq_pkt_append_command(pkt, CMDQ_CODE_WRITE, arg_a, value);
++	return 0;
+ }
+ EXPORT_SYMBOL(cmdq_pkt_write);
+ 
+ int cmdq_pkt_write_mask(struct cmdq_pkt *pkt, u8 subsys,
+ 			u16 offset, u32 value, u32 mask)
+ {
++	struct cmdq_instruction *inst;
+ 	u32 offset_mask = offset;
+-	int err = 0;
+ 
+ 	if (mask != 0xffffffff) {
+-		err = cmdq_pkt_append_command(pkt, CMDQ_CODE_MASK, 0, ~mask);
++		inst = cmdq_pkt_append_command(pkt);
++		if (!inst)
++			return -ENOMEM;
++
++		inst->op = CMDQ_CODE_MASK;
++		inst->mask = ~mask;
+ 		offset_mask |= CMDQ_WRITE_ENABLE_MASK;
+ 	}
+-	err |= cmdq_pkt_write(pkt, value, subsys, offset_mask);
+ 
+-	return err;
++	return cmdq_pkt_write(pkt, subsys, offset_mask, value);
+ }
+ EXPORT_SYMBOL(cmdq_pkt_write_mask);
+ 
+ int cmdq_pkt_wfe(struct cmdq_pkt *pkt, u16 event)
+ {
+-	u32 arg_b;
++	struct cmdq_instruction *inst;
+ 
+ 	if (event >= CMDQ_MAX_EVENT)
+ 		return -EINVAL;
+ 
+-	/*
+-	 * WFE arg_b
+-	 * bit 0-11: wait value
+-	 * bit 15: 1 - wait, 0 - no wait
+-	 * bit 16-27: update value
+-	 * bit 31: 1 - update, 0 - no update
+-	 */
+-	arg_b = CMDQ_WFE_UPDATE | CMDQ_WFE_WAIT | CMDQ_WFE_WAIT_VALUE;
++	inst = cmdq_pkt_append_command(pkt);
++	if (!inst)
++		return -ENOMEM;
++
++	inst->op = CMDQ_CODE_WFE;
++	inst->value = CMDQ_WFE_OPTION;
++	inst->event = event;
+ 
+-	return cmdq_pkt_append_command(pkt, CMDQ_CODE_WFE, event, arg_b);
++	return 0;
+ }
+ EXPORT_SYMBOL(cmdq_pkt_wfe);
+ 
+ int cmdq_pkt_clear_event(struct cmdq_pkt *pkt, u16 event)
+ {
++	struct cmdq_instruction *inst;
++
+ 	if (event >= CMDQ_MAX_EVENT)
+ 		return -EINVAL;
+ 
+-	return cmdq_pkt_append_command(pkt, CMDQ_CODE_WFE, event,
+-				       CMDQ_WFE_UPDATE);
++	inst = cmdq_pkt_append_command(pkt);
++	if (!inst)
++		return -ENOMEM;
++
++	inst->op = CMDQ_CODE_WFE;
++	inst->value = CMDQ_WFE_UPDATE;
++	inst->event = event;
++
++	return 0;
+ }
+ EXPORT_SYMBOL(cmdq_pkt_clear_event);
+ 
+ static int cmdq_pkt_finalize(struct cmdq_pkt *pkt)
+ {
+-	int err;
++	struct cmdq_instruction *inst;
++
++	inst = cmdq_pkt_append_command(pkt);
++	if (!inst)
++		return -ENOMEM;
+ 
+-	/* insert EOC and generate IRQ for each command iteration */
+-	err = cmdq_pkt_append_command(pkt, CMDQ_CODE_EOC, 0, CMDQ_EOC_IRQ_EN);
++	inst->op = CMDQ_CODE_EOC;
++	inst->value = CMDQ_EOC_IRQ_EN;
+ 
+-	/* JUMP to end */
+-	err |= cmdq_pkt_append_command(pkt, CMDQ_CODE_JUMP, 0, CMDQ_JUMP_PASS);
++	inst = cmdq_pkt_append_command(pkt);
++	if (!inst)
++		return -ENOMEM;
++
++	inst->op = CMDQ_CODE_JUMP;
++	inst->value = CMDQ_JUMP_PASS;
+ 
+-	return err;
++	return 0;
+ }
+ 
+ static void cmdq_pkt_flush_async_cb(struct cmdq_cb_data data)
+diff --git a/include/linux/mailbox/mtk-cmdq-mailbox.h b/include/linux/mailbox/mtk-cmdq-mailbox.h
+index 911475da7a53..c8adedefaf42 100644
+--- a/include/linux/mailbox/mtk-cmdq-mailbox.h
++++ b/include/linux/mailbox/mtk-cmdq-mailbox.h
+@@ -19,6 +19,8 @@
+ #define CMDQ_WFE_UPDATE			BIT(31)
+ #define CMDQ_WFE_WAIT			BIT(15)
+ #define CMDQ_WFE_WAIT_VALUE		0x1
++#define CMDQ_WFE_OPTION			(CMDQ_WFE_UPDATE | CMDQ_WFE_WAIT | \
++					CMDQ_WFE_WAIT_VALUE)
+ /** cmdq event maximum */
+ #define CMDQ_MAX_EVENT			0x3ff
+ 
+-- 
+2.18.0
 
