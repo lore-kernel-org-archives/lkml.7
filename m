@@ -2,135 +2,158 @@ Return-Path: <SRS0=9PYC=TV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43982C04E87
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 01:45:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D25AC04AAC
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 01:50:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1804D21743
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 01:45:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 610BB2173E
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 01:50:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=tobin.cc header.i=@tobin.cc header.b="aVzZIMke";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="wogBIOI9"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="DdAorvBu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727632AbfEUBpm (ORCPT
+        id S1727538AbfEUBuO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 21:45:42 -0400
-Received: from new1-smtp.messagingengine.com ([66.111.4.221]:56245 "EHLO
-        new1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727511AbfEUBpl (ORCPT
+        Mon, 20 May 2019 21:50:14 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:45026 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727043AbfEUBuO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 21:45:41 -0400
-Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-        by mailnew.nyi.internal (Postfix) with ESMTP id ADF3BBFD1;
-        Mon, 20 May 2019 21:45:40 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute5.internal (MEProxy); Mon, 20 May 2019 21:45:40 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tobin.cc; h=date
-        :from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm3; bh=zSyPy+Mn5LVlJ+FlCj33Ng1Vj0N
-        3aj5sXaJqqEQXdJg=; b=aVzZIMke8RgIn6fgRezyJIRNTdJNmy5BsAfcf1rzNh9
-        kfmmri+unp7PyZsnxtkTgHSaodOlSW0TTlKw/4fzSUEUmmtotFcMflrouEawmetl
-        yMmjYklNKZ2LGYBcwcppzbcYXLRiwTA4QcWSB/ZX7H9FsqXPJxD/cRXvqR7HSnbl
-        zmsZE4Ph1MtGXYkMjSGtQYC7AFO14uXoLyZbbHwa5QkUlBhb3yBrrCFILt19iBEf
-        kwl8tl11sbo2aN+IhYgJFA3CPgZgs+3qDPLfVBdw4eJznoV2b2tluB4D4CqOi8Cz
-        8hEcWr+0tr06AIlzR9mIdoTTxdmg5oLtQIMgMM4lQRA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=zSyPy+
-        Mn5LVlJ+FlCj33Ng1Vj0N3aj5sXaJqqEQXdJg=; b=wogBIOI9ILp8CO+jyYf2m/
-        4O6hf7ZDRufCxFGdAvGp6xsRPd+RZznXygF6h6C8FzaK2UCm+jexQBRPR5a036PZ
-        ragLxfROMNdB/0r9JMwaS38EjvpdLnYb6fIAMRTYkPNQkcbQryDr2NjG42OxjcBW
-        byUfI68V1yvb882goJR9nc6oZZ2w4KokjWRhkD9kaYfk1ROH6zxZnlbBDN2gDvJO
-        7blXnkWpM6kS89cTpb9wYgh63AMAU4w6AKN4L9TLTCXZXNm6HDKxrTN6+h/1QAZv
-        nk5lOnZ1kaxo4AMVAoe6nuYv6JnFpbD1aDar6wzuzMu+RpE4pza1gfrJUfw8GXDw
-        ==
-X-ME-Sender: <xms:QFjjXGtb0C56eqETPYVgual6pqtTl3Xv4VQd2dU88ZWfBDZlqDgMDw>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduuddruddtledggeelucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    gfrhhlucfvnfffucdlfedtmdenucfjughrpeffhffvuffkfhggtggujgfofgesthdtredt
-    ofervdenucfhrhhomhepfdfvohgsihhnucevrdcujfgrrhguihhnghdfuceomhgvsehtoh
-    gsihhnrdgttgeqnecukfhppeduvdegrdduieelrdduheeirddvtdefnecurfgrrhgrmhep
-    mhgrihhlfhhrohhmpehmvgesthhosghinhdrtggtnecuvehluhhsthgvrhfuihiivgeptd
-X-ME-Proxy: <xmx:QFjjXGIUKhDO5k2QKvBTG4W_hsJowdoztPZE9oKq0Iey0Y_y7DE0TQ>
-    <xmx:QFjjXKeDFCQTJi5XPVg3TWkSTJwYsjmcT--3DtyGNqhPO6u28SGLQA>
-    <xmx:QFjjXIW67bTni76x_zcwROybxmtiemrH031fommHrIE4s3RokU4WTA>
-    <xmx:RFjjXCYvXZUddiAM0f0wNqhYLLKvySulEgfuHrNdsxa024x5Zp9wow>
-Received: from localhost (124-169-156-203.dyn.iinet.net.au [124.169.156.203])
-        by mail.messagingengine.com (Postfix) with ESMTPA id B78C810378;
-        Mon, 20 May 2019 21:45:35 -0400 (EDT)
-Date:   Tue, 21 May 2019 11:44:57 +1000
-From:   "Tobin C. Harding" <me@tobin.cc>
-To:     Roman Gushchin <guro@fb.com>
-Cc:     "Tobin C. Harding" <tobin@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        Alexander Viro <viro@ftp.linux.org.uk>,
-        Christoph Hellwig <hch@infradead.org>,
-        Pekka Enberg <penberg@cs.helsinki.fi>,
-        David Rientjes <rientjes@google.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        Christopher Lameter <cl@linux.com>,
-        Miklos Szeredi <mszeredi@redhat.com>,
-        Andreas Dilger <adilger@dilger.ca>,
-        Waiman Long <longman@redhat.com>,
-        Tycho Andersen <tycho@tycho.ws>, Theodore Ts'o <tytso@mit.edu>,
-        Andi Kleen <ak@linux.intel.com>,
-        David Chinner <david@fromorbit.com>,
-        Nick Piggin <npiggin@gmail.com>,
-        Rik van Riel <riel@redhat.com>,
-        Hugh Dickins <hughd@google.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [RFC PATCH v5 13/16] slub: Enable balancing slabs across nodes
-Message-ID: <20190521014457.GA27676@eros.localdomain>
-References: <20190520054017.32299-1-tobin@kernel.org>
- <20190520054017.32299-14-tobin@kernel.org>
- <20190521010404.GB9552@tower.DHCP.thefacebook.com>
+        Mon, 20 May 2019 21:50:14 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x4L1nFqj053277;
+        Tue, 21 May 2019 01:50:06 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2018-07-02;
+ bh=dn+YYBqV56XU7F7c8CWuso5/+bxKEcmadpFPiXvJSds=;
+ b=DdAorvBuJ54owqKG0kLG39NVx7aA0pnGQwqww2td+q3Q1tnyKKa/wLEQXTY+tsG2Te1d
+ v3vE+2FjpNDnS77mfNnXh6YQrMpVPdIL7n6fpi4uJiroTlDpFR7MxG8tC55LHMiaw+5Y
+ ReeZzbIVqmHfkYSiyZp86cOiDHWGhSRMMBqUqkqed1VfAde28N0s4YUo0tvaSys4mvBM
+ 0XigivNYS6TCuK6bakIVbsIkeTpREeiZfg103SbG9xE2gS1LMT2pHQlI+nUBSxbywcpN
+ 8n2ukoqn5/SEAUsMPplFXfogsWXKud+1bO0wbsQUQ6haFsLfiPuSsLGADUM71mZ7jROQ Kw== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2120.oracle.com with ESMTP id 2sjapqa6sr-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 21 May 2019 01:50:05 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x4L1nYqf031921;
+        Tue, 21 May 2019 01:50:05 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by aserp3030.oracle.com with ESMTP id 2sks1xww56-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 21 May 2019 01:50:04 +0000
+Received: from abhmp0010.oracle.com (abhmp0010.oracle.com [141.146.116.16])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x4L1o4tS000757;
+        Tue, 21 May 2019 01:50:04 GMT
+Received: from [10.159.155.76] (/10.159.155.76)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 21 May 2019 01:50:04 +0000
+Subject: Re: [PATCH] mm, memory-failure: clarify error message
+To:     Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>,
+        Anshuman Khandual <anshuman.khandual@arm.com>
+Cc:     "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-nvdimm@lists.01.org" <linux-nvdimm@lists.01.org>
+References: <1558066095-9495-1-git-send-email-jane.chu@oracle.com>
+ <512532de-4c09-626d-380f-58cef519166b@arm.com>
+ <20190520102106.GA12721@hori.linux.bs1.fc.nec.co.jp>
+From:   Jane Chu <jane.chu@oracle.com>
+Organization: Oracle Corporation
+Message-ID: <49fd8918-5762-9b92-d383-8fdd96cf1c38@oracle.com>
+Date:   Mon, 20 May 2019 18:50:02 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190521010404.GB9552@tower.DHCP.thefacebook.com>
-X-Mailer: Mutt 1.11.4 (2019-03-13)
-User-Agent: Mutt/1.11.4 (2019-03-13)
+In-Reply-To: <20190520102106.GA12721@hori.linux.bs1.fc.nec.co.jp>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9263 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1810050000 definitions=main-1905210009
+X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9263 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1905210009
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 21, 2019 at 01:04:10AM +0000, Roman Gushchin wrote:
-> On Mon, May 20, 2019 at 03:40:14PM +1000, Tobin C. Harding wrote:
-> > We have just implemented Slab Movable Objects (SMO).  On NUMA systems
-> > slabs can become unbalanced i.e. many slabs on one node while other
-> > nodes have few slabs.  Using SMO we can balance the slabs across all
-> > the nodes.
-> > 
-> > The algorithm used is as follows:
-> > 
-> >  1. Move all objects to node 0 (this has the effect of defragmenting the
-> >     cache).
-> 
-> This already sounds dangerous (or costly). Can't it be done without
-> cross-node data moves?
+Thanks Vishal and Naoya!
+
+-jane
+
+On 5/20/2019 3:21 AM, Naoya Horiguchi wrote:
+> On Fri, May 17, 2019 at 10:18:02AM +0530, Anshuman Khandual wrote:
+>>
+>> On 05/17/2019 09:38 AM, Jane Chu wrote:
+>>> Some user who install SIGBUS handler that does longjmp out
+>> What the longjmp about ? Are you referring to the mechanism of catching the
+>> signal which was registered ?
+> AFAIK, longjmp() might be useful for signal-based retrying, so highly
+> optimized applications like Oracle DB might want to utilize it to handle
+> memory errors in application level, I guess.
 >
-> > 
-> >  2. Calculate the desired number of slabs for each node (this is done
-> >     using the approximation nr_slabs / nr_nodes).
-> 
-> So that on this step only (actual data size - desired data size) has
-> to be moved?
-
-This is just the most braindead algorithm I could come up with.  Surely
-there are a bunch of things that could be improved.  Since I don't know
-the exact use case it seemed best not to optimize for any one use case.
-
-I'll review, comment on, and test any algorithm you come up with!
-
-thanks,
-Tobin.
+>>> therefore keeping the process alive is confused by the error
+>>> message
+>>>    "[188988.765862] Memory failure: 0x1840200: Killing
+>>>     cellsrv:33395 due to hardware memory corruption"
+>> Its a valid point because those are two distinct actions.
+>>
+>>> Slightly modify the error message to improve clarity.
+>>>
+>>> Signed-off-by: Jane Chu <jane.chu@oracle.com>
+>>> ---
+>>>   mm/memory-failure.c | 7 ++++---
+>>>   1 file changed, 4 insertions(+), 3 deletions(-)
+>>>
+>>> diff --git a/mm/memory-failure.c b/mm/memory-failure.c
+>>> index fc8b517..14de5e2 100644
+>>> --- a/mm/memory-failure.c
+>>> +++ b/mm/memory-failure.c
+>>> @@ -216,10 +216,9 @@ static int kill_proc(struct to_kill *tk, unsigned long pfn, int flags)
+>>>   	short addr_lsb = tk->size_shift;
+>>>   	int ret;
+>>>   
+>>> -	pr_err("Memory failure: %#lx: Killing %s:%d due to hardware memory corruption\n",
+>>> -		pfn, t->comm, t->pid);
+>>> -
+>>>   	if ((flags & MF_ACTION_REQUIRED) && t->mm == current->mm) {
+>>> +		pr_err("Memory failure: %#lx: Killing %s:%d due to hardware memory "
+>>> +			"corruption\n", pfn, t->comm, t->pid);
+>>>   		ret = force_sig_mceerr(BUS_MCEERR_AR, (void __user *)tk->addr,
+>>>   				       addr_lsb, current);
+>>>   	} else {
+>>> @@ -229,6 +228,8 @@ static int kill_proc(struct to_kill *tk, unsigned long pfn, int flags)
+>>>   		 * This could cause a loop when the user sets SIGBUS
+>>>   		 * to SIG_IGN, but hopefully no one will do that?
+>>>   		 */
+>>> +		pr_err("Memory failure: %#lx: Sending SIGBUS to %s:%d due to hardware "
+>>> +			"memory corruption\n", pfn, t->comm, t->pid);
+>>>   		ret = send_sig_mceerr(BUS_MCEERR_AO, (void __user *)tk->addr,
+>>>   				      addr_lsb, t);  /* synchronous? */
+>> As both the pr_err() messages are very similar, could not we just switch between "Killing"
+>> and "Sending SIGBUS to" based on a variable e.g action_[kill|sigbus] evaluated previously
+>> with ((flags & MF_ACTION_REQUIRED) && t->mm == current->mm).
+> That might need additional if sentence, which I'm not sure worth doing.
+> I think that the simplest fix for the reported problem (a confusing message)
+> is like below:
+>
+> 	-	pr_err("Memory failure: %#lx: Killing %s:%d due to hardware memory corruption\n",
+> 	+	pr_err("Memory failure: %#lx: Sending SIGBUS to %s:%d due to hardware memory corruption\n",
+> 			pfn, t->comm, t->pid);
+>
+> Or, if we have a good reason to separate the message for MF_ACTION_REQUIRED and
+> MF_ACTION_OPTIONAL, that might be OK.
+>
+> Thanks,
+> Naoya Horiguchi
