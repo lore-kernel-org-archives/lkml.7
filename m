@@ -2,88 +2,125 @@ Return-Path: <SRS0=9PYC=TV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32FA4C04AAF
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 05:15:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AE05C04E87
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 05:15:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 092E52173E
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 05:15:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0113C21783
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 05:15:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b="XkYC0Fn2";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="xPO8jHCt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727826AbfEUFPa (ORCPT
+        id S1727879AbfEUFPn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 May 2019 01:15:30 -0400
-Received: from verein.lst.de ([213.95.11.211]:57345 "EHLO newverein.lst.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725804AbfEUFP3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 May 2019 01:15:29 -0400
-Received: by newverein.lst.de (Postfix, from userid 2407)
-        id 71C1968B05; Tue, 21 May 2019 07:15:07 +0200 (CEST)
-Date:   Tue, 21 May 2019 07:15:07 +0200
-From:   Christoph Hellwig <hch@lst.de>
-To:     Thiago Jung Bauermann <bauerman@linux.ibm.com>
-Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        Alexey Kardashevskiy <aik@ozlabs.ru>,
-        Anshuman Khandual <anshuman.linux@gmail.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Christoph Hellwig <hch@lst.de>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Mike Anderson <andmike@linux.ibm.com>,
-        Paul Mackerras <paulus@samba.org>,
-        Ram Pai <linuxram@us.ibm.com>,
-        Claudio Carvalho <cclaudio@linux.ibm.com>,
-        Anshuman Khandual <khandual@linux.vnet.ibm.com>
-Subject: Re: [PATCH 11/12] powerpc/pseries/svm: Force SWIOTLB for secure
- guests
-Message-ID: <20190521051507.GD29120@lst.de>
-References: <20190521044912.1375-1-bauerman@linux.ibm.com> <20190521044912.1375-12-bauerman@linux.ibm.com>
+        Tue, 21 May 2019 01:15:43 -0400
+Received: from out5-smtp.messagingengine.com ([66.111.4.29]:48145 "EHLO
+        out5-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727228AbfEUFPn (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 May 2019 01:15:43 -0400
+Received: from compute6.internal (compute6.nyi.internal [10.202.2.46])
+        by mailout.nyi.internal (Postfix) with ESMTP id A152C22572;
+        Tue, 21 May 2019 01:15:41 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute6.internal (MEProxy); Tue, 21 May 2019 01:15:41 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm3; bh=Zs2g6tIaEDwqeFSvJ6bXGDZori8
+        SQskXCTnrMkz9V0o=; b=XkYC0Fn21fxBL0Y/5xlGTXf/QGhEqpLwC85P4Fk2PGK
+        0KLkieW0hAY6tbhd4yXVr3IpKhelBCISBrHUPUICnqqv46bjFfGBkGHvjfn0CISx
+        0s3FMtnBo1PhklLGB/4det3M2ATP7QqcGHSVfESwZXhlO5TEFe5cfxfW8AmrPfa8
+        gZxIl8bj90v2HAUH+IFzoowMmXJn2QmYLA35Wyt8/aFbLbnrpamSgsyYqrle2omr
+        SxO+xainrHKtUXqGRjtTLQ7Xe2yetygYEABsE2MAONgIpy/YpSEWOy498KMrVbcL
+        KPi3EXLbl8EfLvy6uWb4+aXjOt39OPjeP3K4DZc11sg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=Zs2g6t
+        IaEDwqeFSvJ6bXGDZori8SQskXCTnrMkz9V0o=; b=xPO8jHCtWXj3rDrQEU7Kn+
+        0pOJnLE5jm7t2pMh3r2MsG+k1IxzDaEY4FSM2A1e3dCOX3o+OXIXCUrsro60OFr3
+        Tv4sJ393/LOMKlZGzX6ITxr1VV10yXSpoumg2+BsWjH17g+Lu19TuB3Mz5eMcyAy
+        HVU7bGr3XvlF54OFITAIulQgN3AqwKrXU1eEVgvhzOCleHMHSnwf6xmn38M7UPeR
+        2bRcKtswySRSYj98KuDsBxs4mAXNodjoM+BUEhxtJy4PWFtu4nZBZ15Fn1n0IH58
+        S/8mfPYDh6SArfsZhAAiNGonIUl4y0mvvX51zHW/D0q2SuJKCsrMdvLKgnmrst0A
+        ==
+X-ME-Sender: <xms:fInjXOO0wwQHk0J41lr-xuKWbnTSuzCtcO1Qowc70EMzshaL7Z7Eqw>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduuddruddtledgleefucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepfffhvffukfhfgggtuggjfgesthdtredttdervdenucfhrhhomhepifhrvghg
+    ucfmjfcuoehgrhgvgheskhhrohgrhhdrtghomheqnecukfhppeekfedrkeeirdekledrud
+    dtjeenucfrrghrrghmpehmrghilhhfrhhomhepghhrvghgsehkrhhorghhrdgtohhmnecu
+    vehluhhsthgvrhfuihiivgeptd
+X-ME-Proxy: <xmx:fInjXEbu7SiHIpzIVFdLVV2ucgC0nog-8XQblkluBQ5pk6eKeCkhAA>
+    <xmx:fInjXCpgZ8JXC9_J1e9wIhVzBqnFsav38Yo8PCYoDlP-vUPM-yPC3w>
+    <xmx:fInjXIYx7KH-uRJwMxK9NKW4-urnXhKcjVi1bH2aoWdhc-5BCGTFDw>
+    <xmx:fYnjXKROHSiJEbHDppq7-CQZOUklbNVZdxFCBR_d1R3oH7MTJgtw6Q>
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 4EED310323;
+        Tue, 21 May 2019 01:15:40 -0400 (EDT)
+Date:   Tue, 21 May 2019 07:15:37 +0200
+From:   Greg KH <greg@kroah.com>
+To:     Janusz Krzysztofik <jmkrzyszt@gmail.com>
+Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+        stable@vger.kernel.org
+Subject: Re: [PATCH v2 1/9] media: ov6650: Fix MODDULE_DESCRIPTION
+Message-ID: <20190521051537.GA8325@kroah.com>
+References: <20190520225007.2308-1-jmkrzyszt@gmail.com>
+ <20190520225007.2308-2-jmkrzyszt@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190521044912.1375-12-bauerman@linux.ibm.com>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+In-Reply-To: <20190520225007.2308-2-jmkrzyszt@gmail.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> diff --git a/arch/powerpc/include/asm/mem_encrypt.h b/arch/powerpc/include/asm/mem_encrypt.h
-> new file mode 100644
-> index 000000000000..45d5e4d0e6e0
-> --- /dev/null
-> +++ b/arch/powerpc/include/asm/mem_encrypt.h
-> @@ -0,0 +1,19 @@
-> +/* SPDX-License-Identifier: GPL-2.0+ */
-> +/*
-> + * SVM helper functions
-> + *
-> + * Copyright 2019 IBM Corporation
-> + */
-> +
-> +#ifndef _ASM_POWERPC_MEM_ENCRYPT_H
-> +#define _ASM_POWERPC_MEM_ENCRYPT_H
-> +
-> +#define sme_me_mask	0ULL
-> +
-> +static inline bool sme_active(void) { return false; }
-> +static inline bool sev_active(void) { return false; }
-> +
-> +int set_memory_encrypted(unsigned long addr, int numpages);
-> +int set_memory_decrypted(unsigned long addr, int numpages);
-> +
-> +#endif /* _ASM_POWERPC_MEM_ENCRYPT_H */
+On Tue, May 21, 2019 at 12:49:59AM +0200, Janusz Krzysztofik wrote:
+> Commit 23a52386fabe ("media: ov6650: convert to standalone v4l2
+> subdevice") converted the driver from a soc_camera sensor to a
+> standalone V4L subdevice driver.  Unfortunately, module description was
+> not updated to reflect the change.  Fix it.
+> 
+> While being at it, update email address of the module author.
+> 
+> Fixes: 23a52386fabe ("media: ov6650: convert to standalone v4l2 subdevice")
+> Signed-off-by: Janusz Krzysztofik <jmkrzyszt@gmail.com>
+> cc: stable@vger.kernel.org
+> ---
+>  drivers/media/i2c/ov6650.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/media/i2c/ov6650.c b/drivers/media/i2c/ov6650.c
+> index 1b972e591b48..a3d00afcb0c8 100644
+> --- a/drivers/media/i2c/ov6650.c
+> +++ b/drivers/media/i2c/ov6650.c
+> @@ -1045,6 +1045,6 @@ static struct i2c_driver ov6650_i2c_driver = {
+>  
+>  module_i2c_driver(ov6650_i2c_driver);
+>  
+> -MODULE_DESCRIPTION("SoC Camera driver for OmniVision OV6650");
+> -MODULE_AUTHOR("Janusz Krzysztofik <jkrzyszt@tis.icnet.pl>");
+> +MODULE_DESCRIPTION("V4L2 subdevice driver for OmniVision OV6650 camera sensor");
+> +MODULE_AUTHOR("Janusz Krzysztofik <jmkrzyszt@gmail.com");
+>  MODULE_LICENSE("GPL v2");
+> -- 
+> 2.21.0
+> 
 
-S/390 seems to be adding a stub header just like this.  Can you please
-clean up the Kconfig and generic headers bits for memory encryption so
-that we don't need all this boilerplate code?
+is this _really_ a patch that meets the stable kernel requirements?
+Same for this whole series...
 
->  config PPC_SVM
->  	bool "Secure virtual machine (SVM) support for POWER"
->  	depends on PPC_PSERIES
-> +	select SWIOTLB
-> +	select ARCH_HAS_MEM_ENCRYPT
->  	default n
+thanks,
 
-n is the default default, no need to explictly specify it.
+greg k-h
