@@ -2,348 +2,141 @@ Return-Path: <SRS0=9PYC=TV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 028E0C04AAF
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 09:42:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4CB6C04AB4
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 09:43:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BFC2621479
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 09:42:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 98A8D21479
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 09:43:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="BFTBWPYp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727400AbfEUJmK (ORCPT
+        id S1727433AbfEUJnn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 May 2019 05:42:10 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:36804 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726242AbfEUJmK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 May 2019 05:42:10 -0400
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 64A283086228;
-        Tue, 21 May 2019 09:42:04 +0000 (UTC)
-Received: from [10.36.116.113] (ovpn-116-113.ams2.redhat.com [10.36.116.113])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 4979D60FE6;
-        Tue, 21 May 2019 09:41:55 +0000 (UTC)
-Subject: Re: [PATCH v3 03/16] iommu: Add I/O ASID allocator
-To:     Jacob Pan <jacob.jun.pan@linux.intel.com>,
-        iommu@lists.linux-foundation.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        Joerg Roedel <joro@8bytes.org>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
-Cc:     Yi Liu <yi.l.liu@intel.com>, "Tian, Kevin" <kevin.tian@intel.com>,
-        Raj Ashok <ashok.raj@intel.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Andriy Shevchenko <andriy.shevchenko@linux.intel.com>
-References: <1556922737-76313-1-git-send-email-jacob.jun.pan@linux.intel.com>
- <1556922737-76313-4-git-send-email-jacob.jun.pan@linux.intel.com>
-From:   Auger Eric <eric.auger@redhat.com>
-Message-ID: <faf475ce-8645-9d05-663d-8d090cd4ac05@redhat.com>
-Date:   Tue, 21 May 2019 11:41:52 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.4.0
+        Tue, 21 May 2019 05:43:43 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:42014 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726417AbfEUJnn (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 May 2019 05:43:43 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x4L9YI0C193001;
+        Tue, 21 May 2019 09:42:45 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2018-07-02;
+ bh=CV3K5vVj968rbCwHTWBpou4tQEBJWFpNs+IiANmFcHs=;
+ b=BFTBWPYpwoS4xVmnzUqSvTh4pjcuOeoHhbsu63iYoeYogj5CLBo7IUbzAQDkavUt3g/b
+ H0ObpMgpXWWTSoTDX7PB3o7aoNl3AEriyF8/FPf/LYmL6N/NtS6CGaY+VT90LJP3SCOx
+ h1rmYTDfLzoufVCuOduA8CUGy4RPawyC06Y10cJuUZJv6S+IvfMjVMWQBsyn/pu//nRZ
+ 8ZzNIAsmshrGwmjWaatoGkPkQdBLq6aQwN+nC0HReEUWXXVlefL52Ff8C8i0lmga/oLS
+ 2b8wTYig5Nda0TzCY0yDB3mRXgsnCbJmIUxz4l9wycWoFiuZIzdicH/xx5tDVORmzv4g mA== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2130.oracle.com with ESMTP id 2sj9ftc70n-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 21 May 2019 09:42:45 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x4L9fd6W034592;
+        Tue, 21 May 2019 09:42:44 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by userp3020.oracle.com with ESMTP id 2sks1jbx6d-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 21 May 2019 09:42:44 +0000
+Received: from abhmp0020.oracle.com (abhmp0020.oracle.com [141.146.116.26])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x4L9gbr9014313;
+        Tue, 21 May 2019 09:42:37 GMT
+Received: from [10.191.5.201] (/10.191.5.201)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 21 May 2019 09:42:37 +0000
+Subject: Re: [PATCH v2] doc: kernel-parameters.txt: fix documentation of
+ nmi_watchdog parameter
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+        paulmck@linux.ibm.com, josh@joshtriplett.org,
+        mathieu.desnoyers@efficios.com, jiangshanlai@gmail.com,
+        joel@joelfernandes.org, corbet@lwn.net, tglx@linutronix.de,
+        mingo@kernel.org, gregkh@linuxfoundation.org,
+        keescook@chromium.org, srinivas.eeda@oracle.com
+References: <1557632127-16717-1-git-send-email-zhenzhong.duan@oracle.com>
+ <20190514152113.336e6116@oasis.local.home>
+From:   Zhenzhong Duan <zhenzhong.duan@oracle.com>
+Organization: Oracle Corporation
+Message-ID: <064f1230-be51-37ef-9283-69a7277fdd67@oracle.com>
+Date:   Tue, 21 May 2019 17:42:28 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <1556922737-76313-4-git-send-email-jacob.jun.pan@linux.intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+In-Reply-To: <20190514152113.336e6116@oasis.local.home>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.42]); Tue, 21 May 2019 09:42:09 +0000 (UTC)
+Content-Language: en-US
+X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9263 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1810050000 definitions=main-1905210062
+X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9263 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1905210062
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
 
-On 5/4/19 12:32 AM, Jacob Pan wrote:
-> From: Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
-> 
-> Some devices might support multiple DMA address spaces, in particular
-> those that have the PCI PASID feature. PASID (Process Address Space ID)
-> allows to share process address spaces with devices (SVA), partition a
-> device into VM-assignable entities (VFIO mdev) or simply provide
-> multiple DMA address space to kernel drivers. Add a global PASID
-> allocator usable by different drivers at the same time. Name it I/O ASID
-> to avoid confusion with ASIDs allocated by arch code, which are usually
-> a separate ID space.
-> 
-> The IOASID space is global. Each device can have its own PASID space,
-> but by convention the IOMMU ended up having a global PASID space, so
-> that with SVA, each mm_struct is associated to a single PASID.
-> 
-> The allocator is primarily used by IOMMU subsystem but in rare occasions
-> drivers would like to allocate PASIDs for devices that aren't managed by
-> an IOMMU, using the same ID space as IOMMU.
-> 
-> Signed-off-by: Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
-> Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
-> Link: https://lkml.org/lkml/2019/4/26/462
-> ---
->  drivers/iommu/Kconfig  |   6 +++
->  drivers/iommu/Makefile |   1 +
->  drivers/iommu/ioasid.c | 140 +++++++++++++++++++++++++++++++++++++++++++++++++
->  include/linux/ioasid.h |  67 +++++++++++++++++++++++
->  4 files changed, 214 insertions(+)
->  create mode 100644 drivers/iommu/ioasid.c
->  create mode 100644 include/linux/ioasid.h
-> 
-> diff --git a/drivers/iommu/Kconfig b/drivers/iommu/Kconfig
-> index 6f07f3b..75e7f97 100644
-> --- a/drivers/iommu/Kconfig
-> +++ b/drivers/iommu/Kconfig
-> @@ -2,6 +2,12 @@
->  config IOMMU_IOVA
->  	tristate
->  
-> +config IOASID
-> +	bool
-> +	help
-> +	  Enable the I/O Address Space ID allocator. A single ID space shared
-> +	  between different users.
-> +
->  # IOMMU_API always gets selected by whoever wants it.
->  config IOMMU_API
->  	bool
-> diff --git a/drivers/iommu/Makefile b/drivers/iommu/Makefile
-> index 8c71a15..0efac6f 100644
-> --- a/drivers/iommu/Makefile
-> +++ b/drivers/iommu/Makefile
-> @@ -7,6 +7,7 @@ obj-$(CONFIG_IOMMU_DMA) += dma-iommu.o
->  obj-$(CONFIG_IOMMU_IO_PGTABLE) += io-pgtable.o
->  obj-$(CONFIG_IOMMU_IO_PGTABLE_ARMV7S) += io-pgtable-arm-v7s.o
->  obj-$(CONFIG_IOMMU_IO_PGTABLE_LPAE) += io-pgtable-arm.o
-> +obj-$(CONFIG_IOASID) += ioasid.o
->  obj-$(CONFIG_IOMMU_IOVA) += iova.o
->  obj-$(CONFIG_OF_IOMMU)	+= of_iommu.o
->  obj-$(CONFIG_MSM_IOMMU) += msm_iommu.o
-> diff --git a/drivers/iommu/ioasid.c b/drivers/iommu/ioasid.c
-> new file mode 100644
-> index 0000000..99f5e0a
-> --- /dev/null
-> +++ b/drivers/iommu/ioasid.c
-> @@ -0,0 +1,140 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * I/O Address Space ID allocator. There is one global IOASID space, split into
-> + * subsets. Users create a subset with DECLARE_IOASID_SET, then allocate and
-> + * free IOASIDs with ioasid_alloc and ioasid_free.
-> + */
-> +#include <linux/xarray.h>
-> +#include <linux/ioasid.h>
-> +#include <linux/slab.h>
-> +#include <linux/spinlock.h>
-> +
-> +struct ioasid_data {
-> +	ioasid_t id;
-> +	struct ioasid_set *set;
-> +	void *private;
-> +	struct rcu_head rcu;
-> +};
-> +
-> +static DEFINE_XARRAY_ALLOC(ioasid_xa);
-> +
-> +/**
-> + * ioasid_set_data - Set private data for an allocated ioasid
-> + * @ioasid: the ID to set data
-> + * @data:   the private data
-> + *
-> + * For IOASID that is already allocated, private data can be set
-> + * via this API. Future lookup can be done via ioasid_find.
-> + */
-> +int ioasid_set_data(ioasid_t ioasid, void *data)
-> +{
-> +	struct ioasid_data *ioasid_data;
-> +	int ret = 0;
-> +
-> +	ioasid_data = xa_load(&ioasid_xa, ioasid);
-> +	if (ioasid_data)
-> +		ioasid_data->private = data;
-> +	else
-> +		ret = -ENOENT;
-> +
-> +	/* getter may use the private data */
-> +	synchronize_rcu();
-> +
-> +	return ret;
-> +}
-> +EXPORT_SYMBOL_GPL(ioasid_set_data);
-> +
-> +/**
-> + * ioasid_alloc - Allocate an IOASID
-> + * @set: the IOASID set
-> + * @min: the minimum ID (inclusive)
-> + * @max: the maximum ID (inclusive)
-> + * @private: data private to the caller
-> + *
-> + * Allocate an ID between @min and @max (or %0 and %INT_MAX). Return the
-> + * allocated ID on success, or INVALID_IOASID on failure. The @private pointer
-> + * is stored internally and can be retrieved with ioasid_find().
-> + */
-> +ioasid_t ioasid_alloc(struct ioasid_set *set, ioasid_t min, ioasid_t max,
-> +		      void *private)
-> +{
-> +	int id = INVALID_IOASID;
-> +	struct ioasid_data *data;
-> +
-> +	data = kzalloc(sizeof(*data), GFP_KERNEL);
-> +	if (!data)
-> +		return INVALID_IOASID;
-> +
-> +	data->set = set;
-> +	data->private = private;
-> +
-> +	if (xa_alloc(&ioasid_xa, &id, data, XA_LIMIT(min, max), GFP_KERNEL)) {
-> +		pr_err("Failed to alloc ioasid from %d to %d\n", min, max);
-> +		goto exit_free;
-> +	}
-> +	data->id = id;
-> +
-> +exit_free:
-> +	if (id < 0 || id == INVALID_IOASID) {
-> +		kfree(data);
-> +		return INVALID_IOASID;
-> +	}
-> +	return id;
-> +}
-> +EXPORT_SYMBOL_GPL(ioasid_alloc);
-> +
-> +/**
-> + * ioasid_free - Free an IOASID
-> + * @ioasid: the ID to remove
-> + */
-> +void ioasid_free(ioasid_t ioasid)
-> +{
-> +	struct ioasid_data *ioasid_data;
-> +
-> +	ioasid_data = xa_erase(&ioasid_xa, ioasid);
-> +
-> +	kfree_rcu(ioasid_data, rcu);
-> +}
-> +EXPORT_SYMBOL_GPL(ioasid_free);
-> +
-> +/**
-> + * ioasid_find - Find IOASID data
-> + * @set: the IOASID set
-> + * @ioasid: the IOASID to find
-> + * @getter: function to call on the found object
-> + *
-> + * The optional getter function allows to take a reference to the found object
-> + * under the rcu lock. The function can also check if the object is still valid:
-> + * if @getter returns false, then the object is invalid and NULL is returned.
-> + *
-> + * If the IOASID has been allocated for this set, return the private pointer
-> + * passed to ioasid_alloc. Private data can be NULL if not set. Return an error
-> + * if the IOASID is not found or not belong to the set.
-> + */
-> +void *ioasid_find(struct ioasid_set *set, ioasid_t ioasid,
-> +		  bool (*getter)(void *))
-> +{
-> +	void *priv = NULL;
-> +	struct ioasid_data *ioasid_data;
-> +
-> +	rcu_read_lock();
-> +	ioasid_data = xa_load(&ioasid_xa, ioasid);
-> +	if (!ioasid_data) {
-> +		priv = ERR_PTR(-ENOENT);
-> +		goto unlock;
-> +	}
-> +	if (set && ioasid_data->set != set) {
-> +		/* data found but does not belong to the set */
-> +		priv = ERR_PTR(-EACCES);
-> +		goto unlock;
-> +	}
-> +	/* Now IOASID and its set is verified, we can return the private data */
-> +	priv = ioasid_data->private;
-> +	if (getter && !getter(priv))
-> +		priv = NULL;
-> +unlock:
-> +	rcu_read_unlock();
-> +
-> +	return priv;
-> +}
-> +EXPORT_SYMBOL_GPL(ioasid_find);
-> diff --git a/include/linux/ioasid.h b/include/linux/ioasid.h
-> new file mode 100644
-> index 0000000..41de5e4
-> --- /dev/null
-> +++ b/include/linux/ioasid.h
-> @@ -0,0 +1,67 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +#ifndef __LINUX_IOASID_H
-> +#define __LINUX_IOASID_H
-> +
-> +#define INVALID_IOASID ((ioasid_t)-1)
-> +typedef unsigned int ioasid_t;
-> +typedef int (*ioasid_iter_t)(ioasid_t ioasid, void *private, void *data);
-not used as reported during v2 review: https://lkml.org/lkml/2019/4/25/341
+On 2019/5/15 3:21, Steven Rostedt wrote:
+> On Sun, 12 May 2019 11:35:27 +0800
+> Zhenzhong Duan <zhenzhong.duan@oracle.com> wrote:
+>
+>> The default behavior of hardlockup depends on the config of
+>> CONFIG_BOOTPARAM_HARDLOCKUP_PANIC.
+>>
+>> Fix the description of nmi_watchdog to make it clear.
+>>
+>> Signed-off-by: Zhenzhong Duan <zhenzhong.duan@oracle.com>
+>> Reviewed-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+>> Cc: Steven Rostedt <rostedt@goodmis.org>
+> Perhaps it should have been:
+>
+>   Suggested-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+>
+> As the wording is what I suggested ;-)
 
-Thanks
+Sure, I should have done that. Just not familiar with which one is better.
 
-Eric
-> +typedef ioasid_t (*ioasid_alloc_fn_t)(ioasid_t min, ioasid_t max, void *data);
-> +typedef void (*ioasid_free_fn_t)(ioasid_t ioasid, void *data);
-> +
-> +struct ioasid_set {
-> +	int dummy;
-> +};
-> +
-> +struct ioasid_allocator {
-> +	ioasid_alloc_fn_t alloc;
-> +	ioasid_free_fn_t free;
-> +	void *pdata;
-> +	struct list_head list;
-> +};
-> +
-> +#define DECLARE_IOASID_SET(name) struct ioasid_set name = { 0 }
-> +
-> +#ifdef CONFIG_IOASID
-> +ioasid_t ioasid_alloc(struct ioasid_set *set, ioasid_t min, ioasid_t max,
-> +		      void *private);
-> +void ioasid_free(ioasid_t ioasid);
-> +
-> +void *ioasid_find(struct ioasid_set *set, ioasid_t ioasid,
-> +		  bool (*getter)(void *));
-> +int ioasid_register_allocator(struct ioasid_allocator *allocator);
-> +void ioasid_unregister_allocator(struct ioasid_allocator *allocator);
-> +
-> +int ioasid_set_data(ioasid_t ioasid, void *data);
-> +
-> +#else /* !CONFIG_IOASID */
-> +static inline ioasid_t ioasid_alloc(struct ioasid_set *set, ioasid_t min,
-> +				    ioasid_t max, void *private)
-> +{
-> +	return INVALID_IOASID;
-> +}
-> +
-> +static inline void ioasid_free(ioasid_t ioasid)
-> +{
-> +}
-> +
-> +static inline void *ioasid_find(struct ioasid_set *set, ioasid_t ioasid,
-> +				bool (*getter)(void *))
-> +{
-> +	return NULL;
-> +}
-> +static inline int ioasid_register_allocator(struct ioasid_allocator *allocator)
-> +{
-> +	return -ENODEV;
-> +}
-> +
-> +static inline void ioasid_unregister_allocator(struct ioasid_allocator *allocator)
-> +{
-> +}
-> +
-> +static inline int ioasid_set_data(ioasid_t ioasid, void *data)
-> +{
-> +	return -ENODEV;
-> +}
-> +
-> +#endif /* CONFIG_IOASID */
-> +#endif /* __LINUX_IOASID_H */
-> 
+Not clear if I should send a v3 adding Suggested-by and Acked-by?
+
+Zhenzhong
+
+>
+> -- Steve
+>
+>> ---
+>>   v2: fix description using words suggested by Steven Rostedt
+>>
+>>   Documentation/admin-guide/kernel-parameters.txt | 5 +++--
+>>   1 file changed, 3 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+>> index 08df588..b9d4358 100644
+>> --- a/Documentation/admin-guide/kernel-parameters.txt
+>> +++ b/Documentation/admin-guide/kernel-parameters.txt
+>> @@ -2805,8 +2805,9 @@
+>>   			0 - turn hardlockup detector in nmi_watchdog off
+>>   			1 - turn hardlockup detector in nmi_watchdog on
+>>   			When panic is specified, panic when an NMI watchdog
+>> -			timeout occurs (or 'nopanic' to override the opposite
+>> -			default). To disable both hard and soft lockup detectors,
+>> +			timeout occurs (or 'nopanic' to not panic on an NMI
+>> +			watchdog, if CONFIG_BOOTPARAM_HARDLOCKUP_PANIC is set)
+>> +			To disable both hard and soft lockup detectors,
+>>   			please see 'nowatchdog'.
+>>   			This is useful when you use a panic=... timeout and
+>>   			need the box quickly up again.
