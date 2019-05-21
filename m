@@ -2,122 +2,91 @@ Return-Path: <SRS0=9PYC=TV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.8 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF271C04AAF
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 16:49:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F32F3C04E87
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 16:49:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9C42A217D7
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 16:49:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C76852173E
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 16:49:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ddep7DyH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728928AbfEUQtT (ORCPT
+        id S1729088AbfEUQti (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 May 2019 12:49:19 -0400
-Received: from outgoing-auth-1.mit.edu ([18.9.28.11]:47396 "EHLO
-        outgoing.mit.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727817AbfEUQtS (ORCPT
+        Tue, 21 May 2019 12:49:38 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:35905 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727817AbfEUQth (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 May 2019 12:49:18 -0400
-Received: from callcc.thunk.org (guestnat-104-133-0-109.corp.google.com [104.133.0.109] (may be forged))
-        (authenticated bits=0)
-        (User authenticated as tytso@ATHENA.MIT.EDU)
-        by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id x4LGmFdg004334
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 21 May 2019 12:48:16 -0400
-Received: by callcc.thunk.org (Postfix, from userid 15806)
-        id 184C4420481; Tue, 21 May 2019 12:48:15 -0400 (EDT)
-Date:   Tue, 21 May 2019 12:48:14 -0400
-From:   "Theodore Ts'o" <tytso@mit.edu>
-To:     Jan Kara <jack@suse.cz>
-Cc:     Paolo Valente <paolo.valente@linaro.org>,
-        "Srivatsa S. Bhat" <srivatsa@csail.mit.edu>,
-        linux-fsdevel@vger.kernel.org,
-        linux-block <linux-block@vger.kernel.org>,
-        linux-ext4@vger.kernel.org, cgroups@vger.kernel.org,
-        linux-kernel@vger.kernel.org, axboe@kernel.dk, jmoyer@redhat.com,
-        amakhalov@vmware.com, anishs@vmware.com, srivatsab@vmware.com
-Subject: Re: CFQ idling kills I/O performance on ext4 with blkio cgroup
- controller
-Message-ID: <20190521164814.GC2591@mit.edu>
-Mail-Followup-To: Theodore Ts'o <tytso@mit.edu>, Jan Kara <jack@suse.cz>,
-        Paolo Valente <paolo.valente@linaro.org>,
-        "Srivatsa S. Bhat" <srivatsa@csail.mit.edu>,
-        linux-fsdevel@vger.kernel.org,
-        linux-block <linux-block@vger.kernel.org>,
-        linux-ext4@vger.kernel.org, cgroups@vger.kernel.org,
-        linux-kernel@vger.kernel.org, axboe@kernel.dk, jmoyer@redhat.com,
-        amakhalov@vmware.com, anishs@vmware.com, srivatsab@vmware.com
-References: <8d72fcf7-bbb4-2965-1a06-e9fc177a8938@csail.mit.edu>
- <1812E450-14EF-4D5A-8F31-668499E13652@linaro.org>
- <20190518192847.GB14277@mit.edu>
- <20190520091558.GC2172@quack2.suse.cz>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190520091558.GC2172@quack2.suse.cz>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Tue, 21 May 2019 12:49:37 -0400
+Received: by mail-pl1-f193.google.com with SMTP id d21so8722314plr.3;
+        Tue, 21 May 2019 09:49:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=v2SnYdg7A+KRf1CirjBXBSRjCuSa5ZCNOU/wWwgCIfk=;
+        b=Ddep7DyHe5OsovWNiAt9kTIMBQlef/9LvJA19PYauVxiR02nikKb24vzLGi03F7nsN
+         T2V6VOpn+2U+RJicJhJatRRwwq+azLcIwsHclxn81zlRcai3UATILn6cxNnxzZV/5ehR
+         Bu3VpJ6zqJUnJD1T7k2/U+eJTy4iNZg4xoSO25YWBpbTJW9MizL1zJb0hfYqcBUbh1om
+         UTxzOpSjyh9aorCUnS7hb3qFRtytTckbMZugXBTXBLRcTpIwnsM/pLy9FuLME7FYojIK
+         hA/YL9CdX9tR3PrsCv5SI7noKMNDtvgGrxWGXve6/d66D0l3XoTicIH89o1pUS7QchMo
+         bNVQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=v2SnYdg7A+KRf1CirjBXBSRjCuSa5ZCNOU/wWwgCIfk=;
+        b=LZbjSW/Ytxhz7PXEaWtzcDNCaoYMweuTamvfijHAY3fLMiVS12tvRz0cLBp8h+nbwt
+         VvomViT4z2LrV56DO0V9/c8aFE8qdXMNfz9BZqMTY63FZGhERC8jRwmQ5rlQEMJNMMFr
+         xrrRX5MtJS8swqnWA0NMRaQdi8z8BtHTG/3OWTyu4pMjMeWGLI3Y1bRL8rdquWIpK1q1
+         9ARs+1TBMPiu+/t1XwXCCXeZCl3haZlEC5dkIEFTxZ86D7qhbJZdNIIeGjDDXv0PShTj
+         DPXHgc3fjjP1RugqXRAp7m1yGwRt8K+0B5dRJUzaFsUs1H1ECnR2yFihRAlCZJ1w8sFE
+         H/Xg==
+X-Gm-Message-State: APjAAAVNRLCI/x7zpXQgp2D0xN/0L1JId7H988JKGGFlOK6RPOO4qfyt
+        u8PBgBJ7MGpD/qpCG7dZb6Y=
+X-Google-Smtp-Source: APXvYqzvYTYoKR4keXPH4jiYbPWg9Rfb6ADPPLBY7qhfTOKHapIWHpV+sbFumzLUsWLGsvVb034/Ng==
+X-Received: by 2002:a17:902:2a2b:: with SMTP id i40mr83744999plb.170.1558457376769;
+        Tue, 21 May 2019 09:49:36 -0700 (PDT)
+Received: from aw-bldr-10.qualcomm.com (i-global254.qualcomm.com. [199.106.103.254])
+        by smtp.gmail.com with ESMTPSA id o7sm32411008pfp.168.2019.05.21.09.49.35
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 21 May 2019 09:49:36 -0700 (PDT)
+From:   Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Cc:     agross@kernel.org, david.brown@linaro.org,
+        bjorn.andersson@linaro.org, jcrouse@codeaurora.org,
+        lgirdwood@gmail.com, broonie@kernel.org, robh+dt@kernel.org,
+        mark.rutland@arm.com, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Subject: [PATCH 0/3] PM8005 regulator support for msm8998 GPU
+Date:   Tue, 21 May 2019 09:49:32 -0700
+Message-Id: <20190521164932.14265-1-jeffrey.l.hugo@gmail.com>
+X-Mailer: git-send-email 2.17.1
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 20, 2019 at 11:15:58AM +0200, Jan Kara wrote:
-> But this makes priority-inversion problems with ext4 journal worse, doesn't
-> it? If we submit journal commit in blkio cgroup of some random process, it
-> may get throttled which then effectively blocks the whole filesystem. Or do
-> you want to implement a more complex back-pressure mechanism where you'd
-> just account to different blkio cgroup during journal commit and then
-> throttle as different point where you are not blocking other tasks from
-> progress?
+The MSM8998 MTP reference platform supplies VDD_GFX from s1 of the
+pm8005 PMIC.  VDD_GFX is needed to turn on the GPU.  As we are looking
+to bring up the GPU, add the support for pm8005 and wire up s1 in a
+basic manner so that we have this dependency out of the way and can
+focus on enabling the GPU driver.
 
-Good point, yes, it can.  It depends in what cgroup the file system is
-mounted (and hence what cgroup the jbd2 kernel thread is on).  If it
-was mounted in the root cgroup, then jbd2 thread is going to be
-completely unthrottled (except for the data=ordered writebacks, which
-will be charged to the cgroup which write those pages) so the only
-thing which is nuking us will be the slice_idle timeout --- both for
-the writebacks (which could get charged to N different cgroups, with
-disastrous effects --- and this is going to be true for any file
-system on a syncfs(2) call as well) and switching between the jbd2
-thread's cgroup and the writeback cgroup.
+Jeffrey Hugo (3):
+  dt-bindings: qcom_spmi: Document PM8005 regulators
+  regulator: qcom_spmi: Add support for PM8005
+  arm64: dts: msm8998-mtp: Add pm8005_s1 regulator
 
-One thing the I/O scheduler could do is use the synchronous flag as a
-hint that it should ix-nay on the idle-way.  Or maybe we need to have
-a different way to signal this to the jbd2 thread, since I do
-recognize that this issue is ext4-specific, *because* we do the
-transaction handling in a separate thread, and because of the
-data=ordered scheme, both of which are unique to ext4.  So exempting
-synchronous writes from cgroup control doesn't make sense for other
-file systems.
+ .../regulator/qcom,spmi-regulator.txt         |   4 +
+ arch/arm64/boot/dts/qcom/msm8998-mtp.dtsi     |  17 ++
+ drivers/regulator/qcom_spmi-regulator.c       | 203 +++++++++++++++++-
+ 3 files changed, 219 insertions(+), 5 deletions(-)
 
-So maybe a special flag meaning "entangled writes", where the
-sched_idle hacks should get suppressed for the data=ordered
-writebacks, but we still charge the block I/O to the relevant CSS's?
+-- 
+2.17.1
 
-I could also imagine if there was some way that file system could
-track whether all of the file system modifications were charged to a
-single cgroup, we could in that case charge it to that cgroup?
-
-> Yeah. At least in some cases, we know there won't be any more IO from a
-> particular cgroup in the near future (e.g. transaction commit completing,
-> or when the layers above IO scheduler already know which IO they are going
-> to submit next) and in that case idling is just a waste of time. But so far
-> I haven't decided how should look a reasonably clean interface for this
-> that isn't specific to a particular IO scheduler implementation.
-
-The best I've come up with is some way of signalling that all of the
-writes coming from the jbd2 commit are entangled, probably via a bio
-flag.
-
-If we don't have cgroup support, the other thing we could do is assume
-that the jbd2 thread should always be in the root (unconstrained)
-cgroup, and then force all writes, include data=ordered writebacks, to
-be in the jbd2's cgroup.  But that would make the block cgroup
-controls trivially bypassable by an application, which could just be
-fsync-happy and exempt all of its buffered I/O writes from cgroup
-control.  So that's probably not a great way to go --- but it would at
-least fix this particular performance issue.  :-/
-
-						- Ted
