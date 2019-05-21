@@ -2,105 +2,82 @@ Return-Path: <SRS0=9PYC=TV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E91F9C04AAF
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 14:46:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8568BC04AAF
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 14:47:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BC4F62173E
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 14:46:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="V9zV7vPp";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="V9zV7vPp"
+	by mail.kernel.org (Postfix) with ESMTP id 51CE22173E
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 14:47:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1558450037;
+	bh=45UtuzY6nu9B311oBHLASyIPC8N0XlpKmv/uJv4/Nbk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=OJNTZIkNiGm9iMGRYwOLb+/Hd3VPcqLd4ZjPsUwZItprQq8m7R8QfofdTyWNNaBQq
+	 my50pp1AL2iYeay7n/N3EfjHrDN0+uNED5qr37aJxGYX5gyGysm1+xB2YX7N7chiKF
+	 ZQIF+JC6DyCxVwlJuN1yOUIQb7QNtzNwBRMXM6Ps=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728562AbfEUOqr (ORCPT
+        id S1728648AbfEUOrQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 May 2019 10:46:47 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:44166 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727044AbfEUOqq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 May 2019 10:46:46 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id D677F60795; Tue, 21 May 2019 14:46:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1558450005;
-        bh=58fFmYhPIocjStRpbEhyiTY5BBN3Wu7usU0JI7t0dMM=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=V9zV7vPpj4+k2OwsbLcNbbrUpidQKcXhLjGcvAg0ip4ZB6irUaHrD9iIvXmYtVhBT
-         dnPwuSPE1p01MIrAJcCEx18QPMYbqQ+oO9WwLbHEwaa4b/fNLu2/1D8E3kAjVcktki
-         Mja75BPH1riGM6RmmWMjlN3dbvql7EdcDBiNLzAY=
-Received: from jhugo-perf-lnx.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: jhugo@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 1BD186021C;
-        Tue, 21 May 2019 14:46:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1558450005;
-        bh=58fFmYhPIocjStRpbEhyiTY5BBN3Wu7usU0JI7t0dMM=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=V9zV7vPpj4+k2OwsbLcNbbrUpidQKcXhLjGcvAg0ip4ZB6irUaHrD9iIvXmYtVhBT
-         dnPwuSPE1p01MIrAJcCEx18QPMYbqQ+oO9WwLbHEwaa4b/fNLu2/1D8E3kAjVcktki
-         Mja75BPH1riGM6RmmWMjlN3dbvql7EdcDBiNLzAY=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 1BD186021C
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=jhugo@codeaurora.org
-From:   Jeffrey Hugo <jhugo@codeaurora.org>
-To:     mturquette@baylibre.com, sboyd@kernel.org
-Cc:     agross@kernel.org, bjorn.andersson@linaro.org,
-        marc.w.gonzalez@free.fr, david.brown@linaro.org,
-        robh+dt@kernel.org, mark.rutland@arm.com,
-        linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        Jeffrey Hugo <jhugo@codeaurora.org>
-Subject: [PATCH v4 1/6] dt-bindings: clock: Document external clocks for MSM8998 gcc
-Date:   Tue, 21 May 2019 08:46:33 -0600
-Message-Id: <1558449993-20902-1-git-send-email-jhugo@codeaurora.org>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <1558449843-19971-1-git-send-email-jhugo@codeaurora.org>
-References: <1558449843-19971-1-git-send-email-jhugo@codeaurora.org>
+        Tue, 21 May 2019 10:47:16 -0400
+Received: from mx2.suse.de ([195.135.220.15]:42438 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727044AbfEUOrQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 May 2019 10:47:16 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id ED24FAF8E;
+        Tue, 21 May 2019 14:47:14 +0000 (UTC)
+Date:   Tue, 21 May 2019 16:47:13 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Christopher Lameter <cl@linux.com>
+Cc:     Daniel Vetter <daniel.vetter@ffwll.ch>,
+        DRI Development <dri-devel@lists.freedesktop.org>,
+        Intel Graphics Development <intel-gfx@lists.freedesktop.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux MM <linux-mm@kvack.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        David Rientjes <rientjes@google.com>,
+        Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
+        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Wei Wang <wvw@google.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jann Horn <jannh@google.com>, Feng Tang <feng.tang@intel.com>,
+        Kees Cook <keescook@chromium.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Daniel Vetter <daniel.vetter@intel.com>
+Subject: Re: [PATCH] kernel.h: Add non_block_start/end()
+Message-ID: <20190521144713.GX32329@dhcp22.suse.cz>
+References: <20190521100611.10089-1-daniel.vetter@ffwll.ch>
+ <0100016adad909d8-e6c9c310-36e0-4bdd-80fd-5df1a1660041-000000@email.amazonses.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <0100016adad909d8-e6c9c310-36e0-4bdd-80fd-5df1a1660041-000000@email.amazonses.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The global clock controller on MSM8998 can consume a number of external
-clocks.  Document them.
+On Tue 21-05-19 14:43:38, Cristopher Lameter wrote:
+> On Tue, 21 May 2019, Daniel Vetter wrote:
+> 
+> > In some special cases we must not block, but there's not a
+> > spinlock, preempt-off, irqs-off or similar critical section already
+> > that arms the might_sleep() debug checks. Add a non_block_start/end()
+> > pair to annotate these.
+> 
+> Just putting preempt on/off around these is not sufficient?
 
-Signed-off-by: Jeffrey Hugo <jhugo@codeaurora.org>
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-Reviewed-by: Rob Herring <robh@kernel.org>
----
- Documentation/devicetree/bindings/clock/qcom,gcc.txt | 10 ++++++++++
- 1 file changed, 10 insertions(+)
-
-diff --git a/Documentation/devicetree/bindings/clock/qcom,gcc.txt b/Documentation/devicetree/bindings/clock/qcom,gcc.txt
-index 8661c3c..7d45323 100644
---- a/Documentation/devicetree/bindings/clock/qcom,gcc.txt
-+++ b/Documentation/devicetree/bindings/clock/qcom,gcc.txt
-@@ -28,6 +28,16 @@ Required properties :
- - #clock-cells : shall contain 1
- - #reset-cells : shall contain 1
- 
-+For MSM8998 only:
-+	- clocks: a list of phandles and clock-specifier pairs,
-+		  one for each entry in clock-names.
-+	- clock-names: "xo" (required)
-+		       "usb3_pipe" (optional)
-+		       "ufs_rx_symbol0" (optional)
-+		       "ufs_rx_symbol1" (optional)
-+		       "ufs_tx_symbol0" (optional)
-+		       "pcie0_pipe" (optional)
-+
- Optional properties :
- - #power-domain-cells : shall contain 1
- - Qualcomm TSENS (thermal sensor device) on some devices can
+It is not a critical section. It is a _debugging_ facility to help
+discover blocking contexts.
 -- 
-Qualcomm Datacenter Technologies as an affiliate of Qualcomm Technologies, Inc.
-Qualcomm Technologies, Inc. is a member of the
-Code Aurora Forum, a Linux Foundation Collaborative Project.
-
+Michal Hocko
+SUSE Labs
