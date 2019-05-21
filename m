@@ -6,52 +6,52 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE51EC04AAF
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 10:36:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83154C04AAF
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 10:36:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8CF69217D9
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 10:36:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 625862182B
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 10:36:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727804AbfEUKgj (ORCPT
+        id S1727904AbfEUKg6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 May 2019 06:36:39 -0400
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:42819 "EHLO
+        Tue, 21 May 2019 06:36:58 -0400
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:45533 "EHLO
         mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727715AbfEUKgi (ORCPT
+        with ESMTP id S1727760AbfEUKgj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 May 2019 06:36:38 -0400
-Received: by mail-ed1-f67.google.com with SMTP id l25so28604839eda.9
-        for <linux-kernel@vger.kernel.org>; Tue, 21 May 2019 03:36:37 -0700 (PDT)
+        Tue, 21 May 2019 06:36:39 -0400
+Received: by mail-ed1-f67.google.com with SMTP id g57so28582599edc.12
+        for <linux-kernel@vger.kernel.org>; Tue, 21 May 2019 03:36:38 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version;
-        bh=odw0Br10pd/FID0oLpxhs9oyem6lxu+oPFxMjbKBkEQ=;
-        b=cOjMTKYz7SArJMq/Tu/+r5YWlJCR0KjKMCwBsSYiOHb5+u1PiYi6tBhp6VBkdXHykR
-         gqNKw08IMSbFq8sZT1419KDhAA9koYW8vlXRwLLCTfYEb2LkERfzkdxSiE22H+JvDz+v
-         SiD6hr2VnvHEaxKk37zSjxl8GQbnNHOvGjnbFhjFDxCH1xEIIxyTrCy9aAWzrkM2XNaZ
-         eyaeZuRFQ+479rT83LrDddSw8/NEjoJ5h0tmNdLRa4fSjFDvTb8TFiZXe7dEzDjWzein
-         Wz6bVBUU5uKeVkydHfEilLMfiHbH7gtF3x0sVlEM1xNY6MPy3QTMhht71qjI4ZXufkU0
-         ItsA==
-X-Gm-Message-State: APjAAAX/vpHoIAtOFONO264XfFOsr6LdZFgWIoEJIg199ATDhLi/qKs7
-        bYUIVLZTt53Eq6NSBC+bmzDXp9BjQCuY8pfrmRQQW3FPuuFx4Fdb2m3Qn3hGj8LmzKv9LUZrh9r
-        eCAXe2/Hkh3TYV+JLR1En7S61
-X-Google-Smtp-Source: APXvYqybcyoaWgALzKgHnX9qkZKOL1y9QhO/tydUl9gFPtCPfkc2n+gdnaHhGjgsCSNAwAtctNFBuA==
-X-Received: by 2002:a17:906:90c6:: with SMTP id v6mr40526940ejw.111.1558434996456;
-        Tue, 21 May 2019 03:36:36 -0700 (PDT)
+        bh=iCa3sIkXRS0MUvhZrMU0I1kSnN7S8DExfC/yTx1vxTA=;
+        b=ehLe7oQGXaKsq/0SS7sqLsGcsMdnNNY13RFm9xkkFbbVkm9y0qXdCxvoguWp3gcQtz
+         b5Y79VoHtZPY9rS880nC2E2lcxcv5zkc6Q+GU8hQZhHuIQnkTOk1hzZU+DPfy04frgEq
+         C3D9Pu9nYhEkKWFGX2sXkT3n6RHVmu2hKTg+vvliVA8O4pWcVaSn90D/6tLsGR9lSQLB
+         qGdMaW6lZzO9/j2YyqsomQNX48nWwI2bRsrC7kQG2nkKCSmCuuF2VawE1DgJ3YAaTCzE
+         PB/QLQzZcIS44wReAR2l6txxGIe1kkexqqAhIhf33UYwGFxkuyXoSSG6n+aOlKo69uUu
+         7WVA==
+X-Gm-Message-State: APjAAAX1ZEHDd3qXqCqoGq70DWsX3iEQi+P3mk7hdpN6sKqMpi0bUw7q
+        uokabLr8lsfEGChLGw3vYm3ZlOb2jZmZ6eLD78I2VSMh5dUT5Qzegq/Vk0rajtrm5im3U6CIKpX
+        FrYxcGDy71YXmIC7m
+X-Google-Smtp-Source: APXvYqxeWQK82QeOi5z+lBMdAAErKeezVrdKlYCVRXGcKGYFNE9+MsqmQD8PS6/9oZTtpGtxLKg45A==
+X-Received: by 2002:a17:906:22d8:: with SMTP id q24mr62970353eja.261.1558434997802;
+        Tue, 21 May 2019 03:36:37 -0700 (PDT)
 Received: from localhost ([194.105.145.90])
-        by smtp.gmail.com with ESMTPSA id ay6sm3507075ejb.20.2019.05.21.03.36.35
+        by smtp.gmail.com with ESMTPSA id e43sm6202423edb.38.2019.05.21.03.36.37
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 21 May 2019 03:36:35 -0700 (PDT)
+        Tue, 21 May 2019 03:36:37 -0700 (PDT)
 From:   Oleksandr Suvorov <oleksandr.suvorov@toradex.com>
 To:     Fabio Estevam <festevam@gmail.com>
 Cc:     linux-kernel@vger.kernel.org, alsa-devel@alsa-project.org,
         Marcel Ziswiler <marcel.ziswiler@toradex.com>,
         Igor Opaniuk <igor.opaniuk@toradex.com>,
         Oleksandr Suvorov <oleksandr.suvorov@toradex.com>
-Subject: [PATCH v1 2/6] ASoC: sgtl5000: add ADC mute control
-Date:   Tue, 21 May 2019 13:36:15 +0300
-Message-Id: <20190521103619.4707-3-oleksandr.suvorov@toradex.com>
+Subject: [PATCH v1 3/6] ASoC: sgtl5000: Fix of unmute outputs on probe
+Date:   Tue, 21 May 2019 13:36:16 +0300
+Message-Id: <20190521103619.4707-4-oleksandr.suvorov@toradex.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190521103619.4707-1-oleksandr.suvorov@toradex.com>
 References: <20190521103619.4707-1-oleksandr.suvorov@toradex.com>
@@ -62,27 +62,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This control mute/unmute the ADC input of SGTL5000
-using its CHIP_ANA_CTRL register.
+To enable "zero cross detect" for ADC/HP, change
+HP_ZCD_EN/ADC_ZCD_EN bits only instead of writing the whole
+CHIP_ANA_CTRL register.
 
 Signed-off-by: Oleksandr Suvorov <oleksandr.suvorov@toradex.com>
 ---
 
- sound/soc/codecs/sgtl5000.c | 1 +
- 1 file changed, 1 insertion(+)
+ sound/soc/codecs/sgtl5000.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
 diff --git sound/soc/codecs/sgtl5000.c sound/soc/codecs/sgtl5000.c
-index 5e49523ee0b6..bb58c997c691 100644
+index bb58c997c691..e813a37910af 100644
 --- sound/soc/codecs/sgtl5000.c
 +++ sound/soc/codecs/sgtl5000.c
-@@ -556,6 +556,7 @@ static const struct snd_kcontrol_new sgtl5000_snd_controls[] = {
- 			SGTL5000_CHIP_ANA_ADC_CTRL,
- 			8, 1, 0, capture_6db_attenuate),
- 	SOC_SINGLE("Capture ZC Switch", SGTL5000_CHIP_ANA_CTRL, 1, 1, 0),
-+	SOC_SINGLE("Capture Switch", SGTL5000_CHIP_ANA_CTRL, 0, 1, 1),
+@@ -1289,6 +1289,7 @@ static int sgtl5000_probe(struct snd_soc_component *component)
+ 	int ret;
+ 	u16 reg;
+ 	struct sgtl5000_priv *sgtl5000 = snd_soc_component_get_drvdata(component);
++	unsigned int zcd_mask = SGTL5000_HP_ZCD_EN | SGTL5000_ADC_ZCD_EN;
  
- 	SOC_DOUBLE_TLV("Headphone Playback Volume",
- 			SGTL5000_CHIP_ANA_HP_CTRL,
+ 	/* power up sgtl5000 */
+ 	ret = sgtl5000_set_power_regs(component);
+@@ -1316,9 +1317,8 @@ static int sgtl5000_probe(struct snd_soc_component *component)
+ 	       0x1f);
+ 	snd_soc_component_write(component, SGTL5000_CHIP_PAD_STRENGTH, reg);
+ 
+-	snd_soc_component_write(component, SGTL5000_CHIP_ANA_CTRL,
+-			SGTL5000_HP_ZCD_EN |
+-			SGTL5000_ADC_ZCD_EN);
++	snd_soc_component_update_bits(component, SGTL5000_CHIP_ANA_CTRL,
++		zcd_mask, zcd_mask);
+ 
+ 	snd_soc_component_update_bits(component, SGTL5000_CHIP_MIC_CTRL,
+ 			SGTL5000_BIAS_R_MASK,
 -- 
 2.20.1
 
