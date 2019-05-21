@@ -2,133 +2,240 @@ Return-Path: <SRS0=9PYC=TV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6749CC04E87
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 16:39:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49A6FC04AAF
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 16:39:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 463642173E
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 16:39:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1257D2173E
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 16:39:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tvm1JOL0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728665AbfEUQjN (ORCPT
+        id S1728861AbfEUQjj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 May 2019 12:39:13 -0400
-Received: from mail-vs1-f67.google.com ([209.85.217.67]:35130 "EHLO
-        mail-vs1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727946AbfEUQjN (ORCPT
+        Tue, 21 May 2019 12:39:39 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:43100 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727946AbfEUQji (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 May 2019 12:39:13 -0400
-Received: by mail-vs1-f67.google.com with SMTP id q13so11537973vso.2;
-        Tue, 21 May 2019 09:39:12 -0700 (PDT)
+        Tue, 21 May 2019 12:39:38 -0400
+Received: by mail-wr1-f68.google.com with SMTP id r4so19358886wro.10;
+        Tue, 21 May 2019 09:39:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=ZevjsTq/5oCWSC9Ugeppy6ZBh126nny81ksWozxVUrk=;
+        b=tvm1JOL0YFWgJB2+atKjWCcbVwD4q5BDf1EVnyAQpEkMWlsQG4wtnp9tBwH7P2pfkV
+         pnEPwkecXt/Q0zov15HYfF8O++JY9wNFfHixPe0cg3YD30/WZD47SCfzr20PiSlJL3Qz
+         M0lPkOFuUa1JajSby9MlWGpRQqNgfI+gSCQnGyeO4PuJAkHjwcsULhw5qM2ZvUGcBfmo
+         2pXiHxZlTU7HvT2Ky3SDWlzGbEFy8CvY3fAJESkOshc2TcEMxxHktpX8ET0v6Ic5+kxz
+         uqgredhrpIsMI6grhTL78lcyqcJkDr46KynQ32GPij15/sfqrmT5so3yW3f8iG83y8ZG
+         cNYg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=d3r+vtHOni2ql6K8KUyHYDwXA6dbsBBCMW+a9jJjXY0=;
-        b=ptSGQht4/1Z682C+yPxpLx8zmsnzKrrvEctI3mcXgdYD5nxhJ3QzrJfKHBGlZlNGQw
-         Kq3u596/OJ1U3gXi50oj4mBNLD0X5CJbDyj5WpUIE9bo/mCNICw7oBjr+wejRs7abfhv
-         KLp8TZzGOP8k7czbRIRZkCfRRms1phJe9jN9OH9yjKlbKAeiJMZsOhK+Bh76zdYNxNr+
-         XwlgnHrFo8DxRzPveBpf9FHO83WY/pVIb7Aw5j7Avszp71P6HtPfjwBE7U9hNChjlVDQ
-         y0dZ/o2WeCf/Dm1TY1h3mr5pApM99jobAu3trlhOAXEs481+V6Vu0v6LYSTe0nE4ilCa
-         2FFA==
-X-Gm-Message-State: APjAAAVy0ZYDzHKUrB3yR+8AFbHeJ2sQ2lbDoyYN7rafdU/9o2r93GsF
-        2s162tCYlKoYRmSN/WVEaOj598kS9QwiykJzviQFhbAq
-X-Google-Smtp-Source: APXvYqwCQIckTpeBswbXwCcMWkbVVy9WAUMEJsw8Zbz08S2CXrenseFMa2ivFFBrrmH68j06jfFotolazbcgC2VSxME=
-X-Received: by 2002:a67:f589:: with SMTP id i9mr9021336vso.152.1558456752226;
- Tue, 21 May 2019 09:39:12 -0700 (PDT)
-MIME-Version: 1.0
-References: <git-mailbomb-linux-master-c4741b23059794bd99beef0f700103b0d983b3fd@kernel.org>
-In-Reply-To: <git-mailbomb-linux-master-c4741b23059794bd99beef0f700103b0d983b3fd@kernel.org>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Tue, 21 May 2019 18:39:00 +0200
-Message-ID: <CAMuHMdWSUMOh1uG1g+cipup86ZpiVYuHDpPJtp+gSmmUyjB6eA@mail.gmail.com>
-Subject: Re: crypto: run initcalls for generic implementations earlier
-To:     Eric Biggers <ebiggers@google.com>
-Cc:     Herbert Xu <herbert@gondor.apana.org.au>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=ZevjsTq/5oCWSC9Ugeppy6ZBh126nny81ksWozxVUrk=;
+        b=GosShyVFW40h8Ky/7VGTIOOMgNBW8AU5dbESTL2vlMjWiG4O4iUdBDo3QKmAHVQ4R3
+         3gZJ/nSRTw0vh+mAOjq9KYQ4D/6pFAbmR9fJyuvyre3o5dsHE2pHgIpbEwKuGQla74n+
+         +fn57RcI23su+ItnRAY0ktbK97T3ztgdImEsZI30Rux8O69T2iNsk8I65fmEifiDolKy
+         YX8Rgjp8A1Jmk+tBQFQtE1jDIWAwE0WHSR1YRVZk1Uac8qoyRZ1ELAQhNVkmt/srPItF
+         6gLBp6bMXrFx2+xhhOLfxd7PxMPs+da4yRrXL2peN6hK84Dc9dsPgGJA3taWwIBGyxa5
+         Maww==
+X-Gm-Message-State: APjAAAVi1BbWxn1y1VbH5UBZYgUpMqmrOCXf9TWOVpJFyJmpoSU8t7wO
+        R+IzdYpAKUo6jekD5/9/Ukw=
+X-Google-Smtp-Source: APXvYqxanh5/uLLUoGMESOyA6hkugmy/Dymko0raF1QOHBgVfGXVF57kkpmdXuP5+JCpm+i8cxjOPQ==
+X-Received: by 2002:adf:94a5:: with SMTP id 34mr52115482wrr.275.1558456776368;
+        Tue, 21 May 2019 09:39:36 -0700 (PDT)
+Received: from mobilestation ([31.13.144.82])
+        by smtp.gmail.com with ESMTPSA id w13sm3560134wmk.0.2019.05.21.09.39.32
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 21 May 2019 09:39:35 -0700 (PDT)
+Date:   Tue, 21 May 2019 19:39:30 +0300
+From:   Serge Semin <fancer.lancer@gmail.com>
+To:     Mike Rapoport <rppt@linux.ibm.com>
+Cc:     Geert Uytterhoeven <geert@linux-m68k.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paul.burton@mips.com>,
+        James Hogan <jhogan@kernel.org>,
+        Matt Redfearn <matt.redfearn@mips.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Michal Hocko <mhocko@suse.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thomas Bogendoerfer <tbogendoerfer@suse.de>,
+        Huacai Chen <chenhc@lemote.com>,
+        Stefan Agner <stefan@agner.ch>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Juergen Gross <jgross@suse.com>, linux-mips@vger.kernel.org,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+        Atsushi Nemoto <anemo@mba.ocn.ne.jp>
+Subject: Re: [PATCH 04/12] mips: Reserve memory for the kernel image resources
+Message-ID: <20190521163928.yo75uskjachtw2nt@mobilestation>
+References: <20190423224748.3765-1-fancer.lancer@gmail.com>
+ <20190423224748.3765-5-fancer.lancer@gmail.com>
+ <CAMuHMdWPmL5Z86cgJ4N-U-3XKr4ys8Y7U85okDcXYEu7z4ybaw@mail.gmail.com>
+ <20190521155309.GB24470@rapoport-lnx>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190521155309.GB24470@rapoport-lnx>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Eric,
+Hello Geert, Mike
 
-On Tue, May 7, 2019 at 5:26 AM Linux Kernel Mailing List
-<linux-kernel@vger.kernel.org> wrote:
-> Commit:     c4741b23059794bd99beef0f700103b0d983b3fd
-> Parent:     40153b10d91c9e25f912344ba6ce1f0874400659
-> Refname:    refs/heads/master
-> Web:        https://git.kernel.org/torvalds/c/c4741b23059794bd99beef0f700103b0d983b3fd
-> Author:     Eric Biggers <ebiggers@google.com>
-> AuthorDate: Thu Apr 11 21:57:42 2019 -0700
-> Committer:  Herbert Xu <herbert@gondor.apana.org.au>
-> CommitDate: Thu Apr 18 22:15:03 2019 +0800
->
->     crypto: run initcalls for generic implementations earlier
->
->     Use subsys_initcall for registration of all templates and generic
->     algorithm implementations, rather than module_init.  Then change
->     cryptomgr to use arch_initcall, to place it before the subsys_initcalls.
->
->     This is needed so that when both a generic and optimized implementation
->     of an algorithm are built into the kernel (not loadable modules), the
->     generic implementation is registered before the optimized one.
->     Otherwise, the self-tests for the optimized implementation are unable to
->     allocate the generic implementation for the new comparison fuzz tests.
->
->     Note that on arm, a side effect of this change is that self-tests for
->     generic implementations may run before the unaligned access handler has
->     been installed.  So, unaligned accesses will crash the kernel.  This is
->     arguably a good thing as it makes it easier to detect that type of bug.
->
->     Signed-off-by: Eric Biggers <ebiggers@google.com>
->     Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+On Tue, May 21, 2019 at 06:53:10PM +0300, Mike Rapoport wrote:
+> Hi Geert,
+> 
+> On Tue, May 21, 2019 at 04:56:39PM +0200, Geert Uytterhoeven wrote:
+> > Hi Serge,
+> > 
+> > On Wed, Apr 24, 2019 at 12:50 AM Serge Semin <fancer.lancer@gmail.com> wrote:
+> > > The reserved_end variable had been used by the bootmem_init() code
+> > > to find a lowest limit of memory available for memmap blob. The original
+> > > code just tried to find a free memory space higher than kernel was placed.
+> > > This limitation seems justified for the memmap ragion search process, but
+> > > I can't see any obvious reason to reserve the unused space below kernel
+> > > seeing some platforms place it much higher than standard 1MB. Moreover
+> > > the RELOCATION config enables it to be loaded at any memory address.
+> > > So lets reserve the memory occupied by the kernel only, leaving the region
+> > > below being free for allocations. After doing this we can now discard the
+> > > code freeing a space between kernel _text and VMLINUX_LOAD_ADDRESS symbols
+> > > since it's going to be free anyway (unless marked as reserved by
+> > > platforms).
+> > >
+> > > Signed-off-by: Serge Semin <fancer.lancer@gmail.com>
+> > 
+> > This is now commit b93ddc4f9156205e ("mips: Reserve memory for the kernel
+> > image resources") in v5.2-rc1, which causes rbtx4927 to crash during boot:
+> > 
+> >     VFS: Mounted root (nfs filesystem) on device 0:13.
+> >     devtmpfs: mounted
+> >     BUG: Bad page state in process swapper  pfn:00001
+> >     page:804b7820 refcount:0 mapcount:-128 mapping:00000000 index:0x1
+> >     flags: 0x0()
+> >     raw: 00000000 00000100 00000200 00000000 00000001 00000000 ffffff7f 00000000
+> >     page dumped because: nonzero mapcount
+> >     Modules linked in:
+> >     CPU: 0 PID: 1 Comm: swapper Not tainted
+> > 5.2.0-rc1-rbtx4927-00468-g3c05ea3d4077b756-dirty #137
+> >     Stack : 00000000 10008400 8040dd2c 87c1b974 8044af63 8040dd2c
+> > 00000001 804a3490
+> >             00000001 81000000 0030f231 80148558 00000003 10008400
+> > 87c1dd80 7599ee13
+> >             00000000 00000000 804b0000 00000000 00000007 00000000
+> > 00000085 00000000
+> >             62722d31 00000084 804b0000 39347874 00000000 804b7820
+> > 8040cef8 81000010
+> >             00000001 00000007 00000001 81000000 00000008 8021de24
+> > 00000000 804a0000
+> >             ...
+> >     Call Trace:
+> >     [<8010adec>] show_stack+0x74/0x104
+> >     [<801a5e44>] bad_page+0x130/0x138
+> >     [<801a654c>] free_pcppages_bulk+0x17c/0x3b0
+> >     [<801a789c>] free_unref_page+0x40/0x68
+> >     [<801120f4>] free_init_pages+0xec/0x104
+> >     [<803bdde8>] free_initmem+0x10/0x58
+> >     [<803bdb8c>] kernel_init+0x20/0x100
+> >     [<801057c8>] ret_from_kernel_thread+0x14/0x1c
+> >     Disabling lock debugging due to kernel taint
+> >     BUG: Bad page state in process swapper  pfn:00002
+> >     [...]
+> > 
 
-> --- a/crypto/jitterentropy-kcapi.c
-> +++ b/crypto/jitterentropy-kcapi.c
-> @@ -198,7 +198,7 @@ static void __exit jent_mod_exit(void)
->         crypto_unregister_rng(&jent_alg);
->  }
->
-> -module_init(jent_mod_init);
-> +subsys_initcall(jent_mod_init);
->  module_exit(jent_mod_exit);
->
->  MODULE_LICENSE("Dual BSD/GPL");
+The root cause of the problem most likely is in prom_free_prom_memory() method of
+arch/mips/txx9/generic/setup.c:
+void __init prom_free_prom_memory(void)
+{
+        unsigned long saddr = PAGE_SIZE;
+        unsigned long eaddr = __pa_symbol(&_text);
+        
+        if (saddr < eaddr)
+                free_init_pages("prom memory", saddr, eaddr);
+}
 
-This change causes jitterentropy to fail on Renesas SoCs based on
-single-core Cortex A9 with:
+As you can see the txx9 platform tries to free a memory which isn't reserved
+and set free from the very beginning due to the patch above. So as soon as you
+remove the free_init_pages("prom memory", ...) the problem shall be fixed.
+Could you try it and send a result to us whether it helped?
 
-    jitterentropy: Initialization failed with host not compliant with
-requirements: 2
+Regards,
+-Sergey
 
-This happens because jitterentropy is now initialized before the main
-clocksource is activated, i.e. before
-
-    clocksource: Switched to clocksource ostm timer (on RZ/A1)
-    clocksource: Switched to clocksource fff80000.timer (on R-Mobile A1)
-
-is printed.
-RZ/A1 and R-Mobile A1 SoCs rely on the OSTM resp. TMU timers.
-
-The issue does not happen on SoCs with Cortex A15 cores (with ARM
-architectured timer) or Cortex A9 multicore (with ARM global timer).
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+> > CONFIG_RELOCATABLE is not set, so the only relevant part is the
+> > change quoted below.
+> > 
+> > > --- a/arch/mips/kernel/setup.c
+> > > +++ b/arch/mips/kernel/setup.c
+> > > @@ -371,7 +371,6 @@ static void __init bootmem_init(void)
+> > >
+> > >  static void __init bootmem_init(void)
+> > >  {
+> > > -       unsigned long reserved_end;
+> > >         phys_addr_t ramstart = PHYS_ADDR_MAX;
+> > >         int i;
+> > >
+> > > @@ -382,10 +381,10 @@ static void __init bootmem_init(void)
+> > >          * will reserve the area used for the initrd.
+> > >          */
+> > >         init_initrd();
+> > > -       reserved_end = (unsigned long) PFN_UP(__pa_symbol(&_end));
+> > >
+> > > -       memblock_reserve(PHYS_OFFSET,
+> > > -                        (reserved_end << PAGE_SHIFT) - PHYS_OFFSET);
+> > > +       /* Reserve memory occupied by kernel. */
+> > > +       memblock_reserve(__pa_symbol(&_text),
+> > > +                       __pa_symbol(&_end) - __pa_symbol(&_text));
+> > >
+> > >         /*
+> > >          * max_low_pfn is not a number of pages. The number of pages
+> > 
+> > With some debug code added:
+> > 
+> >     Determined physical RAM map:
+> >      memory: 08000000 @ 00000000 (usable)
+> >     bootmem_init:390: PHYS_OFFSET = 0x0
+> >     bootmem_init:391: __pa_symbol(&_text) = 0x100000
+> >     bootmem_init:392: __pa_symbol(&_end) = 0x4b77c8
+> >     bootmem_init:393: PFN_UP(__pa_symbol(&_end)) = 0x4b8
+> 
+> Have you tried adding memblock=debug to the command line?
+> Not sure it'll help, but still :)
+>  
+> > Hence the old code reserved 1 MiB extra at the beginning.
+> > 
+> > Note that the new code also dropped the rounding up of the memory block
+> > size to a multiple of PAGE_SIZE. I'm not sure the latter actually
+> > matters or not.
+> 
+> I'd say that bad page state for pfn 1 is caused by "freeing" the first 1M.
+> 
+> > Do you have a clue? Thanks!
+> > 
+> > Gr{oetje,eeting}s,
+> > 
+> >                         Geert
+> > 
+> > -- 
+> > Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+> > 
+> > In personal conversations with technical people, I call myself a hacker. But
+> > when I'm talking to journalists I just say "programmer" or something like that.
+> >                                 -- Linus Torvalds
+> > 
+> 
+> -- 
+> Sincerely yours,
+> Mike.
+> 
