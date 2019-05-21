@@ -2,98 +2,89 @@ Return-Path: <SRS0=9PYC=TV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DAB9C04AAF
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 01:53:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB461C04AAC
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 01:59:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1E1BF217F4
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 01:53:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="GtdEhsmE"
+	by mail.kernel.org (Postfix) with ESMTP id 883732173E
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 01:59:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727510AbfEUBxZ (ORCPT
+        id S1727281AbfEUB74 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 21:53:25 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:55476 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726335AbfEUBxY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 21:53:24 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x4L1oQ3S041273;
-        Tue, 21 May 2019 01:53:17 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2018-07-02;
- bh=yVkvZ8fXUaw/jTaRiqp6doEQkt1RyJ1CKsPrkEb5+Mc=;
- b=GtdEhsmE9R4Zp5z5vZMf9BbUL5SfV6BWLtuTdxklSLGncygnasVo0c0idEhjz950KX2U
- BBQDdYFcF4q0kwxRhRiahcfDSy01chn+f/yI7aH7kB0wAAagAmRFbx0J5gyrqUkIYLJG
- xicAQtlDBoFpB7eujyAEG/d8c20PrPGfYBb1JqoL3s/50G6dlo+5STLSNi49LosJnOcY
- d8Tei/znbUWFLpq98487U3WBOWVJufze2kfUM4w6gnWij383V4nzLeLCUEsSOp3iW8Qv
- 0VxNjmPohLFDyVK+zJpEcc+Ui9xwFv/6y2IzdmfYc1F5AU5rMwEq3aAszVy4BIpIYal5 CA== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by userp2130.oracle.com with ESMTP id 2sj9ftabyj-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 21 May 2019 01:53:17 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x4L1pSbK035907;
-        Tue, 21 May 2019 01:53:16 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by aserp3030.oracle.com with ESMTP id 2sks1xwx3e-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 21 May 2019 01:53:16 +0000
-Received: from abhmp0012.oracle.com (abhmp0012.oracle.com [141.146.116.18])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x4L1rG5A002361;
-        Tue, 21 May 2019 01:53:16 GMT
-Received: from [10.159.155.76] (/10.159.155.76)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 21 May 2019 01:53:15 +0000
-Subject: Re: [PATCH] mm, memory-failure: clarify error message
-To:     Anshuman Khandual <anshuman.khandual@arm.com>,
-        n-horiguchi@ah.jp.nec.com, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Cc:     linux-nvdimm@lists.01.org
-References: <1558066095-9495-1-git-send-email-jane.chu@oracle.com>
- <512532de-4c09-626d-380f-58cef519166b@arm.com>
-From:   Jane Chu <jane.chu@oracle.com>
-Organization: Oracle Corporation
-Message-ID: <a2be5833-2161-38b6-2569-46084207ee47@oracle.com>
-Date:   Mon, 20 May 2019 18:53:14 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
-MIME-Version: 1.0
-In-Reply-To: <512532de-4c09-626d-380f-58cef519166b@arm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+        Mon, 20 May 2019 21:59:56 -0400
+Received: from mga09.intel.com ([134.134.136.24]:33841 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726412AbfEUB74 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 21:59:56 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 May 2019 18:59:55 -0700
+X-ExtLoop1: 1
+Received: from orsmsx107.amr.corp.intel.com ([10.22.240.5])
+  by fmsmga001.fm.intel.com with ESMTP; 20 May 2019 18:59:55 -0700
+Received: from orsmsx122.amr.corp.intel.com (10.22.225.227) by
+ ORSMSX107.amr.corp.intel.com (10.22.240.5) with Microsoft SMTP Server (TLS)
+ id 14.3.408.0; Mon, 20 May 2019 18:59:54 -0700
+Received: from orsmsx112.amr.corp.intel.com ([169.254.3.79]) by
+ ORSMSX122.amr.corp.intel.com ([169.254.11.150]) with mapi id 14.03.0415.000;
+ Mon, 20 May 2019 18:59:54 -0700
+From:   "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>
+To:     "davem@davemloft.net" <davem@davemloft.net>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "peterz@infradead.org" <peterz@infradead.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "mroos@linux.ee" <mroos@linux.ee>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "namit@vmware.com" <namit@vmware.com>,
+        "luto@kernel.org" <luto@kernel.org>, "bp@alien8.de" <bp@alien8.de>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "Hansen, Dave" <dave.hansen@intel.com>,
+        "sparclinux@vger.kernel.org" <sparclinux@vger.kernel.org>
+Subject: Re: [PATCH v2] vmalloc: Fix issues with flush flag
+Thread-Topic: [PATCH v2] vmalloc: Fix issues with flush flag
+Thread-Index: AQHVD0ezpbXySuUS5EinefGl750kkaZ0/uwAgAALkwCAAAiygIAAGYEAgAADqwCAAA0vgIAABnMAgAAEjYA=
+Date:   Tue, 21 May 2019 01:59:54 +0000
+Message-ID: <339ef85d984f329aa66f29fa80781624e6e4aecc.camel@intel.com>
+References: <3e7e674c1fe094cd8dbe0c8933db18be1a37d76d.camel@intel.com>
+         <20190520.203320.621504228022195532.davem@davemloft.net>
+         <a43f9224e6b245ade4b587a018c8a21815091f0f.camel@intel.com>
+         <20190520.184336.743103388474716249.davem@davemloft.net>
+In-Reply-To: <20190520.184336.743103388474716249.davem@davemloft.net>
+Accept-Language: en-US
 Content-Language: en-US
-X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9263 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=944
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1905210009
-X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9263 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=995 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1905210009
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Evolution 3.30.1 (3.30.1-1.fc29) 
+x-originating-ip: [10.254.114.95]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <8EBD949950AB8941B07DC53183E4B2A9@intel.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/16/2019 9:48 PM, Anshuman Khandual wrote:
-
-> On 05/17/2019 09:38 AM, Jane Chu wrote:
->> Some user who install SIGBUS handler that does longjmp out
-> What the longjmp about ? Are you referring to the mechanism of catching the
-> signal which was registered ?
-
-Yes.
-
-thanks,
--jane
-
+T24gTW9uLCAyMDE5LTA1LTIwIGF0IDE4OjQzIC0wNzAwLCBEYXZpZCBNaWxsZXIgd3JvdGU6DQo+
+IEZyb206ICJFZGdlY29tYmUsIFJpY2sgUCIgPHJpY2sucC5lZGdlY29tYmVAaW50ZWwuY29tPg0K
+PiBEYXRlOiBUdWUsIDIxIE1heSAyMDE5IDAxOjIwOjMzICswMDAwDQo+IA0KPiA+IFNob3VsZCBp
+dCBoYW5kbGUgZXhlY3V0aW5nIGFuIHVubWFwcGVkIHBhZ2UgZ3JhY2VmdWxseT8gQmVjYXVzZQ0K
+PiA+IHRoaXMNCj4gPiBjaGFuZ2UgaXMgY2F1c2luZyB0aGF0IHRvIGhhcHBlbiBtdWNoIGVhcmxp
+ZXIuIElmIHNvbWV0aGluZyB3YXMNCj4gPiByZWx5aW5nDQo+ID4gb24gYSBjYWNoZWQgdHJhbnNs
+YXRpb24gdG8gZXhlY3V0ZSBzb21ldGhpbmcgaXQgY291bGQgZmluZCB0aGUNCj4gPiBtYXBwaW5n
+DQo+ID4gZGlzYXBwZWFyLg0KPiANCj4gRG9lcyB0aGlzIHdvcmsgYnkgbm90IG1hcHBpbmcgYW55
+IGtlcm5lbCBtYXBwaW5ncyBhdCB0aGUgYmVnaW5uaW5nLA0KPiBhbmQgdGhlbiBmaWxsaW5nIGlu
+IHRoZSBCUEYgbWFwcGluZ3MgaW4gcmVzcG9uc2UgdG8gZmF1bHRzPw0KTm8sIG5vdGhpbmcgdG9v
+IGZhbmN5LiBJdCBqdXN0IGZsdXNoZXMgdGhlIHZtIG1hcHBpbmcgaW1tZWRpYXRseSBpbg0KdmZy
+ZWUgZm9yIGV4ZWN1dGUgKGFuZCBSTykgbWFwcGluZ3MuIFRoZSBvbmx5IHRoaW5nIHRoYXQgaGFw
+cGVucyBhcm91bmQNCmFsbG9jYXRpb24gdGltZSBpcyBzZXR0aW5nIG9mIGEgbmV3IGZsYWcgdG8g
+dGVsbCB2bWFsbG9jIHRvIGRvIHRoZQ0KZmx1c2guDQoNClRoZSBwcm9ibGVtIGJlZm9yZSB3YXMg
+dGhhdCB0aGUgcGFnZXMgd291bGQgYmUgZnJlZWQgYmVmb3JlIHRoZSBleGVjdXRlDQptYXBwaW5n
+IHdhcyBmbHVzaGVkLiBTbyB0aGVuIHdoZW4gdGhlIHBhZ2VzIGdvdCByZWN5Y2xlZCwgcmFuZG9t
+LA0Kc29tZXRpbWVzIGNvbWluZyBmcm9tIHVzZXJzcGFjZSwgZGF0YSB3b3VsZCBiZSBtYXBwZWQg
+YXMgZXhlY3V0YWJsZSBpbg0KdGhlIGtlcm5lbCBieSB0aGUgdW4tZmx1c2hlZCB0bGIgZW50cmll
+cy4NCg0KDQo=
