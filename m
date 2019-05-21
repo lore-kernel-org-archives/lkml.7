@@ -7,43 +7,43 @@ X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76558C072B5
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 20:33:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9626CC072B5
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 20:33:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 42B9C2183F
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 20:33:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 60AE421855
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 20:33:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558470793;
-	bh=aqP/8vzF4eNKx094Bhafd5MDrQNIsS6BvqbuuW0wzNY=;
+	s=default; t=1558470798;
+	bh=AZZSicw78b5Fggefzg16+EJ0Q3YsoyLnR4rvrLtZAi8=;
 	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=OVTJ4bIcusXdiA1nkUTXOBcvuvRhGakYU/unGY3all42zgcz5h7d/tzUqiClGdw+W
-	 OIM3McHz5GK/xIa7KGjTPpN//IbSIcbTY6ixWiMoJVZd/Nr4K1qqiHbFEHg6A0xM9H
-	 KxXa5J1ZxS+x9lCHnwAlR6HKQFwM0ZMpmk9Sl9mA=
+	b=UiUCsYAMXX9BCi4/njRHxI9NvobEOp3QxHhdEMwifgpQKaETPmhx/PQjyU9So129i
+	 zzpWZICjchb9hbBekVJG0mOuozhm/fXwb/m4cLGmHbwC0g5zUYQqpD0LPFZ5cBKH3B
+	 gcz5L9g1ZlDG/bvllDcABKToPovsrUO5SKYJYdpw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728039AbfEUUdM (ORCPT
+        id S1728087AbfEUUdR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 May 2019 16:33:12 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:38616 "EHLO
+        Tue, 21 May 2019 16:33:17 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:38650 "EHLO
         heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727376AbfEUUdI (ORCPT
+        with ESMTP id S1727958AbfEUUdJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 May 2019 16:33:08 -0400
+        Tue, 21 May 2019 16:33:09 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
         Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
         List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=WYXLR7ZS6jDTWKfU4LheraNWdGPA7/wxWnPkHZQHF5k=; b=HQtwaysftys3
-        IKkP1WzONpOu/70j3HEIS3i9HRBiKl7J0b/OBN+qE6M8SNvr3Cji9uxdl5nH01HjSvmZD8BK3ioid
-        WJs8crY6S8+sfZDb6Pz7W4HjnLeMKDDvGCt7q5bXF+l6M52U5Istb/UUgGy1i/SwmbcmFFfBDDnWM
-        BizYw=;
+        List-Archive; bh=S5X7czboCisMYseVeOymioFKExO97rxcqzHyV6vKQEM=; b=XrmK8xbVOkbO
+        RBzeMljHOj0vrLCu8xnNe88LnagR1nQjM88ZXA2XeBPTK29QRp9HDaui9i8sA+9yEh+Qxfc/Ck35e
+        G/7lesp/juCsEg2CoxBR1UkpT8d2k5Ab1MMobEYMpsAD7pzqZ9xJBqDOxHrsE0QiAme56WS6PTHlS
+        uuzi4=;
 Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=debutante.sirena.org.uk)
         by heliosphere.sirena.org.uk with esmtpa (Exim 4.89)
         (envelope-from <broonie@sirena.org.uk>)
-        id 1hTBRX-000221-Nj; Tue, 21 May 2019 20:33:03 +0000
+        id 1hTBRU-00021a-7E; Tue, 21 May 2019 20:33:00 +0000
 Received: by debutante.sirena.org.uk (Postfix, from userid 1000)
-        id CDEFC1126D16; Tue, 21 May 2019 21:32:59 +0100 (BST)
+        id 937C91126D13; Tue, 21 May 2019 21:32:59 +0100 (BST)
 From:   Mark Brown <broonie@kernel.org>
 To:     Richard Fitzgerald <rf@opensource.cirrus.com>
 Cc:     broonie@kernel.org, Charles Keepax <ckeepax@opensource.cirrus.com>,
@@ -51,10 +51,10 @@ Cc:     broonie@kernel.org, Charles Keepax <ckeepax@opensource.cirrus.com>,
         linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>,
         mark.rutland@arm.com, patches@opensource.cirrus.com,
         robh+dt@kernel.org
-Subject: Applied "regulator: arizona-ldo1: Add support for Cirrus Logic Madera codecs" to the regulator tree
-In-Reply-To: <20190521100439.27383-2-ckeepax@opensource.cirrus.com>
+Subject: Applied "regulator: arizona-micsupp: Add support for Cirrus Logic Madera codecs" to the regulator tree
+In-Reply-To: <20190521100439.27383-3-ckeepax@opensource.cirrus.com>
 X-Patchwork-Hint: ignore
-Message-Id: <20190521203259.CDEFC1126D16@debutante.sirena.org.uk>
+Message-Id: <20190521203259.937C91126D13@debutante.sirena.org.uk>
 Date:   Tue, 21 May 2019 21:32:59 +0100 (BST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -63,7 +63,7 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   regulator: arizona-ldo1: Add support for Cirrus Logic Madera codecs
+   regulator: arizona-micsupp: Add support for Cirrus Logic Madera codecs
 
 has been applied to the regulator tree at
 
@@ -88,49 +88,48 @@ to this mail.
 Thanks,
 Mark
 
-From 1f5f11e7370c6a55da1a37351b0cfb5f86f0cb6d Mon Sep 17 00:00:00 2001
+From 7bd7916dc8ab5b056f1b53e19021e476120481c0 Mon Sep 17 00:00:00 2001
 From: Richard Fitzgerald <rf@opensource.cirrus.com>
-Date: Tue, 21 May 2019 11:04:38 +0100
-Subject: [PATCH] regulator: arizona-ldo1: Add support for Cirrus Logic Madera
- codecs
+Date: Tue, 21 May 2019 11:04:39 +0100
+Subject: [PATCH] regulator: arizona-micsupp: Add support for Cirrus Logic
+ Madera codecs
 
-This adds a new driver identity "madera-ldo1" and probe function
-so that this driver can be used to control the LDO1 regulator on
-some Cirrus Logic Madera codecs.
+This adds a new driver identity "madera-micsupp" and probe function
+so that this driver can be used to control the micsupp regulator on
+Cirrus Logic Madera codecs.
 
 Signed-off-by: Richard Fitzgerald <rf@opensource.cirrus.com>
 Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- drivers/regulator/Kconfig        |  8 +--
- drivers/regulator/arizona-ldo1.c | 83 +++++++++++++++++++++++++++++++-
- 2 files changed, 86 insertions(+), 5 deletions(-)
+ drivers/regulator/Kconfig           |  7 +--
+ drivers/regulator/arizona-micsupp.c | 71 ++++++++++++++++++++++++++++-
+ 2 files changed, 74 insertions(+), 4 deletions(-)
 
 diff --git a/drivers/regulator/Kconfig b/drivers/regulator/Kconfig
-index 5e3a9e6547b0..5827aace014b 100644
+index 5827aace014b..660f3a1717ba 100644
 --- a/drivers/regulator/Kconfig
 +++ b/drivers/regulator/Kconfig
-@@ -135,12 +135,12 @@ config REGULATOR_AB8500
- 	  signal AB8500 PMIC
+@@ -143,11 +143,12 @@ config REGULATOR_ARIZONA_LDO1
+ 	  and Wolfson Microelectronic Arizona codecs.
  
- config REGULATOR_ARIZONA_LDO1
--	tristate "Wolfson Arizona class devices LDO1"
+ config REGULATOR_ARIZONA_MICSUPP
+-	tristate "Wolfson Arizona class devices MICSUPP"
 -	depends on MFD_ARIZONA
-+	tristate "Cirrus Madera and Wolfson Arizona class devices LDO1"
++	tristate "Cirrus Madera and Wolfson Arizona class devices MICSUPP"
 +	depends on MFD_ARIZONA || MFD_MADERA
  	depends on SND_SOC
  	help
--	  Support for the LDO1 regulators found on Wolfson Arizona class
--	  devices.
-+	  Support for the LDO1 regulators found on Cirrus Logic Madera codecs
-+	  and Wolfson Microelectronic Arizona codecs.
+-	  Support for the MICSUPP regulators found on Wolfson Arizona class
++	  Support for the MICSUPP regulators found on Cirrus Logic Madera codecs
++	  and Wolfson Microelectronic Arizona codecs
+ 	  devices.
  
- config REGULATOR_ARIZONA_MICSUPP
- 	tristate "Wolfson Arizona class devices MICSUPP"
-diff --git a/drivers/regulator/arizona-ldo1.c b/drivers/regulator/arizona-ldo1.c
-index e4bc7b1e5ccd..1a3d7b720f5e 100644
---- a/drivers/regulator/arizona-ldo1.c
-+++ b/drivers/regulator/arizona-ldo1.c
+ config REGULATOR_AS3711
+diff --git a/drivers/regulator/arizona-micsupp.c b/drivers/regulator/arizona-micsupp.c
+index be0d46da51a1..de6802b85e9f 100644
+--- a/drivers/regulator/arizona-micsupp.c
++++ b/drivers/regulator/arizona-micsupp.c
 @@ -25,6 +25,10 @@
  #include <linux/mfd/arizona/pdata.h>
  #include <linux/mfd/arizona/registers.h>
@@ -139,112 +138,100 @@ index e4bc7b1e5ccd..1a3d7b720f5e 100644
 +#include <linux/mfd/madera/pdata.h>
 +#include <linux/mfd/madera/registers.h>
 +
- struct arizona_ldo1 {
- 	struct regulator_dev *regulator;
- 	struct regmap *regmap;
-@@ -158,6 +162,31 @@ static const struct regulator_init_data arizona_ldo1_wm5110 = {
+ #include <linux/regulator/arizona-micsupp.h>
+ 
+ struct arizona_micsupp {
+@@ -200,6 +204,28 @@ static const struct regulator_init_data arizona_micsupp_ext_default = {
  	.num_consumer_supplies = 1,
  };
  
-+static const struct regulator_desc madera_ldo1 = {
-+	.name = "LDO1",
-+	.supply_name = "LDOVDD",
++static const struct regulator_desc madera_micsupp = {
++	.name = "MICVDD",
++	.supply_name = "CPVDD1",
 +	.type = REGULATOR_VOLTAGE,
-+	.ops = &arizona_ldo1_ops,
++	.n_voltages = 40,
++	.ops = &arizona_micsupp_ops,
 +
-+	.vsel_reg = MADERA_LDO1_CONTROL_1,
-+	.vsel_mask = MADERA_LDO1_VSEL_MASK,
-+	.min_uV = 900000,
-+	.uV_step = 25000,
-+	.n_voltages = 13,
++	.vsel_reg = MADERA_LDO2_CONTROL_1,
++	.vsel_mask = MADERA_LDO2_VSEL_MASK,
++	.enable_reg = MADERA_MIC_CHARGE_PUMP_1,
++	.enable_mask = MADERA_CPMIC_ENA,
++	.bypass_reg = MADERA_MIC_CHARGE_PUMP_1,
++	.bypass_mask = MADERA_CPMIC_BYPASS,
++
++	.linear_ranges = arizona_micsupp_ext_ranges,
++	.n_linear_ranges = ARRAY_SIZE(arizona_micsupp_ext_ranges),
++
 +	.enable_time = 3000,
 +
 +	.owner = THIS_MODULE,
 +};
 +
-+static const struct regulator_init_data madera_ldo1_default = {
-+	.constraints = {
-+		.min_uV = 1200000,
-+		.max_uV = 1200000,
-+		.valid_ops_mask = REGULATOR_CHANGE_STATUS,
-+	},
-+	.num_consumer_supplies = 1,
-+};
-+
- static int arizona_ldo1_of_get_pdata(struct arizona_ldo1_pdata *pdata,
- 				     struct regulator_config *config,
- 				     const struct regulator_desc *desc,
-@@ -320,6 +349,32 @@ static int arizona_ldo1_remove(struct platform_device *pdev)
- 	return 0;
+ static int arizona_micsupp_of_get_pdata(struct arizona_micsupp_pdata *pdata,
+ 					struct regulator_config *config,
+ 					const struct regulator_desc *desc)
+@@ -316,6 +342,24 @@ static int arizona_micsupp_probe(struct platform_device *pdev)
+ 					   &arizona->pdata.micvdd);
  }
  
-+static int madera_ldo1_probe(struct platform_device *pdev)
++static int madera_micsupp_probe(struct platform_device *pdev)
 +{
 +	struct madera *madera = dev_get_drvdata(pdev->dev.parent);
-+	struct arizona_ldo1 *ldo1;
-+	bool external_dcvdd;
-+	int ret;
++	struct arizona_micsupp *micsupp;
 +
-+	ldo1 = devm_kzalloc(&pdev->dev, sizeof(*ldo1), GFP_KERNEL);
-+	if (!ldo1)
++	micsupp = devm_kzalloc(&pdev->dev, sizeof(*micsupp), GFP_KERNEL);
++	if (!micsupp)
 +		return -ENOMEM;
 +
-+	ldo1->regmap = madera->regmap;
++	micsupp->regmap = madera->regmap;
++	micsupp->dapm = &madera->dapm;
++	micsupp->dev = madera->dev;
++	micsupp->init_data = arizona_micsupp_ext_default;
 +
-+	ldo1->init_data = madera_ldo1_default;
-+
-+	ret = arizona_ldo1_common_init(pdev, ldo1, &madera_ldo1,
-+				       &madera->pdata.ldo1,
-+				       &external_dcvdd);
-+	if (ret)
-+		return ret;
-+
-+	madera->internal_dcvdd = !external_dcvdd;
-+
-+	return 0;
++	return arizona_micsupp_common_init(pdev, micsupp, &madera_micsupp,
++					   &madera->pdata.micvdd);
 +}
 +
- static struct platform_driver arizona_ldo1_driver = {
- 	.probe = arizona_ldo1_probe,
- 	.remove = arizona_ldo1_remove,
-@@ -328,10 +383,36 @@ static struct platform_driver arizona_ldo1_driver = {
+ static struct platform_driver arizona_micsupp_driver = {
+ 	.probe = arizona_micsupp_probe,
+ 	.driver		= {
+@@ -323,10 +367,35 @@ static struct platform_driver arizona_micsupp_driver = {
  	},
  };
  
--module_platform_driver(arizona_ldo1_driver);
-+static struct platform_driver madera_ldo1_driver = {
-+	.probe = madera_ldo1_probe,
-+	.remove = arizona_ldo1_remove,
+-module_platform_driver(arizona_micsupp_driver);
++static struct platform_driver madera_micsupp_driver = {
++	.probe = madera_micsupp_probe,
 +	.driver		= {
-+		.name	= "madera-ldo1",
++		.name	= "madera-micsupp",
 +	},
 +};
 +
-+static struct platform_driver * const madera_ldo1_drivers[] = {
-+	&arizona_ldo1_driver,
-+	&madera_ldo1_driver,
++static struct platform_driver * const arizona_micsupp_drivers[] = {
++	&arizona_micsupp_driver,
++	&madera_micsupp_driver,
 +};
 +
-+static int __init arizona_ldo1_init(void)
++static int __init arizona_micsupp_init(void)
 +{
-+	return platform_register_drivers(madera_ldo1_drivers,
-+					 ARRAY_SIZE(madera_ldo1_drivers));
++	return platform_register_drivers(arizona_micsupp_drivers,
++					 ARRAY_SIZE(arizona_micsupp_drivers));
 +}
-+module_init(arizona_ldo1_init);
++module_init(arizona_micsupp_init);
 +
-+static void __exit madera_ldo1_exit(void)
++static void __exit arizona_micsupp_exit(void)
 +{
-+	platform_unregister_drivers(madera_ldo1_drivers,
-+				    ARRAY_SIZE(madera_ldo1_drivers));
++	platform_unregister_drivers(arizona_micsupp_drivers,
++				    ARRAY_SIZE(arizona_micsupp_drivers));
 +}
-+module_exit(madera_ldo1_exit);
++module_exit(arizona_micsupp_exit);
  
  /* Module information */
  MODULE_AUTHOR("Mark Brown <broonie@opensource.wolfsonmicro.com>");
- MODULE_DESCRIPTION("Arizona LDO1 driver");
+ MODULE_DESCRIPTION("Arizona microphone supply driver");
  MODULE_LICENSE("GPL");
- MODULE_ALIAS("platform:arizona-ldo1");
-+MODULE_ALIAS("platform:madera-ldo1");
+ MODULE_ALIAS("platform:arizona-micsupp");
++MODULE_ALIAS("platform:madera-micsupp");
 -- 
 2.20.1
 
