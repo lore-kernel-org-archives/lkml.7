@@ -2,138 +2,277 @@ Return-Path: <SRS0=9PYC=TV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20E2DC04AAF
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 07:08:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA325C04E87
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 07:11:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E96DE2173C
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 07:08:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RHVbc2pi"
+	by mail.kernel.org (Postfix) with ESMTP id 9E76021743
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 07:11:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726628AbfEUHIP (ORCPT
+        id S1726511AbfEUHLV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 May 2019 03:08:15 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:46358 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726318AbfEUHIN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 May 2019 03:08:13 -0400
-Received: by mail-pl1-f196.google.com with SMTP id r18so7953501pls.13
-        for <linux-kernel@vger.kernel.org>; Tue, 21 May 2019 00:08:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=UCzPCZF+x24sS03YB1jPAhrRBKiDQmd3KZY05F7KSFM=;
-        b=RHVbc2pilM+0bkS5Jvwg+Ibm1lvO2wvhsRAO2fMgignObjIx5z3vWUM0z+C45gQZhi
-         Wa4VWX1gm3GaCopzJ6cmfM67qu6ffG6TQ9qY4IArdUxmfHIfkN3x5FgqH6t77jb2FEYw
-         L/NpJozNluW1oR6+gUdv4Nc0CWZFFkaj+6H8pMGYg7/j7jZBsDKEK4h3h2SVnCXYaDkS
-         YONXKVaOf/3Vgu7nUmw7FWZ/B9eSM3d5tKNMyQZA0YwH+0Ct6arNs0Usxw3rzR/XA5fy
-         +k8y07igm2aL8ZMoL1Jd69U44LBLOqRkXQ7rH7r4DBQtfr/rMQyxdk70iKwWHghcHz1l
-         Ge+A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=UCzPCZF+x24sS03YB1jPAhrRBKiDQmd3KZY05F7KSFM=;
-        b=AER/pyUGsaKk54DwG/qohPfvZJqIgWo0jyv/xHKKcQyMfJZbnF1oSeyp/LS6M0kNp/
-         t76xUB+4bVN7nmGkzDJevlfi1NK113AsGJ/qn+ek5w+u8F4pjCSFNNzp17JIzedL2rxy
-         rSjn8yMX2urOlZGvZEUjNos7iqRPYU48Za/+SDR5KRqktdrzLrGGpm2VuAWhocTLTXec
-         CdLXFtWbHjCLBJr3Sk2CDu6BfBWI2vFVVZ0f3Mu6KVYlzPmsssL3C6lX9pfsq84sJXZV
-         GsABHBNRk4QcYR3l7LcOht61LZQ+o3DrY811WDwf0efpUTBBE6loYOr+sY+Mrn3loQHY
-         SiiA==
-X-Gm-Message-State: APjAAAVDBIZ0U7WtzGf/mxZkKniMY6uo0t91zPV2S/JOhvT+352KlXW9
-        PQ2Q1B63O63RfUlZUCGr7Vk7g4kt
-X-Google-Smtp-Source: APXvYqwIMhGLeBvpXmFvR9E0s9CaVCv1XCJpHrIaVkHroJU2tf2eaVjg+rPx4vIyy5pcQflGB+nAzQ==
-X-Received: by 2002:a17:902:84:: with SMTP id a4mr81826578pla.210.1558422492641;
-        Tue, 21 May 2019 00:08:12 -0700 (PDT)
-Received: from blueforge.nvidia.com (searspoint.nvidia.com. [216.228.112.21])
-        by smtp.gmail.com with ESMTPSA id q193sm30033885pfc.52.2019.05.21.00.08.11
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 21 May 2019 00:08:12 -0700 (PDT)
-From:   john.hubbard@gmail.com
-X-Google-Original-From: jhubbard@nvidia.com
-To:     LKML <linux-kernel@vger.kernel.org>
-Cc:     John Hubbard <jhubbard@nvidia.com>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        "Paul E . McKenney" <paulmck@linux.vnet.ibm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Will Deacon <will.deacon@arm.com>
-Subject: [PATCH 1/1] lockdep: fix warning: print_lock_trace defined but not used
-Date:   Tue, 21 May 2019 00:08:08 -0700
-Message-Id: <20190521070808.3536-2-jhubbard@nvidia.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190521070808.3536-1-jhubbard@nvidia.com>
-References: <20190521070808.3536-1-jhubbard@nvidia.com>
+        Tue, 21 May 2019 03:11:21 -0400
+Received: from lhrrgout.huawei.com ([185.176.76.210]:32958 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725790AbfEUHLV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 May 2019 03:11:21 -0400
+Received: from LHREML714-CAH.china.huawei.com (unknown [172.18.7.107])
+        by Forcepoint Email with ESMTP id 9BE044E299856D3935D4;
+        Tue, 21 May 2019 08:11:19 +0100 (IST)
+Received: from [10.220.96.108] (10.220.96.108) by smtpsuk.huawei.com
+ (10.201.108.37) with Microsoft SMTP Server (TLS) id 14.3.408.0; Tue, 21 May
+ 2019 08:11:18 +0100
+Subject: Re: [PATCH v6 2/3] add a new ima template field buf
+To:     Prakhar Srivastava <prsriva02@gmail.com>,
+        <linux-integrity@vger.kernel.org>,
+        <linux-security-module@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+CC:     <mjg59@google.com>, <zohar@linux.ibm.com>, <vgoyal@redhat.com>
+References: <20190521000645.16227-1-prsriva02@gmail.com>
+ <20190521000645.16227-3-prsriva02@gmail.com>
+From:   Roberto Sassu <roberto.sassu@huawei.com>
+Message-ID: <daa54bb7-acd4-1376-544d-8db178479d02@huawei.com>
+Date:   Tue, 21 May 2019 09:11:21 +0200
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.3.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-X-NVConfidentiality: public
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190521000645.16227-3-prsriva02@gmail.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.220.96.108]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: John Hubbard <jhubbard@nvidia.com>
+On 5/21/2019 2:06 AM, Prakhar Srivastava wrote:
+> A buffer(cmdline args) measured into ima cannot be appraised
+> without already being aware of the buffer contents.Since we
 
-Commit 0d2cc3b34532 ("locking/lockdep: Move valid_state() inside
-CONFIG_TRACE_IRQFLAGS && CONFIG_PROVE_LOCKING") moved the only usage of
-print_lock_trace() that was originally outside of the CONFIG_PROVE_LOCKING
-case. It moved that usage into a different case: CONFIG_PROVE_LOCKING &&
-CONFIG_TRACE_IRQFLAGS. That leaves things not symmetrical, and as a result,
-the following warning fires on my build, when I have
+Space before 'Since'.
 
-!CONFIG_TRACE_IRQFLAGS && !CONFIG_PROVE_LOCKING
 
-set:
+> don't know what cmdline args will be passed (or need to validate
+> what was passed) it is not possible to appraise it.
+> 
+> Since hashs are non reversible the raw buffer is needed to
+> recompute the hash.
 
-kernel/locking/lockdep.c:2821:13: warning: ‘print_lock_trace’ defined
-    but not used [-Wunused-function]
+Hashes.
 
-Fix this by only defining print_lock_trace() in cases in which is it
-called.
+> To regenrate the hash of the buffer and appraise the same
 
-Fixes: 0d2cc3b34532 ("locking/lockdep: Move valid_state() inside CONFIG_TRACE_IRQFLAGS && CONFIG_PROVE_LOCKING")
-Cc: Frederic Weisbecker <frederic@kernel.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Paul E. McKenney <paulmck@linux.vnet.ibm.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Will Deacon <will.deacon@arm.com>
-Signed-off-by: John Hubbard <jhubbard@nvidia.com>
----
- kernel/locking/lockdep.c | 3 +++
- 1 file changed, 3 insertions(+)
+Regenerate.
 
-diff --git a/kernel/locking/lockdep.c b/kernel/locking/lockdep.c
-index d06190fa5082..3065dc36c27a 100644
---- a/kernel/locking/lockdep.c
-+++ b/kernel/locking/lockdep.c
-@@ -2817,11 +2817,14 @@ static inline int validate_chain(struct task_struct *curr,
- 	return 1;
- }
- 
-+#if defined(CONFIG_TRACE_IRQFLAGS)
- static void print_lock_trace(struct lock_trace *trace, unsigned int spaces)
- {
- }
- #endif
- 
-+#endif
-+
- /*
-  * We are building curr_chain_key incrementally, so double-check
-  * it from scratch, to make sure that it's done correctly:
+
+> the contents of the buffer need to be available.
+> 
+> A new template field buf is added to the existing ima template
+> fields, which can be used to store/read the buffer itself.
+> Two new fields are added to the ima_event_data to carry the
+> buf and buf_len whenever necessary.
+> 
+> Updated the process_buffer_measurement call to add the buf
+> to the ima_event_data.
+> process_buffer_measurement added in "Add a new ima hook
+> ima_kexec_cmdline to measure cmdline args"
+> 
+> - Add a new template field 'buf' to be used to store/read
+> the buffer data.
+> - Added two new fields to ima_event_data to hold the buf and
+> buf_len [Suggested by Roberto]
+> -Updated process_buffer_meaurement to add the buffer to
+
+Space after -.
+
+
+> ima_event_data
+> 
+> Signed-off-by: Prakhar Srivastava <prsriva02@gmail.com>
+> ---
+>   Documentation/security/IMA-templates.rst  |  2 +-
+>   security/integrity/ima/ima.h              |  2 ++
+>   security/integrity/ima/ima_api.c          |  4 ++--
+>   security/integrity/ima/ima_init.c         |  2 +-
+>   security/integrity/ima/ima_main.c         |  4 +++-
+>   security/integrity/ima/ima_template.c     |  2 ++
+>   security/integrity/ima/ima_template_lib.c | 20 ++++++++++++++++++++
+>   security/integrity/ima/ima_template_lib.h |  4 ++++
+>   8 files changed, 35 insertions(+), 5 deletions(-)
+> 
+> diff --git a/Documentation/security/IMA-templates.rst b/Documentation/security/IMA-templates.rst
+> index 2cd0e273cc9a..9cddb66727ee 100644
+> --- a/Documentation/security/IMA-templates.rst
+> +++ b/Documentation/security/IMA-templates.rst
+> @@ -70,7 +70,7 @@ descriptors by adding their identifier to the format string
+>      prefix is shown only if the hash algorithm is not SHA1 or MD5);
+>    - 'n-ng': the name of the event, without size limitations;
+>    - 'sig': the file signature.
+
+; instead of .
+
+
+> -
+
+Keep the new line.
+
+
+Apart from that, the patch looks good to me.
+
+Reviewed-by: Roberto Sassu <roberto.sassu@huawei.com>
+
+Roberto
+
+
+> + - 'buf': the buffer data that was used to generate the hash without size limitations.
+>   
+>   Below, there is the list of defined template descriptors:
+>   
+> diff --git a/security/integrity/ima/ima.h b/security/integrity/ima/ima.h
+> index 226a26d8de09..4a82541dc3b6 100644
+> --- a/security/integrity/ima/ima.h
+> +++ b/security/integrity/ima/ima.h
+> @@ -65,6 +65,8 @@ struct ima_event_data {
+>   	struct evm_ima_xattr_data *xattr_value;
+>   	int xattr_len;
+>   	const char *violation;
+> +	const void *buf;
+> +	int buf_len;
+>   };
+>   
+>   /* IMA template field data definition */
+> diff --git a/security/integrity/ima/ima_api.c b/security/integrity/ima/ima_api.c
+> index 800d965232e5..c12f1cd38f8f 100644
+> --- a/security/integrity/ima/ima_api.c
+> +++ b/security/integrity/ima/ima_api.c
+> @@ -134,7 +134,7 @@ void ima_add_violation(struct file *file, const unsigned char *filename,
+>   	struct ima_template_entry *entry;
+>   	struct inode *inode = file_inode(file);
+>   	struct ima_event_data event_data = {iint, file, filename, NULL, 0,
+> -					    cause};
+> +					    cause, NULL, 0};
+>   	int violation = 1;
+>   	int result;
+>   
+> @@ -286,7 +286,7 @@ void ima_store_measurement(struct integrity_iint_cache *iint,
+>   	struct inode *inode = file_inode(file);
+>   	struct ima_template_entry *entry;
+>   	struct ima_event_data event_data = {iint, file, filename, xattr_value,
+> -					    xattr_len, NULL};
+> +					    xattr_len, NULL, NULL, 0};
+>   	int violation = 0;
+>   
+>   	if (iint->measured_pcrs & (0x1 << pcr))
+> diff --git a/security/integrity/ima/ima_init.c b/security/integrity/ima/ima_init.c
+> index 6c9295449751..0c34d3100b5b 100644
+> --- a/security/integrity/ima/ima_init.c
+> +++ b/security/integrity/ima/ima_init.c
+> @@ -50,7 +50,7 @@ static int __init ima_add_boot_aggregate(void)
+>   	struct ima_template_entry *entry;
+>   	struct integrity_iint_cache tmp_iint, *iint = &tmp_iint;
+>   	struct ima_event_data event_data = {iint, NULL, boot_aggregate_name,
+> -					    NULL, 0, NULL};
+> +					    NULL, 0, NULL, NULL, 0};
+>   	int result = -ENOMEM;
+>   	int violation = 0;
+>   	struct {
+> diff --git a/security/integrity/ima/ima_main.c b/security/integrity/ima/ima_main.c
+> index a88c28918a63..6c5691b65b84 100644
+> --- a/security/integrity/ima/ima_main.c
+> +++ b/security/integrity/ima/ima_main.c
+> @@ -594,7 +594,7 @@ static void process_buffer_measurement(const void *buf, int size,
+>   	struct ima_template_entry *entry = NULL;
+>   	struct integrity_iint_cache tmp_iint, *iint = &tmp_iint;
+>   	struct ima_event_data event_data = {iint, NULL, NULL,
+> -						NULL, 0, NULL};
+> +						NULL, 0, NULL, NULL, 0};
+>   	struct {
+>   		struct ima_digest_data hdr;
+>   		char digest[IMA_MAX_DIGEST_SIZE];
+> @@ -611,6 +611,8 @@ static void process_buffer_measurement(const void *buf, int size,
+>   	memset(&hash, 0, sizeof(hash));
+>   
+>   	event_data.filename = eventname;
+> +	event_data.buf = buf;
+> +	event_data.buf_len = size;
+>   
+>   	iint->ima_hash = &hash.hdr;
+>   	iint->ima_hash->algo = ima_hash_algo;
+> diff --git a/security/integrity/ima/ima_template.c b/security/integrity/ima/ima_template.c
+> index b631b8bc7624..a76d1c04162a 100644
+> --- a/security/integrity/ima/ima_template.c
+> +++ b/security/integrity/ima/ima_template.c
+> @@ -43,6 +43,8 @@ static const struct ima_template_field supported_fields[] = {
+>   	 .field_show = ima_show_template_string},
+>   	{.field_id = "sig", .field_init = ima_eventsig_init,
+>   	 .field_show = ima_show_template_sig},
+> +	{.field_id = "buf", .field_init = ima_eventbuf_init,
+> +	 .field_show = ima_show_template_buf},
+>   };
+>   #define MAX_TEMPLATE_NAME_LEN 15
+>   
+> diff --git a/security/integrity/ima/ima_template_lib.c b/security/integrity/ima/ima_template_lib.c
+> index 513b457ae900..43d1404141c1 100644
+> --- a/security/integrity/ima/ima_template_lib.c
+> +++ b/security/integrity/ima/ima_template_lib.c
+> @@ -162,6 +162,12 @@ void ima_show_template_sig(struct seq_file *m, enum ima_show_type show,
+>   	ima_show_template_field_data(m, show, DATA_FMT_HEX, field_data);
+>   }
+>   
+> +void ima_show_template_buf(struct seq_file *m, enum ima_show_type show,
+> +				struct ima_field_data *field_data)
+> +{
+> +	ima_show_template_field_data(m, show, DATA_FMT_HEX, field_data);
+> +}
+> +
+>   /**
+>    * ima_parse_buf() - Parses lengths and data from an input buffer
+>    * @bufstartp:       Buffer start address.
+> @@ -389,3 +395,17 @@ int ima_eventsig_init(struct ima_event_data *event_data,
+>   	return ima_write_template_field_data(xattr_value, event_data->xattr_len,
+>   					     DATA_FMT_HEX, field_data);
+>   }
+> +
+> +/*
+> + *  ima_eventbuf_init - include the buffer(kexec-cmldine) as part of the
+> + *  template data.
+> + */
+> +int ima_eventbuf_init(struct ima_event_data *event_data,
+> +				struct ima_field_data *field_data)
+> +{
+> +	if ((!event_data->buf) || (event_data->buf_len == 0))
+> +		return 0;
+> +
+> +	return ima_write_template_field_data(event_data->buf, event_data->buf_len,
+> +					DATA_FMT_HEX, field_data);
+> +}
+> diff --git a/security/integrity/ima/ima_template_lib.h b/security/integrity/ima/ima_template_lib.h
+> index 6a3d8b831deb..f0178bc60c55 100644
+> --- a/security/integrity/ima/ima_template_lib.h
+> +++ b/security/integrity/ima/ima_template_lib.h
+> @@ -29,6 +29,8 @@ void ima_show_template_string(struct seq_file *m, enum ima_show_type show,
+>   			      struct ima_field_data *field_data);
+>   void ima_show_template_sig(struct seq_file *m, enum ima_show_type show,
+>   			   struct ima_field_data *field_data);
+> +void ima_show_template_buf(struct seq_file *m, enum ima_show_type show,
+> +				struct ima_field_data *field_data);
+>   int ima_parse_buf(void *bufstartp, void *bufendp, void **bufcurp,
+>   		  int maxfields, struct ima_field_data *fields, int *curfields,
+>   		  unsigned long *len_mask, int enforce_mask, char *bufname);
+> @@ -42,4 +44,6 @@ int ima_eventname_ng_init(struct ima_event_data *event_data,
+>   			  struct ima_field_data *field_data);
+>   int ima_eventsig_init(struct ima_event_data *event_data,
+>   		      struct ima_field_data *field_data);
+> +int ima_eventbuf_init(struct ima_event_data *event_data,
+> +				struct ima_field_data *field_data);
+>   #endif /* __LINUX_IMA_TEMPLATE_LIB_H */
+> 
+
 -- 
-2.21.0
-
+HUAWEI TECHNOLOGIES Duesseldorf GmbH, HRB 56063
+Managing Director: Bo PENG, Jian LI, Yanli SHI
