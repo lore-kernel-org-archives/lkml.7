@@ -2,79 +2,95 @@ Return-Path: <SRS0=9PYC=TV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=FREEMAIL_FORGED_FROMDOMAIN,
-	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73557C04AAF
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 16:10:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2A88C04AAF
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 16:11:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 526372173C
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 16:10:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B55FD21743
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 16:11:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728634AbfEUQKT (ORCPT
+        id S1728770AbfEUQLJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 May 2019 12:10:19 -0400
-Received: from ns.iliad.fr ([212.27.33.1]:54762 "EHLO ns.iliad.fr"
+        Tue, 21 May 2019 12:11:09 -0400
+Received: from foss.arm.com ([217.140.101.70]:37994 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727817AbfEUQKT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 May 2019 12:10:19 -0400
-Received: from ns.iliad.fr (localhost [127.0.0.1])
-        by ns.iliad.fr (Postfix) with ESMTP id 67CFD20814;
-        Tue, 21 May 2019 18:10:17 +0200 (CEST)
-Received: from [192.168.108.49] (freebox.vlq16.iliad.fr [213.36.7.13])
-        by ns.iliad.fr (Postfix) with ESMTP id 505B620348;
-        Tue, 21 May 2019 18:10:17 +0200 (CEST)
-Subject: Re: [PATCH v2 7/9] arm64: dts: qcom: msm8998: Add PSCI cpuidle low
- power states
-From:   Marc Gonzalez <marc.w.gonzalez@free.fr>
-To:     Amit Kucheria <amit.kucheria@linaro.org>
-Cc:     MSM <linux-arm-msm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Andy Gross <agross@kernel.org>,
-        Jeffrey Hugo <jhugo@codeaurora.org>
-References: <cover.1558430617.git.amit.kucheria@linaro.org>
- <49cf5d94beb9af9ef4e78d4c52f3b0ad20b7c63f.1558430617.git.amit.kucheria@linaro.org>
- <a7514c68-d2d3-ce9e-bc4b-f484bb5bf3cf@free.fr>
-Message-ID: <9dfe47bc-9f37-e494-271b-b343205c8073@free.fr>
-Date:   Tue, 21 May 2019 18:10:17 +0200
+        id S1727817AbfEUQLI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 May 2019 12:11:08 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2F8F9374;
+        Tue, 21 May 2019 09:11:08 -0700 (PDT)
+Received: from [10.1.196.75] (e110467-lin.cambridge.arm.com [10.1.196.75])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 4174D3F718;
+        Tue, 21 May 2019 09:11:07 -0700 (PDT)
+Subject: Re: [PATCH v3 3/3] arm64: dts: meson: Add minimal support for
+ Odroid-N2
+To:     Neil Armstrong <narmstrong@baylibre.com>, khilman@baylibre.com
+Cc:     linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+References: <20190521151952.2779-1-narmstrong@baylibre.com>
+ <20190521151952.2779-4-narmstrong@baylibre.com>
+From:   Robin Murphy <robin.murphy@arm.com>
+Message-ID: <4eb6aa5c-14e2-944e-9f15-692063ef072b@arm.com>
+Date:   Tue, 21 May 2019 17:11:05 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <a7514c68-d2d3-ce9e-bc4b-f484bb5bf3cf@free.fr>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+In-Reply-To: <20190521151952.2779-4-narmstrong@baylibre.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
 Content-Transfer-Encoding: 7bit
-X-Virus-Scanned: ClamAV using ClamSMTP ; ns.iliad.fr ; Tue May 21 18:10:17 2019 +0200 (CEST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 21/05/2019 14:03, Marc Gonzalez wrote:
+On 21/05/2019 16:19, Neil Armstrong wrote:
+[...]
+> +		cpu100: cpu@100 {
+> +			device_type = "cpu";
+> +			compatible = "arm,cortex-a73", "arm,armv8";
 
-> the system starts to boot, hangs a few seconds, then silently reboots
+Nit: we've recently tried to eradicate "arm,armv8" as a fallback 
+compatible for real CPUs (although I see there are still a couple of 
+instances that have slipped through).
 
-Using extremely high-tech debugging tools (i.e. spraying printk left and right)
-I traced this one down to:
+Robin.
 
-psci_cpu_suspend_enter: 435
-psci_cpu_suspend: 171
-psci_cpu_suspend: __invoke_psci_fn_smc c4000001
-__invoke_psci_fn_smc: id=c4000001 3 0 0
-/*** we never return from arm_smccc_smc() ***/
-
-
-The following dmesg log caught my eye, and might be relevant:
-
-ARM_SMCCC_ARCH_WORKAROUND_1 missing from firmware
-
-
-If I revert your patch, psci_cpu_suspend_enter() is never called,
-so we don't tickle the arm_smccc_smc() monster.
-
-Could it be that my FW doesn't support PSCI?
-
-Regards.
+> +			reg = <0x0 0x100>;
+> +			enable-method = "psci";
+> +			next-level-cache = <&l2>;
+> +		};
+> +
+> +		cpu101: cpu@101 {
+> +			device_type = "cpu";
+> +			compatible = "arm,cortex-a73", "arm,armv8";
+> +			reg = <0x0 0x101>;
+> +			enable-method = "psci";
+> +			next-level-cache = <&l2>;
+> +		};
+> +
+> +		cpu102: cpu@102 {
+> +			device_type = "cpu";
+> +			compatible = "arm,cortex-a73", "arm,armv8";
+> +			reg = <0x0 0x102>;
+> +			enable-method = "psci";
+> +			next-level-cache = <&l2>;
+> +		};
+> +
+> +		cpu103: cpu@103 {
+> +			device_type = "cpu";
+> +			compatible = "arm,cortex-a73", "arm,armv8";
+> +			reg = <0x0 0x103>;
+> +			enable-method = "psci";
+> +			next-level-cache = <&l2>;
+> +		};
+> +	};
+> +};
+> +
+> +&clkc {
+> +	compatible = "amlogic,g12b-clkc";
+> +};
+> 
