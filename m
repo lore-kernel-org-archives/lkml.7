@@ -2,239 +2,167 @@ Return-Path: <SRS0=9PYC=TV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39111C04AAF
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 13:50:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48516C04AAF
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 13:50:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EF20021019
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 13:50:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1335421019
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 13:50:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="BvauOK+G"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mFHy2QYL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728441AbfEUNuB (ORCPT
+        id S1728454AbfEUNuS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 May 2019 09:50:01 -0400
-Received: from conssluserg-02.nifty.com ([210.131.2.81]:58503 "EHLO
-        conssluserg-02.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728142AbfEUNuA (ORCPT
+        Tue, 21 May 2019 09:50:18 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:55464 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728075AbfEUNuR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 May 2019 09:50:00 -0400
-Received: from mail-vs1-f54.google.com (mail-vs1-f54.google.com [209.85.217.54]) (authenticated)
-        by conssluserg-02.nifty.com with ESMTP id x4LDnYw6027273;
-        Tue, 21 May 2019 22:49:35 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-02.nifty.com x4LDnYw6027273
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1558446575;
-        bh=wki7JwvrZ9RUz00+Did3BCvqytR4NxGLs+2dqfiy3MM=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=BvauOK+GHa1bl3WAMTDGrf7ni6j8z++/+NkQJOt845euJszQ/Sp+a9udFYjFe7KMM
-         bkrkjmwK99j1jnZuq2JNNyodpy/ts4ayIF9cQo8mnx6gBfzmXONS04r+rSFaHTQZkm
-         tkPn1csNMK5bdlUt7kUl9REGEKhigSKiJeN6wWFWYxV3iIbAD+bS2LcFeMaIRwvw8X
-         7H4g6lO5nBxNd1fx/O+FPdZTFlHpZgssF598bHBc9LP8HR3kisfeGcktMuTULcPF0B
-         2vZaaMpeFLANDC2Eh4J6OEy7UZ4SlH+gsCECPDTSkYRGCIWn+9agLNVwKv7uwvBdDN
-         e1RlT3lwtupag==
-X-Nifty-SrcIP: [209.85.217.54]
-Received: by mail-vs1-f54.google.com with SMTP id c24so11169656vsp.7;
-        Tue, 21 May 2019 06:49:35 -0700 (PDT)
-X-Gm-Message-State: APjAAAVDqDGsFTxDXJfmsdYQdmbBJTbsWEI/E49SIDe/Y4ICww8OIdMC
-        Vqfs9z7tFu+TJ0b1+2uOX5yqb6FkHPPwnv1sakc=
-X-Google-Smtp-Source: APXvYqxcDjZDHiMUpn9cnaLGkfZA35KnjvEwSlFRKKz1fP5fktkPYJE8WDRbS6BEAwZ7dss7nXcKto+7mKSV9eENPpM=
-X-Received: by 2002:a67:ad0f:: with SMTP id t15mr21995936vsl.179.1558446573967;
- Tue, 21 May 2019 06:49:33 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190509143859.9050-1-joe.lawrence@redhat.com> <20190509143859.9050-3-joe.lawrence@redhat.com>
-In-Reply-To: <20190509143859.9050-3-joe.lawrence@redhat.com>
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Tue, 21 May 2019 22:48:57 +0900
-X-Gmail-Original-Message-ID: <CAK7LNAT_2Tgt+3C1RVYGn47uhQ0L94uY4CFRjjooJz2m0nZnXw@mail.gmail.com>
-Message-ID: <CAK7LNAT_2Tgt+3C1RVYGn47uhQ0L94uY4CFRjjooJz2m0nZnXw@mail.gmail.com>
-Subject: Re: [PATCH v4 02/10] kbuild: Support for Symbols.list creation
-To:     Joe Lawrence <joe.lawrence@redhat.com>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        live-patching@vger.kernel.org,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Tue, 21 May 2019 09:50:17 -0400
+Received: by mail-wm1-f68.google.com with SMTP id x64so3077056wmb.5
+        for <linux-kernel@vger.kernel.org>; Tue, 21 May 2019 06:50:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=xWUTmh+WZTqntJFjf70zBsFQNnHLTqlLA8TC+YaA8qc=;
+        b=mFHy2QYLg2zPmzuL5FmMSN0vPoR3imQocKrfkxKDqc5v5D7V8Bla1zt+CUb5sHGsJa
+         gN9fm6RM9WH8oe74g7GimRRPvMWkn1qbf58Eaql/OZ/yT4G/fFN1QQhpStQEnWPuOTLK
+         guZdYcaFMhL6oJKXt0foBdlmMfy92wxvs8lMueq4vb7Ynxd3V01VIYutayj8nu8lR1Wg
+         9s9RZcdSACFXMM4wHEYNorGaV/miAueCUh5jcZ2Kj4oG5PxYx/K8+MDoU194OsdXxp6G
+         OvNvRgeX++Z6qE+fE8v6SPbV31SyWFsJA3Awp+AvWhTSdrvfW9KSndGBub/lDFOYpy5Z
+         6LVg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=xWUTmh+WZTqntJFjf70zBsFQNnHLTqlLA8TC+YaA8qc=;
+        b=GolRZUEVRKaQDaGaRrCQLwwuFbVK9fx21lRncMhjBrw/n78ank0HoimivvO24h4enB
+         XhC+J9iLMn2UQiGtDmhJhcj3nPQEI5/7Ij6JcceCxJQ/l9quND6E7a4mwPbxATjgzu/w
+         EFLFGEF53PeE9xWju08fkmtRwJ5x0I4/rkBVvUGpMQQbDduz3iSXDTdQSX77X7kHLJOX
+         qnRXWC/zprlMuLJgLrsE1j4/jEE+AnbEgdbzMZ0/Xhq6BmnJKnbzT6bFJbOHLGsQtl5G
+         EHPOE750Ld4aftaJCoEwztSyfS7jog199BjPQw1XTqpntfhf6ueuQSaGZNE2taNaWGo+
+         R9aQ==
+X-Gm-Message-State: APjAAAVeNOZRJapcdp9Aq01JNHrSYlSQDgo6yKjzvjPOAS75JDK0dO/G
+        Uyj3KYAcTDnLDhTYwzAW5CQ=
+X-Google-Smtp-Source: APXvYqxABuxlU4i/2wB0qz/CCSgeFtpP9gq0iy0IkjJxeN98/j2ZamWNngHuZDzd8nwyX3TZivTwDg==
+X-Received: by 2002:a7b:cb85:: with SMTP id m5mr3592959wmi.85.1558446616051;
+        Tue, 21 May 2019 06:50:16 -0700 (PDT)
+Received: from localhost.localdomain (ip83.173.mip.uni-hannover.de. [130.75.173.83])
+        by smtp.gmail.com with ESMTPSA id n63sm3541471wmn.38.2019.05.21.06.50.14
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 21 May 2019 06:50:15 -0700 (PDT)
+From:   Tianzheng Li <ltz0302@gmail.com>
+To:     rspringer@google.com
+Cc:     linux-kernel@vger.kernel.org, devel@driverdev.osuosl.org,
+        gregkh@linuxfoundation.org, benchan@chromium.org,
+        toddpoynor@google.com, linux-kernel@i4.cs.fau.de,
+        zhangjie.cnde@gmail.com
+Subject: [PATCH] staging/gasket: Fix string split
+Date:   Tue, 21 May 2019 15:50:12 +0200
+Message-Id: <20190521135012.24887-1-ltz0302@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 9, 2019 at 11:40 PM Joe Lawrence <joe.lawrence@redhat.com> wrote:
->
-> From: Joao Moreira <jmoreira@suse.de>
->
-> For automatic resolution of livepatch relocations, a file called
-> Symbols.list is used. This file maps symbols within every compiled
-> kernel object allowing the identification of symbols whose name is
-> unique, thus relocation can be automatically inferred, or providing
-> information that helps developers when code annotation is required for
-> solving the matter.
->
-> Add support for creating Symbols.list in the main Makefile. First,
-> ensure that built-in is compiled when CONFIG_LIVEPATCH is enabled (as
-> required to achieve a complete Symbols.list file). Define the command to
-> build Symbols.list (cmd_klp_map) and hook it in the modules rule.
->
-> As it is undesirable to have symbols from livepatch objects inside
-> Symbols.list, make livepatches discernible by modifying
-> scripts/Makefile.build to create a .livepatch file for each livepatch
-> in $(MODVERDIR). This file then used by cmd_klp_map to identify and
-> bypass livepatches.
->
-> For identifying livepatches during the build process, a flag variable
-> LIVEPATCH_$(basetarget).o is considered in scripts/Makefile.build. This
-> way, set this flag for the livepatch sample Makefile in
-> samples/livepatch/Makefile.
->
-> Finally, Add a clean rule to ensure that Symbols.list is removed during
-> clean.
->
-> Notes:
->
-> To achieve a correct Symbols.list file, all kernel objects must be
-> considered, thus, its construction require these objects to be priorly
-> built. On the other hand, invoking scripts/Makefile.modpost without
-> having a complete Symbols.list in place would occasionally lead to
-> in-tree livepatches being post-processed incorrectly. To prevent this
-> from becoming a circular dependency, the construction of Symbols.list
-> uses non-post-processed kernel objects and such does not cause harm as
-> the symbols normally referenced from within livepatches are visible at
-> this stage. Also due to these requirements, the spot in-between modules
-> compilation and the invocation of scripts/Makefile.modpost was picked
-> for hooking cmd_klp_map.
->
-> The approach based on .livepatch files was proposed as an alternative
-> to using MODULE_INFO statements. This approach was originally
-> proposed by Miroslav Benes as a workaround for identifying livepathes
-> without depending on modinfo during the modpost stage. It was moved to
-> this patch as the approach also shown to be useful while building
-> Symbols.list.
->
-> Signed-off-by: Joao Moreira <jmoreira@suse.de>
-> Signed-off-by: Joe Lawrence <joe.lawrence@redhat.com>
-> ---
->  .gitignore                 |  1 +
->  Makefile                   | 30 ++++++++++++++++++++++++++----
->  lib/livepatch/Makefile     |  5 +++++
->  samples/livepatch/Makefile |  4 ++++
->  scripts/Makefile.build     |  7 +++++++
->  5 files changed, 43 insertions(+), 4 deletions(-)
->
-> diff --git a/.gitignore b/.gitignore
-> index a20ac26aa2f5..5cd5758f5ffe 100644
-> --- a/.gitignore
-> +++ b/.gitignore
-> @@ -45,6 +45,7 @@
->  *.xz
->  Module.symvers
->  modules.builtin
-> +Symbols.list
+This patch removes unnecessary quoted string splits.
+Signed-off-by: Tianzheng Li <ltz0302@gmail.com>
+Signed-off-by: Jie Zhang <zhangjie.cnde@gmail.com>
+---
+ drivers/staging/gasket/gasket_core.c       |  6 ++----
+ drivers/staging/gasket/gasket_ioctl.c      |  3 +--
+ drivers/staging/gasket/gasket_page_table.c | 14 ++++++--------
+ 3 files changed, 9 insertions(+), 14 deletions(-)
 
-
-Symbols.list is created only in the top directory.
-
-Please move this to
-
-# Top-level generic files
-
-section with a leading slash.
-
-
-
-Also, you need to add it to
-Documentation/dontdiff
-
-
-
-
->  #
->  # Top-level generic files
-> diff --git a/Makefile b/Makefile
-> index abe13538a8c0..98089f9d44fe 100644
-> --- a/Makefile
-> +++ b/Makefile
-> @@ -574,10 +574,13 @@ KBUILD_BUILTIN := 1
->  # If we have only "make modules", don't compile built-in objects.
->  # When we're building modules with modversions, we need to consider
->  # the built-in objects during the descend as well, in order to
-> -# make sure the checksums are up to date before we record them.
-> +# make sure the checksums are up to date before we record them. The
-> +# same applies for building livepatches, as built-in objects may hold
-> +# symbols which are referenced from livepatches and are required by
-> +# klp-convert post-processing tool for resolving these cases.
->
->  ifeq ($(MAKECMDGOALS),modules)
-> -  KBUILD_BUILTIN := $(if $(CONFIG_MODVERSIONS),1)
-> +  KBUILD_BUILTIN := $(if $(or $(CONFIG_MODVERSIONS), $(CONFIG_LIVEPATCH)),1)
->  endif
->
->  # If we have "make <whatever> modules", compile modules
-> @@ -1261,9 +1264,25 @@ all: modules
->  # duplicate lines in modules.order files.  Those are removed
->  # using awk while concatenating to the final file.
->
-> +quiet_cmd_klp_map = KLP     Symbols.list
-> +SLIST = $(objtree)/Symbols.list
-
-
-Please do not define SLIST.
-
-Use Symbols.list directly.
-
-
-
-
-> +
-> +define cmd_klp_map
-> +       $(shell echo "klp-convert-symbol-data.0.1" > $(SLIST))                          \
-> +       $(shell echo "*vmlinux" >> $(SLIST))                                            \
-> +       $(shell nm -f posix $(objtree)/vmlinux | cut -d\  -f1 >> $(SLIST))              \
-> +       $(foreach m, $(wildcard $(MODVERDIR)/*.mod),                                    \
-> +               $(eval mod = $(patsubst %.ko,%.o,$(shell head -n1 $(m))))               \
-> +               $(if $(wildcard $(MODVERDIR)/$(shell basename -s .o $(mod)).livepatch),,\
-> +                       $(eval fmod = $(subst $(quote),_,$(subst -,_,$(mod))))          \
-> +                       $(shell echo "*$(shell basename -s .o $(fmod))" >> $(SLIST))    \
-> +                       $(shell nm -f posix $(mod) | cut -d\  -f1 >> $(SLIST))))
-> +endef
-> +
->  PHONY += modules
->  modules: $(vmlinux-dirs) $(if $(KBUILD_BUILTIN),vmlinux) modules.builtin
->         $(Q)$(AWK) '!x[$$0]++' $(vmlinux-dirs:%=$(objtree)/%/modules.order) > $(objtree)/modules.order
-> +       $(if $(CONFIG_LIVEPATCH), $(call cmd,klp_map))
->         @$(kecho) '  Building modules, stage 2.';
->         $(Q)$(MAKE) -f $(srctree)/scripts/Makefile.modpost
->
-> @@ -1350,7 +1369,7 @@ clean: rm-dirs  := $(CLEAN_DIRS)
->  clean: rm-files := $(CLEAN_FILES)
->  clean-dirs      := $(addprefix _clean_, . $(vmlinux-alldirs) Documentation samples)
->
-> -PHONY += $(clean-dirs) clean archclean vmlinuxclean
-> +PHONY += $(clean-dirs) clean archclean vmlinuxclean klpclean
->  $(clean-dirs):
->         $(Q)$(MAKE) $(clean)=$(patsubst _clean_%,%,$@)
->
-> @@ -1358,7 +1377,10 @@ vmlinuxclean:
->         $(Q)$(CONFIG_SHELL) $(srctree)/scripts/link-vmlinux.sh clean
->         $(Q)$(if $(ARCH_POSTLINK), $(MAKE) -f $(ARCH_POSTLINK) clean)
->
-> -clean: archclean vmlinuxclean
-> +klpclean:
-> +       $(Q) rm -f $(SLIST)
-
-
-klpclean is unneeded.
-
-Add it to CLEAN_FILES
-
-CLEAN_FILES += modules.builtin.modinfo Systems.list
-
-
-
-
+diff --git a/drivers/staging/gasket/gasket_core.c b/drivers/staging/gasket/gasket_core.c
+index a445d58fb399..13179f063a61 100644
+--- a/drivers/staging/gasket/gasket_core.c
++++ b/drivers/staging/gasket/gasket_core.c
+@@ -702,8 +702,7 @@ static bool gasket_mmap_has_permissions(struct gasket_dev *gasket_dev,
+ 	if ((vma->vm_flags & VM_WRITE) &&
+ 	    !gasket_owned_by_current_tgid(&gasket_dev->dev_info)) {
+ 		dev_dbg(gasket_dev->dev,
+-			"Attempting to mmap a region for write without owning "
+-			"device.\n");
++			"Attempting to mmap a region for write without owning device.\n");
+ 		return false;
+ 	}
+ 
+@@ -1054,8 +1053,7 @@ static int gasket_mmap(struct file *filp, struct vm_area_struct *vma)
+ 	}
+ 	if (bar_index > 0 && is_coherent_region) {
+ 		dev_err(gasket_dev->dev,
+-			"double matching bar and coherent buffers for address "
+-			"0x%lx\n",
++			"double matching bar and coherent buffers for address 0x%lx\n",
+ 			raw_offset);
+ 		trace_gasket_mmap_exit(bar_index);
+ 		return -EINVAL;
+diff --git a/drivers/staging/gasket/gasket_ioctl.c b/drivers/staging/gasket/gasket_ioctl.c
+index 0ca48e688818..7ecfba4f2b06 100644
+--- a/drivers/staging/gasket/gasket_ioctl.c
++++ b/drivers/staging/gasket/gasket_ioctl.c
+@@ -353,8 +353,7 @@ long gasket_handle_ioctl(struct file *filp, uint cmd, void __user *argp)
+ 		 */
+ 		trace_gasket_ioctl_integer_data(arg);
+ 		dev_dbg(gasket_dev->dev,
+-			"Unknown ioctl cmd=0x%x not caught by "
+-			"gasket_is_supported_ioctl\n",
++			"Unknown ioctl cmd=0x%x not caught by gasket_is_supported_ioctl\n",
+ 			cmd);
+ 		retval = -EINVAL;
+ 		break;
+diff --git a/drivers/staging/gasket/gasket_page_table.c b/drivers/staging/gasket/gasket_page_table.c
+index d35c4fb19e28..f6d715787da8 100644
+--- a/drivers/staging/gasket/gasket_page_table.c
++++ b/drivers/staging/gasket/gasket_page_table.c
+@@ -237,8 +237,8 @@ int gasket_page_table_init(struct gasket_page_table **ppg_tbl,
+ 	 * hardware register that contains the page table size.
+ 	 */
+ 	if (total_entries == ULONG_MAX) {
+-		dev_dbg(device, "Error reading page table size. "
+-			"Initializing page table with size 0\n");
++		dev_dbg(device,
++			"Error reading page table size. Initializing page table with size 0\n");
+ 		total_entries = 0;
+ 	}
+ 
+@@ -491,8 +491,7 @@ static int gasket_perform_mapping(struct gasket_page_table *pg_tbl,
+ 
+ 			if (ret <= 0) {
+ 				dev_err(pg_tbl->device,
+-					"get user pages failed for addr=0x%lx, "
+-					"offset=0x%lx [ret=%d]\n",
++					"get user pages failed for addr=0x%lx, offset=0x%lx [ret=%d]\n",
+ 					page_addr, offset, ret);
+ 				return ret ? ret : -ENOMEM;
+ 			}
+@@ -779,8 +778,8 @@ static bool gasket_is_extended_dev_addr_bad(struct gasket_page_table *pg_tbl,
+ 
+ 	if (page_lvl0_idx >= pg_tbl->num_extended_entries) {
+ 		dev_err(pg_tbl->device,
+-			"starting level 0 slot at %lu is too large, max is < "
+-			"%u\n", page_lvl0_idx, pg_tbl->num_extended_entries);
++			"starting level 0 slot at %lu is too large, max is < %u\n",
++			page_lvl0_idx, pg_tbl->num_extended_entries);
+ 		return true;
+ 	}
+ 
+@@ -965,8 +964,7 @@ static int gasket_map_extended_pages(struct gasket_page_table *pg_tbl,
+ 	if (ret) {
+ 		dev_addr_end = dev_addr + (num_pages / PAGE_SIZE) - 1;
+ 		dev_err(pg_tbl->device,
+-			"page table slots (%lu,%lu) (@ 0x%lx) to (%lu,%lu) are "
+-			"not available\n",
++			"page table slots (%lu,%lu) (@ 0x%lx) to (%lu,%lu) are not available\n",
+ 			gasket_extended_lvl0_page_idx(pg_tbl, dev_addr),
+ 			dev_addr,
+ 			gasket_extended_lvl1_page_idx(pg_tbl, dev_addr),
 -- 
-Best Regards
-Masahiro Yamada
+2.17.1
+
