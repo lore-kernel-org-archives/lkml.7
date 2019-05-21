@@ -2,129 +2,122 @@ Return-Path: <SRS0=9PYC=TV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE908C04AAF
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 16:47:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF271C04AAF
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 16:49:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C0F3B2173E
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 16:47:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="EeQpa9fi"
+	by mail.kernel.org (Postfix) with ESMTP id 9C42A217D7
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 16:49:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729078AbfEUQrg (ORCPT
+        id S1728928AbfEUQtT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 May 2019 12:47:36 -0400
-Received: from hqemgate16.nvidia.com ([216.228.121.65]:1173 "EHLO
-        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727965AbfEUQrg (ORCPT
+        Tue, 21 May 2019 12:49:19 -0400
+Received: from outgoing-auth-1.mit.edu ([18.9.28.11]:47396 "EHLO
+        outgoing.mit.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727817AbfEUQtS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 May 2019 12:47:36 -0400
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5ce42ba70000>; Tue, 21 May 2019 09:47:35 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Tue, 21 May 2019 09:47:34 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Tue, 21 May 2019 09:47:34 -0700
-Received: from [10.25.72.115] (172.20.13.39) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 21 May
- 2019 16:47:29 +0000
-Subject: Re: [PATCH V7 02/15] PCI: Disable MSI for Tegra194 root port
-To:     Thierry Reding <thierry.reding@gmail.com>
-CC:     <lorenzo.pieralisi@arm.com>, <bhelgaas@google.com>,
-        <robh+dt@kernel.org>, <mark.rutland@arm.com>,
-        <jonathanh@nvidia.com>, <kishon@ti.com>, <catalin.marinas@arm.com>,
-        <will.deacon@arm.com>, <jingoohan1@gmail.com>,
-        <gustavo.pimentel@synopsys.com>, <mperttunen@nvidia.com>,
-        <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <kthota@nvidia.com>,
-        <mmaddireddy@nvidia.com>, <sagar.tv@gmail.com>
-References: <20190517123846.3708-1-vidyas@nvidia.com>
- <20190517123846.3708-3-vidyas@nvidia.com> <20190521102729.GB29166@ulmo>
-X-Nvconfidentiality: public
-From:   Vidya Sagar <vidyas@nvidia.com>
-Message-ID: <f63051b0-a220-125b-219e-25156d65ea6d@nvidia.com>
-Date:   Tue, 21 May 2019 22:17:26 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Tue, 21 May 2019 12:49:18 -0400
+Received: from callcc.thunk.org (guestnat-104-133-0-109.corp.google.com [104.133.0.109] (may be forged))
+        (authenticated bits=0)
+        (User authenticated as tytso@ATHENA.MIT.EDU)
+        by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id x4LGmFdg004334
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 21 May 2019 12:48:16 -0400
+Received: by callcc.thunk.org (Postfix, from userid 15806)
+        id 184C4420481; Tue, 21 May 2019 12:48:15 -0400 (EDT)
+Date:   Tue, 21 May 2019 12:48:14 -0400
+From:   "Theodore Ts'o" <tytso@mit.edu>
+To:     Jan Kara <jack@suse.cz>
+Cc:     Paolo Valente <paolo.valente@linaro.org>,
+        "Srivatsa S. Bhat" <srivatsa@csail.mit.edu>,
+        linux-fsdevel@vger.kernel.org,
+        linux-block <linux-block@vger.kernel.org>,
+        linux-ext4@vger.kernel.org, cgroups@vger.kernel.org,
+        linux-kernel@vger.kernel.org, axboe@kernel.dk, jmoyer@redhat.com,
+        amakhalov@vmware.com, anishs@vmware.com, srivatsab@vmware.com
+Subject: Re: CFQ idling kills I/O performance on ext4 with blkio cgroup
+ controller
+Message-ID: <20190521164814.GC2591@mit.edu>
+Mail-Followup-To: Theodore Ts'o <tytso@mit.edu>, Jan Kara <jack@suse.cz>,
+        Paolo Valente <paolo.valente@linaro.org>,
+        "Srivatsa S. Bhat" <srivatsa@csail.mit.edu>,
+        linux-fsdevel@vger.kernel.org,
+        linux-block <linux-block@vger.kernel.org>,
+        linux-ext4@vger.kernel.org, cgroups@vger.kernel.org,
+        linux-kernel@vger.kernel.org, axboe@kernel.dk, jmoyer@redhat.com,
+        amakhalov@vmware.com, anishs@vmware.com, srivatsab@vmware.com
+References: <8d72fcf7-bbb4-2965-1a06-e9fc177a8938@csail.mit.edu>
+ <1812E450-14EF-4D5A-8F31-668499E13652@linaro.org>
+ <20190518192847.GB14277@mit.edu>
+ <20190520091558.GC2172@quack2.suse.cz>
 MIME-Version: 1.0
-In-Reply-To: <20190521102729.GB29166@ulmo>
-X-Originating-IP: [172.20.13.39]
-X-ClientProxiedBy: HQMAIL103.nvidia.com (172.20.187.11) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1558457255; bh=BlKoVyxfa3/PhGnDYxQwviA1iVDUS1wMLF49XD5WLTo=;
-        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=EeQpa9fitk/OpoQb5fgRexaj/4U0V03Hh0lFLdmYSKWSxWr0BxeUY1pOsh3perPWB
-         SVrQaG2Es6cVEJE9EcAkpzaUoe60SPjdpXy08bnbbNt9SXoNgvTk4Zh9/BoEqEtNSW
-         NPLtiibkt0oh3/H2R3pz2t8h0xyFRQ0W9hxD4848k7pI4sY8vWFWGltTlk8aT8G5wQ
-         NdeLJpPeJqt0Z9aq2LNe77mtwWiM3EwVsYl7NZCFrZfxwU0pFW6XX/hp7Cet/gZsnm
-         yjcGWIB56i2lBnp8u4z42Li1AYeei5ZBUCmPodnipCn0mPZNdyRypL1GmUo5PaUvx8
-         /rRw7QYrXZMww==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190520091558.GC2172@quack2.suse.cz>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/21/2019 3:57 PM, Thierry Reding wrote:
-> On Fri, May 17, 2019 at 06:08:33PM +0530, Vidya Sagar wrote:
->> Tegra194 rootports don't generate MSI interrupts for PME events and hence
->> MSI needs to be disabled for them to avoid root ports service drivers
->> registering their respective ISRs with MSI interrupt.
->>
->> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
->> ---
->> Changes since [v6]:
->> * This is a new patch
->>
->>   drivers/pci/quirks.c | 14 ++++++++++++++
->>   1 file changed, 14 insertions(+)
->>
->> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
->> index 0f16acc323c6..28f9a0380df5 100644
->> --- a/drivers/pci/quirks.c
->> +++ b/drivers/pci/quirks.c
->> @@ -2592,6 +2592,20 @@ DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_NVIDIA,
->>   			PCI_DEVICE_ID_NVIDIA_NVENET_15,
->>   			nvenet_msi_disable);
->>   
->> +/*
->> + * Tegra194's PCIe root ports don't generate MSI interrupts for PME events
->> + * instead legacy interrupts are generated. Hence, to avoid service drivers
->> + * registering their respective ISRs for MSIs, need to disable MSI interrupts
->> + * for root ports.
->> + */
->> +static void disable_tegra194_rp_msi(struct pci_dev *dev)
->> +{
->> +	dev->no_msi = 1;
->> +}
->> +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_NVIDIA, 0x1ad0, disable_tegra194_rp_msi);
->> +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_NVIDIA, 0x1ad1, disable_tegra194_rp_msi);
->> +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_NVIDIA, 0x1ad2, disable_tegra194_rp_msi);
->> +
-> 
-> Later functions in this file seem to use a more consistent naming
-> pattern, according to which the name for this would become:
-> 
-> 	pci_quirk_nvidia_tegra194_disable_rp_msi
-> 
-> Might be worth considering making this consistent.
-> 
-> This could also be moved to the DWC driver to restrict this to where it
-> is needed. In either case, this seems like a good solution, so:
-> 
-> Reviewed-by: Thierry Reding <treding@nvidia.com>
-> 
-Ok. I'll move it to DWC driver along with name change for the quirk API.
+On Mon, May 20, 2019 at 11:15:58AM +0200, Jan Kara wrote:
+> But this makes priority-inversion problems with ext4 journal worse, doesn't
+> it? If we submit journal commit in blkio cgroup of some random process, it
+> may get throttled which then effectively blocks the whole filesystem. Or do
+> you want to implement a more complex back-pressure mechanism where you'd
+> just account to different blkio cgroup during journal commit and then
+> throttle as different point where you are not blocking other tasks from
+> progress?
 
+Good point, yes, it can.  It depends in what cgroup the file system is
+mounted (and hence what cgroup the jbd2 kernel thread is on).  If it
+was mounted in the root cgroup, then jbd2 thread is going to be
+completely unthrottled (except for the data=ordered writebacks, which
+will be charged to the cgroup which write those pages) so the only
+thing which is nuking us will be the slice_idle timeout --- both for
+the writebacks (which could get charged to N different cgroups, with
+disastrous effects --- and this is going to be true for any file
+system on a syncfs(2) call as well) and switching between the jbd2
+thread's cgroup and the writeback cgroup.
+
+One thing the I/O scheduler could do is use the synchronous flag as a
+hint that it should ix-nay on the idle-way.  Or maybe we need to have
+a different way to signal this to the jbd2 thread, since I do
+recognize that this issue is ext4-specific, *because* we do the
+transaction handling in a separate thread, and because of the
+data=ordered scheme, both of which are unique to ext4.  So exempting
+synchronous writes from cgroup control doesn't make sense for other
+file systems.
+
+So maybe a special flag meaning "entangled writes", where the
+sched_idle hacks should get suppressed for the data=ordered
+writebacks, but we still charge the block I/O to the relevant CSS's?
+
+I could also imagine if there was some way that file system could
+track whether all of the file system modifications were charged to a
+single cgroup, we could in that case charge it to that cgroup?
+
+> Yeah. At least in some cases, we know there won't be any more IO from a
+> particular cgroup in the near future (e.g. transaction commit completing,
+> or when the layers above IO scheduler already know which IO they are going
+> to submit next) and in that case idling is just a waste of time. But so far
+> I haven't decided how should look a reasonably clean interface for this
+> that isn't specific to a particular IO scheduler implementation.
+
+The best I've come up with is some way of signalling that all of the
+writes coming from the jbd2 commit are entangled, probably via a bio
+flag.
+
+If we don't have cgroup support, the other thing we could do is assume
+that the jbd2 thread should always be in the root (unconstrained)
+cgroup, and then force all writes, include data=ordered writebacks, to
+be in the jbd2's cgroup.  But that would make the block cgroup
+controls trivially bypassable by an application, which could just be
+fsync-happy and exempt all of its buffered I/O writes from cgroup
+control.  So that's probably not a great way to go --- but it would at
+least fix this particular performance issue.  :-/
+
+						- Ted
