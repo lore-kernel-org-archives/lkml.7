@@ -2,85 +2,104 @@ Return-Path: <SRS0=9PYC=TV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C35CC04AAF
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 17:27:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FC65C04AAF
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 17:27:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E620921019
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 17:27:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="kZByJbH2"
+	by mail.kernel.org (Postfix) with ESMTP id 1C4F521019
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 17:27:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729189AbfEUR1g (ORCPT
+        id S1729197AbfEUR1z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 May 2019 13:27:36 -0400
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:43954 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728667AbfEUR1e (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 May 2019 13:27:34 -0400
-Received: by mail-oi1-f196.google.com with SMTP id t187so13402392oie.10;
-        Tue, 21 May 2019 10:27:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=TayEp1ksFcqXBm82oIipJqb5D8UI8dYtdKg/emIUJLo=;
-        b=kZByJbH2mc8eeETLvwO5waL7KS6N+JCa4Orr7jguque/5C1bHCOj6z0WH+gicoHa/I
-         JHu5YAWXcXn25mUu+LtrzzyjChJ1mP0xXEgVR5R3EC84GlLf2AKLEsVzEUtqGMhgqUhC
-         iG39xsYxQolPC5wJYaXa4aprxlAfE11mcZOQ/cMPJ0rHuyHi1+YrCFu/pBkAD6c9HhTk
-         mU8T1Eo69zGX1G2nY0/jV1VuwyLwW831BQ5NyUNfpzq1zj7KpTInFCiG7/6WeAFhn+W+
-         G6F9hrSEHn9lczssdA73ZaAr0M4BwP3vkTC3DzicALdQQSKnbS0moqp6VN6wOojM+yIN
-         fgRg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=TayEp1ksFcqXBm82oIipJqb5D8UI8dYtdKg/emIUJLo=;
-        b=cFnwHSI5yKnvIIe4/xQK72F226FmVLJEz5a/MenrQI33DjrN1AQCe/uI7xRDzKlwse
-         YUxJbiJdp3MR3StqsNA1JZUf4PesYaEbQ5YsN5ERraRn3nL3eLcJSDDWGSoAEV/omsZI
-         5pUMvcgLiwwiFgsShSKBmDjzwUDw9qbD8YkAjtDr4hybtIGCGNtvtfz3z0cfYLtfqvTv
-         5UCJcVp1lNxSP9fjJnc5yxfTcmYaLj1c2wbD+V4roQm8ac0TiDFFzpf75KibUndsgStj
-         9YBoBi0M/dpDl3Hrorumlw2yAjM+pNxVEiXnsb6uTRPoTmY6213CAcmqrNuEwuFLTWF+
-         DHbg==
-X-Gm-Message-State: APjAAAVyk4i/NPSZN+wkMQsc9b+nZVWpf8Vej0ussrx+nVBC72XIwPRJ
-        UKzw4SQGCk8+mzTlSNRGY+aQANo04OfXYJfIgHI=
-X-Google-Smtp-Source: APXvYqwBydkTAgIPGsBBBTU6zoHGfizVaMAtfM9QlyULjdJhMvL8xcCdDFr72f/jNhNO17+7gmDznI34NCAH4vu2Pw0=
-X-Received: by 2002:aca:5b06:: with SMTP id p6mr410085oib.129.1558459654071;
- Tue, 21 May 2019 10:27:34 -0700 (PDT)
+        Tue, 21 May 2019 13:27:55 -0400
+Received: from foss.arm.com ([217.140.101.70]:39342 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726900AbfEUR1y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 May 2019 13:27:54 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 59CE0374;
+        Tue, 21 May 2019 10:27:54 -0700 (PDT)
+Received: from [10.1.196.75] (e110467-lin.cambridge.arm.com [10.1.196.75])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id EC5113F718;
+        Tue, 21 May 2019 10:27:51 -0700 (PDT)
+Subject: Re: Device obligation to write into a DMA_FROM_DEVICE streaming DMA
+ mapping
+To:     Horia Geanta <horia.geanta@nxp.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
+Cc:     "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <VI1PR0402MB348537CB86926B3E6D1DBE0A98070@VI1PR0402MB3485.eurprd04.prod.outlook.com>
+From:   Robin Murphy <robin.murphy@arm.com>
+Message-ID: <584b54f6-bd12-d036-35e6-23eb2dabe811@arm.com>
+Date:   Tue, 21 May 2019 18:27:49 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-References: <20190521151952.2779-1-narmstrong@baylibre.com> <20190521151952.2779-2-narmstrong@baylibre.com>
-In-Reply-To: <20190521151952.2779-2-narmstrong@baylibre.com>
-From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Date:   Tue, 21 May 2019 19:27:23 +0200
-Message-ID: <CAFBinCDbQAMHT-g7arJLZNf0OGfjYTDdqsnMXN_njamhPYHBvg@mail.gmail.com>
-Subject: Re: [PATCH v3 1/3] dt-bindings: arm: amlogic: add G12B bindings
-To:     Neil Armstrong <narmstrong@baylibre.com>
-Cc:     khilman@baylibre.com, devicetree@vger.kernel.org,
-        linux-amlogic@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Rob Herring <robh@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <VI1PR0402MB348537CB86926B3E6D1DBE0A98070@VI1PR0402MB3485.eurprd04.prod.outlook.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 21, 2019 at 5:19 PM Neil Armstrong <narmstrong@baylibre.com> wrote:
->
-> Add compatible for the Amlogic G12B SoC, sharing most of the
-> features and architecture with the G12A SoC.
->
-> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
-> Reviewed-by: Rob Herring <robh@kernel.org>
-> Reviewed-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-> ---
-> Rob, Martin,
->
-> I converted the patch you acked in yaml, I kept the Reviewed-by,
-> is it ok for you ?
-yes, it's fine
+On 21/05/2019 18:14, Horia Geanta wrote:
+> Hi,
+> 
+> Is it mandatory for a device to write data in an area DMA mapped DMA_FROM_DEVICE?
+> Can't the device just "ignore" that mapping - i.e. not write anything - and
+> driver should expect original data to be found in that location (since it was
+> not touched / written to by the device)?
+> [Let's leave cache coherency aside, and consider "original data" to be in RAM.]
+> 
+> I am asking this since I am seeing what seems to be an inconsistent behavior /
+> semantics between cases when swiotlb bouncing is used and when it's not.
+> 
+> Specifically, the context is:
+> 1. driver prepares a scatterlist with several entries and performs a
+> dma_map_sg() with direction FROM_DEVICE
+> 2. device decides there's no need to write into the buffer pointed by first
+> scatterlist entry and skips it (writing into subsequent buffers)
+> 3. driver is notified the device finished processing and dma unmaps the scatterlist
+> 
+> When swiotlb bounce is used, the buffer pointed to by first scatterlist entry is
+> corrupted. That's because swiotlb implementation expects the device to write
+> something into that buffer, however the device logic is "whatever was previously
+> in that buffer should be used" (2. above).
+> 
+> For FROM_DEVICE direction:
+> -swiotlb_tbl_map_single() does not copy data from original location to swiotlb
+> 	if (!(attrs & DMA_ATTR_SKIP_CPU_SYNC) &&
+> 	    (dir == DMA_TO_DEVICE || dir == DMA_BIDIRECTIONAL))
+> 		swiotlb_bounce(orig_addr, tlb_addr, size, DMA_TO_DEVICE);
+> -swiotlb_tbl_unmap_single() copies data from swiotlb to original location
+> 	if (orig_addr != INVALID_PHYS_ADDR &&
+> 	    !(attrs & DMA_ATTR_SKIP_CPU_SYNC) &&
+> 	    ((dir == DMA_FROM_DEVICE) || (dir == DMA_BIDIRECTIONAL)))
+> 		swiotlb_bounce(orig_addr, tlb_addr, size, DMA_FROM_DEVICE);
+> and when device did not write anything (as in current situation), it overwrites
+> original data with zeros
+> 
+> In case swiotlb bounce is not used and device does not write into the
+> FROM_DEVICE streaming DMA maping, the original data is available.
+> 
+> Could you please clarify whether:
+> -I am missing something obvious OR
+> -the DMA API documentation should be updated - to mandate for device writes into
+> FROM_DEVICE mappings) OR
+> -the swiotlb implementation should be updated - to copy data from original
+> location irrespective of DMA mapping direction?
+
+Hmm, that certainly feels like a bug in SWIOTLB - it seems reasonable in 
+principle for a device to only partially update a mapped buffer before a 
+sync/unmap, so I'd say it probably should be filling the bounce buffer 
+with the original data at the start, regardless of direction.
+
+Robin.
