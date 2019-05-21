@@ -2,209 +2,102 @@ Return-Path: <SRS0=9PYC=TV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_NEOMUTT
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65062C04AAF
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 15:02:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DE20C04AAF
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 15:03:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2FACE208C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 15:02:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 54596208C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 15:03:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="zKFYFWcd"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="PpW3x0ym"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728887AbfEUPC5 (ORCPT
+        id S1728814AbfEUPDo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 May 2019 11:02:57 -0400
-Received: from mail-it1-f193.google.com ([209.85.166.193]:56129 "EHLO
-        mail-it1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728661AbfEUPC4 (ORCPT
+        Tue, 21 May 2019 11:03:44 -0400
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:25802 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728505AbfEUPDo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 May 2019 11:02:56 -0400
-Received: by mail-it1-f193.google.com with SMTP id g24so1027048iti.5
-        for <linux-kernel@vger.kernel.org>; Tue, 21 May 2019 08:02:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:mail-followup-to:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=aXGZlwZ2utpr5fuCxQ1nwKS/KyyL22WxIEG+biDA5Fk=;
-        b=zKFYFWcdGJPTep5yVlaByZqDz4Dsi4C/RTBpJ6d1qCT6RerXGP7iqtkdCSKuShpi8C
-         cqoPPmd3f9grUiCdU0hFlwOQuRVmBcn7e/aiyQ/7dDY6OZzhNDB3JL1K+zWrhxTczlgk
-         Jvi08OoVhDB+4FJ44GU5yEqXDtUqpg5cUFURDKzIFpT7saDPae54WUN3W2wZqoUQGZq6
-         h6G+4M5TsWO0z0VFjOqswy6E5c3+pgKVf69Mne5Py+K33rqSG1p5y3CLRYnpX9zfK/XO
-         NU4SSuAOF+pwIOpj8fgPqHOziw91Zbo62fN8irBpktjZqobbdNLwZLIvltCSYg9durzA
-         G8Ow==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id
-         :mail-followup-to:references:mime-version:content-disposition
-         :in-reply-to:user-agent;
-        bh=aXGZlwZ2utpr5fuCxQ1nwKS/KyyL22WxIEG+biDA5Fk=;
-        b=NBekba7RIb/AhxdIm7ZsYzMvdHMomoKm6I/YMRY7BRM9jJ2dL+n980DkQkdBykdu8S
-         WXoS4MJGco7DddeFI4sMcYW2Rfqc08++x1LhGK/TxM3fjZlmq2R7rUVcKzIq3MhyduO3
-         VG/760wRRyoTyt8ZaJbldrBTv0iAohbbxlJvWiyOeUATqSQc39aQJ/UhCOwAMDQ8exWU
-         ANZkH6W60IrNmW0WcPhyxoDH1sgxvR3Rjy3Lb2MWEfz5nuLjS/Scfjc1QqYXOTeEooMu
-         +VQqEwKQ/4aYfwSVZFDB1ED58oRKsdc5d7PzcasNC3tj+bpKtDK56Wb0n95eIC7INPth
-         omEQ==
-X-Gm-Message-State: APjAAAUXZbAtyQmxMP3QMyW6Zxsn+CghSdeYxyuJBsgNcf8jup3wbmhL
-        zBfo8fyECUr2ytNEA//5AtlCOQ==
-X-Google-Smtp-Source: APXvYqybOSduGZ+saGdI5xBZLJnD+XEmDMa3Dfrrjt4EW/+/wagQX/n2F5nZHSso4dIPO8EzjTnxzg==
-X-Received: by 2002:a24:aa42:: with SMTP id y2mr4458662iti.23.1558450975703;
-        Tue, 21 May 2019 08:02:55 -0700 (PDT)
-Received: from localhost (c-75-72-120-115.hsd1.mn.comcast.net. [75.72.120.115])
-        by smtp.gmail.com with ESMTPSA id z18sm6983012ioi.33.2019.05.21.08.02.54
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 21 May 2019 08:02:54 -0700 (PDT)
-Date:   Tue, 21 May 2019 10:02:53 -0500
-From:   Dan Rue <dan.rue@linaro.org>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Theodore Ts'o <tytso@mit.edu>,
-        Naresh Kamboju <naresh.kamboju@linaro.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>,
-        lkft-triage@lists.linaro.org,
-        linux- stable <stable@vger.kernel.org>,
-        linux-ext4@vger.kernel.org,
-        Arthur Marsh <arthur.marsh@internode.on.net>,
-        Richard Weinberger <richard.weinberger@gmail.com>
-Subject: Re: ext4 regression (was Re: [PATCH 4.19 000/105] 4.19.45-stable
- review)
-Message-ID: <20190521150253.coawunplbqjqf4n3@xps.therub.org>
-Mail-Followup-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Theodore Ts'o <tytso@mit.edu>,
-        Naresh Kamboju <naresh.kamboju@linaro.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Guenter Roeck <linux@roeck-us.net>, Shuah Khan <shuah@kernel.org>,
-        patches@kernelci.org, Ben Hutchings <ben.hutchings@codethink.co.uk>,
-        lkft-triage@lists.linaro.org,
-        linux- stable <stable@vger.kernel.org>, linux-ext4@vger.kernel.org,
-        Arthur Marsh <arthur.marsh@internode.on.net>,
-        Richard Weinberger <richard.weinberger@gmail.com>
-References: <20190520115247.060821231@linuxfoundation.org>
- <20190520222342.wtsjx227c6qbkuua@xps.therub.org>
- <20190521085956.GC31445@kroah.com>
- <CA+G9fYvHmUimtwszwo=9fDQLn+MNh8Vq3UGPaPUdhH=dEKzqxg@mail.gmail.com>
- <20190521093849.GA9806@kroah.com>
+        Tue, 21 May 2019 11:03:44 -0400
+Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
+        by mx08-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4LEuoq6020124;
+        Tue, 21 May 2019 17:03:26 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : subject :
+ date : message-id : mime-version : content-type :
+ content-transfer-encoding; s=STMicroelectronics;
+ bh=nq7D1bNWeTgr7MKVNaV3palhDHMi3cg+ormhUszIkDA=;
+ b=PpW3x0ymcnUZ/0c0dfYbfMZXrKlhgx/d+/39TwL3UFhz58hr6/EOYLV/Qbsh3vXnnJ5i
+ JLgHTmGh2Mk7LtVtTtpXLevTq/GHHs/TXVOp2Rk/1cbpRSwtSnrmw9LrCLS9MpdcRvAU
+ v1bZBT50KYk907XY50A0NSfcbsc4zmlvQGXyGCL0kMlqC758Mq8CK6YpqK7sasUTatuE
+ +aMAuqcb/BPxaS5Qwulo7rG+L++aENNczIBcHpJAQr2Ki6En8oF7OFUjZgDl+Tczh+Tw
+ l6RYbGWu72bhq9oWwaSX+CXez5LsOe6zbrEsekF/UlJJGjrP1S7dZpbP8RIBUUyQootB bw== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx08-00178001.pphosted.com with ESMTP id 2sj7742m3c-1
+        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
+        Tue, 21 May 2019 17:03:26 +0200
+Received: from zeta.dmz-eu.st.com (zeta.dmz-eu.st.com [164.129.230.9])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 257F23A;
+        Tue, 21 May 2019 15:03:26 +0000 (GMT)
+Received: from Webmail-eu.st.com (Safex1hubcas22.st.com [10.75.90.92])
+        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id F11662BFE;
+        Tue, 21 May 2019 15:03:25 +0000 (GMT)
+Received: from SAFEX1HUBCAS24.st.com (10.75.90.95) by Safex1hubcas22.st.com
+ (10.75.90.92) with Microsoft SMTP Server (TLS) id 14.3.439.0; Tue, 21 May
+ 2019 17:03:25 +0200
+Received: from localhost (10.201.23.97) by webmail-ga.st.com (10.75.90.48)
+ with Microsoft SMTP Server (TLS) id 14.3.439.0; Tue, 21 May 2019 17:03:25
+ +0200
+From:   =?UTF-8?q?Yannick=20Fertr=C3=A9?= <yannick.fertre@st.com>
+To:     Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Benjamin Gaignard <benjamin.gaignard@st.com>,
+        Yannick Fertre <yannick.fertre@st.com>,
+        Philippe Cornu <philippe.cornu@st.com>,
+        Fabrice Gasnier <fabrice.gasnier@st.com>
+Subject: [PATCH] ARM: dts: stm32: add power supply of rm68200 on stm32mp157c-ev1
+Date:   Tue, 21 May 2019 17:03:18 +0200
+Message-ID: <1558450998-13451-1-git-send-email-yannick.fertre@st.com>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190521093849.GA9806@kroah.com>
-User-Agent: NeoMutt/20180716
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.201.23.97]
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-21_03:,,
+ signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 21, 2019 at 11:38:49AM +0200, Greg Kroah-Hartman wrote:
-> On Tue, May 21, 2019 at 02:58:58PM +0530, Naresh Kamboju wrote:
-> > On Tue, 21 May 2019 at 14:30, Greg Kroah-Hartman
-> > <gregkh@linuxfoundation.org> wrote:
-> > >
-> > > On Mon, May 20, 2019 at 05:23:42PM -0500, Dan Rue wrote:
-> > > > On Mon, May 20, 2019 at 02:13:06PM +0200, Greg Kroah-Hartman wrote:
-> > > > > This is the start of the stable review cycle for the 4.19.45 release.
-> > > > > There are 105 patches in this series, all will be posted as a response
-> > > > > to this one.  If anyone has any issues with these being applied, please
-> > > > > let me know.
-> > > > >
-> > > > > Responses should be made by Wed 22 May 2019 11:50:49 AM UTC.
-> > > > > Anything received after that time might be too late.
-> > > >
-> > > > We're seeing an ext4 issue previously reported at
-> > > > https://lore.kernel.org/lkml/20190514092054.GA6949@osiris.
-> > > >
-> > > > [ 1916.032087] EXT4-fs error (device sda): ext4_find_extent:909: inode #8: comm jbd2/sda-8: pblk 121667583 bad header/extent: invalid extent entries - magic f30a, entries 8, max 340(340), depth 0(0)
-> > > > [ 1916.073840] jbd2_journal_bmap: journal block not found at offset 4455 on sda-8
-> > > > [ 1916.081071] Aborting journal on device sda-8.
-> > > > [ 1916.348652] EXT4-fs error (device sda): ext4_journal_check_start:61: Detected aborted journal
-> > > > [ 1916.357222] EXT4-fs (sda): Remounting filesystem read-only
-> > > >
-> > > > This is seen on 4.19-rc, 5.0-rc, mainline, and next. We don't have data
-> > > > for 5.1-rc yet, which is presumably also affected in this RC round.
-> > > >
-> > > > We only see this on x86_64 and i386 devices - though our hardware setups
-> > > > vary so it could be coincidence.
-> > > >
-> > > > I have to run out now, but I'll come back and work on a reproducer and
-> > > > bisection later tonight and tomorrow.
-> > > >
-> > > > Here is an example test run; link goes to the spot in the ltp syscalls
-> > > > test where the disk goes into read-only mode.
-> > > > https://lkft.validation.linaro.org/scheduler/job/735468#L8081
-> > >
-> > > Odd, I keep hearing rumors of ext4 issues right now, but nothing
-> > > actually solid that I can point to.  Any help you can provide here would
-> > > be great.
-> > >
-> > 
-> > git bisect helped me to land on this commit,
-> > 
-> > # git bisect bad
-> > e8fd3c9a5415f9199e3fc5279e0f1dfcc0a80ab2 is the first bad commit
-> > commit e8fd3c9a5415f9199e3fc5279e0f1dfcc0a80ab2
-> > Author: Theodore Ts'o <tytso@mit.edu>
-> > Date:   Tue Apr 9 23:37:08 2019 -0400
-> > 
-> >     ext4: protect journal inode's blocks using block_validity
-> > 
-> >     commit 345c0dbf3a30872d9b204db96b5857cd00808cae upstream.
-> > 
-> >     Add the blocks which belong to the journal inode to block_validity's
-> >     system zone so attempts to deallocate or overwrite the journal due a
-> >     corrupted file system where the journal blocks are also claimed by
-> >     another inode.
-> > 
-> >     Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=202879
-> >     Signed-off-by: Theodore Ts'o <tytso@mit.edu>
-> >     Cc: stable@kernel.org
-> >     Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> > 
-> > :040000 040000 b8b6ce2577d60c65021e5cc1c3a38b32e0cbb2ff
-> > 747c67b159b33e4e1da414b1d33567a5da9ae125 M fs
-> 
-> Ah, many thanks for this bisection.
-> 
-> Ted, any ideas here?  Should I drop this from the stable trees, and you
-> revert it from Linus's?  Or something else?
-> 
-> Note, I do also have 170417c8c7bb ("ext4: fix block validity checks for
-> journal inodes using indirect blocks") in the trees, which was supposed
-> to fix the problem with this patch, am I missing another one as well?
-> 
-> (side note, it was mean not to mark 170417c8c7bb for stable, when the
-> patch it was fixing was marked for stable, I'm lucky I caught it...)
+This patch adds a new property (power-supply) to panel rm68200 (raydium)
+on stm32mp157c-ev1.
 
-My independent bisection agrees that e8fd3c9a5415 ("ext4: protect
-journal inode's blocks using block_validity") is the root cause. I was
-able to revert it along with 18b3c1c2827c ("ext4: unsigned int compared
-against zero") on 4.19 and then the issue went away.
+Signed-off-by: Yannick Fertré <yannick.fertre@st.com>
+---
+ arch/arm/boot/dts/stm32mp157c-ev1.dts | 1 +
+ 1 file changed, 1 insertion(+)
 
-I tested the same revert on mainline v5.2-rc1 and it fixed the issue
-there as well (git revert fbbbbd2f28ae 345c0dbf3a30).
-
-The problem reproduces in our environment 100% of the time, but creating
-a reproducer is troublesome; it happens while running LTP syscalls, and
-requires some combination of syscall tests to happen. So far, we've been
-able to reduce it to the following ltp runfile:
-https://gist.github.com/danrue/61c663e1dc50dc7c13a232f0a062bdc6
-
-LTP is run using '/opt/ltp/runltp -d /scratch -f syscalls', where the
-syscalls file has been replaced with the version in the gist, and
-/scratch is an ext4 SATA drive. /scratch is created using 'mkfs -t ext4
-/dev/disk/by-id/ata-TOSHIBA_MG03ACA100_37O9KGKWF' and mounted to
-/scratch.
-
-I'll update the gist as we reduce it further.
-
-Dan
-
+diff --git a/arch/arm/boot/dts/stm32mp157c-ev1.dts b/arch/arm/boot/dts/stm32mp157c-ev1.dts
+index 8ef2cb0..50f3263 100644
+--- a/arch/arm/boot/dts/stm32mp157c-ev1.dts
++++ b/arch/arm/boot/dts/stm32mp157c-ev1.dts
+@@ -127,6 +127,7 @@
+ 		reg = <0>;
+ 		reset-gpios = <&gpiof 15 GPIO_ACTIVE_LOW>;
+ 		backlight = <&panel_backlight>;
++		power-supply = <&v3v3>;
+ 		status = "okay";
+ 
+ 		port {
 -- 
-Linaro - Kernel Validation
+2.7.4
+
