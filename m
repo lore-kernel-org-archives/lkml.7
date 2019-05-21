@@ -3,115 +3,120 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79F5EC04E87
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 13:07:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38B49C04AAF
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 13:10:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 540772173C
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 13:07:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 17A5020856
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 13:10:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728117AbfEUNHV (ORCPT
+        id S1728158AbfEUNKA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 May 2019 09:07:21 -0400
-Received: from mail-ua1-f68.google.com ([209.85.222.68]:42330 "EHLO
-        mail-ua1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727044AbfEUNHV (ORCPT
+        Tue, 21 May 2019 09:10:00 -0400
+Received: from relay5-d.mail.gandi.net ([217.70.183.197]:56543 "EHLO
+        relay5-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727624AbfEUNJ7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 May 2019 09:07:21 -0400
-Received: by mail-ua1-f68.google.com with SMTP id e9so6587467uar.9;
-        Tue, 21 May 2019 06:07:20 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=9zdMKMq6YtEJcAmlQV2agBqhGjgcY71RbSkdU/Um18Y=;
-        b=qC1pmOKJLrPxvbs5uWxUquS1d16CTi0asKi9/eQNiTV5z/S1Ip1ltRprrHUWL2XKNr
-         a3FfEM4avx5+RmkBwIA9L98W0IyKPeiwySXW7A2ZNJeFJ3NJzOpVLTTcNNRlhItyccGb
-         BvaFnGp7VnCXVrJcWIvWPmT75HZo4M2aRMG+2CTBDjZ/4CLlI5vvbsZwIeyVcwhYTvr1
-         l7PiKKoGT9OyirczJzWkdKCBcaD7yqupSnzI878mTYz2V3cj481HzeudwWW8AVx1sOPS
-         g8kOrav3Hu12nt44/AiLWlkr5ox0kqMNWIX7M9HkdSE8RbVF38EL+PqKPmWC0uRsYWTr
-         6VHw==
-X-Gm-Message-State: APjAAAWZNtEyCtNYos6/9FJxcQzCoeuJvpam88FdbQy5ymvA2hmrKYzX
-        2G51mxinvw/NHoFucEZ6WA1vzWiOE7MlXqchm7I=
-X-Google-Smtp-Source: APXvYqwk86c0hOBvUvXgwVC5HhHHgKfiCpYrw7PY71h9R+NjlgSuR31+RKZOh67So1NHcZxoXJw+Sjkim3xtMudQ18M=
-X-Received: by 2002:ab0:2bc6:: with SMTP id s6mr4471903uar.86.1558444040004;
- Tue, 21 May 2019 06:07:20 -0700 (PDT)
+        Tue, 21 May 2019 09:09:59 -0400
+X-Originating-IP: 90.88.22.185
+Received: from localhost (aaubervilliers-681-1-80-185.w90-88.abo.wanadoo.fr [90.88.22.185])
+        (Authenticated sender: maxime.ripard@bootlin.com)
+        by relay5-d.mail.gandi.net (Postfix) with ESMTPSA id 2E4871C000A;
+        Tue, 21 May 2019 13:09:55 +0000 (UTC)
+Date:   Tue, 21 May 2019 15:09:55 +0200
+From:   Maxime Ripard <maxime.ripard@bootlin.com>
+To:     luca@z3ntu.xyz
+Cc:     Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "moderated list:ARM/Allwinner sunXi SoC support" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] arm64: dts: allwinner: a64: Add lradc node
+Message-ID: <20190521130955.3omqwpx3i7njsb3t@flea>
+References: <20190518170929.24789-1-luca@z3ntu.xyz>
+ <20190520110742.ykgxwaabzzwovgpl@flea>
+ <9B2B83DF-2C91-4DDA-B707-664A792A8BCF@z3ntu.xyz>
 MIME-Version: 1.0
-References: <git-mailbomb-linux-master-23bfaa594002f4bba085e0a1ae3c9847b988d816@kernel.org>
-In-Reply-To: <git-mailbomb-linux-master-23bfaa594002f4bba085e0a1ae3c9847b988d816@kernel.org>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Tue, 21 May 2019 15:07:08 +0200
-Message-ID: <CAMuHMdXH4A96CUuSkmnL8RVubRyd9eswz9VPqBsDqXGbNCWncw@mail.gmail.com>
-Subject: Re: net: phy: improve pause mode reporting in phy_print_status
-To:     Heiner Kallweit <hkallweit1@gmail.com>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>,
-        Simon Horman <horms+renesas@verge.net.au>,
-        netdev <netdev@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="o4dueejzfmmapbjw"
+Content-Disposition: inline
+In-Reply-To: <9B2B83DF-2C91-4DDA-B707-664A792A8BCF@z3ntu.xyz>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Heiner,
 
-On Wed, May 8, 2019 at 8:02 AM Linux Kernel Mailing List
-<linux-kernel@vger.kernel.org> wrote:
-> Commit:     23bfaa594002f4bba085e0a1ae3c9847b988d816
-> Parent:     5db9c74042e3c2168b1f1104d691063f5b662a8b
-> Refname:    refs/heads/master
-> Web:        https://git.kernel.org/torvalds/c/23bfaa594002f4bba085e0a1ae3c9847b988d816
-> Author:     Heiner Kallweit <hkallweit1@gmail.com>
-> AuthorDate: Sun May 5 19:03:51 2019 +0200
-> Committer:  David S. Miller <davem@davemloft.net>
-> CommitDate: Tue May 7 12:40:39 2019 -0700
+--o4dueejzfmmapbjw
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+On Tue, May 21, 2019 at 08:43:45AM +0200, luca@z3ntu.xyz wrote:
+> On May 20, 2019 1:07:42 PM GMT+02:00, Maxime Ripard <maxime.ripard@bootlin.com> wrote:
+> >On Sat, May 18, 2019 at 07:09:30PM +0200, Luca Weiss wrote:
+> >> Add a node describing the KEYADC on the A64.
+> >>
+> >> Signed-off-by: Luca Weiss <luca@z3ntu.xyz>
+> >> ---
+> >>  arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi | 7 +++++++
+> >>  1 file changed, 7 insertions(+)
+> >>
+> >> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
+> >b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
+> >> index 7734f70e1057..dc1bf8c1afb5 100644
+> >> --- a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
+> >> +++ b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
+> >> @@ -704,6 +704,13 @@
+> >>  			status = "disabled";
+> >>  		};
+> >>
+> >> +		lradc: lradc@1c21800 {
+> >> +			compatible = "allwinner,sun4i-a10-lradc-keys";
+> >> +			reg = <0x01c21800 0x100>;
+> >> +			interrupts = <GIC_SPI 30 IRQ_TYPE_LEVEL_HIGH>;
+> >> +			status = "disabled";
+> >> +		};
+> >> +
+> >
+> >The controller is pretty different on the A64 compared to the A10. The
+> >A10 has two channels for example, while the A64 has only one.
+> >
+> >It looks like the one in the A83t though, so you can use that
+> >compatible instead.
 >
->     net: phy: improve pause mode reporting in phy_print_status
->
->     So far we report symmetric pause only, and we don't consider the local
->     pause capabilities. Let's properly consider local and remote
->     capabilities, and report also asymmetric pause.
->
->     Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
->     Signed-off-by: David S. Miller <davem@davemloft.net>
+> Looking at the patch for the A83t, the only difference is that it
+> uses a 3/4 instead of a 2/3 voltage divider, nothing is changed with
+> the channels.
 
-Due to this commit, I see the folllowing change on Renesas development
-boards using either the sh_eth or ravb Ethernet driver:
+I guess you can reuse the A83t compatible here then, and a more
+specific a64 compatible in case we ever need to fix this.
 
-    -sh-eth ee700000.ethernet eth0: Link is Up - 100Mbps/Full - flow
-control rx/tx
-    +sh-eth ee700000.ethernet eth0: Link is Up - 100Mbps/Full - flow control off
+> But I'm also not sure which one (or a different one)
+> is used from looking at the "A64 User Manual".
 
-and
+I'm sorry, what are you referring to with "one" in that sentence?
 
-    -ravb e6800000.ethernet eth0: Link is Up - 1Gbps/Full - flow control rx/tx
-    +ravb e6800000.ethernet eth0: Link is Up - 1Gbps/Full - flow control off
+Maxime
 
-Adding debug prints reveals that:
+--
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
 
-    phydev->autoneg = 1
-    phydev->pause = 1
-    phydev->asym_pause = 0 or 1 (depending on the board)
-    local_pause = 0
-    local_asym_pause = 0
+--o4dueejzfmmapbjw
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Is this expected behavior?
+-----BEGIN PGP SIGNATURE-----
 
-Thanks!
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXOP4owAKCRDj7w1vZxhR
+xZkvAQCd5wzD/xjw3laO9nxjD2QxKl1qIHQW5BZeiCHbM1DA5wD/VtDKwN19wKfS
+efcYJj1jUOQM495DpaIysQG3XvYg3AA=
+=08Dd
+-----END PGP SIGNATURE-----
 
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+--o4dueejzfmmapbjw--
