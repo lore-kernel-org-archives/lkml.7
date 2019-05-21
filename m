@@ -2,79 +2,133 @@ Return-Path: <SRS0=9PYC=TV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DF42C04AAF
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 16:34:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6749CC04E87
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 16:39:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 71AE1208C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 16:34:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 463642173E
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 16:39:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728649AbfEUQe2 (ORCPT
+        id S1728665AbfEUQjN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 May 2019 12:34:28 -0400
-Received: from relay4-d.mail.gandi.net ([217.70.183.196]:36109 "EHLO
-        relay4-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727817AbfEUQe2 (ORCPT
+        Tue, 21 May 2019 12:39:13 -0400
+Received: from mail-vs1-f67.google.com ([209.85.217.67]:35130 "EHLO
+        mail-vs1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727946AbfEUQjN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 May 2019 12:34:28 -0400
-X-Originating-IP: 90.66.53.80
-Received: from localhost (lfbn-1-3034-80.w90-66.abo.wanadoo.fr [90.66.53.80])
-        (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay4-d.mail.gandi.net (Postfix) with ESMTPSA id 47052E000E;
-        Tue, 21 May 2019 16:34:20 +0000 (UTC)
-Date:   Tue, 21 May 2019 18:34:20 +0200
-From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
-To:     Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Cc:     Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Ludovic Desroches <ludovic.desroches@microchip.com>,
-        linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] video: fbdev: atmel_lcdfb: add COMPILE_TEST support
-Message-ID: <20190521163420.GI3274@piout.net>
-References: <CGME20190521105217eucas1p19796d2969c1a568fecb0750818226241@eucas1p1.samsung.com>
- <f9d56fc1-3e02-9716-b764-82e9600e5919@samsung.com>
+        Tue, 21 May 2019 12:39:13 -0400
+Received: by mail-vs1-f67.google.com with SMTP id q13so11537973vso.2;
+        Tue, 21 May 2019 09:39:12 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=d3r+vtHOni2ql6K8KUyHYDwXA6dbsBBCMW+a9jJjXY0=;
+        b=ptSGQht4/1Z682C+yPxpLx8zmsnzKrrvEctI3mcXgdYD5nxhJ3QzrJfKHBGlZlNGQw
+         Kq3u596/OJ1U3gXi50oj4mBNLD0X5CJbDyj5WpUIE9bo/mCNICw7oBjr+wejRs7abfhv
+         KLp8TZzGOP8k7czbRIRZkCfRRms1phJe9jN9OH9yjKlbKAeiJMZsOhK+Bh76zdYNxNr+
+         XwlgnHrFo8DxRzPveBpf9FHO83WY/pVIb7Aw5j7Avszp71P6HtPfjwBE7U9hNChjlVDQ
+         y0dZ/o2WeCf/Dm1TY1h3mr5pApM99jobAu3trlhOAXEs481+V6Vu0v6LYSTe0nE4ilCa
+         2FFA==
+X-Gm-Message-State: APjAAAVy0ZYDzHKUrB3yR+8AFbHeJ2sQ2lbDoyYN7rafdU/9o2r93GsF
+        2s162tCYlKoYRmSN/WVEaOj598kS9QwiykJzviQFhbAq
+X-Google-Smtp-Source: APXvYqwCQIckTpeBswbXwCcMWkbVVy9WAUMEJsw8Zbz08S2CXrenseFMa2ivFFBrrmH68j06jfFotolazbcgC2VSxME=
+X-Received: by 2002:a67:f589:: with SMTP id i9mr9021336vso.152.1558456752226;
+ Tue, 21 May 2019 09:39:12 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <f9d56fc1-3e02-9716-b764-82e9600e5919@samsung.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+References: <git-mailbomb-linux-master-c4741b23059794bd99beef0f700103b0d983b3fd@kernel.org>
+In-Reply-To: <git-mailbomb-linux-master-c4741b23059794bd99beef0f700103b0d983b3fd@kernel.org>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Tue, 21 May 2019 18:39:00 +0200
+Message-ID: <CAMuHMdWSUMOh1uG1g+cipup86ZpiVYuHDpPJtp+gSmmUyjB6eA@mail.gmail.com>
+Subject: Re: crypto: run initcalls for generic implementations earlier
+To:     Eric Biggers <ebiggers@google.com>
+Cc:     Herbert Xu <herbert@gondor.apana.org.au>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 21/05/2019 12:52:17+0200, Bartlomiej Zolnierkiewicz wrote:
-> Add COMPILE_TEST support to atmel_lcdfb driver for better compile
-> testing coverage.
-> 
-> Signed-off-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Reviewed-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Hi Eric,
 
-> ---
-> v2: add missing HAVE_CLK && HAS IOMEM dependencies
-> 
->  drivers/video/fbdev/Kconfig |    3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
-> 
-> Index: b/drivers/video/fbdev/Kconfig
-> ===================================================================
-> --- a/drivers/video/fbdev/Kconfig
-> +++ b/drivers/video/fbdev/Kconfig
-> @@ -856,7 +856,8 @@ config FB_S1D13XXX
->  
->  config FB_ATMEL
->  	tristate "AT91 LCD Controller support"
-> -	depends on FB && OF && HAVE_FB_ATMEL
-> +	depends on FB && OF && HAVE_CLK && HAS_IOMEM
-> +	depends on HAVE_FB_ATMEL || COMPILE_TEST
->  	select FB_BACKLIGHT
->  	select FB_CFB_FILLRECT
->  	select FB_CFB_COPYAREA
+On Tue, May 7, 2019 at 5:26 AM Linux Kernel Mailing List
+<linux-kernel@vger.kernel.org> wrote:
+> Commit:     c4741b23059794bd99beef0f700103b0d983b3fd
+> Parent:     40153b10d91c9e25f912344ba6ce1f0874400659
+> Refname:    refs/heads/master
+> Web:        https://git.kernel.org/torvalds/c/c4741b23059794bd99beef0f700103b0d983b3fd
+> Author:     Eric Biggers <ebiggers@google.com>
+> AuthorDate: Thu Apr 11 21:57:42 2019 -0700
+> Committer:  Herbert Xu <herbert@gondor.apana.org.au>
+> CommitDate: Thu Apr 18 22:15:03 2019 +0800
+>
+>     crypto: run initcalls for generic implementations earlier
+>
+>     Use subsys_initcall for registration of all templates and generic
+>     algorithm implementations, rather than module_init.  Then change
+>     cryptomgr to use arch_initcall, to place it before the subsys_initcalls.
+>
+>     This is needed so that when both a generic and optimized implementation
+>     of an algorithm are built into the kernel (not loadable modules), the
+>     generic implementation is registered before the optimized one.
+>     Otherwise, the self-tests for the optimized implementation are unable to
+>     allocate the generic implementation for the new comparison fuzz tests.
+>
+>     Note that on arm, a side effect of this change is that self-tests for
+>     generic implementations may run before the unaligned access handler has
+>     been installed.  So, unaligned accesses will crash the kernel.  This is
+>     arguably a good thing as it makes it easier to detect that type of bug.
+>
+>     Signed-off-by: Eric Biggers <ebiggers@google.com>
+>     Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 
--- 
-Alexandre Belloni, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+> --- a/crypto/jitterentropy-kcapi.c
+> +++ b/crypto/jitterentropy-kcapi.c
+> @@ -198,7 +198,7 @@ static void __exit jent_mod_exit(void)
+>         crypto_unregister_rng(&jent_alg);
+>  }
+>
+> -module_init(jent_mod_init);
+> +subsys_initcall(jent_mod_init);
+>  module_exit(jent_mod_exit);
+>
+>  MODULE_LICENSE("Dual BSD/GPL");
+
+This change causes jitterentropy to fail on Renesas SoCs based on
+single-core Cortex A9 with:
+
+    jitterentropy: Initialization failed with host not compliant with
+requirements: 2
+
+This happens because jitterentropy is now initialized before the main
+clocksource is activated, i.e. before
+
+    clocksource: Switched to clocksource ostm timer (on RZ/A1)
+    clocksource: Switched to clocksource fff80000.timer (on R-Mobile A1)
+
+is printed.
+RZ/A1 and R-Mobile A1 SoCs rely on the OSTM resp. TMU timers.
+
+The issue does not happen on SoCs with Cortex A15 cores (with ARM
+architectured timer) or Cortex A9 multicore (with ARM global timer).
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
