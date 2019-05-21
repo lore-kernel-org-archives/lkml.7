@@ -2,57 +2,57 @@ Return-Path: <SRS0=9PYC=TV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UPPERCASE_50_75,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 650F4C072B5
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 20:32:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0762FC072B5
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 20:32:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2C0002173E
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 20:32:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D0EF42182B
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 20:32:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="QBq9fahc"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="jfXEHCzv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727801AbfEUUcl (ORCPT
+        id S1727847AbfEUUco (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 May 2019 16:32:41 -0400
-Received: from mail-it1-f194.google.com ([209.85.166.194]:32789 "EHLO
-        mail-it1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727046AbfEUUck (ORCPT
+        Tue, 21 May 2019 16:32:44 -0400
+Received: from mail-it1-f195.google.com ([209.85.166.195]:34211 "EHLO
+        mail-it1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727428AbfEUUcl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 May 2019 16:32:40 -0400
-Received: by mail-it1-f194.google.com with SMTP id j17so3676856itk.0
+        Tue, 21 May 2019 16:32:41 -0400
+Received: by mail-it1-f195.google.com with SMTP id g23so3671625iti.1
         for <linux-kernel@vger.kernel.org>; Tue, 21 May 2019 13:32:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=TL0Rco+HJb/XdiRCUNcHvK2NcbT9epjRSGpGsvVbQoI=;
-        b=QBq9fahcLU2tgJhshCN0dwVdL0HE77OlAbTaVT8QDvwmSf17Ll5gBABBcZbQPKSgI8
-         wPLldHhQueXNBElEdaeVQGucuCyfo4uJDJwgYvxXvlJB+Ro8K+sPZp03zZ6h3jcX+Zwn
-         8KN7ULMXhj+3tDAZroKu43AHQM5IoJZShiDBU=
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=eQ2r5PQ0vvjlMI5kpOVHnGlsdtagsJZCtwtZAIF6wsM=;
+        b=jfXEHCzvUcv7X9RSwEbvGDRkOdVJyAJuHgS/ha5PpxQEQxLd7aI8p8zITCJWQYvgWv
+         kY0qQaJLquIEjt40FFKt/TRlAG0EAlfPnMWQeYOCx6yiphf4mROdATbunECkw4YwxI1W
+         varGpt1jUIIahlRNDo0ElzGp4fcD0Hx+V3FYo=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=TL0Rco+HJb/XdiRCUNcHvK2NcbT9epjRSGpGsvVbQoI=;
-        b=PnU+YneRxxUctkMuRQVMxc30i5tke8+P05k/AJSc7b9kuAB255B4XM22tdtFMcBLsD
-         Q6pvDUe2WUG8dfKboGZCpkOk5/FBkvAhgps8DlnUfJ7FN+RNcsybXvYbv3Uyd8I+1GtB
-         v38OqZKx5md8dJJfy3G4aqICc1J4gVNQ2BacWeqzd9bDleINxFYXgeJA78INt3xp26Qk
-         yo7qhu8jWw9ucucwxc9ebqEuereI+FWGbXEkAaRK3uVhCnkViUuKAQBTmQdp5AbvnwNW
-         leAaK3YQWZ32Kh5nzvquUhedDtF1+jdFm9/BqJ5/3fEUva+sUQFDg1xmS0ADHvAtbsPw
-         k+9A==
-X-Gm-Message-State: APjAAAUkgx0oATt5eJ+2TelYodTt/Ai2ZxODcyIniR0v9j3jE1sH5B+9
-        7XQYheEq1JL/xZ193EVkRSiHcw==
-X-Google-Smtp-Source: APXvYqzMgS+2Y+L54Bugxjb3Y7W5RtvSETPi7Pcr1ybp84tqKgN8/mOHXp8N4/4GVoMpgsDaegyHyg==
-X-Received: by 2002:a24:278c:: with SMTP id g134mr4385454ita.49.1558470759345;
-        Tue, 21 May 2019 13:32:39 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=eQ2r5PQ0vvjlMI5kpOVHnGlsdtagsJZCtwtZAIF6wsM=;
+        b=SRIFLr6ozl2zKEs/EMXskVGN5UU4ENWLbB80o4wccOh4ofU2ALP++lSiQToVvkYQdd
+         tgrULWayBgkrhGnB94hHfM9XbHL4PJoT0Aa8AAVHozjNXWHPJiIwOYPvlmZjt+m+bv89
+         zswv9L/xvXB7iY5KrGITV8OAsOX8gSc2+1nni58/IYAGAmWWXj+/6/OxoBHA2aVXgLGi
+         1Co1WqXkyT6NF5wfU/6w8ghdTFTCyDpYteAlzdA2AfFOBzmCFgeQPot8w0A1eYcbrqA0
+         vQBfD8wm7xFQ3eJThb90v9Ux7HE7oqVfo3ZNoE88U2PB5jBdnzy7qHwinG1ikt8x7foS
+         F2oA==
+X-Gm-Message-State: APjAAAWc5b/HcZNb+SwIfNW2WfYh2aHiwHuT9VZyCW37hbJSqOAsAHWc
+        X15oS9g6AMpgX/7ER99btZUQTcjaodg=
+X-Google-Smtp-Source: APXvYqxSz/8n9XxlYkdxr6ciXmid1JAcD9hFZpzXZV5KyhgrDbitGBVY4l2Wvb/tr6ZfkWjRGGs9ZQ==
+X-Received: by 2002:a02:80e:: with SMTP id 14mr53391656jac.71.1558470760572;
+        Tue, 21 May 2019 13:32:40 -0700 (PDT)
 Received: from tictac2.mtv.corp.google.com ([2620:15c:202:1:24fa:e766:52c9:e3b2])
-        by smtp.gmail.com with ESMTPSA id e22sm7205710ioe.45.2019.05.21.13.32.38
+        by smtp.gmail.com with ESMTPSA id e22sm7205710ioe.45.2019.05.21.13.32.39
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 21 May 2019 13:32:38 -0700 (PDT)
+        Tue, 21 May 2019 13:32:40 -0700 (PDT)
 From:   Douglas Anderson <dianders@chromium.org>
 To:     Heiko Stuebner <heiko@sntech.de>
 Cc:     briannorris@chromium.org, ryandcase@chromium.org, mka@chromium.org,
@@ -62,10 +62,12 @@ Cc:     briannorris@chromium.org, ryandcase@chromium.org, mka@chromium.org,
         Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         linux-arm-kernel@lists.infradead.org
-Subject: [PATCH 1/2] ARM: dts: rockchip: Add pin names for rk3288-veyron-minnie
-Date:   Tue, 21 May 2019 13:32:14 -0700
-Message-Id: <20190521203215.234898-1-dianders@chromium.org>
+Subject: [PATCH 2/2] ARM: dts: rockchip: Add pin names for rk3288-veyron-jerry
+Date:   Tue, 21 May 2019 13:32:15 -0700
+Message-Id: <20190521203215.234898-2-dianders@chromium.org>
 X-Mailer: git-send-email 2.21.0.1020.gf2820cf01a-goog
+In-Reply-To: <20190521203215.234898-1-dianders@chromium.org>
+References: <20190521203215.234898-1-dianders@chromium.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -73,38 +75,20 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We can now use the "gpio-line-names" property to provide the names for
-all the pins on a board.  Let's use this to provide the names for all
-the pins on rk3288-veyron-minnie.
-
-In general the names here come straight from the schematic.  That
-means even if the schematic name is weird / doesn't have consistent
-naming conventions / has typos I still haven't made any changes.
-
-The exception here is for two pins: the recovery switch and the write
-protect detection pin.  These two pins need to have standardized names
-since crossystem (a Chrome OS tool) uses these names to query the
-pins.  In downstream kernels crossystem used an out-of-tree driver to
-do this but it has now been moved to the gpiod API and needs the
-standardized names.
-
-It's expected that other rk3288-veyron boards will get similar patches
-shortly.
-
-NOTE: I have sorted the "gpio" section to be next to the "pinctrl"
-section since it seems to logically make the most sense there.
+This is like the same change for rk3288-veyron-minnie.  See that patch
+for more details.
 
 Signed-off-by: Douglas Anderson <dianders@chromium.org>
 ---
 
- arch/arm/boot/dts/rk3288-veyron-minnie.dts | 212 +++++++++++++++++++++
- 1 file changed, 212 insertions(+)
+ arch/arm/boot/dts/rk3288-veyron-jerry.dts | 207 ++++++++++++++++++++++
+ 1 file changed, 207 insertions(+)
 
-diff --git a/arch/arm/boot/dts/rk3288-veyron-minnie.dts b/arch/arm/boot/dts/rk3288-veyron-minnie.dts
-index ce57881625ec..a65099b4aef1 100644
---- a/arch/arm/boot/dts/rk3288-veyron-minnie.dts
-+++ b/arch/arm/boot/dts/rk3288-veyron-minnie.dts
-@@ -184,6 +184,218 @@
+diff --git a/arch/arm/boot/dts/rk3288-veyron-jerry.dts b/arch/arm/boot/dts/rk3288-veyron-jerry.dts
+index b1613af83d5d..164561f04c1d 100644
+--- a/arch/arm/boot/dts/rk3288-veyron-jerry.dts
++++ b/arch/arm/boot/dts/rk3288-veyron-jerry.dts
+@@ -103,6 +103,213 @@
  	pinctrl-0 = <&vcc50_hdmi_en>;
  };
  
@@ -128,7 +112,7 @@ index ce57881625ec..a65099b4aef1 100644
 +			  "HOST1_PWR_EN",
 +			  "USBOTG_PWREN_H",
 +			  "AP_WARM_RESET_H",
-+			  "nFALUT2",
++			  "nFAULT2",
 +			  "I2C0_SDA_PMIC",
 +
 +			  "I2C0_SCL_PMIC",
@@ -146,17 +130,12 @@ index ce57881625ec..a65099b4aef1 100644
 +			  "",
 +			  "CONFIG3",
 +
-+			  "PROCHOT#",
++			  "",
 +			  "EMMC_RST_L",
 +			  "",
 +			  "",
 +			  "BL_PWR_EN",
-+			  "AVDD_1V8_DISP_EN",
-+			  "TOUCH_INT",
-+			  "TOUCH_RST",
-+
-+			  "I2C3_SCL_TP",
-+			  "I2C3_SDA_TP";
++			  "AVDD_1V8_DISP_EN";
 +};
 +
 +&gpio3 {
@@ -213,7 +192,7 @@ index ce57881625ec..a65099b4aef1 100644
 +
 +			  "SDIO0_CMD",
 +			  "SDIO0_CLK",
-+			  "dev_wake",
++			  "BT_DEV_WAKE",
 +			  "",
 +			  "WIFI_ENABLE_H",
 +			  "BT_ENABLE_L",
@@ -233,8 +212,8 @@ index ce57881625ec..a65099b4aef1 100644
 +
 +			  "",
 +			  "",
-+			  "Volum_Up#",
-+			  "Volum_Down#",
++			  "",
++			  "",
 +			  "SPI0_CLK",
 +			  "SPI0_CS0",
 +			  "SPI0_TXD",
@@ -288,11 +267,11 @@ index ce57881625ec..a65099b4aef1 100644
 +			  "EC_INT",
 +
 +			  "CPU_NMI",
-+			  "DVS_OK",
-+			  "SDMMC_WP",
++			  "DVSOK",
++			  "",
 +			  "EDP_HPD",
 +			  "DVS1",
-+			  "nFALUT1",
++			  "nFAULT1",
 +			  "LCD_EN",
 +			  "DVS2",
 +
