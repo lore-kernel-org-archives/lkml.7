@@ -2,242 +2,142 @@ Return-Path: <SRS0=9PYC=TV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BD88C04E87
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 12:46:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09CCDC04AAF
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 12:46:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1173E2173E
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 12:46:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C741B2173E
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 12:46:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="VWHSb85x"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728020AbfEUMqS (ORCPT
+        id S1728093AbfEUMqW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 May 2019 08:46:18 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:46714 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726740AbfEUMqQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 May 2019 08:46:16 -0400
-Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4LCh40t014925
-        for <linux-kernel@vger.kernel.org>; Tue, 21 May 2019 08:46:15 -0400
-Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2smfjvw9wc-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Tue, 21 May 2019 08:46:14 -0400
-Received: from localhost
-        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <pmorel@linux.ibm.com>;
-        Tue, 21 May 2019 13:46:13 +0100
-Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
-        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Tue, 21 May 2019 13:46:08 +0100
-Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
-        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x4LCk70438469882
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 21 May 2019 12:46:07 GMT
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id F052AA4055;
-        Tue, 21 May 2019 12:46:06 +0000 (GMT)
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 66FBEA405B;
-        Tue, 21 May 2019 12:46:06 +0000 (GMT)
-Received: from [9.152.222.56] (unknown [9.152.222.56])
-        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Tue, 21 May 2019 12:46:06 +0000 (GMT)
-Reply-To: pmorel@linux.ibm.com
-Subject: Re: [PATCH v2 4/4] vfio: vfio_iommu_type1: implement
- VFIO_IOMMU_INFO_CAPABILITIES
-To:     Cornelia Huck <cohuck@redhat.com>
-Cc:     Alex Williamson <alex.williamson@redhat.com>,
-        sebott@linux.vnet.ibm.com, gerald.schaefer@de.ibm.com,
-        pasic@linux.vnet.ibm.com, borntraeger@de.ibm.com,
-        walling@linux.ibm.com, linux-s390@vger.kernel.org,
-        iommu@lists.linux-foundation.org, joro@8bytes.org,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        schwidefsky@de.ibm.com, heiko.carstens@de.ibm.com,
-        robin.murphy@arm.com
-References: <1558109810-18683-1-git-send-email-pmorel@linux.ibm.com>
- <1558109810-18683-5-git-send-email-pmorel@linux.ibm.com>
- <20190517104143.240082b5@x1.home>
- <92b6ad4e-9a49-636b-9225-acca0bec4bb7@linux.ibm.com>
- <ed193353-56f0-14b5-f1fb-1835d0a6c603@linux.ibm.com>
- <20190520162737.7560ad7c.cohuck@redhat.com>
- <23f6a739-be4f-7eda-2227-2994fdc2325a@linux.ibm.com>
- <20190520122352.73082e52@x1.home>
- <9dc0a8de-b850-df21-e3b7-21b7c2a373a3@linux.ibm.com>
- <20190521131120.0b2afb37.cohuck@redhat.com>
-From:   Pierre Morel <pmorel@linux.ibm.com>
-Date:   Tue, 21 May 2019 14:46:06 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
-MIME-Version: 1.0
-In-Reply-To: <20190521131120.0b2afb37.cohuck@redhat.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+        Tue, 21 May 2019 08:46:22 -0400
+Received: from mail-eopbgr150043.outbound.protection.outlook.com ([40.107.15.43]:41956
+        "EHLO EUR01-DB5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726344AbfEUMqU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 May 2019 08:46:20 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=LCjIquD9DNq8D+A3/WjkFMtjQubFKnvBsIiNQxx7ZmM=;
+ b=VWHSb85x/an56akxcZYhaYtCvSJCFvJ6wE6bZhM0XF/W0BQlvVVPkIsrOdf29UukuStNg48T06omb1wMfaZyutPcdu7hRxKklLVb0dnhAvgm9drenHcnU2LdTQLvv1QWaWN02gaSWnrYkb1KsFtzMA6lRx9UXxPebwD1X2HlGXI=
+Received: from VI1PR0402MB3519.eurprd04.prod.outlook.com (52.134.4.24) by
+ VI1PR0402MB3664.eurprd04.prod.outlook.com (52.134.15.18) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1900.18; Tue, 21 May 2019 12:45:36 +0000
+Received: from VI1PR0402MB3519.eurprd04.prod.outlook.com
+ ([fe80::2417:67da:c1aa:29f3]) by VI1PR0402MB3519.eurprd04.prod.outlook.com
+ ([fe80::2417:67da:c1aa:29f3%7]) with mapi id 15.20.1900.020; Tue, 21 May 2019
+ 12:45:36 +0000
+From:   Jacky Bai <ping.bai@nxp.com>
+To:     Daniel Lezcano <daniel.lezcano@linaro.org>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        Aisheng Dong <aisheng.dong@nxp.com>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        dl-linux-imx <linux-imx@nxp.com>
+Subject: RE: [PATCH v4 2/2] driver: clocksource: Add nxp system counter timer
+ driver support
+Thread-Topic: [PATCH v4 2/2] driver: clocksource: Add nxp system counter timer
+ driver support
+Thread-Index: AQHVD6VyGxyzK/K+Ck6OWhJMa/LQ6aZ1WusAgAAZ3gCAAAsDgIAAAf1Q
+Date:   Tue, 21 May 2019 12:45:36 +0000
+Message-ID: <VI1PR0402MB3519E48F01380A3DE9FEC01487070@VI1PR0402MB3519.eurprd04.prod.outlook.com>
+References: <20190521072355.12928-1-ping.bai@nxp.com>
+ <20190521072355.12928-2-ping.bai@nxp.com>
+ <5823cd07-312b-600c-1b78-dc5bff2a12eb@linaro.org>
+ <VI1PR0402MB3519B14C5AF93F246907F03A87070@VI1PR0402MB3519.eurprd04.prod.outlook.com>
+ <bc03b0c8-52cf-58e1-e7b3-bb1f2345c05b@linaro.org>
+In-Reply-To: <bc03b0c8-52cf-58e1-e7b3-bb1f2345c05b@linaro.org>
+Accept-Language: zh-CN, en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 19052112-0016-0000-0000-0000027DF974
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19052112-0017-0000-0000-000032DAE368
-Message-Id: <6216c287-c741-0600-d5b7-cbdaf2214661@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-21_03:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=915 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1905210080
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=ping.bai@nxp.com; 
+x-originating-ip: [117.81.146.122]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 0f959f2e-5d57-47f2-5755-08d6ddea38e5
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:VI1PR0402MB3664;
+x-ms-traffictypediagnostic: VI1PR0402MB3664:
+x-microsoft-antispam-prvs: <VI1PR0402MB3664C559FE13D67D3D985F3C87070@VI1PR0402MB3664.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8273;
+x-forefront-prvs: 0044C17179
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(376002)(346002)(396003)(39860400002)(136003)(366004)(189003)(199004)(13464003)(446003)(11346002)(6116002)(476003)(478600001)(3846002)(99286004)(14454004)(66946007)(6636002)(2906002)(33656002)(81156014)(81166006)(8676002)(486006)(2501003)(8936002)(7696005)(66066001)(66446008)(52536014)(71200400001)(71190400001)(6246003)(9686003)(316002)(229853002)(76176011)(74316002)(68736007)(102836004)(256004)(53936002)(14444005)(5660300002)(54906003)(7736002)(110136005)(66556008)(86362001)(53546011)(6506007)(64756008)(26005)(186003)(76116006)(55016002)(73956011)(25786009)(66476007)(4326008)(6436002)(305945005);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR0402MB3664;H:VI1PR0402MB3519.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: mGCKtR/TED+94kIAvEB/+z5pfvucuoO/caAKeHAxNW6vX7W7H50AVXxmNs+8Aw7YJi11F2GOODYa19B5NtOc/+kI7pNNQYCuNGSFksWtpqQ1AR3SqVmW1OurUNuJeh6xnS8mR7nZAW+c/udn+j3ceLqHiA+m99TxFG7tOe0HEOGWunSfO6vhDusSiNc6IGRyaypO9Pd3VVyoeJw/p1lwHaMvqnUhqk/P7QlT/bG21f4eppwoXm+xeDfO7KSFB2zYLT4EEYRkj0wfoD3pCvqB9BNVdZ5d7ULp47WWev6006atVBtZ0aifmPw+XmaoriQu+LeQX5ErJhtq78412AnKDeOp6o3OYSVsYT0HREwmhgo79ntfyvXhn9gympTm1ydx5JM9FDlLFmIaCD19rRHKsFeYbF7Ha+/cytDH23Epf58=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0f959f2e-5d57-47f2-5755-08d6ddea38e5
+X-MS-Exchange-CrossTenant-originalarrivaltime: 21 May 2019 12:45:36.4944
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0402MB3664
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 21/05/2019 13:11, Cornelia Huck wrote:
-> On Tue, 21 May 2019 11:14:38 +0200
-> Pierre Morel <pmorel@linux.ibm.com> wrote:
-> 
->> 1) A short description, of zPCI functions and groups
->>
->> IN Z, PCI cards, leave behind an adapter between subchannels and PCI.
->> We access PCI cards through 2 ways:
->> - dedicated PCI instructions (pci_load/pci_store/pci/store_block)
->> - DMA
-> 
-> Quick question: What about the new pci instructions? Anything that
-> needs to be considered there?
-
-No and yes.
-
-No because they should be used when pci_{load,stor,store_block} are 
-interpreted AFAIU.
-And currently we only use interception.
-
-Yes, because, the CLP part, use to setup the translations IIUC, (do not 
-ask me for details now), will need to be re-issued by the kernel after 
-some modifications and this will also need a way from QEMU S390 PCI down 
-to the ZPCI driver.
-Way that I try to setup with this patch.
-
-So answer is not now but we should keep in mind that we will 
-definitively need a way down to the zpci low level in the host.
-
-> 
->> We receive events through
->> - Adapter interrupts
-> 
-> Note for the non-s390 folks: These are (I/O) interrupts that are not
-> tied to a specific device. MSI-X is mapped to this.
-> 
->> - CHSC events
-> 
-> Another note for the non-s390 folks: This is a notification mechanism
-> that is using machine check interrupts; more information is retrieved
-> via a special instruction (chsc).
-> 
-
-thanks, it is yes better to explain better :)
-
->>
->> The adapter propose an IOMMU to protect the DMA
->> and the interrupt handling goes through a MSIX like interface handled by
->> the adapter.
->>
->> The architecture specific PCI do the interface between the standard PCI
->> level and the zPCI function (PCI + DMA/IOMMU/Interrupt)
->>
->> To handle the communication through the "zPCI way" the CLP interface
->> provides instructions to retrieve informations from the adapters.
->>
->> There are different group of functions having same functionalities.
->>
->> clp_list give us a list from zPCI functions
->> clp_query_pci_function returns informations specific to a function
->> clp_query_group returns information on a function group
->>
->>
->> 2) Why do we need it in the guest
->>
->> We need to provide the guest with information on the adapters and zPCI
->> functions returned by the clp_query instruction so that the guest's
->> driver gets the right information on how the way to the zPCI function
->> has been built in the host.
->>
->>
->> When a guest issues the CLP instructions we intercept the clp command in
->> QEMU and we need to feed the response with the right values for the guest.
->> The "right" values are not the raw CLP response values:
->>
->> - some identifier must be virtualized, like UID and FID,
->>
->> - some values must match what the host received from the CLP response,
->> like the size of the transmited blocks, the DMA Address Space Mask,
->> number of interrupt, MSIA
->>
->> - some other must match what the host handled with the adapter and
->> function, the start and end of DMA,
->>
->> - some what the host IOMMU driver supports (frame size),
->>
->>
->>
->> 3) We have three different way to get This information:
->>
->> The PCI Linux interface is a standard PCI interface and some Z specific
->> information is available in sysfs.
->> Not all the information needed to be returned inside the CLP response is
->> available.
->> So we can not use the sysfs interface to get all the information.
->>
->> There is a CLP ioctl interface but this interface is not secure in that
->> it returns the information for all adapters in the system.
->>
->> The VFIO interface offers the advantage to point to a single PCI
->> function, so more secure than the clp ioctl interface.
->> Coupled with the s390_iommu we get access to the zPCI CLP instruction
->> and to the values handled by the zPCI driver.
->>
->>
->> 4) Until now we used to fill the CLP response to the guest inside QEMU
->> with fixed values corresponding to the only PCI card we supported.
->> To support new cards we need to get the right values from the kernel out.
-> 
-> IIRC, the current code fills in values that make sense for one specific
-> type of card only, right?
-
-yes, right
-
-> We also use the same values for emulated
-> cards (virtio); I assume that they are not completely weird for that
-> case...
-> 
-
-No they are not.
-
-For emulated cards, all is done inside QEMU, we do not need kernel 
-access, the emulated cards get a specific emulation function and group 
-assigned with pre-defined values.
-
-I sent a QEMU patch related to this.
-Even the kernel interface will change with the changes in the kernel 
-patch, the emulation should continue in this way.
-
-Regards,
-Pierre
-
-
-
-
-
-
-
-
-
-
--- 
-Pierre Morel
-Linux/KVM/QEMU in Böblingen - Germany
-
+DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogRGFuaWVsIExlemNhbm8g
+W21haWx0bzpkYW5pZWwubGV6Y2Fub0BsaW5hcm8ub3JnXQ0KPiBTZW50OiBUdWVzZGF5LCBNYXkg
+MjEsIDIwMTkgODoyMCBQTQ0KPiBUbzogSmFja3kgQmFpIDxwaW5nLmJhaUBueHAuY29tPjsgdGds
+eEBsaW51dHJvbml4LmRlOyByb2JoK2R0QGtlcm5lbC5vcmc7DQo+IHNoYXduZ3VvQGtlcm5lbC5v
+cmc7IG1hcmsucnV0bGFuZEBhcm0uY29tOyBBaXNoZW5nIERvbmcNCj4gPGFpc2hlbmcuZG9uZ0Bu
+eHAuY29tPg0KPiBDYzogbGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZzsgZGV2aWNldHJlZUB2
+Z2VyLmtlcm5lbC5vcmc7IGRsLWxpbnV4LWlteA0KPiA8bGludXgtaW14QG54cC5jb20+DQo+IFN1
+YmplY3Q6IFJlOiBbUEFUQ0ggdjQgMi8yXSBkcml2ZXI6IGNsb2Nrc291cmNlOiBBZGQgbnhwIHN5
+c3RlbSBjb3VudGVyIHRpbWVyDQo+IGRyaXZlciBzdXBwb3J0DQo+IA0KPiBPbiAyMS8wNS8yMDE5
+IDE0OjAxLCBKYWNreSBCYWkgd3JvdGU6DQo+ID4NCj4gPj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdl
+LS0tLS0NCj4gPj4gRnJvbTogRGFuaWVsIExlemNhbm8gW21haWx0bzpkYW5pZWwubGV6Y2Fub0Bs
+aW5hcm8ub3JnXQ0KPiA+PiBTZW50OiBUdWVzZGF5LCBNYXkgMjEsIDIwMTkgNjowOCBQTQ0KPiA+
+PiBUbzogSmFja3kgQmFpIDxwaW5nLmJhaUBueHAuY29tPjsgdGdseEBsaW51dHJvbml4LmRlOw0K
+PiA+PiByb2JoK2R0QGtlcm5lbC5vcmc7IHNoYXduZ3VvQGtlcm5lbC5vcmc7IG1hcmsucnV0bGFu
+ZEBhcm0uY29tOw0KPiA+PiBBaXNoZW5nIERvbmcgPGFpc2hlbmcuZG9uZ0BueHAuY29tPg0KPiA+
+PiBDYzogbGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZzsgZGV2aWNldHJlZUB2Z2VyLmtlcm5l
+bC5vcmc7DQo+ID4+IGRsLWxpbnV4LWlteCA8bGludXgtaW14QG54cC5jb20+DQo+ID4+IFN1Ympl
+Y3Q6IFJlOiBbUEFUQ0ggdjQgMi8yXSBkcml2ZXI6IGNsb2Nrc291cmNlOiBBZGQgbnhwIHN5c3Rl
+bQ0KPiA+PiBjb3VudGVyIHRpbWVyIGRyaXZlciBzdXBwb3J0DQo+ID4+DQo+ID4+IE9uIDIxLzA1
+LzIwMTkgMDk6MTgsIEphY2t5IEJhaSB3cm90ZToNCj4gPj4+IEZyb206IEJhaSBQaW5nIDxwaW5n
+LmJhaUBueHAuY29tPg0KPiA+Pj4NCj4gPj4+IFRoZSBzeXN0ZW0gY291bnRlciAoc3lzX2N0cikg
+aXMgYSBwcm9ncmFtbWFibGUgc3lzdGVtIGNvdW50ZXIgd2hpY2gNCj4gPj4+IHByb3ZpZGVzIGEg
+c2hhcmVkIHRpbWUgYmFzZSB0byB0aGUgQ29ydGV4IEExNSwgQTcsIEE1MyBldGMgY29yZXMuDQo+
+ID4+PiBJdCBpcyBpbnRlbmRlZCBmb3IgdXNlIGluIGFwcGxpY2F0aW9ucyB3aGVyZSB0aGUgY291
+bnRlciBpcyBhbHdheXMNCj4gPj4+IHBvd2VyZWQgb24gYW5kIHN1cHBvcnRzIG11bHRpcGxlLCB1
+bnJlbGF0ZWQgY2xvY2tzLiBUaGUgc3lzX2N0cg0KPiA+Pj4gaGFyZHdhcmUNCj4gPj4+IHN1cHBv
+cnRzOg0KPiA+Pj4gIC0gNTYtYml0IGNvdW50ZXIgd2lkdGggKHJvbGwtb3ZlciB0aW1lIGdyZWF0
+ZXIgdGhhbiA0MCB5ZWFycykNCj4gPj4NCj4gPj4gVGhlIGJlbmVmaXQgb2YgdXNpbmcgbW9yZSB0
+aGFuIDMyYml0cyBvbiBhIDMyYml0cyBzeXN0ZW0gaXMgbm90IHByb3Zlbi4NCj4gPj4NCj4gPg0K
+PiA+IEl0IGlzIG1haW5seSB1c2VkIG9uIDY0Yml0IEFSTXY4IHN5c3RlbS4NCj4gDQo+IE9oLCBv
+ay4gRmFpciBlbm91Z2guDQo+IA0KPiA+DQo+ID4+IFRoZSBmdW5jdGlvbiB0byByZWFkIGFuZCBi
+dWlsZCB0aGUgNTZiaXRzIHZhbHVlIGNhbiBoYXZlIGEgdmVyeQ0KPiA+PiBzaWduaWZpY2FudCBp
+bXBhY3Qgb24gdGhlIHBlcmZvcm1hbmNlIG9mIHlvdXIgcGxhdGZvcm0uDQo+ID4+DQo+ID4+IFVz
+aW5nIGEgMzJiaXRzIGNvdW50ZXIgY2FuIGJlIGVub3VnaCBpZiBpdCBkb2VzIG5vdCB3cmFwIHRv
+byBmYXN0Lg0KPiA+Pg0KPiA+PiBDYW4geW91IGNvbnNpZGVyIGEgMzIgYml0cyBjb3VudGVyID8N
+Cj4gPg0KPiA+IHRoaXMgY291bnRlciBpcyBBUk12OCBhcmNoIHRpbWVyJ3MgY291bnRlciBzb3Vy
+Y2UuIEFzIGl0IGFsc28gaGFzDQo+ID4gdGltZXIgZnVuY3Rpb24sIHNvIEkgY2hvb3NlIGl0IHRv
+IGFjdCBhcyBhIGJyb2FkY2FzdCB0aW1lciBmb3IgY3B1aWRsZS4gVGhlDQo+IHRpbWVyIGludGVy
+cnVwdCBjYW4gb25seSBiZSB0cmlnZ2VyZWQgd2hlbiAnY29tcGFyZVs1NTowXSA8PSBjb3VudGVy
+WzU1OjBdJy4NCj4gPiBTbyB5b3UgbWVhbiB0aGF0IG9ubHkgdXNlIHRoZSBsb3dlciAzMmJpdCB0
+byBpbXBsZW1lbnQgdGhpcyB0aW1lcj8gSWYgc28sIEkNCj4gY2FuIGNoYW5nZSB0byB1c2Ugb25s
+eSB0aGUgbG93ZXIgMzJiaXQuDQo+IA0KPiBJTU8gaXQgaXMgcHJlZmVyYWJsZSBidXQgeW91IGRl
+Y2lkZSAocHJvYmFibHkgY29tcGFyZSB3aXRoIGhvdyBsb25nIGl0IHRha2VzDQo+IHRvIHdyYXAg
+d2hlbiAzMmJpdHMpLg0KPiANCg0KTm9ybWFsbHksIGl0IGlzIGRyaXZlbiBieSBmaXhlZCA4TUh6
+IGNsb2NrLiAzMmJpdCBoYXMgcmlzaywgd2hlbiB0aGUgbG93ZXIgMzJiaXQgd3JhcHBlZCwNCnRo
+ZW4gdGhlICdjb3VudGVyIHZhbHVlID49IGNvbXBhcmUgdmFsdWUnIGlzIHRydWUgaWYgb25seSB1
+c2UgMzJiaXQgZm9yIHRpbWVyLCB0aGVuIElSUSB3aWxsDQpQZW5kaW5nIGFsbCB0aGUgdGltZS4g
+SSB3aWxsIGtlZXAgdXNlIHRoZSB3aG9sZSA1NmJpdC4NCg0KPiANCj4gDQoNCg==
